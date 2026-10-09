@@ -37,6 +37,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Move | WASD or arrow keys | Left stick / D-pad |
 | Menu / card navigation and confirm | Mouse, arrow keys, Enter / Space | D-pad or left stick, **A** |
 | Pick a level-up card | Click, or keys **1 / 2 / 3** | Focus + **A** |
+| Shadow Bolt aim: Nearest / Strongest | **T** | **Y** |
 | Pause (Resume / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
 
@@ -82,9 +83,9 @@ replacing fallen units all happen automatically (GDD §4, §21).
 | **Warrior blocking** | Warriors are physical blockers. Enemies can't pass through them; overlaps are resolved through the spatial hash, weighted by mass. An enemy touching a warrior is *engaged*: it moves at 60% speed and attacks that warrior. Warriors also shield-bash on a cooldown (damage plus knockback). Sir Alaric's charge goes straight through the wall. |
 | **Priests** | Heal allies and the necromancer with the §31 formula; a critically hurt necromancer comes first. Whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px), a priest also casts an instant damage-absorbing **ward** on you, as long as no ward is active, its own ward cooldown is ready, and nobody is critical. The ward has its own cooldown, so it never replaces a heal. It shows as a ring on the necromancer and in the HUD, and the autotest reports ward counts and wards per minute. |
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
-| Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Each has 5 levels. |
+| Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Each has 5 levels. |
 | Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed), Soul Recycling (faster replacement). Bonus stacking follows §34. |
-| Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. |
+| Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. |
 | Waves (§11) | The data-driven Graveyard timeline, compressed 4× to 5 minutes, then the boss and the Reckoning. |
 | Boss (§11) | Placeholder Sir Alaric with telegraphed Hammerfall and Divine Charge. |
 | UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu, end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and priest ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress; ability slots with levels. |
@@ -217,15 +218,22 @@ Options (after `--`):
 | `--speed=N` | Time scale (default 4). |
 | `--seed=N` | RNG seed (default 1337). |
 | `--timeout=N` | Give up after N game seconds (default 480). |
+| `--policy=NAME` | Level-up card policy: `naive` (default; takes every new summon class, then new spells, then new passives) or `army` (a summoner build that levels summons and army passives first). |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
 
 The summary covers: result, time, kills, level, army per class, boss
 spawn/kill, all cards picked, and per-source damage (`dmg_warrior`, `dmg_bolt`,
 `dmg_bash`, …). It also reports damage taken by summons, split by attacker
-(`summon_dmg_from_*`); heals, wards and orb intercepts; peak entity counts;
+(`summon_dmg_from_*`) and damage taken by the player, split by attacker
+(`player_dmg_from_*`); damage to the boss by source (`bossdmg_*`); Shadow Bolt
+damage per aim mode (the autotest uses Nearest, then switches to Strongest when
+the boss spawns); heals, wards and orb intercepts; peak entity counts;
 pool node counts; and the average and worst simulation-step cost. These numbers
-are the starting point for tuning.
+are the starting point for tuning. Every 30 s it also prints `[metric]` lines
+(army size and capacity per class, damage taken by attacker, enemies alive by
+kind), and at the end `boss_hp_at_0` and `min_hp_before_0` (the lowest player
+HP before 0:00). Multi-seed tuning scripts parse these lines.
 
 ---
 

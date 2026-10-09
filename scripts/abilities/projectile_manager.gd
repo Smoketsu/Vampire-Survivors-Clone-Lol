@@ -220,7 +220,7 @@ func _hostile_hits(p: Projectile) -> bool:
 		return false
 	var pl := game.player
 	if pl.position.distance_to(p.position) <= pl.radius + p.radius:
-		game.combat.damage_player(p.damage)
+		game.combat.damage_player(p.damage, "archer_arrow")
 		return false
 	game.ally_grid.query(p.position, p.radius + 14.0, _tmp)
 	for u: SummonedUnit in _tmp:

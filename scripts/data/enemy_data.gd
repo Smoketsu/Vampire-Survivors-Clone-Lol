@@ -23,7 +23,6 @@ const ORDER := ["recruit", "footman", "archer", "chaplain", "purifier"]
 ##   armor               — fraction of incoming damage ignored (0..0.9).
 ##   xp                  — XP crystal value dropped on death.
 ##   behavior            — AI branch: "melee" | "ranged" | "healer" | "purifier".
-##   preferred_range     — px from target that ranged/healer units try to keep.
 ##   projectile_speed    — px/s for ranged attacks.
 ##   undead_damage_mult  — damage multiplier vs undead summons (not player).
 ##   heal_amount         — HP healed per cast on another enemy.
@@ -46,7 +45,6 @@ const ENEMIES := {
 		"armor": 0.0,  # TUNING (not in GDD)
 		"xp": 1,  # TUNING (not in GDD)
 		"behavior": "melee",
-		"preferred_range": 0.0,
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
 		"heal_amount": 0.0,
@@ -67,7 +65,6 @@ const ENEMIES := {
 		"armor": 0.3,  # TUNING (not in GDD) — "moderate damage resistance"
 		"xp": 3,  # TUNING (not in GDD)
 		"behavior": "melee",
-		"preferred_range": 0.0,
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
 		"heal_amount": 0.0,
@@ -88,7 +85,6 @@ const ENEMIES := {
 		"armor": 0.0,  # TUNING (not in GDD)
 		"xp": 2,  # TUNING (not in GDD)
 		"behavior": "ranged",
-		"preferred_range": 150.0,  # TUNING (not in GDD)
 		"projectile_speed": 230.0,  # TUNING (not in GDD)
 		"undead_damage_mult": 1.0,
 		"heal_amount": 0.0,
@@ -109,7 +105,6 @@ const ENEMIES := {
 		"armor": 0.0,  # TUNING (not in GDD)
 		"xp": 5,  # TUNING (not in GDD)
 		"behavior": "healer",
-		"preferred_range": 135.0,  # TUNING (not in GDD)
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
 		"heal_amount": 3.0,  # TUNING (not in GDD)
@@ -131,7 +126,6 @@ const ENEMIES := {
 		"armor": 0.0,  # TUNING (not in GDD)
 		"xp": 3,  # TUNING (not in GDD)
 		"behavior": "purifier",
-		"preferred_range": 0.0,
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.5,  # TUNING (not in GDD) "bonus damage vs undead"
 		"heal_amount": 0.0,
@@ -157,7 +151,6 @@ const RECKONING_ENEMY := {
 	"armor": 0.5,  # TUNING (not in GDD)
 	"xp": 30,  # TUNING (not in GDD)
 	"behavior": "melee",
-	"preferred_range": 0.0,
 	"projectile_speed": 0.0,
 	"undead_damage_mult": 3.0,  # TUNING (not in GDD)
 	"heal_amount": 0.0,
@@ -190,6 +183,15 @@ const PURIFIER_HUNT_RADIUS: float = 180.0  # TUNING (not in GDD)
 const ATTACKING_PLAYER_RADIUS: float = 120.0  # TUNING (not in GDD)
 ## Minimum missing-HP fraction before a chaplain will heal an ally.
 const HEAL_MIN_MISSING_FRACTION: float = 0.1  # TUNING (not in GDD)
+## Survivor convention (user brief): every enemy advances on the player.
+## Ranged / healer units stop walking only when within this many px (edge to
+## edge) of him, so they don't overlap his body.
+const ADVANCE_STOP_GAP: float = 4.0  # TUNING (not in GDD)
+## Speed multiplier for a ranged unit right after it fires (reads as
+## "stopping to shoot" without ever backing away).
+const SHOOT_SLOW_MULT: float = 0.5  # TUNING (not in GDD)
+## Seconds the post-shot slowdown lasts.
+const SHOOT_SLOW_TIME: float = 0.35  # TUNING (not in GDD)
 ## Seconds an enemy stays "engaged" after its last contact with a blocker.
 const ENGAGED_TIME: float = 0.3  # TUNING (not in GDD)
 ## Knockback velocity decay in px/s^2.
@@ -227,7 +229,6 @@ const BOSS := {
 	"armor": 0.15,  # TUNING (not in GDD)
 	"xp": 0,
 	"behavior": "melee",
-	"preferred_range": 0.0,
 	"projectile_speed": 0.0,
 	"undead_damage_mult": 1.0,
 	"heal_amount": 0.0,

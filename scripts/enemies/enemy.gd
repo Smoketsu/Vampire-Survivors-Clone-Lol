@@ -3,8 +3,13 @@
 ## Archer, Chaplain, Purifier); EnemyData supplies stats and a `behavior` key:
 ##   melee     close in on the player, divert onto summons in the way.
 ##   purifier  hunt undead summons first (GDD §35), bonus damage vs undead.
-##   ranged    keep preferred range and shoot arrows (player or summons).
-##   healer    keep distance and heal the most wounded OTHER enemy (§10).
+##   ranged    walk at the player and shoot arrows (player or a nearer summon)
+##             whenever a target is in range.
+##   healer    walk at the player and heal the most wounded OTHER enemy in
+##             range (§10).
+## Survivor convention (user brief): enemies ALWAYS advance on the player;
+## nobody kites or holds at range. Ranged units only slow down briefly after
+## each shot (EnemyData.SHOOT_SLOW_*).
 ## Sir Alaric (BossAlaric) extends this class so every targeting / damage
 ## system treats the boss like any enemy.
 ##
@@ -55,8 +60,6 @@ var armor: float = 0.0
 var xp_value: int = 1
 ## AI branch: "melee" | "purifier" | "ranged" | "healer".
 var behavior: String = "melee"
-## Distance (px) ranged / healer units try to keep from their target.
-var preferred_range: float = 0.0
 ## Arrow speed in px/s.
 var projectile_speed: float = 0.0
 ## Damage multiplier against undead summons.
@@ -115,8 +118,8 @@ var engaged_timer: float = 0.0
 var engaged_mult: float = 1.0
 ## Knockback velocity in px/s (shield bashes), decays over time.
 var knockback: Vector2 = Vector2.ZERO
-## +1 / -1: which way ranged units strafe while holding range.
-var _strafe_sign: float = 1.0
+## Seconds left of the brief slowdown after a ranged unit fires.
+var _shoot_slow_timer: float = 0.0
 ## Facing sign (+1 right / -1 left).
 var _facing: float = 1.0
 ## Reusable query buffer.
@@ -143,7 +146,6 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	armor = def["armor"]
 	xp_value = def["xp"]
 	behavior = def["behavior"]
-	preferred_range = def["preferred_range"]
 	projectile_speed = def["projectile_speed"]
 	undead_damage_mult = def["undead_damage_mult"]
 	heal_amount = def["heal_amount"]
@@ -177,7 +179,7 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	engaged_timer = 0.0
 	engaged_mult = 1.0
 	knockback = Vector2.ZERO
-	_strafe_sign = 1.0 if randf() < 0.5 else -1.0
+	_shoot_slow_timer = 0.0
 	visible = true
 	queue_redraw()
 
@@ -315,26 +317,29 @@ func physics_step(delta: float) -> void:
 	var edge := d - radius - _radius_of(t)
 	var move := Vector2.ZERO
 	if behavior == "ranged" or behavior == "healer":
-		if d > preferred_range + 10.0:
-			move = dir
-		elif d < preferred_range * 0.7:
-			move = -dir
-		else:
-			move = Vector2(-dir.y, dir.x) * 0.35 * _strafe_sign
+		# Always advance on the player (even while shooting a summon), stopping
+		# only on contact so they don't overlap him.
+		var to_p := game.player.position - position
+		var dp := to_p.length()
+		if dp - radius - game.player.radius > EnemyData.ADVANCE_STOP_GAP and dp > 0.001:
+			move = to_p / dp
 		if behavior == "ranged":
 			if d <= attack_range and attack_cd <= 0.0:
 				attack_cd = attack_interval
+				_shoot_slow_timer = EnemyData.SHOOT_SLOW_TIME
 				game.projectiles.fire_hostile(position, dir, damage * game.enemies.damage_mult, projectile_speed, undead_damage_mult)
 		else:
 			_try_heal()
 	elif edge > attack_range:
 		move = dir
-	# Anyone in contact can strike (chaplains only rarely get this close).
+	# Anyone in contact can strike except archers (chaplains swing weakly).
 	if behavior != "ranged" and edge <= attack_range and attack_cd <= 0.0:
 		_melee_hit(t, dir)
 	var spd := move_speed * (1.0 - slow_factor if slow_timer > 0.0 else 1.0)
 	if engaged_timer > 0.0:
 		spd *= engaged_mult
+	if _shoot_slow_timer > 0.0:
+		spd *= EnemyData.SHOOT_SLOW_MULT
 	velocity = move * spd + sep * spd * EnemyData.SEPARATION_STRENGTH
 	position += (velocity + knockback) * delta
 	_update_facing()
@@ -378,6 +383,8 @@ func _tick_timers(delta: float) -> void:
 		slow_timer -= delta
 	if engaged_timer > 0.0:
 		engaged_timer -= delta
+	if _shoot_slow_timer > 0.0:
+		_shoot_slow_timer -= delta
 	if knockback != Vector2.ZERO:
 		knockback = knockback.move_toward(Vector2.ZERO, EnemyData.KNOCKBACK_DECAY * delta)
 	if flash > 0.0:
@@ -412,7 +419,7 @@ func _melee_hit(t: Node2D, dir: Vector2) -> void:
 	if t is SummonedUnit:
 		game.combat.damage_unit(t as SummonedUnit, dmg * undead_damage_mult, kind)
 	else:
-		game.combat.damage_player(dmg)
+		game.combat.damage_player(dmg, kind)
 
 
 ## Chaplain heal on the chosen wounded ally.

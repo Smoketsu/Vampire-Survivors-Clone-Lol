@@ -38,6 +38,9 @@ func _ready() -> void:
 	_resume = _button(vb, "Resume", func() -> void: resume_pressed.emit())
 	_button(vb, "Restart", func() -> void: restart_pressed.emit())
 	_button(vb, "Main Menu", func() -> void: main_menu_pressed.emit())
+	var hints := UiTheme.label("Move: WASD / Arrows / Left stick\nT / Y: Shadow Bolt aim (Nearest / Strongest)\nEsc / B: Resume    F3: Debug", 13, UiTheme.TEXT_DIM)
+	hints.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vb.add_child(hints)
 
 
 ## Adds a full-width button to `parent`.

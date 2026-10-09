@@ -197,6 +197,13 @@ func _build_ui() -> void:
 # Simulation
 # =====================================================================================
 
+## In-run hotkeys. Only reached while playing (Game pauses with the tree).
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("toggle_aim") and run_state == RunState.PLAYING:
+		abilities.toggle_bolt_aim()
+		get_viewport().set_input_as_handled()
+
+
 func _physics_process(delta: float) -> void:
 	if run_state != RunState.PLAYING:
 		return

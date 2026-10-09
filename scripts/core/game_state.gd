@@ -14,6 +14,10 @@
 ##   --speed=N             Autotest time scale (default 4).
 ##   --seed=N              RNG seed for the autotest run (default 1337).
 ##   --timeout=N           Autotest gives up after N game seconds (default 480).
+##   --policy=NAME         Autotest card policy: "naive" (default; new summon
+##                         classes, then new spells, then new passives) or
+##                         "army" (summoner build: summon levels and army
+##                         passives first, then Shadow Bolt / Blast).
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 
@@ -27,6 +31,8 @@ var autotest_speed: float = 4.0
 var autotest_seed: int = 1337
 ## Autotest: game-time limit in seconds before the test aborts.
 var autotest_timeout: float = 480.0
+## Autotest: level-up card policy, "naive" or "army" (see header).
+var autotest_policy: String = "naive"
 ## Whether the F3 debug overlay is shown; persists across restarts.
 var debug_overlay_visible: bool = false
 ## Summary dictionary of the most recent finished run (see Game.build_summary).
@@ -52,3 +58,5 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_seed = arg.get_slice("=", 1).to_int()
 		elif arg.begins_with("--timeout="):
 			autotest_timeout = maxf(30.0, arg.get_slice("=", 1).to_float())
+		elif arg.begins_with("--policy="):
+			autotest_policy = arg.get_slice("=", 1)

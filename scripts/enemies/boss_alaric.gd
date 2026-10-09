@@ -112,7 +112,7 @@ func _resolve_hammerfall() -> void:
 	game.shake(8.0)
 	var player := game.player
 	if player.position.distance_to(hammer_point) <= r + player.radius:
-		game.combat.damage_player(float(boss_def["hammer_damage_player"]) * game.enemies.damage_mult)
+		game.combat.damage_player(float(boss_def["hammer_damage_player"]) * game.enemies.damage_mult, "boss_hammer")
 	game.ally_grid.query(hammer_point, r + 12.0, _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.position.distance_to(hammer_point) <= r + u.radius:
@@ -141,7 +141,7 @@ func _step_charge(delta: float) -> void:
 	var player := game.player
 	if not _charge_hit_player and player.position.distance_to(position) <= hit_r + player.radius:
 		_charge_hit_player = true
-		game.combat.damage_player(float(boss_def["charge_damage_player"]) * game.enemies.damage_mult)
+		game.combat.damage_player(float(boss_def["charge_damage_player"]) * game.enemies.damage_mult, "boss_charge")
 	game.ally_grid.query(position, hit_r + 12.0, _tmp)
 	for u: SummonedUnit in _tmp:
 		if not u.active or _charge_hit_units.has(u.get_instance_id()):

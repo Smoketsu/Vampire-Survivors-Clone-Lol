@@ -25,6 +25,8 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	e.on_hit()
 	game.stat_add("damage_dealt", dealt)
 	game.stat_add("dmg_" + source, dealt)
+	if e.is_boss:
+		game.stat_add("bossdmg_" + source, dealt)
 	if e.hp <= 0.0:
 		_kill_enemy(e)
 	return dealt
@@ -41,14 +43,17 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	game.stat_add("damage_to_summons", dealt)
 	game.stat_add("summon_dmg_from_" + source, dealt)
 	if u.hp <= 0.0:
+		game.stat_add("death_" + u.unit_class + "_by_" + source, 1.0)
 		game.horde.on_unit_died(u)
 
 
-## Damages the necromancer (i-frames are handled by the player).
-func damage_player(amount: float) -> void:
+## Damages the necromancer (i-frames are handled by the player). `source`
+## tags the attacker kind for the player_dmg_from_* statistics.
+func damage_player(amount: float, source: String) -> void:
 	var lost := game.player.take_damage(amount)
 	if lost > 0.0:
 		game.stat_add("damage_to_player", lost)
+		game.stat_add("player_dmg_from_" + source, lost)
 		game.shake(4.0)
 
 
@@ -97,5 +102,7 @@ func _kill_enemy(e: Enemy) -> void:
 	game.effects.pop(e.position, Palette.CRIMSON if not e.is_boss else Palette.GOLD, e.radius * 1.2)
 	if e.xp_value > 0:
 		game.pickups.spawn(e.position, e.xp_value)
+		game.stat_add("xp_dropped", e.xp_value)
+	game.stat_add("kill_" + e.kind, 1.0)
 	game.kills += 1
 	game.enemies.on_enemy_killed(e)

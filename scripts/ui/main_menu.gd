@@ -41,7 +41,7 @@ func _ready() -> void:
 	quit.pressed.connect(func() -> void: get_tree().quit())
 	vb.add_child(quit)
 	var controls := UiTheme.label(
-		"Move: WASD / Arrow keys / Left stick\nSpells and undead act on their own.\nEsc / Start: Pause    F3: Debug overlay\nLevel-up: click, 1 / 2 / 3, or controller A",
+		"Move: WASD / Arrow keys / Left stick\nSpells and undead act on their own.\nEsc / Start: Pause    T / Y: Shadow Bolt aim (Nearest / Strongest)    F3: Debug overlay\nLevel-up: click, 1 / 2 / 3, or controller A",
 		13, UiTheme.TEXT_DIM)
 	controls.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(controls)

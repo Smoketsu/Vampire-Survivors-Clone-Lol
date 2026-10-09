@@ -48,6 +48,8 @@ var _class_rows: Dictionary = {}
 var _active_icons: Array[IconGlyph] = []
 ## Passive ability slot icons.
 var _passive_icons: Array[IconGlyph] = []
+## Shadow Bolt aim mode label above the ability bar.
+var _aim_label: Label
 
 
 func _ready() -> void:
@@ -132,7 +134,7 @@ func _build() -> void:
 	_kills_label = UiTheme.label("Kills: 0", 20)
 	_kills_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	top_right.add_child(_kills_label)
-	var hint := UiTheme.label("Esc: Pause   F3: Debug", 13, UiTheme.TEXT_DIM)
+	var hint := UiTheme.label("Esc: Pause   T / Y: Bolt aim   F3: Debug", 13, UiTheme.TEXT_DIM)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	top_right.add_child(hint)
 	var mods := UiTheme.label("Modifiers: none  |  Difficulty: Necromancer", 13, UiTheme.TEXT_DIM)
@@ -159,7 +161,10 @@ func _build() -> void:
 		_class_rows[cls] = {"row": row, "label": lbl, "bar": bar}
 
 	# Bottom center: ability bar (actives row, passives row).
-	var bc := _box(true, 0.5, 1.0, -200, -110, 200, -12, BoxContainer.ALIGNMENT_END)
+	var bc := _box(true, 0.5, 1.0, -200, -130, 200, -12, BoxContainer.ALIGNMENT_END)
+	_aim_label = UiTheme.label("", 13, Palette.VIOLET.lightened(0.35))
+	_aim_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	bc.add_child(_aim_label)
 	var actives := HBoxContainer.new()
 	actives.alignment = BoxContainer.ALIGNMENT_CENTER
 	actives.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -216,6 +221,7 @@ func _refresh() -> void:
 		if owned:
 			(row["label"] as Label).text = "%s %d/%d" % [UnitData.UNITS[cls]["plural"], h.count_of(cls), h.capacity(cls)]
 			(row["bar"] as HudBar).set_values(h.replenish_progress(cls))
+	_aim_label.text = "Shadow Bolt aim: %s  [T / Y]" % game.abilities.bolt_aim_name() if game.abilities.spell_level("shadow_bolt") > 0 else ""
 	var actives := game.abilities.owned_actives()
 	for i in _active_icons.size():
 		if i < actives.size():

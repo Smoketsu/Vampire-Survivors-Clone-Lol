@@ -4,12 +4,17 @@
 ##     ticks scaled to match, so each physics step is still 1/60 s of game
 ##     time and collision behaviour is unchanged),
 ##   * drives the necromancer with a simple kiting autopilot,
-##   * auto-picks level-up cards (unowned summon classes and spells first, so
-##     every system gets exercised),
+##   * auto-picks level-up cards with a policy (--policy=naive: unowned summon
+##     classes and spells first so every system gets exercised; --policy=army:
+##     a summoner build that levels summons and army passives first),
+##   * exercises both Shadow Bolt aim modes: Nearest until the boss spawns,
+##     then Strongest, and reports bolt damage per mode and to the boss,
 ##   * keeps the necromancer invulnerable (unless --mortal) until the countdown
 ##     has ended and the Reckoning has run for RECKONING_GRACE seconds, then
 ##     makes him mortal so the Reckoning kills him -> "Run Complete" screen,
-##   * prints progress every 30 game seconds and a final summary, then quits
+##   * prints progress every 30 game seconds, plus "[metric]" lines (horde
+##     size, damage taken by attacker, enemies alive by kind) that the
+##     multi-seed tuning scripts parse, and a final summary, then quits
 ##     with exit code 0 when the run completed, 1 otherwise.
 class_name Autotest
 extends Node
@@ -22,6 +27,10 @@ const FLEE_RADIUS: float = 110.0
 const XP_SEEK_RADIUS: float = 320.0
 ## Game seconds of Reckoning before the invulnerable autopilot turns mortal.
 const RECKONING_GRACE: float = 20.0
+## Card priorities for --policy=army (higher = picked first).
+const ARMY_PRIORITY := {"warrior": 100.0, "archer": 95.0, "mage": 98.0, "priest": 90.0, "grave_dominion": 105.0,
+	"dark_command": 70.0, "necrotic_vigor": 65.0, "soul_recycling": 50.0,
+	"shadow_bolt": 60.0, "shadow_blast": 55.0, "orb_shield": 40.0}
 
 ## Owning run.
 var game: Game
@@ -43,6 +52,20 @@ var _two_priest_time: float = 0.0
 var _two_priest_wards: int = 0
 ## priest_wards stat seen on the previous step (to attribute new wards).
 var _last_wards: int = 0
+## Sum of living-summon counts over the current report window.
+var _horde_sum: float = 0.0
+## Number of steps in the current report window.
+var _horde_n: int = 0
+## Total summon deaths at the start of the current report window.
+var _death_mark: int = 0
+## Boss HP when the countdown reached 0:00 (-1 = not reached / no boss).
+var _boss_hp_at_0: float = -1.0
+## summon_dmg_from_* stats at the previous report (to print per-window deltas).
+var _last_src: Dictionary = {}
+## Lowest necromancer HP seen before 0:00 (the "nigh-unkillable" check).
+var _min_hp: float = 9999.0
+## dmg_bolt stat when the aim switched to Strongest (-1 = never switched).
+var _bolt_dmg_at_switch: float = -1.0
 ## Guards against printing the summary twice.
 var _finished: bool = false
 ## Reusable query buffer.
@@ -57,8 +80,8 @@ func _ready() -> void:
 	Engine.physics_ticks_per_second = int(roundf(60.0 * speed))
 	Engine.max_physics_steps_per_frame = maxi(8, int(ceilf(8.0 * speed)))
 	_real_start_msec = Time.get_ticks_msec()
-	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss" % [
-		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout)])
+	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s" % [
+		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout), GameState.autotest_policy])
 
 
 ## Called by Game after each simulation step.
@@ -76,6 +99,10 @@ func step(delta: float) -> void:
 	if _boss_spawn_time < 0.0 and game.enemies.boss != null:
 		_boss_spawn_time = game.elapsed
 		print("[autotest] boss spawned at %.1f s" % game.elapsed)
+		if not game.abilities.bolt_aim_strongest:
+			game.abilities.toggle_bolt_aim()
+			_bolt_dmg_at_switch = float(game.stats.get("dmg_bolt", 0.0))
+			print("[autotest] Shadow Bolt aim switched to %s" % game.abilities.bolt_aim_name())
 	if _boss_death_time < 0.0 and game.boss_defeated:
 		_boss_death_time = game.elapsed
 		print("[autotest] boss defeated at %.1f s" % game.elapsed)
@@ -85,8 +112,15 @@ func step(delta: float) -> void:
 	if _reckoning_time >= 0.0 and game.player.invulnerable and game.elapsed >= _reckoning_time + RECKONING_GRACE:
 		game.player.invulnerable = false
 		print("[autotest] %.1f s: Reckoning wave %d reached, player made mortal" % [game.elapsed, game.enemies.reckoning_wave])
+	if game.elapsed < WaveData.RUN_DURATION:
+		_min_hp = minf(_min_hp, game.player.hp)
+	_horde_sum += game.horde.units.size()
+	_horde_n += 1
+	if _boss_hp_at_0 < 0.0 and game.elapsed >= WaveData.RUN_DURATION and game.enemies.boss != null:
+		_boss_hp_at_0 = game.enemies.boss.hp if game.enemies.boss.active else 0.0
 	if game.elapsed >= _next_report:
 		_next_report += REPORT_INTERVAL
+		_print_metrics()
 		print("[autotest] t=%s lvl=%d kills=%d enemies=%d summons=%d/%d projectiles=%d hp=%d step_avg=%.2fms" % [
 			_clock(game.elapsed), game.level, game.kills, game.enemies.active.size(),
 			game.horde.units.size(), game.horde.total_capacity(), game.projectiles.active.size(),
@@ -96,13 +130,51 @@ func step(delta: float) -> void:
 		game.end_run(false, "timeout")
 
 
-## Chooses a card index: new summon classes > new spells > new passives >
-## lowest resulting level. Deterministic for a given offer list.
+## Prints the per-window "[metric]" lines parsed by the tuning scripts.
+func _print_metrics() -> void:
+	var cc := PackedStringArray()
+	for cls: String in UnitData.CLASS_ORDER:
+		cc.append("%s%d/%d" % [cls.substr(0, 1), game.horde.count_of(cls), game.horde.capacity(cls)])
+	print("[metric] t=%d avg_horde=%.1f now=%d cap=%d %s deaths_win=%d lvl=%d kills=%d enemies=%d hp=%d boss_hp=%d crystals=%d" % [
+		int(game.elapsed), _horde_sum / maxf(1.0, _horde_n), game.horde.units.size(), game.horde.total_capacity(), " ".join(cc),
+		game.horde.total_deaths - _death_mark, game.level, game.kills, game.enemies.active.size(), int(game.player.hp),
+		int(game.enemies.boss.hp) if game.enemies.boss != null else -1, game.pickups.active.size()])
+	var parts := PackedStringArray()
+	for k: String in game.stats.keys():
+		if k.begins_with("summon_dmg_from_"):
+			var v := float(game.stats[k]) - float(_last_src.get(k, 0.0))
+			_last_src[k] = float(game.stats[k])
+			if v >= 1.0:
+				parts.append("%s=%d" % [k.substr(16), int(v)])
+	print("[metric]    summon dmg taken this window: " + " ".join(parts))
+	var kinds := {}
+	var near := 0
+	for e in game.enemies.active:
+		if e.active:
+			kinds[e.kind] = int(kinds.get(e.kind, 0)) + 1
+			if e.position.distance_to(game.player.position) < 260.0:
+				near += 1
+	print("[metric]    alive by kind: %s within260=%d" % [str(kinds), near])
+	_horde_sum = 0.0
+	_horde_n = 0
+	_death_mark = game.horde.total_deaths
+
+
+## Chooses a card index. "naive": new summon classes > new spells > new
+## passives > lowest resulting level. "army": ARMY_PRIORITY minus a level
+## penalty. Deterministic for a given offer list.
 func choose_card(offers: Array[Dictionary]) -> int:
 	var best := 0
 	var best_score := -INF
+	var army := GameState.autotest_policy == "army"
 	for i in offers.size():
 		var o := offers[i]
+		if army:
+			var a := float(ARMY_PRIORITY.get(String(o["id"]), 0.0)) - float(o["to"]) * 8.0
+			if a > best_score:
+				best_score = a
+				best = i
+			continue
 		var s := -float(o["to"]) * 5.0
 		var is_new := int(o["from"]) == 0
 		match String(o["kind"]):
@@ -179,7 +251,12 @@ func finish(summary: Dictionary) -> void:
 	var ward_rate := float(_two_priest_wards) / (_two_priest_time / 60.0) if _two_priest_time > 1.0 else 0.0
 	print("[autotest] priest wards: %d total, absorbed %d dmg | %d wards in %.0f s with 2+ priests alive (%.1f / min) | priest heals: %d" % [
 		int(st_all.get("priest_wards", 0.0)), int(st_all.get("ward_absorbed", 0.0)), _two_priest_wards, _two_priest_time, ward_rate, int(st_all.get("priest_heals", 0.0))])
+	var bolt_total := float(st.get("dmg_bolt", 0.0))
+	var bolt_nearest := bolt_total if _bolt_dmg_at_switch < 0.0 else _bolt_dmg_at_switch
+	print("[autotest] shadow bolt: %d dmg in Nearest mode, %d dmg in Strongest mode; to boss: %d of %d total boss dmg" % [
+		int(bolt_nearest), int(bolt_total - bolt_nearest), int(st.get("bossdmg_bolt", 0.0)), int(_sum_prefix(st, "bossdmg_"))])
 	print("[autotest] stats: " + " ".join(stat_parts))
+	print("[metric] boss_hp_at_0=%d min_hp_before_0=%d" % [int(_boss_hp_at_0), int(_min_hp)])
 	print("[autotest] peaks: enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [
 		int(_peak["enemies"]), int(_peak["summons"]), int(_peak["projectiles"]), int(_peak["effects"]), int(_peak["crystals"])])
 	print("[autotest] nodes created (pools): enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [
@@ -188,6 +265,15 @@ func finish(summary: Dictionary) -> void:
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
+
+
+## Sum of every stat whose key starts with `prefix`.
+static func _sum_prefix(st: Dictionary, prefix: String) -> float:
+	var total := 0.0
+	for k: String in st.keys():
+		if k.begins_with(prefix):
+			total += float(st[k])
+	return total
 
 
 ## Formats seconds as mm:ss.

@@ -20,6 +20,9 @@ var passive_levels: Dictionary = {}
 var orb_shield: OrbShield = null
 ## Seconds until the next Shadow Bolt volley.
 var _bolt_timer: float = 0.5
+## Shadow Bolt aim mode, toggled by the player (toggle_aim: T / controller Y).
+## false = "Nearest" (default), true = "Strongest" (highest current HP).
+var bolt_aim_strongest: bool = false
 ## Seconds until the next Shadow Blast.
 var _blast_timer: float = 1.0
 ## "id level" strings of every card picked this run (summary / autotest).
@@ -138,9 +141,24 @@ func step(delta: float) -> void:
 		orb_shield.step(delta, spell_stats("orb_shield"))
 
 
-## Shadow Bolt: fires `count` bolts at the best nearby targets. Prefers the
-## nearest enemies, enemies attacking summons (GDD §33) and avoids targets
-## already expected to die. Returns false if there was nothing to shoot.
+## Flips the Shadow Bolt aim mode between Nearest and Strongest.
+func toggle_bolt_aim() -> void:
+	bolt_aim_strongest = not bolt_aim_strongest
+
+
+## UI name of the current Shadow Bolt aim mode.
+func bolt_aim_name() -> String:
+	return "Strongest" if bolt_aim_strongest else "Nearest"
+
+
+## Shadow Bolt: fires `count` bolts at the best targets within range, ranked
+## by the aim mode (lower score = better):
+##   Nearest   — nearest enemies, enemies attacking summons first (GDD §33).
+##   Strongest — highest current HP (whole HP points; ties go to the nearest),
+##               so the boss and elites are favoured only through their HP.
+## Extra bolts of multi-bolt levels go to the next-ranked targets. In both
+## modes targets already expected to die (overkill reservation) rank last.
+## Returns false if there was nothing to shoot.
 func _cast_bolt(s: Dictionary) -> bool:
 	var p := game.player.position
 	game.enemy_grid.query(p, float(s["range"]), _tmp)
@@ -148,11 +166,15 @@ func _cast_bolt(s: Dictionary) -> bool:
 	for e: Enemy in _tmp:
 		if not e.active:
 			continue
-		var score := p.distance_to(e.position)
-		if e.targeting_summon:
+		var dist := p.distance_to(e.position)
+		var score := dist
+		if bolt_aim_strongest:
+			# Distance (< range, well under 10000) only breaks HP ties.
+			score = -roundf(e.hp) * 10000.0 + dist
+		elif e.targeting_summon:
 			score -= AbilityData.BOLT_PROTECT_BONUS
 		if e.hp - e.incoming_damage <= 0.0:
-			score += 1000.0
+			score += 1.0e9
 		_cands.append([score, e])
 	if _cands.is_empty():
 		return false
