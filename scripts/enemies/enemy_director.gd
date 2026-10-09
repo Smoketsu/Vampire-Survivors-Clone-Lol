@@ -76,7 +76,10 @@ func step(delta: float) -> void:
 	var slot := _frame % UnitData.AI_TICK_DIVISOR
 	var sep_slot := _frame % 6
 	var player_pos := game.player.position
-	var recycle2 := WaveData.RECYCLE_DISTANCE * WaveData.RECYCLE_DISTANCE
+	# Never recycle inside the spawn ring (tall / narrow windows can make the
+	# ring larger than RECYCLE_DISTANCE, which would recycle forever).
+	var recycle := maxf(WaveData.RECYCLE_DISTANCE, _ring_radius() + WaveData.RECYCLE_MARGIN)
+	var recycle2 := recycle * recycle
 	for e in active:
 		if not e.active:
 			continue

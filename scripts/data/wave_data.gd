@@ -124,6 +124,8 @@ const SPAWN_MARGIN: float = 60.0  # TUNING (not in GDD)
 ## Enemies farther than this (px) from the player are moved back to the
 ## spawn ring ahead of the player (keeps pressure on a moving player).
 const RECYCLE_DISTANCE: float = 950.0  # TUNING (not in GDD)
+## Minimum gap (px) kept between the spawn ring and the recycle distance.
+const RECYCLE_MARGIN: float = 200.0  # TUNING (not in GDD)
 ## Banner display time (s) for event announcements.
 const BANNER_TIME: float = 4.0  # TUNING (not in GDD)
 ## Angular spread (radians) of an "arc" formation.

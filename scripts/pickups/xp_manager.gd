@@ -1,8 +1,8 @@
 ## XpManager — spawns, magnetises, collects and pools XP crystals
 ## (GDD §3 loop, §5 "Pickup Radius"). Crystals inside the necromancer's pickup
 ## radius accelerate toward him and grant XP on contact. To bound node count
-## in long fights, crystals beyond MAX_CRYSTALS merge their value into an
-## existing crystal instead of spawning a new one.
+## in long fights, crystals beyond MAX_CRYSTALS merge their value into the
+## existing crystal nearest the drop point instead of spawning a new one.
 class_name XpManager
 extends Node2D
 
@@ -17,8 +17,6 @@ var active: Array[XpCrystal] = []
 var _pool: Array[XpCrystal] = []
 ## Total XpCrystal nodes ever instantiated (debug: pool health).
 var created: int = 0
-## Round-robin index used when merging overflow value.
-var _merge_index: int = 0
 
 
 func _ready() -> void:
@@ -28,10 +26,15 @@ func _ready() -> void:
 ## Drops a crystal worth `value` XP at `pos`.
 func spawn(pos: Vector2, value: int) -> void:
 	if active.size() >= MAX_CRYSTALS:
-		_merge_index = (_merge_index + 1) % active.size()
-		var target := active[_merge_index]
-		target.value += value
-		target.queue_redraw()
+		var nearest := active[0]
+		var best_d2 := INF
+		for c in active:
+			var d2 := c.position.distance_squared_to(pos)
+			if d2 < best_d2:
+				best_d2 = d2
+				nearest = c
+		nearest.value += value
+		nearest.queue_redraw()
 		return
 	var c: XpCrystal
 	if _pool.is_empty():

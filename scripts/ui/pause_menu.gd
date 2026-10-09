@@ -1,6 +1,7 @@
 ## PauseMenu — Esc / controller Start pause screen with Resume, Restart and
 ## Main Menu (GDD §4 "Esc: Pause/settings"). It also owns the "pause" input
-## handling because it keeps processing while the tree is paused.
+## handling because it keeps processing while the tree is paused. While the
+## menu is open, ui_cancel (Esc / controller B) also resumes.
 class_name PauseMenu
 extends Control
 
@@ -61,6 +62,7 @@ func close() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause") and game != null and game.can_toggle_pause():
+	var wants_toggle := event.is_action_pressed("pause") or (visible and event.is_action_pressed("ui_cancel"))
+	if wants_toggle and game != null and game.can_toggle_pause():
 		get_viewport().set_input_as_handled()
 		game.toggle_pause()

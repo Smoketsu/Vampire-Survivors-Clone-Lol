@@ -35,8 +35,9 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Action | Keyboard / mouse | Controller |
 |---|---|---|
 | Move | WASD or arrow keys | Left stick / D-pad |
+| Menu / card navigation and confirm | Mouse, arrow keys, Enter / Space | D-pad or left stick, **A** |
 | Pick a level-up card | Click, or keys **1 / 2 / 3** | Focus + **A** |
-| Pause (Resume / Restart / Main Menu) | **Esc** | **Start** |
+| Pause (Resume / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
 
 You don't aim or cast anything yourself. Spells, summons, targeting, healing and
@@ -86,7 +87,7 @@ replacing fallen units all happen automatically (GDD §4, §21).
 | Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. |
 | Waves (§11) | The data-driven Graveyard timeline, compressed 4× to 5 minutes, then the boss and the Reckoning. |
 | Boss (§11) | Placeholder Sir Alaric with telegraphed Hammerfall and Divine Charge. |
-| UI (§16) | Main menu, HUD, level-up cards, pause menu, end screens and the F3 debug overlay. The HUD shows: XP bar; HP, orb shields and priest ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress; ability slots with levels. |
+| UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu, end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and priest ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress; ability slots with levels. |
 | Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, priests are round with a halo). Hit flashes and death pops are included. |
 
 ### Where the numbers come from

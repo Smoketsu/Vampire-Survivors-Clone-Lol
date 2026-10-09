@@ -101,16 +101,27 @@ func set_class_level(cls: String, level: int) -> void:
 	_refresh_class(cls, old_cap)
 
 
-## Recomputes every learned class (called when a passive changes).
-func recompute_all() -> void:
+## Class id -> current capacity. Take this snapshot BEFORE changing a passive
+## and pass it to recompute_all() so only real capacity growth spawns units.
+func capacity_snapshot() -> Dictionary:
+	var caps := {}
+	for cls: String in UnitData.CLASS_ORDER:
+		caps[cls] = capacity(cls)
+	return caps
+
+
+## Recomputes every learned class after a passive changed. `old_caps` is the
+## capacity_snapshot() taken before the change: only the capacity increase
+## (new cap - old cap) spawns immediately; units that were already dead keep
+## waiting for their normal replacement timer (GDD §24).
+func recompute_all(old_caps: Dictionary) -> void:
 	for cls: String in UnitData.CLASS_ORDER:
 		if int(class_levels[cls]) > 0:
-			_refresh_class(cls, -1)
+			_refresh_class(cls, int(old_caps.get(cls, capacity(cls))))
 
 
 ## Recomputes stats for `cls`, pushes them to living units (HP % preserved)
-## and queues immediate spawns if capacity grew. `old_cap` < 0 means "use the
-## current live count as the baseline".
+## and queues immediate spawns for the capacity gained since `old_cap`.
 func _refresh_class(cls: String, old_cap: int) -> void:
 	var level: int = class_levels[cls]
 	if level <= 0:
@@ -121,11 +132,8 @@ func _refresh_class(cls: String, old_cap: int) -> void:
 		if u.unit_class == cls:
 			u.apply_stats(stats, true)
 	var new_cap := capacity(cls)
-	var baseline := old_cap
-	if baseline < 0:
-		baseline = int(class_counts[cls]) + int(immediate_spawns[cls])
-	if new_cap > baseline:
-		immediate_spawns[cls] = int(immediate_spawns[cls]) + (new_cap - baseline)
+	if new_cap > old_cap:
+		immediate_spawns[cls] = int(immediate_spawns[cls]) + (new_cap - old_cap)
 	summon_cap_changed.emit()
 
 

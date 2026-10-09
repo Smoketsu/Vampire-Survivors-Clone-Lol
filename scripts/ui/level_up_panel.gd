@@ -12,8 +12,15 @@ signal card_chosen(offer: Dictionary)
 ## Clicks/keys within this many ms of opening are ignored, so a held key or
 ## an in-flight click doesn't pick a card by accident.
 const INPUT_GRACE_MSEC: int = 250
-## Card size in px.
-const CARD_SIZE := Vector2(270, 340)
+## Card width in px (fixed so text wraps predictably).
+const CARD_WIDTH: float = 270.0
+## Minimum card height in px; cards grow taller to fit their content and the
+## row stretches every card to the tallest one.
+const CARD_MIN_HEIGHT: float = 340.0
+## Inner padding of a card in px (left/right).
+const CARD_PAD_X: int = 14
+## Inner padding of a card in px (top/bottom).
+const CARD_PAD_Y: int = 12
 
 ## Owning run (autotest hook).
 var game: Game
@@ -23,8 +30,10 @@ var _offers: Array[Dictionary] = []
 var _cards_box: HBoxContainer
 ## "LEVEL N" title.
 var _title: Label
-## Card buttons in display order.
+## Card buttons in display order (focus / click targets).
 var _buttons: Array[Button] = []
+## Card root containers in display order (freed when the panel reopens).
+var _cards: Array[Control] = []
 ## Time (ms) the panel was last opened.
 var _opened_msec: int = 0
 ## True while waiting for a choice.
@@ -57,13 +66,14 @@ func _ready() -> void:
 ## Shows `offers` as cards for reaching level `for_level`.
 func open(offers: Array[Dictionary], for_level: int) -> void:
 	_offers = offers
-	for b in _buttons:
-		b.queue_free()
+	for c in _cards:
+		c.queue_free()
+	_cards.clear()
 	_buttons.clear()
 	for i in offers.size():
-		var b := _make_card(offers[i], i)
-		_cards_box.add_child(b)
-		_buttons.append(b)
+		var card := _make_card(offers[i], i)
+		_cards_box.add_child(card)
+		_cards.append(card)
 	_title.text = "LEVEL %d" % for_level
 	visible = true
 	_waiting = true
@@ -80,21 +90,31 @@ func close() -> void:
 	_waiting = false
 
 
-## Builds one card button for offer `o` (index `idx`).
-func _make_card(o: Dictionary, idx: int) -> Button:
+## Builds one card for offer `o` (index `idx`). Layout: a MarginContainer
+## root whose minimum size is the max of its children, holding a full-size
+## Button (focus / click / controller A) underneath a padded content column.
+## The card therefore grows to fit its text and can never overflow.
+func _make_card(o: Dictionary, idx: int) -> Control:
+	var card := MarginContainer.new()
+	card.custom_minimum_size = Vector2(CARD_WIDTH, CARD_MIN_HEIGHT)
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var b := Button.new()
-	b.custom_minimum_size = CARD_SIZE
 	b.focus_mode = Control.FOCUS_ALL
 	b.pressed.connect(_choose.bind(idx, false))
+	card.add_child(b)
+	_buttons.append(b)
+	var content := MarginContainer.new()
+	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_theme_constant_override("margin_left", CARD_PAD_X)
+	content.add_theme_constant_override("margin_right", CARD_PAD_X)
+	content.add_theme_constant_override("margin_top", CARD_PAD_Y)
+	content.add_theme_constant_override("margin_bottom", CARD_PAD_Y)
+	card.add_child(content)
 	var vb := VBoxContainer.new()
-	vb.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	vb.offset_left = 14
-	vb.offset_top = 12
-	vb.offset_right = -14
-	vb.offset_bottom = -12
 	vb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vb.add_theme_constant_override("separation", 6)
-	b.add_child(vb)
+	content.add_child(vb)
+	var text_width := CARD_WIDTH - 2.0 * float(CARD_PAD_X)
 	var tag_color := Palette.NECRO_GREEN
 	match String(o["tag"]):
 		"SPELL":
@@ -119,11 +139,13 @@ func _make_card(o: Dictionary, idx: int) -> Button:
 	vb.add_child(lvl_label)
 	var desc := UiTheme.label(o["description"], 13, UiTheme.TEXT_DIM)
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	desc.custom_minimum_size = Vector2(text_width, 0)
 	vb.add_child(desc)
 	var deltas := UiTheme.label("\n".join(o["deltas"]), 14, UiTheme.TEXT_GOOD)
 	deltas.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	deltas.custom_minimum_size = Vector2(text_width, 0)
 	vb.add_child(deltas)
-	return b
+	return card
 
 
 ## Emits the chosen card once (ignores input during the grace period unless

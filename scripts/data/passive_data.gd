@@ -38,11 +38,11 @@ const PASSIVES := {
 		"description": "Increases summon capacity of every summon class you command.",
 		"labels": {"capacity_per_class": ["Capacity per class", "int"]},
 		"levels": [
-			{"capacity_per_class": 1},  # TUNING (not in GDD)
-			{"capacity_per_class": 1},  # TUNING (not in GDD)
-			{"capacity_per_class": 2},  # TUNING (not in GDD)
+			{"capacity_per_class": 1},  # TUNING (not in GDD) every level adds +1
 			{"capacity_per_class": 2},  # TUNING (not in GDD)
 			{"capacity_per_class": 3},  # TUNING (not in GDD)
+			{"capacity_per_class": 4},  # TUNING (not in GDD)
+			{"capacity_per_class": 5},  # TUNING (not in GDD)
 		],
 	},
 	"necrotic_vigor": {

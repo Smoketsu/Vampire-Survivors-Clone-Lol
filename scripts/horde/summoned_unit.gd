@@ -615,6 +615,7 @@ func physics_step(delta: float) -> void:
 		if f != _facing:
 			_facing = f
 			scale.x = _facing
+			queue_redraw()  # HP bar counter-flip depends on facing
 
 
 ## Blends steering behaviours into a velocity (GDD §26: formation
@@ -843,4 +844,8 @@ func _draw() -> void:
 		draw_circle(Vector2(0, radius * 0.9), radius * (1.3 - 0.4 * rise), Color(Palette.NECRO_GREEN, 0.3 * (1.0 - rise)))
 	Glyphs.draw_summon(self, unit_class, Vector2(0, (1.0 - rise) * radius), radius, flash > 0.0)
 	if hp < max_hp - 0.5 and state != State.SPAWNING:
+		# The node is mirrored via scale.x; counter-flip so the bar always
+		# fills left-to-right.
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2(_facing, 1.0))
 		Glyphs.hp_bar(self, Vector2(0, -radius * 1.9), radius * 2.0, hp / max_hp, Palette.HP_FRIENDLY)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

@@ -233,8 +233,9 @@ func apply_offer(o: Dictionary) -> void:
 		"summon":
 			game.horde.set_class_level(id, to)
 		"passive":
+			var old_caps := game.horde.capacity_snapshot()
 			passive_levels[id] = to
-			game.horde.recompute_all()
+			game.horde.recompute_all(old_caps)
 		"heal":
 			game.combat.heal_player(game.player.max_hp * PlayerData.FALLBACK_HEAL_FRACTION)
 	pick_history.append("%s %d" % [id, to])

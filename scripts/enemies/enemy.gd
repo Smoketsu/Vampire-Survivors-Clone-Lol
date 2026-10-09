@@ -393,6 +393,8 @@ func _update_facing() -> void:
 		if f != _facing:
 			_facing = f
 			scale.x = _facing
+			if hp < max_hp:
+				queue_redraw()  # HP bar counter-flip depends on facing
 
 
 ## Body radius of the player or a summon.
@@ -431,4 +433,8 @@ func _try_heal() -> void:
 func _draw() -> void:
 	Glyphs.draw_enemy(self, kind, Vector2.ZERO, radius, flash > 0.0, is_elite)
 	if hp < max_hp:
+		# The node is mirrored via scale.x; counter-flip so the bar always
+		# fills left-to-right.
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2(_facing, 1.0))
 		Glyphs.hp_bar(self, Vector2(0, -radius * 1.8), radius * 2.0, hp / max_hp, Palette.HP_ENEMY)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
