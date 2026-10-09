@@ -150,6 +150,9 @@ func _ready() -> void:
 		player.invulnerable = not GameState.autotest_mortal
 	player.died.connect(_on_player_died)
 	enemies.boss_defeated.connect(_on_boss_defeated)
+	# Counters that should appear in the summary even when they stay at 0.
+	for key: String in ["priest_wards", "ward_absorbed", "priest_heals", "player_healing"]:
+		stats[key] = 0.0
 	# GDD brief: the run starts with 2 Skeleton Warriors (warrior level 1).
 	horde.set_class_level("warrior", 1)
 	_build_ui()

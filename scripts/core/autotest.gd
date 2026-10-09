@@ -37,6 +37,12 @@ var _reckoning_time: float = -1.0
 var _peak: Dictionary = {"enemies": 0, "summons": 0, "projectiles": 0, "effects": 0, "crystals": 0}
 ## Real-time start (ms) for the wall-clock duration line.
 var _real_start_msec: int = 0
+## Game seconds during which 2 or more priests were alive.
+var _two_priest_time: float = 0.0
+## Priest wards cast while 2 or more priests were alive.
+var _two_priest_wards: int = 0
+## priest_wards stat seen on the previous step (to attribute new wards).
+var _last_wards: int = 0
 ## Guards against printing the summary twice.
 var _finished: bool = false
 ## Reusable query buffer.
@@ -56,7 +62,12 @@ func _ready() -> void:
 
 
 ## Called by Game after each simulation step.
-func step(_delta: float) -> void:
+func step(delta: float) -> void:
+	var wards := int(game.stats.get("priest_wards", 0.0))
+	if game.horde.count_of("priest") >= 2:
+		_two_priest_time += delta
+		_two_priest_wards += wards - _last_wards
+	_last_wards = wards
 	_peak["enemies"] = maxi(int(_peak["enemies"]), game.enemies.active.size())
 	_peak["summons"] = maxi(int(_peak["summons"]), game.horde.units.size())
 	_peak["projectiles"] = maxi(int(_peak["projectiles"]), game.projectiles.active.size())
@@ -164,6 +175,10 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] " + boss_line)
 	print("[autotest] player HP: %d / %d (invulnerable: %s)" % [int(summary["player_hp"]), int(summary["player_max_hp"]), str(game.player.invulnerable)])
 	print("[autotest] picks (%d): %s" % [(summary["picks"] as PackedStringArray).size(), ", ".join(summary["picks"])])
+	var st_all: Dictionary = summary["stats"]
+	var ward_rate := float(_two_priest_wards) / (_two_priest_time / 60.0) if _two_priest_time > 1.0 else 0.0
+	print("[autotest] priest wards: %d total, absorbed %d dmg | %d wards in %.0f s with 2+ priests alive (%.1f / min) | priest heals: %d" % [
+		int(st_all.get("priest_wards", 0.0)), int(st_all.get("ward_absorbed", 0.0)), _two_priest_wards, _two_priest_time, ward_rate, int(st_all.get("priest_heals", 0.0))])
 	print("[autotest] stats: " + " ".join(stat_parts))
 	print("[autotest] peaks: enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [
 		int(_peak["enemies"]), int(_peak["summons"]), int(_peak["projectiles"]), int(_peak["effects"]), int(_peak["crystals"])])

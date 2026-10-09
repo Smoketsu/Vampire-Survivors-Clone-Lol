@@ -307,6 +307,9 @@ const PLAYER_CRITICAL_BONUS: float = 1.0  # TUNING (not in GDD)
 ## Priests consider a ward when the player was hit within this many seconds
 ## (or is flagged "in danger").
 const SHIELD_TRIGGER_WINDOW: float = 1.5  # TUNING (not in GDD)
+## The necromancer also counts as "under threat" (ward-worthy) while any enemy
+## is within this many px of him.
+const WARD_THREAT_RADIUS: float = 90.0  # TUNING (not in GDD)
 ## Max radius (px) of any blocker, used to size enemy-vs-blocker queries.
 const MAX_BLOCK_RADIUS: float = 16.0  # TUNING (not in GDD)
 

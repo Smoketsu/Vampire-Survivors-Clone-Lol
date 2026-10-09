@@ -168,8 +168,9 @@ var _kite_cd: float = 0.0
 var bash_cd: float = 0.0
 ## Seconds until this priest may ward the necromancer again.
 var _shield_cd: float = 0.0
-## True when the current heal_target job is a ward on the player, not a heal.
-var _shield_job: bool = false
+## Set by _choose_heal_target(): true if any heal candidate (necromancer or
+## ally) is below HEAL_CRITICAL_FRACTION, in which case healing beats warding.
+var _heal_critical: bool = false
 ## Facing sign (+1 right / -1 left).
 var _facing: float = 1.0
 ## Reusable query buffer for target candidates.
@@ -206,7 +207,6 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	_kite_cd = 0.0
 	bash_cd = 0.0
 	_shield_cd = 0.0
-	_shield_job = false
 	_threat_away = Vector2.ZERO
 	_threat_dist = INF
 	slot_jitter = randf()
@@ -314,6 +314,9 @@ func think() -> void:
 		_drop_target()
 		_enter(State.RETURNING)
 		return
+	# Priests: instant ward on a threatened necromancer (never costs a heal).
+	if attack_profile == "heal":
+		_try_ward()
 	if state == State.CASTING:
 		return
 	# Priests: healing has priority over everything else (GDD §31).
@@ -348,26 +351,18 @@ func think() -> void:
 		_enter(State.FOLLOWING)
 
 
-## Priest support logic. Returns true if the priest has a heal or ward job.
-## A ward (damage-absorb shield) on the necromancer is chosen when he is under
-## attack and a heal would be (mostly) wasted on him (user brief).
+## Priest heal logic (GDD §31 / §39). Returns true if the priest has a heal
+## job. Wards are handled separately by _try_ward() so they never replace a
+## heal cast.
 func _think_heal() -> bool:
 	if _heal_target_valid() and target_hold < UnitData.TARGET_COMMIT_TIME:
 		return true
 	var best := _choose_heal_target()
-	var player := game.player
-	var shield := false
-	var player_missing := player.max_hp - player.hp - player.incoming_heal
-	if (best == null or (best == player and player_missing <= heal_amount)) and _can_shield_player():
-		best = player
-		shield = true
 	if best == null:
 		heal_target = null
-		_shield_job = false
 		return false
-	if best != heal_target or shield != _shield_job:
+	if best != heal_target:
 		target_hold = 0.0
-	_shield_job = shield
 	heal_target = best
 	heal_target_gen = (best as SummonedUnit).generation if best is SummonedUnit else 0
 	target = null
@@ -408,19 +403,46 @@ func _heal_target_valid() -> bool:
 	var p := heal_target as Necromancer
 	if p == null or p.dead:
 		return false
-	if _shield_job:
-		return p.shield_hp <= 0.0
 	return p.hp < p.max_hp - 0.5
 
 
-## True if this priest may cast a ward on the necromancer right now.
+## Priest ward on the necromancer (user brief). An instant secondary cast
+## with its own cooldown, so it never delays or replaces a heal:
+##   * fires whenever the necromancer is under threat (recently hit, or an
+##     enemy within WARD_THREAT_RADIUS) even if he is somewhat hurt,
+##   * only while no ward is active and this priest's ward cooldown is ready
+##     (no stacking),
+##   * suppressed while the necromancer or an ally is critical, so priests
+##     stay focused on healing then.
+func _try_ward() -> void:
+	if not _can_shield_player():
+		return
+	_choose_heal_target()  # refreshes _heal_critical
+	if _heal_critical:
+		return
+	var p := game.player
+	p.apply_shield(shield_amount, shield_duration)
+	_shield_cd = shield_cooldown
+	game.effects.beam(position, p.position, Palette.COLD_BLUE)
+	game.stat_add("priest_wards", 1.0)
+
+
+## True if this priest may cast a ward on the necromancer right now: it has
+## a ward, its cooldown is ready (no stacking), no ward is active, the player
+## is in reach, and the player is under threat.
 func _can_shield_player() -> bool:
 	var p := game.player
 	if shield_amount <= 0.0 or _shield_cd > 0.0 or p.dead or p.shield_hp > 0.0:
 		return false
 	if position.distance_to(p.position) > acquisition_range:
 		return false
-	return p.time_since_hit <= UnitData.SHIELD_TRIGGER_WINDOW or director.player_in_danger
+	if p.time_since_hit <= UnitData.SHIELD_TRIGGER_WINDOW or director.player_in_danger:
+		return true
+	game.enemy_grid.query(p.position, UnitData.WARD_THREAT_RADIUS, _neigh)
+	for e: Enemy in _neigh:
+		if e.active:
+			return true
+	return false
 
 
 ## Teleports a stranded unit next to the player (GDD §24 hard recall).
@@ -540,12 +562,14 @@ func _choose_heal_target() -> Node2D:
 	var player := game.player
 	var best: Node2D = null
 	var best_score := 0.0
+	_heal_critical = false
 	if not player.dead and position.distance_to(player.position) <= acquisition_range:
 		var p_missing := player.max_hp - player.hp - player.incoming_heal
 		if p_missing > 0.5:
 			best_score = _heal_score(p_missing, player.max_hp, UnitData.PLAYER_HEAL_ROLE)
 			if player.hp < player.max_hp * UnitData.HEAL_CRITICAL_FRACTION:
 				best_score += UnitData.HEAL_CRITICAL_BONUS + UnitData.PLAYER_CRITICAL_BONUS
+				_heal_critical = true
 			best = player
 	game.ally_grid.query(position, acquisition_range, _cand)
 	for a: SummonedUnit in _cand:
@@ -557,6 +581,7 @@ func _choose_heal_target() -> Node2D:
 		var s := _heal_score(missing, a.max_hp, a.heal_role_priority)
 		if a.hp < a.max_hp * UnitData.HEAL_CRITICAL_FRACTION:
 			s += UnitData.HEAL_CRITICAL_BONUS
+			_heal_critical = true
 		if s > best_score:
 			best_score = s
 			best = a
@@ -756,7 +781,7 @@ func _begin_cast() -> void:
 		_reserved_heal_on = u
 		_reserved_heal_gen = u.generation
 		u.incoming_heal += _reserved_heal
-	elif heal_target is Necromancer and not _shield_job:
+	elif heal_target is Necromancer:
 		var pl := heal_target as Necromancer
 		_reserved_heal = minf(heal_amount, pl.max_hp - pl.hp)
 		_reserved_heal_on = pl
@@ -799,14 +824,7 @@ func _release_attack() -> void:
 		"heal":
 			if heal_target != null:
 				_release_heal_reservation()
-				if _shield_job:
-					if _heal_target_valid():
-						game.player.apply_shield(shield_amount, shield_duration)
-						_shield_cd = shield_cooldown
-						game.effects.beam(position, game.player.position, Palette.COLD_BLUE)
-						game.stat_add("priest_wards", 1.0)
-					_shield_job = false
-				elif _heal_target_valid():
+				if _heal_target_valid():
 					var healed := 0.0
 					if heal_target is SummonedUnit:
 						healed = game.combat.heal_unit(heal_target as SummonedUnit, heal_amount)
