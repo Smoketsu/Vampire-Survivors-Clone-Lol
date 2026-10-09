@@ -1,6 +1,6 @@
 ## EnemyData — immutable design data for the Crimson Covenant roster used in
 ## the prototype (GDD §10 roster, §35 interaction rules) and for the
-## placeholder boss Sir Alaric (GDD §11).
+## Graveyard boss Sir Alaric and his five abilities (GDD §11).
 ##
 ## The GDD only describes enemies qualitatively ("weak basic infantry",
 ## "moderate damage resistance", "bonus damage versus undead"...), so every
@@ -10,7 +10,7 @@ class_name EnemyData
 extends RefCounted
 
 ## Display / iteration order of regular enemy kinds.
-const ORDER := ["recruit", "footman", "archer", "chaplain", "purifier"]
+const ORDER := ["recruit", "footman", "archer", "chaplain", "purifier", "templar"]
 
 ## Regular enemy definitions. Field reference (same keys in every row):
 ##   display_name        — UI string.
@@ -32,6 +32,17 @@ const ORDER := ["recruit", "footman", "archer", "chaplain", "purifier"]
 ##                         enemy as a target (healers/casters high).
 ##   mass                — weight vs blocking warriors (UnitData block_mass):
 ##                         heavier enemies shove warriors more.
+## Optional keys of the "templar" behaviour (Templar Knight charge):
+##   charge_range_min / charge_range_max — px; charges only at a player this far.
+##   charge_telegraph    — s the warning lane is shown before the rush.
+##   charge_speed        — px/s during the rush.
+##   charge_length       — px; maximum rush distance (cut short by obstacles).
+##   charge_width        — px; lane width (hit radius = half of it).
+##   charge_cooldown     — s between charges.
+##   charge_damage       — damage to the player or a summon hit by the rush.
+##   charge_knockback    — px a hit summon is shoved aside ("disruption").
+##   charge_block_mass   — warrior block_mass it takes to stop the rush
+##                         (undead body-block it, user brief).
 const ENEMIES := {
 	# GDD §10 "Weak basic infantry, mass waves."
 	"recruit": {
@@ -134,6 +145,37 @@ const ENEMIES := {
 		"target_priority": 0.7,  # TUNING (not in GDD)
 		"mass": 1.0,  # TUNING (not in GDD) pushback vs blocking warriors
 	},
+	# GDD §10 "Templar Knight: Heavy charging melee; knockback/disruption";
+	# §35 "charges and disrupts melee army, threatening player through gaps".
+	"templar": {
+		"display_name": "Templar Knight",
+		"max_hp": 80.0,  # TUNING (not in GDD)
+		"move_speed": 46.0,  # TUNING (not in GDD)
+		"damage": 8.0,  # TUNING (not in GDD)
+		"attack_interval": 1.3,  # TUNING (not in GDD)
+		"attack_range": 6.0,  # TUNING (not in GDD)
+		"radius": 13.0,  # TUNING (not in GDD)
+		"armor": 0.35,  # TUNING (not in GDD) heavy armour
+		"xp": 6,  # TUNING (not in GDD)
+		"behavior": "templar",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.5,  # TUNING (not in GDD)
+		"mass": 3.0,  # TUNING (not in GDD) heavy: shoves warriors
+		"charge_range_min": 60.0,  # TUNING (not in GDD)
+		"charge_range_max": 190.0,  # TUNING (not in GDD)
+		"charge_telegraph": 0.75,  # TUNING (not in GDD)
+		"charge_speed": 340.0,  # TUNING (not in GDD)
+		"charge_length": 170.0,  # TUNING (not in GDD)
+		"charge_width": 30.0,  # TUNING (not in GDD)
+		"charge_cooldown": 6.0,  # TUNING (not in GDD)
+		"charge_damage": 10.0,  # TUNING (not in GDD)
+		"charge_knockback": 26.0,  # TUNING (not in GDD)
+		"charge_block_mass": 3.0,  # TUNING (not in GDD) one warrior stops it
+	},
 }
 
 ## "Reckoning" enemy that spawns once the countdown reaches 0:00 (user brief:
@@ -199,25 +241,65 @@ const KNOCKBACK_DECAY: float = 700.0  # TUNING (not in GDD)
 ## Strength of enemy-enemy separation steering (fraction of move speed).
 const SEPARATION_STRENGTH: float = 0.9  # TUNING (not in GDD)
 
-## Sir Alaric, the Gravebreaker (GDD §11). Only Hammerfall and Divine Charge
-## are implemented in the prototype.
+## Sir Alaric, the Gravebreaker (GDD §11): "Heavy holy paladin with
+## two-handed hammer" and five abilities. Every special is telegraphed
+## (GDD §16 "Clear AoE telegraphs", §32 "Bosses can suppress or kill squads
+## with clear telegraphs"). Attacks aimed at the necromancer can be
+## body-blocked by undead (user brief: undead don't dodge, they absorb).
 ##   max_hp ... target_priority — as for ENEMIES.
-##   attack_gap         — s between the end of one special and the next.
-##   hammer_radius      — px radius of Hammerfall's ground AoE.
-##   hammer_telegraph   — s the warning circle is shown before impact.
-##   hammer_damage_player / hammer_damage_summon — damage on impact.
-##   hammer_max_range   — px; Hammerfall is preferred within this distance.
-##   charge_telegraph   — s the warning line is shown before the dash.
-##   charge_speed       — px/s during the dash.
-##   charge_length      — px travelled by the dash.
-##   charge_width       — px; width of the telegraphed lane.
-##   charge_damage_player / charge_damage_summon — damage on contact.
-##   recover_time       — s the boss stands still after a charge.
+##   reward_xp / reward_crystals — XP burst dropped on death and the number
+##                        of crystals it is split into (killing him no longer
+##                        wins the run; user brief).
 ##   slow_resist        — fraction of slow effects ignored.
-##   mass               — weight vs blocking warriors.
-##   reward_xp          — total XP dropped on death (boss kill no longer wins
-##                        the run; user brief).
-##   reward_crystals    — number of crystals that XP is split into.
+##   attack_gap         — s between the end of one special and the next.
+##   first_special      — s after arrival before the first special.
+## Phase threshold (GDD gives none for Alaric; see GDD §15.0):
+##   phase2_hp_fraction — below this HP fraction he enters "Wrath".
+##   phase2_gap_mult    — attack_gap multiplier in Wrath.
+##   phase2_extra_zones — extra Consecrated Ground zones per cast in Wrath.
+##   phase2_extra_marks — extra Judgment of the Dead marks in Wrath.
+##   phase2_banner      — HUD banner when Wrath starts (he also casts Call
+##                        to Arms as his next special).
+## Each special NAME in SPECIALS has NAME_weight (relative choice weight among
+## the specials that are ready) and NAME_cooldown (s before NAME can be
+## chosen again):
+##   Hammerfall (GDD §11 "telegraphed overhead smash"):
+##     hammer_radius / hammer_telegraph / hammer_max_range — AoE radius (px),
+##                        warning time (s), max distance to the player (px).
+##     hammer_damage_player / hammer_damage_summon — damage on impact.
+##     hammer_soak_per_unit — fraction of the player's damage each summon
+##                        inside the circle absorbs (body-blocking).
+##     hammer_soak_max    — cap on that absorbed fraction.
+##   Divine Charge (GDD §11 "fast linear rush"):
+##     charge_min_range   — px; only used on a player at least this far.
+##     charge_telegraph / charge_speed / charge_length / charge_width —
+##                        warning time (s), px/s, max lane length (px, cut
+##                        short by obstacles), lane width (px).
+##     charge_damage_player / charge_damage_summon — damage on contact.
+##     charge_absorb_summon / charge_absorb_warrior — px of remaining rush
+##                        each undead body hit soaks up; at 0 the charge stops
+##                        (body-blocking).
+##   Consecrated Ground (GDD §11 "persistent radiant zones"):
+##     consecrate_telegraph — s Alaric raises his hammer before the zones
+##                        appear (the zones then have their own arm_time).
+##     consecrate_count   — zones per cast (one on the necromancer's path).
+##     consecrate_lead    — s of player movement the first zone leads by.
+##     consecrate_spread_min / consecrate_spread_max — px from the player of
+##                        the other zones.
+##     consecrate_zone    — the holy zone (keys as WaveData.CONSECRATION.zone).
+##   Call to Arms (GDD §11 "reinforcement infantry"):
+##     call_telegraph     — s the rally markers are shown before soldiers
+##                        arrive.
+##     call_groups        — list of {kind, count} soldiers summoned.
+##     call_radius_min / call_radius_max — px from Alaric they arrive at.
+##   Judgment of the Dead (GDD §11 "marked AoE damages allied summons"):
+##     judgment_telegraph — s the marks are shown before the light falls.
+##     judgment_marks     — number of marks (centred on summon clusters).
+##     judgment_radius    — px radius of each mark.
+##     judgment_damage    — damage to each summon inside a mark (the
+##                        necromancer is unharmed).
+##     judgment_min_summons — only cast while at least this many summons live.
+##   recover_time       — s he stands still after any special.
 const BOSS := {
 	"display_name": "Sir Alaric, the Gravebreaker",  # GDD §11
 	"max_hp": 2500.0,  # TUNING (not in GDD)
@@ -238,18 +320,70 @@ const BOSS := {
 	"mass": 12.0,  # TUNING (not in GDD) shoves warriors aside
 	"reward_xp": 150,  # TUNING (not in GDD) user brief: big reward burst on kill
 	"reward_crystals": 20,  # TUNING (not in GDD) crystals the reward is split into
-	"attack_gap": 2.8,  # TUNING (not in GDD)
+	"slow_resist": 0.5,  # TUNING (not in GDD)
+	"attack_gap": 2.6,  # TUNING (not in GDD)
+	"first_special": 2.0,  # TUNING (not in GDD)
+	"recover_time": 0.9,  # TUNING (not in GDD)
+	"phase2_hp_fraction": 0.5,  # TUNING (not in GDD) no Alaric phases in the GDD
+	"phase2_gap_mult": 0.7,  # TUNING (not in GDD)
+	"phase2_extra_zones": 1,  # TUNING (not in GDD)
+	"phase2_extra_marks": 2,  # TUNING (not in GDD)
+	"phase2_banner": "Sir Alaric's wrath ignites!",  # TUNING (not in GDD)
+	# Hammerfall.
+	"hammer_weight": 1.0,  # TUNING (not in GDD)
+	"hammer_cooldown": 0.0,  # TUNING (not in GDD)
 	"hammer_radius": 80.0,  # TUNING (not in GDD)
 	"hammer_telegraph": 1.2,  # TUNING (not in GDD)
 	"hammer_damage_player": 30.0,  # TUNING (not in GDD)
 	"hammer_damage_summon": 25.0,  # TUNING (not in GDD)
 	"hammer_max_range": 230.0,  # TUNING (not in GDD)
+	"hammer_soak_per_unit": 0.2,  # TUNING (not in GDD) body-blocking
+	"hammer_soak_max": 0.8,  # TUNING (not in GDD)
+	# Divine Charge.
+	"charge_weight": 1.0,  # TUNING (not in GDD)
+	"charge_cooldown": 0.0,  # TUNING (not in GDD)
+	"charge_min_range": 100.0,  # TUNING (not in GDD)
 	"charge_telegraph": 0.9,  # TUNING (not in GDD)
 	"charge_speed": 620.0,  # TUNING (not in GDD)
 	"charge_length": 420.0,  # TUNING (not in GDD)
 	"charge_width": 56.0,  # TUNING (not in GDD)
 	"charge_damage_player": 28.0,  # TUNING (not in GDD)
 	"charge_damage_summon": 25.0,  # TUNING (not in GDD)
-	"recover_time": 0.9,  # TUNING (not in GDD)
-	"slow_resist": 0.5,  # TUNING (not in GDD)
+	"charge_absorb_summon": 50.0,  # TUNING (not in GDD) body-blocking
+	"charge_absorb_warrior": 120.0,  # TUNING (not in GDD) body-blocking
+	# Consecrated Ground.
+	"consecrate_weight": 1.0,  # TUNING (not in GDD)
+	"consecrate_cooldown": 9.0,  # TUNING (not in GDD)
+	"consecrate_telegraph": 0.8,  # TUNING (not in GDD)
+	"consecrate_count": 2,  # TUNING (not in GDD)
+	"consecrate_lead": 0.4,  # TUNING (not in GDD)
+	"consecrate_spread_min": 80.0,  # TUNING (not in GDD)
+	"consecrate_spread_max": 160.0,  # TUNING (not in GDD)
+	"consecrate_zone": {
+		"radius": 62.0,  # TUNING (not in GDD)
+		"arm_time": 1.4,  # TUNING (not in GDD)
+		"duration": 10.0,  # TUNING (not in GDD) "persistent", but bounded
+		"undead_dps": 8.0,  # TUNING (not in GDD)
+		"undead_slow": 0.4,  # TUNING (not in GDD)
+		"player_damage": 6.0,  # TUNING (not in GDD)
+		"player_interval": 1.0,  # TUNING (not in GDD)
+	},
+	# Call to Arms.
+	"call_weight": 1.0,  # TUNING (not in GDD)
+	"call_cooldown": 18.0,  # TUNING (not in GDD)
+	"call_telegraph": 1.3,  # TUNING (not in GDD)
+	"call_groups": [{"kind": "recruit", "count": 6}, {"kind": "footman", "count": 2}],  # TUNING (not in GDD)
+	"call_radius_min": 70.0,  # TUNING (not in GDD)
+	"call_radius_max": 130.0,  # TUNING (not in GDD)
+	# Judgment of the Dead.
+	"judgment_weight": 1.0,  # TUNING (not in GDD)
+	"judgment_cooldown": 11.0,  # TUNING (not in GDD)
+	"judgment_telegraph": 1.8,  # TUNING (not in GDD)
+	"judgment_marks": 3,  # TUNING (not in GDD)
+	"judgment_radius": 46.0,  # TUNING (not in GDD)
+	"judgment_damage": 26.0,  # TUNING (not in GDD)
+	"judgment_min_summons": 3,  # TUNING (not in GDD)
 }
+
+## Sir Alaric's special ability ids (GDD §11), in HUD / report order.
+const SPECIALS := ["hammer", "charge", "consecrate", "call", "judgment"]
