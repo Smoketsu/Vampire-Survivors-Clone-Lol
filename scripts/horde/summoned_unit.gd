@@ -1,0 +1,747 @@
+## SummonedUnit — the ONE shared AI script for every undead summon class
+## (Warrior, Archer, Mage, Priest). GDD §36: "Share unit logic in a base
+## scene/script and parameterize per-class behavior with data resources.
+## Avoid four independent unrelated AI implementations."
+## Class differences come only from the data row in UnitData (attack_profile,
+## target_profile, ranges, steering weights, heal amount...).
+##
+## Update model (GDD §25 / §39), both driven by HordeDirector:
+##   think()        ~5 Hz, staggered across units: FSM decisions, leash checks,
+##                  threat sampling, target / heal-target selection.
+##   physics_step() 60 Hz: steering, attack timing, cast windups, animation.
+##
+## FSM (GDD §25): SPAWNING -> FOLLOWING -> ACQUIRING -> ENGAGING
+##   <-> REPOSITIONING / RETREATING (kite) -> CASTING -> ...; RETURNING when
+##   leashed; DEAD at 0 HP (HordeDirector pools the node).
+##
+## Units are pooled: `generation` increments on every activation so stale
+## references held by enemies, projectiles or priests can be detected.
+class_name SummonedUnit
+extends Node2D
+
+## FSM states, names match GDD §25.
+enum State { SPAWNING, FOLLOWING, ACQUIRING, ENGAGING, REPOSITIONING, CASTING, RETREATING, RETURNING, DEAD }
+
+# --- Identity / lifecycle -----------------------------------------------------------
+
+## Owning horde director.
+var director: HordeDirector
+## Owning run.
+var game: Game
+## Class id: "warrior" | "archer" | "mage" | "priest".
+var unit_class: String = ""
+## True while alive in the world (false = pooled).
+var active: bool = false
+## Incremented on each activation; lets holders detect a recycled unit.
+var generation: int = 0
+## Current FSM state.
+var state: State = State.DEAD
+## Seconds spent in the current state.
+var state_time: float = 0.0
+## Which of the AI_TICK_DIVISOR physics ticks this unit thinks on (stagger).
+var think_slot: int = 0
+
+# --- Effective stats (pushed by HordeDirector after upgrades) ---------------------
+
+## Maximum HP after skill + passive bonuses.
+var max_hp: float = 1.0
+## Current HP.
+var hp: float = 1.0
+## Damage per attack.
+var damage: float = 0.0
+## Seconds between attacks / heals.
+var attack_interval: float = 1.0
+## Preferred attack range in px (melee: edge-to-edge; ranged: centre-to-edge).
+var attack_range: float = 20.0
+## Target search radius in px.
+var acquisition_range: float = 150.0
+## Movement speed in px/s.
+var move_speed: float = 80.0
+## Body radius in px.
+var radius: float = 10.0
+## Inner edge of this class's formation band (px from player).
+var band_min: float = 35.0
+## Outer edge of this class's formation band (px from player).
+var band_max: float = 85.0
+## Steering weight toward the current target.
+var w_pursuit: float = 1.0
+## Steering weight toward the formation anchor.
+var w_formation: float = 0.5
+## Steering weight away from overlapping allies.
+var w_separation: float = 0.8
+## Steering weight away from nearby enemies.
+var w_threat: float = 0.0
+## Windup seconds between starting an attack and its effect.
+var windup: float = 0.2
+## Projectile speed in px/s (ranged profiles).
+var projectile_speed: float = 0.0
+## Mage explosion radius in px.
+var splash_radius: float = 0.0
+## HP restored per heal cast (priests).
+var heal_amount: float = 0.0
+## Archers kite away from enemies closer than this many px.
+var kite_distance: float = 0.0
+## Extra enemies an arrow can pass through.
+var pierce: int = 0
+## Priest may heal the necromancer (priest level 5).
+var heals_player: bool = false
+## Priest healing role priority of THIS unit's class (0..1, GDD §31).
+var heal_role_priority: float = 0.5
+## Attack branch: "melee" | "arrow" | "aoe" | "heal".
+var attack_profile: String = "melee"
+## Target scoring profile key into UnitData.TARGET_WEIGHTS.
+var target_profile: String = "guard"
+
+# Cached target weights (floats, faster than dictionary lookups in hot loops).
+## Weight of normalised distance in target scoring.
+var _wd: float = 1.0
+## Weight of threat-to-player in target scoring.
+var _wt: float = 1.0
+## Weight of enemy role priority in target scoring.
+var _wr: float = 0.0
+## Weight of tactical value in target scoring.
+var _wv: float = 0.0
+## Weight of cluster value (mages) in target scoring.
+var _wc: float = 0.0
+## Weight of the overkill penalty in target scoring.
+var _wo: float = 1.0
+
+# --- Runtime AI state ---------------------------------------------------------------
+
+## Current enemy target (null if none).
+var target: Enemy = null
+## Generation of `target` when it was chosen (stale-reference guard).
+var target_gen: int = 0
+## Seconds the current target (or heal target) has been held (commitment).
+var target_hold: float = 0.0
+## Priest heal target: a SummonedUnit or the Necromancer (null if none).
+var heal_target: Node2D = null
+## Generation of `heal_target` when chosen (0 for the player).
+var heal_target_gen: int = 0
+## Seconds until the next attack is allowed.
+var attack_cd: float = 0.0
+## Seconds left in the current cast / swing windup.
+var cast_time: float = 0.0
+## World position a mage explosion is aimed at (locked at cast start).
+var cast_point: Vector2 = Vector2.ZERO
+## Formation anchor relative to the player (assigned at 4 Hz by the director).
+var anchor_offset: Vector2 = Vector2.ZERO
+## Stable per-unit random 0..1 for angular slot offset.
+var slot_jitter: float = 0.5
+## Stable per-unit random 0..1 for position inside the band.
+var band_jitter: float = 0.5
+## Current velocity in px/s.
+var velocity: Vector2 = Vector2.ZERO
+## Remaining hit-flash time in seconds.
+var flash: float = 0.0
+## HP of heals already "in flight" toward this unit (priest reservations).
+var incoming_heal: float = 0.0
+## Heal amount this priest reserved on its target during the current cast.
+var _reserved_heal: float = 0.0
+## Unit holding this priest's heal reservation.
+var _reserved_heal_on: SummonedUnit = null
+## Generation of `_reserved_heal_on` at reservation time.
+var _reserved_heal_gen: int = 0
+## Normalised direction away from nearby enemies (sampled in think()).
+var _threat_away: Vector2 = Vector2.ZERO
+## Edge distance in px to the closest enemy (sampled in think()).
+var _threat_dist: float = INF
+## Seconds until an archer may kite again.
+var _kite_cd: float = 0.0
+## Facing sign (+1 right / -1 left).
+var _facing: float = 1.0
+## Reusable query buffer for target candidates.
+var _cand: Array = []
+## Reusable query buffer for neighbours (separation, clusters, threats).
+var _neigh: Array = []
+## Score of the best candidate found by the last acquisition.
+var _best_score: float = 0.0
+
+
+# =====================================================================================
+# Lifecycle
+# =====================================================================================
+
+## Activates a pooled unit as class `cls` at `pos` with effective `stats`.
+func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dictionary, pos: Vector2, slot: int) -> void:
+	director = p_director
+	game = p_game
+	unit_class = cls
+	generation += 1
+	active = true
+	position = pos
+	velocity = Vector2.ZERO
+	max_hp = 0.0
+	apply_stats(stats, false)
+	hp = max_hp
+	target = null
+	heal_target = null
+	incoming_heal = 0.0
+	_reserved_heal = 0.0
+	_reserved_heal_on = null
+	attack_cd = randf() * 0.5
+	flash = 0.0
+	_kite_cd = 0.0
+	_threat_away = Vector2.ZERO
+	_threat_dist = INF
+	slot_jitter = randf()
+	band_jitter = randf()
+	anchor_offset = pos - game.player.position
+	think_slot = slot
+	visible = true
+	_enter(State.SPAWNING)
+	queue_redraw()
+
+
+## Copies effective stats from the director. When `preserve_pct` is true the
+## current HP fraction is preserved (GDD §34 "Health percentage is preserved
+## on max HP increase unless healing explicitly occurs").
+func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
+	var frac := hp / max_hp if max_hp > 0.0 else 1.0
+	max_hp = stats["max_hp"]
+	damage = stats["damage"]
+	attack_interval = stats["attack_interval"]
+	attack_range = stats["attack_range"]
+	acquisition_range = stats["acquisition_range"]
+	move_speed = stats["move_speed"]
+	radius = stats["radius"]
+	band_min = stats["band_min"]
+	band_max = stats["band_max"]
+	w_pursuit = stats["w_pursuit"]
+	w_formation = stats["w_formation"]
+	w_separation = stats["w_separation"]
+	w_threat = stats["w_threat"]
+	windup = stats["windup"]
+	projectile_speed = stats["projectile_speed"]
+	splash_radius = stats["splash_radius"]
+	heal_amount = stats["heal_amount"]
+	kite_distance = stats["kite_distance"]
+	pierce = stats["pierce"]
+	heals_player = stats["heals_player"]
+	heal_role_priority = stats["heal_role_priority"]
+	attack_profile = stats["attack_profile"]
+	target_profile = stats["target_profile"]
+	var w: Dictionary = UnitData.TARGET_WEIGHTS[target_profile]
+	_wd = w["distance"]
+	_wt = w["threat"]
+	_wr = w["role"]
+	_wv = w["tactical"]
+	_wc = w["cluster"]
+	_wo = w["overkill"]
+	if preserve_pct:
+		hp = max_hp * frac
+	queue_redraw()
+
+
+## Called by HordeDirector when HP reaches 0: stop AI, release reservations
+## and hide (GDD §24 "On death").
+func deactivate() -> void:
+	_drop_target()
+	active = false
+	state = State.DEAD
+	visible = false
+	velocity = Vector2.ZERO
+	incoming_heal = 0.0
+
+
+## Visual hit reaction.
+func on_hit() -> void:
+	flash = 0.1
+	queue_redraw()
+
+
+## Enters `new_state` and resets the state timer.
+func _enter(new_state: State) -> void:
+	if state == new_state:
+		return
+	state = new_state
+	state_time = 0.0
+
+
+# =====================================================================================
+# think() — 5 Hz decisions (GDD §39 UNIT pseudocode)
+# =====================================================================================
+
+## Staggered AI decision step.
+func think() -> void:
+	if not active or state == State.DEAD or state == State.SPAWNING:
+		return
+	var player_pos := game.player.position
+	var d_player := position.distance_to(player_pos)
+	# Leash (GDD §24): hard recall teleports, soft recall returns.
+	if d_player > UnitData.HARD_RECALL:
+		_safe_recall()
+		return
+	_update_threat_avoidance()
+	if state == State.RETURNING:
+		if d_player <= band_max + UnitData.RETURN_ARRIVE_MARGIN:
+			_enter(State.FOLLOWING)
+		return
+	if d_player > UnitData.SOFT_RECALL:
+		_drop_target()
+		_enter(State.RETURNING)
+		return
+	if state == State.CASTING:
+		return
+	# Priests: healing has priority over everything else (GDD §31).
+	if attack_profile == "heal" and _think_heal():
+		return
+	if not _target_valid():
+		if target != null:
+			_drop_target()
+	# ENGAGING -> RETURNING when pursuit exceeds the engagement leash.
+	if target != null and d_player > UnitData.ENGAGE_RADIUS:
+		_drop_target()
+		_enter(State.RETURNING)
+		return
+	# Target commitment (GDD §27): hold >= 1 s, switch early only for a
+	# significantly better target.
+	if target == null or target_hold >= UnitData.TARGET_COMMIT_TIME:
+		var best := _acquire_best_target()
+		if best != null and best != target:
+			if target == null:
+				_set_target(best)
+			else:
+				var best_score := _best_score
+				var current := _score_enemy(target, target.position.distance_to(player_pos))
+				if best_score > current + UnitData.SWITCH_MARGIN:
+					_set_target(best)
+				else:
+					target_hold = 0.0
+	if target != null:
+		if state == State.FOLLOWING or state == State.ACQUIRING:
+			_enter(State.ENGAGING)
+	elif state != State.FOLLOWING:
+		_enter(State.FOLLOWING)
+
+
+## Priest heal-target logic. Returns true if the priest is busy healing.
+func _think_heal() -> bool:
+	if _heal_target_valid() and target_hold < UnitData.TARGET_COMMIT_TIME:
+		return true
+	var best := _choose_heal_target()
+	if best == null:
+		heal_target = null
+		return false
+	if best != heal_target:
+		target_hold = 0.0
+	heal_target = best
+	heal_target_gen = (best as SummonedUnit).generation if best is SummonedUnit else 0
+	target = null
+	if state == State.FOLLOWING or state == State.ACQUIRING:
+		_enter(State.ENGAGING)
+	return true
+
+
+## Sets a new enemy target and resets commitment.
+func _set_target(e: Enemy) -> void:
+	target = e
+	target_gen = e.generation
+	target_hold = 0.0
+	heal_target = null
+
+
+## Clears enemy and heal targets and releases any heal reservation.
+func _drop_target() -> void:
+	_release_heal_reservation()
+	target = null
+	heal_target = null
+	target_hold = 0.0
+
+
+## True if `target` still refers to the same living enemy.
+func _target_valid() -> bool:
+	return target != null and target.active and target.generation == target_gen
+
+
+## True if the heal target still exists and still needs healing.
+func _heal_target_valid() -> bool:
+	if heal_target == null:
+		return false
+	if heal_target is SummonedUnit:
+		var u := heal_target as SummonedUnit
+		return u.active and u.generation == heal_target_gen and u.state != State.DEAD and u.hp < u.max_hp - 0.5
+	var p := heal_target as Necromancer
+	return p != null and not p.dead and p.hp < p.max_hp * UnitData.PLAYER_HEAL_THRESHOLD
+
+
+## Teleports a stranded unit next to the player (GDD §24 hard recall).
+func _safe_recall() -> void:
+	_drop_target()
+	game.effects.spawn_ring(position, Palette.NECRO_GREEN)
+	position = game.player.position + anchor_offset
+	velocity = Vector2.ZERO
+	game.effects.spawn_ring(position, Palette.NECRO_GREEN)
+	director.hard_recalls += 1
+	_enter(State.FOLLOWING)
+
+
+## Samples nearby enemies once per think: direction to flee and the closest
+## enemy edge distance (used for threat avoidance and archer kiting).
+func _update_threat_avoidance() -> void:
+	_threat_away = Vector2.ZERO
+	_threat_dist = INF
+	if w_threat <= 0.0 and kite_distance <= 0.0:
+		return
+	game.enemy_grid.query(position, UnitData.THREAT_AVOID_RADIUS, _neigh)
+	for e: Enemy in _neigh:
+		if not e.active:
+			continue
+		var diff := position - e.position
+		var d := maxf(diff.length() - e.radius, 0.01)
+		_threat_dist = minf(_threat_dist, d)
+		_threat_away += diff.normalized() * (1.0 - clampf(d / UnitData.THREAT_AVOID_RADIUS, 0.0, 1.0))
+	_threat_away = _threat_away.limit_length(1.0)
+
+
+# =====================================================================================
+# Target scoring (GDD §27)
+# =====================================================================================
+
+## Returns the best-scoring enemy in acquisition range (or null) and stores
+## its score in `_best_score` (GDD §39 TARGET SELECTOR).
+func _acquire_best_target() -> Enemy:
+	var best: Enemy = null
+	_best_score = -INF
+	var player_pos := game.player.position
+	game.enemy_grid.query(position, acquisition_range, _cand)
+	var examined := 0
+	for e: Enemy in _cand:
+		if not e.active:
+			continue
+		var dp := e.position.distance_to(player_pos)
+		if not _candidate_allowed(dp):
+			continue
+		var s := _score_enemy(e, dp)
+		if s > _best_score:
+			_best_score = s
+			best = e
+		if attack_profile == "aoe":
+			examined += 1
+			if examined >= UnitData.MAGE_MAX_CANDIDATES:
+				break
+	return best
+
+
+## Leash-based candidate filter. `dp` = enemy distance to the player.
+func _candidate_allowed(dp: float) -> bool:
+	if target_profile == "guard":
+		if dp > UnitData.ENGAGE_RADIUS:
+			return false
+		# "Don't chase distant targets while necromancer is surrounded."
+		if director.player_in_danger and dp > UnitData.WARRIOR_INTERCEPT_RADIUS:
+			return false
+		return true
+	return dp <= UnitData.ENGAGE_RADIUS + attack_range * 0.5
+
+
+## score = distance*Wd + threat*Wt + role*Wr + tactical*Wv + cluster*Wc
+##         - overkill*Wo, every term normalised to 0..1 (GDD §27).
+func _score_enemy(e: Enemy, dp: float) -> float:
+	var d := position.distance_to(e.position)
+	var dist_v := 1.0 - clampf(d / acquisition_range, 0.0, 1.0)
+	var threat := 1.0 - clampf(dp / UnitData.THREAT_NORM_DISTANCE, 0.0, 1.0)
+	if e.targeting_player:
+		threat = minf(1.0, threat + 0.3)
+	var tactical := 0.0
+	if target_profile == "guard":
+		# Enemies already hitting our summons are worth intercepting.
+		tactical = 1.0 if e.targeting_summon else 0.0
+	elif target_profile == "ranged":
+		# Near-death finishable enemies (GDD §27 archer preference).
+		tactical = 1.0 - e.hp / e.max_hp
+	var cluster := 0.0
+	if _wc > 0.0:
+		cluster = _cluster_value(e)
+	var overkill := 1.0 if e.hp - e.incoming_damage <= 0.0 else 0.0
+	var wt := _wt
+	if target_profile == "guard" and director.player_in_danger:
+		wt *= 1.5
+	return dist_v * _wd + threat * wt + e.target_priority * _wr + tactical * _wv + cluster * _wc - overkill * _wo
+
+
+## Mage cluster value of an explosion centred on `e`: enemy count inside the
+## splash (normalised) plus the value of support/elite units caught in it.
+func _cluster_value(e: Enemy) -> float:
+	game.enemy_grid.query(e.position, splash_radius, _neigh)
+	var count := 0
+	var value := 0.0
+	for n: Enemy in _neigh:
+		if n.active:
+			count += 1
+			value += n.target_priority
+	return clampf(float(count) / UnitData.MAGE_CLUSTER_NORM, 0.0, 1.0) * 0.8 + clampf(value / UnitData.MAGE_CLUSTER_NORM, 0.0, 1.0) * 0.2
+
+
+## Priest heal target choice (GDD §31 / §39 PRIEST TARGETING):
+## critical necromancer first (if allowed), then highest
+## 0.6*missing_frac + 0.2*missing_raw_norm + 0.2*role (+ critical bonus).
+## Full-HP (or already fully covered by in-flight heals) allies are skipped.
+func _choose_heal_target() -> Node2D:
+	var player := game.player
+	if heals_player and not player.dead and player.hp < player.max_hp * UnitData.PLAYER_HEAL_THRESHOLD \
+			and position.distance_to(player.position) <= acquisition_range:
+		return player
+	var best: SummonedUnit = null
+	var best_score := 0.0
+	game.ally_grid.query(position, acquisition_range, _cand)
+	for a: SummonedUnit in _cand:
+		if not a.active or a.state == State.DEAD or a.state == State.SPAWNING:
+			continue
+		var missing := a.max_hp - a.hp - a.incoming_heal
+		if missing <= 0.5:
+			continue
+		var s := UnitData.HEAL_W_MISSING_FRACTION * (missing / a.max_hp) \
+				+ UnitData.HEAL_W_MISSING_RAW * clampf(missing / UnitData.HEAL_MISSING_RAW_NORM, 0.0, 1.0) \
+				+ UnitData.HEAL_W_ROLE * a.heal_role_priority
+		if a.hp < a.max_hp * UnitData.HEAL_CRITICAL_FRACTION:
+			s += UnitData.HEAL_CRITICAL_BONUS
+		if s > best_score:
+			best_score = s
+			best = a
+	return best
+
+
+# =====================================================================================
+# physics_step() — 60 Hz movement and combat timing
+# =====================================================================================
+
+## Per-physics-tick update (movement, attack timing, casting, animation).
+func physics_step(delta: float) -> void:
+	if not active:
+		return
+	state_time += delta
+	target_hold += delta
+	attack_cd -= delta
+	_kite_cd -= delta
+	if flash > 0.0:
+		flash -= delta
+		if flash <= 0.0:
+			queue_redraw()
+	if state == State.SPAWNING:
+		queue_redraw()
+		if state_time >= UnitData.SPAWN_DURATION:
+			_enter(State.FOLLOWING)
+		return
+	if state == State.CASTING:
+		_step_cast(delta)
+	else:
+		_step_movement(delta)
+	position += velocity * delta
+	if absf(velocity.x) > 8.0:
+		var f := signf(velocity.x)
+		if f != _facing:
+			_facing = f
+			scale.x = _facing
+
+
+## Blends steering behaviours into a velocity (GDD §26: formation
+## attraction, target pursuit, ally separation, threat avoidance; weighted and
+## clamped). Open arena: no obstacle term.
+func _step_movement(delta: float) -> void:
+	var player_pos := game.player.position
+	var anchor := player_pos + anchor_offset
+	var desired := Vector2.ZERO
+	var speed := move_speed
+	match state:
+		State.FOLLOWING, State.ACQUIRING:
+			desired = _arrive(anchor)
+			if position.distance_to(anchor) > UnitData.CATCHUP_DISTANCE:
+				speed *= UnitData.CATCHUP_SPEED_MULT
+		State.RETURNING:
+			desired = (anchor - position).normalized()
+			speed *= UnitData.RETURN_SPEED_MULT
+		_:
+			desired = _combat_desire(anchor, player_pos)
+	if state != State.RETURNING:
+		desired += _threat_away * w_threat
+	desired += _separation() * w_separation
+	desired = desired.limit_length(1.0) * speed
+	velocity = velocity.move_toward(desired, speed * UnitData.STEER_ACCEL * delta)
+
+
+## Combat steering + attack triggering for ENGAGING / REPOSITIONING /
+## RETREATING. Returns the (unclamped) desired direction.
+func _combat_desire(anchor: Vector2, player_pos: Vector2) -> Vector2:
+	var goal: Node2D = null
+	var goal_radius := 0.0
+	if heal_target != null:
+		if _heal_target_valid():
+			goal = heal_target
+			goal_radius = (heal_target as SummonedUnit).radius if heal_target is SummonedUnit else game.player.radius
+	elif _target_valid():
+		goal = target
+		goal_radius = target.radius
+	if goal == null:
+		# ENGAGING -> ACQUIRING when the target dies (resolved next think).
+		_drop_target()
+		_enter(State.ACQUIRING)
+		return _arrive(anchor)
+	var to_goal := goal.position - position
+	var d := to_goal.length()
+	var dir := to_goal / d if d > 0.001 else Vector2.ZERO
+	var formation := _arrive(anchor) * w_formation
+	if attack_profile == "melee":
+		var edge := d - radius - goal_radius
+		if edge <= attack_range:
+			if state != State.ENGAGING:
+				_enter(State.ENGAGING)
+			if attack_cd <= 0.0:
+				_begin_cast()
+			return formation * 0.2
+		if state != State.ENGAGING:
+			_enter(State.ENGAGING)
+		return dir * w_pursuit + formation
+	# Ranged / heal profiles.
+	if kite_distance > 0.0:
+		if state == State.RETREATING:
+			if state_time >= UnitData.KITE_DURATION:
+				_kite_cd = UnitData.KITE_COOLDOWN
+				_enter(State.ENGAGING)
+			else:
+				return _threat_away * 1.5 + (player_pos - position).normalized() * 0.4
+		elif _threat_dist <= kite_distance and _kite_cd <= 0.0:
+			_enter(State.RETREATING)
+			return _threat_away * 1.5
+	var reach := attack_range + goal_radius
+	if d > reach:
+		if state != State.REPOSITIONING:
+			_enter(State.REPOSITIONING)
+		var approach := 1.0 if heal_target != null else maxf(w_pursuit, 0.4)
+		return dir * approach + formation * 0.3
+	if state != State.ENGAGING:
+		_enter(State.ENGAGING)
+	if attack_cd <= 0.0:
+		_begin_cast()
+	return formation * 0.5
+
+
+## Arrival steering toward `point`: full strength far away, easing in close.
+func _arrive(point: Vector2) -> Vector2:
+	var v := point - position
+	var d := v.length()
+	if d < 4.0:
+		return Vector2.ZERO
+	return v / d * clampf(d / 40.0, 0.0, 1.0)
+
+
+## Soft ally separation (GDD §26: friendly<->friendly no hard collisions,
+## steering separation only).
+func _separation() -> Vector2:
+	var reach := radius * 2.0 + UnitData.SEPARATION_PADDING
+	game.ally_grid.query(position, reach, _neigh)
+	var push := Vector2.ZERO
+	for o: SummonedUnit in _neigh:
+		if o == self or not o.active:
+			continue
+		var diff := position - o.position
+		var d := diff.length()
+		var min_d := radius + o.radius + UnitData.SEPARATION_PADDING
+		if d >= min_d:
+			continue
+		if d < 0.01:
+			# Exactly overlapping: push in a stable pseudo-random direction.
+			diff = Vector2.from_angle(float(get_instance_id() % 628) * 0.01)
+			d = 1.0
+		push += diff / d * (1.0 - d / min_d)
+	return push
+
+
+# =====================================================================================
+# Attacks
+# =====================================================================================
+
+## Starts a windup (CASTING). Ranged units first check the overkill
+## reservation and redirect if their target is already expected to die
+## (GDD §27 "redirect new shots when target is already expected to die").
+func _begin_cast() -> void:
+	if heal_target == null and attack_profile != "melee" and _target_valid() \
+			and target.hp - target.incoming_damage <= 0.0:
+		game.stat_add("overkill_redirects", 1.0)
+		var alt := _acquire_best_target()
+		if alt == null or alt == target or alt.hp - alt.incoming_damage <= 0.0:
+			attack_cd = 0.2
+			return
+		_set_target(alt)
+		if position.distance_to(alt.position) > attack_range + alt.radius:
+			return
+	if attack_profile == "aoe" and _target_valid():
+		cast_point = target.position
+	if heal_target is SummonedUnit:
+		var u := heal_target as SummonedUnit
+		_reserved_heal = minf(heal_amount, u.max_hp - u.hp)
+		_reserved_heal_on = u
+		_reserved_heal_gen = u.generation
+		u.incoming_heal += _reserved_heal
+	_enter(State.CASTING)
+	cast_time = windup
+
+
+## Holds still while the windup runs, then releases the attack.
+func _step_cast(delta: float) -> void:
+	velocity = velocity.move_toward(Vector2.ZERO, move_speed * 10.0 * delta)
+	cast_time -= delta
+	if cast_time > 0.0:
+		return
+	_release_attack()
+	attack_cd = attack_interval
+	if _target_valid() or _heal_target_valid():
+		_enter(State.ENGAGING)
+	else:
+		_drop_target()
+		_enter(State.ACQUIRING)
+
+
+## Applies the attack at the end of the windup, per attack_profile.
+func _release_attack() -> void:
+	match attack_profile:
+		"melee":
+			if _target_valid():
+				var edge := position.distance_to(target.position) - radius - target.radius
+				if edge <= attack_range + UnitData.MELEE_TOLERANCE:
+					var dir := (target.position - position).normalized()
+					game.effects.slash(position + dir * radius, dir, Palette.BONE, radius * 1.4)
+					game.combat.damage_enemy(target, damage, unit_class)
+		"arrow":
+			if _target_valid():
+				game.projectiles.fire_friendly(Projectile.Kind.ARROW, position, target, damage, projectile_speed, pierce, unit_class)
+		"aoe":
+			game.projectiles.fire_aoe(position, cast_point, damage, projectile_speed, splash_radius, target if _target_valid() else null)
+		"heal":
+			if heal_target != null:
+				_release_heal_reservation()
+				if _heal_target_valid():
+					var healed := 0.0
+					if heal_target is SummonedUnit:
+						healed = game.combat.heal_unit(heal_target as SummonedUnit, heal_amount)
+					else:
+						healed = game.combat.heal_player(heal_amount)
+					if healed > 0.0:
+						game.effects.beam(position, heal_target.position, Palette.NECRO_GREEN)
+						game.stat_add("priest_heals", 1.0)
+			elif _target_valid():
+				# Minor unholy offense when nothing needs healing (GDD §7).
+				game.projectiles.fire_friendly(Projectile.Kind.PRIEST_BOLT, position, target, damage, projectile_speed, 0, unit_class)
+
+
+## Removes this priest's pending heal from its target's incoming_heal.
+func _release_heal_reservation() -> void:
+	if _reserved_heal_on != null:
+		if _reserved_heal_on.generation == _reserved_heal_gen:
+			_reserved_heal_on.incoming_heal = maxf(0.0, _reserved_heal_on.incoming_heal - _reserved_heal)
+		_reserved_heal_on = null
+		_reserved_heal = 0.0
+
+
+# =====================================================================================
+# Drawing
+# =====================================================================================
+
+func _draw() -> void:
+	var rise := 1.0
+	if state == State.SPAWNING:
+		rise = clampf(state_time / UnitData.SPAWN_DURATION, 0.0, 1.0)
+		draw_circle(Vector2(0, radius * 0.9), radius * (1.3 - 0.4 * rise), Color(Palette.NECRO_GREEN, 0.3 * (1.0 - rise)))
+	Glyphs.draw_summon(self, unit_class, Vector2(0, (1.0 - rise) * radius), radius, flash > 0.0)
+	if hp < max_hp - 0.5 and state != State.SPAWNING:
+		Glyphs.hp_bar(self, Vector2(0, -radius * 1.9), radius * 2.0, hp / max_hp, Palette.HP_FRIENDLY)

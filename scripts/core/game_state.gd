@@ -1,0 +1,54 @@
+## GameState — the only autoload. It is justified because it holds state that
+## must survive the Game node being freed and rebuilt (restart / main menu):
+##   * launch options parsed from the command line (autotest mode),
+##   * per-session preferences (debug overlay visibility),
+##   * a summary of the last finished run (for the end screen / autotest).
+## Gameplay systems do NOT talk through this node; they hold direct typed
+## references owned by Game and use their own signals.
+##
+## Command-line options (pass after `--`, e.g. `godot -- --autotest`):
+##   --autotest            Skip the menu, start a run, auto-pick cards,
+##                         fast-forward and print a summary, then quit.
+##   --mortal              Autotest player can die (default: invulnerable so
+##                         the whole 5-minute timeline + boss are exercised).
+##   --speed=N             Autotest time scale (default 4).
+##   --seed=N              RNG seed for the autotest run (default 1337).
+##   --timeout=N           Autotest gives up after N game seconds (default 480).
+## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
+extends Node
+
+## True when the game runs the headless self-test instead of the menu.
+var autotest: bool = false
+## Autotest: if true the necromancer can die (balance check run).
+var autotest_mortal: bool = false
+## Autotest: Engine.time_scale multiplier (1 = real time).
+var autotest_speed: float = 4.0
+## Autotest: seed for the global RNG so runs are reproducible.
+var autotest_seed: int = 1337
+## Autotest: game-time limit in seconds before the test aborts.
+var autotest_timeout: float = 480.0
+## Whether the F3 debug overlay is shown; persists across restarts.
+var debug_overlay_visible: bool = false
+## Summary dictionary of the most recent finished run (see Game.build_summary).
+var last_run_summary: Dictionary = {}
+
+
+func _ready() -> void:
+	_parse_args(OS.get_cmdline_user_args())
+	if OS.get_environment("GRAVEBOUND_AUTOTEST") == "1":
+		autotest = true
+
+
+## Parses user command-line arguments (the ones after `--`).
+func _parse_args(args: PackedStringArray) -> void:
+	for arg: String in args:
+		if arg == "--autotest":
+			autotest = true
+		elif arg == "--mortal":
+			autotest_mortal = true
+		elif arg.begins_with("--speed="):
+			autotest_speed = clampf(arg.get_slice("=", 1).to_float(), 0.25, 32.0)
+		elif arg.begins_with("--seed="):
+			autotest_seed = arg.get_slice("=", 1).to_int()
+		elif arg.begins_with("--timeout="):
+			autotest_timeout = maxf(30.0, arg.get_slice("=", 1).to_float())
