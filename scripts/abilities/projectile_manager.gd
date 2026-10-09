@@ -4,6 +4,9 @@
 ## projectile adds its damage to the target's `incoming_damage` when fired and
 ## removes it when it hits that target, explodes or expires, so other ranged
 ## units can see the target is already "spoken for".
+## Evolution / synergy hooks: Void Barrage bolts split into shards on their
+## first hit (GDD §6.1); with Volley of the Fallen active, mage explosions mark
+## enemies and skeletal arrows deal bonus damage to marked ones (GDD §6.3).
 class_name ProjectileManager
 extends Node2D
 
@@ -15,6 +18,8 @@ const DEFAULT_LIFE: float = 1.4  # TUNING (not in GDD)
 const ARROW_HOMING: float = 3.0  # TUNING (not in GDD)
 ## Largest enemy radius considered in contact queries (boss is 22 px).
 const MAX_BODY_RADIUS: float = 30.0
+## Total fan angle (radians) of Void Barrage shards around the bolt heading.
+const SHARD_FAN: float = 1.4  # TUNING (not in GDD)
 
 ## Owning run.
 var game: Game
@@ -33,10 +38,12 @@ var _tmp: Array = []
 # =====================================================================================
 
 ## Fires a friendly contact projectile at `target` and reserves its damage.
-func fire_friendly(kind: Projectile.Kind, pos: Vector2, target: Enemy, damage: float, speed: float, pierce: int, source: String) -> void:
+## Returns the projectile (null when the projectile cap was hit) so callers
+## can set extra fields such as the Void Barrage split.
+func fire_friendly(kind: Projectile.Kind, pos: Vector2, target: Enemy, damage: float, speed: float, pierce: int, source: String) -> Projectile:
 	var p := _acquire()
 	if p == null:
-		return
+		return null
 	p.kind = kind
 	p.hostile = false
 	p.is_aoe = false
@@ -46,13 +53,47 @@ func fire_friendly(kind: Projectile.Kind, pos: Vector2, target: Enemy, damage: f
 	p.damage = damage
 	p.pierce_left = pierce
 	p.life = DEFAULT_LIFE
-	p.radius = 5.0 if kind == Projectile.Kind.SHADOW_BOLT else 3.0
-	p.homing = AbilityData.BOLT_HOMING if kind == Projectile.Kind.SHADOW_BOLT else ARROW_HOMING
+	var spell := kind == Projectile.Kind.SHADOW_BOLT or kind == Projectile.Kind.VOID_BOLT
+	p.radius = 5.0 if spell else 3.0
+	p.homing = AbilityData.BOLT_HOMING if spell else ARROW_HOMING
 	p.target = target
 	p.target_gen = target.generation
 	p.source = source
 	_reserve(p, target, damage)
 	_launch(p)
+	return p
+
+
+## Void Barrage: releases `p.split_count` shards fanned around `p`'s heading
+## from the enemy `hit` (which the shards ignore). Shards do not home, pierce,
+## split again or reserve damage.
+func _split(p: Projectile, hit: Enemy) -> void:
+	var n := p.split_count
+	p.split_count = 0
+	var heading := p.velocity.angle()
+	for i in n:
+		var s := _acquire()
+		if s == null:
+			return
+		var t := 0.5 if n <= 1 else float(i) / float(n - 1)
+		var dir := Vector2.from_angle(heading + (t - 0.5) * SHARD_FAN)
+		s.kind = Projectile.Kind.VOID_SHARD
+		s.hostile = false
+		s.is_aoe = false
+		s.position = hit.position
+		s.speed = p.split_speed
+		s.velocity = dir * p.split_speed
+		s.damage = p.split_damage
+		s.pierce_left = 0
+		s.life = p.split_life
+		s.radius = 3.0
+		s.homing = 0.0
+		s.target = null
+		s.source = "void_shard"
+		s.split_count = 0
+		s.hit_ids.append(hit.get_instance_id())
+		_launch(s)
+	game.stat_add("void_shards", float(n))
 
 
 ## Fires a mage orb that explodes at `dest` with `splash` radius. Damage is
@@ -114,6 +155,7 @@ func _acquire() -> Projectile:
 	else:
 		p = _pool.pop_back()
 	p.hit_ids.clear()
+	p.split_count = 0
 	p.reserved = 0.0
 	p.reserve_target = null
 	p.undead_mult = 1.0
@@ -204,7 +246,16 @@ func _friendly_hits(p: Projectile) -> bool:
 		if e == p.reserve_target:
 			_release(p)
 		p.hit_ids.append(id)
-		game.combat.damage_enemy(e, p.damage, p.source)
+		var dmg := p.damage
+		if p.source == "archer" and e.mark_time > 0.0:
+			# Volley of the Fallen: archers punish mage-marked enemies.
+			var bonus := game.horde.synergies.value("volley", "archer_bonus")
+			if bonus > 0.0:
+				dmg *= 1.0 + bonus
+				game.stat_add("volley_marked_hits", 1.0)
+		game.combat.damage_enemy(e, dmg, p.source)
+		if p.split_count > 0:
+			_split(p, e)
 		if p.pierce_left <= 0:
 			return false
 		p.pierce_left -= 1
@@ -235,7 +286,10 @@ func _explode(p: Projectile) -> void:
 	_release(p)
 	game.effects.ring(p.dest, p.splash, Palette.VIOLET, 0.3)
 	game.enemy_grid.query(p.dest, p.splash + MAX_BODY_RADIUS, _tmp)
+	var mark := game.horde.synergies.value("volley", "mark_duration")
 	for e: Enemy in _tmp:
 		if e.active and e.position.distance_to(p.dest) <= p.splash + e.radius * 0.5:
+			if mark > 0.0:
+				e.apply_mark(mark)
 			game.combat.damage_enemy(e, p.damage, p.source)
 	game.stat_add("mage_explosions", 1.0)

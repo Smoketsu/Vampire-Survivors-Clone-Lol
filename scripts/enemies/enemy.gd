@@ -118,6 +118,9 @@ var engaged_timer: float = 0.0
 var engaged_mult: float = 1.0
 ## Knockback velocity in px/s (shield bashes), decays over time.
 var knockback: Vector2 = Vector2.ZERO
+## Seconds left of a mage mark (Volley of the Fallen synergy, GDD §6.3):
+## skeletal arrows deal bonus damage while it is > 0.
+var mark_time: float = 0.0
 ## Seconds left of the brief slowdown after a ranged unit fires.
 var _shoot_slow_timer: float = 0.0
 ## Facing sign (+1 right / -1 left).
@@ -179,6 +182,7 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	engaged_timer = 0.0
 	engaged_mult = 1.0
 	knockback = Vector2.ZERO
+	mark_time = 0.0
 	_shoot_slow_timer = 0.0
 	visible = true
 	queue_redraw()
@@ -197,6 +201,13 @@ func deactivate() -> void:
 func on_hit() -> void:
 	flash = 0.08
 	queue_redraw()
+
+
+## Marks this enemy for `duration` s (Volley of the Fallen mage mark).
+func apply_mark(duration: float) -> void:
+	if mark_time <= 0.0:
+		queue_redraw()
+	mark_time = maxf(mark_time, duration)
 
 
 ## Applies a slow of `fraction` (0..1 of speed removed) for `duration` s.
@@ -385,6 +396,10 @@ func _tick_timers(delta: float) -> void:
 		engaged_timer -= delta
 	if _shoot_slow_timer > 0.0:
 		_shoot_slow_timer -= delta
+	if mark_time > 0.0:
+		mark_time -= delta
+		if mark_time <= 0.0:
+			queue_redraw()
 	if knockback != Vector2.ZERO:
 		knockback = knockback.move_toward(Vector2.ZERO, EnemyData.KNOCKBACK_DECAY * delta)
 	if flash > 0.0:
@@ -439,6 +454,8 @@ func _try_heal() -> void:
 
 func _draw() -> void:
 	Glyphs.draw_enemy(self, kind, Vector2.ZERO, radius, flash > 0.0, is_elite)
+	if mark_time > 0.0:
+		ProgressionGlyphs.draw_mage_mark(self, Vector2(0, -radius * 2.5), 4.0)
 	if hp < max_hp:
 		# The node is mirrored via scale.x; counter-flip so the bar always
 		# fills left-to-right.

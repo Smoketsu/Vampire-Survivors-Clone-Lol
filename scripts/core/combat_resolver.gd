@@ -34,9 +34,23 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 
 ## Damages a summon. Death is routed to HordeDirector (deregistration,
 ## replacement queue, pooling). `source` tags the attacker kind for stats.
+## Synergies (GDD §6.3): The Unholy Host reduces the damage, then a
+## Shieldwall barrier absorbs what it can before HP is lost.
 func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	if not u.active or u.state == SummonedUnit.State.DEAD or amount <= 0.0:
 		return
+	var host_dr := game.horde.synergies.value("unholy_host", "damage_reduction")
+	if host_dr > 0.0:
+		game.stat_add("host_dmg_prevented", amount * host_dr)
+		amount *= 1.0 - host_dr
+	if u.barrier_hp > 0.0:
+		var absorbed := minf(u.barrier_hp, amount)
+		u.barrier_hp -= absorbed
+		amount -= absorbed
+		game.stat_add("shieldwall_absorbed", absorbed)
+		if amount <= 0.0:
+			u.on_hit()
+			return
 	var dealt := minf(amount, u.hp)
 	u.hp -= amount
 	u.on_hit()
@@ -48,8 +62,10 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 
 
 ## Damages the necromancer (i-frames are handled by the player). `source`
-## tags the attacker kind for the player_dmg_from_* statistics.
+## tags the attacker kind for the player_dmg_from_* statistics. Warding Ritual
+## (evolution passive) reduces the damage first.
 func damage_player(amount: float, source: String) -> void:
+	amount *= 1.0 - game.abilities.passive_value("warding_ritual", "damage_reduction")
 	var lost := game.player.take_damage(amount)
 	if lost > 0.0:
 		game.stat_add("damage_to_player", lost)

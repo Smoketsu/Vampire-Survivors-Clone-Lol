@@ -4,9 +4,17 @@
 ##     Shadow Blast (GDD §8),
 ##   * passive levels (GDD §34) exposed as values for HordeDirector,
 ##   * summon ability levels are forwarded to HordeDirector,
-##   * level-up card generation (3 random choices, GDD §15) with concrete
-##     "current -> next" stat deltas (GDD §16 level-up panel), respecting the
-##     6 active / 6 passive slot limits (GDD §6).
+##   * level-up card generation (3 weighted random choices, GDD §9.1) with
+##     concrete "current -> next" stat deltas and evolution readiness (GDD
+##     §10.4 level-up panel), respecting the 6 active / 6 passive slot limits
+##     (GDD §6),
+##   * spell evolutions (GDD §6.1, EvolutionData): Void Barrage, Eclipse Ward
+##     and Abyssal Detonation, offered as a highlighted card once the base
+##     spell is level 5 and its paired passive is owned,
+##   * the limited rerolls / banishes and unlimited skips of the level-up
+##     panel (GDD §9.1, LevelUpData), plus fallback cards when nothing is left.
+## Spell stats are "effective": the level row (or evolution row) with the
+## spell passives applied (Soul Conduit damage, Abyssal Focus cooldowns).
 class_name AbilityManager
 extends Node2D
 
@@ -27,6 +35,22 @@ var bolt_aim_strongest: bool = false
 var _blast_timer: float = 1.0
 ## "id level" strings of every card picked this run (summary / autotest).
 var pick_history: PackedStringArray = PackedStringArray()
+## Spell id -> evolution id once evolved (absent = not evolved).
+var evolved: Dictionary = {}
+## "evolution_id@mm:ss" for every evolution obtained (summary / autotest).
+var evolution_history: PackedStringArray = PackedStringArray()
+## Level-up rerolls left this run.
+var rerolls_left: int = LevelUpData.REROLLS
+## Level-up banishes left this run.
+var banishes_left: int = LevelUpData.BANISHES
+## Item id -> true for items banished from the card pool this run.
+var banished: Dictionary = {}
+## Level-up skips used this run (unlimited).
+var skips_used: int = 0
+## Spell id -> cached effective stats (cleared whenever a card is applied).
+var _eff_cache: Dictionary = {}
+## Pending Abyssal Detonation second hits: {"t": s left, "pos": centre, "stats": row}.
+var _detonations: Array[Dictionary] = []
 ## Reusable query buffer.
 var _tmp: Array = []
 ## Reusable [score, enemy] candidate list for Shadow Bolt.
@@ -65,12 +89,71 @@ func passive_value(id: String, key: String) -> float:
 	return float(PassiveData.PASSIVES[id]["levels"][lvl - 1][key])
 
 
-## Stats row of spell `id` at its current level (empty if not learned).
-func spell_stats(id: String) -> Dictionary:
+## Value of passive `id` / `key` at level `lvl` (-1 = current level).
+func _passive_value_at(id: String, key: String, lvl: int) -> float:
+	var l := passive_level(id) if lvl < 0 else lvl
+	if l <= 0:
+		return 0.0
+	return float(PassiveData.PASSIVES[id]["levels"][l - 1][key])
+
+
+## Raw stats row of spell `id`: its evolution row once evolved, else the row
+## of its current level (empty if not learned). Passives are NOT applied.
+func spell_row(id: String) -> Dictionary:
+	if evolved.has(id):
+		return EvolutionData.EVOLUTIONS[evolved[id]]["stats"]
 	var lvl := spell_level(id)
 	if lvl <= 0:
 		return {}
 	return AbilityData.SPELLS[id]["levels"][lvl - 1]
+
+
+## Effective stats of spell `id` (spell_row() with the spell passives applied;
+## empty if not learned). Cached until the next card is applied.
+func spell_stats(id: String) -> Dictionary:
+	if not _eff_cache.has(id):
+		var row := spell_row(id)
+		_eff_cache[id] = {} if row.is_empty() else apply_spell_mods(row)
+	return _eff_cache[id]
+
+
+## Applies the spell passives to a stats row (GDD §6.4 stacking: each passive
+## is its own category, so it multiplies the level / evolution value):
+##   Soul Conduit  -> damage, pulse_damage               x (1 + spell_damage)
+##   Abyssal Focus -> cooldown, recharge, pulse_interval x (1 - cooldown_reduction)
+## Pass `conduit_lvl` / `focus_lvl` >= 0 to preview other passive levels.
+func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -1) -> Dictionary:
+	var out := row.duplicate()
+	var dmg_mult := 1.0 + _passive_value_at("soul_conduit", "spell_damage", conduit_lvl)
+	var cd_mult := 1.0 - _passive_value_at("abyssal_focus", "cooldown_reduction", focus_lvl)
+	for key: String in ["damage", "pulse_damage"]:
+		if out.has(key):
+			out[key] = float(out[key]) * dmg_mult
+	for key: String in ["cooldown", "recharge", "pulse_interval"]:
+		if out.has(key):
+			out[key] = float(out[key]) * cd_mult
+	return out
+
+
+## Display name of spell `id` (its evolution's name once evolved).
+func spell_name(id: String) -> String:
+	if evolved.has(id):
+		return EvolutionData.EVOLUTIONS[evolved[id]]["display_name"]
+	return AbilityData.SPELLS[id]["display_name"]
+
+
+## Evolution ids whose condition currently holds (EvolutionData header):
+## base spell at BASE_LEVEL_REQUIRED, not evolved yet, paired passive owned.
+func ready_evolutions() -> PackedStringArray:
+	var out := PackedStringArray()
+	for evo: String in EvolutionData.ORDER:
+		var def: Dictionary = EvolutionData.EVOLUTIONS[evo]
+		var base: String = def["base"]
+		if evolved.has(base):
+			continue
+		if spell_level(base) >= EvolutionData.BASE_LEVEL_REQUIRED and passive_level(def["passive"]) >= EvolutionData.PASSIVE_LEVEL_REQUIRED:
+			out.append(evo)
+	return out
 
 
 ## Number of occupied active slots (learned spells + learned summon classes).
@@ -94,7 +177,8 @@ func passive_count() -> int:
 	return n
 
 
-## HUD helper: [{icon, level, max}] for owned actives (summons first).
+## HUD helper: [{icon, level, max}] for owned actives (summons first). An
+## evolved spell shows its evolution icon.
 func owned_actives() -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	for cls: String in UnitData.CLASS_ORDER:
@@ -103,7 +187,8 @@ func owned_actives() -> Array[Dictionary]:
 			out.append({"icon": cls, "level": lvl, "max": 5})
 	for id: String in AbilityData.SPELL_ORDER:
 		if spell_level(id) > 0:
-			out.append({"icon": AbilityData.SPELLS[id]["icon"], "level": spell_level(id), "max": (AbilityData.SPELLS[id]["levels"] as Array).size()})
+			var icon: String = EvolutionData.EVOLUTIONS[evolved[id]]["icon"] if evolved.has(id) else AbilityData.SPELLS[id]["icon"]
+			out.append({"icon": icon, "level": spell_level(id), "max": (AbilityData.SPELLS[id]["levels"] as Array).size()})
 	return out
 
 
@@ -139,6 +224,8 @@ func step(delta: float) -> void:
 			_blast_timer = float(s["cooldown"]) if _cast_blast(s) else 0.25
 	if orb_shield != null:
 		orb_shield.step(delta, spell_stats("orb_shield"))
+	if not _detonations.is_empty():
+		_step_detonations(delta)
 
 
 ## Flips the Shadow Bolt aim mode between Nearest and Strongest.
@@ -158,6 +245,7 @@ func bolt_aim_name() -> String:
 ##               so the boss and elites are favoured only through their HP.
 ## Extra bolts of multi-bolt levels go to the next-ranked targets. In both
 ## modes targets already expected to die (overkill reservation) rank last.
+## Once evolved into Void Barrage the bolts also split on their first hit.
 ## Returns false if there was nothing to shoot.
 func _cast_bolt(s: Dictionary) -> bool:
 	var p := game.player.position
@@ -180,68 +268,153 @@ func _cast_bolt(s: Dictionary) -> bool:
 		return false
 	_cands.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
 	var count: int = s["count"]
+	var void_barrage := s.has("split")
 	for i in count:
 		var e: Enemy = _cands[i % _cands.size()][1]
-		game.projectiles.fire_friendly(Projectile.Kind.SHADOW_BOLT, p, e, float(s["damage"]), float(s["speed"]), int(s["pierce"]), "bolt")
+		if not void_barrage:
+			game.projectiles.fire_friendly(Projectile.Kind.SHADOW_BOLT, p, e, float(s["damage"]), float(s["speed"]), int(s["pierce"]), "bolt")
+			continue
+		# Void Barrage (GDD §5.1): rapid piercing bolts that split on impact.
+		var b := game.projectiles.fire_friendly(Projectile.Kind.VOID_BOLT, p, e, float(s["damage"]), float(s["speed"]), int(s["pierce"]), "void")
+		if b != null:
+			b.split_count = int(s["split"])
+			b.split_damage = float(s["damage"]) * float(s["split_damage"])
+			b.split_speed = float(s["split_speed"])
+			b.split_life = float(s["split_life"])
 	return true
 
 
 ## Shadow Blast: AoE damage + slow around the player. Returns false (retry
 ## soon) when no enemy is in range so the cooldown is not wasted.
+## Abyssal Detonation (evolved, GDD §5.1) adds a short pull toward the centre
+## and a second hit `second_delay` s later at the same spot.
 func _cast_blast(s: Dictionary) -> bool:
 	var p := game.player.position
 	var r: float = s["radius"]
+	var abyss := s.has("pull")
 	game.enemy_grid.query(p, r + 30.0, _tmp)
 	var hit := false
 	for e: Enemy in _tmp:
 		if e.active and e.position.distance_to(p) <= r + e.radius:
 			hit = true
+			if abyss:
+				_pull_enemy(e, p, r, s)
 			game.combat.slow_enemy(e, float(s["slow"]), float(s["slow_duration"]))
-			game.combat.damage_enemy(e, float(s["damage"]), "blast")
+			game.combat.damage_enemy(e, float(s["damage"]), "abyss" if abyss else "blast")
 	if not hit:
 		return false
-	game.effects.ring(p, r, Palette.VIOLET, 0.35)
+	if abyss:
+		game.effects.abyss(p, r)
+		_detonations.append({"t": float(s["second_delay"]), "pos": p, "stats": s})
+		game.stat_add("abyssal_detonations", 1.0)
+	else:
+		game.effects.ring(p, r, Palette.VIOLET, 0.35)
 	game.shake(2.0)
 	game.stat_add("shadow_blasts", 1.0)
 	return true
 
 
+## Abyssal Detonation pull: enemies outside the inner core get an inward
+## impulse (stronger near the rim, divided by mass; decays like knockback).
+func _pull_enemy(e: Enemy, center: Vector2, r: float, s: Dictionary) -> void:
+	var to_c := center - e.position
+	var d := to_c.length()
+	var inner := r * float(s["pull_inner"])
+	if d <= inner or d < 0.01:
+		return
+	var k := clampf((d - inner) / maxf(r - inner, 1.0), 0.0, 1.0)
+	e.knockback += to_c / d * float(s["pull"]) * (0.5 + 0.5 * k) / maxf(e.mass, 0.1)
+
+
+## Counts down pending Abyssal Detonation second hits and releases them.
+func _step_detonations(delta: float) -> void:
+	var i := 0
+	while i < _detonations.size():
+		var d: Dictionary = _detonations[i]
+		d["t"] = float(d["t"]) - delta
+		if float(d["t"]) > 0.0:
+			i += 1
+			continue
+		_detonations.remove_at(i)
+		var s: Dictionary = d["stats"]
+		var pos: Vector2 = d["pos"]
+		var r: float = s["radius"]
+		game.enemy_grid.query(pos, r + 30.0, _tmp)
+		for e: Enemy in _tmp:
+			if e.active and e.position.distance_to(pos) <= r + e.radius:
+				game.combat.damage_enemy(e, float(s["damage"]) * float(s["second_damage"]), "abyss")
+		game.effects.ring(pos, r, Palette.NECRO_GREEN, 0.3)
+		game.effects.ring(pos, r * 0.55, Palette.VIOLET, 0.4)
+		game.shake(3.0)
+
+
 # =====================================================================================
-# Level-up cards
+# Level-up cards: weighted offers, evolutions, reroll / banish / skip
 # =====================================================================================
 
-## Builds up to `n` random offers from every upgradeable spell, summon class
-## and passive. Falls back to a heal card when nothing is left.
+## Builds up to `n` offers (GDD §9.1 "three randomized choices"):
+##   1. every ready evolution first (highlighted special cards),
+##   2. weighted draw without replacement from every upgradeable spell,
+##      summon class and passive (LevelUpData weights: owned upgrades and
+##      evolution paths come up more often, "dead" cards rarely; never only
+##      dead cards while a live one exists),
+##   3. fallback cards fill any slot left empty (everything maxed / banished).
 func build_offers(n: int) -> Array[Dictionary]:
-	var pool: Array[Dictionary] = []
-	var can_new_active := active_count() < PlayerData.ACTIVE_SLOTS
-	var can_new_passive := passive_count() < PlayerData.PASSIVE_SLOTS
-	for id: String in AbilityData.SPELL_ORDER:
-		var lvl := spell_level(id)
-		var max_lvl := (AbilityData.SPELLS[id]["levels"] as Array).size()
-		if lvl >= max_lvl or (lvl == 0 and not can_new_active):
-			continue
-		pool.append(_spell_offer(id, lvl))
-	for cls: String in UnitData.CLASS_ORDER:
-		var lvl: int = game.horde.class_levels[cls]
-		if lvl >= (UnitData.LEVELS[cls] as Array).size() or (lvl == 0 and not can_new_active):
-			continue
-		pool.append(_summon_offer(cls, lvl))
-	for id: String in PassiveData.ORDER:
-		var lvl := passive_level(id)
-		if lvl >= (PassiveData.PASSIVES[id]["levels"] as Array).size() or (lvl == 0 and not can_new_passive):
-			continue
-		pool.append(_passive_offer(id, lvl))
-	pool.shuffle()
 	var offers: Array[Dictionary] = []
-	for i in mini(n, pool.size()):
-		offers.append(pool[i])
-	if offers.is_empty():
-		offers.append(_heal_offer())
+	for evo: String in ready_evolutions():
+		if offers.size() < n:
+			offers.append(_evolution_offer(evo))
+	var cands := _candidates({})
+	while offers.size() < n and not cands.is_empty():
+		offers.append(_draw_weighted(cands))
+	_ensure_live_card(offers, cands)
+	_fill_fallbacks(offers, n)
 	return offers
 
 
-## Applies a chosen card.
+## Uses one reroll charge. Returns false (nothing happens) when none is left.
+func use_reroll() -> bool:
+	if rerolls_left <= 0:
+		return false
+	rerolls_left -= 1
+	game.stat_add("levelup_rerolls", 1.0)
+	return true
+
+
+## True if card `o` may be banished (regular items only, not evolutions or
+## fallback cards) and a banish charge is left.
+func can_banish(o: Dictionary) -> bool:
+	return banishes_left > 0 and String(o["kind"]) in ["spell", "summon", "passive"]
+
+
+## Banishes the item of `offers[idx]` for the rest of the run (it is never
+## offered again; levels already owned are kept) and returns a copy of
+## `offers` with that card replaced by a fresh weighted draw (or a fallback).
+func banish_offer(offers: Array[Dictionary], idx: int) -> Array[Dictionary]:
+	var out: Array[Dictionary] = offers.duplicate()
+	if idx < 0 or idx >= out.size() or not can_banish(out[idx]):
+		return out
+	var id: String = out[idx]["id"]
+	banished[id] = true
+	banishes_left -= 1
+	game.stat_add("levelup_banishes", 1.0)
+	var exclude := {}
+	for o in out:
+		exclude[String(o["id"])] = true
+	var cands := _candidates(exclude)
+	if not cands.is_empty():
+		out[idx] = _draw_weighted(cands)
+	else:
+		out[idx] = _fallback_offer(_unused_fallback(out))
+	return out
+
+
+## Pseudo-offer for skipping a level-up (apply_offer heals a little).
+func skip_offer() -> Dictionary:
+	return _offer("skip", "skip", "Skip", "", 0, 0, "SKIP", "", PackedStringArray())
+
+
+## Applies a chosen card (or a skip).
 func apply_offer(o: Dictionary) -> void:
 	var id: String = o["id"]
 	var to: int = o["to"]
@@ -258,32 +431,204 @@ func apply_offer(o: Dictionary) -> void:
 			var old_caps := game.horde.capacity_snapshot()
 			passive_levels[id] = to
 			game.horde.recompute_all(old_caps)
-		"heal":
+		"evolution":
+			_apply_evolution(id)
+		"fallback":
+			_apply_fallback(id)
+		"skip":
+			skips_used += 1
+			game.combat.heal_player(game.player.max_hp * LevelUpData.SKIP_HEAL_FRACTION)
+			game.stat_add("levelup_skips", 1.0)
+	_eff_cache.clear()
+	if String(o["kind"]) == "evolution":
+		pick_history.append("EVOLVE %s" % id)
+	elif String(o["kind"]) == "skip" or String(o["kind"]) == "fallback":
+		pick_history.append(id)
+	else:
+		pick_history.append("%s %d" % [id, to])
+
+
+## Evolves the base spell of evolution `evo` in place (same active slot).
+func _apply_evolution(evo: String) -> void:
+	var def: Dictionary = EvolutionData.EVOLUTIONS[evo]
+	evolved[String(def["base"])] = evo
+	evolution_history.append("%s@%s" % [evo, _clock(game.elapsed)])
+	game.stat_add("evolutions", 1.0)
+	var p := game.player.position
+	game.effects.ring(p, 120.0, Palette.NECRO_GREEN, 0.7)
+	game.effects.ring(p, 80.0, Palette.VIOLET, 0.9)
+	if game.hud != null:
+		game.hud.announce("EVOLUTION", String(def["display_name"]), String(def["description"]), Palette.GOLD)
+
+
+## Applies fallback card `id` (LevelUpData.FALLBACKS).
+func _apply_fallback(id: String) -> void:
+	match id:
+		"dark_restoration":
 			game.combat.heal_player(game.player.max_hp * PlayerData.FALLBACK_HEAL_FRACTION)
-	pick_history.append("%s %d" % [id, to])
+		"grave_fortitude":
+			game.player.max_hp += LevelUpData.FORTITUDE_MAX_HP
+			game.combat.heal_player(LevelUpData.FORTITUDE_MAX_HP)
+		"call_of_the_grave":
+			game.horde.raise_all_missing()
 
 
-## Common offer skeleton.
-func _offer(kind: String, id: String, display_name: String, icon: String, from: int, to: int, tag: String, desc: String, deltas: PackedStringArray) -> Dictionary:
+## Every upgradeable item not banished and not in `exclude` (id -> true), as
+## {"offer", "weight", "dead"} entries for the weighted draw.
+func _candidates(exclude: Dictionary) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var can_new_active := active_count() < PlayerData.ACTIVE_SLOTS
+	var can_new_passive := passive_count() < PlayerData.PASSIVE_SLOTS
+	var owns_summon := false
+	for cls: String in UnitData.CLASS_ORDER:
+		owns_summon = owns_summon or int(game.horde.class_levels[cls]) > 0
+	var owns_spell := false
+	for id: String in AbilityData.SPELL_ORDER:
+		owns_spell = owns_spell or spell_level(id) > 0
+	for id: String in AbilityData.SPELL_ORDER:
+		var lvl := spell_level(id)
+		var max_lvl := (AbilityData.SPELLS[id]["levels"] as Array).size()
+		if banished.has(id) or exclude.has(id) or evolved.has(id) or lvl >= max_lvl or (lvl == 0 and not can_new_active):
+			continue
+		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else LevelUpData.WEIGHT_NEW
+		var evo := EvolutionData.for_spell(id)
+		if lvl > 0 and evo != "" and passive_level(EvolutionData.EVOLUTIONS[evo]["passive"]) > 0:
+			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
+		out.append({"offer": _spell_offer(id, lvl), "weight": w, "dead": false})
+	for cls: String in UnitData.CLASS_ORDER:
+		var lvl: int = game.horde.class_levels[cls]
+		if banished.has(cls) or exclude.has(cls) or lvl >= (UnitData.LEVELS[cls] as Array).size() or (lvl == 0 and not can_new_active):
+			continue
+		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else LevelUpData.WEIGHT_NEW
+		out.append({"offer": _summon_offer(cls, lvl), "weight": w, "dead": false})
+	for id: String in PassiveData.ORDER:
+		var lvl := passive_level(id)
+		if banished.has(id) or exclude.has(id) or lvl >= (PassiveData.PASSIVES[id]["levels"] as Array).size() or (lvl == 0 and not can_new_passive):
+			continue
+		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else LevelUpData.WEIGHT_NEW
+		var paired := _paired_spell(id)
+		if paired != "" and spell_level(paired) > 0 and not evolved.has(paired):
+			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
+		var dead := (id in PassiveData.ARMY_PASSIVES and not owns_summon) or (id in PassiveData.SPELL_PASSIVES and not owns_spell)
+		if dead:
+			w *= LevelUpData.WEIGHT_DEAD
+		out.append({"offer": _passive_offer(id, lvl), "weight": w, "dead": dead})
+	return out
+
+
+## Removes and returns one weighted-random offer from `cands`.
+func _draw_weighted(cands: Array[Dictionary]) -> Dictionary:
+	var total := 0.0
+	for c in cands:
+		total += float(c["weight"])
+	var r := randf() * total
+	var idx := cands.size() - 1
+	for i in cands.size():
+		r -= float(cands[i]["weight"])
+		if r <= 0.0:
+			idx = i
+			break
+	var picked: Dictionary = cands[idx]
+	cands.remove_at(idx)
+	var o: Dictionary = picked["offer"]
+	o["dead"] = picked["dead"]
+	return o
+
+
+## "Never only dead cards": if every offer is dead and a live candidate is
+## left in `cands`, the last dead offer is replaced by a live weighted draw.
+func _ensure_live_card(offers: Array[Dictionary], cands: Array[Dictionary]) -> void:
+	if offers.is_empty():
+		return
+	for o in offers:
+		if not bool(o.get("dead", false)):
+			return
+	var live: Array[Dictionary] = []
+	for c in cands:
+		if not bool(c["dead"]):
+			live.append(c)
+	if not live.is_empty():
+		offers[offers.size() - 1] = _draw_weighted(live)
+
+
+## Fills `offers` up to `n` cards with fallback cards not already shown.
+func _fill_fallbacks(offers: Array[Dictionary], n: int) -> void:
+	while offers.size() < n:
+		var id := _unused_fallback(offers)
+		if id == "":
+			return
+		offers.append(_fallback_offer(id))
+
+
+## First fallback id (LevelUpData.FALLBACK_ORDER) not present in `offers`.
+func _unused_fallback(offers: Array[Dictionary]) -> String:
+	for id: String in LevelUpData.FALLBACK_ORDER:
+		var used := false
+		for o in offers:
+			used = used or String(o["id"]) == id
+		if not used:
+			return id
+	return ""
+
+
+## Spell evolved by passive `id` ("" if it is not an evolution passive).
+static func _paired_spell(id: String) -> String:
+	for evo: String in EvolutionData.ORDER:
+		if String(EvolutionData.EVOLUTIONS[evo]["passive"]) == id:
+			return EvolutionData.EVOLUTIONS[evo]["base"]
+	return ""
+
+
+## Common offer skeleton. `evo_hint` is the optional "evolution readiness"
+## line (GDD §10.4).
+func _offer(kind: String, id: String, display_name: String, icon: String, from: int, to: int, tag: String, desc: String, deltas: PackedStringArray, evo_hint: String = "") -> Dictionary:
 	return {"kind": kind, "id": id, "name": display_name, "icon": icon, "from": from, "to": to,
-		"tag": tag, "description": desc, "deltas": deltas}
+		"tag": tag, "description": desc, "deltas": deltas, "evo_hint": evo_hint}
 
 
-## Spell card: lists base stats when new, otherwise every stat that changes.
+## Spell card: lists base stats when new, otherwise every effective stat that
+## changes, plus the evolution readiness line.
 func _spell_offer(id: String, lvl: int) -> Dictionary:
 	var def: Dictionary = AbilityData.SPELLS[id]
 	var levels: Array = def["levels"]
 	var labels: Dictionary = def["labels"]
-	var nxt: Dictionary = levels[lvl]
+	var nxt := apply_spell_mods(levels[lvl])
 	var deltas := PackedStringArray()
 	for key: String in labels:
 		if lvl == 0:
 			deltas.append("%s %s" % [labels[key], _fmt_spell(key, nxt[key])])
 		else:
-			var cur: Dictionary = levels[lvl - 1]
-			if cur[key] != nxt[key]:
+			var cur := apply_spell_mods(levels[lvl - 1])
+			if not is_equal_approx(float(cur[key]), float(nxt[key])):
 				deltas.append("%s %s -> %s" % [labels[key], _fmt_spell(key, cur[key]), _fmt_spell(key, nxt[key])])
-	return _offer("spell", id, def["display_name"], def["icon"], lvl, lvl + 1, "SPELL", def["description"], deltas)
+	var hint := ""
+	var evo := EvolutionData.for_spell(id)
+	if evo != "":
+		var e: Dictionary = EvolutionData.EVOLUTIONS[evo]
+		var p_name: String = PassiveData.PASSIVES[e["passive"]]["display_name"]
+		if lvl + 1 >= EvolutionData.BASE_LEVEL_REQUIRED and passive_level(e["passive"]) >= EvolutionData.PASSIVE_LEVEL_REQUIRED:
+			hint = "Evolution ready: %s!" % e["display_name"]
+		else:
+			hint = "Evolves into %s at Lv %d with %s" % [e["display_name"], EvolutionData.BASE_LEVEL_REQUIRED, p_name]
+	return _offer("spell", id, def["display_name"], def["icon"], lvl, lvl + 1, "SPELL", def["description"], deltas, hint)
+
+
+## Evolution card: base spell (level 5, effective) vs evolved effective stats.
+func _evolution_offer(evo: String) -> Dictionary:
+	var def: Dictionary = EvolutionData.EVOLUTIONS[evo]
+	var base: String = def["base"]
+	var cur := spell_stats(base)
+	var nxt := apply_spell_mods(def["stats"])
+	var labels: Dictionary = def["labels"]
+	var deltas := PackedStringArray()
+	for key: String in labels:
+		if cur.has(key):
+			if not is_equal_approx(float(cur[key]), float(nxt[key])):
+				deltas.append("%s %s -> %s" % [labels[key], _fmt_spell(key, cur[key]), _fmt_spell(key, nxt[key])])
+		else:
+			deltas.append("NEW  %s %s" % [labels[key], _fmt_spell(key, nxt[key])])
+	var hint := "Replaces %s in its slot" % AbilityData.SPELLS[base]["display_name"]
+	return _offer("evolution", evo, def["display_name"], def["icon"], spell_level(base), spell_level(base), "EVOLUTION", def["description"], deltas, hint)
 
 
 ## Summon card: effective stats now vs next level (passives included).
@@ -321,7 +666,10 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 		_delta_line(deltas, "Splash radius", cur["splash_radius"], nxt["splash_radius"])
 		_delta_line(deltas, "Arrow pierce", float(cur["pierce"]), float(nxt["pierce"]))
 		_delta_line(deltas, "Ward on you (HP)", cur["shield_amount"], nxt["shield_amount"])
-	return _offer("summon", cls, base["display_name"], cls, lvl, lvl + 1, "SUMMON", desc, deltas)
+	var hint := ""
+	if lvl + 1 == SynergyData.MIN_CLASS_LEVEL:
+		hint = game.horde.synergies.unlock_hint(cls)
+	return _offer("summon", cls, base["display_name"], cls, lvl, lvl + 1, "SUMMON", desc, deltas, hint)
 
 
 ## Passive card: passive value now vs next plus one concrete effect line.
@@ -355,14 +703,49 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 			var cur_i := base_i * (1.0 - passive_value(id, "replace_reduction"))
 			var nxt_i := base_i * (1.0 - float(nxt["replace_reduction"]))
 			deltas.append("Warrior respawn %ss -> %ss" % [_fmt(cur_i), _fmt(nxt_i)])
-	return _offer("passive", id, def["display_name"], def["icon"], lvl, lvl + 1, "PASSIVE", def["description"], deltas)
+		"soul_conduit":
+			var row := spell_row("shadow_bolt")
+			if not row.is_empty():
+				var a := apply_spell_mods(row, lvl, -1)
+				var b := apply_spell_mods(row, lvl + 1, -1)
+				deltas.append("%s damage %s -> %s" % [spell_name("shadow_bolt"), _fmt(a["damage"]), _fmt(b["damage"])])
+		"warding_ritual":
+			var hit := 20.0
+			deltas.append("A %s-damage hit: %s -> %s" % [_fmt(hit), _fmt(hit * (1.0 - _passive_value_at(id, "damage_reduction", lvl))), _fmt(hit * (1.0 - float(nxt["damage_reduction"])))])
+		"abyssal_focus":
+			var row := spell_row("shadow_bolt")
+			if not row.is_empty():
+				var a := apply_spell_mods(row, -1, lvl)
+				var b := apply_spell_mods(row, -1, lvl + 1)
+				deltas.append("%s cooldown %ss -> %ss" % [spell_name("shadow_bolt"), _fmt(a["cooldown"]), _fmt(b["cooldown"])])
+	var hint := ""
+	var spell := _paired_spell(id)
+	if spell != "":
+		var evo := EvolutionData.for_spell(spell)
+		var e_name: String = EvolutionData.EVOLUTIONS[evo]["display_name"]
+		if evolved.has(spell):
+			hint = "%s already evolved" % e_name
+		elif spell_level(spell) >= EvolutionData.BASE_LEVEL_REQUIRED:
+			hint = "Evolution ready: %s!" % e_name
+		else:
+			hint = "Evolves %s (Lv %d/%d) into %s" % [AbilityData.SPELLS[spell]["display_name"], spell_level(spell), EvolutionData.BASE_LEVEL_REQUIRED, e_name]
+	return _offer("passive", id, def["display_name"], def["icon"], lvl, lvl + 1, "PASSIVE", def["description"], deltas, hint)
 
 
-## Fallback card when every ability is maxed (or no slot is free).
-func _heal_offer() -> Dictionary:
-	var amount := game.player.max_hp * PlayerData.FALLBACK_HEAL_FRACTION
-	var deltas := PackedStringArray(["Restore %s HP" % _fmt(amount)])
-	return _offer("heal", "dark_restoration", "Dark Restoration", "heal", 0, 0, "RESTORE", "Drain the fallen to mend your body.", deltas)
+## Fallback card `id` (LevelUpData.FALLBACKS) with its concrete effect.
+func _fallback_offer(id: String) -> Dictionary:
+	var def: Dictionary = LevelUpData.FALLBACKS[id]
+	var deltas := PackedStringArray()
+	match id:
+		"dark_restoration":
+			deltas.append("Restore %s HP" % _fmt(game.player.max_hp * PlayerData.FALLBACK_HEAL_FRACTION))
+		"grave_fortitude":
+			deltas.append("Max HP %s -> %s" % [_fmt(game.player.max_hp), _fmt(game.player.max_hp + LevelUpData.FORTITUDE_MAX_HP)])
+			deltas.append("Restore %s HP" % _fmt(LevelUpData.FORTITUDE_MAX_HP))
+		"call_of_the_grave":
+			var missing := game.horde.missing_count()
+			deltas.append("Raise %d fallen summons now" % missing if missing > 0 else "Your army is at full strength")
+	return _offer("fallback", id, def["display_name"], def["icon"], 0, 0, def["tag"], def["description"], deltas)
 
 
 ## Appends "label a -> b" when the value changes.
@@ -378,9 +761,9 @@ static func _fmt(v: float) -> String:
 	return str(snappedf(v, 0.01))
 
 
-## Formats a spell stat (slow is shown as a percentage).
+## Formats a spell stat (slow and second-hit fractions are shown as %).
 static func _fmt_spell(key: String, v: Variant) -> String:
-	if key == "slow":
+	if key == "slow" or key == "second_damage":
 		return "%d%%" % int(roundf(float(v) * 100.0))
 	return _fmt(float(v))
 
@@ -393,3 +776,9 @@ static func _fmt_passive(v: float, fmt: String) -> String:
 		"neg_pct":
 			return "-%d%%" % int(roundf(v * 100.0))
 	return "+%d" % int(v)
+
+
+## Formats seconds as mm:ss.
+static func _clock(t: float) -> String:
+	var s := int(t)
+	return "%02d:%02d" % [floori(float(s) / 60.0), s % 60]

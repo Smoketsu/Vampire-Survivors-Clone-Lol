@@ -6,8 +6,8 @@
 class_name Effect
 extends Node2D
 
-## What to draw.
-enum Kind { POP, SLASH, RING, BEAM, SPAWN, TELEGRAPH_CIRCLE, TELEGRAPH_LINE, IMPACT }
+## What to draw. ABYSS is the imploding vortex of Abyssal Detonation.
+enum Kind { POP, SLASH, RING, BEAM, SPAWN, TELEGRAPH_CIRCLE, TELEGRAPH_LINE, IMPACT, ABYSS }
 
 ## Current effect kind.
 var kind: Kind = Kind.POP
@@ -96,3 +96,11 @@ func _draw() -> void:
 		Kind.IMPACT:
 			draw_circle(Vector2.ZERO, size * (0.6 + 0.4 * k), Color(color, 0.45 * fade))
 			draw_arc(Vector2.ZERO, size * (0.8 + 0.4 * k), 0.0, TAU, 40, Color(Palette.IVORY, fade), 3.0)
+		Kind.ABYSS:
+			# Dark disc collapsing inward with a green rim and violet spiral arms.
+			var rr := size * (1.0 - 0.65 * k)
+			draw_circle(Vector2.ZERO, rr, Color(0.04, 0.0, 0.07, 0.55 * fade + 0.15))
+			draw_arc(Vector2.ZERO, rr, 0.0, TAU, 48, Color(Palette.NECRO_GREEN, fade), 3.0)
+			for i in 4:
+				var a := TAU * float(i) / 4.0 + k * 4.0
+				draw_arc(Vector2.ZERO, rr * 0.7, a, a + 1.1, 10, Color(color, 0.8 * fade), 2.0)

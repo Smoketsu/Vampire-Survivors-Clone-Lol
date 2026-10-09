@@ -5,7 +5,10 @@
 ##   Top right     : kill count, pause hint, modifiers.
 ##   Bottom center : active ability slots (6) and passive slots (6) with levels.
 ##   Bottom left   : army total / capacity and per-class counts with
-##                   replacement progress bars.
+##                   replacement progress bars; active army synergies
+##                   (GDD §6.3) listed above them.
+##   Upper middle  : progression banner announcing a synergy activation or a
+##                   spell evolution (announce()).
 ## Built entirely in code and refreshed at 10 Hz by polling the Game (cheaper
 ## and simpler than wiring dozens of per-frame signals).
 class_name Hud
@@ -13,6 +16,10 @@ extends Control
 
 ## HUD refresh period in seconds.
 const REFRESH: float = 0.1
+## Seconds of game time the progression banner stays fully visible.
+const ANNOUNCE_TIME: float = 3.5  # TUNING (not in GDD)
+## Seconds the progression banner takes to fade out afterwards.
+const ANNOUNCE_FADE: float = 0.8  # TUNING (not in GDD)
 
 ## Owning run.
 var game: Game
@@ -50,6 +57,18 @@ var _active_icons: Array[IconGlyph] = []
 var _passive_icons: Array[IconGlyph] = []
 ## Shadow Bolt aim mode label above the ability bar.
 var _aim_label: Label
+## Synergy id -> HBoxContainer row (icon + name), shown while active.
+var _synergy_rows: Dictionary = {}
+## Progression banner container (title, name, description).
+var _announce_box: VBoxContainer
+## Progression banner small title ("SYNERGY AWAKENED" / "EVOLUTION").
+var _announce_title: Label
+## Progression banner big name line.
+var _announce_name: Label
+## Progression banner effect description line.
+var _announce_desc: Label
+## Game time (Game.elapsed) at which the current banner was shown (-1 = none).
+var _announce_at: float = -1.0
 
 
 func _ready() -> void:
@@ -160,6 +179,27 @@ func _build() -> void:
 		bl.add_child(row)
 		_class_rows[cls] = {"row": row, "label": lbl, "bar": bar}
 
+	# Bottom left, above the army panel: active synergies.
+	var syn := _box(true, 0.0, 1.0, 16, -300, 300, -194, BoxContainer.ALIGNMENT_END)
+	for id: String in SynergyData.ORDER:
+		var srow := HBoxContainer.new()
+		srow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		srow.add_child(IconGlyph.new(String(SynergyData.SYNERGIES[id]["icon"]), Vector2(22, 22)))
+		srow.add_child(UiTheme.label(String(SynergyData.SYNERGIES[id]["short_name"]), 13, Palette.NECRO_GREEN.lightened(0.2)))
+		srow.visible = false
+		syn.add_child(srow)
+		_synergy_rows[id] = srow
+
+	# Upper middle: progression banner (synergy activation / evolution).
+	_announce_box = _box(true, 0.5, 0.0, -360, 170, 360, 290, BoxContainer.ALIGNMENT_BEGIN)
+	_announce_title = UiTheme.label("", 15, UiTheme.TEXT_DIM)
+	_announce_name = UiTheme.label("", 30, UiTheme.TEXT_GOLD)
+	_announce_desc = UiTheme.label("", 14, UiTheme.TEXT)
+	for l: Label in [_announce_title, _announce_name, _announce_desc]:
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_announce_box.add_child(l)
+	_announce_box.visible = false
+
 	# Bottom center: ability bar (actives row, passives row).
 	var bc := _box(true, 0.5, 1.0, -200, -130, 200, -12, BoxContainer.ALIGNMENT_END)
 	_aim_label = UiTheme.label("", 13, Palette.VIOLET.lightened(0.35))
@@ -221,7 +261,10 @@ func _refresh() -> void:
 		if owned:
 			(row["label"] as Label).text = "%s %d/%d" % [UnitData.UNITS[cls]["plural"], h.count_of(cls), h.capacity(cls)]
 			(row["bar"] as HudBar).set_values(h.replenish_progress(cls))
-	_aim_label.text = "Shadow Bolt aim: %s  [T / Y]" % game.abilities.bolt_aim_name() if game.abilities.spell_level("shadow_bolt") > 0 else ""
+	_aim_label.text = "%s aim: %s  [T / Y]" % [game.abilities.spell_name("shadow_bolt"), game.abilities.bolt_aim_name()] if game.abilities.spell_level("shadow_bolt") > 0 else ""
+	for id: String in SynergyData.ORDER:
+		(_synergy_rows[id] as Control).visible = h.synergies.is_active(id)
+	_refresh_announce()
 	var actives := game.abilities.owned_actives()
 	for i in _active_icons.size():
 		if i < actives.size():
@@ -234,3 +277,28 @@ func _refresh() -> void:
 			_passive_icons[i].set_icon(passives[i]["icon"], passives[i]["level"], passives[i]["max"])
 		else:
 			_passive_icons[i].set_icon("")
+
+
+## Shows the progression banner: `title` (small), `name` (big, in `color`)
+## and `desc`. It stays ANNOUNCE_TIME s of game time, so a banner raised
+## while the level-up panel pauses the game is seen after resuming.
+func announce(title: String, name: String, desc: String, color: Color) -> void:
+	_announce_title.text = title
+	_announce_name.text = name
+	_announce_name.add_theme_color_override("font_color", color)
+	_announce_desc.text = desc
+	_announce_at = game.elapsed
+	_announce_box.visible = true
+	_announce_box.modulate.a = 1.0
+
+
+## Fades out and hides the progression banner once its time is over.
+func _refresh_announce() -> void:
+	if _announce_at < 0.0:
+		return
+	var age := game.elapsed - _announce_at
+	if age > ANNOUNCE_TIME + ANNOUNCE_FADE:
+		_announce_box.visible = false
+		_announce_at = -1.0
+	else:
+		_announce_box.modulate.a = clampf(1.0 - (age - ANNOUNCE_TIME) / ANNOUNCE_FADE, 0.0, 1.0)

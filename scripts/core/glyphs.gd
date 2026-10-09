@@ -291,4 +291,6 @@ static func draw_icon(ci: CanvasItem, kind: String, rect: Rect2) -> void:
 		"":
 			pass  # Empty slot: backdrop only.
 		_:
-			ci.draw_circle(c, s * 0.3, Palette.BONE)
+			# Evolutions, evolution passives, synergies, fallback cards.
+			if not ProgressionGlyphs.draw_icon(ci, kind, c, s):
+				ci.draw_circle(c, s * 0.3, Palette.BONE)

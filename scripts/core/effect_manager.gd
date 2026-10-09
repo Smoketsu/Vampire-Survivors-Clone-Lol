@@ -79,6 +79,11 @@ func telegraph_line(from: Vector2, to: Vector2, lane_width: float, duration: flo
 	_spawn(Effect.Kind.TELEGRAPH_LINE, from, Palette.GOLD, 0.0, duration, to - from, lane_width, true)
 
 
+## Abyssal Detonation first hit: a dark vortex collapsing toward `pos`.
+func abyss(pos: Vector2, radius: float) -> void:
+	_spawn(Effect.Kind.ABYSS, pos, Palette.VIOLET, radius, 0.4)
+
+
 ## Big holy impact burst (Hammerfall landing, boss death).
 func impact(pos: Vector2, radius: float, color: Color) -> void:
 	_spawn(Effect.Kind.IMPACT, pos, color, radius, 0.4, Vector2.RIGHT, 2.0, true)
