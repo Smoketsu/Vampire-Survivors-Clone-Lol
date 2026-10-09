@@ -1,0 +1,875 @@
+GRAVEBOUND
+COMPLETE GAME DESIGN DOCUMENT + AUTONOMOUS HORDE TECHNICAL SPECIFICATION
+Version 0.2 | October 2026 | Plain-text handoff for Claude
+
+DOCUMENT PURPOSE
+This file combines the full game concept, core systems, three-level campaign,
+enemy faction, progression, menus, and the autonomous undead horde design and
+implementation specification. It is intended as development context for Claude.
+The figures below are prototype tuning targets, not tested balance values.
+
+======================================================================
+PART I — GAME DESIGN DOCUMENT (GDD v0.1)
+======================================================================
+
+1. HIGH CONCEPT
+
+Title: GRAVEBOUND
+Genre: Dark fantasy, single-player action roguelite / bullet heaven / horde survival
+Perspective: Top-down 2D or 2.5D
+Platform: PC first (Steam)
+Run length: 20–30 minutes per level
+Inspirations: Vampire Survivors, Brotato, Army of Ruin, Warcraft III undead faction
+
+The player is a necromancer fighting an advancing fanatical holy order called
+the Crimson Covenant, inspired aesthetically by the Scarlet Crusade from World
+of Warcraft, but designed as an original faction. The player begins alone and
+hunted, gaining shadow spells and an increasingly powerful autonomous undead
+army. The campaign reverses the power dynamic: defend a graveyard, besiege
+the crusaders' compound, then invade the interior and defeat their leader.
+
+Three campaign stages:
+1. The Desecrated Graveyard — Defend against the Covenant invasion.
+2. The Crimson March — Advance with the undead against the outer compound.
+3. The Sanctum of Judgment — Invade the compound for the final boss.
+
+Core fantasy: Begin as the hunted. Raise the fallen. Become the army.
+Extinguish the crusade.
+
+2. DESIGN PILLARS
+
+- THE ARMY IS YOUR WEAPON: Warriors, archers, mages and priests play distinct
+  frontline, ranged, area-damage and support roles. Summons are the feature,
+  not merely cosmetic projectiles.
+- UNHOLY POWER VERSUS DIVINE ZEAL: The enemy uses holy magic, military
+  formations, healing, protective wards and specialized undead hunters.
+- BUILD DIVERSITY: Mass skeletons, elite undead, destructive shadow magic,
+  sustain/defensive builds and hybrids should all be viable.
+- ESCALATING SPECTACLE: The game evolves visibly from a fragile caster into
+  an army leader amid large-scale magical conflict.
+
+3. CORE GAMEPLAY LOOP
+
+1. Choose level, skin, difficulty and modifiers at the main menu.
+2. Begin run with a single starting skill.
+3. Move to survive as enemies approach continuously.
+4. Automatically cast equipped shadow spells and deploy summons.
+5. Enemies drop XP crystals and sometimes other resources.
+6. Level up and choose one of three randomized upgrades.
+7. New enemies, elites, events and environmental threats arrive by time.
+8. Build synergies, evolve abilities and replenish fallen summons.
+9. Defeat final stage boss to unlock next chapter, currency and cosmetics.
+10. Spend earned Soul Ash on permanent upgrades, then replay.
+
+4. CONTROLS
+
+WASD: Move
+Mouse: Menu navigation
+Shift: Optional unlocked dash
+Space: Optional ultimate
+Esc: Pause/settings
+Tab: Expand army information
+Controller left stick: Move
+Controller A / Cross: Confirm
+
+Combat, spells, summons, targeting and healing are automatic. No manual unit
+selection, unit positioning or aiming is required.
+
+5. PLAYER STATISTICS
+
+Max Health — Player survivability
+Movement Speed — Movement across battlefield
+Armor — Physical damage mitigation
+Shadow Resistance — Hostile magic damage mitigation
+Spell Power — Shadow ability damage
+Minion Damage — Summon damage
+Minion Health — Summon survivability
+Summon Capacity — Max active undead
+Cooldown Reduction — Ability intervals
+Area of Effect — Spell radii
+Duration — Temporary effect duration
+Pickup Radius — Experience collection distance
+Luck — Reward probability
+
+6. ABILITY SLOTS
+
+6 active abilities (automatic summons and spells), 6 passive abilities and
+1 optional ultimate. If active slots fill up, offer level-ups to existing
+skills and passives. Skills have five normal levels; evolution requires a
+matching passive and special elite reward.
+
+7. FOUR PRIMARY UNDEAD SUMMONS
+
+SKELETON WARRIOR — Frontline
+- Basic rusted-sword melee attacker; engages enemies threatening player.
+- Moderate HP, modest damage, limited body-block effect.
+- Upgrades: extra population, more HP/damage, shields and armor, cleave.
+- Evolution: Dreadguard Legion — armored skeleton fighters with retaliatory
+  strikes and cleaving attacks.
+
+SKELETAL ARCHER — Ranged sustained DPS
+- Keeps distance, fires physical arrows, fragile.
+- Upgrades: increased count, faster attack, piercing arrows, cursed arrows.
+- Evolution: Gravebow Company — splitting/piercing arrows and curses.
+
+UNDEAD MAGE — Magical AoE
+- Targets clustered enemies with shadow projectiles or explosions.
+- Upgrades: more mages, damage, splash, Soulburn, larger AoE.
+- Evolution: Lich Conclave — chain explosions and shadow storms.
+
+UNDEAD PRIEST — Healing and support
+- Corrupted former cleric; heals allied undead, occasionally shields player,
+  casts minor unholy offense when no healing is needed.
+- Upgrades: more priests, healing amount, radius, defense buffs.
+- Evolution: Profane Bishop — area healing aura and unholy damage pulse.
+
+Possible future summons: Bone Golem (tank), Banshee (debuffer), Death Knight
+(elite melee/buff commander), Corpse Abomination (durable monster).
+
+8. SHADOW SPELL ABILITIES
+
+SHADOW BOLT
+- Automatically fires at nearby enemy at intervals.
+- Upgrades: damage, extra projectiles, speed and pierce, damage-over-time
+  curse. Evolution: Void Barrage — rapid piercing bolts, split on impact.
+
+SHADOW ORB SHIELD
+- Protective orbs orbit the necromancer, damage approaching enemies and
+  intercept a limited number of hostile projectiles.
+- Upgrades: orb count, orbit speed, radius, damage, interception.
+- Evolution: Eclipse Ward — rotating barrier and periodic damage pulses.
+- Interception is charge- or cooldown-limited to avoid invulnerability.
+
+SHADOW BLAST
+- Automatically creates AoE explosion around the player.
+- Upgrades: damage, radius, cooldown, slow.
+- Evolution: Abyssal Detonation — double-hit blast and short enemy pull.
+
+Other possible spells:
+- Grasp of the Damned: Hands from ground slow/root enemies.
+- Soul Siphon: Nearby damage and capped lifesteal.
+- Death Nova: Wave dealing bonus damage to cursed enemies.
+- Grave Eruption: Bone spikes create damaging ground zones.
+
+9. EVOLUTIONS AND PASSIVES
+
+Skeleton Warrior + Bone Plating = Dreadguard Legion
+Skeletal Archer + Unholy Precision = Gravebow Company
+Undead Mage + Forbidden Knowledge = Lich Conclave
+Undead Priest + Dark Benediction = Profane Bishop
+Shadow Bolt + Soul Conduit = Void Barrage
+Shadow Orb Shield + Warding Ritual = Eclipse Ward
+Shadow Blast + Abyssal Focus = Abyssal Detonation
+
+Army synergies:
+- Shieldwall of the Damned (Warriors + Priests): Priest barriers on frontline.
+- Volley of the Fallen (Archers + Mages): Mage marks cause archer bonus damage.
+- March of the Deathless (3 different summons): Move speed + regeneration.
+- The Unholy Host (all 4 main summons): Army-wide attack speed/resilience
+  aura and visual effect on summon.
+
+10. ENEMY FACTION — CRIMSON COVENANT
+
+A fanatical, original religious-military order dedicated to eradicating
+necromancy. Scarlet Crusade-inspired aesthetic: crimson and ivory tabards,
+polished silver armor, cloaks and religious insignia. Their magic appears
+radiant gold/white, contrasting player purple/green necromancy.
+
+Roster:
+- Covenant Recruit: Weak basic infantry, mass waves.
+- Crimson Footman: Armored melee, moderate damage resistance.
+- Zealous Archer: Ranged projectiles.
+- Covenant Chaplain: Heals enemy allies.
+- Purifier: Bonus damage versus undead summons.
+- Templar Knight: Heavy charging melee; knockback/disruption.
+- Radiant Inquisitor: Elite caster creating holy damage zones.
+- Banner Bearer: Buffs nearby Covenant soldiers.
+- Sanctified Sentinel: High-armor construct with sweeps.
+- High Confessor: Elite priest healing, shielding and limited revival.
+
+Faction tactics:
+- Infantry protect archers and priests in advancing formations.
+- Holy healers demand target prioritization.
+- Purifiers attack the horde to exploit its reliance on summons.
+- Banners buff formations until destroyed.
+- Holy suppression/consecration zones apply localized temporary pressure.
+
+11. CAMPAIGN — LEVEL 1: THE DESECRATED GRAVEYARD
+
+Theme: Defense and survival
+Art: Moonlit cemetery, crypts, broken tombs, dead trees, fog and spectral
+blue-green lights; red torches and banners advance over time.
+Story: Covenant forces discover the necromancer's burial grounds and attack.
+
+Mechanics:
+- Empowered graves near the player add temporary reinforcements or improve
+  summon replenishment.
+- Desecration events: priests attempt to consecrate selected graves; failure
+  to interrupt creates hazardous anti-undead spaces.
+- Crypt Defender event: briefly awaken ancient guardian units.
+
+Timeline:
+00:00 Recruits
+03:00 Archers and footmen
+05:00 Chaplain elite
+08:00 Purifiers
+10:00 Grave consecration event
+13:00 Templar Knights
+15:00 Major assault
+18:00 Final preparation wave
+20:00 Sir Alaric boss
+
+Boss: SIR ALARIC, THE GRAVEBREAKER
+Heavy holy paladin with two-handed hammer.
+- Consecrated Ground: Persistent radiant zones.
+- Hammerfall: Telegraph overhead smash.
+- Divine Charge: Fast linear rush.
+- Call to Arms: Reinforcement infantry.
+- Judgment of the Dead: Marked AoE damages allied summons.
+Win: Defeat Alaric. Story: Necromancer learns origin of crusade and attacks.
+
+12. CAMPAIGN — LEVEL 2: THE CRIMSON MARCH
+
+Theme: Counteroffensive and siege
+Art: Roads, devastated settlements, forests, camps, barricades and distant
+fortress towers.
+Story: Necromancer's army marches toward Covenant headquarters.
+
+Mechanics:
+- Guided progression through interconnected battle zones; outposts spawn
+  reinforcements until destroyed.
+- Holy Ward Generators damage/weaken summons in areas.
+- Destroy enemy supply carts for optional rewards.
+
+Timeline:
+00:00 Patrols
+04:00 Fortified checkpoint
+06:00 Templar ambush
+09:00 Siege outpost
+12:00 Heavy infantry
+15:00 Ward generator
+18:00 Cathedral defenders mobilize
+20:00 Fortress assault
+24:00 Marshal Vael boss
+
+Boss: MARSHAL VAEL, THE CRIMSON BULWARK
+Shield and flaming holy sword.
+- Shieldwall: High frontal damage resistance.
+- Crusader's Command: Infantry formation waves.
+- Radiant Cleave: Sweeping melee.
+- Holy Standard: Buff zone.
+- Last Stand: Attack speed boost below 30% HP.
+Win: Defeat Vael and breach fortress gates.
+
+13. CAMPAIGN — LEVEL 3: THE SANCTUM OF JUDGMENT
+
+Theme: Final assault
+Art: Cathedral halls, cloisters, sacred courtyards, stained glass, giant
+statues, golden mosaics; progressively corrupted as holy wards fall.
+Story: Invade fortress interior and defeat Covenant's supreme leader.
+
+Mechanics:
+- Sanctified chambers punish undead until their ward crystals are destroyed.
+- Sacred altars are optional/required objectives that weaken later enemies.
+- Cathedral Guardians are construct minibosses controlling route access.
+
+Timeline:
+00:00 Outer defenders
+04:00 Sanctified chamber
+07:00 Guardian miniboss
+10:00 High Confessor ambush
+13:00 Altar destruction
+16:00 Elite paladins
+19:00 Final sanctuary opens
+22:00 Final boss
+
+Final boss: GRAND INQUISITOR SERAPHINE, VOICE OF THE DAWN
+Phase 1 — Divine Judgment: Radiant projectiles, delayed holy circles,
+             templars, teleportation.
+Phase 2 — Avatar of the Dawn (60% HP): Relic transformation, rotating
+             holy beams, barrages, temporary undead suppression, constructs,
+             safe-zone navigation.
+Phase 3 — The Last Light (20% HP): Faster attacks, more hazards, no boss
+             healing support, collapsing arena, final army confrontation.
+Win: Defeat Seraphine and shatter radiant relic.
+Ending: Compound falls; other religious orders mobilize, setting up sequel.
+
+14. MAIN MENU AND PRE-RUN CONFIGURATION
+
+Visual menu: Necromancer in atmospheric candlelit crypt, attendants and live
+skin preview. Menu buttons: Play, Character Customization, Upgrades,
+Collection/Codex, Achievements, Settings, Exit.
+
+Pre-run options:
+- Select Graveyard, Crimson March or Sanctum (progression-locked initially).
+- Select character skin, difficulty and modifiers.
+
+Difficulties:
+- Initiate: Easier scaling.
+- Necromancer: Standard.
+- Lich: Increased HP/aggression.
+- Deathlord: Hardest with more elites.
+
+Optional modifiers:
+- Endless Crusade: +30% enemy spawn rate.
+- Hardened Faith: +25% enemy health.
+- Divine Fury: +20% enemy damage.
+- Purge the Unholy: More Purifiers.
+- Scarcity: Reduced healing drops.
+- Frail Master: Reduced player starting HP.
+- Vengeful Dead: Minions damage up, HP down.
+- Holy Retribution: Elites emit radiant attacks on death.
+
+Modifier stacking should show total reward multiplier, not hide it.
+
+Cosmetic skins (no default mechanical bonuses):
+- The Gravecaller: Hood, skull staff.
+- The Plague Scholar: Decaying alchemical robes, green magic.
+- The Dread Sovereign: Black armor, royal cloak.
+- The Bone Oracle: Skull mask and spectral ornaments.
+- The Fallen Confessor: Corrupted Covenant-style clerical robes.
+
+15. PROGRESSION
+
+In-run: XP crystals -> level-ups -> three randomized choices; active abilities,
+passives, upgrades, or situational boosts. Limited rerolls/skips/banishes.
+
+Persistent currency: Soul Ash, earned after battles and spent on:
+- Necromancy: Minion cap, health and damage.
+- Shadowcraft: Spell damage, cooldown reduction, AoE.
+- Survival: Health, armor and movement.
+- Fortune: Pickup radius, reward luck and rerolls.
+
+Example achievement unlocks:
+- 1,000 Warrior kills -> Bone Golem.
+- Clear stage without Shadow Bolt -> alternative starting ability.
+- Defeat 500 priests -> priest evolution-related unlock.
+- Graveyard on Lich -> Bone Oracle skin.
+- Final boss with all 4 summons -> Dread Sovereign skin.
+
+16. UI / HUD
+
+Top left: Player HP, shields, level.
+Top center: Timer, objective/event indicator, boss HP when applicable.
+Top right: Pause, modifiers, kill count.
+Bottom center: Equipped active/passive icons, levels, ultimate cooldown.
+Bottom left: Army total, class counts and summon capacity.
+XP bar at top or bottom edge.
+
+Level-up panel: Pause combat; three large cards with icon, name, old/new
+level, description, actual stat delta and evolution readiness.
+
+Combat visual language:
+- Friendly undead: blue, violet, green.
+- Enemy holy effects: gold, ivory, crimson.
+- Clear AoE telegraphs.
+- Adjustable screen shake, damage numerals, particles and ally transparency.
+
+17. ART, ANIMATION AND AUDIO
+
+Stylized gothic dark fantasy, either polished pixel art or painted 2D.
+Necromancer: purple/green/black/bone. Undead: gray steel/cold blue/green.
+Covenant: crimson/ivory/silver/gold.
+
+Animation states:
+Necromancer: idle, walk, cast, hit, death.
+Undead: rise, walk, attack, hit, collapse, special ability.
+Enemies: walk, attack, cast, hurt, death.
+Bosses: intro, tells, special attacks, transformations, defeat.
+
+Sound: Ominous choirs, dark orchestration, low percussion and ambient drones;
+holy sounds are bright and metallic, necromancy is low and unsettling.
+Aggressive audio voice limits required with large crowds.
+
+18. TECHNICAL PLATFORM
+
+Preferred engine: Godot 4; alternative: Unity.
+Systems: PlayerController, PlayerStats, AbilityManager, HordeDirector,
+EnemyDirector, CombatResolver, SpatialIndex, ProjectileManager,
+ProgressionManager, RunConfigurationManager, UIManager, SaveSystem.
+
+Targets to test: 1080p / 60 FPS on modest gaming PC, 20–40 friendly units,
+150–300 enemies, many pooled projectiles. Not guaranteed without profiling.
+Object pooling, spatial queries, simplified crowd collision, staggered AI
+and visual density settings are essential.
+
+19. DEVELOPMENT PLAN
+
+Phase 1 / Prototype: Necromancer, movement, Skeleton Warrior, Shadow Bolt,
+two enemies, XP, level-ups and five-minute spawner.
+Phase 2 / Graveyard vertical slice: All 4 summons, 3 spells, initial passives,
+evolutions, six enemies, elite, Gravebreaker, menus and saves.
+Phase 3 / Campaign: March, Sanctum, remaining enemies and bosses, events,
+permanent progression, modifiers, skins.
+Phase 4 / Polish: Art, audio, QA, accessibility, controller support,
+optimization and balance.
+
+MVP: One necromancer, one graveyard, four summon abilities, three shadow
+abilities, seven enemies, one boss, basic upgrades, one difficulty, menus,
+level-up UI and victory/defeat states.
+
+20. DESIGN RISKS AND SUCCESS CRITERIA
+
+Risks:
+- Army overcrowding -> collision rules, separation steering, opacity options.
+- Too-passive combat -> telegraphed hazards, positioning-sensitive threats.
+- Excessive anti-undead suppression -> localized, telegraphed counterplay.
+- Mandatory builds -> test pure summoner, pure magic and hybrid clears.
+- Overscope -> polish graveyard vertical slice before later content.
+
+Success means unique and recognizable summon roles, meaningful level-up
+choices, engaging holy enemy counters, distinctive stages, viable build types,
+readable large battles, and strong replay value.
+
+======================================================================
+PART II — AUTONOMOUS HORDE TECHNICAL DESIGN (v0.2)
+======================================================================
+
+21. CORE OBJECTIVE AND BOUNDARIES
+
+The player ONLY moves the necromancer and selects run upgrades. Every undead
+unit spawns, follows, targets, attacks, heals, retreats and regroups without
+manual commands. The system must feel coordinated rather than perfectly
+omniscient, and be predictable enough for player positioning to matter.
+
+Excluded from current scope: RTS selection, unit click-to-move, manual focus
+fire, unit inventories, persistent named companions, tactical pause orders.
+
+22. HORDE COMPONENT RESPONSIBILITIES
+
+Player / AbilityManager: Current skills and effective stat modifiers.
+HordeDirector: Population limits, replenishment scheduling, formation anchor
+assignment, threat context, registered summons, buffs and target reservations.
+SummonedUnit: Its own movement, target choice, attack/heal, animation and HP.
+SpatialIndex: Shared nearby-enemy/ally lookup.
+CombatResolver: Hits, armor, death, status effects and healing.
+ProjectileManager: Projectiles, pooling and impacts.
+EnemyDirector: Enemy waves, enemy density and event escalation.
+
+23. BASE UNIT DATA (INITIAL PROTOTYPE ONLY)
+
+                     Warrior   Archer   Mage   Priest
+HP                      60       30       35      40
+Attack damage           10        8       14       3
+Attack interval        1.2s     1.6s     2.5s     2.0s
+Preferred range         22px    170px    145px    150px
+Movement speed          85       95       82      90
+Level 1 count            2        1        1       1
+Unit radius             10px      9px     10px     10px
+
+For priest, offensive attack is used only when no heal is needed. Example
+healing throughput in balance sandbox was 8 HP per cast at 2.0s interval,
+subject to tuning and skill level. Coordinate baseline ~32px per world tile.
+
+Army cap = sum of equipped summon abilities' class caps + global bonuses.
+Level-one composition with all four abilities = 5 total summons.
+Target common late-game composition = 20–40 undead.
+
+24. SUMMON LIFECYCLE
+
+SPAWN -> ORIENT -> TARGET -> ENGAGE/REPOSITION -> REPEAT -> DIE/DESPAWN
+
+Create a summon when skill is learned, capacity increases, timer replaces a
+casualty, or a temporary summon effect activates.
+
+Spawn location: Ground point ~35–80px from player, navigable, not solid
+world geometry, preferably not inside hazards or enemy collider. Failed
+spawns retry rather than consume capacity/cooldown.
+
+Initial sequential per-ability replacement intervals:
+Warrior 5s; Archer 8s; Mage 12s; Priest 15s.
+If an ability can hold 5 warriors and only 3 survive, spawn the missing 2
+one at a time per interval. Each parent ability controls its own queue.
+
+On death: Stop AI/attacks, deregister from targetable sets, release target
+and anchor reservations, play death FX, pool unit and queue replacement.
+Corpses are cosmetic and non-collidable.
+
+Leash: Engagement zone ~220px from player; soft recall at 320px; hard
+spectral fade/teleport at 650px for stranded units. Hard recall should be rare.
+
+25. FINITE STATE MACHINE
+
+States: SPAWNING, FOLLOWING, ACQUIRING, ENGAGING, REPOSITIONING,
+CASTING, RETREATING, RETURNING, DEAD.
+
+Transitions:
+SPAWNING -> FOLLOWING when emergence finishes.
+FOLLOWING -> ACQUIRING when a viable enemy is found.
+ACQUIRING -> ENGAGING when target chosen; otherwise FOLLOWING.
+ENGAGING -> CASTING/attack when in valid range and ready.
+ENGAGING -> REPOSITIONING if line of sight or range inadequate.
+ENGAGING -> RETURNING when target pursuit exceeds leash.
+ENGAGING -> ACQUIRING when target dies.
+REPOSITIONING -> ENGAGING when firing position achieved.
+RETURNING -> FOLLOWING after re-entering army region.
+Any alive state -> DEAD at zero HP.
+
+Suggested rates: movement physics 60Hz; general AI decisions 5Hz;
+target checks 3–5Hz; formation anchors 4Hz; player threat checks 5Hz.
+Stagger AI work among unit groups to avoid synchronized spikes.
+
+26. SOFT FORMATION / POSITIONING
+
+Use non-rigid circles around player, weighted toward threats.
+Inner defense band 35–85px: Warriors.
+Midline 85–155px: Archers and mages.
+Support band 60–125px: Priests.
+These are preferences; role-based behavior overrides anchors when warranted.
+
+Assign player-relative angular slots spread across rings. Add slight stable
+random offsets to avoid perfect geometry. Threat direction biases warriors
+toward approaching enemies; support avoids dangerous crowd densities.
+
+Steering vector combines formation attraction, target pursuit, ally
+separation, obstacle avoidance, and threat avoidance; weighted and clamped.
+
+Example weights:
+Warrior: pursuit 1.0, formation 0.35, ally separation 0.8,
+         obstacle avoidance 1.2, threat avoidance 0.1.
+Priest:  pursuit 0.0 while healing, formation 0.7, separation 0.8,
+         obstacle avoidance 1.2, threat avoidance 1.0.
+These are tuneable data values, not strict physics constants.
+
+Collision design:
+- Player <-> friendly undead: NO physical collision.
+- Friendly <-> friendly: NO hard collisions; steering separation only.
+- Friendly <-> enemy: No blocking collision for initial prototype; enemies
+  can still hit allied summons via attacks and overlapping hit detection.
+- Units <-> solid world: YES collision.
+- Corpses: NO physics collision.
+
+Open arenas use steering. Indoor halls can use navigation for major routes,
+local avoidance for small obstacles and recall if pathing fails. Never
+recalculate full paths every physics frame.
+
+27. TARGET ACQUISITION
+
+Unit queries shared spatial index for living, targetable candidate enemies
+within its acquisition range; ranged attacks may require line of sight.
+
+Score target (normalize all constituent measures):
+score = distance_value*Wd + threat_to_player*Wt + role_priority*Wr
+      + tactical_value*Wv - overkill_penalty
+
+Warriors prefer enemies attacking player, close-range intruders, accessible
+ranged casters, then nearest available enemy. Don't chase distant targets
+while necromancer is surrounded.
+
+Archers prefer exposed chaplains/healers, enemy archers/casters,
+near-death finishable enemies, then unblocked nearby targets.
+
+Mages prefer largest valuable AoE cluster, groups with support/elite targets,
+groups closing on player, then isolated units when needed. Score potential
+impact positions, generally based on enemy centers and nearby units.
+
+Priests prioritize critically injured necromancer IF their skill explicitly
+allows player healing; allies below 35% HP; allies with large missing
+normalized HP; large damaged clusters if AoE heal unlocked; minor offense
+when nothing to heal.
+
+Target commitment: Hold reasonable target for >=1s; instantly switch on
+death/invalidity; early switch only for a significantly greater threat.
+Overkill: HordeDirector tracks rough committed ranged damage; redirect new
+shots when target is already expected to die. Approximate, not exact.
+
+28. WARRIOR AI
+
+Acquire close threat -> approach within ~22px -> melee swing -> hit on
+animation impact -> cooldown -> repeat. Intercept enemies within ~80px of
+player; don't stray excessively. Evolution Dreadguard: armor, cleave,
+reactive strikes, larger silhouette.
+
+29. ARCHER AI
+
+Choose ranged-priority target -> move into ~170px preferred range -> check
+line of sight -> fire arrow -> cooldown. If threatening enemy is within
+~45px, kite/retreat if space permits; otherwise keep firing.
+Evolution Gravebow: piercing, cursed arrows, volleys, longer acquisition.
+
+30. MAGE AI
+
+Collect nearby enemy candidates -> score circular explosion opportunities
+based on counts, clustered high-value units and proximity to player -> cast
+at best position -> projectile/impact -> splash and optional Soulburn ->
+cooldown. Evolution Lich Conclave: larger blasts, chains, curses, periodic
+shadow-storm AoE.
+
+31. PRIEST AI
+
+Collect damaged nearby allies -> heal target with highest weighted urgency
+-> approach range -> cast -> apply capped heal -> cooldown -> seek next.
+Proposed normalized healing score:
+0.6*(missing health fraction) + 0.2*(normalized missing raw HP)
++ 0.2*(tactical role priority).
+Warriors may get a small role bonus. Never heal full-HP allies. If player
+healing is enabled, critical necromancer has top priority. Evolution Profane
+Bishop adds group heal aura, defensive blessing and damage pulse.
+
+32. SHARED ARMY COORDINATION
+
+HordeDirector holds living unit registry, class caps, anchor ownership,
+local player-threat summary, summon queues, buffs and rough pending ranged
+damage reservations.
+
+Threat categories: immediate melee, ranged cluster, holy support,
+elite/boss, environmental hazards. Raise warrior defense priority during
+player danger while keeping archers/mages providing damage and priests
+healing. Once threats disappear, return to formation band preferences.
+
+Bosses: Warriors engage but respect leash; archers prioritize boss unless
+urgent support target appears; mages target boss+adds for useful splash;
+priests sustain allied units. Bosses can suppress or kill squads with clear
+telegraphs but never permanently disable summon abilities.
+
+33. SHADOW MAGIC INTERACTIONS
+
+Shadow Bolt can preferentially hit enemies threatening warriors; future
+curse marks can increase minion damage.
+Shadow Orb Shield protects player from threats slipping through frontline;
+future upgrades may grant nearby minions defense.
+Shadow Blast slows/clusters nearby foes and creates intercept opportunities;
+future synergy can buff minion move speed or reduce replacement timers.
+
+34. SUMMON SKILL PROGRESSION
+
+Example Skeleton Warrior Level 1–5:
+L1: 2 skeleton warriors.
+L2: +1 warrior, +10% damage.
+L3: +2 warriors, +15% HP.
+L4: +1 warrior, +20% attack speed.
+L5: +2 warriors, +20% HP.
+Total 8 before global capacity bonuses.
+
+Global passives:
+- Grave Dominion: Capacity.
+- Necrotic Vigor: Max minion health.
+- Dark Command: Minion attack damage/speed.
+- Soul Recycling: Faster replacement.
+- Unholy Resilience: Armor/AoE resistance.
+- Bound Souls: Speed and leash/recall improvements.
+
+Current summons recalculate effective attributes upon upgrades. Health
+percentage is preserved on max HP increase unless healing explicitly occurs.
+Recommended stacking: Add like-category bonus percentages, then multiply
+separate categories. Make formula consistent and player-visible.
+
+35. CRIMSON COVENANT INTERACTION RULES
+
+Purifiers prioritize undead and deal minion bonus damage; relatively
+vulnerable to ranged focus.
+Chaplains heal other enemies; increase ranged-unit target preference.
+Templars charge and disrupt melee army, threatening player through gaps.
+Banner Bearers buff near soldiers; elevated target priority.
+Radiant Inquisitors produce holy hazards; later difficulty may briefly
+suppress replacement locally with telegraphed visuals.
+Boss suppression must allow normal replacement afterward.
+
+36. GODOT 4 PROPOSED SCENE/CLASS TREE
+
+Game (Node2D)
+  Player (CharacterBody2D)
+    PlayerController
+    PlayerStats
+    AbilityManager
+    HealthComponent
+  HordeDirector
+  EnemyDirector
+  CombatResolver
+  SpatialIndex
+  ProjectileManager
+  EffectManager
+  UnitContainer
+  EnemyContainer
+  UIManager
+
+SummonedUnit (CharacterBody2D or optimized equivalent)
+  MovementController
+  BehaviorController
+  TargetSelector
+  CombatController
+  HealthComponent
+  StatusEffectController
+  VisualController
+
+Share unit logic in a base scene/script and parameterize per-class behavior
+with data resources. Avoid four independent unrelated AI implementations.
+
+37. DATA DEFINITIONS
+
+SummonDefinition (Godot Resource):
+unit_id, display_name, unit_scene, max_health, base_damage, move_speed,
+attack_interval, attack_range, acquisition_range, preferred_follow_radius,
+soft_recall_distance, hard_recall_distance, target_profile, attack_profile,
+ability_definitions, animation_profile, visual_effect_profile.
+
+SummonAbilityDefinition (Godot Resource):
+ability_id, associated_unit_id, current_level, population_by_level,
+replenishment_interval, evolution_requirements, evolution_id.
+(Note for implementation: Keep immutable design data in a Resource, and
+per-run current_level/timers/live instances in separate runtime state.)
+
+Events/signals:
+summon_created, summon_died, summon_count_changed, summon_cap_changed,
+target_acquired, damage_applied, healing_applied, ability_cast, unit_evolved,
+army_buff_changed. Don't broadcast movement every frame globally.
+
+38. OPTIMIZATION AND PERFORMANCE
+
+Target test environment: 60 FPS at 1080p, 40 undead, 250 enemies, hundreds
+of projectiles; measured on real target-class hardware.
+
+- Use grid-based spatial hash or other 2D spatial partitioning for nearby
+  allied, enemy and AoE queries; avoid full enemy scans per unit.
+- Pool common enemies, summons, projectiles, combat text, effects, corpses.
+  Reset all mutable state, references, timers, effects and signal connections.
+- Stagger target/strategy decisions; physics motion stays responsive.
+- Use lightweight direct steering; pathfind only on target/path changes.
+- Use batched/simple effects, cap audio voices, limit simultaneous projectiles.
+- Expose damage-number density, corpses, particles, unit alpha, screen shake
+  and minion HP bar toggles.
+
+39. BEHAVIOR PSEUDOCODE
+
+HORDE DIRECTOR:
+function update_horde(delta):
+    update_summon_replenishment(delta)
+    if formation_update_due: calculate_formation_anchors()
+    if threat_update_due: evaluate_player_threats()
+    for unit in scheduled_behavior_units:
+        if unit.is_alive: unit.update_behavior()
+    update_army_wide_effects(delta)
+
+UNIT:
+function update_behavior():
+    if health <= 0:
+        enter_state(DEAD)
+        return
+    if distance_to_player > hard_recall:
+        perform_safe_recall()
+        return
+    if distance_to_player > soft_recall:
+        enter_state(RETURNING)
+        return
+    if state == CASTING:
+        continue_cast()
+        return
+    if has_valid_target():
+        if can_attack_target(): perform_attack_if_ready()
+        else: reposition_for_attack()
+        return
+    target = acquire_best_target()
+    if target != null: enter_state(ENGAGING)
+    else: enter_state(FOLLOWING)
+
+TARGET SELECTOR:
+function acquire_best_target():
+    candidates = spatial_index.get_nearby_enemies(position, acquisition_range)
+    best = null
+    best_score = -infinity
+    for enemy in candidates:
+        if not is_valid_target(enemy): continue
+        score = evaluate_target(enemy, target_profile)
+        if score > best_score:
+            best = enemy
+            best_score = score
+    return best
+
+REPLENISHMENT:
+function update_summon_ability(delta):
+    if active_count >= current_capacity:
+        replenish_timer = 0
+        return
+    replenish_timer += delta
+    if replenish_timer >= replenish_interval:
+        if try_spawn_summon(): replenish_timer = 0
+
+PRIEST TARGETING:
+function choose_healing_target():
+    allies = spatial_index.get_nearby_allies(position, healing_range)
+    best = null
+    score_best = 0
+    for ally in allies:
+        if ally.health >= ally.max_health: continue
+        score = calculate_healing_priority(ally)
+        if score > score_best:
+            score_best = score
+            best = ally
+    return best
+
+40. TEST PLAN
+
+Functional:
+- Buy Warrior -> exactly two spawn.
+- No spawn beyond population cap.
+- Kill one -> count reduces and replacement occurs after cooldown.
+- Move player -> units follow and recover from long-distance pursuit.
+- Warrior prioritizes enemy threatening player.
+- Archer prefers range and attempts kite within ~45px.
+- Mage picks useful enemy cluster.
+- Priest heals wounded unit, never wastes full-health heals.
+- Unit death deregisters targets and pool resets correctly.
+- All four classes act differently while functioning as a whole.
+- Boss AoEs meaningfully hurt army without locking it out forever.
+
+Stress scenarios:
+(10 allies, 50 enemies), (20,100), (40,200), (60,300).
+Measure mean/worst FPS and frametime, AI cost, physics, projectile cost,
+allocations, nav requests and memory.
+
+Acceptance:
+- Friendly units cannot physically trap player.
+- Units don't oscillate rapidly between targets.
+- Long pursuits always resolve via return or recall.
+- Summons replenish, cooperate and remain useful against bosses.
+- All classes readable at normal gameplay zoom.
+- Stable measured performance at agreed entity counts.
+
+41. IMPLEMENTATION MILESTONES
+
+A. Basic army: Shared SummonedUnit, HordeDirector, warrior follow/target,
+   melee, death, replenishment. Success: 10 soldiers act autonomously.
+B. Class roles: Archer, mage, priest, ranged/AoE/healing, class targeting.
+   Success: Four-class army functions for a five-minute simulation.
+C. Coordination: Bands, threats, ally separation, priority scoring, leash.
+   Success: Recognizable formation and automatic threat response.
+D. Optimization: Spatial hash, pooling, staggered AI, projectiles, profiler.
+   Success: Target performance with late-game crowds.
+E. Progression: Five skill levels, passives, evolutions, synergies, bosses,
+   summon HUD. Success: Win graveyard with summoner-first build.
+
+42. ILLUSTRATIVE BALANCE SANDBOX
+
+Initial illustrative late-game army composition:
+8 warriors + 5 archers + 3 mages + 2 priests = 18 summons.
+Base attacks: 10/1.2, 8/1.6, 14/2.5, 3/2 DPS per unit respectively.
+Example bonuses: +50% power and +30% attack speed.
+Approximate theoretical DPS = sum(count * damage / interval)
+                            * (1 + power_bonus)
+                            * (1 + speed_bonus).
+Priest baseline healing example = priest_count * 8 / 2.0
+                                * (1 + healing_bonus)
+                                * (1 + cast_speed_bonus).
+These idealized outputs ignore hit rate, armor, animation, targets, splash,
+overheal, deaths, healing downtime and replenishment.
+
+43. KEY DESIGN DECISIONS TO PRESERVE
+
+- Autonomous horde, NOT manual RTS commands.
+- Four main classes: warrior, archer, mage, priest.
+- Shadow Bolt, Orb Shield and Blast remain core standalone spells.
+- Enemy forces consist of crimson holy paladins, priests and infantry.
+- Progression through graveyard defense, compound assault and compound
+  interior final boss.
+- Pre-run menu chooses level, difficulty modifiers and skins.
+- Readability and performant mass combat take precedence over simulation.
+- Pure summoner, pure shadow and hybrid strategies should each be viable.
+
+NEXT RECOMMENDED WORK FOR CLAUDE
+1. Implement Godot 4 prototype architecture with scenes and scripts.
+2. Start with movable player, 10 autonomous skeleton warriors, enemy targets,
+   summon replenishment, a live debug overlay and 5-minute wave director.
+3. Add archers, mages, priests, then special Crimson Covenant enemies.
+4. Only after AI feels good, construct the Graveyard vertical slice.
+
+END OF DOCUMENT
