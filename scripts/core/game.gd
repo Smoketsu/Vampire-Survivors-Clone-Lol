@@ -56,11 +56,6 @@ var worst_step_usec: int = 0
 var _step_usec_total: int = 0
 ## Number of simulation steps measured.
 var _step_count: int = 0
-## Remaining camera shake strength in px.
-var _shake: float = 0.0
-## Separate RNG for cosmetic shake so frame-rate dependent visuals never
-## disturb the (seeded) gameplay RNG used by the autotest.
-var _fx_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 # --- Systems (GDD §36 scene/class tree) ----------------------------------------
 
@@ -227,14 +222,10 @@ func _physics_process(delta: float) -> void:
 		_open_level_up()
 
 
-func _process(delta: float) -> void:
-	# Camera follow + decaying screen shake (cosmetic, frame-rate based).
-	var offset := Vector2.ZERO
-	if _shake > 0.1:
-		offset = Vector2(_fx_rng.randf_range(-_shake, _shake), _fx_rng.randf_range(-_shake, _shake))
-		_shake = move_toward(_shake, 0.0, 30.0 * delta)
+func _process(_delta: float) -> void:
+	# Camera follow + trauma-based screen shake (Juice autoload, cosmetic).
 	camera.position = player.position
-	camera.offset = offset
+	camera.offset = Juice.camera_offset()
 	ground.update_view(player.position)
 
 
@@ -254,9 +245,9 @@ func stat_add(key: String, amount: float) -> void:
 	stats[key] = float(stats.get(key, 0.0)) + amount
 
 
-## Adds camera shake of `amount` px (strongest request wins).
+## Adds camera shake for a request of `amount` px (trauma-based, see Juice).
 func shake(amount: float) -> void:
-	_shake = maxf(_shake, amount)
+	Juice.shake(amount)
 
 
 ## Visible world size in px (viewport / zoom). Used for the spawn ring.

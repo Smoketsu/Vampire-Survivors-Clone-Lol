@@ -46,7 +46,7 @@ const VIGNETTE_FADE: float = 0.45  # TUNING (not in GDD)
 ## XP pickups closer together than this (s) continue the rising chain.
 const XP_CHAIN_WINDOW: float = 0.45  # TUNING (not in GDD)
 ## Semitone steps of the XP pickup chain (natural minor, one octave).
-const XP_CHAIN_STEPS := PackedFloat32Array([0.0, 2.0, 3.0, 5.0, 7.0, 8.0, 10.0, 12.0])  # TUNING (not in GDD)
+const XP_CHAIN_STEPS: Array = [0.0, 2.0, 3.0, 5.0, 7.0, 8.0, 10.0, 12.0]  # TUNING (not in GDD)
 ## Damage source tag (CombatResolver) -> hit sound; others use enemy_hit.
 const SOURCE_SOUNDS: Dictionary = {"bolt": "bolt_hit", "orb": "orb_hit", "bash": "warrior_bash",
 	"blast": "shadow_blast", "mage": "mage_burst"}
@@ -293,7 +293,7 @@ func _on_xp_collected(pos: Vector2) -> void:
 	if now - _xp_last_msec > int(XP_CHAIN_WINDOW * 1000.0):
 		_xp_chain = 0
 	_xp_last_msec = now
-	Sfx.play("xp_pickup", Vector2.INF, pow(2.0, XP_CHAIN_STEPS[_xp_chain] / 12.0))
+	Sfx.play("xp_pickup", Vector2.INF, pow(2.0, float(XP_CHAIN_STEPS[_xp_chain]) / 12.0))
 	_xp_chain = mini(_xp_chain + 1, XP_CHAIN_STEPS.size() - 1)
 	fx.sparkle(pos, Palette.XP, 3)
 

@@ -40,9 +40,37 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Shadow Bolt aim: Nearest / Strongest | **T** | **Y** |
 | Pause (Resume / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
+| Settings (volume, shake, damage numbers, fullscreen, keys) | **Settings** in the main or pause menu; Esc / Back closes | Focus + **A**; **B** closes |
+| Rebind a key (in Settings) | Select a binding, then press the new key | **B** cancels |
 
 You don't aim or cast anything yourself. Spells, summons, targeting, healing and
 replacing fallen units all happen automatically (GDD §4, §21).
+
+### Audio, Feel & Settings
+
+- **Audio, with no audio files.** `Synth` builds every sound effect and a 12 s
+  dark D-minor ambient loop (drone, choir pad, heartbeat) as 16-bit PCM
+  `AudioStreamWAV`s on worker threads at startup. The main thread is blocked
+  for under 1 ms; all sounds are ready in about 0.15–0.3 s and the music in
+  about 0.3–0.5 s. Recipes and voice limits live in `scripts/data/sound_data.gd`.
+  The `Sfx` autoload creates the **Master / Music / SFX** buses and plays
+  sounds from a pool of 24 voices. Each sound also has its own voice cap,
+  cooldown and priority, so 150 enemies dying at once play only a few voices.
+  In headless runs everything runs except actually starting the players.
+- **Feel (`Juice` autoload).** Trauma-based screen shake (bigger for boss
+  impacts and player damage), plus a short hit-stop on Hammerfall impacts,
+  boss kills and elite kills. Hit-stop is off under `--autotest` and while
+  the game is paused. Also: death pops, XP sparkles, a red hurt vignette, and
+  floating damage numbers. Particles and numbers are drawn by one node from
+  fixed ring buffers, and hits on the same enemy merge into one number.
+  `Juice` gets most events from the run's existing signals and stats.
+  Gameplay code only calls it in a few one-line hooks.
+- **Settings (`Settings` autoload, `SettingsMenu`).** Volume sliders, screen
+  shake, damage numbers, fullscreen, and keyboard rebinding of the primary key
+  for Move up / down / left / right, Shadow Bolt aim and Pause. Arrow keys and
+  controller bindings stay fixed, and binding a key that is already in use
+  swaps the two keys. Everything works with a controller. Settings are saved
+  to `user://settings.cfg` when the menu closes and loaded at startup.
 
 ### How a run works
 

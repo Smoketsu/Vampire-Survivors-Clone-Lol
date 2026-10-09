@@ -18,6 +18,9 @@ config/features=PackedStringArray("4.3", "GL Compatibility")
 [autoload]
 
 GameState="*res://scripts/core/game_state.gd"
+Sfx="*res://scripts/audio/sfx.gd"
+Settings="*res://scripts/core/settings.gd"
+Juice="*res://scripts/fx/juice.gd"
 
 [display]
 

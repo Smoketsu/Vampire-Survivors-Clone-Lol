@@ -1,5 +1,5 @@
-## PauseMenu — Esc / controller Start pause screen with Resume, Restart and
-## Main Menu (GDD §4 "Esc: Pause/settings"). It also owns the "pause" input
+## PauseMenu — Esc / controller Start pause screen with Resume, Settings,
+## Restart and Main Menu (GDD §4 "Esc: Pause/settings"). It also owns the "pause" input
 ## handling because it keeps processing while the tree is paused. While the
 ## menu is open, ui_cancel (Esc / controller B) also resumes.
 class_name PauseMenu
@@ -36,6 +36,7 @@ func _ready() -> void:
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(title)
 	_resume = _button(vb, "Resume", func() -> void: resume_pressed.emit())
+	_button(vb, "Settings", func() -> void: SettingsMenu.open_over(self, get_viewport().gui_get_focus_owner()))
 	_button(vb, "Restart", func() -> void: restart_pressed.emit())
 	_button(vb, "Main Menu", func() -> void: main_menu_pressed.emit())
 	var hints := UiTheme.label("Move: WASD / Arrows / Left stick\nT / Y: Shadow Bolt aim (Nearest / Strongest)\nEsc / B: Resume    F3: Debug", 13, UiTheme.TEXT_DIM)

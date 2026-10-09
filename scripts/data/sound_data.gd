@@ -107,14 +107,14 @@ const SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "noise", "dur": 0.8, "amp": 0.6, "decay": 0.2, "lp0": 2500.0, "lp1": 120.0},
 			{"wave": "sine", "f0": 523.0, "dur": 0.9, "amp": 0.2, "decay": 0.3},
 			{"wave": "sine", "f0": 1443.0, "dur": 0.6, "amp": 0.1, "decay": 0.2}]},
-	"reckoning": {"dur": 2.2, "volume_db": -7.0, "max_voices": 1, "min_interval": 2000, "pitch_var": 0.0, "priority": 5,
+	"reckoning": {"dur": 1.9, "volume_db": -7.0, "max_voices": 1, "min_interval": 2000, "pitch_var": 0.0, "priority": 5,
 		"layers": [
-			{"wave": "sine", "f0": 146.83, "dur": 2.2, "amp": 0.35, "decay": 0.8},
+			{"wave": "sine", "f0": 146.83, "dur": 1.9, "amp": 0.35, "decay": 0.8},
 			{"wave": "sine", "f0": 405.0, "dur": 1.6, "amp": 0.15, "decay": 0.5},
-			{"wave": "saw", "f0": 73.42, "dur": 2.2, "amp": 0.2, "attack": 0.4, "lp0": 500.0, "vib_hz": 5.0, "vib_depth": 0.01},
-			{"wave": "saw", "f0": 87.31, "dur": 2.2, "amp": 0.15, "attack": 0.5, "lp0": 500.0, "vib_hz": 4.6, "vib_depth": 0.01},
-			{"wave": "saw", "f0": 110.0, "dur": 2.2, "amp": 0.15, "attack": 0.6, "lp0": 500.0, "vib_hz": 5.3, "vib_depth": 0.01},
-			{"wave": "noise", "dur": 1.5, "amp": 0.1, "attack": 0.5, "lp0": 600.0}]},
+			{"wave": "saw", "f0": 73.42, "dur": 1.9, "amp": 0.2, "attack": 0.4, "lp0": 500.0, "vib_hz": 5.0, "vib_depth": 0.01},
+			{"wave": "saw", "f0": 87.31, "dur": 1.9, "amp": 0.15, "attack": 0.5, "lp0": 500.0, "vib_hz": 4.6, "vib_depth": 0.01},
+			{"wave": "saw", "f0": 110.0, "dur": 1.9, "amp": 0.15, "attack": 0.6, "lp0": 500.0, "vib_hz": 5.3, "vib_depth": 0.01},
+			{"wave": "noise", "dur": 1.4, "amp": 0.1, "attack": 0.5, "lp0": 600.0}]},
 	# --- Player / progression ---------------------------------------------------
 	"player_hurt": {"dur": 0.25, "volume_db": -10.0, "max_voices": 1, "min_interval": 120, "pitch_var": 0.06, "priority": 4,
 		"layers": [
@@ -154,7 +154,7 @@ const SOUNDS: Dictionary = {  # TUNING (not in GDD)
 
 ## Music drone loop length in seconds (all oscillators are snapped to a whole
 ## number of cycles per loop so it repeats seamlessly).
-const MUSIC_LOOP_SECONDS: float = 16.0  # TUNING (not in GDD)
+const MUSIC_LOOP_SECONDS: float = 12.0  # TUNING (not in GDD)
 ## Root drone frequency (D2) of the minor-key ambient bed.
 const MUSIC_ROOT_HZ: float = 73.42  # TUNING (not in GDD)
 ## Pad chords (Hz per voice), one per equal segment of the loop:

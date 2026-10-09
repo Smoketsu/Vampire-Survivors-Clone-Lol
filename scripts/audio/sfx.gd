@@ -17,8 +17,12 @@
 ## Positional sounds are not panned; they are attenuated with distance from
 ## the camera centre and culled beyond CULL_DISTANCE.
 ## Runs with PROCESS_MODE_ALWAYS so menus and the level-up panel (tree
-## paused) still make sound. In headless runs Godot uses the dummy audio
-## driver; everything still runs, nothing is heard.
+## paused) still make sound. In headless runs (dummy audio driver, nothing
+## can be heard) synthesis, voice limiting and bookkeeping all still run,
+## but players are not started: a playback still alive when the autotest
+## calls quit() would be reported as a leaked instance at exit.
+## Voice occupancy is tracked from each sound's computed end time rather
+## than AudioStreamPlayer.playing, so it behaves the same in both modes.
 ## Pitch variation uses its own RNG, never the seeded gameplay RNG.
 extends Node
 
@@ -54,7 +58,7 @@ var plays_started: int = 0
 ## Plays dropped by a voice limit or cooldown (debug / tests).
 var plays_dropped: int = 0
 
-## Sound ids in SoundData order (index = synth task index).
+## Sound ids, most expensive first (index = synth task index).
 var _ids: PackedStringArray = PackedStringArray()
 ## Streams written by the synth tasks, one slot per id (guarded by _mutex).
 var _rendered: Array[AudioStreamWAV] = []
@@ -76,6 +80,10 @@ var _voices: Array[AudioStreamPlayer] = []
 var _voice_id: PackedStringArray = PackedStringArray()
 ## Start time (ms) of each voice's current sound.
 var _voice_start: PackedInt64Array = PackedInt64Array()
+## Time (ms) each voice's current sound ends (voice is free after it).
+var _voice_end: PackedInt64Array = PackedInt64Array()
+## True on the headless display server: players are never started.
+var _silent: bool = false
 ## Priority of each voice's current sound.
 var _voice_prio: PackedInt32Array = PackedInt32Array()
 ## id -> last accepted play time (ms), for min_interval.
@@ -92,6 +100,7 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 func _ready() -> void:
 	_t0_usec = Time.get_ticks_usec()
+	_silent = DisplayServer.get_name() == "headless"
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_rng.randomize()
 	_setup_buses()
@@ -102,16 +111,21 @@ func _ready() -> void:
 		_voices.append(p)
 		_voice_id.append("")
 		_voice_start.append(0)
+		_voice_end.append(0)
 		_voice_prio.append(0)
 	_music = AudioStreamPlayer.new()
 	_music.bus = BUS_MUSIC
 	_music.volume_db = MUSIC_DB
 	add_child(_music)
-	for id: String in SoundData.SOUNDS.keys():
+	# Longest renders first, so the slowest sounds never start last and
+	# stretch the total synthesis time.
+	var order: Array = SoundData.SOUNDS.keys()
+	order.sort_custom(func(a: String, b: String) -> bool: return _cost(a) > _cost(b))
+	for id: String in order:
 		_ids.append(id)
 	_rendered.resize(_ids.size())
-	_music_task = WorkerThreadPool.add_task(_synth_music, false, "Gravebound music synth")
-	_sfx_task = WorkerThreadPool.add_group_task(_synth_one, _ids.size(), -1, false, "Gravebound sfx synth")
+	_music_task = WorkerThreadPool.add_task(_synth_music, true, "Gravebound music synth")
+	_sfx_task = WorkerThreadPool.add_group_task(_synth_one, _ids.size(), -1, true, "Gravebound sfx synth")
 	get_tree().node_added.connect(_on_node_added)
 	startup_msec = float(Time.get_ticks_usec() - _t0_usec) / 1000.0
 
@@ -124,6 +138,12 @@ func _exit_tree() -> void:
 	if _music_task >= 0:
 		WorkerThreadPool.wait_for_task_completion(_music_task)
 		_music_task = -1
+	# Release playbacks so the audio server holds no stream at exit.
+	_music.stop()
+	_music.stream = null
+	for p in _voices:
+		p.stop()
+		p.stream = null
 
 
 func _process(delta: float) -> void:
@@ -148,7 +168,8 @@ func _process(delta: float) -> void:
 		music_ready_msec = float(Time.get_ticks_usec() - _t0_usec) / 1000.0
 		_music.volume_db = -60.0
 		_music_fade = MUSIC_FADE_IN
-		_music.play()
+		if not _silent:
+			_music.play()
 		_report_if_done()
 	if _music_fade > 0.0:
 		_music_fade = maxf(0.0, _music_fade - delta)
@@ -158,8 +179,14 @@ func _process(delta: float) -> void:
 ## Prints the synthesis timings once both the bank and the music exist.
 func _report_if_done() -> void:
 	if bank_ready and _music_task < 0 and _music.stream != null:
-		print("[audio] main-thread startup %.1f ms; %d sfx ready after %.0f ms, music loop after %.0f ms (worker threads); driver: %s" % [
-			startup_msec, _ids.size(), sfx_ready_msec, music_ready_msec, AudioServer.get_driver_name()])
+		print("[audio] main-thread startup %.1f ms; %d sfx ready after %.0f ms, music loop after %.0f ms (worker threads); display: %s" % [
+			startup_msec, _ids.size(), sfx_ready_msec, music_ready_msec, DisplayServer.get_name()])
+
+
+## Rough render cost of sound `id` (duration x layer count).
+static func _cost(id: String) -> float:
+	var r: Dictionary = SoundData.SOUNDS[id]
+	return float(r["dur"]) * float((r["layers"] as Array).size())
 
 
 ## Worker thread: renders sound `i`.
@@ -226,9 +253,11 @@ func play(id: String, pos: Vector2 = Vector2.INF, pitch: float = 1.0) -> void:
 	p.volume_db = vol
 	var pv: float = def["pitch_var"]
 	p.pitch_scale = maxf(0.05, pitch * (1.0 + (_rng.randf_range(-pv, pv) if pv > 0.0 else 0.0)))
-	p.play()
+	if not _silent:
+		p.play()
 	_voice_id[v] = id
 	_voice_start[v] = now
+	_voice_end[v] = now + int(p.stream.get_length() / p.pitch_scale * 1000.0) + 1
 	_voice_prio[v] = prio
 	plays_started += 1
 
@@ -239,8 +268,9 @@ func _pick_voice(id: String, max_same: int, prio: int) -> int:
 	var oldest_same := -1
 	var free := -1
 	var victim := -1
+	var now := Time.get_ticks_msec()
 	for i in MAX_VOICES:
-		if not _voices[i].playing:
+		if now >= _voice_end[i]:
 			if free < 0:
 				free = i
 			continue
@@ -263,8 +293,9 @@ func _pick_voice(id: String, max_same: int, prio: int) -> int:
 ## Number of sound-effect voices currently playing (debug / tests).
 func active_voices() -> int:
 	var n := 0
-	for p in _voices:
-		if p.playing:
+	var now := Time.get_ticks_msec()
+	for i in MAX_VOICES:
+		if now < _voice_end[i]:
 			n += 1
 	return n
 
@@ -308,6 +339,7 @@ func _on_slider_changed(_value: float) -> void:
 func play_card_select() -> void:
 	var now := Time.get_ticks_msec()
 	for i in MAX_VOICES:
-		if _voice_id[i] == "ui_confirm" and _voices[i].playing and now - _voice_start[i] < CONFIRM_SUPPRESS_MSEC:
+		if _voice_id[i] == "ui_confirm" and now < _voice_end[i] and now - _voice_start[i] < CONFIRM_SUPPRESS_MSEC:
 			_voices[i].stop()
+			_voice_end[i] = 0
 	play("card_select")

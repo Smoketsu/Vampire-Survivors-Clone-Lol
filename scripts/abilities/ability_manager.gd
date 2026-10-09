@@ -183,6 +183,7 @@ func _cast_bolt(s: Dictionary) -> bool:
 	for i in count:
 		var e: Enemy = _cands[i % _cands.size()][1]
 		game.projectiles.fire_friendly(Projectile.Kind.SHADOW_BOLT, p, e, float(s["damage"]), float(s["speed"]), int(s["pierce"]), "bolt")
+	Sfx.play("bolt_cast", p)
 	return true
 
 

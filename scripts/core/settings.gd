@@ -20,7 +20,7 @@ signal changed
 ## Settings file location.
 const PATH: String = "user://settings.cfg"
 ## Actions the player may rebind (keyboard primary key only), in menu order.
-const REBINDABLE := PackedStringArray(["move_up", "move_down", "move_left", "move_right", "toggle_aim", "pause"])
+const REBINDABLE: Array = ["move_up", "move_down", "move_left", "move_right", "toggle_aim", "pause"]
 ## Menu labels for REBINDABLE actions.
 const ACTION_LABELS: Dictionary = {"move_up": "Move up", "move_down": "Move down", "move_left": "Move left",
 	"move_right": "Move right", "toggle_aim": "Shadow Bolt aim", "pause": "Pause"}

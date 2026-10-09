@@ -72,13 +72,16 @@ func spawn_ring(pos: Vector2, color: Color) -> void:
 ## Boss ground-AoE warning circle shown for `duration` seconds.
 func telegraph_circle(pos: Vector2, radius: float, duration: float) -> void:
 	_spawn(Effect.Kind.TELEGRAPH_CIRCLE, pos, Palette.GOLD, radius, duration, Vector2.RIGHT, 2.0, true)
+	Sfx.play("boss_telegraph", pos)
 
 
 ## Boss charge-lane warning from `from` to `to`, `lane_width` px wide.
 func telegraph_line(from: Vector2, to: Vector2, lane_width: float, duration: float) -> void:
 	_spawn(Effect.Kind.TELEGRAPH_LINE, from, Palette.GOLD, 0.0, duration, to - from, lane_width, true)
+	Sfx.play("boss_telegraph", from)
 
 
 ## Big holy impact burst (Hammerfall landing, boss death).
 func impact(pos: Vector2, radius: float, color: Color) -> void:
 	_spawn(Effect.Kind.IMPACT, pos, color, radius, 0.4, Vector2.RIGHT, 2.0, true)
+	Juice.impact(pos, radius)

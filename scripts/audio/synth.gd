@@ -16,9 +16,9 @@ extends RefCounted
 
 ## Output sample rate for sound effects (Hz).
 const SFX_RATE: int = 22050  # TUNING (not in GDD)
-## Output sample rate for the music loop (Hz). The drone is all low
-## frequencies, so half rate halves the generation cost at no audible loss.
-const MUSIC_RATE: int = 11025  # TUNING (not in GDD)
+## Output sample rate for the music loop (Hz). The drone, pad and wind are
+## all low frequencies, so a low rate cuts generation cost at no audible loss.
+const MUSIC_RATE: int = 8000  # TUNING (not in GDD)
 ## Peak level every rendered sound is normalised to (0..1 of full scale).
 const PEAK: float = 0.89  # TUNING (not in GDD)
 ## Fade-out at the end of every layer (s) so cut-off layers never click.
@@ -154,6 +154,8 @@ static func render_music(rng_seed: int) -> AudioStreamWAV:
 	var f2 := snap(SoundData.MUSIC_ROOT_HZ * 1.006, loop_s)
 	var f_sub := snap(SoundData.MUSIC_ROOT_HZ * 0.5, loop_s)
 	var lfo := TAU * 2.0 / loop_s  # wind swells twice per loop
+	var drone_a := TAU * 60.0 * inv_rate  # one-pole low-pass at ~60 Hz
+	var wind_a := TAU * 140.0 * inv_rate  # one-pole low-pass at ~140 Hz
 	# The filters start `warm` samples before 0 (with matching phases, since
 	# every frequency loops) so their state at sample 0 equals the state at
 	# the loop end: no click at the loop point.
@@ -166,9 +168,9 @@ static func render_music(rng_seed: int) -> AudioStreamWAV:
 	for i in range(-warm, n):
 		var t := float(i) * inv_rate
 		var saw := (2.0 * p1 - 1.0) + (2.0 * p2 - 1.0)
-		y_drone += 0.035 * (saw - y_drone)
+		y_drone += drone_a * (saw - y_drone)
 		var wind_amp := 0.05 + 0.04 * sin(lfo * t)
-		y_wind += 0.08 * (rng.randf() * 2.0 - 1.0 - y_wind)
+		y_wind += wind_a * (rng.randf() * 2.0 - 1.0 - y_wind)
 		if i >= 0:
 			buf[i] = y_drone * 0.32 + sin(TAU * p3) * 0.22 + y_wind * wind_amp * 3.0
 		p1 += f1 * inv_rate
