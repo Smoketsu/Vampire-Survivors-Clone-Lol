@@ -1,5 +1,5 @@
-## MainMenu — title screen with Play / Quit (GDD §14 lists more buttons —
-## customization, upgrades, codex, achievements, settings — which are out of
+## MainMenu — title screen with Play / Settings / Quit (GDD §14 lists more
+## buttons — customization, upgrades, codex, achievements — which are out of
 ## prototype scope). The candle-lit crypt backdrop is drawn in _draw().
 class_name MainMenu
 extends Control
@@ -35,6 +35,11 @@ func _ready() -> void:
 	_play.custom_minimum_size = Vector2(0, 52)
 	_play.pressed.connect(func() -> void: play_pressed.emit())
 	vb.add_child(_play)
+	var settings := Button.new()
+	settings.text = "Settings"
+	settings.custom_minimum_size = Vector2(0, 44)
+	settings.pressed.connect(func() -> void: SettingsMenu.open_over(self, settings))
+	vb.add_child(settings)
 	var quit := Button.new()
 	quit.text = "Quit"
 	quit.custom_minimum_size = Vector2(0, 44)

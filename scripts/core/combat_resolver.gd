@@ -27,6 +27,7 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	game.stat_add("dmg_" + source, dealt)
 	if e.is_boss:
 		game.stat_add("bossdmg_" + source, dealt)
+	Juice.enemy_hit(e, dealt, source)
 	if e.hp <= 0.0:
 		_kill_enemy(e)
 	return dealt
@@ -116,6 +117,7 @@ func slow_enemy(e: Enemy, fraction: float, duration: float) -> void:
 ## EnemyDirector deactivates/pools it (or ends the run for the boss).
 func _kill_enemy(e: Enemy) -> void:
 	game.effects.pop(e.position, Palette.CRIMSON if not e.is_boss else Palette.GOLD, e.radius * 1.2)
+	Juice.enemy_killed(e)
 	if e.xp_value > 0:
 		game.pickups.spawn(e.position, e.xp_value)
 		game.stat_add("xp_dropped", e.xp_value)

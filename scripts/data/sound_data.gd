@@ -1,0 +1,169 @@
+## SoundData — DESIGNER-TUNABLE recipes for every procedurally synthesized
+## sound effect, plus the per-sound voice limits (GDD §12 Audio: "necromancy
+## sounds low and unsettling", "holy sounds bright and metallic", "aggressive
+## audio voice limits ... cap audio voices"). The GDD gives no voice counts
+## (GDD §15.7 q48), so every number here is `# TUNING (not in GDD)`.
+## No audio files exist: Synth renders these recipes to AudioStreamWAV at
+## startup and Sfx plays them through a capped voice pool.
+##
+## Recipe keys (one entry of SOUNDS):
+##   dur           total length in seconds (layers are clipped to it).
+##   layers        Array of layer Dictionaries mixed together (see below).
+##   volume_db     playback volume on the SFX bus.
+##   max_voices    max simultaneous voices of THIS sound (oldest is stolen).
+##   min_interval  ms; a new play of the same sound inside it is dropped.
+##   pitch_var     random +/- pitch_scale variation per play (0 = none).
+##   priority      higher wins when the global voice pool is full.
+## Layer keys:
+##   wave          "sine" | "tri" | "saw" | "square" | "noise".
+##   f0, f1        start / end frequency in Hz (exponential sweep).
+##   start, dur    layer start time and length in seconds.
+##   amp           peak amplitude before the sound is normalised.
+##   attack        linear fade-in in seconds.
+##   decay         exponential decay time constant in s (0 = sustain).
+##   lp0, lp1      one-pole low-pass cutoff sweep in Hz (0 = off).
+##   vib_hz, vib_depth   vibrato rate (Hz) and depth (fraction of pitch).
+class_name SoundData
+extends RefCounted
+
+## Every sound effect id -> recipe (keys documented in the header).
+const SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# --- Player necromancy: low and unsettling (GDD §12) --------------------
+	"bolt_cast": {"dur": 0.22, "volume_db": -15.0, "max_voices": 3, "min_interval": 60, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "saw", "f0": 220.0, "f1": 110.0, "dur": 0.2, "amp": 0.35, "attack": 0.01, "decay": 0.08, "lp0": 1800.0, "lp1": 400.0},
+			{"wave": "noise", "dur": 0.18, "amp": 0.25, "attack": 0.02, "decay": 0.06, "lp0": 3000.0, "lp1": 500.0},
+			{"wave": "sine", "f0": 110.0, "f1": 73.0, "dur": 0.22, "amp": 0.3, "decay": 0.1}]},
+	"bolt_hit": {"dur": 0.15, "volume_db": -16.0, "max_voices": 4, "min_interval": 35, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 160.0, "f1": 55.0, "dur": 0.15, "amp": 0.6, "decay": 0.05},
+			{"wave": "noise", "dur": 0.08, "amp": 0.4, "decay": 0.02, "lp0": 2500.0, "lp1": 800.0}]},
+	"orb_hit": {"dur": 0.16, "volume_db": -17.0, "max_voices": 3, "min_interval": 50, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "tri", "f0": 392.0, "f1": 370.0, "dur": 0.16, "amp": 0.45, "decay": 0.05},
+			{"wave": "sine", "f0": 587.0, "dur": 0.12, "amp": 0.2, "decay": 0.04},
+			{"wave": "noise", "dur": 0.03, "amp": 0.2, "decay": 0.01, "lp0": 4000.0}]},
+	"orb_block": {"dur": 0.22, "volume_db": -12.0, "max_voices": 2, "min_interval": 70, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 784.0, "f1": 523.0, "dur": 0.22, "amp": 0.4, "decay": 0.07, "vib_hz": 30.0, "vib_depth": 0.02},
+			{"wave": "tri", "f0": 1046.0, "dur": 0.1, "amp": 0.15, "decay": 0.03},
+			{"wave": "noise", "dur": 0.05, "amp": 0.3, "decay": 0.015, "lp0": 6000.0, "lp1": 2000.0}]},
+	"shadow_blast": {"dur": 0.7, "volume_db": -10.0, "max_voices": 2, "min_interval": 120, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 95.0, "f1": 32.0, "dur": 0.7, "amp": 0.7, "decay": 0.25},
+			{"wave": "noise", "dur": 0.6, "amp": 0.5, "attack": 0.01, "decay": 0.18, "lp0": 1800.0, "lp1": 150.0},
+			{"wave": "saw", "f0": 55.0, "f1": 40.0, "dur": 0.5, "amp": 0.2, "decay": 0.2, "lp0": 300.0}]},
+	"mage_burst": {"dur": 0.3, "volume_db": -18.0, "max_voices": 3, "min_interval": 70, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 140.0, "f1": 60.0, "dur": 0.3, "amp": 0.5, "decay": 0.09},
+			{"wave": "noise", "dur": 0.25, "amp": 0.35, "decay": 0.07, "lp0": 2200.0, "lp1": 400.0},
+			{"wave": "tri", "f0": 330.0, "f1": 165.0, "dur": 0.2, "amp": 0.2, "decay": 0.06}]},
+	# --- Undead army ----------------------------------------------------------
+	"summon_rise": {"dur": 0.55, "volume_db": -19.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.05, "priority": 1,
+		"layers": [
+			{"wave": "saw", "f0": 98.0, "f1": 196.0, "dur": 0.55, "amp": 0.3, "attack": 0.25, "lp0": 400.0, "lp1": 1400.0, "vib_hz": 6.0, "vib_depth": 0.03},
+			{"wave": "noise", "dur": 0.5, "amp": 0.15, "attack": 0.3, "lp0": 800.0, "lp1": 2500.0},
+			{"wave": "sine", "f0": 49.0, "f1": 98.0, "dur": 0.55, "amp": 0.3, "attack": 0.2}]},
+	"summon_death": {"dur": 0.26, "volume_db": -17.0, "max_voices": 3, "min_interval": 80, "pitch_var": 0.12, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.05, "amp": 0.4, "decay": 0.012, "lp0": 5000.0},
+			{"wave": "noise", "start": 0.06, "dur": 0.04, "amp": 0.3, "decay": 0.01, "lp0": 4000.0},
+			{"wave": "noise", "start": 0.13, "dur": 0.04, "amp": 0.25, "decay": 0.01, "lp0": 3500.0},
+			{"wave": "square", "f0": 300.0, "f1": 90.0, "dur": 0.25, "amp": 0.2, "decay": 0.08, "lp0": 1200.0}]},
+	"warrior_bash": {"dur": 0.15, "volume_db": -18.0, "max_voices": 3, "min_interval": 70, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.1, "amp": 0.5, "decay": 0.03, "lp0": 3000.0, "lp1": 900.0},
+			{"wave": "square", "f0": 130.0, "f1": 80.0, "dur": 0.14, "amp": 0.35, "decay": 0.05, "lp0": 900.0},
+			{"wave": "tri", "f0": 620.0, "f1": 600.0, "dur": 0.12, "amp": 0.12, "decay": 0.04}]},
+	"priest_ward": {"dur": 0.5, "volume_db": -17.0, "max_voices": 1, "min_interval": 150, "pitch_var": 0.0, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 523.0, "f1": 540.0, "dur": 0.5, "amp": 0.3, "attack": 0.08, "decay": 0.2, "vib_hz": 9.0, "vib_depth": 0.01},
+			{"wave": "sine", "f0": 784.0, "dur": 0.45, "amp": 0.2, "attack": 0.1, "decay": 0.18},
+			{"wave": "noise", "dur": 0.3, "amp": 0.05, "attack": 0.1, "lp0": 6000.0}]},
+	# --- Covenant (holy: bright and metallic) --------------------------------
+	"enemy_hit": {"dur": 0.07, "volume_db": -23.0, "max_voices": 4, "min_interval": 30, "pitch_var": 0.18, "priority": 0,
+		"layers": [
+			{"wave": "noise", "dur": 0.06, "amp": 0.45, "decay": 0.015, "lp0": 5000.0, "lp1": 2000.0},
+			{"wave": "sine", "f0": 420.0, "f1": 260.0, "dur": 0.07, "amp": 0.35, "decay": 0.025}]},
+	"enemy_death": {"dur": 0.2, "volume_db": -20.0, "max_voices": 4, "min_interval": 40, "pitch_var": 0.15, "priority": 0,
+		"layers": [
+			{"wave": "noise", "dur": 0.18, "amp": 0.45, "decay": 0.05, "lp0": 3500.0, "lp1": 600.0},
+			{"wave": "square", "f0": 240.0, "f1": 70.0, "dur": 0.2, "amp": 0.25, "decay": 0.06, "lp0": 1500.0},
+			{"wave": "sine", "f0": 880.0, "f1": 600.0, "dur": 0.1, "amp": 0.1, "decay": 0.03}]},
+	"boss_arrive": {"dur": 1.6, "volume_db": -9.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.0, "priority": 4,
+		"layers": [
+			{"wave": "sine", "f0": 220.0, "dur": 1.6, "amp": 0.4, "decay": 0.6},
+			{"wave": "sine", "f0": 607.0, "dur": 1.2, "amp": 0.2, "decay": 0.4},
+			{"wave": "sine", "f0": 1188.0, "dur": 0.8, "amp": 0.1, "decay": 0.25},
+			{"wave": "sine", "f0": 110.0, "dur": 1.6, "amp": 0.3, "attack": 0.05, "decay": 0.7}]},
+	"boss_telegraph": {"dur": 0.7, "volume_db": -13.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 880.0, "dur": 0.7, "amp": 0.3, "attack": 0.25, "decay": 0.3, "vib_hz": 11.0, "vib_depth": 0.004},
+			{"wave": "sine", "f0": 2429.0, "dur": 0.6, "amp": 0.12, "attack": 0.2, "decay": 0.2},
+			{"wave": "sine", "f0": 4752.0, "dur": 0.4, "amp": 0.05, "attack": 0.15, "decay": 0.12}]},
+	"boss_impact": {"dur": 1.0, "volume_db": -6.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.04, "priority": 4,
+		"layers": [
+			{"wave": "sine", "f0": 70.0, "f1": 28.0, "dur": 1.0, "amp": 0.8, "decay": 0.35},
+			{"wave": "noise", "dur": 0.8, "amp": 0.6, "decay": 0.2, "lp0": 2500.0, "lp1": 120.0},
+			{"wave": "sine", "f0": 523.0, "dur": 0.9, "amp": 0.2, "decay": 0.3},
+			{"wave": "sine", "f0": 1443.0, "dur": 0.6, "amp": 0.1, "decay": 0.2}]},
+	"reckoning": {"dur": 1.9, "volume_db": -7.0, "max_voices": 1, "min_interval": 2000, "pitch_var": 0.0, "priority": 5,
+		"layers": [
+			{"wave": "sine", "f0": 146.83, "dur": 1.9, "amp": 0.35, "decay": 0.8},
+			{"wave": "sine", "f0": 405.0, "dur": 1.6, "amp": 0.15, "decay": 0.5},
+			{"wave": "saw", "f0": 73.42, "dur": 1.9, "amp": 0.2, "attack": 0.4, "lp0": 500.0, "vib_hz": 5.0, "vib_depth": 0.01},
+			{"wave": "saw", "f0": 87.31, "dur": 1.9, "amp": 0.15, "attack": 0.5, "lp0": 500.0, "vib_hz": 4.6, "vib_depth": 0.01},
+			{"wave": "saw", "f0": 110.0, "dur": 1.9, "amp": 0.15, "attack": 0.6, "lp0": 500.0, "vib_hz": 5.3, "vib_depth": 0.01},
+			{"wave": "noise", "dur": 1.4, "amp": 0.1, "attack": 0.5, "lp0": 600.0}]},
+	# --- Player / progression ---------------------------------------------------
+	"player_hurt": {"dur": 0.25, "volume_db": -10.0, "max_voices": 1, "min_interval": 120, "pitch_var": 0.06, "priority": 4,
+		"layers": [
+			{"wave": "square", "f0": 170.0, "f1": 85.0, "dur": 0.25, "amp": 0.3, "decay": 0.08, "lp0": 1400.0},
+			{"wave": "noise", "dur": 0.15, "amp": 0.45, "decay": 0.04, "lp0": 2500.0, "lp1": 500.0},
+			{"wave": "sine", "f0": 90.0, "f1": 50.0, "dur": 0.25, "amp": 0.5, "decay": 0.09}]},
+	"player_death": {"dur": 1.4, "volume_db": -7.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.0, "priority": 5,
+		"layers": [
+			{"wave": "sine", "f0": 110.0, "f1": 40.0, "dur": 1.4, "amp": 0.6, "decay": 0.5},
+			{"wave": "saw", "f0": 55.0, "f1": 36.0, "dur": 1.4, "amp": 0.3, "attack": 0.02, "decay": 0.5, "lp0": 600.0, "lp1": 150.0},
+			{"wave": "noise", "dur": 1.0, "amp": 0.3, "decay": 0.3, "lp0": 1200.0, "lp1": 100.0}]},
+	"xp_pickup": {"dur": 0.09, "volume_db": -21.0, "max_voices": 3, "min_interval": 35, "pitch_var": 0.0, "priority": 0,
+		"layers": [
+			{"wave": "sine", "f0": 1318.5, "dur": 0.09, "amp": 0.4, "attack": 0.002, "decay": 0.03},
+			{"wave": "sine", "f0": 1975.5, "dur": 0.07, "amp": 0.15, "decay": 0.02}]},
+	"level_up": {"dur": 0.95, "volume_db": -11.0, "max_voices": 1, "min_interval": 200, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "tri", "f0": 440.0, "dur": 0.45, "amp": 0.3, "decay": 0.2},
+			{"wave": "tri", "f0": 523.25, "start": 0.09, "dur": 0.45, "amp": 0.3, "decay": 0.2},
+			{"wave": "tri", "f0": 659.25, "start": 0.18, "dur": 0.45, "amp": 0.3, "decay": 0.2},
+			{"wave": "tri", "f0": 880.0, "start": 0.27, "dur": 0.65, "amp": 0.3, "decay": 0.25},
+			{"wave": "sine", "f0": 220.0, "dur": 0.95, "amp": 0.25, "attack": 0.05, "decay": 0.4}]},
+	# --- UI -------------------------------------------------------------------------
+	"card_select": {"dur": 0.34, "volume_db": -12.0, "max_voices": 1, "min_interval": 100, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 293.66, "dur": 0.3, "amp": 0.35, "decay": 0.12},
+			{"wave": "tri", "f0": 440.0, "start": 0.04, "dur": 0.3, "amp": 0.25, "decay": 0.12},
+			{"wave": "noise", "dur": 0.04, "amp": 0.15, "decay": 0.01, "lp0": 5000.0}]},
+	"ui_hover": {"dur": 0.035, "volume_db": -26.0, "max_voices": 2, "min_interval": 40, "pitch_var": 0.0, "priority": 2,
+		"layers": [
+			{"wave": "tri", "f0": 1200.0, "f1": 1100.0, "dur": 0.035, "amp": 0.3, "decay": 0.01}]},
+	"ui_confirm": {"dur": 0.15, "volume_db": -17.0, "max_voices": 2, "min_interval": 60, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "tri", "f0": 660.0, "dur": 0.08, "amp": 0.3, "decay": 0.03},
+			{"wave": "tri", "f0": 880.0, "start": 0.05, "dur": 0.1, "amp": 0.3, "decay": 0.04}]},
+}
+
+## Music drone loop length in seconds (all oscillators are snapped to a whole
+## number of cycles per loop so it repeats seamlessly).
+const MUSIC_LOOP_SECONDS: float = 12.0  # TUNING (not in GDD)
+## Root drone frequency (D2) of the minor-key ambient bed.
+const MUSIC_ROOT_HZ: float = 73.42  # TUNING (not in GDD)
+## Pad chords (Hz per voice), one per equal segment of the loop:
+## Dm -> Bb -> Gm -> A (D harmonic minor; dark, unresolved turnaround).
+const MUSIC_CHORDS: Array = [  # TUNING (not in GDD)
+	[146.83, 174.61, 220.0],
+	[116.54, 146.83, 174.61],
+	[98.0, 116.54, 146.83],
+	[110.0, 138.59, 164.81],
+]
+## Seconds between low "heartbeat" percussion hits.
+const MUSIC_BEAT_SECONDS: float = 2.0  # TUNING (not in GDD)

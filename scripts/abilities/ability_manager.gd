@@ -281,6 +281,7 @@ func _cast_bolt(s: Dictionary) -> bool:
 			b.split_damage = float(s["damage"]) * float(s["split_damage"])
 			b.split_speed = float(s["split_speed"])
 			b.split_life = float(s["split_life"])
+	Sfx.play("bolt_cast", p)
 	return true
 
 
