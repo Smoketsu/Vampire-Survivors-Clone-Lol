@@ -4,6 +4,12 @@
 ##   Necrotic Vigor  — Max minion health.
 ##   Dark Command    — Minion attack damage/speed.
 ##   Soul Recycling  — Faster replacement.
+## plus the three spell-evolution passives of GDD §6.1 (their standalone
+## effects are not defined by the GDD, open question 28; these are the
+## prototype's choice):
+##   Soul Conduit    — +% damage of every shadow spell (evolves Shadow Bolt).
+##   Warding Ritual  — -% damage taken by the necromancer (evolves Orb Shield).
+##   Abyssal Focus   — -% spell cooldowns / orb recharge (evolves Shadow Blast).
 ## The GDD defines what each passive does but gives no values, so all numbers
 ## are TUNING (not in GDD).
 ##
@@ -15,7 +21,14 @@ class_name PassiveData
 extends RefCounted
 
 ## Display / card order of passives.
-const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycling"]
+const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycling",
+	"soul_conduit", "warding_ritual", "abyssal_focus"]
+
+## Passives that only help summons (a "dead" level-up card while no summon
+## class is owned, see AbilityManager.build_offers()).
+const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycling"]
+## Passives that only help shadow spells (a "dead" card while no spell is owned).
+const SPELL_PASSIVES := ["soul_conduit", "abyssal_focus"]
 
 ## Passive definitions.
 ##   display_name — UI name.
@@ -31,6 +44,10 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 ##   minion_damage      — +% minion damage.
 ##   minion_speed       — +% minion attack speed.
 ##   replace_reduction  — -% replacement interval.
+##   spell_damage       — +% damage of every shadow spell (and its evolution).
+##   damage_reduction   — -% damage taken by the necromancer (after wards).
+##   cooldown_reduction — -% spell cooldowns, Orb Shield recharge and Eclipse
+##                        Ward pulse interval.
 const PASSIVES := {
 	"grave_dominion": {
 		"display_name": "Grave Dominion",
@@ -82,6 +99,45 @@ const PASSIVES := {
 			{"replace_reduction": 0.30},  # TUNING (not in GDD)
 			{"replace_reduction": 0.40},  # TUNING (not in GDD)
 			{"replace_reduction": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	"soul_conduit": {
+		"display_name": "Soul Conduit",
+		"icon": "soul_conduit",
+		"description": "Channel harvested souls into your shadow spells. Evolves Shadow Bolt into Void Barrage.",
+		"labels": {"spell_damage": ["Spell damage", "pct"]},
+		"levels": [
+			{"spell_damage": 0.10},  # TUNING (not in GDD)
+			{"spell_damage": 0.20},  # TUNING (not in GDD)
+			{"spell_damage": 0.30},  # TUNING (not in GDD)
+			{"spell_damage": 0.40},  # TUNING (not in GDD)
+			{"spell_damage": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	"warding_ritual": {
+		"display_name": "Warding Ritual",
+		"icon": "warding_ritual",
+		"description": "Protective sigils dull every blow you take. Evolves Shadow Orb Shield into Eclipse Ward.",
+		"labels": {"damage_reduction": ["Damage taken", "neg_pct"]},
+		"levels": [
+			{"damage_reduction": 0.05},  # TUNING (not in GDD)
+			{"damage_reduction": 0.10},  # TUNING (not in GDD)
+			{"damage_reduction": 0.15},  # TUNING (not in GDD)
+			{"damage_reduction": 0.20},  # TUNING (not in GDD)
+			{"damage_reduction": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	"abyssal_focus": {
+		"display_name": "Abyssal Focus",
+		"icon": "abyssal_focus",
+		"description": "Your spells return faster from the abyss. Evolves Shadow Blast into Abyssal Detonation.",
+		"labels": {"cooldown_reduction": ["Spell cooldowns", "neg_pct"]},
+		"levels": [
+			{"cooldown_reduction": 0.05},  # TUNING (not in GDD)
+			{"cooldown_reduction": 0.10},  # TUNING (not in GDD)
+			{"cooldown_reduction": 0.15},  # TUNING (not in GDD)
+			{"cooldown_reduction": 0.20},  # TUNING (not in GDD)
+			{"cooldown_reduction": 0.25},  # TUNING (not in GDD)
 		],
 	},
 }

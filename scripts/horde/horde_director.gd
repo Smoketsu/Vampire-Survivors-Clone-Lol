@@ -5,7 +5,8 @@
 ##   * per-ability sequential replenishment queues (GDD §24),
 ##   * soft formation anchors at 4 Hz (GDD §26),
 ##   * player threat evaluation at 5 Hz (GDD §32),
-##   * staggered 5 Hz AI ticks: each unit thinks on 1 of 12 physics ticks.
+##   * staggered 5 Hz AI ticks: each unit thinks on 1 of 12 physics ticks,
+##   * army synergies (GDD §6.3) through its SynergyManager.
 ## Ranged overkill reservations are stored on the enemies themselves
 ## (Enemy.incoming_damage) and managed by ProjectileManager.
 class_name HordeDirector
@@ -56,6 +57,8 @@ var total_deaths: int = 0
 var hard_recalls: int = 0
 ## Reusable query buffer.
 var _tmp: Array = []
+## Army synergies (activation + effects, GDD §6.3).
+var synergies: SynergyManager
 
 
 func _init() -> void:
@@ -64,6 +67,7 @@ func _init() -> void:
 		class_counts[cls] = 0
 		replenish_timer[cls] = 0.0
 		immediate_spawns[cls] = 0
+	synergies = SynergyManager.new(self)
 
 
 # =====================================================================================
@@ -74,6 +78,7 @@ func _init() -> void:
 func step(delta: float) -> void:
 	_frame += 1
 	_update_replenishment(delta)
+	synergies.step(delta)
 	if _frame % UnitData.FORMATION_TICK_DIVISOR == 0:
 		_calculate_formation_anchors()
 	# Offset by half a period so threat checks never share a tick with the
@@ -99,6 +104,7 @@ func set_class_level(cls: String, level: int) -> void:
 	var old_cap := capacity(cls)
 	class_levels[cls] = level
 	_refresh_class(cls, old_cap)
+	synergies.evaluate()
 
 
 ## Class id -> current capacity. Take this snapshot BEFORE changing a passive
@@ -167,17 +173,19 @@ func replenish_interval(cls: String) -> float:
 	return base * (1.0 - game.abilities.passive_value("soul_recycling", "replace_reduction"))
 
 
-## Effective stats of class `cls` at skill `level` with the CURRENT passives.
-## Stacking (GDD §34): like-category bonuses add, categories multiply:
-##   stat = base * (1 + skill_bonus) * (1 + passive_bonus).
-## Attack interval divides by the attack-speed multipliers.
+## Effective stats of class `cls` at skill `level` with the CURRENT passives
+## and synergies. Stacking (GDD §34): like-category bonuses add, categories
+## multiply: stat = base * (1 + skill_bonus) * (1 + passive_bonus) *
+## (1 + synergy_bonus). Attack interval divides by the attack-speed multipliers.
 func compute_stats(cls: String, level: int) -> Dictionary:
 	var base: Dictionary = UnitData.UNITS[cls]
 	var row: Dictionary = UnitData.LEVELS[cls][clampi(level, 1, 5) - 1]
 	var ab := game.abilities
 	var hp_mult := (1.0 + float(row.get("hp_bonus", 0.0))) * (1.0 + ab.passive_value("necrotic_vigor", "minion_hp"))
 	var dmg_mult := (1.0 + float(row.get("damage_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_damage"))
-	var spd_mult := (1.0 + float(row.get("speed_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_speed"))
+	var spd_mult := (1.0 + float(row.get("speed_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_speed")) \
+			* (1.0 + synergies.value("unholy_host", "attack_speed"))
+	var move_mult := 1.0 + synergies.value("deathless", "move_speed")
 	var heal_mult := 1.0 + float(row.get("heal_bonus", 0.0))
 	var splash_mult := 1.0 + float(row.get("splash_bonus", 0.0))
 	var shield_mult := 1.0 + float(row.get("shield_bonus", 0.0))
@@ -188,7 +196,7 @@ func compute_stats(cls: String, level: int) -> Dictionary:
 		"attack_interval": float(base["attack_interval"]) / spd_mult,
 		"attack_range": float(base["attack_range"]),
 		"acquisition_range": float(base["acquisition_range"]),
-		"move_speed": float(base["move_speed"]),
+		"move_speed": float(base["move_speed"]) * move_mult,
 		"radius": float(base["radius"]),
 		"band_min": float(base["band_min"]),
 		"band_max": float(base["band_max"]),
@@ -243,6 +251,22 @@ func _update_replenishment(delta: float) -> void:
 			if _try_spawn(cls):
 				replenish_timer[cls] = 0.0
 				game.stat_add("replacements", 1.0)
+
+
+## Number of missing units across all owned classes (capacity - alive).
+func missing_count() -> int:
+	var n := 0
+	for cls: String in UnitData.CLASS_ORDER:
+		n += maxi(0, capacity(cls) - int(class_counts[cls]))
+	return n
+
+
+## "Call of the Grave" fallback card: every missing unit is queued for an
+## immediate spawn instead of waiting for its replacement timer.
+func raise_all_missing() -> void:
+	for cls: String in UnitData.CLASS_ORDER:
+		if int(class_levels[cls]) > 0:
+			immediate_spawns[cls] = maxi(int(immediate_spawns[cls]), capacity(cls) - int(class_counts[cls]))
 
 
 ## Fraction 0..1 of the current replacement timer for HUD display.

@@ -152,6 +152,8 @@ var velocity: Vector2 = Vector2.ZERO
 var flash: float = 0.0
 ## HP of heals already "in flight" toward this unit (priest reservations).
 var incoming_heal: float = 0.0
+## Shieldwall of the Damned barrier (GDD §6.3): absorbed before HP.
+var barrier_hp: float = 0.0
 ## Heal amount this priest reserved on its target during the current cast.
 var _reserved_heal: float = 0.0
 ## Unit or Necromancer holding this priest's heal reservation.
@@ -200,6 +202,7 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	target = null
 	heal_target = null
 	incoming_heal = 0.0
+	barrier_hp = 0.0
 	_reserved_heal = 0.0
 	_reserved_heal_on = null
 	attack_cd = randf() * 0.5
@@ -857,10 +860,14 @@ func _release_heal_reservation() -> void:
 
 func _draw() -> void:
 	var rise := 1.0
+	if director != null and director.synergies.is_active("unholy_host"):
+		ProgressionGlyphs.draw_host_aura(self, Vector2(0, radius * 0.6), radius)
 	if state == State.SPAWNING:
 		rise = clampf(state_time / UnitData.SPAWN_DURATION, 0.0, 1.0)
 		draw_circle(Vector2(0, radius * 0.9), radius * (1.3 - 0.4 * rise), Color(Palette.NECRO_GREEN, 0.3 * (1.0 - rise)))
 	Glyphs.draw_summon(self, unit_class, Vector2(0, (1.0 - rise) * radius), radius, flash > 0.0)
+	if barrier_hp > 0.0:
+		ProgressionGlyphs.draw_barrier(self, Vector2.ZERO, radius, barrier_hp / maxf(max_hp, 1.0))
 	if hp < max_hp - 0.5 and state != State.SPAWNING:
 		# The node is mirrored via scale.x; counter-flip so the bar always
 		# fills left-to-right.
