@@ -276,7 +276,11 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 		deltas.append("%s: %d" % [plural, int(nxt["count"]) + dom])
 		deltas.append("HP %s" % _fmt(nxt["max_hp"]))
 		if cls == "priest":
-			deltas.append("Heals %s HP every %ss" % [_fmt(nxt["heal_amount"]), _fmt(nxt["attack_interval"])])
+			deltas.append("Heals %s HP every %ss (allies and you)" % [_fmt(nxt["heal_amount"]), _fmt(nxt["attack_interval"])])
+			deltas.append("Wards you for %s HP when you are attacked" % _fmt(nxt["shield_amount"]))
+		elif cls == "warrior":
+			deltas.append("Damage %s every %ss" % [_fmt(nxt["damage"]), _fmt(nxt["attack_interval"])])
+			deltas.append("Blocks enemies; shield-bash %s dmg every %ss" % [_fmt(nxt["bash_damage"]), _fmt(nxt["bash_cooldown"])])
 		else:
 			deltas.append("Damage %s every %ss" % [_fmt(nxt["damage"]), _fmt(nxt["attack_interval"])])
 		deltas.append("Range %s px" % _fmt(nxt["attack_range"]))
@@ -289,11 +293,11 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 			_delta_line(deltas, "Heal per cast", cur["heal_amount"], nxt["heal_amount"])
 		else:
 			_delta_line(deltas, "Damage", cur["damage"], nxt["damage"])
+			_delta_line(deltas, "Shield bash", cur["bash_damage"], nxt["bash_damage"])
 		_delta_line(deltas, "Attack interval (s)", cur["attack_interval"], nxt["attack_interval"])
 		_delta_line(deltas, "Splash radius", cur["splash_radius"], nxt["splash_radius"])
 		_delta_line(deltas, "Arrow pierce", float(cur["pierce"]), float(nxt["pierce"]))
-		if bool(nxt["heals_player"]) and not bool(cur["heals_player"]):
-			deltas.append("Now heals YOU below %d%% HP" % int(UnitData.PLAYER_HEAL_THRESHOLD * 100.0))
+		_delta_line(deltas, "Ward on you (HP)", cur["shield_amount"], nxt["shield_amount"])
 	return _offer("summon", cls, base["display_name"], cls, lvl, lvl + 1, "SUMMON", desc, deltas)
 
 

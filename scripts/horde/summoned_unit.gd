@@ -83,8 +83,24 @@ var heal_amount: float = 0.0
 var kite_distance: float = 0.0
 ## Extra enemies an arrow can pass through.
 var pierce: int = 0
-## Priest may heal the necromancer (priest level 5).
-var heals_player: bool = false
+## >0 makes this unit a physical blocker of this radius (warriors).
+var block_radius: float = 0.0
+## Blocker mass vs Enemy.mass (overlap correction split).
+var block_mass: float = 0.0
+## Speed multiplier applied to enemies touching this blocker.
+var engaged_speed_mult: float = 1.0
+## Shield-bash damage on contact.
+var bash_damage: float = 0.0
+## Seconds between shield bashes.
+var bash_cooldown: float = 0.0
+## Shield-bash knockback impulse in px/s (divided by enemy mass).
+var bash_knockback: float = 0.0
+## HP absorbed by a priest ward cast on the necromancer.
+var shield_amount: float = 0.0
+## Seconds a priest ward lasts.
+var shield_duration: float = 0.0
+## Seconds between wards from this priest.
+var shield_cooldown: float = 0.0
 ## Priest healing role priority of THIS unit's class (0..1, GDD §31).
 var heal_role_priority: float = 0.5
 ## Attack branch: "melee" | "arrow" | "aoe" | "heal".
@@ -138,8 +154,8 @@ var flash: float = 0.0
 var incoming_heal: float = 0.0
 ## Heal amount this priest reserved on its target during the current cast.
 var _reserved_heal: float = 0.0
-## Unit holding this priest's heal reservation.
-var _reserved_heal_on: SummonedUnit = null
+## Unit or Necromancer holding this priest's heal reservation.
+var _reserved_heal_on: Node2D = null
 ## Generation of `_reserved_heal_on` at reservation time.
 var _reserved_heal_gen: int = 0
 ## Normalised direction away from nearby enemies (sampled in think()).
@@ -148,6 +164,12 @@ var _threat_away: Vector2 = Vector2.ZERO
 var _threat_dist: float = INF
 ## Seconds until an archer may kite again.
 var _kite_cd: float = 0.0
+## Seconds until this warrior may shield-bash again.
+var bash_cd: float = 0.0
+## Seconds until this priest may ward the necromancer again.
+var _shield_cd: float = 0.0
+## True when the current heal_target job is a ward on the player, not a heal.
+var _shield_job: bool = false
 ## Facing sign (+1 right / -1 left).
 var _facing: float = 1.0
 ## Reusable query buffer for target candidates.
@@ -182,6 +204,9 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	attack_cd = randf() * 0.5
 	flash = 0.0
 	_kite_cd = 0.0
+	bash_cd = 0.0
+	_shield_cd = 0.0
+	_shield_job = false
 	_threat_away = Vector2.ZERO
 	_threat_dist = INF
 	slot_jitter = randf()
@@ -217,7 +242,15 @@ func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
 	heal_amount = stats["heal_amount"]
 	kite_distance = stats["kite_distance"]
 	pierce = stats["pierce"]
-	heals_player = stats["heals_player"]
+	block_radius = stats["block_radius"]
+	block_mass = stats["block_mass"]
+	engaged_speed_mult = stats["engaged_speed_mult"]
+	bash_damage = stats["bash_damage"]
+	bash_cooldown = stats["bash_cooldown"]
+	bash_knockback = stats["bash_knockback"]
+	shield_amount = stats["shield_amount"]
+	shield_duration = stats["shield_duration"]
+	shield_cooldown = stats["shield_cooldown"]
 	heal_role_priority = stats["heal_role_priority"]
 	attack_profile = stats["attack_profile"]
 	target_profile = stats["target_profile"]
@@ -315,16 +348,26 @@ func think() -> void:
 		_enter(State.FOLLOWING)
 
 
-## Priest heal-target logic. Returns true if the priest is busy healing.
+## Priest support logic. Returns true if the priest has a heal or ward job.
+## A ward (damage-absorb shield) on the necromancer is chosen when he is under
+## attack and a heal would be (mostly) wasted on him (user brief).
 func _think_heal() -> bool:
 	if _heal_target_valid() and target_hold < UnitData.TARGET_COMMIT_TIME:
 		return true
 	var best := _choose_heal_target()
+	var player := game.player
+	var shield := false
+	var player_missing := player.max_hp - player.hp - player.incoming_heal
+	if (best == null or (best == player and player_missing <= heal_amount)) and _can_shield_player():
+		best = player
+		shield = true
 	if best == null:
 		heal_target = null
+		_shield_job = false
 		return false
-	if best != heal_target:
+	if best != heal_target or shield != _shield_job:
 		target_hold = 0.0
+	_shield_job = shield
 	heal_target = best
 	heal_target_gen = (best as SummonedUnit).generation if best is SummonedUnit else 0
 	target = null
@@ -354,7 +397,8 @@ func _target_valid() -> bool:
 	return target != null and target.active and target.generation == target_gen
 
 
-## True if the heal target still exists and still needs healing.
+## True if the heal target still exists and still needs healing (or, for a
+## ward job, still has no ward).
 func _heal_target_valid() -> bool:
 	if heal_target == null:
 		return false
@@ -362,7 +406,21 @@ func _heal_target_valid() -> bool:
 		var u := heal_target as SummonedUnit
 		return u.active and u.generation == heal_target_gen and u.state != State.DEAD and u.hp < u.max_hp - 0.5
 	var p := heal_target as Necromancer
-	return p != null and not p.dead and p.hp < p.max_hp * UnitData.PLAYER_HEAL_THRESHOLD
+	if p == null or p.dead:
+		return false
+	if _shield_job:
+		return p.shield_hp <= 0.0
+	return p.hp < p.max_hp - 0.5
+
+
+## True if this priest may cast a ward on the necromancer right now.
+func _can_shield_player() -> bool:
+	var p := game.player
+	if shield_amount <= 0.0 or _shield_cd > 0.0 or p.dead or p.shield_hp > 0.0:
+		return false
+	if position.distance_to(p.position) > acquisition_range:
+		return false
+	return p.time_since_hit <= UnitData.SHIELD_TRIGGER_WINDOW or director.player_in_danger
 
 
 ## Teleports a stranded unit next to the player (GDD §24 hard recall).
@@ -473,17 +531,22 @@ func _cluster_value(e: Enemy) -> float:
 	return clampf(float(count) / UnitData.MAGE_CLUSTER_NORM, 0.0, 1.0) * 0.8 + clampf(value / UnitData.MAGE_CLUSTER_NORM, 0.0, 1.0) * 0.2
 
 
-## Priest heal target choice (GDD §31 / §39 PRIEST TARGETING):
-## critical necromancer first (if allowed), then highest
+## Priest heal target choice (GDD §31 / §39 PRIEST TARGETING): highest
 ## 0.6*missing_frac + 0.2*missing_raw_norm + 0.2*role (+ critical bonus).
-## Full-HP (or already fully covered by in-flight heals) allies are skipped.
+## The necromancer is a candidate too (role PLAYER_HEAL_ROLE) and a critical
+## necromancer gets an extra bonus so he has top priority.
+## Full-HP (or already fully covered by in-flight heals) targets are skipped.
 func _choose_heal_target() -> Node2D:
 	var player := game.player
-	if heals_player and not player.dead and player.hp < player.max_hp * UnitData.PLAYER_HEAL_THRESHOLD \
-			and position.distance_to(player.position) <= acquisition_range:
-		return player
-	var best: SummonedUnit = null
+	var best: Node2D = null
 	var best_score := 0.0
+	if not player.dead and position.distance_to(player.position) <= acquisition_range:
+		var p_missing := player.max_hp - player.hp - player.incoming_heal
+		if p_missing > 0.5:
+			best_score = _heal_score(p_missing, player.max_hp, UnitData.PLAYER_HEAL_ROLE)
+			if player.hp < player.max_hp * UnitData.HEAL_CRITICAL_FRACTION:
+				best_score += UnitData.HEAL_CRITICAL_BONUS + UnitData.PLAYER_CRITICAL_BONUS
+			best = player
 	game.ally_grid.query(position, acquisition_range, _cand)
 	for a: SummonedUnit in _cand:
 		if not a.active or a.state == State.DEAD or a.state == State.SPAWNING:
@@ -491,15 +554,32 @@ func _choose_heal_target() -> Node2D:
 		var missing := a.max_hp - a.hp - a.incoming_heal
 		if missing <= 0.5:
 			continue
-		var s := UnitData.HEAL_W_MISSING_FRACTION * (missing / a.max_hp) \
-				+ UnitData.HEAL_W_MISSING_RAW * clampf(missing / UnitData.HEAL_MISSING_RAW_NORM, 0.0, 1.0) \
-				+ UnitData.HEAL_W_ROLE * a.heal_role_priority
+		var s := _heal_score(missing, a.max_hp, a.heal_role_priority)
 		if a.hp < a.max_hp * UnitData.HEAL_CRITICAL_FRACTION:
 			s += UnitData.HEAL_CRITICAL_BONUS
 		if s > best_score:
 			best_score = s
 			best = a
 	return best
+
+
+## GDD §31 normalised heal score (without the critical bonus).
+static func _heal_score(missing: float, max_health: float, role: float) -> float:
+	return UnitData.HEAL_W_MISSING_FRACTION * (missing / max_health) \
+			+ UnitData.HEAL_W_MISSING_RAW * clampf(missing / UnitData.HEAL_MISSING_RAW_NORM, 0.0, 1.0) \
+			+ UnitData.HEAL_W_ROLE * role
+
+
+## Warrior shield bash on an enemy pressed against this blocker (called by
+## Enemy.resolve_blocking): damage + knockback along `normal`, on cooldown.
+func try_bash(e: Enemy, normal: Vector2) -> void:
+	if bash_damage <= 0.0 or bash_cd > 0.0 or state == State.SPAWNING:
+		return
+	bash_cd = bash_cooldown
+	e.knockback += normal * bash_knockback / maxf(e.mass, 0.1)
+	game.effects.slash(position + normal * radius, normal, Palette.COLD_BLUE, radius * 1.6)
+	game.stat_add("warrior_bashes", 1.0)
+	game.combat.damage_enemy(e, bash_damage, "bash")
 
 
 # =====================================================================================
@@ -514,6 +594,8 @@ func physics_step(delta: float) -> void:
 	target_hold += delta
 	attack_cd -= delta
 	_kite_cd -= delta
+	bash_cd -= delta
+	_shield_cd -= delta
 	if flash > 0.0:
 		flash -= delta
 		if flash <= 0.0:
@@ -673,6 +755,12 @@ func _begin_cast() -> void:
 		_reserved_heal_on = u
 		_reserved_heal_gen = u.generation
 		u.incoming_heal += _reserved_heal
+	elif heal_target is Necromancer and not _shield_job:
+		var pl := heal_target as Necromancer
+		_reserved_heal = minf(heal_amount, pl.max_hp - pl.hp)
+		_reserved_heal_on = pl
+		_reserved_heal_gen = 0
+		pl.incoming_heal += _reserved_heal
 	_enter(State.CASTING)
 	cast_time = windup
 
@@ -710,7 +798,14 @@ func _release_attack() -> void:
 		"heal":
 			if heal_target != null:
 				_release_heal_reservation()
-				if _heal_target_valid():
+				if _shield_job:
+					if _heal_target_valid():
+						game.player.apply_shield(shield_amount, shield_duration)
+						_shield_cd = shield_cooldown
+						game.effects.beam(position, game.player.position, Palette.COLD_BLUE)
+						game.stat_add("priest_wards", 1.0)
+					_shield_job = false
+				elif _heal_target_valid():
 					var healed := 0.0
 					if heal_target is SummonedUnit:
 						healed = game.combat.heal_unit(heal_target as SummonedUnit, heal_amount)
@@ -726,11 +821,15 @@ func _release_attack() -> void:
 
 ## Removes this priest's pending heal from its target's incoming_heal.
 func _release_heal_reservation() -> void:
-	if _reserved_heal_on != null:
-		if _reserved_heal_on.generation == _reserved_heal_gen:
-			_reserved_heal_on.incoming_heal = maxf(0.0, _reserved_heal_on.incoming_heal - _reserved_heal)
-		_reserved_heal_on = null
-		_reserved_heal = 0.0
+	if _reserved_heal_on is SummonedUnit:
+		var u := _reserved_heal_on as SummonedUnit
+		if u.generation == _reserved_heal_gen:
+			u.incoming_heal = maxf(0.0, u.incoming_heal - _reserved_heal)
+	elif _reserved_heal_on is Necromancer:
+		var pl := _reserved_heal_on as Necromancer
+		pl.incoming_heal = maxf(0.0, pl.incoming_heal - _reserved_heal)
+	_reserved_heal_on = null
+	_reserved_heal = 0.0
 
 
 # =====================================================================================

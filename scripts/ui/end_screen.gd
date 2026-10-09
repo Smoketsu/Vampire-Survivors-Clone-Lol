@@ -1,5 +1,6 @@
-## EndScreen — victory (Sir Alaric defeated) or defeat (necromancer died)
-## screen with run statistics, Restart and Main Menu (GDD §19 MVP
+## EndScreen — "Run Complete" victory (necromancer died AFTER surviving the
+## countdown, i.e. during the Reckoning) or defeat (died before 0:00) screen
+## with run statistics, Restart and Main Menu (GDD §19 MVP
 ## "victory/defeat states").
 class_name EndScreen
 extends Control
@@ -57,9 +58,9 @@ func _ready() -> void:
 func open(summary: Dictionary) -> void:
 	var won: bool = summary["victory"]
 	if won:
-		_title.text = "VICTORY"
+		_title.text = "VICTORY - RUN COMPLETE"
 		_title.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
-		_subtitle.text = "Sir Alaric has fallen. The graveyard is yours."
+		_subtitle.text = "You outlasted the Covenant. The Reckoning finally claimed you."
 	else:
 		_title.text = "DEFEAT" if summary["reason"] != "timeout" else "TIME'S UP"
 		_title.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.2))
@@ -68,6 +69,13 @@ func open(summary: Dictionary) -> void:
 	var counts: Dictionary = summary["horde_counts"]
 	var lines := PackedStringArray()
 	lines.append("Time survived:  %02d:%02d" % [floori(float(t) / 60.0), t % 60])
+	if won:
+		var over := int(float(summary["time_past_zero"]))
+		lines.append("Survived past 0:00:  +%d:%02d  (%d Reckoning waves)" % [floori(float(over) / 60.0), over % 60, int(summary["reckoning_waves"])])
+	else:
+		var left := ceili(float(summary["time_remaining"]))
+		lines.append("Time left on the countdown:  %d:%02d" % [floori(float(left) / 60.0), left % 60])
+	lines.append("Sir Alaric:  %s" % ("slain" if summary["boss_defeated"] else ("not slain" if summary["boss_spawned"] else "never arrived")))
 	lines.append("Enemies slain:  %d" % int(summary["kills"]))
 	lines.append("Level reached:  %d" % int(summary["level"]))
 	lines.append("Army at the end:  %d" % int(summary["horde_total"]))

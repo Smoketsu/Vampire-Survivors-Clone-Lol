@@ -6,17 +6,22 @@
 ##   * drives the necromancer with a simple kiting autopilot,
 ##   * auto-picks level-up cards (unowned summon classes and spells first, so
 ##     every system gets exercised),
+##   * keeps the necromancer invulnerable (unless --mortal) until the countdown
+##     has ended and the Reckoning has run for RECKONING_GRACE seconds, then
+##     makes him mortal so the Reckoning kills him -> "Run Complete" screen,
 ##   * prints progress every 30 game seconds and a final summary, then quits
-##     with exit code 0 on victory, 1 otherwise.
+##     with exit code 0 when the run completed, 1 otherwise.
 class_name Autotest
 extends Node
 
 ## Game seconds between progress lines.
 const REPORT_INTERVAL: float = 30.0
 ## Radius (px) in which the autopilot flees enemies.
-const FLEE_RADIUS: float = 140.0
+const FLEE_RADIUS: float = 110.0
 ## Radius (px) in which the autopilot walks toward XP crystals.
 const XP_SEEK_RADIUS: float = 320.0
+## Game seconds of Reckoning before the invulnerable autopilot turns mortal.
+const RECKONING_GRACE: float = 20.0
 
 ## Owning run.
 var game: Game
@@ -24,6 +29,10 @@ var game: Game
 var _next_report: float = REPORT_INTERVAL
 ## Game time the boss spawned (-1 until then).
 var _boss_spawn_time: float = -1.0
+## Game time the boss died (-1 if alive / never spawned).
+var _boss_death_time: float = -1.0
+## Game time the Reckoning began (-1 until then).
+var _reckoning_time: float = -1.0
 ## Peak simultaneous entity counts.
 var _peak: Dictionary = {"enemies": 0, "summons": 0, "projectiles": 0, "effects": 0, "crystals": 0}
 ## Real-time start (ms) for the wall-clock duration line.
@@ -56,12 +65,22 @@ func step(_delta: float) -> void:
 	if _boss_spawn_time < 0.0 and game.enemies.boss != null:
 		_boss_spawn_time = game.elapsed
 		print("[autotest] boss spawned at %.1f s" % game.elapsed)
+	if _boss_death_time < 0.0 and game.boss_defeated:
+		_boss_death_time = game.elapsed
+		print("[autotest] boss defeated at %.1f s" % game.elapsed)
+	if _reckoning_time < 0.0 and game.enemies.reckoning_wave > 0:
+		_reckoning_time = game.elapsed
+		print("[autotest] countdown reached 0:00 at %.1f s - THE RECKONING begins" % game.elapsed)
+	if _reckoning_time >= 0.0 and game.player.invulnerable and game.elapsed >= _reckoning_time + RECKONING_GRACE:
+		game.player.invulnerable = false
+		print("[autotest] %.1f s: Reckoning wave %d reached, player made mortal" % [game.elapsed, game.enemies.reckoning_wave])
 	if game.elapsed >= _next_report:
 		_next_report += REPORT_INTERVAL
 		print("[autotest] t=%s lvl=%d kills=%d enemies=%d summons=%d/%d projectiles=%d hp=%d step_avg=%.2fms" % [
 			_clock(game.elapsed), game.level, game.kills, game.enemies.active.size(),
 			game.horde.units.size(), game.horde.total_capacity(), game.projectiles.active.size(),
 			int(game.player.hp), game.avg_step_ms()])
+		print("[autotest]    unit FSM: %s" % str(game.horde.state_counts()))
 	if game.elapsed >= GameState.autotest_timeout:
 		game.end_run(false, "timeout")
 
@@ -111,7 +130,7 @@ func get_move_vector() -> Vector2:
 	if game.enemies.boss != null and game.enemies.boss.active:
 		danger = game.enemies.boss.danger_push(p)
 	var wander := Vector2.from_angle(game.elapsed * 0.3) * 0.35
-	return (away * 1.5 + toward * 0.8 + danger * 3.0 + wander).limit_length(1.0)
+	return (away * 1.5 + toward * 1.2 + danger * 3.0 + wander).limit_length(1.0)
 
 
 ## Prints the final summary and quits the engine.
@@ -132,12 +151,14 @@ func finish(summary: Dictionary) -> void:
 	for k: String in keys:
 		stat_parts.append("%s=%d" % [k, int(st[k])])
 	print("[autotest] ===== GRAVEBOUND AUTOTEST SUMMARY =====")
-	print("[autotest] result: %s (%s)" % ["VICTORY" if summary["victory"] else "NO VICTORY", summary["reason"]])
-	print("[autotest] time reached: %s (%.1f s game time, %.1f s real time)" % [_clock(summary["time"]), float(summary["time"]), real_s])
+	print("[autotest] result: %s (%s)" % ["VICTORY / RUN COMPLETE" if summary["victory"] else "NOT COMPLETED", summary["reason"]])
+	print("[autotest] time reached: %s elapsed (%.1f s game time, %.1f s real time); past 0:00: %.1f s; Reckoning waves: %d" % [
+		_clock(summary["time"]), float(summary["time"]), real_s, float(summary["time_past_zero"]), int(summary["reckoning_waves"])])
 	print("[autotest] kills: %d | level: %d" % [int(summary["kills"]), int(summary["level"])])
 	print("[autotest] horde: %d alive / capacity %d (%s)" % [int(summary["horde_total"]), int(summary["horde_capacity"]), ", ".join(classes)])
 	print("[autotest] summons spawned: %d, died: %d, hard recalls: %d" % [game.horde.total_spawned, game.horde.total_deaths, game.horde.hard_recalls])
 	var boss_line := "boss spawned: %s" % ("yes at %.1f s" % _boss_spawn_time if summary["boss_spawned"] else "no")
+	boss_line += " | boss defeated: %s" % ("yes at %.1f s" % _boss_death_time if summary["boss_defeated"] else "no")
 	if summary["boss_spawned"]:
 		boss_line += " | boss HP left: %d / %d" % [int(summary["boss_hp"]), int(summary["boss_max_hp"])]
 	print("[autotest] " + boss_line)

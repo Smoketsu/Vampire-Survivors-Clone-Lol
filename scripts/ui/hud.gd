@@ -26,6 +26,8 @@ var _level_label: Label
 var _hp_bar: HudBar
 ## Orb Shield charges ("shields") label.
 var _ward_label: Label
+## Priest ward on the necromancer label.
+var _shield_label: Label
 ## Run timer.
 var _timer_label: Label
 ## Current objective text.
@@ -65,7 +67,11 @@ func _process(delta: float) -> void:
 ## Creates a Box container anchored at (ax, ay) with the given pixel rect
 ## offsets. Children align to `align` inside it.
 func _box(vertical: bool, ax: float, ay: float, l: float, t: float, r: float, b: float, align: BoxContainer.AlignmentMode) -> BoxContainer:
-	var box: BoxContainer = VBoxContainer.new() if vertical else HBoxContainer.new()
+	var box: BoxContainer
+	if vertical:
+		box = VBoxContainer.new()
+	else:
+		box = HBoxContainer.new()
 	box.anchor_left = ax
 	box.anchor_right = ax
 	box.anchor_top = ay
@@ -90,13 +96,15 @@ func _build() -> void:
 	add_child(_xp_bar)
 
 	# Top left: level, HP, shields.
-	var tl := _box(true, 0.0, 0.0, 16, 20, 300, 110, BoxContainer.ALIGNMENT_BEGIN)
+	var top_left := _box(true, 0.0, 0.0, 16, 20, 300, 110, BoxContainer.ALIGNMENT_BEGIN)
 	_level_label = UiTheme.label("Lv 1", 22, UiTheme.TEXT_GOLD)
-	tl.add_child(_level_label)
+	top_left.add_child(_level_label)
 	_hp_bar = HudBar.new(Palette.HP_FRIENDLY, Vector2(240, 18))
-	tl.add_child(_hp_bar)
+	top_left.add_child(_hp_bar)
 	_ward_label = UiTheme.label("", 13, Palette.VIOLET.lightened(0.3))
-	tl.add_child(_ward_label)
+	top_left.add_child(_ward_label)
+	_shield_label = UiTheme.label("", 13, Palette.NECRO_GREEN)
+	top_left.add_child(_shield_label)
 
 	# Top center: timer, objective, banner, boss.
 	var tc := _box(true, 0.5, 0.0, -260, 16, 260, 160, BoxContainer.ALIGNMENT_BEGIN)
@@ -120,16 +128,16 @@ func _build() -> void:
 	tc.add_child(_boss_box)
 
 	# Top right: kills, pause hint, modifiers.
-	var tr := _box(true, 1.0, 0.0, -300, 20, -16, 110, BoxContainer.ALIGNMENT_BEGIN)
+	var top_right := _box(true, 1.0, 0.0, -300, 20, -16, 110, BoxContainer.ALIGNMENT_BEGIN)
 	_kills_label = UiTheme.label("Kills: 0", 20)
 	_kills_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	tr.add_child(_kills_label)
+	top_right.add_child(_kills_label)
 	var hint := UiTheme.label("Esc: Pause   F3: Debug", 13, UiTheme.TEXT_DIM)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	tr.add_child(hint)
+	top_right.add_child(hint)
 	var mods := UiTheme.label("Modifiers: none  |  Difficulty: Necromancer", 13, UiTheme.TEXT_DIM)
 	mods.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	tr.add_child(mods)
+	top_right.add_child(mods)
 
 	# Bottom left: army panel.
 	var bl := _box(true, 0.0, 1.0, 16, -190, 300, -16, BoxContainer.ALIGNMENT_END)
@@ -183,8 +191,15 @@ func _refresh() -> void:
 		_ward_label.text = "Orb shields ready: %d / %d" % [orbs.charges_ready(), orbs.recharge.size()]
 	else:
 		_ward_label.text = ""
-	var t := int(game.elapsed)
-	_timer_label.text = "%02d:%02d" % [floori(float(t) / 60.0), t % 60]
+	_shield_label.text = "Priest ward: %d HP (%.1fs)" % [ceili(p.shield_hp), p.shield_time] if p.shield_hp > 0.0 else ""
+	# Countdown (user brief): 6:00 -> 0:00, then "RECKONING +m:ss".
+	if game.countdown_finished():
+		var over := int(game.elapsed - WaveData.RUN_DURATION)
+		_timer_label.text = "RECKONING +%d:%02d" % [floori(float(over) / 60.0), over % 60]
+		_timer_label.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.25))
+	else:
+		var t := ceili(game.time_remaining())
+		_timer_label.text = "%02d:%02d" % [floori(float(t) / 60.0), t % 60]
 	_objective_label.text = game.enemies.objective_text()
 	_banner_label.text = game.enemies.banner_text if game.elapsed < game.enemies.banner_until else ""
 	var boss := game.enemies.boss

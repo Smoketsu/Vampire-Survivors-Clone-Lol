@@ -71,6 +71,10 @@ var heal_radius: float = 0.0
 var target_priority: float = 0.2
 ## Fraction of slow effects ignored (boss only).
 var slow_resist: float = 0.0
+## Weight vs blocking warriors (overlap correction is mass-weighted).
+var mass: float = 1.0
+## True for Reckoning enemies (spawned after the countdown ends).
+var is_reckoning: bool = false
 
 # --- Runtime --------------------------------------------------------------------------
 
@@ -105,6 +109,12 @@ var slow_factor: float = 0.0
 var flash: float = 0.0
 ## Seconds before Orb Shield orbs may hit this enemy again.
 var orb_hit_cd: float = 0.0
+## Seconds left "engaged" by a blocking warrior (slowed, fights it).
+var engaged_timer: float = 0.0
+## Speed multiplier while engaged (from the blocking warrior's data).
+var engaged_mult: float = 1.0
+## Knockback velocity in px/s (shield bashes), decays over time.
+var knockback: Vector2 = Vector2.ZERO
 ## +1 / -1: which way ranged units strafe while holding range.
 var _strafe_sign: float = 1.0
 ## Facing sign (+1 right / -1 left).
@@ -141,6 +151,8 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	heal_radius = def["heal_radius"]
 	target_priority = def["target_priority"]
 	slow_resist = float(def.get("slow_resist", 0.0))
+	mass = float(def.get("mass", 1.0))
+	is_reckoning = false
 	if elite:
 		max_hp *= EnemyData.ELITE_HP_MULT
 		radius *= EnemyData.ELITE_RADIUS_MULT
@@ -162,6 +174,9 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	slow_factor = 0.0
 	flash = 0.0
 	orb_hit_cd = 0.0
+	engaged_timer = 0.0
+	engaged_mult = 1.0
+	knockback = Vector2.ZERO
 	_strafe_sign = 1.0 if randf() < 0.5 else -1.0
 	visible = true
 	queue_redraw()
@@ -196,11 +211,16 @@ func apply_slow(fraction: float, duration: float) -> void:
 
 ## ~5 Hz decision step: choose what to attack / whom to heal.
 func think() -> void:
+	# Engaged by a blocking warrior: keep fighting it (user brief).
+	if engaged_timer > 0.0 and target is SummonedUnit and _target_valid():
+		targeting_player = false
+		targeting_summon = true
+		return
 	match behavior:
 		"purifier":
 			_pick_target(EnemyData.PURIFIER_HUNT_RADIUS, true)
 		"ranged":
-			_pick_target(attack_range * 0.6, false)
+			_pick_target(EnemyData.RANGED_DIVERT_RADIUS, false)
 		"healer":
 			_pick_heal_target()
 			_pick_target(EnemyData.MELEE_DIVERT_RADIUS, false)
@@ -313,9 +333,40 @@ func physics_step(delta: float) -> void:
 	if behavior != "ranged" and edge <= attack_range and attack_cd <= 0.0:
 		_melee_hit(t, dir)
 	var spd := move_speed * (1.0 - slow_factor if slow_timer > 0.0 else 1.0)
+	if engaged_timer > 0.0:
+		spd *= engaged_mult
 	velocity = move * spd + sep * spd * EnemyData.SEPARATION_STRENGTH
-	position += velocity * delta
+	position += (velocity + knockback) * delta
 	_update_facing()
+
+
+## Warrior blocking (user brief): pushes this enemy out of any overlapping
+## blocker using the spatial hash (no physics bodies). The correction is split
+## by mass so warriors hold the line while the boss can shove them. Touching
+## a blocker "engages" the enemy: it is slowed, retargets that warrior and may
+## eat a shield bash. Called by EnemyDirector right after physics_step().
+func resolve_blocking() -> void:
+	game.ally_grid.query(position, radius + UnitData.MAX_BLOCK_RADIUS, _tmp)
+	for u: SummonedUnit in _tmp:
+		if not active:
+			return
+		if not u.active or u.block_radius <= 0.0 or u.state == SummonedUnit.State.SPAWNING:
+			continue
+		var diff := position - u.position
+		var d := diff.length()
+		var min_d := radius + u.block_radius
+		if d >= min_d:
+			continue
+		var n := diff / d if d > 0.01 else Vector2.from_angle(float(get_instance_id() % 628) * 0.01)
+		var overlap := min_d - d
+		var enemy_share := u.block_mass / (u.block_mass + mass)
+		position += n * overlap * enemy_share
+		u.position -= n * overlap * (1.0 - enemy_share)
+		engaged_timer = EnemyData.ENGAGED_TIME
+		engaged_mult = u.engaged_speed_mult
+		if target != u:
+			_set_target(u)
+		u.try_bash(self, n)
 
 
 ## Shared countdowns (flash, slow, cooldowns).
@@ -325,6 +376,10 @@ func _tick_timers(delta: float) -> void:
 	orb_hit_cd -= delta
 	if slow_timer > 0.0:
 		slow_timer -= delta
+	if engaged_timer > 0.0:
+		engaged_timer -= delta
+	if knockback != Vector2.ZERO:
+		knockback = knockback.move_toward(Vector2.ZERO, EnemyData.KNOCKBACK_DECAY * delta)
 	if flash > 0.0:
 		flash -= delta
 		if flash <= 0.0:
@@ -353,7 +408,7 @@ func _melee_hit(t: Node2D, dir: Vector2) -> void:
 	var dmg := damage * game.enemies.damage_mult
 	game.effects.slash(position + dir * radius, dir, Palette.SILVER, radius * 1.2)
 	if t is SummonedUnit:
-		game.combat.damage_unit(t as SummonedUnit, dmg * undead_damage_mult)
+		game.combat.damage_unit(t as SummonedUnit, dmg * undead_damage_mult, kind)
 	else:
 		game.combat.damage_player(dmg)
 

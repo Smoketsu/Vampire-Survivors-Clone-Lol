@@ -2,7 +2,8 @@
 ## necromancer (WASD / arrows / left stick via the move_* input actions);
 ## spells and summons are fully automatic (GDD §21).
 ##
-## Owns HP, i-frames and pickup radius. Movement has no physical collision
+## Owns HP, i-frames, pickup radius and the priest ward (damage-absorb
+## shield, user brief). Movement has no physical collision
 ## with summons (GDD §26 "Player <-> friendly undead: NO physical collision")
 ## and the open arena has no solid geometry, so the node is moved directly
 ## instead of using CharacterBody2D physics.
@@ -34,6 +35,16 @@ var flash: float = 0.0
 var dead: bool = false
 ## Autotest: when true, damage is recorded but HP never drops below 1.
 var invulnerable: bool = false
+## Remaining HP of the priest ward; absorbed before real HP.
+var shield_hp: float = 0.0
+## Strength of the current ward when it was cast (HUD / ring opacity).
+var shield_max: float = 0.0
+## Seconds before the current ward expires.
+var shield_time: float = 0.0
+## Heals already "in flight" from priests (avoids over-healing).
+var incoming_heal: float = 0.0
+## Seconds since the necromancer was last hit (priests ward on recent hits).
+var time_since_hit: float = 999.0
 ## Facing sign (+1 right, -1 left) used to mirror the sprite.
 var _facing: float = 1.0
 
@@ -69,14 +80,41 @@ func step(delta: float) -> void:
 		flash -= delta
 		if flash <= 0.0:
 			queue_redraw()
+	time_since_hit += delta
+	if shield_time > 0.0:
+		shield_time -= delta
+		if shield_time <= 0.0:
+			shield_hp = 0.0
+			queue_redraw()
 
 
-## Applies damage unless invulnerable. Returns true if damage was taken.
-func take_damage(amount: float) -> bool:
+## Applies (or refreshes) a priest ward absorbing `amount` for `duration` s.
+## The stronger of the current and new ward wins.
+func apply_shield(amount: float, duration: float) -> void:
+	if amount >= shield_hp:
+		shield_hp = amount
+		shield_max = amount
+	shield_time = maxf(shield_time, duration)
+	queue_redraw()
+
+
+## Applies damage unless in i-frames. The ward absorbs first. Returns the HP
+## actually lost (0 if fully absorbed) or -1 if the hit was ignored.
+func take_damage(amount: float) -> float:
 	if dead or iframes > 0.0:
-		return false
-	hp -= amount
+		return -1.0
+	time_since_hit = 0.0
 	iframes = PlayerData.IFRAMES
+	if shield_hp > 0.0:
+		var absorbed := minf(shield_hp, amount)
+		shield_hp -= absorbed
+		amount -= absorbed
+		if game != null:
+			game.stat_add("ward_absorbed", absorbed)
+		queue_redraw()
+		if amount <= 0.0:
+			return 0.0
+	hp -= amount
 	flash = 0.12
 	queue_redraw()
 	if hp <= 0.0:
@@ -86,7 +124,7 @@ func take_damage(amount: float) -> bool:
 			hp = 0.0
 			dead = true
 			died.emit()
-	return true
+	return amount
 
 
 ## Restores HP up to max. Returns the amount actually healed.
@@ -100,3 +138,8 @@ func heal(amount: float) -> float:
 
 func _draw() -> void:
 	Glyphs.draw_necromancer(self, Vector2.ZERO, radius, flash > 0.0)
+	if shield_hp > 0.0:
+		# Priest ward: translucent necrotic bubble, thicker when stronger.
+		var k := clampf(shield_hp / maxf(shield_max, 1.0), 0.0, 1.0)
+		draw_circle(Vector2.ZERO, radius * 2.0, Color(Palette.COLD_BLUE, 0.10 + 0.10 * k))
+		draw_arc(Vector2.ZERO, radius * 2.0, 0.0, TAU, 32, Color(Palette.NECRO_GREEN, 0.5 + 0.4 * k), 1.0 + 2.0 * k)

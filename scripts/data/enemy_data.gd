@@ -31,13 +31,15 @@ const ORDER := ["recruit", "footman", "archer", "chaplain", "purifier"]
 ##   heal_radius         — px search radius for heal targets.
 ##   target_priority     — 0..1 "role priority" summons use when scoring this
 ##                         enemy as a target (healers/casters high).
+##   mass                — weight vs blocking warriors (UnitData block_mass):
+##                         heavier enemies shove warriors more.
 const ENEMIES := {
 	# GDD §10 "Weak basic infantry, mass waves."
 	"recruit": {
 		"display_name": "Covenant Recruit",
-		"max_hp": 18.0,  # TUNING (not in GDD)
+		"max_hp": 14.0,  # TUNING (not in GDD)
 		"move_speed": 58.0,  # TUNING (not in GDD)
-		"damage": 5.0,  # TUNING (not in GDD)
+		"damage": 3.0,  # TUNING (not in GDD)
 		"attack_interval": 1.0,  # TUNING (not in GDD)
 		"attack_range": 4.0,  # TUNING (not in GDD)
 		"radius": 9.0,  # TUNING (not in GDD)
@@ -51,13 +53,14 @@ const ENEMIES := {
 		"heal_interval": 0.0,
 		"heal_radius": 0.0,
 		"target_priority": 0.2,  # TUNING (not in GDD)
+		"mass": 1.0,  # TUNING (not in GDD) pushback vs blocking warriors
 	},
 	# GDD §10 "Armored melee, moderate damage resistance."
 	"footman": {
 		"display_name": "Crimson Footman",
-		"max_hp": 45.0,  # TUNING (not in GDD)
+		"max_hp": 36.0,  # TUNING (not in GDD)
 		"move_speed": 50.0,  # TUNING (not in GDD)
-		"damage": 9.0,  # TUNING (not in GDD)
+		"damage": 6.0,  # TUNING (not in GDD)
 		"attack_interval": 1.2,  # TUNING (not in GDD)
 		"attack_range": 5.0,  # TUNING (not in GDD)
 		"radius": 11.0,  # TUNING (not in GDD)
@@ -71,13 +74,14 @@ const ENEMIES := {
 		"heal_interval": 0.0,
 		"heal_radius": 0.0,
 		"target_priority": 0.3,  # TUNING (not in GDD)
+		"mass": 1.6,  # TUNING (not in GDD) pushback vs blocking warriors
 	},
 	# GDD §10 "Ranged projectiles."
 	"archer": {
 		"display_name": "Zealous Archer",
-		"max_hp": 22.0,  # TUNING (not in GDD)
+		"max_hp": 18.0,  # TUNING (not in GDD)
 		"move_speed": 55.0,  # TUNING (not in GDD)
-		"damage": 7.0,  # TUNING (not in GDD)
+		"damage": 5.0,  # TUNING (not in GDD)
 		"attack_interval": 2.2,  # TUNING (not in GDD)
 		"attack_range": 240.0,  # TUNING (not in GDD) max firing distance
 		"radius": 9.0,  # TUNING (not in GDD)
@@ -91,13 +95,14 @@ const ENEMIES := {
 		"heal_interval": 0.0,
 		"heal_radius": 0.0,
 		"target_priority": 0.7,  # GDD §27 archers prefer enemy archers/casters
+		"mass": 1.0,  # TUNING (not in GDD) pushback vs blocking warriors
 	},
 	# GDD §10 "Heals enemy allies"; §35 "increase ranged-unit target preference".
 	"chaplain": {
 		"display_name": "Covenant Chaplain",
-		"max_hp": 40.0,  # TUNING (not in GDD)
+		"max_hp": 32.0,  # TUNING (not in GDD)
 		"move_speed": 48.0,  # TUNING (not in GDD)
-		"damage": 4.0,  # TUNING (not in GDD) weak melee if cornered
+		"damage": 2.0,  # TUNING (not in GDD) weak melee if cornered
 		"attack_interval": 1.4,  # TUNING (not in GDD)
 		"attack_range": 4.0,  # TUNING (not in GDD)
 		"radius": 10.0,  # TUNING (not in GDD)
@@ -107,18 +112,19 @@ const ENEMIES := {
 		"preferred_range": 170.0,  # TUNING (not in GDD)
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
-		"heal_amount": 10.0,  # TUNING (not in GDD)
-		"heal_interval": 2.5,  # TUNING (not in GDD)
-		"heal_radius": 150.0,  # TUNING (not in GDD)
+		"heal_amount": 5.0,  # TUNING (not in GDD)
+		"heal_interval": 4.0,  # TUNING (not in GDD)
+		"heal_radius": 120.0,  # TUNING (not in GDD)
 		"target_priority": 1.0,  # GDD §27/§35 healers are top archer priority
+		"mass": 1.0,  # TUNING (not in GDD) pushback vs blocking warriors
 	},
 	# GDD §10 "Bonus damage versus undead summons"; §35 "prioritize undead...
 	# relatively vulnerable to ranged focus".
 	"purifier": {
 		"display_name": "Purifier",
-		"max_hp": 30.0,  # TUNING (not in GDD) fragile on purpose (§35)
+		"max_hp": 26.0,  # TUNING (not in GDD) fragile on purpose (§35)
 		"move_speed": 66.0,  # TUNING (not in GDD)
-		"damage": 8.0,  # TUNING (not in GDD)
+		"damage": 5.0,  # TUNING (not in GDD)
 		"attack_interval": 1.0,  # TUNING (not in GDD)
 		"attack_range": 5.0,  # TUNING (not in GDD)
 		"radius": 10.0,  # TUNING (not in GDD)
@@ -132,7 +138,33 @@ const ENEMIES := {
 		"heal_interval": 0.0,
 		"heal_radius": 0.0,
 		"target_priority": 0.7,  # TUNING (not in GDD)
+		"mass": 1.0,  # TUNING (not in GDD) pushback vs blocking warriors
 	},
+}
+
+## "Reckoning" enemy that spawns once the countdown reaches 0:00 (user brief:
+## absurdly strong holy executioners that normally end the run). Spawned only
+## by EnemyDirector's Reckoning logic (WaveData.RECKONING), never by the
+## regular trickle. Same keys as ENEMIES rows.
+const RECKONING_ENEMY := {
+	"display_name": "Inquisitor of the End",
+	"max_hp": 900.0,  # TUNING (not in GDD)
+	"move_speed": 100.0,  # TUNING (not in GDD) slightly slower than the player
+	"damage": 45.0,  # TUNING (not in GDD)
+	"attack_interval": 0.8,  # TUNING (not in GDD)
+	"attack_range": 6.0,  # TUNING (not in GDD)
+	"radius": 16.0,  # TUNING (not in GDD)
+	"armor": 0.5,  # TUNING (not in GDD)
+	"xp": 30,  # TUNING (not in GDD)
+	"behavior": "melee",
+	"preferred_range": 0.0,
+	"projectile_speed": 0.0,
+	"undead_damage_mult": 3.0,  # TUNING (not in GDD)
+	"heal_amount": 0.0,
+	"heal_interval": 0.0,
+	"heal_radius": 0.0,
+	"target_priority": 0.9,  # TUNING (not in GDD)
+	"mass": 8.0,  # TUNING (not in GDD)
 }
 
 ## Elite modifiers (GDD §11 timeline "05:00 Chaplain elite").
@@ -147,14 +179,21 @@ const ELITE_HEAL_MULT: float = 2.0  # TUNING (not in GDD)
 
 ## Search radius (px) in which melee enemies will divert onto a summon that is
 ## closer than the player ("enemies can still hit allied summons", GDD §26).
-const MELEE_DIVERT_RADIUS: float = 50.0  # TUNING (not in GDD)
+const MELEE_DIVERT_RADIUS: float = 22.0  # TUNING (not in GDD)
+## Search radius (px) in which Zealous Archers shoot a summon instead of the
+## player (if that summon is closer than the player).
+const RANGED_DIVERT_RADIUS: float = 70.0  # TUNING (not in GDD)
 ## Search radius (px) in which Purifiers hunt summons first (GDD §35).
-const PURIFIER_HUNT_RADIUS: float = 260.0  # TUNING (not in GDD)
+const PURIFIER_HUNT_RADIUS: float = 180.0  # TUNING (not in GDD)
 ## Enemies within this distance (px) of the player with the player as target
 ## count as "attacking the player" for warrior threat scoring (GDD §27).
 const ATTACKING_PLAYER_RADIUS: float = 120.0  # TUNING (not in GDD)
 ## Minimum missing-HP fraction before a chaplain will heal an ally.
 const HEAL_MIN_MISSING_FRACTION: float = 0.1  # TUNING (not in GDD)
+## Seconds an enemy stays "engaged" after its last contact with a blocker.
+const ENGAGED_TIME: float = 0.3  # TUNING (not in GDD)
+## Knockback velocity decay in px/s^2.
+const KNOCKBACK_DECAY: float = 700.0  # TUNING (not in GDD)
 ## Strength of enemy-enemy separation steering (fraction of move speed).
 const SEPARATION_STRENGTH: float = 0.9  # TUNING (not in GDD)
 
@@ -173,9 +212,13 @@ const SEPARATION_STRENGTH: float = 0.9  # TUNING (not in GDD)
 ##   charge_damage_player / charge_damage_summon — damage on contact.
 ##   recover_time       — s the boss stands still after a charge.
 ##   slow_resist        — fraction of slow effects ignored.
+##   mass               — weight vs blocking warriors.
+##   reward_xp          — total XP dropped on death (boss kill no longer wins
+##                        the run; user brief).
+##   reward_crystals    — number of crystals that XP is split into.
 const BOSS := {
 	"display_name": "Sir Alaric, the Gravebreaker",  # GDD §11
-	"max_hp": 4000.0,  # TUNING (not in GDD)
+	"max_hp": 2500.0,  # TUNING (not in GDD)
 	"move_speed": 52.0,  # TUNING (not in GDD)
 	"damage": 12.0,  # TUNING (not in GDD) basic hammer swing
 	"attack_interval": 1.0,  # TUNING (not in GDD)
@@ -191,6 +234,9 @@ const BOSS := {
 	"heal_interval": 0.0,
 	"heal_radius": 0.0,
 	"target_priority": 0.9,  # GDD §32 archers prioritise the boss
+	"mass": 12.0,  # TUNING (not in GDD) shoves warriors aside
+	"reward_xp": 150,  # TUNING (not in GDD) user brief: big reward burst on kill
+	"reward_crystals": 20,  # TUNING (not in GDD) crystals the reward is split into
 	"attack_gap": 2.8,  # TUNING (not in GDD)
 	"hammer_radius": 80.0,  # TUNING (not in GDD)
 	"hammer_telegraph": 1.2,  # TUNING (not in GDD)

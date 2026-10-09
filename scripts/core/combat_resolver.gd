@@ -31,21 +31,24 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 
 
 ## Damages a summon. Death is routed to HordeDirector (deregistration,
-## replacement queue, pooling).
-func damage_unit(u: SummonedUnit, amount: float) -> void:
+## replacement queue, pooling). `source` tags the attacker kind for stats.
+func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	if not u.active or u.state == SummonedUnit.State.DEAD or amount <= 0.0:
 		return
+	var dealt := minf(amount, u.hp)
 	u.hp -= amount
 	u.on_hit()
-	game.stat_add("damage_to_summons", amount)
+	game.stat_add("damage_to_summons", dealt)
+	game.stat_add("summon_dmg_from_" + source, dealt)
 	if u.hp <= 0.0:
 		game.horde.on_unit_died(u)
 
 
 ## Damages the necromancer (i-frames are handled by the player).
 func damage_player(amount: float) -> void:
-	if game.player.take_damage(amount):
-		game.stat_add("damage_to_player", amount)
+	var lost := game.player.take_damage(amount)
+	if lost > 0.0:
+		game.stat_add("damage_to_player", lost)
 		game.shake(4.0)
 
 

@@ -116,7 +116,7 @@ func _resolve_hammerfall() -> void:
 	game.ally_grid.query(hammer_point, r + 12.0, _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.position.distance_to(hammer_point) <= r + u.radius:
-			game.combat.damage_unit(u, float(boss_def["hammer_damage_summon"]))
+			game.combat.damage_unit(u, float(boss_def["hammer_damage_summon"]), "boss")
 
 
 ## Divine Charge: telegraph a lane toward the player.
@@ -148,9 +148,16 @@ func _step_charge(delta: float) -> void:
 			continue
 		if u.position.distance_to(position) <= hit_r + u.radius:
 			_charge_hit_units[u.get_instance_id()] = true
-			game.combat.damage_unit(u, float(boss_def["charge_damage_summon"]))
+			game.combat.damage_unit(u, float(boss_def["charge_damage_summon"]), "boss")
 	if charge_left <= 0.0:
 		_set_phase(Phase.RECOVER)
+
+
+## The charge bulldozes through the warrior wall; otherwise Alaric is blocked
+## (mass-weighted, so he mostly shoves warriors aside).
+func resolve_blocking() -> void:
+	if phase != Phase.CHARGING:
+		super.resolve_blocking()
 
 
 ## Danger avoidance hint for the autotest autopilot: a push vector away from

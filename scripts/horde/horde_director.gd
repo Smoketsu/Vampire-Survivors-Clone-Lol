@@ -172,6 +172,7 @@ func compute_stats(cls: String, level: int) -> Dictionary:
 	var spd_mult := (1.0 + float(row.get("speed_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_speed"))
 	var heal_mult := 1.0 + float(row.get("heal_bonus", 0.0))
 	var splash_mult := 1.0 + float(row.get("splash_bonus", 0.0))
+	var shield_mult := 1.0 + float(row.get("shield_bonus", 0.0))
 	return {
 		"count": int(row["count"]),
 		"max_hp": float(base["max_hp"]) * hp_mult,
@@ -193,7 +194,15 @@ func compute_stats(cls: String, level: int) -> Dictionary:
 		"heal_amount": float(base["heal_amount"]) * heal_mult,
 		"kite_distance": float(base["kite_distance"]),
 		"pierce": int(row.get("pierce", 0)),
-		"heals_player": bool(row.get("heals_player", false)),
+		"block_radius": float(base.get("block_radius", 0.0)),
+		"block_mass": float(base.get("block_mass", 0.0)),
+		"engaged_speed_mult": float(base.get("engaged_speed_mult", 1.0)),
+		"bash_damage": float(base.get("bash_damage", 0.0)) * dmg_mult,
+		"bash_cooldown": float(base.get("bash_cooldown", 0.0)),
+		"bash_knockback": float(base.get("bash_knockback", 0.0)),
+		"shield_amount": float(base.get("shield_amount", 0.0)) * shield_mult,
+		"shield_duration": float(base.get("shield_duration", 0.0)),
+		"shield_cooldown": float(base.get("shield_cooldown", 0.0)),
 		"heal_role_priority": float(base["heal_role_priority"]),
 		"attack_profile": String(base["attack_profile"]),
 		"target_profile": String(base["target_profile"]),

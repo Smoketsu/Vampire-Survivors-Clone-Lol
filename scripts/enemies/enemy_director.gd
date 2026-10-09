@@ -12,8 +12,10 @@ extends Node2D
 
 ## The boss entered the arena.
 signal boss_spawned(boss: BossAlaric)
-## The boss died (Game turns this into victory).
+## The boss died (big reward; the run continues).
 signal boss_defeated
+## The countdown hit 0:00 and the Reckoning began.
+signal reckoning_started
 
 ## Owning run.
 var game: Game
@@ -43,6 +45,10 @@ var created_nodes: int = 0
 var total_spawned: int = 0
 ## Number of times far-away enemies were recycled ahead of the player.
 var total_recycled: int = 0
+## Reckoning waves spawned so far (0 before the countdown ends).
+var reckoning_wave: int = 0
+## Game time of the next Reckoning wave.
+var _next_reckoning: float = WaveData.RUN_DURATION
 ## Physics ticks since run start (drives staggering).
 var _frame: int = 0
 ## Next think slot handed to a new enemy (round-robin).
@@ -64,6 +70,8 @@ func step(delta: float) -> void:
 	_run_events(t)
 	if boss == null and t >= WaveData.BOSS_TIME:
 		_spawn_boss()
+	if t >= _next_reckoning:
+		_spawn_reckoning_wave()
 	_spawn_trickle(delta)
 	var slot := _frame % UnitData.AI_TICK_DIVISOR
 	var sep_slot := _frame % 6
@@ -77,6 +85,7 @@ func step(delta: float) -> void:
 		if e.think_slot % 6 == sep_slot:
 			e.update_separation()
 		e.physics_step(delta)
+		e.resolve_blocking()
 		if not e.is_boss and e.position.distance_squared_to(player_pos) > recycle2:
 			_recycle(e)
 
@@ -103,6 +112,10 @@ func regular_alive() -> int:
 
 ## Current HUD objective text from the active segment.
 func objective_text() -> String:
+	if reckoning_wave > 0:
+		return WaveData.RECKONING_OBJECTIVE
+	if boss != null and not boss.active:
+		return "Sir Alaric is dead. Survive until the countdown ends."
 	return WaveData.SEGMENTS[segment_index]["objective"]
 
 
@@ -203,6 +216,26 @@ func _spawn_boss() -> void:
 	boss_spawned.emit(boss)
 
 
+## Spawns the next Reckoning wave around the player: count and HP/damage
+## compound every wave (WaveData.RECKONING), ignoring the regular caps.
+func _spawn_reckoning_wave() -> void:
+	var r: Dictionary = WaveData.RECKONING
+	if reckoning_wave == 0:
+		show_banner(r["banner"])
+		reckoning_started.emit()
+	var count: int = int(r["base_count"]) + int(r["count_growth"]) * reckoning_wave
+	var hp_scale := hp_mult * pow(float(r["hp_growth"]), float(reckoning_wave))
+	var dmg_scale := pow(float(r["damage_growth"]), float(reckoning_wave))
+	var offset := randf() * TAU
+	for i in count:
+		var e := _spawn_enemy_def("inquisitor", EnemyData.RECKONING_ENEMY, _ring_point(offset + TAU * float(i) / float(count)), hp_scale, false)
+		e.damage *= dmg_scale
+		e.is_reckoning = true
+	reckoning_wave += 1
+	_next_reckoning += float(r["interval"])
+	game.stat_add("reckoning_spawned", float(count))
+
+
 # =====================================================================================
 # Spawning, recycling, death
 # =====================================================================================
@@ -219,6 +252,11 @@ func _ring_point(angle: float) -> Vector2:
 
 ## Takes an enemy from the pool (or creates one) and activates it.
 func _spawn_enemy(kind: String, pos: Vector2, elite: bool) -> Enemy:
+	return _spawn_enemy_def(kind, EnemyData.ENEMIES[kind], pos, hp_mult, elite)
+
+
+## As _spawn_enemy() but with an explicit definition and HP multiplier.
+func _spawn_enemy_def(kind: String, def: Dictionary, pos: Vector2, hp_scale: float, elite: bool) -> Enemy:
 	var e: Enemy
 	if _pool.is_empty():
 		e = Enemy.new()
@@ -226,7 +264,7 @@ func _spawn_enemy(kind: String, pos: Vector2, elite: bool) -> Enemy:
 		created_nodes += 1
 	else:
 		e = _pool.pop_back()
-	e.activate(game, kind, EnemyData.ENEMIES[kind], pos, hp_mult, elite, _next_slot)
+	e.activate(game, kind, def, pos, hp_scale, elite, _next_slot)
 	_next_slot = (_next_slot + 1) % UnitData.AI_TICK_DIVISOR
 	active.append(e)
 	total_spawned += 1
@@ -246,7 +284,13 @@ func _recycle(e: Enemy) -> void:
 func on_enemy_killed(e: Enemy) -> void:
 	e.deactivate()
 	if e.is_boss:
+		# Big reward burst (user brief: no longer the win condition).
 		game.effects.impact(e.position, 120.0, Palette.GOLD)
+		var n: int = EnemyData.BOSS["reward_crystals"]
+		var each: int = maxi(1, floori(float(EnemyData.BOSS["reward_xp"]) / float(n)))
+		for i in n:
+			game.pickups.spawn(e.position + Vector2.from_angle(TAU * float(i) / float(n)) * randf_range(20.0, 70.0), each)
+		show_banner("Sir Alaric has fallen! Hold out until the end...")
 		boss_defeated.emit()
 	else:
 		_pool.append(e)

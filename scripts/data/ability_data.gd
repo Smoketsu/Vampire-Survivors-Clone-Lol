@@ -40,11 +40,11 @@ const SPELLS := {
 		"description": "Automatically fires shadow bolts at nearby enemies.",
 		"labels": {"damage": "Damage", "count": "Bolts", "cooldown": "Cooldown (s)", "pierce": "Pierce", "speed": "Speed"},
 		"levels": [
-			{"damage": 12.0, "cooldown": 1.25, "count": 1, "pierce": 0, "speed": 380.0, "range": 380.0},  # TUNING (not in GDD)
-			{"damage": 16.0, "cooldown": 1.25, "count": 1, "pierce": 0, "speed": 380.0, "range": 380.0},  # TUNING (not in GDD)
-			{"damage": 16.0, "cooldown": 1.25, "count": 2, "pierce": 0, "speed": 380.0, "range": 380.0},  # TUNING (not in GDD)
-			{"damage": 16.0, "cooldown": 1.1, "count": 2, "pierce": 1, "speed": 440.0, "range": 400.0},  # TUNING (not in GDD)
-			{"damage": 22.0, "cooldown": 1.0, "count": 3, "pierce": 1, "speed": 440.0, "range": 420.0},  # TUNING (not in GDD)
+			{"damage": 15.0, "cooldown": 1.0, "count": 1, "pierce": 0, "speed": 380.0, "range": 380.0},  # TUNING (not in GDD)
+			{"damage": 20.0, "cooldown": 1.0, "count": 1, "pierce": 0, "speed": 380.0, "range": 380.0},  # TUNING (not in GDD)
+			{"damage": 20.0, "cooldown": 1.0, "count": 2, "pierce": 0, "speed": 380.0, "range": 380.0},  # TUNING (not in GDD)
+			{"damage": 20.0, "cooldown": 0.9, "count": 2, "pierce": 1, "speed": 440.0, "range": 400.0},  # TUNING (not in GDD)
+			{"damage": 26.0, "cooldown": 0.8, "count": 3, "pierce": 1, "speed": 440.0, "range": 420.0},  # TUNING (not in GDD)
 		],
 	},
 	"orb_shield": {

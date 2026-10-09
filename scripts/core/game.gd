@@ -3,7 +3,10 @@
 ## physics tick:
 ##   rebuild spatial hashes -> player -> spells -> horde -> enemies ->
 ##   projectiles -> XP pickups -> effects
-## and routes run-level flow (level-up pause, Esc pause, victory, defeat).
+## and routes run-level flow (level-up pause, Esc pause, end of run).
+## Run rules (user brief): a 6:00 countdown; Sir Alaric arrives at 1:00 left;
+## at 0:00 the Reckoning starts. Dying after 0:00 completes the run (victory
+## screen), dying before 0:00 is a defeat.
 ## Restarting frees this node and builds a fresh one, so no state can leak
 ## between runs. Managers hold a typed `game` reference instead of using
 ## global singletons.
@@ -37,9 +40,11 @@ var xp: int = 0
 var xp_to_next: int = PlayerData.xp_to_next(1)
 ## Level-ups earned but not yet resolved by picking a card.
 var pending_level_ups: int = 0
-## True if the run ended with the boss dead.
+## True if the run ended after surviving the countdown ("Run Complete").
 var victory: bool = false
-## Why the run ended: "victory" | "defeat" | "timeout" ("" while running).
+## True once Sir Alaric has been killed.
+var boss_defeated: bool = false
+## Why the run ended: "run_complete" | "defeat" | "timeout" ("" while running).
 var end_reason: String = ""
 ## Free-form counters (damage dealt, heals, intercepts...) for the summary.
 var stats: Dictionary = {}
@@ -311,12 +316,27 @@ func toggle_pause() -> void:
 		get_tree().paused = false
 
 
+## Seconds left on the countdown (negative during the Reckoning).
+func time_remaining() -> float:
+	return WaveData.RUN_DURATION - elapsed
+
+
+## True once the countdown has reached 0:00.
+func countdown_finished() -> bool:
+	return elapsed >= WaveData.RUN_DURATION
+
+
 func _on_player_died() -> void:
-	end_run(false, "defeat")
+	if countdown_finished():
+		end_run(true, "run_complete")
+	else:
+		end_run(false, "defeat")
 
 
+## Boss kill: reward only (dropped by EnemyDirector); the run goes on.
 func _on_boss_defeated() -> void:
-	end_run(true, "victory")
+	boss_defeated = true
+	stat_add("boss_kills", 1.0)
 
 
 ## Ends the run: freezes the world and shows the victory / defeat screen.
@@ -348,6 +368,10 @@ func build_summary() -> Dictionary:
 		"victory": victory,
 		"reason": end_reason,
 		"time": elapsed,
+		"time_past_zero": maxf(0.0, elapsed - WaveData.RUN_DURATION),
+		"time_remaining": maxf(0.0, WaveData.RUN_DURATION - elapsed),
+		"reckoning_waves": enemies.reckoning_wave,
+		"boss_defeated": boss_defeated,
 		"kills": kills,
 		"level": level,
 		"horde_total": horde.units.size(),

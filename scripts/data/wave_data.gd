@@ -17,11 +17,37 @@
 ##   20:00 Sir Alaric boss       ->  5:00
 ##
 ## Spawn rates, caps and weights are all TUNING (not in GDD).
+##
+## Run structure (user brief, overrides "kill the boss to win"): the HUD timer
+## counts DOWN from RUN_DURATION (6:00). Sir Alaric arrives with 1:00 left
+## (5:00 elapsed); killing him drops a big reward but does not end the run.
+## At 0:00 the run counts as survived and THE RECKONING begins: ever stronger
+## Inquisitors of the End spawn every RECKONING.interval seconds until the
+## necromancer falls. Dying after 0:00 = "Run Complete" (victory screen);
+## dying before 0:00 = defeat.
 class_name WaveData
 extends RefCounted
 
-## Game time (s) at which Sir Alaric appears.
+## Total countdown length in seconds (prototype: 6:00 -> 0:00).
+const RUN_DURATION: float = 360.0  # TUNING (not in GDD) user brief
+## Game time (s) at which Sir Alaric appears (1:00 left on the countdown).
 const BOSS_TIME: float = 300.0  # GDD §11 20:00, compressed 4x
+
+## The Reckoning (user brief): escalating waves after the countdown ends.
+##   banner          — HUD banner when it starts.
+##   interval        — s between waves.
+##   base_count      — enemies in the first wave.
+##   count_growth    — extra enemies per subsequent wave.
+##   hp_growth       — HP multiplier compounding per wave (wave n: hp_growth^n).
+##   damage_growth   — damage multiplier compounding per wave.
+const RECKONING := {
+	"banner": "THE RECKONING",
+	"interval": 10.0,  # TUNING (not in GDD) user brief "every ~10s"
+	"base_count": 3,  # TUNING (not in GDD)
+	"count_growth": 2,  # TUNING (not in GDD)
+	"hp_growth": 1.6,  # TUNING (not in GDD)
+	"damage_growth": 1.25,  # TUNING (not in GDD)
+}
 
 ## Continuous spawning segments, sorted by start time. The active segment is
 ## the last one whose `start` <= elapsed time.
@@ -31,34 +57,37 @@ const BOSS_TIME: float = 300.0  # GDD §11 20:00, compressed 4x
 ##   weights    — relative spawn weights per enemy kind.
 ##   objective  — HUD objective text for this phase.
 const SEGMENTS := [
-	{"start": 0.0, "rate": 1.2, "max_alive": 40,  # TUNING (not in GDD)
+	{"start": 0.0, "rate": 0.9, "max_alive": 40,  # TUNING (not in GDD)
 		"weights": {"recruit": 1.0},
 		"objective": "Survive: the Covenant has found your graveyard"},
-	{"start": 45.0, "rate": 1.8, "max_alive": 70,  # TUNING (not in GDD)
+	{"start": 45.0, "rate": 1.3, "max_alive": 70,  # TUNING (not in GDD)
 		"weights": {"recruit": 0.6, "footman": 0.25, "archer": 0.15},
 		"objective": "Archers and footmen join the purge"},
-	{"start": 75.0, "rate": 2.2, "max_alive": 90,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.5, "footman": 0.25, "archer": 0.15, "chaplain": 0.1},
+	{"start": 75.0, "rate": 1.6, "max_alive": 90,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.5, "footman": 0.25, "archer": 0.15, "chaplain": 0.06},
 		"objective": "Chaplains heal their soldiers: kill them first"},
-	{"start": 120.0, "rate": 2.8, "max_alive": 110,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.45, "footman": 0.2, "archer": 0.15, "chaplain": 0.08, "purifier": 0.12},
+	{"start": 120.0, "rate": 1.9, "max_alive": 110,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.45, "footman": 0.2, "archer": 0.15, "chaplain": 0.05, "purifier": 0.12},
 		"objective": "Purifiers hunt your undead"},
-	{"start": 150.0, "rate": 3.2, "max_alive": 120,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.4, "footman": 0.2, "archer": 0.15, "chaplain": 0.1, "purifier": 0.15},
+	{"start": 150.0, "rate": 2.2, "max_alive": 120,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.4, "footman": 0.2, "archer": 0.15, "chaplain": 0.06, "purifier": 0.15},
 		"objective": "The graves are being consecrated"},
-	{"start": 195.0, "rate": 3.6, "max_alive": 130,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.35, "footman": 0.3, "archer": 0.15, "chaplain": 0.08, "purifier": 0.12},
+	{"start": 195.0, "rate": 2.5, "max_alive": 130,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.35, "footman": 0.3, "archer": 0.15, "chaplain": 0.05, "purifier": 0.12},
 		"objective": "Heavy infantry advances"},
-	{"start": 225.0, "rate": 4.5, "max_alive": 150,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.4, "footman": 0.25, "archer": 0.15, "chaplain": 0.08, "purifier": 0.12},
+	{"start": 225.0, "rate": 3.0, "max_alive": 150,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.4, "footman": 0.25, "archer": 0.15, "chaplain": 0.05, "purifier": 0.12},
 		"objective": "Major assault!"},
-	{"start": 270.0, "rate": 5.0, "max_alive": 150,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.35, "footman": 0.25, "archer": 0.18, "chaplain": 0.1, "purifier": 0.12},
+	{"start": 270.0, "rate": 3.3, "max_alive": 150,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.35, "footman": 0.25, "archer": 0.18, "chaplain": 0.06, "purifier": 0.12},
 		"objective": "Final preparation: Sir Alaric approaches"},
 	{"start": BOSS_TIME, "rate": 1.2, "max_alive": 60,  # TUNING (not in GDD)
 		"weights": {"recruit": 0.6, "footman": 0.25, "archer": 0.15},
-		"objective": "Defeat Sir Alaric, the Gravebreaker"},
+		"objective": "Sir Alaric, the Gravebreaker, has come for you"},
 ]
+
+## Objective text shown once the countdown has reached 0:00.
+const RECKONING_OBJECTIVE: String = "THE RECKONING: you survived. Now endure."
 
 ## One-shot scripted events, sorted by time.
 ##   time       — s when the event fires.
@@ -84,7 +113,7 @@ const EVENTS := [
 ]
 
 ## Enemy max-HP multiplier gained per minute of game time (linear).
-const HP_SCALE_PER_MINUTE: float = 0.15  # TUNING (not in GDD)
+const HP_SCALE_PER_MINUTE: float = 0.12  # TUNING (not in GDD)
 ## Enemy damage multiplier gained per minute of game time (linear).
 const DAMAGE_SCALE_PER_MINUTE: float = 0.08  # TUNING (not in GDD)
 ## Hard performance cap on living regular enemies, events included

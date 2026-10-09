@@ -38,6 +38,20 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "priest"]
 ##   kite_distance           — px; archers retreat from threats this close.
 ##   heal_role_priority      — 0..1 "tactical role priority" a priest assigns
 ##                             to healing this class (GDD §31).
+## Optional keys (read with a default of 0 when absent):
+##   block_radius            — px; >0 makes the unit a physical blocker that
+##                             enemies cannot overlap (warriors only).
+##   block_mass              — blocker "mass" vs Enemy mass: share of an
+##                             overlap correction is mass-weighted, so heavy
+##                             warriors barely move and the boss shoves them.
+##   engaged_speed_mult      — speed multiplier for enemies touching this
+##                             blocker (they are "engaged").
+##   bash_damage             — shield-bash damage on contact.
+##   bash_cooldown           — s between shield bashes.
+##   bash_knockback          — px/s impulse of the bash (divided by enemy mass).
+##   shield_amount           — HP absorbed by a priest's ward on the player.
+##   shield_duration         — s the ward lasts.
+##   shield_cooldown         — s between wards from the same priest.
 const UNITS := {
 	"warrior": {
 		"display_name": "Skeleton Warrior",  # GDD §7
@@ -64,6 +78,12 @@ const UNITS := {
 		"heal_amount": 0.0,
 		"kite_distance": 0.0,
 		"heal_role_priority": 1.0,  # GDD §31 "Warriors may get a small role bonus"
+		"block_radius": 12.0,  # TUNING (not in GDD) user brief: warriors physically block
+		"block_mass": 3.0,  # TUNING (not in GDD)
+		"engaged_speed_mult": 0.6,  # TUNING (not in GDD) user brief: ~60% speed
+		"bash_damage": 5.0,  # TUNING (not in GDD)
+		"bash_cooldown": 2.0,  # TUNING (not in GDD)
+		"bash_knockback": 160.0,  # TUNING (not in GDD)
 	},
 	"archer": {
 		"display_name": "Skeletal Archer",  # GDD §7
@@ -142,6 +162,9 @@ const UNITS := {
 		"heal_amount": 8.0,  # GDD §23 (8 HP per cast at 2.0 s)
 		"kite_distance": 0.0,
 		"heal_role_priority": 0.5,  # TUNING (not in GDD)
+		"shield_amount": 15.0,  # TUNING (not in GDD) user brief: priest ward on player
+		"shield_duration": 4.0,  # TUNING (not in GDD)
+		"shield_cooldown": 6.0,  # TUNING (not in GDD)
 	},
 }
 
@@ -154,7 +177,7 @@ const UNITS := {
 ##   splash_bonus    — +% splash radius (mage).
 ##   heal_bonus      — +% heal per cast (priest).
 ##   pierce          — extra enemies an arrow passes through (archer).
-##   heals_player    — priest may heal the necromancer (GDD §27/§31).
+##   shield_bonus    — +% ward strength on the necromancer (priest).
 const LEVELS := {
 	# GDD §34 example Skeleton Warrior L1–L5 (2, +1 +10% dmg, +2 +15% HP,
 	# +1 +20% attack speed, +2 +20% HP = 8 total).
@@ -186,11 +209,11 @@ const LEVELS := {
 	# L1 count 1 is GDD §23; the rest is TUNING (not in GDD), aimed at the
 	# §42 sandbox composition of 2 priests.
 	"priest": [
-		{"count": 1, "heal_bonus": 0.0, "hp_bonus": 0.0, "heals_player": false},
-		{"count": 1, "heal_bonus": 0.25, "hp_bonus": 0.0, "heals_player": false},
-		{"count": 2, "heal_bonus": 0.25, "hp_bonus": 0.0, "heals_player": false},
-		{"count": 2, "heal_bonus": 0.50, "hp_bonus": 0.20, "heals_player": false},
-		{"count": 2, "heal_bonus": 0.50, "hp_bonus": 0.20, "heals_player": true},
+		{"count": 1, "heal_bonus": 0.0, "hp_bonus": 0.0, "shield_bonus": 0.0},
+		{"count": 1, "heal_bonus": 0.25, "hp_bonus": 0.0, "shield_bonus": 0.0},
+		{"count": 2, "heal_bonus": 0.25, "hp_bonus": 0.0, "shield_bonus": 0.0},
+		{"count": 2, "heal_bonus": 0.50, "hp_bonus": 0.20, "shield_bonus": 0.0},
+		{"count": 2, "heal_bonus": 0.50, "hp_bonus": 0.20, "shield_bonus": 0.60},
 	],
 }
 
@@ -274,8 +297,18 @@ const HEAL_MISSING_RAW_NORM: float = 60.0  # TUNING (not in GDD)
 const HEAL_CRITICAL_FRACTION: float = 0.35  # GDD §27
 ## Extra score for critical allies so they always win over chip damage.
 const HEAL_CRITICAL_BONUS: float = 0.5  # TUNING (not in GDD)
-## Necromancer counts as "critically injured" below this HP fraction.
-const PLAYER_HEAL_THRESHOLD: float = 0.5  # TUNING (not in GDD)
+## Tactical role priority of the necromancer as a heal target (priests may
+## always heal the player, per the user brief overriding GDD §27's "if skill
+## allows").
+const PLAYER_HEAL_ROLE: float = 1.0  # TUNING (not in GDD)
+## Extra score when the necromancer is critical (< HEAL_CRITICAL_FRACTION) so
+## a critical necromancer has top priority (GDD §31).
+const PLAYER_CRITICAL_BONUS: float = 1.0  # TUNING (not in GDD)
+## Priests consider a ward when the player was hit within this many seconds
+## (or is flagged "in danger").
+const SHIELD_TRIGGER_WINDOW: float = 1.5  # TUNING (not in GDD)
+## Max radius (px) of any blocker, used to size enemy-vs-blocker queries.
+const MAX_BLOCK_RADIUS: float = 16.0  # TUNING (not in GDD)
 
 # --- Coordination / steering ----------------------------------------------------
 

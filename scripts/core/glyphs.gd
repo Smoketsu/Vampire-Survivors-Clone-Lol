@@ -10,6 +10,7 @@
 ##   Recruit = small round + tabard + spear     Footman = big square + kite shield
 ##   Zealous Archer = crimson triangle + bow    Chaplain = ivory round + gold cross
 ##   Purifier = hexagon + torch flame           Sir Alaric = big octagon + hammer
+##   Inquisitor of the End (Reckoning) = blazing 8-point sun star + eye
 class_name Glyphs
 extends RefCounted
 
@@ -135,6 +136,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			_draw_chaplain(ci, o, r, flash)
 		"purifier":
 			_draw_purifier(ci, o, r, flash)
+		"inquisitor":
+			_draw_inquisitor(ci, o, r, flash)
 
 
 ## Covenant Recruit: small crimson round body, ivory tabard, silver helm, spear.
@@ -187,6 +190,21 @@ static func _draw_purifier(ci: CanvasItem, o: Vector2, r: float, flash: bool) ->
 	var flame := PackedVector2Array([o + Vector2(r * 0.95, -r * 1.45), o + Vector2(r * 0.65, -r * 0.6), o + Vector2(r * 1.25, -r * 0.6)])
 	ci.draw_colored_polygon(flame, _c(Palette.FLAME, flash))
 	ci.draw_circle(o + Vector2(r * 0.95, -r * 0.75), r * 0.18, _c(Palette.GOLD, flash))
+
+
+## Inquisitor of the End: radiant 8-point star of gold over ivory with a
+## crimson eye; a wide holy halo makes the Reckoning readable at a glance.
+static func _draw_inquisitor(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
+	ci.draw_circle(o, r * 1.7, Color(Palette.GOLD, 0.15))
+	var star := PackedVector2Array()
+	for i in 16:
+		var rr := r * (1.25 if i % 2 == 0 else 0.6)
+		star.append(o + Vector2.from_angle(TAU * float(i) / 16.0 - PI / 2.0) * rr)
+	ci.draw_colored_polygon(star, _c(Palette.GOLD, flash))
+	ci.draw_circle(o, r * 0.62, _c(Palette.IVORY, flash))
+	ci.draw_circle(o, r * 0.3, _c(Palette.CRIMSON, flash))
+	ci.draw_circle(o, r * 0.12, _c(Color.BLACK, flash))
+	ci.draw_arc(o, r * 1.45, 0.0, TAU, 32, _c(Palette.IVORY, flash), 1.5)
 
 
 ## Sir Alaric: crimson cape, big silver octagon with gold trim, gold hammer.
