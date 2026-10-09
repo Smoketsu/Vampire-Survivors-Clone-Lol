@@ -14,7 +14,7 @@ const RADIUS: float = 10.0  # TUNING (not in GDD)
 ## Invulnerability window after taking a hit, in seconds.
 const IFRAMES: float = 0.5  # TUNING (not in GDD)
 ## Distance (px) at which XP crystals start flying toward the player.
-const PICKUP_RADIUS: float = 75.0  # TUNING (not in GDD)
+const PICKUP_RADIUS: float = 120.0  # TUNING (not in GDD)
 ## Distance (px) at which a flying crystal is actually collected.
 const COLLECT_RADIUS: float = 14.0  # TUNING (not in GDD)
 ## Acceleration (px/s^2) of a magnetised crystal toward the player.
@@ -23,7 +23,7 @@ const MAGNET_ACCEL: float = 900.0  # TUNING (not in GDD)
 const MAGNET_MAX_SPEED: float = 650.0  # TUNING (not in GDD)
 
 ## XP needed to go from level 1 to level 2.
-const XP_BASE: int = 4  # TUNING (not in GDD)
+const XP_BASE: int = 3  # TUNING (not in GDD)
 ## Additional XP needed per level after that (linear curve).
 const XP_GROWTH: int = 5  # TUNING (not in GDD)
 

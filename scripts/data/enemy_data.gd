@@ -60,7 +60,7 @@ const ENEMIES := {
 		"display_name": "Crimson Footman",
 		"max_hp": 36.0,  # TUNING (not in GDD)
 		"move_speed": 50.0,  # TUNING (not in GDD)
-		"damage": 6.0,  # TUNING (not in GDD)
+		"damage": 5.0,  # TUNING (not in GDD)
 		"attack_interval": 1.2,  # TUNING (not in GDD)
 		"attack_range": 5.0,  # TUNING (not in GDD)
 		"radius": 11.0,  # TUNING (not in GDD)
@@ -81,14 +81,14 @@ const ENEMIES := {
 		"display_name": "Zealous Archer",
 		"max_hp": 18.0,  # TUNING (not in GDD)
 		"move_speed": 55.0,  # TUNING (not in GDD)
-		"damage": 5.0,  # TUNING (not in GDD)
-		"attack_interval": 2.2,  # TUNING (not in GDD)
-		"attack_range": 240.0,  # TUNING (not in GDD) max firing distance
+		"damage": 4.0,  # TUNING (not in GDD)
+		"attack_interval": 2.6,  # TUNING (not in GDD)
+		"attack_range": 200.0,  # TUNING (not in GDD) max firing distance
 		"radius": 9.0,  # TUNING (not in GDD)
 		"armor": 0.0,  # TUNING (not in GDD)
 		"xp": 2,  # TUNING (not in GDD)
 		"behavior": "ranged",
-		"preferred_range": 190.0,  # TUNING (not in GDD)
+		"preferred_range": 150.0,  # TUNING (not in GDD)
 		"projectile_speed": 230.0,  # TUNING (not in GDD)
 		"undead_damage_mult": 1.0,
 		"heal_amount": 0.0,
@@ -109,11 +109,11 @@ const ENEMIES := {
 		"armor": 0.0,  # TUNING (not in GDD)
 		"xp": 5,  # TUNING (not in GDD)
 		"behavior": "healer",
-		"preferred_range": 170.0,  # TUNING (not in GDD)
+		"preferred_range": 135.0,  # TUNING (not in GDD)
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
-		"heal_amount": 5.0,  # TUNING (not in GDD)
-		"heal_interval": 4.0,  # TUNING (not in GDD)
+		"heal_amount": 3.0,  # TUNING (not in GDD)
+		"heal_interval": 5.0,  # TUNING (not in GDD)
 		"heal_radius": 120.0,  # TUNING (not in GDD)
 		"target_priority": 1.0,  # GDD §27/§35 healers are top archer priority
 		"mass": 1.0,  # TUNING (not in GDD) pushback vs blocking warriors
@@ -133,7 +133,7 @@ const ENEMIES := {
 		"behavior": "purifier",
 		"preferred_range": 0.0,
 		"projectile_speed": 0.0,
-		"undead_damage_mult": 2.0,  # TUNING (not in GDD) "bonus damage vs undead"
+		"undead_damage_mult": 1.5,  # TUNING (not in GDD) "bonus damage vs undead"
 		"heal_amount": 0.0,
 		"heal_interval": 0.0,
 		"heal_radius": 0.0,
@@ -175,7 +175,7 @@ const ELITE_RADIUS_MULT: float = 1.35  # TUNING (not in GDD)
 ## Multiplier on XP value for elites.
 const ELITE_XP_MULT: int = 5  # TUNING (not in GDD)
 ## Multiplier on heal amount for elite healers.
-const ELITE_HEAL_MULT: float = 2.0  # TUNING (not in GDD)
+const ELITE_HEAL_MULT: float = 1.5  # TUNING (not in GDD)
 
 ## Search radius (px) in which melee enemies will divert onto a summon that is
 ## closer than the player ("enemies can still hit allied summons", GDD §26).
@@ -241,14 +241,14 @@ const BOSS := {
 	"hammer_radius": 80.0,  # TUNING (not in GDD)
 	"hammer_telegraph": 1.2,  # TUNING (not in GDD)
 	"hammer_damage_player": 30.0,  # TUNING (not in GDD)
-	"hammer_damage_summon": 45.0,  # TUNING (not in GDD)
+	"hammer_damage_summon": 25.0,  # TUNING (not in GDD)
 	"hammer_max_range": 230.0,  # TUNING (not in GDD)
 	"charge_telegraph": 0.9,  # TUNING (not in GDD)
 	"charge_speed": 620.0,  # TUNING (not in GDD)
 	"charge_length": 420.0,  # TUNING (not in GDD)
 	"charge_width": 56.0,  # TUNING (not in GDD)
 	"charge_damage_player": 28.0,  # TUNING (not in GDD)
-	"charge_damage_summon": 40.0,  # TUNING (not in GDD)
+	"charge_damage_summon": 25.0,  # TUNING (not in GDD)
 	"recover_time": 0.9,  # TUNING (not in GDD)
 	"slow_resist": 0.5,  # TUNING (not in GDD)
 }

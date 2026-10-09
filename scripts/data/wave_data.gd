@@ -57,31 +57,31 @@ const RECKONING := {
 ##   weights    — relative spawn weights per enemy kind.
 ##   objective  — HUD objective text for this phase.
 const SEGMENTS := [
-	{"start": 0.0, "rate": 0.9, "max_alive": 40,  # TUNING (not in GDD)
+	{"start": 0.0, "rate": 1.2, "max_alive": 40,  # TUNING (not in GDD)
 		"weights": {"recruit": 1.0},
 		"objective": "Survive: the Covenant has found your graveyard"},
-	{"start": 45.0, "rate": 1.3, "max_alive": 70,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.6, "footman": 0.25, "archer": 0.15},
+	{"start": 45.0, "rate": 1.4, "max_alive": 55,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.68, "footman": 0.2, "archer": 0.12},
 		"objective": "Archers and footmen join the purge"},
-	{"start": 75.0, "rate": 1.6, "max_alive": 90,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.5, "footman": 0.25, "archer": 0.15, "chaplain": 0.06},
+	{"start": 75.0, "rate": 1.6, "max_alive": 65,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.55, "footman": 0.23, "archer": 0.12, "chaplain": 0.05},
 		"objective": "Chaplains heal their soldiers: kill them first"},
-	{"start": 120.0, "rate": 1.9, "max_alive": 110,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.45, "footman": 0.2, "archer": 0.15, "chaplain": 0.05, "purifier": 0.12},
+	{"start": 120.0, "rate": 1.8, "max_alive": 75,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.48, "footman": 0.2, "archer": 0.12, "chaplain": 0.04, "purifier": 0.12},
 		"objective": "Purifiers hunt your undead"},
-	{"start": 150.0, "rate": 2.2, "max_alive": 120,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.4, "footman": 0.2, "archer": 0.15, "chaplain": 0.06, "purifier": 0.15},
+	{"start": 150.0, "rate": 2.0, "max_alive": 85,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.45, "footman": 0.2, "archer": 0.12, "chaplain": 0.04, "purifier": 0.15},
 		"objective": "The graves are being consecrated"},
-	{"start": 195.0, "rate": 2.5, "max_alive": 130,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.35, "footman": 0.3, "archer": 0.15, "chaplain": 0.05, "purifier": 0.12},
+	{"start": 195.0, "rate": 2.5, "max_alive": 95,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.4, "footman": 0.3, "archer": 0.12, "chaplain": 0.04, "purifier": 0.12},
 		"objective": "Heavy infantry advances"},
-	{"start": 225.0, "rate": 3.0, "max_alive": 150,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.4, "footman": 0.25, "archer": 0.15, "chaplain": 0.05, "purifier": 0.12},
+	{"start": 225.0, "rate": 3.0, "max_alive": 105,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.45, "footman": 0.25, "archer": 0.12, "chaplain": 0.04, "purifier": 0.12},
 		"objective": "Major assault!"},
-	{"start": 270.0, "rate": 3.3, "max_alive": 150,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.35, "footman": 0.25, "archer": 0.18, "chaplain": 0.06, "purifier": 0.12},
+	{"start": 270.0, "rate": 3.3, "max_alive": 110,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.4, "footman": 0.25, "archer": 0.14, "chaplain": 0.05, "purifier": 0.12},
 		"objective": "Final preparation: Sir Alaric approaches"},
-	{"start": BOSS_TIME, "rate": 1.2, "max_alive": 60,  # TUNING (not in GDD)
+	{"start": BOSS_TIME, "rate": 1.0, "max_alive": 50,  # TUNING (not in GDD)
 		"weights": {"recruit": 0.6, "footman": 0.25, "archer": 0.15},
 		"objective": "Sir Alaric, the Gravebreaker, has come for you"},
 ]
@@ -96,20 +96,22 @@ const RECKONING_OBJECTIVE: String = "THE RECKONING: you survived. Now endure."
 ##                "line" (a marching column from one direction).
 ##   groups     — list of {kind, count, elite} spawned in that formation.
 const EVENTS := [
+	{"time": 20.0, "banner": "Covenant recruits charge!", "formation": "arc",  # TUNING (not in GDD) first-minute beat: shows warrior blocking
+		"groups": [{"kind": "recruit", "count": 8, "elite": false}]},
 	{"time": 45.0, "banner": "Archers and footmen march in!", "formation": "arc",  # GDD §11 03:00
-		"groups": [{"kind": "footman", "count": 6, "elite": false}, {"kind": "archer", "count": 5, "elite": false}]},
+		"groups": [{"kind": "footman", "count": 5, "elite": false}, {"kind": "archer", "count": 3, "elite": false}]},
 	{"time": 75.0, "banner": "A Chaplain elite leads the charge!", "formation": "arc",  # GDD §11 05:00
 		"groups": [{"kind": "chaplain", "count": 1, "elite": true}, {"kind": "recruit", "count": 10, "elite": false}]},
 	{"time": 120.0, "banner": "Purifiers have come for your dead!", "formation": "ring",  # GDD §11 08:00
-		"groups": [{"kind": "purifier", "count": 10, "elite": false}]},
+		"groups": [{"kind": "purifier", "count": 8, "elite": false}]},
 	{"time": 150.0, "banner": "The Covenant consecrates the graves!", "formation": "ring",  # GDD §11 10:00
-		"groups": [{"kind": "chaplain", "count": 6, "elite": false}, {"kind": "purifier", "count": 6, "elite": false}, {"kind": "recruit", "count": 12, "elite": false}]},
+		"groups": [{"kind": "chaplain", "count": 4, "elite": false}, {"kind": "purifier", "count": 6, "elite": false}, {"kind": "recruit", "count": 12, "elite": false}]},
 	{"time": 195.0, "banner": "A footman phalanx advances!", "formation": "line",  # GDD §11 13:00 stand-in
 		"groups": [{"kind": "footman", "count": 14, "elite": false}, {"kind": "footman", "count": 1, "elite": true}]},
 	{"time": 225.0, "banner": "MAJOR ASSAULT!", "formation": "ring",  # GDD §11 15:00
 		"groups": [{"kind": "recruit", "count": 28, "elite": false}, {"kind": "footman", "count": 10, "elite": false}, {"kind": "chaplain", "count": 2, "elite": true}]},
 	{"time": 270.0, "banner": "Final preparation wave!", "formation": "arc",  # GDD §11 18:00
-		"groups": [{"kind": "archer", "count": 10, "elite": false}, {"kind": "purifier", "count": 8, "elite": false}, {"kind": "footman", "count": 1, "elite": true}]},
+		"groups": [{"kind": "archer", "count": 6, "elite": false}, {"kind": "purifier", "count": 8, "elite": false}, {"kind": "footman", "count": 1, "elite": true}]},
 ]
 
 ## Enemy max-HP multiplier gained per minute of game time (linear).

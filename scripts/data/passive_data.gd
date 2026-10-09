@@ -51,11 +51,11 @@ const PASSIVES := {
 		"description": "Increases maximum health of all minions.",
 		"labels": {"minion_hp": ["Minion max HP", "pct"]},
 		"levels": [
-			{"minion_hp": 0.10},  # TUNING (not in GDD)
-			{"minion_hp": 0.20},  # TUNING (not in GDD)
+			{"minion_hp": 0.15},  # TUNING (not in GDD)
 			{"minion_hp": 0.30},  # TUNING (not in GDD)
-			{"minion_hp": 0.40},  # TUNING (not in GDD)
-			{"minion_hp": 0.50},  # TUNING (not in GDD)
+			{"minion_hp": 0.45},  # TUNING (not in GDD)
+			{"minion_hp": 0.60},  # TUNING (not in GDD)
+			{"minion_hp": 0.75},  # TUNING (not in GDD)
 		],
 	},
 	"dark_command": {
@@ -64,11 +64,11 @@ const PASSIVES := {
 		"description": "Increases minion attack damage and attack speed.",
 		"labels": {"minion_damage": ["Minion damage", "pct"], "minion_speed": ["Minion attack speed", "pct"]},
 		"levels": [
-			{"minion_damage": 0.08, "minion_speed": 0.04},  # TUNING (not in GDD)
-			{"minion_damage": 0.16, "minion_speed": 0.08},  # TUNING (not in GDD)
-			{"minion_damage": 0.24, "minion_speed": 0.12},  # TUNING (not in GDD)
-			{"minion_damage": 0.32, "minion_speed": 0.16},  # TUNING (not in GDD)
+			{"minion_damage": 0.10, "minion_speed": 0.05},  # TUNING (not in GDD)
+			{"minion_damage": 0.20, "minion_speed": 0.10},  # TUNING (not in GDD)
+			{"minion_damage": 0.30, "minion_speed": 0.15},  # TUNING (not in GDD)
 			{"minion_damage": 0.40, "minion_speed": 0.20},  # TUNING (not in GDD)
+			{"minion_damage": 0.50, "minion_speed": 0.25},  # TUNING (not in GDD)
 		],
 	},
 	"soul_recycling": {
