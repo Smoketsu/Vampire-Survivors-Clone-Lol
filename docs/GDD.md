@@ -1317,6 +1317,10 @@ Decisions made since the source was written are recorded in 15.0; everything bel
 | 11 | Priest player healing/shielding | Priests **can heal the player** (same heal formula) and **can shield the player** with a short damage-absorb barrier. No special upgrade is required. |
 | 12 | Warrior body-blocking | Warriors **physically block enemies**. Enemies cannot overlap warriors (overlap is resolved through the spatial hash, not physics bodies). Enemies in contact with a warrior are *engaged*: slowed and drawn to attack it. Warriors also have a short-cooldown shield bash that knocks back and damages enemies on contact. Other summon classes do not block. |
 | 46 | Presentation / engine | **Top-down 2D in Godot 4.** |
+| — | Power curve | A strong summoner build should make the player **nigh unkillable** before 0:00, as in other survivor games. Weak or careless builds can still die. Only the Reckoning is meant to end strong runs. |
+| — | Summons vs. boss attacks | Undead **do not dodge** telegraphed attacks. They act as body blockers that absorb hits, including projectiles, for the necromancer. |
+| — | Enemy movement | Covenant enemies **always advance toward the player**, following survivor-genre convention. Ranged enemies and Chaplains do not kite or hold at range; they attack or heal while advancing. |
+| — | Shadow Bolt targeting | By default Shadow Bolt targets the **nearest** enemy. The player can toggle a **Strongest** aim mode that targets the highest-HP enemy in range. |
 | 9, 26, 31, … | Missing numbers | Placeholder values marked `TUNING` in the prototype's data files are acceptable. Balance will be tuned against the playable prototype. |
 
 ### 15.1 Core Rules and Run Structure
