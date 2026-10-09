@@ -5,7 +5,10 @@
 ##   * per-ability sequential replenishment queues (GDD §24),
 ##   * soft formation anchors at 4 Hz (GDD §26),
 ##   * player threat evaluation at 5 Hz (GDD §32),
-##   * staggered 5 Hz AI ticks: each unit thinks on 1 of 12 physics ticks.
+##   * staggered 5 Hz AI ticks: each unit thinks on 1 of 12 physics ticks,
+##   * temporary summons from stage events (empowered graves, Crypt Defender
+##     guardians): same shared AI, but outside caps / HUD counts, and they
+##     crumble after their duration (GDD §15.0 decision on open question 14).
 ## Ranged overkill reservations are stored on the enemies themselves
 ## (Enemy.incoming_damage) and managed by ProjectileManager.
 class_name HordeDirector
@@ -54,6 +57,10 @@ var total_spawned: int = 0
 var total_deaths: int = 0
 ## Total hard recalls (should stay rare, GDD §24).
 var hard_recalls: int = 0
+## Temporary summons currently alive (not in class_counts).
+var temp_alive: int = 0
+## Temporary summons spawned this run.
+var temp_spawned: int = 0
 ## Reusable query buffer.
 var _tmp: Array = []
 
@@ -73,6 +80,8 @@ func _init() -> void:
 ## Fixed-order update called by Game every physics tick.
 func step(delta: float) -> void:
 	_frame += 1
+	if temp_alive > 0:
+		_update_temporaries(delta)
 	_update_replenishment(delta)
 	if _frame % UnitData.FORMATION_TICK_DIVISOR == 0:
 		_calculate_formation_anchors()
@@ -129,7 +138,7 @@ func _refresh_class(cls: String, old_cap: int) -> void:
 	var stats := compute_stats(cls, level)
 	class_stats[cls] = stats
 	for u in units:
-		if u.unit_class == cls:
+		if u.unit_class == cls and not u.is_temporary:
 			u.apply_stats(stats, true)
 	var new_cap := capacity(cls)
 	if new_cap > old_cap:
@@ -259,7 +268,9 @@ func _try_spawn(cls: String) -> bool:
 	var r: float = stats["radius"]
 	for _attempt in UnitData.SPAWN_RETRIES:
 		var pos := game.player.position + Vector2.from_angle(randf() * TAU) * randf_range(UnitData.SPAWN_MIN, UnitData.SPAWN_MAX)
-		if _blocked_by_enemy(pos, r):
+		# Never inside an enemy, an obstacle or a holy zone (holy ground
+		# suppresses replacement locally, GDD §10).
+		if _blocked_by_enemy(pos, r) or game.arena.is_blocked(pos, r) or game.enemies.stage.in_holy_zone(pos):
 			continue
 		var u: SummonedUnit
 		if _pool.is_empty():
@@ -280,6 +291,50 @@ func _try_spawn(cls: String) -> bool:
 	return false
 
 
+## Spawns a temporary summon of `cls` near `pos` for `duration` seconds,
+## using the class's current effective stats (level 1 if not learned) times
+## `hp_mult` / `dmg_mult`. It runs the shared AI but is not counted in
+## class_counts (caps, HUD) and is never replaced.
+func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float, dmg_mult: float) -> SummonedUnit:
+	var stats := compute_stats(cls, maxi(1, int(class_levels[cls])))
+	stats["max_hp"] = float(stats["max_hp"]) * hp_mult
+	stats["damage"] = float(stats["damage"]) * dmg_mult
+	stats["bash_damage"] = float(stats["bash_damage"]) * dmg_mult
+	var at := game.arena.free_point(pos, float(stats["radius"]))
+	var u: SummonedUnit
+	if _pool.is_empty():
+		u = SummonedUnit.new()
+		add_child(u)
+		created_nodes += 1
+	else:
+		u = _pool.pop_back()
+	u.activate(self, game, cls, stats, at, _next_slot)
+	u.is_temporary = true
+	u.temp_life = duration
+	_next_slot = (_next_slot + 1) % UnitData.AI_TICK_DIVISOR
+	units.append(u)
+	temp_alive += 1
+	temp_spawned += 1
+	game.effects.spawn_ring(at, Palette.NECRO_GREEN)
+	return u
+
+
+## Ages temporary summons and crumbles the expired ones (outside the unit
+## loop, which must not see the array change).
+func _update_temporaries(delta: float) -> void:
+	var i := units.size() - 1
+	while i >= 0:
+		var u := units[i]
+		if u.is_temporary:
+			u.temp_life -= delta
+			if u.temp_life < 5.0:
+				u.queue_redraw()  # aura dims as it expires
+			if u.temp_life <= 0.0:
+				game.stat_add("temporary_expired", 1.0)
+				on_unit_died(u)
+		i -= 1
+
+
 ## True if `pos` overlaps a living enemy body.
 func _blocked_by_enemy(pos: Vector2, r: float) -> bool:
 	game.enemy_grid.query(pos, r + 30.0, _tmp)
@@ -298,8 +353,11 @@ func on_unit_died(u: SummonedUnit) -> void:
 	if idx >= 0:
 		units[idx] = units[units.size() - 1]
 		units.pop_back()
-	class_counts[u.unit_class] = maxi(0, int(class_counts[u.unit_class]) - 1)
-	total_deaths += 1
+	if u.is_temporary:
+		temp_alive -= 1
+	else:
+		class_counts[u.unit_class] = maxi(0, int(class_counts[u.unit_class]) - 1)
+		total_deaths += 1
 	game.effects.pop(u.position, Palette.COLD_BLUE, u.radius * 1.2)
 	u.deactivate()
 	_pool.append(u)
@@ -347,17 +405,19 @@ func _calculate_formation_anchors() -> void:
 
 
 ## Distributes `list` evenly over an arc of `spread` radians centred on
-## `center_angle`, each unit at a stable radius inside its own band.
+## `center_angle`, each unit at a stable radius inside its own band. Anchors
+## that would fall inside an obstacle are moved out of it.
 func _assign_arc(list: Array[SummonedUnit], center_angle: float, spread: float) -> void:
 	var n := list.size()
 	if n == 0:
 		return
+	var pp := game.player.position
 	for i in n:
 		var u := list[i]
 		var t := (float(i) + 0.5) / float(n) - 0.5
 		var angle := center_angle + t * spread + (u.slot_jitter - 0.5) * UnitData.FORMATION_JITTER_ANGLE
 		var r := lerpf(u.band_min, u.band_max, 0.2 + 0.6 * u.band_jitter)
-		u.anchor_offset = Vector2.from_angle(angle) * r
+		u.anchor_offset = game.arena.free_point(pp + Vector2.from_angle(angle) * r, u.radius) - pp
 
 
 ## Summarises enemies near the player into a direction + pressure level and

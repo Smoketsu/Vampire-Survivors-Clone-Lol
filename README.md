@@ -70,6 +70,49 @@ replacing fallen units all happen automatically (GDD §4, §21).
     lasted past zero.
   - Dying **before 0:00** shows **DEFEAT**.
 
+### Stage & Boss
+
+This section describes the graveyard stage and Sir Alaric as they are now. Where
+it disagrees with older notes elsewhere in this README, this section is correct.
+
+- **Obstacles.** Gravestones, dead trees and crypt walls are solid for the
+  player, summons and enemies. Each one is a simple circle or rectangle, so no
+  physics engine is used. Units walk around obstacles, and nothing ever spawns
+  or is recalled inside one. Arrows and spells still fly over them.
+- **Stage events** (`WaveData.EVENTS`, compressed 4× from the GDD §11 timeline):
+  - **Empowered graves** glow near you from 0:30, then every 40 s. Walk onto
+    one to raise 3 temporary warriors, or to bring back every fallen summon at
+    once.
+  - **Desecration** at 2:30 and 4:15. Chaplains march to the marked graves and
+    start channelling. Kill a Chaplain to save its grave (you get XP).
+    Otherwise the grave becomes **holy ground**: a gold zone that burns and
+    slows undead, stings you, and blocks summon replacement inside it.
+  - **Templar Knights** arrive at 3:15. They telegraph a short charge lane,
+    then rush along it and shove summons aside. A warrior in the lane stops
+    the rush.
+  - **Crypt Defender** at 4:00. Walk to the crypt to wake 4 strong guardians
+    for 30 s.
+- **Sir Alaric** (2700 HP, arrives with 1:00 left) uses all five GDD
+  abilities. Each one is telegraphed:
+  - **Hammerfall**: a gold circle. Each summon inside soaks 20% of the hit
+    on you.
+  - **Divine Charge**: a gold lane. Every undead body he hits absorbs part
+    of the charge, and enough bodies stop it.
+  - **Consecrated Ground**: arming gold circles that become holy zones for
+    10 s.
+  - **Call to Arms**: crimson rally banners mark where infantry will arrive.
+  - **Judgment of the Dead**: ivory sigils on your summon clusters. Summons
+    inside take heavy damage; you are not hurt.
+
+  At **50% HP** he enters **Wrath**: his specials come faster, he places more
+  zones and marks, and he casts Call to Arms immediately.
+- **Temporary summons** from graves and the crypt don't count toward your
+  caps or the HUD counts, and they crumble when their time runs out.
+- **Autotest.** The summary also reports boss attacks per type, stage events
+  fired, obstacle collisions resolved and `stuck_units`. A unit counts as
+  stuck if it is trying to reach its target or anchor but has not moved more
+  than 10 px in 10 s; this should stay at 0.
+
 ---
 
 ## What is implemented (vs. the GDD)

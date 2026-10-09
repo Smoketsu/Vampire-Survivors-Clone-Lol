@@ -284,6 +284,7 @@ func _step_charge(delta: float) -> void:
 	charge_left -= step_len
 	velocity = charge_dir * spd
 	var hit_r := float(boss_def["charge_width"]) * 0.5
+	var soaked := false
 	game.ally_grid.query(position, hit_r + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	for u: SummonedUnit in _tmp:
 		if not u.active or u.state == SummonedUnit.State.SPAWNING or _charge_hit_units.has(u.get_instance_id()):
@@ -292,18 +293,19 @@ func _step_charge(delta: float) -> void:
 			_charge_hit_units[u.get_instance_id()] = true
 			var absorb := float(boss_def["charge_absorb_warrior"] if u.block_radius > 0.0 else boss_def["charge_absorb_summon"])
 			charge_left -= absorb
+			soaked = soaked or charge_left <= 0.0
 			game.combat.damage_unit(u, float(boss_def["charge_damage_summon"]), "boss_charge")
-	if charge_left <= 0.0 and step_len < spd * delta - 0.01 and not _charge_hit_units.is_empty():
-		pass
 	var player := game.player
 	if not _charge_hit_player and player.position.distance_to(position) <= hit_r + player.radius:
 		_charge_hit_player = true
 		game.combat.damage_player(float(boss_def["charge_damage_player"]) * game.enemies.damage_mult, "boss_charge")
 	if charge_left <= 0.0:
-		if not _charge_hit_player and not _charge_hit_units.is_empty() \
-				and _lane_reaches_player():
-			game.stat_add("boss_charge_blocked", 1.0)
+		if soaked:
+			# Undead bodies soaked the rest of the charge (body-blocking).
+			game.stat_add("boss_charge_stopped", 1.0)
 			game.effects.impact(position + charge_dir * radius, radius * 1.5, Palette.COLD_BLUE)
+			if not _charge_hit_player and _lane_reaches_player():
+				game.stat_add("boss_charge_blocked", 1.0)
 		velocity = Vector2.ZERO
 		_set_phase(Phase.RECOVER)
 

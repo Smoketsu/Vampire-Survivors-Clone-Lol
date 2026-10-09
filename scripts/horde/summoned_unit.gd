@@ -180,6 +180,18 @@ var _neigh: Array = []
 ## Score of the best candidate found by the last acquisition.
 var _best_score: float = 0.0
 
+# --- Stage effects --------------------------------------------------------------------
+
+## True for a temporary stage-event summon (empowered grave / crypt
+## guardian): outside caps, never replaced, crumbles after temp_life.
+var is_temporary: bool = false
+## Seconds a temporary summon has left (HordeDirector ages it).
+var temp_life: float = 0.0
+## Fraction of speed lost while standing on holy ground.
+var holy_slow: float = 0.0
+## Seconds the holy-ground slow still applies (refreshed by StageDirector).
+var holy_slow_timer: float = 0.0
+
 
 # =====================================================================================
 # Lifecycle
@@ -209,6 +221,10 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	_shield_cd = 0.0
 	_threat_away = Vector2.ZERO
 	_threat_dist = INF
+	is_temporary = false
+	temp_life = 0.0
+	holy_slow = 0.0
+	holy_slow_timer = 0.0
 	slot_jitter = randf()
 	band_jitter = randf()
 	anchor_offset = pos - game.player.position
@@ -449,7 +465,7 @@ func _can_shield_player() -> bool:
 func _safe_recall() -> void:
 	_drop_target()
 	game.effects.spawn_ring(position, Palette.NECRO_GREEN)
-	position = game.player.position + anchor_offset
+	position = game.arena.free_point(game.player.position + anchor_offset, radius)
 	velocity = Vector2.ZERO
 	game.effects.spawn_ring(position, Palette.NECRO_GREEN)
 	director.hard_recalls += 1
@@ -621,6 +637,8 @@ func physics_step(delta: float) -> void:
 	_kite_cd -= delta
 	bash_cd -= delta
 	_shield_cd -= delta
+	if holy_slow_timer > 0.0:
+		holy_slow_timer -= delta
 	if flash > 0.0:
 		flash -= delta
 		if flash <= 0.0:
@@ -645,7 +663,9 @@ func physics_step(delta: float) -> void:
 
 ## Blends steering behaviours into a velocity (GDD §26: formation
 ## attraction, target pursuit, ally separation, threat avoidance; weighted and
-## clamped). Open arena: no obstacle term.
+## clamped). Obstacles are handled by Arena.resolve_all (push-out + slide
+## along the obstacle), so there is no separate obstacle term here. Holy
+## ground slows the unit.
 func _step_movement(delta: float) -> void:
 	var player_pos := game.player.position
 	var anchor := player_pos + anchor_offset
@@ -661,6 +681,8 @@ func _step_movement(delta: float) -> void:
 			speed *= UnitData.RETURN_SPEED_MULT
 		_:
 			desired = _combat_desire(anchor, player_pos)
+	if holy_slow_timer > 0.0:
+		speed *= 1.0 - holy_slow
 	if state != State.RETURNING:
 		desired += _threat_away * w_threat
 	desired += _separation() * w_separation
@@ -860,6 +882,11 @@ func _draw() -> void:
 	if state == State.SPAWNING:
 		rise = clampf(state_time / UnitData.SPAWN_DURATION, 0.0, 1.0)
 		draw_circle(Vector2(0, radius * 0.9), radius * (1.3 - 0.4 * rise), Color(Palette.NECRO_GREEN, 0.3 * (1.0 - rise)))
+	if is_temporary:
+		# Stage-event summon: spectral green aura that dims as it expires.
+		var k := clampf(temp_life / 5.0, 0.3, 1.0)
+		draw_circle(Vector2.ZERO, radius * 1.5, Color(Palette.NECRO_GREEN, 0.12 * k))
+		draw_arc(Vector2.ZERO, radius * 1.5, 0.0, TAU, 20, Color(Palette.NECRO_GREEN, 0.7 * k), 1.5)
 	Glyphs.draw_summon(self, unit_class, Vector2(0, (1.0 - rise) * radius), radius, flash > 0.0)
 	if hp < max_hp - 0.5 and state != State.SPAWNING:
 		# The node is mirrored via scale.x; counter-flip so the bar always

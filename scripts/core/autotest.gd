@@ -3,7 +3,9 @@
 ##   * seeds the RNG and fast-forwards time (Engine.time_scale with physics
 ##     ticks scaled to match, so each physics step is still 1/60 s of game
 ##     time and collision behaviour is unchanged),
-##   * drives the necromancer with a simple kiting autopilot,
+##   * drives the necromancer with a simple kiting autopilot (it also dodges
+##     boss telegraphs and holy zones, steers off obstacles, and walks to
+##     empowered graves, crypts and graves being consecrated),
 ##   * auto-picks level-up cards with a policy (--policy=naive: unowned summon
 ##     classes and spells first so every system gets exercised; --policy=army:
 ##     a summoner build that levels summons and army passives first),
@@ -14,8 +16,13 @@
 ##     makes him mortal so the Reckoning kills him -> "Run Complete" screen,
 ##   * prints progress every 30 game seconds, plus "[metric]" lines (horde
 ##     size, damage taken by attacker, enemies alive by kind) that the
-##     multi-seed tuning scripts parse, and a final summary, then quits
-##     with exit code 0 when the run completed, 1 otherwise.
+##     multi-seed tuning scripts parse, and a final summary (including Sir
+##     Alaric's attacks per type, stage events fired, obstacle collisions
+##     resolved and stuck units), then quits with exit code 0 when the run
+##     completed, 1 otherwise,
+##   * detects stuck units: a summon or enemy that wants to move toward its
+##     goal (target out of reach, anchor far away, returning...) but has not
+##     moved more than STUCK_DISTANCE px in STUCK_TIME s.
 class_name Autotest
 extends Node
 
@@ -27,6 +34,19 @@ const FLEE_RADIUS: float = 110.0
 const XP_SEEK_RADIUS: float = 320.0
 ## Game seconds of Reckoning before the invulnerable autopilot turns mortal.
 const RECKONING_GRACE: float = 20.0
+## Radius (px) in which the autopilot walks to stage objectives.
+const OBJECTIVE_SEEK_RADIUS: float = 420.0
+## Distance (px) at which the autopilot starts steering off obstacles.
+const OBSTACLE_LOOK: float = 22.0
+## Game seconds between stuck-unit samples.
+const STUCK_SAMPLE: float = 1.0
+## A unit that moved less than this (px) ...
+const STUCK_DISTANCE: float = 10.0
+## ... over this many game seconds while wanting to move counts as stuck.
+const STUCK_TIME: float = 10.0
+## A following summon "wants to move" only when its anchor is farther than
+## this (px); closer than that it is simply standing in formation.
+const STUCK_ANCHOR_SLACK: float = 40.0
 ## Card priorities for --policy=army (higher = picked first).
 const ARMY_PRIORITY := {"warrior": 100.0, "archer": 95.0, "mage": 98.0, "priest": 90.0, "grave_dominion": 105.0,
 	"dark_command": 70.0, "necrotic_vigor": 65.0, "soul_recycling": 50.0,
@@ -68,6 +88,16 @@ var _min_hp: float = 9999.0
 var _bolt_dmg_at_switch: float = -1.0
 ## Guards against printing the summary twice.
 var _finished: bool = false
+## Instance id -> [generation, position, game time] of the stuck tracker.
+var _stuck_track: Dictionary = {}
+## Game time of the next stuck-unit sample.
+var _next_stuck_sample: float = STUCK_SAMPLE
+## Stuck episodes detected (must stay ~0).
+var _stuck_units: int = 0
+## Stuck episodes by unit label ("summon_warrior", "enemy_footman"...).
+var _stuck_by: Dictionary = {}
+## Stuck episodes where the unit was touching an obstacle.
+var _stuck_at_obstacle: int = 0
 ## Reusable query buffer.
 var _tmp: Array = []
 
@@ -118,6 +148,9 @@ func step(delta: float) -> void:
 	_horde_n += 1
 	if _boss_hp_at_0 < 0.0 and game.elapsed >= WaveData.RUN_DURATION and game.enemies.boss != null:
 		_boss_hp_at_0 = game.enemies.boss.hp if game.enemies.boss.active else 0.0
+	if game.elapsed >= _next_stuck_sample:
+		_next_stuck_sample += STUCK_SAMPLE
+		_sample_stuck()
 	if game.elapsed >= _next_report:
 		_next_report += REPORT_INTERVAL
 		_print_metrics()
@@ -128,6 +161,76 @@ func step(delta: float) -> void:
 		print("[autotest]    unit FSM: %s" % str(game.horde.state_counts()))
 	if game.elapsed >= GameState.autotest_timeout:
 		game.end_run(false, "timeout")
+
+
+## Samples every summon and enemy for the stuck-unit check.
+func _sample_stuck() -> void:
+	for u in game.horde.units:
+		if u.active:
+			_track(u, u.generation, u.radius, _summon_wants_move(u), "summon_" + u.unit_class)
+	for e in game.enemies.active:
+		if e.active:
+			_track(e, e.generation, e.radius, _enemy_wants_move(e), "enemy_" + e.kind)
+
+
+## Stuck bookkeeping for one unit: restart its window whenever it moved
+## enough, was recycled, or has no reason to move; count an episode when
+## the window reaches STUCK_TIME.
+func _track(n: Node2D, gen: int, r: float, wants: bool, label: String) -> void:
+	var id := n.get_instance_id()
+	var rec: Variant = _stuck_track.get(id)
+	if rec == null or int(rec[0]) != gen or not wants or n.position.distance_to(rec[1]) > STUCK_DISTANCE:
+		_stuck_track[id] = [gen, n.position, game.elapsed]
+		return
+	if game.elapsed - float(rec[2]) < STUCK_TIME:
+		return
+	_stuck_units += 1
+	_stuck_by[label] = int(_stuck_by.get(label, 0)) + 1
+	var at_obstacle := game.arena.is_blocked(n.position, r + 3.0)
+	if at_obstacle:
+		_stuck_at_obstacle += 1
+	print("[autotest] stuck unit: %s at %s (%.0f px from player, touching obstacle: %s)" % [
+		label, str(n.position.round()), n.position.distance_to(game.player.position), str(at_obstacle)])
+	_stuck_track[id] = [gen, n.position, game.elapsed]
+
+
+## True when a summon is trying to get somewhere (not idling in formation,
+## casting or fighting in reach).
+func _summon_wants_move(u: SummonedUnit) -> bool:
+	match u.state:
+		SummonedUnit.State.RETURNING, SummonedUnit.State.RETREATING, SummonedUnit.State.REPOSITIONING:
+			return true
+		SummonedUnit.State.FOLLOWING, SummonedUnit.State.ACQUIRING:
+			return u.position.distance_to(game.player.position + u.anchor_offset) > STUCK_ANCHOR_SLACK
+		SummonedUnit.State.ENGAGING:
+			var t := u.target
+			if u.attack_profile == "melee" and t != null and t.active and t.generation == u.target_gen:
+				return u.position.distance_to(t.position) - u.radius - t.radius > u.attack_range + UnitData.MELEE_TOLERANCE
+	return false
+
+
+## True when an enemy is trying to close in (not fighting a blocker, not in
+## reach, not winding up a special).
+func _enemy_wants_move(e: Enemy) -> bool:
+	if e.engaged_timer > 0.0:
+		return false
+	var pl := game.player
+	if e.is_boss:
+		var b := e as BossAlaric
+		return b.phase == BossAlaric.Phase.WALK and e.position.distance_to(pl.position) - e.radius - pl.radius > e.attack_range + 4.0
+	match e.behavior:
+		"consecrator":
+			return e.position.distance_to(e.post_pos) > 12.0
+		"ranged", "healer":
+			return e.position.distance_to(pl.position) - e.radius - pl.radius > EnemyData.ADVANCE_STOP_GAP + 6.0
+		"templar":
+			if e.rush_state != 0:
+				return false
+	var t := e.target
+	if t == null:
+		return false
+	var tr := pl.radius if t == pl else (t as SummonedUnit).radius
+	return e.position.distance_to(t.position) - e.radius - tr > e.attack_range + 4.0
 
 
 ## Prints the per-window "[metric]" lines parsed by the tuning scripts.
@@ -209,11 +312,17 @@ func get_move_vector() -> Vector2:
 		if d < best_d:
 			best_d = d
 			toward = (c.position - p) / maxf(d, 1.0)
-	var danger := Vector2.ZERO
+	var danger := game.enemies.stage.danger_push(p)
 	if game.enemies.boss != null and game.enemies.boss.active:
-		danger = game.enemies.boss.danger_push(p)
+		danger += game.enemies.boss.danger_push(p)
+	var objective := Vector2.ZERO
+	# Walk to shrines any time, to graves under consecration only when calm.
+	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
+	if goal != Vector2.INF:
+		objective = (goal - p).normalized()
+	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
 	var wander := Vector2.from_angle(game.elapsed * 0.3) * 0.35
-	return (away * 1.5 + toward * 1.2 + danger * 3.0 + wander).limit_length(1.0)
+	return (away * 1.5 + toward * 1.2 + objective * 1.0 + danger * 3.0 + avoid * 1.5 + wander).limit_length(1.0)
 
 
 ## Prints the final summary and quits the engine.
@@ -256,6 +365,19 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] shadow bolt: %d dmg in Nearest mode, %d dmg in Strongest mode; to boss: %d of %d total boss dmg" % [
 		int(bolt_nearest), int(bolt_total - bolt_nearest), int(st.get("bossdmg_bolt", 0.0)), int(_sum_prefix(st, "bossdmg_"))])
 	print("[autotest] stats: " + " ".join(stat_parts))
+	var atk := PackedStringArray()
+	for id: String in EnemyData.SPECIALS:
+		atk.append("%s=%d" % [id, int(st.get("boss_atk_" + id, 0.0))])
+	print("[autotest] boss attacks: %s | wrath: %s | hammer soaked by undead: %d | charges stopped by undead: %d (shielding the player: %d) | judgment hits: %d | call soldiers: %d | holy zones boss/grave: %d/%d" % [
+		" ".join(atk), "yes" if st.has("boss_phase2") else "no", int(st.get("boss_hammer_soaked", 0.0)), int(st.get("boss_charge_stopped", 0.0)), int(st.get("boss_charge_blocked", 0.0)),
+		int(st.get("boss_judgment_hits", 0.0)), int(st.get("boss_call_soldiers", 0.0)), int(st.get("holy_zones_boss", 0.0)), int(st.get("holy_zones_grave", 0.0))])
+	var fired := game.enemies.stage.fired
+	print("[autotest] stage events fired (%d): %s" % [fired.size(), ", ".join(fired)])
+	print("[autotest] templar charges: %d (body-blocked by warriors: %d) | temporary summons spawned: %d" % [
+		int(st.get("templar_charges", 0.0)), int(st.get("templar_charges_blocked", 0.0)), game.horde.temp_spawned])
+	print("[autotest] obstacle collisions resolved: player=%d summons=%d enemies=%d" % [
+		game.arena.resolved_player, game.arena.resolved_summons, game.arena.resolved_enemies])
+	print("[autotest] stuck_units=%d (touching an obstacle: %d) %s" % [_stuck_units, _stuck_at_obstacle, str(_stuck_by)])
 	print("[metric] boss_hp_at_0=%d min_hp_before_0=%d" % [int(_boss_hp_at_0), int(_min_hp)])
 	print("[autotest] peaks: enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [
 		int(_peak["enemies"]), int(_peak["summons"]), int(_peak["projectiles"]), int(_peak["effects"]), int(_peak["crystals"])])

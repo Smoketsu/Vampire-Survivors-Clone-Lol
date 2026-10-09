@@ -149,13 +149,13 @@ const ENEMIES := {
 	# §35 "charges and disrupts melee army, threatening player through gaps".
 	"templar": {
 		"display_name": "Templar Knight",
-		"max_hp": 80.0,  # TUNING (not in GDD)
+		"max_hp": 65.0,  # TUNING (not in GDD)
 		"move_speed": 46.0,  # TUNING (not in GDD)
 		"damage": 8.0,  # TUNING (not in GDD)
 		"attack_interval": 1.3,  # TUNING (not in GDD)
 		"attack_range": 6.0,  # TUNING (not in GDD)
 		"radius": 13.0,  # TUNING (not in GDD)
-		"armor": 0.35,  # TUNING (not in GDD) heavy armour
+		"armor": 0.3,  # TUNING (not in GDD) heavy armour
 		"xp": 6,  # TUNING (not in GDD)
 		"behavior": "templar",
 		"projectile_speed": 0.0,
@@ -171,7 +171,7 @@ const ENEMIES := {
 		"charge_speed": 340.0,  # TUNING (not in GDD)
 		"charge_length": 170.0,  # TUNING (not in GDD)
 		"charge_width": 30.0,  # TUNING (not in GDD)
-		"charge_cooldown": 6.0,  # TUNING (not in GDD)
+		"charge_cooldown": 7.0,  # TUNING (not in GDD)
 		"charge_damage": 10.0,  # TUNING (not in GDD)
 		"charge_knockback": 26.0,  # TUNING (not in GDD)
 		"charge_block_mass": 3.0,  # TUNING (not in GDD) one warrior stops it
@@ -302,7 +302,7 @@ const SEPARATION_STRENGTH: float = 0.9  # TUNING (not in GDD)
 ##   recover_time       — s he stands still after any special.
 const BOSS := {
 	"display_name": "Sir Alaric, the Gravebreaker",  # GDD §11
-	"max_hp": 2500.0,  # TUNING (not in GDD)
+	"max_hp": 2700.0,  # TUNING (not in GDD)
 	"move_speed": 52.0,  # TUNING (not in GDD)
 	"damage": 12.0,  # TUNING (not in GDD) basic hammer swing
 	"attack_interval": 1.0,  # TUNING (not in GDD)

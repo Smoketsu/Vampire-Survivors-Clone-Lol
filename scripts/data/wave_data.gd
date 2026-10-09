@@ -80,13 +80,13 @@ const SEGMENTS := [
 		"weights": {"recruit": 0.45, "footman": 0.2, "archer": 0.12, "chaplain": 0.04, "purifier": 0.15},
 		"objective": "The graves are being consecrated"},
 	{"start": 195.0, "rate": 2.5, "max_alive": 95,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.4, "footman": 0.27, "archer": 0.12, "chaplain": 0.04, "purifier": 0.12, "templar": 0.05},
+		"weights": {"recruit": 0.4, "footman": 0.27, "archer": 0.12, "chaplain": 0.04, "purifier": 0.12, "templar": 0.03},
 		"objective": "Templar Knights charge your lines"},
 	{"start": 225.0, "rate": 3.0, "max_alive": 105,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.45, "footman": 0.22, "archer": 0.12, "chaplain": 0.04, "purifier": 0.12, "templar": 0.05},
+		"weights": {"recruit": 0.45, "footman": 0.22, "archer": 0.12, "chaplain": 0.04, "purifier": 0.12, "templar": 0.03},
 		"objective": "Major assault!"},
 	{"start": 270.0, "rate": 3.3, "max_alive": 110,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.4, "footman": 0.22, "archer": 0.14, "chaplain": 0.05, "purifier": 0.12, "templar": 0.05},
+		"weights": {"recruit": 0.4, "footman": 0.22, "archer": 0.14, "chaplain": 0.05, "purifier": 0.12, "templar": 0.03},
 		"objective": "Final preparation: Sir Alaric approaches"},
 	{"start": BOSS_TIME, "rate": 1.0, "max_alive": 50,  # TUNING (not in GDD)
 		"weights": {"recruit": 0.6, "footman": 0.25, "archer": 0.15},
@@ -124,7 +124,7 @@ const EVENTS := [
 		"graves": 3,  # TUNING (not in GDD)
 		"escort": [{"kind": "recruit", "count": 4, "elite": false}, {"kind": "purifier", "count": 2, "elite": false}]},  # TUNING (not in GDD)
 	{"time": 195.0, "type": "wave", "banner": "Templar Knights charge!", "formation": "line",  # GDD §11 13:00 Templar Knights
-		"groups": [{"kind": "templar", "count": 4, "elite": false}, {"kind": "footman", "count": 8, "elite": false}, {"kind": "templar", "count": 1, "elite": true}]},  # TUNING (not in GDD)
+		"groups": [{"kind": "templar", "count": 3, "elite": false}, {"kind": "footman", "count": 8, "elite": false}, {"kind": "templar", "count": 1, "elite": true}]},  # TUNING (not in GDD)
 	{"time": 225.0, "type": "wave", "banner": "MAJOR ASSAULT!", "formation": "ring",  # GDD §11 15:00
 		"groups": [{"kind": "recruit", "count": 26, "elite": false}, {"kind": "footman", "count": 8, "elite": false}, {"kind": "templar", "count": 2, "elite": false}, {"kind": "chaplain", "count": 2, "elite": true}]},
 	{"time": 240.0, "type": "crypt", "banner": "An ancient crypt stirs nearby: awaken its guardians!"},  # TUNING (not in GDD) §11 Crypt Defender event, untimed in the GDD
@@ -201,8 +201,8 @@ const CONSECRATION := {
 	"zone": {
 		"radius": 85.0,  # TUNING (not in GDD)
 		"arm_time": 1.5,  # TUNING (not in GDD)
-		"duration": 60.0,  # TUNING (not in GDD) "temporary" (§10) but long
-		"undead_dps": 5.0,  # TUNING (not in GDD)
+		"duration": 45.0,  # TUNING (not in GDD) "temporary" (§10) but long
+		"undead_dps": 4.0,  # TUNING (not in GDD)
 		"undead_slow": 0.35,  # TUNING (not in GDD)
 		"player_damage": 4.0,  # TUNING (not in GDD)
 		"player_interval": 1.0,  # TUNING (not in GDD)
