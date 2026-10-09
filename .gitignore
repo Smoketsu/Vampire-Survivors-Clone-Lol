@@ -13,3 +13,6 @@ export_credentials.cfg
 .DS_Store
 Thumbs.db
 *.tmp
+
+# Claude Code local worktrees
+.claude/

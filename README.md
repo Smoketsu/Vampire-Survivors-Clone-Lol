@@ -23,6 +23,16 @@ Code comments cite the spec as `GDD §N`.
 
 ## How to play
 
+### Option A: download a ready-made build (no Godot needed)
+
+- **Releases:** on GitHub, open **Releases** and download `Gravebound-windows.zip` (or `-linux.zip`), unzip it, and run
+  `Gravebound.exe`. Windows SmartScreen may warn that the app is unrecognized because it is unsigned. Click
+  **More info → Run anyway**.
+- **Latest commit:** open **Actions → CI**, click the newest green run, and download the `Gravebound-windows`
+  artifact at the bottom of the page. You must be signed in to GitHub.
+
+### Option B: run from source in Godot
+
 1. Download **Godot 4.3** (the standard build, not .NET) from
    <https://godotengine.org/download/archive/4.3-stable/>.
 2. Start Godot and choose **Import**, then select this folder's `project.godot`.
@@ -234,6 +244,25 @@ are the starting point for tuning. Every 30 s it also prints `[metric]` lines
 (army size and capacity per class, damage taken by attacker, enemies alive by
 kind), and at the end `boss_hp_at_0` and `min_hp_before_0` (the lowest player
 HP before 0:00). Multi-seed tuning scripts parse these lines.
+
+### Continuous integration and builds
+
+`.github/workflows/ci.yml` runs on every push and pull request:
+
+1. **test:** imports the project with Godot 4.3 headless and runs the autotest with the naive and army policies.
+   It fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if a run doesn't complete.
+2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in
+   the executable), runs the autotest again on the exported Linux build, and uploads both as workflow artifacts.
+
+To publish a downloadable release, push a version tag. The export job then creates a GitHub Release with both zips
+attached:
+
+```bash
+git tag v0.2.0 && git push origin v0.2.0
+```
+
+To export locally, install the 4.3 export templates (**Editor → Manage Export Templates**), then use
+**Project → Export**, or run `godot --headless --export-release "Windows Desktop" build/windows/Gravebound.exe`.
 
 ---
 

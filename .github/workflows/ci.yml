@@ -1,0 +1,163 @@
+# Gravebound CI
+#
+# On every push / pull request:
+#   1. test   - imports the project with Godot 4.3 headless and runs the
+#               automated full playthrough (--autotest). Fails on any script
+#               error/warning or if the run doesn't complete.
+#   2. export - builds single-file Windows (.exe) and Linux executables and
+#               uploads them as workflow artifacts (Actions tab -> run -> Artifacts).
+# On a pushed tag starting with "v" (e.g. v0.2.0) the export job also creates a
+# GitHub Release with both builds attached, so testers can just download and play.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  # GODOT_VERSION: engine version the project targets (must match project.godot features).
+  GODOT_VERSION: "4.3"
+  # GODOT_BIN: path where the downloaded Godot editor binary is placed.
+  GODOT_BIN: /home/runner/godot/Godot_v4.3-stable_linux.x86_64
+  # GODOT_URL: official Linux editor build used for import, tests and export.
+  GODOT_URL: https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
+  # TEMPLATES_URL: official export templates (needed only by the export job).
+  TEMPLATES_URL: https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/godot
+          key: godot-${{ env.GODOT_VERSION }}-linux
+
+      - name: Download Godot
+        run: |
+          if [ ! -x "$GODOT_BIN" ]; then
+            mkdir -p "$(dirname "$GODOT_BIN")"
+            curl -sSL -o /tmp/godot.zip "$GODOT_URL"
+            unzip -q /tmp/godot.zip -d "$(dirname "$GODOT_BIN")"
+          fi
+          "$GODOT_BIN" --headless --version
+
+      - name: Import project
+        run: |
+          "$GODOT_BIN" --headless --import 2>&1 | tee import.log
+          if grep -qE "SCRIPT ERROR|Parse Error|ERROR:" import.log; then
+            echo "::error::Script errors during import"; exit 1
+          fi
+
+      - name: Autotest (full run, player invulnerable until the Reckoning)
+        run: |
+          # Exit code is 0 only when the run completes (reaches 0:00).
+          timeout 900 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 40000 -- --autotest 2>&1 | tee autotest.log
+          status=${PIPESTATUS[0]}
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest.log; then
+            echo "::error::Errors/warnings during autotest"; exit 1
+          fi
+          exit $status
+
+      - name: Autotest (army policy)
+        run: |
+          timeout 900 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 40000 -- --autotest --policy=army 2>&1 | tee autotest_army.log
+          status=${PIPESTATUS[0]}
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_army.log; then
+            echo "::error::Errors/warnings during army autotest"; exit 1
+          fi
+          exit $status
+
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: "*.log"
+
+  export:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      # contents: write is needed to create a GitHub Release on tag pushes.
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot and export templates
+        uses: actions/cache@v4
+        with:
+          path: |
+            /home/runner/godot
+            ~/.local/share/godot/export_templates/4.3.stable
+          key: godot-${{ env.GODOT_VERSION }}-linux-templates-win-linux
+
+      - name: Download Godot and templates
+        run: |
+          if [ ! -x "$GODOT_BIN" ]; then
+            mkdir -p "$(dirname "$GODOT_BIN")"
+            curl -sSL -o /tmp/godot.zip "$GODOT_URL"
+            unzip -q /tmp/godot.zip -d "$(dirname "$GODOT_BIN")"
+          fi
+          # TEMPLATE_DIR: where Godot looks for 4.3 export templates on Linux.
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/4.3.stable
+          if [ ! -f "$TEMPLATE_DIR/windows_release_x86_64.exe" ]; then
+            mkdir -p "$TEMPLATE_DIR"
+            curl -sSL -o /tmp/templates.tpz "$TEMPLATES_URL"
+            # Only extract the templates we export with, to keep the cache small.
+            unzip -q -o -j /tmp/templates.tpz \
+              templates/windows_release_x86_64.exe templates/windows_debug_x86_64.exe \
+              templates/linux_release.x86_64 templates/linux_debug.x86_64 \
+              templates/version.txt -d "$TEMPLATE_DIR"
+            rm /tmp/templates.tpz
+          fi
+
+      - name: Export builds
+        run: |
+          mkdir -p build/windows build/linux
+          "$GODOT_BIN" --headless --import > /dev/null 2>&1
+          "$GODOT_BIN" --headless --export-release "Windows Desktop" build/windows/Gravebound.exe
+          "$GODOT_BIN" --headless --export-release "Linux" build/linux/Gravebound.x86_64
+          test -s build/windows/Gravebound.exe
+          test -s build/linux/Gravebound.x86_64
+          (cd build/windows && zip -q ../Gravebound-windows.zip Gravebound.exe)
+          (cd build/linux && chmod +x Gravebound.x86_64 && zip -q ../Gravebound-linux.zip Gravebound.x86_64)
+
+      - name: Smoke-test exported Linux build
+        run: |
+          timeout 900 build/linux/Gravebound.x86_64 --headless --fixed-fps 60 --quit-after 40000 -- --autotest 2>&1 | tee export_autotest.log
+          status=${PIPESTATUS[0]}
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" export_autotest.log; then
+            echo "::error::Errors in exported build"; exit 1
+          fi
+          exit $status
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gravebound-windows
+          path: build/windows/Gravebound.exe
+
+      - name: Upload Linux build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gravebound-linux
+          path: build/linux/Gravebound.x86_64
+
+      - name: Create GitHub Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/Gravebound-windows.zip
+            build/Gravebound-linux.zip
+          generate_release_notes: true
