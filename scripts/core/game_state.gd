@@ -17,7 +17,9 @@
 ##   --policy=NAME         Autotest card policy: "naive" (default; new summon
 ##                         classes, then new spells, then new passives) or
 ##                         "army" (summoner build: summon levels and army
-##                         passives first, then Shadow Bolt / Blast).
+##                         passives first, then Shadow Bolt / Blast) or
+##                         "evolve" (spell build that chases the three
+##                         spell evolutions).
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 
@@ -31,7 +33,7 @@ var autotest_speed: float = 4.0
 var autotest_seed: int = 1337
 ## Autotest: game-time limit in seconds before the test aborts.
 var autotest_timeout: float = 480.0
-## Autotest: level-up card policy, "naive" or "army" (see header).
+## Autotest: level-up card policy, "naive", "army" or "evolve" (see header).
 var autotest_policy: String = "naive"
 ## Whether the F3 debug overlay is shown; persists across restarts.
 var debug_overlay_visible: bool = false

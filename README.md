@@ -37,6 +37,9 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Move | WASD or arrow keys | Left stick / D-pad |
 | Menu / card navigation and confirm | Mouse, arrow keys, Enter / Space | D-pad or left stick, **A** |
 | Pick a level-up card | Click, or keys **1 / 2 / 3** | Focus + **A** |
+| Level-up: Reroll all cards (2 per run) | **R**, or the Reroll button | **X**, or focus the button + **A** |
+| Level-up: Banish a card (2 per run) | **B**, then pick the card (**B** / **Esc** cancels) | **LB**, then pick the card (**LB** / **B** cancels) |
+| Level-up: Skip (unlimited, heals 8% HP) | **N**, or the Skip button | **RB**, or focus the button + **A** |
 | Shadow Bolt aim: Nearest / Strongest | **T** | **Y** |
 | Pause (Resume / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
@@ -69,6 +72,38 @@ replacing fallen units all happen automatically (GDD §4, §21).
   - Dying **after 0:00** shows **VICTORY – Run Complete**, with how long you
     lasted past zero.
   - Dying **before 0:00** shows **DEFEAT**.
+
+### Evolutions & Synergies
+
+- **Evolutions** (GDD §6.1): once a spell reaches **Lv 5** and you own its
+  paired passive (any level), every level-up offers its evolution as a
+  **gold card**. The evolution replaces the spell in its slot.
+
+| Spell | + Passive (its standalone effect) | = Evolution |
+|---|---|---|
+| Shadow Bolt | Soul Conduit (+10–50% spell damage) | **Void Barrage**: 4 rapid piercing void bolts that split into 3 shards on impact |
+| Shadow Orb Shield | Warding Ritual (−5–25% damage taken) | **Eclipse Ward**: 6-orb rotating eclipse barrier with periodic damage pulses that push foes back |
+| Shadow Blast | Abyssal Focus (−5–25% spell cooldowns) | **Abyssal Detonation**: a blast that pulls foes inward, then a second detonation |
+
+- **Army synergies** (GDD §6.3) turn on automatically while every required
+  summon class is at **Lv 2+**. A banner announces each one, and the active
+  ones are listed above the army panel:
+  **Shieldwall of the Damned** (Warriors + Priests: warriors get barriers),
+  **Volley of the Fallen** (Archers + Mages: mage hits mark foes, archers deal
+  +35% to marked foes), **March of the Deathless** (any 3 classes: +15% move
+  speed and regeneration), **The Unholy Host** (all 4: +15% attack speed,
+  −15% damage taken, aura on every summon).
+- **Level-up cards** are weighted: upgrades to items you own, and items on an
+  evolution path, come up more often. A hand is never made only of useless
+  cards, and fallback cards (heal, +max HP, raise every fallen summon) fill
+  any empty slots once everything is maxed. Use **Reroll** (2 per run),
+  **Banish** (2 per run; removes that item from the run) and **Skip**
+  (unlimited; small heal) as needed.
+- Numbers are in `scripts/data/evolution_data.gd`, `synergy_data.gd`,
+  `level_up_data.gd` and `passive_data.gd`. The autotest picks evolutions
+  whenever they are offered. Its summary reports the evolutions obtained,
+  the active synergies, and the rerolls, banishes and skips used.
+  `--policy=evolve` runs a spell build that chases the evolutions.
 
 ---
 

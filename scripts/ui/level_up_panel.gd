@@ -1,12 +1,22 @@
 ## LevelUpPanel — pauses combat and shows three large upgrade cards
-## (GDD §16 "Level-up panel: Pause combat; three large cards with icon, name,
-## old/new level, description, actual stat delta"). Pick with the mouse,
-## keys 1/2/3, or controller (focus + A). Evolutions are not implemented, so
-## no "evolution readiness" line is shown yet.
+## (GDD §10.4 "Level-up panel: Pause combat; three large cards with icon, name,
+## old/new level, description, actual stat delta, evolution readiness").
+## Evolution cards are highlighted in gold. Under the cards, an action bar
+## offers Reroll / Banish (limited charges) and Skip (unlimited, small heal),
+## GDD §9.1 and LevelUpData.
+##
+## Controls (all also reachable by focus navigation + A / Enter / click):
+##   pick a card     1 / 2 / 3, click, or focus + A
+##   Reroll          R            controller X
+##   Banish mode     B            controller LB (then pick the card to banish;
+##                                B / LB again, Esc or controller B cancels)
+##   Skip            N            controller RB
+## Controller Y stays the Shadow Bolt aim toggle, so it is not used here.
 class_name LevelUpPanel
 extends Control
 
-## Emitted with the chosen offer Dictionary (see AbilityManager._offer()).
+## Emitted with the chosen offer Dictionary (see AbilityManager._offer()); a
+## skip emits AbilityManager.skip_offer().
 signal card_chosen(offer: Dictionary)
 
 ## Clicks/keys within this many ms of opening are ignored, so a held key or
@@ -21,19 +31,33 @@ const CARD_MIN_HEIGHT: float = 340.0
 const CARD_PAD_X: int = 14
 ## Inner padding of a card in px (top/bottom).
 const CARD_PAD_Y: int = 12
+## Width in px of each action-bar button.
+const ACTION_WIDTH: float = 190.0
 
-## Owning run (autotest hook).
+## Owning run (abilities, autotest hook).
 var game: Game
 ## Offers currently displayed.
 var _offers: Array[Dictionary] = []
+## Level number shown in the title (kept across rerolls / banishes).
+var _for_level: int = 0
 ## Container holding the card buttons.
 var _cards_box: HBoxContainer
 ## "LEVEL N" title.
 var _title: Label
+## Status line under the cards (banish mode prompt, evolution notice).
+var _status: Label
 ## Card buttons in display order (focus / click targets).
 var _buttons: Array[Button] = []
 ## Card root containers in display order (freed when the panel reopens).
 var _cards: Array[Control] = []
+## Reroll action button.
+var _reroll_btn: Button
+## Banish action button (toggles banish mode).
+var _banish_btn: Button
+## Skip action button.
+var _skip_btn: Button
+## True while the next card pick banishes instead of taking the card.
+var _banish_mode: bool = false
 ## Time (ms) the panel was last opened.
 var _opened_msec: int = 0
 ## True while waiting for a choice.
@@ -61,10 +85,38 @@ func _ready() -> void:
 	_cards_box.add_theme_constant_override("separation", 18)
 	_cards_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	vb.add_child(_cards_box)
+	_status = UiTheme.label("", 15, UiTheme.TEXT_GOLD)
+	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vb.add_child(_status)
+	var actions := HBoxContainer.new()
+	actions.add_theme_constant_override("separation", 18)
+	actions.alignment = BoxContainer.ALIGNMENT_CENTER
+	vb.add_child(actions)
+	_reroll_btn = _action_button(actions, _reroll)
+	_banish_btn = _action_button(actions, _toggle_banish)
+	_skip_btn = _action_button(actions, _skip)
+
+
+## Adds one action-bar button calling `cb` to `parent`.
+func _action_button(parent: Control, cb: Callable) -> Button:
+	var b := Button.new()
+	b.custom_minimum_size = Vector2(ACTION_WIDTH, 40)
+	b.focus_mode = Control.FOCUS_ALL
+	b.pressed.connect(func() -> void: _on_action(cb))
+	parent.add_child(b)
+	return b
 
 
 ## Shows `offers` as cards for reaching level `for_level`.
 func open(offers: Array[Dictionary], for_level: int) -> void:
+	_for_level = for_level
+	_banish_mode = false
+	_opened_msec = Time.get_ticks_msec()
+	_show(offers)
+
+
+## (Re)builds the cards for `offers` and refreshes the action bar.
+func _show(offers: Array[Dictionary]) -> void:
 	_offers = offers
 	for c in _cards:
 		c.queue_free()
@@ -74,26 +126,52 @@ func open(offers: Array[Dictionary], for_level: int) -> void:
 		var card := _make_card(offers[i], i)
 		_cards_box.add_child(card)
 		_cards.append(card)
-	_title.text = "LEVEL %d" % for_level
+	_title.text = "LEVEL %d" % _for_level
 	visible = true
 	_waiting = true
-	_opened_msec = Time.get_ticks_msec()
+	_refresh_actions()
 	if not _buttons.is_empty():
 		_buttons[0].grab_focus.call_deferred()
 	if game != null and game.autotest != null:
-		_choose.call_deferred(game.autotest.choose_card(offers), true)
+		_autoplay.call_deferred()
 
 
 ## Hides the panel.
 func close() -> void:
 	visible = false
 	_waiting = false
+	_banish_mode = false
+
+
+## Updates the action-bar labels / availability and the status line.
+func _refresh_actions() -> void:
+	var ab := game.abilities
+	_reroll_btn.text = "Reroll (%d)   [R / X]" % ab.rerolls_left
+	_reroll_btn.disabled = ab.rerolls_left <= 0
+	_banish_btn.text = ("Cancel banish   [B / LB]" if _banish_mode else "Banish (%d)   [B / LB]" % ab.banishes_left)
+	_banish_btn.disabled = ab.banishes_left <= 0 and not _banish_mode
+	_skip_btn.text = "Skip (+%d%% HP)   [N / RB]" % int(roundf(LevelUpData.SKIP_HEAL_FRACTION * 100.0))
+	var has_evo := false
+	for o in _offers:
+		has_evo = has_evo or String(o["kind"]) == "evolution"
+	if _banish_mode:
+		_status.text = "BANISH: pick the card to remove from this run  (Esc / B to cancel)"
+		_status.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.35))
+	elif has_evo:
+		_status.text = "An evolution is ready!"
+		_status.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
+	else:
+		_status.text = ""
+	for i in _cards.size():
+		var dim := _banish_mode and not ab.can_banish(_offers[i])
+		_cards[i].modulate = Color(1, 1, 1, 0.4) if dim else (Color(1.0, 0.78, 0.78) if _banish_mode else Color.WHITE)
 
 
 ## Builds one card for offer `o` (index `idx`). Layout: a MarginContainer
 ## root whose minimum size is the max of its children, holding a full-size
 ## Button (focus / click / controller A) underneath a padded content column.
 ## The card therefore grows to fit its text and can never overflow.
+## Evolution cards get a gold frame and background.
 func _make_card(o: Dictionary, idx: int) -> Control:
 	var card := MarginContainer.new()
 	card.custom_minimum_size = Vector2(CARD_WIDTH, CARD_MIN_HEIGHT)
@@ -101,6 +179,11 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 	var b := Button.new()
 	b.focus_mode = Control.FOCUS_ALL
 	b.pressed.connect(_choose.bind(idx, false))
+	var kind := String(o["kind"])
+	if kind == "evolution":
+		b.add_theme_stylebox_override("normal", UiTheme.box(Color(0.17, 0.11, 0.04, 0.96), Palette.GOLD, 3))
+		b.add_theme_stylebox_override("hover", UiTheme.box(Color(0.26, 0.17, 0.06, 0.98), Palette.GOLD, 3))
+		b.add_theme_stylebox_override("pressed", UiTheme.box(Color(0.32, 0.22, 0.08, 1.0), Palette.GOLD, 3))
 	card.add_child(b)
 	_buttons.append(b)
 	var content := MarginContainer.new()
@@ -121,18 +204,20 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 			tag_color = Palette.VIOLET.lightened(0.3)
 		"PASSIVE":
 			tag_color = Palette.COLD_BLUE
-		"RESTORE":
+		"RESTORE", "BOON", "EVOLUTION":
 			tag_color = Palette.GOLD
 	vb.add_child(UiTheme.label("[%d]  %s" % [idx + 1, o["tag"]], 12, tag_color))
 	var icon_center := CenterContainer.new()
 	icon_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon_center.add_child(IconGlyph.new(o["icon"], Vector2(68, 68)))
 	vb.add_child(icon_center)
-	var name_label := UiTheme.label(o["name"], 20)
+	var name_label := UiTheme.label(o["name"], 20, UiTheme.TEXT_GOLD if kind == "evolution" else UiTheme.TEXT)
 	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(name_label)
 	var lvl_text := ""
-	if String(o["kind"]) != "heal":
+	if kind == "evolution":
+		lvl_text = "Lv %d  ->  EVOLVED" % int(o["from"])
+	elif kind != "fallback":
 		lvl_text = "NEW!  Lv 1" if int(o["from"]) == 0 else "Lv %d  ->  Lv %d" % [int(o["from"]), int(o["to"])]
 	var lvl_label := UiTheme.label(lvl_text, 15, UiTheme.TEXT_GOLD)
 	lvl_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -145,22 +230,107 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 	deltas.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	deltas.custom_minimum_size = Vector2(text_width, 0)
 	vb.add_child(deltas)
+	var hint := String(o.get("evo_hint", ""))
+	if hint != "":
+		var hint_label := UiTheme.label(hint, 12, UiTheme.TEXT_GOLD)
+		hint_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		hint_label.custom_minimum_size = Vector2(text_width, 0)
+		vb.add_child(hint_label)
 	return card
 
 
-## Emits the chosen card once (ignores input during the grace period unless
-## `forced` by the autotest).
+## True while input is accepted (open, waiting, grace period over) or forced.
+func _accepting(forced: bool) -> bool:
+	if not _waiting:
+		return false
+	return forced or Time.get_ticks_msec() - _opened_msec >= INPUT_GRACE_MSEC
+
+
+## Runs an action-bar callback if input is accepted.
+func _on_action(cb: Callable) -> void:
+	if _accepting(false):
+		cb.call()
+
+
+## Card `idx` was picked: banishes it in banish mode, otherwise emits it
+## once (ignores input during the grace period unless `forced` by the
+## autotest).
 func _choose(idx: int, forced: bool) -> void:
-	if not _waiting or idx < 0 or idx >= _offers.size():
+	if not _accepting(forced) or idx < 0 or idx >= _offers.size():
 		return
-	if not forced and Time.get_ticks_msec() - _opened_msec < INPUT_GRACE_MSEC:
+	if _banish_mode:
+		_banish(idx)
 		return
 	_waiting = false
 	card_chosen.emit(_offers[idx])
 
 
+## Spends a reroll and redraws every card.
+func _reroll() -> void:
+	if game.abilities.use_reroll():
+		_banish_mode = false
+		_show(game.abilities.build_offers(PlayerData.CARDS_PER_LEVEL))
+
+
+## Enters / leaves banish mode (the next picked card is banished).
+func _toggle_banish() -> void:
+	_banish_mode = not _banish_mode and game.abilities.banishes_left > 0
+	_refresh_actions()
+
+
+## Banishes card `idx` (if allowed) and redraws that card.
+func _banish(idx: int) -> void:
+	if not game.abilities.can_banish(_offers[idx]):
+		return
+	_banish_mode = false
+	_show(game.abilities.banish_offer(_offers, idx))
+	if idx < _buttons.size():
+		_buttons[idx].grab_focus.call_deferred()
+
+
+## Skips this level-up (small heal, see LevelUpData).
+func _skip() -> void:
+	_waiting = false
+	card_chosen.emit(game.abilities.skip_offer())
+
+
+## Autotest: asks the policy for an action and performs it. Rerolls and
+## banishes redraw the panel, which asks again (charges bound the loop).
+func _autoplay() -> void:
+	if not _waiting or game == null or game.autotest == null:
+		return
+	var act := game.autotest.choose_action(_offers)
+	match String(act["action"]):
+		"reroll":
+			_reroll()
+		"banish":
+			var i := int(act["index"])
+			if i >= 0 and i < _offers.size() and game.abilities.can_banish(_offers[i]):
+				_banish_mode = true
+				_banish(i)
+			else:
+				_choose(0, true)
+		"skip":
+			_skip()
+		_:
+			_choose(int(act["index"]), true)
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible or not _waiting:
+		return
+	var pad := event as InputEventJoypadButton
+	if pad != null and pad.pressed:
+		match pad.button_index:
+			JOY_BUTTON_X:
+				_handled_action(_reroll)
+			JOY_BUTTON_LEFT_SHOULDER:
+				_handled_action(_toggle_banish)
+			JOY_BUTTON_RIGHT_SHOULDER:
+				_handled_action(_skip)
+			JOY_BUTTON_B:
+				if _banish_mode:
+					_handled_action(_toggle_banish)
 		return
 	var key := event as InputEventKey
 	if key == null or not key.pressed or key.echo:
@@ -173,6 +343,21 @@ func _unhandled_input(event: InputEvent) -> void:
 			idx = 1
 		KEY_3, KEY_KP_3:
 			idx = 2
+		KEY_R:
+			_handled_action(_reroll)
+		KEY_B:
+			_handled_action(_toggle_banish)
+		KEY_N:
+			_handled_action(_skip)
+		KEY_ESCAPE:
+			if _banish_mode:
+				_handled_action(_toggle_banish)
 	if idx >= 0:
 		get_viewport().set_input_as_handled()
 		_choose(idx, false)
+
+
+## Marks the event handled and runs action `cb` (grace period applies).
+func _handled_action(cb: Callable) -> void:
+	get_viewport().set_input_as_handled()
+	_on_action(cb)

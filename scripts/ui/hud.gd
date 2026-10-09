@@ -279,12 +279,12 @@ func _refresh() -> void:
 			_passive_icons[i].set_icon("")
 
 
-## Shows the progression banner: `title` (small), `name` (big, in `color`)
+## Shows the progression banner: `title` (small), `item_name` (big, in `color`)
 ## and `desc`. It stays ANNOUNCE_TIME s of game time, so a banner raised
 ## while the level-up panel pauses the game is seen after resuming.
-func announce(title: String, name: String, desc: String, color: Color) -> void:
+func announce(title: String, item_name: String, desc: String, color: Color) -> void:
 	_announce_title.text = title
-	_announce_name.text = name
+	_announce_name.text = item_name
 	_announce_name.add_theme_color_override("font_color", color)
 	_announce_desc.text = desc
 	_announce_at = game.elapsed

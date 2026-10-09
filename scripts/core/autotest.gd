@@ -6,7 +6,11 @@
 ##   * drives the necromancer with a simple kiting autopilot,
 ##   * auto-picks level-up cards with a policy (--policy=naive: unowned summon
 ##     classes and spells first so every system gets exercised; --policy=army:
-##     a summoner build that levels summons and army passives first),
+##     a summoner build that levels summons and army passives first;
+##     --policy=evolve: a spell build that chases all three evolutions).
+##     Every policy takes an evolution card as soon as one is offered; army
+##     and evolve also banish unwanted items and reroll weak hands (naive
+##     never does, it plays like a careless player),
 ##   * exercises both Shadow Bolt aim modes: Nearest until the boss spawns,
 ##     then Strongest, and reports bolt damage per mode and to the boss,
 ##   * keeps the necromancer invulnerable (unless --mortal) until the countdown
@@ -30,7 +34,21 @@ const RECKONING_GRACE: float = 20.0
 ## Card priorities for --policy=army (higher = picked first).
 const ARMY_PRIORITY := {"warrior": 100.0, "archer": 95.0, "mage": 98.0, "priest": 90.0, "grave_dominion": 105.0,
 	"dark_command": 70.0, "necrotic_vigor": 65.0, "soul_recycling": 50.0,
-	"shadow_bolt": 60.0, "shadow_blast": 55.0, "orb_shield": 40.0}
+	"shadow_bolt": 60.0, "shadow_blast": 55.0, "orb_shield": 40.0,
+	"warding_ritual": 35.0, "soul_conduit": 30.0, "abyssal_focus": 28.0}
+## Card priorities for --policy=evolve (higher = picked first): the three
+## base spells and their paired passives, then the army.
+const EVOLVE_PRIORITY := {"shadow_bolt": 100.0, "soul_conduit": 96.0, "shadow_blast": 94.0, "abyssal_focus": 92.0,
+	"orb_shield": 90.0, "warding_ritual": 88.0, "warrior": 70.0, "priest": 66.0, "grave_dominion": 64.0,
+	"mage": 62.0, "archer": 60.0, "dark_command": 50.0, "necrotic_vigor": 48.0, "soul_recycling": 40.0}
+## Items each policy banishes when offered (while banish charges last).
+const BANISH_IDS := {"army": ["orb_shield", "abyssal_focus"], "evolve": ["soul_recycling", "necrotic_vigor"]}
+## army / evolve reroll the hand when its best card scores below this.
+const REROLL_BELOW: float = 25.0
+## Score of an evolution card (always taken first).
+const EVOLUTION_SCORE: float = 1000.0
+## Score of a fallback card (taken only when nothing else is offered).
+const FALLBACK_SCORE: float = -100.0
 
 ## Owning run.
 var game: Game
@@ -101,7 +119,7 @@ func step(delta: float) -> void:
 		print("[autotest] boss spawned at %.1f s" % game.elapsed)
 		if not game.abilities.bolt_aim_strongest:
 			game.abilities.toggle_bolt_aim()
-			_bolt_dmg_at_switch = float(game.stats.get("dmg_bolt", 0.0))
+			_bolt_dmg_at_switch = _bolt_damage(game.stats, "dmg_")
 			print("[autotest] Shadow Bolt aim switched to %s" % game.abilities.bolt_aim_name())
 	if _boss_death_time < 0.0 and game.boss_defeated:
 		_boss_death_time = game.elapsed
@@ -160,34 +178,59 @@ func _print_metrics() -> void:
 	_death_mark = game.horde.total_deaths
 
 
-## Chooses a card index. "naive": new summon classes > new spells > new
-## passives > lowest resulting level. "army": ARMY_PRIORITY minus a level
-## penalty. Deterministic for a given offer list.
-func choose_card(offers: Array[Dictionary]) -> int:
+## Decides what to do with a level-up hand: {"action": "pick" | "reroll" |
+## "banish" | "skip", "index": card}. Evolutions are always picked. army /
+## evolve banish BANISH_IDS items, reroll hands scoring below REROLL_BELOW,
+## and skip when the only useful card would heal an unhurt necromancer.
+## Deterministic for a given offer list and charge state.
+func choose_action(offers: Array[Dictionary]) -> Dictionary:
 	var best := 0
 	var best_score := -INF
-	var army := GameState.autotest_policy == "army"
 	for i in offers.size():
-		var o := offers[i]
-		if army:
-			var a := float(ARMY_PRIORITY.get(String(o["id"]), 0.0)) - float(o["to"]) * 8.0
-			if a > best_score:
-				best_score = a
-				best = i
-			continue
-		var s := -float(o["to"]) * 5.0
-		var is_new := int(o["from"]) == 0
-		match String(o["kind"]):
-			"summon":
-				s += 100.0 if is_new else 3.0
-			"spell":
-				s += 80.0 if is_new else 0.0
-			"passive":
-				s += 60.0 if is_new else 0.0
+		var s := _card_score(offers[i])
 		if s > best_score:
 			best_score = s
 			best = i
-	return best
+	var policy := GameState.autotest_policy
+	var ab := game.abilities
+	if policy != "naive" and best_score < EVOLUTION_SCORE:
+		var banish_ids: Array = BANISH_IDS.get(policy, [])
+		for i in offers.size():
+			if ab.can_banish(offers[i]) and String(offers[i]["id"]) in banish_ids:
+				return {"action": "banish", "index": i}
+		if best_score < REROLL_BELOW and ab.rerolls_left > 0:
+			return {"action": "reroll", "index": -1}
+		if String(offers[best]["id"]) == "dark_restoration" and game.player.hp >= game.player.max_hp:
+			return {"action": "skip", "index": -1}
+	return {"action": "pick", "index": best}
+
+
+## Policy score of one card (higher = better).
+##   naive : new summon classes > new spells > new passives > lowest level.
+##   army  : ARMY_PRIORITY minus a level penalty.
+##   evolve: EVOLVE_PRIORITY minus a small level penalty (maxes spells).
+func _card_score(o: Dictionary) -> float:
+	match String(o["kind"]):
+		"evolution":
+			return EVOLUTION_SCORE
+		"fallback":
+			return FALLBACK_SCORE
+	var id := String(o["id"])
+	match GameState.autotest_policy:
+		"army":
+			return float(ARMY_PRIORITY.get(id, 0.0)) - float(o["to"]) * 8.0
+		"evolve":
+			return float(EVOLVE_PRIORITY.get(id, 0.0)) - float(o["to"]) * 3.0
+	var s := -float(o["to"]) * 5.0
+	var is_new := int(o["from"]) == 0
+	match String(o["kind"]):
+		"summon":
+			s += 100.0 if is_new else 3.0
+		"spell":
+			s += 80.0 if is_new else 0.0
+		"passive":
+			s += 60.0 if is_new else 0.0
+	return s
 
 
 ## Autopilot: flee nearby enemies, drift toward XP, dodge boss telegraphs,
@@ -251,10 +294,20 @@ func finish(summary: Dictionary) -> void:
 	var ward_rate := float(_two_priest_wards) / (_two_priest_time / 60.0) if _two_priest_time > 1.0 else 0.0
 	print("[autotest] priest wards: %d total, absorbed %d dmg | %d wards in %.0f s with 2+ priests alive (%.1f / min) | priest heals: %d" % [
 		int(st_all.get("priest_wards", 0.0)), int(st_all.get("ward_absorbed", 0.0)), _two_priest_wards, _two_priest_time, ward_rate, int(st_all.get("priest_heals", 0.0))])
-	var bolt_total := float(st.get("dmg_bolt", 0.0))
+	var ab := game.abilities
+	print("[autotest] evolutions: %s" % (", ".join(ab.evolution_history) if not ab.evolution_history.is_empty() else "none"))
+	var syn := game.horde.synergies
+	print("[autotest] synergies active at end: %s | activations: %s" % [
+		", ".join(syn.active_ids()) if not syn.active_ids().is_empty() else "none",
+		", ".join(syn.activation_log) if not syn.activation_log.is_empty() else "none"])
+	print("[autotest] level-up actions: rerolls used %d/%d, banishes used %d/%d (banished: %s), skips %d" % [
+		LevelUpData.REROLLS - ab.rerolls_left, LevelUpData.REROLLS, LevelUpData.BANISHES - ab.banishes_left, LevelUpData.BANISHES,
+		", ".join(PackedStringArray(ab.banished.keys())) if not ab.banished.is_empty() else "none", ab.skips_used])
+	# Shadow Bolt damage includes its Void Barrage evolution (bolts + shards).
+	var bolt_total := _bolt_damage(st, "dmg_")
 	var bolt_nearest := bolt_total if _bolt_dmg_at_switch < 0.0 else _bolt_dmg_at_switch
 	print("[autotest] shadow bolt: %d dmg in Nearest mode, %d dmg in Strongest mode; to boss: %d of %d total boss dmg" % [
-		int(bolt_nearest), int(bolt_total - bolt_nearest), int(st.get("bossdmg_bolt", 0.0)), int(_sum_prefix(st, "bossdmg_"))])
+		int(bolt_nearest), int(bolt_total - bolt_nearest), int(_bolt_damage(st, "bossdmg_")), int(_sum_prefix(st, "bossdmg_"))])
 	print("[autotest] stats: " + " ".join(stat_parts))
 	print("[metric] boss_hp_at_0=%d min_hp_before_0=%d" % [int(_boss_hp_at_0), int(_min_hp)])
 	print("[autotest] peaks: enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [
@@ -265,6 +318,15 @@ func finish(summary: Dictionary) -> void:
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
+
+
+## Shadow Bolt damage stat with `prefix` ("dmg_" / "bossdmg_"), including the
+## Void Barrage bolts and shards.
+static func _bolt_damage(st: Dictionary, prefix: String) -> float:
+	var total := 0.0
+	for src: String in ["bolt", "void", "void_shard"]:
+		total += float(st.get(prefix + src, 0.0))
+	return total
 
 
 ## Sum of every stat whose key starts with `prefix`.
