@@ -138,6 +138,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			_draw_purifier(ci, o, r, flash)
 		"inquisitor":
 			_draw_inquisitor(ci, o, r, flash)
+		"templar":
+			_draw_templar(ci, o, r, flash)
 
 
 ## Covenant Recruit: small crimson round body, ivory tabard, silver helm, spear.
@@ -190,6 +192,25 @@ static func _draw_purifier(ci: CanvasItem, o: Vector2, r: float, flash: bool) ->
 	var flame := PackedVector2Array([o + Vector2(r * 0.95, -r * 1.45), o + Vector2(r * 0.65, -r * 0.6), o + Vector2(r * 1.25, -r * 0.6)])
 	ci.draw_colored_polygon(flame, _c(Palette.FLAME, flash))
 	ci.draw_circle(o + Vector2(r * 0.95, -r * 0.75), r * 0.18, _c(Palette.GOLD, flash))
+
+
+## Templar Knight: broad silver heater-shield body with a crimson cross,
+## gold-crested great helm and a couched lance (reads "heavy charger").
+static func _draw_templar(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
+	var shield := PackedVector2Array([
+		o + Vector2(-r, -r * 0.8), o + Vector2(r, -r * 0.8), o + Vector2(r, r * 0.2),
+		o + Vector2(0, r * 1.1), o + Vector2(-r, r * 0.2)])
+	ci.draw_colored_polygon(shield, OUTLINE)
+	ci.draw_colored_polygon(PackedVector2Array([
+		o + Vector2(-r * 0.88, -r * 0.7), o + Vector2(r * 0.88, -r * 0.7), o + Vector2(r * 0.88, r * 0.15),
+		o + Vector2(0, r * 0.95), o + Vector2(-r * 0.88, r * 0.15)]), _c(Palette.SILVER, flash))
+	ci.draw_rect(Rect2(o + Vector2(-r * 0.14, -r * 0.6), Vector2(r * 0.28, r * 1.3)), _c(Palette.CRIMSON, flash))
+	ci.draw_rect(Rect2(o + Vector2(-r * 0.6, -r * 0.3), Vector2(r * 1.2, r * 0.26)), _c(Palette.CRIMSON, flash))
+	ci.draw_rect(Rect2(o + Vector2(-r * 0.32, -r * 1.35), Vector2(r * 0.64, r * 0.6)), _c(Color(0.62, 0.64, 0.7), flash))
+	ci.draw_line(o + Vector2(-r * 0.22, -r * 1.05), o + Vector2(r * 0.22, -r * 1.05), _c(Color.BLACK, flash), 1.5)
+	ci.draw_line(o + Vector2(0, -r * 1.35), o + Vector2(0, -r * 1.7), _c(Palette.GOLD, flash), 2.5)
+	ci.draw_line(o + Vector2(r * 0.6, r * 0.5), o + Vector2(r * 1.9, -r * 0.6), _c(Color(0.5, 0.38, 0.22), flash), 2.5)
+	ci.draw_circle(o + Vector2(r * 1.9, -r * 0.6), r * 0.16, _c(Palette.SILVER, flash))
 
 
 ## Inquisitor of the End: radiant 8-point star of gold over ivory with a

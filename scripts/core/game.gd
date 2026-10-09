@@ -1,8 +1,9 @@
 ## Game — root node of ONE run (GDD §36 "Game (Node2D)"). It builds the world
 ## and every manager in code, then drives the simulation in a fixed order each
 ## physics tick:
-##   rebuild spatial hashes -> player -> spells -> horde -> enemies ->
-##   projectiles -> XP pickups -> effects
+##   rebuild spatial hashes -> player -> spells -> horde -> enemies (and
+##   stage events) -> obstacle collision -> projectiles -> XP pickups ->
+##   effects
 ## and routes run-level flow (level-up pause, Esc pause, end of run).
 ## Run rules (user brief): a 6:00 countdown; Sir Alaric arrives at 1:00 left;
 ## at 0:00 the Reckoning starts. Dying after 0:00 completes the run (victory
@@ -65,6 +66,8 @@ var player: Necromancer
 var camera: Camera2D
 ## Procedural graveyard floor.
 var ground: Ground
+## Solid obstacles (gravestones, dead trees, crypt walls) and their collision.
+var arena: Arena
 ## Undead army.
 var horde: HordeDirector
 ## Crimson Covenant spawner / updater.
@@ -113,6 +116,9 @@ func _ready() -> void:
 	# World layers, back to front (tree order + z_index).
 	ground = Ground.new()
 	add_child(ground)
+	arena = Arena.new()
+	arena.game = self
+	add_child(arena)
 	pickups = XpManager.new()
 	pickups.game = self
 	add_child(pickups)
@@ -209,6 +215,7 @@ func _physics_process(delta: float) -> void:
 	abilities.step(delta)
 	horde.step(delta)
 	enemies.step(delta)
+	arena.resolve_all(delta)
 	projectiles.step(delta)
 	pickups.step(delta)
 	effects.step(delta)

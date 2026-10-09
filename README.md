@@ -143,6 +143,46 @@ replacing fallen units all happen automatically (GDD §4, §21).
   the active synergies, and the rerolls, banishes and skips used.
   `--policy=evolve` runs a spell build that chases the evolutions.
 
+### Stage & Boss
+
+- **Obstacles.** Gravestones, dead trees and crypt walls are solid for the
+  player, summons and enemies. Each one is a simple circle or rectangle, so no
+  physics engine is used. Units walk around obstacles, and nothing ever spawns
+  or is recalled inside one. Arrows and spells still fly over them.
+- **Stage events** (`WaveData.EVENTS`, compressed 4× from the GDD §11 timeline):
+  - **Empowered graves** glow near you from 0:30, then every 40 s. Walk onto
+    one to raise 3 temporary warriors, or to bring back every fallen summon at
+    once.
+  - **Desecration** at 2:30 and 4:15. Chaplains march to the marked graves and
+    start channelling. Kill a Chaplain to save its grave (you get XP).
+    Otherwise the grave becomes **holy ground**: a gold zone that burns and
+    slows undead, stings you, and blocks summon replacement inside it.
+  - **Templar Knights** arrive at 3:15. They telegraph a short charge lane,
+    then rush along it and shove summons aside. A warrior in the lane stops
+    the rush.
+  - **Crypt Defender** at 4:00. Walk to the crypt to wake 4 strong guardians
+    for 30 s.
+- **Sir Alaric** (2700 HP, arrives with 1:00 left) uses all five GDD
+  abilities. Each one is telegraphed:
+  - **Hammerfall**: a gold circle. Each summon inside soaks 20% of the hit
+    on you.
+  - **Divine Charge**: a gold lane. Every undead body he hits absorbs part
+    of the charge, and enough bodies stop it.
+  - **Consecrated Ground**: arming gold circles that become holy zones for
+    10 s.
+  - **Call to Arms**: crimson rally banners mark where infantry will arrive.
+  - **Judgment of the Dead**: ivory sigils on your summon clusters. Summons
+    inside take heavy damage; you are not hurt.
+
+  At **50% HP** he enters **Wrath**: his specials come faster, he places more
+  zones and marks, and he casts Call to Arms immediately.
+- **Temporary summons** from graves and the crypt don't count toward your
+  caps or the HUD counts, and they crumble when their time runs out.
+- **Autotest.** The summary also reports boss attacks per type, stage events
+  fired, obstacle collisions resolved and `stuck_units`. A unit counts as
+  stuck if it is trying to reach its target or anchor but has not moved more
+  than 10 px in 10 s; this should stay at 0.
+
 ---
 
 ## What is implemented (vs. the GDD)
@@ -153,14 +193,16 @@ replacing fallen units all happen automatically (GDD §4, §21).
 | **Shared summon AI** (§25–§31, §36) | **One** data-driven `SummonedUnit` script runs all four classes. It has the full FSM from §25, soft formation bands around the player (§26), and normalised target scoring (§27). Targets are held for at least 1 s; ranged units redirect when a target is already doomed (overkill reservation); priests use the §31 heal formula. |
 | Leash and recall (§24) | Engagement radius 220 px, soft recall at 320 px, hard spectral recall at 650 px. |
 | Replenishment (§24) | Each summon ability refills its own queue one unit at a time (Warrior 5 s, Archer 8 s, Mage 12 s, Priest 15 s). A capacity increase spawns the new units immediately. A failed spawn retries without using up the timer. |
-| **Warrior blocking** | Warriors are physical blockers. Enemies can't pass through them; overlaps are resolved through the spatial hash, weighted by mass. An enemy touching a warrior is *engaged*: it moves at 60% speed and attacks that warrior. Warriors also shield-bash on a cooldown (damage plus knockback). Sir Alaric's charge goes straight through the wall. |
+| **Warrior blocking** | Warriors are physical blockers. Enemies can't pass through them; overlaps are resolved through the spatial hash, weighted by mass. An enemy touching a warrior is *engaged*: it moves at 60% speed and attacks that warrior. Warriors also shield-bash on a cooldown (damage plus knockback). Sir Alaric's Divine Charge loses distance for every undead body it hits, so a thick enough wall stops it. |
 | **Priests** | Heal allies and the necromancer with the §31 formula; a critically hurt necromancer comes first. Whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px), a priest also casts an instant damage-absorbing **ward** on you, as long as no ward is active, its own ward cooldown is ready, and nobody is critical. The ward has its own cooldown, so it never replaces a heal. It shows as a ring on the necromancer and in the HUD, and the autotest reports ward counts and wards per minute. |
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
 | Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Each has 5 levels. |
-| Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed), Soul Recycling (faster replacement). Bonus stacking follows §34. |
-| Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. |
-| Waves (§11) | The data-driven Graveyard timeline, compressed 4× to 5 minutes, then the boss and the Reckoning. |
-| Boss (§11) | Placeholder Sir Alaric with telegraphed Hammerfall and Divine Charge. |
+| Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual and Abyssal Focus. Bonus stacking follows §34. |
+| Evolutions & synergies (§6) | Void Barrage, Eclipse Ward and Abyssal Detonation; four army synergies; weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
+| Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 3:15. |
+| Waves and stage events (§11) | The data-driven Graveyard timeline, compressed 4× to 5 minutes, then the boss and the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
+| Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
+| Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
 | UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu, end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and priest ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress; ability slots with levels. |
 | Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, priests are round with a halo). Hit flashes and death pops are included. |
 
@@ -203,7 +245,9 @@ blocking/bash and priest ward values, and the Reckoning scaling.
 scenes/main.tscn            Minimal entry scene (one Node + main.gd)
 scripts/
   core/
-    game_state.gd           The only autoload: CLI options (autotest), session prefs, last run summary
+    game_state.gd           Autoload: CLI options (autotest), session prefs, last run summary
+    settings.gd             Autoload: persistent settings (volumes, toggles, key rebinds) in user://settings.cfg
+    arena.gd                Solid obstacles (circles/rects) and the collision push-out used by all units
     main.gd                 Switches menu <-> run (a run is a fresh Game node every time)
     game.gd                 One run: builds world + managers in code, fixed-order simulation step,
                             level-up / pause / end-of-run flow
@@ -217,25 +261,37 @@ scripts/
   horde/
     horde_director.gd       Army registry, pools, caps, effective stats, replenishment queues,
                             formation anchors, threat evaluation, staggered 5 Hz AI ticks
+    synergy_manager.gd      Army synergy activation and effects
     summoned_unit.gd        The ONE shared FSM/steering/targeting AI for all summon classes
   enemies/
     enemy.gd                Data-driven Covenant soldier (melee / purifier / ranged / healer),
                             plus warrior-blocking resolution
-    boss_alaric.gd          Sir Alaric (extends Enemy): Hammerfall + Divine Charge
+    boss_alaric.gd          Sir Alaric (extends Enemy): five telegraphed attacks + Wrath phase
+    stage_director.gd       Graveyard events: empowered graves, Desecration, Crypt Defender, holy ground
     enemy_director.gd       Wave timeline, events, boss, Reckoning, pooling, recycling
   abilities/
     ability_manager.gd      Spell casting, passive values, level-up card generation + deltas
     orb_shield.gd           Shadow Orb Shield
     projectile.gd, projectile_manager.gd   Pooled projectiles + overkill reservations
   pickups/xp_crystal.gd, xp_manager.gd     Pooled XP crystals with magnet
+  audio/sfx.gd              Autoload: audio buses, pooled voices with per-sound and global voice limits
+  audio/synth.gd            Procedural sound and music synthesis (no audio files)
+  fx/juice.gd               Autoload: screen shake, hit-stop, hooks for particles and damage numbers
+  fx/fx_layer.gd            One node that draws all particles and damage numbers from fixed buffers
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
-                            debug_overlay, hud_bar, icon_glyph, ui_theme
+                            debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
+                            progression_glyphs (evolution/synergy icons)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     unit_data.gd            Summon classes, level tables, AI weights, leash/rates
     enemy_data.gd           Enemy roster, boss, Reckoning enemy, elites
     wave_data.gd            Countdown, segments, events, Reckoning escalation
     ability_data.gd         Spell level tables
     passive_data.gd         Passive level tables
+    evolution_data.gd       Evolution recipes and stats
+    synergy_data.gd         Army synergy requirements and effects
+    level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
+    arena_data.gd           Obstacle layout
+    sound_data.gd           Sound recipes, voice limits, priorities
     player_data.gd          Player stats, XP curve, slot counts
     palette.gd              Colour language
 ```
@@ -331,26 +387,22 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 
 ## Known limitations
 
-- **Balance is first-pass.** All `TUNING` values are guesses. In the autotest,
-  the army holds until about 3:00, then gets worn down by footmen, Covenant
-  arrows and Purifiers. With the autopilot's build, Sir Alaric usually survives
-  until the Reckoning. The autopilot is a simple "flee and collect XP" script,
-  not a skilled player.
+- **Balance is first-pass.** All `TUNING` values are guesses checked only
+  against the autotest bots. With these bots, the summoner build (`--policy=army`)
+  never dies before 0:00 and almost always kills Sir Alaric; the naive build
+  sometimes dies and kills him in roughly a third of runs. Void Barrage is very
+  strong (about half of all damage in an evolution build).
 - Only the Graveyard stage, and only a 6-minute version of it (the GDD runs are
   20–30 minutes).
-- The arena is open, with no solid obstacles, so line-of-sight checks and
-  obstacle avoidance are not used (the steering has no obstacle term).
-- There are no evolutions, army synergies, ultimate, dash, rerolls, meta
-  progression (Soul Ash), saves, settings, skins, difficulties or modifiers yet.
-  The HUD shows "Modifiers: none".
-- Sir Alaric only has Hammerfall and Divine Charge. Consecrated Ground, Call to
-  Arms and Judgment of the Dead are not in.
-- Desecration events, empowered graves and Crypt Defender are not in. The
-  consecration and Templar timeline beats use stand-in waves.
-- No audio, damage numbers or accessibility toggles (§38).
-- Performance was measured headless: about 2.8 ms of simulation per tick with
-  40 summons and 150 enemies. Rendering cost on real hardware has not been
-  profiled yet.
+- Arrows and spells fly over obstacles (no line-of-sight checks).
+- Eclipse Ward is hard to reach in a 6-minute run, because Orb Shield rarely
+  hits level 5.
+- No ultimate, dash, meta progression (Soul Ash), saved runs, skins,
+  difficulties or modifiers yet. The HUD shows "Modifiers: none".
+- Menu hint text still shows the default keys (Esc, T) after you rebind them.
+- Nobody has played it on real hardware yet. Audio, visuals and performance
+  have only been verified headless (simulation step about 0.6–1.5 ms with
+  ~150 enemies and ~40 summons). Rendering cost has not been profiled.
 
 ## Next steps (grouped by GDD §19 phases)
 
@@ -358,17 +410,10 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 autotest stats; give the horde a feel pass (formation spacing, kite timing,
 warrior wall shape) with a human player.
 
-**Phase 2 – Graveyard vertical slice:**
-- Evolutions and their passives: Bone Plating, Unholy Precision, Forbidden
-  Knowledge, Dark Benediction, Soul Conduit, Warding Ritual, Abyssal Focus.
-- Army synergies (§9).
-- Unholy Resilience and Bound Souls passives.
-- A sixth enemy type (Templar Knight) and the Banner Bearer.
-- Sir Alaric's other attacks.
-- The desecration / grave mechanics.
-- Saves.
-- Settings for density, screen shake and minion HP bars (§38).
-- Audio with voice limits.
+**Phase 2 – Graveyard vertical slice (mostly done):** playtest with humans;
+retune Void Barrage and the boss; the remaining passives (Bone Plating, Unholy
+Precision, Forbidden Knowledge, Dark Benediction, Unholy Resilience, Bound
+Souls); the Banner Bearer; saves; density and minion-HP-bar settings (§38).
 
 **Phase 3 – Campaign:** Crimson March and Sanctum stages, Marshal Vael and
 Grand Inquisitor Seraphine, remaining enemies, Soul Ash meta progression,

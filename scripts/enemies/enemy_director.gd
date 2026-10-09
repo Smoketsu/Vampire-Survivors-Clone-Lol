@@ -7,6 +7,9 @@
 ##   * Staggers enemy AI: think() at 5 Hz, separation at 10 Hz, movement at
 ##     60 Hz.
 ##   * Recycles enemies left far behind to the spawn ring ahead of the player.
+##   * Owns the StageDirector (graveyard stage events and holy zones) and
+##     hands it the "consecration" / "crypt" timeline events.
+##   * Never places an enemy inside an obstacle (Arena.free_point).
 class_name EnemyDirector
 extends Node2D
 
@@ -53,6 +56,14 @@ var _next_reckoning: float = WaveData.RUN_DURATION
 var _frame: int = 0
 ## Next think slot handed to a new enemy (round-robin).
 var _next_slot: int = 0
+## Graveyard stage mechanics and holy zones (GDD §11).
+var stage: StageDirector
+
+
+func _ready() -> void:
+	stage = StageDirector.new()
+	stage.game = game
+	add_child(stage)
 
 
 # =====================================================================================
@@ -89,8 +100,9 @@ func step(delta: float) -> void:
 			e.update_separation()
 		e.physics_step(delta)
 		e.resolve_blocking()
-		if not e.is_boss and e.position.distance_squared_to(player_pos) > recycle2:
+		if not e.is_boss and not e.is_objective and e.position.distance_squared_to(player_pos) > recycle2:
 			_recycle(e)
+	stage.step(delta)
 
 
 ## Removes enemies killed since the last step from `active`.
@@ -117,6 +129,9 @@ func regular_alive() -> int:
 func objective_text() -> String:
 	if reckoning_wave > 0:
 		return WaveData.RECKONING_OBJECTIVE
+	var stage_text := stage.objective_override()
+	if stage_text != "":
+		return stage_text
 	if boss != null and not boss.active:
 		return "Sir Alaric is dead. Survive until the countdown ends."
 	return WaveData.SEGMENTS[segment_index]["objective"]
@@ -167,8 +182,18 @@ func _run_events(t: float) -> void:
 		event_index += 1
 
 
-## Spawns one event's groups in its formation and shows its banner.
+## Runs one timeline event: stage events go to the StageDirector, "wave"
+## events spawn their groups in formation and show the banner.
 func _run_event(ev: Dictionary) -> void:
+	match String(ev.get("type", "wave")):
+		"consecration":
+			stage.start_consecration(ev)
+			game.stat_add("wave_events", 1.0)
+			return
+		"crypt":
+			stage.start_crypt(ev)
+			game.stat_add("wave_events", 1.0)
+			return
 	show_banner(ev["banner"])
 	var members: Array[Dictionary] = []
 	for g: Dictionary in ev["groups"]:
@@ -253,13 +278,28 @@ func _ring_point(angle: float) -> Vector2:
 	return game.player.position + Vector2.from_angle(angle) * _ring_radius()
 
 
+## Public spawn-ring point (StageDirector sends consecrators from it).
+func ring_point(angle: float) -> Vector2:
+	return _ring_point(angle)
+
+
+## Spawns a regular enemy of `kind` at `pos` (moved out of obstacles) for the
+## StageDirector and Sir Alaric's Call to Arms. Ignores the caps; callers
+## check regular_alive() themselves.
+func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
+	return _spawn_enemy(kind, pos, elite)
+
+
 ## Takes an enemy from the pool (or creates one) and activates it.
 func _spawn_enemy(kind: String, pos: Vector2, elite: bool) -> Enemy:
 	return _spawn_enemy_def(kind, EnemyData.ENEMIES[kind], pos, hp_mult, elite)
 
 
 ## As _spawn_enemy() but with an explicit definition and HP multiplier.
+## The position is moved out of any obstacle first.
 func _spawn_enemy_def(kind: String, def: Dictionary, pos: Vector2, hp_scale: float, elite: bool) -> Enemy:
+	var body_r := float(def["radius"]) * (EnemyData.ELITE_RADIUS_MULT if elite else 1.0)
+	pos = game.arena.free_point(pos, body_r)
 	var e: Enemy
 	if _pool.is_empty():
 		e = Enemy.new()
@@ -278,7 +318,7 @@ func _spawn_enemy_def(kind: String, def: Dictionary, pos: Vector2, hp_scale: flo
 func _recycle(e: Enemy) -> void:
 	var v := game.player.velocity
 	var angle := v.angle() + randf_range(-1.0, 1.0) if v.length() > 1.0 else randf() * TAU
-	e.position = _ring_point(angle)
+	e.position = game.arena.free_point(_ring_point(angle), e.radius)
 	e.sep = Vector2.ZERO
 	total_recycled += 1
 

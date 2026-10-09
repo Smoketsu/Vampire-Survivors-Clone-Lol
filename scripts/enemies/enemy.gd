@@ -1,12 +1,19 @@
 ## Enemy — one Crimson Covenant soldier, driven by EnemyDirector. A single
 ## data-driven script covers every regular kind (Recruit, Footman, Zealous
-## Archer, Chaplain, Purifier); EnemyData supplies stats and a `behavior` key:
+## Archer, Chaplain, Purifier, Templar Knight); EnemyData supplies stats and a
+## `behavior` key:
 ##   melee     close in on the player, divert onto summons in the way.
 ##   purifier  hunt undead summons first (GDD §35), bonus damage vs undead.
 ##   ranged    walk at the player and shoot arrows (player or a nearer summon)
 ##             whenever a target is in range.
 ##   healer    walk at the player and heal the most wounded OTHER enemy in
 ##             range (§10).
+##   templar   melee that periodically telegraphs a short rush lane and
+##             charges along it, shoving summons aside; a warrior in the lane
+##             stops the rush (GDD §10 "knockback/disruption", §35).
+##   consecrator  set at runtime by StageDirector on a desecration-event
+##             Chaplain: walks to its grave (`post_pos`) and holds there
+##             while it channels (GDD §11 desecration events).
 ## Survivor convention (user brief): enemies ALWAYS advance on the player;
 ## nobody kites or holds at range. Ranged units only slow down briefly after
 ## each shot (EnemyData.SHOOT_SLOW_*).
@@ -78,6 +85,10 @@ var slow_resist: float = 0.0
 var mass: float = 1.0
 ## True for Reckoning enemies (spawned after the countdown ends).
 var is_reckoning: bool = false
+## True for stage-objective enemies (consecrators): never recycled.
+var is_objective: bool = false
+## World point a "consecrator" walks to and holds.
+var post_pos: Vector2 = Vector2.ZERO
 
 # --- Runtime --------------------------------------------------------------------------
 
@@ -128,6 +139,25 @@ var _facing: float = 1.0
 ## Reusable query buffer.
 var _tmp: Array = []
 
+# --- Templar rush (behavior "templar") ----------------------------------------------
+
+## Rush state: 0 = walking, 1 = windup (lane telegraphed), 2 = rushing.
+var rush_state: int = 0
+## Seconds spent in the current rush state.
+var rush_timer: float = 0.0
+## Seconds until the next rush may start.
+var rush_cd: float = 0.0
+## Unit direction of the current rush.
+var rush_dir: Vector2 = Vector2.RIGHT
+## Distance (px) still to rush.
+var rush_left: float = 0.0
+## Rush data (the templar's EnemyData row; empty for other kinds).
+var _rush_def: Dictionary = {}
+## Instance ids of summons already hit by the current rush.
+var _rush_hits: Dictionary = {}
+## Whether the player was already hit by the current rush.
+var _rush_hit_player: bool = false
+
 
 ## Activates a pooled enemy of `p_kind` using definition `def`.
 ## `hp_mult` is the director's time-scaling multiplier.
@@ -158,6 +188,13 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	slow_resist = float(def.get("slow_resist", 0.0))
 	mass = float(def.get("mass", 1.0))
 	is_reckoning = false
+	is_objective = false
+	post_pos = pos
+	_rush_def = def if behavior == "templar" else {}
+	rush_state = 0
+	rush_timer = 0.0
+	rush_cd = randf_range(1.0, maxf(1.0, float(def.get("charge_cooldown", 1.0))))
+	_rush_hits.clear()
 	if elite:
 		max_hp *= EnemyData.ELITE_HP_MULT
 		radius *= EnemyData.ELITE_RADIUS_MULT
@@ -319,6 +356,11 @@ func update_separation() -> void:
 ## Per-physics-tick update: movement and attacks.
 func physics_step(delta: float) -> void:
 	_tick_timers(delta)
+	if behavior == "templar" and _step_rush(delta):
+		return
+	if behavior == "consecrator":
+		_step_consecrator(delta)
+		return
 	if not _target_valid():
 		_set_target(game.player)
 	var t := target
@@ -354,6 +396,93 @@ func physics_step(delta: float) -> void:
 	velocity = move * spd + sep * spd * EnemyData.SEPARATION_STRENGTH
 	position += (velocity + knockback) * delta
 	_update_facing()
+
+
+## Desecration-event Chaplain: walk to the grave and hold position there
+## while StageDirector runs the channel. Never attacks.
+func _step_consecrator(delta: float) -> void:
+	var to := post_pos - position
+	var d := to.length()
+	var move := to / d if d > 2.0 else Vector2.ZERO
+	var spd := move_speed * (1.0 - slow_factor if slow_timer > 0.0 else 1.0)
+	velocity = move * spd + sep * spd * EnemyData.SEPARATION_STRENGTH * 0.5
+	position += (velocity + knockback) * delta
+	_update_facing()
+
+
+## Templar Knight rush. Returns true while a windup / rush owns this tick.
+## Walking templars start a rush when the player is within the charge range
+## and the lane is long enough (obstacles cut it short).
+func _step_rush(delta: float) -> bool:
+	match rush_state:
+		1:
+			rush_timer += delta
+			velocity = Vector2.ZERO
+			if rush_timer >= float(_rush_def["charge_telegraph"]):
+				rush_state = 2
+				rush_timer = 0.0
+			return true
+		2:
+			_rush_move(delta)
+			return true
+	rush_cd -= delta
+	if rush_cd > 0.0 or engaged_timer > 0.0:
+		return false
+	var to_p := game.player.position - position
+	var d := to_p.length()
+	if d < float(_rush_def["charge_range_min"]) or d > float(_rush_def["charge_range_max"]):
+		return false
+	rush_dir = to_p / d
+	rush_left = game.arena.clear_length(position, rush_dir, float(_rush_def["charge_length"]), radius * 0.8)
+	rush_cd = float(_rush_def["charge_cooldown"])
+	if rush_left < float(_rush_def["charge_range_min"]):
+		return false
+	rush_state = 1
+	rush_timer = 0.0
+	_rush_hits.clear()
+	_rush_hit_player = false
+	velocity = Vector2.ZERO
+	game.effects.telegraph_line(position, position + rush_dir * rush_left, float(_rush_def["charge_width"]), float(_rush_def["charge_telegraph"]))
+	game.stat_add("templar_charges", 1.0)
+	return true
+
+
+## Moves along the rush lane: hurts the player once, shoves summons aside,
+## and stops dead on a warrior heavy enough to body-block it.
+func _rush_move(delta: float) -> void:
+	var spd := float(_rush_def["charge_speed"])
+	var step_len := minf(spd * delta, rush_left)
+	position += rush_dir * step_len
+	rush_left -= step_len
+	velocity = rush_dir * spd
+	var hit_r := float(_rush_def["charge_width"]) * 0.5
+	var dmg := float(_rush_def["charge_damage"]) * game.enemies.damage_mult
+	var player := game.player
+	if not _rush_hit_player and player.position.distance_to(position) <= hit_r + player.radius:
+		_rush_hit_player = true
+		game.combat.damage_player(dmg, "templar_charge")
+	game.ally_grid.query(position, hit_r + UnitData.MAX_BLOCK_RADIUS, _tmp)
+	for u: SummonedUnit in _tmp:
+		if not u.active or u.state == SummonedUnit.State.SPAWNING or _rush_hits.has(u.get_instance_id()):
+			continue
+		var rel := u.position - position
+		if rel.length() > hit_r + u.radius:
+			continue
+		_rush_hits[u.get_instance_id()] = true
+		if u.block_mass >= float(_rush_def["charge_block_mass"]):
+			# Body-blocked by a warrior: the rush ends here.
+			rush_left = 0.0
+			game.effects.slash(position + rush_dir * radius, rush_dir, Palette.COLD_BLUE, radius * 1.6)
+			game.stat_add("templar_charges_blocked", 1.0)
+			game.combat.damage_unit(u, dmg * undead_damage_mult * 0.5, "templar_charge")
+			break
+		var side := rel - rush_dir * rel.dot(rush_dir)
+		var push := side.normalized() if side.length() > 0.1 else Vector2(-rush_dir.y, rush_dir.x)
+		u.position += push * float(_rush_def["charge_knockback"])
+		game.combat.damage_unit(u, dmg * undead_damage_mult, "templar_charge")
+	if rush_left <= 0.0:
+		rush_state = 0
+		velocity = Vector2.ZERO
 
 
 ## Warrior blocking (user brief): pushes this enemy out of any overlapping
