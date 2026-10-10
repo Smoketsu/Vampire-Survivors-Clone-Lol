@@ -23,6 +23,11 @@
 ##                         passives first, then Shadow Bolt / Blast) or
 ##                         "evolve" (spell build that chases the three
 ##                         spell evolutions).
+##   --meta=PROFILE        Autotest Soul Ash upgrades, applied in memory only:
+##                         "none" (default, no upgrades), "mid" or "max"
+##                         (MetaData.AUTOTEST_PROFILES).
+##   --meta-save           Test flag: lets the autotest read and write
+##                         user://save.cfg (by default it never touches it).
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 
@@ -38,6 +43,10 @@ var autotest_seed: int = 1337
 var autotest_timeout: float = 1500.0
 ## Autotest: level-up card policy, "naive", "army" or "evolve" (see header).
 var autotest_policy: String = "naive"
+## Autotest: simulated meta-upgrade profile, "none", "mid" or "max" (see header).
+var autotest_meta: String = "none"
+## Autotest: true when --meta-save allows the run to use user://save.cfg.
+var autotest_meta_save: bool = false
 ## Whether the F3 debug overlay is shown; persists across restarts.
 var debug_overlay_visible: bool = false
 ## Summary dictionary of the most recent finished run (see Game.build_summary).
@@ -65,3 +74,8 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_timeout = maxf(30.0, arg.get_slice("=", 1).to_float())
 		elif arg.begins_with("--policy="):
 			autotest_policy = arg.get_slice("=", 1)
+		elif arg.begins_with("--meta="):
+			var profile := arg.get_slice("=", 1)
+			autotest_meta = profile if profile in MetaData.AUTOTEST_PROFILES else "none"
+		elif arg == "--meta-save":
+			autotest_meta_save = true

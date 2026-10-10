@@ -1,7 +1,8 @@
 ## HordeDirector — owns the undead army (GDD §22 / §32 / §39 HORDE DIRECTOR):
 ##   * living unit registry + object pool of SummonedUnit nodes,
 ##   * per-class skill level, capacity and effective stats (skill bonuses x
-##     passive bonuses, GDD §34 stacking rule),
+##     passive bonuses x meta upgrades, GDD §34 stacking rule; meta values
+##     come from game.meta, see MetaModifiers),
 ##   * per-ability sequential replenishment queues (GDD §24),
 ##   * soft formation anchors at 4 Hz (GDD §26),
 ##   * player threat evaluation at 5 Hz (GDD §32),
@@ -152,15 +153,21 @@ func _refresh_class(cls: String, old_cap: int) -> void:
 	summon_cap_changed.emit()
 
 
-## Population cap for `cls`: ability level count + Grave Dominion bonus
-## (GDD §23 "Army cap = sum of equipped summon abilities' class caps + global
+## Population cap for `cls`: ability level count + global bonuses (GDD §23
+## "Army cap = sum of equipped summon abilities' class caps + global
 ## bonuses"). Pass `dominion_level` to preview another passive level.
 func capacity(cls: String, dominion_level: int = -1) -> int:
 	var level: int = class_levels[cls]
 	if level <= 0:
 		return 0
 	var row: Dictionary = UnitData.LEVELS[cls][level - 1]
-	var cap: int = row["count"]
+	return int(row["count"]) + bonus_capacity(cls, dominion_level)
+
+
+## Global capacity bonus of `cls` on top of its level count: Grave Dominion
+## (optionally previewed at `dominion_level`) plus meta upgrades.
+func bonus_capacity(cls: String, dominion_level: int = -1) -> int:
+	var cap := game.meta.capacity_bonus(cls)
 	var dl := dominion_level if dominion_level >= 0 else game.abilities.passive_level("grave_dominion")
 	if dl > 0:
 		cap += int(PassiveData.PASSIVES["grave_dominion"]["levels"][dl - 1]["capacity_per_class"])
@@ -176,22 +183,27 @@ func total_capacity(dominion_level: int = -1) -> int:
 	return total
 
 
-## Seconds between replacements for `cls` (GDD §24 base x Soul Recycling).
+## Seconds between replacements for `cls` (GDD §24 base x Soul Recycling x
+## meta Grave Call).
 func replenish_interval(cls: String) -> float:
 	var base: float = UnitData.UNITS[cls]["replenish_interval"]
-	return base * (1.0 - game.abilities.passive_value("soul_recycling", "replace_reduction"))
+	return base * (1.0 - game.abilities.passive_value("soul_recycling", "replace_reduction")) \
+			* (1.0 - game.meta.value("replace_reduction"))
 
 
 ## Effective stats of class `cls` at skill `level` with the CURRENT passives
 ## and synergies. Stacking (GDD §34): like-category bonuses add, categories
 ## multiply: stat = base * (1 + skill_bonus) * (1 + passive_bonus) *
-## (1 + synergy_bonus). Attack interval divides by the attack-speed multipliers.
+## (1 + synergy_bonus) * (1 + meta_bonus). Attack interval divides by the
+## attack-speed multipliers.
 func compute_stats(cls: String, level: int) -> Dictionary:
 	var base: Dictionary = UnitData.UNITS[cls]
 	var row: Dictionary = UnitData.LEVELS[cls][clampi(level, 1, 5) - 1]
 	var ab := game.abilities
-	var hp_mult := (1.0 + float(row.get("hp_bonus", 0.0))) * (1.0 + ab.passive_value("necrotic_vigor", "minion_hp"))
-	var dmg_mult := (1.0 + float(row.get("damage_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_damage"))
+	var hp_mult := (1.0 + float(row.get("hp_bonus", 0.0))) * (1.0 + ab.passive_value("necrotic_vigor", "minion_hp")) \
+			* (1.0 + game.meta.value("minion_hp"))
+	var dmg_mult := (1.0 + float(row.get("damage_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_damage")) \
+			* (1.0 + game.meta.value("minion_damage"))
 	var spd_mult := (1.0 + float(row.get("speed_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_speed")) \
 			* (1.0 + synergies.value("unholy_host", "attack_speed"))
 	var move_mult := 1.0 + synergies.value("deathless", "move_speed")

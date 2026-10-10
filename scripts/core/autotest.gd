@@ -25,6 +25,9 @@
 ##     collisions resolved, stuck units, the level pacing and when the build
 ##     was complete), then quits with exit code 0 when the run completed, 1
 ##     otherwise,
+##   * applies the --meta profile (none / mid / max simulated Soul Ash
+##     purchases, in memory only) and reports the run's Soul Ash award and
+##     its breakdown in the summary,
 ##   * detects stuck units: a summon or enemy that wants to move toward its
 ##     goal (target out of reach, anchor far away, returning...) but has not
 ##     moved more than STUCK_DISTANCE px in STUCK_TIME s.
@@ -144,8 +147,8 @@ func _ready() -> void:
 	_real_start_msec = Time.get_ticks_msec()
 	for _i in TIME_MARKS.size():
 		_level_at_mark.append(-1)
-	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s" % [
-		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout), GameState.autotest_policy])
+	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s meta=%s" % [
+		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout), GameState.autotest_policy, GameState.autotest_meta])
 
 
 ## Called by Game after each simulation step.
@@ -450,7 +453,7 @@ func finish(summary: Dictionary) -> void:
 		", ".join(syn.active_ids()) if not syn.active_ids().is_empty() else "none",
 		", ".join(syn.activation_log) if not syn.activation_log.is_empty() else "none"])
 	print("[autotest] level-up actions: rerolls used %d/%d, banishes used %d/%d (banished: %s), skips %d" % [
-		LevelUpData.REROLLS - ab.rerolls_left, LevelUpData.REROLLS, LevelUpData.BANISHES - ab.banishes_left, LevelUpData.BANISHES,
+		ab.rerolls_max - ab.rerolls_left, ab.rerolls_max, ab.banishes_max - ab.banishes_left, ab.banishes_max,
 		", ".join(PackedStringArray(ab.banished.keys())) if not ab.banished.is_empty() else "none", ab.skips_used])
 	# Shadow Bolt damage includes its Void Barrage evolution (bolts + shards).
 	var bolt_total := _bolt_damage(st, "dmg_")
@@ -477,9 +480,25 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] nodes created (pools): enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [
 		game.enemies.created_nodes, game.horde.created_nodes, game.projectiles.created, game.effects.created, game.pickups.created])
 	print("[autotest] simulation step: avg %.2f ms, worst %.2f ms" % [game.avg_step_ms(), float(game.worst_step_usec) / 1000.0])
+	_print_soul_ash(summary)
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
+
+
+## Prints the meta profile and the run's Soul Ash award (Meta.award_run()).
+func _print_soul_ash(summary: Dictionary) -> void:
+	print("[autotest] meta upgrades (--meta=%s): %s | revivals used: %d" % [
+		GameState.autotest_meta, game.meta.describe(), int(game.stats.get("revivals", 0.0))])
+	var ash: Dictionary = summary.get("soul_ash", {})
+	if ash.is_empty():
+		return
+	var parts: Dictionary = ash["parts"]
+	print("[autotest] soul ash: +%d (time %d [%s] + kills %d [%d] + elites %d [%d] + boss %d + reckoning %d [%.1f s] = %d, bonus +%d%% = +%d) | bounty %d | new total %d | saved: %s" % [
+		int(ash["total"]), int(parts["time"]), _clock(float(ash["time_survived"])), int(parts["kills"]), int(ash["kill_count"]),
+		int(parts["elites"]), int(ash["elite_count"]), int(parts["boss"]), int(parts["reckoning"]), float(ash["reckoning_seconds"]),
+		int(ash["subtotal"]), int(roundf(float(ash["bonus_pct"]) * 100.0)), int(ash["bonus"]), int(ash["bounty"]), int(ash["new_total"]),
+		str(Meta.can_write())])
 
 
 ## Shadow Bolt damage stat with `prefix` ("dmg_" / "bossdmg_"), including the

@@ -312,6 +312,7 @@ static func draw_icon(ci: CanvasItem, kind: String, rect: Rect2) -> void:
 		"":
 			pass  # Empty slot: backdrop only.
 		_:
-			# Evolutions, evolution passives, synergies, fallback cards.
-			if not ProgressionGlyphs.draw_icon(ci, kind, c, s):
+			# Evolutions, evolution passives, synergies, fallback cards, then
+			# meta-progression icons (Soul Ash, trees, Ossuary upgrades).
+			if not ProgressionGlyphs.draw_icon(ci, kind, c, s) and not MetaGlyphs.draw_icon(ci, kind, c, s):
 				ci.draw_circle(c, s * 0.3, Palette.BONE)
