@@ -302,7 +302,7 @@ const SEPARATION_STRENGTH: float = 0.9  # TUNING (not in GDD)
 ##   recover_time       — s he stands still after any special.
 const BOSS := {
 	"display_name": "Sir Alaric, the Gravebreaker",  # GDD §11
-	"max_hp": 46000.0,  # TUNING (not in GDD) a 3-minute fight against a near-complete build
+	"max_hp": 42000.0,  # TUNING (not in GDD) a 2-3-minute fight against a near-complete build; balance pass 46000 -> 42000 after the Void Barrage nerf
 	"move_speed": 52.0,  # TUNING (not in GDD)
 	"damage": 12.0,  # TUNING (not in GDD) basic hammer swing
 	"attack_interval": 1.0,  # TUNING (not in GDD)

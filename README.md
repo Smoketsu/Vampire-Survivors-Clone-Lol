@@ -120,9 +120,13 @@ replacing fallen units all happen automatically (GDD §4, §21).
 
 ### Evolutions & Synergies
 
-- **Evolutions** (GDD §6.1): once a spell reaches **Lv 5** and you own its
-  paired passive (any level), every level-up offers its evolution as a
-  **gold card**. The evolution replaces the spell in its slot.
+- **Evolutions** (GDD §6.1): once a spell reaches **Lv 5**, you own its
+  paired passive (any level) **and the run has reached 8:00 elapsed** (12:00
+  left on the timer), every level-up offers its evolution as a **gold card**.
+  Before 8:00 the card hints say when it unlocks. The evolution replaces the
+  spell in its slot. The whole condition is `AbilityManager.ready_evolutions()`
+  with its numbers in `EvolutionData` (`BASE_LEVEL_REQUIRED`,
+  `PASSIVE_LEVEL_REQUIRED`, `MIN_ELAPSED`).
 
 | Spell | + Passive (its standalone effect) | = Evolution |
 |---|---|---|
@@ -252,12 +256,12 @@ replacing fallen units all happen automatically (GDD §4, §21).
 
 | Area | Status in this prototype |
 |---|---|
-| Necromancer | Movement (keyboard and stick), HP, i-frames, pickup radius, hit flash. Can receive priest heals and wards. |
+| Necromancer | Movement (keyboard and stick), HP with a slow natural regeneration (0.3 HP/s), i-frames, pickup radius, hit flash. Can receive priest heals and wards. |
 | **Shared summon AI** (§25–§31, §36) | **One** data-driven `SummonedUnit` script runs all four classes. It has the full FSM from §25, soft formation bands around the player (§26), and normalised target scoring (§27). Targets are held for at least 1 s; ranged units redirect when a target is already doomed (overkill reservation); priests use the §31 heal formula. |
 | Leash and recall (§24) | Engagement radius 220 px, soft recall at 320 px, hard spectral recall at 650 px. |
 | Replenishment (§24) | Each summon ability refills its own queue one unit at a time (Warrior 5 s, Archer 8 s, Mage 12 s, Priest 15 s). A capacity increase spawns the new units immediately. A failed spawn retries without using up the timer. |
 | **Warrior blocking** | Warriors are physical blockers. Enemies can't pass through them; overlaps are resolved through the spatial hash, weighted by mass. An enemy touching a warrior is *engaged*: it moves at 60% speed and attacks that warrior. Warriors also shield-bash on a cooldown (damage plus knockback). Sir Alaric's Divine Charge loses distance for every undead body it hits, so a thick enough wall stops it. |
-| **Priests** | Heal allies and the necromancer with the §31 formula; a critically hurt necromancer comes first. Whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px), a priest also casts an instant damage-absorbing **ward** on you, as long as no ward is active, its own ward cooldown is ready, and nobody is critical. The ward has its own cooldown, so it never replaces a heal. It shows as a ring on the necromancer and in the HUD, and the autotest reports ward counts and wards per minute. |
+| **Priests** | Heal allies and the necromancer with the §31 formula; a critically hurt necromancer comes first. Whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px), a priest also casts an instant damage-absorbing **ward** on you, as long as no ward is active and its own ward cooldown is ready (even while someone is critical: the ward is instant, so it never delays or replaces a heal). It shows as a ring on the necromancer and in the HUD, and the autotest reports ward counts and wards per minute. |
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
 | Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Each has 5 levels. |
 | Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual and Abyssal Focus. Bonus stacking follows §34. |

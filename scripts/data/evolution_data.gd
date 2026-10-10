@@ -5,9 +5,11 @@
 ##   Shadow Blast      + Abyssal Focus  = Abyssal Detonation
 ##
 ## Evolution condition (GDD open question 27 is unresolved; prototype decision,
-## recorded in GDD §15.0): the base spell is at its max level (5) and the
-## paired passive is at level 1 or higher. The GDD's "special elite reward" is
-## not implemented yet. While the condition holds, every level-up includes the
+## recorded in GDD §15.0): the base spell is at its max level (5), the paired
+## passive is at level 1 or higher, and at least MIN_ELAPSED seconds of the
+## run have passed (8:00, the Purifier beat; this stands in for the GDD's
+## "special elite reward", which is not implemented yet, and keeps a spell
+## rush from evolving at 2:00-5:00). While the condition holds, every level-up includes the
 ## evolution as a highlighted gold card; picking it replaces the base spell in
 ## its active slot (no extra slot is used) and the passive is kept.
 ##
@@ -22,6 +24,10 @@ extends RefCounted
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) decision for open question 27
 ## Paired passive level required before the evolution can be offered.
 const PASSIVE_LEVEL_REQUIRED: int = 1  # TUNING (not in GDD) decision for open question 27
+## Elapsed game seconds before any evolution can be offered (8:00 elapsed =
+## 12:00 left on the countdown, the GDD §11 Purifier beat). Balance pass: a
+## spell rush evolved Shadow Bolt at 1:48-5:35 before this gate existed.
+const MIN_ELAPSED: float = 480.0  # TUNING (not in GDD) decision for open question 27
 
 ## Display / card order of evolutions.
 const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation"]
@@ -56,8 +62,11 @@ const EVOLUTIONS := {
 		"description": "Rapid piercing void bolts that split into shards on impact.",
 		"labels": {"damage": "Damage", "count": "Bolts", "cooldown": "Cooldown (s)", "pierce": "Pierce", "split": "Split shards"},
 		"stats": {
-			"damage": 30.0, "cooldown": 0.5, "count": 4, "pierce": 3, "speed": 540.0, "range": 460.0,  # TUNING (not in GDD)
-			"split": 3, "split_damage": 0.5, "split_speed": 380.0, "split_life": 0.45,  # TUNING (not in GDD)
+			# Balance pass: damage 30 -> 24, cooldown 0.5 -> 0.6, pierce 3 -> 2 and
+			# split_damage 0.5 -> 0.4 (about -33% single-target and -55% crowd
+			# output); it dealt 70-85% of all damage in a spell build.
+			"damage": 24.0, "cooldown": 0.6, "count": 4, "pierce": 2, "speed": 540.0, "range": 460.0,  # TUNING (not in GDD)
+			"split": 3, "split_damage": 0.4, "split_speed": 380.0, "split_life": 0.45,  # TUNING (not in GDD)
 		},
 	},
 	"eclipse_ward": {

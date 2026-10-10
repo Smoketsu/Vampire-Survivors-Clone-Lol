@@ -170,9 +170,6 @@ var _kite_cd: float = 0.0
 var bash_cd: float = 0.0
 ## Seconds until this priest may ward the necromancer again.
 var _shield_cd: float = 0.0
-## Set by _choose_heal_target(): true if any heal candidate (necromancer or
-## ally) is below HEAL_CRITICAL_FRACTION, in which case healing beats warding.
-var _heal_critical: bool = false
 ## Facing sign (+1 right / -1 left).
 var _facing: float = 1.0
 ## Reusable query buffer for target candidates.
@@ -430,14 +427,13 @@ func _heal_target_valid() -> bool:
 ##   * fires whenever the necromancer is under threat (recently hit, or an
 ##     enemy within WARD_THREAT_RADIUS) even if he is somewhat hurt,
 ##   * only while no ward is active and this priest's ward cooldown is ready
-##     (no stacking),
-##   * suppressed while the necromancer or an ally is critical, so priests
-##     stay focused on healing then.
+##     (no stacking).
+## It is NOT suppressed while someone is critical (balance pass fix): the
+## ward is instant and never delays a heal, and in the boss fight some
+## summon was almost always critical, so wards stopped exactly when the
+## necromancer needed them (army runs dipped to 36-43 HP at 19:00).
 func _try_ward() -> void:
 	if not _can_shield_player():
-		return
-	_choose_heal_target()  # refreshes _heal_critical
-	if _heal_critical:
 		return
 	var p := game.player
 	p.apply_shield(shield_amount, shield_duration)
@@ -581,14 +577,12 @@ func _choose_heal_target() -> Node2D:
 	var player := game.player
 	var best: Node2D = null
 	var best_score := 0.0
-	_heal_critical = false
 	if not player.dead and position.distance_to(player.position) <= acquisition_range:
 		var p_missing := player.max_hp - player.hp - player.incoming_heal
 		if p_missing > 0.5:
 			best_score = _heal_score(p_missing, player.max_hp, UnitData.PLAYER_HEAL_ROLE)
 			if player.hp < player.max_hp * UnitData.HEAL_CRITICAL_FRACTION:
 				best_score += UnitData.HEAL_CRITICAL_BONUS + UnitData.PLAYER_CRITICAL_BONUS
-				_heal_critical = true
 			best = player
 	game.ally_grid.query(position, acquisition_range, _cand)
 	for a: SummonedUnit in _cand:
@@ -600,7 +594,6 @@ func _choose_heal_target() -> Node2D:
 		var s := _heal_score(missing, a.max_hp, a.heal_role_priority)
 		if a.hp < a.max_hp * UnitData.HEAL_CRITICAL_FRACTION:
 			s += UnitData.HEAL_CRITICAL_BONUS
-			_heal_critical = true
 		if s > best_score:
 			best_score = s
 			best = a
