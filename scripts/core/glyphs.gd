@@ -314,7 +314,9 @@ static func draw_icon(ci: CanvasItem, kind: String, rect: Rect2) -> void:
 		_:
 			# Evolutions, evolution passives, synergies, fallback cards, then
 			# meta-progression icons (Soul Ash, trees, Ossuary upgrades), then
-			# power-ups and the Profane Pact / Oath.
+			# power-ups and the Profane Pact / Oath, then the newer spells,
+			# their evolutions and passives (SpellGlyphs).
 			if not ProgressionGlyphs.draw_icon(ci, kind, c, s) and not MetaGlyphs.draw_icon(ci, kind, c, s) \
-					and not PowerupGlyphs.draw_icon(ci, kind, c, s):
+					and not PowerupGlyphs.draw_icon(ci, kind, c, s) \
+					and not SpellGlyphs.draw_icon(ci, kind, c, s):
 				ci.draw_circle(c, s * 0.3, Palette.BONE)

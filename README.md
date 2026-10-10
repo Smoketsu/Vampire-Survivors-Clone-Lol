@@ -137,6 +137,10 @@ replacing fallen units all happen automatically (GDD §4, §21).
 | Shadow Bolt | Soul Conduit (+10–50% spell damage) | **Void Barrage**: 4 rapid piercing void bolts that split into 3 shards on impact |
 | Shadow Orb Shield | Warding Ritual (−5–25% damage taken) | **Eclipse Ward**: 6-orb rotating eclipse barrier with periodic damage pulses that push foes back |
 | Shadow Blast | Abyssal Focus (−5–25% spell cooldowns) | **Abyssal Detonation**: a blast that pulls foes inward, then a second detonation |
+| Bone Spear | Shade Stride (+3–15% move speed) | **Ossuary Lance**: great barbed lances thrown ahead of you *and* behind, pierce 8, knock foes back |
+| Soul Siphon | Vampiric Rite (+0.2–1.0 HP/s regeneration) | **Soul Rapture**: 5 braided soul tethers; a tethered foe bursts when it dies; spare lifesteal heals your most wounded summon |
+| Corpse Explosion | Necrotic Expanse (+5–25% spell area) | **Grave Eruption**: bigger bursts that leave bone-spike fields (damage + slow); foes an eruption kills erupt in turn |
+| Plague Cloud | Lingering Malediction (+10–50% spell durations) | **Pestilence**: black clouds that creep after foes, Rot +25%, and end in a Death Nova (double damage to rotting foes) |
 
 - **Army synergies** (GDD §6.3) turn on automatically while every required
   summon class is at **Lv 2+**. A banner announces each one, and the active
@@ -157,6 +161,28 @@ replacing fallen units all happen automatically (GDD §4, §21).
   it reaches. Its summary reports the evolutions obtained (with times),
   the active synergies, and the rerolls, banishes and skips used.
   `--policy=evolve` runs a spell build that chases the evolutions.
+
+### The newer spells
+
+Four more necromancer spells (code in `scripts/abilities/spells/`, numbers in
+`AbilityData` / `EvolutionData` / `PassiveData`, all `TUNING`). Each has 5
+levels; the card lists every stat as old → new. Soul Conduit, Abyssal Focus,
+the meta Shadowcraft upgrades and the Hyper power-up apply to them like to
+the first three spells, and they keep hitting enemies frozen by Stasis.
+
+| Spell | What it does | Lv 1 → Lv 5 |
+|---|---|---|
+| **Bone Spear** | Straight piercing bone spears thrown the way you are **walking**, aim-assisted: the volley flies at the nearest enemy within ±34° of your walking direction (standing still keeps the last one), or at the nearest enemy when none is ahead. Throws only while an enemy is within 420 px. | 18 dmg, 1 spear, pierce 2, every 1.3 s, 360 px → 31 dmg, 3 spears, pierce 4, every 0.9 s, 440 px |
+| **Soul Siphon** (GDD §5.3) | Tethers hold the **strongest** foes in range (highest HP; foes already doomed are skipped) and drain them on a pulse; part of the damage heals you, **capped per second**. | 7 dmg / 0.5 s, 1 tether, 170 px, 25% lifesteal, cap 1 HP/s → 14 dmg / 0.45 s, 3 tethers, 210 px, 35%, cap 2 HP/s |
+| **Corpse Explosion** | Every enemy that dies (to your horde, spells or anything) leaves a corpse for 8 s. The spell detonates the corpses near you with the most foes around them. | 24 dmg, 1 corpse, radius 50, every 2.2 s → 40 dmg, 3 corpses, radius 70, every 1.6 s |
+| **Plague Cloud** | A lingering cloud settles on the most packed foes (avoiding spots already covered), ticks damage every 0.5 s and inflicts **Rot**: for 1.5 s the foe takes extra damage from **every** source (bosses get half). | 3 dmg/tick, radius 55, 3.5 s, every 3.4 s, Rot +8% → 4 dmg/tick, radius 70, 5 s, every 3 s, Rot +18% |
+
+Rot is a field on the enemy (`rot_until`, `rot_amp`) that
+`CombatResolver.damage_enemy` applies to every hit; the extra damage is the
+`rot_bonus_dmg` stat. Shade Stride and Vampiric Rite are read by the
+necromancer's movement and regeneration; Necrotic Expanse and Lingering
+Malediction are two more categories in `AbilityManager.apply_spell_mods()`
+(radius keys; `AbilityData.DURATION_KEYS`, which include Shadow Blast's slow).
 
 ### Stage & Boss
 
@@ -341,9 +367,9 @@ replacing fallen units all happen automatically (GDD §4, §21).
 | **Warrior blocking** | Warriors are physical blockers. Enemies can't pass through them; overlaps are resolved through the spatial hash, weighted by mass. An enemy touching a warrior is *engaged*: it moves at 60% speed and attacks that warrior. Warriors also shield-bash on a cooldown (damage plus knockback). Sir Alaric's Divine Charge loses distance for every undead body it hits, so a thick enough wall stops it. |
 | **Priests** | Heal allies and the necromancer with the §31 formula; a critically hurt necromancer comes first. Whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px), a priest also casts an instant damage-absorbing **ward** on you, as long as no ward is active and its own ward cooldown is ready (even while someone is critical: the ward is instant, so it never delays or replaces a heal). It shows as a ring on the necromancer and in the HUD, and the autotest reports ward counts and wards per minute. |
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
-| Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Each has 5 levels. |
-| Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual and Abyssal Focus. Bonus stacking follows §34. |
-| Evolutions & synergies (§6) | Void Barrage, Eclipse Ward and Abyssal Detonation; four army synergies; weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
+| Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Plus Bone Spear, Soul Siphon, Corpse Explosion and Plague Cloud (see *The newer spells*). Each has 5 levels. |
+| Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual, Abyssal Focus, Shade Stride, Vampiric Rite, Necrotic Expanse and Lingering Malediction. Bonus stacking follows §34. |
+| Evolutions & synergies (§6) | Void Barrage, Eclipse Ward, Abyssal Detonation, Ossuary Lance, Soul Rapture, Grave Eruption and Pestilence; four army synergies; weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
 | Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 13:00. |
 | Waves and stage events (§11) | The data-driven 20-minute Graveyard timeline at the GDD's real times (Sir Alaric at 17:00), then the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
@@ -424,6 +450,14 @@ scripts/
     ability_manager.gd      Spell casting, passive values, level-up card generation + deltas
     orb_shield.gd           Shadow Orb Shield
     projectile.gd, projectile_manager.gd   Pooled projectiles + overkill reservations
+    spells/                 The four newer spells, behind ONE dispatch in ability_manager.gd:
+      necro_spell_book.gd   Creates / ticks the spell nodes, kill hook, passive card lines, autotest line
+      necro_spell.gd        Base class (shared area-damage / target helpers)
+      bone_spear.gd         Bone Spear / Ossuary Lance (pooled spears)
+      soul_siphon.gd        Soul Siphon / Soul Rapture (tethers, capped lifesteal)
+      corpse_explosion.gd   Corpse Explosion / Grave Eruption (corpse ring buffer, spike fields)
+      plague_cloud.gd       Plague Cloud / Pestilence (clouds, Rot, Death Nova)
+      spell_glyphs.gd       Their icons (spells, evolutions, passives) and world visuals
   pickups/xp_crystal.gd, xp_manager.gd     Pooled XP crystals with magnet
   pickups/powerup.gd, powerup_manager.gd   Pooled power-up drops, drop rules, timed buffs, Soul Nova
   pickups/chest.gd, chest_manager.gd       Pooled treasure chests and their drop rules
@@ -520,6 +554,7 @@ Options (after `--`):
 | `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). |
 | `--oath=N` | Active Profane Oath tier 0-5 (default 0). No `--meta` profile includes the Oath, so `--meta=max` balance runs stay comparable. |
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
+| `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army` and `evolve` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells do not change those baselines. Use it to exercise a spell and reach its evolution. |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
 
@@ -529,7 +564,10 @@ spawn/kill, all cards picked, and per-source damage (`dmg_warrior`, `dmg_bolt`,
 (`summon_dmg_from_*`) and damage taken by the player, split by attacker
 (`player_dmg_from_*`); damage to the boss by source (`bossdmg_*`); Shadow Bolt
 damage per aim mode (the autotest uses Nearest, then switches to Strongest when
-the boss spawns); heals, wards and orb intercepts; peak entity counts;
+the boss spawns); a **necro spells** line (for each newer spell: level, total
+damage and the evolved part, boss damage, and counters such as volleys,
+lifesteal healed, corpse bursts and chains, clouds, Death Novas and the Rot
+bonus damage); heals, wards and orb intercepts; peak entity counts;
 pool node counts; and the average and worst simulation-step cost. These numbers
 are the starting point for tuning. Every 60 s it also prints `[metric]` lines
 (army size and capacity per class, level, damage taken by attacker, enemies
@@ -590,6 +628,15 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
   the strongest single source: about 30-45% of all damage in army / naive
   builds, about 60-70% in the spell build. A first-time naive player kills
   Alaric only about 1 run in 4.
+- The four newer spells (Bone Spear, Soul Siphon, Corpse Explosion, Plague
+  Cloud) and their evolutions have first-pass numbers, checked only against
+  single bot runs (`--spells=...`) and a 4-seed naive / army comparison.
+  The army and evolve bots never pick them on purpose, and a combined
+  balance pass is still due. Plague Cloud and Grave Eruption were the
+  strongest and were cut; Grave Eruption is still the strongest of the four
+  evolutions (about 400 dmg/s, close to Void Barrage in a spell rush).
+  Bone Spear needed an aim assist: pure movement aim missed almost
+  everything while kiting.
 - Only the Graveyard stage (a 20-minute run, the GDD's lower bound).
 - Arrows and spells fly over obstacles (no line-of-sight checks).
 - Eclipse Ward usually arrives late (15:00-19:00) and only in builds that

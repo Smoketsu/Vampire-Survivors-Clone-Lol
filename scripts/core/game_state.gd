@@ -36,6 +36,10 @@
 ##   --pact                Any policy also takes every Profane Pact card at
 ##                         once (e.g. --policy=army --pact: a strong build
 ##                         with the Pact); --policy=pact is naive + --pact.
+##   --spells=a,b,...      Any policy first takes these spells (AbilityData
+##                         ids, e.g. bone_spear,plague_cloud) and their
+##                         evolution passives, so each spell can be exercised
+##                         and its evolution reached.
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 
@@ -59,6 +63,9 @@ var autotest_meta_save: bool = false
 var autotest_oath: int = 0
 ## Autotest: true when --pact makes the policy take every Profane Pact card.
 var autotest_pact: bool = false
+## Autotest: spell ids from --spells=a,b the policy takes first (with their
+## evolution passives); empty = none forced.
+var autotest_spells: PackedStringArray = PackedStringArray()
 ## Whether the F3 debug overlay is shown; persists across restarts.
 var debug_overlay_visible: bool = false
 ## Summary dictionary of the most recent finished run (see Game.build_summary).
@@ -93,5 +100,11 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_meta_save = true
 		elif arg == "--pact":
 			autotest_pact = true
+		elif arg.begins_with("--spells="):
+			for id: String in arg.get_slice("=", 1).split(",", false):
+				if id in AbilityData.SPELL_ORDER:
+					autotest_spells.append(id)
+				else:
+					push_warning("--spells: unknown spell id '%s' ignored" % id)
 		elif arg.begins_with("--oath="):
 			autotest_oath = clampi(arg.get_slice("=", 1).to_int(), 0, MetaData.max_tier(PactData.OATH_ID))

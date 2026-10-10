@@ -6,6 +6,18 @@
 ##
 ## The GDD lists which stats each spell upgrades but no values, so all numbers
 ## are TUNING (not in GDD).
+##
+## Four more necromancer spells (user request "more weapons", GDD §5.3
+## candidate spells where they fit; logic in scripts/abilities/spells/):
+##   Bone Spear       — straight piercing bone spears thrown the way you are
+##                      walking (aim-assisted toward the nearest foe ahead).
+##   Soul Siphon      — GDD §5.3: tethers drain the strongest nearby foes and
+##                      heal you, with a capped lifesteal.
+##   Corpse Explosion — detonates fresh corpses (any killer: horde, spells)
+##                      into bursts of bone.
+##   Plague Cloud     — lingering plague zones that deal damage over time and
+##                      inflict Rot (the enemy takes more damage from every
+##                      source; GDD open question 30 "curse" status).
 class_name AbilityData
 extends RefCounted
 
@@ -13,7 +25,8 @@ extends RefCounted
 const STARTING_SPELL: String = "shadow_bolt"
 
 ## Display / card order of spells.
-const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast"]
+const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
+	"bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -33,6 +46,24 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast"]
 ## Shadow Blast stat keys:
 ##   damage, radius (px), cooldown (s), slow (fraction of speed removed),
 ##   slow_duration (s).
+## Bone Spear stat keys:
+##   damage (per spear per enemy), cooldown (s), count (spears per volley,
+##   fanned by SPEAR_SPREAD), pierce (extra enemies passed through), speed
+##   (px/s), range (px a spear flies before it crumbles).
+## Soul Siphon stat keys:
+##   damage (drained from each tethered enemy per pulse), cooldown (s between
+##   drain pulses), targets (tethers at once), range (px tether reach),
+##   lifesteal (fraction of drained damage healed), heal_cap (HP/s: the most
+##   the siphon can heal per second; GDD §5.3 "capped lifesteal").
+## Corpse Explosion stat keys:
+##   damage (per enemy per burst), radius (px burst radius), cooldown (s),
+##   count (corpses detonated per cast), range (px around the necromancer in
+##   which corpses are used).
+## Plague Cloud stat keys:
+##   damage (per enemy per PLAGUE_TICK), radius (px cloud radius), duration
+##   (s a cloud lingers), cooldown (s between clouds), rot (fraction: extra
+##   damage a rotting enemy takes from every source), range (px from the
+##   necromancer in which a cloud is placed).
 const SPELLS := {
 	"shadow_bolt": {
 		"display_name": "Shadow Bolt",
@@ -73,7 +104,68 @@ const SPELLS := {
 			{"damage": 42.0, "radius": 125.0, "cooldown": 3.0, "slow": 0.45, "slow_duration": 1.5},  # TUNING (not in GDD)
 		],
 	},
+	"bone_spear": {
+		"display_name": "Bone Spear",
+		"icon": "bone_spear",
+		"description": "Hurls piercing bone spears at the nearest foe ahead of you. Steer it by walking.",
+		"labels": {"damage": "Damage", "count": "Spears", "cooldown": "Cooldown (s)", "pierce": "Pierce", "range": "Range"},
+		"levels": [
+			{"damage": 18.0, "cooldown": 1.3, "count": 1, "pierce": 2, "speed": 520.0, "range": 360.0},  # TUNING (not in GDD)
+			{"damage": 22.0, "cooldown": 1.3, "count": 2, "pierce": 2, "speed": 520.0, "range": 360.0},  # TUNING (not in GDD)
+			{"damage": 22.0, "cooldown": 1.1, "count": 2, "pierce": 3, "speed": 560.0, "range": 400.0},  # TUNING (not in GDD)
+			{"damage": 27.0, "cooldown": 1.1, "count": 3, "pierce": 3, "speed": 560.0, "range": 400.0},  # TUNING (not in GDD)
+			{"damage": 31.0, "cooldown": 0.9, "count": 3, "pierce": 4, "speed": 600.0, "range": 440.0},  # TUNING (not in GDD)
+		],
+	},
+	"soul_siphon": {
+		"display_name": "Soul Siphon",
+		"icon": "soul_siphon",
+		"description": "Tethers drain the strongest nearby foes and heal you (lifesteal is capped per second).",
+		"labels": {"damage": "Drain", "targets": "Tethers", "cooldown": "Drain every (s)", "range": "Range", "lifesteal": "Lifesteal", "heal_cap": "Heal cap (HP/s)"},
+		"levels": [
+			{"damage": 7.0, "cooldown": 0.5, "targets": 1, "range": 170.0, "lifesteal": 0.25, "heal_cap": 1.0},  # TUNING (not in GDD)
+			{"damage": 9.0, "cooldown": 0.5, "targets": 1, "range": 170.0, "lifesteal": 0.25, "heal_cap": 1.0},  # TUNING (not in GDD)
+			{"damage": 9.0, "cooldown": 0.5, "targets": 2, "range": 190.0, "lifesteal": 0.25, "heal_cap": 1.5},  # TUNING (not in GDD)
+			{"damage": 12.0, "cooldown": 0.5, "targets": 2, "range": 190.0, "lifesteal": 0.3, "heal_cap": 1.5},  # TUNING (not in GDD)
+			{"damage": 14.0, "cooldown": 0.45, "targets": 3, "range": 210.0, "lifesteal": 0.35, "heal_cap": 2.0},  # TUNING (not in GDD)
+		],
+	},
+	"corpse_explosion": {
+		"display_name": "Corpse Explosion",
+		"icon": "corpse_explosion",
+		"description": "Detonates fresh corpses near you, whoever made them, in bursts of bone.",
+		"labels": {"damage": "Damage", "radius": "Radius", "count": "Corpses per cast", "cooldown": "Cooldown (s)", "range": "Range"},
+		"levels": [
+			{"damage": 24.0, "radius": 50.0, "cooldown": 2.2, "count": 1, "range": 240.0},  # TUNING (not in GDD)
+			{"damage": 30.0, "radius": 50.0, "cooldown": 2.2, "count": 2, "range": 240.0},  # TUNING (not in GDD)
+			{"damage": 30.0, "radius": 60.0, "cooldown": 1.9, "count": 2, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 36.0, "radius": 60.0, "cooldown": 1.9, "count": 3, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 40.0, "radius": 70.0, "cooldown": 1.6, "count": 3, "range": 280.0},  # TUNING (not in GDD)
+		],
+	},
+	"plague_cloud": {
+		"display_name": "Plague Cloud",
+		"icon": "plague_cloud",
+		"description": "Drops lingering plague clouds on packed foes. Rotting foes take more damage from everything.",
+		"labels": {"damage": "Damage per tick", "radius": "Radius", "duration": "Duration (s)", "cooldown": "Cooldown (s)", "rot": "Rot (damage taken)"},
+		"levels": [
+			# Two cuts: the first pass (4-8 dmg/tick, 4-6 s, every 3.0-2.2 s) and a second
+			# (3-6 dmg/tick) still dealt 2-3x Shadow Blast's damage in naive runs (up to 37%
+			# of all damage): a cloud always sits on the densest pack, so coverage was cut.
+			{"damage": 3.0, "radius": 55.0, "duration": 3.5, "cooldown": 3.4, "rot": 0.08, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 3.0, "radius": 55.0, "duration": 4.0, "cooldown": 3.4, "rot": 0.10, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 3.0, "radius": 62.0, "duration": 4.0, "cooldown": 3.2, "rot": 0.12, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 4.0, "radius": 62.0, "duration": 4.5, "cooldown": 3.2, "rot": 0.15, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 4.0, "radius": 70.0, "duration": 5.0, "cooldown": 3.0, "rot": 0.18, "range": 280.0},  # TUNING (not in GDD)
+		],
+	},
 }
+
+## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
+const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", "nova", "nova_rot_bonus"]
+## Stat keys that are spell durations (s): the Lingering Malediction passive
+## lengthens them (AbilityManager.apply_spell_mods()).
+const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]
 
 ## Shadow Bolt: score bonus (px-equivalent) for enemies currently attacking a
 ## summon, so bolts "preferentially hit enemies threatening warriors" (GDD §33).
@@ -82,3 +174,57 @@ const BOLT_PROTECT_BONUS: float = 80.0  # TUNING (not in GDD)
 const BOLT_HOMING: float = 5.0  # TUNING (not in GDD)
 ## Radius (px) of a single orb's body / hit circle.
 const ORB_RADIUS: float = 7.0  # TUNING (not in GDD)
+
+# --- Bone Spear / Ossuary Lance (BoneSpear) ----------------------------------------
+
+## Angle (radians) between neighbouring spears of one volley.
+const SPEAR_SPREAD: float = 0.14  # TUNING (not in GDD)
+## Hit radius (px) of a Bone Spear (Ossuary Lance uses its "width" stat).
+const SPEAR_RADIUS: float = 5.0  # TUNING (not in GDD)
+## Most spears / lances in flight at once (new ones are skipped beyond it).
+const SPEAR_MAX: int = 60  # TUNING (not in GDD)
+## A volley is only thrown while an enemy is within this many px (else the
+## spell retries every SPELL_RETRY s instead of wasting its cooldown).
+const SPEAR_TRIGGER_RANGE: float = 420.0  # TUNING (not in GDD)
+## Aim assist half-angle (radians) around the walking direction: the volley
+## flies at the nearest enemy inside this cone, else at the nearest enemy
+## (pure movement aim dealt almost nothing while kiting).
+const SPEAR_AIM_CONE: float = 0.6  # TUNING (not in GDD)
+
+# --- Soul Siphon / Soul Rapture (SoulSiphon) ---------------------------------------
+
+## A tether breaks once its enemy is this many px beyond the spell range.
+const SIPHON_LEASH: float = 40.0  # TUNING (not in GDD)
+## Seconds of heal_cap the lifesteal budget can bank (the cap is per second,
+## so a full budget allows at most heal_cap * this HP in one pulse).
+const SIPHON_BUDGET_SECONDS: float = 1.0  # TUNING (not in GDD)
+
+# --- Corpse Explosion / Grave Eruption (CorpseExplosion) ---------------------------
+
+## Seconds a corpse stays usable after its enemy died.
+const CORPSE_LIFE: float = 8.0  # TUNING (not in GDD)
+## Corpses remembered at once (ring buffer; the oldest is overwritten).
+const CORPSE_MAX: int = 64  # TUNING (not in GDD)
+## Seconds between Grave Eruption spike-field damage ticks.
+const ZONE_TICK: float = 0.5  # TUNING (not in GDD)
+## Most Grave Eruption spike fields at once (the oldest is replaced).
+const ZONE_MAX: int = 10  # TUNING (not in GDD)
+
+# --- Plague Cloud / Pestilence (PlagueCloud) ---------------------------------------
+
+## Seconds between plague damage ticks of one cloud.
+const PLAGUE_TICK: float = 0.5  # TUNING (not in GDD)
+## Seconds Rot lingers on an enemy after its last plague tick.
+const ROT_LINGER: float = 1.5  # TUNING (not in GDD)
+## Fraction of the Rot bonus that applies to bosses (Sir Alaric).
+const ROT_BOSS_MULT: float = 0.5  # TUNING (not in GDD)
+## Most clouds at once (the oldest is replaced).
+const CLOUD_MAX: int = 12  # TUNING (not in GDD)
+## Pestilence Death Nova radius as a multiple of the cloud radius.
+const NOVA_RADIUS_MULT: float = 1.5  # TUNING (not in GDD)
+
+# --- Shared by the four spells above -----------------------------------------------
+
+## Seconds before a spell that found nothing to do tries again (its cooldown
+## is not spent on an empty cast).
+const SPELL_RETRY: float = 0.25  # TUNING (not in GDD)

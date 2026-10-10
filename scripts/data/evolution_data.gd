@@ -3,6 +3,13 @@
 ##   Shadow Bolt       + Soul Conduit   = Void Barrage
 ##   Shadow Orb Shield + Warding Ritual = Eclipse Ward
 ##   Shadow Blast      + Abyssal Focus  = Abyssal Detonation
+## plus the four newer necromancer spells (user request "more weapons"; the
+## recipes are the prototype's own, recorded in GDD §15.0):
+##   Bone Spear        + Shade Stride          = Ossuary Lance
+##   Soul Siphon       + Vampiric Rite         = Soul Rapture
+##   Corpse Explosion  + Necrotic Expanse      = Grave Eruption (GDD §5.3)
+##   Plague Cloud      + Lingering Malediction = Pestilence (with the GDD
+##                                               §5.3 Death Nova burst)
 ##
 ## Evolution condition (GDD open question 27 is unresolved; prototype decision,
 ## recorded in GDD §15.0): the base spell is at its max level (5), the paired
@@ -30,7 +37,8 @@ const PASSIVE_LEVEL_REQUIRED: int = 1  # TUNING (not in GDD) decision for open q
 const MIN_ELAPSED: float = 480.0  # TUNING (not in GDD) decision for open question 27
 
 ## Display / card order of evolutions.
-const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation"]
+const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
+	"ossuary_lance", "soul_rapture", "grave_eruption", "pestilence"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -53,6 +61,25 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation"]
 ##   dealt by the second hit), pull (px/s inward impulse toward the blast
 ##   centre, divided by enemy mass), pull_inner (fraction of the radius inside
 ##   which enemies are no longer pulled).
+## Ossuary Lance extra keys:
+##   back_count (lances also thrown behind you), width (px hit radius of a
+##   lance), knockback (px/s impulse along the lance, divided by enemy mass).
+## Soul Rapture extra keys:
+##   burst (death burst damage as a multiple of the drain damage, released
+##   when a tethered enemy dies), radius (px burst radius), overflow
+##   (fraction of the lifesteal that heals the most wounded nearby summon
+##   when you are already at full HP).
+## Grave Eruption extra keys:
+##   zone_duration (s a bone-spike field lingers), zone_damage (fraction of
+##   damage dealt per AbilityData.ZONE_TICK inside a field), zone_slow
+##   (fraction of speed removed inside a field), chain (most extra bursts
+##   per cast from enemies an eruption kills: they detonate at once).
+## Pestilence extra keys:
+##   creep (px/s a cloud drifts toward the nearest enemy), nova (Death Nova
+##   damage as a multiple of the tick damage, released when a cloud
+##   expires, radius x AbilityData.NOVA_RADIUS_MULT), nova_rot_bonus (extra
+##   fraction of nova damage against rotting enemies, GDD §5.3 "bonus
+##   damage to cursed enemies").
 const EVOLUTIONS := {
 	"void_barrage": {
 		"base": "shadow_bolt",
@@ -91,6 +118,59 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 60.0, "radius": 150.0, "cooldown": 2.6, "slow": 0.6, "slow_duration": 2.0,  # TUNING (not in GDD)
 			"second_delay": 0.4, "second_damage": 0.8, "pull": 240.0, "pull_inner": 0.35,  # TUNING (not in GDD)
+		},
+	},
+	"ossuary_lance": {
+		"base": "bone_spear",
+		"passive": "shade_stride",
+		"display_name": "Ossuary Lance",
+		"icon": "ossuary_lance",
+		"description": "Great bone lances skewer every foe in their path, ahead of you and behind, and drive them back.",
+		"labels": {"damage": "Damage", "count": "Lances ahead", "back_count": "Lances behind", "cooldown": "Cooldown (s)", "pierce": "Pierce", "knockback": "Knockback"},
+		"stats": {
+			"damage": 34.0, "cooldown": 0.8, "count": 3, "pierce": 8, "speed": 640.0, "range": 520.0,  # TUNING (not in GDD)
+			"back_count": 2, "width": 9.0, "knockback": 150.0,  # TUNING (not in GDD)
+		},
+	},
+	"soul_rapture": {
+		"base": "soul_siphon",
+		"passive": "vampiric_rite",
+		"display_name": "Soul Rapture",
+		"icon": "soul_rapture",
+		"description": "Five soul tethers feed you; a tethered foe bursts when it dies, and spare life mends your undead.",
+		"labels": {"damage": "Drain", "targets": "Tethers", "cooldown": "Drain every (s)", "lifesteal": "Lifesteal", "heal_cap": "Heal cap (HP/s)", "burst": "Death burst (x drain)", "radius": "Burst radius"},
+		"stats": {
+			# First pass (18 dmg, burst x3) dealt about 350 dmg/s; trimmed.
+			"damage": 16.0, "cooldown": 0.4, "targets": 5, "range": 250.0, "lifesteal": 0.4, "heal_cap": 3.0,  # TUNING (not in GDD)
+			"burst": 2.0, "radius": 70.0, "overflow": 1.0,  # TUNING (not in GDD)
+		},
+	},
+	"grave_eruption": {
+		"base": "corpse_explosion",
+		"passive": "necrotic_expanse",
+		"display_name": "Grave Eruption",
+		"icon": "grave_eruption",
+		"description": "Corpses erupt into fields of bone spikes; foes slain by an eruption erupt in turn.",
+		"labels": {"damage": "Damage", "radius": "Radius", "count": "Corpses per cast", "cooldown": "Cooldown (s)", "zone_duration": "Spike field (s)", "zone_damage": "Spikes per tick", "chain": "Chain bursts"},
+		"stats": {
+			# First pass (damage 52, 4 corpses, spikes 25%, chain 6) and a second (46, spikes
+			# 20%, chain 4) dealt about 480 dmg/s (Void Barrage: about 300); trimmed.
+			"damage": 36.0, "radius": 90.0, "cooldown": 1.3, "count": 3, "range": 320.0,  # TUNING (not in GDD)
+			"zone_duration": 3.0, "zone_damage": 0.15, "zone_slow": 0.35, "chain": 3,  # TUNING (not in GDD)
+		},
+	},
+	"pestilence": {
+		"base": "plague_cloud",
+		"passive": "lingering_malediction",
+		"display_name": "Pestilence",
+		"icon": "pestilence",
+		"description": "Black plague clouds creep after the living, deepen the Rot and end in a Death Nova.",
+		"labels": {"damage": "Damage per tick", "radius": "Radius", "duration": "Duration (s)", "cooldown": "Cooldown (s)", "rot": "Rot (damage taken)", "creep": "Creep speed", "nova": "Death Nova (x tick)"},
+		"stats": {
+			# First pass (12 dmg, 8 s every 1.8 s, Rot 30%, nova x4) dealt 118k in its first
+			# 4 minutes of a naive run (Void Barrage: about 300 dmg/s); cut to about a third.
+			"damage": 6.0, "radius": 95.0, "duration": 7.0, "cooldown": 2.6, "rot": 0.25, "range": 300.0,  # TUNING (not in GDD)
+			"creep": 35.0, "nova": 3.0, "nova_rot_bonus": 1.0,  # TUNING (not in GDD)
 		},
 	},
 }

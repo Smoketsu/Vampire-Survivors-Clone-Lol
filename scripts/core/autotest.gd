@@ -13,7 +13,9 @@
 ##     Every policy would take an evolution card first (evolutions now come
 ##     only from treasure chests, so level-up hands no longer hold them); army
 ##     and evolve also banish unwanted items and reroll weak hands (naive
-##     never does, it plays like a careless player),
+##     never does, it plays like a careless player), and never take a new
+##     item that is not on their build list (they reroll or skip instead, so
+##     the newer spells do not change these baseline builds),
 ##   * exercises both Shadow Bolt aim modes: Nearest until the boss spawns,
 ##     then Strongest, and reports bolt damage per mode and to the boss,
 ##   * keeps the necromancer invulnerable (unless --mortal) until the countdown
@@ -44,7 +46,13 @@
 ##     autopilot walks to a chest within ChestData.AUTOTEST_SEEK_RADIUS unless
 ##     enemies press it hard, and the summary lists chests spawned / opened,
 ##     their sizes, every item granted and the evolution times (evolutions
-##     come only from chests).
+##     come only from chests),
+##   * --spells=a,b: every policy first takes those spells and their
+##     evolution passives (FORCED_SPELL_SCORE; never banished), so each of
+##     the newer spells can be exercised and evolved; the summary's
+##     "necro spells" line reports each newer spell's level, damage (and its
+##     evolved part), boss damage and spell counters, and the "evolutions"
+##     line their times.
 class_name Autotest
 extends Node
 
@@ -108,6 +116,24 @@ const DROP_SEEK_RADIUS: float = 300.0
 const DROP_SAFE_PRESSURE: float = 0.35
 ## Flee pressure above which even chests are ignored.
 const CHEST_SAFE_PRESSURE: float = 0.8
+## Score of a --spells card (a forced spell or its evolution passive): above
+## every policy priority and the Pact, below evolutions.
+const FORCED_SPELL_SCORE: float = 300.0
+## Score of a card for a NEW non-forced item while a --spells item of the
+## same slot kind (active / passive) is not owned yet, and of a NEW item
+## that is not on the army / evolve build list: below every real card and
+## the fallbacks, above the unwanted Profane Pact (PACT_SCORE); a hand whose
+## best card scores this or less is rerolled or skipped, so a blocked hand
+## never falls through to the Pact.
+const FORCED_BLOCK_SCORE: float = -120.0
+## --spells: free slots kept beyond the forced items still missing, as
+## headroom for a treasure chest that grants some other new item.
+const FORCED_SPARE_SLOTS: int = 1
+## --spells: card-weight multiplier of the forced spells and passives in
+## level-up hands and chests (AbilityManager._candidates asks through
+## card_weight_mult()), so they are offered reliably; scoring alone left a
+## forced spell unoffered for most of a run in some seeds.
+const FORCED_WEIGHT_MULT: float = 8.0
 
 ## Owning run.
 var game: Game
@@ -170,11 +196,18 @@ var _build_complete_level: int = 0
 var _pact_seen: int = 0
 ## "Ln@mm:ss" for every Profane Pact level taken.
 var _pact_log: PackedStringArray = PackedStringArray()
+## Item id -> true for the --spells spells and their evolution passives.
+var _forced: Dictionary = {}
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	seed(GameState.autotest_seed)
+	for id: String in GameState.autotest_spells:
+		_forced[id] = true
+		var evo := EvolutionData.for_spell(id)  # Its evolution ("" if none).
+		if evo != "":
+			_forced[String(EvolutionData.EVOLUTIONS[evo]["passive"])] = true
 	var speed := GameState.autotest_speed
 	Engine.time_scale = speed
 	Engine.physics_ticks_per_second = int(roundf(60.0 * speed))
@@ -182,9 +215,9 @@ func _ready() -> void:
 	_real_start_msec = Time.get_ticks_msec()
 	for _i in TIME_MARKS.size():
 		_level_at_mark.append(-1)
-	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s meta=%s oath=%d pact=%s" % [
+	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s meta=%s oath=%d pact=%s spells=%s" % [
 		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout), GameState.autotest_policy, GameState.autotest_meta,
-		GameState.autotest_oath, str(GameState.autotest_pact)])
+		GameState.autotest_oath, str(GameState.autotest_pact), ",".join(GameState.autotest_spells) if not GameState.autotest_spells.is_empty() else "-"])
 
 
 ## Called by Game after each simulation step.
@@ -369,10 +402,13 @@ func choose_action(offers: Array[Dictionary]) -> Dictionary:
 			best = i
 	var policy := GameState.autotest_policy
 	var ab := game.abilities
+	if best_score <= FORCED_BLOCK_SCORE:
+		# --spells: only slot-stealing actives on offer; keep the slots.
+		return {"action": "reroll", "index": -1} if ab.rerolls_left > 0 else {"action": "skip", "index": -1}
 	if policy in ["army", "evolve"] and best_score < EVOLUTION_SCORE:
 		var banish_ids: Array = BANISH_IDS.get(policy, [])
 		for i in offers.size():
-			if ab.can_banish(offers[i]) and String(offers[i]["id"]) in banish_ids:
+			if ab.can_banish(offers[i]) and String(offers[i]["id"]) in banish_ids and not _forced.has(String(offers[i]["id"])):
 				return {"action": "banish", "index": i}
 		if best_score < REROLL_BELOW and ab.rerolls_left > 0:
 			return {"action": "reroll", "index": -1}
@@ -398,6 +434,15 @@ func _card_score(o: Dictionary) -> float:
 	if id == PactData.ID:
 		var eager := GameState.autotest_policy == "pact" or GameState.autotest_pact  # --policy=pact or --pact.
 		return (PACT_EAGER_SCORE if eager else PACT_SCORE) - float(o["to"])
+	if _forced.has(id):
+		return FORCED_SPELL_SCORE - float(o["to"]) * 3.0  # --spells: take and level these first.
+	if int(o["from"]) == 0 and _forced_slots_short(String(o["kind"])):
+		return FORCED_BLOCK_SCORE  # Would take a slot a --spells item still needs.
+	var listed: Dictionary = ARMY_PRIORITY if GameState.autotest_policy == "army" else EVOLVE_PRIORITY  # Build list.
+	if GameState.autotest_policy in ["army", "evolve"] and int(o["from"]) == 0 and not listed.has(id):
+		# Off-build item (e.g. the newer spells and passives): a focused build
+		# never spends a slot on it; reroll or skip instead (FORCED_BLOCK_SCORE).
+		return FORCED_BLOCK_SCORE
 	match GameState.autotest_policy:
 		"army":
 			var pri := float(ARMY_PRIORITY.get(id, 0.0))  # Card priority.
@@ -416,6 +461,37 @@ func _card_score(o: Dictionary) -> float:
 		"passive":
 			s += 60.0 if is_new else 0.0
 	return s
+
+
+## Card-weight multiplier of item `id` for AbilityManager's weighted draw:
+## FORCED_WEIGHT_MULT for --spells items, 1 otherwise (so every run without
+## --spells draws exactly as before).
+func card_weight_mult(id: String) -> float:
+	return FORCED_WEIGHT_MULT if _forced.has(id) else 1.0
+
+
+## True when taking another NEW non-forced item of card kind `kind` could
+## lock a --spells item out of its slot kind: forced spells use active slots
+## ("spell" / "summon" cards), forced evolution passives passive slots. It
+## blocks once the free slots of that kind are down to the forced items
+## still missing plus FORCED_SPARE_SLOTS (treasure chests ignore the policy
+## and may fill a slot too).
+func _forced_slots_short(kind: String) -> bool:
+	var ab := game.abilities
+	var passive := kind == "passive"  # Slot kind of this card.
+	if not passive and kind not in ["spell", "summon"]:
+		return false
+	var missing := 0  # Forced items of this slot kind not owned yet.
+	for id: String in _forced.keys():
+		var is_spell := AbilityData.SPELLS.has(id)  # Spell (active) or passive.
+		if passive and not is_spell and ab.passive_level(id) <= 0:
+			missing += 1
+		elif not passive and is_spell and ab.spell_level(id) <= 0:
+			missing += 1
+	if missing == 0:
+		return false
+	var free := (PlayerData.PASSIVE_SLOTS - ab.passive_count()) if passive else (PlayerData.ACTIVE_SLOTS - ab.active_count())  # Free slots.
+	return free <= missing + FORCED_SPARE_SLOTS
 
 
 ## Autopilot: flee nearby enemies, drift toward XP, dodge boss telegraphs,
@@ -514,6 +590,7 @@ func finish(summary: Dictionary) -> void:
 		int(st_all.get("priest_wards", 0.0)), int(st_all.get("ward_absorbed", 0.0)), _two_priest_wards, _two_priest_time, ward_rate, int(st_all.get("priest_heals", 0.0))])
 	var ab := game.abilities
 	print("[autotest] evolutions: %s" % (", ".join(ab.evolution_history) if not ab.evolution_history.is_empty() else "none"))
+	print("[autotest] necro spells: %s" % ab.spells.summary_line())
 	var syn := game.horde.synergies
 	print("[autotest] synergies active at end: %s | activations: %s" % [
 		", ".join(syn.active_ids()) if not syn.active_ids().is_empty() else "none",
