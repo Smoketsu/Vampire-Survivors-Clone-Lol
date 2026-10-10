@@ -463,7 +463,7 @@ func _step_rush(delta: float) -> bool:
 	_rush_hits.clear()
 	_rush_hit_player = false
 	velocity = Vector2.ZERO
-	game.effects.telegraph_line(position, position + rush_dir * rush_left, float(_rush_def["charge_width"]), float(_rush_def["charge_telegraph"]))
+	game.effects.telegraph_line(position, position + rush_dir * rush_left, float(_rush_def["charge_width"]), float(_rush_def["charge_telegraph"]), self)
 	game.stat_add("templar_charges", 1.0)
 	return true
 

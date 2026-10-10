@@ -29,10 +29,11 @@ func step(delta: float) -> void:
 			_pool.append(e)
 
 
-## Takes an effect from the pool (or creates one) and starts it.
-func _spawn(kind: Effect.Kind, pos: Vector2, color: Color, size: float, duration: float, vec: Vector2 = Vector2.RIGHT, width: float = 2.0, critical: bool = false) -> void:
+## Takes an effect from the pool (or creates one) and starts it. Returns it
+## (null when a cosmetic effect was skipped at MAX_COSMETIC).
+func _spawn(kind: Effect.Kind, pos: Vector2, color: Color, size: float, duration: float, vec: Vector2 = Vector2.RIGHT, width: float = 2.0, critical: bool = false) -> Effect:
 	if not critical and active.size() >= MAX_COSMETIC:
-		return
+		return null
 	var e: Effect
 	if _pool.is_empty():
 		e = Effect.new()
@@ -42,6 +43,7 @@ func _spawn(kind: Effect.Kind, pos: Vector2, color: Color, size: float, duration
 		e = _pool.pop_back()
 	e.start(kind, pos, color, size, duration, vec, width)
 	active.append(e)
+	return e
 
 
 ## Death pop: expanding ring + bone shards (also stands in for a corpse).
@@ -69,16 +71,26 @@ func spawn_ring(pos: Vector2, color: Color) -> void:
 	_spawn(Effect.Kind.SPAWN, pos, color, 12.0, 0.5)
 
 
-## Boss ground-AoE warning circle shown for `duration` seconds.
-func telegraph_circle(pos: Vector2, radius: float, duration: float) -> void:
-	_spawn(Effect.Kind.TELEGRAPH_CIRCLE, pos, Palette.GOLD, radius, duration, Vector2.RIGHT, 2.0, true)
+## Boss ground-AoE warning circle shown for `duration` seconds. `owner`
+## (optional) is the attacker: the telegraph pauses while it is frozen.
+func telegraph_circle(pos: Vector2, radius: float, duration: float, owner: Enemy = null) -> void:
+	_set_owner(_spawn(Effect.Kind.TELEGRAPH_CIRCLE, pos, Palette.GOLD, radius, duration, Vector2.RIGHT, 2.0, true), owner)
 	Sfx.play("boss_telegraph", pos)
 
 
 ## Boss charge-lane warning from `from` to `to`, `lane_width` px wide.
-func telegraph_line(from: Vector2, to: Vector2, lane_width: float, duration: float) -> void:
-	_spawn(Effect.Kind.TELEGRAPH_LINE, from, Palette.GOLD, 0.0, duration, to - from, lane_width, true)
+## `owner` (optional) is the attacker: the telegraph pauses while it is frozen.
+func telegraph_line(from: Vector2, to: Vector2, lane_width: float, duration: float, owner: Enemy = null) -> void:
+	_set_owner(_spawn(Effect.Kind.TELEGRAPH_LINE, from, Palette.GOLD, 0.0, duration, to - from, lane_width, true), owner)
 	Sfx.play("boss_telegraph", from)
+
+
+## Ties telegraph `e` to the enemy `owner` (Stasis pause, Effect.step()).
+func _set_owner(e: Effect, owner: Enemy) -> void:
+	if e == null or owner == null:
+		return
+	e.owner_enemy = owner
+	e.owner_gen = owner.generation
 
 
 ## Abyssal Detonation first hit: a dark vortex collapsing toward `pos`.

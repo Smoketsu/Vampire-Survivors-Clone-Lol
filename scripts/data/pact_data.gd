@@ -11,7 +11,7 @@
 ##   penalties  enemy_spawn  trickle rate and soft cap (max_alive) of the wave
 ##                           segments (EnemyDirector._spawn_trickle)
 ##              enemy_hp     enemy HP multiplier (EnemyDirector.hp_mult; also
-##                           Sir Alaric and the Reckoning)
+##                           the Reckoning; Sir Alaric gets BOSS_HP_SHARE of it)
 ##              enemy_damage enemy damage multiplier (EnemyDirector.damage_mult)
 ##   rewards    xp_gain      XP gain (Game.add_xp)
 ##              ash_gain     Soul Ash earned (Meta.compute_ash bonus lines)
@@ -41,6 +41,10 @@ const CARD_WEIGHT_MULT: float = 0.4  # TUNING (not in GDD)
 
 ## The Profane Pact passive definition, in the PassiveData.PASSIVES format
 ## (display_name, icon, description, labels, levels with ABSOLUTE values).
+## Per level: spawn +5%, HP +5%, damage +3%; XP +8%, Soul Ash +12%, drops
+## +15%. Post-merge retune: +10 / +10 / +6 per level (ash +10%) made a Lv 5
+## Pact a trap: the army bot, swamped by +50% spawns of +50% HP, never killed
+## Sir Alaric (63,000 HP); at +6 / +5 / +4 it still left him at 0-16k HP.
 const PASSIVE := {
 	"display_name": "Profane Pact",
 	"icon": "profane_pact",
@@ -54,16 +58,17 @@ const PASSIVE := {
 		"drop_chance": ["Reward: drop chance", "pct"],
 	},
 	"levels": [
-		{"enemy_spawn": 0.10, "enemy_hp": 0.10, "enemy_damage": 0.06, "xp_gain": 0.08, "ash_gain": 0.10, "drop_chance": 0.15},  # TUNING (not in GDD)
-		{"enemy_spawn": 0.20, "enemy_hp": 0.20, "enemy_damage": 0.12, "xp_gain": 0.16, "ash_gain": 0.20, "drop_chance": 0.30},  # TUNING (not in GDD)
-		{"enemy_spawn": 0.30, "enemy_hp": 0.30, "enemy_damage": 0.18, "xp_gain": 0.24, "ash_gain": 0.30, "drop_chance": 0.45},  # TUNING (not in GDD)
-		{"enemy_spawn": 0.40, "enemy_hp": 0.40, "enemy_damage": 0.24, "xp_gain": 0.32, "ash_gain": 0.40, "drop_chance": 0.60},  # TUNING (not in GDD)
-		{"enemy_spawn": 0.50, "enemy_hp": 0.50, "enemy_damage": 0.30, "xp_gain": 0.40, "ash_gain": 0.50, "drop_chance": 0.75},  # TUNING (not in GDD)
+		{"enemy_spawn": 0.05, "enemy_hp": 0.05, "enemy_damage": 0.03, "xp_gain": 0.08, "ash_gain": 0.12, "drop_chance": 0.15},  # TUNING (not in GDD)
+		{"enemy_spawn": 0.10, "enemy_hp": 0.10, "enemy_damage": 0.06, "xp_gain": 0.16, "ash_gain": 0.24, "drop_chance": 0.30},  # TUNING (not in GDD)
+		{"enemy_spawn": 0.15, "enemy_hp": 0.15, "enemy_damage": 0.09, "xp_gain": 0.24, "ash_gain": 0.36, "drop_chance": 0.45},  # TUNING (not in GDD)
+		{"enemy_spawn": 0.20, "enemy_hp": 0.20, "enemy_damage": 0.12, "xp_gain": 0.32, "ash_gain": 0.48, "drop_chance": 0.60},  # TUNING (not in GDD)
+		{"enemy_spawn": 0.25, "enemy_hp": 0.25, "enemy_damage": 0.15, "xp_gain": 0.40, "ash_gain": 0.60, "drop_chance": 0.75},  # TUNING (not in GDD)
 	],
 }
 
-## Bonus added per active Profane Oath tier (milder per step than a Pact
-## level, since it applies from the first second, when the build is weakest).
+## Bonus added per active Profane Oath tier (applies from the first second;
+## unchanged in the post-merge retune: Oath V is meant as a hard mode, the
+## army bot never dies but kills Sir Alaric in about 1 run in 4).
 const OATH_PER_TIER := {
 	"enemy_spawn": 0.06,  # TUNING (not in GDD)
 	"enemy_hp": 0.05,  # TUNING (not in GDD)
@@ -72,6 +77,11 @@ const OATH_PER_TIER := {
 	"ash_gain": 0.10,  # TUNING (not in GDD)
 	"drop_chance": 0.10,  # TUNING (not in GDD)
 }
+
+## Fraction of the combined enemy_hp bonus that also applies to Sir Alaric
+## (his base HP is not time-scaled, so the full bonus made him a wall: a
+## Lv 5 Pact took him from 42,000 to 63,000 HP).
+const BOSS_HP_SHARE: float = 0.2  # TUNING (not in GDD) Lv 5 Pact: 42,000 -> 44,100 HP
 
 ## Short HUD / Ossuary names of the keys.
 const SHORT := {"enemy_spawn": "spawn", "enemy_hp": "HP", "enemy_damage": "dmg",

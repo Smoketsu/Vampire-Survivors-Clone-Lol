@@ -208,13 +208,21 @@ func evolutions_unlocked() -> bool:
 	return game.elapsed >= EvolutionData.MIN_ELAPSED
 
 
-## Card hint suffix while evolutions are still time-locked: the countdown
-## value at which they unlock (the HUD timer counts down), e.g.
-## " when the timer reaches 12:00".
+## Card hint suffix for a ready evolution: evolutions are delivered only by
+## treasure chests (chest_rewards()), and only once the time lock opens (the
+## countdown value, since the HUD timer counts down), e.g.
+## " - the next treasure chest grants it" or
+## " - a treasure chest grants it once the timer reaches 12:00".
 func _evo_unlock_note() -> String:
 	if evolutions_unlocked():
-		return ""
-	return " when the timer reaches %s" % _clock(WaveData.RUN_DURATION - EvolutionData.MIN_ELAPSED)
+		return " - the next treasure chest grants it"
+	return " - a treasure chest grants it once the timer reaches %s" % _clock(WaveData.RUN_DURATION - EvolutionData.MIN_ELAPSED)
+
+
+## Card hint suffix for an evolution that is not ready yet: where and from
+## when it is delivered, e.g. " (from a treasure chest, timer 12:00 or less)".
+static func _evo_source_note() -> String:
+	return " (from a treasure chest, timer %s or less)" % _clock(WaveData.RUN_DURATION - EvolutionData.MIN_ELAPSED)
 
 
 ## Number of occupied active slots (learned spells + learned summon classes).
@@ -698,9 +706,9 @@ func _spell_offer(id: String, lvl: int) -> Dictionary:
 		var e: Dictionary = EvolutionData.EVOLUTIONS[evo]
 		var p_name: String = PassiveData.PASSIVES[e["passive"]]["display_name"]
 		if lvl + 1 >= EvolutionData.BASE_LEVEL_REQUIRED and passive_level(e["passive"]) >= EvolutionData.PASSIVE_LEVEL_REQUIRED:
-			hint = "Evolution ready: %s%s!" % [e["display_name"], _evo_unlock_note()]
+			hint = "Evolution ready: %s%s" % [e["display_name"], _evo_unlock_note()]
 		else:
-			hint = "Evolves into %s at Lv %d with %s" % [e["display_name"], EvolutionData.BASE_LEVEL_REQUIRED, p_name]
+			hint = "Evolves into %s at Lv %d with %s%s" % [e["display_name"], EvolutionData.BASE_LEVEL_REQUIRED, p_name, _evo_source_note()]
 	return _offer("spell", id, def["display_name"], def["icon"], lvl, lvl + 1, "SPELL", def["description"], deltas, hint)
 
 
@@ -819,9 +827,9 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 		if evolved.has(spell):
 			hint = "%s already evolved" % e_name
 		elif spell_level(spell) >= EvolutionData.BASE_LEVEL_REQUIRED and lvl + 1 >= EvolutionData.PASSIVE_LEVEL_REQUIRED:
-			hint = "Evolution ready: %s%s!" % [e_name, _evo_unlock_note()]
+			hint = "Evolution ready: %s%s" % [e_name, _evo_unlock_note()]
 		else:
-			hint = "Evolves %s (Lv %d/%d) into %s" % [AbilityData.SPELLS[spell]["display_name"], spell_level(spell), EvolutionData.BASE_LEVEL_REQUIRED, e_name]
+			hint = "Evolves %s (Lv %d/%d) into %s%s" % [AbilityData.SPELLS[spell]["display_name"], spell_level(spell), EvolutionData.BASE_LEVEL_REQUIRED, e_name, _evo_source_note()]
 	return _offer("passive", id, def["display_name"], def["icon"], lvl, lvl + 1, "PASSIVE", def["description"], deltas, hint)
 
 

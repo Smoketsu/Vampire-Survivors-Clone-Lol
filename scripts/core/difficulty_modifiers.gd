@@ -5,7 +5,8 @@
 ## Game owns one instance (`game.difficulty`). The stat code asks it for
 ## multipliers instead of checking the Pact or the Oath itself:
 ##   enemy_spawn_mult()   EnemyDirector._spawn_trickle (rate and max_alive)
-##   enemy_hp_mult()      EnemyDirector.step (hp_mult) and Sir Alaric's HP
+##   enemy_hp_mult()      EnemyDirector.step (hp_mult; also the Reckoning)
+##   boss_hp_mult()       Sir Alaric's HP (a share of the HP bonus)
 ##   enemy_damage_mult()  EnemyDirector.step (damage_mult)
 ##   xp_mult()            Game.add_xp
 ##   drop_mult()          PowerupManager (power-up drop chance)
@@ -58,9 +59,15 @@ func enemy_spawn_mult() -> float:
 	return 1.0 + value("enemy_spawn")
 
 
-## Multiplier on enemy max HP (time-scaled enemies, Reckoning, Sir Alaric).
+## Multiplier on enemy max HP (time-scaled enemies and the Reckoning).
 func enemy_hp_mult() -> float:
 	return 1.0 + value("enemy_hp")
+
+
+## Multiplier on Sir Alaric's HP: only PactData.BOSS_HP_SHARE of the HP
+## bonus applies to him.
+func boss_hp_mult() -> float:
+	return 1.0 + value("enemy_hp") * PactData.BOSS_HP_SHARE
 
 
 ## Multiplier on every enemy hit (applied through EnemyDirector.damage_mult).

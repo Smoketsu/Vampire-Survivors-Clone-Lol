@@ -83,6 +83,10 @@ const ARMY_PRIORITY := {"warrior": 100.0, "archer": 95.0, "mage": 98.0, "priest"
 const EVOLVE_PRIORITY := {"shadow_bolt": 100.0, "soul_conduit": 96.0, "shadow_blast": 94.0, "abyssal_focus": 92.0,
 	"orb_shield": 90.0, "warding_ritual": 88.0, "warrior": 70.0, "priest": 66.0, "grave_dominion": 64.0,
 	"mage": 62.0, "archer": 60.0, "dark_command": 50.0, "necrotic_vigor": 48.0, "soul_recycling": 40.0}
+## Warding Ritual priority for --policy=army --pact: the Pact takes a
+## passive slot, and a sensible Pact build gives up Warding Ritual (below
+## Soul Conduit, 30) rather than its Void Barrage evolution passive.
+const ARMY_PACT_WARDING_PRIORITY: float = 25.0
 ## Items each policy banishes when offered (while banish charges last).
 const BANISH_IDS := {"army": ["orb_shield", "abyssal_focus"], "evolve": ["soul_recycling", "necrotic_vigor"]}
 ## army / evolve reroll the hand when its best card scores below this.
@@ -178,9 +182,9 @@ func _ready() -> void:
 	_real_start_msec = Time.get_ticks_msec()
 	for _i in TIME_MARKS.size():
 		_level_at_mark.append(-1)
-	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s meta=%s oath=%d" % [
+	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s meta=%s oath=%d pact=%s" % [
 		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout), GameState.autotest_policy, GameState.autotest_meta,
-		GameState.autotest_oath])
+		GameState.autotest_oath, str(GameState.autotest_pact)])
 
 
 ## Called by Game after each simulation step.
@@ -349,9 +353,9 @@ func _print_metrics() -> void:
 ## Deterministic for a given offer list and charge state.
 func choose_action(offers: Array[Dictionary]) -> Dictionary:
 	if _build_complete_time < 0.0:
-		var only_fallbacks := true  # Hand holds nothing but fallback cards.
+		var only_fallbacks := true  # Hand holds nothing but fallback cards (or the optional Pact).
 		for o in offers:
-			only_fallbacks = only_fallbacks and String(o["kind"]) == "fallback"
+			only_fallbacks = only_fallbacks and (String(o["kind"]) == "fallback" or String(o["id"]) == PactData.ID)
 		if only_fallbacks:
 			_build_complete_time = game.elapsed
 			_build_complete_level = game.level - game.pending_level_ups + 1
@@ -382,7 +386,8 @@ func choose_action(offers: Array[Dictionary]) -> Dictionary:
 ##   army  : ARMY_PRIORITY minus a level penalty.
 ##   evolve: EVOLVE_PRIORITY minus a small level penalty (maxes spells).
 ##   pact  : naive, but the Profane Pact first (PACT_EAGER_SCORE); every
-##           other policy ranks the Pact at PACT_SCORE.
+##           other policy ranks the Pact at PACT_SCORE unless --pact is given
+##           (then it too takes the Pact first).
 func _card_score(o: Dictionary) -> float:
 	match String(o["kind"]):
 		"evolution":
@@ -391,10 +396,14 @@ func _card_score(o: Dictionary) -> float:
 			return FALLBACK_SCORE
 	var id := String(o["id"])
 	if id == PactData.ID:
-		return (PACT_EAGER_SCORE if GameState.autotest_policy == "pact" else PACT_SCORE) - float(o["to"])
+		var eager := GameState.autotest_policy == "pact" or GameState.autotest_pact  # --policy=pact or --pact.
+		return (PACT_EAGER_SCORE if eager else PACT_SCORE) - float(o["to"])
 	match GameState.autotest_policy:
 		"army":
-			return float(ARMY_PRIORITY.get(id, 0.0)) - float(o["to"]) * 8.0
+			var pri := float(ARMY_PRIORITY.get(id, 0.0))  # Card priority.
+			if GameState.autotest_pact and id == "warding_ritual":
+				pri = ARMY_PACT_WARDING_PRIORITY  # The Pact's slot comes out of Warding Ritual.
+			return pri - float(o["to"]) * 8.0
 		"evolve":
 			return float(EVOLVE_PRIORITY.get(id, 0.0)) - float(o["to"]) * 3.0
 	var s := -float(o["to"]) * 5.0

@@ -10,7 +10,10 @@
 ##   stasis  Stasis       timed: every enemy is frozen in place (no movement,
 ##                        attacks, heals or projectile spawns). Sir Alaric is
 ##                        frozen for boss_fraction of the duration; Reckoning
-##                        enemies are immune.
+##                        enemies are immune. A frozen attacker's telegraphs
+##                        (and Sir Alaric's marks and arming zones) pause
+##                        with it, and a frozen Desecration Chaplain does not
+##                        channel.
 ##   frenzy  Dark Frenzy  timed: summons get +damage_bonus damage and
 ##                        +attack_speed_bonus attack speed (own stacking
 ##                        category in HordeDirector.compute_stats).
@@ -48,13 +51,13 @@ const ORDER := ["magnet", "feast", "hyper", "stasis", "frenzy", "nova"]
 const TIMED := ["hyper", "stasis", "frenzy"]
 
 ## Drop chance of a regular (non-elite) enemy kill.
-const CHANCE_NORMAL: float = 0.003  # TUNING (not in GDD)
+const CHANCE_NORMAL: float = 0.002  # TUNING (not in GDD) was 0.003 (~23 drops per run made naive builds too safe)
 ## Drop chance of an elite kill.
 const CHANCE_ELITE: float = 0.20  # TUNING (not in GDD)
 ## Power-ups Sir Alaric drops when slain (guaranteed).
 const BOSS_DROPS: int = 1  # TUNING (not in GDD)
 ## Seconds without any drop after which the next eligible kill drops one.
-const PITY_TIME: float = 90.0  # TUNING (not in GDD)
+const PITY_TIME: float = 120.0  # TUNING (not in GDD) was 90 (8 of ~23 drops were pity drops)
 ## Most power-ups lying on the ground at once.
 const MAX_LIVE: int = 3  # TUNING (not in GDD)
 ## Seconds a drop stays on the ground before it despawns.

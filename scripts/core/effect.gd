@@ -26,6 +26,11 @@ var size: float = 10.0
 var vec: Vector2 = Vector2.RIGHT
 ## Line width in px (beams, telegraph lanes).
 var width: float = 2.0
+## Enemy whose attack this telegraph announces (null = none). While that
+## enemy is frozen by a Stasis power-up the telegraph holds still.
+var owner_enemy: Enemy = null
+## Generation of `owner_enemy` when the telegraph started (stale guard).
+var owner_gen: int = 0
 
 
 ## Starts the effect. Called by EffectManager after taking it from the pool.
@@ -37,6 +42,8 @@ func start(p_kind: Kind, pos: Vector2, p_color: Color, p_size: float, p_duration
 	duration = maxf(p_duration, 0.01)
 	vec = p_vec
 	width = p_width
+	owner_enemy = null
+	owner_gen = 0
 	t = 0.0
 	active = true
 	visible = true
@@ -45,8 +52,11 @@ func start(p_kind: Kind, pos: Vector2, p_color: Color, p_size: float, p_duration
 	queue_redraw()
 
 
-## Advances the animation; returns false once finished.
+## Advances the animation; returns false once finished. A telegraph whose
+## owner is frozen by Stasis does not advance (it resumes with its owner).
 func step(delta: float) -> bool:
+	if owner_enemy != null and owner_enemy.active and owner_enemy.generation == owner_gen and owner_enemy.frozen:
+		return true
 	t += delta
 	if t >= duration:
 		active = false

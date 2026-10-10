@@ -33,6 +33,9 @@
 ##                         user://save.cfg (by default it never touches it).
 ##   --oath=N              Autotest active Profane Oath tier 0-5 (default 0;
 ##                         no --meta profile includes the Oath).
+##   --pact                Any policy also takes every Profane Pact card at
+##                         once (e.g. --policy=army --pact: a strong build
+##                         with the Pact); --policy=pact is naive + --pact.
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 
@@ -54,6 +57,8 @@ var autotest_meta: String = "none"
 var autotest_meta_save: bool = false
 ## Autotest: active Profane Oath tier (--oath=N, 0 = off).
 var autotest_oath: int = 0
+## Autotest: true when --pact makes the policy take every Profane Pact card.
+var autotest_pact: bool = false
 ## Whether the F3 debug overlay is shown; persists across restarts.
 var debug_overlay_visible: bool = false
 ## Summary dictionary of the most recent finished run (see Game.build_summary).
@@ -86,5 +91,7 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_meta = profile if profile in MetaData.AUTOTEST_PROFILES else "none"
 		elif arg == "--meta-save":
 			autotest_meta_save = true
+		elif arg == "--pact":
+			autotest_pact = true
 		elif arg.begins_with("--oath="):
 			autotest_oath = clampi(arg.get_slice("=", 1).to_int(), 0, MetaData.max_tier(PactData.OATH_ID))

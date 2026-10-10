@@ -1,7 +1,8 @@
 ## ChestManager — treasure chests (user request; rules and numbers in
 ## ChestData). It rolls a chest on enemy kills (CombatResolver._kill_enemy
 ## calls on_enemy_killed): elites at ELITE_CHANCE, Sir Alaric always, and a
-## pity drop from any regular kill after PITY_TIME s without a chest; never
+## pity drop from any regular kill after PITY_TIME s without a chest (or
+## EVOLUTION_PITY_TIME s while an evolution is ready); never
 ## from Reckoning enemies or after 0:00. Chests are pooled Chest nodes that
 ## never despawn. Walking over one asks Game.open_chest() to pause the run
 ## and show the reveal (ChestPanel); at most one chest opens per tick.
@@ -63,6 +64,8 @@ func on_enemy_killed(e: Enemy) -> void:
 		spawn_chest(e.position, true)
 		return
 	var pity := since_chest >= ChestData.PITY_TIME  # Pity timer ran out.
+	if not pity and since_chest >= ChestData.EVOLUTION_PITY_TIME and not game.abilities.ready_evolutions().is_empty():
+		pity = true  # An evolution waits for its chest: shorter pity.
 	var rolled := e.is_elite and _rng.randf() < ChestData.ELITE_CHANCE  # Elite roll succeeded.
 	if not pity and not rolled:
 		return
@@ -95,8 +98,16 @@ func spawn_chest(pos: Vector2, force: bool) -> bool:
 	return true
 
 
-## Weighted number of upgrades in the next chest (ChestData.COUNT_WEIGHTS).
+## Weighted number of upgrades in the next chest (ChestData.COUNT_WEIGHTS);
+## always 1 before ChestData.LARGE_CHEST_TIME. The roll is made either way,
+## so the chest RNG stream does not depend on the time gate.
 func roll_count() -> int:
+	var n_rolled := _roll_weights()  # 1, 3 or 5 from the weights.
+	return n_rolled if game.elapsed >= ChestData.LARGE_CHEST_TIME else 1
+
+
+## Weighted 1 / 3 / 5 draw over ChestData.COUNT_WEIGHTS.
+func _roll_weights() -> int:
 	var total := 0.0  # Sum of the weights.
 	for n: int in ChestData.COUNT_WEIGHTS:
 		total += float(ChestData.COUNT_WEIGHTS[n])

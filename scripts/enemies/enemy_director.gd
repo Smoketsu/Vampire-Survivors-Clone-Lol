@@ -13,7 +13,7 @@
 ##   * Never places an enemy inside an obstacle (Arena.free_point).
 ##   * Applies the Profane Pact / Oath difficulty (game.difficulty) in the
 ##     existing scaling path: hp_mult / damage_mult and the trickle rate and
-##     soft cap are multiplied by it, and Sir Alaric's HP too.
+##     soft cap are multiplied by it, and Sir Alaric's HP by a share of it.
 ##   * Skips the AI and movement of enemies held by a Stasis power-up
 ##     (game.powerups.freezes(); Reckoning enemies are immune, the boss is
 ##     frozen for part of the duration).
@@ -250,12 +250,12 @@ func show_banner(text: String) -> void:
 	banner_until = game.elapsed + WaveData.BANNER_TIME
 
 
-## Spawns Sir Alaric at the spawn ring (HP not time-scaled, but scaled by the
-## Profane Pact / Oath HP penalty).
+## Spawns Sir Alaric at the spawn ring (HP not time-scaled, but scaled by a
+## share of the Profane Pact / Oath HP penalty, DifficultyModifiers.boss_hp_mult).
 func _spawn_boss() -> void:
 	boss = BossAlaric.new()
 	add_child(boss)
-	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.enemy_hp_mult(), _next_slot)
+	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult(), _next_slot)
 	_next_slot = (_next_slot + 1) % UnitData.AI_TICK_DIVISOR
 	active.append(boss)
 	show_banner("Sir Alaric, the Gravebreaker, has arrived!")

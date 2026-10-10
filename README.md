@@ -103,7 +103,8 @@ replacing fallen units all happen automatically (GDD §4, §21).
   and enemies get tougher over time.
 - **Level-ups slow down over the run.** The first comes after about 20-25 s
   and a focused build has every slot maxed (plus its evolution) at about
-  17:00; a scattered build is still filling in its last levels at 20:00.
+  16:00 (level-ups plus about 5 treasure-chest upgrades); a scattered build
+  is still filling in its last levels at 20:00.
 - **Sir Alaric, the Gravebreaker** arrives with **3:00 left** (17:00). He
   telegraphs two attacks:
   - **Hammerfall**: a gold warning circle appears, then the smash lands there.
@@ -123,8 +124,10 @@ replacing fallen units all happen automatically (GDD §4, §21).
 - **Evolutions** (GDD §6.1): once a spell reaches **Lv 5**, you own its
   paired passive (any level) **and the run has reached 8:00 elapsed** (12:00
   left on the timer), the **next treasure chest** grants its evolution first
-  (the GDD's "special elite reward"). Evolutions never appear on level-up
-  cards. The evolution replaces the spell in its slot. The whole eligibility
+  (the GDD's "special elite reward"); while an evolution waits, a chest drops
+  within about 40 s. Evolutions never appear on level-up cards, and the
+  spell / passive card hints say so ("from a treasure chest, timer 12:00 or
+  less"). The evolution replaces the spell in its slot. The whole eligibility
   check is `AbilityManager.ready_evolutions()` with its numbers in
   `EvolutionData` (`BASE_LEVEL_REQUIRED`, `PASSIVE_LEVEL_REQUIRED`,
   `MIN_ELAPSED`).
@@ -268,13 +271,13 @@ replacing fallen units all happen automatically (GDD §4, §21).
   | **Soul Magnet** (violet horseshoe) | 3 | Every XP crystal on the stage flies to you. |
   | **Grave Feast** (haunch on a bone) | 3 | Restores 30% of max HP. |
   | **Hyper** (violet lightning) | 2 | 10 s: your spells deal ×2 damage and their cooldowns are halved. Violet screen tint. |
-  | **Stasis** (cold-blue hourglass) | 1.5 | 5 s: every enemy is frozen (no movement, attacks, heals or arrows; frost shell). Sir Alaric is frozen for the first half only, Reckoning enemies are immune. Cold-blue screen tint. |
+  | **Stasis** (cold-blue hourglass) | 1.5 | 5 s: every enemy is frozen (no movement, attacks, heals or arrows; frost shell). Sir Alaric is frozen for the first half only, Reckoning enemies are immune. A frozen attacker's telegraphs (and Alaric's marks and arming zones) pause with it, and frozen Desecration Chaplains stop channelling. Cold-blue screen tint. |
   | **Dark Frenzy** (green skull, crossed bones) | 2 | 12 s: summons deal ×1.5 damage and attack ×1.5 as fast (through the horde's effective stats). |
   | **Soul Nova** (white-violet starburst) | 0.5 (rarest) | Screen clear: every regular enemy on screen dies, elites lose 50% of their current HP, Sir Alaric takes 5% of his max HP; Reckoning enemies are immune. The kills go through `CombatResolver`, so they drop XP and count for stats, Soul Ash and achievements. Big flash, shake and sound. |
 
-  Drop rules: **0.3%** per regular kill, **20%** per elite kill, and Sir
+  Drop rules: **0.2%** per regular kill, **20%** per elite kill, and Sir
   Alaric always drops one. A **pity timer** guarantees a drop on the next
-  kill after 90 s without one. At most **3** lie on the ground (a roll at
+  kill after 120 s without one (about 17 drops per run). At most **3** lie on the ground (a roll at
   the cap is lost), each despawns after **30 s** and blinks for its last
   7 s. Nothing drops from Reckoning enemies or after 0:00. You pick one up by
   **walking over it** (within 12 px of your body: a fixed radius on purpose,
@@ -284,24 +287,30 @@ replacing fallen units all happen automatically (GDD §4, §21).
   that is already running refreshes its duration to full; it never stacks.**
   Drop rolls use their own seeded RNG, so autotest runs stay deterministic.
 - **Treasure chests** (`scripts/data/chest_data.gd`, all `TUNING`). A gold-
-  banded crimson reliquary. Elites drop one **35%** of the time, Sir Alaric
-  always, and a pity timer drops one from the next kill after **150 s**
-  without a chest (about one every 2-3 minutes). Chests never despawn (at
-  most 3 on the ground), and none drop from Reckoning enemies or after 0:00.
-  Walking over one pauses the run and shows a short code-drawn reveal; it
-  grants **1, 3 or 5** upgrades (weights 70 / 24 / 6), drawn from the normal
-  level-up pool with the usual card weights, listed with their old → new
-  levels. **Every ready evolution comes first: evolutions are delivered only
+  banded crimson reliquary. Elites drop one **10%** of the time, Sir Alaric
+  always, and a pity timer drops one from the next kill after **360 s**
+  without a chest, or after only **40 s** while an evolution is ready. That
+  makes about **4-7 chests per run** (median 5 for the army bot, 4 naive, 7
+  for the spell build). Chests never despawn (at most 3 on the
+  ground), and none drop from Reckoning enemies or after 0:00. Walking over
+  one pauses the run and shows a short code-drawn reveal. Before **15:00
+  elapsed** a chest grants **1** upgrade; from then on **1, 3 or 5**
+  (weights 85 / 12 / 3), drawn from the normal level-up pool with the usual
+  card weights, listed with their old → new levels. **Every ready evolution comes first: evolutions are delivered only
   by chests.** A chest never grants the Profane Pact, and when nothing can be
   upgraded it heals (Dark Restoration). Confirm (Enter / Space / click / pad
   A) skips the reveal, then closes it.
 - **Profane Pact** (in-run difficulty passive, `scripts/data/pact_data.gd`).
   Offered on level-up cards (crimson **PACT** tag, a modest 0.4× card
   weight), it takes a passive slot, has 5 levels and can be banished. Per
-  level: enemies **+10% spawn rate** (trickle rate and soft cap), **+10%
-  HP**, **+6% damage**; rewards **+8% XP**, **+10% Soul Ash**, **+15%
-  power-up drop chance**. The card lists every penalty and reward as
-  old → new.
+  level: enemies **+5% spawn rate** (trickle rate and soft cap), **+5%
+  HP**, **+3% damage**; rewards **+8% XP**, **+12% Soul Ash**, **+15%
+  power-up drop chance**. Sir Alaric gets only 20% of the HP bonus (42,000
+  → 44,100 at Lv 5). The card lists every penalty and reward as old → new.
+  Measured with an army build that takes it at once (`--policy=army --pact`,
+  `--mortal`, 8 seeds): no deaths, lowest HP 26-94 (vs 92-114 without it),
+  Sir Alaric killed in 5 of 8 runs (the others left him at 200-7,100 HP),
+  Soul Ash about 745 instead of about 455.
 - **Profane Oath** (Ossuary, standalone "Oath" entry between Refund all and
   Back; 5 tiers costing 25 / 50 / 75 / 100 / 125). Each **active** tier
   applies from the first second: enemies +6% spawn rate, +5% HP, +4%
@@ -312,7 +321,8 @@ replacing fallen units all happen automatically (GDD §4, §21).
 - **One difficulty path, additive.** `DifficultyModifiers` (`game.difficulty`)
   adds the Pact and Oath bonuses of each key (one stacking category) and
   hands out the multipliers: `EnemyDirector` multiplies its `hp_mult` /
-  `damage_mult` and the trickle rate / soft cap (Sir Alaric's HP too),
+  `damage_mult` and the trickle rate / soft cap (Sir Alaric's HP by 20% of
+  the HP bonus),
   `Game.add_xp` the XP, `PowerupManager` the drop chance, and
   `Meta.compute_ash` pays a **Profane Pact** and a **Profane Oath** bonus
   line on the run's subtotal (shown on the end screen). The HUD's Modifiers
@@ -509,6 +519,7 @@ Options (after `--`):
 | `--meta=PROFILE` | Simulated Soul Ash purchases, applied in memory only: `none` (default, so balance runs stay comparable), `mid` (about half of every tree) or `max` (everything). |
 | `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). |
 | `--oath=N` | Active Profane Oath tier 0-5 (default 0). No `--meta` profile includes the Oath, so `--meta=max` balance runs stay comparable. |
+| `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
 
@@ -564,16 +575,18 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 
 ## Known limitations
 
-- **Balance is checked only against the autotest bots** (`--mortal`, 16 seeds
-  for naive / army at meta none and max, 8 for the rest). At **meta none** the
-  summoner build (`--policy=army`) never dies before 0:00 (lowest HP 98/120),
-  always kills Sir Alaric (in 100-140 s) and lasts 6-24 s into the Reckoning.
-  The naive build dies before 0:00 in about 30% of runs (around 9-11 min when
-  it never drew a Priest, otherwise at the 19:00 peak) and kills him in about
-  25%. The evolve build is in between. At **meta mid** no bot died and every
-  bot killed him. At **meta max** nothing dies before 0:00, the army build
-  kills him in 70-115 s (at least 16 of his attacks), and the Reckoning still
-  ends every run, 15-55 s past 0:00 (median about 40 s). Void Barrage is still
+- **Balance is checked only against the autotest bots** (`--mortal`; after the
+  power-up / chest merge: 16 seeds for naive / army at meta none, 8 for evolve
+  at none, army / naive at max and the Pact build). At **meta none** the
+  summoner build (`--policy=army`) never dies before 0:00 (lowest HP 92/120),
+  always kills Sir Alaric (in 96-140 s), completes its build at about 16:07
+  (15:44-16:26; chests included), evolves Void Barrage at 12:29-14:38 and lasts
+  6-17 s into the Reckoning. The naive build dies before 0:00 in about 40% of
+  runs (mostly at 8-13 min) and kills him in about 45%. The spell build
+  (`--policy=evolve`) evolves at 8:00-8:13 (the time gate), never died and
+  always killed him. At **meta max** nothing dies before 0:00, builds complete
+  at about 15:20-15:30, every bot kills him, and the Reckoning still ends
+  every run, 25-53 s past 0:00. Void Barrage is still
   the strongest single source: about 30-45% of all damage in army / naive
   builds, about 60-70% in the spell build. A first-time naive player kills
   Alaric only about 1 run in 4.
@@ -585,9 +598,9 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
   only modifiers are the opt-in Profane Pact and Profane Oath. The Soul Ash
   numbers are first-pass and the achievement unlocks only pay Soul Ash until
   their GDD rewards exist.
-- Power-up, chest and Pact / Oath numbers are first-pass. Stasis pauses the
-  boss's attack timers but his telegraph effects keep fading on their own
-  clock, and Desecration Chaplains keep channelling while frozen.
+- Power-up, chest and Pact / Oath numbers are tuned only against the bots.
+  The Profane Oath at tier V is a true hard mode: the army bot never dies
+  but kills Sir Alaric in only about 1 run in 4 (8 seeds).
 - Menu hint text still shows the default keys (Esc, T) after you rebind them.
 - Nobody has played it on real hardware yet. Audio, visuals and performance
   have only been verified headless (simulation step about 0.9–1.3 ms on

@@ -145,9 +145,11 @@ func step(delta: float) -> void:
 	_step_shrines(delta)
 	_step_graves(delta)
 	_step_zones(delta)
+	var hold := _boss_frozen()  # Boss marks pause while Sir Alaric is frozen.
 	var i := 0
 	while i < marks.size():
-		marks[i].t += delta
+		if not hold:
+			marks[i].t += delta
 		if marks[i].t >= marks[i].duration:
 			marks.remove_at(i)
 		else:
@@ -156,6 +158,13 @@ func step(delta: float) -> void:
 	if busy or _drew:
 		queue_redraw()
 	_drew = busy
+
+
+## True while Sir Alaric is held by a Stasis power-up: his marks (Call to
+## Arms, Judgment) and the arming of his Consecrated Ground zones pause.
+func _boss_frozen() -> bool:
+	var b := game.enemies.boss  # Sir Alaric (null before he arrives).
+	return b != null and b.active and b.frozen
 
 
 ## Records a fired stage event for the autotest summary and stats.
@@ -200,10 +209,14 @@ func in_holy_zone(pos: Vector2) -> bool:
 ## Arms, ages and applies every holy zone.
 func _step_zones(delta: float) -> void:
 	_player_zone_cd -= delta
+	var boss_hold := _boss_frozen()  # Boss zones do not arm while he is frozen.
 	var i := 0
 	while i < zones.size():
 		var z := zones[i]
 		if z.arm_left > 0.0:
+			if boss_hold and z.source == "boss":
+				i += 1
+				continue
 			z.arm_left -= delta
 			if z.arm_left <= 0.0:
 				game.effects.ring(z.pos, z.radius, Palette.GOLD, 0.35)
@@ -399,7 +412,8 @@ func _step_graves(delta: float) -> void:
 			_interrupt(g)
 			graves.remove_at(i)
 			continue
-		g.channelling = e.position.distance_to(g.pos) <= float(c["post_radius"]) + e.radius
+		# A consecrator frozen by Stasis does not channel.
+		g.channelling = not e.frozen and e.position.distance_to(g.pos) <= float(c["post_radius"]) + e.radius
 		if g.channelling:
 			g.channel += delta
 			if g.channel >= float(c["channel_time"]):

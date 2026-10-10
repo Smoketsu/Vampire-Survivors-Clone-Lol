@@ -235,7 +235,7 @@ func _enter_wrath() -> void:
 func _start_hammerfall() -> void:
 	var player := game.player
 	hammer_point = player.position + player.velocity * 0.25
-	game.effects.telegraph_circle(hammer_point, float(boss_def["hammer_radius"]), float(boss_def["hammer_telegraph"]))
+	game.effects.telegraph_circle(hammer_point, float(boss_def["hammer_radius"]), float(boss_def["hammer_telegraph"]), self)
 	_begin_special("hammer", Phase.HAMMER_WINDUP)
 
 
@@ -270,7 +270,7 @@ func _start_charge() -> void:
 	charge_left = game.arena.clear_length(position, charge_dir, float(boss_def["charge_length"]), radius * 0.8)
 	_charge_hit_player = false
 	_charge_hit_units.clear()
-	game.effects.telegraph_line(position, position + charge_dir * charge_left, float(boss_def["charge_width"]), float(boss_def["charge_telegraph"]))
+	game.effects.telegraph_line(position, position + charge_dir * charge_left, float(boss_def["charge_width"]), float(boss_def["charge_telegraph"]), self)
 	_begin_special("charge", Phase.CHARGE_WINDUP)
 
 
