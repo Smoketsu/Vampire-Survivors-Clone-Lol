@@ -7,6 +7,7 @@
 ## distinguishable by SILHOUETTE, not only colour:
 ##   Warrior = square body + shield + sword     Archer  = triangle + bow
 ##   Mage    = diamond + floating orb           Priest  = round robe + halo
+##   (Abomination, Rogue, Gargoyle, Frost Wraith: see SummonGlyphs)
 ##   Recruit = small round + tabard + spear     Footman = big square + kite shield
 ##   Zealous Archer = crimson triangle + bow    Chaplain = ivory round + gold cross
 ##   Purifier = hexagon + torch flame           Sir Alaric = big octagon + hammer
@@ -77,6 +78,8 @@ static func draw_summon(ci: CanvasItem, cls: String, o: Vector2, r: float, flash
 			draw_mage(ci, o, r, flash)
 		"priest":
 			draw_priest(ci, o, r, flash)
+		_:
+			SummonGlyphs.draw_summon(ci, cls, o, r, flash)  # Later classes.
 
 
 ## Skeleton Warrior: square steel body, blue shield on the left, bone sword.
@@ -315,6 +318,7 @@ static func draw_icon(ci: CanvasItem, kind: String, rect: Rect2) -> void:
 			# Evolutions, evolution passives, synergies, fallback cards, then
 			# meta-progression icons (Soul Ash, trees, Ossuary upgrades), then
 			# power-ups and the Profane Pact / Oath.
-			if not ProgressionGlyphs.draw_icon(ci, kind, c, s) and not MetaGlyphs.draw_icon(ci, kind, c, s) \
+			if not SummonGlyphs.draw_icon(ci, kind, c, s) \
+					and not ProgressionGlyphs.draw_icon(ci, kind, c, s) and not MetaGlyphs.draw_icon(ci, kind, c, s) \
 					and not PowerupGlyphs.draw_icon(ci, kind, c, s):
 				ci.draw_circle(c, s * 0.3, Palette.BONE)

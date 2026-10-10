@@ -280,7 +280,8 @@ func _rebuild_grids() -> void:
 			enemy_grid.insert(e, e.position)
 	ally_grid.clear()
 	for u in horde.units:
-		ally_grid.insert(u, u.position)
+		if not u.airborne:  # Flying Gargoyles cannot be targeted, blocked or hit.
+			ally_grid.insert(u, u.position)
 
 
 ## Adds to a summary counter.
@@ -415,9 +416,10 @@ func _on_player_died() -> void:
 func _on_boss_defeated() -> void:
 	boss_defeated = true
 	stat_add("boss_kills", 1.0)
-	# Dread Sovereign achievement (GDD §9.4): boss slain with all 4 classes.
+	# Dread Sovereign achievement (GDD §9.4): boss slain with all 4 classes
+	# (the four GDD classes; the later ones are not required).
 	var full_army := true
-	for cls: String in UnitData.CLASS_ORDER:
+	for cls: String in UnitData.CORE_CLASSES:
 		full_army = full_army and int(horde.class_levels[cls]) > 0
 	if full_army:
 		stat_add("boss_kill_full_army", 1.0)

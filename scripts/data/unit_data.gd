@@ -1,6 +1,10 @@
-## UnitData — immutable design data for the four undead summon classes and the
+## UnitData — immutable design data for the undead summon classes and the
 ## horde AI tuning knobs (GDD Part II §23–§34). The shared SummonedUnit script
-## reads one row of UNITS per class; nothing class-specific lives in code.
+## reads one row of UNITS per class. The four GDD classes need no
+## class-specific code; the later classes (Abomination, Rogue, Gargoyle, Frost
+## Wraith) add ONE special action each through a SummonBehavior
+## (scripts/horde/behaviors/, chosen by the row's "behavior" key) whose
+## numbers live in the row's "special" dictionary below.
 ##
 ## Per GDD §37 note: this file holds IMMUTABLE design data only. Per-run state
 ## (current level, timers, live instances) lives in HordeDirector.
@@ -12,7 +16,10 @@ class_name UnitData
 extends RefCounted
 
 ## Display / iteration order of summon classes (HUD rows, card pool).
-const CLASS_ORDER := ["warrior", "archer", "mage", "priest"]
+const CLASS_ORDER := ["warrior", "archer", "mage", "priest", "abomination", "rogue", "gargoyle", "frost_wraith"]
+## The four GDD §4.2 summon classes ("all 4 classes": The Unholy Host
+## synergy, the Dread Sovereign achievement).
+const CORE_CLASSES := ["warrior", "archer", "mage", "priest"]
 
 ## Base stats per summon class at skill level 1, before any bonus.
 ## Field reference (same keys in every row):
@@ -52,6 +59,23 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "priest"]
 ##   shield_amount           — HP absorbed by a priest's ward on the player.
 ##   shield_duration         — s the ward lasts.
 ##   shield_cooldown         — s between wards from the same priest.
+##   formation               — "front" joins the warriors' threat-facing arc
+##                             (otherwise priests are "support" and every
+##                             other class shares the midline ring).
+##   capacity_bonus_mult     — share (0..1) of GLOBAL capacity bonuses (Grave
+##                             Dominion, Legion of Bone) this class receives,
+##                             rounded down; 1 when absent. Low-population
+##                             elite classes would otherwise double in size.
+##   behavior                — SummonBehavior id ("stomp" | "dash" | "swoop" |
+##                             "frost"); absent = no special action.
+##   special                 — the behaviour's numbers. HordeDirector scales
+##                             them by suffix (see _special_stats()):
+##                               *_damage   x minion damage bonuses x (1 +
+##                                          the level row's special_bonus),
+##                               *_radius, *_length  x (1 + special_area),
+##                               *_cooldown / (1 + special_haste),
+##                               *_duration x (1 + special_duration);
+##                             every other key is copied unchanged.
 const UNITS := {
 	"warrior": {
 		"display_name": "Skeleton Warrior",  # GDD §7
@@ -166,6 +190,191 @@ const UNITS := {
 		"shield_duration": 4.0,  # TUNING (not in GDD)
 		"shield_cooldown": 6.0,  # TUNING (not in GDD)
 	},
+	# --- Later classes (user request; GDD §4.2 lists the Corpse Abomination as
+	# a "possible future summon"). Every number below is TUNING (not in GDD).
+	# Corpse Abomination: a slow, huge blocker that stomps the crowd around it
+	# (AbominationBehavior).
+	"abomination": {
+		"display_name": "Corpse Abomination",  # GDD §4.2 possible future summon
+		"plural": "Abominations",
+		"max_hp": 260.0,  # TUNING (not in GDD) ~4 warriors of HP in one body
+		"damage": 16.0,  # TUNING (not in GDD) fist slam (melee)
+		"attack_interval": 1.6,  # TUNING (not in GDD)
+		"attack_range": 16.0,  # TUNING (not in GDD) edge-to-edge melee reach (px)
+		"move_speed": 62.0,  # TUNING (not in GDD) slowest summon (px/s)
+		"radius": 16.0,  # TUNING (not in GDD) body radius (px), the largest summon
+		"acquisition_range": 140.0,  # TUNING (not in GDD)
+		"replenish_interval": 20.0,  # TUNING (not in GDD) slow to rebuild (s)
+		"band_min": 45.0,  # TUNING (not in GDD) just outside the warriors' band (px)
+		"band_max": 95.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a tank never shies away
+		"attack_profile": "melee",
+		"target_profile": "guard",  # same preferences as warriors (GDD §27): threats to the player first
+		"windup": 0.3,  # TUNING (not in GDD)
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) priests value the tank
+		"block_radius": 20.0,  # TUNING (not in GDD) blocks like a warrior, wider (px)
+		"block_mass": 8.0,  # TUNING (not in GDD) warrior 3; the boss (12) still shoves it
+		"engaged_speed_mult": 0.45,  # TUNING (not in GDD) touching enemies move at 45%
+		"formation": "front",  # TUNING (not in GDD) frontline arc with the warriors
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2, not +5
+		"behavior": "stomp",
+		"special": {
+			"stomp_damage": 22.0,  # TUNING (not in GDD) AoE damage to every enemy in the ring
+			"stomp_radius": 64.0,  # TUNING (not in GDD) px around the abomination
+			"stomp_cooldown": 6.0,  # TUNING (not in GDD) s between stomps
+			"stomp_windup": 0.6,  # TUNING (not in GDD) s the ring is telegraphed before it lands
+			"stomp_recover": 0.25,  # TUNING (not in GDD) s it stands still after the impact
+			"stomp_knockback": 260.0,  # TUNING (not in GDD) px/s impulse, divided by enemy mass
+			"stomp_min_enemies": 2,  # TUNING (not in GDD) enemies inside 85% of the ring to stomp (an elite / boss alone also counts)
+			"stomp_shake": 3.0,  # TUNING (not in GDD) screen-shake request (px, Juice)
+		},
+	},
+	# Grave Rogue: a fast, fragile assassin that telegraphs a short lane and
+	# dashes through it onto backline targets, leaving them bleeding
+	# (RogueBehavior), then runs back to its formation slot.
+	"rogue": {
+		"display_name": "Grave Rogue",  # TUNING (not in GDD) user request
+		"plural": "Rogues",
+		"max_hp": 38.0,  # TUNING (not in GDD) fragile
+		"damage": 9.0,  # TUNING (not in GDD) dagger stab (melee)
+		"attack_interval": 0.9,  # TUNING (not in GDD)
+		"attack_range": 18.0,  # TUNING (not in GDD) edge-to-edge (px)
+		"move_speed": 112.0,  # TUNING (not in GDD) fastest summon (px/s)
+		"radius": 9.0,  # TUNING (not in GDD)
+		"acquisition_range": 240.0,  # TUNING (not in GDD) looks far for backline targets
+		"replenish_interval": 9.0,  # TUNING (not in GDD)
+		"band_min": 70.0,  # TUNING (not in GDD) between the frontline and the midline (px)
+		"band_max": 130.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.3,  # TUNING (not in GDD)
+		"attack_profile": "melee",
+		"target_profile": "assassin",
+		"windup": 0.12,  # TUNING (not in GDD)
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.4,  # TUNING (not in GDD)
+		"formation": "mid",
+		"capacity_bonus_mult": 0.6,  # TUNING (not in GDD) Grave Dominion V: +3
+		"behavior": "dash",
+		"special": {
+			"dash_damage": 24.0,  # TUNING (not in GDD) to every enemy in the lane
+			"dash_length": 130.0,  # TUNING (not in GDD) max lane length (px)
+			"dash_min": 45.0,  # TUNING (not in GDD) the target must be at least this far (px) to dash
+			"dash_overshoot": 30.0,  # TUNING (not in GDD) px the lane runs past the target
+			"dash_width": 24.0,  # TUNING (not in GDD) lane width (px)
+			"dash_telegraph": 0.3,  # TUNING (not in GDD) s the lane is shown before the dash
+			"dash_speed": 560.0,  # TUNING (not in GDD) px/s while dashing
+			"dash_cooldown": 4.5,  # TUNING (not in GDD) s between dashes
+			"bleed_damage": 3.0,  # TUNING (not in GDD) damage per bleed tick
+			"bleed_duration": 3.0,  # TUNING (not in GDD) s a dash's bleed lasts
+			"bleed_tick": 0.5,  # TUNING (not in GDD) s between bleed ticks
+			"backline_bonus": 0.6,  # TUNING (not in GDD) target-score bonus for archers / chaplains / consecrators
+			"far_bonus": 0.3,  # TUNING (not in GDD) score bonus x (enemy distance to player / ENGAGE_RADIUS): the back of the crowd
+		},
+	},
+	# Crypt Gargoyle: melee claws, and a periodic swoop: it takes off (airborne:
+	# ignores obstacles and body-blocking, cannot be hit), dives onto a cluster
+	# for AoE damage, then lands (GargoyleBehavior).
+	"gargoyle": {
+		"display_name": "Crypt Gargoyle",  # TUNING (not in GDD) user request
+		"plural": "Gargoyles",
+		"max_hp": 70.0,  # TUNING (not in GDD) stone skin
+		"damage": 11.0,  # TUNING (not in GDD) claw rake (melee)
+		"attack_interval": 1.0,  # TUNING (not in GDD)
+		"attack_range": 18.0,  # TUNING (not in GDD) edge-to-edge (px)
+		"move_speed": 95.0,  # TUNING (not in GDD)
+		"radius": 11.0,  # TUNING (not in GDD)
+		"acquisition_range": 200.0,  # TUNING (not in GDD)
+		"replenish_interval": 12.0,  # TUNING (not in GDD)
+		"band_min": 50.0,  # TUNING (not in GDD) frontline arc, a little behind the abominations (px)
+		"band_max": 110.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.1,  # TUNING (not in GDD)
+		"attack_profile": "melee",
+		"target_profile": "skirmisher",
+		"windup": 0.15,  # TUNING (not in GDD)
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "front",
+		"capacity_bonus_mult": 0.6,  # TUNING (not in GDD) Grave Dominion V: +3
+		"behavior": "swoop",
+		"special": {
+			"swoop_damage": 30.0,  # TUNING (not in GDD) AoE damage where it lands
+			"swoop_radius": 50.0,  # TUNING (not in GDD) impact radius (px)
+			"swoop_cooldown": 7.0,  # TUNING (not in GDD) s between swoops
+			"swoop_takeoff": 0.25,  # TUNING (not in GDD) s rising in place (already airborne)
+			"swoop_land": 0.25,  # TUNING (not in GDD) s settling after the dive (still airborne)
+			"swoop_speed": 330.0,  # TUNING (not in GDD) flight speed (px/s)
+			"swoop_range_min": 50.0,  # TUNING (not in GDD) closer clusters are clawed instead (px)
+			"swoop_range_max": 230.0,  # TUNING (not in GDD) farthest dive (px)
+			"swoop_max_flight": 1.4,  # TUNING (not in GDD) s; the dive lands wherever it is by then
+			"swoop_min_enemies": 3,  # TUNING (not in GDD) enemies around the target to swoop (an elite / boss alone also counts)
+			"swoop_knockback": 160.0,  # TUNING (not in GDD) px/s impulse, divided by enemy mass
+			"swoop_lift": 18.0,  # TUNING (not in GDD) px the body is drawn above its shadow at full height
+			"swoop_shake": 1.5,  # TUNING (not in GDD) screen-shake request (px, Juice)
+			"cluster_bonus": 0.6,  # TUNING (not in GDD) target-score bonus x cluster fullness while the swoop is ready
+		},
+	},
+	# Frost Wraith: an ice mage. Frost bolts chill (slow) what they hit; a
+	# periodic Deep Freeze freezes every enemy around its target (the Stasis
+	# freeze path; bosses briefly, Reckoning enemies never; FrostWraithBehavior).
+	"frost_wraith": {
+		"display_name": "Frost Wraith",  # TUNING (not in GDD) user request
+		"plural": "Frost Wraiths",
+		"max_hp": 34.0,  # TUNING (not in GDD)
+		"damage": 8.0,  # TUNING (not in GDD) frost bolt
+		"attack_interval": 1.5,  # TUNING (not in GDD)
+		"attack_range": 160.0,  # TUNING (not in GDD) centre-to-edge (px)
+		"move_speed": 88.0,  # TUNING (not in GDD)
+		"radius": 10.0,  # TUNING (not in GDD)
+		"acquisition_range": 250.0,  # TUNING (not in GDD)
+		"replenish_interval": 14.0,  # TUNING (not in GDD)
+		"band_min": 95.0,  # TUNING (not in GDD) outer midline (px)
+		"band_max": 160.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.5,  # TUNING (not in GDD)
+		"w_formation": 0.6,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.8,  # TUNING (not in GDD) keeps out of the crowd
+		"attack_profile": "frost",
+		"target_profile": "frost",
+		"windup": 0.25,  # TUNING (not in GDD)
+		"projectile_speed": 340.0,  # TUNING (not in GDD)
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.5,  # TUNING (not in GDD)
+		"formation": "mid",
+		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "frost",
+		"special": {
+			"chill_slow": 0.35,  # TUNING (not in GDD) fraction of speed a frost bolt removes
+			"chill_duration": 1.8,  # TUNING (not in GDD) s the chill lasts
+			"freeze_radius": 52.0,  # TUNING (not in GDD) px around the target
+			"freeze_duration": 1.6,  # TUNING (not in GDD) s enemies stay frozen
+			"freeze_cooldown": 9.0,  # TUNING (not in GDD) s between Deep Freezes
+			"freeze_windup": 0.45,  # TUNING (not in GDD) s the frost circle is telegraphed
+			"freeze_boss_mult": 0.2,  # TUNING (not in GDD) Sir Alaric: 20% of the duration (Stasis gives him 50%)
+			"freeze_elite_mult": 0.6,  # TUNING (not in GDD) elites: 60% of the duration
+			"freeze_min_enemies": 3,  # TUNING (not in GDD) enemies around the target (an elite / boss, or a target next to an endangered player, alone also counts)
+			"unchilled_bonus": 0.4,  # TUNING (not in GDD) target-score bonus for an enemy not chilled yet (spreads the slow)
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -178,6 +387,12 @@ const UNITS := {
 ##   heal_bonus      — +% heal per cast (priest).
 ##   pierce          — extra enemies an arrow passes through (archer).
 ##   shield_bonus    — +% ward strength on the necromancer (priest).
+##   special_bonus   — +% damage of the class special (stomp, dash + bleed,
+##                     swoop).
+##   special_area    — +% radius / length of the class special.
+##   special_haste   — special cooldown divided by (1 + this).
+##   special_duration — +% duration of the special's status (bleed, chill,
+##                     freeze).
 const LEVELS := {
 	# GDD §34 example Skeleton Warrior L1–L5 (2, +1 +10% dmg, +2 +15% HP,
 	# +1 +20% attack speed, +2 +20% HP = 8 total).
@@ -215,6 +430,39 @@ const LEVELS := {
 		{"count": 2, "heal_bonus": 0.50, "hp_bonus": 0.20, "shield_bonus": 0.0},
 		{"count": 2, "heal_bonus": 0.50, "hp_bonus": 0.20, "shield_bonus": 0.60},
 	],
+	# TUNING (not in GDD): low population, 1 -> 3 (user request), each level
+	# adds bulk or a bigger stomp.
+	"abomination": [
+		{"count": 1},
+		{"count": 1, "hp_bonus": 0.20, "special_bonus": 0.25},
+		{"count": 2, "hp_bonus": 0.20, "special_bonus": 0.25},
+		{"count": 2, "hp_bonus": 0.40, "special_bonus": 0.25, "special_area": 0.20},
+		{"count": 3, "hp_bonus": 0.40, "damage_bonus": 0.20, "special_bonus": 0.50, "special_area": 0.20},
+	],
+	# TUNING (not in GDD): 1 -> 4 rogues; harder dashes, then faster ones.
+	"rogue": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "special_bonus": 0.30, "special_duration": 0.30},
+		{"count": 3, "damage_bonus": 0.20, "special_bonus": 0.30, "special_duration": 0.30},
+		{"count": 4, "damage_bonus": 0.20, "special_bonus": 0.30, "special_duration": 0.30, "special_haste": 0.25},
+	],
+	# TUNING (not in GDD): 1 -> 3 gargoyles; bigger, harder, more frequent swoops.
+	"gargoyle": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "hp_bonus": 0.25, "special_bonus": 0.25},
+		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.25, "special_area": 0.20},
+		{"count": 3, "hp_bonus": 0.25, "damage_bonus": 0.25, "special_bonus": 0.50, "special_area": 0.20, "special_haste": 0.20},
+	],
+	# TUNING (not in GDD): 1 -> 3 wraiths; wider, longer, then more frequent freezes.
+	"frost_wraith": [
+		{"count": 1},
+		{"count": 1, "damage_bonus": 0.25, "special_area": 0.15},
+		{"count": 2, "damage_bonus": 0.25, "special_area": 0.15},
+		{"count": 2, "damage_bonus": 0.25, "special_area": 0.15, "special_duration": 0.25},
+		{"count": 3, "damage_bonus": 0.25, "special_area": 0.15, "special_duration": 0.25, "special_haste": 0.25},
+	],
 }
 
 ## Target-scoring weights per target_profile (GDD §27):
@@ -230,6 +478,15 @@ const TARGET_WEIGHTS := {
 	"cluster": {"distance": 0.3, "threat": 0.6, "role": 0.6, "tactical": 0.0, "cluster": 1.5, "overkill": 1.0},  # TUNING (not in GDD)
 	# Priest offensive fallback: nearest threat.
 	"support": {"distance": 1.0, "threat": 0.8, "role": 0.2, "tactical": 0.0, "cluster": 0.0, "overkill": 2.0},  # TUNING (not in GDD)
+	# Rogues: backline healers / archers first, wherever they are (the
+	# RogueBehavior adds a backline and far-from-player bonus).
+	"assassin": {"distance": 0.4, "threat": 0.2, "role": 1.6, "tactical": 0.0, "cluster": 0.0, "overkill": 1.0},  # TUNING (not in GDD)
+	# Gargoyles: threats near the player, clusters while a swoop is ready
+	# (GargoyleBehavior cluster bonus).
+	"skirmisher": {"distance": 0.8, "threat": 1.0, "role": 0.4, "tactical": 0.0, "cluster": 0.0, "overkill": 0.6},  # TUNING (not in GDD)
+	# Frost Wraiths: enemies closing on the player, unchilled ones first
+	# (FrostWraithBehavior bonus), never wasted on doomed targets.
+	"frost": {"distance": 0.5, "threat": 1.2, "role": 0.5, "tactical": 0.0, "cluster": 0.0, "overkill": 2.0},  # TUNING (not in GDD)
 }
 
 # --- Leash / lifecycle (GDD §24) ---------------------------------------------
@@ -310,7 +567,10 @@ const SHIELD_TRIGGER_WINDOW: float = 1.5  # TUNING (not in GDD)
 ## The necromancer also counts as "under threat" (ward-worthy) while any enemy
 ## is within this many px of him.
 const WARD_THREAT_RADIUS: float = 90.0  # TUNING (not in GDD)
-## Max radius (px) of any blocker, used to size enemy-vs-blocker queries.
+## Max radius (px) of any summon body (and of the warriors' blocker), used to
+## size enemy-vs-summon queries. A wider blocker (the Corpse Abomination's
+## 20 px block radius) raises HordeDirector.block_query_radius instead, only
+## once one has been spawned, so runs without it pay nothing extra.
 const MAX_BLOCK_RADIUS: float = 16.0  # TUNING (not in GDD)
 
 # --- Coordination / steering ----------------------------------------------------

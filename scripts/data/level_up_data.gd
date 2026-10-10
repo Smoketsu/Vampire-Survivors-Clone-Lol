@@ -24,6 +24,13 @@ const WEIGHT_OWNED: float = 2.5  # TUNING (not in GDD)
 ## Weight multiplier for a card on an evolution path: the paired passive of an
 ## owned spell, or an owned spell whose paired passive is owned.
 const WEIGHT_EVOLUTION_PATH: float = 1.5  # TUNING (not in GDD)
+## Total draw weight shared by all NEW summon-class cards: each unowned class
+## gets min(WEIGHT_NEW, this / number of unowned classes). With the four GDD
+## classes (3 unowned at the start) every class keeps weight 1.0 exactly as
+## before; with eight classes the chance that a hand holds some new summon
+## stays about what it was, instead of new summons crowding out spells,
+## passives and upgrades.
+const NEW_SUMMON_POOL_WEIGHT: float = 3.0  # TUNING (not in GDD)
 ## Weight multiplier for a "dead" card (no current effect on the build, e.g.
 ## an army passive with no summon class owned). At most CARDS-1 dead cards are
 ## offered while a live card exists.

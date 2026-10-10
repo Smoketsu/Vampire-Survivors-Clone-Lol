@@ -3,7 +3,12 @@
 ## scene/script and parameterize per-class behavior with data resources.
 ## Avoid four independent unrelated AI implementations."
 ## Class differences come only from the data row in UnitData (attack_profile,
-## target_profile, ranges, steering weights, heal amount...).
+## target_profile, ranges, steering weights, heal amount...). A class with a
+## special action (Abomination stomp, Rogue dash, Gargoyle swoop, Frost Wraith
+## Deep Freeze) also gets a per-unit SummonBehavior (`behavior`), the one
+## dispatch point for class-specific code: it may start a special in think(),
+## own the tick in physics_step() while the unit is CASTING it, release a
+## custom attack profile, add a target-score bonus and draw extras.
 ##
 ## Update model (GDD §25 / §39), both driven by HordeDirector:
 ##   think()        ~5 Hz, staggered across units: FSM decisions, leash checks,
@@ -107,6 +112,14 @@ var heal_role_priority: float = 0.5
 var attack_profile: String = "melee"
 ## Target scoring profile key into UnitData.TARGET_WEIGHTS.
 var target_profile: String = "guard"
+## Effective numbers of the class special (HordeDirector._special_stats();
+## empty for classes without one). Shared read-only with the director.
+var special: Dictionary = {}
+## Class special action (null for the GDD classes); reused while pooled.
+var behavior: SummonBehavior = null
+## True while flying (Gargoyle swoop): no obstacle collision, not in the ally
+## grid (enemies cannot target or be blocked by it) and immune to damage.
+var airborne: bool = false
 
 # Cached target weights (floats, faster than dictionary lookups in hot loops).
 ## Weight of normalised distance in target scoring.
@@ -230,6 +243,10 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	anchor_offset = pos - game.player.position
 	think_slot = slot
 	visible = true
+	airborne = false
+	behavior = SummonBehaviors.for_unit(behavior, String(UnitData.UNITS[cls].get("behavior", "")))
+	if behavior != null:
+		behavior.reset(self)
 	_enter(State.SPAWNING)
 	queue_redraw()
 
@@ -270,6 +287,7 @@ func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
 	heal_role_priority = stats["heal_role_priority"]
 	attack_profile = stats["attack_profile"]
 	target_profile = stats["target_profile"]
+	special = stats.get("special", {})
 	var w: Dictionary = UnitData.TARGET_WEIGHTS[target_profile]
 	_wd = w["distance"]
 	_wt = w["threat"]
@@ -286,6 +304,9 @@ func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
 ## and hide (GDD §24 "On death").
 func deactivate() -> void:
 	_drop_target()
+	if behavior != null:
+		behavior.on_deactivate(self)
+	airborne = false
 	active = false
 	state = State.DEAD
 	visible = false
@@ -305,6 +326,21 @@ func _enter(new_state: State) -> void:
 		return
 	state = new_state
 	state_time = 0.0
+
+
+## Public FSM transition for SummonBehavior (same as _enter()).
+func set_state(new_state: State) -> void:
+	_enter(new_state)
+
+
+## Public target release for SummonBehavior (same as _drop_target()).
+func clear_target() -> void:
+	_drop_target()
+
+
+## True if `target` still refers to the same living enemy (for SummonBehavior).
+func target_alive() -> bool:
+	return _target_valid()
 
 
 # =====================================================================================
@@ -334,6 +370,9 @@ func think() -> void:
 	if attack_profile == "heal":
 		_try_ward()
 	if state == State.CASTING:
+		return
+	# Class special (SummonBehavior): may start one and take this decision.
+	if behavior != null and behavior.think(self):
 		return
 	# Priests: healing has priority over everything else (GDD §31).
 	if attack_profile == "heal" and _think_heal():
@@ -552,7 +591,8 @@ func _score_enemy(e: Enemy, dp: float) -> float:
 	var wt := _wt
 	if target_profile == "guard" and director.player_in_danger:
 		wt *= 1.5
-	return dist_v * _wd + threat * wt + e.target_priority * _wr + tactical * _wv + cluster * _wc - overkill * _wo
+	var bonus := behavior.score_bonus(self, e, dp) if behavior != null else 0.0  # Class preference.
+	return dist_v * _wd + threat * wt + e.target_priority * _wr + tactical * _wv + cluster * _wc - overkill * _wo + bonus
 
 
 ## Mage cluster value of an explosion centred on `e`: enemy count inside the
@@ -644,7 +684,9 @@ func physics_step(delta: float) -> void:
 		if state_time >= UnitData.SPAWN_DURATION:
 			_enter(State.FOLLOWING)
 		return
-	if state == State.CASTING:
+	if behavior != null and behavior.physics(self, delta):
+		pass  # A class special owns this tick (it set the velocity).
+	elif state == State.CASTING:
 		_step_cast(delta)
 	else:
 		_step_movement(delta)
@@ -857,6 +899,10 @@ func _release_attack() -> void:
 			elif _target_valid():
 				# Minor unholy offense when nothing needs healing (GDD §7).
 				game.projectiles.fire_friendly(Projectile.Kind.PRIEST_BOLT, position, target, damage, projectile_speed, 0, unit_class)
+		_:
+			# Class-specific profiles (e.g. "frost") are released by the behaviour.
+			if behavior != null:
+				behavior.release_attack(self)
 
 
 ## Removes this priest's pending heal from its target's incoming_heal.
@@ -878,6 +924,10 @@ func _release_heal_reservation() -> void:
 
 func _draw() -> void:
 	var rise := 1.0
+	var lift := 0.0  # px the body is drawn above the ground (Gargoyle flight).
+	if behavior != null:
+		behavior.draw_under(self)  # Telegraphs and flight shadow, under the body.
+		lift = behavior.body_lift(self)
 	if director != null and director.synergies.is_active("unholy_host"):
 		ProgressionGlyphs.draw_host_aura(self, Vector2(0, radius * 0.6), radius)
 	if state == State.SPAWNING:
@@ -888,7 +938,7 @@ func _draw() -> void:
 		var k := clampf(temp_life / 5.0, 0.3, 1.0)
 		draw_circle(Vector2.ZERO, radius * 1.5, Color(Palette.NECRO_GREEN, 0.12 * k))
 		draw_arc(Vector2.ZERO, radius * 1.5, 0.0, TAU, 20, Color(Palette.NECRO_GREEN, 0.7 * k), 1.5)
-	Glyphs.draw_summon(self, unit_class, Vector2(0, (1.0 - rise) * radius), radius, flash > 0.0)
+	Glyphs.draw_summon(self, unit_class, Vector2(0, (1.0 - rise) * radius - lift), radius, flash > 0.0)
 	if barrier_hp > 0.0:
 		ProgressionGlyphs.draw_barrier(self, Vector2.ZERO, radius, barrier_hp / maxf(max_hp, 1.0))
 	if hp < max_hp - 0.5 and state != State.SPAWNING:

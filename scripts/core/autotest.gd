@@ -44,7 +44,13 @@
 ##     autopilot walks to a chest within ChestData.AUTOTEST_SEEK_RADIUS unless
 ##     enemies press it hard, and the summary lists chests spawned / opened,
 ##     their sizes, every item granted and the evolution times (evolutions
-##     come only from chests).
+##     come only from chests),
+##   * later summon classes: --classes=a,b raises those classes to Lv 1 at
+##     the start and makes every policy upgrade them first; the summary has
+##     one line per class with a special (damage by source, stomps / dashes /
+##     swoops / Deep Freezes, frozen-enemy-seconds, chills), and the stuck
+##     check also counts a special that runs past SPECIAL_STUCK_TIME
+##     (airborne / dashing units) or ends inside an obstacle.
 class_name Autotest
 extends Node
 
@@ -108,6 +114,19 @@ const DROP_SEEK_RADIUS: float = 300.0
 const DROP_SAFE_PRESSURE: float = 0.35
 ## Flee pressure above which even chests are ignored.
 const CHEST_SAFE_PRESSURE: float = 0.8
+## Score of a card for a class forced by --classes (above everything but
+## evolutions and an eager Pact).
+const FORCED_CLASS_SCORE: float = 400.0
+## A class special (dash, swoop, stomp, freeze) still running after this many
+## game seconds counts as a stuck unit (the longest one, a swoop, is ~2 s).
+const SPECIAL_STUCK_TIME: float = 4.0
+## Summary of the later classes: class -> [damage stat sources, count stats].
+const CLASS_REPORT := {
+	"abomination": [["abomination", "abom_stomp"], ["abom_stomps", "abom_stomp_hits"]],
+	"rogue": [["rogue", "rogue_dash", "rogue_bleed"], ["rogue_dashes", "rogue_dash_hits"]],
+	"gargoyle": [["gargoyle", "gargoyle_swoop"], ["gargoyle_swoops", "gargoyle_swoop_hits"]],
+	"frost_wraith": [["frost_wraith"], ["frost_deep_freezes", "frost_freezes", "frost_boss_freezes", "frost_frozen_seconds", "frost_chills"]],
+}
 
 ## Owning run.
 var game: Game
@@ -170,6 +189,12 @@ var _build_complete_level: int = 0
 var _pact_seen: int = 0
 ## "Ln@mm:ss" for every Profane Pact level taken.
 var _pact_log: PackedStringArray = PackedStringArray()
+## True once the --classes forced classes were raised.
+var _forced_done: bool = false
+## summon_special_end_blocked stat already counted as stuck units.
+var _end_blocked_seen: int = 0
+## Instance id -> generation of units already counted for an overlong special.
+var _overtime_seen: Dictionary = {}
 
 
 func _ready() -> void:
@@ -182,13 +207,29 @@ func _ready() -> void:
 	_real_start_msec = Time.get_ticks_msec()
 	for _i in TIME_MARKS.size():
 		_level_at_mark.append(-1)
-	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s meta=%s oath=%d pact=%s" % [
+	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s meta=%s oath=%d pact=%s classes=%s" % [
 		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout), GameState.autotest_policy, GameState.autotest_meta,
-		GameState.autotest_oath, str(GameState.autotest_pact)])
+		GameState.autotest_oath, str(GameState.autotest_pact), ",".join(GameState.autotest_classes) if not GameState.autotest_classes.is_empty() else "-"])
+
+
+## --classes: raises every forced class to Lv 1 while an active slot is free.
+func _apply_forced_classes() -> void:
+	_forced_done = true
+	for cls: String in GameState.autotest_classes:
+		if int(game.horde.class_levels[cls]) > 0:
+			continue
+		if game.abilities.active_count() >= PlayerData.ACTIVE_SLOTS:
+			print("[autotest] forced class %s skipped: no active slot left" % cls)
+			continue
+		game.horde.set_class_level(cls, 1)
+		game.abilities.pick_history.append("%s 1 (forced)" % cls)
+		print("[autotest] forced class %s raised to Lv 1" % cls)
 
 
 ## Called by Game after each simulation step.
 func step(delta: float) -> void:
+	if not _forced_done:
+		_apply_forced_classes()
 	var wards := int(game.stats.get("priest_wards", 0.0))
 	if game.horde.count_of("priest") >= 2:
 		_two_priest_time += delta
@@ -245,11 +286,22 @@ func step(delta: float) -> void:
 		game.end_run(false, "timeout")
 
 
-## Samples every summon and enemy for the stuck-unit check.
+## Samples every summon and enemy for the stuck-unit check. Class specials
+## (airborne / dashing units) are checked separately: one that runs longer
+## than SPECIAL_STUCK_TIME, or ends inside an obstacle, is a stuck unit.
 func _sample_stuck() -> void:
 	for u in game.horde.units:
 		if u.active:
 			_track(u, u.generation, u.radius, _summon_wants_move(u), "summon_" + u.unit_class)
+			if u.behavior != null and u.behavior.is_busy() and u.behavior.special_time > SPECIAL_STUCK_TIME \
+					and int(_overtime_seen.get(u.get_instance_id(), -1)) != u.generation:
+				_overtime_seen[u.get_instance_id()] = u.generation
+				_count_stuck("summon_%s_special" % u.unit_class, "special overtime: %s phase %d for %.1f s (airborne: %s)" % [
+					u.unit_class, u.behavior.phase, u.behavior.special_time, str(u.airborne)])
+	var blocked := int(game.stats.get("summon_special_end_blocked", 0.0))  # Specials that ended in an obstacle.
+	if blocked > _end_blocked_seen:
+		_count_stuck("summon_special_end_blocked", "%d special(s) ended inside an obstacle" % (blocked - _end_blocked_seen))
+		_end_blocked_seen = blocked
 	for e in game.enemies.active:
 		if e.active:
 			_track(e, e.generation, e.radius, _enemy_wants_move(e), "enemy_" + e.kind)
@@ -274,6 +326,13 @@ func _track(n: Node2D, gen: int, r: float, wants: bool, label: String) -> void:
 	print("[autotest] stuck unit: %s at %s (%.0f px from player, touching obstacle: %s)" % [
 		label, str(n.position.round()), n.position.distance_to(game.player.position), str(at_obstacle)])
 	_stuck_track[id] = [gen, n.position, game.elapsed]
+
+
+## Records one stuck episode labelled `label` and prints `detail`.
+func _count_stuck(label: String, detail: String) -> void:
+	_stuck_units += 1
+	_stuck_by[label] = int(_stuck_by.get(label, 0)) + 1
+	print("[autotest] stuck unit: %s" % detail)
 
 
 ## True when a summon is trying to get somewhere (not idling in formation,
@@ -398,6 +457,8 @@ func _card_score(o: Dictionary) -> float:
 	if id == PactData.ID:
 		var eager := GameState.autotest_policy == "pact" or GameState.autotest_pact  # --policy=pact or --pact.
 		return (PACT_EAGER_SCORE if eager else PACT_SCORE) - float(o["to"])
+	if String(o["kind"]) == "summon" and GameState.autotest_classes.has(id):
+		return FORCED_CLASS_SCORE - float(o["to"])  # --classes: upgrade it first.
 	match GameState.autotest_policy:
 		"army":
 			var pri := float(ARMY_PRIORITY.get(id, 0.0))  # Card priority.
@@ -539,6 +600,7 @@ func finish(summary: Dictionary) -> void:
 		int(st.get("templar_charges", 0.0)), int(st.get("templar_charges_blocked", 0.0)), game.horde.temp_spawned])
 	print("[autotest] obstacle collisions resolved: player=%d summons=%d enemies=%d" % [
 		game.arena.resolved_player, game.arena.resolved_summons, game.arena.resolved_enemies])
+	_print_class_specials(st)
 	print("[autotest] stuck_units=%d (touching an obstacle: %d) %s" % [_stuck_units, _stuck_at_obstacle, str(_stuck_by)])
 	print("[metric] boss_hp_at_0=%d min_hp_before_0=%d" % [int(_boss_hp_at_0), int(_min_hp)])
 	print("[autotest] peaks: enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [
@@ -551,6 +613,27 @@ func finish(summary: Dictionary) -> void:
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
+
+
+## Prints one line per later summon class (CLASS_REPORT): level, live count,
+## deaths, damage by source and its special counters, plus the special
+## cancellations / obstacle endings.
+func _print_class_specials(st: Dictionary) -> void:
+	for cls: String in CLASS_REPORT:
+		var rep: Array = CLASS_REPORT[cls]  # [damage sources, count stats].
+		var dmg_parts := PackedStringArray()  # "source=N" damage dealt.
+		var total := 0.0  # Damage dealt by the class.
+		for src: String in rep[0]:
+			total += float(st.get("dmg_" + src, 0.0))
+			dmg_parts.append("%s=%d" % [src, int(st.get("dmg_" + src, 0.0))])
+		var counts := PackedStringArray()  # "stat=N" special counters.
+		for key: String in rep[1]:
+			counts.append("%s=%d" % [key, int(st.get(key, 0.0))])
+		print("[autotest] class %s: Lv %d, alive %d/%d, deaths %d | dmg %d (%s) | %s" % [
+			cls, int(game.horde.class_levels[cls]), game.horde.count_of(cls), game.horde.capacity(cls),
+			int(_sum_prefix(st, "death_%s_by_" % cls)), int(total), " ".join(dmg_parts), " ".join(counts)])
+	print("[autotest] class specials: cancelled by recall %d | ended inside an obstacle %d" % [
+		int(st.get("summon_specials_cancelled", 0.0)), int(st.get("summon_special_end_blocked", 0.0))])
 
 
 ## Prints the power-up drop / buff counters and the Profane Pact / Oath lines.

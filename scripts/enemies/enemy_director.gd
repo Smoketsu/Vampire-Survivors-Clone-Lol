@@ -16,7 +16,8 @@
 ##     soft cap are multiplied by it, and Sir Alaric's HP by a share of it.
 ##   * Skips the AI and movement of enemies held by a Stasis power-up
 ##     (game.powerups.freezes(); Reckoning enemies are immune, the boss is
-##     frozen for part of the duration).
+##     frozen for part of the duration) or by a Frost Wraith Deep Freeze
+##     (Enemy.freeze_timer, set by CombatResolver.freeze_enemy()).
 class_name EnemyDirector
 extends Node2D
 
@@ -103,7 +104,7 @@ func step(delta: float) -> void:
 	for e in active:
 		if not e.active:
 			continue
-		var frozen := pw.freezes(e)  # Held by Stasis this tick.
+		var frozen := pw.freezes(e) or e.freeze_timer > 0.0  # Held by Stasis or a Deep Freeze this tick.
 		e.set_frozen(frozen)
 		if frozen:
 			e.step_frozen(delta)

@@ -571,7 +571,9 @@ func _apply_fallback(id: String) -> void:
 
 
 ## Every upgradeable item not banished and not in `exclude` (id -> true), as
-## {"offer", "weight", "dead"} entries for the weighted draw.
+## {"offer", "weight", "dead"} entries for the weighted draw. New summon
+## classes split LevelUpData.NEW_SUMMON_POOL_WEIGHT between them, so a larger
+## roster does not crowd spells, passives and upgrades out of the hands.
 func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var can_new_active := active_count() < PlayerData.ACTIVE_SLOTS
@@ -592,11 +594,16 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 		if lvl > 0 and evo != "" and passive_level(EvolutionData.EVOLUTIONS[evo]["passive"]) > 0:
 			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
 		out.append({"offer": _spell_offer(id, lvl), "weight": w, "dead": false})
+	var unowned := 0  # Summon classes not owned or banished yet (they share NEW_SUMMON_POOL_WEIGHT).
+	for cls: String in UnitData.CLASS_ORDER:
+		if int(game.horde.class_levels[cls]) == 0 and not banished.has(cls):
+			unowned += 1
+	var w_new_summon := minf(LevelUpData.WEIGHT_NEW, LevelUpData.NEW_SUMMON_POOL_WEIGHT / float(maxi(unowned, 1)))  # Weight of one new class.
 	for cls: String in UnitData.CLASS_ORDER:
 		var lvl: int = game.horde.class_levels[cls]
 		if banished.has(cls) or exclude.has(cls) or lvl >= (UnitData.LEVELS[cls] as Array).size() or (lvl == 0 and not can_new_active):
 			continue
-		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else LevelUpData.WEIGHT_NEW
+		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else w_new_summon
 		out.append({"offer": _summon_offer(cls, lvl), "weight": w, "dead": false})
 	for id: String in PassiveData.ORDER:
 		var lvl := passive_level(id)
@@ -750,6 +757,7 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 			deltas.append("Blocks enemies; shield-bash %s dmg every %ss" % [_fmt(nxt["bash_damage"]), _fmt(nxt["bash_cooldown"])])
 		else:
 			deltas.append("Damage %s every %ss" % [_fmt(nxt["damage"]), _fmt(nxt["attack_interval"])])
+		deltas.append_array(SummonBehaviors.card_lines(cls, {}, nxt))  # Class special, if any.
 		deltas.append("Range %s px" % _fmt(nxt["attack_range"]))
 	else:
 		desc = "Strengthen your %s." % plural.to_lower()
@@ -765,6 +773,7 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 		_delta_line(deltas, "Splash radius", cur["splash_radius"], nxt["splash_radius"])
 		_delta_line(deltas, "Arrow pierce", float(cur["pierce"]), float(nxt["pierce"]))
 		_delta_line(deltas, "Ward on you (HP)", cur["shield_amount"], nxt["shield_amount"])
+		deltas.append_array(SummonBehaviors.card_lines(cls, cur, nxt))  # Class special, if any.
 	var hint := ""
 	if lvl + 1 == SynergyData.MIN_CLASS_LEVEL:
 		hint = game.horde.synergies.unlock_hint(cls)
