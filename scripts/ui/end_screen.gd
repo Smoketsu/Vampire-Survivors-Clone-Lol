@@ -3,8 +3,9 @@
 ## with run statistics, Restart and Main Menu (GDD §19 MVP
 ## "victory/defeat states"). A second column shows the Soul Ash earned by the
 ## run (kept on death), its breakdown (including the Profane Pact and
-## Profane Oath bonus lines), achievements unlocked and the new balance
-## (Meta.award_run(), GDD §9.2).
+## Profane Oath bonus lines and the stage bonus of the Crimson March),
+## achievements and stages unlocked and the new balance (Meta.award_run(),
+## GDD §9.2, §9.3). The stage and its boss are named from the summary.
 class_name EndScreen
 extends Control
 
@@ -96,8 +97,9 @@ func _build_ash_column() -> Control:
 	return col
 
 
-## Fills the Soul Ash column from summary["soul_ash"] (Meta.award_run()).
-func _show_ash(ash: Dictionary) -> void:
+## Fills the Soul Ash column from summary["soul_ash"] (Meta.award_run());
+## `boss_name` names the stage boss's line.
+func _show_ash(ash: Dictionary, boss_name: String) -> void:
 	if ash.is_empty():
 		_ash_title.text = ""
 		_ash_lines.text = ""
@@ -110,7 +112,7 @@ func _show_ash(ash: Dictionary) -> void:
 		"Time survived (%d:%02d)" % [floori(float(t) / 60.0), t % 60],
 		"Enemies slain (%d)" % int(ash["kill_count"]),
 		"Elites slain (%d)" % int(ash["elite_count"]),
-		"Sir Alaric slain",
+		"%s slain" % boss_name,
 		"Reckoning (+%d s)" % int(float(ash["reckoning_seconds"])),
 	])
 	var values := PackedStringArray()
@@ -125,6 +127,9 @@ func _show_ash(ash: Dictionary) -> void:
 	if int(ash.get("oath_bonus", 0)) > 0:
 		names.append("Profane Oath %s (+%d%%)" % [DifficultyModifiers.roman(int(ash["oath_tier"])), int(roundf(float(ash["oath_pct"]) * 100.0))])
 		values.append("+%d" % int(ash["oath_bonus"]))
+	if int(ash.get("stage_bonus", 0)) > 0:
+		names.append("%s bonus (x%.2f)" % [String(ash["stage_name"]), 1.0 + float(ash["stage_pct"])])
+		values.append("+%d" % int(ash["stage_bonus"]))
 	if int(ash["bounty"]) > 0:
 		names.append("Achievement bounties")
 		values.append("+%d" % int(ash["bounty"]))
@@ -135,6 +140,9 @@ func _show_ash(ash: Dictionary) -> void:
 	for id: String in ash["achievements"]:
 		var def: Dictionary = MetaData.ACHIEVEMENTS[id]
 		total_lines.append("Achievement: %s! (%s coming later)" % [def["display_name"], def["unlock"]])
+	for sid: String in ash.get("unlocked_stages", PackedStringArray()):
+		var sdef: Dictionary = StageRegistry.STAGES[sid]  # The stage this run opened.
+		total_lines.append("New stage unlocked: %s - %s!" % [sdef["chapter"], sdef["display_name"]])
 	total_lines.append("Spend it in the Ossuary from the main menu.")
 	_ash_total.text = "\n".join(total_lines)
 
@@ -153,6 +161,8 @@ func open(summary: Dictionary) -> void:
 	var t := int(float(summary["time"]))
 	var counts: Dictionary = summary["horde_counts"]
 	var lines := PackedStringArray()
+	var boss_name := String(summary.get("boss_name", "Sir Alaric"))  # The stage boss.
+	lines.append("Stage:  %s" % String(summary.get("stage_name", "The Desecrated Graveyard")))
 	lines.append("Time survived:  %02d:%02d" % [floori(float(t) / 60.0), t % 60])
 	if won:
 		var over := int(float(summary["time_past_zero"]))
@@ -160,7 +170,7 @@ func open(summary: Dictionary) -> void:
 	else:
 		var left := ceili(float(summary["time_remaining"]))
 		lines.append("Time left on the countdown:  %d:%02d" % [floori(float(left) / 60.0), left % 60])
-	lines.append("Sir Alaric:  %s" % ("slain" if summary["boss_defeated"] else ("not slain" if summary["boss_spawned"] else "never arrived")))
+	lines.append("%s:  %s" % [boss_name, "slain" if summary["boss_defeated"] else ("not slain" if summary["boss_spawned"] else "never arrived")])
 	lines.append("Enemies slain:  %d" % int(summary["kills"]))
 	lines.append("Level reached:  %d" % int(summary["level"]))
 	lines.append("Army at the end:  %d" % int(summary["horde_total"]))
@@ -168,6 +178,6 @@ func open(summary: Dictionary) -> void:
 		if int(counts[cls]) > 0:
 			lines.append("    %s: %d" % [UnitData.UNITS[cls]["plural"], int(counts[cls])])
 	_stats.text = "\n".join(lines)
-	_show_ash(summary.get("soul_ash", {}))
+	_show_ash(summary.get("soul_ash", {}), boss_name)
 	visible = true
 	_restart.grab_focus.call_deferred()

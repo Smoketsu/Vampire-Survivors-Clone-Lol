@@ -180,7 +180,7 @@ const ENEMIES := {
 
 ## "Reckoning" enemy that spawns once the countdown reaches 0:00 (user brief:
 ## absurdly strong holy executioners that normally end the run). Spawned only
-## by EnemyDirector's Reckoning logic (WaveData.RECKONING), never by the
+## by EnemyDirector's Reckoning logic (the stage's "reckoning" data), never by the
 ## regular trickle. Same keys as ENEMIES rows.
 const RECKONING_ENEMY := {
 	"display_name": "Inquisitor of the End",
@@ -286,7 +286,7 @@ const SEPARATION_STRENGTH: float = 0.9  # TUNING (not in GDD)
 ##     consecrate_lead    — s of player movement the first zone leads by.
 ##     consecrate_spread_min / consecrate_spread_max — px from the player of
 ##                        the other zones.
-##     consecrate_zone    — the holy zone (keys as WaveData.CONSECRATION.zone).
+##     consecrate_zone    — the holy zone (keys as GraveyardStage.CONSECRATION.zone).
 ##   Call to Arms (GDD §11 "reinforcement infantry"):
 ##     call_telegraph     — s the rally markers are shown before soldiers
 ##                        arrive.

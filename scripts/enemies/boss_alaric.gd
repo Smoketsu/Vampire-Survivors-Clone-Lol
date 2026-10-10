@@ -26,8 +26,9 @@
 ## phase2_hp_fraction HP he enters Wrath — shorter gaps, more zones and marks,
 ## and an immediate Call to Arms.
 ## Killing him drops a big XP reward; the run goes on (user brief).
+## Extends Boss (the shared stage-boss base; `boss_def` = EnemyData.BOSS).
 class_name BossAlaric
-extends Enemy
+extends Boss
 
 ## Boss attack phases.
 enum Phase { WALK, HAMMER_WINDUP, CHARGE_WINDUP, CHARGING, CONSECRATE_WINDUP, CALL_WINDUP, JUDGMENT_WINDUP, RECOVER }
@@ -38,8 +39,6 @@ var phase: Phase = Phase.WALK
 var phase_time: float = 0.0
 ## Seconds until the next special may start (counts down while walking).
 var special_cd: float = 2.0
-## Boss design data (EnemyData.BOSS).
-var boss_def: Dictionary = {}
 ## True once below phase2_hp_fraction HP ("Wrath").
 var enraged: bool = false
 ## World point Hammerfall will strike.
@@ -79,6 +78,16 @@ func setup_boss(p_game: Game, pos: Vector2, hp_mult: float, slot: int) -> void:
 	_force_call = false
 	for id: String in EnemyData.SPECIALS:
 		_special_cds[id] = 0.0
+
+
+## Sir Alaric's specials in report order (Boss hook).
+func special_ids() -> Array:
+	return EnemyData.SPECIALS
+
+
+## True while he walks at the necromancer (Boss hook, stuck check).
+func is_walking() -> bool:
+	return phase == Phase.WALK
 
 
 ## Picks the next special when ready; otherwise normal melee targeting.

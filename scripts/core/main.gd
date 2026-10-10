@@ -1,17 +1,23 @@
 ## Main — entry scene script (scenes/main.tscn). Switches between the main
 ## menu and a run. A run is a fresh Game node every time, so Restart is
-## simply "free the old Game, build a new one". In autotest mode the menu is
-## skipped and a run starts immediately.
+## simply "free the old Game, build a new one" with the same RunConfig.
+## Play opens the stage select (StageSelect) over the menu; choosing a stage
+## yields the RunConfig the run is built with (the pre-run settings hook,
+## see RunConfig). In autotest mode the menu is skipped and a run starts
+## immediately on the --stage= stage (locks ignored).
 extends Node
 
 ## Current run (null while the menu is shown).
 var _game: Game = null
 ## CanvasLayer holding the main menu (null while a run is active).
 var _menu_layer: CanvasLayer = null
+## Pre-run choices of the current / last run (reused by Restart).
+var _run_config: RunConfig = null
 
 
 func _ready() -> void:
 	if GameState.autotest:
+		_run_config = RunConfig.for_stage(GameState.autotest_stage)
 		_start_game()
 	else:
 		_show_menu()
@@ -24,14 +30,22 @@ func _show_menu() -> void:
 	add_child(_menu_layer)
 	var menu := MainMenu.new()
 	menu.theme = UiTheme.get_theme()
-	menu.play_pressed.connect(_start_game, CONNECT_DEFERRED)
+	menu.stage_chosen.connect(_on_stage_chosen, CONNECT_DEFERRED)
 	_menu_layer.add_child(menu)
 
 
-## Frees whatever is shown and starts a new run.
+## The stage select confirmed a stage: start a run with that config.
+func _on_stage_chosen(config: RunConfig) -> void:
+	_run_config = config
+	GameState.last_stage_id = config.stage_id
+	_start_game()
+
+
+## Frees whatever is shown and starts a new run with `_run_config`.
 func _start_game() -> void:
 	_clear()
 	_game = Game.new()
+	_game.run_config = _run_config.duplicate_config() if _run_config != null else RunConfig.new()
 	_game.restart_requested.connect(_start_game, CONNECT_DEFERRED)
 	_game.main_menu_requested.connect(_show_menu, CONNECT_DEFERRED)
 	add_child(_game)

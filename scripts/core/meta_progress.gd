@@ -21,6 +21,14 @@
 ## lower or switch off in the Ossuary for free (set_oath_active(); owned
 ## tiers stay owned and can be raised again for free). Buying a tier makes it
 ## active. Saved as [oath] active.
+## Stages (GDD §9.3 campaign unlocks): per-stage records (runs, victories,
+## best time, boss kills) in `stage_records`, saved as [stages]
+## "<id>_<key>". A stage opens once the boss its StageRegistry `unlock` names
+## was slain often enough (is_stage_unlocked(); the Crimson March: Sir
+## Alaric once). A save without [stages] (older build) is migrated additively:
+## every earlier run was a Graveyard run, so the Graveyard record is rebuilt
+## from the lifetime stats (an old Alaric kill unlocks the Crimson March).
+## A run on a stage with an `ash_mult` above 1 earns a stage bonus line.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -51,6 +59,12 @@ var load_status: String = "fresh"
 var last_award: Dictionary = {}
 ## Profane Oath tier that applies to runs (0..owned tier; 0 = switched off).
 var oath_active: int = 0
+## Stage id -> {runs, victories, best_time, boss_kills} (STAGE_RECORD_KEYS),
+## one entry per StageRegistry stage.
+var stage_records: Dictionary = {}
+
+## Keys of every stage record (all floats, like the lifetime stats).
+const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills"]
 
 
 func _ready() -> void:
@@ -123,6 +137,8 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 	var oath_pct := maxf(0.0, float(summary.get("oath_ash_gain", 0.0)))  # Profane Oath Soul Ash reward.
 	var pact_bonus := floori(float(subtotal) * pact_pct)  # Ash from the Pact reward.
 	var oath_bonus := floori(float(subtotal) * oath_pct)  # Ash from the Oath reward.
+	var stage_pct := maxf(0.0, float(summary.get("stage_ash_mult", 1.0)) - 1.0)  # Stage Soul Ash bonus (Crimson March).
+	var stage_bonus := floori(float(subtotal) * stage_pct)  # Ash from the stage bonus.
 	return {
 		"parts": parts,
 		"time_survived": survived,
@@ -138,17 +154,31 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 		"oath_tier": int(summary.get("oath_tier", 0)),
 		"oath_pct": oath_pct,
 		"oath_bonus": oath_bonus,
-		"total": subtotal + bonus + pact_bonus + oath_bonus,
+		"stage_name": String(summary.get("stage_name", "")),
+		"stage_pct": stage_pct,
+		"stage_bonus": stage_bonus,
+		"total": subtotal + bonus + pact_bonus + oath_bonus + stage_bonus,
 	}
 
 
 ## Ends a run for meta-progression: adds its Soul Ash (kept on death),
-## updates lifetime stats and achievements (one-time bounties), saves, and
-## returns the compute_ash() breakdown plus "achievements" (newly unlocked
-## ids), "bounty" and "new_total" for the end screen / autotest summary.
+## updates lifetime stats, the stage record and achievements (one-time
+## bounties), saves, and returns the compute_ash() breakdown plus
+## "achievements" (newly unlocked ids), "unlocked_stages" (stage ids opened
+## by this run), "bounty" and "new_total" for the end screen / autotest.
 func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	var award := compute_ash(summary, mods.value("ash_gain") if mods != null else 0.0)
 	var st: Dictionary = summary.get("stats", {})
+	var was_locked := PackedStringArray()  # Stages still locked before this run.
+	for sid: String in StageRegistry.ORDER:
+		if not is_stage_unlocked(sid):
+			was_locked.append(sid)
+	_record_stage_run(summary)
+	var opened := PackedStringArray()  # Stages this run unlocked.
+	for sid: String in was_locked:
+		if is_stage_unlocked(sid):
+			opened.append(sid)
+	award["unlocked_stages"] = opened
 	_add_lifetime("runs", 1.0)
 	_add_lifetime("victories", 1.0 if bool(summary.get("victory", false)) else 0.0)
 	_add_lifetime("total_kills", float(summary.get("kills", 0)))
@@ -176,6 +206,58 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	save()
 	changed.emit()
 	return award
+
+
+# =====================================================================================
+# Stages (GDD §9.3 campaign unlocks)
+# =====================================================================================
+
+## True when stage `id` may be played: no `unlock` requirement, or the
+## required stage's boss was slain at least `boss_kills` times.
+func is_stage_unlocked(id: String) -> bool:
+	if not StageRegistry.STAGES.has(id):
+		return false
+	var req: Dictionary = StageRegistry.STAGES[id]["unlock"]
+	if req.is_empty():
+		return true
+	return float(stage_record(String(req["stage"])).get("boss_kills", 0.0)) >= float(req["boss_kills"])
+
+
+## Record of stage `id` (STAGE_RECORD_KEYS; zeros for an unknown id).
+func stage_record(id: String) -> Dictionary:
+	if stage_records.has(id):
+		return stage_records[id]
+	return _empty_stage_record()
+
+
+## Adds a finished run to its stage's record (summary "stage_id").
+func _record_stage_run(summary: Dictionary) -> void:
+	var id := String(summary.get("stage_id", StageRegistry.DEFAULT_ID))  # Stage the run was on.
+	if not stage_records.has(id):
+		return
+	var rec: Dictionary = stage_records[id]
+	rec["runs"] = minf(float(rec["runs"]) + 1.0, float(MAX_STORED))
+	if bool(summary.get("victory", false)):
+		rec["victories"] = minf(float(rec["victories"]) + 1.0, float(MAX_STORED))
+	if bool(summary.get("boss_defeated", false)):
+		rec["boss_kills"] = minf(float(rec["boss_kills"]) + 1.0, float(MAX_STORED))
+	rec["best_time"] = maxf(float(rec["best_time"]), float(summary.get("time", 0.0)))
+
+
+## A zeroed stage record.
+static func _empty_stage_record() -> Dictionary:
+	var rec := {}
+	for key: String in STAGE_RECORD_KEYS:
+		rec[key] = 0.0
+	return rec
+
+
+## A zeroed record for every StageRegistry stage.
+static func _default_stage_records() -> Dictionary:
+	var out := {}
+	for id: String in StageRegistry.ORDER:
+		out[id] = _empty_stage_record()
+	return out
 
 
 # =====================================================================================
@@ -272,6 +354,10 @@ func save() -> Error:
 	for id: String in MetaData.ACHIEVEMENT_ORDER:
 		cfg.set_value("achievements", id, achievements.has(id))
 	cfg.set_value("oath", "active", oath_active_tier())
+	for id: String in StageRegistry.ORDER:
+		var rec := stage_record(id)  # This stage's record.
+		for key: String in STAGE_RECORD_KEYS:
+			cfg.set_value("stages", "%s_%s" % [id, key], float(rec[key]))
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -312,6 +398,7 @@ func load_save() -> void:
 	_enforce_prerequisites()
 	# Missing key (older save) = the owned Oath tier is active.
 	oath_active = clampi(_read_int(cfg, "oath", "active", tier(PactData.OATH_ID)), 0, tier(PactData.OATH_ID))
+	_load_stage_records(cfg)
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -319,6 +406,23 @@ func load_save() -> void:
 	else:
 		load_status = "ok"
 	changed.emit()
+
+
+## Reads the [stages] records. A save from before stages existed has no such
+## section: every earlier run was a Graveyard run, so the Graveyard record
+## is rebuilt from the lifetime stats (runs, victories, best time, boss
+## kills), which keeps an earlier Alaric kill's Crimson March unlock.
+## Missing keys of a known stage read as 0; unknown keys are ignored.
+func _load_stage_records(cfg: ConfigFile) -> void:
+	if not cfg.has_section("stages"):
+		var gy: Dictionary = stage_records[StageRegistry.DEFAULT_ID]  # The Graveyard record.
+		for key: String in STAGE_RECORD_KEYS:
+			gy[key] = float(lifetime.get(key, 0.0))
+		return
+	for id: String in StageRegistry.ORDER:
+		var rec: Dictionary = stage_records[id]
+		for key: String in STAGE_RECORD_KEYS:
+			rec[key] = _read_float(cfg, "stages", "%s_%s" % [id, key], 0.0)
 
 
 ## Upgrades an older save layout in `cfg` (in memory) to SAVE_VERSION.
@@ -353,6 +457,7 @@ func _reset() -> void:
 	achievements = {}
 	last_award = {}
 	oath_active = 0
+	stage_records = _default_stage_records()
 	load_status = "fresh"
 
 
@@ -364,7 +469,7 @@ static func _default_lifetime() -> Dictionary:
 		"best_time": 0.0,  # longest run, seconds
 		"best_reckoning": 0.0,  # most seconds survived past 0:00
 		"total_kills": 0.0,  # enemies slain over all runs
-		"boss_kills": 0.0,  # Sir Alaric kills
+		"boss_kills": 0.0,  # stage boss kills (Sir Alaric, Marshal Vael), all stages
 		"warrior_kills": 0.0,  # killing blows by Skeleton Warriors (achievement)
 		"chaplain_kills": 0.0,  # Covenant Chaplains slain (achievement)
 		"boss_kills_full_army": 0.0,  # boss kills with all 4 classes (achievement)

@@ -44,7 +44,15 @@
 ##     autopilot walks to a chest within ChestData.AUTOTEST_SEEK_RADIUS unless
 ##     enemies press it hard, and the summary lists chests spawned / opened,
 ##     their sizes, every item granted and the evolution times (evolutions
-##     come only from chests).
+##     come only from chests),
+##   * stages: --stage=graveyard|crimson_march picks the stage (locks are
+##     ignored; Main builds the RunConfig). On the Crimson March the
+##     autopilot also walks toward outposts, ward generators and supply
+##     carts when calm, and the summary adds a "crimson march" line (zones,
+##     structures placed / destroyed / escaped, outpost reinforcements, aura
+##     buffs, tower-shield and Shieldwall damage resisted, halberd cleaves)
+##     and Marshal Vael's attack counters. The boss line works for any stage
+##     boss (Boss.special_ids()).
 class_name Autotest
 extends Node
 
@@ -185,6 +193,7 @@ func _ready() -> void:
 	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s meta=%s oath=%d pact=%s" % [
 		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout), GameState.autotest_policy, GameState.autotest_meta,
 		GameState.autotest_oath, str(GameState.autotest_pact)])
+	print("[autotest] stage: %s" % GameState.autotest_stage)
 
 
 ## Called by Game after each simulation step.
@@ -298,12 +307,14 @@ func _enemy_wants_move(e: Enemy) -> bool:
 		return false
 	var pl := game.player
 	if e.is_boss:
-		var b := e as BossAlaric
-		return b.phase == BossAlaric.Phase.WALK and e.position.distance_to(pl.position) - e.radius - pl.radius > e.attack_range + 4.0
+		var b := e as Boss
+		return b.is_walking() and e.position.distance_to(pl.position) - e.radius - pl.radius > e.attack_range + 4.0
+	if e.is_structure:
+		return false  # Outposts, generators, standards stand; carts roll on a fixed path.
 	match e.behavior:
 		"consecrator":
 			return e.position.distance_to(e.post_pos) > 12.0
-		"ranged", "healer":
+		"ranged", "healer", "banner":
 			return e.position.distance_to(pl.position) - e.radius - pl.radius > EnemyData.ADVANCE_STOP_GAP + 6.0
 		"templar":
 			if e.rush_state != 0:
@@ -443,6 +454,9 @@ func get_move_vector() -> Vector2:
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
+	if goal == Vector2.INF and game.enemies.march != null and away.length() < 0.2:
+		# Crimson March: close in on outposts, generators and carts when calm.
+		goal = game.enemies.march.seek_point(p, OBJECTIVE_SEEK_RADIUS)
 	if goal != Vector2.INF:
 		objective = (goal - p).normalized()
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
@@ -528,11 +542,13 @@ func finish(summary: Dictionary) -> void:
 		int(bolt_nearest), int(bolt_total - bolt_nearest), int(_bolt_damage(st, "bossdmg_")), int(_sum_prefix(st, "bossdmg_"))])
 	print("[autotest] stats: " + " ".join(stat_parts))
 	var atk := PackedStringArray()
-	for id: String in EnemyData.SPECIALS:
+	for id: String in _boss_special_ids():
 		atk.append("%s=%d" % [id, int(st.get("boss_atk_" + id, 0.0))])
 	print("[autotest] boss attacks: %s | wrath: %s | hammer soaked by undead: %d | charges stopped by undead: %d (shielding the player: %d) | judgment hits: %d | call soldiers: %d | holy zones boss/grave: %d/%d" % [
-		" ".join(atk), "yes" if st.has("boss_phase2") else "no", int(st.get("boss_hammer_soaked", 0.0)), int(st.get("boss_charge_stopped", 0.0)), int(st.get("boss_charge_blocked", 0.0)),
+		" ".join(atk), "yes" if st.has("boss_phase2") or st.has("boss_last_stand") else "no", int(st.get("boss_hammer_soaked", 0.0)), int(st.get("boss_charge_stopped", 0.0)), int(st.get("boss_charge_blocked", 0.0)),
 		int(st.get("boss_judgment_hits", 0.0)), int(st.get("boss_call_soldiers", 0.0)), int(st.get("holy_zones_boss", 0.0)), int(st.get("holy_zones_grave", 0.0))])
+	if game.enemies.march != null:
+		_print_march(st)
 	var fired := game.enemies.stage.fired
 	print("[autotest] stage events fired (%d): %s" % [fired.size(), ", ".join(fired)])
 	print("[autotest] templar charges: %d (body-blocked by warriors: %d) | temporary summons spawned: %d" % [
@@ -551,6 +567,32 @@ func finish(summary: Dictionary) -> void:
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
+
+
+## Special ids of the stage boss (from the boss once he arrived, else from
+## the stage data) for the "boss attacks" line.
+func _boss_special_ids() -> Array:
+	if game.enemies.boss != null:
+		return game.enemies.boss.special_ids()
+	return MarchEnemyData.VAEL_SPECIALS if String(game.stage_def["boss"]["id"]) == "vael" else EnemyData.SPECIALS
+
+
+## Crimson March summary: zones, structures, new-enemy mechanics, Marshal
+## Vael's body-blocking and stance counters, and the march event log.
+func _print_march(st: Dictionary) -> void:
+	var m := game.enemies.march
+	var roles := PackedStringArray()  # "role placed/destroyed/escaped".
+	for role: String in ["outpost", "generator", "cart", "standard"]:
+		roles.append("%ss %d/%d/%d" % [role, int(st.get("march_%ss_placed" % role, 0.0)) if role != "standard" else int(st.get("boss_atk_standard", 0.0)),
+			int(st.get("march_%ss_destroyed" % role, 0.0)), int(st.get("march_%ss_escaped" % role, 0.0))])
+	print("[autotest] crimson march: zones entered %d (final: %s) | placed/destroyed/escaped: %s | outpost reinforcements %d | ward zones %d" % [
+		int(st.get("march_zones_entered", 0.0)), m.zone_label(), " ".join(roles), int(st.get("march_outpost_reinforcements", 0.0)), int(st.get("holy_zones_ward", 0.0))])
+	print("[autotest] march enemies: aura buff pulses %d | halberd cleave hits %d | dmg resisted: shieldbearer %d, boss %d | kills: shieldbearer=%d banner_bearer=%d halberdier=%d" % [
+		int(st.get("march_aura_buff_pulses", 0.0)), int(st.get("march_cleave_hits", 0.0)), int(st.get("dmg_resisted_shieldbearer", 0.0)), int(st.get("dmg_resisted_boss", 0.0)),
+		int(st.get("kill_shieldbearer", 0.0)), int(st.get("kill_banner_bearer", 0.0)), int(st.get("kill_halberdier", 0.0))])
+	print("[autotest] marshal vael: last stand %s | cleave summon hits %d, soaked for the player %d | command soldiers %d" % [
+		"yes" if st.has("boss_last_stand") else "no", int(st.get("boss_cleave_summon_hits", 0.0)), int(st.get("boss_cleave_soaked", 0.0)), int(st.get("boss_command_soldiers", 0.0))])
+	print("[autotest] march events (%d): %s" % [m.fired.size(), ", ".join(m.fired)])
 
 
 ## Prints the power-up drop / buff counters and the Profane Pact / Oath lines.
@@ -602,6 +644,9 @@ func _print_soul_ash(summary: Dictionary) -> void:
 		int(parts["elites"]), int(ash["elite_count"]), int(parts["boss"]), int(parts["reckoning"]), float(ash["reckoning_seconds"]),
 		int(ash["subtotal"]), int(roundf(float(ash["bonus_pct"]) * 100.0)), int(ash["bonus"]), int(ash.get("pact_bonus", 0)), int(ash.get("oath_bonus", 0)),
 		int(ash["bounty"]), int(ash["new_total"]), str(Meta.can_write())])
+	print("[autotest] stage: %s | soul ash stage bonus +%d (x%.2f) | stages unlocked by this run: %s" % [
+		String(summary.get("stage_name", "")), int(ash.get("stage_bonus", 0)), 1.0 + float(ash.get("stage_pct", 0.0)),
+		", ".join(ash.get("unlocked_stages", PackedStringArray())) if not (ash.get("unlocked_stages", PackedStringArray()) as PackedStringArray).is_empty() else "none"])
 
 
 ## Shadow Bolt damage stat with `prefix` ("dmg_" / "bossdmg_"), including the

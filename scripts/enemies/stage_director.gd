@@ -1,7 +1,12 @@
 ## StageDirector — the Desecrated Graveyard's stage mechanics (GDD §11) and
 ## every holy ground hazard, owned by EnemyDirector and stepped by it once per
-## tick. Data lives in WaveData (stage events) and EnemyData.BOSS (Alaric's
-## Consecrated Ground / Call to Arms / Judgment telegraphs).
+## tick. Data lives in the run's stage (`game.stage_def` empowered_graves /
+## consecration / crypt_defender, StageRegistry; an empty dictionary turns a
+## mechanic off) and in the boss data (Alaric's Consecrated Ground / Call to
+## Arms / Judgment telegraphs, Marshal Vael's rally marks). The Crimson March
+## reuses the empowered graves as "the battlefield dead" (style "corpse") and
+## the holy zones for its Holy Ward Generators (zones owned by an enemy that
+## vanish when it dies).
 ##   * Holy zones        — consecrated ground (GDD §10 "holy suppression /
 ##                         consecration zones apply localized temporary
 ##                         pressure"). Each zone is telegraphed while it arms,
@@ -53,8 +58,14 @@ class HolyZone:
 	var player_damage: float = 0.0
 	## Seconds between hits on the necromancer.
 	var player_interval: float = 1.0
-	## "boss" (Consecrated Ground) or "grave" (desecration event).
+	## "boss" (Consecrated Ground), "grave" (desecration event) or "ward"
+	## (Crimson March Holy Ward Generator).
 	var source: String = ""
+	## Enemy that sustains the zone (a ward generator; null = none). The zone
+	## fades as soon as that enemy dies or is recycled.
+	var owner_enemy: Enemy = null
+	## Generation of `owner_enemy` when the zone was tied to it (stale guard).
+	var owner_gen: int = 0
 
 ## One visual boss telegraph mark.
 class Mark:
@@ -113,9 +124,15 @@ var shrines: Array[Shrine] = []
 var graves: Array[ConsecrationGrave] = []
 ## Log of stage events fired, "m:ss name" (autotest summary).
 var fired: Array[String] = []
-## Game time the next empowered grave rises.
-var _next_grave: float = float(WaveData.EMPOWERED_GRAVES["first"])
-## Index into EMPOWERED_GRAVES.rewards of the next grave's reward.
+## The stage's empowered graves (stage_def "empowered_graves"; {} = none).
+var _graves_def: Dictionary = {}
+## The stage's desecration events (stage_def "consecration"; {} = none).
+var _consecration_def: Dictionary = {}
+## The stage's Crypt Defender (stage_def "crypt_defender"; {} = none).
+var _crypt_def: Dictionary = {}
+## Game time the next empowered grave rises (INF when the stage has none).
+var _next_grave: float = INF
+## Index into _graves_def.rewards of the next grave's reward.
 var _reward_index: int = 0
 ## Seconds accumulated toward the next zone damage tick.
 var _zone_tick: float = 0.0
@@ -129,6 +146,11 @@ var _tmp: Array = []
 
 func _ready() -> void:
 	z_index = -7
+	_graves_def = game.stage_def["empowered_graves"]
+	_consecration_def = game.stage_def["consecration"]
+	_crypt_def = game.stage_def["crypt_defender"]
+	if not _graves_def.is_empty():
+		_next_grave = float(_graves_def["first"])
 
 
 # =====================================================================================
@@ -138,7 +160,7 @@ func _ready() -> void:
 ## Per-tick update, called by EnemyDirector after the enemies moved.
 func step(delta: float) -> void:
 	var t := game.elapsed
-	var eg: Dictionary = WaveData.EMPOWERED_GRAVES
+	var eg: Dictionary = _graves_def
 	if t >= _next_grave and t <= float(eg["until"]):
 		_next_grave += float(eg["interval"])
 		_raise_empowered_grave()
@@ -160,10 +182,11 @@ func step(delta: float) -> void:
 	_drew = busy
 
 
-## True while Sir Alaric is held by a Stasis power-up: his marks (Call to
-## Arms, Judgment) and the arming of his Consecrated Ground zones pause.
+## True while the stage boss is held by a Stasis power-up: his marks (Call to
+## Arms, Judgment, Crusader's Command, Holy Standard) and the arming of his
+## Consecrated Ground zones pause.
 func _boss_frozen() -> bool:
-	var b := game.enemies.boss  # Sir Alaric (null before he arrives).
+	var b := game.enemies.boss  # The stage boss (null before he arrives).
 	return b != null and b.active and b.frozen
 
 
@@ -179,8 +202,9 @@ func _log(event_name: String) -> void:
 # =====================================================================================
 
 ## Adds a holy zone at `pos` from a zone definition (keys documented at
-## WaveData.CONSECRATION.zone). `source` tags it ("boss" / "grave").
-func add_zone(pos: Vector2, def: Dictionary, source: String) -> void:
+## GraveyardStage.CONSECRATION.zone) and returns it. `source` tags it
+## ("boss" / "grave" / "ward").
+func add_zone(pos: Vector2, def: Dictionary, source: String) -> HolyZone:
 	var z := HolyZone.new()
 	z.pos = pos
 	z.radius = float(def["radius"])
@@ -195,6 +219,14 @@ func add_zone(pos: Vector2, def: Dictionary, source: String) -> void:
 	z.source = source
 	zones.append(z)
 	game.stat_add("holy_zones_" + source, 1.0)
+	return z
+
+
+## Ties zone `z` to enemy `e`: the zone fades as soon as `e` dies (Holy Ward
+## Generator, MarchDirector).
+func bind_zone(z: HolyZone, e: Enemy) -> void:
+	z.owner_enemy = e
+	z.owner_gen = e.generation
 
 
 ## True if `pos` lies inside a holy zone (armed or arming). Summon
@@ -213,6 +245,11 @@ func _step_zones(delta: float) -> void:
 	var i := 0
 	while i < zones.size():
 		var z := zones[i]
+		if z.owner_enemy != null and (not z.owner_enemy.active or z.owner_enemy.generation != z.owner_gen):
+			# Its generator fell: the ward collapses (a short fade, no more arming).
+			z.owner_enemy = null
+			z.arm_left = 0.0
+			z.life = minf(z.life, 0.5)
 		if z.arm_left > 0.0:
 			if boss_hold and z.source == "boss":
 				i += 1
@@ -280,7 +317,7 @@ func _free_spot(dmin: float, dmax: float, r: float) -> Vector2:
 
 ## Raises the next empowered grave near the necromancer.
 func _raise_empowered_grave() -> void:
-	var eg: Dictionary = WaveData.EMPOWERED_GRAVES
+	var eg: Dictionary = _graves_def
 	var s := Shrine.new()
 	s.kind = "empowered"
 	s.pos = _free_spot(float(eg["distance_min"]), float(eg["distance_max"]), 16.0)
@@ -291,13 +328,13 @@ func _raise_empowered_grave() -> void:
 	s.reward = String(rewards[_reward_index % rewards.size()])
 	_reward_index += 1
 	shrines.append(s)
-	game.enemies.show_banner("An empowered grave rises nearby!")
+	game.enemies.show_banner(String(eg.get("rise_banner", "An empowered grave rises nearby!")))
 	_log("empowered_grave_risen")
 
 
-## Starts the Crypt Defender event (WaveData.EVENTS "crypt").
+## Starts the Crypt Defender event (stage event "crypt").
 func start_crypt(ev: Dictionary) -> void:
-	var cd: Dictionary = WaveData.CRYPT_DEFENDER
+	var cd: Dictionary = _crypt_def
 	var s := Shrine.new()
 	s.kind = "crypt"
 	s.pos = _free_spot(float(cd["distance_min"]), float(cd["distance_max"]), 22.0)
@@ -332,12 +369,12 @@ func _claim(s: Shrine) -> void:
 	game.effects.ring(s.pos, s.claim_radius * 2.5, Palette.NECRO_GREEN, 0.5)
 	match s.reward:
 		"reinforce":
-			var eg: Dictionary = WaveData.EMPOWERED_GRAVES
+			var eg: Dictionary = _graves_def
 			# Temporary summons for this grave: the base count plus the per-minute growth.
 			var count := int(eg["reinforce_count"]) + floori(game.elapsed / 60.0 * float(eg["reinforce_growth"]))
 			_spawn_temporaries(s.pos, String(eg["reinforce_class"]), count, float(eg["reinforce_duration"]),
 					float(eg["reinforce_hp_mult"]), float(eg["reinforce_damage_mult"]))
-			game.enemies.show_banner("The grave answers: the dead rise to fight!")
+			game.enemies.show_banner(String(eg.get("reinforce_banner", "The grave answers: the dead rise to fight!")))
 		"replenish":
 			var h := game.horde
 			var refilled := 0
@@ -347,9 +384,9 @@ func _claim(s: Shrine) -> void:
 					h.immediate_spawns[cls] = missing
 					refilled += missing
 			game.stat_add("grave_replenished_units", float(refilled))
-			game.enemies.show_banner("The grave answers: your fallen return at once!")
+			game.enemies.show_banner(String(_graves_def.get("replenish_banner", "The grave answers: your fallen return at once!")))
 		"guardians":
-			var cd: Dictionary = WaveData.CRYPT_DEFENDER
+			var cd: Dictionary = _crypt_def
 			_spawn_temporaries(s.pos, String(cd["guardian_class"]), int(cd["guardian_count"]), float(cd["guardian_duration"]),
 					float(cd["guardian_hp_mult"]), float(cd["guardian_damage_mult"]))
 			game.enemies.show_banner("The ancient guardians awaken!")
@@ -367,11 +404,11 @@ func _spawn_temporaries(pos: Vector2, cls: String, count: int, duration: float, 
 # Desecration (grave consecration) events
 # =====================================================================================
 
-## Starts a desecration event (WaveData.EVENTS "consecration"): marks graves
+## Starts a desecration event (stage event "consecration"): marks graves
 ## around the necromancer and sends a consecrator (+ escort) to each one from
 ## the spawn ring in that direction.
 func start_consecration(ev: Dictionary) -> void:
-	var c: Dictionary = WaveData.CONSECRATION
+	var c: Dictionary = _consecration_def
 	var n := int(ev["graves"])
 	var offset := randf() * TAU
 	var p := game.player.position
@@ -403,7 +440,7 @@ func start_consecration(ev: Dictionary) -> void:
 ## Advances every consecration: channel while the consecrator stands on its
 ## grave; its death interrupts, a full channel consecrates the grave.
 func _step_graves(delta: float) -> void:
-	var c: Dictionary = WaveData.CONSECRATION
+	var c: Dictionary = _consecration_def
 	var i := 0
 	while i < graves.size():
 		var g := graves[i]
@@ -429,7 +466,7 @@ func _step_graves(delta: float) -> void:
 
 ## The consecrator died: the grave is saved and spills XP.
 func _interrupt(g: ConsecrationGrave) -> void:
-	var c: Dictionary = WaveData.CONSECRATION
+	var c: Dictionary = _consecration_def
 	var n := int(c["interrupt_crystals"])
 	var each := maxi(1, floori(float(c["interrupt_xp"]) / float(n)))
 	for k in n:
@@ -451,7 +488,7 @@ func objective_override() -> String:
 		if s.kind == "crypt":
 			return "An ancient crypt stirs: walk to it to awaken its guardians"
 	if not shrines.is_empty():
-		return "An empowered grave glows nearby: walk onto it"
+		return String(_graves_def.get("objective", "An empowered grave glows nearby: walk onto it"))
 	return ""
 
 
@@ -529,7 +566,7 @@ func _draw_zone(z: HolyZone, now: float) -> void:
 ## Grave under consecration: a gold target ring, and a channel progress arc
 ## while the Chaplain stands on it.
 func _draw_grave(g: ConsecrationGrave, now: float) -> void:
-	var c: Dictionary = WaveData.CONSECRATION
+	var c: Dictionary = _consecration_def
 	var r := float(c["zone"]["radius"])
 	var blink := 0.5 + 0.5 * sin(now * 6.0)
 	draw_arc(g.pos, r, 0.0, TAU, 48, Color(Palette.GOLD, 0.25 + 0.25 * blink), 1.5)
@@ -558,6 +595,10 @@ func _draw_shrine(s: Shrine, now: float) -> void:
 		draw_line(s.pos + Vector2(0, -26), s.pos + Vector2(0, 12), Color(0.06, 0.06, 0.07), 2.0)
 		for i in 3:
 			draw_circle(s.pos + Vector2(-7 + 7 * i, -6), 2.0, Color(Palette.NECRO_GREEN, (0.5 + 0.5 * pulse) * fade))
+	elif String(_graves_def.get("style", "grave")) == "corpse":
+		# Crimson March: a heap of fallen soldiers stirring with necrotic light.
+		MarchGlyphs.draw_corpse_pile(self, s.pos, fade, pulse)
+		Glyphs.draw_icon(self, "warrior" if s.reward == "reinforce" else "soul_recycling", Rect2(s.pos + Vector2(-7, -40), Vector2(14, 14)))
 	else:
 		draw_rect(Rect2(s.pos + Vector2(-9, -6), Vector2(18, 12)), Color(0.04, 0.08, 0.06))
 		draw_rect(Rect2(s.pos + Vector2(-9, -6), Vector2(18, 12)), Color(Palette.NECRO_GREEN, fade), false, 1.5)

@@ -2,8 +2,10 @@
 #
 # On every push / pull request:
 #   1. test   - imports the project with Godot 4.3 headless and runs the
-#               automated full playthrough (--autotest). Fails on any script
-#               error/warning or if the run doesn't complete.
+#               automated full playthrough (--autotest) on the Graveyard
+#               (naive and army policies) and on the Crimson March
+#               (--stage=crimson_march). Fails on any script error/warning
+#               or if a run doesn't complete.
 #   2. export - builds single-file Windows (.exe) and Linux executables and
 #               uploads them as workflow artifacts (Actions tab -> run -> Artifacts).
 # On a pushed tag starting with "v" (e.g. v0.2.0) the export job also creates a
@@ -31,7 +33,8 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Three full runs (Graveyard naive + army, Crimson March) of ~2-4 min each.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -78,6 +81,16 @@ jobs:
           status=${PIPESTATUS[0]}
           if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_army.log; then
             echo "::error::Errors/warnings during army autotest"; exit 1
+          fi
+          exit $status
+
+      - name: Autotest (Stage 2, the Crimson March)
+        run: |
+          # --stage ignores the stage lock; same pass rules as the Graveyard runs.
+          timeout 600 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest --stage=crimson_march 2>&1 | tee autotest_march.log
+          status=${PIPESTATUS[0]}
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_march.log; then
+            echo "::error::Errors/warnings during Crimson March autotest"; exit 1
           fi
           exit $status
 

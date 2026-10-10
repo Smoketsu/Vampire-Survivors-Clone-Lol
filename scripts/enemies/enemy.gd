@@ -14,6 +14,19 @@
 ##   consecrator  set at runtime by StageDirector on a desecration-event
 ##             Chaplain: walks to its grave (`post_pos`) and holds there
 ##             while it channels (GDD §11 desecration events).
+## Crimson March kinds (MarchEnemyData, GDD §8.2) add:
+##   banner    walk at the player like a Chaplain and buff every other
+##             Covenant soldier inside `aura_radius` (Banner Bearer).
+##   structure stand still, never pick targets (watchtowers, outposts, ward
+##             generators, Vael's Holy Standard); an aura structure buffs too.
+##   cart      roll in a straight line toward `post_pos` (supply carts);
+##             MarchDirector removes it when its time is up.
+##   and optional data keys: projectile_resist (tower shield), the aura_*
+##   buff, cleave_* (a halberd hit on a summon also hits its neighbours) and
+##   is_structure. A buffed soldier (`buff_time` > 0) deals, moves and takes
+##   damage with the aura's multipliers. damage_taken_mult() is the one hook
+##   CombatResolver asks before applying damage (Marshal Vael overrides it
+##   for his Shieldwall).
 ## Survivor convention (user brief): enemies ALWAYS advance on the player;
 ## nobody kites or holds at range. Ranged units only slow down briefly after
 ## each shot (EnemyData.SHOOT_SLOW_*).
@@ -87,8 +100,37 @@ var mass: float = 1.0
 var is_reckoning: bool = false
 ## True for stage-objective enemies (consecrators): never recycled.
 var is_objective: bool = false
-## World point a "consecrator" walks to and holds.
+## World point a "consecrator" walks to and holds ("cart": where it rolls to).
 var post_pos: Vector2 = Vector2.ZERO
+## True for buildings and carts (MarchEnemyData `is_structure`): no target
+## picking, no separation steering, never recycled; Soul Nova treats them
+## like elites.
+var is_structure: bool = false
+## Fraction (0..1) of damage ignored from projectile sources (tower shield,
+## MarchEnemyData.PROJECTILE_SOURCES).
+var projectile_resist: float = 0.0
+## Radius (px) of the buff aura this unit projects (0 = none).
+var aura_radius: float = 0.0
+## Damage-dealt multiplier the aura grants.
+var aura_damage_mult: float = 1.0
+## Move-speed multiplier the aura grants.
+var aura_speed_mult: float = 1.0
+## Damage-taken multiplier the aura grants.
+var aura_taken_mult: float = 1.0
+## Radius (px) around a struck summon that a cleave also hits (0 = none).
+var cleave_radius: float = 0.0
+## Extra summons a cleave can hit.
+var cleave_targets: int = 0
+## Fraction of the damage the extra cleave targets take.
+var cleave_mult: float = 0.0
+## Seconds left of an aura buff on this unit (0 = not buffed).
+var buff_time: float = 0.0
+## Damage-dealt multiplier while buffed.
+var buff_damage: float = 1.0
+## Move-speed multiplier while buffed.
+var buff_speed: float = 1.0
+## Damage-taken multiplier while buffed.
+var buff_taken: float = 1.0
 
 # --- Runtime --------------------------------------------------------------------------
 
@@ -198,6 +240,20 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	rush_timer = 0.0
 	rush_cd = randf_range(1.0, maxf(1.0, float(def.get("charge_cooldown", 1.0))))
 	_rush_hits.clear()
+	# Crimson March optional keys (absent in every Graveyard row: all off).
+	is_structure = bool(def.get("is_structure", false))
+	projectile_resist = float(def.get("projectile_resist", 0.0))
+	aura_radius = float(def.get("aura_radius", 0.0))
+	aura_damage_mult = float(def.get("aura_damage_mult", 1.0))
+	aura_speed_mult = float(def.get("aura_speed_mult", 1.0))
+	aura_taken_mult = float(def.get("aura_taken_mult", 1.0))
+	cleave_radius = float(def.get("cleave_radius", 0.0))
+	cleave_targets = int(def.get("cleave_targets", 0))
+	cleave_mult = float(def.get("cleave_mult", 0.0))
+	buff_time = 0.0
+	buff_damage = 1.0
+	buff_speed = 1.0
+	buff_taken = 1.0
 	if elite:
 		max_hp *= EnemyData.ELITE_HP_MULT
 		radius *= EnemyData.ELITE_RADIUS_MULT
@@ -280,8 +336,16 @@ func apply_slow(fraction: float, duration: float) -> void:
 # AI
 # =====================================================================================
 
-## ~5 Hz decision step: choose what to attack / whom to heal.
+## ~5 Hz decision step: choose what to attack / whom to heal. Aura units
+## (Banner Bearer, Holy Standard) refresh their buff on nearby soldiers;
+## structures pick no target.
 func think() -> void:
+	if aura_radius > 0.0:
+		_pulse_aura()
+	if is_structure:
+		targeting_player = false
+		targeting_summon = false
+		return
 	# Engaged by a blocking warrior: keep fighting it (user brief).
 	if engaged_timer > 0.0 and target is SummonedUnit and _target_valid():
 		targeting_player = false
@@ -354,6 +418,51 @@ func _pick_heal_target() -> void:
 			heal_target_gen = e.generation
 
 
+## Aura (Banner Bearer / Holy Standard, GDD §7.2-§7.5): every other living
+## Covenant soldier (structures and Reckoning enemies excepted, the boss
+## included) inside aura_radius is buffed for MarchEnemyData.AURA_LINGER s.
+## Overlapping auras keep the strongest value of each multiplier.
+func _pulse_aura() -> void:
+	game.enemy_grid.query(position, aura_radius, _tmp)
+	var buffed := 0  # Soldiers refreshed this pulse (stat).
+	for e: Enemy in _tmp:
+		if e == self or not e.active or e.is_structure or e.is_reckoning:
+			continue
+		if e.position.distance_to(position) > aura_radius:
+			continue
+		if e.buff_time <= 0.0:
+			e.buff_damage = aura_damage_mult
+			e.buff_speed = aura_speed_mult
+			e.buff_taken = aura_taken_mult
+			e.queue_redraw()
+		else:
+			e.buff_damage = maxf(e.buff_damage, aura_damage_mult)
+			e.buff_speed = maxf(e.buff_speed, aura_speed_mult)
+			e.buff_taken = minf(e.buff_taken, aura_taken_mult)
+		e.buff_time = MarchEnemyData.AURA_LINGER
+		buffed += 1
+	if buffed > 0:
+		game.stat_add("march_aura_buff_pulses", float(buffed))
+
+
+## Damage-dealt multiplier from an aura buff (1 when not buffed).
+func hit_mult() -> float:
+	return buff_damage if buff_time > 0.0 else 1.0
+
+
+## Multiplier on incoming damage from `source`, asked by CombatResolver
+## before armour: an aura buff and a tower shield against projectiles
+## (MarchEnemyData.PROJECTILE_SOURCES). A Soul Nova ignores both. Graveyard
+## kinds have neither, so this is exactly 1 for them.
+func damage_taken_mult(source: String) -> float:
+	if source == "nova":
+		return 1.0
+	var m := buff_taken if buff_time > 0.0 else 1.0  # Aura buff.
+	if projectile_resist > 0.0 and source in MarchEnemyData.PROJECTILE_SOURCES:
+		m *= 1.0 - projectile_resist
+	return m
+
+
 ## Recomputes the cached separation push from overlapping enemies.
 ## Called by EnemyDirector at ~10 Hz (staggered) to keep the crowd spread.
 func update_separation() -> void:
@@ -377,6 +486,9 @@ func update_separation() -> void:
 ## Per-physics-tick update: movement and attacks.
 func physics_step(delta: float) -> void:
 	_tick_timers(delta)
+	if is_structure:
+		_step_structure(delta)
+		return
 	if behavior == "templar" and _step_rush(delta):
 		return
 	if behavior == "consecrator":
@@ -390,7 +502,7 @@ func physics_step(delta: float) -> void:
 	var dir := to_t / d if d > 0.001 else Vector2.ZERO
 	var edge := d - radius - _radius_of(t)
 	var move := Vector2.ZERO
-	if behavior == "ranged" or behavior == "healer":
+	if behavior == "ranged" or behavior == "healer" or behavior == "banner":
 		# Always advance on the player (even while shooting a summon), stopping
 		# only on contact so they don't overlap him.
 		var to_p := game.player.position - position
@@ -401,8 +513,8 @@ func physics_step(delta: float) -> void:
 			if d <= attack_range and attack_cd <= 0.0:
 				attack_cd = attack_interval
 				_shoot_slow_timer = EnemyData.SHOOT_SLOW_TIME
-				game.projectiles.fire_hostile(position, dir, damage * game.enemies.damage_mult, projectile_speed, undead_damage_mult)
-		else:
+				game.projectiles.fire_hostile(position, dir, damage * game.enemies.damage_mult * hit_mult(), projectile_speed, undead_damage_mult)
+		elif behavior == "healer":
 			_try_heal()
 	elif edge > attack_range:
 		move = dir
@@ -414,8 +526,26 @@ func physics_step(delta: float) -> void:
 		spd *= engaged_mult
 	if _shoot_slow_timer > 0.0:
 		spd *= EnemyData.SHOOT_SLOW_MULT
+	if buff_time > 0.0:
+		spd *= buff_speed  # Banner / Holy Standard aura.
 	velocity = move * spd + sep * spd * EnemyData.SEPARATION_STRENGTH
 	position += (velocity + knockback) * delta
+	_update_facing()
+
+
+## Structures stand still (no knockback, no separation); a supply cart rolls
+## toward `post_pos` at its move speed (slows apply) until MarchDirector
+## takes it off the field.
+func _step_structure(delta: float) -> void:
+	knockback = Vector2.ZERO
+	if behavior != "cart":
+		velocity = Vector2.ZERO
+		return
+	var to := post_pos - position  # Remaining path.
+	var d := to.length()
+	var spd := move_speed * (1.0 - slow_factor if slow_timer > 0.0 else 1.0)  # Cart speed this tick.
+	velocity = to / d * spd if d > 2.0 else Vector2.ZERO
+	position += velocity * delta
 	_update_facing()
 
 
@@ -477,7 +607,7 @@ func _rush_move(delta: float) -> void:
 	rush_left -= step_len
 	velocity = rush_dir * spd
 	var hit_r := float(_rush_def["charge_width"]) * 0.5
-	var dmg := float(_rush_def["charge_damage"]) * game.enemies.damage_mult
+	var dmg := float(_rush_def["charge_damage"]) * game.enemies.damage_mult * hit_mult()
 	var player := game.player
 	if not _rush_hit_player and player.position.distance_to(position) <= hit_r + player.radius:
 		_rush_hit_player = true
@@ -525,7 +655,8 @@ func resolve_blocking() -> void:
 			continue
 		var n := diff / d if d > 0.01 else _overlap_dir()
 		var overlap := min_d - d
-		var enemy_share := u.block_mass / (u.block_mass + mass)
+		# A standing structure never moves: the warrior takes the whole correction.
+		var enemy_share := 0.0 if (is_structure and behavior != "cart") else u.block_mass / (u.block_mass + mass)
 		position += n * overlap * enemy_share
 		u.position -= n * overlap * (1.0 - enemy_share)
 		engaged_timer = EnemyData.ENGAGED_TIME
@@ -549,6 +680,13 @@ func _tick_timers(delta: float) -> void:
 	if mark_time > 0.0:
 		mark_time -= delta
 		if mark_time <= 0.0:
+			queue_redraw()
+	if buff_time > 0.0:
+		buff_time -= delta
+		if buff_time <= 0.0:
+			buff_damage = 1.0
+			buff_speed = 1.0
+			buff_taken = 1.0
 			queue_redraw()
 	if knockback != Vector2.ZERO:
 		knockback = knockback.move_toward(Vector2.ZERO, EnemyData.KNOCKBACK_DECAY * delta)
@@ -587,12 +725,33 @@ func _radius_of(n: Node2D) -> float:
 ## Melee strike on the player or a summon (undead bonus applies to summons).
 func _melee_hit(t: Node2D, dir: Vector2) -> void:
 	attack_cd = attack_interval
-	var dmg := damage * game.enemies.damage_mult
+	var dmg := damage * game.enemies.damage_mult * hit_mult()
 	game.effects.slash(position + dir * radius, dir, Palette.SILVER, radius * 1.2)
 	if t is SummonedUnit:
 		game.combat.damage_unit(t as SummonedUnit, dmg * undead_damage_mult, kind)
+		if cleave_radius > 0.0:
+			_cleave(t as SummonedUnit, dmg * undead_damage_mult * cleave_mult)
 	else:
 		game.combat.damage_player(dmg, kind)
+
+
+## Halberd sweep (MarchEnemyData cleave_*): up to cleave_targets OTHER
+## summons within cleave_radius px of the struck one take `dmg`.
+func _cleave(struck: SummonedUnit, dmg: float) -> void:
+	game.ally_grid.query(struck.position, cleave_radius + UnitData.MAX_BLOCK_RADIUS, _tmp)
+	var hits := 0  # Extra summons hit so far.
+	for u: SummonedUnit in _tmp:
+		if hits >= cleave_targets:
+			break
+		if u == struck or not u.active or u.state == SummonedUnit.State.SPAWNING:
+			continue
+		if u.position.distance_to(struck.position) > cleave_radius + u.radius:
+			continue
+		game.combat.damage_unit(u, dmg, kind + "_cleave")
+		hits += 1
+	if hits > 0:
+		game.stat_add("march_cleave_hits", float(hits))
+		game.effects.slash(struck.position, struck.position - position, Palette.FLAME, cleave_radius)
 
 
 ## Chaplain heal on the chosen wounded ally.
@@ -611,7 +770,11 @@ func _try_heal() -> void:
 
 
 func _draw() -> void:
+	if aura_radius > 0.0:
+		MarchGlyphs.draw_aura(self, aura_radius)  # Banner / Holy Standard reach.
 	Glyphs.draw_enemy(self, kind, Vector2.ZERO, radius, flash > 0.0, is_elite)
+	if buff_time > 0.0:
+		MarchGlyphs.draw_buffed(self, Vector2(0, -radius * 2.4), 4.0)  # Aura buff chevron.
 	if mark_time > 0.0:
 		ProgressionGlyphs.draw_mage_mark(self, Vector2(0, -radius * 2.5), 4.0)
 	if hp < max_hp:

@@ -3,11 +3,15 @@
 ## codex, achievements — which are out of prototype scope). It shows the Soul
 ## Ash balance and a lifetime line (runs, best time, boss kills, achievements).
 ## The candle-lit crypt backdrop is drawn in _draw().
+## Play opens the stage select (StageSelect, GDD §10.2); the stage it
+## confirms reaches Main as a RunConfig through `stage_chosen`.
 class_name MainMenu
 extends Control
 
-## Play pressed: Main starts a run.
+## Play pressed (the stage select opens).
 signal play_pressed
+## A stage was chosen in the stage select: Main starts a run with `config`.
+signal stage_chosen(config: RunConfig)
 
 ## Play button (focused on open for keyboard / controller users).
 var _play: Button
@@ -46,9 +50,9 @@ func _ready() -> void:
 	Meta.changed.connect(_refresh_meta)
 	_refresh_meta()
 	_play = Button.new()
-	_play.text = "Play  -  The Desecrated Graveyard"
+	_play.text = "Play  -  Choose a battlefield"
 	_play.custom_minimum_size = Vector2(0, 52)
-	_play.pressed.connect(func() -> void: play_pressed.emit())
+	_play.pressed.connect(_open_stage_select)
 	vb.add_child(_play)
 	var ossuary := Button.new()
 	ossuary.text = "The Ossuary  -  Soul Ash upgrades"
@@ -76,12 +80,20 @@ func _ready() -> void:
 	_play.grab_focus.call_deferred()
 
 
+## Play: opens the stage select over the menu (focus returns to Play when
+## it closes); its choice is forwarded to Main.
+func _open_stage_select() -> void:
+	play_pressed.emit()
+	var sel := StageSelect.open_over(self, _play)
+	sel.stage_chosen.connect(func(config: RunConfig) -> void: stage_chosen.emit(config))
+
+
 ## Updates the Soul Ash balance and the lifetime line.
 func _refresh_meta() -> void:
 	_ash_label.text = "%d Soul Ash" % Meta.soul_ash
 	var lt: Dictionary = Meta.lifetime
 	var best := int(float(lt.get("best_time", 0.0)))
-	_lifetime_label.text = "Runs %d   |   Best %d:%02d   |   Sir Alaric slain %d   |   Achievements %d/%d" % [
+	_lifetime_label.text = "Runs %d   |   Best %d:%02d   |   Bosses slain %d   |   Achievements %d/%d" % [
 		int(float(lt.get("runs", 0.0))), floori(float(best) / 60.0), best % 60, int(float(lt.get("boss_kills", 0.0))),
 		Meta.achievements.size(), MetaData.ACHIEVEMENT_ORDER.size()]
 

@@ -1,7 +1,8 @@
 ## Hud — in-run heads-up display laid out per GDD §16:
 ##   Top edge      : XP bar.
 ##   Top left      : level, HP, shields (Orb Shield intercept charges).
-##   Top center    : timer, objective / event banner, boss HP when present.
+##   Top center    : timer, battle zone (Crimson March), objective / event
+##                   banner, boss HP when present (named after the stage boss).
 ##   Top right     : kill count, pause hint, modifiers (the Profane Pact
 ##                   level and Profane Oath tier with their combined effect,
 ##                   from game.difficulty).
@@ -41,6 +42,9 @@ var _ward_label: Label
 var _shield_label: Label
 ## Run timer.
 var _timer_label: Label
+## Crimson March battle zone under the timer ("Zone II - The Fortified
+## Checkpoint"; hidden on stages without zones).
+var _zone_label: Label
 ## Current objective text.
 var _objective_label: Label
 ## Event banner (gold, temporary).
@@ -140,6 +144,10 @@ func _build() -> void:
 	_timer_label = UiTheme.label("00:00", 32)
 	_timer_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tc.add_child(_timer_label)
+	_zone_label = UiTheme.label("", 13, Palette.CRIMSON.lightened(0.45))
+	_zone_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_zone_label.visible = false
+	tc.add_child(_zone_label)
 	_objective_label = UiTheme.label("", 14, UiTheme.TEXT_DIM)
 	_objective_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tc.add_child(_objective_label)
@@ -149,7 +157,7 @@ func _build() -> void:
 	_boss_box = VBoxContainer.new()
 	_boss_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_boss_box.visible = false
-	var boss_name := UiTheme.label(String(EnemyData.BOSS["display_name"]), 16, UiTheme.TEXT_GOLD)
+	var boss_name := UiTheme.label(String(game.stage_def["boss"]["display_name"]), 16, UiTheme.TEXT_GOLD)  # The stage boss.
 	boss_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_boss_box.add_child(boss_name)
 	_boss_bar = HudBar.new(Palette.GOLD, Vector2(520, 14))
@@ -271,6 +279,9 @@ func _refresh() -> void:
 	else:
 		var t := ceili(game.time_remaining())
 		_timer_label.text = "%02d:%02d" % [floori(float(t) / 60.0), t % 60]
+	if game.enemies.march != null:
+		_zone_label.visible = true
+		_zone_label.text = game.enemies.march.zone_label()
 	_objective_label.text = game.enemies.objective_text()
 	_banner_label.text = game.enemies.banner_text if game.elapsed < game.enemies.banner_until else ""
 	var boss := game.enemies.boss

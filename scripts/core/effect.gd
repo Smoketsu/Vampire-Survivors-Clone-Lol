@@ -6,8 +6,9 @@
 class_name Effect
 extends Node2D
 
-## What to draw. ABYSS is the imploding vortex of Abyssal Detonation.
-enum Kind { POP, SLASH, RING, BEAM, SPAWN, TELEGRAPH_CIRCLE, TELEGRAPH_LINE, IMPACT, ABYSS }
+## What to draw. ABYSS is the imploding vortex of Abyssal Detonation;
+## TELEGRAPH_CONE is a boss sector warning (Marshal Vael's Radiant Cleave).
+enum Kind { POP, SLASH, RING, BEAM, SPAWN, TELEGRAPH_CIRCLE, TELEGRAPH_LINE, IMPACT, ABYSS, TELEGRAPH_CONE }
 
 ## Current effect kind.
 var kind: Kind = Kind.POP
@@ -22,9 +23,9 @@ var color: Color = Color.WHITE
 ## Size parameter in px (radius for circles, length for slashes).
 var size: float = 10.0
 ## Secondary vector: BEAM/TELEGRAPH_LINE end point relative to `position`;
-## SLASH facing direction.
+## SLASH / TELEGRAPH_CONE facing direction.
 var vec: Vector2 = Vector2.RIGHT
-## Line width in px (beams, telegraph lanes).
+## Line width in px (beams, telegraph lanes); TELEGRAPH_CONE: half-angle (rad).
 var width: float = 2.0
 ## Enemy whose attack this telegraph announces (null = none). While that
 ## enemy is frozen by a Stasis power-up the telegraph holds still.
@@ -48,7 +49,7 @@ func start(p_kind: Kind, pos: Vector2, p_color: Color, p_size: float, p_duration
 	active = true
 	visible = true
 	# Telegraphs sit under bodies, everything else above.
-	z_index = -5 if (kind == Kind.TELEGRAPH_CIRCLE or kind == Kind.TELEGRAPH_LINE) else 5
+	z_index = -5 if (kind == Kind.TELEGRAPH_CIRCLE or kind == Kind.TELEGRAPH_LINE or kind == Kind.TELEGRAPH_CONE) else 5
 	queue_redraw()
 
 
@@ -106,6 +107,20 @@ func _draw() -> void:
 		Kind.IMPACT:
 			draw_circle(Vector2.ZERO, size * (0.6 + 0.4 * k), Color(color, 0.45 * fade))
 			draw_arc(Vector2.ZERO, size * (0.8 + 0.4 * k), 0.0, TAU, 40, Color(Palette.IVORY, fade), 3.0)
+		Kind.TELEGRAPH_CONE:
+			# Sector toward `vec`: outline + fill sweeping outward until the strike.
+			var ang := vec.angle()
+			var outer := PackedVector2Array([Vector2.ZERO])
+			var inner := PackedVector2Array([Vector2.ZERO])
+			for i in 17:
+				var a := ang - width + 2.0 * width * float(i) / 16.0
+				outer.append(Vector2.from_angle(a) * size)
+				inner.append(Vector2.from_angle(a) * size * k)
+			draw_colored_polygon(outer, Color(color, 0.12))
+			if k > 0.02:
+				draw_colored_polygon(inner, Color(color, 0.28))
+			outer.append(Vector2.ZERO)
+			draw_polyline(outer, Color(color, 0.85), 2.0)
 		Kind.ABYSS:
 			# Dark disc collapsing inward with a green rim and violet spiral arms.
 			var rr := size * (1.0 - 0.65 * k)

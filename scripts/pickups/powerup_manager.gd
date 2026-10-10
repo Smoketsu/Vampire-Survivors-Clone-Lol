@@ -209,7 +209,8 @@ func _soul_nova(def: Dictionary) -> void:
 		var amount := 0.0  # Damage before armour.
 		if e.is_boss:
 			amount = e.max_hp * float(def["boss_max_hp_fraction"])
-		elif e.is_elite:
+		elif e.is_elite or e.is_structure:
+			# Crimson March structures (outposts, generators, carts) count as elites.
 			amount = e.hp * float(def["elite_hp_fraction"])
 		else:
 			amount = e.hp + 1.0  # A little extra so rounding never leaves a sliver.

@@ -36,6 +36,9 @@
 ##   --pact                Any policy also takes every Profane Pact card at
 ##                         once (e.g. --policy=army --pact: a strong build
 ##                         with the Pact); --policy=pact is naive + --pact.
+##   --stage=ID            Autotest stage: "graveyard" (default) or
+##                         "crimson_march" (StageRegistry ids; stage locks
+##                         are ignored).
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 
@@ -59,6 +62,10 @@ var autotest_meta_save: bool = false
 var autotest_oath: int = 0
 ## Autotest: true when --pact makes the policy take every Profane Pact card.
 var autotest_pact: bool = false
+## Autotest: StageRegistry id of the stage to play (--stage=, locks ignored).
+var autotest_stage: String = StageRegistry.DEFAULT_ID
+## Stage chosen last in the stage select this session (focused next time).
+var last_stage_id: String = StageRegistry.DEFAULT_ID
 ## Whether the F3 debug overlay is shown; persists across restarts.
 var debug_overlay_visible: bool = false
 ## Summary dictionary of the most recent finished run (see Game.build_summary).
@@ -93,5 +100,11 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_meta_save = true
 		elif arg == "--pact":
 			autotest_pact = true
+		elif arg.begins_with("--stage="):
+			var id := arg.get_slice("=", 1)  # Requested stage id.
+			if StageRegistry.STAGES.has(id):
+				autotest_stage = id
+			else:
+				push_error("Unknown --stage=%s (expected one of %s)" % [id, ", ".join(PackedStringArray(StageRegistry.ORDER))])
 		elif arg.begins_with("--oath="):
 			autotest_oath = clampi(arg.get_slice("=", 1).to_int(), 0, MetaData.max_tier(PactData.OATH_ID))

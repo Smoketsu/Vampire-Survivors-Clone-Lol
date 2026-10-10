@@ -20,6 +20,12 @@ func _init(p_game: Game) -> void:
 func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if not e.active or amount <= 0.0:
 		return 0.0
+	# Enemy-side damage modifiers (Crimson March tower shields, aura buffs,
+	# Marshal Vael's Shieldwall): exactly 1 for every Graveyard enemy.
+	var taken := e.damage_taken_mult(source)
+	if taken != 1.0:
+		game.stat_add("dmg_resisted_" + e.kind, amount * (1.0 - taken) * (1.0 - e.armor))
+		amount *= taken
 	var dealt := minf(amount * (1.0 - e.armor), e.hp)
 	e.hp -= dealt
 	e.on_hit()

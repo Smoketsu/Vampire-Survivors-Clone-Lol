@@ -85,6 +85,14 @@ func telegraph_line(from: Vector2, to: Vector2, lane_width: float, duration: flo
 	Sfx.play("boss_telegraph", from)
 
 
+## Boss sector warning at `pos` facing `dir`: `radius` px, `half_angle` rad
+## each side, shown for `duration` s (Marshal Vael's Radiant Cleave).
+## `owner` (optional) is the attacker: the telegraph pauses while it is frozen.
+func telegraph_cone(pos: Vector2, dir: Vector2, radius: float, half_angle: float, duration: float, owner: Enemy = null) -> void:
+	_set_owner(_spawn(Effect.Kind.TELEGRAPH_CONE, pos, Palette.GOLD, radius, duration, dir, half_angle, true), owner)
+	Sfx.play("boss_telegraph", pos)
+
+
 ## Ties telegraph `e` to the enemy `owner` (Stasis pause, Effect.step()).
 func _set_owner(e: Effect, owner: Enemy) -> void:
 	if e == null or owner == null:

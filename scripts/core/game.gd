@@ -20,6 +20,10 @@
 ## Treasure chests (`chests`, ChestData): walking over one pauses the run in
 ## RunState.CHEST while the ChestPanel reveals its rewards (evolutions are
 ## delivered only by chests).
+## Stages (GDD §8, §10.2): Main hands in `run_config` (RunConfig: the stage
+## today, the later pre-run settings tomorrow) before the node enters the
+## tree; `stage_def` is that stage's StageRegistry dictionary, read by the
+## directors, the arena, the ground and the HUD.
 class_name Game
 extends Node2D
 
@@ -68,6 +72,10 @@ var _step_usec_total: int = 0
 var _step_count: int = 0
 ## Fractional XP left over by the meta XP-gain bonus (paid out once whole).
 var _xp_carry: float = 0.0
+## Pre-run choices (set by Main before add_child; null = the default stage).
+var run_config: RunConfig = null
+## The run's stage (StageRegistry dictionary of run_config.stage_id).
+var stage_def: Dictionary = {}
 
 # --- Systems (GDD §36 scene/class tree) ----------------------------------------
 
@@ -75,7 +83,7 @@ var _xp_carry: float = 0.0
 var player: Necromancer
 ## World camera (follows the player; not a child so sprite flipping is safe).
 var camera: Camera2D
-## Procedural graveyard floor.
+## Procedural floor (Ground in the Graveyard, MarchGround on the Crimson March).
 var ground: Ground
 ## Solid obstacles (gravestones, dead trees, crypt walls) and their collision.
 var arena: Arena
@@ -125,6 +133,9 @@ var debug_overlay: DebugOverlay
 
 
 func _ready() -> void:
+	if run_config == null:
+		run_config = RunConfig.new()
+	stage_def = run_config.stage_def()
 	# The autotest must exist first: it seeds the RNG before anything random.
 	if GameState.autotest:
 		autotest = Autotest.new()
@@ -137,7 +148,7 @@ func _ready() -> void:
 	difficulty = DifficultyModifiers.new(self)
 
 	# World layers, back to front (tree order + z_index).
-	ground = Ground.new()
+	ground = MarchGround.new() if String(stage_def["ground"]) == "march" else Ground.new()
 	add_child(ground)
 	arena = Arena.new()
 	arena.game = self
@@ -449,9 +460,14 @@ func build_summary() -> Dictionary:
 		counts[cls] = horde.count_of(cls)
 		caps[cls] = horde.capacity(cls)
 	var boss := enemies.boss
+	var boss_info: Dictionary = stage_def["boss"]  # The stage boss's names.
 	return {
 		"victory": victory,
 		"reason": end_reason,
+		"stage_id": String(stage_def["id"]),
+		"stage_name": String(stage_def["display_name"]),
+		"stage_ash_mult": float(stage_def["ash_mult"]),
+		"boss_name": String(boss_info["short_name"]),
 		"time": elapsed,
 		"countdown": WaveData.RUN_DURATION,
 		"time_past_zero": maxf(0.0, elapsed - WaveData.RUN_DURATION),
