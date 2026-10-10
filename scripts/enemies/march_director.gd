@@ -162,19 +162,19 @@ func _place_structures(ev: Dictionary, role: String) -> void:
 	_log("%ss_placed_%d" % [role, n])
 
 
-## A supply cart rolls past: it appears `distance` px from the necromancer
-## and drives across his view (perpendicular to that offset) for `lifetime`
-## s; its escort spawns around it.
+## A supply cart rolls past the necromancer: it appears pass_distance px
+## away on one side, pass_offset px off his line, and drives to the mirrored
+## point on the other side (then waits) until its `lifetime` runs out; its
+## escort spawns around it.
 func _start_cart(ev: Dictionary) -> void:
 	var kind := String(ev["kind"])
-	var def := game.enemies.enemy_def(kind)
-	var a := randf() * TAU
-	var start := game.player.position + Vector2.from_angle(a) * randf_range(float(ev["distance_min"]), float(ev["distance_max"]))
-	var side := 1.0 if randf() < 0.5 else -1.0  # Which way it drives.
-	var dir := Vector2.from_angle(a + side * PI * 0.5)
-	var e := game.enemies.spawn_at(kind, start, false)
+	var u := Vector2.from_angle(randf() * TAU)  # Travel direction.
+	var v := Vector2(-u.y, u.x) * float(ev["pass_offset"])  # Lateral offset of the path.
+	var p := game.player.position
+	var reach := float(ev["pass_distance"])
+	var e := game.enemies.spawn_at(kind, p - u * reach + v, false)
 	e.is_objective = true
-	e.post_pos = e.position + dir * float(def["move_speed"]) * float(ev["lifetime"]) * 1.2
+	e.post_pos = p + u * reach + v
 	var s := _track(e, "cart", ev)
 	s.life = float(ev["lifetime"])
 	for grp: Dictionary in ev["escort"]:
@@ -264,6 +264,9 @@ func _on_destroyed(s: Structure) -> void:
 		for k in n:
 			game.pickups.spawn(s.pos + Vector2.from_angle(TAU * float(k) / float(n)) * randf_range(16.0, 46.0), each)
 	game.effects.impact(s.pos, 60.0, Palette.FLAME)
+	if bool(s.ev.get("reward_chest", false)) and not game.countdown_finished():
+		if game.chests.spawn_chest(s.pos, false):
+			game.stat_add("march_structure_chests", 1.0)
 	match s.role:
 		"cart":
 			var rewards: Array = config["cart_rewards"]

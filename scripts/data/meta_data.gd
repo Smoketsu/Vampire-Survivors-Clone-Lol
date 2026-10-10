@@ -226,7 +226,7 @@ const ACHIEVEMENTS := {
 		"stat": "warrior_kills", "goal": 1000, "unlock": "Bone Golem", "bounty": 100},  # GDD §9.4 goal; bounty TUNING (not in GDD)
 	"heretics_bane": {"display_name": "Heretic's Bane", "description": "Defeat 500 Covenant Chaplains",
 		"stat": "chaplain_kills", "goal": 500, "unlock": "Priest evolution unlock", "bounty": 100},  # GDD §9.4 goal; bounty TUNING (not in GDD)
-	"dread_sovereign": {"display_name": "Dread Sovereign", "description": "Slay Sir Alaric while commanding all 4 summon classes",
+	"dread_sovereign": {"display_name": "Dread Sovereign", "description": "Slay a stage boss while commanding all 4 summon classes",
 		"stat": "boss_kills_full_army", "goal": 1, "unlock": "The Dread Sovereign skin", "bounty": 150},  # GDD §9.4 goal; bounty TUNING (not in GDD)
 }
 

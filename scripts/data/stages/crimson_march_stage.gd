@@ -44,7 +44,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) GDD §8.2 places him at 2
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling.
 const ENEMY_HP_MULT: float = 1.1  # TUNING (not in GDD) GDD §9.3 campaign: each chapter steps up
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.1  # TUNING (not in GDD)
+const ENEMY_DAMAGE_MULT: float = 1.05  # TUNING (not in GDD)
 ## Soul Ash multiplier of a run on this stage (shown as its own end-screen line).
 const ASH_MULT: float = 1.25  # TUNING (not in GDD) user brief "e.g. x1.25"
 
@@ -67,13 +67,13 @@ const RECKONING_OBJECTIVE: String = "THE RECKONING: the whole garrison marches o
 const SEGMENTS := [
 	# Zone I, the Burned Road: GDD §8.2 "00:00 Patrols".
 	{"start": 0.0, "rate": 1.5, "max_alive": 32,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.85, "footman": 0.15},
+		"weights": {"recruit": 1.0},
 		"objective": "The Burned Road: Covenant patrols bar the way"},
-	{"start": 60.0, "rate": 1.9, "max_alive": 44,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.8, "footman": 0.15, "archer": 0.05},
+	{"start": 60.0, "rate": 1.8, "max_alive": 42,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.9, "footman": 0.1},
 		"objective": "March on: the patrols grow bolder"},
-	{"start": 120.0, "rate": 2.1, "max_alive": 52,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.72, "footman": 0.18, "archer": 0.1},
+	{"start": 120.0, "rate": 2.0, "max_alive": 52,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.8, "footman": 0.12, "archer": 0.08},
 		"objective": "The Burned Road: carts and patrols ahead"},
 	{"start": 180.0, "rate": 2.2, "max_alive": 58,  # TUNING (not in GDD)
 		"weights": {"recruit": 0.66, "footman": 0.2, "archer": 0.1, "chaplain": 0.04},
@@ -120,7 +120,7 @@ const SEGMENTS := [
 		"weights": {"recruit": 0.36, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.08, "chaplain": 0.05, "purifier": 0.08, "templar": 0.03, "banner_bearer": 0.02},
 		"objective": "The Fortress Approach: holy wards protect the walls"},
 	# GDD §8.2 "18:00 Cathedral defenders mobilize" (moved to 16:00, before the boss).
-	{"start": 960.0, "rate": 5.6, "max_alive": 165,  # TUNING (not in GDD)
+	{"start": 960.0, "rate": 5.0, "max_alive": 160,  # TUNING (not in GDD)
 		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.1, "chaplain": 0.06, "purifier": 0.08, "templar": 0.04, "banner_bearer": 0.02},
 		"objective": "The cathedral defenders mobilize: Marshal Vael approaches"},
 	# 17:00, Marshal Vael: a thinner trickle so the duel stays readable.
@@ -135,25 +135,28 @@ const SEGMENTS := [
 ## One-shot scripted events, sorted by time. Keys as GraveyardStage.EVENTS
 ## ("wave" entries: formation + groups), plus the Crimson March types run by
 ## MarchDirector:
-##   "outposts"   — `count` structures of EnemyData kind `kind` placed
+##   "outposts"   — `count` structures of MarchEnemyData kind `kind` placed
 ##                  `distance_min`..`distance_max` px from the necromancer;
 ##                  each spawns `groups` (list of {kind, count, elite}) every
-##                  `interval` s while he is within MarchData active radius,
+##                  `interval` s while he is within MARCH.active_radius,
 ##                  until destroyed (GDD §8.2 "outposts spawn reinforcements
 ##                  until destroyed"). `reward_xp` / `reward_crystals`: XP
-##                  burst when one falls. `escort`: an optional formation
+##                  burst when one falls; `reward_chest` (optional): it also
+##                  drops a treasure chest. `escort`: an optional formation
 ##                  wave {formation, groups} that arrives with them.
 ##   "generators" — `count` Holy Ward Generators (kind `kind`), each the
 ##                  centre of a holy zone (`zone`, keys as a holy zone) that
 ##                  lasts until the generator is destroyed (GDD §8.2 "Holy
 ##                  Ward Generators damage/weaken summons in areas"). Same
 ##                  distance / reward / escort keys as "outposts".
-##   "cart"       — a supply cart (kind `kind`) rolls past `distance_min`..
-##                  `distance_max` px from the necromancer for `lifetime` s at
-##                  its move speed with `escort` groups; destroying it pays
-##                  `reward_xp` in `reward_crystals` crystals plus the next
-##                  power-up of CART_REWARDS (GDD §8.2 "destroy enemy supply
-##                  carts for optional rewards"). If it survives, it escapes.
+##   "cart"       — a supply cart (kind `kind`) rolls PAST the necromancer:
+##                  it appears `pass_distance` px from him on one side,
+##                  `pass_offset` px off his line, and drives to the mirrored
+##                  point on the other side, escorted by `escort` groups; it
+##                  escapes after `lifetime` s. Destroying it pays `reward_xp`
+##                  in `reward_crystals` crystals plus the next power-up of
+##                  MARCH.cart_rewards (GDD §8.2 "destroy enemy supply carts
+##                  for optional rewards").
 const EVENTS := [
 	# Zone I: patrols (GDD §8.2 00:00).
 	{"time": 12.0, "type": "wave", "banner": "A Covenant patrol blocks the road!", "formation": "arc",  # TUNING (not in GDD)
@@ -165,8 +168,8 @@ const EVENTS := [
 	{"time": 110.0, "type": "wave", "banner": "A patrol sergeant leads the charge!", "formation": "arc",  # TUNING (not in GDD) first elite
 		"groups": [{"kind": "footman", "count": 1, "elite": true}, {"kind": "recruit", "count": 10, "elite": false}]},
 	{"time": 150.0, "type": "cart", "banner": "A Covenant supply cart rumbles past: destroy it for spoils!",  # GDD §8.2 supply carts
-		"kind": "supply_cart", "distance_min": 190.0, "distance_max": 240.0, "lifetime": 32.0,  # TUNING (not in GDD)
-		"reward_xp": 30, "reward_crystals": 6,  # TUNING (not in GDD)
+		"kind": "supply_cart", "pass_distance": 240.0, "pass_offset": 90.0, "lifetime": 30.0,  # TUNING (not in GDD)
+		"reward_xp": 20, "reward_crystals": 4,  # TUNING (not in GDD)
 		"escort": [{"kind": "recruit", "count": 4, "elite": false}]},  # TUNING (not in GDD)
 	{"time": 180.0, "type": "wave", "banner": "Archers on the ridge!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "archer", "count": 4, "elite": false}, {"kind": "footman", "count": 4, "elite": false}, {"kind": "recruit", "count": 6, "elite": false}]},
@@ -177,7 +180,7 @@ const EVENTS := [
 		"kind": "watchtower", "count": 1, "distance_min": 230.0, "distance_max": 290.0,  # TUNING (not in GDD)
 		"interval": 14.0,  # TUNING (not in GDD)
 		"groups": [{"kind": "recruit", "count": 3, "elite": false}, {"kind": "archer", "count": 1, "elite": false}],  # TUNING (not in GDD)
-		"reward_xp": 40, "reward_crystals": 8,  # TUNING (not in GDD)
+		"reward_xp": 25, "reward_crystals": 5,  # TUNING (not in GDD)
 		"escort": {"formation": "line", "groups": [{"kind": "shieldbearer", "count": 6, "elite": false}, {"kind": "footman", "count": 4, "elite": false}]}},  # TUNING (not in GDD)
 	{"time": 285.0, "type": "wave", "banner": "Shieldbearers advance behind their tower shields!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "shieldbearer", "count": 4, "elite": false}, {"kind": "archer", "count": 4, "elite": false}, {"kind": "chaplain", "count": 1, "elite": false}]},
@@ -187,8 +190,8 @@ const EVENTS := [
 	{"time": 360.0, "type": "wave", "banner": "AMBUSH! Templar Knights charge from the treeline!", "formation": "ring",  # GDD §8.2 06:00
 		"groups": [{"kind": "templar", "count": 4, "elite": false}, {"kind": "templar", "count": 1, "elite": true}, {"kind": "footman", "count": 6, "elite": false}]},
 	{"time": 400.0, "type": "cart", "banner": "Another supply cart tries to slip past!",  # GDD §8.2 supply carts
-		"kind": "supply_cart", "distance_min": 190.0, "distance_max": 240.0, "lifetime": 32.0,  # TUNING (not in GDD)
-		"reward_xp": 45, "reward_crystals": 9,  # TUNING (not in GDD)
+		"kind": "supply_cart", "pass_distance": 240.0, "pass_offset": 90.0, "lifetime": 30.0,  # TUNING (not in GDD)
+		"reward_xp": 25, "reward_crystals": 5,  # TUNING (not in GDD)
 		"escort": [{"kind": "footman", "count": 3, "elite": false}, {"kind": "recruit", "count": 3, "elite": false}]},  # TUNING (not in GDD)
 	{"time": 435.0, "type": "wave", "banner": "Purifiers and archers flank the road!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "purifier", "count": 6, "elite": false}, {"kind": "archer", "count": 4, "elite": false}]},
@@ -201,13 +204,13 @@ const EVENTS := [
 		"kind": "outpost", "count": 2, "distance_min": 250.0, "distance_max": 330.0,  # TUNING (not in GDD)
 		"interval": 12.0,  # TUNING (not in GDD)
 		"groups": [{"kind": "footman", "count": 2, "elite": false}, {"kind": "recruit", "count": 2, "elite": false}, {"kind": "archer", "count": 1, "elite": false}],  # TUNING (not in GDD)
-		"reward_xp": 60, "reward_crystals": 10,  # TUNING (not in GDD)
+		"reward_xp": 30, "reward_crystals": 6,  # TUNING (not in GDD)
 		"escort": {"formation": "arc", "groups": [{"kind": "footman", "count": 6, "elite": false}, {"kind": "archer", "count": 4, "elite": false}]}},  # TUNING (not in GDD)
 	{"time": 580.0, "type": "wave", "banner": "A Banner Bearer rallies the line!", "formation": "arc",  # TUNING (not in GDD) GDD §7.2 Banner Bearer
 		"groups": [{"kind": "banner_bearer", "count": 2, "elite": false}, {"kind": "footman", "count": 8, "elite": false}, {"kind": "archer", "count": 4, "elite": false}]},
 	{"time": 630.0, "type": "cart", "banner": "A heavy supply wagon leaves the camp: stop it!",  # GDD §8.2 supply carts
-		"kind": "supply_cart", "distance_min": 190.0, "distance_max": 240.0, "lifetime": 32.0,  # TUNING (not in GDD)
-		"reward_xp": 70, "reward_crystals": 10,  # TUNING (not in GDD)
+		"kind": "supply_cart", "pass_distance": 240.0, "pass_offset": 90.0, "lifetime": 30.0,  # TUNING (not in GDD)
+		"reward_xp": 40, "reward_crystals": 8,  # TUNING (not in GDD)
 		"escort": [{"kind": "footman", "count": 4, "elite": false}, {"kind": "shieldbearer", "count": 2, "elite": false}]},  # TUNING (not in GDD)
 	{"time": 660.0, "type": "wave", "banner": "The camp turns out against you!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "recruit", "count": 24, "elite": false}, {"kind": "purifier", "count": 6, "elite": false}, {"kind": "templar", "count": 2, "elite": false}, {"kind": "chaplain", "count": 1, "elite": true}]},
@@ -219,8 +222,8 @@ const EVENTS := [
 	{"time": 765.0, "type": "wave", "banner": "Halberdiers and archers under a banner!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "halberdier", "count": 4, "elite": false}, {"kind": "archer", "count": 6, "elite": false}, {"kind": "banner_bearer", "count": 1, "elite": false}]},
 	{"time": 800.0, "type": "cart", "banner": "The war chest is on the move: seize it!",  # GDD §8.2 supply carts
-		"kind": "supply_cart", "distance_min": 190.0, "distance_max": 240.0, "lifetime": 32.0,  # TUNING (not in GDD)
-		"reward_xp": 90, "reward_crystals": 12,  # TUNING (not in GDD)
+		"kind": "supply_cart", "pass_distance": 240.0, "pass_offset": 90.0, "lifetime": 30.0,  # TUNING (not in GDD)
+		"reward_xp": 50, "reward_crystals": 8,  # TUNING (not in GDD)
 		"escort": [{"kind": "halberdier", "count": 2, "elite": false}, {"kind": "shieldbearer", "count": 3, "elite": false}]},  # TUNING (not in GDD)
 	{"time": 820.0, "type": "wave", "banner": "The heavy infantry closes the ring!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "recruit", "count": 26, "elite": false}, {"kind": "footman", "count": 8, "elite": false}, {"kind": "purifier", "count": 6, "elite": false}, {"kind": "shieldbearer", "count": 1, "elite": true}]},
@@ -228,8 +231,8 @@ const EVENTS := [
 		"groups": [{"kind": "templar", "count": 4, "elite": false}, {"kind": "halberdier", "count": 3, "elite": false}, {"kind": "chaplain", "count": 2, "elite": false}]},
 	# Zone IV: the fortress approach (GDD §8.2 15:00 Ward generator).
 	{"time": 900.0, "type": "generators", "banner": "Holy Ward Generators burn your dead: destroy them!",  # GDD §8.2 15:00
-		"kind": "ward_generator", "count": 2, "distance_min": 230.0, "distance_max": 310.0,  # TUNING (not in GDD)
-		"reward_xp": 80, "reward_crystals": 10,  # TUNING (not in GDD)
+		"kind": "ward_generator", "count": 2, "distance_min": 160.0, "distance_max": 210.0,  # TUNING (not in GDD)
+		"reward_xp": 40, "reward_crystals": 8, "reward_chest": true,  # TUNING (not in GDD)
 		"zone": {
 			"radius": 105.0,  # TUNING (not in GDD)
 			"arm_time": 2.0,  # TUNING (not in GDD)
@@ -244,17 +247,17 @@ const EVENTS := [
 		"groups": [{"kind": "purifier", "count": 8, "elite": false}, {"kind": "archer", "count": 6, "elite": false}, {"kind": "banner_bearer", "count": 1, "elite": false}]},
 	# GDD §8.2 18:00 Cathedral defenders mobilize (moved to 16:00).
 	{"time": 960.0, "type": "wave", "banner": "The cathedral defenders mobilize!", "formation": "ring",  # GDD §8.2 18:00, moved to 16:00
-		"groups": [{"kind": "chaplain", "count": 2, "elite": false}, {"kind": "chaplain", "count": 1, "elite": true}, {"kind": "banner_bearer", "count": 2, "elite": false},
-			{"kind": "templar", "count": 3, "elite": false}, {"kind": "shieldbearer", "count": 8, "elite": false}, {"kind": "halberdier", "count": 4, "elite": false}]},
+		"groups": [{"kind": "chaplain", "count": 2, "elite": false}, {"kind": "chaplain", "count": 1, "elite": true}, {"kind": "banner_bearer", "count": 1, "elite": false},
+			{"kind": "templar", "count": 2, "elite": false}, {"kind": "shieldbearer", "count": 6, "elite": false}, {"kind": "halberdier", "count": 2, "elite": false}]},
 	# GDD §8.2 20:00 Fortress assault (moved to 16:30).
 	{"time": 990.0, "type": "wave", "banner": "FORTRESS ASSAULT: the gates are in sight!", "formation": "ring",  # GDD §8.2 20:00, moved to 16:30
-		"groups": [{"kind": "recruit", "count": 28, "elite": false}, {"kind": "footman", "count": 10, "elite": false}, {"kind": "halberdier", "count": 4, "elite": false},
+		"groups": [{"kind": "recruit", "count": 24, "elite": false}, {"kind": "footman", "count": 8, "elite": false}, {"kind": "halberdier", "count": 2, "elite": false},
 			{"kind": "templar", "count": 2, "elite": false}, {"kind": "templar", "count": 1, "elite": true}]},
 	# 17:00 Marshal Vael (BOSS_TIME): his own Crusader's Command, plus two garrison sallies.
 	{"time": 1080.0, "type": "wave", "banner": "The garrison sallies from the gates!", "formation": "line",  # TUNING (not in GDD)
 		"groups": [{"kind": "footman", "count": 10, "elite": false}, {"kind": "shieldbearer", "count": 6, "elite": false}, {"kind": "archer", "count": 6, "elite": false}, {"kind": "chaplain", "count": 1, "elite": true}]},
 	{"time": 1140.0, "type": "wave", "banner": "The last defenders surround you!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "recruit", "count": 20, "elite": false}, {"kind": "halberdier", "count": 6, "elite": false}, {"kind": "templar", "count": 3, "elite": false}, {"kind": "templar", "count": 1, "elite": true}]},
+		"groups": [{"kind": "recruit", "count": 20, "elite": false}, {"kind": "halberdier", "count": 3, "elite": false}, {"kind": "templar", "count": 2, "elite": false}, {"kind": "templar", "count": 1, "elite": true}]},
 ]
 
 ## The battlefield dead: this stage's empowered graves (GDD §8.1 mechanic

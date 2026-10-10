@@ -52,7 +52,7 @@ const ENEMIES := {
 		"attack_range": 5.0,  # TUNING (not in GDD)
 		"radius": 12.0,  # TUNING (not in GDD)
 		"armor": 0.2,  # TUNING (not in GDD)
-		"xp": 4,  # TUNING (not in GDD)
+		"xp": 2,  # TUNING (not in GDD)
 		"behavior": "melee",
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
@@ -75,7 +75,7 @@ const ENEMIES := {
 		"attack_range": 4.0,  # TUNING (not in GDD)
 		"radius": 11.0,  # TUNING (not in GDD)
 		"armor": 0.15,  # TUNING (not in GDD)
-		"xp": 6,  # TUNING (not in GDD)
+		"xp": 3,  # TUNING (not in GDD)
 		"behavior": "banner",
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
@@ -85,9 +85,9 @@ const ENEMIES := {
 		"target_priority": 0.9,  # GDD §7.2 "elevated target priority"
 		"mass": 1.2,  # TUNING (not in GDD)
 		"aura_radius": 110.0,  # TUNING (not in GDD)
-		"aura_damage_mult": 1.2,  # TUNING (not in GDD)
+		"aura_damage_mult": 1.15,  # TUNING (not in GDD)
 		"aura_speed_mult": 1.15,  # TUNING (not in GDD)
-		"aura_taken_mult": 0.85,  # TUNING (not in GDD)
+		"aura_taken_mult": 0.9,  # TUNING (not in GDD)
 	},
 	# GDD §8.2 "12:00 Heavy infantry": slow, armoured halberdier whose sweeps
 	# cleave packed summons. Counterplay: spread / heal the front line, kite
@@ -96,12 +96,12 @@ const ENEMIES := {
 		"display_name": "Crimson Halberdier",
 		"max_hp": 85.0,  # TUNING (not in GDD)
 		"move_speed": 42.0,  # TUNING (not in GDD)
-		"damage": 9.0,  # TUNING (not in GDD)
+		"damage": 8.0,  # TUNING (not in GDD)
 		"attack_interval": 1.5,  # TUNING (not in GDD)
 		"attack_range": 12.0,  # TUNING (not in GDD) halberd reach
 		"radius": 13.0,  # TUNING (not in GDD)
 		"armor": 0.35,  # TUNING (not in GDD) heavy armour
-		"xp": 7,  # TUNING (not in GDD)
+		"xp": 4,  # TUNING (not in GDD)
 		"behavior": "melee",
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
@@ -111,8 +111,8 @@ const ENEMIES := {
 		"target_priority": 0.45,  # TUNING (not in GDD)
 		"mass": 3.2,  # TUNING (not in GDD) heavy: shoves warriors
 		"cleave_radius": 34.0,  # TUNING (not in GDD)
-		"cleave_targets": 3,  # TUNING (not in GDD)
-		"cleave_mult": 0.6,  # TUNING (not in GDD)
+		"cleave_targets": 2,  # TUNING (not in GDD)
+		"cleave_mult": 0.4,  # TUNING (not in GDD)
 	},
 	# GDD §8.2 "04:00 Fortified checkpoint": a watchtower that sends recruits
 	# and archers until it falls (MarchDirector "outposts" event).
@@ -226,7 +226,7 @@ const ENEMIES := {
 		"aura_radius": 150.0,  # TUNING (not in GDD)
 		"aura_damage_mult": 1.3,  # TUNING (not in GDD)
 		"aura_speed_mult": 1.2,  # TUNING (not in GDD)
-		"aura_taken_mult": 0.75,  # TUNING (not in GDD)
+		"aura_taken_mult": 0.85,  # TUNING (not in GDD)
 	},
 }
 
@@ -269,11 +269,15 @@ const ENEMIES := {
 ##                              come from the necromancer's side; blades at
 ##                              close range reach around the shield).
 ##     shieldwall_speed_mult  — his move speed while the shield is raised.
-##     shieldwall_min_range   — px; raised only while the necromancer is at
-##                              least this far (he is being shot at).
+##     shieldwall_min_range / shieldwall_max_range — px; raised only while the
+##                              necromancer is this far (he is being shot at).
+##   Forced march (no GDD ability; Alaric has Divine Charge to close in):
+##     advance_range          — px; farther than this from the necromancer he
+##                              strides faster (shield lowered or not).
+##     advance_speed_mult     — his move-speed multiplier while striding.
 const VAEL := {
 	"display_name": "Marshal Vael, the Crimson Bulwark",  # GDD §7.5
-	"max_hp": 46000.0,  # TUNING (not in GDD) a bit above Sir Alaric: the campaign steps up
+	"max_hp": 32000.0,  # TUNING (not in GDD) x1.1 stage HP = 35,200; Shieldwall, the Holy Standard and Last Stand make him tougher than his HP says
 	"move_speed": 50.0,  # TUNING (not in GDD)
 	"damage": 14.0,  # TUNING (not in GDD) flaming sword swing
 	"attack_interval": 1.1,  # TUNING (not in GDD)
@@ -302,21 +306,21 @@ const VAEL := {
 	"last_stand_telegraph_mult": 0.8,  # TUNING (not in GDD) still readable
 	"last_stand_banner": "Marshal Vael makes his Last Stand!",  # TUNING (not in GDD)
 	# Radiant Cleave.
-	"cleave_weight": 1.4,  # TUNING (not in GDD)
-	"cleave_cooldown": 4.0,  # TUNING (not in GDD)
+	"cleave_weight": 1.0,  # TUNING (not in GDD)
+	"cleave_cooldown": 5.0,  # TUNING (not in GDD)
 	"cleave_radius": 120.0,  # TUNING (not in GDD)
 	"cleave_half_angle": 1.0,  # TUNING (not in GDD) ~115 degree sweep
 	"cleave_telegraph": 1.0,  # TUNING (not in GDD)
 	"cleave_max_range": 150.0,  # TUNING (not in GDD)
 	"cleave_damage_player": 30.0,  # TUNING (not in GDD)
-	"cleave_damage_summon": 30.0,  # TUNING (not in GDD)
+	"cleave_damage_summon": 16.0,  # TUNING (not in GDD)
 	"cleave_soak_per_unit": 0.15,  # TUNING (not in GDD) body-blocking
 	"cleave_soak_max": 0.75,  # TUNING (not in GDD)
 	# Crusader's Command.
 	"command_weight": 1.0,  # TUNING (not in GDD)
-	"command_cooldown": 20.0,  # TUNING (not in GDD)
+	"command_cooldown": 24.0,  # TUNING (not in GDD)
 	"command_telegraph": 1.5,  # TUNING (not in GDD)
-	"command_groups": [{"kind": "footman", "count": 4}, {"kind": "shieldbearer", "count": 4}, {"kind": "archer", "count": 2}],  # TUNING (not in GDD)
+	"command_groups": [{"kind": "footman", "count": 3}, {"kind": "shieldbearer", "count": 3}, {"kind": "archer", "count": 2}],  # TUNING (not in GDD)
 	"command_distance": 230.0,  # TUNING (not in GDD)
 	"command_spacing": 26.0,  # TUNING (not in GDD)
 	# Holy Standard.
@@ -329,10 +333,16 @@ const VAEL := {
 	# Shieldwall.
 	"shieldwall_weight": 1.0,  # TUNING (not in GDD)
 	"shieldwall_cooldown": 16.0,  # TUNING (not in GDD)
-	"shieldwall_duration": 5.0,  # TUNING (not in GDD)
-	"shieldwall_taken_mult": 0.3,  # TUNING (not in GDD) "high frontal damage resistance"
+	"shieldwall_duration": 4.0,  # TUNING (not in GDD)
+	"shieldwall_taken_mult": 0.5,  # TUNING (not in GDD) "high frontal damage resistance"
 	"shieldwall_speed_mult": 0.55,  # TUNING (not in GDD)
 	"shieldwall_min_range": 60.0,  # TUNING (not in GDD)
+	"shieldwall_max_range": 300.0,  # TUNING (not in GDD) only while he is within reach of the fight
+	# Forced march (TUNING, not in GDD): Sir Alaric closes gaps with Divine
+	# Charge; Vael has no dash, so he strides faster while far from the
+	# necromancer (still slower than him: kiting stays possible).
+	"advance_range": 220.0,  # TUNING (not in GDD) px
+	"advance_speed_mult": 1.8,  # TUNING (not in GDD) 50 -> 90 px/s (the necromancer runs at 110)
 }
 
 ## Marshal Vael's special ability ids (GDD §7.5), in HUD / report order

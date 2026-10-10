@@ -7,9 +7,10 @@ move. Your shadow spells fire automatically, and an **autonomous undead horde**
 of Skeleton Warriors, Skeletal Archers, Undead Mages and Undead Priests follows,
 fights, heals, holds the line and regroups without any commands from you.
 
-This repository has a playable **prototype** of the first stage, *The Desecrated
-Graveyard*, built in Godot 4.3. Every visual is drawn in code, and there are no
-external assets or addons.
+This repository has a playable **prototype** of the first two stages, *The
+Desecrated Graveyard* and *The Crimson March* (unlocked by slaying Sir Alaric),
+built in Godot 4.3. Every visual is drawn in code, and there are no external
+assets or addons.
 
 Design documents:
 - [`docs/Gravebound_Complete_Game_Design_and_Horde_Spec.txt`](docs/Gravebound_Complete_Game_Design_and_Horde_Spec.txt):
@@ -36,7 +37,8 @@ Code comments cite the spec as `GDD §N`.
 1. Download **Godot 4.3** (the standard build, not .NET) from
    <https://godotengine.org/download/archive/4.3-stable/>.
 2. Start Godot and choose **Import**, then select this folder's `project.godot`.
-3. Press **F5** (or the ▶ Play button). Choose **Play** on the main menu.
+3. Press **F5** (or the ▶ Play button). Choose **Play** on the main menu, then
+   a stage.
 
 The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 
@@ -46,6 +48,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 |---|---|---|
 | Move | WASD or arrow keys | Left stick / D-pad |
 | Menu / card navigation and confirm | Mouse, arrow keys, Enter / Space | D-pad or left stick, **A** |
+| Stage select (after **Play**) | Left / right between stages, Enter marches, Esc goes back | D-pad / stick, **A**, **B** |
 | Pick a level-up card | Click, or keys **1 / 2 / 3** | Focus + **A** |
 | Level-up: Reroll all cards (2 per run) | **R**, or the Reroll button | **X**, or focus the button + **A** |
 | Level-up: Banish a card (2 per run) | **B**, then pick the card (**B** / **Esc** cancels) | **LB**, then pick the card (**LB** / **B** cancels) |
@@ -158,7 +161,19 @@ replacing fallen units all happen automatically (GDD §4, §21).
   the active synergies, and the rerolls, banishes and skips used.
   `--policy=evolve` runs a spell build that chases the evolutions.
 
-### Stage & Boss
+### Stages
+
+**Play** opens the stage select: one card per stage with its chapter, name,
+a short description and a small emblem, plus either its lock requirement or
+your best time, boss kills and Soul Ash bonus there. Every stage runs the same
+structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
+
+| Stage | Unlock | Boss | Soul Ash |
+|---|---|---|---|
+| Chapter I, **The Desecrated Graveyard** | always open | Sir Alaric, the Gravebreaker | ×1.0 |
+| Chapter II, **The Crimson March** | slay Sir Alaric once (GDD §9.3) | Marshal Vael, the Crimson Bulwark | ×1.25 |
+
+### Stage 1: The Desecrated Graveyard (Stage & Boss)
 
 - **Obstacles.** Gravestones, dead trees and crypt walls are solid for the
   player, summons and enemies. Each one is a simple circle or rectangle, so no
@@ -201,6 +216,56 @@ replacing fallen units all happen automatically (GDD §4, §21).
   stuck if it is trying to reach its target or anchor but has not moved more
   than 10 px in 10 s; this should stay at 0.
 
+### Stage 2: The Crimson March
+
+The army marches on the Covenant's headquarters (GDD §8.2). The clock stays
+in charge: the march passes through **four battle zones** on fixed times, and
+at each change a banner names the zone, a fog of war sweeps the field and the
+terrain around you is rebuilt as the next zone (an old road always stays
+open). The zone is shown under the timer.
+
+| Zone (from) | Ground and obstacles | Timeline beats (GDD §8.2) |
+|---|---|---|
+| I, the Burned Road (0:00) | ash, burned houses, charred trees, cart wrecks | patrols; a supply cart at 2:30 |
+| II, the Fortified Checkpoint (4:00) | forest, barricades, stakes | a watchtower and a shield line at 4:00; Templar ambush at 6:00; a cart at 6:40 |
+| III, the Siege Camp (9:00) | tents, crates, siege engines | two siege outposts at 9:00; Banner Bearers; a cart at 10:30; heavy infantry at 12:00; a cart at 13:20 |
+| IV, the Fortress Approach (15:00) | cobbles, fortress walls, tower bases, rubble | two Holy Ward Generators at 15:00; cathedral defenders at 16:00; fortress assault at 16:30; **Marshal Vael at 17:00** |
+
+- **Objectives.** *Outposts* (a watchtower, two siege outposts) send a squad
+  every 12-14 s while you are nearby, until destroyed; they pay an XP burst.
+  *Holy Ward Generators* each keep a
+  holy zone up (it burns and slows undead, stings you and blocks summon
+  replacement) until destroyed; each drops XP and a chest. *Supply carts* roll
+  past you with an escort and escape after 30 s; destroying one drops XP and a
+  power-up. *The battlefield dead* (heaps of fallen soldiers) work like the
+  Graveyard's empowered graves.
+- **New Covenant soldiers** (each with its own silhouette):
+  - **Covenant Shieldbearer** (tall tower shield): takes 60% less damage from
+    projectiles (Shadow Bolt, Void Barrage, arrows, mage bolts). Warriors,
+    bashes, Shadow Blast and orbs hit it normally.
+  - **Banner Bearer** (tall swallow-tailed banner): buffs Covenant soldiers
+    within 110 px (+15% damage and speed, −10% damage taken; buffed soldiers
+    show a gold chevron). Your summons prioritise it.
+  - **Crimson Halberdier** (long halberd): slow and armoured; a hit on a
+    summon also cleaves two neighbours.
+- **Marshal Vael, the Crimson Bulwark** (35,200 HP with the stage bonus):
+  - **Radiant Cleave**: a gold sector telegraph, then a flaming sweep; each
+    summon caught in it soaks part of your damage.
+  - **Crusader's Command**: rally banners mark a shield line that forms
+    behind you.
+  - **Holy Standard**: a marked spot, then a destructible standard whose
+    aura buffs the Covenant and Vael for 15 s. Kill it or pull him away.
+  - **Shieldwall**: he raises a gold-rimmed shield for 4 s and walks slower;
+    spells and projectiles deal only 50%, warriors and bashes full damage.
+  - **Last Stand** below 30% HP: faster swings and specials, and a
+    Crusader's Command at once.
+
+  He strides faster while far from you (he has no charge). Killing him drops
+  a large XP burst, a chest and a power-up.
+- **Harder than the Graveyard**: enemies have ×1.1 HP and ×1.05 damage on top
+  of the usual time scaling, tougher kinds arrive earlier, and Soul Ash is
+  ×1.25 (its own end-screen line).
+
 ### Meta-progression (Soul Ash)
 
 - **Soul Ash** is earned at the end of **every** run and kept even if you die
@@ -216,6 +281,7 @@ replacing fallen units all happen automatically (GDD §4, §21).
   | Sir Alaric slain | 75 | 75 |
   | Seconds survived into the Reckoning | 2.5 per second (capped at 180 s) | 30 s = 75 |
   | **Ash Harvest** (Fortune) | +5% per tier on the sum | |
+  | **Stage bonus** (Crimson March) | +25% on the sum | |
 
   A strong run earns about **450** at no upgrades (about 550-610 with mid / max
   upgrades, Ash Harvest included): two or three mid-tier upgrades. A death at
@@ -258,7 +324,11 @@ replacing fallen units all happen automatically (GDD §4, §21).
   `save.cfg.corrupt` and the game starts fresh. Every value is type-checked and
   clamped, unknown keys are ignored, and tiers whose prerequisite is missing
   are refunded. The autotest never reads or writes it (unless `--meta-save`).
-  The active Profane Oath tier is saved as `[oath] active`.
+  The active Profane Oath tier is saved as `[oath] active`. Per-stage records
+  (runs, victories, best time, boss kills) are saved under `[stages]`; they
+  drive the stage unlocks. An older save without that section is migrated:
+  its lifetime stats become the Graveyard record, so a past Alaric kill
+  unlocks the Crimson March.
 
 ### Power-ups & Profane Pact
 
@@ -347,6 +417,8 @@ replacing fallen units all happen automatically (GDD §4, §21).
 | Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 13:00. |
 | Waves and stage events (§11) | The data-driven 20-minute Graveyard timeline at the GDD's real times (Sir Alaric at 17:00), then the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
+| Stages (§8, §9.3, §10.2) | A stage registry with two stages, a stage select (locks, best time, boss kills) and the GDD §9.3 unlock (slay Sir Alaric once to open the Crimson March). See *Stages* above. |
+| Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
 | Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades, prerequisites, respec) plus the opt-in Profane Oath, 3 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
@@ -399,14 +471,17 @@ scripts/
     meta_modifiers.gd       The ONE path meta upgrades take into a run (game.meta, read by stat code)
     difficulty_modifiers.gd The ONE path the Profane Pact + Oath take into a run (game.difficulty)
     arena.gd                Solid obstacles (circles/rects) and the collision push-out used by all units
-    main.gd                 Switches menu <-> run (a run is a fresh Game node every time)
+    main.gd                 Switches menu <-> run (a run is a fresh Game node every time, built from a RunConfig)
+    run_config.gd           Pre-run choices handed from the menu into Game (the stage; hook for difficulty / modifiers)
     game.gd                 One run: builds world + managers in code, fixed-order simulation step,
-                            level-up / pause / end-of-run flow
+                            level-up / pause / end-of-run flow; `stage_def` = the run's stage
     spatial_hash.gd         Uniform grid for radius queries (enemies and allies, rebuilt per tick)
     combat_resolver.gd      All damage / healing / kills / XP drops / stats go through here
     effect.gd, effect_manager.gd   Pooled cosmetic effects and boss telegraphs
     glyphs.gd               All placeholder shapes (world entities AND UI icons share this code)
     ground.gd               Procedural graveyard floor, redrawn only when the camera changes cell
+    march_ground.gd         Crimson March floor: the road and each battle zone's look (extends Ground)
+    march_glyphs.gd         Crimson March shapes: new soldiers, structures, Marshal Vael, obstacles, corpse piles
     autotest.gd             Headless self-test driver
   player/necromancer.gd
   horde/
@@ -415,11 +490,14 @@ scripts/
     synergy_manager.gd      Army synergy activation and effects
     summoned_unit.gd        The ONE shared FSM/steering/targeting AI for all summon classes
   enemies/
-    enemy.gd                Data-driven Covenant soldier (melee / purifier / ranged / healer),
-                            plus warrior-blocking resolution
-    boss_alaric.gd          Sir Alaric (extends Enemy): five telegraphed attacks + Wrath phase
-    stage_director.gd       Graveyard events: empowered graves, Desecration, Crypt Defender, holy ground
-    enemy_director.gd       Wave timeline, events, boss, Reckoning, pooling, recycling
+    enemy.gd                Data-driven Covenant soldier (melee / purifier / ranged / healer / banner /
+                            structure / cart), auras, cleaves, damage-taken hook, warrior-blocking resolution
+    boss.gd                 Shared base of the stage bosses (extends Enemy; EnemyDirector.boss)
+    boss_alaric.gd          Sir Alaric (extends Boss): five telegraphed attacks + Wrath phase
+    boss_vael.gd            Marshal Vael (extends Boss): Cleave, Command, Holy Standard, Shieldwall, Last Stand
+    stage_director.gd       Empowered graves, Desecration, Crypt Defender, holy ground (incl. ward-generator zones)
+    march_director.gd       Crimson March: battle zones, outposts, ward generators, supply carts, timed structures
+    enemy_director.gd       The stage's wave timeline, events, boss, Reckoning, pooling, recycling
   abilities/
     ability_manager.gd      Spell casting, passive values, level-up card generation + deltas
     orb_shield.gd           Shadow Orb Shield
@@ -435,17 +513,24 @@ scripts/
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
                             progression_glyphs (evolution/synergy icons),
                             ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons),
-                            chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons)
+                            chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
+                            stage_select (stage cards, locks, best times; the pre-run settings hook)
   data/                     DESIGNER-TUNABLE DATA (no logic):
+    stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
+    stages/graveyard_stage.gd      Stage 1: segments, events, Reckoning flavour, graves, desecration,
+                                   Crypt Defender, obstacle layout, boss arrival
+    stages/crimson_march_stage.gd  Stage 2: segments, events, zones (ground + layout), march config,
+                                   stage multipliers, boss arrival
     unit_data.gd            Summon classes, level tables, AI weights, leash/rates
-    enemy_data.gd           Enemy roster, boss, Reckoning enemy, elites
-    wave_data.gd            Countdown, segments, events, Reckoning escalation
+    enemy_data.gd           Graveyard enemy roster, Sir Alaric, Reckoning enemy, elites
+    march_enemy_data.gd     Crimson March soldiers and structures, Marshal Vael
+    wave_data.gd            Shared run rules: countdown, enemy time scaling, caps, spawn ring
     ability_data.gd         Spell level tables
     passive_data.gd         Passive level tables
     evolution_data.gd       Evolution recipes and stats
     synergy_data.gd         Army synergy requirements and effects
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
-    arena_data.gd           Obstacle layout
+    arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
     sound_data.gd           Sound recipes, voice limits, priorities
     player_data.gd          Player stats, XP curve, slot counts
     meta_data.gd            Soul Ash formula, upgrade trees / tiers / costs, achievements, autotest profiles
@@ -520,8 +605,20 @@ Options (after `--`):
 | `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). |
 | `--oath=N` | Active Profane Oath tier 0-5 (default 0). No `--meta` profile includes the Oath, so `--meta=max` balance runs stay comparable. |
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
+| `--stage=ID` | Stage to play: `graveyard` (default) or `crimson_march`. Stage locks are ignored. |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
+
+On the Crimson March the autopilot also walks toward outposts, ward generators
+and supply carts when nothing presses it, and the summary adds four lines:
+`crimson march` (zones entered and the final zone; outposts, generators,
+carts and Holy Standards placed / destroyed / escaped; outpost reinforcements;
+ward zones), `march enemies` (aura buff pulses, halberd cleave hits, damage
+resisted by tower shields and by Vael, kills of the new kinds), `marshal vael`
+(Last Stand, cleave hits on summons and how often they soaked his blow for
+you, Crusader's Command soldiers) and `march events` (a timed log). The
+`boss attacks` line lists the stage boss's own specials. Every run ends with
+a `stage:` line (stage, Soul Ash stage bonus, stages unlocked by the run).
 
 The summary covers: result, time, kills, level, army per class, boss
 spawn/kill, all cards picked, and per-source damage (`dmg_warrior`, `dmg_bolt`,
@@ -556,7 +653,8 @@ chest within 450 px unless enemies press it hard, and to a power-up within
 `.github/workflows/ci.yml` runs on every push and pull request:
 
 1. **test:** imports the project with Godot 4.3 headless and runs the full 20-minute autotest with the naive and
-   army policies (`--quit-after 15000`, at most 10 wall-clock minutes per run, 20 minutes for the job).
+   army policies on the Graveyard, then once on the Crimson March (`--stage=crimson_march`) (`--quit-after 15000`,
+   at most 10 wall-clock minutes per run, 30 minutes for the job).
    It fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if a run doesn't complete.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in
    the executable), runs the autotest again on the exported Linux build, and uploads both as workflow artifacts.
@@ -590,7 +688,13 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
   the strongest single source: about 30-45% of all damage in army / naive
   builds, about 60-70% in the spell build. A first-time naive player kills
   Alaric only about 1 run in 4.
-- Only the Graveyard stage (a 20-minute run, the GDD's lower bound).
+- Two stages so far (the Sanctum of Judgment is next), both 20-minute runs
+  (the GDD's lower bound). The **Crimson March** has only a first balance pass
+  (`--mortal`, meta none, 4 seeds per bot): the army bot never died (lowest HP
+  76-102), killed Marshal Vael in 3 of 4 runs, completed its build at
+  15:29-16:00 (a little early) and earned 455-561 Soul Ash; the naive bot died
+  in 1 of 4 and killed him in 1 of 4. The terrain changes at each battle zone
+  rather than scrolling (the clock drives the march).
 - Arrows and spells fly over obstacles (no line-of-sight checks).
 - Eclipse Ward usually arrives late (15:00-19:00) and only in builds that
   take Orb Shield. No evolution is granted before 8:00 elapsed.
@@ -617,10 +721,12 @@ retune Void Barrage and the boss; the remaining passives (Bone Plating, Unholy
 Precision, Forbidden Knowledge, Dark Benediction, Unholy Resilience, Bound
 Souls); the Banner Bearer; saves; density and minion-HP-bar settings (§38).
 
-**Phase 3 – Campaign:** Crimson March and Sanctum stages, Marshal Vael and
-Grand Inquisitor Seraphine, remaining enemies, Soul Ash balance against the
-full-length stage, the real achievement unlocks, difficulties and modifiers,
-skins.
+**Phase 3 – Campaign:** the Crimson March and Marshal Vael are in (a human
+playtest and balance pass are next); the Sanctum of Judgment and Grand
+Inquisitor Seraphine, the remaining enemies (Radiant Inquisitor, Sanctified
+Sentinel, High Confessor), Soul Ash balance against the full-length stage, the
+real achievement unlocks, difficulties and modifiers (a pre-run step plugs
+into `RunConfig`), skins.
 
 **Phase 4 – Polish:** real art and animation, audio, accessibility, full
 controller UX, profiling on target hardware (§40 stress scenarios), balance.

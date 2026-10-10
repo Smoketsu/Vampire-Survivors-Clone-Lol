@@ -150,7 +150,7 @@ func _special_usable(id: String, d: float) -> bool:
 		"standard":
 			return not _standard_alive()
 		"shieldwall":
-			return shieldwall_left <= 0.0 and d >= float(boss_def["shieldwall_min_range"])
+			return shieldwall_left <= 0.0 and d >= float(boss_def["shieldwall_min_range"]) and d <= float(boss_def["shieldwall_max_range"])
 	return true
 
 
@@ -179,11 +179,11 @@ func physics_step(delta: float) -> void:
 	if shieldwall_left > 0.0:
 		shieldwall_left -= delta
 		if shieldwall_left <= 0.0:
-			move_speed = _base_speed
 			queue_redraw()
 	match phase:
 		Phase.WALK:
 			special_cd -= delta
+			_update_speed(delta)
 			super.physics_step(delta)
 		Phase.CLEAVE_WINDUP:
 			_hold(delta)
@@ -205,6 +205,18 @@ func physics_step(delta: float) -> void:
 			if phase_time >= float(boss_def["recover_time"]):
 				_end_special()
 				_set_phase(Phase.WALK)
+
+
+## Walking speed this tick: slower behind a raised Shieldwall, faster on a
+## forced march while the necromancer is farther than advance_range.
+func _update_speed(delta: float) -> void:
+	var spd := _base_speed
+	if shieldwall_left > 0.0:
+		spd *= float(boss_def["shieldwall_speed_mult"])
+	if position.distance_to(game.player.position) > float(boss_def["advance_range"]):
+		spd *= float(boss_def["advance_speed_mult"])
+		game.stat_add("boss_advance_time", delta)
+	move_speed = spd
 
 
 ## Standing still during a windup / recovery (timers keep running).
@@ -375,7 +387,6 @@ func _resolve_standard() -> void:
 ## slower). No windup: the raised gold-rimmed shield is the tell.
 func _start_shieldwall() -> void:
 	shieldwall_left = float(boss_def["shieldwall_duration"])
-	move_speed = _base_speed * float(boss_def["shieldwall_speed_mult"])
 	game.effects.ring(position, radius * 2.2, Palette.SILVER, 0.4)
 	_last_special = "shieldwall"
 	_special_cds["shieldwall"] = float(boss_def["shieldwall_cooldown"])
