@@ -9,13 +9,18 @@
 ##     §10.4 level-up panel), respecting the 6 active / 6 passive slot limits
 ##     (GDD §6),
 ##   * spell evolutions (GDD §6.1, EvolutionData): Void Barrage, Eclipse Ward
-##     and Abyssal Detonation, offered as a highlighted card once the base
-##     spell is level 5 and its paired passive is owned,
+##     and Abyssal Detonation. Once ready_evolutions() lists one, it is
+##     delivered ONLY by the next treasure chest (chest_rewards() grants it
+##     first; user decision, the GDD's "special elite reward"), never as a
+##     level-up card,
 ##   * the limited rerolls / banishes and unlimited skips of the level-up
 ##     panel (GDD §9.1, LevelUpData), plus fallback cards when nothing is left.
 ## Spell stats are "effective": the level row (or evolution row) with the
 ## spell passives applied (Soul Conduit damage, Abyssal Focus cooldowns) and
-## the meta Shadowcraft upgrades (game.meta, see MetaModifiers).
+## the meta Shadowcraft upgrades (game.meta, see MetaModifiers); spell_stats()
+## also applies the Hyper power-up (x2 damage, halved cooldowns) while it runs.
+## The Profane Pact (PactData) is a regular passive here; its card shows the
+## combined Pact + Oath penalties and rewards (game.difficulty).
 class_name AbilityManager
 extends Node2D
 
@@ -118,13 +123,35 @@ func spell_row(id: String) -> Dictionary:
 	return AbilityData.SPELLS[id]["levels"][lvl - 1]
 
 
-## Effective stats of spell `id` (spell_row() with the spell passives applied;
-## empty if not learned). Cached until the next card is applied.
+## Effective stats of spell `id` (spell_row() with the spell passives and
+## the Hyper power-up applied; empty if not learned). Cached until the next
+## card is applied or a Hyper buff starts / ends (invalidate_spell_stats()).
 func spell_stats(id: String) -> Dictionary:
 	if not _eff_cache.has(id):
 		var row := spell_row(id)
-		_eff_cache[id] = {} if row.is_empty() else apply_spell_mods(row)
+		_eff_cache[id] = {} if row.is_empty() else _apply_spell_buffs(apply_spell_mods(row))
 	return _eff_cache[id]
+
+
+## Drops the cached effective spell stats (a timed spell buff changed).
+func invalidate_spell_stats() -> void:
+	_eff_cache.clear()
+
+
+## Applies the Hyper power-up (PowerupManager) to an effective stats row in
+## place: damage keys x spell_damage_mult(), cooldown keys x
+## spell_cooldown_mult(). Returns `out` unchanged while Hyper is off.
+func _apply_spell_buffs(out: Dictionary) -> Dictionary:
+	var pw := game.powerups  # Owner of the timed buffs.
+	if pw == null or not pw.is_active("hyper"):
+		return out
+	for key: String in ["damage", "pulse_damage"]:
+		if out.has(key):
+			out[key] = float(out[key]) * pw.spell_damage_mult()
+	for key: String in ["cooldown", "recharge", "pulse_interval"]:
+		if out.has(key):
+			out[key] = float(out[key]) * pw.spell_cooldown_mult()
+	return out
 
 
 ## Applies the spell passives and meta upgrades to a stats row (GDD §6.4
@@ -371,23 +398,50 @@ func _step_detonations(delta: float) -> void:
 # =====================================================================================
 
 ## Builds up to `n` offers (GDD §9.1 "three randomized choices"):
-##   1. every ready evolution first (highlighted special cards),
-##   2. weighted draw without replacement from every upgradeable spell,
+##   1. weighted draw without replacement from every upgradeable spell,
 ##      summon class and passive (LevelUpData weights: owned upgrades and
 ##      evolution paths come up more often, "dead" cards rarely; never only
 ##      dead cards while a live one exists),
-##   3. fallback cards fill any slot left empty (everything maxed / banished).
+##   2. fallback cards fill any slot left empty (everything maxed / banished).
+## Ready evolutions are NOT offered here: treasure chests deliver them
+## (chest_rewards()).
 func build_offers(n: int) -> Array[Dictionary]:
 	var offers: Array[Dictionary] = []
-	for evo: String in ready_evolutions():
-		if offers.size() < n:
-			offers.append(_evolution_offer(evo))
 	var cands := _candidates({})
 	while offers.size() < n and not cands.is_empty():
 		offers.append(_draw_weighted(cands))
 	_ensure_live_card(offers, cands)
 	_fill_fallbacks(offers, n)
 	return offers
+
+
+## Treasure chest contents (ChestData): grants up to `n` rewards one after
+## the other and returns their offers in order (already applied):
+##   1. every ready evolution first (ready_evolutions(), the eligibility
+##      check is unchanged),
+##   2. then weighted draws from the normal level-up pool (_candidates(),
+##      recomputed after each grant, so one item may rise twice; the Profane
+##      Pact is never granted by a chest),
+##   3. if nothing at all can be upgraded, the Dark Restoration heal.
+func chest_rewards(n: int) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []  # Rewards granted, in order.
+	for _i in n:
+		var o: Dictionary = {}  # Reward to grant next.
+		var evos := ready_evolutions()  # Evolutions waiting for a chest.
+		if not evos.is_empty():
+			o = _evolution_offer(evos[0])
+		else:
+			var cands := _candidates({PactData.ID: true})  # Pool without the Pact.
+			if cands.is_empty():
+				break
+			o = _draw_weighted(cands)
+		apply_offer(o)
+		out.append(o)
+	if out.is_empty():
+		var heal := _fallback_offer("dark_restoration")  # Nothing left to upgrade.
+		apply_offer(heal)
+		out.append(heal)
+	return out
 
 
 ## Uses one reroll charge. Returns false (nothing happens) when none is left.
@@ -530,6 +584,8 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 		var dead := (id in PassiveData.ARMY_PASSIVES and not owns_summon) or (id in PassiveData.SPELL_PASSIVES and not owns_spell)
 		if dead:
 			w *= LevelUpData.WEIGHT_DEAD
+		if id == PactData.ID:
+			w *= PactData.CARD_WEIGHT_MULT  # Modest weight (PactData).
 		out.append({"offer": _passive_offer(id, lvl), "weight": w, "dead": dead})
 	return out
 
@@ -635,7 +691,7 @@ func _spell_offer(id: String, lvl: int) -> Dictionary:
 func _evolution_offer(evo: String) -> Dictionary:
 	var def: Dictionary = EvolutionData.EVOLUTIONS[evo]
 	var base: String = def["base"]
-	var cur := spell_stats(base)
+	var cur := apply_spell_mods(spell_row(base))
 	var nxt := apply_spell_mods(def["stats"])
 	var labels: Dictionary = def["labels"]
 	var deltas := PackedStringArray()
@@ -654,7 +710,7 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 	var base: Dictionary = UnitData.UNITS[cls]
 	var plural: String = base["plural"]
 	var dom := game.horde.bonus_capacity(cls)
-	var nxt := game.horde.compute_stats(cls, lvl + 1)
+	var nxt := game.horde.compute_stats(cls, lvl + 1, false)
 	var deltas := PackedStringArray()
 	var desc := ""
 	if lvl == 0:
@@ -672,7 +728,7 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 		deltas.append("Range %s px" % _fmt(nxt["attack_range"]))
 	else:
 		desc = "Strengthen your %s." % plural.to_lower()
-		var cur := game.horde.compute_stats(cls, lvl)
+		var cur := game.horde.compute_stats(cls, lvl, false)
 		_delta_line(deltas, plural, float(int(cur["count"]) + dom), float(int(nxt["count"]) + dom))
 		_delta_line(deltas, "Max HP", cur["max_hp"], nxt["max_hp"])
 		if cls == "priest":
@@ -692,6 +748,8 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 
 ## Passive card: passive value now vs next plus one concrete effect line.
 func _passive_offer(id: String, lvl: int) -> Dictionary:
+	if id == PactData.ID:
+		return _pact_offer(lvl)
 	var def: Dictionary = PassiveData.PASSIVES[id]
 	var levels: Array = def["levels"]
 	var labels: Dictionary = def["labels"]
@@ -704,7 +762,7 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 		var nxt_v := float(nxt[key])
 		deltas.append("%s %s -> %s" % [label, _fmt_passive(cur_v, fmt), _fmt_passive(nxt_v, fmt)])
 	# One concrete, player-visible consequence (GDD §34 "player-visible").
-	var warrior := game.horde.compute_stats("warrior", maxi(1, int(game.horde.class_levels["warrior"])))
+	var warrior := game.horde.compute_stats("warrior", maxi(1, int(game.horde.class_levels["warrior"])), false)
 	match id:
 		"grave_dominion":
 			deltas.append("Army capacity %d -> %d" % [game.horde.total_capacity(lvl), game.horde.total_capacity(lvl + 1)])
@@ -748,6 +806,22 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 		else:
 			hint = "Evolves %s (Lv %d/%d) into %s" % [AbilityData.SPELLS[spell]["display_name"], spell_level(spell), EvolutionData.BASE_LEVEL_REQUIRED, e_name]
 	return _offer("passive", id, def["display_name"], def["icon"], lvl, lvl + 1, "PASSIVE", def["description"], deltas, hint)
+
+
+## Profane Pact card (tag PACT): every penalty and reward as the COMBINED
+## Pact + Oath bonus now -> after this level (game.difficulty adds them).
+func _pact_offer(lvl: int) -> Dictionary:
+	var def: Dictionary = PassiveData.PASSIVES[PactData.ID]  # The Pact passive definition.
+	var labels: Dictionary = def["labels"]  # Key -> [label, format].
+	var deltas := PackedStringArray()  # One "label old -> new" line per key.
+	for key: String in PactData.KEYS:
+		var cur_v := game.difficulty.value(key, lvl)  # Bonus at the current level.
+		var nxt_v := game.difficulty.value(key, lvl + 1)  # Bonus after this card.
+		deltas.append("%s %s -> %s" % [labels[key][0], _fmt_passive(cur_v, "pct"), _fmt_passive(nxt_v, "pct")])
+	var hint := "Raises danger AND rewards. Can be banished."  # Card footer line.
+	if game.difficulty.oath_tier() > 0:
+		hint = "Includes your Profane Oath %s. Can be banished." % DifficultyModifiers.roman(game.difficulty.oath_tier())
+	return _offer("passive", PactData.ID, def["display_name"], def["icon"], lvl, lvl + 1, "PACT", def["description"], deltas, hint)
 
 
 ## Fallback card `id` (LevelUpData.FALLBACKS) with its concrete effect.

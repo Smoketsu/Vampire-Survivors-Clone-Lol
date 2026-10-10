@@ -473,3 +473,5 @@ func _draw() -> void:
 		draw_circle(Vector2.ZERO, radius * 1.6, Color(Palette.FLAME, 0.14))
 		draw_arc(Vector2.ZERO, radius * 1.6, 0.0, TAU, 32, Color(Palette.GOLD, 0.7), 2.0)
 	Glyphs.draw_boss(self, Vector2.ZERO, radius, flash > 0.0, pose)
+	if frozen:
+		PowerupGlyphs.draw_frozen(self, Vector2.ZERO, radius)  # Stasis power-up.

@@ -117,8 +117,9 @@ func slow_enemy(e: Enemy, fraction: float, duration: float) -> void:
 		e.apply_slow(fraction, duration)
 
 
-## Death of an enemy: cosmetic pop, XP crystal, kill counter, then the
-## EnemyDirector deactivates/pools it (or ends the run for the boss).
+## Death of an enemy: cosmetic pop, XP crystal, kill counter, power-up drop
+## and chest rolls, then the EnemyDirector deactivates/pools it (or ends the run for the
+## boss).
 func _kill_enemy(e: Enemy) -> void:
 	game.effects.pop(e.position, Palette.CRIMSON if not e.is_boss else Palette.GOLD, e.radius * 1.2)
 	Juice.enemy_killed(e)
@@ -129,4 +130,6 @@ func _kill_enemy(e: Enemy) -> void:
 	if e.is_elite:
 		game.stat_add("elite_kills", 1.0)  # Soul Ash elite bonus (MetaData)
 	game.kills += 1
+	game.powerups.on_enemy_killed(e)  # Power-up drop roll (PowerupData rules).
+	game.chests.on_enemy_killed(e)  # Treasure chest roll (ChestData rules).
 	game.enemies.on_enemy_killed(e)

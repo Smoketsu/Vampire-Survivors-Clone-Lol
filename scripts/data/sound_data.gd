@@ -150,6 +150,47 @@ const SOUNDS: Dictionary = {  # TUNING (not in GDD)
 		"layers": [
 			{"wave": "tri", "f0": 660.0, "dur": 0.08, "amp": 0.3, "decay": 0.03},
 			{"wave": "tri", "f0": 880.0, "start": 0.05, "dur": 0.1, "amp": 0.3, "decay": 0.04}]},
+	# --- Power-up pickups (PowerupData, played by Juice.powerup_collected) ------
+	"pu_magnet": {"dur": 0.6, "volume_db": -11.0, "max_voices": 1, "min_interval": 200, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 330.0, "f1": 1320.0, "dur": 0.55, "amp": 0.35, "attack": 0.02, "decay": 0.3, "vib_hz": 14.0, "vib_depth": 0.02},
+			{"wave": "tri", "f0": 660.0, "f1": 1760.0, "start": 0.08, "dur": 0.5, "amp": 0.2, "decay": 0.25},
+			{"wave": "noise", "dur": 0.5, "amp": 0.08, "attack": 0.2, "lp0": 1500.0, "lp1": 6000.0}]},
+	"pu_feast": {"dur": 0.45, "volume_db": -12.0, "max_voices": 1, "min_interval": 200, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.35, "decay": 0.02, "lp0": 2500.0, "lp1": 700.0},
+			{"wave": "noise", "start": 0.12, "dur": 0.08, "amp": 0.3, "decay": 0.02, "lp0": 2200.0, "lp1": 600.0},
+			{"wave": "sine", "f0": 392.0, "f1": 523.0, "start": 0.15, "dur": 0.3, "amp": 0.3, "attack": 0.02, "decay": 0.12},
+			{"wave": "sine", "f0": 784.0, "start": 0.22, "dur": 0.22, "amp": 0.15, "decay": 0.08}]},
+	"pu_hyper": {"dur": 0.6, "volume_db": -10.0, "max_voices": 1, "min_interval": 200, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 110.0, "f1": 880.0, "dur": 0.4, "amp": 0.3, "attack": 0.01, "decay": 0.2, "lp0": 800.0, "lp1": 5000.0},
+			{"wave": "square", "f0": 440.0, "start": 0.3, "dur": 0.3, "amp": 0.15, "decay": 0.1, "lp0": 3000.0},
+			{"wave": "noise", "dur": 0.15, "amp": 0.3, "decay": 0.04, "lp0": 6000.0, "lp1": 2000.0}]},
+	"pu_stasis": {"dur": 0.9, "volume_db": -10.0, "max_voices": 1, "min_interval": 300, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 1568.0, "f1": 392.0, "dur": 0.8, "amp": 0.3, "decay": 0.35},
+			{"wave": "tri", "f0": 2093.0, "dur": 0.5, "amp": 0.12, "decay": 0.2, "vib_hz": 22.0, "vib_depth": 0.01},
+			{"wave": "noise", "dur": 0.9, "amp": 0.15, "attack": 0.05, "decay": 0.4, "lp0": 8000.0, "lp1": 1500.0}]},
+	"pu_frenzy": {"dur": 0.7, "volume_db": -10.0, "max_voices": 1, "min_interval": 200, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 73.42, "f1": 146.83, "dur": 0.6, "amp": 0.35, "attack": 0.05, "decay": 0.3, "lp0": 500.0, "lp1": 1600.0, "vib_hz": 7.0, "vib_depth": 0.04},
+			{"wave": "square", "f0": 110.0, "dur": 0.5, "amp": 0.15, "attack": 0.1, "decay": 0.2, "lp0": 900.0},
+			{"wave": "noise", "dur": 0.4, "amp": 0.25, "decay": 0.12, "lp0": 2500.0, "lp1": 400.0}]},
+	"pu_nova": {"dur": 1.3, "volume_db": -6.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.0, "priority": 5,
+		"layers": [
+			{"wave": "sine", "f0": 60.0, "f1": 30.0, "dur": 1.2, "amp": 0.7, "decay": 0.45},
+			{"wave": "noise", "dur": 1.0, "amp": 0.55, "attack": 0.01, "decay": 0.3, "lp0": 7000.0, "lp1": 200.0},
+			{"wave": "saw", "f0": 146.83, "f1": 587.33, "dur": 0.5, "amp": 0.2, "attack": 0.02, "decay": 0.2, "lp0": 1200.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 1174.66, "start": 0.1, "dur": 1.0, "amp": 0.15, "decay": 0.4, "vib_hz": 6.0, "vib_depth": 0.01}]},
+	# --- Treasure chest (ChestPanel reveal) -------------------------------------
+	"chest_open": {"dur": 1.0, "volume_db": -9.0, "max_voices": 1, "min_interval": 300, "pitch_var": 0.0, "priority": 4,
+		"layers": [
+			{"wave": "noise", "dur": 0.12, "amp": 0.4, "decay": 0.04, "lp0": 2000.0, "lp1": 500.0},
+			{"wave": "tri", "f0": 523.25, "start": 0.15, "dur": 0.4, "amp": 0.25, "decay": 0.15},
+			{"wave": "tri", "f0": 659.25, "start": 0.25, "dur": 0.4, "amp": 0.25, "decay": 0.15},
+			{"wave": "tri", "f0": 783.99, "start": 0.35, "dur": 0.4, "amp": 0.25, "decay": 0.15},
+			{"wave": "sine", "f0": 1046.5, "start": 0.45, "dur": 0.55, "amp": 0.25, "decay": 0.25, "vib_hz": 8.0, "vib_depth": 0.01}]},
 }
 
 ## Music drone loop length in seconds (all oscillators are snapped to a whole

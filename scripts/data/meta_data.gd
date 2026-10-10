@@ -22,6 +22,16 @@
 ##   Survival    — health, armor, movement (+ one revival per run)
 ##   Fortune     — pickup radius, reward luck (XP / Soul Ash gain), rerolls
 ##                 and banishes (GDD open question 7)
+## plus one standalone entry outside the four trees (user request, the
+## Vampire Survivors "Curse" idea):
+##   Oath        — Profane Oath: 5 cheap tiers of opt-in DIFFICULTY (more,
+##                 stronger enemies) for more XP, Soul Ash and power-up drops.
+##                 Its per-tier effect is PactData.OATH_PER_TIER; it stacks
+##                 additively with the in-run Profane Pact passive through
+##                 DifficultyModifiers. The player can lower or switch off the
+##                 ACTIVE tier in the Ossuary for free (owned tiers stay owned,
+##                 Meta.oath_active), and the autotest profiles never include
+##                 it (use --oath=N).
 ## Each upgrade raises ONE modifier stat (STATS) by `per_tier` per tier.
 ## Costs rise per tier. `requires` names a prerequisite inside the same tree
 ## ({} = none). MetaModifiers sums the stats; the game's stat code reads them.
@@ -67,6 +77,8 @@ const TREE_ORDER := ["necromancy", "shadowcraft", "survival", "fortune"]
 ## Tree definitions (GDD §9.2): display_name, "improves" line from the GDD
 ## table, icon (MetaGlyphs kind) and accent colour.
 const TREES := {
+	# Standalone Oath entry (not in TREE_ORDER: shown in the Ossuary's bottom row).
+	"oath": {"display_name": "Oath", "improves": "Opt-in difficulty for richer rewards", "icon": "tree_oath", "color": Palette.CRIMSON},  # TUNING (not in GDD)
 	"necromancy": {"display_name": "Necromancy", "improves": "Minion cap, health and damage", "icon": "tree_necromancy", "color": Palette.NECRO_GREEN},  # GDD §9.2
 	"shadowcraft": {"display_name": "Shadowcraft", "improves": "Spell damage, cooldowns, AoE", "icon": "tree_shadowcraft", "color": Palette.VIOLET},  # GDD §9.2
 	"survival": {"display_name": "Survival", "improves": "Health, armor and movement", "icon": "tree_survival", "color": Palette.COLD_BLUE},  # GDD §9.2
@@ -87,7 +99,9 @@ const TREES := {
 ##   xp_gain                      Game.add_xp
 ##   ash_gain                     Meta.compute_ash
 ##   rerolls, banishes            AbilityManager.setup (added to LevelUpData)
+##   oath_tier                    DifficultyModifiers.oath_tier (Profane Oath)
 const STATS := {
+	"oath_tier": ["Oath tier", "int"],
 	"minion_hp": ["Minion HP", "pct"],
 	"minion_damage": ["Minion damage", "pct"],
 	"replace_reduction": ["Replacement time", "neg_pct"],
@@ -115,6 +129,7 @@ const UPGRADE_ORDER := [
 	"umbral_potency", "quickened_rites", "widening_dark", "shadow_mastery",
 	"grave_flesh", "bone_mail", "fleet_shade", "undying_will",
 	"soul_magnet", "grave_tithe", "ash_harvest", "fates_thread", "banishing_rite",
+	"profane_oath",
 ]
 
 ## Upgrade definitions.
@@ -127,6 +142,11 @@ const UPGRADE_ORDER := [
 ##   costs        — Soul Ash price of each tier (size = number of tiers).
 ##   requires     — {"id": upgrade, "tier": N} needed before tier 1 ({} = none).
 const UPGRADES := {
+	# Oath (standalone, user request): opt-in difficulty, cheap on purpose
+	# since it is a risk / reward choice rather than pure power.
+	"profane_oath": {"tree": "oath", "display_name": "Profane Oath", "icon": "profane_oath",
+		"description": "Swear yourself to the grave: from the first second, more and stronger Covenant soldiers, and richer XP, Soul Ash and power-ups.",
+		"stat": "oath_tier", "per_tier": 1.0, "costs": [25, 50, 75, 100, 125], "requires": {}},  # TUNING (not in GDD)
 	# Necromancy (GDD §9.2: minion cap, health and damage).
 	"necrotic_marrow": {"tree": "necromancy", "display_name": "Necrotic Marrow", "icon": "necrotic_marrow",
 		"description": "Grave-marrow thickens the bones of every summon.",
@@ -218,6 +238,8 @@ const WARRIOR_KILL_SOURCES := ["warrior", "bash"]
 ## Autotest --meta profiles: "none" (no upgrades, the default so balance runs
 ## stay comparable), "mid" (about half of every tree, ~8 good runs) and "max"
 ## (everything bought). Applied in memory only; user:// is never touched.
+## No profile includes the Profane Oath (a difficulty choice, not power), so
+## balance comparisons stay clean; the autotest sets it with --oath=N.
 const AUTOTEST_PROFILES := ["none", "mid", "max"]
 
 
@@ -274,4 +296,5 @@ static func autotest_tiers(profile: String) -> Dictionary:
 			var req: Dictionary = UPGRADES[id]["requires"]
 			if not req.is_empty() and int(out.get(String(req["id"]), 0)) < int(req["tier"]):
 				out[id] = 0
+	out.erase(PactData.OATH_ID)  # Never part of a profile (see above).
 	return out

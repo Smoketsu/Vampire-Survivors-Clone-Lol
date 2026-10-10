@@ -10,7 +10,8 @@
 ##     classes and spells first so every system gets exercised; --policy=army:
 ##     a summoner build that levels summons and army passives first;
 ##     --policy=evolve: a spell build that chases all three evolutions).
-##     Every policy takes an evolution card as soon as one is offered; army
+##     Every policy would take an evolution card first (evolutions now come
+##     only from treasure chests, so level-up hands no longer hold them); army
 ##     and evolve also banish unwanted items and reroll weak hands (naive
 ##     never does, it plays like a careless player),
 ##   * exercises both Shadow Bolt aim modes: Nearest until the boss spawns,
@@ -30,7 +31,20 @@
 ##     its breakdown in the summary,
 ##   * detects stuck units: a summon or enemy that wants to move toward its
 ##     goal (target out of reach, anchor far away, returning...) but has not
-##     moved more than STUCK_DISTANCE px in STUCK_TIME s.
+##     moved more than STUCK_DISTANCE px in STUCK_TIME s,
+##   * Profane Pact: every other policy ranks the Pact card below every card,
+##     fallbacks included (PACT_SCORE), so balance runs never take it; --policy=pact is the
+##     naive build that takes it at once (PACT_EAGER_SCORE). --oath=N sets the
+##     Profane Oath tier. The summary reports whether and when the Pact was
+##     taken, the Oath tier, and the extra XP / Soul Ash they gave,
+##   * power-ups: the autopilot walks to a drop within DROP_SEEK_RADIUS when no
+##     enemy presses it (keeps it simple), and the summary reports drops
+##     spawned / collected / expired per type and the uptime of each buff,
+##   * treasure chests open automatically (ChestPanel closes at once); the
+##     autopilot walks to a chest within ChestData.AUTOTEST_SEEK_RADIUS unless
+##     enemies press it hard, and the summary lists chests spawned / opened,
+##     their sizes, every item granted and the evolution times (evolutions
+##     come only from chests).
 class_name Autotest
 extends Node
 
@@ -77,6 +91,19 @@ const REROLL_BELOW: float = 25.0
 const EVOLUTION_SCORE: float = 1000.0
 ## Score of a fallback card (taken only when nothing else is offered).
 const FALLBACK_SCORE: float = -100.0
+## Score of a Profane Pact card for every policy but "pact": below every
+## card including the fallbacks, so the balance policies never take it (a
+## hand of only the Pact cannot happen: fallbacks fill every hand).
+const PACT_SCORE: float = -150.0
+## Score of a Profane Pact card for --policy=pact (always taken first,
+## except evolutions).
+const PACT_EAGER_SCORE: float = 500.0
+## Radius (px) in which the autopilot walks to a power-up drop.
+const DROP_SEEK_RADIUS: float = 300.0
+## Flee pressure (length of the flee vector) above which drops are ignored.
+const DROP_SAFE_PRESSURE: float = 0.35
+## Flee pressure above which even chests are ignored.
+const CHEST_SAFE_PRESSURE: float = 0.8
 
 ## Owning run.
 var game: Game
@@ -135,6 +162,10 @@ var _level_at_mark: PackedInt32Array = PackedInt32Array()
 var _build_complete_time: float = -1.0
 ## Level of that hand (0 = never).
 var _build_complete_level: int = 0
+## Highest Profane Pact level seen so far.
+var _pact_seen: int = 0
+## "Ln@mm:ss" for every Profane Pact level taken.
+var _pact_log: PackedStringArray = PackedStringArray()
 
 
 func _ready() -> void:
@@ -147,8 +178,9 @@ func _ready() -> void:
 	_real_start_msec = Time.get_ticks_msec()
 	for _i in TIME_MARKS.size():
 		_level_at_mark.append(-1)
-	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s meta=%s" % [
-		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout), GameState.autotest_policy, GameState.autotest_meta])
+	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s meta=%s oath=%d" % [
+		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout), GameState.autotest_policy, GameState.autotest_meta,
+		GameState.autotest_oath])
 
 
 ## Called by Game after each simulation step.
@@ -185,6 +217,10 @@ func step(delta: float) -> void:
 	_horde_n += 1
 	while _level_time.size() <= game.level:
 		_level_time.append(game.elapsed)
+	var pact := game.difficulty.pact_level()  # Profane Pact level now.
+	if pact > _pact_seen:
+		_pact_seen = pact
+		_pact_log.append("L%d@%s" % [pact, _clock(game.elapsed)])
 	for i in TIME_MARKS.size():
 		if _level_at_mark[i] < 0 and game.elapsed >= float(TIME_MARKS[i]):
 			_level_at_mark[i] = game.level
@@ -329,7 +365,7 @@ func choose_action(offers: Array[Dictionary]) -> Dictionary:
 			best = i
 	var policy := GameState.autotest_policy
 	var ab := game.abilities
-	if policy != "naive" and best_score < EVOLUTION_SCORE:
+	if policy in ["army", "evolve"] and best_score < EVOLUTION_SCORE:
 		var banish_ids: Array = BANISH_IDS.get(policy, [])
 		for i in offers.size():
 			if ab.can_banish(offers[i]) and String(offers[i]["id"]) in banish_ids:
@@ -345,6 +381,8 @@ func choose_action(offers: Array[Dictionary]) -> Dictionary:
 ##   naive : new summon classes > new spells > new passives > lowest level.
 ##   army  : ARMY_PRIORITY minus a level penalty.
 ##   evolve: EVOLVE_PRIORITY minus a small level penalty (maxes spells).
+##   pact  : naive, but the Profane Pact first (PACT_EAGER_SCORE); every
+##           other policy ranks the Pact at PACT_SCORE.
 func _card_score(o: Dictionary) -> float:
 	match String(o["kind"]):
 		"evolution":
@@ -352,6 +390,8 @@ func _card_score(o: Dictionary) -> float:
 		"fallback":
 			return FALLBACK_SCORE
 	var id := String(o["id"])
+	if id == PactData.ID:
+		return (PACT_EAGER_SCORE if GameState.autotest_policy == "pact" else PACT_SCORE) - float(o["to"])
 	match GameState.autotest_policy:
 		"army":
 			return float(ARMY_PRIORITY.get(id, 0.0)) - float(o["to"]) * 8.0
@@ -398,7 +438,24 @@ func get_move_vector() -> Vector2:
 		objective = (goal - p).normalized()
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
 	var wander := Vector2.from_angle(game.elapsed * 0.3) * 0.35
-	return (away * 1.5 + toward * 1.2 + objective * 1.0 + danger * 3.0 + avoid * 1.5 + wander).limit_length(1.0)
+	var loot := _loot_vector(p, away.length())  # Toward a nearby chest / drop when safe.
+	return (away * 1.5 + toward * 1.2 + objective * 1.0 + danger * 3.0 + avoid * 1.5 + wander + loot * 1.4).limit_length(1.0)
+
+
+## Unit vector toward the nearest chest (within ChestData.AUTOTEST_SEEK_RADIUS,
+## unless `pressure` > CHEST_SAFE_PRESSURE), else the nearest power-up drop
+## within DROP_SEEK_RADIUS (unless `pressure` > DROP_SAFE_PRESSURE), else zero.
+func _loot_vector(p: Vector2, pressure: float) -> Vector2:
+	if pressure <= CHEST_SAFE_PRESSURE:
+		var c := game.chests.nearest_chest(p, ChestData.AUTOTEST_SEEK_RADIUS)  # Closest chest in reach.
+		if c != null:
+			return (c.position - p).normalized()
+	if pressure > DROP_SAFE_PRESSURE:
+		return Vector2.ZERO
+	var d := game.powerups.nearest_drop(p, DROP_SEEK_RADIUS)  # Closest drop in reach.
+	if d == null:
+		return Vector2.ZERO
+	return (d.position - p).normalized()
 
 
 ## Prints the final summary and quits the engine.
@@ -480,10 +537,47 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] nodes created (pools): enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [
 		game.enemies.created_nodes, game.horde.created_nodes, game.projectiles.created, game.effects.created, game.pickups.created])
 	print("[autotest] simulation step: avg %.2f ms, worst %.2f ms" % [game.avg_step_ms(), float(game.worst_step_usec) / 1000.0])
+	_print_powerups(summary)
 	_print_soul_ash(summary)
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
+
+
+## Prints the power-up drop / buff counters and the Profane Pact / Oath lines.
+func _print_powerups(summary: Dictionary) -> void:
+	var st: Dictionary = summary["stats"]  # Run counters.
+	var spawned := PackedStringArray()  # "kind=n" drops spawned.
+	var taken := PackedStringArray()  # "kind=n" drops collected.
+	var expired := PackedStringArray()  # "kind=n" drops that despawned.
+	var n_sp := 0  # Total drops spawned.
+	var n_tk := 0  # Total drops collected.
+	for kind: String in PowerupData.ORDER:
+		n_sp += int(st.get("pu_spawned_" + kind, 0.0))
+		n_tk += int(st.get("pu_collected_" + kind, 0.0))
+		spawned.append("%s=%d" % [kind, int(st.get("pu_spawned_" + kind, 0.0))])
+		taken.append("%s=%d" % [kind, int(st.get("pu_collected_" + kind, 0.0))])
+		expired.append("%s=%d" % [kind, int(st.get("pu_expired_" + kind, 0.0))])
+	print("[autotest] power-ups: spawned %d (%s) | collected %d (%s) | expired (%s) | lost at cap %d | pity drops %d | crystals pulled by Soul Magnet %d" % [
+		n_sp, " ".join(spawned), n_tk, " ".join(taken), " ".join(expired), int(st.get("pu_lost_at_cap", 0.0)), int(st.get("pu_pity_drops", 0.0)),
+		int(st.get("pu_magnet_crystals", 0.0))])
+	var up := PackedStringArray()  # "buff=Ns (p% of the run)".
+	var run_t := maxf(1.0, float(summary["time"]))  # Run length for the uptime %.
+	for kind: String in PowerupData.TIMED:
+		var t := float(st.get("pu_uptime_" + kind, 0.0))  # Seconds this buff ran.
+		up.append("%s=%.0fs (%.1f%%, refreshed %d)" % [kind, t, t / run_t * 100.0, int(st.get("pu_refreshed_" + kind, 0.0))])
+	print("[autotest] buff uptime: %s | soul nova kills: %d" % [" ".join(up), int(st.get("nova_kills", 0.0))])
+	print("[autotest] chests: spawned %d, opened %d (x1=%d x3=%d x5=%d), items granted %d (evolutions %d), pity %d, lost at cap %d, left on ground %d" % [
+		int(st.get("chests_spawned", 0.0)), int(st.get("chests_opened", 0.0)), int(st.get("chest_count_1", 0.0)), int(st.get("chest_count_3", 0.0)),
+		int(st.get("chest_count_5", 0.0)), int(st.get("chest_items", 0.0)), int(st.get("chest_evolutions", 0.0)), int(st.get("chests_pity", 0.0)),
+		int(st.get("chests_lost_at_cap", 0.0)), game.chests.active.size()])
+	for line: String in game.chests.open_log:
+		print("[autotest]    chest %s" % line)
+	var ash: Dictionary = summary.get("soul_ash", {})  # Meta.award_run() breakdown.
+	print("[autotest] profane pact: taken %s (final Lv %d; %s) | oath tier %d | extra XP from pact %d, from oath %d | extra soul ash from pact %d, from oath %d" % [
+		"yes" if _pact_seen > 0 else "no", _pact_seen, " ".join(_pact_log) if not _pact_log.is_empty() else "never offered or never picked",
+		int(summary.get("oath_tier", 0)), int(st.get("pact_bonus_xp", 0.0)), int(st.get("oath_bonus_xp", 0.0)),
+		int(ash.get("pact_bonus", 0)), int(ash.get("oath_bonus", 0))])
 
 
 ## Prints the meta profile and the run's Soul Ash award (Meta.award_run()).
@@ -494,11 +588,11 @@ func _print_soul_ash(summary: Dictionary) -> void:
 	if ash.is_empty():
 		return
 	var parts: Dictionary = ash["parts"]
-	print("[autotest] soul ash: +%d (time %d [%s] + kills %d [%d] + elites %d [%d] + boss %d + reckoning %d [%.1f s] = %d, bonus +%d%% = +%d) | bounty %d | new total %d | saved: %s" % [
+	print("[autotest] soul ash: +%d (time %d [%s] + kills %d [%d] + elites %d [%d] + boss %d + reckoning %d [%.1f s] = %d, bonus +%d%% = +%d, pact +%d, oath +%d) | bounty %d | new total %d | saved: %s" % [
 		int(ash["total"]), int(parts["time"]), _clock(float(ash["time_survived"])), int(parts["kills"]), int(ash["kill_count"]),
 		int(parts["elites"]), int(ash["elite_count"]), int(parts["boss"]), int(parts["reckoning"]), float(ash["reckoning_seconds"]),
-		int(ash["subtotal"]), int(roundf(float(ash["bonus_pct"]) * 100.0)), int(ash["bonus"]), int(ash["bounty"]), int(ash["new_total"]),
-		str(Meta.can_write())])
+		int(ash["subtotal"]), int(roundf(float(ash["bonus_pct"]) * 100.0)), int(ash["bonus"]), int(ash.get("pact_bonus", 0)), int(ash.get("oath_bonus", 0)),
+		int(ash["bounty"]), int(ash["new_total"]), str(Meta.can_write())])
 
 
 ## Shadow Bolt damage stat with `prefix` ("dmg_" / "bossdmg_"), including the
