@@ -1,8 +1,15 @@
 ## SynergyData — immutable design data for the army synergies (GDD §6.3):
-##   Shieldwall of the Damned (Warriors + Priests)  priest barriers on the frontline
+##   Shieldwall of the Damned (Warriors + Warders)  warder barriers on the frontline
 ##   Volley of the Fallen     (Archers + Mages)     mage marks -> archer bonus damage
 ##   March of the Deathless   (3 different summons) move speed + regeneration
 ##   The Unholy Host          (all 4 main summons)  attack speed / resilience aura
+##
+## Priest split (user request, GDD §15.0): the GDD's Priest is now two
+## classes. Shieldwall needs the Crypt Warder (the barrier caster). The Unholy
+## Host's "4 main summons" are Warriors, Archers, Mages and EITHER priest
+## order (a nested array in `requires` means "any one of these"). A class
+## whose UnitData row lists `counts_as` (the Profane Bishop) satisfies those
+## classes, so merging Menders + Warders keeps both synergies.
 ##
 ## Activation rule (GDD open question 29 is unresolved; prototype decision,
 ## recorded in GDD §15.0): a synergy is active automatically while every
@@ -27,7 +34,8 @@ const ORDER := ["shieldwall", "volley", "deathless", "unholy_host"]
 ##   short_name   — compact HUD name.
 ##   icon         — IconGlyph kind (drawn by ProgressionGlyphs).
 ##   description  — one-line effect text (banner subtitle).
-##   requires     — summon classes that must each be at MIN_CLASS_LEVEL+.
+##   requires     — summon classes that must each be at MIN_CLASS_LEVEL+; an
+##                  entry may be an Array of class ids (any one of them).
 ##   distinct     — alternatively: number of different classes at
 ##                  MIN_CLASS_LEVEL+ (0 = use `requires`).
 ##   (effect keys, see each entry)
@@ -36,12 +44,12 @@ const SYNERGIES := {
 		"display_name": "Shieldwall of the Damned",
 		"short_name": "Shieldwall",
 		"icon": "syn_shieldwall",
-		"description": "Priests raise bone barriers on your frontline warriors.",
-		"requires": ["warrior", "priest"],
+		"description": "Warders raise bone barriers on your frontline warriors.",
+		"requires": ["warrior", "warder"],
 		"distinct": 0,
 		## Barrier HP as a fraction of the warrior's max HP (refreshed, not stacked).
 		"barrier_fraction": 0.25,  # TUNING (not in GDD)
-		## Seconds between barrier refreshes (needs at least one living priest).
+		## Seconds between barrier refreshes (needs at least one living Warder or Bishop).
 		"barrier_interval": 5.0,  # TUNING (not in GDD)
 	},
 	"volley": {
@@ -73,7 +81,7 @@ const SYNERGIES := {
 		"short_name": "Unholy Host",
 		"icon": "syn_unholy_host",
 		"description": "An unholy aura: all summons attack faster and take less damage.",
-		"requires": ["warrior", "archer", "mage", "priest"],
+		"requires": ["warrior", "archer", "mage", ["mender", "warder"]],
 		"distinct": 0,
 		## Summon attack-speed bonus (+15%), its own stacking category.
 		"attack_speed": 0.15,  # TUNING (not in GDD)

@@ -21,8 +21,16 @@ const NECRO_GREEN := Color(0.42, 0.95, 0.55)
 const VIOLET := Color(0.64, 0.36, 0.98)
 ## Deep purple of the necromancer's robe.
 const ROBE := Color(0.24, 0.12, 0.34)
-## Dark teal robe of the undead priest.
+## Dark teal robe of the undead priest (now the Grave Mender).
 const PRIEST_ROBE := Color(0.16, 0.36, 0.36)
+## Deep cold-blue robe of the Crypt Warder (ward caster).
+const WARDER_ROBE := Color(0.14, 0.23, 0.42)
+## Deep violet vestment of the Profane Bishop (merged priest evolution).
+const BISHOP_ROBE := Color(0.27, 0.12, 0.38)
+## Blackened steel of the Death Knight (evolved Skeleton Warrior).
+const DEATH_STEEL := Color(0.19, 0.21, 0.29)
+## Dark violet robe of the Lich (evolved Undead Mage), outlined in VIOLET.
+const LICH_ROBE := Color(0.21, 0.10, 0.33)
 
 # --- Hostile (Crimson Covenant) -----------------------------------------------
 

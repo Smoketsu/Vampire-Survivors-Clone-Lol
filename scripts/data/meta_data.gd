@@ -219,19 +219,28 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign"]
 ##   stat   — lifetime counter in Meta.lifetime that is compared with `goal`.
 ##   unlock — the GDD reward, shown as "(coming later)".
 ## Wording decisions for open question 40: "Warrior kills" are kills whose
-## killing blow came from a Skeleton Warrior (strike or shield bash); "priests"
-## are Covenant Chaplains.
+## killing blow came from a Skeleton Warrior (strike or shield bash, also as a
+## Death Knight); "priests" are Covenant Chaplains. Priest split (GDD §15.0):
+## Dread Sovereign's "all 4 summon classes" are the GDD's four roles, with
+## either priest order (Mender / Warder, or the merged Profane Bishop) as the
+## priest. The Profane Bishop is available from the start for now, so Heretic's
+## Bane still pays its bounty until a real Bishop-related unlock exists.
 const ACHIEVEMENTS := {
 	"bone_legion": {"display_name": "Bone Legion", "description": "Skeleton Warriors slay 1,000 foes",
 		"stat": "warrior_kills", "goal": 1000, "unlock": "Bone Golem", "bounty": 100},  # GDD §9.4 goal; bounty TUNING (not in GDD)
 	"heretics_bane": {"display_name": "Heretic's Bane", "description": "Defeat 500 Covenant Chaplains",
-		"stat": "chaplain_kills", "goal": 500, "unlock": "Priest evolution unlock", "bounty": 100},  # GDD §9.4 goal; bounty TUNING (not in GDD)
-	"dread_sovereign": {"display_name": "Dread Sovereign", "description": "Slay Sir Alaric while commanding all 4 summon classes",
+		"stat": "chaplain_kills", "goal": 500, "unlock": "Profane Bishop unlock", "bounty": 100},  # GDD §9.4 goal; bounty TUNING (not in GDD)
+	"dread_sovereign": {"display_name": "Dread Sovereign", "description": "Slay Sir Alaric while commanding Warriors, Archers, Mages and a priest order",
 		"stat": "boss_kills_full_army", "goal": 1, "unlock": "The Dread Sovereign skin", "bounty": 150},  # GDD §9.4 goal; bounty TUNING (not in GDD)
 }
 
-## Damage sources whose killing blow counts as a Skeleton Warrior kill.
-const WARRIOR_KILL_SOURCES := ["warrior", "bash"]
+## Damage sources whose killing blow counts as a Skeleton Warrior kill (the
+## Death Knight is an evolved Skeleton Warrior: strike, bash and cleave).
+const WARRIOR_KILL_SOURCES := ["warrior", "bash", "death_knight", "death_knight_bash", "death_knight_cleave"]
+## Classes Dread Sovereign needs (SynergyManager.classes_met, level 1+): the
+## GDD's four summon roles; the nested array is "any one of" the priest
+## orders (the Profane Bishop counts as both through UnitData "counts_as").
+const DREAD_SOVEREIGN_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
 
 # --- Autotest profiles --------------------------------------------------------------
 

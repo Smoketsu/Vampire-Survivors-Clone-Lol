@@ -31,14 +31,16 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if e.hp <= 0.0:
 		if source in MetaData.WARRIOR_KILL_SOURCES:
 			game.stat_add("warrior_kills", 1.0)  # Bone Legion achievement (MetaData)
+		game.horde.evolutions.on_enemy_killed(e, source)  # Lich raise-the-dead.
 		_kill_enemy(e)
 	return dealt
 
 
 ## Damages a summon. Death is routed to HordeDirector (deregistration,
 ## replacement queue, pooling). `source` tags the attacker kind for stats.
-## Synergies (GDD §6.3): The Unholy Host reduces the damage, then a
-## Shieldwall barrier absorbs what it can before HP is lost.
+## Synergies (GDD §6.3): The Unholy Host reduces the damage, then a barrier
+## (Shieldwall, or a Warder / Bishop ally barrier) absorbs what it can before
+## HP is lost.
 func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	if not u.active or u.state == SummonedUnit.State.DEAD or amount <= 0.0:
 		return
@@ -50,7 +52,7 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 		var absorbed := minf(u.barrier_hp, amount)
 		u.barrier_hp -= absorbed
 		amount -= absorbed
-		game.stat_add("shieldwall_absorbed", absorbed)
+		game.stat_add("barrier_absorbed", absorbed)
 		if amount <= 0.0:
 			u.on_hit()
 			return

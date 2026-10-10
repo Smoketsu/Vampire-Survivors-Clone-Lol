@@ -1,5 +1,6 @@
 ## SummonedUnit — the ONE shared AI script for every undead summon class
-## (Warrior, Archer, Mage, Priest). GDD §36: "Share unit logic in a base
+## (Warrior, Archer, Mage, Mender, Warder, Profane Bishop, and the evolved
+## Death Knight / Lich). GDD §36: "Share unit logic in a base
 ## scene/script and parameterize per-class behavior with data resources.
 ## Avoid four independent unrelated AI implementations."
 ## Class differences come only from the data row in UnitData (attack_profile,
@@ -15,7 +16,12 @@
 ##   leashed; DEAD at 0 HP (HordeDirector pools the node).
 ##
 ## Units are pooled: `generation` increments on every activation so stale
-## references held by enemies, projectiles or priests can be detected.
+## references held by enemies, projectiles or healers can be detected.
+##
+## Support and evolution kits are data too (zero = off) and run through small
+## hooks into SummonAbilities: the instant ally barrier (Warder / Bishop), the
+## aura pulse (Bishop) and the cleave + life drain after a melee hit (Death
+## Knight). Statistics are tagged with `dmg_source` (class or evolution id).
 class_name SummonedUnit
 extends Node2D
 
@@ -28,7 +34,8 @@ enum State { SPAWNING, FOLLOWING, ACQUIRING, ENGAGING, REPOSITIONING, CASTING, R
 var director: HordeDirector
 ## Owning run.
 var game: Game
-## Class id: "warrior" | "archer" | "mage" | "priest".
+## Class id (UnitData.CLASS_ORDER): "warrior" | "archer" | "mage" | "mender" |
+## "warder" | "bishop".
 var unit_class: String = ""
 ## True while alive in the world (false = pooled).
 var active: bool = false
@@ -95,16 +102,41 @@ var bash_damage: float = 0.0
 var bash_cooldown: float = 0.0
 ## Shield-bash knockback impulse in px/s (divided by enemy mass).
 var bash_knockback: float = 0.0
-## HP absorbed by a priest ward cast on the necromancer.
+## HP absorbed by a ward this unit casts on the necromancer (Warder, Bishop).
 var shield_amount: float = 0.0
-## Seconds a priest ward lasts.
+## Seconds a ward lasts.
 var shield_duration: float = 0.0
-## Seconds between wards from this priest.
+## Seconds between wards from this unit.
 var shield_cooldown: float = 0.0
-## Priest healing role priority of THIS unit's class (0..1, GDD §31).
+## Healing role priority of THIS unit's class (0..1, GDD §31).
 var heal_role_priority: float = 0.5
-## Attack branch: "melee" | "arrow" | "aoe" | "heal".
+## Attack branch: "melee" | "arrow" | "aoe" | "heal" | "ward".
 var attack_profile: String = "melee"
+## Barrier HP this unit casts on a threatened ally (Warder / Bishop; 0 = none).
+var ally_shield_amount: float = 0.0
+## Seconds between ally barriers from this unit.
+var ally_shield_cooldown: float = 0.0
+## Seconds between aura pulses (Profane Bishop; 0 = no aura).
+var aura_interval: float = 0.0
+## Aura pulse radius in px.
+var aura_radius: float = 0.0
+## HP every ally (and the necromancer) inside the aura regains per pulse.
+var aura_heal: float = 0.0
+## Damage every enemy inside the aura takes per pulse.
+var aura_damage: float = 0.0
+## Death Knight cleave radius in px around the struck enemy (0 = no cleave).
+var cleave_radius: float = 0.0
+## Fraction of a melee hit dealt to the other enemies inside the cleave.
+var cleave_fraction: float = 0.0
+## Fraction of melee damage dealt that heals this unit (Death Knight drain).
+var lifesteal: float = 0.0
+## Summon evolution of this unit ("" = none, "death_knight", "lich").
+var evolution: String = ""
+## Statistics tag of this unit's damage, heals and shields: the evolution id
+## if evolved, else the class id ("lich_risen" for Lich-raised skeletons).
+var dmg_source: String = ""
+## Glyph drawn for this unit: the class id, the evolution id or "risen".
+var glyph_kind: String = ""
 ## Target scoring profile key into UnitData.TARGET_WEIGHTS.
 var target_profile: String = "guard"
 
@@ -168,8 +200,16 @@ var _threat_dist: float = INF
 var _kite_cd: float = 0.0
 ## Seconds until this warrior may shield-bash again.
 var bash_cd: float = 0.0
-## Seconds until this priest may ward the necromancer again.
+## Seconds until this unit may ward the necromancer again.
 var _shield_cd: float = 0.0
+## Seconds until this unit may cast an ally barrier again.
+var ally_shield_cd: float = 0.0
+## Seconds until this unit's next aura pulse.
+var aura_cd: float = 0.0
+## Seconds since this unit last took a hit (ally-barrier threat check).
+var since_hit: float = 99.0
+## Seconds left of the summon-evolution transformation glow.
+var transform_time: float = 0.0
 ## Facing sign (+1 right / -1 left).
 var _facing: float = 1.0
 ## Reusable query buffer for target candidates.
@@ -219,6 +259,10 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	_kite_cd = 0.0
 	bash_cd = 0.0
 	_shield_cd = 0.0
+	ally_shield_cd = 0.0
+	aura_cd = aura_interval
+	since_hit = 99.0
+	transform_time = 0.0
 	_threat_away = Vector2.ZERO
 	_threat_dist = INF
 	is_temporary = false
@@ -270,6 +314,18 @@ func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
 	heal_role_priority = stats["heal_role_priority"]
 	attack_profile = stats["attack_profile"]
 	target_profile = stats["target_profile"]
+	ally_shield_amount = float(stats.get("ally_shield_amount", 0.0))
+	ally_shield_cooldown = float(stats.get("ally_shield_cooldown", 0.0))
+	aura_interval = float(stats.get("aura_interval", 0.0))
+	aura_radius = float(stats.get("aura_radius", 0.0))
+	aura_heal = float(stats.get("aura_heal", 0.0))
+	aura_damage = float(stats.get("aura_damage", 0.0))
+	cleave_radius = float(stats.get("cleave_radius", 0.0))
+	cleave_fraction = float(stats.get("cleave_fraction", 0.0))
+	lifesteal = float(stats.get("lifesteal", 0.0))
+	evolution = String(stats.get("evolution", ""))
+	dmg_source = evolution if evolution != "" else unit_class
+	glyph_kind = dmg_source
 	var w: Dictionary = UnitData.TARGET_WEIGHTS[target_profile]
 	_wd = w["distance"]
 	_wt = w["threat"]
@@ -293,9 +349,10 @@ func deactivate() -> void:
 	incoming_heal = 0.0
 
 
-## Visual hit reaction.
+## Visual hit reaction (also restarts the ally-barrier threat window).
 func on_hit() -> void:
 	flash = 0.1
+	since_hit = 0.0
 	queue_redraw()
 
 
@@ -330,9 +387,12 @@ func think() -> void:
 		_drop_target()
 		_enter(State.RETURNING)
 		return
-	# Priests: instant ward on a threatened necromancer (never costs a heal).
-	if attack_profile == "heal":
+	# Warders / Bishops: instant ward on a threatened necromancer and an
+	# instant barrier on a threatened ally (never cost a heal or an attack).
+	if shield_amount > 0.0:
 		_try_ward()
+	if ally_shield_amount > 0.0 and ally_shield_cd <= 0.0:
+		SummonAbilities.try_ally_barrier(self)
 	if state == State.CASTING:
 		return
 	# Priests: healing has priority over everything else (GDD §31).
@@ -422,7 +482,8 @@ func _heal_target_valid() -> bool:
 	return p.hp < p.max_hp - 0.5
 
 
-## Priest ward on the necromancer (user brief). An instant secondary cast
+## Ward on the necromancer (user brief; the old priest ward, now cast by
+## Warders and Profane Bishops). An instant secondary cast
 ## with its own cooldown, so it never delays or replaces a heal:
 ##   * fires whenever the necromancer is under threat (recently hit, or an
 ##     enemy within WARD_THREAT_RADIUS) even if he is somewhat hurt,
@@ -440,6 +501,7 @@ func _try_ward() -> void:
 	_shield_cd = shield_cooldown
 	game.effects.beam(position, p.position, Palette.COLD_BLUE)
 	game.stat_add("priest_wards", 1.0)
+	game.stat_add("shield_by_" + dmg_source, shield_amount)
 
 
 ## True if this priest may cast a ward on the necromancer right now: it has
@@ -614,9 +676,9 @@ func try_bash(e: Enemy, normal: Vector2) -> void:
 		return
 	bash_cd = bash_cooldown
 	e.knockback += normal * bash_knockback / maxf(e.mass, 0.1)
-	game.effects.slash(position + normal * radius, normal, Palette.COLD_BLUE, radius * 1.6)
+	game.effects.slash(position + normal * radius, normal, Palette.COLD_BLUE if evolution == "" else Palette.VIOLET, radius * 1.6)
 	game.stat_add("warrior_bashes", 1.0)
-	game.combat.damage_enemy(e, bash_damage, "bash")
+	game.combat.damage_enemy(e, bash_damage, "bash" if evolution == "" else evolution + "_bash")
 
 
 # =====================================================================================
@@ -633,6 +695,11 @@ func physics_step(delta: float) -> void:
 	_kite_cd -= delta
 	bash_cd -= delta
 	_shield_cd -= delta
+	ally_shield_cd -= delta
+	since_hit += delta
+	if transform_time > 0.0:
+		transform_time -= delta
+		queue_redraw()
 	if holy_slow_timer > 0.0:
 		holy_slow_timer -= delta
 	if flash > 0.0:
@@ -644,6 +711,11 @@ func physics_step(delta: float) -> void:
 		if state_time >= UnitData.SPAWN_DURATION:
 			_enter(State.FOLLOWING)
 		return
+	if aura_interval > 0.0:
+		aura_cd -= delta
+		if aura_cd <= 0.0:
+			aura_cd = aura_interval
+			SummonAbilities.aura_pulse(self)
 	if state == State.CASTING:
 		_step_cast(delta)
 	else:
@@ -835,13 +907,16 @@ func _release_attack() -> void:
 				var edge := position.distance_to(target.position) - radius - target.radius
 				if edge <= attack_range + UnitData.MELEE_TOLERANCE:
 					var dir := (target.position - position).normalized()
+					var hit_at := target.position  # Cleave centre (the target may die).
 					game.effects.slash(position + dir * radius, dir, Palette.BONE, radius * 1.4)
-					game.combat.damage_enemy(target, damage, unit_class)
+					var dealt := game.combat.damage_enemy(target, damage, dmg_source)
+					if cleave_radius > 0.0 or lifesteal > 0.0:
+						SummonAbilities.after_melee(self, target, hit_at, dir, dealt)
 		"arrow":
 			if _target_valid():
-				game.projectiles.fire_friendly(Projectile.Kind.ARROW, position, target, damage, projectile_speed, pierce, unit_class)
+				game.projectiles.fire_friendly(Projectile.Kind.ARROW, position, target, damage, projectile_speed, pierce, dmg_source)
 		"aoe":
-			game.projectiles.fire_aoe(position, cast_point, damage, projectile_speed, splash_radius, target if _target_valid() else null)
+			game.projectiles.fire_aoe(position, cast_point, damage, projectile_speed, splash_radius, target if _target_valid() else null, dmg_source)
 		"heal":
 			if heal_target != null:
 				_release_heal_reservation()
@@ -854,12 +929,18 @@ func _release_attack() -> void:
 					if healed > 0.0:
 						game.effects.beam(position, heal_target.position, Palette.NECRO_GREEN)
 						game.stat_add("priest_heals", 1.0)
+						game.stat_add("heal_by_" + dmg_source, healed)
 			elif _target_valid():
 				# Minor unholy offense when nothing needs healing (GDD §7).
-				game.projectiles.fire_friendly(Projectile.Kind.PRIEST_BOLT, position, target, damage, projectile_speed, 0, unit_class)
+				game.projectiles.fire_friendly(Projectile.Kind.PRIEST_BOLT, position, target, damage, projectile_speed, 0, dmg_source)
+		"ward":
+			# Warder: minor unholy offense; its wards and barriers are instant
+			# side casts in think(), so they never wait on this cooldown.
+			if _target_valid():
+				game.projectiles.fire_friendly(Projectile.Kind.PRIEST_BOLT, position, target, damage, projectile_speed, 0, dmg_source)
 
 
-## Removes this priest's pending heal from its target's incoming_heal.
+## Removes this healer's pending heal from its target's incoming_heal.
 func _release_heal_reservation() -> void:
 	if _reserved_heal_on is SummonedUnit:
 		var u := _reserved_heal_on as SummonedUnit
@@ -888,7 +969,9 @@ func _draw() -> void:
 		var k := clampf(temp_life / 5.0, 0.3, 1.0)
 		draw_circle(Vector2.ZERO, radius * 1.5, Color(Palette.NECRO_GREEN, 0.12 * k))
 		draw_arc(Vector2.ZERO, radius * 1.5, 0.0, TAU, 20, Color(Palette.NECRO_GREEN, 0.7 * k), 1.5)
-	Glyphs.draw_summon(self, unit_class, Vector2(0, (1.0 - rise) * radius), radius, flash > 0.0)
+	if transform_time > 0.0:
+		SummonGlyphs.draw_transform_glow(self, radius, transform_time / SummonEvolutionData.TRANSFORM_FX_TIME)
+	Glyphs.draw_summon(self, glyph_kind if glyph_kind != "" else unit_class, Vector2(0, (1.0 - rise) * radius), radius, flash > 0.0)
 	if barrier_hp > 0.0:
 		ProgressionGlyphs.draw_barrier(self, Vector2.ZERO, radius, barrier_hp / maxf(max_hp, 1.0))
 	if hp < max_hp - 0.5 and state != State.SPAWNING:

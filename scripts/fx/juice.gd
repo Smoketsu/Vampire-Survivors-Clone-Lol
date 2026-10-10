@@ -53,7 +53,7 @@ const XP_CHAIN_WINDOW: float = 0.45  # TUNING (not in GDD)
 const XP_CHAIN_STEPS: Array = [0.0, 2.0, 3.0, 5.0, 7.0, 8.0, 10.0, 12.0]  # TUNING (not in GDD)
 ## Damage source tag (CombatResolver) -> hit sound; others use enemy_hit.
 const SOURCE_SOUNDS: Dictionary = {"bolt": "bolt_hit", "orb": "orb_hit", "bash": "warrior_bash",
-	"blast": "shadow_blast", "mage": "mage_burst"}
+	"blast": "shadow_blast", "mage": "mage_burst", "death_knight_bash": "warrior_bash", "lich": "mage_burst"}
 ## Damage sources drawn in the spell colour (others use bone white).
 const SPELL_SOURCES: Dictionary = {"bolt": true, "orb": true, "blast": true}
 ## Damage-number colour for the necromancer's spells.

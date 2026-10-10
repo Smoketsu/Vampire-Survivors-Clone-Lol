@@ -12,13 +12,17 @@ class_name UnitData
 extends RefCounted
 
 ## Display / iteration order of summon classes (HUD rows, card pool).
-const CLASS_ORDER := ["warrior", "archer", "mage", "priest"]
+## The GDD's single Undead Priest is split into two classes (user request,
+## GDD §15.0): the Grave Mender (heals) and the Crypt Warder (wards and
+## barriers). "bishop" (the Profane Bishop) is never offered on a card: it
+## only appears when the Mender and Warder merge (SummonEvolutionData).
+const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop"]
 
 ## Base stats per summon class at skill level 1, before any bonus.
 ## Field reference (same keys in every row):
 ##   display_name / plural   — UI strings.
 ##   max_hp                  — hit points.
-##   damage                  — damage per attack (priest: offensive bolt only).
+##   damage                  — damage per attack (Mender / Warder / Bishop: offensive bolt only).
 ##   attack_interval         — seconds between attacks / heal casts.
 ##   attack_range            — preferred attack range in px. For melee it is
 ##                             measured edge-to-edge, for ranged centre-to-edge.
@@ -29,14 +33,16 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "priest"]
 ##   band_min / band_max     — px; soft formation band around the necromancer.
 ##   w_pursuit / w_formation / w_separation / w_threat — steering weights.
 ##   attack_profile          — which attack branch the shared AI runs:
-##                             "melee" | "arrow" | "aoe" | "heal".
+##                             "melee" | "arrow" | "aoe" | "heal" | "ward"
+##                             ("ward": minor offense bolts; the Warder's
+##                             wards and barriers are instant side casts).
 ##   target_profile          — which TARGET_WEIGHTS row scores enemies.
 ##   windup                  — s; cast / swing time before the hit lands.
 ##   projectile_speed        — px/s (0 for melee).
 ##   splash_radius           — px; mage explosion radius (0 = none).
-##   heal_amount             — HP restored per priest cast (0 = no heals).
+##   heal_amount             — HP restored per heal cast (Mender, Bishop) (0 = no heals).
 ##   kite_distance           — px; archers retreat from threats this close.
-##   heal_role_priority      — 0..1 "tactical role priority" a priest assigns
+##   heal_role_priority      — 0..1 "tactical role priority" a healer assigns
 ##                             to healing this class (GDD §31).
 ## Optional keys (read with a default of 0 when absent):
 ##   block_radius            — px; >0 makes the unit a physical blocker that
@@ -49,9 +55,23 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "priest"]
 ##   bash_damage             — shield-bash damage on contact.
 ##   bash_cooldown           — s between shield bashes.
 ##   bash_knockback          — px/s impulse of the bash (divided by enemy mass).
-##   shield_amount           — HP absorbed by a priest's ward on the player.
+##   shield_amount           — HP absorbed by a ward cast on the player
+##                             (Warder / Profane Bishop).
 ##   shield_duration         — s the ward lasts.
-##   shield_cooldown         — s between wards from the same priest.
+##   shield_cooldown         — s between wards from the same unit.
+##   ally_shield_amount      — HP of the barrier cast on a threatened ally
+##                             (Warder / Profane Bishop; not stacked, the
+##                             stronger barrier wins).
+##   ally_shield_cooldown    — s between ally barriers from the same unit.
+##   aura_interval           — s between aura pulses (Profane Bishop; 0 = none).
+##   aura_radius             — px radius of the aura pulse.
+##   aura_heal               — HP every ally (and the player) in the aura regains
+##                             per pulse.
+##   aura_damage             — damage every enemy in the aura takes per pulse.
+##   evolved_only            — true: never offered on a level-up card, only
+##                             created by a summon evolution (SummonEvolutionData).
+##   counts_as               — class ids this class stands in for when synergies
+##                             and achievements check requirements.
 const UNITS := {
 	"warrior": {
 		"display_name": "Skeleton Warrior",  # GDD §7
@@ -137,17 +157,20 @@ const UNITS := {
 		"kite_distance": 0.0,
 		"heal_role_priority": 0.5,  # TUNING (not in GDD)
 	},
-	"priest": {
-		"display_name": "Undead Priest",  # GDD §7
-		"plural": "Priests",
-		"max_hp": 40.0,  # GDD §23
+	# Grave Mender: the healing half of the GDD's Undead Priest (user request:
+	# priest split). Keeps the priest's §23 numbers and §31 heal formula; it
+	# no longer wards (the Crypt Warder does).
+	"mender": {
+		"display_name": "Grave Mender",  # TUNING (not in GDD) user request: priest split
+		"plural": "Menders",
+		"max_hp": 40.0,  # GDD §23 (priest)
 		"damage": 3.0,  # GDD §23 (minor offense when nothing needs healing)
 		"attack_interval": 2.0,  # GDD §23
 		"attack_range": 150.0,  # GDD §23
 		"move_speed": 90.0,  # GDD §23
 		"radius": 10.0,  # GDD §23
 		"acquisition_range": 200.0,  # TUNING (not in GDD)
-		"replenish_interval": 15.0,  # GDD §24
+		"replenish_interval": 15.0,  # GDD §24 (priest)
 		"band_min": 60.0,  # GDD §26 support band
 		"band_max": 125.0,  # GDD §26
 		"w_pursuit": 0.0,  # GDD §26 (0 while healing)
@@ -162,9 +185,81 @@ const UNITS := {
 		"heal_amount": 8.0,  # GDD §23 (8 HP per cast at 2.0 s)
 		"kite_distance": 0.0,
 		"heal_role_priority": 0.5,  # TUNING (not in GDD)
-		"shield_amount": 15.0,  # TUNING (not in GDD) user brief: priest ward on player
+	},
+	# Crypt Warder: the shielding half of the Undead Priest. Instant ward on
+	# the threatened necromancer (the old priest ward, same numbers) plus an
+	# instant barrier on a threatened ally; slow bolts when idle.
+	"warder": {
+		"display_name": "Crypt Warder",  # TUNING (not in GDD) user request: priest split
+		"plural": "Warders",
+		"max_hp": 45.0,  # TUNING (not in GDD) a little sturdier than the Mender
+		"damage": 3.0,  # GDD §23 (priest minor offense)
+		"attack_interval": 2.0,  # GDD §23 (priest)
+		"attack_range": 150.0,  # GDD §23 (priest)
+		"move_speed": 90.0,  # GDD §23 (priest)
+		"radius": 10.0,  # GDD §23 (priest)
+		"acquisition_range": 200.0,  # TUNING (not in GDD) also the ward / barrier reach
+		"replenish_interval": 15.0,  # GDD §24 (priest)
+		"band_min": 60.0,  # GDD §26 support band
+		"band_max": 125.0,  # GDD §26
+		"w_pursuit": 0.0,  # GDD §26 (priest)
+		"w_formation": 0.7,  # GDD §26 (priest)
+		"w_separation": 0.8,  # GDD §26
+		"w_threat": 1.0,  # GDD §26 (priest)
+		"attack_profile": "ward",
+		"target_profile": "support",
+		"windup": 0.3,  # TUNING (not in GDD)
+		"projectile_speed": 300.0,  # TUNING (not in GDD)
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.5,  # TUNING (not in GDD)
+		"shield_amount": 15.0,  # TUNING (not in GDD) the old priest ward on the player
 		"shield_duration": 4.0,  # TUNING (not in GDD)
 		"shield_cooldown": 6.0,  # TUNING (not in GDD)
+		"ally_shield_amount": 12.0,  # TUNING (not in GDD) barrier HP on a threatened ally
+		"ally_shield_cooldown": 3.0,  # TUNING (not in GDD)
+	},
+	# Profane Bishop (GDD §4.2 priest evolution): created only when the Mender
+	# and Warder merge (SummonEvolutionData "profane_bishop"). Heals like a
+	# Mender, wards and shields like a Warder, and pulses an aura that heals
+	# allies and burns enemies (GDD §4.10 "group heal aura ... damage pulse").
+	"bishop": {
+		"display_name": "Profane Bishop",  # GDD §4.2
+		"plural": "Bishops",
+		"max_hp": 70.0,  # TUNING (not in GDD)
+		"damage": 6.0,  # TUNING (not in GDD) minor offense when nothing needs healing
+		"attack_interval": 2.0,  # TUNING (not in GDD)
+		"attack_range": 150.0,  # TUNING (not in GDD)
+		"move_speed": 90.0,  # TUNING (not in GDD)
+		"radius": 12.0,  # TUNING (not in GDD) bigger silhouette
+		"acquisition_range": 220.0,  # TUNING (not in GDD)
+		"replenish_interval": 12.0,  # TUNING (not in GDD)
+		"band_min": 60.0,  # GDD §26 support band
+		"band_max": 125.0,  # GDD §26
+		"w_pursuit": 0.0,  # GDD §26 (priest)
+		"w_formation": 0.7,  # GDD §26 (priest)
+		"w_separation": 0.8,  # GDD §26
+		"w_threat": 1.0,  # GDD §26 (priest)
+		"attack_profile": "heal",
+		"target_profile": "support",
+		"windup": 0.25,  # TUNING (not in GDD)
+		"projectile_speed": 300.0,  # TUNING (not in GDD)
+		"splash_radius": 0.0,
+		"heal_amount": 12.0,  # TUNING (not in GDD)
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.5,  # TUNING (not in GDD)
+		"shield_amount": 20.0,  # TUNING (not in GDD)
+		"shield_duration": 4.0,  # TUNING (not in GDD)
+		"shield_cooldown": 5.0,  # TUNING (not in GDD)
+		"ally_shield_amount": 16.0,  # TUNING (not in GDD)
+		"ally_shield_cooldown": 2.5,  # TUNING (not in GDD)
+		"aura_interval": 3.0,  # TUNING (not in GDD)
+		"aura_radius": 90.0,  # TUNING (not in GDD)
+		"aura_heal": 4.0,  # TUNING (not in GDD)
+		"aura_damage": 12.0,  # TUNING (not in GDD)
+		"evolved_only": true,
+		"counts_as": ["mender", "warder"],
 	},
 }
 
@@ -175,9 +270,11 @@ const UNITS := {
 ##   damage_bonus    — +% damage from skill levels.
 ##   speed_bonus     — +% attack speed from skill levels.
 ##   splash_bonus    — +% splash radius (mage).
-##   heal_bonus      — +% heal per cast (priest).
+##   heal_bonus      — +% heal per cast (Mender, Bishop aura heal too).
 ##   pierce          — extra enemies an arrow passes through (archer).
-##   shield_bonus    — +% ward strength on the necromancer (priest).
+##   shield_bonus    — +% ward and ally-barrier strength (Warder, Bishop).
+## A class may have fewer than 5 rows: the Profane Bishop has ONE row (it is
+## created at its final strength); HordeDirector.level_row() clamps.
 const LEVELS := {
 	# GDD §34 example Skeleton Warrior L1–L5 (2, +1 +10% dmg, +2 +15% HP,
 	# +1 +20% attack speed, +2 +20% HP = 8 total).
@@ -206,16 +303,45 @@ const LEVELS := {
 		{"count": 3, "damage_bonus": 0.0, "splash_bonus": 0.30},
 		{"count": 3, "damage_bonus": 0.30, "splash_bonus": 0.50},
 	],
-	# L1 count 1 is GDD §23; the rest is TUNING (not in GDD), aimed at the
-	# §42 sandbox composition of 2 priests.
-	"priest": [
-		{"count": 1, "heal_bonus": 0.0, "hp_bonus": 0.0, "shield_bonus": 0.0},
-		{"count": 1, "heal_bonus": 0.25, "hp_bonus": 0.0, "shield_bonus": 0.0},
-		{"count": 2, "heal_bonus": 0.25, "hp_bonus": 0.0, "shield_bonus": 0.0},
-		{"count": 2, "heal_bonus": 0.50, "hp_bonus": 0.20, "shield_bonus": 0.0},
-		{"count": 2, "heal_bonus": 0.50, "hp_bonus": 0.20, "shield_bonus": 0.60},
+	# Grave Mender: the old priest table's count / heal / HP rows (L1 count 1
+	# is GDD §23; the rest is TUNING (not in GDD), §42 sandbox of 2 priests).
+	# The priest's L5 ward bonus moved to the Warder; L5 casts faster instead.
+	"mender": [
+		{"count": 1, "heal_bonus": 0.0, "hp_bonus": 0.0},
+		{"count": 1, "heal_bonus": 0.25, "hp_bonus": 0.0},
+		{"count": 2, "heal_bonus": 0.25, "hp_bonus": 0.0},
+		{"count": 2, "heal_bonus": 0.50, "hp_bonus": 0.20},
+		{"count": 2, "heal_bonus": 0.50, "hp_bonus": 0.20, "speed_bonus": 0.25},  # TUNING (not in GDD)
+	],
+	# Crypt Warder: same count / HP rhythm as the Mender; the ward and ally
+	# barrier grow instead of the heal. TUNING (not in GDD).
+	"warder": [
+		{"count": 1, "shield_bonus": 0.0, "hp_bonus": 0.0},
+		{"count": 1, "shield_bonus": 0.25, "hp_bonus": 0.0},
+		{"count": 2, "shield_bonus": 0.25, "hp_bonus": 0.0},
+		{"count": 2, "shield_bonus": 0.50, "hp_bonus": 0.20},
+		{"count": 2, "shield_bonus": 0.80, "hp_bonus": 0.20},
+	],
+	# Profane Bishop: one row, the strength it is created at. Count 3 replaces
+	# the 2 + 2 Menders and Warders it merges (decision recorded in GDD §15.0);
+	# global capacity bonuses then apply once instead of twice. TUNING (not in GDD).
+	"bishop": [
+		{"count": 3, "heal_bonus": 0.50, "hp_bonus": 0.20, "shield_bonus": 0.80, "speed_bonus": 0.20},
 	],
 }
+
+## Ally-barrier targeting (Warder / Profane Bishop, SummonAbilities):
+## an ally counts as "threatened" if it was hit within this many seconds ...
+const ALLY_WARD_HIT_WINDOW: float = 2.0  # TUNING (not in GDD)
+## ... or it is a blocker (warrior) fighting in melee right now. An ally
+## whose barrier is still above this fraction of the new barrier is skipped.
+const ALLY_WARD_REFRESH_FRACTION: float = 0.5  # TUNING (not in GDD)
+## Ally-barrier score weights: missing barrier, missing HP, role priority.
+const ALLY_WARD_W_BARRIER: float = 0.5  # TUNING (not in GDD)
+## Weight of the ally's missing HP fraction in the barrier score.
+const ALLY_WARD_W_HURT: float = 0.3  # TUNING (not in GDD)
+## Weight of the ally's heal_role_priority in the barrier score.
+const ALLY_WARD_W_ROLE: float = 0.2  # TUNING (not in GDD)
 
 ## Target-scoring weights per target_profile (GDD §27):
 ## score = distance*Wd + threat_to_player*Wt + role_priority*Wr
@@ -228,7 +354,7 @@ const TARGET_WEIGHTS := {
 	"ranged": {"distance": 0.4, "threat": 0.6, "role": 1.2, "tactical": 0.6, "cluster": 0.0, "overkill": 2.0},  # TUNING (not in GDD)
 	# Mages: biggest valuable cluster near the player.
 	"cluster": {"distance": 0.3, "threat": 0.6, "role": 0.6, "tactical": 0.0, "cluster": 1.5, "overkill": 1.0},  # TUNING (not in GDD)
-	# Priest offensive fallback: nearest threat.
+	# Support classes (Mender, Warder, Bishop) offensive fallback: nearest threat.
 	"support": {"distance": 1.0, "threat": 0.8, "role": 0.2, "tactical": 0.0, "cluster": 0.0, "overkill": 2.0},  # TUNING (not in GDD)
 }
 
@@ -284,7 +410,7 @@ const KITE_DURATION: float = 0.5  # TUNING (not in GDD)
 ## Cooldown (s) between kites so archers "otherwise keep firing" (GDD §29).
 const KITE_COOLDOWN: float = 1.2  # TUNING (not in GDD)
 
-## Priest heal score weights (GDD §31):
+## Heal score weights (Mender, Bishop) (GDD §31):
 ## 0.6*missing_fraction + 0.2*normalised_missing_raw + 0.2*role_priority.
 const HEAL_W_MISSING_FRACTION: float = 0.6  # GDD §31
 ## Weight of normalised raw missing HP.
@@ -297,14 +423,14 @@ const HEAL_MISSING_RAW_NORM: float = 60.0  # TUNING (not in GDD)
 const HEAL_CRITICAL_FRACTION: float = 0.35  # GDD §27
 ## Extra score for critical allies so they always win over chip damage.
 const HEAL_CRITICAL_BONUS: float = 0.5  # TUNING (not in GDD)
-## Tactical role priority of the necromancer as a heal target (priests may
+## Tactical role priority of the necromancer as a heal target (healers may
 ## always heal the player, per the user brief overriding GDD §27's "if skill
 ## allows").
 const PLAYER_HEAL_ROLE: float = 1.0  # TUNING (not in GDD)
 ## Extra score when the necromancer is critical (< HEAL_CRITICAL_FRACTION) so
 ## a critical necromancer has top priority (GDD §31).
 const PLAYER_CRITICAL_BONUS: float = 1.0  # TUNING (not in GDD)
-## Priests consider a ward when the player was hit within this many seconds
+## Warders and Bishops consider a ward when the player was hit within this many seconds
 ## (or is flagged "in danger").
 const SHIELD_TRIGGER_WINDOW: float = 1.5  # TUNING (not in GDD)
 ## The necromancer also counts as "under threat" (ward-worthy) while any enemy
@@ -335,5 +461,5 @@ const RETURN_SPEED_MULT: float = 1.5  # TUNING (not in GDD)
 const STEER_ACCEL: float = 8.0  # TUNING (not in GDD)
 ## Extra spacing (px) kept between allies on top of their radii.
 const SEPARATION_PADDING: float = 4.0  # TUNING (not in GDD)
-## Radius (px) scanned for threats to avoid (priests / archers / mages).
+## Radius (px) scanned for threats to avoid (support classes / archers / mages).
 const THREAT_AVOID_RADIUS: float = 55.0  # TUNING (not in GDD)

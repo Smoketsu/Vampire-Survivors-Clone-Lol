@@ -22,7 +22,9 @@
 ##                         "army" (summoner build: summon levels and army
 ##                         passives first, then Shadow Bolt / Blast) or
 ##                         "evolve" (spell build that chases the three
-##                         spell evolutions) or "pact" (the naive build that
+##                         spell evolutions) or "summon" (summoner build that
+##                         chases the Death Knight, Lich and Profane Bishop
+##                         summon evolutions) or "pact" (the naive build that
 ##                         also takes every Profane Pact card at once, to
 ##                         measure the Pact; the other policies rank the
 ##                         Pact below every card, fallbacks included).
@@ -49,7 +51,7 @@ var autotest_speed: float = 8.0
 var autotest_seed: int = 1337
 ## Autotest: game-time limit in seconds before the test aborts.
 var autotest_timeout: float = 1500.0
-## Autotest: level-up card policy, "naive", "army", "evolve" or "pact" (see header).
+## Autotest: level-up card policy, "naive", "army", "evolve", "summon" or "pact" (see header).
 var autotest_policy: String = "naive"
 ## Autotest: simulated meta-upgrade profile, "none", "mid" or "max" (see header).
 var autotest_meta: String = "none"

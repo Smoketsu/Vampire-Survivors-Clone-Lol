@@ -15,6 +15,10 @@
 ##     level-up card,
 ##   * the limited rerolls / banishes and unlimited skips of the level-up
 ##     panel (GDD §9.1, LevelUpData), plus fallback cards when nothing is left.
+##   * summon evolutions (Death Knight, Lich, Profane Bishop; recipes in
+##     SummonEvolutionData, runtime in game.horde.evolutions) share the spell
+##     evolutions' delivery: ready_evolutions() appends them, chest_rewards()
+##     grants them, and the cards / hints / weights call small hooks there.
 ## Spell stats are "effective": the level row (or evolution row) with the
 ## spell passives applied (Soul Conduit damage, Abyssal Focus cooldowns) and
 ## the meta Shadowcraft upgrades (game.meta, see MetaModifiers); spell_stats()
@@ -200,6 +204,8 @@ func ready_evolutions() -> PackedStringArray:
 			continue
 		if spell_level(base) >= EvolutionData.BASE_LEVEL_REQUIRED and passive_level(def["passive"]) >= EvolutionData.PASSIVE_LEVEL_REQUIRED:
 			out.append(evo)
+	# Summon evolutions: same time gate and chest delivery (SummonEvolutionData).
+	out.append_array(game.horde.evolutions.ready_ids())
 	return out
 
 
@@ -253,7 +259,7 @@ func owned_actives() -> Array[Dictionary]:
 	for cls: String in UnitData.CLASS_ORDER:
 		var lvl: int = game.horde.class_levels[cls]
 		if lvl > 0:
-			out.append({"icon": cls, "level": lvl, "max": 5})
+			out.append({"icon": game.horde.evolutions.class_icon(cls), "level": lvl, "max": 5})
 	for id: String in AbilityData.SPELL_ORDER:
 		if spell_level(id) > 0:
 			var icon: String = EvolutionData.EVOLUTIONS[evolved[id]]["icon"] if evolved.has(id) else AbilityData.SPELLS[id]["icon"]
@@ -529,7 +535,10 @@ func apply_offer(o: Dictionary) -> void:
 			passive_levels[id] = to
 			game.horde.recompute_all(old_caps)
 		"evolution":
-			_apply_evolution(id)
+			if SummonEvolutionData.EVOLUTIONS.has(id):
+				game.horde.evolutions.apply(id)
+			else:
+				_apply_evolution(id)
 		"fallback":
 			_apply_fallback(id)
 		"skip":
@@ -592,11 +601,16 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 		if lvl > 0 and evo != "" and passive_level(EvolutionData.EVOLUTIONS[evo]["passive"]) > 0:
 			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
 		out.append({"offer": _spell_offer(id, lvl), "weight": w, "dead": false})
+	var evos := game.horde.evolutions  # Summon-evolution card hooks.
 	for cls: String in UnitData.CLASS_ORDER:
 		var lvl: int = game.horde.class_levels[cls]
 		if banished.has(cls) or exclude.has(cls) or lvl >= (UnitData.LEVELS[cls] as Array).size() or (lvl == 0 and not can_new_active):
 			continue
+		if evos.is_locked(cls):
+			continue  # Merged away, or only created by an evolution.
 		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else LevelUpData.WEIGHT_NEW
+		if lvl > 0 and evos.on_path(cls):
+			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
 		out.append({"offer": _summon_offer(cls, lvl), "weight": w, "dead": false})
 	for id: String in PassiveData.ORDER:
 		var lvl := passive_level(id)
@@ -606,7 +620,10 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 		var paired := _paired_spell(id)
 		if paired != "" and spell_level(paired) > 0 and not evolved.has(paired):
 			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
-		var dead := (id in PassiveData.ARMY_PASSIVES and not owns_summon) or (id in PassiveData.SPELL_PASSIVES and not owns_spell)
+		elif evos.on_path(id):
+			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
+		var dead := (id in PassiveData.ARMY_PASSIVES and not owns_summon) or (id in PassiveData.SPELL_PASSIVES and not owns_spell) \
+				or evos.passive_dead(id)
 		if dead:
 			w *= LevelUpData.WEIGHT_DEAD
 		if id == PactData.ID:
@@ -713,7 +730,10 @@ func _spell_offer(id: String, lvl: int) -> Dictionary:
 
 
 ## Evolution card: base spell (level 5, effective) vs evolved effective stats.
+## Summon evolutions build their own card (SummonEvolutions.build_offer()).
 func _evolution_offer(evo: String) -> Dictionary:
+	if SummonEvolutionData.EVOLUTIONS.has(evo):
+		return game.horde.evolutions.build_offer(evo)
 	var def: Dictionary = EvolutionData.EVOLUTIONS[evo]
 	var base: String = def["base"]
 	var cur := apply_spell_mods(spell_row(base))
@@ -730,21 +750,28 @@ func _evolution_offer(evo: String) -> Dictionary:
 	return _offer("evolution", evo, def["display_name"], def["icon"], spell_level(base), spell_level(base), "EVOLUTION", def["description"], deltas, hint)
 
 
-## Summon card: effective stats now vs next level (passives included).
+## Summon card: effective stats now vs next level (passives included). The
+## support lines follow the class's kit (heal / ward / ally barrier), so the
+## Mender and Warder cards show what each one does.
 func _summon_offer(cls: String, lvl: int) -> Dictionary:
 	var base: Dictionary = UnitData.UNITS[cls]
-	var plural: String = base["plural"]
+	var plural: String = game.horde.evolutions.class_plural(cls)
 	var dom := game.horde.bonus_capacity(cls)
 	var nxt := game.horde.compute_stats(cls, lvl + 1, false)
 	var deltas := PackedStringArray()
 	var desc := ""
+	var support := float(nxt["heal_amount"]) > 0.0 or float(nxt["shield_amount"]) > 0.0  # Mender / Warder kit.
 	if lvl == 0:
 		desc = "Raise %s to fight for you. Fallen ones return every %ss." % [plural.to_lower(), _fmt(game.horde.replenish_interval(cls))]
 		deltas.append("%s: %d" % [plural, int(nxt["count"]) + dom])
 		deltas.append("HP %s" % _fmt(nxt["max_hp"]))
-		if cls == "priest":
-			deltas.append("Heals %s HP every %ss (allies and you)" % [_fmt(nxt["heal_amount"]), _fmt(nxt["attack_interval"])])
-			deltas.append("Wards you for %s HP when you are attacked" % _fmt(nxt["shield_amount"]))
+		if support:
+			if float(nxt["heal_amount"]) > 0.0:
+				deltas.append("Heals %s HP every %ss (allies and you)" % [_fmt(nxt["heal_amount"]), _fmt(nxt["attack_interval"])])
+			if float(nxt["shield_amount"]) > 0.0:
+				deltas.append("Wards you for %s HP when you are attacked" % _fmt(nxt["shield_amount"]))
+			if float(nxt["ally_shield_amount"]) > 0.0:
+				deltas.append("Shields a threatened ally for %s HP every %ss" % [_fmt(nxt["ally_shield_amount"]), _fmt(nxt["ally_shield_cooldown"])])
 		elif cls == "warrior":
 			deltas.append("Damage %s every %ss" % [_fmt(nxt["damage"]), _fmt(nxt["attack_interval"])])
 			deltas.append("Blocks enemies; shield-bash %s dmg every %ss" % [_fmt(nxt["bash_damage"]), _fmt(nxt["bash_cooldown"])])
@@ -756,7 +783,7 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 		var cur := game.horde.compute_stats(cls, lvl, false)
 		_delta_line(deltas, plural, float(int(cur["count"]) + dom), float(int(nxt["count"]) + dom))
 		_delta_line(deltas, "Max HP", cur["max_hp"], nxt["max_hp"])
-		if cls == "priest":
+		if support:
 			_delta_line(deltas, "Heal per cast", cur["heal_amount"], nxt["heal_amount"])
 		else:
 			_delta_line(deltas, "Damage", cur["damage"], nxt["damage"])
@@ -765,9 +792,12 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 		_delta_line(deltas, "Splash radius", cur["splash_radius"], nxt["splash_radius"])
 		_delta_line(deltas, "Arrow pierce", float(cur["pierce"]), float(nxt["pierce"]))
 		_delta_line(deltas, "Ward on you (HP)", cur["shield_amount"], nxt["shield_amount"])
+		_delta_line(deltas, "Ally barrier (HP)", cur["ally_shield_amount"], nxt["ally_shield_amount"])
 	var hint := ""
 	if lvl + 1 == SynergyData.MIN_CLASS_LEVEL:
 		hint = game.horde.synergies.unlock_hint(cls)
+	if hint == "":
+		hint = game.horde.evolutions.class_hint(cls, lvl)
 	return _offer("summon", cls, base["display_name"], cls, lvl, lvl + 1, "SUMMON", desc, deltas, hint)
 
 
@@ -819,6 +849,8 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 				var a := apply_spell_mods(row, -1, lvl)
 				var b := apply_spell_mods(row, -1, lvl + 1)
 				deltas.append("%s cooldown %ss -> %ss" % [spell_name("shadow_bolt"), _fmt(a["cooldown"]), _fmt(b["cooldown"])])
+		"forbidden_knowledge", "dark_benediction":
+			deltas.append(game.horde.evolutions.passive_effect_line(id, lvl, nxt))
 	var hint := ""
 	var spell := _paired_spell(id)
 	if spell != "":
@@ -830,6 +862,8 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 			hint = "Evolution ready: %s%s" % [e_name, _evo_unlock_note()]
 		else:
 			hint = "Evolves %s (Lv %d/%d) into %s%s" % [AbilityData.SPELLS[spell]["display_name"], spell_level(spell), EvolutionData.BASE_LEVEL_REQUIRED, e_name, _evo_source_note()]
+	if hint == "":
+		hint = game.horde.evolutions.passive_hint(id, lvl)  # Summon evolution passives.
 	return _offer("passive", id, def["display_name"], def["icon"], lvl, lvl + 1, "PASSIVE", def["description"], deltas, hint)
 
 

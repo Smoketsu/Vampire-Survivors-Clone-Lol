@@ -8,8 +8,10 @@
 ##     empowered graves, crypts and graves being consecrated),
 ##   * auto-picks level-up cards with a policy (--policy=naive: unowned summon
 ##     classes and spells first so every system gets exercised; --policy=army:
-##     a summoner build that levels summons and army passives first;
-##     --policy=evolve: a spell build that chases all three evolutions).
+##     a summoner build that levels summons and army passives first, both
+##     priest orders included; --policy=evolve: a spell build that chases all
+##     three spell evolutions; --policy=summon: a summoner build that chases
+##     the three summon evolutions, Death Knight, Lich and Profane Bishop).
 ##     Every policy would take an evolution card first (evolutions now come
 ##     only from treasure chests, so level-up hands no longer hold them); army
 ##     and evolve also banish unwanted items and reroll weak hands (naive
@@ -45,6 +47,10 @@
 ##     enemies press it hard, and the summary lists chests spawned / opened,
 ##     their sizes, every item granted and the evolution times (evolutions
 ##     come only from chests).
+##   * summon evolutions and the priest split: the summary lists every
+##     evolution by type (spell / summon) with its time, the damage, heals
+##     and shields of every summon source and class (dmg_<tag>, heal_by_<tag>,
+##     shield_by_<tag>), and the Lich raises, merge, ally barriers and aura.
 class_name Autotest
 extends Node
 
@@ -74,21 +80,31 @@ const STUCK_TIME: float = 10.0
 ## this (px); closer than that it is simply standing in formation.
 const STUCK_ANCHOR_SLACK: float = 40.0
 ## Card priorities for --policy=army (higher = picked first).
-const ARMY_PRIORITY := {"warrior": 100.0, "archer": 95.0, "mage": 98.0, "priest": 90.0, "grave_dominion": 105.0,
+const ARMY_PRIORITY := {"warrior": 100.0, "archer": 95.0, "mage": 98.0, "mender": 90.0, "warder": 89.0, "grave_dominion": 105.0,
 	"dark_command": 70.0, "necrotic_vigor": 65.0, "soul_recycling": 50.0,
 	"shadow_bolt": 60.0, "shadow_blast": 55.0, "orb_shield": 40.0,
 	"warding_ritual": 35.0, "soul_conduit": 30.0, "abyssal_focus": 28.0}
 ## Card priorities for --policy=evolve (higher = picked first): the three
 ## base spells and their paired passives, then the army.
 const EVOLVE_PRIORITY := {"shadow_bolt": 100.0, "soul_conduit": 96.0, "shadow_blast": 94.0, "abyssal_focus": 92.0,
-	"orb_shield": 90.0, "warding_ritual": 88.0, "warrior": 70.0, "priest": 66.0, "grave_dominion": 64.0,
+	"orb_shield": 90.0, "warding_ritual": 88.0, "warrior": 70.0, "mender": 66.0, "warder": 63.0, "grave_dominion": 64.0,
 	"mage": 62.0, "archer": 60.0, "dark_command": 50.0, "necrotic_vigor": 48.0, "soul_recycling": 40.0}
+## Card priorities for --policy=summon (higher = picked first): the base
+## classes of the three summon evolutions and their passives (Dark Command
+## and Forbidden Knowledge must reach Lv 5, Dark Benediction only needs to
+## be owned), then Archers, Shadow Bolt and the rest. Once the Mender +
+## Warder merge frees a slot, Shadow Blast fills it.
+const SUMMON_PRIORITY := {"grave_dominion": 105.0, "warrior": 100.0, "mage": 98.0, "mender": 93.0, "warder": 92.0,
+	"dark_command": 84.0, "forbidden_knowledge": 82.0, "dark_benediction": 80.0, "archer": 78.0,
+	"necrotic_vigor": 62.0, "shadow_bolt": 60.0, "shadow_blast": 55.0, "soul_recycling": 45.0,
+	"warding_ritual": 35.0, "soul_conduit": 30.0}
 ## Warding Ritual priority for --policy=army --pact: the Pact takes a
 ## passive slot, and a sensible Pact build gives up Warding Ritual (below
 ## Soul Conduit, 30) rather than its Void Barrage evolution passive.
 const ARMY_PACT_WARDING_PRIORITY: float = 25.0
 ## Items each policy banishes when offered (while banish charges last).
-const BANISH_IDS := {"army": ["orb_shield", "abyssal_focus"], "evolve": ["soul_recycling", "necrotic_vigor"]}
+const BANISH_IDS := {"army": ["orb_shield", "abyssal_focus"], "evolve": ["soul_recycling", "necrotic_vigor"],
+	"summon": ["orb_shield", "abyssal_focus"]}
 ## army / evolve reroll the hand when its best card scores below this.
 const REROLL_BELOW: float = 25.0
 ## Score of an evolution card (always taken first).
@@ -123,9 +139,10 @@ var _reckoning_time: float = -1.0
 var _peak: Dictionary = {"enemies": 0, "summons": 0, "projectiles": 0, "effects": 0, "crystals": 0}
 ## Real-time start (ms) for the wall-clock duration line.
 var _real_start_msec: int = 0
-## Game seconds during which 2 or more priests were alive.
+## Game seconds during which 2 or more ward casters (Warders / Profane
+## Bishops) were alive.
 var _two_priest_time: float = 0.0
-## Priest wards cast while 2 or more priests were alive.
+## Wards cast while 2 or more ward casters were alive.
 var _two_priest_wards: int = 0
 ## priest_wards stat seen on the previous step (to attribute new wards).
 var _last_wards: int = 0
@@ -190,7 +207,7 @@ func _ready() -> void:
 ## Called by Game after each simulation step.
 func step(delta: float) -> void:
 	var wards := int(game.stats.get("priest_wards", 0.0))
-	if game.horde.count_of("priest") >= 2:
+	if game.horde.count_of("warder") + game.horde.count_of("bishop") >= 2:
 		_two_priest_time += delta
 		_two_priest_wards += wards - _last_wards
 	_last_wards = wards
@@ -369,7 +386,7 @@ func choose_action(offers: Array[Dictionary]) -> Dictionary:
 			best = i
 	var policy := GameState.autotest_policy
 	var ab := game.abilities
-	if policy in ["army", "evolve"] and best_score < EVOLUTION_SCORE:
+	if policy in ["army", "evolve", "summon"] and best_score < EVOLUTION_SCORE:
 		var banish_ids: Array = BANISH_IDS.get(policy, [])
 		for i in offers.size():
 			if ab.can_banish(offers[i]) and String(offers[i]["id"]) in banish_ids:
@@ -406,6 +423,8 @@ func _card_score(o: Dictionary) -> float:
 			return pri - float(o["to"]) * 8.0
 		"evolve":
 			return float(EVOLVE_PRIORITY.get(id, 0.0)) - float(o["to"]) * 3.0
+		"summon":
+			return float(SUMMON_PRIORITY.get(id, 0.0)) - float(o["to"]) * 6.0
 	var s := -float(o["to"]) * 5.0
 	var is_new := int(o["from"]) == 0
 	match String(o["kind"]):
@@ -510,10 +529,12 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] picks (%d): %s" % [(summary["picks"] as PackedStringArray).size(), ", ".join(summary["picks"])])
 	var st_all: Dictionary = summary["stats"]
 	var ward_rate := float(_two_priest_wards) / (_two_priest_time / 60.0) if _two_priest_time > 1.0 else 0.0
-	print("[autotest] priest wards: %d total, absorbed %d dmg | %d wards in %.0f s with 2+ priests alive (%.1f / min) | priest heals: %d" % [
-		int(st_all.get("priest_wards", 0.0)), int(st_all.get("ward_absorbed", 0.0)), _two_priest_wards, _two_priest_time, ward_rate, int(st_all.get("priest_heals", 0.0))])
+	print("[autotest] wards on you: %d total, absorbed %d dmg | %d wards in %.0f s with 2+ Warders/Bishops alive (%.1f / min) | heal casts: %d | ally barriers: %d, barrier dmg absorbed: %d" % [
+		int(st_all.get("priest_wards", 0.0)), int(st_all.get("ward_absorbed", 0.0)), _two_priest_wards, _two_priest_time, ward_rate, int(st_all.get("priest_heals", 0.0)),
+		int(st_all.get("ally_barriers", 0.0)), int(st_all.get("barrier_absorbed", 0.0))])
 	var ab := game.abilities
 	print("[autotest] evolutions: %s" % (", ".join(ab.evolution_history) if not ab.evolution_history.is_empty() else "none"))
+	_print_summon_evolutions(st_all)
 	var syn := game.horde.synergies
 	print("[autotest] synergies active at end: %s | activations: %s" % [
 		", ".join(syn.active_ids()) if not syn.active_ids().is_empty() else "none",
@@ -551,6 +572,55 @@ func finish(summary: Dictionary) -> void:
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
+
+
+## Prints the evolutions split by type (spell / summon, with times), the
+## summon-evolution counters, and every summon source's damage, heals and
+## shields, plus the same summed per base class.
+func _print_summon_evolutions(st: Dictionary) -> void:
+	var spell := PackedStringArray()  # "id@mm:ss" spell evolutions.
+	var summon := PackedStringArray()  # "id@mm:ss" summon evolutions.
+	for entry: String in game.abilities.evolution_history:
+		if SummonEvolutionData.EVOLUTIONS.has(entry.get_slice("@", 0)):
+			summon.append(entry)
+		else:
+			spell.append(entry)
+	print("[autotest] evolutions by type: spell: %s | summon: %s" % [
+		", ".join(spell) if not spell.is_empty() else "none", ", ".join(summon) if not summon.is_empty() else "none"])
+	var ev := game.horde.evolutions
+	print("[autotest] summon evolutions: lich raised %d (capped %d) | merge converted %d, dissolved %d | aura pulses %d | merged classes: %s" % [
+		int(st.get("lich_raised", 0.0)), int(st.get("lich_raise_capped", 0.0)), int(st.get("merge_converted", 0.0)),
+		int(st.get("merge_dissolved", 0.0)), int(st.get("aura_pulses", 0.0)),
+		", ".join(PackedStringArray(ev.merged.keys())) if not ev.merged.is_empty() else "none"])
+	# Summon statistic tags -> base class they belong to.
+	var tags := {}
+	for cls: String in UnitData.CLASS_ORDER:
+		tags[cls] = cls
+	tags["bash"] = "warrior"
+	for evo: String in SummonEvolutionData.ORDER:
+		var base: String = SummonEvolutionData.EVOLUTIONS[evo]["bases"][0]
+		tags[evo] = base
+		tags[evo + "_bash"] = base
+		tags[evo + "_cleave"] = base
+	tags["lich_risen"] = "lich_risen"
+	var by_src := PackedStringArray()  # "tag=dmg/heal/shield" per source.
+	var by_cls := {}  # Base class -> [dmg, heal, shield].
+	for tag: String in tags:
+		var v := [float(st.get("dmg_" + tag, 0.0)), float(st.get("heal_by_" + tag, 0.0)), float(st.get("shield_by_" + tag, 0.0))]
+		if v[0] + v[1] + v[2] <= 0.0:
+			continue
+		by_src.append("%s=%d/%d/%d" % [tag, int(v[0]), int(v[1]), int(v[2])])
+		var cls: String = tags[tag]
+		var sum: Array = by_cls.get(cls, [0.0, 0.0, 0.0])
+		for i in 3:
+			sum[i] = float(sum[i]) + float(v[i])
+		by_cls[cls] = sum
+	var cls_parts := PackedStringArray()  # "class=dmg/heal/shield" per base class.
+	for cls: String in by_cls:
+		var sum: Array = by_cls[cls]
+		cls_parts.append("%s=%d/%d/%d" % [cls, int(sum[0]), int(sum[1]), int(sum[2])])
+	print("[autotest] summon output by source (dmg/heal/shield): %s" % " ".join(by_src))
+	print("[autotest] summon output by class (dmg/heal/shield): %s" % " ".join(cls_parts))
 
 
 ## Prints the power-up drop / buff counters and the Profane Pact / Oath lines.

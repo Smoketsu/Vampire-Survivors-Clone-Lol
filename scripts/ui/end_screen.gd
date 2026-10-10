@@ -164,9 +164,10 @@ func open(summary: Dictionary) -> void:
 	lines.append("Enemies slain:  %d" % int(summary["kills"]))
 	lines.append("Level reached:  %d" % int(summary["level"]))
 	lines.append("Army at the end:  %d" % int(summary["horde_total"]))
+	var names: Dictionary = summary.get("horde_names", {})  # Class -> plural (evolution name once evolved).
 	for cls: String in UnitData.CLASS_ORDER:
 		if int(counts[cls]) > 0:
-			lines.append("    %s: %d" % [UnitData.UNITS[cls]["plural"], int(counts[cls])])
+			lines.append("    %s: %d" % [names.get(cls, UnitData.UNITS[cls]["plural"]), int(counts[cls])])
 	_stats.text = "\n".join(lines)
 	_show_ash(summary.get("soul_ash", {}))
 	visible = true

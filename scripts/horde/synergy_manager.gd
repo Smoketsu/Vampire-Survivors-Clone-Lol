@@ -2,8 +2,13 @@
 ## by HordeDirector, which calls evaluate() whenever a summon level changes and
 ## step() every tick. Activation is automatic (SynergyData header rule); on
 ## activation it announces the synergy on the HUD banner.
+## Requirements (SynergyData): `requires` entries are class ids or arrays of
+## class ids (any one of them); a class whose UnitData row lists `counts_as`
+## (the Profane Bishop) satisfies those classes too. `distinct` counts real
+## classes, so the Bishop counts once.
 ## Effects and where they are applied:
-##   Shieldwall of the Damned  barrier HP on warriors (here), absorbed in
+##   Shieldwall of the Damned  barrier HP on warriors (here; needs a living
+##                             Warder or Bishop), absorbed in
 ##                             CombatResolver.damage_unit().
 ##   Volley of the Fallen      mage explosions mark enemies, archers deal bonus
 ##                             damage to marked ones (ProjectileManager).
@@ -87,10 +92,34 @@ static func requirements_met(id: String, levels: Dictionary) -> bool:
 			if int(levels.get(cls, 0)) >= SynergyData.MIN_CLASS_LEVEL:
 				n += 1
 		return n >= distinct
-	for cls: String in def["requires"]:
-		if int(levels.get(cls, 0)) < SynergyData.MIN_CLASS_LEVEL:
+	return classes_met(def["requires"], levels, SynergyData.MIN_CLASS_LEVEL)
+
+
+## True if every entry of `reqs` is owned at `min_level`+ in `levels`. An
+## entry is a class id or an Array of class ids (any one of them). A class
+## is also satisfied by any class whose UnitData row lists it in `counts_as`
+## (the Profane Bishop stands in for the Mender and the Warder). Also used for
+## the Dread Sovereign achievement (Game._on_boss_defeated).
+static func classes_met(reqs: Array, levels: Dictionary, min_level: int) -> bool:
+	for entry: Variant in reqs:
+		var options: Array = entry if entry is Array else [entry]
+		var ok := false
+		for cls: String in options:
+			ok = ok or class_level(cls, levels) >= min_level
+		if not ok:
 			return false
 	return true
+
+
+## Level at which class `cls` counts in `levels`: its own level, or the level
+## of a class that `counts_as` it, whichever is higher.
+static func class_level(cls: String, levels: Dictionary) -> int:
+	var lvl := int(levels.get(cls, 0))
+	for other: String in UnitData.CLASS_ORDER:
+		var stands_in: Array = UnitData.UNITS[other].get("counts_as", [])
+		if cls in stands_in:
+			lvl = maxi(lvl, int(levels.get(other, 0)))
+	return lvl
 
 
 ## Level-up card hint: names the synergies that raising `cls` to
@@ -133,10 +162,10 @@ func step(delta: float) -> void:
 			_regen_accum = 0.0
 
 
-## Shieldwall: while a priest lives, every warrior's barrier is refreshed to
-## barrier_fraction of its max HP (not stacked).
+## Shieldwall: while a Warder (or a Profane Bishop) lives, every warrior's
+## barrier is refreshed to barrier_fraction of its max HP (not stacked).
 func _raise_barriers() -> void:
-	if director.count_of("priest") <= 0:
+	if director.count_of("warder") + director.count_of("bishop") <= 0:
 		return
 	var frac := value("shieldwall", "barrier_fraction")
 	for u in director.units:
