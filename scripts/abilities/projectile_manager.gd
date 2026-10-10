@@ -98,7 +98,9 @@ func _split(p: Projectile, hit: Enemy) -> void:
 
 ## Fires a mage orb that explodes at `dest` with `splash` radius. Damage is
 ## reserved on `reserve_target` (the cluster's centre enemy) if given.
-func fire_aoe(pos: Vector2, dest: Vector2, damage: float, speed: float, splash: float, reserve_target: Enemy) -> void:
+## `source` tags the damage ("mage", or "lich" for the evolved Lich, whose
+## kills can rise as skeletons, SummonEvolutions.on_enemy_killed()).
+func fire_aoe(pos: Vector2, dest: Vector2, damage: float, speed: float, splash: float, reserve_target: Enemy, source: String = "mage") -> void:
 	var p := _acquire()
 	if p == null:
 		return
@@ -116,7 +118,7 @@ func fire_aoe(pos: Vector2, dest: Vector2, damage: float, speed: float, splash: 
 	p.radius = 5.0
 	p.homing = 0.0
 	p.target = null
-	p.source = "mage"
+	p.source = source
 	if reserve_target != null:
 		_reserve(p, reserve_target, damage)
 	_launch(p)

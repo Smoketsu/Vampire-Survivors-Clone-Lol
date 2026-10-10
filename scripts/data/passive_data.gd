@@ -2,7 +2,8 @@
 ## GDD §34 ("Global passives"). The prototype implements the first four:
 ##   Grave Dominion  — Capacity.
 ##   Necrotic Vigor  — Max minion health.
-##   Dark Command    — Minion attack damage/speed.
+##   Dark Command    — Minion attack damage/speed (at Lv 5 it also evolves
+##                     Lv 5 Skeleton Warriors into Death Knights, user rule).
 ##   Soul Recycling  — Faster replacement.
 ## plus the three spell-evolution passives of GDD §6.1 (their standalone
 ## effects are not defined by the GDD, open question 28; these are the
@@ -10,6 +11,13 @@
 ##   Soul Conduit    — +% damage of every shadow spell (evolves Shadow Bolt).
 ##   Warding Ritual  — -% damage taken by the necromancer (evolves Orb Shield).
 ##   Abyssal Focus   — -% spell cooldowns / orb recharge (evolves Shadow Blast).
+## plus two summon-evolution passives of GDD §6.1 (user request; standalone
+## effects are the prototype's choice, open question 28):
+##   Forbidden Knowledge — +% Undead Mage damage and splash radius (at Lv 5
+##                         it evolves Lv 5 Mages into Liches).
+##   Dark Benediction    — +% heals, wards and barriers of the priest orders
+##                         (owned, it merges Lv 5 Menders + Warders into
+##                         Profane Bishops). Recipes: SummonEvolutionData.
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -25,7 +33,7 @@ extends RefCounted
 
 ## Display / card order of passives.
 const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycling",
-	"soul_conduit", "warding_ritual", "abyssal_focus", PactData.ID]
+	"soul_conduit", "warding_ritual", "abyssal_focus", "forbidden_knowledge", "dark_benediction", PactData.ID]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -51,6 +59,12 @@ const SPELL_PASSIVES := ["soul_conduit", "abyssal_focus"]
 ##   damage_reduction   — -% damage taken by the necromancer (after wards).
 ##   cooldown_reduction — -% spell cooldowns, Orb Shield recharge and Eclipse
 ##                        Ward pulse interval.
+##   mage_damage        — +% damage of the `classes` (Undead Mage / Lich).
+##   mage_splash        — +% splash radius of the `classes`.
+##   support_power      — +% heal, ward, ally barrier and aura heal of the
+##                        `classes` (Mender, Warder, Profane Bishop).
+##   classes            — (optional) summon classes the passive affects; it
+##                        is a "dead" card while none of them is owned.
 const PASSIVES := {
 	# Profane Pact (difficulty / reward passive): defined in PactData.
 	PactData.ID: PactData.PASSIVE,
@@ -83,7 +97,7 @@ const PASSIVES := {
 	"dark_command": {
 		"display_name": "Dark Command",
 		"icon": "dark_command",
-		"description": "Increases minion attack damage and attack speed.",
+		"description": "Increases minion attack damage and attack speed. At Lv 5, with Warriors at Lv 5, a treasure chest raises them as Death Knights.",
 		"labels": {"minion_damage": ["Minion damage", "pct"], "minion_speed": ["Minion attack speed", "pct"]},
 		"levels": [
 			{"minion_damage": 0.10, "minion_speed": 0.05},  # TUNING (not in GDD)
@@ -143,6 +157,33 @@ const PASSIVES := {
 			{"cooldown_reduction": 0.15},  # TUNING (not in GDD)
 			{"cooldown_reduction": 0.20},  # TUNING (not in GDD)
 			{"cooldown_reduction": 0.25},  # TUNING (not in GDD)
+		],
+	},	"forbidden_knowledge": {
+		"display_name": "Forbidden Knowledge",
+		"icon": "forbidden_knowledge",
+		"description": "Forbidden rites empower your Undead Mages. At Lv 5, with Mages at Lv 5, a treasure chest raises them as Liches.",
+		"labels": {"mage_damage": ["Mage damage", "pct"], "mage_splash": ["Mage splash radius", "pct"]},
+		"classes": ["mage"],
+		"levels": [
+			{"mage_damage": 0.08, "mage_splash": 0.05},  # TUNING (not in GDD)
+			{"mage_damage": 0.16, "mage_splash": 0.10},  # TUNING (not in GDD)
+			{"mage_damage": 0.24, "mage_splash": 0.15},  # TUNING (not in GDD)
+			{"mage_damage": 0.32, "mage_splash": 0.20},  # TUNING (not in GDD)
+			{"mage_damage": 0.40, "mage_splash": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	"dark_benediction": {
+		"display_name": "Dark Benediction",
+		"icon": "dark_benediction",
+		"description": "Unholy blessings strengthen Menders, Warders and Bishops. With Menders and Warders at Lv 5, a treasure chest merges them into Profane Bishops.",
+		"labels": {"support_power": ["Heals, wards and barriers", "pct"]},
+		"classes": ["mender", "warder", "bishop"],
+		"levels": [
+			{"support_power": 0.08},  # TUNING (not in GDD)
+			{"support_power": 0.16},  # TUNING (not in GDD)
+			{"support_power": 0.24},  # TUNING (not in GDD)
+			{"support_power": 0.32},  # TUNING (not in GDD)
+			{"support_power": 0.40},  # TUNING (not in GDD)
 		],
 	},
 }

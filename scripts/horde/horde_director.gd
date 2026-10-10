@@ -11,6 +11,9 @@
 ##   * temporary summons from stage events (empowered graves, Crypt Defender
 ##     guardians): same shared AI, but outside caps / HUD counts, and they
 ##     crumble after their duration (GDD §15.0 decision on open question 14).
+##   * summon evolutions (Death Knight, Lich, Profane Bishop) through its
+##     SummonEvolutions: the evolution overlay on effective stats, in-place
+##     transformation and the Mender + Warder merge (SummonEvolutionData).
 ## Ranged overkill reservations are stored on the enemies themselves
 ## (Enemy.incoming_damage) and managed by ProjectileManager.
 class_name HordeDirector
@@ -67,6 +70,8 @@ var temp_spawned: int = 0
 var _tmp: Array = []
 ## Army synergies (activation + effects, GDD §6.3).
 var synergies: SynergyManager
+## Summon evolutions (state, stat overlay, transformation / merge).
+var evolutions: SummonEvolutions
 
 
 func _init() -> void:
@@ -76,6 +81,7 @@ func _init() -> void:
 		replenish_timer[cls] = 0.0
 		immediate_spawns[cls] = 0
 	synergies = SynergyManager.new(self)
+	evolutions = SummonEvolutions.new(self)
 
 
 # =====================================================================================
@@ -160,8 +166,15 @@ func capacity(cls: String, dominion_level: int = -1) -> int:
 	var level: int = class_levels[cls]
 	if level <= 0:
 		return 0
-	var row: Dictionary = UnitData.LEVELS[cls][level - 1]
+	var row := level_row(cls, level)
 	return int(row["count"]) + bonus_capacity(cls, dominion_level)
+
+
+## UnitData.LEVELS row of `cls` at skill `level`, clamped to the rows the
+## class has (the Profane Bishop has a single row).
+func level_row(cls: String, level: int) -> Dictionary:
+	var rows: Array = UnitData.LEVELS[cls]
+	return rows[clampi(level, 1, rows.size()) - 1]
 
 
 ## Global capacity bonus of `cls` on top of its level count: Grave Dominion
@@ -198,9 +211,13 @@ func replenish_interval(cls: String) -> float:
 ## attack-speed multipliers. The Dark Frenzy power-up is one more category
 ## (x (1 + frenzy) on damage and attack speed) while `with_buffs` is true;
 ## level-up card previews pass false so they show the lasting stats.
-func compute_stats(cls: String, level: int, with_buffs: bool = true) -> Dictionary:
+## SummonEvolutions.modify_stats() then applies the summon-evolution passives
+## (Forbidden Knowledge, Dark Benediction: own categories) and, while
+## `with_evolution` is true, the class's evolution overlay (Death Knight /
+## Lich); temporary summons pass false and keep the base class.
+func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolution: bool = true) -> Dictionary:
 	var base: Dictionary = UnitData.UNITS[cls]
-	var row: Dictionary = UnitData.LEVELS[cls][clampi(level, 1, 5) - 1]
+	var row := level_row(cls, level)
 	var ab := game.abilities
 	var hp_mult := (1.0 + float(row.get("hp_bonus", 0.0))) * (1.0 + ab.passive_value("necrotic_vigor", "minion_hp")) \
 			* (1.0 + game.meta.value("minion_hp"))
@@ -215,7 +232,7 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true) -> Dictiona
 	var heal_mult := 1.0 + float(row.get("heal_bonus", 0.0))
 	var splash_mult := 1.0 + float(row.get("splash_bonus", 0.0))
 	var shield_mult := 1.0 + float(row.get("shield_bonus", 0.0))
-	return {
+	var out := {
 		"count": int(row["count"]),
 		"max_hp": float(base["max_hp"]) * hp_mult,
 		"damage": float(base["damage"]) * dmg_mult,
@@ -248,7 +265,20 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true) -> Dictiona
 		"heal_role_priority": float(base["heal_role_priority"]),
 		"attack_profile": String(base["attack_profile"]),
 		"target_profile": String(base["target_profile"]),
+		# Support / evolution keys (optional in UnitData rows; 0 = none).
+		"ally_shield_amount": float(base.get("ally_shield_amount", 0.0)) * shield_mult,
+		"ally_shield_cooldown": float(base.get("ally_shield_cooldown", 0.0)),
+		"aura_interval": float(base.get("aura_interval", 0.0)),
+		"aura_radius": float(base.get("aura_radius", 0.0)),
+		"aura_heal": float(base.get("aura_heal", 0.0)) * heal_mult,
+		"aura_damage": float(base.get("aura_damage", 0.0)) * dmg_mult,
+		"cleave_radius": 0.0,
+		"cleave_fraction": 0.0,
+		"lifesteal": 0.0,
+		"evolution": "",
 	}
+	evolutions.modify_stats(cls, out, with_evolution)
+	return out
 
 
 # =====================================================================================
@@ -335,9 +365,10 @@ func _try_spawn(cls: String) -> bool:
 ## Spawns a temporary summon of `cls` near `pos` for `duration` seconds,
 ## using the class's current effective stats (level 1 if not learned) times
 ## `hp_mult` / `dmg_mult`. It runs the shared AI but is not counted in
-## class_counts (caps, HUD) and is never replaced.
+## class_counts (caps, HUD) and is never replaced. It always keeps the base
+## class look and kit (no summon-evolution overlay).
 func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float, dmg_mult: float) -> SummonedUnit:
-	var stats := compute_stats(cls, maxi(1, int(class_levels[cls])))
+	var stats := compute_stats(cls, maxi(1, int(class_levels[cls])), true, false)
 	stats["max_hp"] = float(stats["max_hp"]) * hp_mult
 	stats["damage"] = float(stats["damage"]) * dmg_mult
 	stats["bash_damage"] = float(stats["bash_damage"]) * dmg_mult
@@ -387,7 +418,9 @@ func _blocked_by_enemy(pos: Vector2, r: float) -> bool:
 
 ## Death handling (GDD §24): stop AI, deregister, release reservations, play
 ## FX, pool the node; the class queue then replaces it after its interval.
-func on_unit_died(u: SummonedUnit) -> void:
+## `as_death` false removes the unit without counting a death or emitting
+## summon_died (units dissolved by the Mender + Warder merge).
+func on_unit_died(u: SummonedUnit, as_death: bool = true) -> void:
 	if not u.active:
 		return
 	var idx := units.find(u)
@@ -398,11 +431,13 @@ func on_unit_died(u: SummonedUnit) -> void:
 		temp_alive -= 1
 	else:
 		class_counts[u.unit_class] = maxi(0, int(class_counts[u.unit_class]) - 1)
-		total_deaths += 1
+		if as_death:
+			total_deaths += 1
 	game.effects.pop(u.position, Palette.COLD_BLUE, u.radius * 1.2)
 	u.deactivate()
 	_pool.append(u)
-	summon_died.emit(u)
+	if as_death:
+		summon_died.emit(u)
 	summon_count_changed.emit()
 
 
@@ -417,8 +452,8 @@ func count_of(cls: String) -> int:
 
 ## Assigns each unit a player-relative anchor inside its class band.
 ## Warriors spread in an arc facing the threat (or a full ring when calm);
-## archers + mages share the midline ring; priests sit on the side away from
-## the threat. Stable per-unit jitter keeps it from looking geometric.
+## archers + mages share the midline ring; the support classes (Mender,
+## Warder, Profane Bishop) sit on the side away from the threat. Stable per-unit jitter keeps it from looking geometric.
 func _calculate_formation_anchors() -> void:
 	var warriors: Array[SummonedUnit] = []
 	var midline: Array[SummonedUnit] = []
@@ -427,7 +462,7 @@ func _calculate_formation_anchors() -> void:
 		match u.unit_class:
 			"warrior":
 				warriors.append(u)
-			"priest":
+			"mender", "warder", "bishop":
 				support.append(u)
 			_:
 				midline.append(u)

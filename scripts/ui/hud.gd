@@ -9,7 +9,8 @@
 ##                   their remaining time (game.powerups).
 ##   Bottom center : active ability slots (6) and passive slots (6) with levels.
 ##   Bottom left   : army total / capacity and per-class counts with
-##                   replacement progress bars; active army synergies
+##                   replacement progress bars (an evolved class shows its
+##                   evolution's icon and name); active army synergies
 ##                   (GDD §6.3) listed above them.
 ##   Upper middle  : progression banner announcing a synergy activation or a
 ##                   spell evolution (announce()).
@@ -37,7 +38,7 @@ var _level_label: Label
 var _hp_bar: HudBar
 ## Orb Shield charges ("shields") label.
 var _ward_label: Label
-## Priest ward on the necromancer label.
+## Ward on the necromancer label (cast by Warders / Profane Bishops).
 var _shield_label: Label
 ## Run timer.
 var _timer_label: Label
@@ -53,7 +54,7 @@ var _boss_bar: HudBar
 var _kills_label: Label
 ## "Army N / cap" label.
 var _army_label: Label
-## Class id -> {"row": HBoxContainer, "label": Label, "bar": HudBar}.
+## Class id -> {"row": HBoxContainer, "icon": IconGlyph, "label": Label, "bar": HudBar}.
 var _class_rows: Dictionary = {}
 ## Active ability slot icons.
 var _active_icons: Array[IconGlyph] = []
@@ -186,14 +187,15 @@ func _build() -> void:
 		buffs.add_child(brow)
 		_buff_rows[kind] = {"row": brow, "label": blabel, "bar": bbar}
 
-	# Bottom left: army panel.
-	var bl := _box(true, 0.0, 1.0, 16, -190, 300, -16, BoxContainer.ALIGNMENT_END)
+	# Bottom left: army panel (up to 6 owned classes, one per active slot).
+	var bl := _box(true, 0.0, 1.0, 16, -206, 300, -16, BoxContainer.ALIGNMENT_END)
 	_army_label = UiTheme.label("Army 0 / 0", 18, Palette.NECRO_GREEN)
 	bl.add_child(_army_label)
 	for cls: String in UnitData.CLASS_ORDER:
 		var row := HBoxContainer.new()
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		row.add_child(IconGlyph.new(cls, Vector2(26, 26)))
+		var icon := IconGlyph.new(cls, Vector2(24, 24))  # Class (or evolution) icon.
+		row.add_child(icon)
 		var lbl := UiTheme.label("", 14)
 		lbl.custom_minimum_size = Vector2(120, 0)
 		row.add_child(lbl)
@@ -203,10 +205,10 @@ func _build() -> void:
 		row.add_child(bar)
 		row.visible = false
 		bl.add_child(row)
-		_class_rows[cls] = {"row": row, "label": lbl, "bar": bar}
+		_class_rows[cls] = {"row": row, "icon": icon, "label": lbl, "bar": bar}
 
 	# Bottom left, above the army panel: active synergies.
-	var syn := _box(true, 0.0, 1.0, 16, -300, 300, -194, BoxContainer.ALIGNMENT_END)
+	var syn := _box(true, 0.0, 1.0, 16, -316, 300, -210, BoxContainer.ALIGNMENT_END)
 	for id: String in SynergyData.ORDER:
 		var srow := HBoxContainer.new()
 		srow.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -262,7 +264,7 @@ func _refresh() -> void:
 		_ward_label.text = "Orb shields ready: %d / %d" % [orbs.charges_ready(), orbs.recharge.size()]
 	else:
 		_ward_label.text = ""
-	_shield_label.text = "Priest ward: %d HP (%.1fs)" % [ceili(p.shield_hp), p.shield_time] if p.shield_hp > 0.0 else ""
+	_shield_label.text = "Ward: %d HP (%.1fs)" % [ceili(p.shield_hp), p.shield_time] if p.shield_hp > 0.0 else ""
 	# Countdown (user brief): 20:00 -> 0:00, then "RECKONING +m:ss".
 	if game.countdown_finished():
 		var over := int(game.elapsed - WaveData.RUN_DURATION)
@@ -285,7 +287,8 @@ func _refresh() -> void:
 		var owned := int(h.class_levels[cls]) > 0
 		(row["row"] as Control).visible = owned
 		if owned:
-			(row["label"] as Label).text = "%s %d/%d" % [UnitData.UNITS[cls]["plural"], h.count_of(cls), h.capacity(cls)]
+			(row["icon"] as IconGlyph).set_icon(h.evolutions.class_icon(cls))
+			(row["label"] as Label).text = "%s %d/%d" % [h.evolutions.class_plural(cls), h.count_of(cls), h.capacity(cls)]
 			(row["bar"] as HudBar).set_values(h.replenish_progress(cls))
 	_aim_label.text = "%s aim: %s  [T / Y]" % [game.abilities.spell_name("shadow_bolt"), game.abilities.bolt_aim_name()] if game.abilities.spell_level("shadow_bolt") > 0 else ""
 	for id: String in SynergyData.ORDER:

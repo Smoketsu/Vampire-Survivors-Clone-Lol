@@ -6,7 +6,9 @@
 ## Readability rule (GDD §16/§17): each summon class and each enemy kind is
 ## distinguishable by SILHOUETTE, not only colour:
 ##   Warrior = square body + shield + sword     Archer  = triangle + bow
-##   Mage    = diamond + floating orb           Priest  = round robe + halo
+##   Mage    = diamond + floating orb           Mender  = round robe + halo
+##   (Crypt Warder, Profane Bishop, Death Knight, Lich and the Lich's risen
+##   skeletons are drawn by SummonGlyphs.)
 ##   Recruit = small round + tabard + spear     Footman = big square + kite shield
 ##   Zealous Archer = crimson triangle + bow    Chaplain = ivory round + gold cross
 ##   Purifier = hexagon + torch flame           Sir Alaric = big octagon + hammer
@@ -75,8 +77,10 @@ static func draw_summon(ci: CanvasItem, cls: String, o: Vector2, r: float, flash
 			draw_archer(ci, o, r, flash)
 		"mage":
 			draw_mage(ci, o, r, flash)
-		"priest":
+		"mender":
 			draw_priest(ci, o, r, flash)
+		_:
+			SummonGlyphs.draw_summon(ci, cls, o, r, flash)
 
 
 ## Skeleton Warrior: square steel body, blue shield on the left, bone sword.
@@ -109,7 +113,8 @@ static func draw_mage(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void
 	ci.draw_circle(o + Vector2(r * 1.0, -r * 0.95), r * 0.3, _c(Palette.VIOLET, flash))
 
 
-## Undead Priest: round teal robe, hood, green halo ring and staff.
+## Grave Mender (the GDD's Undead Priest look): round teal robe, hood, green
+## halo ring and staff.
 static func draw_priest(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
 	ci.draw_circle(o + Vector2(0, r * 0.3), r * 0.85, _c(Palette.PRIEST_ROBE, flash))
 	ci.draw_line(o + Vector2(0, -r * 0.2), o + Vector2(0, r * 1.05), _c(Palette.NECRO_GREEN, flash), 1.5)
@@ -270,7 +275,7 @@ static func draw_icon(ci: CanvasItem, kind: String, rect: Rect2) -> void:
 	var c := rect.get_center()
 	var s := minf(rect.size.x, rect.size.y) * 0.5
 	match kind:
-		"warrior", "archer", "mage", "priest":
+		"warrior", "archer", "mage", "mender":
 			draw_summon(ci, kind, c + Vector2(-s * 0.08, s * 0.08), s * 0.5, false)
 		"shadow_bolt":
 			ci.draw_line(c + Vector2(-s * 0.6, s * 0.6), c + Vector2(s * 0.1, -s * 0.1), Color(Palette.VIOLET, 0.5), s * 0.25)
@@ -314,7 +319,8 @@ static func draw_icon(ci: CanvasItem, kind: String, rect: Rect2) -> void:
 		_:
 			# Evolutions, evolution passives, synergies, fallback cards, then
 			# meta-progression icons (Soul Ash, trees, Ossuary upgrades), then
-			# power-ups and the Profane Pact / Oath.
+			# power-ups and the Profane Pact / Oath, then the priest-split
+			# classes, summon evolutions and their passives.
 			if not ProgressionGlyphs.draw_icon(ci, kind, c, s) and not MetaGlyphs.draw_icon(ci, kind, c, s) \
-					and not PowerupGlyphs.draw_icon(ci, kind, c, s):
+					and not PowerupGlyphs.draw_icon(ci, kind, c, s) and not SummonGlyphs.draw_icon(ci, kind, c, s):
 				ci.draw_circle(c, s * 0.3, Palette.BONE)

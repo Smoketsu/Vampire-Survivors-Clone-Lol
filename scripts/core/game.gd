@@ -415,11 +415,10 @@ func _on_player_died() -> void:
 func _on_boss_defeated() -> void:
 	boss_defeated = true
 	stat_add("boss_kills", 1.0)
-	# Dread Sovereign achievement (GDD §9.4): boss slain with all 4 classes.
-	var full_army := true
-	for cls: String in UnitData.CLASS_ORDER:
-		full_army = full_army and int(horde.class_levels[cls]) > 0
-	if full_army:
+	# Dread Sovereign achievement (GDD §9.4): boss slain with all 4 GDD
+	# summon roles (MetaData.DREAD_SOVEREIGN_CLASSES; either priest order or
+	# the Profane Bishop counts as the priest).
+	if SynergyManager.classes_met(MetaData.DREAD_SOVEREIGN_CLASSES, horde.class_levels, 1):
 		stat_add("boss_kill_full_army", 1.0)
 
 
@@ -445,9 +444,11 @@ func end_run(won: bool, reason: String) -> void:
 func build_summary() -> Dictionary:
 	var counts := {}
 	var caps := {}
+	var names := {}  # Class id -> UI plural (an evolved class's evolution name).
 	for cls: String in UnitData.CLASS_ORDER:
 		counts[cls] = horde.count_of(cls)
 		caps[cls] = horde.capacity(cls)
+		names[cls] = horde.evolutions.class_plural(cls)
 	var boss := enemies.boss
 	return {
 		"victory": victory,
@@ -464,6 +465,7 @@ func build_summary() -> Dictionary:
 		"horde_capacity": horde.total_capacity(),
 		"horde_counts": counts,
 		"horde_caps": caps,
+		"horde_names": names,
 		"boss_spawned": boss != null,
 		"boss_hp": boss.hp if boss != null else 0.0,
 		"boss_max_hp": boss.max_hp if boss != null else 0.0,
