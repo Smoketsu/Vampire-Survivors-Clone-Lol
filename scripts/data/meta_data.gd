@@ -238,9 +238,11 @@ const ACHIEVEMENTS := {
 ## Death Knight is an evolved Skeleton Warrior: strike, bash and cleave).
 const WARRIOR_KILL_SOURCES := ["warrior", "bash", "death_knight", "death_knight_bash", "death_knight_cleave"]
 ## Classes Dread Sovereign needs (SynergyManager.classes_met, level 1+): the
-## GDD's four summon roles; the nested array is "any one of" the priest
-## orders (the Profane Bishop counts as both through UnitData "counts_as").
-const DREAD_SOVEREIGN_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
+## GDD's four summon roles, UnitData.CORE_CLASSES; the nested array is "any
+## one of" the priest orders (the Profane Bishop counts as both through
+## UnitData "counts_as"). The later classes (Abomination, Rogue, Gargoyle,
+## Frost Wraith) are never required.
+const DREAD_SOVEREIGN_CLASSES: Array = UnitData.CORE_CLASSES
 
 # --- Autotest profiles --------------------------------------------------------------
 

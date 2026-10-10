@@ -5,7 +5,8 @@ vein of *Vampire Survivors*, with one twist: **the army is your weapon**. You pl
 a necromancer hunted by the Crimson Covenant, a fanatical holy order. You only
 move. Your shadow spells fire automatically, and an **autonomous undead horde**
 of Skeleton Warriors, Skeletal Archers, Undead Mages and the two priest orders,
-Grave Menders and Crypt Warders, follows, fights, heals, shields, holds the line
+Grave Menders and Crypt Warders (plus Corpse Abominations, Grave Rogues, Crypt
+Gargoyles and Frost Wraiths), follows, fights, heals, shields, holds the line
 and regroups without any commands from you. Late in a run your summons can
 evolve into Death Knights, Liches and Profane Bishops.
 
@@ -121,6 +122,48 @@ replacing fallen units all happen automatically (GDD §4, §21).
     lasted past zero.
   - Dying **before 0:00** shows **DEFEAT**.
 
+### Summon classes
+
+All classes run the same shared AI (formation band, target scoring, leash and
+recall, replacement queue). The GDD's single Undead Priest is **split into two
+classes**, the Grave Mender and the Crypt Warder (user request; they can later
+merge into the Profane Bishop, see *Evolutions & Synergies*). The four later
+classes add one special action each (`scripts/horde/behaviors/`). Every class
+number is in `scripts/data/unit_data.gd`.
+
+| Class | Population (Lv 1 → 5) | Replaced every | Role | Special |
+|---|---|---|---|---|
+| Skeleton Warrior | 2 → 8 | 5 s | Frontline blocker | Physically blocks enemies (they move at 60%); shield bash. Evolves into the **Death Knight** |
+| Skeletal Archer | 1 → 5 | 8 s | Ranged DPS | Kites briefly; pierce at Lv 4 |
+| Undead Mage | 1 → 3 | 12 s | AoE caster | Explosions on the best cluster. Evolves into the **Lich** |
+| Grave Mender | 1 → 2 | 15 s | Healer | Heals allies and you (the old priest heal, §31) |
+| Crypt Warder | 1 → 2 | 15 s | Warder | Wards you when you are threatened; instant barriers on threatened allies |
+| Profane Bishop | 3 (merge only) | 12 s | Support | Never offered on a card: created when Menders and Warders merge. Heals, wards, barriers and a heal / burn aura |
+| **Corpse Abomination** | 1 → 3 | 20 s | Tank | A wider, heavier blocker (enemies touching it move at 45%). **Stomp**: a telegraphed bone-green ring, then damage and knockback to everything around it, with a shockwave and screen shake |
+| **Grave Rogue** | 1 → 4 | 9 s | Assassin | Hunts Chaplains, archers and the back of the crowd. **Dash Strike**: a telegraphed violet lane, then a dash through it that hits every enemy in the lane and makes them bleed; it never ends inside an obstacle and runs back to formation |
+| **Crypt Gargoyle** | 1 → 3 | 12 s | Skirmisher | Claws. **Swoop**: takes off (airborne: flies over obstacles and bodies, can't be hit, drawn above its shadow), dives onto a cluster for AoE damage, lands on a free spot |
+| **Frost Wraith** | 1 → 3 | 14 s | Ice caster | Frost bolts **chill** (slow, frost film). **Deep Freeze**: a telegraphed circle, then every enemy inside is frozen (Stasis rules: Sir Alaric only briefly, Reckoning enemies immune) |
+
+- **Global capacity bonuses** (Grave Dominion, Legion of Bone) give every GDD
+  class the full bonus, and the Mender and Warder each count as a class; the
+  merged Bishop gets it once. Low-population later classes take only part of
+  it (Abomination 40%, Frost Wraith 50%, Rogue and Gargoyle 60%, rounded
+  down).
+- **Synergies and achievements**: The Unholy Host and Dread Sovereign need the
+  GDD's four roles (Warriors, Archers, Mages and either priest order, or the
+  Bishop); the later classes are never required. March of the Deathless
+  counts any 3 classes.
+- **Evolutions only touch their own classes**: Death Knight (Warriors), Lich
+  (Mages) and Profane Bishop (Menders + Warders). Forbidden Knowledge and
+  Dark Benediction boost only Mages and the support classes; the later
+  classes have no evolution yet.
+- **Interactions**: an enemy touching several blockers (Warriors, Death
+  Knights, Abominations) gets the strongest slow, never a product of them.
+  Shieldwall barriers stay on Warriors (and Death Knights); Warder and Bishop
+  ally barriers can land on any threatened ally, Abominations included. A
+  Gargoyle in flight is out of reach of enemies and allies alike: it can't be
+  hit, healed or given a barrier until it lands.
+
 ### Evolutions & Synergies
 
 - **Evolutions** (GDD §6.1): once a spell reaches **Lv 5**, you own its
@@ -169,7 +212,11 @@ replacing fallen units all happen automatically (GDD §4, §21).
   summon). The Profane Bishop counts as both priest orders, so merging keeps
   both synergies.
 - **Level-up cards** are weighted: upgrades to items you own, and items on an
-  evolution path, come up more often. A hand is never made only of useless
+  evolution path, come up more often. New summon classes share one weight
+  (`NEW_SUMMON_POOL_WEIGHT` = 3, split between the classes you don't own; the
+  Bishop is never offered and merged classes don't count), so eight
+  offerable classes don't crowd spells and passives out of the hands; once your 6
+  active slots are full, no new summon or spell is offered at all. A hand is never made only of useless
   cards, and fallback cards (heal, +max HP, raise every fallen summon) fill
   any empty slots once everything is maxed. Use **Reroll** (2 per run),
   **Banish** (2 per run; removes that item from the run) and **Skip**
@@ -361,9 +408,9 @@ replacing fallen units all happen automatically (GDD §4, §21).
 | Area | Status in this prototype |
 |---|---|
 | Necromancer | Movement (keyboard and stick), HP with a slow natural regeneration (0.3 HP/s), i-frames, pickup radius, hit flash. Can receive Mender heals and Warder wards. |
-| **Shared summon AI** (§25–§31, §36) | **One** data-driven `SummonedUnit` script runs every class (Warrior, Archer, Mage, Mender, Warder, Profane Bishop, plus the evolved Death Knight and Lich). It has the full FSM from §25, soft formation bands around the player (§26), and normalised target scoring (§27). Targets are held for at least 1 s; ranged units redirect when a target is already doomed (overkill reservation); healers use the §31 heal formula. Support and evolution kits (ally barrier, aura, cleave, life drain) are data-driven hooks into `SummonAbilities`. |
+| **Shared summon AI** (§25–§31, §36) | **One** data-driven `SummonedUnit` script runs every class (Warrior, Archer, Mage, Mender, Warder, Profane Bishop, the evolved Death Knight and Lich, and the four later classes). It has the full FSM from §25, soft formation bands around the player (§26), and normalised target scoring (§27). Targets are held for at least 1 s; ranged units redirect when a target is already doomed (overkill reservation); healers use the §31 heal formula. Support and evolution kits (ally barrier, aura, cleave, life drain) are data-driven hooks into `SummonAbilities`; the four later classes plug one special action each into the AI through a `SummonBehavior` (see *Summon classes*). |
 | Leash and recall (§24) | Engagement radius 220 px, soft recall at 320 px, hard spectral recall at 650 px. |
-| Replenishment (§24) | Each summon ability refills its own queue one unit at a time (Warrior 5 s, Archer 8 s, Mage 12 s, Mender and Warder 15 s, Profane Bishop 12 s). A capacity increase spawns the new units immediately. A failed spawn retries without using up the timer. |
+| Replenishment (§24) | Each summon ability refills its own queue one unit at a time (Warrior 5 s, Archer 8 s, Mage 12 s, Mender and Warder 15 s, Profane Bishop 12 s; Abomination 20 s, Rogue 9 s, Gargoyle 12 s, Frost Wraith 14 s). A capacity increase spawns the new units immediately. A failed spawn retries without using up the timer. |
 | **Warrior blocking** | Warriors are physical blockers. Enemies can't pass through them; overlaps are resolved through the spatial hash, weighted by mass. An enemy touching a warrior is *engaged*: it moves at 60% speed and attacks that warrior. Warriors also shield-bash on a cooldown (damage plus knockback). Sir Alaric's Divine Charge loses distance for every undead body it hits, so a thick enough wall stops it. |
 | **Priest orders** (user request: the GDD's Priest split in two) | **Grave Mender** (round teal robe, green halo): heals allies and the necromancer with the §31 formula, a critically hurt necromancer first (the old priest heal, unchanged). **Crypt Warder** (heater-shaped blue robe, ward sigil): whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px) it casts an instant damage-absorbing **ward** on you, as long as no ward is active and its own ward cooldown is ready (the old priest ward, same numbers); it also casts an instant **barrier** (12 HP, +25–80% by level) on the most threatened ally in reach every 3 s: an ally hit in the last 2 s, or a warrior fighting in melee, whose barrier is below half. Barriers don't stack with Shieldwall's (the stronger one wins). Both orders fire weak bolts when idle. Each has its own card, cap (1-2 by level), 15 s replenishment and HUD row; the ward shows as a ring on the necromancer and in the HUD. |
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
@@ -376,8 +423,8 @@ replacing fallen units all happen automatically (GDD §4, §21).
 | Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades, prerequisites, respec) plus the opt-in Profane Oath, 3 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
-| UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu, end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress; ability slots with levels (an evolved class shows its evolution's icon and name). |
-| Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, Menders are round with a halo, Warders are downward heater shapes under a floating ward sigil, Bishops wear a tall mitre over a bell robe, Death Knights have horned helms, spiked pauldrons and a greatsword, Liches float as crowned wisps, and the Lich's risen dead are bare ribcages). Hit flashes, death pops and an evolution glow are included. |
+| UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu, end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress (compact rows, at most one per active slot); ability slots with levels (an evolved class shows its evolution's icon and name). |
+| Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, Menders are round with a halo, Warders are downward heater shapes under a floating ward sigil, Bishops wear a tall mitre over a bell robe, Death Knights have horned helms, spiked pauldrons and a greatsword, Liches float as crowned wisps, the Lich's risen dead are bare ribcages, abominations are huge stitched blobs, rogues are hooded chevrons with daggers, gargoyles have bat wings, frost wraiths are legless ice ghosts). Hit flashes, death pops and an evolution glow are included. |
 
 ### Where the numbers come from
 
@@ -409,7 +456,8 @@ values, passive values, archer/mage/Mender/Warder level progressions (aimed at
 the §42 sandbox army of 5 archers, 3 mages and 2 priests), archer and mage
 steering weights, target-score weights, the XP curve, player stats, the
 warrior blocking/bash and Warder ward / barrier values, the Profane Bishop and
-the summon-evolution numbers, and the Reckoning scaling.
+the summon-evolution numbers, the Reckoning scaling, and everything about the
+Abomination, Rogue, Gargoyle and Frost Wraith.
 
 ---
 
@@ -445,6 +493,13 @@ scripts/
                             barrier, Bishop aura pulse, Death Knight cleave + life drain
     summon_evolutions.gd    Summon evolutions: eligibility, stat overlay, in-place transform,
                             Mender + Warder merge, Lich raise-the-dead, card hints
+    behaviors/              Class special actions plugged into that AI (one SummonBehavior per unit):
+      summon_behavior.gd      Base class: think / physics / attack / score / draw hooks, recall-safe
+      summon_behaviors.gd     Registry (behavior id -> class) and the level-up card lines
+      abomination_behavior.gd Stomp (telegraphed ring, AoE damage + knockback)
+      rogue_behavior.gd       Dash Strike (telegraphed lane, dash, bleed, return to formation)
+      gargoyle_behavior.gd    Swoop (airborne flight over obstacles, dive AoE, safe landing)
+      frost_wraith_behavior.gd Frost bolts (chill) and Deep Freeze (the Stasis freeze path)
   enemies/
     enemy.gd                Data-driven Covenant soldier (melee / purifier / ranged / healer),
                             plus warrior-blocking resolution
@@ -468,9 +523,10 @@ scripts/
                             (Warder, Bishop, Death Knight, Lich, risen skeleton
                             shapes and their icons, evolution glow),
                             ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons),
-                            chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons)
+                            chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
+                            summon_glyphs (the four later summon classes, enemy chill tint)
   data/                     DESIGNER-TUNABLE DATA (no logic):
-    unit_data.gd            Summon classes, level tables, AI weights, leash/rates
+    unit_data.gd            Summon classes (and their specials), level tables, AI weights, leash/rates
     enemy_data.gd           Enemy roster, boss, Reckoning enemy, elites
     wave_data.gd            Countdown, segments, events, Reckoning escalation
     ability_data.gd         Spell level tables
@@ -553,6 +609,7 @@ Options (after `--`):
 | `--meta=PROFILE` | Simulated Soul Ash purchases, applied in memory only: `none` (default, so balance runs stay comparable), `mid` (about half of every tree) or `max` (everything). |
 | `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). |
 | `--oath=N` | Active Profane Oath tier 0-5 (default 0). No `--meta` profile includes the Oath, so `--meta=max` balance runs stay comparable. |
+| `--classes=a,b` | Forces summon classes (`abomination`, `rogue`, `gargoyle`, `frost_wraith`, or any offerable class id; the merge-only `bishop` is ignored): each is raised to Lv 1 at the start (while active slots allow) and every policy upgrades it first, so its special gets exercised. |
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
@@ -592,7 +649,16 @@ items granted, every chest's contents with its time) and the **Profane
 Pact** line (taken or not, the time of each level, the Oath tier, and the
 extra XP and Soul Ash from the Pact and the Oath). The autopilot walks to a
 chest within 450 px unless enemies press it hard, and to a power-up within
-300 px when nothing presses it.
+300 px when nothing presses it. One **class** line per later summon class
+lists its level, alive / capacity, deaths, damage by source (attack and
+special) and its special counters: `abom_stomps` / `abom_stomp_hits`,
+`rogue_dashes` / `rogue_dash_hits` (plus `dmg_rogue_bleed`),
+`gargoyle_swoops` / `gargoyle_swoop_hits`, and `frost_deep_freezes`,
+`frost_freezes` (enemies frozen), `frost_boss_freezes`,
+`frost_frozen_seconds` and `frost_chills`. The stuck check also counts a
+special still running after 4 s (a dashing or airborne unit) and any dash or
+landing that ends inside an obstacle; specials cancelled by a recall are
+reported too.
 
 ### Continuous integration and builds
 
@@ -638,11 +704,16 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
   1-4). The army build (which now takes both priest orders and usually
   evolves the Death Knight at 10:26-11:16) never died before 0:00 (lowest HP
   92-110, main 92-114), always killed Sir Alaric and completed its build at
-  15:58-16:40 (main 15:55-16:14). The naive build died before 0:00 in 2 of 4
-  runs and killed him in 2 (main 3 and 1); with five summon classes it often
-  fills its six active slots before taking a Mender. The `summon` build gets
-  all three summon evolutions at about 11:16-12:36. A combined balance pass
-  is still due.
+  15:58-16:40 (main 15:55-16:14). The `summon` build gets all three summon
+  evolutions at about 11:16-12:36.
+- The four later summon classes (Abomination, Rogue, Gargoyle, Frost Wraith)
+  have first-pass numbers checked only with the autotest bots. Each deals
+  damage in the range of the core classes. A Rogue's bleeds stop if that
+  rogue dies.
+- **These two features were merged together without a combined balance
+  pass yet.** With ten class ids (eight offerable at the start) the naive bot
+  grabs a new summon class whenever one is offered, so its results move with
+  the card mix; see GDD §15.0 for the post-merge check.
 - Only the Graveyard stage (a 20-minute run, the GDD's lower bound).
 - Arrows and spells fly over obstacles (no line-of-sight checks).
 - Eclipse Ward usually arrives late (15:00-19:00) and only in builds that

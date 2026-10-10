@@ -31,6 +31,14 @@ const BISHOP_ROBE := Color(0.27, 0.12, 0.38)
 const DEATH_STEEL := Color(0.19, 0.21, 0.29)
 ## Dark violet robe of the Lich (evolved Undead Mage), outlined in VIOLET.
 const LICH_ROBE := Color(0.21, 0.10, 0.33)
+## Sickly grey-green stitched flesh of the Corpse Abomination (and its stomp).
+const CORPSE_FLESH := Color(0.47, 0.56, 0.42)
+## Near-black violet cloak of the Grave Rogue.
+const ROGUE_CLOAK := Color(0.16, 0.10, 0.24)
+## Blue-grey weathered stone of the Crypt Gargoyle.
+const GARGOYLE_STONE := Color(0.46, 0.50, 0.58)
+## Pale frost blue of the Frost Wraith's spectral body (chill tint too).
+const FROST := Color(0.62, 0.84, 1.0)
 
 # --- Hostile (Crimson Covenant) -----------------------------------------------
 

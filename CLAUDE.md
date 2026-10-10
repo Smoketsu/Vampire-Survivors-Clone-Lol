@@ -6,7 +6,8 @@ Guidance for Claude Code (and any agent) working in this repo. Read this first, 
 ## What this is
 
 **Gravebound** is a Vampire Survivors-style game. You play a necromancer who commands an autonomous undead
-horde (Warriors, Archers, Mages, Priests) against the holy Crimson Covenant. It is built in **Godot 4.3**
+horde (Warriors, Archers, Mages, the Mender
+and Warder priest orders, plus Abominations, Rogues, Gargoyles and Frost Wraiths) against the holy Crimson Covenant. It is built in **Godot 4.3**
 with **GDScript**, top-down 2D and the GL Compatibility renderer. There are no external assets: art is
 drawn in code (`_draw`), and sound and music are synthesized at startup.
 
@@ -54,9 +55,11 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
   evolutions arrive mostly at 10-14 min.
 - **Undead don't dodge.** They body-block for the player, and Warriors physically block enemies.
 - **Enemies always advance** on the player; nobody kites.
-- **Priests** heal and ward the necromancer as well as allies.
+- **Priests** are split: **Menders** heal allies and the necromancer, **Warders** ward the
+  necromancer and put barriers on allies; with Dark Benediction both merge into the Profane Bishop.
 - **Evolutions** come only from **treasure chests**, once the base spell is Lv5, the paired passive is
-  owned and the run has reached 8:00 elapsed.
+  owned and the run has reached 8:00 elapsed. Summon evolutions (Death Knight, Lich, Profane Bishop)
+  use the same delivery and gate with their own recipes (`summon_evolution_data.gd`).
 - **Shadow Bolt** has a Nearest/Strongest aim toggle (T / pad Y).
 - **Soul Ash is kept on death.** Profane Pact (in-run) and Profane Oath (Ossuary) trade difficulty
   for rewards.
@@ -76,7 +79,8 @@ godot --headless --fixed-fps 60 --quit-after 15000 -- --autotest [options]
 Autotest options (full table in the README):
 - `--mortal`: the player can die before 0:00.
 - `--seed=N`
-- `--policy=naive|army|evolve|pact`
+- `--policy=naive|army|evolve|summon|pact`
+- `--classes=a,b` (force summon classes, e.g. `abomination,rogue,gargoyle,frost_wraith`)
 - `--pact`
 - `--meta=none|mid|max`
 - `--oath=0-5`
@@ -132,6 +136,17 @@ tiny tweaks.
 - audio, game feel and settings;
 - CI and export.
 
+**Done (after v0.3):**
+- the priest split: the Grave Mender (heals) and the Crypt Warder (wards the player, barriers on
+  allies), which merge into the Profane Bishop;
+- the summon evolutions Death Knight (Warriors), Lich (Mages) and Profane Bishop (Menders +
+  Warders), delivered by chests like the spell evolutions;
+- the passives Forbidden Knowledge and Dark Benediction;
+- four more summon classes, each with a `SummonBehavior` special: the Corpse Abomination (blocker,
+  stomp), Grave Rogue (dash strike, bleed), Crypt Gargoyle (airborne swoop) and Frost Wraith
+  (chill, Deep Freeze);
+- autotest `--policy=summon` and `--classes=a,b`.
+
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.
 2. **Small fixes:**
@@ -142,8 +157,9 @@ tiny tweaks.
    (SpriteCook can export Godot packages). Approve a sample set before generating everything. Keep
    silhouettes distinct and follow the color language in `scripts/data/palette.gd` and GDD §11.
 4. **Rest of Stage 1's content:**
-   - the remaining passives (Bone Plating, Unholy Precision, Forbidden Knowledge, Dark Benediction,
-     Unholy Resilience, Bound Souls);
+   - the remaining passives (Bone Plating, Unholy Precision, Unholy Resilience, Bound Souls);
+   - a combined balance pass for the priest split, the summon evolutions and the four later
+     classes (they were tuned separately); evolutions for the later classes, if wanted;
    - the Banner Bearer enemy;
    - a dash and an ultimate.
 5. **GDD difficulty levels and pre-run modifiers** (Purge the Unholy, Scarcity, Frail Master, Vengeful

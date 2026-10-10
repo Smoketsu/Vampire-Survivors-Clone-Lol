@@ -80,6 +80,42 @@ const SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 523.0, "f1": 540.0, "dur": 0.5, "amp": 0.3, "attack": 0.08, "decay": 0.2, "vib_hz": 9.0, "vib_depth": 0.01},
 			{"wave": "sine", "f0": 784.0, "dur": 0.45, "amp": 0.2, "attack": 0.1, "decay": 0.18},
 			{"wave": "noise", "dur": 0.3, "amp": 0.05, "attack": 0.1, "lp0": 6000.0}]},
+	# --- Later summon classes (SummonBehavior specials) -----------------------
+	# Corpse Abomination stomp: a deep body thud with a gravelly rumble.
+	"abom_stomp": {"dur": 0.55, "volume_db": -12.0, "max_voices": 2, "min_interval": 120, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 80.0, "f1": 30.0, "dur": 0.55, "amp": 0.8, "decay": 0.18},
+			{"wave": "noise", "dur": 0.4, "amp": 0.5, "attack": 0.005, "decay": 0.12, "lp0": 1500.0, "lp1": 120.0},
+			{"wave": "square", "f0": 60.0, "f1": 40.0, "dur": 0.3, "amp": 0.2, "decay": 0.1, "lp0": 400.0}]},
+	# Grave Rogue dash: a quick airy swish.
+	"rogue_dash": {"dur": 0.22, "volume_db": -16.0, "max_voices": 2, "min_interval": 80, "pitch_var": 0.12, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.22, "amp": 0.5, "attack": 0.04, "decay": 0.07, "lp0": 1200.0, "lp1": 6000.0},
+			{"wave": "tri", "f0": 300.0, "f1": 900.0, "dur": 0.15, "amp": 0.12, "decay": 0.05}]},
+	# Crypt Gargoyle takeoff: a heavy wing beat.
+	"gargoyle_takeoff": {"dur": 0.3, "volume_db": -17.0, "max_voices": 2, "min_interval": 120, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.12, "amp": 0.5, "attack": 0.02, "decay": 0.04, "lp0": 900.0, "lp1": 300.0},
+			{"wave": "noise", "start": 0.14, "dur": 0.12, "amp": 0.4, "attack": 0.02, "decay": 0.04, "lp0": 900.0, "lp1": 300.0},
+			{"wave": "sine", "f0": 110.0, "f1": 70.0, "dur": 0.25, "amp": 0.25, "decay": 0.08}]},
+	# Crypt Gargoyle dive impact: stone crunch.
+	"gargoyle_dive": {"dur": 0.35, "volume_db": -13.0, "max_voices": 2, "min_interval": 100, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.3, "amp": 0.55, "decay": 0.08, "lp0": 3000.0, "lp1": 400.0},
+			{"wave": "sine", "f0": 120.0, "f1": 45.0, "dur": 0.35, "amp": 0.5, "decay": 0.12},
+			{"wave": "square", "f0": 220.0, "f1": 90.0, "dur": 0.15, "amp": 0.15, "decay": 0.05, "lp0": 1500.0}]},
+	# Frost Wraith bolt: a thin glassy chime.
+	"frost_bolt": {"dur": 0.18, "volume_db": -19.0, "max_voices": 2, "min_interval": 60, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 1760.0, "f1": 1320.0, "dur": 0.18, "amp": 0.3, "decay": 0.06},
+			{"wave": "tri", "f0": 2640.0, "dur": 0.1, "amp": 0.12, "decay": 0.03},
+			{"wave": "noise", "dur": 0.08, "amp": 0.1, "decay": 0.02, "lp0": 9000.0, "lp1": 4000.0}]},
+	# Frost Wraith Deep Freeze: a crackling glassy sweep down.
+	"deep_freeze": {"dur": 0.75, "volume_db": -12.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 2093.0, "f1": 523.0, "dur": 0.7, "amp": 0.3, "decay": 0.25},
+			{"wave": "noise", "dur": 0.75, "amp": 0.3, "attack": 0.01, "decay": 0.3, "lp0": 9000.0, "lp1": 1800.0},
+			{"wave": "tri", "f0": 3136.0, "dur": 0.35, "amp": 0.08, "decay": 0.12, "vib_hz": 25.0, "vib_depth": 0.01}]},
 	# --- Covenant (holy: bright and metallic) --------------------------------
 	"enemy_hit": {"dur": 0.07, "volume_db": -23.0, "max_voices": 4, "min_interval": 30, "pitch_var": 0.18, "priority": 0,
 		"layers": [

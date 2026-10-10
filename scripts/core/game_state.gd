@@ -38,6 +38,12 @@
 ##   --pact                Any policy also takes every Profane Pact card at
 ##                         once (e.g. --policy=army --pact: a strong build
 ##                         with the Pact); --policy=pact is naive + --pact.
+##   --classes=a,b         Forces summon classes (UnitData ids, e.g.
+##                         abomination,rogue,gargoyle,frost_wraith): each is
+##                         raised to Lv 1 at the start (while active slots
+##                         allow) and every policy upgrades it first, so its
+##                         special gets exercised. Unknown ids and the
+##                         evolution-only "bishop" are ignored.
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 
@@ -61,6 +67,8 @@ var autotest_meta_save: bool = false
 var autotest_oath: int = 0
 ## Autotest: true when --pact makes the policy take every Profane Pact card.
 var autotest_pact: bool = false
+## Autotest: summon class ids forced by --classes=a,b (empty = none).
+var autotest_classes: PackedStringArray = PackedStringArray()
 ## Whether the F3 debug overlay is shown; persists across restarts.
 var debug_overlay_visible: bool = false
 ## Summary dictionary of the most recent finished run (see Game.build_summary).
@@ -97,3 +105,9 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_pact = true
 		elif arg.begins_with("--oath="):
 			autotest_oath = clampi(arg.get_slice("=", 1).to_int(), 0, MetaData.max_tier(PactData.OATH_ID))
+		elif arg.begins_with("--classes="):
+			for cls: String in arg.get_slice("=", 1).split(",", false):
+				# Evolution-only classes (the Profane Bishop) cannot be forced.
+				if UnitData.UNITS.has(cls) and not autotest_classes.has(cls) \
+						and not bool(UnitData.UNITS[cls].get("evolved_only", false)):
+					autotest_classes.append(cls)

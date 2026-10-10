@@ -158,6 +158,7 @@ func _acquire() -> Projectile:
 		p = _pool.pop_back()
 	p.hit_ids.clear()
 	p.split_count = 0
+	p.chill_slow = 0.0
 	p.reserved = 0.0
 	p.reserve_target = null
 	p.undead_mult = 1.0
@@ -256,6 +257,8 @@ func _friendly_hits(p: Projectile) -> bool:
 				dmg *= 1.0 + bonus
 				game.stat_add("volley_marked_hits", 1.0)
 		game.combat.damage_enemy(e, dmg, p.source)
+		if p.chill_slow > 0.0:
+			game.combat.chill_enemy(e, p.chill_slow, p.chill_time)  # Frost Wraith bolt.
 		if p.split_count > 0:
 			_split(p, e)
 		if p.pierce_left <= 0:

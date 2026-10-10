@@ -280,7 +280,8 @@ func _rebuild_grids() -> void:
 			enemy_grid.insert(e, e.position)
 	ally_grid.clear()
 	for u in horde.units:
-		ally_grid.insert(u, u.position)
+		if not u.airborne:  # Flying Gargoyles cannot be targeted, blocked or hit.
+			ally_grid.insert(u, u.position)
 
 
 ## Adds to a summary counter.
@@ -416,8 +417,9 @@ func _on_boss_defeated() -> void:
 	boss_defeated = true
 	stat_add("boss_kills", 1.0)
 	# Dread Sovereign achievement (GDD §9.4): boss slain with all 4 GDD
-	# summon roles (MetaData.DREAD_SOVEREIGN_CLASSES; either priest order or
-	# the Profane Bishop counts as the priest).
+	# summon roles (MetaData.DREAD_SOVEREIGN_CLASSES = UnitData.CORE_CLASSES;
+	# either priest order or the Profane Bishop counts as the priest; the
+	# later classes are not required).
 	if SynergyManager.classes_met(MetaData.DREAD_SOVEREIGN_CLASSES, horde.class_levels, 1):
 		stat_add("boss_kill_full_army", 1.0)
 

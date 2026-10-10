@@ -207,8 +207,8 @@ func resolve_all(delta: float) -> void:
 			p.position += push
 			resolved_player += 1
 	for u in game.horde.units:
-		if not u.active or u.state == SummonedUnit.State.SPAWNING:
-			continue
+		if not u.active or u.state == SummonedUnit.State.SPAWNING or u.airborne:
+			continue  # A flying Gargoyle passes over obstacles (it lands on a free point).
 		var before := u.position
 		u.position = _resolve_body(u.position, u.radius, u.velocity, u.get_instance_id(), delta, now)
 		if u.position != before:

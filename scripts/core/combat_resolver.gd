@@ -44,6 +44,8 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	if not u.active or u.state == SummonedUnit.State.DEAD or amount <= 0.0:
 		return
+	if u.airborne:
+		return  # A flying Gargoyle cannot be hit (GargoyleBehavior).
 	var host_dr := game.horde.synergies.value("unholy_host", "damage_reduction")
 	if host_dr > 0.0:
 		game.stat_add("host_dmg_prevented", amount * host_dr)
@@ -117,6 +119,36 @@ func heal_enemy(e: Enemy, amount: float) -> float:
 func slow_enemy(e: Enemy, fraction: float, duration: float) -> void:
 	if e.active:
 		e.apply_slow(fraction, duration)
+
+
+## Frost Wraith chill: a slow of `fraction` for `duration` s, shown as a
+## frost tint on the enemy (Enemy.apply_chill).
+func chill_enemy(e: Enemy, fraction: float, duration: float) -> void:
+	if not e.active:
+		return
+	e.apply_slow(fraction, duration)
+	e.apply_chill(duration)
+	game.stat_add("frost_chills", 1.0)
+
+
+## Frost Wraith Deep Freeze: holds `e` for `duration` s through the Stasis
+## freeze path (EnemyDirector skips its AI, attacks and movement while
+## Enemy.freeze_timer > 0). The boss gets `boss_mult` of the duration, elites
+## `elite_mult`, Reckoning enemies are immune. A longer freeze already running
+## is kept. Returns the seconds applied (0 = immune).
+func freeze_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) -> float:
+	if not e.active or e.is_reckoning or duration <= 0.0:
+		return 0.0
+	var d := duration  # Freeze time for this enemy.
+	if e.is_boss:
+		d *= boss_mult
+	elif e.is_elite:
+		d *= elite_mult
+	e.freeze_timer = maxf(e.freeze_timer, d)
+	game.stat_add("frost_freezes", 1.0)
+	if e.is_boss:
+		game.stat_add("frost_boss_freezes", 1.0)
+	return d
 
 
 ## Death of an enemy: cosmetic pop, XP crystal, kill counter, power-up drop

@@ -125,7 +125,8 @@ var flash: float = 0.0
 var orb_hit_cd: float = 0.0
 ## Seconds left "engaged" by a blocking warrior (slowed, fights it).
 var engaged_timer: float = 0.0
-## Speed multiplier while engaged (from the blocking warrior's data).
+## Speed multiplier while engaged (the touching blocker's engaged_speed_mult,
+## the lowest one when several touch it in the same tick).
 var engaged_mult: float = 1.0
 ## Knockback velocity in px/s (shield bashes), decays over time.
 var knockback: Vector2 = Vector2.ZERO
@@ -137,6 +138,12 @@ var _shoot_slow_timer: float = 0.0
 ## True while a Stasis power-up holds this enemy (EnemyDirector skips its
 ## think() / physics_step(); drawn with an ice overlay).
 var frozen: bool = false
+## Seconds left of a Frost Wraith Deep Freeze (CombatResolver.freeze_enemy):
+## while > 0 EnemyDirector freezes this enemy exactly like Stasis.
+var freeze_timer: float = 0.0
+## Seconds left of a Frost Wraith chill (the slow itself is slow_timer; this
+## only drives the frost tint).
+var chill_timer: float = 0.0
 ## Facing sign (+1 right / -1 left).
 var _facing: float = 1.0
 ## Reusable query buffer.
@@ -225,6 +232,8 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	mark_time = 0.0
 	_shoot_slow_timer = 0.0
 	frozen = false
+	freeze_timer = 0.0
+	chill_timer = 0.0
 	visible = true
 	queue_redraw()
 
@@ -249,6 +258,10 @@ func set_frozen(f: bool) -> void:
 ## Shield re-hit timer run; attacks, heals, rushes, slows and knockback wait.
 func step_frozen(delta: float) -> void:
 	orb_hit_cd -= delta
+	if freeze_timer > 0.0:
+		# Frost Wraith Deep Freeze (frozen-enemy-seconds stat for the autotest).
+		game.stat_add("frost_frozen_seconds", minf(delta, freeze_timer))
+		freeze_timer -= delta
 	if flash > 0.0:
 		flash -= delta
 		if flash <= 0.0:
@@ -274,6 +287,13 @@ func apply_slow(fraction: float, duration: float) -> void:
 	if slow_timer <= 0.0 or f > slow_factor:
 		slow_factor = f
 	slow_timer = maxf(slow_timer, duration)
+
+
+## Shows the Frost Wraith chill tint for `duration` s (the slow is apply_slow()).
+func apply_chill(duration: float) -> void:
+	if chill_timer <= 0.0:
+		queue_redraw()
+	chill_timer = maxf(chill_timer, duration)
 
 
 # =====================================================================================
@@ -510,9 +530,14 @@ func _rush_move(delta: float) -> void:
 ## blocker using the spatial hash (no physics bodies). The correction is split
 ## by mass so warriors hold the line while the boss can shove them. Touching
 ## a blocker "engages" the enemy: it is slowed, retargets that warrior and may
-## eat a shield bash. Called by EnemyDirector right after physics_step().
+## eat a shield bash. When several blockers touch it in the same tick
+## (warriors, Death Knights, Corpse Abominations) the STRONGEST slow applies
+## (lowest engaged_speed_mult); slows never multiply together, and the order
+## the spatial hash returns blockers in no longer matters. Called by
+## EnemyDirector right after physics_step().
 func resolve_blocking() -> void:
-	game.ally_grid.query(position, radius + UnitData.MAX_BLOCK_RADIUS, _tmp)
+	game.ally_grid.query(position, radius + game.horde.block_query_radius, _tmp)
+	var touched := false  # A blocker already engaged this enemy this tick.
 	for u: SummonedUnit in _tmp:
 		if not active:
 			return
@@ -529,7 +554,8 @@ func resolve_blocking() -> void:
 		position += n * overlap * enemy_share
 		u.position -= n * overlap * (1.0 - enemy_share)
 		engaged_timer = EnemyData.ENGAGED_TIME
-		engaged_mult = u.engaged_speed_mult
+		engaged_mult = minf(engaged_mult, u.engaged_speed_mult) if touched else u.engaged_speed_mult
+		touched = true
 		if target != u:
 			_set_target(u)
 		u.try_bash(self, n)
@@ -549,6 +575,10 @@ func _tick_timers(delta: float) -> void:
 	if mark_time > 0.0:
 		mark_time -= delta
 		if mark_time <= 0.0:
+			queue_redraw()
+	if chill_timer > 0.0:
+		chill_timer -= delta
+		if chill_timer <= 0.0:
 			queue_redraw()
 	if knockback != Vector2.ZERO:
 		knockback = knockback.move_toward(Vector2.ZERO, EnemyData.KNOCKBACK_DECAY * delta)
@@ -622,3 +652,5 @@ func _draw() -> void:
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if frozen:
 		PowerupGlyphs.draw_frozen(self, Vector2.ZERO, radius)
+	elif chill_timer > 0.0:
+		SummonGlyphs.draw_chill(self, Vector2.ZERO, radius)

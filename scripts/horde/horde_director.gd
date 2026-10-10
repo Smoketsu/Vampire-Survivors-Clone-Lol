@@ -2,7 +2,8 @@
 ##   * living unit registry + object pool of SummonedUnit nodes,
 ##   * per-class skill level, capacity and effective stats (skill bonuses x
 ##     passive bonuses x meta upgrades, GDD §34 stacking rule; meta values
-##     come from game.meta, see MetaModifiers),
+##     come from game.meta, see MetaModifiers), including the numbers of the
+##     later classes' specials (_special_stats(), SummonBehavior),
 ##   * per-ability sequential replenishment queues (GDD §24),
 ##   * soft formation anchors at 4 Hz (GDD §26),
 ##   * player threat evaluation at 5 Hz (GDD §32),
@@ -72,6 +73,10 @@ var _tmp: Array = []
 var synergies: SynergyManager
 ## Summon evolutions (state, stat overlay, transformation / merge).
 var evolutions: SummonEvolutions
+## Radius (px) Enemy.resolve_blocking() adds to its own to find blockers:
+## UnitData.MAX_BLOCK_RADIUS, raised to the widest block_radius ever spawned
+## this run (the Corpse Abomination's), never lowered.
+var block_query_radius: float = UnitData.MAX_BLOCK_RADIUS
 
 
 func _init() -> void:
@@ -178,13 +183,15 @@ func level_row(cls: String, level: int) -> Dictionary:
 
 
 ## Global capacity bonus of `cls` on top of its level count: Grave Dominion
-## (optionally previewed at `dominion_level`) plus meta upgrades.
+## (optionally previewed at `dominion_level`) plus meta upgrades, times the
+## class's capacity_bonus_mult (UnitData; rounded down, 1 for the GDD classes).
 func bonus_capacity(cls: String, dominion_level: int = -1) -> int:
 	var cap := game.meta.capacity_bonus(cls)
 	var dl := dominion_level if dominion_level >= 0 else game.abilities.passive_level("grave_dominion")
 	if dl > 0:
 		cap += int(PassiveData.PASSIVES["grave_dominion"]["levels"][dl - 1]["capacity_per_class"])
-	return cap
+	var share := float(UnitData.UNITS[cls].get("capacity_bonus_mult", 1.0))  # Share of global bonuses.
+	return cap if share >= 1.0 else floori(float(cap) * share + 0.001)
 
 
 ## Total army capacity across all classes (optionally previewing a different
@@ -276,8 +283,37 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		"cleave_fraction": 0.0,
 		"lifesteal": 0.0,
 		"evolution": "",
+		# Class special numbers (later classes; empty for the others).
+		"special": _special_stats(base, row, dmg_mult),
 	}
 	evolutions.modify_stats(cls, out, with_evolution)
+	return out
+
+
+## Effective numbers of a class special (UnitData "special" dictionary;
+## empty for classes without one), scaled by key suffix: *_damage by the same
+## damage multiplier as attacks (`dmg_mult`: skill level x Dark Command x meta
+## x Dark Frenzy) and the level row's special_bonus; *_radius / *_length by
+## special_area; *_cooldown divided by (1 + special_haste); *_duration by
+## special_duration. Attack-speed bonuses do not shorten special cooldowns.
+func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dictionary:
+	var out := {}  # Effective special numbers.
+	var src: Dictionary = base.get("special", {})  # Base special numbers.
+	var dmg := dmg_mult * (1.0 + float(row.get("special_bonus", 0.0)))  # Special damage multiplier.
+	var area := 1.0 + float(row.get("special_area", 0.0))  # Radius / length multiplier.
+	var haste := 1.0 + float(row.get("special_haste", 0.0))  # Cooldown divisor.
+	var dur := 1.0 + float(row.get("special_duration", 0.0))  # Status duration multiplier.
+	for key: String in src:
+		var v := float(src[key])  # Base value of this key.
+		if key.ends_with("_damage"):
+			v *= dmg
+		elif key.ends_with("_radius") or key.ends_with("_length"):
+			v *= area
+		elif key.ends_with("_cooldown"):
+			v /= haste
+		elif key.ends_with("_duration"):
+			v *= dur
+		out[key] = v
 	return out
 
 
@@ -351,6 +387,7 @@ func _try_spawn(cls: String) -> bool:
 		else:
 			u = _pool.pop_back()
 		u.activate(self, game, cls, stats, pos, _next_slot)
+		block_query_radius = maxf(block_query_radius, u.block_radius)
 		_next_slot = (_next_slot + 1) % UnitData.AI_TICK_DIVISOR
 		units.append(u)
 		class_counts[cls] = int(class_counts[cls]) + 1
@@ -381,6 +418,7 @@ func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float,
 	else:
 		u = _pool.pop_back()
 	u.activate(self, game, cls, stats, at, _next_slot)
+	block_query_radius = maxf(block_query_radius, u.block_radius)
 	u.is_temporary = true
 	u.temp_life = duration
 	_next_slot = (_next_slot + 1) % UnitData.AI_TICK_DIVISOR
@@ -465,7 +503,11 @@ func _calculate_formation_anchors() -> void:
 			"mender", "warder", "bishop":
 				support.append(u)
 			_:
-				midline.append(u)
+				# Later classes pick their band group in data (UnitData "formation").
+				if String(UnitData.UNITS[u.unit_class].get("formation", "mid")) == "front":
+					warriors.append(u)
+				else:
+					midline.append(u)
 	var threat_angle := threat_dir.angle()
 	var calm_rot := float(_frame) * 0.0005
 	# Warriors: arc toward the threat, narrowing as pressure rises.

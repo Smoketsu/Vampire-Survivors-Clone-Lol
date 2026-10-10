@@ -187,17 +187,23 @@ func _build() -> void:
 		buffs.add_child(brow)
 		_buff_rows[kind] = {"row": brow, "label": blabel, "bar": bbar}
 
-	# Bottom left: army panel (up to 6 owned classes, one per active slot).
+	# Bottom left: army panel. There is one row per class id in CLASS_ORDER
+	# (10 with the split priest and the later classes), but only OWNED classes
+	# are visible and each takes an active slot, so at most
+	# PlayerData.ACTIVE_SLOTS (6) rows show at once. Compact rows (22 px icons,
+	# 2 px gaps) keep the worst case, header + 6 rows = ~25 + 6 x 24 = 169 px,
+	# inside the 190 px box (24 px rows with the default 4 px gaps would not).
 	var bl := _box(true, 0.0, 1.0, 16, -206, 300, -16, BoxContainer.ALIGNMENT_END)
+	bl.add_theme_constant_override("separation", 2)
 	_army_label = UiTheme.label("Army 0 / 0", 18, Palette.NECRO_GREEN)
 	bl.add_child(_army_label)
 	for cls: String in UnitData.CLASS_ORDER:
 		var row := HBoxContainer.new()
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var icon := IconGlyph.new(cls, Vector2(24, 24))  # Class (or evolution) icon.
+		var icon := IconGlyph.new(cls, Vector2(22, 22))  # Class (or evolution) icon.
 		row.add_child(icon)
 		var lbl := UiTheme.label("", 14)
-		lbl.custom_minimum_size = Vector2(120, 0)
+		lbl.custom_minimum_size = Vector2(130, 0)  # Fits "Frost Wraiths 3/3".
 		row.add_child(lbl)
 		var bar := HudBar.new(Palette.NECRO_GREEN, Vector2(70, 6))
 		bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
