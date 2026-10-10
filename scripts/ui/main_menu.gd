@@ -1,6 +1,8 @@
-## MainMenu — title screen with Play / Settings / Quit (GDD §14 lists more
-## buttons — customization, upgrades, codex, achievements — which are out of
-## prototype scope). The candle-lit crypt backdrop is drawn in _draw().
+## MainMenu — title screen with Play / Ossuary (Soul Ash upgrades, GDD §10.1
+## "Upgrades") / Settings / Quit (GDD §10.1 lists more buttons — customization,
+## codex, achievements — which are out of prototype scope). It shows the Soul
+## Ash balance and a lifetime line (runs, best time, boss kills, achievements).
+## The candle-lit crypt backdrop is drawn in _draw().
 class_name MainMenu
 extends Control
 
@@ -9,6 +11,10 @@ signal play_pressed
 
 ## Play button (focused on open for keyboard / controller users).
 var _play: Button
+## Soul Ash balance line (refreshed whenever Meta changes).
+var _ash_label: Label
+## Lifetime statistics line under the balance.
+var _lifetime_label: Label
 
 
 func _ready() -> void:
@@ -27,14 +33,28 @@ func _ready() -> void:
 	var tagline := UiTheme.label("Begin as the hunted. Raise the fallen. Become the army.", 16, UiTheme.TEXT_DIM)
 	tagline.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(tagline)
-	var spacer := Control.new()
-	spacer.custom_minimum_size = Vector2(0, 20)
-	vb.add_child(spacer)
+	var ash_row := HBoxContainer.new()
+	ash_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	ash_row.add_theme_constant_override("separation", 8)
+	ash_row.add_child(IconGlyph.new("soul_ash", Vector2(30, 30)))
+	_ash_label = UiTheme.label("", 20, MetaGlyphs.EMBER.lightened(0.2))
+	ash_row.add_child(_ash_label)
+	vb.add_child(ash_row)
+	_lifetime_label = UiTheme.label("", 13, UiTheme.TEXT_DIM)
+	_lifetime_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vb.add_child(_lifetime_label)
+	Meta.changed.connect(_refresh_meta)
+	_refresh_meta()
 	_play = Button.new()
 	_play.text = "Play  -  The Desecrated Graveyard"
 	_play.custom_minimum_size = Vector2(0, 52)
 	_play.pressed.connect(func() -> void: play_pressed.emit())
 	vb.add_child(_play)
+	var ossuary := Button.new()
+	ossuary.text = "The Ossuary  -  Soul Ash upgrades"
+	ossuary.custom_minimum_size = Vector2(0, 44)
+	ossuary.pressed.connect(func() -> void: OssuaryMenu.open_over(self, ossuary))
+	vb.add_child(ossuary)
 	var settings := Button.new()
 	settings.text = "Settings"
 	settings.custom_minimum_size = Vector2(0, 44)
@@ -54,6 +74,16 @@ func _ready() -> void:
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(version)
 	_play.grab_focus.call_deferred()
+
+
+## Updates the Soul Ash balance and the lifetime line.
+func _refresh_meta() -> void:
+	_ash_label.text = "%d Soul Ash" % Meta.soul_ash
+	var lt: Dictionary = Meta.lifetime
+	var best := int(float(lt.get("best_time", 0.0)))
+	_lifetime_label.text = "Runs %d   |   Best %d:%02d   |   Sir Alaric slain %d   |   Achievements %d/%d" % [
+		int(float(lt.get("runs", 0.0))), floori(float(best) / 60.0), best % 60, int(float(lt.get("boss_kills", 0.0))),
+		Meta.achievements.size(), MetaData.ACHIEVEMENT_ORDER.size()]
 
 
 func _draw() -> void:

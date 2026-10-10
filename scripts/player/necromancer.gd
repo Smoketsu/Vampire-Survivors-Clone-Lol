@@ -3,7 +3,8 @@
 ## spells and summons are fully automatic (GDD §21).
 ##
 ## Owns HP, i-frames, pickup radius and the priest ward (damage-absorb
-## shield, user brief). Movement has no physical collision
+## shield, user brief), and the meta revival (Survival tree "Undying Will",
+## GDD §9.2): lethal damage with a revival left restores part of max HP. Movement has no physical collision
 ## with summons (GDD §26 "Player <-> friendly undead: NO physical collision")
 ## and the open arena has no solid geometry, so the node is moved directly
 ## instead of using CharacterBody2D physics.
@@ -45,6 +46,8 @@ var shield_time: float = 0.0
 var incoming_heal: float = 0.0
 ## Seconds since the necromancer was last hit (priests ward on recent hits).
 var time_since_hit: float = 999.0
+## Revivals left this run (set at run start by MetaModifiers.apply_to_player).
+var revives_left: int = 0
 ## Facing sign (+1 right, -1 left) used to mirror the sprite.
 var _facing: float = 1.0
 
@@ -120,11 +123,34 @@ func take_damage(amount: float) -> float:
 	if hp <= 0.0:
 		if invulnerable:
 			hp = 1.0
+		elif revives_left > 0:
+			_revive()
 		else:
 			hp = 0.0
 			dead = true
 			died.emit()
 	return amount
+
+
+## Meta revival: uses one charge, restores MetaData.REVIVE_HP_FRACTION of max
+## HP, grants REVIVE_IFRAMES of invulnerability and knocks nearby enemies back.
+func _revive() -> void:
+	revives_left -= 1
+	hp = max_hp * MetaData.REVIVE_HP_FRACTION
+	iframes = MetaData.REVIVE_IFRAMES
+	if game == null:
+		return
+	game.stat_add("revivals", 1.0)
+	var tmp: Array = []
+	game.enemy_grid.query(position, MetaData.REVIVE_PUSH_RADIUS, tmp)
+	for e: Enemy in tmp:
+		var away := e.position - position
+		if e.active and away.length() > 0.01:
+			e.knockback += away.normalized() * MetaData.REVIVE_PUSH_FORCE / maxf(e.mass, 0.1)
+	game.effects.ring(position, MetaData.REVIVE_PUSH_RADIUS, Palette.NECRO_GREEN, 0.6)
+	game.shake(6.0)
+	if game.hud != null:
+		game.hud.announce("UNDYING WILL", "You rise again", "%d revival(s) left" % revives_left, Palette.NECRO_GREEN)
 
 
 ## Restores HP up to max. Returns the amount actually healed.

@@ -53,6 +53,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Shadow Bolt aim: Nearest / Strongest | **T** | **Y** |
 | Pause (Resume / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
+| Ossuary (Soul Ash upgrades) | **The Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
 | Settings (volume, shake, damage numbers, fullscreen, keys) | **Settings** in the main or pause menu; Esc / Back closes | Focus + **A**; **B** closes |
 | Rebind a key (in Settings) | Select a binding, then press the new key | **B** cancels |
 
@@ -183,6 +184,59 @@ replacing fallen units all happen automatically (GDD §4, §21).
   stuck if it is trying to reach its target or anchor but has not moved more
   than 10 px in 10 s; this should stay at 0.
 
+### Meta-progression (Soul Ash)
+
+- **Soul Ash** is earned at the end of **every** run and kept even if you die
+  (survivor convention). The end screen shows the breakdown and the new total;
+  the main menu shows the balance and a lifetime line (runs, best time, boss
+  kills, achievements). Formula (all `TUNING`, in `scripts/data/meta_data.gd`):
+
+  | Part | Rate | Good 20:00 run |
+  |---|---|---|
+  | Time survived on the countdown | 7.5 per minute | 20 min = 150 |
+  | Enemies slain | 0.03 each (1 per ~33) | 3,000 = 90 |
+  | Elites slain | 4 each | 15 = 60 |
+  | Sir Alaric slain | 75 | 75 |
+  | Seconds survived into the Reckoning | 2.5 per second (capped at 180 s) | 30 s = 75 |
+  | **Ash Harvest** (Fortune) | +5% per tier on the sum | |
+
+  A strong run earns about **450**: two or three mid-tier upgrades. An
+  8-minute death still keeps about 80. Buying everything costs **8,965**,
+  about 20 good runs (15–25 including weaker runs and Ash Harvest).
+- **The Ossuary** (main menu) holds the four GDD §9.2 trees. Each upgrade
+  raises one stat per tier, costs rise per tier, and some need a prerequisite
+  in the same tree:
+
+  | Tree | Upgrades (per tier, tiers, cost of tier 1 → last) |
+  |---|---|
+  | Necromancy | Necrotic Marrow minion HP +6% (5, 40→230) · Sharpened Bones minion damage +5% (5, 40→230) · Grave Call replacement time −6% (3, 60→200) · Risen Vanguard +1 Warrior capacity (2, 130→280; needs Marrow II) · Legion of Bone +1 capacity for every class (1, 500; needs Vanguard II) |
+  | Shadowcraft | Umbral Potency spell damage +5% (5, 40→230) · Quickened Rites spell cooldowns −3% (4, 60→250) · Widening Dark Shadow Blast / pulse radius +6% (3, 70→230; needs Potency I) · Shadow Mastery spell damage +10% (1, 450; needs Rites III) |
+  | Survival | Grave-Hardened Flesh max HP +10 (5, 40→230) · Bone Mail damage taken −3% (4, 60→250) · Fleet Shade move speed +4% (3, 50→175) · Undying Will one revival per run at 50% HP with a knock-back burst (1, 550; needs Bone Mail II) |
+  | Fortune | Soul Magnet pickup radius +10% (4, 30→155) · Grave Tithe XP gain +4% (3, 60→200) · Ash Harvest Soul Ash +5% (3, 80→270) · Fate's Thread +1 reroll (2, 120→250) · Banishing Rite +1 banish (2, 150→310; needs Thread I) |
+
+  Every button shows the tier pips, the effect delta (`Minion HP +6% -> +12%`)
+  and whether it is affordable, too expensive, locked or maxed. **Refund all**
+  (respec) returns every spent Soul Ash after a confirmation. The screen is
+  fully usable with keyboard or controller.
+- **One modifier path.** At run start `Meta.run_modifiers()` turns the
+  purchased tiers into a `MetaModifiers` object (`game.meta`). The existing
+  stat code reads it in a few places (horde `compute_stats` / `capacity` /
+  `replenish_interval`, `apply_spell_mods`, `damage_player`, `add_xp`, the
+  reroll / banish counts, and the player's run-start stats). Each meta stat is
+  its own stacking category (GDD §6.4), and with no purchases every value is 0.
+- **Achievements** (GDD §9.4, tracked over all runs): *Bone Legion* (Skeleton
+  Warriors land 1,000 killing blows), *Heretic's Bane* (500 Chaplains slain),
+  *Dread Sovereign* (slay Sir Alaric while owning all 4 summon classes). Their
+  GDD unlocks (Bone Golem, a priest evolution unlock, a skin) don't exist yet,
+  so each pays a one-time Soul Ash bounty (100 / 100 / 150) for now.
+- **Save file.** `user://save.cfg` (ConfigFile, separate from `settings.cfg`)
+  stores `save_version`, Soul Ash, every tier, lifetime stats and achievements.
+  It is written on every run end, purchase and refund (via a temp file and a
+  rename). A missing file starts a fresh profile. An unreadable file is kept as
+  `save.cfg.corrupt` and the game starts fresh. Every value is type-checked and
+  clamped, unknown keys are ignored, and tiers whose prerequisite is missing
+  are refunded. The autotest never reads or writes it (unless `--meta-save`).
+
 ---
 
 ## What is implemented (vs. the GDD)
@@ -202,6 +256,7 @@ replacing fallen units all happen automatically (GDD §4, §21).
 | Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 3:15. |
 | Waves and stage events (§11) | The data-driven Graveyard timeline, compressed 4× to 5 minutes, then the boss and the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
+| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades, prerequisites, respec), 3 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
 | UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu, end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and priest ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress; ability slots with levels. |
 | Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, priests are round with a halo). Hit flashes and death pops are included. |
@@ -247,6 +302,9 @@ scripts/
   core/
     game_state.gd           Autoload: CLI options (autotest), session prefs, last run summary
     settings.gd             Autoload: persistent settings (volumes, toggles, key rebinds) in user://settings.cfg
+    meta_progress.gd        Autoload "Meta": Soul Ash, upgrade tiers, lifetime stats, achievements,
+                            purchase / refund, run award, versioned save in user://save.cfg
+    meta_modifiers.gd       The ONE path meta upgrades take into a run (game.meta, read by stat code)
     arena.gd                Solid obstacles (circles/rects) and the collision push-out used by all units
     main.gd                 Switches menu <-> run (a run is a fresh Game node every time)
     game.gd                 One run: builds world + managers in code, fixed-order simulation step,
@@ -280,7 +338,8 @@ scripts/
   fx/fx_layer.gd            One node that draws all particles and damage numbers from fixed buffers
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
-                            progression_glyphs (evolution/synergy icons)
+                            progression_glyphs (evolution/synergy icons),
+                            ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     unit_data.gd            Summon classes, level tables, AI weights, leash/rates
     enemy_data.gd           Enemy roster, boss, Reckoning enemy, elites
@@ -293,6 +352,7 @@ scripts/
     arena_data.gd           Obstacle layout
     sound_data.gd           Sound recipes, voice limits, priorities
     player_data.gd          Player stats, XP curve, slot counts
+    meta_data.gd            Soul Ash formula, upgrade trees / tiers / costs, achievements, autotest profiles
     palette.gd              Colour language
 ```
 
@@ -348,6 +408,8 @@ Options (after `--`):
 | `--seed=N` | RNG seed (default 1337). |
 | `--timeout=N` | Give up after N game seconds (default 480). |
 | `--policy=NAME` | Level-up card policy: `naive` (default; takes every new summon class, then new spells, then new passives) or `army` (a summoner build that levels summons and army passives first). |
+| `--meta=PROFILE` | Simulated Soul Ash purchases, applied in memory only: `none` (default, so balance runs stay comparable), `mid` (about half of every tree) or `max` (everything). |
+| `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
 
@@ -362,7 +424,9 @@ pool node counts; and the average and worst simulation-step cost. These numbers
 are the starting point for tuning. Every 30 s it also prints `[metric]` lines
 (army size and capacity per class, damage taken by attacker, enemies alive by
 kind), and at the end `boss_hp_at_0` and `min_hp_before_0` (the lowest player
-HP before 0:00). Multi-seed tuning scripts parse these lines.
+HP before 0:00). Multi-seed tuning scripts parse these lines. The last lines
+list the active meta upgrades and the run's Soul Ash award with its breakdown
+(time, kills, elites, boss, Reckoning, Ash Harvest bonus, achievement bounty).
 
 ### Continuous integration and builds
 
@@ -397,8 +461,9 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 - Arrows and spells fly over obstacles (no line-of-sight checks).
 - Eclipse Ward is hard to reach in a 6-minute run, because Orb Shield rarely
   hits level 5.
-- No ultimate, dash, meta progression (Soul Ash), saved runs, skins,
-  difficulties or modifiers yet. The HUD shows "Modifiers: none".
+- No ultimate, dash, mid-run saves, skins, difficulties or modifiers yet. The
+  HUD shows "Modifiers: none". The Soul Ash numbers are first-pass and the
+  achievement unlocks only pay Soul Ash until their GDD rewards exist.
 - Menu hint text still shows the default keys (Esc, T) after you rebind them.
 - Nobody has played it on real hardware yet. Audio, visuals and performance
   have only been verified headless (simulation step about 0.6–1.5 ms with
@@ -416,8 +481,9 @@ Precision, Forbidden Knowledge, Dark Benediction, Unholy Resilience, Bound
 Souls); the Banner Bearer; saves; density and minion-HP-bar settings (§38).
 
 **Phase 3 – Campaign:** Crimson March and Sanctum stages, Marshal Vael and
-Grand Inquisitor Seraphine, remaining enemies, Soul Ash meta progression,
-difficulties and modifiers, skins.
+Grand Inquisitor Seraphine, remaining enemies, Soul Ash balance against the
+full-length stage, the real achievement unlocks, difficulties and modifiers,
+skins.
 
 **Phase 4 – Polish:** real art and animation, audio, accessibility, full
 controller UX, profiling on target hardware (§40 stress scenarios), balance.

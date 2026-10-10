@@ -8,6 +8,9 @@
 ## Run rules (user brief): a 6:00 countdown; Sir Alaric arrives at 1:00 left;
 ## at 0:00 the Reckoning starts. Dying after 0:00 completes the run (victory
 ## screen), dying before 0:00 is a defeat.
+## Meta-progression (GDD §9.2): `meta` holds the purchased Soul Ash upgrades
+## for this run (built once by Meta.run_modifiers(), read by the stat code),
+## and end_run() hands the summary to Meta.award_run() (ash is kept on death).
 ## Restarting frees this node and builds a fresh one, so no state can leak
 ## between runs. Managers hold a typed `game` reference instead of using
 ## global singletons.
@@ -57,6 +60,8 @@ var worst_step_usec: int = 0
 var _step_usec_total: int = 0
 ## Number of simulation steps measured.
 var _step_count: int = 0
+## Fractional XP left over by the meta XP-gain bonus (paid out once whole).
+var _xp_carry: float = 0.0
 
 # --- Systems (GDD §36 scene/class tree) ----------------------------------------
 
@@ -88,6 +93,8 @@ var enemy_grid: SpatialHash
 var ally_grid: SpatialHash
 ## Headless self-test driver (null in normal play).
 var autotest: Autotest = null
+## Purchased meta upgrades for this run (never null; empty = no upgrades).
+var meta: MetaModifiers
 
 # --- UI ---------------------------------------------------------------------------
 
@@ -109,6 +116,7 @@ func _ready() -> void:
 		autotest = Autotest.new()
 		autotest.game = self
 		add_child(autotest)
+	meta = Meta.run_modifiers()
 	enemy_grid = SpatialHash.new(GRID_CELL)
 	ally_grid = SpatialHash.new(GRID_CELL)
 	combat = CombatResolver.new(self)
@@ -133,6 +141,7 @@ func _ready() -> void:
 	player = Necromancer.new()
 	player.game = self
 	add_child(player)
+	meta.apply_to_player(player)
 	abilities = AbilityManager.new()
 	add_child(abilities)
 	abilities.setup(self)
@@ -272,7 +281,11 @@ func avg_step_ms() -> float:
 # =====================================================================================
 
 ## Grants XP; each threshold crossed queues one level-up card pick.
+## The meta XP-gain bonus (Grave Tithe) scales `amount`; fractions carry over.
 func add_xp(amount: int) -> void:
+	var gained := float(amount) * (1.0 + meta.value("xp_gain")) + _xp_carry
+	amount = floori(gained)
+	_xp_carry = gained - float(amount)
 	xp += amount
 	stat_add("xp_collected", float(amount))
 	while xp >= xp_to_next:
@@ -345,6 +358,12 @@ func _on_player_died() -> void:
 func _on_boss_defeated() -> void:
 	boss_defeated = true
 	stat_add("boss_kills", 1.0)
+	# Dread Sovereign achievement (GDD §9.4): boss slain with all 4 classes.
+	var full_army := true
+	for cls: String in UnitData.CLASS_ORDER:
+		full_army = full_army and int(horde.class_levels[cls]) > 0
+	if full_army:
+		stat_add("boss_kill_full_army", 1.0)
 
 
 ## Ends the run: freezes the world and shows the victory / defeat screen.
@@ -358,6 +377,7 @@ func end_run(won: bool, reason: String) -> void:
 	level_up_panel.close()
 	pause_menu.close()
 	var summary := build_summary()
+	summary["soul_ash"] = Meta.award_run(summary, meta)
 	GameState.last_run_summary = summary
 	end_screen.open(summary)
 	if autotest != null:
@@ -376,6 +396,7 @@ func build_summary() -> Dictionary:
 		"victory": victory,
 		"reason": end_reason,
 		"time": elapsed,
+		"countdown": WaveData.RUN_DURATION,
 		"time_past_zero": maxf(0.0, elapsed - WaveData.RUN_DURATION),
 		"time_remaining": maxf(0.0, WaveData.RUN_DURATION - elapsed),
 		"reckoning_waves": enemies.reckoning_wave,

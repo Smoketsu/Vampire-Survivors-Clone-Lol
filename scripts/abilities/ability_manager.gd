@@ -14,7 +14,8 @@
 ##   * the limited rerolls / banishes and unlimited skips of the level-up
 ##     panel (GDD §9.1, LevelUpData), plus fallback cards when nothing is left.
 ## Spell stats are "effective": the level row (or evolution row) with the
-## spell passives applied (Soul Conduit damage, Abyssal Focus cooldowns).
+## spell passives applied (Soul Conduit damage, Abyssal Focus cooldowns) and
+## the meta Shadowcraft upgrades (game.meta, see MetaModifiers).
 class_name AbilityManager
 extends Node2D
 
@@ -39,8 +40,12 @@ var pick_history: PackedStringArray = PackedStringArray()
 var evolved: Dictionary = {}
 ## "evolution_id@mm:ss" for every evolution obtained (summary / autotest).
 var evolution_history: PackedStringArray = PackedStringArray()
+## Level-up rerolls per run: LevelUpData.REROLLS + meta Fate's Thread.
+var rerolls_max: int = LevelUpData.REROLLS
 ## Level-up rerolls left this run.
 var rerolls_left: int = LevelUpData.REROLLS
+## Level-up banishes per run: LevelUpData.BANISHES + meta Banishing Rite.
+var banishes_max: int = LevelUpData.BANISHES
 ## Level-up banishes left this run.
 var banishes_left: int = LevelUpData.BANISHES
 ## Item id -> true for items banished from the card pool this run.
@@ -65,6 +70,11 @@ func setup(p_game: Game) -> void:
 	for id: String in PassiveData.ORDER:
 		passive_levels[id] = 0
 	spell_levels[AbilityData.STARTING_SPELL] = 1
+	# Fortune tree (GDD §9.2 "rerolls", open question 7): extra charges.
+	rerolls_max = LevelUpData.REROLLS + game.meta.int_value("rerolls")
+	banishes_max = LevelUpData.BANISHES + game.meta.int_value("banishes")
+	rerolls_left = rerolls_max
+	banishes_left = banishes_max
 
 
 # =====================================================================================
@@ -117,21 +127,28 @@ func spell_stats(id: String) -> Dictionary:
 	return _eff_cache[id]
 
 
-## Applies the spell passives to a stats row (GDD §6.4 stacking: each passive
-## is its own category, so it multiplies the level / evolution value):
+## Applies the spell passives and meta upgrades to a stats row (GDD §6.4
+## stacking: each passive and each meta stat is its own category, so it
+## multiplies the level / evolution value):
 ##   Soul Conduit  -> damage, pulse_damage               x (1 + spell_damage)
 ##   Abyssal Focus -> cooldown, recharge, pulse_interval x (1 - cooldown_reduction)
+##   meta spell_damage / spell_cooldown -> the same keys, x (1 +/- value)
+##   meta spell_area -> radius, pulse_radius             x (1 + value)
 ## Pass `conduit_lvl` / `focus_lvl` >= 0 to preview other passive levels.
 func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -1) -> Dictionary:
 	var out := row.duplicate()
-	var dmg_mult := 1.0 + _passive_value_at("soul_conduit", "spell_damage", conduit_lvl)
-	var cd_mult := 1.0 - _passive_value_at("abyssal_focus", "cooldown_reduction", focus_lvl)
+	var dmg_mult := (1.0 + _passive_value_at("soul_conduit", "spell_damage", conduit_lvl)) * (1.0 + game.meta.value("spell_damage"))
+	var cd_mult := (1.0 - _passive_value_at("abyssal_focus", "cooldown_reduction", focus_lvl)) * (1.0 - game.meta.value("spell_cooldown"))
+	var area_mult := 1.0 + game.meta.value("spell_area")
 	for key: String in ["damage", "pulse_damage"]:
 		if out.has(key):
 			out[key] = float(out[key]) * dmg_mult
 	for key: String in ["cooldown", "recharge", "pulse_interval"]:
 		if out.has(key):
 			out[key] = float(out[key]) * cd_mult
+	for key: String in ["radius", "pulse_radius"]:
+		if out.has(key):
+			out[key] = float(out[key]) * area_mult
 	return out
 
 
@@ -636,7 +653,7 @@ func _evolution_offer(evo: String) -> Dictionary:
 func _summon_offer(cls: String, lvl: int) -> Dictionary:
 	var base: Dictionary = UnitData.UNITS[cls]
 	var plural: String = base["plural"]
-	var dom := int(passive_value("grave_dominion", "capacity_per_class"))
+	var dom := game.horde.bonus_capacity(cls)
 	var nxt := game.horde.compute_stats(cls, lvl + 1)
 	var deltas := PackedStringArray()
 	var desc := ""
