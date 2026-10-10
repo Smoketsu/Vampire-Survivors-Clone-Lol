@@ -120,9 +120,13 @@ replacing fallen units all happen automatically (GDD §4, §21).
 
 ### Evolutions & Synergies
 
-- **Evolutions** (GDD §6.1): once a spell reaches **Lv 5** and you own its
-  paired passive (any level), every level-up offers its evolution as a
-  **gold card**. The evolution replaces the spell in its slot.
+- **Evolutions** (GDD §6.1): once a spell reaches **Lv 5**, you own its
+  paired passive (any level) **and the run has reached 8:00 elapsed** (12:00
+  left on the timer), every level-up offers its evolution as a **gold card**.
+  Before 8:00 the card hints say when it unlocks. The evolution replaces the
+  spell in its slot. The whole condition is `AbilityManager.ready_evolutions()`
+  with its numbers in `EvolutionData` (`BASE_LEVEL_REQUIRED`,
+  `PASSIVE_LEVEL_REQUIRED`, `MIN_ELAPSED`).
 
 | Spell | + Passive (its standalone effect) | = Evolution |
 |---|---|---|
@@ -172,7 +176,7 @@ replacing fallen units all happen automatically (GDD §4, §21).
     for 60 s, in time for Sir Alaric.
   - **Call to Arms** waves at 18:00 and 19:00 reinforce Alaric on top of his
     own Call to Arms.
-- **Sir Alaric** (46 000 HP, arrives with 3:00 left) uses all five GDD
+- **Sir Alaric** (42 000 HP, arrives with 3:00 left) uses all five GDD
   abilities. Each one is telegraphed:
   - **Hammerfall**: a gold circle. Each summon inside soaks 20% of the hit
     on you.
@@ -209,9 +213,11 @@ replacing fallen units all happen automatically (GDD §4, §21).
   | Seconds survived into the Reckoning | 2.5 per second (capped at 180 s) | 30 s = 75 |
   | **Ash Harvest** (Fortune) | +5% per tier on the sum | |
 
-  A strong run earns about **450**: two or three mid-tier upgrades. An
-  8-minute death still keeps about 80. Buying everything costs **8,965**,
-  about 20 good runs (15–25 including weaker runs and Ash Harvest).
+  A strong run earns about **450** at no upgrades (about 550-610 with mid / max
+  upgrades, Ash Harvest included): two or three mid-tier upgrades. A death at
+  9-11 min still keeps about 100-150. The Reckoning pays only about 8% of a
+  good run. Buying everything costs **8,965**, about 17-20 good runs (15–25
+  including weaker runs and Ash Harvest).
 - **The Ossuary** (main menu) holds the four GDD §9.2 trees. Each upgrade
   raises one stat per tier, costs rise per tier, and some need a prerequisite
   in the same tree:
@@ -252,12 +258,12 @@ replacing fallen units all happen automatically (GDD §4, §21).
 
 | Area | Status in this prototype |
 |---|---|
-| Necromancer | Movement (keyboard and stick), HP, i-frames, pickup radius, hit flash. Can receive priest heals and wards. |
+| Necromancer | Movement (keyboard and stick), HP with a slow natural regeneration (0.3 HP/s), i-frames, pickup radius, hit flash. Can receive priest heals and wards. |
 | **Shared summon AI** (§25–§31, §36) | **One** data-driven `SummonedUnit` script runs all four classes. It has the full FSM from §25, soft formation bands around the player (§26), and normalised target scoring (§27). Targets are held for at least 1 s; ranged units redirect when a target is already doomed (overkill reservation); priests use the §31 heal formula. |
 | Leash and recall (§24) | Engagement radius 220 px, soft recall at 320 px, hard spectral recall at 650 px. |
 | Replenishment (§24) | Each summon ability refills its own queue one unit at a time (Warrior 5 s, Archer 8 s, Mage 12 s, Priest 15 s). A capacity increase spawns the new units immediately. A failed spawn retries without using up the timer. |
 | **Warrior blocking** | Warriors are physical blockers. Enemies can't pass through them; overlaps are resolved through the spatial hash, weighted by mass. An enemy touching a warrior is *engaged*: it moves at 60% speed and attacks that warrior. Warriors also shield-bash on a cooldown (damage plus knockback). Sir Alaric's Divine Charge loses distance for every undead body it hits, so a thick enough wall stops it. |
-| **Priests** | Heal allies and the necromancer with the §31 formula; a critically hurt necromancer comes first. Whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px), a priest also casts an instant damage-absorbing **ward** on you, as long as no ward is active, its own ward cooldown is ready, and nobody is critical. The ward has its own cooldown, so it never replaces a heal. It shows as a ring on the necromancer and in the HUD, and the autotest reports ward counts and wards per minute. |
+| **Priests** | Heal allies and the necromancer with the §31 formula; a critically hurt necromancer comes first. Whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px), a priest also casts an instant damage-absorbing **ward** on you, as long as no ward is active and its own ward cooldown is ready (even while someone is critical: the ward is instant, so it never delays or replaces a heal). It shows as a ring on the necromancer and in the HUD, and the autotest reports ward counts and wards per minute. |
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
 | Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Each has 5 levels. |
 | Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual and Abyssal Focus. Bonus stacking follows §34. |
@@ -474,23 +480,30 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 
 ## Known limitations
 
-- **Balance is first-pass.** All `TUNING` values are guesses checked only
-  against the autotest bots, at zero meta upgrades. With these bots, over 16
-  seeds, the summoner build (`--policy=army`) never dies before 0:00 and always
-  kills Sir Alaric. The naive build dies before 0:00 in about half of runs,
-  either around 6-8 min (builds with no Priest) or at the 16-19 min peak, and
-  kills him in about half. Void Barrage is very strong (about half of all
-  damage in an evolution build).
+- **Balance is checked only against the autotest bots** (`--mortal`, 16 seeds
+  for naive / army at meta none and max, 8 for the rest). At **meta none** the
+  summoner build (`--policy=army`) never dies before 0:00 (lowest HP 98/120),
+  always kills Sir Alaric (in 100-140 s) and lasts 6-24 s into the Reckoning.
+  The naive build dies before 0:00 in about 30% of runs (around 9-11 min when
+  it never drew a Priest, otherwise at the 19:00 peak) and kills him in about
+  25%. The evolve build is in between. At **meta mid** no bot died and every
+  bot killed him. At **meta max** nothing dies before 0:00, the army build
+  kills him in 70-115 s (at least 16 of his attacks), and the Reckoning still
+  ends every run, 15-55 s past 0:00 (median about 40 s). Void Barrage is still
+  the strongest single source: about 30-45% of all damage in army / naive
+  builds, about 60-70% in the spell build. A first-time naive player kills
+  Alaric only about 1 run in 4.
 - Only the Graveyard stage (a 20-minute run, the GDD's lower bound).
 - Arrows and spells fly over obstacles (no line-of-sight checks).
 - Eclipse Ward usually arrives late (15:00-19:00) and only in builds that
-  take Orb Shield.
+  take Orb Shield. No evolution is offered before 8:00 elapsed; a spell rush
+  gets all of them at about 8:00-8:25, other builds at 11:00-16:00.
 - No ultimate, dash, mid-run saves, skins, difficulties or modifiers yet. The
   HUD shows "Modifiers: none". The Soul Ash numbers are first-pass and the
   achievement unlocks only pay Soul Ash until their GDD rewards exist.
 - Menu hint text still shows the default keys (Esc, T) after you rebind them.
 - Nobody has played it on real hardware yet. Audio, visuals and performance
-  have only been verified headless (simulation step about 0.9–1.5 ms on
+  have only been verified headless (simulation step about 0.9–1.3 ms on
   average over a 20-minute run, with up to 180 enemies and ~45 summons). Rendering cost has not been profiled.
 
 ## Next steps (grouped by GDD §19 phases)

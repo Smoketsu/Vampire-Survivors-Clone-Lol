@@ -84,6 +84,9 @@ func step(delta: float) -> void:
 		if flash <= 0.0:
 			queue_redraw()
 	time_since_hit += delta
+	# Natural regeneration (PlayerData.HP_REGEN), capped at max HP.
+	if hp < max_hp:
+		hp = minf(max_hp, hp + PlayerData.HP_REGEN * delta)
 	if shield_time > 0.0:
 		shield_time -= delta
 		if shield_time <= 0.0:
