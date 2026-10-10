@@ -5,6 +5,7 @@
 ## near the drop point, or else moves the crystal farthest from the
 ## necromancer to the drop point, so XP left behind in a 20-minute run keeps
 ## coming back into play instead of every later drop vanishing into it.
+## magnetize_all() is the Soul Magnet power-up (PowerupManager).
 class_name XpManager
 extends Node2D
 
@@ -91,3 +92,11 @@ func step(delta: float) -> void:
 			c.speed = minf(c.speed + PlayerData.MAGNET_ACCEL * delta, PlayerData.MAGNET_MAX_SPEED)
 			c.position += to_p / d * minf(c.speed * delta, d)
 		i += 1
+
+
+## Soul Magnet power-up (PowerupManager): every crystal on the stage starts
+## flying to the necromancer. Returns how many were pulled.
+func magnetize_all() -> int:
+	for c in active:
+		c.magnet = true
+	return active.size()

@@ -11,6 +11,12 @@
 ##   * Owns the StageDirector (graveyard stage events and holy zones) and
 ##     hands it the "consecration" / "crypt" timeline events.
 ##   * Never places an enemy inside an obstacle (Arena.free_point).
+##   * Applies the Profane Pact / Oath difficulty (game.difficulty) in the
+##     existing scaling path: hp_mult / damage_mult and the trickle rate and
+##     soft cap are multiplied by it, and Sir Alaric's HP too.
+##   * Skips the AI and movement of enemies held by a Stasis power-up
+##     (game.powerups.freezes(); Reckoning enemies are immune, the boss is
+##     frozen for part of the duration).
 class_name EnemyDirector
 extends Node2D
 
@@ -78,8 +84,8 @@ func step(delta: float) -> void:
 	var t := game.elapsed
 	_update_segment(t)
 	var m := t / 60.0  # Elapsed minutes (time scaling, see WaveData).
-	hp_mult = 1.0 + m * WaveData.HP_SCALE_PER_MINUTE + m * m * WaveData.HP_SCALE_PER_MINUTE_SQ
-	damage_mult = 1.0 + m * WaveData.DAMAGE_SCALE_PER_MINUTE + m * m * WaveData.DAMAGE_SCALE_PER_MINUTE_SQ
+	hp_mult = (1.0 + m * WaveData.HP_SCALE_PER_MINUTE + m * m * WaveData.HP_SCALE_PER_MINUTE_SQ) * game.difficulty.enemy_hp_mult()
+	damage_mult = (1.0 + m * WaveData.DAMAGE_SCALE_PER_MINUTE + m * m * WaveData.DAMAGE_SCALE_PER_MINUTE_SQ) * game.difficulty.enemy_damage_mult()
 	_run_events(t)
 	if boss == null and t >= WaveData.BOSS_TIME:
 		_spawn_boss()
@@ -93,8 +99,15 @@ func step(delta: float) -> void:
 	# ring larger than RECYCLE_DISTANCE, which would recycle forever).
 	var recycle := maxf(WaveData.RECYCLE_DISTANCE, _ring_radius() + WaveData.RECYCLE_MARGIN)
 	var recycle2 := recycle * recycle
+	var pw := game.powerups  # Stasis check (power-up freeze).
 	for e in active:
 		if not e.active:
+			continue
+		var frozen := pw.freezes(e)  # Held by Stasis this tick.
+		e.set_frozen(frozen)
+		if frozen:
+			e.step_frozen(delta)
+			e.resolve_blocking()
 			continue
 		if e.think_slot == slot:
 			e.think()
@@ -149,11 +162,13 @@ func _update_segment(t: float) -> void:
 		segment_index += 1
 
 
-## Trickle spawner: `rate` enemies/s up to the segment's max_alive.
+## Trickle spawner: `rate` enemies/s up to the segment's max_alive, both
+## scaled by the Profane Pact / Oath spawn penalty (HARD_CAP still applies).
 func _spawn_trickle(delta: float) -> void:
 	var seg: Dictionary = WaveData.SEGMENTS[segment_index]
-	spawn_accum += float(seg["rate"]) * delta
-	var cap: int = mini(int(seg["max_alive"]), WaveData.HARD_CAP)
+	var spawn_mult := game.difficulty.enemy_spawn_mult()  # Pact / Oath spawn penalty.
+	spawn_accum += float(seg["rate"]) * spawn_mult * delta
+	var cap: int = mini(roundi(float(seg["max_alive"]) * spawn_mult), WaveData.HARD_CAP)
 	var alive := regular_alive()
 	while spawn_accum >= 1.0:
 		spawn_accum -= 1.0
@@ -235,11 +250,12 @@ func show_banner(text: String) -> void:
 	banner_until = game.elapsed + WaveData.BANNER_TIME
 
 
-## Spawns Sir Alaric at the spawn ring.
+## Spawns Sir Alaric at the spawn ring (HP not time-scaled, but scaled by the
+## Profane Pact / Oath HP penalty).
 func _spawn_boss() -> void:
 	boss = BossAlaric.new()
 	add_child(boss)
-	boss.setup_boss(game, _ring_point(randf() * TAU), 1.0, _next_slot)
+	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.enemy_hp_mult(), _next_slot)
 	_next_slot = (_next_slot + 1) % UnitData.AI_TICK_DIVISOR
 	active.append(boss)
 	show_banner("Sir Alaric, the Gravebreaker, has arrived!")

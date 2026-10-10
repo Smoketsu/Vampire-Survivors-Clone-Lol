@@ -16,6 +16,11 @@
 ## (corrupt) file is copied to "<path>.corrupt" and the game starts fresh,
 ## every value is type-checked and clamped, unknown keys are ignored, and
 ## tiers whose prerequisite is no longer met are refunded.
+## Profane Oath (user request): its purchased tier is a normal upgrade tier,
+## but the tier that applies to runs is `oath_active`, which the player may
+## lower or switch off in the Ossuary for free (set_oath_active(); owned
+## tiers stay owned and can be raised again for free). Buying a tier makes it
+## active. Saved as [oath] active.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -44,6 +49,8 @@ var last_load_error: Error = OK
 var load_status: String = "fresh"
 ## Breakdown Dictionary of the most recent award_run() (see compute_ash()).
 var last_award: Dictionary = {}
+## Profane Oath tier that applies to runs (0..owned tier; 0 = switched off).
+var oath_active: int = 0
 
 
 func _ready() -> void:
@@ -58,15 +65,41 @@ func _ready() -> void:
 
 ## Modifiers for a new run: the purchased tiers, or the --meta profile
 ## (MetaData.AUTOTEST_PROFILES) in the autotest. Nothing is written.
+## The Profane Oath enters at its ACTIVE tier (the autotest: --oath=N).
 func run_modifiers() -> MetaModifiers:
 	if GameState.autotest:
-		return MetaModifiers.from_tiers(MetaData.autotest_tiers(GameState.autotest_meta))
-	return MetaModifiers.from_tiers(tiers)
+		var test_tiers: Dictionary = MetaData.autotest_tiers(GameState.autotest_meta)  # Profile tiers (never the Oath).
+		if GameState.autotest_oath > 0:
+			test_tiers[PactData.OATH_ID] = GameState.autotest_oath
+		return MetaModifiers.from_tiers(test_tiers)
+	var run_tiers := tiers.duplicate()  # Owned tiers with the Oath at its active tier.
+	run_tiers[PactData.OATH_ID] = oath_active_tier()
+	return MetaModifiers.from_tiers(run_tiers)
+
+
+## Profane Oath tier applied to runs (never above the owned tier).
+func oath_active_tier() -> int:
+	return clampi(oath_active, 0, tier(PactData.OATH_ID))
+
+
+## Sets the active Profane Oath tier (0 = off, up to the owned tier) without
+## any refund or cost, then saves. Returns false if nothing changed.
+func set_oath_active(t: int) -> bool:
+	var nt := clampi(t, 0, tier(PactData.OATH_ID))  # Clamped new active tier.
+	if nt == oath_active_tier():
+		return false
+	oath_active = nt
+	save()
+	changed.emit()
+	return true
 
 
 ## Soul Ash earned by a finished run (MetaData header formula). Each part is
 ## floored to whole ash so the breakdown on the end screen adds up exactly.
 ## `summary` is Game.build_summary(); `ash_gain` is the Ash Harvest bonus.
+## The Profane Pact and Profane Oath rewards (summary "pact_ash_gain" /
+## "oath_ash_gain", from DifficultyModifiers) are two more bonus lines on the
+## same subtotal, each floored ("pact_bonus" / "oath_bonus").
 static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 	var st: Dictionary = summary.get("stats", {})
 	var countdown := float(summary.get("countdown", WaveData.RUN_DURATION))
@@ -86,6 +119,10 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 	for k: String in parts:
 		subtotal += int(parts[k])
 	var bonus := floori(float(subtotal) * maxf(0.0, ash_gain))
+	var pact_pct := maxf(0.0, float(summary.get("pact_ash_gain", 0.0)))  # Profane Pact Soul Ash reward.
+	var oath_pct := maxf(0.0, float(summary.get("oath_ash_gain", 0.0)))  # Profane Oath Soul Ash reward.
+	var pact_bonus := floori(float(subtotal) * pact_pct)  # Ash from the Pact reward.
+	var oath_bonus := floori(float(subtotal) * oath_pct)  # Ash from the Oath reward.
 	return {
 		"parts": parts,
 		"time_survived": survived,
@@ -95,7 +132,13 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 		"subtotal": subtotal,
 		"bonus_pct": ash_gain,
 		"bonus": bonus,
-		"total": subtotal + bonus,
+		"pact_level": int(summary.get("pact_level", 0)),
+		"pact_pct": pact_pct,
+		"pact_bonus": pact_bonus,
+		"oath_tier": int(summary.get("oath_tier", 0)),
+		"oath_pct": oath_pct,
+		"oath_bonus": oath_bonus,
+		"total": subtotal + bonus + pact_bonus + oath_bonus,
 	}
 
 
@@ -178,6 +221,8 @@ func purchase(id: String) -> bool:
 		return false
 	soul_ash -= next_cost(id)
 	tiers[id] = tier(id) + 1
+	if id == PactData.OATH_ID:
+		oath_active = tier(id)  # A newly sworn tier is active at once.
 	save()
 	changed.emit()
 	return true
@@ -196,6 +241,7 @@ func refund_all() -> int:
 	var refund := spent_total()
 	for id: String in MetaData.UPGRADE_ORDER:
 		tiers[id] = 0
+	oath_active = 0
 	soul_ash = mini(soul_ash + refund, MAX_STORED)
 	save()
 	changed.emit()
@@ -225,6 +271,7 @@ func save() -> Error:
 		cfg.set_value("lifetime", key, lifetime[key])
 	for id: String in MetaData.ACHIEVEMENT_ORDER:
 		cfg.set_value("achievements", id, achievements.has(id))
+	cfg.set_value("oath", "active", oath_active_tier())
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -263,6 +310,8 @@ func load_save() -> void:
 		if typeof(v) == TYPE_BOOL and bool(v):
 			achievements[id] = true
 	_enforce_prerequisites()
+	# Missing key (older save) = the owned Oath tier is active.
+	oath_active = clampi(_read_int(cfg, "oath", "active", tier(PactData.OATH_ID)), 0, tier(PactData.OATH_ID))
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -303,6 +352,7 @@ func _reset() -> void:
 	lifetime = _default_lifetime()
 	achievements = {}
 	last_award = {}
+	oath_active = 0
 	load_status = "fresh"
 
 

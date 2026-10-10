@@ -12,7 +12,11 @@
 ##   * One-line calls from gameplay where no signal exists:
 ##     CombatResolver -> enemy_hit() / enemy_killed(),
 ##     EffectManager.impact() -> impact(), Game.shake() -> shake(),
-##     Game._process() -> camera_offset().
+##     Game._process() -> camera_offset(),
+##     PowerupManager.collect() -> powerup_collected() (pickup sound, sparkle
+##     burst and a full-screen colour flash).
+## Screen tint: while Stasis or Hyper runs, a faint cold-blue / violet tint
+## covers the world (polled from game.powerups); pickups flash it brighter.
 ## Screen shake: Game.shake(px) adds trauma; the camera offset is
 ## MAX_SHAKE_PX * trauma^2 along smooth pseudo-noise and trauma decays
 ## linearly in real time. Off when Settings.screen_shake is false.
@@ -54,6 +58,14 @@ const SOURCE_SOUNDS: Dictionary = {"bolt": "bolt_hit", "orb": "orb_hit", "bash":
 const SPELL_SOURCES: Dictionary = {"bolt": true, "orb": true, "blast": true}
 ## Damage-number colour for the necromancer's spells.
 const SPELL_NUMBER_COLOR: Color = Color(0.86, 0.74, 1.0)
+## Peak alpha of the full-screen flash when a power-up is collected.
+const POWERUP_FLASH_ALPHA: float = 0.28  # TUNING (not in GDD)
+## Peak alpha of the much bigger Soul Nova (screen clear) flash.
+const NOVA_FLASH_ALPHA: float = 0.7  # TUNING (not in GDD)
+## Seconds the power-up flash takes to fade out.
+const POWERUP_FLASH_FADE: float = 0.4  # TUNING (not in GDD)
+## Steady screen-tint alpha while Stasis / Hyper runs.
+const BUFF_TINT_ALPHA: float = 0.07  # TUNING (not in GDD)
 
 ## World-space particles and damage numbers.
 var fx: FxLayer
@@ -95,6 +107,14 @@ var _xp_chain: int = 0
 var _xp_last_msec: int = -100000
 ## Cosmetic RNG (never the global, seeded RNG).
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+## Full-screen colour overlay for power-up flashes and the Stasis / Hyper tint.
+var _tint: ColorRect
+## Current power-up flash strength (0..1, fades over POWERUP_FLASH_FADE).
+var _flash_a: float = 0.0
+## Colour of the current power-up flash.
+var _flash_color: Color = Palette.VIOLET
+## Peak alpha of the current power-up flash.
+var _flash_peak: float = POWERUP_FLASH_ALPHA
 
 
 func _ready() -> void:
@@ -105,8 +125,23 @@ func _ready() -> void:
 	fx.process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_child(fx)
 	_build_vignette()
+	_build_tint()
 	_last_usec = Time.get_ticks_usec()
 	get_tree().node_added.connect(_on_node_added)
+
+
+## Builds the power-up tint overlay on its own CanvasLayer just under the
+## hurt vignette (layer 9) and the HUD (layer 10).
+func _build_tint() -> void:
+	var layer := CanvasLayer.new()  # Holds the overlay above the world.
+	layer.layer = 8
+	add_child(layer)
+	_tint = ColorRect.new()
+	_tint.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_tint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tint.color = Color(0, 0, 0, 0)
+	_tint.visible = false
+	layer.add_child(_tint)
 
 
 ## Builds the hurt vignette: a CanvasLayer between the world and the HUD
@@ -157,6 +192,7 @@ func _process(_delta: float) -> void:
 		_vignette_a = maxf(0.0, _vignette_a - real_dt / VIGNETTE_FADE)
 		_vignette.modulate.a = _vignette_a
 		_vignette.visible = _vignette_a > 0.0
+	_update_tint(real_dt)
 	if _game != null:
 		_poll_game()
 
@@ -188,6 +224,36 @@ func hitstop(ms: int) -> void:
 		Engine.time_scale = HITSTOP_SCALE
 		_hitstop_end_usec = now
 	_hitstop_end_usec = mini(maxi(_hitstop_end_usec, now + ms * 1000), now + HITSTOP_MAX_MS * 1000)
+
+
+## A power-up was collected (PowerupManager.collect): its pickup sound, a
+## sparkle burst on the necromancer and a screen flash in its colour.
+func powerup_collected(kind: String, pos: Vector2) -> void:
+	var def: Dictionary = PowerupData.POWERUPS[kind]  # Power-up definition.
+	var col: Color = def["color"]  # Accent colour of the power-up.
+	Sfx.play(String(def["sound"]))
+	fx.burst(pos, col, Palette.BONE, 18, 120.0, 0.6, 3.0)
+	_flash_color = col
+	_flash_a = 1.0
+	_flash_peak = NOVA_FLASH_ALPHA if kind == "nova" else POWERUP_FLASH_ALPHA
+
+
+## Fades the power-up flash and keeps the steady Stasis / Hyper tint.
+func _update_tint(real_dt: float) -> void:
+	if _flash_a > 0.0:
+		_flash_a = maxf(0.0, _flash_a - real_dt / POWERUP_FLASH_FADE)
+	var steady := Color(0, 0, 0, 0)  # Tint while a screen-wide buff runs.
+	if _game != null and _game.powerups != null:
+		if _game.powerups.is_active("stasis"):
+			steady = Color(Palette.COLD_BLUE, BUFF_TINT_ALPHA)
+		elif _game.powerups.is_active("hyper"):
+			steady = Color(Palette.VIOLET, BUFF_TINT_ALPHA)
+	var flash_a := _flash_a * _flash_peak  # Flash alpha this frame.
+	if flash_a <= 0.0 and steady.a <= 0.0:
+		_tint.visible = false
+		return
+	_tint.visible = true
+	_tint.color = Color(_flash_color, flash_a) if flash_a > steady.a else steady
 
 
 ## An enemy took `dealt` damage from `source` (CombatResolver.damage_enemy).
@@ -259,6 +325,8 @@ func _detach() -> void:
 	_offset = Vector2.ZERO
 	_vignette_a = 0.0
 	_vignette.visible = false
+	_flash_a = 0.0
+	_tint.visible = false
 	if _hitstopping:
 		_end_hitstop()
 

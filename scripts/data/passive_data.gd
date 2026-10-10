@@ -10,6 +10,9 @@
 ##   Soul Conduit    — +% damage of every shadow spell (evolves Shadow Bolt).
 ##   Warding Ritual  — -% damage taken by the necromancer (evolves Orb Shield).
 ##   Abyssal Focus   — -% spell cooldowns / orb recharge (evolves Shadow Blast).
+## plus the opt-in difficulty passive (user request, data in PactData):
+##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
+##                     and power-up drops.
 ## The GDD defines what each passive does but gives no values, so all numbers
 ## are TUNING (not in GDD).
 ##
@@ -22,7 +25,7 @@ extends RefCounted
 
 ## Display / card order of passives.
 const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycling",
-	"soul_conduit", "warding_ritual", "abyssal_focus"]
+	"soul_conduit", "warding_ritual", "abyssal_focus", PactData.ID]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -49,6 +52,8 @@ const SPELL_PASSIVES := ["soul_conduit", "abyssal_focus"]
 ##   cooldown_reduction — -% spell cooldowns, Orb Shield recharge and Eclipse
 ##                        Ward pulse interval.
 const PASSIVES := {
+	# Profane Pact (difficulty / reward passive): defined in PactData.
+	PactData.ID: PactData.PASSIVE,
 	"grave_dominion": {
 		"display_name": "Grave Dominion",
 		"icon": "grave_dominion",

@@ -122,11 +122,12 @@ replacing fallen units all happen automatically (GDD §4, §21).
 
 - **Evolutions** (GDD §6.1): once a spell reaches **Lv 5**, you own its
   paired passive (any level) **and the run has reached 8:00 elapsed** (12:00
-  left on the timer), every level-up offers its evolution as a **gold card**.
-  Before 8:00 the card hints say when it unlocks. The evolution replaces the
-  spell in its slot. The whole condition is `AbilityManager.ready_evolutions()`
-  with its numbers in `EvolutionData` (`BASE_LEVEL_REQUIRED`,
-  `PASSIVE_LEVEL_REQUIRED`, `MIN_ELAPSED`).
+  left on the timer), the **next treasure chest** grants its evolution first
+  (the GDD's "special elite reward"). Evolutions never appear on level-up
+  cards. The evolution replaces the spell in its slot. The whole eligibility
+  check is `AbilityManager.ready_evolutions()` with its numbers in
+  `EvolutionData` (`BASE_LEVEL_REQUIRED`, `PASSIVE_LEVEL_REQUIRED`,
+  `MIN_ELAPSED`).
 
 | Spell | + Passive (its standalone effect) | = Evolution |
 |---|---|---|
@@ -149,8 +150,8 @@ replacing fallen units all happen automatically (GDD §4, §21).
   **Banish** (2 per run; removes that item from the run) and **Skip**
   (unlimited; small heal) as needed.
 - Numbers are in `scripts/data/evolution_data.gd`, `synergy_data.gd`,
-  `level_up_data.gd` and `passive_data.gd`. The autotest picks evolutions
-  whenever they are offered. Its summary reports the evolutions obtained,
+  `level_up_data.gd` and `passive_data.gd`. The autotest opens every chest
+  it reaches. Its summary reports the evolutions obtained (with times),
   the active synergies, and the rerolls, banishes and skips used.
   `--policy=evolve` runs a spell build that chases the evolutions.
 
@@ -217,7 +218,9 @@ replacing fallen units all happen automatically (GDD §4, §21).
   upgrades, Ash Harvest included): two or three mid-tier upgrades. A death at
   9-11 min still keeps about 100-150. The Reckoning pays only about 8% of a
   good run. Buying everything costs **8,965**, about 17-20 good runs (15–25
-  including weaker runs and Ash Harvest).
+  including weaker runs and Ash Harvest), plus 375 for the optional Profane
+  Oath (9,340 in all). The Profane Pact and Oath rewards add their own bonus
+  lines on top (below).
 - **The Ossuary** (main menu) holds the four GDD §9.2 trees. Each upgrade
   raises one stat per tier, costs rise per tier, and some need a prerequisite
   in the same tree:
@@ -228,6 +231,7 @@ replacing fallen units all happen automatically (GDD §4, §21).
   | Shadowcraft | Umbral Potency spell damage +5% (5, 40→230) · Quickened Rites spell cooldowns −3% (4, 60→250) · Widening Dark Shadow Blast / pulse radius +6% (3, 70→230; needs Potency I) · Shadow Mastery spell damage +10% (1, 450; needs Rites III) |
   | Survival | Grave-Hardened Flesh max HP +10 (5, 40→230) · Bone Mail damage taken −3% (4, 60→250) · Fleet Shade move speed +4% (3, 50→175) · Undying Will one revival per run at 50% HP with a knock-back burst (1, 550; needs Bone Mail II) |
   | Fortune | Soul Magnet pickup radius +10% (4, 30→155) · Grave Tithe XP gain +4% (3, 60→200) · Ash Harvest Soul Ash +5% (3, 80→270) · Fate's Thread +1 reroll (2, 120→250) · Banishing Rite +1 banish (2, 150→310; needs Thread I) |
+  | Oath (standalone) | **Profane Oath**: opt-in difficulty (5, 25→125). See *Power-ups & Profane Pact* below |
 
   Every button shows the tier pips, the effect delta (`Minion HP +6% -> +12%`)
   and whether it is affordable, too expensive, locked or maxed. **Refund all**
@@ -251,6 +255,68 @@ replacing fallen units all happen automatically (GDD §4, §21).
   `save.cfg.corrupt` and the game starts fresh. Every value is type-checked and
   clamped, unknown keys are ignored, and tiers whose prerequisite is missing
   are refunded. The autotest never reads or writes it (unless `--meta-save`).
+  The active Profane Oath tier is saved as `[oath] active`.
+
+### Power-ups & Profane Pact
+
+- **Power-up drops** (`scripts/data/powerup_data.gd`, all `TUNING`). Killed
+  enemies sometimes drop a power-up: a dark round token with a pulsing ring
+  and its own icon, so it never reads as an XP crystal.
+
+  | Power-up | Weight | Effect |
+  |---|---|---|
+  | **Soul Magnet** (violet horseshoe) | 3 | Every XP crystal on the stage flies to you. |
+  | **Grave Feast** (haunch on a bone) | 3 | Restores 30% of max HP. |
+  | **Hyper** (violet lightning) | 2 | 10 s: your spells deal ×2 damage and their cooldowns are halved. Violet screen tint. |
+  | **Stasis** (cold-blue hourglass) | 1.5 | 5 s: every enemy is frozen (no movement, attacks, heals or arrows; frost shell). Sir Alaric is frozen for the first half only, Reckoning enemies are immune. Cold-blue screen tint. |
+  | **Dark Frenzy** (green skull, crossed bones) | 2 | 12 s: summons deal ×1.5 damage and attack ×1.5 as fast (through the horde's effective stats). |
+  | **Soul Nova** (white-violet starburst) | 0.5 (rarest) | Screen clear: every regular enemy on screen dies, elites lose 50% of their current HP, Sir Alaric takes 5% of his max HP; Reckoning enemies are immune. The kills go through `CombatResolver`, so they drop XP and count for stats, Soul Ash and achievements. Big flash, shake and sound. |
+
+  Drop rules: **0.3%** per regular kill, **20%** per elite kill, and Sir
+  Alaric always drops one. A **pity timer** guarantees a drop on the next
+  kill after 90 s without one. At most **3** lie on the ground (a roll at
+  the cap is lost), each despawns after **30 s** and blinks for its last
+  7 s. Nothing drops from Reckoning enemies or after 0:00. You pick one up by
+  **walking over it** (within 12 px of your body: a fixed radius on purpose,
+  so it is a routing choice and the Soul Magnet meta upgrade doesn't vacuum
+  power-ups). Each has its own pickup sound and a screen flash. Running
+  buffs are listed under your HP with the time left. **Collecting a buff
+  that is already running refreshes its duration to full; it never stacks.**
+  Drop rolls use their own seeded RNG, so autotest runs stay deterministic.
+- **Treasure chests** (`scripts/data/chest_data.gd`, all `TUNING`). A gold-
+  banded crimson reliquary. Elites drop one **35%** of the time, Sir Alaric
+  always, and a pity timer drops one from the next kill after **150 s**
+  without a chest (about one every 2-3 minutes). Chests never despawn (at
+  most 3 on the ground), and none drop from Reckoning enemies or after 0:00.
+  Walking over one pauses the run and shows a short code-drawn reveal; it
+  grants **1, 3 or 5** upgrades (weights 70 / 24 / 6), drawn from the normal
+  level-up pool with the usual card weights, listed with their old → new
+  levels. **Every ready evolution comes first: evolutions are delivered only
+  by chests.** A chest never grants the Profane Pact, and when nothing can be
+  upgraded it heals (Dark Restoration). Confirm (Enter / Space / click / pad
+  A) skips the reveal, then closes it.
+- **Profane Pact** (in-run difficulty passive, `scripts/data/pact_data.gd`).
+  Offered on level-up cards (crimson **PACT** tag, a modest 0.4× card
+  weight), it takes a passive slot, has 5 levels and can be banished. Per
+  level: enemies **+10% spawn rate** (trickle rate and soft cap), **+10%
+  HP**, **+6% damage**; rewards **+8% XP**, **+10% Soul Ash**, **+15%
+  power-up drop chance**. The card lists every penalty and reward as
+  old → new.
+- **Profane Oath** (Ossuary, standalone "Oath" entry between Refund all and
+  Back; 5 tiers costing 25 / 50 / 75 / 100 / 125). Each **active** tier
+  applies from the first second: enemies +6% spawn rate, +5% HP, +4%
+  damage; rewards +5% XP, +10% Soul Ash, +10% drop chance. **Lower Oath**
+  (with a confirmation) lowers the active tier by one, down to off, with no
+  refund; owned tiers can be raised again for free. Refund all returns
+  everything.
+- **One difficulty path, additive.** `DifficultyModifiers` (`game.difficulty`)
+  adds the Pact and Oath bonuses of each key (one stacking category) and
+  hands out the multipliers: `EnemyDirector` multiplies its `hp_mult` /
+  `damage_mult` and the trickle rate / soft cap (Sir Alaric's HP too),
+  `Game.add_xp` the XP, `PowerupManager` the drop chance, and
+  `Meta.compute_ash` pays a **Profane Pact** and a **Profane Oath** bonus
+  line on the run's subtotal (shown on the end screen). The HUD's Modifiers
+  area shows the Pact level, the Oath tier and their combined effect.
 
 ---
 
@@ -271,7 +337,8 @@ replacing fallen units all happen automatically (GDD §4, §21).
 | Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 13:00. |
 | Waves and stage events (§11) | The data-driven 20-minute Graveyard timeline at the GDD's real times (Sir Alaric at 17:00), then the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
-| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades, prerequisites, respec), 3 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
+| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades, prerequisites, respec) plus the opt-in Profane Oath, 3 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
+| Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
 | UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu, end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and priest ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress; ability slots with levels. |
 | Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, priests are round with a halo). Hit flashes and death pops are included. |
@@ -320,6 +387,7 @@ scripts/
     meta_progress.gd        Autoload "Meta": Soul Ash, upgrade tiers, lifetime stats, achievements,
                             purchase / refund, run award, versioned save in user://save.cfg
     meta_modifiers.gd       The ONE path meta upgrades take into a run (game.meta, read by stat code)
+    difficulty_modifiers.gd The ONE path the Profane Pact + Oath take into a run (game.difficulty)
     arena.gd                Solid obstacles (circles/rects) and the collision push-out used by all units
     main.gd                 Switches menu <-> run (a run is a fresh Game node every time)
     game.gd                 One run: builds world + managers in code, fixed-order simulation step,
@@ -347,6 +415,8 @@ scripts/
     orb_shield.gd           Shadow Orb Shield
     projectile.gd, projectile_manager.gd   Pooled projectiles + overkill reservations
   pickups/xp_crystal.gd, xp_manager.gd     Pooled XP crystals with magnet
+  pickups/powerup.gd, powerup_manager.gd   Pooled power-up drops, drop rules, timed buffs, Soul Nova
+  pickups/chest.gd, chest_manager.gd       Pooled treasure chests and their drop rules
   audio/sfx.gd              Autoload: audio buses, pooled voices with per-sound and global voice limits
   audio/synth.gd            Procedural sound and music synthesis (no audio files)
   fx/juice.gd               Autoload: screen shake, hit-stop, hooks for particles and damage numbers
@@ -354,7 +424,8 @@ scripts/
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
                             progression_glyphs (evolution/synergy icons),
-                            ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons)
+                            ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons),
+                            chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     unit_data.gd            Summon classes, level tables, AI weights, leash/rates
     enemy_data.gd           Enemy roster, boss, Reckoning enemy, elites
@@ -368,6 +439,9 @@ scripts/
     sound_data.gd           Sound recipes, voice limits, priorities
     player_data.gd          Player stats, XP curve, slot counts
     meta_data.gd            Soul Ash formula, upgrade trees / tiers / costs, achievements, autotest profiles
+    powerup_data.gd         Power-up types, weights, durations, drop chances, pity, cap, lifetime
+    chest_data.gd           Chest drop chances, pity, contents (1 / 3 / 5) weights, reveal timing
+    pact_data.gd            Profane Pact levels and Profane Oath per-tier values
     palette.gd              Colour language
 ```
 
@@ -381,7 +455,8 @@ scripts/
 5. Enemies: trickle and events, `think()`, separation, movement, warrior blocking.
 6. Projectiles.
 7. XP pickups.
-8. Effects.
+8. Power-up drops and buffs, then treasure chests.
+9. Effects.
 
 The whole step is timed and the cost is shown in the F3 overlay.
 
@@ -430,9 +505,10 @@ Options (after `--`):
 | `--speed=N` | Time scale (default 8; results are identical at 4 and 8). |
 | `--seed=N` | RNG seed (default 1337). |
 | `--timeout=N` | Give up after N game seconds (default 1500: the 20:00 countdown plus the Reckoning). |
-| `--policy=NAME` | Level-up card policy: `naive` (default; takes every new summon class, then new spells, then new passives), `army` (a summoner build that levels summons and army passives first) or `evolve` (a spell build that chases the three evolutions). |
+| `--policy=NAME` | Level-up card policy: `naive` (default; takes every new summon class, then new spells, then new passives), `army` (a summoner build that levels summons and army passives first), `evolve` (a spell build that chases the three evolutions) or `pact` (the naive build that takes every Profane Pact card at once, to measure the Pact). Every other policy ranks the Pact below every card, fallbacks included, so balance runs never take it. |
 | `--meta=PROFILE` | Simulated Soul Ash purchases, applied in memory only: `none` (default, so balance runs stay comparable), `mid` (about half of every tree) or `max` (everything). |
 | `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). |
+| `--oath=N` | Active Profane Oath tier 0-5 (default 0). No `--meta` profile includes the Oath, so `--meta=max` balance runs stay comparable. |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
 
@@ -454,7 +530,15 @@ level at 1:00, 3:00, 5:00, 10:00, 15:00, 17:00 and 20:00, and when levels 2,
 hand held only fallback cards: every slot maxed and every available evolution
 taken). The last lines
 list the active meta upgrades and the run's Soul Ash award with its breakdown
-(time, kills, elites, boss, Reckoning, Ash Harvest bonus, achievement bounty).
+(time, kills, elites, boss, Reckoning, Ash Harvest bonus, Pact and Oath
+bonuses, achievement bounty). Before them come the **power-up** lines (drops
+spawned / collected / expired per type, lost at the cap, pity drops, buff
+uptime, Soul Nova kills), the **chest** lines (spawned, opened by size,
+items granted, every chest's contents with its time) and the **Profane
+Pact** line (taken or not, the time of each level, the Oath tier, and the
+extra XP and Soul Ash from the Pact and the Oath). The autopilot walks to a
+chest within 450 px unless enemies press it hard, and to a power-up within
+300 px when nothing presses it.
 
 ### Continuous integration and builds
 
@@ -496,11 +580,14 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 - Only the Graveyard stage (a 20-minute run, the GDD's lower bound).
 - Arrows and spells fly over obstacles (no line-of-sight checks).
 - Eclipse Ward usually arrives late (15:00-19:00) and only in builds that
-  take Orb Shield. No evolution is offered before 8:00 elapsed; a spell rush
-  gets all of them at about 8:00-8:25, other builds at 11:00-16:00.
-- No ultimate, dash, mid-run saves, skins, difficulties or modifiers yet. The
-  HUD shows "Modifiers: none". The Soul Ash numbers are first-pass and the
-  achievement unlocks only pay Soul Ash until their GDD rewards exist.
+  take Orb Shield. No evolution is granted before 8:00 elapsed.
+- No ultimate, dash, mid-run saves, skins or GDD difficulty levels yet; the
+  only modifiers are the opt-in Profane Pact and Profane Oath. The Soul Ash
+  numbers are first-pass and the achievement unlocks only pay Soul Ash until
+  their GDD rewards exist.
+- Power-up, chest and Pact / Oath numbers are first-pass. Stasis pauses the
+  boss's attack timers but his telegraph effects keep fading on their own
+  clock, and Desecration Chaplains keep channelling while frozen.
 - Menu hint text still shows the default keys (Esc, T) after you rebind them.
 - Nobody has played it on real hardware yet. Audio, visuals and performance
   have only been verified headless (simulation step about 0.9–1.3 ms on

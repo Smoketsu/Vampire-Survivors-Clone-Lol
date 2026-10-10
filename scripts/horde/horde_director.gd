@@ -195,8 +195,10 @@ func replenish_interval(cls: String) -> float:
 ## and synergies. Stacking (GDD §34): like-category bonuses add, categories
 ## multiply: stat = base * (1 + skill_bonus) * (1 + passive_bonus) *
 ## (1 + synergy_bonus) * (1 + meta_bonus). Attack interval divides by the
-## attack-speed multipliers.
-func compute_stats(cls: String, level: int) -> Dictionary:
+## attack-speed multipliers. The Dark Frenzy power-up is one more category
+## (x (1 + frenzy) on damage and attack speed) while `with_buffs` is true;
+## level-up card previews pass false so they show the lasting stats.
+func compute_stats(cls: String, level: int, with_buffs: bool = true) -> Dictionary:
 	var base: Dictionary = UnitData.UNITS[cls]
 	var row: Dictionary = UnitData.LEVELS[cls][clampi(level, 1, 5) - 1]
 	var ab := game.abilities
@@ -206,6 +208,9 @@ func compute_stats(cls: String, level: int) -> Dictionary:
 			* (1.0 + game.meta.value("minion_damage"))
 	var spd_mult := (1.0 + float(row.get("speed_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_speed")) \
 			* (1.0 + synergies.value("unholy_host", "attack_speed"))
+	if with_buffs and game.powerups != null:
+		dmg_mult *= 1.0 + game.powerups.frenzy_bonus("damage_bonus")
+		spd_mult *= 1.0 + game.powerups.frenzy_bonus("attack_speed_bonus")
 	var move_mult := 1.0 + synergies.value("deathless", "move_speed")
 	var heal_mult := 1.0 + float(row.get("heal_bonus", 0.0))
 	var splash_mult := 1.0 + float(row.get("splash_bonus", 0.0))

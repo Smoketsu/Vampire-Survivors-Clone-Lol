@@ -11,6 +11,11 @@
 ## trees at the same row, down from the last row to Refund all / Back), A /
 ## Enter buys, B / Esc closes the confirmation or the menu. The first upgrade
 ## is focused on open.
+## The standalone Profane Oath (opt-in difficulty, MetaData "oath") sits in
+## the bottom row between Refund all and Back: its button buys the next tier
+## (or raises the active tier again for free when it was lowered), and
+## "Lower Oath" asks for confirmation, then lowers the ACTIVE tier by one
+## (down to off) with no refund (owned tiers stay owned, Meta.set_oath_active).
 ## Open it with OssuaryMenu.open_over(parent, button_to_refocus).
 class_name OssuaryMenu
 extends Control
@@ -57,6 +62,12 @@ var _confirm: Control = null
 var confirm_yes: Button = null
 ## Confirmation "Cancel" button (valid while _confirm is open).
 var confirm_no: Button = null
+## Profane Oath upgrade button (bottom row).
+var oath_button: Button
+## "Lower Oath" button: lowers / disables the active Oath tier (asks first).
+var oath_lower_button: Button
+## Button focused again when the confirmation closes.
+var _confirm_return: Button = null
 
 
 ## Creates the menu as a full-screen child of `parent` and returns it.
@@ -100,7 +111,15 @@ func _ready() -> void:
 	root.add_child(bottom)
 	refund_button = _plain_button(bottom, "", _open_confirm)
 	refund_button.focus_entered.connect(func() -> void: _detail.text = "Respec: refund every upgrade and get all spent Soul Ash back (asks first).")
+	oath_button = _upgrade_button(PactData.OATH_ID)
+	bottom.add_child(oath_button)
+	oath_lower_button = _plain_button(bottom, "", _open_lower_confirm)
+	oath_lower_button.custom_minimum_size = Vector2(170, 42)
+	oath_lower_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	oath_lower_button.focus_entered.connect(func() -> void: _detail.text = "Lower the active Profane Oath by one tier (to off). No refund; owned tiers can be raised again for free.")
 	back_button = _plain_button(bottom, "Back", close)
+	refund_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	back_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	back_button.focus_entered.connect(func() -> void: _detail.text = "Return to the main menu. Purchases are already saved.")
 	_wire_focus()
 	Meta.changed.connect(_refresh)
@@ -212,7 +231,8 @@ func _wire_focus() -> void:
 		for r in col.size():
 			var b: Button = col[r]
 			var up: Control = col[r - 1] if r > 0 else b
-			var down: Control = col[r + 1] if r < col.size() - 1 else (refund_button if float(c) < float(n_cols) * 0.5 else back_button)
+			var bottom_row: Array[Control] = [refund_button, oath_button, oath_lower_button, back_button]  # Bottom row, left to right.
+			var down: Control = col[r + 1] if r < col.size() - 1 else bottom_row[mini(c, bottom_row.size() - 1)]
 			var left_col: Array = _grid[c - 1] if c > 0 else col
 			var right_col: Array = _grid[c + 1] if c < n_cols - 1 else col
 			var left: Control = left_col[mini(r, left_col.size() - 1)]
@@ -222,8 +242,12 @@ func _wire_focus() -> void:
 			b.focus_next = b.get_path_to(right)
 	var first_col: Array = _grid[0]
 	var last_col: Array = _grid[n_cols - 1]
-	_set_neighbors(refund_button, first_col[first_col.size() - 1], refund_button, refund_button, back_button)
-	_set_neighbors(back_button, last_col[last_col.size() - 1], back_button, refund_button, back_button)
+	var col2: Array = _grid[mini(1, n_cols - 1)]  # Column above the Oath button.
+	var col3: Array = _grid[mini(2, n_cols - 1)]  # Column above the Lower button.
+	_set_neighbors(refund_button, first_col[first_col.size() - 1], refund_button, refund_button, oath_button)
+	_set_neighbors(oath_button, col2[col2.size() - 1], oath_button, refund_button, oath_lower_button)
+	_set_neighbors(oath_lower_button, col3[col3.size() - 1], oath_lower_button, oath_button, back_button)
+	_set_neighbors(back_button, last_col[last_col.size() - 1], back_button, oath_lower_button, back_button)
 
 
 ## Sets the four focus neighbours of `b`.
@@ -253,6 +277,9 @@ func _refresh() -> void:
 	_achievements.text = "Achievements:  " + "    ".join(ach)
 	refund_button.text = "Refund all  (+%d)" % Meta.spent_total()
 	refund_button.disabled = Meta.spent_total() <= 0
+	var active := Meta.oath_active_tier()  # Active Profane Oath tier.
+	oath_lower_button.text = "Lower Oath  (%s)" % DifficultyModifiers.roman(active) if active > 0 else "Oath is off"
+	oath_lower_button.disabled = active <= 0
 	var focused := get_viewport().gui_get_focus_owner() if is_inside_tree() else null
 	for id: String in buttons:
 		if buttons[id] == focused:
@@ -295,13 +322,46 @@ func _refresh_upgrade(id: String) -> void:
 			cost.add_theme_color_override("font_color", UiTheme.TEXT_GOOD)
 			name_label.add_theme_color_override("font_color", UiTheme.TEXT)
 			border = Palette.NECRO_GREEN.darkened(0.2)
+	if id == PactData.OATH_ID:
+		border = _refresh_oath(p, border)
 	var b: Button = buttons[id]
 	b.add_theme_stylebox_override("normal", UiTheme.box(UiTheme.BG, border))
 	b.add_theme_stylebox_override("hover", UiTheme.box(UiTheme.BG_HOVER, border))
 
 
+## Profane Oath button extras: the name shows the ACTIVE / owned tiers and,
+## when the active tier was lowered, the cost line offers the free raise.
+## Returns the border colour to use.
+func _refresh_oath(p: Dictionary, border: Color) -> Color:
+	var owned := Meta.tier(PactData.OATH_ID)  # Tiers bought.
+	var active := Meta.oath_active_tier()  # Tier applied to runs.
+	var name_label: Label = p["name"]  # "Profane Oath III (owned 3/5)".
+	name_label.text = "Profane Oath  %s (owned %d/%d)" % [DifficultyModifiers.roman(active) if active > 0 else "off", owned, MetaData.max_tier(PactData.OATH_ID)]
+	if active < owned:
+		var cost: Label = p["cost"]  # Cost / action line.
+		cost.text = "Raise to %s  -  free (owned)" % DifficultyModifiers.roman(active + 1)
+		cost.add_theme_color_override("font_color", UiTheme.TEXT_GOOD)
+		return Palette.CRIMSON.darkened(0.1)
+	return Palette.CRIMSON.darkened(0.1) if owned > 0 else border
+
+
+## Oath effect line: "Foes +16% -> +24% HP, Ash +20% -> +30%" for the next
+## active tier (or the current values at the top tier).
+static func _oath_effect_text() -> String:
+	var t := Meta.oath_active_tier()  # Active tier now.
+	var per: Dictionary = PactData.OATH_PER_TIER  # Bonus per tier.
+	var hp := float(per["enemy_hp"])  # HP penalty per tier.
+	var ash := float(per["ash_gain"])  # Soul Ash reward per tier.
+	if t >= MetaData.max_tier(PactData.OATH_ID):
+		return "Foes HP +%d%%, Ash +%d%% (max)" % [int(roundf(hp * t * 100.0)), int(roundf(ash * t * 100.0))]
+	return "Foes HP +%d%% -> +%d%%, Ash +%d%% -> +%d%%" % [int(roundf(hp * t * 100.0)), int(roundf(hp * (t + 1) * 100.0)),
+		int(roundf(ash * t * 100.0)), int(roundf(ash * (t + 1) * 100.0))]
+
+
 ## "Label old -> new" for the next tier (or "Label value (max)").
 static func effect_text(id: String) -> String:
+	if id == PactData.OATH_ID:
+		return _oath_effect_text()
 	var def: Dictionary = MetaData.UPGRADES[id]
 	var stat_def: Array = MetaData.STATS[String(def["stat"])]
 	var per := float(def["per_tier"])
@@ -326,6 +386,11 @@ func _show_detail(id: String) -> void:
 	var def: Dictionary = MetaData.UPGRADES[id]
 	var tree_name: String = MetaData.TREES[String(def["tree"])]["display_name"]
 	_detail.text = "%s (%s): %s" % [def["display_name"], tree_name, def["description"]]
+	if id == PactData.OATH_ID:
+		var parts := PackedStringArray()  # "spawn +8%" per key, per tier.
+		for key: String in PactData.KEYS:
+			parts.append("%s +%d%%" % [PactData.SHORT[key], int(roundf(float(PactData.OATH_PER_TIER[key]) * 100.0))])
+		_detail.text = "Profane Oath (opt-in difficulty), per tier: %s. Stacks with the in-run Profane Pact." % ", ".join(parts)
 
 
 # =====================================================================================
@@ -335,6 +400,12 @@ func _show_detail(id: String) -> void:
 ## Buys the next tier of `id`, or explains why it cannot be bought.
 func _on_upgrade_pressed(id: String) -> void:
 	var display_name: String = MetaData.UPGRADES[id]["display_name"]
+	if id == PactData.OATH_ID and Meta.oath_active_tier() < Meta.tier(id):
+		# A lowered Oath goes back up for free (the tier is still owned).
+		Meta.set_oath_active(Meta.oath_active_tier() + 1)
+		Sfx.play("ui_confirm")
+		_set_status("Profane Oath raised to %s (no cost: already owned)." % DifficultyModifiers.roman(Meta.oath_active_tier()), Palette.CRIMSON.lightened(0.4))
+		return
 	match Meta.purchase_block(id):
 		"maxed":
 			_set_status("%s is already at its highest tier." % display_name, UiTheme.TEXT_GOLD)
@@ -364,6 +435,33 @@ func confirm_open() -> bool:
 func _open_confirm() -> void:
 	if _confirm != null or Meta.spent_total() <= 0:
 		return
+	_open_dialog("REFUND ALL UPGRADES?", "Every upgrade returns to tier 0 and you get back\n%d Soul Ash to spend again." % Meta.spent_total(),
+		"Refund", _confirm_refund, refund_button)
+
+
+## Shows the "Lower the Oath?" confirmation with Cancel focused.
+func _open_lower_confirm() -> void:
+	var active := Meta.oath_active_tier()  # Tier before lowering.
+	if _confirm != null or active <= 0:
+		return
+	var to := "off" if active == 1 else "tier %s" % DifficultyModifiers.roman(active - 1)  # Target state text.
+	_open_dialog("LOWER THE PROFANE OATH?", "The Oath drops from tier %s to %s for future runs.\nNo Soul Ash is refunded; owned tiers can be raised again for free." % [DifficultyModifiers.roman(active), to],
+		"Lower", _confirm_lower, oath_lower_button)
+
+
+## Confirmed: lowers the active Oath tier by one and closes the dialog.
+func _confirm_lower() -> void:
+	Meta.set_oath_active(Meta.oath_active_tier() - 1)
+	_close_confirm()
+	Sfx.play("ui_confirm")
+	var active := Meta.oath_active_tier()  # Tier after lowering.
+	_set_status("Profane Oath is now %s." % ("off" if active <= 0 else "tier %s" % DifficultyModifiers.roman(active)), UiTheme.TEXT_GOLD)
+
+
+## Builds a two-button confirmation dialog (Cancel focused). `yes_cb` runs on
+## the confirm button; `return_to` regains focus when it closes.
+func _open_dialog(title_text: String, body: String, yes_text: String, yes_cb: Callable, return_to: Button) -> void:
+	_confirm_return = return_to
 	_confirm = Control.new()
 	_confirm.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_confirm.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -377,17 +475,17 @@ func _open_confirm() -> void:
 	vb.add_theme_constant_override("separation", 12)
 	vb.custom_minimum_size = Vector2(420, 0)
 	panel.add_child(vb)
-	var title := UiTheme.label("REFUND ALL UPGRADES?", 22, UiTheme.TEXT_GOLD)
+	var title := UiTheme.label(title_text, 22, UiTheme.TEXT_GOLD)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(title)
-	var text := UiTheme.label("Every upgrade returns to tier 0 and you get back\n%d Soul Ash to spend again." % Meta.spent_total(), 15)
+	var text := UiTheme.label(body, 15)
 	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(text)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 16)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	vb.add_child(row)
-	confirm_yes = _plain_button(row, "Refund", _confirm_refund)
+	confirm_yes = _plain_button(row, yes_text, yes_cb)
 	confirm_yes.custom_minimum_size = Vector2(170, 42)
 	confirm_no = _plain_button(row, "Cancel", _close_confirm)
 	confirm_no.custom_minimum_size = Vector2(170, 42)
@@ -418,10 +516,10 @@ func _close_confirm() -> void:
 	_confirm = null
 	confirm_yes = null
 	confirm_no = null
-	if refund_button.disabled:
-		back_button.grab_focus()
+	if _confirm_return != null and not _confirm_return.disabled:
+		_confirm_return.grab_focus()
 	else:
-		refund_button.grab_focus()
+		back_button.grab_focus()
 
 
 ## Restores focus to the opener and frees the menu.

@@ -3,7 +3,7 @@
 ## physics tick:
 ##   rebuild spatial hashes -> player -> spells -> horde -> enemies (and
 ##   stage events) -> obstacle collision -> projectiles -> XP pickups ->
-##   effects
+##   power-up drops -> effects
 ## and routes run-level flow (level-up pause, Esc pause, end of run).
 ## Run rules (user brief): a 20:00 countdown; Sir Alaric arrives at 3:00 left;
 ## at 0:00 the Reckoning starts. Dying after 0:00 completes the run (victory
@@ -14,6 +14,12 @@
 ## Restarting frees this node and builds a fresh one, so no state can leak
 ## between runs. Managers hold a typed `game` reference instead of using
 ## global singletons.
+## Difficulty (user request): `difficulty` is the one path through which the
+## Profane Pact passive and the Profane Oath meta upgrade scale enemies and
+## rewards (DifficultyModifiers); `powerups` owns the power-up drops and buffs.
+## Treasure chests (`chests`, ChestData): walking over one pauses the run in
+## RunState.CHEST while the ChestPanel reveals its rewards (evolutions are
+## delivered only by chests).
 class_name Game
 extends Node2D
 
@@ -23,7 +29,7 @@ signal restart_requested
 signal main_menu_requested
 
 ## High-level run state.
-enum RunState { PLAYING, LEVEL_UP, PAUSED, ENDED }
+enum RunState { PLAYING, LEVEL_UP, PAUSED, ENDED, CHEST }
 
 ## Camera zoom (higher = closer). Shows roughly 850x480 world px at 720p.
 const CAMERA_ZOOM: float = 1.5  # TUNING (not in GDD)
@@ -83,6 +89,12 @@ var projectiles: ProjectileManager
 var abilities: AbilityManager
 ## XP crystals.
 var pickups: XpManager
+## Power-up drops and the timed buffs they grant (PowerupManager).
+var powerups: PowerupManager
+## Profane Pact / Oath difficulty and reward multipliers (never null).
+var difficulty: DifficultyModifiers
+## Treasure chests (ChestManager).
+var chests: ChestManager
 ## Cosmetic effects and telegraphs.
 var effects: EffectManager
 ## Damage / healing rules.
@@ -106,6 +118,8 @@ var level_up_panel: LevelUpPanel
 var pause_menu: PauseMenu
 ## Victory / defeat screen.
 var end_screen: EndScreen
+## Treasure-chest reveal.
+var chest_panel: ChestPanel
 ## F3 debug overlay.
 var debug_overlay: DebugOverlay
 
@@ -120,6 +134,7 @@ func _ready() -> void:
 	enemy_grid = SpatialHash.new(GRID_CELL)
 	ally_grid = SpatialHash.new(GRID_CELL)
 	combat = CombatResolver.new(self)
+	difficulty = DifficultyModifiers.new(self)
 
 	# World layers, back to front (tree order + z_index).
 	ground = Ground.new()
@@ -130,6 +145,12 @@ func _ready() -> void:
 	pickups = XpManager.new()
 	pickups.game = self
 	add_child(pickups)
+	powerups = PowerupManager.new()
+	powerups.game = self
+	add_child(powerups)
+	chests = ChestManager.new()
+	chests.game = self
+	add_child(chests)
 	effects = EffectManager.new()
 	add_child(effects)
 	horde = HordeDirector.new()
@@ -191,6 +212,10 @@ func _build_ui() -> void:
 	level_up_panel.game = self
 	level_up_panel.card_chosen.connect(_on_card_chosen)
 	root.add_child(level_up_panel)
+	chest_panel = ChestPanel.new()
+	chest_panel.game = self
+	chest_panel.closed.connect(_on_chest_closed)
+	root.add_child(chest_panel)
 	pause_menu = PauseMenu.new()
 	pause_menu.game = self
 	pause_menu.resume_pressed.connect(toggle_pause)
@@ -227,6 +252,8 @@ func _physics_process(delta: float) -> void:
 	arena.resolve_all(delta)
 	projectiles.step(delta)
 	pickups.step(delta)
+	powerups.step(delta)
+	chests.step(delta)
 	effects.step(delta)
 	last_step_usec = Time.get_ticks_usec() - t0
 	worst_step_usec = maxi(worst_step_usec, last_step_usec)
@@ -282,8 +309,15 @@ func avg_step_ms() -> float:
 
 ## Grants XP; each threshold crossed queues one level-up card pick.
 ## The meta XP-gain bonus (Grave Tithe) scales `amount`; fractions carry over.
+## The Profane Pact / Oath XP reward is its own category on top
+## (DifficultyModifiers.xp_mult()); its extra XP is counted in the
+## pact_bonus_xp / oath_bonus_xp stats.
 func add_xp(amount: int) -> void:
-	var gained := float(amount) * (1.0 + meta.value("xp_gain")) + _xp_carry
+	var base := float(amount) * (1.0 + meta.value("xp_gain"))  # XP before the Pact / Oath reward.
+	if difficulty.is_active():
+		stat_add("pact_bonus_xp", base * difficulty.pact_value("xp_gain"))
+		stat_add("oath_bonus_xp", base * difficulty.oath_value("xp_gain"))
+	var gained := base * difficulty.xp_mult() + _xp_carry
 	amount = floori(gained)
 	_xp_carry = gained - float(amount)
 	xp += amount
@@ -314,6 +348,29 @@ func _on_card_chosen(offer: Dictionary) -> void:
 		level_up_panel.close()
 		run_state = RunState.PLAYING
 		get_tree().paused = false
+
+
+## Opens a treasure chest collected at `pos`: rolls its size, applies the
+## rewards (ready evolutions first, AbilityManager.chest_rewards), pauses the
+## run and shows the reveal. Resumes in _on_chest_closed().
+func open_chest(pos: Vector2) -> void:
+	if run_state != RunState.PLAYING:
+		return
+	var count := chests.roll_count()  # 1, 3 or 5 upgrades.
+	var rewards := abilities.chest_rewards(count)  # Applied rewards, in order.
+	chests.record_opened(count, rewards)
+	effects.ring(pos, 90.0, Palette.GOLD, 0.6)
+	run_state = RunState.CHEST
+	get_tree().paused = true
+	chest_panel.open(rewards, count)
+
+
+## The chest reveal was closed: resume (a pending level-up opens next tick).
+func _on_chest_closed() -> void:
+	if run_state != RunState.CHEST:
+		return
+	run_state = RunState.PLAYING
+	get_tree().paused = false
 
 
 # =====================================================================================
@@ -413,5 +470,9 @@ func build_summary() -> Dictionary:
 		"player_hp": player.hp,
 		"player_max_hp": player.max_hp,
 		"picks": abilities.pick_history,
+		"pact_level": difficulty.pact_level(),
+		"oath_tier": difficulty.oath_tier(),
+		"pact_ash_gain": float(difficulty.ash_parts()["pact"]),
+		"oath_ash_gain": float(difficulty.ash_parts()["oath"]),
 		"stats": stats.duplicate(),
 	}

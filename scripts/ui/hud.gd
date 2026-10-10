@@ -2,7 +2,11 @@
 ##   Top edge      : XP bar.
 ##   Top left      : level, HP, shields (Orb Shield intercept charges).
 ##   Top center    : timer, objective / event banner, boss HP when present.
-##   Top right     : kill count, pause hint, modifiers.
+##   Top right     : kill count, pause hint, modifiers (the Profane Pact
+##                   level and Profane Oath tier with their combined effect,
+##                   from game.difficulty).
+##   Left, under HP: timed power-up buffs (Hyper, Stasis, Dark Frenzy) with
+##                   their remaining time (game.powerups).
 ##   Bottom center : active ability slots (6) and passive slots (6) with levels.
 ##   Bottom left   : army total / capacity and per-class counts with
 ##                   replacement progress bars; active army synergies
@@ -69,6 +73,10 @@ var _announce_name: Label
 var _announce_desc: Label
 ## Game time (Game.elapsed) at which the current banner was shown (-1 = none).
 var _announce_at: float = -1.0
+## "Modifiers" label (top right): "none", or the Pact / Oath and their effect.
+var _mods_label: Label
+## Timed buff id -> {"row": HBoxContainer, "label": Label, "bar": HudBar}.
+var _buff_rows: Dictionary = {}
 
 
 func _ready() -> void:
@@ -156,9 +164,27 @@ func _build() -> void:
 	var hint := UiTheme.label("Esc: Pause   T / Y: Bolt aim   F3: Debug", 13, UiTheme.TEXT_DIM)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	top_right.add_child(hint)
-	var mods := UiTheme.label("Modifiers: none  |  Difficulty: Necromancer", 13, UiTheme.TEXT_DIM)
-	mods.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	top_right.add_child(mods)
+	_mods_label = UiTheme.label("Modifiers: none  |  Difficulty: Necromancer", 13, UiTheme.TEXT_DIM)
+	_mods_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	top_right.add_child(_mods_label)
+
+	# Left, under the HP block: running power-up buffs with time left.
+	var buffs := _box(true, 0.0, 0.0, 16, 116, 300, 220, BoxContainer.ALIGNMENT_BEGIN)  # Buff rows column.
+	for kind: String in PowerupData.TIMED:
+		var def: Dictionary = PowerupData.POWERUPS[kind]  # Buff definition.
+		var brow := HBoxContainer.new()  # Icon + "Name 7.2s" + time bar.
+		brow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		brow.add_child(IconGlyph.new(String(def["icon"]), Vector2(24, 24)))
+		var blabel := UiTheme.label("", 14, (def["color"] as Color).lightened(0.25))  # "Hyper 7.2s".
+		blabel.custom_minimum_size = Vector2(130, 0)
+		brow.add_child(blabel)
+		var bbar := HudBar.new(def["color"], Vector2(70, 6))  # Remaining-time bar.
+		bbar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		bbar.border_color = Color(0, 0, 0, 0)
+		brow.add_child(bbar)
+		brow.visible = false
+		buffs.add_child(brow)
+		_buff_rows[kind] = {"row": brow, "label": blabel, "bar": bbar}
 
 	# Bottom left: army panel.
 	var bl := _box(true, 0.0, 1.0, 16, -190, 300, -16, BoxContainer.ALIGNMENT_END)
@@ -265,6 +291,7 @@ func _refresh() -> void:
 	for id: String in SynergyData.ORDER:
 		(_synergy_rows[id] as Control).visible = h.synergies.is_active(id)
 	_refresh_announce()
+	_refresh_modifiers()
 	var actives := game.abilities.owned_actives()
 	for i in _active_icons.size():
 		if i < actives.size():
@@ -277,6 +304,24 @@ func _refresh() -> void:
 			_passive_icons[i].set_icon(passives[i]["icon"], passives[i]["level"], passives[i]["max"])
 		else:
 			_passive_icons[i].set_icon("")
+
+
+## Updates the power-up buff rows and the Modifiers (Pact / Oath) label.
+func _refresh_modifiers() -> void:
+	for kind: String in PowerupData.TIMED:
+		var row: Dictionary = _buff_rows[kind]  # Widgets of this buff.
+		var left := game.powerups.time_left(kind)  # Seconds of this buff left.
+		(row["row"] as Control).visible = left > 0.0
+		if left > 0.0:
+			(row["label"] as Label).text = "%s %.1fs" % [PowerupData.POWERUPS[kind]["display_name"], left]
+			(row["bar"] as HudBar).set_values(left / float(PowerupData.POWERUPS[kind]["duration"]))
+	var lines := game.difficulty.describe_lines()  # Empty while no Pact / Oath.
+	if lines.is_empty():
+		_mods_label.text = "Modifiers: none  |  Difficulty: Necromancer"
+		_mods_label.add_theme_color_override("font_color", UiTheme.TEXT_DIM)
+	else:
+		_mods_label.text = "\n".join(lines)
+		_mods_label.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.45))
 
 
 ## Shows the progression banner: `title` (small), `item_name` (big, in `color`)

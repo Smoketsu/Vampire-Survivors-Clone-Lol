@@ -134,6 +134,9 @@ var knockback: Vector2 = Vector2.ZERO
 var mark_time: float = 0.0
 ## Seconds left of the brief slowdown after a ranged unit fires.
 var _shoot_slow_timer: float = 0.0
+## True while a Stasis power-up holds this enemy (EnemyDirector skips its
+## think() / physics_step(); drawn with an ice overlay).
+var frozen: bool = false
 ## Facing sign (+1 right / -1 left).
 var _facing: float = 1.0
 ## Reusable query buffer.
@@ -221,6 +224,7 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	knockback = Vector2.ZERO
 	mark_time = 0.0
 	_shoot_slow_timer = 0.0
+	frozen = false
 	visible = true
 	queue_redraw()
 
@@ -232,6 +236,23 @@ func deactivate() -> void:
 	incoming_damage = 0.0
 	target = null
 	heal_target = null
+
+
+## Sets the Stasis freeze state (redraws only when it changes).
+func set_frozen(f: bool) -> void:
+	if f != frozen:
+		frozen = f
+		queue_redraw()
+
+
+## Tick while frozen by Stasis: only the cosmetic hit flash and the Orb
+## Shield re-hit timer run; attacks, heals, rushes, slows and knockback wait.
+func step_frozen(delta: float) -> void:
+	orb_hit_cd -= delta
+	if flash > 0.0:
+		flash -= delta
+		if flash <= 0.0:
+			queue_redraw()
 
 
 ## Visual hit reaction.
@@ -599,3 +620,5 @@ func _draw() -> void:
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2(_facing, 1.0))
 		Glyphs.hp_bar(self, Vector2(0, -radius * 1.8), radius * 2.0, hp / max_hp, Palette.HP_ENEMY)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	if frozen:
+		PowerupGlyphs.draw_frozen(self, Vector2.ZERO, radius)

@@ -2,8 +2,9 @@
 ## countdown, i.e. during the Reckoning) or defeat (died before 0:00) screen
 ## with run statistics, Restart and Main Menu (GDD §19 MVP
 ## "victory/defeat states"). A second column shows the Soul Ash earned by the
-## run (kept on death), its breakdown, achievements unlocked and the new
-## balance (Meta.award_run(), GDD §9.2).
+## run (kept on death), its breakdown (including the Profane Pact and
+## Profane Oath bonus lines), achievements unlocked and the new balance
+## (Meta.award_run(), GDD §9.2).
 class_name EndScreen
 extends Control
 
@@ -118,6 +119,12 @@ func _show_ash(ash: Dictionary) -> void:
 	if int(ash["bonus"]) > 0:
 		names.append("Ash Harvest (+%d%%)" % int(roundf(float(ash["bonus_pct"]) * 100.0)))
 		values.append("+%d" % int(ash["bonus"]))
+	if int(ash.get("pact_bonus", 0)) > 0:
+		names.append("Profane Pact Lv %d (+%d%%)" % [int(ash["pact_level"]), int(roundf(float(ash["pact_pct"]) * 100.0))])
+		values.append("+%d" % int(ash["pact_bonus"]))
+	if int(ash.get("oath_bonus", 0)) > 0:
+		names.append("Profane Oath %s (+%d%%)" % [DifficultyModifiers.roman(int(ash["oath_tier"])), int(roundf(float(ash["oath_pct"]) * 100.0))])
+		values.append("+%d" % int(ash["oath_bonus"]))
 	if int(ash["bounty"]) > 0:
 		names.append("Achievement bounties")
 		values.append("+%d" % int(ash["bounty"]))

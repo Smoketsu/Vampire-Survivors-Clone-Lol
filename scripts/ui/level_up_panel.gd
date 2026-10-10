@@ -206,6 +206,8 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 			tag_color = Palette.COLD_BLUE
 		"RESTORE", "BOON", "EVOLUTION":
 			tag_color = Palette.GOLD
+		"PACT":
+			tag_color = Palette.CRIMSON.lightened(0.3)  # Profane Pact (difficulty passive).
 	vb.add_child(UiTheme.label("[%d]  %s" % [idx + 1, o["tag"]], 12, tag_color))
 	var icon_center := CenterContainer.new()
 	icon_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
