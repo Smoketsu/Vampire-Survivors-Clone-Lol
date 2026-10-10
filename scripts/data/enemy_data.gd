@@ -302,7 +302,7 @@ const SEPARATION_STRENGTH: float = 0.9  # TUNING (not in GDD)
 ##   recover_time       — s he stands still after any special.
 const BOSS := {
 	"display_name": "Sir Alaric, the Gravebreaker",  # GDD §11
-	"max_hp": 2700.0,  # TUNING (not in GDD)
+	"max_hp": 46000.0,  # TUNING (not in GDD) a 3-minute fight against a near-complete build
 	"move_speed": 52.0,  # TUNING (not in GDD)
 	"damage": 12.0,  # TUNING (not in GDD) basic hammer swing
 	"attack_interval": 1.0,  # TUNING (not in GDD)
@@ -318,7 +318,7 @@ const BOSS := {
 	"heal_radius": 0.0,
 	"target_priority": 0.9,  # GDD §32 archers prioritise the boss
 	"mass": 12.0,  # TUNING (not in GDD) shoves warriors aside
-	"reward_xp": 150,  # TUNING (not in GDD) user brief: big reward burst on kill
+	"reward_xp": 400,  # TUNING (not in GDD) user brief: big reward burst on kill
 	"reward_crystals": 20,  # TUNING (not in GDD) crystals the reward is split into
 	"slow_resist": 0.5,  # TUNING (not in GDD)
 	"attack_gap": 2.6,  # TUNING (not in GDD)

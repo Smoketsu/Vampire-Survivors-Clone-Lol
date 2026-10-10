@@ -87,18 +87,24 @@ replacing fallen units all happen automatically (GDD §4, §21).
 
 ### How a run works
 
-- A **6:00 countdown** runs at the top of the screen.
+- A **20:00 countdown** runs at the top of the screen.
 - You start with **Shadow Bolt** and **2 Skeleton Warriors**. Covenant soldiers
   close in, and each one drops an **XP crystal** when it dies. Walk near a
   crystal and it flies to you.
 - Each **level-up pauses the game** and offers **3 cards**: new or upgraded
   summon classes, spells, or passives. Every card shows the level change
   (`Lv 2 -> Lv 3`) and the exact stat changes (for example `Max HP 66 -> 76`).
-- The waves follow the Graveyard timeline. Archers and footmen arrive, then a
-  Chaplain elite, Purifiers, a consecration pincer, a footman phalanx, a major
-  assault and a final wave.
-- **Sir Alaric, the Gravebreaker** arrives with **1:00 left**. He telegraphs two
-  attacks:
+- The waves follow the GDD Graveyard timeline at its real times: recruits from
+  0:00, archers and footmen at 3:00, a Chaplain elite at 5:00, Purifiers at
+  8:00, a grave consecration at 10:00, Templar Knights at 13:00, the major
+  assault at 15:00 and the final preparation wave at 16:00. Smaller waves fill
+  the gaps, density ramps up in steps with short lulls after the big beats,
+  and enemies get tougher over time.
+- **Level-ups slow down over the run.** The first comes after about 20-25 s
+  and a focused build has every slot maxed (plus its evolution) at about
+  17:00; a scattered build is still filling in its last levels at 20:00.
+- **Sir Alaric, the Gravebreaker** arrives with **3:00 left** (17:00). He
+  telegraphs two attacks:
   - **Hammerfall**: a gold warning circle appears, then the smash lands there.
   - **Divine Charge**: a gold warning lane appears, then he dashes along it.
 
@@ -149,20 +155,23 @@ replacing fallen units all happen automatically (GDD §4, §21).
   player, summons and enemies. Each one is a simple circle or rectangle, so no
   physics engine is used. Units walk around obstacles, and nothing ever spawns
   or is recalled inside one. Arrows and spells still fly over them.
-- **Stage events** (`WaveData.EVENTS`, compressed 4× from the GDD §11 timeline):
-  - **Empowered graves** glow near you from 0:30, then every 40 s. Walk onto
-    one to raise 3 temporary warriors, or to bring back every fallen summon at
-    once.
-  - **Desecration** at 2:30 and 4:15. Chaplains march to the marked graves and
-    start channelling. Kill a Chaplain to save its grave (you get XP).
-    Otherwise the grave becomes **holy ground**: a gold zone that burns and
-    slows undead, stings you, and blocks summon replacement inside it.
-  - **Templar Knights** arrive at 3:15. They telegraph a short charge lane,
+- **Stage events** (`WaveData.EVENTS`, on the GDD §11 timeline at real times):
+  - **Empowered graves** glow near you from 0:45, then every 75 s. Walk onto
+    one to raise temporary warriors (3 early, one more every 5 minutes), or
+    to bring back every fallen summon at once.
+  - **Desecration** at 10:00 (as in the GDD) and 14:00. Chaplains march to
+    the marked graves and start channelling. Kill a Chaplain to save its
+    grave (you get XP). Otherwise the grave becomes **holy ground**: a gold
+    zone that burns and slows undead, stings you, and blocks summon
+    replacement inside it.
+  - **Templar Knights** arrive at 13:00. They telegraph a short charge lane,
     then rush along it and shove summons aside. A warrior in the lane stops
     the rush.
-  - **Crypt Defender** at 4:00. Walk to the crypt to wake 4 strong guardians
-    for 30 s.
-- **Sir Alaric** (2700 HP, arrives with 1:00 left) uses all five GDD
+  - **Crypt Defender** at 16:30. Walk to the crypt to wake 6 strong guardians
+    for 60 s, in time for Sir Alaric.
+  - **Call to Arms** waves at 18:00 and 19:00 reinforce Alaric on top of his
+    own Call to Arms.
+- **Sir Alaric** (46 000 HP, arrives with 3:00 left) uses all five GDD
   abilities. Each one is telegraphed:
   - **Hammerfall**: a gold circle. Each summon inside soaks 20% of the hit
     on you.
@@ -199,8 +208,8 @@ replacing fallen units all happen automatically (GDD §4, §21).
 | Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Each has 5 levels. |
 | Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual and Abyssal Focus. Bonus stacking follows §34. |
 | Evolutions & synergies (§6) | Void Barrage, Eclipse Ward and Abyssal Detonation; four army synergies; weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
-| Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 3:15. |
-| Waves and stage events (§11) | The data-driven Graveyard timeline, compressed 4× to 5 minutes, then the boss and the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
+| Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 13:00. |
+| Waves and stage events (§11) | The data-driven 20-minute Graveyard timeline at the GDD's real times (Sir Alaric at 17:00), then the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
 | UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu, end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and priest ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress; ability slots with levels. |
@@ -332,11 +341,19 @@ directors and managers.
 godot --headless --import
 
 # Full automated run: skips the menu, picks cards automatically, fast-forwards
-# (time_scale 4 with physics ticks scaled to match), plays through the countdown,
-# the boss and the Reckoning, then prints a summary and quits
-# (exit code 0 = run completed).
-godot --headless --fixed-fps 60 --quit-after 40000 -- --autotest
+# (time_scale 8 with physics ticks scaled to match), plays through the 20:00
+# countdown, the boss and the Reckoning (about 1220-1260 game seconds), then
+# prints a summary and quits (exit code 0 = run completed). One run takes about
+# 1.5-2 minutes of wall time; 15000 frames at speed 8 allow 2000 game seconds.
+godot --headless --fixed-fps 60 --quit-after 15000 -- --autotest
 ```
+
+Runs are deterministic for a given seed: the same seed gives the same run at
+`--speed=4` and `--speed=8`, alone or under load. The simulation is CPU-bound
+under `--fixed-fps`, so speed 8 takes about the same wall time as 4 and only
+needs half the frames. Speed 16 produces audio errors, so don't use it. Each
+run is single-threaded, so multi-seed batches run in parallel, e.g. four at a
+time on four cores.
 
 Options (after `--`):
 
@@ -344,10 +361,10 @@ Options (after `--`):
 |---|---|
 | `--autotest` | Run the automated playthrough. |
 | `--mortal` | The player can die before 0:00 (a balance check). By default the autotest player cannot die until 20 s into the Reckoning, so the whole timeline gets exercised. |
-| `--speed=N` | Time scale (default 4). |
+| `--speed=N` | Time scale (default 8; results are identical at 4 and 8). |
 | `--seed=N` | RNG seed (default 1337). |
-| `--timeout=N` | Give up after N game seconds (default 480). |
-| `--policy=NAME` | Level-up card policy: `naive` (default; takes every new summon class, then new spells, then new passives) or `army` (a summoner build that levels summons and army passives first). |
+| `--timeout=N` | Give up after N game seconds (default 1500: the 20:00 countdown plus the Reckoning). |
+| `--policy=NAME` | Level-up card policy: `naive` (default; takes every new summon class, then new spells, then new passives), `army` (a summoner build that levels summons and army passives first) or `evolve` (a spell build that chases the three evolutions). |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
 
@@ -359,16 +376,22 @@ spawn/kill, all cards picked, and per-source damage (`dmg_warrior`, `dmg_bolt`,
 damage per aim mode (the autotest uses Nearest, then switches to Strongest when
 the boss spawns); heals, wards and orb intercepts; peak entity counts;
 pool node counts; and the average and worst simulation-step cost. These numbers
-are the starting point for tuning. Every 30 s it also prints `[metric]` lines
-(army size and capacity per class, damage taken by attacker, enemies alive by
-kind), and at the end `boss_hp_at_0` and `min_hp_before_0` (the lowest player
-HP before 0:00). Multi-seed tuning scripts parse these lines.
+are the starting point for tuning. Every 60 s it also prints `[metric]` lines
+(army size and capacity per class, level, damage taken by attacker, enemies
+alive by kind, XP collected so far as `xp=`), and at the end `boss_hp_at_0`
+and `min_hp_before_0` (the lowest player HP before 0:00). Multi-seed tuning
+scripts parse these lines. The summary also has a **level pacing** line (the
+level at 1:00, 3:00, 5:00, 10:00, 15:00, 17:00 and 20:00, and when levels 2,
+5, 10, ... 60 were reached) and **build complete** (the first level-up whose
+hand held only fallback cards: every slot maxed and every available evolution
+taken).
 
 ### Continuous integration and builds
 
 `.github/workflows/ci.yml` runs on every push and pull request:
 
-1. **test:** imports the project with Godot 4.3 headless and runs the autotest with the naive and army policies.
+1. **test:** imports the project with Godot 4.3 headless and runs the full 20-minute autotest with the naive and
+   army policies (`--quit-after 15000`, at most 10 wall-clock minutes per run, 20 minutes for the job).
    It fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if a run doesn't complete.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in
    the executable), runs the autotest again on the exported Linux build, and uploads both as workflow artifacts.
@@ -388,21 +411,22 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 ## Known limitations
 
 - **Balance is first-pass.** All `TUNING` values are guesses checked only
-  against the autotest bots. With these bots, the summoner build (`--policy=army`)
-  never dies before 0:00 and almost always kills Sir Alaric; the naive build
-  sometimes dies and kills him in roughly a third of runs. Void Barrage is very
-  strong (about half of all damage in an evolution build).
-- Only the Graveyard stage, and only a 6-minute version of it (the GDD runs are
-  20–30 minutes).
+  against the autotest bots, at zero meta upgrades. With these bots, over 16
+  seeds, the summoner build (`--policy=army`) never dies before 0:00 and always
+  kills Sir Alaric. The naive build dies before 0:00 in about half of runs,
+  either around 6-8 min (builds with no Priest) or at the 16-19 min peak, and
+  kills him in about half. Void Barrage is very strong (about half of all
+  damage in an evolution build).
+- Only the Graveyard stage (a 20-minute run, the GDD's lower bound).
 - Arrows and spells fly over obstacles (no line-of-sight checks).
-- Eclipse Ward is hard to reach in a 6-minute run, because Orb Shield rarely
-  hits level 5.
+- Eclipse Ward usually arrives late (15:00-19:00) and only in builds that
+  take Orb Shield.
 - No ultimate, dash, meta progression (Soul Ash), saved runs, skins,
   difficulties or modifiers yet. The HUD shows "Modifiers: none".
 - Menu hint text still shows the default keys (Esc, T) after you rebind them.
 - Nobody has played it on real hardware yet. Audio, visuals and performance
-  have only been verified headless (simulation step about 0.6–1.5 ms with
-  ~150 enemies and ~40 summons). Rendering cost has not been profiled.
+  have only been verified headless (simulation step about 0.9–1.5 ms on
+  average over a 20-minute run, with up to 180 enemies and ~45 summons). Rendering cost has not been profiled.
 
 ## Next steps (grouped by GDD §19 phases)
 

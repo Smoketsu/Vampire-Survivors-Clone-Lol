@@ -238,15 +238,19 @@ func _resolve_body(pos: Vector2, r: float, vel: Vector2, id: int, delta: float, 
 	var vn := vel.dot(n)
 	if vn < 0.0:
 		var t := Vector2(-n.y, n.x)
-		var side := _slide_side(id, vel.dot(t), vel.length(), now)
+		var side := _slide_side(id, vel.dot(t), vel.length(), (pos - o.center).dot(t), now)
 		out += t * side * (-vn) * delta
 	return out
 
 
 ## Side (+1 / -1 along the tangent) a unit walks around an obstacle. The
-## first contact picks the side its velocity already leans to (or a stable
-## per-unit side when heading straight in); later contacts keep it.
-func _slide_side(id: int, vt: float, speed: float, now: float) -> float:
+## first contact picks the side its velocity already leans to; a unit heading
+## straight in takes the side its position is offset to (`offset`: its
+## distance from the obstacle centre along the tangent), i.e. the shorter way
+## around. That choice is geometric, so neighbours pick the same side instead
+## of sliding into each other (and it no longer depends on instance ids,
+## which vary with thread timing). Later contacts keep the side.
+func _slide_side(id: int, vt: float, speed: float, offset: float, now: float) -> float:
 	var mem: Variant = _slide.get(id)
 	var side := 0.0
 	if mem != null and (mem as Vector2).y >= now:
@@ -254,7 +258,7 @@ func _slide_side(id: int, vt: float, speed: float, now: float) -> float:
 	elif absf(vt) > speed * 0.1:
 		side = signf(vt)
 	else:
-		side = 1.0 if id % 2 == 0 else -1.0
+		side = -1.0 if offset < 0.0 else 1.0
 	_slide[id] = Vector2(side, now + ArenaData.SLIDE_MEMORY)
 	return side
 

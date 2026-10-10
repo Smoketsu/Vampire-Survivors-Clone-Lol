@@ -60,7 +60,12 @@ jobs:
       - name: Autotest (full run, player invulnerable until the Reckoning)
         run: |
           # Exit code is 0 only when the run completes (reaches 0:00).
-          timeout 900 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 40000 -- --autotest 2>&1 | tee autotest.log
+          # A full run is ~1220-1260 game s (20:00 countdown + Reckoning) and
+          # takes ~1.5-2 min of wall time. At the default --speed=8 one frame
+          # is 2/15 game s, so --quit-after 15000 frames allows 2000 game s,
+          # above the autotest's own 1500 s timeout; `timeout 600` (wall
+          # seconds) keeps both runs inside the 20-minute job limit.
+          timeout 600 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest 2>&1 | tee autotest.log
           status=${PIPESTATUS[0]}
           if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest.log; then
             echo "::error::Errors/warnings during autotest"; exit 1
@@ -69,7 +74,7 @@ jobs:
 
       - name: Autotest (army policy)
         run: |
-          timeout 900 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 40000 -- --autotest --policy=army 2>&1 | tee autotest_army.log
+          timeout 600 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest --policy=army 2>&1 | tee autotest_army.log
           status=${PIPESTATUS[0]}
           if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_army.log; then
             echo "::error::Errors/warnings during army autotest"; exit 1
@@ -134,7 +139,7 @@ jobs:
 
       - name: Smoke-test exported Linux build
         run: |
-          timeout 900 build/linux/Gravebound.x86_64 --headless --fixed-fps 60 --quit-after 40000 -- --autotest 2>&1 | tee export_autotest.log
+          timeout 600 build/linux/Gravebound.x86_64 --headless --fixed-fps 60 --quit-after 15000 -- --autotest 2>&1 | tee export_autotest.log
           status=${PIPESTATUS[0]}
           if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" export_autotest.log; then
             echo "::error::Errors in exported build"; exit 1

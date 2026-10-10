@@ -237,7 +237,7 @@ func _refresh() -> void:
 	else:
 		_ward_label.text = ""
 	_shield_label.text = "Priest ward: %d HP (%.1fs)" % [ceili(p.shield_hp), p.shield_time] if p.shield_hp > 0.0 else ""
-	# Countdown (user brief): 6:00 -> 0:00, then "RECKONING +m:ss".
+	# Countdown (user brief): 20:00 -> 0:00, then "RECKONING +m:ss".
 	if game.countdown_finished():
 		var over := int(game.elapsed - WaveData.RUN_DURATION)
 		_timer_label.text = "RECKONING +%d:%02d" % [floori(float(over) / 60.0), over % 60]

@@ -10,10 +10,13 @@
 ##   --autotest            Skip the menu, start a run, auto-pick cards,
 ##                         fast-forward and print a summary, then quit.
 ##   --mortal              Autotest player can die (default: invulnerable so
-##                         the whole 5-minute timeline + boss are exercised).
-##   --speed=N             Autotest time scale (default 4).
+##                         the whole 20-minute timeline + boss are exercised).
+##   --speed=N             Autotest time scale (default 8; the results are
+##                         identical at any speed up to 8, only the frame
+##                         count changes).
 ##   --seed=N              RNG seed for the autotest run (default 1337).
-##   --timeout=N           Autotest gives up after N game seconds (default 480).
+##   --timeout=N           Autotest gives up after N game seconds (default
+##                         1500: the 20:00 countdown plus the Reckoning).
 ##   --policy=NAME         Autotest card policy: "naive" (default; new summon
 ##                         classes, then new spells, then new passives) or
 ##                         "army" (summoner build: summon levels and army
@@ -28,11 +31,11 @@ var autotest: bool = false
 ## Autotest: if true the necromancer can die (balance check run).
 var autotest_mortal: bool = false
 ## Autotest: Engine.time_scale multiplier (1 = real time).
-var autotest_speed: float = 4.0
+var autotest_speed: float = 8.0
 ## Autotest: seed for the global RNG so runs are reproducible.
 var autotest_seed: int = 1337
 ## Autotest: game-time limit in seconds before the test aborts.
-var autotest_timeout: float = 480.0
+var autotest_timeout: float = 1500.0
 ## Autotest: level-up card policy, "naive", "army" or "evolve" (see header).
 var autotest_policy: String = "naive"
 ## Whether the F3 debug overlay is shown; persists across restarts.

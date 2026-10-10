@@ -5,7 +5,7 @@
 ##   stage events) -> obstacle collision -> projectiles -> XP pickups ->
 ##   effects
 ## and routes run-level flow (level-up pause, Esc pause, end of run).
-## Run rules (user brief): a 6:00 countdown; Sir Alaric arrives at 1:00 left;
+## Run rules (user brief): a 20:00 countdown; Sir Alaric arrives at 3:00 left;
 ## at 0:00 the Reckoning starts. Dying after 0:00 completes the run (victory
 ## screen), dying before 0:00 is a defeat.
 ## Restarting frees this node and builds a fresh one, so no state can leak

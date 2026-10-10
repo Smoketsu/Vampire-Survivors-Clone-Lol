@@ -1,33 +1,36 @@
-## WaveData — the data-driven 5-minute wave timeline used by EnemyDirector
+## WaveData — the data-driven 20-minute wave timeline used by EnemyDirector
 ## and the Graveyard stage events run by StageDirector.
 ##
-## It is modelled on the GDD §11 Desecrated Graveyard timeline (20 minutes),
-## compressed 4x to fit the 5-minute prototype loop asked for in GDD §19
-## Phase 1 ("five-minute spawner"):
+## It follows the GDD §11 Desecrated Graveyard timeline (formatted as GDD.md
+## §8.1) at its real, uncompressed times (user decision: a 20:00 countdown):
 ##
-##   GDD 20-min timeline         ->  prototype 5-min timeline
-##   00:00 Recruits              ->  0:00
-##   02:00 (empowered graves)    ->  0:30, then every EMPOWERED_GRAVES.interval
-##   03:00 Archers and footmen   ->  0:45
-##   05:00 Chaplain elite        ->  1:15
-##   08:00 Purifiers             ->  2:00
-##   10:00 Grave consecration    ->  2:30 (desecration event: Chaplains walk to
-##                                         marked graves and channel; kill them
-##                                         or the grave becomes a holy zone)
-##   13:00 Templar Knights       ->  3:15 (Templar charge + footman line)
-##   15:00 Major assault         ->  3:45
-##   16:00 (Crypt Defender)      ->  4:00 (an ancient crypt can be awakened)
-##   17:00 (second desecration)  ->  4:15
-##   18:00 Final preparation     ->  4:30
-##   20:00 Sir Alaric boss       ->  5:00
-## The GDD lists empowered graves, desecration events and the Crypt Defender
-## as stage mechanics (§11) without times; the bracketed times are TUNING.
+##   GDD time   Event                       Prototype (elapsed)
+##   00:00      Recruits                    0:00 (recruit waves at 0:12, 0:40, 1:15...)
+##   03:00      Archers and footmen         3:00
+##   05:00      Chaplain elite              5:00
+##   08:00      Purifiers                   8:00
+##   10:00      Grave consecration event    10:00 (desecration: Chaplains walk to
+##                                                 marked graves and channel; kill
+##                                                 them or the grave becomes holy
+##                                                 ground)
+##   13:00      Templar Knights             13:00
+##   15:00      Major assault               15:00
+##   18:00      Final preparation wave      16:00 (moved: Sir Alaric now comes at
+##                                                 17:00, see below)
+##   20:00      Sir Alaric boss             17:00 (user decision: 3:00 left)
+##
+## The GDD gives no times for the empowered graves, the second desecration
+## (14:00), the Crypt Defender (16:30), the waves that fill the gaps between
+## the GDD beats, or the two Call to Arms waves during the boss fight; those
+## times are TUNING. Pacing (TUNING): density ramps in steps, each GDD beat is
+## a peak, and the segment after most peaks is a short lull; the boss fight
+## has a thinner trickle of its own.
 ##
 ## Spawn rates, caps and weights are all TUNING (not in GDD).
 ##
 ## Run structure (user brief, overrides "kill the boss to win"): the HUD timer
-## counts DOWN from RUN_DURATION (6:00). Sir Alaric arrives with 1:00 left
-## (5:00 elapsed); killing him drops a big reward but does not end the run.
+## counts DOWN from RUN_DURATION (20:00). Sir Alaric arrives with 3:00 left
+## (17:00 elapsed); killing him drops a big reward but does not end the run.
 ## At 0:00 the run counts as survived and THE RECKONING begins: ever stronger
 ## Inquisitors of the End spawn every RECKONING.interval seconds until the
 ## necromancer falls. Dying after 0:00 = "Run Complete" (victory screen);
@@ -35,10 +38,10 @@
 class_name WaveData
 extends RefCounted
 
-## Total countdown length in seconds (prototype: 6:00 -> 0:00).
-const RUN_DURATION: float = 360.0  # TUNING (not in GDD) user brief
-## Game time (s) at which Sir Alaric appears (1:00 left on the countdown).
-const BOSS_TIME: float = 300.0  # GDD §11 20:00, compressed 4x
+## Total countdown length in seconds (20:00 -> 0:00).
+const RUN_DURATION: float = 1200.0  # GDD §8 "20–30 minutes"; user decision 20:00
+## Game time (s) at which Sir Alaric appears (3:00 left on the countdown).
+const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) user decision 17:00 (GDD §11 places him at 20:00)
 
 ## The Reckoning (user brief): escalating waves after the countdown ends.
 ##   banner          — HUD banner when it starts.
@@ -64,32 +67,73 @@ const RECKONING := {
 ##   weights    — relative spawn weights per enemy kind.
 ##   objective  — HUD objective text for this phase.
 const SEGMENTS := [
-	{"start": 0.0, "rate": 1.2, "max_alive": 40,  # TUNING (not in GDD)
+	# 0:00-3:00, GDD §11 "00:00 Recruits": recruits only, ramping every minute.
+	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
 		"weights": {"recruit": 1.0},
 		"objective": "Survive: the Covenant has found your graveyard"},
-	{"start": 45.0, "rate": 1.4, "max_alive": 55,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.68, "footman": 0.2, "archer": 0.12},
+	{"start": 60.0, "rate": 1.8, "max_alive": 42,  # TUNING (not in GDD)
+		"weights": {"recruit": 1.0},
+		"objective": "Raise your army: more recruits are coming"},
+	{"start": 120.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
+		"weights": {"recruit": 1.0},
+		"objective": "Hold the graveyard against the recruits"},
+	# 3:00, GDD §11 "Archers and footmen".
+	{"start": 180.0, "rate": 2.0, "max_alive": 55,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.72, "footman": 0.2, "archer": 0.08},
 		"objective": "Archers and footmen join the purge"},
-	{"start": 75.0, "rate": 1.6, "max_alive": 65,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.55, "footman": 0.23, "archer": 0.12, "chaplain": 0.05},
+	{"start": 255.0, "rate": 1.8, "max_alive": 52,  # TUNING (not in GDD) lull
+		"weights": {"recruit": 0.71, "footman": 0.2, "archer": 0.09},
+		"objective": "Archers and footmen join the purge"},
+	# 5:00, GDD §11 "Chaplain elite".
+	{"start": 300.0, "rate": 2.4, "max_alive": 70,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.62, "footman": 0.22, "archer": 0.1, "chaplain": 0.06},
 		"objective": "Chaplains heal their soldiers: kill them first"},
-	{"start": 120.0, "rate": 1.8, "max_alive": 75,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.48, "footman": 0.2, "archer": 0.12, "chaplain": 0.04, "purifier": 0.12},
+	{"start": 390.0, "rate": 2.7, "max_alive": 80,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.6, "footman": 0.24, "archer": 0.1, "chaplain": 0.06},
+		"objective": "The Covenant tightens its ring"},
+	{"start": 450.0, "rate": 2.3, "max_alive": 75,  # TUNING (not in GDD) lull before the Purifiers
+		"weights": {"recruit": 0.6, "footman": 0.24, "archer": 0.1, "chaplain": 0.06},
+		"objective": "The Covenant tightens its ring"},
+	# 8:00, GDD §11 "Purifiers".
+	{"start": 480.0, "rate": 3.2, "max_alive": 100,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.48, "footman": 0.2, "archer": 0.13, "chaplain": 0.05, "purifier": 0.14},
 		"objective": "Purifiers hunt your undead"},
-	{"start": 150.0, "rate": 2.0, "max_alive": 85,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.45, "footman": 0.2, "archer": 0.12, "chaplain": 0.04, "purifier": 0.15},
+	{"start": 555.0, "rate": 3.6, "max_alive": 110,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.46, "footman": 0.21, "archer": 0.13, "chaplain": 0.05, "purifier": 0.15},
+		"objective": "Purifiers hunt your undead"},
+	# 10:00, GDD §11 "Grave consecration event" (the trickle eases meanwhile).
+	{"start": 600.0, "rate": 3.2, "max_alive": 105,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.45, "footman": 0.2, "archer": 0.13, "chaplain": 0.05, "purifier": 0.17},
 		"objective": "The graves are being consecrated"},
-	{"start": 195.0, "rate": 2.5, "max_alive": 95,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.4, "footman": 0.27, "archer": 0.12, "chaplain": 0.04, "purifier": 0.12, "templar": 0.03},
+	{"start": 660.0, "rate": 4.0, "max_alive": 125,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.44, "footman": 0.22, "archer": 0.14, "chaplain": 0.05, "purifier": 0.15},
+		"objective": "The crusade presses on"},
+	{"start": 735.0, "rate": 3.4, "max_alive": 115,  # TUNING (not in GDD) lull before the Templars
+		"weights": {"recruit": 0.44, "footman": 0.22, "archer": 0.14, "chaplain": 0.05, "purifier": 0.15},
+		"objective": "Steel yourself: heavy knights approach"},
+	# 13:00, GDD §11 "Templar Knights".
+	{"start": 780.0, "rate": 5.0, "max_alive": 150,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.4, "footman": 0.25, "archer": 0.13, "chaplain": 0.05, "purifier": 0.13, "templar": 0.04},
 		"objective": "Templar Knights charge your lines"},
-	{"start": 225.0, "rate": 3.0, "max_alive": 105,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.45, "footman": 0.22, "archer": 0.12, "chaplain": 0.04, "purifier": 0.12, "templar": 0.03},
+	# 14:00, second desecration (TUNING).
+	{"start": 840.0, "rate": 4.8, "max_alive": 150,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.4, "footman": 0.25, "archer": 0.13, "chaplain": 0.05, "purifier": 0.13, "templar": 0.04},
+		"objective": "More graves are being consecrated"},
+	# 15:00, GDD §11 "Major assault" (the density peak of the run).
+	{"start": 900.0, "rate": 7.0, "max_alive": 175,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.44, "footman": 0.22, "archer": 0.12, "chaplain": 0.05, "purifier": 0.13, "templar": 0.04},
 		"objective": "Major assault!"},
-	{"start": 270.0, "rate": 3.3, "max_alive": 110,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.4, "footman": 0.22, "archer": 0.14, "chaplain": 0.05, "purifier": 0.12, "templar": 0.03},
+	# 16:00, GDD §11 "Final preparation wave" (GDD 18:00, moved before the boss).
+	{"start": 960.0, "rate": 6.0, "max_alive": 170,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.4, "footman": 0.22, "archer": 0.14, "chaplain": 0.05, "purifier": 0.15, "templar": 0.04},
 		"objective": "Final preparation: Sir Alaric approaches"},
-	{"start": BOSS_TIME, "rate": 1.0, "max_alive": 50,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.6, "footman": 0.25, "archer": 0.15},
+	# 17:00, Sir Alaric: a thinner trickle so the duel stays readable, rising
+	# toward the end of the countdown.
+	{"start": BOSS_TIME, "rate": 3.2, "max_alive": 100,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.55, "footman": 0.25, "archer": 0.15, "purifier": 0.05},
+		"objective": "Sir Alaric, the Gravebreaker, has come for you"},
+	{"start": 1110.0, "rate": 4.0, "max_alive": 120,  # TUNING (not in GDD)
+		"weights": {"recruit": 0.5, "footman": 0.25, "archer": 0.15, "purifier": 0.1},
 		"objective": "Sir Alaric, the Gravebreaker, has come for you"},
 ]
 
@@ -112,27 +156,68 @@ const RECKONING_OBJECTIVE: String = "THE RECKONING: you survived. Now endure."
 ##   graves     — number of graves the Covenant tries to consecrate.
 ##   escort     — list of {kind, count, elite} walking with EACH consecrator.
 const EVENTS := [
-	{"time": 20.0, "type": "wave", "banner": "Covenant recruits charge!", "formation": "arc",  # TUNING (not in GDD) first-minute beat: shows warrior blocking
-		"groups": [{"kind": "recruit", "count": 8, "elite": false}]},
-	{"time": 45.0, "type": "wave", "banner": "Archers and footmen march in!", "formation": "arc",  # GDD §11 03:00
-		"groups": [{"kind": "footman", "count": 5, "elite": false}, {"kind": "archer", "count": 3, "elite": false}]},
-	{"time": 75.0, "type": "wave", "banner": "A Chaplain elite leads the charge!", "formation": "arc",  # GDD §11 05:00
-		"groups": [{"kind": "chaplain", "count": 1, "elite": true}, {"kind": "recruit", "count": 10, "elite": false}]},
-	{"time": 120.0, "type": "wave", "banner": "Purifiers have come for your dead!", "formation": "ring",  # GDD §11 08:00
-		"groups": [{"kind": "purifier", "count": 8, "elite": false}]},
-	{"time": 150.0, "type": "consecration", "banner": "Chaplains march to consecrate your graves: stop them!",  # GDD §11 10:00 grave consecration event
+	# 0:00-3:00 recruits (GDD §11 00:00), with early beats so the first minute has action.
+	{"time": 12.0, "type": "wave", "banner": "Covenant recruits charge!", "formation": "arc",  # TUNING (not in GDD) first beat: shows warrior blocking
+		"groups": [{"kind": "recruit", "count": 7, "elite": false}]},
+	{"time": 40.0, "type": "wave", "banner": "Recruits close in from every side!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "recruit", "count": 10, "elite": false}]},
+	{"time": 75.0, "type": "wave", "banner": "A recruit column marches in!", "formation": "line",  # TUNING (not in GDD)
+		"groups": [{"kind": "recruit", "count": 12, "elite": false}]},
+	{"time": 110.0, "type": "wave", "banner": "A veteran sergeant leads the recruits!", "formation": "arc",  # TUNING (not in GDD) first elite
+		"groups": [{"kind": "recruit", "count": 1, "elite": true}, {"kind": "recruit", "count": 10, "elite": false}]},
+	{"time": 150.0, "type": "wave", "banner": "The recruits surround you!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "recruit", "count": 16, "elite": false}]},
+	# 3:00, GDD §11 "Archers and footmen".
+	{"time": 180.0, "type": "wave", "banner": "Archers and footmen march in!", "formation": "arc",  # GDD §11 03:00
+		"groups": [{"kind": "footman", "count": 5, "elite": false}, {"kind": "archer", "count": 3, "elite": false}, {"kind": "recruit", "count": 6, "elite": false}]},
+	{"time": 225.0, "type": "wave", "banner": "A footman column advances!", "formation": "line",  # TUNING (not in GDD)
+		"groups": [{"kind": "footman", "count": 6, "elite": false}, {"kind": "recruit", "count": 6, "elite": false}]},
+	{"time": 270.0, "type": "wave", "banner": "Archers take aim!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "archer", "count": 4, "elite": false}, {"kind": "recruit", "count": 10, "elite": false}]},
+	# 5:00, GDD §11 "Chaplain elite".
+	{"time": 300.0, "type": "wave", "banner": "A Chaplain elite leads the charge!", "formation": "arc",  # GDD §11 05:00
+		"groups": [{"kind": "chaplain", "count": 1, "elite": true}, {"kind": "recruit", "count": 12, "elite": false}, {"kind": "footman", "count": 3, "elite": false}]},
+	{"time": 360.0, "type": "wave", "banner": "The Covenant closes the ring!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "recruit", "count": 18, "elite": false}, {"kind": "footman", "count": 4, "elite": false}, {"kind": "footman", "count": 1, "elite": true}]},
+	{"time": 420.0, "type": "wave", "banner": "A footman phalanx advances!", "formation": "line",  # TUNING (not in GDD)
+		"groups": [{"kind": "footman", "count": 10, "elite": false}, {"kind": "archer", "count": 2, "elite": false}, {"kind": "chaplain", "count": 1, "elite": false}]},
+	# 8:00, GDD §11 "Purifiers".
+	{"time": 480.0, "type": "wave", "banner": "Purifiers have come for your dead!", "formation": "ring",  # GDD §11 08:00
+		"groups": [{"kind": "purifier", "count": 8, "elite": false}, {"kind": "purifier", "count": 1, "elite": true}]},
+	{"time": 525.0, "type": "wave", "banner": "Purifiers and archers flank you!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "purifier", "count": 6, "elite": false}, {"kind": "archer", "count": 6, "elite": false}]},
+	{"time": 570.0, "type": "wave", "banner": "The Covenant surges!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "recruit", "count": 22, "elite": false}, {"kind": "footman", "count": 6, "elite": false}, {"kind": "chaplain", "count": 2, "elite": false}]},
+	# 10:00, GDD §11 "Grave consecration event".
+	{"time": 600.0, "type": "consecration", "banner": "Chaplains march to consecrate your graves: stop them!",  # GDD §11 10:00 grave consecration event
 		"graves": 3,  # TUNING (not in GDD)
 		"escort": [{"kind": "recruit", "count": 4, "elite": false}, {"kind": "purifier", "count": 2, "elite": false}]},  # TUNING (not in GDD)
-	{"time": 195.0, "type": "wave", "banner": "Templar Knights charge!", "formation": "line",  # GDD §11 13:00 Templar Knights
+	{"time": 660.0, "type": "wave", "banner": "Elite Chaplains lead a fresh battalion!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "chaplain", "count": 2, "elite": true}, {"kind": "footman", "count": 10, "elite": false}, {"kind": "archer", "count": 6, "elite": false}]},
+	{"time": 720.0, "type": "wave", "banner": "A purge sweeps the graveyard!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "recruit", "count": 26, "elite": false}, {"kind": "purifier", "count": 8, "elite": false}, {"kind": "purifier", "count": 1, "elite": true}]},
+	# 13:00, GDD §11 "Templar Knights".
+	{"time": 780.0, "type": "wave", "banner": "Templar Knights charge!", "formation": "line",  # GDD §11 13:00 Templar Knights
 		"groups": [{"kind": "templar", "count": 3, "elite": false}, {"kind": "footman", "count": 8, "elite": false}, {"kind": "templar", "count": 1, "elite": true}]},  # TUNING (not in GDD)
-	{"time": 225.0, "type": "wave", "banner": "MAJOR ASSAULT!", "formation": "ring",  # GDD §11 15:00
-		"groups": [{"kind": "recruit", "count": 26, "elite": false}, {"kind": "footman", "count": 8, "elite": false}, {"kind": "templar", "count": 2, "elite": false}, {"kind": "chaplain", "count": 2, "elite": true}]},
-	{"time": 240.0, "type": "crypt", "banner": "An ancient crypt stirs nearby: awaken its guardians!"},  # TUNING (not in GDD) §11 Crypt Defender event, untimed in the GDD
-	{"time": 255.0, "type": "consecration", "banner": "More Chaplains seek to consecrate the graves!",  # TUNING (not in GDD) §11 desecration events recur
-		"graves": 2,  # TUNING (not in GDD)
-		"escort": [{"kind": "footman", "count": 2, "elite": false}, {"kind": "recruit", "count": 2, "elite": false}]},  # TUNING (not in GDD)
-	{"time": 270.0, "type": "wave", "banner": "Final preparation wave!", "formation": "arc",  # GDD §11 18:00
-		"groups": [{"kind": "archer", "count": 6, "elite": false}, {"kind": "purifier", "count": 8, "elite": false}, {"kind": "footman", "count": 1, "elite": true}]},
+	{"time": 815.0, "type": "wave", "banner": "More Templars ride in!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "templar", "count": 4, "elite": false}, {"kind": "archer", "count": 8, "elite": false}]},
+	{"time": 840.0, "type": "consecration", "banner": "More Chaplains seek to consecrate the graves!",  # TUNING (not in GDD) §11 desecration events recur
+		"graves": 3,  # TUNING (not in GDD)
+		"escort": [{"kind": "footman", "count": 2, "elite": false}, {"kind": "recruit", "count": 3, "elite": false}]},  # TUNING (not in GDD)
+	# 15:00, GDD §11 "Major assault", in two waves.
+	{"time": 900.0, "type": "wave", "banner": "MAJOR ASSAULT!", "formation": "ring",  # GDD §11 15:00
+		"groups": [{"kind": "recruit", "count": 30, "elite": false}, {"kind": "footman", "count": 10, "elite": false}, {"kind": "templar", "count": 3, "elite": false}, {"kind": "chaplain", "count": 2, "elite": true}]},
+	{"time": 930.0, "type": "wave", "banner": "The assault's second line strikes!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "purifier", "count": 8, "elite": false}, {"kind": "archer", "count": 6, "elite": false}, {"kind": "footman", "count": 1, "elite": true}]},
+	# 16:00, GDD §11 "Final preparation wave" (18:00 in the GDD, moved before the boss).
+	{"time": 960.0, "type": "wave", "banner": "Final preparation wave!", "formation": "arc",  # GDD §11 18:00, moved to 16:00
+		"groups": [{"kind": "archer", "count": 8, "elite": false}, {"kind": "purifier", "count": 10, "elite": false}, {"kind": "footman", "count": 1, "elite": true}, {"kind": "templar", "count": 1, "elite": true}]},
+	{"time": 990.0, "type": "crypt", "banner": "An ancient crypt stirs nearby: awaken its guardians!"},  # TUNING (not in GDD) §11 Crypt Defender event, untimed in the GDD
+	# 17:00 Sir Alaric (BOSS_TIME): his own Call to Arms, plus two timeline beats.
+	{"time": 1080.0, "type": "wave", "banner": "Call to Arms: the Covenant answers Sir Alaric!", "formation": "line",  # TUNING (not in GDD) GDD §11 "Call to Arms" as a timeline beat
+		"groups": [{"kind": "footman", "count": 12, "elite": false}, {"kind": "archer", "count": 6, "elite": false}, {"kind": "chaplain", "count": 1, "elite": true}]},
+	{"time": 1140.0, "type": "wave", "banner": "Call to Arms: the last crusade surrounds you!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "recruit", "count": 20, "elite": false}, {"kind": "footman", "count": 8, "elite": false}, {"kind": "templar", "count": 3, "elite": false}, {"kind": "templar", "count": 1, "elite": true}]},
 ]
 
 ## Empowered graves (GDD §11 "Empowered graves near the player add temporary
@@ -147,22 +232,26 @@ const EVENTS := [
 ##   rewards        — cycled in order: "reinforce" (temporary summons) or
 ##                    "replenish" (every missing summon returns at once).
 ##   reinforce_class    — summon class of the temporary reinforcements.
-##   reinforce_count    — temporary summons per "reinforce" grave.
+##   reinforce_count    — temporary summons per "reinforce" grave at 0:00.
+##   reinforce_growth   — extra temporary summons per minute of game time
+##                    (floored), so late graves still matter next to a
+##                    large army.
 ##   reinforce_duration — s before they crumble.
 ##   reinforce_hp_mult / reinforce_damage_mult — their stat multipliers on
 ##                    top of the class's current effective stats.
 const EMPOWERED_GRAVES := {
-	"first": 30.0,  # TUNING (not in GDD)
-	"interval": 40.0,  # TUNING (not in GDD)
-	"until": 345.0,  # TUNING (not in GDD)
-	"lifetime": 22.0,  # TUNING (not in GDD)
+	"first": 45.0,  # TUNING (not in GDD)
+	"interval": 75.0,  # TUNING (not in GDD) about 15 graves in a 20-minute run
+	"until": 1150.0,  # TUNING (not in GDD)
+	"lifetime": 25.0,  # TUNING (not in GDD)
 	"distance_min": 130.0,  # TUNING (not in GDD)
 	"distance_max": 210.0,  # TUNING (not in GDD)
 	"claim_radius": 30.0,  # TUNING (not in GDD)
 	"rewards": ["reinforce", "replenish"],  # GDD §11 the two empowered-grave effects
 	"reinforce_class": "warrior",  # TUNING (not in GDD)
 	"reinforce_count": 3,  # TUNING (not in GDD)
-	"reinforce_duration": 20.0,  # TUNING (not in GDD)
+	"reinforce_growth": 0.2,  # TUNING (not in GDD) 3 warriors at 0:00, 6 at 15:00
+	"reinforce_duration": 25.0,  # TUNING (not in GDD)
 	"reinforce_hp_mult": 1.0,  # TUNING (not in GDD)
 	"reinforce_damage_mult": 1.0,  # TUNING (not in GDD)
 }
@@ -196,8 +285,8 @@ const CONSECRATION := {
 	"consecrator_hp_mult": 2.0,  # TUNING (not in GDD)
 	"post_radius": 6.0,  # TUNING (not in GDD)
 	"channel_time": 12.0,  # TUNING (not in GDD)
-	"interrupt_xp": 12,  # TUNING (not in GDD)
-	"interrupt_crystals": 4,  # TUNING (not in GDD)
+	"interrupt_xp": 60,  # TUNING (not in GDD) about a third of a level at 10:00
+	"interrupt_crystals": 6,  # TUNING (not in GDD)
 	"zone": {
 		"radius": 85.0,  # TUNING (not in GDD)
 		"arm_time": 1.5,  # TUNING (not in GDD)
@@ -211,7 +300,8 @@ const CONSECRATION := {
 
 ## Crypt Defender event (GDD §11 "briefly awaken ancient guardian units").
 ## A sealed crypt appears near the necromancer; walking up to it awakens
-## temporary guardians that fight with the horde.
+## temporary guardians that fight with the horde. It rises at 16:30, so
+## guardians claimed promptly stand beside the army when Sir Alaric arrives.
 ##   distance_min / distance_max — px from the necromancer.
 ##   lifetime         — s the crypt waits before it seals again.
 ##   claim_radius     — px; the necromancer awakens it within this distance.
@@ -226,8 +316,8 @@ const CRYPT_DEFENDER := {
 	"lifetime": 25.0,  # TUNING (not in GDD)
 	"claim_radius": 34.0,  # TUNING (not in GDD)
 	"guardian_class": "warrior",  # TUNING (not in GDD)
-	"guardian_count": 4,  # TUNING (not in GDD)
-	"guardian_duration": 30.0,  # TUNING (not in GDD) "briefly"
+	"guardian_count": 6,  # TUNING (not in GDD)
+	"guardian_duration": 60.0,  # TUNING (not in GDD) "briefly", but long enough to meet Alaric
 	"guardian_hp_mult": 1.6,  # TUNING (not in GDD)
 	"guardian_damage_mult": 1.5,  # TUNING (not in GDD)
 }
@@ -239,10 +329,23 @@ const ZONE_TICK: float = 0.25  # TUNING (not in GDD)
 ## ZONE_TICK so the slow doesn't flicker).
 const ZONE_SLOW_LINGER: float = 0.35  # TUNING (not in GDD)
 
-## Enemy max-HP multiplier gained per minute of game time (linear).
-const HP_SCALE_PER_MINUTE: float = 0.12  # TUNING (not in GDD)
-## Enemy damage multiplier gained per minute of game time (linear).
-const DAMAGE_SCALE_PER_MINUTE: float = 0.08  # TUNING (not in GDD)
+## Enemy time scaling over the 20-minute run, with m = elapsed minutes:
+##   hp_mult     = 1 + HP_SCALE_PER_MINUTE * m + HP_SCALE_PER_MINUTE_SQ * m^2
+##   damage_mult = 1 + DAMAGE_SCALE_PER_MINUTE * m + DAMAGE_SCALE_PER_MINUTE_SQ * m^2
+## The quadratic term keeps the early game gentle and lets the late game
+## catch up with a near-complete build: HP x1.8 / x3.3 / x5.4 / x6.5 / x8.2
+## and damage x1.3 / x1.8 / x2.6 / x3.0 / x3.6 at 5 / 10 / 15 / 17 / 20
+## minutes (a 20:00 recruit has 115 HP; an evolved spell still kills it in
+## one to three hits). Weak builds stop keeping up around the 13:00-17:00
+## density peak; a focused build does not.
+## Enemy max-HP multiplier gained per minute of game time (linear term).
+const HP_SCALE_PER_MINUTE: float = 0.10  # TUNING (not in GDD)
+## Enemy max-HP multiplier gained per minute squared (quadratic term).
+const HP_SCALE_PER_MINUTE_SQ: float = 0.013  # TUNING (not in GDD)
+## Enemy damage multiplier gained per minute of game time (linear term).
+const DAMAGE_SCALE_PER_MINUTE: float = 0.03  # TUNING (not in GDD)
+## Enemy damage multiplier gained per minute squared (quadratic term).
+const DAMAGE_SCALE_PER_MINUTE_SQ: float = 0.005  # TUNING (not in GDD)
 ## Hard performance cap on living regular enemies, events included
 ## (GDD §18 performance target: 150–300 enemies).
 const HARD_CAP: int = 180  # TUNING (not in GDD)

@@ -18,20 +18,25 @@
 ##   * keeps the necromancer invulnerable (unless --mortal) until the countdown
 ##     has ended and the Reckoning has run for RECKONING_GRACE seconds, then
 ##     makes him mortal so the Reckoning kills him -> "Run Complete" screen,
-##   * prints progress every 30 game seconds, plus "[metric]" lines (horde
-##     size, damage taken by attacker, enemies alive by kind) that the
-##     multi-seed tuning scripts parse, and a final summary (including Sir
-##     Alaric's attacks per type, stage events fired, obstacle collisions
-##     resolved and stuck units), then quits with exit code 0 when the run
-##     completed, 1 otherwise,
+##   * prints progress every 60 game seconds, plus "[metric]" lines (horde
+##     size, damage taken by attacker, enemies alive by kind, XP collected)
+##     that the multi-seed tuning scripts parse, and a final summary
+##     (including Sir Alaric's attacks per type, stage events fired, obstacle
+##     collisions resolved, stuck units, the level pacing and when the build
+##     was complete), then quits with exit code 0 when the run completed, 1
+##     otherwise,
 ##   * detects stuck units: a summon or enemy that wants to move toward its
 ##     goal (target out of reach, anchor far away, returning...) but has not
 ##     moved more than STUCK_DISTANCE px in STUCK_TIME s.
 class_name Autotest
 extends Node
 
-## Game seconds between progress lines.
-const REPORT_INTERVAL: float = 30.0
+## Game seconds between progress lines (a 20-minute run prints 20 of them).
+const REPORT_INTERVAL: float = 60.0
+## Levels whose arrival time the summary's level-pacing line lists.
+const LEVEL_MARKS := [2, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
+## Elapsed game times (s) at which the summary lists the level reached.
+const TIME_MARKS := [60.0, 180.0, 300.0, 600.0, 900.0, 1020.0, 1200.0]
 ## Radius (px) in which the autopilot flees enemies.
 const FLEE_RADIUS: float = 110.0
 ## Radius (px) in which the autopilot walks toward XP crystals.
@@ -118,6 +123,15 @@ var _stuck_by: Dictionary = {}
 var _stuck_at_obstacle: int = 0
 ## Reusable query buffer.
 var _tmp: Array = []
+## Game time (s) at which each level was reached, indexed by level (level 1 = 0).
+var _level_time: PackedFloat32Array = PackedFloat32Array([0.0, 0.0])
+## Level the necromancer had at each TIME_MARKS entry (-1 until reached).
+var _level_at_mark: PackedInt32Array = PackedInt32Array()
+## Game time (s) of the first level-up hand made only of fallback cards, i.e.
+## every slot full and maxed, every evolution taken (-1 = never).
+var _build_complete_time: float = -1.0
+## Level of that hand (0 = never).
+var _build_complete_level: int = 0
 
 
 func _ready() -> void:
@@ -128,6 +142,8 @@ func _ready() -> void:
 	Engine.physics_ticks_per_second = int(roundf(60.0 * speed))
 	Engine.max_physics_steps_per_frame = maxi(8, int(ceilf(8.0 * speed)))
 	_real_start_msec = Time.get_ticks_msec()
+	for _i in TIME_MARKS.size():
+		_level_at_mark.append(-1)
 	print("[autotest] start: seed=%d speed=%sx mortal=%s timeout=%ss policy=%s" % [
 		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout), GameState.autotest_policy])
 
@@ -164,6 +180,11 @@ func step(delta: float) -> void:
 		_min_hp = minf(_min_hp, game.player.hp)
 	_horde_sum += game.horde.units.size()
 	_horde_n += 1
+	while _level_time.size() <= game.level:
+		_level_time.append(game.elapsed)
+	for i in TIME_MARKS.size():
+		if _level_at_mark[i] < 0 and game.elapsed >= float(TIME_MARKS[i]):
+			_level_at_mark[i] = game.level
 	if _boss_hp_at_0 < 0.0 and game.elapsed >= WaveData.RUN_DURATION and game.enemies.boss != null:
 		_boss_hp_at_0 = game.enemies.boss.hp if game.enemies.boss.active else 0.0
 	if game.elapsed >= _next_stuck_sample:
@@ -256,10 +277,11 @@ func _print_metrics() -> void:
 	var cc := PackedStringArray()
 	for cls: String in UnitData.CLASS_ORDER:
 		cc.append("%s%d/%d" % [cls.substr(0, 1), game.horde.count_of(cls), game.horde.capacity(cls)])
-	print("[metric] t=%d avg_horde=%.1f now=%d cap=%d %s deaths_win=%d lvl=%d kills=%d enemies=%d hp=%d boss_hp=%d crystals=%d" % [
+	print("[metric] t=%d avg_horde=%.1f now=%d cap=%d %s deaths_win=%d lvl=%d kills=%d enemies=%d hp=%d boss_hp=%d crystals=%d xp=%d" % [
 		int(game.elapsed), _horde_sum / maxf(1.0, _horde_n), game.horde.units.size(), game.horde.total_capacity(), " ".join(cc),
 		game.horde.total_deaths - _death_mark, game.level, game.kills, game.enemies.active.size(), int(game.player.hp),
-		int(game.enemies.boss.hp) if game.enemies.boss != null else -1, game.pickups.active.size()])
+		int(game.enemies.boss.hp) if game.enemies.boss != null else -1, game.pickups.active.size(),
+		int(game.stats.get("xp_collected", 0.0))])
 	var parts := PackedStringArray()
 	for k: String in game.stats.keys():
 		if k.begins_with("summon_dmg_from_"):
@@ -287,6 +309,14 @@ func _print_metrics() -> void:
 ## and skip when the only useful card would heal an unhurt necromancer.
 ## Deterministic for a given offer list and charge state.
 func choose_action(offers: Array[Dictionary]) -> Dictionary:
+	if _build_complete_time < 0.0:
+		var only_fallbacks := true  # Hand holds nothing but fallback cards.
+		for o in offers:
+			only_fallbacks = only_fallbacks and String(o["kind"]) == "fallback"
+		if only_fallbacks:
+			_build_complete_time = game.elapsed
+			_build_complete_level = game.level - game.pending_level_ups + 1
+			print("[autotest] build complete (only fallback cards left) at %s, level %d" % [_clock(game.elapsed), _build_complete_level])
 	var best := 0
 	var best_score := -INF
 	for i in offers.size():
@@ -390,6 +420,16 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] time reached: %s elapsed (%.1f s game time, %.1f s real time); past 0:00: %.1f s; Reckoning waves: %d" % [
 		_clock(summary["time"]), float(summary["time"]), real_s, float(summary["time_past_zero"]), int(summary["reckoning_waves"])])
 	print("[autotest] kills: %d | level: %d" % [int(summary["kills"]), int(summary["level"])])
+	var at_mark := PackedStringArray()  # "mm:ss=Ln" per TIME_MARKS entry reached.
+	for i in TIME_MARKS.size():
+		if _level_at_mark[i] >= 0:
+			at_mark.append("%s=L%d" % [_clock(float(TIME_MARKS[i])), _level_at_mark[i]])
+	var reached := PackedStringArray()  # "Ln@mm:ss" per LEVEL_MARKS entry reached.
+	for lvl: int in LEVEL_MARKS:
+		if lvl < _level_time.size():
+			reached.append("L%d@%s" % [lvl, _clock(_level_time[lvl])])
+	print("[autotest] level pacing: %s | reached: %s" % [" ".join(at_mark), " ".join(reached)])
+	print("[autotest] build complete: %s" % ("at %s, level %d" % [_clock(_build_complete_time), _build_complete_level] if _build_complete_time >= 0.0 else "no"))
 	print("[autotest] horde: %d alive / capacity %d (%s)" % [int(summary["horde_total"]), int(summary["horde_capacity"]), ", ".join(classes)])
 	print("[autotest] summons spawned: %d, died: %d, hard recalls: %d" % [game.horde.total_spawned, game.horde.total_deaths, game.horde.hard_recalls])
 	var boss_line := "boss spawned: %s" % ("yes at %.1f s" % _boss_spawn_time if summary["boss_spawned"] else "no")

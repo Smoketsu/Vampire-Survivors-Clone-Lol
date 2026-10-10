@@ -16,7 +16,8 @@
 ##   * Empowered graves  — "near the player add temporary reinforcements or
 ##                         improve summon replenishment": a glowing grave
 ##                         rises near the necromancer; walking onto it grants
-##                         temporary summons or refills the whole army.
+##                         temporary summons (more of them later in the run)
+##                         or refills the whole army.
 ##   * Crypt Defender    — "briefly awaken ancient guardian units": walking up
 ##                         to a crypt awakens strong temporary guardians.
 ##   * Marks             — purely visual boss telegraphs (Call to Arms rally
@@ -319,7 +320,9 @@ func _claim(s: Shrine) -> void:
 	match s.reward:
 		"reinforce":
 			var eg: Dictionary = WaveData.EMPOWERED_GRAVES
-			_spawn_temporaries(s.pos, String(eg["reinforce_class"]), int(eg["reinforce_count"]), float(eg["reinforce_duration"]),
+			# Temporary summons for this grave: the base count plus the per-minute growth.
+			var count := int(eg["reinforce_count"]) + floori(game.elapsed / 60.0 * float(eg["reinforce_growth"]))
+			_spawn_temporaries(s.pos, String(eg["reinforce_class"]), count, float(eg["reinforce_duration"]),
 					float(eg["reinforce_hp_mult"]), float(eg["reinforce_damage_mult"]))
 			game.enemies.show_banner("The grave answers: the dead rise to fight!")
 		"replenish":

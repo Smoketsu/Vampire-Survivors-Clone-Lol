@@ -774,7 +774,10 @@ func _separation() -> Vector2:
 			continue
 		if d < 0.01:
 			# Exactly overlapping: push in a stable pseudo-random direction.
-			diff = Vector2.from_angle(float(get_instance_id() % 628) * 0.01)
+			# Derived from the think slot and pool generation, not the
+			# instance id: ids depend on thread timing (audio synthesis
+			# allocates objects on worker threads), which broke determinism.
+			diff = Vector2.from_angle(float((think_slot * 157 + generation * 61) % 628) * 0.01)
 			d = 1.0
 		push += diff / d * (1.0 - d / min_d)
 	return push

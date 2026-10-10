@@ -347,7 +347,7 @@ func update_separation() -> void:
 		if d >= min_d:
 			continue
 		if d < 0.01:
-			diff = Vector2.from_angle(float(get_instance_id() % 628) * 0.01)
+			diff = _overlap_dir()
 			d = 1.0
 		push += diff / d * (1.0 - d / min_d)
 	sep = push.limit_length(1.0)
@@ -502,7 +502,7 @@ func resolve_blocking() -> void:
 		var min_d := radius + u.block_radius
 		if d >= min_d:
 			continue
-		var n := diff / d if d > 0.01 else Vector2.from_angle(float(get_instance_id() % 628) * 0.01)
+		var n := diff / d if d > 0.01 else _overlap_dir()
 		var overlap := min_d - d
 		var enemy_share := u.block_mass / (u.block_mass + mass)
 		position += n * overlap * enemy_share
@@ -546,6 +546,14 @@ func _update_facing() -> void:
 			scale.x = _facing
 			if hp < max_hp:
 				queue_redraw()  # HP bar counter-flip depends on facing
+
+
+## Stable pseudo-random push direction for an exactly overlapping body.
+## Derived from the think slot and pool generation, not the instance id:
+## ids depend on thread timing (audio synthesis allocates objects on worker
+## threads), which made autotest runs non-deterministic.
+func _overlap_dir() -> Vector2:
+	return Vector2.from_angle(float((think_slot * 157 + generation * 61) % 628) * 0.01)
 
 
 ## Body radius of the player or a summon.

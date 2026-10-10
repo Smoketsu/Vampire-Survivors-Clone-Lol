@@ -1,5 +1,5 @@
 ## BossAlaric — SIR ALARIC, THE GRAVEBREAKER (GDD §11), the Graveyard boss
-## that appears at 5:00 in the compressed prototype timeline. Extends Enemy so
+## that appears at 17:00 (3:00 left on the countdown). Extends Enemy so
 ## summons, spells and the spatial hash treat him like any other target.
 ## All five GDD §11 abilities are implemented, each clearly telegraphed
 ## (GDD §16 "Clear AoE telegraphs", §32 "Bosses can suppress or kill squads

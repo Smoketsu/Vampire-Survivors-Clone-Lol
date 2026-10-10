@@ -1,7 +1,8 @@
 ## EnemyDirector — spawns and updates the Crimson Covenant (GDD §22
 ## "EnemyDirector: Enemy waves, enemy density and event escalation").
-##   * Reads the data-driven 5-minute timeline in WaveData: continuous
-##     trickle segments + one-shot formation events + the boss at 5:00.
+##   * Reads the data-driven 20-minute timeline in WaveData: continuous
+##     trickle segments + one-shot formation events + the boss at 17:00,
+##     with enemy HP / damage scaling over time.
 ##   * Pools Enemy nodes; dead enemies are compacted out of `active` at the
 ##     start of the next step and reused.
 ##   * Staggers enemy AI: think() at 5 Hz, separation at 10 Hz, movement at
@@ -36,7 +37,7 @@ var spawn_accum: float = 0.0
 var hp_mult: float = 1.0
 ## Current enemy damage multiplier from time scaling.
 var damage_mult: float = 1.0
-## The boss once spawned (null before 5:00).
+## The boss once spawned (null before WaveData.BOSS_TIME).
 var boss: BossAlaric = null
 ## Event banner text shown on the HUD.
 var banner_text: String = ""
@@ -76,8 +77,9 @@ func step(delta: float) -> void:
 	_compact()
 	var t := game.elapsed
 	_update_segment(t)
-	hp_mult = 1.0 + t / 60.0 * WaveData.HP_SCALE_PER_MINUTE
-	damage_mult = 1.0 + t / 60.0 * WaveData.DAMAGE_SCALE_PER_MINUTE
+	var m := t / 60.0  # Elapsed minutes (time scaling, see WaveData).
+	hp_mult = 1.0 + m * WaveData.HP_SCALE_PER_MINUTE + m * m * WaveData.HP_SCALE_PER_MINUTE_SQ
+	damage_mult = 1.0 + m * WaveData.DAMAGE_SCALE_PER_MINUTE + m * m * WaveData.DAMAGE_SCALE_PER_MINUTE_SQ
 	_run_events(t)
 	if boss == null and t >= WaveData.BOSS_TIME:
 		_spawn_boss()
