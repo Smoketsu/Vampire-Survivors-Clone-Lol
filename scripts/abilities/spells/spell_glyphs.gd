@@ -120,6 +120,8 @@ static func _gold_frame(ci: CanvasItem, c: Vector2, s: float) -> void:
 ## A Bone Spear at `p` heading `d` (unit): bone shaft, barbed tip, faint
 ## green marrow trail. `half_len` is the half length, `w` the shaft width.
 static func draw_spear(ci: CanvasItem, p: Vector2, d: Vector2, half_len: float = 11.0, w: float = 2.5) -> void:
+	if SpriteBank.draw_flat(ci, "projectiles/bone_spear", p, d.angle()):
+		return  # Sprite art exists.
 	var n := Vector2(-d.y, d.x)  # Perpendicular.
 	var tail := p - d * half_len  # Butt of the shaft.
 	ci.draw_line(tail - d * half_len * 0.8, tail, Color(Palette.NECRO_GREEN, 0.25), w * 1.4)
@@ -133,6 +135,8 @@ static func draw_spear(ci: CanvasItem, p: Vector2, d: Vector2, half_len: float =
 ## violet afterimage trail and a green glow at its point. `half_len` is the half
 ## length, `w` the shaft width.
 static func draw_lance(ci: CanvasItem, p: Vector2, d: Vector2, half_len: float = 20.0, w: float = 4.0) -> void:
+	if SpriteBank.draw_flat(ci, "projectiles/ossuary_lance", p, d.angle()):
+		return  # Sprite art exists.
 	var n := Vector2(-d.y, d.x)  # Perpendicular.
 	var tail := p - d * half_len  # Butt of the shaft.
 	for k in 3:

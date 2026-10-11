@@ -60,6 +60,27 @@ const FLASH_MODULATE: Color = Color(2.6, 2.6, 2.6, 1.0)  # TUNING (not in GDD)
 ## card icon (SpriteBank.icon_cap).
 const ICON_FILL: float = 0.9  # TUNING (not in GDD)
 
+## Longest side (world px) of flat sprites drawn by SpriteBank.draw_flat():
+## projectiles (art pointing right) and orbs. Keys "projectiles/<id>".
+const FLAT_SIZES: Dictionary = {
+	"projectiles/shadow_bolt": 22.0,  # TUNING (not in GDD)
+	"projectiles/void_bolt": 30.0,  # TUNING (not in GDD)
+	"projectiles/void_shard": 14.0,  # TUNING (not in GDD)
+	"projectiles/arrow": 20.0,  # TUNING (not in GDD)
+	"projectiles/enemy_arrow": 20.0,  # TUNING (not in GDD)
+	"projectiles/mage_orb": 20.0,  # TUNING (not in GDD)
+	"projectiles/priest_bolt": 14.0,  # TUNING (not in GDD)
+	"projectiles/frost_bolt": 20.0,  # TUNING (not in GDD)
+	"projectiles/radiant_bolt": 20.0,  # TUNING (not in GDD)
+	"projectiles/bone_spear": 26.0,  # TUNING (not in GDD)
+	"projectiles/ossuary_lance": 44.0,  # TUNING (not in GDD)
+	"projectiles/orb": 18.0,  # TUNING (not in GDD) Shadow Orb Shield orb
+}
+## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
+const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)
+## Fraction of an icon box that icon art (assets/sprites/icons/) fills.
+const ICON_ART_FILL: float = 0.92  # TUNING (not in GDD)
+
 ## Drop-shadow ellipse under a sprite: width as a fraction of the sprite height.
 const SHADOW_WIDTH: float = 0.55  # TUNING (not in GDD)
 ## Drop-shadow ellipse height as a fraction of its width.

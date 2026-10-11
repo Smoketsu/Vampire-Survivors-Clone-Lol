@@ -67,6 +67,9 @@ var chill_time: float = 0.0
 
 
 func _draw() -> void:
+	# Sprite art (assets/sprites/projectiles/<kind>.png), drawn along +x like the glyphs.
+	if SpriteBank.draw_flat(self, "projectiles/" + String(Kind.keys()[kind]).to_lower(), Vector2.ZERO, 0.0):
+		return
 	match kind:
 		Kind.SHADOW_BOLT:
 			draw_line(Vector2(-14, 0), Vector2.ZERO, Color(Palette.VIOLET, 0.45), 4.0)

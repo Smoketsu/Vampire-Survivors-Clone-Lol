@@ -58,3 +58,37 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool) -> bool:
 	var mod := SpriteData.FLASH_MODULATE if flash else Color.WHITE  # Hit-flash tint.
 	ci.draw_texture_rect(tex, Rect2(centre - size * 0.5, size), false, mod)
 	return true
+
+
+## Draws a flat sprite (projectile, orb) centred on `o`, rotated by `angle`
+## (radians; the art points right), scaled so its longest side is
+## SpriteData.FLAT_SIZES[key] px. No shadow or flash. `tint` multiplies the
+## colours (e.g. a dim uncharged orb). Returns false when there is no art.
+static func draw_flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tint: Color = Color.WHITE) -> bool:
+	var tex := texture(key)  # Art for this key, or null.
+	if tex == null:
+		return false
+	var long_side: float = SpriteData.FLAT_SIZES.get(key, SpriteData.DEFAULT_FLAT_SIZE)  # Longest side (px).
+	var w := float(tex.get_width())  # Texture width (px).
+	var h := float(tex.get_height())  # Texture height (px).
+	var k := long_side / maxf(w, h)  # Texture px -> world px.
+	var size := Vector2(w, h) * k  # Drawn size (px).
+	ci.draw_set_transform(o, angle, Vector2.ONE)
+	ci.draw_texture_rect(tex, Rect2(-size * 0.5, size), false, tint)
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	return true
+
+
+## Draws icon art for `kind` (assets/sprites/icons/<kind>.png) filling `rect`
+## (SpriteData.ICON_ART_FILL of it, centred, aspect kept). Returns false when
+## there is no art, so Glyphs.draw_icon() falls back to its drawn symbol.
+static func draw_icon_art(ci: CanvasItem, kind: String, rect: Rect2) -> bool:
+	var tex := texture("icons/" + kind)  # Icon art, or null.
+	if tex == null:
+		return false
+	var box := minf(rect.size.x, rect.size.y) * SpriteData.ICON_ART_FILL  # Target size (px).
+	var w := float(tex.get_width())  # Texture width (px).
+	var h := float(tex.get_height())  # Texture height (px).
+	var size := Vector2(w, h) * (box / maxf(w, h))  # Drawn size (px).
+	ci.draw_texture_rect(tex, Rect2(rect.get_center() - size * 0.5, size), false)
+	return true

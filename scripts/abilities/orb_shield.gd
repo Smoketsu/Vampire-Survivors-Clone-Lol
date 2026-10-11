@@ -111,6 +111,9 @@ func _draw() -> void:
 	for i in orb_positions.size():
 		var local := orb_positions[i] - position
 		var charged := recharge[i] <= 0.0
+		# Sprite art for the orb (dimmed while recharging), if any.
+		if SpriteBank.draw_flat(self, "projectiles/orb", local, 0.0, Color.WHITE if charged else Color(1, 1, 1, 0.45)):
+			continue
 		draw_circle(local, AbilityData.ORB_RADIUS + 3.0, Color(Palette.VIOLET, 0.25 if charged else 0.08))
 		draw_circle(local, AbilityData.ORB_RADIUS, Palette.VIOLET if charged else Color(Palette.VIOLET, 0.45))
 		if charged:

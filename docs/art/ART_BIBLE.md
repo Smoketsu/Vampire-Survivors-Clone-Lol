@@ -131,6 +131,83 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 Ground tiles and obstacles (gravestones, crypt walls, the march road) come in a later pass, as
 seamless tiles.
 
+### Projectiles (`assets/sprites/projectiles/`)
+
+Flat sprites that the game **rotates along their flight path**. Draw each one **pointing right**
+(the head at the right, the trail to the left), with no character, no ground and a transparent
+background. Size is the length of the longest side on screen.
+
+| File | Subject | Size |
+|---|---|---|
+| `shadow_bolt.png` | Shadow Bolt: a violet (`#A35CFA`) magic bolt with a short fading trail | 22 px |
+| `void_bolt.png` | Void Barrage bolt: a black core ringed in necrotic green with a violet trail | 30 px |
+| `void_shard.png` | Void shard: a tiny green crystal splinter | 14 px |
+| `bone_spear.png` | Bone Spear: a sharpened bone javelin (`#DED9C2`) | 26 px |
+| `ossuary_lance.png` | Ossuary Lance: a huge bone lance wrapped in violet energy | 44 px |
+| `arrow.png` | Skeletal Archer arrow: a bone shaft with a green soul-fire head | 20 px |
+| `mage_orb.png` | Undead Mage orb: a violet orb with a green spark | 20 px |
+| `priest_bolt.png` | Mender / Warder bolt: a small green (`#6BF28C`) glowing mote | 14 px |
+| `frost_bolt.png` | Frost Wraith bolt: an icy blue (`#9ED6FF`) shard | 20 px |
+| `orb.png` | Shadow Orb Shield orb: a round violet orb (not pointed; it doesn't rotate) | 18 px |
+| `enemy_arrow.png` | Covenant arrow: an ivory (`#F5EDD4`) shaft with a gold (`#FFD14C`) head | 20 px |
+| `radiant_bolt.png` | Covenant holy bolt: a radiant gold-and-ivory spark | 20 px |
+
+Prompt tip: *"a single pixel-art projectile sprite for a top-down game, pointing right, glowing,
+transparent background, centred, no character, readable at 20 px"*. Several can be generated on one
+sheet and split up afterwards.
+
+### Icons (`assets/sprites/icons/`)
+
+Square **badge icons** shown on level-up cards, the HUD ability bar and buff timers. Each one is a
+**dark rounded-square badge** with one **bold, simple symbol** that reads at 24 px, in the same pixel
+style. Undead and necromancy icons use violet, green and bone; never use Covenant gold or crimson on
+the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
+
+| File | Subject |
+|---|---|
+| `shadow_bolt.png` | Violet bolt |
+| `orb_shield.png` | Three violet orbs circling |
+| `shadow_blast.png` | Violet shockwave ring |
+| `bone_spear.png` | Crossed bone javelins |
+| `soul_siphon.png` | Green soul stream flowing into a skeletal hand |
+| `corpse_explosion.png` | Bursting corpse / bone shrapnel |
+| `plague_cloud.png` | Sickly green miasma cloud with a skull |
+| `void_barrage.png` | Black-and-green void bolts (evolution: add a gold-trimmed frame) |
+| `eclipse_ward.png` | Eclipsed black orbs in a ring (evolution frame) |
+| `abyssal_detonation.png` | Imploding violet vortex (evolution frame) |
+| `ossuary_lance.png` | Huge bone lance (evolution frame) |
+| `soul_rapture.png` | Many soul tethers to a skull (evolution frame) |
+| `grave_eruption.png` | Bone spikes erupting from a grave (evolution frame) |
+| `pestilence.png` | Swirling plague with a death's-head (evolution frame) |
+| `death_knight.png` | Skull helm with a greatsword (evolution frame) |
+| `lich.png` | Crowned skull with a phylactery (evolution frame) |
+| `profane_bishop.png` | Bone mitre with a green halo (evolution frame) |
+| `grave_dominion.png` | Gravestone with a green rune |
+| `necrotic_vigor.png` | Green heart made of bone |
+| `dark_command.png` | Violet crown |
+| `soul_recycling.png` | Green circular soul arrow |
+| `soul_conduit.png` | Violet crystal channelling energy |
+| `warding_ritual.png` | Runic shield circle |
+| `abyssal_focus.png` | Violet eye in a void |
+| `forbidden_knowledge.png` | Chained grimoire |
+| `dark_benediction.png` | Inverted halo over cupped bone hands |
+| `shade_stride.png` | Shadowy boot / footprints |
+| `vampiric_rite.png` | Blood-red drop in a chalice (one deep red accent is fine) |
+| `necrotic_expanse.png` | Expanding green rings |
+| `lingering_malediction.png` | Hourglass with green mist |
+| `profane_pact.png` | Torn scroll with a crimson seal (the curse: the one icon allowed crimson) |
+| `powerup_magnet.png` | Cyan soul vortex |
+| `powerup_feast.png` | Roasted meat on a bone |
+| `powerup_hyper.png` | Violet lightning rune |
+| `powerup_stasis.png` | Frozen hourglass |
+| `powerup_frenzy.png` | Green flaming skull |
+| `powerup_nova.png` | Violet starburst |
+
+Prompt tip: *"a pixel-art game ability icon, a dark rounded-square badge with a thin violet border,
+one bold simple symbol: <subject>, readable at 24 pixels, transparent background outside the badge"*.
+Keep the badge shape and border identical across all icons; generating them 4-6 at a time in one
+conversation helps.
+
 ---
 
 ## Prompt 1: the Necromancer (style test; run both)

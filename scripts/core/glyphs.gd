@@ -288,6 +288,9 @@ static func draw_icon(ci: CanvasItem, kind: String, rect: Rect2) -> void:
 	ci.draw_rect(rect, Color(0.4, 0.28, 0.6, 0.9), false, 1.5)
 	var c := rect.get_center()
 	var s := minf(rect.size.x, rect.size.y) * 0.5
+	# Dedicated icon art (assets/sprites/icons/<kind>.png) wins when present.
+	if SpriteBank.draw_icon_art(ci, kind, rect):
+		return
 	# Sprite art drawn through the world glyph functions must fit the box.
 	SpriteBank.icon_cap = s * 2.0 * SpriteData.ICON_FILL
 	_draw_icon_body(ci, kind, c, s)
