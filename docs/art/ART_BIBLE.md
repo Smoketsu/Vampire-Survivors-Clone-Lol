@@ -10,8 +10,10 @@ It is the single reference for every art request.
    becomes the **style reference** for everything else.
 2. **Generate the rest in small related batches** (e.g. Warrior, Archer and Mage together) using the
    *reference-matching template* at the bottom: attach `necromancer.png` and say "match this style".
-3. **Save each PNG** at the path given in the manifest (exact filename, lowercase). Commit them or
-   send them to Claude.
+3. **Process each PNG** with `python3 tools/prepare_sprite.py <downloaded image> <key>` (e.g.
+   `summons/warrior`). It keeps the original in `art_source/` (ignored by Godot), crops the
+   transparent border and writes a game-ready copy to `assets/sprites/<key>.png` at 3x its on-screen
+   height (`scripts/data/sprite_data.gd`). Or just send the images to Claude to do it.
 4. The game shows a sprite whenever the file exists, and otherwise keeps the current code-drawn
    shape. Art can arrive a piece at a time and the game never breaks. Movement, hit flashes, facing
    and shadows are animated in code, so **one still image per unit** is enough.
@@ -83,7 +85,7 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 | `rogue.png` | Grave Rogue: lean skeleton in a dark hooded cloak, twin curved daggers | 44 px |
 | `gargoyle.png` | Crypt Gargoyle: stone gargoyle, wings half-spread, long claws | 56 px |
 | `frost_wraith.png` | Frost Wraith: icy translucent spectre, tattered robe trailing into mist | 48 px |
-| `skeleton_risen.png` | Lich-raised temporary skeleton: plain, ragged, faint violet glow | 36 px |
+| `risen.png` | Lich-raised temporary skeleton: plain, ragged, faint violet glow | 36 px |
 
 ### Covenant enemies (`assets/sprites/enemies/`)
 | File | Subject | Size |
@@ -94,7 +96,7 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 | `chaplain.png` | Covenant Chaplain: ivory robes, gold censer, healing glow | 42 px |
 | `purifier.png` | Purifier: silver mask, flaming torch / flamethrower censer | 44 px |
 | `templar.png` | Templar Knight: gold-trimmed heavy knight, lance, crimson cape | 52 px |
-| `inquisitor_end.png` | Inquisitor of the End (Reckoning): towering, radiant gold, faceless | 64 px |
+| `inquisitor.png` | Inquisitor of the End (Reckoning): towering, radiant gold, faceless | 64 px |
 | `shieldbearer.png` | Covenant Shieldbearer: huge crimson tower shield | 50 px |
 | `banner_bearer.png` | Banner Bearer: tall crimson-and-gold war banner | 50 px |
 | `halberdier.png` | Crimson Halberdier: long halberd, silver half-plate | 50 px |

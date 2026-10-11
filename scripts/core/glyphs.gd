@@ -56,6 +56,8 @@ static func hp_bar(ci: CanvasItem, c: Vector2, w: float, frac: float, fill: Colo
 ## The player: hooded purple robe (triangle), bone face, green eyes, staff
 ## with a necrotic green orb (GDD §17 "purple/green/black/bone").
 static func draw_necromancer(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
+	if SpriteBank.draw(ci, "player/necromancer", o, flash):
+		return  # Sprite art exists (assets/sprites/player/necromancer.png).
 	ci.draw_circle(o + Vector2(0, r * 0.9), r * 0.9, Color(0, 0, 0, 0.35))
 	var robe := PackedVector2Array([o + Vector2(0, -r * 1.25), o + Vector2(-r, r * 1.05), o + Vector2(r, r * 1.05)])
 	ci.draw_colored_polygon(robe, _c(Palette.ROBE, flash))
@@ -73,6 +75,8 @@ static func draw_necromancer(ci: CanvasItem, o: Vector2, r: float, flash: bool) 
 
 ## Dispatches to the shape for summon class `cls`.
 static func draw_summon(ci: CanvasItem, cls: String, o: Vector2, r: float, flash: bool) -> void:
+	if SpriteBank.draw(ci, "summons/" + cls, o, flash):
+		return  # Sprite art exists (assets/sprites/summons/<cls>.png).
 	match cls:
 		"warrior":
 			draw_warrior(ci, o, r, flash)
@@ -133,6 +137,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	if elite:
 		ci.draw_circle(o, r * 1.45, Color(Palette.GOLD, 0.12))
 		ci.draw_arc(o, r * 1.4, 0.0, TAU, 24, Palette.GOLD, 2.0)
+	# Sprite art, if any: soldiers in enemies/, buildings and carts in structures/.
+	if SpriteBank.draw(ci, "enemies/" + kind, o, flash) or SpriteBank.draw(ci, "structures/" + kind, o, flash):
+		return
 	match kind:
 		"recruit":
 			_draw_recruit(ci, o, r, flash)
@@ -244,6 +251,8 @@ static func _draw_inquisitor(ci: CanvasItem, o: Vector2, r: float, flash: bool) 
 static func draw_boss(ci: CanvasItem, o: Vector2, r: float, flash: bool, pose: int) -> void:
 	if pose == 2:
 		ci.draw_circle(o, r * 1.5, Color(Palette.GOLD, 0.18))
+	if SpriteBank.draw(ci, "bosses/alaric", o, flash):
+		return  # Sprite art exists (assets/sprites/bosses/alaric.png); pose glow kept.
 	ci.draw_circle(o + Vector2(0, r * 0.25), r * 1.05, _c(Palette.CRIMSON, flash))
 	var body := regular_polygon(o, r * 0.85, 8, PI / 8.0)
 	ci.draw_colored_polygon(body, _c(Palette.SILVER if pose != 3 else Color(0.6, 0.6, 0.65), flash))

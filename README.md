@@ -137,7 +137,7 @@ number is in `scripts/data/unit_data.gd`.
 | Class | Population (Lv 1 → 5) | Replaced every | Role | Special |
 |---|---|---|---|---|
 | Skeleton Warrior | 2 → 8 | 5 s | Frontline blocker | Physically blocks enemies (they move at 60%); shield bash. Evolves into the **Death Knight** |
-| Skeletal Archer | 1 → 5 | 8 s | Ranged DPS | Kites briefly; pierce at Lv 4 |
+| Skeletal Archer | 1 → 5 | 8 s | Ranged DPS | Holds its ground and fires; pierce at Lv 4 |
 | Undead Mage | 1 → 3 | 12 s | AoE caster | Explosions on the best cluster. Evolves into the **Lich** |
 | Grave Mender | 1 → 2 | 15 s | Healer | Heals allies and you (the old priest heal, §31) |
 | Crypt Warder | 1 → 2 | 15 s | Warder | Wards you when you are threatened; instant barriers on threatened allies |
@@ -589,6 +589,16 @@ open). The zone is shown under the timer.
 
 ---
 
+### Sprite art (in progress)
+
+Units can use real sprite art instead of their code-drawn shapes. `SpriteBank` draws
+`assets/sprites/<category>/<id>.png` whenever that file exists and otherwise falls back to the
+glyph, so art arrives one piece at a time without breaking anything. The style is **pixel art**,
+set by the approved necromancer sprite. Sprites are generated in ChatGPT from the prompt pack in
+`docs/art/ART_BIBLE.md` and processed with `python3 tools/prepare_sprite.py <image> <key>`, which
+keeps the original in `art_source/` (ignored by Godot), crops it and stores it at 3x its on-screen
+height from `scripts/data/sprite_data.gd`. Done so far: the necromancer.
+
 ## What is implemented (vs. the GDD)
 
 | Area | Status in this prototype |
@@ -635,7 +645,7 @@ All tunable numbers are in `scripts/data/`. Each value is tagged in a comment:
 - Warrior and priest steering weights (§26), used by all three support classes.
 - 1 s target commitment and "critical below 35% HP" (§27).
 - Warrior intercept radius of 80 px (§28).
-- Archer kite distance of 45 px (§29).
+- Archer kite distance of 45 px (§29), now 0: archers hold their ground (user decision, GDD §15.0).
 - Heal score weights 0.6 / 0.2 / 0.2 (§31).
 - Warrior level progression 2 → 3 → 5 → 6 → 8, with its % bonuses (§34).
 - 6 active and 6 passive ability slots (§6), 5 levels per skill, and 3 cards per level-up.
@@ -672,6 +682,7 @@ scripts/
     combat_resolver.gd      All damage / healing / kills / XP drops / stats go through here
     effect.gd, effect_manager.gd   Pooled cosmetic effects and boss telegraphs
     glyphs.gd               All placeholder shapes (world entities AND UI icons share this code)
+    sprite_bank.gd          Optional sprite art (assets/sprites/), falls back to the glyphs
     ground.gd               Procedural graveyard floor, redrawn only when the camera changes cell
     march_ground.gd         Crimson March floor: the road and each battle zone's look (extends Ground)
     march_glyphs.gd         Crimson March shapes: new soldiers, structures, Marshal Vael, obstacles, corpse piles
@@ -983,7 +994,7 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 ## Next steps (grouped by GDD §19 phases)
 
 **Phase 1 – Prototype (mostly done):** tune the TUNING values using the
-autotest stats; give the horde a feel pass (formation spacing, kite timing,
+autotest stats; give the horde a feel pass (formation spacing,
 warrior wall shape) with a human player.
 
 **Phase 2 – Graveyard vertical slice (mostly done):** playtest with humans;

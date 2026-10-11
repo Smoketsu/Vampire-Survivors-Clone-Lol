@@ -161,6 +161,7 @@ tiny tweaks.
   Soul Siphon / Soul Rapture (Vampiric Rite), Corpse Explosion / Grave Eruption (Necrotic
   Expanse), Plague Cloud / Pestilence (Lingering Malediction), plus the Rot status;
 - autotest `--policy=summon`, `--classes=a,b` and `--spells=a,b`;
+- a combined balance pass across both stages (owned-only chests, card weights, outlier nerfs);
 - Stage 2, **the Crimson March**, on a multi-stage framework: stage data in
   `scripts/data/stages/` behind `StageRegistry` (read through `game.stage_def`; `wave_data.gd` and
   `arena_data.gd` keep only shared rules), a RunConfig and stage select, the Meta `[stages]` save
@@ -175,19 +176,23 @@ tiny tweaks.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.
-2. **Small fixes:**
-   - Menu key hints should reflect rebinds.
-   - Naive build deaths are slightly high (~44%).
-   - Open question: should Skeletal Archers keep their 45 px step-back?
-3. **Real art (Phase 2):** replace the code-drawn placeholders with sprites, animations and tilesets
-   (SpriteCook can export Godot packages). Approve a sample set before generating everything. Keep
-   silhouettes distinct and follow the color language in `scripts/data/palette.gd` and GDD §11.
+2. **Small fixes:** menu key hints should reflect rebinds. (Archers now hold their ground: user
+   decision, GDD §15.0.)
+3. **Real art (Phase 2), in progress:** **pixel art** style, locked by the approved necromancer.
+   The owner generates sprites in ChatGPT from `docs/art/ART_BIBLE.md` (manifest of every asset,
+   with file keys and sizes); process each with `python3 tools/prepare_sprite.py <image> <key>`.
+   `SpriteBank` draws `assets/sprites/<key>.png` when present and falls back to the glyph, so art
+   lands piecemeal. Done: `player/necromancer`. Pickups, ground tiles and obstacles come later.
 4. **Rest of Stage 1's content:**
    - the remaining passives (Bone Plating, Unholy Precision, Unholy Resilience, Bound Souls);
-   - a combined balance pass for the priest split, the summon evolutions, the four later
-     classes, the four newer spells and the Crimson March (each was tuned separately);
-     evolutions for the later classes, if wanted;
+   - evolutions for the Archer and the four later classes, if wanted;
    - a dash and an ultimate.
 5. **Phase 3 campaign:** Stage 3 (Sanctum of Judgment,
    Grand Inquisitor Seraphine); skins; achievement rewards.
-6. **Phase 4 polish:** accessibility, profiling on real hardware, final balance.
+6. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
+   The owner is happy with balance for now and wants value tweaks deferred to this pass (naive-bot
+   death rates above target on both stages and spell-only builds lacking single-target damage are
+   known and accepted until then).
+
+**Pace:** the owner is watching usage. Run **one agent at a time** with tight scopes and minimal
+test batches (sanity checks only) until told otherwise.
