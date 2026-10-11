@@ -1,15 +1,20 @@
 ## EnemyDirector — spawns and updates the Crimson Covenant (GDD §22
 ## "EnemyDirector: Enemy waves, enemy density and event escalation").
-##   * Reads the data-driven 20-minute timeline in WaveData: continuous
-##     trickle segments + one-shot formation events + the boss at 17:00,
-##     with enemy HP / damage scaling over time.
+##   * Reads the run's stage (`game.stage_def`, StageRegistry): its
+##     data-driven 20-minute timeline of continuous trickle segments +
+##     one-shot formation events + the stage boss at 17:00 (Sir Alaric or
+##     Marshal Vael), with the shared enemy HP / damage scaling over time
+##     (WaveData) times the stage's own multipliers.
 ##   * Pools Enemy nodes; dead enemies are compacted out of `active` at the
 ##     start of the next step and reused.
 ##   * Staggers enemy AI: think() at 5 Hz, separation at 10 Hz, movement at
 ##     60 Hz.
 ##   * Recycles enemies left far behind to the spawn ring ahead of the player.
-##   * Owns the StageDirector (graveyard stage events and holy zones) and
-##     hands it the "consecration" / "crypt" timeline events.
+##   * Owns the StageDirector (graveyard stage events, empowered graves and
+##     holy zones) and hands it the "consecration" / "crypt" timeline events;
+##     on the Crimson March it also owns the MarchDirector (zones, outposts,
+##     ward generators, supply carts) and hands it "outposts" /
+##     "generators" / "cart" events.
 ##   * Never places an enemy inside an obstacle (Arena.free_point).
 ##   * Applies the Profane Pact / Oath difficulty (game.difficulty) in the
 ##     existing scaling path: hp_mult / damage_mult and the trickle rate and
@@ -22,7 +27,7 @@ class_name EnemyDirector
 extends Node2D
 
 ## The boss entered the arena.
-signal boss_spawned(boss: BossAlaric)
+signal boss_spawned(boss: Boss)
 ## The boss died (big reward; the run continues).
 signal boss_defeated
 ## The countdown hit 0:00 and the Reckoning began.
@@ -34,9 +39,20 @@ var game: Game
 var active: Array[Enemy] = []
 ## Inactive enemies ready for reuse.
 var _pool: Array[Enemy] = []
-## Index of the current WaveData.SEGMENTS entry.
+## Enemies taken off the field without a kill this step (pooled at the
+## next compaction, see despawn()).
+var _despawned: Array[Enemy] = []
+## The run's stage (Game.stage_def, StageRegistry keys).
+var stage_def: Dictionary = {}
+## The stage's trickle segments (stage_def "segments").
+var segments: Array = []
+## The stage's timeline events (stage_def "events").
+var events: Array = []
+## The stage's boss arrival data (stage_def "boss").
+var boss_info: Dictionary = {}
+## Index of the current `segments` entry.
 var segment_index: int = 0
-## Index of the next WaveData.EVENTS entry to fire.
+## Index of the next `events` entry to fire.
 var event_index: int = 0
 ## Fractional enemies accumulated by the trickle spawner.
 var spawn_accum: float = 0.0
@@ -44,8 +60,8 @@ var spawn_accum: float = 0.0
 var hp_mult: float = 1.0
 ## Current enemy damage multiplier from time scaling.
 var damage_mult: float = 1.0
-## The boss once spawned (null before WaveData.BOSS_TIME).
-var boss: BossAlaric = null
+## The boss once spawned (null before the stage's boss time).
+var boss: Boss = null
 ## Event banner text shown on the HUD.
 var banner_text: String = ""
 ## Game time (s) until which the banner is shown.
@@ -66,12 +82,23 @@ var _frame: int = 0
 var _next_slot: int = 0
 ## Graveyard stage mechanics and holy zones (GDD §11).
 var stage: StageDirector
+## Crimson March mechanics (GDD §8.2; null on stages without them).
+var march: MarchDirector = null
 
 
 func _ready() -> void:
+	stage_def = game.stage_def
+	segments = stage_def["segments"]
+	events = stage_def["events"]
+	boss_info = stage_def["boss"]
 	stage = StageDirector.new()
 	stage.game = game
 	add_child(stage)
+	if not (stage_def["march"] as Dictionary).is_empty():
+		march = MarchDirector.new()
+		march.game = game
+		march.config = stage_def["march"]
+		add_child(march)
 
 
 # =====================================================================================
@@ -87,8 +114,11 @@ func step(delta: float) -> void:
 	var m := t / 60.0  # Elapsed minutes (time scaling, see WaveData).
 	hp_mult = (1.0 + m * WaveData.HP_SCALE_PER_MINUTE + m * m * WaveData.HP_SCALE_PER_MINUTE_SQ) * game.difficulty.enemy_hp_mult()
 	damage_mult = (1.0 + m * WaveData.DAMAGE_SCALE_PER_MINUTE + m * m * WaveData.DAMAGE_SCALE_PER_MINUTE_SQ) * game.difficulty.enemy_damage_mult()
+	# Stage step-up (StageRegistry enemy_hp_mult / enemy_damage_mult; 1 in the Graveyard).
+	hp_mult *= float(stage_def["enemy_hp_mult"])
+	damage_mult *= float(stage_def["enemy_damage_mult"])
 	_run_events(t)
-	if boss == null and t >= WaveData.BOSS_TIME:
+	if boss == null and t >= float(boss_info["time"]):
 		_spawn_boss()
 	if t >= _next_reckoning:
 		_spawn_reckoning_wave()
@@ -119,10 +149,16 @@ func step(delta: float) -> void:
 		if not e.is_boss and not e.is_objective and e.position.distance_squared_to(player_pos) > recycle2:
 			_recycle(e)
 	stage.step(delta)
+	if march != null:
+		march.step(delta)
 
 
-## Removes enemies killed since the last step from `active`.
+## Removes enemies killed since the last step from `active` (and pools the
+## ones despawned without a kill).
 func _compact() -> void:
+	if not _despawned.is_empty():
+		_pool.append_array(_despawned)
+		_despawned.clear()
 	var i := 0
 	while i < active.size():
 		if active[i].active:
@@ -144,13 +180,17 @@ func regular_alive() -> int:
 ## Current HUD objective text from the active segment.
 func objective_text() -> String:
 	if reckoning_wave > 0:
-		return WaveData.RECKONING_OBJECTIVE
+		return String(stage_def["reckoning_objective"])
 	var stage_text := stage.objective_override()
 	if stage_text != "":
 		return stage_text
+	if march != null:
+		var march_text := march.objective_override()  # Live outposts / generators / carts.
+		if march_text != "":
+			return march_text
 	if boss != null and not boss.active:
-		return "Sir Alaric is dead. Survive until the countdown ends."
-	return WaveData.SEGMENTS[segment_index]["objective"]
+		return String(boss_info["dead_objective"])
+	return segments[segment_index]["objective"]
 
 
 # =====================================================================================
@@ -159,14 +199,14 @@ func objective_text() -> String:
 
 ## Advances `segment_index` to the last segment that has started.
 func _update_segment(t: float) -> void:
-	while segment_index + 1 < WaveData.SEGMENTS.size() and t >= float(WaveData.SEGMENTS[segment_index + 1]["start"]):
+	while segment_index + 1 < segments.size() and t >= float(segments[segment_index + 1]["start"]):
 		segment_index += 1
 
 
 ## Trickle spawner: `rate` enemies/s up to the segment's max_alive, both
 ## scaled by the Profane Pact / Oath spawn penalty (HARD_CAP still applies).
 func _spawn_trickle(delta: float) -> void:
-	var seg: Dictionary = WaveData.SEGMENTS[segment_index]
+	var seg: Dictionary = segments[segment_index]
 	var spawn_mult := game.difficulty.enemy_spawn_mult()  # Pact / Oath spawn penalty.
 	spawn_accum += float(seg["rate"]) * spawn_mult * delta
 	var cap: int = mini(roundi(float(seg["max_alive"]) * spawn_mult), WaveData.HARD_CAP)
@@ -195,13 +235,14 @@ func _pick_kind(weights: Dictionary) -> String:
 
 ## Fires every timeline event whose time has come.
 func _run_events(t: float) -> void:
-	while event_index < WaveData.EVENTS.size() and t >= float(WaveData.EVENTS[event_index]["time"]):
-		_run_event(WaveData.EVENTS[event_index])
+	while event_index < events.size() and t >= float(events[event_index]["time"]):
+		_run_event(events[event_index])
 		event_index += 1
 
 
-## Runs one timeline event: stage events go to the StageDirector, "wave"
-## events spawn their groups in formation and show the banner.
+## Runs one timeline event: stage events go to the StageDirector (Graveyard)
+## or the MarchDirector (Crimson March), "wave" events spawn their groups in
+## formation and show the banner.
 func _run_event(ev: Dictionary) -> void:
 	match String(ev.get("type", "wave")):
 		"consecration":
@@ -212,9 +253,22 @@ func _run_event(ev: Dictionary) -> void:
 			stage.start_crypt(ev)
 			game.stat_add("wave_events", 1.0)
 			return
+		"outposts", "generators", "cart":
+			if march != null:
+				march.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
 	show_banner(ev["banner"])
+	spawn_formation(String(ev["formation"]), ev["groups"])
+	game.stat_add("wave_events", 1.0)
+
+
+## Spawns `groups` (list of {kind, count, elite}) in `formation` ("ring",
+## "arc" or "line") on the spawn ring around the player (HARD_CAP respected).
+## Used by "wave" events and by MarchDirector's escort waves.
+func spawn_formation(formation: String, groups: Array) -> void:
 	var members: Array[Dictionary] = []
-	for g: Dictionary in ev["groups"]:
+	for g: Dictionary in groups:
 		for i in int(g["count"]):
 			members.append({"kind": g["kind"], "elite": g["elite"]})
 	var n := members.size()
@@ -226,7 +280,7 @@ func _run_event(ev: Dictionary) -> void:
 		if alive >= WaveData.HARD_CAP:
 			break
 		var pos: Vector2
-		match String(ev["formation"]):
+		match formation:
 			"ring":
 				pos = p + Vector2.from_angle(TAU * float(i) / float(n) + randf_range(-0.05, 0.05)) * ring
 			"arc":
@@ -242,7 +296,6 @@ func _run_event(ev: Dictionary) -> void:
 		var m := members[i]
 		_spawn_enemy(m["kind"], pos, m["elite"])
 		alive += 1
-	game.stat_add("wave_events", 1.0)
 
 
 ## Shows `text` as the HUD event banner.
@@ -251,22 +304,28 @@ func show_banner(text: String) -> void:
 	banner_until = game.elapsed + WaveData.BANNER_TIME
 
 
-## Spawns Sir Alaric at the spawn ring (HP not time-scaled, but scaled by a
-## share of the Profane Pact / Oath HP penalty, DifficultyModifiers.boss_hp_mult).
+## Spawns the stage boss (stage_def boss.id: "alaric" -> BossAlaric,
+## "vael" -> BossVael) at the spawn ring (HP not time-scaled, but scaled by
+## a share of the Profane Pact / Oath HP penalty,
+## DifficultyModifiers.boss_hp_mult, and by the stage's enemy HP multiplier).
 func _spawn_boss() -> void:
-	boss = BossAlaric.new()
+	match String(boss_info["id"]):
+		"vael":
+			boss = BossVael.new()
+		_:
+			boss = BossAlaric.new()
 	add_child(boss)
-	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult(), _next_slot)
+	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
 	_next_slot = (_next_slot + 1) % UnitData.AI_TICK_DIVISOR
 	active.append(boss)
-	show_banner("Sir Alaric, the Gravebreaker, has arrived!")
+	show_banner(String(boss_info["arrive_banner"]))
 	boss_spawned.emit(boss)
 
 
 ## Spawns the next Reckoning wave around the player: count and HP/damage
-## compound every wave (WaveData.RECKONING), ignoring the regular caps.
+## compound every wave (the stage's "reckoning" data), ignoring the regular caps.
 func _spawn_reckoning_wave() -> void:
-	var r: Dictionary = WaveData.RECKONING
+	var r: Dictionary = stage_def["reckoning"]
 	if reckoning_wave == 0:
 		show_banner(r["banner"])
 		reckoning_started.emit()
@@ -303,15 +362,34 @@ func ring_point(angle: float) -> Vector2:
 
 
 ## Spawns a regular enemy of `kind` at `pos` (moved out of obstacles) for the
-## StageDirector and Sir Alaric's Call to Arms. Ignores the caps; callers
-## check regular_alive() themselves.
+## StageDirector, the MarchDirector and the bosses' summons. Ignores the
+## caps; callers check regular_alive() themselves.
 func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 	return _spawn_enemy(kind, pos, elite)
 
 
+## Design row of enemy `kind`: EnemyData.ENEMIES (Graveyard roster) first,
+## then MarchEnemyData.ENEMIES (Crimson March soldiers and structures).
+func enemy_def(kind: String) -> Dictionary:
+	if EnemyData.ENEMIES.has(kind):
+		return EnemyData.ENEMIES[kind]
+	return MarchEnemyData.ENEMIES[kind]
+
+
 ## Takes an enemy from the pool (or creates one) and activates it.
 func _spawn_enemy(kind: String, pos: Vector2, elite: bool) -> Enemy:
-	return _spawn_enemy_def(kind, EnemyData.ENEMIES[kind], pos, hp_mult, elite)
+	return _spawn_enemy_def(kind, enemy_def(kind), pos, hp_mult, elite)
+
+
+## Takes a living enemy off the field WITHOUT a kill (no XP, no drops, no
+## kill count): a supply cart that escaped, a Holy Standard whose time ran
+## out. It returns to the pool at the next compaction (never in the same
+## step, so it cannot be reused while `active` still lists it).
+func despawn(e: Enemy) -> void:
+	if not e.active or e.is_boss:
+		return
+	e.deactivate()
+	_despawned.append(e)
 
 
 ## As _spawn_enemy() but with an explicit definition and HP multiplier.
@@ -348,11 +426,12 @@ func on_enemy_killed(e: Enemy) -> void:
 	if e.is_boss:
 		# Big reward burst (user brief: no longer the win condition).
 		game.effects.impact(e.position, 120.0, Palette.GOLD)
-		var n: int = EnemyData.BOSS["reward_crystals"]
-		var each: int = maxi(1, floori(float(EnemyData.BOSS["reward_xp"]) / float(n)))
+		var bdef: Dictionary = (e as Boss).boss_def  # The fallen boss's data (reward burst).
+		var n: int = bdef["reward_crystals"]
+		var each: int = maxi(1, floori(float(bdef["reward_xp"]) / float(n)))
 		for i in n:
 			game.pickups.spawn(e.position + Vector2.from_angle(TAU * float(i) / float(n)) * randf_range(20.0, 70.0), each)
-		show_banner("Sir Alaric has fallen! Hold out until the end...")
+		show_banner(String(boss_info["defeat_banner"]))
 		boss_defeated.emit()
 	else:
 		_pool.append(e)

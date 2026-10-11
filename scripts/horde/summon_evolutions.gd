@@ -250,8 +250,8 @@ func _transform_fx(u: SummonedUnit) -> void:
 ## at 1.0 a temporary skeleton rises where the enemy fell (base class kit,
 ## tagged "lich_risen"), unless max_alive of them already stand.
 func on_enemy_killed(e: Enemy, source: String) -> void:
-	if source != "lich":
-		return
+	if source != "lich" or e.is_structure:
+		return  # Not a Lich kill, or a Crimson March structure (no body to raise).
 	var raise: Dictionary = SummonEvolutionData.EVOLUTIONS["lich"]["raise"]
 	_raise_accum += float(raise["chance"])
 	if _raise_accum < 1.0:

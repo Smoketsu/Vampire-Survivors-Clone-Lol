@@ -24,15 +24,18 @@ const WEIGHT_OWNED: float = 2.5  # TUNING (not in GDD)
 ## Weight multiplier for a card on an evolution path: the paired passive of an
 ## owned spell, or an owned spell whose paired passive is owned.
 const WEIGHT_EVOLUTION_PATH: float = 1.5  # TUNING (not in GDD)
-## Total draw weight shared by all NEW summon-class cards: each unowned class
-## gets min(WEIGHT_NEW, this / number of unowned classes). With the original
-## four GDD classes (3 unowned at the start) every class kept weight 1.0; with
-## the split priest (Mender, Warder) and the four later classes (8 unowned at
-## the start) the chance that a hand holds some new summon stays about what it
-## was, instead of new summons crowding out spells, passives and upgrades.
-## Locked classes (the evolution-only Profane Bishop, merged Menders /
+## Total draw weight shared by the NEW cards of the later summon classes
+## (UnitData "shared_card_pool": Abomination, Rogue, Gargoyle, Frost Wraith):
+## each unowned one gets min(WEIGHT_NEW, this / number of them). The GDD's
+## summon roles (Archer, Mage, Mender, Warder) keep the full WEIGHT_NEW like a
+## spell. A single pool over all eight classes (3.0, the first version) left
+## each core class at 0.375: an army build could go most of a run without
+## being offered Mages or a priest order, and collapsed on the Crimson March.
+## At the start this gives 4 + 1.5 new-summon weight against 6 new-spell
+## weight, so new summons still do not crowd spells, passives and upgrades
+## out. Locked classes (the evolution-only Profane Bishop, merged Menders /
 ## Warders) are never offered and do not count.
-const NEW_SUMMON_POOL_WEIGHT: float = 3.0  # TUNING (not in GDD)
+const NEW_SUMMON_POOL_WEIGHT: float = 1.5  # TUNING (not in GDD)
 ## Weight multiplier for a "dead" card (no current effect on the build, e.g.
 ## an army passive with no summon class owned). At most CARDS-1 dead cards are
 ## offered while a live card exists.

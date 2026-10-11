@@ -47,7 +47,8 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
 
 ## Design pillars and decisions to preserve (see GDD §15.0)
 
-- **Run structure:** a 20:00 countdown. Sir Alaric arrives with 3:00 left. At 0:00 the **Reckoning**
+- **Run structure:** a 20:00 countdown on every stage. The stage boss (Sir Alaric, Marshal Vael)
+  arrives with 3:00 left. At 0:00 the **Reckoning**
   begins: escalating, near-unbeatable enemies that end the run. Dying after 0:00 is a victory, and
   dying before 0:00 is a defeat.
 - **Power curve:** a strong build should be **nigh unkillable** before 0:00, and a careless build can
@@ -86,6 +87,7 @@ Autotest options (full table in the README):
 - `--classes=a,b` (force summon classes, e.g. `abomination,rogue,gargoyle,frost_wraith`)
 - `--spells=a,b` (force spells and their evolution passives, e.g.
   `bone_spear,soul_siphon,corpse_explosion,plague_cloud`)
+- `--stage=graveyard|crimson_march` (default graveyard; stage locks are ignored)
 - `--pact`
 - `--meta=none|mid|max`
 - `--oath=0-5`
@@ -98,7 +100,8 @@ Autotest options (full table in the README):
 - `stuck_units=0`;
 - for balance-affecting changes, a multi-seed check against the targets below.
 
-CI (`.github/workflows/ci.yml`) runs the import, the autotest with the naive and army policies, the
+CI (`.github/workflows/ci.yml`) runs the import, the Graveyard autotest with the naive and army
+policies, a Crimson March autotest, the
 Windows/Linux exports and an exported-build smoke test. Pushing a `v*` tag publishes a GitHub Release
 with both zips.
 
@@ -153,7 +156,13 @@ tiny tweaks.
 - four more spells with evolutions and paired passives: Bone Spear / Ossuary Lance (Shade Stride),
   Soul Siphon / Soul Rapture (Vampiric Rite), Corpse Explosion / Grave Eruption (Necrotic
   Expanse), Plague Cloud / Pestilence (Lingering Malediction), plus the Rot status;
-- autotest `--policy=summon`, `--classes=a,b` and `--spells=a,b`.
+- autotest `--policy=summon`, `--classes=a,b` and `--spells=a,b`;
+- Stage 2, **the Crimson March**, on a multi-stage framework: stage data in
+  `scripts/data/stages/` behind `StageRegistry` (read through `game.stage_def`; `wave_data.gd` and
+  `arena_data.gd` keep only shared rules), a RunConfig and stage select, the Meta `[stages]` save
+  section, four clock-driven battle zones, outposts, Holy Ward Generators, supply carts, the
+  Shieldbearer, Banner Bearer and Halberdier, a `Boss` base class, Marshal Vael, and ×1.25 Soul Ash;
+  `--stage=graveyard|crimson_march`.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.
@@ -167,12 +176,11 @@ tiny tweaks.
 4. **Rest of Stage 1's content:**
    - the remaining passives (Bone Plating, Unholy Precision, Unholy Resilience, Bound Souls);
    - a combined balance pass for the priest split, the summon evolutions, the four later
-     classes and the four newer spells (each was tuned separately); evolutions for the later
-     classes, if wanted;
-   - the Banner Bearer enemy;
+     classes, the four newer spells and the Crimson March (each was tuned separately);
+     evolutions for the later classes, if wanted;
    - a dash and an ultimate.
 5. **GDD difficulty levels and pre-run modifiers** (Purge the Unholy, Scarcity, Frail Master, Vengeful
    Dead), plugged into `difficulty_modifiers.gd`.
-6. **Phase 3 campaign:** Stage 2 (Crimson March, Marshal Vael), then Stage 3 (Sanctum of Judgment,
+6. **Phase 3 campaign:** Stage 3 (Sanctum of Judgment,
    Grand Inquisitor Seraphine); skins; achievement rewards.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, final balance.

@@ -40,7 +40,7 @@ func think(u: SummonedUnit) -> bool:
 	if is_busy() or special_cd > 0.0 or not u.target_alive():
 		return false
 	var t := u.target
-	if t.is_reckoning or t.freeze_timer > 0.0 or t.frozen:
+	if t.is_reckoning or t.is_structure or t.freeze_timer > 0.0 or t.frozen:
 		return false
 	if u.position.distance_to(t.position) > u.attack_range + t.radius:
 		return false

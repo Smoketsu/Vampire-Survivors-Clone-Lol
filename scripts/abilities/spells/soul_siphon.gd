@@ -94,7 +94,10 @@ func _fill(stats: Dictionary) -> void:
 		var d := _from.distance_to(e.position)  # px; also breaks HP ties.
 		if d > float(stats["range"]):
 			continue
-		_cands.append([-roundf(e.hp) * 10000.0 + d, e])
+		# Crimson March structures rank after every soldier (they would always
+		# be the "strongest" by HP): tethered only when nothing else is near.
+		var rank := -roundf(e.hp) * 10000.0 + d + (1.0e12 if e.is_structure else 0.0)  # Lower = tethered first.
+		_cands.append([rank, e])
 	_cands.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
 	for c: Array in _cands:
 		if _targets.size() >= want:

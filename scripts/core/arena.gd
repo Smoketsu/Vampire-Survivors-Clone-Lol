@@ -14,13 +14,18 @@
 ## obstacle; Divine Charge lanes are cut short with clear_length().
 ## Drawing works like Ground: the layer is redrawn only when the player
 ## crosses into a new ArenaData.REDRAW_CELL.
+## The layout (density, clear radius, seed, obstacle kinds) comes from the
+## run's stage (`game.stage_def` "arena", StageRegistry). On the Crimson March
+## MarchDirector swaps it at each battle-zone change with set_layout(): the
+## cell cache is dropped, so the terrain around the necromancer is rebuilt
+## as the next zone (a clear circle around him, the road lane kept free).
 class_name Arena
 extends Node2D
 
 ## One solid obstacle (immutable after generation).
 class Obstacle:
 	extends RefCounted
-	## ArenaData.KINDS key ("" for the empty-cell sentinel).
+	## Obstacle kind: a key of the layout's `kinds` ("" for the empty-cell sentinel).
 	var kind: String = ""
 	## True for a circle, false for an axis-aligned rect.
 	var is_circle: bool = true
@@ -55,10 +60,41 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _inv_cell: float = 1.0 / ArenaData.CELL
 ## Physics ticks since the run started (drives slide-memory purges).
 var _frame: int = 0
+## Current obstacle layout (a stage's "arena" dictionary, keys as
+## GraveyardStage.ARENA).
+var _layout: Dictionary = {}
+## Obstacle kinds of `_layout` (kind -> definition).
+var _kinds: Dictionary = {}
+## No obstacle centre within the layout's clear_radius of this point (the
+## run start; the necromancer's position at a zone change).
+var _clear_center: Vector2 = Vector2.ZERO
+## Half-width (px) of the obstacle-free road along y = 0 (0 = no road).
+var _road_half: float = 0.0
 
 
 func _ready() -> void:
 	z_index = -6
+	_apply_layout(game.stage_def["arena"])
+	var march: Dictionary = game.stage_def["march"]  # Crimson March config ({} elsewhere).
+	_road_half = float(march.get("road_half_width", 0.0))
+
+
+## Switches to obstacle layout `layout` (a stage's "arena" dictionary) with
+## its clear circle around `clear_center`: every cached cell is regenerated
+## and the layer redrawn (Crimson March zone change, MarchDirector). Bodies
+## caught inside a new obstacle are pushed out by the next resolve_all().
+func set_layout(layout: Dictionary, clear_center: Vector2, clear_radius: float) -> void:
+	_apply_layout(layout)
+	_layout["clear_radius"] = clear_radius
+	_clear_center = clear_center
+	_cells.clear()
+	_center_cell = Vector2i(1 << 30, 1 << 30)  # Forces a redraw next frame.
+
+
+## Stores `layout` (a copy, so set_layout() may change its clear radius).
+func _apply_layout(layout: Dictionary) -> void:
+	_layout = layout.duplicate()
+	_kinds = _layout["kinds"]
 
 
 func _process(_delta: float) -> void:
@@ -86,25 +122,27 @@ func obstacle_at(pos: Vector2) -> Obstacle:
 
 ## Builds the (hash-chosen) obstacle of cell `key`, or `_empty`.
 func _generate(key: Vector2i) -> Obstacle:
-	_rng.seed = hash(Vector3i(key.x, key.y, ArenaData.LAYOUT_SEED))
-	if _rng.randf() >= ArenaData.DENSITY:
+	_rng.seed = hash(Vector3i(key.x, key.y, int(_layout["layout_seed"])))
+	if _rng.randf() >= float(_layout["density"]):
 		return _empty
 	var span := ArenaData.CELL - 2.0 * ArenaData.CELL_MARGIN
 	var center := Vector2(float(key.x) * ArenaData.CELL + ArenaData.CELL_MARGIN + _rng.randf() * span,
 			float(key.y) * ArenaData.CELL + ArenaData.CELL_MARGIN + _rng.randf() * span)
-	if center.length() < ArenaData.CLEAR_RADIUS:
+	if (center - _clear_center).length() < float(_layout["clear_radius"]):
 		return _empty
+	if _road_half > 0.0 and absf(center.y) < _road_half + ArenaData.MAX_HALF_EXTENT:
+		return _empty  # Crimson March: the road stays open.
 	var total := 0.0
-	for k: String in ArenaData.KINDS:
-		total += float(ArenaData.KINDS[k]["weight"])
+	for k: String in _kinds:
+		total += float(_kinds[k]["weight"])
 	var roll := _rng.randf() * total
-	var kind := "gravestone"
-	for k: String in ArenaData.KINDS:
-		roll -= float(ArenaData.KINDS[k]["weight"])
+	var kind: String = _kinds.keys()[0]  # Fallback: the first kind.
+	for k: String in _kinds:
+		roll -= float(_kinds[k]["weight"])
 		if roll <= 0.0:
 			kind = k
 			break
-	var def: Dictionary = ArenaData.KINDS[kind]
+	var def: Dictionary = _kinds[kind]
 	var o := Obstacle.new()
 	o.kind = kind
 	o.center = center
@@ -290,6 +328,8 @@ func _draw() -> void:
 
 ## Draws one obstacle; the solid outline matches its collision shape.
 func _draw_obstacle(o: Obstacle) -> void:
+	if MarchGlyphs.draw_obstacle(self, o):
+		return  # A Crimson March obstacle kind.
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

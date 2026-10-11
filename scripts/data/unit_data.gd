@@ -93,6 +93,11 @@ const CORE_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
 ##                             Dominion, Legion of Bone) this class receives,
 ##                             rounded down; 1 when absent. Low-population
 ##                             elite classes would otherwise double in size.
+##   shared_card_pool        — true: while not owned, this class's NEW card
+##                             shares LevelUpData.NEW_SUMMON_POOL_WEIGHT with
+##                             the other shared classes (the four later
+##                             classes); absent: it has the full
+##                             LevelUpData.WEIGHT_NEW like a spell.
 ##   behavior                — SummonBehavior id ("stomp" | "dash" | "swoop" |
 ##                             "frost"); absent = no special action.
 ##   special                 — the behaviour's numbers. HordeDirector scales
@@ -327,6 +332,7 @@ const UNITS := {
 		"formation": "front",  # TUNING (not in GDD) frontline arc with the warriors
 		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2, not +5
 		"behavior": "stomp",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
 		"special": {
 			"stomp_damage": 22.0,  # TUNING (not in GDD) AoE damage to every enemy in the ring
 			"stomp_radius": 64.0,  # TUNING (not in GDD) px around the abomination
@@ -369,6 +375,7 @@ const UNITS := {
 		"formation": "mid",
 		"capacity_bonus_mult": 0.6,  # TUNING (not in GDD) Grave Dominion V: +3
 		"behavior": "dash",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
 		"special": {
 			"dash_damage": 24.0,  # TUNING (not in GDD) to every enemy in the lane
 			"dash_length": 130.0,  # TUNING (not in GDD) max lane length (px)
@@ -416,6 +423,7 @@ const UNITS := {
 		"formation": "front",
 		"capacity_bonus_mult": 0.6,  # TUNING (not in GDD) Grave Dominion V: +3
 		"behavior": "swoop",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
 		"special": {
 			"swoop_damage": 30.0,  # TUNING (not in GDD) AoE damage where it lands
 			"swoop_radius": 50.0,  # TUNING (not in GDD) impact radius (px)
@@ -464,6 +472,7 @@ const UNITS := {
 		"formation": "mid",
 		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2
 		"behavior": "frost",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
 		"special": {
 			"chill_slow": 0.35,  # TUNING (not in GDD) fraction of speed a frost bolt removes
 			"chill_duration": 1.8,  # TUNING (not in GDD) s the chill lasts

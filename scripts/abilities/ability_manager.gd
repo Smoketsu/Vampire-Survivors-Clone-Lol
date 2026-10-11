@@ -605,9 +605,10 @@ func _apply_fallback(id: String) -> void:
 
 
 ## Every upgradeable item not banished and not in `exclude` (id -> true), as
-## {"offer", "weight", "dead"} entries for the weighted draw. New summon
-## classes split LevelUpData.NEW_SUMMON_POOL_WEIGHT between them, so a larger
-## roster does not crowd spells, passives and upgrades out of the hands.
+## {"offer", "weight", "dead"} entries for the weighted draw. The later
+## summon classes (UnitData "shared_card_pool") split
+## LevelUpData.NEW_SUMMON_POOL_WEIGHT between their NEW cards, so a larger
+## roster does not crowd spells, passives, upgrades and the GDD classes out.
 func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var can_new_active := active_count() < PlayerData.ACTIVE_SLOTS
@@ -631,12 +632,14 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 			w *= game.autotest.card_weight_mult(id)  # Test only: --spells items come up more often.
 		out.append({"offer": _spell_offer(id, lvl), "weight": w, "dead": false})
 	var evos := game.horde.evolutions  # Summon-evolution card hooks.
-	# Summon classes that can still appear as a NEW card (not owned, not
-	# banished, not locked: the Profane Bishop is evolution-only and merged
-	# Menders / Warders are gone). They share NEW_SUMMON_POOL_WEIGHT.
+	# Shared-pool summon classes (UnitData "shared_card_pool": the later
+	# classes) that can still appear as a NEW card (not owned, not banished,
+	# not locked). They split NEW_SUMMON_POOL_WEIGHT; the other classes get
+	# WEIGHT_NEW each.
 	var unowned := 0
 	for cls: String in UnitData.CLASS_ORDER:
-		if int(game.horde.class_levels[cls]) == 0 and not banished.has(cls) and not evos.is_locked(cls):
+		if int(game.horde.class_levels[cls]) == 0 and not banished.has(cls) and not evos.is_locked(cls) \
+				and bool(UnitData.UNITS[cls].get("shared_card_pool", false)):
 			unowned += 1
 	var w_new_summon := minf(LevelUpData.WEIGHT_NEW, LevelUpData.NEW_SUMMON_POOL_WEIGHT / float(maxi(unowned, 1)))  # Weight of one new class.
 	for cls: String in UnitData.CLASS_ORDER:
@@ -645,7 +648,7 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 			continue
 		if evos.is_locked(cls):
 			continue  # Merged away, or only created by an evolution.
-		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else w_new_summon
+		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (w_new_summon if bool(UnitData.UNITS[cls].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW)
 		if lvl > 0 and evos.on_path(cls):
 			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
 		out.append({"offer": _summon_offer(cls, lvl), "weight": w, "dead": false})

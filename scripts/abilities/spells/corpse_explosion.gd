@@ -1,6 +1,7 @@
 ## CorpseExplosion — the Corpse Explosion spell (AbilityData
 ## "corpse_explosion"): every enemy that dies, whoever killed it (the horde,
-## spells, a Soul Nova), leaves a corpse for AbilityData.CORPSE_LIFE s.
+## spells, a Soul Nova), leaves a corpse for AbilityData.CORPSE_LIFE s
+## (Crimson March structures leave none).
 ## Every `cooldown` s the spell detonates up to `count` corpses within
 ## `range` px of the necromancer, choosing the ones with the most live
 ## enemies inside `radius` (fresher corpses win ties); each burst deals
@@ -75,6 +76,8 @@ func _ready() -> void:
 ## Eruption bursts the victim erupts at once (chain); otherwise it leaves a
 ## corpse.
 func on_enemy_killed(e: Enemy) -> void:
+	if e.is_structure:
+		return  # A destroyed Crimson March structure leaves rubble, not a corpse.
 	if _bursting and _eruption and _chain_left > 0:
 		_chain_left -= 1
 		_chain_queue.append(e.position)

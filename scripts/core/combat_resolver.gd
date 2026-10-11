@@ -22,6 +22,14 @@ func _init(p_game: Game) -> void:
 func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if not e.active or amount <= 0.0:
 		return 0.0
+	# Enemy-side damage modifiers (Crimson March tower shields, aura buffs,
+	# Marshal Vael's Shieldwall): exactly 1 for every Graveyard enemy.
+	var taken := e.damage_taken_mult(source)
+	if taken != 1.0:
+		game.stat_add("dmg_resisted_" + e.kind, amount * (1.0 - taken) * (1.0 - e.armor))
+		amount *= taken
+	# Plague Cloud Rot (applied after the enemy-side modifiers): +rot_amp
+	# from every source.
 	var rot := e.rot_amp if e.rot_until > game.elapsed else 0.0  # Rot bonus fraction.
 	amount *= 1.0 + rot
 	var dealt := minf(amount * (1.0 - e.armor), e.hp)
@@ -140,10 +148,13 @@ func chill_enemy(e: Enemy, fraction: float, duration: float) -> void:
 ## Frost Wraith Deep Freeze: holds `e` for `duration` s through the Stasis
 ## freeze path (EnemyDirector skips its AI, attacks and movement while
 ## Enemy.freeze_timer > 0). The boss gets `boss_mult` of the duration, elites
-## `elite_mult`, Reckoning enemies are immune. A longer freeze already running
-## is kept. Returns the seconds applied (0 = immune).
+## `elite_mult`, Reckoning enemies are immune. Crimson March structures
+## (outposts, ward generators, carts, the Holy Standard) are immune too: a
+## building cannot be frozen, and a frozen one would stop its own timers
+## (the Stasis power-up, a global time stop, still holds them). A longer
+## freeze already running is kept. Returns the seconds applied (0 = immune).
 func freeze_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) -> float:
-	if not e.active or e.is_reckoning or duration <= 0.0:
+	if not e.active or e.is_reckoning or e.is_structure or duration <= 0.0:
 		return 0.0
 	var d := duration  # Freeze time for this enemy.
 	if e.is_boss:

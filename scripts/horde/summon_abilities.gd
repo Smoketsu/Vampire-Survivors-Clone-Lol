@@ -13,7 +13,7 @@
 ##                       life drain from all the damage dealt.
 ## All damage and healing goes through CombatResolver. Statistics use the
 ## unit's dmg_source tag: heal_by_<tag>, shield_by_<tag> and the damage
-## sources ("death_knight_cleave", "bishop"...).
+## sources ("death_knight_cleave", "bishop_aura"...).
 class_name SummonAbilities
 extends RefCounted
 
@@ -62,7 +62,8 @@ static func try_ally_barrier(u: SummonedUnit) -> void:
 
 ## Profane Bishop aura pulse: heals every living ally and the necromancer
 ## within `u.aura_radius` by `u.aura_heal`, and damages every enemy inside by
-## `u.aura_damage` (source = the unit's dmg_source). Called from the unit's
+## `u.aura_damage` (source "<dmg_source>_aura", e.g. "bishop_aura": a melee
+## source for Marshal Vael's Shieldwall). Called from the unit's
 ## physics step on its own timer.
 static func aura_pulse(u: SummonedUnit) -> void:
 	var game := u.game
@@ -81,7 +82,7 @@ static func aura_pulse(u: SummonedUnit) -> void:
 		game.enemy_grid.query(u.position, r + ProjectileManager.MAX_BODY_RADIUS, _buf)
 		for e: Enemy in _buf:
 			if e.active and e.position.distance_to(u.position) <= r + e.radius:
-				game.combat.damage_enemy(e, u.aura_damage, u.dmg_source)
+				game.combat.damage_enemy(e, u.aura_damage, u.dmg_source + "_aura")
 				hit += 1
 	if healed > 0.0 or hit > 0:
 		game.effects.ring(u.position, r, Palette.NECRO_GREEN, 0.45)
