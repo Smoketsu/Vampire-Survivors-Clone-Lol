@@ -2,9 +2,10 @@
 ## menu and a run. A run is a fresh Game node every time, so Restart is
 ## simply "free the old Game, build a new one" with the same RunConfig.
 ## Play opens the stage select (StageSelect) over the menu; choosing a stage
-## yields the RunConfig the run is built with (the pre-run settings hook,
-## see RunConfig). In autotest mode the menu is skipped and a run starts
-## immediately on the --stage= stage (locks ignored).
+## opens the pre-run setup (PreRunSetup: difficulty level and run
+## modifiers), which yields the RunConfig the run is built with. In autotest
+## mode the menu is skipped and a run starts immediately on the --stage=
+## stage (locks ignored) with --difficulty= and --modifiers=.
 extends Node
 
 ## Current run (null while the menu is shown).
@@ -18,6 +19,8 @@ var _run_config: RunConfig = null
 func _ready() -> void:
 	if GameState.autotest:
 		_run_config = RunConfig.for_stage(GameState.autotest_stage)
+		_run_config.set_difficulty(GameState.autotest_difficulty)
+		_run_config.set_modifiers(GameState.autotest_modifiers)
 		_start_game()
 	else:
 		_show_menu()
@@ -34,7 +37,7 @@ func _show_menu() -> void:
 	_menu_layer.add_child(menu)
 
 
-## The stage select confirmed a stage: start a run with that config.
+## The stage select and pre-run setup confirmed a config: start a run with it.
 func _on_stage_chosen(config: RunConfig) -> void:
 	_run_config = config
 	GameState.last_stage_id = config.stage_id

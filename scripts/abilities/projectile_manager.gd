@@ -124,12 +124,16 @@ func fire_aoe(pos: Vector2, dest: Vector2, damage: float, speed: float, splash: 
 	_launch(p)
 
 
-## Fires a Covenant arrow in direction `dir`.
-func fire_hostile(pos: Vector2, dir: Vector2, damage: float, speed: float, undead_mult: float) -> void:
+## Fires a Covenant arrow in direction `dir`. `kind` / `source` default to
+## an archer arrow; Holy Retribution (a run modifier) fires RADIANT_BOLTs
+## tagged "holy_retribution" (the player_dmg_from_* / summon_dmg_from_* stat).
+func fire_hostile(pos: Vector2, dir: Vector2, damage: float, speed: float, undead_mult: float,
+		kind: Projectile.Kind = Projectile.Kind.ENEMY_ARROW, source: String = "archer_arrow") -> void:
 	var p := _acquire()
 	if p == null:
 		return
-	p.kind = Projectile.Kind.ENEMY_ARROW
+	p.kind = kind
+	p.source = source
 	p.hostile = true
 	p.is_aoe = false
 	p.position = pos
@@ -276,12 +280,12 @@ func _hostile_hits(p: Projectile) -> bool:
 		return false
 	var pl := game.player
 	if pl.position.distance_to(p.position) <= pl.radius + p.radius:
-		game.combat.damage_player(p.damage, "archer_arrow")
+		game.combat.damage_player(p.damage, p.source)
 		return false
 	game.ally_grid.query(p.position, p.radius + 14.0, _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.position.distance_to(p.position) <= u.radius + p.radius:
-			game.combat.damage_unit(u, p.damage * p.undead_mult, "archer_arrow")
+			game.combat.damage_unit(u, p.damage * p.undead_mult, p.source)
 			return false
 	return true
 

@@ -3,9 +3,10 @@
 ##   Top left      : level, HP, shields (Orb Shield intercept charges).
 ##   Top center    : timer, battle zone (Crimson March), objective / event
 ##                   banner, boss HP when present (named after the stage boss).
-##   Top right     : kill count, pause hint, modifiers (the Profane Pact
-##                   level and Profane Oath tier with their combined effect,
-##                   from game.difficulty).
+##   Top right     : kill count, pause hint, modifiers (the difficulty
+##                   level, the active run modifiers and their Soul Ash
+##                   multiplier, then the Profane Pact level and Profane
+##                   Oath tier with their combined effect; game.difficulty).
 ##   Left, under HP: timed power-up buffs (Hyper, Stasis, Dark Frenzy) with
 ##                   their remaining time (game.powerups).
 ##   Bottom center : active ability slots (6) and passive slots (6) with levels.
@@ -78,7 +79,7 @@ var _announce_name: Label
 var _announce_desc: Label
 ## Game time (Game.elapsed) at which the current banner was shown (-1 = none).
 var _announce_at: float = -1.0
-## "Modifiers" label (top right): "none", or the Pact / Oath and their effect.
+## "Modifiers" label (top right): difficulty, run modifiers, Pact / Oath.
 var _mods_label: Label
 ## Timed buff id -> {"row": HBoxContainer, "label": Label, "bar": HudBar}.
 var _buff_rows: Dictionary = {}
@@ -175,6 +176,8 @@ func _build() -> void:
 	top_right.add_child(hint)
 	_mods_label = UiTheme.label("Modifiers: none  |  Difficulty: Necromancer", 13, UiTheme.TEXT_DIM)
 	_mods_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_mods_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART  # Many run modifiers wrap.
+	_mods_label.custom_minimum_size = Vector2(284, 0)
 	top_right.add_child(_mods_label)
 
 	# Left, under the HP block: running power-up buffs with time left.
@@ -326,7 +329,8 @@ func _refresh() -> void:
 			_passive_icons[i].set_icon("")
 
 
-## Updates the power-up buff rows and the Modifiers (Pact / Oath) label.
+## Updates the power-up buff rows and the Modifiers label (difficulty level,
+## run modifiers, Pact / Oath).
 func _refresh_modifiers() -> void:
 	for kind: String in PowerupData.TIMED:
 		var row: Dictionary = _buff_rows[kind]  # Widgets of this buff.
@@ -335,13 +339,10 @@ func _refresh_modifiers() -> void:
 		if left > 0.0:
 			(row["label"] as Label).text = "%s %.1fs" % [PowerupData.POWERUPS[kind]["display_name"], left]
 			(row["bar"] as HudBar).set_values(left / float(PowerupData.POWERUPS[kind]["duration"]))
-	var lines := game.difficulty.describe_lines()  # Empty while no Pact / Oath.
-	if lines.is_empty():
-		_mods_label.text = "Modifiers: none  |  Difficulty: Necromancer"
-		_mods_label.add_theme_color_override("font_color", UiTheme.TEXT_DIM)
-	else:
-		_mods_label.text = "\n".join(lines)
-		_mods_label.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.45))
+	var dif := game.difficulty  # The one difficulty path.
+	_mods_label.text = "\n".join(dif.hud_lines())
+	var hot := dif.is_active() or dif.has_run_setup()  # Anything beyond the standard run.
+	_mods_label.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.45) if hot else UiTheme.TEXT_DIM)
 
 
 ## Shows the progression banner: `title` (small), `item_name` (big, in `color`)

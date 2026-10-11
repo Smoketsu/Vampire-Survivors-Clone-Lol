@@ -6,8 +6,9 @@ class_name Projectile
 extends Node2D
 
 ## Projectile kinds (drawing + hit rules). VOID_BOLT / VOID_SHARD belong to
-## the Void Barrage evolution (GDD §6.1); FROST_BOLT is the Frost Wraith's.
-enum Kind { SHADOW_BOLT, ARROW, MAGE_ORB, PRIEST_BOLT, ENEMY_ARROW, VOID_BOLT, VOID_SHARD, FROST_BOLT }
+## the Void Barrage evolution (GDD §6.1); FROST_BOLT is the Frost Wraith's;
+## RADIANT_BOLT is the hostile burst of the Holy Retribution run modifier.
+enum Kind { SHADOW_BOLT, ARROW, MAGE_ORB, PRIEST_BOLT, ENEMY_ARROW, VOID_BOLT, VOID_SHARD, FROST_BOLT, RADIANT_BOLT }
 
 ## Current kind.
 var kind: Kind = Kind.SHADOW_BOLT
@@ -100,3 +101,8 @@ func _draw() -> void:
 			draw_line(Vector2(-14, 0), Vector2(-2, 0), Color(Palette.COLD_BLUE, 0.45), 3.0)
 			draw_colored_polygon(PackedVector2Array([Vector2(7, 0), Vector2(0, -3), Vector2(-5, 0), Vector2(0, 3)]), Palette.COLD_BLUE)
 			draw_line(Vector2(-3, 0), Vector2(6, 0), PowerupGlyphs.ICE, 1.0)
+		Kind.RADIANT_BOLT:
+			# Holy Retribution: a gold-white mote of holy light with a short trail.
+			draw_line(Vector2(-12, 0), Vector2.ZERO, Color(Palette.GOLD, 0.4), 4.0)
+			draw_circle(Vector2.ZERO, 6.0, Color(Palette.GOLD, 0.35))
+			draw_circle(Vector2.ZERO, 3.5, Palette.IVORY)

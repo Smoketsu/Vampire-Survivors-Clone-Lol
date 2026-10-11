@@ -74,6 +74,11 @@
 ##     buffs, tower-shield and Shieldwall damage resisted, halberd cleaves)
 ##     and Marshal Vael's attack counters. The boss line works for any stage
 ##     boss (Boss.special_ids()).
+##   * difficulty: --difficulty=ID and --modifiers=a,b set the GDD §8.4
+##     level and §8.5 run modifiers (Main builds the RunConfig); the summary
+##     adds a "difficulty" line (level, modifiers, every effective multiplier,
+##     the Soul Ash parts, trickle elites promoted, Holy Retribution bursts
+##     and radiant-bolt damage).
 class_name Autotest
 extends Node
 
@@ -210,6 +215,9 @@ var _reckoning_time: float = -1.0
 var _peak: Dictionary = {"enemies": 0, "summons": 0, "projectiles": 0, "effects": 0, "crystals": 0}
 ## Real-time start (ms) for the wall-clock duration line.
 var _real_start_msec: int = 0
+## Necromancer max HP at the first step (after Soul Ash upgrades and the
+## Frail Master run modifier); -1 before the first step.
+var _start_max_hp: float = -1.0
 ## Game seconds during which 2 or more ward casters (Warders / Profane
 ## Bishops) were alive.
 var _two_priest_time: float = 0.0
@@ -288,6 +296,8 @@ func _ready() -> void:
 		GameState.autotest_oath, str(GameState.autotest_pact), ",".join(GameState.autotest_classes) if not GameState.autotest_classes.is_empty() else "-",
 		",".join(GameState.autotest_spells) if not GameState.autotest_spells.is_empty() else "-"])
 	print("[autotest] stage: %s" % GameState.autotest_stage)
+	print("[autotest] difficulty: %s | modifiers: %s" % [GameState.autotest_difficulty,
+		",".join(GameState.autotest_modifiers) if not GameState.autotest_modifiers.is_empty() else "none"])
 
 
 ## --classes: raises every forced class to Lv 1 while an active slot is free.
@@ -308,6 +318,8 @@ func _apply_forced_classes() -> void:
 func step(delta: float) -> void:
 	if not _forced_done:
 		_apply_forced_classes()
+	if _start_max_hp < 0.0:
+		_start_max_hp = game.player.max_hp
 	var wards := int(game.stats.get("priest_wards", 0.0))
 	if game.horde.count_of("warder") + game.horde.count_of("bishop") >= 2:
 		_two_priest_time += delta
@@ -936,6 +948,12 @@ func _print_soul_ash(summary: Dictionary) -> void:
 		int(parts["elites"]), int(ash["elite_count"]), int(parts["boss"]), int(parts["reckoning"]), float(ash["reckoning_seconds"]),
 		int(ash["subtotal"]), int(roundf(float(ash["bonus_pct"]) * 100.0)), int(ash["bonus"]), int(ash.get("pact_bonus", 0)), int(ash.get("oath_bonus", 0)),
 		int(ash["bounty"]), int(ash["new_total"]), str(Meta.can_write())])
+	var dif := game.difficulty
+	print("[autotest] %s" % dif.summary_line())
+	print("[autotest] difficulty results: soul ash difficulty %+d, modifiers +%d | trickle elites promoted: %d | holy retribution bursts: %d (dmg to you %d, to summons %d) | player max HP at start: %d" % [
+		int(ash.get("difficulty_bonus", 0)), int(ash.get("modifiers_bonus", 0)), int(game.stats.get("elites_promoted", 0.0)),
+		int(game.stats.get("holy_retribution_bursts", 0.0)), int(game.stats.get("player_dmg_from_holy_retribution", 0.0)),
+		int(game.stats.get("summon_dmg_from_holy_retribution", 0.0)), int(_start_max_hp)])
 	print("[autotest] stage: %s | soul ash stage bonus +%d (x%.2f) | stages unlocked by this run: %s" % [
 		String(summary.get("stage_name", "")), int(ash.get("stage_bonus", 0)), 1.0 + float(ash.get("stage_pct", 0.0)),
 		", ".join(ash.get("unlocked_stages", PackedStringArray())) if not (ash.get("unlocked_stages", PackedStringArray()) as PackedStringArray).is_empty() else "none"])

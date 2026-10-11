@@ -184,4 +184,26 @@ func _kill_enemy(e: Enemy) -> void:
 	game.abilities.on_enemy_killed(e)  # Corpse Explosion corpses, Soul Rapture bursts.
 	game.powerups.on_enemy_killed(e)  # Power-up drop roll (PowerupData rules).
 	game.chests.on_enemy_killed(e)  # Treasure chest roll (ChestData rules).
+	if e.is_elite and not e.is_boss and not e.is_structure:
+		_holy_retribution(e)
 	game.enemies.on_enemy_killed(e)
+
+
+## Holy Retribution (GDD §8.5 run modifier, game.difficulty): a slain elite
+## bursts into a ring of radiant bolts (Covenant projectiles, damage scaled
+## like every enemy hit by EnemyDirector.damage_mult). No-op when the
+## modifier is off. The ring is aligned to the elite's heading to the
+## player, so no RNG is used.
+func _holy_retribution(e: Enemy) -> void:
+	var n := game.difficulty.radiant_bolts()  # Bolts in the ring (0 = off).
+	if n <= 0:
+		return
+	var dmg := game.difficulty.radiant_damage() * game.enemies.damage_mult  # Damage per bolt.
+	var speed := game.difficulty.radiant_speed()  # Bolt speed (px/s).
+	var a0 := (game.player.position - e.position).angle()  # First bolt aims at the player.
+	for i in n:
+		var dir := Vector2.from_angle(a0 + TAU * float(i) / float(n))  # This bolt's heading.
+		game.projectiles.fire_hostile(e.position + dir * e.radius, dir, dmg, speed, 1.0,
+				Projectile.Kind.RADIANT_BOLT, "holy_retribution")
+	game.effects.ring(e.position, 34.0, Palette.GOLD, 0.35)
+	game.stat_add("holy_retribution_bursts", 1.0)

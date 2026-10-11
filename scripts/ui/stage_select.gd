@@ -6,14 +6,15 @@
 ## kills and Soul Ash bonus (Meta.stage_record()). Keyboard, mouse and
 ## controller navigable (arrows / D-pad between cards, Enter / A to march,
 ## Esc / B back), in the shared UiTheme.
-## Choosing an unlocked stage emits `stage_chosen` with a RunConfig.
-## PRE-RUN SETTINGS HOOK: a later difficulty / modifier step (GDD §8.4,
-## §8.5) slots in here: open it from _choose() with the RunConfig, let it
-## fill its fields, then emit stage_chosen.
+## Choosing an unlocked stage opens the pre-run setup (PreRunSetup: GDD
+## §8.4 difficulty and §8.5 run modifiers, starting from the choices
+## remembered in the Meta save) over this screen; when it confirms,
+## `stage_chosen` is emitted with the finished RunConfig. Backing out of it
+## returns to the stage card.
 class_name StageSelect
 extends Control
 
-## A stage was chosen: start a run with `config`.
+## A stage was chosen and set up: start a run with `config`.
 signal stage_chosen(config: RunConfig)
 ## The screen closed without a choice (Back / Esc).
 signal closed
@@ -185,12 +186,14 @@ func _wire_focus() -> void:
 	_back.focus_neighbor_top = _back.get_path_to(_cards[ids[0]])
 
 
-## An unlocked stage was chosen: hand its RunConfig to the menu.
+## An unlocked stage was chosen: open the pre-run setup with its RunConfig
+## (remembered difficulty and modifiers); its Begin hands the config on.
 func _choose(id: String) -> void:
 	if not Meta.is_stage_unlocked(id):
 		return
 	Sfx.play("ui_confirm")
-	stage_chosen.emit(RunConfig.for_stage(id))
+	var setup := PreRunSetup.open_over(self, _cards[id], Meta.prerun_config(id))  # Difficulty / modifiers step.
+	setup.confirmed.connect(func(c: RunConfig) -> void: stage_chosen.emit(c))
 
 
 ## Restores focus to the opener and frees the screen.

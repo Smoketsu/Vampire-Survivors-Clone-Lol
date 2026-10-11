@@ -66,7 +66,8 @@ func on_enemy_killed(e: Enemy) -> void:
 	var pity := since_chest >= ChestData.PITY_TIME  # Pity timer ran out.
 	if not pity and since_chest >= ChestData.EVOLUTION_PITY_TIME and not game.abilities.ready_evolutions().is_empty():
 		pity = true  # An evolution waits for its chest: shorter pity.
-	var rolled := e.is_elite and _rng.randf() < ChestData.ELITE_CHANCE  # Elite roll succeeded.
+	# Elite roll (an elite promoted by the difficulty level never rolls).
+	var rolled := e.is_elite and not e.is_promoted and _rng.randf() < ChestData.ELITE_CHANCE  # Elite roll succeeded.
 	if not pity and not rolled:
 		return
 	if active.size() >= ChestData.MAX_LIVE:

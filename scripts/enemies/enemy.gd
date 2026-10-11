@@ -100,6 +100,10 @@ var mass: float = 1.0
 var is_reckoning: bool = false
 ## True for stage-objective enemies (consecrators): never recycled.
 var is_objective: bool = false
+## True for an elite promoted by the difficulty level (DifficultyData
+## elite_chance): elite HP and size, but the base soldier's XP and no elite
+## chest / power-up chance (EnemyDirector._spawn_trickle sets it).
+var is_promoted: bool = false
 ## World point a "consecrator" walks to and holds ("cart": where it rolls to).
 var post_pos: Vector2 = Vector2.ZERO
 ## True for buildings and carts (MarchEnemyData `is_structure`): no target
@@ -248,6 +252,7 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	mass = float(def.get("mass", 1.0))
 	is_reckoning = false
 	is_objective = false
+	is_promoted = false
 	post_pos = pos
 	_rush_def = def if behavior == "templar" else {}
 	rush_state = 0

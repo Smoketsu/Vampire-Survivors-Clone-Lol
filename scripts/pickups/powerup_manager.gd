@@ -110,7 +110,8 @@ func on_enemy_killed(e: Enemy) -> void:
 		for _n in PowerupData.BOSS_DROPS:
 			spawn_drop(_pick_kind(), e.position, true)
 		return
-	var chance := PowerupData.CHANCE_ELITE if e.is_elite else PowerupData.CHANCE_NORMAL  # Base drop chance.
+	# Base drop chance (an elite promoted by the difficulty level drops like a soldier).
+	var chance := PowerupData.CHANCE_ELITE if e.is_elite and not e.is_promoted else PowerupData.CHANCE_NORMAL  # Base drop chance.
 	chance *= game.difficulty.drop_mult()
 	var pity := since_drop >= PowerupData.PITY_TIME  # Pity timer ran out: guaranteed.
 	var rolled := _rng.randf() < chance  # Regular drop roll succeeded.
@@ -152,14 +153,15 @@ func spawn_drop(kind: String, pos: Vector2, force: bool) -> bool:
 	return true
 
 
-## Weighted random power-up id (PowerupData weights).
+## Weighted random power-up id (PowerupData weights; the Scarcity run
+## modifier lowers Grave Feast's through game.difficulty.powerup_weight).
 func _pick_kind() -> String:
 	var total := 0.0  # Sum of all weights.
 	for kind: String in PowerupData.ORDER:
-		total += float(PowerupData.POWERUPS[kind]["weight"])
+		total += game.difficulty.powerup_weight(kind, float(PowerupData.POWERUPS[kind]["weight"]))
 	var roll := _rng.randf() * total  # Position inside the weight line.
 	for kind: String in PowerupData.ORDER:
-		roll -= float(PowerupData.POWERUPS[kind]["weight"])
+		roll -= game.difficulty.powerup_weight(kind, float(PowerupData.POWERUPS[kind]["weight"]))
 		if roll <= 0.0:
 			return kind
 	return PowerupData.ORDER[0]
@@ -178,7 +180,7 @@ func collect(kind: String, pos: Vector2) -> void:
 		"magnet":
 			game.stat_add("pu_magnet_crystals", float(game.pickups.magnetize_all()))
 		"feast":
-			game.combat.heal_player(game.player.max_hp * float(def["heal_fraction"]))
+			game.combat.heal_player(game.player.max_hp * float(def["heal_fraction"]) * game.difficulty.feast_heal_mult())
 		"nova":
 			_soul_nova(def)
 		_:
