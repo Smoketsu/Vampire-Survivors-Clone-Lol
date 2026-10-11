@@ -183,7 +183,10 @@ tiny tweaks.
    with file keys and sizes); process each with `python3 tools/prepare_sprite.py <image> <key>`.
    `SpriteBank` draws `assets/sprites/<key>.png` when present and falls back to the glyph, so art
    lands piecemeal. Done: `player/necromancer`; every summon and evolution (incl. `risen`); every enemy soldier (incl. the
-   Reckoning's `inquisitor`). Still to do: the bosses, structures and pickups. Pickups, ground tiles and obstacles come later.
+   Reckoning's `inquisitor`). Still to do: the bosses, structures and pickups. Effects are
+   short animations (`prepare_sprite.py --anim <sheet or GIF> <id>` → `assets/sprites/effects/`,
+   timing in `anim_data.gd`); only `shadow_blast` is hooked so far (test), hook the rest via
+   `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.
 4. **Rest of Stage 1's content:**
    - the remaining passives (Bone Plating, Unholy Precision, Unholy Resilience, Bound Souls);
    - evolutions for the Archer and the four later classes, if wanted;

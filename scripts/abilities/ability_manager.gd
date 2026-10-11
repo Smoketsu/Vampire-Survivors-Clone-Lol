@@ -409,7 +409,7 @@ func _cast_blast(s: Dictionary) -> bool:
 		_detonations.append({"t": float(s["second_delay"]), "pos": p, "stats": s})
 		game.stat_add("abyssal_detonations", 1.0)
 	else:
-		game.effects.ring(p, r, Palette.VIOLET, 0.35)
+		game.effects.ring(p, r, Palette.VIOLET, 0.35, "shadow_blast")
 	game.shake(2.0)
 	game.stat_add("shadow_blasts", 1.0)
 	return true

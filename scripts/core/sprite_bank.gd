@@ -92,3 +92,24 @@ static func draw_icon_art(ci: CanvasItem, kind: String, rect: Rect2) -> bool:
 	var size := Vector2(w, h) * (box / maxf(w, h))  # Drawn size (px).
 	ci.draw_texture_rect(tex, Rect2(rect.get_center() - size * 0.5, size), false)
 	return true
+
+
+## True when an effect animation strip exists for `id` (assets/sprites/effects/<id>.png).
+static func has_anim(id: String) -> bool:
+	return texture("effects/" + id) != null
+
+
+## Draws frame `progress` (0..1 through the animation) of effect animation `id`
+## centred on `o`, `diameter` px across (square frames in a horizontal strip;
+## frame count = width / height). `alpha` fades it. Returns false without art.
+static func draw_anim(ci: CanvasItem, id: String, o: Vector2, diameter: float, progress: float, alpha: float = 1.0) -> bool:
+	var tex := texture("effects/" + id)  # Strip of square frames, or null.
+	if tex == null:
+		return false
+	var fh := float(tex.get_height())  # Frame size (px).
+	var frames := maxi(1, int(round(float(tex.get_width()) / fh)))  # Frame count.
+	var f := mini(int(progress * float(frames)), frames - 1)  # Current frame.
+	var src := Rect2(fh * float(f), 0.0, fh, fh)  # Frame region in the strip.
+	var dst := Rect2(o - Vector2.ONE * diameter * 0.5, Vector2.ONE * diameter)  # On-screen rect.
+	ci.draw_texture_rect_region(tex, dst, src, Color(1, 1, 1, alpha))
+	return true

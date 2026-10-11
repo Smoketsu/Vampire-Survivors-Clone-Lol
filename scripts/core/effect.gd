@@ -12,6 +12,9 @@ enum Kind { POP, SLASH, RING, BEAM, SPAWN, TELEGRAPH_CIRCLE, TELEGRAPH_LINE, IMP
 
 ## Current effect kind.
 var kind: Kind = Kind.POP
+## Effect animation id (AnimData / assets/sprites/effects/<id>.png) played
+## instead of the drawn shape when its art exists; "" = always drawn.
+var anim_id: String = ""
 ## True while the effect is playing (false = sitting in the pool).
 var active: bool = false
 ## Seconds since the effect started.
@@ -45,6 +48,7 @@ func start(p_kind: Kind, pos: Vector2, p_color: Color, p_size: float, p_duration
 	width = p_width
 	owner_enemy = null
 	owner_gen = 0
+	anim_id = ""
 	t = 0.0
 	active = true
 	visible = true
@@ -70,6 +74,11 @@ func step(delta: float) -> bool:
 func _draw() -> void:
 	var k := clampf(t / duration, 0.0, 1.0)
 	var fade := 1.0 - k
+	if anim_id != "":
+		# Sprite-sheet animation scaled to the gameplay radius (size).
+		var fill: float = AnimData.ANIMS.get(anim_id, {}).get("fill", AnimData.DEFAULT_FILL)  # Diameter multiple.
+		if SpriteBank.draw_anim(self, anim_id, Vector2.ZERO, size * 2.0 * fill, k):
+			return
 	match kind:
 		Kind.POP:
 			# Expanding ring + four bone shards flying outward (cosmetic corpse).

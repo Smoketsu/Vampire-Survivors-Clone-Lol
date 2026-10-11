@@ -208,6 +208,57 @@ one bold simple symbol: <subject>, readable at 24 pixels, transparent background
 Keep the badge shape and border identical across all icons; generating them 4-6 at a time in one
 conversation helps.
 
+### Effects (`assets/sprites/effects/`)
+
+Short **one-shot animations** (explosions, bursts, flashes) that play once, centred on the effect
+and scaled to its gameplay radius. Each is a **sprite sheet of 6-10 frames** (or a short GIF),
+seen **straight from above**, on a transparent background. Process it with
+`python3 tools/prepare_sprite.py --anim <sheet or GIF> <id>`; the tool finds the frames (by the
+transparent gaps between them, or `--frames N` for N equal frames in a row, or `--grid CxR`), crops
+them to one square around the effect and writes a strip of 128 px frames. Timing and on-screen fill
+are set per effect in `scripts/data/anim_data.gd`. Without the file, the game keeps today's drawn
+shape. Only **Shadow Blast** is wired so far (the test); the rest get their code hook when their
+art arrives.
+
+| Id | Effect | Frames |
+|---|---|---|
+| `shadow_blast` | **Test first.** Shadow Blast: a violet (`#A35CFA`) shockwave ring bursting outward from a dark centre, then fading to wisps | 8 |
+| `abyssal_detonation` | Abyssal Detonation: a black-violet vortex imploding, then exploding with green (`#6BF28C`) sparks | 10 |
+| `corpse_explosion` | Corpse Explosion: a burst of bone shrapnel and green gore mist | 8 |
+| `grave_eruption` | Grave Eruption: bone spikes stabbing up from the ground in a ring, then crumbling | 8 |
+| `bolt_impact` | Shadow Bolt hit: a small violet splash with sparks | 6 |
+| `summon_rise` | Summon rising: green soul-fire swirling up from a grave-dirt circle | 8 |
+| `undead_death` | Undead destroyed: bones scattering and a green soul wisp rising | 6 |
+| `enemy_death` | Covenant soldier dies: a crimson-and-ivory burst fading into gold motes | 6 |
+| `holy_impact` | Covenant hammer / boss slam: a gold (`#FFD14C`) radiant shockwave with ivory dust | 8 |
+| `soul_nova` | Soul Nova: a huge violet-and-green ring of souls expanding across the screen | 10 |
+| `level_up` | Level-up: a column of violet light with rising green runes | 8 |
+| `chest_open` | Treasure chest bursting open with violet light and bone-coloured sparks | 8 |
+| `evolution` | Evolution: a dark vortex collapsing into a bright violet-gold flash | 10 |
+
+**Sprite-sheet prompt** (ChatGPT; attach `necromancer.png` as the style reference):
+```
+Using the attached image only as the pixel-art style reference (same pixel size, outline weight
+and palette treatment), create a SPRITE SHEET for a one-shot visual effect in a top-down 2D
+horde-survival game, seen straight from above.
+
+Effect: <EFFECT DESCRIPTION FROM THE TABLE, with its hex colours>.
+
+Layout: exactly <N> frames in ONE horizontal row, left to right in play order, every frame the same
+size, the effect centred in each frame, with clear empty transparent space between frames. Frame 1
+is the very start (small), the middle frames are the peak, and the last frames fade and break up.
+Crisp pixel art (clean pixel clusters, no anti-aliased blur), bright and readable on a very dark
+ground (#161A1C). Fully transparent background (real alpha, not a checkerboard). No ground, no
+characters, no text, no frame numbers, no watermark.
+```
+
+Tips:
+- The frames must line up: the centre of the burst should stay in the same place in every frame.
+  If ChatGPT drifts or changes the design between frames, ask it to "redraw the same effect with
+  identical centre and design in every frame, only the expansion changes", or send the sheet to
+  Claude to make the same effect with **SpriteCook** (image to animation) instead.
+- A short GIF works as well as a sheet; send whichever comes out cleaner.
+
 ---
 
 ## Prompt 1: the Necromancer (style test; run both)

@@ -56,9 +56,16 @@ func slash(pos: Vector2, dir: Vector2, color: Color, size: float) -> void:
 	_spawn(Effect.Kind.SLASH, pos, color, size, 0.15, dir)
 
 
-## Expanding filled ring (Shadow Blast, mage explosions).
-func ring(pos: Vector2, radius: float, color: Color, duration: float = 0.3) -> void:
-	_spawn(Effect.Kind.RING, pos, color, radius, duration)
+## Expanding filled ring (Shadow Blast, mage explosions). With `anim` (an
+## AnimData id) and its art present, the animation plays instead, for its own
+## AnimData duration.
+func ring(pos: Vector2, radius: float, color: Color, duration: float = 0.3, anim: String = "") -> void:
+	var dur := duration  # Play time (s).
+	if anim != "" and SpriteBank.has_anim(anim):
+		dur = float(AnimData.ANIMS.get(anim, {}).get("duration", AnimData.DEFAULT_DURATION))
+	var e := _spawn(Effect.Kind.RING, pos, color, radius, dur)
+	if e != null:
+		e.anim_id = anim
 
 
 ## Straight beam from `a` to `b` (priest / chaplain heals).

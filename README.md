@@ -605,6 +605,12 @@ set by the approved necromancer sprite. Sprites are generated in ChatGPT from th
 keeps the original in `art_source/` (ignored by Godot), crops it and stores it at 3x its on-screen
 height from `scripts/data/sprite_data.gd`. Done so far: the necromancer, every summon and evolution, and every enemy soldier (Stage 1, Stage 2 and the Reckoning's Inquisitor). Still to do: the bosses, structures and pickups.
 
+Effects (explosions, bursts) can be **short animations**: a ChatGPT sprite sheet or a GIF, converted
+with `python3 tools/prepare_sprite.py --anim <sheet or GIF> <id>` into a strip of square 128 px
+frames at `assets/sprites/effects/<id>.png`. An effect given an animation id plays it once, scaled
+to its radius (timing and fill in `scripts/data/anim_data.gd`), and keeps its drawn shape when the
+file is missing. Only Shadow Blast is wired so far, as the test.
+
 ## What is implemented (vs. the GDD)
 
 | Area | Status in this prototype |
