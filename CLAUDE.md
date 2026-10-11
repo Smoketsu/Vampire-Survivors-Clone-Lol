@@ -182,8 +182,7 @@ tiny tweaks.
    The owner generates sprites in ChatGPT from `docs/art/ART_BIBLE.md` (manifest of every asset,
    with file keys and sizes); process each with `python3 tools/prepare_sprite.py <image> <key>`.
    `SpriteBank` draws `assets/sprites/<key>.png` when present and falls back to the glyph, so art
-   lands piecemeal. Done: `player/necromancer`; every summon except `risen` (warrior, archer, mage,
-   mender, warder, bishop, death_knight, lich, abomination, rogue, gargoyle, frost_wraith). Pickups, ground tiles and obstacles come later.
+   lands piecemeal. Done: `player/necromancer`; every summon and evolution (incl. `risen`). Pickups, ground tiles and obstacles come later.
 4. **Rest of Stage 1's content:**
    - the remaining passives (Bone Plating, Unholy Precision, Unholy Resilience, Bound Souls);
    - evolutions for the Archer and the four later classes, if wanted;

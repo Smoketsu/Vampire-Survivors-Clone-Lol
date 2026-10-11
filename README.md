@@ -597,7 +597,7 @@ glyph, so art arrives one piece at a time without breaking anything. The style i
 set by the approved necromancer sprite. Sprites are generated in ChatGPT from the prompt pack in
 `docs/art/ART_BIBLE.md` and processed with `python3 tools/prepare_sprite.py <image> <key>`, which
 keeps the original in `art_source/` (ignored by Godot), crops it and stores it at 3x its on-screen
-height from `scripts/data/sprite_data.gd`. Done so far: the necromancer and every summon except the Lich's risen skeletons.
+height from `scripts/data/sprite_data.gd`. Done so far: the necromancer and every summon and evolution.
 
 ## What is implemented (vs. the GDD)
 
