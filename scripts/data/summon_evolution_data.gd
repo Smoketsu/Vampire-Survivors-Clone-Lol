@@ -107,8 +107,11 @@ const EVOLUTIONS := {
 		"description": "Your mages ascend as Liches: wider, deadlier blasts, and the foes they slay rise as skeletons.",
 		"mult": {
 			"max_hp": 1.4,  # TUNING (not in GDD)
-			"damage": 1.35,  # TUNING (not in GDD) 1.5 made Liches 36% of all damage in the summon build
-			"splash_radius": 1.25,  # TUNING (not in GDD)
+			# Combined balance pass: 1.35 / 1.25 (on top of Forbidden Knowledge's +40% damage
+			# and +25% splash) left Liches at 29% of all damage in the summon build, up to 45%
+			# in one run (plus 12% from the mages before they evolved).
+			"damage": 1.2,  # TUNING (not in GDD) was 1.35; 1.5 made Liches 36% of all damage in the summon build
+			"splash_radius": 1.15,  # TUNING (not in GDD) was 1.25
 			"attack_interval": 0.85,  # TUNING (not in GDD) casts 15% faster
 		},
 		"set": {

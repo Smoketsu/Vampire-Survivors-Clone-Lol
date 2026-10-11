@@ -69,8 +69,8 @@ const SEGMENTS := [
 	{"start": 0.0, "rate": 1.5, "max_alive": 32,  # TUNING (not in GDD)
 		"weights": {"recruit": 1.0},
 		"objective": "The Burned Road: Covenant patrols bar the way"},
-	{"start": 60.0, "rate": 1.8, "max_alive": 42,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.9, "footman": 0.1},
+	{"start": 60.0, "rate": 1.8, "max_alive": 42,  # TUNING (not in GDD) recruits only (was 10% footmen; see the 0:12 patrol)
+		"weights": {"recruit": 1.0},
 		"objective": "March on: the patrols grow bolder"},
 	{"start": 120.0, "rate": 2.0, "max_alive": 52,  # TUNING (not in GDD)
 		"weights": {"recruit": 0.8, "footman": 0.12, "archer": 0.08},
@@ -159,10 +159,16 @@ const SEGMENTS := [
 ##                  for optional rewards").
 const EVENTS := [
 	# Zone I: patrols (GDD §8.2 00:00).
+	# Combined balance pass: the first two patrols are recruits only (were 6 + 2 footmen
+	# and 10 + 2 footmen). Every build opens with Shadow Bolt and 2 warriors, and armoured
+	# footmen in the first minute let the patrols kill both warriors whenever the first
+	# cards held no damage: 6 of 8 army runs fell behind at 1:00 (about 30 foes alive
+	# instead of 15) and 4 of them never recovered. The stage step-up now starts with
+	# the 1:50 sergeant and the 2:00 footmen.
 	{"time": 12.0, "type": "wave", "banner": "A Covenant patrol blocks the road!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "recruit", "count": 6, "elite": false}, {"kind": "footman", "count": 2, "elite": false}]},
+		"groups": [{"kind": "recruit", "count": 8, "elite": false}]},
 	{"time": 45.0, "type": "wave", "banner": "A patrol column marches down the road!", "formation": "line",  # TUNING (not in GDD)
-		"groups": [{"kind": "recruit", "count": 10, "elite": false}, {"kind": "footman", "count": 2, "elite": false}]},
+		"groups": [{"kind": "recruit", "count": 12, "elite": false}]},
 	{"time": 80.0, "type": "wave", "banner": "Patrols close in from the burned fields!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "recruit", "count": 12, "elite": false}]},
 	{"time": 110.0, "type": "wave", "banner": "A patrol sergeant leads the charge!", "formation": "arc",  # TUNING (not in GDD) first elite

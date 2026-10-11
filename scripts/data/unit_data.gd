@@ -96,8 +96,12 @@ const CORE_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
 ##   shared_card_pool        — true: while not owned, this class's NEW card
 ##                             shares LevelUpData.NEW_SUMMON_POOL_WEIGHT with
 ##                             the other shared classes (the four later
-##                             classes); absent: it has the full
-##                             LevelUpData.WEIGHT_NEW like a spell.
+##                             classes); absent (the GDD summon roles):
+##                             LevelUpData.WEIGHT_NEW_CORE_SUMMON.
+##   new_card_weight_mult    — multiplier on that NEW-card weight (1 when
+##                             absent). The Mender and Warder are the GDD's one
+##                             Priest role split in two, so each has 0.5: the
+##                             two orders together come up as often as one role.
 ##   behavior                — SummonBehavior id ("stomp" | "dash" | "swoop" |
 ##                             "frost"); absent = no special action.
 ##   special                 — the behaviour's numbers. HordeDirector scales
@@ -220,6 +224,7 @@ const UNITS := {
 		"splash_radius": 0.0,
 		"heal_amount": 8.0,  # GDD §23 (8 HP per cast at 2.0 s)
 		"kite_distance": 0.0,
+		"new_card_weight_mult": 0.5,  # TUNING (not in GDD) combined balance pass: one Priest role split in two (naive builds took both no-damage orders in 15 of 16 runs)
 		"heal_role_priority": 0.5,  # TUNING (not in GDD)
 	},
 	# Crypt Warder: the shielding half of the Undead Priest. Instant ward on
@@ -249,6 +254,7 @@ const UNITS := {
 		"splash_radius": 0.0,
 		"heal_amount": 0.0,
 		"kite_distance": 0.0,
+		"new_card_weight_mult": 0.5,  # TUNING (not in GDD) combined balance pass: one Priest role split in two (naive builds took both no-damage orders in 15 of 16 runs)
 		"heal_role_priority": 0.5,  # TUNING (not in GDD)
 		"shield_amount": 15.0,  # TUNING (not in GDD) the old priest ward on the player
 		"shield_duration": 4.0,  # TUNING (not in GDD)
@@ -448,7 +454,10 @@ const UNITS := {
 		"display_name": "Frost Wraith",  # TUNING (not in GDD) user request
 		"plural": "Frost Wraiths",
 		"max_hp": 34.0,  # TUNING (not in GDD)
-		"damage": 8.0,  # TUNING (not in GDD) frost bolt
+		# Combined balance pass: 8 -> 12. At 8 it dealt about 18k per run at Lv 5 (the other
+		# later classes 73-120k, warriors / Death Knights 120-140k) and about 4k in naive
+		# runs, so a Wraith slot was nearly dead weight outside its Deep Freeze.
+		"damage": 12.0,  # TUNING (not in GDD) frost bolt
 		"attack_interval": 1.5,  # TUNING (not in GDD)
 		"attack_range": 160.0,  # TUNING (not in GDD) centre-to-edge (px)
 		"move_speed": 88.0,  # TUNING (not in GDD)
