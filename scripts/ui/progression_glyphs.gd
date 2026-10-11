@@ -112,10 +112,13 @@ static func draw_host_aura(ci: CanvasItem, c: Vector2, r: float) -> void:
 	ci.draw_arc(c, r * 1.25, 0.0, TAU, 20, Color(Palette.NECRO_GREEN, 0.45), 1.0)
 
 
-## Gold double frame marking an evolution icon.
+## Marks an evolution icon: a gold double border drawn over the icon box's
+## violet one (Glyphs.draw_icon's box is the square of half-size `s` around `c`),
+## so the evolution's art keeps the whole box (user decision, GDD 15.0).
 static func _gold_frame(ci: CanvasItem, c: Vector2, s: float) -> void:
-	ci.draw_arc(c, s * 0.85, 0.0, TAU, 32, Color(Palette.GOLD, 0.8), 1.5)
-	ci.draw_arc(c, s * 0.78, 0.0, TAU, 32, Color(Palette.GOLD, 0.3), 1.0)
+	var box := Rect2(c - Vector2.ONE * s, Vector2.ONE * s * 2.0)  # The icon box (px).
+	ci.draw_rect(box, Palette.GOLD, false, 2.0)
+	ci.draw_rect(box.grow(-3.0), Color(Palette.GOLD, 0.35), false, 1.0)
 
 
 ## Returns `pts` with its first point appended (closed outline).

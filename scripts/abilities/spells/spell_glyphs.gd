@@ -109,8 +109,7 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 
 ## Gold double frame marking an evolution icon (as ProgressionGlyphs does).
 static func _gold_frame(ci: CanvasItem, c: Vector2, s: float) -> void:
-	ci.draw_arc(c, s * 0.85, 0.0, TAU, 32, Color(Palette.GOLD, 0.8), 1.5)
-	ci.draw_arc(c, s * 0.78, 0.0, TAU, 32, Color(Palette.GOLD, 0.3), 1.0)
+	ProgressionGlyphs._gold_frame(ci, c, s)  # One shared evolution frame.
 
 
 # =====================================================================================
