@@ -161,14 +161,14 @@ const UNITS := {
 		"w_pursuit": 0.6,  # TUNING (not in GDD)
 		"w_formation": 0.5,  # TUNING (not in GDD)
 		"w_separation": 0.8,  # TUNING (not in GDD)
-		"w_threat": 0.6,  # TUNING (not in GDD)
+		"w_threat": 0.1,  # TUNING (not in GDD) user decision: archers hold their ground (was 0.6); same as warriors
 		"attack_profile": "arrow",
 		"target_profile": "ranged",
 		"windup": 0.15,  # TUNING (not in GDD)
 		"projectile_speed": 420.0,  # TUNING (not in GDD)
 		"splash_radius": 0.0,
 		"heal_amount": 0.0,
-		"kite_distance": 45.0,  # GDD §29
+		"kite_distance": 0.0,  # User decision (GDD §15.0): archers hold their ground and fire (GDD §29 had a 45 px step-back)
 		"heal_role_priority": 0.5,  # TUNING (not in GDD)
 	},
 	"mage": {
