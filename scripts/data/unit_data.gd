@@ -746,5 +746,12 @@ const RETURN_SPEED_MULT: float = 1.5  # TUNING (not in GDD)
 const STEER_ACCEL: float = 8.0  # TUNING (not in GDD)
 ## Extra spacing (px) kept between allies on top of their radii.
 const SEPARATION_PADDING: float = 4.0  # TUNING (not in GDD)
+## Multiplier on every class's formation band (band_min / band_max) so the
+## army spreads out enough for its 44-88 px sprites to stay readable
+## (the GDD §26 bands were sized for small placeholder shapes).
+const FORMATION_SPREAD: float = 1.3  # TUNING (not in GDD) user decision: wider spacing for sprite art
+## Multiplier on the ally separation distance (sum of the two radii) for the
+## same reason; the padding below the radii is unchanged.
+const SEPARATION_SPREAD: float = 1.3  # TUNING (not in GDD) user decision: wider spacing for sprite art
 ## Radius (px) scanned for threats to avoid (support classes / archers / mages).
 const THREAT_AVOID_RADIUS: float = 55.0  # TUNING (not in GDD)

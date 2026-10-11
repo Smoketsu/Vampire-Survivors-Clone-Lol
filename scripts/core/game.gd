@@ -168,9 +168,14 @@ func _ready() -> void:
 	add_child(effects)
 	horde = HordeDirector.new()
 	horde.game = self
+	# Depth sorting: summons lower on screen draw in front, so a packed army reads
+	# as a formation. Only same-z_index children are reordered (ground decals,
+	# telegraphs and fog keep their own layers). Purely visual.
+	horde.y_sort_enabled = true
 	add_child(horde)
 	enemies = EnemyDirector.new()
 	enemies.game = self
+	enemies.y_sort_enabled = true  # Same depth sorting for the Covenant.
 	add_child(enemies)
 	player = Necromancer.new()
 	player.game = self

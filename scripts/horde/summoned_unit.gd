@@ -868,7 +868,7 @@ func _arrive(point: Vector2) -> Vector2:
 ## Soft ally separation (GDD §26: friendly<->friendly no hard collisions,
 ## steering separation only).
 func _separation() -> Vector2:
-	var reach := radius * 2.0 + UnitData.SEPARATION_PADDING
+	var reach := radius * 2.0 * UnitData.SEPARATION_SPREAD + UnitData.SEPARATION_PADDING
 	game.ally_grid.query(position, reach, _neigh)
 	var push := Vector2.ZERO
 	for o: SummonedUnit in _neigh:
@@ -876,7 +876,7 @@ func _separation() -> Vector2:
 			continue
 		var diff := position - o.position
 		var d := diff.length()
-		var min_d := radius + o.radius + UnitData.SEPARATION_PADDING
+		var min_d := (radius + o.radius) * UnitData.SEPARATION_SPREAD + UnitData.SEPARATION_PADDING
 		if d >= min_d:
 			continue
 		if d < 0.01:
