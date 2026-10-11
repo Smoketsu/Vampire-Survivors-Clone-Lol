@@ -603,7 +603,7 @@ glyph, so art arrives one piece at a time without breaking anything. The style i
 set by the approved necromancer sprite. Sprites are generated in ChatGPT from the prompt pack in
 `docs/art/ART_BIBLE.md` and processed with `python3 tools/prepare_sprite.py <image> <key>`, which
 keeps the original in `art_source/` (ignored by Godot), crops it and stores it at 3x its on-screen
-height from `scripts/data/sprite_data.gd`. Done so far: the necromancer, every summon and evolution, and every enemy soldier (Stage 1, Stage 2 and the Reckoning's Inquisitor). Still to do: the bosses, structures and pickups.
+height from `scripts/data/sprite_data.gd`. Done so far: the necromancer, every summon and evolution, every enemy soldier (Stage 1, Stage 2 and the Reckoning's Inquisitor), Sir Alaric and the five Crimson March structures. Still to do: Marshal Vael and the pickups.
 
 Effects (explosions, bursts) can be **short animations**: a ChatGPT sprite sheet or a GIF, converted
 with `python3 tools/prepare_sprite.py --anim <sheet or GIF> <id>` into a strip of square 128 px

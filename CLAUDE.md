@@ -183,7 +183,7 @@ tiny tweaks.
    with file keys and sizes); process each with `python3 tools/prepare_sprite.py <image> <key>`.
    `SpriteBank` draws `assets/sprites/<key>.png` when present and falls back to the glyph, so art
    lands piecemeal. Done: `player/necromancer`; every summon and evolution (incl. `risen`); every enemy soldier (incl. the
-   Reckoning's `inquisitor`). Still to do: the bosses, structures and pickups. Effects are
+   Reckoning's `inquisitor`); `bosses/alaric`; all five `structures/`. Still to do: `bosses/vael` and the pickups. Effects are
    short animations (`prepare_sprite.py --anim <sheet or GIF> <id>` → `assets/sprites/effects/`,
    timing in `anim_data.gd`); only `shadow_blast` is hooked so far (test), hook the rest via
    `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.

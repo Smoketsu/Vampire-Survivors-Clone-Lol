@@ -191,7 +191,11 @@ func _ready() -> void:
 	camera = Camera2D.new()
 	camera.zoom = Vector2.ONE * Settings.zoom_value()
 	Settings.changed.connect(_on_settings_changed)
-	camera.position_smoothing_enabled = true
+	# Smoothing steps by speed x delta; at the autotest's 8x time scale a slow
+	# rendered frame pushes that past 2, the smoothing diverges and the camera
+	# goes to NaN (blank screen, NaN sound volumes). The autotest follows the
+	# player directly instead; players (1x) keep the smooth camera.
+	camera.position_smoothing_enabled = not GameState.autotest
 	camera.position_smoothing_speed = 8.0
 	add_child(camera)
 	camera.make_current()
