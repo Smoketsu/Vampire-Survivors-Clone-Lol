@@ -3,8 +3,9 @@
 ## codex, achievements — which are out of prototype scope). It shows the Soul
 ## Ash balance and a lifetime line (runs, best time, boss kills, achievements).
 ## The candle-lit crypt backdrop is drawn in _draw().
-## Play opens the stage select (StageSelect, GDD §10.2); the stage it
-## confirms reaches Main as a RunConfig through `stage_chosen`.
+## Play opens the stage select (StageSelect, GDD §10.2), which opens the
+## pre-run setup (PreRunSetup: difficulty and run modifiers); the finished
+## RunConfig reaches Main through `stage_chosen`.
 class_name MainMenu
 extends Control
 

@@ -33,7 +33,8 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
 3. **Static typing** in all GDScript.
 4. **Single paths for modifiers.** Stats flow through one path per concern; don't scatter checks:
    - `scripts/core/meta_modifiers.gd`: Soul Ash upgrades.
-   - `scripts/core/difficulty_modifiers.gd`: Profane Pact and Oath, added together and applied once.
+   - `scripts/core/difficulty_modifiers.gd`: the difficulty level (its own multiplier) and the opt-in
+     modifiers (the run modifiers, Profane Pact and Oath, added together and applied once).
    - The horde director's effective-stat code: summon stats.
    - `scripts/core/combat_resolver.gd`: all damage, healing, kills, XP, drops and stats.
 5. **Pooling and determinism.** Enemies, summons, projectiles, crystals, effects and drops are pooled,
@@ -88,6 +89,8 @@ Autotest options (full table in the README):
 - `--spells=a,b` (force spells and their evolution passives, e.g.
   `bone_spear,soul_siphon,corpse_explosion,plague_cloud`)
 - `--stage=graveyard|crimson_march` (default graveyard; stage locks are ignored)
+- `--difficulty=initiate|necromancer|lich|deathlord` (GDD §8.4; default necromancer = today's game)
+- `--modifiers=a,b` (GDD §8.5 run modifiers, e.g. `hardened_faith,scarcity`, or `all`)
 - `--pact`
 - `--meta=none|mid|max`
 - `--oath=0-5`
@@ -115,6 +118,7 @@ with both zips.
 | Pacing (meta none) | first level-up ~0:20-0:30; build complete ~16-18 min; evolutions mostly 10-14 min; ~5-8 chests |
 | Soul Ash | good run ~450; death at ~9-11 min ~100-150; all upgrades ~17-20 good runs |
 | Profane Pact (strong build) | harder but viable, noticeably more Soul Ash |
+| Difficulty, `--policy=army` | Initiate clearly safer; Deathlord clearly harder but the army usually still reaches 0:00 |
 
 Screen changes with 8 seeds on the relevant configs, and confirm with 16. The machine usually has
 4 cores: run at most 4 Godot processes in parallel. Prefer a few principled data changes over many
@@ -162,7 +166,12 @@ tiny tweaks.
   `arena_data.gd` keep only shared rules), a RunConfig and stage select, the Meta `[stages]` save
   section, four clock-driven battle zones, outposts, Holy Ward Generators, supply carts, the
   Shieldbearer, Banner Bearer and Halberdier, a `Boss` base class, Marshal Vael, and ×1.25 Soul Ash;
-  `--stage=graveyard|crimson_march`.
+  `--stage=graveyard|crimson_march`;
+- the GDD §8.4 **difficulty levels** (Initiate, Necromancer = the standard game, Lich, Deathlord;
+  `difficulty_data.gd`) and the eight §8.5 **run modifiers** (`run_modifier_data.gd`), chosen on a
+  pre-run setup screen after the stage select that shows the total Soul Ash multiplier; both go
+  through `difficulty_modifiers.gd` with the Pact and Oath, are remembered in the Meta `[prerun]`
+  save section and kept by Restart; `--difficulty=` and `--modifiers=`.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.
@@ -179,8 +188,6 @@ tiny tweaks.
      classes, the four newer spells and the Crimson March (each was tuned separately);
      evolutions for the later classes, if wanted;
    - a dash and an ultimate.
-5. **GDD difficulty levels and pre-run modifiers** (Purge the Unholy, Scarcity, Frail Master, Vengeful
-   Dead), plugged into `difficulty_modifiers.gd`.
-6. **Phase 3 campaign:** Stage 3 (Sanctum of Judgment,
+5. **Phase 3 campaign:** Stage 3 (Sanctum of Judgment,
    Grand Inquisitor Seraphine); skins; achievement rewards.
-7. **Phase 4 polish:** accessibility, profiling on real hardware, final balance.
+6. **Phase 4 polish:** accessibility, profiling on real hardware, final balance.

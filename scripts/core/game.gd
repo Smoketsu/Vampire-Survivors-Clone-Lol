@@ -14,14 +14,16 @@
 ## Restarting frees this node and builds a fresh one, so no state can leak
 ## between runs. Managers hold a typed `game` reference instead of using
 ## global singletons.
-## Difficulty (user request): `difficulty` is the one path through which the
-## Profane Pact passive and the Profane Oath meta upgrade scale enemies and
-## rewards (DifficultyModifiers); `powerups` owns the power-up drops and buffs.
+## Difficulty: `difficulty` is the one path through which the difficulty
+## level (GDD §8.4), the run modifiers (§8.5), the Profane Pact passive and
+## the Profane Oath meta upgrade scale enemies, the player, the horde and the
+## rewards (DifficultyModifiers, built from run_config);
+## `powerups` owns the power-up drops and buffs.
 ## Treasure chests (`chests`, ChestData): walking over one pauses the run in
 ## RunState.CHEST while the ChestPanel reveals its rewards (evolutions are
 ## delivered only by chests).
-## Stages (GDD §8, §10.2): Main hands in `run_config` (RunConfig: the stage
-## today, the later pre-run settings tomorrow) before the node enters the
+## Stages (GDD §8, §10.2): Main hands in `run_config` (RunConfig: the stage,
+## the difficulty level and the run modifiers) before the node enters the
 ## tree; `stage_def` is that stage's StageRegistry dictionary, read by the
 ## directors, the arena, the ground and the HUD.
 class_name Game
@@ -99,7 +101,7 @@ var abilities: AbilityManager
 var pickups: XpManager
 ## Power-up drops and the timed buffs they grant (PowerupManager).
 var powerups: PowerupManager
-## Profane Pact / Oath difficulty and reward multipliers (never null).
+## Difficulty level, run modifiers and Profane Pact / Oath multipliers (never null).
 var difficulty: DifficultyModifiers
 ## Treasure chests (ChestManager).
 var chests: ChestManager
@@ -174,6 +176,7 @@ func _ready() -> void:
 	player.game = self
 	add_child(player)
 	meta.apply_to_player(player)
+	difficulty.apply_to_player(player)  # Frail Master (run modifier); no-op otherwise.
 	abilities = AbilityManager.new()
 	add_child(abilities)
 	abilities.setup(self)
@@ -329,6 +332,8 @@ func add_xp(amount: int) -> void:
 	if difficulty.is_active():
 		stat_add("pact_bonus_xp", base * difficulty.pact_value("xp_gain"))
 		stat_add("oath_bonus_xp", base * difficulty.oath_value("xp_gain"))
+	if difficulty.level_value("xp_mult") != 1.0:
+		stat_add("difficulty_bonus_xp", base * (difficulty.xp_mult() - 1.0 - difficulty.value("xp_gain")))
 	var gained := base * difficulty.xp_mult() + _xp_carry
 	amount = floori(gained)
 	_xp_carry = gained - float(amount)
@@ -494,5 +499,11 @@ func build_summary() -> Dictionary:
 		"oath_tier": difficulty.oath_tier(),
 		"pact_ash_gain": float(difficulty.ash_parts()["pact"]),
 		"oath_ash_gain": float(difficulty.ash_parts()["oath"]),
+		"difficulty_id": difficulty.difficulty_id(),
+		"difficulty_name": difficulty.difficulty_name(),
+		"difficulty_ash_pct": float(difficulty.ash_parts()["difficulty"]),
+		"modifiers": difficulty.modifier_ids(),
+		"modifier_names": difficulty.modifier_names(),
+		"modifiers_ash_gain": float(difficulty.ash_parts()["modifiers"]),
 		"stats": stats.duplicate(),
 	}

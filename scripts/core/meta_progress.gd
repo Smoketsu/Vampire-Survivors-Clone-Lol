@@ -29,6 +29,12 @@
 ## every earlier run was a Graveyard run, so the Graveyard record is rebuilt
 ## from the lifetime stats (an old Alaric kill unlocks the Crimson March).
 ## A run on a stage with an `ash_mult` above 1 earns a stage bonus line.
+## Pre-run choices (GDD §10.2): the difficulty level and run modifiers last
+## confirmed on the pre-run setup screen are remembered in `prerun_difficulty`
+## / `prerun_modifiers` (saved as [prerun] difficulty / modifiers, a
+## comma-separated id list). Older saves have no [prerun] section and get
+## the defaults (Necromancer, no modifiers); unknown ids are dropped. The
+## difficulty level and run modifiers each pay their own Soul Ash line.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -62,6 +68,11 @@ var oath_active: int = 0
 ## Stage id -> {runs, victories, best_time, boss_kills} (STAGE_RECORD_KEYS),
 ## one entry per StageRegistry stage.
 var stage_records: Dictionary = {}
+
+## Difficulty level (DifficultyData id) last confirmed on the setup screen.
+var prerun_difficulty: String = DifficultyData.DEFAULT_ID
+## Run modifiers (RunModifierData ids, ORDER order) last confirmed there.
+var prerun_modifiers: PackedStringArray = PackedStringArray()
 
 ## Keys of every stage record (all floats, like the lifetime stats).
 const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills"]
@@ -113,7 +124,11 @@ func set_oath_active(t: int) -> bool:
 ## `summary` is Game.build_summary(); `ash_gain` is the Ash Harvest bonus.
 ## The Profane Pact and Profane Oath rewards (summary "pact_ash_gain" /
 ## "oath_ash_gain", from DifficultyModifiers) are two more bonus lines on the
-## same subtotal, each floored ("pact_bonus" / "oath_bonus").
+## same subtotal, each floored ("pact_bonus" / "oath_bonus"), and so are
+## the difficulty level ("difficulty_ash_pct" = ash_mult - 1: negative on
+## Initiate, so its line subtracts; "difficulty_bonus") and the run
+## modifiers ("modifiers_ash_gain" = their summed ash_gain;
+## "modifiers_bonus"). A summary without these keys pays nothing extra.
 static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 	var st: Dictionary = summary.get("stats", {})
 	var countdown := float(summary.get("countdown", WaveData.RUN_DURATION))
@@ -139,6 +154,10 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 	var oath_bonus := floori(float(subtotal) * oath_pct)  # Ash from the Oath reward.
 	var stage_pct := maxf(0.0, float(summary.get("stage_ash_mult", 1.0)) - 1.0)  # Stage Soul Ash bonus (Crimson March).
 	var stage_bonus := floori(float(subtotal) * stage_pct)  # Ash from the stage bonus.
+	var diff_pct := float(summary.get("difficulty_ash_pct", 0.0))  # Difficulty level Soul Ash change (signed).
+	var diff_bonus := floori(float(subtotal) * diff_pct) if diff_pct >= 0.0 else -floori(float(subtotal) * -diff_pct)  # Signed, floored toward 0.
+	var mods_pct := maxf(0.0, float(summary.get("modifiers_ash_gain", 0.0)))  # Run modifiers Soul Ash reward.
+	var mods_bonus := floori(float(subtotal) * mods_pct)  # Ash from the run modifiers.
 	return {
 		"parts": parts,
 		"time_survived": survived,
@@ -157,7 +176,13 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 		"stage_name": String(summary.get("stage_name", "")),
 		"stage_pct": stage_pct,
 		"stage_bonus": stage_bonus,
-		"total": subtotal + bonus + pact_bonus + oath_bonus + stage_bonus,
+		"difficulty_name": String(summary.get("difficulty_name", "")),
+		"difficulty_pct": diff_pct,
+		"difficulty_bonus": diff_bonus,
+		"modifier_count": (summary.get("modifiers", PackedStringArray()) as PackedStringArray).size(),
+		"modifiers_pct": mods_pct,
+		"modifiers_bonus": mods_bonus,
+		"total": maxi(0, subtotal + bonus + pact_bonus + oath_bonus + stage_bonus + diff_bonus + mods_bonus),
 	}
 
 
@@ -206,6 +231,30 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	save()
 	changed.emit()
 	return award
+
+
+# =====================================================================================
+# Pre-run choices (GDD §10.2)
+# =====================================================================================
+
+## A RunConfig for stage `stage_id` with the remembered difficulty level and
+## run modifiers (the setup screen opens on it).
+func prerun_config(stage_id: String) -> RunConfig:
+	var c := RunConfig.for_stage(stage_id)
+	c.set_difficulty(prerun_difficulty)
+	c.set_modifiers(prerun_modifiers)
+	return c
+
+
+## Remembers the difficulty level and run modifiers of `config` for the next
+## setup screen (and the next session) and saves when they changed.
+func remember_prerun(config: RunConfig) -> void:
+	if config.difficulty_id == prerun_difficulty and config.modifiers == prerun_modifiers:
+		return
+	prerun_difficulty = config.difficulty_id
+	prerun_modifiers = config.modifiers.duplicate()
+	save()
+	changed.emit()
 
 
 # =====================================================================================
@@ -354,6 +403,8 @@ func save() -> Error:
 	for id: String in MetaData.ACHIEVEMENT_ORDER:
 		cfg.set_value("achievements", id, achievements.has(id))
 	cfg.set_value("oath", "active", oath_active_tier())
+	cfg.set_value("prerun", "difficulty", prerun_difficulty)
+	cfg.set_value("prerun", "modifiers", ",".join(prerun_modifiers))
 	for id: String in StageRegistry.ORDER:
 		var rec := stage_record(id)  # This stage's record.
 		for key: String in STAGE_RECORD_KEYS:
@@ -399,6 +450,7 @@ func load_save() -> void:
 	# Missing key (older save) = the owned Oath tier is active.
 	oath_active = clampi(_read_int(cfg, "oath", "active", tier(PactData.OATH_ID)), 0, tier(PactData.OATH_ID))
 	_load_stage_records(cfg)
+	_load_prerun(cfg)
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -423,6 +475,20 @@ func _load_stage_records(cfg: ConfigFile) -> void:
 		var rec: Dictionary = stage_records[id]
 		for key: String in STAGE_RECORD_KEYS:
 			rec[key] = _read_float(cfg, "stages", "%s_%s" % [id, key], 0.0)
+
+
+## Reads the [prerun] choices (missing section or keys = the defaults; wrong
+## types and unknown ids are ignored).
+func _load_prerun(cfg: ConfigFile) -> void:
+	var c := RunConfig.new()  # Validates the ids.
+	var d: Variant = cfg.get_value("prerun", "difficulty", DifficultyData.DEFAULT_ID)
+	if typeof(d) == TYPE_STRING:
+		c.set_difficulty(String(d))
+	var m: Variant = cfg.get_value("prerun", "modifiers", "")
+	if typeof(m) == TYPE_STRING:
+		c.set_modifiers(String(m).split(",", false))
+	prerun_difficulty = c.difficulty_id
+	prerun_modifiers = c.modifiers
 
 
 ## Upgrades an older save layout in `cfg` (in memory) to SAVE_VERSION.
@@ -458,6 +524,8 @@ func _reset() -> void:
 	last_award = {}
 	oath_active = 0
 	stage_records = _default_stage_records()
+	prerun_difficulty = DifficultyData.DEFAULT_ID
+	prerun_modifiers = PackedStringArray()
 	load_status = "fresh"
 
 

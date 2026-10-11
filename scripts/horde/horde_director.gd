@@ -232,6 +232,9 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 			* (1.0 + game.meta.value("minion_damage"))
 	var spd_mult := (1.0 + float(row.get("speed_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_speed")) \
 			* (1.0 + synergies.value("unholy_host", "attack_speed"))
+	# Run modifiers (Vengeful Dead, DifficultyModifiers): own category, 1 when off.
+	hp_mult *= game.difficulty.minion_hp_mult()
+	dmg_mult *= game.difficulty.minion_damage_mult()
 	if with_buffs and game.powerups != null:
 		dmg_mult *= 1.0 + game.powerups.frenzy_bonus("damage_bonus")
 		spd_mult *= 1.0 + game.powerups.frenzy_bonus("attack_speed_bonus")

@@ -16,9 +16,11 @@
 ##     ward generators, supply carts) and hands it "outposts" /
 ##     "generators" / "cart" events.
 ##   * Never places an enemy inside an obstacle (Arena.free_point).
-##   * Applies the Profane Pact / Oath difficulty (game.difficulty) in the
-##     existing scaling path: hp_mult / damage_mult and the trickle rate and
-##     soft cap are multiplied by it, and Sir Alaric's HP by a share of it.
+##   * Applies the difficulty (game.difficulty: the GDD §8.4 level, the §8.5
+##     run modifiers and the Profane Pact / Oath) in the existing scaling
+##     path: hp_mult / damage_mult (and the growth of their time scaling),
+##     the trickle rate, soft cap and kind weights, the enemy move speed,
+##     trickle elites, and the boss's HP (a share of the HP bonus).
 ##   * Skips the AI and movement of enemies held by a Stasis power-up
 ##     (game.powerups.freezes(); Reckoning enemies are immune, the boss is
 ##     frozen for part of the duration) or by a Frost Wraith Deep Freeze
@@ -112,8 +114,13 @@ func step(delta: float) -> void:
 	var t := game.elapsed
 	_update_segment(t)
 	var m := t / 60.0  # Elapsed minutes (time scaling, see WaveData).
-	hp_mult = (1.0 + m * WaveData.HP_SCALE_PER_MINUTE + m * m * WaveData.HP_SCALE_PER_MINUTE_SQ) * game.difficulty.enemy_hp_mult()
-	damage_mult = (1.0 + m * WaveData.DAMAGE_SCALE_PER_MINUTE + m * m * WaveData.DAMAGE_SCALE_PER_MINUTE_SQ) * game.difficulty.enemy_damage_mult()
+	# Difficulty level (DifficultyData): hs / ds scale only the growth part of
+	# the time scaling (exactly 1 on the standard level, so the products are
+	# bit-identical to the unscaled formula).
+	var hs := game.difficulty.hp_scaling()  # Level HP growth factor.
+	var ds := game.difficulty.damage_scaling()  # Level damage growth factor.
+	hp_mult = (1.0 + m * WaveData.HP_SCALE_PER_MINUTE * hs + m * m * WaveData.HP_SCALE_PER_MINUTE_SQ * hs) * game.difficulty.enemy_hp_mult()
+	damage_mult = (1.0 + m * WaveData.DAMAGE_SCALE_PER_MINUTE * ds + m * m * WaveData.DAMAGE_SCALE_PER_MINUTE_SQ * ds) * game.difficulty.enemy_damage_mult()
 	# Stage step-up (StageRegistry enemy_hp_mult / enemy_damage_mult; 1 in the Graveyard).
 	hp_mult *= float(stage_def["enemy_hp_mult"])
 	damage_mult *= float(stage_def["enemy_damage_mult"])
@@ -204,19 +211,33 @@ func _update_segment(t: float) -> void:
 
 
 ## Trickle spawner: `rate` enemies/s up to the segment's max_alive, both
-## scaled by the Profane Pact / Oath spawn penalty (HARD_CAP still applies).
+## scaled by the difficulty spawn multiplier (level x Pact / Oath / run
+## modifiers; HARD_CAP still applies). The difficulty may change the kind
+## weights (Purge the Unholy) and promote a soldier to an elite (level
+## elite_chance; that roll is skipped entirely when the chance is 0). A
+## promoted elite keeps the base soldier's XP and never rolls the elite
+## chest / power-up chance (Enemy.is_promoted): with elite loot, Deathlord's
+## extra elites completed builds about a minute early.
 func _spawn_trickle(delta: float) -> void:
 	var seg: Dictionary = segments[segment_index]
-	var spawn_mult := game.difficulty.enemy_spawn_mult()  # Pact / Oath spawn penalty.
+	var spawn_mult := game.difficulty.enemy_spawn_mult()  # Difficulty spawn multiplier.
 	spawn_accum += float(seg["rate"]) * spawn_mult * delta
 	var cap: int = mini(roundi(float(seg["max_alive"]) * spawn_mult), WaveData.HARD_CAP)
 	var alive := regular_alive()
+	var elite_chance := game.difficulty.elite_chance()  # Level trickle-elite chance.
 	while spawn_accum >= 1.0:
 		spawn_accum -= 1.0
 		if alive >= cap:
 			continue
-		var kind := _pick_kind(seg["weights"])
-		_spawn_enemy(kind, _ring_point(randf() * TAU), false)
+		var kind := _pick_kind(game.difficulty.trickle_weights(seg["weights"], game.elapsed))
+		var pos := _ring_point(randf() * TAU)  # Spawn point on the ring.
+		var elite := elite_chance > 0.0 and randf() < elite_chance  # Promoted by the level.
+		var e := _spawn_enemy(kind, pos, elite)  # The new soldier.
+		if elite:
+			# A threat, not a loot source: base XP, no elite chest / drop chance.
+			e.is_promoted = true
+			e.xp_value = int(enemy_def(kind)["xp"])
+			game.stat_add("elites_promoted", 1.0)
 		alive += 1
 
 
@@ -306,7 +327,7 @@ func show_banner(text: String) -> void:
 
 ## Spawns the stage boss (stage_def boss.id: "alaric" -> BossAlaric,
 ## "vael" -> BossVael) at the spawn ring (HP not time-scaled, but scaled by
-## a share of the Profane Pact / Oath HP penalty,
+## the difficulty level's boss_hp and a share of the opt-in HP bonus,
 ## DifficultyModifiers.boss_hp_mult, and by the stage's enemy HP multiplier).
 func _spawn_boss() -> void:
 	match String(boss_info["id"]):
@@ -405,6 +426,9 @@ func _spawn_enemy_def(kind: String, def: Dictionary, pos: Vector2, hp_scale: flo
 	else:
 		e = _pool.pop_back()
 	e.activate(game, kind, def, pos, hp_scale, elite, _next_slot)
+	var speed_mult := game.difficulty.enemy_speed_mult()  # Level "aggression".
+	if speed_mult != 1.0:
+		e.move_speed *= speed_mult
 	_next_slot = (_next_slot + 1) % UnitData.AI_TICK_DIVISOR
 	active.append(e)
 	total_spawned += 1

@@ -280,6 +280,55 @@ structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
 | Chapter I, **The Desecrated Graveyard** | always open | Sir Alaric, the Gravebreaker | ×1.0 |
 | Chapter II, **The Crimson March** | slay Sir Alaric once (GDD §9.3) | Marshal Vael, the Crimson Bulwark | ×1.25 |
 
+### Difficulty & run modifiers
+
+Choosing a stage opens the **pre-run setup** screen (GDD §10.2): pick one of
+the four GDD §8.4 **difficulty levels** and toggle any of the eight §8.5
+**run modifiers**. Every card lists its exact effect and Soul Ash reward, and
+the screen shows the **total Soul Ash multiplier** of the stack and the
+combined enemy multipliers (plus a note when a Profane Oath tier is active).
+It works with keyboard, mouse and controller (arrows / D-pad move, Enter / A
+selects or toggles, Esc / B goes back to the stage select). Your last choice
+is remembered (saved in `user://save.cfg`), **Restart** keeps it, and
+**Standard** resets to Necromancer with no modifiers. All four levels are open
+from the start. The HUD's Modifiers area (top right) and the end screen show
+the difficulty and the active modifiers.
+
+| Difficulty (`difficulty_data.gd`) | Foes | Soul Ash |
+|---|---|---|
+| **Initiate** ("easier scaling") | HP ×0.9 and damage ×0.8, and both grow 25% slower over time (×0.70 HP and ×0.66 damage by 0:00); boss HP ×0.8 | ×0.8 |
+| **Necromancer** (standard) | today's game, every value ×1 | ×1 |
+| **Lich** ("increased HP / aggression") | HP and damage ×1.05, growing faster over time (×1.28 HP and ×1.20 damage by 0:00); move speed ×1.05; boss HP ×1.15 | ×1.25 |
+| **Deathlord** ("hardest, with more elites") | HP and damage ×1.05, growing 40% faster (×1.42 HP and ×1.35 damage by 0:00); move speed ×1.06; 0.8% of trickle soldiers are promoted to elites (elite HP and size, but plain XP and no elite chest or power-up chance); boss HP ×1.3 | ×1.5 |
+
+The levels mostly bite later in the run: an army that falls behind in the
+first minutes never recovers, so a harsh opening would make Deathlord a coin
+flip instead of a hard mode. Spawn rate and XP stay ×1 on every level (the
+data has both keys): more soldiers, or elites with elite XP, meant more XP
+and builds complete a minute early, which made the hard levels easier.
+
+| Run modifier (`run_modifier_data.gd`) | Effect | Soul Ash |
+|---|---|---|
+| **Endless Crusade** | +30% enemy spawn rate and soft cap (GDD) | +20% |
+| **Hardened Faith** | +25% enemy HP (GDD; the boss gets a fifth of it) | +20% |
+| **Divine Fury** | +20% enemy damage (GDD) | +20% |
+| **Purge the Unholy** | ×2.5 Purifiers in every wave segment, and they join from 3:00 | +15% |
+| **Scarcity** | Grave Feast drops are 60% rarer and heal half as much | +10% |
+| **Frail Master** | the necromancer starts with 30% less max HP | +15% |
+| **Vengeful Dead** | summons deal +20% damage but have −30% HP | +10% |
+| **Holy Retribution** | a slain elite bursts into 8 radiant bolts (orbs can intercept them) | +15% |
+
+**How it all combines** (`DifficultyModifiers`, the one difficulty path):
+the difficulty level is its own multiplier; the run modifiers, the Profane
+Pact and the Profane Oath are one opt-in category whose bonuses **add**. So
+enemy HP = time scaling × stage × level HP × (1 + Pact + Oath + modifiers),
+and the same for damage and spawns. Soul Ash: every source pays its own line
+on the run subtotal, and the lines add: Ash Harvest, Pact, Oath, the stage
+bonus, **Difficulty** (−20% on Initiate up to +50% on Deathlord) and **Run
+modifiers** (the sum of the active modifiers' rewards, +125% with all eight).
+The setup screen's total is level ×ash + modifier rewards (Deathlord with
+every modifier: ×2.75).
+
 ### Stage 1: The Desecrated Graveyard (Stage & Boss)
 
 - **Obstacles.** Gravestones, dead trees and crypt walls are solid for the
@@ -451,7 +500,10 @@ open). The zone is shown under the timer.
   (runs, victories, best time, boss kills) are saved under `[stages]`; they
   drive the stage unlocks. An older save without that section is migrated:
   its lifetime stats become the Graveyard record, so a past Alaric kill
-  unlocks the Crimson March.
+  unlocks the Crimson March. The last pre-run choice is saved as
+  `[prerun] difficulty` / `modifiers` (a comma-separated id list); an older
+  save without it starts on Necromancer with no modifiers, and unknown ids
+  are dropped.
 
 ### Power-ups & Profane Pact
 
@@ -519,7 +571,10 @@ open). The zone is shown under the timer.
   `Game.add_xp` the XP, `PowerupManager` the drop chance, and
   `Meta.compute_ash` pays a **Profane Pact** and a **Profane Oath** bonus
   line on the run's subtotal (shown on the end screen). The HUD's Modifiers
-  area shows the Pact level, the Oath tier and their combined effect.
+  area shows the Pact level, the Oath tier and their combined effect. The
+  difficulty levels and run modifiers go through the same path (the run
+  modifiers join the Pact and Oath category; see *Difficulty & run
+  modifiers*).
 
 ---
 
@@ -544,6 +599,7 @@ open). The zone is shown under the timer.
 | Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
 | Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades, prerequisites, respec) plus the opt-in Profane Oath, 3 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
+| Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
 | UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu, end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress (compact rows, at most one per active slot); ability slots with levels (an evolved class shows its evolution's icon and name). |
 | Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, Menders are round with a halo, Warders are downward heater shapes under a floating ward sigil, Bishops wear a tall mitre over a bell robe, Death Knights have horned helms, spiked pauldrons and a greatsword, Liches float as crowned wisps, the Lich's risen dead are bare ribcages, abominations are huge stitched blobs, rogues are hooded chevrons with daggers, gargoyles have bat wings, frost wraiths are legless ice ghosts). Hit flashes, death pops and an evolution glow are included. |
@@ -594,10 +650,11 @@ scripts/
     meta_progress.gd        Autoload "Meta": Soul Ash, upgrade tiers, lifetime stats, achievements,
                             purchase / refund, run award, versioned save in user://save.cfg
     meta_modifiers.gd       The ONE path meta upgrades take into a run (game.meta, read by stat code)
-    difficulty_modifiers.gd The ONE path the Profane Pact + Oath take into a run (game.difficulty)
+    difficulty_modifiers.gd The ONE path the difficulty level, run modifiers, Profane Pact + Oath take
+                            into a run (game.difficulty); defines how they combine
     arena.gd                Solid obstacles (circles/rects) and the collision push-out used by all units
     main.gd                 Switches menu <-> run (a run is a fresh Game node every time, built from a RunConfig)
-    run_config.gd           Pre-run choices handed from the menu into Game (the stage; hook for difficulty / modifiers)
+    run_config.gd           Pre-run choices handed from the menu into Game (stage, difficulty, run modifiers)
     game.gd                 One run: builds world + managers in code, fixed-order simulation step,
                             level-up / pause / end-of-run flow; `stage_def` = the run's stage
     spatial_hash.gd         Uniform grid for radius queries (enemies and allies, rebuilt per tick)
@@ -661,7 +718,8 @@ scripts/
                             their icons, evolution glow, enemy chill tint),
                             ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons),
                             chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
-                            stage_select (stage cards, locks, best times; the pre-run settings hook)
+                            stage_select (stage cards, locks, best times), pre_run_setup (difficulty level,
+                            run modifiers, total Soul Ash multiplier)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
     stages/graveyard_stage.gd      Stage 1: segments, events, Reckoning flavour, graves, desecration,
@@ -685,6 +743,8 @@ scripts/
     powerup_data.gd         Power-up types, weights, durations, drop chances, pity, cap, lifetime
     chest_data.gd           Chest drop chances, pity, contents (1 / 3 / 5) weights, reveal timing
     pact_data.gd            Profane Pact levels and Profane Oath per-tier values
+    difficulty_data.gd      GDD §8.4 difficulty levels (Initiate, Necromancer, Lich, Deathlord)
+    run_modifier_data.gd    GDD §8.5 run modifiers: effects and Soul Ash rewards
     palette.gd              Colour language
 ```
 
@@ -756,6 +816,8 @@ Options (after `--`):
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--stage=ID` | Stage to play: `graveyard` (default) or `crimson_march`. Stage locks are ignored. |
+| `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
+| `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
 
@@ -896,8 +958,12 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 - Arrows and spells fly over obstacles (no line-of-sight checks).
 - Eclipse Ward usually arrives late (15:00-19:00) and only in builds that
   take Orb Shield. No evolution is granted before 8:00 elapsed.
-- No ultimate, dash, mid-run saves, skins or GDD difficulty levels yet; the
-  only modifiers are the opt-in Profane Pact and Profane Oath. The Soul Ash
+- No ultimate, dash, mid-run saves or skins yet. The difficulty levels and
+  run modifiers have first-pass numbers checked only with the autotest bots
+  (see GDD §15.0), and no difficulty is locked. Army bot, `--mortal`:
+  Initiate (4 seeds) lowest HP 106-114 vs 37-109 on Necromancer; Deathlord
+  (6 seeds) always reaches 0:00 but kills Sir Alaric only 1 time in 6, with
+  one run surviving on 1 HP. The Soul Ash
   numbers are first-pass and the achievement unlocks only pay Soul Ash until
   their GDD rewards exist.
 - Power-up, chest and Pact / Oath numbers are tuned only against the bots.
@@ -923,8 +989,8 @@ Company); the Banner Bearer; saves; density and minion-HP-bar settings (§38).
 playtest and balance pass are next); the Sanctum of Judgment and Grand
 Inquisitor Seraphine, the remaining enemies (Radiant Inquisitor, Sanctified
 Sentinel, High Confessor), Soul Ash balance against the full-length stage, the
-real achievement unlocks, difficulties and modifiers (a pre-run step plugs
-into `RunConfig`), skins.
+real achievement unlocks, skins (the pre-run setup screen can take a skin
+choice next to the difficulty and modifiers).
 
 **Phase 4 – Polish:** real art and animation, audio, accessibility, full
 controller UX, profiling on target hardware (§40 stress scenarios), balance.

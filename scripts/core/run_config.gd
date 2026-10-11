@@ -1,19 +1,25 @@
 ## RunConfig — everything chosen BEFORE a run starts (GDD §10.2 "Pre-Run
 ## Configuration"), handed from the menus (or the autotest) to Main and into
 ## Game (`Game.run_config`). Restart reuses the same config.
-## Today it only holds the stage. PRE-RUN SETTINGS HOOK: the planned pre-run
-## settings step (GDD §8.4 difficulty, §8.5 run modifiers, §10.2 skin) adds
-## its choices as fields here, and the run reads them from
-## `game.run_config` (difficulty and modifiers through DifficultyModifiers,
-## the one difficulty path).
+## It holds the stage (StageSelect), the difficulty level (GDD §8.4) and the
+## optional run modifiers (GDD §8.5), both chosen on the pre-run setup
+## screen (PreRunSetup) and remembered in the Meta save. The run reads the
+## difficulty and modifiers only through DifficultyModifiers (the one
+## difficulty path). A later skin choice (§10.2) adds its field here.
 class_name RunConfig
 extends RefCounted
 
 ## StageRegistry id of the stage to play.
 var stage_id: String = StageRegistry.DEFAULT_ID
+## DifficultyData id of the difficulty level (default: Necromancer, today's game).
+var difficulty_id: String = DifficultyData.DEFAULT_ID
+## RunModifierData ids of the active run modifiers, in RunModifierData.ORDER
+## (empty = none; set through set_modifiers(), which validates and sorts).
+var modifiers: PackedStringArray = PackedStringArray()
 
 
-## A config for stage `id` (unknown ids fall back to the default stage).
+## A config for stage `id` (unknown ids fall back to the default stage),
+## at the standard difficulty with no run modifiers.
 static func for_stage(id: String) -> RunConfig:
 	var c := RunConfig.new()
 	c.stage_id = id if StageRegistry.STAGES.has(id) else StageRegistry.DEFAULT_ID
@@ -25,6 +31,29 @@ func stage_def() -> Dictionary:
 	return StageRegistry.STAGES.get(stage_id, StageRegistry.STAGES[StageRegistry.DEFAULT_ID])
 
 
-## A copy for a restart (a later pre-run settings step copies its fields too).
+## Sets the difficulty level (unknown ids fall back to the default).
+func set_difficulty(id: String) -> void:
+	difficulty_id = id if DifficultyData.LEVELS.has(id) else DifficultyData.DEFAULT_ID
+
+
+## Sets the active run modifiers: unknown ids and duplicates are dropped and
+## the rest kept in RunModifierData.ORDER (so the same choice always gives
+## the same config, summary and HUD text).
+func set_modifiers(ids: PackedStringArray) -> void:
+	modifiers = PackedStringArray()
+	for id: String in RunModifierData.ORDER:
+		if ids.has(id):
+			modifiers.append(id)
+
+
+## True when run modifier `id` is active.
+func has_modifier(id: String) -> bool:
+	return modifiers.has(id)
+
+
+## A copy for a restart: the same stage, difficulty and modifiers.
 func duplicate_config() -> RunConfig:
-	return RunConfig.for_stage(stage_id)
+	var c := RunConfig.for_stage(stage_id)
+	c.set_difficulty(difficulty_id)
+	c.set_modifiers(modifiers)
+	return c

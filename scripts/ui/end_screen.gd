@@ -3,9 +3,11 @@
 ## with run statistics, Restart and Main Menu (GDD §19 MVP
 ## "victory/defeat states"). A second column shows the Soul Ash earned by the
 ## run (kept on death), its breakdown (including the Profane Pact and
-## Profane Oath bonus lines and the stage bonus of the Crimson March),
+## Profane Oath bonus lines, the difficulty level line (negative on
+## Initiate), the run modifiers line and the stage bonus of the Crimson March),
 ## achievements and stages unlocked and the new balance (Meta.award_run(),
-## GDD §9.2, §9.3). The stage and its boss are named from the summary.
+## GDD §9.2, §9.3). The stage, its boss, the difficulty level and the run
+## modifiers are named from the summary.
 class_name EndScreen
 extends Control
 
@@ -57,6 +59,7 @@ func _ready() -> void:
 	vb.add_child(cols)
 	_stats = UiTheme.label("", 15)
 	_stats.custom_minimum_size = Vector2(390, 0)
+	_stats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART  # A long run-modifier list wraps.
 	cols.add_child(_stats)
 	cols.add_child(_build_ash_column())
 	_restart = Button.new()
@@ -127,6 +130,12 @@ func _show_ash(ash: Dictionary, boss_name: String) -> void:
 	if int(ash.get("oath_bonus", 0)) > 0:
 		names.append("Profane Oath %s (+%d%%)" % [DifficultyModifiers.roman(int(ash["oath_tier"])), int(roundf(float(ash["oath_pct"]) * 100.0))])
 		values.append("+%d" % int(ash["oath_bonus"]))
+	if int(ash.get("difficulty_bonus", 0)) != 0:
+		names.append("Difficulty: %s (%+d%%)" % [String(ash["difficulty_name"]), int(roundf(float(ash["difficulty_pct"]) * 100.0))])
+		values.append("%+d" % int(ash["difficulty_bonus"]))
+	if int(ash.get("modifiers_bonus", 0)) > 0:
+		names.append("Run modifiers x%d (+%d%%)" % [int(ash["modifier_count"]), int(roundf(float(ash["modifiers_pct"]) * 100.0))])
+		values.append("+%d" % int(ash["modifiers_bonus"]))
 	if int(ash.get("stage_bonus", 0)) > 0:
 		names.append("%s bonus (x%.2f)" % [String(ash["stage_name"]), 1.0 + float(ash["stage_pct"])])
 		values.append("+%d" % int(ash["stage_bonus"]))
@@ -163,6 +172,10 @@ func open(summary: Dictionary) -> void:
 	var lines := PackedStringArray()
 	var boss_name := String(summary.get("boss_name", "Sir Alaric"))  # The stage boss.
 	lines.append("Stage:  %s" % String(summary.get("stage_name", "The Desecrated Graveyard")))
+	lines.append("Difficulty:  %s" % String(summary.get("difficulty_name", "Necromancer")))
+	var mod_names: PackedStringArray = summary.get("modifier_names", PackedStringArray())  # Active run modifiers.
+	if not mod_names.is_empty():
+		lines.append("Run modifiers:  %s" % ", ".join(mod_names))
 	lines.append("Time survived:  %02d:%02d" % [floori(float(t) / 60.0), t % 60])
 	if won:
 		var over := int(float(summary["time_past_zero"]))

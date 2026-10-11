@@ -51,6 +51,13 @@
 ##   --stage=ID            Autotest stage: "graveyard" (default) or
 ##                         "crimson_march" (StageRegistry ids; stage locks
 ##                         are ignored).
+##   --difficulty=ID       Autotest difficulty level (GDD §8.4, DifficultyData
+##                         ids or names, any case): initiate, necromancer
+##                         (default, today's game), lich or deathlord.
+##   --modifiers=a,b       Autotest run modifiers (GDD §8.5, RunModifierData
+##                         ids): endless_crusade, hardened_faith, divine_fury,
+##                         purge_the_unholy, scarcity, frail_master,
+##                         vengeful_dead, holy_retribution; "all" = every one.
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 
@@ -81,6 +88,10 @@ var autotest_classes: PackedStringArray = PackedStringArray()
 var autotest_spells: PackedStringArray = PackedStringArray()
 ## Autotest: StageRegistry id of the stage to play (--stage=, locks ignored).
 var autotest_stage: String = StageRegistry.DEFAULT_ID
+## Autotest: DifficultyData id of the difficulty level (--difficulty=).
+var autotest_difficulty: String = DifficultyData.DEFAULT_ID
+## Autotest: RunModifierData ids of the run modifiers (--modifiers=a,b).
+var autotest_modifiers: PackedStringArray = PackedStringArray()
 ## Stage chosen last in the stage select this session (focused next time).
 var last_stage_id: String = StageRegistry.DEFAULT_ID
 ## Whether the F3 debug overlay is shown; persists across restarts.
@@ -129,6 +140,25 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_stage = id
 			else:
 				push_error("Unknown --stage=%s (expected one of %s)" % [id, ", ".join(PackedStringArray(StageRegistry.ORDER))])
+		elif arg.begins_with("--difficulty="):
+			var want := arg.get_slice("=", 1).to_lower()  # Requested level (id or name).
+			var found := ""  # Matching DifficultyData id.
+			for id: String in DifficultyData.ORDER:
+				if id == want or String(DifficultyData.LEVELS[id]["display_name"]).to_lower() == want:
+					found = id
+			if found != "":
+				autotest_difficulty = found
+			else:
+				push_error("Unknown --difficulty=%s (expected one of %s)" % [want, ", ".join(PackedStringArray(DifficultyData.ORDER))])
+		elif arg.begins_with("--modifiers="):
+			for id: String in arg.get_slice("=", 1).to_lower().split(",", false):
+				if id == "all":
+					autotest_modifiers = PackedStringArray(RunModifierData.ORDER)
+				elif RunModifierData.MODIFIERS.has(id):
+					if not autotest_modifiers.has(id):
+						autotest_modifiers.append(id)
+				else:
+					push_error("Unknown --modifiers id '%s' (expected %s or all)" % [id, ", ".join(PackedStringArray(RunModifierData.ORDER))])
 		elif arg.begins_with("--oath="):
 			autotest_oath = clampi(arg.get_slice("=", 1).to_int(), 0, MetaData.max_tier(PactData.OATH_ID))
 		elif arg.begins_with("--classes="):
