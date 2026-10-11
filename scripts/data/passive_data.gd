@@ -18,6 +18,12 @@
 ##   Dark Benediction    — +% heals, wards and barriers of the priest orders
 ##                         (owned, it merges Lv 5 Menders + Warders into
 ##                         Profane Bishops). Recipes: SummonEvolutionData.
+## plus the four evolution passives of the newer spells (user request "more
+## weapons"; prototype's choice, recorded in GDD §15.0):
+##   Shade Stride          — +% necromancer move speed (evolves Bone Spear).
+##   Vampiric Rite         — +HP/s regeneration (evolves Soul Siphon).
+##   Necrotic Expanse      — +% spell area (evolves Corpse Explosion).
+##   Lingering Malediction — +% spell durations (evolves Plague Cloud).
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -33,7 +39,8 @@ extends RefCounted
 
 ## Display / card order of passives.
 const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycling",
-	"soul_conduit", "warding_ritual", "abyssal_focus", "forbidden_knowledge", "dark_benediction", PactData.ID]
+	"soul_conduit", "warding_ritual", "abyssal_focus", "forbidden_knowledge", "dark_benediction",
+	"shade_stride", "vampiric_rite", "necrotic_expanse", "lingering_malediction", PactData.ID]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -46,7 +53,8 @@ const SPELL_PASSIVES := ["soul_conduit", "abyssal_focus"]
 ##   icon         — IconGlyph kind.
 ##   description  — card text (GDD §34 definition).
 ##   labels       — stat key -> [UI label, format] where format is "int",
-##                  "pct" (0.1 -> +10%) or "neg_pct" (0.1 -> -10%).
+##                  "pct" (0.1 -> +10%), "neg_pct" (0.1 -> -10%) or "num"
+##                  (0.4 -> +0.4).
 ##   levels       — 5 rows of ABSOLUTE values at that passive level.
 ##
 ## Keys:
@@ -65,6 +73,15 @@ const SPELL_PASSIVES := ["soul_conduit", "abyssal_focus"]
 ##                        `classes` (Mender, Warder, Profane Bishop).
 ##   classes            — (optional) summon classes the passive affects; it
 ##                        is a "dead" card while none of them is owned.
+##   move_speed         — +% necromancer move speed (its own category, on top
+##                        of the meta Fleet Shade bonus).
+##   hp_regen           — +HP per second added to the necromancer's natural
+##                        regeneration (PlayerData.HP_REGEN).
+##   spell_area         — +% spell area: the radius stats of every spell
+##                        (own category, on top of the meta Widening Dark).
+##   spell_duration     — +% spell durations (AbilityData.DURATION_KEYS: Plague
+##                        Cloud duration, Grave Eruption spike fields, Shadow
+##                        Blast slow).
 const PASSIVES := {
 	# Profane Pact (difficulty / reward passive): defined in PactData.
 	PactData.ID: PactData.PASSIVE,
@@ -158,7 +175,8 @@ const PASSIVES := {
 			{"cooldown_reduction": 0.20},  # TUNING (not in GDD)
 			{"cooldown_reduction": 0.25},  # TUNING (not in GDD)
 		],
-	},	"forbidden_knowledge": {
+	},
+	"forbidden_knowledge": {
 		"display_name": "Forbidden Knowledge",
 		"icon": "forbidden_knowledge",
 		"description": "Forbidden rites empower your Undead Mages. At Lv 5, with Mages at Lv 5, a treasure chest raises them as Liches.",
@@ -184,6 +202,58 @@ const PASSIVES := {
 			{"support_power": 0.24},  # TUNING (not in GDD)
 			{"support_power": 0.32},  # TUNING (not in GDD)
 			{"support_power": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	"shade_stride": {
+		"display_name": "Shade Stride",
+		"icon": "shade_stride",
+		"description": "You glide like a shade across the graves. Evolves Bone Spear into Ossuary Lance.",
+		"labels": {"move_speed": ["Move speed", "pct"]},
+		"levels": [
+			{"move_speed": 0.03},  # TUNING (not in GDD)
+			{"move_speed": 0.06},  # TUNING (not in GDD)
+			{"move_speed": 0.09},  # TUNING (not in GDD)
+			{"move_speed": 0.12},  # TUNING (not in GDD)
+			{"move_speed": 0.15},  # TUNING (not in GDD)
+		],
+	},
+	"vampiric_rite": {
+		"display_name": "Vampiric Rite",
+		"icon": "vampiric_rite",
+		"description": "Stolen life seeps back into you. Evolves Soul Siphon into Soul Rapture.",
+		"labels": {"hp_regen": ["Regeneration (HP/s)", "num"]},
+		"levels": [
+			{"hp_regen": 0.2},  # TUNING (not in GDD)
+			{"hp_regen": 0.4},  # TUNING (not in GDD)
+			{"hp_regen": 0.6},  # TUNING (not in GDD)
+			{"hp_regen": 0.8},  # TUNING (not in GDD)
+			{"hp_regen": 1.0},  # TUNING (not in GDD)
+		],
+	},
+	"necrotic_expanse": {
+		"display_name": "Necrotic Expanse",
+		"icon": "necrotic_expanse",
+		"description": "Your blasts, clouds and bursts spread wider. Evolves Corpse Explosion into Grave Eruption.",
+		"labels": {"spell_area": ["Spell area (radius)", "pct"]},
+		"levels": [
+			{"spell_area": 0.05},  # TUNING (not in GDD)
+			{"spell_area": 0.10},  # TUNING (not in GDD)
+			{"spell_area": 0.15},  # TUNING (not in GDD)
+			{"spell_area": 0.20},  # TUNING (not in GDD)
+			{"spell_area": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	"lingering_malediction": {
+		"display_name": "Lingering Malediction",
+		"icon": "lingering_malediction",
+		"description": "Your curses outlast their casting. Evolves Plague Cloud into Pestilence.",
+		"labels": {"spell_duration": ["Spell duration", "pct"]},
+		"levels": [
+			{"spell_duration": 0.10},  # TUNING (not in GDD)
+			{"spell_duration": 0.20},  # TUNING (not in GDD)
+			{"spell_duration": 0.30},  # TUNING (not in GDD)
+			{"spell_duration": 0.40},  # TUNING (not in GDD)
+			{"spell_duration": 0.50},  # TUNING (not in GDD)
 		],
 	},
 }

@@ -17,10 +17,16 @@ func _init(p_game: Game) -> void:
 ## Damages an enemy. Armour reduces damage by its fraction. Kills, XP drops
 ## and the kill counter are handled here. `source` tags the damage for the
 ## run statistics ("warrior", "bolt", "orb"...). Returns damage dealt.
+## A rotting enemy (Plague Cloud Rot, Enemy.rot_until) takes rot_amp more
+## from every source; the extra is counted in the rot_bonus_dmg stat.
 func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if not e.active or amount <= 0.0:
 		return 0.0
+	var rot := e.rot_amp if e.rot_until > game.elapsed else 0.0  # Rot bonus fraction.
+	amount *= 1.0 + rot
 	var dealt := minf(amount * (1.0 - e.armor), e.hp)
+	if rot > 0.0:
+		game.stat_add("rot_bonus_dmg", dealt * rot / (1.0 + rot))
 	e.hp -= dealt
 	e.on_hit()
 	game.stat_add("damage_dealt", dealt)
@@ -164,6 +170,7 @@ func _kill_enemy(e: Enemy) -> void:
 	if e.is_elite:
 		game.stat_add("elite_kills", 1.0)  # Soul Ash elite bonus (MetaData)
 	game.kills += 1
+	game.abilities.on_enemy_killed(e)  # Corpse Explosion corpses, Soul Rapture bursts.
 	game.powerups.on_enemy_killed(e)  # Power-up drop roll (PowerupData rules).
 	game.chests.on_enemy_killed(e)  # Treasure chest roll (ChestData rules).
 	game.enemies.on_enemy_killed(e)

@@ -49,6 +49,11 @@ const KINDS := {
 const SLIDE_MEMORY: float = 0.6  # TUNING (not in GDD)
 ## Step (px) used when sampling a line for obstacles (charge lanes).
 const RAY_STEP: float = 8.0  # TUNING (not in GDD)
+## Extra distance (px) Arena.free_point() adds to every push-out. Positions
+## are 32-bit floats: far from the origin a sub-pixel penetration push can
+## round away to nothing, leaving the point inside the obstacle after every
+## retry (seen once as a Rogue dash ending inside an obstacle).
+const FREE_POINT_MARGIN: float = 0.5  # TUNING (not in GDD)
 ## Camera movement (px) that triggers a redraw of the obstacle layer.
 const REDRAW_CELL: float = 256.0  # TUNING (not in GDD)
 ## Half-size (px) of the area drawn around the redraw cell centre.

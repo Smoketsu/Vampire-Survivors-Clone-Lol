@@ -133,6 +133,13 @@ var knockback: Vector2 = Vector2.ZERO
 ## Seconds left of a mage mark (Volley of the Fallen synergy, GDD §6.3):
 ## skeletal arrows deal bonus damage while it is > 0.
 var mark_time: float = 0.0
+## Plague Cloud Rot: game time (s) until which this enemy rots (takes
+## `rot_amp` more damage from every source in CombatResolver.damage_enemy).
+## Set by PlagueCloud.apply_rot(); compared with Game.elapsed, so it needs
+## no ticking (and keeps running through Stasis).
+var rot_until: float = 0.0
+## Plague Cloud Rot: extra damage fraction taken while rotting (0..~0.3).
+var rot_amp: float = 0.0
 ## Seconds left of the brief slowdown after a ranged unit fires.
 var _shoot_slow_timer: float = 0.0
 ## True while a Stasis power-up holds this enemy (EnemyDirector skips its
@@ -230,6 +237,8 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	engaged_mult = 1.0
 	knockback = Vector2.ZERO
 	mark_time = 0.0
+	rot_until = 0.0
+	rot_amp = 0.0
 	_shoot_slow_timer = 0.0
 	frozen = false
 	freeze_timer = 0.0

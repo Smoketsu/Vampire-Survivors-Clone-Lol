@@ -61,6 +61,9 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
   owned and the run has reached 8:00 elapsed. Summon evolutions (Death Knight, Lich, Profane Bishop)
   use the same delivery and gate with their own recipes (`summon_evolution_data.gd`).
 - **Shadow Bolt** has a Nearest/Strongest aim toggle (T / pad Y).
+- **Spells:** Shadow Bolt, Orb Shield, Shadow Blast, plus Bone Spear, Soul Siphon, Corpse Explosion
+  and Plague Cloud (`scripts/abilities/spells/`, one dispatch through `NecroSpellBook`). 11 actives
+  (7 spells, 8 offerable summon classes) compete for 6 active slots.
 - **Soul Ash is kept on death.** Profane Pact (in-run) and Profane Oath (Ossuary) trade difficulty
   for rewards.
 
@@ -81,6 +84,8 @@ Autotest options (full table in the README):
 - `--seed=N`
 - `--policy=naive|army|evolve|summon|pact`
 - `--classes=a,b` (force summon classes, e.g. `abomination,rogue,gargoyle,frost_wraith`)
+- `--spells=a,b` (force spells and their evolution passives, e.g.
+  `bone_spear,soul_siphon,corpse_explosion,plague_cloud`)
 - `--pact`
 - `--meta=none|mid|max`
 - `--oath=0-5`
@@ -145,7 +150,10 @@ tiny tweaks.
 - four more summon classes, each with a `SummonBehavior` special: the Corpse Abomination (blocker,
   stomp), Grave Rogue (dash strike, bleed), Crypt Gargoyle (airborne swoop) and Frost Wraith
   (chill, Deep Freeze);
-- autotest `--policy=summon` and `--classes=a,b`.
+- four more spells with evolutions and paired passives: Bone Spear / Ossuary Lance (Shade Stride),
+  Soul Siphon / Soul Rapture (Vampiric Rite), Corpse Explosion / Grave Eruption (Necrotic
+  Expanse), Plague Cloud / Pestilence (Lingering Malediction), plus the Rot status;
+- autotest `--policy=summon`, `--classes=a,b` and `--spells=a,b`.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.
@@ -158,8 +166,9 @@ tiny tweaks.
    silhouettes distinct and follow the color language in `scripts/data/palette.gd` and GDD §11.
 4. **Rest of Stage 1's content:**
    - the remaining passives (Bone Plating, Unholy Precision, Unholy Resilience, Bound Souls);
-   - a combined balance pass for the priest split, the summon evolutions and the four later
-     classes (they were tuned separately); evolutions for the later classes, if wanted;
+   - a combined balance pass for the priest split, the summon evolutions, the four later
+     classes and the four newer spells (each was tuned separately); evolutions for the later
+     classes, if wanted;
    - the Banner Bearer enemy;
    - a dash and an ultimate.
 5. **GDD difficulty levels and pre-run modifiers** (Purge the Unholy, Scarcity, Frail Master, Vengeful

@@ -4,7 +4,10 @@
 ##
 ## Owns HP, i-frames, pickup radius and the priest ward (damage-absorb
 ## shield, user brief), and the meta revival (Survival tree "Undying Will",
-## GDD §9.2): lethal damage with a revival left restores part of max HP. Movement has no physical collision
+## GDD §9.2): lethal damage with a revival left restores part of max HP.
+## Two spell passives act here: Shade Stride (+% move speed, its own
+## category) and Vampiric Rite (+HP/s on top of PlayerData.HP_REGEN), both
+## read from AbilityManager.passive_value(). Movement has no physical collision
 ## with summons (GDD §26 "Player <-> friendly undead: NO physical collision")
 ## and the open arena has no solid geometry, so the node is moved directly
 ## instead of using CharacterBody2D physics.
@@ -66,7 +69,8 @@ func step(delta: float) -> void:
 		input = game.autotest.get_move_vector()
 	else:
 		input = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	velocity = input * move_speed
+	# Shade Stride passive: its own +% move speed category on top of move_speed.
+	velocity = input * move_speed * (1.0 + game.abilities.passive_value("shade_stride", "move_speed"))
 	position += velocity * delta
 	if absf(velocity.x) > 1.0:
 		var f := signf(velocity.x)
@@ -84,9 +88,10 @@ func step(delta: float) -> void:
 		if flash <= 0.0:
 			queue_redraw()
 	time_since_hit += delta
-	# Natural regeneration (PlayerData.HP_REGEN), capped at max HP.
+	# Natural regeneration (PlayerData.HP_REGEN) plus the Vampiric Rite
+	# passive's HP/s, capped at max HP.
 	if hp < max_hp:
-		hp = minf(max_hp, hp + PlayerData.HP_REGEN * delta)
+		hp = minf(max_hp, hp + (PlayerData.HP_REGEN + game.abilities.passive_value("vampiric_rite", "hp_regen")) * delta)
 	if shield_time > 0.0:
 		shield_time -= delta
 		if shield_time <= 0.0:

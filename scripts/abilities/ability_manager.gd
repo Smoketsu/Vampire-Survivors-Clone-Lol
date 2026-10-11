@@ -25,6 +25,13 @@
 ## also applies the Hyper power-up (x2 damage, halved cooldowns) while it runs.
 ## The Profane Pact (PactData) is a regular passive here; its card shows the
 ## combined Pact + Oath penalties and rewards (game.difficulty).
+## The four newer spells (Bone Spear, Soul Siphon, Corpse Explosion, Plague
+## Cloud) and their evolutions live in scripts/abilities/spells/ behind ONE
+## dispatch: `spells` (NecroSpellBook) is ticked from step(), told about
+## kills (on_enemy_killed) and adds their passive card lines. Their stats use
+## the same spell_stats() path; apply_spell_mods() also applies the new
+## spell passives Necrotic Expanse (area) and Lingering Malediction
+## (durations).
 class_name AbilityManager
 extends Node2D
 
@@ -69,11 +76,16 @@ var _detonations: Array[Dictionary] = []
 var _tmp: Array = []
 ## Reusable [score, enemy] candidate list for Shadow Bolt.
 var _cands: Array = []
+## The four newer spells (NecroSpellBook; created in setup()).
+var spells: NecroSpellBook = null
 
 
 ## Initialises levels: the starting spell at level 1, everything else 0.
 func setup(p_game: Game) -> void:
 	game = p_game
+	spells = NecroSpellBook.new()
+	spells.game = game
+	add_child(spells)
 	for id: String in AbilityData.SPELL_ORDER:
 		spell_levels[id] = 0
 	for id: String in PassiveData.ORDER:
@@ -165,12 +177,18 @@ func _apply_spell_buffs(out: Dictionary) -> Dictionary:
 ##   Abyssal Focus -> cooldown, recharge, pulse_interval x (1 - cooldown_reduction)
 ##   meta spell_damage / spell_cooldown -> the same keys, x (1 +/- value)
 ##   meta spell_area -> radius, pulse_radius             x (1 + value)
+##   Necrotic Expanse -> radius, pulse_radius            x (1 + spell_area)
+##   Lingering Malediction -> AbilityData.DURATION_KEYS  x (1 + spell_duration)
 ## Pass `conduit_lvl` / `focus_lvl` >= 0 to preview other passive levels.
 func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -1) -> Dictionary:
 	var out := row.duplicate()
 	var dmg_mult := (1.0 + _passive_value_at("soul_conduit", "spell_damage", conduit_lvl)) * (1.0 + game.meta.value("spell_damage"))
 	var cd_mult := (1.0 - _passive_value_at("abyssal_focus", "cooldown_reduction", focus_lvl)) * (1.0 - game.meta.value("spell_cooldown"))
-	var area_mult := 1.0 + game.meta.value("spell_area")
+	var area_mult := (1.0 + game.meta.value("spell_area")) * (1.0 + passive_value("necrotic_expanse", "spell_area"))
+	var dur_mult := 1.0 + passive_value("lingering_malediction", "spell_duration")  # Lingering Malediction.
+	for key: String in AbilityData.DURATION_KEYS:
+		if out.has(key):
+			out[key] = float(out[key]) * dur_mult
 	for key: String in ["damage", "pulse_damage"]:
 		if out.has(key):
 			out[key] = float(out[key]) * dmg_mult
@@ -301,6 +319,13 @@ func step(delta: float) -> void:
 		orb_shield.step(delta, spell_stats("orb_shield"))
 	if not _detonations.is_empty():
 		_step_detonations(delta)
+	spells.step(delta)  # Bone Spear, Soul Siphon, Corpse Explosion, Plague Cloud.
+
+
+## Kill hook from CombatResolver._kill_enemy (the enemy is still in place):
+## forwarded to the newer spells (corpses, Soul Rapture bursts).
+func on_enemy_killed(e: Enemy) -> void:
+	spells.on_enemy_killed(e)
 
 
 ## Flips the Shadow Bolt aim mode between Nearest and Strongest.
@@ -602,6 +627,8 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 		var evo := EvolutionData.for_spell(id)
 		if lvl > 0 and evo != "" and passive_level(EvolutionData.EVOLUTIONS[evo]["passive"]) > 0:
 			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
+		if game.autotest != null:
+			w *= game.autotest.card_weight_mult(id)  # Test only: --spells items come up more often.
 		out.append({"offer": _spell_offer(id, lvl), "weight": w, "dead": false})
 	var evos := game.horde.evolutions  # Summon-evolution card hooks.
 	# Summon classes that can still appear as a NEW card (not owned, not
@@ -638,6 +665,8 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 			w *= LevelUpData.WEIGHT_DEAD
 		if id == PactData.ID:
 			w *= PactData.CARD_WEIGHT_MULT  # Modest weight (PactData).
+		if game.autotest != null:
+			w *= game.autotest.card_weight_mult(id)  # Test only: --spells items come up more often.
 		out.append({"offer": _passive_offer(id, lvl), "weight": w, "dead": dead})
 	return out
 
@@ -863,6 +892,8 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 				deltas.append("%s cooldown %ss -> %ss" % [spell_name("shadow_bolt"), _fmt(a["cooldown"]), _fmt(b["cooldown"])])
 		"forbidden_knowledge", "dark_benediction":
 			deltas.append(game.horde.evolutions.passive_effect_line(id, lvl, nxt))
+		_:
+			spells.passive_example(id, nxt, deltas)  # The newer spells' passives.
 	var hint := ""
 	var spell := _paired_spell(id)
 	if spell != "":
@@ -924,20 +955,24 @@ static func _fmt(v: float) -> String:
 	return str(snappedf(v, 0.01))
 
 
-## Formats a spell stat (slow and second-hit fractions are shown as %).
+## Formats a spell stat (slow and second-hit fractions, and
+## AbilityData.PERCENT_KEYS, are shown as %).
 static func _fmt_spell(key: String, v: Variant) -> String:
-	if key == "slow" or key == "second_damage":
+	if key == "slow" or key == "second_damage" or key in AbilityData.PERCENT_KEYS:
 		return "%d%%" % int(roundf(float(v) * 100.0))
 	return _fmt(float(v))
 
 
-## Formats a passive value per its label format ("int" / "pct" / "neg_pct").
+## Formats a passive value per its label format ("int" / "pct" / "neg_pct" /
+## "num").
 static func _fmt_passive(v: float, fmt: String) -> String:
 	match fmt:
 		"pct":
 			return "+%d%%" % int(roundf(v * 100.0))
 		"neg_pct":
 			return "-%d%%" % int(roundf(v * 100.0))
+		"num":
+			return "+%s" % _fmt(v)
 	return "+%d" % int(v)
 
 

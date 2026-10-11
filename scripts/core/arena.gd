@@ -153,7 +153,9 @@ func is_blocked(pos: Vector2, r: float) -> bool:
 
 
 ## Nearest free position for a body of radius `r` placed at `pos` (spawns,
-## recycling, recalls, objective markers).
+## recycling, recalls, objective markers, special-move landings). Each push
+## gets ArenaData.FREE_POINT_MARGIN on top, so a tiny penetration far from
+## the origin cannot round away in 32-bit floats.
 func free_point(pos: Vector2, r: float) -> Vector2:
 	var p := pos
 	for _i in 3:
@@ -163,7 +165,7 @@ func free_point(pos: Vector2, r: float) -> Vector2:
 		var push := separation(o, p, r)
 		if push == Vector2.ZERO:
 			return p
-		p += push * 1.05
+		p += push * 1.05 + push.normalized() * ArenaData.FREE_POINT_MARGIN
 	return p
 
 

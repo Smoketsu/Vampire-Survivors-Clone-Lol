@@ -58,6 +58,63 @@ const SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 140.0, "f1": 60.0, "dur": 0.3, "amp": 0.5, "decay": 0.09},
 			{"wave": "noise", "dur": 0.25, "amp": 0.35, "decay": 0.07, "lp0": 2200.0, "lp1": 400.0},
 			{"wave": "tri", "f0": 330.0, "f1": 165.0, "dur": 0.2, "amp": 0.2, "decay": 0.06}]},
+	# --- Newer necromancer spells (scripts/abilities/spells/) ----------------
+	# Bone Spear throw: a dry bony whoosh.
+	"spear_cast": {"dur": 0.2, "volume_db": -16.0, "max_voices": 2, "min_interval": 90, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.18, "amp": 0.4, "attack": 0.03, "decay": 0.06, "lp0": 1200.0, "lp1": 4500.0},
+			{"wave": "tri", "f0": 260.0, "f1": 180.0, "dur": 0.12, "amp": 0.25, "decay": 0.04}]},
+	# Ossuary Lance throw: heavier, with a low hollow boom.
+	"lance_cast": {"dur": 0.35, "volume_db": -13.0, "max_voices": 2, "min_interval": 120, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.3, "amp": 0.45, "attack": 0.03, "decay": 0.1, "lp0": 900.0, "lp1": 3500.0},
+			{"wave": "sine", "f0": 120.0, "f1": 60.0, "dur": 0.35, "amp": 0.5, "decay": 0.12},
+			{"wave": "square", "f0": 200.0, "f1": 140.0, "dur": 0.15, "amp": 0.12, "decay": 0.05, "lp0": 1200.0}]},
+	# Spear / lance impact: a bone crack.
+	"spear_hit": {"dur": 0.1, "volume_db": -18.0, "max_voices": 3, "min_interval": 45, "pitch_var": 0.15, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.05, "amp": 0.5, "decay": 0.012, "lp0": 6000.0, "lp1": 2500.0},
+			{"wave": "square", "f0": 520.0, "f1": 300.0, "dur": 0.08, "amp": 0.18, "decay": 0.025, "lp0": 2500.0}]},
+	# Soul Siphon / Soul Rapture drain: a low wobbling suck.
+	"siphon_hit": {"dur": 0.3, "volume_db": -19.0, "max_voices": 2, "min_interval": 140, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 90.0, "f1": 140.0, "dur": 0.3, "amp": 0.45, "attack": 0.05, "decay": 0.12, "vib_hz": 11.0, "vib_depth": 0.05},
+			{"wave": "noise", "dur": 0.25, "amp": 0.12, "attack": 0.08, "decay": 0.08, "lp0": 600.0, "lp1": 1400.0}]},
+	# Soul Rapture death burst: a rising spectral wail.
+	"rapture_burst": {"dur": 0.45, "volume_db": -14.0, "max_voices": 2, "min_interval": 110, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 330.0, "f1": 880.0, "dur": 0.4, "amp": 0.3, "attack": 0.02, "decay": 0.15, "vib_hz": 7.0, "vib_depth": 0.02},
+			{"wave": "noise", "dur": 0.3, "amp": 0.25, "decay": 0.08, "lp0": 3000.0, "lp1": 800.0},
+			{"wave": "sine", "f0": 80.0, "f1": 50.0, "dur": 0.3, "amp": 0.35, "decay": 0.1}]},
+	# Corpse Explosion burst: a wet crunch of bones.
+	"corpse_burst": {"dur": 0.3, "volume_db": -14.0, "max_voices": 3, "min_interval": 80, "pitch_var": 0.1, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.25, "amp": 0.55, "decay": 0.06, "lp0": 2500.0, "lp1": 300.0},
+			{"wave": "sine", "f0": 110.0, "f1": 45.0, "dur": 0.3, "amp": 0.45, "decay": 0.1},
+			{"wave": "noise", "start": 0.05, "dur": 0.04, "amp": 0.3, "decay": 0.01, "lp0": 5000.0}]},
+	# Grave Eruption: a deep ground rupture with rattling spikes.
+	"eruption": {"dur": 0.55, "volume_db": -12.0, "max_voices": 2, "min_interval": 110, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 70.0, "f1": 32.0, "dur": 0.55, "amp": 0.6, "decay": 0.2},
+			{"wave": "noise", "dur": 0.45, "amp": 0.45, "decay": 0.14, "lp0": 1500.0, "lp1": 200.0},
+			{"wave": "noise", "start": 0.08, "dur": 0.05, "amp": 0.3, "decay": 0.012, "lp0": 6000.0},
+			{"wave": "noise", "start": 0.16, "dur": 0.05, "amp": 0.25, "decay": 0.012, "lp0": 6000.0}]},
+	# Plague Cloud placed: a long sickly hiss.
+	"plague_cast": {"dur": 0.6, "volume_db": -17.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.05, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.6, "amp": 0.4, "attack": 0.12, "decay": 0.22, "lp0": 2500.0, "lp1": 900.0},
+			{"wave": "saw", "f0": 98.0, "f1": 92.0, "dur": 0.5, "amp": 0.15, "attack": 0.1, "decay": 0.2, "lp0": 500.0, "vib_hz": 5.0, "vib_depth": 0.03}]},
+	# Plague tick on an enemy: a soft wet bubble.
+	"plague_tick": {"dur": 0.08, "volume_db": -25.0, "max_voices": 2, "min_interval": 90, "pitch_var": 0.2, "priority": 0,
+		"layers": [
+			{"wave": "sine", "f0": 300.0, "f1": 520.0, "dur": 0.08, "amp": 0.4, "decay": 0.025},
+			{"wave": "noise", "dur": 0.05, "amp": 0.15, "decay": 0.015, "lp0": 1800.0}]},
+	# Pestilence Death Nova: a dark choral thump.
+	"death_nova": {"dur": 0.8, "volume_db": -11.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 82.0, "f1": 36.0, "dur": 0.8, "amp": 0.6, "decay": 0.3},
+			{"wave": "saw", "f0": 146.83, "f1": 110.0, "dur": 0.6, "amp": 0.2, "attack": 0.02, "decay": 0.25, "lp0": 900.0, "lp1": 250.0},
+			{"wave": "noise", "dur": 0.6, "amp": 0.35, "decay": 0.18, "lp0": 2000.0, "lp1": 150.0}]},
 	# --- Undead army ----------------------------------------------------------
 	"summon_rise": {"dur": 0.55, "volume_db": -19.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.05, "priority": 1,
 		"layers": [
