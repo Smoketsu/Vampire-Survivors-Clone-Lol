@@ -64,14 +64,16 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 ## the kind is unknown here. Evolved classes get the gold evolution frame.
 static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> bool:
 	match kind:
+		# Unit icons go through Glyphs.draw_summon() so sprite art
+		# (assets/sprites/summons/) is used when present, capped to the box.
 		"warder", "bishop", "risen":
-			draw_summon(ci, kind, c + Vector2(-s * 0.08, s * 0.08), s * 0.5, false)
+			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.08, s * 0.08), s * 0.5, false)
 		"death_knight", "lich":
 			ProgressionGlyphs._gold_frame(ci, c, s)
-			draw_summon(ci, kind, c + Vector2(-s * 0.08, s * 0.1), s * 0.45, false)
+			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.08, s * 0.1), s * 0.45, false)
 		"profane_bishop":
 			ProgressionGlyphs._gold_frame(ci, c, s)
-			draw_bishop(ci, c + Vector2(0, s * 0.1), s * 0.45, false)
+			Glyphs.draw_summon(ci, "bishop", c + Vector2(0, s * 0.1), s * 0.45, false)
 		"forbidden_knowledge":
 			# Open grimoire with a violet eye on its pages.
 			var left := PackedVector2Array([c + Vector2(-s * 0.62, -s * 0.3), c + Vector2(-s * 0.02, -s * 0.18),
@@ -92,9 +94,9 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 				ci.draw_line(c + Vector2(x, -s * 0.28), c + Vector2(x * 1.3, s * 0.05), Color(Palette.NECRO_GREEN, 0.6), 1.5)
 			Glyphs._skull(ci, c + Vector2(0, s * 0.3), s * 0.3, false, Palette.NECRO_GREEN)
 		"abomination":
-			draw_summon(ci, kind, c + Vector2(-s * 0.05, s * 0.05), s * 0.46, false)
+			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.05, s * 0.05), s * 0.46, false)
 		"rogue", "gargoyle", "frost_wraith":
-			draw_summon(ci, kind, c + Vector2(-s * 0.06, s * 0.08), s * 0.5, false)
+			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.06, s * 0.08), s * 0.5, false)
 		_:
 			return false
 	return true
