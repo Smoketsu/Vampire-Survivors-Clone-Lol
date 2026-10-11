@@ -56,6 +56,10 @@ const CENTER_OFFSET: float = -0.12  # TUNING (not in GDD)
 ## brighten it towards white; dark outlines stay dark).
 const FLASH_MODULATE: Color = Color(2.6, 2.6, 2.6, 1.0)  # TUNING (not in GDD)
 
+## Fraction of an icon box's size that a sprite fills when drawn as a HUD /
+## card icon (SpriteBank.icon_cap).
+const ICON_FILL: float = 0.9  # TUNING (not in GDD)
+
 ## Drop-shadow ellipse under a sprite: width as a fraction of the sprite height.
 const SHADOW_WIDTH: float = 0.55  # TUNING (not in GDD)
 ## Drop-shadow ellipse height as a fraction of its width.

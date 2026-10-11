@@ -13,6 +13,11 @@ extends RefCounted
 ## key -> Texture2D, or null when no PNG exists for that key.
 static var _cache: Dictionary = {}
 
+## Icon mode: when > 0, sprites are drawn exactly this tall (px) with no drop
+## shadow, so HUD / card icons that reuse the world glyph functions stay inside
+## their boxes. Set and cleared by Glyphs.draw_icon(); 0 = world drawing.
+static var icon_cap: float = 0.0
+
 
 ## Returns the texture for sprite `key`, or null if there is no PNG for it.
 static func texture(key: String) -> Texture2D:
@@ -38,14 +43,18 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool) -> bool:
 	var tex := texture(key)  # Art for this key, or null.
 	if tex == null:
 		return false
-	var h: float = SpriteData.HEIGHTS.get(key, SpriteData.DEFAULT_HEIGHT)  # On-screen height (px).
+	var icon := icon_cap > 0.0  # Drawing a HUD / card icon rather than a world unit.
+	var h: float = icon_cap if icon else SpriteData.HEIGHTS.get(key, SpriteData.DEFAULT_HEIGHT)  # Drawn height (px).
 	var size := Vector2(h * float(tex.get_width()) / float(tex.get_height()), h)  # Drawn size (px).
-	var centre := o + Vector2(0.0, h * SpriteData.CENTER_OFFSET)  # Sprite centre (px).
-	# Drop shadow at the feet: a flattened circle via a scaled transform.
-	var sw := h * SpriteData.SHADOW_WIDTH  # Shadow width (px).
-	ci.draw_set_transform(centre + Vector2(0.0, h * 0.46), 0.0, Vector2(1.0, SpriteData.SHADOW_SQUASH))
-	ci.draw_circle(Vector2.ZERO, sw * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA))
-	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	if icon and size.x > icon_cap:
+		size *= icon_cap / size.x  # Wide sprites also fit the icon box.
+	var centre := o + Vector2(0.0, 0.0 if icon else h * SpriteData.CENTER_OFFSET)  # Sprite centre (px).
+	if not icon:
+		# Drop shadow at the feet: a flattened circle via a scaled transform.
+		var sw := h * SpriteData.SHADOW_WIDTH  # Shadow width (px).
+		ci.draw_set_transform(centre + Vector2(0.0, h * 0.46), 0.0, Vector2(1.0, SpriteData.SHADOW_SQUASH))
+		ci.draw_circle(Vector2.ZERO, sw * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA))
+		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	var mod := SpriteData.FLASH_MODULATE if flash else Color.WHITE  # Hit-flash tint.
 	ci.draw_texture_rect(tex, Rect2(centre - size * 0.5, size), false, mod)
 	return true

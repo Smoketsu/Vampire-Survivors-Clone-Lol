@@ -288,6 +288,15 @@ static func draw_icon(ci: CanvasItem, kind: String, rect: Rect2) -> void:
 	ci.draw_rect(rect, Color(0.4, 0.28, 0.6, 0.9), false, 1.5)
 	var c := rect.get_center()
 	var s := minf(rect.size.x, rect.size.y) * 0.5
+	# Sprite art drawn through the world glyph functions must fit the box.
+	SpriteBank.icon_cap = s * 2.0 * SpriteData.ICON_FILL
+	_draw_icon_body(ci, kind, c, s)
+	SpriteBank.icon_cap = 0.0
+
+
+## The icon artwork for draw_icon() (split out so the sprite size cap is
+## always cleared afterwards).
+static func _draw_icon_body(ci: CanvasItem, kind: String, c: Vector2, s: float) -> void:
 	match kind:
 		"warrior", "archer", "mage", "mender":
 			draw_summon(ci, kind, c + Vector2(-s * 0.08, s * 0.08), s * 0.5, false)
