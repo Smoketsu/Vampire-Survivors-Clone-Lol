@@ -387,6 +387,7 @@ const STAGE := {
 	"ground": "graveyard",
 	"enemy_hp_mult": 1.0,  # Stage 1 is the baseline difficulty.
 	"enemy_damage_mult": 1.0,  # Stage 1 is the baseline difficulty.
+	"enemy_mult_from": 0.0,  # TUNING (not in GDD) no step-up to delay here
 	"ash_mult": 1.0,  # No Soul Ash stage bonus.
 	"march": {},  # No Crimson March mechanics.
 }

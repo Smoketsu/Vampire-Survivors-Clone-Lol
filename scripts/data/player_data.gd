@@ -6,10 +6,14 @@ extends RefCounted
 
 ## Starting and maximum health of the necromancer (HP).
 const MAX_HP: float = 120.0  # TUNING (not in GDD)
-## Natural HP regeneration of the necromancer (HP per second, 18 HP per
+## Natural HP regeneration of the necromancer (HP per second, 30 HP per
 ## minute). Balance pass: without it a build that never drew a Priest had no
 ## healing at all and died of chip damage at 6-8 min; bursts still kill.
-const HP_REGEN: float = 0.3  # TUNING (not in GDD)
+## Combined balance pass: 0.3 -> 0.5. With 15 actives in the pool most
+## careless builds own no priest order (the two orders share one role's card
+## weight) and died of 200-300 HP of chip damage at 6-10 min, half of them
+## with a healthy army around them.
+const HP_REGEN: float = 0.5  # TUNING (not in GDD)
 ## Movement speed in px/s. A little faster than summons (82–95 px/s, GDD §23)
 ## so the army visibly has to keep up, slower than a sprinting Purifier.
 const MOVE_SPEED: float = 110.0  # TUNING (not in GDD)

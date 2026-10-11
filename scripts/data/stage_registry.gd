@@ -29,6 +29,9 @@
 ##   ground             — "graveyard" (Ground) or "march" (MarchGround).
 ##   enemy_hp_mult / enemy_damage_mult — stage multipliers on the shared
 ##                        enemy time scaling (1.0 = Graveyard baseline).
+##   enemy_mult_from    — elapsed game seconds from which those two
+##                        multipliers apply to regular enemies (0 = from the
+##                        start; the stage boss always gets them).
 ##   ash_mult           — Soul Ash multiplier of a run here (an end-screen
 ##                        bonus line; 1.0 = none).
 ##   march              — MarchDirector config ({} = no march mechanics).

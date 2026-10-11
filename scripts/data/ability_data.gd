@@ -35,6 +35,10 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 ##   labels       — stat key -> UI label, in display order. Only these keys
 ##                  are listed on cards.
 ##   levels       — 5 rows of absolute stats.
+##   shared_card_pool — true (the four newer spells): while not owned, this
+##                  spell's NEW card shares LevelUpData.NEW_SPELL_POOL_WEIGHT
+##                  with the other shared spells; absent: the full
+##                  LevelUpData.WEIGHT_NEW (the GDD spells).
 ##
 ## Shadow Bolt stat keys:
 ##   damage (per bolt), cooldown (s), count (bolts per cast), pierce (extra
@@ -108,6 +112,7 @@ const SPELLS := {
 		"display_name": "Bone Spear",
 		"icon": "bone_spear",
 		"description": "Hurls piercing bone spears at the nearest foe ahead of you. Steer it by walking.",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
 		"labels": {"damage": "Damage", "count": "Spears", "cooldown": "Cooldown (s)", "pierce": "Pierce", "range": "Range"},
 		"levels": [
 			{"damage": 18.0, "cooldown": 1.3, "count": 1, "pierce": 2, "speed": 520.0, "range": 360.0},  # TUNING (not in GDD)
@@ -121,6 +126,7 @@ const SPELLS := {
 		"display_name": "Soul Siphon",
 		"icon": "soul_siphon",
 		"description": "Tethers drain the strongest nearby foes and heal you (lifesteal is capped per second).",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
 		"labels": {"damage": "Drain", "targets": "Tethers", "cooldown": "Drain every (s)", "range": "Range", "lifesteal": "Lifesteal", "heal_cap": "Heal cap (HP/s)"},
 		"levels": [
 			{"damage": 7.0, "cooldown": 0.5, "targets": 1, "range": 170.0, "lifesteal": 0.25, "heal_cap": 1.0},  # TUNING (not in GDD)
@@ -134,29 +140,39 @@ const SPELLS := {
 		"display_name": "Corpse Explosion",
 		"icon": "corpse_explosion",
 		"description": "Detonates fresh corpses near you, whoever made them, in bursts of bone.",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
 		"labels": {"damage": "Damage", "radius": "Radius", "count": "Corpses per cast", "cooldown": "Cooldown (s)", "range": "Range"},
 		"levels": [
-			{"damage": 24.0, "radius": 50.0, "cooldown": 2.2, "count": 1, "range": 240.0},  # TUNING (not in GDD)
-			{"damage": 30.0, "radius": 50.0, "cooldown": 2.2, "count": 2, "range": 240.0},  # TUNING (not in GDD)
-			{"damage": 30.0, "radius": 60.0, "cooldown": 1.9, "count": 2, "range": 260.0},  # TUNING (not in GDD)
-			{"damage": 36.0, "radius": 60.0, "cooldown": 1.9, "count": 3, "range": 260.0},  # TUNING (not in GDD)
-			{"damage": 40.0, "radius": 70.0, "cooldown": 1.6, "count": 3, "range": 280.0},  # TUNING (not in GDD)
+			# Combined balance pass: damage 24/30/30/36/40 -> 22/26/26/30/34 and cooldown
+			# 2.2/2.2/1.9/1.9/1.6 -> 2.4/2.4/2.2/2.2/2.0 (Lv 5 output about -32%). Unevolved
+			# it dealt about 165k in naive runs (mage about 90k, Shadow Bolt about 47k): every
+			# kill feeds it and it always bursts on the densest pack.
+			{"damage": 22.0, "radius": 50.0, "cooldown": 2.4, "count": 1, "range": 240.0},  # TUNING (not in GDD)
+			{"damage": 26.0, "radius": 50.0, "cooldown": 2.4, "count": 2, "range": 240.0},  # TUNING (not in GDD)
+			{"damage": 26.0, "radius": 60.0, "cooldown": 2.2, "count": 2, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 30.0, "radius": 60.0, "cooldown": 2.2, "count": 3, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 34.0, "radius": 70.0, "cooldown": 2.0, "count": 3, "range": 280.0},  # TUNING (not in GDD)
 		],
 	},
 	"plague_cloud": {
 		"display_name": "Plague Cloud",
 		"icon": "plague_cloud",
 		"description": "Drops lingering plague clouds on packed foes. Rotting foes take more damage from everything.",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
 		"labels": {"damage": "Damage per tick", "radius": "Radius", "duration": "Duration (s)", "cooldown": "Cooldown (s)", "rot": "Rot (damage taken)"},
 		"levels": [
 			# Two cuts: the first pass (4-8 dmg/tick, 4-6 s, every 3.0-2.2 s) and a second
 			# (3-6 dmg/tick) still dealt 2-3x Shadow Blast's damage in naive runs (up to 37%
 			# of all damage): a cloud always sits on the densest pack, so coverage was cut.
-			{"damage": 3.0, "radius": 55.0, "duration": 3.5, "cooldown": 3.4, "rot": 0.08, "range": 260.0},  # TUNING (not in GDD)
-			{"damage": 3.0, "radius": 55.0, "duration": 4.0, "cooldown": 3.4, "rot": 0.10, "range": 260.0},  # TUNING (not in GDD)
-			{"damage": 3.0, "radius": 62.0, "duration": 4.0, "cooldown": 3.2, "rot": 0.12, "range": 260.0},  # TUNING (not in GDD)
-			{"damage": 4.0, "radius": 62.0, "duration": 4.5, "cooldown": 3.2, "rot": 0.15, "range": 260.0},  # TUNING (not in GDD)
-			{"damage": 4.0, "radius": 70.0, "duration": 5.0, "cooldown": 3.0, "rot": 0.18, "range": 280.0},  # TUNING (not in GDD)
+			# Combined balance pass, a third cut: damage 3/3/3/4/4 -> 2/2/2/3/3, duration
+			# 3.5/4/4/4.5/5 -> 3/3.5/3.5/4/4.5, cooldown 3.4/3.4/3.2/3.2/3.0 -> 3.8/3.8/3.6/3.6/3.4
+			# (about -40% damage; Rot unchanged, it is the spell's real job). Unevolved at
+			# Lv 4 it still dealt 150-230k in naive Crimson March runs, up to 80% of all damage.
+			{"damage": 2.0, "radius": 55.0, "duration": 3.0, "cooldown": 3.8, "rot": 0.08, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 2.0, "radius": 55.0, "duration": 3.5, "cooldown": 3.8, "rot": 0.10, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 2.0, "radius": 62.0, "duration": 3.5, "cooldown": 3.6, "rot": 0.12, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 3.0, "radius": 62.0, "duration": 4.0, "cooldown": 3.6, "rot": 0.15, "range": 260.0},  # TUNING (not in GDD)
+			{"damage": 3.0, "radius": 70.0, "duration": 4.5, "cooldown": 3.4, "rot": 0.18, "range": 280.0},  # TUNING (not in GDD)
 		],
 	},
 }

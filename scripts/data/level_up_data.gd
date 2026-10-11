@@ -27,15 +27,34 @@ const WEIGHT_EVOLUTION_PATH: float = 1.5  # TUNING (not in GDD)
 ## Total draw weight shared by the NEW cards of the later summon classes
 ## (UnitData "shared_card_pool": Abomination, Rogue, Gargoyle, Frost Wraith):
 ## each unowned one gets min(WEIGHT_NEW, this / number of them). The GDD's
-## summon roles (Archer, Mage, Mender, Warder) keep the full WEIGHT_NEW like a
-## spell. A single pool over all eight classes (3.0, the first version) left
+## summon roles (Archer, Mage, Mender, Warder) get WEIGHT_NEW_CORE_SUMMON
+## (they had the full WEIGHT_NEW like a spell until the combined balance
+## pass). A single pool over all eight classes (3.0, the first version) left
 ## each core class at 0.375: an army build could go most of a run without
 ## being offered Mages or a priest order, and collapsed on the Crimson March.
-## At the start this gives 4 + 1.5 new-summon weight against 6 new-spell
-## weight, so new summons still do not crowd spells, passives and upgrades
-## out. Locked classes (the evolution-only Profane Bishop, merged Menders /
+## Locked classes (the evolution-only Profane Bishop, merged Menders /
 ## Warders) are never offered and do not count.
 const NEW_SUMMON_POOL_WEIGHT: float = 1.5  # TUNING (not in GDD)
+## Draw weight of a NEW card for one of the GDD's summon roles (Archer, Mage,
+## Mender, Warder: classes without UnitData "shared_card_pool"; the Warrior is
+## owned from the start). The Mender and Warder, one Priest role split in
+## two, take half each (UnitData "new_card_weight_mult"). Combined balance pass: at WEIGHT_NEW (1.0) a core
+## class was about 1 card in 7 at the start, so a summoner could go 15+
+## level-ups without being offered Mages (one Graveyard army run never saw a
+## Mage or Warder card in 24 level-ups and collapsed). "The army is your
+## weapon" (GDD pillar), so the roles come up half again as often as a spell.
+const WEIGHT_NEW_CORE_SUMMON: float = 1.5  # TUNING (not in GDD)
+## Total draw weight shared by the NEW cards of the four newer spells
+## (AbilityData "shared_card_pool": Bone Spear, Soul Siphon, Corpse
+## Explosion, Plague Cloud), like NEW_SUMMON_POOL_WEIGHT for the later
+## classes: each unowned one gets min(WEIGHT_NEW, this / number of them).
+## The GDD spells (Orb Shield, Shadow Blast) keep WEIGHT_NEW. Combined
+## balance pass: with six new spells at full weight, new spells were about a
+## quarter of every early hand and crowded the summon roles out.
+## At the start: 2 (GDD spells) + 2 (newer spells) new-spell weight against
+## 3 x 1.5 (Archer, Mage, Priest orders) + 1.5 (later classes) new-summon
+## weight, beside about 12 of passives and 5 of owned upgrades.
+const NEW_SPELL_POOL_WEIGHT: float = 2.0  # TUNING (not in GDD)
 ## Weight multiplier for a "dead" card (no current effect on the build, e.g.
 ## an army passive with no summon class owned). At most CARDS-1 dead cards are
 ## offered while a live card exists.

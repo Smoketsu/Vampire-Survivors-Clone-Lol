@@ -155,8 +155,13 @@ const EVOLUTIONS := {
 		"stats": {
 			# First pass (damage 52, 4 corpses, spikes 25%, chain 6) and a second (46, spikes
 			# 20%, chain 4) dealt about 480 dmg/s (Void Barrage: about 300); trimmed.
-			"damage": 36.0, "radius": 90.0, "cooldown": 1.3, "count": 3, "range": 320.0,  # TUNING (not in GDD)
-			"zone_duration": 3.0, "zone_damage": 0.15, "zone_slow": 0.35, "chain": 3,  # TUNING (not in GDD)
+			# Combined balance pass: damage 36 -> 26, cooldown 1.3 -> 1.6, corpses 3 -> 2,
+			# chain 3 -> 2. With all four newer spells forced it dealt 145-306k (35-42% of all
+			# damage with its spikes), 2-3x Ossuary Lance, Soul Rapture or Pestilence in the same
+			# runs; after a first cut (30 damage, 3 corpses) naive runs still got 430-760 dmg/s
+			# from it in the packed late game (Void Barrage: about 300).
+			"damage": 26.0, "radius": 90.0, "cooldown": 1.6, "count": 2, "range": 320.0,  # TUNING (not in GDD)
+			"zone_duration": 3.0, "zone_damage": 0.15, "zone_slow": 0.35, "chain": 2,  # TUNING (not in GDD)
 		},
 	},
 	"pestilence": {

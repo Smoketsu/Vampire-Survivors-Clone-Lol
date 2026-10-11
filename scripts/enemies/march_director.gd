@@ -233,15 +233,20 @@ func _step_structures(delta: float) -> void:
 
 
 ## An outpost's reinforcement squad (only while the necromancer is within
-## MARCH.active_radius and the enemy cap has room).
+## MARCH.active_radius and the enemy cap has room). Outposts are a continuous
+## source like the trickle, so they stop at the segment's soft cap
+## (EnemyDirector.soft_cap()); combined balance pass: they used to fill the
+## field up to HARD_CAP - 10, so a struggling army that could not raze them
+## faced up to 170 foes where the segment allows 64-145.
 func _send_squad(s: Structure) -> void:
 	var p := game.player.position
 	if s.pos.distance_to(p) > float(config["active_radius"]):
 		return
+	var cap := mini(game.enemies.soft_cap(), WaveData.HARD_CAP - 10)  # Room for the squad.
 	var spawned := 0  # Soldiers sent this time.
 	for grp: Dictionary in s.ev["groups"]:
 		for _k in int(grp["count"]):
-			if game.enemies.regular_alive() >= WaveData.HARD_CAP - 10:
+			if game.enemies.regular_alive() >= cap:
 				break
 			var at := s.pos + Vector2.from_angle(randf() * TAU) * (s.enemy.radius + 14.0)
 			game.enemies.spawn_at(String(grp["kind"]), at, bool(grp["elite"]))

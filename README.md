@@ -200,7 +200,7 @@ number is in `scripts/data/unit_data.gd`.
 | Summon class | + Requirement | = Evolution |
 |---|---|---|
 | Skeleton Warrior Lv 5 | Dark Command **Lv 5** | **Death Knight**: bigger armoured silhouette, ×1.5 HP, ×1.35 damage; each swing **cleaves** 50% to foes within 32 px; **life drain** 12% of melee damage; a heavier wall (block mass 5, bash ×2 every 1.5 s, foes in contact slowed to 45%) |
-| Undead Mage Lv 5 | Forbidden Knowledge **Lv 5** (+8–40% mage damage, +5–25% splash) | **Lich**: floating crowned wisp, ×1.4 HP, ×1.35 damage, ×1.25 splash, casts 15% faster; **raise the dead**: every 5th foe a Lich kills rises as a skeleton for 12 s (max 6 at once) |
+| Undead Mage Lv 5 | Forbidden Knowledge **Lv 5** (+8–40% mage damage, +5–25% splash) | **Lich**: floating crowned wisp, ×1.4 HP, ×1.2 damage; **raise the dead**: every 5th foe a Lich kills rises as a skeleton for 12 s (max 6 at once) |
 | Grave Mender Lv 5 **and** Crypt Warder Lv 5 | Dark Benediction **owned** (+8–40% heals, wards and barriers) | **Profane Bishop** (a **merge**): both orders become one class that heals, wards you **and** shields allies, plus an aura every 3 s that heals everything near it and burns foes. Capacity becomes 3 + your global capacity bonuses (counted once, not twice); existing Menders and Warders convert in place up to that cap, the rest dissolve into them, and **one active slot is freed** |
 
   The numbers live in `scripts/data/summon_evolution_data.gd`; the runtime is
@@ -218,13 +218,16 @@ number is in `scripts/data/unit_data.gd`.
   either priest order: +15% attack speed, −15% damage taken, aura on every
   summon). The Profane Bishop counts as both priest orders, so merging keeps
   both synergies.
-- **Level-up cards** are weighted: upgrades to items you own, and items on an
-  evolution path, come up more often. A new spell and a new GDD summon class
-  (Archer, Mage, Mender, Warder) each have weight 1; the four later classes
-  share one weight (`NEW_SUMMON_POOL_WEIGHT` = 1.5, split between the ones you
-  don't own; the Bishop is never offered and merged classes don't count), so
-  the larger roster doesn't crowd spells, passives and the core classes out
-  of the hands (Shadow Bolt is always yours); once your 6
+- **Level-up cards** are weighted: upgrades to items you own (2.5), and items
+  on an evolution path, come up more often. New cards: Orb Shield and Shadow
+  Blast weigh 1 each and the four newer spells share one weight
+  (`NEW_SPELL_POOL_WEIGHT` = 2, split between the ones you don't own); the
+  GDD summon roles weigh 1.5 (`WEIGHT_NEW_CORE_SUMMON`: Archer, Mage, and the
+  one Priest role whose two orders, Mender and Warder, get 0.75 each); the
+  four later classes share one weight (`NEW_SUMMON_POOL_WEIGHT` = 1.5; the
+  Bishop is never offered and merged classes don't count). So the larger
+  roster doesn't crowd passives, upgrades and the core classes out of the
+  hands (Shadow Bolt is always yours); once your 6
   active slots are full, no new summon or spell is offered at all. A hand is never made only of useless
   cards, and fallback cards (heal, +max HP, raise every fallen summon) fill
   any empty slots once everything is maxed. Use **Reroll** (2 per run),
@@ -248,8 +251,8 @@ the first three spells, and they keep hitting enemies frozen by Stasis.
 |---|---|---|
 | **Bone Spear** | Straight piercing bone spears thrown the way you are **walking**, aim-assisted: the volley flies at the nearest enemy within ±34° of your walking direction (standing still keeps the last one), or at the nearest enemy when none is ahead. Throws only while an enemy is within 420 px. | 18 dmg, 1 spear, pierce 2, every 1.3 s, 360 px → 31 dmg, 3 spears, pierce 4, every 0.9 s, 440 px |
 | **Soul Siphon** (GDD §5.3) | Tethers hold the **strongest** foes in range (highest HP; foes already doomed are skipped) and drain them on a pulse; part of the damage heals you, **capped per second**. | 7 dmg / 0.5 s, 1 tether, 170 px, 25% lifesteal, cap 1 HP/s → 14 dmg / 0.45 s, 3 tethers, 210 px, 35%, cap 2 HP/s |
-| **Corpse Explosion** | Every enemy that dies (to your horde, spells or anything) leaves a corpse for 8 s. The spell detonates the corpses near you with the most foes around them. | 24 dmg, 1 corpse, radius 50, every 2.2 s → 40 dmg, 3 corpses, radius 70, every 1.6 s |
-| **Plague Cloud** | A lingering cloud settles on the most packed foes (avoiding spots already covered), ticks damage every 0.5 s and inflicts **Rot**: for 1.5 s the foe takes extra damage from **every** source (bosses get half). | 3 dmg/tick, radius 55, 3.5 s, every 3.4 s, Rot +8% → 4 dmg/tick, radius 70, 5 s, every 3 s, Rot +18% |
+| **Corpse Explosion** | Every enemy that dies (to your horde, spells or anything) leaves a corpse for 8 s. The spell detonates the corpses near you with the most foes around them. | 22 dmg, 1 corpse, radius 50, every 2.4 s → 34 dmg, 3 corpses, radius 70, every 2.0 s |
+| **Plague Cloud** | A lingering cloud settles on the most packed foes (avoiding spots already covered), ticks damage every 0.5 s and inflicts **Rot**: for 1.5 s the foe takes extra damage from **every** source (bosses get half). | 2 dmg/tick, radius 55, 3 s, every 3.8 s, Rot +8% → 3 dmg/tick, radius 70, 4.5 s, every 3.4 s, Rot +18% |
 
 Rot is a field on the enemy (`rot_until`, `rot_amp`) that
 `CombatResolver.damage_enemy` applies to every hit; the extra damage is the
@@ -334,12 +337,14 @@ open). The zone is shown under the timer.
 | Zone (from) | Ground and obstacles | Timeline beats (GDD §8.2) |
 |---|---|---|
 | I, the Burned Road (0:00) | ash, burned houses, charred trees, cart wrecks | patrols; a supply cart at 2:30 |
-| II, the Fortified Checkpoint (4:00) | forest, barricades, stakes | a watchtower and a shield line at 4:00; Templar ambush at 6:00; a cart at 6:40 |
+| II, the Fortified Checkpoint (4:00) | forest, barricades, stakes | a watchtower and a shield line at 4:00; Templar ambush (an arc of three) at 6:00; a cart at 6:40 |
 | III, the Siege Camp (9:00) | tents, crates, siege engines | two siege outposts at 9:00; Banner Bearers; a cart at 10:30; heavy infantry at 12:00; a cart at 13:20 |
 | IV, the Fortress Approach (15:00) | cobbles, fortress walls, tower bases, rubble | two Holy Ward Generators at 15:00; cathedral defenders at 16:00; fortress assault at 16:30; **Marshal Vael at 17:00** |
 
-- **Objectives.** *Outposts* (a watchtower, two siege outposts) send a squad
-  every 12-14 s while you are nearby, until destroyed; they pay an XP burst.
+- **Objectives.** *Outposts* (a watchtower, two siege outposts) send a melee
+  squad every 12-14 s while you are nearby, until destroyed (like the normal
+  spawning, they hold back while the field is at its density cap); they pay
+  an XP burst.
   *Holy Ward Generators* each keep a
   holy zone up (it burns and slows undead, stings you and blocks summon
   replacement) until destroyed; each drops XP and a chest. *Supply carts* roll
@@ -381,9 +386,12 @@ open). The zone is shown under the timer.
   Frost Wraith's Deep Freeze (the Stasis power-up still holds them), leave no
   corpse for Corpse Explosion, never rise as Lich skeletons, and Soul Siphon
   tethers them only when no soldier is in range.
-- **Harder than the Graveyard**: enemies have ×1.1 HP and ×1.05 damage on top
-  of the usual time scaling, tougher kinds arrive earlier, and Soul Ash is
-  ×1.25 (its own end-screen line).
+- **Harder than the Graveyard**: from Zone II (4:00) enemies have ×1.1 HP and
+  ×1.05 damage on top of the usual time scaling (Marshal Vael always), tougher
+  kinds arrive earlier, and Soul Ash is ×1.25 (its own end-screen line). The
+  first two minutes are recruit patrols only, like the Graveyard's opening:
+  every build starts with Shadow Bolt and two warriors, and a harder opening
+  snowballed into starved runs.
 
 ### Meta-progression (Soul Ash)
 
@@ -483,13 +491,16 @@ open). The zone is shown under the timer.
   banded crimson reliquary. Elites drop one **10%** of the time, Sir Alaric
   always, and a pity timer drops one from the next kill after **360 s**
   without a chest, or after only **40 s** while an evolution is ready. That
-  makes about **4-7 chests per run** (median 5 for the army bot, 4 naive, 7
-  for the spell build). Chests never despawn (at most 3 on the
+  makes about **4-7 chests per run** on the Graveyard (combined balance pass:
+  median 5 for the army bot, 7 for the summon bot, 2-3 for naive runs; the
+  Crimson March adds its ward-generator and Vael chests: army median 7). Chests never despawn (at most 3 on the
   ground), and none drop from Reckoning enemies or after 0:00. Walking over
   one pauses the run and shows a short code-drawn reveal. Before **15:00
   elapsed** a chest grants **1** upgrade; from then on **1, 3 or 5**
   (weights 85 / 12 / 3), drawn from the normal level-up pool with the usual
-  card weights, listed with their old → new levels. **Every ready evolution comes first: evolutions are delivered only
+  card weights, listed with their old → new levels. **A chest only upgrades what you already own**
+  (survivor convention): it never puts a new spell, summon class or passive into an empty slot, so your slots stay your
+  own level-up choices. **Every ready evolution comes first: evolutions are delivered only
   by chests.** A chest never grants the Profane Pact, and when nothing can be
   upgraded it heals (Dark Restoration). Confirm (Enter / Space / click / pad
   A) skips the reveal, then closes it.
@@ -527,7 +538,7 @@ open). The zone is shown under the timer.
 
 | Area | Status in this prototype |
 |---|---|
-| Necromancer | Movement (keyboard and stick), HP with a slow natural regeneration (0.3 HP/s), i-frames, pickup radius, hit flash. Can receive Mender heals and Warder wards. |
+| Necromancer | Movement (keyboard and stick), HP with a slow natural regeneration (0.5 HP/s), i-frames, pickup radius, hit flash. Can receive Mender heals and Warder wards. |
 | **Shared summon AI** (§25–§31, §36) | **One** data-driven `SummonedUnit` script runs every class (Warrior, Archer, Mage, Mender, Warder, Profane Bishop, the evolved Death Knight and Lich, and the four later classes). It has the full FSM from §25, soft formation bands around the player (§26), and normalised target scoring (§27). Targets are held for at least 1 s; ranged units redirect when a target is already doomed (overkill reservation); healers use the §31 heal formula. Support and evolution kits (ally barrier, aura, cleave, life drain) are data-driven hooks into `SummonAbilities`; the four later classes plug one special action each into the AI through a `SummonBehavior` (see *Summon classes*). |
 | Leash and recall (§24) | Engagement radius 220 px, soft recall at 320 px, hard spectral recall at 650 px. |
 | Replenishment (§24) | Each summon ability refills its own queue one unit at a time (Warrior 5 s, Archer 8 s, Mage 12 s, Mender and Warder 15 s, Profane Bishop 12 s; Abomination 20 s, Rogue 9 s, Gargoyle 12 s, Frost Wraith 14 s). A capacity increase spawns the new units immediately. A failed spawn retries without using up the timer. |
@@ -844,7 +855,8 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 
 ## Known limitations
 
-- **Balance is checked only against the autotest bots** (`--mortal`; after the
+- **Balance is checked only against the autotest bots.** The v0.3 pass, before
+  the priest split and the newer content (`--mortal`; after the
   power-up / chest merge: 16 seeds for naive / army at meta none, 8 for evolve
   at none, army / naive at max and the Pact build). At **meta none** the
   summoner build (`--policy=army`) never dies before 0:00 (lowest HP 92/120),
@@ -858,41 +870,35 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
   every run, 25-53 s past 0:00. Void Barrage is still
   the strongest single source: about 30-45% of all damage in army / naive
   builds, about 60-70% in the spell build. A first-time naive player kills
-  Alaric only about 1 run in 4.
-- **The priest split and the summon evolutions are first-pass numbers**,
-  checked only with a 4-seed sanity run against main (`--mortal`, seeds
-  1-4). The army build (which now takes both priest orders and usually
-  evolves the Death Knight at 10:26-11:16) never died before 0:00 (lowest HP
-  92-110, main 92-114), always killed Sir Alaric and completed its build at
-  15:58-16:40 (main 15:55-16:14). The `summon` build gets all three summon
-  evolutions at about 11:16-12:36.
-- The four later summon classes (Abomination, Rogue, Gargoyle, Frost Wraith)
-  have first-pass numbers checked only with the autotest bots. Each deals
-  damage in the range of the core classes. A Rogue's bleeds stop if that
-  rogue dies.
-- The four newer spells (Bone Spear, Soul Siphon, Corpse Explosion, Plague
-  Cloud) and their evolutions have first-pass numbers, checked only against
-  single bot runs (`--spells=...`) and a 4-seed naive / army comparison.
-  The army, evolve and summon bots never pick them on purpose. Plague Cloud and Grave Eruption were the
-  strongest and were cut; Grave Eruption is still the strongest of the four
-  evolutions (about 400 dmg/s, close to Void Barrage in a spell rush).
-  Bone Spear needed an aim assist: pure movement aim missed almost
-  everything while kiting.
-- **The priest split, the four later summon classes and the four newer
-  spells were each tuned on their own and merged without a combined balance
-  pass yet.** With 7 spells and 8 offerable summon classes competing for 6
-  active slots, the naive bot's results move with the card mix; see GDD
-  §15.0 for the post-merge checks.
+  Alaric only about 1 run in 4. The combined pass below supersedes these
+  numbers.
+- **Combined balance pass** (all content together, `--mortal`, meta none
+  unless noted; 16 seeds for army / naive and 8 for summon and meta max on
+  each stage; details and the baseline in GDD §15.0). The **army** bot never
+  dies before 0:00 and always kills the boss on both stages: Graveyard lowest
+  HP 101-116, Sir Alaric in about 111 s, build complete at about 16:18
+  (16:00-17:18); Crimson March lowest HP 70-112, Marshal Vael in about
+  139 s, build complete at about 16:11 (15:15-17:00). 26 of 32 (Graveyard)
+  and 24 of 32 (march) evolutions land at 10-14 min, with 5-7 / 5-10 chests
+  and about 456 / 559 Soul Ash. The **summon** bot kills the boss in 8/8 and
+  7/8 runs (one march run starved and died at 19:16); Liches deal about 30%
+  of its damage (at most 38% in one run). At **meta max** every bot kills
+  both bosses and the Reckoning still ends every run, 23-43 s past 0:00.
+- **Naive builds are still below their targets** (dies 20-40%, kills the
+  boss 25-50%): on the Graveyard the naive bot dies before 0:00 in 8 of 16
+  runs and kills Sir Alaric in 3 of 16; on the Crimson March it dies in 11
+  of 16 and never kills Marshal Vael (baseline: 4 of 8 / 0 of 8 and 3 of 8 /
+  0 of 8). With 15 actives for 6 slots it spreads over many level-1 items,
+  and builds without a priest or a damage core starve (levels 21-56 at
+  20:00 instead of about 66). Corpse
+  Explosion / Grave Eruption, Plague Cloud and the mages carry most naive
+  runs that do well: area spells feed on the packed crowds weak armies let
+  build up.
+- A Rogue's bleeds stop if that rogue dies. Bone Spear needed an aim assist:
+  pure movement aim missed almost everything while kiting.
 - Two stages so far (the Sanctum of Judgment is next), both 20-minute runs
-  (the GDD's lower bound). The **Crimson March** has only a first balance pass
-  (`--mortal`, meta none, 4 seeds per bot): the army bot never died (lowest HP
-  76-102), killed Marshal Vael in 3 of 4 runs, completed its build at
-  15:29-16:00 (a little early) and earned 455-561 Soul Ash; the naive bot died
-  in 1 of 4 and killed him in 1 of 4. The terrain changes at each battle zone
-  rather than scrolling (the clock drives the march). After merging it with
-  the new summons and spells (and both priest orders in the army build), the
-  army bot still never died before 0:00 on either stage (4 seeds each) but
-  killed Marshal Vael in only 2 of 4 runs; see GDD §15.0.
+  (the GDD's lower bound). On the **Crimson March** the terrain changes at
+  each battle zone rather than scrolling (the clock drives the march).
 - Arrows and spells fly over obstacles (no line-of-sight checks).
 - Eclipse Ward usually arrives late (15:00-19:00) and only in builds that
   take Orb Shield. No evolution is granted before 8:00 elapsed.

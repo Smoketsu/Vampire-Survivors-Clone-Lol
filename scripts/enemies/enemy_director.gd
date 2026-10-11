@@ -114,9 +114,11 @@ func step(delta: float) -> void:
 	var m := t / 60.0  # Elapsed minutes (time scaling, see WaveData).
 	hp_mult = (1.0 + m * WaveData.HP_SCALE_PER_MINUTE + m * m * WaveData.HP_SCALE_PER_MINUTE_SQ) * game.difficulty.enemy_hp_mult()
 	damage_mult = (1.0 + m * WaveData.DAMAGE_SCALE_PER_MINUTE + m * m * WaveData.DAMAGE_SCALE_PER_MINUTE_SQ) * game.difficulty.enemy_damage_mult()
-	# Stage step-up (StageRegistry enemy_hp_mult / enemy_damage_mult; 1 in the Graveyard).
-	hp_mult *= float(stage_def["enemy_hp_mult"])
-	damage_mult *= float(stage_def["enemy_damage_mult"])
+	# Stage step-up (StageRegistry enemy_hp_mult / enemy_damage_mult; 1 in the Graveyard),
+	# from the stage's enemy_mult_from time on (the boss always gets it, _spawn_boss()).
+	if t >= float(stage_def.get("enemy_mult_from", 0.0)):
+		hp_mult *= float(stage_def["enemy_hp_mult"])
+		damage_mult *= float(stage_def["enemy_damage_mult"])
 	_run_events(t)
 	if boss == null and t >= float(boss_info["time"]):
 		_spawn_boss()
@@ -203,13 +205,22 @@ func _update_segment(t: float) -> void:
 		segment_index += 1
 
 
-## Trickle spawner: `rate` enemies/s up to the segment's max_alive, both
-## scaled by the Profane Pact / Oath spawn penalty (HARD_CAP still applies).
+## The current soft cap on living regular enemies: the segment's max_alive
+## scaled by the Profane Pact / Oath spawn penalty, never above HARD_CAP.
+## The trickle and other continuous sources (Crimson March outposts) stop at
+## it; scripted waves only respect HARD_CAP.
+func soft_cap() -> int:
+	var seg: Dictionary = segments[segment_index]
+	return mini(roundi(float(seg["max_alive"]) * game.difficulty.enemy_spawn_mult()), WaveData.HARD_CAP)
+
+
+## Trickle spawner: `rate` enemies/s up to soft_cap() (the segment's
+## max_alive), both scaled by the Profane Pact / Oath spawn penalty.
 func _spawn_trickle(delta: float) -> void:
 	var seg: Dictionary = segments[segment_index]
 	var spawn_mult := game.difficulty.enemy_spawn_mult()  # Pact / Oath spawn penalty.
 	spawn_accum += float(seg["rate"]) * spawn_mult * delta
-	var cap: int = mini(roundi(float(seg["max_alive"]) * spawn_mult), WaveData.HARD_CAP)
+	var cap: int = soft_cap()
 	var alive := regular_alive()
 	while spawn_accum >= 1.0:
 		spawn_accum -= 1.0

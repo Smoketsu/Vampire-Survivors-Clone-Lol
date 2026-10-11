@@ -104,12 +104,22 @@ const EVOLUTIONS := {
 		"display_name": "Lich",
 		"plural": "Liches",
 		"icon": "lich",
-		"description": "Your mages ascend as Liches: wider, deadlier blasts, and the foes they slay rise as skeletons.",
+		"description": "Your mages ascend as Liches: deadlier blasts, sturdier bodies, and the foes they slay rise as skeletons.",
 		"mult": {
 			"max_hp": 1.4,  # TUNING (not in GDD)
-			"damage": 1.35,  # TUNING (not in GDD) 1.5 made Liches 36% of all damage in the summon build
-			"splash_radius": 1.25,  # TUNING (not in GDD)
-			"attack_interval": 0.85,  # TUNING (not in GDD) casts 15% faster
+			# Combined balance pass: 1.35 (on top of Forbidden Knowledge's +40% damage and +25%
+			# splash) left Liches at 29% of all damage in the summon build, up to 45% in one
+			# run (plus 12% from the mages before they evolved).
+			"damage": 1.2,  # TUNING (not in GDD) was 1.35; 1.5 made Liches 36% of all damage in the summon build
+			# Combined balance pass: 1.25 -> 1.0. With Grave Dominion a summon build fields up
+			# to 8 Liches, and splash width decides who lands the kills (Forbidden Knowledge
+			# still adds up to +25%).
+			"splash_radius": 1.0,  # TUNING (not in GDD) was 1.25
+			# Combined balance pass: 0.85 (casts 15% faster) -> 1.0. Strong summon builds kill
+			# everything that spawns, so the damage cut alone barely moved the Lich's share
+			# (its splash lands most kills first: 37% of all damage, up to 43%); fewer casts
+			# land fewer of them.
+			"attack_interval": 1.0,  # TUNING (not in GDD) was 0.85
 		},
 		"set": {
 			"radius": 11.0,  # TUNING (not in GDD)

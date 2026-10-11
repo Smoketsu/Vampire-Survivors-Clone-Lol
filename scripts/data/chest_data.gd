@@ -19,11 +19,22 @@
 ## (COUNT_WEIGHTS, the late-run treat), each drawn from the normal level-up pool with
 ## the existing weighted-card logic (AbilityManager.chest_rewards), with
 ## every ready EVOLUTION granted first: evolutions are delivered ONLY by
-## chests, never as level-up cards. The Profane Pact (a difficulty choice)
+## chests, never as level-up cards. A chest only UPGRADES items the player
+## already owns (GRANTS_NEW_ITEMS): it never puts a new spell, summon class
+## or passive into an empty slot. The Profane Pact (a difficulty choice)
 ## is never granted by a chest. When nothing can be upgraded the chest
 ## gives the Dark Restoration heal instead.
 class_name ChestData
 extends RefCounted
+
+## False (survivor-genre convention, combined balance pass): a chest draws
+## only upgrades of items the player already owns, plus ready evolutions and
+## the Dark Restoration fallback. With 7 spells and 8 summon classes in the
+## pool, chests that could grant NEW items filled slots a build had planned
+## for something else (a chest put Plague Cloud where the army's Mages were
+## meant to go, and that army failed to kill Marshal Vael). True restores
+## the old behaviour (new items drawn like level-up cards).
+const GRANTS_NEW_ITEMS: bool = false  # TUNING (not in GDD)
 
 ## Chest drop chance of an elite kill (was 0.35: ~12 chests per run and
 ## builds complete at ~13:50 instead of ~17:20).

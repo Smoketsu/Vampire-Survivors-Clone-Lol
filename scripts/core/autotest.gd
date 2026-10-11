@@ -114,9 +114,11 @@ const EVOLVE_PRIORITY := {"shadow_bolt": 100.0, "soul_conduit": 96.0, "shadow_bl
 	"mage": 62.0, "archer": 60.0, "dark_command": 50.0, "necrotic_vigor": 48.0, "soul_recycling": 40.0}
 ## --policy=summon: the base classes of the three summon evolutions. The bot
 ## keeps active slots free for the ones it does not own yet (see
-## _forced_slots_short()), because with seven spells a treasure chest can
+## _forced_slots_short()), because with seven spells a treasure chest could
 ## hand it a new spell and a too-early Shadow Blast then left no slot for the
-## Warder (no Profane Bishop). A merged-away Mender / Warder counts as owned.
+## Warder (no Profane Bishop). Chests no longer grant new items
+## (ChestData.GRANTS_NEW_ITEMS), but the reservation is kept. A merged-away
+## Mender / Warder counts as owned.
 const SUMMON_CORE := ["warrior", "mage", "mender", "warder"]
 ## --policy=army: its summoner core, the four GDD roles with both priest
 ## orders. Six active slots hold Shadow Bolt and these five, so the bot keeps
@@ -182,8 +184,11 @@ const FORCED_SPELL_SCORE: float = 300.0
 ## best card scores this or less is rerolled or skipped, so a blocked hand
 ## never falls through to the Pact.
 const FORCED_BLOCK_SCORE: float = -120.0
-## --spells: free slots kept beyond the forced items still missing, as
-## headroom for a treasure chest that grants some other new item.
+## --spells: free slots kept beyond the forced items still missing. It was
+## headroom for a treasure chest granting some other new item; chests now
+## only upgrade owned items (ChestData.GRANTS_NEW_ITEMS), and it is kept at
+## 1 so the summon / army bots' slot order (and their baselines) stay as
+## they were.
 const FORCED_SPARE_SLOTS: int = 1
 ## --spells: card-weight multiplier of the forced spells and passives in
 ## level-up hands and chests (AbilityManager._candidates asks through
@@ -617,7 +622,7 @@ func _reserved_ids() -> Dictionary:
 ## summon classes use active slots ("spell" / "summon" cards), evolution
 ## passives passive slots. It blocks once the free slots of that kind are
 ## down to the reserved items still missing plus FORCED_SPARE_SLOTS
-## (treasure chests ignore the policy and may fill a slot too).
+## (a margin from when treasure chests could fill a slot too).
 func _forced_slots_short(kind: String) -> bool:
 	var ab := game.abilities
 	var passive := kind == "passive"  # Slot kind of this card.
