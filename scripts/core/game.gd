@@ -38,7 +38,6 @@ signal main_menu_requested
 enum RunState { PLAYING, LEVEL_UP, PAUSED, ENDED, CHEST }
 
 ## Camera zoom (higher = closer). Shows roughly 850x480 world px at 720p.
-const CAMERA_ZOOM: float = 1.5  # TUNING (not in GDD)
 ## Cell size (px) of both spatial hashes.
 const GRID_CELL: float = 64.0  # TUNING (not in GDD)
 
@@ -190,7 +189,8 @@ func _ready() -> void:
 	projectiles.z_index = 2
 	add_child(projectiles)
 	camera = Camera2D.new()
-	camera.zoom = Vector2.ONE * CAMERA_ZOOM
+	camera.zoom = Vector2.ONE * Settings.zoom_value()
+	Settings.changed.connect(_on_settings_changed)
 	camera.position_smoothing_enabled = true
 	camera.position_smoothing_speed = 8.0
 	add_child(camera)
@@ -313,9 +313,17 @@ func shake(amount: float) -> void:
 	Juice.shake(amount)
 
 
-## Visible world size in px (viewport / zoom). Used for the spawn ring.
+## World size in px treated as "on screen" by gameplay (spawn ring, off-screen
+## checks): the real visible area, but never smaller than at
+## ViewData.GAMEPLAY_ZOOM, so zooming in (Close) does not change gameplay.
 func view_size() -> Vector2:
-	return get_viewport_rect().size / camera.zoom
+	return get_viewport_rect().size / minf(camera.zoom.x, ViewData.GAMEPLAY_ZOOM)
+
+
+## Applies a zoom change made in the Settings menu during a run.
+func _on_settings_changed() -> void:
+	if camera != null:
+		camera.zoom = Vector2.ONE * Settings.zoom_value()
 
 
 ## Average simulation step in milliseconds.

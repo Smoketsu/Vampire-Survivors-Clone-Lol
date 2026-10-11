@@ -171,9 +171,21 @@ func heal(amount: float) -> float:
 
 
 func _draw() -> void:
+	_draw_ground_ring()
 	Glyphs.draw_necromancer(self, Vector2.ZERO, radius, flash > 0.0)
 	if shield_hp > 0.0:
 		# Priest ward: translucent necrotic bubble, thicker when stronger.
 		var k := clampf(shield_hp / maxf(shield_max, 1.0), 0.0, 1.0)
 		draw_circle(Vector2.ZERO, radius * 2.0, Color(Palette.COLD_BLUE, 0.10 + 0.10 * k))
 		draw_arc(Vector2.ZERO, radius * 2.0, 0.0, TAU, 32, Color(Palette.NECRO_GREEN, 0.5 + 0.4 * k), 1.0 + 2.0 * k)
+
+
+## Soft ground ring under the necromancer (ViewData.PLAYER_RING_*) so the
+## player stays easy to find among similar-looking summons. Drawn in the
+## node's mirrored space, which is symmetric, so facing does not matter.
+func _draw_ground_ring() -> void:
+	var c := Vector2(0.0, ViewData.PLAYER_RING_OFFSET)  # Ring centre at the feet.
+	draw_set_transform(c, 0.0, Vector2(1.0, ViewData.PLAYER_RING_SQUASH))
+	draw_circle(Vector2.ZERO, ViewData.PLAYER_RING_RADIUS, ViewData.PLAYER_RING_FILL)
+	draw_arc(Vector2.ZERO, ViewData.PLAYER_RING_RADIUS, 0.0, TAU, 40, ViewData.PLAYER_RING_COLOR, ViewData.PLAYER_RING_WIDTH / ViewData.PLAYER_RING_SQUASH * 0.6)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

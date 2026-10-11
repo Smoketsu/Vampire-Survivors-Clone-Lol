@@ -90,7 +90,7 @@ var _hitstop_end_usec: int = 0
 ## usec timestamp of the last _process (real-time delta for shake/vignette).
 var _last_usec: int = 0
 ## Full-screen red edge glow shown when the player is hurt.
-var _vignette: TextureRect
+var _vignette: HurtVignette
 ## Current vignette strength (0..1).
 var _vignette_a: float = 0.0
 ## The run being watched (null in the menu).
@@ -149,29 +149,14 @@ func _build_tint() -> void:
 
 
 ## Builds the hurt vignette: a CanvasLayer between the world and the HUD
-## (Game's UI layer is 10) holding a stretched radial gradient texture.
+## (Game's UI layer is 10) holding a HurtVignette (vertex-colour ring, fully
+## transparent in the middle; its opacity is driven by modulate.a below).
 func _build_vignette() -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 9
 	add_child(layer)
-	var grad := Gradient.new()
-	grad.set_color(0, Color(0.6, 0.0, 0.05, 0.0))
-	grad.set_offset(0, 0.55)
-	grad.set_color(1, Color(0.6, 0.0, 0.05, 0.85))
-	grad.set_offset(1, 1.0)
-	var tex := GradientTexture2D.new()
-	tex.gradient = grad
-	tex.fill = GradientTexture2D.FILL_RADIAL
-	tex.fill_from = Vector2(0.5, 0.5)
-	tex.fill_to = Vector2(1.0, 0.5)
-	tex.width = 128
-	tex.height = 128
-	_vignette = TextureRect.new()
-	_vignette.texture = tex
-	_vignette.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_vignette.stretch_mode = TextureRect.STRETCH_SCALE
-	_vignette.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_vignette = HurtVignette.new()
+	_vignette.strength = 1.0
 	_vignette.visible = false
 	layer.add_child(_vignette)
 

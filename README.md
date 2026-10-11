@@ -589,6 +589,12 @@ open). The zone is shown under the timer.
 
 ---
 
+### Camera zoom
+
+The Settings menu has a **Zoom** option: Close (1.25×), **Normal (1.0×, default)** and Far (0.8×).
+Zooming in never changes gameplay (enemy spawns use the Normal view or wider). A green ring on the
+ground marks the necromancer.
+
 ### Sprite art (in progress)
 
 Units can use real sprite art instead of their code-drawn shapes. `SpriteBank` draws

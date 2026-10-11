@@ -35,6 +35,8 @@ var screen_shake: bool = true
 var damage_numbers: bool = true
 ## Fullscreen window.
 var fullscreen: bool = false
+## Camera zoom level id (ViewData.ZOOM_LEVELS key).
+var zoom_id: String = ViewData.DEFAULT_ZOOM
 ## action -> physical keycode of its primary keyboard key (current).
 var key_bindings: Dictionary = {}
 ## action -> physical keycode of its primary key in project.godot (defaults).
@@ -61,6 +63,8 @@ func load_settings() -> void:
 		screen_shake = bool(cfg.get_value("feel", "screen_shake", true))
 		damage_numbers = bool(cfg.get_value("feel", "damage_numbers", true))
 		fullscreen = bool(cfg.get_value("video", "fullscreen", false))
+		var z := String(cfg.get_value("video", "zoom", ViewData.DEFAULT_ZOOM))  # Saved zoom id.
+		zoom_id = z if ViewData.ZOOM_LEVELS.has(z) else ViewData.DEFAULT_ZOOM
 		for action: String in REBINDABLE:
 			var kc := int(cfg.get_value("input", action, default_bindings[action]))
 			if kc > 0:
@@ -78,6 +82,7 @@ func save_settings() -> Error:
 	cfg.set_value("feel", "screen_shake", screen_shake)
 	cfg.set_value("feel", "damage_numbers", damage_numbers)
 	cfg.set_value("video", "fullscreen", fullscreen)
+	cfg.set_value("video", "zoom", zoom_id)
 	for action: String in REBINDABLE:
 		cfg.set_value("input", action, key_bindings[action])
 	return cfg.save(PATH)
@@ -96,6 +101,22 @@ func apply_all() -> void:
 # =====================================================================================
 # Setters used by the Settings menu (apply immediately; saved on close)
 # =====================================================================================
+
+## Sets the camera zoom level (a ViewData.ZOOM_LEVELS id); a running game
+## picks it up through the `changed` signal.
+func set_zoom(id: String) -> void:
+	if ViewData.ZOOM_LEVELS.has(id):
+		zoom_id = id
+		changed.emit()
+
+
+## Camera zoom factor for the current setting (always GAMEPLAY_ZOOM in the
+## autotest, so headless runs never depend on a player's settings).
+func zoom_value() -> float:
+	if GameState.autotest:
+		return ViewData.GAMEPLAY_ZOOM
+	return float(ViewData.ZOOM_LEVELS[zoom_id]["zoom"])
+
 
 ## Sets a bus volume (linear 0..1).
 func set_volume(bus: String, value: float) -> void:

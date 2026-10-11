@@ -35,6 +35,8 @@ var key_buttons: Dictionary = {}
 var listening_action: String = ""
 ## Back button.
 var _back: Button
+## Zoom button (cycles ViewData.ZOOM_ORDER).
+var zoom_button: Button
 
 
 ## Creates the menu as a full-screen child of `parent` and returns it.
@@ -112,7 +114,24 @@ func _build_left() -> Control:
 	_add_toggle(vb, "fullscreen", "Fullscreen", Settings.fullscreen, Settings.set_fullscreen)
 	_add_toggle(vb, "screen_shake", "Screen shake", Settings.screen_shake, Settings.set_screen_shake)
 	_add_toggle(vb, "damage_numbers", "Damage numbers", Settings.damage_numbers, Settings.set_damage_numbers)
+	zoom_button = Button.new()
+	zoom_button.custom_minimum_size = Vector2(0, 36)
+	zoom_button.pressed.connect(_on_zoom_pressed)
+	vb.add_child(zoom_button)
+	_refresh_zoom()
 	return vb
+
+
+## Cycles the camera zoom level (Close -> Normal -> Far).
+func _on_zoom_pressed() -> void:
+	var i := ViewData.ZOOM_ORDER.find(Settings.zoom_id)  # Current position in the cycle.
+	Settings.set_zoom(String(ViewData.ZOOM_ORDER[(i + 1) % ViewData.ZOOM_ORDER.size()]))
+	_refresh_zoom()
+
+
+## Shows the current zoom level on its button.
+func _refresh_zoom() -> void:
+	zoom_button.text = "Zoom: %s" % String(ViewData.ZOOM_LEVELS[Settings.zoom_id]["label"])
 
 
 ## Keyboard rebinding rows.
