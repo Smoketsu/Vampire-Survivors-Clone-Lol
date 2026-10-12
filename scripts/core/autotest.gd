@@ -89,6 +89,11 @@
 ##     adds a "difficulty" line (level, modifiers, every effective multiplier,
 ##     the Soul Ash parts, trickle elites promoted, Holy Retribution bursts
 ##     and radiant-bolt damage).
+##   * army stances: StanceBot drives the stance (--stance=ID forces one for
+##     the whole run; army / summon / evolve switch by its rule; naive /
+##     pact keep Escort, their baseline) and the summary adds an "army
+##     stance" line (time, entries, kills, army damage taken, hard recalls
+##     and unit spread per stance, and the number of switches).
 class_name Autotest
 extends Node
 
@@ -297,6 +302,8 @@ var _end_blocked_seen: int = 0
 var _overtime_seen: Dictionary = {}
 ## Item id -> true for the --spells spells and their evolution passives.
 var _forced: Dictionary = {}
+## Army-stance driver (forced --stance, or the bot's switching rule).
+var _stance_bot: StanceBot = StanceBot.new()
 
 
 func _ready() -> void:
@@ -345,6 +352,7 @@ func _apply_forced_classes() -> void:
 func step(delta: float) -> void:
 	if not _forced_done:
 		_apply_forced_classes()
+	_stance_bot.step(game)
 	if _start_max_hp < 0.0:
 		_start_max_hp = game.player.max_hp
 	var wards := int(game.stats.get("priest_wards", 0.0))
@@ -822,6 +830,7 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] obstacle collisions resolved: player=%d summons=%d enemies=%d" % [
 		game.arena.resolved_player, game.arena.resolved_summons, game.arena.resolved_enemies])
 	_print_class_specials(st)
+	print("[autotest] army stance (%s): %s" % [StanceBot.mode(), game.stance.summary_line()])
 	print("[autotest] stuck_units=%d (touching an obstacle: %d) %s" % [_stuck_units, _stuck_at_obstacle, str(_stuck_by)])
 	print("[metric] boss_hp_at_0=%d min_hp_before_0=%d" % [int(_boss_hp_at_0), int(_min_hp)])
 	print("[autotest] peaks: enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [

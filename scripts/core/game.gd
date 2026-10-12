@@ -26,6 +26,9 @@
 ## the difficulty level and the run modifiers) before the node enters the
 ## tree; `stage_def` is that stage's StageRegistry dictionary, read by the
 ## directors, the arena, the ground and the HUD.
+## Army stances (StanceData): `stance` (ArmyStance) holds the army's stance
+## for this run (Escort at the start, so Restart resets it); the stance keys
+## and right-stick flicks reach it from _unhandled_input() while playing.
 class_name Game
 extends Node2D
 
@@ -116,6 +119,10 @@ var ally_grid: SpatialHash
 var autotest: Autotest = null
 ## Purchased meta upgrades for this run (never null; empty = no upgrades).
 var meta: MetaModifiers
+## The army's stance this run (ArmyStance; never null once _ready ran).
+var stance: ArmyStance
+## Faint ground outline of the army's shape after a stance change.
+var stance_outline: StanceOutline
 
 # --- UI ---------------------------------------------------------------------------
 
@@ -147,6 +154,7 @@ func _ready() -> void:
 	ally_grid = SpatialHash.new(GRID_CELL)
 	combat = CombatResolver.new(self)
 	difficulty = DifficultyModifiers.new(self)
+	stance = ArmyStance.new(self)
 
 	# World layers, back to front (tree order + z_index).
 	ground = MarchGround.new() if String(stage_def["ground"]) == "march" else Ground.new()
@@ -165,6 +173,9 @@ func _ready() -> void:
 	add_child(chests)
 	effects = EffectManager.new()
 	add_child(effects)
+	stance_outline = StanceOutline.new()
+	stance_outline.game = self
+	add_child(stance_outline)
 	horde = HordeDirector.new()
 	horde.game = self
 	# Depth sorting: summons lower on screen draw in front, so a packed army reads
@@ -260,6 +271,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_aim") and run_state == RunState.PLAYING:
 		abilities.toggle_bolt_aim()
 		get_viewport().set_input_as_handled()
+	if run_state == RunState.PLAYING and stance.handle_input(event):
+		get_viewport().set_input_as_handled()
 
 
 func _physics_process(delta: float) -> void:
@@ -269,6 +282,7 @@ func _physics_process(delta: float) -> void:
 	elapsed += delta
 	_rebuild_grids()
 	player.step(delta)
+	stance.step(delta)
 	abilities.step(delta)
 	horde.step(delta)
 	enemies.step(delta)

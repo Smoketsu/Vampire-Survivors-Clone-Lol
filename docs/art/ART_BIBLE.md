@@ -199,6 +199,10 @@ the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
 | `unholy_precision.png` | Bone arrowhead under a violet crosshair eye |
 | `unholy_resilience.png` | Cracked, drained holy sun behind a dark undead shield |
 | `bound_souls.png` | Green soul wisp held by a short iron chain |
+| `stance_escort.png` | Army stance Escort (HUD stance bar, 26 px): a green guard arc of bone escorts sheltering a small violet necromancer mark |
+| `stance_onslaught.png` | Army stance Onslaught: three orange-flame arrows bursting outward from a small violet mark |
+| `stance_spearhead.png` | Army stance Spearhead (also its Ossuary unlock): a V-wedge of bone pointing up, the violet mark behind its tip |
+| `stance_bone_ring.png` | Army stance Bone Ring: a closed ring of bone around a small violet mark, cold-blue glow |
 | `profane_pact.png` | Torn scroll with a crimson seal (the curse: the one icon allowed crimson) |
 | `powerup_magnet.png` | Cyan soul vortex |
 | `powerup_feast.png` | Roasted meat on a bone |

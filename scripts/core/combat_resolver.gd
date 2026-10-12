@@ -14,6 +14,9 @@
 ##                       PassiveData.AREA_HOLY_SOURCES.
 ##   Bone Plating      — damage_unit(): a flat amount off every hit, after
 ##                       the other reductions and before barriers.
+## The army stance's damage-taken bonus (Bone Ring, ArmyStance.bonus(); 0
+## while StanceData.BONUSES_ENABLED is false) is one more category in
+## damage_unit(), counted in stance_dmg_prevented.
 class_name CombatResolver
 extends RefCounted
 
@@ -112,6 +115,10 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	if host_dr > 0.0:
 		game.stat_add("host_dmg_prevented", amount * host_dr)
 		amount *= 1.0 - host_dr
+	var stance_dr := game.stance.bonus("damage_taken_reduction")  # Army stance bonus (0 while off).
+	if stance_dr > 0.0:
+		game.stat_add("stance_dmg_prevented", amount * stance_dr)
+		amount *= 1.0 - stance_dr
 	var ab := game.abilities  # Passive levels.
 	var res := ab.passive_value("unholy_resilience", "area_holy_reduction")  # 0..1, 0 when not owned.
 	if res > 0.0 and PassiveData.AREA_HOLY_SOURCES.has(source):

@@ -15,6 +15,10 @@
 ##   * summon evolutions (Death Knight, Lich, Profane Bishop) through its
 ##     SummonEvolutions: the evolution overlay on effective stats, in-place
 ##     transformation and the Mender + Warder merge (SummonEvolutionData).
+##   * army stances (game.stance, ArmyStance / StanceData): the effective
+##     stats take the stance's leash, soft recall, formation pull and (when
+##     switched on) flavour bonuses; the formation anchors use its shape
+##     (Escort = the original layout below, the others StanceFormations).
 ## Ranged overkill reservations are stored on the enemies themselves
 ## (Enemy.incoming_damage) and managed by ProjectileManager.
 class_name HordeDirector
@@ -219,8 +223,11 @@ func replenish_interval(cls: String) -> float:
 ## (x (1 + frenzy) on damage and attack speed) while `with_buffs` is true;
 ## level-up card previews pass false so they show the lasting stats.
 ## Bound Souls adds the move-speed category and sets the per-unit leash keys
-## (engage_radius, soft_recall: UnitData's leash x (1 + leash_range)) and
-## the RETURNING speed (return_speed_mult).
+## (engage_radius, soft_recall: the army stance's leash x (1 + leash_range);
+## Escort's leash is UnitData's) and the RETURNING speed (return_speed_mult).
+## The army stance (ArmyStance) also scales w_formation and, only while
+## StanceData.BONUSES_ENABLED, adds its flavour bonus as one more category
+## (attack speed; block mass / bash knockback of the "front" classes).
 ## SummonEvolutions.modify_stats() then applies the summon-evolution passives
 ## (Forbidden Knowledge, Dark Benediction: own categories) and, while
 ## `with_evolution` is true, the class's evolution overlay (Death Knight /
@@ -238,6 +245,18 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 	# Run modifiers (Vengeful Dead, DifficultyModifiers): own category, 1 when off.
 	hp_mult *= game.difficulty.minion_hp_mult()
 	dmg_mult *= game.difficulty.minion_damage_mult()
+	# Army stance (ArmyStance): leash, soft recall and formation pull overrides
+	# (Escort = UnitData's numbers) and its flavour bonuses (0 while off).
+	var st := game.stance  # Current army stance (null only outside a run).
+	var engage := st.engage_radius() if st != null else UnitData.ENGAGE_RADIUS  # Chase leash before Bound Souls (px).
+	var recall := st.soft_recall() if st != null else UnitData.SOFT_RECALL  # Soft recall before Bound Souls (px).
+	var pull := st.formation_pull() if st != null else 1.0  # Formation pull multiplier.
+	var stance_speed := st.bonus("attack_speed") if st != null else 0.0  # Onslaught bonus (0 = off).
+	if stance_speed != 0.0:
+		spd_mult *= 1.0 + stance_speed
+	var push := 1.0  # Block mass / bash knockback multiplier of a "front" class (Spearhead tip).
+	if st != null and StanceFormations.role(cls) == "front":
+		push += st.bonus("front_push")
 	if with_buffs and game.powerups != null:
 		dmg_mult *= 1.0 + game.powerups.frenzy_bonus("damage_bonus")
 		spd_mult *= 1.0 + game.powerups.frenzy_bonus("attack_speed_bonus")
@@ -258,14 +277,14 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		"attack_range": float(base["attack_range"]),
 		"acquisition_range": float(base["acquisition_range"]),
 		"move_speed": float(base["move_speed"]) * move_mult,
-		"engage_radius": UnitData.ENGAGE_RADIUS * leash_mult,
-		"soft_recall": UnitData.SOFT_RECALL * leash_mult,
+		"engage_radius": engage * leash_mult,
+		"soft_recall": recall * leash_mult,
 		"return_speed_mult": UnitData.RETURN_SPEED_MULT * return_mult,
 		"radius": float(base["radius"]),
 		"band_min": float(base["band_min"]) * UnitData.FORMATION_SPREAD,
 		"band_max": float(base["band_max"]) * UnitData.FORMATION_SPREAD,
 		"w_pursuit": float(base["w_pursuit"]),
-		"w_formation": float(base["w_formation"]),
+		"w_formation": float(base["w_formation"]) * pull,
 		"w_separation": float(base["w_separation"]),
 		"w_threat": float(base["w_threat"]),
 		"windup": float(base["windup"]),
@@ -275,11 +294,11 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		"kite_distance": float(base["kite_distance"]),
 		"pierce": int(row.get("pierce", 0)),
 		"block_radius": float(base.get("block_radius", 0.0)),
-		"block_mass": float(base.get("block_mass", 0.0)),
+		"block_mass": float(base.get("block_mass", 0.0)) * push,
 		"engaged_speed_mult": float(base.get("engaged_speed_mult", 1.0)),
 		"bash_damage": float(base.get("bash_damage", 0.0)) * dmg_mult,
 		"bash_cooldown": float(base.get("bash_cooldown", 0.0)),
-		"bash_knockback": float(base.get("bash_knockback", 0.0)),
+		"bash_knockback": float(base.get("bash_knockback", 0.0)) * push,
 		"shield_amount": float(base.get("shield_amount", 0.0)) * shield_mult,
 		"shield_duration": float(base.get("shield_duration", 0.0)),
 		"shield_cooldown": float(base.get("shield_cooldown", 0.0)),
@@ -302,6 +321,22 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 	}
 	evolutions.modify_stats(cls, out, with_evolution)
 	return out
+
+
+## Pushes the current army stance's numbers to every unit (ArmyStance
+## changed): learned classes get fresh effective stats through the usual
+## refresh (HP % kept, no capacity change); temporary summons keep their
+## spawn-time multipliers and only take the stance keys (leash, soft
+## recall, formation pull). Anchors are re-placed at once.
+func apply_stance() -> void:
+	recompute_all(capacity_snapshot())
+	for u in units:
+		if u.is_temporary:
+			var fresh := compute_stats(u.unit_class, maxi(1, int(class_levels[u.unit_class])), true, false)  # Stance keys source.
+			u.engage_radius = float(fresh["engage_radius"])
+			u.soft_recall = float(fresh["soft_recall"])
+			u.w_formation = float(fresh["w_formation"])
+	_calculate_formation_anchors()
 
 
 ## Effective numbers of a class special (UnitData "special" dictionary;
@@ -506,7 +541,12 @@ func count_of(cls: String) -> int:
 ## Warriors spread in an arc facing the threat (or a full ring when calm);
 ## archers + mages share the midline ring; the support classes (Mender,
 ## Warder, Profane Bishop) sit on the side away from the threat. Stable per-unit jitter keeps it from looking geometric.
+## This is the Escort stance; any other army stance places its own shape
+## (StanceFormations).
 func _calculate_formation_anchors() -> void:
+	if game.stance != null and game.stance.shape() != "escort":
+		StanceFormations.assign(self, game.stance.shape(), game.stance.jitter())
+		return
 	var warriors: Array[SummonedUnit] = []
 	var midline: Array[SummonedUnit] = []
 	var support: Array[SummonedUnit] = []

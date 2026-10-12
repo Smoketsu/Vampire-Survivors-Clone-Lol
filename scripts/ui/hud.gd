@@ -16,6 +16,9 @@
 ##                   (GDD §6.3) listed above them.
 ##   Upper middle  : progression banner announcing a synergy activation or a
 ##                   spell evolution (announce()).
+##   Bottom left   : beside the army list, the army stance column (four
+##                   stance icons with their keys) and, under the
+##                   necromancer, the stance banner (StanceBar).
 ## Built entirely in code and refreshed at 10 Hz by polling the Game (cheaper
 ## and simpler than wiring dozens of per-frame signals).
 class_name Hud
@@ -244,6 +247,11 @@ func _build() -> void:
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		_announce_box.add_child(l)
 	_announce_box.visible = false
+
+	# Bottom left, beside the army list: the army stance bar and its banner.
+	var stance_bar := StanceBar.new()  # Stance icons + banner overlay.
+	stance_bar.game = game
+	add_child(stance_bar)
 
 	# Bottom center: ability bar (actives row, passives row).
 	var bc := _box(true, 0.5, 1.0, -200, -130, 200, -12, BoxContainer.ALIGNMENT_END)
