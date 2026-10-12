@@ -26,6 +26,11 @@
 ##     frozen for part of the duration) or by a Frost Wraith Deep Freeze
 ##     (Enemy.freeze_timer, set by CombatResolver.freeze_enemy()) or a
 ##     Cathedral Horror dive stun (Enemy.stun_timer, CombatResolver.stun_enemy()).
+##   * Looks enemy kinds up in EnemyData, then MarchEnemyData, then
+##     SanctumEnemyData (the Sanctum of Judgment's kinds: any stage can spawn
+##     them), owns the CovenantRites (`rites`: the Sanctum kits' death record,
+##     High Confessor revivals and danger hints) and tracks the living
+##     miniboss (the Cathedral Guardian: HUD bar, never recycled).
 class_name EnemyDirector
 extends Node2D
 
@@ -87,6 +92,12 @@ var _next_slot: int = 0
 var stage: StageDirector
 ## Crimson March mechanics (GDD §8.2; null on stages without them).
 var march: MarchDirector = null
+## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
+var rites: CovenantRites
+## The living miniboss shown on the HUD (Cathedral Guardian; null = none).
+var miniboss: Enemy = null
+## Generation of `miniboss` when it registered (stale guard).
+var miniboss_gen: int = 0
 
 
 func _ready() -> void:
@@ -97,6 +108,9 @@ func _ready() -> void:
 	stage = StageDirector.new()
 	stage.game = game
 	add_child(stage)
+	rites = CovenantRites.new()
+	rites.game = game
+	add_child(rites)
 	if not (stage_def["march"] as Dictionary).is_empty():
 		march = MarchDirector.new()
 		march.game = game
@@ -156,9 +170,10 @@ func step(delta: float) -> void:
 			e.update_separation()
 		e.physics_step(delta)
 		e.resolve_blocking()
-		if not e.is_boss and not e.is_objective and e.position.distance_squared_to(player_pos) > recycle2:
+		if not e.is_boss and not e.is_objective and not e.is_miniboss and e.position.distance_squared_to(player_pos) > recycle2:
 			_recycle(e)
 	stage.step(delta)
+	rites.step(delta)
 	if march != null:
 		march.step(delta)
 
@@ -402,11 +417,38 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 
 
 ## Design row of enemy `kind`: EnemyData.ENEMIES (Graveyard roster) first,
-## then MarchEnemyData.ENEMIES (Crimson March soldiers and structures).
+## then MarchEnemyData.ENEMIES (Crimson March soldiers and structures), then
+## SanctumEnemyData.ENEMIES (the Sanctum of Judgment's kinds).
 func enemy_def(kind: String) -> Dictionary:
 	if EnemyData.ENEMIES.has(kind):
 		return EnemyData.ENEMIES[kind]
-	return MarchEnemyData.ENEMIES[kind]
+	if MarchEnemyData.ENEMIES.has(kind):
+		return MarchEnemyData.ENEMIES[kind]
+	return SanctumEnemyData.ENEMIES[kind]
+
+
+## True if `kind` is a spawnable enemy kind of any stage's data.
+static func is_known_kind(kind: String) -> bool:
+	return EnemyData.ENEMIES.has(kind) or MarchEnemyData.ENEMIES.has(kind) or SanctumEnemyData.ENEMIES.has(kind)
+
+
+## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar).
+func set_miniboss(e: Enemy) -> void:
+	miniboss = e
+	miniboss_gen = e.generation
+
+
+## Releases the miniboss slot if `e` holds it (it died or was despawned).
+func clear_miniboss(e: Enemy) -> void:
+	if miniboss == e:
+		miniboss = null
+
+
+## The living miniboss, or null.
+func miniboss_alive() -> Enemy:
+	if miniboss != null and miniboss.active and miniboss.generation == miniboss_gen:
+		return miniboss
+	return null
 
 
 ## Takes an enemy from the pool (or creates one) and activates it.
@@ -458,6 +500,7 @@ func _recycle(e: Enemy) -> void:
 
 ## Called by CombatResolver when an enemy dies.
 func on_enemy_killed(e: Enemy) -> void:
+	rites.on_enemy_killed(e)  # Sanctum kit death actions and the revival record.
 	e.deactivate()
 	if e.is_boss:
 		# Big reward burst (user brief: no longer the win condition).

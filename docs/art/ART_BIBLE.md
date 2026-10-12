@@ -105,6 +105,11 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 | `shieldbearer.png` | Covenant Shieldbearer: huge crimson tower shield | 50 px |
 | `banner_bearer.png` | Banner Bearer: tall crimson-and-gold war banner | 50 px |
 | `halberdier.png` | Crimson Halberdier: long halberd, silver half-plate | 50 px |
+| `sanctified_sentinel.png` | Sanctified Sentinel (Stage 3 construct): a squat, blocky animated statue of pale cathedral stone (`#BDB8A8`) inlaid with gold (`#FFD14C`) lines, a narrow glowing gold eye slit in a square head, one arm ending in a long stone blade held forward; heavy, slow, no cloth | 72 px |
+| `radiant_inquisitor.png` | Radiant Inquisitor (Stage 3 elite caster): a tall robed inquisitor in ivory (`#F5EDD4`) robes with a crimson (`#C71A29`) stole, face hidden in shadow under a hood, a gold sunburst halo of rays behind the head, holding a gold-bound tome; smaller and more human than the Reckoning's `inquisitor.png` | 60 px |
+| `high_confessor.png` | High Confessor (Stage 3 elite priest): a broad figure in wide ivory (`#F5EDD4`) vestments with a crimson (`#C71A29`) stole, a tall gold (`#FFD14C`) mitre, a gold crook staff topped by a faint halo; serene, imposing, clearly grander than `chaplain.png` | 56 px |
+| `sun_paladin.png` | Sun Paladin (Stage 3 elite): a heavily armoured knight in gilded plate, a gold (`#FFD14C`) heater shield bearing a crimson sun emblem with rays, a gold great helm with an ivory plume, a lance; a gold-heavy cousin of `templar.png` | 56 px |
+| `cathedral_guardian.png` | Cathedral Guardian (Stage 3 miniboss): a giant colossus of pale cathedral stone (`#BDB8A8`) with gold (`#FFD14C`) trim, a stained-glass rose window (deep blue, crimson, gold) set in its chest, a small square head crowned with three gold spires, two huge stone fists; towering, slow, monumental | 140 px |
 
 ### Bosses (`assets/sprites/bosses/`)
 | File | Subject | Size |

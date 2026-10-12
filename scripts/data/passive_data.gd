@@ -98,6 +98,10 @@ const AREA_HOLY_SOURCES := {
 	"purifier": "holy",  # TUNING (not in GDD) Purifier holy fire (bonus vs undead).
 	"holy_zone": "holy",  # TUNING (not in GDD) holy ground: grave consecration, Holy Ward Generators, boss holy zones.
 	"holy_retribution": "holy",  # TUNING (not in GDD) radiant bolts of the Holy Retribution run modifier.
+	"sentinel_sweep": "area",  # TUNING (not in GDD) a Sanctified Sentinel's frontal sweep.
+	"guardian_slam": "area",  # TUNING (not in GDD) the Cathedral Guardian's ground slam.
+	"guardian_beam": "holy",  # TUNING (not in GDD) the Cathedral Guardian's sweeping beam.
+	"radiant_inquisitor": "holy",  # TUNING (not in GDD) a Radiant Inquisitor's radiant bolts.
 }
 ## Bone Plating: a plated hit always keeps at least this fraction (0..1) of
 ## its damage, so the flat reduction never makes a summon immune to the

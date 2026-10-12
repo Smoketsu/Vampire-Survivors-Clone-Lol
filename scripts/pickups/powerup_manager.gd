@@ -260,13 +260,13 @@ func frenzy_bonus(key: String) -> float:
 
 
 ## True if enemy `e` is held by Stasis right now: every enemy while it runs,
-## except Reckoning enemies (immune) and Sir Alaric after the first
-## boss_fraction of the duration.
+## except Reckoning enemies (immune) and the stage boss (and a miniboss, the
+## Cathedral Guardian) after the first boss_fraction of the duration.
 func freezes(e: Enemy) -> bool:
 	var left := time_left("stasis")  # Stasis seconds left.
 	if left <= 0.0 or e.is_reckoning:
 		return false
-	if e.is_boss:
+	if e.is_boss or e.is_miniboss:
 		return stasis_total - left < stasis_total * float(PowerupData.POWERUPS["stasis"]["boss_fraction"])
 	return true
 

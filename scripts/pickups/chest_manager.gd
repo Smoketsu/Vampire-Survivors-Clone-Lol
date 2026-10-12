@@ -1,6 +1,7 @@
 ## ChestManager — treasure chests (user request; rules and numbers in
 ## ChestData). It rolls a chest on enemy kills (CombatResolver._kill_enemy
-## calls on_enemy_killed): elites at ELITE_CHANCE, Sir Alaric always, and a
+## calls on_enemy_killed): elites at ELITE_CHANCE, the stage boss and a
+## miniboss (the Cathedral Guardian) always, and a
 ## pity drop from any regular kill after PITY_TIME s without a chest (or
 ## EVOLUTION_PITY_TIME s while an evolution is ready); never
 ## from Reckoning enemies or after 0:00. Chests are pooled Chest nodes that
@@ -62,6 +63,11 @@ func on_enemy_killed(e: Enemy) -> void:
 		return
 	if e.is_boss:
 		spawn_chest(e.position, true)
+		return
+	if e.is_miniboss:
+		# Cathedral Guardian (owner decision): a guaranteed chest, no elite roll.
+		spawn_chest(e.position, true)
+		game.stat_add("miniboss_chests", 1.0)
 		return
 	var pity := since_chest >= ChestData.PITY_TIME  # Pity timer ran out.
 	if not pity and since_chest >= ChestData.EVOLUTION_PITY_TIME and not game.abilities.ready_evolutions().is_empty():

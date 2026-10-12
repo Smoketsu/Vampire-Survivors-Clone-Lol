@@ -21,6 +21,21 @@
 ## The army stance's damage-taken bonus (Bone Ring, ArmyStance.bonus(); 0
 ## while StanceData.BONUSES_ENABLED is false) is one more category in
 ## damage_unit(), counted in stance_dmg_prevented.
+## Sanctum of Judgment (SanctumEnemyData) mitigation, all in damage_enemy():
+##   holy suppression — minion attacks on an enemy inside an armed
+##                      suppression zone deal its damage_mult
+##                      (HordeDirector.add_suppression(); 1 for the Radiant
+##                      Inquisitor's): suppression_dmg_prevented.
+##   Sun Paladin ward — a warded enemy (Enemy.ward_until) takes ward_resist
+##                      less: paladin_ward_dmg_prevented.
+##   flat armour      — after percentage armour, Enemy.flat_armor off every
+##                      hit, keeping at least FLAT_ARMOR_MIN_FRACTION:
+##                      flat_armor_absorbed_<kind>.
+##   holy shield      — Enemy.holy_shield absorbs what is left before HP:
+##                      holy_shield_absorbed, holy_shields_broken.
+## The Soul Nova ignores the ward, flat armour and shields
+## (SanctumEnemyData.FLAT_ARMOR_EXEMPT_SOURCES). A miniboss (Enemy.is_miniboss)
+## takes the boss multiplier of a Deep Freeze / dive stun.
 class_name CombatResolver
 extends RefCounted
 
@@ -73,12 +88,24 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if crit > 0.0 and is_minion_source(source) and _crit_rng.randf() < crit:
 		crit_mult = PassiveData.CRIT_DAMAGE_MULT
 		amount *= crit_mult
+	# Holy suppression zones (HordeDirector.add_suppression()): minion attacks
+	# on an enemy inside one deal its damage_mult (skipped when none is armed).
+	var sup := game.horde.suppression  # The army's suppression field.
+	if sup.active_count > 0 and is_minion_source(source):
+		var sm := sup.damage_mult_at(e.position)  # Suppression multiplier here.
+		if sm < 1.0:
+			game.stat_add("suppression_dmg_prevented", amount * (1.0 - sm) * (1.0 - e.armor))
+			amount *= sm
 	# Enemy-side damage modifiers (Crimson March tower shields, aura buffs,
 	# Marshal Vael's Shieldwall): exactly 1 for every Graveyard enemy.
 	var taken := e.damage_taken_mult(source)
 	if taken != 1.0:
 		game.stat_add("dmg_resisted_" + e.kind, amount * (1.0 - taken) * (1.0 - e.armor))
 		amount *= taken
+	# Sun Paladin ward (one ward per enemy, PaladinKit): ward_resist less.
+	if e.ward_until > game.elapsed and not source in SanctumEnemyData.FLAT_ARMOR_EXEMPT_SOURCES:
+		game.stat_add("paladin_ward_dmg_prevented", amount * e.ward_resist * (1.0 - e.armor))
+		amount *= 1.0 - e.ward_resist
 	# Plague Cloud Rot (applied after the enemy-side modifiers): +rot_amp
 	# from every source.
 	var rot := e.rot_amp if e.rot_until > game.elapsed else 0.0  # Rot bonus fraction.
@@ -88,7 +115,13 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if e.curse_until > game.elapsed and not source in SummonEvolutionData.CURSE_EXEMPT_SOURCES:
 		curse = e.curse_amp
 		amount *= 1.0 + curse
-	var dealt := minf(amount * (1.0 - e.armor), e.hp)
+	var raw := amount * (1.0 - e.armor)  # Damage after percentage armour.
+	if e.flat_armor > 0.0 or e.holy_shield > 0.0:
+		raw = _sanctum_mitigation(e, raw, source)
+		if raw <= 0.0:
+			e.on_hit()  # Fully absorbed by a holy shield.
+			return 0.0
+	var dealt := minf(raw, e.hp)
 	if rot > 0.0:
 		game.stat_add("rot_bonus_dmg", dealt * rot / (1.0 + rot))
 	if curse > 0.0:
@@ -104,6 +137,8 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 		game.stat_add("rally_minion_dmg", dealt)  # Minion damage dealt under the Dread Rally buff.
 	if e.is_boss:
 		game.stat_add("bossdmg_" + source, dealt)
+	elif e.is_miniboss:
+		game.stat_add("minibossdmg_" + source, dealt)  # Cathedral Guardian (autotest).
 	Juice.enemy_hit(e, dealt, source)
 	if e.hp <= 0.0:
 		if source in MetaData.WARRIOR_KILL_SOURCES:
@@ -111,6 +146,28 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 		game.horde.evolutions.on_enemy_killed(e, source)  # Lich raise-the-dead.
 		_kill_enemy(e)
 	return dealt
+
+
+## Sanctum flat armour, then a holy shield, on `raw` post-armour damage to
+## `e` (see the header); returns what is left for HP.
+func _sanctum_mitigation(e: Enemy, raw: float, source: String) -> float:
+	if source in SanctumEnemyData.FLAT_ARMOR_EXEMPT_SOURCES:
+		return raw
+	if e.flat_armor > 0.0:
+		var cut := minf(e.flat_armor, raw * (1.0 - SanctumEnemyData.FLAT_ARMOR_MIN_FRACTION))  # Damage removed.
+		game.stat_add("flat_armor_absorbed_" + e.kind, cut)
+		raw -= cut
+	if e.holy_shield > 0.0:
+		var absorbed := minf(e.holy_shield, raw)  # Taken by the shield.
+		e.holy_shield -= absorbed
+		raw -= absorbed
+		game.stat_add("holy_shield_absorbed", absorbed)
+		if e.holy_shield <= 0.0:
+			e.holy_shield = 0.0
+			e.holy_shield_time = 0.0
+			e.queue_redraw()
+			game.stat_add("holy_shields_broken", 1.0)
+	return raw
 
 
 ## Damages a summon. Death is routed to HordeDirector (deregistration,
@@ -253,7 +310,7 @@ func curse_enemy(e: Enemy, amp: float, duration: float) -> void:
 
 ## Frost Wraith Deep Freeze: holds `e` for `duration` s through the Stasis
 ## freeze path (EnemyDirector skips its AI, attacks and movement while
-## Enemy.freeze_timer > 0). The boss gets `boss_mult` of the duration, elites
+## Enemy.freeze_timer > 0). The boss (and a miniboss) gets `boss_mult` of the duration, elites
 ## `elite_mult`, Reckoning enemies are immune. Crimson March structures
 ## (outposts, ward generators, carts, the Holy Standard) are immune too: a
 ## building cannot be frozen, and a frozen one would stop its own timers
@@ -263,7 +320,7 @@ func freeze_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float
 	if not e.active or e.is_reckoning or e.is_structure or duration <= 0.0:
 		return 0.0
 	var d := duration  # Freeze time for this enemy.
-	if e.is_boss:
+	if e.is_boss or e.is_miniboss:
 		d *= boss_mult
 	elif e.is_elite:
 		d *= elite_mult
@@ -286,7 +343,7 @@ func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) 
 	if not e.active or e.is_reckoning or e.is_structure or duration <= 0.0:
 		return 0.0
 	var d := duration  # Stun time for this enemy.
-	if e.is_boss:
+	if e.is_boss or e.is_miniboss:
 		d *= boss_mult
 	elif e.is_elite:
 		d *= elite_mult

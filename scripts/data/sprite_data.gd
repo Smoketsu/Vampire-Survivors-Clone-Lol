@@ -40,6 +40,11 @@ const HEIGHTS: Dictionary = {
 	"enemies/shieldbearer": 50.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/banner_bearer": 50.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/halberdier": 50.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/sanctified_sentinel": 72.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/radiant_inquisitor": 60.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/high_confessor": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/sun_paladin": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/cathedral_guardian": 140.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"bosses/alaric": 120.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"bosses/vael": 120.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"structures/outpost": 96.0,  # TUNING (not in GDD) ART_BIBLE manifest size
