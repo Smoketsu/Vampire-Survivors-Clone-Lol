@@ -423,6 +423,9 @@ func _attendant_heal_pulse() -> void:
 		var e := _attendants[i]
 		if e.position.distance_to(position) > float(boss_def["attend_radius"]):
 			continue
+		if game.combat.is_silenced(e):
+			game.stat_add("keening_heals_silenced", 1.0)
+			continue  # Silenced by a Keening Lady's Dirge: this attendant cannot heal her.
 		near += 1
 		if _attend_pulses % 2 == 0 and hp < max_hp:
 			game.effects.beam(e.position, position, Palette.GOLD)

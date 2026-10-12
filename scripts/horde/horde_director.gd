@@ -25,6 +25,9 @@
 ##     (`suppression`), reached through ONE call, add_suppression(): no
 ##     replacement spawns inside an armed zone, and deaths inside it are held
 ##     (that class's replacement pauses) until it ends.
+##   * the ground and air effects of the newest classes through its
+##     HordeHazards (`hazards`): Corpse Catapult boulders in flight, Hellhound
+##     fire trails and Ossuary Engine bone shards.
 ## Ranged overkill reservations are stored on the enemies themselves
 ## (Enemy.incoming_damage) and managed by ProjectileManager.
 class_name HordeDirector
@@ -87,6 +90,8 @@ var evolutions: SummonEvolutions
 var colossi: ColossusKit
 ## Holy suppression zones (Radiant Inquisitor, Seraphine; add_suppression()).
 var suppression: SuppressionField
+## Catapult boulders, Hellhound fire trails and Ossuary Engine shards (HordeHazards).
+var hazards: HordeHazards
 ## Radius (px) Enemy.resolve_blocking() adds to its own to find blockers:
 ## UnitData.MAX_BLOCK_RADIUS, raised to the widest block_radius ever spawned
 ## this run (the Corpse Abomination's), never lowered.
@@ -108,6 +113,9 @@ func _ready() -> void:
 	suppression = SuppressionField.new()
 	suppression.game = game
 	add_child(suppression)
+	hazards = HordeHazards.new()
+	hazards.game = game
+	add_child(hazards)
 
 
 ## THE suppression API (GDD §7.3, §15.0): a zone at `pos`, `radius` px, that
@@ -131,6 +139,7 @@ func step(delta: float) -> void:
 	if temp_alive > 0:
 		_update_temporaries(delta)
 	suppression.step(delta)
+	hazards.step(delta)
 	_update_replenishment(delta)
 	synergies.step(delta)
 	if _frame % UnitData.FORMATION_TICK_DIVISOR == 0:
@@ -254,6 +263,8 @@ func replenish_interval(cls: String) -> float:
 ## level-up card previews pass false so they show the lasting stats. The
 ## Dread Rally ultimate (game.dread_rally) is another such timed category:
 ## damage and attack speed during its buff, move speed during its surge.
+## Blood Scent adds a move-speed and an attack-speed category for the fast
+## classes (PassiveData.FAST_SUMMON_SPEED).
 ## Bound Souls adds the move-speed category and sets the per-unit leash keys
 ## (engage_radius, soft_recall: the army stance's leash x (1 + leash_range);
 ## Escort's leash is UnitData's) and the RETURNING speed (return_speed_mult).
@@ -303,6 +314,12 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 	# leash scales the engagement radius and soft recall, and the return trip
 	# takes (1 - return_reduction) of the time (RETURNING speed divided by it).
 	var move_mult := (1.0 + synergies.value("deathless", "move_speed")) * (1.0 + ab.passive_value("bound_souls", "minion_move_speed"))
+	# Blood Scent (paired with the Bone Hounds): the fast classes (base move
+	# speed >= PassiveData.FAST_SUMMON_SPEED) move and attack faster, each its
+	# own category.
+	if float(base["move_speed"]) >= PassiveData.FAST_SUMMON_SPEED:
+		move_mult *= 1.0 + ab.passive_value("blood_scent", "fast_move_speed")
+		spd_mult *= 1.0 + ab.passive_value("blood_scent", "fast_attack_speed")
 	if rally != null:
 		move_mult *= 1.0 + rally.bonus("move_speed")  # Dread Rally surge.
 	var leash_mult := 1.0 + ab.passive_value("bound_souls", "leash_range")  # Leash distance multiplier.
@@ -587,7 +604,8 @@ func count_of(cls: String) -> int:
 ## Assigns each unit a player-relative anchor inside its class band.
 ## Warriors spread in an arc facing the threat (or a full ring when calm);
 ## archers + mages share the midline ring; the support classes (Mender,
-## Warder, Profane Bishop) sit on the side away from the threat. Stable per-unit jitter keeps it from looking geometric.
+## Warder, Profane Bishop) sit on the side away from the threat, and the
+## "back" classes (Corpse Catapults) in their own farther band behind them. Stable per-unit jitter keeps it from looking geometric.
 ## This is the Escort stance; any other army stance places its own shape
 ## (StanceFormations).
 func _calculate_formation_anchors() -> void:
@@ -597,6 +615,7 @@ func _calculate_formation_anchors() -> void:
 	var warriors: Array[SummonedUnit] = []
 	var midline: Array[SummonedUnit] = []
 	var support: Array[SummonedUnit] = []
+	var rear: Array[SummonedUnit] = []  # UnitData formation "back" (Corpse Catapults).
 	for u in units:
 		match u.unit_class:
 			"warrior":
@@ -605,10 +624,13 @@ func _calculate_formation_anchors() -> void:
 				support.append(u)
 			_:
 				# Later classes pick their band group in data (UnitData "formation").
-				if String(UnitData.UNITS[u.unit_class].get("formation", "mid")) == "front":
-					warriors.append(u)
-				else:
-					midline.append(u)
+				match String(UnitData.UNITS[u.unit_class].get("formation", "mid")):
+					"front":
+						warriors.append(u)
+					"back":
+						rear.append(u)
+					_:
+						midline.append(u)
 	var threat_angle := threat_dir.angle()
 	var calm_rot := float(_frame) * 0.0005
 	# Warriors: arc toward the threat, narrowing as pressure rises.
@@ -621,6 +643,13 @@ func _calculate_formation_anchors() -> void:
 		_assign_arc(support, threat_angle + PI, PI * 0.7)
 	else:
 		_assign_arc(support, calm_rot + PI * 0.5, TAU)
+	# Rear (siege artillery, in its own farther band): behind the necromancer
+	# relative to the threat, a little wider than the support arc; a full
+	# ring when calm. Empty (no change) without a "back" class.
+	if threat_level > 0.05:
+		_assign_arc(rear, threat_angle + PI, PI * 0.9)
+	else:
+		_assign_arc(rear, calm_rot + PI * 1.5, TAU)
 
 
 ## Distributes `list` evenly over an arc of `spread` radians centred on

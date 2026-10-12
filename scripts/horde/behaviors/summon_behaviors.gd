@@ -4,6 +4,9 @@
 ##   "dash"   Grave Rogue         RogueBehavior
 ##   "swoop"  Crypt Gargoyle      GargoyleBehavior
 ##   "frost"  Frost Wraith        FrostWraithBehavior
+##   "pack"   Bone Hounds         BoneHoundBehavior
+##   "dirge"  Banshee             BansheeBehavior
+##   "barrage" Corpse Catapult    CatapultBehavior
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -29,6 +32,12 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 			b = GargoyleBehavior.new()
 		"frost":
 			b = FrostWraithBehavior.new()
+		"pack":
+			b = BoneHoundBehavior.new()
+		"dirge":
+			b = BansheeBehavior.new()
+		"barrage":
+			b = CatapultBehavior.new()
 	if b != null:
 		b.kind = kind
 	return b
@@ -73,6 +82,24 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 				_delta(out, "Freeze radius", a, b, "freeze_radius")
 				_delta(out, "Freeze time (s)", a, b, "freeze_duration")
 				_delta(out, "Freeze cooldown (s)", a, b, "freeze_cooldown")
+		"pack":
+			if a.is_empty():
+				out.append("Pack Hunt: hounds share prey, hunting archers and priests")
+				out.append("+%d%% bite per packmate on the foe (max +%d%%)" % [
+					int(roundf(float(b["pack_bonus"]) * 100.0)), int(roundf(float(b["pack_bonus"]) * float(b["pack_cap"]) * 100.0))])
+		"dirge":
+			if a.is_empty():
+				out.append("Dirge every %ss: foes in %s px slowed %d%%" % [_f(b["dirge_cooldown"]), _f(b["dirge_radius"]),
+					int(roundf(float(b["dirge_slow"]) * 100.0))])
+				out.append("and deal %d%% less damage for %ss" % [int(roundf(float(b["dirge_cut"]) * 100.0)), _f(b["dirge_duration"])])
+			else:
+				_delta(out, "Dirge radius", a, b, "dirge_radius")
+				_delta(out, "Dirge time (s)", a, b, "dirge_duration")
+				_delta(out, "Dirge cooldown (s)", a, b, "dirge_cooldown")
+		"barrage":
+			if a.is_empty():
+				out.append("Bone Barrage: boulders splash %s px, from behind the army" % _f(nxt["splash_radius"]))
+				out.append("Targets structures, elites and dense packs first")
 	return out
 
 

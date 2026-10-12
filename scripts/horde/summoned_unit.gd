@@ -6,10 +6,12 @@
 ## Class differences come only from the data row in UnitData (attack_profile,
 ## target_profile, ranges, steering weights, heal amount...). A class with a
 ## special action (Abomination stomp, Rogue dash, Gargoyle swoop, Frost Wraith
-## Deep Freeze) also gets a per-unit SummonBehavior (`behavior`), the one
+## Deep Freeze, Bone Hound Pack Hunt, Banshee Dirge, Corpse Catapult Bone
+## Barrage) also gets a per-unit SummonBehavior (`behavior`), the one
 ## dispatch point for class-specific code: it may start a special in think(),
 ## own the tick in physics_step() while the unit is CASTING it, release a
-## custom attack profile, add a target-score bonus and draw extras.
+## custom attack profile, scale a melee strike and react to it, add a
+## target-score bonus and draw extras.
 ##
 ## Update model (GDD §25 / §39), both driven by HordeDirector:
 ##   think()        ~5 Hz, staggered across units: FSM decisions, leash checks,
@@ -40,7 +42,8 @@ var director: HordeDirector
 ## Owning run.
 var game: Game
 ## Class id (UnitData.CLASS_ORDER): "warrior" | "archer" | "mage" | "mender" |
-## "warder" | "bishop" | "abomination" | "rogue" | "gargoyle" | "frost_wraith".
+## "warder" | "bishop" | "abomination" | "rogue" | "gargoyle" | "frost_wraith" |
+## "bone_hound" | "banshee" | "corpse_catapult".
 var unit_class: String = ""
 ## True while alive in the world (false = pooled).
 var active: bool = false
@@ -124,7 +127,9 @@ var shield_duration: float = 0.0
 var shield_cooldown: float = 0.0
 ## Healing role priority of THIS unit's class (0..1, GDD §31).
 var heal_role_priority: float = 0.5
-## Attack branch: "melee" | "arrow" | "aoe" | "heal" | "ward".
+## Attack branch: "melee" | "arrow" | "aoe" | "heal" | "ward", or a
+## class-specific profile released by the behaviour ("frost", "dirge",
+## "boulder").
 var attack_profile: String = "melee"
 ## Barrier HP this unit casts on a threatened ally (Warder / Bishop; 0 = none).
 var ally_shield_amount: float = 0.0
@@ -975,8 +980,12 @@ func _release_attack() -> void:
 				if edge <= attack_range + UnitData.MELEE_TOLERANCE:
 					var dir := (target.position - position).normalized()
 					var hit_at := target.position  # Cleave centre (the target may die).
+					var struck := target  # The struck enemy (the target may die).
 					game.effects.slash(position + dir * radius, dir, Palette.BONE, radius * 1.4)
-					var dealt := game.combat.damage_enemy(target, damage, dmg_source)
+					var mult := behavior.melee_bonus(self, struck) if behavior != null else 1.0  # Class bonus (Pack Hunt).
+					var dealt := game.combat.damage_enemy(struck, damage * mult, dmg_source)
+					if behavior != null:
+						behavior.on_melee_hit(self, struck, dealt)  # Hellhound burn.
 					if cleave_radius > 0.0 or lifesteal > 0.0:
 						SummonAbilities.after_melee(self, target, hit_at, dir, dealt)
 		"arrow":

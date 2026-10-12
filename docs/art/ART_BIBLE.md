@@ -91,6 +91,12 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 | `cathedral_horror.png` | Cathedral Horror (Crypt Gargoyle evolution): a huge winged stone gargoyle torn from a cathedral, cracked pale marble body, wide ribbed stone wings, ram horns, violet (`#A35CFA`) glowing runes carved into its chest, gripping a broken plinth; clearly bigger and bulkier than the Crypt Gargoyle | 64 px |
 | `gravebow.png` | Gravebow (evolved archer): an ornate skeletal archer in a tall tattered dark-green hood (`#2B453D`) with a ragged hem, violet (`#A35CFA`) eye glow, a bone quiver; it draws a HUGE bone longbow (`#DED9C2`, taller than itself, bone spikes at the tips) with an arrow wreathed in violet curse-fire nocked. Bigger and more ornate than `archer.png` | 52 px |
 | `bone_colossus.png` | Bone Colossus (evolved abomination): a towering hulk of grey-green corpse flesh (`#788F6B`) armoured in fused bone plates (`#DED9C2`): a ribbed bone breastplate, spiked bone pauldrons, a horned bone helm over a small skull with green (`#6BF28C`) eyes, a bone-slab club for an arm, thick plated legs. Clearly bigger and more armoured than `abomination.png` | 100 px |
+| `bone_hound.png` | Bone Hound: a lean, low skeletal hound seen from the side, long ribcage barrel, thin legs, a long snouted skull with a green (`#6BF28C`) eye, a curled bone tail; small, fast, feral | 32 px |
+| `hellhound.png` | Hellhound (Bone Hound evolution): the hound charred black-brown (`#4D3329`) with glowing ember (`#FF6B1F`) cracks along the ribs, a mane of orange flame along the neck and back, burning yellow-orange eyes. Bigger and fiercer than `bone_hound.png` | 40 px |
+| `banshee.png` | Banshee: a legless floating spectre in a pale translucent veil (`#CCE0FA`) that frays into wisps, long white hair streaming back, arms raised, a dark wide-open wailing mouth; faint violet (`#A35CFA`) glow | 48 px |
+| `keening_lady.png` | Keening Lady (Banshee evolution): a taller, regal banshee in a flowing dark violet gown (`#4D2969`), a silver circlet with a violet gem, pale face with a screaming mouth, lilac sound ripples rolling out of it. Bigger and more ornate than `banshee.png` | 56 px |
+| `corpse_catapult.png` | Corpse Catapult: a squat siege engine of old coffin wood (`#5C4533`) and bone beams on two bone wheels, sinew ropes, a diagonal throwing arm whose cup holds a skull boulder with green eyes | 56 px |
+| `ossuary_engine.png` | Ossuary Engine (Corpse Catapult evolution): a bigger siege engine built from ribcages and spines, ember-lit (`#FF6B1F`) sinew, a triple cup loaded with three burning skulls. Clearly bigger and grimmer than `corpse_catapult.png` | 72 px |
 
 ### Covenant enemies (`assets/sprites/enemies/`)
 | File | Subject | Size |
@@ -217,6 +223,12 @@ the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
 | `cathedral_horror.png` | Horned marble gargoyle head with a glowing violet rune (evolution frame) |
 | `gravebow.png` | Bone longbow with a violet curse-fire arrow (evolution frame) |
 | `bone_colossus.png` | Horned bone helm over a ribbed bone breastplate (evolution frame) |
+| `bone_hound.png` | Snarling skeletal hound head in profile |
+| `banshee.png` | Pale wailing veiled face with streaming hair |
+| `corpse_catapult.png` | Bone catapult arm with a skull in its cup |
+| `hellhound.png` | Flaming charred hound head (evolution frame) |
+| `keening_lady.png` | Crowned banshee face with lilac sound ripples (evolution frame) |
+| `ossuary_engine.png` | Triple cup of burning skulls on a rib-cage arm (evolution frame) |
 | `grave_dominion.png` | Gravestone with a green rune |
 | `necrotic_vigor.png` | Green heart made of bone |
 | `dark_command.png` | Violet crown |
@@ -234,6 +246,9 @@ the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
 | `unholy_precision.png` | Bone arrowhead under a violet crosshair eye |
 | `unholy_resilience.png` | Cracked, drained holy sun behind a dark undead shield |
 | `bound_souls.png` | Green soul wisp held by a short iron chain |
+| `blood_scent.png` | Blood Scent: a blood drop with bone-white speed streaks (one deep red accent is fine) |
+| `mournsong.png` | Mournsong: a pale weeping spectral face with two violet notes |
+| `siegecraft.png` | Siegecraft: a cracked grey tower struck by a bone boulder |
 | `stance_escort.png` | Army stance Escort (HUD stance bar, 26 px): a green guard arc of bone escorts sheltering a small violet necromancer mark |
 | `stance_onslaught.png` | Army stance Onslaught: three orange-flame arrows bursting outward from a small violet mark |
 | `stance_spearhead.png` | Army stance Spearhead (also its Ossuary unlock): a V-wedge of bone pointing up, the violet mark behind its tip |

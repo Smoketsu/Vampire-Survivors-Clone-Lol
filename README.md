@@ -6,10 +6,11 @@ a necromancer hunted by the Crimson Covenant, a fanatical holy order. You only
 move. Your shadow spells fire automatically, and an **autonomous undead horde**
 of Skeleton Warriors, Skeletal Archers, Undead Mages and the two priest orders,
 Grave Menders and Crypt Warders (plus Corpse Abominations, Grave Rogues, Crypt
-Gargoyles and Frost Wraiths), follows, fights, heals, shields, holds the line
-and regroups without any commands from you. Late in a run your summons can
-evolve into Death Knights, Liches, Profane Bishops, Shadow Reapers and
-Cathedral Horrors.
+Gargoyles, Frost Wraiths, Bone Hounds, Banshees and Corpse Catapults), follows,
+fights, heals, shields, holds the line and regroups without any commands from
+you. Late in a run your summons can evolve into Death Knights, Liches, Profane
+Bishops, Shadow Reapers, Cathedral Horrors, Hellhounds, Keening Ladies and
+Ossuary Engines.
 
 This repository has a playable **prototype** of the three campaign stages,
 *The Desecrated Graveyard*, *The Crimson March* (unlocked by slaying Sir
@@ -215,12 +216,15 @@ number is in `scripts/data/unit_data.gd`.
 | **Grave Rogue** | 1 → 4 | 9 s | Assassin | Hunts Chaplains, archers and the back of the crowd. **Dash Strike**: a telegraphed violet lane, then a dash through it that hits every enemy in the lane and makes them bleed; it never ends inside an obstacle and runs back to formation |
 | **Crypt Gargoyle** | 1 → 3 | 12 s | Skirmisher | Claws. **Swoop**: takes off (airborne: flies over obstacles and bodies, can't be hit, drawn above its shadow), dives onto a cluster for AoE damage, lands on a free spot |
 | **Frost Wraith** | 1 → 3 | 14 s | Ice caster | Frost bolts **chill** (slow, frost film). **Deep Freeze**: a telegraphed circle, then every enemy inside is frozen (Stasis rules: Sir Alaric only briefly, Reckoning enemies immune) |
+| **Bone Hound** | 3 → 9 | 6 s | Pack hunter | Cheap, fast (122 px/s) skeletal hounds, the biggest pack in the army; melee, never kite. **Pack Hunt**: the pack shares a target (archers, casters, priests and banner bearers first), and every other hound biting the same foe adds +15% to a bite (at most +45%). Evolves into **Hellhounds** |
+| **Banshee** | 1 → 3 | 14 s | Debuffer | A floating spectral caster with shriek bolts; enemies **can** hit it (it is not airborne like a swooping Gargoyle, it just keeps its distance). **Dirge** every 6 s: a telegraphed wail around its target that slows foes 30% and cuts the damage of their hits by 25% for 4 s (bosses and minibosses half; Reckoning enemies and structures immune). Evolves into the **Keening Lady** |
+| **Corpse Catapult** | 1 → 3 | 18 s | Siege artillery | Posts behind you and holds its ground. **Bone Barrage**: lobs a bone boulder (235 px reach) on an arc with a landing telegraph; it splashes 50 px around the landing point. Targets structures (outposts, generators, carts, ward crystals, altars), elites, minibosses and the densest packs first. Evolves into the **Ossuary Engine** |
 
 - **Global capacity bonuses** (Grave Dominion, Legion of Bone) give every GDD
   class the full bonus, and the Mender and Warder each count as a class; the
   merged Bishop gets it once. Low-population later classes take only part of
-  it (Abomination 40%, Frost Wraith 50%, Rogue and Gargoyle 60%, rounded
-  down).
+  it (Abomination, Banshee and Catapult 40%, Frost Wraith 50%, Rogue,
+  Gargoyle and Bone Hound 60%, rounded down).
 - **Synergies and achievements**: The Unholy Host and Dread Sovereign need the
   GDD's four roles (Warriors, Archers, Mages and either priest order, or the
   Bishop); the later classes are never required. March of the Deathless
@@ -228,7 +232,8 @@ number is in `scripts/data/unit_data.gd`.
 - **Evolutions only touch their own classes**: Death Knight (Warriors), Lich
   (Mages), Profane Bishop (Menders + Warders), Gravebow (Archers), Bone
   Colossus (Abominations), Shadow Reaper (Rogues), Cathedral Horror
-  (Gargoyles) and Winter Revenant (Frost Wraiths). Forbidden Knowledge and
+  (Gargoyles), Winter Revenant (Frost Wraiths), Hellhound (Bone Hounds),
+  Keening Lady (Banshees) and Ossuary Engine (Catapults). Forbidden Knowledge and
   Dark Benediction boost only Mages and the support classes. (The
   Gravebow's curse is the one exception that helps everyone: a cursed foe
   takes more damage from every undead source.)
@@ -237,7 +242,14 @@ number is in `scripts/data/unit_data.gd`.
   Shieldwall barriers stay on Warriors (and Death Knights); Warder and Bishop
   ally barriers can land on any threatened ally, Abominations included. A
   Gargoyle in flight is out of reach of enemies and allies alike: it can't be
-  hit, healed or given a barrier until it lands.
+  hit, healed or given a barrier until it lands. A Banshee only looks
+  airborne (it floats over a shadow): it can be hit, healed and shielded. A
+  weakened foe (Dirge) shows a pale veil arc; its slow is the strongest of
+  its slows, never a product, and slows never make an enemy flee. The
+  Dirge's damage cut applies to every hit an enemy strikes itself (soldier
+  swings, arrows and charges, Sanctum kit hits, Vael's cleave, Seraphine's
+  fans and barrages), not to scripted boss and stage hazards (Hammerfall,
+  holy circles, beams, holy ground).
 
 ### Evolutions & Synergies
 
@@ -280,6 +292,9 @@ number is in `scripts/data/unit_data.gd`.
 | Frost Wraith Lv 5 | Soul Recycling **Lv 5** (faster replacement) | **Winter Revenant**: a taller crowned ice wraith, ×1.25 HP, ×1.25 damage, Deep Freeze radius **+35%**; **shatter**: a foe that dies while Deep-Frozen bursts for 22% of its max HP to foes within 56 px and chills them (bosses and structures never shatter; a shatter never sets off another shatter, and at most 12 resolve per tick); **death nova**: a Revenant that falls deals 3× its frost-bolt damage within 84 px and freezes the survivors for 1.2 s (boss / elite multipliers apply), and Soul Recycling brings it back quickly |
 | Skeletal Archer Lv 5 | Unholy Precision **Lv 5** (minion crits 5–25%) | **Gravebow** (GDD "Gravebow Company"): a tall hooded archer with a huge bone longbow, ×1.4 HP, ×1.25 damage; arrows **pierce 2** foes; every **4th volley splits** into a fan of 3 arrows; every hit **curses** the foe for 4 s: it takes **+15% damage from every undead source** (all summons and your spells; only the Soul Nova is exempt), shown as a violet film and rune. Still holds its ground |
 | Corpse Abomination Lv 5 | Bone Plating **Lv 5** (flat damage off every hit on a minion) | **Bone Colossus**: armoured in fused bone, ×1.6 HP, a bigger body (19 px) and blocking ring (23 px, mass 11), **Stomp radius +40%**; **taunt**: foes within 110 px pick it as their target before you or any other summon (target choice only: they still advance; bosses, Reckoning enemies and structures ignore it); when it falls it bursts into **bone shrapnel** (2× its stomp damage to foes within 90 px, with knockback) |
+| Bone Hound Lv 5 | Blood Scent **Lv 5** (fast summons move and attack faster) | **Hellhound**: a charred hound with a flaming mane, ×1.3 HP, ×1.2 damage; **burning bites** (60% of each bite again as fire over 3 s); a **fire trail** behind every running hound (14 px patches that burn for 1.6 s); the **pack splits** into two halves that hunt two prey at once |
+| Banshee Lv 5 | Mournsong **Lv 5** (every weakening effect lasts longer) | **Keening Lady**: a crowned banshee in a violet gown, ×1.3 HP, ×1.25 damage; every Dirge rolls out in **three widening waves** (radius ×1, ×1.3, ×1.6, 0.35 s apart) and **silences** every foe it reaches for its duration: Chaplains, High Confessors and Seraphine's attendants cannot heal |
+| Corpse Catapult Lv 5 | Siegecraft **Lv 5** (summons deal more to structures, elites, minibosses) | **Ossuary Engine**: a siege engine of ribcages and spines, ×1.35 HP; **three boulders per volley** (×0.75 damage each, volleys ×1.2 slower), and each leaves a field of **burning bone shards** for 3 s (30 px; 10% of the boulder's damage every 0.5 s) |
 
   The numbers live in `scripts/data/summon_evolution_data.gd`; the runtime is
   `HordeDirector.evolutions` (`scripts/horde/summon_evolutions.gd`). Summon
@@ -311,12 +326,18 @@ number is in `scripts/data/unit_data.gd`.
 | Unholy Resilience | Minions take 8% → 35% less **area and holy** damage: Hammerfall, Vael's cleave, Halberdier sweeps, Judgment, Purifier fire, holy ground (consecration, ward generators, boss and Inquisitor zones), Holy Retribution bolts, the Sanctum's Sentinel sweeps, Guardian slams and beams and Radiant Inquisitor bolts, Seraphine's bolts, circles, beams, nova and collapse fire | Gargoyles → **Cathedral Horrors** |
 | Bound Souls | Minion move speed +6% → +30%; leash (engagement radius and soft recall) +10% → +50%; the return trip after a recall takes 10% → 50% less time | Rogues → **Shadow Reapers** |
 | Soul Recycling (existing) | Faster replacement | Frost Wraiths → **Winter Revenants** |
+| Blood Scent | The **fast** summon classes (base move speed 95+ px/s: Bone Hounds, Rogues, Gargoyles, Archers) move +5% → +25% and attack +6% → +30% faster | Bone Hounds → **Hellhounds** |
+| Mournsong | Every **weakening** effect on enemies lasts +10% → +50% longer: slows (Shadow Blast, Corpse Explosion fields), Frost Wraith chills, the Dirge, Gravebow curses and Plague Cloud Rot (not Deep Freeze or stuns) | Banshees → **Keening Ladies** |
+| Siegecraft | Summons deal +10% → +50% damage to **structures, elites and minibosses** (not the stage boss), bleed / burn / fire ticks included | Catapults → **Ossuary Engines** |
 
   Their hooks are on the single paths: `CombatResolver` (crits, Resilience,
   Plating; the crit rolls use their own seeded RNG, so runs stay
   deterministic) and `HordeDirector.compute_stats()` (Bound Souls). Source
   lists and numbers are in `passive_data.gd`; card lines in
-  `scripts/horde/minion_passives.gd`.
+  `scripts/horde/minion_passives.gd`. The three newest passives work the same
+  way (Blood Scent in `compute_stats()`, Mournsong in
+  `CombatResolver.debuff_time()`, Siegecraft in `damage_enemy()`; card lines
+  in `scripts/horde/class_passives.gd`).
 - **Army synergies** (GDD §6.3) turn on automatically while every required
   summon class is at **Lv 2+**. A banner announces each one, and the active
   ones are listed above the army panel:
@@ -515,7 +536,7 @@ open). The zone is shown under the timer.
   - **Covenant Shieldbearer** (tall tower shield): takes 60% less damage from
     projectiles (Shadow Bolt, Void Barrage, Bone Spear / Ossuary Lance,
     arrows, mage and Lich blasts, Frost Wraith bolts, the support classes'
-    bolts). Melee summons, bashes, Shadow Blast, orbs, Corpse Explosion,
+    and Banshees' bolts). Melee summons, bashes, Shadow Blast, orbs, Corpse Explosion,
     Plague Cloud and Soul Siphon hit it normally.
   - **Banner Bearer** (tall swallow-tailed banner): buffs Covenant soldiers
     within 110 px (+15% damage and speed, −10% damage taken; buffed soldiers
@@ -533,7 +554,9 @@ open). The zone is shown under the timer.
     spells and projectiles deal only 50%; close-range blows reach around it
     for full damage: Warriors, bashes, Death Knights (strike, bash, cleave),
     Lich-risen skeletons, Abominations (fists, stomp), Rogues (stab, dash,
-    bleed), Gargoyles (claws, swoop) and the Profane Bishop's aura
+    bleed), Gargoyles (claws, swoop), Bone Hounds and Hellhounds (bites,
+    burns, fire trail), the Profane Bishop's aura and the catapults' lobbed
+    boulders and bone shards, which land behind the shield
     (`MarchEnemyData.MELEE_SOURCES`).
   - **Last Stand** below 30% HP: faster swings and specials, and a
     Crusader's Command at once.
@@ -874,7 +897,7 @@ departure puff (`grave_step_trail`) are wired so far.
 | Necromancer | Movement (keyboard and stick), HP with a slow natural regeneration (0.5 HP/s), i-frames, pickup radius, hit flash. Can receive Mender heals and Warder wards. |
 | **Shared summon AI** (§25–§31, §36) | **One** data-driven `SummonedUnit` script runs every class (Warrior, Archer, Mage, Mender, Warder, Profane Bishop, the evolved Death Knight and Lich, and the four later classes). It has the full FSM from §25, soft formation bands around the player (§26), and normalised target scoring (§27). Targets are held for at least 1 s; ranged units redirect when a target is already doomed (overkill reservation); healers use the §31 heal formula. Support and evolution kits (ally barrier, aura, cleave, life drain) are data-driven hooks into `SummonAbilities`; the four later classes plug one special action each into the AI through a `SummonBehavior` (see *Summon classes*). |
 | Leash and recall (§24) | Engagement radius 220 px, soft recall at 320 px, hard spectral recall at 650 px (Bound Souls widens the first two by up to 50% and halves the return trip). |
-| Replenishment (§24) | Each summon ability refills its own queue one unit at a time (Warrior 5 s, Archer 8 s, Mage 12 s, Mender and Warder 15 s, Profane Bishop 12 s; Abomination 20 s, Rogue 9 s, Gargoyle 12 s, Frost Wraith 14 s). A capacity increase spawns the new units immediately. A failed spawn retries without using up the timer. |
+| Replenishment (§24) | Each summon ability refills its own queue one unit at a time (Warrior 5 s, Archer 8 s, Mage 12 s, Mender and Warder 15 s, Profane Bishop 12 s; Abomination 20 s, Rogue 9 s, Gargoyle 12 s, Frost Wraith 14 s, Bone Hound 6 s, Banshee 14 s, Corpse Catapult 18 s). A capacity increase spawns the new units immediately. A failed spawn retries without using up the timer. |
 | **Warrior blocking** | Warriors are physical blockers. Enemies can't pass through them; overlaps are resolved through the spatial hash, weighted by mass. An enemy touching a warrior is *engaged*: it moves at 60% speed and attacks that warrior. Warriors also shield-bash on a cooldown (damage plus knockback). Sir Alaric's Divine Charge loses distance for every undead body it hits, so a thick enough wall stops it. |
 | **Priest orders** (user request: the GDD's Priest split in two) | **Grave Mender** (round teal robe, green halo): heals allies and the necromancer with the §31 formula, a critically hurt necromancer first (the old priest heal, unchanged). **Crypt Warder** (heater-shaped blue robe, ward sigil): whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px) it casts an instant damage-absorbing **ward** on you, as long as no ward is active and its own ward cooldown is ready (the old priest ward, same numbers); it also casts an instant **barrier** (12 HP, +25–80% by level) on the most threatened ally in reach every 3 s: an ally hit in the last 2 s, or a warrior fighting in melee, whose barrier is below half. Barriers don't stack with Shieldwall's (the stronger one wins). Both orders fire weak bolts when idle. Each has its own card, cap (1-2 by level), 15 s replenishment and HUD row; the ward shows as a ring on the necromancer and in the HUD. |
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
@@ -926,7 +949,8 @@ the §42 sandbox army of 5 archers, 3 mages and 2 priests), archer and mage
 steering weights, target-score weights, the XP curve, player stats, the
 warrior blocking/bash and Warder ward / barrier values, the Profane Bishop and
 the summon-evolution numbers, the Reckoning scaling, and everything about the
-Abomination, Rogue, Gargoyle and Frost Wraith.
+Abomination, Rogue, Gargoyle, Frost Wraith, Bone Hound, Banshee and Corpse
+Catapult.
 
 ---
 
@@ -984,6 +1008,10 @@ scripts/
                             spawns, held deaths, optional minion damage cut)
     minion_passives.gd      Card lines and the autotest line of the later horde passives
                             (their effects live in CombatResolver / compute_stats)
+    class_passives.gd       Card lines (Blood Scent, Mournsong, Siegecraft; Hellhound, Keening
+                            Lady and Ossuary Engine evolution cards) and their autotest line
+    horde_hazards.gd        Pooled catapult boulders in flight (arc, landing telegraph, splash),
+                            Hellhound fire-trail patches and Ossuary Engine bone-shard fields
     army_stance.gd          The run's army stance (game.stance): lockout, keys / right-stick
                             flicks, Ossuary unlock, the numbers the director reads, summary stats
     stance_formations.gd    Formation posts of Onslaught, Spearhead and Bone Ring (Escort is the
@@ -997,6 +1025,12 @@ scripts/
       rogue_behavior.gd       Dash Strike (telegraphed lane, dash, bleed, return to formation)
       gargoyle_behavior.gd    Swoop (airborne flight over obstacles, dive AoE, safe landing)
       frost_wraith_behavior.gd Frost bolts (chill) and Deep Freeze (the Stasis freeze path)
+      bone_hound_behavior.gd  Pack Hunt (shared prey, pack bite bonus); Hellhound burns, fire
+                              trail and split pack
+      banshee_behavior.gd     Shriek bolts and the Dirge (telegraphed wail, CombatResolver.
+                              weaken_enemy()); Keening Lady waves and silence
+      catapult_behavior.gd    Bone Barrage (led, arcing boulders through HordeHazards; siege
+                              targeting); Ossuary Engine volleys and shard fields
     gravebow_kit.gd         Gravebow volleys (pierce, split fan, cursed arrows), card lines, autotest line
     colossus_kit.gd         Bone Colossus taunt list (4 Hz, generation-checked) and shrapnel burst
   enemies/
@@ -1054,7 +1088,10 @@ scripts/
                             reaper_horror_glyphs (Shadow Reaper, Cathedral Horror,
                             enemy stun stars, stone-form shell),
                             gravebow_colossus_glyphs (Gravebow, Bone Colossus, their icons,
-                            the curse tint),
+                            the curse tint), warband_glyphs (Bone Hound, Hellhound, Banshee,
+                            Keening Lady, Corpse Catapult, Ossuary Engine, their icons, the
+                            Blood Scent / Mournsong / Siegecraft icons, the Dirge mark, fire
+                            patches, shard fields, boulders),
                             ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons),
                             chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
                             stage_select (stage cards, locks, best times), pre_run_setup (difficulty level,
@@ -1085,7 +1122,7 @@ scripts/
     recipe_book_data.gd     Texts of the pause menu's Recipes view (discovered evolutions)
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
                             Winter Revenant, Shadow Reaper, Cathedral Horror, Gravebow,
-                            Bone Colossus) and stats
+                            Bone Colossus, Hellhound, Keening Lady, Ossuary Engine) and stats
     synergy_data.gd         Army synergy requirements and effects
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
@@ -1167,10 +1204,10 @@ Options (after `--`):
 | `--meta=PROFILE` | Simulated Soul Ash purchases, applied in memory only: `none` (default, so balance runs stay comparable), `mid` (about half of every tree) or `max` (everything). |
 | `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). Every run's summary has a `recipe book` line (evolutions discovered so far, in memory only without this flag) and builds the Recipes view rows once, headless. |
 | `--oath=N` | Active Profane Oath tier 0-5 (default 0). No `--meta` profile includes the Oath, so `--meta=max` balance runs stay comparable. |
-| `--classes=a,b` | Forces summon classes (`abomination`, `rogue`, `gargoyle`, `frost_wraith`, or any offerable class id; the merge-only `bishop` is ignored): each is raised to Lv 1 at the start (while active slots allow) and every policy upgrades it first, so its special gets exercised. |
+| `--classes=a,b` | Forces summon classes (`abomination`, `rogue`, `gargoyle`, `frost_wraith`, `bone_hound`, `banshee`, `corpse_catapult`, or any offerable class id; the merge-only `bishop` is ignored): each is raised to Lv 1 at the start (while active slots allow) and every policy upgrades it first, so its special gets exercised. |
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
-| `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
+| `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march` or `sanctum`. Stage locks are ignored. |
 | `--stage=ID` | Stage to play: `graveyard` (default) or `crimson_march`. Stage locks are ignored. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
@@ -1266,9 +1303,18 @@ chest within 450 px unless enemies press it hard, and to a power-up within
 lists its level, alive / capacity, deaths, damage by source (attack and
 special) and its special counters: `abom_stomps` / `abom_stomp_hits`,
 `rogue_dashes` / `rogue_dash_hits` (plus `dmg_rogue_bleed`),
-`gargoyle_swoops` / `gargoyle_swoop_hits`, and `frost_deep_freezes`,
+`gargoyle_swoops` / `gargoyle_swoop_hits`, `frost_deep_freezes`,
 `frost_freezes` (enemies frozen), `frost_boss_freezes`,
-`frost_frozen_seconds` and `frost_chills`. A **winter revenant** line counts the
+`frost_frozen_seconds` and `frost_chills`; `hound_bites`,
+`hound_pack_bites` (with a packmate on the foe), `hound_pack_bonus_dmg`,
+`hellhound_burns`, `hellhound_trail_patches`; `banshee_dirges`,
+`banshee_dirge_hits` (foes weakened), `dirge_debuff_seconds` (enemy-seconds
+of Dirge coverage), `keening_waves`, `keening_silenced`,
+`keening_heals_silenced`; `catapult_volleys`, `catapult_boulders`,
+`catapult_boulder_hits`, `catapult_structure_dmg`, `ossuary_shard_fields`,
+`hazards_dropped` (must stay 0). A **class passives** line reports Blood
+Scent (level and the fast classes), Mournsong (extra debuff seconds),
+Siegecraft (bonus damage) and the summons' damage to structures. A **winter revenant** line counts the
 Winter Revenant's shatters (and those skipped by the per-tick cap), shatter
 hits and damage, death novas, nova hits, nova freezes and nova damage
 (`wr_*` stats, `dmg_winter_revenant_shatter` / `_nova`). The stuck check also counts a

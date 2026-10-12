@@ -19,6 +19,12 @@
 ##   Skeletal Archer Lv 5  + Unholy Precision Lv 5    = Gravebow
 ##       (GDD §4.2 / §6.1 "Gravebow Company"; the owner chose the singular)
 ##   Corpse Abomination Lv 5 + Bone Plating Lv 5      = Bone Colossus
+##   Bone Hounds Lv 5      + Blood Scent Lv 5         = Hellhounds
+##   Banshee Lv 5          + Mournsong Lv 5           = Keening Lady
+##   Corpse Catapult Lv 5  + Siegecraft Lv 5          = Ossuary Engine
+##       (owner-approved; they upgrade the class kit through special_set,
+##       read by BoneHoundBehavior / BansheeBehavior / CatapultBehavior and
+##       HordeHazards)
 ## Owner rule: every evolution, spell or summon, needs its paired passive at
 ## Lv 5 (EvolutionData.PASSIVE_LEVEL_REQUIRED); `passive_level` below is 5
 ## for every recipe.
@@ -44,7 +50,8 @@ extends RefCounted
 
 ## Display / check order of the summon evolutions.
 const ORDER := ["death_knight", "lich", "profane_bishop",
-	"winter_revenant", "shadow_reaper", "cathedral_horror", "gravebow", "bone_colossus"]
+	"winter_revenant", "shadow_reaper", "cathedral_horror", "gravebow", "bone_colossus",
+	"hellhound", "keening_lady", "ossuary_engine"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -164,6 +171,35 @@ const CURSE_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
 ##                           (fully scaled) stomp_damage.
 ##   shrapnel_knockback    — px/s impulse of the burst, divided by enemy mass.
 ##   shrapnel_shake        — screen-shake request (px, Juice) of the burst.
+## Hellhound keys (special_set; BoneHoundBehavior, HordeHazards):
+##   burn_fraction   — a bite sets the foe burning for this fraction of the
+##                     bite's damage in total (source "hellhound_burn"),
+##   burn_ticks / burn_tick — ticks of a burn / s between them; a new bite
+##                     refreshes the burn (one burn per hound per foe),
+##   trail_interval  — s between fire patches a running Hellhound drops,
+##   trail_spacing   — px it must have run since its last patch,
+##   trail_life      — s a patch burns, trail_radius — its radius (px),
+##   trail_tick      — s between patch damage ticks,
+##   trail_fraction  — damage per tick to every foe in a patch, as a fraction
+##                     of the Hellhound's bite damage (source "hellhound_trail"),
+##   pack_split      — 2: the pack splits into two halves (by think slot) that
+##                     each focus their own target (1 = one pack).
+## Keening Lady keys (special_set; BansheeBehavior):
+##   waves         — wails per Dirge (the first plus expanding repeats),
+##   wave_interval — s between waves, wave_growth — each wave's radius grows
+##                   by this fraction of the Dirge radius,
+##   silence       — 1: every foe a wave reaches is silenced for the Dirge
+##                   duration: its heals fail (Chaplains, High Confessors,
+##                   Seraphine's attendant regeneration; CombatResolver).
+## Ossuary Engine keys (special_set; CatapultBehavior, HordeHazards):
+##   volley        — boulders per volley (one on the target, the others
+##                   volley_spread px to its sides),
+##   volley_spread — px between the boulders' landing points,
+##   shard_life    — s the burning bone shards stay on the ground,
+##   shard_radius  — px radius of a shard field,
+##   shard_tick    — s between shard damage ticks,
+##   shard_fraction — damage per tick to every foe in the field, as a fraction
+##                   of the boulder's damage (source "ossuary_shards").
 const EVOLUTIONS := {
 	"death_knight": {
 		"mode": "transform",
@@ -418,6 +454,95 @@ const EVOLUTIONS := {
 			"shrapnel_damage_mult": 2.0,  # TUNING (not in GDD) x its stomp damage
 			"shrapnel_knockback": 220.0,  # TUNING (not in GDD) px/s
 			"shrapnel_shake": 4.0,  # TUNING (not in GDD) px
+		},
+	},
+	# Hellhounds (owner-approved): Bone Hounds Lv 5 + Blood Scent Lv 5.
+	# Burning bites, a short fire trail, and a pack that splits to hunt two
+	# targets (BoneHoundBehavior; patches in HordeHazards).
+	"hellhound": {
+		"mode": "transform",
+		"bases": ["bone_hound"],
+		"passive": "blood_scent",
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: every evolution needs its passive maxed
+		"display_name": "Hellhound",  # TUNING (not in GDD) owner-approved name
+		"plural": "Hellhounds",
+		"icon": "hellhound",
+		"description": "Your Bone Hounds burst into hellfire: burning bites, a trail of flame behind every running hound, and the pack splits to run down two prey at once.",
+		"mult": {
+			"max_hp": 1.3,  # TUNING (not in GDD)
+			"damage": 1.2,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 9.0,  # TUNING (not in GDD) bone hounds are 8
+		},
+		"special_set": {
+			"burn_fraction": 0.6,  # TUNING (not in GDD) a burn deals 60% of the bite again over its duration
+			"burn_ticks": 6,  # TUNING (not in GDD)
+			"burn_tick": 0.5,  # TUNING (not in GDD) s (6 ticks = 3 s)
+			"trail_interval": 0.3,  # TUNING (not in GDD) s
+			"trail_spacing": 26.0,  # TUNING (not in GDD) px (patches barely overlap)
+			"trail_life": 1.6,  # TUNING (not in GDD) s (owner brief: a SHORT fire trail)
+			"trail_radius": 14.0,  # TUNING (not in GDD) px
+			"trail_tick": 0.5,  # TUNING (not in GDD) s
+			"trail_fraction": 0.3,  # TUNING (not in GDD) of the bite damage per tick
+			"pack_split": 2,  # TUNING (not in GDD) owner brief: the pack hunts two targets
+		},
+	},
+	# Keening Lady (owner-approved): Banshee Lv 5 + Mournsong Lv 5. The Dirge
+	# repeats in three expanding waves and silences priests' heals.
+	"keening_lady": {
+		"mode": "transform",
+		"bases": ["banshee"],
+		"passive": "mournsong",
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: every evolution needs its passive maxed
+		"display_name": "Keening Lady",  # TUNING (not in GDD) owner-approved name
+		"plural": "Keening Ladies",
+		"icon": "keening_lady",
+		"description": "Your Banshees rise as Keening Ladies: every Dirge rolls out in three widening waves, and the Covenant's priests it reaches cannot heal until it fades.",
+		"mult": {
+			"max_hp": 1.3,  # TUNING (not in GDD)
+			"damage": 1.25,  # TUNING (not in GDD) shriek bolt
+		},
+		"set": {
+			"radius": 11.0,  # TUNING (not in GDD) banshees are 10
+		},
+		"special_set": {
+			"waves": 3,  # TUNING (not in GDD) owner brief: three expanding waves
+			"wave_interval": 0.35,  # TUNING (not in GDD) s
+			"wave_growth": 0.3,  # TUNING (not in GDD) radius x1, x1.3, x1.6
+			"silence": 1,  # TUNING (not in GDD) owner brief: silences priests' heals
+		},
+	},
+	# Ossuary Engine (owner-approved): Corpse Catapult Lv 5 + Siegecraft Lv 5.
+	# Three boulders per volley, each leaving burning bone shards.
+	"ossuary_engine": {
+		"mode": "transform",
+		"bases": ["corpse_catapult"],
+		"passive": "siegecraft",
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: every evolution needs its passive maxed
+		"display_name": "Ossuary Engine",  # TUNING (not in GDD) owner-approved name
+		"plural": "Ossuary Engines",
+		"icon": "ossuary_engine",
+		"description": "Your Catapults are rebuilt as Ossuary Engines: three boulders per volley, and each one leaves a field of burning bone shards behind.",
+		# First forced tests (seed 1, --policy=summon): at x1.0 damage and 0.15 shards the
+		# catapults dealt 38% of all army damage in a mixed run (the Cathedral Horrors 20%)
+		# and 58-88% in runs with only the three newest classes; at x0.85 / 0.12 still 66%
+		# in a mixed Sanctum run (the Abominations 25%).
+		"mult": {
+			"max_hp": 1.35,  # TUNING (not in GDD)
+			"damage": 0.75,  # TUNING (not in GDD) each boulder; three per volley (was 1.0, then 0.85)
+			"attack_interval": 1.2,  # TUNING (not in GDD) heavier volleys come a little slower
+		},
+		"set": {
+			"radius": 15.0,  # TUNING (not in GDD) catapults are 13
+		},
+		"special_set": {
+			"volley": 3,  # TUNING (not in GDD) owner brief: three boulders per volley
+			"volley_spread": 52.0,  # TUNING (not in GDD) px between landing points
+			"shard_life": 3.0,  # TUNING (not in GDD) s (owner brief: a few seconds)
+			"shard_radius": 30.0,  # TUNING (not in GDD) px
+			"shard_tick": 0.5,  # TUNING (not in GDD) s
+			"shard_fraction": 0.1,  # TUNING (not in GDD) of the boulder damage per tick (was 0.15, then 0.12)
 		},
 	},
 }
