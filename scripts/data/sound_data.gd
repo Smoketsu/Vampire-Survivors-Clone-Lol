@@ -243,6 +243,13 @@ const SOUNDS: Dictionary = {  # TUNING (not in GDD)
 		"layers": [
 			{"wave": "tri", "f0": 660.0, "dur": 0.08, "amp": 0.3, "decay": 0.03},
 			{"wave": "tri", "f0": 880.0, "start": 0.05, "dur": 0.1, "amp": 0.3, "decay": 0.04}]},
+	# --- Army stance command (ArmyStance change): a low horn over a drum thump --
+	"stance_command": {"dur": 0.45, "volume_db": -13.0, "max_voices": 1, "min_interval": 150, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.1, "amp": 0.45, "decay": 0.03, "lp0": 900.0, "lp1": 200.0},
+			{"wave": "sine", "f0": 90.0, "f1": 55.0, "dur": 0.2, "amp": 0.5, "decay": 0.07},
+			{"wave": "saw", "f0": 98.0, "f1": 110.0, "start": 0.06, "dur": 0.38, "amp": 0.3, "attack": 0.04, "decay": 0.18, "lp0": 500.0, "lp1": 1300.0},
+			{"wave": "saw", "f0": 146.83, "f1": 164.81, "start": 0.06, "dur": 0.38, "amp": 0.18, "attack": 0.04, "decay": 0.18, "lp0": 600.0, "lp1": 1500.0}]},
 	# --- Power-up pickups (PowerupData, played by Juice.powerup_collected) ------
 	"pu_magnet": {"dur": 0.6, "volume_db": -11.0, "max_voices": 1, "min_interval": 200, "pitch_var": 0.0, "priority": 3,
 		"layers": [

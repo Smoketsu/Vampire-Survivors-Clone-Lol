@@ -3,7 +3,8 @@
 ## opens the RecipesPanel view of the discovered evolution recipes (owner
 ## decision "Evolution recipe book", GDD §15.0). It also owns the "pause" input
 ## handling because it keeps processing while the tree is paused. While the
-## menu is open, ui_cancel (Esc / controller B) also resumes.
+## menu is open, ui_cancel (Esc / controller B) also resumes. Under the
+## hints, one line per army stance (key and description, StanceData).
 class_name PauseMenu
 extends Control
 
@@ -22,6 +23,8 @@ var _resume: Button
 var _recipes_btn: Button
 ## Open Recipes view (null when closed; freed when the menu closes).
 var _recipes: RecipesPanel = null
+## Army stance help lines (rebuilt on open, so rebound keys show).
+var _stance_label: Label
 
 
 func _ready() -> void:
@@ -49,6 +52,22 @@ func _ready() -> void:
 	var hints := UiTheme.label("Move: WASD / Arrows / Left stick\nT / Y: Shadow Bolt aim (Nearest / Strongest)\nEsc / B: Resume    F3: Debug", 13, UiTheme.TEXT_DIM)
 	hints.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(hints)
+	_stance_label = UiTheme.label("", 12, UiTheme.TEXT_DIM)
+	_stance_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_stance_label.custom_minimum_size = Vector2(560, 0)
+	vb.add_child(_stance_label)
+
+
+## Army stance help: a title line, then one line per stance with its bound
+## key and description (StanceData; a locked stance says so).
+func _stance_help() -> String:
+	var lines := PackedStringArray(["Army stance (keys or right-stick flick):"])
+	for i in StanceData.ORDER.size():
+		var id: String = StanceData.ORDER[i]
+		var d := StanceData.def(id)
+		var lock := "" if game == null or game.stance.is_unlocked(id) else " [locked: Ossuary]"
+		lines.append("%s  %s%s: %s" % [Settings.key_name(StanceData.ACTIONS[i]), d["display_name"], lock, d["description"]])
+	return "\n".join(lines)
 
 
 ## Adds a full-width button to `parent`.
@@ -71,6 +90,7 @@ func _open_recipes() -> void:
 ## Shows the menu and focuses Resume.
 func open() -> void:
 	visible = true
+	_stance_label.text = _stance_help()
 	_resume.grab_focus.call_deferred()
 
 

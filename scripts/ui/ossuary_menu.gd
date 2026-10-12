@@ -31,6 +31,14 @@ const COLUMN_GAP: int = 14
 const ROW_GAP: int = 5
 ## Size (px) of the icon on an upgrade button (includes the pip row).
 const ICON_SIZE := Vector2(44, 52)
+## Button height (px) and row gap (px) used instead of BUTTON_SIZE.y /
+## ROW_GAP when a tree holds more than COMPACT_ROWS upgrades (Necromancy
+## with the Spearhead stance unlock), so the screen still fits 720 px.
+const COMPACT_BUTTON_HEIGHT: float = 62.0
+## Row gap (px) of the compact layout.
+const COMPACT_ROW_GAP: int = 3
+## Upgrades per tree above which the compact layout is used.
+const COMPACT_ROWS: int = 5
 ## Roman numerals for tier names in prerequisite text.
 const ROMAN := ["0", "I", "II", "III", "IV", "V", "VI"]
 
@@ -155,7 +163,7 @@ func _build_header() -> Control:
 func _build_column(tree_id: String) -> Control:
 	var def: Dictionary = MetaData.TREES[tree_id]
 	var vb := VBoxContainer.new()
-	vb.add_theme_constant_override("separation", ROW_GAP)
+	vb.add_theme_constant_override("separation", COMPACT_ROW_GAP if _compact() else ROW_GAP)
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 8)
 	head.add_child(IconGlyph.new(String(def["icon"]), Vector2(36, 36)))
@@ -174,10 +182,18 @@ func _build_column(tree_id: String) -> Control:
 	return vb
 
 
+## True when the tallest tree has more than COMPACT_ROWS upgrades.
+static func _compact() -> bool:
+	for tree_id: String in MetaData.TREE_ORDER:
+		if MetaData.upgrades_in(tree_id).size() > COMPACT_ROWS:
+			return true
+	return false
+
+
 ## Builds the button of upgrade `id` (contents are filled by _refresh()).
 func _upgrade_button(id: String) -> Button:
 	var b := Button.new()
-	b.custom_minimum_size = BUTTON_SIZE
+	b.custom_minimum_size = Vector2(BUTTON_SIZE.x, COMPACT_BUTTON_HEIGHT) if _compact() else BUTTON_SIZE
 	b.focus_mode = Control.FOCUS_ALL
 	b.pressed.connect(_on_upgrade_pressed.bind(id))
 	b.focus_entered.connect(_show_detail.bind(id))
@@ -378,6 +394,8 @@ static func format_stat(v: float, fmt: String) -> String:
 			return "+%d%%" % int(roundf(v * 100.0))
 		"neg_pct":
 			return "-%d%%" % int(roundf(v * 100.0))
+		"unlock":
+			return "unlocked" if v >= 1.0 else "locked"
 	return "+%d" % int(roundf(v))
 
 

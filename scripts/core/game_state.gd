@@ -62,6 +62,11 @@
 ##                         ids): endless_crusade, hardened_faith, divine_fury,
 ##                         purge_the_unholy, scarcity, frail_master,
 ##                         vengeful_dead, holy_retribution; "all" = every one.
+##   --stance=ID           Autotest army stance for the whole run (StanceData
+##                         ids: escort, onslaught, spearhead, bone_ring);
+##                         forcing ignores the Spearhead unlock. Without it,
+##                         army / summon / evolve switch stances (StanceBot)
+##                         and naive / pact keep Escort.
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 
@@ -99,6 +104,9 @@ var autotest_stage: String = StageRegistry.DEFAULT_ID
 var autotest_difficulty: String = DifficultyData.DEFAULT_ID
 ## Autotest: RunModifierData ids of the run modifiers (--modifiers=a,b).
 var autotest_modifiers: PackedStringArray = PackedStringArray()
+## Autotest: StanceData id forced for the whole run by --stance= ("" = the
+## stance bot's rule, StanceBot).
+var autotest_stance: String = ""
 ## Stage chosen last in the stage select this session (focused next time).
 var last_stage_id: String = StageRegistry.DEFAULT_ID
 ## Whether the F3 debug overlay is shown; persists across restarts.
@@ -174,6 +182,12 @@ func _parse_args(args: PackedStringArray) -> void:
 					push_error("Unknown --modifiers id '%s' (expected %s or all)" % [id, ", ".join(PackedStringArray(RunModifierData.ORDER))])
 		elif arg.begins_with("--oath="):
 			autotest_oath = clampi(arg.get_slice("=", 1).to_int(), 0, MetaData.max_tier(PactData.OATH_ID))
+		elif arg.begins_with("--stance="):
+			var sid := arg.get_slice("=", 1).to_lower()  # Requested stance id.
+			if StanceData.STANCES.has(sid):
+				autotest_stance = sid
+			else:
+				push_error("Unknown --stance=%s (expected one of %s)" % [sid, ", ".join(PackedStringArray(StanceData.ORDER))])
 		elif arg.begins_with("--classes="):
 			for cls: String in arg.get_slice("=", 1).split(",", false):
 				# Evolution-only classes (the Profane Bishop) cannot be forced.

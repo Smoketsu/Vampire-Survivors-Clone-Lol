@@ -60,6 +60,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Shadow Bolt aim: Nearest / Strongest | **T** | **Y** |
 | Grave Step (dash) | **Shift** | **RB** |
 | Dread Rally (ultimate, when its soul meter is full) | **Space** | **LB** |
+| Army stance: Escort / Onslaught / Spearhead / Bone Ring | **1 / 2 / 3 / 4** (rebindable) | **Right-stick flick** up / right / down / left |
 | Pause (Resume / Recipes / Settings / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move through the list, Esc / Back closes | Focus + **A**; D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
@@ -119,8 +120,8 @@ buttons you press in a fight are the dash and the ultimate (below).
   Gameplay code only calls it in a few one-line hooks.
 - **Settings (`Settings` autoload, `SettingsMenu`).** Volume sliders, screen
   shake, damage numbers, fullscreen, and keyboard rebinding of the primary key
-  for Move up / down / left / right, Shadow Bolt aim, Grave Step, Dread Rally
-  and Pause. Arrow keys and
+  for Move up / down / left / right, Shadow Bolt aim, Grave Step, Dread Rally,
+  Pause and the four army stances. Arrow keys and
   controller bindings stay fixed, and binding a key that is already in use
   swaps the two keys. Everything works with a controller. Settings are saved
   to `user://settings.cfg` when the menu closes and loaded at startup.
@@ -157,6 +158,40 @@ buttons you press in a fight are the dash and the ultimate (below).
   - Dying **after 0:00** shows **VICTORY – Run Complete**, with how long you
     lasted past zero.
   - Dying **before 0:00** shows **DEFEAT**.
+
+### Army stances
+
+You don't control units one by one, but you choose how the whole army fights.
+A stance only changes numbers the horde AI already uses (where each unit's
+formation post is, how far units chase, how hard they pull back to their
+post); every unit keeps its own AI. The hard recall (650 px, the teleport
+back) never changes.
+
+| Key | Stance | Shape | Chase distance |
+|---|---|---|---|
+| **1** | **Escort** (default) | The usual formation: blockers on an arc facing the threat, the rest in their bands around you | 220 px |
+| **2** | **Onslaught** | Loose: fighters surge at the nearest enemy groups, priests trail between you and the fight. Exposes you | 440 px (formation pull cut to a third) |
+| **3** | **Spearhead** | A wedge pointed where you move (or last moved): blockers at the tip, Rogues on the flanks, ranged and priests close around you. The rear is open | 150 px |
+| **4** | **Bone Ring** | A closed circle 60-90 px out with the blockers spaced evenly, ranged and priests inside. Safest, fewest kills | 110 px |
+
+- **Escort, Onslaught and Bone Ring** are available from the first run.
+  **Spearhead** is bought in the Ossuary (*Spearhead Doctrine*, Necromancy,
+  200 Soul Ash). Before that, its key only shows "Locked: unlock Spearhead in
+  the Ossuary" (once per run).
+- Keys **1-4** (rebindable in Settings) or a **right-stick flick** (up /
+  right / down / left; release the stick before the next flick). After a
+  change, the next one is possible after **1.5 s** of game time. Stance keys
+  do nothing while a menu or the level-up panel is open.
+- The **stance bar** beside the army list shows the four stances with their
+  keys: the active one lit (a thin bar shows the switch lockout), the others
+  dimmed, a locked one dark with a padlock. A change shows a one-word banner
+  under the necromancer, plays a command horn and draws a faint outline of the
+  new shape on the ground for 1 s. The pause menu lists what each stance does.
+- The stance resets to **Escort** at the start of every run (and on Restart).
+- No stance gives a stat bonus yet. Flavour bonuses (Onslaught +10% army
+  attack speed, Spearhead +30% push on the tip, Bone Ring -10% army damage
+  taken) exist in `scripts/data/stance_data.gd` but are switched off
+  (`BONUSES_ENABLED`).
 
 ### Summon classes
 
@@ -536,9 +571,9 @@ open). The zone is shown under the timer.
   A strong run earns about **450** at no upgrades (about 550-610 with mid / max
   upgrades, Ash Harvest included): two or three mid-tier upgrades. A death at
   9-11 min still keeps about 100-150. The Reckoning pays only about 8% of a
-  good run. Buying everything costs **9,635** (8,965 before the two Grave
-  Step upgrades), about 18-21 good runs (16–27 including weaker runs and Ash
-  Harvest), plus 375 for the optional Profane Oath (10,010 in all). The Profane Pact and Oath rewards add their own bonus
+  good run. Buying everything costs **9,835** (8,965 before the two Grave
+  Step upgrades and the Spearhead stance unlock), about 22 good runs (17–28 including weaker runs and Ash
+  Harvest), plus 375 for the optional Profane Oath (10,210 in all). The Profane Pact and Oath rewards add their own bonus
   lines on top (below).
 - **The Ossuary** (main menu) holds the four GDD §9.2 trees. Each upgrade
   raises one stat per tier, costs rise per tier, and some need a prerequisite
@@ -546,7 +581,7 @@ open). The zone is shown under the timer.
 
   | Tree | Upgrades (per tier, tiers, cost of tier 1 → last) |
   |---|---|
-  | Necromancy | Necrotic Marrow minion HP +6% (5, 40→230) · Sharpened Bones minion damage +5% (5, 40→230) · Grave Call replacement time −6% (3, 60→200) · Risen Vanguard +1 Warrior capacity (2, 130→280; needs Marrow II) · Legion of Bone +1 capacity for every class (1, 500; needs Vanguard II) |
+  | Necromancy | Necrotic Marrow minion HP +6% (5, 40→230) · Sharpened Bones minion damage +5% (5, 40→230) · Grave Call replacement time −6% (3, 60→200) · Risen Vanguard +1 Warrior capacity (2, 130→280; needs Marrow II) · Legion of Bone +1 capacity for every class (1, 500; needs Vanguard II) · Spearhead Doctrine unlocks the Spearhead army stance (1, 200) |
   | Shadowcraft | Umbral Potency spell damage +5% (5, 40→230) · Quickened Rites spell cooldowns −3% (4, 60→250) · Widening Dark Shadow Blast / pulse radius +6% (3, 70→230; needs Potency I) · Shadow Mastery spell damage +10% (1, 450; needs Rites III) · Restless Shade Grave Step cooldown −10% (3, 60→190; 5 s → 3.5 s) |
   | Survival | Grave-Hardened Flesh max HP +10 (5, 40→230) · Bone Mail damage taken −3% (4, 60→250) · Fleet Shade move speed +4% (3, 50→175) · Undying Will one revival per run at 50% HP with a knock-back burst (1, 550; needs Bone Mail II) · Twin Shadow +1 Grave Step charge (1, 300; needs Fleet Shade I) |
   | Fortune | Soul Magnet pickup radius +10% (4, 30→155) · Grave Tithe XP gain +4% (3, 60→200) · Ash Harvest Soul Ash +5% (3, 80→270) · Fate's Thread +1 reroll (2, 120→250) · Banishing Rite +1 banish (2, 150→310; needs Thread I) |
@@ -707,7 +742,7 @@ departure puff (`grave_step_trail`) are wired so far.
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
 | Stages (§8, §9.3, §10.2) | A stage registry with two stages, a stage select (locks, best time, boss kills) and the GDD §9.3 unlock (slay Sir Alaric once to open the Crimson March). See *Stages* above. |
 | Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
-| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades, prerequisites, respec) plus the opt-in Profane Oath, 3 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
+| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades plus the Spearhead stance unlock, prerequisites, respec) plus the opt-in Profane Oath, 3 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
@@ -779,6 +814,7 @@ scripts/
     evolution_recipes.gd    Read-only list of every evolution recipe (spell + summon data), for the
                             Recipes view, the Meta [recipes] section and the autotest
     autotest.gd             Headless self-test driver
+    stance_bot.gd           The autotest's army-stance driver (--stance, or its switching rule)
   player/necromancer.gd
   player/grave_step.gd      Grave Step dash: charges, obstacle-clamped step, i-frames, shadow trail
   player/dread_rally.gd     Dread Rally ultimate: kill-charged soul meter, surge, heal, army buff, knockback
@@ -794,6 +830,10 @@ scripts/
     winter_revenant.gd      Winter Revenant kit: shatter (kill hook) and death nova (summon_died)
     minion_passives.gd      Card lines and the autotest line of the later horde passives
                             (their effects live in CombatResolver / compute_stats)
+    army_stance.gd          The run's army stance (game.stance): lockout, keys / right-stick
+                            flicks, Ossuary unlock, the numbers the director reads, summary stats
+    stance_formations.gd    Formation posts of Onslaught, Spearhead and Bone Ring (Escort is the
+                            director's own layout)
     behaviors/              Class special actions plugged into that AI (one SummonBehavior per unit):
       summon_behavior.gd      Base class: think / physics / attack / score / draw hooks, recall-safe
       summon_behaviors.gd     Registry (behavior id -> class) and the level-up card lines
@@ -833,6 +873,7 @@ scripts/
   audio/synth.gd            Procedural sound and music synthesis (no audio files)
   fx/juice.gd               Autoload: screen shake, hit-stop, hooks for particles and damage numbers
   fx/fx_layer.gd            One node that draws all particles and damage numbers from fixed buffers
+  fx/stance_outline.gd      Faint ground outline of the army's shape after a stance change
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
                             progression_glyphs (evolution/synergy icons), summon_glyphs
@@ -849,7 +890,8 @@ scripts/
                             run modifiers, total Soul Ash multiplier), recipes_panel (pause menu
                             Recipes view: discovered evolution recipes, locked "?" placeholders),
                             hud_abilities (Grave Step charges and Dread Rally meter), ability_glyphs
-                            (their icons)
+                            (their icons), stance_bar (HUD stance icons + banner),
+                            stance_glyphs (stance icons, padlock, ground outline shapes)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
     stages/graveyard_stage.gd      Stage 1: segments, events, Reckoning flavour, graves, desecration,
@@ -879,13 +921,15 @@ scripts/
     pact_data.gd            Profane Pact levels and Profane Oath per-tier values
     difficulty_data.gd      GDD §8.4 difficulty levels (Initiate, Necromancer, Lich, Deathlord)
     run_modifier_data.gd    GDD §8.5 run modifiers: effects and Soul Ash rewards
+    stance_data.gd          Army stances: leash / recall / pull overrides, shapes, lockout,
+                            switched-off flavour bonuses, the autotest stance bot's thresholds
     palette.gd              Colour language
 ```
 
 **Simulation order.** Each physics tick (60 Hz), `Game` runs these steps in order:
 
 1. Rebuild the enemy and ally spatial hashes.
-2. Player.
+2. Player, then the army stance's bookkeeping (move direction, per-stance stats).
 3. Spells.
 4. Horde: replenishment, formation (4 Hz), threat (5 Hz), then each unit's
    `think()` on its stagger slot and `physics_step()` every tick.
@@ -952,6 +996,7 @@ Options (after `--`):
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | `--stage=ID` | Stage to play: `graveyard` (default) or `crimson_march`. Stage locks are ignored. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
+| `--stance=ID` | Army stance for the whole run: `escort`, `onslaught`, `spearhead` or `bone_ring` (forcing ignores the Spearhead unlock). Without it, `army`, `summon` and `evolve` switch stances by a simple rule (Bone Ring when the necromancer is in danger or the boss is within 260 px; Onslaught when at most 6 enemies are within 220 px and a Crimson March structure is within 420 px or at most 10 enemies are within 480 px; Spearhead, when owned, toward a chest or power-up within 300 px; else Escort; `StanceBot`), while `naive` and `pact` keep Escort so their baselines do not move. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
@@ -1033,7 +1078,11 @@ hits and damage, death novas, nova hits, nova freezes and nova damage
 (`wr_*` stats, `dmg_winter_revenant_shatter` / `_nova`). The stuck check also counts a
 special still running after 4 s (a dashing or airborne unit) and any dash or
 landing that ends inside an obstacle; specials cancelled by a recall are
-reported too.
+reported too. The **army stance** line says how the stance was driven
+(forced, bot switching or the Escort baseline) and lists, per stance, the
+seconds held, times entered, kills, army damage taken, hard recalls and the
+unit spread (largest and mean distance from the necromancer), plus the
+number of switches.
 
 Every policy also uses the **dash and the ultimate**: Grave Step when 3+
 enemies touch a 45 px circle around the necromancer, when he was hit in the

@@ -30,6 +30,9 @@
 ## stepped by the player) and `dread_rally` (DreadRally, Space / LB ultimate
 ## with a kill-charged soul meter, stepped right after the player); both are
 ## requested from _unhandled_input(), so they only fire while PLAYING.
+## Army stances (StanceData): `stance` (ArmyStance) holds the army's stance
+## for this run (Escort at the start, so Restart resets it); the stance keys
+## and right-stick flicks reach it from _unhandled_input() while playing.
 class_name Game
 extends Node2D
 
@@ -124,6 +127,10 @@ var meta: MetaModifiers
 var grave_step: GraveStep
 ## The necromancer's ultimate (Dread Rally: soul meter, army buff).
 var dread_rally: DreadRally
+## The army's stance this run (ArmyStance; never null once _ready ran).
+var stance: ArmyStance
+## Faint ground outline of the army's shape after a stance change.
+var stance_outline: StanceOutline
 
 # --- UI ---------------------------------------------------------------------------
 
@@ -156,6 +163,7 @@ func _ready() -> void:
 	combat = CombatResolver.new(self)
 	difficulty = DifficultyModifiers.new(self)
 	dread_rally = DreadRally.new(self)
+	stance = ArmyStance.new(self)
 
 	# World layers, back to front (tree order + z_index).
 	ground = MarchGround.new() if String(stage_def["ground"]) == "march" else Ground.new()
@@ -174,6 +182,9 @@ func _ready() -> void:
 	add_child(chests)
 	effects = EffectManager.new()
 	add_child(effects)
+	stance_outline = StanceOutline.new()
+	stance_outline.game = self
+	add_child(stance_outline)
 	horde = HordeDirector.new()
 	horde.game = self
 	# Depth sorting: summons lower on screen draw in front, so a packed army reads
@@ -278,6 +289,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("ultimate") and run_state == RunState.PLAYING:
 		dread_rally.request()
 		get_viewport().set_input_as_handled()
+	elif run_state == RunState.PLAYING and stance.handle_input(event):
+		get_viewport().set_input_as_handled()
 
 
 func _physics_process(delta: float) -> void:
@@ -288,6 +301,7 @@ func _physics_process(delta: float) -> void:
 	_rebuild_grids()
 	player.step(delta)
 	dread_rally.step(delta)
+	stance.step(delta)
 	abilities.step(delta)
 	horde.step(delta)
 	enemies.step(delta)

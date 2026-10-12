@@ -64,6 +64,10 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
   run has reached 8:00 elapsed. Summon evolutions (Death Knight, Lich, Profane Bishop) use the same
   delivery and gate with their own recipes (`summon_evolution_data.gd`).
 - **Shadow Bolt** has a Nearest/Strongest aim toggle (T / pad Y).
+- **Army stances** (keys 1-4 / right-stick flicks, 1.5 s lockout): Escort (default, exactly the
+  original formation and leash), Onslaught, Spearhead (Ossuary unlock) and Bone Ring only override
+  numbers the horde AI already uses (`stance_data.gd`, read by the horde director); the hard recall
+  never changes, the flavour bonuses stay off, and the stance resets to Escort every run.
 - **Spells:** Shadow Bolt, Orb Shield, Shadow Blast, plus Bone Spear, Soul Siphon, Corpse Explosion
   and Plague Cloud (`scripts/abilities/spells/`, one dispatch through `NecroSpellBook`). 11 actives
   (7 spells, 8 offerable summon classes) compete for 6 active slots.
@@ -93,6 +97,7 @@ Autotest options (full table in the README):
 - `--stage=graveyard|crimson_march` (default graveyard; stage locks are ignored)
 - `--difficulty=initiate|necromancer|lich|deathlord` (GDD §8.4; default necromancer = today's game)
 - `--modifiers=a,b` (GDD §8.5 run modifiers, e.g. `hardened_faith,scarcity`, or `all`)
+- `--stance=escort|onslaught|spearhead|bone_ring` (force an army stance for the whole run)
 - `--pact`
 - `--meta=none|mid|max`
 - `--oath=0-5`
@@ -202,6 +207,11 @@ tiny tweaks.
   `scripts/player/dread_rally.gd`: a kill-charged soul meter; surge, 30% heal, +40% damage and
   attack speed for 8 s through `compute_stats`, knockback); numbers in `player_ability_data.gd`,
   HUD in `hud_abilities.gd`, rebindable, used by every autotest bot.
+- **army stances** (Escort, Onslaught, Spearhead, Bone Ring; `stance_data.gd`, `army_stance.gd`,
+  `stance_formations.gd`): keys 1-4 / right-stick flicks, a HUD stance bar, banner, command sound
+  and ground outline, a pause-menu line per stance, Spearhead bought in the Ossuary (Spearhead
+  Doctrine); the flavour bonuses exist but are off until the final balance pass; `--stance=`, and
+  the army / summon / evolve bots switch by a simple rule (`stance_bot.gd`; naive / pact keep Escort).
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.
