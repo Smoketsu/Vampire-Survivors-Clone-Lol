@@ -945,6 +945,8 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 			deltas.append(game.horde.evolutions.passive_effect_line(id, lvl, nxt))
 		"bone_plating", "unholy_precision", "unholy_resilience", "bound_souls":
 			deltas.append(MinionPassives.card_line(game, id, nxt))  # The later horde passives.
+		"blood_scent", "mournsong", "siegecraft":
+			deltas.append(ClassPassives.card_line(game, id, nxt))  # The newest classes' passives.
 		_:
 			spells.passive_example(id, nxt, deltas)  # The newer spells' passives.
 	var hint := ""

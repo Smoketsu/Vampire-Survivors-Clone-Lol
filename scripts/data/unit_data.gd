@@ -20,9 +20,12 @@ extends RefCounted
 ## GDD §15.0): the Grave Mender (heals) and the Crypt Warder (wards and
 ## barriers). "bishop" (the Profane Bishop) is never offered on a card: it
 ## only appears when the Mender and Warder merge (SummonEvolutionData).
-## The four later classes (Abomination, Rogue, Gargoyle, Frost Wraith) follow.
+## The four later classes (Abomination, Rogue, Gargoyle, Frost Wraith) follow,
+## then the three newest (owner-approved): Bone Hounds, Banshee, Corpse
+## Catapult.
 const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
-		"abomination", "rogue", "gargoyle", "frost_wraith"]
+		"abomination", "rogue", "gargoyle", "frost_wraith",
+		"bone_hound", "banshee", "corpse_catapult"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -85,7 +88,9 @@ const CORE_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
 ##   counts_as               — class ids this class stands in for when synergies
 ##                             and achievements check requirements.
 ##   formation               — "front" joins the warriors' threat-facing arc,
-##                             "mid" (the default) the midline ring. The
+##                             "mid" (the default) the midline ring, "back"
+##                             an arc of its own BEHIND the necromancer
+##                             (opposite the threat; the Corpse Catapult). The
 ##                             support classes (Mender, Warder, Bishop) always
 ##                             take the support ring (HordeDirector
 ##                             _calculate_formation_anchors()).
@@ -103,7 +108,8 @@ const CORE_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
 ##                             Priest role split in two, so each has 0.5: the
 ##                             two orders together come up as often as one role.
 ##   behavior                — SummonBehavior id ("stomp" | "dash" | "swoop" |
-##                             "frost"); absent = no special action.
+##                             "frost" | "pack" | "dirge" | "barrage");
+##                             absent = no special action.
 ##   special                 — the behaviour's numbers. HordeDirector scales
 ##                             them by suffix (see _special_stats()):
 ##                               *_damage   x minion damage bonuses x (1 +
@@ -495,6 +501,148 @@ const UNITS := {
 			"unchilled_bonus": 0.4,  # TUNING (not in GDD) target-score bonus for an enemy not chilled yet (spreads the slow)
 		},
 	},
+	# --- The three newest classes (owner-approved). Every number is TUNING
+	# (not in GDD). Bone Hounds: cheap, fast pack beasts that share a target
+	# and bite harder together (BoneHoundBehavior, Pack Hunt). Melee; like
+	# every summon they never kite.
+	"bone_hound": {
+		"display_name": "Bone Hound",  # TUNING (not in GDD) owner-approved class
+		"plural": "Bone Hounds",
+		# First forced tests (seed 1): at 26 HP and 5.5 damage every 0.8 s the pack died 238
+		# times in a run and dealt 7% of the army's damage, and in the Sanctum the Sentinels'
+		# flat armour 6 ate most of each bite. Heavier, slower bites (same damage per second).
+		"max_hp": 40.0,  # TUNING (not in GDD) cheap and fragile; was 26
+		"damage": 7.5,  # TUNING (not in GDD) bite (melee); was 5.5
+		"attack_interval": 1.0,  # TUNING (not in GDD) s; was 0.8
+		"attack_range": 14.0,  # TUNING (not in GDD) edge-to-edge (px)
+		"move_speed": 122.0,  # TUNING (not in GDD) the fastest summon (px/s; rogues 112)
+		"radius": 8.0,  # TUNING (not in GDD) small body (px)
+		"acquisition_range": 230.0,  # TUNING (not in GDD) looks far for prey at the edge of the crowd (px)
+		"replenish_interval": 6.0,  # TUNING (not in GDD) s; cheap to replace
+		"band_min": 55.0,  # TUNING (not in GDD) between the frontline and the midline (px)
+		"band_max": 115.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.35,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a hunting pack never shies away
+		"attack_profile": "melee",
+		"target_profile": "pack",
+		"windup": 0.1,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.3,  # TUNING (not in GDD) healers value the cheap hounds least
+		"formation": "mid",
+		"capacity_bonus_mult": 0.6,  # TUNING (not in GDD) Grave Dominion V: +3 (the pack is already the biggest class)
+		"behavior": "pack",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
+		"special": {
+			"pack_bonus": 0.15,  # TUNING (not in GDD) +15% bite damage per other hound biting the same foe
+			"pack_cap": 3,  # TUNING (not in GDD) at most 3 packmates count (+45%)
+			"pack_radius": 30.0,  # TUNING (not in GDD) px beyond the foe's edge a packmate counts as biting it
+			# Backline / edge pulls were 0.5 / 0.3 at first: the pack ran through the whole crowd
+			# to reach an archer and was swarmed (200+ deaths a run in the forced tests).
+			"backline_bonus": 0.35,  # TUNING (not in GDD) target-score bonus for archers / casters / priests / banner bearers
+			"edge_bonus": 0.1,  # TUNING (not in GDD) score bonus x (foe distance to the player / the engagement leash): the edge of the crowd
+			"focus_bonus": 0.45,  # TUNING (not in GDD) score bonus x (packmates already on this foe / pack_cap): the pack shares a target
+		},
+	},
+	# Banshee: a spectral support caster. It floats (drawn above a shadow; it
+	# passes through enemies like every summon) but, unlike a swooping Gargoyle,
+	# it is NOT airborne: enemies can target and hit it, so it keeps its
+	# distance (w_threat). Its Dirge (BansheeBehavior) is a telegraphed wail
+	# around its target that slows foes and cuts their damage
+	# (CombatResolver.weaken_enemy(), the one debuff path).
+	"banshee": {
+		"display_name": "Banshee",  # TUNING (not in GDD) owner-approved class
+		"plural": "Banshees",
+		"max_hp": 40.0,  # TUNING (not in GDD) was 36 (63-70 deaths a run in the first forced tests)
+		"damage": 7.0,  # TUNING (not in GDD) spectral shriek bolt
+		"attack_interval": 1.8,  # TUNING (not in GDD) s
+		"attack_range": 150.0,  # TUNING (not in GDD) centre-to-edge (px); also the Dirge's reach
+		"move_speed": 92.0,  # TUNING (not in GDD) px/s
+		"radius": 10.0,  # TUNING (not in GDD)
+		"acquisition_range": 240.0,  # TUNING (not in GDD)
+		"replenish_interval": 14.0,  # TUNING (not in GDD) s
+		"band_min": 90.0,  # TUNING (not in GDD) midline (px)
+		"band_max": 150.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.5,  # TUNING (not in GDD)
+		"w_formation": 0.6,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.9,  # TUNING (not in GDD) a frail caster keeps out of the crowd
+		"attack_profile": "dirge",
+		"target_profile": "dirge",
+		"windup": 0.25,  # TUNING (not in GDD) s
+		"projectile_speed": 300.0,  # TUNING (not in GDD) px/s
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "mid",
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "dirge",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
+		"special": {
+			"dirge_radius": 72.0,  # TUNING (not in GDD) px around the target
+			"dirge_cooldown": 6.0,  # TUNING (not in GDD) s between Dirges (owner brief: every ~6 s)
+			"dirge_windup": 0.6,  # TUNING (not in GDD) s the wail is telegraphed
+			"dirge_duration": 4.0,  # TUNING (not in GDD) s the slow and the damage cut last (owner brief)
+			"dirge_slow": 0.3,  # TUNING (not in GDD) fraction of speed removed (a slow, never a fear)
+			"dirge_cut": 0.25,  # TUNING (not in GDD) fraction of damage removed from the foe's hits
+			"dirge_boss_mult": 0.5,  # TUNING (not in GDD) share of the slow and cut on bosses / minibosses
+			"dirge_min_enemies": 3,  # TUNING (not in GDD) foes around the target to wail (an elite / boss, or a foe on an endangered player, alone also counts)
+			"unweakened_bonus": 0.4,  # TUNING (not in GDD) target-score bonus for a foe not weakened yet (spreads the Dirge)
+		},
+	},
+	# Corpse Catapult: slow siege artillery that stays behind the army
+	# (formation "back") and holds its ground while firing like the Archers.
+	# Its attack is Bone Barrage (CatapultBehavior): an arcing bone boulder
+	# with a landing telegraph that splashes splash_radius px; it targets
+	# structures, elites, minibosses and the densest packs first.
+	"corpse_catapult": {
+		"display_name": "Corpse Catapult",  # TUNING (not in GDD) owner-approved class
+		"plural": "Catapults",
+		"max_hp": 90.0,  # TUNING (not in GDD) a sturdy frame of bone and sinew
+		"damage": 22.0,  # TUNING (not in GDD) per enemy in the boulder's splash
+		"attack_interval": 3.6,  # TUNING (not in GDD) s between boulders
+		"attack_range": 235.0,  # TUNING (not in GDD) centre-to-edge (px), the longest reach
+		"move_speed": 60.0,  # TUNING (not in GDD) the slowest summon (px/s)
+		"radius": 13.0,  # TUNING (not in GDD)
+		# 300 at first: from its post ~170 px behind the necromancer it then saw structures only
+		# when he stood next to them (Crimson March test: 551 structure damage in a run).
+		"acquisition_range": 380.0,  # TUNING (not in GDD) px; was 300
+		"replenish_interval": 18.0,  # TUNING (not in GDD) s; slow to rebuild
+		"band_min": 110.0,  # TUNING (not in GDD) behind the necromancer (px)
+		"band_max": 150.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.3,  # TUNING (not in GDD)
+		"w_formation": 0.7,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.1,  # TUNING (not in GDD) holds its ground like the Archers
+		"attack_profile": "boulder",
+		"target_profile": "siege",
+		"windup": 0.5,  # TUNING (not in GDD) s winding the arm
+		"projectile_speed": 0.0,
+		"splash_radius": 50.0,  # TUNING (not in GDD) boulder splash radius (px)
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.7,  # TUNING (not in GDD)
+		"formation": "back",
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "barrage",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
+		"special": {
+			"boulder_speed": 300.0,  # TUNING (not in GDD) px/s along the ground: flight time = distance / this
+			"boulder_flight_min": 0.55,  # TUNING (not in GDD) s, shortest flight (the telegraph is always readable)
+			"boulder_flight_max": 1.1,  # TUNING (not in GDD) s, longest flight
+			"boulder_lead": 0.7,  # TUNING (not in GDD) share of the target's velocity x flight time the aim leads by
+			"boulder_arc": 48.0,  # TUNING (not in GDD) px peak height of the drawn arc
+			"boulder_knockback": 120.0,  # TUNING (not in GDD) px/s impulse, divided by enemy mass
+			"boulder_shake": 1.0,  # TUNING (not in GDD) screen-shake request (px, Juice)
+			"structure_bonus": 1.5,  # TUNING (not in GDD) target-score bonus for a structure (outposts, generators, crystals, altars, carts)
+			"elite_bonus": 0.7,  # TUNING (not in GDD) target-score bonus for an elite, a miniboss or the boss
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -601,6 +749,31 @@ const LEVELS := {
 		{"count": 2, "damage_bonus": 0.25, "special_area": 0.15, "special_duration": 0.25},
 		{"count": 3, "damage_bonus": 0.25, "special_area": 0.15, "special_duration": 0.25, "special_haste": 0.25},
 	],
+	# TUNING (not in GDD): 3 -> 9 hounds (owner brief: more capacity per level
+	# than any other class); harder, then faster bites.
+	"bone_hound": [
+		{"count": 3},
+		{"count": 4},
+		{"count": 5, "damage_bonus": 0.15},
+		{"count": 7, "damage_bonus": 0.15, "hp_bonus": 0.15},
+		{"count": 9, "damage_bonus": 0.25, "hp_bonus": 0.15, "speed_bonus": 0.15},
+	],
+	# TUNING (not in GDD): 1 -> 3 banshees; a wider, longer, then more frequent Dirge.
+	"banshee": [
+		{"count": 1},
+		{"count": 1, "special_area": 0.15},
+		{"count": 2, "special_area": 0.15},
+		{"count": 2, "special_area": 0.15, "special_duration": 0.25},
+		{"count": 3, "damage_bonus": 0.2, "special_area": 0.25, "special_duration": 0.25, "special_haste": 0.2},
+	],
+	# TUNING (not in GDD): 1 -> 3 catapults; heavier, then wider boulders.
+	"corpse_catapult": [
+		{"count": 1},
+		{"count": 1, "damage_bonus": 0.2},
+		{"count": 2, "damage_bonus": 0.2, "splash_bonus": 0.15},
+		{"count": 2, "damage_bonus": 0.35, "splash_bonus": 0.15, "hp_bonus": 0.2},
+		{"count": 3, "damage_bonus": 0.35, "splash_bonus": 0.3, "hp_bonus": 0.2, "speed_bonus": 0.15},
+	],
 }
 
 ## Ally-barrier targeting (Warder / Profane Bishop, SummonAbilities):
@@ -638,6 +811,15 @@ const TARGET_WEIGHTS := {
 	# Frost Wraiths: enemies closing on the player, unchilled ones first
 	# (FrostWraithBehavior bonus), never wasted on doomed targets.
 	"frost": {"distance": 0.5, "threat": 1.2, "role": 0.5, "tactical": 0.0, "cluster": 0.0, "overkill": 2.0},  # TUNING (not in GDD)
+	# Bone Hounds: backline prey at the edge of the crowd and the pack's
+	# shared target (BoneHoundBehavior backline / edge / focus bonuses).
+	"pack": {"distance": 0.6, "threat": 0.7, "role": 0.6, "tactical": 0.0, "cluster": 0.0, "overkill": 0.8},  # TUNING (not in GDD) role was 1.0, threat 0.4 (the pack ran too deep)
+	# Banshees: crowds closing on the player, unweakened ones first
+	# (BansheeBehavior bonus).
+	"dirge": {"distance": 0.5, "threat": 1.2, "role": 0.4, "tactical": 0.0, "cluster": 0.0, "overkill": 2.0},  # TUNING (not in GDD)
+	# Corpse Catapults: the densest pack (cluster value inside the boulder's
+	# splash), structures / elites / minibosses first (CatapultBehavior bonus).
+	"siege": {"distance": 0.2, "threat": 0.4, "role": 0.4, "tactical": 0.0, "cluster": 1.4, "overkill": 1.5},  # TUNING (not in GDD)
 }
 
 # --- Leash / lifecycle (GDD §24) ---------------------------------------------

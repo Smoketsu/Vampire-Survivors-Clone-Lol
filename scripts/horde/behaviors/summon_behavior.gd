@@ -17,6 +17,9 @@
 ##                       special is cancelled (on_cancel()) so leash and
 ##                       recall always win.
 ##   release_attack(u)   releases a class-specific attack_profile.
+##   melee_bonus(u,e)    damage multiplier of a "melee" strike on `e` (1 =
+##                       none; Bone Hound Pack Hunt).
+##   on_melee_hit(u,e,dealt)  after a "melee" strike landed (Hellhound burn).
 ##   score_bonus(u,e,dp) extra target score (GDD §27 class preferences).
 ##   draw_under(u) / body_lift(u)  telegraphs / shadow and the drawn height.
 ##   draw_over(u)        overlays drawn after the body (Cathedral Horror stone).
@@ -102,6 +105,16 @@ func on_cancel(_u: SummonedUnit) -> void:
 
 ## Releases a class-specific attack profile at the end of a normal windup.
 func release_attack(_u: SummonedUnit) -> void:
+	pass
+
+
+## Damage multiplier of the unit's next "melee" strike on `e` (1 = none).
+func melee_bonus(_u: SummonedUnit, _e: Enemy) -> float:
+	return 1.0
+
+
+## Called after a "melee" strike on `e` dealt `dealt` (e may have died).
+func on_melee_hit(_u: SummonedUnit, _e: Enemy, _dealt: float) -> void:
 	pass
 
 

@@ -244,6 +244,16 @@ var wither_until: float = 0.0
 ## Wither aura: fraction (0..1) of armour and flat armour removed while
 ## shredded (CombatResolver.damage_enemy()).
 var wither_shred: float = 0.0
+## Banshee Dirge: game time (s) until which this enemy is weakened (its hits
+## deal `weaken_cut` less, hit_mult()). Set by CombatResolver.weaken_enemy();
+## timed on Game.elapsed like the curse. 0 = never weakened / expired.
+var weaken_until: float = 0.0
+## Banshee Dirge: fraction (0..1) of damage removed from this enemy's hits
+## while weakened.
+var weaken_cut: float = 0.0
+## Keening Lady Dirge: game time (s) until which this enemy is silenced (its
+## heals fail, CombatResolver.heal_enemy()). 0 = never silenced.
+var silence_until: float = 0.0
 ## Seconds left of the brief slowdown after a ranged unit fires.
 var _shoot_slow_timer: float = 0.0
 ## True while a Stasis power-up holds this enemy (EnemyDirector skips its
@@ -383,6 +393,9 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	curse_amp = 0.0
 	wither_until = 0.0
 	wither_shred = 0.0
+	weaken_until = 0.0
+	weaken_cut = 0.0
+	silence_until = 0.0
 	_shoot_slow_timer = 0.0
 	frozen = false
 	freeze_timer = 0.0
@@ -603,9 +616,13 @@ func _pulse_aura() -> void:
 		game.stat_add("march_aura_buff_pulses", float(buffed))
 
 
-## Damage-dealt multiplier from an aura buff (1 when not buffed).
+## Damage-dealt multiplier from an aura buff (1 when not buffed), times the
+## Banshee Dirge's damage cut while weakened (CombatResolver.weaken_enemy()).
 func hit_mult() -> float:
-	return buff_damage if buff_time > 0.0 else 1.0
+	var m := buff_damage if buff_time > 0.0 else 1.0  # Aura buff.
+	if weaken_until > game.elapsed:
+		m *= 1.0 - weaken_cut  # Dirge: weakened hits.
+	return m
 
 
 ## Multiplier on incoming damage from `source`, asked by CombatResolver
@@ -858,6 +875,10 @@ func _tick_timers(delta: float) -> void:
 	if curse_until > 0.0 and curse_until <= game.elapsed:
 		curse_until = 0.0  # Gravebow curse expired: drop its tint.
 		queue_redraw()
+	if weaken_until > 0.0 and weaken_until <= game.elapsed:
+		weaken_until = 0.0  # Banshee Dirge expired: drop its mark.
+		weaken_cut = 0.0
+		queue_redraw()
 	if buff_time > 0.0:
 		buff_time -= delta
 		if buff_time <= 0.0:
@@ -951,7 +972,7 @@ func _try_heal() -> void:
 	if heal_target.position.distance_to(position) > reach:
 		return
 	heal_cd = heal_interval
-	if game.combat.heal_enemy(heal_target, heal_amount) > 0.0:
+	if game.combat.heal_enemy(heal_target, heal_amount, self) > 0.0:  # Fails while silenced (Keening Lady).
 		game.effects.beam(position, heal_target.position, Palette.GOLD)
 		game.stat_add(heal_stat, 1.0)
 
@@ -974,6 +995,8 @@ func _draw() -> void:
 		ProgressionGlyphs.draw_mage_mark(self, Vector2(0, -radius * 2.5), 4.0)
 	if curse_until > 0.0:
 		GravebowColossusGlyphs.draw_curse(self, Vector2.ZERO, radius)  # Gravebow curse tint.
+	if weaken_until > 0.0:
+		WarbandGlyphs.draw_dirge(self, Vector2.ZERO, radius, silence_until > game.elapsed)  # Banshee Dirge mark.
 	if hp < max_hp:
 		# The node is mirrored via scale.x; counter-flip so the bar always
 		# fills left-to-right.

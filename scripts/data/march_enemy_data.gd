@@ -30,14 +30,14 @@ const ORDER := ["shieldbearer", "banner_bearer", "halberdier"]
 ## Damage sources (CombatResolver `source` tags) that count as projectiles
 ## for a tower shield: Shadow Bolt, Void Barrage bolts and shards, Bone Spear
 ## and Ossuary Lance, skeletal arrows, mage and Lich blasts, Frost Wraith
-## frost bolts and the support classes' bolts (Mender, Warder, Bishop), and
-## Gravebow arrows.
+## frost bolts and the support classes' bolts (Mender, Warder, Bishop),
+## Gravebow arrows and Banshee / Keening Lady shriek bolts.
 ## Area spells (Shadow Blast, Corpse Explosion / Grave Eruption, Plague Cloud
 ## / Pestilence, Soul Siphon tethers and Soul Rapture bursts, Orb Shield) are
 ## not projectiles and go through a tower shield.
 const PROJECTILE_SOURCES := ["bolt", "void", "void_shard", "spear", "lance",
 	"archer", "mage", "lich", "frost_wraith", "mender", "warder", "bishop",
-	"gravebow"]
+	"gravebow", "banshee", "keening_lady"]
 ## Damage sources that reach AROUND a shield (melee at close range); used by
 ## Marshal Vael's Shieldwall, which blocks everything else from the front:
 ## Skeleton Warrior strikes and bashes (temporary, Lich-risen, Death Mark
@@ -46,12 +46,17 @@ const PROJECTILE_SOURCES := ["bolt", "void", "void_shard", "spear", "lance",
 ## and swoop (and the same strikes of their Shadow Reaper / Cathedral
 ## Horror evolutions), and the Profane Bishop's aura pulse (it surrounds the Bishop,
 ## so it reaches behind a shield like a blade at close range); the Bone
-## Colossus's fists and death shrapnel (a burst all around it) as well.
+## Colossus's fists and death shrapnel (a burst all around it) as well; the
+## Bone Hounds' / Hellhounds' bites, burns and fire trail, and the Corpse
+## Catapult / Ossuary Engine boulders and bone shards (lobbed over the
+## shield, they land around it).
 const MELEE_SOURCES := ["warrior", "bash", "lich_risen", "death_mark_risen", "raised_dead",
 	"death_knight", "death_knight_bash", "death_knight_cleave",
 	"abomination", "abom_stomp", "rogue", "rogue_dash", "rogue_bleed",
 	"gargoyle", "gargoyle_swoop", "bishop_aura",
-	"shadow_reaper", "cathedral_horror", "bone_colossus", "colossus_shrapnel"]
+	"shadow_reaper", "cathedral_horror", "bone_colossus", "colossus_shrapnel",
+	"bone_hound", "hellhound", "hellhound_burn", "hellhound_trail",
+	"corpse_catapult", "ossuary_engine", "ossuary_shards"]
 ## Seconds an aura buff (Banner Bearer, Holy Standard) lingers on a soldier
 ## after it leaves the aura (auras refresh at the 5 Hz think rate).
 const AURA_LINGER: float = 0.6  # TUNING (not in GDD)

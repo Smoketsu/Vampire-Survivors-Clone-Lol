@@ -7,8 +7,10 @@
 ## Arena.free_point(), so a post inside an obstacle is moved out of it.
 ## Unit roles (same split as the Escort formation): "front" (Warriors and
 ## UnitData formation "front": Abominations, Gargoyles), "support" (Mender,
-## Warder, Profane Bishop), and the rest split into melee "flank" units
-## (Rogues) and "ranged" units (Archers, Mages, Frost Wraiths).
+## Warder, Profane Bishop, and the formation "back" siege artillery, the
+## Corpse Catapults, so they post with the priests BEHIND the fighting), and
+## the rest split into melee "flank" units (Rogues, Bone Hounds) and
+## "ranged" units (Archers, Mages, Frost Wraiths, Banshees).
 ##   onslaught — enemies within StanceData.ONSLAUGHT_SCAN are grouped by
 ##               angular sector; fighters spread over the biggest groups
 ##               (posts short of each group's centre, ranged a little back),
@@ -54,14 +56,20 @@ static func assign(d: HordeDirector, shape: String, jitter: float) -> void:
 
 
 ## Formation role of class `cls`: "front", "support" or "mid" (the Escort
-## formation's split, HordeDirector._calculate_formation_anchors()).
+## formation's split, HordeDirector._calculate_formation_anchors(); a
+## formation "back" class posts as "support" here).
 static func role(cls: String) -> String:
 	match cls:
 		"warrior":
 			return "front"
 		"mender", "warder", "bishop":
 			return "support"
-	return "front" if String(UnitData.UNITS[cls].get("formation", "mid")) == "front" else "mid"
+	match String(UnitData.UNITS[cls].get("formation", "mid")):
+		"front":
+			return "front"
+		"back":
+			return "support"
+	return "mid"
 
 
 ## Sets `u`'s post to `offset` from the necromancer, moved out of obstacles.

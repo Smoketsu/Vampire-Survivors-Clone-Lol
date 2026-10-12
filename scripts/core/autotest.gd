@@ -60,7 +60,12 @@
 ##   * later summon classes: --classes=a,b raises those classes to Lv 1 at
 ##     the start and makes every policy upgrade them first; the summary has
 ##     one line per class with a special (damage by source, stomps / dashes /
-##     swoops / Deep Freezes, frozen-enemy-seconds, chills), and the stuck
+##     swoops / Deep Freezes, frozen-enemy-seconds, chills; Bone Hound bites,
+##     pack bites and pack bonus damage, Hellhound burns and trail; Banshee
+##     Dirges, enemies weakened, debuff uptime, Keening waves and silences;
+##     Catapult volleys, boulders, hits, structure damage, Ossuary shard
+##     fields), a "class passives" line (Blood Scent, Mournsong, Siegecraft
+##     and summon damage to structures), and the stuck
 ##     check also counts a special that runs past SPECIAL_STUCK_TIME
 ##     (airborne / dashing units) or ends inside an obstacle,
 ##   * --spells=a,b: every policy first takes those spells and their
@@ -244,6 +249,12 @@ const CLASS_REPORT := {
 	"rogue": [["rogue", "rogue_dash", "rogue_bleed"], ["rogue_dashes", "rogue_dash_hits"]],
 	"gargoyle": [["gargoyle", "gargoyle_swoop"], ["gargoyle_swoops", "gargoyle_swoop_hits"]],
 	"frost_wraith": [["frost_wraith"], ["frost_deep_freezes", "frost_freezes", "frost_boss_freezes", "frost_frozen_seconds", "frost_chills"]],
+	"bone_hound": [["bone_hound", "hellhound", "hellhound_burn", "hellhound_trail"],
+		["hound_bites", "hound_pack_bites", "hound_pack_bonus_dmg", "hellhound_burns", "hellhound_trail_patches"]],
+	"banshee": [["banshee", "keening_lady"],
+		["banshee_dirges", "banshee_dirge_hits", "dirge_debuff_seconds", "keening_waves", "keening_silenced", "keening_heals_silenced"]],
+	"corpse_catapult": [["corpse_catapult", "ossuary_engine", "ossuary_shards"],
+		["catapult_volleys", "catapult_boulders", "catapult_boulder_hits", "catapult_structure_dmg", "ossuary_shard_fields", "hazards_dropped"]],
 }
 ## Score of a --spells card (a forced spell or its evolution passive): above
 ## every policy priority and the Pact, below evolutions.
@@ -977,6 +988,7 @@ func finish(summary: Dictionary) -> void:
 		ab.passive_level("grim_ledger"), int(st_all.get("grim_ledger_bonus_dmg", 0.0)), ab.passive_level("spirit_binding"),
 		ab.passive_level("restless_dead"), game.horde.temp_spawned])
 	print("[autotest] horde passives: %s" % MinionPassives.summary_line(game))
+	print("[autotest] class passives: %s" % ClassPassives.summary_line(game))
 	var syn := game.horde.synergies
 	print("[autotest] synergies active at end: %s | activations: %s" % [
 		", ".join(syn.active_ids()) if not syn.active_ids().is_empty() else "none",
@@ -1079,6 +1091,8 @@ func _print_summon_evolutions(st: Dictionary) -> void:
 	tags[WinterRevenant.SRC_SHATTER] = "frost_wraith"
 	tags[WinterRevenant.SRC_NOVA] = "frost_wraith"
 	tags["bishop_aura"] = "bishop"
+	for tag: String in ClassPassives.EXTRA_TAGS:
+		tags[tag] = ClassPassives.EXTRA_TAGS[tag]  # Hellhound burn / trail, Ossuary Engine shards.
 	var by_src := PackedStringArray()  # "tag=dmg/heal/shield" per source.
 	var by_cls := {}  # Base class -> [dmg, heal, shield].
 	for tag: String in tags:

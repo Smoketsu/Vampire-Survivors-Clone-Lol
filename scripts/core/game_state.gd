@@ -39,7 +39,8 @@
 ##                         once (e.g. --policy=army --pact: a strong build
 ##                         with the Pact); --policy=pact is naive + --pact.
 ##   --classes=a,b         Forces summon classes (UnitData ids, e.g.
-##                         abomination,rogue,gargoyle,frost_wraith): each is
+##                         abomination,rogue,gargoyle,frost_wraith or
+##                         bone_hound,banshee,corpse_catapult): each is
 ##                         raised to Lv 1 at the start (while active slots
 ##                         allow) and every policy upgrades it first, so its
 ##                         special gets exercised. Unknown ids and the

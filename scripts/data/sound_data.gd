@@ -173,6 +173,22 @@ const SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 2093.0, "f1": 523.0, "dur": 0.7, "amp": 0.3, "decay": 0.25},
 			{"wave": "noise", "dur": 0.75, "amp": 0.3, "attack": 0.01, "decay": 0.3, "lp0": 9000.0, "lp1": 1800.0},
 			{"wave": "tri", "f0": 3136.0, "dur": 0.35, "amp": 0.08, "decay": 0.12, "vib_hz": 25.0, "vib_depth": 0.01}]},
+	# Banshee Dirge wail: a rising then falling ghostly moan with vibrato.
+	"banshee_wail": {"dur": 0.7, "volume_db": -15.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 660.0, "f1": 440.0, "dur": 0.7, "amp": 0.35, "attack": 0.12, "decay": 0.3, "vib_hz": 6.0, "vib_depth": 0.04},
+			{"wave": "tri", "f0": 990.0, "f1": 620.0, "dur": 0.6, "amp": 0.12, "attack": 0.1, "decay": 0.25, "vib_hz": 7.0, "vib_depth": 0.03},
+			{"wave": "noise", "dur": 0.5, "amp": 0.12, "attack": 0.08, "decay": 0.2, "lp0": 2400.0, "lp1": 900.0}]},
+	# Corpse Catapult launch: a creaking wooden thunk.
+	"catapult_launch": {"dur": 0.3, "volume_db": -16.0, "max_voices": 2, "min_interval": 120, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "square", "f0": 140.0, "f1": 70.0, "dur": 0.2, "amp": 0.3, "decay": 0.07, "lp0": 900.0},
+			{"wave": "noise", "dur": 0.25, "amp": 0.35, "attack": 0.01, "decay": 0.08, "lp0": 1400.0, "lp1": 300.0}]},
+	# Corpse Catapult boulder impact: a heavy bony crunch.
+	"catapult_impact": {"dur": 0.45, "volume_db": -13.0, "max_voices": 3, "min_interval": 90, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 95.0, "f1": 38.0, "dur": 0.45, "amp": 0.7, "decay": 0.15},
+			{"wave": "noise", "dur": 0.35, "amp": 0.5, "attack": 0.005, "decay": 0.1, "lp0": 2600.0, "lp1": 250.0}]},
 	# --- Covenant (holy: bright and metallic) --------------------------------
 	"enemy_hit": {"dur": 0.07, "volume_db": -23.0, "max_voices": 4, "min_interval": 30, "pitch_var": 0.18, "priority": 0,
 		"layers": [

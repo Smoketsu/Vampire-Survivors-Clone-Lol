@@ -51,6 +51,23 @@
 ##   Spirit Binding — slow_enemy(), chill_enemy(), freeze_enemy() and
 ##                    stun_enemy() lengthen every duration by cc_duration
 ##                    (cc_mult(); the one path for those statuses).
+## The passives of the three newest summon classes act here too:
+##   Siegecraft — damage_enemy(): summon damage (is_minion_source() or
+##                PassiveData.MINION_DOT_SOURCES) to a structure, an elite or
+##                a miniboss (never the stage boss) is raised by siege_damage
+##                (stat siege_bonus_dmg).
+##   Mournsong  — debuff_time(): every weakening effect applied through here
+##                (slow_enemy(), chill_enemy(), curse_enemy(), weaken_enemy())
+##                and Plague Cloud Rot (PlagueCloud.apply_rot()) lasts
+##                (1 + debuff_duration) times longer. Holds (Deep Freeze,
+##                dive stun) are not weakening effects and are unchanged.
+## The Banshee Dirge is the ONE debuff path for "weakened" foes:
+## weaken_enemy() slows the foe and cuts the damage of its hits
+## (Enemy.hit_mult()); a Keening Lady's Dirge also silences it, and a
+## silenced healer's heals fail in heal_enemy().
+## Every damage to a structure is also counted per source (structdmg_<tag>).
+## Spirit Binding and Mournsong both lengthen slows and chills (slow_enemy(),
+## chill_enemy()); the two multipliers stack multiplicatively.
 class_name CombatResolver
 extends RefCounted
 
@@ -103,6 +120,12 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if crit > 0.0 and is_minion_source(source) and _crit_rng.randf() < crit:
 		crit_mult = PassiveData.CRIT_DAMAGE_MULT
 		amount *= crit_mult
+	# Siegecraft: summon damage to structures, elites and minibosses.
+	var siege := 0.0  # Siege bonus fraction of this hit.
+	if (e.is_structure or e.is_miniboss or (e.is_elite and not e.is_boss)) \
+			and (is_minion_source(source) or source in PassiveData.MINION_DOT_SOURCES):
+		siege = game.abilities.passive_value("siegecraft", "siege_damage")  # 0 when not owned.
+		amount *= 1.0 + siege
 	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
 	# undead fighting on it hit weaker.
 	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).
@@ -163,6 +186,8 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if crit_mult > 1.0:
 		game.stat_add("minion_crits", 1.0)
 		game.stat_add("minion_crit_bonus_dmg", dealt * (1.0 - 1.0 / crit_mult))
+	if siege > 0.0:
+		game.stat_add("siege_bonus_dmg", dealt * siege / (1.0 + siege))
 	e.hp -= dealt
 	e.on_hit()
 	game.stat_add("damage_dealt", dealt)
@@ -173,6 +198,8 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 		game.stat_add("bossdmg_" + source, dealt)
 	elif e.is_miniboss:
 		game.stat_add("minibossdmg_" + source, dealt)  # Cathedral Guardian (autotest).
+	if e.is_structure:
+		game.stat_add("structdmg_" + source, dealt)  # Outposts, generators, crystals, altars, carts (autotest).
 	Juice.enemy_hit(e, dealt, source)
 	if e.hp <= 0.0:
 		game.stat_add("kills_by_" + source, 1.0)  # Killing blow per damage source (autotest spell summaries).
@@ -297,8 +324,14 @@ func heal_player(amount: float) -> float:
 
 
 ## Heals an enemy (Chaplains), capped at max HP. Returns HP restored.
-func heal_enemy(e: Enemy, amount: float) -> float:
+## `healer` is the enemy casting the heal (null = not a cast, e.g. a
+## regeneration); a silenced healer (Keening Lady Dirge, is_silenced()) heals
+## nothing (stat keening_heals_silenced).
+func heal_enemy(e: Enemy, amount: float, healer: Enemy = null) -> float:
 	if not e.active:
+		return 0.0
+	if healer != null and is_silenced(healer):
+		game.stat_add("keening_heals_silenced", 1.0)
 		return 0.0
 	var healed := minf(amount, e.max_hp - e.hp)
 	if healed <= 0.0:
@@ -315,21 +348,73 @@ func cc_mult() -> float:
 	return 1.0 + game.abilities.passive_value("spirit_binding", "cc_duration")
 
 
-## Applies a movement slow to an enemy (Spirit Binding lengthens it).
+## Applies a movement slow to an enemy. Spirit Binding (cc_mult()) and
+## Mournsong (debuff_time()) both lengthen it; they stack multiplicatively.
 func slow_enemy(e: Enemy, fraction: float, duration: float) -> void:
 	if e.active:
-		e.apply_slow(fraction, duration * cc_mult())
+		e.apply_slow(fraction, debuff_time(duration * cc_mult()))
 
 
 ## Frost Wraith chill: a slow of `fraction` for `duration` s, shown as a
-## frost tint on the enemy (Enemy.apply_chill). Spirit Binding lengthens it.
+## frost tint on the enemy (Enemy.apply_chill). Spirit Binding and Mournsong
+## both lengthen it (multiplicatively, like slow_enemy()).
 func chill_enemy(e: Enemy, fraction: float, duration: float) -> void:
 	if not e.active:
 		return
-	duration *= cc_mult()
-	e.apply_slow(fraction, duration)
-	e.apply_chill(duration)
+	var d := debuff_time(duration * cc_mult())  # Chill time after Spirit Binding and Mournsong (s).
+	e.apply_slow(fraction, d)
+	e.apply_chill(d)
 	game.stat_add("frost_chills", 1.0)
+
+
+## Mournsong: duration (s) of a weakening effect of base `duration` s on an
+## enemy, x (1 + debuff_duration) while the passive is owned. The extra
+## seconds are counted in mournsong_extra_seconds.
+func debuff_time(duration: float) -> float:
+	var bonus := game.abilities.passive_value("mournsong", "debuff_duration")  # 0 when not owned.
+	if bonus <= 0.0 or duration <= 0.0:
+		return duration
+	game.stat_add("mournsong_extra_seconds", duration * bonus)
+	return duration * (1.0 + bonus)
+
+
+## Banshee Dirge (the one "weakened" debuff path): for `duration` s (after
+## Mournsong) enemy `e` is slowed by `slow` and its hits deal `cut` (0..1)
+## less (Enemy.hit_mult(): every soldier strike, arrow, rush and Sanctum kit
+## hit, Vael's cleave and Seraphine's fans / barrages; scripted boss and
+## stage hazards are not hits of the enemy and are unchanged). The boss and
+## minibosses take `boss_mult` of the slow and cut; Reckoning enemies and
+## structures are immune. A slow never makes an enemy flee: it only lowers
+## its speed. `silence` (Keening Lady) also silences it for the same time:
+## its heals fail (heal_enemy()). A new Dirge refreshes the time and keeps the
+## stronger cut. Timed on Game.elapsed like the curse. Returns true if it
+## applied. Stats: dirge_debuffs, dirge_debuff_seconds (enemy-seconds of
+## new coverage), keening_silenced.
+func weaken_enemy(e: Enemy, slow: float, cut: float, duration: float, boss_mult: float, silence: bool) -> bool:
+	if not e.active or e.is_reckoning or e.is_structure or duration <= 0.0:
+		return false
+	var k := boss_mult if (e.is_boss or e.is_miniboss) else 1.0  # Share for bosses.
+	var d := debuff_time(duration)  # Debuff time after Mournsong (s).
+	var now := game.elapsed  # Run time (s).
+	e.apply_slow(slow * k, d)
+	game.stat_add("dirge_debuff_seconds", maxf(0.0, now + d - maxf(e.weaken_until, now)))
+	if e.weaken_until <= now:
+		e.weaken_cut = cut * k
+		e.queue_redraw()
+	else:
+		e.weaken_cut = maxf(e.weaken_cut, cut * k)
+	e.weaken_until = maxf(e.weaken_until, now + d)
+	game.stat_add("dirge_debuffs", 1.0)
+	if silence:
+		if e.silence_until <= now:
+			game.stat_add("keening_silenced", 1.0)
+		e.silence_until = maxf(e.silence_until, now + d)
+	return true
+
+
+## True while enemy `e` is silenced by a Keening Lady's Dirge (its heals fail).
+func is_silenced(e: Enemy) -> bool:
+	return e.silence_until > game.elapsed
 
 
 ## Gravebow curse: for `duration` s enemy `e` takes `amp` (0..1) more damage
@@ -342,6 +427,7 @@ func curse_enemy(e: Enemy, amp: float, duration: float) -> void:
 	if not e.active or amp <= 0.0 or duration <= 0.0:
 		return
 	var now := game.elapsed  # Run time (s).
+	duration = debuff_time(duration)  # Mournsong.
 	if e.curse_until <= now:
 		e.curse_amp = amp
 		e.queue_redraw()

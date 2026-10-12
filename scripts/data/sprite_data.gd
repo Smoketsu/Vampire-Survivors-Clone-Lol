@@ -30,6 +30,12 @@ const HEIGHTS: Dictionary = {
 	"summons/cathedral_horror": 64.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/gravebow": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/bone_colossus": 100.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"summons/bone_hound": 32.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"summons/hellhound": 40.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"summons/banshee": 48.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"summons/keening_lady": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"summons/corpse_catapult": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"summons/ossuary_engine": 72.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/recruit": 40.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/footman": 48.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/archer": 40.0,  # TUNING (not in GDD) ART_BIBLE manifest size

@@ -7,7 +7,8 @@ Guidance for Claude Code (and any agent) working in this repo. Read this first, 
 
 **Gravebound** is a Vampire Survivors-style game. You play a necromancer who commands an autonomous undead
 horde (Warriors, Archers, Mages, the Mender
-and Warder priest orders, plus Abominations, Rogues, Gargoyles and Frost Wraiths) against the holy Crimson Covenant. It is built in **Godot 4.3**
+and Warder priest orders, plus Abominations, Rogues, Gargoyles, Frost Wraiths, Bone Hounds,
+Banshees and Corpse Catapults) against the holy Crimson Covenant. It is built in **Godot 4.3**
 with **GDScript**, top-down 2D and the GL Compatibility renderer. There are no external assets: art is
 drawn in code (`_draw`), and sound and music are synthesized at startup.
 
@@ -70,8 +71,8 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
   never changes, the flavour bonuses stay off, and the stance resets to Escort every run.
 - **Spells:** Shadow Bolt, Orb Shield, Shadow Blast, plus Bone Spear, Soul Siphon, Corpse Explosion
   and Plague Cloud, plus Death Mark, Bone Wall, Soul Chains, Wither and Raise Dead
-  (`scripts/abilities/spells/`, one dispatch through `NecroSpellBook`). 21 actives
-  (12 spells, 9 offerable summon classes) compete for 6 active slots.
+  (`scripts/abilities/spells/`, one dispatch through `NecroSpellBook`). 24 actives
+  (12 spells, 12 offerable summon classes) compete for 6 active slots.
 - **Soul Ash is kept on death.** Profane Pact (in-run) and Profane Oath (Ossuary) trade difficulty
   for rewards.
 
@@ -248,6 +249,19 @@ tiny tweaks.
   shred, `Enemy.wither_until`), **Raise Dead** / Legion of Bones (+ new Restless Dead: every temporary
   summon lasts longer and hits harder, in `HordeDirector.spawn_temporary()`); autotest "later spells"
   line.
+- three more summon classes (owner-approved; 9 -> 12 offerable), one `SummonBehavior` each:
+  **Bone Hounds** (3 -> 9 cheap, fast pack beasts; Pack Hunt: a shared prey, +15% bite per
+  packmate, max +45%), the **Banshee** (a floating, hittable support caster; Dirge: a telegraphed
+  wail that slows and cuts enemy damage through the one debuff path
+  `CombatResolver.weaken_enemy()`, read by `Enemy.hit_mult()`) and the **Corpse Catapult**
+  (formation "back", holds its ground; Bone Barrage: led, arcing boulders with a landing
+  telegraph, structures / elites / dense packs first, pooled in `horde_hazards.gd`). Their
+  evolutions and NEW paired passives: **Hellhound** (Blood Scent: fast classes, base speed >= 95,
+  move and attack faster; burning bites, fire trail, split pack), **Keening Lady** (Mournsong:
+  every weakening effect lasts longer, `CombatResolver.debuff_time()`; three Dirge waves that
+  silence priests' heals) and **Ossuary Engine** (Siegecraft: more summon damage to structures,
+  elites, minibosses; three boulders a volley, burning bone-shard fields). Glyphs in
+  `warband_glyphs.gd`, card / autotest text in `class_passives.gd`.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -258,7 +272,7 @@ tiny tweaks.
    with file keys and sizes); process each with `python3 tools/prepare_sprite.py <image> <key>`.
    `SpriteBank` draws `assets/sprites/<key>.png` when present and falls back to the glyph, so art
    lands piecemeal. Done: `player/necromancer`; every summon and the first three evolutions (incl. `risen`); every enemy soldier (incl. the
-   Reckoning's `inquisitor`); both `bosses/`; all five `structures/`. Still to do: the pickups and the five newer evolutions (Gravebow, Bone Colossus, Shadow Reaper, Cathedral Horror, Winter Revenant), and the five later spells' icons (spells, evolutions, passives) and effects (`soul_lightning`, `bone_wall_rise`, `bone_wall_burst`, `wither_aura`, `doom_burst`, `raise_dead`, `legion_burst`, already hooked). Effects are
+   Reckoning's `inquisitor`); both `bosses/`; all five `structures/`. Still to do: the pickups, the five newer evolutions (Gravebow, Bone Colossus, Shadow Reaper, Cathedral Horror, Winter Revenant), the three newest classes with their evolutions (Bone Hound / Hellhound, Banshee / Keening Lady, Corpse Catapult / Ossuary Engine), and the five later spells' icons (spells, evolutions, passives) and effects (`soul_lightning`, `bone_wall_rise`, `bone_wall_burst`, `wither_aura`, `doom_burst`, `raise_dead`, `legion_burst`, already hooked). Effects are
    short animations (`prepare_sprite.py --anim <sheet or GIF> <id>` → `assets/sprites/effects/`,
    timing in `anim_data.gd`); `shadow_blast` (test), `dread_rally` and `grave_step_trail` are hooked so far, hook the rest via
    `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.

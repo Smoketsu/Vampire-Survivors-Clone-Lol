@@ -51,6 +51,18 @@
 ##                     skeletons, Lich raises, stage reinforcements) last
 ##                     longer and hit harder (HordeDirector.spawn_temporary();
 ##                     evolves Raise Dead into Legion of Bones).
+## plus the three passives paired with the newest summon classes
+## (owner-approved, recorded in GDD §15.0; card lines and the autotest line
+## in ClassPassives):
+##   Blood Scent  — fast summons (base move speed >= FAST_SUMMON_SPEED) move
+##                  and attack faster (HordeDirector.compute_stats(); Bone
+##                  Hounds -> Hellhounds).
+##   Mournsong    — every weakening effect on enemies lasts longer: slows,
+##                  chills, the Dirge's damage cut, curses and Rot
+##                  (CombatResolver.debuff_time(); Banshees -> Keening Ladies).
+##   Siegecraft   — summons deal more damage to structures, elites and
+##                  minibosses (CombatResolver.damage_enemy(); Corpse
+##                  Catapults -> Ossuary Engines).
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -69,12 +81,25 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	"soul_conduit", "warding_ritual", "abyssal_focus", "forbidden_knowledge", "dark_benediction",
 	"shade_stride", "vampiric_rite", "necrotic_expanse", "lingering_malediction",
 	"bone_plating", "unholy_precision", "unholy_resilience", "bound_souls",
-	"grim_ledger", "spirit_binding", "restless_dead", PactData.ID]
+	"grim_ledger", "spirit_binding", "restless_dead",
+	"blood_scent", "mournsong", "siegecraft", PactData.ID]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
 const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycling",
-	"bone_plating", "unholy_precision", "unholy_resilience", "bound_souls"]
+	"bone_plating", "unholy_precision", "unholy_resilience", "bound_souls",
+	"blood_scent", "siegecraft"]
+
+## Blood Scent: a summon class is "fast" (and gets the passive) when its
+## UnitData base move_speed is at least this (px/s): Bone Hounds 122, Grave
+## Rogues 112, Skeletal Archers and Crypt Gargoyles 95. Warriors (85), the
+## priest orders (90), Banshees (92) and the slower classes are not.
+const FAST_SUMMON_SPEED: float = 95.0  # TUNING (not in GDD) owner brief: "define fast by base speed threshold in data"
+## Siegecraft: minion damage-over-time sources that also count as summon
+## damage for its bonus (the strike sources are CombatResolver.
+## is_minion_source(); these ticks are left out of crits and suppression
+## like the Rogue bleed, but a siege bonus applies to them too).
+const MINION_DOT_SOURCES := ["rogue_bleed", "hellhound_burn", "hellhound_trail", "ossuary_shards"]
 ## Passives that only help shadow spells (a "dead" card while no spell is owned).
 const SPELL_PASSIVES := ["soul_conduit", "abyssal_focus"]
 
@@ -190,6 +215,13 @@ const LEDGER_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
 ##                        stun applied to enemies (Spirit Binding).
 ##   temp_duration      — +% lifetime of temporary summons (Restless Dead).
 ##   temp_damage        — +% damage of temporary summons (Restless Dead).
+##   fast_move_speed    — +% move speed of the fast summon classes
+##                        (FAST_SUMMON_SPEED; own category).
+##   fast_attack_speed  — +% attack speed of the fast summon classes.
+##   debuff_duration    — +% duration of every weakening effect on enemies
+##                        (slows, chills, the Dirge, curses, Rot).
+##   siege_damage       — +% summon damage to structures, elites and
+##                        minibosses (not the stage boss).
 const PASSIVES := {
 	# Profane Pact (difficulty / reward passive): defined in PactData.
 	PactData.ID: PactData.PASSIVE,
@@ -460,6 +492,48 @@ const PASSIVES := {
 			{"temp_duration": 0.30, "temp_damage": 0.24},  # TUNING (not in GDD)
 			{"temp_duration": 0.40, "temp_damage": 0.32},  # TUNING (not in GDD)
 			{"temp_duration": 0.50, "temp_damage": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	"blood_scent": {
+		"display_name": "Blood Scent",
+		"icon": "blood_scent",
+		"description": "The smell of the living drives your swiftest dead into a frenzy: fast summons (Hounds, Rogues, Gargoyles, Archers) move and attack faster. At Lv 5, with Bone Hounds at Lv 5, a treasure chest raises them as Hellhounds.",
+		"labels": {"fast_move_speed": ["Fast summon move speed", "pct"], "fast_attack_speed": ["Fast summon attack speed", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"levels": [
+			{"fast_move_speed": 0.05, "fast_attack_speed": 0.06},  # TUNING (not in GDD)
+			{"fast_move_speed": 0.10, "fast_attack_speed": 0.12},  # TUNING (not in GDD)
+			{"fast_move_speed": 0.15, "fast_attack_speed": 0.18},  # TUNING (not in GDD)
+			{"fast_move_speed": 0.20, "fast_attack_speed": 0.24},  # TUNING (not in GDD)
+			{"fast_move_speed": 0.25, "fast_attack_speed": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	"mournsong": {
+		"display_name": "Mournsong",
+		"icon": "mournsong",
+		"description": "A dirge clings to everything your power touches: slows, chills, curses, Rot and the Banshee's Dirge last longer. At Lv 5, with Banshees at Lv 5, a treasure chest raises them as Keening Ladies.",
+		"labels": {"debuff_duration": ["Weakening effect duration", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"levels": [
+			{"debuff_duration": 0.10},  # TUNING (not in GDD)
+			{"debuff_duration": 0.20},  # TUNING (not in GDD)
+			{"debuff_duration": 0.30},  # TUNING (not in GDD)
+			{"debuff_duration": 0.40},  # TUNING (not in GDD)
+			{"debuff_duration": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	"siegecraft": {
+		"display_name": "Siegecraft",
+		"icon": "siegecraft",
+		"description": "Your dead learn to break walls and champions: summons deal more damage to structures, elites and minibosses. At Lv 5, with Catapults at Lv 5, a treasure chest rebuilds them as Ossuary Engines.",
+		"labels": {"siege_damage": ["Summon damage to structures, elites, minibosses", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"levels": [
+			{"siege_damage": 0.10},  # TUNING (not in GDD)
+			{"siege_damage": 0.20},  # TUNING (not in GDD)
+			{"siege_damage": 0.30},  # TUNING (not in GDD)
+			{"siege_damage": 0.40},  # TUNING (not in GDD)
+			{"siege_damage": 0.50},  # TUNING (not in GDD)
 		],
 	},
 }
