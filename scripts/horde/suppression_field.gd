@@ -4,7 +4,8 @@
 ## (`game.horde.suppression`) and reached through ONE call,
 ## HordeDirector.add_suppression(). The Radiant Inquisitor casts it
 ## (InquisitorKit: 160 px, 4 s, 1 s telegraph, owner-approved) and Grand
-## Inquisitor Seraphine can reuse it with her own numbers.
+## Inquisitor Seraphine casts it with her own numbers (BossSeraphine: 220
+## px, 5 s, 1.5 s telegraph, half minion damage).
 ## A zone first ARMS for its telegraph time (a gold warning ring that fills
 ## up, no effect yet), then for `duration` s:
 ##   * no summon replacement spawns inside it (HordeDirector._try_spawn);
@@ -174,6 +175,15 @@ func holds_class(cls: String, count: int, cap: int) -> bool:
 		return false
 	var held := held_count(cls)
 	return held > 0 and count + held >= cap
+
+
+## True while a zone cast by `source` is arming or armed (Seraphine casts
+## one at a time).
+func has_source(source: String) -> bool:
+	for z in zones:
+		if z.source == source:
+			return true
+	return false
 
 
 ## Multiplier on a minion attack against an enemy at `pos`: the lowest

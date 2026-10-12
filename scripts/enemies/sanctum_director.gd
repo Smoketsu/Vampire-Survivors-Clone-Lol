@@ -11,8 +11,10 @@
 ##     the last crystal cleanses it: the ground turns purple, the penalty
 ##     ends, corruption rises and the objective's Soul Ash is paid.
 ##   * The Cathedral Guardian: a plain miniboss (owner decision: it shields
-##     nothing) that walks in from the spawn ring, shows on the HUD's miniboss
-##     bar (EnemyDirector.miniboss) and drops a treasure chest when it dies.
+##     nothing) that walks in from the spawn ring. Spawned and tracked here
+##     (objective text, kill time); its kit (GuardianKit) shows it on the
+##     HUD's one miniboss bar (EnemyDirector.set_miniboss()) and pays its XP
+##     burst, and ChestManager drops its guaranteed treasure chest.
 ##   * Sacred altars (optional, open question 4): three altars rise around
 ##     the necromancer, each guarded by a High Confessor. Each one destroyed
 ##     cuts SANCTUM.altar_hp_cut off the max HP of every Covenant soldier
@@ -101,10 +103,6 @@ var fired: Array[String] = []
 var _guardian: Enemy = null
 ## Generation of `_guardian` when it spawned.
 var _guardian_gen: int = 0
-## The "guardian" event that spawned it (rewards).
-var _guardian_ev: Dictionary = {}
-## Last known position of the Guardian (its chest drops there).
-var _guardian_pos: Vector2 = Vector2.ZERO
 ## Seconds accumulated toward the next chamber damage tick.
 var _tick: float = 0.0
 ## True if something animated was drawn last frame (one final redraw clears it).
@@ -175,18 +173,13 @@ func _open_chamber(ev: Dictionary) -> void:
 	_log("chamber_opened")
 
 
-## Spawns the Cathedral Guardian on the spawn ring (stand-in HP multiplier
-## from the event), shows it on the HUD's miniboss bar and tracks it.
+## Spawns the Cathedral Guardian on the spawn ring and tracks it for the
+## objective text and the summary. Its kit (GuardianKit) registers it on the
+## HUD's miniboss bar and keeps it from being recycled (Enemy.is_miniboss).
 func _spawn_guardian(ev: Dictionary) -> void:
 	var e := game.enemies.spawn_at(String(ev["kind"]), game.enemies.ring_point(randf() * TAU), bool(ev["elite"]))
-	e.max_hp *= float(ev.get("hp_mult", 1.0))
-	e.hp = e.max_hp
-	e.is_objective = true  # Never recycled: it always comes for the necromancer.
 	_guardian = e
 	_guardian_gen = e.generation
-	_guardian_ev = ev
-	_guardian_pos = e.position
-	game.enemies.set_miniboss(e)
 	game.stat_add("sanctum_guardians_spawned", 1.0)
 	_log("guardian_arrived")
 
@@ -321,20 +314,12 @@ func _step_altars() -> void:
 		_log("altar_destroyed")
 
 
-## The Guardian fell: treasure chest, XP burst, banner.
+## Notes when the Guardian fell (its XP burst and banner are GuardianKit's,
+## its guaranteed chest ChestManager's miniboss rule).
 func _step_guardian() -> void:
-	if _guardian == null:
-		return
-	if _guardian.active and _guardian.generation == _guardian_gen:
-		_guardian_pos = _guardian.position
+	if _guardian == null or (_guardian.active and _guardian.generation == _guardian_gen):
 		return
 	_guardian = null
-	_xp_burst(_guardian_pos, _guardian_ev)
-	if bool(_guardian_ev.get("reward_chest", false)) and not game.countdown_finished():
-		if game.chests.spawn_chest(_guardian_pos, true):
-			game.stat_add("sanctum_guardian_chests", 1.0)
-	game.effects.impact(_guardian_pos, 90.0, Palette.GOLD)
-	game.enemies.show_banner("The Cathedral Guardian crumbles! Claim its treasure")
 	game.stat_add("sanctum_guardians_killed", 1.0)
 	guardian_time = _clock()
 	_log("guardian_killed")

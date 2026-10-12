@@ -157,9 +157,9 @@ const BOSS := {
 	"last_light_time": 0.8,  # TUNING (not in GDD)
 	"last_light_banner": "The Last Light! The Sanctum burns around her!",  # TUNING (not in GDD)
 	# Attendants (her healers).
-	"attendant_kind": "chaplain",  # INTEGRATION: switch to high_confessor
+	"attendant_kind": "high_confessor",  # GDD §7.2 / §7.5: her healers are High Confessors (SanctumEnemyData)
 	"attendant_count": 3,  # TUNING (not in GDD) owner brief: up to three
-	"attendant_hp_mult": 6.0,  # TUNING (not in GDD) INTEGRATION: revisit (1.0?) with high_confessor's own HP
+	"attendant_hp_mult": 1.0,  # TUNING (not in GDD) the High Confessor row carries its own HP (170, always elite; was a x6 Chaplain stand-in, 192)
 	"attendant_spawn_radius": 46.0,  # TUNING (not in GDD)
 	"attend_radius": 170.0,  # TUNING (not in GDD)
 	"attend_regen": 30.0,  # TUNING (not in GDD) HP/s per healer in reach
@@ -230,10 +230,10 @@ const BOSS := {
 	# Constructs.
 	"constructs_weight": 0.8,  # TUNING (not in GDD)
 	"constructs_cooldown": 22.0,  # TUNING (not in GDD)
-	"construct_kind": "footman",  # INTEGRATION: switch to sanctified_sentinel
+	"construct_kind": "sanctified_sentinel",  # GDD §7.2 / §7.5 "constructs": Sanctified Sentinels (SanctumEnemyData)
 	"constructs_count": 2,  # TUNING (not in GDD)
 	"constructs_telegraph": 1.5,  # TUNING (not in GDD)
-	"constructs_hp_mult": 3.0,  # TUNING (not in GDD) INTEGRATION: revisit (1.0?) with sanctified_sentinel's own HP
+	"constructs_hp_mult": 1.0,  # TUNING (not in GDD) the Sentinel row carries its own HP and flat armour (120; was a x3 footman stand-in, 108)
 	"constructs_offset": 90.0,  # TUNING (not in GDD)
 	"constructs_spread": 60.0,  # TUNING (not in GDD)
 	# Undead suppression.
@@ -268,7 +268,7 @@ const BOSS := {
 	"collapse_damage_player": 5.0,  # TUNING (not in GDD) per tick (x scaling)
 	"collapse_damage_summon": 6.0,  # TUNING (not in GDD) per tick
 	# Final guard.
-	"guard_groups": [{"kind": "templar", "count": 5}, {"kind": "footman", "count": 5}],  # TUNING (not in GDD) INTEGRATION: paladin stand-in = footman (switch to the Stage 3 elite paladin kind if one exists)
+	"guard_groups": [{"kind": "templar", "count": 5}, {"kind": "sun_paladin", "count": 3}],  # TUNING (not in GDD) GDD "final army confrontation": Templars and Sun Paladins (always elite, so 3 where the footman stand-in had 5)
 	"guard_telegraph": 1.5,  # TUNING (not in GDD)
 	"guard_radius": 520.0,  # TUNING (not in GDD) inside the 600 px collapse ring
 }

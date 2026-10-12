@@ -8,17 +8,20 @@
 ##      warning), delayed holy circles (gold circles that blast after 1.2 s),
 ##      Templar squads (rally banners, then the squad), and a teleport after
 ##      a 1 s glow that always lands nearer the necromancer (on his side of
-##      her, on a free point). Up to three attendants (healers) arrive with
-##      her: 3 minus the altars destroyed on the stage (game.altars_destroyed,
-##      read defensively; 0 when the stage has none). While one lives within
-##      attend_radius of her she regenerates attend_regen HP/s per attendant.
+##      her, on a free point). Up to three attendants (High Confessors)
+##      arrive with her: 3 minus the sacred altars destroyed on the stage
+##      (Game.altars_destroyed, SanctumDirector; 0 on the other stages).
+##      While one lives within attend_radius of her she regenerates
+##      attend_regen HP/s per attendant.
 ##   2. Avatar of the Dawn (60-20%): the relic transformation (1 s, she is
 ##      invulnerable, brighter and larger); two rotating holy beams (warning
 ##      rays, then a sweep that pulses damage on the necromancer and every
 ##      summon in the light); radiant barrages (rings of bolts); constructs
-##      rising at rally marks; undead suppression (a 1.5 s pale ring around
-##      the army, then summons inside deal half damage and are not replaced
-##      for 5 s, through _apply_suppression()); and every 25 s the Judgment
+##      (Sanctified Sentinels) rising at rally marks; undead suppression (a
+##      1.5 s telegraphed 220 px sigil around the army, then for 5 s summons
+##      fighting inside deal half damage and are not replaced, through the
+##      horde's one suppression path, HordeDirector.add_suppression(), which
+##      also draws it); and every 25 s the Judgment
 ##      nova: the area around her glows gold for 2.5 s while 2-3 safe
 ##      circles are marked (one always within reach of the necromancer), then
 ##      everything outside them takes heavy holy damage.
@@ -36,18 +39,21 @@
 ## reward fires (EnemyDirector: XP burst, chest, power-up), and the ending
 ## text plays as the stage banner. The Reckoning still begins at 0:00.
 ##
-## Integration points (Stage 3 is built in parallel):
-##   * attendant_kind / construct_kind in SeraphineData.BOSS are stand-ins
-##     (chaplain / footman) for high_confessor / sanctified_sentinel.
-##   * _apply_suppression() calls HordeDirector.add_suppression() when it
-##     exists; otherwise only the telegraph, the drawn zone and the stats run.
-##   * The attendant heal is her own regen (attend_regen); a High Confessor
-##     boss-heal hook may replace it (_attendant_heal_pulse()).
+## Her attendants heal her through exactly one path, her attend_regen pulse
+## (_attendant_heal_pulse(), CombatResolver.heal_enemy()); the High
+## Confessor's set_heal_override() hook is not used, so her healing keeps
+## its own tuned rate and drawn gold links. As High Confessors they keep
+## their ordinary kit otherwise (heals and holy shields on any ally that
+## qualifies, revivals of ordinary soldiers), like a Chaplain near any boss.
 class_name BossSeraphine
 extends Boss
 
 ## Attack phases (the fight phase is `fight_phase`).
 enum Phase { WALK, FAN_WINDUP, CIRCLES_CAST, TEMPLARS_WINDUP, TELEPORT_GLOW, BEAMS, BARRAGE, CONSTRUCTS_WINDUP, SUPPRESSION_CAST, NOVA_CAST, TRANSFORM, RECOVER }
+
+## Source tag of her suppression zones (HordeDirector.add_suppression();
+## the stat suppression_zones_seraphine).
+const SUPPRESSION_SOURCE: String = "seraphine"
 
 ## Current attack phase.
 var phase: Phase = Phase.WALK
@@ -209,7 +215,7 @@ func _special_usable(id: String, d: float) -> bool:
 		"constructs":
 			return game.enemies.regular_alive() < WaveData.HARD_CAP - 6
 		"suppression":
-			return hazards.suppressions.is_empty() and game.horde.units.size() >= int(boss_def["suppression_min_summons"])
+			return not game.horde.suppression.has_source(SUPPRESSION_SOURCE) and game.horde.units.size() >= int(boss_def["suppression_min_summons"])
 	return true
 
 
@@ -362,13 +368,10 @@ func _enter_last_light() -> void:
 # =====================================================================================
 
 ## Spawns her attendants around her: attendant_count minus the altars the
-## necromancer destroyed on this stage (game.altars_destroyed when the stage
-## records it, else 0), never below 0.
+## necromancer destroyed on this stage (Game.altars_destroyed, counted by
+## SanctumDirector; 0 on the other stages), never below 0.
 func _spawn_attendants() -> void:
-	var altars := 0  # Altars destroyed (Stage 3); absent on other stages.
-	var v: Variant = game.get("altars_destroyed")
-	if v != null:
-		altars = int(v)
+	var altars := game.altars_destroyed  # Sacred altars destroyed (SanctumDirector; 0 on other stages).
 	var n := clampi(int(boss_def["attendant_count"]) - altars, 0, int(boss_def["attendant_count"]))
 	var kind := String(boss_def["attendant_kind"])
 	var r := float(game.enemies.enemy_def(kind)["radius"])
@@ -408,8 +411,9 @@ func _step_attendants(delta: float) -> void:
 
 ## Attendant healing (GDD §15.5 q34): she regenerates attend_regen HP/s for
 ## every living attendant within attend_radius of her, through
-## CombatResolver.heal_enemy() (the single healing path). INTEGRATION: if the
-## High Confessor gets a boss-heal hook, this pulse can hand over to it.
+## CombatResolver.heal_enemy(). This is the one attendant-to-boss healing
+## path (the High Confessor's set_heal_override() hook is deliberately not
+## used; see the header).
 func _attendant_heal_pulse() -> void:
 	var near := 0  # Attendants in reach.
 	_attend_pulses += 1
@@ -683,32 +687,28 @@ func _step_barrage(delta: float) -> void:
 # Undead suppression
 # =====================================================================================
 
-## Undead suppression: a pale ring around the necromancer (where his army
-## stands) that lands after suppression_telegraph s.
+## Undead suppression (GDD §7.5 / §15.5 q36): a sigil around the necromancer
+## (where his army stands), cast through the horde's one suppression path,
+## HordeDirector.add_suppression(): it arms for suppression_telegraph s
+## (the gold warning ring, drawn by the SuppressionField), then for
+## suppression_duration s no summon is replaced inside it, deaths inside it
+## are held, and minion attacks on foes inside deal suppression_damage_mult.
+## Stats: seraphine_suppressions, seraphine_suppressed_summons (summons
+## inside the ring at the cast).
 func _start_suppression() -> void:
-	hazards.start_suppression(game.player.position, float(boss_def["suppression_radius"]), _tele("suppression_telegraph"),
-		float(boss_def["suppression_duration"]), float(boss_def["suppression_damage_mult"]))
-	game.enemies.show_banner("Seraphine suppresses the undead!")
-	_begin_special("suppression", Phase.SUPPRESSION_CAST)
-
-
-## ADAPTER (integration point): applies an undead suppression at `pos`:
-## summons within `radius` px deal x`damage_mult` damage and are not
-## replaced for `duration` s. Hands it to HordeDirector.add_suppression()
-## when the horde has that API; otherwise only the drawn zone and the
-## stats run (no gameplay effect).
-func _apply_suppression(pos: Vector2, radius_px: float, duration: float, damage_mult: float) -> void:
-	var horde := game.horde
-	if horde.has_method("add_suppression"):
-		horde.call("add_suppression", pos, radius_px, duration, damage_mult)
-		game.stat_add("seraphine_suppressions_applied", 1.0)
-	var caught := 0  # Summons inside when it lands.
-	for u in horde.units:
-		if u.active and u.position.distance_to(pos) <= radius_px:
+	var pos := game.player.position  # Centre of the sigil.
+	var r := float(boss_def["suppression_radius"])
+	game.horde.add_suppression(pos, r, float(boss_def["suppression_duration"]), float(boss_def["suppression_damage_mult"]),
+		_tele("suppression_telegraph"), SUPPRESSION_SOURCE)
+	var caught := 0  # Summons inside at the cast.
+	for u in game.horde.units:
+		if u.active and u.position.distance_to(pos) <= r:
 			caught += 1
-	game.effects.ring(pos, radius_px, Color(0.86, 0.9, 1.0), 0.4)
+	Sfx.play("boss_telegraph", pos)
 	game.stat_add("seraphine_suppressions", 1.0)
 	game.stat_add("seraphine_suppressed_summons", float(caught))
+	game.enemies.show_banner("Seraphine suppresses the undead!")
+	_begin_special("suppression", Phase.SUPPRESSION_CAST)
 
 
 # =====================================================================================
@@ -817,7 +817,7 @@ static func summary_line(st: Dictionary) -> String:
 	var t0 := float(st.get("seraphine_spawn_time", -1.0))
 	var rel := func(key: String) -> String:
 		return "%.1fs" % (float(st[key]) - t0) if st.has(key) else "-"
-	return "phases: avatar %s, last light %s, kill %s | attendants %d spawned (altars %d) / %d killed / %d fled, heal received %d | teleports %d | circles %d (summon hits %d) | beams %d (player pulses %d, summon pulses %d) | barrages %d | templars %d, constructs %d, guard %d | suppressions %d (summons caught %d, applied %d) | novas %d (player hit %d / safe %d, summons hit %d / spared %d, dmg to player %d) | collapse dmg player %d / summons %d (player ticks %d) | dmg to player: bolts %d, circles %d, beams %d" % [
+	return "phases: avatar %s, last light %s, kill %s | attendants %d spawned (altars %d) / %d killed / %d fled, heal received %d | teleports %d | circles %d (summon hits %d) | beams %d (player pulses %d, summon pulses %d) | barrages %d | templars %d, constructs %d, guard %d | suppressions %d (summons in the ring at the cast %d) | novas %d (player hit %d / safe %d, summons hit %d / spared %d, dmg to player %d) | collapse dmg player %d / summons %d (player ticks %d) | dmg to player: bolts %d, circles %d, beams %d" % [
 		rel.call("seraphine_avatar_time"), rel.call("seraphine_last_light_time"),
 		"%.1fs" % float(st["seraphine_kill_time"]) if st.has("seraphine_kill_time") else "-",
 		int(st.get("seraphine_attendants_spawned", 0.0)), int(st.get("seraphine_altars_destroyed", 0.0)), int(st.get("seraphine_attendants_killed", 0.0)),
@@ -825,7 +825,7 @@ static func summary_line(st: Dictionary) -> String:
 		int(st.get("seraphine_circles", 0.0)), int(st.get("seraphine_circle_summon_hits", 0.0)), int(st.get("boss_atk_beams", 0.0)),
 		int(st.get("seraphine_beam_player_pulses", 0.0)), int(st.get("seraphine_beam_summon_pulses", 0.0)), int(st.get("boss_atk_barrage", 0.0)),
 		int(st.get("seraphine_templars", 0.0)), int(st.get("seraphine_constructs", 0.0)), int(st.get("seraphine_guard", 0.0)),
-		int(st.get("seraphine_suppressions", 0.0)), int(st.get("seraphine_suppressed_summons", 0.0)), int(st.get("seraphine_suppressions_applied", 0.0)),
+		int(st.get("seraphine_suppressions", 0.0)), int(st.get("seraphine_suppressed_summons", 0.0)),
 		int(st.get("seraphine_novas", 0.0)), int(st.get("seraphine_nova_player_hit", 0.0)), int(st.get("seraphine_nova_player_safe", 0.0)),
 		int(st.get("seraphine_nova_summon_hits", 0.0)), int(st.get("seraphine_nova_summon_spared", 0.0)), int(st.get("player_dmg_from_seraphine_nova", 0.0)),
 		int(st.get("player_dmg_from_seraphine_collapse", 0.0)), int(st.get("summon_dmg_from_seraphine_collapse", 0.0)), int(st.get("seraphine_collapse_player_ticks", 0.0)),

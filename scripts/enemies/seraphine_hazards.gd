@@ -10,12 +10,12 @@
 ##                             cool, dark safe circles are marked; when it
 ##                             detonates, the necromancer and summons outside
 ##                             the safe circles take heavy holy damage;
-##   * undead suppression    — a pale ring around the army that, after its
-##                             telegraph, calls BossSeraphine._apply_suppression()
-##                             and stays drawn while the suppression lasts;
 ##   * the collapsing arena  — holy fire closing in from the rim of a circle
 ##                             around her (the Last Light), burning whatever
 ##                             stands outside it.
+## Her undead suppression is not here: it goes through the horde's one
+## suppression path (HordeDirector.add_suppression(), SuppressionField),
+## which times and draws it.
 ## The boss steps it from its own physics step, so every hazard pauses while
 ## she is frozen (Stasis, Deep Freeze), like her telegraphs. Damage goes
 ## through CombatResolver; nothing here uses randomness (the boss picks every
@@ -48,24 +48,6 @@ class HolyCircle:
 	## Seconds left until it blasts.
 	var left: float = 1.0
 
-## One undead suppression (telegraph, then the active zone).
-class Suppression:
-	extends RefCounted
-	## World-space centre (the necromancer at the cast).
-	var pos: Vector2 = Vector2.ZERO
-	## Radius in px.
-	var radius: float = 220.0
-	## Seconds left of the telegraph (> 0: still warning).
-	var warn_left: float = 1.5
-	## Total telegraph seconds (fill animation).
-	var warn_total: float = 1.5
-	## Seconds the suppression lasts once it lands.
-	var duration: float = 5.0
-	## Seconds left of the active zone (after the telegraph).
-	var active_left: float = 0.0
-	## Summon damage multiplier inside while active.
-	var damage_mult: float = 0.5
-
 ## Owning run.
 var game: Game
 ## The boss these hazards belong to.
@@ -76,8 +58,6 @@ var def: Dictionary = {}
 var overlay: Node2D
 ## Pending holy circles.
 var circles: Array[HolyCircle] = []
-## Active and telegraphed suppressions.
-var suppressions: Array[Suppression] = []
 ## Beam state: 0 = none, 1 = warning rays, 2 = sweeping.
 var beam_state: int = 0
 ## Angle (rad) of the first beam (the others are spread evenly).
@@ -139,7 +119,6 @@ func step(delta: float) -> void:
 	_step_circles(delta)
 	_step_beams(delta)
 	_step_nova(delta)
-	_step_suppressions(delta)
 	_step_collapse(delta)
 	if tele_left > 0.0:
 		tele_left -= delta
@@ -150,7 +129,6 @@ func step(delta: float) -> void:
 ## Removes every hazard (the boss died): nothing more blasts or burns.
 func clear() -> void:
 	circles.clear()
-	suppressions.clear()
 	beam_state = 0
 	nova_pending = false
 	nova_glow_left = 0.0
@@ -370,43 +348,6 @@ func _blast_nova() -> void:
 
 
 # =====================================================================================
-# Undead suppression
-# =====================================================================================
-
-## Telegraphs a suppression of `radius` px at `pos` for `telegraph` s; it
-## then lasts `duration` s with summon damage x `damage_mult`.
-func start_suppression(pos: Vector2, radius: float, telegraph: float, duration: float, damage_mult: float) -> void:
-	var s := Suppression.new()
-	s.pos = pos
-	s.radius = radius
-	s.warn_left = telegraph
-	s.warn_total = maxf(0.05, telegraph)
-	s.duration = duration
-	s.damage_mult = damage_mult
-	suppressions.append(s)
-	Sfx.play("boss_telegraph", pos)
-
-
-## Telegraph -> landing (the boss adapter applies it) -> active -> gone.
-func _step_suppressions(delta: float) -> void:
-	var i := 0
-	while i < suppressions.size():
-		var s := suppressions[i]
-		if s.warn_left > 0.0:
-			s.warn_left -= delta
-			if s.warn_left <= 0.0:
-				s.active_left = s.duration
-				boss._apply_suppression(s.pos, s.radius, s.duration, s.damage_mult)
-			i += 1
-			continue
-		s.active_left -= delta
-		if s.active_left <= 0.0:
-			suppressions.remove_at(i)
-		else:
-			i += 1
-
-
-# =====================================================================================
 # Collapsing arena
 # =====================================================================================
 
@@ -498,12 +439,9 @@ func danger_push(p: Vector2) -> Vector2:
 # Drawing
 # =====================================================================================
 
-## Ground parts: the nova glow and safe circles, the suppression rings and
-## the collapse fire band.
+## Ground parts: the nova glow and safe circles and the collapse fire band.
 func _draw() -> void:
 	var now := game.elapsed if game != null else 0.0  # Animation clock (visual only).
-	for s in suppressions:
-		_draw_suppression(s, now)
 	if nova_pending:
 		var k := 1.0 - clampf(nova_left / nova_total, 0.0, 1.0)  # Telegraph progress 0..1.
 		var r := float(def["nova_radius"])
@@ -564,28 +502,6 @@ func _draw_teleport_mark(now: float) -> void:
 	var h := 70.0 + 50.0 * k  # Column height (px).
 	overlay.draw_colored_polygon(PackedVector2Array([c + Vector2(-w, 0), c + Vector2(-w * 0.4, -h), c + Vector2(w * 0.4, -h), c + Vector2(w, 0)]),
 		Color(Palette.IVORY, 0.12 + 0.25 * k))
-
-
-## A suppression ring: a filling pale disc while it warns, then a faint dome.
-func _draw_suppression(s: Suppression, now: float) -> void:
-	var col := Color(0.86, 0.9, 1.0)  # Pale holy white (distinct from the gold damage telegraphs).
-	if s.warn_left > 0.0:
-		var k := 1.0 - s.warn_left / s.warn_total  # Telegraph progress 0..1.
-		draw_circle(s.pos, s.radius, Color(col, 0.06))
-		draw_circle(s.pos, s.radius * k, Color(col, 0.12))
-		# Dashed rim turning slowly, with sigils.
-		var dashes := 24
-		for j in dashes:
-			var a := TAU * float(j) / float(dashes) + now * 0.6
-			draw_arc(s.pos, s.radius, a, a + TAU / float(dashes) * 0.55, 6, Color(col, 0.9), 3.0)
-		for j in 6:
-			var p := s.pos + Vector2.from_angle(TAU * float(j) / 6.0 - now * 0.4) * s.radius
-			draw_line(p + Vector2(0, -8), p + Vector2(0, 8), Color(Palette.GOLD, 0.9), 2.0)
-			draw_line(p + Vector2(-5, -2), p + Vector2(5, -2), Color(Palette.GOLD, 0.9), 2.0)
-	else:
-		var fade := clampf(s.active_left / maxf(0.01, s.duration), 0.0, 1.0)
-		draw_circle(s.pos, s.radius, Color(col, 0.05 + 0.05 * fade))
-		draw_arc(s.pos, s.radius, 0.0, TAU, RING_SEGMENTS, Color(col, 0.25 + 0.35 * fade), 2.0)
 
 
 ## The two beams: thin pulsing warning rays with sweep arrows, then wide

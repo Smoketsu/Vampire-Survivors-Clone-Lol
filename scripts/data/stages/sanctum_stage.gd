@@ -39,34 +39,26 @@ extends RefCounted
 const ID: String = "sanctum"
 
 # =====================================================================================
-# INTEGRATION STAND-INS (the only block the integrator has to touch)
+# Stage 3 kinds
 # =====================================================================================
-# INTEGRATION: switch to sanctified_sentinel / high_confessor / sun_paladin / radiant_inquisitor / cathedral_guardian / seraphine
+
 ## Stage-local enemy kind aliases. Every timeline entry of this stage (trickle
 ## weights, waves, escorts, altar guards, the Guardian, the Dawn's Wrath
-## companions) names its new Stage 3 kinds by these short keys;
-## EnemyDirector.resolve_kind() maps them to a real enemy kind when one is
-## spawned (StageRegistry "kind_aliases"). Until the Stage 3 enemy roster
-## exists the values are existing stand-in kinds; at integration they become
-## the real kind ids:
-##   sentinel  -> "sanctified_sentinel"  (GDD §7.2 high-armour construct with sweeps)
-##   confessor -> "high_confessor"       (GDD §7.2 elite priest)
-##   paladin   -> "sun_paladin"          (GDD §8.3 "elite paladins")
-##   radiant   -> "radiant_inquisitor"   (GDD §7.2 elite caster, holy zones)
-##   guardian  -> "cathedral_guardian"   (GDD §7.4 construct miniboss)
+## companions) names its Stage 3 kinds by these short keys;
+## EnemyDirector.resolve_kind() maps them to the real SanctumEnemyData kind
+## when one is looked up or spawned (StageRegistry "kind_aliases"):
+##   sentinel  -> Sanctified Sentinel   (GDD §7.2 high-armour construct with sweeps)
+##   confessor -> High Confessor        (GDD §7.2 elite priest)
+##   paladin   -> Sun Paladin           (GDD §8.3 "elite paladins")
+##   radiant   -> Radiant Inquisitor    (GDD §7.2 elite caster, holy zones)
+##   guardian  -> Cathedral Guardian    (GDD §7.4 construct miniboss)
 const KINDS := {
-	"sentinel": "halberdier",  # INTEGRATION: "sanctified_sentinel"
-	"confessor": "chaplain",  # INTEGRATION: "high_confessor"
-	"paladin": "templar",  # INTEGRATION: "sun_paladin"
-	"radiant": "purifier",  # INTEGRATION: "radiant_inquisitor"
-	"guardian": "halberdier",  # INTEGRATION: "cathedral_guardian"
+	"sentinel": "sanctified_sentinel",  # GDD §7.2
+	"confessor": "high_confessor",  # GDD §7.2
+	"paladin": "sun_paladin",  # GDD §8.3
+	"radiant": "radiant_inquisitor",  # GDD §7.2
+	"guardian": "cathedral_guardian",  # GDD §7.4
 }
-## Boss script id of the stage boss (EnemyDirector._spawn_boss()). Marshal
-## Vael stands in until Grand Inquisitor Seraphine exists.
-const BOSS_ID: String = "vael"  # INTEGRATION: "seraphine"
-## Max-HP multiplier of the Cathedral Guardian stand-in (a plain halberdier
-## made miniboss-sized). The real Guardian's row carries its own HP.
-const GUARDIAN_HP_MULT: float = 14.0  # INTEGRATION: 1.0 once "cathedral_guardian" exists. TUNING (not in GDD)
 
 # =====================================================================================
 # Run structure
@@ -195,11 +187,12 @@ const SEGMENTS := [
 ##                XP burst per crystal. `escort`: an optional formation wave
 ##                {formation, groups} that arrives with it.
 ##   "guardian" — the Cathedral Guardian miniboss (GDD §7.4 / §7.5): one
-##                `kind` (elite if `elite`, max HP x `hp_mult`) from the spawn
-##                ring, named `name` on the HUD's miniboss bar; when it dies
-##                it drops a treasure chest (`reward_chest`) and an XP burst
-##                (`reward_xp` in `reward_crystals` crystals). A plain
-##                miniboss (owner decision: it shields nothing).
+##                `kind` (elite if `elite`; the Guardian is always_elite, so
+##                the flag changes nothing) from the spawn ring. Its own kit
+##                (GuardianKit) registers it on the HUD's miniboss bar and
+##                pays its XP burst; ChestManager drops its guaranteed
+##                treasure chest. A plain miniboss (owner decision: it
+##                shields nothing).
 ##   "altars"   — `count` sacred altars (kind `kind`) rise
 ##                `distance_min`..`distance_max` px from the necromancer
 ##                (spread evenly), each with `guards` (list of {kind, count,
@@ -234,8 +227,7 @@ const EVENTS := [
 		"groups": [{"kind": "shieldbearer", "count": 4, "elite": false}, {"kind": "archer", "count": 4, "elite": false}, {"kind": "chaplain", "count": 1, "elite": false}]},
 	# GDD §8.3 07:00 "Guardian miniboss" (moved to 5:30) and a second chamber.
 	{"time": 330.0, "type": "guardian", "banner": "A Cathedral Guardian lumbers out of its alcove!",  # GDD §7.4 / §7.5 minibosses
-		"kind": "guardian", "elite": false, "hp_mult": GUARDIAN_HP_MULT, "name": "Cathedral Guardian",
-		"reward_chest": true, "reward_xp": 30, "reward_crystals": 6},  # TUNING (not in GDD)
+		"kind": "guardian", "elite": false},  # its HP, XP burst and chest: SanctumEnemyData / GuardianKit / ChestManager
 	{"time": 332.0, "type": "chamber", "banner": "Another sanctified chamber flares: break its crystals!",  # GDD §8.3 / §7.4
 		"kind": "ward_crystal", "distance_min": 260.0, "distance_max": 320.0, "crystal_offset": 115.0,  # TUNING (not in GDD)
 		"reward_xp": 22, "reward_crystals": 5,  # TUNING (not in GDD)
@@ -423,17 +415,10 @@ const SANCTUM := {
 	"structure_spacing": 170.0,  # TUNING (not in GDD)
 }
 
-## Grand Inquisitor Seraphine's arrival (keys as GraveyardStage.BOSS; the
-## boss script is BOSS_ID).
-const BOSS := {
-	"id": BOSS_ID,
-	"time": BOSS_TIME,
-	"display_name": "Grand Inquisitor Seraphine, Voice of the Dawn",  # GDD §7.5
-	"short_name": "Seraphine",
-	"arrive_banner": "Grand Inquisitor Seraphine, Voice of the Dawn, descends to judge you!",
-	"defeat_banner": "Seraphine has fallen! The radiant relic shatters: hold out...",  # GDD §7.5 "shatter the radiant relic"
-	"dead_objective": "Seraphine is dead. Survive until the countdown ends.",
-}
+## Grand Inquisitor Seraphine's arrival (keys as GraveyardStage.BOSS): her
+## own SeraphineData.ARRIVAL (boss id "seraphine", the ending text as the
+## defeat banner), whose `time` equals BOSS_TIME (17:00).
+const BOSS: Dictionary = SeraphineData.ARRIVAL
 
 ## The whole stage as one dictionary (StageRegistry documents every key).
 const STAGE := {
