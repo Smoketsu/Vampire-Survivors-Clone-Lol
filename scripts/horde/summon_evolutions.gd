@@ -9,7 +9,8 @@
 ##     HordeDirector.compute_stats() (the ONE summon-stat path). It applies the
 ##     summon-evolution passives (Forbidden Knowledge, Dark Benediction; each
 ##     its own stacking category, GDD §6.4) and the evolution overlay of a
-##     transformed class (SummonEvolutionData "mult" / "set").
+##     transformed class (SummonEvolutionData "mult" / "set", and
+##     "special_mult" / "special_set" on its class-special numbers).
 ##   * Transformation ("transform"): the class keeps its id, level, slot and
 ##     capacity; every unit is re-statted in place, healed to full and plays
 ##     the transformation glow. Its HUD row, slot icon and plural change.
@@ -147,6 +148,15 @@ func modify_stats(cls: String, out: Dictionary, with_evolution: bool) -> void:
 	var set_v: Dictionary = def.get("set", {})
 	for key: String in set_v:
 		out[key] = set_v[key]
+	# Class-special overlays (Shadow Reaper, Cathedral Horror): on the scaled
+	# special numbers; special_set values are final.
+	var sp: Dictionary = out["special"]  # Fresh per compute_stats() call.
+	var sp_mult: Dictionary = def.get("special_mult", {})
+	for key: String in sp_mult:
+		sp[key] = float(sp[key]) * float(sp_mult[key])
+	var sp_set: Dictionary = def.get("special_set", {})
+	for key: String in sp_set:
+		sp[key] = sp_set[key]
 	out["evolution"] = evo
 
 
@@ -322,7 +332,8 @@ func build_offer(evo: String) -> Dictionary:
 			var raise: Dictionary = def["raise"]
 			deltas.append("NEW  1 in %d foes it slays rises for %ss (max %d)" % [
 					int(roundf(1.0 / float(raise["chance"]))), AbilityManager._fmt(raise["duration"]), int(raise["max_alive"])])
-		hint = "Transforms your %s in place" % String(UnitData.UNITS[cls]["plural"]).to_lower()
+		deltas.append_array(SpecialEvolutions.card_lines(evo, cur, nxt))  # Shadow Reaper / Cathedral Horror.
+		hint ="Transforms your %s in place" % String(UnitData.UNITS[cls]["plural"]).to_lower()
 	var lvl_from := int(SummonEvolutionData.BASE_LEVEL_REQUIRED)
 	return ab._offer("evolution", evo, String(def["display_name"]), String(def["icon"]), lvl_from, lvl_from, "EVOLUTION",
 			String(def["description"]), deltas, hint)

@@ -24,7 +24,8 @@
 ##   * Skips the AI and movement of enemies held by a Stasis power-up
 ##     (game.powerups.freezes(); Reckoning enemies are immune, the boss is
 ##     frozen for part of the duration) or by a Frost Wraith Deep Freeze
-##     (Enemy.freeze_timer, set by CombatResolver.freeze_enemy()).
+##     (Enemy.freeze_timer, set by CombatResolver.freeze_enemy()) or a
+##     Cathedral Horror dive stun (Enemy.stun_timer, CombatResolver.stun_enemy()).
 class_name EnemyDirector
 extends Node2D
 
@@ -143,7 +144,7 @@ func step(delta: float) -> void:
 	for e in active:
 		if not e.active:
 			continue
-		var frozen := pw.freezes(e) or e.freeze_timer > 0.0  # Held by Stasis or a Deep Freeze this tick.
+		var frozen := pw.freezes(e) or e.freeze_timer > 0.0 or e.stun_timer > 0.0  # Held by Stasis, a Deep Freeze or a Cathedral Horror stun this tick.
 		e.set_frozen(frozen)
 		if frozen:
 			e.step_frozen(delta)

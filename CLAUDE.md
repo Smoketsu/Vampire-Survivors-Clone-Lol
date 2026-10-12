@@ -181,6 +181,10 @@ tiny tweaks.
   `HordeDirector.compute_stats()`; their cards name the summon evolutions they will unlock (Bone
   Colossus, Gravebow, Cathedral Horror, Shadow Reaper; Soul Recycling → Winter Revenant), which are
   not built yet; and the owner rule that **every evolution needs its paired passive at Lv 5**.
+- the summon evolutions **Shadow Reaper** (Rogue + Bound Souls: halved dash cooldown, chained
+  dashes, stacking bleeds, dash-kill reset) and **Cathedral Horror** (Gargoyle + Unholy
+  Resilience: wider swoop, dive stun via `CombatResolver.stun_enemy()`, stone form after landing),
+  upgrading the class specials through the `special_mult` / `special_set` recipe overlays.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.

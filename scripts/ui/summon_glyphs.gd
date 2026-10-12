@@ -20,6 +20,8 @@
 ##   Crypt Gargoyle     = hunched stone body with wide bat wings and horns
 ##   Frost Wraith       = legless teardrop ghost with an ice crown and a
 ##                        floating ice shard, in a cold glow
+##   Shadow Reaper / Cathedral Horror (the Rogue / Gargoyle evolutions) are
+##                        drawn by ReaperHorrorGlyphs
 ## Also draws the icons of the horde passives tied to summon evolutions
 ## (Forbidden Knowledge, Dark Benediction, and the four later ones: Bone
 ## Plating, Unholy Precision, Unholy Resilience, Bound Souls), the
@@ -58,6 +60,10 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 			draw_gargoyle(ci, o, r, flash)
 		"frost_wraith":
 			draw_frost_wraith(ci, o, r, flash)
+		"shadow_reaper":
+			ReaperHorrorGlyphs.draw_shadow_reaper(ci, o, r, flash)
+		"cathedral_horror":
+			ReaperHorrorGlyphs.draw_cathedral_horror(ci, o, r, flash)
 		_:
 			return false
 	return true
@@ -74,6 +80,9 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 		"death_knight", "lich":
 			ProgressionGlyphs._gold_frame(ci, c, s)
 			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.08, s * 0.1), s * 0.45, false)
+		"shadow_reaper", "cathedral_horror":
+			ProgressionGlyphs._gold_frame(ci, c, s)
+			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.06, s * 0.1), s * 0.42, false)
 		"profane_bishop":
 			ProgressionGlyphs._gold_frame(ci, c, s)
 			Glyphs.draw_summon(ci, "bishop", c + Vector2(0, s * 0.1), s * 0.45, false)

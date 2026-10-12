@@ -8,7 +8,8 @@ of Skeleton Warriors, Skeletal Archers, Undead Mages and the two priest orders,
 Grave Menders and Crypt Warders (plus Corpse Abominations, Grave Rogues, Crypt
 Gargoyles and Frost Wraiths), follows, fights, heals, shields, holds the line
 and regroups without any commands from you. Late in a run your summons can
-evolve into Death Knights, Liches and Profane Bishops.
+evolve into Death Knights, Liches, Profane Bishops, Shadow Reapers and
+Cathedral Horrors.
 
 This repository has a playable **prototype** of the first two stages, *The
 Desecrated Graveyard* and *The Crimson March* (unlocked by slaying Sir Alaric),
@@ -157,7 +158,8 @@ number is in `scripts/data/unit_data.gd`.
   Bishop); the later classes are never required. March of the Deathless
   counts any 3 classes.
 - **Evolutions only touch their own classes**: Death Knight (Warriors), Lich
-  (Mages) and Profane Bishop (Menders + Warders). Forbidden Knowledge and
+  (Mages), Profane Bishop (Menders + Warders), Shadow Reaper (Rogues) and
+  Cathedral Horror (Gargoyles). Forbidden Knowledge and
   Dark Benediction boost only Mages and the support classes; the later
   classes have no evolution yet (their paired passives already exist, see
   *Later horde passives*).
@@ -203,6 +205,8 @@ number is in `scripts/data/unit_data.gd`.
 |---|---|---|
 | Skeleton Warrior Lv 5 | Dark Command **Lv 5** | **Death Knight**: bigger armoured silhouette, ×1.5 HP, ×1.35 damage; each swing **cleaves** 50% to foes within 32 px; **life drain** 12% of melee damage; a heavier wall (block mass 5, bash ×2 every 1.5 s, foes in contact slowed to 45%) |
 | Undead Mage Lv 5 | Forbidden Knowledge **Lv 5** (+8–40% mage damage, +5–25% splash) | **Lich**: floating crowned wisp, ×1.4 HP, ×1.2 damage; **raise the dead**: every 5th foe a Lich kills rises as a skeleton for 12 s (max 6 at once) |
+| Grave Rogue Lv 5 | Bound Souls **Lv 5** | **Shadow Reaper**: hooded scythe assassin, ×1.35 HP, ×1.25 damage; **Dash Strike cooldown halved**; each dash **chains** to the nearest enemy it has not struck yet (same lane rules: a clear lane that reaches it, an end inside the leash, never inside an obstacle; 0.1 s lane flash); **bleeds stack** up to 3 per Reaper on one enemy (each stack ticks on its own; at the cap the oldest stack is refreshed); a **kill during a dash resets** the cooldown to 0.9 s (at most once per chain) |
+| Crypt Gargoyle Lv 5 | Unholy Resilience **Lv 5** | **Cathedral Horror**: huge cracked-marble gargoyle, ×1.4 HP, ×1.25 damage; **swoop radius +30%**; the dive **stuns** every enemy it hits for 0.6 s (the Deep Freeze hold: the boss 25%, elites 60%, Reckoning enemies and structures immune; stars over the enemy); after landing it **turns to stone** for 2 s: it stands still and does not attack, **takes no damage** and still body-blocks (a recall ends it at once) |
 | Grave Mender Lv 5 **and** Crypt Warder Lv 5 | Dark Benediction **Lv 5** (+8–40% heals, wards and barriers) | **Profane Bishop** (a **merge**): both orders become one class that heals, wards you **and** shields allies, plus an aura every 3 s that heals everything near it and burns foes. Capacity becomes 3 + your global capacity bonuses (counted once, not twice); existing Menders and Warders convert in place up to that cap, the rest dissolve into them, and **one active slot is freed** |
 
   The numbers live in `scripts/data/summon_evolution_data.gd`; the runtime is
@@ -647,7 +651,7 @@ file is missing. Only Shadow Blast is wired so far, as the test.
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
 | Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Plus Bone Spear, Soul Siphon, Corpse Explosion and Plague Cloud (see *The newer spells*). Each has 5 levels. |
 | Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed; at Lv 5 it evolves Warriors), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual, Abyssal Focus, Shade Stride, Vampiric Rite, Necrotic Expanse, Lingering Malediction, Forbidden Knowledge (mage damage and splash) and Dark Benediction (heals, wards and barriers), and the later horde passives Bone Plating (flat damage off every hit on a minion), Unholy Precision (minion crits), Unholy Resilience (less area / holy damage to minions) and Bound Souls (minion speed, leash and return). Every evolution needs its paired passive at Lv 5. Bonus stacking follows §34. |
-| Evolutions & synergies (§6) | Void Barrage, Eclipse Ward, Abyssal Detonation, Ossuary Lance, Soul Rapture, Grave Eruption and Pestilence; the summon evolutions Death Knight, Lich and Profane Bishop (a merge of the two priest orders); four army synergies; weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
+| Evolutions & synergies (§6) | Void Barrage, Eclipse Ward, Abyssal Detonation, Ossuary Lance, Soul Rapture, Grave Eruption and Pestilence; the summon evolutions Death Knight, Lich, Profane Bishop (a merge of the two priest orders), Shadow Reaper and Cathedral Horror; four army synergies; weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
 | Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 13:00. |
 | Waves and stage events (§11) | The data-driven 20-minute Graveyard timeline at the GDD's real times (Sir Alaric at 17:00), then the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
@@ -658,7 +662,7 @@ file is missing. Only Shadow Blast is wired so far, as the test.
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
 | UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu, end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress (compact rows, at most one per active slot); ability slots with levels (an evolved class shows its evolution's icon and name). |
-| Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, Menders are round with a halo, Warders are downward heater shapes under a floating ward sigil, Bishops wear a tall mitre over a bell robe, Death Knights have horned helms, spiked pauldrons and a greatsword, Liches float as crowned wisps, the Lich's risen dead are bare ribcages, abominations are huge stitched blobs, rogues are hooded chevrons with daggers, gargoyles have bat wings, frost wraiths are legless ice ghosts). Hit flashes, death pops and an evolution glow are included. |
+| Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, Menders are round with a halo, Warders are downward heater shapes under a floating ward sigil, Bishops wear a tall mitre over a bell robe, Death Knights have horned helms, spiked pauldrons and a greatsword, Liches float as crowned wisps, the Lich's risen dead are bare ribcages, abominations are huge stitched blobs, rogues are hooded chevrons with daggers, gargoyles have bat wings, frost wraiths are legless ice ghosts, Shadow Reapers are smoke-trailing hooded scythe assassins, Cathedral Horrors are huge marble gargoyles on a broken plinth). Hit flashes, death pops and an evolution glow are included. |
 
 ### Where the numbers come from
 
@@ -738,6 +742,8 @@ scripts/
       summon_behavior.gd      Base class: think / physics / attack / score / draw hooks, recall-safe
       summon_behaviors.gd     Registry (behavior id -> class) and the level-up card lines
       abomination_behavior.gd Stomp (telegraphed ring, AoE damage + knockback)
+      special_evolutions.gd   Shadow Reaper / Cathedral Horror card lines and autotest line
+                              (their mechanics live in the Rogue / Gargoyle behaviours)
       rogue_behavior.gd       Dash Strike (telegraphed lane, dash, bleed, return to formation)
       gargoyle_behavior.gd    Swoop (airborne flight over obstacles, dive AoE, safe landing)
       frost_wraith_behavior.gd Frost bolts (chill) and Deep Freeze (the Stasis freeze path)
@@ -775,6 +781,8 @@ scripts/
                             (Warder, Bishop, Death Knight, Lich, risen skeleton,
                             Abomination, Rogue, Gargoyle, Frost Wraith shapes and
                             their icons, evolution glow, enemy chill tint),
+                            reaper_horror_glyphs (Shadow Reaper, Cathedral Horror,
+                            enemy stun stars, stone-form shell),
                             ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons),
                             chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
                             stage_select (stage cards, locks, best times), pre_run_setup (difficulty level,
@@ -792,7 +800,8 @@ scripts/
     ability_data.gd         Spell level tables
     passive_data.gd         Passive level tables
     evolution_data.gd       Evolution recipes and stats
-    summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop) and stats
+    summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
+                            Shadow Reaper, Cathedral Horror) and stats
     synergy_data.gd         Army synergy requirements and effects
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
@@ -914,7 +923,14 @@ Menders / Warders converted and dissolved by the merge, Bishop aura pulses),
 and the damage / heals / shields of every summon source
 (`dmg_<tag>`, `heal_by_<tag>`, `shield_by_<tag>`; tags are the class or
 evolution id plus `bash`, `death_knight_bash`, `death_knight_cleave` and
-`lich_risen`) and the same summed per class. The ward line reports wards on
+`lich_risen`) and the same summed per class. The **special evolutions** line
+counts the Shadow Reaper's chained dashes, cooldown resets, bleed stacks added
+and the most stacks on one enemy (`reaper_chain_dashes`, `reaper_cd_resets`,
+`reaper_bleed_stacks_added`, `reaper_max_bleed_stacks`) and the Cathedral
+Horror's stuns (and on the boss), stunned-enemy seconds, stone forms, stone
+seconds and damage the stone prevented (`horror_stuns`, `horror_boss_stuns`,
+`enemy_stunned_seconds`, `horror_stone_forms`, `horror_stone_seconds`,
+`horror_stone_dmg_prevented`). The ward line reports wards on
 the necromancer (and per minute with 2+ Warders / Bishops alive), heal casts,
 ally barriers and the barrier damage absorbed. These numbers
 are the starting point for tuning. Every 60 s it also prints `[metric]` lines

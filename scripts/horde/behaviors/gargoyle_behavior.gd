@@ -16,8 +16,26 @@
 ##      never lands inside an obstacle), then rejoins the shared FSM.
 ## Leash and recall stay in charge: a recall changes the FSM state, which
 ## cancels the swoop and lands the gargoyle at once (SummonBehavior.physics()).
+## Cathedral Horror (summon evolution; keys from SummonEvolutionData
+## "special_mult" / "special_set", absent / 0 on the base Gargoyle, which
+## keeps exactly the behaviour above):
+##   * a wider swoop (swoop_radius x special_mult),
+##   * the dive stuns every enemy it hits for stun_duration s through
+##     CombatResolver.stun_enemy() (the Deep Freeze hold: EnemyDirector skips
+##     the enemy's AI, attacks and movement; the boss gets stun_boss_mult,
+##     elites stun_elite_mult, Reckoning enemies and structures are immune),
+##   * after touching down it turns to stone (phase STONE, still CASTING)
+##     for stone_duration s: it stands still and does not attack, takes no
+##     damage (SummonedUnit.stone_form, checked first in CombatResolver.
+##     damage_unit()) and, being on the ground and in the ally grid, still
+##     body-blocks enemies. special_time restarts with the stone phase (a
+##     separately bounded hold, so the autotest overtime check still bounds
+##     the swoop and the stone each on their own). A recall ends it at once.
 ## Stats: gargoyle_swoops, gargoyle_swoop_hits, dmg_gargoyle_swoop,
-## summon_special_end_blocked (a landing inside an obstacle: must be 0).
+## summon_special_end_blocked (a landing inside an obstacle: must be 0);
+## Cathedral Horror: horror_stuns, horror_boss_stuns, horror_stone_forms,
+## horror_stone_seconds, horror_stone_dmg_prevented (CombatResolver),
+## enemy_stunned_seconds (Enemy.step_frozen()).
 class_name GargoyleBehavior
 extends SummonBehavior
 
@@ -27,6 +45,8 @@ const TAKEOFF: int = 1
 const FLIGHT: int = 2
 ## Phase: settling after the dive (still airborne).
 const LAND: int = 3
+## Phase: turned to stone after landing (Cathedral Horror only).
+const STONE: int = 4
 
 ## World point of the dive (follows the dive target while it lives).
 var dive_point: Vector2 = Vector2.ZERO
@@ -95,10 +115,38 @@ func step_special(u: SummonedUnit, delta: float) -> bool:
 			var left := float(u.special["swoop_land"]) - phase_time  # Seconds of landing left.
 			if left <= 0.0:
 				_touch_down(u)
-				end_special(u, SummonedUnit.State.ENGAGING if u.target_alive() else SummonedUnit.State.FOLLOWING)
+				if float(u.special.get("stone_duration", 0.0)) > 0.0:
+					_begin_stone(u)
+				else:
+					end_special(u, SummonedUnit.State.ENGAGING if u.target_alive() else SummonedUnit.State.FOLLOWING)
 			else:
 				u.velocity = (land_point - u.position) / maxf(left, delta)
+		STONE:
+			u.velocity = Vector2.ZERO
+			u.game.stat_add("horror_stone_seconds", delta)
+			if phase_time >= float(u.special["stone_duration"]):
+				_end_stone(u)
+				end_special(u, SummonedUnit.State.ENGAGING if u.target_alive() else SummonedUnit.State.FOLLOWING)
 	return true
+
+
+## Cathedral Horror: turns to stone where it landed (no damage taken).
+func _begin_stone(u: SummonedUnit) -> void:
+	next_phase(STONE)
+	special_time = 0.0  # The stone hold is bounded on its own (see header).
+	u.velocity = Vector2.ZERO
+	u.stone_form = true
+	u.self_modulate = ReaperHorrorGlyphs.STONE_TINT
+	u.game.effects.ring(u.position, u.radius * 1.8, Palette.GARGOYLE_STONE, 0.35)
+	u.game.stat_add("horror_stone_forms", 1.0)
+	u.queue_redraw()
+
+
+## Ends the stone form (flesh again, takes damage).
+func _end_stone(u: SummonedUnit) -> void:
+	u.stone_form = false
+	u.self_modulate = Color.WHITE
+	u.queue_redraw()
 
 
 ## The dive lands at `pos`: AoE damage, knockback, shockwave, shake.
@@ -106,6 +154,7 @@ func _impact(u: SummonedUnit, pos: Vector2) -> void:
 	var game := u.game
 	var r := float(u.special["swoop_radius"])  # Impact radius (px).
 	var kb := float(u.special["swoop_knockback"])  # Knockback impulse (px/s).
+	var stun := float(u.special.get("stun_duration", 0.0))  # Cathedral Horror stun (s; 0 = none).
 	game.enemy_grid.query(pos, r + ProjectileManager.MAX_BODY_RADIUS, _buf)
 	var hits := 0  # Enemies hit.
 	for e: Enemy in _buf:
@@ -115,8 +164,16 @@ func _impact(u: SummonedUnit, pos: Vector2) -> void:
 		e.knockback += (away / away.length() if away.length() > 0.01 else Vector2.UP) * kb / maxf(e.mass, 0.1)
 		hits += 1
 		game.combat.damage_enemy(e, float(u.special["swoop_damage"]), "gargoyle_swoop")
+		if stun > 0.0 and e.active:
+			# Cathedral Horror: the dive stuns what it hits.
+			if game.combat.stun_enemy(e, stun, float(u.special["stun_boss_mult"]), float(u.special["stun_elite_mult"])) > 0.0:
+				game.stat_add("horror_stuns", 1.0)
+				if e.is_boss:
+					game.stat_add("horror_boss_stuns", 1.0)
 	game.effects.ring(pos, r, Palette.VIOLET, 0.3)
 	game.effects.ring(pos, r * 0.55, Palette.GARGOYLE_STONE, 0.35)
+	if stun > 0.0:
+		game.effects.ring(pos, r * 0.8, Palette.IVORY, 0.25)  # Stun shock ring.
 	Juice.fx.burst(pos, Palette.GARGOYLE_STONE, Palette.VIOLET, 10, r * 2.0, 0.45, 2.5)
 	game.shake(float(u.special["swoop_shake"]))
 	Sfx.play("gargoyle_dive", pos)
@@ -131,8 +188,12 @@ func _touch_down(u: SummonedUnit) -> void:
 		u.game.stat_add("summon_special_end_blocked", 1.0)
 
 
-## A recall interrupted the swoop: land where it is (on a free point).
+## A recall interrupted the swoop: land where it is (on a free point). In
+## stone form it is already on the ground: the stone just ends.
 func on_cancel(u: SummonedUnit) -> void:
+	if phase == STONE:
+		_end_stone(u)
+		return
 	land_point = u.position
 	_touch_down(u)
 	dive_target = null
@@ -157,6 +218,12 @@ func body_lift(u: SummonedUnit) -> float:
 		LAND:
 			return h * (1.0 - clampf(phase_time / maxf(float(u.special["swoop_land"]), 0.01), 0.0, 1.0))
 	return 0.0
+
+
+## Stone form overlay over the body (cracked stone shell, violet runes).
+func draw_over(u: SummonedUnit) -> void:
+	if phase == STONE:
+		ReaperHorrorGlyphs.draw_stone_shell(u, Vector2.ZERO, u.radius)
 
 
 ## Ground shadow while airborne and the dive marker during the flight.

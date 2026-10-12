@@ -19,6 +19,7 @@
 ##   release_attack(u)   releases a class-specific attack_profile.
 ##   score_bonus(u,e,dp) extra target score (GDD §27 class preferences).
 ##   draw_under(u) / body_lift(u)  telegraphs / shadow and the drawn height.
+##   draw_over(u)        overlays drawn after the body (Cathedral Horror stone).
 ##
 ## Determinism (CLAUDE.md): only the seeded global RNG, never instance ids.
 class_name SummonBehavior
@@ -111,6 +112,11 @@ func score_bonus(_u: SummonedUnit, _e: Enemy, _dp: float) -> float:
 
 ## Draws telegraphs / shadows before the body (inside u._draw()).
 func draw_under(_u: SummonedUnit) -> void:
+	pass
+
+
+## Draws overlays after the body (inside u._draw()).
+func draw_over(_u: SummonedUnit) -> void:
 	pass
 
 
