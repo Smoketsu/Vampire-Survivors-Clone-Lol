@@ -95,6 +95,7 @@ Autotest options (full table in the README):
   `bone_spear,soul_siphon,corpse_explosion,plague_cloud`)
 - `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
 - `--stage=graveyard|crimson_march|sanctum` (default graveyard; stage locks are ignored)
+- `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
 - `--difficulty=initiate|necromancer|lich|deathlord` (GDD §8.4; default necromancer = today's game)
 - `--modifiers=a,b` (GDD §8.5 run modifiers, e.g. `hardened_faith,scarcity`, or `all`)
 - `--stance=escort|onslaught|spearhead|bone_ring` (force an army stance for the whole run)
@@ -222,6 +223,11 @@ tiny tweaks.
   and ground outline, a pause-menu line per stance, Spearhead bought in the Ossuary (Spearhead
   Doctrine); the flavour bonuses exist but are off until the final balance pass; `--stance=`, and
   the army / summon / evolve bots switch by a simple rule (`stance_bot.gd`; naive / pact keep Escort).
+- the Stage 3 boss **Grand Inquisitor Seraphine** (`boss_seraphine.gd`, hazards in
+  `seraphine_hazards.gd`, data in `seraphine_data.gd`, GDD §15.0): three phases (Divine Judgment,
+  Avatar of the Dawn, The Last Light), healing attendants (3 − altars destroyed), teleports, beams,
+  the safe-zone nova, undead suppression (`_apply_suppression()` adapter), the collapsing arena,
+  the relic shatter and the ending text; `--boss=seraphine`.
 
 - the Stage 3 **Covenant kinds** (`sanctum_enemy_data.gd`, kits in `scripts/enemies/sanctum/`, usable by
   any stage): the Sanctified Sentinel (flat armour 6, telegraphed sweep), Radiant Inquisitor (holy zones,

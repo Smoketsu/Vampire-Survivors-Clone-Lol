@@ -55,7 +55,11 @@
 ##   --stage=ID           Autotest stage: "graveyard" (default),
 ##                         "crimson_march" or "sanctum" (StageRegistry ids;
 ##                         stage locks are ignored).
-##   --difficulty=ID       Autotest difficulty level (GDD §8.4, DifficultyData
+##   --boss=ID             Autotest boss test: puts boss ID ("alaric", "vael"
+##                         or "seraphine"; StageRegistry.BOSS_ARRIVALS) in
+##                         the stage's boss slot at the stage's boss time,
+##                         e.g. --boss=seraphine on the Graveyard.
+##   --difficulty=ID      Autotest difficulty level (GDD §8.4, DifficultyData
 ##                         ids or names, any case): initiate, necromancer
 ##                         (default, today's game), lich or deathlord.
 ##   --modifiers=a,b       Autotest run modifiers (GDD §8.5, RunModifierData
@@ -106,6 +110,9 @@ var autotest_spells: PackedStringArray = PackedStringArray()
 var autotest_passives: PackedStringArray = PackedStringArray()
 ## Autotest: StageRegistry id of the stage to play (--stage=, locks ignored).
 var autotest_stage: String = StageRegistry.DEFAULT_ID
+## Autotest: StageRegistry.BOSS_ARRIVALS id replacing the stage's boss
+## (--boss=; "" = the stage's own boss).
+var autotest_boss: String = ""
 ## Autotest: DifficultyData id of the difficulty level (--difficulty=).
 var autotest_difficulty: String = DifficultyData.DEFAULT_ID
 ## Autotest: RunModifierData ids of the run modifiers (--modifiers=a,b).
@@ -170,6 +177,12 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_stage = id
 			else:
 				push_error("Unknown --stage=%s (expected one of %s)" % [id, ", ".join(PackedStringArray(StageRegistry.ORDER))])
+		elif arg.begins_with("--boss="):
+			var bid := arg.get_slice("=", 1).to_lower()  # Requested boss id.
+			if StageRegistry.BOSS_ARRIVALS.has(bid):
+				autotest_boss = bid
+			else:
+				push_error("Unknown --boss=%s (expected one of %s)" % [bid, ", ".join(PackedStringArray(StageRegistry.BOSS_ARRIVALS.keys()))])
 		elif arg.begins_with("--difficulty="):
 			var want := arg.get_slice("=", 1).to_lower()  # Requested level (id or name).
 			var found := ""  # Matching DifficultyData id.

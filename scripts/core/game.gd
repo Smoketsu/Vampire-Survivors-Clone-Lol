@@ -157,6 +157,12 @@ func _ready() -> void:
 	if run_config == null:
 		run_config = RunConfig.new()
 	stage_def = run_config.stage_def()
+	if GameState.autotest and GameState.autotest_boss != "":
+		# --boss=ID: another boss in this stage's slot, at the stage's boss time.
+		var arrival: Dictionary = (StageRegistry.BOSS_ARRIVALS[GameState.autotest_boss] as Dictionary).duplicate()
+		arrival["time"] = stage_def["boss"]["time"]
+		stage_def = stage_def.duplicate()
+		stage_def["boss"] = arrival
 	# The autotest must exist first: it seeds the RNG before anything random.
 	if GameState.autotest:
 		autotest = Autotest.new()

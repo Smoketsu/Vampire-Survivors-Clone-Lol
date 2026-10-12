@@ -390,13 +390,16 @@ func show_banner(text: String) -> void:
 
 
 ## Spawns the stage boss (stage_def boss.id: "alaric" -> BossAlaric,
-## "vael" -> BossVael) at the spawn ring (HP not time-scaled, but scaled by
+## "vael" -> BossVael, "seraphine" -> BossSeraphine) at the spawn ring (HP
+## not time-scaled, but scaled by
 ## the difficulty level's boss_hp and a share of the opt-in HP bonus,
 ## DifficultyModifiers.boss_hp_mult, and by the stage's enemy HP multiplier).
 func _spawn_boss() -> void:
 	match String(boss_info["id"]):
 		"vael":
 			boss = BossVael.new()
+		"seraphine":
+			boss = BossSeraphine.new()
 		_:
 			boss = BossAlaric.new()
 	add_child(boss)

@@ -83,7 +83,12 @@
 ##     structures placed / destroyed / escaped, outpost reinforcements, aura
 ##     buffs, tower-shield and Shieldwall damage resisted, halberd cleaves)
 ##     and Marshal Vael's attack counters. The boss line works for any stage
-##     boss (Boss.special_ids()). In the Sanctum of Judgment the army,
+##     boss (Boss.special_ids()). --boss=ID puts another boss in the stage's
+##     slot (e.g. --boss=seraphine on any stage); with Grand Inquisitor
+##     Seraphine the summary adds a "seraphine" line (phase times, attendants
+##     and their healing, teleports, circles, beams, barrages, summons,
+##     suppressions, novas, the collapsing arena and her damage;
+##     BossSeraphine.summary_line()). In the Sanctum of Judgment the army,
 ##     summon and evolve bots also walk toward live ward crystals and sacred
 ##     altars when calm (naive / pact keep their baseline), and the summary
 ##     adds a "sanctum" line (chambers cleansed and when, altars destroyed
@@ -370,6 +375,8 @@ func _ready() -> void:
 		for sp in _spawns:
 			parts.append("%s@%s x%d" % [sp["kind"], _clock(float(sp["time"])), int(sp["count"])])
 		print("[autotest] forced spawns: %s" % ", ".join(parts))
+	if GameState.autotest_boss != "":
+		print("[autotest] boss override: %s" % GameState.autotest_boss)
 	print("[autotest] difficulty: %s | modifiers: %s" % [GameState.autotest_difficulty,
 		",".join(GameState.autotest_modifiers) if not GameState.autotest_modifiers.is_empty() else "none"])
 
@@ -988,6 +995,8 @@ func finish(summary: Dictionary) -> void:
 		print("[autotest] sanctum: %s | minion dmg prevented by chambers %d" % [sd.summary_line(), int(st.get("sanctum_chamber_dmg_prevented", 0.0))])
 		print("[autotest] sanctum events (%d): %s" % [sd.fired.size(), ", ".join(sd.fired)])
 	_print_sanctum(st)
+	if game.enemies.boss is BossSeraphine:
+		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired
 	print("[autotest] stage events fired (%d): %s" % [fired.size(), ", ".join(fired)])
 	print("[autotest] templar charges: %d (body-blocked by warriors: %d) | temporary summons spawned: %d" % [
@@ -1132,7 +1141,12 @@ func _print_abilities(st: Dictionary) -> void:
 func _boss_special_ids() -> Array:
 	if game.enemies.boss != null:
 		return game.enemies.boss.special_ids()
-	return MarchEnemyData.VAEL_SPECIALS if String(game.stage_def["boss"]["id"]) == "vael" else EnemyData.SPECIALS
+	match String(game.stage_def["boss"]["id"]):
+		"vael":
+			return MarchEnemyData.VAEL_SPECIALS
+		"seraphine":
+			return SeraphineData.SPECIALS
+	return EnemyData.SPECIALS
 
 
 ## Crimson March summary: zones, structures, new-enemy mechanics, Marshal

@@ -17,6 +17,9 @@ const ANIMS: Dictionary = {
 	"frost_nova": {"duration": 0.5, "fill": 1.15},  # TUNING (not in GDD) Winter Revenant death nova
 	"dread_rally": {"duration": 0.6, "fill": 1.15},  # TUNING (not in GDD) Dread Rally burst (10 frames, ART_BIBLE)
 	"grave_step_trail": {"duration": 0.3, "fill": 1.3},  # TUNING (not in GDD) Grave Step departure puff (6 frames)
+	"seraphine_nova": {"duration": 0.55, "fill": 1.05},  # TUNING (not in GDD) Seraphine's Judgment nova blast (10 frames)
+	"holy_beam": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) Seraphine's beams igniting (6 frames)
+	"relic_shatter": {"duration": 0.8, "fill": 1.15},  # TUNING (not in GDD) Seraphine's death, the relic shattering (10 frames)
 }
 ## Duration (s) for an animation id missing from ANIMS.
 const DEFAULT_DURATION: float = 0.4  # TUNING (not in GDD)

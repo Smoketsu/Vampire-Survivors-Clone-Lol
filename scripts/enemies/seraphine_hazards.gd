@@ -1,0 +1,660 @@
+## SeraphineHazards — the battlefield hazards of Grand Inquisitor Seraphine
+## (BossSeraphine, GDD §7.5), kept in world space because the boss node is
+## mirrored for facing. It times, resolves and draws:
+##   * delayed holy circles  — gold warning circles (EffectManager
+##                             telegraph_circle) that blast after their delay;
+##   * rotating holy beams   — thin warning rays, then two bright beams that
+##                             sweep around her and pulse damage on the
+##                             necromancer and every summon they cross;
+##   * the Judgment nova     — the whole area around her glows gold while 2-3
+##                             cool, dark safe circles are marked; when it
+##                             detonates, the necromancer and summons outside
+##                             the safe circles take heavy holy damage;
+##   * undead suppression    — a pale ring around the army that, after its
+##                             telegraph, calls BossSeraphine._apply_suppression()
+##                             and stays drawn while the suppression lasts;
+##   * the collapsing arena  — holy fire closing in from the rim of a circle
+##                             around her (the Last Light), burning whatever
+##                             stands outside it.
+## The boss steps it from its own physics step, so every hazard pauses while
+## she is frozen (Stasis, Deep Freeze), like her telegraphs. Damage goes
+## through CombatResolver; nothing here uses randomness (the boss picks every
+## position), so runs stay deterministic per seed. All numbers come from
+## SeraphineData.BOSS. Ground parts draw under the bodies (z_index below);
+## beams, flames and safe-circle rims draw on `overlay`, above them.
+class_name SeraphineHazards
+extends Node2D
+
+## Draw layer of the ground parts (above telegraphs and obstacles, under bodies).
+const GROUND_Z: int = -4
+## Draw layer of the bright parts (over bodies, under projectiles).
+const OVERLAY_Z: int = 3
+## Segments of the collapse fire ring and other large circles.
+const RING_SEGMENTS: int = 72
+## Flame tongues licking inward along the collapse edge.
+const FLAME_TONGUES: int = 56
+## How far (px) outside the collapse edge the drawn fire band reaches.
+const FIRE_BAND: float = 900.0
+## Seconds the safe circles keep glowing after a nova blast.
+const NOVA_AFTERGLOW: float = 0.5
+
+## One delayed holy circle.
+class HolyCircle:
+	extends RefCounted
+	## World-space centre.
+	var pos: Vector2 = Vector2.ZERO
+	## Radius in px.
+	var radius: float = 50.0
+	## Seconds left until it blasts.
+	var left: float = 1.0
+
+## One undead suppression (telegraph, then the active zone).
+class Suppression:
+	extends RefCounted
+	## World-space centre (the necromancer at the cast).
+	var pos: Vector2 = Vector2.ZERO
+	## Radius in px.
+	var radius: float = 220.0
+	## Seconds left of the telegraph (> 0: still warning).
+	var warn_left: float = 1.5
+	## Total telegraph seconds (fill animation).
+	var warn_total: float = 1.5
+	## Seconds the suppression lasts once it lands.
+	var duration: float = 5.0
+	## Seconds left of the active zone (after the telegraph).
+	var active_left: float = 0.0
+	## Summon damage multiplier inside while active.
+	var damage_mult: float = 0.5
+
+## Owning run.
+var game: Game
+## The boss these hazards belong to.
+var boss: BossSeraphine
+## SeraphineData.BOSS (numbers).
+var def: Dictionary = {}
+## Bright layer drawn over the bodies (beams, flames, safe-circle rims).
+var overlay: Node2D
+## Pending holy circles.
+var circles: Array[HolyCircle] = []
+## Active and telegraphed suppressions.
+var suppressions: Array[Suppression] = []
+## Beam state: 0 = none, 1 = warning rays, 2 = sweeping.
+var beam_state: int = 0
+## Angle (rad) of the first beam (the others are spread evenly).
+var beam_angle: float = 0.0
+## Sweep direction (+1 / -1).
+var beam_dir: float = 1.0
+## Sweep speed (rad/s).
+var beam_speed: float = 0.85
+## Seconds left in the current beam state.
+var beam_left: float = 0.0
+## Seconds until the next beam damage pulse.
+var beam_tick_left: float = 0.0
+## Seconds the beams sweep once their warning ends.
+var beam_duration: float = 4.0
+## True while a Judgment nova is telegraphed.
+var nova_pending: bool = false
+## Centre of the nova (her position at the cast).
+var nova_center: Vector2 = Vector2.ZERO
+## Seconds left until the nova blasts.
+var nova_left: float = 0.0
+## Total telegraph seconds (fill animation).
+var nova_total: float = 2.5
+## Centres of the safe circles.
+var nova_safe: Array[Vector2] = []
+## Seconds left of the safe circles' afterglow after a blast.
+var nova_glow_left: float = 0.0
+## True once the arena collapse started (the Last Light).
+var collapse_on: bool = false
+## Centre of the collapsing circle.
+var collapse_center: Vector2 = Vector2.ZERO
+## Seconds since the collapse started.
+var collapse_t: float = 0.0
+## Seconds until the next collapse damage tick.
+var collapse_tick_left: float = 0.0
+## Where a teleport will land (drawn while tele_left > 0).
+var tele_dest: Vector2 = Vector2.ZERO
+## Seconds left of the teleport landing marker (0 = none).
+var tele_left: float = 0.0
+## Total seconds of the landing marker (animation).
+var tele_total: float = 1.0
+## Reusable query buffer.
+var _tmp: Array = []
+
+
+## Binds the hazards to `p_boss` (call once, right after setup_boss()).
+func setup(p_game: Game, p_boss: BossSeraphine) -> void:
+	game = p_game
+	boss = p_boss
+	def = p_boss.boss_def
+	z_index = GROUND_Z
+	overlay = Node2D.new()
+	overlay.z_index = OVERLAY_Z
+	overlay.draw.connect(_draw_overlay)
+	add_child(overlay)
+
+
+## Advances every hazard by `delta` s (called by the boss's physics step).
+func step(delta: float) -> void:
+	_step_circles(delta)
+	_step_beams(delta)
+	_step_nova(delta)
+	_step_suppressions(delta)
+	_step_collapse(delta)
+	if tele_left > 0.0:
+		tele_left -= delta
+	queue_redraw()
+	overlay.queue_redraw()
+
+
+## Removes every hazard (the boss died): nothing more blasts or burns.
+func clear() -> void:
+	circles.clear()
+	suppressions.clear()
+	beam_state = 0
+	nova_pending = false
+	nova_glow_left = 0.0
+	collapse_on = false
+	tele_left = 0.0
+	queue_redraw()
+	overlay.queue_redraw()
+
+
+## Shows where a teleport lands for `duration` s (a column of light and a
+## closing ring); `duration` 0 removes it (the teleport was cut short).
+func mark_teleport(dest: Vector2, duration: float) -> void:
+	tele_dest = dest
+	tele_left = duration
+	tele_total = maxf(0.05, duration)
+
+
+# =====================================================================================
+# Delayed holy circles
+# =====================================================================================
+
+## Marks a holy circle at `pos` that blasts after `delay` s (gold warning
+## circle owned by the boss, so it pauses with her).
+func add_circle(pos: Vector2, radius: float, delay: float) -> void:
+	var c := HolyCircle.new()
+	c.pos = pos
+	c.radius = radius
+	c.left = delay
+	circles.append(c)
+	game.effects.telegraph_circle(pos, radius, delay, boss)
+
+
+## Counts circles down and blasts the ready ones.
+func _step_circles(delta: float) -> void:
+	var i := 0
+	while i < circles.size():
+		var c := circles[i]
+		c.left -= delta
+		if c.left > 0.0:
+			i += 1
+			continue
+		_blast_circle(c)
+		circles.remove_at(i)
+
+
+## A holy circle blasts: summons inside and the necromancer take its damage.
+func _blast_circle(c: HolyCircle) -> void:
+	game.effects.impact(c.pos, c.radius, Palette.GOLD)
+	game.shake(3.0)
+	game.ally_grid.query(c.pos, c.radius + UnitData.MAX_BLOCK_RADIUS, _tmp)
+	var hits := 0  # Summons caught.
+	for u: SummonedUnit in _tmp:
+		if u.active and u.state != SummonedUnit.State.SPAWNING and u.position.distance_to(c.pos) <= c.radius + u.radius:
+			hits += 1
+			game.combat.damage_unit(u, float(def["circles_damage_summon"]), "seraphine_circle")
+	game.stat_add("seraphine_circle_summon_hits", float(hits))
+	var pl := game.player
+	if pl.position.distance_to(c.pos) <= c.radius + pl.radius:
+		game.combat.damage_player(float(def["circles_damage_player"]) * game.enemies.damage_mult, "seraphine_circle")
+
+
+# =====================================================================================
+# Rotating holy beams
+# =====================================================================================
+
+## Starts the beams: warning rays at `angle` for `telegraph` s, then a sweep
+## in direction `dir` at `speed` rad/s for `duration` s.
+func start_beams(angle: float, dir: float, speed: float, telegraph: float, duration: float) -> void:
+	beam_state = 1
+	beam_angle = angle
+	beam_dir = dir
+	beam_speed = speed
+	beam_left = telegraph
+	beam_tick_left = 0.0
+	beam_duration = duration
+	Sfx.play("boss_telegraph", boss.position)
+
+
+## True while the beams are telegraphed or sweeping (she channels them).
+func beams_busy() -> bool:
+	return beam_state != 0
+
+
+## Ends the beams at once (phase change).
+func stop_beams() -> void:
+	beam_state = 0
+
+
+## Unit direction of beam `i`.
+func _beam_vec(i: int) -> Vector2:
+	var n := int(def["beams_count"])
+	return Vector2.from_angle(beam_angle + TAU * float(i) / float(maxi(1, n)))
+
+
+## Warning -> sweep -> done; damage pulses every beams_tick s while sweeping.
+func _step_beams(delta: float) -> void:
+	if beam_state == 0:
+		return
+	beam_left -= delta
+	if beam_state == 1:
+		if beam_left <= 0.0:
+			beam_state = 2
+			beam_left = beam_duration
+			game.effects.ring(boss.position, boss.radius * 3.0, Palette.IVORY, 0.4, "holy_beam")
+			Sfx.play("boss_impact", boss.position, 1.6)
+		return
+	beam_angle += beam_dir * beam_speed * delta
+	beam_tick_left -= delta
+	if beam_tick_left <= 0.0:
+		beam_tick_left += float(def["beams_tick"])
+		_beam_pulse()
+	if beam_left <= 0.0:
+		beam_state = 0
+
+
+## True if a body of radius `r` at `p` lies in beam `i`.
+func _in_beam(i: int, p: Vector2, r: float) -> bool:
+	var v := _beam_vec(i)
+	var rel := p - boss.position
+	var along := rel.dot(v)
+	if along < 0.0 or along > float(def["beams_length"]) + r:
+		return false
+	return absf(rel.cross(v)) <= float(def["beams_width"]) * 0.5 + r
+
+
+## One damage pulse of every beam on the necromancer and the summons.
+func _beam_pulse() -> void:
+	var n := int(def["beams_count"])
+	var pl := game.player
+	for i in n:
+		if _in_beam(i, pl.position, pl.radius):
+			game.combat.damage_player(float(def["beams_damage_player"]) * game.enemies.damage_mult, "seraphine_beam")
+			game.stat_add("seraphine_beam_player_pulses", 1.0)
+			break
+	game.ally_grid.query(boss.position, float(def["beams_length"]) + UnitData.MAX_BLOCK_RADIUS, _tmp)
+	var hits := 0  # Summon pulses this tick.
+	for u: SummonedUnit in _tmp:
+		if not u.active or u.state == SummonedUnit.State.SPAWNING:
+			continue
+		for i in n:
+			if _in_beam(i, u.position, u.radius):
+				hits += 1
+				game.combat.damage_unit(u, float(def["beams_damage_summon"]), "seraphine_beam")
+				break
+	game.stat_add("seraphine_beam_summon_pulses", float(hits))
+
+
+# =====================================================================================
+# Judgment nova
+# =====================================================================================
+
+## Telegraphs a Judgment nova around `center` with safe circles at `safe`;
+## it blasts after `telegraph` s.
+func start_nova(center: Vector2, safe: Array[Vector2], telegraph: float) -> void:
+	nova_pending = true
+	nova_center = center
+	nova_safe = safe
+	nova_left = telegraph
+	nova_total = telegraph
+	nova_glow_left = 0.0
+	Sfx.play("boss_telegraph", center)
+
+
+## True if `p` (a body of radius `r`) stands inside a safe circle. The body
+## only has to reach in with its centre (a fair, generous rule).
+func in_safe(p: Vector2, _r: float) -> bool:
+	var sr := float(def["nova_safe_radius"])
+	for s in nova_safe:
+		if p.distance_to(s) <= sr:
+			return true
+	return false
+
+
+## Counts the nova down and blasts it.
+func _step_nova(delta: float) -> void:
+	if nova_glow_left > 0.0:
+		nova_glow_left -= delta
+	if not nova_pending:
+		return
+	nova_left -= delta
+	if nova_left <= 0.0:
+		nova_pending = false
+		nova_glow_left = NOVA_AFTERGLOW
+		_blast_nova()
+
+
+## The nova blasts: everything within nova_radius of its centre and outside
+## every safe circle takes heavy holy damage.
+func _blast_nova() -> void:
+	var r := float(def["nova_radius"])
+	game.effects.ring(nova_center, r, Palette.GOLD, 0.55, "seraphine_nova")
+	game.effects.impact(nova_center, boss.radius * 4.0, Palette.IVORY)
+	for s in nova_safe:
+		game.effects.ring(s, float(def["nova_safe_radius"]), Palette.COLD_BLUE, 0.5)
+	game.shake(9.0)
+	Sfx.play("boss_impact", nova_center, 0.8)
+	game.stat_add("seraphine_novas", 1.0)
+	var pl := game.player
+	if pl.position.distance_to(nova_center) <= r:
+		if in_safe(pl.position, pl.radius):
+			game.stat_add("seraphine_nova_player_safe", 1.0)
+		else:
+			game.combat.damage_player(float(def["nova_damage_player"]) * game.enemies.damage_mult, "seraphine_nova")
+			game.stat_add("seraphine_nova_player_hit", 1.0)
+	var hit := 0  # Summons burned.
+	var spared := 0  # Summons standing in a safe circle.
+	for u in game.horde.units:
+		if not u.active or u.state == SummonedUnit.State.SPAWNING or u.position.distance_to(nova_center) > r:
+			continue
+		if in_safe(u.position, u.radius):
+			spared += 1
+			continue
+		hit += 1
+		game.combat.damage_unit(u, float(def["nova_damage_summon"]), "seraphine_nova")
+	game.stat_add("seraphine_nova_summon_hits", float(hit))
+	game.stat_add("seraphine_nova_summon_spared", float(spared))
+
+
+# =====================================================================================
+# Undead suppression
+# =====================================================================================
+
+## Telegraphs a suppression of `radius` px at `pos` for `telegraph` s; it
+## then lasts `duration` s with summon damage x `damage_mult`.
+func start_suppression(pos: Vector2, radius: float, telegraph: float, duration: float, damage_mult: float) -> void:
+	var s := Suppression.new()
+	s.pos = pos
+	s.radius = radius
+	s.warn_left = telegraph
+	s.warn_total = maxf(0.05, telegraph)
+	s.duration = duration
+	s.damage_mult = damage_mult
+	suppressions.append(s)
+	Sfx.play("boss_telegraph", pos)
+
+
+## Telegraph -> landing (the boss adapter applies it) -> active -> gone.
+func _step_suppressions(delta: float) -> void:
+	var i := 0
+	while i < suppressions.size():
+		var s := suppressions[i]
+		if s.warn_left > 0.0:
+			s.warn_left -= delta
+			if s.warn_left <= 0.0:
+				s.active_left = s.duration
+				boss._apply_suppression(s.pos, s.radius, s.duration, s.damage_mult)
+			i += 1
+			continue
+		s.active_left -= delta
+		if s.active_left <= 0.0:
+			suppressions.remove_at(i)
+		else:
+			i += 1
+
+
+# =====================================================================================
+# Collapsing arena
+# =====================================================================================
+
+## Starts the collapse around `center` (the Last Light).
+func start_collapse(center: Vector2) -> void:
+	collapse_on = true
+	collapse_center = center
+	collapse_t = 0.0
+	collapse_tick_left = float(def["collapse_tick"])
+
+
+## Current radius (px) of the shrinking circle (INF before the collapse).
+func collapse_radius() -> float:
+	if not collapse_on:
+		return INF
+	var k := clampf(collapse_t / float(def["collapse_time"]), 0.0, 1.0)
+	return lerpf(float(def["collapse_start_radius"]), float(def["collapse_end_radius"]), k)
+
+
+## Shrinks the circle and burns whatever stands outside it every tick.
+func _step_collapse(delta: float) -> void:
+	if not collapse_on:
+		return
+	collapse_t += delta
+	collapse_tick_left -= delta
+	if collapse_tick_left > 0.0:
+		return
+	collapse_tick_left += float(def["collapse_tick"])
+	var r := collapse_radius()
+	var pl := game.player
+	if pl.position.distance_to(collapse_center) > r:
+		game.combat.damage_player(float(def["collapse_damage_player"]) * game.enemies.damage_mult, "seraphine_collapse")
+		game.stat_add("seraphine_collapse_player_ticks", 1.0)
+	var burned := 0  # Summons outside this tick.
+	for u in game.horde.units:
+		if u.active and u.state != SummonedUnit.State.SPAWNING and u.position.distance_to(collapse_center) > r:
+			burned += 1
+			game.combat.damage_unit(u, float(def["collapse_damage_summon"]), "seraphine_collapse")
+	game.stat_add("seraphine_collapse_summon_ticks", float(burned))
+
+
+# =====================================================================================
+# Autopilot hint
+# =====================================================================================
+
+## Danger push at `p` for the autotest autopilot: out of holy circles, out
+## of the beams' path, into a safe circle before the nova, and back inside
+## the collapsing arena.
+func danger_push(p: Vector2) -> Vector2:
+	var push := Vector2.ZERO
+	for c in circles:
+		var diff := p - c.pos
+		var d := diff.length()
+		var reach := c.radius + 30.0
+		if d < reach:
+			push += (diff / d if d > 0.1 else Vector2.RIGHT) * (1.0 - d / reach * 0.5)
+	if beam_state != 0:
+		var rel := p - boss.position
+		var d := rel.length()
+		if d < float(def["beams_length"]) + 30.0 and d > 0.1:
+			for i in int(def["beams_count"]):
+				# Angle from the beam to `p`, measured in the sweep direction.
+				var ahead := wrapf((rel.angle() - _beam_vec(i).angle()) * beam_dir, 0.0, TAU)
+				if ahead < 0.7:
+					push += rel / d
+					break
+	if nova_pending:
+		var sr := float(def["nova_safe_radius"])
+		var best := Vector2.INF
+		var best_d := INF
+		for s in nova_safe:
+			var d := p.distance_to(s)
+			if d < best_d:
+				best_d = d
+				best = s
+		if best != Vector2.INF:
+			if best_d > sr * 0.7:
+				push += (best - p).normalized() * (1.0 if best_d > sr else 0.4)
+	if collapse_on:
+		var r := collapse_radius()
+		var off := p - collapse_center
+		var d := off.length()
+		if d > r - 70.0 and d > 0.1:
+			push -= off / d * clampf((d - (r - 70.0)) / 70.0, 0.3, 1.0)
+	return push.limit_length(1.0)
+
+
+# =====================================================================================
+# Drawing
+# =====================================================================================
+
+## Ground parts: the nova glow and safe circles, the suppression rings and
+## the collapse fire band.
+func _draw() -> void:
+	var now := game.elapsed if game != null else 0.0  # Animation clock (visual only).
+	for s in suppressions:
+		_draw_suppression(s, now)
+	if nova_pending:
+		var k := 1.0 - clampf(nova_left / nova_total, 0.0, 1.0)  # Telegraph progress 0..1.
+		var r := float(def["nova_radius"])
+		draw_circle(nova_center, r, Color(Palette.GOLD, 0.07 + 0.2 * k))
+		# Radiant pulses rolling outward from her.
+		for j in 3:
+			var f := fposmod(now * 0.9 + float(j) / 3.0, 1.0)
+			draw_arc(nova_center, r * f, 0.0, TAU, RING_SEGMENTS, Color(Palette.IVORY, 0.25 * (1.0 - f) + 0.1 * k), 3.0)
+		draw_arc(nova_center, r, 0.0, TAU, RING_SEGMENTS, Color(Palette.GOLD, 0.6 + 0.3 * k), 4.0)
+		var sr := float(def["nova_safe_radius"])
+		for s in nova_safe:
+			# The safe circle "cuts" a cool, dark hole in the gold glow.
+			draw_circle(s, sr, Color(0.02, 0.05, 0.1, 0.82))
+			draw_circle(s, sr * 0.6, Color(Palette.COLD_BLUE, 0.12 + 0.08 * sin(now * 8.0)))
+	elif nova_glow_left > 0.0:
+		var g := nova_glow_left / NOVA_AFTERGLOW  # Afterglow 1..0.
+		for s in nova_safe:
+			draw_circle(s, float(def["nova_safe_radius"]), Color(Palette.COLD_BLUE, 0.25 * g))
+	if collapse_on:
+		_draw_collapse_band(collapse_radius(), now)
+
+
+## Bright parts over the bodies: the beams, the safe-circle rims and the
+## flames on the collapse edge.
+func _draw_overlay() -> void:
+	var now := game.elapsed if game != null else 0.0  # Animation clock (visual only).
+	if beam_state != 0 and boss != null:
+		_draw_beams(now)
+	if nova_pending:
+		var k := 1.0 - clampf(nova_left / nova_total, 0.0, 1.0)  # Telegraph progress 0..1.
+		var sr := float(def["nova_safe_radius"])
+		for s in nova_safe:
+			var pulse := 0.5 + 0.5 * sin(now * 10.0)
+			overlay.draw_arc(s, sr, 0.0, TAU, 40, Color(Palette.IVORY, 0.85), 3.0)
+			overlay.draw_arc(s, sr + 4.0 + 3.0 * pulse, 0.0, TAU, 40, Color(Palette.COLD_BLUE, 0.6), 2.0)
+			# Countdown: the inner arc drains as the blast nears.
+			overlay.draw_arc(s, sr - 7.0, -PI * 0.5, -PI * 0.5 + TAU * (1.0 - k), 40, Color(Palette.COLD_BLUE, 0.9), 4.0)
+			# A small ward sigil in the middle (a cross in a ring).
+			overlay.draw_arc(s, 9.0, 0.0, TAU, 16, Color(Palette.IVORY, 0.8), 2.0)
+			overlay.draw_line(s + Vector2(0, -14), s + Vector2(0, 14), Color(Palette.IVORY, 0.8), 2.0)
+			overlay.draw_line(s + Vector2(-10, -3), s + Vector2(10, -3), Color(Palette.IVORY, 0.8), 2.0)
+	if collapse_on:
+		_draw_collapse_flames(collapse_radius(), now)
+	if tele_left > 0.0:
+		_draw_teleport_mark(now)
+
+
+## The teleport landing marker: a disc of light filling in, a ring closing
+## on the spot and a column of light rising from it.
+func _draw_teleport_mark(now: float) -> void:
+	var k := 1.0 - clampf(tele_left / tele_total, 0.0, 1.0)  # Glow progress 0..1.
+	var c := tele_dest
+	var rr := boss.radius * 1.3  # Landing body size (px).
+	overlay.draw_circle(c, rr * (0.4 + 0.6 * k), Color(Palette.IVORY, 0.15 + 0.3 * k))
+	overlay.draw_arc(c, rr * (2.6 - 1.6 * k), 0.0, TAU, 32, Color(Palette.IVORY, 0.5 + 0.4 * k), 2.5)
+	overlay.draw_arc(c, rr, 0.0, TAU, 32, Color(Palette.GOLD, 0.8), 1.5)
+	var w := rr * (0.5 + 0.3 * sin(now * 18.0) * k)  # Column half-width (px).
+	var h := 70.0 + 50.0 * k  # Column height (px).
+	overlay.draw_colored_polygon(PackedVector2Array([c + Vector2(-w, 0), c + Vector2(-w * 0.4, -h), c + Vector2(w * 0.4, -h), c + Vector2(w, 0)]),
+		Color(Palette.IVORY, 0.12 + 0.25 * k))
+
+
+## A suppression ring: a filling pale disc while it warns, then a faint dome.
+func _draw_suppression(s: Suppression, now: float) -> void:
+	var col := Color(0.86, 0.9, 1.0)  # Pale holy white (distinct from the gold damage telegraphs).
+	if s.warn_left > 0.0:
+		var k := 1.0 - s.warn_left / s.warn_total  # Telegraph progress 0..1.
+		draw_circle(s.pos, s.radius, Color(col, 0.06))
+		draw_circle(s.pos, s.radius * k, Color(col, 0.12))
+		# Dashed rim turning slowly, with sigils.
+		var dashes := 24
+		for j in dashes:
+			var a := TAU * float(j) / float(dashes) + now * 0.6
+			draw_arc(s.pos, s.radius, a, a + TAU / float(dashes) * 0.55, 6, Color(col, 0.9), 3.0)
+		for j in 6:
+			var p := s.pos + Vector2.from_angle(TAU * float(j) / 6.0 - now * 0.4) * s.radius
+			draw_line(p + Vector2(0, -8), p + Vector2(0, 8), Color(Palette.GOLD, 0.9), 2.0)
+			draw_line(p + Vector2(-5, -2), p + Vector2(5, -2), Color(Palette.GOLD, 0.9), 2.0)
+	else:
+		var fade := clampf(s.active_left / maxf(0.01, s.duration), 0.0, 1.0)
+		draw_circle(s.pos, s.radius, Color(col, 0.05 + 0.05 * fade))
+		draw_arc(s.pos, s.radius, 0.0, TAU, RING_SEGMENTS, Color(col, 0.25 + 0.35 * fade), 2.0)
+
+
+## The two beams: thin pulsing warning rays with sweep arrows, then wide
+## white-gold rays with a glow.
+func _draw_beams(now: float) -> void:
+	var length := float(def["beams_length"]) - boss.radius * 0.8  # Drawn ray length from her edge (px).
+	var w := float(def["beams_width"])
+	for i in int(def["beams_count"]):
+		var v := _beam_vec(i)
+		var perp := Vector2(-v.y, v.x)
+		var o := boss.position + v * boss.radius * 0.8  # Rays leave her body edge (drawn only).
+		if beam_state == 1:
+			var a := 0.45 + 0.35 * sin(now * 14.0)
+			overlay.draw_line(o, o + v * length, Color(Palette.GOLD, a), 3.0)
+			overlay.draw_line(o + perp * w * 0.5, o + v * length + perp * w * 0.5, Color(Palette.GOLD, 0.3), 1.0)
+			overlay.draw_line(o - perp * w * 0.5, o + v * length - perp * w * 0.5, Color(Palette.GOLD, 0.3), 1.0)
+			# Arrowheads along the ray pointing the way it will sweep.
+			for j in 3:
+				var c := o + v * length * (0.4 + 0.25 * float(j))
+				var side := perp * beam_dir
+				overlay.draw_line(c + side * 14.0, c + side * 2.0 + v * 8.0, Color(Palette.IVORY, a), 2.0)
+				overlay.draw_line(c + side * 14.0, c + side * 2.0 - v * 8.0, Color(Palette.IVORY, a), 2.0)
+		else:
+			var flick := 0.85 + 0.15 * sin(now * 30.0 + float(i))
+			var glow := PackedVector2Array([o + perp * w, o + v * length + perp * w * 1.2, o + v * length - perp * w * 1.2, o - perp * w])
+			overlay.draw_colored_polygon(glow, Color(Palette.GOLD, 0.18 * flick))
+			var body := PackedVector2Array([o + perp * w * 0.5, o + v * length + perp * w * 0.6, o + v * length - perp * w * 0.6, o - perp * w * 0.5])
+			overlay.draw_colored_polygon(body, Color(Palette.GOLD, 0.55 * flick))
+			overlay.draw_line(o, o + v * length, Color(Palette.IVORY, 0.95), w * 0.3)
+			overlay.draw_circle(o + v * length, w * 0.6, Color(Palette.IVORY, 0.5 * flick))
+	if beam_state == 1:
+		overlay.draw_arc(boss.position, float(def["beams_length"]), 0.0, TAU, RING_SEGMENTS, Color(Palette.GOLD, 0.25), 1.5)
+
+
+## Ground fire band of the collapse: hot at the edge, a steady burn beyond,
+## and a faint ring where the circle will stop shrinking.
+func _draw_collapse_band(r: float, now: float) -> void:
+	var c := collapse_center
+	var hot := Color(1.0, 0.62, 0.2, 0.55)
+	var warm := Color(1.0, 0.45, 0.1, 0.28)
+	_annulus(c, r, r + 70.0, hot, warm)
+	_annulus(c, r + 70.0, r + FIRE_BAND, warm, Color(0.8, 0.3, 0.05, 0.22))
+	draw_arc(c, float(def["collapse_end_radius"]), 0.0, TAU, RING_SEGMENTS, Color(Palette.GOLD, 0.18 + 0.06 * sin(now * 3.0)), 2.0)
+
+
+## Bright flames along the collapse edge (over the bodies).
+func _draw_collapse_flames(r: float, now: float) -> void:
+	var c := collapse_center
+	overlay.draw_arc(c, r, 0.0, TAU, RING_SEGMENTS * 2, Color(Palette.IVORY, 0.9), 3.0)
+	overlay.draw_arc(c, r + 5.0, 0.0, TAU, RING_SEGMENTS * 2, Color(Palette.FLAME, 0.8), 4.0)
+	for j in FLAME_TONGUES:
+		var a := TAU * float(j) / float(FLAME_TONGUES) + now * 0.05
+		var flick := 0.5 + 0.5 * sin(now * 9.0 + float(j) * 2.3)
+		var height := 12.0 + 16.0 * flick
+		var half := TAU / float(FLAME_TONGUES) * 0.45
+		var base_l := c + Vector2.from_angle(a - half) * (r + 6.0)
+		var base_r := c + Vector2.from_angle(a + half) * (r + 6.0)
+		var tip := c + Vector2.from_angle(a + 0.02 * sin(now * 5.0 + float(j))) * (r - height)
+		overlay.draw_colored_polygon(PackedVector2Array([base_l, tip, base_r]), Color(Palette.FLAME, 0.75))
+		var inner_tip := c + Vector2.from_angle(a) * (r - height * 0.55)
+		overlay.draw_colored_polygon(PackedVector2Array([base_l.lerp(base_r, 0.25), inner_tip, base_l.lerp(base_r, 0.75)]), Color(Palette.GOLD, 0.85))
+
+
+## A filled ring from `r0` to `r1` around `c` with a radial colour gradient.
+func _annulus(c: Vector2, r0: float, r1: float, col0: Color, col1: Color) -> void:
+	for j in RING_SEGMENTS:
+		var a0 := TAU * float(j) / float(RING_SEGMENTS)
+		var a1 := TAU * float(j + 1) / float(RING_SEGMENTS)
+		var d0 := Vector2.from_angle(a0)
+		var d1 := Vector2.from_angle(a1)
+		draw_polygon(PackedVector2Array([c + d0 * r0, c + d0 * r1, c + d1 * r1, c + d1 * r0]),
+			PackedColorArray([col0, col1, col1, col0]))
