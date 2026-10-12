@@ -111,6 +111,8 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 |---|---|---|
 | `alaric.png` | Sir Alaric, the Gravebreaker: giant paladin, holy warhammer, gold and ivory | 120 px |
 | `vael.png` | Marshal Vael, the Crimson Bulwark: great kite shield, flaming sword, crimson plume | 120 px |
+| `seraphine.png` | Grand Inquisitor Seraphine, Voice of the Dawn (Stage 3): a radiant winged Inquisitor in a white-and-gold bell robe with a crimson stole and a gold sun on the chest, a white veil and gold circlet, a gold **sun halo** with rays behind her head, two feathered ivory wings spread up behind her shoulders, a tall gold **relic staff** crowned by a blazing sunburst reliquary in her front hand | 130 px |
+| `seraphine_avatar.png` | *Optional.* Her **Avatar of the Dawn** form (phases 2-3): the same figure larger and brighter, wings spread wide with gold-edged feathers, a long-rayed halo, the relic blazing white-gold, a soft gold aura around her. Without it the game draws `seraphine.png` with a drawn aura | 156 px |
 
 ### Structures (`assets/sprites/structures/`)
 | File | Subject | Size |
@@ -239,8 +241,9 @@ seen **straight from above**, on a transparent background. Process it with
 transparent gaps between them, or `--frames N` for N equal frames in a row, or `--grid CxR`), crops
 them to one square around the effect and writes a strip of 128 px frames. Timing and on-screen fill
 are set per effect in `scripts/data/anim_data.gd`. Without the file, the game keeps today's drawn
-shape. **Shadow Blast** (the test), **Dread Rally** and the **Grave Step** puff are wired so far;
-the rest get their code hook when their art arrives.
+shape. **Shadow Blast** (the test), **Dread Rally**, the **Grave Step** puff and Seraphine's
+**nova**, **holy beam** flare and **relic shatter** are wired so far; the rest get their code hook
+when their art arrives.
 
 | Id | Effect | Frames |
 |---|---|---|
@@ -261,6 +264,9 @@ the rest get their code hook when their art arrives.
 | `evolution` | Evolution: a dark vortex collapsing into a bright violet-gold flash | 10 |
 | `dread_rally` | **Hooked.** Dread Rally: a deep violet (`#4D1473`) shockwave bursting out of a green (`#6BF28C`) skull-shaped flare, souls streaking outward, then fading to dark wisps | 10 |
 | `grave_step_trail` | **Hooked.** Grave Step departure: a puff of violet (`#A35CFA`) shadow smoke left where the necromancer stepped from, curling and thinning away | 6 |
+| `seraphine_nova` | **Hooked.** Seraphine's Judgment nova: a huge gold (`#FFD14C`) and ivory (`#F5EDD4`) ring of holy light racing outward from a white-hot centre, sun-ray streaks, then fading to gold motes (played at the full nova radius, so keep the ring thin and the centre mostly empty) | 10 |
+| `holy_beam` | **Hooked.** Seraphine's holy beams igniting: a white-gold flare bursting from her relic, with short gold rays (the beams themselves stay drawn) | 6 |
+| `relic_shatter` | **Hooked.** Seraphine's death: the radiant sunburst relic cracking and exploding into gold and ivory shards and a ring of white light, then the light guttering out | 10 |
 
 **Sprite-sheet prompt** (ChatGPT; attach `necromancer.png` as the style reference):
 ```

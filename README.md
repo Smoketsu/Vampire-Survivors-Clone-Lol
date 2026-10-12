@@ -307,7 +307,7 @@ number is in `scripts/data/unit_data.gd`.
 |---|---|---|
 | Bone Plating | Minions ignore 2 → 6 damage of every hit (after the other reductions, before barriers; a hit keeps at least 25%; holy-ground ticks are exempt) | Abominations → **Bone Colossi** |
 | Unholy Precision | Minion attacks and specials crit 5% → 25% of the time for double damage (not the Rogue's bleed ticks, not your spells) | Archers → **Gravebows** |
-| Unholy Resilience | Minions take 8% → 35% less **area and holy** damage: Hammerfall, Vael's cleave, Halberdier sweeps, Judgment, Purifier fire, holy ground (consecration, ward generators, boss zones), Holy Retribution bolts | Gargoyles → **Cathedral Horrors** |
+| Unholy Resilience | Minions take 8% → 35% less **area and holy** damage: Hammerfall, Vael's cleave, Halberdier sweeps, Judgment, Purifier fire, holy ground (consecration, ward generators, boss zones), Holy Retribution bolts, Seraphine's bolts, circles, beams, nova and collapse fire | Gargoyles → **Cathedral Horrors** |
 | Bound Souls | Minion move speed +6% → +30%; leash (engagement radius and soft recall) +10% → +50%; the return trip after a recall takes 10% → 50% less time | Rogues → **Shadow Reapers** |
 | Soul Recycling (existing) | Faster replacement | Frost Wraiths → **Winter Revenants** |
 
@@ -551,6 +551,56 @@ open). The zone is shown under the timer.
   every build starts with Shadow Bolt and two warriors, and a harder opening
   snowballed into starved runs.
 
+### Stage 3 boss: Grand Inquisitor Seraphine
+
+**Grand Inquisitor Seraphine, Voice of the Dawn** (GDD §7.5; `boss_seraphine.gd`,
+numbers in `scripts/data/seraphine_data.gd`) is the Sanctum of Judgment's boss
+(any stage's boss slot can send her: `StageRegistry` boss id `seraphine`; the
+autotest's `--boss=seraphine` tests her on the Graveyard or the March). She
+arrives at 17:00 (3:00 left) with a banner and the boss bar, 40,000 HP before
+the stage's HP multiplier, and fights in three phases. She never kites: between
+specials she walks at you and strikes in reach, and every special holds her in
+place or brings her closer. Every big hit is telegraphed; your undead never
+dodge, only you can step out.
+
+1. **Divine Judgment** (100-60% HP): **radiant fans** (a gold sector, then 7
+   bolts), **delayed holy circles** (gold circles on and around you that blast
+   after 1.2 s), **Templar squads** (rally banners, then 3 Templars and 2
+   footmen) and a **teleport**: she glows for 1 s while a column of light
+   marks where she lands, always nearer you (110-160 px away, on your side of
+   her, never in an obstacle). Up to **three attendants** arrive with her
+   (healers; 3 minus the altars destroyed on the stage): while one lives within
+   170 px of her she regenerates 30 HP/s per attendant. Kill them first, or
+   pull her away from them.
+2. **Avatar of the Dawn** (60-20%): the relic transformation (1 s,
+   invulnerable; she grows larger and brighter), then **two rotating holy
+   beams** (warning rays with sweep arrows, then a 4.2 s sweep that burns you
+   and every summon in the light), **barrages** (three rings of 12 bolts),
+   **constructs** rising at rally marks, **undead suppression** (a pale ring of
+   220 px around you; after 1.5 s the summons inside deal half damage and are
+   not replaced for 5 s) and, every 25 s, the **Judgment nova**: the area
+   around her glows gold for 2.5 s while 2-3 dark safe circles are marked (one
+   always within 80-140 px of you, on her side); everything outside them then
+   takes heavy holy damage.
+3. **The Last Light** (under 20%): shorter gaps and windups, more circles,
+   faster beams, the fans back, novas every 20 s with two safe circles. Her
+   attendants flee, **holy fire closes in** from the rim of a 600 px circle
+   around her, shrinking to 300 px over 40 s (it burns whatever stands
+   outside), and her **final guard** (5 Templars, 5 footmen) forms on the
+   circle and charges in.
+
+When she dies the radiant relic shatters, the usual boss reward drops (XP
+burst, chest, power-up) and the ending plays as the stage banner: *"The
+Sanctum falls. Across the realm, other holy orders begin to mobilize."* The
+Reckoning still begins at 0:00. Her attendants and constructs are stand-ins
+(Chaplains with ×6 HP, footmen with ×3 HP) until the Stage 3 enemies (High
+Confessor, Sanctified Sentinel) are merged; the suppression calls the horde's
+`add_suppression()` when it exists (until then it is drawn and counted only).
+Measured with `--boss=seraphine --policy=army --mortal`, seeds 1-4: on the
+Graveyard she dies after 120 / 92 / 173 / 127 s (Sir Alaric: about 122 s), on
+the Crimson March (×1.1 HP) after 139 / - / 121 / 88 s (seed 2 ends with 169
+HP left at 0:00); the army bot never dropped below 48 HP.
+
 ### Meta-progression (Soul Ash)
 
 - **Soul Ash** is earned at the end of **every** run and kept even if you die
@@ -714,7 +764,7 @@ glyph, so art arrives one piece at a time without breaking anything. The style i
 set by the approved necromancer sprite. Sprites are generated in ChatGPT from the prompt pack in
 `docs/art/ART_BIBLE.md` and processed with `python3 tools/prepare_sprite.py <image> <key>`, which
 keeps the original in `art_source/` (ignored by Godot), crops it and stores it at 3x its on-screen
-height from `scripts/data/sprite_data.gd`. Done so far: the necromancer, every summon and evolution, every enemy soldier (Stage 1, Stage 2 and the Reckoning's Inquisitor), both bosses (Sir Alaric, Marshal Vael) and the five Crimson March structures. Still to do: the pickups.
+height from `scripts/data/sprite_data.gd`. Done so far: the necromancer, every summon and evolution, every enemy soldier (Stage 1, Stage 2 and the Reckoning's Inquisitor), both bosses (Sir Alaric, Marshal Vael) and the five Crimson March structures. Still to do: the pickups and Grand Inquisitor Seraphine (`bosses/seraphine`, optional `bosses/seraphine_avatar`; her effects `seraphine_nova`, `holy_beam` and `relic_shatter` are hooked).
 
 Effects (explosions, bursts) can be **short animations**: a ChatGPT sprite sheet or a GIF, converted
 with `python3 tools/prepare_sprite.py --anim <sheet or GIF> <id>` into a strip of square 128 px
@@ -742,6 +792,7 @@ departure puff (`grave_step_trail`) are wired so far.
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
 | Stages (§8, §9.3, §10.2) | A stage registry with two stages, a stage select (locks, best time, boss kills) and the GDD §9.3 unlock (slay Sir Alaric once to open the Crimson March). See *Stages* above. |
 | Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
+| Stage 3 boss (§7.5) | Grand Inquisitor Seraphine with her three GDD phases (Divine Judgment, Avatar of the Dawn, The Last Light): radiant fans, delayed holy circles, Templar squads, teleports, healing attendants, rotating holy beams, barrages, constructs, undead suppression, the safe-zone Judgment nova, the collapsing arena and a final guard, the relic shatter and the ending text. Tested on any stage with `--boss=seraphine`; the Sanctum stage itself is built separately. See *Stage 3 boss* above. |
 | Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades plus the Spearhead stance unlock, prerequisites, respec) plus the opt-in Profane Oath, 3 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
@@ -811,6 +862,7 @@ scripts/
     ground.gd               Procedural graveyard floor, redrawn only when the camera changes cell
     march_ground.gd         Crimson March floor: the road and each battle zone's look (extends Ground)
     march_glyphs.gd         Crimson March shapes: new soldiers, structures, Marshal Vael, obstacles, corpse piles
+    seraphine_glyphs.gd     Grand Inquisitor Seraphine's shape (wings, sun halo, relic staff; Avatar form)
     evolution_recipes.gd    Read-only list of every evolution recipe (spell + summon data), for the
                             Recipes view, the Meta [recipes] section and the autotest
     autotest.gd             Headless self-test driver
@@ -851,6 +903,10 @@ scripts/
     boss.gd                 Shared base of the stage bosses (extends Enemy; EnemyDirector.boss)
     boss_alaric.gd          Sir Alaric (extends Boss): five telegraphed attacks + Wrath phase
     boss_vael.gd            Marshal Vael (extends Boss): Cleave, Command, Holy Standard, Shieldwall, Last Stand
+    boss_seraphine.gd       Grand Inquisitor Seraphine (extends Boss): three phases, attendants, teleport,
+                            fans, circles, beams, barrages, summons, suppression adapter, nova, Last Light
+    seraphine_hazards.gd    Her world-space hazards: holy circles, rotating beams, Judgment nova and safe
+                            circles, suppression rings, the collapsing arena (timing, damage, drawing)
     stage_director.gd       Empowered graves, Desecration, Crypt Defender, holy ground (incl. ward-generator zones)
     march_director.gd       Crimson March: battle zones, outposts, ward generators, supply carts, timed structures
     enemy_director.gd       The stage's wave timeline, events, boss, Reckoning, pooling, recycling
@@ -901,6 +957,7 @@ scripts/
     unit_data.gd            Summon classes (and their specials), level tables, AI weights, leash/rates
     enemy_data.gd           Graveyard enemy roster, Sir Alaric, Reckoning enemy, elites
     march_enemy_data.gd     Crimson March soldiers and structures, Marshal Vael
+    seraphine_data.gd       Grand Inquisitor Seraphine: phases, kit, attendants, arrival and ending text
     wave_data.gd            Shared run rules: countdown, enemy time scaling, caps, spawn ring
     ability_data.gd         Spell level tables
     passive_data.gd         Passive level tables
@@ -995,6 +1052,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | `--stage=ID` | Stage to play: `graveyard` (default) or `crimson_march`. Stage locks are ignored. |
+| `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | `--stance=ID` | Army stance for the whole run: `escort`, `onslaught`, `spearhead` or `bone_ring` (forcing ignores the Spearhead unlock). Without it, `army`, `summon` and `evolve` switch stances by a simple rule (Bone Ring when the necromancer is in danger or the boss is within 260 px; Onslaught when at most 6 enemies are within 220 px and a Crimson March structure is within 420 px or at most 10 enemies are within 480 px; Spearhead, when owned, toward a chest or power-up within 300 px; else Escort; `StanceBot`), while `naive` and `pact` keep Escort so their baselines do not move. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
@@ -1009,7 +1067,14 @@ ward zones), `march enemies` (aura buff pulses, halberd cleave hits, damage
 resisted by tower shields and by Vael, kills of the new kinds), `marshal vael`
 (Last Stand, cleave hits on summons and how often they soaked his blow for
 you, Crusader's Command soldiers) and `march events` (a timed log). The
-`boss attacks` line lists the stage boss's own specials. Every run ends with
+`boss attacks` line lists the stage boss's own specials. With Seraphine
+(`--boss=seraphine`) a `seraphine` line adds her phase times (after her
+arrival), attendants spawned / killed / fled and the healing they gave her,
+teleports, holy circles and their summon hits, beam pulses on you and on
+summons, barrages, Templars / constructs / final guard summoned,
+suppressions (summons caught, applied through the horde API), novas (you hit
+or safe, summons hit or spared), the collapse damage and her damage to you by
+attack. Every run ends with
 a `stage:` line (stage, Soul Ash stage bonus, stages unlocked by the run).
 
 The summary covers: result, time, kills, level, army per class, boss

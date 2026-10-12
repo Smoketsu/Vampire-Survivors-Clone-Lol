@@ -16,7 +16,7 @@
 ##   unlock_text        — how to unlock it (stage select, while locked).
 ##   boss               — {id, time, display_name, short_name, arrive_banner,
 ##                        defeat_banner, dead_objective}: which boss script
-##                        ("alaric" / "vael") arrives at `time` s.
+##                        ("alaric" / "vael" / "seraphine") arrives at `time` s.
 ##   segments           — trickle segments (GraveyardStage.SEGMENTS keys).
 ##   events             — timeline events (GraveyardStage.EVENTS keys, plus
 ##                        the Crimson March types in CrimsonMarchStage.EVENTS).
@@ -46,4 +46,14 @@ const DEFAULT_ID: String = "graveyard"
 const STAGES := {
 	"graveyard": GraveyardStage.STAGE,
 	"crimson_march": CrimsonMarchStage.STAGE,
+}
+
+## Boss script id -> that boss's arrival dictionary (the STAGE "boss" keys).
+## The autotest option --boss=ID puts one of them in the run's stage slot
+## (keeping the stage's own arrival time), so a boss can be tested on any
+## stage (Game._ready()).
+const BOSS_ARRIVALS := {
+	"alaric": GraveyardStage.BOSS,
+	"vael": CrimsonMarchStage.BOSS,
+	"seraphine": SeraphineData.ARRIVAL,
 }

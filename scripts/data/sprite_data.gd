@@ -42,6 +42,8 @@ const HEIGHTS: Dictionary = {
 	"enemies/halberdier": 50.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"bosses/alaric": 120.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"bosses/vael": 120.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"bosses/seraphine": 130.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"bosses/seraphine_avatar": 156.0,  # TUNING (not in GDD) ART_BIBLE manifest size (optional Avatar form)
 	"structures/outpost": 96.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"structures/ward_generator": 80.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"structures/supply_cart": 72.0,  # TUNING (not in GDD) ART_BIBLE manifest size

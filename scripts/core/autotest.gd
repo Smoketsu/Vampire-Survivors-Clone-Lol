@@ -83,7 +83,11 @@
 ##     structures placed / destroyed / escaped, outpost reinforcements, aura
 ##     buffs, tower-shield and Shieldwall damage resisted, halberd cleaves)
 ##     and Marshal Vael's attack counters. The boss line works for any stage
-##     boss (Boss.special_ids()).
+##     boss (Boss.special_ids()). --boss=ID puts another boss in the stage's
+##     slot (e.g. --boss=seraphine); with Grand Inquisitor Seraphine the
+##     summary adds a "seraphine" line (phase times, attendants and their
+##     healing, teleports, circles, beams, barrages, summons, suppressions,
+##     novas, the collapsing arena and her damage; BossSeraphine.summary_line()).
 ##   * difficulty: --difficulty=ID and --modifiers=a,b set the GDD §8.4
 ##     level and §8.5 run modifiers (Main builds the RunConfig); the summary
 ##     adds a "difficulty" line (level, modifiers, every effective multiplier,
@@ -341,6 +345,8 @@ func _ready() -> void:
 	if not GameState.autotest_passives.is_empty():
 		print("[autotest] forced passives: %s" % ",".join(GameState.autotest_passives))
 	print("[autotest] stage: %s" % GameState.autotest_stage)
+	if GameState.autotest_boss != "":
+		print("[autotest] boss override: %s" % GameState.autotest_boss)
 	print("[autotest] difficulty: %s | modifiers: %s" % [GameState.autotest_difficulty,
 		",".join(GameState.autotest_modifiers) if not GameState.autotest_modifiers.is_empty() else "none"])
 
@@ -939,6 +945,8 @@ func finish(summary: Dictionary) -> void:
 		int(st.get("boss_judgment_hits", 0.0)), int(st.get("boss_call_soldiers", 0.0)), int(st.get("holy_zones_boss", 0.0)), int(st.get("holy_zones_grave", 0.0))])
 	if game.enemies.march != null:
 		_print_march(st)
+	if game.enemies.boss is BossSeraphine:
+		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired
 	print("[autotest] stage events fired (%d): %s" % [fired.size(), ", ".join(fired)])
 	print("[autotest] templar charges: %d (body-blocked by warriors: %d) | temporary summons spawned: %d" % [
@@ -1083,7 +1091,12 @@ func _print_abilities(st: Dictionary) -> void:
 func _boss_special_ids() -> Array:
 	if game.enemies.boss != null:
 		return game.enemies.boss.special_ids()
-	return MarchEnemyData.VAEL_SPECIALS if String(game.stage_def["boss"]["id"]) == "vael" else EnemyData.SPECIALS
+	match String(game.stage_def["boss"]["id"]):
+		"vael":
+			return MarchEnemyData.VAEL_SPECIALS
+		"seraphine":
+			return SeraphineData.SPECIALS
+	return EnemyData.SPECIALS
 
 
 ## Crimson March summary: zones, structures, new-enemy mechanics, Marshal

@@ -98,6 +98,11 @@ const AREA_HOLY_SOURCES := {
 	"purifier": "holy",  # TUNING (not in GDD) Purifier holy fire (bonus vs undead).
 	"holy_zone": "holy",  # TUNING (not in GDD) holy ground: grave consecration, Holy Ward Generators, boss holy zones.
 	"holy_retribution": "holy",  # TUNING (not in GDD) radiant bolts of the Holy Retribution run modifier.
+	"seraphine_bolt": "holy",  # TUNING (not in GDD) Seraphine's radiant fans and barrages.
+	"seraphine_circle": "area",  # TUNING (not in GDD) Seraphine's delayed holy circles.
+	"seraphine_beam": "holy",  # TUNING (not in GDD) Seraphine's rotating holy beams.
+	"seraphine_nova": "holy",  # TUNING (not in GDD) Seraphine's Judgment nova.
+	"seraphine_collapse": "holy",  # TUNING (not in GDD) the holy fire of her collapsing arena.
 }
 ## Bone Plating: a plated hit always keeps at least this fraction (0..1) of
 ## its damage, so the flat reduction never makes a summon immune to the
@@ -107,7 +112,8 @@ const PLATING_MIN_FRACTION: float = 0.25  # TUNING (not in GDD)
 ## small ticks (StageDirector, every WaveData.ZONE_TICK s), which a flat
 ## per-hit reduction would erase; it is a field, not a hit (Unholy
 ## Resilience covers it instead).
-const PLATING_EXEMPT_SOURCES := ["holy_zone"]
+## Seraphine's beam pulses and collapse fire tick the same way (fields).
+const PLATING_EXEMPT_SOURCES := ["holy_zone", "seraphine_beam", "seraphine_collapse"]
 
 ## Passive definitions.
 ##   display_name — UI name.
