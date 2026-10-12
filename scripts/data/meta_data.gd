@@ -13,13 +13,16 @@
 ##   ash  = floor(raw * (1 + Ash Harvest bonus))
 ## A strong 20-minute run (~3,000 kills, ~15 elites, boss slain, ~30 s of
 ## Reckoning) earns roughly 150 + 90 + 60 + 75 + 75 = ~450 ash: two or three
-## mid-tier purchases. Every upgrade maxed costs max_total_cost() = 8,965,
-## i.e. about 20 good runs (very roughly 15-25 with weaker runs and Ash Harvest).
+## mid-tier purchases. Every upgrade maxed costs max_total_cost() = 9,635
+## (8,965 before the two Grave Step upgrades), i.e. about 21 good runs (very
+## roughly 16-27 with weaker runs and Ash Harvest).
 ##
 ## Four upgrade trees (GDD §9.2 table):
 ##   Necromancy  — minion cap, health and damage (+ replacement speed)
-##   Shadowcraft — spell damage, cooldown reduction, AoE
-##   Survival    — health, armor, movement (+ one revival per run)
+##   Shadowcraft — spell damage, cooldown reduction, AoE (+ the Grave Step
+##                 dash cooldown)
+##   Survival    — health, armor, movement (+ one revival per run and a
+##                 second Grave Step charge)
 ##   Fortune     — pickup radius, reward luck (XP / Soul Ash gain), rerolls
 ##                 and banishes (GDD open question 7)
 ## plus one standalone entry outside the four trees (user request, the
@@ -100,6 +103,7 @@ const TREES := {
 ##   ash_gain                     Meta.compute_ash
 ##   rerolls, banishes            AbilityManager.setup (added to LevelUpData)
 ##   oath_tier                    DifficultyModifiers.oath_tier (Profane Oath)
+##   dash_charges, dash_cooldown  GraveStep._ready (Grave Step dash)
 const STATS := {
 	"oath_tier": ["Oath tier", "int"],
 	"minion_hp": ["Minion HP", "pct"],
@@ -119,6 +123,8 @@ const STATS := {
 	"ash_gain": ["Soul Ash gain", "pct"],
 	"rerolls": ["Rerolls per run", "int"],
 	"banishes": ["Banishes per run", "int"],
+	"dash_charges": ["Grave Step charges", "int"],
+	"dash_cooldown": ["Grave Step cooldown", "neg_pct"],
 }
 
 # --- Upgrades ----------------------------------------------------------------------
@@ -126,8 +132,8 @@ const STATS := {
 ## Every upgrade in Ossuary order (grouped by tree, top to bottom).
 const UPGRADE_ORDER := [
 	"necrotic_marrow", "sharpened_bones", "grave_call", "risen_vanguard", "legion_of_bone",
-	"umbral_potency", "quickened_rites", "widening_dark", "shadow_mastery",
-	"grave_flesh", "bone_mail", "fleet_shade", "undying_will",
+	"umbral_potency", "quickened_rites", "widening_dark", "shadow_mastery", "restless_shade",
+	"grave_flesh", "bone_mail", "fleet_shade", "undying_will", "twin_shadow",
 	"soul_magnet", "grave_tithe", "ash_harvest", "fates_thread", "banishing_rite",
 	"profane_oath",
 ]
@@ -176,6 +182,12 @@ const UPGRADES := {
 	"shadow_mastery": {"tree": "shadowcraft", "display_name": "Shadow Mastery", "icon": "shadow_mastery",
 		"description": "The pinnacle of shadowcraft: a final surge of spell power.",
 		"stat": "spell_damage", "per_tier": 0.10, "costs": [450], "requires": {"id": "quickened_rites", "tier": 3}},  # TUNING (not in GDD)
+	# Grave Step cooldown (the dash, PlayerAbilityData): 3 tiers of -10% take
+	# it from 5 s to 3.5 s (owner brief). Priced like Grave Call, a comparable
+	# 3-tier quality-of-life upgrade.
+	"restless_shade": {"tree": "shadowcraft", "display_name": "Restless Shade", "icon": "restless_shade",
+		"description": "Your Grave Step gathers its shadow sooner.",
+		"stat": "dash_cooldown", "per_tier": 0.10, "costs": [60, 120, 190], "requires": {}},  # TUNING (not in GDD)
 	# Survival (GDD §9.2: health, armor and movement).
 	"grave_flesh": {"tree": "survival", "display_name": "Grave-Hardened Flesh", "icon": "grave_flesh",
 		"description": "Bind grave-earth into your own body.",
@@ -189,6 +201,12 @@ const UPGRADES := {
 	"undying_will": {"tree": "survival", "display_name": "Undying Will", "icon": "undying_will",
 		"description": "Once per run, rise from death with half your health in a burst of grave-fire.",
 		"stat": "revives", "per_tier": 1.0, "costs": [550], "requires": {"id": "bone_mail", "tier": 2}},  # TUNING (not in GDD)
+	# Second Grave Step charge (owner brief). A movement upgrade, so it needs
+	# Fleet Shade I; priced like a strong single-tier pick, between Fate's
+	# Thread (120 / 250) and the 450-550 capstones.
+	"twin_shadow": {"tree": "survival", "display_name": "Twin Shadow", "icon": "twin_shadow",
+		"description": "Your shadow splits in two: store a second Grave Step.",
+		"stat": "dash_charges", "per_tier": 1.0, "costs": [300], "requires": {"id": "fleet_shade", "tier": 1}},  # TUNING (not in GDD)
 	# Fortune (GDD §9.2: pickup radius, reward luck and rerolls).
 	"soul_magnet": {"tree": "fortune", "display_name": "Soul Magnet", "icon": "soul_magnet",
 		"description": "XP crystals are drawn to you from farther away.",

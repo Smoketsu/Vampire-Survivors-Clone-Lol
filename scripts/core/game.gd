@@ -26,6 +26,10 @@
 ## the difficulty level and the run modifiers) before the node enters the
 ## tree; `stage_def` is that stage's StageRegistry dictionary, read by the
 ## directors, the arena, the ground and the HUD.
+## Manual abilities (GDD §5.5): `grave_step` (GraveStep, Shift / RB dash,
+## stepped by the player) and `dread_rally` (DreadRally, Space / LB ultimate
+## with a kill-charged soul meter, stepped right after the player); both are
+## requested from _unhandled_input(), so they only fire while PLAYING.
 class_name Game
 extends Node2D
 
@@ -116,6 +120,10 @@ var ally_grid: SpatialHash
 var autotest: Autotest = null
 ## Purchased meta upgrades for this run (never null; empty = no upgrades).
 var meta: MetaModifiers
+## The necromancer's dash (Grave Step; also draws its shadow trail).
+var grave_step: GraveStep
+## The necromancer's ultimate (Dread Rally: soul meter, army buff).
+var dread_rally: DreadRally
 
 # --- UI ---------------------------------------------------------------------------
 
@@ -147,6 +155,7 @@ func _ready() -> void:
 	ally_grid = SpatialHash.new(GRID_CELL)
 	combat = CombatResolver.new(self)
 	difficulty = DifficultyModifiers.new(self)
+	dread_rally = DreadRally.new(self)
 
 	# World layers, back to front (tree order + z_index).
 	ground = MarchGround.new() if String(stage_def["ground"]) == "march" else Ground.new()
@@ -176,6 +185,9 @@ func _ready() -> void:
 	enemies.game = self
 	enemies.y_sort_enabled = true  # Same depth sorting for the Covenant.
 	add_child(enemies)
+	grave_step = GraveStep.new()  # Before the player: its trail draws under him.
+	grave_step.game = self
+	add_child(grave_step)
 	player = Necromancer.new()
 	player.game = self
 	add_child(player)
@@ -260,6 +272,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_aim") and run_state == RunState.PLAYING:
 		abilities.toggle_bolt_aim()
 		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("dash") and run_state == RunState.PLAYING:
+		grave_step.request()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("ultimate") and run_state == RunState.PLAYING:
+		dread_rally.request()
+		get_viewport().set_input_as_handled()
 
 
 func _physics_process(delta: float) -> void:
@@ -269,6 +287,7 @@ func _physics_process(delta: float) -> void:
 	elapsed += delta
 	_rebuild_grids()
 	player.step(delta)
+	dread_rally.step(delta)
 	abilities.step(delta)
 	horde.step(delta)
 	enemies.step(delta)

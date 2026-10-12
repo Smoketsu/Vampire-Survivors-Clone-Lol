@@ -206,6 +206,10 @@ the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
 | `powerup_stasis.png` | Frozen hourglass |
 | `powerup_frenzy.png` | Green flaming skull |
 | `powerup_nova.png` | Violet starburst |
+| `grave_step.png` | Grave Step (dash): a hooded violet shadow stepping sideways, two fading afterimages behind it |
+| `dread_rally.png` | Dread Rally (ultimate): a green-eyed skull inside a dark violet burst ring, green soul wisps rising |
+| `twin_shadow.png` | Ossuary Twin Shadow: two overlapping hooded shadow silhouettes (second dash charge) |
+| `restless_shade.png` | Ossuary Restless Shade: a hooded shadow inside a green clock arc (shorter dash cooldown) |
 
 Prompt tip: *"a pixel-art game ability icon, a dark rounded-square badge with a thin violet border,
 one bold simple symbol: <subject>, readable at 24 pixels, transparent background outside the badge"*.
@@ -221,8 +225,8 @@ seen **straight from above**, on a transparent background. Process it with
 transparent gaps between them, or `--frames N` for N equal frames in a row, or `--grid CxR`), crops
 them to one square around the effect and writes a strip of 128 px frames. Timing and on-screen fill
 are set per effect in `scripts/data/anim_data.gd`. Without the file, the game keeps today's drawn
-shape. Only **Shadow Blast** is wired so far (the test); the rest get their code hook when their
-art arrives.
+shape. **Shadow Blast** (the test), **Dread Rally** and the **Grave Step** puff are wired so far;
+the rest get their code hook when their art arrives.
 
 | Id | Effect | Frames |
 |---|---|---|
@@ -239,6 +243,8 @@ art arrives.
 | `level_up` | Level-up: a column of violet light with rising green runes | 8 |
 | `chest_open` | Treasure chest bursting open with violet light and bone-coloured sparks | 8 |
 | `evolution` | Evolution: a dark vortex collapsing into a bright violet-gold flash | 10 |
+| `dread_rally` | **Hooked.** Dread Rally: a deep violet (`#4D1473`) shockwave bursting out of a green (`#6BF28C`) skull-shaped flare, souls streaking outward, then fading to dark wisps | 10 |
+| `grave_step_trail` | **Hooked.** Grave Step departure: a puff of violet (`#A35CFA`) shadow smoke left where the necromancer stepped from, curling and thinning away | 6 |
 
 **Sprite-sheet prompt** (ChatGPT; attach `necromancer.png` as the style reference):
 ```

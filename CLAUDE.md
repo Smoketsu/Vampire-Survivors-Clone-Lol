@@ -180,7 +180,13 @@ tiny tweaks.
   **Bound Souls** (minion speed, leash, faster return), hooked into `CombatResolver` and
   `HordeDirector.compute_stats()`; their cards name the summon evolutions they will unlock (Bone
   Colossus, Gravebow, Cathedral Horror, Shadow Reaper; Soul Recycling → Winter Revenant), which are
-  not built yet; and the owner rule that **every evolution needs its paired passive at Lv 5**.
+  not built yet; and the owner rule that **every evolution needs its paired passive at Lv 5**;
+- the GDD §5.5 **dash and ultimate**: **Grave Step** (Shift / RB, `scripts/player/grave_step.gd`:
+  110 px obstacle-clamped shadow step, 0.2 s i-frames, 5 s cooldown, from the first run; Ossuary
+  Twin Shadow = second charge, Restless Shade = 5 → 3.5 s) and **Dread Rally** (Space / LB,
+  `scripts/player/dread_rally.gd`: a kill-charged soul meter; surge, 30% heal, +40% damage and
+  attack speed for 8 s through `compute_stats`, knockback); numbers in `player_ability_data.gd`,
+  HUD in `hud_abilities.gd`, rebindable, used by every autotest bot.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.
@@ -193,14 +199,13 @@ tiny tweaks.
    lands piecemeal. Done: `player/necromancer`; every summon and evolution (incl. `risen`); every enemy soldier (incl. the
    Reckoning's `inquisitor`); both `bosses/`; all five `structures/`. Still to do: the pickups. Effects are
    short animations (`prepare_sprite.py --anim <sheet or GIF> <id>` → `assets/sprites/effects/`,
-   timing in `anim_data.gd`); only `shadow_blast` is hooked so far (test), hook the rest via
+   timing in `anim_data.gd`); `shadow_blast` (test), `dread_rally` and `grave_step_trail` are hooked so far, hook the rest via
    `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.
 4. **Rest of Stage 1's content:**
    - the summon evolutions paired with the later passives: Abomination → Bone Colossus (Bone
      Plating), Archer → Gravebow (Unholy Precision), Gargoyle → Cathedral Horror (Unholy
      Resilience), Rogue → Shadow Reaper (Bound Souls), Frost Wraith → Winter Revenant (Soul
-     Recycling);
-   - a dash and an ultimate.
+     Recycling).
 5. **Phase 3 campaign:** Stage 3 (Sanctum of Judgment,
    Grand Inquisitor Seraphine); skins; achievement rewards.
 6. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.

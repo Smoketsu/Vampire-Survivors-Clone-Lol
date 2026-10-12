@@ -83,6 +83,8 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	e.on_hit()
 	game.stat_add("damage_dealt", dealt)
 	game.stat_add("dmg_" + source, dealt)
+	if game.dread_rally.buff_active() and is_minion_source(source):
+		game.stat_add("rally_minion_dmg", dealt)  # Minion damage dealt under the Dread Rally buff.
 	if e.is_boss:
 		game.stat_add("bossdmg_" + source, dealt)
 	Juice.enemy_hit(e, dealt, source)
@@ -243,6 +245,7 @@ func _kill_enemy(e: Enemy) -> void:
 	game.abilities.on_enemy_killed(e)  # Corpse Explosion corpses, Soul Rapture bursts.
 	game.powerups.on_enemy_killed(e)  # Power-up drop roll (PowerupData rules).
 	game.chests.on_enemy_killed(e)  # Treasure chest roll (ChestData rules).
+	game.dread_rally.on_enemy_killed(e)  # Dread Rally soul meter.
 	if e.is_elite and not e.is_boss and not e.is_structure:
 		_holy_retribution(e)
 	game.enemies.on_enemy_killed(e)

@@ -7,8 +7,10 @@
 ## GDD §9.2): lethal damage with a revival left restores part of max HP.
 ## Two spell passives act here: Shade Stride (+% move speed, its own
 ## category) and Vampiric Rite (+HP/s on top of PlayerData.HP_REGEN), both
-## read from AbilityManager.passive_value(). Movement has no physical collision
-## with summons (GDD §26 "Player <-> friendly undead: NO physical collision")
+## read from AbilityManager.passive_value(). The Grave Step dash
+## (game.grave_step) runs first each tick and replaces the normal movement
+## while a step is in progress; its i-frames use `iframes` like a hit.
+## Movement has no physical collision with summons (GDD §26 "Player <-> friendly undead: NO physical collision")
 ## and the open arena has no solid geometry, so the node is moved directly
 ## instead of using CharacterBody2D physics.
 class_name Necromancer
@@ -69,9 +71,11 @@ func step(delta: float) -> void:
 		input = game.autotest.get_move_vector()
 	else:
 		input = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	# Shade Stride passive: its own +% move speed category on top of move_speed.
-	velocity = input * move_speed * (1.0 + game.abilities.passive_value("shade_stride", "move_speed"))
-	position += velocity * delta
+	# Grave Step (dash) moves him itself while a step runs.
+	if not game.grave_step.step(delta, input):
+		# Shade Stride passive: its own +% move speed category on top of move_speed.
+		velocity = input * move_speed * (1.0 + game.abilities.passive_value("shade_stride", "move_speed"))
+		position += velocity * delta
 	if absf(velocity.x) > 1.0:
 		var f := signf(velocity.x)
 		if f != _facing:
@@ -112,7 +116,11 @@ func apply_shield(amount: float, duration: float) -> void:
 ## Applies damage unless in i-frames. The ward absorbs first. Returns the HP
 ## actually lost (0 if fully absorbed) or -1 if the hit was ignored.
 func take_damage(amount: float) -> float:
-	if dead or iframes > 0.0:
+	if dead:
+		return -1.0
+	if iframes > 0.0:
+		if game != null and game.grave_step != null and game.grave_step.dodge_time > 0.0:
+			game.stat_add("dash_hits_avoided", 1.0)  # Ignored during Grave Step i-frames.
 		return -1.0
 	time_since_hit = 0.0
 	iframes = PlayerData.IFRAMES

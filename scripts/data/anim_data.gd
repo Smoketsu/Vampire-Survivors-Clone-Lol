@@ -13,6 +13,8 @@ extends RefCounted
 ##                        gameplay diameter (art often has empty margins)}.
 const ANIMS: Dictionary = {
 	"shadow_blast": {"duration": 0.4, "fill": 1.15},  # TUNING (not in GDD) test effect
+	"dread_rally": {"duration": 0.6, "fill": 1.15},  # TUNING (not in GDD) Dread Rally burst (10 frames, ART_BIBLE)
+	"grave_step_trail": {"duration": 0.3, "fill": 1.3},  # TUNING (not in GDD) Grave Step departure puff (6 frames)
 }
 ## Duration (s) for an animation id missing from ANIMS.
 const DEFAULT_DURATION: float = 0.4  # TUNING (not in GDD)
