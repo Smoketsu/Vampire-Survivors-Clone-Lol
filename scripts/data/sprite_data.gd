@@ -25,6 +25,7 @@ const HEIGHTS: Dictionary = {
 	"summons/gargoyle": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/frost_wraith": 48.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/risen": 36.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"summons/winter_revenant": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/recruit": 40.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/footman": 48.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/archer": 40.0,  # TUNING (not in GDD) ART_BIBLE manifest size

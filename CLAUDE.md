@@ -180,7 +180,10 @@ tiny tweaks.
   **Bound Souls** (minion speed, leash, faster return), hooked into `CombatResolver` and
   `HordeDirector.compute_stats()`; their cards name the summon evolutions they will unlock (Bone
   Colossus, Gravebow, Cathedral Horror, Shadow Reaper; Soul Recycling → Winter Revenant), which are
-  not built yet; and the owner rule that **every evolution needs its paired passive at Lv 5**.
+  not built yet; and the owner rule that **every evolution needs its paired passive at Lv 5**;
+- the **Winter Revenant** (Frost Wraith + Soul Recycling Lv 5, "transform"): Deep Freeze radius
+  +35% (`special_mult`), frozen enemies **shatter** on death (no chains, per-tick cap) and a
+  fallen Revenant releases a freezing **death nova** (`scripts/horde/winter_revenant.gd`).
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.
