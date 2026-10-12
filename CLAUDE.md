@@ -48,7 +48,7 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
 
 ## Design pillars and decisions to preserve (see GDD §15.0)
 
-- **Run structure:** a 20:00 countdown on every stage. The stage boss (Sir Alaric, Marshal Vael)
+- **Run structure:** a 20:00 countdown on every stage. The stage boss (Sir Alaric, Marshal Vael, Seraphine)
   arrives with 3:00 left. At 0:00 the **Reckoning**
   begins: escalating, near-unbeatable enemies that end the run. Dying after 0:00 is a victory, and
   dying before 0:00 is a defeat.
@@ -114,7 +114,7 @@ Autotest options (full table in the README):
 - for balance-affecting changes, a multi-seed check against the targets below.
 
 CI (`.github/workflows/ci.yml`) runs the import, the Graveyard autotest with the naive and army
-policies, a Crimson March autotest, the
+policies, a Crimson March autotest, a Sanctum of Judgment autotest (army policy), the
 Windows/Linux exports and an exported-build smoke test. Pushing a `v*` tag publishes a GitHub Release
 with both zips.
 
@@ -204,14 +204,6 @@ tiny tweaks.
   splitting, cursing arrows; the curse status lives in `combat_resolver.gd`) and the **Bone
   Colossus** (Abominations + Bone Plating: bigger stomp and body, taunt, bone shrapnel on death),
   in `gravebow_kit.gd` / `colossus_kit.gd`.
-- **Stage 3, the Sanctum of Judgment** (stage, zones, objectives): `sanctum_stage.gd`
-  (unlocked by Marshal Vael, ×1.5 Soul Ash), four clock-driven zones through `MarchDirector`
-  (`SanctumGround`, `SanctumTerrainGlyphs`), `SanctumDirector` for the two sanctified chambers
-  (ward crystals, 25% weaker undead hits inside), the Cathedral Guardian slot (miniboss bar,
-  chest), three optional sacred altars (−6% soldier HP each, `Game.altars_destroyed`), floor
-  corruption and Dawn's Wrath; achievement *Dawn Extinguished*; `--stage=sanctum`. The new
-  kinds and the boss come in through `SanctumStage.KINDS` / `BOSS_ID` (stand-ins until the
-  Stage 3 roster and Seraphine are merged);
 - the GDD §5.5 **dash and ultimate**: **Grave Step** (Shift / RB, `scripts/player/grave_step.gd`:
   110 px obstacle-clamped shadow step, 0.2 s i-frames, 5 s cooldown, from the first run; Ossuary
   Twin Shadow = second charge, Restless Shade = 5 → 3.5 s) and **Dread Rally** (Space / LB,
@@ -223,18 +215,27 @@ tiny tweaks.
   and ground outline, a pause-menu line per stance, Spearhead bought in the Ossuary (Spearhead
   Doctrine); the flavour bonuses exist but are off until the final balance pass; `--stance=`, and
   the army / summon / evolve bots switch by a simple rule (`stance_bot.gd`; naive / pact keep Escort).
-- the Stage 3 boss **Grand Inquisitor Seraphine** (`boss_seraphine.gd`, hazards in
-  `seraphine_hazards.gd`, data in `seraphine_data.gd`, GDD §15.0): three phases (Divine Judgment,
-  Avatar of the Dawn, The Last Light), healing attendants (3 − altars destroyed), teleports, beams,
-  the safe-zone nova, undead suppression (`_apply_suppression()` adapter), the collapsing arena,
-  the relic shatter and the ending text; `--boss=seraphine`.
-
-- the Stage 3 **Covenant kinds** (`sanctum_enemy_data.gd`, kits in `scripts/enemies/sanctum/`, usable by
-  any stage): the Sanctified Sentinel (flat armour 6, telegraphed sweep), Radiant Inquisitor (holy zones,
-  suppression through the one `HordeDirector.add_suppression()` path), High Confessor (heals, holy
-  shields, revival every 12 s, max 3, interruptible gold pillar; `Enemy.set_heal_override()`), Sun
-  Paladin (Templar charge, 20% sun ward aura) and the Cathedral Guardian plain miniboss (HUD bar,
-  slams, sweeping beam, chest); `--spawn=`.
+- **Stage 3, the Sanctum of Judgment**, the last stage of the campaign: `sanctum_stage.gd`
+  (unlocked by Marshal Vael, ×1.5 Soul Ash), four clock-driven zones through `MarchDirector`
+  (`SanctumGround`, `SanctumTerrainGlyphs`), and `SanctumDirector` for the two sanctified chambers
+  (ward crystals, 25% weaker undead hits inside), the Cathedral Guardian, three optional sacred
+  altars (−6% soldier HP each, `Game.altars_destroyed`), floor corruption and Dawn's Wrath (Sun
+  Paladins with the Reckoning); achievement *Dawn Extinguished*. Its **Covenant kinds**
+  (`sanctum_enemy_data.gd`, one `CovenantKit` each in `scripts/enemies/sanctum/`, usable by any
+  stage; the timeline names them through `SanctumStage.KINDS` aliases): the Sanctified Sentinel
+  (flat armour 6, telegraphed sweep), Radiant Inquisitor (holy zones, suppression), High Confessor
+  (heals, holy shields, revival every 12 s, max 3, interruptible gold pillar), Sun Paladin (Templar
+  charge, 20% sun ward aura) and the **Cathedral Guardian** miniboss (slams, sweeping beam; its kit
+  registers it with `EnemyDirector.set_miniboss()` for the HUD's one miniboss bar, `ChestManager`
+  drops its chest). Its boss **Grand Inquisitor Seraphine** (`boss_seraphine.gd`, hazards in
+  `seraphine_hazards.gd`, data in `seraphine_data.gd`, arrival `SeraphineData.ARRIVAL`): three
+  phases, High Confessor attendants (3 − altars destroyed; her regen is the one healing path),
+  Sanctified Sentinel constructs, teleports, beams, the safe-zone nova, the collapsing arena with a
+  Templar and Sun Paladin guard, the relic shatter and the ending text. Every suppression (Radiant
+  Inquisitor, Seraphine) goes through the one `HordeDirector.add_suppression()` path; flat armour,
+  holy shields, the sun ward, suppression and the chamber penalty each have their own stat in
+  `CombatResolver.damage_enemy()`. `--stage=sanctum`, `--spawn=`, `--boss=`; CI runs a Sanctum
+  autotest.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -249,10 +250,12 @@ tiny tweaks.
    short animations (`prepare_sprite.py --anim <sheet or GIF> <id>` → `assets/sprites/effects/`,
    timing in `anim_data.gd`); `shadow_blast` (test), `dread_rally` and `grave_step_trail` are hooked so far, hook the rest via
    `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.
-4. **Content candidates** (owner to choose): Stage 3 (below), achievement rewards / the Bone Golem,
-   synergies for the newer classes, more ultimates, a victory screen after the Reckoning.
-5. **Phase 3 campaign:** Stage 3 (Sanctum of Judgment,
-   Grand Inquisitor Seraphine); skins; achievement rewards.
+4. **Content candidates** (owner to choose): achievement rewards / the Bone Golem (and the
+   campaign epilogue that *Dawn Extinguished* should unlock), synergies for the newer classes, more
+   ultimates, a victory screen after the Reckoning.
+5. **Phase 3 campaign:** Stage 3 is done (the Sanctum of Judgment and Grand Inquisitor Seraphine);
+   left: skins, achievement rewards, the campaign epilogue, art for the Sanctum kinds, structures
+   and Seraphine.
 6. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner is happy with balance for now and wants value tweaks deferred to this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

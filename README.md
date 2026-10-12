@@ -575,11 +575,12 @@ countdown with the boss at 17:00 like the other stages.
   undead attacks on foes standing inside deal **25% less**. Shattering both
   cleanses it: the circle turns into a purple rot stain and the penalty ends.
 - **The Cathedral Guardian** (5:30) is a plain miniboss (it shields nothing)
-  with its own bar under the boss bar; it drops a **treasure chest**.
+  with its own bar under the timer (below the boss bar if both live); it
+  drops an XP burst and a **treasure chest** (see the kinds below).
 - **Sacred altars** (10:30, optional): three altars rise 300-400 px away, each
-  guarded by a High Confessor. Every altar destroyed takes **6% max HP** off
-  every Covenant soldier spawned afterwards (up to −18%) and weakens
-  Seraphine's retinue (`Game.altars_destroyed`). Skipping them only costs the
+  guarded by a High Confessor and two footmen. Every altar destroyed takes **6% max HP** off
+  every Covenant soldier spawned afterwards (up to −18%) and costs Seraphine
+  one of her three healing attendants (`Game.altars_destroyed`). Skipping them only costs the
   bonus.
 - **Corruption**: every cleansed chamber and fallen altar corrupts the
   Sanctum; the whole floor darkens toward purple (HUD: *Corruption N%*).
@@ -588,13 +589,17 @@ countdown with the boss at 17:00 like the other stages.
 - **Dawn's Wrath**: the Sanctum's Reckoning. Same escalation, but a gold dawn
   light floods the field and Sun Paladins march with the Inquisitors.
 - **The crypts beneath**: open crypts work like the Graveyard's empowered graves.
-- **Hardest stage**: from Zone II (4:00) enemies have ×1.2 HP and ×1.1 damage
-  (the boss always), and Soul Ash is ×1.5. The opening minute is recruits only.
-- **New enemies and the boss**: the Sanctified Sentinel, High Confessor, Sun
-  Paladin, Radiant Inquisitor, the Cathedral Guardian's kit and Grand
-  Inquisitor Seraphine are named through the stage's kind aliases
-  (`SanctumStage.KINDS` / `BOSS_ID`), so the timeline does not change when
-  they arrive.
+- **Hardest stage**: its own kinds arrive from Zone II, and from Zone III
+  (8:30) enemies also have ×1.1 HP and ×1.1 damage (the boss always), and
+  Soul Ash is ×1.5. The opening minute is recruits only, and the first four
+  minutes use the March's opening numbers. The elite kinds (Radiant
+  Inquisitors, High Confessors, Sun Paladins) come in scripted waves, never
+  in the trickle.
+- **New enemies and the boss**: the timeline names the Sanctified Sentinel,
+  High Confessor, Sun Paladin, Radiant Inquisitor and Cathedral Guardian by
+  short aliases (`SanctumStage.KINDS`: sentinel, confessor, paladin, radiant,
+  guardian), and the boss slot is Seraphine's own arrival
+  (`SeraphineData.ARRIVAL`). Both are described below.
 
 ### Stage 3 Covenant kinds (the Sanctum of Judgment)
 
@@ -628,14 +633,16 @@ them; the autotest's `--spawn=` puts them in any run.
   soldiers within 110 px **20% damage resistance** (a gold shield pip; one
   ward per soldier, Paladins do not stack; a Soul Nova ignores it).
 - **Cathedral Guardian** (miniboss, owner decision: a plain one): a giant
-  stone construct with **its own health bar** under the timer. It advances
+  stone construct with **its own health bar** under the timer (one miniboss
+  bar: its kit registers it with `EnemyDirector.set_miniboss()`). It advances
   slowly (striding faster when left behind), punches, and alternates two
   telegraphed specials: a **ground slam** (gold circle on your spot; summons
   inside soak part of your damage and are thrown out) and a **sweeping beam**
   (a gold sector, then a radiant beam sweeps across it, hitting everything
   once). It shrugs off knockback, Deep Freeze / stuns and Stasis like a boss,
   is never recycled, and drops an XP burst and a **treasure chest** when it
-  falls.
+  falls (the chest comes from `ChestManager`'s miniboss rule, never after
+  0:00).
 
 ### Stage 3 boss: Grand Inquisitor Seraphine
 
@@ -643,8 +650,8 @@ them; the autotest's `--spawn=` puts them in any run.
 numbers in `scripts/data/seraphine_data.gd`) is the Sanctum of Judgment's boss
 (any stage's boss slot can send her: `StageRegistry` boss id `seraphine`; the
 autotest's `--boss=seraphine` tests her on the Graveyard or the March). She
-arrives at 17:00 (3:00 left) with a banner and the boss bar, 40,000 HP before
-the stage's HP multiplier, and fights in three phases. She never kites: between
+arrives at 17:00 (3:00 left) with a banner and the boss bar, 30,000 HP before
+the stage's HP multiplier (33,000 in the Sanctum), and fights in three phases. She never kites: between
 specials she walks at you and strikes in reach, and every special holds her in
 place or brings her closer. Every big hit is telegraphed; your undead never
 dodge, only you can step out.
@@ -655,16 +662,19 @@ dodge, only you can step out.
    footmen) and a **teleport**: she glows for 1 s while a column of light
    marks where she lands, always nearer you (110-160 px away, on your side of
    her, never in an obstacle). Up to **three attendants** arrive with her
-   (healers; 3 minus the altars destroyed on the stage): while one lives within
-   170 px of her she regenerates 30 HP/s per attendant. Kill them first, or
+   (**High Confessors**; 3 minus the sacred altars destroyed on the stage):
+   while one lives within 170 px of her she regenerates 30 HP/s per attendant
+   (gold links; this regen is their only special healing of her: as
+   Confessors they otherwise keep their ordinary kit). Kill them first, or
    pull her away from them.
 2. **Avatar of the Dawn** (60-20%): the relic transformation (1 s,
    invulnerable; she grows larger and brighter), then **two rotating holy
    beams** (warning rays with sweep arrows, then a 4.2 s sweep that burns you
    and every summon in the light), **barrages** (three rings of 12 bolts),
-   **constructs** rising at rally marks, **undead suppression** (a pale ring of
-   220 px around you; after 1.5 s the summons inside deal half damage and are
-   not replaced for 5 s) and, every 25 s, the **Judgment nova**: the area
+   **constructs** (two Sanctified Sentinels) rising at rally marks, **undead
+   suppression** (the same sigil as the Radiant Inquisitor's, through the one
+   suppression path, but 220 px around you: after 1.5 s your summons fighting
+   inside deal half damage and are not replaced for 5 s) and, every 25 s, the **Judgment nova**: the area
    around her glows gold for 2.5 s while 2-3 dark safe circles are marked (one
    always within 80-140 px of you, on her side); everything outside them then
    takes heavy holy damage.
@@ -672,20 +682,15 @@ dodge, only you can step out.
    faster beams, the fans back, novas every 20 s with two safe circles. Her
    attendants flee, **holy fire closes in** from the rim of a 600 px circle
    around her, shrinking to 300 px over 40 s (it burns whatever stands
-   outside), and her **final guard** (5 Templars, 5 footmen) forms on the
-   circle and charges in.
+   outside), and her **final guard** (5 Templars, 3 Sun Paladins) forms on
+   the circle and charges in.
 
 When she dies the radiant relic shatters, the usual boss reward drops (XP
 burst, chest, power-up) and the ending plays as the stage banner: *"The
 Sanctum falls. Across the realm, other holy orders begin to mobilize."* The
-Reckoning still begins at 0:00. Her attendants and constructs are stand-ins
-(Chaplains with ×6 HP, footmen with ×3 HP) until the Stage 3 enemies (High
-Confessor, Sanctified Sentinel) are merged; the suppression calls the horde's
-`add_suppression()` when it exists (until then it is drawn and counted only).
-Measured with `--boss=seraphine --policy=army --mortal`, seeds 1-4: on the
-Graveyard she dies after 120 / 92 / 173 / 127 s (Sir Alaric: about 122 s), on
-the Crimson March (×1.1 HP) after 139 / - / 121 / 88 s (seed 2 ends with 169
-HP left at 0:00); the army bot never dropped below 48 HP.
+Reckoning (Dawn's Wrath in the Sanctum) still begins at 0:00. Measurements on
+her own stage are in *Known limitations* and GDD §15.0 ("Stage 3
+integration").
 
 ### Meta-progression (Soul Ash)
 
@@ -881,8 +886,8 @@ departure puff (`grave_step_trail`) are wired so far.
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
 | Stages (§8, §9.3, §10.2) | A stage registry with three stages, a stage select (locks, best time, boss kills) and the GDD §9.3 unlocks (slay Sir Alaric once to open the Crimson March, Marshal Vael once to open the Sanctum). See *Stages* above. |
 | Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
-| Stage 3 (§8.3, §7.4) | The Sanctum of Judgment: four battle zones on the clock (courtyards, golden halls, cloisters, final sanctuary), two sanctified chambers with ward crystals, the Cathedral Guardian miniboss (chest), three optional sacred altars (−6% soldier HP each), floor corruption, Dawn's Wrath, the boss slot for Grand Inquisitor Seraphine. See *Stage 3* above. |
-| Stage 3 boss (§7.5) | Grand Inquisitor Seraphine with her three GDD phases (Divine Judgment, Avatar of the Dawn, The Last Light): radiant fans, delayed holy circles, Templar squads, teleports, healing attendants, rotating holy beams, barrages, constructs, undead suppression, the safe-zone Judgment nova, the collapsing arena and a final guard, the relic shatter and the ending text. Tested on any stage with `--boss=seraphine`; the Sanctum stage itself is built separately. See *Stage 3 boss* above. |
+| Stage 3 (§8.3, §7.2, §7.4) | The Sanctum of Judgment: four battle zones on the clock (courtyards, golden halls, cloisters, final sanctuary), two sanctified chambers with ward crystals, the Cathedral Guardian miniboss (slams, sweeping beam, its own HUD bar, chest), three optional sacred altars (−6% soldier HP each, one healer fewer for Seraphine), floor corruption, Dawn's Wrath with Sun Paladins, and four new Covenant kinds (Sanctified Sentinel, Radiant Inquisitor with suppression, High Confessor with holy shields and revivals, Sun Paladin). See *Stage 3* above. |
+| Stage 3 boss (§7.5) | Grand Inquisitor Seraphine with her three GDD phases (Divine Judgment, Avatar of the Dawn, The Last Light): radiant fans, delayed holy circles, Templar squads, teleports, healing attendants, rotating holy beams, barrages, constructs, undead suppression, the safe-zone Judgment nova, the collapsing arena and a final guard, the relic shatter and the ending text. She ends the Sanctum of Judgment; `--boss=seraphine` also puts her on any other stage. See *Stage 3 boss* above. |
 | Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades plus the Spearhead stance unlock, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
@@ -1064,7 +1069,7 @@ scripts/
                                    Crypt Defender, obstacle layout, boss arrival
     stages/crimson_march_stage.gd  Stage 2: segments, events, zones (ground + layout), march config,
                                    stage multipliers, boss arrival
-    stages/sanctum_stage.gd        Stage 3: kind aliases (integration stand-ins), segments, events,
+    stages/sanctum_stage.gd        Stage 3: kind aliases (KINDS -> SanctumEnemyData ids), segments, events,
                                    zones, chamber / altar / corruption rules, Dawn's Wrath, boss arrival
     sanctum_objective_data.gd      Sanctum structures: ward crystal, sacred altar
     unit_data.gd            Summon classes (and their specials), level tables, AI weights, leash/rates
@@ -1191,13 +1196,14 @@ calm, and the summary adds `sanctum` (chambers cleansed and when, crystals
 destroyed, altars destroyed and when, corruption, the soldier HP cut, the
 Guardian's death time, chamber burns, objective Soul Ash, structures caught in
 an obstacle (must stay 0), minion damage the chambers prevented) and `sanctum
-events` (a timed log). Every run ends with
-`boss attacks` line lists the stage boss's own specials. With Seraphine
-(`--boss=seraphine`) a `seraphine` line adds her phase times (after her
+events` (a timed log); the `sanctum enemies / sentinel / inquisitor /
+confessor / paladin / guardian` lines (see `--spawn=`) appear whenever a
+Sanctum kind spawned. With Seraphine (her stage, or `--boss=seraphine`
+elsewhere) a `seraphine` line adds her phase times (after her
 arrival), attendants spawned / killed / fled and the healing they gave her,
 teleports, holy circles and their summon hits, beam pulses on you and on
 summons, barrages, Templars / constructs / final guard summoned,
-suppressions (summons caught, applied through the horde API), novas (you hit
+suppressions (summons inside the ring at the cast), novas (you hit
 or safe, summons hit or spared), the collapse damage and her damage to you by
 attack. Every run ends with
 a `stage:` line (stage, Soul Ash stage bonus, stages unlocked by the run).
@@ -1344,6 +1350,16 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
   7/8 runs (one march run starved and died at 19:16); Liches deal about 30%
   of its damage (at most 38% in one run). At **meta max** every bot kills
   both bosses and the Reckoning still ends every run, 23-43 s past 0:00.
+- **The Sanctum of Judgment** (all Stage 3 kinds and Seraphine, after the
+  integration balance pass; `--mortal`, meta none, seeds 1-8; GDD §15.0
+  "Stage 3 integration balance"): the **army** bot is alive at 0:00 in 7 of 8
+  runs (one starved 13-16 capacity army dies at 9:58), lowest HP 46-96,
+  slays the Cathedral Guardian at 6:01-7:22 and **Seraphine in 7 of 8**
+  (74-152 s after she arrives); Dawn's Wrath ends every run 7-34 s past 0:00
+  (meta max: 45 s). Builds complete at 14:15-15:27 with 7-11 chests and a good
+  run pays ~900 Soul Ash (×1.5 included): a little early and generous, left
+  for the final balance pass. The **naive** bot dies in all 8 runs, 6 of
+  them after 8:00.
 - **Naive builds are still below their targets** (dies 20-40%, kills the
   boss 25-50%): on the Graveyard the naive bot dies before 0:00 in 8 of 16
   runs and kills Sir Alaric in 3 of 16; on the Crimson March it dies in 11
@@ -1356,9 +1372,9 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
   build up.
 - A Rogue's bleeds stop if that rogue dies. Bone Spear needed an aim assist:
   pure movement aim missed almost everything while kiting.
-- Two stages so far (the Sanctum of Judgment is next), both 20-minute runs
-  (the GDD's lower bound). On the **Crimson March** the terrain changes at
-  each battle zone rather than scrolling (the clock drives the march).
+- Three stages, all 20-minute runs (the GDD's lower bound). On the **Crimson
+  March** and in the **Sanctum** the terrain changes at each battle zone
+  rather than scrolling (the clock drives the assault).
 - Arrows and spells fly over obstacles (no line-of-sight checks).
 - Eclipse Ward usually arrives late (15:00-19:00) and only in builds that
   take Orb Shield. No evolution is granted before 8:00 elapsed.
@@ -1394,11 +1410,11 @@ retune Void Barrage and the boss; the summon evolutions the later horde
 passives point to (Cathedral Horror, Shadow Reaper, Winter Revenant; the
 Gravebow and Bone Colossus are in); saves; density and minion-HP-bar settings (§38).
 
-**Phase 3 – Campaign:** the Crimson March and Marshal Vael are in (a human
-playtest and balance pass are next); the Sanctum of Judgment and Grand
-Inquisitor Seraphine, the remaining enemies (Radiant Inquisitor, Sanctified
-Sentinel, High Confessor), Soul Ash balance against the full-length stage, the
-real achievement unlocks, skins (the pre-run setup screen can take a skin
+**Phase 3 – Campaign:** all three stages are in: the Crimson March with
+Marshal Vael and the Sanctum of Judgment with its Covenant kinds and Grand
+Inquisitor Seraphine (a human playtest and balance pass are next). Left: Soul
+Ash balance against the full-length stage, the real achievement unlocks (the
+campaign epilogue for *Dawn Extinguished*), skins (the pre-run setup screen can take a skin
 choice next to the difficulty and modifiers).
 
 **Phase 4 – Polish:** real art and animation, audio, accessibility, full
