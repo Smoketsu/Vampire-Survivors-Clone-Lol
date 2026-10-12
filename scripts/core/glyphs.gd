@@ -15,7 +15,8 @@
 ##   Purifier = hexagon + torch flame           Sir Alaric = big octagon + hammer
 ##   Inquisitor of the End (Reckoning) = blazing 8-point sun star + eye
 ## The Crimson March's soldiers, structures and Marshal Vael are drawn by
-## MarchGlyphs (draw_enemy() delegates unknown kinds to it).
+## MarchGlyphs, the Sanctum of Judgment's kinds by SanctumGlyphs
+## (draw_enemy() delegates unknown kinds to them).
 class_name Glyphs
 extends RefCounted
 
@@ -156,7 +157,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		"templar":
 			_draw_templar(ci, o, r, flash)
 		_:
-			MarchGlyphs.draw_enemy(ci, kind, o, r, flash)  # Crimson March kinds.
+			if not MarchGlyphs.draw_enemy(ci, kind, o, r, flash):  # Crimson March kinds ...
+				SanctumGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Sanctum's.
 
 
 ## Covenant Recruit: small crimson round body, ivory tabard, silver helm, spear.

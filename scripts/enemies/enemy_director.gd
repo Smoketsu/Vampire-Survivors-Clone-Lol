@@ -20,7 +20,6 @@
 ##     "altars" events. A stage may name enemy kinds by short aliases
 ##     (StageRegistry "kind_aliases"); resolve_kind() maps them when a kind
 ##     is looked up or spawned.
-##   * Tracks one stage miniboss for the HUD's miniboss bar (set_miniboss()).
 ##   * Never places an enemy inside an obstacle (Arena.free_point).
 ##   * Applies the difficulty (game.difficulty: the GDD §8.4 level, the §8.5
 ##     run modifiers and the Profane Pact / Oath) in the existing scaling
@@ -32,6 +31,13 @@
 ##     frozen for part of the duration) or by a Frost Wraith Deep Freeze
 ##     (Enemy.freeze_timer, set by CombatResolver.freeze_enemy()) or a
 ##     Cathedral Horror dive stun (Enemy.stun_timer, CombatResolver.stun_enemy()).
+##   * Looks enemy kinds up (after a stage alias) in EnemyData, then
+##     SanctumObjectiveData.STRUCTURES, then MarchEnemyData, then
+##     SanctumEnemyData (the Sanctum of Judgment's kinds: any stage can spawn
+##     them), owns the CovenantRites (`rites`: the Sanctum kits' death record,
+##     High Confessor revivals and danger hints) and tracks the living
+##     miniboss (the Cathedral Guardian: its kit registers it with
+##     set_miniboss() for the HUD's one miniboss bar; never recycled).
 class_name EnemyDirector
 extends Node2D
 
@@ -99,13 +105,14 @@ var sanctum: SanctumDirector = null
 ## The stage's enemy kind aliases (StageRegistry "kind_aliases"; alias ->
 ## real kind id; {} = none).
 var _kind_aliases: Dictionary = {}
-## The stage miniboss on the HUD's miniboss bar (null = none; check
+## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
+var rites: CovenantRites
+## The living miniboss shown on the HUD's miniboss bar (the Cathedral
+## Guardian, registered by its GuardianKit; null = none; read it through
 ## miniboss_alive(), the node is pooled).
 var miniboss: Enemy = null
-## Generation of `miniboss` when it was set (stale guard).
+## Generation of `miniboss` when it registered (stale guard).
 var miniboss_gen: int = 0
-## HUD name of the miniboss ("Cathedral Guardian").
-var miniboss_name: String = ""
 
 
 func _ready() -> void:
@@ -117,6 +124,9 @@ func _ready() -> void:
 	stage = StageDirector.new()
 	stage.game = game
 	add_child(stage)
+	rites = CovenantRites.new()
+	rites.game = game
+	add_child(rites)
 	if not (stage_def["march"] as Dictionary).is_empty():
 		march = MarchDirector.new()
 		march.game = game
@@ -186,9 +196,10 @@ func step(delta: float) -> void:
 			e.update_separation()
 		e.physics_step(delta)
 		e.resolve_blocking()
-		if not e.is_boss and not e.is_objective and e.position.distance_squared_to(player_pos) > recycle2:
+		if not e.is_boss and not e.is_objective and not e.is_miniboss and e.position.distance_squared_to(player_pos) > recycle2:
 			_recycle(e)
 	stage.step(delta)
+	rites.step(delta)
 	if march != null:
 		march.step(delta)
 	if sanctum != null:
@@ -455,14 +466,45 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## Design row of enemy `kind` (a stage alias is resolved first):
 ## EnemyData.ENEMIES (Graveyard roster) first, then
 ## SanctumObjectiveData.STRUCTURES (Sanctum ward crystals and altars), then
-## MarchEnemyData.ENEMIES (Crimson March soldiers and structures).
+## MarchEnemyData.ENEMIES (Crimson March soldiers and structures), then
+## SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
+## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
 	kind = resolve_kind(kind)
 	if EnemyData.ENEMIES.has(kind):
 		return EnemyData.ENEMIES[kind]
 	if SanctumObjectiveData.STRUCTURES.has(kind):
 		return SanctumObjectiveData.STRUCTURES[kind]
-	return MarchEnemyData.ENEMIES[kind]
+	if MarchEnemyData.ENEMIES.has(kind):
+		return MarchEnemyData.ENEMIES[kind]
+	return SanctumEnemyData.ENEMIES[kind]
+
+
+## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
+## stage aliases are not resolved here).
+static func is_known_kind(kind: String) -> bool:
+	return EnemyData.ENEMIES.has(kind) or SanctumObjectiveData.STRUCTURES.has(kind) \
+			or MarchEnemyData.ENEMIES.has(kind) or SanctumEnemyData.ENEMIES.has(kind)
+
+
+## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar
+## under its display name).
+func set_miniboss(e: Enemy) -> void:
+	miniboss = e
+	miniboss_gen = e.generation
+
+
+## Releases the miniboss slot if `e` holds it (it died or was despawned).
+func clear_miniboss(e: Enemy) -> void:
+	if miniboss == e:
+		miniboss = null
+
+
+## The living miniboss, or null.
+func miniboss_alive() -> Enemy:
+	if miniboss != null and miniboss.active and miniboss.generation == miniboss_gen:
+		return miniboss
+	return null
 
 
 ## The real enemy kind of `kind`: the stage's alias target (StageRegistry
@@ -475,19 +517,6 @@ func resolve_kind(kind: String) -> String:
 func _spawn_enemy(kind: String, pos: Vector2, elite: bool) -> Enemy:
 	kind = resolve_kind(kind)
 	return _spawn_enemy_def(kind, enemy_def(kind), pos, hp_mult, elite)
-
-
-## Shows `e` on the HUD's miniboss bar as `display` (SanctumDirector's
-## Cathedral Guardian).
-func set_miniboss(e: Enemy, display: String) -> void:
-	miniboss = e
-	miniboss_gen = e.generation
-	miniboss_name = display
-
-
-## True while the miniboss set by set_miniboss() is alive.
-func miniboss_alive() -> bool:
-	return miniboss != null and miniboss.active and miniboss.generation == miniboss_gen
 
 
 ## Takes a living enemy off the field WITHOUT a kill (no XP, no drops, no
@@ -534,6 +563,7 @@ func _recycle(e: Enemy) -> void:
 
 ## Called by CombatResolver when an enemy dies.
 func on_enemy_killed(e: Enemy) -> void:
+	rites.on_enemy_killed(e)  # Sanctum kit death actions and the revival record.
 	e.deactivate()
 	if e.is_boss:
 		# Big reward burst (user brief: no longer the win condition).

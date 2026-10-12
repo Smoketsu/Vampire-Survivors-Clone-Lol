@@ -98,6 +98,8 @@ Autotest options (full table in the README):
 - `--difficulty=initiate|necromancer|lich|deathlord` (GDD §8.4; default necromancer = today's game)
 - `--modifiers=a,b` (GDD §8.5 run modifiers, e.g. `hardened_faith,scarcity`, or `all`)
 - `--stance=escort|onslaught|spearhead|bone_ring` (force an army stance for the whole run)
+- `--spawn=kind@T[xN],...` (force-spawn any enemy kind at T game seconds on any stage, e.g.
+  `sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300`)
 - `--pact`
 - `--meta=none|mid|max`
 - `--oath=0-5`
@@ -220,6 +222,13 @@ tiny tweaks.
   and ground outline, a pause-menu line per stance, Spearhead bought in the Ossuary (Spearhead
   Doctrine); the flavour bonuses exist but are off until the final balance pass; `--stance=`, and
   the army / summon / evolve bots switch by a simple rule (`stance_bot.gd`; naive / pact keep Escort).
+
+- the Stage 3 **Covenant kinds** (`sanctum_enemy_data.gd`, kits in `scripts/enemies/sanctum/`, usable by
+  any stage): the Sanctified Sentinel (flat armour 6, telegraphed sweep), Radiant Inquisitor (holy zones,
+  suppression through the one `HordeDirector.add_suppression()` path), High Confessor (heals, holy
+  shields, revival every 12 s, max 3, interruptible gold pillar; `Enemy.set_heal_override()`), Sun
+  Paladin (Templar charge, 20% sun ward aura) and the Cathedral Guardian plain miniboss (HUD bar,
+  slams, sweeping beam, chest); `--spawn=`.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.

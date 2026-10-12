@@ -111,6 +111,16 @@
 ##     pact keep Escort, their baseline) and the summary adds an "army
 ##     stance" line (time, entries, kills, army damage taken, hard recalls
 ##     and unit spread per stance, and the number of switches).
+##   * forced spawns: --spawn=kind@T[xN],... spawns N enemies of any kind
+##     (Graveyard, Crimson March or Sanctum data) in an arc on the spawn ring
+##     at T game seconds, on any stage (a test hook for new kinds). The
+##     autopilot also dodges the Sanctum kits' telegraphs
+##     (EnemyDirector.rites.danger_push()), and when any Sanctum kind spawned
+##     the summary adds "sanctum enemies" lines (spawns and kills per kind,
+##     Sentinel sweeps and flat armour absorbed, Inquisitor zones and
+##     suppressions with the horde's suppression counters, Confessor heals /
+##     shields / revives / cancelled revives, Paladin ward damage prevented,
+##     Cathedral Guardian slams / beams / kills / time to kill / chests).
 class_name Autotest
 extends Node
 
@@ -323,6 +333,10 @@ var _overtime_seen: Dictionary = {}
 var _forced: Dictionary = {}
 ## Army-stance driver (forced --stance, or the bot's switching rule).
 var _stance_bot: StanceBot = StanceBot.new()
+## --spawn entries sorted by time ({"kind", "time", "count"}).
+var _spawns: Array[Dictionary] = []
+## Index of the next --spawn entry to run.
+var _next_spawn: int = 0
 
 
 func _ready() -> void:
@@ -349,6 +363,13 @@ func _ready() -> void:
 	if not GameState.autotest_passives.is_empty():
 		print("[autotest] forced passives: %s" % ",".join(GameState.autotest_passives))
 	print("[autotest] stage: %s" % GameState.autotest_stage)
+	_spawns = GameState.autotest_spawns.duplicate()
+	_spawns.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a["time"]) < float(b["time"]))
+	if not _spawns.is_empty():
+		var parts := PackedStringArray()  # "kind@T xN" per forced spawn.
+		for sp in _spawns:
+			parts.append("%s@%s x%d" % [sp["kind"], _clock(float(sp["time"])), int(sp["count"])])
+		print("[autotest] forced spawns: %s" % ", ".join(parts))
 	print("[autotest] difficulty: %s | modifiers: %s" % [GameState.autotest_difficulty,
 		",".join(GameState.autotest_modifiers) if not GameState.autotest_modifiers.is_empty() else "none"])
 
@@ -371,6 +392,9 @@ func _apply_forced_classes() -> void:
 func step(delta: float) -> void:
 	if not _forced_done:
 		_apply_forced_classes()
+	while _next_spawn < _spawns.size() and game.elapsed >= float(_spawns[_next_spawn]["time"]):
+		_forced_spawn(_spawns[_next_spawn])
+		_next_spawn += 1
 	_stance_bot.step(game)
 	if _start_max_hp < 0.0:
 		_start_max_hp = game.player.max_hp
@@ -429,6 +453,14 @@ func step(delta: float) -> void:
 		print("[autotest]    unit FSM: %s" % str(game.horde.state_counts()))
 	if game.elapsed >= GameState.autotest_timeout:
 		game.end_run(false, "timeout")
+
+
+## --spawn: spawns one forced entry in an arc on the spawn ring (the normal
+## formation path, HARD_CAP respected).
+func _forced_spawn(sp: Dictionary) -> void:
+	var before := game.enemies.total_spawned  # To count what really spawned.
+	game.enemies.spawn_formation("arc", [{"kind": String(sp["kind"]), "count": int(sp["count"]), "elite": false}])
+	print("[autotest] %s forced spawn: %d x %s" % [_clock(game.elapsed), game.enemies.total_spawned - before, sp["kind"]])
 
 
 ## Samples every summon and enemy for the stuck-unit check. Class specials
@@ -498,8 +530,8 @@ func _summon_wants_move(u: SummonedUnit) -> bool:
 ## True when an enemy is trying to close in (not fighting a blocker, not in
 ## reach, not winding up a special).
 func _enemy_wants_move(e: Enemy) -> bool:
-	if e.engaged_timer > 0.0:
-		return false
+	if e.engaged_timer > 0.0 or (e.kit != null and e.kit.is_busy()):
+		return false  # Fighting a blocker, or standing in a Sanctum windup / cast.
 	var pl := game.player
 	if e.is_boss:
 		var b := e as Boss
@@ -756,9 +788,10 @@ func _dash_reason() -> String:
 	return ""
 
 
-## Stage and boss danger push at `pos` (the autopilot's telegraph dodge).
+## Stage, Sanctum kit and boss danger push at `pos` (the autopilot's
+## telegraph dodge).
 func _danger_at(pos: Vector2) -> Vector2:
-	var danger := game.enemies.stage.danger_push(pos)
+	var danger := game.enemies.stage.danger_push(pos) + game.enemies.rites.danger_push(pos)
 	if game.enemies.boss != null and game.enemies.boss.active:
 		danger += game.enemies.boss.danger_push(pos)
 	return danger
@@ -840,7 +873,7 @@ func get_move_vector() -> Vector2:
 		if d < best_d:
 			best_d = d
 			toward = (c.position - p) / maxf(d, 1.0)
-	var danger := game.enemies.stage.danger_push(p)
+	var danger := game.enemies.stage.danger_push(p) + game.enemies.rites.danger_push(p)
 	if game.enemies.boss != null and game.enemies.boss.active:
 		danger += game.enemies.boss.danger_push(p)
 	var objective := Vector2.ZERO
@@ -954,6 +987,7 @@ func finish(summary: Dictionary) -> void:
 		var sd := game.enemies.sanctum  # Sanctum objectives.
 		print("[autotest] sanctum: %s | minion dmg prevented by chambers %d" % [sd.summary_line(), int(st.get("sanctum_chamber_dmg_prevented", 0.0))])
 		print("[autotest] sanctum events (%d): %s" % [sd.fired.size(), ", ".join(sd.fired)])
+	_print_sanctum(st)
 	var fired := game.enemies.stage.fired
 	print("[autotest] stage events fired (%d): %s" % [fired.size(), ", ".join(fired)])
 	print("[autotest] templar charges: %d (body-blocked by warriors: %d) | temporary summons spawned: %d" % [
@@ -1117,6 +1151,41 @@ func _print_march(st: Dictionary) -> void:
 	print("[autotest] marshal vael: last stand %s | cleave summon hits %d, soaked for the player %d | command soldiers %d" % [
 		"yes" if st.has("boss_last_stand") else "no", int(st.get("boss_cleave_summon_hits", 0.0)), int(st.get("boss_cleave_soaked", 0.0)), int(st.get("boss_command_soldiers", 0.0))])
 	print("[autotest] march events (%d): %s" % [m.fired.size(), ", ".join(m.fired)])
+
+
+## Sanctum of Judgment kinds (SanctumEnemyData): printed only when one of
+## them spawned this run (so every other run's summary is unchanged).
+func _print_sanctum(st: Dictionary) -> void:
+	var spawned := PackedStringArray()  # "kind=spawned/killed".
+	var any := false  # A Sanctum kind spawned.
+	for kind: String in SanctumEnemyData.ORDER:
+		var n := int(st.get("spawned_" + kind, 0.0))
+		any = any or n > 0
+		spawned.append("%s=%d/%d" % [kind, n, int(st.get("kill_" + kind, 0.0))])
+	if not any:
+		return
+	var i := func(key: String) -> int: return int(st.get(key, 0.0))
+	print("[autotest] sanctum enemies (spawned/killed): %s | confessor revived soldiers killed: %d" % [" ".join(spawned), i.call("revived_killed")])
+	print("[autotest] sanctum sentinel: sweeps %d (summon hits %d, player hits %d) | flat armour absorbed %d | player dmg from sweeps %d, summon dmg %d" % [
+		i.call("sentinel_sweeps"), i.call("sentinel_sweep_summon_hits"), i.call("sentinel_sweep_player_hits"), i.call("flat_armor_absorbed_sanctified_sentinel"),
+		i.call("player_dmg_from_sentinel_sweep"), i.call("summon_dmg_from_sentinel_sweep")])
+	print("[autotest] sanctum inquisitor: holy zones %d, suppressions %d | suppression: replacements delayed %d, released %d, paused class-seconds %d, spawn spots blocked %d, minion dmg prevented %d | radiant bolt dmg to player %d, summons %d" % [
+		i.call("inquisitor_zones"), i.call("inquisitor_suppressions"), i.call("suppression_replacements_delayed"), i.call("suppression_released"),
+		i.call("suppression_paused_seconds"), i.call("suppression_spawns_blocked"), i.call("suppression_dmg_prevented"),
+		i.call("player_dmg_from_radiant_inquisitor"), i.call("summon_dmg_from_radiant_inquisitor")])
+	print("[autotest] sanctum confessor: heals %d (%d HP healed by all priests) | shields %d, absorbed %d, broken %d | revives started %d, done %d, cancelled %d, capped %d" % [
+		i.call("high_confessor_heals"), i.call("enemy_healing"), i.call("confessor_shields"), i.call("holy_shield_absorbed"), i.call("holy_shields_broken"),
+		i.call("confessor_revives_started"), i.call("confessor_revives"), i.call("confessor_revives_cancelled"), i.call("confessor_revives_capped")])
+	print("[autotest] sanctum paladin: ward pulses %d, ward dmg prevented %d | charges (shared with templars) %d" % [
+		i.call("paladin_ward_pulses"), i.call("paladin_ward_dmg_prevented"), i.call("templar_charges")])
+	var ttk := float(st.get("guardian_ttk", 0.0)) / maxf(1.0, float(st.get("guardian_kills", 0.0)))  # Average time to kill (s).
+	var mb := game.enemies.miniboss_alive()  # A Guardian still standing (null = none).
+	print("[autotest] sanctum guardian: dmg taken %d (alive now: %s) | spawned %d, killed %d (avg time to kill %.1f s), chests %d | slams %d (summon hits %d, player hits %d, soaked %d) | beams %d (summon hits %d, player hits %d) | dmg to player %d, summons %d" % [
+		int(_sum_prefix(st, "minibossdmg_")), "%d / %d HP" % [int(mb.hp), int(mb.max_hp)] if mb != null else "no",
+		i.call("guardian_spawned"), i.call("guardian_kills"), ttk, i.call("miniboss_chests"), i.call("guardian_slams"), i.call("guardian_slam_summon_hits"),
+		i.call("guardian_slam_player_hits"), i.call("guardian_slam_soaked"), i.call("guardian_beams"), i.call("guardian_beam_summon_hits"), i.call("guardian_beam_player_hits"),
+		i.call("player_dmg_from_guardian_slam") + i.call("player_dmg_from_guardian_beam") + i.call("player_dmg_from_cathedral_guardian"),
+		i.call("summon_dmg_from_guardian_slam") + i.call("summon_dmg_from_guardian_beam") + i.call("summon_dmg_from_cathedral_guardian")])
 
 
 ## Prints the power-up drop / buff counters and the Profane Pact / Oath lines.

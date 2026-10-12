@@ -186,7 +186,7 @@ func _spawn_guardian(ev: Dictionary) -> void:
 	_guardian_gen = e.generation
 	_guardian_ev = ev
 	_guardian_pos = e.position
-	game.enemies.set_miniboss(e, String(ev["name"]))
+	game.enemies.set_miniboss(e)
 	game.stat_add("sanctum_guardians_spawned", 1.0)
 	_log("guardian_arrived")
 

@@ -308,7 +308,7 @@ number is in `scripts/data/unit_data.gd`.
 |---|---|---|
 | Bone Plating | Minions ignore 2 → 6 damage of every hit (after the other reductions, before barriers; a hit keeps at least 25%; holy-ground ticks are exempt) | Abominations → **Bone Colossi** |
 | Unholy Precision | Minion attacks and specials crit 5% → 25% of the time for double damage (not the Rogue's bleed ticks, not your spells) | Archers → **Gravebows** |
-| Unholy Resilience | Minions take 8% → 35% less **area and holy** damage: Hammerfall, Vael's cleave, Halberdier sweeps, Judgment, Purifier fire, holy ground (consecration, ward generators, boss zones), Holy Retribution bolts | Gargoyles → **Cathedral Horrors** |
+| Unholy Resilience | Minions take 8% → 35% less **area and holy** damage: Hammerfall, Vael's cleave, Halberdier sweeps, Judgment, Purifier fire, holy ground (consecration, ward generators, boss and Inquisitor zones), Holy Retribution bolts, the Sanctum's Sentinel sweeps, Guardian slams and beams and Radiant Inquisitor bolts | Gargoyles → **Cathedral Horrors** |
 | Bound Souls | Minion move speed +6% → +30%; leash (engagement radius and soft recall) +10% → +50%; the return trip after a recall takes 10% → 50% less time | Rogues → **Shadow Reapers** |
 | Soul Recycling (existing) | Faster replacement | Frost Wraiths → **Winter Revenants** |
 
@@ -596,6 +596,47 @@ countdown with the boss at 17:00 like the other stages.
   (`SanctumStage.KINDS` / `BOSS_ID`), so the timeline does not change when
   they arrive.
 
+### Stage 3 Covenant kinds (the Sanctum of Judgment)
+
+Five new Covenant kinds (GDD §7.2, §8.3; `SanctumEnemyData`), each with its
+own silhouette and a `CovenantKit` for its specials. Any stage can spawn
+them; the autotest's `--spawn=` puts them in any run.
+
+- **Sanctified Sentinel** (squat pale-stone construct, gold eye slit):
+  slow and armoured; it **ignores the first 6 damage of every hit** (after
+  armour; a hit keeps at least 25%, so many weak hits still chip it: mages,
+  spears and big single hits are the answer). When its target is close it
+  shows a gold cone for 1 s, then **sweeps**: undead in the cone are hurt and
+  shoved back, and so are you if you stand in it. Constructs are never
+  healed, shielded or raised by Covenant priests.
+- **Radiant Inquisitor** (elite caster: ivory robe, gold sunburst halo):
+  advances shooting radiant bolts, lays **holy zones** on your path, and casts
+  a **suppression sigil**: a 1 s gold warning circle (160 px) on your undead
+  frontline, then for 4 s no replacement spawns inside it and summons that die
+  inside it are **not replaced until it ends** (the rest of the army keeps
+  replacing normally; afterwards replacement resumes as usual).
+- **High Confessor** (elite priest: gold mitre, crook): heals the most wounded
+  ally within 120 px, puts **holy shields** (an absorb, ivory-gold bubble) on
+  up to 3 allies (bosses and elites first), and every 12 s **raises one fallen
+  soldier** that died within 140 px of it, where it fell, after a **gold pillar
+  of 1.5 s**: kill the Confessor during the pillar to cancel it. At most 3
+  revives per Confessor; never elites, structures, constructs, bosses or the
+  Reckoning; a raised soldier comes back at 60% HP, drops no XP and is never
+  raised again. Your summons treat it as a top-priority healer.
+- **Sun Paladin** (elite: gold shield with a sun emblem): an armoured Templar
+  with the same telegraphed charge, whose **sun aura** gives other Covenant
+  soldiers within 110 px **20% damage resistance** (a gold shield pip; one
+  ward per soldier, Paladins do not stack; a Soul Nova ignores it).
+- **Cathedral Guardian** (miniboss, owner decision: a plain one): a giant
+  stone construct with **its own health bar** under the timer. It advances
+  slowly (striding faster when left behind), punches, and alternates two
+  telegraphed specials: a **ground slam** (gold circle on your spot; summons
+  inside soak part of your damage and are thrown out) and a **sweeping beam**
+  (a gold sector, then a radiant beam sweeps across it, hitting everything
+  once). It shrugs off knockback, Deep Freeze / stuns and Stasis like a boss,
+  is never recycled, and drops an XP burst and a **treasure chest** when it
+  falls.
+
 ### Meta-progression (Soul Ash)
 
 - **Soul Ash** is earned at the end of **every** run and kept even if you die
@@ -862,6 +903,9 @@ scripts/
     march_glyphs.gd         Crimson March shapes: new soldiers, structures, Marshal Vael, obstacles, corpse piles
     sanctum_ground.gd       Sanctum floor: each battle zone's look, corruption tint (extends Ground)
     sanctum_terrain_glyphs.gd  Sanctum shapes: ward crystals, sacred altars, the four zones' obstacles
+    sanctum_glyphs.gd       Sanctum of Judgment Covenant shapes (Sentinel, Radiant Inquisitor, High Confessor,
+                            Sun Paladin, Cathedral Guardian) and their overlays (holy shield, sun ward,
+                            revival pillar, suppression sigil, Guardian beam)
     evolution_recipes.gd    Read-only list of every evolution recipe (spell + summon data), for the
                             Recipes view, the Meta [recipes] section and the autotest
     autotest.gd             Headless self-test driver
@@ -879,6 +923,8 @@ scripts/
     summon_evolutions.gd    Summon evolutions: eligibility, stat overlay, in-place transform,
                             Mender + Warder merge, Lich raise-the-dead, card hints
     winter_revenant.gd      Winter Revenant kit: shatter (kill hook) and death nova (summon_died)
+    suppression_field.gd    Holy suppression zones (HordeDirector.add_suppression(): blocked replacement
+                            spawns, held deaths, optional minion damage cut)
     minion_passives.gd      Card lines and the autotest line of the later horde passives
                             (their effects live in CombatResolver / compute_stats)
     army_stance.gd          The run's army stance (game.stance): lockout, keys / right-stick
@@ -906,7 +952,18 @@ scripts/
     march_director.gd       Crimson March: battle zones, outposts, ward generators, supply carts, timed structures
                             (also the Sanctum's battle zones)
     sanctum_director.gd     Sanctum: sanctified chambers, Cathedral Guardian, sacred altars, corruption, Dawn's Wrath light
-    enemy_director.gd       The stage's wave timeline, events, boss, Reckoning, pooling, recycling
+    enemy_director.gd       The stage's wave timeline, events, boss, Reckoning, pooling, recycling,
+                            the miniboss slot (HUD bar)
+    sanctum/                The Sanctum of Judgment's Covenant kits (one CovenantKit per enemy, like
+                            the summon behaviours):
+      covenant_kit.gd         Base class: reset / think / physics / killed / danger / draw hooks
+      covenant_kits.gd        Registry (kit id -> class)
+      covenant_rites.gd       Recent-deaths ring buffer, High Confessor revivals (gold pillars), danger hints
+      sentinel_kit.gd         Sanctified Sentinel: telegraphed frontal sweep with knockback
+      inquisitor_kit.gd       Radiant Inquisitor: holy zones and the suppression sigil
+      confessor_kit.gd        High Confessor: holy shields and revival (heals use the shared healer AI)
+      paladin_kit.gd          Sun Paladin: sun ward aura (the charge is the shared Templar rush)
+      guardian_kit.gd         Cathedral Guardian miniboss: ground slams, sweeping beam, XP burst
   abilities/
     ability_manager.gd      Spell casting, passive values, level-up card generation + deltas
     orb_shield.gd           Shadow Orb Shield
@@ -957,6 +1014,8 @@ scripts/
     unit_data.gd            Summon classes (and their specials), level tables, AI weights, leash/rates
     enemy_data.gd           Graveyard enemy roster, Sir Alaric, Reckoning enemy, elites
     march_enemy_data.gd     Crimson March soldiers and structures, Marshal Vael
+    sanctum_enemy_data.gd   Sanctum of Judgment kinds (Sentinel, Radiant Inquisitor, High Confessor,
+                            Sun Paladin, Cathedral Guardian) and their kit numbers
     wave_data.gd            Shared run rules: countdown, enemy time scaling, caps, spawn ring
     ability_data.gd         Spell level tables
     passive_data.gd         Passive level tables
@@ -1053,6 +1112,7 @@ Options (after `--`):
 | `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march` or `sanctum`. Stage locks are ignored. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | `--stance=ID` | Army stance for the whole run: `escort`, `onslaught`, `spearhead` or `bone_ring` (forcing ignores the Spearhead unlock). Without it, `army`, `summon` and `evolve` switch stances by a simple rule (Bone Ring when the necromancer is in danger or the boss is within 260 px; Onslaught when at most 6 enemies are within 220 px and a Crimson March structure or a Sanctum crystal / altar is within 420 px or at most 10 enemies are within 480 px; Spearhead, when owned, toward a chest or power-up within 300 px; else Escort; `StanceBot`), while `naive` and `pact` keep Escort so their baselines do not move. |
+| `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.

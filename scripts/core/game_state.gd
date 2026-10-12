@@ -67,6 +67,12 @@
 ##                         forcing ignores the Spearhead unlock. Without it,
 ##                         army / summon / evolve switch stances (StanceBot)
 ##                         and naive / pact keep Escort.
+##   --spawn=k@T[xN],...   Autotest test hook: force-spawns N (default 1)
+##                         enemies of kind k (any stage's data: EnemyData,
+##                         MarchEnemyData or SanctumEnemyData ids) at T game
+##                         seconds, in an arc on the spawn ring, on any
+##                         stage, e.g. --spawn=sanctified_sentinel@120x3,
+##                         high_confessor@180x2,cathedral_guardian@300.
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 
@@ -107,6 +113,9 @@ var autotest_modifiers: PackedStringArray = PackedStringArray()
 ## Autotest: StanceData id forced for the whole run by --stance= ("" = the
 ## stance bot's rule, StanceBot).
 var autotest_stance: String = ""
+## Autotest: forced spawns from --spawn= ({"kind", "time" s, "count"}, in
+## the order given; empty = none).
+var autotest_spawns: Array[Dictionary] = []
 ## Stage chosen last in the stage select this session (focused next time).
 var last_stage_id: String = StageRegistry.DEFAULT_ID
 ## Whether the F3 debug overlay is shown; persists across restarts.
@@ -188,6 +197,15 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_stance = sid
 			else:
 				push_error("Unknown --stance=%s (expected one of %s)" % [sid, ", ".join(PackedStringArray(StanceData.ORDER))])
+		elif arg.begins_with("--spawn="):
+			for entry: String in arg.get_slice("=", 1).split(",", false):
+				var kind := entry.get_slice("@", 0)  # Enemy kind id.
+				var rest := entry.get_slice("@", 1) if entry.contains("@") else "0"  # "T" or "TxN".
+				var count := int(rest.get_slice("x", 1)) if rest.contains("x") else 1  # How many.
+				if EnemyDirector.is_known_kind(kind) and count > 0:
+					autotest_spawns.append({"kind": kind, "time": rest.get_slice("x", 0).to_float(), "count": count})
+				else:
+					push_error("--spawn: bad entry '%s' (expected kind@seconds[xcount] with a known enemy kind)" % entry)
 		elif arg.begins_with("--classes="):
 			for cls: String in arg.get_slice("=", 1).split(",", false):
 				# Evolution-only classes (the Profane Bishop) cannot be forced.

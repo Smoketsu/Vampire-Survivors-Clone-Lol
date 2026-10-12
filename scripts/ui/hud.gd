@@ -4,8 +4,10 @@
 ##   Top center    : timer, battle zone (Crimson March, Sanctum; the Sanctum
 ##                   adds its corruption), objective / event banner, boss HP
 ##                   when present (named after the stage boss), and a smaller
-##                   miniboss bar while a stage miniboss lives (the Sanctum's
-##                   Cathedral Guardian; EnemyDirector.miniboss).
+##                   miniboss bar under it while a stage miniboss lives (the
+##                   Sanctum's Cathedral Guardian, registered by its kit:
+##                   EnemyDirector.miniboss_alive(), named by its display
+##                   name).
 ##   Top right     : kill count, pause hint, modifiers (the difficulty
 ##                   level, the active run modifiers and their Soul Ash
 ##                   multiplier, then the Profane Pact level and Profane
@@ -63,12 +65,13 @@ var _banner_label: Label
 var _boss_box: VBoxContainer
 ## Boss HP bar.
 var _boss_bar: HudBar
-## Container for the miniboss name + HP bar (hidden while none lives).
-var _miniboss_box: VBoxContainer
-## Miniboss name label.
-var _miniboss_name: Label
-## Miniboss HP bar.
-var _miniboss_bar: HudBar
+## Container for the miniboss name + HP bar (hidden while none lives; shown
+## under the boss bar if both live).
+var _mini_box: VBoxContainer
+## Miniboss name label (its display name).
+var _mini_name: Label
+## Miniboss HP bar (red, smaller than the gold boss bar).
+var _mini_bar: HudBar
 ## Kill counter.
 var _kills_label: Label
 ## "Army N / cap" label.
@@ -182,17 +185,17 @@ func _build() -> void:
 	_boss_bar = HudBar.new(Palette.GOLD, Vector2(520, 14))
 	_boss_box.add_child(_boss_bar)
 	tc.add_child(_boss_box)
-	_miniboss_box = VBoxContainer.new()
-	_miniboss_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_miniboss_box.visible = false
-	_miniboss_name = UiTheme.label("", 14, Palette.GOLD.lightened(0.2))
-	_miniboss_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_miniboss_box.add_child(_miniboss_name)
-	_miniboss_bar = HudBar.new(Palette.HP_ENEMY, Vector2(360, 10))
-	_miniboss_bar.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	_miniboss_bar.font_size = 10
-	_miniboss_box.add_child(_miniboss_bar)
-	tc.add_child(_miniboss_box)
+	_mini_box = VBoxContainer.new()
+	_mini_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_mini_box.visible = false
+	_mini_name = UiTheme.label("", 14, UiTheme.TEXT_GOLD)
+	_mini_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_mini_box.add_child(_mini_name)
+	_mini_bar = HudBar.new(Palette.HP_ENEMY, Vector2(360, 10))
+	_mini_bar.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_mini_bar.font_size = 10
+	_mini_box.add_child(_mini_bar)
+	tc.add_child(_mini_box)
 
 	# Top right: kills, pause hint, modifiers.
 	var top_right := _box(true, 1.0, 0.0, -300, 20, -16, 110, BoxContainer.ALIGNMENT_BEGIN)
@@ -338,11 +341,11 @@ func _refresh() -> void:
 	_boss_box.visible = boss != null and boss.active
 	if _boss_box.visible:
 		_boss_bar.set_values(boss.hp / boss.max_hp, "%d / %d" % [ceili(boss.hp), int(boss.max_hp)])
-	_miniboss_box.visible = game.enemies.miniboss_alive()
-	if _miniboss_box.visible:
-		var mb := game.enemies.miniboss  # The live stage miniboss.
-		_miniboss_name.text = game.enemies.miniboss_name
-		_miniboss_bar.set_values(mb.hp / mb.max_hp, "%d / %d" % [ceili(mb.hp), ceili(mb.max_hp)])
+	var mb := game.enemies.miniboss_alive()  # Living miniboss (null = none).
+	_mini_box.visible = mb != null
+	if _mini_box.visible:
+		_mini_name.text = mb.display_name
+		_mini_bar.set_values(mb.hp / mb.max_hp, "%d / %d" % [ceili(mb.hp), ceili(mb.max_hp)])
 	_kills_label.text = "Kills: %d" % game.kills
 	var h := game.horde
 	_army_label.text = "Army %d / %d" % [h.units.size(), h.total_capacity()]

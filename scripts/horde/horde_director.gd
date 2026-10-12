@@ -21,6 +21,10 @@
 ##     stats take the stance's leash, soft recall, formation pull and (when
 ##     switched on) flavour bonuses; the formation anchors use its shape
 ##     (Escort = the original layout below, the others StanceFormations).
+##   * holy suppression (GDD §7.3) through its SuppressionField
+##     (`suppression`), reached through ONE call, add_suppression(): no
+##     replacement spawns inside an armed zone, and deaths inside it are held
+##     (that class's replacement pauses) until it ends.
 ## Ranged overkill reservations are stored on the enemies themselves
 ## (Enemy.incoming_damage) and managed by ProjectileManager.
 class_name HordeDirector
@@ -81,6 +85,8 @@ var synergies: SynergyManager
 var evolutions: SummonEvolutions
 ## Bone Colossus taunt list and death burst (ColossusKit).
 var colossi: ColossusKit
+## Holy suppression zones (Radiant Inquisitor, Seraphine; add_suppression()).
+var suppression: SuppressionField
 ## Radius (px) Enemy.resolve_blocking() adds to its own to find blockers:
 ## UnitData.MAX_BLOCK_RADIUS, raised to the widest block_radius ever spawned
 ## this run (the Corpse Abomination's), never lowered.
@@ -98,6 +104,23 @@ func _init() -> void:
 	colossi = ColossusKit.new(self)
 
 
+func _ready() -> void:
+	suppression = SuppressionField.new()
+	suppression.game = game
+	add_child(suppression)
+
+
+## THE suppression API (GDD §7.3, §15.0): a zone at `pos`, `radius` px, that
+## arms for `telegraph` s (a gold warning ring, no effect yet) and then for
+## `duration` s blocks summon replacement inside it, holds the replacement of
+## every summon that dies inside it until it ends, and makes minion attacks
+## on enemies inside it deal `damage_mult` of their damage (1 = unchanged).
+## `source` tags it for the stats ("inquisitor", "seraphine"...). Replacement
+## resumes normally afterwards (SuppressionField).
+func add_suppression(pos: Vector2, radius: float, duration: float, damage_mult: float = 1.0, telegraph: float = 0.0, source: String = "inquisitor") -> void:
+	suppression.add(pos, radius, duration, damage_mult, telegraph, source)
+
+
 # =====================================================================================
 # Per-tick update (GDD §39 update_horde)
 # =====================================================================================
@@ -107,6 +130,7 @@ func step(delta: float) -> void:
 	_frame += 1
 	if temp_alive > 0:
 		_update_temporaries(delta)
+	suppression.step(delta)
 	_update_replenishment(delta)
 	synergies.step(delta)
 	if _frame % UnitData.FORMATION_TICK_DIVISOR == 0:
@@ -389,7 +413,9 @@ func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dicti
 
 ## Each summon ability runs its own queue: missing units come back one at a
 ## time per interval; capacity increases spawn immediately. A failed spawn
-## does not consume the timer (GDD §24 "Failed spawns retry").
+## does not consume the timer (GDD §24 "Failed spawns retry"). While every
+## missing unit of a class is held by a holy suppression zone, that class's
+## timer pauses (SuppressionField.holds_class()).
 func _update_replenishment(delta: float) -> void:
 	for cls: String in UnitData.CLASS_ORDER:
 		if int(class_levels[cls]) <= 0:
@@ -403,6 +429,9 @@ func _update_replenishment(delta: float) -> void:
 		if int(immediate_spawns[cls]) > 0:
 			if _try_spawn(cls):
 				immediate_spawns[cls] = int(immediate_spawns[cls]) - 1
+			continue
+		if suppression.holds_class(cls, count, cap):
+			game.stat_add("suppression_paused_seconds", delta)
 			continue
 		replenish_timer[cls] = float(replenish_timer[cls]) + delta
 		if float(replenish_timer[cls]) >= replenish_interval(cls):
@@ -441,9 +470,9 @@ func _try_spawn(cls: String) -> bool:
 	var r: float = stats["radius"]
 	for _attempt in UnitData.SPAWN_RETRIES:
 		var pos := game.player.position + Vector2.from_angle(randf() * TAU) * randf_range(UnitData.SPAWN_MIN, UnitData.SPAWN_MAX)
-		# Never inside an enemy, an obstacle or a holy zone (holy ground
-		# suppresses replacement locally, GDD §10).
-		if _blocked_by_enemy(pos, r) or game.arena.is_blocked(pos, r) or game.enemies.stage.in_holy_zone(pos):
+		# Never inside an enemy, an obstacle, a holy zone or a suppression
+		# zone (holy ground suppresses replacement locally, GDD §10).
+		if _blocked_by_enemy(pos, r) or game.arena.is_blocked(pos, r) or game.enemies.stage.in_holy_zone(pos) or suppression.blocks(pos):
 			continue
 		var u: SummonedUnit
 		if _pool.is_empty():
@@ -537,6 +566,7 @@ func on_unit_died(u: SummonedUnit, as_death: bool = true) -> void:
 		class_counts[u.unit_class] = maxi(0, int(class_counts[u.unit_class]) - 1)
 		if as_death:
 			total_deaths += 1
+			suppression.on_unit_died(u)  # Held if it fell inside a suppression zone.
 	game.effects.pop(u.position, Palette.COLD_BLUE, u.radius * 1.2)
 	u.deactivate()
 	_pool.append(u)

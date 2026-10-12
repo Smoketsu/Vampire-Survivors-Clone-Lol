@@ -27,6 +27,15 @@
 ##   damage with the aura's multipliers. damage_taken_mult() is the one hook
 ##   CombatResolver asks before applying damage (Marshal Vael overrides it
 ##   for his Shieldwall).
+## Sanctum of Judgment kinds (SanctumEnemyData, GDD §8.3) add optional keys
+## read here (absent = off): `kit` (a CovenantKit with the kind's specials:
+## Sentinel sweep, Inquisitor zones and suppression, Confessor shields and
+## revival, Paladin ward, Guardian slams and beam; hooks in activate(),
+## deactivate(), think(), physics_step() and _draw()), always_elite,
+## construct (never healed), flat_armor, miniboss, projectile "radiant" and
+## heal_stat. Every enemy can carry a holy shield (absorb, High Confessor)
+## and a sun ward (damage resistance, Sun Paladin), both applied by
+## CombatResolver; set_heal_override() points a healer at a chosen ally.
 ## Survivor convention (user brief): enemies ALWAYS advance on the player;
 ## nobody kites or holds at range. Ranged units only slow down briefly after
 ## each shot (EnemyData.SHOOT_SLOW_*).
@@ -135,6 +144,41 @@ var buff_damage: float = 1.0
 var buff_speed: float = 1.0
 ## Damage-taken multiplier while buffed.
 var buff_taken: float = 1.0
+## Sanctum kit (SanctumEnemyData "kit"; null for every other kind).
+var kit: CovenantKit = null
+## True for animated stone (Sentinel, Guardian): never healed, shielded or
+## raised by Covenant priests.
+var is_construct: bool = false
+## True for a miniboss (Cathedral Guardian): HUD bar, boss-like crowd-control
+## resistance, never recycled, guaranteed chest.
+var is_miniboss: bool = false
+## HP of damage ignored from every hit after armour (0 = none; see
+## SanctumEnemyData.FLAT_ARMOR_MIN_FRACTION).
+var flat_armor: float = 0.0
+## Holy shield HP left (High Confessor; absorbs damage before HP; 0 = none).
+var holy_shield: float = 0.0
+## Seconds before an unbroken holy shield fades.
+var holy_shield_time: float = 0.0
+## Sun Paladin ward: game time (s) until which it holds (0 = none). Compared
+## with Game.elapsed like the curse.
+var ward_until: float = 0.0
+## Sun Paladin ward: fraction (0..1) of incoming damage removed while it holds.
+var ward_resist: float = 0.0
+## True for a soldier raised by a High Confessor (no XP, never raised again).
+var is_revived: bool = false
+## Healer only: an ally this healer prefers whenever it is wounded and within
+## heal_override_radius (set_heal_override(); null = none).
+var heal_override: Enemy = null
+## Generation of `heal_override` when set (stale guard).
+var heal_override_gen: int = 0
+## Healer only: reach (px) of the override heal.
+var heal_override_radius: float = 0.0
+## Game.stats key counted per heal (SanctumEnemyData heal_stat; default
+## "chaplain_heals").
+var heal_stat: String = "chaplain_heals"
+## True when a "ranged" kind fires radiant bolts (SanctumEnemyData
+## "projectile": "radiant") instead of arrows.
+var _radiant: bool = false
 
 # --- Runtime --------------------------------------------------------------------------
 
@@ -283,7 +327,25 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	buff_damage = 1.0
 	buff_speed = 1.0
 	buff_taken = 1.0
-	if elite:
+	# Sanctum of Judgment optional keys (absent in every Graveyard and Crimson
+	# March row: all off). An always-elite kind's numbers are final.
+	var always_elite := bool(def.get("always_elite", false))  # Elite by design.
+	is_construct = bool(def.get("construct", false))
+	is_miniboss = bool(def.get("miniboss", false))
+	flat_armor = float(def.get("flat_armor", 0.0))
+	_radiant = String(def.get("projectile", "")) == "radiant"
+	heal_stat = String(def.get("heal_stat", "chaplain_heals"))
+	holy_shield = 0.0
+	holy_shield_time = 0.0
+	ward_until = 0.0
+	ward_resist = 0.0
+	is_revived = false
+	heal_override = null
+	heal_override_gen = 0
+	heal_override_radius = 0.0
+	if always_elite:
+		is_elite = true
+	elif elite:
 		max_hp *= EnemyData.ELITE_HP_MULT
 		radius *= EnemyData.ELITE_RADIUS_MULT
 		xp_value *= EnemyData.ELITE_XP_MULT
@@ -318,6 +380,11 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	stun_timer = 0.0
 	chill_timer = 0.0
 	visible = true
+	kit = CovenantKits.for_enemy(kit, String(def.get("kit", "")))
+	if kit != null:
+		kit.reset(self, def)
+		game.enemies.rites.register(self)
+		game.stat_add("spawned_" + kind, 1.0)
 	queue_redraw()
 
 
@@ -328,6 +395,20 @@ func deactivate() -> void:
 	incoming_damage = 0.0
 	target = null
 	heal_target = null
+	heal_override = null
+	if kit != null:
+		kit.on_deactivate(self)
+		game.enemies.rites.unregister(self)
+
+
+## Points this healer at `ally`: whenever `ally` is wounded and within
+## `reach` px it is healed first (for an external owner, e.g. Grand
+## Inquisitor Seraphine on her High Confessors; the normal ally search
+## already includes bosses within heal_radius). Pass null to clear.
+func set_heal_override(ally: Enemy, reach: float) -> void:
+	heal_override = ally
+	heal_override_gen = ally.generation if ally != null else 0
+	heal_override_radius = reach
 
 
 ## Sets the Stasis freeze state (redraws only when it changes).
@@ -393,6 +474,8 @@ func apply_chill(duration: float) -> void:
 func think() -> void:
 	if aura_radius > 0.0:
 		_pulse_aura()
+	if kit != null:
+		kit.think(self)  # Sanctum specials (CovenantKit).
 	if is_structure:
 		targeting_player = false
 		targeting_summon = false
@@ -462,13 +545,20 @@ func _target_valid() -> bool:
 	return true
 
 
-## Chaplain: picks the most wounded other enemy in heal radius.
+## Chaplain: picks the most wounded other enemy in heal radius (never a
+## construct). A wounded heal override in its reach wins (set_heal_override()).
 func _pick_heal_target() -> void:
 	heal_target = null
+	var o := heal_override  # External heal target (null = none).
+	if o != null and o.active and o.generation == heal_override_gen and o.hp < o.max_hp \
+			and o.position.distance_to(position) <= heal_override_radius:
+		heal_target = o
+		heal_target_gen = o.generation
+		return
 	var best_frac := EnemyData.HEAL_MIN_MISSING_FRACTION
 	game.enemy_grid.query(position, heal_radius, _tmp)
 	for e: Enemy in _tmp:
-		if e == self or not e.active:
+		if e == self or not e.active or e.is_construct:
 			continue
 		var frac := 1.0 - e.hp / e.max_hp
 		if frac >= best_frac:
@@ -545,6 +635,8 @@ func update_separation() -> void:
 ## Per-physics-tick update: movement and attacks.
 func physics_step(delta: float) -> void:
 	_tick_timers(delta)
+	if kit != null and kit.physics(self, delta):
+		return  # A Sanctum windup / cast holds still.
 	if is_structure:
 		_step_structure(delta)
 		return
@@ -572,7 +664,11 @@ func physics_step(delta: float) -> void:
 			if d <= attack_range and attack_cd <= 0.0:
 				attack_cd = attack_interval
 				_shoot_slow_timer = EnemyData.SHOOT_SLOW_TIME
-				game.projectiles.fire_hostile(position, dir, damage * game.enemies.damage_mult * hit_mult(), projectile_speed, undead_damage_mult)
+				if _radiant:
+					game.projectiles.fire_hostile(position, dir, damage * game.enemies.damage_mult * hit_mult(), projectile_speed, undead_damage_mult,
+							Projectile.Kind.RADIANT_BOLT, kind)
+				else:
+					game.projectiles.fire_hostile(position, dir, damage * game.enemies.damage_mult * hit_mult(), projectile_speed, undead_damage_mult)
 		elif behavior == "healer":
 			_try_heal()
 	elif edge > attack_range:
@@ -760,6 +856,15 @@ func _tick_timers(delta: float) -> void:
 			buff_speed = 1.0
 			buff_taken = 1.0
 			queue_redraw()
+	if holy_shield_time > 0.0:
+		holy_shield_time -= delta
+		if holy_shield_time <= 0.0:
+			holy_shield = 0.0  # The Confessor's shield fades unbroken.
+			queue_redraw()
+	if ward_until > 0.0 and ward_until <= game.elapsed:
+		ward_until = 0.0  # Out of every Sun Paladin's aura: the ward drops.
+		ward_resist = 0.0
+		queue_redraw()
 	if knockback != Vector2.ZERO:
 		knockback = knockback.move_toward(Vector2.ZERO, EnemyData.KNOCKBACK_DECAY * delta)
 	if flash > 0.0:
@@ -833,18 +938,27 @@ func _try_heal() -> void:
 	if not heal_target.active or heal_target.generation != heal_target_gen:
 		heal_target = null
 		return
-	if heal_target.position.distance_to(position) > heal_radius:
+	var reach := heal_override_radius if heal_target == heal_override else heal_radius  # Heal range (px).
+	if heal_target.position.distance_to(position) > reach:
 		return
 	heal_cd = heal_interval
 	if game.combat.heal_enemy(heal_target, heal_amount) > 0.0:
 		game.effects.beam(position, heal_target.position, Palette.GOLD)
-		game.stat_add("chaplain_heals", 1.0)
+		game.stat_add(heal_stat, 1.0)
 
 
 func _draw() -> void:
 	if aura_radius > 0.0:
 		MarchGlyphs.draw_aura(self, aura_radius)  # Banner / Holy Standard reach.
+	if kit != null:
+		kit.draw_under(self)  # Sanctum auras.
 	Glyphs.draw_enemy(self, kind, Vector2.ZERO, radius, flash > 0.0, is_elite)
+	if kit != null:
+		kit.draw_over(self)  # Sanctum casting glows, beams.
+	if holy_shield > 0.0:
+		SanctumGlyphs.draw_holy_shield(self, radius)  # High Confessor shield.
+	if ward_until > 0.0:
+		SanctumGlyphs.draw_ward(self, Vector2(-radius * 1.05, -radius * 1.2), 3.5)  # Sun Paladin ward.
 	if buff_time > 0.0:
 		MarchGlyphs.draw_buffed(self, Vector2(0, -radius * 2.4), 4.0)  # Aura buff chevron.
 	if mark_time > 0.0:
