@@ -12,6 +12,17 @@ const ROOT: String = "res://assets/sprites/"
 ## On-screen height in world px per sprite key (ART_BIBLE.md manifest sizes).
 const HEIGHTS: Dictionary = {
 	"player/necromancer": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"player/umbral_warden": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/voidcaller": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/bone_oracle": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/fallen_confessor": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/carrion_lord": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/plague_scholar": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/doomsayer": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/barrow_warden": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/soulbinder": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/wither_witch": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/grave_herald": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
 	"summons/warrior": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/archer": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/mage": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size

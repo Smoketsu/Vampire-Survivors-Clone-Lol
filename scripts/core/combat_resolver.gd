@@ -40,6 +40,12 @@
 ## The Soul Nova ignores the ward, flat armour and shields
 ## (SanctumEnemyData.FLAT_ARMOR_EXEMPT_SOURCES). A miniboss (Enemy.is_miniboss)
 ## takes the boss multiplier of a Deep Freeze / dive stun.
+## Playable characters (CharacterInnates, game.innates; every hook is a
+## no-op for the Gravecaller): a killing blow reports to on_enemy_killed()
+## (Ossuary Ward shards, Contagion), damage_player() lets an Ossuary Ward
+## shard absorb the hit first, and heal_player() passes the HP healed to
+## Stolen Grace. Rot (Plague Cloud, Contagion, the Wither Witch's aura) is
+## applied through rot_enemy().
 class_name CombatResolver
 extends RefCounted
 
@@ -156,6 +162,7 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 		if source in MetaData.WARRIOR_KILL_SOURCES:
 			game.stat_add("warrior_kills", 1.0)  # Bone Legion achievement (MetaData)
 		game.horde.evolutions.on_enemy_killed(e, source)  # Lich raise-the-dead.
+		game.innates.on_enemy_killed(e, source)  # Character innates (no-op without one).
 		_kill_enemy(e)
 	return dealt
 
@@ -242,6 +249,8 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 ## (evolution passive) and the meta Bone Mail armor (own category) reduce the
 ## damage first.
 func damage_player(amount: float, source: String) -> void:
+	if game.innates.try_block_hit():
+		return  # Ossuary Ward shard (Bone Oracle) absorbed the whole hit.
 	amount *= 1.0 - game.abilities.passive_value("warding_ritual", "damage_reduction")
 	amount *= 1.0 - game.meta.value("damage_reduction")
 	var lost := game.player.take_damage(amount)
@@ -268,6 +277,8 @@ func heal_unit(u: SummonedUnit, amount: float) -> float:
 func heal_player(amount: float) -> float:
 	var healed := game.player.heal(amount)
 	game.stat_add("player_healing", healed)
+	if healed > 0.0:
+		game.innates.on_player_healed(healed)  # Stolen Grace (no-op without it).
 	return healed
 
 
@@ -288,6 +299,18 @@ func heal_enemy(e: Enemy, amount: float) -> float:
 func slow_enemy(e: Enemy, fraction: float, duration: float) -> void:
 	if e.active:
 		e.apply_slow(fraction, duration)
+
+
+## Rot (Plague Cloud, AbilityData): enemy `e` takes `amount` (0..1) more
+## damage from every source until game time `until` (damage_enemy()). The
+## stronger Rot wins while one is running and the longer expiry is kept;
+## bosses get AbilityData.ROT_BOSS_MULT of `amount`. Also used by the
+## Plague Scholar's Contagion and the Wither Witch's Creeping Rot innates.
+func rot_enemy(e: Enemy, amount: float, until: float) -> void:
+	var a := amount * (AbilityData.ROT_BOSS_MULT if e.is_boss else 1.0)  # Rot for this enemy.
+	if e.rot_until <= game.elapsed or a >= e.rot_amp:
+		e.rot_amp = a
+	e.rot_until = maxf(e.rot_until, until)
 
 
 ## Frost Wraith chill: a slow of `fraction` for `duration` s, shown as a

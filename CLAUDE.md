@@ -73,6 +73,13 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
   (7 spells, 9 offerable summon classes) compete for 6 active slots.
 - **Soul Ash is kept on death.** Profane Pact (in-run) and Profane Oath (Ossuary) trade difficulty
   for rewards.
+- **Playable characters** (one per spell, `character_data.gd`): each starts with its own spell, has
+  **one innate passive only** (no exclusive cards) and a few stat modifiers, all through ONE path
+  (`RunConfig.character_id` → `CharacterModifiers` as `game.character` → `CharacterInnates` as
+  `game.innates`). **The Gravecaller is the default with no innate and baseline stats**: with him the
+  game must stay bit-for-bit identical (same-seed autotest summaries). A character unlocks the first
+  time its spell reaches Lv 5 in any run (Meta `[characters]`); characters whose spell does not exist
+  yet stay hidden.
 
 ## Tools and commands
 
@@ -99,6 +106,8 @@ Autotest options (full table in the README):
 - `--difficulty=initiate|necromancer|lich|deathlord` (GDD §8.4; default necromancer = today's game)
 - `--modifiers=a,b` (GDD §8.5 run modifiers, e.g. `hardened_faith,scarcity`, or `all`)
 - `--stance=escort|onslaught|spearhead|bone_ring` (force an army stance for the whole run)
+- `--character=ID` (playable character, default `gravecaller`; locks bypassed, e.g. `bone_oracle`;
+  characters whose spell is missing are refused)
 - `--spawn=kind@T[xN],...` (force-spawn any enemy kind at T game seconds on any stage, e.g.
   `sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300`)
 - `--pact`
@@ -236,6 +245,15 @@ tiny tweaks.
   holy shields, the sun ward, suppression and the chamber penalty each have their own stat in
   `CombatResolver.damage_enemy()`. `--stage=sanctum`, `--spawn=`, `--boss=`; CI runs a Sanctum
   autotest.
+- **Playable characters** (owner-approved, one per spell): `character_data.gd` (12 characters),
+  `CharacterModifiers` (the one character path: starting spell, stats applied once, innate values),
+  `CharacterInnates` (Eclipsed Guard, Echoing Dark, Ossuary Ward, Grave Harvest, Stolen Grace,
+  Contagion; Restless in `HordeDirector.spawn_temporary()`), a picker on the pre-run setup screen
+  (`character_picker.gd`, portraits in `character_glyphs.gd`: the necromancer tinted until art
+  exists), the unlock rule (Lv 5 with the spell in any run, Meta `[characters]`, end-screen banner),
+  `[prerun] character`, `--character=`. The five characters of the coming spells (Doomsayer, Barrow
+  Warden, Soulbinder, Wither Witch, Grave Herald) are hidden until their spells exist; their innates
+  are `game.character.innate_value()` hooks (GDD §15.0).
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -246,7 +264,7 @@ tiny tweaks.
    with file keys and sizes); process each with `python3 tools/prepare_sprite.py <image> <key>`.
    `SpriteBank` draws `assets/sprites/<key>.png` when present and falls back to the glyph, so art
    lands piecemeal. Done: `player/necromancer`; every summon and the first three evolutions (incl. `risen`); every enemy soldier (incl. the
-   Reckoning's `inquisitor`); both `bosses/`; all five `structures/`. Still to do: the pickups and the five newer evolutions (Gravebow, Bone Colossus, Shadow Reaper, Cathedral Horror, Winter Revenant). Effects are
+   Reckoning's `inquisitor`); both `bosses/`; all five `structures/`. Still to do: the pickups, the five newer evolutions (Gravebow, Bone Colossus, Shadow Reaper, Cathedral Horror, Winter Revenant) and the eleven playable characters (`player/<id>`, drawn as the tinted necromancer until then). Effects are
    short animations (`prepare_sprite.py --anim <sheet or GIF> <id>` → `assets/sprites/effects/`,
    timing in `anim_data.gd`); `shadow_blast` (test), `dread_rally` and `grave_step_trail` are hooked so far, hook the rest via
    `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.

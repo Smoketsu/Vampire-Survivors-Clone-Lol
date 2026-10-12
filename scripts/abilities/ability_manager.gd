@@ -37,6 +37,12 @@
 ## The four later horde passives (Bone Plating, Unholy Precision, Unholy
 ## Resilience, Bound Souls) act in CombatResolver / HordeDirector; their
 ## card line comes from MinionPassives.card_line().
+## Playable characters (game.character, CharacterModifiers): the run starts
+## with the character's spell at Lv 1 (CharacterModifiers.starting_spell(),
+## Shadow Bolt for the Gravecaller), its spell-area modifier is one more
+## category in apply_spell_mods(), every spell level-up is reported to it
+## (the Meta unlock rule), and Shadow Blast tells the Voidcaller's Echoing
+## Dark innate about each blast (game.innates.on_blast()).
 class_name AbilityManager
 extends Node2D
 
@@ -85,7 +91,8 @@ var _cands: Array = []
 var spells: NecroSpellBook = null
 
 
-## Initialises levels: the starting spell at level 1, everything else 0.
+## Initialises levels: the character's starting spell at level 1 (its Orb
+## Shield node too when that is the spell), everything else 0.
 func setup(p_game: Game) -> void:
 	game = p_game
 	spells = NecroSpellBook.new()
@@ -95,7 +102,10 @@ func setup(p_game: Game) -> void:
 		spell_levels[id] = 0
 	for id: String in PassiveData.ORDER:
 		passive_levels[id] = 0
-	spell_levels[AbilityData.STARTING_SPELL] = 1
+	var start := game.character.starting_spell()  # AbilityData.STARTING_SPELL for the Gravecaller.
+	spell_levels[start] = 1
+	if start == "orb_shield":
+		_create_orb_shield()
 	# Fortune tree (GDD §9.2 "rerolls", open question 7): extra charges.
 	rerolls_max = LevelUpData.REROLLS + game.meta.int_value("rerolls")
 	banishes_max = LevelUpData.BANISHES + game.meta.int_value("banishes")
@@ -184,12 +194,14 @@ func _apply_spell_buffs(out: Dictionary) -> Dictionary:
 ##   meta spell_area -> radius, pulse_radius             x (1 + value)
 ##   Necrotic Expanse -> radius, pulse_radius            x (1 + spell_area)
 ##   Lingering Malediction -> AbilityData.DURATION_KEYS  x (1 + spell_duration)
+##   character spell_area -> radius, pulse_radius        x (1 + value)
 ## Pass `conduit_lvl` / `focus_lvl` >= 0 to preview other passive levels.
 func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -1) -> Dictionary:
 	var out := row.duplicate()
 	var dmg_mult := (1.0 + _passive_value_at("soul_conduit", "spell_damage", conduit_lvl)) * (1.0 + game.meta.value("spell_damage"))
 	var cd_mult := (1.0 - _passive_value_at("abyssal_focus", "cooldown_reduction", focus_lvl)) * (1.0 - game.meta.value("spell_cooldown"))
-	var area_mult := (1.0 + game.meta.value("spell_area")) * (1.0 + passive_value("necrotic_expanse", "spell_area"))
+	var area_mult := (1.0 + game.meta.value("spell_area")) * (1.0 + passive_value("necrotic_expanse", "spell_area")) \
+			* (1.0 + game.character.value("spell_area"))  # Playable character (0 for the Gravecaller).
 	var dur_mult := 1.0 + passive_value("lingering_malediction", "spell_duration")  # Lingering Malediction.
 	for key: String in AbilityData.DURATION_KEYS:
 		if out.has(key):
@@ -410,6 +422,7 @@ func _cast_blast(s: Dictionary) -> bool:
 			game.combat.damage_enemy(e, float(s["damage"]), "abyss" if abyss else "blast")
 	if not hit:
 		return false
+	game.innates.on_blast(p, r, float(s["damage"]))  # Voidcaller's Echoing Dark (no-op otherwise).
 	if abyss:
 		game.effects.abyss(p, r)
 		_detonations.append({"t": float(s["second_delay"]), "pos": p, "stats": s})
@@ -572,9 +585,8 @@ func apply_offer(o: Dictionary) -> void:
 		"spell":
 			spell_levels[id] = to
 			if id == "orb_shield" and orb_shield == null:
-				orb_shield = OrbShield.new()
-				orb_shield.game = game
-				add_child(orb_shield)
+				_create_orb_shield()
+			game.character.on_spell_level(id, to)  # Character unlock rule (Meta save).
 		"summon":
 			game.horde.set_class_level(id, to)
 		"passive":
@@ -600,6 +612,13 @@ func apply_offer(o: Dictionary) -> void:
 		pick_history.append(id)
 	else:
 		pick_history.append("%s %d" % [id, to])
+
+
+## Creates the Orb Shield node (the spell was just learned).
+func _create_orb_shield() -> void:
+	orb_shield = OrbShield.new()
+	orb_shield.game = game
+	add_child(orb_shield)
 
 
 ## Evolves the base spell of evolution `evo` in place (same active slot).

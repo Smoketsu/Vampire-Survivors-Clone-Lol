@@ -177,12 +177,10 @@ func _tick(c: Cloud) -> void:
 
 
 ## Inflicts Rot on `e`: it takes `amount` more damage from every source until
-## game time `until` (the stronger Rot wins; bosses get ROT_BOSS_MULT).
+## game time `until` (the stronger Rot wins; bosses get ROT_BOSS_MULT), through
+## the one Rot path, CombatResolver.rot_enemy().
 func apply_rot(e: Enemy, amount: float, until: float) -> void:
-	var a := amount * (AbilityData.ROT_BOSS_MULT if e.is_boss else 1.0)  # Rot for this enemy.
-	if e.rot_until <= game.elapsed or a >= e.rot_amp:
-		e.rot_amp = a
-	e.rot_until = maxf(e.rot_until, until)
+	game.combat.rot_enemy(e, amount, until)
 
 
 ## Pestilence Death Nova when a cloud expires.

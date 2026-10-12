@@ -498,8 +498,11 @@ func _try_spawn(cls: String) -> bool:
 ## using the class's current effective stats (level 1 if not learned) times
 ## `hp_mult` / `dmg_mult`. It runs the shared AI but is not counted in
 ## class_counts (caps, HUD) and is never replaced. It always keeps the base
-## class look and kit (no summon-evolution overlay).
+## class look and kit (no summon-evolution overlay). The Grave Herald's
+## Restless innate lengthens `duration` (CharacterData temp_summon_duration;
+## 0 for every other character).
 func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float, dmg_mult: float) -> SummonedUnit:
+	duration *= 1.0 + game.character.innate_value("temp_summon_duration")
 	var stats := compute_stats(cls, maxi(1, int(class_levels[cls])), true, false)
 	stats["max_hp"] = float(stats["max_hp"]) * hp_mult
 	stats["damage"] = float(stats["damage"]) * dmg_mult
@@ -552,7 +555,9 @@ func _blocked_by_enemy(pos: Vector2, r: float) -> bool:
 ## Death handling (GDD §24): stop AI, deregister, release reservations, play
 ## FX, pool the node; the class queue then replaces it after its interval.
 ## `as_death` false removes the unit without counting a death or emitting
-## summon_died (units dissolved by the Mender + Warder merge).
+## summon_died (units dissolved by the Mender + Warder merge). A real death
+## is reported to the character innates first (CharacterInnates
+## .on_summon_died, the Carrion Lord's summon corpses).
 func on_unit_died(u: SummonedUnit, as_death: bool = true) -> void:
 	if not u.active:
 		return
@@ -560,6 +565,8 @@ func on_unit_died(u: SummonedUnit, as_death: bool = true) -> void:
 	if idx >= 0:
 		units[idx] = units[units.size() - 1]
 		units.pop_back()
+	if as_death:
+		game.innates.on_summon_died(u)  # Carrion Lord corpses (no-op without the innate).
 	if u.is_temporary:
 		temp_alive -= 1
 	else:

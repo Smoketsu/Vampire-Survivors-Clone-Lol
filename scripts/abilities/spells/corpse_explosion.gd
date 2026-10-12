@@ -15,6 +15,9 @@
 ## slow inside), and an enemy an eruption kills erupts at once (up to
 ## `chain` extra bursts per cast).
 ## Corpses live in a fixed ring buffer (no allocation per kill).
+## The Carrion Lord's Grave Harvest innate (CharacterInnates) adds the
+## corpses of fallen summons through add_summon_corpse(); they detonate like
+## any other corpse (stat carrion_summon_bursts).
 class_name CorpseExplosion
 extends NecroSpell
 
@@ -40,6 +43,8 @@ class Zone:
 var _corpse_pos: PackedVector2Array = PackedVector2Array()
 ## Game time each corpse appeared (-1 = slot empty or already used).
 var _corpse_time: PackedFloat32Array = PackedFloat32Array()
+## 1 for a corpse slot left by a fallen summon (Grave Harvest), else 0.
+var _corpse_ally: PackedByteArray = PackedByteArray()
 ## Next ring-buffer slot to write.
 var _next: int = 0
 ## Seconds until the next cast.
@@ -70,6 +75,7 @@ func _ready() -> void:
 	_corpse_pos.resize(AbilityData.CORPSE_MAX)
 	_corpse_time.resize(AbilityData.CORPSE_MAX)
 	_corpse_time.fill(-1.0)
+	_corpse_ally.resize(AbilityData.CORPSE_MAX)
 
 
 ## Kill hook (NecroSpellBook): during one of this spell's own Grave
@@ -82,8 +88,21 @@ func on_enemy_killed(e: Enemy) -> void:
 		_chain_left -= 1
 		_chain_queue.append(e.position)
 		return
-	_corpse_pos[_next] = e.position
+	_add_corpse(e.position, 0)
+
+
+## Grave Harvest (Carrion Lord, CharacterInnates.on_summon_died): a fallen
+## summon at `pos` leaves a corpse like an enemy's.
+func add_summon_corpse(pos: Vector2) -> void:
+	_add_corpse(pos, 1)
+
+
+## Writes a corpse at `pos` into the next ring-buffer slot (`ally` 1 = a
+## summon's corpse).
+func _add_corpse(pos: Vector2, ally: int) -> void:
+	_corpse_pos[_next] = pos
 	_corpse_time[_next] = game.elapsed
+	_corpse_ally[_next] = ally
 	_next = (_next + 1) % AbilityData.CORPSE_MAX
 
 
@@ -130,6 +149,8 @@ func _cast(stats: Dictionary) -> bool:
 	for j in used:
 		var k: int = _cands[j][1]
 		_corpse_time[k] = -1.0
+		if _corpse_ally[k] == 1:
+			game.stat_add("carrion_summon_bursts", 1.0)  # Grave Harvest corpse.
 		_detonate(_corpse_pos[k], stats, false)
 	var c := 0  # Chain bursts released.
 	while c < _chain_queue.size():

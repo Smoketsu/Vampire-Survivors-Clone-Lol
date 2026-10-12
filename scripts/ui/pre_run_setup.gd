@@ -1,6 +1,8 @@
 ## PreRunSetup — the pre-run setup screen (GDD §10.2 "Select ... difficulty
 ## (§8.4) and modifiers (§8.5). Show the total reward multiplier from stacked
 ## modifiers"). The stage select opens it after a stage is chosen:
+##   * the playable character (CharacterPicker, its own file: portrait
+##     tiles and a detail panel; locked ones show their unlock condition),
 ##   * a row of four difficulty cards (DifficultyData, easiest to hardest):
 ##     name, the GDD effect line and every number that differs from the
 ##     standard level; exactly one is selected,
@@ -65,6 +67,8 @@ var _back: Button
 var _reset: Button
 ## Begin button (focused on open).
 var _begin: Button
+## The playable-character section (CharacterPicker, above the difficulty row).
+var _picker: CharacterPicker
 
 
 ## Opens the screen over `parent` for `p_config`; focus returns to `refocus`
@@ -98,6 +102,9 @@ func _ready() -> void:
 	var sub := UiTheme.label("%s  -  %s" % [String(def["chapter"]), String(def["display_name"])], 14, UiTheme.TEXT_DIM)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(sub)
+	_picker = CharacterPicker.new()
+	_picker.config = config
+	vb.add_child(_picker)
 	vb.add_child(UiTheme.label("DIFFICULTY", 14, UiTheme.TEXT_DIM))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
@@ -224,17 +231,20 @@ func _build_mod_card(id: String) -> Button:
 	return b
 
 
-## Explicit focus neighbours: the difficulty row, the modifier grid below
-## it, then the bottom buttons; edges stay inside the screen.
+## Explicit focus neighbours: the character tiles, the difficulty row, the
+## modifier grid below it, then the bottom buttons; edges stay inside the
+## screen.
 func _wire_focus() -> void:
 	var levels: Array = DifficultyData.ORDER
 	var mods: Array = RunModifierData.ORDER
 	var rows := ceili(float(mods.size()) / float(MOD_COLUMNS))  # Modifier grid rows.
+	var level_row: Array = []  # Difficulty cards, left to right (below the picker).
 	for i in levels.size():
 		var b: Button = _level_buttons[levels[i]]
+		level_row.append(b)
 		_link(b, "left", _level_buttons[levels[maxi(0, i - 1)]])
 		_link(b, "right", _level_buttons[levels[mini(levels.size() - 1, i + 1)]])
-		_link(b, "top", b)
+		_link(b, "top", _picker.tile_above(i, levels.size()))
 		_link(b, "bottom", _mod_buttons[mods[mini(i, mini(MOD_COLUMNS, mods.size()) - 1)]])
 	var bottom := [_back, _reset, _begin]  # Bottom row, left to right.
 	for k in mods.size():
@@ -256,6 +266,7 @@ func _wire_focus() -> void:
 		_link(b, "bottom", b)
 		var col := roundi(float(j) * float(MOD_COLUMNS - 1) / float(maxi(1, bottom.size() - 1)))  # Column above.
 		_link(b, "top", _mod_buttons[mods[mini(mods.size() - 1, last_row_start + col)]])
+	_picker.wire_focus(level_row)
 
 
 ## Sets focus neighbour `side` ("left" / "right" / "top" / "bottom") of `b` to `to`.

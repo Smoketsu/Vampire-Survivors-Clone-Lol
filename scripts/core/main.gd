@@ -5,7 +5,7 @@
 ## opens the pre-run setup (PreRunSetup: difficulty level and run
 ## modifiers), which yields the RunConfig the run is built with. In autotest
 ## mode the menu is skipped and a run starts immediately on the --stage=
-## stage (locks ignored) with --difficulty= and --modifiers=.
+## stage (locks ignored) with --difficulty=, --modifiers= and --character=.
 extends Node
 
 ## Current run (null while the menu is shown).
@@ -21,6 +21,7 @@ func _ready() -> void:
 		_run_config = RunConfig.for_stage(GameState.autotest_stage)
 		_run_config.set_difficulty(GameState.autotest_difficulty)
 		_run_config.set_modifiers(GameState.autotest_modifiers)
+		_run_config.set_character(GameState.autotest_character)
 		_start_game()
 	else:
 		_show_menu()

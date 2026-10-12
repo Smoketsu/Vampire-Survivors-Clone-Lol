@@ -1,0 +1,233 @@
+## CharacterPicker — the playable-character section of the pre-run setup
+## screen (PreRunSetup adds it above the difficulty row and wires its focus).
+## Shows one portrait tile per character playable in this build
+## (CharacterModifiers.available_ids(): characters whose starting spell does
+## not exist yet stay hidden) and a detail panel for the focused / hovered
+## tile: big portrait, name and title, starting spell, the innate passive and
+## the stat modifiers. Locked characters (Meta.is_character_unlocked(): the
+## owner's rule, Lv 5 with the character's spell in any run) show a padlock
+## and their unlock condition and cannot be chosen. Choosing one (Enter / A
+## / click) sets RunConfig.character_id through set_character() and emits
+## `character_changed`; PreRunSetup's Begin remembers it in the Meta save.
+## Keyboard / controller: arrows / D-pad move between tiles (explicit focus
+## neighbours, wire_focus()), the bottom row leads down to the difficulty
+## cards.
+class_name CharacterPicker
+extends VBoxContainer
+
+## A character was chosen (RunConfig.character_id already set).
+signal character_changed(id: String)
+
+## Size (px) of one portrait tile.
+const TILE_SIZE := Vector2(66, 66)
+## Tiles per grid row.
+const TILE_COLUMNS: int = 6
+## Size (px) of the detail panel's big portrait.
+const BIG_PORTRAIT := Vector2(108, 108)
+## Width (px) of the detail panel's text column.
+const DETAIL_TEXT_WIDTH: float = 440.0
+## Border colour of the chosen character's tile.
+const SELECTED_BORDER := Color(1.0, 0.84, 0.4)
+
+## The config being edited (its character_id changes).
+var config: RunConfig = null
+## Character ids shown, in CharacterData.ORDER (the available ones).
+var _ids: PackedStringArray = PackedStringArray()
+## Character id -> its tile Button.
+var _tiles: Dictionary = {}
+## Character id -> its tile Portrait.
+var _portraits: Dictionary = {}
+## Character id shown in the detail panel.
+var _shown: String = ""
+## Detail panel: big portrait.
+var _big: Portrait
+## Detail panel: name line.
+var _name_l: Label
+## Detail panel: flavour title.
+var _title_l: Label
+## Detail panel: starting spell line.
+var _spell_l: Label
+## Detail panel: innate line.
+var _innate_l: Label
+## Detail panel: stat modifiers line.
+var _stats_l: Label
+## Detail panel: lock / unlock condition line.
+var _lock_l: Label
+
+
+## A character portrait (CharacterGlyphs.draw_portrait) filling its rect.
+class Portrait:
+	extends Control
+	## CharacterData id drawn.
+	var char_id: String = ""
+	## True while that character is locked (padlock veil).
+	var locked: bool = false
+
+	func _init(p_id: String, p_locked: bool, min_size: Vector2) -> void:
+		char_id = p_id
+		locked = p_locked
+		custom_minimum_size = min_size
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	func _draw() -> void:
+		CharacterGlyphs.draw_portrait(self, char_id, Rect2(Vector2.ZERO, size), locked)
+
+
+func _ready() -> void:
+	if config == null:
+		config = RunConfig.new()
+	add_theme_constant_override("separation", 4)
+	add_child(UiTheme.label("CHARACTER  (each starts with its own spell; unlock one by reaching Lv %d with that spell)" % CharacterData.UNLOCK_LEVEL, 14, UiTheme.TEXT_DIM))
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 16)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	add_child(row)
+	var grid := GridContainer.new()
+	grid.columns = TILE_COLUMNS
+	grid.add_theme_constant_override("h_separation", 6)
+	grid.add_theme_constant_override("v_separation", 6)
+	row.add_child(grid)
+	_ids = CharacterModifiers.available_ids()
+	for id: String in _ids:
+		grid.add_child(_build_tile(id))
+	row.add_child(_build_detail())
+	_refresh()
+	_show(config.character_id)
+
+
+## One portrait tile Button (focus / hover show its details, press chooses).
+func _build_tile(id: String) -> Button:
+	var b := Button.new()
+	b.custom_minimum_size = TILE_SIZE
+	b.focus_mode = Control.FOCUS_ALL
+	b.tooltip_text = String(CharacterData.CHARACTERS[id]["display_name"])
+	var p := Portrait.new(id, not Meta.is_character_unlocked(id), Vector2.ZERO)
+	p.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	p.offset_left = 4
+	p.offset_top = 4
+	p.offset_right = -4
+	p.offset_bottom = -4
+	b.add_child(p)
+	b.pressed.connect(_choose.bind(id))
+	b.focus_entered.connect(_show.bind(id))
+	b.mouse_entered.connect(_show.bind(id))
+	_tiles[id] = b
+	_portraits[id] = p
+	return b
+
+
+## The detail panel: big portrait beside the text lines.
+func _build_detail() -> Control:
+	var box := HBoxContainer.new()
+	box.add_theme_constant_override("separation", 10)
+	_big = Portrait.new(CharacterData.DEFAULT_ID, false, BIG_PORTRAIT)
+	box.add_child(_big)
+	var text := VBoxContainer.new()
+	text.add_theme_constant_override("separation", 1)
+	box.add_child(text)
+	_name_l = UiTheme.label("", 19, UiTheme.TEXT)
+	text.add_child(_name_l)
+	_title_l = _wrapped(12, UiTheme.TEXT_DIM)
+	text.add_child(_title_l)
+	_spell_l = UiTheme.label("", 13, UiTheme.TEXT)
+	text.add_child(_spell_l)
+	_innate_l = _wrapped(12, UiTheme.TEXT_GOOD)
+	text.add_child(_innate_l)
+	_stats_l = _wrapped(12, UiTheme.TEXT)
+	text.add_child(_stats_l)
+	_lock_l = _wrapped(12, Palette.CRIMSON.lightened(0.45))
+	text.add_child(_lock_l)
+	return box
+
+
+## A word-wrapped detail label `size_px` px in `color`.
+func _wrapped(size_px: int, color: Color) -> Label:
+	var l := UiTheme.label("", size_px, color)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.custom_minimum_size = Vector2(DETAIL_TEXT_WIDTH, 0)
+	return l
+
+
+## Shows character `id` in the detail panel.
+func _show(id: String) -> void:
+	if not _tiles.has(id):
+		id = CharacterData.DEFAULT_ID
+	_shown = id
+	var d := CharacterModifiers.def(id)  # Character row.
+	var locked := not Meta.is_character_unlocked(id)  # Cannot be chosen yet.
+	_big.char_id = id
+	_big.locked = locked
+	_big.queue_redraw()
+	var chosen := id == config.character_id  # The current choice.
+	_name_l.text = String(d["display_name"]) + ("  (chosen)" if chosen else "")
+	_name_l.add_theme_color_override("font_color", UiTheme.TEXT_GOLD if chosen else UiTheme.TEXT)
+	_title_l.text = String(d["title"])
+	_spell_l.text = "Starting spell:  %s" % CharacterModifiers.spell_name(id)
+	var inn: Dictionary = d["innate"]  # {} = none.
+	_innate_l.text = "Innate:  none - the classic necromancer" if inn.is_empty() else "Innate - %s:  %s" % [String(inn["name"]), String(inn["description"])]
+	_stats_l.text = CharacterModifiers.stats_text(id)
+	_lock_l.text = "LOCKED - %s" % CharacterModifiers.unlock_text(id) if locked else ""
+
+
+## Chooses character `id` when it is unlocked (else nothing happens; the
+## detail panel already says how to unlock it).
+func _choose(id: String) -> void:
+	if not Meta.is_character_unlocked(id):
+		Sfx.play("ui_hover")
+		_show(id)
+		return
+	config.set_character(id)
+	Sfx.play("ui_confirm")
+	_refresh()
+	_show(id)
+	character_changed.emit(config.character_id)
+
+
+## Redraws the chosen / locked looks of every tile.
+func _refresh() -> void:
+	for id: String in _ids:
+		var b: Button = _tiles[id]
+		if id == config.character_id:
+			b.add_theme_stylebox_override("normal", UiTheme.box(Color(0.24, 0.15, 0.08, 0.97), SELECTED_BORDER, 3))
+			b.add_theme_stylebox_override("hover", UiTheme.box(Color(0.3, 0.19, 0.1, 0.97), SELECTED_BORDER, 3))
+		else:
+			b.remove_theme_stylebox_override("normal")
+			b.remove_theme_stylebox_override("hover")
+
+
+## The tile Buttons in display order.
+func tiles() -> Array[Button]:
+	var out: Array[Button] = []
+	for id: String in _ids:
+		out.append(_tiles[id])
+	return out
+
+
+## The tile in the bottom grid row above column `col` of a row of `count`
+## controls below the picker (spread evenly), for their "top" neighbour.
+func tile_above(col: int, count: int) -> Button:
+	var t := tiles()
+	var rows := ceili(float(t.size()) / float(TILE_COLUMNS))  # Grid rows.
+	var last_start := (rows - 1) * TILE_COLUMNS  # First index of the bottom row.
+	var in_last := t.size() - last_start  # Tiles in the bottom row.
+	var c := roundi(float(col) * float(in_last - 1) / float(maxi(1, count - 1)))  # Bottom-row column.
+	return t[mini(t.size() - 1, last_start + c)]
+
+
+## Explicit focus neighbours of the tiles: arrows inside the grid (edges stay
+## put; up from the top row stays), and down from the bottom row (or from a
+## tile with nothing below it) to `below` (spread evenly by column).
+func wire_focus(below: Array) -> void:
+	var t := tiles()
+	var n := t.size()
+	for i in n:
+		var b: Button = t[i]
+		var c := i % TILE_COLUMNS  # Grid column.
+		PreRunSetup._link(b, "left", t[i - 1] if c > 0 else b)
+		PreRunSetup._link(b, "right", t[i + 1] if c < TILE_COLUMNS - 1 and i + 1 < n else b)
+		PreRunSetup._link(b, "top", t[i - TILE_COLUMNS] if i >= TILE_COLUMNS else b)
+		if i + TILE_COLUMNS < n:
+			PreRunSetup._link(b, "bottom", t[i + TILE_COLUMNS])
+		elif not below.is_empty():
+			var k := roundi(float(c) * float(below.size() - 1) / float(maxi(1, TILE_COLUMNS - 1)))  # Control below.
+			PreRunSetup._link(b, "bottom", below[mini(below.size() - 1, k)])
