@@ -185,6 +185,9 @@ tiny tweaks.
   so the pause menu's **Recipes** view (`recipes_panel.gd`) shows only the recipes obtained in some
   run, saved in the Meta `[recipes]` section, and locked "?" placeholders for the rest; it is
   built from the recipe data (`evolution_recipes.gd`), so new evolutions appear automatically.
+- the **Winter Revenant** (Frost Wraith + Soul Recycling Lv 5, "transform"): Deep Freeze radius
+  +35% (`special_mult`), frozen enemies **shatter** on death (no chains, per-tick cap) and a
+  fallen Revenant releases a freezing **death nova** (`scripts/horde/winter_revenant.gd`).
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.

@@ -21,6 +21,8 @@
 ##   * Lich raise-the-dead: on_enemy_killed() (called by CombatResolver for
 ##     every kill) raises a temporary skeleton for a Lich kill, with a
 ##     deterministic accumulator instead of an RNG roll.
+##   * Winter Revenant shatter and death nova: WinterRevenant (`winter`),
+##     fed by on_enemy_killed() and HordeDirector.summon_died.
 ## Card helpers (offer, hints, dead-card and evolution-path checks) keep
 ## AbilityManager's changes to one-line hooks.
 class_name SummonEvolutions
@@ -48,10 +50,13 @@ var _raise_accum: float = 0.0
 var _risen: Array = []
 ## Skeletons raised by Liches this run.
 var risen_total: int = 0
+## Winter Revenant runtime (shatter, death nova).
+var winter: WinterRevenant
 
 
 func _init(p_director: HordeDirector) -> void:
 	director = p_director
+	winter = WinterRevenant.new(p_director)
 
 
 # =====================================================================================
@@ -147,6 +152,13 @@ func modify_stats(cls: String, out: Dictionary, with_evolution: bool) -> void:
 	var set_v: Dictionary = def.get("set", {})
 	for key: String in set_v:
 		out[key] = set_v[key]
+	# Class special overlay (Winter Revenant Deep Freeze radius); out["special"]
+	# is built fresh by every compute_stats() call, so it is safe to scale.
+	var smult: Dictionary = def.get("special_mult", {})
+	var sp: Dictionary = out["special"]
+	for key: String in smult:
+		if sp.has(key):
+			sp[key] = float(sp[key]) * float(smult[key])
 	out["evolution"] = evo
 
 
@@ -250,6 +262,7 @@ func _transform_fx(u: SummonedUnit) -> void:
 ## at 1.0 a temporary skeleton rises where the enemy fell (base class kit,
 ## tagged "lich_risen"), unless max_alive of them already stand.
 func on_enemy_killed(e: Enemy, source: String) -> void:
+	winter.on_enemy_killed(e, source)  # Winter Revenant shatter (no-op unless evolved).
 	if source != "lich" or e.is_structure:
 		return  # Not a Lich kill, or a Crimson March structure (no body to raise).
 	var raise: Dictionary = SummonEvolutionData.EVOLUTIONS["lich"]["raise"]
@@ -322,6 +335,8 @@ func build_offer(evo: String) -> Dictionary:
 			var raise: Dictionary = def["raise"]
 			deltas.append("NEW  1 in %d foes it slays rises for %ss (max %d)" % [
 					int(roundf(1.0 / float(raise["chance"]))), AbilityManager._fmt(raise["duration"]), int(raise["max_alive"])])
+		if evo == WinterRevenant.ID:
+			WinterRevenant.offer_lines(deltas, cur, nxt, def)
 		hint = "Transforms your %s in place" % String(UnitData.UNITS[cls]["plural"]).to_lower()
 	var lvl_from := int(SummonEvolutionData.BASE_LEVEL_REQUIRED)
 	return ab._offer("evolution", evo, String(def["display_name"]), String(def["icon"]), lvl_from, lvl_from, "EVOLUTION",

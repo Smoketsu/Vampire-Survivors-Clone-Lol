@@ -20,6 +20,9 @@
 ##   Crypt Gargoyle     = hunched stone body with wide bat wings and horns
 ##   Frost Wraith       = legless teardrop ghost with an ice crown and a
 ##                        floating ice shard, in a cold glow
+##   Winter Revenant    = a taller crowned frost wraith in tattered robes with
+##                        a black-ice staff and a pale blue glow (the Frost
+##                        Wraith evolution; bigger, five-spike crown)
 ## Also draws the icons of the horde passives tied to summon evolutions
 ## (Forbidden Knowledge, Dark Benediction, and the four later ones: Bone
 ## Plating, Unholy Precision, Unholy Resilience, Bound Souls), the
@@ -58,6 +61,8 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 			draw_gargoyle(ci, o, r, flash)
 		"frost_wraith":
 			draw_frost_wraith(ci, o, r, flash)
+		"winter_revenant":
+			draw_winter_revenant(ci, o, r, flash)
 		_:
 			return false
 	return true
@@ -102,6 +107,9 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.05, s * 0.05), s * 0.46, false)
 		"rogue", "gargoyle", "frost_wraith":
 			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.06, s * 0.08), s * 0.5, false)
+		"winter_revenant":
+			ProgressionGlyphs._gold_frame(ci, c, s)
+			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.04, s * 0.14), s * 0.42, false)
 		_:
 			return false
 	return true
@@ -384,6 +392,50 @@ static func draw_frost_wraith(ci: CanvasItem, o: Vector2, r: float, flash: bool)
 	var shard := o + Vector2(r * 1.05, -r * 0.7)  # Floating ice shard centre.
 	ci.draw_colored_polygon(PackedVector2Array([shard + Vector2(0, -r * 0.35), shard + Vector2(r * 0.18, 0), shard + Vector2(0, r * 0.35), shard + Vector2(-r * 0.18, 0)]),
 		_c(Palette.COLD_BLUE, flash))
+
+
+## Winter Revenant pale blue glow (ART_BIBLE #9ED6FF), also its shatter /
+## nova effect colour (WinterRevenant).
+const REVENANT_GLOW := Color("9ED6FF")
+## Winter Revenant staff colour: black ice.
+const BLACK_ICE := Color(0.10, 0.14, 0.24)
+
+
+## Winter Revenant (Frost Wraith evolution): a towering, legless frost wraith
+## in tattered robes that trail into three ragged tails, a hooded skull face
+## with bright ice eyes, a five-spike ice crown, a black-ice staff topped by
+## a glowing shard, and a wide pale blue glow.
+static func draw_winter_revenant(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
+	ci.draw_circle(o, r * 1.45, Color(REVENANT_GLOW, 0.13))
+	ci.draw_circle(o + Vector2(0, -r * 0.3), r * 0.95, Color(REVENANT_GLOW, 0.10))
+	# Tattered robe: wide shoulders tapering into three ragged tails.
+	var robe := PackedVector2Array([
+		o + Vector2(-r * 0.8, -r * 0.5), o + Vector2(r * 0.8, -r * 0.5), o + Vector2(r * 0.7, r * 0.3),
+		o + Vector2(r * 0.55, r * 1.3), o + Vector2(r * 0.28, r * 0.8), o + Vector2(r * 0.05, r * 1.5),
+		o + Vector2(-r * 0.2, r * 0.85), o + Vector2(-r * 0.5, r * 1.3), o + Vector2(-r * 0.7, r * 0.3)])
+	ci.draw_colored_polygon(robe, _c(Palette.FROST.darkened(0.45), flash))
+	ci.draw_polyline(ProgressionGlyphs._closed(robe), _c(REVENANT_GLOW, flash), 1.5)
+	# Frost trim across the chest.
+	ci.draw_line(o + Vector2(-r * 0.62, -r * 0.05), o + Vector2(r * 0.62, -r * 0.05), _c(PowerupGlyphs.ICE, flash), 1.5)
+	# Hooded head with a dark face and bright ice eyes.
+	var h := o + Vector2(0, -r * 0.75)  # Head centre.
+	ci.draw_circle(h, r * 0.58, _c(Palette.FROST.darkened(0.25), flash))
+	ci.draw_circle(h + Vector2(0, r * 0.08), r * 0.4, Glyphs.EYE)
+	ci.draw_circle(h + Vector2(-r * 0.17, r * 0.04), r * 0.09, _c(REVENANT_GLOW, flash))
+	ci.draw_circle(h + Vector2(r * 0.17, r * 0.04), r * 0.09, _c(REVENANT_GLOW, flash))
+	# Five-spike ice crown (taller centre spike).
+	for i in 5:
+		var x := (float(i) - 2.0) * r * 0.2  # Spike x offset.
+		var sh := r * (0.6 if i == 2 else (0.42 if i == 1 or i == 3 else 0.28))  # Spike height.
+		ci.draw_colored_polygon(PackedVector2Array([h + Vector2(x - r * 0.09, -r * 0.45), h + Vector2(x, -r * 0.45 - sh),
+			h + Vector2(x + r * 0.09, -r * 0.45)]), _c(PowerupGlyphs.ICE, flash))
+	ci.draw_line(h + Vector2(-r * 0.5, -r * 0.45), h + Vector2(r * 0.5, -r * 0.45), _c(REVENANT_GLOW, flash), 1.5)
+	# Black-ice staff on the right, topped by a glowing shard.
+	ci.draw_line(o + Vector2(r * 1.05, r * 1.1), o + Vector2(r * 1.05, -r * 1.15), _c(BLACK_ICE, flash), 2.5)
+	var tip := o + Vector2(r * 1.05, -r * 1.45)  # Staff shard centre.
+	ci.draw_circle(tip, r * 0.42, Color(REVENANT_GLOW, 0.25))
+	ci.draw_colored_polygon(PackedVector2Array([tip + Vector2(0, -r * 0.4), tip + Vector2(r * 0.2, 0), tip + Vector2(0, r * 0.35),
+		tip + Vector2(-r * 0.2, 0)]), _c(REVENANT_GLOW, flash))
 
 
 ## Frost Wraith chill on an enemy (drawn in its _draw()): a pale frost film

@@ -13,6 +13,8 @@ extends RefCounted
 ##                        gameplay diameter (art often has empty margins)}.
 const ANIMS: Dictionary = {
 	"shadow_blast": {"duration": 0.4, "fill": 1.15},  # TUNING (not in GDD) test effect
+	"frost_shatter": {"duration": 0.35, "fill": 1.15},  # TUNING (not in GDD) Winter Revenant shatter
+	"frost_nova": {"duration": 0.5, "fill": 1.15},  # TUNING (not in GDD) Winter Revenant death nova
 }
 ## Duration (s) for an animation id missing from ANIMS.
 const DEFAULT_DURATION: float = 0.4  # TUNING (not in GDD)

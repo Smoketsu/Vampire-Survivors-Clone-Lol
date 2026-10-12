@@ -871,6 +871,7 @@ func _print_summon_evolutions(st: Dictionary) -> void:
 		int(st.get("lich_raised", 0.0)), int(st.get("lich_raise_capped", 0.0)), int(st.get("merge_converted", 0.0)),
 		int(st.get("merge_dissolved", 0.0)), int(st.get("aura_pulses", 0.0)),
 		", ".join(PackedStringArray(ev.merged.keys())) if not ev.merged.is_empty() else "none"])
+	print("[autotest] winter revenant: %s" % WinterRevenant.summary_line(st))
 	# Summon statistic tags -> base class they belong to.
 	var tags := {}
 	for cls: String in UnitData.CLASS_ORDER:
@@ -882,6 +883,8 @@ func _print_summon_evolutions(st: Dictionary) -> void:
 		tags[evo + "_bash"] = base
 		tags[evo + "_cleave"] = base
 	tags["lich_risen"] = "lich_risen"
+	tags[WinterRevenant.SRC_SHATTER] = "frost_wraith"
+	tags[WinterRevenant.SRC_NOVA] = "frost_wraith"
 	tags["bishop_aura"] = "bishop"
 	var by_src := PackedStringArray()  # "tag=dmg/heal/shield" per source.
 	var by_cls := {}  # Base class -> [dmg, heal, shield].

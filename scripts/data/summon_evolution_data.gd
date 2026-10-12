@@ -10,6 +10,8 @@
 ##   Grave Mender Lv 5 + Crypt Warder Lv 5 + Dark Benediction Lv 5
 ##                                                     = Profane Bishop
 ##       (GDD §4.2 priest evolution; the split priest classes MERGE into one)
+##   Frost Wraith Lv 5     + Soul Recycling Lv 5      = Winter Revenant
+##       (owner-approved; wider Deep Freeze, shatter, death nova)
 ## Owner rule: every evolution, spell or summon, needs its paired passive at
 ## Lv 5 (EvolutionData.PASSIVE_LEVEL_REQUIRED); `passive_level` below is 5
 ## for every recipe.
@@ -34,7 +36,8 @@ class_name SummonEvolutionData
 extends RefCounted
 
 ## Display / check order of the summon evolutions.
-const ORDER := ["death_knight", "lich", "profane_bishop"]
+const ORDER := ["death_knight", "lich", "profane_bishop",
+	"winter_revenant"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -146,5 +149,67 @@ const EVOLUTIONS := {
 		"plural": "Bishops",
 		"icon": "profane_bishop",
 		"description": "Menders and Warders merge into Profane Bishops: stronger heals, wards and barriers, a healing aura that burns foes, and one free active slot.",
+	},
+	# Winter Revenant (owner-approved): Frost Wraith Lv 5 + Soul Recycling Lv 5.
+	# Upgrades the Frost Wraith kit (FrostWraithBehavior); the shatter and the
+	# death nova run in WinterRevenant (owned by SummonEvolutions).
+	# Extra keys:
+	#   special_mult — "transform" only: UnitData "special" key -> multiplier,
+	#                  applied after HordeDirector._special_stats() scaling.
+	#   shatter      — an enemy killed while Deep-Frozen (Enemy.freeze_timer > 0;
+	#                  not the Stasis power-up, not a boss or a structure)
+	#                  splashes frost on the enemies around it:
+	#     radius          — px around the shattered enemy (body edges count half),
+	#     damage_fraction — fraction of the SHATTERED enemy's max HP dealt to each
+	#                       (source "winter_revenant_shatter"; scales with the
+	#                       enemy HP growth of the run),
+	#     chill_slow / chill_duration — chill applied to each survivor (fraction
+	#                       of speed removed / s),
+	#     max_per_frame   — at most this many shatters resolve per physics tick
+	#                       (the rest are skipped and counted; a perf cap).
+	#                       Shatters never chain: see WinterRevenant.
+	#   nova         — when a Winter Revenant dies (not dissolved, not a temporary):
+	#     radius          — px around the fallen Revenant,
+	#     damage_mult     — damage to each enemy as a multiple of the Revenant's
+	#                       frost-bolt damage (source "winter_revenant_nova"),
+	#     freeze_duration — s of Deep Freeze applied to each survivor through
+	#                       CombatResolver.freeze_enemy() (the class's boss / elite
+	#                       multipliers apply, Reckoning enemies are immune).
+	"winter_revenant": {
+		"mode": "transform",
+		"bases": ["frost_wraith"],
+		"passive": "soul_recycling",
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: Soul Recycling at max level
+		"display_name": "Winter Revenant",  # TUNING (not in GDD) owner-approved name
+		"plural": "Winter Revenants",
+		"icon": "winter_revenant",
+		"description": "Your Frost Wraiths rise as Winter Revenants: a wider Deep Freeze, frozen foes shatter into frost, and each Revenant that falls bursts in a freezing nova.",
+		"mult": {
+			"max_hp": 1.25,  # TUNING (not in GDD)
+			"damage": 1.25,  # TUNING (not in GDD) frost bolt
+		},
+		"set": {
+			"radius": 12.0,  # TUNING (not in GDD) bigger silhouette (Frost Wraiths are 10)
+		},
+		"special_mult": {
+			"freeze_radius": 1.35,  # TUNING (not in GDD) owner brief: Deep Freeze radius +35%
+		},
+		"shatter": {
+			"radius": 56.0,  # TUNING (not in GDD) px
+			# First test (seed 1, --classes=frost_wraith --passives=soul_recycling --policy=summon):
+			# 0.3 made shatters 16% of ALL damage on the Crimson March (the class 29%, like the
+			# Lich before the combined balance pass nerfed it), 6% in the Graveyard.
+			"damage_fraction": 0.22,  # TUNING (not in GDD) of the shattered enemy's max HP; was 0.3
+			"chill_slow": 0.4,  # TUNING (not in GDD) Frost Wraith bolts chill 0.35
+			"chill_duration": 2.0,  # TUNING (not in GDD) s
+			"max_per_frame": 12,  # TUNING (not in GDD) perf cap per physics tick
+		},
+		"nova": {
+			"radius": 84.0,  # TUNING (not in GDD) px
+			# First test: 4.0 gave 50k (8% of all damage) on the Crimson March, where the
+			# Revenants die far more often (92 deaths vs 23 in the Graveyard).
+			"damage_mult": 3.0,  # TUNING (not in GDD) x the Revenant's frost-bolt damage; was 4.0
+			"freeze_duration": 1.2,  # TUNING (not in GDD) s (Deep Freeze is 1.6)
+		},
 	},
 }

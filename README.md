@@ -205,6 +205,7 @@ number is in `scripts/data/unit_data.gd`.
 | Skeleton Warrior Lv 5 | Dark Command **Lv 5** | **Death Knight**: bigger armoured silhouette, ×1.5 HP, ×1.35 damage; each swing **cleaves** 50% to foes within 32 px; **life drain** 12% of melee damage; a heavier wall (block mass 5, bash ×2 every 1.5 s, foes in contact slowed to 45%) |
 | Undead Mage Lv 5 | Forbidden Knowledge **Lv 5** (+8–40% mage damage, +5–25% splash) | **Lich**: floating crowned wisp, ×1.4 HP, ×1.2 damage; **raise the dead**: every 5th foe a Lich kills rises as a skeleton for 12 s (max 6 at once) |
 | Grave Mender Lv 5 **and** Crypt Warder Lv 5 | Dark Benediction **Lv 5** (+8–40% heals, wards and barriers) | **Profane Bishop** (a **merge**): both orders become one class that heals, wards you **and** shields allies, plus an aura every 3 s that heals everything near it and burns foes. Capacity becomes 3 + your global capacity bonuses (counted once, not twice); existing Menders and Warders convert in place up to that cap, the rest dissolve into them, and **one active slot is freed** |
+| Frost Wraith Lv 5 | Soul Recycling **Lv 5** (faster replacement) | **Winter Revenant**: a taller crowned ice wraith, ×1.25 HP, ×1.25 damage, Deep Freeze radius **+35%**; **shatter**: a foe that dies while Deep-Frozen bursts for 22% of its max HP to foes within 56 px and chills them (bosses and structures never shatter; a shatter never sets off another shatter, and at most 12 resolve per tick); **death nova**: a Revenant that falls deals 3× its frost-bolt damage within 84 px and freezes the survivors for 1.2 s (boss / elite multipliers apply), and Soul Recycling brings it back quickly |
 
   The numbers live in `scripts/data/summon_evolution_data.gd`; the runtime is
   `HordeDirector.evolutions` (`scripts/horde/summon_evolutions.gd`). Summon
@@ -749,6 +750,7 @@ scripts/
                             barrier, Bishop aura pulse, Death Knight cleave + life drain
     summon_evolutions.gd    Summon evolutions: eligibility, stat overlay, in-place transform,
                             Mender + Warder merge, Lich raise-the-dead, card hints
+    winter_revenant.gd      Winter Revenant kit: shatter (kill hook) and death nova (summon_died)
     minion_passives.gd      Card lines and the autotest line of the later horde passives
                             (their effects live in CombatResolver / compute_stats)
     behaviors/              Class special actions plugged into that AI (one SummonBehavior per unit):
@@ -811,7 +813,7 @@ scripts/
     passive_data.gd         Passive level tables
     evolution_data.gd       Evolution recipes and stats
     recipe_book_data.gd     Texts of the pause menu's Recipes view (discovered evolutions)
-    summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop) and stats
+    summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop, Winter Revenant) and stats
     synergy_data.gd         Army synergy requirements and effects
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
@@ -960,7 +962,10 @@ special) and its special counters: `abom_stomps` / `abom_stomp_hits`,
 `rogue_dashes` / `rogue_dash_hits` (plus `dmg_rogue_bleed`),
 `gargoyle_swoops` / `gargoyle_swoop_hits`, and `frost_deep_freezes`,
 `frost_freezes` (enemies frozen), `frost_boss_freezes`,
-`frost_frozen_seconds` and `frost_chills`. The stuck check also counts a
+`frost_frozen_seconds` and `frost_chills`. A **winter revenant** line counts the
+Winter Revenant's shatters (and those skipped by the per-tick cap), shatter
+hits and damage, death novas, nova hits, nova freezes and nova damage
+(`wr_*` stats, `dmg_winter_revenant_shatter` / `_nova`). The stuck check also counts a
 special still running after 4 s (a dashing or airborne unit) and any dash or
 landing that ends inside an obstacle; specials cancelled by a recall are
 reported too.

@@ -86,6 +86,7 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 | `gargoyle.png` | Crypt Gargoyle: stone gargoyle, wings half-spread, long claws | 56 px |
 | `frost_wraith.png` | Frost Wraith: icy translucent spectre, tattered robe trailing into mist | 48 px |
 | `risen.png` | Lich-raised temporary skeleton: plain, ragged, faint violet glow | 36 px |
+| `winter_revenant.png` | Winter Revenant (Frost Wraith evolution): a towering crowned ice wraith in tattered frost robes, a staff of black ice, pale blue (`#9ED6FF`) glow; pixel art, faces right, transparent background | 56 px |
 
 ### Covenant enemies (`assets/sprites/enemies/`)
 | File | Subject | Size |
@@ -182,6 +183,7 @@ the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
 | `death_knight.png` | Skull helm with a greatsword (evolution frame) |
 | `lich.png` | Crowned skull with a phylactery (evolution frame) |
 | `profane_bishop.png` | Bone mitre with a green halo (evolution frame) |
+| `winter_revenant.png` | Ice-crowned wraith head with a black-ice staff (evolution frame) |
 | `grave_dominion.png` | Gravestone with a green rune |
 | `necrotic_vigor.png` | Green heart made of bone |
 | `dark_command.png` | Violet crown |
@@ -237,6 +239,8 @@ art arrives.
 | `holy_impact` | Covenant hammer / boss slam: a gold (`#FFD14C`) radiant shockwave with ivory dust | 8 |
 | `soul_nova` | Soul Nova: a huge violet-and-green ring of souls expanding across the screen | 10 |
 | `level_up` | Level-up: a column of violet light with rising green runes | 8 |
+| `frost_shatter` | Winter Revenant shatter: a frozen body bursting into pale blue (`#9ED6FF`) ice shards flying outward, then glittering frost (wired) | 6 |
+| `frost_nova` | Winter Revenant death nova: a ring of freezing frost (`#9ED6FF`) racing outward from a cold-white centre, leaving ice crystals (wired) | 8 |
 | `chest_open` | Treasure chest bursting open with violet light and bone-coloured sparks | 8 |
 | `evolution` | Evolution: a dark vortex collapsing into a bright violet-gold flash | 10 |
 
