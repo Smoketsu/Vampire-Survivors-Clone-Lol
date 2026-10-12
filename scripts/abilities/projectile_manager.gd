@@ -304,9 +304,14 @@ func _friendly_hits(p: Projectile) -> bool:
 	return true
 
 
-## Covenant projectile hits: Orb Shield interception first, then the
-## necromancer, then any summon. Returns false when spent.
+## Covenant projectile hits: Orb Shield interception first (the Umbral
+## Warden's Eclipsed Guard innate before the charge-limited intercept: any
+## orb destroys what it touches), then the necromancer, then any summon.
+## Returns false when spent.
 func _hostile_hits(p: Projectile) -> bool:
+	if game.innates.eclipsed_guard(p.position, p.radius):
+		game.effects.pop(p.position, Palette.VIOLET, 6.0)
+		return false
 	if game.abilities.try_intercept(p.position, p.radius):
 		game.effects.pop(p.position, Palette.VIOLET, 6.0)
 		game.stat_add("orb_intercepts", 1.0)

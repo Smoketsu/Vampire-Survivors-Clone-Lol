@@ -92,6 +92,16 @@ func try_intercept(pos: Vector2, r: float) -> bool:
 	return false
 
 
+## True when any orb, charged or not, touches a projectile at `pos` (radius
+## `r`; same reach as try_intercept()). Used by the Umbral Warden's Eclipsed
+## Guard innate (CharacterInnates); no charge is spent.
+func touches(pos: Vector2, r: float) -> bool:
+	for i in orb_positions.size():
+		if orb_positions[i].distance_to(pos) <= AbilityData.ORB_RADIUS + r + 4.0:
+			return true
+	return false
+
+
 ## Number of orbs currently able to intercept (HUD "shields").
 func charges_ready() -> int:
 	var n := 0

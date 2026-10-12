@@ -55,6 +55,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Move | WASD or arrow keys | Left stick / D-pad |
 | Menu / card navigation and confirm | Mouse, arrow keys, Enter / Space | D-pad or left stick, **A** |
 | Stage select (after **Play**) | Left / right between stages, Enter marches, Esc goes back | D-pad / stick, **A**, **B** |
+| Pre-run setup: character, difficulty, run modifiers | Arrows move between the character tiles, difficulty cards, modifier cards and buttons; Enter chooses / toggles; Esc goes back | D-pad / stick, **A**, **B** |
 | Pick a level-up card | Click, or keys **1 / 2 / 3** | Focus + **A** |
 | Level-up: Reroll all cards (2 per run) | **R**, or the Reroll button | **X**, or focus the button + **A** |
 | Level-up: Banish a card (2 per run) | **B**, then pick the card (**B** / **Esc** cancels) | **LB**, then pick the card (**LB** / **B** cancels) |
@@ -451,9 +452,52 @@ structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
 | Chapter II, **The Crimson March** | slay Sir Alaric once (GDD §9.3) | Marshal Vael, the Crimson Bulwark | ×1.25 |
 | Chapter III, **The Sanctum of Judgment** | slay Marshal Vael once (GDD §9.3) | Grand Inquisitor Seraphine, Voice of the Dawn | ×1.5 |
 
+### Characters
+
+The top of the **pre-run setup** screen (after the stage select) picks your
+**playable character**: one necromancer per spell, each starting the run with
+its own spell at Lv 1 instead of Shadow Bolt, with **one innate passive** and a
+few stat modifiers (`character_data.gd`). There are no character-only level-up
+cards (owner decision: innates only). A tile row shows a portrait per
+character (the necromancer tinted in the spell school's colour until each
+character's own art exists) with its starting spell as a badge; the detail
+panel shows the name, title, starting spell, innate and stats. Arrows / D-pad
+move, Enter / A chooses; the bottom tiles lead down to the difficulty cards.
+
+**Unlocking:** **The Gravecaller** is open from the start. Every other
+character unlocks the **first time you reach Lv 5 with its starting spell in
+any run** (with any character, on any stage), e.g. take Bone Spear to Lv 5 to
+unlock the Bone Oracle. Locked tiles show a padlock and the condition; the end
+screen announces **NEW CHARACTER UNLOCKED**. The last chosen character is
+remembered with the difficulty and modifiers, and **Restart** keeps it.
+
+| Character | Starting spell | Innate passive | Stats |
+|---|---|---|---|
+| **The Gravecaller** (default, today's necromancer) | Shadow Bolt | none | baseline (120 HP, 110 px/s) |
+| **The Umbral Warden** | Shadow Orb Shield | **Eclipsed Guard:** your orbs destroy every enemy arrow and bolt they touch, even while recharging (no charge spent) | +15 max HP, −5% move speed |
+| **The Voidcaller** | Shadow Blast | **Echoing Dark:** each blast leaves a ring that bursts again 1 s later for 40% of its damage (Abyssal Detonation too) | −10 max HP |
+| **The Bone Oracle** | Bone Spear | **Ossuary Ward:** Bone Spear / Ossuary Lance kills grow bone shards that orbit you (one per 3 s, max 3); each absorbs one whole hit and gives the normal hit i-frames | +10 max HP |
+| **The Fallen Confessor** | Soul Siphon | **Stolen Grace:** healing you receive also heals your nearest wounded summons (up to 3 within 240 px) for half as much | +5% move speed |
+| **The Carrion Lord** | Corpse Explosion | **Grave Harvest:** your own fallen summons leave corpses that Corpse Explosion detonates like the enemy's | baseline |
+| **The Plague Scholar** | Plague Cloud | **Contagion:** an enemy that dies while Rotting spreads its Rot to the nearest enemy within 160 px for 3 s | −10 max HP, +10% spell area |
+| The Doomsayer | Death Mark | **Ill Omen:** branded enemies are also slowed 15% | baseline |
+| The Barrow Warden | Bone Wall | **Stonebone:** walls last 50% longer | +10 max HP |
+| The Soulbinder | Soul Chains | **Conductor:** lightning arcs jump to one extra enemy | baseline |
+| The Wither Witch | Wither | **Creeping Rot:** the aura applies Rot | −5 max HP |
+| The Grave Herald | Raise Dead | **Restless:** temporary summons from any source last 25% longer | baseline |
+
+The last five start with spells that are not in the game yet: they stay
+hidden from the picker (and `--character=` refuses them) until those spells
+exist; their innates are already wired as hooks the spells read
+(`game.character.innate_value(key)`). Every character goes through one path:
+`RunConfig.character_id` → `CharacterModifiers` (`game.character`: the starting
+spell, the stat modifiers applied once after the Soul Ash upgrades, the innate
+numbers) → `CharacterInnates` (`game.innates`: the innate hooks).
+
 ### Difficulty & run modifiers
 
-Choosing a stage opens the **pre-run setup** screen (GDD §10.2): pick one of
+Choosing a stage opens the **pre-run setup** screen (GDD §10.2): pick your
+character (above), then one of
 the four GDD §8.4 **difficulty levels** and toggle any of the eight §8.5
 **run modifiers**. Every card lists its exact effect and Soul Ash reward, and
 the screen shows the **total Soul Ash multiplier** of the stack and the
@@ -821,9 +865,12 @@ integration").
   drive the stage unlocks. An older save without that section is migrated:
   its lifetime stats become the Graveyard record, so a past Alaric kill
   unlocks the Crimson March. The last pre-run choice is saved as
-  `[prerun] difficulty` / `modifiers` (a comma-separated id list); an older
-  save without it starts on Necromancer with no modifiers, and unknown ids
-  are dropped. Discovered evolution recipes are saved under `[recipes]`
+  `[prerun] difficulty` / `modifiers` (a comma-separated id list) /
+  `character`; an older save without it starts on Necromancer with no
+  modifiers as the Gravecaller, and unknown ids are dropped. The highest level
+  each spell reached in any run is saved under `[characters]`
+  (`<spell id> = level`, written as soon as a level is new); it drives the
+  character unlocks, and an older save starts with nothing reached. Discovered evolution recipes are saved under `[recipes]`
   (`<evolution id> = true`), written as soon as an evolution is obtained; an
   older save without the section starts with nothing discovered.
 
@@ -949,6 +996,7 @@ departure puff (`grave_step_trail`) are wired so far.
 | Stage 3 boss (§7.5) | Grand Inquisitor Seraphine with her three GDD phases (Divine Judgment, Avatar of the Dawn, The Last Light): radiant fans, delayed holy circles, Templar squads, teleports, healing attendants, rotating holy beams, barrages, constructs, undead suppression, the safe-zone Judgment nova, the collapsing arena and a final guard, the relic shatter and the ending text. She ends the Sanctum of Judgment; `--boss=seraphine` also puts her on any other stage. See *Stage 3 boss* above. |
 | Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades plus the Spearhead stance unlock, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
+| Playable characters (§10.2, §11.4) | Twelve characters, one per spell (seven playable now; the five for the coming spells are hidden until those spells exist), each with its starting spell, one innate passive and stat modifiers; chosen on the pre-run setup screen, unlocked by reaching Lv 5 with the character's spell, remembered in the save. The Gravecaller is the default and plays exactly like the game before characters. See *Characters* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
 | UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu (with a **Recipes** view of the discovered evolution recipes), end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress (compact rows, at most one per active slot); ability slots with levels (an evolved class shows its evolution's icon and name). |
@@ -999,14 +1047,17 @@ scripts/
     game_state.gd           Autoload: CLI options (autotest), session prefs, last run summary
     settings.gd             Autoload: persistent settings (volumes, toggles, key rebinds) in user://settings.cfg
     meta_progress.gd        Autoload "Meta": Soul Ash, upgrade tiers, lifetime stats, achievements,
-                            discovered evolution recipes,
+                            discovered evolution recipes, per-spell best levels (character unlocks),
                             purchase / refund, run award, versioned save in user://save.cfg
     meta_modifiers.gd       The ONE path meta upgrades take into a run (game.meta, read by stat code)
     difficulty_modifiers.gd The ONE path the difficulty level, run modifiers, Profane Pact + Oath take
                             into a run (game.difficulty); defines how they combine
     arena.gd                Solid obstacles (circles/rects) and the collision push-out used by all units
     main.gd                 Switches menu <-> run (a run is a fresh Game node every time, built from a RunConfig)
-    run_config.gd           Pre-run choices handed from the menu into Game (stage, difficulty, run modifiers)
+    run_config.gd           Pre-run choices handed from the menu into Game (stage, difficulty, run modifiers,
+                            character)
+    character_modifiers.gd  The ONE path the playable character takes into a run (game.character: starting
+                            spell, stat modifiers, innate values, the unlock-rule hook; picker helpers)
     game.gd                 One run: builds world + managers in code, fixed-order simulation step,
                             level-up / pause / end-of-run flow; `stage_def` = the run's stage
     spatial_hash.gd         Uniform grid for radius queries (enemies and allies, rebuilt per tick)
@@ -1098,6 +1149,8 @@ scripts/
   abilities/
     ability_manager.gd      Spell casting, passive values, level-up card generation + deltas
     orb_shield.gd           Shadow Orb Shield
+    character_innates.gd    The playable character's innate passive (game.innates): Eclipsed Guard, Echoing
+                            Dark, Ossuary Ward, Grave Harvest, Stolen Grace, Contagion hooks
     projectile.gd, projectile_manager.gd   Pooled projectiles + overkill reservations
     spells/                 The nine newer spells, behind ONE dispatch in ability_manager.gd:
       necro_spell_book.gd   Creates / ticks the spell nodes, kill hook, post-physics hook, passive card lines, autotest lines
@@ -1142,7 +1195,9 @@ scripts/
                             Recipes view: discovered evolution recipes, locked "?" placeholders),
                             hud_abilities (Grave Step charges and Dread Rally meter), ability_glyphs
                             (their icons), stance_bar (HUD stance icons + banner),
-                            stance_glyphs (stance icons, padlock, ground outline shapes)
+                            stance_glyphs (stance icons, padlock, ground outline shapes),
+                            character_picker (pre-run character tiles + detail panel),
+                            character_glyphs (characters in the world and as portraits)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
     stages/graveyard_stage.gd      Stage 1: segments, events, Reckoning flavour, graves, desecration,
@@ -1181,6 +1236,8 @@ scripts/
     run_modifier_data.gd    GDD §8.5 run modifiers: effects and Soul Ash rewards
     stance_data.gd          Army stances: leash / recall / pull overrides, shapes, lockout,
                             switched-off flavour bonuses, the autotest stance bot's thresholds
+    character_data.gd       Playable characters: starting spell, innate (text + numbers), stats, art key,
+                            school colour, unlock rule
     palette.gd              Colour language
 ```
 
@@ -1188,7 +1245,7 @@ scripts/
 
 1. Rebuild the enemy and ally spatial hashes.
 2. Player, then the army stance's bookkeeping (move direction, per-stance stats).
-3. Spells.
+3. Spells, then the character's innate (Echoing Dark bursts, Ossuary Ward shards).
 4. Horde: replenishment, formation (4 Hz), threat (5 Hz), then each unit's
    `think()` on its stagger slot and `physics_step()` every tick.
 5. Enemies: trickle and events, `think()`, separation, movement, warrior blocking.
@@ -1257,6 +1314,7 @@ Options (after `--`):
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | `--stance=ID` | Army stance for the whole run: `escort`, `onslaught`, `spearhead` or `bone_ring` (forcing ignores the Spearhead unlock). Without it, `army`, `summon` and `evolve` switch stances by a simple rule (Bone Ring when the necromancer is in danger or the boss is within 260 px; Onslaught when at most 6 enemies are within 220 px and a Crimson March structure or a Sanctum crystal / altar is within 420 px or at most 10 enemies are within 480 px; Spearhead, when owned, toward a chest or power-up within 300 px; else Escort; `StanceBot`), while `naive` and `pact` keep Escort so their baselines do not move. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). |
+| `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord` or `plague_scholar` (locks are bypassed). A character whose starting spell is not in the build (`doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch`, `grave_herald`) is refused with an error and the Gravecaller plays. For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads) and the characters the run unlocked. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.

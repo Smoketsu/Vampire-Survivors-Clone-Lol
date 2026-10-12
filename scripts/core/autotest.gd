@@ -135,6 +135,15 @@
 ##     suppressions with the horde's suppression counters, Confessor heals /
 ##     shields / revives / cancelled revives, Paladin ward damage prevented,
 ##     Cathedral Guardian slams / beams / kills / time to kill / chests).
+##   * playable characters: --character=ID plays that character (locks
+##     bypassed; Main builds the RunConfig). For any character but the
+##     Gravecaller the army / evolve / summon build lists swap the
+##     character's starting spell (and its evolution passive) into Shadow
+##     Bolt's (and Soul Conduit's) priority, and never banish them, so each
+##     character plays the same build shape around its own spell
+##     (_character_list()). The summary adds a "character" line (starting
+##     spell level, stats, the innate's counters, characters unlocked this
+##     run; CharacterInnates.summary_line()).
 class_name Autotest
 extends Node
 
@@ -357,6 +366,12 @@ var _stance_bot: StanceBot = StanceBot.new()
 var _spawns: Array[Dictionary] = []
 ## Index of the next --spawn entry to run.
 var _next_spawn: int = 0
+## Policy -> its build list with the --character swap applied (cache of
+## _character_list(); the Gravecaller uses the constant lists unchanged).
+var _char_lists: Dictionary = {}
+## Item ids the --character build never banishes (its starting spell and its
+## evolution passive; empty for the Gravecaller).
+var _char_keep: Dictionary = {}
 
 
 func _ready() -> void:
@@ -394,6 +409,8 @@ func _ready() -> void:
 		print("[autotest] boss override: %s" % GameState.autotest_boss)
 	print("[autotest] difficulty: %s | modifiers: %s" % [GameState.autotest_difficulty,
 		",".join(GameState.autotest_modifiers) if not GameState.autotest_modifiers.is_empty() else "none"])
+	print("[autotest] character: %s (starting spell %s)" % [GameState.autotest_character,
+		String(CharacterData.CHARACTERS[GameState.autotest_character]["spell"])])
 
 
 ## --classes: raises every forced class to Lv 1 while an active slot is free.
@@ -635,7 +652,8 @@ func choose_action(offers: Array[Dictionary]) -> Dictionary:
 	if policy in ["army", "evolve", "summon"] and best_score < EVOLUTION_SCORE:
 		var banish_ids: Array = BANISH_IDS.get(policy, [])
 		for i in offers.size():
-			if ab.can_banish(offers[i]) and String(offers[i]["id"]) in banish_ids and not _forced.has(String(offers[i]["id"])):
+			if ab.can_banish(offers[i]) and String(offers[i]["id"]) in banish_ids and not _forced.has(String(offers[i]["id"])) \
+					and not _char_keep.has(String(offers[i]["id"])):
 				return {"action": "banish", "index": i}
 		if best_score < REROLL_BELOW and ab.rerolls_left > 0:
 			return {"action": "reroll", "index": -1}
@@ -683,14 +701,14 @@ func _card_score(o: Dictionary) -> float:
 		return FORCED_BLOCK_SCORE  # A later horde passive before the bot's top passive (LATE_PASSIVE_GATE).
 	match GameState.autotest_policy:
 		"army":
-			var pri := float(ARMY_PRIORITY.get(id, 0.0))  # Card priority.
+			var pri := float(_build_list("army").get(id, 0.0))  # Card priority.
 			if GameState.autotest_pact and id == "warding_ritual":
 				pri = ARMY_PACT_WARDING_PRIORITY  # The Pact's slot comes out of Warding Ritual.
 			return pri - float(o["to"]) * 8.0
 		"evolve":
-			return float(EVOLVE_PRIORITY.get(id, 0.0)) - float(o["to"]) * 3.0
+			return float(_build_list("evolve").get(id, 0.0)) - float(o["to"]) * 3.0
 		"summon":
-			return float(SUMMON_PRIORITY.get(id, 0.0)) - float(o["to"]) * 6.0
+			return float(_build_list("summon").get(id, 0.0)) - float(o["to"]) * 6.0
 	var s := -float(o["to"]) * 5.0
 	var is_new := int(o["from"]) == 0
 	match String(o["kind"]):
@@ -711,18 +729,56 @@ func card_weight_mult(id: String) -> float:
 
 
 ## Build list (item id -> priority) of a focused policy: ARMY_PRIORITY,
-## EVOLVE_PRIORITY or SUMMON_PRIORITY; empty for naive / pact, which take
-## anything. Items not on the list are never taken NEW (see _card_score()),
-## so these bots stay comparable baselines as spells and classes are added.
-static func _build_list(policy: String) -> Dictionary:
+## EVOLVE_PRIORITY or SUMMON_PRIORITY (with the --character swap,
+## _character_list()); empty for naive / pact, which take anything. Items
+## not on the list are never taken NEW (see _card_score()), so these bots
+## stay comparable baselines as spells and classes are added.
+func _build_list(policy: String) -> Dictionary:
+	var base: Dictionary = {}  # The policy's constant list.
 	match policy:
 		"army":
-			return ARMY_PRIORITY
+			base = ARMY_PRIORITY
 		"evolve":
-			return EVOLVE_PRIORITY
+			base = EVOLVE_PRIORITY
 		"summon":
-			return SUMMON_PRIORITY
-	return {}
+			base = SUMMON_PRIORITY
+	if base.is_empty() or GameState.autotest_character == CharacterData.DEFAULT_ID:
+		return base
+	if not _char_lists.has(policy):
+		_char_lists[policy] = _character_list(base)
+	return _char_lists[policy]
+
+
+## `base` with the --character swap: the character's starting spell takes
+## Shadow Bolt's priority (Shadow Bolt takes the starting spell's, or leaves
+## the list), and the starting spell's evolution passive takes Soul
+## Conduit's the same way. Both are recorded in _char_keep (never banished).
+func _character_list(base: Dictionary) -> Dictionary:
+	var out := base.duplicate()  # Swapped copy.
+	var start := String(CharacterData.CHARACTERS[GameState.autotest_character]["spell"])  # Starting spell.
+	_swap(out, AbilityData.STARTING_SPELL, start)
+	_char_keep[start] = true
+	var evo := EvolutionData.for_spell(start)  # Its evolution ("" if none).
+	var bolt_evo := EvolutionData.for_spell(AbilityData.STARTING_SPELL)  # Void Barrage.
+	if evo != "" and bolt_evo != "":
+		var p := String(EvolutionData.EVOLUTIONS[evo]["passive"])  # Starting spell's evolution passive.
+		_swap(out, String(EvolutionData.EVOLUTIONS[bolt_evo]["passive"]), p)
+		_char_keep[p] = true
+	return out
+
+
+## Gives `to` the priority of `from` in `list` and `from` the old priority of
+## `to` (or removes `from` when `to` was not listed). No-op when equal.
+static func _swap(list: Dictionary, from: String, to: String) -> void:
+	if from == to or not list.has(from):
+		return
+	var had := list.has(to)  # `to` was on the list.
+	var old_to: Variant = list.get(to)  # Its old priority.
+	list[to] = list[from]
+	if had:
+		list[from] = old_to
+	else:
+		list.erase(from)
 
 
 ## Items whose slots are reserved (id -> true): the --spells spells and
@@ -1027,6 +1083,7 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] special evolutions: %s" % SpecialEvolutions.summary_line(game))
 	_print_abilities(st)
 	print("[autotest] army stance (%s): %s" % [StanceBot.mode(), game.stance.summary_line()])
+	print("[autotest] character: %s" % game.innates.summary_line())
 	print("[autotest] stuck_units=%d (touching an obstacle: %d) %s" % [_stuck_units, _stuck_at_obstacle, str(_stuck_by)])
 	print("[metric] boss_hp_at_0=%d min_hp_before_0=%d" % [int(_boss_hp_at_0), int(_min_hp)])
 	print("[autotest] peaks: enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [

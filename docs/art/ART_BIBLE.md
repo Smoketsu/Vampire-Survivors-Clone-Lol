@@ -69,6 +69,23 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 | File | Subject | Size |
 |---|---|---|
 | `assets/sprites/player/necromancer.png` | The necromancer (style reference; prompt below) | 56 px |
+| `assets/sprites/player/umbral_warden.png` | **The Umbral Warden** (Shadow Orb Shield): a broad hooded necromancer in layered eclipse-blue robes (`#2A3266`) over dark plate, a tall staff topped by a black sun ringed with a cold violet-blue corona (`#7388FF`), three small dark orbs orbiting the staff head, faint violet (`#A35CFA`) eye glow; sturdier than the necromancer | 56 px |
+| `assets/sprites/player/voidcaller.png` | **The Voidcaller** (Shadow Blast): a gaunt robed sorceress in deep abyssal purple (`#2B1240`) with a torn star-speckled hem, hood thrown back over a pale skull-like face, one hand raised trailing a swirling ring of violet void energy (`#8C38D9`), eyes glowing violet (`#A35CFA`) | 56 px |
+| `assets/sprites/player/bone_oracle.png` | **The Bone Oracle** (Bone Spear): a necromancer in a carved skull mask with spectral ornaments, pale bone robes (`#DED9C2`) hung with finger-bone charms, a bone spear held upright, three small bone shards floating around him, faint necro-green (`#6BF28C`) eye glow | 56 px |
+| `assets/sprites/player/fallen_confessor.png` | **The Fallen Confessor** (Soul Siphon): a necromancer in corrupted Covenant-style clerical robes, once ivory now stained grey-teal (`#2E5C55`), a torn crimson stole, a broken gold censer on a chain, soul-teal wisps (`#5CDBBD`) drawn into his open hand from below, hollow glowing teal eyes | 56 px |
+| `assets/sprites/player/carrion_lord.png` | **The Carrion Lord** (Corpse Explosion): a hulking hooded necromancer in a gore-stained bone-and-leather mantle (`#5C2E2B` with `#DED9C2` bone plates), a ribcage pauldron, a cleaver-headed bone staff, bone-white (`#DED9C2`) splinters and dull red (`#C76B5C`) glow at his feet | 56 px |
+| `assets/sprites/player/plague_scholar.png` | **The Plague Scholar** (Plague Cloud): a hunched necromancer in decaying alchemical robes (`#3B4220`), a beaked plague mask, glass vials and a satchel of tomes at the belt, a staff hung with a smoking censer leaking sickly yellow-green fumes (`#B3DB4C`) | 56 px |
+| `assets/sprites/player/doomsayer.png` | **The Doomsayer** (Death Mark): a tall gaunt prophet in a black robe (`#1F0F14`) lined with doom crimson (`#DB3342`), a branding iron glowing crimson in one hand, a hood with a crimson eye sigil on its brow, a noose-cord belt | 56 px |
+| `assets/sprites/player/barrow_warden.png` | **The Barrow Warden** (Bone Wall): a heavy-set warden in a mossy barrow-stone grey cloak (`#5C594F`), stacked bone-and-stone armour (`#A8A18C`), a bone-slab tower shield, a shovel-headed staff; solid, grounded silhouette | 56 px |
+| `assets/sprites/player/soulbinder.png` | **The Soulbinder** (Soul Chains): a slender necromancer in a dark slate robe (`#1F2E3D`) wrapped in spectral chains, cyan soul-lightning (`#66DBFF`) crackling along the chains and from her raised hand, hair and robe edges lifting in the charge | 56 px |
+| `assets/sprites/player/wither_witch.png` | **The Wither Witch** (Wither): a crooked witch in a withered amber-brown shawl and robe (`#5C4224`), a wide frayed hat, dead leaves and dried petals falling around her, a twisted dead-branch staff, a faint amber (`#CC994C`) aura around her feet | 56 px |
+| `assets/sprites/player/grave_herald.png` | **The Grave Herald** (Raise Dead): a necromancer herald in a dark green-black tabard (`#1A3324`) over bone mail, a raised bone horn in one hand, a banner pole topped with a skull, necrotic green (`#6BF28C`) soul fire rising from the ground at his feet | 56 px |
+
+The eleven character sprites above are the playable characters (`scripts/data/character_data.gd`;
+the Gravecaller keeps `necromancer.png`). Generate each with the reference-matching template and
+`necromancer.png` attached: same pixel-art style, same three-quarter view and 56 px scale, but a
+distinct silhouette and the listed spell-school colours, so the twelve read apart on the pre-run
+character picker. Until a file exists the game draws the necromancer tinted with the school colour.
 
 ### Summons (`assets/sprites/summons/`)
 | File | Subject | Size |

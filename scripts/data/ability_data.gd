@@ -35,7 +35,10 @@
 class_name AbilityData
 extends RefCounted
 
-## Spell the run starts with (GDD §3 "Begin run with a single starting skill").
+## Spell the default character, the Gravecaller, starts with (GDD §3 "Begin
+## run with a single starting skill"). Each playable character names its own
+## starting spell (CharacterData "spell"; AbilityManager.setup() reads it
+## through CharacterModifiers.starting_spell()).
 const STARTING_SPELL: String = "shadow_bolt"
 
 ## Display / card order of spells.

@@ -7,7 +7,9 @@
 ## Initiate), the run modifiers line and the stage bonus of the Crimson March),
 ## achievements and stages unlocked and the new balance (Meta.award_run(),
 ## GDD §9.2, §9.3). The stage, its boss, the difficulty level and the run
-## modifiers are named from the summary.
+## modifiers are named from the summary, and so is the playable character;
+## characters this run unlocked (their spell reached Lv 5 for the first
+## time, summary "unlocked_characters") get a banner line under the Soul Ash.
 class_name EndScreen
 extends Control
 
@@ -159,6 +161,19 @@ func _show_ash(ash: Dictionary, boss_name: String) -> void:
 	_ash_total.text = "\n".join(total_lines)
 
 
+## Adds a "New character unlocked" banner line per character in `ids`
+## (CharacterData ids this run unlocked) under the Soul Ash total.
+func _show_unlocks(ids: PackedStringArray) -> void:
+	var lines := PackedStringArray()  # One banner line per unlock.
+	for cid: String in ids:
+		var d := CharacterModifiers.def(cid)  # The unlocked character.
+		lines.append("NEW CHARACTER UNLOCKED: %s - starts with %s. Choose them before your next march!" % [
+			String(d["display_name"]), CharacterModifiers.spell_name(cid)])
+	if lines.is_empty():
+		return
+	_ash_total.text = "\n".join(lines) + ("\n" + _ash_total.text if _ash_total.text != "" else "")
+
+
 ## Shows the screen for a finished run (see Game.build_summary()).
 func open(summary: Dictionary) -> void:
 	var won: bool = summary["victory"]
@@ -174,6 +189,7 @@ func open(summary: Dictionary) -> void:
 	var counts: Dictionary = summary["horde_counts"]
 	var lines := PackedStringArray()
 	var boss_name := String(summary.get("boss_name", "Sir Alaric"))  # The stage boss.
+	lines.append("Character:  %s" % String(summary.get("character_name", "The Gravecaller")))
 	lines.append("Stage:  %s" % String(summary.get("stage_name", "The Desecrated Graveyard")))
 	lines.append("Difficulty:  %s" % String(summary.get("difficulty_name", "Necromancer")))
 	var mod_names: PackedStringArray = summary.get("modifier_names", PackedStringArray())  # Active run modifiers.
@@ -196,5 +212,6 @@ func open(summary: Dictionary) -> void:
 			lines.append("    %s: %d" % [names.get(cls, UnitData.UNITS[cls]["plural"]), int(counts[cls])])
 	_stats.text = "\n".join(lines)
 	_show_ash(summary.get("soul_ash", {}), boss_name)
+	_show_unlocks(summary.get("unlocked_characters", PackedStringArray()))
 	visible = true
 	_restart.grab_focus.call_deferred()

@@ -33,6 +33,12 @@
 ## Army stances (StanceData): `stance` (ArmyStance) holds the army's stance
 ## for this run (Escort at the start, so Restart resets it); the stance keys
 ## and right-stick flicks reach it from _unhandled_input() while playing.
+## Playable characters (CharacterData): `character` (CharacterModifiers,
+## built once from run_config.character_id) is the one character path: the
+## starting spell, the stat modifiers (applied once, after the Soul Ash
+## upgrades) and the innate values; `innates` (CharacterInnates) runs the
+## innate passive and is stepped right after the spells. The Gravecaller
+## (the default) has no innate and baseline stats.
 class_name Game
 extends Node2D
 
@@ -134,6 +140,11 @@ var grave_step: GraveStep
 var dread_rally: DreadRally
 ## The army's stance this run (ArmyStance; never null once _ready ran).
 var stance: ArmyStance
+## The playable character of this run (CharacterModifiers; never null).
+var character: CharacterModifiers
+## The character's innate passive (CharacterInnates; every hook is a no-op
+## for a character without one).
+var innates: CharacterInnates
 ## Faint ground outline of the army's shape after a stance change.
 var stance_outline: StanceOutline
 
@@ -169,6 +180,7 @@ func _ready() -> void:
 		autotest.game = self
 		add_child(autotest)
 	meta = Meta.run_modifiers()
+	character = CharacterModifiers.for_id(run_config.character_id)
 	enemy_grid = SpatialHash.new(GRID_CELL)
 	ally_grid = SpatialHash.new(GRID_CELL)
 	combat = CombatResolver.new(self)
@@ -220,7 +232,11 @@ func _ready() -> void:
 	player.game = self
 	add_child(player)
 	meta.apply_to_player(player)
+	character.apply_to_player(player)  # Character stats; no-op for the Gravecaller.
 	difficulty.apply_to_player(player)  # Frail Master (run modifier); no-op otherwise.
+	innates = CharacterInnates.new()
+	innates.game = self
+	add_child(innates)
 	abilities = AbilityManager.new()
 	add_child(abilities)
 	abilities.setup(self)
@@ -320,6 +336,7 @@ func _physics_process(delta: float) -> void:
 	dread_rally.step(delta)
 	stance.step(delta)
 	abilities.step(delta)
+	innates.step(delta)
 	horde.step(delta)
 	enemies.step(delta)
 	arena.resolve_all(delta)
@@ -543,6 +560,9 @@ func build_summary() -> Dictionary:
 		"stage_id": String(stage_def["id"]),
 		"stage_name": String(stage_def["display_name"]),
 		"stage_ash_mult": float(stage_def["ash_mult"]),
+		"character_id": character.id,
+		"character_name": character.display_name(),
+		"unlocked_characters": character.unlocked_this_run.duplicate(),
 		"boss_name": String(boss_info["short_name"]),
 		"time": elapsed,
 		"countdown": WaveData.RUN_DURATION,

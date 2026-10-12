@@ -13,6 +13,8 @@
 ## Movement has no physical collision with summons (GDD §26 "Player <-> friendly undead: NO physical collision")
 ## and the open arena has no solid geometry, so the node is moved directly
 ## instead of using CharacterBody2D physics.
+## He is drawn as the run's playable character (CharacterGlyphs; the
+## Gravecaller is the classic necromancer).
 class_name Necromancer
 extends Node2D
 
@@ -180,7 +182,7 @@ func heal(amount: float) -> float:
 
 func _draw() -> void:
 	_draw_ground_ring()
-	Glyphs.draw_necromancer(self, Vector2.ZERO, radius, flash > 0.0)
+	CharacterGlyphs.draw_player(self, game.character.id if game != null else CharacterData.DEFAULT_ID, Vector2.ZERO, radius, flash > 0.0)
 	if shield_hp > 0.0:
 		# Priest ward: translucent necrotic bubble, thicker when stronger.
 		var k := clampf(shield_hp / maxf(shield_max, 1.0), 0.0, 1.0)

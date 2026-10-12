@@ -78,6 +78,15 @@
 ##                         seconds, in an arc on the spawn ring, on any
 ##                         stage, e.g. --spawn=sanctified_sentinel@120x3,
 ##                         high_confessor@180x2,cathedral_guardian@300.
+##   --character=ID        Autotest playable character (CharacterData ids:
+##                         gravecaller (default, today's game),
+##                         umbral_warden, voidcaller, bone_oracle,
+##                         fallen_confessor, carrion_lord, plague_scholar...);
+##                         locks are bypassed. A character whose starting
+##                         spell is not in this build (doomsayer,
+##                         barrow_warden, soulbinder, wither_witch,
+##                         grave_herald until their spells exist) is refused
+##                         with an error and the default is played.
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 
@@ -124,6 +133,9 @@ var autotest_stance: String = ""
 ## Autotest: forced spawns from --spawn= ({"kind", "time" s, "count"}, in
 ## the order given; empty = none).
 var autotest_spawns: Array[Dictionary] = []
+## Autotest: CharacterData id of the playable character (--character=;
+## locks bypassed, only characters whose starting spell exists).
+var autotest_character: String = CharacterData.DEFAULT_ID
 ## Stage chosen last in the stage select this session (focused next time).
 var last_stage_id: String = StageRegistry.DEFAULT_ID
 ## Whether the F3 debug overlay is shown; persists across restarts.
@@ -220,6 +232,15 @@ func _parse_args(args: PackedStringArray) -> void:
 					autotest_spawns.append({"kind": kind, "time": rest.get_slice("x", 0).to_float(), "count": count})
 				else:
 					push_error("--spawn: bad entry '%s' (expected kind@seconds[xcount] with a known enemy kind)" % entry)
+		elif arg.begins_with("--character="):
+			var cid := arg.get_slice("=", 1).to_lower()  # Requested character id.
+			if not CharacterModifiers.is_known(cid):
+				push_error("Unknown --character=%s (expected one of %s)" % [cid, ", ".join(CharacterModifiers.available_ids())])
+			elif not CharacterModifiers.is_available(cid):
+				push_error("--character=%s is not playable in this build: its starting spell '%s' does not exist yet (playable: %s); playing %s" % [
+					cid, String(CharacterData.CHARACTERS[cid]["spell"]), ", ".join(CharacterModifiers.available_ids()), CharacterData.DEFAULT_ID])
+			else:
+				autotest_character = cid
 		elif arg.begins_with("--classes="):
 			for cls: String in arg.get_slice("=", 1).split(",", false):
 				# Evolution-only classes (the Profane Bishop) cannot be forced.

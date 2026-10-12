@@ -44,6 +44,16 @@
 ## saved at once (so it survives quitting mid-run). Older saves have no
 ## [recipes] section and start with nothing discovered; unknown ids are
 ## ignored. The pause menu's Recipes view (RecipesPanel) reads it.
+## Playable characters (CharacterData, owner rule): the highest level each
+## spell reached in any run (`spell_max_levels`, saved as [characters]
+## <spell id> = level; AbilityManager reports every spell level-up through
+## CharacterModifiers.on_spell_level() -> record_spell_level(), which saves
+## at once when a level is new, like a recipe discovery). A character unlocks
+## once its starting spell reached CharacterData.UNLOCK_LEVEL
+## (is_character_unlocked(); the Gravecaller is open from the start). The
+## character last confirmed on the pre-run setup screen is remembered in
+## `prerun_character` ([prerun] character). Older saves have neither and get
+## nothing reached and the Gravecaller; unknown ids are ignored.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -84,6 +94,11 @@ var prerun_difficulty: String = DifficultyData.DEFAULT_ID
 var prerun_modifiers: PackedStringArray = PackedStringArray()
 ## Evolution id (EvolutionRecipes.ids()) -> true once obtained in any run.
 var discovered_recipes: Dictionary = {}
+## Playable character (CharacterData id) last confirmed on the setup screen.
+var prerun_character: String = CharacterData.DEFAULT_ID
+## Spell id (AbilityData) -> highest level it reached in any run (1..5;
+## absent = never learned). Drives the character unlock rule.
+var spell_max_levels: Dictionary = {}
 
 ## Keys of every stage record (all floats, like the lifetime stats).
 const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills"]
@@ -262,24 +277,65 @@ func achievement_progress(id: String) -> float:
 # Pre-run choices (GDD §10.2)
 # =====================================================================================
 
-## A RunConfig for stage `stage_id` with the remembered difficulty level and
-## run modifiers (the setup screen opens on it).
+## A RunConfig for stage `stage_id` with the remembered difficulty level,
+## run modifiers and character (the setup screen opens on it; a remembered
+## character that is locked or missing from this build falls back to the
+## default).
 func prerun_config(stage_id: String) -> RunConfig:
 	var c := RunConfig.for_stage(stage_id)
 	c.set_difficulty(prerun_difficulty)
 	c.set_modifiers(prerun_modifiers)
+	c.set_character(prerun_character if is_character_unlocked(prerun_character) else CharacterData.DEFAULT_ID)
 	return c
 
 
-## Remembers the difficulty level and run modifiers of `config` for the next
-## setup screen (and the next session) and saves when they changed.
+## Remembers the difficulty level, run modifiers and character of `config`
+## for the next setup screen (and the next session) and saves when they
+## changed.
 func remember_prerun(config: RunConfig) -> void:
-	if config.difficulty_id == prerun_difficulty and config.modifiers == prerun_modifiers:
+	if config.difficulty_id == prerun_difficulty and config.modifiers == prerun_modifiers \
+			and config.character_id == prerun_character:
 		return
 	prerun_difficulty = config.difficulty_id
 	prerun_modifiers = config.modifiers.duplicate()
+	prerun_character = config.character_id
 	save()
 	changed.emit()
+
+
+# =====================================================================================
+# Playable characters (unlock rule: Lv UNLOCK_LEVEL with the character's spell)
+# =====================================================================================
+
+## Records that spell `spell` reached level `lvl` in a run. When that is a
+## new best it is saved at once and the characters it unlocked (first time
+## their spell reached CharacterData.UNLOCK_LEVEL) are returned.
+func record_spell_level(spell: String, lvl: int) -> PackedStringArray:
+	var opened := PackedStringArray()  # Characters unlocked by this level.
+	var old := spell_max_level(spell)  # Best level before.
+	if lvl <= old or not AbilityData.SPELLS.has(spell):
+		return opened
+	spell_max_levels[spell] = lvl
+	if old < CharacterData.UNLOCK_LEVEL and lvl >= CharacterData.UNLOCK_LEVEL:
+		opened = CharacterModifiers.unlocked_by_spell(spell)
+	save()
+	changed.emit()
+	return opened
+
+
+## Highest level spell `spell` reached in any run (0 = never learned).
+func spell_max_level(spell: String) -> int:
+	return int(spell_max_levels.get(spell, 0))
+
+
+## True when character `id` may be chosen: open from the start, or its
+## starting spell reached CharacterData.UNLOCK_LEVEL in some run. (Whether
+## the character exists in this build is CharacterModifiers.is_available().)
+func is_character_unlocked(id: String) -> bool:
+	if not CharacterModifiers.is_known(id):
+		return false
+	var d: Dictionary = CharacterData.CHARACTERS[id]
+	return bool(d["starts_unlocked"]) or spell_max_level(String(d["spell"])) >= CharacterData.UNLOCK_LEVEL
 
 
 # =====================================================================================
@@ -459,6 +515,10 @@ func save() -> Error:
 	cfg.set_value("oath", "active", oath_active_tier())
 	cfg.set_value("prerun", "difficulty", prerun_difficulty)
 	cfg.set_value("prerun", "modifiers", ",".join(prerun_modifiers))
+	cfg.set_value("prerun", "character", prerun_character)
+	for id: String in AbilityData.SPELL_ORDER:
+		if spell_max_level(id) > 0:
+			cfg.set_value("characters", id, spell_max_level(id))
 	for id: String in StageRegistry.ORDER:
 		var rec := stage_record(id)  # This stage's record.
 		for key: String in STAGE_RECORD_KEYS:
@@ -508,6 +568,7 @@ func load_save() -> void:
 	_load_stage_records(cfg)
 	_load_prerun(cfg)
 	_load_recipes(cfg)
+	_load_characters(cfg)
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -546,6 +607,18 @@ func _load_prerun(cfg: ConfigFile) -> void:
 		c.set_modifiers(String(m).split(",", false))
 	prerun_difficulty = c.difficulty_id
 	prerun_modifiers = c.modifiers
+
+
+## Reads the [characters] spell levels (missing section or keys = never
+## reached; only known spell ids, clamped to 0..5) and the remembered
+## [prerun] character (unknown ids = the default).
+func _load_characters(cfg: ConfigFile) -> void:
+	for id: String in AbilityData.SPELL_ORDER:
+		var lvl := mini(_read_int(cfg, "characters", id, 0), (AbilityData.SPELLS[id]["levels"] as Array).size())  # Saved best level.
+		if lvl > 0:
+			spell_max_levels[id] = lvl
+	var c: Variant = cfg.get_value("prerun", "character", CharacterData.DEFAULT_ID)
+	prerun_character = String(c) if typeof(c) == TYPE_STRING and CharacterModifiers.is_known(String(c)) else CharacterData.DEFAULT_ID
 
 
 ## Reads the [recipes] discoveries (missing section or keys = undiscovered;
@@ -593,6 +666,8 @@ func _reset() -> void:
 	prerun_difficulty = DifficultyData.DEFAULT_ID
 	prerun_modifiers = PackedStringArray()
 	discovered_recipes = {}
+	prerun_character = CharacterData.DEFAULT_ID
+	spell_max_levels = {}
 	load_status = "fresh"
 
 
