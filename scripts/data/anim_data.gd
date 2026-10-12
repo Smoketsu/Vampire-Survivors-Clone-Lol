@@ -20,6 +20,13 @@ const ANIMS: Dictionary = {
 	"seraphine_nova": {"duration": 0.55, "fill": 1.05},  # TUNING (not in GDD) Seraphine's Judgment nova blast (10 frames)
 	"holy_beam": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) Seraphine's beams igniting (6 frames)
 	"relic_shatter": {"duration": 0.8, "fill": 1.15},  # TUNING (not in GDD) Seraphine's death, the relic shattering (10 frames)
+	"soul_lightning": {"duration": 0.2, "fill": 1.4},  # TUNING (not in GDD) Soul Chains strike flash at each struck foe (6 frames)
+	"bone_wall_rise": {"duration": 0.25, "fill": 1.2},  # TUNING (not in GDD) a Bone Wall segment bursting out of the ground (6 frames)
+	"bone_wall_burst": {"duration": 0.35, "fill": 1.15},  # TUNING (not in GDD) Charnel Bastion shrapnel burst per segment (8 frames)
+	"wither_aura": {"duration": 0.35, "fill": 1.1},  # TUNING (not in GDD) one Wither / Necrotic Blight pulse ring (8 frames)
+	"doom_burst": {"duration": 0.4, "fill": 1.15},  # TUNING (not in GDD) Doom Brand detonation of a branded death (8 frames)
+	"raise_dead": {"duration": 0.45, "fill": 1.2},  # TUNING (not in GDD) a raised skeleton clawing out of the ground (8 frames)
+	"legion_burst": {"duration": 0.35, "fill": 1.15},  # TUNING (not in GDD) a Legion of Bones skeleton bursting into shards (8 frames)
 }
 ## Duration (s) for an animation id missing from ANIMS.
 const DEFAULT_DURATION: float = 0.4  # TUNING (not in GDD)

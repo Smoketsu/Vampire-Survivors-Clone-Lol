@@ -68,7 +68,11 @@
 ##     the newer spells can be exercised and evolved; the summary's
 ##     "necro spells" line reports each newer spell's level, damage (and its
 ##     evolved part), boss damage and spell counters, and the "evolutions"
-##     line their times; --passives=a,b forces passives the same way (to
+##     line their times; the five later spells (death_mark, bone_wall,
+##     soul_chains, wither, raise_dead) get their own "later spells" line
+##     (damage, killing blows, brands / Risen, walls / push-outs, arcs /
+##     jumps, aura uptime / heal, skeletons / bursts) and a "later spell
+##     passives" line; --passives=a,b forces passives the same way (to
 ##     exercise one, e.g. a later horde passive),
 ##   * the later horde passives: a "horde passives" line reports each one's
 ##     level and effect (Bone Plating / Unholy Resilience damage prevented,
@@ -968,6 +972,10 @@ func finish(summary: Dictionary) -> void:
 	_print_recipe_book()
 	print("[autotest] gravebow / bone colossus: %s | %s" % [GravebowKit.summary_line(st_all), ColossusKit.summary_line(st_all)])
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())
+	print("[autotest] later spells: %s" % ab.spells.later_summary_line())
+	print("[autotest] later spell passives: grim_ledger Lv%d bonus_dmg=%d | spirit_binding Lv%d | restless_dead Lv%d | temporary summons spawned=%d" % [
+		ab.passive_level("grim_ledger"), int(st_all.get("grim_ledger_bonus_dmg", 0.0)), ab.passive_level("spirit_binding"),
+		ab.passive_level("restless_dead"), game.horde.temp_spawned])
 	print("[autotest] horde passives: %s" % MinionPassives.summary_line(game))
 	var syn := game.horde.synergies
 	print("[autotest] synergies active at end: %s | activations: %s" % [

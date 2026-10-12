@@ -262,6 +262,11 @@ number is in `scripts/data/unit_data.gd`.
 | Soul Siphon | Vampiric Rite (+0.2–1.0 HP/s regeneration) | **Soul Rapture**: 5 braided soul tethers; a tethered foe bursts when it dies; spare lifesteal heals your most wounded summon |
 | Corpse Explosion | Necrotic Expanse (+5–25% spell area) | **Grave Eruption**: bigger bursts that leave bone-spike fields (damage + slow); foes an eruption kills erupt in turn |
 | Plague Cloud | Lingering Malediction (+10–50% spell durations) | **Pestilence**: black clouds that creep after foes, Rot +25%, and end in a Death Nova (double damage to rotting foes) |
+| Death Mark | Grim Ledger (+5–25% damage to elites, minibosses and bosses, every source) | **Doom Brand**: 3 brands per cast; a branded death also detonates (4× tick damage, radius 60) |
+| Bone Wall | Grave Dominion (+1–5 capacity per class) | **Charnel Bastion**: a ring of bone walls around you that bursts into shrapnel (30 dmg) when it falls |
+| Soul Chains | Spirit Binding (+8–40% duration of every slow, chill, freeze and stun) | **Chains of the Damned**: up to 8 jumps, and every struck foe is yanked toward the first |
+| Wither | Necrotic Vigor (+15–75% minion HP) | **Necrotic Blight**: a wider aura that heals you 0.6 HP per foe inside each pulse (cap 3 HP/s) |
+| Raise Dead | Restless Dead (+10–50% temporary-summon life, +8–40% their damage) | **Legion of Bones**: 6 skeletons per cast that burst into bone shards (32 dmg, radius 60) when they crumble or fall |
 
 - **Summon evolutions** (user request; GDD §4.2 / §6.1 name one per class).
   They use the spell evolutions' delivery: once the recipe holds **and** the
@@ -370,6 +375,37 @@ Rot is a field on the enemy (`rot_until`, `rot_amp`) that
 necromancer's movement and regeneration; Necrotic Expanse and Lingering
 Malediction are two more categories in `AbilityManager.apply_spell_mods()`
 (radius keys; `AbilityData.DURATION_KEYS`, which include Shadow Blast's slow).
+
+### The later spells
+
+Five more owner-approved spells take the game to **12 spells** (code in
+`scripts/abilities/spells/`, behind the same `NecroSpellBook` dispatch; per-level
+rows in `AbilityData` / `EvolutionData` / `PassiveData`, fixed rules in
+`GraveSpellData`; all `TUNING`). Their NEW cards share the newer spells' card
+weight (`LevelUpData.NEW_SPELL_POOL_WEIGHT`), and their three new passives share
+`NEW_PASSIVE_POOL_WEIGHT`, so early hands are not crowded. Every evolution follows
+the owner rule (base Lv 5 + paired passive Lv 5 + 8:00 + a treasure chest) and
+appears in the Recipes view automatically.
+
+| Spell | What it does | Lv 1 → Lv 5 |
+|---|---|---|
+| **Death Mark** | Brands the **strongest** foes in range (highest HP, ties to the nearest; doomed foes skipped, unbranded ones first). A brand is a plain damage-over-time (owner: **no** damage-taken bonus, so it kills early foes alone as a starting spell). A foe that dies branded (to anything) rises as a temporary **Risen** skeleton (8 s, half a warrior's HP, 60% damage; outside the army cap, its own cap). | 4 dmg / 0.5 s for 5 s, 1 brand every 2.4 s, 2 Risen → 7 dmg / 0.5 s for 6 s, 2 brands every 1.8 s, 4 Risen |
+| **Bone Wall** | Raises a line of bone-spike segments 70-80 px ahead of you, across your walking direction (aimed at the nearest foe ahead). **Enemies cannot pass it**: they press against it and walk around its ends (it never turns them away), and every 0.5 s each foe pressing on it takes spike damage. It blocks enemies only (never you or your undead), is never placed inside an obstacle, and does not hold bosses, minibosses, Reckoning foes or structures. | 5 segments, 4 dmg, 3.5 s, every 7 s → 9 segments, 8 dmg, 4.5 s, every 6 s |
+| **Soul Chains** (owner change: lightning) | A soul-lightning bolt strikes the nearest foe (those attacking your undead first) and **arcs** to the next nearest ones, losing damage per jump and briefly slowing everything it touches. Drawn as jagged violet arcs. | 18 dmg, 2 jumps, −20%/jump, 25% slow 0.6 s, every 1.6 s → 31 dmg, 4 jumps, −18%/jump, 35% slow 0.8 s, every 1.3 s |
+| **Wither** | A decay aura around you (survivor "garlic"): every pulse each foe inside takes damage and, while it stays, loses part of its **armour and flat armour** (bosses half; an unarmoured foe gains nothing). | 5 dmg / 1 s, radius 80, −25% armour → 11 dmg / 0.8 s, radius 105, −50% armour |
+| **Raise Dead** | Skeletons claw up beside the foes nearest you and fight for a few seconds: temporary summons outside the army cap (at most 8), with a share of a Skeleton Warrior's current HP and damage. | 2 skeletons (50% HP, 60% dmg, 7 s) every 9 s → 4 skeletons (70% HP, 100% dmg, 9 s) every 7 s |
+
+The three new passives each have one path: **Grim Ledger** is one more
+category in `CombatResolver.damage_enemy()` (the Soul Nova excepted),
+**Spirit Binding** lengthens every duration passed to
+`CombatResolver.slow_enemy()` / `chill_enemy()` / `freeze_enemy()` /
+`stun_enemy()`, and **Restless Dead** lengthens and strengthens every temporary
+summon in `HordeDirector.spawn_temporary()` (Death Mark Risen, Raise Dead
+skeletons, Lich raises and the stage reinforcements). The Wither shred is a
+field on the enemy (`wither_until`, `wither_shred`) that `damage_enemy()` applies
+to armour and flat armour (`wither_shred_bonus_dmg`). Bone Wall's push-out runs
+once per tick after the obstacles (`NecroSpellBook.after_physics()`, called by
+`Game`).
 
 With the summon roster: Rot amplifies **every** hit that goes through
 `CombatResolver.damage_enemy`, so summon attacks and specials (Frost Wraith
@@ -878,9 +914,9 @@ departure puff (`grave_step_trail`) are wired so far.
 | **Warrior blocking** | Warriors are physical blockers. Enemies can't pass through them; overlaps are resolved through the spatial hash, weighted by mass. An enemy touching a warrior is *engaged*: it moves at 60% speed and attacks that warrior. Warriors also shield-bash on a cooldown (damage plus knockback). Sir Alaric's Divine Charge loses distance for every undead body it hits, so a thick enough wall stops it. |
 | **Priest orders** (user request: the GDD's Priest split in two) | **Grave Mender** (round teal robe, green halo): heals allies and the necromancer with the §31 formula, a critically hurt necromancer first (the old priest heal, unchanged). **Crypt Warder** (heater-shaped blue robe, ward sigil): whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px) it casts an instant damage-absorbing **ward** on you, as long as no ward is active and its own ward cooldown is ready (the old priest ward, same numbers); it also casts an instant **barrier** (12 HP, +25–80% by level) on the most threatened ally in reach every 3 s: an ally hit in the last 2 s, or a warrior fighting in melee, whose barrier is below half. Barriers don't stack with Shieldwall's (the stronger one wins). Both orders fire weak bolts when idle. Each has its own card, cap (1-2 by level), 15 s replenishment and HUD row; the ward shows as a ring on the necromancer and in the HUD. |
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
-| Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Plus Bone Spear, Soul Siphon, Corpse Explosion and Plague Cloud (see *The newer spells*). Each has 5 levels. |
-| Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed; at Lv 5 it evolves Warriors), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual, Abyssal Focus, Shade Stride, Vampiric Rite, Necrotic Expanse, Lingering Malediction, Forbidden Knowledge (mage damage and splash) and Dark Benediction (heals, wards and barriers), and the later horde passives Bone Plating (flat damage off every hit on a minion), Unholy Precision (minion crits), Unholy Resilience (less area / holy damage to minions) and Bound Souls (minion speed, leash and return). Every evolution needs its paired passive at Lv 5. Bonus stacking follows §34. |
-| Evolutions & synergies (§6) | Void Barrage, Eclipse Ward, Abyssal Detonation, Ossuary Lance, Soul Rapture, Grave Eruption and Pestilence; the summon evolutions Death Knight, Lich, Profane Bishop (a merge of the two priest orders), Shadow Reaper and Cathedral Horror; four army synergies; weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
+| Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Plus Bone Spear, Soul Siphon, Corpse Explosion and Plague Cloud (see *The newer spells*), and Death Mark, Bone Wall, Soul Chains, Wither and Raise Dead (see *The later spells*): 12 spells. Each has 5 levels. |
+| Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed; at Lv 5 it evolves Warriors), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual, Abyssal Focus, Shade Stride, Vampiric Rite, Necrotic Expanse, Lingering Malediction, Forbidden Knowledge (mage damage and splash) and Dark Benediction (heals, wards and barriers), and the later horde passives Bone Plating (flat damage off every hit on a minion), Unholy Precision (minion crits), Unholy Resilience (less area / holy damage to minions) and Bound Souls (minion speed, leash and return), and the later spells' passives Grim Ledger (damage to elites and bosses), Spirit Binding (longer slows, freezes and stuns) and Restless Dead (longer, stronger temporary summons); Grave Dominion and Necrotic Vigor also evolve Bone Wall and Wither. Every evolution needs its paired passive at Lv 5. Bonus stacking follows §34. |
+| Evolutions & synergies (§6) | Void Barrage, Eclipse Ward, Abyssal Detonation, Ossuary Lance, Soul Rapture, Grave Eruption, Pestilence, Doom Brand, Charnel Bastion, Chains of the Damned, Necrotic Blight and Legion of Bones; the summon evolutions Death Knight, Lich, Profane Bishop (a merge of the two priest orders), Shadow Reaper and Cathedral Horror; four army synergies; weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
 | Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 13:00. |
 | Waves and stage events (§11) | The data-driven 20-minute Graveyard timeline at the GDD's real times (Sir Alaric at 17:00), then the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
@@ -1029,14 +1065,21 @@ scripts/
     ability_manager.gd      Spell casting, passive values, level-up card generation + deltas
     orb_shield.gd           Shadow Orb Shield
     projectile.gd, projectile_manager.gd   Pooled projectiles + overkill reservations
-    spells/                 The four newer spells, behind ONE dispatch in ability_manager.gd:
-      necro_spell_book.gd   Creates / ticks the spell nodes, kill hook, passive card lines, autotest line
-      necro_spell.gd        Base class (shared area-damage / target helpers)
+    spells/                 The nine newer spells, behind ONE dispatch in ability_manager.gd:
+      necro_spell_book.gd   Creates / ticks the spell nodes, kill hook, post-physics hook, passive card lines, autotest lines
+      necro_spell.gd        Base class (shared area-damage / target helpers, optional hooks)
       bone_spear.gd         Bone Spear / Ossuary Lance (pooled spears)
       soul_siphon.gd        Soul Siphon / Soul Rapture (tethers, capped lifesteal)
       corpse_explosion.gd   Corpse Explosion / Grave Eruption (corpse ring buffer, spike fields)
       plague_cloud.gd       Plague Cloud / Pestilence (clouds, Rot, Death Nova)
       spell_glyphs.gd       Their icons (spells, evolutions, passives) and world visuals
+      death_mark.gd         Death Mark / Doom Brand (brands, Risen, detonations)
+      bone_wall.gd          Bone Wall / Charnel Bastion (segments, enemy push-out, shrapnel)
+      soul_chains.gd        Soul Chains / Chains of the Damned (lightning arcs, falloff, pull)
+      wither.gd             Wither / Necrotic Blight (aura pulses, armour shred, capped heal)
+      raise_dead.gd         Raise Dead / Legion of Bones (temporary skeletons, bone bursts)
+      grave_spell_glyphs.gd The five later spells' icons and world visuals
+      grave_spell_lines.gd  Card lines of Grim Ledger, Spirit Binding and Restless Dead
   pickups/xp_crystal.gd, xp_manager.gd     Pooled XP crystals with magnet
   pickups/powerup.gd, powerup_manager.gd   Pooled power-up drops, drop rules, timed buffs, Soul Nova
   pickups/chest.gd, chest_manager.gd       Pooled treasure chests and their drop rules
@@ -1082,6 +1125,7 @@ scripts/
     ability_data.gd         Spell level tables
     passive_data.gd         Passive level tables
     evolution_data.gd       Evolution recipes and stats
+    grave_spell_data.gd     Fixed rules of the five later spells (ticks, caps, wall geometry, Risen)
     recipe_book_data.gd     Texts of the pause menu's Recipes view (discovered evolutions)
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
                             Winter Revenant, Shadow Reaper, Cathedral Horror, Gravebow,
@@ -1169,7 +1213,7 @@ Options (after `--`):
 | `--oath=N` | Active Profane Oath tier 0-5 (default 0). No `--meta` profile includes the Oath, so `--meta=max` balance runs stay comparable. |
 | `--classes=a,b` | Forces summon classes (`abomination`, `rogue`, `gargoyle`, `frost_wraith`, or any offerable class id; the merge-only `bishop` is ignored): each is raised to Lv 1 at the start (while active slots allow) and every policy upgrades it first, so its special gets exercised. |
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
-| `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
+| `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march` or `sanctum`. Stage locks are ignored. |
 | `--stage=ID` | Stage to play: `graveyard` (default) or `crimson_march`. Stage locks are ignored. |
@@ -1217,7 +1261,14 @@ damage per aim mode (the autotest uses Nearest, then switches to Strongest when
 the boss spawns); a **necro spells** line (for each newer spell: level, total
 damage and the evolved part, boss damage, and counters such as volleys,
 lifesteal healed, corpse bursts and chains, clouds, Death Novas and the Rot
-bonus damage); a **horde passives** line (each later horde passive's level,
+bonus damage); a **later spells** line (Death Mark, Bone Wall, Soul Chains,
+Wither, Raise Dead: level, damage and the evolved part, boss damage, killing
+blows (`kills_by_<source>`), and brands / Risen raised / detonations, walls /
+Bastions / push-outs / enemy-seconds held, casts / jumps / pulls, pulses /
+aura uptime / armour-shred bonus damage / Blight healing, skeletons raised /
+their damage / Legion bursts) and a **later spell passives** line (Grim Ledger
+bonus damage, Spirit Binding and Restless Dead levels, temporary summons
+spawned); a **horde passives** line (each later horde passive's level,
 damage prevented by Bone Plating and by Unholy Resilience, split area /
 holy, Unholy Precision crits and their extra damage, Bound Souls soft and
 hard recalls; the stats are `plating_dmg_prevented`,

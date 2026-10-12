@@ -69,8 +69,9 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
   numbers the horde AI already uses (`stance_data.gd`, read by the horde director); the hard recall
   never changes, the flavour bonuses stay off, and the stance resets to Escort every run.
 - **Spells:** Shadow Bolt, Orb Shield, Shadow Blast, plus Bone Spear, Soul Siphon, Corpse Explosion
-  and Plague Cloud (`scripts/abilities/spells/`, one dispatch through `NecroSpellBook`). 16 actives
-  (7 spells, 9 offerable summon classes) compete for 6 active slots.
+  and Plague Cloud, plus Death Mark, Bone Wall, Soul Chains, Wither and Raise Dead
+  (`scripts/abilities/spells/`, one dispatch through `NecroSpellBook`). 21 actives
+  (12 spells, 9 offerable summon classes) compete for 6 active slots.
 - **Soul Ash is kept on death.** Profane Pact (in-run) and Profane Oath (Ossuary) trade difficulty
   for rewards.
 
@@ -92,7 +93,7 @@ Autotest options (full table in the README):
 - `--policy=naive|army|evolve|summon|pact`
 - `--classes=a,b` (force summon classes, e.g. `abomination,rogue,gargoyle,frost_wraith`)
 - `--spells=a,b` (force spells and their evolution passives, e.g.
-  `bone_spear,soul_siphon,corpse_explosion,plague_cloud`)
+  `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or `death_mark,bone_wall,soul_chains`)
 - `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
 - `--stage=graveyard|crimson_march|sanctum` (default graveyard; stage locks are ignored)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
@@ -236,6 +237,17 @@ tiny tweaks.
   holy shields, the sun ward, suppression and the chamber penalty each have their own stat in
   `CombatResolver.damage_enemy()`. `--stage=sanctum`, `--spawn=`, `--boss=`; CI runs a Sanctum
   autotest.
+- **five more spells** (owner-approved; 12 in all), same `NecroSpellBook` dispatch, fixed rules in
+  `grave_spell_data.gd`: **Death Mark** / Doom Brand (+ new passive Grim Ledger: damage to elites,
+  minibosses and bosses in `CombatResolver`; the brand is a plain DoT, no damage-taken bonus, and a
+  branded death raises a temporary Risen), **Bone Wall** / Charnel Bastion (+ Grave Dominion; segments
+  push enemies out after the obstacles, `NecroSpellBook.after_physics()`, enemies only, never inside
+  obstacles, bosses / minibosses / Reckoning / structures not held), **Soul Chains** / Chains of the
+  Damned (+ new Spirit Binding: longer slows, chills, freezes and stuns in `CombatResolver`; owner
+  change: arcing soul lightning), **Wither** / Necrotic Blight (+ Necrotic Vigor; aura with an armour
+  shred, `Enemy.wither_until`), **Raise Dead** / Legion of Bones (+ new Restless Dead: every temporary
+  summon lasts longer and hits harder, in `HordeDirector.spawn_temporary()`); autotest "later spells"
+  line.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -246,7 +258,7 @@ tiny tweaks.
    with file keys and sizes); process each with `python3 tools/prepare_sprite.py <image> <key>`.
    `SpriteBank` draws `assets/sprites/<key>.png` when present and falls back to the glyph, so art
    lands piecemeal. Done: `player/necromancer`; every summon and the first three evolutions (incl. `risen`); every enemy soldier (incl. the
-   Reckoning's `inquisitor`); both `bosses/`; all five `structures/`. Still to do: the pickups and the five newer evolutions (Gravebow, Bone Colossus, Shadow Reaper, Cathedral Horror, Winter Revenant). Effects are
+   Reckoning's `inquisitor`); both `bosses/`; all five `structures/`. Still to do: the pickups and the five newer evolutions (Gravebow, Bone Colossus, Shadow Reaper, Cathedral Horror, Winter Revenant), and the five later spells' icons (spells, evolutions, passives) and effects (`soul_lightning`, `bone_wall_rise`, `bone_wall_burst`, `wither_aura`, `doom_burst`, `raise_dead`, `legion_burst`, already hooked). Effects are
    short animations (`prepare_sprite.py --anim <sheet or GIF> <id>` → `assets/sprites/effects/`,
    timing in `anim_data.gd`); `shadow_blast` (test), `dread_rally` and `grave_step_trail` are hooked so far, hook the rest via
    `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.

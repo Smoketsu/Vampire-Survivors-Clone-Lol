@@ -40,14 +40,14 @@ const PROJECTILE_SOURCES := ["bolt", "void", "void_shard", "spear", "lance",
 	"gravebow"]
 ## Damage sources that reach AROUND a shield (melee at close range); used by
 ## Marshal Vael's Shieldwall, which blocks everything else from the front:
-## Skeleton Warrior strikes and bashes (temporary and Lich-risen skeletons
-## included), the Death Knight's strike, bash and cleave, the Abomination's
+## Skeleton Warrior strikes and bashes (temporary, Lich-risen, Death Mark
+## Risen and Raise Dead skeletons included), the Death Knight's strike, bash and cleave, the Abomination's
 ## fists and stomp, the Rogue's stab, dash and bleed, the Gargoyle's claws
 ## and swoop (and the same strikes of their Shadow Reaper / Cathedral
 ## Horror evolutions), and the Profane Bishop's aura pulse (it surrounds the Bishop,
 ## so it reaches behind a shield like a blade at close range); the Bone
 ## Colossus's fists and death shrapnel (a burst all around it) as well.
-const MELEE_SOURCES := ["warrior", "bash", "lich_risen",
+const MELEE_SOURCES := ["warrior", "bash", "lich_risen", "death_mark_risen", "raised_dead",
 	"death_knight", "death_knight_bash", "death_knight_cleave",
 	"abomination", "abom_stomp", "rogue", "rogue_dash", "rogue_bleed",
 	"gargoyle", "gargoyle_swoop", "bishop_aura",

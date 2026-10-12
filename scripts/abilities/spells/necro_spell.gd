@@ -1,5 +1,6 @@
-## NecroSpell — base class of the four newer necromancer spells driven by
-## NecroSpellBook (BoneSpear, SoulSiphon, CorpseExplosion, PlagueCloud).
+## NecroSpell — base class of the newer necromancer spells driven by
+## NecroSpellBook (BoneSpear, SoulSiphon, CorpseExplosion, PlagueCloud, and
+## the five later ones: DeathMark, BoneWall, SoulChains, Wither, RaiseDead).
 ## A spell node lives in world space (child of the spell book, which sits at
 ## the origin), simulates its own pooled pieces (spears, tethers, corpses,
 ## clouds) in step() and draws them itself in _draw(), so no shared pool or
@@ -18,6 +19,27 @@ var _tmp: Array = []
 ## Overridden by every spell.
 func step(_delta: float, _stats: Dictionary) -> void:
 	pass
+
+
+## Kill hook (NecroSpellBook.on_enemy_killed, from CombatResolver's kill
+## path while `e` is still active and in place). Optional override: the
+## five later spells use it (Death Mark Risen); the four older spells are
+## called directly by the book.
+func on_enemy_killed(_e: Enemy) -> void:
+	pass
+
+
+## Called once per physics tick AFTER enemies moved and obstacles were
+## resolved (Game._physics_process -> NecroSpellBook.after_physics). Optional
+## override: Bone Wall pushes enemies out of its segments here.
+func after_physics(_delta: float) -> void:
+	pass
+
+
+## Spell-specific counters for the autotest summary (e.g. "brands=12").
+## Optional override: the five later spells report theirs here.
+func summary_extra() -> String:
+	return ""
 
 
 ## True if `e` is a live enemy whose HP is not already spoken for by damage
