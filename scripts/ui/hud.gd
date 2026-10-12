@@ -9,7 +9,9 @@
 ##                   Oath tier with their combined effect; game.difficulty).
 ##   Left, under HP: timed power-up buffs (Hyper, Stasis, Dark Frenzy) with
 ##                   their remaining time (game.powerups).
-##   Bottom center : active ability slots (6) and passive slots (6) with levels.
+##   Bottom center : active ability slots (6) and passive slots (6) with levels,
+##                   flanked by the Grave Step charges (left) and the Dread
+##                   Rally soul meter / ready state (right; HudAbilities).
 ##   Bottom left   : army total / capacity and per-class counts with
 ##                   replacement progress bars (an evolved class shows its
 ##                   evolution's icon and name); active army synergies
@@ -266,6 +268,10 @@ func _build() -> void:
 		var g := IconGlyph.new("", Vector2(32, 38))
 		passives.add_child(g)
 		_passive_icons.append(g)
+
+	# Bottom center, flanking the ability bar: Grave Step charges and the
+	# Dread Rally meter (HudAbilities draws and refreshes itself).
+	add_child(HudAbilities.new(game))
 
 
 ## Pulls current values from the Game into the widgets.

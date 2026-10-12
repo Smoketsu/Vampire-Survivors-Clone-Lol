@@ -222,7 +222,9 @@ func replenish_interval(cls: String) -> float:
 ## (1 + synergy_bonus) * (1 + meta_bonus). Attack interval divides by the
 ## attack-speed multipliers. The Dark Frenzy power-up is one more category
 ## (x (1 + frenzy) on damage and attack speed) while `with_buffs` is true;
-## level-up card previews pass false so they show the lasting stats.
+## level-up card previews pass false so they show the lasting stats. The
+## Dread Rally ultimate (game.dread_rally) is another such timed category:
+## damage and attack speed during its buff, move speed during its surge.
 ## Bound Souls adds the move-speed category and sets the per-unit leash keys
 ## (engage_radius, soft_recall: UnitData's leash x (1 + leash_range)) and
 ## the RETURNING speed (return_speed_mult).
@@ -246,10 +248,19 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 	if with_buffs and game.powerups != null:
 		dmg_mult *= 1.0 + game.powerups.frenzy_bonus("damage_bonus")
 		spd_mult *= 1.0 + game.powerups.frenzy_bonus("attack_speed_bonus")
+	# Dread Rally (the ultimate, DreadRally.bonus): its own timed category on
+	# damage and attack speed while the buff runs, and on move speed (below)
+	# during its surge.
+	var rally: DreadRally = game.dread_rally if with_buffs else null  # Null in card previews / before setup.
+	if rally != null:
+		dmg_mult *= 1.0 + rally.bonus("damage")
+		spd_mult *= 1.0 + rally.bonus("attack_speed")
 	# Bound Souls (later horde passive): move speed is its own category; the
 	# leash scales the engagement radius and soft recall, and the return trip
 	# takes (1 - return_reduction) of the time (RETURNING speed divided by it).
 	var move_mult := (1.0 + synergies.value("deathless", "move_speed")) * (1.0 + ab.passive_value("bound_souls", "minion_move_speed"))
+	if rally != null:
+		move_mult *= 1.0 + rally.bonus("move_speed")  # Dread Rally surge.
 	var leash_mult := 1.0 + ab.passive_value("bound_souls", "leash_range")  # Leash distance multiplier.
 	var return_mult := 1.0 / maxf(0.1, 1.0 - ab.passive_value("bound_souls", "return_reduction"))  # RETURNING speed multiplier (the 0.1 floor only guards a 100% value).
 	var heal_mult := 1.0 + float(row.get("heal_bonus", 0.0))

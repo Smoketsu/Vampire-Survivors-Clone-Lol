@@ -58,6 +58,8 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Level-up: Banish a card (2 per run) | **B**, then pick the card (**B** / **Esc** cancels) | **LB**, then pick the card (**LB** / **B** cancels) |
 | Level-up: Skip (unlimited, heals 8% HP) | **N**, or the Skip button | **RB**, or focus the button + **A** |
 | Shadow Bolt aim: Nearest / Strongest | **T** | **Y** |
+| Grave Step (dash) | **Shift** | **RB** |
+| Dread Rally (ultimate, when its soul meter is full) | **Space** | **LB** |
 | Pause (Resume / Recipes / Settings / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move through the list, Esc / Back closes | Focus + **A**; D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
@@ -66,7 +68,35 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Rebind a key (in Settings) | Select a binding, then press the new key | **B** cancels |
 
 You don't aim or cast anything yourself. Spells, summons, targeting, healing and
-replacing fallen units all happen automatically (GDD §4, §21).
+replacing fallen units all happen automatically (GDD §4, §21). The only two
+buttons you press in a fight are the dash and the ultimate (below).
+
+### Grave Step and Dread Rally (dash and ultimate)
+
+- **Grave Step** (Shift / RB) is a 110 px shadow step over 0.15 s in the
+  direction you move (or the way you last moved when standing still), with
+  0.2 s of invulnerability. It passes through enemies but not obstacles: the
+  step stops short of a gravestone or wall and always ends on free ground. It
+  has a 5 s cooldown and is available from the first run; the Ossuary sells a
+  second charge (**Twin Shadow**) and a shorter cooldown (**Restless Shade**,
+  5 → 3.5 s). The army follows as it does when you walk. A violet shadow
+  trail marks the step.
+- **Dread Rally** (Space / LB) has no cooldown: its **soul meter fills from
+  kills** (1 point per kill, 8 per elite or Crimson March structure, 60 for
+  the stage boss; 240 to fill, about 60-90 s of mid-game fighting). It stays
+  full until you use it, and kills made during a rally do not charge it.
+  Casting it calls the army: every summon outside its formation band
+  returns to you and the whole army moves +120% faster for 1.5 s, every
+  summon heals 30% of its max HP, and for 8 s the army deals **+40% damage**
+  with **+40% attack speed**. Enemies within 120 px are knocked back (heavier
+  ones less, bosses barely).
+- Both live in the HUD's bottom centre, either side of the ability bar: the
+  Grave Step icon with one pip per charge (it darkens and counts down while
+  no charge is ready) and the Dread Rally icon with its meter (a pulsing
+  border and READY when full, the buff time while it runs). The key names
+  follow your rebinds. Everything runs on game time, so pauses, level-ups and
+  chests freeze the cooldown, the meter and the buff, and the Space / A that
+  confirms a card or closes a chest never casts the rally.
 
 ### Audio, Feel & Settings
 
@@ -89,7 +119,8 @@ replacing fallen units all happen automatically (GDD §4, §21).
   Gameplay code only calls it in a few one-line hooks.
 - **Settings (`Settings` autoload, `SettingsMenu`).** Volume sliders, screen
   shake, damage numbers, fullscreen, and keyboard rebinding of the primary key
-  for Move up / down / left / right, Shadow Bolt aim and Pause. Arrow keys and
+  for Move up / down / left / right, Shadow Bolt aim, Grave Step, Dread Rally
+  and Pause. Arrow keys and
   controller bindings stay fixed, and binding a key that is already in use
   swaps the two keys. Everything works with a controller. Settings are saved
   to `user://settings.cfg` when the menu closes and loaded at startup.
@@ -505,9 +536,9 @@ open). The zone is shown under the timer.
   A strong run earns about **450** at no upgrades (about 550-610 with mid / max
   upgrades, Ash Harvest included): two or three mid-tier upgrades. A death at
   9-11 min still keeps about 100-150. The Reckoning pays only about 8% of a
-  good run. Buying everything costs **8,965**, about 17-20 good runs (15–25
-  including weaker runs and Ash Harvest), plus 375 for the optional Profane
-  Oath (9,340 in all). The Profane Pact and Oath rewards add their own bonus
+  good run. Buying everything costs **9,635** (8,965 before the two Grave
+  Step upgrades), about 18-21 good runs (16–27 including weaker runs and Ash
+  Harvest), plus 375 for the optional Profane Oath (10,010 in all). The Profane Pact and Oath rewards add their own bonus
   lines on top (below).
 - **The Ossuary** (main menu) holds the four GDD §9.2 trees. Each upgrade
   raises one stat per tier, costs rise per tier, and some need a prerequisite
@@ -516,8 +547,8 @@ open). The zone is shown under the timer.
   | Tree | Upgrades (per tier, tiers, cost of tier 1 → last) |
   |---|---|
   | Necromancy | Necrotic Marrow minion HP +6% (5, 40→230) · Sharpened Bones minion damage +5% (5, 40→230) · Grave Call replacement time −6% (3, 60→200) · Risen Vanguard +1 Warrior capacity (2, 130→280; needs Marrow II) · Legion of Bone +1 capacity for every class (1, 500; needs Vanguard II) |
-  | Shadowcraft | Umbral Potency spell damage +5% (5, 40→230) · Quickened Rites spell cooldowns −3% (4, 60→250) · Widening Dark Shadow Blast / pulse radius +6% (3, 70→230; needs Potency I) · Shadow Mastery spell damage +10% (1, 450; needs Rites III) |
-  | Survival | Grave-Hardened Flesh max HP +10 (5, 40→230) · Bone Mail damage taken −3% (4, 60→250) · Fleet Shade move speed +4% (3, 50→175) · Undying Will one revival per run at 50% HP with a knock-back burst (1, 550; needs Bone Mail II) |
+  | Shadowcraft | Umbral Potency spell damage +5% (5, 40→230) · Quickened Rites spell cooldowns −3% (4, 60→250) · Widening Dark Shadow Blast / pulse radius +6% (3, 70→230; needs Potency I) · Shadow Mastery spell damage +10% (1, 450; needs Rites III) · Restless Shade Grave Step cooldown −10% (3, 60→190; 5 s → 3.5 s) |
+  | Survival | Grave-Hardened Flesh max HP +10 (5, 40→230) · Bone Mail damage taken −3% (4, 60→250) · Fleet Shade move speed +4% (3, 50→175) · Undying Will one revival per run at 50% HP with a knock-back burst (1, 550; needs Bone Mail II) · Twin Shadow +1 Grave Step charge (1, 300; needs Fleet Shade I) |
   | Fortune | Soul Magnet pickup radius +10% (4, 30→155) · Grave Tithe XP gain +4% (3, 60→200) · Ash Harvest Soul Ash +5% (3, 80→270) · Fate's Thread +1 reroll (2, 120→250) · Banishing Rite +1 banish (2, 150→310; needs Thread I) |
   | Oath (standalone) | **Profane Oath**: opt-in difficulty (5, 25→125). See *Power-ups & Profane Pact* below |
 
@@ -654,7 +685,8 @@ Effects (explosions, bursts) can be **short animations**: a ChatGPT sprite sheet
 with `python3 tools/prepare_sprite.py --anim <sheet or GIF> <id>` into a strip of square 128 px
 frames at `assets/sprites/effects/<id>.png`. An effect given an animation id plays it once, scaled
 to its radius (timing and fill in `scripts/data/anim_data.gd`), and keeps its drawn shape when the
-file is missing. Only Shadow Blast is wired so far, as the test.
+file is missing. Shadow Blast (the test), the Dread Rally burst (`dread_rally`) and the Grave Step
+departure puff (`grave_step_trail`) are wired so far.
 
 ## What is implemented (vs. the GDD)
 
@@ -748,6 +780,8 @@ scripts/
                             Recipes view, the Meta [recipes] section and the autotest
     autotest.gd             Headless self-test driver
   player/necromancer.gd
+  player/grave_step.gd      Grave Step dash: charges, obstacle-clamped step, i-frames, shadow trail
+  player/dread_rally.gd     Dread Rally ultimate: kill-charged soul meter, surge, heal, army buff, knockback
   horde/
     horde_director.gd       Army registry, pools, caps, effective stats, replenishment queues,
                             formation anchors, threat evaluation, staggered 5 Hz AI ticks
@@ -813,7 +847,9 @@ scripts/
                             chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
                             stage_select (stage cards, locks, best times), pre_run_setup (difficulty level,
                             run modifiers, total Soul Ash multiplier), recipes_panel (pause menu
-                            Recipes view: discovered evolution recipes, locked "?" placeholders)
+                            Recipes view: discovered evolution recipes, locked "?" placeholders),
+                            hud_abilities (Grave Step charges and Dread Rally meter), ability_glyphs
+                            (their icons)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
     stages/graveyard_stage.gd      Stage 1: segments, events, Reckoning flavour, graves, desecration,
@@ -836,6 +872,7 @@ scripts/
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
     sound_data.gd           Sound recipes, voice limits, priorities
     player_data.gd          Player stats, XP curve, slot counts
+    player_ability_data.gd  Grave Step and Dread Rally numbers (and the bots' use of them)
     meta_data.gd            Soul Ash formula, upgrade trees / tiers / costs, achievements, autotest profiles
     powerup_data.gd         Power-up types, weights, durations, drop chances, pity, cap, lifetime
     chest_data.gd           Chest drop chances, pity, contents (1 / 3 / 5) weights, reveal timing
@@ -997,6 +1034,21 @@ hits and damage, death novas, nova hits, nova freezes and nova damage
 special still running after 4 s (a dashing or airborne unit) and any dash or
 landing that ends inside an obstacle; specials cancelled by a recall are
 reported too.
+
+Every policy also uses the **dash and the ultimate**: Grave Step when 3+
+enemies touch a 45 px circle around the necromancer, when he was hit in the
+last 0.6 s while in danger, or to leave a boss / stage telegraph, toward the
+safest of 12 directions (clear length, enemies and danger at the landing
+point, the flee direction); Dread Rally once the meter is full and he is in
+danger, the stage boss is alive, or the army is badly hurt (average HP under
+60% or under 70% of its capacity alive). The **grave step** line reports
+dashes and why the bot took them (`bot_dash_crowd` / `_hit` / `_telegraph`),
+`dash_hits_avoided` (hits ignored during the dash i-frames), blocked and
+shortened steps and the average length; the **dread rally** line reports
+rallies, every meter fill time, `rally_knockbacks`, summons called back
+(`rally_recalled`), `rally_heal`, the minion damage dealt under the buff
+(`rally_minion_dmg`) with the share its +40% damage added, and the buff
+uptime.
 
 ### Continuous integration and builds
 

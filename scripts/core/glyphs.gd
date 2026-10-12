@@ -347,8 +347,9 @@ static func _draw_icon_body(ci: CanvasItem, kind: String, c: Vector2, s: float) 
 			# meta-progression icons (Soul Ash, trees, Ossuary upgrades), then
 			# power-ups and the Profane Pact / Oath, then the classes, summon
 			# evolutions and evolution passives drawn by SummonGlyphs, then the
-			# newer spells, their evolutions and passives (SpellGlyphs).
+			# newer spells, their evolutions and passives (SpellGlyphs), then
+			# the Grave Step / Dread Rally abilities (AbilityGlyphs).
 			if not ProgressionGlyphs.draw_icon(ci, kind, c, s) and not MetaGlyphs.draw_icon(ci, kind, c, s) \
 					and not PowerupGlyphs.draw_icon(ci, kind, c, s) and not SummonGlyphs.draw_icon(ci, kind, c, s) \
-					and not SpellGlyphs.draw_icon(ci, kind, c, s):
+					and not SpellGlyphs.draw_icon(ci, kind, c, s) and not AbilityGlyphs.draw_icon(ci, kind, c, s):
 				ci.draw_circle(c, s * 0.3, Palette.BONE)

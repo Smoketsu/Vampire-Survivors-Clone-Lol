@@ -89,6 +89,17 @@
 ##     adds a "difficulty" line (level, modifiers, every effective multiplier,
 ##     the Soul Ash parts, trickle elites promoted, Holy Retribution bursts
 ##     and radiant-bolt damage).
+##   * manual abilities (GDD §5.5): every policy uses Grave Step (the dash)
+##     when enemies crowd the necromancer, when he was just hit while in
+##     danger, or to leave a boss / stage telegraph, toward the safest of
+##     PlayerAbilityData.BOT_DASH_DIRECTIONS directions (clear length,
+##     enemies and danger at the landing point, the flee direction), and
+##     casts Dread Rally once the soul meter is full and he is in danger, the
+##     stage boss is alive or the army is badly hurt (_drive_abilities()).
+##     The summary's "grave step" / "dread rally" lines report dashes (and
+##     why), hits ignored during dash i-frames, rallies, the meter fill
+##     times, knockbacks, summons called back, rally healing and the minion
+##     damage dealt under the buff.
 class_name Autotest
 extends Node
 
@@ -388,6 +399,7 @@ func step(delta: float) -> void:
 			_level_at_mark[i] = game.level
 	if _boss_hp_at_0 < 0.0 and game.elapsed >= WaveData.RUN_DURATION and game.enemies.boss != null:
 		_boss_hp_at_0 = game.enemies.boss.hp if game.enemies.boss.active else 0.0
+	_drive_abilities()
 	if game.elapsed >= _next_stuck_sample:
 		_next_stuck_sample += STUCK_SAMPLE
 		_sample_stuck()
@@ -690,6 +702,109 @@ func _forced_slots_short(kind: String) -> bool:
 	return free <= missing + FORCED_SPARE_SLOTS
 
 
+## Bot use of the manual abilities (every policy, deterministic): a Grave
+## Step toward the safest direction when _dash_reason() finds a reason, and
+## Dread Rally when the meter is full and _rally_wanted().
+func _drive_abilities() -> void:
+	if game.player.dead:
+		return
+	var gs := game.grave_step
+	if gs.charges > 0 and not gs.is_dashing():
+		var why := _dash_reason()  # "" = no reason to dash.
+		if why != "":
+			var dir := _safest_dash_dir()  # Zero when every direction is blocked.
+			if dir != Vector2.ZERO:
+				gs.request(dir)
+				game.stat_add("bot_dash_" + why, 1.0)
+	if game.dread_rally.is_full() and _rally_wanted():
+		game.dread_rally.request()
+
+
+## Why the bot should dash now: "telegraph" (a boss / stage danger zone
+## pushes the necromancer), "crowd" (BOT_DASH_CROWD enemies touch the
+## BOT_DASH_RADIUS circle), "hit" (hit within BOT_DASH_HIT_WINDOW s while in
+## danger), or "" for no reason.
+func _dash_reason() -> String:
+	var p := game.player
+	if _danger_at(p.position).length() > PlayerAbilityData.BOT_DASH_DANGER_PUSH:
+		return "telegraph"
+	game.enemy_grid.query(p.position, PlayerAbilityData.BOT_DASH_RADIUS + 30.0, _tmp)
+	var close := 0  # Enemies touching the crowd circle.
+	for e: Enemy in _tmp:
+		if e.active and not e.is_structure and e.position.distance_to(p.position) <= PlayerAbilityData.BOT_DASH_RADIUS + e.radius:
+			close += 1
+	if close >= PlayerAbilityData.BOT_DASH_CROWD:
+		return "crowd"
+	if p.time_since_hit < PlayerAbilityData.BOT_DASH_HIT_WINDOW and game.horde.player_in_danger:
+		return "hit"
+	return ""
+
+
+## Stage and boss danger push at `pos` (the autopilot's telegraph dodge).
+func _danger_at(pos: Vector2) -> Vector2:
+	var danger := game.enemies.stage.danger_push(pos)
+	if game.enemies.boss != null and game.enemies.boss.active:
+		danger += game.enemies.boss.danger_push(pos)
+	return danger
+
+
+## The safest step direction: of BOT_DASH_DIRECTIONS directions (starting
+## from the flee + danger direction), the one with the best score of clear
+## length, few enemies and no danger around the landing point, and closeness
+## to the flee direction. Vector2.ZERO when every direction is blocked.
+func _safest_dash_dir() -> Vector2:
+	var p := game.player.position
+	var flee := Vector2.ZERO  # Away from nearby enemies, like the autopilot.
+	game.enemy_grid.query(p, FLEE_RADIUS, _tmp)
+	for e: Enemy in _tmp:
+		if e.active:
+			var diff := p - e.position
+			var d := maxf(diff.length(), 1.0)
+			flee += diff / d * (1.0 - d / FLEE_RADIUS)
+	flee += _danger_at(p) * 3.0
+	var base := flee.angle() if flee.length() > 0.01 else game.grave_step.facing_dir.angle()  # First candidate angle.
+	var pref := Vector2.from_angle(base)  # Preferred direction.
+	var best := Vector2.ZERO
+	var best_score := -INF
+	var n := PlayerAbilityData.BOT_DASH_DIRECTIONS
+	for i in n:
+		var dir := Vector2.from_angle(base + TAU * float(i) / float(n))
+		var length := game.arena.clear_length(p, dir, PlayerAbilityData.DASH_DISTANCE, game.player.radius)
+		if length < PlayerAbilityData.DASH_MIN_LENGTH:
+			continue
+		var end := p + dir * length  # Landing point.
+		var crowd := 0.0  # Enemies near the landing point, weighted by closeness.
+		game.enemy_grid.query(end, PlayerAbilityData.BOT_DASH_LANDING_RADIUS, _tmp)
+		for e: Enemy in _tmp:
+			if e.active:
+				crowd += maxf(0.0, 1.0 - e.position.distance_to(end) / PlayerAbilityData.BOT_DASH_LANDING_RADIUS)
+		var score := length / PlayerAbilityData.DASH_DISTANCE - crowd * 0.6 - _danger_at(end).length() * 3.0 + dir.dot(pref) * 0.5
+		if score > best_score:
+			best_score = score
+			best = dir
+	return best
+
+
+## True when the bot should spend a full Dread Rally meter: the player is in
+## danger, the stage boss is alive, or the army is badly hurt (average HP
+## below BOT_RALLY_ARMY_HP, or fewer than BOT_RALLY_ARMY_ALIVE of its
+## capacity alive; temporary summons do not count).
+func _rally_wanted() -> bool:
+	var h := game.horde
+	if h.player_in_danger or (game.enemies.boss != null and game.enemies.boss.active):
+		return true
+	var alive := 0  # Living permanent summons.
+	var hp_frac := 0.0  # Sum of their HP fractions.
+	for u in h.units:
+		if u.active and not u.is_temporary:
+			alive += 1
+			hp_frac += u.hp / maxf(u.max_hp, 1.0)
+	var cap := h.total_capacity()
+	if cap > 0 and float(alive) < float(cap) * PlayerAbilityData.BOT_RALLY_ARMY_ALIVE:
+		return true
+	return alive > 0 and hp_frac / float(alive) < PlayerAbilityData.BOT_RALLY_ARMY_HP
+
+
 ## Autopilot: flee nearby enemies, drift toward XP, dodge boss telegraphs,
 ## plus a slow circular wander so the run covers ground.
 func get_move_vector() -> Vector2:
@@ -824,6 +939,7 @@ func finish(summary: Dictionary) -> void:
 		game.arena.resolved_player, game.arena.resolved_summons, game.arena.resolved_enemies])
 	_print_class_specials(st)
 	print("[autotest] special evolutions: %s" % SpecialEvolutions.summary_line(game))
+	_print_abilities(st)
 	print("[autotest] stuck_units=%d (touching an obstacle: %d) %s" % [_stuck_units, _stuck_at_obstacle, str(_stuck_by)])
 	print("[metric] boss_hp_at_0=%d min_hp_before_0=%d" % [int(_boss_hp_at_0), int(_min_hp)])
 	print("[autotest] peaks: enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [
@@ -927,6 +1043,30 @@ func _print_class_specials(st: Dictionary) -> void:
 			int(_sum_prefix(st, "death_%s_by_" % cls)), int(total), " ".join(dmg_parts), " ".join(counts)])
 	print("[autotest] class specials: cancelled by recall %d | ended inside an obstacle %d" % [
 		int(st.get("summon_specials_cancelled", 0.0)), int(st.get("summon_special_end_blocked", 0.0))])
+
+
+## Prints the Grave Step and Dread Rally lines (GDD §5.5 manual abilities).
+## "est. +dmg part" is the share of the minion damage under the buff that
+## its +RALLY_DAMAGE_BONUS damage multiplier added (attack speed not counted).
+func _print_abilities(st: Dictionary) -> void:
+	var gs := game.grave_step
+	var dashes := float(st.get("dashes", 0.0))  # Steps taken.
+	print("[autotest] grave step: dashes %d (bot: crowd %d, hit %d, telegraph %d) | hits avoided in dash i-frames %d | blocked %d, shortened by obstacles %d, ended inside an obstacle %d, avg length %.0f px | charges %d, cooldown %.2f s" % [
+		int(dashes), int(st.get("bot_dash_crowd", 0.0)), int(st.get("bot_dash_hit", 0.0)), int(st.get("bot_dash_telegraph", 0.0)),
+		int(st.get("dash_hits_avoided", 0.0)), int(st.get("dash_blocked", 0.0)), int(st.get("dash_shortened", 0.0)), int(st.get("dash_end_blocked", 0.0)),
+		float(st.get("dash_distance", 0.0)) / maxf(dashes, 1.0), gs.max_charges, gs.cooldown])
+	var dr := game.dread_rally
+	var fills := PackedStringArray()  # Seconds each fill took.
+	var total := 0.0  # Sum of the fill times.
+	for t: float in dr.fill_times:
+		fills.append("%.0f" % t)
+		total += t
+	var under := float(st.get("rally_minion_dmg", 0.0))  # Minion damage dealt under the buff.
+	var bonus := PlayerAbilityData.RALLY_DAMAGE_BONUS  # Damage bonus share of that damage.
+	print("[autotest] dread rally: rallies %d | meter fills %d, fill times s [%s] (avg %.0f s), meter now %d%% | knockbacks %d | summons called back %d | heal %d | minion dmg under buff %d (est. +dmg part %d) | buff time %.0f s" % [
+		dr.rallies, dr.fill_times.size(), " ".join(fills), total / maxf(1.0, float(dr.fill_times.size())), int(dr.fraction() * 100.0),
+		int(st.get("rally_knockbacks", 0.0)), int(st.get("rally_recalled", 0.0)), int(st.get("rally_heal", 0.0)),
+		int(under), int(under * bonus / (1.0 + bonus)), float(st.get("rally_buff_time", 0.0))])
 
 
 ## Special ids of the stage boss (from the boss once he arrived, else from

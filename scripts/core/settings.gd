@@ -20,10 +20,12 @@ signal changed
 ## Settings file location.
 const PATH: String = "user://settings.cfg"
 ## Actions the player may rebind (keyboard primary key only), in menu order.
-const REBINDABLE: Array = ["move_up", "move_down", "move_left", "move_right", "toggle_aim", "pause"]
+## (`dash` = Grave Step, `ultimate` = Dread Rally, GDD §5.5.)
+const REBINDABLE: Array = ["move_up", "move_down", "move_left", "move_right", "toggle_aim", "dash", "ultimate", "pause"]
 ## Menu labels for REBINDABLE actions.
 const ACTION_LABELS: Dictionary = {"move_up": "Move up", "move_down": "Move down", "move_left": "Move left",
-	"move_right": "Move right", "toggle_aim": "Shadow Bolt aim", "pause": "Pause"}
+	"move_right": "Move right", "toggle_aim": "Shadow Bolt aim", "dash": "Grave Step (dash)",
+	"ultimate": "Dread Rally (ultimate)", "pause": "Pause"}
 ## Default bus volumes (linear 0..1).
 const DEFAULT_VOLUMES: Dictionary = {"Master": 0.8, "Music": 0.6, "SFX": 0.8}  # TUNING (not in GDD)
 

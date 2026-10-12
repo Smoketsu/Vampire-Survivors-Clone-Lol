@@ -1,0 +1,170 @@
+## DreadRally — the necromancer's ultimate (GDD §3.1 / §3.3 / §5.5 "Space:
+## ultimate, cooldown shown on HUD"; open question 10, resolved in GDD
+## §15.0). Instead of a cooldown it has a SOUL METER filled by kills (owner
+## decision): CombatResolver._kill_enemy() calls on_enemy_killed(), which
+## adds PlayerAbilityData.POINTS_PER_KILL (elites, Crimson March structures
+## and the boss are worth more) up to KILLS_TO_FILL. The meter persists and
+## caps at full; Space (gamepad LB, action `ultimate`) spends it only when
+## full. The rally then, at once:
+##   * calls the army: every summon outside its formation band drops its
+##     target and RETURNs to the necromancer, and every summon moves
+##     SURGE_SPEED_BONUS faster for SURGE_DURATION s (no teleport),
+##   * heals every summon RALLY_HEAL_FRACTION of its max HP (CombatResolver
+##     .heal_unit, the one healing path),
+##   * buffs the army for RALLY_DURATION s: +RALLY_DAMAGE_BONUS damage and
+##     +RALLY_ATTACK_SPEED_BONUS attack speed, read by HordeDirector
+##     .compute_stats() through bonus() as its own category (like Dark
+##     Frenzy); stats are recomputed when the buff and the surge start / end,
+##   * knocks back enemies within KNOCKBACK_RADIUS (impulse divided by the
+##     enemy's mass, so bosses resist like every other knockback; structures
+##     never move),
+##   * plays a dark burst (EffectManager.ring with anim id "dread_rally", so
+##     sprite-sheet art plugs in through AnimData) and a big screen shake.
+## Game steps it right after the player; all timers run on game time. The
+## autotest bots call request() directly. No RNG: deterministic per seed.
+class_name DreadRally
+extends RefCounted
+
+## Owning run.
+var game: Game
+## Soul points collected (0..PlayerAbilityData.KILLS_TO_FILL).
+var meter: float = 0.0
+## Seconds of the damage / attack-speed buff left (0 = inactive).
+var buff_left: float = 0.0
+## Seconds of the surge (move-speed burst toward the necromancer) left.
+var surge_left: float = 0.0
+## Rallies cast this run.
+var rallies: int = 0
+## Seconds of charging each fill took (from run start or the end of the
+## previous rally's buff to a full meter), in order.
+var fill_times: PackedFloat32Array = PackedFloat32Array()
+## Game time (s) the current fill started charging.
+var _fill_start: float = 0.0
+## True when a rally was requested and not processed yet.
+var _queued: bool = false
+## Reusable spatial-query buffer.
+var _tmp: Array = []
+
+
+func _init(p_game: Game) -> void:
+	game = p_game
+
+
+## True when the meter is full (Space casts the rally).
+func is_full() -> bool:
+	return meter >= PlayerAbilityData.KILLS_TO_FILL
+
+
+## Meter fill 0..1 (HUD).
+func fraction() -> float:
+	return clampf(meter / PlayerAbilityData.KILLS_TO_FILL, 0.0, 1.0)
+
+
+## True while the rally's damage / attack-speed buff runs.
+func buff_active() -> bool:
+	return buff_left > 0.0
+
+
+## Summon stat bonus of the rally for HordeDirector.compute_stats():
+## "damage" / "attack_speed" while the buff runs, "move_speed" during the
+## surge; 0 otherwise.
+func bonus(key: String) -> float:
+	match key:
+		"damage":
+			return PlayerAbilityData.RALLY_DAMAGE_BONUS if buff_left > 0.0 else 0.0
+		"attack_speed":
+			return PlayerAbilityData.RALLY_ATTACK_SPEED_BONUS if buff_left > 0.0 else 0.0
+		"move_speed":
+			return PlayerAbilityData.SURGE_SPEED_BONUS if surge_left > 0.0 else 0.0
+	return 0.0
+
+
+## Asks for a rally on the next tick (ignored unless the meter is full).
+func request() -> void:
+	_queued = true
+
+
+## A kill charges the meter (CombatResolver._kill_enemy). Kills during the
+## buff do not count unless PlayerAbilityData.CHARGE_DURING_BUFF.
+func on_enemy_killed(e: Enemy) -> void:
+	if is_full() or (buff_left > 0.0 and not PlayerAbilityData.CHARGE_DURING_BUFF):
+		return
+	var pts := PlayerAbilityData.POINTS_PER_KILL  # Soul points of this kill.
+	if e.is_boss:
+		pts = PlayerAbilityData.POINTS_PER_BOSS
+	elif e.is_elite or e.is_structure:
+		pts = PlayerAbilityData.POINTS_PER_ELITE
+	meter = minf(PlayerAbilityData.KILLS_TO_FILL, meter + pts)
+	if is_full():
+		fill_times.append(game.elapsed - _fill_start)
+		game.stat_add("rally_meter_fills", 1.0)
+
+
+## Per-tick update (Game, after the player): casts a queued rally and runs
+## the buff and surge timers, recomputing summon stats when one ends.
+func step(delta: float) -> void:
+	if _queued:
+		_queued = false
+		if is_full() and not game.player.dead:
+			_cast()
+	if surge_left > 0.0:
+		surge_left -= delta
+		if surge_left <= 0.0:
+			surge_left = 0.0
+			game.horde.recompute_all(game.horde.capacity_snapshot())
+	if buff_left > 0.0:
+		buff_left -= delta
+		game.stat_add("rally_buff_time", delta)
+		if buff_left <= 0.0:
+			buff_left = 0.0
+			_fill_start = game.elapsed
+			game.horde.recompute_all(game.horde.capacity_snapshot())
+
+
+## Spends the meter: surge, heal, buff, knockback and the burst.
+func _cast() -> void:
+	var pos := game.player.position  # Rally centre.
+	meter = 0.0
+	rallies += 1
+	game.stat_add("rallies", 1.0)
+	buff_left = PlayerAbilityData.RALLY_DURATION
+	surge_left = PlayerAbilityData.SURGE_DURATION
+	_fill_start = game.elapsed  # Overwritten when the buff ends (kills do not charge meanwhile).
+	# Buffed stats first (HP fraction kept), then the heal on the new max HP.
+	game.horde.recompute_all(game.horde.capacity_snapshot())
+	for u in game.horde.units:
+		if not u.active or u.state == SummonedUnit.State.DEAD:
+			continue
+		game.stat_add("rally_heal", game.combat.heal_unit(u, u.max_hp * PlayerAbilityData.RALLY_HEAL_FRACTION))
+		_call_back(u, pos)
+	game.enemy_grid.query(pos, PlayerAbilityData.KNOCKBACK_RADIUS, _tmp)
+	for e: Enemy in _tmp:
+		if not e.active or e.is_structure:
+			continue
+		var away := e.position - pos  # Push direction.
+		if away.length() > PlayerAbilityData.KNOCKBACK_RADIUS + e.radius:
+			continue
+		var dir := away / away.length() if away.length() > 0.01 else Vector2.RIGHT
+		e.knockback += dir * PlayerAbilityData.KNOCKBACK_FORCE / maxf(e.mass, 0.1)
+		game.stat_add("rally_knockbacks", 1.0)
+	game.effects.ring(pos, PlayerAbilityData.KNOCKBACK_RADIUS, Palette.VIOLET, PlayerAbilityData.RALLY_RING_TIME, "dread_rally")
+	game.effects.ring(pos, PlayerAbilityData.KNOCKBACK_RADIUS * 0.6, Palette.NECRO_GREEN, PlayerAbilityData.RALLY_RING_TIME * 0.75)
+	game.effects.abyss(pos, PlayerAbilityData.KNOCKBACK_RADIUS * 0.45)
+	game.shake(PlayerAbilityData.RALLY_SHAKE)
+	Sfx.play("death_nova", pos)
+
+
+## Surge: a summon outside its formation band (and not busy with a class
+## special, a cast or rising) drops its target and returns to the
+## necromancer at its (surging) return speed.
+func _call_back(u: SummonedUnit, pos: Vector2) -> void:
+	if u.state == SummonedUnit.State.SPAWNING or u.state == SummonedUnit.State.CASTING \
+			or u.state == SummonedUnit.State.RETURNING:
+		return
+	if u.behavior != null and u.behavior.is_busy():
+		return
+	if u.position.distance_to(pos) <= u.band_max + UnitData.RETURN_ARRIVE_MARGIN:
+		return
+	u.clear_target()
+	u.set_state(SummonedUnit.State.RETURNING)
+	game.stat_add("rally_recalled", 1.0)
