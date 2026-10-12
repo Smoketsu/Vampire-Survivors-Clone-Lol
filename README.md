@@ -544,6 +544,62 @@ modifiers** (the sum of the active modifiers' rewards, +125% with all eight).
 The setup screen's total is level ×ash + modifier rewards (Deathlord with
 every modifier: ×2.75).
 
+### Hyper mode & skins
+
+The pre-run setup screen has one more row under the run modifiers: the
+**Hyper** toggle and the **skin selector** (`PreRunHyperSkins`).
+
+**Hyper mode** (`hyper_data.gd`, owner-approved) is locked until you slay
+**Grand Inquisitor Seraphine** once, on any difficulty (the end screen of
+that run shows a gold *HYPER MODE UNLOCKED* banner; a save that already has
+her kill is unlocked on load). Until then its card shows the condition. It
+stacks on whichever difficulty level you pick, through the same
+`DifficultyModifiers` path, applied once:
+
+| Hyper | Effect |
+|---|---|
+| Enemy HP and damage | the **growth** part of the time scaling ×2, on top of the level's own `hp_scaling` / `damage_scaling` (the starting values are unchanged); the Reckoning is built from the same scaling, so it grows too |
+| Stage boss | HP ×1.5 (on top of the level's boss HP) |
+| Soul Ash | its own end-screen line, **+100%** of the run subtotal (Soul Ash ×2), next to the difficulty line |
+
+At 0:00, against the standard game: Necromancer + Hyper is enemy HP ×1.88
+and damage ×1.72 (HP ×15.4 instead of ×8.2 of the starting value, damage
+×6.2 instead of ×3.6); Deathlord + Hyper is HP ×2.71 and damage ×2.41, with
+boss HP ×1.95. The setup screen's total Soul Ash multiplier and foe line
+include it, the HUD says *Difficulty: Lich + Hyper*, the end screen names it
+and pays the *Hyper (+100%)* line, Restart keeps it and the toggle is saved
+as `[prerun] hyper`. **Standard** turns it off. A **Hyper clear** (a victory:
+the run reached the Reckoning with Hyper on) gives that stage a gold
+**HYPER CLEARED** badge on the stage select, recorded per stage **and per
+character** (`[hyper_clears] <stage>-<character>`; the Gravecaller until the
+character system exists).
+
+**Skins** (`skin_data.gd`) are **purely cosmetic** (GDD §15.0 resolves open
+question 42: no stat ever changes). Each character has its default look and
+a **Hyper skin**, unlocked by clearing the **Sanctum of Judgment on Hyper**
+with that character, and four characters have an **achievement skin**:
+
+| Skin | Character | Unlock |
+|---|---|---|
+| **The Dread Sovereign** (black armour, royal cloak, gold crown) | Gravecaller | slay Seraphine while commanding Warriors, Archers, Mages and a priest order (the *Dread Sovereign* achievement's role check) |
+| **The Ivory Seer** | Bone Oracle | the *Bone Legion* achievement (1,000 Warrior killing blows) |
+| **The Plague Doctor** | Plague Scholar | 5,000 enemies slain while Rotting (Plague Cloud; lifetime counter) |
+| **The Heretic Saint** | Fallen Confessor | 50 High Confessors slain (lifetime counter) |
+| Hyper skins: Eclipsed Gravecaller, Sunless Warden, Starless Voidcaller, Gilded Oracle, Crowned Carrion Lord, Fallen Seraph, Blighted Scholar, Final-Hour Doomsayer, Gilded Barrow King, Radiant Soulbinder, Thorn-Crowned Witch, Golden Herald | one each | clear the Sanctum on Hyper with that character |
+
+The selector shows one card per skin of the selected character with a live
+preview; a locked skin shows its condition and progress (*1,234 / 5,000*).
+It works with keyboard, mouse and controller like the rest of the screen.
+The choice is remembered per character (`[skins] <character> = <skin id>`).
+A skin draws `assets/sprites/player/<character>_<skin>.png` when that file
+exists; until then the character's sprite is drawn with the skin's **palette
+tint**, a small emblem (crown, halo, cracked halo, gold sun corona, plague
+mask) and a faint aura ring (`SkinGlyphs`), so every skin is visible before
+its art. New unlocks are announced on the end screen (*NEW SKIN*). The three
+counters (`rot_kills`, `high_confessor_kills`, `seraphine_kills_full_army`)
+are lifetime stats in the save; unlocks are derived from them, the
+achievements and the Hyper clears, never stored separately.
+
 ### Stage 1: The Desecrated Graveyard (Stage & Boss)
 
 - **Obstacles.** Gravestones, dead trees and crypt walls are solid for the
@@ -872,7 +928,12 @@ integration").
   (`<spell id> = level`, written as soon as a level is new); it drives the
   character unlocks, and an older save starts with nothing reached. Discovered evolution recipes are saved under `[recipes]`
   (`<evolution id> = true`), written as soon as an evolution is obtained; an
-  older save without the section starts with nothing discovered.
+  older save without the section starts with nothing discovered. Hyper mode
+  and skins add `[hyper] unlocked`, `[hyper_clears] <stage>-<character>`,
+  `[prerun] hyper` and `[skins] <character> = <skin id>`, plus three lifetime
+  counters (`rot_kills`, `high_confessor_kills`, `seraphine_kills_full_army`);
+  an older save without them starts locked, with default skins (a past
+  Seraphine kill in the Sanctum record unlocks Hyper on load).
 
 ### Power-ups & Profane Pact
 
@@ -1048,14 +1109,15 @@ scripts/
     settings.gd             Autoload: persistent settings (volumes, toggles, key rebinds) in user://settings.cfg
     meta_progress.gd        Autoload "Meta": Soul Ash, upgrade tiers, lifetime stats, achievements,
                             discovered evolution recipes, per-spell best levels (character unlocks),
-                            purchase / refund, run award, versioned save in user://save.cfg
+                            Hyper unlock / clears, chosen skins and skin unlock checks, purchase /
+                            refund, run award, versioned save in user://save.cfg
     meta_modifiers.gd       The ONE path meta upgrades take into a run (game.meta, read by stat code)
-    difficulty_modifiers.gd The ONE path the difficulty level, run modifiers, Profane Pact + Oath take
-                            into a run (game.difficulty); defines how they combine
+    difficulty_modifiers.gd The ONE path the difficulty level, run modifiers, Hyper mode, Profane
+                            Pact + Oath take into a run (game.difficulty); defines how they combine
     arena.gd                Solid obstacles (circles/rects) and the collision push-out used by all units
     main.gd                 Switches menu <-> run (a run is a fresh Game node every time, built from a RunConfig)
     run_config.gd           Pre-run choices handed from the menu into Game (stage, difficulty, run modifiers,
-                            character)
+                            character, Hyper, skin)
     character_modifiers.gd  The ONE path the playable character takes into a run (game.character: starting
                             spell, stat modifiers, innate values, the unlock-rule hook; picker helpers)
     game.gd                 One run: builds world + managers in code, fixed-order simulation step,
@@ -1065,6 +1127,8 @@ scripts/
     effect.gd, effect_manager.gd   Pooled cosmetic effects and boss telegraphs
     glyphs.gd               All placeholder shapes (world entities AND UI icons share this code)
     sprite_bank.gd          Optional sprite art (assets/sprites/), falls back to the glyphs
+    skin_glyphs.gd          Cosmetic skins: the skin's art, else the character sprite / glyph with the
+                            skin's palette tint, emblem and aura
     ground.gd               Procedural graveyard floor, redrawn only when the camera changes cell
     march_ground.gd         Crimson March floor: the road and each battle zone's look (extends Ground)
     march_glyphs.gd         Crimson March shapes: new soldiers, structures, Marshal Vael, obstacles, corpse piles
@@ -1190,8 +1254,10 @@ scripts/
                             patches, shard fields, boulders),
                             ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons),
                             chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
-                            stage_select (stage cards, locks, best times), pre_run_setup (difficulty level,
-                            run modifiers, total Soul Ash multiplier), recipes_panel (pause menu
+                            stage_select (stage cards, locks, best times, Hyper badges), pre_run_setup
+                            (difficulty level, run modifiers, total Soul Ash multiplier),
+                            prerun_hyper_skins (its Hyper toggle and skin selector with previews),
+                            hyper_badge (the gold Hyper-clear badge), recipes_panel (pause menu
                             Recipes view: discovered evolution recipes, locked "?" placeholders),
                             hud_abilities (Grave Step charges and Dread Rally meter), ability_glyphs
                             (their icons), stance_bar (HUD stance icons + banner),
@@ -1234,6 +1300,9 @@ scripts/
     pact_data.gd            Profane Pact levels and Profane Oath per-tier values
     difficulty_data.gd      GDD §8.4 difficulty levels (Initiate, Necromancer, Lich, Deathlord)
     run_modifier_data.gd    GDD §8.5 run modifiers: effects and Soul Ash rewards
+    hyper_data.gd           Hyper mode: growth x2, boss HP x1.5, Soul Ash +100%, unlock boss, texts
+    skin_data.gd            Per-character (CharacterData) default / Hyper / achievement skins, unlock rules,
+                            palette fallbacks (tint, accent, glow, emblem)
     stance_data.gd          Army stances: leash / recall / pull overrides, shapes, lockout,
                             switched-off flavour bonuses, the autotest stance bot's thresholds
     character_data.gd       Playable characters: starting spell, innate (text + numbers), stats, art key,
@@ -1314,7 +1383,9 @@ Options (after `--`):
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | `--stance=ID` | Army stance for the whole run: `escort`, `onslaught`, `spearhead` or `bone_ring` (forcing ignores the Spearhead unlock). Without it, `army`, `summon` and `evolve` switch stances by a simple rule (Bone Ring when the necromancer is in danger or the boss is within 260 px; Onslaught when at most 6 enemies are within 220 px and a Crimson March structure or a Sanctum crystal / altar is within 420 px or at most 10 enemies are within 480 px; Spearhead, when owned, toward a chest or power-up within 300 px; else Escort; `StanceBot`), while `naive` and `pact` keep Escort so their baselines do not move. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). |
-| `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord` or `plague_scholar` (locks are bypassed). A character whose starting spell is not in the build (`doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch`, `grave_herald`) is refused with an error and the Gravecaller plays. For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads) and the characters the run unlocked. |
+| `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |
+| `--hyper` | Hyper mode (`HyperData`: enemy HP / damage growth ×2, stage boss HP ×1.5, Soul Ash +100%), bypassing the Seraphine unlock. Every summary has a `hyper` line (on / off, the effective growth and boss HP, the 0:00 multipliers vs the standard game, the Hyper Soul Ash line, seconds survived past 0:00, the unlock and Hyper-clear state, in memory only without `--meta-save`). |
+| `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
@@ -1537,7 +1608,8 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
   2 of 4 seeds at 16:30-17:10 (before: 4 of 4 at 12:45-14:00); the spell
   bot's Abyssal Detonation and Eclipse Ward land at 8:43-13:00 (GDD §15.0).
   Not retuned yet (final balance pass).
-- No ultimate, dash, mid-run saves or skins yet. The difficulty levels and
+- No mid-run saves. Skins exist (cosmetic; most still draw a palette-tinted
+  stand-in until their art arrives). The difficulty levels and
   run modifiers have first-pass numbers checked only with the autotest bots
   (see GDD §15.0), and no difficulty is locked. Army bot, `--mortal`:
   Initiate (4 seeds) lowest HP 106-114 vs 37-109 on Necromancer; Deathlord
@@ -1568,8 +1640,8 @@ Gravebow and Bone Colossus are in); saves; density and minion-HP-bar settings (�
 Marshal Vael and the Sanctum of Judgment with its Covenant kinds and Grand
 Inquisitor Seraphine (a human playtest and balance pass are next). Left: Soul
 Ash balance against the full-length stage, the real achievement unlocks (the
-campaign epilogue for *Dawn Extinguished*), skins (the pre-run setup screen can take a skin
-choice next to the difficulty and modifiers).
+campaign epilogue for *Dawn Extinguished*) and the skin art (skins, Hyper mode and the
+Hyper badges are in, with palette stand-ins until the art arrives).
 
 **Phase 4 – Polish:** real art and animation, audio, accessibility, full
 controller UX, profiling on target hardware (§40 stress scenarios), balance.

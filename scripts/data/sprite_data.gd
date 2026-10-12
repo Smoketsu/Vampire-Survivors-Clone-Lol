@@ -23,6 +23,22 @@ const HEIGHTS: Dictionary = {
 	"player/soulbinder": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
 	"player/wither_witch": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
 	"player/grave_herald": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/gravecaller_dread_sovereign": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/bone_oracle_ivory_seer": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/plague_scholar_plague_doctor": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/fallen_confessor_heretic_saint": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/gravecaller_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/umbral_warden_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/voidcaller_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/bone_oracle_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/carrion_lord_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/fallen_confessor_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/plague_scholar_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/doomsayer_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/barrow_warden_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/soulbinder_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/wither_witch_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	"player/grave_herald_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
 	"summons/warrior": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/archer": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/mage": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size

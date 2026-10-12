@@ -1,31 +1,36 @@
 ## CharacterPicker — the playable-character section of the pre-run setup
-## screen (PreRunSetup adds it above the difficulty row and wires its focus).
-## Shows one portrait tile per character playable in this build
-## (CharacterModifiers.available_ids(): characters whose starting spell does
-## not exist yet stay hidden) and a detail panel for the focused / hovered
-## tile: big portrait, name and title, starting spell, the innate passive and
-## the stat modifiers. Locked characters (Meta.is_character_unlocked(): the
+## screen (PreRunSetup puts it at the top of its left column, the "who"
+## column, above the skin and Hyper cards, and wires its focus through
+## tile_rows()). Shows one portrait tile per character playable in this build
+## (CharacterModifiers.available_ids(): a character whose starting spell is
+## missing would stay hidden; all twelve exist now) in a compact grid, and
+## under it a detail panel for the focused / hovered tile: portrait, name
+## and title, starting spell, the innate passive and the stat modifiers. Locked characters (Meta.is_character_unlocked(): the
 ## owner's rule, Lv 5 with the character's spell in any run) show a padlock
 ## and their unlock condition and cannot be chosen. Choosing one (Enter / A
 ## / click) sets RunConfig.character_id through set_character() and emits
 ## `character_changed`; PreRunSetup's Begin remembers it in the Meta save.
 ## Keyboard / controller: arrows / D-pad move between tiles (explicit focus
-## neighbours, wire_focus()), the bottom row leads down to the difficulty
-## cards.
+## neighbours set by PreRunSetup from tile_rows()).
 class_name CharacterPicker
 extends VBoxContainer
 
 ## A character was chosen (RunConfig.character_id already set).
 signal character_changed(id: String)
 
-## Size (px) of one portrait tile.
-const TILE_SIZE := Vector2(66, 66)
-## Tiles per grid row.
+## Size (px) of one portrait tile (six to a row fill the setup screen's
+## left column, PreRunSetup.LEFT_WIDTH).
+const TILE_SIZE := Vector2(62, 62)
+## Tiles per grid row (12 characters = two rows).
 const TILE_COLUMNS: int = 6
 ## Size (px) of the detail panel's big portrait.
-const BIG_PORTRAIT := Vector2(108, 108)
-## Width (px) of the detail panel's text column.
-const DETAIL_TEXT_WIDTH: float = 440.0
+const BIG_PORTRAIT := Vector2(84, 84)
+## Width (px) of the detail panel's text column (beside the big portrait,
+## inside the left column).
+const DETAIL_TEXT_WIDTH: float = 330.0
+## Minimum height (px) of the detail panel, so the screen does not jump
+## when the focused character's texts are shorter or longer.
+const DETAIL_MIN_HEIGHT: float = 118.0
 ## Border colour of the chosen character's tile.
 const SELECTED_BORDER := Color(1.0, 0.84, 0.4)
 
@@ -77,20 +82,19 @@ func _ready() -> void:
 	if config == null:
 		config = RunConfig.new()
 	add_theme_constant_override("separation", 4)
-	add_child(UiTheme.label("CHARACTER  (each starts with its own spell; unlock one by reaching Lv %d with that spell)" % CharacterData.UNLOCK_LEVEL, 14, UiTheme.TEXT_DIM))
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 16)
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	add_child(row)
+	var head := UiTheme.label("CHARACTER  (each starts with its own spell; reach Lv %d with a spell to unlock its character)" % CharacterData.UNLOCK_LEVEL, 12, UiTheme.TEXT_DIM)
+	head.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	head.custom_minimum_size = Vector2(TILE_SIZE.x * TILE_COLUMNS + 5.0 * 6.0, 0)
+	add_child(head)
 	var grid := GridContainer.new()
 	grid.columns = TILE_COLUMNS
 	grid.add_theme_constant_override("h_separation", 6)
 	grid.add_theme_constant_override("v_separation", 6)
-	row.add_child(grid)
+	add_child(grid)
 	_ids = CharacterModifiers.available_ids()
 	for id: String in _ids:
 		grid.add_child(_build_tile(id))
-	row.add_child(_build_detail())
+	add_child(_build_detail())
 	_refresh()
 	_show(config.character_id)
 
@@ -120,12 +124,13 @@ func _build_tile(id: String) -> Button:
 func _build_detail() -> Control:
 	var box := HBoxContainer.new()
 	box.add_theme_constant_override("separation", 10)
+	box.custom_minimum_size = Vector2(0, DETAIL_MIN_HEIGHT)
 	_big = Portrait.new(CharacterData.DEFAULT_ID, false, BIG_PORTRAIT)
 	box.add_child(_big)
 	var text := VBoxContainer.new()
 	text.add_theme_constant_override("separation", 1)
 	box.add_child(text)
-	_name_l = UiTheme.label("", 19, UiTheme.TEXT)
+	_name_l = UiTheme.label("", 17, UiTheme.TEXT)
 	text.add_child(_name_l)
 	_title_l = _wrapped(12, UiTheme.TEXT_DIM)
 	text.add_child(_title_l)
@@ -203,31 +208,11 @@ func tiles() -> Array[Button]:
 	return out
 
 
-## The tile in the bottom grid row above column `col` of a row of `count`
-## controls below the picker (spread evenly), for their "top" neighbour.
-func tile_above(col: int, count: int) -> Button:
+## The tile Buttons as grid rows (top to bottom, each left to right), for
+## the setup screen's focus wiring.
+func tile_rows() -> Array:
 	var t := tiles()
-	var rows := ceili(float(t.size()) / float(TILE_COLUMNS))  # Grid rows.
-	var last_start := (rows - 1) * TILE_COLUMNS  # First index of the bottom row.
-	var in_last := t.size() - last_start  # Tiles in the bottom row.
-	var c := roundi(float(col) * float(in_last - 1) / float(maxi(1, count - 1)))  # Bottom-row column.
-	return t[mini(t.size() - 1, last_start + c)]
-
-
-## Explicit focus neighbours of the tiles: arrows inside the grid (edges stay
-## put; up from the top row stays), and down from the bottom row (or from a
-## tile with nothing below it) to `below` (spread evenly by column).
-func wire_focus(below: Array) -> void:
-	var t := tiles()
-	var n := t.size()
-	for i in n:
-		var b: Button = t[i]
-		var c := i % TILE_COLUMNS  # Grid column.
-		PreRunSetup._link(b, "left", t[i - 1] if c > 0 else b)
-		PreRunSetup._link(b, "right", t[i + 1] if c < TILE_COLUMNS - 1 and i + 1 < n else b)
-		PreRunSetup._link(b, "top", t[i - TILE_COLUMNS] if i >= TILE_COLUMNS else b)
-		if i + TILE_COLUMNS < n:
-			PreRunSetup._link(b, "bottom", t[i + TILE_COLUMNS])
-		elif not below.is_empty():
-			var k := roundi(float(c) * float(below.size() - 1) / float(maxi(1, TILE_COLUMNS - 1)))  # Control below.
-			PreRunSetup._link(b, "bottom", below[mini(below.size() - 1, k)])
+	var out: Array = []  # Rows of Buttons.
+	for i in range(0, t.size(), TILE_COLUMNS):
+		out.append(t.slice(i, mini(t.size(), i + TILE_COLUMNS)))
+	return out

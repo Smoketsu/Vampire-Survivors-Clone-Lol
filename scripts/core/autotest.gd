@@ -411,6 +411,8 @@ func _ready() -> void:
 		",".join(GameState.autotest_modifiers) if not GameState.autotest_modifiers.is_empty() else "none"])
 	print("[autotest] character: %s (starting spell %s)" % [GameState.autotest_character,
 		String(CharacterData.CHARACTERS[GameState.autotest_character]["spell"])])
+	if GameState.autotest_hyper or GameState.autotest_skin != "":
+		print("[autotest] hyper: %s | skin: %s" % [str(GameState.autotest_hyper), GameState.autotest_skin if GameState.autotest_skin != "" else "default"])
 
 
 ## --classes: raises every forced class to Lv 1 while an active slot is free.
@@ -1093,6 +1095,7 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] simulation step: avg %.2f ms, worst %.2f ms" % [game.avg_step_ms(), float(game.worst_step_usec) / 1000.0])
 	_print_powerups(summary)
 	_print_soul_ash(summary)
+	_print_hyper_skins(summary)
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
@@ -1340,6 +1343,38 @@ func _print_soul_ash(summary: Dictionary) -> void:
 	print("[autotest] stage: %s | soul ash stage bonus +%d (x%.2f) | stages unlocked by this run: %s" % [
 		String(summary.get("stage_name", "")), int(ash.get("stage_bonus", 0)), 1.0 + float(ash.get("stage_pct", 0.0)),
 		", ".join(ash.get("unlocked_stages", PackedStringArray())) if not (ash.get("unlocked_stages", PackedStringArray()) as PackedStringArray).is_empty() else "none"])
+
+
+## Prints Hyper mode (HyperData) and the skin system (SkinData): the run's
+## Hyper numbers and the 20:00 enemy multipliers vs the standard game, what
+## the run unlocked (in memory only unless --meta-save), the worn skin and
+## the skin counters, and builds the setup screen's Hyper / skin row once,
+## headless, so that UI code runs in every autotest.
+func _print_hyper_skins(summary: Dictionary) -> void:
+	var dif := game.difficulty
+	var pv := DifficultyModifiers.preview(dif.difficulty_id(), dif.modifier_ids(), dif.is_hyper())  # 20:00 multipliers vs standard.
+	var ash: Dictionary = summary.get("soul_ash", {})
+	print("[autotest] hyper: %s (%s) | foes: HP growth x%.2f, dmg growth x%.2f, boss HP x%.3f | at 0:00 vs the standard game: HP x%.2f, dmg x%.2f | soul ash hyper +%d (+%d%%) | Reckoning lasted %.1f s past 0:00 | unlocked: %s (by this run: %s) | hyper clear recorded: %s" % [
+		"on" if dif.is_hyper() else "off", dif.difficulty_label(), dif.hp_scaling(), dif.damage_scaling(), dif.boss_hp_mult(),
+		float(pv["enemy_hp_end"]), float(pv["enemy_damage_end"]), int(ash.get("hyper_bonus", 0)), roundi(float(ash.get("hyper_pct", 0.0)) * 100.0),
+		float(summary["time_past_zero"]), str(Meta.hyper_unlocked), str(bool(ash.get("hyper_unlocked", false))),
+		String(ash.get("hyper_clear", "")) if String(ash.get("hyper_clear", "")) != "" else "no"])
+	var st: Dictionary = summary["stats"]
+	var skin := String(summary.get("skin_id", ""))  # Worn skin ("" = default).
+	var key := String(SkinData.skin(skin).get("sprite", "")) if skin != "" else ""  # Its sprite key.
+	var row_cfg := RunConfig.for_stage(String(summary["stage_id"]))  # Throwaway config for the UI check.
+	var row := PreRunHyperSkins.new()  # The setup screen's Hyper / skin row.
+	row.config = row_cfg
+	add_child(row)
+	var cards := row.cards().size()  # Cards built (Hyper + skins).
+	row.queue_free()
+	var new_skins: PackedStringArray = ash.get("unlocked_skins", PackedStringArray())
+	print("[autotest] skins: character %s, worn %s%s | this run: rot kills %d, high confessors slain %d, seraphine slain with all 4 roles %d | lifetime: rot %d/5000, confessors %d/50, seraphine full army %d/1 | unlocked %d/%d (new: %s) | setup row cards %d" % [
+		String(summary.get("character_id", CharacterData.DEFAULT_ID)), skin if skin != "" else "default",
+		(" (art %s: %s)" % [key, "yes" if SpriteBank.has(key) else "no, palette fallback"]) if skin != "" else "",
+		int(st.get("rot_kills", 0.0)), int(st.get("kill_high_confessor", 0.0)), 1 if float(st.get("boss_kill_full_army", 0.0)) > 0.0 and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID and bool(summary["boss_defeated"]) else 0,
+		int(float(Meta.lifetime.get("rot_kills", 0.0))), int(float(Meta.lifetime.get("high_confessor_kills", 0.0))), int(float(Meta.lifetime.get("seraphine_kills_full_army", 0.0))),
+		Meta.unlocked_skin_ids().size(), SkinData.all_ids().size(), ", ".join(new_skins) if not new_skins.is_empty() else "none", cards])
 
 
 ## Shadow Bolt damage stat with `prefix` ("dmg_" / "bossdmg_"), including the

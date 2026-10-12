@@ -39,6 +39,9 @@
 ## upgrades) and the innate values; `innates` (CharacterInnates) runs the
 ## innate passive and is stepped right after the spells. The Gravecaller
 ## (the default) has no innate and baseline stats.
+## Hyper mode (HyperData) is part of `difficulty`; the cosmetic skin
+## (SkinData, run_config.skin_id or --skin=) is resolved once into
+## player.skin_id and only changes how the necromancer is drawn.
 class_name Game
 extends Node2D
 
@@ -237,6 +240,7 @@ func _ready() -> void:
 	innates = CharacterInnates.new()
 	innates.game = self
 	add_child(innates)
+	player.skin_id = _resolve_skin()  # Cosmetic only (SkinData); "" = the default look.
 	abilities = AbilityManager.new()
 	add_child(abilities)
 	abilities.setup(self)
@@ -267,6 +271,19 @@ func _ready() -> void:
 	horde.set_class_level("warrior", 1)
 	_build_ui()
 	ground.update_view(player.position)
+
+
+## The skin the necromancer wears this run (purely cosmetic, SkinData): the
+## autotest's --skin= (forced, for screenshots), else run_config.skin_id
+## when it belongs to the run's character and is unlocked. A default skin
+## (or none) returns "" so the normal necromancer drawing is used.
+func _resolve_skin() -> String:
+	var id := run_config.skin_id  # Requested skin.
+	if GameState.autotest and GameState.autotest_skin != "":
+		id = GameState.autotest_skin
+	elif not SkinData.skins_for(run_config.character_key()).has(id) or not Meta.is_skin_unlocked(id):
+		return ""
+	return "" if String(SkinData.skin(id).get("kind", "default")) == "default" else id
 
 
 ## Builds the CanvasLayer UI. It processes while the tree is paused so menus
@@ -593,5 +610,10 @@ func build_summary() -> Dictionary:
 		"modifiers": difficulty.modifier_ids(),
 		"modifier_names": difficulty.modifier_names(),
 		"modifiers_ash_gain": float(difficulty.ash_parts()["modifiers"]),
+		"hyper": difficulty.is_hyper(),
+		"hyper_ash_gain": float(difficulty.ash_parts()["hyper"]),
+		"difficulty_label": difficulty.difficulty_label(),
+		"boss_id": String(boss_info.get("id", "")),
+		"skin_id": player.skin_id,
 		"stats": stats.duplicate(),
 	}

@@ -5,10 +5,13 @@
 ## optional run modifiers (GDD §8.5), both chosen on the pre-run setup
 ## screen (PreRunSetup) and remembered in the Meta save. The run reads the
 ## difficulty and modifiers only through DifficultyModifiers (the one
-## difficulty path). A later skin choice (§10.2) adds its field here.
+## difficulty path). Hyper mode (HyperData, an opt-in toggle stacking on the
+## level, also read only through DifficultyModifiers) and the cosmetic skin
+## (SkinData; never a stat) are chosen on the same screen.
 ## The playable character (CharacterData id, chosen on the same screen's
 ## CharacterPicker, remembered in the Meta save) is `character_id`; the run
-## reads it only through CharacterModifiers (the one character path).
+## reads it only through CharacterModifiers (the one character path), and
+## everything else (skins, Hyper clears) through character_key().
 class_name RunConfig
 extends RefCounted
 
@@ -22,6 +25,12 @@ var modifiers: PackedStringArray = PackedStringArray()
 ## CharacterData id of the playable character (default: the Gravecaller,
 ## today's necromancer; set through set_character(), which validates).
 var character_id: String = CharacterData.DEFAULT_ID
+## True when Hyper mode is on (HyperData; the setup screen only offers it once
+## unlocked, the autotest's --hyper bypasses the lock).
+var hyper: bool = false
+## SkinData id of the cosmetic skin ("" = the character's default look).
+## Purely visual: Game hands it to the Necromancer's drawing only.
+var skin_id: String = ""
 
 
 ## A config for stage `id` (unknown ids fall back to the default stage),
@@ -64,10 +73,19 @@ func has_modifier(id: String) -> bool:
 	return modifiers.has(id)
 
 
-## A copy for a restart: the same stage, difficulty, modifiers and character.
+## The run's character id (`character_id`, a CharacterData id; the one
+## accessor skins and Hyper clears use).
+func character_key() -> String:
+	return character_id
+
+
+## A copy for a restart: the same stage, difficulty, modifiers, character,
+## Hyper and skin.
 func duplicate_config() -> RunConfig:
 	var c := RunConfig.for_stage(stage_id)
 	c.set_difficulty(difficulty_id)
 	c.set_modifiers(modifiers)
 	c.set_character(character_id)
+	c.hyper = hyper
+	c.skin_id = skin_id
 	return c

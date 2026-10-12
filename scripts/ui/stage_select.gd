@@ -3,7 +3,9 @@
 ## initially)"). One card per StageRegistry stage: chapter, name, a short
 ## description, a code-drawn emblem, and either the lock requirement (GDD
 ## §9.3: defeat the previous stage's boss) or the stage's best time, boss
-## kills and Soul Ash bonus (Meta.stage_record()). Keyboard, mouse and
+## kills and Soul Ash bonus (Meta.stage_record()), plus a gold HYPER badge
+## once the stage was cleared on Hyper (HyperBadge; Meta.hyper_clears, per
+## stage and character). Keyboard, mouse and
 ## controller navigable (arrows / D-pad between cards, Enter / A to march,
 ## Esc / B back), in the shared UiTheme.
 ## Choosing an unlocked stage opens the pre-run setup (PreRunSetup: GDD
@@ -168,6 +170,9 @@ func _build_card(id: String) -> Button:
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	status.custom_minimum_size = Vector2(CARD_WIDTH - 24.0, 0)
 	box.add_child(status)
+	var hyper_n := Meta.hyper_clear_count(id)  # Characters that cleared it on Hyper.
+	if unlocked and hyper_n > 0:
+		box.add_child(HyperBadge.row("HYPER CLEARED" + (" (%d characters)" % hyper_n if hyper_n > 1 else "")))
 	return b
 
 
