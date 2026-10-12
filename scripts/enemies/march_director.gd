@@ -22,6 +22,10 @@
 ##                     power-up (MARCH.cart_rewards, cycled, no RNG).
 ##   * Timed structures — Marshal Vael's Holy Standard is tracked here and
 ##                     taken off the field when its time runs out.
+## The Sanctum of Judgment reuses the battle zones (its `march` config has
+## zones and no road, outposts or carts) with its own zone-change look: the
+## optional config keys zone_title, zone_color, fog_color and fog_bank_color
+## (absent = the Crimson March's crimson banner and smoke).
 ## Structures are ordinary pooled Enemy nodes (is_structure, is_objective:
 ## never recycled), so summons, spells, Stasis and the combat resolver treat
 ## them like any enemy; this director polls them (generation-checked) to pay
@@ -49,7 +53,7 @@ class Structure:
 
 ## Owning run.
 var game: Game
-## The stage's march config (CrimsonMarchStage.MARCH).
+## The stage's march config (CrimsonMarchStage.MARCH, SanctumStage.MARCH).
 var config: Dictionary = {}
 ## Index of the current battle zone in config.zones.
 var zone_index: int = 0
@@ -93,14 +97,20 @@ func _update_zone() -> void:
 func _enter_zone(z: Dictionary) -> void:
 	var p := game.player.position
 	game.arena.set_layout(z["arena"], p, float(config["transition_clear"]))
-	if game.ground is MarchGround:
-		(game.ground as MarchGround).set_zone(z["ground"])
+	game.ground.set_zone(z["ground"])
+	var title := String(config.get("zone_title", "THE MARCH ADVANCES  -  ZONE %s"))  # Banner title format.
 	if game.hud != null:
-		game.hud.announce("THE MARCH ADVANCES  -  ZONE %s" % String(z["numeral"]), String(z["name"]), String(z["blurb"]), Palette.CRIMSON.lightened(0.35))
+		game.hud.announce(title % String(z["numeral"]), String(z["name"]), String(z["blurb"]), zone_color())
 	_transition_left = float(config["transition_time"])
-	game.effects.ring(p, 420.0, Palette.CRIMSON, 0.9)
+	game.effects.ring(p, 420.0, config.get("zone_color", Palette.CRIMSON), 0.9)
 	game.stat_add("march_zones_entered", 1.0)
 	_log("zone_" + String(z["numeral"]))
+
+
+## Colour of the zone banner and HUD zone line (config zone_color; the
+## Crimson March's light crimson by default).
+func zone_color() -> Color:
+	return config.get("zone_color", Palette.CRIMSON.lightened(0.35))
 
 
 ## HUD line under the timer: "Zone II - The Fortified Checkpoint".
@@ -344,9 +354,11 @@ func _draw() -> void:
 	var k := clampf(_transition_left / maxf(0.01, float(config["transition_time"])), 0.0, 1.0)  # 1 -> 0.
 	var c := game.player.position
 	var half := game.view_size() * 0.6 + Vector2.ONE * 80.0
-	draw_rect(Rect2(c - half, half * 2.0), Color(0.05, 0.02, 0.03, 0.75 * k))
+	var veil: Color = config.get("fog_color", Color(0.05, 0.02, 0.03))  # Sweep veil colour.
+	var bank: Color = config.get("fog_bank_color", Color(0.12, 0.05, 0.06))  # Drifting bank colour.
+	draw_rect(Rect2(c - half, half * 2.0), Color(veil, 0.75 * k))
 	# Drifting smoke banks clearing outward from the necromancer.
 	for i in 10:
 		var a := TAU * float(i) / 10.0
 		var r := (1.0 - k) * half.length() * 0.9 + 60.0
-		draw_circle(c + Vector2.from_angle(a) * r, 90.0, Color(0.12, 0.05, 0.06, 0.45 * k))
+		draw_circle(c + Vector2.from_angle(a) * r, 90.0, Color(bank, 0.45 * k))

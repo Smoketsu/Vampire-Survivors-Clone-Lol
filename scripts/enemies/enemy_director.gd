@@ -14,7 +14,13 @@
 ##     holy zones) and hands it the "consecration" / "crypt" timeline events;
 ##     on the Crimson March it also owns the MarchDirector (zones, outposts,
 ##     ward generators, supply carts) and hands it "outposts" /
-##     "generators" / "cart" events.
+##     "generators" / "cart" events; on the Sanctum of Judgment it also owns
+##     the SanctumDirector (sanctified chambers, the Cathedral Guardian, the
+##     sacred altars, corruption) and hands it "chamber" / "guardian" /
+##     "altars" events. A stage may name enemy kinds by short aliases
+##     (StageRegistry "kind_aliases"); resolve_kind() maps them when a kind
+##     is looked up or spawned.
+##   * Tracks one stage miniboss for the HUD's miniboss bar (set_miniboss()).
 ##   * Never places an enemy inside an obstacle (Arena.free_point).
 ##   * Applies the difficulty (game.difficulty: the GDD §8.4 level, the §8.5
 ##     run modifiers and the Profane Pact / Oath) in the existing scaling
@@ -85,8 +91,21 @@ var _frame: int = 0
 var _next_slot: int = 0
 ## Graveyard stage mechanics and holy zones (GDD §11).
 var stage: StageDirector
-## Crimson March mechanics (GDD §8.2; null on stages without them).
+## Crimson March mechanics (GDD §8.2; null on stages without them). The
+## Sanctum of Judgment uses it for its battle zones.
 var march: MarchDirector = null
+## Sanctum of Judgment objectives (GDD §8.3; null on stages without them).
+var sanctum: SanctumDirector = null
+## The stage's enemy kind aliases (StageRegistry "kind_aliases"; alias ->
+## real kind id; {} = none).
+var _kind_aliases: Dictionary = {}
+## The stage miniboss on the HUD's miniboss bar (null = none; check
+## miniboss_alive(), the node is pooled).
+var miniboss: Enemy = null
+## Generation of `miniboss` when it was set (stale guard).
+var miniboss_gen: int = 0
+## HUD name of the miniboss ("Cathedral Guardian").
+var miniboss_name: String = ""
 
 
 func _ready() -> void:
@@ -94,6 +113,7 @@ func _ready() -> void:
 	segments = stage_def["segments"]
 	events = stage_def["events"]
 	boss_info = stage_def["boss"]
+	_kind_aliases = stage_def.get("kind_aliases", {})
 	stage = StageDirector.new()
 	stage.game = game
 	add_child(stage)
@@ -102,6 +122,11 @@ func _ready() -> void:
 		march.game = game
 		march.config = stage_def["march"]
 		add_child(march)
+	if not (stage_def.get("sanctum", {}) as Dictionary).is_empty():
+		sanctum = SanctumDirector.new()
+		sanctum.game = game
+		sanctum.config = stage_def["sanctum"]
+		add_child(sanctum)
 
 
 # =====================================================================================
@@ -127,6 +152,11 @@ func step(delta: float) -> void:
 	if t >= float(stage_def.get("enemy_mult_from", 0.0)):
 		hp_mult *= float(stage_def["enemy_hp_mult"])
 		damage_mult *= float(stage_def["enemy_damage_mult"])
+	# Stage objectives (the one place they touch enemy stats): every sacred
+	# altar destroyed in the Sanctum cuts the max HP of soldiers spawned from
+	# now on (SanctumDirector.objective_hp_mult(); 1 elsewhere).
+	if sanctum != null:
+		hp_mult *= sanctum.objective_hp_mult()
 	_run_events(t)
 	if boss == null and t >= float(boss_info["time"]):
 		_spawn_boss()
@@ -161,6 +191,8 @@ func step(delta: float) -> void:
 	stage.step(delta)
 	if march != null:
 		march.step(delta)
+	if sanctum != null:
+		sanctum.step(delta)
 
 
 ## Removes enemies killed since the last step from `active` (and pools the
@@ -198,6 +230,10 @@ func objective_text() -> String:
 		var march_text := march.objective_override()  # Live outposts / generators / carts.
 		if march_text != "":
 			return march_text
+	if sanctum != null:
+		var sanctum_text := sanctum.objective_override()  # Ward crystals / Guardian / altars.
+		if sanctum_text != "":
+			return sanctum_text
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -291,6 +327,11 @@ func _run_event(ev: Dictionary) -> void:
 				march.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
+		"chamber", "guardian", "altars":
+			if sanctum != null:
+				sanctum.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
 	show_banner(ev["banner"])
 	spawn_formation(String(ev["formation"]), ev["groups"])
 	game.stat_add("wave_events", 1.0)
@@ -357,6 +398,8 @@ func _spawn_boss() -> void:
 
 ## Spawns the next Reckoning wave around the player: count and HP/damage
 ## compound every wave (the stage's "reckoning" data), ignoring the regular caps.
+## A stage's optional `companions` (Dawn's Wrath: Sun Paladins) march with
+## each wave's Inquisitors, scaled the same way.
 func _spawn_reckoning_wave() -> void:
 	var r: Dictionary = stage_def["reckoning"]
 	if reckoning_wave == 0:
@@ -370,6 +413,14 @@ func _spawn_reckoning_wave() -> void:
 		var e := _spawn_enemy_def("inquisitor", EnemyData.RECKONING_ENEMY, _ring_point(offset + TAU * float(i) / float(count)), hp_scale, false)
 		e.damage *= dmg_scale
 		e.is_reckoning = true
+	for comp: Dictionary in r.get("companions", []):
+		var n := int(comp["count"]) + floori(float(reckoning_wave) * float(comp["growth"]))  # Companions this wave.
+		var kind := resolve_kind(String(comp["kind"]))  # Real kind of the companion.
+		for i in n:
+			var c := _spawn_enemy_def(kind, enemy_def(kind), _ring_point(offset + TAU * (float(i) + 0.5) / float(maxi(1, n))), hp_scale, false)
+			c.damage *= dmg_scale
+			c.is_reckoning = true
+		count += n
 	reckoning_wave += 1
 	_next_reckoning += float(r["interval"])
 	game.stat_add("reckoning_spawned", float(count))
@@ -401,17 +452,42 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 	return _spawn_enemy(kind, pos, elite)
 
 
-## Design row of enemy `kind`: EnemyData.ENEMIES (Graveyard roster) first,
-## then MarchEnemyData.ENEMIES (Crimson March soldiers and structures).
+## Design row of enemy `kind` (a stage alias is resolved first):
+## EnemyData.ENEMIES (Graveyard roster) first, then
+## SanctumObjectiveData.STRUCTURES (Sanctum ward crystals and altars), then
+## MarchEnemyData.ENEMIES (Crimson March soldiers and structures).
 func enemy_def(kind: String) -> Dictionary:
+	kind = resolve_kind(kind)
 	if EnemyData.ENEMIES.has(kind):
 		return EnemyData.ENEMIES[kind]
+	if SanctumObjectiveData.STRUCTURES.has(kind):
+		return SanctumObjectiveData.STRUCTURES[kind]
 	return MarchEnemyData.ENEMIES[kind]
+
+
+## The real enemy kind of `kind`: the stage's alias target (StageRegistry
+## "kind_aliases", e.g. the Sanctum's "sentinel"), else `kind` itself.
+func resolve_kind(kind: String) -> String:
+	return String(_kind_aliases.get(kind, kind))
 
 
 ## Takes an enemy from the pool (or creates one) and activates it.
 func _spawn_enemy(kind: String, pos: Vector2, elite: bool) -> Enemy:
+	kind = resolve_kind(kind)
 	return _spawn_enemy_def(kind, enemy_def(kind), pos, hp_mult, elite)
+
+
+## Shows `e` on the HUD's miniboss bar as `display` (SanctumDirector's
+## Cathedral Guardian).
+func set_miniboss(e: Enemy, display: String) -> void:
+	miniboss = e
+	miniboss_gen = e.generation
+	miniboss_name = display
+
+
+## True while the miniboss set by set_miniboss() is alive.
+func miniboss_alive() -> bool:
+	return miniboss != null and miniboss.active and miniboss.generation == miniboss_gen
 
 
 ## Takes a living enemy off the field WITHOUT a kill (no XP, no drops, no

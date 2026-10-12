@@ -51,6 +51,13 @@ func _draw() -> void:
 			_draw_cell(cx, cy)
 
 
+## Switches to battle-zone look `look` (a stage ZONES "ground" dictionary).
+## The Graveyard has no zones: a no-op here; MarchGround and SanctumGround
+## override it (MarchDirector calls it at each zone change).
+func set_zone(_look: Dictionary) -> void:
+	pass
+
+
 ## Draws the (hash-chosen) decoration of one cell, if any.
 func _draw_cell(cx: int, cy: int) -> void:
 	var h := absi(hash(Vector2i(cx, cy)))

@@ -121,6 +121,9 @@ func _show_ash(ash: Dictionary, boss_name: String) -> void:
 	var values := PackedStringArray()
 	for k: String in ["time", "kills", "elites", "boss", "reckoning"]:
 		values.append("+%d" % int(parts[k]))
+	if int(parts.get("objectives", 0)) > 0:
+		names.append("Stage objectives")  # The Sanctum's chambers and altars.
+		values.append("+%d" % int(parts["objectives"]))
 	if int(ash["bonus"]) > 0:
 		names.append("Ash Harvest (+%d%%)" % int(roundf(float(ash["bonus_pct"]) * 100.0)))
 		values.append("+%d" % int(ash["bonus"]))

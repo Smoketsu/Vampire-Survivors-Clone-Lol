@@ -140,6 +140,9 @@ func set_oath_active(t: int) -> bool:
 ## Initiate, so its line subtracts; "difficulty_bonus") and the run
 ## modifiers ("modifiers_ash_gain" = their summed ash_gain;
 ## "modifiers_bonus"). A summary without these keys pays nothing extra.
+## Stage objectives (the Sanctum's cleansed chambers and destroyed altars,
+## the run stat "objective_ash") are one more part, "objectives", of the
+## subtotal (0 on stages without them).
 static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 	var st: Dictionary = summary.get("stats", {})
 	var countdown := float(summary.get("countdown", WaveData.RUN_DURATION))
@@ -154,6 +157,7 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 		"elites": floori(float(elites) * MetaData.ASH_PER_ELITE),
 		"boss": floori(MetaData.ASH_BOSS_KILL) if boss else 0,
 		"reckoning": floori(past_zero * MetaData.ASH_PER_RECKONING_SECOND),
+		"objectives": floori(float(st.get("objective_ash", 0.0))),
 	}
 	var subtotal := 0
 	for k: String in parts:
@@ -229,7 +233,7 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	var bounty := 0
 	for id: String in MetaData.ACHIEVEMENT_ORDER:
 		var def: Dictionary = MetaData.ACHIEVEMENTS[id]
-		if not achievements.has(id) and float(lifetime.get(String(def["stat"]), 0.0)) >= float(def["goal"]):
+		if not achievements.has(id) and achievement_progress(id) >= float(def["goal"]):
 			achievements[id] = true
 			unlocked.append(id)
 			bounty += int(def["bounty"])
@@ -242,6 +246,16 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	save()
 	changed.emit()
 	return award
+
+
+## Progress of achievement `id` toward its goal: its `stat` in the record of
+## its `stage` when it names one (e.g. Dawn Extinguished: the Sanctum's boss
+## kills), else the lifetime counter `stat`.
+func achievement_progress(id: String) -> float:
+	var def: Dictionary = MetaData.ACHIEVEMENTS[id]
+	if def.has("stage"):
+		return float(stage_record(String(def["stage"])).get(String(def["stat"]), 0.0))
+	return float(lifetime.get(String(def["stat"]), 0.0))
 
 
 # =====================================================================================

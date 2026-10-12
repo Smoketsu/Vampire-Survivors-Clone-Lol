@@ -16,17 +16,20 @@
 ##   unlock_text        — how to unlock it (stage select, while locked).
 ##   boss               — {id, time, display_name, short_name, arrive_banner,
 ##                        defeat_banner, dead_objective}: which boss script
-##                        ("alaric" / "vael") arrives at `time` s.
+##                        ("alaric" / "vael"; the Sanctum's is
+##                        SanctumStage.BOSS_ID) arrives at `time` s.
 ##   segments           — trickle segments (GraveyardStage.SEGMENTS keys).
 ##   events             — timeline events (GraveyardStage.EVENTS keys, plus
-##                        the Crimson March types in CrimsonMarchStage.EVENTS).
+##                        the Crimson March types in CrimsonMarchStage.EVENTS
+##                        and the Sanctum types in SanctumStage.EVENTS).
 ##   reckoning          — Reckoning escalation and its banner.
 ##   reckoning_objective — HUD objective after 0:00.
 ##   empowered_graves   — StageDirector empowered graves ({} = none).
 ##   consecration       — StageDirector desecration events ({} = none).
 ##   crypt_defender     — StageDirector Crypt Defender ({} = none).
 ##   arena              — obstacle layout at run start (Arena).
-##   ground             — "graveyard" (Ground) or "march" (MarchGround).
+##   ground             — "graveyard" (Ground), "march" (MarchGround) or
+##                        "sanctum" (SanctumGround).
 ##   enemy_hp_mult / enemy_damage_mult — stage multipliers on the shared
 ##                        enemy time scaling (1.0 = Graveyard baseline).
 ##   enemy_mult_from    — elapsed game seconds from which those two
@@ -34,16 +37,23 @@
 ##                        start; the stage boss always gets them).
 ##   ash_mult           — Soul Ash multiplier of a run here (an end-screen
 ##                        bonus line; 1.0 = none).
-##   march              — MarchDirector config ({} = no march mechanics).
+##   march              — MarchDirector config ({} = no march mechanics; the
+##                        Sanctum uses it for its battle zones only).
+## Optional keys (absent = off):
+##   sanctum            — SanctumDirector config (SanctumStage.SANCTUM:
+##                        chambers, altars, corruption).
+##   kind_aliases       — {alias: real kind}: short kind names the stage's
+##                        timeline uses (EnemyDirector.resolve_kind()).
 class_name StageRegistry
 extends RefCounted
 
 ## Stages in campaign order (stage select order, unlock chain).
-const ORDER := ["graveyard", "crimson_march"]
+const ORDER := ["graveyard", "crimson_march", "sanctum"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
 const STAGES := {
 	"graveyard": GraveyardStage.STAGE,
 	"crimson_march": CrimsonMarchStage.STAGE,
+	"sanctum": SanctumStage.STAGE,
 }

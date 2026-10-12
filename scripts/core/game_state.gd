@@ -52,9 +52,9 @@
 ##                         ids, e.g. unholy_precision,unholy_resilience) the
 ##                         same way as the --spells items, so a passive's
 ##                         effect can be exercised.
-##   --stage=ID           Autotest stage: "graveyard" (default) or
-##                         "crimson_march" (StageRegistry ids; stage locks
-##                         are ignored).
+##   --stage=ID           Autotest stage: "graveyard" (default),
+##                         "crimson_march" or "sanctum" (StageRegistry ids;
+##                         stage locks are ignored).
 ##   --difficulty=ID       Autotest difficulty level (GDD §8.4, DifficultyData
 ##                         ids or names, any case): initiate, necromancer
 ##                         (default, today's game), lich or deathlord.

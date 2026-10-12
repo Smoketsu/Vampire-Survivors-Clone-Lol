@@ -120,6 +120,8 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 | `supply_cart.png` | Covenant supply cart (seen from above) | 72 px |
 | `holy_standard.png` | Vael's Holy Standard: ornate gold banner pole | 72 px |
 | `watchtower.png` | Checkpoint watchtower: wooden tower, crimson pennant | 96 px |
+| `ward_crystal.png` | Sanctum ward crystal: a tall faceted ivory-and-gold crystal on a round pale-stone plinth, soft radiant gold glow; pixel art, top-down three-quarter view, transparent background | 56 px |
+| `sacred_altar.png` | Sanctum sacred altar: a wide pale-stone altar block draped in gold cloth with a crimson stripe, two lit candles, a radiant gold sun disc standing behind it; pixel art, top-down three-quarter view, transparent background | 72 px |
 
 ### Pickups (`assets/sprites/pickups/`)
 | File | Subject | Size |
@@ -135,6 +137,22 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 
 Ground tiles and obstacles (gravestones, crypt walls, the march road) come in a later pass, as
 seamless tiles.
+
+### Sanctum of Judgment ground tiles (`assets/sprites/tiles/`, later pass)
+Stage 3's four battle-zone floors (GDD §8.3: "cathedral halls, cloisters, sacred courtyards,
+stained glass, giant statues, golden mosaics"). Palette: ivory, gold and pale stone with
+Covenant crimson accents, kept **mid-dark** (the code-drawn floors sit around `#3D3A35`-`#4A4743`)
+so ivory-and-silver Covenant soldiers and bone-white undead stay readable on them. Seamless,
+pixel art, top-down three-quarter view; no characters, no objects that look solid (obstacles are
+drawn separately). The game later blends each tile toward purple (`#2B1236`) as the Sanctum
+is corrupted, so avoid baking purple in. Not hooked up yet: `SanctumGround` draws these looks in
+code until the tiles land.
+| File | Subject | Size |
+|---|---|---|
+| `sanctum_courtyard.png` | Zone I, the Outer Courtyards: pale flagstones in staggered courses, moss in the joints, the odd gold inlay star; pixel art, top-down three-quarter, seamless tile | 128 px |
+| `sanctum_halls.png` | Zone II, the Sanctified Halls: a dark-gold mosaic floor of small tesserae with rosettes; pixel art, top-down three-quarter, seamless tile | 128 px |
+| `sanctum_cloisters.png` | Zone III, the Cloisters: a square grid of stone walks around trimmed turf and small flower beds; pixel art, top-down three-quarter, seamless tile | 128 px |
+| `sanctum_sanctuary.png` | Zone IV, the Final Sanctuary: grey-white marble slabs with veins, crossed by translucent pools of stained-glass light (red, blue, gold, green); pixel art, top-down three-quarter, seamless tile | 128 px |
 
 ### Projectiles (`assets/sprites/projectiles/`)
 

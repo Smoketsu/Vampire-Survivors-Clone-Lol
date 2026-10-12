@@ -94,7 +94,7 @@ Autotest options (full table in the README):
 - `--spells=a,b` (force spells and their evolution passives, e.g.
   `bone_spear,soul_siphon,corpse_explosion,plague_cloud`)
 - `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
-- `--stage=graveyard|crimson_march` (default graveyard; stage locks are ignored)
+- `--stage=graveyard|crimson_march|sanctum` (default graveyard; stage locks are ignored)
 - `--difficulty=initiate|necromancer|lich|deathlord` (GDD §8.4; default necromancer = today's game)
 - `--modifiers=a,b` (GDD §8.5 run modifiers, e.g. `hardened_faith,scarcity`, or `all`)
 - `--stance=escort|onslaught|spearhead|bone_ring` (force an army stance for the whole run)
@@ -201,6 +201,14 @@ tiny tweaks.
   splitting, cursing arrows; the curse status lives in `combat_resolver.gd`) and the **Bone
   Colossus** (Abominations + Bone Plating: bigger stomp and body, taunt, bone shrapnel on death),
   in `gravebow_kit.gd` / `colossus_kit.gd`.
+- **Stage 3, the Sanctum of Judgment** (stage, zones, objectives): `sanctum_stage.gd`
+  (unlocked by Marshal Vael, ×1.5 Soul Ash), four clock-driven zones through `MarchDirector`
+  (`SanctumGround`, `SanctumTerrainGlyphs`), `SanctumDirector` for the two sanctified chambers
+  (ward crystals, 25% weaker undead hits inside), the Cathedral Guardian slot (miniboss bar,
+  chest), three optional sacred altars (−6% soldier HP each, `Game.altars_destroyed`), floor
+  corruption and Dawn's Wrath; achievement *Dawn Extinguished*; `--stage=sanctum`. The new
+  kinds and the boss come in through `SanctumStage.KINDS` / `BOSS_ID` (stand-ins until the
+  Stage 3 roster and Seraphine are merged);
 - the GDD §5.5 **dash and ultimate**: **Grave Step** (Shift / RB, `scripts/player/grave_step.gd`:
   110 px obstacle-clamped shadow step, 0.2 s i-frames, 5 s cooldown, from the first run; Ossuary
   Twin Shadow = second charge, Restless Shade = 5 → 3.5 s) and **Dread Rally** (Space / LB,

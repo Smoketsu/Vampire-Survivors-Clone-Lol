@@ -76,14 +76,20 @@
 ##     hard recalls); army and summon list them below their core passives.
 ##     Every evolution needs its paired passive at Lv 5, which the evolve,
 ##     summon and --spells bots level like any other build item,
-##   * stages: --stage=graveyard|crimson_march picks the stage (locks are
-##     ignored; Main builds the RunConfig). On the Crimson March the
+##   * stages: --stage=graveyard|crimson_march|sanctum picks the stage (locks
+##     are ignored; Main builds the RunConfig). On the Crimson March the
 ##     autopilot also walks toward outposts, ward generators and supply
 ##     carts when calm, and the summary adds a "crimson march" line (zones,
 ##     structures placed / destroyed / escaped, outpost reinforcements, aura
 ##     buffs, tower-shield and Shieldwall damage resisted, halberd cleaves)
 ##     and Marshal Vael's attack counters. The boss line works for any stage
-##     boss (Boss.special_ids()).
+##     boss (Boss.special_ids()). In the Sanctum of Judgment the army,
+##     summon and evolve bots also walk toward live ward crystals and sacred
+##     altars when calm (naive / pact keep their baseline), and the summary
+##     adds a "sanctum" line (chambers cleansed and when, altars destroyed
+##     and when, corruption, the soldier HP cut applied, the Guardian's
+##     death time, chamber burns, objective Soul Ash, structures caught in
+##     obstacles: must stay 0) and the Sanctum event log.
 ##   * difficulty: --difficulty=ID and --modifiers=a,b set the GDD §8.4
 ##     level and §8.5 run modifiers (Main builds the RunConfig); the summary
 ##     adds a "difficulty" line (level, modifiers, every effective multiplier,
@@ -122,6 +128,8 @@ const XP_SEEK_RADIUS: float = 320.0
 const RECKONING_GRACE: float = 20.0
 ## Radius (px) in which the autopilot walks to stage objectives.
 const OBJECTIVE_SEEK_RADIUS: float = 420.0
+## Policies whose autopilot walks to the Sanctum's ward crystals and altars.
+const SANCTUM_SEEK_POLICIES := ["army", "summon", "evolve"]
 ## Distance (px) at which the autopilot starts steering off obstacles.
 const OBSTACLE_LOOK: float = 22.0
 ## Game seconds between stuck-unit samples.
@@ -841,6 +849,9 @@ func get_move_vector() -> Vector2:
 	if goal == Vector2.INF and game.enemies.march != null and away.length() < 0.2:
 		# Crimson March: close in on outposts, generators and carts when calm.
 		goal = game.enemies.march.seek_point(p, OBJECTIVE_SEEK_RADIUS)
+	if goal == Vector2.INF and game.enemies.sanctum != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
+		# Sanctum: close in on ward crystals and sacred altars when calm.
+		goal = game.enemies.sanctum.seek_point(p, OBJECTIVE_SEEK_RADIUS)
 	if goal != Vector2.INF:
 		objective = (goal - p).normalized()
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
@@ -939,6 +950,10 @@ func finish(summary: Dictionary) -> void:
 		int(st.get("boss_judgment_hits", 0.0)), int(st.get("boss_call_soldiers", 0.0)), int(st.get("holy_zones_boss", 0.0)), int(st.get("holy_zones_grave", 0.0))])
 	if game.enemies.march != null:
 		_print_march(st)
+	if game.enemies.sanctum != null:
+		var sd := game.enemies.sanctum  # Sanctum objectives.
+		print("[autotest] sanctum: %s | minion dmg prevented by chambers %d" % [sd.summary_line(), int(st.get("sanctum_chamber_dmg_prevented", 0.0))])
+		print("[autotest] sanctum events (%d): %s" % [sd.fired.size(), ", ".join(sd.fired)])
 	var fired := game.enemies.stage.fired
 	print("[autotest] stage events fired (%d): %s" % [fired.size(), ", ".join(fired)])
 	print("[autotest] templar charges: %d (body-blocked by warriors: %d) | temporary summons spawned: %d" % [
@@ -1148,9 +1163,10 @@ func _print_soul_ash(summary: Dictionary) -> void:
 	if ash.is_empty():
 		return
 	var parts: Dictionary = ash["parts"]
-	print("[autotest] soul ash: +%d (time %d [%s] + kills %d [%d] + elites %d [%d] + boss %d + reckoning %d [%.1f s] = %d, bonus +%d%% = +%d, pact +%d, oath +%d) | bounty %d | new total %d | saved: %s" % [
+	print("[autotest] soul ash: +%d (time %d [%s] + kills %d [%d] + elites %d [%d] + boss %d + reckoning %d [%.1f s]%s = %d, bonus +%d%% = +%d, pact +%d, oath +%d) | bounty %d | new total %d | saved: %s" % [
 		int(ash["total"]), int(parts["time"]), _clock(float(ash["time_survived"])), int(parts["kills"]), int(ash["kill_count"]),
 		int(parts["elites"]), int(ash["elite_count"]), int(parts["boss"]), int(parts["reckoning"]), float(ash["reckoning_seconds"]),
+		" + objectives %d" % int(parts["objectives"]) if int(parts.get("objectives", 0)) > 0 else "",
 		int(ash["subtotal"]), int(roundf(float(ash["bonus_pct"]) * 100.0)), int(ash["bonus"]), int(ash.get("pact_bonus", 0)), int(ash.get("oath_bonus", 0)),
 		int(ash["bounty"]), int(ash["new_total"]), str(Meta.can_write())])
 	var dif := game.difficulty

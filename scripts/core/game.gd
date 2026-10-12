@@ -84,6 +84,10 @@ var _xp_carry: float = 0.0
 var run_config: RunConfig = null
 ## The run's stage (StageRegistry dictionary of run_config.stage_id).
 var stage_def: Dictionary = {}
+## Sacred altars destroyed this run (Sanctum of Judgment, 0..3; always 0 on
+## other stages). Set by SanctumDirector; Grand Inquisitor Seraphine brings
+## that many fewer healers.
+var altars_destroyed: int = 0
 
 # --- Systems (GDD §36 scene/class tree) ----------------------------------------
 
@@ -91,7 +95,8 @@ var stage_def: Dictionary = {}
 var player: Necromancer
 ## World camera (follows the player; not a child so sprite flipping is safe).
 var camera: Camera2D
-## Procedural floor (Ground in the Graveyard, MarchGround on the Crimson March).
+## Procedural floor (Ground in the Graveyard, MarchGround on the Crimson
+## March, SanctumGround in the Sanctum of Judgment).
 var ground: Ground
 ## Solid obstacles (gravestones, dead trees, crypt walls) and their collision.
 var arena: Arena
@@ -166,7 +171,13 @@ func _ready() -> void:
 	stance = ArmyStance.new(self)
 
 	# World layers, back to front (tree order + z_index).
-	ground = MarchGround.new() if String(stage_def["ground"]) == "march" else Ground.new()
+	match String(stage_def["ground"]):
+		"march":
+			ground = MarchGround.new()
+		"sanctum":
+			ground = SanctumGround.new()
+		_:
+			ground = Ground.new()
 	add_child(ground)
 	arena = Arena.new()
 	arena.game = self

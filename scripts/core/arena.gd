@@ -19,6 +19,10 @@
 ## MarchDirector swaps it at each battle-zone change with set_layout(): the
 ## cell cache is dropped, so the terrain around the necromancer is rebuilt
 ## as the next zone (a clear circle around him, the road lane kept free).
+## The Sanctum of Judgment uses the same zone swap; its live objectives (ward
+## crystals, sacred altars) ask keep_clear(), so no later layout puts an
+## obstacle on them, and its Sanctified Halls layout is `aligned` (each
+## obstacle at its cell's centre: rows of pillars).
 class_name Arena
 extends Node2D
 
@@ -70,6 +74,9 @@ var _kinds: Dictionary = {}
 var _clear_center: Vector2 = Vector2.ZERO
 ## Half-width (px) of the obstacle-free road along y = 0 (0 = no road).
 var _road_half: float = 0.0
+## Circles kept free of obstacle centres in every cell generated from now on
+## (x, y = centre, z = radius in px): live stage objectives (keep_clear()).
+var _keep_clear: Array[Vector3] = []
 
 
 func _ready() -> void:
@@ -89,6 +96,14 @@ func set_layout(layout: Dictionary, clear_center: Vector2, clear_radius: float) 
 	_clear_center = clear_center
 	_cells.clear()
 	_center_cell = Vector2i(1 << 30, 1 << 30)  # Forces a redraw next frame.
+
+
+## Keeps a circle of radius `r` around `pos` free of obstacle centres in every
+## cell generated from now on (cells already generated keep their obstacle;
+## the caller places its structure on a free point). Sanctum objectives use
+## it so a zone change never rebuilds terrain on top of them.
+func keep_clear(pos: Vector2, r: float) -> void:
+	_keep_clear.append(Vector3(pos.x, pos.y, r))
 
 
 ## Stores `layout` (a copy, so set_layout() may change its clear radius).
@@ -128,8 +143,16 @@ func _generate(key: Vector2i) -> Obstacle:
 	var span := ArenaData.CELL - 2.0 * ArenaData.CELL_MARGIN
 	var center := Vector2(float(key.x) * ArenaData.CELL + ArenaData.CELL_MARGIN + _rng.randf() * span,
 			float(key.y) * ArenaData.CELL + ArenaData.CELL_MARGIN + _rng.randf() * span)
+	if bool(_layout.get("aligned", false)):
+		# Aligned layout (Sanctum halls): the obstacle sits at its cell's centre,
+		# so neighbouring obstacles form rows. The random draws above still run,
+		# keeping the RNG stream per cell the same shape.
+		center = Vector2((float(key.x) + 0.5) * ArenaData.CELL, (float(key.y) + 0.5) * ArenaData.CELL)
 	if (center - _clear_center).length() < float(_layout["clear_radius"]):
 		return _empty
+	for k in _keep_clear:
+		if center.distance_to(Vector2(k.x, k.y)) < k.z:
+			return _empty  # A live stage objective stands here.
 	if _road_half > 0.0 and absf(center.y) < _road_half + ArenaData.MAX_HALF_EXTENT:
 		return _empty  # Crimson March: the road stays open.
 	var total := 0.0

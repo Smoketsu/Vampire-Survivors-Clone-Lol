@@ -32,8 +32,9 @@ var _cards: Dictionary = {}
 var _back: Button
 
 
-## Small code-drawn stage emblem: a moonlit tombstone (Graveyard) or a
-## crimson banner over a road to the fortress (Crimson March).
+## Small code-drawn stage emblem: a moonlit tombstone (Graveyard), a
+## crimson banner over a road to the fortress (Crimson March) or a cathedral
+## facade with a rose window under a dawn sun (Sanctum of Judgment).
 class StageEmblem:
 	extends Control
 	## StageRegistry id it depicts.
@@ -51,7 +52,20 @@ class StageEmblem:
 		var s := size
 		var c := Vector2(s.x * 0.5, s.y * 0.55)
 		draw_rect(Rect2(Vector2.ZERO, s), Color(0.03, 0.02, 0.05, 0.9))
-		if stage_id == "crimson_march":
+		if stage_id == "sanctum":
+			draw_rect(Rect2(Vector2.ZERO, Vector2(s.x, s.y * 0.6)), Color(0.16, 0.12, 0.08, 0.6))  # Dawn sky.
+			draw_circle(Vector2(s.x * 0.2, s.y * 0.3), 13.0, Color(Palette.GOLD, 0.85))
+			draw_rect(Rect2(Vector2(0, s.y * 0.8), Vector2(s.x, s.y * 0.2)), Color(0.24, 0.23, 0.21))
+			var facade := Rect2(Vector2(c.x - 40, s.y * 0.32), Vector2(80, s.y * 0.48))
+			draw_rect(facade, Color(0.42, 0.40, 0.37))
+			draw_colored_polygon(PackedVector2Array([Vector2(c.x - 44, s.y * 0.32), Vector2(c.x, s.y * 0.06), Vector2(c.x + 44, s.y * 0.32)]), Color(0.36, 0.34, 0.31))
+			for tx: float in [c.x - 54.0, c.x + 42.0]:  # Bell towers.
+				draw_rect(Rect2(Vector2(tx, s.y * 0.2), Vector2(12, s.y * 0.6)), Color(0.36, 0.34, 0.31))
+			draw_circle(Vector2(c.x, s.y * 0.44), 10.0, Palette.GOLD.darkened(0.2))  # Rose window.
+			for i in 6:
+				draw_line(Vector2(c.x, s.y * 0.44), Vector2(c.x, s.y * 0.44) + Vector2.from_angle(TAU * float(i) / 6.0) * 10.0, Palette.CRIMSON, 1.5)
+			draw_rect(Rect2(Vector2(c.x - 9, s.y * 0.62), Vector2(18, s.y * 0.18)), Color(0.10, 0.08, 0.07))  # Doors.
+		elif stage_id == "crimson_march":
 			draw_rect(Rect2(Vector2(0, s.y * 0.62), Vector2(s.x, s.y * 0.38)), Color(0.12, 0.09, 0.07))
 			draw_colored_polygon(PackedVector2Array([Vector2(c.x - 14, s.y), Vector2(c.x + 14, s.y), Vector2(c.x + 3, s.y * 0.62), Vector2(c.x - 3, s.y * 0.62)]), Color(0.24, 0.19, 0.14))
 			for i in 3:  # Distant fortress towers.

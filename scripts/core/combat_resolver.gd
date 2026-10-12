@@ -21,6 +21,10 @@
 ## The army stance's damage-taken bonus (Bone Ring, ArmyStance.bonus(); 0
 ## while StanceData.BONUSES_ENABLED is false) is one more category in
 ## damage_unit(), counted in stance_dmg_prevented.
+## Sanctified chambers (Sanctum of Judgment, SanctumDirector): a minion
+## attack on a foe standing in an uncleansed chamber is cut to
+## SanctumStage.SANCTUM.chamber_minion_damage in damage_enemy(), counted in
+## sanctum_chamber_dmg_prevented.
 class_name CombatResolver
 extends RefCounted
 
@@ -73,6 +77,14 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if crit > 0.0 and is_minion_source(source) and _crit_rng.randf() < crit:
 		crit_mult = PassiveData.CRIT_DAMAGE_MULT
 		amount *= crit_mult
+	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
+	# undead fighting on it hit weaker.
+	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).
+	if sanctum != null and is_minion_source(source):
+		var holy := sanctum.minion_damage_mult(e.position)  # 1, or the chamber penalty.
+		if holy != 1.0:
+			game.stat_add("sanctum_chamber_dmg_prevented", amount * (1.0 - holy))
+			amount *= holy
 	# Enemy-side damage modifiers (Crimson March tower shields, aura buffs,
 	# Marshal Vael's Shieldwall): exactly 1 for every Graveyard enemy.
 	var taken := e.damage_taken_mult(source)

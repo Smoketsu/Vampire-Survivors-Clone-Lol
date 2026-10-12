@@ -1,8 +1,11 @@
 ## Hud — in-run heads-up display laid out per GDD §16:
 ##   Top edge      : XP bar.
 ##   Top left      : level, HP, shields (Orb Shield intercept charges).
-##   Top center    : timer, battle zone (Crimson March), objective / event
-##                   banner, boss HP when present (named after the stage boss).
+##   Top center    : timer, battle zone (Crimson March, Sanctum; the Sanctum
+##                   adds its corruption), objective / event banner, boss HP
+##                   when present (named after the stage boss), and a smaller
+##                   miniboss bar while a stage miniboss lives (the Sanctum's
+##                   Cathedral Guardian; EnemyDirector.miniboss).
 ##   Top right     : kill count, pause hint, modifiers (the difficulty
 ##                   level, the active run modifiers and their Soul Ash
 ##                   multiplier, then the Profane Pact level and Profane
@@ -60,6 +63,12 @@ var _banner_label: Label
 var _boss_box: VBoxContainer
 ## Boss HP bar.
 var _boss_bar: HudBar
+## Container for the miniboss name + HP bar (hidden while none lives).
+var _miniboss_box: VBoxContainer
+## Miniboss name label.
+var _miniboss_name: Label
+## Miniboss HP bar.
+var _miniboss_bar: HudBar
 ## Kill counter.
 var _kills_label: Label
 ## "Army N / cap" label.
@@ -151,7 +160,10 @@ func _build() -> void:
 	_timer_label = UiTheme.label("00:00", 32)
 	_timer_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tc.add_child(_timer_label)
-	_zone_label = UiTheme.label("", 13, Palette.CRIMSON.lightened(0.45))
+	var zone_col := Palette.CRIMSON.lightened(0.45)  # Zone line colour (the stage's zone colour if set).
+	if game.enemies.march != null and game.enemies.march.config.has("zone_color"):
+		zone_col = game.enemies.march.zone_color()
+	_zone_label = UiTheme.label("", 13, zone_col)
 	_zone_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_zone_label.visible = false
 	tc.add_child(_zone_label)
@@ -170,6 +182,17 @@ func _build() -> void:
 	_boss_bar = HudBar.new(Palette.GOLD, Vector2(520, 14))
 	_boss_box.add_child(_boss_bar)
 	tc.add_child(_boss_box)
+	_miniboss_box = VBoxContainer.new()
+	_miniboss_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_miniboss_box.visible = false
+	_miniboss_name = UiTheme.label("", 14, Palette.GOLD.lightened(0.2))
+	_miniboss_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_miniboss_box.add_child(_miniboss_name)
+	_miniboss_bar = HudBar.new(Palette.HP_ENEMY, Vector2(360, 10))
+	_miniboss_bar.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_miniboss_bar.font_size = 10
+	_miniboss_box.add_child(_miniboss_bar)
+	tc.add_child(_miniboss_box)
 
 	# Top right: kills, pause hint, modifiers.
 	var top_right := _box(true, 1.0, 0.0, -300, 20, -16, 110, BoxContainer.ALIGNMENT_BEGIN)
@@ -307,12 +330,19 @@ func _refresh() -> void:
 	if game.enemies.march != null:
 		_zone_label.visible = true
 		_zone_label.text = game.enemies.march.zone_label()
+		if game.enemies.sanctum != null:
+			_zone_label.text += game.enemies.sanctum.hud_suffix()
 	_objective_label.text = game.enemies.objective_text()
 	_banner_label.text = game.enemies.banner_text if game.elapsed < game.enemies.banner_until else ""
 	var boss := game.enemies.boss
 	_boss_box.visible = boss != null and boss.active
 	if _boss_box.visible:
 		_boss_bar.set_values(boss.hp / boss.max_hp, "%d / %d" % [ceili(boss.hp), int(boss.max_hp)])
+	_miniboss_box.visible = game.enemies.miniboss_alive()
+	if _miniboss_box.visible:
+		var mb := game.enemies.miniboss  # The live stage miniboss.
+		_miniboss_name.text = game.enemies.miniboss_name
+		_miniboss_bar.set_values(mb.hp / mb.max_hp, "%d / %d" % [ceili(mb.hp), ceili(mb.max_hp)])
 	_kills_label.text = "Kills: %d" % game.kills
 	var h := game.horde
 	_army_label.text = "Army %d / %d" % [h.units.size(), h.total_capacity()]

@@ -288,7 +288,7 @@ func _refresh() -> void:
 	for aid: String in MetaData.ACHIEVEMENT_ORDER:
 		var a: Dictionary = MetaData.ACHIEVEMENTS[aid]
 		var done := Meta.achievements.has(aid)
-		var prog := mini(int(float(Meta.lifetime.get(String(a["stat"]), 0.0))), int(a["goal"]))
+		var prog := mini(int(Meta.achievement_progress(aid)), int(a["goal"]))
 		ach.append("%s %s (%s)" % ["[x]" if done else "[ ]", a["display_name"], "done" if done else "%d/%d" % [prog, int(a["goal"])]])
 	_achievements.text = "Achievements:  " + "    ".join(ach)
 	refund_button.text = "Refund all  (+%d)" % Meta.spent_total()

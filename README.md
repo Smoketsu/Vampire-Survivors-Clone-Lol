@@ -11,8 +11,9 @@ and regroups without any commands from you. Late in a run your summons can
 evolve into Death Knights, Liches, Profane Bishops, Shadow Reapers and
 Cathedral Horrors.
 
-This repository has a playable **prototype** of the first two stages, *The
-Desecrated Graveyard* and *The Crimson March* (unlocked by slaying Sir Alaric),
+This repository has a playable **prototype** of the three campaign stages,
+*The Desecrated Graveyard*, *The Crimson March* (unlocked by slaying Sir
+Alaric) and *The Sanctum of Judgment* (unlocked by slaying Marshal Vael),
 built in Godot 4.3. Every visual is drawn in code, and there are no external
 assets or addons.
 
@@ -391,6 +392,7 @@ structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
 |---|---|---|---|
 | Chapter I, **The Desecrated Graveyard** | always open | Sir Alaric, the Gravebreaker | ×1.0 |
 | Chapter II, **The Crimson March** | slay Sir Alaric once (GDD §9.3) | Marshal Vael, the Crimson Bulwark | ×1.25 |
+| Chapter III, **The Sanctum of Judgment** | slay Marshal Vael once (GDD §9.3) | Grand Inquisitor Seraphine, Voice of the Dawn | ×1.5 |
 
 ### Difficulty & run modifiers
 
@@ -551,6 +553,49 @@ open). The zone is shown under the timer.
   every build starts with Shadow Bolt and two warriors, and a harder opening
   snowballed into starved runs.
 
+### Stage 3: The Sanctum of Judgment
+
+The final assault on the Covenant's cathedral (GDD §8.3). Like the March, the
+clock is in charge: **four battle zones** on fixed times, each announced with
+a gold banner and a sweep of dusty light that rebuilds the terrain around you
+(`MarchDirector` runs the zones; the zone and the floor's corruption are shown
+under the timer). The GDD's 22:00 timeline is compressed into the 20:00
+countdown with the boss at 17:00 like the other stages.
+
+| Zone (from) | Ground and obstacles | Timeline beats (GDD §8.3) |
+|---|---|---|
+| I, the Outer Courtyards (0:00) | pale flagstones; saints' statues, fountains, benches | outer defenders; **sanctified chamber 1 at 3:00** |
+| II, the Sanctified Halls (4:00) | gold mosaic and carpet runners; rows of pillars, pews | Sanctified Sentinels from 4:00; **Cathedral Guardian + chamber 2 at 5:30**; Radiant Inquisitors from 6:00 |
+| III, the Cloisters (8:30) | stone walks and turf; cloister arches, garden beds, cypresses | High Confessor ambush at 8:30; **three sacred altars at 10:30** |
+| IV, the Final Sanctuary (13:00) | marble and stained-glass light; giant statues, columns, reliquaries | Sun Paladins at 13:00; the final sanctuary opens at 15:30; **Grand Inquisitor Seraphine at 17:00** |
+
+- **Sanctified chambers** (GDD "ward crystals"): a 220 px circle of holy
+  ground near you with two **ward crystals**. Until both fall, every summon
+  inside takes light holy damage each second (Unholy Resilience applies) and
+  undead attacks on foes standing inside deal **25% less**. Shattering both
+  cleanses it: the circle turns into a purple rot stain and the penalty ends.
+- **The Cathedral Guardian** (5:30) is a plain miniboss (it shields nothing)
+  with its own bar under the boss bar; it drops a **treasure chest**.
+- **Sacred altars** (10:30, optional): three altars rise 300-400 px away, each
+  guarded by a High Confessor. Every altar destroyed takes **6% max HP** off
+  every Covenant soldier spawned afterwards (up to −18%) and weakens
+  Seraphine's retinue (`Game.altars_destroyed`). Skipping them only costs the
+  bonus.
+- **Corruption**: every cleansed chamber and fallen altar corrupts the
+  Sanctum; the whole floor darkens toward purple (HUD: *Corruption N%*).
+  Each cleansed chamber pays +10 Soul Ash and each altar +8 (a *Stage
+  objectives* line, before the stage bonus).
+- **Dawn's Wrath**: the Sanctum's Reckoning. Same escalation, but a gold dawn
+  light floods the field and Sun Paladins march with the Inquisitors.
+- **The crypts beneath**: open crypts work like the Graveyard's empowered graves.
+- **Hardest stage**: from Zone II (4:00) enemies have ×1.2 HP and ×1.1 damage
+  (the boss always), and Soul Ash is ×1.5. The opening minute is recruits only.
+- **New enemies and the boss**: the Sanctified Sentinel, High Confessor, Sun
+  Paladin, Radiant Inquisitor, the Cathedral Guardian's kit and Grand
+  Inquisitor Seraphine are named through the stage's kind aliases
+  (`SanctumStage.KINDS` / `BOSS_ID`), so the timeline does not change when
+  they arrive.
+
 ### Meta-progression (Soul Ash)
 
 - **Soul Ash** is earned at the end of **every** run and kept even if you die
@@ -566,7 +611,8 @@ open). The zone is shown under the timer.
   | Sir Alaric slain | 75 | 75 |
   | Seconds survived into the Reckoning | 2.5 per second (capped at 180 s) | 30 s = 75 |
   | **Ash Harvest** (Fortune) | +5% per tier on the sum | |
-  | **Stage bonus** (Crimson March) | +25% on the sum | |
+  | Stage objectives (Sanctum: cleansed chambers, destroyed altars) | 10 per chamber, 8 per altar | 2 + 3 = 44 |
+  | **Stage bonus** (Crimson March / Sanctum) | +25% / +50% on the sum | |
 
   A strong run earns about **450** at no upgrades (about 550-610 with mid / max
   upgrades, Ash Harvest included): two or three mid-tier upgrades. A death at
@@ -600,10 +646,12 @@ open). The zone is shown under the timer.
 - **Achievements** (GDD §9.4, tracked over all runs): *Bone Legion* (Skeleton
   Warriors, also as Death Knights, land 1,000 killing blows), *Heretic's Bane*
   (500 Chaplains slain), *Dread Sovereign* (slay Sir Alaric while commanding
-  Warriors, Archers, Mages and a priest order: Menders, Warders or Bishops).
-  Their GDD unlocks (Bone Golem, a Profane Bishop unlock, a skin) don't exist
-  yet (the Profane Bishop is available from the start), so each pays a
-  one-time Soul Ash bounty (100 / 100 / 150) for now. Capacity upgrades that
+  Warriors, Archers, Mages and a priest order: Menders, Warders or Bishops),
+  *Dawn Extinguished* (slay the Sanctum's boss, Grand Inquisitor Seraphine;
+  counted from the Sanctum's stage record).
+  Their unlocks (Bone Golem, a Profane Bishop unlock, a skin, the campaign
+  epilogue) don't exist yet (the Profane Bishop is available from the start),
+  so each pays a one-time Soul Ash bounty (100 / 100 / 150 / 200) for now. Capacity upgrades that
   apply to "every class" (Legion of Bone, Grave Dominion) count the Mender
   and the Warder as two classes and the merged Bishop as one.
 - **Save file.** `user://save.cfg` (ConfigFile, separate from `settings.cfg`)
@@ -740,9 +788,10 @@ departure puff (`grave_step_trail`) are wired so far.
 | Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 13:00. |
 | Waves and stage events (§11) | The data-driven 20-minute Graveyard timeline at the GDD's real times (Sir Alaric at 17:00), then the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
-| Stages (§8, §9.3, §10.2) | A stage registry with two stages, a stage select (locks, best time, boss kills) and the GDD §9.3 unlock (slay Sir Alaric once to open the Crimson March). See *Stages* above. |
+| Stages (§8, §9.3, §10.2) | A stage registry with three stages, a stage select (locks, best time, boss kills) and the GDD §9.3 unlocks (slay Sir Alaric once to open the Crimson March, Marshal Vael once to open the Sanctum). See *Stages* above. |
 | Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
-| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades plus the Spearhead stance unlock, prerequisites, respec) plus the opt-in Profane Oath, 3 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
+| Stage 3 (§8.3, §7.4) | The Sanctum of Judgment: four battle zones on the clock (courtyards, golden halls, cloisters, final sanctuary), two sanctified chambers with ward crystals, the Cathedral Guardian miniboss (chest), three optional sacred altars (−6% soldier HP each), floor corruption, Dawn's Wrath, the boss slot for Grand Inquisitor Seraphine. See *Stage 3* above. |
+| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades plus the Spearhead stance unlock, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
@@ -811,6 +860,8 @@ scripts/
     ground.gd               Procedural graveyard floor, redrawn only when the camera changes cell
     march_ground.gd         Crimson March floor: the road and each battle zone's look (extends Ground)
     march_glyphs.gd         Crimson March shapes: new soldiers, structures, Marshal Vael, obstacles, corpse piles
+    sanctum_ground.gd       Sanctum floor: each battle zone's look, corruption tint (extends Ground)
+    sanctum_terrain_glyphs.gd  Sanctum shapes: ward crystals, sacred altars, the four zones' obstacles
     evolution_recipes.gd    Read-only list of every evolution recipe (spell + summon data), for the
                             Recipes view, the Meta [recipes] section and the autotest
     autotest.gd             Headless self-test driver
@@ -853,6 +904,8 @@ scripts/
     boss_vael.gd            Marshal Vael (extends Boss): Cleave, Command, Holy Standard, Shieldwall, Last Stand
     stage_director.gd       Empowered graves, Desecration, Crypt Defender, holy ground (incl. ward-generator zones)
     march_director.gd       Crimson March: battle zones, outposts, ward generators, supply carts, timed structures
+                            (also the Sanctum's battle zones)
+    sanctum_director.gd     Sanctum: sanctified chambers, Cathedral Guardian, sacred altars, corruption, Dawn's Wrath light
     enemy_director.gd       The stage's wave timeline, events, boss, Reckoning, pooling, recycling
   abilities/
     ability_manager.gd      Spell casting, passive values, level-up card generation + deltas
@@ -898,6 +951,9 @@ scripts/
                                    Crypt Defender, obstacle layout, boss arrival
     stages/crimson_march_stage.gd  Stage 2: segments, events, zones (ground + layout), march config,
                                    stage multipliers, boss arrival
+    stages/sanctum_stage.gd        Stage 3: kind aliases (integration stand-ins), segments, events,
+                                   zones, chamber / altar / corruption rules, Dawn's Wrath, boss arrival
+    sanctum_objective_data.gd      Sanctum structures: ward crystal, sacred altar
     unit_data.gd            Summon classes (and their specials), level tables, AI weights, leash/rates
     enemy_data.gd           Graveyard enemy roster, Sir Alaric, Reckoning enemy, elites
     march_enemy_data.gd     Crimson March soldiers and structures, Marshal Vael
@@ -994,9 +1050,9 @@ Options (after `--`):
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
-| `--stage=ID` | Stage to play: `graveyard` (default) or `crimson_march`. Stage locks are ignored. |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march` or `sanctum`. Stage locks are ignored. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
-| `--stance=ID` | Army stance for the whole run: `escort`, `onslaught`, `spearhead` or `bone_ring` (forcing ignores the Spearhead unlock). Without it, `army`, `summon` and `evolve` switch stances by a simple rule (Bone Ring when the necromancer is in danger or the boss is within 260 px; Onslaught when at most 6 enemies are within 220 px and a Crimson March structure is within 420 px or at most 10 enemies are within 480 px; Spearhead, when owned, toward a chest or power-up within 300 px; else Escort; `StanceBot`), while `naive` and `pact` keep Escort so their baselines do not move. |
+| `--stance=ID` | Army stance for the whole run: `escort`, `onslaught`, `spearhead` or `bone_ring` (forcing ignores the Spearhead unlock). Without it, `army`, `summon` and `evolve` switch stances by a simple rule (Bone Ring when the necromancer is in danger or the boss is within 260 px; Onslaught when at most 6 enemies are within 220 px and a Crimson March structure or a Sanctum crystal / altar is within 420 px or at most 10 enemies are within 480 px; Spearhead, when owned, toward a chest or power-up within 300 px; else Escort; `StanceBot`), while `naive` and `pact` keep Escort so their baselines do not move. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 
 Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
@@ -1009,7 +1065,14 @@ ward zones), `march enemies` (aura buff pulses, halberd cleave hits, damage
 resisted by tower shields and by Vael, kills of the new kinds), `marshal vael`
 (Last Stand, cleave hits on summons and how often they soaked his blow for
 you, Crusader's Command soldiers) and `march events` (a timed log). The
-`boss attacks` line lists the stage boss's own specials. Every run ends with
+`boss attacks` line lists the stage boss's own specials. In the Sanctum
+(the zones also print the `crimson march` line) the `army`, `summon` and
+`evolve` autopilots walk toward live ward crystals and sacred altars when
+calm, and the summary adds `sanctum` (chambers cleansed and when, crystals
+destroyed, altars destroyed and when, corruption, the soldier HP cut, the
+Guardian's death time, chamber burns, objective Soul Ash, structures caught in
+an obstacle (must stay 0), minion damage the chambers prevented) and `sanctum
+events` (a timed log). Every run ends with
 a `stage:` line (stage, Soul Ash stage bonus, stages unlocked by the run).
 
 The summary covers: result, time, kills, level, army per class, boss
@@ -1104,8 +1167,9 @@ uptime.
 `.github/workflows/ci.yml` runs on every push and pull request:
 
 1. **test:** imports the project with Godot 4.3 headless and runs the full 20-minute autotest with the naive and
-   army policies on the Graveyard, then once on the Crimson March (`--stage=crimson_march`) (`--quit-after 15000`,
-   at most 10 wall-clock minutes per run, 30 minutes for the job).
+   army policies on the Graveyard, then once on the Crimson March (`--stage=crimson_march`) and once in the
+   Sanctum (`--stage=sanctum --policy=army`) (`--quit-after 15000`, at most 10 wall-clock minutes per run,
+   40 minutes for the job).
    It fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if a run doesn't complete.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in
    the executable), runs the autotest again on the exported Linux build, and uploads both as workflow artifacts.

@@ -11,7 +11,8 @@
 ##                       is alive within BOT_BOSS_CLOSE px;
 ##       2. Onslaught  — at most BOT_FEW_ENEMIES enemies within
 ##                       BOT_NEAR_RADIUS px, and a Crimson March structure
-##                       (outpost, ward generator, supply cart) is within
+##                       (outpost, ward generator, supply cart) or a
+##                       Sanctum objective (ward crystal, sacred altar) is within
 ##                       BOT_STRUCTURE_RADIUS px or the screen is nearly
 ##                       clear (at most BOT_CLEAR_COUNT enemies within
 ##                       BOT_SCREEN_RADIUS px);
@@ -70,6 +71,8 @@ func choose(game: Game) -> String:
 		return "bone_ring"
 	if _count_within(game, p, StanceData.BOT_NEAR_RADIUS) <= StanceData.BOT_FEW_ENEMIES:
 		var structure := game.enemies.march != null and game.enemies.march.seek_point(p, StanceData.BOT_STRUCTURE_RADIUS) != Vector2.INF
+		if not structure and game.enemies.sanctum != null:
+			structure = game.enemies.sanctum.seek_point(p, StanceData.BOT_STRUCTURE_RADIUS) != Vector2.INF  # Sanctum crystals / altars.
 		if structure or _count_within(game, p, StanceData.BOT_SCREEN_RADIUS) <= StanceData.BOT_CLEAR_COUNT:
 			return "onslaught"
 	if game.stance.is_unlocked("spearhead"):

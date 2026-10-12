@@ -240,13 +240,16 @@ const UPGRADES := {
 # --- Achievements (GDD §9.4) ---------------------------------------------------------
 
 ## Display order of achievements.
-const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign"]
+const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "dawn_extinguished"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). The GDD
 ## unlocks (Bone Golem, priest evolution unlock, Dread Sovereign skin) do not
 ## exist in the prototype yet, so each achievement is tracked and recorded in
 ## the save, and pays a one-time Soul Ash `bounty` until its unlock exists.
-##   stat   — lifetime counter in Meta.lifetime that is compared with `goal`.
+##   stat   — lifetime counter in Meta.lifetime that is compared with `goal`
+##            (or, with `stage`, that key of the stage's record).
+##   stage  — optional StageRegistry id: `stat` is read from that stage's
+##            record (Meta.stage_record(); Meta.achievement_progress()).
 ##   unlock — the GDD reward, shown as "(coming later)".
 ## Wording decisions for open question 40: "Warrior kills" are kills whose
 ## killing blow came from a Skeleton Warrior (strike or shield bash, also as a
@@ -262,6 +265,10 @@ const ACHIEVEMENTS := {
 		"stat": "chaplain_kills", "goal": 500, "unlock": "Profane Bishop unlock", "bounty": 100},  # GDD §9.4 goal; bounty TUNING (not in GDD)
 	"dread_sovereign": {"display_name": "Dread Sovereign", "description": "Slay a stage boss while commanding Warriors, Archers, Mages and a priest order",
 		"stat": "boss_kills_full_army", "goal": 1, "unlock": "The Dread Sovereign skin", "bounty": 150},  # GDD §9.4 goal; bounty TUNING (not in GDD)
+	# Owner-approved Stage 3 achievement: the stage boss of the Sanctum slain
+	# (counted from the stage record, so it works for any boss the stage names).
+	"dawn_extinguished": {"display_name": "Dawn Extinguished", "description": "Defeat Grand Inquisitor Seraphine in the Sanctum of Judgment",
+		"stat": "boss_kills", "stage": "sanctum", "goal": 1, "unlock": "The campaign epilogue", "bounty": 200},  # GDD §7.5 ending; bounty TUNING (not in GDD)
 }
 
 ## Damage sources whose killing blow counts as a Skeleton Warrior kill (the

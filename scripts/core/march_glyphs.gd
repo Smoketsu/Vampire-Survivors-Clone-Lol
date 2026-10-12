@@ -14,7 +14,9 @@
 ##   Marshal Vael   = huge kite shield + flaming sword, crimson plume
 ## plus the stage's obstacles (draw_obstacle) and the battlefield-dead corpse
 ## pile (the march's empowered grave). Glyphs.draw_enemy() and
-## Arena._draw_obstacle() delegate here for kinds they do not know.
+## Arena._draw_obstacle() delegate here for kinds they do not know; kinds
+## unknown here go on to SanctumTerrainGlyphs (the Sanctum's objectives and
+## obstacles).
 class_name MarchGlyphs
 extends RefCounted
 
@@ -53,7 +55,7 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		"holy_standard":
 			_draw_standard(ci, o, r, flash)
 		_:
-			return false
+			return SanctumTerrainGlyphs.draw_structure(ci, kind, o, r, flash)  # Sanctum ward crystals and altars.
 	return true
 
 
@@ -301,7 +303,7 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 			ci.draw_circle(c + Vector2(-r * 0.3, -r * 0.2), r * 0.4, Palette.STONE.lightened(0.15))
 			ci.draw_circle(c + Vector2(r * 0.35, r * 0.25), r * 0.3, Palette.STONE.darkened(0.2))
 		_:
-			return false
+			return SanctumTerrainGlyphs.draw_obstacle(ci, o)  # Sanctum obstacles.
 	return true
 
 
