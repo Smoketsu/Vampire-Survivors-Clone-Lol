@@ -14,11 +14,11 @@
 ## per spell in the Meta save, [characters] section); the Gravecaller
 ## (`starts_unlocked`) is open from the start.
 ##
-## A character whose starting spell is not in AbilityData.SPELLS (Death
-## Mark, Bone Wall, Soul Chains, Wither and Raise Dead until those spells
-## are merged) is hidden from the picker and refused by --character=; its
-## innate is a documented hook (`values` below) the spell's code reads with
-## game.character.innate_value(key), which is 0 for every other character.
+## A character whose starting spell is not in AbilityData.SPELLS would be
+## hidden from the picker and refused by --character= (a safety rule; all
+## twelve spells exist). The five later spells' innates are hooks (`values`
+## below) the spell's code reads with game.character.innate_value(key),
+## which is 0 for every other character.
 ##
 ## Keys of a character row:
 ##   display_name    UI name.
@@ -76,11 +76,11 @@ const STAT_LABELS := {
 ##   grace_range             CharacterInnates.on_player_healed (px)
 ##   contagion_range         CharacterInnates.on_enemy_killed (px)
 ##   contagion_duration      CharacterInnates.on_enemy_killed (s of Rot)
-##   death_mark_slow         Death Mark spell (agent hook, not in this build)
-##   bone_wall_duration      Bone Wall spell (agent hook, not in this build)
-##   soul_chains_extra_jumps Soul Chains spell (agent hook, not in this build)
-##   wither_rot              Wither spell (agent hook, not in this build)
-##   wither_rot_linger       Wither spell (agent hook, not in this build)
+##   death_mark_slow         DeathMark._brand (slow fraction for the brand's s)
+##   bone_wall_duration      BoneWall._cast (extra wall lifetime fraction)
+##   soul_chains_extra_jumps SoulChains._cast (extra arcs per bolt)
+##   wither_rot              Wither._pulse (Rot fraction per pulse)
+##   wither_rot_linger       Wither._pulse (s the Rot outlasts the pulse)
 ##   temp_summon_duration    HordeDirector.spawn_temporary (every source)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",

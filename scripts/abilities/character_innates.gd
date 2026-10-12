@@ -32,9 +32,18 @@
 ##                    .rot_enemy; stat contagion_spreads)
 ##   Grave Herald     Restless        HordeDirector.spawn_temporary reads
 ##                    temp_summon_duration directly.
-## The later spells' innates (Doomsayer, Barrow Warden, Soulbinder, Wither
-## Witch) are read by those spells through game.character.innate_value()
-## (keys in CharacterData.INNATE_KEYS).
+## The later spells' innates are read by those spells through
+## game.character.innate_value() (keys in CharacterData.INNATE_KEYS):
+##   Doomsayer        Ill Omen        DeathMark._brand(): death_mark_slow
+##                    through CombatResolver.slow_enemy (ill_omen_slows)
+##   Barrow Warden    Stonebone       BoneWall._cast(): bone_wall_duration
+##                    (stonebone_extra_seconds)
+##   Soulbinder       Conductor       SoulChains._cast():
+##                    soul_chains_extra_jumps (conductor_extra_jumps)
+##   Wither Witch     Creeping Rot    Wither._pulse(): wither_rot for
+##                    wither_rot_linger s through CombatResolver.rot_enemy
+##                    (creeping_rot_applied)
+## The Grave Herald's Restless counts restless_extra_seconds.
 class_name CharacterInnates
 extends Node2D
 
@@ -272,7 +281,15 @@ func summary_line() -> String:
 		"contagion":
 			counters = "contagion spreads %d (rot bonus dmg %d)" % [int(st.get("contagion_spreads", 0.0)), int(st.get("rot_bonus_dmg", 0.0))]
 		"restless":
-			counters = "temporary summons %d" % game.horde.temp_spawned
+			counters = "temporary summons %d, extra seconds %d" % [game.horde.temp_spawned, int(st.get("restless_extra_seconds", 0.0))]
+		"ill_omen":
+			counters = "brands slowed %d (brands %d)" % [int(st.get("ill_omen_slows", 0.0)), int(st.get("death_mark_brands", 0.0))]
+		"stonebone":
+			counters = "extra wall seconds %d (walls %d, hold seconds %d)" % [int(st.get("stonebone_extra_seconds", 0.0)), int(float(st.get("walls_raised", 0.0)) + float(st.get("bastions_raised", 0.0))), int(st.get("wall_hold_seconds", 0.0))]
+		"conductor":
+			counters = "extra jumps %d (casts %d)" % [int(st.get("conductor_extra_jumps", 0.0)), int(st.get("chains_casts", 0.0))]
+		"creeping_rot":
+			counters = "rot applied %d (rot bonus dmg %d)" % [int(st.get("creeping_rot_applied", 0.0)), int(st.get("rot_bonus_dmg", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

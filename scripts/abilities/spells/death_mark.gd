@@ -137,6 +137,13 @@ func _brand(e: Enemy, stats: Dictionary, doom: bool) -> void:
 	b.time_left = float(stats["duration"])
 	b.damage = float(stats["damage"])
 	b.doom = doom
+	# The Doomsayer's Ill Omen innate (CharacterData death_mark_slow; 0 for
+	# every other character): the brand also slows its enemy for the brand's
+	# duration, through the one slow path (CombatResolver.slow_enemy()).
+	var s := game.character.innate_value("death_mark_slow")  # Slow fraction 0..1.
+	if s > 0.0:
+		game.combat.slow_enemy(e, s, b.time_left)
+		game.stat_add("ill_omen_slows", 1.0)
 	game.effects.ring(e.position, e.radius + 8.0, GraveSpellGlyphs.DOOM if doom else Palette.VIOLET, 0.3)
 
 

@@ -90,7 +90,8 @@ character picker. Until a file exists the game draws the necromancer tinted with
 ### Player skins (`assets/sprites/player/<character>_<skin>.png`)
 
 Cosmetic skins (`scripts/data/skin_data.gd`; purely visual, never a stat). Until a file exists the
-game draws the character's own sprite with the skin's **palette tint** plus a small emblem (crown,
+game draws the character's own sprite (or, while it has none, that character's school-tinted
+stand-in) with the skin's **palette tint** plus a small emblem (crown,
 halo, sun corona, plague mask) and a faint aura, so these can arrive one at a time. Use the
 *reference-matching template* and attach **the character's own sprite** (for the Gravecaller:
 `necromancer.png`) so the silhouette, pose and proportions stay the same; only the costume and

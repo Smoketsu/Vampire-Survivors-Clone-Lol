@@ -73,11 +73,18 @@ func _pulse(stats: Dictionary) -> void:
 	var until := game.elapsed + float(stats["cooldown"]) + GraveSpellData.WITHER_LINGER  # Shred expiry.
 	var shred := float(stats["shred"])  # Armour fraction removed.
 	var src := "blight" if _blight else "wither"  # Stats tag.
+	# The Wither Witch's Creeping Rot innate (CharacterData wither_rot /
+	# wither_rot_linger; 0 for every other character): each pulse also
+	# inflicts Rot through the one Rot path, lingering briefly past the aura.
+	var rot := game.character.innate_value("wither_rot")  # Rot fraction (0 = none).
 	for e in victims:
 		if not e.active:
 			continue
 		e.wither_shred = shred * (GraveSpellData.WITHER_BOSS_MULT if e.is_boss else 1.0)
 		e.wither_until = until
+		if rot > 0.0:
+			game.combat.rot_enemy(e, rot, game.elapsed + game.character.innate_value("wither_rot_linger"))
+			game.stat_add("creeping_rot_applied", 1.0)
 		game.combat.damage_enemy(e, float(stats["damage"]), src)
 	game.stat_add("wither_pulses", 1.0)
 	game.stat_add("wither_hits", float(victims.size()))

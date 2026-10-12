@@ -41,11 +41,11 @@ const RIGHT_WIDTH: float = 760.0
 ## Gap (px) between the two columns.
 const COLUMN_GAP: int = 22
 ## Size (px) of one difficulty card (two per row fill RIGHT_WIDTH).
-const LEVEL_CARD_SIZE := Vector2(375, 92)
+const LEVEL_CARD_SIZE := Vector2(375, 104)
 ## Difficulty cards per grid row.
 const LEVEL_COLUMNS: int = 2
 ## Size (px) of one run-modifier card (two per row fill RIGHT_WIDTH).
-const MOD_CARD_SIZE := Vector2(375, 46)
+const MOD_CARD_SIZE := Vector2(375, 44)
 ## Run-modifier cards per grid row.
 const MOD_COLUMNS: int = 2
 ## Border colour of the selected difficulty card.
@@ -306,12 +306,12 @@ func _queue_wire() -> void:
 ## inside each column the rows link up and down (left: character tiles, skin
 ## cards, Hyper; right: difficulty cards, modifier cards), the end of a row
 ## crosses to the other column's row nearest in height, the last rows lead
-## down to the bottom buttons (left: Back / Standard, right: Standard /
+## down to the bottom buttons (left: Back, right: Standard /
 ## Begin) and the bottom buttons lead back up.
 func _wire_focus() -> void:
 	var left: Array = _picker.tile_rows() + _extras.rows()  # Left column rows.
 	var right: Array = _rows_of(_level_buttons, DifficultyData.ORDER, LEVEL_COLUMNS) + _rows_of(_mod_buttons, RunModifierData.ORDER, MOD_COLUMNS)  # Right column rows.
-	_wire_column(left, [], right, [_back, _reset])
+	_wire_column(left, [], right, [_back])
 	_wire_column(right, left, [], [_reset, _begin])
 	var bottom := [_back, _reset, _begin]  # Bottom row, left to right.
 	for j in bottom.size():
@@ -443,9 +443,9 @@ func _refresh() -> void:
 	])
 	if config.hyper:
 		parts.append("%s +%d%%" % [HyperData.DISPLAY_NAME, roundi(HyperData.ASH_BONUS * 100.0)])
-	var note := "   (the stage bonus, Ash Harvest and the Profane Pact add their own lines)"  # Breakdown tail.
+	var note := "   (plus the stage bonus, Ash Harvest and the Pact)"  # Breakdown tail (one line at RIGHT_WIDTH).
 	if Meta.oath_active_tier() > 0:
-		note = "   (your Profane Oath %s adds +%d%% Soul Ash and its own penalties on top)" % [
+		note = "   (plus Profane Oath %s: +%d%% Soul Ash, its penalties on top)" % [
 			DifficultyModifiers.roman(Meta.oath_active_tier()), roundi(float(Meta.oath_active_tier()) * float(PactData.OATH_PER_TIER["ash_gain"]) * 100.0)]
 	_breakdown_label.text = " + ".join(parts) + note
 	var pv := DifficultyModifiers.preview(config.difficulty_id, config.modifiers, config.hyper)  # Combined enemy multipliers.

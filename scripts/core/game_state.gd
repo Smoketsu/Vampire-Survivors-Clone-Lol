@@ -87,12 +87,12 @@
 ##   --character=ID        Autotest playable character (CharacterData ids:
 ##                         gravecaller (default, today's game),
 ##                         umbral_warden, voidcaller, bone_oracle,
-##                         fallen_confessor, carrion_lord, plague_scholar...);
-##                         locks are bypassed. A character whose starting
-##                         spell is not in this build (doomsayer,
-##                         barrow_warden, soulbinder, wither_witch,
-##                         grave_herald until their spells exist) is refused
-##                         with an error and the default is played.
+##                         fallen_confessor, carrion_lord, plague_scholar,
+##                         doomsayer, barrow_warden, soulbinder,
+##                         wither_witch, grave_herald); locks are bypassed.
+##                         An unknown id (or one whose starting spell is not
+##                         in the build) is refused with an error and the
+##                         default is played.
 ## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
 extends Node
 

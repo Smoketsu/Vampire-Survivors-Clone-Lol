@@ -525,7 +525,8 @@ func _try_spawn(cls: String) -> bool:
 ## duration x (1 + temp_duration) x (1 + temp_summon_duration).
 func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float, dmg_mult: float) -> SummonedUnit:
 	duration *= 1.0 + game.abilities.passive_value("restless_dead", "temp_duration")
-	duration *= 1.0 + game.character.innate_value("temp_summon_duration")
+	var herald := duration * game.character.innate_value("temp_summon_duration")  # Restless extra seconds (0 unless the Grave Herald).
+	duration += herald
 	dmg_mult *= 1.0 + game.abilities.passive_value("restless_dead", "temp_damage")
 	var stats := compute_stats(cls, maxi(1, int(class_levels[cls])), true, false)
 	stats["max_hp"] = float(stats["max_hp"]) * hp_mult
@@ -547,6 +548,8 @@ func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float,
 	units.append(u)
 	temp_alive += 1
 	temp_spawned += 1
+	if herald > 0.0:
+		game.stat_add("restless_extra_seconds", herald)  # Grave Herald innate (autotest).
 	game.effects.spawn_ring(at, Palette.NECRO_GREEN)
 	return u
 

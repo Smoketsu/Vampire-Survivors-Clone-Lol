@@ -130,8 +130,13 @@ func _cast(stats: Dictionary) -> bool:
 	if w.segs.is_empty():
 		_pool.append(w)
 		return false
-	w.duration = float(stats["duration"])
+	# The Barrow Warden's Stonebone innate (CharacterData bone_wall_duration;
+	# 0 for every other character) lengthens every wall and Bastion ring.
+	var stone := game.character.innate_value("bone_wall_duration")  # Extra lifetime fraction.
+	w.duration = float(stats["duration"]) * (1.0 + stone)
 	w.time_left = w.duration
+	if stone > 0.0:
+		game.stat_add("stonebone_extra_seconds", w.duration - float(stats["duration"]))
 	w.tick = GraveSpellData.BONE_WALL_TICK
 	w.damage = float(stats["damage"])
 	w.shrapnel = float(stats.get("pulse_damage", 0.0))

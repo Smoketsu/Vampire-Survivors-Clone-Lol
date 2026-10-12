@@ -82,7 +82,7 @@ func _ready() -> void:
 	if config == null:
 		config = RunConfig.new()
 	add_theme_constant_override("separation", 4)
-	var head := UiTheme.label("CHARACTER  (each starts with its own spell; reach Lv %d with a spell to unlock its character)" % CharacterData.UNLOCK_LEVEL, 12, UiTheme.TEXT_DIM)
+	var head := UiTheme.label("CHARACTER  (unlock one by reaching Lv %d with its spell)" % CharacterData.UNLOCK_LEVEL, 12, UiTheme.TEXT_DIM)
 	head.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	head.custom_minimum_size = Vector2(TILE_SIZE.x * TILE_COLUMNS + 5.0 * 6.0, 0)
 	add_child(head)

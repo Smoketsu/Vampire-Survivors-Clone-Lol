@@ -83,12 +83,18 @@ func _cast(stats: Dictionary) -> bool:
 	_chain.clear()
 	_chain.append(first)
 	var jumps := int(stats["jumps"])  # Arcs after the first strike.
+	# The Soulbinder's Conductor innate (CharacterData soul_chains_extra_jumps;
+	# 0 for every other character): the arc jumps to more enemies.
+	var extra := int(game.character.innate_value("soul_chains_extra_jumps"))  # Extra jumps.
+	jumps += extra
 	var jr := float(stats["jump_range"])  # px between two struck enemies.
 	for _j in jumps:
 		var nxt := _next_target(_chain[_chain.size() - 1].position, jr)
 		if nxt == null:
 			break
 		_chain.append(nxt)
+	if extra > 0 and _chain.size() - 1 > jumps - extra:
+		game.stat_add("conductor_extra_jumps", float(_chain.size() - 1 - (jumps - extra)))  # Arcs only the innate allowed.
 	_casts += 1
 	var damned := stats.has("pull")  # Evolved into Chains of the Damned.
 	var src := "chains_damned" if damned else "soul_chains"  # Stats tag.

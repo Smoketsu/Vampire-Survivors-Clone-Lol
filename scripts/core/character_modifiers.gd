@@ -127,7 +127,8 @@ static func is_known(p_id: String) -> bool:
 
 
 ## True when `p_id` is known and its starting spell exists in this build
-## (the five later spells' characters stay hidden until those spells merge).
+## (a safety rule: a character whose spell is missing stays hidden; all
+## twelve exist now).
 static func is_available(p_id: String) -> bool:
 	return is_known(p_id) and AbilityData.SPELLS.has(String(CharacterData.CHARACTERS[p_id]["spell"]))
 

@@ -298,6 +298,14 @@ tiny tweaks.
   (= `character_id`, the one accessor) and read the character list from `CharacterData`; a skin
   without art on a character without art is that character's own glyph (`CharacterGlyphs`),
   tinted. `--hyper`, `--skin=`.
+- **the content-wave integration** (the four parts above, merged together, GDD §15.0 "Content wave
+  integration"): 24 actives for 6 slots; one `SpriteBank.draw()` `tint` parameter; one character
+  list (`CharacterData`; `SkinData` only adds skins); the five later spells read their characters'
+  innates (Ill Omen through `slow_enemy()`, Stonebone, Conductor, Creeping Rot through
+  `rot_enemy()`; Restless × Restless Dead multiply in `spawn_temporary()`); Spirit Binding and
+  Mournsong multiply on slows and chills, and every Rot goes through `rot_enemy()` (Mournsong
+  included); the pre-run setup screen in two columns at 1280×720 (left: character, skin, Hyper;
+  right: difficulty 2×2, modifiers 2×4, totals) with explicit cross-column focus links.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.

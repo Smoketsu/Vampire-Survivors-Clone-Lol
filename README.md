@@ -322,8 +322,7 @@ number is in `scripts/data/unit_data.gd`.
   GDD §15.0). Like every army passive they are a dead card while you own no
   summon class; their NEW cards share one weight
   (`NEW_PASSIVE_POOL_WEIGHT` = 2). Each card already names the summon
-  evolution it will unlock (those evolutions are not built yet), and Soul
-  Recycling's card names the Frost Wraith's:
+  evolution it unlocks, and Soul Recycling's card names the Frost Wraith's:
 
 | Passive | Effect (Lv 1 → 5) | Will evolve (with the class at Lv 5) |
 |---|---|---|
@@ -454,15 +453,17 @@ structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
 
 ### Characters
 
-The top of the **pre-run setup** screen (after the stage select) picks your
+The left column of the **pre-run setup** screen (after the stage select) picks your
 **playable character**: one necromancer per spell, each starting the run with
 its own spell at Lv 1 instead of Shadow Bolt, with **one innate passive** and a
 few stat modifiers (`character_data.gd`). There are no character-only level-up
-cards (owner decision: innates only). A tile row shows a portrait per
-character (the necromancer tinted in the spell school's colour until each
-character's own art exists) with its starting spell as a badge; the detail
-panel shows the name, title, starting spell, innate and stats. Arrows / D-pad
-move, Enter / A chooses; the bottom tiles lead down to the difficulty cards.
+cards (owner decision: innates only). A grid of portrait tiles (two rows of
+six) shows every character (the necromancer tinted in the spell school's
+colour until each character's own art exists) with its starting spell as a
+badge; the detail panel under it shows the name, title, starting spell,
+innate and stats. Arrows / D-pad move, Enter / A chooses; the bottom tiles
+lead down to the skin cards, the right-hand tiles across to the difficulty
+cards.
 
 **Unlocking:** **The Gravecaller** is open from the start. Every other
 character unlocks the **first time you reach Lv 5 with its starting spell in
@@ -480,30 +481,33 @@ remembered with the difficulty and modifiers, and **Restart** keeps it.
 | **The Fallen Confessor** | Soul Siphon | **Stolen Grace:** healing you receive also heals your nearest wounded summons (up to 3 within 240 px) for half as much | +5% move speed |
 | **The Carrion Lord** | Corpse Explosion | **Grave Harvest:** your own fallen summons leave corpses that Corpse Explosion detonates like the enemy's | baseline |
 | **The Plague Scholar** | Plague Cloud | **Contagion:** an enemy that dies while Rotting spreads its Rot to the nearest enemy within 160 px for 3 s | −10 max HP, +10% spell area |
-| The Doomsayer | Death Mark | **Ill Omen:** branded enemies are also slowed 15% | baseline |
-| The Barrow Warden | Bone Wall | **Stonebone:** walls last 50% longer | +10 max HP |
-| The Soulbinder | Soul Chains | **Conductor:** lightning arcs jump to one extra enemy | baseline |
-| The Wither Witch | Wither | **Creeping Rot:** the aura applies Rot | −5 max HP |
-| The Grave Herald | Raise Dead | **Restless:** temporary summons from any source last 25% longer | baseline |
+| **The Doomsayer** | Death Mark | **Ill Omen:** branded enemies are also slowed 15% for the brand's duration (Doom Brand too; through the one slow path, so Spirit Binding and Mournsong lengthen it) | baseline |
+| **The Barrow Warden** | Bone Wall | **Stonebone:** walls (and Charnel Bastion rings) last 50% longer | +10 max HP |
+| **The Soulbinder** | Soul Chains | **Conductor:** lightning arcs jump to one extra enemy (Chains of the Damned too) | baseline |
+| **The Wither Witch** | Wither | **Creeping Rot:** every aura pulse also inflicts 10% Rot that lingers 1 s past it (Necrotic Blight too; Mournsong lengthens it) | −5 max HP |
+| **The Grave Herald** | Raise Dead | **Restless:** temporary summons from any source last 25% longer (multiplies with the Restless Dead passive) | baseline |
 
-The last five start with spells that are not in the game yet: they stay
-hidden from the picker (and `--character=` refuses them) until those spells
-exist; their innates are already wired as hooks the spells read
-(`game.character.innate_value(key)`). Every character goes through one path:
+The last five start with the five later spells; their innates are hooks the
+spells read (`game.character.innate_value(key)`, 0 for every other
+character). Every character goes through one path:
 `RunConfig.character_id` → `CharacterModifiers` (`game.character`: the starting
 spell, the stat modifiers applied once after the Soul Ash upgrades, the innate
 numbers) → `CharacterInnates` (`game.innates`: the innate hooks).
 
 ### Difficulty & run modifiers
 
-Choosing a stage opens the **pre-run setup** screen (GDD §10.2): pick your
-character (above), then one of
-the four GDD §8.4 **difficulty levels** and toggle any of the eight §8.5
-**run modifiers**. Every card lists its exact effect and Soul Ash reward, and
-the screen shows the **total Soul Ash multiplier** of the stack and the
-combined enemy multipliers (plus a note when a Profane Oath tier is active).
-It works with keyboard, mouse and controller (arrows / D-pad move, Enter / A
-selects or toggles, Esc / B goes back to the stage select). Your last choice
+Choosing a stage opens the **pre-run setup** screen (GDD §10.2). It fits
+1280×720 in two columns under a one-line title: the **left** column is who
+plays (the character picker, its skins and the Hyper toggle), the **right**
+column how hard (the four GDD §8.4 **difficulty levels** as a 2×2 grid, the
+eight §8.5 **run modifiers** as a 2×4 grid, then the totals), with Back /
+Standard / Begin across the bottom. Every card lists its exact effect and
+Soul Ash reward (a difficulty card shows its Soul Ash multiplier beside its
+name), and the screen shows the **total Soul Ash multiplier** of the stack and
+the combined enemy multipliers (plus a note when a Profane Oath tier is
+active). It works with keyboard, mouse and controller (arrows / D-pad move
+inside a column and across to the other one, Enter / A selects or toggles,
+Esc / B goes back to the stage select). Your last choice
 is remembered (saved in `user://save.cfg`), **Restart** keeps it, and
 **Standard** resets to Necromancer with no modifiers. All four levels are open
 from the start. The HUD's Modifiers area (top right) and the end screen show
@@ -546,8 +550,8 @@ every modifier: ×2.75).
 
 ### Hyper mode & skins
 
-The pre-run setup screen has one more row under the run modifiers: the
-**Hyper** toggle and the **skin selector** (`PreRunHyperSkins`).
+The pre-run setup screen's left column ends with the **skin selector** and
+the **Hyper** toggle (`PreRunHyperSkins`), under the character picker.
 
 **Hyper mode** (`hyper_data.gd`, owner-approved) is locked until you slay
 **Grand Inquisitor Seraphine** once, on any difficulty (the end screen of
@@ -571,8 +575,7 @@ and pays the *Hyper (+100%)* line, Restart keeps it and the toggle is saved
 as `[prerun] hyper`. **Standard** turns it off. A **Hyper clear** (a victory:
 the run reached the Reckoning with Hyper on) gives that stage a gold
 **HYPER CLEARED** badge on the stage select, recorded per stage **and per
-character** (`[hyper_clears] <stage>-<character>`; the Gravecaller until the
-character system exists).
+character** (`[hyper_clears] <stage>-<character>`).
 
 **Skins** (`skin_data.gd`) are **purely cosmetic** (GDD §15.0 resolves open
 question 42: no stat ever changes). Each character has its default look and
@@ -587,13 +590,14 @@ with that character, and four characters have an **achievement skin**:
 | **The Heretic Saint** | Fallen Confessor | 50 High Confessors slain (lifetime counter) |
 | Hyper skins: Eclipsed Gravecaller, Sunless Warden, Starless Voidcaller, Gilded Oracle, Crowned Carrion Lord, Fallen Seraph, Blighted Scholar, Final-Hour Doomsayer, Gilded Barrow King, Radiant Soulbinder, Thorn-Crowned Witch, Golden Herald | one each | clear the Sanctum on Hyper with that character |
 
-The selector shows one card per skin of the selected character with a live
-preview; a locked skin shows its condition and progress (*1,234 / 5,000*).
+The selector shows one compact card per skin of the selected character with
+a live preview (it follows the character picker); a locked skin shows its condition and progress (*1,234 / 5,000*).
 It works with keyboard, mouse and controller like the rest of the screen.
 The choice is remembered per character (`[skins] <character> = <skin id>`).
 A skin draws `assets/sprites/player/<character>_<skin>.png` when that file
-exists; until then the character's sprite is drawn with the skin's **palette
-tint**, a small emblem (crown, halo, cracked halo, gold sun corona, plague
+exists; until then the character's own look (its sprite, or while it has no
+art the school-tinted stand-in, never the Gravecaller's) is drawn with the
+skin's **palette tint**, a small emblem (crown, halo, cracked halo, gold sun corona, plague
 mask) and a faint aura ring (`SkinGlyphs`), so every skin is visible before
 its art. New unlocks are announced on the end screen (*NEW SKIN*). The three
 counters (`rot_kills`, `high_confessor_kills`, `seraphine_kills_full_army`)
@@ -1057,7 +1061,7 @@ departure puff (`grave_step_trail`) are wired so far.
 | Stage 3 boss (§7.5) | Grand Inquisitor Seraphine with her three GDD phases (Divine Judgment, Avatar of the Dawn, The Last Light): radiant fans, delayed holy circles, Templar squads, teleports, healing attendants, rotating holy beams, barrages, constructs, undead suppression, the safe-zone Judgment nova, the collapsing arena and a final guard, the relic shatter and the ending text. She ends the Sanctum of Judgment; `--boss=seraphine` also puts her on any other stage. See *Stage 3 boss* above. |
 | Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades plus the Spearhead stance unlock, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
-| Playable characters (§10.2, §11.4) | Twelve characters, one per spell (seven playable now; the five for the coming spells are hidden until those spells exist), each with its starting spell, one innate passive and stat modifiers; chosen on the pre-run setup screen, unlocked by reaching Lv 5 with the character's spell, remembered in the save. The Gravecaller is the default and plays exactly like the game before characters. See *Characters* above. |
+| Playable characters (§10.2, §11.4) | Twelve characters, one per spell, each with its starting spell, one innate passive and stat modifiers; chosen on the pre-run setup screen, unlocked by reaching Lv 5 with the character's spell, remembered in the save. The Gravecaller is the default and plays exactly like the game before characters. See *Characters* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
 | UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu (with a **Recipes** view of the discovered evolution recipes), end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress (compact rows, at most one per active slot); ability slots with levels (an evolved class shows its evolution's icon and name). |
