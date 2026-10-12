@@ -55,6 +55,9 @@ var time_since_hit: float = 999.0
 var revives_left: int = 0
 ## Facing sign (+1 right, -1 left) used to mirror the sprite.
 var _facing: float = 1.0
+## SkinData id of the cosmetic skin worn this run ("" = the default look;
+## set by Game at run start). Purely visual, never a stat.
+var skin_id: String = ""
 
 
 func _ready() -> void:
@@ -180,7 +183,8 @@ func heal(amount: float) -> float:
 
 func _draw() -> void:
 	_draw_ground_ring()
-	Glyphs.draw_necromancer(self, Vector2.ZERO, radius, flash > 0.0)
+	if skin_id == "" or not SkinGlyphs.draw_skin(self, skin_id, Vector2.ZERO, radius, flash > 0.0):
+		Glyphs.draw_necromancer(self, Vector2.ZERO, radius, flash > 0.0)
 	if shield_hp > 0.0:
 		# Priest ward: translucent necrotic bubble, thicker when stronger.
 		var k := clampf(shield_hp / maxf(shield_max, 1.0), 0.0, 1.0)

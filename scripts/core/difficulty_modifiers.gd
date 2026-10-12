@@ -2,8 +2,10 @@
 ## reaches a run:
 ##   * the DIFFICULTY LEVEL (GDD §8.4, DifficultyData; RunConfig.difficulty_id),
 ##   * the optional RUN MODIFIERS (GDD §8.5, RunModifierData; RunConfig.modifiers),
-##   * the in-run Profane Pact passive (AbilityManager passive level), and
-##   * the Profane Oath meta upgrade (active tier, read from game.meta).
+##   * the in-run Profane Pact passive (AbilityManager passive level),
+##   * the Profane Oath meta upgrade (active tier, read from game.meta), and
+##   * HYPER mode (HyperData; RunConfig.hyper), an opt-in toggle that
+##     stacks on the level.
 ## Game owns one instance (`game.difficulty`). The stat code asks it for
 ## multipliers instead of checking any of these itself:
 ##   enemy_spawn_mult()   EnemyDirector._spawn_trickle (rate and max_alive)
@@ -34,16 +36,21 @@
 ##     other category. The level's hp_scaling / damage_scaling scale only the
 ##     growth part of the time scaling. The boss gets level boss_hp x
 ##     (1 + BOSS_HP_SHARE x the opt-in HP bonus).
+##   * HYPER is its own category too, applied once on top of the level:
+##     hp_scaling / damage_scaling x HyperData.GROWTH_MULT (the growth part
+##     only, so the Reckoning, built from the same time scaling, grows too)
+##     and boss_hp x HyperData.BOSS_HP_MULT.
 ##   * XP: level xp_mult x (1 + Pact + Oath XP reward), next to Grave Tithe.
 ##   * Soul Ash: each source pays its own floored line on the run subtotal
 ##     (all lines add): Ash Harvest, Pact, Oath, the stage bonus, the
 ##     difficulty line ((ash_mult - 1) x subtotal, negative on Initiate) and
-##     one "Run modifiers" line (the summed ash_gain of the active modifiers).
-##     The setup screen shows level ash_mult + modifier ash as the run's
-##     total reward multiplier.
-## With the Necromancer level, no run modifier, no Pact level and Oath tier
-## 0 every multiplier is exactly 1 (and the extra elite roll is skipped), so
-## the run plays bit-for-bit as before.
+##     one "Run modifiers" line (the summed ash_gain of the active modifiers),
+##     plus one "Hyper" line (HyperData.ASH_BONUS x subtotal) when Hyper is on.
+##     The setup screen shows level ash_mult + modifier ash (+ Hyper) as the
+##     run's total reward multiplier.
+## With the Necromancer level, no run modifier, Hyper off, no Pact level and
+## Oath tier 0 every multiplier is exactly 1 (and the extra elite roll is
+## skipped), so the run plays bit-for-bit as before.
 class_name DifficultyModifiers
 extends RefCounted
 
@@ -55,6 +62,8 @@ var _level_id: String = DifficultyData.DEFAULT_ID
 var _level: Dictionary = {}
 ## Active run modifier ids (RunModifierData.ORDER order).
 var _mods: PackedStringArray = PackedStringArray()
+## True when Hyper mode is on this run (RunConfig.hyper).
+var _hyper: bool = false
 
 
 func _init(p_game: Game) -> void:
@@ -65,6 +74,7 @@ func _init(p_game: Game) -> void:
 		for id: String in cfg.modifiers:
 			if RunModifierData.MODIFIERS.has(id):
 				_mods.append(id)
+		_hyper = cfg.hyper
 	_level = DifficultyData.LEVELS[_level_id]
 
 
@@ -96,34 +106,41 @@ static func modifiers_ash(ids: PackedStringArray) -> float:
 	return total
 
 
-## Total Soul Ash multiplier of a difficulty level plus run modifiers (the
-## number the setup screen shows): 1 + (ash_mult - 1) + modifier ash. The
-## Oath, Pact, stage bonus and Ash Harvest add their own lines on top.
-static func reward_mult(level_id: String, ids: PackedStringArray) -> float:
+## Total Soul Ash multiplier of a difficulty level plus run modifiers (and
+## Hyper when `hyper`; the number the setup screen shows): 1 + (ash_mult - 1)
+## + modifier ash (+ HyperData.ASH_BONUS). The Oath, Pact, stage bonus and
+## Ash Harvest add their own lines on top.
+static func reward_mult(level_id: String, ids: PackedStringArray, hyper: bool = false) -> float:
 	var lv: Dictionary = DifficultyData.LEVELS.get(level_id, DifficultyData.LEVELS[DifficultyData.DEFAULT_ID])
-	return float(lv["ash_mult"]) + modifiers_ash(ids)
+	return float(lv["ash_mult"]) + modifiers_ash(ids) + (HyperData.ASH_BONUS if hyper else 0.0)
+
+
+## Hyper's factor on the growth part of the time scaling (1 when off).
+static func hyper_growth(hyper: bool) -> float:
+	return HyperData.GROWTH_MULT if hyper else 1.0
 
 
 ## Enemy multipliers of a level plus run modifiers, without the Pact / Oath
 ## (setup screen): {"enemy_hp", "enemy_damage" (at the start), "enemy_hp_end",
 ## "enemy_damage_end" (vs the standard game when the countdown ends, the
 ## level's faster / slower growth included), "enemy_spawn", "enemy_speed",
-## "boss_hp", "elite_chance"}.
-static func preview(level_id: String, ids: PackedStringArray) -> Dictionary:
+## "boss_hp", "elite_chance"}. `hyper` adds Hyper's growth and boss HP.
+static func preview(level_id: String, ids: PackedStringArray, hyper: bool = false) -> Dictionary:
 	var lv: Dictionary = DifficultyData.LEVELS.get(level_id, DifficultyData.LEVELS[DifficultyData.DEFAULT_ID])
 	var m := WaveData.RUN_DURATION / 60.0  # Minutes elapsed at 0:00 on the countdown.
 	var hp_g := m * WaveData.HP_SCALE_PER_MINUTE + m * m * WaveData.HP_SCALE_PER_MINUTE_SQ  # Standard HP growth then.
 	var dmg_g := m * WaveData.DAMAGE_SCALE_PER_MINUTE + m * m * WaveData.DAMAGE_SCALE_PER_MINUTE_SQ  # Standard damage growth then.
 	var hp := float(lv["enemy_hp"]) * (1.0 + modifiers_sum(ids, "enemy_hp"))  # Flat HP multiplier.
 	var dmg := float(lv["enemy_damage"]) * (1.0 + modifiers_sum(ids, "enemy_damage"))  # Flat damage multiplier.
+	var hg := hyper_growth(hyper)  # Hyper growth factor (1 when off).
 	return {
 		"enemy_hp": hp,
 		"enemy_damage": dmg,
-		"enemy_hp_end": hp * (1.0 + hp_g * float(lv["hp_scaling"])) / (1.0 + hp_g),
-		"enemy_damage_end": dmg * (1.0 + dmg_g * float(lv["damage_scaling"])) / (1.0 + dmg_g),
+		"enemy_hp_end": hp * (1.0 + hp_g * float(lv["hp_scaling"]) * hg) / (1.0 + hp_g),
+		"enemy_damage_end": dmg * (1.0 + dmg_g * float(lv["damage_scaling"]) * hg) / (1.0 + dmg_g),
 		"enemy_spawn": float(lv["enemy_spawn"]) * (1.0 + modifiers_sum(ids, "enemy_spawn")),
 		"enemy_speed": float(lv["enemy_speed"]),
-		"boss_hp": float(lv["boss_hp"]) * (1.0 + modifiers_sum(ids, "enemy_hp") * PactData.BOSS_HP_SHARE),
+		"boss_hp": float(lv["boss_hp"]) * (1.0 + modifiers_sum(ids, "enemy_hp") * PactData.BOSS_HP_SHARE) * (HyperData.BOSS_HP_MULT if hyper else 1.0),
 		"elite_chance": float(lv["elite_chance"]),
 	}
 
@@ -142,6 +159,16 @@ func difficulty_name() -> String:
 	return String(_level["display_name"])
 
 
+## True when Hyper mode is on this run.
+func is_hyper() -> bool:
+	return _hyper
+
+
+## UI name of the level with Hyper appended when on ("Lich + Hyper").
+func difficulty_label() -> String:
+	return difficulty_name() + (" + " + HyperData.DISPLAY_NAME if _hyper else "")
+
+
 ## Value `key` of this run's level row (DifficultyData keys).
 func level_value(key: String) -> float:
 	return float(_level[key])
@@ -157,9 +184,10 @@ func has_modifier(id: String) -> bool:
 	return _mods.has(id)
 
 
-## True when the level is not the standard one or any run modifier is on.
+## True when the level is not the standard one, any run modifier is on or
+## Hyper is on.
 func has_run_setup() -> bool:
-	return _level_id != DifficultyData.DEFAULT_ID or not _mods.is_empty()
+	return _level_id != DifficultyData.DEFAULT_ID or not _mods.is_empty() or _hyper
 
 
 # =====================================================================================
@@ -215,15 +243,19 @@ func enemy_hp_mult() -> float:
 	return float(_level["enemy_hp"]) * (1.0 + optional_value("enemy_hp"))
 
 
-## Multiplier on the growth part of the enemy HP time scaling (level only).
+## Multiplier on the growth part of the enemy HP time scaling: the level's,
+## times HyperData.GROWTH_MULT when Hyper is on (exactly the level's when off).
 func hp_scaling() -> float:
-	return float(_level["hp_scaling"])
+	var s := float(_level["hp_scaling"])  # Level growth factor.
+	return s * HyperData.GROWTH_MULT if _hyper else s
 
 
 ## Multiplier on the stage boss's HP: the level's boss_hp times only
-## PactData.BOSS_HP_SHARE of the opt-in HP bonus.
+## PactData.BOSS_HP_SHARE of the opt-in HP bonus, times
+## HyperData.BOSS_HP_MULT when Hyper is on.
 func boss_hp_mult() -> float:
-	return float(_level["boss_hp"]) * (1.0 + optional_value("enemy_hp") * PactData.BOSS_HP_SHARE)
+	var m := float(_level["boss_hp"]) * (1.0 + optional_value("enemy_hp") * PactData.BOSS_HP_SHARE)  # Without Hyper.
+	return m * HyperData.BOSS_HP_MULT if _hyper else m
 
 
 ## Multiplier on every enemy hit (applied through EnemyDirector.damage_mult).
@@ -231,9 +263,11 @@ func enemy_damage_mult() -> float:
 	return float(_level["enemy_damage"]) * (1.0 + optional_value("enemy_damage"))
 
 
-## Multiplier on the growth part of the enemy damage time scaling (level only).
+## Multiplier on the growth part of the enemy damage time scaling: the
+## level's, times HyperData.GROWTH_MULT when Hyper is on.
 func damage_scaling() -> float:
-	return float(_level["damage_scaling"])
+	var s := float(_level["damage_scaling"])  # Level growth factor.
+	return s * HyperData.GROWTH_MULT if _hyper else s
 
 
 ## Multiplier on enemy move speed (level "aggression"; not the stage boss).
@@ -334,10 +368,12 @@ func is_active() -> bool:
 
 ## Soul Ash bonus fractions for Meta.compute_ash, each paid as its own
 ## floored line on the run's subtotal: {"pact", "oath", "difficulty"
-## (ash_mult - 1, negative on easier levels), "modifiers" (summed ash_gain)}.
+## (ash_mult - 1, negative on easier levels), "modifiers" (summed ash_gain),
+## "hyper" (HyperData.ASH_BONUS when on, else 0)}.
 func ash_parts() -> Dictionary:
 	return {"pact": pact_value("ash_gain"), "oath": oath_value("ash_gain"),
-		"difficulty": float(_level["ash_mult"]) - 1.0, "modifiers": modifiers_ash(_mods)}
+		"difficulty": float(_level["ash_mult"]) - 1.0, "modifiers": modifiers_ash(_mods),
+		"hyper": HyperData.ASH_BONUS if _hyper else 0.0}
 
 
 ## Display names of the active run modifiers.
@@ -359,14 +395,14 @@ func hud_lines() -> PackedStringArray:
 	var shorts := PackedStringArray()  # One word per active run modifier.
 	for id: String in _mods:
 		shorts.append(String(RunModifierData.MODIFIERS[id]["short_name"]))
-	var line := "Difficulty: %s" % difficulty_name()  # First line.
+	var line := "Difficulty: %s" % difficulty_label()  # First line ("Lich + Hyper").
 	if shorts.is_empty():
 		line += "  |  Modifiers: none"
 	out.append(line)
 	if not shorts.is_empty():
 		out.append("Modifiers: " + ", ".join(shorts))
 	if has_run_setup():
-		out.append("Soul Ash x%.2f" % reward_mult(_level_id, _mods))
+		out.append("Soul Ash x%.2f" % reward_mult(_level_id, _mods, _hyper))
 	out.append_array(describe_lines())
 	return out
 

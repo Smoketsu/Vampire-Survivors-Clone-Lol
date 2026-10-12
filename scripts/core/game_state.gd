@@ -66,6 +66,12 @@
 ##                         ids): endless_crusade, hardened_faith, divine_fury,
 ##                         purge_the_unholy, scarcity, frail_master,
 ##                         vengeful_dead, holy_retribution; "all" = every one.
+##   --hyper               Autotest Hyper mode (HyperData: enemy HP / damage
+##                         growth x2, stage boss HP x1.5, Soul Ash +100%);
+##                         bypasses the Seraphine unlock.
+##   --skin=ID             Autotest skin (SkinData id, e.g. dread_sovereign
+##                         or gravecaller_hyper), forced for screenshots:
+##                         ignores the unlock and the character. Cosmetic.
 ##   --stance=ID           Autotest army stance for the whole run (StanceData
 ##                         ids: escort, onslaught, spearhead, bone_ring);
 ##                         forcing ignores the Spearhead unlock. Without it,
@@ -117,6 +123,10 @@ var autotest_boss: String = ""
 var autotest_difficulty: String = DifficultyData.DEFAULT_ID
 ## Autotest: RunModifierData ids of the run modifiers (--modifiers=a,b).
 var autotest_modifiers: PackedStringArray = PackedStringArray()
+## Autotest: true when --hyper turns Hyper mode on (lock bypassed).
+var autotest_hyper: bool = false
+## Autotest: SkinData id forced by --skin= ("" = the default look).
+var autotest_skin: String = ""
 ## Autotest: StanceData id forced for the whole run by --stance= ("" = the
 ## stance bot's rule, StanceBot).
 var autotest_stance: String = ""
@@ -204,6 +214,14 @@ func _parse_args(args: PackedStringArray) -> void:
 					push_error("Unknown --modifiers id '%s' (expected %s or all)" % [id, ", ".join(PackedStringArray(RunModifierData.ORDER))])
 		elif arg.begins_with("--oath="):
 			autotest_oath = clampi(arg.get_slice("=", 1).to_int(), 0, MetaData.max_tier(PactData.OATH_ID))
+		elif arg == "--hyper":
+			autotest_hyper = true
+		elif arg.begins_with("--skin="):
+			var skid := arg.get_slice("=", 1).to_lower()  # Requested skin id.
+			if SkinData.has(skid):
+				autotest_skin = skid
+			else:
+				push_error("Unknown --skin=%s (expected one of %s)" % [skid, ", ".join(SkinData.all_ids())])
 		elif arg.begins_with("--stance="):
 			var sid := arg.get_slice("=", 1).to_lower()  # Requested stance id.
 			if StanceData.STANCES.has(sid):

@@ -33,6 +33,9 @@
 ## Army stances (StanceData): `stance` (ArmyStance) holds the army's stance
 ## for this run (Escort at the start, so Restart resets it); the stance keys
 ## and right-stick flicks reach it from _unhandled_input() while playing.
+## Hyper mode (HyperData) is part of `difficulty`; the cosmetic skin
+## (SkinData, run_config.skin_id or --skin=) is resolved once into
+## player.skin_id and only changes how the necromancer is drawn.
 class_name Game
 extends Node2D
 
@@ -221,6 +224,7 @@ func _ready() -> void:
 	add_child(player)
 	meta.apply_to_player(player)
 	difficulty.apply_to_player(player)  # Frail Master (run modifier); no-op otherwise.
+	player.skin_id = _resolve_skin()  # Cosmetic only (SkinData); "" = the default look.
 	abilities = AbilityManager.new()
 	add_child(abilities)
 	abilities.setup(self)
@@ -251,6 +255,19 @@ func _ready() -> void:
 	horde.set_class_level("warrior", 1)
 	_build_ui()
 	ground.update_view(player.position)
+
+
+## The skin the necromancer wears this run (purely cosmetic, SkinData): the
+## autotest's --skin= (forced, for screenshots), else run_config.skin_id
+## when it belongs to the run's character and is unlocked. A default skin
+## (or none) returns "" so the normal necromancer drawing is used.
+func _resolve_skin() -> String:
+	var id := run_config.skin_id  # Requested skin.
+	if GameState.autotest and GameState.autotest_skin != "":
+		id = GameState.autotest_skin
+	elif not SkinData.skins_for(run_config.character_key()).has(id) or not Meta.is_skin_unlocked(id):
+		return ""
+	return "" if String(SkinData.skin(id).get("kind", "default")) == "default" else id
 
 
 ## Builds the CanvasLayer UI. It processes while the tree is paused so menus
@@ -572,5 +589,11 @@ func build_summary() -> Dictionary:
 		"modifiers": difficulty.modifier_ids(),
 		"modifier_names": difficulty.modifier_names(),
 		"modifiers_ash_gain": float(difficulty.ash_parts()["modifiers"]),
+		"hyper": difficulty.is_hyper(),
+		"hyper_ash_gain": float(difficulty.ash_parts()["hyper"]),
+		"difficulty_label": difficulty.difficulty_label(),
+		"boss_id": String(boss_info.get("id", "")),
+		"character_id": run_config.character_key(),
+		"skin_id": player.skin_id,
 		"stats": stats.duplicate(),
 	}

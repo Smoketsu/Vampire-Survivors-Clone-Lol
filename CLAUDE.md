@@ -73,6 +73,11 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
   (7 spells, 9 offerable summon classes) compete for 6 active slots.
 - **Soul Ash is kept on death.** Profane Pact (in-run) and Profane Oath (Ossuary) trade difficulty
   for rewards.
+- **Hyper mode** (`hyper_data.gd`; unlocked by slaying Seraphine once, any difficulty): a pre-run
+  toggle stacking on the difficulty level through `difficulty_modifiers.gd`: the **growth** part of
+  enemy HP / damage time scaling ×2 (the Reckoning too), stage boss HP ×1.5, Soul Ash +100% as its
+  own line. A Hyper clear (victory) earns a per-stage, per-character gold badge. **Skins**
+  (`skin_data.gd`) are **purely cosmetic**: never let one touch a stat.
 
 ## Tools and commands
 
@@ -99,6 +104,7 @@ Autotest options (full table in the README):
 - `--difficulty=initiate|necromancer|lich|deathlord` (GDD §8.4; default necromancer = today's game)
 - `--modifiers=a,b` (GDD §8.5 run modifiers, e.g. `hardened_faith,scarcity`, or `all`)
 - `--stance=escort|onslaught|spearhead|bone_ring` (force an army stance for the whole run)
+- `--hyper` (Hyper mode, lock bypassed) and `--skin=ID` (force a cosmetic skin, e.g. `dread_sovereign`)
 - `--spawn=kind@T[xN],...` (force-spawn any enemy kind at T game seconds on any stage, e.g.
   `sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300`)
 - `--pact`
@@ -236,6 +242,17 @@ tiny tweaks.
   holy shields, the sun ward, suppression and the chamber penalty each have their own stat in
   `CombatResolver.damage_enemy()`. `--stage=sanctum`, `--spawn=`, `--boss=`; CI runs a Sanctum
   autotest.
+- **Hyper mode and skins** (owner-approved): Hyper (`hyper_data.gd`, through
+  `difficulty_modifiers.gd`; unlocked by Seraphine's first defeat, Meta `[hyper]`), a toggle on the
+  pre-run screen (`prerun_hyper_skins.gd`, remembered in `[prerun] hyper`, kept by Restart, "+ Hyper"
+  on the HUD and end screen, its own Soul Ash line), Hyper clears per stage and character
+  (`[hyper_clears]`, gold `HyperBadge` on the stage select). Skins (`skin_data.gd`, cosmetic only):
+  a default and a Hyper skin per character (Hyper skin = Sanctum cleared on Hyper with it) and four
+  achievement skins (Dread Sovereign, Ivory Seer, Plague Doctor, Heretic Saint; lifetime counters
+  `rot_kills`, `high_confessor_kills`, `seraphine_kills_full_army`); `SkinGlyphs` draws the skin's
+  art, else the character sprite with the skin's palette tint, emblem and aura; the selector
+  remembers a skin per character (`[skins]`). Skins are keyed by `RunConfig.character_key()`
+  (the character system's `character_id`, else `gravecaller`). `--hyper`, `--skin=`.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -245,7 +262,7 @@ tiny tweaks.
    The owner generates sprites in ChatGPT from `docs/art/ART_BIBLE.md` (manifest of every asset,
    with file keys and sizes); process each with `python3 tools/prepare_sprite.py <image> <key>`.
    `SpriteBank` draws `assets/sprites/<key>.png` when present and falls back to the glyph, so art
-   lands piecemeal. Done: `player/necromancer`; every summon and the first three evolutions (incl. `risen`); every enemy soldier (incl. the
+   lands piecemeal (skins too: `player/<character>_<skin>`, 16 rows, palette stand-ins until then). Done: `player/necromancer`; every summon and the first three evolutions (incl. `risen`); every enemy soldier (incl. the
    Reckoning's `inquisitor`); both `bosses/`; all five `structures/`. Still to do: the pickups and the five newer evolutions (Gravebow, Bone Colossus, Shadow Reaper, Cathedral Horror, Winter Revenant). Effects are
    short animations (`prepare_sprite.py --anim <sheet or GIF> <id>` → `assets/sprites/effects/`,
    timing in `anim_data.gd`); `shadow_blast` (test), `dread_rally` and `grave_step_trail` are hooked so far, hook the rest via
@@ -254,7 +271,7 @@ tiny tweaks.
    campaign epilogue that *Dawn Extinguished* should unlock), synergies for the newer classes, more
    ultimates, a victory screen after the Reckoning.
 5. **Phase 3 campaign:** Stage 3 is done (the Sanctum of Judgment and Grand Inquisitor Seraphine);
-   left: skins, achievement rewards, the campaign epilogue, art for the Sanctum kinds, structures
+   left: skin art (skins and Hyper mode are in), achievement rewards, the campaign epilogue, art for the Sanctum kinds, structures
    and Seraphine.
 6. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner is happy with balance for now and wants value tweaks deferred to this pass (naive-bot

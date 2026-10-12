@@ -44,6 +44,22 @@
 ## saved at once (so it survives quitting mid-run). Older saves have no
 ## [recipes] section and start with nothing discovered; unknown ids are
 ## ignored. The pause menu's Recipes view (RecipesPanel) reads it.
+## Hyper mode and skins (owner-approved; HyperData, SkinData):
+##   * `hyper_unlocked` turns true the first time HyperData.UNLOCK_BOSS_ID
+##     (Grand Inquisitor Seraphine) is slain ([hyper] unlocked; an older save
+##     with a kill in that boss's stage record is migrated as unlocked),
+##   * `hyper_clears` records every Hyper clear (a victory with Hyper on) per
+##     stage and character ([hyper_clears] "<stage>-<character>" = true; the
+##     stage-select gold badges and the Hyper skins read it),
+##   * `prerun_hyper` is the Hyper toggle last confirmed ([prerun] hyper),
+##   * `chosen_skins` is the skin last chosen per character ([skins]
+##     <character> = <skin id>); skin UNLOCKS are not stored but derived
+##     (is_skin_unlocked()) from the Hyper clears, achievements and three
+##     lifetime counters (rot_kills, high_confessor_kills,
+##     seraphine_kills_full_army), so they can never disagree with them.
+## award_run() reports what a run unlocked ("hyper_unlocked", "hyper_clear",
+## "unlocked_skins") for the end screen. Older saves without these sections
+## get the defaults; unknown ids are ignored.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -84,6 +100,15 @@ var prerun_difficulty: String = DifficultyData.DEFAULT_ID
 var prerun_modifiers: PackedStringArray = PackedStringArray()
 ## Evolution id (EvolutionRecipes.ids()) -> true once obtained in any run.
 var discovered_recipes: Dictionary = {}
+## True once Hyper mode is unlocked (HyperData.UNLOCK_BOSS_ID slain once).
+var hyper_unlocked: bool = false
+## "<stage id>-<character id>" -> true for every stage cleared on Hyper with
+## that character (stage-select badges, Hyper skin unlocks).
+var hyper_clears: Dictionary = {}
+## Hyper toggle last confirmed on the setup screen.
+var prerun_hyper: bool = false
+## Character id -> SkinData id last chosen for that character.
+var chosen_skins: Dictionary = {}
 
 ## Keys of every stage record (all floats, like the lifetime stats).
 const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills"]
@@ -139,7 +164,8 @@ func set_oath_active(t: int) -> bool:
 ## the difficulty level ("difficulty_ash_pct" = ash_mult - 1: negative on
 ## Initiate, so its line subtracts; "difficulty_bonus") and the run
 ## modifiers ("modifiers_ash_gain" = their summed ash_gain;
-## "modifiers_bonus"). A summary without these keys pays nothing extra.
+## "modifiers_bonus") and Hyper mode ("hyper_ash_gain" = HyperData.ASH_BONUS
+## when on; "hyper_bonus"). A summary without these keys pays nothing extra.
 ## Stage objectives (the Sanctum's cleansed chambers and destroyed altars,
 ## the run stat "objective_ash") are one more part, "objectives", of the
 ## subtotal (0 on stages without them).
@@ -173,6 +199,8 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 	var diff_bonus := floori(float(subtotal) * diff_pct) if diff_pct >= 0.0 else -floori(float(subtotal) * -diff_pct)  # Signed, floored toward 0.
 	var mods_pct := maxf(0.0, float(summary.get("modifiers_ash_gain", 0.0)))  # Run modifiers Soul Ash reward.
 	var mods_bonus := floori(float(subtotal) * mods_pct)  # Ash from the run modifiers.
+	var hyper_pct := maxf(0.0, float(summary.get("hyper_ash_gain", 0.0)))  # Hyper mode Soul Ash reward.
+	var hyper_bonus := floori(float(subtotal) * hyper_pct)  # Ash from Hyper mode.
 	return {
 		"parts": parts,
 		"time_survived": survived,
@@ -197,7 +225,9 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 		"modifier_count": (summary.get("modifiers", PackedStringArray()) as PackedStringArray).size(),
 		"modifiers_pct": mods_pct,
 		"modifiers_bonus": mods_bonus,
-		"total": maxi(0, subtotal + bonus + pact_bonus + oath_bonus + stage_bonus + diff_bonus + mods_bonus),
+		"hyper_pct": hyper_pct,
+		"hyper_bonus": hyper_bonus,
+		"total": maxi(0, subtotal + bonus + pact_bonus + oath_bonus + stage_bonus + diff_bonus + mods_bonus + hyper_bonus),
 	}
 
 
@@ -209,6 +239,7 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	var award := compute_ash(summary, mods.value("ash_gain") if mods != null else 0.0)
 	var st: Dictionary = summary.get("stats", {})
+	var skins_before := unlocked_skin_ids()  # Skins owned before this run.
 	var was_locked := PackedStringArray()  # Stages still locked before this run.
 	for sid: String in StageRegistry.ORDER:
 		if not is_stage_unlocked(sid):
@@ -226,6 +257,17 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("warrior_kills", float(st.get("warrior_kills", 0.0)))
 	_add_lifetime("chaplain_kills", float(st.get("kill_chaplain", 0.0)))
 	_add_lifetime("boss_kills_full_army", float(st.get("boss_kill_full_army", 0.0)))
+	_add_lifetime("rot_kills", float(st.get("rot_kills", 0.0)))
+	_add_lifetime("high_confessor_kills", float(st.get("kill_high_confessor", 0.0)))
+	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
+	if slew_unlock_boss:
+		# The Dread Sovereign skin reuses the achievement's role check
+		# (Game._on_boss_defeated: the four GDD roles when the boss fell).
+		_add_lifetime("seraphine_kills_full_army", 1.0 if float(st.get("boss_kill_full_army", 0.0)) > 0.0 else 0.0)
+	award["hyper_unlocked"] = slew_unlock_boss and not hyper_unlocked
+	if slew_unlock_boss:
+		hyper_unlocked = true
+	award["hyper_clear"] = _record_hyper_clear(summary)
 	_add_lifetime("ash_earned", float(award["total"]))
 	lifetime["best_time"] = maxf(float(lifetime["best_time"]), float(summary.get("time", 0.0)))
 	lifetime["best_reckoning"] = maxf(float(lifetime["best_reckoning"]), float(summary.get("time_past_zero", 0.0)))
@@ -240,6 +282,11 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("ash_earned", float(bounty))
 	soul_ash = mini(soul_ash + int(award["total"]) + bounty, MAX_STORED)
 	award["achievements"] = unlocked
+	var new_skins := PackedStringArray()  # Skins this run unlocked.
+	for id: String in unlocked_skin_ids():
+		if not skins_before.has(id):
+			new_skins.append(id)
+	award["unlocked_skins"] = new_skins
 	award["bounty"] = bounty
 	award["new_total"] = soul_ash
 	last_award = award
@@ -262,24 +309,137 @@ func achievement_progress(id: String) -> float:
 # Pre-run choices (GDD §10.2)
 # =====================================================================================
 
-## A RunConfig for stage `stage_id` with the remembered difficulty level and
-## run modifiers (the setup screen opens on it).
+## A RunConfig for stage `stage_id` with the remembered difficulty level,
+## run modifiers, Hyper toggle (only while unlocked) and the skin chosen for
+## its character (the setup screen opens on it).
 func prerun_config(stage_id: String) -> RunConfig:
 	var c := RunConfig.for_stage(stage_id)
 	c.set_difficulty(prerun_difficulty)
 	c.set_modifiers(prerun_modifiers)
+	c.hyper = prerun_hyper and hyper_unlocked
+	c.skin_id = chosen_skin(c.character_key())
 	return c
 
 
-## Remembers the difficulty level and run modifiers of `config` for the next
-## setup screen (and the next session) and saves when they changed.
+## Remembers the difficulty level, run modifiers, Hyper toggle and skin of
+## `config` for the next setup screen (and the next session) and saves when
+## they changed.
 func remember_prerun(config: RunConfig) -> void:
-	if config.difficulty_id == prerun_difficulty and config.modifiers == prerun_modifiers:
+	var skin_changed := _remember_skin(config)  # The character's skin choice changed.
+	if config.difficulty_id == prerun_difficulty and config.modifiers == prerun_modifiers \
+			and config.hyper == prerun_hyper and not skin_changed:
 		return
 	prerun_difficulty = config.difficulty_id
 	prerun_modifiers = config.modifiers.duplicate()
+	prerun_hyper = config.hyper
 	save()
 	changed.emit()
+
+
+## Stores the skin of `config` as its character's choice (unlocked skins of
+## that character only). Returns true if the stored choice changed.
+func _remember_skin(config: RunConfig) -> bool:
+	var ch := config.character_key()  # The run's character.
+	var id := config.skin_id if config.skin_id != "" else SkinData.default_skin(ch)  # Chosen skin.
+	if not SkinData.skins_for(ch).has(id) or not is_skin_unlocked(id):
+		return false
+	if String(chosen_skins.get(ch, SkinData.default_skin(ch))) == id:
+		return false
+	chosen_skins[ch] = id
+	return true
+
+
+# =====================================================================================
+# Hyper mode and skins (owner-approved; HyperData, SkinData)
+# =====================================================================================
+
+## Records a Hyper clear of `summary` (victory with Hyper on) for its stage
+## and character. Returns the stage id when it is that pair's first clear,
+## else "".
+func _record_hyper_clear(summary: Dictionary) -> String:
+	if not bool(summary.get("hyper", false)) or not bool(summary.get("victory", false)):
+		return ""
+	var sid := String(summary.get("stage_id", StageRegistry.DEFAULT_ID))  # Cleared stage.
+	var key := _hyper_key(sid, SkinData.character_or_default(String(summary.get("character_id", ""))))  # Save key.
+	if hyper_clears.has(key) or not StageRegistry.STAGES.has(sid):
+		return ""
+	hyper_clears[key] = true
+	return sid
+
+
+## [hyper_clears] key of stage `stage_id` and character `character`.
+static func _hyper_key(stage_id: String, character: String) -> String:
+	return "%s-%s" % [stage_id, character]
+
+
+## True when stage `stage_id` was cleared on Hyper with `character`.
+func is_hyper_cleared(stage_id: String, character: String) -> bool:
+	return hyper_clears.has(_hyper_key(stage_id, character))
+
+
+## Number of characters that cleared stage `stage_id` on Hyper (stage-select badge).
+func hyper_clear_count(stage_id: String) -> int:
+	var n := 0  # Characters with a clear.
+	for ch: String in SkinData.CHARACTER_ORDER:
+		if is_hyper_cleared(stage_id, ch):
+			n += 1
+	return n
+
+
+## True when skin `id` may be worn (SkinData unlock rules; default skins
+## always). Unknown ids are locked.
+func is_skin_unlocked(id: String) -> bool:
+	var row := SkinData.skin(id)  # The skin's data ({} if unknown).
+	if row.is_empty():
+		return false
+	var u: Dictionary = row["unlock"]
+	match String(u["type"]):
+		"default":
+			return true
+		"hyper_clear":
+			return is_hyper_cleared(String(u["stage"]), String(row["character"]))
+		"achievement":
+			return achievements.has(String(u["id"]))
+		"lifetime":
+			return float(lifetime.get(String(u["stat"]), 0.0)) >= float(u["goal"])
+	return false
+
+
+## Progress text of a locked skin's condition ("1,234 / 5,000"; "" when the
+## condition has no counter).
+func skin_progress(id: String) -> String:
+	var row := SkinData.skin(id)  # The skin's data.
+	if row.is_empty():
+		return ""
+	var u: Dictionary = row["unlock"]
+	match String(u["type"]):
+		"lifetime":
+			return "%d / %d" % [mini(int(float(lifetime.get(String(u["stat"]), 0.0))), int(u["goal"])), int(u["goal"])]
+		"achievement":
+			var aid := String(u["id"])  # The achievement.
+			if MetaData.ACHIEVEMENTS.has(aid):
+				var goal := int(MetaData.ACHIEVEMENTS[aid]["goal"])  # Its goal.
+				return "%d / %d" % [mini(int(achievement_progress(aid)), goal), goal]
+	return ""
+
+
+## Every unlocked skin id (all characters, SkinData order).
+func unlocked_skin_ids() -> PackedStringArray:
+	var out := PackedStringArray()  # Ids.
+	for id: String in SkinData.all_ids():
+		if is_skin_unlocked(id):
+			out.append(id)
+	return out
+
+
+## Skin worn by `character` next run: its remembered choice while still
+## unlocked, else its default skin.
+func chosen_skin(character: String) -> String:
+	var ch := SkinData.character_or_default(character)  # Known character.
+	var id := String(chosen_skins.get(ch, ""))  # Remembered choice.
+	if id != "" and SkinData.skins_for(ch).has(id) and is_skin_unlocked(id):
+		return id
+	return SkinData.default_skin(ch)
 
 
 # =====================================================================================
@@ -465,6 +625,12 @@ func save() -> Error:
 			cfg.set_value("stages", "%s_%s" % [id, key], float(rec[key]))
 	for id: String in EvolutionRecipes.ids():
 		cfg.set_value("recipes", id, discovered_recipes.has(id))
+	cfg.set_value("prerun", "hyper", prerun_hyper)
+	cfg.set_value("hyper", "unlocked", hyper_unlocked)
+	for key: String in hyper_clears:
+		cfg.set_value("hyper_clears", key, true)
+	for ch: String in chosen_skins:
+		cfg.set_value("skins", ch, String(chosen_skins[ch]))
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -508,6 +674,7 @@ func load_save() -> void:
 	_load_stage_records(cfg)
 	_load_prerun(cfg)
 	_load_recipes(cfg)
+	_load_hyper_skins(cfg)
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -557,6 +724,30 @@ func _load_recipes(cfg: ConfigFile) -> void:
 			discovered_recipes[id] = true
 
 
+## Reads the Hyper / skin sections (missing = locked, no clears, Hyper off,
+## default skins; only `true` booleans and known ids count). A save from
+## before Hyper existed whose stage records show HyperData.UNLOCK_BOSS_ID
+## slain is treated as unlocked.
+func _load_hyper_skins(cfg: ConfigFile) -> void:
+	var u: Variant = cfg.get_value("hyper", "unlocked", false)
+	hyper_unlocked = typeof(u) == TYPE_BOOL and bool(u)
+	for sid: String in StageRegistry.ORDER:
+		var boss: Dictionary = StageRegistry.STAGES[sid]["boss"]  # The stage's boss slot.
+		if String(boss.get("id", "")) == HyperData.UNLOCK_BOSS_ID and float(stage_record(sid)["boss_kills"]) > 0.0:
+			hyper_unlocked = true
+	for sid: String in StageRegistry.ORDER:
+		for ch: String in SkinData.CHARACTER_ORDER:
+			var v: Variant = cfg.get_value("hyper_clears", _hyper_key(sid, ch), false)
+			if typeof(v) == TYPE_BOOL and bool(v):
+				hyper_clears[_hyper_key(sid, ch)] = true
+	var h: Variant = cfg.get_value("prerun", "hyper", false)
+	prerun_hyper = typeof(h) == TYPE_BOOL and bool(h)
+	for ch: String in SkinData.CHARACTER_ORDER:
+		var sk: Variant = cfg.get_value("skins", ch, "")
+		if typeof(sk) == TYPE_STRING and SkinData.skins_for(ch).has(String(sk)):
+			chosen_skins[ch] = String(sk)
+
+
 ## Upgrades an older save layout in `cfg` (in memory) to SAVE_VERSION.
 ## Version 0 is a file without a save_version key; it has the version-1
 ## layout, so nothing moves. Future layout changes add one step per version
@@ -593,6 +784,10 @@ func _reset() -> void:
 	prerun_difficulty = DifficultyData.DEFAULT_ID
 	prerun_modifiers = PackedStringArray()
 	discovered_recipes = {}
+	hyper_unlocked = false
+	hyper_clears = {}
+	prerun_hyper = false
+	chosen_skins = {}
 	load_status = "fresh"
 
 
@@ -609,6 +804,9 @@ static func _default_lifetime() -> Dictionary:
 		"chaplain_kills": 0.0,  # Covenant Chaplains slain (achievement)
 		"boss_kills_full_army": 0.0,  # boss kills with all 4 classes (achievement)
 		"ash_earned": 0.0,  # Soul Ash earned in total (runs + bounties)
+		"rot_kills": 0.0,  # enemies slain while Rotting (Plague Doctor skin)
+		"high_confessor_kills": 0.0,  # High Confessors slain (Heretic Saint skin)
+		"seraphine_kills_full_army": 0.0,  # Seraphine slain with the 4 GDD roles (Dread Sovereign skin)
 	}
 
 

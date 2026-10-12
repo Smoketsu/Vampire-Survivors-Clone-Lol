@@ -37,9 +37,11 @@ static func has(key: String) -> bool:
 
 
 ## Draws sprite `key` centred near `o` on `ci` (scaled to its SpriteData
-## height, with a drop shadow; brightened while `flash`). Returns false and
-## draws nothing when there is no art, so the caller can draw its glyph.
-static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool) -> bool:
+## height, with a drop shadow; brightened while `flash`). `tint` multiplies
+## the colours when not flashing (a skin's palette fallback, SkinGlyphs;
+## components above 1 brighten). Returns false and draws nothing when there
+## is no art, so the caller can draw its glyph.
+static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Color = Color.WHITE) -> bool:
 	var tex := texture(key)  # Art for this key, or null.
 	if tex == null:
 		return false
@@ -55,7 +57,7 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool) -> bool:
 		ci.draw_set_transform(centre + Vector2(0.0, h * 0.46), 0.0, Vector2(1.0, SpriteData.SHADOW_SQUASH))
 		ci.draw_circle(Vector2.ZERO, sw * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA))
 		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	var mod := SpriteData.FLASH_MODULATE if flash else Color.WHITE  # Hit-flash tint.
+	var mod := SpriteData.FLASH_MODULATE if flash else tint  # Hit-flash or skin tint.
 	ci.draw_texture_rect(tex, Rect2(centre - size * 0.5, size), false, mod)
 	return true
 

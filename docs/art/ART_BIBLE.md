@@ -70,6 +70,36 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 |---|---|---|
 | `assets/sprites/player/necromancer.png` | The necromancer (style reference; prompt below) | 56 px |
 
+### Player skins (`assets/sprites/player/<character>_<skin>.png`)
+
+Cosmetic skins (`scripts/data/skin_data.gd`; purely visual, never a stat). Until a file exists the
+game draws the character's own sprite with the skin's **palette tint** plus a small emblem (crown,
+halo, sun corona, plague mask) and a faint aura, so these can arrive one at a time. Use the
+*reference-matching template* and attach **the character's own sprite** (for the Gravecaller:
+`necromancer.png`) so the silhouette, pose and proportions stay the same; only the costume and
+colours change. Every skin is **56 px** tall, like the necromancer. The twelve **Hyper skins**
+share one theme: the character's regalia **gilded** (or, for the three shadow characters,
+**eclipsed** dark with a gold corona), earned by clearing the Sanctum of Judgment on Hyper.
+
+| File | Skin (character) | Subject (for the template) |
+|---|---|---|
+| `gravecaller_dread_sovereign.png` | The Dread Sovereign (Gravecaller) | The necromancer in **black plate armour** with gold trim and a **royal crimson-lined black cloak**, a spiked **gold crown** over the hood, skull staff with gold fittings; near-black `#1A161E` with gold `#FFD14C` accents |
+| `bone_oracle_ivory_seer.png` | The Ivory Seer (Bone Oracle) | The Bone Oracle in **polished ivory** bone mask and mantle, bleached-white robes, a thin ivory **halo**, spectral pale-blue `#9ED6FF` eyes |
+| `plague_scholar_plague_doctor.png` | The Plague Doctor (Plague Scholar) | The Plague Scholar as a **plague doctor**: long **beaked leather mask** with green glass lenses, wide-brimmed black hat, waxed brown coat, a swinging **green censer** (`#6BF28C` smoke) |
+| `fallen_confessor_heretic_saint.png` | The Heretic Saint (Fallen Confessor) | The Fallen Confessor in **defiled white Covenant vestments** stained crimson, a **cracked crimson halo**, torn holy stole; ivory `#F5EDD4` with crimson `#C71A29` |
+| `gravecaller_hyper.png` | Eclipsed Gravecaller (Gravecaller) | The necromancer **eclipsed**: robes darkened to near-black violet, a **gold sun corona** blazing behind the hood, gold-rimmed staff orb |
+| `umbral_warden_hyper.png` | Sunless Warden (Umbral Warden) | The Umbral Warden eclipsed: armour darkened to black, a **gold corona** behind the helm, gold edges on the shield |
+| `voidcaller_hyper.png` | Starless Voidcaller (Voidcaller) | The Voidcaller eclipsed: a starless black robe, a **gold corona** ring behind the head, a gold-framed void orb |
+| `bone_oracle_hyper.png` | Gilded Oracle (Bone Oracle) | The Bone Oracle **gilded**: gold-leaf skull mask and ornaments, gold trim, a gold sun corona |
+| `carrion_lord_hyper.png` | Crowned Carrion Lord (Carrion Lord) | The Carrion Lord **gilded**: tarnished-gold armour, a gold crown, gold sun corona |
+| `fallen_confessor_hyper.png` | Fallen Seraph (Fallen Confessor) | The Fallen Confessor as a **fallen seraph**: gilded vestments, broken **gold wings**, a gold sun corona |
+| `plague_scholar_hyper.png` | Blighted Scholar (Plague Scholar) | The Plague Scholar **blighted gold**: robes of sickly gold-green, gold alchemical vials, a gold sun corona |
+| `doomsayer_hyper.png` | Final-Hour Doomsayer (Doomsayer) | The Doomsayer **gilded**: gold hourglass and chains, gold trim, a gold sun corona |
+| `barrow_warden_hyper.png` | Gilded Barrow King (Barrow Warden) | The Barrow Warden as a **barrow king**: gold grave-goods armour, a gold circlet, a gold sun corona |
+| `soulbinder_hyper.png` | Radiant Soulbinder (Soulbinder) | The Soulbinder **gilded**: gold soul chains, radiant gold trim, a gold sun corona |
+| `wither_witch_hyper.png` | Thorn-Crowned Witch (Wither Witch) | The Wither Witch **gilded**: a crown of gold thorns, gold-dusted withered robes, a gold sun corona |
+| `grave_herald_hyper.png` | Golden Herald (Grave Herald) | The Grave Herald **gilded**: a gold horn and tabard, gold trim, a gold sun corona |
+
 ### Summons (`assets/sprites/summons/`)
 | File | Subject | Size |
 |---|---|---|
@@ -196,6 +226,7 @@ the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
 | File | Subject |
 |---|---|
 | `shadow_bolt.png` | Violet bolt |
+| `hyper_badge.png` | **Hyper clear badge** (stage select, setup screen): a gold `#FFD14C` sun disc with eight short rays and a dark five-pointed star in the middle. The one player-side icon that may use gold: it marks a Hyper clear. Until it exists the badge is code-drawn (`HyperBadge`) |
 | `orb_shield.png` | Three violet orbs circling |
 | `shadow_blast.png` | Violet shockwave ring |
 | `bone_spear.png` | Crossed bone javelins |

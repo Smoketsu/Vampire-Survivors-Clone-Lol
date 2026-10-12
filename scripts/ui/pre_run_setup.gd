@@ -6,6 +6,8 @@
 ##     standard level; exactly one is selected,
 ##   * a grid of the eight run modifiers (RunModifierData): name, effect and
 ##     its Soul Ash reward; each toggles on / off and they stack,
+##   * the Hyper toggle and the skin selector (PreRunHyperSkins, its own
+##     file: HyperData, SkinData; Hyper stays locked until Seraphine falls),
 ##   * the stacked result: the TOTAL Soul Ash multiplier (difficulty x plus
 ##     the modifiers' rewards) and the combined enemy multipliers, plus a
 ##     note when a Profane Oath tier is active (it stacks on top),
@@ -65,6 +67,8 @@ var _back: Button
 var _reset: Button
 ## Begin button (focused on open).
 var _begin: Button
+## Hyper toggle and skin selector row (PreRunHyperSkins).
+var _extras: PreRunHyperSkins
 
 
 ## Opens the screen over `parent` for `p_config`; focus returns to `refocus`
@@ -113,6 +117,10 @@ func _ready() -> void:
 	vb.add_child(grid)
 	for id: String in RunModifierData.ORDER:
 		grid.add_child(_build_mod_card(id))
+	_extras = PreRunHyperSkins.new()
+	_extras.config = config
+	_extras.changed.connect(_refresh)
+	vb.add_child(_extras)
 	_total_label = UiTheme.label("", 20, MetaGlyphs.EMBER.lightened(0.2))
 	_total_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(_total_label)
@@ -126,7 +134,7 @@ func _ready() -> void:
 	buttons.add_theme_constant_override("separation", 10)
 	vb.add_child(buttons)
 	_back = _make_button("Back", buttons, close)
-	_reset = _make_button("Standard (Necromancer, no modifiers)", buttons, _reset_choice)
+	_reset = _make_button("Standard (Necromancer, no modifiers, no Hyper)", buttons, _reset_choice)
 	_begin = _make_button("Begin the march", buttons, _start)
 	_wire_focus()
 	_refresh()
@@ -256,6 +264,10 @@ func _wire_focus() -> void:
 		_link(b, "bottom", b)
 		var col := roundi(float(j) * float(MOD_COLUMNS - 1) / float(maxi(1, bottom.size() - 1)))  # Column above.
 		_link(b, "top", _mod_buttons[mods[mini(mods.size() - 1, last_row_start + col)]])
+	var last_row: Array = []  # The modifier grid's last row, left to right.
+	for k in range(last_row_start, mods.size()):
+		last_row.append(_mod_buttons[mods[k]])
+	_extras.wire(last_row, bottom)  # The Hyper / skin row sits between them.
 
 
 ## Sets focus neighbour `side` ("left" / "right" / "top" / "bottom") of `b` to `to`.
@@ -286,6 +298,7 @@ func _toggle_mod(id: String) -> void:
 func _reset_choice() -> void:
 	config.set_difficulty(DifficultyData.DEFAULT_ID)
 	config.set_modifiers(PackedStringArray())
+	_extras.reset()  # Hyper off (the skin is kept: cosmetic).
 	Sfx.play("ui_confirm")
 	_refresh()
 
@@ -303,19 +316,22 @@ func _refresh() -> void:
 		var st: Label = _mod_states[id]
 		st.text = "ON" if on else "off"
 		st.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.5) if on else UiTheme.TEXT_DIM)
+	_extras.refresh()
 	var lv: Dictionary = DifficultyData.LEVELS[config.difficulty_id]
 	var mods_ash := DifficultyModifiers.modifiers_ash(config.modifiers)  # Summed modifier reward.
-	_total_label.text = "Total Soul Ash reward:  x%.2f" % DifficultyModifiers.reward_mult(config.difficulty_id, config.modifiers)
+	_total_label.text = "Total Soul Ash reward:  x%.2f" % DifficultyModifiers.reward_mult(config.difficulty_id, config.modifiers, config.hyper)
 	var parts := PackedStringArray([
 		"%s x%.2f" % [String(lv["display_name"]), float(lv["ash_mult"])],
 		"%d run modifier%s +%d%%" % [config.modifiers.size(), "" if config.modifiers.size() == 1 else "s", roundi(mods_ash * 100.0)],
 	])
+	if config.hyper:
+		parts.append("%s +%d%%" % [HyperData.DISPLAY_NAME, roundi(HyperData.ASH_BONUS * 100.0)])
 	var note := "   (the stage bonus, Ash Harvest and the Profane Pact add their own lines)"  # Breakdown tail.
 	if Meta.oath_active_tier() > 0:
 		note = "   (your Profane Oath %s adds +%d%% Soul Ash and its own penalties on top)" % [
 			DifficultyModifiers.roman(Meta.oath_active_tier()), roundi(float(Meta.oath_active_tier()) * float(PactData.OATH_PER_TIER["ash_gain"]) * 100.0)]
 	_breakdown_label.text = " + ".join(parts) + note
-	var pv := DifficultyModifiers.preview(config.difficulty_id, config.modifiers)  # Combined enemy multipliers.
+	var pv := DifficultyModifiers.preview(config.difficulty_id, config.modifiers, config.hyper)  # Combined enemy multipliers.
 	var foes := "Foes: HP x%.2f (x%.2f by 0:00)   damage x%.2f (x%.2f by 0:00)   spawn x%.2f   speed x%.2f   boss HP x%.2f" % [
 		float(pv["enemy_hp"]), float(pv["enemy_hp_end"]), float(pv["enemy_damage"]), float(pv["enemy_damage_end"]),
 		float(pv["enemy_spawn"]), float(pv["enemy_speed"]), float(pv["boss_hp"])]

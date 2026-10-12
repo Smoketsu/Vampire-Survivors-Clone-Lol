@@ -6,8 +6,11 @@
 ## Profane Oath bonus lines, the difficulty level line (negative on
 ## Initiate), the run modifiers line and the stage bonus of the Crimson March),
 ## achievements and stages unlocked and the new balance (Meta.award_run(),
-## GDD §9.2, §9.3). The stage, its boss, the difficulty level and the run
-## modifiers are named from the summary.
+## GDD §9.2, §9.3). The stage, its boss, the difficulty level (with
+## "+ Hyper" when Hyper mode was on, and its own +100% Soul Ash line) and the
+## run modifiers are named from the summary. Unlocks of the run (Hyper mode,
+## a Hyper clear's stage badge, new skins) appear as a gold banner under the
+## subtitle and as lines under the balance.
 class_name EndScreen
 extends Control
 
@@ -20,6 +23,8 @@ signal main_menu_pressed
 var _title: Label
 ## One-line flavour text under the title.
 var _subtitle: Label
+## Gold unlock banner (Hyper mode, Hyper clear badge, new skins; hidden if none).
+var _unlock_banner: Label
 ## Multi-line run statistics.
 var _stats: Label
 ## "+N SOUL ASH" headline.
@@ -54,6 +59,10 @@ func _ready() -> void:
 	_subtitle = UiTheme.label("", 15, UiTheme.TEXT_DIM)
 	_subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(_subtitle)
+	_unlock_banner = UiTheme.label("", 20, UiTheme.TEXT_GOLD)
+	_unlock_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_unlock_banner.visible = false
+	vb.add_child(_unlock_banner)
 	var cols := HBoxContainer.new()
 	cols.add_theme_constant_override("separation", 28)
 	vb.add_child(cols)
@@ -104,6 +113,7 @@ func _build_ash_column() -> Control:
 ## `boss_name` names the stage boss's line.
 func _show_ash(ash: Dictionary, boss_name: String) -> void:
 	if ash.is_empty():
+		_unlock_banner.visible = false
 		_ash_title.text = ""
 		_ash_lines.text = ""
 		_ash_values.text = ""
@@ -139,6 +149,9 @@ func _show_ash(ash: Dictionary, boss_name: String) -> void:
 	if int(ash.get("modifiers_bonus", 0)) > 0:
 		names.append("Run modifiers x%d (+%d%%)" % [int(ash["modifier_count"]), int(roundf(float(ash["modifiers_pct"]) * 100.0))])
 		values.append("+%d" % int(ash["modifiers_bonus"]))
+	if int(ash.get("hyper_bonus", 0)) > 0:
+		names.append("%s (+%d%%)" % [HyperData.DISPLAY_NAME, int(roundf(float(ash["hyper_pct"]) * 100.0))])
+		values.append("+%d" % int(ash["hyper_bonus"]))
 	if int(ash.get("stage_bonus", 0)) > 0:
 		names.append("%s bonus (x%.2f)" % [String(ash["stage_name"]), 1.0 + float(ash["stage_pct"])])
 		values.append("+%d" % int(ash["stage_bonus"]))
@@ -155,6 +168,21 @@ func _show_ash(ash: Dictionary, boss_name: String) -> void:
 	for sid: String in ash.get("unlocked_stages", PackedStringArray()):
 		var sdef: Dictionary = StageRegistry.STAGES[sid]  # The stage this run opened.
 		total_lines.append("New stage unlocked: %s - %s!" % [sdef["chapter"], sdef["display_name"]])
+	var banner := PackedStringArray()  # Gold banner parts (Hyper / skins).
+	if bool(ash.get("hyper_unlocked", false)):
+		banner.append(HyperData.UNLOCK_BANNER)
+		total_lines.append("Hyper mode unlocked: toggle it on the pre-run setup screen.")
+	var cleared := String(ash.get("hyper_clear", ""))  # Stage first cleared on Hyper by this character.
+	if cleared != "" and StageRegistry.STAGES.has(cleared):
+		banner.append("HYPER CLEAR")
+		total_lines.append("Hyper clear: %s earns its gold badge!" % String(StageRegistry.STAGES[cleared]["display_name"]))
+	var skins: PackedStringArray = ash.get("unlocked_skins", PackedStringArray())  # Skins this run unlocked.
+	if not skins.is_empty():
+		banner.append("NEW SKIN" if skins.size() == 1 else "%d NEW SKINS" % skins.size())
+	for sk: String in skins:
+		total_lines.append("New skin unlocked: %s (%s)!" % [String(SkinData.skin(sk)["display_name"]), SkinData.character_name(String(SkinData.skin(sk)["character"]))])
+	_unlock_banner.text = "  -  ".join(banner)
+	_unlock_banner.visible = not banner.is_empty()
 	total_lines.append("Spend it in the Ossuary from the main menu.")
 	_ash_total.text = "\n".join(total_lines)
 
@@ -175,7 +203,7 @@ func open(summary: Dictionary) -> void:
 	var lines := PackedStringArray()
 	var boss_name := String(summary.get("boss_name", "Sir Alaric"))  # The stage boss.
 	lines.append("Stage:  %s" % String(summary.get("stage_name", "The Desecrated Graveyard")))
-	lines.append("Difficulty:  %s" % String(summary.get("difficulty_name", "Necromancer")))
+	lines.append("Difficulty:  %s" % String(summary.get("difficulty_label", summary.get("difficulty_name", "Necromancer"))))
 	var mod_names: PackedStringArray = summary.get("modifier_names", PackedStringArray())  # Active run modifiers.
 	if not mod_names.is_empty():
 		lines.append("Run modifiers:  %s" % ", ".join(mod_names))

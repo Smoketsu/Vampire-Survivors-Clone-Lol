@@ -5,7 +5,9 @@
 ## optional run modifiers (GDD §8.5), both chosen on the pre-run setup
 ## screen (PreRunSetup) and remembered in the Meta save. The run reads the
 ## difficulty and modifiers only through DifficultyModifiers (the one
-## difficulty path). A later skin choice (§10.2) adds its field here.
+## difficulty path). Hyper mode (HyperData, an opt-in toggle stacking on the
+## level, also read only through DifficultyModifiers) and the cosmetic skin
+## (SkinData; never a stat) are chosen on the same screen.
 class_name RunConfig
 extends RefCounted
 
@@ -16,6 +18,12 @@ var difficulty_id: String = DifficultyData.DEFAULT_ID
 ## RunModifierData ids of the active run modifiers, in RunModifierData.ORDER
 ## (empty = none; set through set_modifiers(), which validates and sorts).
 var modifiers: PackedStringArray = PackedStringArray()
+## True when Hyper mode is on (HyperData; the setup screen only offers it once
+## unlocked, the autotest's --hyper bypasses the lock).
+var hyper: bool = false
+## SkinData id of the cosmetic skin ("" = the character's default look).
+## Purely visual: Game hands it to the Necromancer's drawing only.
+var skin_id: String = ""
 
 
 ## A config for stage `id` (unknown ids fall back to the default stage),
@@ -51,9 +59,20 @@ func has_modifier(id: String) -> bool:
 	return modifiers.has(id)
 
 
-## A copy for a restart: the same stage, difficulty and modifiers.
+## The run's character id: `character_id` when the character system
+## (CharacterData) has added that field, else SkinData.DEFAULT_CHARACTER
+## (the Gravecaller, today's necromancer). Read dynamically so skins and
+## Hyper clears work with or without characters.
+func character_key() -> String:
+	var v: Variant = get(&"character_id")  # null while no such field exists.
+	return SkinData.character_or_default(String(v)) if typeof(v) == TYPE_STRING else SkinData.DEFAULT_CHARACTER
+
+
+## A copy for a restart: the same stage, difficulty, modifiers, Hyper and skin.
 func duplicate_config() -> RunConfig:
 	var c := RunConfig.for_stage(stage_id)
 	c.set_difficulty(difficulty_id)
 	c.set_modifiers(modifiers)
+	c.hyper = hyper
+	c.skin_id = skin_id
 	return c
