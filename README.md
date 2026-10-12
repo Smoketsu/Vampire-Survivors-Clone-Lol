@@ -139,12 +139,12 @@ number is in `scripts/data/unit_data.gd`.
 | Class | Population (Lv 1 → 5) | Replaced every | Role | Special |
 |---|---|---|---|---|
 | Skeleton Warrior | 2 → 8 | 5 s | Frontline blocker | Physically blocks enemies (they move at 60%); shield bash. Evolves into the **Death Knight** |
-| Skeletal Archer | 1 → 5 | 8 s | Ranged DPS | Holds its ground and fires; pierce at Lv 4 |
+| Skeletal Archer | 1 → 5 | 8 s | Ranged DPS | Holds its ground and fires; pierce at Lv 4. Evolves into the **Gravebow** |
 | Undead Mage | 1 → 3 | 12 s | AoE caster | Explosions on the best cluster. Evolves into the **Lich** |
 | Grave Mender | 1 → 2 | 15 s | Healer | Heals allies and you (the old priest heal, §31) |
 | Crypt Warder | 1 → 2 | 15 s | Warder | Wards you when you are threatened; instant barriers on threatened allies |
 | Profane Bishop | 3 (merge only) | 12 s | Support | Never offered on a card: created when Menders and Warders merge. Heals, wards, barriers and a heal / burn aura |
-| **Corpse Abomination** | 1 → 3 | 20 s | Tank | A wider, heavier blocker (enemies touching it move at 45%). **Stomp**: a telegraphed bone-green ring, then damage and knockback to everything around it, with a shockwave and screen shake |
+| **Corpse Abomination** | 1 → 3 | 20 s | Tank | A wider, heavier blocker (enemies touching it move at 45%). **Stomp**: a telegraphed bone-green ring, then damage and knockback to everything around it, with a shockwave and screen shake. Evolves into the **Bone Colossus** |
 | **Grave Rogue** | 1 → 4 | 9 s | Assassin | Hunts Chaplains, archers and the back of the crowd. **Dash Strike**: a telegraphed violet lane, then a dash through it that hits every enemy in the lane and makes them bleed; it never ends inside an obstacle and runs back to formation |
 | **Crypt Gargoyle** | 1 → 3 | 12 s | Skirmisher | Claws. **Swoop**: takes off (airborne: flies over obstacles and bodies, can't be hit, drawn above its shadow), dives onto a cluster for AoE damage, lands on a free spot |
 | **Frost Wraith** | 1 → 3 | 14 s | Ice caster | Frost bolts **chill** (slow, frost film). **Deep Freeze**: a telegraphed circle, then every enemy inside is frozen (Stasis rules: Sir Alaric only briefly, Reckoning enemies immune) |
@@ -159,11 +159,12 @@ number is in `scripts/data/unit_data.gd`.
   Bishop); the later classes are never required. March of the Deathless
   counts any 3 classes.
 - **Evolutions only touch their own classes**: Death Knight (Warriors), Lich
-  (Mages), Profane Bishop (Menders + Warders), Shadow Reaper (Rogues) and
-  Cathedral Horror (Gargoyles). Forbidden Knowledge and
-  Dark Benediction boost only Mages and the support classes; the later
-  classes have no evolution yet (their paired passives already exist, see
-  *Later horde passives*).
+  (Mages), Profane Bishop (Menders + Warders), Gravebow (Archers), Bone
+  Colossus (Abominations), Shadow Reaper (Rogues), Cathedral Horror
+  (Gargoyles) and Winter Revenant (Frost Wraiths). Forbidden Knowledge and
+  Dark Benediction boost only Mages and the support classes. (The
+  Gravebow's curse is the one exception that helps everyone: a cursed foe
+  takes more damage from every undead source.)
 - **Interactions**: an enemy touching several blockers (Warriors, Death
   Knights, Abominations) gets the strongest slow, never a product of them.
   Shieldwall barriers stay on Warriors (and Death Knights); Warder and Bishop
@@ -210,6 +211,8 @@ number is in `scripts/data/unit_data.gd`.
 | Crypt Gargoyle Lv 5 | Unholy Resilience **Lv 5** | **Cathedral Horror**: huge cracked-marble gargoyle, ×1.4 HP, ×1.25 damage; **swoop radius +30%**; the dive **stuns** every enemy it hits for 0.6 s (the Deep Freeze hold: the boss 25%, elites 60%, Reckoning enemies and structures immune; stars over the enemy); after landing it **turns to stone** for 2 s: it stands still and does not attack, **takes no damage** and still body-blocks (a recall ends it at once) |
 | Grave Mender Lv 5 **and** Crypt Warder Lv 5 | Dark Benediction **Lv 5** (+8–40% heals, wards and barriers) | **Profane Bishop** (a **merge**): both orders become one class that heals, wards you **and** shields allies, plus an aura every 3 s that heals everything near it and burns foes. Capacity becomes 3 + your global capacity bonuses (counted once, not twice); existing Menders and Warders convert in place up to that cap, the rest dissolve into them, and **one active slot is freed** |
 | Frost Wraith Lv 5 | Soul Recycling **Lv 5** (faster replacement) | **Winter Revenant**: a taller crowned ice wraith, ×1.25 HP, ×1.25 damage, Deep Freeze radius **+35%**; **shatter**: a foe that dies while Deep-Frozen bursts for 22% of its max HP to foes within 56 px and chills them (bosses and structures never shatter; a shatter never sets off another shatter, and at most 12 resolve per tick); **death nova**: a Revenant that falls deals 3× its frost-bolt damage within 84 px and freezes the survivors for 1.2 s (boss / elite multipliers apply), and Soul Recycling brings it back quickly |
+| Skeletal Archer Lv 5 | Unholy Precision **Lv 5** (minion crits 5–25%) | **Gravebow** (GDD "Gravebow Company"): a tall hooded archer with a huge bone longbow, ×1.4 HP, ×1.25 damage; arrows **pierce 2** foes; every **4th volley splits** into a fan of 3 arrows; every hit **curses** the foe for 4 s: it takes **+15% damage from every undead source** (all summons and your spells; only the Soul Nova is exempt), shown as a violet film and rune. Still holds its ground |
+| Corpse Abomination Lv 5 | Bone Plating **Lv 5** (flat damage off every hit on a minion) | **Bone Colossus**: armoured in fused bone, ×1.6 HP, a bigger body (19 px) and blocking ring (23 px, mass 11), **Stomp radius +40%**; **taunt**: foes within 110 px pick it as their target before you or any other summon (target choice only: they still advance; bosses, Reckoning enemies and structures ignore it); when it falls it bursts into **bone shrapnel** (2× its stomp damage to foes within 90 px, with knockback) |
 
   The numbers live in `scripts/data/summon_evolution_data.gd`; the runtime is
   `HordeDirector.evolutions` (`scripts/horde/summon_evolutions.gd`). Summon
@@ -766,6 +769,8 @@ scripts/
       rogue_behavior.gd       Dash Strike (telegraphed lane, dash, bleed, return to formation)
       gargoyle_behavior.gd    Swoop (airborne flight over obstacles, dive AoE, safe landing)
       frost_wraith_behavior.gd Frost bolts (chill) and Deep Freeze (the Stasis freeze path)
+    gravebow_kit.gd         Gravebow volleys (pierce, split fan, cursed arrows), card lines, autotest line
+    colossus_kit.gd         Bone Colossus taunt list (4 Hz, generation-checked) and shrapnel burst
   enemies/
     enemy.gd                Data-driven Covenant soldier (melee / purifier / ranged / healer / banner /
                             structure / cart), auras, cleaves, damage-taken hook, warrior-blocking resolution
@@ -802,6 +807,8 @@ scripts/
                             their icons, evolution glow, enemy chill tint),
                             reaper_horror_glyphs (Shadow Reaper, Cathedral Horror,
                             enemy stun stars, stone-form shell),
+                            gravebow_colossus_glyphs (Gravebow, Bone Colossus, their icons,
+                            the curse tint),
                             ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons),
                             chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
                             stage_select (stage cards, locks, best times), pre_run_setup (difficulty level,
@@ -822,7 +829,8 @@ scripts/
     evolution_data.gd       Evolution recipes and stats
     recipe_book_data.gd     Texts of the pause menu's Recipes view (discovered evolutions)
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
-                            Winter Revenant, Shadow Reaper, Cathedral Horror) and stats
+                            Winter Revenant, Shadow Reaper, Cathedral Horror, Gravebow,
+                            Bone Colossus) and stats
     synergy_data.gd         Army synergy requirements and effects
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
@@ -953,7 +961,11 @@ seconds and damage the stone prevented (`horror_stuns`, `horror_boss_stuns`,
 `enemy_stunned_seconds`, `horror_stone_forms`, `horror_stone_seconds`,
 `horror_stone_dmg_prevented`). The ward line reports wards on
 the necromancer (and per minute with 2+ Warders / Bishops alive), heal casts,
-ally barriers and the barrier damage absorbed. These numbers
+ally barriers and the barrier damage absorbed. A **gravebow / bone colossus**
+line reports Gravebow volleys, split volleys and their extra arrows, pierce
+hits (`gravebow_pierce_hits`) and damage, curses applied / refreshed and the
+curse bonus damage (`curse_bonus_dmg`), and the Colossus's damage, stomps,
+taunted enemies (`colossus_taunts`) and shrapnel bursts, hits and damage. These numbers
 are the starting point for tuning. Every 60 s it also prints `[metric]` lines
 (army size and capacity per class, level, damage taken by attacker, enemies
 alive by kind, XP collected so far as `xp=`), and at the end `boss_hp_at_0`
@@ -1087,8 +1099,8 @@ warrior wall shape) with a human player.
 
 **Phase 2 – Graveyard vertical slice (mostly done):** playtest with humans;
 retune Void Barrage and the boss; the summon evolutions the later horde
-passives point to (Bone Colossus, Gravebow, Cathedral Horror, Shadow Reaper,
-Winter Revenant); saves; density and minion-HP-bar settings (§38).
+passives point to (Cathedral Horror, Shadow Reaper, Winter Revenant; the
+Gravebow and Bone Colossus are in); saves; density and minion-HP-bar settings (§38).
 
 **Phase 3 – Campaign:** the Crimson March and Marshal Vael are in (a human
 playtest and balance pass are next); the Sanctum of Judgment and Grand

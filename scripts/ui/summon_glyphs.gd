@@ -25,6 +25,8 @@
 ##                        Wraith evolution; bigger, five-spike crown)
 ##   Shadow Reaper / Cathedral Horror (the Rogue / Gargoyle evolutions) are
 ##                        drawn by ReaperHorrorGlyphs
+## The Gravebow and Bone Colossus (and their icons) are drawn by
+## GravebowColossusGlyphs, dispatched from here.
 ## Also draws the icons of the horde passives tied to summon evolutions
 ## (Forbidden Knowledge, Dark Benediction, and the four later ones: Bone
 ## Plating, Unholy Precision, Unholy Resilience, Bound Souls), the
@@ -69,6 +71,8 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 			ReaperHorrorGlyphs.draw_shadow_reaper(ci, o, r, flash)
 		"cathedral_horror":
 			ReaperHorrorGlyphs.draw_cathedral_horror(ci, o, r, flash)
+		"gravebow", "bone_colossus":
+			return GravebowColossusGlyphs.draw_summon(ci, kind, o, r, flash)
 		_:
 			return false
 	return true
@@ -119,6 +123,8 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 		"winter_revenant":
 			ProgressionGlyphs._gold_frame(ci, c, s)
 			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.04, s * 0.14), s * 0.42, false)
+		"gravebow", "bone_colossus":
+			return GravebowColossusGlyphs.draw_icon(ci, kind, c, s)  # Gold-framed evolution icons.
 		_:
 			return false
 	return true

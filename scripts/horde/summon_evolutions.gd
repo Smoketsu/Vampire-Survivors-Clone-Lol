@@ -24,6 +24,10 @@
 ##     deterministic accumulator instead of an RNG roll.
 ##   * Winter Revenant shatter and death nova: WinterRevenant (`winter`),
 ##     fed by on_enemy_killed() and HordeDirector.summon_died.
+##   * Gravebow (GravebowKit) and Bone Colossus (ColossusKit): their numbers
+##     arrive as "special_mult" / "special_set" overlays on the class's
+##     effective special (modify_stats()); the kits read them from
+##     SummonedUnit.special.
 ## Card helpers (offer, hints, dead-card and evolution-path checks) keep
 ## AbilityManager's changes to one-line hooks.
 class_name SummonEvolutions
@@ -154,7 +158,7 @@ func modify_stats(cls: String, out: Dictionary, with_evolution: bool) -> void:
 	for key: String in set_v:
 		out[key] = set_v[key]
 	# Class-special overlays (Winter Revenant, Shadow Reaper, Cathedral
-	# Horror): special_mult scales the already-scaled special numbers,
+	# Horror, Gravebow, Bone Colossus): special_mult scales the already-scaled special numbers,
 	# special_set values are final. out["special"] is built fresh by every
 	# compute_stats() call, so it is safe to modify.
 	var sp: Dictionary = out["special"]  # This class's special numbers.
@@ -201,6 +205,9 @@ func _transform(evo: String, def: Dictionary) -> void:
 	var cls: String = def["bases"][0]
 	evolved[cls] = evo
 	director.recompute_all(director.capacity_snapshot())
+	# A wider blocker (Bone Colossus) widens the enemies' blocker query now:
+	# the units transform in place, so _try_spawn() never saw the new radius.
+	director.block_query_radius = maxf(director.block_query_radius, float(director.class_stats[cls]["block_radius"]))
 	for u in director.units:
 		if u.unit_class == cls and not u.is_temporary:
 			u.hp = u.max_hp
@@ -344,6 +351,8 @@ func build_offer(evo: String) -> Dictionary:
 		if evo == WinterRevenant.ID:
 			WinterRevenant.offer_lines(deltas, cur, nxt, def)
 		deltas.append_array(SpecialEvolutions.card_lines(evo, cur, nxt))  # Shadow Reaper / Cathedral Horror.
+		deltas.append_array(GravebowKit.offer_lines(cur, nxt))
+		deltas.append_array(ColossusKit.offer_lines(cur, nxt))
 		hint = "Transforms your %s in place" % String(UnitData.UNITS[cls]["plural"]).to_lower()
 	var lvl_from := int(SummonEvolutionData.BASE_LEVEL_REQUIRED)
 	return ab._offer("evolution", evo, String(def["display_name"]), String(def["icon"]), lvl_from, lvl_from, "EVOLUTION",

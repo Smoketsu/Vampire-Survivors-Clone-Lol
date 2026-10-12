@@ -186,6 +186,13 @@ var mark_time: float = 0.0
 var rot_until: float = 0.0
 ## Plague Cloud Rot: extra damage fraction taken while rotting (0..~0.3).
 var rot_amp: float = 0.0
+## Gravebow curse: game time (s) until which this enemy is cursed (takes
+## `curse_amp` more damage from every undead source in
+## CombatResolver.damage_enemy). Set by CombatResolver.curse_enemy(); timed on
+## Game.elapsed like Rot. 0 = never cursed / expired.
+var curse_until: float = 0.0
+## Gravebow curse: extra damage fraction taken while cursed (0..1).
+var curse_amp: float = 0.0
 ## Seconds left of the brief slowdown after a ranged unit fires.
 var _shoot_slow_timer: float = 0.0
 ## True while a Stasis power-up holds this enemy (EnemyDirector skips its
@@ -303,6 +310,8 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	mark_time = 0.0
 	rot_until = 0.0
 	rot_amp = 0.0
+	curse_until = 0.0
+	curse_amp = 0.0
 	_shoot_slow_timer = 0.0
 	frozen = false
 	freeze_timer = 0.0
@@ -409,8 +418,16 @@ func think() -> void:
 
 
 ## Targets the player unless a summon within `search` px is closer (or, for
-## Purifiers, unless any summon is within `search` px at all).
+## Purifiers, unless any summon is within `search` px at all). A Bone
+## Colossus in taunt reach (ColossusKit) wins over both: it changes only the
+## target choice, so every kind keeps its own movement (enemies always advance).
 func _pick_target(search: float, prefer_undead: bool) -> void:
+	var taunter := game.horde.colossi.taunt_target(self)  # null = no taunt applies.
+	if taunter != null:
+		if target != taunter:
+			game.stat_add("colossus_taunts", 1.0)
+		_set_target(taunter)
+		return
 	var player := game.player
 	var best: Node2D = player
 	var best_d := position.distance_to(player.position)
@@ -733,6 +750,9 @@ func _tick_timers(delta: float) -> void:
 		chill_timer -= delta
 		if chill_timer <= 0.0:
 			queue_redraw()
+	if curse_until > 0.0 and curse_until <= game.elapsed:
+		curse_until = 0.0  # Gravebow curse expired: drop its tint.
+		queue_redraw()
 	if buff_time > 0.0:
 		buff_time -= delta
 		if buff_time <= 0.0:
@@ -829,6 +849,8 @@ func _draw() -> void:
 		MarchGlyphs.draw_buffed(self, Vector2(0, -radius * 2.4), 4.0)  # Aura buff chevron.
 	if mark_time > 0.0:
 		ProgressionGlyphs.draw_mage_mark(self, Vector2(0, -radius * 2.5), 4.0)
+	if curse_until > 0.0:
+		GravebowColossusGlyphs.draw_curse(self, Vector2.ZERO, radius)  # Gravebow curse tint.
 	if hp < max_hp:
 		# The node is mirrored via scale.x; counter-flip so the bar always
 		# fills left-to-right.

@@ -89,6 +89,8 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 | `winter_revenant.png` | Winter Revenant (Frost Wraith evolution): a towering crowned ice wraith in tattered frost robes, a staff of black ice, pale blue (`#9ED6FF`) glow; pixel art, faces right, transparent background | 56 px |
 | `shadow_reaper.png` | Shadow Reaper (Grave Rogue evolution): a hooded skeletal assassin wreathed in shadow, bone skull mask with violet (`#A35CFA`) eyes, twin curved scythe-blades (one forward, one swept back), violet trailing smoke behind it, deep rogue-cloak violet-black (`#291A3D`) | 48 px |
 | `cathedral_horror.png` | Cathedral Horror (Crypt Gargoyle evolution): a huge winged stone gargoyle torn from a cathedral, cracked pale marble body, wide ribbed stone wings, ram horns, violet (`#A35CFA`) glowing runes carved into its chest, gripping a broken plinth; clearly bigger and bulkier than the Crypt Gargoyle | 64 px |
+| `gravebow.png` | Gravebow (evolved archer): an ornate skeletal archer in a tall tattered dark-green hood (`#2B453D`) with a ragged hem, violet (`#A35CFA`) eye glow, a bone quiver; it draws a HUGE bone longbow (`#DED9C2`, taller than itself, bone spikes at the tips) with an arrow wreathed in violet curse-fire nocked. Bigger and more ornate than `archer.png` | 52 px |
+| `bone_colossus.png` | Bone Colossus (evolved abomination): a towering hulk of grey-green corpse flesh (`#788F6B`) armoured in fused bone plates (`#DED9C2`): a ribbed bone breastplate, spiked bone pauldrons, a horned bone helm over a small skull with green (`#6BF28C`) eyes, a bone-slab club for an arm, thick plated legs. Clearly bigger and more armoured than `abomination.png` | 100 px |
 
 ### Covenant enemies (`assets/sprites/enemies/`)
 | File | Subject | Size |
@@ -188,6 +190,8 @@ the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
 | `winter_revenant.png` | Ice-crowned wraith head with a black-ice staff (evolution frame) |
 | `shadow_reaper.png` | Hooded skull mask between two crossed scythe-blades (evolution frame) |
 | `cathedral_horror.png` | Horned marble gargoyle head with a glowing violet rune (evolution frame) |
+| `gravebow.png` | Bone longbow with a violet curse-fire arrow (evolution frame) |
+| `bone_colossus.png` | Horned bone helm over a ribbed bone breastplate (evolution frame) |
 | `grave_dominion.png` | Gravestone with a green rune |
 | `necrotic_vigor.png` | Green heart made of bone |
 | `dark_command.png` | Violet crown |

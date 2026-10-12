@@ -792,6 +792,7 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] evolutions: %s" % (", ".join(ab.evolution_history) if not ab.evolution_history.is_empty() else "none"))
 	_print_summon_evolutions(st_all)
 	_print_recipe_book()
+	print("[autotest] gravebow / bone colossus: %s | %s" % [GravebowKit.summary_line(st_all), ColossusKit.summary_line(st_all)])
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())
 	print("[autotest] horde passives: %s" % MinionPassives.summary_line(game))
 	var syn := game.horde.synergies

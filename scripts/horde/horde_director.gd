@@ -14,7 +14,8 @@
 ##     crumble after their duration (GDD §15.0 decision on open question 14).
 ##   * summon evolutions (Death Knight, Lich, Profane Bishop) through its
 ##     SummonEvolutions: the evolution overlay on effective stats, in-place
-##     transformation and the Mender + Warder merge (SummonEvolutionData).
+##     transformation and the Mender + Warder merge (SummonEvolutionData);
+##     the Bone Colossus taunt and death burst through its ColossusKit.
 ## Ranged overkill reservations are stored on the enemies themselves
 ## (Enemy.incoming_damage) and managed by ProjectileManager.
 class_name HordeDirector
@@ -73,6 +74,8 @@ var _tmp: Array = []
 var synergies: SynergyManager
 ## Summon evolutions (state, stat overlay, transformation / merge).
 var evolutions: SummonEvolutions
+## Bone Colossus taunt list and death burst (ColossusKit).
+var colossi: ColossusKit
 ## Radius (px) Enemy.resolve_blocking() adds to its own to find blockers:
 ## UnitData.MAX_BLOCK_RADIUS, raised to the widest block_radius ever spawned
 ## this run (the Corpse Abomination's), never lowered.
@@ -87,6 +90,7 @@ func _init() -> void:
 		immediate_spawns[cls] = 0
 	synergies = SynergyManager.new(self)
 	evolutions = SummonEvolutions.new(self)
+	colossi = ColossusKit.new(self)
 
 
 # =====================================================================================
@@ -102,6 +106,7 @@ func step(delta: float) -> void:
 	synergies.step(delta)
 	if _frame % UnitData.FORMATION_TICK_DIVISOR == 0:
 		_calculate_formation_anchors()
+		colossi.refresh()  # Bone Colossus taunters (4 Hz).
 	# Offset by half a period so threat checks never share a tick with the
 	# formation update.
 	if _frame % UnitData.THREAT_TICK_DIVISOR == (UnitData.THREAT_TICK_DIVISOR >> 1):

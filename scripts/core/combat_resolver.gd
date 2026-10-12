@@ -16,6 +16,8 @@
 ##                       the other reductions and before barriers.
 ## Cathedral Horror (summon evolution): stun_enemy() (the dive stun) and the
 ## stone form check in damage_unit().
+## The Gravebow curse (a status, curse_enemy()) amplifies damage here too, and
+## a dying Bone Colossus bursts into shrapnel from damage_unit() (ColossusKit).
 class_name CombatResolver
 extends RefCounted
 
@@ -57,6 +59,9 @@ func is_minion_source(source: String) -> bool:
 ## from every source; the extra is counted in the rot_bonus_dmg stat.
 ## A minion attack may crit first (Unholy Precision; minion_crits and the
 ## extra damage dealt, minion_crit_bonus_dmg).
+## A cursed enemy (Gravebow curse, Enemy.curse_until, curse_enemy()) takes
+## curse_amp more from every undead source; the extra is counted in the
+## curse_bonus_dmg stat.
 func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if not e.active or amount <= 0.0:
 		return 0.0
@@ -75,9 +80,16 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	# from every source.
 	var rot := e.rot_amp if e.rot_until > game.elapsed else 0.0  # Rot bonus fraction.
 	amount *= 1.0 + rot
+	# Gravebow curse (applied after Rot): +curse_amp from every undead source.
+	var curse := 0.0  # Curse bonus fraction of this hit.
+	if e.curse_until > game.elapsed and not source in SummonEvolutionData.CURSE_EXEMPT_SOURCES:
+		curse = e.curse_amp
+		amount *= 1.0 + curse
 	var dealt := minf(amount * (1.0 - e.armor), e.hp)
 	if rot > 0.0:
 		game.stat_add("rot_bonus_dmg", dealt * rot / (1.0 + rot))
+	if curse > 0.0:
+		game.stat_add("curse_bonus_dmg", dealt * curse / (1.0 + curse))
 	if crit_mult > 1.0:
 		game.stat_add("minion_crits", 1.0)
 		game.stat_add("minion_crit_bonus_dmg", dealt * (1.0 - 1.0 / crit_mult))
@@ -143,6 +155,7 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	game.stat_add("summon_dmg_from_" + source, dealt)
 	if u.hp <= 0.0:
 		game.stat_add("death_" + u.unit_class + "_by_" + source, 1.0)
+		game.horde.colossi.on_unit_killed(u)  # Bone Colossus shrapnel burst.
 		game.horde.on_unit_died(u)
 
 
@@ -207,6 +220,26 @@ func chill_enemy(e: Enemy, fraction: float, duration: float) -> void:
 	e.apply_slow(fraction, duration)
 	e.apply_chill(duration)
 	game.stat_add("frost_chills", 1.0)
+
+
+## Gravebow curse: for `duration` s enemy `e` takes `amp` (0..1) more damage
+## from every undead source (damage_enemy(); SummonEvolutionData
+## CURSE_EXEMPT_SOURCES aside). It is timed on Game.elapsed like Rot, so it
+## needs no ticking; a new hit refreshes the duration and keeps the stronger
+## amp. A violet tint marks a cursed enemy (Enemy._draw()). Stats:
+## curses_applied (a fresh curse), curse_refreshes.
+func curse_enemy(e: Enemy, amp: float, duration: float) -> void:
+	if not e.active or amp <= 0.0 or duration <= 0.0:
+		return
+	var now := game.elapsed  # Run time (s).
+	if e.curse_until <= now:
+		e.curse_amp = amp
+		e.queue_redraw()
+		game.stat_add("curses_applied", 1.0)
+	else:
+		e.curse_amp = maxf(e.curse_amp, amp)
+		game.stat_add("curse_refreshes", 1.0)
+	e.curse_until = maxf(e.curse_until, now + duration)
 
 
 ## Frost Wraith Deep Freeze: holds `e` for `duration` s through the Stasis

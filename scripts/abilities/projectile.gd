@@ -64,9 +64,17 @@ var split_life: float = 0.0
 var chill_slow: float = 0.0
 ## Frost bolt: seconds the chill lasts.
 var chill_time: float = 0.0
+## Gravebow arrow: extra damage fraction its curse adds (0..1; 0 = no curse).
+var curse_amp: float = 0.0
+## Gravebow arrow: seconds the curse lasts on every enemy it hits (0 = none).
+var curse_time: float = 0.0
 
 
 func _draw() -> void:
+	if curse_time > 0.0:
+		# Gravebow arrow: a violet curse-fire trail under the arrow (or its sprite).
+		draw_line(Vector2(-16, 0), Vector2(2, 0), Color(Palette.VIOLET, 0.45), 4.5)
+		draw_circle(Vector2(6, 0), 3.5, Color(Palette.VIOLET, 0.55))
 	# Sprite art (assets/sprites/projectiles/<kind>.png), drawn along +x like the glyphs.
 	if SpriteBank.draw_flat(self, "projectiles/" + String(Kind.keys()[kind]).to_lower(), Vector2.ZERO, 0.0):
 		return

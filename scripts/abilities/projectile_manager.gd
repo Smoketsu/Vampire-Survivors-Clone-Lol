@@ -6,7 +6,10 @@
 ## units can see the target is already "spoken for".
 ## Evolution / synergy hooks: Void Barrage bolts split into shards on their
 ## first hit (GDD §6.1); with Volley of the Fallen active, mage explosions mark
-## enemies and skeletal arrows deal bonus damage to marked ones (GDD §6.3).
+## enemies and skeletal arrows (Gravebow arrows too) deal bonus damage to
+## marked ones (GDD §6.3); Gravebow arrows curse what they hit
+## (CombatResolver.curse_enemy) and its split arrows fly straight
+## (fire_friendly_dir()).
 class_name ProjectileManager
 extends Node2D
 
@@ -60,6 +63,30 @@ func fire_friendly(kind: Projectile.Kind, pos: Vector2, target: Enemy, damage: f
 	p.target_gen = target.generation
 	p.source = source
 	_reserve(p, target, damage)
+	_launch(p)
+	return p
+
+
+## Fires a friendly contact projectile straight along unit direction `dir`
+## (no homing, no target, no damage reservation): the Gravebow's split
+## arrows. Returns the projectile (null when the projectile cap was hit).
+func fire_friendly_dir(kind: Projectile.Kind, pos: Vector2, dir: Vector2, damage: float, speed: float, pierce: int, source: String) -> Projectile:
+	var p := _acquire()
+	if p == null:
+		return null
+	p.kind = kind
+	p.hostile = false
+	p.is_aoe = false
+	p.position = pos
+	p.speed = speed
+	p.velocity = dir * speed
+	p.damage = damage
+	p.pierce_left = pierce
+	p.life = DEFAULT_LIFE
+	p.radius = 3.0
+	p.homing = 0.0
+	p.target = null
+	p.source = source
 	_launch(p)
 	return p
 
@@ -163,6 +190,8 @@ func _acquire() -> Projectile:
 	p.hit_ids.clear()
 	p.split_count = 0
 	p.chill_slow = 0.0
+	p.curse_amp = 0.0
+	p.curse_time = 0.0
 	p.reserved = 0.0
 	p.reserve_target = null
 	p.undead_mult = 1.0
@@ -254,7 +283,7 @@ func _friendly_hits(p: Projectile) -> bool:
 			_release(p)
 		p.hit_ids.append(id)
 		var dmg := p.damage
-		if p.source == "archer" and e.mark_time > 0.0:
+		if (p.source == "archer" or p.source == "gravebow") and e.mark_time > 0.0:
 			# Volley of the Fallen: archers punish mage-marked enemies.
 			var bonus := game.horde.synergies.value("volley", "archer_bonus")
 			if bonus > 0.0:
@@ -263,6 +292,10 @@ func _friendly_hits(p: Projectile) -> bool:
 		game.combat.damage_enemy(e, dmg, p.source)
 		if p.chill_slow > 0.0:
 			game.combat.chill_enemy(e, p.chill_slow, p.chill_time)  # Frost Wraith bolt.
+		if p.curse_time > 0.0:
+			game.combat.curse_enemy(e, p.curse_amp, p.curse_time)  # Gravebow arrow.
+			if p.hit_ids.size() > 1:
+				game.stat_add("gravebow_pierce_hits", 1.0)  # A hit after piercing an enemy.
 		if p.split_count > 0:
 			_split(p, e)
 		if p.pierce_left <= 0:

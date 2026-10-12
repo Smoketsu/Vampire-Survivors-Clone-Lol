@@ -144,7 +144,8 @@ var cleave_radius: float = 0.0
 var cleave_fraction: float = 0.0
 ## Fraction of melee damage dealt that heals this unit (Death Knight drain).
 var lifesteal: float = 0.0
-## Summon evolution of this unit ("" = none, "death_knight", "lich").
+## Summon evolution of this unit ("" = none, or a SummonEvolutionData
+## "transform" id: "death_knight", "lich", "gravebow", "bone_colossus").
 var evolution: String = ""
 ## Statistics tag of this unit's damage, heals and shields: the evolution id
 ## if evolved, else the class id ("lich_risen" for Lich-raised skeletons).
@@ -165,6 +166,9 @@ var airborne: bool = false
 ## (GargoyleBehavior): on the ground and body-blocking, but immune to damage
 ## (CombatResolver.damage_unit()).
 var stone_form: bool = false
+## Volleys this unit fired as a Gravebow (GravebowKit: every split_every-th
+## splits); 0 on every activation.
+var evo_volleys: int = 0
 
 # Cached target weights (floats, faster than dictionary lookups in hot loops).
 ## Weight of normalised distance in target scoring.
@@ -303,6 +307,7 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	airborne = false
 	stone_form = false
 	self_modulate = Color.WHITE  # A pooled node may have been stone-tinted.
+	evo_volleys = 0
 	behavior = SummonBehaviors.for_unit(behavior, String(UnitData.UNITS[cls].get("behavior", "")))
 	if behavior != null:
 		behavior.reset(self)
@@ -976,7 +981,10 @@ func _release_attack() -> void:
 						SummonAbilities.after_melee(self, target, hit_at, dir, dealt)
 		"arrow":
 			if _target_valid():
-				game.projectiles.fire_friendly(Projectile.Kind.ARROW, position, target, damage, projectile_speed, pierce, dmg_source)
+				if GravebowKit.is_gravebow(self):
+					GravebowKit.release_volley(self)  # Piercing, splitting, cursing arrows.
+				else:
+					game.projectiles.fire_friendly(Projectile.Kind.ARROW, position, target, damage, projectile_speed, pierce, dmg_source)
 		"aoe":
 			game.projectiles.fire_aoe(position, cast_point, damage, projectile_speed, splash_radius, target if _target_valid() else null, dmg_source)
 		"heal":
