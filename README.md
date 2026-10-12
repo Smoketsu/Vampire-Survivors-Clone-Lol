@@ -57,7 +57,8 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Level-up: Banish a card (2 per run) | **B**, then pick the card (**B** / **Esc** cancels) | **LB**, then pick the card (**LB** / **B** cancels) |
 | Level-up: Skip (unlimited, heals 8% HP) | **N**, or the Skip button | **RB**, or focus the button + **A** |
 | Shadow Bolt aim: Nearest / Strongest | **T** | **Y** |
-| Pause (Resume / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
+| Pause (Resume / Recipes / Settings / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
+| Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move through the list, Esc / Back closes | Focus + **A**; D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
 | Ossuary (Soul Ash upgrades) | **The Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
 | Settings (volume, shake, damage numbers, fullscreen, keys) | **Settings** in the main or pause menu; Esc / Back closes | Focus + **A**; **B** closes |
@@ -210,6 +211,17 @@ number is in `scripts/data/unit_data.gd`.
   cards and the paired passives' cards show the path ("Evolves into Death
   Knights at Lv 5 with Dark Command Lv 5 ...") and "Evolution ready" once it
   holds. Stage-event temporary summons (graves, crypt) always keep the base kit.
+- **Recipe book** (owner decision: evolutions are meant to be *discovered*).
+  The pause menu's **Recipes** view lists every evolution recipe, but shows
+  only the ones you have **obtained in some run**: the evolution's icon and
+  name, its kind, and the recipe ("Shadow Bolt Lv 5 + Soul Conduit Lv 5 ->
+  Void Barrage"; both priest orders for the Profane Bishop). Every other
+  recipe is a locked dark "?" tile with no names or ingredients, and a
+  count ("3 / 10 discovered") shows how many exist. There are no other new
+  hints (no card lines, no HUD signal). Discoveries are saved at once in
+  the save file's `[recipes]` section. The list is built from
+  `EvolutionData` + `SummonEvolutionData` (`scripts/core/evolution_recipes.gd`),
+  so new recipes appear automatically; texts in `recipe_book_data.gd`.
 - **Later horde passives** (GDD §34 names; effects are the prototype's,
   GDD §15.0). Like every army passive they are a dead card while you own no
   summon class; their NEW cards share one weight
@@ -534,7 +546,9 @@ open). The zone is shown under the timer.
   unlocks the Crimson March. The last pre-run choice is saved as
   `[prerun] difficulty` / `modifiers` (a comma-separated id list); an older
   save without it starts on Necromancer with no modifiers, and unknown ids
-  are dropped.
+  are dropped. Discovered evolution recipes are saved under `[recipes]`
+  (`<evolution id> = true`), written as soon as an evolution is obtained; an
+  older save without the section starts with nothing discovered.
 
 ### Power-ups & Profane Pact
 
@@ -657,7 +671,7 @@ file is missing. Only Shadow Blast is wired so far, as the test.
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
-| UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu, end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress (compact rows, at most one per active slot); ability slots with levels (an evolved class shows its evolution's icon and name). |
+| UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu (with a **Recipes** view of the discovered evolution recipes), end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress (compact rows, at most one per active slot); ability slots with levels (an evolved class shows its evolution's icon and name). |
 | Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, Menders are round with a halo, Warders are downward heater shapes under a floating ward sigil, Bishops wear a tall mitre over a bell robe, Death Knights have horned helms, spiked pauldrons and a greatsword, Liches float as crowned wisps, the Lich's risen dead are bare ribcages, abominations are huge stitched blobs, rogues are hooded chevrons with daggers, gargoyles have bat wings, frost wraiths are legless ice ghosts). Hit flashes, death pops and an evolution glow are included. |
 
 ### Where the numbers come from
@@ -704,6 +718,7 @@ scripts/
     game_state.gd           Autoload: CLI options (autotest), session prefs, last run summary
     settings.gd             Autoload: persistent settings (volumes, toggles, key rebinds) in user://settings.cfg
     meta_progress.gd        Autoload "Meta": Soul Ash, upgrade tiers, lifetime stats, achievements,
+                            discovered evolution recipes,
                             purchase / refund, run award, versioned save in user://save.cfg
     meta_modifiers.gd       The ONE path meta upgrades take into a run (game.meta, read by stat code)
     difficulty_modifiers.gd The ONE path the difficulty level, run modifiers, Profane Pact + Oath take
@@ -721,6 +736,8 @@ scripts/
     ground.gd               Procedural graveyard floor, redrawn only when the camera changes cell
     march_ground.gd         Crimson March floor: the road and each battle zone's look (extends Ground)
     march_glyphs.gd         Crimson March shapes: new soldiers, structures, Marshal Vael, obstacles, corpse piles
+    evolution_recipes.gd    Read-only list of every evolution recipe (spell + summon data), for the
+                            Recipes view, the Meta [recipes] section and the autotest
     autotest.gd             Headless self-test driver
   player/necromancer.gd
   horde/
@@ -778,7 +795,8 @@ scripts/
                             ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons),
                             chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
                             stage_select (stage cards, locks, best times), pre_run_setup (difficulty level,
-                            run modifiers, total Soul Ash multiplier)
+                            run modifiers, total Soul Ash multiplier), recipes_panel (pause menu
+                            Recipes view: discovered evolution recipes, locked "?" placeholders)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
     stages/graveyard_stage.gd      Stage 1: segments, events, Reckoning flavour, graves, desecration,
@@ -792,6 +810,7 @@ scripts/
     ability_data.gd         Spell level tables
     passive_data.gd         Passive level tables
     evolution_data.gd       Evolution recipes and stats
+    recipe_book_data.gd     Texts of the pause menu's Recipes view (discovered evolutions)
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop) and stats
     synergy_data.gd         Army synergy requirements and effects
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
@@ -869,7 +888,7 @@ Options (after `--`):
 | `--timeout=N` | Give up after N game seconds (default 1500: the 20:00 countdown plus the Reckoning). |
 | `--policy=NAME` | Level-up card policy: `naive` (default; takes every new summon class, then new spells, then new passives), `army` (a summoner build that levels summons and army passives first, both priest orders included; it maxes Dark Command, so it usually gets the Death Knight too), `evolve` (a spell build that chases the three spell evolutions), `summon` (a summoner build that chases the three summon evolutions: Warriors + Dark Command, Mages + Forbidden Knowledge, Menders + Warders + Dark Benediction) or `pact` (the naive build that takes every Profane Pact card at once, to measure the Pact). Every other policy ranks the Pact below every card, fallbacks included, so balance runs never take it. |
 | `--meta=PROFILE` | Simulated Soul Ash purchases, applied in memory only: `none` (default, so balance runs stay comparable), `mid` (about half of every tree) or `max` (everything). |
-| `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). |
+| `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). Every run's summary has a `recipe book` line (evolutions discovered so far, in memory only without this flag) and builds the Recipes view rows once, headless. |
 | `--oath=N` | Active Profane Oath tier 0-5 (default 0). No `--meta` profile includes the Oath, so `--meta=max` balance runs stay comparable. |
 | `--classes=a,b` | Forces summon classes (`abomination`, `rogue`, `gargoyle`, `frost_wraith`, or any offerable class id; the merge-only `bishop` is ignored): each is raised to Lv 1 at the start (while active slots allow) and every policy upgrades it first, so its special gets exercised. |
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |

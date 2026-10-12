@@ -1,5 +1,7 @@
-## PauseMenu — Esc / controller Start pause screen with Resume, Settings,
-## Restart and Main Menu (GDD §4 "Esc: Pause/settings"). It also owns the "pause" input
+## PauseMenu — Esc / controller Start pause screen with Resume, Recipes,
+## Settings, Restart and Main Menu (GDD §4 "Esc: Pause/settings"). Recipes
+## opens the RecipesPanel view of the discovered evolution recipes (owner
+## decision "Evolution recipe book", GDD §15.0). It also owns the "pause" input
 ## handling because it keeps processing while the tree is paused. While the
 ## menu is open, ui_cancel (Esc / controller B) also resumes.
 class_name PauseMenu
@@ -16,6 +18,10 @@ signal main_menu_pressed
 var game: Game
 ## Resume button (focused on open for keyboard / controller users).
 var _resume: Button
+## Recipes button (regains focus when the Recipes view closes).
+var _recipes_btn: Button
+## Open Recipes view (null when closed; freed when the menu closes).
+var _recipes: RecipesPanel = null
 
 
 func _ready() -> void:
@@ -36,6 +42,7 @@ func _ready() -> void:
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(title)
 	_resume = _button(vb, "Resume", func() -> void: resume_pressed.emit())
+	_recipes_btn = _button(vb, "Recipes", _open_recipes)
 	_button(vb, "Settings", func() -> void: SettingsMenu.open_over(self, get_viewport().gui_get_focus_owner()))
 	_button(vb, "Restart", func() -> void: restart_pressed.emit())
 	_button(vb, "Main Menu", func() -> void: main_menu_pressed.emit())
@@ -54,15 +61,25 @@ func _button(parent: Control, text: String, cb: Callable) -> Button:
 	return b
 
 
+## Opens the Recipes view over the menu (refocusing the Recipes button after).
+func _open_recipes() -> void:
+	if _recipes != null and is_instance_valid(_recipes):
+		return
+	_recipes = RecipesPanel.open_over(self, _recipes_btn)
+
+
 ## Shows the menu and focuses Resume.
 func open() -> void:
 	visible = true
 	_resume.grab_focus.call_deferred()
 
 
-## Hides the menu.
+## Hides the menu (and drops an open Recipes view).
 func close() -> void:
 	visible = false
+	if _recipes != null and is_instance_valid(_recipes):
+		_recipes.queue_free()
+	_recipes = null
 
 
 func _unhandled_input(event: InputEvent) -> void:

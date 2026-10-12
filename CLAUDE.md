@@ -180,7 +180,11 @@ tiny tweaks.
   **Bound Souls** (minion speed, leash, faster return), hooked into `CombatResolver` and
   `HordeDirector.compute_stats()`; their cards name the summon evolutions they will unlock (Bone
   Colossus, Gravebow, Cathedral Horror, Shadow Reaper; Soul Recycling → Winter Revenant), which are
-  not built yet; and the owner rule that **every evolution needs its paired passive at Lv 5**.
+  not built yet; and the owner rule that **every evolution needs its paired passive at Lv 5**;
+- the **recipe book**: evolutions are meant to be discovered (owner decision, no card or HUD hints),
+  so the pause menu's **Recipes** view (`recipes_panel.gd`) shows only the recipes obtained in some
+  run, saved in the Meta `[recipes]` section, and locked "?" placeholders for the rest; it is
+  built from the recipe data (`evolution_recipes.gd`), so new evolutions appear automatically.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.

@@ -50,6 +50,9 @@
 ##     enemies press it hard, and the summary lists chests spawned / opened,
 ##     their sizes, every item granted and the evolution times (evolutions
 ##     come only from chests),
+##   * the recipe book: a "recipe book" line lists the evolutions discovered
+##     so far (Meta [recipes]; in memory only unless --meta-save) and the
+##     pause menu's Recipes rows are built once, headless,
 ##   * summon evolutions and the priest split: the summary lists every
 ##     evolution by type (spell / summon) with its time, the damage, heals
 ##     and shields of every summon source and class (dmg_<tag>, heal_by_<tag>,
@@ -788,6 +791,7 @@ func finish(summary: Dictionary) -> void:
 	var ab := game.abilities
 	print("[autotest] evolutions: %s" % (", ".join(ab.evolution_history) if not ab.evolution_history.is_empty() else "none"))
 	_print_summon_evolutions(st_all)
+	_print_recipe_book()
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())
 	print("[autotest] horde passives: %s" % MinionPassives.summary_line(game))
 	var syn := game.horde.synergies
@@ -830,6 +834,23 @@ func finish(summary: Dictionary) -> void:
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
+
+
+## Prints the Meta recipe book (evolutions discovered in any run; in memory
+## only unless --meta-save) and builds the pause menu's Recipes rows once,
+## headless, so that UI code runs in every autotest.
+func _print_recipe_book() -> void:
+	var known := PackedStringArray()  # Discovered evolution ids, recipe order.
+	for id: String in EvolutionRecipes.ids():
+		if Meta.is_recipe_discovered(id):
+			known.append(id)
+	var buttons: Array[Button] = []  # Focus buttons of the built rows.
+	var list := RecipesPanel.build_list(Meta.discovered_recipes, buttons)
+	var rows := list.get_child_count()
+	list.free()
+	print("[autotest] recipe book: %d / %d discovered (%s) | Recipes view rows built: %d (saved: %s)" % [
+		Meta.discovered_count(), EvolutionRecipes.ids().size(), ", ".join(known) if not known.is_empty() else "none",
+		rows, str(Meta.can_write())])
 
 
 ## Prints the evolutions split by type (spell / summon, with times), the

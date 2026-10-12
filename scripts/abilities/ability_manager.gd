@@ -19,6 +19,8 @@
 ##     SummonEvolutionData, runtime in game.horde.evolutions) share the spell
 ##     evolutions' delivery: ready_evolutions() appends them, chest_rewards()
 ##     grants them, and the cards / hints / weights call small hooks there.
+##     Every granted evolution (spell or summon) is recorded in the Meta
+##     recipe book (Meta.discover_recipe(), the pause menu's Recipes view).
 ## Spell stats are "effective": the level row (or evolution row) with the
 ## spell passives applied (Soul Conduit damage, Abyssal Focus cooldowns) and
 ## the meta Shadowcraft upgrades (game.meta, see MetaModifiers); spell_stats()
@@ -584,6 +586,7 @@ func apply_offer(o: Dictionary) -> void:
 				game.horde.evolutions.apply(id)
 			else:
 				_apply_evolution(id)
+			Meta.discover_recipe(id)  # Recipe book: the pause menu's Recipes view (saved at once).
 		"fallback":
 			_apply_fallback(id)
 		"skip":

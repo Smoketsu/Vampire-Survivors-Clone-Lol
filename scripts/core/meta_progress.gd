@@ -4,7 +4,8 @@
 ## user://settings.cfg:
 ##   * Soul Ash balance and the purchased tier of every upgrade (MetaData),
 ##   * lifetime statistics (runs, best time, total kills, boss kills...),
-##   * achievement unlocks (MetaData.ACHIEVEMENTS).
+##   * achievement unlocks (MetaData.ACHIEVEMENTS),
+##   * the discovered evolution recipes ([recipes], see below).
 ## Run flow: Game asks run_modifiers() at run start (the ONE place meta
 ## upgrades enter a run, see MetaModifiers) and calls award_run() when the
 ## run ends, won or lost (Soul Ash is kept on death).
@@ -35,6 +36,14 @@
 ## comma-separated id list). Older saves have no [prerun] section and get
 ## the defaults (Necromancer, no modifiers); unknown ids are dropped. The
 ## difficulty level and run modifiers each pay their own Soul Ash line.
+## Recipe book (owner decision "Evolution recipe book", GDD §15.0): every
+## evolution the player has obtained in any run is "discovered"
+## (`discovered_recipes`, saved as [recipes] <evolution id> = true; ids from
+## EvolutionRecipes, so new recipes need no save change). AbilityManager
+## calls discover_recipe() when it grants an evolution; a new discovery is
+## saved at once (so it survives quitting mid-run). Older saves have no
+## [recipes] section and start with nothing discovered; unknown ids are
+## ignored. The pause menu's Recipes view (RecipesPanel) reads it.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -73,6 +82,8 @@ var stage_records: Dictionary = {}
 var prerun_difficulty: String = DifficultyData.DEFAULT_ID
 ## Run modifiers (RunModifierData ids, ORDER order) last confirmed there.
 var prerun_modifiers: PackedStringArray = PackedStringArray()
+## Evolution id (EvolutionRecipes.ids()) -> true once obtained in any run.
+var discovered_recipes: Dictionary = {}
 
 ## Keys of every stage record (all floats, like the lifetime stats).
 const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills"]
@@ -258,6 +269,35 @@ func remember_prerun(config: RunConfig) -> void:
 
 
 # =====================================================================================
+# Recipe book (discovered evolutions)
+# =====================================================================================
+
+## Records evolution `id` as discovered (it was just obtained) and saves when
+## it is new. Returns true if it was new. Unknown ids are ignored.
+func discover_recipe(id: String) -> bool:
+	if discovered_recipes.has(id) or not EvolutionRecipes.has(id):
+		return false
+	discovered_recipes[id] = true
+	save()
+	changed.emit()
+	return true
+
+
+## True once evolution `id` has been obtained in some run.
+func is_recipe_discovered(id: String) -> bool:
+	return discovered_recipes.has(id)
+
+
+## Number of known evolutions discovered so far.
+func discovered_count() -> int:
+	var n := 0  # Discovered ids still in the recipe data.
+	for id: String in EvolutionRecipes.ids():
+		if discovered_recipes.has(id):
+			n += 1
+	return n
+
+
+# =====================================================================================
 # Stages (GDD §9.3 campaign unlocks)
 # =====================================================================================
 
@@ -409,6 +449,8 @@ func save() -> Error:
 		var rec := stage_record(id)  # This stage's record.
 		for key: String in STAGE_RECORD_KEYS:
 			cfg.set_value("stages", "%s_%s" % [id, key], float(rec[key]))
+	for id: String in EvolutionRecipes.ids():
+		cfg.set_value("recipes", id, discovered_recipes.has(id))
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -451,6 +493,7 @@ func load_save() -> void:
 	oath_active = clampi(_read_int(cfg, "oath", "active", tier(PactData.OATH_ID)), 0, tier(PactData.OATH_ID))
 	_load_stage_records(cfg)
 	_load_prerun(cfg)
+	_load_recipes(cfg)
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -491,6 +534,15 @@ func _load_prerun(cfg: ConfigFile) -> void:
 	prerun_modifiers = c.modifiers
 
 
+## Reads the [recipes] discoveries (missing section or keys = undiscovered;
+## only `true` booleans of known evolution ids count).
+func _load_recipes(cfg: ConfigFile) -> void:
+	for id: String in EvolutionRecipes.ids():
+		var v: Variant = cfg.get_value("recipes", id, false)
+		if typeof(v) == TYPE_BOOL and bool(v):
+			discovered_recipes[id] = true
+
+
 ## Upgrades an older save layout in `cfg` (in memory) to SAVE_VERSION.
 ## Version 0 is a file without a save_version key; it has the version-1
 ## layout, so nothing moves. Future layout changes add one step per version
@@ -526,6 +578,7 @@ func _reset() -> void:
 	stage_records = _default_stage_records()
 	prerun_difficulty = DifficultyData.DEFAULT_ID
 	prerun_modifiers = PackedStringArray()
+	discovered_recipes = {}
 	load_status = "fresh"
 
 
