@@ -14,6 +14,8 @@
 ##                       PassiveData.AREA_HOLY_SOURCES.
 ##   Bone Plating      — damage_unit(): a flat amount off every hit, after
 ##                       the other reductions and before barriers.
+## Cathedral Horror (summon evolution): stun_enemy() (the dive stun) and the
+## stone form check in damage_unit().
 class_name CombatResolver
 extends RefCounted
 
@@ -108,6 +110,9 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 		return
 	if u.airborne:
 		return  # A flying Gargoyle cannot be hit (GargoyleBehavior).
+	if u.stone_form:
+		game.stat_add("horror_stone_dmg_prevented", amount)
+		return  # A Cathedral Horror in stone form takes no damage (GargoyleBehavior).
 	var host_dr := game.horde.synergies.value("unholy_host", "damage_reduction")
 	if host_dr > 0.0:
 		game.stat_add("host_dmg_prevented", amount * host_dr)
@@ -224,6 +229,27 @@ func freeze_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float
 	game.stat_add("frost_freezes", 1.0)
 	if e.is_boss:
 		game.stat_add("frost_boss_freezes", 1.0)
+	return d
+
+
+## Cathedral Horror dive stun: holds `e` for `duration` s through the same
+## hold as the Deep Freeze (EnemyDirector skips its AI, attacks and movement
+## while Enemy.stun_timer > 0; drawn with stun stars instead of the frost
+## shell). Same immunities and reductions as freeze_enemy(): the boss gets
+## `boss_mult` of the duration, elites `elite_mult`, Reckoning enemies and
+## Crimson March structures are immune. A longer stun already running is
+## kept. Returns the seconds applied (0 = immune). Stats: enemy_stuns,
+## enemy_stunned_seconds (Enemy.step_frozen()).
+func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) -> float:
+	if not e.active or e.is_reckoning or e.is_structure or duration <= 0.0:
+		return 0.0
+	var d := duration  # Stun time for this enemy.
+	if e.is_boss:
+		d *= boss_mult
+	elif e.is_elite:
+		d *= elite_mult
+	e.stun_timer = maxf(e.stun_timer, d)
+	game.stat_add("enemy_stuns", 1.0)
 	return d
 
 

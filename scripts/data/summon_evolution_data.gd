@@ -12,6 +12,10 @@
 ##       (GDD §4.2 priest evolution; the split priest classes MERGE into one)
 ##   Frost Wraith Lv 5     + Soul Recycling Lv 5      = Winter Revenant
 ##       (owner-approved; wider Deep Freeze, shatter, death nova)
+##   Grave Rogue Lv 5      + Bound Souls Lv 5         = Shadow Reaper
+##   Crypt Gargoyle Lv 5   + Unholy Resilience Lv 5   = Cathedral Horror
+##       (owner-approved; they UPGRADE the class special, RogueBehavior /
+##       GargoyleBehavior, through the special_mult / special_set overlays)
 ## Owner rule: every evolution, spell or summon, needs its paired passive at
 ## Lv 5 (EvolutionData.PASSIVE_LEVEL_REQUIRED); `passive_level` below is 5
 ## for every recipe.
@@ -37,7 +41,7 @@ extends RefCounted
 
 ## Display / check order of the summon evolutions.
 const ORDER := ["death_knight", "lich", "profane_bishop",
-	"winter_revenant"]
+	"winter_revenant", "shadow_reaper", "cathedral_horror"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -60,6 +64,11 @@ const TRANSFORM_FX_TIME: float = 1.2  # TUNING (not in GDD)
 ##   mult          — "transform" only: effective-stat key -> multiplier
 ##                   (its own stacking category, GDD §6.4).
 ##   set           — "transform" only: effective-stat key -> absolute value.
+##   special_mult  — "transform" only: class-special key (UnitData "special",
+##                   already scaled by HordeDirector._special_stats()) ->
+##                   multiplier.
+##   special_set   — "transform" only: class-special key -> absolute value
+##                   (applied after every scaling: these numbers are final).
 ## Death Knight keys (SummonAbilities.after_melee):
 ##   cleave_radius   — px around the struck enemy; other enemies inside take
 ##                     cleave_fraction of the hit (source "death_knight_cleave").
@@ -75,6 +84,27 @@ const TRANSFORM_FX_TIME: float = 1.2  # TUNING (not in GDD)
 ##     duration   — s a risen skeleton lasts before it crumbles,
 ##     hp_mult / damage_mult — multipliers on that class's current stats,
 ##     max_alive  — at most this many risen skeletons at once.
+## Shadow Reaper special keys (RogueBehavior; 0 / absent on the base Rogue):
+##   chain_dashes    — extra dashes after the first: when a dash ends, the
+##                     nearest enemy not struck by this chain, dash_min..
+##                     dash_length px away, with a clear lane whose end stays
+##                     inside the soft leash, is dashed at at once.
+##   chain_telegraph — s the lane of a chained dash is shown (the first dash
+##                     keeps dash_telegraph).
+##   bleed_stacks    — bleeds one Reaper keeps on one enemy at once; each
+##                     dash hit adds a stack (each ticks on its own) and at
+##                     the cap refreshes the stack with the fewest ticks left.
+##   dash_kill_reset — 1 = a kill by a dash hit resets the dash cooldown, at
+##                     most once per dash chain (applied when the chain ends).
+##   dash_reset_floor — s the cooldown is set to by that reset (never 0, so
+##                     kills cannot loop dashes).
+## Cathedral Horror special keys (GargoyleBehavior; 0 / absent on the base):
+##   stun_duration   — s every enemy hit by the dive is stunned
+##                     (CombatResolver.stun_enemy(): the Deep Freeze hold).
+##   stun_boss_mult / stun_elite_mult — share of the stun for the boss /
+##                     elites; Reckoning enemies and structures are immune.
+##   stone_duration  — s it stands as stone after landing: it does not move
+##                     or attack, takes no damage and still body-blocks.
 const EVOLUTIONS := {
 	"death_knight": {
 		"mode": "transform",
@@ -210,6 +240,59 @@ const EVOLUTIONS := {
 			# Revenants die far more often (92 deaths vs 23 in the Graveyard).
 			"damage_mult": 3.0,  # TUNING (not in GDD) x the Revenant's frost-bolt damage; was 4.0
 			"freeze_duration": 1.2,  # TUNING (not in GDD) s (Deep Freeze is 1.6)
+		},
+	},
+	"shadow_reaper": {
+		"mode": "transform",
+		"bases": ["rogue"],
+		"passive": "bound_souls",
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: Bound Souls at max level
+		"display_name": "Shadow Reaper",  # TUNING (not in GDD) owner-approved name
+		"plural": "Shadow Reapers",
+		"icon": "shadow_reaper",
+		"description": "Your rogues become Shadow Reapers: dashes twice as often, each one chains to a second foe, bleeds stack, and a kill mid-dash readies the next.",
+		"mult": {
+			"max_hp": 1.35,  # TUNING (not in GDD)
+			"damage": 1.25,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 10.0,  # TUNING (not in GDD) rogues are 9
+		},
+		"special_mult": {
+			"dash_cooldown": 0.5,  # TUNING (not in GDD) owner brief: cooldown halved
+		},
+		"special_set": {
+			"chain_dashes": 1,  # TUNING (not in GDD) owner brief: chains to a second target
+			"chain_telegraph": 0.1,  # TUNING (not in GDD) s; a short flash of the lane keeps the chain readable
+			"bleed_stacks": 3,  # TUNING (not in GDD) owner brief: bleeds stack up to 3 times
+			"dash_kill_reset": 1,  # TUNING (not in GDD) owner brief: a kill during a dash resets the cooldown
+			"dash_reset_floor": 0.9,  # TUNING (not in GDD) s; at most one reset per chain, never below this (0.6 let 35% of chains come back almost at once: Reapers dealt 38% of all damage in a forced summon run)
+		},
+	},
+	"cathedral_horror": {
+		"mode": "transform",
+		"bases": ["gargoyle"],
+		"passive": "unholy_resilience",
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: Unholy Resilience at max level
+		"display_name": "Cathedral Horror",  # TUNING (not in GDD) owner-approved name
+		"plural": "Cathedral Horrors",
+		"icon": "cathedral_horror",
+		"description": "Your gargoyles tear free as Cathedral Horrors: wider dives that stun what they hit, and after each landing they turn to stone, untouchable.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.25,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 13.0,  # TUNING (not in GDD) gargoyles are 11
+		},
+		"special_mult": {
+			"swoop_radius": 1.3,  # TUNING (not in GDD) owner brief: swoop radius +30%
+		},
+		"special_set": {
+			"stun_duration": 0.6,  # TUNING (not in GDD) owner brief: dive stuns for 0.6 s
+			"stun_boss_mult": 0.25,  # TUNING (not in GDD) the stage boss: 25% of the stun (like the Deep Freeze's reduced boss share)
+			"stun_elite_mult": 0.6,  # TUNING (not in GDD) elites: 60% (the Deep Freeze's elite share)
+			"stone_duration": 2.0,  # TUNING (not in GDD) owner brief: stone for 2 s after landing
 		},
 	},
 }

@@ -87,6 +87,8 @@ silver / gold**. Never mix the two sides' signature colours on one unit.
 | `frost_wraith.png` | Frost Wraith: icy translucent spectre, tattered robe trailing into mist | 48 px |
 | `risen.png` | Lich-raised temporary skeleton: plain, ragged, faint violet glow | 36 px |
 | `winter_revenant.png` | Winter Revenant (Frost Wraith evolution): a towering crowned ice wraith in tattered frost robes, a staff of black ice, pale blue (`#9ED6FF`) glow; pixel art, faces right, transparent background | 56 px |
+| `shadow_reaper.png` | Shadow Reaper (Grave Rogue evolution): a hooded skeletal assassin wreathed in shadow, bone skull mask with violet (`#A35CFA`) eyes, twin curved scythe-blades (one forward, one swept back), violet trailing smoke behind it, deep rogue-cloak violet-black (`#291A3D`) | 48 px |
+| `cathedral_horror.png` | Cathedral Horror (Crypt Gargoyle evolution): a huge winged stone gargoyle torn from a cathedral, cracked pale marble body, wide ribbed stone wings, ram horns, violet (`#A35CFA`) glowing runes carved into its chest, gripping a broken plinth; clearly bigger and bulkier than the Crypt Gargoyle | 64 px |
 
 ### Covenant enemies (`assets/sprites/enemies/`)
 | File | Subject | Size |
@@ -184,6 +186,8 @@ the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
 | `lich.png` | Crowned skull with a phylactery (evolution frame) |
 | `profane_bishop.png` | Bone mitre with a green halo (evolution frame) |
 | `winter_revenant.png` | Ice-crowned wraith head with a black-ice staff (evolution frame) |
+| `shadow_reaper.png` | Hooded skull mask between two crossed scythe-blades (evolution frame) |
+| `cathedral_horror.png` | Horned marble gargoyle head with a glowing violet rune (evolution frame) |
 | `grave_dominion.png` | Gravestone with a green rune |
 | `necrotic_vigor.png` | Green heart made of bone |
 | `dark_command.png` | Violet crown |

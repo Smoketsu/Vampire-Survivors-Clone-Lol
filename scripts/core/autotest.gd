@@ -822,6 +822,7 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] obstacle collisions resolved: player=%d summons=%d enemies=%d" % [
 		game.arena.resolved_player, game.arena.resolved_summons, game.arena.resolved_enemies])
 	_print_class_specials(st)
+	print("[autotest] special evolutions: %s" % SpecialEvolutions.summary_line(game))
 	print("[autotest] stuck_units=%d (touching an obstacle: %d) %s" % [_stuck_units, _stuck_at_obstacle, str(_stuck_by)])
 	print("[metric] boss_hp_at_0=%d min_hp_before_0=%d" % [int(_boss_hp_at_0), int(_min_hp)])
 	print("[autotest] peaks: enemies=%d summons=%d projectiles=%d effects=%d crystals=%d" % [

@@ -41,12 +41,14 @@ const PROJECTILE_SOURCES := ["bolt", "void", "void_shard", "spear", "lance",
 ## Skeleton Warrior strikes and bashes (temporary and Lich-risen skeletons
 ## included), the Death Knight's strike, bash and cleave, the Abomination's
 ## fists and stomp, the Rogue's stab, dash and bleed, the Gargoyle's claws
-## and swoop, and the Profane Bishop's aura pulse (it surrounds the Bishop,
+## and swoop (and the same strikes of their Shadow Reaper / Cathedral
+## Horror evolutions), and the Profane Bishop's aura pulse (it surrounds the Bishop,
 ## so it reaches behind a shield like a blade at close range).
 const MELEE_SOURCES := ["warrior", "bash", "lich_risen",
 	"death_knight", "death_knight_bash", "death_knight_cleave",
 	"abomination", "abom_stomp", "rogue", "rogue_dash", "rogue_bleed",
-	"gargoyle", "gargoyle_swoop", "bishop_aura"]
+	"gargoyle", "gargoyle_swoop", "bishop_aura",
+	"shadow_reaper", "cathedral_horror"]
 ## Seconds an aura buff (Banner Bearer, Holy Standard) lingers on a soldier
 ## after it leaves the aura (auras refresh at the 5 Hz think rate).
 const AURA_LINGER: float = 0.6  # TUNING (not in GDD)

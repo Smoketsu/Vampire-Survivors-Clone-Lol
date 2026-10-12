@@ -194,6 +194,9 @@ var frozen: bool = false
 ## Seconds left of a Frost Wraith Deep Freeze (CombatResolver.freeze_enemy):
 ## while > 0 EnemyDirector freezes this enemy exactly like Stasis.
 var freeze_timer: float = 0.0
+## Seconds left of a Cathedral Horror dive stun (CombatResolver.stun_enemy):
+## while > 0 EnemyDirector holds this enemy exactly like a Deep Freeze.
+var stun_timer: float = 0.0
 ## Seconds left of a Frost Wraith chill (the slow itself is slow_timer; this
 ## only drives the frost tint).
 var chill_timer: float = 0.0
@@ -303,6 +306,7 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	_shoot_slow_timer = 0.0
 	frozen = false
 	freeze_timer = 0.0
+	stun_timer = 0.0
 	chill_timer = 0.0
 	visible = true
 	queue_redraw()
@@ -332,6 +336,10 @@ func step_frozen(delta: float) -> void:
 		# Frost Wraith Deep Freeze (frozen-enemy-seconds stat for the autotest).
 		game.stat_add("frost_frozen_seconds", minf(delta, freeze_timer))
 		freeze_timer -= delta
+	if stun_timer > 0.0:
+		# Cathedral Horror stun (stunned-enemy-seconds stat for the autotest).
+		game.stat_add("enemy_stunned_seconds", minf(delta, stun_timer))
+		stun_timer -= delta
 	if flash > 0.0:
 		flash -= delta
 		if flash <= 0.0:
@@ -827,7 +835,9 @@ func _draw() -> void:
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2(_facing, 1.0))
 		Glyphs.hp_bar(self, Vector2(0, -radius * 1.8), radius * 2.0, hp / max_hp, Palette.HP_ENEMY)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	if frozen:
+	if frozen and stun_timer > 0.0 and freeze_timer <= 0.0:
+		ReaperHorrorGlyphs.draw_stun(self, Vector2(0, -radius * 1.35), radius)  # Stunned, not frozen (Stasis on top shows the stun too).
+	elif frozen:
 		PowerupGlyphs.draw_frozen(self, Vector2.ZERO, radius)
 	elif chill_timer > 0.0:
 		SummonGlyphs.draw_chill(self, Vector2.ZERO, radius)

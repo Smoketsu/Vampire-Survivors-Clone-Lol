@@ -161,6 +161,10 @@ var behavior: SummonBehavior = null
 ## True while flying (Gargoyle swoop): no obstacle collision, not in the ally
 ## grid (enemies cannot target or be blocked by it) and immune to damage.
 var airborne: bool = false
+## True while a Cathedral Horror stands as stone after a swoop
+## (GargoyleBehavior): on the ground and body-blocking, but immune to damage
+## (CombatResolver.damage_unit()).
+var stone_form: bool = false
 
 # Cached target weights (floats, faster than dictionary lookups in hot loops).
 ## Weight of normalised distance in target scoring.
@@ -297,6 +301,8 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	think_slot = slot
 	visible = true
 	airborne = false
+	stone_form = false
+	self_modulate = Color.WHITE  # A pooled node may have been stone-tinted.
 	behavior = SummonBehaviors.for_unit(behavior, String(UnitData.UNITS[cls].get("behavior", "")))
 	if behavior != null:
 		behavior.reset(self)
@@ -375,6 +381,7 @@ func deactivate() -> void:
 	if behavior != null:
 		behavior.on_deactivate(self)
 	airborne = false
+	stone_form = false
 	active = false
 	state = State.DEAD
 	visible = false
@@ -1035,6 +1042,8 @@ func _draw() -> void:
 	if transform_time > 0.0:
 		SummonGlyphs.draw_transform_glow(self, radius, transform_time / SummonEvolutionData.TRANSFORM_FX_TIME)
 	Glyphs.draw_summon(self, glyph_kind if glyph_kind != "" else unit_class, Vector2(0, (1.0 - rise) * radius - lift), radius, flash > 0.0)
+	if behavior != null:
+		behavior.draw_over(self)  # Overlays on the body (Cathedral Horror stone).
 	if barrier_hp > 0.0:
 		ProgressionGlyphs.draw_barrier(self, Vector2.ZERO, radius, barrier_hp / maxf(max_hp, 1.0))
 	if hp < max_hp - 0.5 and state != State.SPAWNING:

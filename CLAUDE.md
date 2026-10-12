@@ -188,6 +188,10 @@ tiny tweaks.
 - the **Winter Revenant** (Frost Wraith + Soul Recycling Lv 5, "transform"): Deep Freeze radius
   +35% (`special_mult`), frozen enemies **shatter** on death (no chains, per-tick cap) and a
   fallen Revenant releases a freezing **death nova** (`scripts/horde/winter_revenant.gd`).
+- the summon evolutions **Shadow Reaper** (Rogue + Bound Souls: halved dash cooldown, chained
+  dashes, stacking bleeds, dash-kill reset) and **Cathedral Horror** (Gargoyle + Unholy
+  Resilience: wider swoop, dive stun via `CombatResolver.stun_enemy()`, stone form after landing),
+  upgrading the class specials through the `special_mult` / `special_set` recipe overlays.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.
