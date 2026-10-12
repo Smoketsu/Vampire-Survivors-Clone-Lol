@@ -48,7 +48,11 @@
 ##                         ids, e.g. bone_spear,plague_cloud) and their
 ##                         evolution passives, so each spell can be exercised
 ##                         and its evolution reached.
-##   --stage=ID            Autotest stage: "graveyard" (default) or
+##   --passives=a,b,...    Any policy first takes these passives (PassiveData
+##                         ids, e.g. unholy_precision,unholy_resilience) the
+##                         same way as the --spells items, so a passive's
+##                         effect can be exercised.
+##   --stage=ID           Autotest stage: "graveyard" (default) or
 ##                         "crimson_march" (StageRegistry ids; stage locks
 ##                         are ignored).
 ##   --difficulty=ID       Autotest difficulty level (GDD §8.4, DifficultyData
@@ -86,6 +90,9 @@ var autotest_classes: PackedStringArray = PackedStringArray()
 ## Autotest: spell ids from --spells=a,b the policy takes first (with their
 ## evolution passives); empty = none forced.
 var autotest_spells: PackedStringArray = PackedStringArray()
+## Autotest: passive ids from --passives=a,b the policy takes first; empty =
+## none forced.
+var autotest_passives: PackedStringArray = PackedStringArray()
 ## Autotest: StageRegistry id of the stage to play (--stage=, locks ignored).
 var autotest_stage: String = StageRegistry.DEFAULT_ID
 ## Autotest: DifficultyData id of the difficulty level (--difficulty=).
@@ -134,6 +141,12 @@ func _parse_args(args: PackedStringArray) -> void:
 					autotest_spells.append(id)
 				else:
 					push_warning("--spells: unknown spell id '%s' ignored" % id)
+		elif arg.begins_with("--passives="):
+			for id: String in arg.get_slice("=", 1).split(",", false):
+				if PassiveData.PASSIVES.has(id) and id != PactData.ID:
+					autotest_passives.append(id)
+				else:
+					push_warning("--passives: unknown passive id '%s' ignored" % id)
 		elif arg.begins_with("--stage="):
 			var id := arg.get_slice("=", 1)  # Requested stage id.
 			if StageRegistry.STAGES.has(id):

@@ -60,8 +60,9 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
 - **Priests** are split: **Menders** heal allies and the necromancer, **Warders** ward the
   necromancer and put barriers on allies; with Dark Benediction both merge into the Profane Bishop.
 - **Evolutions** come only from **treasure chests**, once the base spell is Lv5, the paired passive is
-  owned and the run has reached 8:00 elapsed. Summon evolutions (Death Knight, Lich, Profane Bishop)
-  use the same delivery and gate with their own recipes (`summon_evolution_data.gd`).
+  **at Lv5 too** (owner rule: every evolution, spell or summon, needs its paired passive maxed) and the
+  run has reached 8:00 elapsed. Summon evolutions (Death Knight, Lich, Profane Bishop) use the same
+  delivery and gate with their own recipes (`summon_evolution_data.gd`).
 - **Shadow Bolt** has a Nearest/Strongest aim toggle (T / pad Y).
 - **Spells:** Shadow Bolt, Orb Shield, Shadow Blast, plus Bone Spear, Soul Siphon, Corpse Explosion
   and Plague Cloud (`scripts/abilities/spells/`, one dispatch through `NecroSpellBook`). 11 actives
@@ -88,6 +89,7 @@ Autotest options (full table in the README):
 - `--classes=a,b` (force summon classes, e.g. `abomination,rogue,gargoyle,frost_wraith`)
 - `--spells=a,b` (force spells and their evolution passives, e.g.
   `bone_spear,soul_siphon,corpse_explosion,plague_cloud`)
+- `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
 - `--stage=graveyard|crimson_march` (default graveyard; stage locks are ignored)
 - `--difficulty=initiate|necromancer|lich|deathlord` (GDD §8.4; default necromancer = today's game)
 - `--modifiers=a,b` (GDD §8.5 run modifiers, e.g. `hardened_faith,scarcity`, or `all`)
@@ -172,7 +174,13 @@ tiny tweaks.
   `difficulty_data.gd`) and the eight §8.5 **run modifiers** (`run_modifier_data.gd`), chosen on a
   pre-run setup screen after the stage select that shows the total Soul Ash multiplier; both go
   through `difficulty_modifiers.gd` with the Pact and Oath, are remembered in the Meta `[prerun]`
-  save section and kept by Restart; `--difficulty=` and `--modifiers=`.
+  save section and kept by Restart; `--difficulty=` and `--modifiers=`;
+- the four later horde passives **Bone Plating** (flat damage off each hit on a minion), **Unholy
+  Precision** (seeded minion crits), **Unholy Resilience** (less area / holy damage to minions) and
+  **Bound Souls** (minion speed, leash, faster return), hooked into `CombatResolver` and
+  `HordeDirector.compute_stats()`; their cards name the summon evolutions they will unlock (Bone
+  Colossus, Gravebow, Cathedral Horror, Shadow Reaper; Soul Recycling → Winter Revenant), which are
+  not built yet; and the owner rule that **every evolution needs its paired passive at Lv 5**.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.
@@ -188,8 +196,10 @@ tiny tweaks.
    timing in `anim_data.gd`); only `shadow_blast` is hooked so far (test), hook the rest via
    `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.
 4. **Rest of Stage 1's content:**
-   - the remaining passives (Bone Plating, Unholy Precision, Unholy Resilience, Bound Souls);
-   - evolutions for the Archer and the four later classes, if wanted;
+   - the summon evolutions paired with the later passives: Abomination → Bone Colossus (Bone
+     Plating), Archer → Gravebow (Unholy Precision), Gargoyle → Cathedral Horror (Unholy
+     Resilience), Rogue → Shadow Reaper (Bound Souls), Frost Wraith → Winter Revenant (Soul
+     Recycling);
    - a dash and an ultimate.
 5. **Phase 3 campaign:** Stage 3 (Sanctum of Judgment,
    Grand Inquisitor Seraphine); skins; achievement rewards.

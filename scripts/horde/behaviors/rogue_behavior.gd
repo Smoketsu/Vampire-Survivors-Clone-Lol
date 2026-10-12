@@ -76,7 +76,7 @@ func think(u: SummonedUnit) -> bool:
 	if clear_len < d:
 		return false  # An obstacle stands between the rogue and its target.
 	var end := u.position + dir * clear_len  # Where the dash ends.
-	if end.distance_to(u.game.player.position) > UnitData.SOFT_RECALL - u.band_max * 0.5:
+	if end.distance_to(u.game.player.position) > u.soft_recall - u.band_max * 0.5:
 		return false  # Would end beyond the leash.
 	dash_dir = dir
 	lane_len = clear_len
@@ -173,7 +173,7 @@ func _tick_bleeds(u: SummonedUnit, delta: float) -> void:
 
 ## Assassin preference: backline enemies, and enemies far from the player.
 func score_bonus(u: SummonedUnit, e: Enemy, dp: float) -> float:
-	var s := float(u.special["far_bonus"]) * clampf(dp / UnitData.ENGAGE_RADIUS, 0.0, 1.0)  # Bonus.
+	var s := float(u.special["far_bonus"]) * clampf(dp / u.engage_radius, 0.0, 1.0)  # Bonus.
 	if e.behavior in BACKLINE:
 		s += float(u.special["backline_bonus"])
 	return s

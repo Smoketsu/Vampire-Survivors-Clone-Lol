@@ -65,7 +65,14 @@
 ##     the newer spells can be exercised and evolved; the summary's
 ##     "necro spells" line reports each newer spell's level, damage (and its
 ##     evolved part), boss damage and spell counters, and the "evolutions"
-##     line their times,
+##     line their times; --passives=a,b forces passives the same way (to
+##     exercise one, e.g. a later horde passive),
+##   * the later horde passives: a "horde passives" line reports each one's
+##     level and effect (Bone Plating / Unholy Resilience damage prevented,
+##     Unholy Precision crits and their extra damage, Bound Souls soft and
+##     hard recalls); army and summon list them below their core passives.
+##     Every evolution needs its paired passive at Lv 5, which the evolve,
+##     summon and --spells bots level like any other build item,
 ##   * stages: --stage=graveyard|crimson_march picks the stage (locks are
 ##     ignored; Main builds the RunConfig). On the Crimson March the
 ##     autopilot also walks toward outposts, ward generators and supply
@@ -107,11 +114,17 @@ const STUCK_TIME: float = 10.0
 ## A following summon "wants to move" only when its anchor is farther than
 ## this (px); closer than that it is simply standing in formation.
 const STUCK_ANCHOR_SLACK: float = 40.0
-## Card priorities for --policy=army (higher = picked first).
+## Card priorities for --policy=army (higher = picked first). The four later
+## horde passives (Bone Plating, Unholy Resilience, Unholy Precision, Bound
+## Souls) sit below every passive of its baseline build (Soul Conduit
+## included: at 32-34 Bone Plating took its slot and the bot lost Void
+## Barrage in 3 of 4 seeds), so they mostly fill a slot the baseline passives
+## were not offered for in time.
 const ARMY_PRIORITY := {"warrior": 100.0, "archer": 95.0, "mage": 98.0, "mender": 90.0, "warder": 89.0, "grave_dominion": 105.0,
 	"dark_command": 70.0, "necrotic_vigor": 65.0, "soul_recycling": 50.0,
 	"shadow_bolt": 60.0, "shadow_blast": 55.0, "orb_shield": 40.0,
-	"warding_ritual": 35.0, "soul_conduit": 30.0, "abyssal_focus": 28.0}
+	"warding_ritual": 35.0, "soul_conduit": 30.0, "abyssal_focus": 28.0,
+	"bone_plating": 27.0, "unholy_resilience": 26.0, "unholy_precision": 25.0, "bound_souls": 20.0}
 ## Card priorities for --policy=evolve (higher = picked first): the three
 ## base spells and their paired passives, then the army.
 const EVOLVE_PRIORITY := {"shadow_bolt": 100.0, "soul_conduit": 96.0, "shadow_blast": 94.0, "abyssal_focus": 92.0,
@@ -132,14 +145,21 @@ const SUMMON_CORE := ["warrior", "mage", "mender", "warder"]
 ## the Crimson March.
 const ARMY_CORE := ["warrior", "archer", "mage", "mender", "warder"]
 ## Card priorities for --policy=summon (higher = picked first): the base
-## classes of the three summon evolutions and their passives (Dark Command
-## and Forbidden Knowledge must reach Lv 5, Dark Benediction only needs to
-## be owned), then Archers, Shadow Bolt and the rest. Once the Mender +
-## Warder merge frees a slot, Shadow Blast fills it.
+## classes of the three summon evolutions and their passives (all three
+## must reach Lv 5, the owner's rule for every evolution), then Archers,
+## Shadow Bolt and the rest. Once the Mender + Warder merge frees a slot,
+## Shadow Blast fills it. The later horde passives come last, like in
+## ARMY_PRIORITY.
 const SUMMON_PRIORITY := {"grave_dominion": 105.0, "warrior": 100.0, "mage": 98.0, "mender": 93.0, "warder": 92.0,
 	"dark_command": 84.0, "forbidden_knowledge": 82.0, "dark_benediction": 80.0, "archer": 78.0,
 	"necrotic_vigor": 62.0, "shadow_bolt": 60.0, "shadow_blast": 55.0, "soul_recycling": 45.0,
-	"warding_ritual": 35.0, "soul_conduit": 30.0}
+	"warding_ritual": 35.0, "soul_conduit": 30.0,
+	"bone_plating": 27.0, "unholy_resilience": 26.0, "unholy_precision": 25.0, "bound_souls": 20.0}
+## army / summon take a later horde passive (PassiveData "shared_card_pool")
+## NEW only once they own this passive, their top one: an early Unholy
+## Precision once filled the last passive slot before Grave Dominion was
+## offered, and that army starved (lowest HP 27, no evolutions, no boss kill).
+const LATE_PASSIVE_GATE: String = "grave_dominion"
 ## Warding Ritual priority for --policy=army --pact: the Pact takes a
 ## passive slot, and a sensible Pact build gives up Warding Ritual (below
 ## Soul Conduit, 30) rather than its Void Barrage evolution passive.
@@ -284,6 +304,8 @@ func _ready() -> void:
 		var evo := EvolutionData.for_spell(id)  # Its evolution ("" if none).
 		if evo != "":
 			_forced[String(EvolutionData.EVOLUTIONS[evo]["passive"])] = true
+	for id: String in GameState.autotest_passives:
+		_forced[id] = true  # --passives: taken and levelled like a --spells item.
 	var speed := GameState.autotest_speed
 	Engine.time_scale = speed
 	Engine.physics_ticks_per_second = int(roundf(60.0 * speed))
@@ -295,6 +317,8 @@ func _ready() -> void:
 		GameState.autotest_seed, str(speed), str(GameState.autotest_mortal), str(GameState.autotest_timeout), GameState.autotest_policy, GameState.autotest_meta,
 		GameState.autotest_oath, str(GameState.autotest_pact), ",".join(GameState.autotest_classes) if not GameState.autotest_classes.is_empty() else "-",
 		",".join(GameState.autotest_spells) if not GameState.autotest_spells.is_empty() else "-"])
+	if not GameState.autotest_passives.is_empty():
+		print("[autotest] forced passives: %s" % ",".join(GameState.autotest_passives))
 	print("[autotest] stage: %s" % GameState.autotest_stage)
 	print("[autotest] difficulty: %s | modifiers: %s" % [GameState.autotest_difficulty,
 		",".join(GameState.autotest_modifiers) if not GameState.autotest_modifiers.is_empty() else "none"])
@@ -541,7 +565,9 @@ func choose_action(offers: Array[Dictionary]) -> Dictionary:
 ##   evolve: EVOLVE_PRIORITY minus a small level penalty (maxes spells).
 ##   summon: SUMMON_PRIORITY minus a level penalty.
 ##   army / evolve / summon never take a NEW item off their build list
-##   (FORCED_BLOCK_SCORE); --classes and --spells items come first.
+##   (FORCED_BLOCK_SCORE); --classes and --spells items come first. army /
+##   summon take a later horde passive NEW only once LATE_PASSIVE_GATE is
+##   owned.
 ##   pact  : naive, but the Profane Pact first (PACT_EAGER_SCORE); every
 ##           other policy ranks the Pact at PACT_SCORE unless --pact is given
 ##           (then it too takes the Pact first).
@@ -567,6 +593,9 @@ func _card_score(o: Dictionary) -> float:
 		# classes, the other policies' items): a focused build never spends a
 		# slot on it; reroll or skip instead (FORCED_BLOCK_SCORE).
 		return FORCED_BLOCK_SCORE
+	if GameState.autotest_policy in ["army", "summon"] and int(o["from"]) == 0 and String(o["kind"]) == "passive" \
+			and bool(PassiveData.PASSIVES[id].get("shared_card_pool", false)) and game.abilities.passive_level(LATE_PASSIVE_GATE) <= 0:
+		return FORCED_BLOCK_SCORE  # A later horde passive before the bot's top passive (LATE_PASSIVE_GATE).
 	match GameState.autotest_policy:
 		"army":
 			var pri := float(ARMY_PRIORITY.get(id, 0.0))  # Card priority.
@@ -760,6 +789,7 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] evolutions: %s" % (", ".join(ab.evolution_history) if not ab.evolution_history.is_empty() else "none"))
 	_print_summon_evolutions(st_all)
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())
+	print("[autotest] horde passives: %s" % MinionPassives.summary_line(game))
 	var syn := game.horde.synergies
 	print("[autotest] synergies active at end: %s | activations: %s" % [
 		", ".join(syn.active_ids()) if not syn.active_ids().is_empty() else "none",

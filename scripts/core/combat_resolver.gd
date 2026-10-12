@@ -3,15 +3,49 @@
 ## Every attack in the game (summons, spells, enemies, boss) goes through here,
 ## so armour, death handling, kill counting, XP drops and statistics are
 ## consistent and easy to tune.
+## The later horde passives act here too (numbers and source lists in
+## PassiveData):
+##   Unholy Precision  — damage_enemy(): a minion attack (is_minion_source())
+##                       may crit for PassiveData.CRIT_DAMAGE_MULT. Rolls use
+##                       their own RandomNumberGenerator, seeded from the
+##                       autotest seed, so the gameplay RNG stream is
+##                       untouched and runs stay deterministic per seed.
+##   Unholy Resilience — damage_unit(): less damage from
+##                       PassiveData.AREA_HOLY_SOURCES.
+##   Bone Plating      — damage_unit(): a flat amount off every hit, after
+##                       the other reductions and before barriers.
 class_name CombatResolver
 extends RefCounted
 
 ## Owning run.
 var game: Game
+## Damage-source tag -> true for every minion attack that can crit (built
+## once from PassiveData, UnitData and SummonEvolutionData).
+var _minion_sources: Dictionary = {}
+## Unholy Precision crit RNG, separate from the gameplay RNG.
+var _crit_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 
 func _init(p_game: Game) -> void:
 	game = p_game
+	if GameState.autotest:
+		_crit_rng.seed = hash("crits:%d" % GameState.autotest_seed)
+	else:
+		_crit_rng.randomize()
+	var tags: Array = []  # Every summon damage tag (class, evolution, extras).
+	tags.append_array(UnitData.CLASS_ORDER)
+	tags.append_array(SummonEvolutionData.ORDER)
+	tags.append_array(PassiveData.MINION_EXTRA_TAGS)
+	for tag: String in tags:
+		for suffix: String in PassiveData.MINION_SOURCE_SUFFIXES:
+			_minion_sources[tag + suffix] = true
+	for src: String in PassiveData.MINION_SPECIAL_SOURCES:
+		_minion_sources[src] = true
+
+
+## True if damage tagged `source` is a minion attack (Unholy Precision).
+func is_minion_source(source: String) -> bool:
+	return _minion_sources.has(source)
 
 
 ## Damages an enemy. Armour reduces damage by its fraction. Kills, XP drops
@@ -19,9 +53,16 @@ func _init(p_game: Game) -> void:
 ## run statistics ("warrior", "bolt", "orb"...). Returns damage dealt.
 ## A rotting enemy (Plague Cloud Rot, Enemy.rot_until) takes rot_amp more
 ## from every source; the extra is counted in the rot_bonus_dmg stat.
+## A minion attack may crit first (Unholy Precision; minion_crits and the
+## extra damage dealt, minion_crit_bonus_dmg).
 func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if not e.active or amount <= 0.0:
 		return 0.0
+	var crit_mult := 1.0  # Unholy Precision multiplier of this hit.
+	var crit := game.abilities.passive_value("unholy_precision", "crit_chance")  # 0..1, 0 when not owned.
+	if crit > 0.0 and is_minion_source(source) and _crit_rng.randf() < crit:
+		crit_mult = PassiveData.CRIT_DAMAGE_MULT
+		amount *= crit_mult
 	# Enemy-side damage modifiers (Crimson March tower shields, aura buffs,
 	# Marshal Vael's Shieldwall): exactly 1 for every Graveyard enemy.
 	var taken := e.damage_taken_mult(source)
@@ -35,6 +76,9 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	var dealt := minf(amount * (1.0 - e.armor), e.hp)
 	if rot > 0.0:
 		game.stat_add("rot_bonus_dmg", dealt * rot / (1.0 + rot))
+	if crit_mult > 1.0:
+		game.stat_add("minion_crits", 1.0)
+		game.stat_add("minion_crit_bonus_dmg", dealt * (1.0 - 1.0 / crit_mult))
 	e.hp -= dealt
 	e.on_hit()
 	game.stat_add("damage_dealt", dealt)
@@ -52,9 +96,13 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 
 ## Damages a summon. Death is routed to HordeDirector (deregistration,
 ## replacement queue, pooling). `source` tags the attacker kind for stats.
-## Synergies (GDD §6.3): The Unholy Host reduces the damage, then a barrier
-## (Shieldwall, or a Warder / Bishop ally barrier) absorbs what it can before
-## HP is lost.
+## Synergies (GDD §6.3): The Unholy Host reduces the damage, then Unholy
+## Resilience (area / holy sources only), then Bone Plating (a flat amount,
+## keeping at least PassiveData.PLATING_MIN_FRACTION of the hit; holy-ground
+## ticks are exempt), then a barrier (Shieldwall, or a Warder / Bishop ally
+## barrier) absorbs what it can before HP is lost. Stats:
+## host_dmg_prevented, resilience_dmg_prevented (+ _area / _holy),
+## plating_dmg_prevented.
 func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	if not u.active or u.state == SummonedUnit.State.DEAD or amount <= 0.0:
 		return
@@ -64,6 +112,17 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	if host_dr > 0.0:
 		game.stat_add("host_dmg_prevented", amount * host_dr)
 		amount *= 1.0 - host_dr
+	var ab := game.abilities  # Passive levels.
+	var res := ab.passive_value("unholy_resilience", "area_holy_reduction")  # 0..1, 0 when not owned.
+	if res > 0.0 and PassiveData.AREA_HOLY_SOURCES.has(source):
+		game.stat_add("resilience_dmg_prevented", amount * res)
+		game.stat_add("resilience_dmg_prevented_" + String(PassiveData.AREA_HOLY_SOURCES[source]), amount * res)
+		amount *= 1.0 - res
+	var plate := ab.passive_value("bone_plating", "flat_reduction")  # Flat damage off this hit.
+	if plate > 0.0 and not source in PassiveData.PLATING_EXEMPT_SOURCES:
+		var cut := minf(plate, amount * (1.0 - PassiveData.PLATING_MIN_FRACTION))  # Damage actually removed.
+		game.stat_add("plating_dmg_prevented", cut)
+		amount -= cut
 	if u.barrier_hp > 0.0:
 		var absorbed := minf(u.barrier_hp, amount)
 		u.barrier_hp -= absorbed

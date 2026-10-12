@@ -430,7 +430,8 @@ func on_path(id: String) -> bool:
 	return false
 
 
-## "Dark Command Lv 5" / "Dark Benediction" (owned) for hints.
+## "Dark Command Lv 5" for hints (just the name if `need` is 1, "owned";
+## every recipe now needs Lv 5).
 static func _passive_text(passive: String, need: int) -> String:
 	var p_name := String(PassiveData.PASSIVES[passive]["display_name"])
 	return "%s Lv %d" % [p_name, need] if need > 1 else p_name

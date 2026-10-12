@@ -11,14 +11,16 @@
 ##   Plague Cloud      + Lingering Malediction = Pestilence (with the GDD
 ##                                               §5.3 Death Nova burst)
 ##
-## Evolution condition (GDD open question 27 is unresolved; prototype decision,
-## recorded in GDD §15.0): the base spell is at its max level (5), the paired
-## passive is at level 1 or higher, and at least MIN_ELAPSED seconds of the
-## run have passed (8:00, the Purifier beat; this stands in for the GDD's
-## "special elite reward", which is not implemented yet, and keeps a spell
-## rush from evolving at 2:00-5:00). While the condition holds, every level-up includes the
-## evolution as a highlighted gold card; picking it replaces the base spell in
-## its active slot (no extra slot is used) and the passive is kept.
+## Evolution condition (GDD open question 27; decisions recorded in GDD
+## §15.0): the base spell is at its max level (5), the paired passive is at
+## its max level too (5; owner rule "every evolution requires its paired
+## passive at Lv 5", which the summon evolutions share), and at least
+## MIN_ELAPSED seconds of the run have passed (8:00, the Purifier beat; this
+## stands in for the GDD's "special elite reward", which is not implemented
+## yet, and keeps a spell rush from evolving at 2:00-5:00). While the
+## condition holds, the next treasure chest grants the evolution
+## (AbilityManager.chest_rewards()); it replaces the base spell in its active
+## slot (no extra slot is used) and the passive is kept.
 ##
 ## Each evolution has ONE stats row (it does not level further). Keys reuse the
 ## base spell's keys so the casting code, the card deltas and the passive
@@ -29,8 +31,9 @@ extends RefCounted
 
 ## Base spell level required before its evolution can be offered.
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) decision for open question 27
-## Paired passive level required before the evolution can be offered.
-const PASSIVE_LEVEL_REQUIRED: int = 1  # TUNING (not in GDD) decision for open question 27
+## Paired passive level required before the evolution can be offered (5 =
+## max level; it was 1, "owned", before the owner's Lv 5 rule).
+const PASSIVE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) owner rule: every evolution needs its passive at Lv 5
 ## Elapsed game seconds before any evolution can be offered (8:00 elapsed =
 ## 12:00 left on the countdown, the GDD §11 Purifier beat). Balance pass: a
 ## spell rush evolved Shadow Bolt at 1:48-5:35 before this gate existed.

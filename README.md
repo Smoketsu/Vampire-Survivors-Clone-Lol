@@ -159,7 +159,8 @@ number is in `scripts/data/unit_data.gd`.
 - **Evolutions only touch their own classes**: Death Knight (Warriors), Lich
   (Mages) and Profane Bishop (Menders + Warders). Forbidden Knowledge and
   Dark Benediction boost only Mages and the support classes; the later
-  classes have no evolution yet.
+  classes have no evolution yet (their paired passives already exist, see
+  *Later horde passives*).
 - **Interactions**: an enemy touching several blockers (Warriors, Death
   Knights, Abominations) gets the strongest slow, never a product of them.
   Shieldwall barriers stay on Warriors (and Death Knights); Warder and Bishop
@@ -169,8 +170,9 @@ number is in `scripts/data/unit_data.gd`.
 
 ### Evolutions & Synergies
 
-- **Evolutions** (GDD §6.1): once a spell reaches **Lv 5**, you own its
-  paired passive (any level) **and the run has reached 8:00 elapsed** (12:00
+- **Evolutions** (GDD §6.1): once a spell reaches **Lv 5**, its paired
+  passive is **also at Lv 5** (owner rule: every evolution, spell or summon,
+  needs its paired passive maxed) **and the run has reached 8:00 elapsed** (12:00
   left on the timer), the **next treasure chest** grants its evolution first
   (the GDD's "special elite reward"); while an evolution waits, a chest drops
   within about 40 s. Evolutions never appear on level-up cards, and the
@@ -201,13 +203,33 @@ number is in `scripts/data/unit_data.gd`.
 |---|---|---|
 | Skeleton Warrior Lv 5 | Dark Command **Lv 5** | **Death Knight**: bigger armoured silhouette, ×1.5 HP, ×1.35 damage; each swing **cleaves** 50% to foes within 32 px; **life drain** 12% of melee damage; a heavier wall (block mass 5, bash ×2 every 1.5 s, foes in contact slowed to 45%) |
 | Undead Mage Lv 5 | Forbidden Knowledge **Lv 5** (+8–40% mage damage, +5–25% splash) | **Lich**: floating crowned wisp, ×1.4 HP, ×1.2 damage; **raise the dead**: every 5th foe a Lich kills rises as a skeleton for 12 s (max 6 at once) |
-| Grave Mender Lv 5 **and** Crypt Warder Lv 5 | Dark Benediction **owned** (+8–40% heals, wards and barriers) | **Profane Bishop** (a **merge**): both orders become one class that heals, wards you **and** shields allies, plus an aura every 3 s that heals everything near it and burns foes. Capacity becomes 3 + your global capacity bonuses (counted once, not twice); existing Menders and Warders convert in place up to that cap, the rest dissolve into them, and **one active slot is freed** |
+| Grave Mender Lv 5 **and** Crypt Warder Lv 5 | Dark Benediction **Lv 5** (+8–40% heals, wards and barriers) | **Profane Bishop** (a **merge**): both orders become one class that heals, wards you **and** shields allies, plus an aura every 3 s that heals everything near it and burns foes. Capacity becomes 3 + your global capacity bonuses (counted once, not twice); existing Menders and Warders convert in place up to that cap, the rest dissolve into them, and **one active slot is freed** |
 
   The numbers live in `scripts/data/summon_evolution_data.gd`; the runtime is
   `HordeDirector.evolutions` (`scripts/horde/summon_evolutions.gd`). Summon
   cards and the paired passives' cards show the path ("Evolves into Death
   Knights at Lv 5 with Dark Command Lv 5 ...") and "Evolution ready" once it
   holds. Stage-event temporary summons (graves, crypt) always keep the base kit.
+- **Later horde passives** (GDD §34 names; effects are the prototype's,
+  GDD §15.0). Like every army passive they are a dead card while you own no
+  summon class; their NEW cards share one weight
+  (`NEW_PASSIVE_POOL_WEIGHT` = 2). Each card already names the summon
+  evolution it will unlock (those evolutions are not built yet), and Soul
+  Recycling's card names the Frost Wraith's:
+
+| Passive | Effect (Lv 1 → 5) | Will evolve (with the class at Lv 5) |
+|---|---|---|
+| Bone Plating | Minions ignore 2 → 6 damage of every hit (after the other reductions, before barriers; a hit keeps at least 25%; holy-ground ticks are exempt) | Abominations → **Bone Colossi** |
+| Unholy Precision | Minion attacks and specials crit 5% → 25% of the time for double damage (not the Rogue's bleed ticks, not your spells) | Archers → **Gravebows** |
+| Unholy Resilience | Minions take 8% → 35% less **area and holy** damage: Hammerfall, Vael's cleave, Halberdier sweeps, Judgment, Purifier fire, holy ground (consecration, ward generators, boss zones), Holy Retribution bolts | Gargoyles → **Cathedral Horrors** |
+| Bound Souls | Minion move speed +6% → +30%; leash (engagement radius and soft recall) +10% → +50%; the return trip after a recall takes 10% → 50% less time | Rogues → **Shadow Reapers** |
+| Soul Recycling (existing) | Faster replacement | Frost Wraiths → **Winter Revenants** |
+
+  Their hooks are on the single paths: `CombatResolver` (crits, Resilience,
+  Plating; the crit rolls use their own seeded RNG, so runs stay
+  deterministic) and `HordeDirector.compute_stats()` (Bound Souls). Source
+  lists and numbers are in `passive_data.gd`; card lines in
+  `scripts/horde/minion_passives.gd`.
 - **Army synergies** (GDD §6.3) turn on automatically while every required
   summon class is at **Lv 2+**. A banner announces each one, and the active
   ones are listed above the army panel:
@@ -225,7 +247,8 @@ number is in `scripts/data/unit_data.gd`.
   GDD summon roles weigh 1.5 (`WEIGHT_NEW_CORE_SUMMON`: Archer, Mage, and the
   one Priest role whose two orders, Mender and Warder, get 0.75 each); the
   four later classes share one weight (`NEW_SUMMON_POOL_WEIGHT` = 1.5; the
-  Bishop is never offered and merged classes don't count). So the larger
+  Bishop is never offered and merged classes don't count); the four later
+  horde passives share `NEW_PASSIVE_POOL_WEIGHT` = 2 the same way. So the larger
   roster doesn't crowd passives, upgrades and the core classes out of the
   hands (Shadow Bolt is always yours); once your 6
   active slots are full, no new summon or spell is offered at all. A hand is never made only of useless
@@ -617,13 +640,13 @@ file is missing. Only Shadow Blast is wired so far, as the test.
 |---|---|
 | Necromancer | Movement (keyboard and stick), HP with a slow natural regeneration (0.5 HP/s), i-frames, pickup radius, hit flash. Can receive Mender heals and Warder wards. |
 | **Shared summon AI** (§25–§31, §36) | **One** data-driven `SummonedUnit` script runs every class (Warrior, Archer, Mage, Mender, Warder, Profane Bishop, the evolved Death Knight and Lich, and the four later classes). It has the full FSM from §25, soft formation bands around the player (§26), and normalised target scoring (§27). Targets are held for at least 1 s; ranged units redirect when a target is already doomed (overkill reservation); healers use the §31 heal formula. Support and evolution kits (ally barrier, aura, cleave, life drain) are data-driven hooks into `SummonAbilities`; the four later classes plug one special action each into the AI through a `SummonBehavior` (see *Summon classes*). |
-| Leash and recall (§24) | Engagement radius 220 px, soft recall at 320 px, hard spectral recall at 650 px. |
+| Leash and recall (§24) | Engagement radius 220 px, soft recall at 320 px, hard spectral recall at 650 px (Bound Souls widens the first two by up to 50% and halves the return trip). |
 | Replenishment (§24) | Each summon ability refills its own queue one unit at a time (Warrior 5 s, Archer 8 s, Mage 12 s, Mender and Warder 15 s, Profane Bishop 12 s; Abomination 20 s, Rogue 9 s, Gargoyle 12 s, Frost Wraith 14 s). A capacity increase spawns the new units immediately. A failed spawn retries without using up the timer. |
 | **Warrior blocking** | Warriors are physical blockers. Enemies can't pass through them; overlaps are resolved through the spatial hash, weighted by mass. An enemy touching a warrior is *engaged*: it moves at 60% speed and attacks that warrior. Warriors also shield-bash on a cooldown (damage plus knockback). Sir Alaric's Divine Charge loses distance for every undead body it hits, so a thick enough wall stops it. |
 | **Priest orders** (user request: the GDD's Priest split in two) | **Grave Mender** (round teal robe, green halo): heals allies and the necromancer with the §31 formula, a critically hurt necromancer first (the old priest heal, unchanged). **Crypt Warder** (heater-shaped blue robe, ward sigil): whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px) it casts an instant damage-absorbing **ward** on you, as long as no ward is active and its own ward cooldown is ready (the old priest ward, same numbers); it also casts an instant **barrier** (12 HP, +25–80% by level) on the most threatened ally in reach every 3 s: an ally hit in the last 2 s, or a warrior fighting in melee, whose barrier is below half. Barriers don't stack with Shieldwall's (the stronger one wins). Both orders fire weak bolts when idle. Each has its own card, cap (1-2 by level), 15 s replenishment and HUD row; the ward shows as a ring on the necromancer and in the HUD. |
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
 | Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Plus Bone Spear, Soul Siphon, Corpse Explosion and Plague Cloud (see *The newer spells*). Each has 5 levels. |
-| Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed; at Lv 5 it evolves Warriors), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual, Abyssal Focus, Shade Stride, Vampiric Rite, Necrotic Expanse, Lingering Malediction, Forbidden Knowledge (mage damage and splash) and Dark Benediction (heals, wards and barriers). Bonus stacking follows §34. |
+| Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed; at Lv 5 it evolves Warriors), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual, Abyssal Focus, Shade Stride, Vampiric Rite, Necrotic Expanse, Lingering Malediction, Forbidden Knowledge (mage damage and splash) and Dark Benediction (heals, wards and barriers), and the later horde passives Bone Plating (flat damage off every hit on a minion), Unholy Precision (minion crits), Unholy Resilience (less area / holy damage to minions) and Bound Souls (minion speed, leash and return). Every evolution needs its paired passive at Lv 5. Bonus stacking follows §34. |
 | Evolutions & synergies (§6) | Void Barrage, Eclipse Ward, Abyssal Detonation, Ossuary Lance, Soul Rapture, Grave Eruption and Pestilence; the summon evolutions Death Knight, Lich and Profane Bishop (a merge of the two priest orders); four army synergies; weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
 | Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 13:00. |
 | Waves and stage events (§11) | The data-driven 20-minute Graveyard timeline at the GDD's real times (Sir Alaric at 17:00), then the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
@@ -709,6 +732,8 @@ scripts/
                             barrier, Bishop aura pulse, Death Knight cleave + life drain
     summon_evolutions.gd    Summon evolutions: eligibility, stat overlay, in-place transform,
                             Mender + Warder merge, Lich raise-the-dead, card hints
+    minion_passives.gd      Card lines and the autotest line of the later horde passives
+                            (their effects live in CombatResolver / compute_stats)
     behaviors/              Class special actions plugged into that AI (one SummonBehavior per unit):
       summon_behavior.gd      Base class: think / physics / attack / score / draw hooks, recall-safe
       summon_behaviors.gd     Registry (behavior id -> class) and the level-up card lines
@@ -849,6 +874,7 @@ Options (after `--`):
 | `--classes=a,b` | Forces summon classes (`abomination`, `rogue`, `gargoyle`, `frost_wraith`, or any offerable class id; the merge-only `bishop` is ignored): each is raised to Lv 1 at the start (while active slots allow) and every policy upgrades it first, so its special gets exercised. |
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
+| `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | `--stage=ID` | Stage to play: `graveyard` (default) or `crimson_march`. Stage locks are ignored. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
@@ -875,7 +901,12 @@ damage per aim mode (the autotest uses Nearest, then switches to Strongest when
 the boss spawns); a **necro spells** line (for each newer spell: level, total
 damage and the evolved part, boss damage, and counters such as volleys,
 lifesteal healed, corpse bursts and chains, clouds, Death Novas and the Rot
-bonus damage); heals, wards and orb intercepts; peak entity counts;
+bonus damage); a **horde passives** line (each later horde passive's level,
+damage prevented by Bone Plating and by Unholy Resilience, split area /
+holy, Unholy Precision crits and their extra damage, Bound Souls soft and
+hard recalls; the stats are `plating_dmg_prevented`,
+`resilience_dmg_prevented[_area|_holy]`, `minion_crits`,
+`minion_crit_bonus_dmg`, `summon_soft_recalls`); heals, wards and orb intercepts; peak entity counts;
 pool node counts; and the average and worst simulation-step cost. The
 **evolution** lines list every evolution by type (spell / summon) with its
 time, the summon-evolution counters (Lich raises and raises lost at the cap,
@@ -987,6 +1018,11 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 - Arrows and spells fly over obstacles (no line-of-sight checks).
 - Eclipse Ward usually arrives late (15:00-19:00) and only in builds that
   take Orb Shield. No evolution is granted before 8:00 elapsed.
+- Since every evolution needs its passive at Lv 5, builds that level the
+  paired passive late evolve late: the army bot's Void Barrage now comes in
+  2 of 4 seeds at 16:30-17:10 (before: 4 of 4 at 12:45-14:00); the spell
+  bot's Abyssal Detonation and Eclipse Ward land at 8:43-13:00 (GDD §15.0).
+  Not retuned yet (final balance pass).
 - No ultimate, dash, mid-run saves or skins yet. The difficulty levels and
   run modifiers have first-pass numbers checked only with the autotest bots
   (see GDD §15.0), and no difficulty is locked. Army bot, `--mortal`:
@@ -1010,9 +1046,9 @@ autotest stats; give the horde a feel pass (formation spacing,
 warrior wall shape) with a human player.
 
 **Phase 2 – Graveyard vertical slice (mostly done):** playtest with humans;
-retune Void Barrage and the boss; the remaining passives (Bone Plating, Unholy
-Precision, Unholy Resilience, Bound Souls) and the Archer evolution (Gravebow
-Company); the Banner Bearer; saves; density and minion-HP-bar settings (§38).
+retune Void Barrage and the boss; the summon evolutions the later horde
+passives point to (Bone Colossus, Gravebow, Cathedral Horror, Shadow Reaper,
+Winter Revenant); saves; density and minion-HP-bar settings (§38).
 
 **Phase 3 – Campaign:** the Crimson March and Marshal Vael are in (a human
 playtest and balance pass are next); the Sanctum of Judgment and Grand

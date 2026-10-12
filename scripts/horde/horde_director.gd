@@ -218,6 +218,9 @@ func replenish_interval(cls: String) -> float:
 ## attack-speed multipliers. The Dark Frenzy power-up is one more category
 ## (x (1 + frenzy) on damage and attack speed) while `with_buffs` is true;
 ## level-up card previews pass false so they show the lasting stats.
+## Bound Souls adds the move-speed category and sets the per-unit leash keys
+## (engage_radius, soft_recall: UnitData's leash x (1 + leash_range)) and
+## the RETURNING speed (return_speed_mult).
 ## SummonEvolutions.modify_stats() then applies the summon-evolution passives
 ## (Forbidden Knowledge, Dark Benediction: own categories) and, while
 ## `with_evolution` is true, the class's evolution overlay (Death Knight /
@@ -238,7 +241,12 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 	if with_buffs and game.powerups != null:
 		dmg_mult *= 1.0 + game.powerups.frenzy_bonus("damage_bonus")
 		spd_mult *= 1.0 + game.powerups.frenzy_bonus("attack_speed_bonus")
-	var move_mult := 1.0 + synergies.value("deathless", "move_speed")
+	# Bound Souls (later horde passive): move speed is its own category; the
+	# leash scales the engagement radius and soft recall, and the return trip
+	# takes (1 - return_reduction) of the time (RETURNING speed divided by it).
+	var move_mult := (1.0 + synergies.value("deathless", "move_speed")) * (1.0 + ab.passive_value("bound_souls", "minion_move_speed"))
+	var leash_mult := 1.0 + ab.passive_value("bound_souls", "leash_range")  # Leash distance multiplier.
+	var return_mult := 1.0 / maxf(0.1, 1.0 - ab.passive_value("bound_souls", "return_reduction"))  # RETURNING speed multiplier (the 0.1 floor only guards a 100% value).
 	var heal_mult := 1.0 + float(row.get("heal_bonus", 0.0))
 	var splash_mult := 1.0 + float(row.get("splash_bonus", 0.0))
 	var shield_mult := 1.0 + float(row.get("shield_bonus", 0.0))
@@ -250,6 +258,9 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		"attack_range": float(base["attack_range"]),
 		"acquisition_range": float(base["acquisition_range"]),
 		"move_speed": float(base["move_speed"]) * move_mult,
+		"engage_radius": UnitData.ENGAGE_RADIUS * leash_mult,
+		"soft_recall": UnitData.SOFT_RECALL * leash_mult,
+		"return_speed_mult": UnitData.RETURN_SPEED_MULT * return_mult,
 		"radius": float(base["radius"]),
 		"band_min": float(base["band_min"]) * UnitData.FORMATION_SPREAD,
 		"band_max": float(base["band_max"]) * UnitData.FORMATION_SPREAD,

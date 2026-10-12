@@ -20,7 +20,10 @@
 ##   Crypt Gargoyle     = hunched stone body with wide bat wings and horns
 ##   Frost Wraith       = legless teardrop ghost with an ice crown and a
 ##                        floating ice shard, in a cold glow
-## Also draws the evolution transformation glow (draw_transform_glow()) and
+## Also draws the icons of the horde passives tied to summon evolutions
+## (Forbidden Knowledge, Dark Benediction, and the four later ones: Bone
+## Plating, Unholy Precision, Unholy Resilience, Bound Souls), the
+## evolution transformation glow (draw_transform_glow()) and
 ## the Frost Wraith chill tint on enemies (draw_chill()).
 ## Colour language (Palette, GDD §11.2): undead blue / violet / green / bone;
 ## no Covenant gold except the evolution icon frame (ProgressionGlyphs).
@@ -93,6 +96,8 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 				var x := -s * 0.3 + s * 0.3 * float(i)
 				ci.draw_line(c + Vector2(x, -s * 0.28), c + Vector2(x * 1.3, s * 0.05), Color(Palette.NECRO_GREEN, 0.6), 1.5)
 			Glyphs._skull(ci, c + Vector2(0, s * 0.3), s * 0.3, false, Palette.NECRO_GREEN)
+		"bone_plating", "unholy_precision", "unholy_resilience", "bound_souls":
+			_draw_horde_passive_icon(ci, kind, c, s)
 		"abomination":
 			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.05, s * 0.05), s * 0.46, false)
 		"rogue", "gargoyle", "frost_wraith":
@@ -100,6 +105,66 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 		_:
 			return false
 	return true
+
+
+## The four later horde passives' icons (bold single symbols):
+##   bone_plating      — a heater shield of overlapping bone plates, rivets
+##                       and a green rune,
+##   unholy_precision  — a bone arrowhead with a violet crosshair eye on it,
+##   unholy_resilience — a cracked pale holy sun behind a dark undead shield,
+##   bound_souls       — a green soul wisp held by a short iron chain.
+static func _draw_horde_passive_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> void:
+	match kind:
+		"bone_plating":
+			var shield := PackedVector2Array([c + Vector2(-s * 0.55, -s * 0.55), c + Vector2(s * 0.55, -s * 0.55),
+				c + Vector2(s * 0.5, s * 0.1), c + Vector2(0, s * 0.65), c + Vector2(-s * 0.5, s * 0.1)])
+			ci.draw_colored_polygon(shield, Palette.BONE.darkened(0.25))
+			for i in 3:
+				var y := -s * 0.38 + s * 0.3 * float(i)  # Plate seam height.
+				var w := s * (0.5 - 0.08 * float(i))  # Seam half-width (the shield narrows).
+				ci.draw_line(c + Vector2(-w, y), c + Vector2(w, y), Palette.BONE.lightened(0.2), 2.0)
+				ci.draw_circle(c + Vector2(-w * 0.8, y), s * 0.05, Palette.STONE)
+				ci.draw_circle(c + Vector2(w * 0.8, y), s * 0.05, Palette.STONE)
+			ci.draw_polyline(PackedVector2Array([shield[0], shield[1], shield[2], shield[3], shield[4], shield[0]]), Palette.IVORY, 1.5)
+			ci.draw_circle(c + Vector2(0, s * 0.05), s * 0.1, Palette.NECRO_GREEN)
+		"unholy_precision":
+			var d := Vector2(1, -1).normalized()  # Arrow heading (up-right).
+			var n := Vector2(-d.y, d.x)  # Perpendicular.
+			ci.draw_line(c - d * s * 0.7, c + d * s * 0.1, Palette.BONE.darkened(0.2), s * 0.12)
+			var tip := c + d * s * 0.62  # Arrowhead point.
+			ci.draw_colored_polygon(PackedVector2Array([tip, c + d * s * 0.05 + n * s * 0.32, c + d * s * 0.05 - n * s * 0.32]), Palette.BONE)
+			var eye := c + d * s * 0.22  # Crosshair centre on the arrowhead.
+			ci.draw_arc(eye, s * 0.3, 0.0, TAU, 20, Palette.VIOLET, 2.0)
+			for i in 4:
+				var a := Vector2.from_angle(TAU * float(i) / 4.0)  # Crosshair tick direction.
+				ci.draw_line(eye + a * s * 0.2, eye + a * s * 0.42, Palette.VIOLET, 2.0)
+			ci.draw_circle(eye, s * 0.11, Palette.VIOLET)
+			ci.draw_circle(eye, s * 0.05, Palette.NECRO_GREEN)
+		"unholy_resilience":
+			var sun := c + Vector2(0, -s * 0.28)  # Holy sun centre, behind the shield.
+			var pale := Palette.IVORY.darkened(0.15)  # Drained holy light.
+			for i in 8:
+				var a := Vector2.from_angle(TAU * float(i) / 8.0 + 0.2)  # Ray direction.
+				ci.draw_line(sun + a * s * 0.36, sun + a * s * 0.62, Color(pale, 0.7), 2.0)
+			ci.draw_circle(sun, s * 0.32, pale)
+			ci.draw_polyline(PackedVector2Array([sun + Vector2(-s * 0.08, -s * 0.32), sun + Vector2(s * 0.04, -s * 0.12),
+				sun + Vector2(-s * 0.06, 0), sun + Vector2(s * 0.1, s * 0.2)]), Palette.ROBE, 2.0)
+			var shield := PackedVector2Array([c + Vector2(-s * 0.42, -s * 0.05), c + Vector2(s * 0.42, -s * 0.05),
+				c + Vector2(s * 0.38, s * 0.38), c + Vector2(0, s * 0.68), c + Vector2(-s * 0.38, s * 0.38)])
+			ci.draw_colored_polygon(shield, Palette.DEATH_STEEL)
+			ci.draw_polyline(PackedVector2Array([shield[0], shield[1], shield[2], shield[3], shield[4], shield[0]]), Palette.VIOLET, 1.5)
+			Glyphs._skull(ci, c + Vector2(0, s * 0.26), s * 0.17, false, Palette.NECRO_GREEN)
+		"bound_souls":
+			var wisp := c + Vector2(s * 0.12, -s * 0.12)  # Soul wisp centre.
+			ci.draw_circle(wisp, s * 0.42, Color(Palette.NECRO_GREEN, 0.18))
+			ci.draw_colored_polygon(PackedVector2Array([wisp + Vector2(-s * 0.26, s * 0.05), wisp + Vector2(0, -s * 0.5),
+				wisp + Vector2(s * 0.26, s * 0.05)]), Palette.NECRO_GREEN)
+			ci.draw_circle(wisp + Vector2(0, s * 0.06), s * 0.26, Palette.NECRO_GREEN)
+			ci.draw_circle(wisp + Vector2(-s * 0.09, s * 0.02), s * 0.05, Palette.ROBE)
+			ci.draw_circle(wisp + Vector2(s * 0.09, s * 0.02), s * 0.05, Palette.ROBE)
+			for i in 3:
+				var p := c + Vector2(-s * 0.18, s * 0.26) + Vector2(-s * 0.17, s * 0.13) * float(i)  # Chain link centre.
+				ci.draw_arc(p, s * 0.1, 0.0, TAU, 12, Palette.SILVER.darkened(0.25), 2.0)
 
 
 # =====================================================================================

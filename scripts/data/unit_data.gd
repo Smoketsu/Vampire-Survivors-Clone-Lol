@@ -395,7 +395,7 @@ const UNITS := {
 			"bleed_duration": 3.0,  # TUNING (not in GDD) s a dash's bleed lasts
 			"bleed_tick": 0.5,  # TUNING (not in GDD) s between bleed ticks
 			"backline_bonus": 0.6,  # TUNING (not in GDD) target-score bonus for archers / chaplains / consecrators
-			"far_bonus": 0.3,  # TUNING (not in GDD) score bonus x (enemy distance to player / ENGAGE_RADIUS): the back of the crowd
+			"far_bonus": 0.3,  # TUNING (not in GDD) score bonus x (enemy distance to player / the unit's engagement leash, ENGAGE_RADIUS x Bound Souls): the back of the crowd
 		},
 	},
 	# Crypt Gargoyle: melee claws, and a periodic swoop: it takes off (airborne:

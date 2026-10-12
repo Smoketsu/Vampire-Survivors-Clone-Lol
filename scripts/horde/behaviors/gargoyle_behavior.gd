@@ -53,7 +53,7 @@ func think(u: SummonedUnit) -> bool:
 	var d := u.position.distance_to(t.position)  # Distance to the target (px).
 	if d < float(u.special["swoop_range_min"]) or d > float(u.special["swoop_range_max"]):
 		return false
-	if t.position.distance_to(u.game.player.position) > UnitData.ENGAGE_RADIUS:
+	if t.position.distance_to(u.game.player.position) > u.engage_radius:
 		return false  # Stay inside the engagement leash.
 	var n := count_enemies(u.game, t.position, float(u.special["swoop_radius"]), _buf)  # Cluster size.
 	if n < int(u.special["swoop_min_enemies"]) and not t.is_elite and not t.is_boss:

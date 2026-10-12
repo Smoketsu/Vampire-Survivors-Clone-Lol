@@ -7,9 +7,12 @@
 ##       (GDD "Dreadguard Legion"; the user named it Death Knight)
 ##   Undead Mage Lv 5      + Forbidden Knowledge Lv 5 = Lich
 ##       (GDD "Lich Conclave")
-##   Grave Mender Lv 5 + Crypt Warder Lv 5 + Dark Benediction (owned)
+##   Grave Mender Lv 5 + Crypt Warder Lv 5 + Dark Benediction Lv 5
 ##                                                     = Profane Bishop
 ##       (GDD §4.2 priest evolution; the split priest classes MERGE into one)
+## Owner rule: every evolution, spell or summon, needs its paired passive at
+## Lv 5 (EvolutionData.PASSIVE_LEVEL_REQUIRED); `passive_level` below is 5
+## for every recipe.
 ##
 ## Delivery is the same as the spell evolutions (EvolutionData): once a recipe
 ## holds and the run has reached EvolutionData.MIN_ELAPSED (8:00), the next
@@ -137,7 +140,7 @@ const EVOLUTIONS := {
 		"mode": "merge",
 		"bases": ["mender", "warder"],
 		"passive": "dark_benediction",
-		"passive_level": 1,  # TUNING (not in GDD) owned; the merge already costs two Lv 5 classes
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: Dark Benediction at max level (was 1, owned)
 		"result": "bishop",
 		"display_name": "Profane Bishop",  # GDD §4.2
 		"plural": "Bishops",

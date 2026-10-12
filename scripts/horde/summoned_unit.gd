@@ -69,6 +69,15 @@ var attack_range: float = 20.0
 var acquisition_range: float = 150.0
 ## Movement speed in px/s.
 var move_speed: float = 80.0
+## Engagement leash (px from the player): UnitData.ENGAGE_RADIUS, widened by
+## Bound Souls. Targets beyond it are not chased.
+var engage_radius: float = UnitData.ENGAGE_RADIUS
+## Soft-recall distance (px from the player): UnitData.SOFT_RECALL, widened
+## by Bound Souls. Beyond it the unit drops its target and RETURNs.
+var soft_recall: float = UnitData.SOFT_RECALL
+## Speed multiplier while RETURNING: UnitData.RETURN_SPEED_MULT, raised by
+## Bound Souls (shorter return time).
+var return_speed_mult: float = UnitData.RETURN_SPEED_MULT
 ## Body radius in px.
 var radius: float = 10.0
 ## Inner edge of this class's formation band (px from player).
@@ -306,6 +315,9 @@ func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
 	attack_range = stats["attack_range"]
 	acquisition_range = stats["acquisition_range"]
 	move_speed = stats["move_speed"]
+	engage_radius = float(stats.get("engage_radius", UnitData.ENGAGE_RADIUS))
+	soft_recall = float(stats.get("soft_recall", UnitData.SOFT_RECALL))
+	return_speed_mult = float(stats.get("return_speed_mult", UnitData.RETURN_SPEED_MULT))
 	radius = stats["radius"]
 	band_min = stats["band_min"]
 	band_max = stats["band_max"]
@@ -419,9 +431,10 @@ func think() -> void:
 		if d_player <= band_max + UnitData.RETURN_ARRIVE_MARGIN:
 			_enter(State.FOLLOWING)
 		return
-	if d_player > UnitData.SOFT_RECALL:
+	if d_player > soft_recall:
 		_drop_target()
 		_enter(State.RETURNING)
+		game.stat_add("summon_soft_recalls", 1.0)
 		return
 	# Warders / Bishops: instant ward on a threatened necromancer and an
 	# instant barrier on a threatened ally (never cost a heal or an attack).
@@ -441,7 +454,7 @@ func think() -> void:
 		if target != null:
 			_drop_target()
 	# ENGAGING -> RETURNING when pursuit exceeds the engagement leash.
-	if target != null and d_player > UnitData.ENGAGE_RADIUS:
+	if target != null and d_player > engage_radius:
 		_drop_target()
 		_enter(State.RETURNING)
 		return
@@ -622,13 +635,13 @@ func _acquire_best_target() -> Enemy:
 ## Leash-based candidate filter. `dp` = enemy distance to the player.
 func _candidate_allowed(dp: float) -> bool:
 	if target_profile == "guard":
-		if dp > UnitData.ENGAGE_RADIUS:
+		if dp > engage_radius:
 			return false
 		# "Don't chase distant targets while necromancer is surrounded."
 		if director.player_in_danger and dp > UnitData.WARRIOR_INTERCEPT_RADIUS:
 			return false
 		return true
-	return dp <= UnitData.ENGAGE_RADIUS + attack_range * 0.5
+	return dp <= engage_radius + attack_range * 0.5
 
 
 ## score = distance*Wd + threat*Wt + role*Wr + tactical*Wv + cluster*Wc
@@ -788,7 +801,7 @@ func _step_movement(delta: float) -> void:
 				speed *= UnitData.CATCHUP_SPEED_MULT
 		State.RETURNING:
 			desired = (anchor - position).normalized()
-			speed *= UnitData.RETURN_SPEED_MULT
+			speed *= return_speed_mult
 		_:
 			desired = _combat_desire(anchor, player_pos)
 	if holy_slow_timer > 0.0:

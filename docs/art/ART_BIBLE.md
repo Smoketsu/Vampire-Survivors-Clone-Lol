@@ -195,6 +195,10 @@ the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
 | `vampiric_rite.png` | Blood-red drop in a chalice (one deep red accent is fine) |
 | `necrotic_expanse.png` | Expanding green rings |
 | `lingering_malediction.png` | Hourglass with green mist |
+| `bone_plating.png` | Shield of overlapping bone plates with a small green rune |
+| `unholy_precision.png` | Bone arrowhead under a violet crosshair eye |
+| `unholy_resilience.png` | Cracked, drained holy sun behind a dark undead shield |
+| `bound_souls.png` | Green soul wisp held by a short iron chain |
 | `profane_pact.png` | Torn scroll with a crimson seal (the curse: the one icon allowed crimson) |
 | `powerup_magnet.png` | Cyan soul vortex |
 | `powerup_feast.png` | Roasted meat on a bone |

@@ -32,6 +32,9 @@
 ## the same spell_stats() path; apply_spell_mods() also applies the new
 ## spell passives Necrotic Expanse (area) and Lingering Malediction
 ## (durations).
+## The four later horde passives (Bone Plating, Unholy Precision, Unholy
+## Resilience, Bound Souls) act in CombatResolver / HordeDirector; their
+## card line comes from MinionPassives.card_line().
 class_name AbilityManager
 extends Node2D
 
@@ -209,8 +212,9 @@ func spell_name(id: String) -> String:
 
 
 ## Evolution ids whose condition currently holds (EvolutionData header):
-## base spell at BASE_LEVEL_REQUIRED, not evolved yet, paired passive owned,
-## and the run has reached EvolutionData.MIN_ELAPSED.
+## base spell at BASE_LEVEL_REQUIRED, not evolved yet, paired passive at
+## PASSIVE_LEVEL_REQUIRED (Lv 5), and the run has reached
+## EvolutionData.MIN_ELAPSED.
 func ready_evolutions() -> PackedStringArray:
 	var out := PackedStringArray()
 	if not evolutions_unlocked():
@@ -680,11 +684,18 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 		if lvl > 0 and evos.on_path(cls):
 			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
 		out.append({"offer": _summon_offer(cls, lvl), "weight": w, "dead": false})
+	# Shared-pool passives (PassiveData "shared_card_pool": the later horde
+	# passives) that can still appear as a NEW card split NEW_PASSIVE_POOL_WEIGHT.
+	var unowned_passives := 0  # Unowned, unbanished shared-pool passives.
+	for id: String in PassiveData.ORDER:
+		if passive_level(id) == 0 and not banished.has(id) and bool(PassiveData.PASSIVES[id].get("shared_card_pool", false)):
+			unowned_passives += 1
+	var w_new_passive := minf(LevelUpData.WEIGHT_NEW, LevelUpData.NEW_PASSIVE_POOL_WEIGHT / float(maxi(unowned_passives, 1)))  # Weight of one new shared-pool passive.
 	for id: String in PassiveData.ORDER:
 		var lvl := passive_level(id)
 		if banished.has(id) or exclude.has(id) or lvl >= (PassiveData.PASSIVES[id]["levels"] as Array).size() or (lvl == 0 and not can_new_passive):
 			continue
-		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else LevelUpData.WEIGHT_NEW
+		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (w_new_passive if bool(PassiveData.PASSIVES[id].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW)
 		var paired := _paired_spell(id)
 		if paired != "" and spell_level(paired) > 0 and not evolved.has(paired):
 			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
@@ -795,7 +806,8 @@ func _spell_offer(id: String, lvl: int) -> Dictionary:
 		if lvl + 1 >= EvolutionData.BASE_LEVEL_REQUIRED and passive_level(e["passive"]) >= EvolutionData.PASSIVE_LEVEL_REQUIRED:
 			hint = "Evolution ready: %s%s" % [e["display_name"], _evo_unlock_note()]
 		else:
-			hint = "Evolves into %s at Lv %d with %s%s" % [e["display_name"], EvolutionData.BASE_LEVEL_REQUIRED, p_name, _evo_source_note()]
+			hint = "Evolves into %s at Lv %d with %s Lv %d%s" % [e["display_name"], EvolutionData.BASE_LEVEL_REQUIRED, p_name,
+					EvolutionData.PASSIVE_LEVEL_REQUIRED, _evo_source_note()]
 	return _offer("spell", id, def["display_name"], def["icon"], lvl, lvl + 1, "SPELL", def["description"], deltas, hint)
 
 
@@ -923,6 +935,8 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 				deltas.append("%s cooldown %ss -> %ss" % [spell_name("shadow_bolt"), _fmt(a["cooldown"]), _fmt(b["cooldown"])])
 		"forbidden_knowledge", "dark_benediction":
 			deltas.append(game.horde.evolutions.passive_effect_line(id, lvl, nxt))
+		"bone_plating", "unholy_precision", "unholy_resilience", "bound_souls":
+			deltas.append(MinionPassives.card_line(game, id, nxt))  # The later horde passives.
 		_:
 			spells.passive_example(id, nxt, deltas)  # The newer spells' passives.
 	var hint := ""
@@ -935,7 +949,8 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 		elif spell_level(spell) >= EvolutionData.BASE_LEVEL_REQUIRED and lvl + 1 >= EvolutionData.PASSIVE_LEVEL_REQUIRED:
 			hint = "Evolution ready: %s%s" % [e_name, _evo_unlock_note()]
 		else:
-			hint = "Evolves %s (Lv %d/%d) into %s%s" % [AbilityData.SPELLS[spell]["display_name"], spell_level(spell), EvolutionData.BASE_LEVEL_REQUIRED, e_name, _evo_source_note()]
+			hint = "Evolves %s (Lv %d/%d) into %s once this is Lv %d%s" % [AbilityData.SPELLS[spell]["display_name"], spell_level(spell),
+					EvolutionData.BASE_LEVEL_REQUIRED, e_name, EvolutionData.PASSIVE_LEVEL_REQUIRED, _evo_source_note()]
 	if hint == "":
 		hint = game.horde.evolutions.passive_hint(id, lvl)  # Summon evolution passives.
 	return _offer("passive", id, def["display_name"], def["icon"], lvl, lvl + 1, "PASSIVE", def["description"], deltas, hint)

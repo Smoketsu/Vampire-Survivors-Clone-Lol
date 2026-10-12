@@ -55,6 +55,13 @@ const WEIGHT_NEW_CORE_SUMMON: float = 1.5  # TUNING (not in GDD)
 ## 3 x 1.5 (Archer, Mage, Priest orders) + 1.5 (later classes) new-summon
 ## weight, beside about 12 of passives and 5 of owned upgrades.
 const NEW_SPELL_POOL_WEIGHT: float = 2.0  # TUNING (not in GDD)
+## Total draw weight shared by the NEW cards of the four later horde passives
+## (PassiveData "shared_card_pool": Bone Plating, Unholy Precision, Unholy
+## Resilience, Bound Souls), like NEW_SPELL_POOL_WEIGHT: each unowned one
+## gets min(WEIGHT_NEW, this / number of them). At full weight they would add
+## 4 to the about 12 of passive weight at the start and crowd the summon
+## roles and spells out of early hands; owned ones level at WEIGHT_OWNED.
+const NEW_PASSIVE_POOL_WEIGHT: float = 2.0  # TUNING (not in GDD)
 ## Weight multiplier for a "dead" card (no current effect on the build, e.g.
 ## an army passive with no summon class owned). At most CARDS-1 dead cards are
 ## offered while a live card exists.
