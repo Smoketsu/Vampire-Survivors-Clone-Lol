@@ -10,6 +10,9 @@
 ##   Grave Mender Lv 5 + Crypt Warder Lv 5 + Dark Benediction Lv 5
 ##                                                     = Profane Bishop
 ##       (GDD §4.2 priest evolution; the split priest classes MERGE into one)
+##   Skeletal Archer Lv 5  + Unholy Precision Lv 5    = Gravebow
+##       (GDD §4.2 / §6.1 "Gravebow Company"; the owner chose the singular)
+##   Corpse Abomination Lv 5 + Bone Plating Lv 5      = Bone Colossus
 ## Owner rule: every evolution, spell or summon, needs its paired passive at
 ## Lv 5 (EvolutionData.PASSIVE_LEVEL_REQUIRED); `passive_level` below is 5
 ## for every recipe.
@@ -34,7 +37,7 @@ class_name SummonEvolutionData
 extends RefCounted
 
 ## Display / check order of the summon evolutions.
-const ORDER := ["death_knight", "lich", "profane_bishop"]
+const ORDER := ["death_knight", "lich", "profane_bishop", "gravebow", "bone_colossus"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -43,6 +46,12 @@ const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
 const RESULT_LEVEL: int = 5  # TUNING (not in GDD)
 ## Seconds each unit shows its transformation glow.
 const TRANSFORM_FX_TIME: float = 1.2  # TUNING (not in GDD)
+## Gravebow curse: damage sources it does NOT amplify. A cursed enemy takes
+## more damage from every undead source (all summons AND the necromancer's
+## spells: every hit on a Covenant soldier is undead); only the Soul Nova
+## power-up is left out, because it deals an exact share of max HP (it also
+## ignores the enemy-side modifiers, Enemy.damage_taken_mult()).
+const CURSE_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
 
 ## Evolution definitions.
 ##   mode          — "transform" | "merge" (see header).
@@ -72,6 +81,27 @@ const TRANSFORM_FX_TIME: float = 1.2  # TUNING (not in GDD)
 ##     duration   — s a risen skeleton lasts before it crumbles,
 ##     hp_mult / damage_mult — multipliers on that class's current stats,
 ##     max_alive  — at most this many risen skeletons at once.
+## Special overlays ("transform" only; SummonEvolutions.modify_stats() applies
+## them to the class's effective "special" numbers, after HordeDirector's
+## suffix scaling, so an evolution UPGRADES the class special):
+##   special_mult  — special key -> multiplier on the scaled value.
+##   special_set   — special key -> value added as is (not suffix-scaled).
+## Gravebow keys (special_set; GravebowKit, CombatResolver.curse_enemy):
+##   split_every    — every Nth volley of a Gravebow splits (1..).
+##   split_count    — arrows in a split volley (the aimed one included).
+##   split_fan      — radians; total spread of the split fan.
+##   curse_amp      — 0..1; extra damage a cursed enemy takes from every
+##                    undead source (CURSE_EXEMPT_SOURCES aside).
+##   curse_duration — s an arrow's curse lasts (refreshed by every hit).
+## Bone Colossus keys (special_set; ColossusKit):
+##   taunt_radius          — px; enemies (not bosses, Reckoning enemies or
+##                           structures) whose centre is this close pick the
+##                           Colossus as their target first.
+##   shrapnel_radius       — px; reach of the bone burst when it dies.
+##   shrapnel_damage_mult  — burst damage per enemy as a multiple of its
+##                           (fully scaled) stomp_damage.
+##   shrapnel_knockback    — px/s impulse of the burst, divided by enemy mass.
+##   shrapnel_shake        — screen-shake request (px, Juice) of the burst.
 const EVOLUTIONS := {
 	"death_knight": {
 		"mode": "transform",
@@ -146,5 +176,71 @@ const EVOLUTIONS := {
 		"plural": "Bishops",
 		"icon": "profane_bishop",
 		"description": "Menders and Warders merge into Profane Bishops: stronger heals, wards and barriers, a healing aura that burns foes, and one free active slot.",
+	},
+	# Gravebow (GDD §4.2 / §6.1 "Gravebow Company": splitting / piercing arrows
+	# and curses). Archers still hold their ground (owner decision): only the
+	# arrows change (GravebowKit).
+	"gravebow": {
+		"mode": "transform",
+		"bases": ["archer"],
+		"passive": "unholy_precision",
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: every evolution needs its passive maxed
+		"display_name": "Gravebow",  # GDD §6.1 (owner: singular "Gravebow")
+		"plural": "Gravebows",
+		"icon": "gravebow",
+		"description": "Your archers rise as Gravebows: piercing arrows, a splitting volley every 4th shot, and a curse that makes foes take more damage from all your undead.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.25,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 10.0,  # TUNING (not in GDD) archers are 9
+			"pierce": 2,  # TUNING (not in GDD) each arrow passes through 2 enemies (Lv 5 archers: 1)
+		},
+		"special_set": {
+			"split_every": 4,  # TUNING (not in GDD) every 4th volley splits
+			"split_count": 3,  # TUNING (not in GDD) arrows in a split volley
+			"split_fan": 0.5,  # TUNING (not in GDD) radians, total fan spread (~29 degrees)
+			"curse_amp": 0.15,  # TUNING (not in GDD) +15% damage taken from the undead
+			"curse_duration": 4.0,  # TUNING (not in GDD) s
+		},
+	},
+	# Bone Colossus: a towering, bone-armoured Abomination. A bigger stomp,
+	# a wider and heavier blocker, a taunt and a death burst (ColossusKit).
+	# Body and blocking ring grow together: an enemy held at the ring is
+	# block_radius - radius px from the body's edge and must reach that far
+	# to strike, so the gap stays the Abomination's 4 px (a wider ring alone
+	# would put it out of reach of every melee soldier). The 19 px body is
+	# the largest summon body: UnitData.MAX_BLOCK_RADIUS (the padding of
+	# every enemy / boss query for summon bodies) was raised to match, and
+	# HordeDirector.block_query_radius follows the widest block_radius (also
+	# raised on the transformation itself).
+	"bone_colossus": {
+		"mode": "transform",
+		"bases": ["abomination"],
+		"passive": "bone_plating",
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: every evolution needs its passive maxed
+		"display_name": "Bone Colossus",  # TUNING (not in GDD) owner-approved name
+		"plural": "Bone Colossi",
+		"icon": "bone_colossus",
+		"description": "Your abominations rise as Bone Colossi: far tougher, wider bodies, bigger stomps, foes nearby are drawn to them, and they burst into bone shrapnel when they fall.",
+		"mult": {
+			"max_hp": 1.6,  # TUNING (not in GDD) +60% HP
+		},
+		"set": {
+			"radius": 19.0,  # TUNING (not in GDD) abominations are 16 (= UnitData.MAX_BLOCK_RADIUS)
+			"block_radius": 23.0,  # TUNING (not in GDD) abominations are 20; same 4 px reach gap
+			"block_mass": 11.0,  # TUNING (not in GDD) abominations are 8; the boss (12) still shoves it
+		},
+		"special_mult": {
+			"stomp_radius": 1.4,  # TUNING (not in GDD) +40% stomp radius
+		},
+		"special_set": {
+			"taunt_radius": 110.0,  # TUNING (not in GDD) px
+			"shrapnel_radius": 90.0,  # TUNING (not in GDD) px
+			"shrapnel_damage_mult": 2.0,  # TUNING (not in GDD) x its stomp damage
+			"shrapnel_knockback": 220.0,  # TUNING (not in GDD) px/s
+			"shrapnel_shake": 4.0,  # TUNING (not in GDD) px
+		},
 	},
 }

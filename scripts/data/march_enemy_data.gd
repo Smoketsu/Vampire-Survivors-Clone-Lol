@@ -30,23 +30,27 @@ const ORDER := ["shieldbearer", "banner_bearer", "halberdier"]
 ## Damage sources (CombatResolver `source` tags) that count as projectiles
 ## for a tower shield: Shadow Bolt, Void Barrage bolts and shards, Bone Spear
 ## and Ossuary Lance, skeletal arrows, mage and Lich blasts, Frost Wraith
-## frost bolts and the support classes' bolts (Mender, Warder, Bishop).
+## frost bolts and the support classes' bolts (Mender, Warder, Bishop), and
+## Gravebow arrows.
 ## Area spells (Shadow Blast, Corpse Explosion / Grave Eruption, Plague Cloud
 ## / Pestilence, Soul Siphon tethers and Soul Rapture bursts, Orb Shield) are
 ## not projectiles and go through a tower shield.
 const PROJECTILE_SOURCES := ["bolt", "void", "void_shard", "spear", "lance",
-	"archer", "mage", "lich", "frost_wraith", "mender", "warder", "bishop"]
+	"archer", "mage", "lich", "frost_wraith", "mender", "warder", "bishop",
+	"gravebow"]
 ## Damage sources that reach AROUND a shield (melee at close range); used by
 ## Marshal Vael's Shieldwall, which blocks everything else from the front:
 ## Skeleton Warrior strikes and bashes (temporary and Lich-risen skeletons
 ## included), the Death Knight's strike, bash and cleave, the Abomination's
 ## fists and stomp, the Rogue's stab, dash and bleed, the Gargoyle's claws
 ## and swoop, and the Profane Bishop's aura pulse (it surrounds the Bishop,
-## so it reaches behind a shield like a blade at close range).
+## so it reaches behind a shield like a blade at close range); the Bone
+## Colossus's fists and death shrapnel (a burst all around it) as well.
 const MELEE_SOURCES := ["warrior", "bash", "lich_risen",
 	"death_knight", "death_knight_bash", "death_knight_cleave",
 	"abomination", "abom_stomp", "rogue", "rogue_dash", "rogue_bleed",
-	"gargoyle", "gargoyle_swoop", "bishop_aura"]
+	"gargoyle", "gargoyle_swoop", "bishop_aura",
+	"bone_colossus", "colossus_shrapnel"]
 ## Seconds an aura buff (Banner Bearer, Holy Standard) lingers on a soldier
 ## after it leaves the aura (auras refresh at the 5 Hz think rate).
 const AURA_LINGER: float = 0.6  # TUNING (not in GDD)

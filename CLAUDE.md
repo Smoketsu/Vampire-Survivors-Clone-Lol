@@ -181,6 +181,10 @@ tiny tweaks.
   `HordeDirector.compute_stats()`; their cards name the summon evolutions they will unlock (Bone
   Colossus, Gravebow, Cathedral Horror, Shadow Reaper; Soul Recycling → Winter Revenant), which are
   not built yet; and the owner rule that **every evolution needs its paired passive at Lv 5**.
+- two of those summon evolutions: the **Gravebow** (Archers + Unholy Precision: piercing,
+  splitting, cursing arrows; the curse status lives in `combat_resolver.gd`) and the **Bone
+  Colossus** (Abominations + Bone Plating: bigger stomp and body, taunt, bone shrapnel on death),
+  in `gravebow_kit.gd` / `colossus_kit.gd`.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends; it outranks everything below.
@@ -196,9 +200,8 @@ tiny tweaks.
    timing in `anim_data.gd`); only `shadow_blast` is hooked so far (test), hook the rest via
    `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.
 4. **Rest of Stage 1's content:**
-   - the summon evolutions paired with the later passives: Abomination → Bone Colossus (Bone
-     Plating), Archer → Gravebow (Unholy Precision), Gargoyle → Cathedral Horror (Unholy
-     Resilience), Rogue → Shadow Reaper (Bound Souls), Frost Wraith → Winter Revenant (Soul
+   - the summon evolutions paired with the later passives (Bone Colossus and Gravebow are done):
+     Gargoyle → Cathedral Horror (Unholy Resilience), Rogue → Shadow Reaper (Bound Souls), Frost Wraith → Winter Revenant (Soul
      Recycling);
    - a dash and an ultimate.
 5. **Phase 3 campaign:** Stage 3 (Sanctum of Judgment,

@@ -79,10 +79,11 @@ const MINION_SOURCE_SUFFIXES := ["", "_bash", "_cleave", "_aura"]
 ## Lich's raised skeletons).
 const MINION_EXTRA_TAGS := ["lich_risen"]
 ## Unholy Precision: the other minion damage sources that can crit: the
-## basic warrior shield bash and the later classes' specials. The Rogue's
+## basic warrior shield bash and the later classes' specials (and the Bone
+## Colossus's death shrapnel). The Rogue's
 ## bleed ("rogue_bleed") is left out on purpose: it is a damage-over-time
 ## tick, not a strike.
-const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_swoop"]
+const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_swoop", "colossus_shrapnel"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source

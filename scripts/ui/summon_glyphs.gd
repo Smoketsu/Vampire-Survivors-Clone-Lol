@@ -20,6 +20,8 @@
 ##   Crypt Gargoyle     = hunched stone body with wide bat wings and horns
 ##   Frost Wraith       = legless teardrop ghost with an ice crown and a
 ##                        floating ice shard, in a cold glow
+## The Gravebow and Bone Colossus (and their icons) are drawn by
+## GravebowColossusGlyphs, dispatched from here.
 ## Also draws the icons of the horde passives tied to summon evolutions
 ## (Forbidden Knowledge, Dark Benediction, and the four later ones: Bone
 ## Plating, Unholy Precision, Unholy Resilience, Bound Souls), the
@@ -58,6 +60,8 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 			draw_gargoyle(ci, o, r, flash)
 		"frost_wraith":
 			draw_frost_wraith(ci, o, r, flash)
+		"gravebow", "bone_colossus":
+			return GravebowColossusGlyphs.draw_summon(ci, kind, o, r, flash)
 		_:
 			return false
 	return true
@@ -102,6 +106,8 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.05, s * 0.05), s * 0.46, false)
 		"rogue", "gargoyle", "frost_wraith":
 			Glyphs.draw_summon(ci, kind, c + Vector2(-s * 0.06, s * 0.08), s * 0.5, false)
+		"gravebow", "bone_colossus":
+			return GravebowColossusGlyphs.draw_icon(ci, kind, c, s)  # Gold-framed evolution icons.
 		_:
 			return false
 	return true

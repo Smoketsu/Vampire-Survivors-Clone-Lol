@@ -21,6 +21,10 @@
 ##   * Lich raise-the-dead: on_enemy_killed() (called by CombatResolver for
 ##     every kill) raises a temporary skeleton for a Lich kill, with a
 ##     deterministic accumulator instead of an RNG roll.
+##   * Gravebow (GravebowKit) and Bone Colossus (ColossusKit): their numbers
+##     arrive as "special_mult" / "special_set" overlays on the class's
+##     effective special (modify_stats()); the kits read them from
+##     SummonedUnit.special.
 ## Card helpers (offer, hints, dead-card and evolution-path checks) keep
 ## AbilityManager's changes to one-line hooks.
 class_name SummonEvolutions
@@ -147,6 +151,15 @@ func modify_stats(cls: String, out: Dictionary, with_evolution: bool) -> void:
 	var set_v: Dictionary = def.get("set", {})
 	for key: String in set_v:
 		out[key] = set_v[key]
+	# Special overlays (Gravebow, Bone Colossus): upgrade the class special.
+	# out["special"] is a fresh dictionary per compute_stats() call.
+	var sp: Dictionary = out["special"]  # Effective special numbers.
+	var sp_mult: Dictionary = def.get("special_mult", {})  # Multipliers on scaled keys.
+	for key: String in sp_mult:
+		sp[key] = float(sp[key]) * float(sp_mult[key])
+	var sp_set: Dictionary = def.get("special_set", {})  # Keys added as is.
+	for key: String in sp_set:
+		sp[key] = sp_set[key]
 	out["evolution"] = evo
 
 
@@ -183,6 +196,9 @@ func _transform(evo: String, def: Dictionary) -> void:
 	var cls: String = def["bases"][0]
 	evolved[cls] = evo
 	director.recompute_all(director.capacity_snapshot())
+	# A wider blocker (Bone Colossus) widens the enemies' blocker query now:
+	# the units transform in place, so _try_spawn() never saw the new radius.
+	director.block_query_radius = maxf(director.block_query_radius, float(director.class_stats[cls]["block_radius"]))
 	for u in director.units:
 		if u.unit_class == cls and not u.is_temporary:
 			u.hp = u.max_hp
@@ -322,6 +338,8 @@ func build_offer(evo: String) -> Dictionary:
 			var raise: Dictionary = def["raise"]
 			deltas.append("NEW  1 in %d foes it slays rises for %ss (max %d)" % [
 					int(roundf(1.0 / float(raise["chance"]))), AbilityManager._fmt(raise["duration"]), int(raise["max_alive"])])
+		deltas.append_array(GravebowKit.offer_lines(cur, nxt))
+		deltas.append_array(ColossusKit.offer_lines(cur, nxt))
 		hint = "Transforms your %s in place" % String(UnitData.UNITS[cls]["plural"]).to_lower()
 	var lvl_from := int(SummonEvolutionData.BASE_LEVEL_REQUIRED)
 	return ab._offer("evolution", evo, String(def["display_name"]), String(def["icon"]), lvl_from, lvl_from, "EVOLUTION",

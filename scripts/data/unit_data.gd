@@ -722,7 +722,11 @@ const WARD_THREAT_RADIUS: float = 90.0  # TUNING (not in GDD)
 ## size enemy-vs-summon queries. A wider blocker (the Corpse Abomination's
 ## 20 px block radius) raises HordeDirector.block_query_radius instead, only
 ## once one has been spawned, so runs without it pay nothing extra.
-const MAX_BLOCK_RADIUS: float = 16.0  # TUNING (not in GDD)
+## 19 = the Bone Colossus body (SummonEvolutionData; it was 16, the Abomination
+## body). Every query using it filters by exact distance afterwards, so a
+## larger pad only stops bigger bodies being missed; results are otherwise
+## unchanged.
+const MAX_BLOCK_RADIUS: float = 19.0  # TUNING (not in GDD) was 16; the Bone Colossus body
 
 # --- Coordination / steering ----------------------------------------------------
 
