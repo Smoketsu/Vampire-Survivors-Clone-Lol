@@ -119,7 +119,7 @@ const SHATTER_SHARDS: int = 36  # TUNING (not in GDD)
 ## The boss row (keys in the header).
 const BOSS := {
 	"display_name": "Grand Inquisitor Seraphine, Voice of the Dawn",  # GDD §7.5
-	"max_hp": 40000.0,  # TUNING (not in GDD) ~1.25x Marshal Vael's 32,000; her transformation, teleports, healers, channels and summons stretch it into a 2-2.5 min fight for the army bot (48,000 took 154-191 s); a stage HP multiplier applies on top
+	"max_hp": 30000.0,  # TUNING (not in GDD) x the stage HP multiplier (33,000 in the Sanctum); 40,000 was tuned on the Graveyard, but in her own crowded stage (x1.1-1.2) it often outlasted the countdown
 	"move_speed": 48.0,  # TUNING (not in GDD)
 	"damage": 11.0,  # TUNING (not in GDD) staff strike in reach
 	"attack_interval": 1.1,  # TUNING (not in GDD)
@@ -159,7 +159,7 @@ const BOSS := {
 	# Attendants (her healers).
 	"attendant_kind": "high_confessor",  # GDD §7.2 / §7.5: her healers are High Confessors (SanctumEnemyData)
 	"attendant_count": 3,  # TUNING (not in GDD) owner brief: up to three
-	"attendant_hp_mult": 1.0,  # TUNING (not in GDD) the High Confessor row carries its own HP (170, always elite; was a x6 Chaplain stand-in, 192)
+	"attendant_hp_mult": 1.0,  # TUNING (not in GDD) the High Confessor row carries its own HP (170, always elite; was a x6 Chaplain before the merge, 192)
 	"attendant_spawn_radius": 46.0,  # TUNING (not in GDD)
 	"attend_radius": 170.0,  # TUNING (not in GDD)
 	"attend_regen": 30.0,  # TUNING (not in GDD) HP/s per healer in reach
@@ -185,7 +185,7 @@ const BOSS := {
 	"circles_lead": 0.4,  # TUNING (not in GDD)
 	"circles_spread_min": 90.0,  # TUNING (not in GDD)
 	"circles_spread_max": 170.0,  # TUNING (not in GDD)
-	"circles_damage_player": 20.0,  # TUNING (not in GDD)
+	"circles_damage_player": 16.0,  # TUNING (not in GDD) 20 at first (Stage 3 integration balance)
 	"circles_damage_summon": 18.0,  # TUNING (not in GDD)
 	"circles_max_range": 420.0,  # TUNING (not in GDD)
 	# Templar squads.
@@ -233,7 +233,7 @@ const BOSS := {
 	"construct_kind": "sanctified_sentinel",  # GDD §7.2 / §7.5 "constructs": Sanctified Sentinels (SanctumEnemyData)
 	"constructs_count": 2,  # TUNING (not in GDD)
 	"constructs_telegraph": 1.5,  # TUNING (not in GDD)
-	"constructs_hp_mult": 1.0,  # TUNING (not in GDD) the Sentinel row carries its own HP and flat armour (120; was a x3 footman stand-in, 108)
+	"constructs_hp_mult": 1.0,  # TUNING (not in GDD) the Sentinel row carries its own HP and flat armour (120; was a x3 footman before the merge, 108)
 	"constructs_offset": 90.0,  # TUNING (not in GDD)
 	"constructs_spread": 60.0,  # TUNING (not in GDD)
 	# Undead suppression.
@@ -258,7 +258,7 @@ const BOSS := {
 	"nova_near_turn": 1.0,  # TUNING (not in GDD) rad either side of the bearing to her: shelter lies her way, keeping the army on her
 	"nova_far_min": 150.0,  # TUNING (not in GDD)
 	"nova_far_max": 300.0,  # TUNING (not in GDD)
-	"nova_damage_player": 28.0,  # TUNING (not in GDD) heavy (x enemy damage scaling, ~x3 at 17:00)
+	"nova_damage_player": 22.0,  # TUNING (not in GDD) heavy (x enemy damage scaling, ~x3 at 17:00); 28 at first
 	"nova_damage_summon": 22.0,  # TUNING (not in GDD)
 	# Collapsing arena.
 	"collapse_start_radius": 600.0,  # TUNING (not in GDD) owner brief
@@ -268,7 +268,7 @@ const BOSS := {
 	"collapse_damage_player": 5.0,  # TUNING (not in GDD) per tick (x scaling)
 	"collapse_damage_summon": 6.0,  # TUNING (not in GDD) per tick
 	# Final guard.
-	"guard_groups": [{"kind": "templar", "count": 5}, {"kind": "sun_paladin", "count": 3}],  # TUNING (not in GDD) GDD "final army confrontation": Templars and Sun Paladins (always elite, so 3 where the footman stand-in had 5)
+	"guard_groups": [{"kind": "templar", "count": 5}, {"kind": "sun_paladin", "count": 3}],  # TUNING (not in GDD) GDD "final army confrontation": Templars and Sun Paladins (always elite, so 3 where the footmen before the merge were 5)
 	"guard_telegraph": 1.5,  # TUNING (not in GDD)
 	"guard_radius": 520.0,  # TUNING (not in GDD) inside the 600 px collapse ring
 }

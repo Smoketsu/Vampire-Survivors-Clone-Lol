@@ -30,8 +30,13 @@
 ## The Reckoning is restyled as "Dawn's Wrath" (same escalation; Sun Paladins
 ## march with the Inquisitors). Gap-filling waves, all rates, caps and weights
 ## are TUNING (not in GDD). The stage is the hardest of the three (GDD campaign
-## intent): tougher kinds earlier and the stage multipliers ENEMY_HP_MULT /
-## ENEMY_DAMAGE_MULT, above the Crimson March's.
+## intent): its step up comes mostly from its own kinds (Sentinel flat
+## armour, the Guardian, Radiant suppression, Confessor shields and revivals,
+## Paladin wards) plus the stage multipliers ENEMY_HP_MULT / ENEMY_DAMAGE_MULT
+## from Zone III. Stage 3 integration balance (GDD §15.0): the elite kinds
+## (Radiant Inquisitors, High Confessors, Sun Paladins) come only in the
+## scripted waves, never in the trickle, and Sentinels trickle at a quarter
+## of the first weights (tuned on the lighter kinds that held the slots before the merge).
 class_name SanctumStage
 extends RefCounted
 
@@ -68,14 +73,15 @@ const KINDS := {
 const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) GDD §8.3 places her at 22:00; same 17:00 as the other bosses (owner-approved)
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling.
-const ENEMY_HP_MULT: float = 1.2  # TUNING (not in GDD) GDD §9.3 campaign: each chapter steps up (March 1.1)
+const ENEMY_HP_MULT: float = 1.1  # TUNING (not in GDD) same as the March: the Stage 3 kinds carry the step up (was 1.2 before the Stage 3 kinds merged)
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
 const ENEMY_DAMAGE_MULT: float = 1.1  # TUNING (not in GDD) (March 1.05)
 ## Elapsed game seconds from which ENEMY_HP_MULT / ENEMY_DAMAGE_MULT apply to
-## regular enemies: Zone II, the Sanctified Halls (the boss always gets them).
-## Same reason as the March: from 0:00 they would lift a recruit past the
-## starting Shadow Bolt's one-shot and starve the early army.
-const ENEMY_MULT_FROM: float = 240.0  # TUNING (not in GDD)
+## regular enemies: Zone III, the Cloisters (the boss always gets them). From
+## 0:00 they would lift a recruit past the starting Shadow Bolt's one-shot
+## (the March's lesson), and in Zone II the Sentinels, the Cathedral Guardian
+## and the Radiant Inquisitors already arrive together.
+const ENEMY_MULT_FROM: float = 510.0  # TUNING (not in GDD) Zone III (was 240, Zone II, before the Stage 3 kinds merged)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
 const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner-approved x1.5 (March x1.25)
 
@@ -104,9 +110,11 @@ const RECKONING_OBJECTIVE: String = "DAWN'S WRATH: the Sanctum's light falls on 
 # =====================================================================================
 
 ## Continuous spawning segments, sorted by start time (keys as
-## GraveyardStage.SEGMENTS; kind keys may be KINDS aliases). New kinds:
-## Sentinels from 4:00, Radiant Inquisitors from 6:00, High Confessors from
-## 8:30, Sun Paladins from 13:00.
+## GraveyardStage.SEGMENTS; kind keys may be KINDS aliases). Sentinels
+## trickle from 4:00; the elite kinds (Radiant Inquisitors from 6:00, High
+## Confessors from 8:30, Sun Paladins from 13:00) come in the EVENTS waves
+## only: always-elite kinds in the trickle meant ~70 elites a run, twice the
+## chests and Soul Ash of the other stages and armies ground down by 7:00.
 const SEGMENTS := [
 	# Zone I, the Outer Courtyards: GDD §8.3 "00:00 Outer defenders".
 	{"start": 0.0, "rate": 1.5, "max_alive": 32,  # TUNING (not in GDD)
@@ -115,62 +123,62 @@ const SEGMENTS := [
 	{"start": 60.0, "rate": 1.8, "max_alive": 42,  # TUNING (not in GDD)
 		"weights": {"recruit": 1.0},
 		"objective": "Push through the courtyards"},
-	{"start": 120.0, "rate": 2.1, "max_alive": 52,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.78, "footman": 0.14, "archer": 0.08},
+	{"start": 120.0, "rate": 2.0, "max_alive": 52,  # TUNING (not in GDD) the Crimson March's opening numbers
+		"weights": {"recruit": 0.8, "footman": 0.12, "archer": 0.08},
 		"objective": "Archers line the cathedral walls"},
-	{"start": 180.0, "rate": 2.3, "max_alive": 58,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.64, "footman": 0.2, "archer": 0.1, "chaplain": 0.06},
+	{"start": 180.0, "rate": 2.2, "max_alive": 58,  # TUNING (not in GDD) the Crimson March's opening numbers
+		"weights": {"recruit": 0.66, "footman": 0.2, "archer": 0.1, "chaplain": 0.04},
 		"objective": "Holy ground ahead: shatter the ward crystals"},
 	# Zone II, the Sanctified Halls: Sentinels from 4:00.
 	{"start": 240.0, "rate": 2.5, "max_alive": 66,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.54, "footman": 0.2, "archer": 0.1, "sentinel": 0.06, "shieldbearer": 0.05, "chaplain": 0.05},
+		"weights": {"recruit": 0.54, "footman": 0.2, "archer": 0.1, "sentinel": 0.015, "shieldbearer": 0.05, "chaplain": 0.05},
 		"objective": "The Sanctified Halls: Sentinels guard the colonnades"},
 	{"start": 300.0, "rate": 2.8, "max_alive": 76,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.5, "footman": 0.2, "archer": 0.1, "sentinel": 0.08, "shieldbearer": 0.07, "chaplain": 0.05},
+		"weights": {"recruit": 0.5, "footman": 0.2, "archer": 0.1, "sentinel": 0.02, "shieldbearer": 0.07, "chaplain": 0.05},
 		"objective": "Fight through the halls"},
 	# GDD §8.3 "07:00 Guardian miniboss" (5:30); Radiant Inquisitors from 6:00.
 	{"start": 360.0, "rate": 3.0, "max_alive": 86,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.46, "footman": 0.2, "archer": 0.1, "sentinel": 0.08, "shieldbearer": 0.06, "chaplain": 0.05, "radiant": 0.05},
+		"weights": {"recruit": 0.46, "footman": 0.2, "archer": 0.1, "sentinel": 0.02, "shieldbearer": 0.06, "chaplain": 0.05},
 		"objective": "Radiant Inquisitors sanctify the halls"},
 	{"start": 420.0, "rate": 2.7, "max_alive": 82,  # TUNING (not in GDD) lull
-		"weights": {"recruit": 0.46, "footman": 0.2, "archer": 0.1, "sentinel": 0.08, "shieldbearer": 0.06, "chaplain": 0.05, "radiant": 0.05},
+		"weights": {"recruit": 0.46, "footman": 0.2, "archer": 0.1, "sentinel": 0.02, "shieldbearer": 0.06, "chaplain": 0.05},
 		"objective": "The cloisters lie beyond the halls"},
 	{"start": 465.0, "rate": 3.1, "max_alive": 92,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.42, "footman": 0.2, "archer": 0.1, "sentinel": 0.08, "shieldbearer": 0.06, "chaplain": 0.05, "radiant": 0.05, "purifier": 0.04},
+		"weights": {"recruit": 0.42, "footman": 0.2, "archer": 0.1, "sentinel": 0.02, "shieldbearer": 0.06, "chaplain": 0.05, "purifier": 0.04},
 		"objective": "Purifiers hunt your dead between the pillars"},
 	# Zone III, the Cloisters: GDD §8.3 "10:00 High Confessor ambush" (8:30).
 	{"start": 510.0, "rate": 3.5, "max_alive": 106,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "sentinel": 0.09, "shieldbearer": 0.06, "chaplain": 0.04, "confessor": 0.02, "radiant": 0.06, "purifier": 0.05},
+		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "sentinel": 0.022, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
 		"objective": "The Cloisters: High Confessors shield the faithful"},
 	{"start": 570.0, "rate": 3.9, "max_alive": 116,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "sentinel": 0.09, "shieldbearer": 0.06, "chaplain": 0.04, "confessor": 0.02, "radiant": 0.06, "purifier": 0.05},
+		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "sentinel": 0.022, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
 		"objective": "Purge the cloisters"},
 	# GDD §8.3 "13:00 Altar destruction" (10:30).
 	{"start": 630.0, "rate": 3.6, "max_alive": 112,  # TUNING (not in GDD) room for the altar hunt
-		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "sentinel": 0.09, "shieldbearer": 0.06, "chaplain": 0.04, "confessor": 0.02, "radiant": 0.06, "purifier": 0.05},
+		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "sentinel": 0.022, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
 		"objective": "Sacred altars bless the Covenant: destroy them to weaken it"},
 	{"start": 720.0, "rate": 4.4, "max_alive": 136,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.34, "footman": 0.16, "archer": 0.12, "sentinel": 0.1, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "confessor": 0.02, "radiant": 0.06, "purifier": 0.05},
+		"weights": {"recruit": 0.34, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
 		"objective": "The sanctuary doors tremble"},
 	# Zone IV, the Final Sanctuary: GDD §8.3 "16:00 Elite paladins" (13:00).
 	{"start": 780.0, "rate": 4.9, "max_alive": 146,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "sentinel": 0.1, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "confessor": 0.02, "radiant": 0.06, "purifier": 0.05, "paladin": 0.02},
+		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
 		"objective": "The Final Sanctuary: Sun Paladins defend the inner sanctum"},
 	{"start": 840.0, "rate": 4.5, "max_alive": 140,  # TUNING (not in GDD) lull
-		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "sentinel": 0.1, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "confessor": 0.02, "radiant": 0.06, "purifier": 0.05, "paladin": 0.02},
+		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
 		"objective": "Stained light falls on the last defenders"},
 	{"start": 900.0, "rate": 5.6, "max_alive": 160,  # TUNING (not in GDD) the density peak of the run
-		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "sentinel": 0.1, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "confessor": 0.02, "radiant": 0.06, "purifier": 0.05, "paladin": 0.02},
+		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
 		"objective": "The final sanctuary opens"},
 	{"start": 960.0, "rate": 5.0, "max_alive": 158,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.3, "footman": 0.16, "archer": 0.12, "sentinel": 0.1, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.05, "confessor": 0.02, "radiant": 0.06, "purifier": 0.05, "paladin": 0.03},
+		"weights": {"recruit": 0.3, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.05, "purifier": 0.05},
 		"objective": "The Voice of the Dawn approaches"},
 	# 17:00, the boss: a thinner trickle so the duel stays readable.
 	{"start": BOSS_TIME, "rate": 3.2, "max_alive": 100,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.5, "footman": 0.2, "archer": 0.15, "sentinel": 0.1, "purifier": 0.05},
+		"weights": {"recruit": 0.5, "footman": 0.2, "archer": 0.15, "sentinel": 0.025, "purifier": 0.05},
 		"objective": "Grand Inquisitor Seraphine passes judgment"},
 	{"start": 1110.0, "rate": 4.0, "max_alive": 120,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.45, "footman": 0.2, "archer": 0.15, "sentinel": 0.1, "purifier": 0.1},
+		"weights": {"recruit": 0.45, "footman": 0.2, "archer": 0.15, "sentinel": 0.025, "purifier": 0.1},
 		"objective": "Grand Inquisitor Seraphine passes judgment"},
 ]
 
@@ -400,7 +408,7 @@ const MARCH := {
 const SANCTUM := {
 	"chamber_radius": 220.0,  # owner-approved 220 px circle
 	"crystals_per_chamber": 2,  # owner-approved
-	"chamber_undead_dps": 3.0,  # TUNING (not in GDD) "light holy damage"
+	"chamber_undead_dps": 1.5,  # TUNING (not in GDD) "light holy damage" (3.0 killed whole armies camped on a crystal with the real kinds around)
 	"chamber_tick": 1.0,  # owner-approved "each second"
 	"chamber_minion_damage": 0.75,  # owner-approved "25% less damage"
 	"altar_hp_cut": 0.06,  # owner-approved -6% per altar, stacking to -18%

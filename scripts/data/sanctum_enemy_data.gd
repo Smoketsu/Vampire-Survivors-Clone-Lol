@@ -92,7 +92,7 @@ const ENEMIES := {
 		"sweep_half_angle": 1.05,  # TUNING (not in GDD) rad each side (~120 degrees)
 		"sweep_telegraph": 1.0,  # Owner-approved ~1 s telegraph
 		"sweep_damage_player": 12.0,  # TUNING (not in GDD) before time scaling
-		"sweep_damage_summon": 14.0,  # TUNING (not in GDD) before time scaling
+		"sweep_damage_summon": 10.0,  # TUNING (not in GDD) before time scaling (14 at first: Stage 3 integration balance)
 		"sweep_knockback": 46.0,  # TUNING (not in GDD) px a struck summon is shoved away
 	},
 	# GDD §7.2 "Radiant Inquisitor: elite caster, creates holy damage zones;
@@ -241,7 +241,7 @@ const ENEMIES := {
 	# treasure chest when it falls.
 	"cathedral_guardian": {
 		"display_name": "Cathedral Guardian",
-		"max_hp": 2200.0,  # TUNING (not in GDD) x enemy HP scaling (x1.9 at 5:30)
+		"max_hp": 1400.0,  # TUNING (not in GDD) x enemy HP scaling (x1.9 at 5:30); 2,200 at first, too long-lived inside the Sanctum's 5:30 crowd
 		"move_speed": 30.0,  # TUNING (not in GDD) slow
 		"damage": 16.0,  # TUNING (not in GDD) stone fist
 		"attack_interval": 1.6,  # TUNING (not in GDD)
@@ -277,8 +277,8 @@ const ENEMIES := {
 		"slam_range": 240.0,  # TUNING (not in GDD) px; used on a necromancer this close
 		"slam_radius": 72.0,  # TUNING (not in GDD)
 		"slam_telegraph": 1.3,  # TUNING (not in GDD) GDD §10.5 clear telegraphs
-		"slam_damage_player": 26.0,  # TUNING (not in GDD) before time scaling
-		"slam_damage_summon": 14.0,  # TUNING (not in GDD) before time scaling
+		"slam_damage_player": 18.0,  # TUNING (not in GDD) before time scaling (26 at first)
+		"slam_damage_summon": 8.0,  # TUNING (not in GDD) before time scaling (14 at first)
 		"slam_soak_per_unit": 0.15,  # TUNING (not in GDD) body-blocking (like Hammerfall)
 		"slam_soak_max": 0.6,  # TUNING (not in GDD)
 		"slam_knockback": 40.0,  # TUNING (not in GDD) px summons are thrown out of the circle
@@ -294,8 +294,8 @@ const ENEMIES := {
 		"beam_half_arc": 0.75,  # TUNING (not in GDD) rad each side of the necromancer
 		"beam_telegraph": 1.2,  # TUNING (not in GDD)
 		"beam_sweep_time": 1.5,  # TUNING (not in GDD) s to cross the arc
-		"beam_damage_player": 22.0,  # TUNING (not in GDD) before time scaling
-		"beam_damage_summon": 9.0,  # TUNING (not in GDD) before time scaling
+		"beam_damage_player": 15.0,  # TUNING (not in GDD) before time scaling (22 at first)
+		"beam_damage_summon": 5.0,  # TUNING (not in GDD) before time scaling (9 at first: the beam crosses the whole army)
 	},
 }
 
