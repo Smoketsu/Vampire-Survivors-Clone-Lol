@@ -184,8 +184,8 @@ tiny tweaks.
   Precision** (seeded minion crits), **Unholy Resilience** (less area / holy damage to minions) and
   **Bound Souls** (minion speed, leash, faster return), hooked into `CombatResolver` and
   `HordeDirector.compute_stats()`; their cards name the summon evolutions they will unlock (Bone
-  Colossus, Gravebow, Cathedral Horror, Shadow Reaper; Soul Recycling → Winter Revenant), which are
-  not built yet; and the owner rule that **every evolution needs its paired passive at Lv 5**;
+  Colossus, Gravebow, Cathedral Horror, Shadow Reaper; Soul Recycling → Winter Revenant), all built
+  below; and the owner rule that **every evolution needs its paired passive at Lv 5**;
 - the **recipe book**: evolutions are meant to be discovered (owner decision, no card or HUD hints),
   so the pause menu's **Recipes** view (`recipes_panel.gd`) shows only the recipes obtained in some
   run, saved in the Meta `[recipes]` section, and locked "?" placeholders for the rest; it is
@@ -214,7 +214,7 @@ tiny tweaks.
   the army / summon / evolve bots switch by a simple rule (`stance_bot.gd`; naive / pact keep Escort).
 
 **Next, in priority order:**
-1. **Playtest feedback** from the owner and friends; it outranks everything below.
+1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
 2. **Small fixes:** menu key hints should reflect rebinds. (Archers now hold their ground: user
    decision, GDD §15.0.)
 3. **Real art (Phase 2), in progress:** **pixel art** style, locked by the approved necromancer.
@@ -226,8 +226,8 @@ tiny tweaks.
    short animations (`prepare_sprite.py --anim <sheet or GIF> <id>` → `assets/sprites/effects/`,
    timing in `anim_data.gd`); `shadow_blast` (test), `dread_rally` and `grave_step_trail` are hooked so far, hook the rest via
    `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.
-4. **Army stances** (owner-approved proposal, in progress): Escort / Onslaught / Bone Ring from the
-   first run, Spearhead bought in the Ossuary; keys 1-4 and right-stick flicks.
+4. **Content candidates** (owner to choose): Stage 3 (below), achievement rewards / the Bone Golem,
+   synergies for the newer classes, more ultimates, a victory screen after the Reckoning.
 5. **Phase 3 campaign:** Stage 3 (Sanctum of Judgment,
    Grand Inquisitor Seraphine); skins; achievement rewards.
 6. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
