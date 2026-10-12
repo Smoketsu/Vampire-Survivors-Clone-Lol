@@ -69,8 +69,8 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
   numbers the horde AI already uses (`stance_data.gd`, read by the horde director); the hard recall
   never changes, the flavour bonuses stay off, and the stance resets to Escort every run.
 - **Spells:** Shadow Bolt, Orb Shield, Shadow Blast, plus Bone Spear, Soul Siphon, Corpse Explosion
-  and Plague Cloud (`scripts/abilities/spells/`, one dispatch through `NecroSpellBook`). 11 actives
-  (7 spells, 8 offerable summon classes) compete for 6 active slots.
+  and Plague Cloud (`scripts/abilities/spells/`, one dispatch through `NecroSpellBook`). 16 actives
+  (7 spells, 9 offerable summon classes) compete for 6 active slots.
 - **Soul Ash is kept on death.** Profane Pact (in-run) and Profane Oath (Ossuary) trade difficulty
   for rewards.
 
