@@ -10,6 +10,13 @@
 ##   Corpse Explosion  + Necrotic Expanse      = Grave Eruption (GDD §5.3)
 ##   Plague Cloud      + Lingering Malediction = Pestilence (with the GDD
 ##                                               §5.3 Death Nova burst)
+## plus the five later spells (owner-approved, GDD §15.0 "Five more
+## spells"; no passive pairs with two evolutions):
+##   Death Mark        + Grim Ledger           = Doom Brand
+##   Bone Wall         + Grave Dominion        = Charnel Bastion
+##   Soul Chains       + Spirit Binding        = Chains of the Damned
+##   Wither            + Necrotic Vigor        = Necrotic Blight
+##   Raise Dead        + Restless Dead         = Legion of Bones
 ##
 ## Evolution condition (GDD open question 27; decisions recorded in GDD
 ## §15.0): the base spell is at its max level (5), the paired passive is at
@@ -41,7 +48,8 @@ const MIN_ELAPSED: float = 480.0  # TUNING (not in GDD) decision for open questi
 
 ## Display / card order of evolutions.
 const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
-	"ossuary_lance", "soul_rapture", "grave_eruption", "pestilence"]
+	"ossuary_lance", "soul_rapture", "grave_eruption", "pestilence",
+	"doom_brand", "charnel_bastion", "chains_of_the_damned", "necrotic_blight", "legion_of_bones"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -83,6 +91,23 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 ##   expires, radius x AbilityData.NOVA_RADIUS_MULT), nova_rot_bonus (extra
 ##   fraction of nova damage against rotting enemies, GDD §5.3 "bonus
 ##   damage to cursed enemies").
+## Doom Brand extra keys:
+##   detonation (burst damage as a multiple of the brand tick damage when a
+##   branded enemy dies), radius (px burst radius).
+## Charnel Bastion keys (no "segments" / "distance": the wall is a ring):
+##   radius (px ring radius around the necromancer; segments are placed at
+##   most GraveSpellData.BASTION_SPACING apart), pulse_damage (shrapnel
+##   damage to each enemy within GraveSpellData.BASTION_SHRAPNEL_RADIUS of a
+##   segment when the ring expires).
+## Chains of the Damned extra keys:
+##   pull (px/s impulse toward the first struck enemy given to every later
+##   one, divided by enemy mass).
+## Necrotic Blight extra keys:
+##   heal (HP healed per enemy inside per pulse), heal_cap (HP/s: the most
+##   the aura heals per second).
+## Legion of Bones extra keys:
+##   damage (bone burst damage to each enemy within `radius` px when a
+##   skeleton expires or falls), radius (px).
 const EVOLUTIONS := {
 	"void_barrage": {
 		"base": "shadow_bolt",
@@ -179,6 +204,66 @@ const EVOLUTIONS := {
 			# 4 minutes of a naive run (Void Barrage: about 300 dmg/s); cut to about a third.
 			"damage": 6.0, "radius": 95.0, "duration": 7.0, "cooldown": 2.6, "rot": 0.25, "range": 300.0,  # TUNING (not in GDD)
 			"creep": 35.0, "nova": 3.0, "nova_rot_bonus": 1.0,  # TUNING (not in GDD)
+		},
+	},
+	"doom_brand": {
+		"base": "death_mark",
+		"passive": "grim_ledger",
+		"display_name": "Doom Brand",
+		"icon": "doom_brand",
+		"description": "Three foes are branded at once; a branded foe that dies detonates in a burst of doom and rises as a Risen.",
+		"labels": {"damage": "Brand damage per tick", "count": "Brands per cast", "cooldown": "Cooldown (s)", "risen_cap": "Risen at once", "detonation": "Detonation (x tick)", "radius": "Detonation radius"},
+		"stats": {
+			"damage": 9.0, "duration": 6.0, "cooldown": 1.6, "count": 3, "range": 400.0, "risen_cap": 5,  # TUNING (not in GDD)
+			"detonation": 4.0, "radius": 60.0,  # TUNING (not in GDD)
+		},
+	},
+	"charnel_bastion": {
+		"base": "bone_wall",
+		"passive": "grave_dominion",
+		"display_name": "Charnel Bastion",
+		"icon": "charnel_bastion",
+		"description": "A ring of bone walls rises all around you, holding the living at bay, then bursts into shrapnel when it falls.",
+		"labels": {"damage": "Spike damage per tick", "duration": "Wall duration (s)", "cooldown": "Cooldown (s)", "radius": "Ring radius", "pulse_damage": "Shrapnel damage"},
+		"stats": {
+			"damage": 10.0, "cooldown": 6.0, "duration": 4.5,  # TUNING (not in GDD)
+			"radius": 95.0, "pulse_damage": 30.0,  # TUNING (not in GDD)
+		},
+	},
+	"chains_of_the_damned": {
+		"base": "soul_chains",
+		"passive": "spirit_binding",
+		"display_name": "Chains of the Damned",
+		"icon": "chains_of_the_damned",
+		"description": "The soul lightning leaps up to eight times and drags every foe it strikes toward the first.",
+		"labels": {"damage": "Damage", "jumps": "Jumps", "falloff": "Falloff per jump", "cooldown": "Cooldown (s)", "slow": "Slow", "pull": "Pull"},
+		"stats": {
+			"damage": 38.0, "cooldown": 1.1, "jumps": 8, "falloff": 0.12, "jump_range": 140.0, "range": 380.0, "slow": 0.45, "slow_duration": 1.0,  # TUNING (not in GDD)
+			"pull": 150.0,  # TUNING (not in GDD)
+		},
+	},
+	"necrotic_blight": {
+		"base": "wither",
+		"passive": "necrotic_vigor",
+		"display_name": "Necrotic Blight",
+		"icon": "necrotic_blight",
+		"description": "A wide blight withers all around you and feeds you a little life for every foe caught inside.",
+		"labels": {"damage": "Damage per pulse", "radius": "Radius", "cooldown": "Pulse every (s)", "shred": "Armour removed", "heal": "Heal per foe", "heal_cap": "Heal cap (HP/s)"},
+		"stats": {
+			"damage": 13.0, "radius": 130.0, "cooldown": 0.7, "shred": 0.6,  # TUNING (not in GDD)
+			"heal": 0.6, "heal_cap": 3.0,  # TUNING (not in GDD)
+		},
+	},
+	"legion_of_bones": {
+		"base": "raise_dead",
+		"passive": "restless_dead",
+		"display_name": "Legion of Bones",
+		"icon": "legion_of_bones",
+		"description": "Six skeletons claw up at once, and each bursts into bone shards when it crumbles or falls.",
+		"labels": {"count": "Skeletons", "cooldown": "Cooldown (s)", "life": "Skeleton life (s)", "skeleton_damage": "Skeleton damage", "damage": "Bone burst", "radius": "Burst radius"},
+		"stats": {
+			"count": 6, "cooldown": 7.0, "life": 10.0, "skeleton_hp": 0.8, "skeleton_damage": 1.1, "range": 320.0,  # TUNING (not in GDD)
+			"damage": 32.0, "radius": 60.0,  # TUNING (not in GDD)
 		},
 	},
 }

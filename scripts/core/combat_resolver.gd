@@ -40,6 +40,17 @@
 ## The Soul Nova ignores the ward, flat armour and shields
 ## (SanctumEnemyData.FLAT_ARMOR_EXEMPT_SOURCES). A miniboss (Enemy.is_miniboss)
 ## takes the boss multiplier of a Deep Freeze / dive stun.
+## The later spells' passives and statuses act here too (GDD §15.0 "Five
+## more spells"):
+##   Grim Ledger    — damage_enemy(): elites, minibosses and bosses take
+##                    elite_damage more from every source but the Soul Nova
+##                    (PassiveData.LEDGER_EXEMPT_SOURCES): grim_ledger_bonus_dmg.
+##   Wither shred   — damage_enemy(): an enemy inside the Wither aura
+##                    (Enemy.wither_until) has its armour and flat armour cut
+##                    by wither_shred: wither_shred_bonus_dmg.
+##   Spirit Binding — slow_enemy(), chill_enemy(), freeze_enemy() and
+##                    stun_enemy() lengthen every duration by cc_duration
+##                    (cc_mult(); the one path for those statuses).
 class_name CombatResolver
 extends RefCounted
 
@@ -127,9 +138,20 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if e.curse_until > game.elapsed and not source in SummonEvolutionData.CURSE_EXEMPT_SOURCES:
 		curse = e.curse_amp
 		amount *= 1.0 + curse
-	var raw := amount * (1.0 - e.armor)  # Damage after percentage armour.
+	# Grim Ledger (passive): elites, minibosses and bosses take more.
+	if e.is_elite or e.is_boss or e.is_miniboss:
+		var ledger := game.abilities.passive_value("grim_ledger", "elite_damage")  # 0 when not owned.
+		if ledger > 0.0 and not source in PassiveData.LEDGER_EXEMPT_SOURCES:
+			game.stat_add("grim_ledger_bonus_dmg", amount * ledger * (1.0 - e.armor))
+			amount *= 1.0 + ledger
+	# Wither aura (Enemy.wither_until): armour and flat armour cut by the shred.
+	var shred := e.wither_shred if e.wither_until > game.elapsed else 0.0  # 0..1 of armour removed.
+	var armor := e.armor * (1.0 - shred)  # Effective percentage armour of this hit.
+	if shred > 0.0 and e.armor > 0.0:
+		game.stat_add("wither_shred_bonus_dmg", amount * (e.armor - armor))
+	var raw := amount * (1.0 - armor)  # Damage after percentage armour.
 	if e.flat_armor > 0.0 or e.holy_shield > 0.0:
-		raw = _sanctum_mitigation(e, raw, source)
+		raw = _sanctum_mitigation(e, raw, source, shred)
 		if raw <= 0.0:
 			e.on_hit()  # Fully absorbed by a holy shield.
 			return 0.0
@@ -153,6 +175,7 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 		game.stat_add("minibossdmg_" + source, dealt)  # Cathedral Guardian (autotest).
 	Juice.enemy_hit(e, dealt, source)
 	if e.hp <= 0.0:
+		game.stat_add("kills_by_" + source, 1.0)  # Killing blow per damage source (autotest spell summaries).
 		if source in MetaData.WARRIOR_KILL_SOURCES:
 			game.stat_add("warrior_kills", 1.0)  # Bone Legion achievement (MetaData)
 		game.horde.evolutions.on_enemy_killed(e, source)  # Lich raise-the-dead.
@@ -161,12 +184,14 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 
 
 ## Sanctum flat armour, then a holy shield, on `raw` post-armour damage to
-## `e` (see the header); returns what is left for HP.
-func _sanctum_mitigation(e: Enemy, raw: float, source: String) -> float:
+## `e` (see the header); returns what is left for HP. `shred` (0..1, the
+## Wither aura) removes that fraction of the flat armour.
+func _sanctum_mitigation(e: Enemy, raw: float, source: String, shred: float = 0.0) -> float:
 	if source in SanctumEnemyData.FLAT_ARMOR_EXEMPT_SOURCES:
 		return raw
 	if e.flat_armor > 0.0:
-		var cut := minf(e.flat_armor, raw * (1.0 - SanctumEnemyData.FLAT_ARMOR_MIN_FRACTION))  # Damage removed.
+		var flat := e.flat_armor * (1.0 - shred)  # Flat armour left after the Wither shred.
+		var cut := minf(flat, raw * (1.0 - SanctumEnemyData.FLAT_ARMOR_MIN_FRACTION))  # Damage removed.
 		game.stat_add("flat_armor_absorbed_" + e.kind, cut)
 		raw -= cut
 	if e.holy_shield > 0.0:
@@ -284,17 +309,24 @@ func heal_enemy(e: Enemy, amount: float) -> float:
 	return healed
 
 
-## Applies a movement slow to an enemy.
+## Spirit Binding (passive) multiplier on the duration of every slow, chill,
+## Deep Freeze and stun inflicted on an enemy (1 when not owned).
+func cc_mult() -> float:
+	return 1.0 + game.abilities.passive_value("spirit_binding", "cc_duration")
+
+
+## Applies a movement slow to an enemy (Spirit Binding lengthens it).
 func slow_enemy(e: Enemy, fraction: float, duration: float) -> void:
 	if e.active:
-		e.apply_slow(fraction, duration)
+		e.apply_slow(fraction, duration * cc_mult())
 
 
 ## Frost Wraith chill: a slow of `fraction` for `duration` s, shown as a
-## frost tint on the enemy (Enemy.apply_chill).
+## frost tint on the enemy (Enemy.apply_chill). Spirit Binding lengthens it.
 func chill_enemy(e: Enemy, fraction: float, duration: float) -> void:
 	if not e.active:
 		return
+	duration *= cc_mult()
 	e.apply_slow(fraction, duration)
 	e.apply_chill(duration)
 	game.stat_add("frost_chills", 1.0)
@@ -331,7 +363,7 @@ func curse_enemy(e: Enemy, amp: float, duration: float) -> void:
 func freeze_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) -> float:
 	if not e.active or e.is_reckoning or e.is_structure or duration <= 0.0:
 		return 0.0
-	var d := duration  # Freeze time for this enemy.
+	var d := duration * cc_mult()  # Freeze time for this enemy (Spirit Binding lengthens it).
 	if e.is_boss or e.is_miniboss:
 		d *= boss_mult
 	elif e.is_elite:
@@ -354,7 +386,7 @@ func freeze_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float
 func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) -> float:
 	if not e.active or e.is_reckoning or e.is_structure or duration <= 0.0:
 		return 0.0
-	var d := duration  # Stun time for this enemy.
+	var d := duration * cc_mult()  # Stun time for this enemy (Spirit Binding lengthens it).
 	if e.is_boss or e.is_miniboss:
 		d *= boss_mult
 	elif e.is_elite:

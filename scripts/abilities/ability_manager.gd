@@ -34,6 +34,11 @@
 ## the same spell_stats() path; apply_spell_mods() also applies the new
 ## spell passives Necrotic Expanse (area) and Lingering Malediction
 ## (durations).
+## The five later spells (Death Mark, Bone Wall, Soul Chains, Wither, Raise
+## Dead; GDD §15.0 "Five more spells") join the same NecroSpellBook dispatch
+## and the same spell_stats() path; their new passives act in CombatResolver
+## (Grim Ledger, Spirit Binding) and HordeDirector.spawn_temporary()
+## (Restless Dead).
 ## The four later horde passives (Bone Plating, Unholy Precision, Unholy
 ## Resilience, Bound Souls) act in CombatResolver / HordeDirector; their
 ## card line comes from MinionPassives.card_line().
@@ -325,7 +330,7 @@ func step(delta: float) -> void:
 		orb_shield.step(delta, spell_stats("orb_shield"))
 	if not _detonations.is_empty():
 		_step_detonations(delta)
-	spells.step(delta)  # Bone Spear, Soul Siphon, Corpse Explosion, Plague Cloud.
+	spells.step(delta)  # The newer spells (Bone Spear ... Plague Cloud, Death Mark ... Raise Dead).
 
 
 ## Kill hook from CombatResolver._kill_enemy (the enemy is still in place):

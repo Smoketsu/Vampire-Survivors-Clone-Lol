@@ -237,6 +237,13 @@ var rot_amp: float = 0.0
 var curse_until: float = 0.0
 ## Gravebow curse: extra damage fraction taken while cursed (0..1).
 var curse_amp: float = 0.0
+## Wither aura: game time (s) until which this enemy's armour is shredded
+## (set by the Wither spell each pulse it stands inside; timed on
+## Game.elapsed like Rot, so it needs no ticking). 0 = never / expired.
+var wither_until: float = 0.0
+## Wither aura: fraction (0..1) of armour and flat armour removed while
+## shredded (CombatResolver.damage_enemy()).
+var wither_shred: float = 0.0
 ## Seconds left of the brief slowdown after a ranged unit fires.
 var _shoot_slow_timer: float = 0.0
 ## True while a Stasis power-up holds this enemy (EnemyDirector skips its
@@ -374,6 +381,8 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	rot_amp = 0.0
 	curse_until = 0.0
 	curse_amp = 0.0
+	wither_until = 0.0
+	wither_shred = 0.0
 	_shoot_slow_timer = 0.0
 	frozen = false
 	freeze_timer = 0.0

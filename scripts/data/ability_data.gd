@@ -18,6 +18,20 @@
 ##   Plague Cloud     — lingering plague zones that deal damage over time and
 ##                      inflict Rot (the enemy takes more damage from every
 ##                      source; GDD open question 30 "curse" status).
+## Five more spells (owner-approved, GDD §15.0 "Five more spells"; logic in
+## scripts/abilities/spells/, same NecroSpellBook dispatch):
+##   Death Mark  — brands the strongest foes in range with a damage-over-time
+##                 brand; a branded foe that dies rises as a temporary Risen
+##                 skeleton (no damage-taken amplification: owner decision).
+##   Bone Wall   — raises a short wall of bone spikes ahead of you that holds
+##                 enemies back (they press against it) and hurts them.
+##   Soul Chains — a soul-lightning bolt that arcs from foe to foe with
+##                 falloff per jump, briefly slowing each one (owner change:
+##                 lightning instead of tethers).
+##   Wither      — a decay aura around you (garlic-like): damage every pulse
+##                 and lowered armour while inside.
+##   Raise Dead  — temporary skeletons claw up beside nearby enemies and fight
+##                 for a few seconds, outside the army cap.
 class_name AbilityData
 extends RefCounted
 
@@ -26,7 +40,8 @@ const STARTING_SPELL: String = "shadow_bolt"
 
 ## Display / card order of spells.
 const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
-	"bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud"]
+	"bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud",
+	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -68,6 +83,30 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 ##   (s a cloud lingers), cooldown (s between clouds), rot (fraction: extra
 ##   damage a rotting enemy takes from every source), range (px from the
 ##   necromancer in which a cloud is placed).
+## Death Mark stat keys:
+##   damage (per brand per DEATH_MARK_TICK), duration (s a brand lasts),
+##   cooldown (s between casts), count (enemies branded per cast), range (px
+##   search radius), risen_cap (most Death Mark Risen alive at once).
+## Bone Wall stat keys:
+##   damage (per BONE_WALL_TICK to each enemy pressing on the wall), cooldown
+##   (s), duration (s the wall stands), segments (bone-spike segments, each
+##   BONE_WALL_SEGMENT_RADIUS px, BONE_WALL_SPACING px apart), distance (px
+##   from the necromancer to the wall's centre).
+## Soul Chains stat keys:
+##   damage (first strike), cooldown (s), jumps (arcs after the first
+##   strike), falloff (fraction of damage lost per jump, compounding),
+##   jump_range (px from one struck enemy to the next), range (px search
+##   radius of the first strike), slow (fraction of speed removed),
+##   slow_duration (s).
+## Wither stat keys:
+##   damage (per pulse to each enemy inside), radius (px aura radius),
+##   cooldown (s between pulses), shred (fraction of armour and flat armour
+##   removed while inside; bosses get WITHER_BOSS_MULT of it).
+## Raise Dead stat keys:
+##   count (skeletons per cast), cooldown (s), life (s a skeleton lasts),
+##   skeleton_hp / skeleton_damage (fractions of a Skeleton Warrior's current
+##   HP / damage), range (px around the necromancer in which enemies are
+##   looked for).
 const SPELLS := {
 	"shadow_bolt": {
 		"display_name": "Shadow Bolt",
@@ -175,10 +214,85 @@ const SPELLS := {
 			{"damage": 3.0, "radius": 70.0, "duration": 4.5, "cooldown": 3.4, "rot": 0.18, "range": 280.0},  # TUNING (not in GDD)
 		],
 	},
+	"death_mark": {
+		"display_name": "Death Mark",
+		"icon": "death_mark",
+		"description": "Brands the strongest foes near you with a burning death sigil. A branded foe that dies rises as a Risen skeleton for a while.",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
+		"labels": {"damage": "Brand damage per tick", "duration": "Brand duration (s)", "count": "Brands per cast", "cooldown": "Cooldown (s)", "risen_cap": "Risen at once"},
+		"levels": [
+			# Owner: no damage-taken amplification; the brand alone must kill early
+			# foes (a Lv 1 brand deals 40 over 5 s: a recruit has 14 HP, a footman 36).
+			{"damage": 4.0, "duration": 5.0, "cooldown": 2.4, "count": 1, "range": 340.0, "risen_cap": 2},  # TUNING (not in GDD)
+			{"damage": 5.0, "duration": 5.0, "cooldown": 2.4, "count": 1, "range": 340.0, "risen_cap": 2},  # TUNING (not in GDD)
+			{"damage": 5.0, "duration": 6.0, "cooldown": 2.2, "count": 2, "range": 360.0, "risen_cap": 3},  # TUNING (not in GDD)
+			{"damage": 6.0, "duration": 6.0, "cooldown": 2.0, "count": 2, "range": 360.0, "risen_cap": 3},  # TUNING (not in GDD)
+			{"damage": 7.0, "duration": 6.0, "cooldown": 1.8, "count": 2, "range": 380.0, "risen_cap": 4},  # TUNING (not in GDD)
+		],
+	},
+	"bone_wall": {
+		"display_name": "Bone Wall",
+		"icon": "bone_wall",
+		"description": "Raises a wall of bone spikes ahead of you. Foes cannot pass it and are torn while they press against it.",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
+		"labels": {"damage": "Spike damage per tick", "segments": "Wall segments", "duration": "Wall duration (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 4.0, "cooldown": 7.0, "duration": 3.5, "segments": 5, "distance": 70.0},  # TUNING (not in GDD)
+			{"damage": 5.0, "cooldown": 7.0, "duration": 3.5, "segments": 6, "distance": 70.0},  # TUNING (not in GDD)
+			{"damage": 5.0, "cooldown": 6.5, "duration": 4.0, "segments": 7, "distance": 75.0},  # TUNING (not in GDD)
+			{"damage": 7.0, "cooldown": 6.5, "duration": 4.0, "segments": 8, "distance": 75.0},  # TUNING (not in GDD)
+			{"damage": 8.0, "cooldown": 6.0, "duration": 4.5, "segments": 9, "distance": 80.0},  # TUNING (not in GDD)
+		],
+	},
+	"soul_chains": {
+		"display_name": "Soul Chains",
+		"icon": "soul_chains",
+		"description": "Soul lightning strikes a foe and arcs on to the next ones, weaker with each jump, briefly slowing all it touches.",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
+		"labels": {"damage": "Damage", "jumps": "Jumps", "falloff": "Falloff per jump", "cooldown": "Cooldown (s)", "slow": "Slow", "slow_duration": "Slow duration (s)"},
+		"levels": [
+			{"damage": 18.0, "cooldown": 1.6, "jumps": 2, "falloff": 0.2, "jump_range": 110.0, "range": 320.0, "slow": 0.25, "slow_duration": 0.6},  # TUNING (not in GDD)
+			{"damage": 22.0, "cooldown": 1.6, "jumps": 2, "falloff": 0.2, "jump_range": 110.0, "range": 320.0, "slow": 0.25, "slow_duration": 0.6},  # TUNING (not in GDD)
+			{"damage": 22.0, "cooldown": 1.5, "jumps": 3, "falloff": 0.2, "jump_range": 120.0, "range": 340.0, "slow": 0.3, "slow_duration": 0.6},  # TUNING (not in GDD)
+			{"damage": 27.0, "cooldown": 1.4, "jumps": 3, "falloff": 0.18, "jump_range": 120.0, "range": 340.0, "slow": 0.3, "slow_duration": 0.8},  # TUNING (not in GDD)
+			{"damage": 31.0, "cooldown": 1.3, "jumps": 4, "falloff": 0.18, "jump_range": 130.0, "range": 360.0, "slow": 0.35, "slow_duration": 0.8},  # TUNING (not in GDD)
+		],
+	},
+	"wither": {
+		"display_name": "Wither",
+		"icon": "wither",
+		"description": "A decay aura surrounds you: foes inside wither every pulse, and their armour rots away while they stay.",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
+		"labels": {"damage": "Damage per pulse", "radius": "Radius", "cooldown": "Pulse every (s)", "shred": "Armour removed"},
+		"levels": [
+			# First pass (radius 60-85, damage 4-10) dealt 2.4k in 10 minutes of a forced
+			# run: a kiting necromancer rarely lets foes that close.
+			{"damage": 5.0, "radius": 80.0, "cooldown": 1.0, "shred": 0.25},  # TUNING (not in GDD)
+			{"damage": 7.0, "radius": 80.0, "cooldown": 1.0, "shred": 0.25},  # TUNING (not in GDD)
+			{"damage": 7.0, "radius": 90.0, "cooldown": 0.9, "shred": 0.35},  # TUNING (not in GDD)
+			{"damage": 9.0, "radius": 95.0, "cooldown": 0.9, "shred": 0.35},  # TUNING (not in GDD)
+			{"damage": 11.0, "radius": 105.0, "cooldown": 0.8, "shred": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	"raise_dead": {
+		"display_name": "Raise Dead",
+		"icon": "raise_dead",
+		"description": "Skeletons claw up beside nearby foes and fight for a few seconds, beyond your army's limit.",
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
+		"labels": {"count": "Skeletons", "cooldown": "Cooldown (s)", "life": "Skeleton life (s)", "skeleton_hp": "Skeleton HP", "skeleton_damage": "Skeleton damage"},
+		"levels": [
+			{"count": 2, "cooldown": 9.0, "life": 7.0, "skeleton_hp": 0.5, "skeleton_damage": 0.6, "range": 260.0},  # TUNING (not in GDD)
+			{"count": 3, "cooldown": 9.0, "life": 7.0, "skeleton_hp": 0.5, "skeleton_damage": 0.7, "range": 260.0},  # TUNING (not in GDD)
+			{"count": 3, "cooldown": 8.0, "life": 8.0, "skeleton_hp": 0.6, "skeleton_damage": 0.8, "range": 280.0},  # TUNING (not in GDD)
+			{"count": 4, "cooldown": 8.0, "life": 8.0, "skeleton_hp": 0.6, "skeleton_damage": 0.9, "range": 280.0},  # TUNING (not in GDD)
+			{"count": 4, "cooldown": 7.0, "life": 9.0, "skeleton_hp": 0.7, "skeleton_damage": 1.0, "range": 300.0},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
-const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", "nova", "nova_rot_bonus"]
+const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", "nova", "nova_rot_bonus",
+	"falloff", "shred", "skeleton_hp", "skeleton_damage"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

@@ -54,6 +54,11 @@ const WEIGHT_NEW_CORE_SUMMON: float = 1.5  # TUNING (not in GDD)
 ## At the start: 2 (GDD spells) + 2 (newer spells) new-spell weight against
 ## 3 x 1.5 (Archer, Mage, Priest orders) + 1.5 (later classes) new-summon
 ## weight, beside about 12 of passives and 5 of owned upgrades.
+## The five later spells (Death Mark, Bone Wall, Soul Chains, Wither, Raise
+## Dead) joined this pool unchanged, so nine spells now share it and early
+## hands hold no more new-spell weight than before; likewise their three new
+## passives (Grim Ledger, Spirit Binding, Restless Dead) joined
+## NEW_PASSIVE_POOL_WEIGHT.
 const NEW_SPELL_POOL_WEIGHT: float = 2.0  # TUNING (not in GDD)
 ## Total draw weight shared by the NEW cards of the four later horde passives
 ## (PassiveData "shared_card_pool": Bone Plating, Unholy Precision, Unholy

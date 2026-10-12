@@ -38,6 +38,19 @@
 ##                        (Rogues -> Shadow Reapers).
 ## Their combat hooks live in CombatResolver (damage) and
 ## HordeDirector.compute_stats() (move speed, leash, return speed).
+## plus the evolution passives of the five later spells (owner-approved, GDD
+## §15.0 "Five more spells"; Grave Dominion and Necrotic Vigor above pair
+## with Bone Wall and Wither, so no passive pairs with two evolutions):
+##   Grim Ledger     — +% damage to elites, minibosses and bosses from every
+##                     source (CombatResolver.damage_enemy(); evolves Death
+##                     Mark into Doom Brand).
+##   Spirit Binding  — every slow, chill, Deep Freeze and stun on enemies
+##                     lasts longer (CombatResolver's status calls; evolves
+##                     Soul Chains into Chains of the Damned).
+##   Restless Dead   — temporary summons (Death Mark Risen, Raise Dead
+##                     skeletons, Lich raises, stage reinforcements) last
+##                     longer and hit harder (HordeDirector.spawn_temporary();
+##                     evolves Raise Dead into Legion of Bones).
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -55,7 +68,8 @@ extends RefCounted
 const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycling",
 	"soul_conduit", "warding_ritual", "abyssal_focus", "forbidden_knowledge", "dark_benediction",
 	"shade_stride", "vampiric_rite", "necrotic_expanse", "lingering_malediction",
-	"bone_plating", "unholy_precision", "unholy_resilience", "bound_souls", PactData.ID]
+	"bone_plating", "unholy_precision", "unholy_resilience", "bound_souls",
+	"grim_ledger", "spirit_binding", "restless_dead", PactData.ID]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -76,8 +90,8 @@ const CRIT_DAMAGE_MULT: float = 2.0  # TUNING (not in GDD) user brief: "a crit d
 ## Knight cleave, "_aura" a Profane Bishop aura pulse.
 const MINION_SOURCE_SUFFIXES := ["", "_bash", "_cleave", "_aura"]
 ## Unholy Precision: summon tags that are not a class or evolution id (the
-## Lich's raised skeletons).
-const MINION_EXTRA_TAGS := ["lich_risen"]
+## Lich's raised skeletons, Death Mark's Risen and Raise Dead's skeletons).
+const MINION_EXTRA_TAGS := ["lich_risen", "death_mark_risen", "raised_dead"]
 ## Unholy Precision: the other minion damage sources that can crit: the
 ## basic warrior shield bash and the later classes' specials (and the Bone
 ## Colossus's death shrapnel). The Rogue's
@@ -118,6 +132,9 @@ const PLATING_MIN_FRACTION: float = 0.25  # TUNING (not in GDD)
 ## Resilience covers it instead).
 ## Seraphine's beam pulses and collapse fire tick the same way (fields).
 const PLATING_EXEMPT_SOURCES := ["holy_zone", "seraphine_beam", "seraphine_collapse"]
+## Grim Ledger: damage sources it does NOT amplify. The Soul Nova power-up
+## deals an exact share of max HP (like the Gravebow curse exemption).
+const LEDGER_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
 
 ## Passive definitions.
 ##   display_name — UI name.
@@ -167,13 +184,19 @@ const PLATING_EXEMPT_SOURCES := ["holy_zone", "seraphine_beam", "seraphine_colla
 ##   spell_duration     — +% spell durations (AbilityData.DURATION_KEYS: Plague
 ##                        Cloud duration, Grave Eruption spike fields, Shadow
 ##                        Blast slow).
+##   elite_damage       — +% damage elites, minibosses and bosses take from
+##                        every source (Grim Ledger).
+##   cc_duration        — +% duration of every slow, chill, Deep Freeze and
+##                        stun applied to enemies (Spirit Binding).
+##   temp_duration      — +% lifetime of temporary summons (Restless Dead).
+##   temp_damage        — +% damage of temporary summons (Restless Dead).
 const PASSIVES := {
 	# Profane Pact (difficulty / reward passive): defined in PactData.
 	PactData.ID: PactData.PASSIVE,
 	"grave_dominion": {
 		"display_name": "Grave Dominion",
 		"icon": "grave_dominion",
-		"description": "Increases summon capacity of every summon class you command.",
+		"description": "Increases summon capacity of every summon class you command. At Lv 5, with Bone Wall at Lv 5, a treasure chest evolves it into Charnel Bastion.",
 		"labels": {"capacity_per_class": ["Capacity per class", "int"]},
 		"levels": [
 			{"capacity_per_class": 1},  # TUNING (not in GDD) every level adds +1
@@ -186,7 +209,7 @@ const PASSIVES := {
 	"necrotic_vigor": {
 		"display_name": "Necrotic Vigor",
 		"icon": "necrotic_vigor",
-		"description": "Increases maximum health of all minions.",
+		"description": "Increases maximum health of all minions. At Lv 5, with Wither at Lv 5, a treasure chest evolves it into Necrotic Blight.",
 		"labels": {"minion_hp": ["Minion max HP", "pct"]},
 		"levels": [
 			{"minion_hp": 0.15},  # TUNING (not in GDD)
@@ -395,6 +418,48 @@ const PASSIVES := {
 			{"minion_move_speed": 0.18, "leash_range": 0.30, "return_reduction": 0.30},  # TUNING (not in GDD)
 			{"minion_move_speed": 0.24, "leash_range": 0.40, "return_reduction": 0.40},  # TUNING (not in GDD)
 			{"minion_move_speed": 0.30, "leash_range": 0.50, "return_reduction": 0.50},  # TUNING (not in GDD) user brief: +30% / +50% / half the return time
+		],
+	},
+	"grim_ledger": {
+		"display_name": "Grim Ledger",
+		"icon": "grim_ledger",
+		"description": "Every great soul is written in your ledger: elites, minibosses and bosses take more damage from everything. At Lv 5, with Death Mark at Lv 5, a treasure chest evolves it into Doom Brand.",
+		"labels": {"elite_damage": ["Damage to elites and bosses", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"levels": [
+			{"elite_damage": 0.05},  # TUNING (not in GDD)
+			{"elite_damage": 0.10},  # TUNING (not in GDD)
+			{"elite_damage": 0.15},  # TUNING (not in GDD)
+			{"elite_damage": 0.20},  # TUNING (not in GDD)
+			{"elite_damage": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	"spirit_binding": {
+		"display_name": "Spirit Binding",
+		"icon": "spirit_binding",
+		"description": "Spectral fetters hold the living longer: every slow, chill, freeze and stun you inflict lasts longer. At Lv 5, with Soul Chains at Lv 5, a treasure chest evolves it into Chains of the Damned.",
+		"labels": {"cc_duration": ["Slow, freeze and stun duration", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"levels": [
+			{"cc_duration": 0.08},  # TUNING (not in GDD)
+			{"cc_duration": 0.16},  # TUNING (not in GDD)
+			{"cc_duration": 0.24},  # TUNING (not in GDD)
+			{"cc_duration": 0.32},  # TUNING (not in GDD)
+			{"cc_duration": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	"restless_dead": {
+		"display_name": "Restless Dead",
+		"icon": "restless_dead",
+		"description": "The dead you raise for a moment refuse to lie down: temporary summons last longer and strike harder. At Lv 5, with Raise Dead at Lv 5, a treasure chest evolves it into Legion of Bones.",
+		"labels": {"temp_duration": ["Temporary summon lifetime", "pct"], "temp_damage": ["Temporary summon damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"levels": [
+			{"temp_duration": 0.10, "temp_damage": 0.08},  # TUNING (not in GDD)
+			{"temp_duration": 0.20, "temp_damage": 0.16},  # TUNING (not in GDD)
+			{"temp_duration": 0.30, "temp_damage": 0.24},  # TUNING (not in GDD)
+			{"temp_duration": 0.40, "temp_damage": 0.32},  # TUNING (not in GDD)
+			{"temp_duration": 0.50, "temp_damage": 0.40},  # TUNING (not in GDD)
 		],
 	},
 }

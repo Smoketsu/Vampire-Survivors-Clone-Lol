@@ -1,10 +1,20 @@
-## NecroSpellBook — owns and drives the four newer necromancer spells (user
+## NecroSpellBook — owns and drives the newer necromancer spells (user
 ## request "more weapons", AbilityData header) behind ONE small dispatch in
 ## AbilityManager (setup / step / on_enemy_killed / passive card lines):
 ##   Bone Spear       -> BoneSpear        (evolves into Ossuary Lance)
 ##   Soul Siphon      -> SoulSiphon       (evolves into Soul Rapture)
 ##   Corpse Explosion -> CorpseExplosion  (evolves into Grave Eruption)
 ##   Plague Cloud     -> PlagueCloud      (evolves into Pestilence)
+## and the five later spells (owner-approved, GDD §15.0 "Five more spells"),
+## which use NecroSpell's optional hooks (on_enemy_killed, after_physics,
+## summary_extra) instead of named calls here:
+##   Death Mark       -> DeathMark        (evolves into Doom Brand)
+##   Bone Wall        -> BoneWall         (evolves into Charnel Bastion)
+##   Soul Chains      -> SoulChains       (evolves into Chains of the Damned)
+##   Wither           -> Wither           (evolves into Necrotic Blight)
+##   Raise Dead       -> RaiseDead        (evolves into Legion of Bones)
+## Game calls after_physics() once per tick after obstacles are resolved
+## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
 ## its EFFECTIVE stats every tick from AbilityManager.spell_stats() — the one
 ## modifier path, so Soul Conduit, Abyssal Focus, the new spell passives,
@@ -16,7 +26,11 @@ class_name NecroSpellBook
 extends Node2D
 
 ## Spell ids this book drives, in AbilityData.SPELL_ORDER order.
-const IDS := ["bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud"]
+const IDS := ["bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud",
+	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
+## The five later spells (their own autotest line, later_summary_line(), and
+## the generic NecroSpell hooks).
+const LATER_IDS := ["death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -24,6 +38,11 @@ const SOURCES := {
 	"soul_siphon": ["siphon", "rapture", "rapture_burst"],
 	"corpse_explosion": ["corpse", "eruption", "eruption_spikes"],
 	"plague_cloud": ["plague", "pestilence", "death_nova"],
+	"death_mark": ["death_mark", "doom_brand", "doom_burst"],
+	"bone_wall": ["bone_wall", "bastion", "bastion_shrapnel"],
+	"soul_chains": ["soul_chains", "chains_damned"],
+	"wither": ["wither", "blight"],
+	"raise_dead": ["raised_dead", "legion_burst"],
 }
 
 ## Owning run.
@@ -56,6 +75,16 @@ func _create(id: String) -> NecroSpell:
 			node = SoulSiphon.new()
 		"corpse_explosion":
 			node = CorpseExplosion.new()
+		"death_mark":
+			node = DeathMark.new()
+		"bone_wall":
+			node = BoneWall.new()
+		"soul_chains":
+			node = SoulChains.new()
+		"wither":
+			node = Wither.new()
+		"raise_dead":
+			node = RaiseDead.new()
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -74,6 +103,19 @@ func on_enemy_killed(e: Enemy) -> void:
 	var ss: SoulSiphon = nodes.get("soul_siphon")  # Siphon spell node, if learned.
 	if ss != null:
 		ss.on_enemy_killed(e)
+	for id: String in LATER_IDS:
+		var node: NecroSpell = nodes.get(id)  # A later spell's node, if learned.
+		if node != null:
+			node.on_enemy_killed(e)
+
+
+## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
+## lets the later spells act on final enemy positions (Bone Wall push-out).
+func after_physics(delta: float) -> void:
+	for id: String in LATER_IDS:
+		var node: NecroSpell = nodes.get(id)  # A later spell's node, if learned.
+		if node != null:
+			node.after_physics(delta)
 
 
 ## Total damage dealt so far by spell `id` (base and evolved sources).
@@ -120,6 +162,10 @@ func passive_example(id: String, nxt: Dictionary, deltas: PackedStringArray) -> 
 				var d := float(ab.spell_stats(spell)[key])  # Effective duration now.
 				var k := (1.0 + float(nxt["spell_duration"])) / (1.0 + ab.passive_value(id, "spell_duration"))  # Ratio after / before.
 				deltas.append("%s duration %ss -> %ss" % [ab.spell_name(spell), AbilityManager._fmt(d), AbilityManager._fmt(d * k)])
+		"grim_ledger", "spirit_binding", "restless_dead":
+			var line := GraveSpellLines.passive_line(game, id, nxt)  # The later spells' passives.
+			if line != "":
+				deltas.append(line)
 
 
 ## First spell of `ids` the necromancer owns ("" if none).
@@ -137,6 +183,8 @@ func summary_line() -> String:
 	var st := game.stats  # Run counters.
 	var parts := PackedStringArray()  # One "id: ..." chunk per spell.
 	for id: String in IDS:
+		if id in LATER_IDS:
+			continue  # Reported by later_summary_line().
 		var lvl := ab.spell_level(id)  # Final level (0 = never learned).
 		if lvl <= 0:
 			parts.append("%s: not taken" % id)
@@ -156,6 +204,35 @@ func summary_line() -> String:
 		parts.append("%s: Lv%d%s dmg=%d (evolved %d) boss=%d %s" % [id, lvl, " EVOLVED" if ab.evolved.has(id) else "",
 			int(damage_of(id)), int(evo_dmg), int(_boss_damage_of(id)), extra])
 	return " | ".join(parts)
+
+
+## The autotest line of the five later spells: per spell its level (and
+## EVOLVED), damage (and the evolved part), boss damage, kills and the
+## spell's own counters (NecroSpell.summary_extra()).
+func later_summary_line() -> String:
+	var ab := game.abilities  # The owning AbilityManager.
+	var st := game.stats  # Run counters.
+	var parts := PackedStringArray()  # One "id: ..." chunk per spell.
+	for id: String in LATER_IDS:
+		var lvl := ab.spell_level(id)  # Final level (0 = never learned).
+		if lvl <= 0:
+			parts.append("%s: not taken" % id)
+			continue
+		var srcs: Array = SOURCES[id]  # Base source first.
+		var evo_dmg := damage_of(id) - float(st.get("dmg_" + String(srcs[0]), 0.0))  # Evolution's share.
+		var node: NecroSpell = nodes.get(id)  # Its node (null if never ticked).
+		parts.append("%s: Lv%d%s dmg=%d (evolved %d) boss=%d kills=%d %s" % [id, lvl, " EVOLVED" if ab.evolved.has(id) else "",
+			int(damage_of(id)), int(evo_dmg), int(_boss_damage_of(id)), int(kills_of(id)),
+			node.summary_extra() if node != null else ""])
+	return " | ".join(parts)
+
+
+## Killing blows landed by spell `id` (kills_by_* stats of its sources).
+func kills_of(id: String) -> float:
+	var total := 0.0  # Sum of the spell's kills_by_* stats.
+	for src: String in SOURCES[id]:
+		total += float(game.stats.get("kills_by_" + src, 0.0))
+	return total
 
 
 ## Damage spell `id` dealt to bosses (bossdmg_* stats).

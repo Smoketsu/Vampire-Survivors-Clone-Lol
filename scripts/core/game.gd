@@ -323,6 +323,7 @@ func _physics_process(delta: float) -> void:
 	horde.step(delta)
 	enemies.step(delta)
 	arena.resolve_all(delta)
+	abilities.spells.after_physics(delta)  # Bone Wall holds enemies on their final positions.
 	projectiles.step(delta)
 	pickups.step(delta)
 	powerups.step(delta)

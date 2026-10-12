@@ -209,6 +209,16 @@ the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
 | `soul_rapture.png` | Many soul tethers to a skull (evolution frame) |
 | `grave_eruption.png` | Bone spikes erupting from a grave (evolution frame) |
 | `pestilence.png` | Swirling plague with a death's-head (evolution frame) |
+| `death_mark.png` | Death Mark: a violet brand sigil (ring with an inverted triangle) around a small green-eyed skull |
+| `doom_brand.png` | Doom Brand: three linked sickly-green brand sigils around a violet core (evolution frame) |
+| `bone_wall.png` | Bone Wall: a row of jagged bone spikes rising from a stone base |
+| `charnel_bastion.png` | Charnel Bastion: a closed ring of bone spikes around a green-eyed skull (evolution frame) |
+| `soul_chains.png` | Soul Chains: a jagged violet soul-lightning bolt arcing between three small green souls |
+| `chains_of_the_damned.png` | Chains of the Damned: a forked violet-and-green lightning burst ending in bone chain links (evolution frame) |
+| `wither.png` | Wither: a sickly yellow-green (`#A8CC3D`) aura ring with drooping decay motes around a small robed figure |
+| `necrotic_blight.png` | Necrotic Blight: a wide green aura ring feeding a dark magenta heart (evolution frame) |
+| `raise_dead.png` | Raise Dead: a bare skeleton clawing out of a grave-dirt line, green soul-fire at its feet |
+| `legion_of_bones.png` | Legion of Bones: three green-eyed skulls rising together over a grave line (evolution frame) |
 | `death_knight.png` | Skull helm with a greatsword (evolution frame) |
 | `lich.png` | Crowned skull with a phylactery (evolution frame) |
 | `profane_bishop.png` | Bone mitre with a green halo (evolution frame) |
@@ -234,6 +244,9 @@ the player's icons. Size: generate at 1024 × 1024; they are shown at 22-64 px.
 | `unholy_precision.png` | Bone arrowhead under a violet crosshair eye |
 | `unholy_resilience.png` | Cracked, drained holy sun behind a dark undead shield |
 | `bound_souls.png` | Green soul wisp held by a short iron chain |
+| `grim_ledger.png` | Grim Ledger: an open bone-bound ledger, a small violet crown above it and a green-eyed skull on the page |
+| `spirit_binding.png` | Spirit Binding: a pale soul held in a loop of spectral violet-and-bone chain links |
+| `restless_dead.png` | Restless Dead: a bone hourglass with green mist, a small skull in its lower bulb |
 | `stance_escort.png` | Army stance Escort (HUD stance bar, 26 px): a green guard arc of bone escorts sheltering a small violet necromancer mark |
 | `stance_onslaught.png` | Army stance Onslaught: three orange-flame arrows bursting outward from a small violet mark |
 | `stance_spearhead.png` | Army stance Spearhead (also its Ossuary unlock): a V-wedge of bone pointing up, the violet mark behind its tip |
@@ -290,6 +303,13 @@ when their art arrives.
 | `seraphine_nova` | **Hooked.** Seraphine's Judgment nova: a huge gold (`#FFD14C`) and ivory (`#F5EDD4`) ring of holy light racing outward from a white-hot centre, sun-ray streaks, then fading to gold motes (played at the full nova radius, so keep the ring thin and the centre mostly empty) | 10 |
 | `holy_beam` | **Hooked.** Seraphine's holy beams igniting: a white-gold flare bursting from her relic, with short gold rays (the beams themselves stay drawn) | 6 |
 | `relic_shatter` | **Hooked.** Seraphine's death: the radiant sunburst relic cracking and exploding into gold and ivory shards and a ring of white light, then the light guttering out | 10 |
+| `soul_lightning` | **Hooked.** Soul Chains strike: a small violet (`#A35CFA`) lightning flash with a pale white-violet core and crackling sparks, played on each struck foe (the arcs between foes stay drawn) | 6 |
+| `bone_wall_rise` | **Hooked.** Bone Wall: one cluster of bone spikes bursting up out of cracked grave dirt, with a puff of dust | 6 |
+| `bone_wall_burst` | **Hooked.** Charnel Bastion expiring: a bone-spike cluster exploding into flying bone shrapnel with a green (`#6BF28C`) flash | 8 |
+| `wither_aura` | **Hooked.** One Wither pulse: a thin ring of sickly yellow-green (`#A8CC3D`) decay mist racing outward and dissolving into falling motes (played at the aura radius, keep the centre empty) | 8 |
+| `doom_burst` | **Hooked.** Doom Brand detonation: a sickly green (`#8CFF73`) brand sigil flaring and bursting into a ring of violet doom-fire | 8 |
+| `raise_dead` | **Hooked.** Raise Dead: grave dirt cracking open and a green soul-fire swirl as a skeletal hand claws up | 8 |
+| `legion_burst` | **Hooked.** Legion of Bones: a crumbling skeleton bursting into a ring of bone shards and green dust | 8 |
 
 **Sprite-sheet prompt** (ChatGPT; attach `necromancer.png` as the style reference):
 ```

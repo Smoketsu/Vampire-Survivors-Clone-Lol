@@ -499,7 +499,13 @@ func _try_spawn(cls: String) -> bool:
 ## `hp_mult` / `dmg_mult`. It runs the shared AI but is not counted in
 ## class_counts (caps, HUD) and is never replaced. It always keeps the base
 ## class look and kit (no summon-evolution overlay).
+## Restless Dead (passive, the one path for every temporary summon: Death
+## Mark Risen, Raise Dead skeletons, Lich raises, stage reinforcements)
+## lengthens `duration` by temp_duration and raises `dmg_mult` by
+## temp_damage (its own stacking category).
 func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float, dmg_mult: float) -> SummonedUnit:
+	duration *= 1.0 + game.abilities.passive_value("restless_dead", "temp_duration")
+	dmg_mult *= 1.0 + game.abilities.passive_value("restless_dead", "temp_damage")
 	var stats := compute_stats(cls, maxi(1, int(class_levels[cls])), true, false)
 	stats["max_hp"] = float(stats["max_hp"]) * hp_mult
 	stats["damage"] = float(stats["damage"]) * dmg_mult
