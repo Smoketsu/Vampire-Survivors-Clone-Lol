@@ -86,8 +86,8 @@ Or send the images to Claude to run steps 3-4.
 | **The Crimson Covenant** | **crimson**, **ivory**, **warm steel** | **Gold** for elites, the Sanctum kinds and the bosses; skin tones on faces; fire for the Purifier. |
 | **Floors** | dark, low-saturation, narrow-value | Each stage keeps its floor within a few close darks so every unit stands out. |
 
-**The locked palette** (`tools/palette.json`, the single source of truth; 40 colours: 37 for sprites,
-3 floors). Ramps run dark to light; the first colour of each ramp is its **outline ink**. Colours
+**The locked palette** (`tools/palette.json`, the single source of truth; 47 colours: 37 for sprites,
+10 floors). Ramps run dark to light; the first colour of each ramp is its **outline ink**. Colours
 marked * are borrowed from another ramp. Numbers are OKLab lightness (0-1). A labelled swatch sheet:
 `python3 tools/pixel_palette.py --preview palette.png`.
 
@@ -106,16 +106,17 @@ marked * are borrowed from another ramp. Numbers are OKLab lightness (0-1). A la
 | **gold** | ink_warm* `#1C110B` 0.19 · brown_light* `#8C6040` 0.53 · gold `#E0A92E` 0.77 · gold_light `#FFDC66` 0.90 · holy_white `#FFFAE8` 0.98 | Covenant gold (elites, Sanctum kinds, bosses), halos, holy white glow |
 | **skin** | ink_warm* `#1C110B` 0.19 · brown_light* `#8C6040` 0.53 · skin `#E0A882` 0.77 · bone* `#E8E1C8` 0.91 | Covenant faces and hands |
 | **flame** | ink_red* `#26070C` 0.19 · crimson* `#C71A29` 0.53 · flame `#FF8C26` 0.75 · gold_light* `#FFDC66` 0.90 | fire and embers |
-| **floor** | floor_soil `#161A1C` 0.21 · floor_earth `#221C17` 0.23 · floor_stone `#312E2B` 0.30 | ground colours of the three stages (tiles only, never sprites) |
+| **floor** | floor_soil `#161A1C` 0.21 · floor_earth `#221C17` 0.23 · floor_grass `#1A2218` 0.24 · floor_ochre `#2E2615` 0.27 · floor_slate `#26272A` 0.27 · floor_ash `#2A2724` 0.28 · floor_dirt `#30261B` 0.28 · floor_moss `#26301F` 0.29 · floor_marble `#2D2E33` 0.30 · floor_stone `#312E2B` 0.30 | ground colours of the three stages (tiles only, never sprites); the seven middle shades came with the zone floor tiles |
 
 `prepare_sprite.py` limits each folder to its faction's ramps (player: everything but skin and warm
 steel; summons: bone, grey, soul, moss, arcane, ice, brown, with flame only for the Hellhound and the
 Ossuary Engine, no ice for the Mage and Lich and no arcane for the frost summons; enemies and bosses:
 bone, steel, crimson, brown, gold, skin, flame; structures: the same without skin); `--ramps a,b`
 overrides it. The
-floors will need one or two more close shades per stage when the floor tiles are made (to be added to
-`palette.json` with the anchor tile). Today's code-drawn Sanctum floors are mid-grey (OKLab L 0.34-0.40,
-lighter than `floor_stone`); the floor pass brings them down so violet and crimson units clear them.
+zone floor tiles added seven close floor shades (grass, ochre, slate, ash, dirt, moss, marble), all
+inside the 0.21-0.30 floor band. Today's code-drawn Sanctum floors are mid-grey (OKLab L 0.34-0.40,
+lighter than `floor_stone`); the Sanctum tiles bring them down to a mean L of 0.26-0.29 so violet and
+crimson units clear them.
 
 ## Prompt template (every asset after the anchors)
 
@@ -691,20 +692,66 @@ the size in its row.
   (footprint S × L): without it a vertical rect keeps its code glyph.
 
 **Zone floors** (`assets/sprites/tiles/`, 128×128 art px seamless, up to 2 variants each
-`<file>_2.png`, `<file>_3.png`, later pass):
+`<file>_2.png`, `<file>_3.png` whose edges are identical to the base tile's). **Done (Oct 2026)**
+for every zone and both roads, built by `tools/make_tile.py` (process below):
 
 | File | Zone | Look (today's code floor) | Status |
 |---|---|---|---|
 | `graveyard.png` | The Desecrated Graveyard | dark soil, faint cracks, pebbles, dead grass (Anchor 4) | anchor |
-| `march_burned.png` | March I, the Burned Road | ash-grey scorched earth, soot, embers | later pass |
-| `march_checkpoint.png` | March II, the Fortified Checkpoint | dark forest grass and mud | later pass |
-| `march_camp.png` | March III, the Siege Camp | trampled brown dirt | later pass |
-| `march_fortress.png` | March IV, the Fortress Approach | dark cobbles and grit | later pass |
-| `sanctum_courtyard.png` | Sanctum I, the Outer Courtyards | pale-stone flagstones in staggered courses, moss in the joints (kept dark) | later pass |
-| `sanctum_halls.png` | Sanctum II, the Sanctified Halls | a dark-gold mosaic of small tesserae | later pass |
-| `sanctum_cloisters.png` | Sanctum III, the Cloisters | stone walks around trimmed turf | later pass |
-| `sanctum_sanctuary.png` | Sanctum IV, the Final Sanctuary | grey marble slabs with veins | later pass |
-| `march_road.png` | The March road along y = 0 | a horizontal strip **140 art px tall** (road width 140 world px) tiling left-right: packed earth with darker verges and wheel ruts; a paved variant for the Fortress Approach | later pass |
+| `march_burned.png` | March I, the Burned Road | ash-grey scorched earth, soot, embers | **done**, `_2` `_3` (soot scorch marks); mean L 0.24 |
+| `march_checkpoint.png` | March II, the Fortified Checkpoint | dark forest grass and mud | **done**, `_2` `_3` (mud with boot prints); mean L 0.24 |
+| `march_camp.png` | March III, the Siege Camp | trampled brown dirt | **done**, `_2` `_3` (darker trampled patches; a first source with wheel tracks read as a pattern and was replaced); mean L 0.25 |
+| `march_fortress.png` | March IV, the Fortress Approach | dark cobbles and grit | **done**, no variant (the variant source's cobbles came out inverted); mean L 0.25 |
+| `sanctum_courtyard.png` | Sanctum I, the Outer Courtyards | pale-stone flagstones in staggered courses, moss in the joints (kept dark) | **done**, layout: 4 courses of 32 px, slabs 36-56 px, `_2` `_3`; mean L 0.29 |
+| `sanctum_halls.png` | Sanctum II, the Sanctified Halls | a dark-gold mosaic of small tesserae | **done**, layout: 8 px tesserae, a 64 px diamond lattice with gold nodes, `_2` `_3`; mean L 0.26 |
+| `sanctum_cloisters.png` | Sanctum III, the Cloisters | stone walks around trimmed turf | **done**, layout: a 16 px walk on the tile edges (a walk grid every 128 px, like the code's), `_2` `_3`; mean L 0.25 |
+| `sanctum_sanctuary.png` | Sanctum IV, the Final Sanctuary | grey marble slabs with veins | **done**, layout: 64 px slabs in staggered rows, no variant (every slab reaches a tile edge, so a variant would equal the base); mean L 0.29 |
+| `march_road.png` | The March road along y = 0 | a horizontal strip **140 art px tall** (road width 140 world px) tiling left-right: packed earth with darker verges and wheel ruts | **done**, 192×140, top / bottom 4 px frayed into transparency so it sits on every zone floor |
+| `march_road_fortress.png` | The road in the Fortress Approach | the paved variant | **done**, 192×140, layout: 4 courses of paving between two kerbs (stone texture from the courtyard source) |
+
+**Process (`tools/make_tile.py`, the floor counterpart of `prepare_sprite.py`).** Each output has a
+recipe in the tool (source, colours, layout, shares), so `python3 tools/make_tile.py build --all`
+rebuilds every tile exactly (deterministic) and `python3 tools/make_tile.py sheet <name>` writes a check
+sheet (3×3 repeat ×2, a base / variant mix at ×1 and ×2 with the anchors on it, the half-offset tile and
+the colour shares). Sources in `art_source/tiles/` (`<zone>.png` 1024×1024, `<zone>_v.png` 1536×1024
+for the variants, `march_road.png` 1536×1024), generated through `tools/gen_image.py` with the graveyard
+tile ×8 attached. Prompt pattern (fill in the subject and the colour list from the recipe):
+```
+A SEAMLESS, tileable ground texture for a top-down 2D pixel-art game, seen straight from above
+(orthographic, no perspective, no horizon). LOW-RESOLUTION pixel art: about 160 x 160 pixels in all,
+shown enlarged so every pixel is a big crisp square block (nearest-neighbour). The texture fills the
+WHOLE image edge to edge, fully opaque, evenly lit everywhere (no vignette, no light falloff, no frame,
+no border). The left edge must continue the right edge and the top edge the bottom edge.
+
+Subject: <the zone's look; for a layout zone only the MATERIAL: "one big area of the same stone,
+NOT slabs: no joints, no tiles, no grid lines">.
+
+Very DARK, LOW CONTRAST and QUIET: it is a background that every character must stand out from, so
+keep every colour close to the others and the details small and sparse. Nothing may look solid or
+raised: no rocks, no walls, no objects, no characters, no text. No gradients, no dithering, no soft
+blur, no texture noise: flat colour areas with a few chunky details of 2-4 pixels.
+
+Output: the texture filling the whole image edge to edge. No border, no text, no watermark.
+Attached: an approved floor tile of this game (a different place: do not copy its content), for the
+pixel size and the darkness (match its darkness).
+
+Colours: ONLY flat fills from this list: <names and hex, the main one marked "most of the image">.
+```
+(The variant source: "about 240 x 160 pixels", "a second, different patch of the same ground", plus
+one distinctive line: a scorch mark, a mud patch, a trampled patch; avoid long straight features such as wheel tracks, which repeat as a pattern.) The AI images are never seamless, so
+the tool makes them tile: it reduces the source to the grid (~6.5 source px per art px), removes light
+falloff (lightness minus a wide blur), stretches the lightness and hue onto the recipe's floor colours,
+then either **quilts** it (organic floors: minimum-error cut paths through a 24 px overlap, so the
+wrap column continues the opposite edge exactly and the switch hides where the two candidates agree)
+or fills a **layout** that is periodic by construction (courses, a grid, walks, mosaic tesserae: regular
+joints must line up, which no cut can promise), each stone reading the texture at its own offset with a
+small lightness offset and a bevel. Then it snaps to the palette (nearest colour, or exact shares by
+lightness rank with hue-chosen patches) and merges single pixels. A variant goes through the same steps
+with its histogram matched to the base source, then is cut into the base tile along minimum-error paths
+in a 28 px band on each edge (the outer 2 px always the base's; a layout swaps whole stones that stay clear of the edges), so its edges equal the base tile's and
+any cell mixes with any other. All floors stay inside the floor band (mean OKLab L 0.24-0.29, mostly the
+new floor shades), so every unit's main shape keeps its +0.15 contrast. The code decorations are still
+drawn on top until the decals exist.
 
 The Sanctum floors are blended toward purple as the Sanctum is corrupted, so do not bake purple in.
 

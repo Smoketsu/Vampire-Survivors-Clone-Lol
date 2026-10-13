@@ -69,7 +69,14 @@
 
     {"name": "floor_soil", "hex": "#161A1C", "ramp": "floor", "index": 0, "group": "floor", "role": "Graveyard soil (Palette.GROUND), the darkest floor"},
     {"name": "floor_earth", "hex": "#221C17", "ramp": "floor", "index": 1, "group": "floor", "role": "Crimson March earth and ash"},
-    {"name": "floor_stone", "hex": "#312E2B", "ramp": "floor", "index": 2, "group": "floor", "role": "Sanctum stone (darker than today's code floors, so violet and crimson read on it)"}
+    {"name": "floor_stone", "hex": "#312E2B", "ramp": "floor", "index": 9, "group": "floor", "role": "Sanctum stone (darker than today's code floors, so violet and crimson read on it)"},
+    {"name": "floor_grass", "hex": "#1A2218", "ramp": "floor", "index": 2, "group": "floor", "role": "dark grass and turf: March II forest grass, Sanctum III cloister turf, Sanctum I moss in the joints"},
+    {"name": "floor_ochre", "hex": "#2E2615", "ramp": "floor", "index": 3, "group": "floor", "role": "dark gold: the Sanctum II mosaic tesserae"},
+    {"name": "floor_slate", "hex": "#26272A", "ramp": "floor", "index": 4, "group": "floor", "role": "cool dark stone: March IV cobbles, Sanctum IV marble shade"},
+    {"name": "floor_ash", "hex": "#2A2724", "ramp": "floor", "index": 5, "group": "floor", "role": "grey ash and weathered stone: March I ash, Sanctum I and III stone"},
+    {"name": "floor_dirt", "hex": "#30261B", "ramp": "floor", "index": 6, "group": "floor", "role": "trampled brown dirt: March III camp, the March road"},
+    {"name": "floor_moss", "hex": "#26301F", "ramp": "floor", "index": 7, "group": "floor", "role": "lit grass blades and turf (the lighter green of floor_grass)"},
+    {"name": "floor_marble", "hex": "#2D2E33", "ramp": "floor", "index": 8, "group": "floor", "role": "cool grey marble, Sanctum IV slabs (floor_stone's lightness, cool)"}
   ],
   "ramps": {
     "violet": {"members": ["ink_violet", "violet_deep", "violet", "violet_glow", "violet_flare"], "role": "the player only: necromancer, the 12 characters, their spells and icons"},
@@ -85,6 +92,6 @@
     "gold": {"members": ["ink_warm", "brown_light", "gold", "gold_light", "holy_white"], "role": "Covenant gold (elites, Sanctum kinds, bosses), halos, holy white glow"},
     "skin": {"members": ["ink_warm", "brown_light", "skin", "bone"], "role": "Covenant faces and hands"},
     "flame": {"members": ["ink_red", "crimson", "flame", "gold_light"], "role": "fire and embers"},
-    "floor": {"members": ["floor_soil", "floor_earth", "floor_stone"], "role": "ground colours of the three stages (tiles only, never sprites)"}
+    "floor": {"members": ["floor_soil", "floor_earth", "floor_grass", "floor_ochre", "floor_slate", "floor_ash", "floor_dirt", "floor_moss", "floor_marble", "floor_stone"], "role": "ground colours of the three stages (tiles only, never sprites), dark -> light; the zone tiles add close shades per zone"}
   }
 }
