@@ -155,3 +155,16 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-13 16:20,icons/restless_shade,gpt-image-2.5-flare,medium,1024x1024,1,361,1024,439,0.0232,restless_shade.png
 2026-10-13 16:20,icons/dark_benediction,gpt-image-2.5-flare,medium,1024x1024,1,362,1024,439,0.0232,dark_benediction.png
 2026-10-13 16:22,icons/powerup_hyper,gpt-image-2.5-flare,medium,1024x1024,1,352,1024,439,0.0231,powerup_hyper.png
+2026-10-13 16:29,obstacles/charred_tree,gpt-image-2.5-flare,medium,1024x1024,1,398,512,439,0.0193,charred_tree.png
+2026-10-13 16:29,obstacles/pine,gpt-image-2.5-flare,medium,1024x1024,1,404,512,439,0.0193,pine.png
+2026-10-13 16:29,obstacles/stakes,gpt-image-2.5-flare,medium,1024x1024,1,363,512,439,0.0191,stakes.png
+2026-10-13 16:29,obstacles/rubble,gpt-image-2.5-flare,medium,1024x1024,1,392,512,439,0.0192,rubble.png
+2026-10-13 16:29,obstacles/tower_base,gpt-image-2.5-flare,medium,1024x1024,1,393,512,439,0.0192,tower_base.png
+2026-10-13 16:29,obstacles/tent,gpt-image-2.5-flare,medium,1024x1024,1,436,512,439,0.0194,tent.png
+2026-10-13 16:29,obstacles/pillar,gpt-image-2.5-flare,medium,1024x1024,1,386,512,439,0.0192,pillar.png
+2026-10-13 16:29,obstacles/fountain,gpt-image-2.5-flare,medium,1024x1024,1,398,512,439,0.0193,fountain.png
+2026-10-13 16:29,obstacles/saint_statue,gpt-image-2.5-flare,medium,1024x1024,1,400,512,439,0.0193,saint_statue.png
+2026-10-13 16:29,obstacles/cypress,gpt-image-2.5-flare,medium,1024x1024,1,390,512,439,0.0192,cypress.png
+2026-10-13 16:29,obstacles/marble_column,gpt-image-2.5-flare,medium,1024x1024,1,370,512,439,0.0191,marble_column.png
+2026-10-13 16:29,obstacles/giant_statue,gpt-image-2.5-flare,medium,1024x1024,1,404,512,439,0.0193,giant_statue.png
+2026-10-13 16:30,obstacles/dead_tree,gpt-image-2.5-flare,medium,1024x1024,1,409,512,439,0.0193,dead_tree.png
