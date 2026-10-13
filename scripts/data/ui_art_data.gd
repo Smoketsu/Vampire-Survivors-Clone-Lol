@@ -82,7 +82,9 @@ const FONT_BANNER: String = "res://assets/fonts/Jacquard24-Regular.ttf"
 ## The clean raster sizes (px) of Pixelify Sans Bold used: its pixel em x1
 ## (1 px strokes) and x2 (bold 2-3 px strokes). Text smaller than the second
 ## one is drawn from the x1 raster (enlarged), larger text from the x2 raster
-## (never shrunk, so never blurred).
+## (never shrunk, so never blurred). At 11 px every letter, digit and
+## punctuation mark checked is clean except "=" (its bars merge): draw an
+## "=" at 23 px or more.
 const PIXEL_EMS: Array[int] = [11, 23]  # TUNING (not in GDD) font pass: measured clean sizes
 
 ## Jacquard 24's pixel em: its outlines sit on a 30-unit grid of a 1290-unit
