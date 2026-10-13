@@ -360,54 +360,21 @@ func build_offer(evo: String) -> Dictionary:
 			String(def["description"]), deltas, hint)
 
 
-## Summon card hint for class `cls` going from `lvl` to `lvl` + 1: its
-## evolution path, or "Evolution ready" ("" if none / already evolved).
-func class_hint(cls: String, lvl: int) -> String:
-	var ab := director.game.abilities
+## The summon evolution recipe class `cls` feeds (its card shows it as an
+## icon row once the recipe is discovered, LevelUpPanel / RecipeIconRow), or
+## "" if none is left this run.
+func class_recipe(cls: String) -> String:
 	for evo: String in SummonEvolutionData.ORDER:
-		var def: Dictionary = SummonEvolutionData.EVOLUTIONS[evo]
-		var bases: Array = def["bases"]
-		if done.has(evo) or not cls in bases:
-			continue
-		var others_ready := true
-		var partners := PackedStringArray()
-		for b: String in bases:
-			if b != cls:
-				partners.append(String(UnitData.UNITS[b]["plural"]))
-				others_ready = others_ready and int(director.class_levels[b]) >= SummonEvolutionData.BASE_LEVEL_REQUIRED
-		var passive: String = def["passive"]
-		var need := int(def["passive_level"])
-		if lvl + 1 >= SummonEvolutionData.BASE_LEVEL_REQUIRED and others_ready and ab.passive_level(passive) >= need:
-			return "Evolution ready: %s%s" % [def["display_name"], ab._evo_unlock_note()]
-		var p_text := _passive_text(passive, need)
-		if partners.is_empty():
-			return "Evolves into %s at Lv %d with %s%s" % [def["plural"], SummonEvolutionData.BASE_LEVEL_REQUIRED, p_text, AbilityManager._evo_source_note()]
-		return "Merges with %s into %s (both Lv %d) with %s%s" % [" + ".join(partners), def["plural"],
-				SummonEvolutionData.BASE_LEVEL_REQUIRED, p_text, AbilityManager._evo_source_note()]
+		if not done.has(evo) and cls in (SummonEvolutionData.EVOLUTIONS[evo]["bases"] as Array):
+			return evo
 	return ""
 
 
-## Passive card hint for passive `id` going from `lvl` to `lvl` + 1: the
-## summon evolution it unlocks ("" if it pairs with none).
-func passive_hint(id: String, lvl: int) -> String:
-	var ab := director.game.abilities
+## The summon evolution recipe passive `id` feeds ("" if it pairs with none).
+func passive_recipe(id: String) -> String:
 	for evo: String in SummonEvolutionData.ORDER:
-		var def: Dictionary = SummonEvolutionData.EVOLUTIONS[evo]
-		if String(def["passive"]) != id:
-			continue
-		if done.has(evo):
-			return "%s already evolved" % def["display_name"]
-		var parts := PackedStringArray()
-		var bases_ready := true
-		for b: String in def["bases"]:
-			var bl := int(director.class_levels[b])
-			bases_ready = bases_ready and bl >= SummonEvolutionData.BASE_LEVEL_REQUIRED
-			parts.append("%s (Lv %d/%d)" % [UnitData.UNITS[b]["plural"], bl, SummonEvolutionData.BASE_LEVEL_REQUIRED])
-		var need := int(def["passive_level"])
-		if bases_ready and lvl + 1 >= need:
-			return "Evolution ready: %s%s" % [def["display_name"], ab._evo_unlock_note()]
-		var at := " once this is Lv %d" % need if need > 1 else ""
-		return "Evolves %s into %s%s%s" % [" + ".join(parts), def["plural"], at, AbilityManager._evo_source_note()]
+		if String(SummonEvolutionData.EVOLUTIONS[evo]["passive"]) == id:
+			return evo
 	return ""
 
 
@@ -460,13 +427,6 @@ func on_path(id: String) -> bool:
 		elif id in (def["bases"] as Array) and ab.passive_level(String(def["passive"])) > 0:
 			return true
 	return false
-
-
-## "Dark Command Lv 5" for hints (just the name if `need` is 1, "owned";
-## every recipe now needs Lv 5).
-static func _passive_text(passive: String, need: int) -> String:
-	var p_name := String(PassiveData.PASSIVES[passive]["display_name"])
-	return "%s Lv %d" % [p_name, need] if need > 1 else p_name
 
 
 ## Appends "label a -> b" when the value changes.

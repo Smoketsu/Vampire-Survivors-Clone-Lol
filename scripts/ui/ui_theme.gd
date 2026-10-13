@@ -12,6 +12,14 @@
 ## as they enter the tree (_SharpHook), so the frame pixels stay crisp and even
 ## when the 1280x720 layout is stretched (x1.5 in a 1080p window); text drawn
 ## by the same nodes is unaffected (the shader is identity at 1:1).
+##
+## Fonts (GDD §15.0 "Pixel fonts"; the why is in UiArtData): Pixelify Sans
+## Bold everywhere by default, always rasterised at one of its clean pixel
+## ems and scaled to the asked size (font_for(), applied by label() and
+## pixel_text()), drawn through the sharp-pixel shader (which the hook also
+## puts on every Label); long descriptions use the clean body font (body(),
+## Godot's default font); event banners use Jacquard 24 at its 43 px em
+## (banner()).
 class_name UiTheme
 extends RefCounted
 
@@ -49,6 +57,12 @@ const FALLBACK: Dictionary = {
 
 ## Cached theme instance.
 static var _theme: Theme = null
+## Cached Jacquard 24 banner font (null until first used or when missing).
+static var _banner_font: Font = null
+## Pixelify Sans Bold per clean raster size: UiArtData.PIXEL_EMS entry ->
+## FontFile drawn from that fixed raster (filled on first use; empty when the
+## file is missing).
+static var _pixel: Dictionary = {}
 ## Cached kit styles: "<kind>_<accent>_<state>" -> StyleBox.
 static var _styles: Dictionary = {}
 ## Gives kit-framed Controls the sharp-pixel material as they enter the tree
@@ -57,13 +71,14 @@ static var _hook: _SharpHook = null
 
 
 ## Sets the sharp-pixel material on each Button / panel / scroll bar added to
-## the tree (they draw the kit's pixel frames). Visual only.
+## the tree (they draw the kit's pixel frames) and on each Label (pixel-font
+## text rasterised at layout size). Visual only.
 class _SharpHook:
 	extends RefCounted
 
 	## SceneTree.node_added: a node entered the tree.
 	func on_node_added(n: Node) -> void:
-		if n is Button or n is PanelContainer or n is Panel or n is ScrollBar:
+		if n is Button or n is PanelContainer or n is Panel or n is ScrollBar or n is Label:
 			SpriteBank.apply_sharp(n as CanvasItem)
 
 
@@ -73,6 +88,8 @@ static func get_theme() -> Theme:
 		return _theme
 	var t := Theme.new()
 	t.default_font_size = FONT_SIZE
+	if font_for(FONT_SIZE) != null:
+		t.default_font = font_for(FONT_SIZE)  # Pixelify Sans Bold everywhere by default.
 	t.set_stylebox("normal", "Button", style("button", "violet", "normal"))
 	t.set_stylebox("hover", "Button", style("button", "violet", "hover"))
 	t.set_stylebox("pressed", "Button", style("button", "violet", "pressed"))
@@ -227,14 +244,72 @@ static func style_button(b: Button, kind: String, accent: String) -> void:
 		b.add_theme_stylebox_override("pressed", style(kind, accent, "pressed"))
 
 
-## Convenience: creates a Label with text, font size and colour.
+## Pixelify Sans Bold for text drawn at `size` px: a copy of the font whose
+## glyphs are always rasterised at a clean pixel em (UiArtData.PIXEL_EMS, the
+## largest one not above `size`, else the smallest) and scaled to `size`
+## (FontFile.fixed_size), so every glyph keeps its true shape. Null when the
+## font file is missing (callers then keep the theme / engine default).
+static func font_for(size: int) -> Font:
+	if not ResourceLoader.exists(UiArtData.FONT_PIXEL):
+		return null
+	var em: int = UiArtData.PIXEL_EMS[0]  # Raster size to use.
+	for e: int in UiArtData.PIXEL_EMS:
+		if e <= size:
+			em = e
+	if not _pixel.has(em):
+		var f := (load(UiArtData.FONT_PIXEL) as FontFile).duplicate(true) as FontFile  # Own glyph cache.
+		f.fixed_size = em
+		f.fixed_size_scale_mode = TextServer.FIXED_SIZE_SCALE_ENABLED
+		_pixel[em] = f
+	return _pixel[em]
+
+
+## Gives Control `c` (a Label or a Button) the pixel font for `size` px.
+static func pixel_text(c: Control, size: int) -> void:
+	var f := font_for(size)
+	if f != null:
+		c.add_theme_font_override("font", f)
+	c.add_theme_font_size_override("font_size", size)
+
+
+## Convenience: creates a Label with text, font size and colour, in the
+## pixel font (font_for()).
 static func label(text: String, size: int = FONT_SIZE, color: Color = TEXT) -> Label:
 	var l := Label.new()
 	l.text = text
+	pixel_text(l, size)
+	l.add_theme_color_override("font_color", color)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return l
+
+
+## Convenience: a Label for long descriptions in the clean body font (Godot's
+## default font, smooth at any window scale; owner rule: long card
+## descriptions keep a body font). `size` is used as given.
+static func body(text: String, size: int = 13, color: Color = TEXT_DIM) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_override("font", ThemeDB.fallback_font)
 	l.add_theme_font_size_override("font_size", size)
 	l.add_theme_color_override("font_color", color)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
+
+
+## Turns `l` into an event / zone banner: Jacquard 24 at its 43 px em
+## (UiArtData.BANNER_SIZE), word-wrapped at `wrap` px when wrap > 0. Leaves the
+## label as it is (and returns false) when the font file is missing.
+static func banner(l: Label, wrap: float = 0.0) -> bool:
+	if _banner_font == null and ResourceLoader.exists(UiArtData.FONT_BANNER):
+		_banner_font = load(UiArtData.FONT_BANNER) as Font
+	if _banner_font == null:
+		return false
+	l.add_theme_font_override("font", _banner_font)
+	l.add_theme_font_size_override("font_size", UiArtData.BANNER_SIZE)
+	if wrap > 0.0:
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.custom_minimum_size.x = wrap
+	return true
 
 
 ## Convenience: creates a full-screen dimming backdrop.

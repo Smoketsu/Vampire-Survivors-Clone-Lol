@@ -107,7 +107,7 @@ func _ready() -> void:
 		cols.add_child(_build_column(tree_id))
 	_achievements = UiTheme.label("", 12, UiTheme.TEXT_DIM)
 	root.add_child(_achievements)
-	_detail = UiTheme.label("", 14, UiTheme.TEXT)
+	_detail = UiTheme.body("", 14, UiTheme.TEXT)  # Upgrade description: body font.
 	_detail.custom_minimum_size = Vector2(0, 20)
 	root.add_child(_detail)
 	_status = UiTheme.label("", 14, UiTheme.TEXT_GOLD)
@@ -494,7 +494,7 @@ func _open_dialog(title_text: String, body: String, yes_text: String, yes_cb: Ca
 	var title := UiTheme.label(title_text, 22, UiTheme.TEXT_GOLD)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(title)
-	var text := UiTheme.label(body, 15)
+	var text := UiTheme.body(body, 15, UiTheme.TEXT)  # Dialog paragraph: body font.
 	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(text)
 	var row := HBoxContainer.new()

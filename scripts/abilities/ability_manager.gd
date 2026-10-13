@@ -255,23 +255,6 @@ func evolutions_unlocked() -> bool:
 	return game.elapsed >= EvolutionData.MIN_ELAPSED
 
 
-## Card hint suffix for a ready evolution: evolutions are delivered only by
-## treasure chests (chest_rewards()), and only once the time lock opens (the
-## countdown value, since the HUD timer counts down), e.g.
-## " - the next treasure chest grants it" or
-## " - a treasure chest grants it once the timer reaches 12:00".
-func _evo_unlock_note() -> String:
-	if evolutions_unlocked():
-		return " - the next treasure chest grants it"
-	return " - a treasure chest grants it once the timer reaches %s" % _clock(WaveData.RUN_DURATION - EvolutionData.MIN_ELAPSED)
-
-
-## Card hint suffix for an evolution that is not ready yet: where and from
-## when it is delivered, e.g. " (from a treasure chest, timer 12:00 or less)".
-static func _evo_source_note() -> String:
-	return " (from a treasure chest, timer %s or less)" % _clock(WaveData.RUN_DURATION - EvolutionData.MIN_ELAPSED)
-
-
 ## Number of occupied active slots (learned spells + learned summon classes).
 func active_count() -> int:
 	var n := 0
@@ -805,11 +788,15 @@ static func _paired_spell(id: String) -> String:
 	return ""
 
 
-## Common offer skeleton. `evo_hint` is the optional "evolution readiness"
-## line (GDD §10.4).
+## Common offer skeleton. `evo_hint` is the optional card footer line (a
+## synergy unlock, the evolution card's slot note, the Pact note; evolution
+## recipes are no longer spelled out, owner decision GDD §15.0 "Recipe icon
+## row"). "evo_recipe" is the evolution id the card's spell / class / passive
+## feeds ("" = none): the card shows it as an icon row once that recipe is
+## discovered (Meta.is_recipe_discovered(), RecipeIconRow).
 func _offer(kind: String, id: String, display_name: String, icon: String, from: int, to: int, tag: String, desc: String, deltas: PackedStringArray, evo_hint: String = "") -> Dictionary:
 	return {"kind": kind, "id": id, "name": display_name, "icon": icon, "from": from, "to": to,
-		"tag": tag, "description": desc, "deltas": deltas, "evo_hint": evo_hint}
+		"tag": tag, "description": desc, "deltas": deltas, "evo_hint": evo_hint, "evo_recipe": ""}
 
 
 ## Spell card: lists base stats when new, otherwise every effective stat that
@@ -827,17 +814,9 @@ func _spell_offer(id: String, lvl: int) -> Dictionary:
 			var cur := apply_spell_mods(levels[lvl - 1])
 			if not is_equal_approx(float(cur[key]), float(nxt[key])):
 				deltas.append("%s %s -> %s" % [labels[key], _fmt_spell(key, cur[key]), _fmt_spell(key, nxt[key])])
-	var hint := ""
-	var evo := EvolutionData.for_spell(id)
-	if evo != "":
-		var e: Dictionary = EvolutionData.EVOLUTIONS[evo]
-		var p_name: String = PassiveData.PASSIVES[e["passive"]]["display_name"]
-		if lvl + 1 >= EvolutionData.BASE_LEVEL_REQUIRED and passive_level(e["passive"]) >= EvolutionData.PASSIVE_LEVEL_REQUIRED:
-			hint = "Evolution ready: %s%s" % [e["display_name"], _evo_unlock_note()]
-		else:
-			hint = "Evolves into %s at Lv %d with %s Lv %d%s" % [e["display_name"], EvolutionData.BASE_LEVEL_REQUIRED, p_name,
-					EvolutionData.PASSIVE_LEVEL_REQUIRED, _evo_source_note()]
-	return _offer("spell", id, def["display_name"], def["icon"], lvl, lvl + 1, "SPELL", def["description"], deltas, hint)
+	var o := _offer("spell", id, def["display_name"], def["icon"], lvl, lvl + 1, "SPELL", def["description"], deltas)
+	o["evo_recipe"] = EvolutionData.for_spell(id)  # Shown as icons only once discovered (owner decision).
+	return o
 
 
 ## Evolution card: base spell (level 5, effective) vs evolved effective stats.
@@ -908,9 +887,9 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 	var hint := ""
 	if lvl + 1 == SynergyData.MIN_CLASS_LEVEL:
 		hint = game.horde.synergies.unlock_hint(cls)
-	if hint == "":
-		hint = game.horde.evolutions.class_hint(cls, lvl)
-	return _offer("summon", cls, base["display_name"], cls, lvl, lvl + 1, "SUMMON", desc, deltas, hint)
+	var o := _offer("summon", cls, base["display_name"], cls, lvl, lvl + 1, "SUMMON", desc, deltas, hint)
+	o["evo_recipe"] = game.horde.evolutions.class_recipe(cls)  # Shown as icons only once discovered.
+	return o
 
 
 ## Passive card: passive value now vs next plus one concrete effect line.
@@ -969,21 +948,11 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 			deltas.append(ClassPassives.card_line(game, id, nxt))  # The newest classes' passives.
 		_:
 			spells.passive_example(id, nxt, deltas)  # The newer spells' passives.
-	var hint := ""
 	var spell := _paired_spell(id)
-	if spell != "":
-		var evo := EvolutionData.for_spell(spell)
-		var e_name: String = EvolutionData.EVOLUTIONS[evo]["display_name"]
-		if evolved.has(spell):
-			hint = "%s already evolved" % e_name
-		elif spell_level(spell) >= EvolutionData.BASE_LEVEL_REQUIRED and lvl + 1 >= EvolutionData.PASSIVE_LEVEL_REQUIRED:
-			hint = "Evolution ready: %s%s" % [e_name, _evo_unlock_note()]
-		else:
-			hint = "Evolves %s (Lv %d/%d) into %s once this is Lv %d%s" % [AbilityData.SPELLS[spell]["display_name"], spell_level(spell),
-					EvolutionData.BASE_LEVEL_REQUIRED, e_name, EvolutionData.PASSIVE_LEVEL_REQUIRED, _evo_source_note()]
-	if hint == "":
-		hint = game.horde.evolutions.passive_hint(id, lvl)  # Summon evolution passives.
-	return _offer("passive", id, def["display_name"], def["icon"], lvl, lvl + 1, "PASSIVE", def["description"], deltas, hint)
+	var o := _offer("passive", id, def["display_name"], def["icon"], lvl, lvl + 1, "PASSIVE", def["description"], deltas)
+	# The evolution this passive feeds (spell, else summon), shown as icons only once discovered.
+	o["evo_recipe"] = EvolutionData.for_spell(spell) if spell != "" else game.horde.evolutions.passive_recipe(id)
+	return o
 
 
 ## Profane Pact card (tag PACT): every penalty and reward as the COMBINED

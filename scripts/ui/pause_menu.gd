@@ -52,7 +52,7 @@ func _ready() -> void:
 	var hints := UiTheme.label("Move: WASD / Arrows / Left stick\nT / Y: Shadow Bolt aim (Nearest / Strongest)\nEsc / B: Resume    F3: Debug", 13, UiTheme.TEXT_DIM)
 	hints.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(hints)
-	_stance_label = UiTheme.label("", 12, UiTheme.TEXT_DIM)
+	_stance_label = UiTheme.body("", 12, UiTheme.TEXT_DIM)  # Long help lines: body font.
 	_stance_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_stance_label.custom_minimum_size = Vector2(560, 0)
 	vb.add_child(_stance_label)

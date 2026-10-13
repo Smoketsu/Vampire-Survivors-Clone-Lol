@@ -160,6 +160,7 @@ func _build() -> void:
 
 	# Top center: timer, objective, banner, boss.
 	var tc := _box(true, 0.5, 0.0, -260, 16, 260, 160, BoxContainer.ALIGNMENT_BEGIN)
+	tc.grow_horizontal = Control.GROW_DIRECTION_BOTH  # Stays centred when the banner widens it.
 	_timer_label = UiTheme.label("00:00", 32)
 	_timer_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tc.add_child(_timer_label)
@@ -175,6 +176,7 @@ func _build() -> void:
 	tc.add_child(_objective_label)
 	_banner_label = UiTheme.label("", 20, UiTheme.TEXT_GOLD)
 	_banner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	UiTheme.banner(_banner_label, UiArtData.BANNER_WRAP)  # Event / zone banner: Jacquard 24, wraps.
 	tc.add_child(_banner_label)
 	_boss_box = VBoxContainer.new()
 	_boss_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -183,6 +185,7 @@ func _build() -> void:
 	boss_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_boss_box.add_child(boss_name)
 	_boss_bar = HudBar.new(Palette.GOLD, Vector2(520, 14))
+	_boss_bar.size_flags_horizontal = Control.SIZE_SHRINK_CENTER  # Keeps 520 px under a wider banner.
 	_boss_box.add_child(_boss_bar)
 	tc.add_child(_boss_box)
 	_mini_box = VBoxContainer.new()
@@ -267,9 +270,10 @@ func _build() -> void:
 		_synergy_rows[id] = srow
 
 	# Upper middle: progression banner (synergy activation / evolution).
-	_announce_box = _box(true, 0.5, 0.0, -360, 170, 360, 290, BoxContainer.ALIGNMENT_BEGIN)
+	_announce_box = _box(true, 0.5, 0.0, -360, 196, 360, 316, BoxContainer.ALIGNMENT_BEGIN)  # Below a 2-line Jacquard event banner.
 	_announce_title = UiTheme.label("", 15, UiTheme.TEXT_DIM)
 	_announce_name = UiTheme.label("", 30, UiTheme.TEXT_GOLD)
+	UiTheme.banner(_announce_name)  # The evolution / synergy name: an event banner in Jacquard 24.
 	_announce_desc = UiTheme.label("", 14, UiTheme.TEXT)
 	for l: Label in [_announce_title, _announce_name, _announce_desc]:
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

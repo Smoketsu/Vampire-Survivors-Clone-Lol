@@ -21,11 +21,12 @@ const ICON_GAP: float = 4.0
 const LEFT: float = 256.0
 ## Bottom margin (px) of the column (same as the army panel).
 const BOTTOM: float = 16.0
-## Font size of the key hints next to the icons.
+## Font size of the key hints next to the icons (pixel font).
 const KEY_FONT: int = 11
-## Font size of the stance banner.
+## Font size of the stance banner when the Jacquard banner font is missing
+## (with it, the banner is Jacquard 24 at UiArtData.BANNER_SIZE).
 const BANNER_FONT: int = 26
-## Font size of the locked banner.
+## Font size of the locked banner (Pixelify Sans, a clean size).
 const LOCKED_FONT: int = 16
 ## Banner centre below the screen centre (px), i.e. under the necromancer.
 const BANNER_DROP: float = 70.0
@@ -50,7 +51,7 @@ func _ready() -> void:
 	_banner.offset_left = -300.0
 	_banner.offset_right = 300.0
 	_banner.offset_top = BANNER_DROP
-	_banner.offset_bottom = BANNER_DROP + 34.0
+	_banner.offset_bottom = BANNER_DROP + 48.0
 	_banner.visible = false
 	add_child(_banner)
 
@@ -79,11 +80,13 @@ func _refresh_banner(st: ArmyStance) -> void:
 	_banner.visible = true
 	if locked:
 		_banner.text = StanceData.LOCKED_TEXT
-		_banner.add_theme_font_size_override("font_size", LOCKED_FONT)
+		UiTheme.pixel_text(_banner, LOCKED_FONT)  # Pixelify for the locked sentence.
 		_banner.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.4))
 	else:
 		_banner.text = String(st.def()["display_name"]).to_upper()
-		_banner.add_theme_font_size_override("font_size", BANNER_FONT)
+		UiTheme.pixel_text(_banner, BANNER_FONT)  # Fallback look without the banner font.
+		if UiTheme.banner(_banner):  # The stance word in Jacquard 24 (a stance banner),
+			_banner.text = String(st.def()["display_name"])  # in title case: blackletter capitals read poorly.
 		_banner.add_theme_color_override("font_color", (st.def()["color"] as Color).lightened(0.2))
 	_banner.modulate.a = clampf(1.0 - (age - hold) / StanceData.BANNER_FADE, 0.0, 1.0)
 
@@ -91,10 +94,11 @@ func _refresh_banner(st: ArmyStance) -> void:
 func _draw() -> void:
 	if game == null or game.stance == null:
 		return
+	SpriteBank.apply_sharp(self)  # Icons and pixel-font key hints (rasterised at layout size).
 	var st := game.stance
 	var n := StanceData.ORDER.size()
 	var top := size.y - BOTTOM - float(n) * ICON_SIZE.y - float(n - 1) * ICON_GAP  # Top of the column.
-	var font := get_theme_default_font()
+	var font := get_theme_default_font()  # The theme's pixel font.
 	for i in n:
 		var id: String = StanceData.ORDER[i]
 		var d := StanceData.def(id)
