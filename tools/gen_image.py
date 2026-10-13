@@ -40,8 +40,9 @@ import uuid
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent  # Repo root.
-# Running cost ledger, one row per API call (committed with the art).
-LEDGER = ROOT / "docs" / "art" / "generation_ledger.csv"
+# Running cost ledger, one row per API call (committed with the art). GEN_LEDGER overrides the path,
+# so parallel worktrees can all append to the one ledger in the main checkout (one bill, no merge conflicts).
+LEDGER = Path(os.environ["GEN_LEDGER"]) if os.environ.get("GEN_LEDGER") else ROOT / "docs" / "art" / "generation_ledger.csv"
 # API base URL.
 API = "https://api.openai.com/v1/images"
 # Default model: gpt-image-2.5-flare (same published rates as -sunburst).
