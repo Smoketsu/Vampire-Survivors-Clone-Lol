@@ -120,9 +120,9 @@ RECIPES = {
                                 "base": ["ink_warm", "brown"], "accent": ["brown_light"]},
     "march_checkpoint_stakes_2": {"sheet": "wood", "cell": 5, "h": 12, "cover": 0.4,
                                   "base": ["ink_warm", "brown"], "accent": ["brown_light"]},
-    "march_checkpoint_pennant": {"sheet": "banners", "cell": 0, "h": 9, "cover": 0.35, "shift": -0.08,
+    "march_checkpoint_pennant": {"sheet": "banners", "cell": 0, "h": 9, "cover": 0.35,
                                  "base": ["ink_red", "crimson_dark", "ink_warm", "brown", "steel_dark"]},
-    "march_checkpoint_pennant_2": {"sheet": "banners", "cell": 1, "h": 9, "cover": 0.35, "shift": -0.08,
+    "march_checkpoint_pennant_2": {"sheet": "banners", "cell": 1, "h": 9, "cover": 0.35,
                                    "base": ["ink_red", "crimson_dark", "ink_warm", "brown"]},
     # March III, the Siege Camp.
     "march_camp_campfire": {"sheet": "camp", "cell": 0, "h": 16, "levels": True,
@@ -138,9 +138,9 @@ RECIPES = {
     "march_camp_crate_2": {"sheet": "camp", "cell": 5, "h": 11, "levels": True,
                            "base": ["ink_warm", "floor_earth", "brown"]},
     # March IV, the Fortress Approach.
-    "march_fortress_banner": {"sheet": "banners", "cell": 3, "h": 15, "shift": -0.08,
+    "march_fortress_banner": {"sheet": "banners", "cell": 3, "h": 15, "shift": -0.03,
                               "base": ["ink_red", "crimson_dark", "ink_warm", "brown"], "accent": ["gold"]},
-    "march_fortress_banner_2": {"sheet": "banners", "cell": 3, "h": 13, "shift": -0.08, "flip": "h",
+    "march_fortress_banner_2": {"sheet": "banners", "cell": 3, "h": 13, "shift": -0.03, "flip": "h",
                                 "base": ["ink_red", "crimson_dark", "ink_warm", "brown"], "accent": ["gold"]},
     # Sanctum I, the Outer Courtyards.
     "sanctum_courtyard_moss": {"sheet": "courtyard", "cell": 0, "h": 14, "levels": True,
