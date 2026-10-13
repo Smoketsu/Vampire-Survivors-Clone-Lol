@@ -37,7 +37,8 @@ Grid mode (GDD 15.0 "Art pass (true pixel art)", docs/art/ART_BIBLE.md):
      its ramp's shades ("levels": the moody, dark AI renders otherwise sink to
      the darkest shade and into the floors), then every art pixel takes the
      nearest shade; glow shades only where the source is genuinely that bright.
-  6. Ramp pruning: ramps covering less than RAMP_MIN_SHARE of the sprite are
+  6. Ramp pruning (saturated accent ramps such as eyes are exempt, ACCENT_CHROMA):
+     ramps covering less than RAMP_MIN_SHARE of the sprite are
      dropped and their pixels re-snapped to the remaining ramps (stray hues from
      the AI's colour noise), except strongly contrasting accents (KEEP_DE).
   7. Cleanup ("readable features are 2+ art px; single pixels only for eyes,
@@ -199,6 +200,12 @@ EYE_DARK_L = 0.40
 # the owner's necromancer source). 0.60 sits between bone_shade (0.57) and bone_mid (0.74),
 # so only sockets set in lit bone, ivory, steel or skin are kept.
 SOCKET_LIGHT_L = 0.60
+# A coloured accent survives cleanup and ramp pruning: a pixel whose OKLab chroma is at least
+# this (a saturated colour: teal soul-fire eyes, a violet rune, a crimson gem) and whose ramp no
+# 8-neighbour shares. Eyes are only a pixel or two, so their ramp is always under
+# RAMP_MIN_SHARE and would otherwise be pruned or merged away (the Skeleton Warrior anchor
+# lost its teal eyes). Neutral greys, bone and ivory sit near 0.02-0.05, soul teal ~0.13.
+ACCENT_CHROMA = 0.09
 # Fraction (0-1) of the sprite's rows, from the bottom, used to find the body's centre column.
 BODY_ROWS = 0.6
 # Palette-snap error reported as a hotspot: OKLab a/b (hue and saturation) distance
@@ -363,8 +370,9 @@ def grid_cells(src: GridSource, scale: float, pal: Palette, allowed: list, metho
     "ramp" (default): every sub-sample (VOTE_SUBSAMPLES^2 per cell, box-filtered)
     darker than INK_L is linework / deep shadow (the nearest ink by hue); the
     rest is classified by material (ramp_of_colors()). A cell that is at least
-    INK_YIELD lit takes its majority material (a much brighter material with
-    SALIENT_SHARE of the cell wins instead: eyes, runes, glints) and the mean
+    INK_YIELD lit takes its majority material (a much brighter material, or a
+    much more saturated one (ACCENT_CHROMA), with SALIENT_SHARE of the cell
+    wins instead: eyes, runes, glints) and the mean
     lightness of that material's sub-samples; its shade is chosen later for
     the whole sprite (shade_cells()). A mostly dark cell takes its majority ink.
     "mode": the cell takes the palette colour most of its sub-samples snap to.
@@ -435,9 +443,16 @@ def grid_cells(src: GridSource, scale: float, pal: Palette, allowed: list, metho
         counts = Counter(ramps.tolist())
         best = counts.most_common(1)[0][0]  # Material holding the most lit area.
         best_l = ls[ramps == best].mean()
-        # A much brighter material with enough area wins the cell (eyes, runes, glints).
+        # A much brighter material with enough area wins the cell (eyes, runes, glints),
+        # and so does a strongly coloured one on a neutral material (teal eyes in a bone
+        # face are no brighter than the bone, only far more saturated: ACCENT_CHROMA).
+        lit_lab = sub_lab[cs][c_lit]  # OKLab of this cell's lit sub-samples.
+        best_c = float(np.hypot(lit_lab[ramps == best][:, 1], lit_lab[ramps == best][:, 2]).mean())  # Majority chroma.
         for r, n in counts.most_common():
-            if r != best and n >= SALIENT_SHARE * ramps.size and ls[ramps == r].mean() > best_l + SALIENT_DL:
+            if r == best or n < SALIENT_SHARE * ramps.size:
+                continue
+            r_c = float(np.hypot(lit_lab[ramps == r][:, 1], lit_lab[ramps == r][:, 2]).mean())  # Candidate chroma.
+            if ls[ramps == r].mean() > best_l + SALIENT_DL or (r_c >= ACCENT_CHROMA and r_c > best_c + ACCENT_CHROMA):
                 best, best_l = r, ls[ramps == r].mean()
                 break
         out.idx[y, x] = -2
@@ -543,13 +558,33 @@ def merge_flecks(idx: np.ndarray, pal: Palette) -> tuple:
     return out, changed
 
 
+def is_accent(idx: np.ndarray, y: int, x: int, pal: Palette) -> bool:
+    """True when pixel (y, x) is a coloured accent (see ACCENT_CHROMA): a saturated
+    colour whose ramp none of its opaque 8-neighbours uses (an eye, a gem, a rune)."""
+    c = idx[y, x]
+    if c < 0 or pal.group[c] == "ink":
+        return False
+    if float(np.hypot(pal.lab[c][1], pal.lab[c][2])) < ACCENT_CHROMA:
+        return False
+    h, w = idx.shape
+    for dy in (-1, 0, 1):
+        for dx in (-1, 0, 1):
+            if (dy or dx) and 0 <= y + dy < h and 0 <= x + dx < w:
+                v = idx[y + dy, x + dx]  # Neighbour colour index (-1 = transparent).
+                if v >= 0 and pal.ramp[v] == pal.ramp[c] and pal.group[v] != "ink":
+                    return False
+    return True
+
+
 def cleanup(idx: np.ndarray, pal: Palette) -> tuple:
     """Removes lone opaque pixels and merges single-pixel colour islands (a
     pixel whose colour no 4-neighbour shares) into their neighbours' majority
     colour, except glow pixels, bright accents in a dark setting (eyes in a
     hood, a lit rune: neighbours darker than EYE_DARK_L, the pixel SALIENT_DL
-    brighter) and dark accents in a light setting (a skull's eye sockets:
-    neighbours at least SOCKET_LIGHT_L, the pixel SALIENT_DL darker). Lone
+    brighter), dark accents in a light setting (a skull's eye sockets:
+    neighbours at least SOCKET_LIGHT_L, the pixel SALIENT_DL darker) and
+    coloured accents (is_accent(): a saturated pixel of a ramp no neighbour
+    uses, such as teal eyes in a bone face). Lone
     floating pixels are always removed. Returns (grid, pixels changed)."""
     h, w = idx.shape
     out = idx.copy()
@@ -577,7 +612,7 @@ def cleanup(idx: np.ndarray, pal: Palette) -> tuple:
             # and dark accents in a light setting (a skull's eye sockets).
             eye = around < EYE_DARK_L and pal.lab[c][0] - around > SALIENT_DL
             socket = around >= SOCKET_LIGHT_L and around - pal.lab[c][0] > SALIENT_DL
-            if pal.group[c] == "glow" or eye or socket:
+            if pal.group[c] == "glow" or eye or socket or is_accent(idx, y, x, pal):
                 continue
             out[y, x] = repl
             changed += 1
@@ -712,13 +747,20 @@ def convert(srcs: list, height: int, key: str, pal: Palette, args) -> tuple:
     idx_all = np.concatenate([c.idx.ravel() for c in cells])
     share = Counter(pal.ramp[i] for i in idx_all[idx_all >= 0].tolist() if pal.group[i] != "ink")
     total = max(1, sum(share.values()))
-    drop = sorted(r for r, n in share.items() if n < RAMP_MIN_SHARE * total) if args.prune else []
+    # A rare ramp is dropped unless it is a saturated accent colour (mean OKLab chroma of its
+    # pixels at least ACCENT_CHROMA): a unit's eyes or gem are always rare, never noise to prune.
+    chroma = {r: float(np.mean([np.hypot(pal.lab[i][1], pal.lab[i][2]) for i in idx_all[idx_all >= 0].tolist()
+                                if pal.ramp[i] == r and pal.group[i] != "ink"])) for r in share}  # Mean chroma per used ramp.
+    drop = sorted(r for r, n in share.items()
+                  if n < RAMP_MIN_SHARE * total and chroma[r] < ACCENT_CHROMA) if args.prune else []
     keep = [i for i in allowed if pal.ramp[i] not in drop or pal.group[i] == "ink"]
     grids, srcs_lab, snaps, cleaned = [], [], [], 0
     for c in cells:
         idx = c.idx
         snaps.append(idx.copy())
         for y, x in zip(*np.nonzero(np.isin(idx, [i for i in allowed if i not in keep]))):
+            if is_accent(c.idx, y, x, pal):
+                continue  # A coloured accent (an eye) keeps its pruned ramp.
             alt = pal.snap(c.src[y, x][None, :], keep, RAMP_CHROMA_WEIGHT)[0]
             # A strong accent survives (an eye in a ramp used nowhere else).
             if np.linalg.norm(pal.lab[alt] - pal.lab[idx[y, x]]) <= KEEP_DE:
