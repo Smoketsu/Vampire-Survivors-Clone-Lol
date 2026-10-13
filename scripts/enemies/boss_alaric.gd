@@ -215,6 +215,8 @@ func _hold(delta: float) -> void:
 func _set_phase(p: Phase) -> void:
 	phase = p
 	phase_time = 0.0
+	if p == Phase.RECOVER and game != null:
+		motion_lunge(game.player.position - position, MotionData.POWER_MELEE)  # Engine motion: the strike lands.
 	queue_redraw()
 
 
@@ -468,7 +470,21 @@ func danger_push(p: Vector2) -> Vector2:
 	return Vector2.ZERO
 
 
-func _draw() -> void:
+## Sprite key of his art (engine-motion pivot).
+func motion_sprite_key() -> String:
+	return "bosses/alaric"
+
+
+## Ground layer (Enemy._draw()): the Wrath halo.
+func _draw_under() -> void:
+	if enraged:
+		# Wrath: a burning crimson-gold halo around him.
+		draw_circle(Vector2.ZERO, radius * 1.6, Color(Palette.FLAME, 0.14))
+		draw_arc(Vector2.ZERO, radius * 1.6, 0.0, TAU, 32, Color(Palette.GOLD, 0.7), 2.0)
+
+
+## Body layer on `ci`: Sir Alaric in the pose of his current phase.
+func _draw_body(ci: CanvasItem) -> void:
 	var pose := 0
 	match phase:
 		Phase.HAMMER_WINDUP, Phase.CONSECRATE_WINDUP, Phase.CALL_WINDUP, Phase.JUDGMENT_WINDUP:
@@ -477,10 +493,10 @@ func _draw() -> void:
 			pose = 2
 		Phase.RECOVER:
 			pose = 3
-	if enraged:
-		# Wrath: a burning crimson-gold halo around him.
-		draw_circle(Vector2.ZERO, radius * 1.6, Color(Palette.FLAME, 0.14))
-		draw_arc(Vector2.ZERO, radius * 1.6, 0.0, TAU, 32, Color(Palette.GOLD, 0.7), 2.0)
-	Glyphs.draw_boss(self, Vector2.ZERO, radius, flash > 0.0, pose)
+	Glyphs.draw_boss(ci, Vector2.ZERO, radius, flash > 0.0, pose)
+
+
+## Overlay layer on `ci`: the Stasis ice.
+func _draw_over(ci: CanvasItem) -> void:
 	if frozen:
-		PowerupGlyphs.draw_frozen(self, Vector2.ZERO, radius)  # Stasis power-up.
+		PowerupGlyphs.draw_frozen(ci, Vector2.ZERO, radius)  # Stasis power-up.

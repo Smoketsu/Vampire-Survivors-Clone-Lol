@@ -152,6 +152,7 @@ func _end_stone(u: SummonedUnit) -> void:
 ## The dive lands at `pos`: AoE damage, knockback, shockwave, shake.
 func _impact(u: SummonedUnit, pos: Vector2) -> void:
 	var game := u.game
+	u.motion_lunge(Vector2.ZERO, MotionData.POWER_MELEE)  # Engine motion: the landing (visual only).
 	var r := float(u.special["swoop_radius"])  # Impact radius (px).
 	var kb := float(u.special["swoop_knockback"])  # Knockback impulse (px/s).
 	var stun := float(u.special.get("stun_duration", 0.0))  # Cathedral Horror stun (s; 0 = none).
@@ -221,9 +222,9 @@ func body_lift(u: SummonedUnit) -> float:
 
 
 ## Stone form overlay over the body (cracked stone shell, violet runes).
-func draw_over(u: SummonedUnit) -> void:
+func draw_over(u: SummonedUnit, ci: CanvasItem) -> void:
 	if phase == STONE:
-		ReaperHorrorGlyphs.draw_stone_shell(u, Vector2.ZERO, u.radius)
+		ReaperHorrorGlyphs.draw_stone_shell(ci, Vector2.ZERO, u.radius)
 
 
 ## Ground shadow while airborne and the dive marker during the flight.

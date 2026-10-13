@@ -138,6 +138,7 @@ func step_special(u: SummonedUnit, delta: float) -> bool:
 			if phase_time >= _aim_time:
 				next_phase(DASH)
 				Sfx.play("rogue_dash", u.position)
+				u.motion_lunge(dash_dir, MotionData.POWER_MELEE)  # Engine motion: the strike (visual only).
 		DASH:
 			var step_len := minf(float(u.special["dash_speed"]) * delta, dash_left)  # px this tick.
 			var next := u.position + dash_dir * step_len  # Position after this tick.

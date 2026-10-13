@@ -39,6 +39,7 @@ func think(e: Enemy) -> void:
 		warded += 1
 	if warded > 0:
 		g.stat_add("paladin_ward_pulses", float(warded))
+		e.motion_lunge(Vector2.ZERO, MotionData.POWER_CAST)  # Engine motion: the ward pulse (visual only).
 
 
 ## The sun aura's reach under the body.

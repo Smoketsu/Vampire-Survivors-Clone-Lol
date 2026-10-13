@@ -272,6 +272,9 @@ var chill_timer: float = 0.0
 var _facing: float = 1.0
 ## Reusable query buffer.
 var _tmp: Array = []
+## Engine motion (UnitMotion: body / overlay layers, bob, lean, squashes,
+## lunges); created on the first activation, purely visual.
+var motion: UnitMotion = null
 
 # --- Templar rush (behavior "templar") ----------------------------------------------
 
@@ -407,6 +410,10 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 		kit.reset(self, def)
 		game.enemies.rites.register(self)
 		game.stat_add("spawned_" + kind, 1.0)
+	if motion == null:
+		motion = UnitMotion.new(self, _draw_body, _draw_over)
+	var mscale := MotionData.BOSS_SCALE if self is Boss else (MotionData.MINIBOSS_SCALE if is_miniboss else 1.0)  # Big units move less.
+	motion.reset(UnitMotion.feet_of(motion_sprite_key(), "structures/" + kind, radius), radius, mscale, is_structure)
 	queue_redraw()
 
 
@@ -461,7 +468,21 @@ func step_frozen(delta: float) -> void:
 ## Visual hit reaction.
 func on_hit() -> void:
 	flash = 0.08
+	if motion != null:
+		motion.hit(game.elapsed)  # Engine motion: hit squash with the flash.
 	queue_redraw()
+
+
+## Engine motion: an attack toward world direction `dir` (zero = a slam or
+## pulse) with MotionData power `power`. Visual only.
+func motion_lunge(dir: Vector2, power: float) -> void:
+	if motion != null:
+		motion.lunge(dir, power, game.elapsed)
+
+
+## Sprite key of this enemy's art (the engine-motion pivot); bosses override.
+func motion_sprite_key() -> String:
+	return "enemies/" + kind
 
 
 ## Marks this enemy for `duration` s (Volley of the Fallen mage mark).
@@ -690,6 +711,7 @@ func physics_step(delta: float) -> void:
 			if d <= attack_range and attack_cd <= 0.0:
 				attack_cd = attack_interval
 				_shoot_slow_timer = EnemyData.SHOOT_SLOW_TIME
+				motion_lunge(dir, MotionData.POWER_SHOT)
 				if _radiant:
 					game.projectiles.fire_hostile(position, dir, damage * game.enemies.damage_mult * hit_mult(), projectile_speed, undead_damage_mult,
 							Projectile.Kind.RADIANT_BOLT, kind)
@@ -934,6 +956,7 @@ func _melee_hit(t: Node2D, dir: Vector2) -> void:
 	attack_cd = attack_interval
 	var dmg := damage * game.enemies.damage_mult * hit_mult()
 	game.effects.slash(position + dir * radius, dir, Palette.SILVER, radius * 1.2)
+	motion_lunge(dir, MotionData.POWER_MELEE)
 	if t is SummonedUnit:
 		game.combat.damage_unit(t as SummonedUnit, dmg * undead_damage_mult, kind)
 		if cleave_radius > 0.0:
@@ -975,37 +998,61 @@ func _try_heal() -> void:
 	if game.combat.heal_enemy(heal_target, heal_amount, self) > 0.0:  # Fails while silenced (Keening Lady).
 		game.effects.beam(position, heal_target.position, Palette.GOLD)
 		game.stat_add(heal_stat, 1.0)
+		motion_lunge(heal_target.position - position, MotionData.POWER_CAST)
 
 
+## Draws in three layers (engine motion, UnitMotion): this node draws what
+## lies on the ground under the body, then queues the body layer (the only
+## one that moves) and the overlay layer above it. Before the first
+## activation (no layers yet) everything is drawn here.
 func _draw() -> void:
+	_draw_under()
+	if motion != null:
+		motion.redraw_layers()
+	else:
+		_draw_body(self)
+		_draw_over(self)
+
+
+## Ground layer (this node): aura reach and Sanctum auras. Bosses override.
+func _draw_under() -> void:
 	if aura_radius > 0.0:
 		MarchGlyphs.draw_aura(self, aura_radius)  # Banner / Holy Standard reach.
 	if kit != null:
 		kit.draw_under(self)  # Sanctum auras.
-	Glyphs.draw_enemy(self, kind, Vector2.ZERO, radius, flash > 0.0, is_elite)
+
+
+## Body layer on `ci`: the sprite or glyph. Bosses override.
+func _draw_body(ci: CanvasItem) -> void:
+	Glyphs.draw_enemy(ci, kind, Vector2.ZERO, radius, flash > 0.0, is_elite)
+
+
+## Overlay layer on `ci`: casting glows, shields, marks, the HP bar and the
+## frozen / stunned / chilled look. Bosses override.
+func _draw_over(ci: CanvasItem) -> void:
 	if kit != null:
-		kit.draw_over(self)  # Sanctum casting glows, beams.
+		kit.draw_over(self, ci)  # Sanctum casting glows, beams.
 	if holy_shield > 0.0:
-		SanctumGlyphs.draw_holy_shield(self, radius)  # High Confessor shield.
+		SanctumGlyphs.draw_holy_shield(ci, radius)  # High Confessor shield.
 	if ward_until > 0.0:
-		SanctumGlyphs.draw_ward(self, Vector2(-radius * 1.05, -radius * 1.2), 3.5)  # Sun Paladin ward.
+		SanctumGlyphs.draw_ward(ci, Vector2(-radius * 1.05, -radius * 1.2), 3.5)  # Sun Paladin ward.
 	if buff_time > 0.0:
-		MarchGlyphs.draw_buffed(self, Vector2(0, -radius * 2.4), 4.0)  # Aura buff chevron.
+		MarchGlyphs.draw_buffed(ci, Vector2(0, -radius * 2.4), 4.0)  # Aura buff chevron.
 	if mark_time > 0.0:
-		ProgressionGlyphs.draw_mage_mark(self, Vector2(0, -radius * 2.5), 4.0)
+		ProgressionGlyphs.draw_mage_mark(ci, Vector2(0, -radius * 2.5), 4.0)
 	if curse_until > 0.0:
-		GravebowColossusGlyphs.draw_curse(self, Vector2.ZERO, radius)  # Gravebow curse tint.
+		GravebowColossusGlyphs.draw_curse(ci, Vector2.ZERO, radius)  # Gravebow curse tint.
 	if weaken_until > 0.0:
-		WarbandGlyphs.draw_dirge(self, Vector2.ZERO, radius, silence_until > game.elapsed)  # Banshee Dirge mark.
+		WarbandGlyphs.draw_dirge(ci, Vector2.ZERO, radius, silence_until > game.elapsed)  # Banshee Dirge mark.
 	if hp < max_hp:
 		# The node is mirrored via scale.x; counter-flip so the bar always
 		# fills left-to-right.
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2(_facing, 1.0))
-		Glyphs.hp_bar(self, Vector2(0, -radius * 1.8), radius * 2.0, hp / max_hp, Palette.HP_ENEMY)
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2(_facing, 1.0))
+		Glyphs.hp_bar(ci, Vector2(0, -radius * 1.8), radius * 2.0, hp / max_hp, Palette.HP_ENEMY)
+		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if frozen and stun_timer > 0.0 and freeze_timer <= 0.0:
-		ReaperHorrorGlyphs.draw_stun(self, Vector2(0, -radius * 1.35), radius)  # Stunned, not frozen (Stasis on top shows the stun too).
+		ReaperHorrorGlyphs.draw_stun(ci, Vector2(0, -radius * 1.35), radius)  # Stunned, not frozen (Stasis on top shows the stun too).
 	elif frozen:
-		PowerupGlyphs.draw_frozen(self, Vector2.ZERO, radius)
+		PowerupGlyphs.draw_frozen(ci, Vector2.ZERO, radius)
 	elif chill_timer > 0.0:
-		SummonGlyphs.draw_chill(self, Vector2.ZERO, radius)
+		SummonGlyphs.draw_chill(ci, Vector2.ZERO, radius)

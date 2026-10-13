@@ -60,11 +60,23 @@ var _facing: float = 1.0
 ## SkinData id of the cosmetic skin worn this run ("" = the default look;
 ## set by Game at run start). Purely visual, never a stat.
 var skin_id: String = ""
+## Engine motion (UnitMotion: body / overlay layers, bob, lean, squashes,
+## cast recoils); purely visual.
+var motion: UnitMotion = null
 
 
 func _ready() -> void:
 	z_index = 1
+	motion = UnitMotion.new(self, _draw_body, _draw_over)
+	motion.reset(UnitMotion.feet_of("player/necromancer", "", radius), radius, 1.0, false)
 	queue_redraw()
+
+
+## Engine motion: one of his spells is cast toward world point `at` (his own
+## position = a pulse around him). Visual only.
+func cast_motion(at: Vector2) -> void:
+	if motion != null and game != null:
+		motion.lunge(at - position, MotionData.POWER_PLAYER_CAST, game.elapsed)
 
 
 ## Per-physics-tick update, called by Game in a fixed order.
@@ -140,6 +152,8 @@ func take_damage(amount: float) -> float:
 			return 0.0
 	hp -= amount
 	flash = 0.12
+	if motion != null and game != null:
+		motion.hit(game.elapsed)  # Engine motion: hit squash with the flash.
 	queue_redraw()
 	if hp <= 0.0:
 		if invulnerable:
@@ -183,18 +197,32 @@ func heal(amount: float) -> float:
 	return healed
 
 
+## Draws in three layers (engine motion, UnitMotion): the ground ring here,
+## then the body layer (the only one that moves) and the ward overlay.
 func _draw() -> void:
 	_draw_ground_ring()
-	# A worn skin (SkinGlyphs) draws itself, falling back to this character's
-	# own look; otherwise the character's look (CharacterGlyphs; the classic
-	# necromancer for the Gravecaller).
-	if skin_id == "" or not SkinGlyphs.draw_skin(self, skin_id, Vector2.ZERO, radius, flash > 0.0):
-		CharacterGlyphs.draw_player(self, game.character.id if game != null else CharacterData.DEFAULT_ID, Vector2.ZERO, radius, flash > 0.0)
+	if motion != null:
+		motion.redraw_layers()
+	else:
+		_draw_body(self)
+		_draw_over(self)
+
+
+## Body layer on `ci`: a worn skin (SkinGlyphs) draws itself, falling back
+## to this character's own look; otherwise the character's look
+## (CharacterGlyphs; the classic necromancer for the Gravecaller).
+func _draw_body(ci: CanvasItem) -> void:
+	if skin_id == "" or not SkinGlyphs.draw_skin(ci, skin_id, Vector2.ZERO, radius, flash > 0.0):
+		CharacterGlyphs.draw_player(ci, game.character.id if game != null else CharacterData.DEFAULT_ID, Vector2.ZERO, radius, flash > 0.0)
+
+
+## Overlay layer on `ci`: the priest ward bubble.
+func _draw_over(ci: CanvasItem) -> void:
 	if shield_hp > 0.0:
 		# Priest ward: translucent necrotic bubble, thicker when stronger.
 		var k := clampf(shield_hp / maxf(shield_max, 1.0), 0.0, 1.0)
-		draw_circle(Vector2.ZERO, radius * 2.0, Color(Palette.COLD_BLUE, 0.10 + 0.10 * k))
-		draw_arc(Vector2.ZERO, radius * 2.0, 0.0, TAU, 32, Color(Palette.NECRO_GREEN, 0.5 + 0.4 * k), 1.0 + 2.0 * k)
+		ci.draw_circle(Vector2.ZERO, radius * 2.0, Color(Palette.COLD_BLUE, 0.10 + 0.10 * k))
+		ci.draw_arc(Vector2.ZERO, radius * 2.0, 0.0, TAU, 32, Color(Palette.NECRO_GREEN, 0.5 + 0.4 * k), 1.0 + 2.0 * k)
 
 
 ## Soft ground ring under the necromancer (ViewData.PLAYER_RING_*) so the

@@ -102,6 +102,7 @@ func _begin_cast(e: Enemy, at: Vector2, length: float) -> void:
 	cast_pos = at
 	cast_time = length
 	set_phase(e, CAST)
+	e.motion_lunge(at - e.position if at != Vector2.INF else Vector2.ZERO, MotionData.POWER_CAST)  # Engine motion (visual only).
 
 
 func physics(e: Enemy, delta: float) -> bool:
@@ -117,6 +118,6 @@ func physics(e: Enemy, delta: float) -> bool:
 
 
 ## A raised gold sunburst while casting.
-func draw_over(e: Enemy) -> void:
+func draw_over(e: Enemy, ci: CanvasItem) -> void:
 	if phase == CAST:
-		SanctumGlyphs.draw_casting(e, Vector2(0, -e.radius * 1.9), e.radius)
+		SanctumGlyphs.draw_casting(ci, Vector2(0, -e.radius * 1.9), e.radius)

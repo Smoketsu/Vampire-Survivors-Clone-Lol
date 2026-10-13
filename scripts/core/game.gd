@@ -126,6 +126,8 @@ var difficulty: DifficultyModifiers
 var chests: ChestManager
 ## Cosmetic effects and telegraphs.
 var effects: EffectManager
+## Engine motion of every unit and the pooled death dissolves (visual only).
+var motion: MotionDirector
 ## Damage / healing rules.
 var combat: CombatResolver
 ## Spatial index of living enemies (rebuilt every tick).
@@ -216,6 +218,9 @@ func _ready() -> void:
 	stance_outline = StanceOutline.new()
 	stance_outline.game = self
 	add_child(stance_outline)
+	motion = MotionDirector.new()  # Before the horde and enemies: dissolving bodies sit under the living.
+	motion.game = self
+	add_child(motion)
 	horde = HordeDirector.new()
 	horde.game = self
 	# Depth sorting: summons lower on screen draw in front, so a packed army reads

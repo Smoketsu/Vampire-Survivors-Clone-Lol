@@ -116,6 +116,7 @@ func _cast(stats: Dictionary) -> bool:
 	_clouds.append(c)
 	game.stat_add("plague_clouds", 1.0)
 	Sfx.play("plague_cast", best)
+	game.player.cast_motion(best)  # Engine motion: toward the cloud (visual only).
 	return true
 
 

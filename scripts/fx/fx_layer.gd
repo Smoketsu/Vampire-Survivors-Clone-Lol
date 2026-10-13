@@ -121,6 +121,24 @@ func sparkle(pos: Vector2, color: Color, count: int) -> void:
 	_p_alive = mini(MAX_PARTICLES, _p_alive + count)
 
 
+## Grave dust / holy ash (engine motion, MotionDirector): `count` square
+## motes spread across a body of radius `r` px at its feet `pos`, drifting
+## up and sideways (MotionData.DUST_*), alternating `color` and `alt`.
+func dust(pos: Vector2, color: Color, alt: Color, count: int, r: float) -> void:
+	for i in count:
+		var s := _p_next
+		_p_next = (_p_next + 1) % MAX_PARTICLES
+		_p_pos[s] = pos + Vector2(_rng.randf_range(-r, r), _rng.randf_range(-r * 0.4, r * 0.2))
+		_p_vel[s] = Vector2(_rng.randf_range(-MotionData.DUST_SPREAD, MotionData.DUST_SPREAD),
+				-MotionData.DUST_RISE * _rng.randf_range(0.5, 1.3))
+		var l := MotionData.DUST_LIFE * _rng.randf_range(0.6, 1.0)
+		_p_life[s] = l
+		_p_max[s] = l
+		_p_size[s] = MotionData.DUST_SIZE
+		_p_col[s] = color if i % 2 == 0 else alt
+	_p_alive = mini(MAX_PARTICLES, _p_alive + count)
+
+
 ## Shows (or merges) a damage number for the enemy with instance id `key`.
 func number(key: int, pos: Vector2, value: float, color: Color, big: bool) -> void:
 	var s: int = _n_slot_of.get(key, -1)

@@ -602,6 +602,8 @@ func on_unit_died(u: SummonedUnit, as_death: bool = true) -> void:
 			total_deaths += 1
 			suppression.on_unit_died(u)  # Held if it fell inside a suppression zone.
 	game.effects.pop(u.position, Palette.COLD_BLUE, u.radius * 1.2)
+	if as_death:
+		game.motion.on_summon_died(u)  # Collapses into bone dust (visual only).
 	u.deactivate()
 	_pool.append(u)
 	if as_death:

@@ -103,6 +103,7 @@ func _end(u: SummonedUnit) -> void:
 ## Releases wave `i` (0 = the first): weakens every enemy inside its radius.
 func _wail(u: SummonedUnit, i: int) -> void:
 	var game := u.game
+	u.motion_lunge(Vector2.ZERO, MotionData.POWER_CAST)  # Engine motion: the wail (visual only).
 	var r := wave_radius(u, i)  # This wave's radius (px).
 	var silence := int(u.special.get("silence", 0)) > 0  # Keening Lady.
 	game.enemy_grid.query(wail_point, r + ProjectileManager.MAX_BODY_RADIUS, _buf)

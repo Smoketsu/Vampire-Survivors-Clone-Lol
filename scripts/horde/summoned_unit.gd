@@ -253,6 +253,9 @@ var _cand: Array = []
 var _neigh: Array = []
 ## Score of the best candidate found by the last acquisition.
 var _best_score: float = 0.0
+## Engine motion (UnitMotion: body / overlay layers, bob, lean, squashes,
+## lunges, the rise); created on the first activation, purely visual.
+var motion: UnitMotion = null
 
 # --- Stage effects --------------------------------------------------------------------
 
@@ -317,7 +320,35 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	if behavior != null:
 		behavior.reset(self)
 	_enter(State.SPAWNING)
+	if motion == null:
+		motion = UnitMotion.new(self, _draw_body, _draw_over)
+	motion.reset(_motion_feet(), radius, 1.0, false)
+	game.motion.on_summon_rise(self)  # Rises out of the ground (visual only).
 	queue_redraw()
+
+
+## Engine-motion pivot: the feet line of this unit's sprite or glyph (a
+## floating Banshee's feet are its lift above the ground).
+func _motion_feet() -> float:
+	var lift := behavior.body_lift(self) if behavior != null else 0.0  # Drawn height (px).
+	return UnitMotion.feet_of("summons/" + (glyph_kind if glyph_kind != "" else unit_class), "", radius, lift)
+
+
+## Per-frame engine motion (MotionDirector) at game time `now`, `dt` game
+## seconds after the last frame: stone form holds still, an airborne swoop
+## drops the bob, lean and lunge; the stone tint follows onto the layers.
+func update_motion(now: float, dt: float) -> void:
+	if motion.body.self_modulate != self_modulate:
+		motion.body.self_modulate = self_modulate
+		motion.over.self_modulate = self_modulate
+	motion.update(now, dt, stone_form, airborne)
+
+
+## Engine motion: an attack toward world direction `dir` (zero = a slam or
+## pulse) with MotionData power `power`. Visual only.
+func motion_lunge(dir: Vector2, power: float) -> void:
+	if motion != null:
+		motion.lunge(dir, power, game.elapsed)
 
 
 ## Copies effective stats from the director. When `preserve_pct` is true the
@@ -381,6 +412,8 @@ func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
 	_wo = w["overkill"]
 	if preserve_pct:
 		hp = max_hp * frac
+	if motion != null:
+		motion.feet = _motion_feet()  # An evolution changes the look.
 	queue_redraw()
 
 
@@ -403,6 +436,8 @@ func deactivate() -> void:
 func on_hit() -> void:
 	flash = 0.1
 	since_hit = 0.0
+	if motion != null:
+		motion.hit(game.elapsed)  # Engine motion: hit squash with the flash.
 	queue_redraw()
 
 
@@ -973,6 +1008,7 @@ func _step_cast(delta: float) -> void:
 
 ## Applies the attack at the end of the windup, per attack_profile.
 func _release_attack() -> void:
+	_attack_motion()
 	match attack_profile:
 		"melee":
 			if _target_valid():
@@ -1023,6 +1059,20 @@ func _release_attack() -> void:
 				behavior.release_attack(self)
 
 
+## Engine motion of a released attack: a lunge toward the struck enemy, the
+## aimed point or the healed ally (a shot or a cast lunges less).
+func _attack_motion() -> void:
+	var at := position  # Where the attack goes (world px).
+	if attack_profile == "heal" and heal_target != null and is_instance_valid(heal_target):
+		at = heal_target.position
+	elif attack_profile == "aoe":
+		at = cast_point
+	elif _target_valid():
+		at = target.position
+	var power := MotionData.POWER_MELEE if attack_profile == "melee" else (MotionData.POWER_CAST if attack_profile == "heal" or attack_profile == "ward" else MotionData.POWER_SHOT)  # Lunge power.
+	motion_lunge(at - position, power)
+
+
 ## Removes this healer's pending heal from its target's incoming_heal.
 func _release_heal_reservation() -> void:
 	if _reserved_heal_on is SummonedUnit:
@@ -1040,16 +1090,18 @@ func _release_heal_reservation() -> void:
 # Drawing
 # =====================================================================================
 
+## Draws in three layers (engine motion, UnitMotion): this node draws what
+## lies on the ground under the body (telegraphs, flight shadow, auras, the
+## spawn glow), then queues the body layer (the only one that moves; the
+## rise out of the ground is its transform) and the overlay layer above it.
+## Before the first activation (no layers yet) everything is drawn here.
 func _draw() -> void:
-	var rise := 1.0
-	var lift := 0.0  # px the body is drawn above the ground (Gargoyle flight).
 	if behavior != null:
 		behavior.draw_under(self)  # Telegraphs and flight shadow, under the body.
-		lift = behavior.body_lift(self)
 	if director != null and director.synergies.is_active("unholy_host"):
 		ProgressionGlyphs.draw_host_aura(self, Vector2(0, radius * 0.6), radius)
 	if state == State.SPAWNING:
-		rise = clampf(state_time / UnitData.SPAWN_DURATION, 0.0, 1.0)
+		var rise := clampf(state_time / UnitData.SPAWN_DURATION, 0.0, 1.0)  # Spawn progress.
 		draw_circle(Vector2(0, radius * 0.9), radius * (1.3 - 0.4 * rise), Color(Palette.NECRO_GREEN, 0.3 * (1.0 - rise)))
 	if is_temporary:
 		# Stage-event summon: spectral green aura that dims as it expires.
@@ -1058,14 +1110,28 @@ func _draw() -> void:
 		draw_arc(Vector2.ZERO, radius * 1.5, 0.0, TAU, 20, Color(Palette.NECRO_GREEN, 0.7 * k), 1.5)
 	if transform_time > 0.0:
 		SummonGlyphs.draw_transform_glow(self, radius, transform_time / SummonEvolutionData.TRANSFORM_FX_TIME)
-	Glyphs.draw_summon(self, glyph_kind if glyph_kind != "" else unit_class, Vector2(0, (1.0 - rise) * radius - lift), radius, flash > 0.0)
+	if motion != null:
+		motion.redraw_layers()
+	else:
+		_draw_body(self)
+		_draw_over(self)
+
+
+## Body layer on `ci`: the sprite or glyph, lifted while it flies / floats.
+func _draw_body(ci: CanvasItem) -> void:
+	var lift := behavior.body_lift(self) if behavior != null else 0.0  # px the body is drawn above the ground (Gargoyle flight).
+	Glyphs.draw_summon(ci, glyph_kind if glyph_kind != "" else unit_class, Vector2(0, -lift), radius, flash > 0.0)
+
+
+## Overlay layer on `ci`: class overlays, the barrier and the HP bar.
+func _draw_over(ci: CanvasItem) -> void:
 	if behavior != null:
-		behavior.draw_over(self)  # Overlays on the body (Cathedral Horror stone).
+		behavior.draw_over(self, ci)  # Overlays on the body (Cathedral Horror stone).
 	if barrier_hp > 0.0:
-		ProgressionGlyphs.draw_barrier(self, Vector2.ZERO, radius, barrier_hp / maxf(max_hp, 1.0))
+		ProgressionGlyphs.draw_barrier(ci, Vector2.ZERO, radius, barrier_hp / maxf(max_hp, 1.0))
 	if hp < max_hp - 0.5 and state != State.SPAWNING:
 		# The node is mirrored via scale.x; counter-flip so the bar always
 		# fills left-to-right.
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2(_facing, 1.0))
-		Glyphs.hp_bar(self, Vector2(0, -radius * 1.9), radius * 2.0, hp / max_hp, Palette.HP_FRIENDLY)
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2(_facing, 1.0))
+		Glyphs.hp_bar(ci, Vector2(0, -radius * 1.9), radius * 2.0, hp / max_hp, Palette.HP_FRIENDLY)
+		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
