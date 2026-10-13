@@ -174,11 +174,23 @@ The tool turns any image into palette-correct grid art, but **what it can keep d
   2 px thick in places); it gave the cleaner necromancer.
 - The last 10% (eyes, a face, a clean hand) is fastest done by hand on the small PNG in a pixel
   editor; the check sheet shows whether it is needed.
+- **Small coloured features** (glowing eyes, a gem) are kept automatically: a strongly saturated
+  colour can win its art pixel even when it is no brighter than its surroundings, and such accent
+  colours are never pruned as stray (`ACCENT_CHROMA` in the tool). Eyes smaller than one art pixel in
+  the source can still vanish; put them back by hand (the warrior's teal eyes).
+- **When a material comes out wrong** (a steel helmet turned bone-white, a face lost its skin colour),
+  convert with `--no-prune --no-levels`: no ramp is dropped for being rare and each colour keeps its own
+  shade instead of being stretched over the ramp. It gave the clean Covenant Recruit.
+- **Features thinner than one art pixel** (a spear shaft one source block wide between two outline
+  blocks) come out as outline only. Repaint the lit column by hand (the recruit's shaft: the left
+  column in wood brown, the right one kept as its outline).
 
 ## Anchors (the first six, approved in-game before everything else)
 
-**Status:** the necromancer anchor is in progress: the owner's chunky image (~65 px native) converted
-to 56 art px with `--inside-outline`, being checked on its sheet and in the game.
+**Status:** anchors 1-3 are in the game: the necromancer (owner's ~65 px image, `--inside-outline`, hood
+eyes separated by hand), the Skeleton Warrior (~54 px image, `--inside-outline`, eyes restored by hand)
+and the Covenant Recruit (~60 px image, `--inside-outline --no-prune --no-levels`, spear shaft
+repainted by hand). Next: the Graveyard floor tile, the gravestone and the Shadow Bolt icon.
 
 The anchors fix the style for everything else. Approve them **in order**, each on its check sheet and
 in the game, then attach the approved ones to every later prompt. Each prompt is ready to paste.
