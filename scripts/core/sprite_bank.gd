@@ -74,6 +74,8 @@ static func texture(key: String) -> Texture2D:
 		tex = load(path) as Texture2D
 	var grid := tex != null and ((SpriteData.HEIGHTS.has(key) \
 			and float(tex.get_height()) <= float(SpriteData.HEIGHTS[key])) \
+			or (SpriteData.FLAT_SIZES.has(key) \
+			and float(maxi(tex.get_width(), tex.get_height())) <= float(SpriteData.FLAT_SIZES[key])) \
 			or (key.begins_with("icons/") and tex.get_height() <= SpriteData.ICON_GRID_MAX_PX))  # Stored at art resolution.
 	if grid:
 		var sharp := CanvasTexture.new()  # Per-draw filter override (see the header).
@@ -179,7 +181,10 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Col
 ## Draws a flat sprite (projectile, orb) centred on `o`, rotated by `angle`
 ## (radians; the art points right), scaled so its longest side is
 ## SpriteData.FLAT_SIZES[key] px. No shadow or flash. `tint` multiplies the
-## colours (e.g. a dim uncharged orb). Returns false when there is no art.
+## colours (e.g. a dim uncharged orb). Grid art (longest side no more than
+## its FLAT_SIZES entry: projectiles, orbs, pickups) is drawn 1:1 at
+## SpriteData.ART_SCALE through the sharp-pixel shader, its corner on whole
+## px when unrotated. Returns false when there is no art.
 static func draw_flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tint: Color = Color.WHITE) -> bool:
 	var tex := texture(key)  # Art for this key, or null.
 	if tex == null:
@@ -187,10 +192,16 @@ static func draw_flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tin
 	var long_side: float = SpriteData.FLAT_SIZES.get(key, SpriteData.DEFAULT_FLAT_SIZE)  # Longest side (px).
 	var w := float(tex.get_width())  # Texture width (px).
 	var h := float(tex.get_height())  # Texture height (px).
-	var k := long_side / maxf(w, h)  # Texture px -> world px.
+	var grid := bool(_grid[key])  # True pixel art at art resolution.
+	var k := float(SpriteData.ART_SCALE) if grid else long_side / maxf(w, h)  # Texture px -> world px.
 	var size := Vector2(w, h) * k  # Drawn size (px).
+	var corner := -size * 0.5  # Rect corner in the rotated frame (px).
+	if grid:
+		apply_sharp(ci)
+		if angle == 0.0:
+			corner = (o + corner).round() - o  # Whole screen px, so unrotated pickups stay crisp.
 	ci.draw_set_transform(o, angle, Vector2.ONE)
-	ci.draw_texture_rect(tex, Rect2(-size * 0.5, size), false, tint)
+	ci.draw_texture_rect(tex, Rect2(corner, size), false, tint)
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	return true
 

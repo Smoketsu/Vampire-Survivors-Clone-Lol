@@ -130,19 +130,31 @@ const FLASH_MODULATE: Color = Color(2.6, 2.6, 2.6, 1.0)  # TUNING (not in GDD)
 const ICON_FILL: float = 0.9  # TUNING (not in GDD)
 
 ## Longest side (world px) of flat sprites drawn by SpriteBank.draw_flat():
-## projectiles (art pointing right) and orbs. Keys "projectiles/<id>".
+## projectiles (art pointing right), orbs and the pickups (drawn centred,
+## unrotated). Keys "projectiles/<id>" and "pickups/<id>". Grid art is stored
+## at exactly this longest side (or less) and drawn 1:1.
 const FLAT_SIZES: Dictionary = {
+	"pickups/xp_crystal_s": 12.0,  # TUNING (not in GDD) XP crystal worth 1-2 (the code glyph was ~10-12 px tall)
+	"pickups/xp_crystal_m": 16.0,  # TUNING (not in GDD) XP crystal worth 3-7
+	"pickups/xp_crystal_l": 20.0,  # TUNING (not in GDD) XP crystal worth 8+
+	"pickups/chest": 32.0,  # TUNING (not in GDD) world treasure chest (code chest 22 px wide); art pass: 30 before; the grid art with its outline is 32 px long
+	"pickups/pu_magnet": 24.0,  # TUNING (not in GDD) power-up medallion (token radius 10 + rim)
+	"pickups/pu_feast": 24.0,  # TUNING (not in GDD) power-up medallion
+	"pickups/pu_hyper": 26.0,  # TUNING (not in GDD) power-up medallion; art pass: 24 before; the grid art with its outline is 26 px long
+	"pickups/pu_stasis": 24.0,  # TUNING (not in GDD) power-up medallion
+	"pickups/pu_frenzy": 24.0,  # TUNING (not in GDD) power-up medallion
+	"pickups/pu_nova": 24.0,  # TUNING (not in GDD) power-up medallion
 	"projectiles/shadow_bolt": 22.0,  # TUNING (not in GDD)
-	"projectiles/void_bolt": 30.0,  # TUNING (not in GDD)
-	"projectiles/void_shard": 14.0,  # TUNING (not in GDD)
-	"projectiles/arrow": 20.0,  # TUNING (not in GDD)
+	"projectiles/void_bolt": 32.0,  # TUNING (not in GDD) art pass: 30 before; the grid art with its outline is 32 px long
+	"projectiles/void_shard": 16.0,  # TUNING (not in GDD) art pass: 14 before; the grid art with its outline is 16 px long
+	"projectiles/arrow": 22.0,  # TUNING (not in GDD) art pass: 20 before; the grid art with its outline is 22 px long
 	"projectiles/enemy_arrow": 20.0,  # TUNING (not in GDD)
-	"projectiles/mage_orb": 20.0,  # TUNING (not in GDD)
+	"projectiles/mage_orb": 22.0,  # TUNING (not in GDD) art pass: 20 before; the grid art with its outline is 22 px long
 	"projectiles/priest_bolt": 14.0,  # TUNING (not in GDD)
-	"projectiles/frost_bolt": 20.0,  # TUNING (not in GDD)
+	"projectiles/frost_bolt": 22.0,  # TUNING (not in GDD) art pass: 20 before; the grid art with its outline is 22 px long
 	"projectiles/radiant_bolt": 20.0,  # TUNING (not in GDD)
 	"projectiles/bone_spear": 26.0,  # TUNING (not in GDD)
-	"projectiles/ossuary_lance": 44.0,  # TUNING (not in GDD)
+	"projectiles/ossuary_lance": 46.0,  # TUNING (not in GDD) art pass: 44 before; the grid art with its outline is 46 px long
 	"projectiles/orb": 18.0,  # TUNING (not in GDD) Shadow Orb Shield orb
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.

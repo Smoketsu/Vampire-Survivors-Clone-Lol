@@ -521,16 +521,20 @@ Crimson, ivory and warm steel; gold for elites, the Sanctum kinds and the Reckon
 on screen.)
 
 ### Pickups (`assets/sprites/pickups/`)
+
+Drawn centred and unrotated through `SpriteBank.draw_flat()` (art px = the longest side, `SpriteData.FLAT_SIZES`). The XP crystal keeps the code colour language by value (teal, blue, violet) over its faint glow; the power-ups are **round medallions** (a dark disc in an accent rim) over the code's pulsing ring, so a drop never reads as a crystal or an enemy; the world chest keeps the code's gold pulse (the ChestPanel reveal stays code-drawn).
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `xp_crystal.png` | Small soul crystal (soul ramp, a glint of soul_glow) | 16 | new |
-| `chest.png` | Bone-and-iron treasure chest with a violet lock glint (the player's reward) | 40 | new |
-| `pu_magnet.png` | Soul Magnet: a teal soul vortex charm | 28 | new |
-| `pu_feast.png` | Grave Feast: dark roasted meat on a bone | 28 | new |
-| `pu_hyper.png` | Hyper: a violet lightning rune | 28 | new |
-| `pu_stasis.png` | Stasis: a frozen hourglass (ice) | 28 | new |
-| `pu_frenzy.png` | Dark Frenzy: a flaming skull (flame) | 28 | new |
-| `pu_nova.png` | Soul Nova: a violet starburst | 28 | new |
+| `xp_crystal_s.png` | XP crystal worth 1-2: a small soul crystal (soul teal, a glint) | 12 | done |
+| `xp_crystal_m.png` | XP crystal worth 3-7: arcane blue, three facets | 16 | done |
+| `xp_crystal_l.png` | XP crystal worth 8+: player violet, a white-violet core, two chips at its base | 20 | done |
+| `chest.png` | Bone-and-iron treasure chest with a violet lock glint (the player's reward) | 32 | done |
+| `pu_magnet.png` | Soul Magnet: a teal soul vortex charm | 24 | done |
+| `pu_feast.png` | Grave Feast: dark roasted meat on a bone | 24 | done |
+| `pu_hyper.png` | Hyper: a violet lightning rune | 26 | done |
+| `pu_stasis.png` | Stasis: a frozen hourglass (ice) | 24 | done |
+| `pu_frenzy.png` | Dark Frenzy: a flaming skull (flame) | 24 | done |
+| `pu_nova.png` | Soul Nova: a violet starburst | 24 | done |
 
 ### Projectiles (`assets/sprites/projectiles/`)
 
@@ -539,18 +543,18 @@ right, trail to the left), transparent background. Art px = the longest side (`S
 
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `shadow_bolt.png` | Shadow Bolt: a violet bolt with a pale core and a short trail | 22 | new |
-| `void_bolt.png` | Void Barrage bolt: a black-violet core with a violet trail | 30 | new |
-| `void_shard.png` | Void shard: a tiny violet crystal splinter | 14 | new |
-| `bone_spear.png` | Bone Spear: a sharpened bone javelin | 26 | new |
-| `ossuary_lance.png` | Ossuary Lance: a huge bone lance wrapped in violet energy | 44 | new |
-| `arrow.png` | Skeleton Archer arrow: a bone shaft with a teal soul-fire head | 20 | new |
-| `mage_orb.png` | Undead Mage orb: an arcane-blue orb with a pale core | 20 | new |
-| `priest_bolt.png` | Mender / Warder bolt: a small teal mote | 14 | new |
-| `frost_bolt.png` | Frost Wraith bolt: a pale icy shard | 20 | new |
-| `orb.png` | Shadow Orb Shield orb: a round violet orb (not pointed; it doesn't rotate) | 18 | new |
-| `enemy_arrow.png` | Covenant arrow: an ivory shaft with a gold head | 20 | new |
-| `radiant_bolt.png` | Covenant holy bolt: a gold and holy-white spark | 20 | new |
+| `shadow_bolt.png` | Shadow Bolt: a violet bolt with a pale core and a short trail | 22 | done |
+| `void_bolt.png` | Void Barrage bolt: a black-violet core with a violet trail | 32 | done |
+| `void_shard.png` | Void shard: a tiny violet crystal splinter | 16 | done |
+| `bone_spear.png` | Bone Spear: a sharpened bone javelin | 26 | done |
+| `ossuary_lance.png` | Ossuary Lance: a huge bone lance wrapped in violet energy | 46 | done |
+| `arrow.png` | Skeleton Archer arrow: a bone shaft with a teal soul-fire head | 22 | done |
+| `mage_orb.png` | Undead Mage orb: an arcane-blue orb with a pale core (the Mage's colour since the art pass) | 22 | done |
+| `priest_bolt.png` | Mender / Warder bolt: a small teal mote | 14 | done |
+| `frost_bolt.png` | Frost Wraith bolt: a pale icy shard | 22 | done |
+| `orb.png` | Shadow Orb Shield orb: a round violet orb (not pointed; it doesn't rotate) | 18 | done |
+| `enemy_arrow.png` | Covenant arrow: an ivory shaft with a gold head | 20 | done |
+| `radiant_bolt.png` | Covenant holy bolt: a gold and holy-white spark | 20 | done |
 
 ### Icons (`assets/sprites/icons/`, 32×32 art px)
 

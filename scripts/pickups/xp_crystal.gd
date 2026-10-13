@@ -29,6 +29,12 @@ func _draw() -> void:
 	# Bigger / bluer crystals are worth more.
 	var s := 3.5 + minf(float(value), 10.0) * 0.45
 	var col := Palette.NECRO_GREEN if value < 3 else (Palette.COLD_BLUE if value < 8 else Palette.VIOLET)
+	# Sprite art per value tier (same thresholds as the colours), over the same faint glow.
+	var key := "pickups/xp_crystal_s" if value < 3 else ("pickups/xp_crystal_m" if value < 8 else "pickups/xp_crystal_l")
+	if SpriteBank.has(key):
+		draw_circle(Vector2.ZERO, s * 1.4, Color(col, 0.15))
+		SpriteBank.draw_flat(self, key, Vector2.ZERO, 0.0)
+		return
 	var pts := PackedVector2Array([Vector2(0, -s * 1.3), Vector2(s, 0), Vector2(0, s * 1.3), Vector2(-s, 0)])
 	draw_circle(Vector2.ZERO, s * 1.4, Color(col, 0.15))
 	draw_colored_polygon(pts, col)

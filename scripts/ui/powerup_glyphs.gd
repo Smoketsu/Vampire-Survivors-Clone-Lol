@@ -35,6 +35,9 @@ static func draw_token(ci: CanvasItem, kind: String, c: Vector2, r: float, age: 
 	var pulse := 0.5 + 0.5 * sin(age * 5.0)  # 0..1 ring pulse.
 	ci.draw_circle(c + Vector2(0, r * 0.9), r * 0.9, Color(0, 0, 0, 0.35))
 	ci.draw_circle(c, r * (1.45 + 0.15 * pulse), Color(col, 0.10 + 0.08 * pulse))
+	# Medallion art (pickups/pu_<kind>.png) replaces the disc, ring and icon; the pulse stays.
+	if SpriteBank.draw_flat(ci, "pickups/pu_" + kind, c, 0.0):
+		return
 	ci.draw_circle(c, r, TOKEN_BG)
 	ci.draw_arc(c, r, 0.0, TAU, 24, Color(col, 0.75 + 0.25 * pulse), 1.5)
 	draw_icon(ci, String(def.get("icon", "")), c, r * 0.95)

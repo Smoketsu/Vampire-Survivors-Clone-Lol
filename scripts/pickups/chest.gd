@@ -32,4 +32,12 @@ func tick(delta: float) -> void:
 
 
 func _draw() -> void:
+	if SpriteBank.has("pickups/chest"):
+		# Sprite art over the code chest's shadow and pulsing gold glow (the ChestPanel reveal stays code-drawn).
+		var s := ChestData.SIZE  # Half-width of the code chest (px), sizes the shadow and glow.
+		var pulse := 0.5 + 0.5 * sin(age * 4.0)  # 0..1 glow pulse, as in PowerupGlyphs.draw_chest().
+		draw_circle(Vector2(0, s * 0.7), s * 1.1, Color(0, 0, 0, 0.35))
+		draw_circle(Vector2.ZERO, s * (1.5 + 0.15 * pulse), Color(Palette.GOLD, 0.10 + 0.08 * pulse))
+		SpriteBank.draw_flat(self, "pickups/chest", Vector2.ZERO, 0.0)
+		return
 	PowerupGlyphs.draw_chest(self, Vector2.ZERO, ChestData.SIZE, age, 0.0)
