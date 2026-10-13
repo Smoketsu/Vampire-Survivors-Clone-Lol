@@ -215,13 +215,15 @@ static func _flat(kind: String, accent: String, state: String) -> StyleBox:
 	return box(f[0], f[2], f[3])
 
 
-## Flat style box with a border and rounded corners.
+## Flat style box with a border and cut (chamfered) corners, like the pixel UI
+## kit frames and icon badges (owner request). It is the fallback when a UI kit PNG is missing.
 static func box(bg: Color, border: Color, border_width: int = 2) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = bg
 	sb.border_color = border
 	sb.set_border_width_all(border_width)
-	sb.set_corner_radius_all(6)
+	sb.set_corner_radius_all(6)  # Corner cut depth, px.
+	sb.corner_detail = 1  # One segment per corner: a straight 45° cut instead of a rounded arc.
 	sb.content_margin_left = 10
 	sb.content_margin_right = 10
 	sb.content_margin_top = 6

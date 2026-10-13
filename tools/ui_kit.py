@@ -222,17 +222,18 @@ def make_frames(center: int, slices: dict) -> dict:
     img = ring_frame(n, [("soul", "soul"), ("soul_glow", "soul_glow"), ("soul_glow", "soul")], None, 2)
     stamp(img, FOCUS_CORNER, ("soul_glow", "soul_glow", "ink_green"))
     out["focus_soul_normal"] = img
-    # HUD slot socket: recessed (lit bottom-right), dark fill.
+    # HUD slot socket: recessed (lit bottom-right), dark fill; chamfer 3 so the cut corner reads around the
+    # cut-corner icon badges (owner decision: cut corners on every UI element).
     n = 2 * slices["slot"] + center
     out["slot_grey_normal"] = ring_frame(n, [("ink_cold", "ink_cold"), ("grey_dark", "grey"),
-                                              ("ink_cold", "ink_cold")], FILL["socket"], 1)
+                                              ("ink_cold", "ink_cold")], FILL["socket"], 3)
     # HUD bar frame: outline + bevelled violet edge, open centre (the code fill shows through).
     n = 2 * slices["bar"] + center
-    out["bar_violet_normal"] = ring_frame(n, [("ink_violet", "ink_violet"), ("violet", "violet_deep")], None, 1)
+    out["bar_violet_normal"] = ring_frame(n, [("ink_violet", "ink_violet"), ("violet", "violet_deep")], None, 2)
     # Tooltip: bone ring.
     n = 2 * slices["tip"] + center
     out["tip_bone_normal"] = ring_frame(n, [("ink_warm", "ink_warm"), ("bone", "bone_mid"),
-                                             ("ink_violet", "ink_violet")], FILL["base"], 1)
+                                             ("ink_violet", "ink_violet")], FILL["base"], 2)
     # Scroll bar track and grabber.
     n = 2 * slices["scroll"] + center
     out["scroll_violet_normal"] = ring_frame(n, [("ink_violet", "ink_violet"), ("violet_deep", "violet_deep")],
