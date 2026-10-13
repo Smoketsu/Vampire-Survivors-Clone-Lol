@@ -482,10 +482,10 @@ Crimson, ivory and warm steel; gold for elites, the Sanctum kinds and the Reckon
 |---|---|---|---|
 | `recruit.png` | Covenant Recruit (Anchor 3): kettle helm, crimson tabard over ivory, a tall spear. Signature: the spear | 50 (body 40, spear above) | done |
 | `footman.png` | Crimson Footman: heavy warm-steel armour, a crimson kite shield, a sword. Signature: the kite shield | 48 | done |
-| `archer.png` | Zealous Archer: ivory-and-crimson archer with a tall longbow. Signature: the longbow | 40 | to redo |
-| `chaplain.png` | Covenant Chaplain: ivory robes, a gold censer, a faint holy glint. Signature: the censer | 42 | to redo |
-| `purifier.png` | Purifier: a warm-steel mask, a flaming torch-censer (flame). Signature: the flame | 44 | to redo |
-| `templar.png` | Templar Knight: gold-trimmed heavy knight, a lance, a crimson cape. Signature: the lance | 52 | to redo |
+| `archer.png` | Zealous Archer: ivory-and-crimson archer with a tall longbow. Signature: the longbow | 50 (body 40, longbow above) | done |
+| `chaplain.png` | Covenant Chaplain: ivory robes, a gold censer, a faint holy glint. Signature: the censer | 42 | done |
+| `purifier.png` | Purifier: a warm-steel mask, a flaming torch-censer (flame). Signature: the flame | 44 | done |
+| `templar.png` | Templar Knight: gold-trimmed heavy knight, a lance, a crimson cape. Signature: the lance | 78 (body 52, lance above) | done |
 | `inquisitor.png` | Inquisitor of the End (Reckoning): towering, radiant gold and holy white, faceless (glow allowed) | 64 | to redo |
 | `shieldbearer.png` | Covenant Shieldbearer: a huge crimson tower shield covering the body. Signature: the tower shield | 50 | to redo |
 | `banner_bearer.png` | Banner Bearer: a tall crimson-and-gold war banner on a pole. Signature: the banner | 50 | to redo |
