@@ -63,7 +63,7 @@ const HEIGHTS: Dictionary = {
 	"player/grave_herald_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
 	"summons/warrior": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/archer": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"summons/mage": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"summons/mage": 46.0,  # TUNING (not in GDD) art pass: 44 before; the orb staff rises above the hood (body ~44)
 	"summons/mender": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/warder": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/bishop": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size
