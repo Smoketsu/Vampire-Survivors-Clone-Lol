@@ -388,7 +388,7 @@ Effects are short **smooth** animations processed with `--anim` (strips of squar
 pixel-art style with palette colours, but the engine scales each one to its gameplay radius with
 plain linear filtering (`SpriteBank.draw_anim()`), not through the sharp-pixel shader. That is
 deliberate: the same strip plays at many sizes (area passives, Zoom Close), from a 40 px Soul Chains
-flash to Seraphine's 1300 px nova, so no fixed 1:1 grid fits. After the effects pass (Oct 2026) 25
+flash to Seraphine's 1300 px nova, so no fixed 1:1 grid fits. After the effects pass (Oct 2026) 28
 strips exist; the `--anim` table below lists them, their hooks and the process notes.
 
 ---
@@ -817,28 +817,31 @@ larger frames for effects drawn far above 128 px). Timing and on-screen fill are
 an effect lives as long with or without its art. Without the file, the game keeps today's drawn
 shape. Use palette colours; player effects are violet, undead teal, Covenant gold.
 
-**Status:** *done* = strip in the game and hooked; *new* = no art and no hook yet. **Px** = stored
-frame size. **Hook** = where it plays (all through `EffectManager`: `ring()`, `pop()`,
-`spawn_ring()`, `abyss()`, `impact()` with an anim id).
+**Status:** *done* = strip in the game and hooked. **Px** = stored frame size. **Hook** = where it
+plays (all through `EffectManager`: `ring()`, `pop()`, `spawn_ring()`, `abyss()`, `impact()` with an
+anim id, or `burst()` for the art-only effects that never had a drawn shape: `bolt_impact`,
+`level_up`, `evolution`, drawn by `AnimBursts` outside the Effect pool, nothing without the art).
+`ring_under()` is a drawn ring that hides while a strip covers it (the inner rings under
+`abyssal_burst` and `soul_nova`).
 
 | Id | Effect | Frames | Px | Hook | Status |
 |---|---|---|---|---|---|
 | `shadow_blast` | Shadow Blast: a violet shockwave ring bursting outward from a dark centre, then fading to wisps | 8 | 128 | Shadow Blast cast | done |
-| `abyssal_detonation` | Abyssal Detonation first hit: the black-violet vortex collapsing (frames 3, 2, 1 of the sheet, reversed) | 3 | 256 | `abyss()` at the first hit | done |
+| `abyssal_detonation` | Abyssal Detonation first hit: the black-violet vortex spinning inward and collapsing (the sheet's largest vortex turned 150° and shrunk over 8 frames) | 8 | 256 | `abyss()` at the first hit | done |
 | `abyssal_burst` | Abyssal Detonation second hit: the vortex exploding into pale violet sparks and a thin ring, fading to wisps (frames 4-10 of the same sheet) | 7 | 256 | second-hit ring | done |
 | `corpse_explosion` | Corpse Explosion: a burst of bone shrapnel and dark gore mist | 8 | 192 | burst ring | done |
 | `grave_eruption` | Grave Eruption: bone spikes stabbing up from the ground in a ring around an empty centre, then crumbling | 8 | 192 | burst ring (evolved) | done |
-| `bolt_impact` | Shadow Bolt hit: a small violet splash with sparks | 6 | | none (no drawn hit effect to replace) | new |
+| `bolt_impact` | Shadow Bolt hit: a small violet splash with sparks (subtle, about 20 px) | 6 | 128 | `burst()` on each Shadow Bolt / Void Bolt / Void Shard hit (`ProjectileManager._friendly_hits()`) | done |
 | `summon_rise` | Summon rising: teal soul-fire swirling up from a grave-dirt circle (circle at the feet) | 8 | 128 | `spawn_ring()` of a summon / temporary summon | done |
 | `undead_death` | Undead destroyed: bones scattering and a teal soul wisp rising | 6 | 128 | `pop()` when a summon falls | done |
 | `enemy_death` | Covenant soldier dies: a crimson-and-ivory burst fading into gold motes | 6 | 128 | `pop()` in `CombatResolver._kill_enemy()` | done |
 | `holy_impact` | Covenant hammer / boss slam: a gold radiant shockwave with ivory dust | 8 | 192 | `impact()`: Alaric's Hammerfall and Judgment, the Cathedral Guardian's slam, Seraphine's holy circles and nova centre | done |
 | `soul_nova` | Soul Nova: a huge thin violet ring with teal and violet soul wisps riding it, expanding across the screen, then dissolving (built from one 1024 px ring image, `art_source/effects/soul_nova_ring.png`) | 10 | 512 | Soul Nova power-up ring | done |
-| `level_up` | Level-up: a column of violet light with rising runes | 8 | | | new |
+| `level_up` | Level-up: a tall column of violet light with rising runes, its base on the frame's bottom row (at the necromancer's feet) | 8 | 192 | `burst()` following the necromancer when `Game.add_xp()` gains a level (plays on once the card is picked) | done |
 | `frost_shatter` | Winter Revenant shatter: a frozen body bursting into pale icy shards, then glittering frost | 6 | 128 | Revenant shatter | done |
 | `frost_nova` | Winter Revenant death nova: a ring of freezing frost racing outward from a cold-white centre | 8 | 128 | Revenant death nova | done |
 | `chest_open` | Treasure chest bursting open with violet light and bone-coloured sparks (light only, no chest) | 8 | 192 | `Game.open_chest()` ring (plays once the reveal closes) | done |
-| `evolution` | Evolution: a dark vortex collapsing into a bright violet-gold flash | 10 | | | new |
+| `evolution` | Evolution: a dark vortex collapsing into a bright violet-gold flash (vortex frames reordered into a collapse) | 10 | 192 | `burst()` following the necromancer when a chest grants an evolution (`Game.open_chest()`) | done |
 | `dread_rally` | Dread Rally: a deep violet shockwave bursting out of a skull-shaped flare, souls streaking outward, then fading to dark wisps | 10 | 256 | Dread Rally burst | done |
 | `grave_step_trail` | Grave Step departure: a puff of violet shadow smoke left where the necromancer stepped from, curling and thinning away | 6 | 128 | Grave Step | done |
 | `seraphine_nova` | Seraphine's Judgment nova: a thin gold and ivory ring of holy light racing outward with sun-ray streaks, then dissolving into motes (centre empty: the `holy_impact` flash plays there) | 9 | 512 | Judgment nova | done |
@@ -848,18 +851,21 @@ frame size. **Hook** = where it plays (all through `EffectManager`: `ring()`, `p
 | `bone_wall_rise` | Bone Wall: one cluster of bone spikes bursting up out of cracked grave dirt, with a puff of dust | 6 | 128 | each segment rising | done |
 | `bone_wall_burst` | Charnel Bastion expiring: a bone-spike cluster exploding into flying bone shrapnel with a violet flash | 8 | 128 | each segment bursting | done |
 | `wither_aura` | One Wither pulse: a thin ring of moss-green decay mist racing outward and dissolving into falling motes (centre empty) | 8 | 256 | each pulse | done |
-| `doom_burst` | Doom Brand detonation: a green brand sigil flaring and bursting into a ring of violet doom-fire | 8 | 128 | each branded death | done |
+| `doom_burst` | Doom Brand detonation: a violet brand sigil (Death Mark is the player's violet) flaring and bursting into a ring of violet doom-fire | 8 | 128 | each branded death | done |
 | `raise_dead` | Raise Dead: grave dirt cracking open and a teal soul-fire swirl as a skeletal hand claws up (mound at the feet) | 8 | 128 | each raised skeleton | done |
 | `legion_burst` | Legion of Bones: a crumbling skeleton bursting into a ring of bone shards and dust | 8 | 128 | each skeleton's burst | done |
 
-**How the effects pass made them** (Oct 2026, `tools/gen_image.py`, 24 images for 24 strips): one
+**How the effects pass made them** (Oct 2026, `tools/gen_image.py`, 24 images for 24 strips, then
+a second pass of 3 images for `bolt_impact`, `level_up` and `evolution`): one
 API sheet per effect at 1536×1024 with the anchors and the Shadow Blast sheet as style references:
 6 frames in one row, 8 as a 4×2 grid, 10 as a 5×2 grid (grids give larger frames). Each sheet was
 then normalised before `--anim --frames N`: rows and frames split at the widest transparent gaps
 (robust to sparks), each frame centred on its alpha centroid (or, for effects on the ground such as
 `summon_rise` and `raise_dead`, bottom-aligned so the dirt does not jump), laid out as equal cells.
-A few strips were touched up there: frames reordered or split (the Abyssal vortex reversed into an
-implosion, its burst a second strip), the last frames faded where a bright core would pop off
+A few strips were touched up there: frames reordered or split (the Abyssal sheet's burst is a
+second strip, and its largest vortex is turned and shrunk over 8 frames for a smooth implosion; the
+evolution vortex reversed into a collapse), the Doom Brand sigil's green recoloured onto the violet
+ramp by lightness, the last frames faded where a bright core would pop off
 (`doom_burst`, `holy_impact`), and one sheet that came back on a dark semi-transparent haze
 (`chest_open`) had the dark pixels keyed out. Seraphine's nova first came out as a blocky band at
 1300 px, so it and the Soul Nova are built from ONE 1024 px ring image each

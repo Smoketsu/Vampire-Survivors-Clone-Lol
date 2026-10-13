@@ -471,7 +471,7 @@ func _step_detonations(delta: float) -> void:
 			if e.active and e.position.distance_to(pos) <= r + e.radius:
 				game.combat.damage_enemy(e, float(s["damage"]) * float(s["second_damage"]), "abyss")
 		game.effects.ring(pos, r, Palette.NECRO_GREEN, 0.3, "abyssal_burst")  # The burst animation when its art exists (visual only).
-		game.effects.ring(pos, r * 0.55, Palette.VIOLET, 0.4)
+		game.effects.ring_under(pos, r * 0.55, Palette.VIOLET, 0.4, "abyssal_burst")  # Drawn only without the burst art.
 		game.shake(3.0)
 
 

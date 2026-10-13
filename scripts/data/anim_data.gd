@@ -34,7 +34,7 @@ const ANIMS: Dictionary = {
 	"legion_burst": {"duration": 0.3, "fill": 1.15},  # TUNING (not in GDD) a Legion of Bones skeleton bursting into shards (8 frames of 128 px; 0.3 s)
 	"corpse_explosion": {"duration": 0.3, "fill": 1.05},  # TUNING (not in GDD) Corpse Explosion burst (8 frames of 192 px; corpse_explosion.gd ring 0.3 s)
 	"grave_eruption": {"duration": 0.3, "fill": 1.15},  # TUNING (not in GDD) Grave Eruption bone-spike ring (8 frames of 192 px; 0.3 s)
-	"abyssal_detonation": {"duration": 0.4, "fill": 1.1},  # TUNING (not in GDD) Abyssal Detonation first hit, the vortex collapsing (3 frames of 256 px; EffectManager.abyss() 0.4 s)
+	"abyssal_detonation": {"duration": 0.4, "fill": 1.1},  # TUNING (not in GDD) Abyssal Detonation first hit, the vortex spinning inward (8 frames of 256 px built from the largest drawn vortex; EffectManager.abyss() 0.4 s)
 	"abyssal_burst": {"duration": 0.3, "fill": 1.1},  # TUNING (not in GDD) Abyssal Detonation second hit, the burst (7 frames of 256 px from the same sheet; ring 0.3 s)
 	"enemy_death": {"duration": 0.35, "fill": 1.4},  # TUNING (not in GDD) a Covenant soldier's death pop (6 frames of 128 px; EffectManager.pop() 0.35 s)
 	"undead_death": {"duration": 0.35, "fill": 1.4},  # TUNING (not in GDD) a summon's death pop (6 frames of 128 px; pop() 0.35 s)
@@ -42,7 +42,23 @@ const ANIMS: Dictionary = {
 	"holy_impact": {"duration": 0.4, "fill": 1.1},  # TUNING (not in GDD) Covenant hammer / boss slam (8 frames of 192 px; EffectManager.impact() 0.4 s)
 	"soul_nova": {"duration": 0.6, "fill": 1.33},  # TUNING (not in GDD) the Soul Nova power-up's screen ring (10 frames of 512 px built from one high-res ring; powerup_manager.gd 0.6 s; the ring peaks at 0.75 of the frame half)
 	"chest_open": {"duration": 0.6, "fill": 1.15},  # TUNING (not in GDD) a treasure chest bursting open (8 frames of 192 px; Game.open_chest() 0.6 s, seen once the reveal closes)
+	# Art-only bursts (AnimBursts, outside the Effect pool: their durations are free).
+	"bolt_impact": {"duration": 0.25, "fill": 1.1},  # TUNING (not in GDD) a Shadow Bolt / Void Bolt / Void Shard hit splash (6 frames of 128 px)
+	"level_up": {"duration": 0.8, "fill": 1.0},  # TUNING (not in GDD) the level-up column on the necromancer (8 frames of 192 px; tall art, base on the frame's bottom row)
+	"evolution": {"duration": 0.9, "fill": 1.3},  # TUNING (not in GDD) an evolution from a chest: vortex collapsing into a violet-gold flash (10 frames of 192 px)
 }
+## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
+## overwritten when full).
+const BURST_CAPACITY: int = 48  # TUNING (not in GDD)
+## Gameplay radius (px) of a spell-bolt hit splash ("bolt_impact"): small and subtle.
+const BOLT_IMPACT_RADIUS: float = 10.0  # TUNING (not in GDD)
+## Half-height (px) of the level-up column ("level_up", drawn 2x this tall).
+const LEVEL_UP_RADIUS: float = 53.0  # TUNING (not in GDD)
+## Column centre relative to the necromancer's position (px): puts its base at
+## his feet (the 56 px sprite's feet sit about 21 px below his position).
+const LEVEL_UP_OFFSET := Vector2(0.0, -29.0)  # TUNING (not in GDD)
+## Gameplay radius (px) of the evolution flash ("evolution") on the necromancer.
+const EVOLUTION_RADIUS: float = 70.0  # TUNING (not in GDD)
 ## Duration (s) for an animation id missing from ANIMS.
 const DEFAULT_DURATION: float = 0.4  # TUNING (not in GDD)
 ## Fill for an animation id missing from ANIMS.

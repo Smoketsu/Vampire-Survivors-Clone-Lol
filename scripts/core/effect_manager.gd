@@ -14,10 +14,19 @@ var active: Array[Effect] = []
 var _pool: Array[Effect] = []
 ## Total Effect nodes ever created (debug: pool health).
 var created: int = 0
+## Art-only animations without a drawn shape (bolt hits, level-up,
+## evolution): batched in one node, outside the pool and its counts (burst()).
+var bursts: AnimBursts = null
+
+
+func _ready() -> void:
+	bursts = AnimBursts.new()
+	add_child(bursts)
 
 
 ## Advances all effects and returns finished ones to the pool.
 func step(delta: float) -> void:
+	bursts.step(delta)
 	var i := 0
 	while i < active.size():
 		var e := active[i]
@@ -82,6 +91,22 @@ func slash(pos: Vector2, dir: Vector2, color: Color, size: float) -> void:
 ## AnimData duration.
 func ring(pos: Vector2, radius: float, color: Color, duration: float = 0.3, anim: String = "") -> void:
 	_tag(_spawn(Effect.Kind.RING, pos, color, radius, _anim_time(anim, duration)), anim)
+
+
+## A drawn ring that shows only while animation `cover`'s art is missing
+## (the inner ring under the Abyssal burst and the Soul Nova, which their
+## strips replace). It is spawned and lives exactly like ring() either way,
+## so effect counts do not depend on the art; it just draws nothing.
+func ring_under(pos: Vector2, radius: float, color: Color, duration: float, cover: String) -> void:
+	var e := _spawn(Effect.Kind.RING, pos, color, radius, duration)
+	if e != null:
+		e.hide_with = cover
+
+
+## Plays art-only animation `anim` once at `pos` (or on `follow` + `pos`),
+## for a gameplay radius of `radius` px (AnimBursts; nothing without the art).
+func burst(pos: Vector2, radius: float, anim: String, follow: Node2D = null) -> void:
+	bursts.play(pos, radius, anim, follow)
 
 
 ## Straight beam from `a` to `b` (priest / chaplain heals).
