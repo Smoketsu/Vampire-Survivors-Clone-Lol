@@ -30,10 +30,11 @@ any cell can sit next to any other. The pipeline:
     the strip (the road keeps its darker verges).
  3. Normalise. The source's lightness percentiles PCT_LO..PCT_HI are stretched
     over the target colours' lightness range (`l_range`, default the darkest
-    to the lightest allowed colour) and its chroma scaled so its CHROMA_PCT
-    percentile matches the allowed colours' highest chroma: the AI's brighter
-    or more saturated render lands on the floor's narrow, dark band whatever
-    its exposure.
+    to the lightest allowed colour), and its a/b (hue) cloud is moved onto the
+    allowed colours' centre and scaled to their spread (at most HUE_GAIN_MAX):
+    the AI's brighter, greyer or more saturated render lands on the floor's
+    narrow, dark band whatever its exposure, and its relative hues (greener
+    grass, browner mud) land on the matching colours.
  4. Make it tile (method "quilt"): minimum-error boundary cuts (image
     quilting). From a (N + o) square, the left o columns are replaced by the
     columns that follow column N - 1 in the source, up to a cut path (one
@@ -50,6 +51,8 @@ any cell can sit next to any other. The pipeline:
  5. Snap. Every pixel takes the nearest allowed palette colour in OKLab (a/b
     weighted by `chroma_w`, so a green moss and a brown earth of the same
     lightness stay apart; `bias` adds a per-colour distance to tune shares).
+    Or, with `shares`, exact proportions (rank_snap()): `patches` colours take
+    the pixels furthest toward their hue, the rest is cut by lightness rank.
     Layout regions (joint, stone, turf, ...) each snap to their own colours.
  6. Despeck. A pixel whose colour none of its 4 neighbours shares takes its
     8 neighbours' majority colour (wrap-aware), except the `keep` colours
@@ -135,47 +138,69 @@ MIX = [
 # One entry per output (TUNING, not in GDD: these are art choices). Keys:
 #   source      file in art_source/tiles/ (the AI image)
 #   box         (x0, y0, x1, y1) region of the source, fractions 0-1 (default: CROP margin)
-#   method      "quilt" (organic textures) or "layout" (regular joints, see LAYOUTS)
-#   colors      allowed palette colour names (quilt), or per region (layout: "regions")
+#   method      "quilt" (organic textures) or "layout" (regular joints, build_layout())
+#   colors      allowed palette colour names (quilt)
+#   shares      {colour: fraction} exact proportions by lightness rank (quilt, rank_snap());
+#               patches {colour: fraction} taken first by hue
+#   layout      the joint pattern: {"type": courses | walks | grid | voronoi, ...} (see its function)
+#   regions     layout: {region: colours}; l_ranges {region: (lo, hi)} per region
+#   cell_shift  layout: each stone reads the texture at its own seeded offset (seed)
+#   cell_l      layout: +/- per-stone OKLab L offset; bevel: L added on lit / taken on shaded edges
+#   flat        layout: each cell is one flat colour (its mean: mosaic tesserae)
 #   l_range     (lo, hi) OKLab L the source's lightness is stretched over (default: colours' range)
 #   chroma_w    snapping weight of a/b (default CHROMA_W)
 #   bias        {colour: distance} added when snapping (+ = rarer, - = more common)
-#   flatten     Gaussian sigma (art px) of the gradient removal; 0 = off
+#   flatten     Gaussian sigma (art px) of the gradient removal; 0 = off; flatten_axis "xy" / "x"
 #   overlap     quilting overlap (art px)
 #   keep        colours the despeck keeps as single pixels (accents)
 #   variants    list of {"source", "box"} for tiles/<name>_2, _3
 #   road        (width, height): a road strip instead of a square tile; "fray" px
+#   sheet_floors  road: the zone tiles its check sheet lays it over
+
+# Variant sources are 1536x1024 images (ART_BIBLE: "<zone>_v" prompts); _2 and
+# _3 are its left and right squares, at the base tiles' scale (~6.5 source px
+# per art px: 832 source px -> 128 art px), overlapping only in the middle.
+VARIANT_BOXES = [(0.02, 0.06, 0.56, 0.87), (0.44, 0.06, 0.98, 0.87)]
+
+
+def halves(src: str) -> list:
+    """The two variant entries (tiles/<zone>_2, _3) cut from variant source `src`."""
+    return [{"source": src, "box": b} for b in VARIANT_BOXES]
+
+
 RECIPES = {
     "march_burned": {
-        "source": "march_burned.png", "method": "quilt",
+        "source": "march_burned.png", "variants": halves("march_burned_v.png"), "method": "quilt",
         "colors": ["ink_warm", "floor_earth", "floor_ash", "floor_stone", "ink_red"],
         "l_range": (0.19, 0.30), "bias": {"floor_ash": -0.008},
         "keep": ["ink_red", "floor_stone"],
     },
     "march_checkpoint": {
-        "source": "march_checkpoint.png", "method": "quilt",
+        "source": "march_checkpoint.png", "variants": halves("march_checkpoint_v.png"), "method": "quilt",
         "colors": ["ink_green", "floor_grass", "floor_moss", "floor_earth"],
         "shares": {"ink_green": 0.06, "floor_grass": 0.80, "floor_moss": 0.14}, "patches": {"floor_earth": 0.10},
     },
     "march_camp": {
         "source": "march_camp.png", "method": "quilt",
+        # One variant only (the right half, fewer wheel tracks): tracks in 40% of the cells read as a pattern.
+        "variants": halves("march_camp_v.png")[1:],
         "colors": ["ink_warm", "floor_earth", "floor_dirt", "floor_stone", "brown"],
         "l_range": (0.19, 0.30), "bias": {"brown": 0.03},
         "keep": ["brown", "floor_stone"],
     },
     "march_fortress": {
-        "source": "march_fortress.png", "method": "quilt",
+        "source": "march_fortress.png", "method": "quilt",  # No variants: the variant source's cobbles came out inverted.
         "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_stone"],
     },
     "sanctum_courtyard": {
-        "source": "sanctum_courtyard.png", "method": "layout",
+        "source": "sanctum_courtyard.png", "variants": halves("sanctum_courtyard_v.png"), "method": "layout",
         "layout": {"type": "courses", "rows": [32, 32, 32, 32], "joint": 1,
                    "slabs": [[48, 40, 40], [36, 56, 36], [44, 44, 40], [40, 48, 40]], "offsets": [0, 20, 8, 30]},
         "regions": {"stone": ["floor_ash", "floor_stone"], "joint": ["floor_soil", "floor_grass"]},
         "bias": {"floor_grass": 0.0}, "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
     },
     "sanctum_halls": {
-        "source": "sanctum_halls.png", "method": "layout",
+        "source": "sanctum_halls.png", "variants": halves("sanctum_halls_v.png"), "method": "layout",
         "layout": {"type": "grid", "step": 8, "joint": 1, "lattice": 8},
         "regions": {"stone": ["floor_earth", "floor_ochre", "floor_dirt"], "inlay": ["floor_dirt"],
                     "node": ["brown"], "joint": ["floor_earth"]},
@@ -183,7 +208,7 @@ RECIPES = {
         "flat": True, "cell_l": 0.006,
     },
     "sanctum_cloisters": {
-        "source": "sanctum_cloisters.png", "method": "layout",
+        "source": "sanctum_cloisters.png", "variants": halves("sanctum_cloisters_v.png"), "method": "layout",
         "layout": {"type": "walks", "walk": 16, "slab": 32},
         "regions": {"turf": ["ink_green", "floor_grass", "floor_moss"], "stone": ["floor_ash", "floor_stone"],
                     "joint": ["floor_soil"]},
@@ -191,7 +216,7 @@ RECIPES = {
         "chroma_w": 3.0, "cell_l": 0.01, "bevel": 0.01,
     },
     "sanctum_sanctuary": {
-        "source": "sanctum_sanctuary.png", "method": "layout",
+        "source": "sanctum_sanctuary.png", "variants": halves("sanctum_sanctuary_v.png"), "method": "layout",
         "layout": {"type": "grid", "step": 64, "joint": 1, "stagger": 32},
         "regions": {"stone": ["floor_slate", "floor_marble", "grey_dark"], "joint": ["floor_soil"]},
         "l_ranges": {"stone": (0.25, 0.33)}, "bias": {"grey_dark": 0.02},
@@ -609,13 +634,35 @@ def default_box() -> tuple:
     return (CROP, CROP, 1.0 - CROP, 1.0 - CROP)
 
 
-def texture(rec: dict, pal: Palette, allowed: list, src: str, box, w: int, h: int, periodic: bool) -> np.ndarray:
+def source_lab(rec: dict, src: str, box, w: int, h: int) -> np.ndarray:
+    """Steps 1-2: the source region reduced to (h, w) px, in OKLab, flattened."""
+    lab = srgb_to_oklab(to_grid(load_source(SOURCE_DIR / src), box, w, h))
+    return flatten(lab, rec.get("flatten", FLATTEN), rec.get("flatten_axis", "xy"))
+
+
+def match_hist(lab: np.ndarray, ref: np.ndarray) -> np.ndarray:
+    """Maps each OKLab channel of `lab` onto the value distribution of `ref`
+    (quantile mapping): a variant source keeps its own shapes but takes the
+    base source's lightness and hue spread, so a variant whose AI render came
+    out darker or bluer still lands on the base tile's colour shares."""
+    out = np.empty_like(lab)
+    q = np.linspace(0.0, 1.0, 257)
+    for ch in range(3):
+        src_q = np.quantile(lab[..., ch], q)
+        ref_q = np.quantile(ref[..., ch], q)
+        out[..., ch] = np.interp(lab[..., ch], src_q, ref_q)
+    return out
+
+
+def texture(rec: dict, pal: Palette, allowed: list, src: str, box, w: int, h: int, periodic: bool,
+            ref: np.ndarray = None) -> np.ndarray:
     """Steps 1-4: the source region as an OKLab texture of (h, w) px; periodic
-    (quilted) when `periodic`, else just reduced (variants, layouts' variant fills)."""
+    (quilted) when `periodic`, else just reduced (variants). With `ref` (the
+    base tile's flattened source) its distribution is matched to it first."""
     o = rec.get("overlap", OVERLAP) if periodic else 0
-    rgb = to_grid(load_source(SOURCE_DIR / src), box, w + o, h + (o if rec.get("road") is None else 0))
-    lab = srgb_to_oklab(rgb)
-    lab = flatten(lab, rec.get("flatten", FLATTEN), rec.get("flatten_axis", "xy"))
+    lab = source_lab(rec, src, box, w + o, h + (o if rec.get("road") is None else 0))
+    if ref is not None:
+        lab = match_hist(lab, ref)
     if rec["method"] == "quilt":
         lab = normalise(lab, pal, allowed, rec.get("l_range"))
     if periodic:
@@ -623,19 +670,19 @@ def texture(rec: dict, pal: Palette, allowed: list, src: str, box, w: int, h: in
     return lab
 
 
-def render_tile(rec: dict, pal: Palette, src: str, box, periodic: bool) -> np.ndarray:
-    """A tile (or road strip) as palette indices (steps 1-6)."""
+def render_tile(rec: dict, pal: Palette, src: str, box, periodic: bool, ref: np.ndarray = None) -> np.ndarray:
+    """A tile (or road strip) as palette indices (steps 1-6); `ref`: see texture()."""
     w, h = rec.get("road", (TILE, TILE))
     if rec["method"] == "quilt":
         allowed = [pal.index_of[c] for c in rec["colors"]]
-        lab = texture(rec, pal, allowed, src, box, w, h, periodic)
+        lab = texture(rec, pal, allowed, src, box, w, h, periodic, ref)
         if rec.get("shares"):
             idx = rank_snap(lab, pal, rec["shares"], rec.get("patches", {}))
         else:
             idx = snap(lab, pal, allowed, rec.get("chroma_w", CHROMA_W), rec.get("bias", {}))
     else:
         allowed = sorted({pal.index_of[c] for cs in rec["regions"].values() for c in cs})
-        tex = texture(rec, pal, allowed, src, box, w, h, periodic)
+        tex = texture(rec, pal, allowed, src, box, w, h, periodic, ref)
         cell, region = build_layout(w, h, rec["layout"])
         idx = fill_layout(tex, cell, region, rec, pal)
     keep = {pal.index_of[c] for c in rec.get("keep", [])}
@@ -702,7 +749,7 @@ def report(name: str, idx: np.ndarray, pal: Palette, alpha=None, axes: str = "xy
     shares = ", ".join(f"{pal.names[i]} {100 * c / sel.size:.0f}%" for i, c in cnt.most_common())
     mean_l = float(pal.lab[sel][..., 0].mean())
     seams = " ".join(f"{a} {seam_ratio(idx, pal, 1 if a == 'x' else 0):.2f}" for a in axes)
-    seam = f"seam {seams}" if seams else "periodic layout"
+    seam = f"seam {seams}" if seams else "no seam ratio (layout or variant)"
     return f"{name}: {idx.shape[1]}x{idx.shape[0]}, mean L {mean_l:.3f}, {seam}; {shares}"
 
 
@@ -729,8 +776,10 @@ def build(name: str, pal: Palette) -> None:
     axes = "" if rec["method"] == "layout" else ("x" if rec.get("road") else "xy")  # Wraps the seam ratio means something on.
     print(report(name, idx, pal, alpha, axes))
     keep = {pal.index_of[c] for c in rec.get("keep", [])}
+    o = rec.get("overlap", OVERLAP)
+    ref = source_lab(rec, rec["source"], rec.get("box", default_box()), TILE + o, TILE + o)  # Base source, for match_hist().
     for i, v in enumerate(rec.get("variants", [])):
-        var = render_tile(rec, pal, v["source"], v.get("box", default_box()), periodic=False)
+        var = render_tile(rec, pal, v["source"], v.get("box", default_box()), periodic=False, ref=ref)
         merged = merge_variant(idx, var, pal, keep)
         vname = f"{name}_{i + 2}"
         edges_same = all(np.array_equal(a, b) for a, b in (
