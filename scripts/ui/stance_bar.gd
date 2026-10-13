@@ -26,7 +26,7 @@ const KEY_FONT: int = 11
 ## Font size of the stance banner when the Jacquard banner font is missing
 ## (with it, the banner is Jacquard 24 at UiArtData.BANNER_SIZE).
 const BANNER_FONT: int = 26
-## Font size of the locked banner (Pixelify Sans, a clean size).
+## Font size of the locked banner (pixel font, UiTheme.pixel_text()).
 const LOCKED_FONT: int = 16
 ## Banner centre below the screen centre (px), i.e. under the necromancer.
 const BANNER_DROP: float = 70.0
@@ -80,7 +80,7 @@ func _refresh_banner(st: ArmyStance) -> void:
 	_banner.visible = true
 	if locked:
 		_banner.text = StanceData.LOCKED_TEXT
-		UiTheme.pixel_text(_banner, LOCKED_FONT)  # Pixelify for the locked sentence.
+		UiTheme.pixel_text(_banner, LOCKED_FONT)  # The pixel font for the locked sentence.
 		_banner.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.4))
 	else:
 		_banner.text = String(st.def()["display_name"]).to_upper()
@@ -117,4 +117,4 @@ func _draw() -> void:
 			draw_rect(rect, Color(0, 0, 0, 0.38))
 		var key := Settings.key_name(StanceData.ACTIONS[i])  # Bound key ("1").
 		var key_col := UiTheme.TEXT if id == st.current else UiTheme.TEXT_DIM
-		draw_string(font, Vector2(rect.end.x + 4.0, rect.get_center().y + 4.0), key, HORIZONTAL_ALIGNMENT_LEFT, -1.0, KEY_FONT, key_col)
+		draw_string(font, Vector2(rect.end.x + 4.0, rect.get_center().y + 4.0), key, HORIZONTAL_ALIGNMENT_LEFT, -1.0, UiTheme.font_px(KEY_FONT), key_col)

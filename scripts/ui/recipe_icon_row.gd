@@ -14,9 +14,9 @@ extends HBoxContainer
 const ICON: float = 32.0
 ## Gap (px) between an icon and a "+" / "=" sign.
 const GAP: int = 4
-## Font size (px) of the "+" and "=" signs: drawn from the 23 px raster (at the
-## 11 px one the "=" bars merge into a block, UiArtData.PIXEL_EMS).
-const SIGN_FONT: int = 23
+## Font size (px) of the "+" and "=" signs, as the UI scripts size text (the
+## pixel font at UiTheme.font_px(): 28 px, its x1.5 size).
+const SIGN_FONT: int = 22
 
 
 ## The icon row for evolution `evo_id`, or null when the card must show

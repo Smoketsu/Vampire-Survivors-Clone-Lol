@@ -1004,15 +1004,20 @@ logo's O (shield, skull, flame) onto a 64×64 dark violet badge, saved 2× (128 
 
 **Fonts** (font pass; numbers in `UiArtData`, logic in `UiTheme`):
 
-- **Pixelify Sans Bold** (HUD, numbers, headings, labels, buttons, card names) is a pixel-style font on
-  an off-grid ~11.5 px em. A glyph-topology check (every digit, letter, `%`, `+`, `:` rasterised in mono
-  at 1:1 for sizes 9-48 and compared with the true outline) found it clean only at **11, 23, 24 and
-  27+ px**; at 12-22 px a "2" fills into an "8", "C" closes into "O" and "G" into "Q", and grayscale
-  anti-aliasing at the window resolution only fades the gaps. So its glyphs are always rasterised at a
-  clean pixel em (`UiArtData.PIXEL_EMS` = 11 for text under 23 px, 23 above; `FontFile.fixed_size`) and
-  scaled to each label's own size, mono, through the sharp-pixel shader (on every Label, Button and
-  HUD widget). Every glyph is correct at every window size, every label keeps its size (no layout
-  moves), and the pixels stay even like the sprites'.
+- **Jersey 10** (HUD, numbers, headings, labels, buttons, card names, the recipe row's signs and the
+  in-world damage numbers; owner pick from 9 pixel fonts, replacing Pixelify Sans Bold, whose "2" read
+  as "8" and "5" as "S"). It is a true grid font: every outline point sits on a 75-unit grid of its
+  1400-unit em, so 1 font pixel = em / 18.67, capitals are 10 font px tall. Rasterised in mono at
+  **19 px** (`UiArtData.PIXEL_EM`, through `FontFile.fixed_size`) one font pixel is 1.018 texels, so
+  every glyph lands exactly 1 texel per font pixel (a glyph-topology check over sizes 9-48 found every
+  digit, letter, `%`, `+`, `=` clean from 18 px up; at 9-17 px 3, 5, 6, G and S break). Labels use only
+  **19, 28, 38 and 57 px** (`UiArtData.PIXEL_SIZES`: 1, 1.5, 2 and 3 layout px per font pixel; never
+  smaller, shrinking would blur), drawn from that one raster through the sharp-pixel shader on every
+  Label, Button, HUD widget and the effects layer. The UI scripts keep their old sizes;
+  `UiTheme.font_px()` maps each to the nearest of those with the same cap height (× 1.31), so small
+  labels grew about 20-30% and the screens were checked to still fit at 1280×720. The font's empty
+  line slack (a 20 font px line box for 14 font px of ASCII) is trimmed by 2 px top and bottom
+  (`UiArtData.LINE_TRIM`, a FontVariation).
 - **Jacquard 24** (event, zone, stance and evolution banners): its outlines sit on a 30-unit grid of a
   1290-unit em, so it is drawn only at **43 px** (its pixel em, rasterised at layout size). Long banners
   wrap at 680 px; the stance word is shown in title case (blackletter capitals read poorly).
@@ -1021,3 +1026,5 @@ logo's O (shield, skull, flame) onto a 64×64 dark violet badge, saved 2× (128 
   any window scale.
 - Both pixel fonts are imported with anti-aliasing, hinting and subpixel positioning off and
   oversampling 1.0 (rasterised at layout size, not at layout size × window scale).
+- Credits: Jersey 10 © 2023 The Soft Type Project Authors and Jacquard 24, both SIL Open Font License
+  1.1 (`assets/fonts/OFL-Jersey10.txt`, `OFL-Jacquard24.txt`).

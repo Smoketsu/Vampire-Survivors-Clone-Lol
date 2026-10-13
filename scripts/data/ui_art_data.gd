@@ -53,39 +53,54 @@ const FOCUS_EXPAND: float = 3.0  # TUNING (not in GDD) art pass UI kit
 ## it holds (IconGlyph.slot_frame).
 const SLOT_EXPAND: float = 2.0  # TUNING (not in GDD) art pass UI kit
 
-## --- Pixel fonts (owner choice, GDD §15.0 "Pixel fonts", option 13) --------
-## Pixelify Sans Bold is a pixel-style font whose "pixels" sit on an em of
-## about 11.5 px, with bold strokes and thin gaps off that grid. A scratch
-## glyph-topology check (every digit, letter, %, + and : rasterised in mono at
-## 1:1, sizes 9-48, compared with the true outline: same strokes, same holes)
-## found it clean only at 11, 23, 24 and 27+ px; at 12-22 px a "2" fills into
-## an "8", "C" closes into "O", "G" into "Q" (grayscale anti-aliasing at the
-## window resolution does not save those sizes either: the gaps fade out).
-## Godot's default oversampling also rasterises at layout size x window
-## scale (x1.5 at 1080p), i.e. often at those broken sizes. So the glyphs are
-## always rasterised at one of the font's clean pixel ems (PIXEL_EMS, through
-## FontFile.fixed_size: the raster is scaled to whatever size a label asks
-## for), mono, and the sharp-pixel shader on every Label, Button and HUD
-## widget (UiTheme._SharpHook, SpriteBank.apply_sharp()) enlarges them evenly
-## at any window scale, like the sprites. Every label keeps its own size, so
-## the layouts do not move; every glyph is correct at every window size.
+## --- Pixel fonts (owner choices, GDD §15.0 "Pixel fonts") ---------------
+## Jersey 10 is a true grid pixel font: every outline point sits on a
+## 75-unit grid of its 1400-unit em, so one font pixel = em / 18.67 and its
+## capitals are 10 font px tall. Rasterised in mono at 19 px, one font pixel
+## is 1.018 texels, so every glyph (well under 27 font px) lands exactly 1
+## texel per font pixel (a scratch glyph-topology check over sizes 9-48 found
+## every digit, letter, %, + and = clean from 18 px up; at 9-17 px 3, 5, 6, G
+## and S break). So:
+##   * the font is imported mono, unhinted, without subpixel positioning and
+##     with oversampling 1.0, and UiTheme draws it from ONE raster at
+##     PIXEL_EM px (FontFile.fixed_size), scaled to each label's size;
+##   * labels only use the sizes in PIXEL_SIZES (the em x1, x1.5, x2, x3), so
+##     a font pixel is a whole (or half) number of layout px, and the
+##     sharp-pixel shader on every Label, Button and HUD widget
+##     (UiTheme._SharpHook, SpriteBank.apply_sharp()) keeps the pixels crisp
+##     and even at any window scale, like the sprites;
+##   * the sizes in the UI scripts are still the ones they were written for
+##     (a 0.70-em cap height); UiTheme.font_px() turns each into the PIXEL_SIZES
+##     entry nearest the same cap height (x CAP_MATCH), so the hierarchy holds.
 ## Long descriptions keep a smooth body font instead (UiTheme.body()).
 
-## Pixelify Sans Bold: the HUD, numbers, headings, labels, buttons and card
-## names (the theme's default font).
-const FONT_PIXEL: String = "res://assets/fonts/PixelifySans-Bold.ttf"
+## Jersey 10: the HUD, numbers, headings, labels, buttons, card names and the
+## in-world damage numbers (the theme's default font).
+const FONT_PIXEL: String = "res://assets/fonts/Jersey10-Regular.ttf"
+
+## Raster size (px) of Jersey 10: its pixel em (18.67 px) rounded, where every
+## glyph is drawn exactly 1 texel per font pixel.
+const PIXEL_EM: int = 19  # TUNING (not in GDD) font pass: measured, pixel-exact
+
+## The only Jersey 10 sizes (layout px) used: the raster x1, x1.5, x2 and x3
+## (1, 1.5, 2 and 3 layout px per font pixel). x1 is the smallest: shrinking
+## the raster would blur it.
+const PIXEL_SIZES: Array[int] = [19, 28, 38, 57]  # TUNING (not in GDD) font pass
+
+## Line slack (px at the 19 px raster, per side) trimmed from Jersey 10's
+## line height: its 1500-unit line box (20 font px) holds ASCII glyphs that
+## span only 1050 units (14 font px), so each line would be ~45% taller than
+## its text; trimming 2 px top and bottom keeps 2 px of leading.
+const LINE_TRIM: int = 2  # TUNING (not in GDD) font pass
+
+## Requested size -> Jersey size factor that keeps the cap height the UI
+## scripts were sized for (their sizes assume caps of 0.70 em; Jersey's caps
+## are 750 / 1400 = 0.536 em: 0.70 / 0.536 = 1.31).
+const CAP_MATCH: float = 1.31  # TUNING (not in GDD) font pass
 
 ## Jacquard 24: zone and event banners (the HUD event banner, the stance
 ## banner, the synergy / evolution announcement).
 const FONT_BANNER: String = "res://assets/fonts/Jacquard24-Regular.ttf"
-
-## The clean raster sizes (px) of Pixelify Sans Bold used: its pixel em x1
-## (1 px strokes) and x2 (bold 2-3 px strokes). Text smaller than the second
-## one is drawn from the x1 raster (enlarged), larger text from the x2 raster
-## (never shrunk, so never blurred). At 11 px every letter, digit and
-## punctuation mark checked is clean except "=" (its bars merge): draw an
-## "=" at 23 px or more.
-const PIXEL_EMS: Array[int] = [11, 23]  # TUNING (not in GDD) font pass: measured clean sizes
 
 ## Jacquard 24's pixel em: its outlines sit on a 30-unit grid of a 1290-unit
 ## em, so 43 px = 1 font px per layout px, its only clean size short of 86.

@@ -13,9 +13,9 @@
 ## when the 1280x720 layout is stretched (x1.5 in a 1080p window); text drawn
 ## by the same nodes is unaffected (the shader is identity at 1:1).
 ##
-## Fonts (GDD §15.0 "Pixel fonts"; the why is in UiArtData): Pixelify Sans
-## Bold everywhere by default, always rasterised at one of its clean pixel
-## ems and scaled to the asked size (font_for(), applied by label() and
+## Fonts (GDD §15.0 "Pixel fonts"; the why is in UiArtData): Jersey 10
+## everywhere by default, always drawn from its one exact raster and scaled
+## to one of its clean sizes (font_for(), applied by label() and
 ## pixel_text()), drawn through the sharp-pixel shader (which the hook also
 ## puts on every Label); long descriptions use the clean body font (body(),
 ## Godot's default font); event banners use Jacquard 24 at its 43 px em
@@ -59,10 +59,9 @@ const FALLBACK: Dictionary = {
 static var _theme: Theme = null
 ## Cached Jacquard 24 banner font (null until first used or when missing).
 static var _banner_font: Font = null
-## Pixelify Sans Bold per clean raster size: UiArtData.PIXEL_EMS entry ->
-## FontFile drawn from that fixed raster (filled on first use; empty when the
+## Jersey 10 drawn from its fixed raster (null until first used or when the
 ## file is missing).
-static var _pixel: Dictionary = {}
+static var _pixel: Font = null
 ## Cached kit styles: "<kind>_<accent>_<state>" -> StyleBox.
 static var _styles: Dictionary = {}
 ## Gives kit-framed Controls the sharp-pixel material as they enter the tree
@@ -88,8 +87,9 @@ static func get_theme() -> Theme:
 		return _theme
 	var t := Theme.new()
 	t.default_font_size = FONT_SIZE
-	if font_for(FONT_SIZE) != null:
-		t.default_font = font_for(FONT_SIZE)  # Pixelify Sans Bold everywhere by default.
+	if font_for() != null:
+		t.default_font = font_for()  # Jersey 10 everywhere by default.
+		t.default_font_size = font_px(FONT_SIZE)
 	t.set_stylebox("normal", "Button", style("button", "violet", "normal"))
 	t.set_stylebox("hover", "Button", style("button", "violet", "hover"))
 	t.set_stylebox("pressed", "Button", style("button", "violet", "pressed"))
@@ -244,32 +244,42 @@ static func style_button(b: Button, kind: String, accent: String) -> void:
 		b.add_theme_stylebox_override("pressed", style(kind, accent, "pressed"))
 
 
-## Pixelify Sans Bold for text drawn at `size` px: a copy of the font whose
-## glyphs are always rasterised at a clean pixel em (UiArtData.PIXEL_EMS, the
-## largest one not above `size`, else the smallest) and scaled to `size`
-## (FontFile.fixed_size), so every glyph keeps its true shape. Null when the
-## font file is missing (callers then keep the theme / engine default).
-static func font_for(size: int) -> Font:
-	if not ResourceLoader.exists(UiArtData.FONT_PIXEL):
-		return null
-	var em: int = UiArtData.PIXEL_EMS[0]  # Raster size to use.
-	for e: int in UiArtData.PIXEL_EMS:
-		if e <= size:
-			em = e
-	if not _pixel.has(em):
+## The Jersey 10 size (layout px) for a requested `size` (sized for a 0.70-em
+## cap height): the UiArtData.PIXEL_SIZES entry nearest size x CAP_MATCH (ties
+## go to the smaller one). The one path for pixel-font sizes (labels, buttons,
+## HUD bars and key hints, damage numbers).
+static func font_px(size: int) -> int:
+	var want := float(size) * UiArtData.CAP_MATCH  # Same cap height in Jersey 10.
+	var best: int = UiArtData.PIXEL_SIZES[0]
+	for s: int in UiArtData.PIXEL_SIZES:
+		if absf(float(s) - want) < absf(float(best) - want):
+			best = s
+	return best
+
+
+## Jersey 10, drawn from its one exact raster (UiArtData.PIXEL_EM, through
+## FontFile.fixed_size) at whatever size it is asked for (use font_px()
+## sizes). Null when the font file is missing (callers then keep the theme /
+## engine default).
+static func font_for(_size: int = 0) -> Font:
+	if _pixel == null and ResourceLoader.exists(UiArtData.FONT_PIXEL):
 		var f := (load(UiArtData.FONT_PIXEL) as FontFile).duplicate(true) as FontFile  # Own glyph cache.
-		f.fixed_size = em
+		f.fixed_size = UiArtData.PIXEL_EM
 		f.fixed_size_scale_mode = TextServer.FIXED_SIZE_SCALE_ENABLED
-		_pixel[em] = f
-	return _pixel[em]
+		var v := FontVariation.new()  # Trims the font's empty line slack (UiArtData.LINE_TRIM).
+		v.base_font = f
+		v.spacing_top = -UiArtData.LINE_TRIM
+		v.spacing_bottom = -UiArtData.LINE_TRIM
+		_pixel = v
+	return _pixel
 
 
 ## Gives Control `c` (a Label or a Button) the pixel font for `size` px.
 static func pixel_text(c: Control, size: int) -> void:
-	var f := font_for(size)
+	var f := font_for()
 	if f != null:
 		c.add_theme_font_override("font", f)
-	c.add_theme_font_size_override("font_size", size)
+	c.add_theme_font_size_override("font_size", font_px(size) if f != null else size)
 
 
 ## Convenience: creates a Label with text, font size and colour, in the

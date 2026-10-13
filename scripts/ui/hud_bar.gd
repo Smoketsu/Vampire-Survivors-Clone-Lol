@@ -18,7 +18,8 @@ var back_color: Color = Color(0, 0, 0, 0.6)
 var border_color: Color = Color(0.45, 0.3, 0.7)
 ## Text drawn centred on the bar ("" = none).
 var text: String = ""
-## Font size of the text in px (pixel font, UiTheme.font_for()).
+## Font size of the text in px (as the UI scripts size text; drawn at
+## UiTheme.font_px() in the pixel font).
 var font_size: int = 13
 
 ## Fill bevel: how much lighter the fill's top row is (Color.lightened amount).
@@ -60,8 +61,8 @@ func _draw() -> void:
 			draw_rect(r, border_color, false, 1.0)
 	if text != "":
 		SpriteBank.apply_sharp(self)  # Pixel-font text is rasterised at layout size (UiArtData).
-		var fs := font_size
-		var font := UiTheme.font_for(fs) if UiTheme.font_for(fs) != null else get_theme_default_font()  # Pixel font.
-		var y := roundf((size.y + float(fs) * 0.75) * 0.5)  # Baseline on a whole layout px.
+		var font := UiTheme.font_for() if UiTheme.font_for() != null else get_theme_default_font()  # Pixel font.
+		var fs := UiTheme.font_px(font_size) if UiTheme.font_for() != null else font_size  # Drawn size.
+		var y := roundf((size.y + font.get_ascent(fs) - font.get_descent(fs) * 0.5) * 0.5)  # Caps centred, whole px.
 		draw_string(font, Vector2(1, y + 1), text, HORIZONTAL_ALIGNMENT_CENTER, size.x, fs, Color(0, 0, 0, 0.8))
 		draw_string(font, Vector2(0, y), text, HORIZONTAL_ALIGNMENT_CENTER, size.x, fs, Color.WHITE)
