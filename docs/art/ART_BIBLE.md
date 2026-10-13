@@ -481,7 +481,7 @@ Crimson, ivory and warm steel; gold for elites, the Sanctum kinds and the Reckon
 | File | Subject | Art px | Status |
 |---|---|---|---|
 | `recruit.png` | Covenant Recruit (Anchor 3): kettle helm, crimson tabard over ivory, a tall spear. Signature: the spear | 50 (body 40, spear above) | done |
-| `footman.png` | Crimson Footman: heavy warm-steel armour, a crimson kite shield, a sword. Signature: the kite shield | 48 | to redo |
+| `footman.png` | Crimson Footman: heavy warm-steel armour, a crimson kite shield, a sword. Signature: the kite shield | 48 | done |
 | `archer.png` | Zealous Archer: ivory-and-crimson archer with a tall longbow. Signature: the longbow | 40 | to redo |
 | `chaplain.png` | Covenant Chaplain: ivory robes, a gold censer, a faint holy glint. Signature: the censer | 42 | to redo |
 | `purifier.png` | Purifier: a warm-steel mask, a flaming torch-censer (flame). Signature: the flame | 44 | to redo |
