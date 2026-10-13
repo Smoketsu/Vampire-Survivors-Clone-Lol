@@ -64,9 +64,9 @@ const HEIGHTS: Dictionary = {
 	"summons/warrior": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/archer": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/mage": 46.0,  # TUNING (not in GDD) art pass: 44 before; the orb staff rises above the hood (body ~44)
-	"summons/mender": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"summons/warder": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"summons/bishop": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"summons/mender": 52.0,  # TUNING (not in GDD) art pass: 44 before; the halo floats above the hood (body ~44)
+	"summons/warder": 48.0,  # TUNING (not in GDD) art pass: 44 before; the ward sigil is raised above the hood (body ~44)
+	"summons/bishop": 64.0,  # TUNING (not in GDD) art pass: 52 before; the halo floats above the mitre (body ~52)
 	"summons/death_knight": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/lich": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/abomination": 88.0,  # TUNING (not in GDD) ART_BIBLE manifest size
@@ -87,18 +87,18 @@ const HEIGHTS: Dictionary = {
 	"summons/ossuary_engine": 72.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/recruit": 50.0,  # TUNING (not in GDD) art pass: 40 before; his spear rises above the helmet, so 50 gives a ~40 px body (fodder tier)
 	"enemies/footman": 48.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/archer": 40.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/archer": 50.0,  # TUNING (not in GDD) art pass: 40 before; the longbow rises above the hood (body ~40)
 	"enemies/chaplain": 42.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/purifier": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/templar": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/templar": 78.0,  # TUNING (not in GDD) art pass: 52 before; the upright lance rises well above the helm (body ~52)
 	"enemies/inquisitor": 64.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/shieldbearer": 50.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/banner_bearer": 50.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/halberdier": 50.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/shieldbearer": 56.0,  # TUNING (not in GDD) art pass: 50 before; the spear tip rises above the helm (body ~50)
+	"enemies/banner_bearer": 84.0,  # TUNING (not in GDD) art pass: 50 before; the war banner rises far above the head (body ~44)
+	"enemies/halberdier": 60.0,  # TUNING (not in GDD) art pass: 50 before; the halberd blade rises above the helm (body ~46)
 	"enemies/sanctified_sentinel": 72.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/radiant_inquisitor": 60.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/high_confessor": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/sun_paladin": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/radiant_inquisitor": 68.0,  # TUNING (not in GDD) art pass: 60 before; the halo rays rise above the hood (body ~56)
+	"enemies/high_confessor": 64.0,  # TUNING (not in GDD) art pass: 56 before; the mitre and crook rise above the head (body ~52)
+	"enemies/sun_paladin": 70.0,  # TUNING (not in GDD) art pass: 56 before; the lance rises above the plumed helm (body ~56)
 	"enemies/cathedral_guardian": 140.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"bosses/alaric": 120.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"bosses/vael": 120.0,  # TUNING (not in GDD) ART_BIBLE manifest size
