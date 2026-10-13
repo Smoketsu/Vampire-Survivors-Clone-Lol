@@ -58,12 +58,14 @@ any cell can sit next to any other. The pipeline:
     8 neighbours' majority colour (wrap-aware), except the `keep` colours
     (embers, flecks): single pixels only for accents (ART_BIBLE readability).
  7. Variants (`variants`): the same pipeline on another source region (no
-    wrap needed), then merged into the base tile: on each side, inside a
-    band of VARIANT_BAND px, a minimum-error cut parallel to the edge; outside
-    the cut (and always in the outer VARIANT_KEEP rows) the pixels are the base
-    tile's. A variant's edges are therefore identical to the base tile's, so
-    base and variant cells mix without a seam (the game draws a variant cell
-    clamped, the base repeating). The interior is despecked again.
+    wrap needed; its histogram first matched to the base source, match_hist()),
+    then merged into the base tile: on each side, inside a band of
+    VARIANT_BAND px, a minimum-error cut parallel to the edge; outside the cut
+    (and always in the outer VARIANT_KEEP rows) the pixels are the base tile's
+    (merge_variant(); a layout merges whole stones instead, merge_cells()). A
+    variant's edges are therefore identical to the base tile's, so base and
+    variant cells mix without a seam (the game draws a variant cell clamped,
+    the base repeating). The interior is despecked again.
  8. Road strips (`road`: width x height, horizontal quilting only) can fray
     their top and bottom edges into transparency (`fray` px, a profile that is
     periodic in the strip width) so the road sits on any zone floor.
@@ -118,8 +120,9 @@ CHROMA_W = 2.5
 # Blur (art px, Gaussian sigma) of the hue score that picks a "patches" colour,
 # so the patches come out as coherent areas instead of scattered pixels.
 PATCH_SIGMA = 1.5
-# Variants: width (art px) of the band along each edge the merge cut runs in.
-VARIANT_BAND = 16
+# Variants: width (art px) of the band along each edge the merge cut runs in
+# (28: wide enough for a cut to go around a large patch instead of slicing it straight).
+VARIANT_BAND = 28
 # Variants: outer rows / columns (art px) always kept from the base tile.
 VARIANT_KEEP = 2
 # Check sheet: background, text colours and the text size (px).
@@ -181,9 +184,7 @@ RECIPES = {
         "shares": {"ink_green": 0.06, "floor_grass": 0.80, "floor_moss": 0.14}, "patches": {"floor_earth": 0.10},
     },
     "march_camp": {
-        "source": "march_camp.png", "method": "quilt",
-        # One variant only (the right half, fewer wheel tracks): tracks in 40% of the cells read as a pattern.
-        "variants": halves("march_camp_v.png")[1:],
+        "source": "march_camp.png", "variants": halves("march_camp_v.png"), "method": "quilt",
         "colors": ["ink_warm", "floor_earth", "floor_dirt", "floor_stone", "brown"],
         "l_range": (0.19, 0.30), "bias": {"brown": 0.03},
         "keep": ["brown", "floor_stone"],
@@ -216,7 +217,7 @@ RECIPES = {
         "chroma_w": 3.0, "cell_l": 0.01, "bevel": 0.01,
     },
     "sanctum_sanctuary": {
-        "source": "sanctum_sanctuary.png", "variants": halves("sanctum_sanctuary_v.png"), "method": "layout",
+        "source": "sanctum_sanctuary.png", "method": "layout",  # No variants: every 64 px slab reaches a tile edge (merge_cells()).
         "layout": {"type": "grid", "step": 64, "joint": 1, "stagger": 32},
         "regions": {"stone": ["floor_slate", "floor_marble", "grey_dark"], "joint": ["floor_soil"]},
         "l_ranges": {"stone": (0.25, 0.33)}, "bias": {"grey_dark": 0.02},
@@ -718,6 +719,18 @@ def merge_variant(base: np.ndarray, var: np.ndarray, pal: Palette, keep: set) ->
     return despeck(out, keep, wrap=False, fixed=fixed)
 
 
+def merge_cells(base: np.ndarray, var: np.ndarray, cell: np.ndarray) -> np.ndarray:
+    """Step 7 for layouts: whole stones. A cell (stone, tessera, turf bed) that
+    reaches the outer VARIANT_KEEP px keeps the base tile's pixels, the cells
+    inside take the variant's (a cut through a stone would show as a straight
+    change of shade inside it)."""
+    edge = np.zeros_like(cell, dtype=bool)
+    edge[:VARIANT_KEEP] = edge[-VARIANT_KEEP:] = True
+    edge[:, :VARIANT_KEEP] = edge[:, -VARIANT_KEEP:] = True
+    outer = np.isin(cell, np.unique(cell[edge]))
+    return np.where(outer, base, var)
+
+
 def fray_alpha(w: int, h: int, depth: int, seed: int) -> np.ndarray:
     """Road strip alpha (h, w): the top and bottom `depth` px fray along a
     profile periodic in w (sum of integer-frequency sines), so the strip tiles."""
@@ -780,7 +793,10 @@ def build(name: str, pal: Palette) -> None:
     ref = source_lab(rec, rec["source"], rec.get("box", default_box()), TILE + o, TILE + o)  # Base source, for match_hist().
     for i, v in enumerate(rec.get("variants", [])):
         var = render_tile(rec, pal, v["source"], v.get("box", default_box()), periodic=False, ref=ref)
-        merged = merge_variant(idx, var, pal, keep)
+        if rec["method"] == "layout":
+            merged = merge_cells(idx, var, build_layout(TILE, TILE, rec["layout"])[0])
+        else:
+            merged = merge_variant(idx, var, pal, keep)
         vname = f"{name}_{i + 2}"
         edges_same = all(np.array_equal(a, b) for a, b in (
             (merged[0], idx[0]), (merged[-1], idx[-1]), (merged[:, 0], idx[:, 0]), (merged[:, -1], idx[:, -1])))

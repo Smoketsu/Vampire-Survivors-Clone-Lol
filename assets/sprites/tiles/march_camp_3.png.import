@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0lx5yum7702w"
-path="res://.godot/imported/sanctum_sanctuary_3.png-980c70f6980b80e40f40c9394fb02b1d.ctex"
+uid="uid://dix67deswcnff"
+path="res://.godot/imported/march_camp_3.png-4104e424f5a92543e1ed5077951cc39d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/tiles/sanctum_sanctuary_3.png"
-dest_files=["res://.godot/imported/sanctum_sanctuary_3.png-980c70f6980b80e40f40c9394fb02b1d.ctex"]
+source_file="res://assets/sprites/tiles/march_camp_3.png"
+dest_files=["res://.godot/imported/march_camp_3.png-4104e424f5a92543e1ed5077951cc39d.ctex"]
 
 [params]
 

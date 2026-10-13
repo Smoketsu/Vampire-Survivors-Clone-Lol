@@ -686,12 +686,12 @@ for every zone and both roads, built by `tools/make_tile.py` (process below):
 | `graveyard.png` | The Desecrated Graveyard | dark soil, faint cracks, pebbles, dead grass (Anchor 4) | anchor |
 | `march_burned.png` | March I, the Burned Road | ash-grey scorched earth, soot, embers | **done**, `_2` `_3` (soot scorch marks); mean L 0.24 |
 | `march_checkpoint.png` | March II, the Fortified Checkpoint | dark forest grass and mud | **done**, `_2` `_3` (mud with boot prints); mean L 0.24 |
-| `march_camp.png` | March III, the Siege Camp | trampled brown dirt | **done**, `_2` (wheel tracks; one variant only, tracks in 40% of the cells read as a pattern); mean L 0.25 |
+| `march_camp.png` | March III, the Siege Camp | trampled brown dirt | **done**, `_2` `_3` (darker trampled patches; a first source with wheel tracks read as a pattern and was replaced); mean L 0.25 |
 | `march_fortress.png` | March IV, the Fortress Approach | dark cobbles and grit | **done**, no variant (the variant source's cobbles came out inverted); mean L 0.25 |
 | `sanctum_courtyard.png` | Sanctum I, the Outer Courtyards | pale-stone flagstones in staggered courses, moss in the joints (kept dark) | **done**, layout: 4 courses of 32 px, slabs 36-56 px, `_2` `_3`; mean L 0.29 |
 | `sanctum_halls.png` | Sanctum II, the Sanctified Halls | a dark-gold mosaic of small tesserae | **done**, layout: 8 px tesserae, a 64 px diamond lattice with gold nodes, `_2` `_3`; mean L 0.26 |
 | `sanctum_cloisters.png` | Sanctum III, the Cloisters | stone walks around trimmed turf | **done**, layout: a 16 px walk on the tile edges (a walk grid every 128 px, like the code's), `_2` `_3`; mean L 0.25 |
-| `sanctum_sanctuary.png` | Sanctum IV, the Final Sanctuary | grey marble slabs with veins | **done**, layout: 64 px slabs in staggered rows, `_2` `_3`; mean L 0.29 |
+| `sanctum_sanctuary.png` | Sanctum IV, the Final Sanctuary | grey marble slabs with veins | **done**, layout: 64 px slabs in staggered rows, no variant (every slab reaches a tile edge, so a variant would equal the base); mean L 0.29 |
 | `march_road.png` | The March road along y = 0 | a horizontal strip **140 art px tall** (road width 140 world px) tiling left-right: packed earth with darker verges and wheel ruts | **done**, 192×140, top / bottom 4 px frayed into transparency so it sits on every zone floor |
 | `march_road_fortress.png` | The road in the Fortress Approach | the paved variant | **done**, 192×140, layout: 4 courses of paving between two kerbs (stone texture from the courtyard source) |
 
@@ -724,7 +724,7 @@ pixel size and the darkness (match its darkness).
 Colours: ONLY flat fills from this list: <names and hex, the main one marked "most of the image">.
 ```
 (The variant source: "about 240 x 160 pixels", "a second, different patch of the same ground", plus
-one distinctive line: a scorch mark, a mud patch, wheel tracks.) The AI images are never seamless, so
+one distinctive line: a scorch mark, a mud patch, a trampled patch; avoid long straight features such as wheel tracks, which repeat as a pattern.) The AI images are never seamless, so
 the tool makes them tile: it reduces the source to the grid (~6.5 source px per art px), removes light
 falloff (lightness minus a wide blur), stretches the lightness and hue onto the recipe's floor colours,
 then either **quilts** it (organic floors: minimum-error cut paths through a 24 px overlap, so the
@@ -734,7 +734,7 @@ joints must line up, which no cut can promise), each stone reading the texture a
 small lightness offset and a bevel. Then it snaps to the palette (nearest colour, or exact shares by
 lightness rank with hue-chosen patches) and merges single pixels. A variant goes through the same steps
 with its histogram matched to the base source, then is cut into the base tile along minimum-error paths
-in a 16 px band on each edge (the outer 2 px always the base's), so its edges equal the base tile's and
+in a 28 px band on each edge (the outer 2 px always the base's; a layout swaps whole stones that stay clear of the edges), so its edges equal the base tile's and
 any cell mixes with any other. All floors stay inside the floor band (mean OKLab L 0.24-0.29, mostly the
 new floor shades), so every unit's main shape keeps its +0.15 contrast. The code decorations are still
 drawn on top until the decals exist.
