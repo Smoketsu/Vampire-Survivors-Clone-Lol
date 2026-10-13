@@ -194,7 +194,9 @@ The tool turns any image into palette-correct grid art, but **what it can keep d
 **Status:** anchors 1-3 are in the game: the necromancer (owner's ~65 px image, `--inside-outline`, hood
 eyes separated by hand), the Skeleton Warrior (~54 px image, `--inside-outline`, eyes restored by hand)
 and the Covenant Recruit (~60 px image, `--inside-outline --no-prune --no-levels`, 50 art px so his
-body is 40 under the spear, a few shaft pixels repainted by hand). Next: the Graveyard floor tile, the gravestone and the Shadow Bolt icon.
+body is 40 under the spear, a few shaft pixels repainted by hand). The Graveyard floor tile (anchor 4)
+and the two gravestones (anchor 5) are made and drawn in the game by the environment hookup; to
+approve in-game.
 
 The anchors fix the style for everything else. Approve them **in order**, each on its check sheet and
 in the game, then attach the approved ones to every later prompt. Each prompt is ready to paste.
@@ -308,8 +310,8 @@ Output: a square PNG, the tile filling the whole image edge to edge. No border, 
 Attached: the approved sprites of this game, for the pixel size.
 ```
 Process: `python3 tools/prepare_sprite.py <image> tiles/graveyard --art-height 128 --method mean
---no-outline --no-rim --no-prune --allow-floor --ramps floor,grey --no-center`. (Tiles are not drawn
-by the game yet; the floor pass hooks them up.)
+--no-outline --no-rim --no-prune --allow-floor --ramps floor,grey --no-center`. **Hooked up:** the
+Graveyard floor is drawn as a grid of this tile (see "Environments" below).
 
 ### Anchor 5: a gravestone, two sizes (`obstacles/gravestone_s`, `obstacles/gravestone_l`)
 Collision radius 11 and 15 world px today, so the footprint is **22 and 30 art px wide**; the stones
@@ -336,8 +338,8 @@ Attached: the approved sprites of this game. Match their pixel size, outline wei
 ```
 Process: cut the two stones apart (or ask for one per image), then
 `python3 tools/prepare_sprite.py <small> obstacles/gravestone_s --art-height 32 --ramps grey,moss` and
-`... obstacles/gravestone_l --art-height 44 --ramps grey,moss`. (Obstacles are not drawn from sprites
-yet; the environment pass hooks them up.)
+`... obstacles/gravestone_l --art-height 44 --ramps grey,moss`. **Hooked up:** the gravestone kind
+now has exactly these two sizes (collision radius 11 and 15), and both are drawn from these sprites.
 
 ### Anchor 6: the Shadow Bolt icon (`icons/shadow_bolt`, 32×32 art px)
 ```
@@ -642,10 +644,36 @@ gold-trimmed frame. The Shadow Bolt icon is Anchor 6; the rest come in the icons
 ### Environments (later pass, no prompts yet)
 
 Floors, decals and obstacles come after the units. Floors are **dark, low-saturation and
-narrow-value**; nothing on the floor may look solid unless it collides. Not hooked up yet: the floors
-are code-drawn by `Ground`, `MarchGround` and `SanctumGround`, the obstacles by the stage glyphs.
+narrow-value**; nothing on the floor may look solid unless it collides.
 
-**Zone floors** (`assets/sprites/tiles/`, 128×128 art px seamless, 2-4 variants each, later pass):
+**Hookup (done; `scripts/core/environment_art.gd`, numbers and the key scheme in
+`scripts/data/environment_art_data.gd`).** Every file below is optional and lands on its own: without
+it the game draws today's code floor or obstacle glyph. Environment art is always grid art, drawn at
+its own texel size (1 art px = 1 layout px) through the sharp-pixel shader, so make each PNG exactly
+the size in its row.
+- **Floors:** when a zone's base tile exists, the floor is one repeating rect of it on the world tile
+  grid (seamless across tile edges), plus the variants `tiles/<zone>_2.png` and `tiles/<zone>_3.png`
+  (optional, same size, each on 20% of the 128 px cells, picked from the floor's stable cell hash, so
+  the same cell always shows the same tile). The code decorations are still drawn on top until the
+  decals exist, except the Graveyard's solid-looking ones (tombstone, stone cross, dead tree), which
+  are skipped on the tile floor because they looked like the gravestone obstacles but never collide. The March road strip is drawn over the zone tile along y = 0 (`march_road_<style>.png`
+  overrides it in one zone, e.g. `march_road_fortress.png`). The Sanctum corruption lerps the tiles
+  toward the same purple as the code floor (one translucent overlay of the corruption colour at the
+  code floor's blend strength), so no purple goes into the tiles.
+- **Obstacles:** `obstacles/<kind>_<size>.png`, where `<size>` is `s` / `l` for a kind with two sizes
+  and `s` / `m` / `l` for three (smallest first, the rows below). The sprite is centred on the
+  collision shape horizontally and its **bottom edge sits on the bottom of the collision shape**
+  (circle: centre + r; rect: centre + half the short side), so the footprint rows at the base of the
+  sprite cover the shape and the rest stands above it; the game adds a flat drop shadow, so draw none.
+  Make the sprite as wide as the footprint plus the 1 px outline each side (gravestone_s: 22 → 24).
+  **Long walls** (crypt wall, barricade, fort wall, cloister arch) and every other rect are **whole
+  fixed-length sprites**, one PNG per length (no cap-and-middle assembly: three lengths are three
+  drawings, and nothing can seam). A rect is laid out horizontally or vertically per cell; the
+  sprite above is the horizontal one, and `obstacles/<kind>_<size>_v.png` is the vertical one
+  (footprint S × L): without it a vertical rect keeps its code glyph.
+
+**Zone floors** (`assets/sprites/tiles/`, 128×128 art px seamless, up to 2 variants each
+`<file>_2.png`, `<file>_3.png`, later pass):
 
 | File | Zone | Look (today's code floor) | Status |
 |---|---|---|---|
@@ -674,27 +702,29 @@ the ones the code draws today:
   Sanctum IV: stained-glass light pool (translucent: stays code-drawn), marble vein, inlaid square.
 
 **Obstacles** (`assets/sprites/obstacles/<kind>_<size>.png`, later pass): each kind comes in **2-3
-fixed size variants**, each with a collision shape that matches it exactly (inside today's random
-size ranges, `scripts/data/stages/*.gd` "kinds"). Footprint in art px (1 art px = 1 world px): a
-circle of collision radius *r* world px is *2r* art px across; a rect of *L* × *S* world px is *L* × *S*
-art px. Sprites stand taller than their footprint (a tree's canopy, a wall's face). Long walls are built
-from a left cap, a repeatable middle and a right cap.
+fixed size variants** (`sizes` in `scripts/data/stages/*.gd` "kinds", inside the old random ranges),
+each with a collision shape that matches it exactly; each obstacle picks one per cell, deterministic
+per seed. Footprint in art px (1 art px = 1 world px): a circle of collision radius *r* world px is *2r*
+art px across; a rect of *L* × *S* world px is *L* × *S* art px. Sprites stand taller than their
+footprint (a tree's canopy, a wall's face). Keys: `<kind>_s` / `_l` for two sizes, `<kind>_s` / `_m`
+/ `_l` for three, plus `_v` for a vertical rect (see "Hookup" above). Long walls are whole sprites,
+one per length.
 
 | Stage / zone | Kind | Shape | Variants (world px) → footprint (art px) |
 |---|---|---|---|
-| Graveyard | `gravestone` | circle | r 11 / 13 / 15 → 22 / 26 / 30 wide (Anchor 5: S and L) |
+| Graveyard | `gravestone` | circle | r 11 / 15 → 22 / 30 wide (`_s` / `_l`, Anchor 5: **done**, 24×32 and 32×44) |
 | Graveyard | `dead_tree` | circle (trunk) | r 13 / 15 / 18 → trunk 26 / 30 / 36 wide, tree ~80-100 tall |
-| Graveyard | `crypt_wall` | rect | 64 / 80 / 96 × 20 → 64 / 80 / 96 × 20 (caps + middle) |
+| Graveyard | `crypt_wall` | rect | 64 / 80 / 96 × 20 → 64 / 80 / 96 × 20 |
 | March I | `burned_house` | rect | 64 / 78 / 92 × 44 → 64 / 78 / 92 × 44 |
 | March I | `charred_tree` | circle | r 12 / 14 / 17 → 24 / 28 / 34 |
 | March I | `cart_wreck` | rect | 40 / 48 / 56 × 22 → 40 / 48 / 56 × 22 |
-| March II | `barricade` | rect | 64 / 80 / 96 × 16 → 64 / 80 / 96 × 16 (caps + middle) |
+| March II | `barricade` | rect | 64 / 80 / 96 × 16 → 64 / 80 / 96 × 16 |
 | March II | `pine` | circle | r 14 / 16 / 19 → 28 / 32 / 38 |
 | March II | `stakes` | circle | r 12 / 15 → 24 / 30 |
 | March III | `tent` | circle | r 22 / 26 / 30 → 44 / 52 / 60 |
 | March III | `crates` | rect | 36 / 44 / 52 × 26 → 36 / 44 / 52 × 26 |
 | March III | `siege_engine` | rect | 70 / 80 / 90 × 34 → 70 / 80 / 90 × 34 |
-| March IV | `fort_wall` | rect | 80 / 96 × 24 → 80 / 96 × 24 (caps + middle) |
+| March IV | `fort_wall` | rect | 80 / 96 × 24 → 80 / 96 × 24 |
 | March IV | `tower_base` | circle | r 26 / 30 / 34 → 52 / 60 / 68 |
 | March IV | `rubble` | circle | r 12 / 15 / 18 → 24 / 30 / 36 |
 | Sanctum I | `saint_statue` | circle | r 13 / 15 / 17 → 26 / 30 / 34 |
@@ -702,7 +732,7 @@ from a left cap, a repeatable middle and a right cap.
 | Sanctum I | `stone_bench` | rect | 44 / 52 / 60 × 16 → 44 / 52 / 60 × 16 |
 | Sanctum II | `pillar` | circle | r 13 / 15 → 26 / 30 |
 | Sanctum II | `pew` | rect | 60 / 68 / 76 × 14 → 60 / 68 / 76 × 14 |
-| Sanctum III | `cloister_arch` | rect | 72 / 82 / 92 × 18 → 72 / 82 / 92 × 18 (caps + middle) |
+| Sanctum III | `cloister_arch` | rect | 72 / 82 / 92 × 18 → 72 / 82 / 92 × 18 |
 | Sanctum III | `garden_bed` | rect | 44 / 52 / 60 × 30 → 44 / 52 / 60 × 30 |
 | Sanctum III | `cypress` | circle | r 11 / 14 → 22 / 28 |
 | Sanctum IV | `giant_statue` | circle | r 28 / 32 / 36 → 56 / 64 / 72 |

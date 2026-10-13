@@ -330,21 +330,30 @@ const CRYPT_DEFENDER := {
 ##   kinds        — obstacle kinds. Field reference:
 ##     weight      — relative chance among obstacle cells.
 ##     shape       — "circle" or "rect" (axis-aligned) collision shape.
-##     radius_min / radius_max — circle collision radius range (px).
-##     long_min / long_max     — rect long side range (px); the orientation
-##                               (horizontal / vertical) is picked per cell.
+##     sizes       — the kind's 2-3 FIXED size variants, smallest first:
+##                   circle collision radius (px) or rect long side (px);
+##                   each obstacle picks one per cell and its collision is
+##                   exactly that variant (GDD §15.0 "Art pass (true pixel
+##                   art)": obstacles in fixed sizes, one sprite per size,
+##                   docs/art/ART_BIBLE.md obstacle manifest; sprite keys
+##                   obstacles/<kind>_s|_m|_l, EnvironmentArtData). Rects:
+##                   the orientation (horizontal / vertical) is picked per
+##                   cell; every size is whole and every rect side even, so
+##                   the 1 art px = 1 px sprite sits exactly on the shape.
 ##     short       — rect short side (px).
 const ARENA := {
 	"density": 0.22,  # TUNING (not in GDD)
 	"clear_radius": 220.0,  # TUNING (not in GDD)
 	"layout_seed": 7177,  # TUNING (not in GDD)
 	"kinds": {
-		# Broken tombs and headstones (GDD §11 art).
-		"gravestone": {"weight": 0.45, "shape": "circle", "radius_min": 11.0, "radius_max": 15.0},  # TUNING (not in GDD)
+		# Broken tombs and headstones (GDD §11 art). Two sizes, matching the
+		# owner's anchor sprites obstacles/gravestone_s (footprint 22 px) and
+		# obstacles/gravestone_l (30 px), ART_BIBLE Anchor 5.
+		"gravestone": {"weight": 0.45, "shape": "circle", "sizes": [11.0, 15.0]},  # TUNING (not in GDD)
 		# Dead trees (GDD §11 art); the collision is the trunk, branches are cosmetic.
-		"dead_tree": {"weight": 0.25, "shape": "circle", "radius_min": 13.0, "radius_max": 18.0},  # TUNING (not in GDD)
+		"dead_tree": {"weight": 0.25, "shape": "circle", "sizes": [13.0, 15.0, 18.0]},  # TUNING (not in GDD)
 		# Crypt walls (GDD §11 art "crypts").
-		"crypt_wall": {"weight": 0.30, "shape": "rect", "long_min": 64.0, "long_max": 96.0, "short": 20.0},  # TUNING (not in GDD)
+		"crypt_wall": {"weight": 0.30, "shape": "rect", "sizes": [64.0, 80.0, 96.0], "short": 20.0},  # TUNING (not in GDD)
 	},
 }
 

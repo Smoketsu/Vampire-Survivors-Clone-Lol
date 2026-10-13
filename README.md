@@ -1059,6 +1059,20 @@ from the unit's origin; HUD and card icons use the largest whole-number scale th
 taller than its `HEIGHTS` entry is a legacy 3× placeholder and keeps the old smooth scaling, so
 the 31 placeholders keep working until they are replaced.
 
+**Environment art (floors and obstacles).** `EnvironmentArt` does the same for the stage floors and
+obstacles, always as grid art (1 art px = 1 layout px, sharp). When a zone's floor tile
+`tiles/<zone>.png` (128×128, seamless; `graveyard`, `march_<style>`, `sanctum_<style>`) exists, the
+floor is one repeating rect of it on the world tile grid, plus up to two variants
+(`tiles/<zone>_2.png`, `_3.png`) on cells picked from the floor's stable cell hash; the flat code
+decorations stay on top (the Graveyard's solid-looking tombstones, crosses and dead trees are skipped
+there, since they never collide), the March road strip (`tiles/march_road.png`, 140 px tall) draws along y = 0
+and the Sanctum corruption lerps the tiles toward purple. Each obstacle kind has 2-3 **fixed size
+variants** (`sizes` in the stage files, the collision exactly the variant's, picked per cell,
+deterministic per seed), drawn from `obstacles/<kind>_s|_m|_l[_v].png` with its base on the collision
+shape, else from its code glyph at that size. The Graveyard tile and both gravestones
+(`gravestone_s`, `gravestone_l`) are the first real environment art. Keys, sizes and the rules are in
+`scripts/data/environment_art_data.gd` and the art bible's "Environments" manifest.
+
 Effects (explosions, bursts) can be **short animations**: a ChatGPT sprite sheet or a GIF, converted
 with `python3 tools/prepare_sprite.py --anim <sheet or GIF> <id>` into a strip of square 128 px
 frames at `assets/sprites/effects/<id>.png`. An effect given an animation id plays it once, scaled
@@ -1171,6 +1185,7 @@ scripts/
     effect.gd, effect_manager.gd   Pooled cosmetic effects and boss telegraphs
     glyphs.gd               All placeholder shapes (world entities AND UI icons share this code)
     sprite_bank.gd          Optional sprite art (assets/sprites/), falls back to the glyphs
+    environment_art.gd      Optional floor tiles and obstacle sprites (grid art), falls back to the code floors / glyphs
     skin_glyphs.gd          Cosmetic skins: the skin's art, else the character sprite / glyph with the
                             skin's palette tint, emblem and aura
     ground.gd               Procedural graveyard floor, redrawn only when the camera changes cell
@@ -1339,6 +1354,7 @@ scripts/
     synergy_data.gd         Army synergy requirements and effects
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
+    environment_art_data.gd Floor tile / obstacle sprite key scheme, tile variants, obstacle feet and shadow
     sound_data.gd           Sound recipes, voice limits, priorities
     player_data.gd          Player stats, XP curve, slot counts
     player_ability_data.gd  Grave Step and Dread Rally numbers (and the bots' use of them)
