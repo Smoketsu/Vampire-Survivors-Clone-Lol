@@ -1,4 +1,4 @@
-# Gravebound CI
+# Necropathy CI
 #
 # On every push / pull request:
 #   1. test   - imports the project with Godot 4.3 headless and runs the
@@ -156,16 +156,16 @@ jobs:
         run: |
           mkdir -p build/windows build/linux
           "$GODOT_BIN" --headless --import > /dev/null 2>&1
-          "$GODOT_BIN" --headless --export-release "Windows Desktop" build/windows/Gravebound.exe
-          "$GODOT_BIN" --headless --export-release "Linux" build/linux/Gravebound.x86_64
-          test -s build/windows/Gravebound.exe
-          test -s build/linux/Gravebound.x86_64
-          (cd build/windows && zip -q ../Gravebound-windows.zip Gravebound.exe)
-          (cd build/linux && chmod +x Gravebound.x86_64 && zip -q ../Gravebound-linux.zip Gravebound.x86_64)
+          "$GODOT_BIN" --headless --export-release "Windows Desktop" build/windows/Necropathy.exe
+          "$GODOT_BIN" --headless --export-release "Linux" build/linux/Necropathy.x86_64
+          test -s build/windows/Necropathy.exe
+          test -s build/linux/Necropathy.x86_64
+          (cd build/windows && zip -q ../Necropathy-windows.zip Necropathy.exe)
+          (cd build/linux && chmod +x Necropathy.x86_64 && zip -q ../Necropathy-linux.zip Necropathy.x86_64)
 
       - name: Smoke-test exported Linux build
         run: |
-          timeout 600 build/linux/Gravebound.x86_64 --headless --fixed-fps 60 --quit-after 15000 -- --autotest 2>&1 | tee export_autotest.log
+          timeout 600 build/linux/Necropathy.x86_64 --headless --fixed-fps 60 --quit-after 15000 -- --autotest 2>&1 | tee export_autotest.log
           status=${PIPESTATUS[0]}
           if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" export_autotest.log; then
             echo "::error::Errors in exported build"; exit 1
@@ -175,20 +175,20 @@ jobs:
       - name: Upload Windows build
         uses: actions/upload-artifact@v4
         with:
-          name: Gravebound-windows
-          path: build/windows/Gravebound.exe
+          name: Necropathy-windows
+          path: build/windows/Necropathy.exe
 
       - name: Upload Linux build
         uses: actions/upload-artifact@v4
         with:
-          name: Gravebound-linux
-          path: build/linux/Gravebound.x86_64
+          name: Necropathy-linux
+          path: build/linux/Necropathy.x86_64
 
       - name: Create GitHub Release (tags only)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            build/Gravebound-windows.zip
-            build/Gravebound-linux.zip
+            build/Necropathy-windows.zip
+            build/Necropathy-linux.zip
           generate_release_notes: true

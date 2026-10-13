@@ -1,6 +1,6 @@
 {
   "_doc": [
-    "Gravebound locked pixel-art palette (GDD 15.0 'Art pass (true pixel art)'; docs/art/ART_BIBLE.md 'Palette').",
+    "Necropathy locked pixel-art palette (GDD 15.0 'Art pass (true pixel art)'; docs/art/ART_BIBLE.md 'Palette').",
     "Single source of truth for tools/prepare_sprite.py (grid mode snaps every pixel to these colours),",
     "tools/art_check.py (flags off-palette pixels) and the art bible's colour table.",
     "colors: name, hex (sRGB), ramp (primary ramp), index (position in that ramp, 0 = darkest),",

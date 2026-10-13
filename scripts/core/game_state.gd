@@ -93,7 +93,7 @@
 ##                         An unknown id (or one whose starting spell is not
 ##                         in the build) is refused with an error and the
 ##                         default is played.
-## The environment variable GRAVEBOUND_AUTOTEST=1 is equivalent to --autotest.
+## The environment variable NECROPATHY_AUTOTEST=1 (or the pre-rename GRAVEBOUND_AUTOTEST=1) is equivalent to --autotest.
 extends Node
 
 ## True when the game runs the headless self-test instead of the menu.
@@ -156,8 +156,10 @@ var last_run_summary: Dictionary = {}
 
 func _ready() -> void:
 	_parse_args(OS.get_cmdline_user_args())
-	if OS.get_environment("GRAVEBOUND_AUTOTEST") == "1":
-		autotest = true
+	if OS.get_environment("NECROPATHY_AUTOTEST") == "1" or OS.get_environment("GRAVEBOUND_AUTOTEST") == "1":
+		autotest = true  # GRAVEBOUND_AUTOTEST: the pre-rename name, still accepted.
+	if not autotest:
+		SaveMigration.run()  # First autoload: carry the Gravebound saves over before Settings / Meta load.
 
 
 ## Parses user command-line arguments (the ones after `--`).

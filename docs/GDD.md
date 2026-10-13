@@ -1,4 +1,4 @@
-# GRAVEBOUND: Game Design Document
+# NECROPATHY: Game Design Document
 
 | | |
 |---|---|
@@ -21,7 +21,7 @@
 
 ## Pitch
 
-**Gravebound** is a top-down dark-fantasy horde-survival roguelite in which you play a necromancer hunted by the
+**Necropathy** is a top-down dark-fantasy horde-survival roguelite in which you play a necromancer hunted by the
 Crimson Covenant, a fanatical holy order bent on eradicating necromancy. You start alone and fragile, armed with a
 single shadow spell, and over a 20–30 minute run you raise an autonomous undead army of skeleton warriors, archers,
 mages and priests that fights, heals and regroups on its own while you only steer the necromancer and pick upgrades.
@@ -71,7 +71,7 @@ crusade.**
 
 | Attribute | Value |
 |---|---|
-| Title | GRAVEBOUND |
+| Title | NECROPATHY |
 | Genre | Dark fantasy, single-player action roguelite / bullet heaven / horde survival |
 | Perspective | Top-down 2D or 2.5D |
 | Platform | PC first (Steam) |
@@ -1490,6 +1490,8 @@ Decisions made since the source was written are recorded in 15.0; everything bel
 | — | Icon art | Art pass (Oct 2026), visual only. All 77 badge icons (`assets/sprites/icons/`, 32×32 grid art; spells, evolutions, passives, summon classes and evolutions, stances, power-ups, the Profane Pact, Grave Step and Dread Rally) share one badge built from the approved Shadow Bolt icon: its rounded shape, a 1 px border and an ink-violet face, with the symbol centred in a 26 px box. The border is **violet** for ordinary icons and **gold** for every evolution (the art bible's "gold-trimmed frame"), so an evolved slot reads at a glance in the HUD and on the cards. Grid icons fill their box through the sharp-pixel shader and skip the code backdrop (unchanged path). The **Hyper badge** is a bare 16×16 gold sun, which `HyperBadge` draws 1:1 (largest whole scale) at its 16-18 px sizes instead of the code shape. |
 | — | Skin art sizing | Art pass (Oct 2026), cosmetic only. Every skin keeps its character's body height (head to feet); a crown, halo, corona or taller staff above the head grows the sprite's art height (its `SpriteData.HEIGHTS` entry), never the body. Skins were generated with the character's own sprite attached so the pose and silhouette stay the same; the Hyper skins carry the gilded / eclipsed theme mainly in gold trim and a gold corona or crown (thin corona rays merge into a rim at 56 px). The Grave Step afterimage uses the worn skin's sprite (else the character's, else the necromancer's). |
 | — | Effect animations (art pass) | Art pass (Oct 2026), visual only. Effects are **smooth by design**: strips of square frames scaled to the gameplay radius with plain linear filtering (not the sharp-pixel shader; one strip plays from ~40 px to ~1500 px), in pixel-art style with palette colours. 25 strips in `assets/sprites/effects/`; frames are 128 px, or 192 / 256 / 512 px for large effects (`prepare_sprite.py --anim --frame-px`). Huge thin rings (Seraphine's nova, Soul Nova) are built from one 1024 px ring image scaled across the frames. `EffectManager.pop()` / `spawn_ring()` / `abyss()` / `impact()` take an optional anim id like `ring()`, and the drawn shape stays the fallback. Every `AnimData` duration equals the code duration of its call, so effect lifetimes and same-seed autotest summaries are identical with or without the art. Hooked: the 15 earlier ids plus corpse_explosion, grave_eruption, abyssal_detonation / abyssal_burst, enemy_death, undead_death, summon_rise, holy_impact (Alaric's Hammerfall and Judgment, the Guardian's slam, Seraphine's holy circles and nova centre), soul_nova, chest_open. Not made: bolt_impact, level_up, evolution (no drawn world effect to replace). |
+| — | Zone floor tiles (art pass) | The eight March and Sanctum zone floors (`tiles/march_*`, `tiles/sanctum_*`, 128×128, seamless) and the March road strips (`tiles/march_road`, the paved `tiles/march_road_fortress`, 192×140, the dirt road's edges fading into transparency) are built from AI sources by `tools/make_tile.py`. Organic floors are made seamless with cut paths; floors with regular joints (flagstones, mosaic, cloister walks, marble slabs, paving) use a joint pattern that repeats by construction, filled from the AI texture. Each zone has up to two variants whose edges equal the base tile's (none for the Fortress Approach and the Final Sanctuary). Floors stay dark and quiet: mean OKLab L 0.24-0.29, with seven new floor-only shades in `palette.json` (grass, ochre, slate, ash, dirt, moss, marble), so every unit keeps its +0.15 contrast. No purple is baked in (the Sanctum corruption overlay adds it). Purely visual; the code decorations stay on top until the decals pass. |
+| — | Title: Necropathy | Owner decision (Oct 2026): the game's true title is **Necropathy** (working title: Gravebound). Renamed everywhere players and builds see it: the main-menu title, `config/name`, the export products and executables (`Necropathy.exe`, `Necropathy.x86_64`), the CI artifacts and release zips (`Necropathy-windows.zip`, `-linux.zip`), the autotest summary header and the docs. Godot names the `user://` folder after the project, so `SaveMigration` (run first thing from `GameState._ready()`, never in the autotest) copies `save.cfg` and `settings.cfg` from the old `app_userdata/Gravebound` folder on the first launch whose own folder has neither; the old folder stays as a backup, so playtesters keep their Soul Ash, unlocks, records and settings. `NECROPATHY_AUTOTEST=1` replaces `GRAVEBOUND_AUTOTEST=1` (both accepted). The original raw spec keeps its file name (`docs/Gravebound_Complete_Game_Design_and_Horde_Spec.txt`, the source of record); the GitHub repository name is unchanged. |
 
 ### 15.1 Core Rules and Run Structure
 

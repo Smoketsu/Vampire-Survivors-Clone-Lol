@@ -1,6 +1,6 @@
-# Gravebound: Art Bible and Prompt Pack
+# Necropathy: Art Bible and Prompt Pack
 
-This document defines how Gravebound's art is made, processed, checked and wired into the game. It is
+This document defines how Necropathy's art is made, processed, checked and wired into the game. It is
 the single reference for every art request. The owner decision behind it is GDD §15.0 "Art pass (true
 pixel art)": the first AI placeholders are replaced by **true pixel art made at its real size**, so
 every unit stays clear at the small in-game sizes. The grid is **1 art px = 1 screen px** at the

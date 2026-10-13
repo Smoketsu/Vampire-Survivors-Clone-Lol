@@ -69,9 +69,9 @@ SANCTUM_GD = ROOT / "scripts" / "data" / "stages" / "sanctum_stage.gd"
 # Godot binary used when neither --godot nor the GODOT env var is set (cloud sessions).
 GODOT_DEFAULT = "/home/user/tools/godot/Godot_v4.3-stable_linux.x86_64"
 # Scratch project copy (reused between runs so Godot only re-imports what changed).
-WORK_DIR = Path(tempfile.gettempdir()) / "gravebound_art_check"
+WORK_DIR = Path(tempfile.gettempdir()) / "necropathy_art_check"
 # Default output folder for the sheets.
-OUT_DIR = Path(tempfile.gettempdir()) / "gravebound_art_check_out"
+OUT_DIR = Path(tempfile.gettempdir()) / "necropathy_art_check_out"
 # Screen px per art px at the 1280x720 layout when sprite_data.gd has no ART_SCALE
 # (GDD 15.0 "Art pass grid": 1, the art is drawn 1:1).
 DEFAULT_ART_SCALE = 1
@@ -265,8 +265,8 @@ def sync_project(work: Path, key: str, png: Path) -> Path:
     # Its own user:// folder, so the check never reads or writes the real save.
     cfg = proj / "project.godot"
     text = cfg.read_text()
-    if 'config/name="Gravebound"' in text:
-        cfg.write_text(text.replace('config/name="Gravebound"', 'config/name="GraveboundArtCheck"'))
+    if 'config/name="Necropathy"' in text:
+        cfg.write_text(text.replace('config/name="Necropathy"', 'config/name="NecropathyArtCheck"'))
     return proj
 
 

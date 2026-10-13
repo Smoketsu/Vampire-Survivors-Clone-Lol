@@ -1,6 +1,6 @@
-# Gravebound — Godot 4.3 prototype
+# Necropathy — Godot 4.3 prototype
 
-**Gravebound** is a dark-fantasy bullet-heaven / horde-survival roguelite in the
+**Necropathy** is a dark-fantasy bullet-heaven / horde-survival roguelite in the
 vein of *Vampire Survivors*, with one twist: **the army is your weapon**. You play
 a necromancer hunted by the Crimson Covenant, a fanatical holy order. You only
 move. Your shadow spells fire automatically, and an **autonomous undead horde**
@@ -32,10 +32,10 @@ Code comments cite the spec as `GDD §N`.
 
 ### Option A: download a ready-made build (no Godot needed)
 
-- **Releases:** on GitHub, open **Releases** and download `Gravebound-windows.zip` (or `-linux.zip`), unzip it, and run
-  `Gravebound.exe`. Windows SmartScreen may warn that the app is unrecognized because it is unsigned. Click
+- **Releases:** on GitHub, open **Releases** and download `Necropathy-windows.zip` (or `-linux.zip`), unzip it, and run
+  `Necropathy.exe`. Windows SmartScreen may warn that the app is unrecognized because it is unsigned. Click
   **More info → Run anyway**.
-- **Latest commit:** open **Actions → CI**, click the newest green run, and download the `Gravebound-windows`
+- **Latest commit:** open **Actions → CI**, click the newest green run, and download the `Necropathy-windows`
   artifact at the bottom of the page. You must be signed in to GitHub.
 
 ### Option B: run from source in Godot
@@ -920,6 +920,11 @@ integration").
   `save.cfg.corrupt` and the game starts fresh. Every value is type-checked and
   clamped, unknown keys are ignored, and tiers whose prerequisite is missing
   are refunded. The autotest never reads or writes it (unless `--meta-save`).
+- **Carried over from Gravebound.** The game was renamed from its working title
+  Gravebound, and Godot names the `user://` folder after the project. On the
+  first Necropathy launch whose folder has neither file, `save_migration.gd`
+  copies `save.cfg` and `settings.cfg` from the old `app_userdata/Gravebound`
+  folder (kept as a backup). Never in the autotest.
   The active Profane Oath tier is saved as `[oath] active`. Per-stage records
   (runs, victories, best time, boss kills) are saved under `[stages]`; they
   drive the stage unlocks. An older save without that section is migrated:
@@ -1164,6 +1169,7 @@ scenes/main.tscn            Minimal entry scene (one Node + main.gd)
 scripts/
   core/
     game_state.gd           Autoload: CLI options (autotest), session prefs, last run summary
+    save_migration.gd       First-launch copy of the Gravebound saves (the rename)
     settings.gd             Autoload: persistent settings (volumes, toggles, key rebinds) in user://settings.cfg
     meta_progress.gd        Autoload "Meta": Soul Ash, upgrade tiers, lifetime stats, achievements,
                             discovered evolution recipes, per-spell best levels (character unlocks),
@@ -1453,7 +1459,7 @@ Options (after `--`):
 | `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 
-Setting the environment variable `GRAVEBOUND_AUTOTEST=1` is the same as `--autotest`.
+Setting the environment variable `NECROPATHY_AUTOTEST=1` (or the pre-rename `GRAVEBOUND_AUTOTEST=1`) is the same as `--autotest`.
 
 On the Crimson March the autopilot also walks toward outposts, ward generators
 and supply carts when nothing presses it, and the summary adds four lines:
@@ -1605,7 +1611,7 @@ git tag v0.2.0 && git push origin v0.2.0
 ```
 
 To export locally, install the 4.3 export templates (**Editor → Manage Export Templates**), then use
-**Project → Export**, or run `godot --headless --export-release "Windows Desktop" build/windows/Gravebound.exe`.
+**Project → Export**, or run `godot --headless --export-release "Windows Desktop" build/windows/Necropathy.exe`.
 
 ---
 

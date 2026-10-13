@@ -153,7 +153,7 @@ def render_preview(out: Path) -> None:
     d = ImageDraw.Draw(img)
     f_t, f_l, f_s = _font(FONT_TITLE), _font(FONT_LABEL), _font(FONT_SMALL)
     unit_count = len(pal.sprite_indices())  # Colours sprites may use.
-    d.text((PAD, PAD), f"Gravebound locked palette: {len(pal.names)} colours ({unit_count} for sprites, "
+    d.text((PAD, PAD), f"Necropathy locked palette: {len(pal.names)} colours ({unit_count} for sprites, "
            f"{len(pal.floor_indices())} floors). Ramps dark -> light; the first swatch is the ramp's outline ink.",
            fill=(230, 225, 210), font=f_t if width > 1100 else f_l)
     d.text((PAD, PAD + 30), "L = OKLab perceptual lightness (0-1). Shared colours (borrowed from another ramp) are marked *. "
@@ -210,7 +210,7 @@ def _wrap(text: str, width: int) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Gravebound pixel-art palette tools")
+    parser = argparse.ArgumentParser(description="Necropathy pixel-art palette tools")
     parser.add_argument("--preview", metavar="OUT_PNG", help="render the labelled swatch sheet to OUT_PNG")
     args = parser.parse_args()
     if args.preview:

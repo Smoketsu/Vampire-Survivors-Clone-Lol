@@ -124,8 +124,8 @@ func _ready() -> void:
 	for id: String in order:
 		_ids.append(id)
 	_rendered.resize(_ids.size())
-	_music_task = WorkerThreadPool.add_task(_synth_music, true, "Gravebound music synth")
-	_sfx_task = WorkerThreadPool.add_group_task(_synth_one, _ids.size(), -1, true, "Gravebound sfx synth")
+	_music_task = WorkerThreadPool.add_task(_synth_music, true, "Necropathy music synth")
+	_sfx_task = WorkerThreadPool.add_group_task(_synth_one, _ids.size(), -1, true, "Necropathy sfx synth")
 	get_tree().node_added.connect(_on_node_added)
 	startup_msec = float(Time.get_ticks_usec() - _t0_usec) / 1000.0
 

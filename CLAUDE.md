@@ -1,11 +1,11 @@
-# CLAUDE.md: Gravebound
+# CLAUDE.md: Necropathy
 
 Guidance for Claude Code (and any agent) working in this repo. Read this first, then `README.md`
 (how the game works, the architecture, the autotest) and `docs/GDD.md` (the design).
 
 ## What this is
 
-**Gravebound** is a Vampire Survivors-style game. You play a necromancer who commands an autonomous undead
+**Necropathy** (working title Gravebound; renamed Oct 2026, saves carried over by `save_migration.gd`) is a Vampire Survivors-style game. You play a necromancer who commands an autonomous undead
 horde (Warriors, Archers, Mages, the Mender
 and Warder priest orders, plus Abominations, Rogues, Gargoyles, Frost Wraiths, Bone Hounds,
 Banshees and Corpse Catapults) against the holy Crimson Covenant. It is built in **Godot 4.3**
@@ -16,7 +16,7 @@ drawn in code (`_draw`), and sound and music are synthesized at startup.
 
 - `docs/GDD.md` is the formal design doc. **Section 15.0, "Resolved Decisions", overrides everything
   else in the GDD.** Every design decision made by the user or during development is recorded there.
-- `docs/Gravebound_Complete_Game_Design_and_Horde_Spec.txt` is the original raw spec, the source of
+- `docs/Gravebound_Complete_Game_Design_and_Horde_Spec.txt` (written under the working title Gravebound) is the original raw spec, the source of
   record for the GDD.
 - `README.md` covers player-facing behaviour, the architecture tree, the autotest options and known
   limitations.

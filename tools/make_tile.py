@@ -925,7 +925,7 @@ def main() -> None:
     ap.add_argument("names", nargs="*", help="RECIPES keys")
     ap.add_argument("--all", action="store_true", help="every recipe")
     ap.add_argument("--out", help="sheet: output PNG (one name)")
-    ap.add_argument("--out-dir", default="/tmp/gravebound_tiles", help="sheet: output folder")
+    ap.add_argument("--out-dir", default="/tmp/necropathy_tiles", help="sheet: output folder")
     args = ap.parse_args()
     names = list(RECIPES) if args.all else args.names
     if not names:

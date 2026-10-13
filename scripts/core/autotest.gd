@@ -1006,7 +1006,7 @@ func finish(summary: Dictionary) -> void:
 	keys.sort()
 	for k: String in keys:
 		stat_parts.append("%s=%d" % [k, int(st[k])])
-	print("[autotest] ===== GRAVEBOUND AUTOTEST SUMMARY =====")
+	print("[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====")
 	print("[autotest] result: %s (%s)" % ["VICTORY / RUN COMPLETE" if summary["victory"] else "NOT COMPLETED", summary["reason"]])
 	print("[autotest] time reached: %s elapsed (%.1f s game time, %.1f s real time); past 0:00: %.1f s; Reckoning waves: %d" % [
 		_clock(summary["time"]), float(summary["time"]), real_s, float(summary["time_past_zero"]), int(summary["reckoning_waves"])])

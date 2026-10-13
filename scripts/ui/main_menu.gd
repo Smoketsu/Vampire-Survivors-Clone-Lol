@@ -32,7 +32,7 @@ func _ready() -> void:
 	vb.add_theme_constant_override("separation", 14)
 	vb.custom_minimum_size = Vector2(420, 0)
 	center.add_child(vb)
-	var title := UiTheme.label("GRAVEBOUND", 72, Palette.NECRO_GREEN)
+	var title := UiTheme.label("NECROPATHY", 72, Palette.NECRO_GREEN)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(title)
 	var tagline := UiTheme.label("Begin as the hunted. Raise the fallen. Become the army.", 16, UiTheme.TEXT_DIM)
