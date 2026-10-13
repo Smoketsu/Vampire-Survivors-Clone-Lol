@@ -29,7 +29,7 @@ draw figures about 60-95 px tall).
    (Aseprite, LibreSprite, Pixelorama), using only palette colours, and re-run the check.
 6. The game shows a sprite whenever the file exists, and otherwise keeps the code-drawn glyph, so art
    lands one piece at a time. Movement, hit flashes, facing and shadows are done in code (engine
-   motion); walk cycles come later as 4-frame sheets (see "Walk cycles").
+   motion); the main units also have 8-frame walk strips cut from their stills (see "Walk cycles").
 
 Or send the images to Claude to run steps 3-4.
 
@@ -359,27 +359,62 @@ Attached: the approved sprites of this game, for the pixel size and palette.
 Process: `python3 tools/prepare_sprite.py <image> icons/shadow_bolt --art-height 32 --no-outline
 --no-rim --ramps violet --no-center`.
 
-## Walk cycles (`--frames`)
+## Walk cycles (`tools/walk_cycle.py`)
 
-Walk cycles come after the stills (characters and summon classes first). A walk sheet is **4 poses in
-one row**, same facing (right), same size and ground line, with transparent gaps between them:
+**Status:** 49 strips: the necromancer and the 11 other characters, their 16 skins; the summons
+Warrior, Archer, Mage, Mender, Warder, Rogue, Risen and Bone Hound and the walking evolutions Death
+Knight, Gravebow, Shadow Reaper and Hellhound; the Covenant Recruit, Footman, Archer, Chaplain,
+Purifier, Shieldbearer, Halberdier, Templar and Banner Bearer. Every other unit (bosses, structures,
+the floating Banshee, Keening Lady, Frost Wraith, Winter Revenant and Lich, the airborne Gargoyle and
+Cathedral Horror, the Bishop, the giant summons, the Corpse Catapult and Ossuary Engine, the Inquisitor
+and the Sanctum kinds) keeps its still plus the engine motion. A skin's rig is derived from its character's
+(`SKINS` / `skin_rig()`: the same hip height above the feet, the columns moved by the offset between
+the two lower bodies; `SKIN_FIX` for per-skin corrections), since a skin keeps its character's body
+and pose.
 
-1. **Idle / passing** (the still sprite's pose: feet together, body upright),
-2. **left foot forward** (body 2 art px lower; 1 for units 40 art px or shorter),
-3. **passing** (as 1, body 2 art px higher; 1 for the small units),
-4. **right foot forward** (body 2 art px lower; 1 for the small units).
+**Method (the pilot, Oct 2026).** Two methods were compared on the necromancer, the Warrior and the
+Recruit. (a) AI: the approved still enlarged x16 as the reference, a prompt for 4 poses of "the same
+character" (`gen_image.py`, 3 images), converted with `prepare_sprite.py --frames 4`. Every sheet
+redrew the character: the Warrior lost its skull face, the Recruit his face and kettle helm, the
+necromancer's hood and staff moved between poses, and the images came back on a dark glow; converted,
+no pose matched the still, so the strip would flicker against the approved sprite. (b) Procedural: the
+frames are cut from the still itself. (b) keeps every approved pixel and palette colour, cannot drift
+and is deterministic, so **all strips use (b)**; the AI images were not used.
 
-Ask for it with the prompt template plus: "a WALK CYCLE SPRITE SHEET: exactly 4 poses of the same
-character in ONE horizontal row, left to right: 1 neutral stance, 2 left foot forward, 3 passing, 4
-right foot forward; identical size, design, colours and ground line in every pose, clear empty
-transparent space between the poses". Attach the approved still.
+**How the tool animates a still.** Each unit has a *rig* in `tools/walk_cycle.py` (`RIGS`): a `hip`
+row, the column ranges of the `back` and `front` leg (or, on a robe, the two hem lobes with the feet
+under them) and `rigid` rectangles below the hip that ride with the body (a spear or staff foot, a
+sword tip, a shield rim, a censer). Rows above the hip move only as one block, 1 art px down on the
+"down" pose. Each leg is re-laid row by row: whole rows taken out near its middle (the knee bends,
+the swinging foot lifts by `lift` px) and sheared sideways from 0 px at the hip to `spread` px at the
+foot (the feet come together, then part). Rows move intact, so outlines, rims and colours are the
+approved ones; the tool refuses a strip whose frame 0 differs from the still or that holds a colour
+the still does not. One cycle is **8 frames** (`WalkData.FRAMES`), two steps of four poses: contact
+(the still itself), down, passing (feet together, swinging foot lifted), up; the first step swings the
+back leg, the second the front one. Typical rigs: `spread` 2-3 and `lift` 2 for legged soldiers and
+skeletons, 1 and 1 for the long robes, `dip` 1 everywhere.
 
-Process: `python3 tools/prepare_sprite.py <sheet> <key> --frames 4`. The poses are found by the
-transparent gaps (or split into 4 equal columns), processed with one shared scale, ramp set and
-shading, aligned (feet on the bottom row, body centred) and written to `assets/sprites/<key>_walk.png`:
-4 frames side by side, no gaps, each the still's height (HEIGHTS) and the same even width (the
-height when every pose fits in a square), so the frame width is the strip width / 4. The tool header
-documents the layout for the engine.
+**Strip layout (the engine contract).** `assets/sprites/<key>_walk.png` = 8 frames side by side, no
+gaps, **each exactly the still's width and height** (frame i at x = i x W), feet on the same bottom row
+and the body at the same x, so a frame drawn where the still is drawn lines up pixel for pixel.
+`SpriteBank.draw()` uses a strip only for grid art whose strip height equals the still's and whose width
+is a whole multiple (at least 2) of it; otherwise it draws the still.
+
+**In the game.** The frame follows the engine-motion step phase (`UnitMotion`: the phase advances by
+PI per step at the measured speed over the unit's stride), so the legs keep time with the bob and the
+speed: frame i is centred on phase i x TAU / 8, contact on the bob's low points, passing on its tops.
+A unit counts as walking above `WalkData.START_SPEED` (14 px/s) and stops below `STOP_SPEED` (8 px/s),
+showing its still; frozen, stunned, stone and dead bodies hold their frame, airborne ones show the
+still. The body layer is redrawn only when the frame changes (a Recruit at 58 px/s about 9 times a
+second), and the stretch bob drops to `WalkData.BOB_SCALE` (35%) since the strip carries its own 1 px
+dip. Hit flash, tints (skins, characters), elites, facing and the sharp-pixel shader work as for the
+still. Visual only: game time and positions, no RNG.
+
+**Adding a unit.** Look at the still on a grid (rows and columns), write its rig, then
+`python3 tools/walk_cycle.py build <key>`, `python3 tools/walk_cycle.py preview <key> --out-dir DIR`
+(a GIF walking in place at 4x and a frame sheet) and `sheet <keys> --out PNG` (a review sheet), and
+`godot --headless --import` for the `.import` file. Tune `hip` (higher = more of the legs move),
+`spread` and `lift`; put anything that must not bend below the hip in `rigid`.
 
 ## Effects (smooth by design)
 
