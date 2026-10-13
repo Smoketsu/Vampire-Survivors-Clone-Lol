@@ -48,14 +48,10 @@ const LEVEL_COLUMNS: int = 2
 const MOD_CARD_SIZE := Vector2(375, 44)
 ## Run-modifier cards per grid row.
 const MOD_COLUMNS: int = 2
-## Border colour of the selected difficulty card.
-const SELECTED_BORDER := Color(1.0, 0.84, 0.4)
-## Background of the selected difficulty card.
-const SELECTED_BG := Color(0.24, 0.15, 0.08, 0.97)
-## Border colour of an active run-modifier card.
-const ACTIVE_BORDER := Color(0.95, 0.35, 0.35)
-## Background of an active run-modifier card.
-const ACTIVE_BG := Color(0.26, 0.05, 0.08, 0.97)
+## UI kit accent of the selected difficulty card (gold frame, UiTheme.style()).
+const SELECTED_ACCENT: String = "gold"
+## UI kit accent of an active run-modifier card (crimson frame).
+const ACTIVE_ACCENT: String = "crimson"
 
 ## The config being edited (its stage is fixed; difficulty and modifiers change).
 var config: RunConfig = null
@@ -424,12 +420,12 @@ func _reset_choice() -> void:
 func _refresh() -> void:
 	for id: String in DifficultyData.ORDER:
 		var sel := id == config.difficulty_id  # This card is the chosen level.
-		_style(_level_buttons[id], sel, SELECTED_BG, SELECTED_BORDER)
+		_style(_level_buttons[id], sel, SELECTED_ACCENT)
 		(_level_names[id] as Label).add_theme_color_override("font_color", UiTheme.TEXT_GOLD if sel else UiTheme.TEXT)
 		(_level_names[id] as Label).text = String(DifficultyData.LEVELS[id]["display_name"]) + ("  (chosen)" if sel else "")
 	for id: String in RunModifierData.ORDER:
 		var on := config.has_modifier(id)  # This modifier is active.
-		_style(_mod_buttons[id], on, ACTIVE_BG, ACTIVE_BORDER)
+		_style(_mod_buttons[id], on, ACTIVE_ACCENT)
 		var st: Label = _mod_states[id]
 		st.text = "ON" if on else "off"
 		st.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.5) if on else UiTheme.TEXT_DIM)
@@ -457,14 +453,10 @@ func _refresh() -> void:
 	_foes_label.text = foes
 
 
-## Applies the selected / active look to card `b` (normal and hover styles).
-static func _style(b: Button, on: bool, bg: Color, border: Color) -> void:
-	if on:
-		b.add_theme_stylebox_override("normal", UiTheme.box(bg, border, 3))
-		b.add_theme_stylebox_override("hover", UiTheme.box(bg.lightened(0.08), border, 3))
-	else:
-		b.remove_theme_stylebox_override("normal")
-		b.remove_theme_stylebox_override("hover")
+## Applies the selected / active look (UI kit frame in `accent`) to card `b`
+## (normal and hover styles), or the theme look when off.
+static func _style(b: Button, on: bool, accent: String) -> void:
+	UiTheme.style_button(b, "button", accent if on else "")
 
 
 ## Begin: remember the choice (Meta save) and hand the config on.

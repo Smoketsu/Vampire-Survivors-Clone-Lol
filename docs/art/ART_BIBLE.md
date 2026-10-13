@@ -894,3 +894,47 @@ Tips:
   the AI drifts, ask it to "redraw the same effect with identical centre and design in every frame,
   only the expansion changes", or send the sheet to Claude.
 - A short GIF works as well as a sheet; send whichever comes out cleaner.
+
+### UI kit and title logo (`assets/ui/`)
+
+**Status:** in the game. The UI stays Godot Controls built in code; the kit only reskins them through
+`UiTheme` (same content margins, sizes and focus paths as the old flat boxes; a missing PNG falls back to
+the old `StyleBoxFlat` look).
+
+**Title logo** (`assets/ui/logo.png`, 246×90 art px, drawn at `UiArtData.LOGO_SCALE` = 2 on the main
+menu through the sharp-pixel shader; the plain "NECROPATHY" label is the fallback). Made from four
+image-AI wordmark candidates (all spelled correctly, checked letter by letter); the pick has violet
+gothic capitals with a bone bevel, teal soul flames and a skull in the O. Converted with
+`python3 tools/prepare_sprite.py <source> ui/logo --art-height 90 --ramps violet,bone,soul
+--inside-outline --no-prune --no-levels --no-center --out <png>`, then
+`python3 tools/ui_kit.py logo <png>` applies the hand fix (the skull redrawn symmetric with soul-glow eye
+glints). Source: `art_source/ui/logo.png`. Prompt essentials: "pixel-art title logo reading exactly
+NECROPATHY, about 300 px wide, chunky gothic capitals, violet with a bone bevel and a 2 px ink outline,
+teal soul wisps, a skull in the O, transparent background".
+
+**App icon** (`assets/ui/icon.png`, project.godot `config/icon`): `python3 tools/ui_kit.py icon` cuts the
+logo's O (shield, skull, flame) onto a 64×64 dark violet badge, saved 2× (128 px).
+
+**Frames** are drawn by code, not by the image AI (AI frames are ornate and uneven and do not 9-slice):
+`python3 tools/ui_kit.py frames [--preview sheet.png]` writes `<kind>_<accent>_<state>.png`, each
+`2 × UiArtData.SLICE[kind] + CENTER` texels square, 1 texel = 1 layout px. Rules:
+
+- Rings from the outside in, 1 texel each: an ink outline, a bevelled bright ring (lit top / left one
+  shade lighter, like the sprites), an inner ring, an ink gap, then the flat fill; chamfered corners.
+- Palette colours only for rings and ornaments; the fills keep the UI's own dark fills (`UiTheme.BG`,
+  `BG_HOVER`, the selected gold and evolution fills), which are UI-only and never used by sprites.
+- Accents: **violet** (default), **gold** (evolution cards, chest panel, victory screen, selected
+  tiles), **crimson** (active run modifier, Profane Oath), **soul** (affordable Ossuary upgrade),
+  **dim** (locked / disabled), **grey** (HUD slot sockets), **bone** (tooltips).
+- Kinds: `button` (normal / hover / pressed / disabled), `panel` (bone corner studs), `card` (level-up
+  cards, bone corner brackets), `focus` (a 3 px soul-teal ring drawn 3 px outside the focused control,
+  thick corner brackets: keyboard / controller focus is always obvious), `slot` (HUD ability socket),
+  `bar` (HUD bar frame, open centre), `tip`, `scroll` / `grab`, `line`, and the CheckButton `toggle_on` /
+  `toggle_off` icons (32×16).
+- Crispness: `UiTheme` gives Buttons, panels and scroll bars the shared sharp-pixel material as they
+  enter the tree, so 1 px rings stay even at the ×1.5 1080p scale.
+
+**Fonts:** not wired by the kit. Pixelify Sans Bold renders cleanly only at multiples of 8 px (8, 16,
+24, 32 screen px); at today's 11-20 px label sizes, stretched ×1.5, its digits break (a "2" reads as
+"8"), so wiring it needs its own font-size pass (sizes snapped to the font grid, Jacquard 24 for
+headings) before it ships.
