@@ -623,7 +623,7 @@ badge** with a 1 px border and **one bold symbol**, 32×32 art px (shown about 1
 and 64 px boxes). Player
 spells and passives use violet with bone; summon icons use their class colours; never Covenant gold or
 crimson on the player's icons (the Hyper badge and the Profane Pact excepted). Evolutions add a
-gold-trimmed frame. The Shadow Bolt icon is Anchor 6. **Status: all done** (Oct 2026): the API generated each **symbol alone** on a transparent background, converted to fit 26×26 art px, and composited onto one badge template cut from Anchor 6 (its rounded alpha, a 1 px border, an ink-violet face): a **violet** border for ordinary icons, a **gold** border for the evolutions (spell and summon). Small skull faces keep their eye sockets with `prepare_sprite.py --no-cleanup` or `--method mode`, picked per icon. The **Hyper badge** is the exception: a bare 16×16 gold sun (no square badge), drawn 1:1 by `HyperBadge` at its 16-18 px sizes.
+gold-trimmed frame. The Shadow Bolt icon is Anchor 6. **Status: all done** (Oct 2026): the API generated each **symbol alone** on a transparent background, converted to fit 26×26 art px, and composited onto one badge template: a **square** 32×32 frame (owner request, to fill the square HUD slots; Anchor 6's cut corners were squared too), a 1 px border, an ink-violet face: a **violet** border for ordinary icons, a **gold** border for the evolutions (spell and summon). Small skull faces keep their eye sockets with `prepare_sprite.py --no-cleanup` or `--method mode`, picked per icon. The **Hyper badge** is the exception: a bare 16×16 gold sun (no square badge), drawn 1:1 by `HyperBadge` at its 16-18 px sizes.
 
 | File | Subject |
 |---|---|
@@ -704,6 +704,15 @@ gold-trimmed frame. The Shadow Bolt icon is Anchor 6. **Status: all done** (Oct 
 | `dread_rally.png` | Dread Rally (ultimate): a skull inside a dark violet burst ring, soul wisps rising |
 | `twin_shadow.png` | Ossuary Twin Shadow: two overlapping hooded shadow silhouettes (second dash charge) |
 | `restless_shade.png` | Ossuary Restless Shade: a hooded shadow inside a teal clock arc (shorter dash cooldown) |
+| `warrior.png` | Summon class badge (hotbar and army list): a skeleton warrior's helmed skull behind a round shield |
+| `archer.png` | Summon class badge: a moss-hooded skeleton drawing a bone bow with a teal arrow |
+| `mage.png` | Summon class badge: a skull in an arcane-blue hood beside an orb staff |
+| `mender.png` | Summon class badge: a teal-hooded skeletal priest under a teal halo, a bone censer |
+| `warder.png` | Summon class badge: a bony hand raising a teal ward sigil |
+| `rogue.png` | Summon class badge: a hooded skeleton with crossed bone daggers |
+| `gargoyle.png` | Summon class badge: a stone gargoyle head with half-spread wings |
+| `frost_wraith.png` | Summon class badge: a pale icy hooded wraith trailing frost |
+| `abomination.png` | Summon class badge: a stitched corpse-flesh brute with bone spikes |
 
 ### Environments (later pass, no prompts yet)
 

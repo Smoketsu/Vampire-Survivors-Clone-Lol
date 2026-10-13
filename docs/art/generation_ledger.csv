@@ -333,3 +333,12 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-13 22:29,bosses/seraphine_avatar_cast,gpt-image-2.5-flare,medium,1024x1024,2,322,2476,439,0.0346,seraphine_avatar_cast.png
 2026-10-13 22:29,bosses/seraphine_cast,gpt-image-2.5-flare,medium,1024x1024,2,320,2476,439,0.0346,seraphine_cast.png
 2026-10-13 22:29,bosses/vael_guard,gpt-image-2.5-flare,medium,1024x1024,2,329,2476,439,0.0346,vael_guard.png
+2026-10-13 23:11,icons/warrior,gpt-image-2.5-flare,medium,1024x1024,1,386,1024,439,0.0233,warrior.png
+2026-10-13 23:11,icons/archer,gpt-image-2.5-flare,medium,1024x1024,1,373,1024,439,0.0232,archer.png
+2026-10-13 23:11,icons/mage,gpt-image-2.5-flare,medium,1024x1024,1,367,1024,439,0.0232,mage.png
+2026-10-13 23:11,icons/warder,gpt-image-2.5-flare,medium,1024x1024,1,393,1024,439,0.0233,warder.png
+2026-10-13 23:11,icons/rogue,gpt-image-2.5-flare,medium,1024x1024,1,374,1024,439,0.0232,rogue.png
+2026-10-13 23:11,icons/mender,gpt-image-2.5-flare,medium,1024x1024,1,368,1024,439,0.0232,mender.png
+2026-10-13 23:11,icons/gargoyle,gpt-image-2.5-flare,medium,1024x1024,1,345,1024,439,0.0231,gargoyle.png
+2026-10-13 23:11,icons/frost_wraith,gpt-image-2.5-flare,medium,1024x1024,1,343,1024,439,0.0231,frost_wraith.png
+2026-10-13 23:11,icons/abomination,gpt-image-2.5-flare,medium,1024x1024,1,375,1024,439,0.0232,abomination.png
