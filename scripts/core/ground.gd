@@ -9,7 +9,8 @@
 ## tile per decoration CELL, the variant picked from the same cell hash as the
 ## decoration (_cell_hash()), drawn 1 art px = 1 layout px through the
 ## sharp-pixel shader on the same redraws as before (a few draw calls per
-## redraw); the code decorations stay on top. No PNG: the code floor as before.
+## redraw); the flat code decorations stay on top (the solid-looking ones are
+## skipped, SOLID_DECOR_ROLL). No PNG: the code floor as before.
 ## Purely cosmetic: nothing here collides.
 class_name Ground
 extends Node2D
@@ -23,8 +24,17 @@ const HALF_EXTENT: float = 1200.0
 ## Spacing (px) of the faint ground grid (2 world tiles of ~32 px, GDD §23).
 const GRID: float = 64.0
 
+## Graveyard decorations whose cell roll (0..1) is below this (the tombstone,
+## stone cross and dead tree, the first three bands of _draw_cell()) look solid
+## but never collide. On the tile floor, next to the sprite gravestones, they
+## read as obstacles, so they are skipped there (ART_BIBLE: nothing on the floor
+## may look solid unless it collides); the code floor keeps them.
+const SOLID_DECOR_ROLL: float = 0.20
+
 ## Redraw cell the canvas is currently centred on.
 var _center_cell: Vector2i = Vector2i(1 << 30, 1 << 30)
+## True while the current redraw uses the floor tile art (set by _draw()).
+var _art_floor: bool = false
 
 
 func _ready() -> void:
@@ -42,7 +52,8 @@ func update_view(focus: Vector2) -> void:
 func _draw() -> void:
 	var center := Vector2(_center_cell) * REDRAW_CELL + Vector2.ONE * REDRAW_CELL * 0.5
 	var rect := Rect2(center - Vector2.ONE * HALF_EXTENT, Vector2.ONE * HALF_EXTENT * 2.0)
-	if not _draw_tiles(rect):
+	_art_floor = _draw_tiles(rect)
+	if not _art_floor:
 		draw_rect(rect, Palette.GROUND)
 		var x := floorf(rect.position.x / GRID) * GRID
 		while x <= rect.end.x:
@@ -94,6 +105,8 @@ func _draw_cell(cx: int, cy: int) -> void:
 	var ox := float((h >> 10) % 96) + 16.0
 	var oy := float((h >> 17) % 96) + 16.0
 	var p := Vector2(float(cx) * CELL + ox, float(cy) * CELL + oy)
+	if _art_floor and roll < SOLID_DECOR_ROLL:
+		return  # Tombstone / cross / dead tree: skipped on the tile floor (see SOLID_DECOR_ROLL).
 	if roll < 0.12:
 		# Tombstone: rounded slab with a dark shadow.
 		draw_rect(Rect2(p + Vector2(-8, 2), Vector2(18, 6)), Color(0, 0, 0, 0.3))
