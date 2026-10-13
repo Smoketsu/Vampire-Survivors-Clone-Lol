@@ -324,3 +324,4 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-13 18:04,decals/grass,gpt-image-2.5-flare,medium,1536x1024,1,579,1024,343,0.0214,grass.png
 2026-10-13 18:04,decals/halls_cloisters,gpt-image-2.5-flare,medium,1536x1024,1,706,1024,343,0.0220,halls_cloisters.png
 2026-10-13 18:04,decals/courtyard,gpt-image-2.5-flare,medium,1536x1024,1,613,1024,343,0.0215,courtyard.png
+2026-10-13 18:17,player/necromancer_walk,gpt-image-2.5-flare,medium,1536x1024,1,394,864,343,0.0192,necro_sheet.png
