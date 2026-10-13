@@ -16,3 +16,6 @@ Thumbs.db
 
 # Claude Code local worktrees
 .claude/
+
+# Python bytecode (tools/)
+__pycache__/
