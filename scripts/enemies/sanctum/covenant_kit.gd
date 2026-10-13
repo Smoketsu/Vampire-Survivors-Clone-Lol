@@ -18,7 +18,8 @@
 ##                       resolves warrior blocking afterwards.
 ##   danger_push(e, p)   autotest autopilot hint: a push away from this
 ##                       kit's live telegraph at `p` (zero when none).
-##   draw_under(e) / draw_over(e)  drawn before / after the body.
+##   draw_under(e) / draw_over(e, ci)  drawn before / after the body
+##                       (draw_over on `ci`, the enemy's overlay layer).
 ## While Stasis, a Deep Freeze or a dive stun holds the enemy, physics() is
 ## not called, so its windups pause with it (telegraph effects are tied to
 ## the enemy and pause too).
@@ -85,8 +86,9 @@ func draw_under(_e: Enemy) -> void:
 	pass
 
 
-## Drawn after the enemy's body (casting glows, beams).
-func draw_over(_e: Enemy) -> void:
+## Drawn after the enemy's body on `_ci`, its overlay layer (casting glows,
+## beams; engine motion, UnitMotion).
+func draw_over(_e: Enemy, _ci: CanvasItem) -> void:
 	pass
 
 
@@ -123,9 +125,10 @@ static func hit_scale(e: Enemy) -> float:
 ## Makes the enemy's draw calls use world-axis offsets from its centre: the
 ## node is mirrored by scale.x to face its movement, so this applies the same
 ## mirror again (scale.x is +-1, its own inverse). Reset with
-## e.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE).
-static func unmirror(e: Enemy) -> void:
-	e.draw_set_transform(Vector2.ZERO, 0.0, Vector2(e.scale.x, 1.0))
+## e.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE). `ci` (default: the
+## enemy itself) is the canvas being drawn, e.g. its overlay layer.
+static func unmirror(e: Enemy, ci: CanvasItem = null) -> void:
+	(ci if ci != null else e).draw_set_transform(Vector2.ZERO, 0.0, Vector2(e.scale.x, 1.0))
 
 
 ## True if a body of radius `r` at `p` lies inside the sector at `origin`

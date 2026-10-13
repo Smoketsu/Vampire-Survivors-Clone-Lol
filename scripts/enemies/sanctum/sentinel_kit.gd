@@ -76,6 +76,7 @@ func _sweep(e: Enemy) -> void:
 	var half := float(d["sweep_half_angle"])  # Cone half-angle (rad).
 	var mult := hit_scale(e)  # Time scaling x aura buff.
 	g.effects.slash(e.position + dir * e.radius, dir, Palette.GOLD, reach * 0.8)
+	e.motion_lunge(dir, MotionData.POWER_MELEE)  # Engine motion: the sweep (visual only).
 	g.effects.ring(e.position + dir * reach * 0.5, reach * 0.45, Palette.IVORY, 0.25)
 	Sfx.play("abom_stomp", e.position, 1.25)
 	var hits := 0  # Summons struck.
@@ -105,8 +106,8 @@ func danger_push(e: Enemy, p: Vector2) -> Vector2:
 
 
 ## A raised stone arm while the sweep winds up.
-func draw_over(e: Enemy) -> void:
+func draw_over(e: Enemy, ci: CanvasItem) -> void:
 	if phase == WINDUP:
-		unmirror(e)
-		SanctumGlyphs.draw_sweep_windup(e, dir, e.radius, phase_time / maxf(0.01, float(d["sweep_telegraph"])))
-		e.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		unmirror(e, ci)
+		SanctumGlyphs.draw_sweep_windup(ci, dir, e.radius, phase_time / maxf(0.01, float(d["sweep_telegraph"])))
+		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

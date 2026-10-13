@@ -110,6 +110,7 @@ func _throw(stats: Dictionary) -> bool:
 	if lance:
 		_volley(p, -aim, int(stats["back_count"]), stats, lance)
 	game.stat_add("spear_volleys", 1.0)
+	game.player.cast_motion(p + aim)  # Engine motion: the throw (visual only).
 	Sfx.play("lance_cast" if lance else "spear_cast", p)
 	if lance:
 		game.shake(1.0)

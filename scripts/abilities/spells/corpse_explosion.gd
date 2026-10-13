@@ -146,6 +146,7 @@ func _cast(stats: Dictionary) -> bool:
 	_chain_left = int(stats.get("chain", 0))
 	_chain_queue.clear()
 	var used := mini(int(stats["count"]), _cands.size())  # Corpses detonated.
+	game.player.cast_motion(_corpse_pos[int(_cands[0][1])])  # Engine motion: toward the first corpse (visual only).
 	for j in used:
 		var k: int = _cands[j][1]
 		_corpse_time[k] = -1.0

@@ -152,6 +152,7 @@ func _cast(stats: Dictionary) -> bool:
 		if not bastion or k % 3 == 0:
 			game.effects.ring(w.segs[k], r * 1.6, Palette.BONE, 0.25, "bone_wall_rise")
 	Sfx.play("spear_cast" if not bastion else "lance_cast", p)
+	game.player.cast_motion(p)  # Engine motion: a pulse as the wall rises (visual only).
 	return true
 
 

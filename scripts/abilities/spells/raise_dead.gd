@@ -75,6 +75,7 @@ func _cast(stats: Dictionary) -> bool:
 	game.stat_add("raise_dead_casts", 1.0)
 	game.stat_add("raise_dead_skeletons", float(n))
 	Sfx.play("summon_rise", p)
+	game.player.cast_motion(p)  # Engine motion: a pulse as they rise (visual only).
 	return true
 
 

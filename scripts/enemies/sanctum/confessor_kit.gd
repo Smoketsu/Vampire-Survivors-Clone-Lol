@@ -74,6 +74,7 @@ func physics(_e: Enemy, delta: float) -> bool:
 ## Holy shields on up to shield_targets allies (see the header).
 func _cast_shields(e: Enemy) -> void:
 	var g := e.game
+	e.motion_lunge(Vector2.ZERO, MotionData.POWER_CAST)  # Engine motion: the rite (visual only).
 	var r := float(d["shield_radius"])  # Search radius (px).
 	g.enemy_grid.query(e.position, r, _tmp)
 	var picked: Array[Enemy] = []  # Chosen allies, best first.
@@ -109,6 +110,6 @@ func _cast_shields(e: Enemy) -> void:
 
 
 ## A gold mitre glow while its own revival pillar rises.
-func draw_over(e: Enemy) -> void:
+func draw_over(e: Enemy, ci: CanvasItem) -> void:
 	if e.game != null and e.game.enemies.rites.has_pending(e):
-		SanctumGlyphs.draw_casting(e, Vector2(0, -e.radius * 2.2), e.radius * 0.8)
+		SanctumGlyphs.draw_casting(ci, Vector2(0, -e.radius * 2.2), e.radius * 0.8)

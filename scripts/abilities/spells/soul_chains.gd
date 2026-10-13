@@ -99,6 +99,7 @@ func _cast(stats: Dictionary) -> bool:
 	var damned := stats.has("pull")  # Evolved into Chains of the Damned.
 	var src := "chains_damned" if damned else "soul_chains"  # Stats tag.
 	var anchor := first.position  # Pull target (the first struck enemy).
+	game.player.cast_motion(anchor)  # Engine motion: toward the first strike (visual only).
 	var pts := PackedVector2Array([p])  # Arc path: hand, then every strike.
 	for e in _chain:
 		pts.append(e.position)

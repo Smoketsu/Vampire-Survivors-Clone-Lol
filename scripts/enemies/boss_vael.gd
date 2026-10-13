@@ -229,6 +229,8 @@ func _hold(delta: float) -> void:
 func _set_phase(p: Phase) -> void:
 	phase = p
 	phase_time = 0.0
+	if p == Phase.RECOVER and game != null:
+		motion_lunge(game.player.position - position, MotionData.POWER_MELEE)  # Engine motion: the strike lands.
 	queue_redraw()
 
 
@@ -417,7 +419,18 @@ func danger_push(p: Vector2) -> Vector2:
 	return Vector2.ZERO
 
 
-func _draw() -> void:
+## Sprite key of his art (engine-motion pivot).
+func motion_sprite_key() -> String:
+	return "bosses/vael"
+
+
+## Ground layer (Enemy._draw()): nothing under Marshal Vael.
+func _draw_under() -> void:
+	pass
+
+
+## Body layer on `ci`: Marshal Vael in the pose of his current phase.
+func _draw_body(ci: CanvasItem) -> void:
 	var pose := 0
 	match phase:
 		Phase.CLEAVE_WINDUP, Phase.COMMAND_WINDUP, Phase.STANDARD_WINDUP:
@@ -426,8 +439,12 @@ func _draw() -> void:
 			pose = 3
 	if pose == 0 and shieldwall_left > 0.0:
 		pose = 2
-	MarchGlyphs.draw_vael(self, Vector2.ZERO, radius, flash > 0.0, pose, last_stand)
+	MarchGlyphs.draw_vael(ci, Vector2.ZERO, radius, flash > 0.0, pose, last_stand)
+
+
+## Overlay layer on `ci`: the aura chevron and the Stasis ice.
+func _draw_over(ci: CanvasItem) -> void:
 	if buff_time > 0.0:
-		MarchGlyphs.draw_buffed(self, Vector2(0, -radius * 2.0), 5.0)  # Holy Standard aura.
+		MarchGlyphs.draw_buffed(ci, Vector2(0, -radius * 2.0), 5.0)  # Holy Standard aura.
 	if frozen:
-		PowerupGlyphs.draw_frozen(self, Vector2.ZERO, radius)  # Stasis power-up.
+		PowerupGlyphs.draw_frozen(ci, Vector2.ZERO, radius)  # Stasis power-up.

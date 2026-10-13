@@ -1038,6 +1038,18 @@ to its radius (timing and fill in `scripts/data/anim_data.gd`), and keeps its dr
 file is missing. Shadow Blast (the test), the Dread Rally burst (`dread_rally`) and the Grave Step
 departure puff (`grave_step_trail`) are wired so far.
 
+**Engine motion (tier 0, art pass).** Every unit is still one image, so the engine animates it
+procedurally: a **step bob** matched to its real speed, a small **lean** into the movement, a
+**turn squash** when it flips, a **lunge and recoil** on each strike, shot, cast or special, a
+**hit squash** with the white flash, summons **rising** out of the ground with a puff of grave dust,
+and a **death dissolve** (the body collapses into bone dust or holy ash; bosses keep their own death,
+structures only react to hits). A unit draws in three layers (ground effects on its own node, the
+body and the overlays on two child `UnitLayer`s) and only the body moves, by a scale and shear about
+its feet, so the shadow, HP bar, auras and telegraphs stay put and nothing is redrawn per frame.
+Frozen, stunned, stone-form and airborne units hold still. It is purely visual (it never writes
+gameplay state or uses the gameplay RNG; same-seed autotest summaries are unchanged), runs on game
+time (hit-stop and pause included), and all numbers live in `scripts/data/motion_data.gd`.
+
 ## What is implemented (vs. the GDD)
 
 | Area | Status in this prototype |
@@ -1243,6 +1255,10 @@ scripts/
   fx/juice.gd               Autoload: screen shake, hit-stop, hooks for particles and damage numbers
   fx/fx_layer.gd            One node that draws all particles and damage numbers from fixed buffers
   fx/stance_outline.gd      Faint ground outline of the army's shape after a stance change
+  fx/motion_director.gd     Engine motion: animates every unit's body once per frame, pools death dissolves
+  fx/unit_motion.gd         One unit's procedural motion (bob, lean, squashes, lunge, rise) on its body layer
+  fx/unit_layer.gd          A unit's body / overlay drawing layer (child node calling back into the unit)
+  fx/unit_dissolve.gd       Pooled death dissolve: the dead unit's look collapsing into bone dust / holy ash
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
                             progression_glyphs (evolution/synergy icons), summon_glyphs
@@ -1298,6 +1314,7 @@ scripts/
     sound_data.gd           Sound recipes, voice limits, priorities
     player_data.gd          Player stats, XP curve, slot counts
     player_ability_data.gd  Grave Step and Dread Rally numbers (and the bots' use of them)
+    motion_data.gd          Engine motion (tier 0) amplitudes, timings, dust colours, cost caps
     meta_data.gd            Soul Ash formula, upgrade trees / tiers / costs, achievements, autotest profiles
     powerup_data.gd         Power-up types, weights, durations, drop chances, pity, cap, lifetime
     chest_data.gd           Chest drop chances, pity, contents (1 / 3 / 5) weights, reveal timing

@@ -22,7 +22,8 @@
 ##   on_melee_hit(u,e,dealt)  after a "melee" strike landed (Hellhound burn).
 ##   score_bonus(u,e,dp) extra target score (GDD §27 class preferences).
 ##   draw_under(u) / body_lift(u)  telegraphs / shadow and the drawn height.
-##   draw_over(u)        overlays drawn after the body (Cathedral Horror stone).
+##   draw_over(u, ci)    overlays drawn after the body on `ci`, the unit's
+##                       overlay layer (Cathedral Horror stone).
 ##
 ## Determinism (CLAUDE.md): only the seeded global RNG, never instance ids.
 class_name SummonBehavior
@@ -128,8 +129,9 @@ func draw_under(_u: SummonedUnit) -> void:
 	pass
 
 
-## Draws overlays after the body (inside u._draw()).
-func draw_over(_u: SummonedUnit) -> void:
+## Draws overlays after the body on `_ci`, the unit's overlay layer (engine
+## motion, UnitMotion; inside that layer's _draw()).
+func draw_over(_u: SummonedUnit, _ci: CanvasItem) -> void:
 	pass
 
 

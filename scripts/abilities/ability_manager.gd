@@ -392,6 +392,7 @@ func _cast_bolt(s: Dictionary) -> bool:
 	_cands.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
 	var count: int = s["count"]
 	var void_barrage := s.has("split")
+	game.player.cast_motion((_cands[0][1] as Enemy).position)  # Engine motion: toward the first target (visual only).
 	for i in count:
 		var e: Enemy = _cands[i % _cands.size()][1]
 		if not void_barrage:
@@ -428,6 +429,7 @@ func _cast_blast(s: Dictionary) -> bool:
 	if not hit:
 		return false
 	game.innates.on_blast(p, r, float(s["damage"]))  # Voidcaller's Echoing Dark (no-op otherwise).
+	game.player.cast_motion(p)  # Engine motion: a pulse around him (visual only).
 	if abyss:
 		game.effects.abyss(p, r)
 		_detonations.append({"t": float(s["second_delay"]), "pos": p, "stats": s})

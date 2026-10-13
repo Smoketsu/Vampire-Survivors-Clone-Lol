@@ -512,6 +512,7 @@ func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) 
 ## boss).
 func _kill_enemy(e: Enemy) -> void:
 	game.effects.pop(e.position, Palette.CRIMSON if not e.is_boss else Palette.GOLD, e.radius * 1.2)
+	game.motion.on_enemy_killed(e)  # Collapses into holy ash (visual only; not bosses or structures).
 	Juice.enemy_killed(e)
 	if e.xp_value > 0:
 		game.pickups.spawn(e.position, e.xp_value)

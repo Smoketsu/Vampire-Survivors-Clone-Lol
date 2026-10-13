@@ -302,6 +302,8 @@ func _hold(delta: float) -> void:
 func _set_phase(p: Phase) -> void:
 	phase = p
 	phase_time = 0.0
+	if p == Phase.RECOVER and game != null:
+		motion_lunge(game.player.position - position, MotionData.POWER_MELEE)  # Engine motion: the strike lands.
 
 
 ## Starts special `id`: bookkeeping shared by every special (the timed
@@ -793,7 +795,18 @@ func danger_push(p: Vector2) -> Vector2:
 	return push.limit_length(1.0)
 
 
-func _draw() -> void:
+## Sprite key of her art (engine-motion pivot).
+func motion_sprite_key() -> String:
+	return "bosses/seraphine"
+
+
+## Ground layer (Enemy._draw()): nothing under her.
+func _draw_under() -> void:
+	pass
+
+
+## Body layer on `ci`: Seraphine in the pose of her current phase.
+func _draw_body(ci: CanvasItem) -> void:
 	var pose := 0
 	match phase:
 		Phase.FAN_WINDUP, Phase.CIRCLES_CAST, Phase.TEMPLARS_WINDUP, Phase.BEAMS, Phase.BARRAGE, Phase.CONSTRUCTS_WINDUP, Phase.SUPPRESSION_CAST, Phase.NOVA_CAST:
@@ -807,11 +820,15 @@ func _draw() -> void:
 		glow = clampf(phase_time / maxf(0.05, _tele("teleport_glow")), 0.0, 1.0)
 	elif phase == Phase.TRANSFORM:
 		glow = 1.0
-	SeraphineGlyphs.draw_seraphine(self, Vector2.ZERO, radius, flash > 0.0, pose, fight_phase, glow, game.elapsed if game != null else 0.0)
+	SeraphineGlyphs.draw_seraphine(ci, Vector2.ZERO, radius, flash > 0.0, pose, fight_phase, glow, game.elapsed if game != null else 0.0)
+
+
+## Overlay layer on `ci`: an aura chevron and the Stasis / Deep Freeze ice.
+func _draw_over(ci: CanvasItem) -> void:
 	if buff_time > 0.0:
-		MarchGlyphs.draw_buffed(self, Vector2(0, -radius * 2.6), 5.0)  # A Covenant aura buff.
+		MarchGlyphs.draw_buffed(ci, Vector2(0, -radius * 2.6), 5.0)  # A Covenant aura buff.
 	if frozen:
-		PowerupGlyphs.draw_frozen(self, Vector2.ZERO, radius)  # Stasis / Deep Freeze.
+		PowerupGlyphs.draw_frozen(ci, Vector2.ZERO, radius)  # Stasis / Deep Freeze.
 
 
 ## One-line autotest summary of her fight (phase times relative to her

@@ -63,6 +63,7 @@ func step_special(u: SummonedUnit, _delta: float) -> bool:
 ## The stomp lands: damage + knockback to everything in the ring, shockwave.
 func _impact(u: SummonedUnit) -> void:
 	var game := u.game
+	u.motion_lunge(Vector2.ZERO, MotionData.POWER_MELEE)  # Engine motion: the stomp (visual only).
 	var pos := u.position  # Stomp centre.
 	var r := float(u.special["stomp_radius"])  # Stomp radius (px).
 	var dmg := float(u.special["stomp_damage"])  # Damage per enemy.

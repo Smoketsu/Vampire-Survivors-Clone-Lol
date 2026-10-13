@@ -161,6 +161,7 @@ func _resolve_slam(e: Enemy) -> void:
 	var r := float(d["slam_radius"])  # Circle radius (px).
 	var mult := hit_scale(e)  # Time scaling x aura buff.
 	g.effects.impact(slam_pos, r, Palette.GOLD)
+	e.motion_lunge(slam_pos - e.position, MotionData.POWER_MELEE)  # Engine motion: the slam (visual only).
 	g.shake(8.0)
 	Sfx.play("boss_impact", slam_pos, 1.15)
 	var soakers := 0  # Summons inside the circle.
@@ -191,6 +192,7 @@ func _start_beam(e: Enemy) -> void:
 	var to_p := e.game.player.position - e.position
 	var dir := to_p.normalized() if to_p.length() > 1.0 else Vector2.RIGHT  # Sector centre.
 	var half := float(d["beam_half_arc"])  # Half the swept arc (rad).
+	e.motion_lunge(dir, MotionData.POWER_CAST)  # Engine motion: the beam opens (visual only).
 	# Sweep from the side nearer the necromancer's movement so he must cross it.
 	var side := 1.0 if dir.cross(e.game.player.velocity) >= 0.0 else -1.0  # Sweep direction sign.
 	beam_from = dir.angle() - half * side
@@ -278,13 +280,13 @@ func danger_push(e: Enemy, p: Vector2) -> Vector2:
 
 
 ## Raised fists (slam), a charging eye (beam windup) and the beam itself.
-func draw_over(e: Enemy) -> void:
+func draw_over(e: Enemy, ci: CanvasItem) -> void:
 	match phase:
 		SLAM_WINDUP:
-			SanctumGlyphs.draw_guardian_fists(e, e.radius)
+			SanctumGlyphs.draw_guardian_fists(ci, e.radius)
 		BEAM_WINDUP:
-			SanctumGlyphs.draw_casting(e, Vector2(0, -e.radius * 0.55), e.radius * 0.6)
+			SanctumGlyphs.draw_casting(ci, Vector2(0, -e.radius * 0.55), e.radius * 0.6)
 		BEAM_SWEEP:
-			unmirror(e)
-			SanctumGlyphs.draw_beam(e, Vector2.from_angle(beam_angle) * float(d["beam_length"]), float(d["beam_width"]))
-			e.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			unmirror(e, ci)
+			SanctumGlyphs.draw_beam(ci, Vector2.from_angle(beam_angle) * float(d["beam_length"]), float(d["beam_width"]))
+			ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

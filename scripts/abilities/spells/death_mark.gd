@@ -116,6 +116,7 @@ func _cast(stats: Dictionary) -> bool:
 		var e: Enemy = _cands[k][1]
 		_brand(e, stats, doom)
 	game.stat_add("death_mark_casts", 1.0)
+	game.player.cast_motion((_cands[0][1] as Enemy).position)  # Engine motion: toward the first brand (visual only).
 	Sfx.play("plague_cast", p)
 	return true
 

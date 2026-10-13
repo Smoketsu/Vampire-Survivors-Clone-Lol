@@ -67,6 +67,7 @@ func step_special(u: SummonedUnit, _delta: float) -> bool:
 ## Freezes every enemy inside the circle (CombatResolver.freeze_enemy()).
 func _release_freeze(u: SummonedUnit) -> void:
 	var game := u.game
+	u.motion_lunge(Vector2.ZERO, MotionData.POWER_MELEE)  # Engine motion: Deep Freeze (visual only).
 	var r := float(u.special["freeze_radius"])  # Freeze radius (px).
 	var dur := float(u.special["freeze_duration"])  # Full freeze time (s).
 	game.enemy_grid.query(freeze_point, r + ProjectileManager.MAX_BODY_RADIUS, _buf)
