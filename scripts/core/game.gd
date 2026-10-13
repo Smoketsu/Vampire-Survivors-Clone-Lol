@@ -482,7 +482,7 @@ func open_chest(pos: Vector2) -> void:
 	var count := chests.roll_count()  # 1, 3 or 5 upgrades.
 	var rewards := abilities.chest_rewards(count)  # Applied rewards, in order.
 	chests.record_opened(count, rewards)
-	effects.ring(pos, 90.0, Palette.GOLD, 0.6)
+	effects.ring(pos, 90.0, Palette.GOLD, 0.6, "chest_open")  # Animation when its art exists (visual only).
 	run_state = RunState.CHEST
 	get_tree().paused = true
 	chest_panel.open(rewards, count)

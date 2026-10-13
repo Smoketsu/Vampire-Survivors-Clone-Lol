@@ -169,7 +169,8 @@ func _detonate(pos: Vector2, stats: Dictionary, chained: bool) -> void:
 	damage_area(pos, r, float(stats["damage"]), "eruption" if _eruption else "corpse")
 	_bursting = false
 	_blasts.append(Vector4(pos.x, pos.y, r, 0.0))
-	game.effects.ring(pos, r, Palette.BONE if not _eruption else Palette.NECRO_GREEN, 0.3)
+	game.effects.ring(pos, r, Palette.BONE if not _eruption else Palette.NECRO_GREEN, 0.3,
+			"grave_eruption" if _eruption else "corpse_explosion")  # Animation when its art exists (visual only).
 	game.stat_add("corpse_bursts", 1.0)
 	if chained:
 		game.stat_add("eruption_chains", 1.0)

@@ -219,7 +219,7 @@ func _soul_nova(def: Dictionary) -> void:
 		# Undo armour so the intended amount is what lands.
 		game.combat.damage_enemy(e, amount / maxf(0.05, 1.0 - e.armor), "nova")
 	game.stat_add("nova_kills", float(game.kills - kills_before))
-	game.effects.ring(game.player.position, half.length(), Color(0.92, 0.85, 1.0), 0.6)
+	game.effects.ring(game.player.position, half.length(), Color(0.92, 0.85, 1.0), 0.6, "soul_nova")  # Animation when its art exists (visual only).
 	game.effects.ring(game.player.position, half.length() * 0.6, Palette.VIOLET, 0.5)
 	game.shake(Juice.MAX_SHAKE_PX)
 

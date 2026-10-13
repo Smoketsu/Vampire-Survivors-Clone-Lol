@@ -431,7 +431,7 @@ func _cast_blast(s: Dictionary) -> bool:
 	game.innates.on_blast(p, r, float(s["damage"]))  # Voidcaller's Echoing Dark (no-op otherwise).
 	game.player.cast_motion(p)  # Engine motion: a pulse around him (visual only).
 	if abyss:
-		game.effects.abyss(p, r)
+		game.effects.abyss(p, r, "abyssal_detonation")  # The vortex animation when its art exists (visual only).
 		_detonations.append({"t": float(s["second_delay"]), "pos": p, "stats": s})
 		game.stat_add("abyssal_detonations", 1.0)
 	else:
@@ -470,7 +470,7 @@ func _step_detonations(delta: float) -> void:
 		for e: Enemy in _tmp:
 			if e.active and e.position.distance_to(pos) <= r + e.radius:
 				game.combat.damage_enemy(e, float(s["damage"]) * float(s["second_damage"]), "abyss")
-		game.effects.ring(pos, r, Palette.NECRO_GREEN, 0.3)
+		game.effects.ring(pos, r, Palette.NECRO_GREEN, 0.3, "abyssal_burst")  # The burst animation when its art exists (visual only).
 		game.effects.ring(pos, r * 0.55, Palette.VIOLET, 0.4)
 		game.shake(3.0)
 

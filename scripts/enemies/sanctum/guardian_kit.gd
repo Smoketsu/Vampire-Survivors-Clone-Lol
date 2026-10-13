@@ -160,7 +160,7 @@ func _resolve_slam(e: Enemy) -> void:
 	var g := e.game
 	var r := float(d["slam_radius"])  # Circle radius (px).
 	var mult := hit_scale(e)  # Time scaling x aura buff.
-	g.effects.impact(slam_pos, r, Palette.GOLD)
+	g.effects.impact(slam_pos, r, Palette.GOLD, "holy_impact")  # Animation when its art exists (visual only).
 	e.motion_lunge(slam_pos - e.position, MotionData.POWER_MELEE)  # Engine motion: the slam (visual only).
 	g.shake(8.0)
 	Sfx.play("boss_impact", slam_pos, 1.15)

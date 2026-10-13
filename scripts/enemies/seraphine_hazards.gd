@@ -176,7 +176,7 @@ func _step_circles(delta: float) -> void:
 
 ## A holy circle blasts: summons inside and the necromancer take its damage.
 func _blast_circle(c: HolyCircle) -> void:
-	game.effects.impact(c.pos, c.radius, Palette.GOLD)
+	game.effects.impact(c.pos, c.radius, Palette.GOLD, "holy_impact")  # Animation when its art exists (visual only).
 	game.shake(3.0)
 	game.ally_grid.query(c.pos, c.radius + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	var hits := 0  # Summons caught.
@@ -320,7 +320,7 @@ func _step_nova(delta: float) -> void:
 func _blast_nova() -> void:
 	var r := float(def["nova_radius"])
 	game.effects.ring(nova_center, r, Palette.GOLD, 0.55, "seraphine_nova")
-	game.effects.impact(nova_center, boss.radius * 4.0, Palette.IVORY)
+	game.effects.impact(nova_center, boss.radius * 4.0, Palette.IVORY, "holy_impact")  # The nova's centre flash (animation when its art exists).
 	for s in nova_safe:
 		game.effects.ring(s, float(def["nova_safe_radius"]), Palette.COLD_BLUE, 0.5)
 	game.shake(9.0)

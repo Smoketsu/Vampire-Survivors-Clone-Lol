@@ -5,7 +5,7 @@ Usage (from the repo root):
     e.g. python3 tools/prepare_sprite.py ~/Downloads/necro.png player/necromancer
     python3 tools/prepare_sprite.py <walk sheet> <sprite key> --frames 4   (walk cycle strip)
     python3 tools/prepare_sprite.py --legacy <source image> <sprite key>   (old smooth 3x sprite)
-    python3 tools/prepare_sprite.py --anim <GIF or sheet> <effect id> [--frames N | --grid CxR]
+    python3 tools/prepare_sprite.py --anim <GIF or sheet> <effect id> [--frames N | --grid CxR] [--frame-px P]
 
 Grid mode (GDD 15.0 "Art pass (true pixel art)", docs/art/ART_BIBLE.md):
   The sprite is rebuilt at its REAL size on the art grid: 1 art px = ART_SCALE (1)
@@ -92,6 +92,9 @@ grid read left to right, top to bottom (--grid CxR), or a single row of frames
 separated by fully transparent gaps (the default). Frames are cropped to one
 shared square and written as a strip of ANIM_FRAME_PX frames to
 assets/sprites/effects/<id>.png (AnimData reads the frame count as width / height).
+--frame-px P stores larger (or smaller) frames for an effect drawn far bigger than
+128 px on screen (Seraphine's 1300 px nova): the engine reads the frame size
+from the strip height, so any square size works.
 
 Requires Pillow and numpy. Sources must have a transparent background.
 """
@@ -223,7 +226,7 @@ DEFAULT_HEIGHT = 44.0
 MARGIN = 0.03
 # Alpha value (0-255) below which a pixel counts as background when cropping (legacy, anim).
 ALPHA_THRESHOLD = 8
-# Stored size (px) of one square effect-animation frame (AnimData.FRAME_PX).
+# Default stored size (px) of one square effect-animation frame (AnimData.FRAME_PX); --frame-px overrides it.
 ANIM_FRAME_PX = 128
 # Narrowest run of fully transparent columns (px) that counts as a gap between
 # frames when splitting a sheet by gaps (narrower runs are holes inside a frame).
@@ -892,8 +895,9 @@ def square_frames(frames: list, centre_each: bool) -> list:
     return out
 
 
-def prepare_anim(src: Path, anim_id: str, frames_n: int, grid: str) -> None:
-    """Processes a GIF or sprite sheet into assets/sprites/effects/<id>.png."""
+def prepare_anim(src: Path, anim_id: str, frames_n: int, grid: str, frame_px: int = ANIM_FRAME_PX) -> None:
+    """Processes a GIF or sprite sheet into assets/sprites/effects/<id>.png
+    (square frames of `frame_px` px, ANIM_FRAME_PX by default)."""
     # 1. Keep the original (any format, untouched bytes).
     original = SOURCE_DIR / "effects" / (anim_id + src.suffix.lower())  # Archived source path.
     original.parent.mkdir(parents=True, exist_ok=True)
@@ -924,14 +928,14 @@ def prepare_anim(src: Path, anim_id: str, frames_n: int, grid: str) -> None:
 
     # 3. Square crop around the effect; 4. resize and lay out as a strip.
     squares = square_frames(frames, centre_each)
-    strip = Image.new("RGBA", (ANIM_FRAME_PX * len(squares), ANIM_FRAME_PX), (0, 0, 0, 0))  # Output strip.
+    strip = Image.new("RGBA", (frame_px * len(squares), frame_px), (0, 0, 0, 0))  # Output strip.
     for i, sq in enumerate(squares):
-        strip.paste(sq.resize((ANIM_FRAME_PX, ANIM_FRAME_PX), Image.LANCZOS), (i * ANIM_FRAME_PX, 0))
+        strip.paste(sq.resize((frame_px, frame_px), Image.LANCZOS), (i * frame_px, 0))
     dest = SPRITE_DIR / "effects" / (anim_id + ".png")  # In-game path (SpriteBank "effects/<id>").
     dest.parent.mkdir(parents=True, exist_ok=True)
     strip.save(dest, optimize=True)
     print(f"effects/{anim_id}: {src.name} -> {dest.relative_to(ROOT)} ({len(squares)} frames by {how}, "
-          f"{ANIM_FRAME_PX}px each), original in {original.relative_to(ROOT)}")
+          f"{frame_px}px each), original in {original.relative_to(ROOT)}")
 
 
 def main() -> None:
@@ -943,6 +947,8 @@ def main() -> None:
     parser.add_argument("--frames", type=int, default=0,
                         help="grid mode: a walk sheet of N poses (writes <key>_walk.png); --anim: N equal frames in one row")
     parser.add_argument("--grid", default="", help="--anim: CxR grid of equal frames")
+    parser.add_argument("--frame-px", type=int, default=ANIM_FRAME_PX,
+                        help=f"--anim: stored frame size in px (default {ANIM_FRAME_PX}; larger for huge effects)")
     parser.add_argument("--art-height", type=int, default=0, help="grid mode: output height in art px (default HEIGHTS[key] / ART_SCALE = HEIGHTS[key])")
     parser.add_argument("--method", choices=("ramp", "mode", "mean"), default=METHOD, help="grid mode: how a cell's colour is chosen")
     parser.add_argument("--ramps", default="", help="grid mode: comma-separated ramps allowed (default: the folder's faction set)")
@@ -960,7 +966,7 @@ def main() -> None:
     src = Path(args.source).expanduser()  # Image to process.
     key = args.key.strip("/")  # Sprite key or effect id.
     if args.anim:
-        prepare_anim(src, key.removeprefix("effects/"), args.frames, args.grid)
+        prepare_anim(src, key.removeprefix("effects/"), args.frames, args.grid, args.frame_px)
     elif args.legacy:
         prepare_legacy(src, key)
     elif args.frames > 0:
