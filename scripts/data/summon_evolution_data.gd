@@ -209,7 +209,7 @@ const EVOLUTIONS := {
 		"display_name": "Death Knight",
 		"plural": "Death Knights",
 		"icon": "death_knight",
-		"description": "Your warriors rise as armoured Death Knights: cleaving blows, life drain and a dread wall foes cannot pass.",
+		"description": "Armoured Death Knights cleave, drain life and hold foes like a wall.",
 		"mult": {
 			"max_hp": 1.5,  # TUNING (not in GDD)
 			"damage": 1.35,  # TUNING (not in GDD)
@@ -235,7 +235,7 @@ const EVOLUTIONS := {
 		"display_name": "Lich",
 		"plural": "Liches",
 		"icon": "lich",
-		"description": "Your mages ascend as Liches: deadlier blasts, sturdier bodies, and the foes they slay rise as skeletons.",
+		"description": "Liches cast deadlier blasts, and the foes they slay rise as skeletons.",
 		"mult": {
 			"max_hp": 1.4,  # TUNING (not in GDD)
 			# Combined balance pass: 1.35 (on top of Forbidden Knowledge's +40% damage and +25%
@@ -273,7 +273,7 @@ const EVOLUTIONS := {
 		"display_name": "Profane Bishop",  # GDD §4.2
 		"plural": "Bishops",
 		"icon": "profane_bishop",
-		"description": "Menders and Warders merge into Profane Bishops: stronger heals, wards and barriers, a healing aura that burns foes, and one free active slot.",
+		"description": "Bishops heal and ward more, burn foes with an aura and free a slot.",
 	},
 	# Winter Revenant (owner-approved): Frost Wraith Lv 5 + Soul Recycling Lv 5.
 	# Upgrades the Frost Wraith kit (FrostWraithBehavior); the shatter and the
@@ -308,7 +308,7 @@ const EVOLUTIONS := {
 		"display_name": "Winter Revenant",  # TUNING (not in GDD) owner-approved name
 		"plural": "Winter Revenants",
 		"icon": "winter_revenant",
-		"description": "Your Frost Wraiths rise as Winter Revenants: a wider Deep Freeze, frozen foes shatter into frost, and each Revenant that falls bursts in a freezing nova.",
+		"description": "Deep Freeze spreads wider, frozen foes shatter, and fallen Revenants burst in frost.",
 		"mult": {
 			"max_hp": 1.25,  # TUNING (not in GDD)
 			"damage": 1.25,  # TUNING (not in GDD) frost bolt
@@ -345,7 +345,7 @@ const EVOLUTIONS := {
 		"display_name": "Shadow Reaper",  # TUNING (not in GDD) owner-approved name
 		"plural": "Shadow Reapers",
 		"icon": "shadow_reaper",
-		"description": "Your rogues become Shadow Reapers: dashes twice as often, each one chains to a second foe, bleeds stack, and a kill mid-dash readies the next.",
+		"description": "Reapers chain rapid dashes, stack bleeds, and a dash kill readies the next.",
 		"mult": {
 			"max_hp": 1.35,  # TUNING (not in GDD)
 			"damage": 1.25,  # TUNING (not in GDD)
@@ -372,7 +372,7 @@ const EVOLUTIONS := {
 		"display_name": "Cathedral Horror",  # TUNING (not in GDD) owner-approved name
 		"plural": "Cathedral Horrors",
 		"icon": "cathedral_horror",
-		"description": "Your gargoyles tear free as Cathedral Horrors: wider dives that stun what they hit, and after each landing they turn to stone, untouchable.",
+		"description": "Wider dives stun their prey, and each landing turns them to untouchable stone.",
 		"mult": {
 			"max_hp": 1.4,  # TUNING (not in GDD)
 			"damage": 1.25,  # TUNING (not in GDD)
@@ -401,7 +401,7 @@ const EVOLUTIONS := {
 		"display_name": "Gravebow",  # GDD §6.1 (owner: singular "Gravebow")
 		"plural": "Gravebows",
 		"icon": "gravebow",
-		"description": "Your archers rise as Gravebows: piercing arrows, a splitting volley every 4th shot, and a curse that makes foes take more damage from all your undead.",
+		"description": "Piercing, splitting arrows curse foes to take more damage from your undead.",
 		"mult": {
 			"max_hp": 1.4,  # TUNING (not in GDD)
 			"damage": 1.25,  # TUNING (not in GDD)
@@ -436,7 +436,7 @@ const EVOLUTIONS := {
 		"display_name": "Bone Colossus",  # TUNING (not in GDD) owner-approved name
 		"plural": "Bone Colossi",
 		"icon": "bone_colossus",
-		"description": "Your abominations rise as Bone Colossi: far tougher, wider bodies, bigger stomps, foes nearby are drawn to them, and they burst into bone shrapnel when they fall.",
+		"description": "Colossi draw foes in, stomp wider and burst into bone shrapnel when slain.",
 		"mult": {
 			"max_hp": 1.6,  # TUNING (not in GDD) +60% HP
 		},
@@ -467,7 +467,7 @@ const EVOLUTIONS := {
 		"display_name": "Hellhound",  # TUNING (not in GDD) owner-approved name
 		"plural": "Hellhounds",
 		"icon": "hellhound",
-		"description": "Your Bone Hounds burst into hellfire: burning bites, a trail of flame behind every running hound, and the pack splits to run down two prey at once.",
+		"description": "Hellhounds bite with fire, leave burning trails and split to hunt two prey.",
 		"mult": {
 			"max_hp": 1.3,  # TUNING (not in GDD)
 			"damage": 1.2,  # TUNING (not in GDD)
@@ -498,7 +498,7 @@ const EVOLUTIONS := {
 		"display_name": "Keening Lady",  # TUNING (not in GDD) owner-approved name
 		"plural": "Keening Ladies",
 		"icon": "keening_lady",
-		"description": "Your Banshees rise as Keening Ladies: every Dirge rolls out in three widening waves, and the Covenant's priests it reaches cannot heal until it fades.",
+		"description": "Dirges roll out in widening waves and stop priests from healing.",
 		"mult": {
 			"max_hp": 1.3,  # TUNING (not in GDD)
 			"damage": 1.25,  # TUNING (not in GDD) shriek bolt
@@ -523,7 +523,7 @@ const EVOLUTIONS := {
 		"display_name": "Ossuary Engine",  # TUNING (not in GDD) owner-approved name
 		"plural": "Ossuary Engines",
 		"icon": "ossuary_engine",
-		"description": "Your Catapults are rebuilt as Ossuary Engines: three boulders per volley, and each one leaves a field of burning bone shards behind.",
+		"description": "Heavier volleys leave fields of burning bone shards where they land.",
 		# First forced tests (seed 1, --policy=summon): at x1.0 damage and 0.15 shards the
 		# catapults dealt 38% of all army damage in a mixed run (the Cathedral Horrors 20%)
 		# and 58-88% in runs with only the three newest classes; at x0.85 / 0.12 still 66%

@@ -36,7 +36,10 @@ const CORE_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
 ## Base stats per summon class at skill level 1, before any bonus.
 ## Field reference (same keys in every row):
 ##   display_name / plural   — UI strings.
-##   max_hp                  — hit points.
+##   description             — level-up card text: one short sentence, no
+##                             numbers and no evolution recipe (owner rule,
+##                             GDD §15.0 "Card text: one sentence").
+##   max_hp                 — hit points.
 ##   damage                  — damage per attack (Mender / Warder / Bishop: offensive bolt only).
 ##   attack_interval         — seconds between attacks / heal casts.
 ##   attack_range            — preferred attack range in px. For melee it is
@@ -122,6 +125,7 @@ const UNITS := {
 	"warrior": {
 		"display_name": "Skeleton Warrior",  # GDD §7
 		"plural": "Warriors",
+		"description": "Skeleton warriors that hold the line and shield you.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 60.0,  # GDD §23
 		"damage": 10.0,  # GDD §23
 		"attack_interval": 1.2,  # GDD §23
@@ -154,6 +158,7 @@ const UNITS := {
 	"archer": {
 		"display_name": "Skeletal Archer",  # GDD §7
 		"plural": "Archers",
+		"description": "Skeletal archers that hold their ground and loose arrows from afar.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 30.0,  # GDD §23
 		"damage": 8.0,  # GDD §23
 		"attack_interval": 1.6,  # GDD §23
@@ -180,6 +185,7 @@ const UNITS := {
 	"mage": {
 		"display_name": "Undead Mage",  # GDD §7
 		"plural": "Mages",
+		"description": "Undead mages hurl dark orbs that burst over packed foes.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 35.0,  # GDD §23
 		"damage": 14.0,  # GDD §23
 		"attack_interval": 2.5,  # GDD §23
@@ -209,6 +215,7 @@ const UNITS := {
 	"mender": {
 		"display_name": "Grave Mender",  # TUNING (not in GDD) user request: priest split
 		"plural": "Menders",
+		"description": "Grave menders that mend your undead and you.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 40.0,  # GDD §23 (priest)
 		"damage": 3.0,  # GDD §23 (minor offense when nothing needs healing)
 		"attack_interval": 2.0,  # GDD §23
@@ -239,6 +246,7 @@ const UNITS := {
 	"warder": {
 		"display_name": "Crypt Warder",  # TUNING (not in GDD) user request: priest split
 		"plural": "Warders",
+		"description": "Crypt warders that ward you and shield threatened allies.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 45.0,  # TUNING (not in GDD) a little sturdier than the Mender
 		"damage": 3.0,  # GDD §23 (priest minor offense)
 		"attack_interval": 2.0,  # GDD §23 (priest)
@@ -275,6 +283,7 @@ const UNITS := {
 	"bishop": {
 		"display_name": "Profane Bishop",  # GDD §4.2
 		"plural": "Bishops",
+		"description": "Profane bishops that heal, ward and burn foes with an unholy aura.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 70.0,  # TUNING (not in GDD)
 		"damage": 6.0,  # TUNING (not in GDD) minor offense when nothing needs healing
 		"attack_interval": 2.0,  # TUNING (not in GDD)
@@ -316,6 +325,7 @@ const UNITS := {
 	"abomination": {
 		"display_name": "Corpse Abomination",  # GDD §4.2 possible future summon
 		"plural": "Abominations",
+		"description": "Hulking abominations that block foes and stomp the ground around them.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 260.0,  # TUNING (not in GDD) ~4 warriors of HP in one body
 		"damage": 16.0,  # TUNING (not in GDD) fist slam (melee)
 		"attack_interval": 1.6,  # TUNING (not in GDD)
@@ -362,6 +372,7 @@ const UNITS := {
 	"rogue": {
 		"display_name": "Grave Rogue",  # TUNING (not in GDD) user request
 		"plural": "Rogues",
+		"description": "Grave rogues that dash through foes and leave them bleeding.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 38.0,  # TUNING (not in GDD) fragile
 		"damage": 9.0,  # TUNING (not in GDD) dagger stab (melee)
 		"attack_interval": 0.9,  # TUNING (not in GDD)
@@ -410,6 +421,7 @@ const UNITS := {
 	"gargoyle": {
 		"display_name": "Crypt Gargoyle",  # TUNING (not in GDD) user request
 		"plural": "Gargoyles",
+		"description": "Crypt gargoyles that fly over the fray and dive onto packed foes.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 70.0,  # TUNING (not in GDD) stone skin
 		"damage": 11.0,  # TUNING (not in GDD) claw rake (melee)
 		"attack_interval": 1.0,  # TUNING (not in GDD)
@@ -459,6 +471,7 @@ const UNITS := {
 	"frost_wraith": {
 		"display_name": "Frost Wraith",  # TUNING (not in GDD) user request
 		"plural": "Frost Wraiths",
+		"description": "Frost wraiths that chill foes and lock packs in Deep Freeze.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 34.0,  # TUNING (not in GDD)
 		# Combined balance pass: 8 -> 12. At 8 it dealt about 18k per run at Lv 5 (the other
 		# later classes 73-120k, warriors / Death Knights 120-140k) and about 4k in naive
@@ -508,6 +521,7 @@ const UNITS := {
 	"bone_hound": {
 		"display_name": "Bone Hound",  # TUNING (not in GDD) owner-approved class
 		"plural": "Bone Hounds",
+		"description": "Bone hounds that hunt one prey as a pack, biting harder together.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		# First forced tests (seed 1): at 26 HP and 5.5 damage every 0.8 s the pack died 238
 		# times in a run and dealt 7% of the army's damage, and in the Sanctum the Sentinels'
 		# flat armour 6 ate most of each bite. Heavier, slower bites (same damage per second).
@@ -557,6 +571,7 @@ const UNITS := {
 	"banshee": {
 		"display_name": "Banshee",  # TUNING (not in GDD) owner-approved class
 		"plural": "Banshees",
+		"description": "A floating banshee whose wailing Dirge slows foes and weakens their blows.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 40.0,  # TUNING (not in GDD) was 36 (63-70 deaths a run in the first forced tests)
 		"damage": 7.0,  # TUNING (not in GDD) spectral shriek bolt
 		"attack_interval": 1.8,  # TUNING (not in GDD) s
@@ -603,6 +618,7 @@ const UNITS := {
 	"corpse_catapult": {
 		"display_name": "Corpse Catapult",  # TUNING (not in GDD) owner-approved class
 		"plural": "Catapults",
+		"description": "Corpse catapults that hang back and lob boulders at packs and structures.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 90.0,  # TUNING (not in GDD) a sturdy frame of bone and sinew
 		"damage": 22.0,  # TUNING (not in GDD) per enemy in the boulder's splash
 		"attack_interval": 3.6,  # TUNING (not in GDD) s between boulders

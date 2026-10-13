@@ -48,7 +48,7 @@ const CARD_WEIGHT_MULT: float = 0.4  # TUNING (not in GDD)
 const PASSIVE := {
 	"display_name": "Profane Pact",
 	"icon": "profane_pact",
-	"description": "Swear a dark pact: the Covenant sends more and stronger soldiers, and you reap more from every death.",
+	"description": "A dark pact brings more, stronger foes and richer spoils from every death.",
 	"labels": {
 		"enemy_spawn": ["Foes: spawn rate", "pct"],
 		"enemy_hp": ["Foes: HP", "pct"],
