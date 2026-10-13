@@ -129,7 +129,7 @@ const EVOLUTIONS := {
 		"passive": "warding_ritual",
 		"display_name": "Eclipse Ward",
 		"icon": "eclipse_ward",
-		"description": "A rotating eclipse barrier of six orbs that releases periodic damage pulses.",
+		"description": "Six eclipse orbs guard you and pulse with dark damage.",
 		"labels": {"orbs": "Orbs", "damage": "Damage", "recharge": "Intercept recharge (s)", "pulse_damage": "Pulse damage", "pulse_interval": "Pulse every (s)"},
 		"stats": {
 			"orbs": 6, "damage": 24.0, "orbit_radius": 74.0, "orbit_speed": 4.2, "hit_cooldown": 0.4, "recharge": 2.0,  # TUNING (not in GDD)
@@ -141,7 +141,7 @@ const EVOLUTIONS := {
 		"passive": "abyssal_focus",
 		"display_name": "Abyssal Detonation",
 		"icon": "abyssal_detonation",
-		"description": "The abyss opens twice: a blast that drags foes inward, then a second detonation.",
+		"description": "A blast drags foes inward, then the abyss detonates again.",
 		"labels": {"damage": "Damage", "radius": "Radius", "cooldown": "Cooldown (s)", "slow": "Slow", "second_damage": "Second hit"},
 		"stats": {
 			"damage": 60.0, "radius": 150.0, "cooldown": 2.6, "slow": 0.6, "slow_duration": 2.0,  # TUNING (not in GDD)
@@ -153,7 +153,7 @@ const EVOLUTIONS := {
 		"passive": "shade_stride",
 		"display_name": "Ossuary Lance",
 		"icon": "ossuary_lance",
-		"description": "Great bone lances skewer every foe in their path, ahead of you and behind, and drive them back.",
+		"description": "Great bone lances skewer every foe ahead and behind and drive them back.",
 		"labels": {"damage": "Damage", "count": "Lances ahead", "back_count": "Lances behind", "cooldown": "Cooldown (s)", "pierce": "Pierce", "knockback": "Knockback"},
 		"stats": {
 			"damage": 34.0, "cooldown": 0.8, "count": 3, "pierce": 8, "speed": 640.0, "range": 520.0,  # TUNING (not in GDD)
@@ -165,7 +165,7 @@ const EVOLUTIONS := {
 		"passive": "vampiric_rite",
 		"display_name": "Soul Rapture",
 		"icon": "soul_rapture",
-		"description": "Five soul tethers feed you; a tethered foe bursts when it dies, and spare life mends your undead.",
+		"description": "More tethers feed you; tethered foes burst and spare life mends your undead.",
 		"labels": {"damage": "Drain", "targets": "Tethers", "cooldown": "Drain every (s)", "lifesteal": "Lifesteal", "heal_cap": "Heal cap (HP/s)", "burst": "Death burst (x drain)", "radius": "Burst radius"},
 		"stats": {
 			# First pass (18 dmg, burst x3) dealt about 350 dmg/s; trimmed.
@@ -178,7 +178,7 @@ const EVOLUTIONS := {
 		"passive": "necrotic_expanse",
 		"display_name": "Grave Eruption",
 		"icon": "grave_eruption",
-		"description": "Corpses erupt into fields of bone spikes; foes slain by an eruption erupt in turn.",
+		"description": "Corpses erupt into bone-spike fields, and their victims erupt in turn.",
 		"labels": {"damage": "Damage", "radius": "Radius", "count": "Corpses per cast", "cooldown": "Cooldown (s)", "zone_duration": "Spike field (s)", "zone_damage": "Spikes per tick", "chain": "Chain bursts"},
 		"stats": {
 			# First pass (damage 52, 4 corpses, spikes 25%, chain 6) and a second (46, spikes
@@ -197,7 +197,7 @@ const EVOLUTIONS := {
 		"passive": "lingering_malediction",
 		"display_name": "Pestilence",
 		"icon": "pestilence",
-		"description": "Black plague clouds creep after the living, deepen the Rot and end in a Death Nova.",
+		"description": "Creeping plague clouds deepen the Rot and end in a Death Nova.",
 		"labels": {"damage": "Damage per tick", "radius": "Radius", "duration": "Duration (s)", "cooldown": "Cooldown (s)", "rot": "Rot (damage taken)", "creep": "Creep speed", "nova": "Death Nova (x tick)"},
 		"stats": {
 			# First pass (12 dmg, 8 s every 1.8 s, Rot 30%, nova x4) dealt 118k in its first
@@ -211,7 +211,7 @@ const EVOLUTIONS := {
 		"passive": "grim_ledger",
 		"display_name": "Doom Brand",
 		"icon": "doom_brand",
-		"description": "Three foes are branded at once; a branded foe that dies detonates in a burst of doom and rises as a Risen.",
+		"description": "Branded foes explode in doom when they die, then rise as Risen.",
 		"labels": {"damage": "Brand damage per tick", "count": "Brands per cast", "cooldown": "Cooldown (s)", "risen_cap": "Risen at once", "detonation": "Detonation (x tick)", "radius": "Detonation radius"},
 		"stats": {
 			"damage": 9.0, "duration": 6.0, "cooldown": 1.6, "count": 3, "range": 400.0, "risen_cap": 5,  # TUNING (not in GDD)
@@ -223,7 +223,7 @@ const EVOLUTIONS := {
 		"passive": "grave_dominion",
 		"display_name": "Charnel Bastion",
 		"icon": "charnel_bastion",
-		"description": "A ring of bone walls rises all around you, holding the living at bay, then bursts into shrapnel when it falls.",
+		"description": "A ring of bone walls encloses you, then bursts into shrapnel.",
 		"labels": {"damage": "Spike damage per tick", "duration": "Wall duration (s)", "cooldown": "Cooldown (s)", "radius": "Ring radius", "pulse_damage": "Shrapnel damage"},
 		"stats": {
 			"damage": 10.0, "cooldown": 6.0, "duration": 4.5,  # TUNING (not in GDD)
@@ -235,7 +235,7 @@ const EVOLUTIONS := {
 		"passive": "spirit_binding",
 		"display_name": "Chains of the Damned",
 		"icon": "chains_of_the_damned",
-		"description": "The soul lightning leaps up to eight times and drags every foe it strikes toward the first.",
+		"description": "Soul lightning leaps farther and drags every foe it strikes toward the first.",
 		"labels": {"damage": "Damage", "jumps": "Jumps", "falloff": "Falloff per jump", "cooldown": "Cooldown (s)", "slow": "Slow", "pull": "Pull"},
 		"stats": {
 			"damage": 38.0, "cooldown": 1.1, "jumps": 8, "falloff": 0.12, "jump_range": 140.0, "range": 380.0, "slow": 0.45, "slow_duration": 1.0,  # TUNING (not in GDD)
@@ -247,7 +247,7 @@ const EVOLUTIONS := {
 		"passive": "necrotic_vigor",
 		"display_name": "Necrotic Blight",
 		"icon": "necrotic_blight",
-		"description": "A wide blight withers all around you and feeds you a little life for every foe caught inside.",
+		"description": "A wide blight withers the foes around you and feeds you their life.",
 		"labels": {"damage": "Damage per pulse", "radius": "Radius", "cooldown": "Pulse every (s)", "shred": "Armour removed", "heal": "Heal per foe", "heal_cap": "Heal cap (HP/s)"},
 		"stats": {
 			"damage": 13.0, "radius": 130.0, "cooldown": 0.7, "shred": 0.6,  # TUNING (not in GDD)
@@ -259,7 +259,7 @@ const EVOLUTIONS := {
 		"passive": "restless_dead",
 		"display_name": "Legion of Bones",
 		"icon": "legion_of_bones",
-		"description": "Six skeletons claw up at once, and each bursts into bone shards when it crumbles or falls.",
+		"description": "A legion of skeletons rises, each bursting into bone shards when it falls.",
 		"labels": {"count": "Skeletons", "cooldown": "Cooldown (s)", "life": "Skeleton life (s)", "skeleton_damage": "Skeleton damage", "damage": "Bone burst", "radius": "Burst radius"},
 		"stats": {
 			"count": 6, "cooldown": 7.0, "life": 10.0, "skeleton_hp": 0.8, "skeleton_damage": 1.1, "range": 320.0,  # TUNING (not in GDD)

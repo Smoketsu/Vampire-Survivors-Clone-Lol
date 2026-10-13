@@ -1,0 +1,25 @@
+A sprite sheet of 6 small FLOOR DECALS for a top-down 2D pixel-art game, on a fully TRANSPARENT background.
+Layout: a grid of 3 columns x 2 rows; each decal sits alone in the centre of its own cell, with wide empty
+transparent gaps between them (nothing touches, nothing overlaps a cell border).
+
+Every decal is a flat detail LYING ON THE GROUND, seen STRAIGHT FROM ABOVE (orthographic top-down view, like a map:
+no perspective, no 3/4 view, no side view, no visible height or thickness). NO cast shadow, no drop shadow, no
+shading under it, no glow halo, no outline frame. Nothing may look like a standing object or an obstacle: everything
+is flattened into the ground, like a stain, a scatter or a thing that fell over and lies flat.
+
+LOW-RESOLUTION pixel art: each decal is only about 16 to 26 pixels across, shown enlarged so every pixel is a big crisp
+square block (nearest-neighbour), with chunky 2-3 pixel details. No gradients, no dithering, no soft blur, no
+anti-aliasing, no texture noise. Very DARK, LOW CONTRAST and QUIET colours, close to the dark floor they lie on
+(the attached image is that floor: match its darkness and pixel size, but do NOT draw the floor itself, the
+background must stay transparent).
+
+The decals, left to right, top to bottom:
+1. A small torn crimson pennant fallen and lying flat on muddy ground (about 22 x 12 pixels): a thin broken grey pole lying flat, a small dark-red triangular cloth crumpled flat beside it.
+2. A trampled crimson pennant lying flat (about 18 x 12 pixels): dark-red triangular cloth with a muddy edge, a short broken pole.
+3. A fallen banner lying flat on cobbles (about 26 x 16 pixels): a dark-red rectangular cloth spread flat with a small dull-gold emblem stripe, its wooden pole with a gold tip lying flat beside it.
+4. A torn, trampled banner cloth lying flat (about 22 x 14 pixels): dark red with a dull-gold fringe, half its pole.
+5. A scatter of small flat stone chips and grit on the ground (about 16 x 12 pixels): five or six small dark-grey stone fragments, no height.
+6. A smaller scatter of dark grey gravel and two flat stone chips (about 12 x 10 pixels).
+
+Colours: ONLY flat fills from this list: #7A0E1B dark red (the cloths), #26070C near-black red, #4F3320 dark brown, #8C6040 dull gold-brown, #E0A92E gold (ONLY a few pixels), #3B4352 dark grey, #26272A dark slate (most of the stones), #0F141C near-black.
+No text, no labels, no numbers, no border, no watermark.

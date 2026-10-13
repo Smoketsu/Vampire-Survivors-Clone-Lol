@@ -27,8 +27,9 @@
 ##   Lingering Malediction — +% spell durations (evolves Plague Cloud).
 ## plus the four later horde passives (GDD §34 names them; the effects are
 ## the prototype's choice, recorded in GDD §15.0, open question 28). Each
-## will pair with a later summon evolution (not built yet; only the card
-## text names it):
+## pairs with a later summon evolution (recipes in SummonEvolutionData; card
+## descriptions never spell a recipe out, owner rule "Card text: one
+## sentence"):
 ##   Bone Plating       — minions ignore a flat amount of every hit
 ##                        (Abominations -> Bone Colossi).
 ##   Unholy Precision   — minion critical hits (Archers -> Gravebows).
@@ -164,7 +165,9 @@ const LEDGER_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
 ## Passive definitions.
 ##   display_name — UI name.
 ##   icon         — IconGlyph kind.
-##   description  — card text (GDD §34 definition).
+##   description  — card text (GDD §34 definition): one short sentence, no
+##                  numbers and no evolution recipe (GDD §15.0 "Card text:
+##                  one sentence").
 ##   labels       — stat key -> [UI label, format] where format is "int",
 ##                  "pct" (0.1 -> +10%), "neg_pct" (0.1 -> -10%) or "num"
 ##                  (0.4 -> +0.4).
@@ -228,7 +231,7 @@ const PASSIVES := {
 	"grave_dominion": {
 		"display_name": "Grave Dominion",
 		"icon": "grave_dominion",
-		"description": "Increases summon capacity of every summon class you command. At Lv 5, with Bone Wall at Lv 5, a treasure chest evolves it into Charnel Bastion.",
+		"description": "Raises the capacity of every summon class you command.",
 		"labels": {"capacity_per_class": ["Capacity per class", "int"]},
 		"levels": [
 			{"capacity_per_class": 1},  # TUNING (not in GDD) every level adds +1
@@ -241,7 +244,7 @@ const PASSIVES := {
 	"necrotic_vigor": {
 		"display_name": "Necrotic Vigor",
 		"icon": "necrotic_vigor",
-		"description": "Increases maximum health of all minions. At Lv 5, with Wither at Lv 5, a treasure chest evolves it into Necrotic Blight.",
+		"description": "Increases maximum health of all minions.",
 		"labels": {"minion_hp": ["Minion max HP", "pct"]},
 		"levels": [
 			{"minion_hp": 0.15},  # TUNING (not in GDD)
@@ -254,7 +257,7 @@ const PASSIVES := {
 	"dark_command": {
 		"display_name": "Dark Command",
 		"icon": "dark_command",
-		"description": "Increases minion attack damage and attack speed. At Lv 5, with Warriors at Lv 5, a treasure chest raises them as Death Knights.",
+		"description": "Increases minion attack damage and attack speed.",
 		"labels": {"minion_damage": ["Minion damage", "pct"], "minion_speed": ["Minion attack speed", "pct"]},
 		"levels": [
 			{"minion_damage": 0.10, "minion_speed": 0.05},  # TUNING (not in GDD)
@@ -267,7 +270,7 @@ const PASSIVES := {
 	"soul_recycling": {
 		"display_name": "Soul Recycling",
 		"icon": "soul_recycling",
-		"description": "Fallen summons are replaced faster. At Lv 5, with Frost Wraiths at Lv 5, a treasure chest raises them as Winter Revenants.",
+		"description": "Fallen summons are replaced faster.",
 		"labels": {"replace_reduction": ["Replacement time", "neg_pct"]},
 		"levels": [
 			{"replace_reduction": 0.10},  # TUNING (not in GDD)
@@ -280,7 +283,7 @@ const PASSIVES := {
 	"soul_conduit": {
 		"display_name": "Soul Conduit",
 		"icon": "soul_conduit",
-		"description": "Channel harvested souls into your shadow spells. At Lv 5, with Shadow Bolt at Lv 5, a treasure chest evolves it into Void Barrage.",
+		"description": "Harvested souls add damage to your spells.",
 		"labels": {"spell_damage": ["Spell damage", "pct"]},
 		"levels": [
 			{"spell_damage": 0.10},  # TUNING (not in GDD)
@@ -293,7 +296,7 @@ const PASSIVES := {
 	"warding_ritual": {
 		"display_name": "Warding Ritual",
 		"icon": "warding_ritual",
-		"description": "Protective sigils dull every blow you take. At Lv 5, with Shadow Orb Shield at Lv 5, a treasure chest evolves it into Eclipse Ward.",
+		"description": "Protective sigils dull every blow you take.",
 		"labels": {"damage_reduction": ["Damage taken", "neg_pct"]},
 		"levels": [
 			{"damage_reduction": 0.05},  # TUNING (not in GDD)
@@ -306,7 +309,7 @@ const PASSIVES := {
 	"abyssal_focus": {
 		"display_name": "Abyssal Focus",
 		"icon": "abyssal_focus",
-		"description": "Your spells return faster from the abyss. At Lv 5, with Shadow Blast at Lv 5, a treasure chest evolves it into Abyssal Detonation.",
+		"description": "Your spells return faster from the abyss.",
 		"labels": {"cooldown_reduction": ["Spell cooldowns", "neg_pct"]},
 		"levels": [
 			{"cooldown_reduction": 0.05},  # TUNING (not in GDD)
@@ -319,7 +322,7 @@ const PASSIVES := {
 	"forbidden_knowledge": {
 		"display_name": "Forbidden Knowledge",
 		"icon": "forbidden_knowledge",
-		"description": "Forbidden rites empower your Undead Mages. At Lv 5, with Mages at Lv 5, a treasure chest raises them as Liches.",
+		"description": "Forbidden rites empower your Undead Mages.",
 		"labels": {"mage_damage": ["Mage damage", "pct"], "mage_splash": ["Mage splash radius", "pct"]},
 		"classes": ["mage"],
 		"levels": [
@@ -333,7 +336,7 @@ const PASSIVES := {
 	"dark_benediction": {
 		"display_name": "Dark Benediction",
 		"icon": "dark_benediction",
-		"description": "Unholy blessings strengthen Menders, Warders and Bishops. At Lv 5, with Menders and Warders at Lv 5, a treasure chest merges them into Profane Bishops.",
+		"description": "Unholy blessings strengthen your heals, wards and barriers.",
 		"labels": {"support_power": ["Heals, wards and barriers", "pct"]},
 		"classes": ["mender", "warder", "bishop"],
 		"levels": [
@@ -347,7 +350,7 @@ const PASSIVES := {
 	"shade_stride": {
 		"display_name": "Shade Stride",
 		"icon": "shade_stride",
-		"description": "You glide like a shade across the graves. At Lv 5, with Bone Spear at Lv 5, a treasure chest evolves it into Ossuary Lance.",
+		"description": "You move faster, gliding like a shade across the graves.",
 		"labels": {"move_speed": ["Move speed", "pct"]},
 		"levels": [
 			{"move_speed": 0.03},  # TUNING (not in GDD)
@@ -360,7 +363,7 @@ const PASSIVES := {
 	"vampiric_rite": {
 		"display_name": "Vampiric Rite",
 		"icon": "vampiric_rite",
-		"description": "Stolen life seeps back into you. At Lv 5, with Soul Siphon at Lv 5, a treasure chest evolves it into Soul Rapture.",
+		"description": "Stolen life slowly seeps back into you.",
 		"labels": {"hp_regen": ["Regeneration (HP/s)", "num"]},
 		"levels": [
 			{"hp_regen": 0.2},  # TUNING (not in GDD)
@@ -373,7 +376,7 @@ const PASSIVES := {
 	"necrotic_expanse": {
 		"display_name": "Necrotic Expanse",
 		"icon": "necrotic_expanse",
-		"description": "Your blasts, clouds and bursts spread wider. At Lv 5, with Corpse Explosion at Lv 5, a treasure chest evolves it into Grave Eruption.",
+		"description": "Your blasts, clouds and bursts spread wider.",
 		"labels": {"spell_area": ["Spell area (radius)", "pct"]},
 		"levels": [
 			{"spell_area": 0.05},  # TUNING (not in GDD)
@@ -386,7 +389,7 @@ const PASSIVES := {
 	"lingering_malediction": {
 		"display_name": "Lingering Malediction",
 		"icon": "lingering_malediction",
-		"description": "Your curses outlast their casting. At Lv 5, with Plague Cloud at Lv 5, a treasure chest evolves it into Pestilence.",
+		"description": "Your clouds, spike fields and slows linger longer.",
 		"labels": {"spell_duration": ["Spell duration", "pct"]},
 		"levels": [
 			{"spell_duration": 0.10},  # TUNING (not in GDD)
@@ -399,7 +402,7 @@ const PASSIVES := {
 	"bone_plating": {
 		"display_name": "Bone Plating",
 		"icon": "bone_plating",
-		"description": "Bone plates turn the edge of every blow your minions take. At Lv 5, with Abominations at Lv 5, a treasure chest raises them as Bone Colossi.",
+		"description": "Bone plates turn the edge of every blow your minions take.",
 		"labels": {"flat_reduction": ["Damage ignored per hit", "int"]},
 		"shared_card_pool": true,
 		"levels": [
@@ -413,7 +416,7 @@ const PASSIVES := {
 	"unholy_precision": {
 		"display_name": "Unholy Precision",
 		"icon": "unholy_precision",
-		"description": "Your minions find the weak points of the living: their attacks can strike critically for double damage. At Lv 5, with Archers at Lv 5, a treasure chest raises them as Gravebows.",
+		"description": "Your minions' attacks can strike critically for double damage.",
 		"labels": {"crit_chance": ["Minion critical chance", "pct"]},
 		"shared_card_pool": true,
 		"levels": [
@@ -427,7 +430,7 @@ const PASSIVES := {
 	"unholy_resilience": {
 		"display_name": "Unholy Resilience",
 		"icon": "unholy_resilience",
-		"description": "Your minions shrug off slams, sweeps, holy fire and consecrated ground. At Lv 5, with Gargoyles at Lv 5, a treasure chest raises them as Cathedral Horrors.",
+		"description": "Your minions shrug off slams, sweeps, holy fire and consecrated ground.",
 		"labels": {"area_holy_reduction": ["Area and holy damage taken", "neg_pct"]},
 		"shared_card_pool": true,
 		"levels": [
@@ -441,7 +444,7 @@ const PASSIVES := {
 	"bound_souls": {
 		"display_name": "Bound Souls",
 		"icon": "bound_souls",
-		"description": "Chains of will bind your minions to you: they move faster, roam farther before they are recalled, and return sooner. At Lv 5, with Rogues at Lv 5, a treasure chest raises them as Shadow Reapers.",
+		"description": "Your minions move faster, roam farther and return to you sooner.",
 		"labels": {"minion_move_speed": ["Minion move speed", "pct"], "leash_range": ["Leash range", "pct"], "return_reduction": ["Return time", "neg_pct"]},
 		"shared_card_pool": true,
 		"levels": [
@@ -455,7 +458,7 @@ const PASSIVES := {
 	"grim_ledger": {
 		"display_name": "Grim Ledger",
 		"icon": "grim_ledger",
-		"description": "Every great soul is written in your ledger: elites, minibosses and bosses take more damage from everything. At Lv 5, with Death Mark at Lv 5, a treasure chest evolves it into Doom Brand.",
+		"description": "Elites, minibosses and bosses take more damage from everything.",
 		"labels": {"elite_damage": ["Damage to elites and bosses", "pct"]},
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
 		"levels": [
@@ -469,7 +472,7 @@ const PASSIVES := {
 	"spirit_binding": {
 		"display_name": "Spirit Binding",
 		"icon": "spirit_binding",
-		"description": "Spectral fetters hold the living longer: every slow, chill, freeze and stun you inflict lasts longer. At Lv 5, with Soul Chains at Lv 5, a treasure chest evolves it into Chains of the Damned.",
+		"description": "Every slow, chill, freeze and stun you inflict lasts longer.",
 		"labels": {"cc_duration": ["Slow, freeze and stun duration", "pct"]},
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
 		"levels": [
@@ -483,7 +486,7 @@ const PASSIVES := {
 	"restless_dead": {
 		"display_name": "Restless Dead",
 		"icon": "restless_dead",
-		"description": "The dead you raise for a moment refuse to lie down: temporary summons last longer and strike harder. At Lv 5, with Raise Dead at Lv 5, a treasure chest evolves it into Legion of Bones.",
+		"description": "Temporary summons last longer and strike harder.",
 		"labels": {"temp_duration": ["Temporary summon lifetime", "pct"], "temp_damage": ["Temporary summon damage", "pct"]},
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
 		"levels": [
@@ -497,7 +500,7 @@ const PASSIVES := {
 	"blood_scent": {
 		"display_name": "Blood Scent",
 		"icon": "blood_scent",
-		"description": "The smell of the living drives your swiftest dead into a frenzy: fast summons (Hounds, Rogues, Gargoyles, Archers) move and attack faster. At Lv 5, with Bone Hounds at Lv 5, a treasure chest raises them as Hellhounds.",
+		"description": "Your swiftest dead move and attack faster.",
 		"labels": {"fast_move_speed": ["Fast summon move speed", "pct"], "fast_attack_speed": ["Fast summon attack speed", "pct"]},
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
 		"levels": [
@@ -511,7 +514,7 @@ const PASSIVES := {
 	"mournsong": {
 		"display_name": "Mournsong",
 		"icon": "mournsong",
-		"description": "A dirge clings to everything your power touches: slows, chills, curses, Rot and the Banshee's Dirge last longer. At Lv 5, with Banshees at Lv 5, a treasure chest raises them as Keening Ladies.",
+		"description": "Slows, chills, curses, Rot and Dirges you inflict all last longer.",
 		"labels": {"debuff_duration": ["Weakening effect duration", "pct"]},
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
 		"levels": [
@@ -525,7 +528,7 @@ const PASSIVES := {
 	"siegecraft": {
 		"display_name": "Siegecraft",
 		"icon": "siegecraft",
-		"description": "Your dead learn to break walls and champions: summons deal more damage to structures, elites and minibosses. At Lv 5, with Catapults at Lv 5, a treasure chest rebuilds them as Ossuary Engines.",
+		"description": "Summons deal more damage to structures, elites and minibosses.",
 		"labels": {"siege_damage": ["Summon damage to structures, elites, minibosses", "pct"]},
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
 		"levels": [

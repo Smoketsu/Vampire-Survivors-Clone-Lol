@@ -708,9 +708,9 @@ the size in its row.
 - **Floors:** when a zone's base tile exists, the floor is one repeating rect of it on the world tile
   grid (seamless across tile edges), plus the variants `tiles/<zone>_2.png` and `tiles/<zone>_3.png`
   (optional, same size, each on 20% of the 128 px cells, picked from the floor's stable cell hash, so
-  the same cell always shows the same tile). The code decorations are still drawn on top until the
-  decals exist, except the Graveyard's solid-looking ones (tombstone, stone cross, dead tree), which
-  are skipped on the tile floor because they looked like the gravestone obstacles but never collide. The March road strip is drawn over the zone tile along y = 0 (`march_road_<style>.png`
+  the same cell always shows the same tile). On it the code decorations become floor decals, are
+  dropped or stay code-drawn ("Decals" below); the Graveyard's solid-looking ones (tombstone, stone
+  cross, dead tree) are skipped on the tile floor because they looked like the gravestone obstacles but never collide. The March road strip is drawn over the zone tile along y = 0 (`march_road_<style>.png`
   overrides it in one zone, e.g. `march_road_fortress.png`). The Sanctum corruption lerps the tiles
   toward the same purple as the code floor (one translucent overlay of the corruption colour at the
   code floor's blend strength), so no purple goes into the tiles.
@@ -785,21 +785,54 @@ lightness rank with hue-chosen patches) and merges single pixels. A variant goes
 with its histogram matched to the base source, then is cut into the base tile along minimum-error paths
 in a 28 px band on each edge (the outer 2 px always the base's; a layout swaps whole stones that stay clear of the edges), so its edges equal the base tile's and
 any cell mixes with any other. All floors stay inside the floor band (mean OKLab L 0.24-0.29, mostly the
-new floor shades), so every unit's main shape keeps its +0.15 contrast. The code decorations are still
-drawn on top until the decals exist.
+new floor shades), so every unit's main shape keeps its +0.15 contrast. On the tile floors the code
+decorations became decals (see "Decals" below).
 
 The Sanctum floors are blended toward purple as the Sanctum is corrupted, so do not bake purple in.
 
-**Decals** (small flat floor details scattered by hash, transparent background, later pass): per zone,
-the ones the code draws today:
-- Graveyard: fog patch (soft, translucent: stays code-drawn), grass tufts, open grave, small flat
-  tombstone, stone cross.
-- March I: ash drift, charred stump, embers, spent arrow, broken plank. March II: grass tufts, mud
-  patch, sharpened stakes, crimson pennant. March III: trampled dirt, campfire, tent rope and peg,
-  small crate. March IV: cobbles, rubble, gold-and-crimson banner post, tower shadow.
-- Sanctum I: moss, cracked slab, gold inlay star, fallen petals. Sanctum II: gold tesserae, mosaic
-  rosette, diamond inlay, crimson carpet runner. Sanctum III: turf, flowers, sundial ring, leaves.
-  Sanctum IV: stained-glass light pool (translucent: stays code-drawn), marble vein, inlaid square.
+**Decals** (`assets/sprites/decals/`, **done Oct 2026**): small flat floor details lying on the tile
+floors, seen from straight above, transparent background, **no outline, no rim light, no cast shadow**
+and nothing that looks solid (a standing stake, crate or banner post would read as an obstacle, so
+those are drawn fallen or smashed flat). They stay dark and quiet like the floors (mean OKLab L
+0.19-0.35 except the tiny petals and flowers; only small accents are bright: embers, gold glints,
+the arrow's fletching), in palette colours with the floor shades allowed.
+
+*Hookup* (`scripts/data/decal_data.gd`, `EnvironmentArt.draw_decal()` / `draw_strip()`): the code
+floors place one decoration per 128 px cell at a hashed point and roll. On a zone's tile floor each
+decoration is either (a) its decal `decals/<zone>_<name>.png`, drawn at its own texel size through the
+sharp-pixel shader and centred on the code decoration's own hashed point (plus `DecalData.OFFSETS`,
+the centre of what the code drew), with optional variants `<key>_2`, `<key>_3` picked from the same
+cell hash, so layout and determinism are unchanged; (b) dropped when the tile already shows it
+(`DecalData.DROPPED`); or (c) still code-drawn: soft translucent effects pixel art cannot do better.
+A missing decal PNG falls back to the code decoration; a zone without its tile PNG keeps every code
+decoration exactly as before. The Sanctum corruption overlay is drawn last on the tile floor, so it
+covers the decals exactly like the tiles.
+
+| Zone | Decoration → decision (decal key, size in art px) |
+|---|---|
+| Graveyard | fog patch → code; grass tufts → `graveyard_grass` (15x10, 9x8, 17x7); open grave → `graveyard_grave` (20x14, 15x13); tombstone, stone cross, dead tree → skipped (solid-looking, unchanged rule) |
+| March I | ash drift → `march_burned_ash` (38x28, 27x20); charred stump → `march_burned_stump` (cut flush, 11x13, 10x11); embers → `march_burned_embers` (15x8 x2); spent arrow → `march_arrow` (11x11, 12x10; also the odd arrow on the road in every March zone); broken plank → `march_burned_plank` (13x7, 10x7) |
+| March II | grass tufts, mud → dropped (the tile is grass with mud patches); stakes → `march_checkpoint_stakes` (fallen flat, 15x12, 12x12); pennant → `march_checkpoint_pennant` (trampled, 18x9, 13x9) |
+| March III | trampled dirt → dropped (tile variants); campfire → `march_camp_campfire` (burnt-out ring with embers, glow included, 18x16, 16x14); rope and peg → `march_camp_rope` (20x8, and mirrored); small crate → `march_camp_crate` (smashed flat, 18x14, 14x11) |
+| March IV | cobbles, rubble → dropped (cobbled tile; rubble is an obstacle kind); banner post → `march_fortress_banner` (a trampled banner cloth, 19x15, 17x13); tower shadow → code |
+| Sanctum I | cracked slab, paler slab → dropped (the slabs have their own cracks and shades); moss → `sanctum_courtyard_moss` (24x14, 16x10); gold inlay star → `sanctum_courtyard_star` (19x19, 14x15); petals → `sanctum_courtyard_petals` (12x9, 7x7) |
+| Sanctum II | gold tesserae, diamond inlay → dropped (mosaic tile with a diamond lattice); rosette → `sanctum_halls_rosette` (32x32, 24x24, snapped to the tile's 8 px tesserae, `DecalData.SNAP`); carpet runner → `sanctum_halls_carpet` (a 128x36 strip, one piece per cell along every fourth cell row) |
+| Sanctum III | turf → dropped (turf tile inside stone walks); flowers → `sanctum_cloisters_flowers` (26x12, 21x10); sundial ring → `sanctum_cloisters_sundial` (28x28, 24x24); leaves → `sanctum_cloisters_leaves` (16x8, 15x7) |
+| Sanctum IV | stained-glass light pool → code; marble vein → dropped (veined marble tile); inlaid square → `sanctum_sanctuary_inlay` (18x18) |
+
+*Process* (`art_source/decals/make_decals.py`, deterministic: `python3 art_source/decals/make_decals.py`
+rebuilds every decal). Eight AI sheets (`art_source/decals/sheets/<sheet>.png`, 1536x1024, prompt in
+`<sheet>.txt`, generated through `tools/gen_image.py` with the zone tile x8 attached): each holds 2-6
+decals in a grid of equal cells, every decal "a flat detail LYING ON THE GROUND, seen STRAIGHT FROM
+ABOVE ... NO cast shadow ... nothing may look like a standing object", low-resolution pixel art in a
+short colour list. The script cuts each cell, crops it, downscales it to the recipe's height (block
+mean, an opaque threshold per recipe so thin arrows and ropes survive), colours it from the recipe's
+own few palette names (accents such as embers or gold only where the source really is that colour,
+the rest snapped, optionally after a lightness stretch or a darkening shift), cleans single pixels,
+and can mirror or turn it for a variant. prepare_sprite.py was tried first: its unit-oriented ramps
+and level stretch turned ash into ink and lost thin features, hence the decal recipes. The carpet
+runner is built (periodic by construction, like the tile layouts): a dark-red field between dull-gold
+borders, a crimson diamond every 32 px.
 
 **Obstacles** (`assets/sprites/obstacles/<kind>_<size>.png`, later pass): each kind comes in **2-3
 fixed size variants** (`sizes` in `scripts/data/stages/*.gd` "kinds", inside the old random ranges),

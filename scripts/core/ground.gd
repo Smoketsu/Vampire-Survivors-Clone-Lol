@@ -9,8 +9,10 @@
 ## tile per decoration CELL, the variant picked from the same cell hash as the
 ## decoration (_cell_hash()), drawn 1 art px = 1 layout px through the
 ## sharp-pixel shader on the same redraws as before (a few draw calls per
-## redraw); the flat code decorations stay on top (the solid-looking ones are
-## skipped, SOLID_DECOR_ROLL). No PNG: the code floor as before.
+## redraw); on it each flat code decoration becomes a pixel-art floor decal at
+## the same hashed point, is dropped, or stays code-drawn (_decal(), DecalData;
+## the solid-looking ones are skipped, SOLID_DECOR_ROLL). No PNG: the code
+## floor and decorations as before.
 ## Purely cosmetic: nothing here collides.
 class_name Ground
 extends Node2D
@@ -84,6 +86,21 @@ func _cell_hash(cx: int, cy: int) -> int:
 	return absi(hash(Vector2i(cx, cy)))
 
 
+## Decal key prefix of the current zone (DecalData: "<zone>_"; the decoration
+## name follows). MarchGround and SanctumGround override it.
+func _decal_prefix() -> String:
+	return "graveyard_"
+
+
+## On the tile floor, handles the code decoration `key` (DecalData key, built
+## from _decal_prefix()) at hashed point `p` of a cell with hash `h`: draws its
+## decal, or nothing when DROPPED, and returns true so the caller skips its
+## code drawing. Returns false on the code floor or without the decal's PNG
+## (the code decoration is drawn as before).
+func _decal(key: String, p: Vector2, h: int) -> bool:
+	return _art_floor and EnvironmentArt.draw_decal(self, key, p, h)
+
+
 ## Floor tile key of the current zone (EnvironmentArtData key scheme).
 func _tile_key() -> String:
 	return EnvironmentArtData.TILE_PREFIX + "graveyard"
@@ -125,13 +142,17 @@ func _draw_cell(cx: int, cy: int) -> void:
 		draw_line(p + Vector2(0, -20), p + Vector2(10, -32), trunk, 2.0)
 	elif roll < 0.23:
 		# Broken (open) grave.
+		if _decal(_decal_prefix() + "grave", p, h):
+			return
 		draw_rect(Rect2(p + Vector2(-9, -5), Vector2(18, 10)), Color(0.05, 0.05, 0.06))
 		draw_rect(Rect2(p + Vector2(-9, -5), Vector2(18, 10)), Palette.STONE, false, 1.5)
 	elif roll < 0.36:
-		# Spectral fog patch.
+		# Spectral fog patch (soft and translucent: code-drawn on the tile floor too).
 		draw_circle(p, 40.0 + float(h % 30), Palette.FOG)
 	elif roll < 0.42:
 		# Grass tufts.
+		if _decal(_decal_prefix() + "grass", p, h):
+			return
 		var grass := Color(0.14, 0.2, 0.16)
 		for i in 3:
 			var gp := p + Vector2(float(i) * 5.0 - 5.0, 0)
