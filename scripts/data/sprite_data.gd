@@ -92,9 +92,9 @@ const HEIGHTS: Dictionary = {
 	"enemies/purifier": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/templar": 78.0,  # TUNING (not in GDD) art pass: 52 before; the upright lance rises well above the helm (body ~52)
 	"enemies/inquisitor": 64.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/shieldbearer": 50.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/banner_bearer": 50.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/halberdier": 50.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/shieldbearer": 56.0,  # TUNING (not in GDD) art pass: 50 before; the spear tip rises above the helm (body ~50)
+	"enemies/banner_bearer": 84.0,  # TUNING (not in GDD) art pass: 50 before; the war banner rises far above the head (body ~44)
+	"enemies/halberdier": 60.0,  # TUNING (not in GDD) art pass: 50 before; the halberd blade rises above the helm (body ~46)
 	"enemies/sanctified_sentinel": 72.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/radiant_inquisitor": 60.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/high_confessor": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size

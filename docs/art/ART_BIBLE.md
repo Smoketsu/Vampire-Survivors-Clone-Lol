@@ -457,10 +457,10 @@ The undead army: bone, cold grey and teal soul fire, one accent per class, **no 
 | `bishop.png` | Profane Bishop: tall teal-and-grey vestments, a bone mitre, a teal halo, a bone crook | 52 | to redo |
 | `death_knight.png` | Death Knight: massive dark cold-grey plate, a skull helm with teal eye glow, a bone-white greatsword | 52 | to redo |
 | `lich.png` | Lich: a crowned skeletal sorcerer in a **deep arcane-blue** robe, a floating phylactery with a pale blue core, bone crown. Signature: the phylactery | 52 | to redo |
-| `abomination.png` | Corpse Abomination: a huge stitched hulk of sickly moss-grey corpse flesh, bone spikes, tiny skull head, teal eyes | 88 | to redo |
-| `rogue.png` | Grave Rogue: a lean skeleton in a near-black cold-grey hooded cloak, twin curved bone daggers, teal eyes | 44 | to redo |
-| `gargoyle.png` | Crypt Gargoyle: cold-grey weathered stone gargoyle, wings half-spread, long claws | 56 | to redo |
-| `frost_wraith.png` | Frost Wraith: a **pale icy cyan** spectre (ice ramp, grey shadows), a tattered robe trailing into frost mist, cold white eyes. Kept clearly apart from the Mage's arcane blue | 48 | to redo |
+| `abomination.png` | Corpse Abomination: a huge stitched hulk of sickly moss-grey corpse flesh, bone spikes, tiny skull head, teal eyes | 88 | done |
+| `rogue.png` | Grave Rogue: a lean skeleton in a near-black cold-grey hooded cloak, twin curved bone daggers, teal eyes | 44 | done |
+| `gargoyle.png` | Crypt Gargoyle: cold-grey weathered stone gargoyle, wings half-spread, long claws | 56 | done |
+| `frost_wraith.png` | Frost Wraith: a **pale icy cyan** spectre (ice ramp, grey shadows), a tattered robe trailing into frost mist, cold white eyes. Kept clearly apart from the Mage's arcane blue | 48 | done |
 | `risen.png` | Raised temporary skeleton: plain, ragged, bone with faint teal eyes | 36 | to redo |
 | `winter_revenant.png` | Winter Revenant (Frost Wraith evolution): a towering crowned ice wraith in tattered **pale icy cyan** frost robes, a staff of dark ice, the brightest ice highlights | 56 | new |
 | `shadow_reaper.png` | Shadow Reaper (Grave Rogue evolution): a hooded skeletal assassin in a near-black cold-grey cloak with dark smoke trailing, a bone skull mask with teal eyes, twin scythe-blades (one forward, one swept back) | 48 | new |
@@ -487,9 +487,9 @@ Crimson, ivory and warm steel; gold for elites, the Sanctum kinds and the Reckon
 | `purifier.png` | Purifier: a warm-steel mask, a flaming torch-censer (flame). Signature: the flame | 44 | done |
 | `templar.png` | Templar Knight: gold-trimmed heavy knight, a lance, a crimson cape. Signature: the lance | 78 (body 52, lance above) | done |
 | `inquisitor.png` | Inquisitor of the End (Reckoning): towering, radiant gold and holy white, faceless (glow allowed) | 64 | to redo |
-| `shieldbearer.png` | Covenant Shieldbearer: a huge crimson tower shield covering the body. Signature: the tower shield | 50 | to redo |
-| `banner_bearer.png` | Banner Bearer: a tall crimson-and-gold war banner on a pole. Signature: the banner | 50 | to redo |
-| `halberdier.png` | Crimson Halberdier: a long halberd, warm-steel half-plate. Signature: the halberd | 50 | to redo |
+| `shieldbearer.png` | Covenant Shieldbearer: a huge crimson tower shield covering the body. Signature: the tower shield | 56 (body 50, spear tip above) | done |
+| `banner_bearer.png` | Banner Bearer: a tall crimson-and-gold war banner on a pole. Signature: the banner | 84 (body 44, banner above) | done |
+| `halberdier.png` | Crimson Halberdier: a long halberd, warm-steel half-plate. Signature: the halberd | 60 (body 46, halberd above) | done |
 | `sanctified_sentinel.png` | Sanctified Sentinel (Stage 3 construct): a squat, blocky animated statue of pale cathedral stone (bone ramp) inlaid with gold lines, a glowing gold eye slit in a square head, one arm a long stone blade held forward; no cloth | 72 | new |
 | `radiant_inquisitor.png` | Radiant Inquisitor (Stage 3 elite caster): a tall inquisitor in ivory robes with a crimson stole, face hidden under a hood, a gold sunburst halo of rays, a gold-bound tome | 60 | new |
 | `high_confessor.png` | High Confessor (Stage 3 elite priest): a broad figure in wide ivory vestments with a crimson stole, a tall gold mitre, a gold crook staff with a faint halo | 56 | new |
