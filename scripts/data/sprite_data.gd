@@ -10,16 +10,28 @@ extends RefCounted
 const ROOT: String = "res://assets/sprites/"
 
 ## Grid art (the true pixel-art pass): screen px per art px at the 1280x720
-## viewport, an integer (2 = one art pixel is a 2x2 block on screen at Zoom
-## Normal, 3x3 at Close x1.5). Storage contract with tools/prepare_sprite.py:
-## a grid-art PNG for key K is exactly HEIGHTS[K] / ART_SCALE texels tall
-## (every HEIGHTS value is even) and SpriteBank draws it ART_SCALE times its
-## texel size, sharp (nearest filtering). A PNG taller than HEIGHTS[K] is a
-## legacy placeholder (stored at 3x) and is still scaled smoothly to HEIGHTS[K].
-const ART_SCALE: int = 2  # TUNING (not in GDD) GDD §15.0 "Art pass (true pixel art)": 1 art px = 2 screen px
+## layout, an integer. Owner decision (GDD §15.0 "Art pass grid: 1 art px = 1
+## screen px"): 1, so the necromancer is a 56 art px drawing shown at 56 px
+## (at 2 the 28 px version lost its skull pauldrons and staff skull). Storage
+## contract with tools/prepare_sprite.py: a grid-art PNG for key K is exactly
+## HEIGHTS[K] / ART_SCALE texels tall (every HEIGHTS value is even) and
+## SpriteBank draws it ART_SCALE times its texel size through the sharp-pixel
+## shader (SHARP_SHADER). A PNG taller than HEIGHTS[K] is a legacy placeholder
+## (stored at 3x) and is still scaled smoothly to HEIGHTS[K].
+const ART_SCALE: int = 1  # TUNING (not in GDD) GDD §15.0 "Art pass grid": 1 art px = 1 screen px (was 2)
+
+## Shader that draws grid art sharp at any screen scale (crisp pixels, edges
+## blended over SHARP_EDGE_SOFTNESS screen px; see the shader header).
+const SHARP_SHADER: String = "res://scripts/fx/sharp_pixel.gdshader"
+
+## Width (screen px, 0-1) of the blend at each art-pixel edge in the sharp-pixel
+## shader: 0 = nearest (uneven pixels at fractional scales such as a 1080p
+## window), 1 = soft. Owner pick from 1080p renders: 0.5 ("C2").
+const SHARP_EDGE_SOFTNESS: float = 0.5  # TUNING (not in GDD) owner choice, 1080p comparison
 
 ## On-screen height in world px per sprite key (ART_BIBLE.md manifest sizes).
-## Every value is even, so grid art is HEIGHTS / ART_SCALE whole art px tall.
+## Every value is even, so grid art is HEIGHTS / ART_SCALE whole art px tall
+## (with ART_SCALE 1, the art px height equals this value).
 const HEIGHTS: Dictionary = {
 	"player/necromancer": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"player/umbral_warden": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)

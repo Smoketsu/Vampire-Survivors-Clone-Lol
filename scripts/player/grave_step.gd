@@ -172,6 +172,8 @@ func _age_trail(delta: float) -> void:
 
 func _draw() -> void:
 	var tex := SpriteBank.texture("player/necromancer")  # Sprite art, or null (drawn shape).
+	if tex != null and SpriteBank.is_grid("player/necromancer"):
+		SpriteBank.apply_sharp(self)  # Grid art draws through the sharp-pixel shader.
 	for g: Array in _trail:
 		var a := PlayerAbilityData.TRAIL_ALPHA * (1.0 - float(g[1]) / PlayerAbilityData.TRAIL_LIFE)  # Afterimage opacity.
 		var pos: Vector2 = g[0]

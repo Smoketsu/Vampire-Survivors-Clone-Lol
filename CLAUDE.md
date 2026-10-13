@@ -313,8 +313,9 @@ tiny tweaks.
    decision, GDD §15.0.)
 3. **Real art (Phase 2): the true pixel-art pass** (owner-approved, GDD §15.0 "Art pass (true pixel art)"). The
    ChatGPT placeholders (31 sprites, all to be redone) are replaced by pixel art made at its real size: 1 art px
-   = 2 screen px, sharp whole-number scaling, one locked palette, violet only for the player, Zoom Normal ×1 /
-   Close ×1.5 (Far dropped). The owner generates images with AI tools from prompts in `docs/art/ART_BIBLE.md`;
+   = 1 screen px (necromancer 56 art px; GDD §15.0 "Art pass grid"), drawn through the sharp-pixel shader
+   (`SpriteBank.apply_sharp()`, edges blended over 0.5 px), one locked palette (`tools/palette.json`), violet
+   only for the player, Zoom Normal ×1 / Close ×2 (Far dropped), fonts Jacquard 24 + Pixelify Sans Bold. The owner generates images with AI tools from prompts in `docs/art/ART_BIBLE.md`;
    `tools/prepare_sprite.py` (grid mode) snaps them to the grid and palette, outlines them and aligns the
    feet, and the check sheet shows them at game size before approval. `SpriteBank` still falls back to the
    code glyph when a PNG is missing, so art lands piecemeal. Order: foundations (sharp scaling, palette,

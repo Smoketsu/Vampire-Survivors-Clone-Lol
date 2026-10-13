@@ -1021,8 +1021,9 @@ Two open-licence pixel fonts are in `assets/fonts/` (SIL Open Font License; the 
 
 ### Camera zoom
 
-The Settings menu has a **Zoom** option: **Normal (1.0×, default)** and Close (1.5×), whole
-multiples of the pixel-art grid (one art pixel = 2 or 3 screen pixels). The old Far (0.8×) was
+The Settings menu has a **Zoom** option: **Normal (1.0×, default)** and Close (2×), whole
+multiples of the pixel-art grid (one art pixel = 1 or 2 layout pixels; the sharp-pixel filter keeps
+pixels even when the window scale is fractional, e.g. a 1080p window). The old Far (0.8×) was
 dropped; a saved Far loads as Normal. Zooming in never changes gameplay (enemy spawns use the Normal view or wider). A green ring on the
 ground marks the necromancer.
 
