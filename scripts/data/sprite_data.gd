@@ -77,7 +77,7 @@ const HEIGHTS: Dictionary = {
 	"summons/winter_revenant": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/shadow_reaper": 48.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/cathedral_horror": 64.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"summons/gravebow": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"summons/gravebow": 54.0,  # TUNING (not in GDD) art pass: 52 before; the huge longbow rises above the hood (body ~48)
 	"summons/bone_colossus": 100.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/bone_hound": 32.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/hellhound": 40.0,  # TUNING (not in GDD) ART_BIBLE manifest size

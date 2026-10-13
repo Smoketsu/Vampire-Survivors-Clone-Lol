@@ -24,3 +24,17 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-13 15:31,enemies/sun_paladin,gpt-image-2.5-flare,medium,1024x1024,1,614,1452,439,0.0279,sun_paladin_1.png
 2026-10-13 15:31,enemies/cathedral_guardian,gpt-image-2.5-flare,medium,1024x1024,1,572,1452,439,0.0276,cathedral_guardian_1.png
 2026-10-13 15:31,enemies/inquisitor,gpt-image-2.5-flare,medium,1024x1024,1,532,1452,439,0.0274,inquisitor_1.png
+2026-10-13 15:38,summons/lich,gpt-image-2.5-flare,medium,1024x1024,1,561,1452,439,0.0276,lich_1.png
+2026-10-13 15:38,summons/death_knight,gpt-image-2.5-flare,medium,1024x1024,1,573,1452,439,0.0277,death_knight_1.png
+2026-10-13 15:38,summons/winter_revenant,gpt-image-2.5-flare,medium,1024x1024,1,542,1452,439,0.0275,winter_revenant_1.png
+2026-10-13 15:38,summons/shadow_reaper,gpt-image-2.5-flare,medium,1024x1024,1,565,1452,439,0.0276,shadow_reaper_1.png
+2026-10-13 15:38,summons/cathedral_horror,gpt-image-2.5-flare,medium,1024x1024,1,565,1452,439,0.0276,cathedral_horror_1.png
+2026-10-13 15:38,summons/gravebow,gpt-image-2.5-flare,medium,1024x1024,1,582,1452,439,0.0277,gravebow_1.png
+2026-10-13 15:38,summons/bone_colossus,gpt-image-2.5-flare,medium,1024x1024,1,616,1452,439,0.0279,bone_colossus_1.png
+2026-10-13 15:38,summons/hellhound,gpt-image-2.5-flare,medium,1024x1024,1,559,1452,439,0.0276,hellhound_1.png
+2026-10-13 15:39,summons/keening_lady,gpt-image-2.5-flare,medium,1024x1024,1,584,1452,439,0.0277,keening_lady_1.png
+2026-10-13 15:39,summons/ossuary_engine,gpt-image-2.5-flare,medium,1024x1024,1,561,1452,439,0.0276,ossuary_engine_1.png
+2026-10-13 15:39,bosses/vael,gpt-image-2.5-flare,medium,1024x1024,1,631,1452,439,0.0279,vael_1.png
+2026-10-13 15:39,bosses/alaric,gpt-image-2.5-flare,medium,1024x1024,1,608,1452,439,0.0278,alaric_1.png
+2026-10-13 15:39,bosses/seraphine,gpt-image-2.5-flare,medium,1024x1024,1,596,1452,439,0.0278,seraphine_1.png
+2026-10-13 15:39,bosses/seraphine_avatar,gpt-image-2.5-flare,medium,1024x1024,1,562,1452,439,0.0276,seraphine_avatar_1.png
