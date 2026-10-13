@@ -1015,6 +1015,10 @@ integration").
 
 ---
 
+### Fonts
+
+Two open-licence pixel fonts are in `assets/fonts/` (SIL Open Font License; the licence texts sit next to them), imported without anti-aliasing, hinting or subpixel positioning so they stay crisp: **Jacquard 24** (blackletter) for the title and zone banners, and **Pixelify Sans Bold** for the HUD, numbers, headings, labels and buttons (owner choice, GDD §15.0 "Pixel fonts"). They are wired into the UI with the UI kit (art pass, phase 5); until then the game uses Godot's default font.
+
 ### Camera zoom
 
 The Settings menu has a **Zoom** option: Close (1.25×), **Normal (1.0×, default)** and Far (0.8×).
