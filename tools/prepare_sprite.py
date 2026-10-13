@@ -552,7 +552,11 @@ def merge_flecks(idx: np.ndarray, pal: Palette) -> tuple:
             ramp, n = ramps.most_common(1)[0]
             if n < SMOOTH_MIN:
                 continue
-            members = [m for m in pal.ramps[ramp] if pal.group[m] == "unit"]
+            # Body shades of that ramp; a floor ramp (tiles, --allow-floor) has no "unit" group.
+            members = [m for m in pal.ramps[ramp] if pal.group[m] == "unit"] or \
+                [m for m in pal.ramps[ramp] if pal.group[m] != "ink"]
+            if not members:
+                continue
             out[y, x] = min(members, key=lambda m: abs(pal.lab[m][0] - pal.lab[c][0]))
             changed += 1
     return out, changed
