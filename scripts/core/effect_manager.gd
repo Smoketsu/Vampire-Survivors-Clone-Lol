@@ -46,9 +46,30 @@ func _spawn(kind: Effect.Kind, pos: Vector2, color: Color, size: float, duration
 	return e
 
 
+## Play time (s) of an effect that may show animation `anim`: its AnimData
+## duration when the art exists, else `fallback` (the drawn shape's time).
+## The AnimData durations of the hooked effects equal their code durations,
+## so effect lifetimes (and the autotest's effect counts) do not depend on
+## whether the art is present. Purely visual.
+func _anim_time(anim: String, fallback: float) -> float:
+	if anim != "" and SpriteBank.has_anim(anim):
+		return float(AnimData.ANIMS.get(anim, {}).get("duration", AnimData.DEFAULT_DURATION))
+	return fallback
+
+
+## Tags a just-spawned effect `e` (null when skipped at MAX_COSMETIC) with
+## animation `anim`: Effect._draw() plays it when its art exists, else draws
+## the effect's own shape.
+func _tag(e: Effect, anim: String) -> void:
+	if e != null:
+		e.anim_id = anim
+
+
 ## Death pop: expanding ring + bone shards (also stands in for a corpse).
-func pop(pos: Vector2, color: Color, size: float) -> void:
-	_spawn(Effect.Kind.POP, pos, color, size, 0.35)
+## With `anim` (an AnimData id: "enemy_death", "undead_death") and its art
+## present, the animation plays instead.
+func pop(pos: Vector2, color: Color, size: float, anim: String = "") -> void:
+	_tag(_spawn(Effect.Kind.POP, pos, color, size, _anim_time(anim, 0.35)), anim)
 
 
 ## Melee swing arc facing `dir`.
@@ -60,12 +81,7 @@ func slash(pos: Vector2, dir: Vector2, color: Color, size: float) -> void:
 ## AnimData id) and its art present, the animation plays instead, for its own
 ## AnimData duration.
 func ring(pos: Vector2, radius: float, color: Color, duration: float = 0.3, anim: String = "") -> void:
-	var dur := duration  # Play time (s).
-	if anim != "" and SpriteBank.has_anim(anim):
-		dur = float(AnimData.ANIMS.get(anim, {}).get("duration", AnimData.DEFAULT_DURATION))
-	var e := _spawn(Effect.Kind.RING, pos, color, radius, dur)
-	if e != null:
-		e.anim_id = anim
+	_tag(_spawn(Effect.Kind.RING, pos, color, radius, _anim_time(anim, duration)), anim)
 
 
 ## Straight beam from `a` to `b` (priest / chaplain heals).
@@ -73,9 +89,10 @@ func beam(a: Vector2, b: Vector2, color: Color) -> void:
 	_spawn(Effect.Kind.BEAM, a, color, 0.0, 0.25, b - a, 2.0)
 
 
-## Summon emergence / recall ring.
-func spawn_ring(pos: Vector2, color: Color) -> void:
-	_spawn(Effect.Kind.SPAWN, pos, color, 12.0, 0.5)
+## Summon emergence / recall ring. With `anim` (an AnimData id:
+## "summon_rise") and its art present, the animation plays instead.
+func spawn_ring(pos: Vector2, color: Color, anim: String = "") -> void:
+	_tag(_spawn(Effect.Kind.SPAWN, pos, color, 12.0, _anim_time(anim, 0.5)), anim)
 
 
 ## Boss ground-AoE warning circle shown for `duration` seconds. `owner`
@@ -108,12 +125,14 @@ func _set_owner(e: Effect, owner: Enemy) -> void:
 	e.owner_gen = owner.generation
 
 
-## Abyssal Detonation first hit: a dark vortex collapsing toward `pos`.
-func abyss(pos: Vector2, radius: float) -> void:
-	_spawn(Effect.Kind.ABYSS, pos, Palette.VIOLET, radius, 0.4)
+## Abyssal Detonation first hit: a dark vortex collapsing toward `pos`. With
+## `anim` ("abyssal_detonation") and its art present, the animation plays instead.
+func abyss(pos: Vector2, radius: float, anim: String = "") -> void:
+	_tag(_spawn(Effect.Kind.ABYSS, pos, Palette.VIOLET, radius, _anim_time(anim, 0.4)), anim)
 
 
-## Big holy impact burst (Hammerfall landing, boss death).
-func impact(pos: Vector2, radius: float, color: Color) -> void:
-	_spawn(Effect.Kind.IMPACT, pos, color, radius, 0.4, Vector2.RIGHT, 2.0, true)
+## Big holy impact burst (Hammerfall landing, boss death). With `anim`
+## ("holy_impact") and its art present, the animation plays instead.
+func impact(pos: Vector2, radius: float, color: Color, anim: String = "") -> void:
+	_tag(_spawn(Effect.Kind.IMPACT, pos, color, radius, _anim_time(anim, 0.4), Vector2.RIGHT, 2.0, true), anim)
 	Juice.impact(pos, radius)

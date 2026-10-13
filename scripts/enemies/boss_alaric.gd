@@ -254,7 +254,7 @@ func _start_hammerfall() -> void:
 ## part of the blow aimed at the necromancer (body-blocking).
 func _resolve_hammerfall() -> void:
 	var r: float = boss_def["hammer_radius"]
-	game.effects.impact(hammer_point, r, Palette.GOLD)
+	game.effects.impact(hammer_point, r, Palette.GOLD, "holy_impact")  # Animation when its art exists (visual only).
 	game.shake(8.0)
 	var soakers := 0
 	game.ally_grid.query(hammer_point, r + UnitData.MAX_BLOCK_RADIUS, _tmp)
@@ -428,7 +428,7 @@ func _resolve_judgment() -> void:
 	var r := float(boss_def["judgment_radius"])
 	var hit := {}
 	for p in _judgment_points:
-		game.effects.impact(p, r, Palette.IVORY)
+		game.effects.impact(p, r, Palette.IVORY, "holy_impact")  # Animation when its art exists (visual only).
 		game.ally_grid.query(p, r + UnitData.MAX_BLOCK_RADIUS, _tmp)
 		for u: SummonedUnit in _tmp:
 			if not u.active or hit.has(u.get_instance_id()):

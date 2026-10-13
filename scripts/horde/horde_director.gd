@@ -504,7 +504,7 @@ func _try_spawn(cls: String) -> bool:
 		units.append(u)
 		class_counts[cls] = int(class_counts[cls]) + 1
 		total_spawned += 1
-		game.effects.spawn_ring(pos, Palette.NECRO_GREEN)
+		game.effects.spawn_ring(pos, Palette.NECRO_GREEN, "summon_rise")  # Animation when its art exists (visual only).
 		summon_created.emit(u)
 		summon_count_changed.emit()
 		return true
@@ -550,7 +550,7 @@ func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float,
 	temp_spawned += 1
 	if herald > 0.0:
 		game.stat_add("restless_extra_seconds", herald)  # Grave Herald innate (autotest).
-	game.effects.spawn_ring(at, Palette.NECRO_GREEN)
+	game.effects.spawn_ring(at, Palette.NECRO_GREEN, "summon_rise")  # Animation when its art exists (visual only).
 	return u
 
 
@@ -601,7 +601,7 @@ func on_unit_died(u: SummonedUnit, as_death: bool = true) -> void:
 		if as_death:
 			total_deaths += 1
 			suppression.on_unit_died(u)  # Held if it fell inside a suppression zone.
-	game.effects.pop(u.position, Palette.COLD_BLUE, u.radius * 1.2)
+	game.effects.pop(u.position, Palette.COLD_BLUE, u.radius * 1.2, "undead_death")  # Animation when its art exists (visual only).
 	if as_death:
 		game.motion.on_summon_died(u)  # Collapses into bone dust (visual only).
 	u.deactivate()

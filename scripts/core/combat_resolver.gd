@@ -511,7 +511,7 @@ func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) 
 ## and chest rolls, then the EnemyDirector deactivates/pools it (or ends the run for the
 ## boss).
 func _kill_enemy(e: Enemy) -> void:
-	game.effects.pop(e.position, Palette.CRIMSON if not e.is_boss else Palette.GOLD, e.radius * 1.2)
+	game.effects.pop(e.position, Palette.CRIMSON if not e.is_boss else Palette.GOLD, e.radius * 1.2, "enemy_death")  # Animation when its art exists (visual only).
 	game.motion.on_enemy_killed(e)  # Collapses into holy ash (visual only; not bosses or structures).
 	Juice.enemy_killed(e)
 	if e.xp_value > 0:
