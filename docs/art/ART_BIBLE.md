@@ -45,7 +45,11 @@ Or send the images to Claude to run steps 3-4.
   **44-52**; the necromancer and the other characters **56**; heavies **60-72**; structures **72-100**;
   minibosses and bosses **120-156**. Outside the tiers: the small summons (Bone Hound 32, Risen 36,
   Hellhound 40) and the giant summons (Corpse Abomination 88, Bone Colossus 100). The manifest's "Art
-  px" column is the exact height.
+  px" column is the exact height. **The tiers measure the body, head to feet.** The sprite height is the
+  whole image, so a weapon, banner or flame that rises well above the head adds its overhang to the
+  sprite height (owner check on the anchors: the Covenant Recruit at 40 had a 32 px body under his spear
+  and read three-quarter size next to the warrior; at 50 his body is 40). Set such a unit's `HEIGHTS`
+  when its art lands.
 - **Palette.** Only the locked palette (`tools/palette.json`, below). At most **3 shades per
   material**. No gradients, no dithering, no texture noise.
 - **Detail.** Every readable feature (a face, a hand, a skull pauldron, a weapon head, a buckle) is at
@@ -189,8 +193,8 @@ The tool turns any image into palette-correct grid art, but **what it can keep d
 
 **Status:** anchors 1-3 are in the game: the necromancer (owner's ~65 px image, `--inside-outline`, hood
 eyes separated by hand), the Skeleton Warrior (~54 px image, `--inside-outline`, eyes restored by hand)
-and the Covenant Recruit (~60 px image, `--inside-outline --no-prune --no-levels`, spear shaft
-repainted by hand). Next: the Graveyard floor tile, the gravestone and the Shadow Bolt icon.
+and the Covenant Recruit (~60 px image, `--inside-outline --no-prune --no-levels`, 50 art px so his
+body is 40 under the spear, a few shaft pixels repainted by hand). Next: the Graveyard floor tile, the gravestone and the Shadow Bolt icon.
 
 The anchors fix the style for everything else. Approve them **in order**, each on its check sheet and
 in the game, then attach the approved ones to every later prompt. Each prompt is ready to paste.
@@ -476,7 +480,7 @@ Crimson, ivory and warm steel; gold for elites, the Sanctum kinds and the Reckon
 
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `recruit.png` | Covenant Recruit (Anchor 3): kettle helm, crimson tabard over ivory, a tall spear. Signature: the spear | 40 | to redo |
+| `recruit.png` | Covenant Recruit (Anchor 3): kettle helm, crimson tabard over ivory, a tall spear. Signature: the spear | 50 (body 40, spear above) | done |
 | `footman.png` | Crimson Footman: heavy warm-steel armour, a crimson kite shield, a sword. Signature: the kite shield | 48 | to redo |
 | `archer.png` | Zealous Archer: ivory-and-crimson archer with a tall longbow. Signature: the longbow | 40 | to redo |
 | `chaplain.png` | Covenant Chaplain: ivory robes, a gold censer, a faint holy glint. Signature: the censer | 42 | to redo |

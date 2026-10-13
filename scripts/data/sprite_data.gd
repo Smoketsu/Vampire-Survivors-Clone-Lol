@@ -85,7 +85,7 @@ const HEIGHTS: Dictionary = {
 	"summons/keening_lady": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/corpse_catapult": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/ossuary_engine": 72.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"enemies/recruit": 40.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/recruit": 50.0,  # TUNING (not in GDD) art pass: 40 before; his spear rises above the helmet, so 50 gives a ~40 px body (fodder tier)
 	"enemies/footman": 48.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/archer": 40.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"enemies/chaplain": 42.0,  # TUNING (not in GDD) ART_BIBLE manifest size
