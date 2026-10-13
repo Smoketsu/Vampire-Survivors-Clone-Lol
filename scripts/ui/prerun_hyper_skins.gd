@@ -31,10 +31,8 @@ const SKIN_CARD_SIZE := Vector2(414, 44)
 const HYPER_CARD_SIZE := Vector2(414, 52)
 ## Size (px) of a skin card's preview.
 const PREVIEW_SIZE := Vector2(30, 38)
-## Border colour of the Hyper card while on and of the chosen skin.
-const ON_BORDER := Color(1.0, 0.82, 0.3)
-## Background of the Hyper card while on and of the chosen skin.
-const ON_BG := Color(0.24, 0.17, 0.05, 0.97)
+## UI kit accent of the Hyper card while on and of the chosen skin (gold frame, UiTheme.style()).
+const ON_ACCENT: String = "gold"
 
 ## The config being edited (shared with the setup screen).
 var config: RunConfig = null
@@ -252,9 +250,4 @@ func refresh() -> void:
 
 ## Applies the on / chosen look to card `b` (normal and hover styles).
 static func _style(b: Button, on: bool) -> void:
-	if on:
-		b.add_theme_stylebox_override("normal", UiTheme.box(ON_BG, ON_BORDER, 3))
-		b.add_theme_stylebox_override("hover", UiTheme.box(ON_BG.lightened(0.08), ON_BORDER, 3))
-	else:
-		b.remove_theme_stylebox_override("normal")
-		b.remove_theme_stylebox_override("hover")
+	UiTheme.style_button(b, "button", ON_ACCENT if on else "")

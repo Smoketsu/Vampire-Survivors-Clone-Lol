@@ -31,8 +31,6 @@ const CHIP_ICON_SIZE: float = 22.0
 const ROW_PAD_X: int = 12
 ## Inner padding of a row in px (top / bottom).
 const ROW_PAD_Y: int = 8
-## Background of the locked "?" tile.
-const LOCKED_TILE_BG := Color(0.03, 0.02, 0.05, 0.95)
 
 ## Control focused again when the view closes (may be null).
 var return_focus: Control = null
@@ -179,7 +177,7 @@ static func _locked_tile() -> Control:
 	tile.custom_minimum_size = Vector2(ICON_SIZE, ICON_SIZE)
 	tile.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	tile.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tile.add_theme_stylebox_override("panel", UiTheme.box(LOCKED_TILE_BG, UiTheme.BORDER.darkened(0.4), 2))
+	tile.add_theme_stylebox_override("panel", UiTheme.style("panel", "dim"))  # Dark locked frame (UI kit).
 	var q := UiTheme.label(RecipeBookData.LOCKED_GLYPH, 26, UiTheme.TEXT_DIM)
 	q.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	q.vertical_alignment = VERTICAL_ALIGNMENT_CENTER

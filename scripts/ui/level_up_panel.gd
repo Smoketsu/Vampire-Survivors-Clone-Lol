@@ -180,10 +180,8 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 	b.focus_mode = Control.FOCUS_ALL
 	b.pressed.connect(_choose.bind(idx, false))
 	var kind := String(o["kind"])
-	if kind == "evolution":
-		b.add_theme_stylebox_override("normal", UiTheme.box(Color(0.17, 0.11, 0.04, 0.96), Palette.GOLD, 3))
-		b.add_theme_stylebox_override("hover", UiTheme.box(Color(0.26, 0.17, 0.06, 0.98), Palette.GOLD, 3))
-		b.add_theme_stylebox_override("pressed", UiTheme.box(Color(0.32, 0.22, 0.08, 1.0), Palette.GOLD, 3))
+	# Card frame (UI kit): gold for evolutions, violet otherwise.
+	UiTheme.style_button(b, "card", "gold" if kind == "evolution" else "violet")
 	card.add_child(b)
 	_buttons.append(b)
 	var content := MarginContainer.new()

@@ -31,8 +31,8 @@ const DETAIL_TEXT_WIDTH: float = 330.0
 ## Minimum height (px) of the detail panel, so the screen does not jump
 ## when the focused character's texts are shorter or longer.
 const DETAIL_MIN_HEIGHT: float = 118.0
-## Border colour of the chosen character's tile.
-const SELECTED_BORDER := Color(1.0, 0.84, 0.4)
+## UI kit accent of the chosen character's tile (gold frame, UiTheme.style()).
+const SELECTED_ACCENT: String = "gold"
 
 ## The config being edited (its character_id changes).
 var config: RunConfig = null
@@ -193,11 +193,9 @@ func _refresh() -> void:
 	for id: String in _ids:
 		var b: Button = _tiles[id]
 		if id == config.character_id:
-			b.add_theme_stylebox_override("normal", UiTheme.box(Color(0.24, 0.15, 0.08, 0.97), SELECTED_BORDER, 3))
-			b.add_theme_stylebox_override("hover", UiTheme.box(Color(0.3, 0.19, 0.1, 0.97), SELECTED_BORDER, 3))
+			UiTheme.style_button(b, "button", SELECTED_ACCENT)
 		else:
-			b.remove_theme_stylebox_override("normal")
-			b.remove_theme_stylebox_override("hover")
+			UiTheme.style_button(b, "button", "")
 
 
 ## The tile Buttons in display order.

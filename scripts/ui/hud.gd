@@ -292,6 +292,7 @@ func _build() -> void:
 	bc.add_child(actives)
 	for i in PlayerData.ACTIVE_SLOTS:
 		var g := IconGlyph.new("", Vector2(42, 48))
+		g.slot_frame = true  # UI kit slot socket.
 		actives.add_child(g)
 		_active_icons.append(g)
 	var passives := HBoxContainer.new()
@@ -300,6 +301,7 @@ func _build() -> void:
 	bc.add_child(passives)
 	for i in PlayerData.PASSIVE_SLOTS:
 		var g := IconGlyph.new("", Vector2(32, 38))
+		g.slot_frame = true  # UI kit slot socket.
 		passives.add_child(g)
 		_passive_icons.append(g)
 
