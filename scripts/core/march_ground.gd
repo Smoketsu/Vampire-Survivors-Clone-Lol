@@ -10,7 +10,10 @@
 ##   camp        — trampled dirt, campfires, tent pegs, small crates.
 ##   fortress    — cobbles, rubble, gold-and-crimson banner posts, wall
 ##                 shadows of the fortress towers.
-## MarchDirector calls set_zone() at each zone change. Purely cosmetic.
+## MarchDirector calls set_zone() at each zone change. Art pass: the zone's
+## floor tile (tiles/march_<style>.png) replaces the soil colour and grid, and
+## the road strip (tiles/march_road[_<style>].png) the code road, each only
+## when its PNG exists (Ground header, EnvironmentArt). Purely cosmetic.
 class_name MarchGround
 extends Ground
 
@@ -33,17 +36,19 @@ func set_zone(look: Dictionary) -> void:
 func _draw() -> void:
 	var center := Vector2(_center_cell) * REDRAW_CELL + Vector2.ONE * REDRAW_CELL * 0.5
 	var rect := Rect2(center - Vector2.ONE * HALF_EXTENT, Vector2.ONE * HALF_EXTENT * 2.0)
-	draw_rect(rect, _look["base"])
-	var line: Color = _look["line"]
-	var x := floorf(rect.position.x / GRID) * GRID
-	while x <= rect.end.x:
-		draw_line(Vector2(x, rect.position.y), Vector2(x, rect.end.y), line, 1.0)
-		x += GRID
-	var y := floorf(rect.position.y / GRID) * GRID
-	while y <= rect.end.y:
-		draw_line(Vector2(rect.position.x, y), Vector2(rect.end.x, y), line, 1.0)
-		y += GRID
-	_draw_road(rect)
+	if not _draw_tiles(rect):
+		draw_rect(rect, _look["base"])
+		var line: Color = _look["line"]
+		var x := floorf(rect.position.x / GRID) * GRID
+		while x <= rect.end.x:
+			draw_line(Vector2(x, rect.position.y), Vector2(x, rect.end.y), line, 1.0)
+			x += GRID
+		var y := floorf(rect.position.y / GRID) * GRID
+		while y <= rect.end.y:
+			draw_line(Vector2(rect.position.x, y), Vector2(rect.end.x, y), line, 1.0)
+			y += GRID
+	if not EnvironmentArt.draw_road(self, rect, String(_look["style"])):
+		_draw_road(rect)
 	var c0 := Vector2i(floori(rect.position.x / CELL), floori(rect.position.y / CELL))
 	var c1 := Vector2i(floori(rect.end.x / CELL), floori(rect.end.y / CELL))
 	for cy in range(c0.y, c1.y + 1):
@@ -72,9 +77,19 @@ func _draw_road(rect: Rect2) -> void:
 			px += 40.0
 
 
+## The March's cell hash (salted, so its decorations differ from the Graveyard's).
+func _cell_hash(cx: int, cy: int) -> int:
+	return absi(hash(Vector3i(cx, cy, 77)))
+
+
+## Floor tile key of the current zone: tiles/march_<style>.
+func _tile_key() -> String:
+	return EnvironmentArtData.TILE_PREFIX + "march_" + String(_look["style"])
+
+
 ## Draws the (hash-chosen) decoration of one cell for the current zone.
 func _draw_march_cell(cx: int, cy: int) -> void:
-	var h := absi(hash(Vector3i(cx, cy, 77)))
+	var h := _cell_hash(cx, cy)
 	var roll := float(h % 1000) / 1000.0
 	var p := Vector2(float(cx) * CELL + float((h >> 10) % 96) + 16.0, float(cy) * CELL + float((h >> 17) % 96) + 16.0)
 	if absf(p.y) < float(CrimsonMarchStage.MARCH["road_half_width"]) - 8.0:

@@ -332,9 +332,9 @@ const ZONES := [
 			"accent": Color(0.36, 0.35, 0.32), "trim": Color(0.62, 0.52, 0.28)},
 		"arena": {"density": 0.24, "clear_radius": 220.0, "layout_seed": 9511,  # TUNING (not in GDD)
 			"kinds": {
-				"saint_statue": {"weight": 0.45, "shape": "circle", "radius_min": 13.0, "radius_max": 17.0},  # TUNING (not in GDD)
-				"fountain": {"weight": 0.30, "shape": "circle", "radius_min": 28.0, "radius_max": 36.0},  # TUNING (not in GDD)
-				"stone_bench": {"weight": 0.25, "shape": "rect", "long_min": 44.0, "long_max": 60.0, "short": 16.0},  # TUNING (not in GDD)
+				"saint_statue": {"weight": 0.45, "shape": "circle", "sizes": [13.0, 15.0, 17.0]},  # TUNING (not in GDD)
+				"fountain": {"weight": 0.30, "shape": "circle", "sizes": [28.0, 32.0, 36.0]},  # TUNING (not in GDD)
+				"stone_bench": {"weight": 0.25, "shape": "rect", "sizes": [44.0, 52.0, 60.0], "short": 16.0},  # TUNING (not in GDD)
 			}}},
 	{"start": 240.0, "numeral": "II", "name": "The Sanctified Halls",  # GDD §8.3 art "cathedral halls, golden mosaics"
 		"blurb": "Golden mosaics under endless colonnades",
@@ -342,8 +342,8 @@ const ZONES := [
 			"accent": Color(0.42, 0.34, 0.16), "trim": Color(0.78, 0.62, 0.24)},
 		"arena": {"density": 0.7, "clear_radius": 220.0, "layout_seed": 9622, "aligned": true,  # TUNING (not in GDD) rows of pillars
 			"kinds": {
-				"pillar": {"weight": 0.80, "shape": "circle", "radius_min": 13.0, "radius_max": 15.0},  # TUNING (not in GDD)
-				"pew": {"weight": 0.20, "shape": "rect", "long_min": 60.0, "long_max": 76.0, "short": 14.0},  # TUNING (not in GDD)
+				"pillar": {"weight": 0.80, "shape": "circle", "sizes": [13.0, 15.0]},  # TUNING (not in GDD)
+				"pew": {"weight": 0.20, "shape": "rect", "sizes": [60.0, 68.0, 76.0], "short": 14.0},  # TUNING (not in GDD)
 			}}},
 	{"start": 510.0, "numeral": "III", "name": "The Cloisters",  # GDD §8.3 art "cloisters"
 		"blurb": "Arcaded walks around the Inquisition's gardens",
@@ -351,9 +351,9 @@ const ZONES := [
 			"accent": Color(0.20, 0.30, 0.18), "trim": Color(0.58, 0.50, 0.30)},
 		"arena": {"density": 0.26, "clear_radius": 220.0, "layout_seed": 9733,  # TUNING (not in GDD)
 			"kinds": {
-				"cloister_arch": {"weight": 0.45, "shape": "rect", "long_min": 72.0, "long_max": 92.0, "short": 18.0},  # TUNING (not in GDD)
-				"garden_bed": {"weight": 0.35, "shape": "rect", "long_min": 44.0, "long_max": 60.0, "short": 30.0},  # TUNING (not in GDD)
-				"cypress": {"weight": 0.20, "shape": "circle", "radius_min": 11.0, "radius_max": 14.0},  # TUNING (not in GDD)
+				"cloister_arch": {"weight": 0.45, "shape": "rect", "sizes": [72.0, 82.0, 92.0], "short": 18.0},  # TUNING (not in GDD)
+				"garden_bed": {"weight": 0.35, "shape": "rect", "sizes": [44.0, 52.0, 60.0], "short": 30.0},  # TUNING (not in GDD)
+				"cypress": {"weight": 0.20, "shape": "circle", "sizes": [11.0, 14.0]},  # TUNING (not in GDD)
 			}}},
 	{"start": 780.0, "numeral": "IV", "name": "The Final Sanctuary",  # GDD §8.3 art "stained glass, giant statues"
 		"blurb": "Marble and stained-glass light before the high altar",
@@ -361,9 +361,9 @@ const ZONES := [
 			"accent": Color(0.38, 0.37, 0.40), "trim": Color(0.82, 0.66, 0.30)},
 		"arena": {"density": 0.22, "clear_radius": 220.0, "layout_seed": 9844,  # TUNING (not in GDD)
 			"kinds": {
-				"giant_statue": {"weight": 0.40, "shape": "circle", "radius_min": 28.0, "radius_max": 36.0},  # TUNING (not in GDD)
-				"marble_column": {"weight": 0.40, "shape": "circle", "radius_min": 15.0, "radius_max": 19.0},  # TUNING (not in GDD)
-				"reliquary": {"weight": 0.20, "shape": "rect", "long_min": 40.0, "long_max": 52.0, "short": 26.0},  # TUNING (not in GDD)
+				"giant_statue": {"weight": 0.40, "shape": "circle", "sizes": [28.0, 32.0, 36.0]},  # TUNING (not in GDD)
+				"marble_column": {"weight": 0.40, "shape": "circle", "sizes": [15.0, 17.0, 19.0]},  # TUNING (not in GDD)
+				"reliquary": {"weight": 0.20, "shape": "rect", "sizes": [40.0, 46.0, 52.0], "short": 26.0},  # TUNING (not in GDD)
 			}}},
 ]
 

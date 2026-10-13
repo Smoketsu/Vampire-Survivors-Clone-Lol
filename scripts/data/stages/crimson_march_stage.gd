@@ -328,9 +328,9 @@ const ZONES := [
 			"road": Color(0.20, 0.16, 0.12), "road_edge": Color(0.13, 0.10, 0.08)},
 		"arena": {"density": 0.22, "clear_radius": 220.0, "layout_seed": 9101,  # TUNING (not in GDD)
 			"kinds": {
-				"burned_house": {"weight": 0.35, "shape": "rect", "long_min": 64.0, "long_max": 92.0, "short": 44.0},  # TUNING (not in GDD)
-				"charred_tree": {"weight": 0.40, "shape": "circle", "radius_min": 12.0, "radius_max": 17.0},  # TUNING (not in GDD)
-				"cart_wreck": {"weight": 0.25, "shape": "rect", "long_min": 40.0, "long_max": 56.0, "short": 22.0},  # TUNING (not in GDD)
+				"burned_house": {"weight": 0.35, "shape": "rect", "sizes": [64.0, 78.0, 92.0], "short": 44.0},  # TUNING (not in GDD)
+				"charred_tree": {"weight": 0.40, "shape": "circle", "sizes": [12.0, 14.0, 17.0]},  # TUNING (not in GDD)
+				"cart_wreck": {"weight": 0.25, "shape": "rect", "sizes": [40.0, 48.0, 56.0], "short": 22.0},  # TUNING (not in GDD)
 			}}},
 	{"start": 240.0, "numeral": "II", "name": "The Fortified Checkpoint",  # GDD §8.2 04:00 / art "barricades, forests"
 		"blurb": "Barricades and stakes across the forest road",
@@ -338,9 +338,9 @@ const ZONES := [
 			"road": Color(0.19, 0.16, 0.11), "road_edge": Color(0.12, 0.10, 0.07)},
 		"arena": {"density": 0.26, "clear_radius": 220.0, "layout_seed": 9202,  # TUNING (not in GDD)
 			"kinds": {
-				"barricade": {"weight": 0.40, "shape": "rect", "long_min": 64.0, "long_max": 96.0, "short": 16.0},  # TUNING (not in GDD)
-				"pine": {"weight": 0.40, "shape": "circle", "radius_min": 14.0, "radius_max": 19.0},  # TUNING (not in GDD)
-				"stakes": {"weight": 0.20, "shape": "circle", "radius_min": 12.0, "radius_max": 15.0},  # TUNING (not in GDD)
+				"barricade": {"weight": 0.40, "shape": "rect", "sizes": [64.0, 80.0, 96.0], "short": 16.0},  # TUNING (not in GDD)
+				"pine": {"weight": 0.40, "shape": "circle", "sizes": [14.0, 16.0, 19.0]},  # TUNING (not in GDD)
+				"stakes": {"weight": 0.20, "shape": "circle", "sizes": [12.0, 15.0]},  # TUNING (not in GDD)
 			}}},
 	{"start": 540.0, "numeral": "III", "name": "The Siege Camp",  # GDD §8.2 09:00 / art "camps"
 		"blurb": "Tents, supply wagons and siege engines",
@@ -348,9 +348,9 @@ const ZONES := [
 			"road": Color(0.21, 0.17, 0.12), "road_edge": Color(0.14, 0.11, 0.08)},
 		"arena": {"density": 0.26, "clear_radius": 220.0, "layout_seed": 9303,  # TUNING (not in GDD)
 			"kinds": {
-				"tent": {"weight": 0.45, "shape": "circle", "radius_min": 22.0, "radius_max": 30.0},  # TUNING (not in GDD)
-				"crates": {"weight": 0.30, "shape": "rect", "long_min": 36.0, "long_max": 52.0, "short": 26.0},  # TUNING (not in GDD)
-				"siege_engine": {"weight": 0.25, "shape": "rect", "long_min": 70.0, "long_max": 90.0, "short": 34.0},  # TUNING (not in GDD)
+				"tent": {"weight": 0.45, "shape": "circle", "sizes": [22.0, 26.0, 30.0]},  # TUNING (not in GDD)
+				"crates": {"weight": 0.30, "shape": "rect", "sizes": [36.0, 44.0, 52.0], "short": 26.0},  # TUNING (not in GDD)
+				"siege_engine": {"weight": 0.25, "shape": "rect", "sizes": [70.0, 80.0, 90.0], "short": 34.0},  # TUNING (not in GDD)
 			}}},
 	{"start": 900.0, "numeral": "IV", "name": "The Fortress Approach",  # GDD §8.2 art "distant fortress towers"
 		"blurb": "The Covenant fortress and its holy wards",
@@ -358,9 +358,9 @@ const ZONES := [
 			"road": Color(0.24, 0.23, 0.22), "road_edge": Color(0.15, 0.14, 0.14)},
 		"arena": {"density": 0.24, "clear_radius": 220.0, "layout_seed": 9404,  # TUNING (not in GDD)
 			"kinds": {
-				"fort_wall": {"weight": 0.35, "shape": "rect", "long_min": 80.0, "long_max": 96.0, "short": 24.0},  # TUNING (not in GDD)
-				"tower_base": {"weight": 0.25, "shape": "circle", "radius_min": 26.0, "radius_max": 34.0},  # TUNING (not in GDD)
-				"rubble": {"weight": 0.40, "shape": "circle", "radius_min": 12.0, "radius_max": 18.0},  # TUNING (not in GDD)
+				"fort_wall": {"weight": 0.35, "shape": "rect", "sizes": [80.0, 96.0], "short": 24.0},  # TUNING (not in GDD)
+				"tower_base": {"weight": 0.25, "shape": "circle", "sizes": [26.0, 30.0, 34.0]},  # TUNING (not in GDD)
+				"rubble": {"weight": 0.40, "shape": "circle", "sizes": [12.0, 15.0, 18.0]},  # TUNING (not in GDD)
 			}}},
 ]
 

@@ -13,7 +13,11 @@
 ## Spawners use free_point() / is_blocked() so nothing is ever placed inside an
 ## obstacle; Divine Charge lanes are cut short with clear_length().
 ## Drawing works like Ground: the layer is redrawn only when the player
-## crosses into a new ArenaData.REDRAW_CELL.
+## crosses into a new ArenaData.REDRAW_CELL. Each kind comes in 2-3 fixed size
+## variants (the stage kind's `sizes`; GDD §15.0 "Art pass (true pixel art)"),
+## the collision shape exactly the variant's, and an obstacle is drawn from its
+## sprite (EnvironmentArt, obstacles/<kind>_<size>[_v].png) when that PNG
+## exists, else from its code glyph at the same size.
 ## The layout (density, clear radius, seed, obstacle kinds) comes from the
 ## run's stage (`game.stage_def` "arena", StageRegistry). On the Crimson March
 ## MarchDirector swaps it at each battle-zone change with set_layout(): the
@@ -41,6 +45,12 @@ class Obstacle:
 	var half: Vector2 = Vector2.ZERO
 	## Stable per-obstacle random value (cosmetic variation).
 	var variant: int = 0
+	## Which fixed size variant of its kind it is (index into the kind's
+	## `sizes`, smallest first; GDD §15.0 "Art pass (true pixel art)").
+	var size_index: int = 0
+	## Sprite key of that kind / size / orientation (EnvironmentArtData key
+	## scheme, e.g. "obstacles/gravestone_s"); drawn when its PNG exists.
+	var art_key: String = ""
 
 ## Owning run.
 var game: Game
@@ -148,6 +158,9 @@ func _generate(key: Vector2i) -> Obstacle:
 		# so neighbouring obstacles form rows. The random draws above still run,
 		# keeping the RNG stream per cell the same shape.
 		center = Vector2((float(key.x) + 0.5) * ArenaData.CELL, (float(key.y) + 0.5) * ArenaData.CELL)
+	# Whole layout px, so a sprite drawn 1 art px = 1 layout px sits exactly on
+	# the collision shape (every fixed size is whole, every rect side even).
+	center = center.round()
 	if (center - _clear_center).length() < float(_layout["clear_radius"]):
 		return _empty
 	for k in _keep_clear:
@@ -170,14 +183,22 @@ func _generate(key: Vector2i) -> Obstacle:
 	o.kind = kind
 	o.center = center
 	o.variant = _rng.randi()
+	# One of the kind's fixed size variants (one RNG draw, as the old random
+	# size took; the collision shape is exactly that variant's).
+	var sizes: Array = def["sizes"]  # Circle radii or rect long sides (px), smallest first.
+	o.size_index = _rng.randi_range(0, sizes.size() - 1)
+	var size := float(sizes[o.size_index])  # This variant's radius / long side (px).
+	var vertical := false  # A rect laid out along y.
 	if String(def["shape"]) == "circle":
 		o.is_circle = true
-		o.radius = minf(_rng.randf_range(float(def["radius_min"]), float(def["radius_max"])), ArenaData.MAX_HALF_EXTENT)
+		o.radius = minf(size, ArenaData.MAX_HALF_EXTENT)
 	else:
 		o.is_circle = false
-		var long_half := minf(_rng.randf_range(float(def["long_min"]), float(def["long_max"])) * 0.5, ArenaData.MAX_HALF_EXTENT)
+		var long_half := minf(size * 0.5, ArenaData.MAX_HALF_EXTENT)
 		var short_half := float(def["short"]) * 0.5
-		o.half = Vector2(long_half, short_half) if _rng.randf() < 0.5 else Vector2(short_half, long_half)
+		vertical = _rng.randf() >= 0.5
+		o.half = Vector2(short_half, long_half) if vertical else Vector2(long_half, short_half)
+	o.art_key = EnvironmentArt.obstacle_key(kind, o.size_index, sizes.size(), vertical)
 	return o
 
 
@@ -351,6 +372,8 @@ func _draw() -> void:
 
 ## Draws one obstacle; the solid outline matches its collision shape.
 func _draw_obstacle(o: Obstacle) -> void:
+	if EnvironmentArt.draw_obstacle(self, o):
+		return  # Its sprite (art pass); otherwise the code glyph below.
 	if MarchGlyphs.draw_obstacle(self, o):
 		return  # A Crimson March obstacle kind.
 	var c := o.center
