@@ -64,7 +64,7 @@ const HEIGHTS: Dictionary = {
 	"summons/warrior": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/archer": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/mage": 46.0,  # TUNING (not in GDD) art pass: 44 before; the orb staff rises above the hood (body ~44)
-	"summons/mender": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"summons/mender": 52.0,  # TUNING (not in GDD) art pass: 44 before; the halo floats above the hood (body ~44)
 	"summons/warder": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/bishop": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/death_knight": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size
