@@ -655,7 +655,8 @@ the size in its row.
   grid (seamless across tile edges), plus the variants `tiles/<zone>_2.png` and `tiles/<zone>_3.png`
   (optional, same size, each on 20% of the 128 px cells, picked from the floor's stable cell hash, so
   the same cell always shows the same tile). The code decorations are still drawn on top until the
-  decals exist. The March road strip is drawn over the zone tile along y = 0 (`march_road_<style>.png`
+  decals exist, except the Graveyard's solid-looking ones (tombstone, stone cross, dead tree), which
+  are skipped on the tile floor because they looked like the gravestone obstacles but never collide. The March road strip is drawn over the zone tile along y = 0 (`march_road_<style>.png`
   overrides it in one zone, e.g. `march_road_fortress.png`). The Sanctum corruption lerps the tiles
   toward the same purple as the code floor (one translucent overlay of the corruption colour at the
   code floor's blend strength), so no purple goes into the tiles.

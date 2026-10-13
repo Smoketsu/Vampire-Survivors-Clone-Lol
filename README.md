@@ -1063,8 +1063,9 @@ the 31 placeholders keep working until they are replaced.
 obstacles, always as grid art (1 art px = 1 layout px, sharp). When a zone's floor tile
 `tiles/<zone>.png` (128×128, seamless; `graveyard`, `march_<style>`, `sanctum_<style>`) exists, the
 floor is one repeating rect of it on the world tile grid, plus up to two variants
-(`tiles/<zone>_2.png`, `_3.png`) on cells picked from the floor's stable cell hash; the code
-decorations stay on top, the March road strip (`tiles/march_road.png`, 140 px tall) draws along y = 0
+(`tiles/<zone>_2.png`, `_3.png`) on cells picked from the floor's stable cell hash; the flat code
+decorations stay on top (the Graveyard's solid-looking tombstones, crosses and dead trees are skipped
+there, since they never collide), the March road strip (`tiles/march_road.png`, 140 px tall) draws along y = 0
 and the Sanctum corruption lerps the tiles toward purple. Each obstacle kind has 2-3 **fixed size
 variants** (`sizes` in the stage files, the collision exactly the variant's, picked per cell,
 deterministic per seed), drawn from `obstacles/<kind>_s|_m|_l[_v].png` with its base on the collision
