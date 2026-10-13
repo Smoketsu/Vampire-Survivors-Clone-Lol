@@ -29,7 +29,7 @@ draw figures about 60-95 px tall).
    (Aseprite, LibreSprite, Pixelorama), using only palette colours, and re-run the check.
 6. The game shows a sprite whenever the file exists, and otherwise keeps the code-drawn glyph, so art
    lands one piece at a time. Movement, hit flashes, facing and shadows are done in code (engine
-   motion); walk cycles come later as 4-frame sheets (see "Walk cycles").
+   motion); the main units also have 8-frame walk strips cut from their stills (see "Walk cycles").
 
 Or send the images to Claude to run steps 3-4.
 
@@ -359,27 +359,62 @@ Attached: the approved sprites of this game, for the pixel size and palette.
 Process: `python3 tools/prepare_sprite.py <image> icons/shadow_bolt --art-height 32 --no-outline
 --no-rim --ramps violet --no-center`.
 
-## Walk cycles (`--frames`)
+## Walk cycles (`tools/walk_cycle.py`)
 
-Walk cycles come after the stills (characters and summon classes first). A walk sheet is **4 poses in
-one row**, same facing (right), same size and ground line, with transparent gaps between them:
+**Status:** 49 strips: the necromancer and the 11 other characters, their 16 skins; the summons
+Warrior, Archer, Mage, Mender, Warder, Rogue, Risen and Bone Hound and the walking evolutions Death
+Knight, Gravebow, Shadow Reaper and Hellhound; the Covenant Recruit, Footman, Archer, Chaplain,
+Purifier, Shieldbearer, Halberdier, Templar and Banner Bearer. Every other unit (bosses, structures,
+the floating Banshee, Keening Lady, Frost Wraith, Winter Revenant and Lich, the airborne Gargoyle and
+Cathedral Horror, the Bishop, the giant summons, the Corpse Catapult and Ossuary Engine, the Inquisitor
+and the Sanctum kinds) keeps its still plus the engine motion. A skin's rig is derived from its character's
+(`SKINS` / `skin_rig()`: the same hip height above the feet, the columns moved by the offset between
+the two lower bodies; `SKIN_FIX` for per-skin corrections), since a skin keeps its character's body
+and pose.
 
-1. **Idle / passing** (the still sprite's pose: feet together, body upright),
-2. **left foot forward** (body 2 art px lower; 1 for units 40 art px or shorter),
-3. **passing** (as 1, body 2 art px higher; 1 for the small units),
-4. **right foot forward** (body 2 art px lower; 1 for the small units).
+**Method (the pilot, Oct 2026).** Two methods were compared on the necromancer, the Warrior and the
+Recruit. (a) AI: the approved still enlarged x16 as the reference, a prompt for 4 poses of "the same
+character" (`gen_image.py`, 3 images), converted with `prepare_sprite.py --frames 4`. Every sheet
+redrew the character: the Warrior lost its skull face, the Recruit his face and kettle helm, the
+necromancer's hood and staff moved between poses, and the images came back on a dark glow; converted,
+no pose matched the still, so the strip would flicker against the approved sprite. (b) Procedural: the
+frames are cut from the still itself. (b) keeps every approved pixel and palette colour, cannot drift
+and is deterministic, so **all strips use (b)**; the AI images were not used.
 
-Ask for it with the prompt template plus: "a WALK CYCLE SPRITE SHEET: exactly 4 poses of the same
-character in ONE horizontal row, left to right: 1 neutral stance, 2 left foot forward, 3 passing, 4
-right foot forward; identical size, design, colours and ground line in every pose, clear empty
-transparent space between the poses". Attach the approved still.
+**How the tool animates a still.** Each unit has a *rig* in `tools/walk_cycle.py` (`RIGS`): a `hip`
+row, the column ranges of the `back` and `front` leg (or, on a robe, the two hem lobes with the feet
+under them) and `rigid` rectangles below the hip that ride with the body (a spear or staff foot, a
+sword tip, a shield rim, a censer). Rows above the hip move only as one block, 1 art px down on the
+"down" pose. Each leg is re-laid row by row: whole rows taken out near its middle (the knee bends,
+the swinging foot lifts by `lift` px) and sheared sideways from 0 px at the hip to `spread` px at the
+foot (the feet come together, then part). Rows move intact, so outlines, rims and colours are the
+approved ones; the tool refuses a strip whose frame 0 differs from the still or that holds a colour
+the still does not. One cycle is **8 frames** (`WalkData.FRAMES`), two steps of four poses: contact
+(the still itself), down, passing (feet together, swinging foot lifted), up; the first step swings the
+back leg, the second the front one. Typical rigs: `spread` 2-3 and `lift` 2 for legged soldiers and
+skeletons, 1 and 1 for the long robes, `dip` 1 everywhere.
 
-Process: `python3 tools/prepare_sprite.py <sheet> <key> --frames 4`. The poses are found by the
-transparent gaps (or split into 4 equal columns), processed with one shared scale, ramp set and
-shading, aligned (feet on the bottom row, body centred) and written to `assets/sprites/<key>_walk.png`:
-4 frames side by side, no gaps, each the still's height (HEIGHTS) and the same even width (the
-height when every pose fits in a square), so the frame width is the strip width / 4. The tool header
-documents the layout for the engine.
+**Strip layout (the engine contract).** `assets/sprites/<key>_walk.png` = 8 frames side by side, no
+gaps, **each exactly the still's width and height** (frame i at x = i x W), feet on the same bottom row
+and the body at the same x, so a frame drawn where the still is drawn lines up pixel for pixel.
+`SpriteBank.draw()` uses a strip only for grid art whose strip height equals the still's and whose width
+is a whole multiple (at least 2) of it; otherwise it draws the still.
+
+**In the game.** The frame follows the engine-motion step phase (`UnitMotion`: the phase advances by
+PI per step at the measured speed over the unit's stride), so the legs keep time with the bob and the
+speed: frame i is centred on phase i x TAU / 8, contact on the bob's low points, passing on its tops.
+A unit counts as walking above `WalkData.START_SPEED` (14 px/s) and stops below `STOP_SPEED` (8 px/s),
+showing its still; frozen, stunned, stone and dead bodies hold their frame, airborne ones show the
+still. The body layer is redrawn only when the frame changes (a Recruit at 58 px/s about 9 times a
+second), and the stretch bob drops to `WalkData.BOB_SCALE` (35%) since the strip carries its own 1 px
+dip. Hit flash, tints (skins, characters), elites, facing and the sharp-pixel shader work as for the
+still. Visual only: game time and positions, no RNG.
+
+**Adding a unit.** Look at the still on a grid (rows and columns), write its rig, then
+`python3 tools/walk_cycle.py build <key>`, `python3 tools/walk_cycle.py preview <key> --out-dir DIR`
+(a GIF walking in place at 4x and a frame sheet) and `sheet <keys> --out PNG` (a review sheet), and
+`godot --headless --import` for the `.import` file. Tune `hip` (higher = more of the legs move),
+`spread` and `lift`; put anything that must not bend below the hip in `rigid`.
 
 ## Effects (smooth by design)
 
@@ -388,7 +423,7 @@ Effects are short **smooth** animations processed with `--anim` (strips of squar
 pixel-art style with palette colours, but the engine scales each one to its gameplay radius with
 plain linear filtering (`SpriteBank.draw_anim()`), not through the sharp-pixel shader. That is
 deliberate: the same strip plays at many sizes (area passives, Zoom Close), from a 40 px Soul Chains
-flash to Seraphine's 1300 px nova, so no fixed 1:1 grid fits. After the effects pass (Oct 2026) 25
+flash to Seraphine's 1300 px nova, so no fixed 1:1 grid fits. After the effects pass (Oct 2026) 28
 strips exist; the `--anim` table below lists them, their hooks and the process notes.
 
 ---
@@ -850,28 +885,31 @@ larger frames for effects drawn far above 128 px). Timing and on-screen fill are
 an effect lives as long with or without its art. Without the file, the game keeps today's drawn
 shape. Use palette colours; player effects are violet, undead teal, Covenant gold.
 
-**Status:** *done* = strip in the game and hooked; *new* = no art and no hook yet. **Px** = stored
-frame size. **Hook** = where it plays (all through `EffectManager`: `ring()`, `pop()`,
-`spawn_ring()`, `abyss()`, `impact()` with an anim id).
+**Status:** *done* = strip in the game and hooked. **Px** = stored frame size. **Hook** = where it
+plays (all through `EffectManager`: `ring()`, `pop()`, `spawn_ring()`, `abyss()`, `impact()` with an
+anim id, or `burst()` for the art-only effects that never had a drawn shape: `bolt_impact`,
+`level_up`, `evolution`, drawn by `AnimBursts` outside the Effect pool, nothing without the art).
+`ring_under()` is a drawn ring that hides while a strip covers it (the inner rings under
+`abyssal_burst` and `soul_nova`).
 
 | Id | Effect | Frames | Px | Hook | Status |
 |---|---|---|---|---|---|
 | `shadow_blast` | Shadow Blast: a violet shockwave ring bursting outward from a dark centre, then fading to wisps | 8 | 128 | Shadow Blast cast | done |
-| `abyssal_detonation` | Abyssal Detonation first hit: the black-violet vortex collapsing (frames 3, 2, 1 of the sheet, reversed) | 3 | 256 | `abyss()` at the first hit | done |
+| `abyssal_detonation` | Abyssal Detonation first hit: the black-violet vortex spinning inward and collapsing (the sheet's largest vortex turned 150° and shrunk over 8 frames) | 8 | 256 | `abyss()` at the first hit | done |
 | `abyssal_burst` | Abyssal Detonation second hit: the vortex exploding into pale violet sparks and a thin ring, fading to wisps (frames 4-10 of the same sheet) | 7 | 256 | second-hit ring | done |
 | `corpse_explosion` | Corpse Explosion: a burst of bone shrapnel and dark gore mist | 8 | 192 | burst ring | done |
 | `grave_eruption` | Grave Eruption: bone spikes stabbing up from the ground in a ring around an empty centre, then crumbling | 8 | 192 | burst ring (evolved) | done |
-| `bolt_impact` | Shadow Bolt hit: a small violet splash with sparks | 6 | | none (no drawn hit effect to replace) | new |
+| `bolt_impact` | Shadow Bolt hit: a small violet splash with sparks (subtle, about 20 px) | 6 | 128 | `burst()` on each Shadow Bolt / Void Bolt / Void Shard hit (`ProjectileManager._friendly_hits()`) | done |
 | `summon_rise` | Summon rising: teal soul-fire swirling up from a grave-dirt circle (circle at the feet) | 8 | 128 | `spawn_ring()` of a summon / temporary summon | done |
 | `undead_death` | Undead destroyed: bones scattering and a teal soul wisp rising | 6 | 128 | `pop()` when a summon falls | done |
 | `enemy_death` | Covenant soldier dies: a crimson-and-ivory burst fading into gold motes | 6 | 128 | `pop()` in `CombatResolver._kill_enemy()` | done |
 | `holy_impact` | Covenant hammer / boss slam: a gold radiant shockwave with ivory dust | 8 | 192 | `impact()`: Alaric's Hammerfall and Judgment, the Cathedral Guardian's slam, Seraphine's holy circles and nova centre | done |
 | `soul_nova` | Soul Nova: a huge thin violet ring with teal and violet soul wisps riding it, expanding across the screen, then dissolving (built from one 1024 px ring image, `art_source/effects/soul_nova_ring.png`) | 10 | 512 | Soul Nova power-up ring | done |
-| `level_up` | Level-up: a column of violet light with rising runes | 8 | | | new |
+| `level_up` | Level-up: a tall column of violet light with rising runes, its base on the frame's bottom row (at the necromancer's feet) | 8 | 192 | `burst()` following the necromancer when `Game.add_xp()` gains a level (plays on once the card is picked) | done |
 | `frost_shatter` | Winter Revenant shatter: a frozen body bursting into pale icy shards, then glittering frost | 6 | 128 | Revenant shatter | done |
 | `frost_nova` | Winter Revenant death nova: a ring of freezing frost racing outward from a cold-white centre | 8 | 128 | Revenant death nova | done |
 | `chest_open` | Treasure chest bursting open with violet light and bone-coloured sparks (light only, no chest) | 8 | 192 | `Game.open_chest()` ring (plays once the reveal closes) | done |
-| `evolution` | Evolution: a dark vortex collapsing into a bright violet-gold flash | 10 | | | new |
+| `evolution` | Evolution: a dark vortex collapsing into a bright violet-gold flash (vortex frames reordered into a collapse) | 10 | 192 | `burst()` following the necromancer when a chest grants an evolution (`Game.open_chest()`) | done |
 | `dread_rally` | Dread Rally: a deep violet shockwave bursting out of a skull-shaped flare, souls streaking outward, then fading to dark wisps | 10 | 256 | Dread Rally burst | done |
 | `grave_step_trail` | Grave Step departure: a puff of violet shadow smoke left where the necromancer stepped from, curling and thinning away | 6 | 128 | Grave Step | done |
 | `seraphine_nova` | Seraphine's Judgment nova: a thin gold and ivory ring of holy light racing outward with sun-ray streaks, then dissolving into motes (centre empty: the `holy_impact` flash plays there) | 9 | 512 | Judgment nova | done |
@@ -881,18 +919,21 @@ frame size. **Hook** = where it plays (all through `EffectManager`: `ring()`, `p
 | `bone_wall_rise` | Bone Wall: one cluster of bone spikes bursting up out of cracked grave dirt, with a puff of dust | 6 | 128 | each segment rising | done |
 | `bone_wall_burst` | Charnel Bastion expiring: a bone-spike cluster exploding into flying bone shrapnel with a violet flash | 8 | 128 | each segment bursting | done |
 | `wither_aura` | One Wither pulse: a thin ring of moss-green decay mist racing outward and dissolving into falling motes (centre empty) | 8 | 256 | each pulse | done |
-| `doom_burst` | Doom Brand detonation: a green brand sigil flaring and bursting into a ring of violet doom-fire | 8 | 128 | each branded death | done |
+| `doom_burst` | Doom Brand detonation: a violet brand sigil (Death Mark is the player's violet) flaring and bursting into a ring of violet doom-fire | 8 | 128 | each branded death | done |
 | `raise_dead` | Raise Dead: grave dirt cracking open and a teal soul-fire swirl as a skeletal hand claws up (mound at the feet) | 8 | 128 | each raised skeleton | done |
 | `legion_burst` | Legion of Bones: a crumbling skeleton bursting into a ring of bone shards and dust | 8 | 128 | each skeleton's burst | done |
 
-**How the effects pass made them** (Oct 2026, `tools/gen_image.py`, 24 images for 24 strips): one
+**How the effects pass made them** (Oct 2026, `tools/gen_image.py`, 24 images for 24 strips, then
+a second pass of 3 images for `bolt_impact`, `level_up` and `evolution`): one
 API sheet per effect at 1536×1024 with the anchors and the Shadow Blast sheet as style references:
 6 frames in one row, 8 as a 4×2 grid, 10 as a 5×2 grid (grids give larger frames). Each sheet was
 then normalised before `--anim --frames N`: rows and frames split at the widest transparent gaps
 (robust to sparks), each frame centred on its alpha centroid (or, for effects on the ground such as
 `summon_rise` and `raise_dead`, bottom-aligned so the dirt does not jump), laid out as equal cells.
-A few strips were touched up there: frames reordered or split (the Abyssal vortex reversed into an
-implosion, its burst a second strip), the last frames faded where a bright core would pop off
+A few strips were touched up there: frames reordered or split (the Abyssal sheet's burst is a
+second strip, and its largest vortex is turned and shrunk over 8 frames for a smooth implosion; the
+evolution vortex reversed into a collapse), the Doom Brand sigil's green recoloured onto the violet
+ramp by lightness, the last frames faded where a bright core would pop off
 (`doom_burst`, `holy_impact`), and one sheet that came back on a dark semi-transparent haze
 (`chest_open`) had the dark pixels keyed out. Seraphine's nova first came out as a blocky band at
 1300 px, so it and the Soul Nova are built from ONE 1024 px ring image each
@@ -921,3 +962,47 @@ Tips:
   the AI drifts, ask it to "redraw the same effect with identical centre and design in every frame,
   only the expansion changes", or send the sheet to Claude.
 - A short GIF works as well as a sheet; send whichever comes out cleaner.
+
+### UI kit and title logo (`assets/ui/`)
+
+**Status:** in the game. The UI stays Godot Controls built in code; the kit only reskins them through
+`UiTheme` (same content margins, sizes and focus paths as the old flat boxes; a missing PNG falls back to
+the old `StyleBoxFlat` look).
+
+**Title logo** (`assets/ui/logo.png`, 246×90 art px, drawn at `UiArtData.LOGO_SCALE` = 2 on the main
+menu through the sharp-pixel shader; the plain "NECROPATHY" label is the fallback). Made from four
+image-AI wordmark candidates (all spelled correctly, checked letter by letter); the pick has violet
+gothic capitals with a bone bevel, teal soul flames and a skull in the O. Converted with
+`python3 tools/prepare_sprite.py <source> ui/logo --art-height 90 --ramps violet,bone,soul
+--inside-outline --no-prune --no-levels --no-center --out <png>`, then
+`python3 tools/ui_kit.py logo <png>` applies the hand fix (the skull redrawn symmetric with soul-glow eye
+glints). Source: `art_source/ui/logo.png`. Prompt essentials: "pixel-art title logo reading exactly
+NECROPATHY, about 300 px wide, chunky gothic capitals, violet with a bone bevel and a 2 px ink outline,
+teal soul wisps, a skull in the O, transparent background".
+
+**App icon** (`assets/ui/icon.png`, project.godot `config/icon`): `python3 tools/ui_kit.py icon` cuts the
+logo's O (shield, skull, flame) onto a 64×64 dark violet badge, saved 2× (128 px).
+
+**Frames** are drawn by code, not by the image AI (AI frames are ornate and uneven and do not 9-slice):
+`python3 tools/ui_kit.py frames [--preview sheet.png]` writes `<kind>_<accent>_<state>.png`, each
+`2 × UiArtData.SLICE[kind] + CENTER` texels square, 1 texel = 1 layout px. Rules:
+
+- Rings from the outside in, 1 texel each: an ink outline, a bevelled bright ring (lit top / left one
+  shade lighter, like the sprites), an inner ring, an ink gap, then the flat fill; chamfered corners.
+- Palette colours only for rings and ornaments; the fills keep the UI's own dark fills (`UiTheme.BG`,
+  `BG_HOVER`, the selected gold and evolution fills), which are UI-only and never used by sprites.
+- Accents: **violet** (default), **gold** (evolution cards, chest panel, victory screen, selected
+  tiles), **crimson** (active run modifier, Profane Oath), **soul** (affordable Ossuary upgrade),
+  **dim** (locked / disabled), **grey** (HUD slot sockets), **bone** (tooltips).
+- Kinds: `button` (normal / hover / pressed / disabled), `panel` (bone corner studs), `card` (level-up
+  cards, bone corner brackets), `focus` (a 3 px soul-teal ring drawn 3 px outside the focused control,
+  thick corner brackets: keyboard / controller focus is always obvious), `slot` (HUD ability socket),
+  `bar` (HUD bar frame, open centre), `tip`, `scroll` / `grab`, `line`, and the CheckButton `toggle_on` /
+  `toggle_off` icons (32×16).
+- Crispness: `UiTheme` gives Buttons, panels and scroll bars the shared sharp-pixel material as they
+  enter the tree, so 1 px rings stay even at the ×1.5 1080p scale.
+
+**Fonts:** not wired by the kit. Pixelify Sans Bold renders cleanly only at multiples of 8 px (8, 16,
+24, 32 screen px); at today's 11-20 px label sizes, stretched ×1.5, its digits break (a "2" reads as
+"8"), so wiring it needs its own font-size pass (sizes snapped to the font grid, Jacquard 24 for
+headings) before it ships.

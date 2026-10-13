@@ -53,7 +53,7 @@ func _ready() -> void:
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
 	var panel := PanelContainer.new()  # Framed panel.
-	panel.add_theme_stylebox_override("panel", UiTheme.box(UiTheme.BG, Palette.GOLD, 3))
+	panel.add_theme_stylebox_override("panel", UiTheme.style("panel", "gold"))  # Gold-trimmed (UI kit).
 	center.add_child(panel)
 	var vb := VBoxContainer.new()  # Panel contents, top to bottom.
 	vb.add_theme_constant_override("separation", 8)

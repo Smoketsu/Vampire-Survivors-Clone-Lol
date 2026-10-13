@@ -290,6 +290,9 @@ func _friendly_hits(p: Projectile) -> bool:
 				dmg *= 1.0 + bonus
 				game.stat_add("volley_marked_hits", 1.0)
 		game.combat.damage_enemy(e, dmg, p.source)
+		if p.kind == Projectile.Kind.SHADOW_BOLT or p.kind == Projectile.Kind.VOID_BOLT or p.kind == Projectile.Kind.VOID_SHARD:
+			# The player's spell bolts splash where they hit (art-only, visual).
+			game.effects.burst(p.position, AnimData.BOLT_IMPACT_RADIUS, "bolt_impact")
 		if p.chill_slow > 0.0:
 			game.combat.chill_enemy(e, p.chill_slow, p.chill_time)  # Frost Wraith bolt.
 		if p.curse_time > 0.0:

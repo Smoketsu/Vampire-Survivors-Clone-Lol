@@ -303,8 +303,8 @@ func _refresh() -> void:
 
 
 ## Updates one upgrade button: icon pips, name / tier, effect delta, cost
-## line and a border colour for its state (affordable green, maxed gold,
-## locked dark, too expensive default).
+## line and a UI kit frame accent for its state (affordable soul green,
+## maxed gold, locked dim, too expensive the default violet).
 func _refresh_upgrade(id: String) -> void:
 	var def: Dictionary = MetaData.UPGRADES[id]
 	var p: Dictionary = _parts[id]
@@ -316,19 +316,19 @@ func _refresh_upgrade(id: String) -> void:
 	(p["effect"] as Label).text = effect_text(id)
 	var cost: Label = p["cost"]
 	var block := Meta.purchase_block(id)
-	var border := UiTheme.BORDER
+	var accent := "violet"  # UI kit frame accent (UiTheme.style()).
 	match block:
 		"maxed":
 			cost.text = "MAXED"
 			cost.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
 			name_label.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
-			border = Palette.GOLD.darkened(0.15)
+			accent = "gold"
 		"locked":
 			var req: Dictionary = def["requires"]
 			cost.text = "Needs %s %s" % [MetaData.UPGRADES[req["id"]]["display_name"], ROMAN[int(req["tier"])]]
 			cost.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.35))
 			name_label.add_theme_color_override("font_color", UiTheme.TEXT_DIM)
-			border = UiTheme.BORDER.darkened(0.55)
+			accent = "dim"
 		"cost":
 			cost.text = "Cost %d  (need %d more)" % [Meta.next_cost(id), Meta.next_cost(id) - Meta.soul_ash]
 			cost.add_theme_color_override("font_color", UiTheme.TEXT_DIM)
@@ -337,18 +337,16 @@ func _refresh_upgrade(id: String) -> void:
 			cost.text = "Cost %d  -  buy" % Meta.next_cost(id)
 			cost.add_theme_color_override("font_color", UiTheme.TEXT_GOOD)
 			name_label.add_theme_color_override("font_color", UiTheme.TEXT)
-			border = Palette.NECRO_GREEN.darkened(0.2)
+			accent = "soul"
 	if id == PactData.OATH_ID:
-		border = _refresh_oath(p, border)
-	var b: Button = buttons[id]
-	b.add_theme_stylebox_override("normal", UiTheme.box(UiTheme.BG, border))
-	b.add_theme_stylebox_override("hover", UiTheme.box(UiTheme.BG_HOVER, border))
+		accent = _refresh_oath(p, accent)
+	UiTheme.style_button(buttons[id] as Button, "button", accent)
 
 
 ## Profane Oath button extras: the name shows the ACTIVE / owned tiers and,
 ## when the active tier was lowered, the cost line offers the free raise.
-## Returns the border colour to use.
-func _refresh_oath(p: Dictionary, border: Color) -> Color:
+## Returns the UI kit frame accent to use (crimson once an Oath tier is owned).
+func _refresh_oath(p: Dictionary, accent: String) -> String:
 	var owned := Meta.tier(PactData.OATH_ID)  # Tiers bought.
 	var active := Meta.oath_active_tier()  # Tier applied to runs.
 	var name_label: Label = p["name"]  # "Profane Oath III (owned 3/5)".
@@ -357,8 +355,8 @@ func _refresh_oath(p: Dictionary, border: Color) -> Color:
 		var cost: Label = p["cost"]  # Cost / action line.
 		cost.text = "Raise to %s  -  free (owned)" % DifficultyModifiers.roman(active + 1)
 		cost.add_theme_color_override("font_color", UiTheme.TEXT_GOOD)
-		return Palette.CRIMSON.darkened(0.1)
-	return Palette.CRIMSON.darkened(0.1) if owned > 0 else border
+		return "crimson"
+	return "crimson" if owned > 0 else accent
 
 
 ## Oath effect line: "Foes +16% -> +24% HP, Ash +20% -> +30%" for the next

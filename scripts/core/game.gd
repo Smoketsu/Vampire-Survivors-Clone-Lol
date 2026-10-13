@@ -445,11 +445,15 @@ func add_xp(amount: int) -> void:
 	_xp_carry = gained - float(amount)
 	xp += amount
 	stat_add("xp_collected", float(amount))
+	var level_before := level  # To play the level-up column once per gain.
 	while xp >= xp_to_next:
 		xp -= xp_to_next
 		level += 1
 		xp_to_next = PlayerData.xp_to_next(level)
 		pending_level_ups += 1
+	if level > level_before:
+		# Column of violet light on the necromancer (art-only, visual).
+		effects.burst(AnimData.LEVEL_UP_OFFSET, AnimData.LEVEL_UP_RADIUS, "level_up", player)
 
 
 ## Pauses combat and shows three cards (GDD §16 "Level-up panel: Pause combat").
@@ -483,6 +487,11 @@ func open_chest(pos: Vector2) -> void:
 	var rewards := abilities.chest_rewards(count)  # Applied rewards, in order.
 	chests.record_opened(count, rewards)
 	effects.ring(pos, 90.0, Palette.GOLD, 0.6, "chest_open")  # Animation when its art exists (visual only).
+	for o: Dictionary in rewards:
+		if String(o["kind"]) == "evolution":
+			# Dark vortex collapsing into a violet-gold flash on the necromancer (art-only, visual).
+			effects.burst(Vector2.ZERO, AnimData.EVOLUTION_RADIUS, "evolution", player)
+			break
 	run_state = RunState.CHEST
 	get_tree().paused = true
 	chest_panel.open(rewards, count)

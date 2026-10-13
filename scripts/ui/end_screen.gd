@@ -40,6 +40,8 @@ var _ash_values: Label
 var _ash_total: Label
 ## Restart button (focused on open).
 var _restart: Button
+## The framed panel (gold-trimmed UI kit frame on a victory, violet otherwise).
+var _panel: PanelContainer
 
 
 func _ready() -> void:
@@ -50,12 +52,12 @@ func _ready() -> void:
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
-	var panel := PanelContainer.new()
-	center.add_child(panel)
+	_panel = PanelContainer.new()
+	center.add_child(_panel)
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 12)
 	vb.custom_minimum_size = Vector2(760, 0)
-	panel.add_child(vb)
+	_panel.add_child(vb)
 	_title = UiTheme.label("", 44)
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(_title)
@@ -206,6 +208,7 @@ func _show_unlocks(ids: PackedStringArray) -> void:
 ## Shows the screen for a finished run (see Game.build_summary()).
 func open(summary: Dictionary) -> void:
 	var won: bool = summary["victory"]
+	_panel.add_theme_stylebox_override("panel", UiTheme.style("panel", "gold" if won else "violet"))
 	if won:
 		_title.text = "VICTORY - RUN COMPLETE"
 		_title.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)

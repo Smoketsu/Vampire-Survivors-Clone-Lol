@@ -10,7 +10,9 @@
 ## Key names come from Settings.key_name(), so they follow rebinds. Icons go
 ## through Glyphs.draw_icon(), so icon art (assets/sprites/icons/grave_step
 ## / dread_rally.png) plugs in. Polls game.grave_step / game.dread_rally and
-## redraws every frame (two small icons); purely visual.
+## redraws every frame (two small icons); purely visual. Pixel-art UI kit:
+## each icon sits in the kit's slot socket and the meter in its bar frame,
+## like the ability bar (_socket(), _bar_frame(); flat look without the PNGs).
 class_name HudAbilities
 extends Control
 
@@ -63,6 +65,7 @@ func _draw_step(o: Vector2) -> void:
 	var gs := game.grave_step
 	var rect := Rect2(o, Vector2(ICON, ICON))
 	_key_label(o, Settings.key_name("dash"))
+	_socket(rect)
 	Glyphs.draw_icon(self, "grave_step", rect)
 	if gs.charges <= 0:
 		var k := gs.recharge_fraction()  # Recharge progress of the first charge.
@@ -87,10 +90,12 @@ func _draw_rally(o: Vector2) -> void:
 	var dr := game.dread_rally
 	var rect := Rect2(o, Vector2(ICON, ICON))
 	_key_label(o, Settings.key_name("ultimate"))
+	_socket(rect)
 	Glyphs.draw_icon(self, "dread_rally", rect)
 	var f := dr.fraction()  # Meter fill 0..1.
 	var bar := Rect2(Vector2(o.x + ICON + 3.0, o.y), Vector2(BAR_W, ICON))
 	draw_rect(bar, Color(0.0, 0.0, 0.0, 0.6))
+	_bar_frame(bar)
 	if dr.buff_active():
 		var k := dr.buff_left / PlayerAbilityData.RALLY_DURATION  # Buff time left 0..1.
 		draw_rect(Rect2(Vector2(bar.position.x, bar.end.y - ICON * k), Vector2(BAR_W, ICON * k)), Palette.VIOLET)
@@ -105,6 +110,23 @@ func _draw_rally(o: Vector2) -> void:
 	else:
 		draw_rect(Rect2(o, Vector2(ICON, ICON * (1.0 - f))), Color(0.0, 0.0, 0.0, SHADE_ALPHA))
 		_status(o, "%d%%" % int(f * 100.0))
+
+
+## The kit's slot socket behind the icon square `rect` (nothing without the PNG).
+func _socket(rect: Rect2) -> void:
+	var sb := UiTheme.style("slot")  # A StyleBoxTexture when the kit PNG exists.
+	if sb is StyleBoxTexture:
+		SpriteBank.apply_sharp(self)
+		draw_style_box(sb, rect.grow(UiArtData.SLOT_EXPAND))
+
+
+## The kit's bar frame 1 px around the meter `bar` (drawn under the fill,
+## whose edge rows it frames; nothing without the PNG).
+func _bar_frame(bar: Rect2) -> void:
+	var sb := UiTheme.style("bar")  # A StyleBoxTexture when the kit PNG exists.
+	if sb is StyleBoxTexture:
+		SpriteBank.apply_sharp(self)
+		draw_style_box(sb, bar.grow(1.0))
 
 
 ## Bound key name centred above the icon at `o`.

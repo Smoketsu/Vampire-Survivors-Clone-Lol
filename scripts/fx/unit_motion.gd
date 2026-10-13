@@ -13,6 +13,14 @@
 ## stay planted: the bob is a stretch, the lean and the lunge a shear, the
 ## squashes a scale; the facing mirror of the unit node applies on top.
 ##
+## Walk cycles (WalkData): when the body's sprite has a walk strip (the body
+## layer's walk_count, reported by SpriteBank.draw()), update() also picks
+## the walk frame from the same step phase as the bob, so the legs keep time
+## with the bob and the speed; a standing unit shows its still. The body
+## layer is redrawn only when the frame changes (a few times per second per
+## walking unit). The bob is cut to WalkData.BOB_SCALE then, as the strip
+## carries its own 1 art px dip.
+##
 ## Visual only: it reads the unit's position, facing and state and never
 ## writes any of them; events (hit(), lunge(), begin_rise()) only store game
 ## times. Its clock is Game.elapsed, so it slows with the hit-stop and stops
@@ -64,6 +72,9 @@ var _alpha: float = 1.0
 var _lunge_sx: float = 1.0
 ## Height factor of the lunge computed by the last _lunge_terms() call.
 var _lunge_sy: float = 1.0
+## True while the unit counts as walking for its walk strip (WalkData
+## START_SPEED / STOP_SPEED hysteresis); false = the still is shown.
+var walking: bool = false
 
 
 ## Builds the two layers as children of `p_host`: `body_fn` draws the body
@@ -97,6 +108,8 @@ func reset(p_feet: float, radius: float, scale_k: float, p_hit_only: bool) -> vo
 	lean = 0.0
 	last_pos = host.position
 	facing = 1.0 if host.scale.x >= 0.0 else -1.0
+	walking = false
+	body.walk_frame = -1  # Starts on the still (the activation redraws the layers).
 	_set_identity()
 
 
@@ -150,6 +163,8 @@ func update(now: float, dt: float, still: bool, quiet: bool, no_bob: bool = fals
 		phase = fposmod(phase + vel.length() * dt / stride * PI, TAU)
 		var target := clampf(vel.x * facing / MotionData.LEAN_FULL_SPEED, -1.0, 1.0) * MotionData.LEAN_MAX  # Lean wanted.
 		lean += (target - lean) * minf(1.0, dt * MotionData.LEAN_RATE)
+	if body.walk_count > 0 and not still and not no_bob:
+		_update_walk(quiet or hit_only)  # Frozen, dead and dashing bodies keep their frame.
 	if still:
 		if not _identity:
 			_set_identity()
@@ -161,7 +176,8 @@ func update(now: float, dt: float, still: bool, quiet: bool, no_bob: bool = fals
 		if not no_bob:
 			var bk := clampf((vel.length() - MotionData.BOB_MIN_SPEED) / (MotionData.BOB_FULL_SPEED - MotionData.BOB_MIN_SPEED), 0.0, 1.0)  # Bob strength.
 			if bk > 0.0:
-				var s := MotionData.BOB_STRETCH * amp * bk * (absf(sin(phase)) * 2.0 - 1.0)  # Stretch this frame.
+				var bob := MotionData.BOB_STRETCH * (WalkData.BOB_SCALE if body.walk_count > 0 else 1.0)  # Peak stretch (the walk strip has its own dip).
+				var s := bob * amp * bk * (absf(sin(phase)) * 2.0 - 1.0)  # Stretch this frame.
 				sy += s
 				sx -= s * MotionData.BOB_VOLUME
 		k += lean * amp
@@ -195,6 +211,29 @@ func update(now: float, dt: float, still: bool, quiet: bool, no_bob: bool = fals
 	body.transform = Transform2D(Vector2(sx, 0.0), Vector2(-k * sy, sy), Vector2(k * sy * feet, feet * (1.0 - sy)))
 	_identity = false
 
+
+
+## Picks the walk frame from the step phase (WalkData): frame i is centred
+## on phase PHASE_AT_FRAME_0 + i * TAU / n, so the contact frames sit on the
+## bob's low points and the passing frames on its tops; -1 (the still) while
+## standing or when `stand` (airborne bodies, structures). Redraws the body
+## layer only when the frame changes.
+func _update_walk(stand: bool) -> void:
+	var speed := vel.length()  # Smoothed measured speed (px/s).
+	if stand:
+		walking = false
+	elif walking:
+		walking = speed >= WalkData.STOP_SPEED
+	else:
+		walking = speed >= WalkData.START_SPEED
+	var f := -1  # Frame to show (-1 = the still).
+	if walking:
+		var n := body.walk_count  # Frames in the strip.
+		var slot := TAU / float(n)  # Phase covered by one frame (rad).
+		f = int(fposmod(phase - WalkData.PHASE_AT_FRAME_0 + slot * 0.5, TAU) / slot) % n
+	if f != body.walk_frame:
+		body.walk_frame = f
+		body.queue_redraw()
 
 
 ## Lunge at game time `now`: returns its shear and leaves its width / height

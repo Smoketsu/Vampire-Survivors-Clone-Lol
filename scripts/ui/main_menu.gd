@@ -2,7 +2,10 @@
 ## "Upgrades") / Settings / Quit (GDD §10.1 lists more buttons — customization,
 ## codex, achievements — which are out of prototype scope). It shows the Soul
 ## Ash balance and a lifetime line (runs, best time, boss kills, achievements).
-## The candle-lit crypt backdrop is drawn in _draw().
+## The candle-lit crypt backdrop is drawn in _draw(). The title is the
+## pixel-art NECROPATHY logo (UiArtData.LOGO, drawn at UiArtData.LOGO_SCALE
+## through the sharp-pixel shader); the plain label is the fallback when the
+## PNG is missing.
 ## Play opens the stage select (StageSelect, GDD §10.2), which opens the
 ## pre-run setup (PreRunSetup: difficulty and run modifiers); the finished
 ## RunConfig reaches Main through `stage_chosen`.
@@ -32,9 +35,7 @@ func _ready() -> void:
 	vb.add_theme_constant_override("separation", 14)
 	vb.custom_minimum_size = Vector2(420, 0)
 	center.add_child(vb)
-	var title := UiTheme.label("NECROPATHY", 72, Palette.NECRO_GREEN)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vb.add_child(title)
+	vb.add_child(_title())
 	var tagline := UiTheme.label("Begin as the hunted. Raise the fallen. Become the army.", 16, UiTheme.TEXT_DIM)
 	tagline.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(tagline)
@@ -79,6 +80,23 @@ func _ready() -> void:
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(version)
 	_play.grab_focus.call_deferred()
+
+
+## The title: the pixel-art logo when its PNG exists, else the plain label.
+func _title() -> Control:
+	if ResourceLoader.exists(UiArtData.LOGO):
+		var tex := load(UiArtData.LOGO) as Texture2D  # The wordmark (art px).
+		var logo := TextureRect.new()
+		logo.texture = tex
+		logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		logo.custom_minimum_size = tex.get_size() * float(UiArtData.LOGO_SCALE)
+		logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		SpriteBank.apply_sharp(logo)  # Crisp, even pixels at any window scale.
+		return logo
+	var title := UiTheme.label("NECROPATHY", 72, Palette.NECRO_GREEN)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	return title
 
 
 ## Play: opens the stage select over the menu (focus returns to Play when
