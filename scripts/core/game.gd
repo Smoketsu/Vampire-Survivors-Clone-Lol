@@ -53,7 +53,6 @@ signal main_menu_requested
 ## High-level run state.
 enum RunState { PLAYING, LEVEL_UP, PAUSED, ENDED, CHEST }
 
-## Camera zoom (higher = closer). Shows roughly 850x480 world px at 720p.
 ## Cell size (px) of both spatial hashes.
 const GRID_CELL: float = 64.0  # TUNING (not in GDD)
 

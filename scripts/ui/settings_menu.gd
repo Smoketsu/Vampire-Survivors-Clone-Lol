@@ -122,7 +122,7 @@ func _build_left() -> Control:
 	return vb
 
 
-## Cycles the camera zoom level (Close -> Normal -> Far).
+## Cycles the camera zoom level (Normal <-> Close, ViewData.ZOOM_ORDER).
 func _on_zoom_pressed() -> void:
 	var i := ViewData.ZOOM_ORDER.find(Settings.zoom_id)  # Current position in the cycle.
 	Settings.set_zoom(String(ViewData.ZOOM_ORDER[(i + 1) % ViewData.ZOOM_ORDER.size()]))

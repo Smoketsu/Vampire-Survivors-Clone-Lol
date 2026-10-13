@@ -39,7 +39,7 @@ static func draw_skin(ci: CanvasItem, id: String, o: Vector2, r: float, flash: b
 	var top := o + SkinData.GLYPH_HEAD_TOP * r  # Top of the head (px).
 	var unit := r * SkinData.GLYPH_HEAD_UNIT  # Emblem size unit (px).
 	if drawn != "":
-		var h: float = SpriteBank.icon_cap if icon else float(SpriteData.HEIGHTS.get(drawn, SpriteData.DEFAULT_HEIGHT))  # Drawn height (px).
+		var h := SpriteBank.drawn_height(drawn)  # Drawn height (px; grid art in icons uses a whole-number scale).
 		var centre := o + Vector2(0.0, 0.0 if icon else h * SpriteData.CENTER_OFFSET)  # Sprite centre (px).
 		top = centre + SkinData.SPRITE_HEAD_TOP * h
 		unit = h * SkinData.SPRITE_HEAD_UNIT

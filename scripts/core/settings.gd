@@ -69,7 +69,7 @@ func load_settings() -> void:
 		damage_numbers = bool(cfg.get_value("feel", "damage_numbers", true))
 		fullscreen = bool(cfg.get_value("video", "fullscreen", false))
 		var z := String(cfg.get_value("video", "zoom", ViewData.DEFAULT_ZOOM))  # Saved zoom id.
-		zoom_id = z if ViewData.ZOOM_LEVELS.has(z) else ViewData.DEFAULT_ZOOM
+		zoom_id = z if ViewData.ZOOM_LEVELS.has(z) else ViewData.DEFAULT_ZOOM  # The dropped "far" (or junk) loads as Normal.
 		for action: String in REBINDABLE:
 			var kc := int(cfg.get_value("input", action, default_bindings[action]))
 			if kc > 0:
