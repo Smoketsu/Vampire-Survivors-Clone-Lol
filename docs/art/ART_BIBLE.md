@@ -449,9 +449,9 @@ The undead army: bone, cold grey and teal soul fire, one accent per class, **no 
 
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `warrior.png` | Skeleton Warrior (Anchor 2): bone skull and limbs, cold-grey iron, a round cold-grey shield with a bone boss, short sword, teal eye glints. Signature: the round shield | 44 | to redo |
-| `archer.png` | Skeleton Archer: bone body, a **moss-green** hood and short cloak (the Archer's accent), a bone bow drawn with a teal soul-fire arrow. Signature: the bow | 44 | to redo |
-| `mage.png` | Undead Mage: skeleton in a tattered **deep arcane-blue** robe, a staff with an arcane-blue orb (pale blue core). Signature: the orb staff | 44 | to redo |
+| `warrior.png` | Skeleton Warrior (Anchor 2): bone skull and limbs, cold-grey iron, a round cold-grey shield with a bone boss, short sword, teal eye glints. Signature: the round shield | 44 | done |
+| `archer.png` | Skeleton Archer: bone body, a **moss-green** hood and short cloak (the Archer's accent), a bone bow drawn with a teal soul-fire arrow. Signature: the bow | 44 | done |
+| `mage.png` | Undead Mage: skeleton in a tattered **deep arcane-blue** robe, a staff with an arcane-blue orb (pale blue core). Signature: the orb staff | 46 (body 44, orb above) | done |
 | `mender.png` | Grave Mender: skeletal priest in a round **teal** robe, a teal halo, a swinging bone censer. Signature: the halo | 44 | to redo |
 | `warder.png` | Crypt Warder: skeleton in a cold-grey robe with **teal** trim, holding up a shield-shaped teal ward sigil. Signature: the raised sigil | 44 | to redo |
 | `bishop.png` | Profane Bishop: tall teal-and-grey vestments, a bone mitre, a teal halo, a bone crook | 52 | to redo |
