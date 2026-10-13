@@ -171,8 +171,14 @@ func _age_trail(delta: float) -> void:
 
 
 func _draw() -> void:
-	var tex := SpriteBank.texture("player/necromancer")  # Sprite art, or null (drawn shape).
-	if tex != null and SpriteBank.is_grid("player/necromancer"):
+	# Sprite key of the afterimage: the run's character as drawn (its own art, else the necromancer's).
+	var key := "player/necromancer"
+	if game != null and not game.character.is_default():
+		var drawn := CharacterGlyphs.drawn_sprite_key(game.character.id)  # "" when no art exists.
+		if drawn != "":
+			key = drawn
+	var tex := SpriteBank.texture(key)  # Sprite art, or null (drawn shape).
+	if tex != null and SpriteBank.is_grid(key):
 		SpriteBank.apply_sharp(self)  # Grid art draws through the sharp-pixel shader.
 	for g: Array in _trail:
 		var a := PlayerAbilityData.TRAIL_ALPHA * (1.0 - float(g[1]) / PlayerAbilityData.TRAIL_LIFE)  # Afterimage opacity.
@@ -180,7 +186,7 @@ func _draw() -> void:
 		var tint := Color(0.42, 0.24, 0.72, a)  # Shadow violet.
 		draw_set_transform(pos, 0.0, Vector2(float(g[2]), 1.0))
 		if tex != null:
-			var h: float = SpriteData.HEIGHTS.get("player/necromancer", SpriteData.DEFAULT_HEIGHT)  # Drawn height (px).
+			var h: float = SpriteData.HEIGHTS.get(key, SpriteData.DEFAULT_HEIGHT)  # Drawn height (px).
 			var size := Vector2(h * float(tex.get_width()) / float(tex.get_height()), h)  # Drawn size (px).
 			var centre := Vector2(0.0, h * SpriteData.CENTER_OFFSET)  # Sprite centre (px).
 			draw_texture_rect(tex, Rect2(centre - size * 0.5, size), false, tint)

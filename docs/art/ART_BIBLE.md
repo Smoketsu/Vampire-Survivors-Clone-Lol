@@ -402,17 +402,17 @@ colour.
 | File | Subject | Art px | Status |
 |---|---|---|---|
 | `necromancer.png` | The necromancer (Anchor 1) | 56 | to redo |
-| `umbral_warden.png` | **The Umbral Warden** (Shadow Orb Shield): a broad hooded necromancer in layered dark violet robes over cold-grey plate, a tall staff topped by a black sun ringed with a violet corona, three small dark orbs orbiting the staff head; sturdier than the necromancer. Signature: the black-sun staff | 56 | new |
-| `voidcaller.png` | **The Voidcaller** (Shadow Blast): a gaunt sorceress in an abyssal violet robe with a star-speckled hem, hood thrown back over a pale bone face, one hand raised with a ring of violet void energy, violet eyes. Signature: the raised void ring | 56 | new |
-| `bone_oracle.png` | **The Bone Oracle** (Bone Spear): a necromancer in a carved bone skull mask and pale bone robes with violet trim, a bone spear held upright, three bone shards floating around him, violet eye glints. Signature: the upright spear and floating shards | 56 | new |
-| `fallen_confessor.png` | **The Fallen Confessor** (Soul Siphon): a necromancer in corrupted clerical robes (stained ivory and violet), a torn crimson stole, a broken gold censer on a chain, teal-and-violet soul wisps drawn into his open hand. Signature: the hanging censer | 56 | new |
-| `carrion_lord.png` | **The Carrion Lord** (Corpse Explosion): a hulking hooded necromancer in a gore-stained leather mantle with bone plates and a ribcage pauldron over violet robes, a cleaver-headed bone staff. Signature: the broad mantle and cleaver | 56 | new |
-| `plague_scholar.png` | **The Plague Scholar** (Plague Cloud): a hunched necromancer in decaying moss-green alchemist robes over violet, a beaked plague mask, vials at the belt, a staff hung with a smoking censer leaking moss-green fumes. Signature: the beak and censer | 56 | new |
-| `doomsayer.png` | **The Doomsayer** (Death Mark): a tall gaunt prophet in a near-black violet robe lined with crimson, a branding iron glowing in one hand, a crimson eye sigil on the hood. Signature: the tall thin hooded shape and branding iron | 56 | new |
-| `barrow_warden.png` | **The Barrow Warden** (Bone Wall): a heavy-set warden in a mossy cold-grey cloak over violet, stacked bone-and-stone armour, a bone-slab tower shield, a shovel-headed staff. Signature: the slab shield | 56 | new |
-| `soulbinder.png` | **The Soulbinder** (Soul Chains): a slender necromancer in a dark violet robe wrapped in spectral chains, pale icy lightning crackling along the chains and from her raised hand, robe edges lifting. Signature: the chains and raised hand | 56 | new |
-| `wither_witch.png` | **The Wither Witch** (Wither): a crooked witch in a withered brown shawl over a violet robe, a wide frayed hat, dead leaves falling, a twisted dead-branch staff, a faint moss-green aura at her feet. Signature: the wide hat | 56 | new |
-| `grave_herald.png` | **The Grave Herald** (Raise Dead): a necromancer herald in a dark violet tabard over bone mail, a raised bone horn, a banner pole topped with a skull, teal soul fire at his feet. Signature: the skull banner | 56 | new |
+| `umbral_warden.png` | **The Umbral Warden** (Shadow Orb Shield): a broad hooded necromancer in layered dark violet robes over cold-grey plate, a tall staff topped by a black sun ringed with a violet corona, three small dark orbs orbiting the staff head; sturdier than the necromancer. Signature: the black-sun staff | 63 (body 48, staff above) | done |
+| `voidcaller.png` | **The Voidcaller** (Shadow Blast): a gaunt sorceress in an abyssal violet robe with a star-speckled hem, hood thrown back over a pale bone face, one hand raised with a ring of violet void energy, violet eyes. Signature: the raised void ring | 53 (body 48, void ring above) | done |
+| `bone_oracle.png` | **The Bone Oracle** (Bone Spear): a necromancer in a carved bone skull mask and pale bone robes with violet trim, a bone spear held upright, three bone shards floating around him, violet eye glints. Signature: the upright spear and floating shards | 54 (body 48, spear above) | done |
+| `fallen_confessor.png` | **The Fallen Confessor** (Soul Siphon): a necromancer in corrupted clerical robes (stained ivory and violet), a torn crimson stole, a broken gold censer on a chain, teal-and-violet soul wisps drawn into his open hand. Signature: the hanging censer | 48 | done |
+| `carrion_lord.png` | **The Carrion Lord** (Corpse Explosion): a hulking hooded necromancer in a gore-stained leather mantle with bone plates and a ribcage pauldron over violet robes, a cleaver-headed bone staff. Signature: the broad mantle and cleaver | 52 | done |
+| `plague_scholar.png` | **The Plague Scholar** (Plague Cloud): a hunched necromancer in decaying moss-green alchemist robes over violet, a beaked plague mask, vials at the belt, a staff hung with a smoking censer leaking moss-green fumes. Signature: the beak and censer | 48 | done |
+| `doomsayer.png` | **The Doomsayer** (Death Mark): a tall gaunt prophet in a near-black violet robe lined with crimson, a branding iron glowing in one hand, a crimson eye sigil on the hood. Signature: the tall thin hooded shape and branding iron | 53 (body 48, branding iron above) | done |
+| `barrow_warden.png` | **The Barrow Warden** (Bone Wall): a heavy-set warden in a mossy cold-grey cloak over violet, stacked bone-and-stone armour, a bone-slab tower shield, a shovel-headed staff. Signature: the slab shield | 59 (body 48, shovel staff above) | done |
+| `soulbinder.png` | **The Soulbinder** (Soul Chains): a slender necromancer in a dark violet robe wrapped in spectral chains, pale icy lightning crackling along the chains and from her raised hand, robe edges lifting. Signature: the chains and raised hand | 61 (body 48, lightning hand above) | done |
+| `wither_witch.png` | **The Wither Witch** (Wither): a crooked witch in a withered brown shawl over a violet robe, a wide frayed hat, dead leaves falling, a twisted dead-branch staff, a faint moss-green aura at her feet. Signature: the wide hat | 48 | done |
+| `grave_herald.png` | **The Grave Herald** (Raise Dead): a necromancer herald in a dark violet tabard over bone mail, a raised bone horn, a banner pole topped with a skull, teal soul fire at his feet. Signature: the skull banner | 62 (body 48, skull banner above) | done |
 
 ### Player skins (`assets/sprites/player/<character>_<skin>.png`, 56 art px)
 
@@ -507,15 +507,15 @@ Crimson, ivory and warm steel; gold for elites, the Sanctum kinds and the Reckon
 ### Structures (`assets/sprites/structures/`)
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `outpost.png` | Siege outpost: a crimson-banner palisade tent | 96 | to redo |
-| `ward_generator.png` | Holy Ward Generator: a gold-ringed obelisk with a radiant core | 80 | to redo |
-| `supply_cart.png` | Covenant supply cart (seen from above) | 72 | to redo |
-| `holy_standard.png` | Vael's Holy Standard: an ornate gold banner pole | 72 | to redo |
-| `watchtower.png` | Checkpoint watchtower: a wooden tower with a crimson pennant | 96 | to redo |
-| `ward_crystal.png` | Sanctum ward crystal: a tall faceted ivory-and-gold crystal on a round pale-stone plinth, gold glow | 56 | new |
-| `sacred_altar.png` | Sanctum sacred altar: a wide pale-stone altar block draped in gold cloth with a crimson stripe, two lit candles, a gold sun disc standing behind it | 72 | new |
+| `outpost.png` | Siege outpost: a crimson-banner palisade tent | 96 | done |
+| `ward_generator.png` | Holy Ward Generator: a gold-ringed obelisk with a radiant core | 80 | done |
+| `supply_cart.png` | Covenant supply cart (seen from above) | 60 | done |
+| `holy_standard.png` | Vael's Holy Standard: an ornate gold banner pole | 72 | done |
+| `watchtower.png` | Checkpoint watchtower: a wooden tower with a crimson pennant | 96 | done |
+| `ward_crystal.png` | Sanctum ward crystal: a tall faceted ivory-and-gold crystal on a round pale-stone plinth, gold glow | 64 | done |
+| `sacred_altar.png` | Sanctum sacred altar: a wide pale-stone altar block draped in gold cloth with a crimson stripe, two lit candles, a gold sun disc standing behind it | 72 | done |
 
-(`ward_crystal` and `sacred_altar` have no `SpriteData.HEIGHTS` entry yet; the art px assume 56 and 72
+(`ward_crystal` and `sacred_altar` have their `SpriteData.HEIGHTS` entries now; the supply cart is 60 tall so the wide side-on cart keeps its old ~84 px width.)
 on screen.)
 
 ### Pickups (`assets/sprites/pickups/`)

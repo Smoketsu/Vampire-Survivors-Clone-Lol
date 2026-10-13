@@ -34,17 +34,17 @@ const SHARP_EDGE_SOFTNESS: float = 0.5  # TUNING (not in GDD) owner choice, 1080
 ## (with ART_SCALE 1, the art px height equals this value).
 const HEIGHTS: Dictionary = {
 	"player/necromancer": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"player/umbral_warden": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
-	"player/voidcaller": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
-	"player/bone_oracle": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
-	"player/fallen_confessor": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
-	"player/carrion_lord": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
-	"player/plague_scholar": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
-	"player/doomsayer": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
-	"player/barrow_warden": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
-	"player/soulbinder": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
-	"player/wither_witch": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
-	"player/grave_herald": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
+	"player/umbral_warden": 63.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer, staff and orbs above
+	"player/voidcaller": 53.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer, the void ring above
+	"player/bone_oracle": 54.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer, the spear above
+	"player/fallen_confessor": 48.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer (no overhang)
+	"player/carrion_lord": 52.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer (no overhang)
+	"player/plague_scholar": 48.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer (no overhang)
+	"player/doomsayer": 53.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer, the branding iron above
+	"player/barrow_warden": 59.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer, the shovel staff above
+	"player/soulbinder": 61.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer, the lightning hand above
+	"player/wither_witch": 48.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer (no overhang)
+	"player/grave_herald": 62.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer, the skull banner above
 	"player/gravecaller_dread_sovereign": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
 	"player/bone_oracle_ivory_seer": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
 	"player/plague_scholar_plague_doctor": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
@@ -106,9 +106,11 @@ const HEIGHTS: Dictionary = {
 	"bosses/seraphine_avatar": 156.0,  # TUNING (not in GDD) ART_BIBLE manifest size (optional Avatar form)
 	"structures/outpost": 96.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"structures/ward_generator": 80.0,  # TUNING (not in GDD) ART_BIBLE manifest size
-	"structures/supply_cart": 72.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"structures/supply_cart": 60.0,  # TUNING (not in GDD) art pass: 72 before; the wide side-on cart keeps its old ~84 px width
 	"structures/holy_standard": 72.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"structures/watchtower": 96.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"structures/ward_crystal": 64.0,  # TUNING (not in GDD) art pass: a tall thin crystal, ~26 px wide for its 15 px radius
+	"structures/sacred_altar": 72.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
