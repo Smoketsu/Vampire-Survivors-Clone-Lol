@@ -130,12 +130,75 @@ RIGS = {
     "player/soulbinder": dict(mode="legs", hip=54, back=(0, 24), front=(24, 46), rigid=[], spread=1, lift=1, dip=1),
     "player/wither_witch": dict(mode="legs", hip=42, back=(0, 20), front=(20, 26), rigid=[(26, 40, 0, None)], spread=1, lift=1, dip=1),
     "player/grave_herald": dict(mode="legs", hip=53, back=(0, 24), front=(24, 46), rigid=[], spread=1, lift=1, dip=1),
+    # Later units with long screen time: the walking summon evolutions and two March soldiers.
+    "summons/death_knight": dict(mode="legs", hip=41, back=(0, 25), front=(25, 54), rigid=[], spread=2, lift=2, dip=1),
+    "summons/gravebow": dict(mode="legs", hip=42, back=(0, 22), front=(22, 33), rigid=[(33, 52, 0, None)], spread=2, lift=2, dip=1),
+    "summons/shadow_reaper": dict(mode="legs", hip=40, back=(0, 24), front=(24, 43), rigid=[(43, 50, 0, None)], spread=2, lift=2, dip=1),
+    "summons/hellhound": dict(mode="legs", hip=25, back=(0, 30), front=(30, 60), rigid=[(47, 60, 0, 27)], spread=2, lift=1, dip=1),
+    "enemies/templar": dict(mode="legs", hip=69, back=(0, 18), front=(18, 36), rigid=[(28, 32, 0, 72), (0, 7, 0, 72)], spread=2, lift=2, dip=1),
+    "enemies/banner_bearer": dict(mode="legs", hip=75, back=(0, 16), front=(16, 40), rigid=[(27, 31, 0, 79)], spread=2, lift=2, dip=1),
 }
+
+# Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
+# its character's body height and pose (ART_BIBLE "Player skins"), so its rig is derived
+# from the character's (skin_rig()); SKIN_FIX overrides single fields after review.
+SKINS = {
+    "player/gravecaller_dread_sovereign": "player/necromancer",
+    "player/gravecaller_hyper": "player/necromancer",
+    "player/umbral_warden_hyper": "player/umbral_warden",
+    "player/voidcaller_hyper": "player/voidcaller",
+    "player/bone_oracle_ivory_seer": "player/bone_oracle",
+    "player/bone_oracle_hyper": "player/bone_oracle",
+    "player/fallen_confessor_heretic_saint": "player/fallen_confessor",
+    "player/fallen_confessor_hyper": "player/fallen_confessor",
+    "player/carrion_lord_hyper": "player/carrion_lord",
+    "player/plague_scholar_plague_doctor": "player/plague_scholar",
+    "player/plague_scholar_hyper": "player/plague_scholar",
+    "player/doomsayer_hyper": "player/doomsayer",
+    "player/barrow_warden_hyper": "player/barrow_warden",
+    "player/soulbinder_hyper": "player/soulbinder",
+    "player/wither_witch_hyper": "player/wither_witch",
+    "player/grave_herald_hyper": "player/grave_herald",
+}
+# Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
+SKIN_FIX = {}
 
 
 def load(key: str) -> np.ndarray:
     """The approved still of `key` as an RGBA uint8 array (rows, cols, 4)."""
     return np.array(Image.open(SPRITE_DIR / (key + ".png")).convert("RGBA"))
+
+
+def _lower_centre(img: np.ndarray, hip: int) -> float:
+    """Centre column of the opaque pixels at and below row `hip`."""
+    cols = np.nonzero(img[hip:, :, 3].any(axis=0))[0]
+    return (cols.min() + cols.max()) / 2.0 if cols.size else img.shape[1] / 2.0
+
+
+def skin_rig(skin: str, base: str) -> dict:
+    """The rig of skin `skin` derived from its character `base`: the hip the same number of
+    rows above the feet (the bodies match head to feet; a crown or halo only adds rows on
+    top) and every column range moved by the offset between the two lower bodies' centres."""
+    rig = dict(RIGS[base])
+    b, s = load(base), load(skin)
+    dy = s.shape[0] - b.shape[0]  # Extra rows on top of the skin.
+    rig["hip"] = RIGS[base]["hip"] + dy
+    dx = int(round(_lower_centre(s, rig["hip"]) - _lower_centre(b, RIGS[base]["hip"])))  # Column shift.
+    w = s.shape[1]
+
+    def cols(r: tuple) -> tuple:
+        return (min(w, max(0, r[0] + dx)), min(w, max(0, r[1] + dx)))
+
+    if "back" in rig:
+        rig["back"], rig["front"] = cols(rig["back"]), cols(rig["front"])
+    rig["rigid"] = [(*cols((x0, x1)), y0 if y0 == 0 else y0 + dy, None if y1 is None else y1 + dy)
+                    for x0, x1, y0, y1 in rig.get("rigid", [])]
+    rig.update(SKIN_FIX.get(skin, {}))
+    return rig
+
+
+for _skin, _base in SKINS.items():
+    RIGS[_skin] = skin_rig(_skin, _base)
 
 
 def _shift_rows(layer: np.ndarray, top: int, dy: int, lift: int, shift: float) -> np.ndarray:

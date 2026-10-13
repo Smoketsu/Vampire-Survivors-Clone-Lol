@@ -361,11 +361,16 @@ Process: `python3 tools/prepare_sprite.py <image> icons/shadow_bolt --art-height
 
 ## Walk cycles (`tools/walk_cycle.py`)
 
-**Status:** 27 units walk: the necromancer and the 11 other characters; the summons Warrior, Archer,
-Mage, Mender, Warder, Rogue, Risen and Bone Hound; the Covenant Recruit, Footman, Archer, Chaplain,
-Purifier, Shieldbearer and Halberdier. Every other unit (bosses, structures, the floating Banshee, Frost
-Wraith and airborne Gargoyle, the evolutions and the skins) keeps its still plus the engine motion; a
-skin without its own art draws its character tinted, so it walks with the character's strip.
+**Status:** 49 strips: the necromancer and the 11 other characters, their 16 skins; the summons
+Warrior, Archer, Mage, Mender, Warder, Rogue, Risen and Bone Hound and the walking evolutions Death
+Knight, Gravebow, Shadow Reaper and Hellhound; the Covenant Recruit, Footman, Archer, Chaplain,
+Purifier, Shieldbearer, Halberdier, Templar and Banner Bearer. Every other unit (bosses, structures,
+the floating Banshee, Keening Lady, Frost Wraith, Winter Revenant and Lich, the airborne Gargoyle and
+Cathedral Horror, the Bishop, the giant summons, the Corpse Catapult and Ossuary Engine, the Inquisitor
+and the Sanctum kinds) keeps its still plus the engine motion. A skin's rig is derived from its character's
+(`SKINS` / `skin_rig()`: the same hip height above the feet, the columns moved by the offset between
+the two lower bodies; `SKIN_FIX` for per-skin corrections), since a skin keeps its character's body
+and pose.
 
 **Method (the pilot, Oct 2026).** Two methods were compared on the necromancer, the Warrior and the
 Recruit. (a) AI: the approved still enlarged x16 as the reference, a prompt for 4 poses of "the same
