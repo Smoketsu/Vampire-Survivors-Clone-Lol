@@ -320,13 +320,17 @@ tiny tweaks.
    short animations (`prepare_sprite.py --anim <sheet or GIF> <id>` → `assets/sprites/effects/`,
    timing in `anim_data.gd`); `shadow_blast` (test), `dread_rally` and `grave_step_trail` are hooked so far, hook the rest via
    `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.
-4. **Content candidates** (owner to choose): achievement rewards / the Bone Golem (and the
+4. **Web build** (owner decision, after the art is done; GDD §15.0 "Web build after the art"): a
+   no-threads Godot Web export for desktop browsers, the audio synthesis load checked, Quit hidden,
+   and a CI job that publishes it for playtesters. Phones (touch controls, mobile UI scale,
+   performance setting) only after the browser build is measured.
+5. **Content candidates** (owner to choose): achievement rewards / the Bone Golem (and the
    campaign epilogue that *Dawn Extinguished* should unlock), synergies for the newer classes, more
    ultimates, a victory screen after the Reckoning.
-5. **Phase 3 campaign:** Stage 3 is done (the Sanctum of Judgment and Grand Inquisitor Seraphine);
+6. **Phase 3 campaign:** Stage 3 is done (the Sanctum of Judgment and Grand Inquisitor Seraphine);
    left: skin art (skins and Hyper mode are in), achievement rewards, the campaign epilogue, art for the Sanctum kinds, structures
    and Seraphine.
-6. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
+7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner is happy with balance for now and wants value tweaks deferred to this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
    known and accepted until then).
