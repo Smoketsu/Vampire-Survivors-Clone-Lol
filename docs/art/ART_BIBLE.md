@@ -969,7 +969,22 @@ logo's O (shield, skull, flame) onto a 64×64 dark violet badge, saved 2× (128 
 - Crispness: `UiTheme` gives Buttons, panels and scroll bars the shared sharp-pixel material as they
   enter the tree, so 1 px rings stay even at the ×1.5 1080p scale.
 
-**Fonts:** not wired by the kit. Pixelify Sans Bold renders cleanly only at multiples of 8 px (8, 16,
-24, 32 screen px); at today's 11-20 px label sizes, stretched ×1.5, its digits break (a "2" reads as
-"8"), so wiring it needs its own font-size pass (sizes snapped to the font grid, Jacquard 24 for
-headings) before it ships.
+**Fonts** (font pass; numbers in `UiArtData`, logic in `UiTheme`):
+
+- **Pixelify Sans Bold** (HUD, numbers, headings, labels, buttons, card names) is a pixel-style font on
+  an off-grid ~11.5 px em. A glyph-topology check (every digit, letter, `%`, `+`, `:` rasterised in mono
+  at 1:1 for sizes 9-48 and compared with the true outline) found it clean only at **11, 23, 24 and
+  27+ px**; at 12-22 px a "2" fills into an "8", "C" closes into "O" and "G" into "Q", and grayscale
+  anti-aliasing at the window resolution only fades the gaps. So its glyphs are always rasterised at a
+  clean pixel em (`UiArtData.PIXEL_EMS` = 11 for text under 23 px, 23 above; `FontFile.fixed_size`) and
+  scaled to each label's own size, mono, through the sharp-pixel shader (on every Label, Button and
+  HUD widget). Every glyph is correct at every window size, every label keeps its size (no layout
+  moves), and the pixels stay even like the sprites'.
+- **Jacquard 24** (event, zone, stance and evolution banners): its outlines sit on a 30-unit grid of a
+  1290-unit em, so it is drawn only at **43 px** (its pixel em, rasterised at layout size). Long banners
+  wrap at 680 px; the stance word is shown in title case (blackletter capitals read poorly).
+- **Long descriptions** (card and stage descriptions, character details, Ossuary and recipe
+  descriptions, the pause menu's stance help) keep Godot's default font (`UiTheme.body()`), smooth at
+  any window scale.
+- Both pixel fonts are imported with anti-aliasing, hinting and subpixel positioning off and
+  oversampling 1.0 (rasterised at layout size, not at layout size × window scale).
