@@ -24,8 +24,10 @@ const MERGE_WINDOW: float = 0.22  # TUNING (not in GDD)
 const NUMBER_RISE: float = 26.0  # TUNING (not in GDD)
 ## Font size (px, world space) of a regular damage number.
 const NUMBER_FONT_SIZE: int = 11  # TUNING (not in GDD)
-## Font size of a big number (boss hits or >= BIG_HIT damage).
-const NUMBER_FONT_SIZE_BIG: int = 15  # TUNING (not in GDD)
+## Font size of a big number (boss hits or >= BIG_HIT damage). With the pixel
+## font both sizes go through UiTheme.font_px(): 11 -> 19 px (x1), 22 -> 28 px
+## (x1.5), so big hits stay one clean step larger (15 was the size before).
+const NUMBER_FONT_SIZE_BIG: int = 22  # TUNING (not in GDD) font pass
 ## Damage at or above which a number is drawn big.
 const BIG_HIT: float = 40.0  # TUNING (not in GDD)
 ## Particle drag (fraction of velocity kept per second).
@@ -67,14 +69,17 @@ var _n_next: int = 0
 var _n_alive: int = 0
 ## Cosmetic RNG (never the global, seeded RNG).
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
-## Font used for damage numbers (engine fallback font; no assets).
+## Font used for damage numbers: the UI pixel font (Jersey 10, UiTheme.font_for(),
+## drawn through the sharp-pixel shader), else the engine fallback font.
 var _font: Font
 
 
 func _ready() -> void:
 	z_index = 20
 	_rng.randomize()
-	_font = ThemeDB.fallback_font
+	_font = UiTheme.font_for() if UiTheme.font_for() != null else ThemeDB.fallback_font
+	if UiTheme.font_for() != null:
+		SpriteBank.apply_sharp(self)  # Crisp pixel-font numbers (visual only).
 	_p_pos.resize(MAX_PARTICLES)
 	_p_vel.resize(MAX_PARTICLES)
 	_p_life.resize(MAX_PARTICLES)
@@ -218,6 +223,8 @@ func _draw() -> void:
 		var k := a / NUMBER_LIFE
 		var alpha := 1.0 if k < 0.6 else (1.0 - k) / 0.4
 		var fs := NUMBER_FONT_SIZE_BIG if _n_big[i] == 1 else NUMBER_FONT_SIZE
+		if UiTheme.font_for() != null:
+			fs = UiTheme.font_px(fs)  # A clean pixel-font size.
 		var p := _n_pos[i] + Vector2(-20.0, -NUMBER_RISE * (1.0 - (1.0 - k) * (1.0 - k)))
 		var text := str(int(ceilf(_n_val[i])))
 		draw_string_outline(_font, p, text, HORIZONTAL_ALIGNMENT_CENTER, 40.0, fs, 3, Color(0.0, 0.0, 0.0, 0.75 * alpha))
