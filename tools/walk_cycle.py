@@ -102,6 +102,34 @@ RIGS = {
     "player/necromancer": dict(mode="legs", hip=47, back=(0, 20), front=(20, 33), rigid=[(33, 46, 0, None)], spread=1, lift=1, dip=1),
     "summons/warrior": dict(mode="legs", hip=33, back=(0, 8), front=(16, 28), rigid=[(8, 16, 0, 37)], spread=3, lift=2, dip=1),
     "enemies/recruit": dict(mode="legs", hip=41, back=(0, 13), front=(13, 25), rigid=[(24, 30, 0, 45), (25, 30, 45, None)], spread=2, lift=2, dip=1),
+    # Summons, by screen time. Robed priests walk on their hem lobes and feet.
+    "summons/archer": dict(mode="legs", hip=32, back=(0, 26), front=(26, 50), rigid=[(35, 50, 0, 34)], spread=3, lift=2, dip=1),
+    "summons/mage": dict(mode="legs", hip=38, back=(0, 20), front=(20, 42), rigid=[(31, 36, 0, 40)], spread=2, lift=1, dip=1),
+    "summons/mender": dict(mode="legs", hip=44, back=(0, 24), front=(24, 38), rigid=[(38, 48, 0, None)], spread=2, lift=2, dip=1),
+    "summons/warder": dict(mode="legs", hip=42, back=(0, 24), front=(24, 44), rigid=[], spread=2, lift=1, dip=1),
+    "summons/rogue": dict(mode="legs", hip=34, back=(0, 27), front=(27, 48), rigid=[(0, 11, 0, 36)], spread=3, lift=2, dip=1),
+    "summons/risen": dict(mode="legs", hip=27, back=(0, 12), front=(12, 24), rigid=[], spread=2, lift=1, dip=1),
+    # The hound: hind legs gather toward the forelegs (a bounding lope); the head rides with the body.
+    "summons/bone_hound": dict(mode="legs", hip=19, back=(0, 27), front=(27, 56), rigid=[(44, 56, 0, 24)], spread=2, lift=1, dip=1),
+    # Covenant soldiers.
+    "enemies/footman": dict(mode="legs", hip=41, back=(0, 14), front=(14, 32), rigid=[], spread=2, lift=2, dip=1),
+    "enemies/archer": dict(mode="legs", hip=43, back=(0, 15), front=(19, 36), rigid=[(25, 36, 0, 46)], spread=2, lift=2, dip=1),
+    "enemies/chaplain": dict(mode="legs", hip=38, back=(0, 22), front=(22, 40), rigid=[], spread=1, lift=1, dip=1),
+    "enemies/purifier": dict(mode="legs", hip=36, back=(0, 20), front=(20, 46), rigid=[], spread=2, lift=2, dip=1),
+    "enemies/shieldbearer": dict(mode="legs", hip=45, back=(0, 12), front=(12, 32), rigid=[(14, 30, 0, 52)], spread=2, lift=1, dip=1),
+    "enemies/halberdier": dict(mode="legs", hip=50, back=(0, 14), front=(14, 30), rigid=[(21, 30, 0, 55)], spread=2, lift=2, dip=1),
+    # The playable characters (robes: the hem lobes and the feet under them).
+    "player/umbral_warden": dict(mode="legs", hip=56, back=(0, 21), front=(21, 31), rigid=[(31, 42, 0, None)], spread=1, lift=1, dip=1),
+    "player/voidcaller": dict(mode="legs", hip=47, back=(0, 23), front=(23, 42), rigid=[], spread=1, lift=1, dip=1),
+    "player/bone_oracle": dict(mode="legs", hip=47, back=(0, 18), front=(18, 28), rigid=[(28, 38, 0, None)], spread=1, lift=1, dip=1),
+    "player/fallen_confessor": dict(mode="legs", hip=44, back=(15, 26), front=(26, 44), rigid=[(0, 15, 0, None)], spread=1, lift=1, dip=1),
+    "player/carrion_lord": dict(mode="legs", hip=47, back=(0, 30), front=(30, 62), rigid=[], spread=1, lift=1, dip=1),
+    "player/plague_scholar": dict(mode="legs", hip=43, back=(0, 26), front=(26, 60), rigid=[], spread=2, lift=1, dip=1),
+    "player/doomsayer": dict(mode="legs", hip=47, back=(0, 17), front=(17, 32), rigid=[], spread=1, lift=1, dip=1),
+    "player/barrow_warden": dict(mode="legs", hip=52, back=(0, 18), front=(18, 30), rigid=[(30, 44, 0, None)], spread=1, lift=1, dip=1),
+    "player/soulbinder": dict(mode="legs", hip=54, back=(0, 24), front=(24, 46), rigid=[], spread=1, lift=1, dip=1),
+    "player/wither_witch": dict(mode="legs", hip=42, back=(0, 20), front=(20, 26), rigid=[(26, 40, 0, None)], spread=1, lift=1, dip=1),
+    "player/grave_herald": dict(mode="legs", hip=53, back=(0, 24), front=(24, 46), rigid=[], spread=1, lift=1, dip=1),
 }
 
 
