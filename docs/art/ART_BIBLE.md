@@ -710,7 +710,7 @@ fixed size variants** (`sizes` in `scripts/data/stages/*.gd` "kinds", inside the
 each with a collision shape that matches it exactly; each obstacle picks one per cell, deterministic
 per seed. Footprint in art px (1 art px = 1 world px): a circle of collision radius *r* world px is *2r*
 art px across; a rect of *L* × *S* world px is *L* × *S* art px. Sprites stand taller than their
-footprint (a tree's canopy, a wall's face). **Round kinds (done, Oct 2026):** one design per kind, converted to every size; compact kinds (stakes, tent, tower base, rubble, fountain) are as wide as the footprint + 2, the trees take set heights (their trunks are narrower than the footprint, their canopies wider), and the slim statues and columns are capped (saint statue 64-80, pillar 80-90, marble column 72-88, giant statue 100-124 art px tall), so their plinths are ~10-15% narrower than the collision circle (the code drop shadow still marks the footprint). Keys: `<kind>_s` / `_l` for two sizes, `<kind>_s` / `_m`
+footprint (a tree's canopy, a wall's face). **Long kinds (done):** one drawing per length for the horizontal sprite (as wide as the length + 2); the vertical `_v` sprites are the same objects turned to run away from the camera (generated portrait), as tall as the length plus the face height of their horizontal twin and as wide as the depth + 2: the AI draws them too thin, so each source is stretched horizontally before conversion until the width fits. **Round kinds (done, Oct 2026):** one design per kind, converted to every size; compact kinds (stakes, tent, tower base, rubble, fountain) are as wide as the footprint + 2, the trees take set heights (their trunks are narrower than the footprint, their canopies wider), and the slim statues and columns are capped (saint statue 64-80, pillar 80-90, marble column 72-88, giant statue 100-124 art px tall), so their plinths are ~10-15% narrower than the collision circle (the code drop shadow still marks the footprint). Keys: `<kind>_s` / `_l` for two sizes, `<kind>_s` / `_m`
 / `_l` for three, plus `_v` for a vertical rect (see "Hookup" above). Long walls are whole sprites,
 one per length.
 
@@ -718,30 +718,30 @@ one per length.
 |---|---|---|---|
 | Graveyard | `gravestone` | circle | r 11 / 15 → 22 / 30 wide (`_s` / `_l`, Anchor 5: **done**, 24×32 and 32×44) |
 | Graveyard | `dead_tree` | circle (trunk) | r 13 / 15 / 18 → trunk 26 / 30 / 36 wide, tree ~80-100 tall (**done**, 60x80 / 68x90 / 76x104) |
-| Graveyard | `crypt_wall` | rect | 64 / 80 / 96 × 20 → 64 / 80 / 96 × 20 (horizontal **done**, 64x30 / 82x23 / 96x33; `_v` to do) |
-| March I | `burned_house` | rect | 64 / 78 / 92 × 44 → 64 / 78 / 92 × 44 (horizontal **done**, 64x52 / 80x50 / 92x62; `_v` to do) |
+| Graveyard | `crypt_wall` | rect | 64 / 80 / 96 × 20 → 64 / 80 / 96 × 20 (horizontal **done**, 64x30 / 82x23 / 96x33; vertical `_v` **done**, depth + 2 wide) |
+| March I | `burned_house` | rect | 64 / 78 / 92 × 44 → 64 / 78 / 92 × 44 (horizontal **done**, 64x52 / 80x50 / 92x62; vertical `_v` **done**, depth + 2 wide) |
 | March I | `charred_tree` | circle | r 12 / 14 / 17 → 24 / 28 / 34 (**done**, 36x60 / 44x68 / 50x80) |
-| March I | `cart_wreck` | rect | 40 / 48 / 56 × 22 → 40 / 48 / 56 × 22 (horizontal **done**, 42x29 / 48x35 / 58x38; `_v` to do) |
-| March II | `barricade` | rect | 64 / 80 / 96 × 16 → 64 / 80 / 96 × 16 (horizontal **done**, 66x29 / 82x39 / 100x43; `_v` to do) |
+| March I | `cart_wreck` | rect | 40 / 48 / 56 × 22 → 40 / 48 / 56 × 22 (horizontal **done**, 42x29 / 48x35 / 58x38; vertical `_v` **done**, depth + 2 wide) |
+| March II | `barricade` | rect | 64 / 80 / 96 × 16 → 64 / 80 / 96 × 16 (horizontal **done**, 66x29 / 82x39 / 100x43; vertical `_v` **done**, depth + 2 wide) |
 | March II | `pine` | circle | r 14 / 16 / 19 → 28 / 32 / 38 (**done**, 40x72 / 44x80 / 48x92) |
 | March II | `stakes` | circle | r 12 / 15 → 24 / 30 (**done**, 28x33 / 34x40) |
 | March III | `tent` | circle | r 22 / 26 / 30 → 44 / 52 / 60 (**done**, 48x48 / 56x56 / 64x64) |
-| March III | `crates` | rect | 36 / 44 / 52 × 26 → 36 / 44 / 52 × 26 (horizontal **done**, 36x34 / 44x37 / 52x40; `_v` to do) |
-| March III | `siege_engine` | rect | 70 / 80 / 90 × 34 → 70 / 80 / 90 × 34 (horizontal **done**, 72x53 / 84x53 / 92x77; `_v` to do) |
-| March IV | `fort_wall` | rect | 80 / 96 × 24 → 80 / 96 × 24 (horizontal **done**, 84x40 / 98x44; `_v` to do) |
+| March III | `crates` | rect | 36 / 44 / 52 × 26 → 36 / 44 / 52 × 26 (horizontal **done**, 36x34 / 44x37 / 52x40; vertical `_v` **done**, depth + 2 wide) |
+| March III | `siege_engine` | rect | 70 / 80 / 90 × 34 → 70 / 80 / 90 × 34 (horizontal **done**, 72x53 / 84x53 / 92x77; vertical `_v` **done**, depth + 2 wide) |
+| March IV | `fort_wall` | rect | 80 / 96 × 24 → 80 / 96 × 24 (horizontal **done**, 84x40 / 98x44; vertical `_v` **done**, depth + 2 wide) |
 | March IV | `tower_base` | circle | r 26 / 30 / 34 → 52 / 60 / 68 (**done**, 56x60 / 64x69 / 72x78) |
 | March IV | `rubble` | circle | r 12 / 15 / 18 → 24 / 30 / 36 (**done**, 28x22 / 32x27 / 40x32) |
 | Sanctum I | `saint_statue` | circle | r 13 / 15 / 17 → 26 / 30 / 34 (**done**, 26x64 / 28x72 / 32x80) |
 | Sanctum I | `fountain` | circle | r 28 / 32 / 36 → 56 / 64 / 72 (**done**, 58x62 / 68x71 / 76x79) |
-| Sanctum I | `stone_bench` | rect | 44 / 52 / 60 × 16 → 44 / 52 / 60 × 16 (horizontal **done**, 46x20 / 56x20 / 62x23; `_v` to do) |
+| Sanctum I | `stone_bench` | rect | 44 / 52 / 60 × 16 → 44 / 52 / 60 × 16 (horizontal **done**, 46x20 / 56x20 / 62x23; vertical `_v` **done**, depth + 2 wide) |
 | Sanctum II | `pillar` | circle | r 13 / 15 → 26 / 30 (**done**, 26x80 / 30x90) |
-| Sanctum II | `pew` | rect | 60 / 68 / 76 × 14 → 60 / 68 / 76 × 14 (horizontal **done**, 64x26 / 70x39 / 78x45; `_v` to do) |
-| Sanctum III | `cloister_arch` | rect | 72 / 82 / 92 × 18 → 72 / 82 / 92 × 18 (horizontal **done**, 76x38 / 84x32 / 96x39; `_v` to do) |
-| Sanctum III | `garden_bed` | rect | 44 / 52 / 60 × 30 → 44 / 52 / 60 × 30 (horizontal **done**, 44x16 / 56x19 / 60x21; `_v` to do) |
+| Sanctum II | `pew` | rect | 60 / 68 / 76 × 14 → 60 / 68 / 76 × 14 (horizontal **done**, 64x26 / 70x39 / 78x45; vertical `_v` **done**, depth + 2 wide) |
+| Sanctum III | `cloister_arch` | rect | 72 / 82 / 92 × 18 → 72 / 82 / 92 × 18 (horizontal **done**, 76x38 / 84x32 / 96x39; vertical `_v` **done**, depth + 2 wide) |
+| Sanctum III | `garden_bed` | rect | 44 / 52 / 60 × 30 → 44 / 52 / 60 × 30 (horizontal **done**, 44x16 / 56x19 / 60x21; vertical `_v` **done**, depth + 2 wide) |
 | Sanctum III | `cypress` | circle | r 11 / 14 → 22 / 28 (**done**, 20x60 / 24x72) |
 | Sanctum IV | `giant_statue` | circle | r 28 / 32 / 36 → 56 / 64 / 72 (**done**, 52x100 / 56x112 / 64x124) |
 | Sanctum IV | `marble_column` | circle | r 15 / 17 / 19 → 30 / 34 / 38 (**done**, 28x72 / 32x80 / 36x88) |
-| Sanctum IV | `reliquary` | rect | 40 / 46 / 52 × 26 → 40 / 46 / 52 × 26 (horizontal **done**, 42x47 / 48x43 / 52x47; `_v` to do) |
+| Sanctum IV | `reliquary` | rect | 40 / 46 / 52 × 26 → 40 / 46 / 52 × 26 (horizontal **done**, 42x47 / 48x43 / 52x47; vertical `_v` **done**, depth + 2 wide) |
 
 ### Effects (`assets/sprites/effects/`, `--anim`)
 
