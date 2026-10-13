@@ -1,7 +1,10 @@
 ## LevelUpPanel — pauses combat and shows three large upgrade cards
 ## (GDD §10.4 "Level-up panel: Pause combat; three large cards with icon, name,
 ## old/new level, description, actual stat delta, evolution readiness").
-## Evolution cards are highlighted in gold. Under the cards, an action bar
+## Evolution cards are highlighted in gold. A card whose spell / class /
+## passive feeds an evolution shows that recipe as an icon row at its bottom
+## (RecipeIconRow), only once the recipe is discovered (owner decision, GDD
+## §15.0 "Recipe icon row"). Under the cards, an action bar
 ## offers Reroll / Banish (limited charges) and Skip (unlimited, small heal),
 ## GDD §9.1 and LevelUpData.
 ##
@@ -236,6 +239,13 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 		hint_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		hint_label.custom_minimum_size = Vector2(text_width, 0)
 		vb.add_child(hint_label)
+	var recipe := RecipeIconRow.for_card(String(o.get("evo_recipe", "")))  # Null = nothing to show.
+	if recipe != null:
+		var push := Control.new()  # Pushes the recipe to the card's bottom edge.
+		push.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		push.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		vb.add_child(push)
+		vb.add_child(recipe)
 	return card
 
 
