@@ -204,8 +204,8 @@ static func draw_buffed(ci: CanvasItem, c: Vector2, s: float) -> void:
 ## 2 = Shieldwall (shield raised and enlarged, gold rim), 3 = recovering.
 ## `last_stand` adds a burning aura (Last Stand, below 30% HP).
 static func draw_vael(ci: CanvasItem, o: Vector2, r: float, flash: bool, pose: int, last_stand: bool) -> void:
-	if SpriteBank.draw(ci, "bosses/vael", o, flash):
-		return  # Sprite art exists (assets/sprites/bosses/vael.png).
+	if SpriteBank.draw_pose(ci, "bosses/vael", pose, o, flash):
+		return  # Sprite art exists (bosses/vael.png, plus its attack poses, BossPoseData).
 	if last_stand:
 		ci.draw_circle(o, r * 1.7, Color(Palette.FLAME, 0.16))
 		ci.draw_arc(o, r * 1.7, 0.0, TAU, 32, Color(Palette.FLAME, 0.75), 2.0)

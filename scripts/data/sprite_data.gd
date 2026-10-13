@@ -106,6 +106,14 @@ const HEIGHTS: Dictionary = {
 	"bosses/vael": 120.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"bosses/seraphine": 130.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"bosses/seraphine_avatar": 156.0,  # TUNING (not in GDD) ART_BIBLE manifest size (optional Avatar form)
+	"bosses/alaric_windup": 177.0,  # TUNING (not in GDD) boss attack pose (hammer raised overhead; BossPoseData): body as tall as the still; the pose (raised weapon or crouch) sets the height
+	"bosses/alaric_charge": 117.0,  # TUNING (not in GDD) boss attack pose (shoulder charge; BossPoseData): body as tall as the still; the pose (raised weapon or crouch) sets the height
+	"bosses/alaric_strike": 108.0,  # TUNING (not in GDD) boss attack pose (hammer slammed down, crouched; BossPoseData): body as tall as the still; the pose (raised weapon or crouch) sets the height
+	"bosses/vael_windup": 133.0,  # TUNING (not in GDD) boss attack pose (flaming sword raised; BossPoseData): body as tall as the still; the pose (raised weapon or crouch) sets the height
+	"bosses/vael_guard": 104.0,  # TUNING (not in GDD) boss attack pose (Shieldwall crouch; BossPoseData): body as tall as the still; the pose (raised weapon or crouch) sets the height
+	"bosses/vael_strike": 118.0,  # TUNING (not in GDD) boss attack pose (cleave follow-through; BossPoseData): body as tall as the still; the pose (raised weapon or crouch) sets the height
+	"bosses/seraphine_cast": 156.0,  # TUNING (not in GDD) boss attack pose (relic staff raised; BossPoseData): body as tall as the still; the pose (raised weapon or crouch) sets the height
+	"bosses/seraphine_avatar_cast": 176.0,  # TUNING (not in GDD) boss attack pose (the Avatar casting, wings spread; BossPoseData): body as tall as the still; the pose (raised weapon or crouch) sets the height
 	"structures/outpost": 96.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"structures/ward_generator": 80.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"structures/supply_cart": 60.0,  # TUNING (not in GDD) art pass: 72 before; the wide side-on cart keeps its old ~84 px width

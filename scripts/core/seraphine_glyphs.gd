@@ -40,7 +40,7 @@ static func draw_seraphine(ci: CanvasItem, o: Vector2, r: float, flash: bool, po
 	var k := r * (AVATAR_SCALE if avatar else BASE_SCALE)  # Drawing scale (px).
 	_draw_aura(ci, o, k, fight_phase, now)
 	var key := "bosses/seraphine_avatar" if avatar and SpriteBank.has("bosses/seraphine_avatar") else "bosses/seraphine"
-	if SpriteBank.draw(ci, key, o, flash):
+	if SpriteBank.draw_pose(ci, key, pose, o, flash):  # The still, or its attack pose (BossPoseData).
 		_draw_glow(ci, o, k, glow)
 		return  # Sprite art exists (assets/sprites/bosses/seraphine*.png).
 	_draw_wings(ci, o, k, flash, avatar, now)

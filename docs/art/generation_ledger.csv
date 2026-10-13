@@ -325,3 +325,11 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-13 18:04,decals/halls_cloisters,gpt-image-2.5-flare,medium,1536x1024,1,706,1024,343,0.0220,halls_cloisters.png
 2026-10-13 18:04,decals/courtyard,gpt-image-2.5-flare,medium,1536x1024,1,613,1024,343,0.0215,courtyard.png
 2026-10-13 18:17,player/necromancer_walk,gpt-image-2.5-flare,medium,1536x1024,1,394,864,343,0.0192,necro_sheet.png
+2026-10-13 22:29,bosses/vael_windup,gpt-image-2.5-flare,medium,1024x1024,2,329,2476,439,0.0346,vael_windup.png
+2026-10-13 22:29,bosses/alaric_strike,gpt-image-2.5-flare,medium,1024x1024,2,330,2476,439,0.0346,alaric_strike.png
+2026-10-13 22:29,bosses/alaric_windup,gpt-image-2.5-flare,medium,1024x1024,2,322,2476,439,0.0346,alaric_windup.png
+2026-10-13 22:29,bosses/alaric_charge,gpt-image-2.5-flare,medium,1024x1024,2,328,2476,439,0.0346,alaric_charge.png
+2026-10-13 22:29,bosses/vael_strike,gpt-image-2.5-flare,medium,1024x1024,2,324,2476,439,0.0346,vael_strike.png
+2026-10-13 22:29,bosses/seraphine_avatar_cast,gpt-image-2.5-flare,medium,1024x1024,2,322,2476,439,0.0346,seraphine_avatar_cast.png
+2026-10-13 22:29,bosses/seraphine_cast,gpt-image-2.5-flare,medium,1024x1024,2,320,2476,439,0.0346,seraphine_cast.png
+2026-10-13 22:29,bosses/vael_guard,gpt-image-2.5-flare,medium,1024x1024,2,329,2476,439,0.0346,vael_guard.png

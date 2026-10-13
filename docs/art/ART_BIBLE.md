@@ -555,6 +555,16 @@ Crimson, ivory and warm steel; gold for elites, the Sanctum kinds and the Reckon
 | `vael.png` | Marshal Vael, the Crimson Bulwark: a great crimson kite shield, a flaming sword, a crimson plume | 120 | done |
 | `seraphine.png` | Grand Inquisitor Seraphine, Voice of the Dawn (Stage 3): a winged Inquisitor in a white-and-gold bell robe with a crimson stole and a gold sun on the chest, a white veil and gold circlet, a gold **sun halo** with rays, two feathered ivory wings spread up behind her shoulders, a tall gold **relic staff** crowned by a sunburst reliquary | 130 | done |
 | `seraphine_avatar.png` | *Optional.* Her **Avatar of the Dawn** form (phases 2-3): the same figure larger and brighter, wings spread wide with gold-edged feathers, a long-rayed halo, the relic blazing holy white | 156 | done |
+| `alaric_windup.png` | **Attack pose** (`BossPoseData` pose 1): both hands raise the warhammer high overhead, leaning back | 177 | done |
+| `alaric_charge.png` | Attack pose 2: a shoulder-first charge, hammer trailing low, cape streaming | 117 | done |
+| `alaric_strike.png` | Attack pose 3: crouched, the hammer slammed into the ground in front | 108 | done |
+| `vael_windup.png` | Attack pose 1: the flaming sword raised high behind her head, shield forward | 133 | done |
+| `vael_guard.png` | Attack pose 2 (Shieldwall): crouched behind the planted kite shield | 104 | done |
+| `vael_strike.png` | Attack pose 3: the cleave's follow-through, the flaming sword swept low to the right | 118 | done |
+| `seraphine_cast.png` | Attack pose 1 (every cast): the relic staff raised high, wings wider | 156 | done |
+| `seraphine_avatar_cast.png` | The Avatar's cast: the blazing staff thrust overhead, wings fully spread | 176 | done |
+
+**Attack poses** (`scripts/data/boss_pose_data.gd`, drawn by `SpriteBank.draw_pose()`): the boss scripts already report a pose from their attack phase (0 walk, 1 windup / cast, 2 special stance, 3 strike); a listed pose with a PNG replaces the still, its bottom edge on the still's bottom edge so the feet never jump, under the still's shadow; a missing pose shows the still. Generated with the boss's own still attached (enlarged) and converted at the still's scale (the body the same height; a raised weapon makes the sprite taller, a crouch shorter).
 
 ### Structures (`assets/sprites/structures/`)
 | File | Subject | Art px | Status |

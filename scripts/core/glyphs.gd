@@ -253,8 +253,8 @@ static func _draw_inquisitor(ci: CanvasItem, o: Vector2, r: float, flash: bool) 
 static func draw_boss(ci: CanvasItem, o: Vector2, r: float, flash: bool, pose: int) -> void:
 	if pose == 2:
 		ci.draw_circle(o, r * 1.5, Color(Palette.GOLD, 0.18))
-	if SpriteBank.draw(ci, "bosses/alaric", o, flash):
-		return  # Sprite art exists (assets/sprites/bosses/alaric.png); pose glow kept.
+	if SpriteBank.draw_pose(ci, "bosses/alaric", pose, o, flash):
+		return  # Sprite art exists (bosses/alaric.png, plus its attack poses, BossPoseData); pose glow kept.
 	ci.draw_circle(o + Vector2(0, r * 0.25), r * 1.05, _c(Palette.CRIMSON, flash))
 	var body := regular_polygon(o, r * 0.85, 8, PI / 8.0)
 	ci.draw_colored_polygon(body, _c(Palette.SILVER if pose != 3 else Color(0.6, 0.6, 0.65), flash))

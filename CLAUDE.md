@@ -316,7 +316,7 @@ tiny tweaks.
    strip, walk cycle (49 units), the UI kit and the NECROPATHY logo are pixel art at 1 art px = 1 screen px through the
    sharp-pixel shader; fonts Jersey 10 (UI, numbers) + Jacquard 24 (banners). Tools: `tools/gen_image.py` (API
    generation, cost ledger `docs/art/generation_ledger.csv`), `prepare_sprite.py`, `art_check.py`, `make_tile.py`,
-   `walk_cycle.py`, `ui_kit.py`. Possible later polish: action and boss poses, arm swing, more effect hooks.
+   `walk_cycle.py`, `ui_kit.py`. Boss attack poses are in (`boss_pose_data.gd`). Possible later polish: attack poses for regular units, arm swing, more effect hooks.
 4. **Web build** (owner decision, after the art is done; GDD §15.0 "Web build after the art"): a
    no-threads Godot Web export for desktop browsers, the audio synthesis load checked, Quit hidden,
    and a CI job that publishes it for playtesters. Phones (touch controls, mobile UI scale,

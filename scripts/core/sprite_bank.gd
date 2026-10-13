@@ -230,6 +230,40 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Col
 	return true
 
 
+## Draws stage boss `key` (its still sprite key) in attack pose `pose`
+## (BossPoseData: 0 walk, 1 windup / cast, 2 special stance, 3 strike): the
+## pose sprite "<key>_<suffix>" when BossPoseData lists one and its grid art
+## exists, else the still exactly as draw() does. A pose sprite may be taller
+## or wider than the still (a hammer raised overhead), so it is drawn centred
+## on `o` horizontally with its bottom edge on the still's bottom edge, under
+## the still's drop shadow: the boss's feet never jump when the pose changes.
+## Returns false (nothing drawn) when not even the still has art.
+static func draw_pose(ci: CanvasItem, key: String, pose: int, o: Vector2, flash: bool, tint: Color = Color.WHITE) -> bool:
+	var still := texture(key)  # The boss's still sprite, or null.
+	var suffix := String(BossPoseData.POSES.get(key, {}).get(pose, ""))  # This pose's file suffix ("" = none).
+	if still == null or suffix == "" or icon_cap > 0.0 or not bool(_grid[key]):
+		return draw(ci, key, o, flash, tint)
+	var pose_key := key + "_" + suffix  # Pose sprite key.
+	var tex := texture(pose_key)  # Pose art, or null.
+	if tex == null or not bool(_grid[pose_key]):
+		return draw(ci, key, o, flash, tint)
+	var still_size := _drawn_size(key, still)  # The still's drawn size (px).
+	var h := still_size.y  # The still's drawn height (px).
+	var centre := o + Vector2(0.0, h * SpriteData.CENTER_OFFSET)  # The still's centre (px).
+	var sw := h * SpriteData.SHADOW_WIDTH  # Shadow width (px), the still's.
+	ci.draw_set_transform(centre + Vector2(0.0, h * 0.46), 0.0, Vector2(1.0, SpriteData.SHADOW_SQUASH))
+	ci.draw_circle(Vector2.ZERO, sw * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA))
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	var size := _drawn_size(pose_key, tex)  # Pose drawn size (px).
+	var bottom := centre.y + h * 0.5  # The still's bottom edge = the feet line (px).
+	var top_left := Vector2(o.x - size.x * 0.5, bottom - size.y)  # Pose rect corner (px).
+	var step := float(SpriteData.ART_SCALE)  # Grid pitch (local px).
+	top_left = (top_left / step).round() * step
+	apply_sharp(ci)
+	ci.draw_texture_rect(tex, Rect2(top_left, size), false, SpriteData.FLASH_MODULATE if flash else tint)
+	return true
+
+
 ## Draws a flat sprite (projectile, orb) centred on `o`, rotated by `angle`
 ## (radians; the art points right), scaled so its longest side is
 ## SpriteData.FLAT_SIZES[key] px. No shadow or flash. `tint` multiplies the
