@@ -15,6 +15,10 @@ var kind: Kind = Kind.POP
 ## Effect animation id (AnimData / assets/sprites/effects/<id>.png) played
 ## instead of the drawn shape when its art exists; "" = always drawn.
 var anim_id: String = ""
+## Animation id whose art replaces this effect: while that strip exists the
+## effect draws nothing (it still lives its full time); "" = always drawn.
+## Set by EffectManager.ring_under().
+var hide_with: String = ""
 ## True while the effect is playing (false = sitting in the pool).
 var active: bool = false
 ## Seconds since the effect started.
@@ -49,6 +53,7 @@ func start(p_kind: Kind, pos: Vector2, p_color: Color, p_size: float, p_duration
 	owner_enemy = null
 	owner_gen = 0
 	anim_id = ""
+	hide_with = ""
 	t = 0.0
 	active = true
 	visible = true
@@ -74,6 +79,8 @@ func step(delta: float) -> bool:
 func _draw() -> void:
 	var k := clampf(t / duration, 0.0, 1.0)
 	var fade := 1.0 - k
+	if hide_with != "" and SpriteBank.has_anim(hide_with):
+		return  # Its animation draws this part (EffectManager.ring_under()).
 	if anim_id != "":
 		# Sprite-sheet animation scaled to the gameplay radius (size).
 		var fill: float = AnimData.ANIMS.get(anim_id, {}).get("fill", AnimData.DEFAULT_FILL)  # Diameter multiple.
