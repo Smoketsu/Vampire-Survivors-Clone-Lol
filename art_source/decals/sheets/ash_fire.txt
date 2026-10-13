@@ -1,0 +1,25 @@
+A sprite sheet of 6 small FLOOR DECALS for a top-down 2D pixel-art game, on a fully TRANSPARENT background.
+Layout: a grid of 3 columns x 2 rows; each decal sits alone in the centre of its own cell, with wide empty
+transparent gaps between them (nothing touches, nothing overlaps a cell border).
+
+Every decal is a flat detail LYING ON THE GROUND, seen STRAIGHT FROM ABOVE (orthographic top-down view, like a map:
+no perspective, no 3/4 view, no side view, no visible height or thickness). NO cast shadow, no drop shadow, no
+shading under it, no glow halo, no outline frame. Nothing may look like a standing object or an obstacle: everything
+is flattened into the ground, like a stain, a scatter or a thing that fell over and lies flat.
+
+LOW-RESOLUTION pixel art: each decal is only about 16 to 44 pixels across, shown enlarged so every pixel is a big crisp
+square block (nearest-neighbour), with chunky 2-3 pixel details. No gradients, no dithering, no soft blur, no
+anti-aliasing, no texture noise. Very DARK, LOW CONTRAST and QUIET colours, close to the dark floor they lie on
+(the attached image is that floor: match its darkness and pixel size, but do NOT draw the floor itself, the
+background must stay transparent); the only bright pixels allowed are the tiny orange ember coals.
+
+The decals, left to right, top to bottom:
+1. A wide irregular drift of grey ash and soot (about 44 x 28 pixels), soft lumpy outline, a few charcoal flecks.
+2. A smaller irregular ash drift (about 30 x 20 pixels), a few charcoal flecks.
+3. A burnt tree stump cut flush with the ground, seen from directly above (about 14 x 14 pixels): a black charred ring with faint growth rings, short charred roots spreading flat into the soil.
+4. Another charred stump top flush with the ground (about 12 x 12 pixels), cracked, roots spreading.
+5. A few smouldering embers in a small patch of black char (about 16 x 10 pixels): 3-4 tiny orange glowing coals.
+6. Two or three tiny orange embers on a smear of black soot (about 14 x 8 pixels).
+
+Colours: ONLY flat fills from this list: #2A2724 dark ash grey (most), #221C17 dark earth, #1C110B near-black char, #4F3320 dark brown, #FF8C26 orange (ONLY the tiny embers).
+No text, no labels, no numbers, no border, no watermark.

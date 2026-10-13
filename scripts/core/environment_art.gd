@@ -22,6 +22,12 @@
 ## so there are no seams at any window scale or zoom. The March road strip is
 ## one more repeating rect (draw_road()).
 ##
+## Floor decals (draw_decal(), draw_strip(); keys and decisions in DecalData):
+## on a tile floor each hashed code decoration becomes a flat pixel-art decal
+## at the same hashed point (variant from the same cell hash), is dropped when
+## the tile already shows it, or stays code-drawn (soft translucent effects,
+## or no PNG yet).
+##
 ## Obstacles (draw_obstacle()): one sprite per kind and fixed size variant,
 ## its base on the collision shape (EnvironmentArtData feet rule) with a flat
 ## drop shadow; the key is built once per obstacle by obstacle_key().
@@ -39,6 +45,10 @@ static var _cache: Dictionary = {}
 ## present variant (EnvironmentArtData.TILE_VARIANT_SUFFIXES, clamped), or []
 ## without a base tile.
 static var _tile_sets: Dictionary = {}
+
+## Decal key -> Array of Texture2D: the base decal then each present variant
+## (DecalData.VARIANT_SUFFIXES), or [] without a base decal.
+static var _decal_sets: Dictionary = {}
 
 
 ## The texture of environment sprite `key` (wrapped for the sharp-pixel
@@ -144,6 +154,62 @@ static func draw_road(ci: CanvasItem, rect: Rect2, style: String) -> bool:
 	var x0 := floorf(rect.position.x / w) * w  # First piece, on the strip's own grid from x = 0.
 	var x1 := ceilf(rect.end.x / w) * w  # End of the last piece.
 	ci.draw_texture_rect(tex, Rect2(x0, top, x1 - x0, h), true)
+	return true
+
+
+## The textures of decal `key` (DecalData key, without the folder): the base
+## decal first, then its present variants (DecalData.VARIANT_SUFFIXES); []
+## when the base decal has no PNG.
+static func decal_set(key: String) -> Array:
+	if _decal_sets.has(key):
+		return _decal_sets[key]
+	var decals: Array = []  # Base decal, then variants.
+	var base := texture(DecalData.PREFIX + key)  # The base decal, or null.
+	if base != null:
+		decals.append(base)
+		for suffix in DecalData.VARIANT_SUFFIXES:
+			var v := texture(DecalData.PREFIX + key + suffix)  # An optional variant.
+			if v != null:
+				decals.append(v)
+	_decal_sets[key] = decals
+	return decals
+
+
+## Floor decal `key` (DecalData) of the code decoration at hashed point `p`
+## of a cell whose stable hash is `h` (>= 0), on the tile floor: draws the
+## decal (variant picked from `h`) centred on p + DecalData.OFFSETS[key], on
+## whole layout px (snapped to DecalData.SNAP if listed). Returns true when the
+## tile floor handles this decoration (decal drawn, or DROPPED: nothing
+## drawn), false when the caller should draw its code decoration (no PNG).
+static func draw_decal(ci: CanvasItem, key: String, p: Vector2, h: int) -> bool:
+	if DecalData.DROPPED.has(key):
+		return true
+	var decals := decal_set(key)  # Base decal, then variants ([] = no art).
+	if decals.is_empty():
+		return false
+	SpriteBank.apply_sharp(ci)
+	var tex: Texture2D = decals[(h >> DecalData.VARIANT_HASH_SHIFT) % decals.size()]  # This cell's variant.
+	var size := Vector2(float(tex.get_width()), float(tex.get_height()))  # Drawn size (1 art px = 1 layout px).
+	var offset: Vector2 = DecalData.OFFSETS.get(key, Vector2.ZERO)  # Decal centre relative to p (layout px).
+	var top_left := (p + offset - size * 0.5).round()  # On whole layout px.
+	if DecalData.SNAP.has(key):
+		var s := float(DecalData.SNAP[key])  # Grid (layout px).
+		top_left = (top_left / s).floor() * s
+	ci.draw_texture_rect(tex, Rect2(top_left, size), false)
+	return true
+
+
+## Draws one piece of the strip decal `key` (DecalData.CARPET_KEY) with its
+## left edge at x = `x0` and centred on y = `center_y`, at its own texel size
+## (one decoration cell long, so the pieces of a cell row join seamlessly).
+## Returns false (drawing nothing) without its PNG.
+static func draw_strip(ci: CanvasItem, key: String, x0: float, center_y: float) -> bool:
+	var tex := texture(DecalData.PREFIX + key)  # The strip piece, or null.
+	if tex == null:
+		return false
+	SpriteBank.apply_sharp(ci)
+	var size := Vector2(float(tex.get_width()), float(tex.get_height()))  # Drawn size (1 art px = 1 layout px).
+	ci.draw_texture_rect(tex, Rect2(Vector2(x0, center_y - size.y * 0.5).round(), size), false)
 	return true
 
 

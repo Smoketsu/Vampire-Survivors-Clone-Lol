@@ -1,0 +1,25 @@
+A sprite sheet of 6 small FLOOR DECALS for a top-down 2D pixel-art game, on a fully TRANSPARENT background.
+Layout: a grid of 3 columns x 2 rows; each decal sits alone in the centre of its own cell, with wide empty
+transparent gaps between them (nothing touches, nothing overlaps a cell border).
+
+Every decal is a flat detail LYING ON THE GROUND, seen STRAIGHT FROM ABOVE (orthographic top-down view, like a map:
+no perspective, no 3/4 view, no side view, no visible height or thickness). NO cast shadow, no drop shadow, no
+shading under it, no glow halo, no outline frame. Nothing may look like a standing object or an obstacle: everything
+is flattened into the ground, like a stain, a scatter or a thing that fell over and lies flat.
+
+LOW-RESOLUTION pixel art: each decal is only about 12 to 24 pixels across, shown enlarged so every pixel is a big crisp
+square block (nearest-neighbour), with chunky 2-3 pixel details. No gradients, no dithering, no soft blur, no
+anti-aliasing, no texture noise. Very DARK, LOW CONTRAST and QUIET colours, close to the dark floor they lie on
+(the attached image is that floor: match its darkness and pixel size, but do NOT draw the floor itself, the
+background must stay transparent).
+
+The decals, left to right, top to bottom:
+1. A spent arrow lying flat on the ground, diagonal (about 14 pixels long): a thin brown wooden shaft, a small dark iron head, two pale grey fletching feathers.
+2. A broken arrow lying flat, snapped in two pieces lying at an angle (about 12 pixels long): brown shaft, small pale fletching.
+3. A broken wooden plank lying flat on the ground (about 16 x 6 pixels): dark weathered brown boards, a splintered end.
+4. A short splintered board fragment lying flat (about 12 x 6 pixels), dark brown, one iron nail.
+5. Three sharpened wooden stakes that fell over and lie flat side by side on the ground (about 22 x 12 pixels): pale-brown pointed ends, dark brown bark.
+6. Two fallen sharpened stakes lying flat, crossed (about 18 x 12 pixels).
+
+Colours: ONLY flat fills from this list: #4F3320 dark brown (most), #8C6040 lighter brown, #1C110B near-black, #3B4352 dark iron grey, #7F785F dull pale grey (fletching only).
+No text, no labels, no numbers, no border, no watermark.

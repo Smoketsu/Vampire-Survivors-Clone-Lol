@@ -1,0 +1,25 @@
+A sprite sheet of 6 small FLOOR DECALS for a top-down 2D pixel-art game, on a fully TRANSPARENT background.
+Layout: a grid of 3 columns x 2 rows; each decal sits alone in the centre of its own cell, with wide empty
+transparent gaps between them (nothing touches, nothing overlaps a cell border).
+
+Every decal is a flat detail LYING ON THE GROUND, seen STRAIGHT FROM ABOVE (orthographic top-down view, like a map:
+no perspective, no 3/4 view, no side view, no visible height or thickness). NO cast shadow, no drop shadow, no
+shading under it, no glow halo, no outline frame. Nothing may look like a standing object or an obstacle: everything
+is flattened into the ground, like a stain, a scatter or a thing that fell over and lies flat.
+
+LOW-RESOLUTION pixel art: each decal is only about 10 to 16 pixels across, shown enlarged so every pixel is a big crisp
+square block (nearest-neighbour), with chunky 2-3 pixel details. No gradients, no dithering, no soft blur, no
+anti-aliasing, no texture noise. Very DARK, LOW CONTRAST and QUIET colours, close to the dark floor they lie on
+(the attached image is that floor: match its darkness and pixel size, but do NOT draw the floor itself, the
+background must stay transparent).
+
+The decals, left to right, top to bottom:
+1. A small tuft of dead grass seen from above (about 14 x 9 pixels): a few thin withered blades spreading flat, dull grey-green.
+2. A smaller dead grass tuft (about 10 x 7 pixels), withered dull grey-green blades.
+3. Two tiny dead grass tufts close together (about 16 x 8 pixels), withered, dull.
+4. A small tuft of dark forest grass seen from above (about 14 x 9 pixels): thin blades spreading flat, dark green with a few lighter green blade tips.
+5. A smaller dark green grass tuft (about 10 x 7 pixels).
+6. Two tiny dark green grass tufts close together (about 16 x 8 pixels).
+
+Colours: ONLY flat fills from this list: tufts 1-3: #1A2218 very dark green, #26301F dark grey-green, #3B5529 muted green (few pixels); tufts 4-6: #1A2218 very dark green, #26301F dark green, #3B5529 muted green, #76984A light moss green (only a few tips).
+No text, no labels, no numbers, no border, no watermark.
