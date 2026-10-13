@@ -1,0 +1,90 @@
+{
+  "_doc": [
+    "Gravebound locked pixel-art palette (GDD 15.0 'Art pass (true pixel art)'; docs/art/ART_BIBLE.md 'Palette').",
+    "Single source of truth for tools/prepare_sprite.py (grid mode snaps every pixel to these colours),",
+    "tools/art_check.py (flags off-palette pixels) and the art bible's colour table.",
+    "colors: name, hex (sRGB), ramp (primary ramp), index (position in that ramp, 0 = darkest),",
+    "group (ink = outline darks, unit = body colours, glow = emissive highlights, floor = ground only),",
+    "role (what it is for). Floor colours are never used by sprites (prepare_sprite.py never snaps to them).",
+    "ramps: ordered dark -> light lists of colour names. members[0] is the ramp's outline ink (the darkest",
+    "shade of that hue). A ramp may borrow a colour whose primary ramp is another one (the ice ramp's shade",
+    "is the cold grey, the gold ramp's shade is the light brown), which keeps the palette small.",
+    "Outline of a pixel = members[0] of its colour's primary ramp; rim light = the next member after it.",
+    "Lightness targets (OKLab L, 0-1): inks 0.17-0.21 (just below the floors), floors 0.21-0.30,",
+    "unit mid-tones 0.45-0.80, glows 0.85+."
+  ],
+  "version": 1,
+  "art_scale": 2,
+  "colors": [
+    {"name": "ink_violet", "hex": "#160A21", "ramp": "violet", "index": 0, "group": "ink", "role": "outline of the player's violet (necromancer and the 12 characters)"},
+    {"name": "violet_deep", "hex": "#4A2569", "ramp": "violet", "index": 1, "group": "unit", "role": "player robe shade (was Palette.ROBE #3D1F57, lifted to read on the floors)"},
+    {"name": "violet", "hex": "#7A42AD", "ramp": "violet", "index": 2, "group": "unit", "role": "player robe main tone"},
+    {"name": "violet_glow", "hex": "#A35CFA", "ramp": "violet", "index": 3, "group": "unit", "role": "player soul-flame, eyes, Shadow Bolt (Palette.VIOLET)"},
+    {"name": "violet_flare", "hex": "#DDBDFF", "ramp": "violet", "index": 4, "group": "glow", "role": "white-hot core of the player's violet soul-flame and spells"},
+
+    {"name": "ink_warm", "hex": "#1C110B", "ramp": "bone", "index": 0, "group": "ink", "role": "outline of bone, Covenant ivory, warm steel, gold, leather, wood, skin, flame"},
+    {"name": "bone_shade", "hex": "#7F785F", "ramp": "bone", "index": 1, "group": "unit", "role": "bone and ivory cloth in shadow"},
+    {"name": "bone_mid", "hex": "#B4AA8A", "ramp": "bone", "index": 2, "group": "unit", "role": "bone and ivory cloth mid-tone, parchment"},
+    {"name": "bone", "hex": "#E8E1C8", "ramp": "bone", "index": 3, "group": "unit", "role": "skulls, skeletal limbs, Covenant ivory robes and tabards (Palette.BONE / IVORY)"},
+
+    {"name": "ink_cold", "hex": "#0F141C", "ramp": "grey", "index": 0, "group": "ink", "role": "outline of cold grey, arcane blue and ice"},
+    {"name": "grey_dark", "hex": "#3B4352", "ramp": "grey", "index": 1, "group": "unit", "role": "undead armour and gargoyle stone in shadow"},
+    {"name": "grey", "hex": "#6B7A94", "ramp": "grey", "index": 2, "group": "unit", "role": "undead steel, crypt stone (Palette.UNDEAD_STEEL); also the shade of ice"},
+    {"name": "grey_light", "hex": "#A7B3C6", "ramp": "grey", "index": 3, "group": "unit", "role": "lit undead steel: the Skeleton Warrior's accent"},
+
+    {"name": "ink_green", "hex": "#081814", "ramp": "soul", "index": 0, "group": "ink", "role": "outline of teal-green soul fire and moss"},
+    {"name": "soul_dark", "hex": "#1C6B58", "ramp": "soul", "index": 1, "group": "unit", "role": "priest robes (Mender teal), soul fire in shadow"},
+    {"name": "soul", "hex": "#3DCC94", "ramp": "soul", "index": 2, "group": "unit", "role": "teal-green soul fire, undead eyes, heals, runes"},
+    {"name": "soul_glow", "hex": "#A8FFD2", "ramp": "soul", "index": 3, "group": "glow", "role": "soul-fire core, heal and XP flashes"},
+
+    {"name": "moss_dark", "hex": "#3B5529", "ramp": "moss", "index": 1, "group": "unit", "role": "Skeleton Archer hood and cloak (the archer's accent), shade"},
+    {"name": "moss", "hex": "#76984A", "ramp": "moss", "index": 2, "group": "unit", "role": "Skeleton Archer accent, lit; also rot and wither decay"},
+
+    {"name": "arcane_dark", "hex": "#243A99", "ramp": "arcane", "index": 1, "group": "unit", "role": "Undead Mage and Lich robes, shade (deep arcane / frost blue)"},
+    {"name": "arcane", "hex": "#4F78EB", "ramp": "arcane", "index": 2, "group": "unit", "role": "Undead Mage and Lich robes and orbs, Crypt Warder ward"},
+    {"name": "arcane_light", "hex": "#9FB8FF", "ramp": "arcane", "index": 3, "group": "unit", "role": "arcane highlights, mage orb core"},
+
+    {"name": "ice", "hex": "#A6D9EA", "ramp": "ice", "index": 2, "group": "unit", "role": "Frost Wraith and Winter Revenant body (pale icy cyan), chill"},
+    {"name": "ice_light", "hex": "#E4FAFF", "ramp": "ice", "index": 3, "group": "unit", "role": "frost highlights, frozen enemies"},
+
+    {"name": "steel_dark", "hex": "#5C5852", "ramp": "steel", "index": 1, "group": "unit", "role": "Covenant warm steel in shadow"},
+    {"name": "steel", "hex": "#9C978C", "ramp": "steel", "index": 2, "group": "unit", "role": "Covenant warm steel armour, helms, blades"},
+    {"name": "steel_light", "hex": "#D4D0C6", "ramp": "steel", "index": 3, "group": "unit", "role": "polished Covenant steel (Palette.SILVER, warmed)"},
+
+    {"name": "ink_red", "hex": "#26070C", "ramp": "crimson", "index": 0, "group": "ink", "role": "outline of Covenant crimson"},
+    {"name": "crimson_dark", "hex": "#7A0E1B", "ramp": "crimson", "index": 1, "group": "unit", "role": "Covenant crimson in shadow (Palette.DARK_CRIMSON)"},
+    {"name": "crimson", "hex": "#C71A29", "ramp": "crimson", "index": 2, "group": "unit", "role": "Covenant tabards, capes, banners, shields (Palette.CRIMSON)"},
+
+    {"name": "brown", "hex": "#4F3320", "ramp": "brown", "index": 1, "group": "unit", "role": "leather, wood, boots, belts, staff shafts"},
+    {"name": "brown_light", "hex": "#8C6040", "ramp": "brown", "index": 2, "group": "unit", "role": "lit leather and wood; also the shade of gold and skin"},
+
+    {"name": "gold", "hex": "#E0A92E", "ramp": "gold", "index": 2, "group": "unit", "role": "Covenant gold trim: elites, Sanctum kinds, bosses (Palette.GOLD)"},
+    {"name": "gold_light", "hex": "#FFDC66", "ramp": "gold", "index": 3, "group": "unit", "role": "lit gold, halos"},
+
+    {"name": "skin", "hex": "#E0A882", "ramp": "skin", "index": 2, "group": "unit", "role": "Covenant faces and hands"},
+
+    {"name": "flame", "hex": "#FF8C26", "ramp": "flame", "index": 2, "group": "unit", "role": "Purifier fire, burning blades, embers, Hellhound (Palette.FLAME)"},
+
+    {"name": "holy_white", "hex": "#FFFAE8", "ramp": "gold", "index": 4, "group": "glow", "role": "holy white glow: halos, holy beams, the brightest gold and ivory highlight"},
+
+    {"name": "floor_soil", "hex": "#161A1C", "ramp": "floor", "index": 0, "group": "floor", "role": "Graveyard soil (Palette.GROUND), the darkest floor"},
+    {"name": "floor_earth", "hex": "#221C17", "ramp": "floor", "index": 1, "group": "floor", "role": "Crimson March earth and ash"},
+    {"name": "floor_stone", "hex": "#312E2B", "ramp": "floor", "index": 2, "group": "floor", "role": "Sanctum stone (darker than today's code floors, so violet and crimson read on it)"}
+  ],
+  "ramps": {
+    "violet": {"members": ["ink_violet", "violet_deep", "violet", "violet_glow", "violet_flare"], "role": "the player only: necromancer, the 12 characters, their spells and icons"},
+    "bone": {"members": ["ink_warm", "bone_shade", "bone_mid", "bone"], "role": "undead bone ivory and Covenant ivory cloth"},
+    "grey": {"members": ["ink_cold", "grey_dark", "grey", "grey_light"], "role": "undead cold grey: armour, crypt stone, gargoyles, the Warrior's steel accent"},
+    "soul": {"members": ["ink_green", "soul_dark", "soul", "soul_glow"], "role": "teal-green soul fire, priests (Mender, Warder trim), heals"},
+    "moss": {"members": ["ink_green", "moss_dark", "moss"], "role": "the Archer's moss green accent, rot, wither"},
+    "arcane": {"members": ["ink_cold", "arcane_dark", "arcane", "arcane_light"], "role": "deep arcane / frost blue: Undead Mage, Lich, Crypt Warder ward"},
+    "ice": {"members": ["ink_cold", "grey", "ice", "ice_light"], "role": "pale icy cyan: Frost Wraith, Winter Revenant, chill and freeze"},
+    "steel": {"members": ["ink_warm", "steel_dark", "steel", "steel_light"], "role": "Covenant warm steel"},
+    "crimson": {"members": ["ink_red", "crimson_dark", "crimson"], "role": "Covenant crimson"},
+    "brown": {"members": ["ink_warm", "brown", "brown_light"], "role": "leather and wood"},
+    "gold": {"members": ["ink_warm", "brown_light", "gold", "gold_light", "holy_white"], "role": "Covenant gold (elites, Sanctum kinds, bosses), halos, holy white glow"},
+    "skin": {"members": ["ink_warm", "brown_light", "skin", "bone"], "role": "Covenant faces and hands"},
+    "flame": {"members": ["ink_red", "crimson", "flame", "gold_light"], "role": "fire and embers"},
+    "floor": {"members": ["floor_soil", "floor_earth", "floor_stone"], "role": "ground colours of the three stages (tiles only, never sprites)"}
+  }
+}

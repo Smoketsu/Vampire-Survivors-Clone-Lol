@@ -1030,11 +1030,22 @@ ground marks the necromancer.
 
 Units can use real sprite art instead of their code-drawn shapes. `SpriteBank` draws
 `assets/sprites/<category>/<id>.png` whenever that file exists and otherwise falls back to the
-glyph, so art arrives one piece at a time without breaking anything. The style is **pixel art**,
-set by the approved necromancer sprite. Sprites are generated in ChatGPT from the prompt pack in
-`docs/art/ART_BIBLE.md` and processed with `python3 tools/prepare_sprite.py <image> <key>`, which
-keeps the original in `art_source/` (ignored by Godot), crops it and stores it at 3x its on-screen
-height from `scripts/data/sprite_data.gd`. Done so far: the necromancer, every summon and evolution, every enemy soldier (Stage 1, Stage 2 and the Reckoning's Inquisitor), both bosses (Sir Alaric, Marshal Vael) and the five Crimson March structures. Still to do: the pickups and Grand Inquisitor Seraphine (`bosses/seraphine`, optional `bosses/seraphine_avatar`; her effects `seraphine_nova`, `holy_beam` and `relic_shatter` are hooked).
+glyph, so art arrives one piece at a time without breaking anything. The style is **true pixel
+art made at its real size** (GDD §15.0 "Art pass (true pixel art)"): 1 art px = 2 screen px, one
+locked palette, violet only for the player. Sprites are generated with an image AI from the prompts
+in `docs/art/ART_BIBLE.md` and processed with `python3 tools/prepare_sprite.py <image> <key>` (grid
+mode): it keeps the original in `art_source/` (ignored by Godot), rebuilds the sprite at exactly
+`SpriteData.HEIGHTS[key] / 2` art px on the palette in `tools/palette.json`, draws the outline and
+the top-left rim, and puts the feet on the bottom row (`--frames 4` for a walk sheet, `--legacy` for
+the old smooth 3x copy). `python3 tools/art_check.py <key>` then renders a check sheet: the sprite
+drawn by the game on all 9 stage floors next to the necromancer, a Skeleton Warrior and a Covenant
+Recruit at Normal and Close zoom, a big zoom, greyscale and silhouette, and the rule checks (it runs
+its own Godot scene from `tools/art_check/` in a scratch copy of the project; `tools/` is ignored by
+Godot, so it never ships). `python3 tools/pixel_palette.py --preview <png>` draws the palette. The
+31 sprites made before the pixel-art pass (the necromancer, the first summons and evolutions, the
+Stage 1-2 soldiers and the Reckoning's Inquisitor, Sir Alaric, Marshal Vael and the five March
+structures) are placeholders to be redone; the anchors (necromancer, Skeleton Warrior, Covenant
+Recruit, a Graveyard tile, a gravestone, the Shadow Bolt icon) come first.
 
 **Grid art (the true pixel-art pass).** New sprites are stored at art resolution: a PNG for key K
 is exactly `SpriteData.HEIGHTS[K] / 2` pixels tall (`SpriteData.ART_SCALE` = 2) and `SpriteBank`
