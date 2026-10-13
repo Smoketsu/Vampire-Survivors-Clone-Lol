@@ -177,6 +177,11 @@ func _draw() -> void:
 		var drawn := CharacterGlyphs.drawn_sprite_key(game.character.id)  # "" when no art exists.
 		if drawn != "":
 			key = drawn
+	if game != null and game.player != null and game.player.skin_id != "":
+		# A worn skin with its own art (SkinData, cosmetic): the afterimage takes its silhouette.
+		var skin_key := String(SkinData.skin(game.player.skin_id).get("sprite", ""))  # The skin's sprite key ("" = unknown skin).
+		if skin_key != "" and SpriteBank.has(skin_key):
+			key = skin_key
 	var tex := SpriteBank.texture(key)  # Sprite art, or null (drawn shape).
 	if tex != null and SpriteBank.is_grid(key):
 		SpriteBank.apply_sharp(self)  # Grid art draws through the sharp-pixel shader.

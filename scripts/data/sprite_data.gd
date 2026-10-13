@@ -45,22 +45,24 @@ const HEIGHTS: Dictionary = {
 	"player/soulbinder": 61.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer, the lightning hand above
 	"player/wither_witch": 48.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer (no overhang)
 	"player/grave_herald": 62.0,  # TUNING (not in GDD) art pass: 56 before; body ~48 like the necromancer, the skull banner above
-	"player/gravecaller_dread_sovereign": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/bone_oracle_ivory_seer": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/plague_scholar_plague_doctor": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/fallen_confessor_heretic_saint": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/gravecaller_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/umbral_warden_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/voidcaller_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/bone_oracle_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/carrion_lord_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/fallen_confessor_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/plague_scholar_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/doomsayer_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/barrow_warden_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/soulbinder_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/wither_witch_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
-	"player/grave_herald_hyper": 56.0,  # TUNING (not in GDD) ART_BIBLE skin row (SkinData)
+	# Skins (SkinData, cosmetic only): each keeps its character's body height
+	# (head to feet, art px); the sprite height adds what rises above the head.
+	"player/gravecaller_dread_sovereign": 56.0,  # TUNING (not in GDD) skin art: body 49 like the necromancer, the flame staff above (the crown sits on the hood)
+	"player/bone_oracle_ivory_seer": 60.0,  # TUNING (not in GDD) skin art: body 48 like the Bone Oracle, the spear and the halo above
+	"player/plague_scholar_plague_doctor": 48.0,  # TUNING (not in GDD) skin art: body 48 like the Plague Scholar (the hat is the top, no overhang)
+	"player/fallen_confessor_heretic_saint": 56.0,  # TUNING (not in GDD) skin art: body 48 like the Fallen Confessor, the cracked halo above
+	"player/gravecaller_hyper": 58.0,  # TUNING (not in GDD) skin art: body 49 like the necromancer, the gold-ringed flame staff and the corona above
+	"player/umbral_warden_hyper": 69.0,  # TUNING (not in GDD) skin art: body 49 like the Umbral Warden, the taller gold-ringed black-sun staff above
+	"player/voidcaller_hyper": 55.0,  # TUNING (not in GDD) skin art: body 48 like the Voidcaller, the gold-framed void ring and the corona above
+	"player/bone_oracle_hyper": 59.0,  # TUNING (not in GDD) skin art: body 48 like the Bone Oracle, the gold spear and the corona above
+	"player/carrion_lord_hyper": 60.0,  # TUNING (not in GDD) skin art: body 52 like the Carrion Lord, the crown and the corona above
+	"player/fallen_confessor_hyper": 54.0,  # TUNING (not in GDD) skin art: body 48 like the Fallen Confessor, the corona above
+	"player/plague_scholar_hyper": 53.0,  # TUNING (not in GDD) skin art: body 48 like the Plague Scholar, the corona above
+	"player/doomsayer_hyper": 54.0,  # TUNING (not in GDD) skin art: body 45 like the Doomsayer, the gold branding iron and the corona above
+	"player/barrow_warden_hyper": 63.0,  # TUNING (not in GDD) skin art: body 49 like the Barrow Warden, the gold shovel staff and the corona above
+	"player/soulbinder_hyper": 63.0,  # TUNING (not in GDD) skin art: body 49 like the Soulbinder, the gold lightning hand and the corona above
+	"player/wither_witch_hyper": 50.0,  # TUNING (not in GDD) skin art: body 48 like the Wither Witch, the gold thorn tips above the hat
+	"player/grave_herald_hyper": 63.0,  # TUNING (not in GDD) skin art: body 48 like the Grave Herald, the skull banner and the corona above
 	"summons/warrior": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/archer": 44.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"summons/mage": 46.0,  # TUNING (not in GDD) art pass: 44 before; the orb staff rises above the hood (body ~44)
