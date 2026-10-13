@@ -870,11 +870,11 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 	var dom := game.horde.bonus_capacity(cls)
 	var nxt := game.horde.compute_stats(cls, lvl + 1, false)
 	var deltas := PackedStringArray()
-	var desc := ""
+	var desc := String(base["description"])  # One-sentence class text (UnitData), at every level like a spell's.
 	var support := float(nxt["heal_amount"]) > 0.0 or float(nxt["shield_amount"]) > 0.0  # Mender / Warder kit.
 	if lvl == 0:
-		desc = "Raise %s to fight for you. Fallen ones return every %ss." % [plural.to_lower(), _fmt(game.horde.replenish_interval(cls))]
 		deltas.append("%s: %d" % [plural, int(nxt["count"]) + dom])
+		deltas.append("Fallen ones return every %ss" % _fmt(game.horde.replenish_interval(cls)))
 		deltas.append("HP %s" % _fmt(nxt["max_hp"]))
 		if support:
 			if float(nxt["heal_amount"]) > 0.0:
@@ -891,7 +891,6 @@ func _summon_offer(cls: String, lvl: int) -> Dictionary:
 		deltas.append_array(SummonBehaviors.card_lines(cls, {}, nxt))  # Class special, if any.
 		deltas.append("Range %s px" % _fmt(nxt["attack_range"]))
 	else:
-		desc = "Strengthen your %s." % plural.to_lower()
 		var cur := game.horde.compute_stats(cls, lvl, false)
 		_delta_line(deltas, plural, float(int(cur["count"]) + dom), float(int(nxt["count"]) + dom))
 		_delta_line(deltas, "Max HP", cur["max_hp"], nxt["max_hp"])

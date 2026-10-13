@@ -49,7 +49,8 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 ## Spell definitions.
 ##   display_name — UI name.
 ##   icon         — IconGlyph kind.
-##   description  — short card text (GDD §8 wording).
+##   description  — card text (GDD §8 wording): one short sentence, no
+##                  numbers (GDD §15.0 "Card text: one sentence").
 ##   labels       — stat key -> UI label, in display order. Only these keys
 ##                  are listed on cards.
 ##   levels       — 5 rows of absolute stats.
@@ -114,7 +115,7 @@ const SPELLS := {
 	"shadow_bolt": {
 		"display_name": "Shadow Bolt",
 		"icon": "shadow_bolt",
-		"description": "Automatically fires shadow bolts at nearby enemies.",
+		"description": "Fires homing shadow bolts at nearby foes.",
 		"labels": {"damage": "Damage", "count": "Bolts", "cooldown": "Cooldown (s)", "pierce": "Pierce", "speed": "Speed"},
 		"levels": [
 			{"damage": 15.0, "cooldown": 1.0, "count": 1, "pierce": 0, "speed": 380.0, "range": 380.0},  # TUNING (not in GDD)
@@ -127,7 +128,7 @@ const SPELLS := {
 	"orb_shield": {
 		"display_name": "Shadow Orb Shield",
 		"icon": "orb_shield",
-		"description": "Orbs circle you, damaging enemies and intercepting a limited number of projectiles.",
+		"description": "Shadow orbs circle you, striking foes and catching projectiles.",
 		"labels": {"orbs": "Orbs", "damage": "Damage", "orbit_radius": "Orbit radius", "orbit_speed": "Orbit speed", "recharge": "Intercept recharge (s)"},
 		"levels": [
 			{"orbs": 2, "damage": 8.0, "orbit_radius": 52.0, "orbit_speed": 2.6, "hit_cooldown": 0.5, "recharge": 5.0},  # TUNING (not in GDD)
@@ -140,7 +141,7 @@ const SPELLS := {
 	"shadow_blast": {
 		"display_name": "Shadow Blast",
 		"icon": "shadow_blast",
-		"description": "Periodically detonates shadow around you, damaging and slowing nearby foes.",
+		"description": "Shadow erupts around you, wounding and slowing nearby foes.",
 		"labels": {"damage": "Damage", "radius": "Radius", "cooldown": "Cooldown (s)", "slow": "Slow", "slow_duration": "Slow duration (s)"},
 		"levels": [
 			{"damage": 22.0, "radius": 80.0, "cooldown": 4.0, "slow": 0.3, "slow_duration": 1.0},  # TUNING (not in GDD)
@@ -153,7 +154,7 @@ const SPELLS := {
 	"bone_spear": {
 		"display_name": "Bone Spear",
 		"icon": "bone_spear",
-		"description": "Hurls piercing bone spears at the nearest foe ahead of you. Steer it by walking.",
+		"description": "Hurls piercing bone spears ahead of you as you walk.",
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
 		"labels": {"damage": "Damage", "count": "Spears", "cooldown": "Cooldown (s)", "pierce": "Pierce", "range": "Range"},
 		"levels": [
@@ -167,7 +168,7 @@ const SPELLS := {
 	"soul_siphon": {
 		"display_name": "Soul Siphon",
 		"icon": "soul_siphon",
-		"description": "Tethers drain the strongest nearby foes and heal you (lifesteal is capped per second).",
+		"description": "Soul tethers drain the strongest nearby foes to heal you.",
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
 		"labels": {"damage": "Drain", "targets": "Tethers", "cooldown": "Drain every (s)", "range": "Range", "lifesteal": "Lifesteal", "heal_cap": "Heal cap (HP/s)"},
 		"levels": [
@@ -181,7 +182,7 @@ const SPELLS := {
 	"corpse_explosion": {
 		"display_name": "Corpse Explosion",
 		"icon": "corpse_explosion",
-		"description": "Detonates fresh corpses near you, whoever made them, in bursts of bone.",
+		"description": "Detonates fresh corpses near you in bursts of bone.",
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
 		"labels": {"damage": "Damage", "radius": "Radius", "count": "Corpses per cast", "cooldown": "Cooldown (s)", "range": "Range"},
 		"levels": [
@@ -199,7 +200,7 @@ const SPELLS := {
 	"plague_cloud": {
 		"display_name": "Plague Cloud",
 		"icon": "plague_cloud",
-		"description": "Drops lingering plague clouds on packed foes. Rotting foes take more damage from everything.",
+		"description": "Plague clouds settle on packed foes and rot them to take more damage.",
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
 		"labels": {"damage": "Damage per tick", "radius": "Radius", "duration": "Duration (s)", "cooldown": "Cooldown (s)", "rot": "Rot (damage taken)"},
 		"levels": [
@@ -220,7 +221,7 @@ const SPELLS := {
 	"death_mark": {
 		"display_name": "Death Mark",
 		"icon": "death_mark",
-		"description": "Brands the strongest foes near you with a burning death sigil. A branded foe that dies rises as a Risen skeleton for a while.",
+		"description": "Brands the strongest foes, and the branded dead rise to fight for you.",
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
 		"labels": {"damage": "Brand damage per tick", "duration": "Brand duration (s)", "count": "Brands per cast", "cooldown": "Cooldown (s)", "risen_cap": "Risen at once"},
 		"levels": [
@@ -236,7 +237,7 @@ const SPELLS := {
 	"bone_wall": {
 		"display_name": "Bone Wall",
 		"icon": "bone_wall",
-		"description": "Raises a wall of bone spikes ahead of you. Foes cannot pass it and are torn while they press against it.",
+		"description": "Raises a wall of bone spikes that holds foes back and tears them.",
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
 		"labels": {"damage": "Spike damage per tick", "segments": "Wall segments", "duration": "Wall duration (s)", "cooldown": "Cooldown (s)"},
 		"levels": [
@@ -250,7 +251,7 @@ const SPELLS := {
 	"soul_chains": {
 		"display_name": "Soul Chains",
 		"icon": "soul_chains",
-		"description": "Soul lightning strikes a foe and arcs on to the next ones, weaker with each jump, briefly slowing all it touches.",
+		"description": "Soul lightning arcs from foe to foe, slowing each one it strikes.",
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
 		"labels": {"damage": "Damage", "jumps": "Jumps", "falloff": "Falloff per jump", "cooldown": "Cooldown (s)", "slow": "Slow", "slow_duration": "Slow duration (s)"},
 		"levels": [
@@ -264,7 +265,7 @@ const SPELLS := {
 	"wither": {
 		"display_name": "Wither",
 		"icon": "wither",
-		"description": "A decay aura surrounds you: foes inside wither every pulse, and their armour rots away while they stay.",
+		"description": "A decay aura withers nearby foes and rots their armour away.",
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
 		"labels": {"damage": "Damage per pulse", "radius": "Radius", "cooldown": "Pulse every (s)", "shred": "Armour removed"},
 		"levels": [
@@ -280,7 +281,7 @@ const SPELLS := {
 	"raise_dead": {
 		"display_name": "Raise Dead",
 		"icon": "raise_dead",
-		"description": "Skeletons claw up beside nearby foes and fight for a few seconds, beyond your army's limit.",
+		"description": "Skeletons briefly claw up beside nearby foes, beyond your army's limit.",
 		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
 		"labels": {"count": "Skeletons", "cooldown": "Cooldown (s)", "life": "Skeleton life (s)", "skeleton_hp": "Skeleton HP", "skeleton_damage": "Skeleton damage"},
 		"levels": [
