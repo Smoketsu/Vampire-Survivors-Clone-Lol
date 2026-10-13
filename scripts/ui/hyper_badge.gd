@@ -1,5 +1,5 @@
-## HyperBadge — the gold HYPER badge (HyperData): a code-drawn gold sun disc
-## with a dark five-pointed star, used on the stage-select cards of stages
+## HyperBadge — the gold HYPER badge (HyperData): a gold sun disc with a dark
+## five-pointed star (its pixel art icons/hyper_badge.png, else code-drawn), used on the stage-select cards of stages
 ## cleared on Hyper (Meta.hyper_clear_count()) and on the setup screen's
 ## Hyper card. `row()` builds the badge with its caption as one HBox.
 class_name HyperBadge
@@ -9,6 +9,8 @@ extends Control
 const GOLD := Color(1.0, 0.82, 0.3)
 ## Dark star on the disc.
 const STAR := Color(0.24, 0.14, 0.04)
+## SpriteBank key of the badge's pixel art (drawn instead of the shapes when present).
+const ART_KEY := "icons/hyper_badge"
 
 
 func _init(px: float = 18.0) -> void:
@@ -27,6 +29,14 @@ static func row(text: String, px: float = 18.0, font_size: int = 13) -> HBoxCont
 
 
 func _draw() -> void:
+	# Pixel art (icons/hyper_badge.png, a 16 px sun) at the largest whole scale that fits, centred and sharp.
+	var tex := SpriteBank.texture(ART_KEY)  # Badge art, or null (code-drawn below).
+	if tex != null and SpriteBank.is_grid(ART_KEY):
+		SpriteBank.apply_sharp(self)
+		var k := maxf(1.0, floorf(minf(size.x, size.y) / float(tex.get_height())))  # Whole screen px per art px.
+		var sz := Vector2(float(tex.get_width()), float(tex.get_height())) * k  # Drawn size (px).
+		draw_texture_rect(tex, Rect2(((size - sz) * 0.5).round(), sz), false)
+		return
 	var c := size * 0.5  # Centre (px).
 	var r := minf(size.x, size.y) * 0.5  # Outer radius (px).
 	for i in 8:

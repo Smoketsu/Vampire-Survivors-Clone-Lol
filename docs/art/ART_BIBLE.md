@@ -563,7 +563,7 @@ badge** with a 1 px border and **one bold symbol**, 32×32 art px (shown about 1
 and 64 px boxes). Player
 spells and passives use violet with bone; summon icons use their class colours; never Covenant gold or
 crimson on the player's icons (the Hyper badge and the Profane Pact excepted). Evolutions add a
-gold-trimmed frame. The Shadow Bolt icon is Anchor 6; the rest come in the icons pass. Status: all new.
+gold-trimmed frame. The Shadow Bolt icon is Anchor 6. **Status: all done** (Oct 2026): the API generated each **symbol alone** on a transparent background, converted to fit 26×26 art px, and composited onto one badge template cut from Anchor 6 (its rounded alpha, a 1 px border, an ink-violet face): a **violet** border for ordinary icons, a **gold** border for the evolutions (spell and summon). Small skull faces keep their eye sockets with `prepare_sprite.py --no-cleanup` or `--method mode`, picked per icon. The **Hyper badge** is the exception: a bare 16×16 gold sun (no square badge), drawn 1:1 by `HyperBadge` at its 16-18 px sizes.
 
 | File | Subject |
 |---|---|
