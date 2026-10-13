@@ -286,6 +286,9 @@ static func draw_boss(ci: CanvasItem, o: Vector2, r: float, flash: bool, pose: i
 ## Draws the icon for `kind` (summon class, spell, passive, "heal") inside
 ## `rect` with a dark rounded backdrop. Used by HUD slots and level-up cards.
 static func draw_icon(ci: CanvasItem, kind: String, rect: Rect2) -> void:
+	# A pixel-art badge icon (art pass) is a complete badge: no code backdrop.
+	if SpriteBank.has_grid_icon(kind) and SpriteBank.draw_icon_art(ci, kind, rect):
+		return
 	ci.draw_rect(rect, Color(0.07, 0.05, 0.11, 0.92))
 	ci.draw_rect(rect, Color(0.4, 0.28, 0.6, 0.9), false, 1.5)
 	var c := rect.get_center()

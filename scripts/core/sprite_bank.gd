@@ -72,8 +72,9 @@ static func texture(key: String) -> Texture2D:
 	var tex: Texture2D = null  # Loaded texture (null = no art yet).
 	if ResourceLoader.exists(path):
 		tex = load(path) as Texture2D
-	var grid := tex != null and SpriteData.HEIGHTS.has(key) \
-			and float(tex.get_height()) <= float(SpriteData.HEIGHTS[key])  # Stored at art resolution.
+	var grid := tex != null and ((SpriteData.HEIGHTS.has(key) \
+			and float(tex.get_height()) <= float(SpriteData.HEIGHTS[key])) \
+			or (key.begins_with("icons/") and tex.get_height() <= SpriteData.ICON_GRID_MAX_PX))  # Stored at art resolution.
 	if grid:
 		var sharp := CanvasTexture.new()  # Per-draw filter override (see the header).
 		sharp.diffuse_texture = tex
@@ -194,14 +195,26 @@ static func draw_flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tin
 	return true
 
 
-## Draws icon art for `kind` (assets/sprites/icons/<kind>.png) filling `rect`
-## (SpriteData.ICON_ART_FILL of it, centred, aspect kept). Returns false when
-## there is no art, so Glyphs.draw_icon() falls back to its drawn symbol.
+## True when `kind` has grid pixel-art icon art (a badge icon with its own
+## border, SpriteData.ICON_GRID_MAX_PX): Glyphs.draw_icon() then skips its
+## code-drawn backdrop.
+static func has_grid_icon(kind: String) -> bool:
+	return texture("icons/" + kind) != null and bool(_grid["icons/" + kind])
+
+
+## Draws icon art for `kind` (assets/sprites/icons/<kind>.png) in `rect`,
+## centred, aspect kept: grid pixel art fills the whole box through the
+## sharp-pixel shader (it is a complete badge); legacy art fills
+## SpriteData.ICON_ART_FILL of it, smooth. Returns false when there is no art,
+## so Glyphs.draw_icon() falls back to its drawn symbol.
 static func draw_icon_art(ci: CanvasItem, kind: String, rect: Rect2) -> bool:
 	var tex := texture("icons/" + kind)  # Icon art, or null.
 	if tex == null:
 		return false
-	var box := minf(rect.size.x, rect.size.y) * SpriteData.ICON_ART_FILL  # Target size (px).
+	var grid := bool(_grid["icons/" + kind])  # A pixel-art badge icon.
+	if grid:
+		apply_sharp(ci)
+	var box := minf(rect.size.x, rect.size.y) * (1.0 if grid else SpriteData.ICON_ART_FILL)  # Target size (px).
 	var w := float(tex.get_width())  # Texture width (px).
 	var h := float(tex.get_height())  # Texture height (px).
 	var size := Vector2(w, h) * (box / maxf(w, h))  # Drawn size (px).

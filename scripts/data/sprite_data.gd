@@ -148,6 +148,13 @@ const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)
 ## Fraction of an icon box that icon art (assets/sprites/icons/) fills.
 const ICON_ART_FILL: float = 0.92  # TUNING (not in GDD)
 
+## Icon art (assets/sprites/icons/) no taller than this (px) is grid pixel art
+## (the art pass's 32x32 badge icons, which carry their own badge and border):
+## SpriteBank draws it filling the whole icon box through the sharp-pixel shader,
+## and Glyphs.draw_icon() skips its code-drawn backdrop. Taller icon art is a
+## legacy placeholder, drawn smooth at ICON_ART_FILL inside the code backdrop.
+const ICON_GRID_MAX_PX: int = 64  # TUNING (not in GDD) art pass: icons are 32x32 art px
+
 ## Drop-shadow ellipse under a sprite: width as a fraction of the sprite height.
 const SHADOW_WIDTH: float = 0.55  # TUNING (not in GDD)
 ## Drop-shadow ellipse height as a fraction of its width.
