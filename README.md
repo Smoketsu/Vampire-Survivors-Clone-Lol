@@ -68,7 +68,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move through the list, Esc / Back closes | Focus + **A**; D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
 | Ossuary (Soul Ash upgrades) | **The Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
-| Settings (volume, shake, damage numbers, fullscreen, keys) | **Settings** in the main or pause menu; Esc / Back closes | Focus + **A**; **B** closes |
+| Settings (volume, shake, damage numbers, fullscreen, zoom Normal / Close, keys) | **Settings** in the main or pause menu; Esc / Back closes | Focus + **A**; **B** closes |
 | Rebind a key (in Settings) | Select a binding, then press the new key | **B** cancels |
 
 You don't aim or cast anything yourself. Spells, summons, targeting, healing and
@@ -122,7 +122,7 @@ buttons you press in a fight are the dash and the ultimate (below).
   `Juice` gets most events from the run's existing signals and stats.
   Gameplay code only calls it in a few one-line hooks.
 - **Settings (`Settings` autoload, `SettingsMenu`).** Volume sliders, screen
-  shake, damage numbers, fullscreen, and keyboard rebinding of the primary key
+  shake, damage numbers, fullscreen, the camera zoom (Normal / Close), and keyboard rebinding of the primary key
   for Move up / down / left / right, Shadow Bolt aim, Grave Step, Dread Rally,
   Pause and the four army stances. Arrow keys and
   controller bindings stay fixed, and binding a key that is already in use
@@ -1017,8 +1017,9 @@ integration").
 
 ### Camera zoom
 
-The Settings menu has a **Zoom** option: Close (1.25×), **Normal (1.0×, default)** and Far (0.8×).
-Zooming in never changes gameplay (enemy spawns use the Normal view or wider). A green ring on the
+The Settings menu has a **Zoom** option: **Normal (1.0×, default)** and Close (1.5×), whole
+multiples of the pixel-art grid (one art pixel = 2 or 3 screen pixels). The old Far (0.8×) was
+dropped; a saved Far loads as Normal. Zooming in never changes gameplay (enemy spawns use the Normal view or wider). A green ring on the
 ground marks the necromancer.
 
 ### Sprite art (in progress)
@@ -1030,6 +1031,14 @@ set by the approved necromancer sprite. Sprites are generated in ChatGPT from th
 `docs/art/ART_BIBLE.md` and processed with `python3 tools/prepare_sprite.py <image> <key>`, which
 keeps the original in `art_source/` (ignored by Godot), crops it and stores it at 3x its on-screen
 height from `scripts/data/sprite_data.gd`. Done so far: the necromancer, every summon and evolution, every enemy soldier (Stage 1, Stage 2 and the Reckoning's Inquisitor), both bosses (Sir Alaric, Marshal Vael) and the five Crimson March structures. Still to do: the pickups and Grand Inquisitor Seraphine (`bosses/seraphine`, optional `bosses/seraphine_avatar`; her effects `seraphine_nova`, `holy_beam` and `relic_shatter` are hooked).
+
+**Grid art (the true pixel-art pass).** New sprites are stored at art resolution: a PNG for key K
+is exactly `SpriteData.HEIGHTS[K] / 2` pixels tall (`SpriteData.ART_SCALE` = 2) and `SpriteBank`
+draws it at exactly 2× (3× at Close zoom), **sharp** (nearest filtering through a `CanvasTexture`
+wrapper, so legacy art, text and code-drawn shapes stay smooth), on whole art pixels from the
+unit's origin; HUD and card icons use the largest whole-number scale that fits the box. A PNG
+taller than its `HEIGHTS` entry is a legacy 3× placeholder and keeps the old smooth scaling, so
+the 31 placeholders keep working until they are replaced.
 
 Effects (explosions, bursts) can be **short animations**: a ChatGPT sprite sheet or a GIF, converted
 with `python3 tools/prepare_sprite.py --anim <sheet or GIF> <id>` into a strip of square 128 px

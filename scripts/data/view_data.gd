@@ -1,21 +1,22 @@
 ## ViewData: camera zoom levels and the player's ground marker. Data only.
 ## The camera zoom is a player setting (Settings.zoom_id, Settings menu "Zoom").
-## Gameplay never depends on the chosen zoom below GAMEPLAY_ZOOM: the enemy
-## spawn ring and other "just off-screen" distances use the visible area at
-## GAMEPLAY_ZOOM, or the real visible area when the player zooms further out
-## (so nothing pops into view). Close and Normal therefore play identically, and
-## the autotest always uses GAMEPLAY_ZOOM.
+## Gameplay never depends on the chosen zoom: the enemy spawn ring and other
+## "just off-screen" distances use the visible area at GAMEPLAY_ZOOM (Normal),
+## never the smaller Close view, so Close and Normal play identically, and the
+## autotest always uses GAMEPLAY_ZOOM. Owner decision (art pass): only Normal
+## x1 and Close x1.5, both whole multiples of the grid art's 1 art px = 2 px
+## (2 and 3 px per art px); the old Far x0.8 is dropped and a saved "far" (or
+## any unknown id) loads as Normal (Settings.load_settings()).
 class_name ViewData
 extends RefCounted
 
 ## Zoom level id -> {label: menu text, zoom: Camera2D zoom (1 = 1 world px per screen px)}.
 const ZOOM_LEVELS: Dictionary = {
-	"close": {"label": "Close", "zoom": 1.25},  # TUNING (not in GDD)
 	"normal": {"label": "Normal", "zoom": 1.0},  # TUNING (not in GDD) user decision: was a fixed 1.5
-	"far": {"label": "Far", "zoom": 0.8},  # TUNING (not in GDD)
+	"close": {"label": "Close", "zoom": 1.5},  # TUNING (not in GDD) owner decision (art pass): was 1.25; 1 art px = 3 px
 }
-## Order the Settings menu cycles through the zoom levels.
-const ZOOM_ORDER: Array = ["close", "normal", "far"]
+## Order the Settings menu cycles through the zoom levels (ZOOM_LEVELS ids).
+const ZOOM_ORDER: Array = ["normal", "close"]
 ## Zoom level used on a fresh install and by the autotest.
 const DEFAULT_ZOOM: String = "normal"
 ## Reference zoom for gameplay distances (spawn ring, off-screen checks): the

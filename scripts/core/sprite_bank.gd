@@ -7,19 +7,57 @@
 ## the check costs a dictionary lookup per draw. Facing is handled by the
 ## caller's node (scale.x = -1 mirrors the sprite, which faces right).
 ## Purely visual: it never touches gameplay state, so determinism is unaffected.
+##
+## Grid art (GDD §15.0 "Art pass (true pixel art)"): a PNG no taller than its
+## SpriteData.HEIGHTS entry is true pixel art stored at art resolution and is
+## drawn at exactly SpriteData.ART_SCALE screen px per texel, SHARP. Anything
+## taller is a legacy placeholder (stored at 3x) and keeps today's smooth
+## scaling to its HEIGHTS size. The rule is evaluated once per key and cached.
+##
+## Filtering: texture filtering is a CanvasItem property in Godot 4, but the
+## grid texture is wrapped in a CanvasTexture whose own texture_filter is
+## NEAREST, which overrides the drawing node's filter for that one draw call
+## (both renderers, GL Compatibility included). So every caller (units,
+## structures, bosses, the player, character / skin glyphs, HUD / card icons,
+## the Grave Step trail) gets sharp grid art without touching its node, while
+## legacy sprites, code-drawn shapes and text on the same node stay linear.
+##
+## Pixel snapping: with nearest filtering at a whole-number scale (2 at Zoom
+## Normal, 3 at Close x1.5), every art pixel covers exactly that many viewport
+## px whatever the node's sub-pixel position, so a moving sprite cannot
+## shimmer: it moves in whole-pixel steps. The rect is placed on the art grid
+## relative to the node origin (top-left on a multiple of ART_SCALE local px),
+## so the feet offset adds no fraction and a mirrored (scale.x = -1) sprite
+## lands on the same grid. The rect is NOT snapped to absolute viewport px
+## here: units redraw only when their look changes, not when they move, so an
+## absolute snap baked into _draw() would go stale at once. The project-wide
+## rendering/2d/snap/snap_2d_transforms_to_pixel is not used either: it rounds
+## every node (code-drawn shapes, HP bars, damage numbers step too), and with
+## the smoothed Camera2D and camera shake it is prone to the known 1 px
+## player-against-ground jitter; snap_2d_vertices_to_pixel would deform the
+## small code-drawn circles and lines. Neither is needed for the whole-pixel look.
 class_name SpriteBank
 extends RefCounted
 
-## key -> Texture2D, or null when no PNG exists for that key.
+## key -> Texture2D (a nearest-filtered CanvasTexture wrapper for grid art), or
+## null when no PNG exists for that key.
 static var _cache: Dictionary = {}
 
-## Icon mode: when > 0, sprites are drawn exactly this tall (px) with no drop
-## shadow, so HUD / card icons that reuse the world glyph functions stay inside
-## their boxes. Set and cleared by Glyphs.draw_icon(); 0 = world drawing.
+## key -> true when that key's PNG is grid art (texture height <= its
+## SpriteData.HEIGHTS entry), false for legacy art or no art. Filled with _cache.
+static var _grid: Dictionary = {}
+
+## Icon mode: when > 0, sprites are drawn this tall (px; grid art at the largest
+## whole-number scale that fits, so at most this tall) with no drop shadow, so
+## HUD / card icons that reuse the world glyph functions stay inside their
+## boxes. Set and cleared by Glyphs.draw_icon() (and the character / skin
+## previews); 0 = world drawing.
 static var icon_cap: float = 0.0
 
 
 ## Returns the texture for sprite `key`, or null if there is no PNG for it.
+## Grid art comes back wrapped in a nearest-filtered CanvasTexture (same size),
+## so any caller drawing it directly (the Grave Step trail) draws it sharp.
 static func texture(key: String) -> Texture2D:
 	if _cache.has(key):
 		return _cache[key]
@@ -27,8 +65,52 @@ static func texture(key: String) -> Texture2D:
 	var tex: Texture2D = null  # Loaded texture (null = no art yet).
 	if ResourceLoader.exists(path):
 		tex = load(path) as Texture2D
+	var grid := tex != null and SpriteData.HEIGHTS.has(key) \
+			and float(tex.get_height()) <= float(SpriteData.HEIGHTS[key])  # Stored at art resolution.
+	if grid:
+		var sharp := CanvasTexture.new()  # Per-draw filter override (see the header).
+		sharp.diffuse_texture = tex
+		sharp.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		tex = sharp
 	_cache[key] = tex
+	_grid[key] = grid
 	return tex
+
+
+## True when sprite `key` is grid art (true pixel art at art resolution, drawn
+## sharp at SpriteData.ART_SCALE); false for legacy art or no art.
+static func is_grid(key: String) -> bool:
+	texture(key)
+	return bool(_grid[key])
+
+
+## Size (px) at which draw() shows sprite `key` (texture `tex`, not null),
+## honouring icon mode. Grid art: ART_SCALE x its texel size in the world; in
+## icon mode the largest whole-number scale that fits icon_cap (minimum 1).
+## Legacy art: scaled to its HEIGHTS height (or icon_cap), aspect kept.
+static func _drawn_size(key: String, tex: Texture2D) -> Vector2:
+	var tsize := Vector2(float(tex.get_width()), float(tex.get_height()))  # Texture size (texels).
+	var icon := icon_cap > 0.0  # Drawing a HUD / card icon rather than a world unit.
+	if bool(_grid[key]):
+		var k := float(SpriteData.ART_SCALE)  # Screen px per texel.
+		if icon:
+			k = maxf(1.0, floorf(minf(icon_cap / tsize.y, icon_cap / tsize.x)))
+		return tsize * k
+	var h: float = icon_cap if icon else SpriteData.HEIGHTS.get(key, SpriteData.DEFAULT_HEIGHT)  # Drawn height (px).
+	var size := Vector2(h * tsize.x / tsize.y, h)  # Drawn size (px).
+	if icon and size.x > icon_cap:
+		size *= icon_cap / size.x  # Wide sprites also fit the icon box.
+	return size
+
+
+## Height (px) at which draw() would show sprite `key` right now (icon mode
+## included); without art, the HEIGHTS size (or icon_cap). Lets callers place
+## overlays on the drawn sprite (SkinGlyphs' emblems).
+static func drawn_height(key: String) -> float:
+	var tex := texture(key)  # Art for this key, or null.
+	if tex == null:
+		return icon_cap if icon_cap > 0.0 else float(SpriteData.HEIGHTS.get(key, SpriteData.DEFAULT_HEIGHT))
+	return _drawn_size(key, tex).y
 
 
 ## True when sprite art exists for `key`.
@@ -41,17 +123,16 @@ static func has(key: String) -> bool:
 ## the colours when not flashing (components above 1 brighten): a playable
 ## character without its own art draws the necromancer tinted
 ## (CharacterGlyphs), and a skin's palette fallback tints too (SkinGlyphs).
-## Returns false and draws nothing when there is no art, so the caller can
-## draw its glyph.
+## Grid art is drawn sharp at a whole-number scale on the art grid (see the
+## header). Returns false and draws nothing when there is no art, so the
+## caller can draw its glyph.
 static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Color = Color.WHITE) -> bool:
 	var tex := texture(key)  # Art for this key, or null.
 	if tex == null:
 		return false
 	var icon := icon_cap > 0.0  # Drawing a HUD / card icon rather than a world unit.
-	var h: float = icon_cap if icon else SpriteData.HEIGHTS.get(key, SpriteData.DEFAULT_HEIGHT)  # Drawn height (px).
-	var size := Vector2(h * float(tex.get_width()) / float(tex.get_height()), h)  # Drawn size (px).
-	if icon and size.x > icon_cap:
-		size *= icon_cap / size.x  # Wide sprites also fit the icon box.
+	var size := _drawn_size(key, tex)  # Drawn size (px).
+	var h := size.y  # Drawn height (px).
 	var centre := o + Vector2(0.0, 0.0 if icon else h * SpriteData.CENTER_OFFSET)  # Sprite centre (px).
 	if not icon:
 		# Drop shadow at the feet: a flattened circle via a scaled transform.
@@ -60,7 +141,13 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Col
 		ci.draw_circle(Vector2.ZERO, sw * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA))
 		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	var mod := SpriteData.FLASH_MODULATE if flash else tint  # Hit flash, or the caller's (character / skin) tint.
-	ci.draw_texture_rect(tex, Rect2(centre - size * 0.5, size), false, mod)
+	var top_left := centre - size * 0.5  # Rect corner (px).
+	if bool(_grid[key]):
+		# On the art grid: whole art px from the node origin in the world (so a
+		# 1 art px step stays one), whole px in an icon box.
+		var step := 1.0 if icon else float(SpriteData.ART_SCALE)  # Grid pitch (local px).
+		top_left = (top_left / step).round() * step
+	ci.draw_texture_rect(tex, Rect2(top_left, size), false, mod)
 	return true
 
 

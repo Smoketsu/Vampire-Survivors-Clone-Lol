@@ -9,7 +9,17 @@ extends RefCounted
 ## Root folder of the in-game sprite PNGs (prepared by tools/prepare_sprite.py).
 const ROOT: String = "res://assets/sprites/"
 
+## Grid art (the true pixel-art pass): screen px per art px at the 1280x720
+## viewport, an integer (2 = one art pixel is a 2x2 block on screen at Zoom
+## Normal, 3x3 at Close x1.5). Storage contract with tools/prepare_sprite.py:
+## a grid-art PNG for key K is exactly HEIGHTS[K] / ART_SCALE texels tall
+## (every HEIGHTS value is even) and SpriteBank draws it ART_SCALE times its
+## texel size, sharp (nearest filtering). A PNG taller than HEIGHTS[K] is a
+## legacy placeholder (stored at 3x) and is still scaled smoothly to HEIGHTS[K].
+const ART_SCALE: int = 2  # TUNING (not in GDD) GDD §15.0 "Art pass (true pixel art)": 1 art px = 2 screen px
+
 ## On-screen height in world px per sprite key (ART_BIBLE.md manifest sizes).
+## Every value is even, so grid art is HEIGHTS / ART_SCALE whole art px tall.
 const HEIGHTS: Dictionary = {
 	"player/necromancer": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"player/umbral_warden": 56.0,  # TUNING (not in GDD) ART_BIBLE manifest size (playable character)
