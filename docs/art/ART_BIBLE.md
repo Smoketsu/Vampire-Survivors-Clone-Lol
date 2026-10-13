@@ -416,7 +416,7 @@ colour.
 | `wither_witch.png` | **The Wither Witch** (Wither): a crooked witch in a withered brown shawl over a violet robe, a wide frayed hat, dead leaves falling, a twisted dead-branch staff, a faint moss-green aura at her feet. Signature: the wide hat | 48 | done |
 | `grave_herald.png` | **The Grave Herald** (Raise Dead): a necromancer herald in a dark violet tabard over bone mail, a raised bone horn, a banner pole topped with a skull, teal soul fire at his feet. Signature: the skull banner | 62 (body 48, skull banner above) | done |
 
-### Player skins (`assets/sprites/player/<character>_<skin>.png`, 56 art px)
+### Player skins (`assets/sprites/player/<character>_<skin>.png`, body as the character's)
 
 Cosmetic skins (`scripts/data/skin_data.gd`; purely visual, never a stat). Until a file exists the game
 draws the character's own sprite with the skin's palette tint, a small emblem and a faint aura. Use the
@@ -426,24 +426,34 @@ theme: the character's regalia **gilded** (or, for the three shadow characters, 
 a gold corona), earned by clearing the Sanctum of Judgment on Hyper. Skins are the one place the player
 may wear gold.
 
+**Status:** all sixteen are in. Each was generated (`tools/gen_image.py`) with two attachments: the
+character's own sprite, enlarged ×12 with nearest-neighbour, and the anchors sheet. The prompt said "a
+costume skin of the character in the first attached image: same pose, silhouette and proportions, body
+48 px". Each was converted with `--inside-outline --no-prune --no-levels` at the art height that gives
+the skin **the same body height (head to feet) as its character**: Art px = character body × source
+height ÷ source body. A crown, halo or corona above the head therefore grows the sprite, not the body.
+Hand fixes: the Ivory Seer's icy eyes, and the Heretic Saint's cracked halo repainted crimson (it
+converted almost black). At this size the corona's thin rays merge into a gold rim with a few spikes
+behind the head; ask for "a 2-pixel-thick ring with chunky rays" if one is redone.
+
 | File | Skin (character) | Subject (for the template) | Art px | Status |
 |---|---|---|---|---|
-| `gravecaller_dread_sovereign.png` | The Dread Sovereign (Gravecaller) | The necromancer in **black plate armour** with gold trim and a crimson-lined black cloak, a spiked **gold crown** over the hood, skull staff with gold fittings, violet eyes | 56 | new |
-| `bone_oracle_ivory_seer.png` | The Ivory Seer (Bone Oracle) | The Bone Oracle in a **polished ivory** bone mask and mantle, bleached robes, a thin ivory **halo**, pale icy eyes | 56 | new |
-| `plague_scholar_plague_doctor.png` | The Plague Doctor (Plague Scholar) | The Plague Scholar as a **plague doctor**: long **beaked leather mask** with green lenses, wide-brimmed black hat, waxed brown coat, a swinging censer with moss-green smoke | 56 | new |
-| `fallen_confessor_heretic_saint.png` | The Heretic Saint (Fallen Confessor) | The Fallen Confessor in **defiled ivory vestments** stained crimson, a **cracked crimson halo**, torn holy stole | 56 | new |
-| `gravecaller_hyper.png` | Eclipsed Gravecaller (Gravecaller) | The necromancer **eclipsed**: robes darkened to near-black violet, a **gold sun corona** behind the hood, gold-rimmed staff orb | 56 | new |
-| `umbral_warden_hyper.png` | Sunless Warden (Umbral Warden) | The Umbral Warden eclipsed: armour darkened to black, a **gold corona** behind the helm, gold edges on the shield | 56 | new |
-| `voidcaller_hyper.png` | Starless Voidcaller (Voidcaller) | The Voidcaller eclipsed: a starless black robe, a **gold corona** ring behind the head, a gold-framed void orb | 56 | new |
-| `bone_oracle_hyper.png` | Gilded Oracle (Bone Oracle) | The Bone Oracle **gilded**: gold-leaf skull mask and ornaments, gold trim, a gold sun corona | 56 | new |
-| `carrion_lord_hyper.png` | Crowned Carrion Lord (Carrion Lord) | The Carrion Lord **gilded**: tarnished-gold armour, a gold crown, gold sun corona | 56 | new |
-| `fallen_confessor_hyper.png` | Fallen Seraph (Fallen Confessor) | The Fallen Confessor as a **fallen seraph**: gilded vestments, broken **gold wings**, a gold sun corona | 56 | new |
-| `plague_scholar_hyper.png` | Blighted Scholar (Plague Scholar) | The Plague Scholar **blighted gold**: robes of sickly gold-green, gold vials, a gold sun corona | 56 | new |
-| `doomsayer_hyper.png` | Final-Hour Doomsayer (Doomsayer) | The Doomsayer **gilded**: gold hourglass and chains, gold trim, a gold sun corona | 56 | new |
-| `barrow_warden_hyper.png` | Gilded Barrow King (Barrow Warden) | The Barrow Warden as a **barrow king**: gold grave-goods armour, a gold circlet, a gold sun corona | 56 | new |
-| `soulbinder_hyper.png` | Radiant Soulbinder (Soulbinder) | The Soulbinder **gilded**: gold soul chains, radiant gold trim, a gold sun corona | 56 | new |
-| `wither_witch_hyper.png` | Thorn-Crowned Witch (Wither Witch) | The Wither Witch **gilded**: a crown of gold thorns, gold-dusted withered robes, a gold sun corona | 56 | new |
-| `grave_herald_hyper.png` | Golden Herald (Grave Herald) | The Grave Herald **gilded**: a gold horn and tabard, gold trim, a gold sun corona | 56 | new |
+| `gravecaller_dread_sovereign.png` | The Dread Sovereign (Gravecaller) | The necromancer in **black plate armour** with gold trim and a crimson-lined black cloak, a spiked **gold crown** over the hood, skull staff with gold fittings, violet eyes | 56 (body 49, flame staff above) | done |
+| `bone_oracle_ivory_seer.png` | The Ivory Seer (Bone Oracle) | The Bone Oracle in a **polished ivory** bone mask and mantle, bleached robes, a thin ivory **halo**, pale icy eyes | 60 (body 48, spear and halo above) | done |
+| `plague_scholar_plague_doctor.png` | The Plague Doctor (Plague Scholar) | The Plague Scholar as a **plague doctor**: long **beaked leather mask** with green lenses, wide-brimmed black hat, waxed brown coat, a swinging censer with moss-green smoke | 48 (body 48, no overhang) | done |
+| `fallen_confessor_heretic_saint.png` | The Heretic Saint (Fallen Confessor) | The Fallen Confessor in **defiled ivory vestments** stained crimson, a **cracked crimson halo**, torn holy stole | 56 (body 48, cracked halo above) | done |
+| `gravecaller_hyper.png` | Eclipsed Gravecaller (Gravecaller) | The necromancer **eclipsed**: robes darkened to near-black violet, a **gold sun corona** behind the hood, gold-rimmed staff orb | 58 (body 49, staff and corona above) | done |
+| `umbral_warden_hyper.png` | Sunless Warden (Umbral Warden) | The Umbral Warden eclipsed: armour darkened to black, a **gold corona** behind the helm, gold edges on the shield | 69 (body 49, black-sun staff above) | done |
+| `voidcaller_hyper.png` | Starless Voidcaller (Voidcaller) | The Voidcaller eclipsed: a starless black robe, a **gold corona** ring behind the head, a gold-framed void orb | 55 (body 48, void ring and corona above) | done |
+| `bone_oracle_hyper.png` | Gilded Oracle (Bone Oracle) | The Bone Oracle **gilded**: gold-leaf skull mask and ornaments, gold trim, a gold sun corona | 59 (body 48, spear and corona above) | done |
+| `carrion_lord_hyper.png` | Crowned Carrion Lord (Carrion Lord) | The Carrion Lord **gilded**: tarnished-gold armour, a gold crown, gold sun corona | 60 (body 52, crown and corona above) | done |
+| `fallen_confessor_hyper.png` | Fallen Seraph (Fallen Confessor) | The Fallen Confessor as a **fallen seraph**: gilded vestments, broken **gold wings**, a gold sun corona | 54 (body 48, corona above) | done |
+| `plague_scholar_hyper.png` | Blighted Scholar (Plague Scholar) | The Plague Scholar **blighted gold**: robes of sickly gold-green, gold vials, a gold sun corona | 53 (body 48, corona above) | done |
+| `doomsayer_hyper.png` | Final-Hour Doomsayer (Doomsayer) | The Doomsayer **gilded**: gold hourglass and chains, gold trim, a gold sun corona | 54 (body 45, branding iron and corona above) | done |
+| `barrow_warden_hyper.png` | Gilded Barrow King (Barrow Warden) | The Barrow Warden as a **barrow king**: gold grave-goods armour, a gold circlet, a gold sun corona | 63 (body 49, shovel staff and corona above) | done |
+| `soulbinder_hyper.png` | Radiant Soulbinder (Soulbinder) | The Soulbinder **gilded**: gold soul chains, radiant gold trim, a gold sun corona | 63 (body 49, lightning hand and corona above) | done |
+| `wither_witch_hyper.png` | Thorn-Crowned Witch (Wither Witch) | The Wither Witch **gilded**: a crown of gold thorns, gold-dusted withered robes, a gold sun corona | 50 (body 48, thorn tips above the hat) | done |
+| `grave_herald_hyper.png` | Golden Herald (Grave Herald) | The Grave Herald **gilded**: a gold horn and tabard, gold trim, a gold sun corona | 63 (body 48, skull banner and corona above) | done |
 
 ### Summons (`assets/sprites/summons/`)
 
