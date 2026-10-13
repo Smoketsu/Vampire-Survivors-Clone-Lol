@@ -8,11 +8,13 @@ Usage (from the repo root):
     python3 tools/prepare_sprite.py --anim <GIF or sheet> <effect id> [--frames N | --grid CxR]
 
 Grid mode (GDD 15.0 "Art pass (true pixel art)", docs/art/ART_BIBLE.md):
-  The sprite is rebuilt at its REAL size on the art grid: 1 art px = ART_SCALE (2)
-  screen px, so a sprite whose on-screen height is SpriteData.HEIGHTS[key] = 56 px
-  is written 28 art px tall. Every pixel is one of the locked palette's colours
-  (tools/palette.json), fully opaque or fully transparent. The game draws it at
-  HEIGHTS[key] px with nearest filtering. Steps:
+  The sprite is rebuilt at its REAL size on the art grid: 1 art px = ART_SCALE (1)
+  screen px at the 1280x720 layout, so a sprite whose on-screen height is
+  SpriteData.HEIGHTS[key] = 56 px (the necromancer) is written 56 art px tall.
+  Every pixel is one of the locked palette's colours (tools/palette.json), fully
+  opaque or fully transparent. The game draws it at HEIGHTS[key] px through its
+  sharp-pixel filter (crisp art pixels at any window scale; 2 screen px per art
+  px at Zoom Close x2). Steps:
   1. Archives the untouched source to art_source/<key>.png (Godot ignores
      art_source/ through its .gdignore).
   2. Cleans the alpha: alpha >= ALPHA_CUT is opaque, the rest (soft fringe,
@@ -38,19 +40,21 @@ Grid mode (GDD 15.0 "Art pass (true pixel art)", docs/art/ART_BIBLE.md):
   6. Ramp pruning: ramps covering less than RAMP_MIN_SHARE of the sprite are
      dropped and their pixels re-snapped to the remaining ramps (stray hues from
      the AI's colour noise), except strongly contrasting accents (KEEP_DE).
-  7. Cleanup ("nothing smaller than 2 art px"): material flecks (a pixel of a
-     material almost none of its neighbours share) merge into the surrounding
-     material; a shade one step off a large neighbouring area joins it; lone
-     opaque pixels are removed; a single-pixel colour island takes its
-     neighbours' majority colour, except glow pixels and bright accents in a
-     dark setting (eyes in a hood or a skull, EYE_DARK_L).
+  7. Cleanup ("readable features are 2+ art px; single pixels only for eyes,
+     glints and highlights"): material flecks (a pixel of a material almost
+     none of its neighbours share) merge into the surrounding material; a shade
+     one step off a large neighbouring area joins it; lone opaque pixels are
+     removed; a single-pixel colour island takes its neighbours' majority
+     colour, except glow pixels, bright accents in a dark setting (eyes in a
+     hood, EYE_DARK_L) and dark accents in a light setting (a skull's eye
+     sockets, SOCKET_LIGHT_L).
   8. Outline: every transparent pixel touching the sprite (4-neighbour) becomes
      the outline ink (darkest shade) of the touching pixels' ramp; with
      --inside-outline the sprite's own edge pixels become the outline instead.
   9. Rim light: the sprite's own top and left edge pixels move one shade
      lighter in their ramp (light from the top-left).
   10. Feet on the bottom row (the last row is the lowest opaque row), the canvas
-      exactly (HEIGHTS[key] / ART_SCALE) px tall, and the body centred
+      exactly HEIGHTS[key] / ART_SCALE (= HEIGHTS[key]) px tall, and the body centred
       horizontally: the median column of the lower BODY_ROWS of the sprite sits
       on the canvas centre line (width is even).
   11. Writes assets/sprites/<key>.png and prints a report: size, colours used,
@@ -72,7 +76,7 @@ Walk sheets (--frames N in grid mode, ART_BIBLE "Walk cycles"):
   processed as above, then aligned: feet on the bottom row, body centre on the
   frame's centre line. Output strip layout, for the engine:
     assets/sprites/<key>_walk.png: N frames side by side, left to right in play
-    order, no gaps; height = HEIGHTS[key] / ART_SCALE (same as the still);
+    order, no gaps; height = HEIGHTS[key] / ART_SCALE (= HEIGHTS[key], same as the still);
     every frame has the same even width FW; FW = the height when every pose
     fits in a square, else the smallest even width that fits the widest pose.
     Frame count = strip width / FW; walk sheets always have WALK_FRAMES (4)
@@ -114,8 +118,9 @@ SPRITE_DIR = ROOT / "assets" / "sprites"
 SPRITE_DATA = ROOT / "scripts" / "data" / "sprite_data.gd"
 
 # --- Grid mode tunables -------------------------------------------------------
-# Screen px per art px when sprite_data.gd has no ART_SCALE constant (GDD 15.0: 2).
-DEFAULT_ART_SCALE = 2
+# Screen px per art px at the 1280x720 layout when sprite_data.gd has no ART_SCALE
+# constant (GDD 15.0 "Art pass (true pixel art)": 1, the art is drawn 1:1).
+DEFAULT_ART_SCALE = 1
 # Source alpha (0-255) at or above which a pixel is opaque; below it is background.
 ALPHA_CUT = 128
 # Fraction (0-1) of an art cell that must be opaque for the art pixel to be opaque.
@@ -126,6 +131,8 @@ COVER_MIN = 0.42
 METHOD = "ramp"
 # Sub-samples per art cell side used to vote in "ramp" / "mode" (the source is
 # box-filtered to this many samples per cell side first; 6 = 36 votes per cell).
+# Relative to the cell, so it does not depend on ART_SCALE: at 1:1 a ~1,000 px
+# source has ~19 px cells and ~3 px sub-samples, still finer than any AI pixel block.
 VOTE_SUBSAMPLES = 6
 # Minimum share (0-1) of a cell's lit area for a much brighter material to win the cell.
 SALIENT_SHARE = 0.2
@@ -183,8 +190,15 @@ RAMP_MIN_SHARE = 0.03
 # replacement is kept as an accent (an eye in a ramp used nowhere else).
 KEEP_DE = 0.30
 # Cleanup: a single bright pixel survives when its neighbours' mean lightness (OKLab L)
-# is below this (an eye in a hood or a skull socket); elsewhere singles are merged.
+# is below this (an eye in a hood); elsewhere singles are merged.
 EYE_DARK_L = 0.40
+# Cleanup: a single dark pixel survives when its neighbours' mean lightness (OKLab L, 0-1)
+# is at least this and it is SALIENT_DL darker (a skull's eye socket, a mouth, a rivet).
+# Added for the 1:1 grid (ART_SCALE 1): a 56 px figure's skull pauldrons and staff
+# skull have 1 art px sockets, which the old 2:1 rule merged into the bone (measured on
+# the owner's necromancer source). 0.60 sits between bone_shade (0.57) and bone_mid (0.74),
+# so only sockets set in lit bone, ivory, steel or skin are kept.
+SOCKET_LIGHT_L = 0.60
 # Fraction (0-1) of the sprite's rows, from the bottom, used to find the body's centre column.
 BODY_ROWS = 0.6
 # Palette-snap error reported as a hotspot: OKLab a/b (hue and saturation) distance
@@ -532,9 +546,11 @@ def merge_flecks(idx: np.ndarray, pal: Palette) -> tuple:
 def cleanup(idx: np.ndarray, pal: Palette) -> tuple:
     """Removes lone opaque pixels and merges single-pixel colour islands (a
     pixel whose colour no 4-neighbour shares) into their neighbours' majority
-    colour, except glow pixels and bright accents in a dark setting (eyes in a
+    colour, except glow pixels, bright accents in a dark setting (eyes in a
     hood, a lit rune: neighbours darker than EYE_DARK_L, the pixel SALIENT_DL
-    brighter). Returns (grid, pixels changed)."""
+    brighter) and dark accents in a light setting (a skull's eye sockets:
+    neighbours at least SOCKET_LIGHT_L, the pixel SALIENT_DL darker). Lone
+    floating pixels are always removed. Returns (grid, pixels changed)."""
     h, w = idx.shape
     out = idx.copy()
     changed = 0
@@ -557,9 +573,11 @@ def cleanup(idx: np.ndarray, pal: Palette) -> tuple:
                 continue
             repl = Counter(nb8).most_common(1)[0][0]  # Neighbours' majority colour.
             around = float(np.mean([pal.lab[v][0] for v in nb8]))  # Neighbours' mean lightness.
-            # Kept: glow pixels, and bright accents in a dark setting (eyes in a hood or skull, a lit rune).
+            # Kept: glow pixels, bright accents in a dark setting (eyes in a hood, a lit rune)
+            # and dark accents in a light setting (a skull's eye sockets).
             eye = around < EYE_DARK_L and pal.lab[c][0] - around > SALIENT_DL
-            if pal.group[c] == "glow" or eye:
+            socket = around >= SOCKET_LIGHT_L and around - pal.lab[c][0] > SALIENT_DL
+            if pal.group[c] == "glow" or eye or socket:
                 continue
             out[y, x] = repl
             changed += 1
@@ -879,7 +897,7 @@ def main() -> None:
     parser.add_argument("--frames", type=int, default=0,
                         help="grid mode: a walk sheet of N poses (writes <key>_walk.png); --anim: N equal frames in one row")
     parser.add_argument("--grid", default="", help="--anim: CxR grid of equal frames")
-    parser.add_argument("--art-height", type=int, default=0, help="grid mode: output height in art px (default HEIGHTS[key] / ART_SCALE)")
+    parser.add_argument("--art-height", type=int, default=0, help="grid mode: output height in art px (default HEIGHTS[key] / ART_SCALE = HEIGHTS[key])")
     parser.add_argument("--method", choices=("ramp", "mode", "mean"), default=METHOD, help="grid mode: how a cell's colour is chosen")
     parser.add_argument("--ramps", default="", help="grid mode: comma-separated ramps allowed (default: the folder's faction set)")
     parser.add_argument("--no-levels", dest="levels", action="store_false", help="grid mode: no per-material lightness stretch")

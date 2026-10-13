@@ -7,15 +7,23 @@
 ##   godot --path <copy> res://_art_check/art_check.tscn -- --key=<sprite key> --out=<dir>
 ## For each of the 9 floors (the Graveyard, the 4 Crimson March zones, the 4
 ## Sanctum zones, drawn by the game's own Ground / MarchGround / SanctumGround)
-## and each zoom (Normal x1, Close x1.5) it renders one SubViewport with the
-## sprite under test (SpriteBank.draw, nearest filtering) next to the
-## necromancer, a Skeleton Warrior and a Covenant Recruit (drawn by the game's
-## Glyphs functions: their current art or glyph), then saves each panel to
+## and each zoom (Normal x1, Close x2) it renders one SubViewport with the
+## sprite under test (SpriteBank.draw) next to the necromancer, a Skeleton
+## Warrior and a Covenant Recruit (drawn by the game's Glyphs functions: their
+## current art or glyph), then saves each panel to
 ## <out>/panel_<floor>_<zoom>.png and quits. Purely visual, never in a run.
+##
+## Sharpness matches the game: grid art is drawn through SpriteBank's
+## sharp-pixel shader (SpriteBank.apply_sharp() on each stand drawing grid art;
+## SpriteBank.draw() also applies it). A project copy whose SpriteBank predates
+## the shader (no apply_sharp) falls back to nearest filtering on those stands;
+## the scene prints which mode it used ("art_check: sharp=...") and
+## art_check.py puts it on the sheet.
 extends Node
 
-## Camera zooms rendered: label -> Camera2D zoom (GDD 15.0: Normal x1, Close x1.5).
-const ZOOMS: Dictionary = {"x1": 1.0, "x1.5": 1.5}
+## Camera zooms rendered: label -> Camera2D zoom (GDD 15.0 "Art pass grid": Normal x1
+## = 1 art px per screen px, Close x2 = 2 screen px per art px).
+const ZOOMS: Dictionary = {"x1": 1.0, "x2": 2.0}
 ## Gap between two units in a panel (world px).
 const UNIT_GAP: float = 18.0
 ## Empty world px kept around the row of units (left / right and above).
@@ -34,6 +42,10 @@ var _key: String = ""
 var _out: String = ""
 ## Rendered panels: [{viewport, name}].
 var _panels: Array = []
+## This project's SpriteBank script when it has the sharp-pixel shader
+## (apply_sharp), called dynamically so the scene still parses in an older
+## project copy; null = fall back to nearest filtering on the grid-art stands.
+var _bank: Script = null
 
 
 func _ready() -> void:
@@ -47,6 +59,9 @@ func _ready() -> void:
 		get_tree().quit(2)
 		return
 	DirAccess.make_dir_recursive_absolute(_out)
+	_bank = _sharp_bank()
+	print("art_check: sharp=%s" % ("shader (SpriteBank.apply_sharp)" if _bank != null
+			else "nearest (fallback: this SpriteBank has no apply_sharp)"))
 	for floor_def in _floors():
 		for zoom_label: String in ZOOMS:
 			_build_panel(floor_def, zoom_label, float(ZOOMS[zoom_label]))
@@ -59,6 +74,18 @@ func _ready() -> void:
 		img.save_png(_out.path_join("panel_%s.png" % p["name"]))
 	print("art_check: %d panels -> %s" % [_panels.size(), _out])
 	get_tree().quit(0)
+
+
+## SpriteBank's script (found through the global class list) when it defines
+## apply_sharp(), else null. A class_name cannot be asked has_method() or
+## call() directly in GDScript, so the script resource is loaded by path.
+func _sharp_bank() -> Script:
+	for c: Dictionary in ProjectSettings.get_global_class_list():
+		if c["class"] == &"SpriteBank":
+			var bank := load(String(c["path"])) as Script  # SpriteBank's script resource.
+			if bank != null and bank.has_method("apply_sharp"):
+				return bank
+	return null
 
 
 ## The 9 floors: id, label, ground script and zone look.
@@ -95,10 +122,13 @@ func _unit_for_key(key: String, draw: Callable) -> Dictionary:
 	var h: float = SpriteData.HEIGHTS.get(key, SpriteData.DEFAULT_HEIGHT)  # Drawn height (world px).
 	var tex := SpriteBank.texture(key)  # Art, or null (glyph fallback).
 	var w := h * 0.6  # Glyph width estimate (world px).
-	var grid := key == _key  # Grid art (sharp) or old smooth art / glyph.
+	var grid := false  # Grid art (drawn sharp) rather than old smooth art or a glyph.
 	if tex != null:
-		w = h * float(tex.get_width()) / float(tex.get_height())
-		grid = grid or is_equal_approx(float(tex.get_height()) * 2.0, h)
+		grid = SpriteBank.is_grid(key)
+		# Grid art is drawn ART_SCALE px per texel (the shorter art of a wrong height shows as it is).
+		w = float(tex.get_width()) * float(SpriteData.ART_SCALE) if grid else h * float(tex.get_width()) / float(tex.get_height())
+		if grid:
+			h = float(tex.get_height()) * float(SpriteData.ART_SCALE)
 	return {"draw": draw, "w": w, "h": h, "key": key, "sharp": grid, "sprite": tex != null}
 
 
@@ -137,7 +167,10 @@ func _build_panel(floor_def: Dictionary, zoom_label: String, zoom: float) -> voi
 		# a glyph's feet are about its radius (h / 4) below o.
 		var feet_off := h * (0.5 + SpriteData.CENTER_OFFSET) if u["sprite"] else h * 0.25
 		stand.position = Vector2(x + float(u["w"]) * 0.5, feet_y - feet_off)
-		stand.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST if u["sharp"] else CanvasItem.TEXTURE_FILTER_LINEAR
+		if u["sharp"] and _bank != null:
+			_bank.call("apply_sharp", stand)  # Same shader as the game (dynamic: older copies lack it).
+		elif u["sharp"]:
+			stand.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST  # Fallback: no sharp-pixel shader.
 		vp.add_child(stand)
 		x += float(u["w"]) + UNIT_GAP
 	_panels.append({"viewport": vp, "name": "%s_%s" % [floor_def["id"], zoom_label]})

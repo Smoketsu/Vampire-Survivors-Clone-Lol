@@ -3,7 +3,10 @@
 This document defines how Gravebound's art is made, processed, checked and wired into the game. It is
 the single reference for every art request. The owner decision behind it is GDD §15.0 "Art pass (true
 pixel art)": the first AI placeholders are replaced by **true pixel art made at its real size**, so
-every unit stays clear at the small in-game sizes.
+every unit stays clear at the small in-game sizes. The grid is **1 art px = 1 screen px** at the
+1280×720 layout (GDD §15.0 "Art pass grid": the owner compared renders; at 28 art px the necromancer
+lost its skull pauldrons and staff skull, at 56 it reads clearly, and the AI image tools naturally
+draw figures about 60-95 px tall).
 
 ## Workflow
 
@@ -19,7 +22,7 @@ every unit stays clear at the small in-game sizes.
    colours, cleaned pixels, colours the palette had to move far).
 4. **Check** it: `python3 tools/art_check.py <key>` writes one check sheet: the sprite **drawn by the
    game** on all 9 stage floors next to the necromancer, a Skeleton Warrior and a Covenant Recruit, at
-   Normal (×1) and Close (×1.5) zoom, plus a big zoom, a greyscale copy and a silhouette, with the rule
+   Normal (×1) and Close (×2) zoom, plus a big zoom, a greyscale copy and a silhouette, with the rule
    checks (height, alpha, palette, feet, lightness on every floor, faction colours, specks).
 5. **Approve or iterate.** If the sheet fails or reads badly, regenerate (simpler shapes, flatter
    colours, see "Getting good conversions") or touch up the small PNG by hand in any pixel editor
@@ -32,21 +35,30 @@ Or send the images to Claude to run steps 3-4.
 
 ## Global rules (readability)
 
-- **The grid.** 1 art px = **2 screen px** at 1280×720 (`SpriteData.ART_SCALE`). Art is made at its
-  real size and drawn **sharp** (nearest filtering) at whole-number scales: Normal zoom ×1 (1 art px = 2
-  screen px) and Close ×1.5 (3 screen px). The stored PNG is exactly `SpriteData.HEIGHTS[key] / 2` art
-  px tall, 1 texel = 1 art px, every pixel fully opaque or fully transparent.
-- **Sizes by tier** (art px tall): fodder **20-22**; soldiers and summons **22-26**; the necromancer
-  **28**; heavies **30-36**; structures **36-50**; minibosses and bosses **60-78**. The manifest's
-  "Art px" column is the exact height (= HEIGHTS / 2).
+- **The grid.** 1 art px = **1 screen px** at the 1280×720 layout (`SpriteData.ART_SCALE` = 1). Art is
+  made at its real size and drawn through the game's **sharp-pixel filter** (a shader: every art pixel
+  stays a crisp square, its edges anti-aliased over half a screen pixel), so the pixels stay even at
+  any window scale (a 1080p window is ×1.5 the layout) and at Zoom Close ×2 (1 art px = 2 screen px);
+  Normal zoom is ×1. The stored PNG is exactly `SpriteData.HEIGHTS[key]` art px tall (the HEIGHTS
+  value itself), 1 texel = 1 art px, every pixel fully opaque or fully transparent.
+- **Sizes by tier** (art px tall = `SpriteData.HEIGHTS`): fodder **40-44**; soldiers and summons
+  **44-52**; the necromancer and the other characters **56**; heavies **60-72**; structures **72-100**;
+  minibosses and bosses **120-156**. Outside the tiers: the small summons (Bone Hound 32, Risen 36,
+  Hellhound 40) and the giant summons (Corpse Abomination 88, Bone Colossus 100). The manifest's "Art
+  px" column is the exact height.
 - **Palette.** Only the locked palette (`tools/palette.json`, below). At most **3 shades per
   material**. No gradients, no dithering, no texture noise.
-- **Detail.** Nothing smaller than **2 art px** (eyes and single glints excepted). One readable idea
-  per part: a hood, a face, a weapon, a shield. Fine trims, belts and engravings disappear at this size;
-  leave them out.
-- **Outline and rim.** A **1 art px outline** in the **darkest shade of the part's own hue** (the
-  ramp's ink), **never pure black**; a **1 px light rim** (one shade lighter) on the top-left edges.
-  Light comes from the top-left. `prepare_sprite.py` draws both.
+- **Detail.** Every readable feature (a face, a hand, a skull pauldron, a weapon head, a buckle) is at
+  least **2 art px**; **single pixels** only for **eyes, glints, highlights** and a skull's eye sockets.
+  Why: at 1:1 a 2 art px feature is 2 screen px, about the smallest shape the eye reads as a shape in
+  motion, while one pixel is 1 screen px at Normal zoom, which reads only as an accent (bright on dark,
+  or dark on bright), and a scatter of single pixels reads as noise. `prepare_sprite.py` merges stray
+  single pixels and keeps those accents. One readable idea per part: a hood, a face, a weapon, a
+  shield. 1 px trims, belts and engravings still turn to noise; leave them out.
+- **Outline and rim.** A **1 art px outline** (1 screen px at Normal zoom, 2 at Close: the usual
+  weight for pixel art at this resolution) in the **darkest shade of the part's own hue** (the ramp's
+  ink), **never pure black**; a **1 px light rim** (one shade lighter) on the top-left edges. Light
+  comes from the top-left. `prepare_sprite.py` draws both.
 - **Value contrast.** Unit main shapes sit clearly **above the near-black floors** (the Graveyard soil
   is `#161A1C`): the check sheet wants the main shape's median OKLab lightness at least **+0.15** above
   every floor. Dark cloth uses the ramp's mid shade, with the darkest shade only for shadow.
@@ -104,8 +116,9 @@ lighter than `floor_stone`); the floor pass brings them down so violet and crims
 ## Prompt template (every asset after the anchors)
 
 What converts best from an image AI to this grid: **flat colours from a short list, no gradients or
-texture noise, a thick dark outline, chunky shapes with no detail under two pixels, a big readable
-silhouette**, and a pixel size close to the real grid. Fill in `<...>` from the manifest; the colour
+texture noise, a clean 1-pixel dark outline, chunky shapes with no detail under two pixels, a big
+readable silhouette**, and a pixel size close to the real grid (the AI tools tend to draw figures 60-95
+px tall; asking for the exact height keeps the conversion near 1:1). Fill in `<...>` from the manifest; the colour
 list is the palette names and hex of the ramps the unit uses.
 
 ```
@@ -114,16 +127,16 @@ top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neu
 
 LOW-RESOLUTION pixel art: the whole figure is only <ART PX> pixels tall, drawn on a coarse pixel grid
 and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple,
-readable shapes; nothing smaller than 2 pixels except the eyes. No anti-aliasing, no gradients, no
-dithering, no texture noise, no soft glow haze, no fine trims or engravings.
+readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing,
+no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings.
 
 Subject: <SUBJECT FROM THE MANIFEST>.
 Signature shape that must read in silhouette: <SIGNATURE>.
 
 Colours: ONLY flat fills from this list, at most 3 shades per material: <PALETTE NAMES AND HEX>.
-Outline: a thick dark outline around the whole figure in the darkest shade of each part's own colour
-(never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes
-clearly brighter than a near-black ground (#161A1C).
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own
+colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main
+shapes clearly brighter than a near-black ground (#161A1C).
 
 Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white),
 one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no
@@ -145,31 +158,40 @@ Tips:
 The tool turns any image into palette-correct grid art, but **what it can keep depends on the source**:
 
 - **Detailed AI illustrations** (today's 31 placeholders: ~1,000 px figures "in a pixel style", with
-  gold trims, belts, engraved armour and soft glows) are shrunk about 36× to 28 px. The tool keeps the
-  big masses clean (robe, hood, pauldrons, staff and flame, shield, spear, cape), but the **faces, eyes
-  and trims are lost** and some areas read as abstract blotches. Usable as placeholders, not as final art.
-- **Chunky sources drawn close to the target grid** convert almost losslessly: a 28 px sprite blown up
-  to 1,000 px with blur, colour noise and an off-grid scale came back **95% pixel-identical** (92% after
-  the speck cleanup). That is why the prompt asks for a figure "only N pixels tall" with big blocks,
-  flat colours and a thick outline.
-- When a source was already drawn at the grid with its own outline, `--inside-outline` keeps the
-  sprite's edge as the outline instead of adding a second one.
-- The last 10% (eyes, a face, a clean hand) is fastest done by hand on the 28 px PNG in a pixel
+  gold trims, belts, engraved armour and soft glows) are shrunk about 18× to 56 px (they were 36× to
+  28 px on the old 2:1 grid, where the faces, eyes and trims were lost). The big masses come out clean;
+  fine trims still blur into blotches. Usable as placeholders, not as final art.
+- **Chunky sources drawn close to the target grid** convert almost losslessly: on the old grid a 28 px
+  sprite blown up to 1,000 px with blur, colour noise and an off-grid scale came back **95%
+  pixel-identical** (92% after the speck cleanup). That is why the prompt asks for a figure "only N
+  pixels tall" with big blocks, flat colours and a clean 1-pixel outline.
+- **The owner's chunky necromancer** (~65 px native, 16 source px per pixel, converted to 56) keeps the
+  hood, the robe's tattered hem, both skull pauldrons with their eye sockets, the hand and the staff
+  skull in its flame. Because 65 → 56 is not a whole ratio, a few 1-pixel details merge with a
+  neighbour (the two hood eyes become one short band): touch those up by hand.
+- When a source was already drawn at (or near) the grid with its own outline, `--inside-outline` keeps
+  the sprite's own edge as the outline instead of adding a second one (otherwise the outline comes out
+  2 px thick in places); it gave the cleaner necromancer.
+- The last 10% (eyes, a face, a clean hand) is fastest done by hand on the small PNG in a pixel
   editor; the check sheet shows whether it is needed.
 
 ## Anchors (the first six, approved in-game before everything else)
 
+**Status:** the necromancer anchor is in progress: the owner's chunky image (~65 px native) converted
+to 56 art px with `--inside-outline`, being checked on its sheet and in the game.
+
 The anchors fix the style for everything else. Approve them **in order**, each on its check sheet and
 in the game, then attach the approved ones to every later prompt. Each prompt is ready to paste.
 
-### Anchor 1: the necromancer (`player/necromancer`, 28 art px)
+### Anchor 1: the necromancer (`player/necromancer`, 56 art px)
 ```
 Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter
 top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance.
 
-LOW-RESOLUTION pixel art: the whole figure is only 28 pixels tall, drawn on a coarse pixel grid and
+LOW-RESOLUTION pixel art: the whole figure is only 56 pixels tall, drawn on a coarse pixel grid and
 shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable
-shapes; nothing smaller than 2 pixels except the eyes. No anti-aliasing, no gradients, no dithering,
+shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no
+gradients, no dithering,
 no texture noise, no soft glow haze, no fine trims or engravings.
 
 Subject: a hooded necromancer in a long flowing robe with a tattered hem, a tall pointed hood with his
@@ -183,25 +205,26 @@ Colours: ONLY flat fills from this list, at most 3 shades per material:
 robe violet #4A2569 (shadow), #7A42AD (main), #A35CFA (lit edges and the soul-flame);
 flame core #DDBDFF; bone #7F785F (shadow), #B4AA8A, #E8E1C8 (lit);
 outlines #160A21 (robe) and #1C110B (bone).
-Outline: a thick dark outline around the whole figure in the darkest shade of each part's own colour
-(never pure black). Light from the top-left: the top-left edges one shade lighter. The robe's main
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own
+colour (never pure black). Light from the top-left: the top-left edges one shade lighter. The robe's main
 colour is the mid violet #7A42AD, not the dark one, so he stands out on a near-black ground (#161A1C).
 
 Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white),
 one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no
 scenery, no text, no frame, no watermark.
 ```
-Process: `python3 tools/prepare_sprite.py <image> player/necromancer`, then
-`python3 tools/art_check.py player/necromancer`.
+Process: `python3 tools/prepare_sprite.py <image> player/necromancer` (add `--inside-outline` when the
+image already has its own clean outline), then `python3 tools/art_check.py player/necromancer`.
 
-### Anchor 2: the Skeleton Warrior (`summons/warrior`, 22 art px)
+### Anchor 2: the Skeleton Warrior (`summons/warrior`, 44 art px)
 ```
 Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter
 top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance.
 
-LOW-RESOLUTION pixel art: the whole figure is only 22 pixels tall, drawn on a coarse pixel grid and
+LOW-RESOLUTION pixel art: the whole figure is only 44 pixels tall, drawn on a coarse pixel grid and
 shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable
-shapes; nothing smaller than 2 pixels except the eyes. No anti-aliasing, no gradients, no dithering,
+shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no
+gradients, no dithering,
 no texture noise, no fine trims or engravings.
 
 Subject: a skeleton warrior: a bone-white skull with two small teal-green glowing eye sockets, a
@@ -212,8 +235,8 @@ Signature shape that must read in silhouette: the big round shield.
 Colours: ONLY flat fills from this list, at most 3 shades per material:
 bone #7F785F (shadow), #B4AA8A, #E8E1C8 (lit); cold grey iron #3B4352 (shadow), #6B7A94, #A7B3C6 (lit);
 eye glint #3DCC94; outlines #0F141C (iron) and #1C110B (bone).
-Outline: a thick dark outline around the whole figure in the darkest shade of each part's own colour
-(never pure black). Light from the top-left: the top-left edges one shade lighter.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own
+colour (never pure black). Light from the top-left: the top-left edges one shade lighter.
 
 Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white),
 one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no
@@ -222,14 +245,15 @@ Attached: the approved necromancer of this game. Match its pixel size, outline w
 ```
 Process: `python3 tools/prepare_sprite.py <image> summons/warrior`.
 
-### Anchor 3: the Covenant Recruit (`enemies/recruit`, 20 art px)
+### Anchor 3: the Covenant Recruit (`enemies/recruit`, 40 art px)
 ```
 Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter
 top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance.
 
-LOW-RESOLUTION pixel art: the whole figure is only 20 pixels tall, drawn on a coarse pixel grid and
+LOW-RESOLUTION pixel art: the whole figure is only 40 pixels tall, drawn on a coarse pixel grid and
 shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable
-shapes; nothing smaller than 2 pixels except the eyes. No anti-aliasing, no gradients, no dithering,
+shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no
+gradients, no dithering,
 no texture noise, no fine trims or engravings.
 
 Subject: a young holy-order foot soldier: a round warm-steel kettle helmet over a plain face, a bright
@@ -241,8 +265,8 @@ Colours: ONLY flat fills from this list, at most 3 shades per material:
 crimson #7A0E1B (shadow), #C71A29 (main); ivory #B4AA8A (shadow), #E8E1C8; warm steel #5C5852,
 #9C978C, #D4D0C6 (lit); skin #8C6040 (shadow), #E0A882; leather and wood #4F3320, #8C6040;
 outlines #26070C (crimson) and #1C110B (everything else).
-Outline: a thick dark outline around the whole figure in the darkest shade of each part's own colour
-(never pure black). Light from the top-left: the top-left edges one shade lighter.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own
+colour (never pure black). Light from the top-left: the top-left edges one shade lighter.
 
 Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white),
 one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no
@@ -251,10 +275,10 @@ Attached: the approved sprites of this game. Match their pixel size, outline wei
 ```
 Process: `python3 tools/prepare_sprite.py <image> enemies/recruit`.
 
-### Anchor 4: a Graveyard floor tile (`tiles/graveyard`, 64×64 art px, seamless)
+### Anchor 4: a Graveyard floor tile (`tiles/graveyard`, 128×128 art px, seamless)
 ```
 A SEAMLESS, tileable ground texture for a top-down 2D pixel-art game, seen straight from above.
-LOW-RESOLUTION pixel art: exactly 64 x 64 pixels, shown enlarged so every pixel is a big square
+LOW-RESOLUTION pixel art: exactly 128 x 128 pixels, shown enlarged so every pixel is a big square
 block. The left edge must continue the right edge and the top edge the bottom edge.
 
 Subject: dark, damp graveyard soil at night: packed earth with a few faint cracks, a few small
@@ -267,21 +291,22 @@ Colours: ONLY flat fills from this list: soil #161A1C (most of the tile), earth 
 Output: a square PNG, the tile filling the whole image edge to edge. No border, no text, no watermark.
 Attached: the approved sprites of this game, for the pixel size.
 ```
-Process: `python3 tools/prepare_sprite.py <image> tiles/graveyard --art-height 64 --method mean
+Process: `python3 tools/prepare_sprite.py <image> tiles/graveyard --art-height 128 --method mean
 --no-outline --no-rim --no-prune --allow-floor --ramps floor,grey --no-center`. (Tiles are not drawn
 by the game yet; the floor pass hooks them up.)
 
 ### Anchor 5: a gravestone, two sizes (`obstacles/gravestone_s`, `obstacles/gravestone_l`)
-Collision radius 11 and 15 world px today, so the footprint is **11 and 15 art px wide**; the stones
-stand **16 and 22 art px tall**.
+Collision radius 11 and 15 world px today, so the footprint is **22 and 30 art px wide**; the stones
+stand **32 and 44 art px tall**.
 ```
 Pixel-art game sprite for a top-down 2D horde-survival game. Three-quarter top-down view (camera above
 and slightly in front), on a transparent background. TWO gravestones side by side with a wide
 transparent gap between them, same style:
-1) a small one, only 16 pixels tall and 11 pixels wide; 2) a large one, only 22 pixels tall and 15
+1) a small one, only 32 pixels tall and 22 pixels wide; 2) a large one, only 44 pixels tall and 30
 pixels wide.
 LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block. Chunky simple
-shapes, no detail under 2 pixels, no anti-aliasing, no gradients, no dithering, no texture noise.
+shapes, no detail under 2 pixels, no anti-aliasing, no gradients, no dithering, no texture noise. A
+clean 1-pixel dark outline.
 
 Subject: old weathered headstones with a rounded top, slightly tilted, a dark chipped crack, a patch of
 moss at the foot and a faint carved cross; the front face and the top visible.
@@ -294,16 +319,17 @@ Output: a PNG with a FULLY TRANSPARENT background, no ground, no cast shadow, no
 Attached: the approved sprites of this game. Match their pixel size, outline weight and palette exactly.
 ```
 Process: cut the two stones apart (or ask for one per image), then
-`python3 tools/prepare_sprite.py <small> obstacles/gravestone_s --art-height 16 --ramps grey,moss` and
-`... obstacles/gravestone_l --art-height 22 --ramps grey,moss`. (Obstacles are not drawn from sprites
+`python3 tools/prepare_sprite.py <small> obstacles/gravestone_s --art-height 32 --ramps grey,moss` and
+`... obstacles/gravestone_l --art-height 44 --ramps grey,moss`. (Obstacles are not drawn from sprites
 yet; the environment pass hooks them up.)
 
-### Anchor 6: the Shadow Bolt icon (`icons/shadow_bolt`, 16×16 art px)
+### Anchor 6: the Shadow Bolt icon (`icons/shadow_bolt`, 32×32 art px)
 ```
-A pixel-art game ability icon, exactly 16 x 16 pixels, shown enlarged so every pixel is a big crisp
-square block. A dark rounded-square badge filling the whole icon, with a 1-pixel border, and ONE bold
-simple symbol in the middle: a violet magic bolt flying diagonally up-right, a pale core and a short
-trail. Readable at 32 pixels. No anti-aliasing, no gradients, no dithering, no text.
+A pixel-art game ability icon, exactly 32 x 32 pixels, shown enlarged so every pixel is a big crisp
+square block. A dark rounded-square badge filling the whole icon, with a clean 1-pixel border, and ONE
+bold simple symbol in the middle: a violet magic bolt flying diagonally up-right, a pale core and a
+short trail; no detail under 2 pixels. Readable at its real size of 32 pixels. No anti-aliasing, no
+gradients, no dithering, no text.
 
 Colours: ONLY flat fills from this list: badge #160A21, border #4A2569, bolt #7A42AD and #A35CFA,
 bolt core #DDBDFF.
@@ -311,7 +337,7 @@ bolt core #DDBDFF.
 Output: a square PNG, the badge filling the image, transparent outside the badge's rounded corners.
 Attached: the approved sprites of this game, for the pixel size and palette.
 ```
-Process: `python3 tools/prepare_sprite.py <image> icons/shadow_bolt --art-height 16 --no-outline
+Process: `python3 tools/prepare_sprite.py <image> icons/shadow_bolt --art-height 32 --no-outline
 --no-rim --ramps violet --no-center`.
 
 ## Walk cycles (`--frames`)
@@ -320,9 +346,9 @@ Walk cycles come after the stills (characters and summon classes first). A walk 
 one row**, same facing (right), same size and ground line, with transparent gaps between them:
 
 1. **Idle / passing** (the still sprite's pose: feet together, body upright),
-2. **left foot forward** (body 1 art px lower),
-3. **passing** (as 1, body 1 art px higher),
-4. **right foot forward** (body 1 art px lower).
+2. **left foot forward** (body 2 art px lower; 1 for units 40 art px or shorter),
+3. **passing** (as 1, body 2 art px higher; 1 for the small units),
+4. **right foot forward** (body 2 art px lower; 1 for the small units).
 
 Ask for it with the prompt template plus: "a WALK CYCLE SPRITE SHEET: exactly 4 poses of the same
 character in ONE horizontal row, left to right: 1 neutral stance, 2 left foot forward, 3 passing, 4
@@ -332,7 +358,7 @@ transparent space between the poses". Attach the approved still.
 Process: `python3 tools/prepare_sprite.py <sheet> <key> --frames 4`. The poses are found by the
 transparent gaps (or split into 4 equal columns), processed with one shared scale, ramp set and
 shading, aligned (feet on the bottom row, body centred) and written to `assets/sprites/<key>_walk.png`:
-4 frames side by side, no gaps, each the still's height (HEIGHTS / 2) and the same even width (the
+4 frames side by side, no gaps, each the still's height (HEIGHTS) and the same even width (the
 height when every pose fits in a square), so the frame width is the strip width / 4. The tool header
 documents the layout for the engine.
 
@@ -340,14 +366,14 @@ documents the layout for the engine.
 
 Effects stay short **smooth** animations processed with `--anim` (strips of 128 px frames in
 `assets/sprites/effects/`, timing in `scripts/data/anim_data.gd`) until the effects pass. The pixel
-art versions (palette colours, 2× grid) come with that pass; the `--anim` table below lists the hooks.
+art versions (palette colours, on the 1:1 art grid) come with that pass; the `--anim` table below lists the hooks.
 
 ---
 
 ## Asset manifest
 
-**Art px** is the exact height of the stored PNG (= on-screen `SpriteData.HEIGHTS` / 2; for flat
-sprites the longest side). **Status:** *to redo* = one of the 31 AI placeholders made before the pixel
+**Art px** is the exact height of the stored PNG (= the on-screen `SpriteData.HEIGHTS`, drawn 1:1;
+for flat sprites the longest side). **Status:** *to redo* = one of the 31 AI placeholders made before the pixel
 art pass, to be regenerated with the new rules; *new* = no art yet. Colour words name palette ramps.
 
 ### Player (`assets/sprites/player/`)
@@ -359,20 +385,20 @@ colour.
 
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `necromancer.png` | The necromancer (Anchor 1) | 28 | to redo |
-| `umbral_warden.png` | **The Umbral Warden** (Shadow Orb Shield): a broad hooded necromancer in layered dark violet robes over cold-grey plate, a tall staff topped by a black sun ringed with a violet corona, three small dark orbs orbiting the staff head; sturdier than the necromancer. Signature: the black-sun staff | 28 | new |
-| `voidcaller.png` | **The Voidcaller** (Shadow Blast): a gaunt sorceress in an abyssal violet robe with a star-speckled hem, hood thrown back over a pale bone face, one hand raised with a ring of violet void energy, violet eyes. Signature: the raised void ring | 28 | new |
-| `bone_oracle.png` | **The Bone Oracle** (Bone Spear): a necromancer in a carved bone skull mask and pale bone robes with violet trim, a bone spear held upright, three bone shards floating around him, violet eye glints. Signature: the upright spear and floating shards | 28 | new |
-| `fallen_confessor.png` | **The Fallen Confessor** (Soul Siphon): a necromancer in corrupted clerical robes (stained ivory and violet), a torn crimson stole, a broken gold censer on a chain, teal-and-violet soul wisps drawn into his open hand. Signature: the hanging censer | 28 | new |
-| `carrion_lord.png` | **The Carrion Lord** (Corpse Explosion): a hulking hooded necromancer in a gore-stained leather mantle with bone plates and a ribcage pauldron over violet robes, a cleaver-headed bone staff. Signature: the broad mantle and cleaver | 28 | new |
-| `plague_scholar.png` | **The Plague Scholar** (Plague Cloud): a hunched necromancer in decaying moss-green alchemist robes over violet, a beaked plague mask, vials at the belt, a staff hung with a smoking censer leaking moss-green fumes. Signature: the beak and censer | 28 | new |
-| `doomsayer.png` | **The Doomsayer** (Death Mark): a tall gaunt prophet in a near-black violet robe lined with crimson, a branding iron glowing in one hand, a crimson eye sigil on the hood. Signature: the tall thin hooded shape and branding iron | 28 | new |
-| `barrow_warden.png` | **The Barrow Warden** (Bone Wall): a heavy-set warden in a mossy cold-grey cloak over violet, stacked bone-and-stone armour, a bone-slab tower shield, a shovel-headed staff. Signature: the slab shield | 28 | new |
-| `soulbinder.png` | **The Soulbinder** (Soul Chains): a slender necromancer in a dark violet robe wrapped in spectral chains, pale icy lightning crackling along the chains and from her raised hand, robe edges lifting. Signature: the chains and raised hand | 28 | new |
-| `wither_witch.png` | **The Wither Witch** (Wither): a crooked witch in a withered brown shawl over a violet robe, a wide frayed hat, dead leaves falling, a twisted dead-branch staff, a faint moss-green aura at her feet. Signature: the wide hat | 28 | new |
-| `grave_herald.png` | **The Grave Herald** (Raise Dead): a necromancer herald in a dark violet tabard over bone mail, a raised bone horn, a banner pole topped with a skull, teal soul fire at his feet. Signature: the skull banner | 28 | new |
+| `necromancer.png` | The necromancer (Anchor 1) | 56 | to redo |
+| `umbral_warden.png` | **The Umbral Warden** (Shadow Orb Shield): a broad hooded necromancer in layered dark violet robes over cold-grey plate, a tall staff topped by a black sun ringed with a violet corona, three small dark orbs orbiting the staff head; sturdier than the necromancer. Signature: the black-sun staff | 56 | new |
+| `voidcaller.png` | **The Voidcaller** (Shadow Blast): a gaunt sorceress in an abyssal violet robe with a star-speckled hem, hood thrown back over a pale bone face, one hand raised with a ring of violet void energy, violet eyes. Signature: the raised void ring | 56 | new |
+| `bone_oracle.png` | **The Bone Oracle** (Bone Spear): a necromancer in a carved bone skull mask and pale bone robes with violet trim, a bone spear held upright, three bone shards floating around him, violet eye glints. Signature: the upright spear and floating shards | 56 | new |
+| `fallen_confessor.png` | **The Fallen Confessor** (Soul Siphon): a necromancer in corrupted clerical robes (stained ivory and violet), a torn crimson stole, a broken gold censer on a chain, teal-and-violet soul wisps drawn into his open hand. Signature: the hanging censer | 56 | new |
+| `carrion_lord.png` | **The Carrion Lord** (Corpse Explosion): a hulking hooded necromancer in a gore-stained leather mantle with bone plates and a ribcage pauldron over violet robes, a cleaver-headed bone staff. Signature: the broad mantle and cleaver | 56 | new |
+| `plague_scholar.png` | **The Plague Scholar** (Plague Cloud): a hunched necromancer in decaying moss-green alchemist robes over violet, a beaked plague mask, vials at the belt, a staff hung with a smoking censer leaking moss-green fumes. Signature: the beak and censer | 56 | new |
+| `doomsayer.png` | **The Doomsayer** (Death Mark): a tall gaunt prophet in a near-black violet robe lined with crimson, a branding iron glowing in one hand, a crimson eye sigil on the hood. Signature: the tall thin hooded shape and branding iron | 56 | new |
+| `barrow_warden.png` | **The Barrow Warden** (Bone Wall): a heavy-set warden in a mossy cold-grey cloak over violet, stacked bone-and-stone armour, a bone-slab tower shield, a shovel-headed staff. Signature: the slab shield | 56 | new |
+| `soulbinder.png` | **The Soulbinder** (Soul Chains): a slender necromancer in a dark violet robe wrapped in spectral chains, pale icy lightning crackling along the chains and from her raised hand, robe edges lifting. Signature: the chains and raised hand | 56 | new |
+| `wither_witch.png` | **The Wither Witch** (Wither): a crooked witch in a withered brown shawl over a violet robe, a wide frayed hat, dead leaves falling, a twisted dead-branch staff, a faint moss-green aura at her feet. Signature: the wide hat | 56 | new |
+| `grave_herald.png` | **The Grave Herald** (Raise Dead): a necromancer herald in a dark violet tabard over bone mail, a raised bone horn, a banner pole topped with a skull, teal soul fire at his feet. Signature: the skull banner | 56 | new |
 
-### Player skins (`assets/sprites/player/<character>_<skin>.png`, 28 art px)
+### Player skins (`assets/sprites/player/<character>_<skin>.png`, 56 art px)
 
 Cosmetic skins (`scripts/data/skin_data.gd`; purely visual, never a stat). Until a file exists the game
 draws the character's own sprite with the skin's palette tint, a small emblem and a faint aura. Use the
@@ -384,22 +410,22 @@ may wear gold.
 
 | File | Skin (character) | Subject (for the template) | Art px | Status |
 |---|---|---|---|---|
-| `gravecaller_dread_sovereign.png` | The Dread Sovereign (Gravecaller) | The necromancer in **black plate armour** with gold trim and a crimson-lined black cloak, a spiked **gold crown** over the hood, skull staff with gold fittings, violet eyes | 28 | new |
-| `bone_oracle_ivory_seer.png` | The Ivory Seer (Bone Oracle) | The Bone Oracle in a **polished ivory** bone mask and mantle, bleached robes, a thin ivory **halo**, pale icy eyes | 28 | new |
-| `plague_scholar_plague_doctor.png` | The Plague Doctor (Plague Scholar) | The Plague Scholar as a **plague doctor**: long **beaked leather mask** with green lenses, wide-brimmed black hat, waxed brown coat, a swinging censer with moss-green smoke | 28 | new |
-| `fallen_confessor_heretic_saint.png` | The Heretic Saint (Fallen Confessor) | The Fallen Confessor in **defiled ivory vestments** stained crimson, a **cracked crimson halo**, torn holy stole | 28 | new |
-| `gravecaller_hyper.png` | Eclipsed Gravecaller (Gravecaller) | The necromancer **eclipsed**: robes darkened to near-black violet, a **gold sun corona** behind the hood, gold-rimmed staff orb | 28 | new |
-| `umbral_warden_hyper.png` | Sunless Warden (Umbral Warden) | The Umbral Warden eclipsed: armour darkened to black, a **gold corona** behind the helm, gold edges on the shield | 28 | new |
-| `voidcaller_hyper.png` | Starless Voidcaller (Voidcaller) | The Voidcaller eclipsed: a starless black robe, a **gold corona** ring behind the head, a gold-framed void orb | 28 | new |
-| `bone_oracle_hyper.png` | Gilded Oracle (Bone Oracle) | The Bone Oracle **gilded**: gold-leaf skull mask and ornaments, gold trim, a gold sun corona | 28 | new |
-| `carrion_lord_hyper.png` | Crowned Carrion Lord (Carrion Lord) | The Carrion Lord **gilded**: tarnished-gold armour, a gold crown, gold sun corona | 28 | new |
-| `fallen_confessor_hyper.png` | Fallen Seraph (Fallen Confessor) | The Fallen Confessor as a **fallen seraph**: gilded vestments, broken **gold wings**, a gold sun corona | 28 | new |
-| `plague_scholar_hyper.png` | Blighted Scholar (Plague Scholar) | The Plague Scholar **blighted gold**: robes of sickly gold-green, gold vials, a gold sun corona | 28 | new |
-| `doomsayer_hyper.png` | Final-Hour Doomsayer (Doomsayer) | The Doomsayer **gilded**: gold hourglass and chains, gold trim, a gold sun corona | 28 | new |
-| `barrow_warden_hyper.png` | Gilded Barrow King (Barrow Warden) | The Barrow Warden as a **barrow king**: gold grave-goods armour, a gold circlet, a gold sun corona | 28 | new |
-| `soulbinder_hyper.png` | Radiant Soulbinder (Soulbinder) | The Soulbinder **gilded**: gold soul chains, radiant gold trim, a gold sun corona | 28 | new |
-| `wither_witch_hyper.png` | Thorn-Crowned Witch (Wither Witch) | The Wither Witch **gilded**: a crown of gold thorns, gold-dusted withered robes, a gold sun corona | 28 | new |
-| `grave_herald_hyper.png` | Golden Herald (Grave Herald) | The Grave Herald **gilded**: a gold horn and tabard, gold trim, a gold sun corona | 28 | new |
+| `gravecaller_dread_sovereign.png` | The Dread Sovereign (Gravecaller) | The necromancer in **black plate armour** with gold trim and a crimson-lined black cloak, a spiked **gold crown** over the hood, skull staff with gold fittings, violet eyes | 56 | new |
+| `bone_oracle_ivory_seer.png` | The Ivory Seer (Bone Oracle) | The Bone Oracle in a **polished ivory** bone mask and mantle, bleached robes, a thin ivory **halo**, pale icy eyes | 56 | new |
+| `plague_scholar_plague_doctor.png` | The Plague Doctor (Plague Scholar) | The Plague Scholar as a **plague doctor**: long **beaked leather mask** with green lenses, wide-brimmed black hat, waxed brown coat, a swinging censer with moss-green smoke | 56 | new |
+| `fallen_confessor_heretic_saint.png` | The Heretic Saint (Fallen Confessor) | The Fallen Confessor in **defiled ivory vestments** stained crimson, a **cracked crimson halo**, torn holy stole | 56 | new |
+| `gravecaller_hyper.png` | Eclipsed Gravecaller (Gravecaller) | The necromancer **eclipsed**: robes darkened to near-black violet, a **gold sun corona** behind the hood, gold-rimmed staff orb | 56 | new |
+| `umbral_warden_hyper.png` | Sunless Warden (Umbral Warden) | The Umbral Warden eclipsed: armour darkened to black, a **gold corona** behind the helm, gold edges on the shield | 56 | new |
+| `voidcaller_hyper.png` | Starless Voidcaller (Voidcaller) | The Voidcaller eclipsed: a starless black robe, a **gold corona** ring behind the head, a gold-framed void orb | 56 | new |
+| `bone_oracle_hyper.png` | Gilded Oracle (Bone Oracle) | The Bone Oracle **gilded**: gold-leaf skull mask and ornaments, gold trim, a gold sun corona | 56 | new |
+| `carrion_lord_hyper.png` | Crowned Carrion Lord (Carrion Lord) | The Carrion Lord **gilded**: tarnished-gold armour, a gold crown, gold sun corona | 56 | new |
+| `fallen_confessor_hyper.png` | Fallen Seraph (Fallen Confessor) | The Fallen Confessor as a **fallen seraph**: gilded vestments, broken **gold wings**, a gold sun corona | 56 | new |
+| `plague_scholar_hyper.png` | Blighted Scholar (Plague Scholar) | The Plague Scholar **blighted gold**: robes of sickly gold-green, gold vials, a gold sun corona | 56 | new |
+| `doomsayer_hyper.png` | Final-Hour Doomsayer (Doomsayer) | The Doomsayer **gilded**: gold hourglass and chains, gold trim, a gold sun corona | 56 | new |
+| `barrow_warden_hyper.png` | Gilded Barrow King (Barrow Warden) | The Barrow Warden as a **barrow king**: gold grave-goods armour, a gold circlet, a gold sun corona | 56 | new |
+| `soulbinder_hyper.png` | Radiant Soulbinder (Soulbinder) | The Soulbinder **gilded**: gold soul chains, radiant gold trim, a gold sun corona | 56 | new |
+| `wither_witch_hyper.png` | Thorn-Crowned Witch (Wither Witch) | The Wither Witch **gilded**: a crown of gold thorns, gold-dusted withered robes, a gold sun corona | 56 | new |
+| `grave_herald_hyper.png` | Golden Herald (Grave Herald) | The Grave Herald **gilded**: a gold horn and tabard, gold trim, a gold sun corona | 56 | new |
 
 ### Summons (`assets/sprites/summons/`)
 
@@ -407,30 +433,30 @@ The undead army: bone, cold grey and teal soul fire, one accent per class, **no 
 
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `warrior.png` | Skeleton Warrior (Anchor 2): bone skull and limbs, cold-grey iron, a round cold-grey shield with a bone boss, short sword, teal eye glints. Signature: the round shield | 22 | to redo |
-| `archer.png` | Skeleton Archer: bone body, a **moss-green** hood and short cloak (the Archer's accent), a bone bow drawn with a teal soul-fire arrow. Signature: the bow | 22 | to redo |
-| `mage.png` | Undead Mage: skeleton in a tattered **deep arcane-blue** robe, a staff with an arcane-blue orb (pale blue core). Signature: the orb staff | 22 | to redo |
-| `mender.png` | Grave Mender: skeletal priest in a round **teal** robe, a teal halo, a swinging bone censer. Signature: the halo | 22 | to redo |
-| `warder.png` | Crypt Warder: skeleton in a cold-grey robe with **teal** trim, holding up a shield-shaped teal ward sigil. Signature: the raised sigil | 22 | to redo |
-| `bishop.png` | Profane Bishop: tall teal-and-grey vestments, a bone mitre, a teal halo, a bone crook | 26 | to redo |
-| `death_knight.png` | Death Knight: massive dark cold-grey plate, a skull helm with teal eye glow, a bone-white greatsword | 26 | to redo |
-| `lich.png` | Lich: a crowned skeletal sorcerer in a **deep arcane-blue** robe, a floating phylactery with a pale blue core, bone crown. Signature: the phylactery | 26 | to redo |
-| `abomination.png` | Corpse Abomination: a huge stitched hulk of sickly moss-grey corpse flesh, bone spikes, tiny skull head, teal eyes | 44 | to redo |
-| `rogue.png` | Grave Rogue: a lean skeleton in a near-black cold-grey hooded cloak, twin curved bone daggers, teal eyes | 22 | to redo |
-| `gargoyle.png` | Crypt Gargoyle: cold-grey weathered stone gargoyle, wings half-spread, long claws | 28 | to redo |
-| `frost_wraith.png` | Frost Wraith: a **pale icy cyan** spectre (ice ramp, grey shadows), a tattered robe trailing into frost mist, cold white eyes. Kept clearly apart from the Mage's arcane blue | 24 | to redo |
-| `risen.png` | Raised temporary skeleton: plain, ragged, bone with faint teal eyes | 18 | to redo |
-| `winter_revenant.png` | Winter Revenant (Frost Wraith evolution): a towering crowned ice wraith in tattered **pale icy cyan** frost robes, a staff of dark ice, the brightest ice highlights | 28 | new |
-| `shadow_reaper.png` | Shadow Reaper (Grave Rogue evolution): a hooded skeletal assassin in a near-black cold-grey cloak with dark smoke trailing, a bone skull mask with teal eyes, twin scythe-blades (one forward, one swept back) | 24 | new |
-| `cathedral_horror.png` | Cathedral Horror (Crypt Gargoyle evolution): a huge winged gargoyle of cracked pale stone (light grey and bone), wide ribbed stone wings, ram horns, teal runes carved into its chest, gripping a broken plinth; clearly bigger than the Gargoyle | 32 | new |
-| `gravebow.png` | Gravebow (Archer evolution): an ornate skeletal archer in a tall ragged **moss-green** hood, teal eye glow, a bone quiver, drawing a HUGE bone longbow (taller than itself, bone spikes at the tips) with a teal soul-fire arrow | 26 | new |
-| `bone_colossus.png` | Bone Colossus (Abomination evolution): a towering hulk of moss-grey corpse flesh armoured in fused bone plates: a ribbed bone breastplate, spiked bone pauldrons, a horned bone helm with teal eyes, a bone-slab club arm | 50 | new |
-| `bone_hound.png` | Bone Hound: a lean, low skeletal hound seen from the side, long ribcage, thin legs, a long snouted skull with a teal eye, a curled bone tail; small, fast, feral | 16 | new |
-| `hellhound.png` | Hellhound (Bone Hound evolution): the hound charred dark brown with glowing fire cracks along the ribs, a mane of flame along the neck and back, burning eyes; bigger and fiercer | 20 | new |
-| `banshee.png` | Banshee: a legless floating spectre in a pale bone-white veil that frays into wisps, long white hair streaming back, arms raised, a dark wide-open wailing mouth, faint teal glow | 24 | new |
-| `keening_lady.png` | Keening Lady (Banshee evolution): a taller, regal banshee in a flowing dark cold-grey gown, a bone circlet with a teal gem, a pale screaming face, teal sound ripples | 28 | new |
-| `corpse_catapult.png` | Corpse Catapult: a squat siege engine of old coffin wood (brown) and bone beams on two bone wheels, sinew ropes, a diagonal throwing arm with a skull boulder (teal eyes) in its cup | 28 | new |
-| `ossuary_engine.png` | Ossuary Engine (Corpse Catapult evolution): a bigger siege engine of ribcages and spines, fire-lit sinew, a triple cup of three burning skulls | 36 | new |
+| `warrior.png` | Skeleton Warrior (Anchor 2): bone skull and limbs, cold-grey iron, a round cold-grey shield with a bone boss, short sword, teal eye glints. Signature: the round shield | 44 | to redo |
+| `archer.png` | Skeleton Archer: bone body, a **moss-green** hood and short cloak (the Archer's accent), a bone bow drawn with a teal soul-fire arrow. Signature: the bow | 44 | to redo |
+| `mage.png` | Undead Mage: skeleton in a tattered **deep arcane-blue** robe, a staff with an arcane-blue orb (pale blue core). Signature: the orb staff | 44 | to redo |
+| `mender.png` | Grave Mender: skeletal priest in a round **teal** robe, a teal halo, a swinging bone censer. Signature: the halo | 44 | to redo |
+| `warder.png` | Crypt Warder: skeleton in a cold-grey robe with **teal** trim, holding up a shield-shaped teal ward sigil. Signature: the raised sigil | 44 | to redo |
+| `bishop.png` | Profane Bishop: tall teal-and-grey vestments, a bone mitre, a teal halo, a bone crook | 52 | to redo |
+| `death_knight.png` | Death Knight: massive dark cold-grey plate, a skull helm with teal eye glow, a bone-white greatsword | 52 | to redo |
+| `lich.png` | Lich: a crowned skeletal sorcerer in a **deep arcane-blue** robe, a floating phylactery with a pale blue core, bone crown. Signature: the phylactery | 52 | to redo |
+| `abomination.png` | Corpse Abomination: a huge stitched hulk of sickly moss-grey corpse flesh, bone spikes, tiny skull head, teal eyes | 88 | to redo |
+| `rogue.png` | Grave Rogue: a lean skeleton in a near-black cold-grey hooded cloak, twin curved bone daggers, teal eyes | 44 | to redo |
+| `gargoyle.png` | Crypt Gargoyle: cold-grey weathered stone gargoyle, wings half-spread, long claws | 56 | to redo |
+| `frost_wraith.png` | Frost Wraith: a **pale icy cyan** spectre (ice ramp, grey shadows), a tattered robe trailing into frost mist, cold white eyes. Kept clearly apart from the Mage's arcane blue | 48 | to redo |
+| `risen.png` | Raised temporary skeleton: plain, ragged, bone with faint teal eyes | 36 | to redo |
+| `winter_revenant.png` | Winter Revenant (Frost Wraith evolution): a towering crowned ice wraith in tattered **pale icy cyan** frost robes, a staff of dark ice, the brightest ice highlights | 56 | new |
+| `shadow_reaper.png` | Shadow Reaper (Grave Rogue evolution): a hooded skeletal assassin in a near-black cold-grey cloak with dark smoke trailing, a bone skull mask with teal eyes, twin scythe-blades (one forward, one swept back) | 48 | new |
+| `cathedral_horror.png` | Cathedral Horror (Crypt Gargoyle evolution): a huge winged gargoyle of cracked pale stone (light grey and bone), wide ribbed stone wings, ram horns, teal runes carved into its chest, gripping a broken plinth; clearly bigger than the Gargoyle | 64 | new |
+| `gravebow.png` | Gravebow (Archer evolution): an ornate skeletal archer in a tall ragged **moss-green** hood, teal eye glow, a bone quiver, drawing a HUGE bone longbow (taller than itself, bone spikes at the tips) with a teal soul-fire arrow | 52 | new |
+| `bone_colossus.png` | Bone Colossus (Abomination evolution): a towering hulk of moss-grey corpse flesh armoured in fused bone plates: a ribbed bone breastplate, spiked bone pauldrons, a horned bone helm with teal eyes, a bone-slab club arm | 100 | new |
+| `bone_hound.png` | Bone Hound: a lean, low skeletal hound seen from the side, long ribcage, thin legs, a long snouted skull with a teal eye, a curled bone tail; small, fast, feral | 32 | new |
+| `hellhound.png` | Hellhound (Bone Hound evolution): the hound charred dark brown with glowing fire cracks along the ribs, a mane of flame along the neck and back, burning eyes; bigger and fiercer | 40 | new |
+| `banshee.png` | Banshee: a legless floating spectre in a pale bone-white veil that frays into wisps, long white hair streaming back, arms raised, a dark wide-open wailing mouth, faint teal glow | 48 | new |
+| `keening_lady.png` | Keening Lady (Banshee evolution): a taller, regal banshee in a flowing dark cold-grey gown, a bone circlet with a teal gem, a pale screaming face, teal sound ripples | 56 | new |
+| `corpse_catapult.png` | Corpse Catapult: a squat siege engine of old coffin wood (brown) and bone beams on two bone wheels, sinew ropes, a diagonal throwing arm with a skull boulder (teal eyes) in its cup | 56 | new |
+| `ossuary_engine.png` | Ossuary Engine (Corpse Catapult evolution): a bigger siege engine of ribcages and spines, fire-lit sinew, a triple cup of three burning skulls | 72 | new |
 
 ### Covenant enemies (`assets/sprites/enemies/`)
 
@@ -438,40 +464,40 @@ Crimson, ivory and warm steel; gold for elites, the Sanctum kinds and the Reckon
 
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `recruit.png` | Covenant Recruit (Anchor 3): kettle helm, crimson tabard over ivory, a tall spear. Signature: the spear | 20 | to redo |
-| `footman.png` | Crimson Footman: heavy warm-steel armour, a crimson kite shield, a sword. Signature: the kite shield | 24 | to redo |
-| `archer.png` | Zealous Archer: ivory-and-crimson archer with a tall longbow. Signature: the longbow | 20 | to redo |
-| `chaplain.png` | Covenant Chaplain: ivory robes, a gold censer, a faint holy glint. Signature: the censer | 21 | to redo |
-| `purifier.png` | Purifier: a warm-steel mask, a flaming torch-censer (flame). Signature: the flame | 22 | to redo |
-| `templar.png` | Templar Knight: gold-trimmed heavy knight, a lance, a crimson cape. Signature: the lance | 26 | to redo |
-| `inquisitor.png` | Inquisitor of the End (Reckoning): towering, radiant gold and holy white, faceless (glow allowed) | 32 | to redo |
-| `shieldbearer.png` | Covenant Shieldbearer: a huge crimson tower shield covering the body. Signature: the tower shield | 25 | to redo |
-| `banner_bearer.png` | Banner Bearer: a tall crimson-and-gold war banner on a pole. Signature: the banner | 25 | to redo |
-| `halberdier.png` | Crimson Halberdier: a long halberd, warm-steel half-plate. Signature: the halberd | 25 | to redo |
-| `sanctified_sentinel.png` | Sanctified Sentinel (Stage 3 construct): a squat, blocky animated statue of pale cathedral stone (bone ramp) inlaid with gold lines, a glowing gold eye slit in a square head, one arm a long stone blade held forward; no cloth | 36 | new |
-| `radiant_inquisitor.png` | Radiant Inquisitor (Stage 3 elite caster): a tall inquisitor in ivory robes with a crimson stole, face hidden under a hood, a gold sunburst halo of rays, a gold-bound tome | 30 | new |
-| `high_confessor.png` | High Confessor (Stage 3 elite priest): a broad figure in wide ivory vestments with a crimson stole, a tall gold mitre, a gold crook staff with a faint halo | 28 | new |
-| `sun_paladin.png` | Sun Paladin (Stage 3 elite): gilded heavy plate, a gold heater shield with a crimson sun, a gold great helm with an ivory plume, a lance | 28 | new |
-| `cathedral_guardian.png` | Cathedral Guardian (Stage 3 miniboss): a giant colossus of pale cathedral stone with gold trim, a stained-glass rose window in its chest (arcane blue, crimson, gold), a square head crowned with three gold spires, two huge stone fists | 70 | new |
+| `recruit.png` | Covenant Recruit (Anchor 3): kettle helm, crimson tabard over ivory, a tall spear. Signature: the spear | 40 | to redo |
+| `footman.png` | Crimson Footman: heavy warm-steel armour, a crimson kite shield, a sword. Signature: the kite shield | 48 | to redo |
+| `archer.png` | Zealous Archer: ivory-and-crimson archer with a tall longbow. Signature: the longbow | 40 | to redo |
+| `chaplain.png` | Covenant Chaplain: ivory robes, a gold censer, a faint holy glint. Signature: the censer | 42 | to redo |
+| `purifier.png` | Purifier: a warm-steel mask, a flaming torch-censer (flame). Signature: the flame | 44 | to redo |
+| `templar.png` | Templar Knight: gold-trimmed heavy knight, a lance, a crimson cape. Signature: the lance | 52 | to redo |
+| `inquisitor.png` | Inquisitor of the End (Reckoning): towering, radiant gold and holy white, faceless (glow allowed) | 64 | to redo |
+| `shieldbearer.png` | Covenant Shieldbearer: a huge crimson tower shield covering the body. Signature: the tower shield | 50 | to redo |
+| `banner_bearer.png` | Banner Bearer: a tall crimson-and-gold war banner on a pole. Signature: the banner | 50 | to redo |
+| `halberdier.png` | Crimson Halberdier: a long halberd, warm-steel half-plate. Signature: the halberd | 50 | to redo |
+| `sanctified_sentinel.png` | Sanctified Sentinel (Stage 3 construct): a squat, blocky animated statue of pale cathedral stone (bone ramp) inlaid with gold lines, a glowing gold eye slit in a square head, one arm a long stone blade held forward; no cloth | 72 | new |
+| `radiant_inquisitor.png` | Radiant Inquisitor (Stage 3 elite caster): a tall inquisitor in ivory robes with a crimson stole, face hidden under a hood, a gold sunburst halo of rays, a gold-bound tome | 60 | new |
+| `high_confessor.png` | High Confessor (Stage 3 elite priest): a broad figure in wide ivory vestments with a crimson stole, a tall gold mitre, a gold crook staff with a faint halo | 56 | new |
+| `sun_paladin.png` | Sun Paladin (Stage 3 elite): gilded heavy plate, a gold heater shield with a crimson sun, a gold great helm with an ivory plume, a lance | 56 | new |
+| `cathedral_guardian.png` | Cathedral Guardian (Stage 3 miniboss): a giant colossus of pale cathedral stone with gold trim, a stained-glass rose window in its chest (arcane blue, crimson, gold), a square head crowned with three gold spires, two huge stone fists | 140 | new |
 
 ### Bosses (`assets/sprites/bosses/`)
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `alaric.png` | Sir Alaric, the Gravebreaker: a giant paladin, a holy warhammer, gold, ivory and warm steel | 60 | to redo |
-| `vael.png` | Marshal Vael, the Crimson Bulwark: a great crimson kite shield, a flaming sword, a crimson plume | 60 | to redo |
-| `seraphine.png` | Grand Inquisitor Seraphine, Voice of the Dawn (Stage 3): a winged Inquisitor in a white-and-gold bell robe with a crimson stole and a gold sun on the chest, a white veil and gold circlet, a gold **sun halo** with rays, two feathered ivory wings spread up behind her shoulders, a tall gold **relic staff** crowned by a sunburst reliquary | 65 | new |
-| `seraphine_avatar.png` | *Optional.* Her **Avatar of the Dawn** form (phases 2-3): the same figure larger and brighter, wings spread wide with gold-edged feathers, a long-rayed halo, the relic blazing holy white | 78 | new |
+| `alaric.png` | Sir Alaric, the Gravebreaker: a giant paladin, a holy warhammer, gold, ivory and warm steel | 120 | to redo |
+| `vael.png` | Marshal Vael, the Crimson Bulwark: a great crimson kite shield, a flaming sword, a crimson plume | 120 | to redo |
+| `seraphine.png` | Grand Inquisitor Seraphine, Voice of the Dawn (Stage 3): a winged Inquisitor in a white-and-gold bell robe with a crimson stole and a gold sun on the chest, a white veil and gold circlet, a gold **sun halo** with rays, two feathered ivory wings spread up behind her shoulders, a tall gold **relic staff** crowned by a sunburst reliquary | 130 | new |
+| `seraphine_avatar.png` | *Optional.* Her **Avatar of the Dawn** form (phases 2-3): the same figure larger and brighter, wings spread wide with gold-edged feathers, a long-rayed halo, the relic blazing holy white | 156 | new |
 
 ### Structures (`assets/sprites/structures/`)
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `outpost.png` | Siege outpost: a crimson-banner palisade tent | 48 | to redo |
-| `ward_generator.png` | Holy Ward Generator: a gold-ringed obelisk with a radiant core | 40 | to redo |
-| `supply_cart.png` | Covenant supply cart (seen from above) | 36 | to redo |
-| `holy_standard.png` | Vael's Holy Standard: an ornate gold banner pole | 36 | to redo |
-| `watchtower.png` | Checkpoint watchtower: a wooden tower with a crimson pennant | 48 | to redo |
-| `ward_crystal.png` | Sanctum ward crystal: a tall faceted ivory-and-gold crystal on a round pale-stone plinth, gold glow | 28 | new |
-| `sacred_altar.png` | Sanctum sacred altar: a wide pale-stone altar block draped in gold cloth with a crimson stripe, two lit candles, a gold sun disc standing behind it | 36 | new |
+| `outpost.png` | Siege outpost: a crimson-banner palisade tent | 96 | to redo |
+| `ward_generator.png` | Holy Ward Generator: a gold-ringed obelisk with a radiant core | 80 | to redo |
+| `supply_cart.png` | Covenant supply cart (seen from above) | 72 | to redo |
+| `holy_standard.png` | Vael's Holy Standard: an ornate gold banner pole | 72 | to redo |
+| `watchtower.png` | Checkpoint watchtower: a wooden tower with a crimson pennant | 96 | to redo |
+| `ward_crystal.png` | Sanctum ward crystal: a tall faceted ivory-and-gold crystal on a round pale-stone plinth, gold glow | 56 | new |
+| `sacred_altar.png` | Sanctum sacred altar: a wide pale-stone altar block draped in gold cloth with a crimson stripe, two lit candles, a gold sun disc standing behind it | 72 | new |
 
 (`ward_crystal` and `sacred_altar` have no `SpriteData.HEIGHTS` entry yet; the art px assume 56 and 72
 on screen.)
@@ -479,40 +505,40 @@ on screen.)
 ### Pickups (`assets/sprites/pickups/`)
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `xp_crystal.png` | Small soul crystal (soul ramp, a glint of soul_glow) | 8 | new |
-| `chest.png` | Bone-and-iron treasure chest with a violet lock glint (the player's reward) | 20 | new |
-| `pu_magnet.png` | Soul Magnet: a teal soul vortex charm | 14 | new |
-| `pu_feast.png` | Grave Feast: dark roasted meat on a bone | 14 | new |
-| `pu_hyper.png` | Hyper: a violet lightning rune | 14 | new |
-| `pu_stasis.png` | Stasis: a frozen hourglass (ice) | 14 | new |
-| `pu_frenzy.png` | Dark Frenzy: a flaming skull (flame) | 14 | new |
-| `pu_nova.png` | Soul Nova: a violet starburst | 14 | new |
+| `xp_crystal.png` | Small soul crystal (soul ramp, a glint of soul_glow) | 16 | new |
+| `chest.png` | Bone-and-iron treasure chest with a violet lock glint (the player's reward) | 40 | new |
+| `pu_magnet.png` | Soul Magnet: a teal soul vortex charm | 28 | new |
+| `pu_feast.png` | Grave Feast: dark roasted meat on a bone | 28 | new |
+| `pu_hyper.png` | Hyper: a violet lightning rune | 28 | new |
+| `pu_stasis.png` | Stasis: a frozen hourglass (ice) | 28 | new |
+| `pu_frenzy.png` | Dark Frenzy: a flaming skull (flame) | 28 | new |
+| `pu_nova.png` | Soul Nova: a violet starburst | 28 | new |
 
 ### Projectiles (`assets/sprites/projectiles/`)
 
 Flat sprites the game **rotates along their flight path**: draw each **pointing right** (head at the
-right, trail to the left), transparent background. Art px = the longest side (`SpriteData.FLAT_SIZES`
-/ 2). Player spells are violet; summon shots use their class colours.
+right, trail to the left), transparent background. Art px = the longest side (`SpriteData.FLAT_SIZES`). Player spells are violet; summon shots use their class colours.
 
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `shadow_bolt.png` | Shadow Bolt: a violet bolt with a pale core and a short trail | 11 | new |
-| `void_bolt.png` | Void Barrage bolt: a black-violet core with a violet trail | 15 | new |
-| `void_shard.png` | Void shard: a tiny violet crystal splinter | 7 | new |
-| `bone_spear.png` | Bone Spear: a sharpened bone javelin | 13 | new |
-| `ossuary_lance.png` | Ossuary Lance: a huge bone lance wrapped in violet energy | 22 | new |
-| `arrow.png` | Skeleton Archer arrow: a bone shaft with a teal soul-fire head | 10 | new |
-| `mage_orb.png` | Undead Mage orb: an arcane-blue orb with a pale core | 10 | new |
-| `priest_bolt.png` | Mender / Warder bolt: a small teal mote | 7 | new |
-| `frost_bolt.png` | Frost Wraith bolt: a pale icy shard | 10 | new |
-| `orb.png` | Shadow Orb Shield orb: a round violet orb (not pointed; it doesn't rotate) | 9 | new |
-| `enemy_arrow.png` | Covenant arrow: an ivory shaft with a gold head | 10 | new |
-| `radiant_bolt.png` | Covenant holy bolt: a gold and holy-white spark | 10 | new |
+| `shadow_bolt.png` | Shadow Bolt: a violet bolt with a pale core and a short trail | 22 | new |
+| `void_bolt.png` | Void Barrage bolt: a black-violet core with a violet trail | 30 | new |
+| `void_shard.png` | Void shard: a tiny violet crystal splinter | 14 | new |
+| `bone_spear.png` | Bone Spear: a sharpened bone javelin | 26 | new |
+| `ossuary_lance.png` | Ossuary Lance: a huge bone lance wrapped in violet energy | 44 | new |
+| `arrow.png` | Skeleton Archer arrow: a bone shaft with a teal soul-fire head | 20 | new |
+| `mage_orb.png` | Undead Mage orb: an arcane-blue orb with a pale core | 20 | new |
+| `priest_bolt.png` | Mender / Warder bolt: a small teal mote | 14 | new |
+| `frost_bolt.png` | Frost Wraith bolt: a pale icy shard | 20 | new |
+| `orb.png` | Shadow Orb Shield orb: a round violet orb (not pointed; it doesn't rotate) | 18 | new |
+| `enemy_arrow.png` | Covenant arrow: an ivory shaft with a gold head | 20 | new |
+| `radiant_bolt.png` | Covenant holy bolt: a gold and holy-white spark | 20 | new |
 
-### Icons (`assets/sprites/icons/`, 16×16 art px)
+### Icons (`assets/sprites/icons/`, 32×32 art px)
 
 Square **badge icons** for level-up cards, the HUD ability bar and buff timers: a **dark rounded-square
-badge** with a 1 px border and **one bold symbol**, 16×16 art px (shown at 32, 48 or 64 px). Player
+badge** with a 1 px border and **one bold symbol**, 32×32 art px (shown about 1× to 2× in the 32, 48
+and 64 px boxes). Player
 spells and passives use violet with bone; summon icons use their class colours; never Covenant gold or
 crimson on the player's icons (the Hyper badge and the Profane Pact excepted). Evolutions add a
 gold-trimmed frame. The Shadow Bolt icon is Anchor 6; the rest come in the icons pass. Status: all new.
@@ -603,7 +629,7 @@ Floors, decals and obstacles come after the units. Floors are **dark, low-satura
 narrow-value**; nothing on the floor may look solid unless it collides. Not hooked up yet: the floors
 are code-drawn by `Ground`, `MarchGround` and `SanctumGround`, the obstacles by the stage glyphs.
 
-**Zone floors** (`assets/sprites/tiles/`, 64×64 art px seamless, 2-4 variants each, later pass):
+**Zone floors** (`assets/sprites/tiles/`, 128×128 art px seamless, 2-4 variants each, later pass):
 
 | File | Zone | Look (today's code floor) | Status |
 |---|---|---|---|
@@ -616,7 +642,7 @@ are code-drawn by `Ground`, `MarchGround` and `SanctumGround`, the obstacles by 
 | `sanctum_halls.png` | Sanctum II, the Sanctified Halls | a dark-gold mosaic of small tesserae | later pass |
 | `sanctum_cloisters.png` | Sanctum III, the Cloisters | stone walks around trimmed turf | later pass |
 | `sanctum_sanctuary.png` | Sanctum IV, the Final Sanctuary | grey marble slabs with veins | later pass |
-| `march_road.png` | The March road along y = 0 | a horizontal strip **70 art px tall** (road width 140 world px) tiling left-right: packed earth with darker verges and wheel ruts; a paved variant for the Fortress Approach | later pass |
+| `march_road.png` | The March road along y = 0 | a horizontal strip **140 art px tall** (road width 140 world px) tiling left-right: packed earth with darker verges and wheel ruts; a paved variant for the Fortress Approach | later pass |
 
 The Sanctum floors are blended toward purple as the Sanctum is corrupted, so do not bake purple in.
 
@@ -633,39 +659,39 @@ the ones the code draws today:
 
 **Obstacles** (`assets/sprites/obstacles/<kind>_<size>.png`, later pass): each kind comes in **2-3
 fixed size variants**, each with a collision shape that matches it exactly (inside today's random
-size ranges, `scripts/data/stages/*.gd` "kinds"). Footprint in art px: a circle of collision radius
-*r* world px is *r* art px across (2r world px / 2); a rect of *L* × *S* world px is *L*/2 × *S*/2 art
-px. Sprites stand taller than their footprint (a tree's canopy, a wall's face). Long walls are built
+size ranges, `scripts/data/stages/*.gd` "kinds"). Footprint in art px (1 art px = 1 world px): a
+circle of collision radius *r* world px is *2r* art px across; a rect of *L* × *S* world px is *L* × *S*
+art px. Sprites stand taller than their footprint (a tree's canopy, a wall's face). Long walls are built
 from a left cap, a repeatable middle and a right cap.
 
 | Stage / zone | Kind | Shape | Variants (world px) → footprint (art px) |
 |---|---|---|---|
-| Graveyard | `gravestone` | circle | r 11 / 13 / 15 → 11 / 13 / 15 wide (Anchor 5: S and L) |
-| Graveyard | `dead_tree` | circle (trunk) | r 13 / 15 / 18 → trunk 13 / 15 / 18 wide, tree ~40-50 tall |
-| Graveyard | `crypt_wall` | rect | 64 / 80 / 96 × 20 → 32 / 40 / 48 × 10 (caps + middle) |
-| March I | `burned_house` | rect | 64 / 78 / 92 × 44 → 32 / 39 / 46 × 22 |
-| March I | `charred_tree` | circle | r 12 / 14 / 17 → 12 / 14 / 17 |
-| March I | `cart_wreck` | rect | 40 / 48 / 56 × 22 → 20 / 24 / 28 × 11 |
-| March II | `barricade` | rect | 64 / 80 / 96 × 16 → 32 / 40 / 48 × 8 (caps + middle) |
-| March II | `pine` | circle | r 14 / 16 / 19 → 14 / 16 / 19 |
-| March II | `stakes` | circle | r 12 / 15 → 12 / 15 |
-| March III | `tent` | circle | r 22 / 26 / 30 → 22 / 26 / 30 |
-| March III | `crates` | rect | 36 / 44 / 52 × 26 → 18 / 22 / 26 × 13 |
-| March III | `siege_engine` | rect | 70 / 80 / 90 × 34 → 35 / 40 / 45 × 17 |
-| March IV | `fort_wall` | rect | 80 / 96 × 24 → 40 / 48 × 12 (caps + middle) |
-| March IV | `tower_base` | circle | r 26 / 30 / 34 → 26 / 30 / 34 |
-| March IV | `rubble` | circle | r 12 / 15 / 18 → 12 / 15 / 18 |
-| Sanctum I | `saint_statue` | circle | r 13 / 15 / 17 → 13 / 15 / 17 |
-| Sanctum I | `fountain` | circle | r 28 / 32 / 36 → 28 / 32 / 36 |
-| Sanctum I | `stone_bench` | rect | 44 / 52 / 60 × 16 → 22 / 26 / 30 × 8 |
-| Sanctum II | `pillar` | circle | r 13 / 15 → 13 / 15 |
-| Sanctum II | `pew` | rect | 60 / 68 / 76 × 14 → 30 / 34 / 38 × 7 |
-| Sanctum III | `cloister_arch` | rect | 72 / 82 / 92 × 18 → 36 / 41 / 46 × 9 (caps + middle) |
-| Sanctum III | `garden_bed` | rect | 44 / 52 / 60 × 30 → 22 / 26 / 30 × 15 |
-| Sanctum III | `cypress` | circle | r 11 / 14 → 11 / 14 |
-| Sanctum IV | `giant_statue` | circle | r 28 / 32 / 36 → 28 / 32 / 36 |
-| Sanctum IV | `marble_column` | circle | r 15 / 17 / 19 → 15 / 17 / 19 |
-| Sanctum IV | `reliquary` | rect | 40 / 46 / 52 × 26 → 20 / 23 / 26 × 13 |
+| Graveyard | `gravestone` | circle | r 11 / 13 / 15 → 22 / 26 / 30 wide (Anchor 5: S and L) |
+| Graveyard | `dead_tree` | circle (trunk) | r 13 / 15 / 18 → trunk 26 / 30 / 36 wide, tree ~80-100 tall |
+| Graveyard | `crypt_wall` | rect | 64 / 80 / 96 × 20 → 64 / 80 / 96 × 20 (caps + middle) |
+| March I | `burned_house` | rect | 64 / 78 / 92 × 44 → 64 / 78 / 92 × 44 |
+| March I | `charred_tree` | circle | r 12 / 14 / 17 → 24 / 28 / 34 |
+| March I | `cart_wreck` | rect | 40 / 48 / 56 × 22 → 40 / 48 / 56 × 22 |
+| March II | `barricade` | rect | 64 / 80 / 96 × 16 → 64 / 80 / 96 × 16 (caps + middle) |
+| March II | `pine` | circle | r 14 / 16 / 19 → 28 / 32 / 38 |
+| March II | `stakes` | circle | r 12 / 15 → 24 / 30 |
+| March III | `tent` | circle | r 22 / 26 / 30 → 44 / 52 / 60 |
+| March III | `crates` | rect | 36 / 44 / 52 × 26 → 36 / 44 / 52 × 26 |
+| March III | `siege_engine` | rect | 70 / 80 / 90 × 34 → 70 / 80 / 90 × 34 |
+| March IV | `fort_wall` | rect | 80 / 96 × 24 → 80 / 96 × 24 (caps + middle) |
+| March IV | `tower_base` | circle | r 26 / 30 / 34 → 52 / 60 / 68 |
+| March IV | `rubble` | circle | r 12 / 15 / 18 → 24 / 30 / 36 |
+| Sanctum I | `saint_statue` | circle | r 13 / 15 / 17 → 26 / 30 / 34 |
+| Sanctum I | `fountain` | circle | r 28 / 32 / 36 → 56 / 64 / 72 |
+| Sanctum I | `stone_bench` | rect | 44 / 52 / 60 × 16 → 44 / 52 / 60 × 16 |
+| Sanctum II | `pillar` | circle | r 13 / 15 → 26 / 30 |
+| Sanctum II | `pew` | rect | 60 / 68 / 76 × 14 → 60 / 68 / 76 × 14 |
+| Sanctum III | `cloister_arch` | rect | 72 / 82 / 92 × 18 → 72 / 82 / 92 × 18 (caps + middle) |
+| Sanctum III | `garden_bed` | rect | 44 / 52 / 60 × 30 → 44 / 52 / 60 × 30 |
+| Sanctum III | `cypress` | circle | r 11 / 14 → 22 / 28 |
+| Sanctum IV | `giant_statue` | circle | r 28 / 32 / 36 → 56 / 64 / 72 |
+| Sanctum IV | `marble_column` | circle | r 15 / 17 / 19 → 30 / 34 / 38 |
+| Sanctum IV | `reliquary` | rect | 40 / 46 / 52 × 26 → 40 / 46 / 52 × 26 |
 
 ### Effects (`assets/sprites/effects/`, `--anim`)
 

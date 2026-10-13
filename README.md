@@ -1032,15 +1032,17 @@ ground marks the necromancer.
 Units can use real sprite art instead of their code-drawn shapes. `SpriteBank` draws
 `assets/sprites/<category>/<id>.png` whenever that file exists and otherwise falls back to the
 glyph, so art arrives one piece at a time without breaking anything. The style is **true pixel
-art made at its real size** (GDD §15.0 "Art pass (true pixel art)"): 1 art px = 2 screen px, one
-locked palette, violet only for the player. Sprites are generated with an image AI from the prompts
+art made at its real size** (GDD §15.0 "Art pass (true pixel art)", "Art pass grid"): 1 art px =
+1 screen px at the 1280×720 layout (the necromancer is 56 art px tall), one locked palette, violet
+only for the player. Sprites are generated with an image AI from the prompts
 in `docs/art/ART_BIBLE.md` and processed with `python3 tools/prepare_sprite.py <image> <key>` (grid
 mode): it keeps the original in `art_source/` (ignored by Godot), rebuilds the sprite at exactly
-`SpriteData.HEIGHTS[key] / 2` art px on the palette in `tools/palette.json`, draws the outline and
+`SpriteData.HEIGHTS[key]` art px on the palette in `tools/palette.json`, draws the outline and
 the top-left rim, and puts the feet on the bottom row (`--frames 4` for a walk sheet, `--legacy` for
 the old smooth 3x copy). `python3 tools/art_check.py <key>` then renders a check sheet: the sprite
 drawn by the game on all 9 stage floors next to the necromancer, a Skeleton Warrior and a Covenant
-Recruit at Normal and Close zoom, a big zoom, greyscale and silhouette, and the rule checks (it runs
+Recruit at Normal (×1) and Close (×2) zoom through the game's sharp-pixel shader, a big zoom,
+greyscale and silhouette, and the rule checks (it runs
 its own Godot scene from `tools/art_check/` in a scratch copy of the project; `tools/` is ignored by
 Godot, so it never ships). `python3 tools/pixel_palette.py --preview <png>` draws the palette. The
 31 sprites made before the pixel-art pass (the necromancer, the first summons and evolutions, the
@@ -1049,10 +1051,11 @@ structures) are placeholders to be redone; the anchors (necromancer, Skeleton Wa
 Recruit, a Graveyard tile, a gravestone, the Shadow Bolt icon) come first.
 
 **Grid art (the true pixel-art pass).** New sprites are stored at art resolution: a PNG for key K
-is exactly `SpriteData.HEIGHTS[K] / 2` pixels tall (`SpriteData.ART_SCALE` = 2) and `SpriteBank`
-draws it at exactly 2× (3× at Close zoom), **sharp** (nearest filtering through a `CanvasTexture`
-wrapper, so legacy art, text and code-drawn shapes stay smooth), on whole art pixels from the
-unit's origin; HUD and card icons use the largest whole-number scale that fits the box. A PNG
+is exactly `SpriteData.HEIGHTS[K]` pixels tall (`SpriteData.ART_SCALE` = 1) and `SpriteBank`
+draws it 1:1 (2× at Close zoom), **sharp** (a linear-filtered `CanvasTexture` drawn through the
+sharp-pixel shader `scripts/fx/sharp_pixel.gdshader`, which keeps every art pixel crisp and even at
+fractional window scales; legacy art, text and code-drawn shapes stay smooth), on whole art pixels
+from the unit's origin; HUD and card icons use the largest whole-number scale that fits the box. A PNG
 taller than its `HEIGHTS` entry is a legacy 3× placeholder and keeps the old smooth scaling, so
 the 31 placeholders keep working until they are replaced.
 

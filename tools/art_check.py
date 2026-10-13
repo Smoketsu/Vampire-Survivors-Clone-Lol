@@ -5,15 +5,18 @@ Usage (from the repo root):
     e.g. python3 tools/art_check.py player/necromancer
 
 Produces <out>/<key with / as _>_check.png, one image that shows the asset:
-  * at its real in-game size, DRAWN BY THE GAME (SpriteBank, nearest filtering)
-    on each stage's real floor: the Graveyard, the 4 Crimson March zones and
-    the 4 Sanctum zones (Ground / MarchGround / SanctumGround), next to the
-    necromancer, a Skeleton Warrior and a Covenant Recruit for scale, at the
-    Normal (x1) and Close (x1.5) zooms;
-  * as a 4x nearest-neighbour zoom, a greyscale copy (value check) and a solid
-    black silhouette (shape check);
+  * at its real in-game size, DRAWN BY THE GAME (SpriteBank, through the
+    game's sharp-pixel shader; nearest filtering in a project copy that predates
+    it, noted on the sheet) on each stage's real floor: the Graveyard, the 4
+    Crimson March zones and the 4 Sanctum zones (Ground / MarchGround /
+    SanctumGround), next to the necromancer, a Skeleton Warrior and a Covenant
+    Recruit for scale, at the Normal (x1, 1 art px = 1 screen px) and Close
+    (x2, 2 screen px) zooms;
+  * as a big nearest-neighbour zoom (DETAIL_ZOOM_*: 8x for a 56 px sprite), a
+    greyscale copy (value check) and a solid black silhouette (shape check);
   * with the rule checks in text (also printed, exit code 1 on any FAIL):
-      height     = SpriteData.HEIGHTS[key] / ART_SCALE art px exactly;
+      height     = SpriteData.HEIGHTS[key] / ART_SCALE art px exactly
+                 (ART_SCALE 1: the HEIGHTS value itself, e.g. 56 for the necromancer);
       alpha      fully opaque or fully transparent pixels only;
       palette    every pixel one of tools/palette.json's sprite colours;
       feet       the bottom row holds the feet (an opaque pixel);
@@ -69,8 +72,9 @@ GODOT_DEFAULT = "/home/user/tools/godot/Godot_v4.3-stable_linux.x86_64"
 WORK_DIR = Path(tempfile.gettempdir()) / "gravebound_art_check"
 # Default output folder for the sheets.
 OUT_DIR = Path(tempfile.gettempdir()) / "gravebound_art_check_out"
-# Screen px per art px when sprite_data.gd has no ART_SCALE (GDD 15.0: 2).
-DEFAULT_ART_SCALE = 2
+# Screen px per art px at the 1280x720 layout when sprite_data.gd has no ART_SCALE
+# (GDD 15.0 "Art pass grid": 1, the art is drawn 1:1).
+DEFAULT_ART_SCALE = 1
 # Top-level entries of the repo never copied into the scratch project.
 SKIP_TOP = {".git", ".godot", ".github", "art_source", "docs", "tools", "build", "export", ".claude"}
 # Minimum OKLab L gap (0-1) between the main shape's median lightness and a floor.
@@ -81,11 +85,15 @@ GLOW_MAX_SHARE = 0.04
 VIOLET_OK = ("player/", "icons/", "projectiles/", "effects/")
 GLOW_OK = ("player/", "bosses/", "icons/", "projectiles/", "effects/")
 # Single-pixel specks (a lit pixel whose colour no 4-neighbour shares) above this
-# share (0-1) of the body are flagged ("nothing smaller than 2 art px").
+# share (0-1) of the body are flagged (readable features are 2+ art px; single pixels only
+# for eyes, glints and highlights). Kept at 0.12 for the 1:1 grid: the 56 px necromancer
+# converted from the owner's source has 4%, so 0.12 still flags only noisy conversions.
 SPECK_MAX_SHARE = 0.12
 # Sheet layout: the detail views' zoom is the largest whole number (DETAIL_ZOOM_MIN to
-# DETAIL_ZOOM_MAX) that keeps the sprite's longer side within DETAIL_PX.
-DETAIL_ZOOM_MIN, DETAIL_ZOOM_MAX, DETAIL_PX = 2, 10, 300
+# DETAIL_ZOOM_MAX) that keeps the sprite's longer side within DETAIL_PX (px). At the 1:1
+# grid: a 56 px necromancer gets 8x (448 px), a 44 px Warrior 10x, a 156 px boss 2x,
+# a 32 px icon 12x.
+DETAIL_ZOOM_MIN, DETAIL_ZOOM_MAX, DETAIL_PX = 2, 12, 450
 # Sheet layout: margins (px) and text sizes (px).
 PAD = 14
 FONT_H1, FONT_TEXT, FONT_SMALL = 22, 15, 12
@@ -205,7 +213,7 @@ def run_checks(key: str, img: Image.Image, pal: Palette) -> list:
             specks += 1
     share = specks / max(1, int(body.sum()))
     res.append(("WARN" if share > SPECK_MAX_SHARE else "PASS",
-                f"detail: {specks} single-pixel speck(s) ({share:.0%} of the body; nothing under 2 art px, eyes and glints excepted)"))
+                f"detail: {specks} single-pixel speck(s) ({share:.0%} of the body; features 2+ art px, single pixels only for eyes, glints, highlights)"))
     return res
 
 
@@ -262,8 +270,9 @@ def sync_project(work: Path, key: str, png: Path) -> Path:
     return proj
 
 
-def render(key: str, png: Path, godot: str, work: Path, panel_dir: Path) -> list:
-    """Renders the floor panels with Godot. Returns [] on failure (the sheet says why)."""
+def render(key: str, png: Path, godot: str, work: Path, panel_dir: Path) -> tuple:
+    """Renders the floor panels with Godot. Returns (panel paths, the scene's
+    "sharp=" line: how grid art was drawn); no panels on failure (the sheet says why)."""
     proj = sync_project(work, key, png)
     shutil.rmtree(panel_dir, ignore_errors=True)
     panel_dir.mkdir(parents=True)
@@ -274,12 +283,20 @@ def render(key: str, png: Path, godot: str, work: Path, panel_dir: Path) -> list
     cmd = ["xvfb-run", "-a", "-s", "-screen 0 1280x720x24", godot, "--path", str(proj), "--rendering-driver", "opengl3",
            "--audio-driver", "Dummy", "--resolution", "1280x720", f"res://{SCENE_RES_DIR}/art_check.tscn",
            "--", f"--key={key}", f"--out={panel_dir}"]
-    run = subprocess.run(cmd, capture_output=True, text=True, timeout=RENDER_TIMEOUT)
+    try:
+        run = subprocess.run(cmd, capture_output=True, text=True, timeout=RENDER_TIMEOUT)
+    except subprocess.TimeoutExpired as exc:
+        # A scene that fails to load never quits: report it instead of a traceback.
+        out = exc.stdout.decode(errors="replace") if isinstance(exc.stdout, bytes) else (exc.stdout or "")
+        err = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else (exc.stderr or "")
+        print(f"render timed out after {RENDER_TIMEOUT} s:\n  " + "\n  ".join((out + err).splitlines()[-15:]))
+        return [], ""
     log = run.stdout + run.stderr
     bad = [ln for ln in log.splitlines() if "SCRIPT ERROR" in ln or ("ERROR" in ln and "art_check" in ln)]
     if run.returncode != 0 or bad:
         print("render failed:\n  " + "\n  ".join((bad or log.splitlines())[-15:]))
-    return sorted(panel_dir.glob("panel_*.png"))
+    sharp = next((ln.split("sharp=", 1)[1].strip() for ln in log.splitlines() if "art_check: sharp=" in ln), "")
+    return sorted(panel_dir.glob("panel_*.png")), sharp
 
 
 def floor_label(panel_id: str) -> str:
@@ -299,7 +316,7 @@ def compose(key: str, img: Image.Image, checks: list, panels: list, note: str, o
     by = {p.stem.removeprefix("panel_"): Image.open(p).convert("RGB") for p in panels}
     order = ["graveyard", "march1", "march2", "march3", "march4", "sanctum1", "sanctum2", "sanctum3", "sanctum4"]
     sections = []  # (title, [(label, image)])
-    for zl, title in (("x1", "Normal zoom x1 (1 art px = 2 screen px)"), ("x1.5", "Close zoom x1.5 (1 art px = 3 screen px)")):
+    for zl, title in (("x1", "Normal zoom x1 (1 art px = 1 screen px)"), ("x2", "Close zoom x2 (1 art px = 2 screen px)")):
         items = [(floor_label(o), by[f"{o}_{zl}"]) for o in order if f"{o}_{zl}" in by]
         if items:
             sections.append((title, items))
@@ -387,9 +404,11 @@ def main() -> None:
         if not godot or not shutil.which("xvfb-run"):
             note = "Floor panels skipped: Godot 4.3 or xvfb-run not found (set GODOT=<binary>)."
         else:
-            panels = render(key, png.resolve(), godot, Path(args.work).expanduser().resolve(), out_dir / "panels" / key.replace("/", "_"))
+            panels, sharp = render(key, png.resolve(), godot, Path(args.work).expanduser().resolve(), out_dir / "panels" / key.replace("/", "_"))
             if not panels:
                 note = "Floor panels failed to render (see the console output)."
+            elif sharp:
+                checks.append(("INFO" if sharp.startswith("shader") else "WARN", f"grid art drawn with: {sharp}"))
     else:
         note = "Floor panels skipped (--no-render)."
     sheet = out_dir / (key.replace("/", "_") + "_check.png")
