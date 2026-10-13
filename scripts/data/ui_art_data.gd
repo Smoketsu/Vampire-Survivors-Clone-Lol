@@ -53,6 +53,46 @@ const FOCUS_EXPAND: float = 3.0  # TUNING (not in GDD) art pass UI kit
 ## it holds (IconGlyph.slot_frame).
 const SLOT_EXPAND: float = 2.0  # TUNING (not in GDD) art pass UI kit
 
+## --- Pixel fonts (owner choice, GDD §15.0 "Pixel fonts", option 13) --------
+## Pixelify Sans Bold is a pixel-style font whose "pixels" sit on an em of
+## about 11.5 px, with bold strokes and thin gaps off that grid. A scratch
+## glyph-topology check (every digit, letter, %, + and : rasterised in mono at
+## 1:1, sizes 9-48, compared with the true outline: same strokes, same holes)
+## found it clean only at 11, 23, 24 and 27+ px; at 12-22 px a "2" fills into
+## an "8", "C" closes into "O", "G" into "Q" (grayscale anti-aliasing at the
+## window resolution does not save those sizes either: the gaps fade out).
+## Godot's default oversampling also rasterises at layout size x window
+## scale (x1.5 at 1080p), i.e. often at those broken sizes. So the glyphs are
+## always rasterised at one of the font's clean pixel ems (PIXEL_EMS, through
+## FontFile.fixed_size: the raster is scaled to whatever size a label asks
+## for), mono, and the sharp-pixel shader on every Label, Button and HUD
+## widget (UiTheme._SharpHook, SpriteBank.apply_sharp()) enlarges them evenly
+## at any window scale, like the sprites. Every label keeps its own size, so
+## the layouts do not move; every glyph is correct at every window size.
+## Long descriptions keep a smooth body font instead (UiTheme.body()).
+
+## Pixelify Sans Bold: the HUD, numbers, headings, labels, buttons and card
+## names (the theme's default font).
+const FONT_PIXEL: String = "res://assets/fonts/PixelifySans-Bold.ttf"
+
+## Jacquard 24: zone and event banners (the HUD event banner, the stance
+## banner, the synergy / evolution announcement).
+const FONT_BANNER: String = "res://assets/fonts/Jacquard24-Regular.ttf"
+
+## The clean raster sizes (px) of Pixelify Sans Bold used: its pixel em x1
+## (1 px strokes) and x2 (bold 2-3 px strokes). Text smaller than the second
+## one is drawn from the x1 raster (enlarged), larger text from the x2 raster
+## (never shrunk, so never blurred).
+const PIXEL_EMS: Array[int] = [11, 23]  # TUNING (not in GDD) font pass: measured clean sizes
+
+## Jacquard 24's pixel em: its outlines sit on a 30-unit grid of a 1290-unit
+## em, so 43 px = 1 font px per layout px, its only clean size short of 86.
+const BANNER_SIZE: int = 43  # TUNING (not in GDD) GDD §15.0 "Pixel fonts": whole multiples of the 43 px em
+
+## Width (layout px) at which a Jacquard event banner wraps (between the
+## top-left HP block and the top-right modifiers block).
+const BANNER_WRAP: float = 680.0  # TUNING (not in GDD) font pass
+
 ## Title logo PNG (pixel art at 1 texel per art px; NECROPATHY wordmark).
 const LOGO: String = "res://assets/ui/logo.png"
 

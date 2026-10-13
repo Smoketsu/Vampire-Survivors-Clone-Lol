@@ -158,7 +158,7 @@ func _build_card(id: String) -> Button:
 	box.add_child(StageEmblem.new(id, not unlocked))
 	box.add_child(UiTheme.label(String(def["chapter"]).to_upper(), 12, UiTheme.TEXT_DIM))
 	box.add_child(UiTheme.label(String(def["display_name"]), 22, UiTheme.TEXT_GOLD if unlocked else UiTheme.TEXT_DIM))
-	var desc := UiTheme.label(String(def["description"]), 13, UiTheme.TEXT if unlocked else UiTheme.TEXT_DIM)
+	var desc := UiTheme.body(String(def["description"]), 13, UiTheme.TEXT if unlocked else UiTheme.TEXT_DIM)  # Body font.
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc.custom_minimum_size = Vector2(CARD_WIDTH - 24.0, 0)
 	box.add_child(desc)

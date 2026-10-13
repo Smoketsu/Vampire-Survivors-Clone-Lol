@@ -127,7 +127,7 @@ static func _make_row(id: String, known: bool, buttons: Array[Button]) -> Contro
 		hb.add_child(_locked_tile())
 		hb.add_child(text)
 		text.add_child(UiTheme.label(RecipeBookData.LOCKED_NAME, 18, UiTheme.TEXT_DIM))
-		var lt := UiTheme.label(RecipeBookData.LOCKED_TEXT, 13, UiTheme.TEXT_DIM)
+		var lt := UiTheme.body(RecipeBookData.LOCKED_TEXT, 13, UiTheme.TEXT_DIM)  # Description: body font.
 		lt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		text.add_child(lt)
 		pad.modulate = Color(1, 1, 1, RecipeBookData.LOCKED_ALPHA)  # Dims the content, not the focus frame.

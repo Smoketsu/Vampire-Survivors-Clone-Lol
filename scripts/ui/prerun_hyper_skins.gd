@@ -127,7 +127,7 @@ func _build_hyper_card() -> Button:
 	_hyper_badge = HyperBadge.row("Cleared", 16, 12)
 	head.add_child(_hyper_badge)
 	box.add_child(head)
-	_hyper_desc = UiTheme.label("", 11, UiTheme.TEXT_DIM)
+	_hyper_desc = UiTheme.body("", 11, UiTheme.TEXT_DIM)  # Card description: body font.
 	_hyper_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_hyper_desc.custom_minimum_size = Vector2(HYPER_CARD_SIZE.x - 20.0, 0)
 	box.add_child(_hyper_desc)

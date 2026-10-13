@@ -147,7 +147,7 @@ func _build_detail() -> Control:
 
 ## A word-wrapped detail label `size_px` px in `color`.
 func _wrapped(size_px: int, color: Color) -> Label:
-	var l := UiTheme.label("", size_px, color)
+	var l := UiTheme.body("", size_px, color)  # Detail paragraphs: body font.
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.custom_minimum_size = Vector2(DETAIL_TEXT_WIDTH, 0)
 	return l

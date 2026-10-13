@@ -27,7 +27,7 @@ const BAR_W: float = 6.0
 const HALF_WIDTH: float = 236.0
 ## Opacity of the "not ready" darkening.
 const SHADE_ALPHA: float = 0.68
-## Font size (px) of the key and status labels.
+## Font size (px) of the key and status labels (pixel font).
 const FONT: int = 11
 ## Pulse speed (rad/s of game time) of the ready border.
 const PULSE: float = 6.0
@@ -129,15 +129,21 @@ func _bar_frame(bar: Rect2) -> void:
 		draw_style_box(sb, bar.grow(1.0))
 
 
+## The font of the key and status labels (the theme's pixel font).
+func _font() -> Font:
+	return get_theme_default_font()
+
+
 ## Bound key name centred above the icon at `o`.
 func _key_label(o: Vector2, text: String) -> void:
-	var font := get_theme_default_font()
+	var font := _font()
+	SpriteBank.apply_sharp(self)  # Pixel-font text is rasterised at layout size (UiArtData).
 	draw_string(font, Vector2(o.x - 20.0, o.y - 3.0), text, HORIZONTAL_ALIGNMENT_CENTER, ICON + 40.0, FONT, UiTheme.TEXT_DIM)
 
 
 ## Status text (seconds left, %, READY) on the lower part of the icon at `o`.
 func _status(o: Vector2, text: String) -> void:
-	var font := get_theme_default_font()
+	var font := _font()
 	var p := Vector2(o.x, o.y + ICON - 5.0)
-	draw_string(font, p + Vector2(1, 1), text, HORIZONTAL_ALIGNMENT_CENTER, ICON, FONT + 1, Color(0, 0, 0, 0.85))
-	draw_string(font, p, text, HORIZONTAL_ALIGNMENT_CENTER, ICON, FONT + 1, Color.WHITE)
+	draw_string(font, p + Vector2(1, 1), text, HORIZONTAL_ALIGNMENT_CENTER, ICON, FONT, Color(0, 0, 0, 0.85))
+	draw_string(font, p, text, HORIZONTAL_ALIGNMENT_CENTER, ICON, FONT, Color.WHITE)

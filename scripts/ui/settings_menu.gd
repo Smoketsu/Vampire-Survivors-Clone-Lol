@@ -20,6 +20,12 @@ signal closed
 const VOLUME_ROWS: Dictionary = {"Master": "Master", "Music": "Music", "SFX": "Effects"}
 ## Width (px) of each of the two columns.
 const COLUMN_WIDTH: float = 330.0
+## Height (px) of a key-binding button and of Reset keys. With KEY_ROW_GAP it
+## keeps the whole menu (11 rebindable actions) inside the 720 px layout,
+## Back button included (34 / 6 overflowed it by ~40 px).
+const KEY_ROW_HEIGHT: float = 30.0  # TUNING (not in GDD) layout fit
+## Vertical gap (px) between the key-binding rows.
+const KEY_ROW_GAP: int = 3  # TUNING (not in GDD) layout fit
 
 ## Control focused again when the menu closes (may be null).
 var return_focus: Control = null
@@ -138,7 +144,7 @@ func _refresh_zoom() -> void:
 func _build_right() -> Control:
 	var vb := VBoxContainer.new()
 	vb.custom_minimum_size = Vector2(COLUMN_WIDTH, 0)
-	vb.add_theme_constant_override("separation", 6)
+	vb.add_theme_constant_override("separation", KEY_ROW_GAP)
 	vb.add_child(UiTheme.label("Keyboard", 18, UiTheme.TEXT_GOLD))
 	for action: String in Settings.REBINDABLE:
 		var row := HBoxContainer.new()
@@ -146,14 +152,14 @@ func _build_right() -> Control:
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(l)
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(150, 34)
+		b.custom_minimum_size = Vector2(150, KEY_ROW_HEIGHT)
 		b.pressed.connect(_start_listening.bind(action))
 		row.add_child(b)
 		key_buttons[action] = b
 		vb.add_child(row)
 	var reset := Button.new()
 	reset.text = "Reset keys"
-	reset.custom_minimum_size = Vector2(0, 34)
+	reset.custom_minimum_size = Vector2(0, KEY_ROW_HEIGHT)
 	reset.pressed.connect(_on_reset_keys)
 	vb.add_child(reset)
 	var hint := UiTheme.label("Select a binding, then press a key.\nController B or a click cancels.\nArrow keys and controller stay bound.", 12, UiTheme.TEXT_DIM)

@@ -222,7 +222,7 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 	var lvl_label := UiTheme.label(lvl_text, 15, UiTheme.TEXT_GOLD)
 	lvl_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(lvl_label)
-	var desc := UiTheme.label(o["description"], 13, UiTheme.TEXT_DIM)
+	var desc := UiTheme.body(o["description"], 13, UiTheme.TEXT_DIM)  # Long description: body font.
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc.custom_minimum_size = Vector2(text_width, 0)
 	vb.add_child(desc)
@@ -232,7 +232,7 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 	vb.add_child(deltas)
 	var hint := String(o.get("evo_hint", ""))
 	if hint != "":
-		var hint_label := UiTheme.label(hint, 12, UiTheme.TEXT_GOLD)
+		var hint_label := UiTheme.body(hint, 12, UiTheme.TEXT_GOLD)  # Long description: body font.
 		hint_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		hint_label.custom_minimum_size = Vector2(text_width, 0)
 		vb.add_child(hint_label)

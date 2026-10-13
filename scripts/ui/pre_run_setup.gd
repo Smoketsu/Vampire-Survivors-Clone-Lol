@@ -227,11 +227,11 @@ func _build_level_card(id: String) -> Button:
 	head.add_child(name_l)
 	head.add_child(UiTheme.label(_level_reward(lv), 12, MetaGlyphs.EMBER.lightened(0.2)))
 	box.add_child(head)
-	var tag := UiTheme.label(String(lv["tagline"]), 11, UiTheme.TEXT_DIM)
+	var tag := UiTheme.body(String(lv["tagline"]), 11, UiTheme.TEXT_DIM)  # Card description: body font.
 	tag.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	tag.custom_minimum_size = Vector2(LEVEL_CARD_SIZE.x - 20.0, 0)
 	box.add_child(tag)
-	var nums := UiTheme.label(_level_numbers(lv), 11, UiTheme.TEXT)
+	var nums := UiTheme.body(_level_numbers(lv), 11, UiTheme.TEXT)  # Card description: body font.
 	nums.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	nums.custom_minimum_size = Vector2(LEVEL_CARD_SIZE.x - 20.0, 0)
 	box.add_child(nums)
@@ -278,7 +278,7 @@ func _build_mod_card(id: String) -> Button:
 	var state := UiTheme.label("", 13, UiTheme.TEXT_DIM)
 	head.add_child(state)
 	box.add_child(head)
-	var desc := UiTheme.label(String(md["description"]), 11, UiTheme.TEXT_DIM)
+	var desc := UiTheme.body(String(md["description"]), 11, UiTheme.TEXT_DIM)  # Card description: body font.
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc.custom_minimum_size = Vector2(MOD_CARD_SIZE.x - 20.0, 0)
 	box.add_child(desc)
