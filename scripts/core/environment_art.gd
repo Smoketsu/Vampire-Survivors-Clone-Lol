@@ -12,14 +12,19 @@
 ## see the SpriteBank header).
 ##
 ## Floors (draw_floor()): the zone's base tile is drawn as ONE repeating rect
-## over the whole drawn area, aligned to the world tile grid (multiples of
-## EnvironmentArtData.TILE_SIZE from the origin), so the sharp-pixel blend at
+## over the whole drawn area, aligned to the world tile grid (multiples of the
+## tile's own texel size from the world origin), so the sharp-pixel blend at
 ## each tile edge reads the next tile's first texel through the wrap, exactly
 ## like a seamless tile should. The variant cells (if any variant PNG exists)
 ## are then drawn on top, one clamp-to-edge rect per cell, grouped by texture
 ## so each variant is one batch. A floor is therefore 1 + (variant count) draw
 ## calls, however large the area. Adjacent rects share exact whole-px edges,
-## so there are no seams at any window scale or zoom.
+## so there are no seams at any window scale or zoom. The March road strip is
+## one more repeating rect (draw_road()).
+##
+## Obstacles (draw_obstacle()): one sprite per kind and fixed size variant,
+## its base on the collision shape (EnvironmentArtData feet rule) with a flat
+## drop shadow; the key is built once per obstacle by obstacle_key().
 ##
 ## Purely visual: it reads obstacles and cell hashes but never changes them,
 ## so determinism and the autotest summaries are unaffected.
@@ -56,11 +61,6 @@ static func texture(key: String, repeat: bool = false) -> Texture2D:
 	return tex
 
 
-## True when environment sprite `key` has a PNG.
-static func has(key: String) -> bool:
-	return texture(key) != null
-
-
 ## The textures of zone tile `base_key`: the base tile first (repeating), then
 ## its present variants; [] when the base tile has no PNG (the zone keeps its
 ## code floor).
@@ -93,21 +93,25 @@ static func pick_tile(count: int, h: int) -> int:
 ## Covers `rect` on `ci` with the floor tile `base_key` and its variants (see
 ## the header), the variant of tile cell (cx, cy) chosen from
 ## `cell_hash.call(cx, cy)` (the floor's own stable cell hash, an int >= 0).
-## Returns false, drawing nothing, when the zone has no base tile PNG.
+## Every tile of a set is drawn at the base tile's size (its texel size, 1 art
+## px = 1 layout px). Returns false, drawing nothing, when the zone has no
+## base tile PNG.
 static func draw_floor(ci: CanvasItem, rect: Rect2, base_key: String, cell_hash: Callable) -> bool:
 	var tiles := tile_set(base_key)  # Base tile, then variants ([] = no art).
 	if tiles.is_empty():
 		return false
 	SpriteBank.apply_sharp(ci)
-	var size := EnvironmentArtData.TILE_SIZE  # Tile side (layout px = art px).
-	var c0 := Vector2i(floori(rect.position.x / size), floori(rect.position.y / size))  # First tile cell.
-	var c1 := Vector2i(ceili(rect.end.x / size), ceili(rect.end.y / size))  # One past the last tile cell.
+	var base: Texture2D = tiles[0]  # The repeating base tile.
+	var size := Vector2(float(base.get_width()), float(base.get_height()))  # Tile size (layout px = art px).
+	var c0 := Vector2i(floori(rect.position.x / size.x), floori(rect.position.y / size.y))  # First tile cell.
+	var c1 := Vector2i(ceili(rect.end.x / size.x), ceili(rect.end.y / size.y))  # One past the last tile cell.
 	# The base tile: one repeating rect on the world tile grid.
-	ci.draw_texture_rect(tiles[0], Rect2(Vector2(c0) * size, Vector2(c1 - c0) * size), true)
+	ci.draw_texture_rect(base, Rect2(Vector2(c0) * size, Vector2(c1 - c0) * size), true)
 	if tiles.size() == 1:
 		return true
-	# The variant cells, one texture at a time (one batch each).
-	var picks: Array[int] = []  # Tile index per cell, row by row.
+	# The variant cells, one texture at a time (consecutive draws of one
+	# texture batch together).
+	var picks := PackedInt32Array()  # Tile index per cell, row by row.
 	for cy in range(c0.y, c1.y):
 		for cx in range(c0.x, c1.x):
 			picks.append(pick_tile(tiles.size(), int(cell_hash.call(cx, cy))))
@@ -116,19 +120,19 @@ static func draw_floor(ci: CanvasItem, rect: Rect2, base_key: String, cell_hash:
 		for i in picks.size():
 			if picks[i] == t:
 				var cell := Vector2(float(c0.x + i % cols), float(c0.y + i / cols)) * size  # Cell top-left (layout px).
-				ci.draw_texture_rect(tiles[t], Rect2(cell, Vector2(size, size)), false)
+				ci.draw_texture_rect(tiles[t], Rect2(cell, size), false)
 	return true
 
 
 ## Draws the March road strip for zone style `style` across `rect` (the
-## ground's drawn area) on `ci`: the strip's own height (1 art px = 1 layout
-## px; EnvironmentArtData.ROAD_HEIGHT in the manifest), centred on y = 0,
-## repeated left-right at its own width from x = 0 (all pieces one texture, so
-## one batch). Returns false (drawing nothing) without road art.
+## ground's drawn area) on `ci`: the strip at its own height (1 art px = 1
+## layout px; 140 art px in the manifest, the road's full width), centred on
+## y = 0, as ONE rect repeating left-right from x = 0. Returns false (drawing
+## nothing) without road art, so MarchGround draws its code road.
 static func draw_road(ci: CanvasItem, rect: Rect2, style: String) -> bool:
-	var tex := texture(EnvironmentArtData.ROAD_KEY + "_" + style)  # Zone override (the paved fortress road).
+	var tex := texture(EnvironmentArtData.ROAD_KEY + "_" + style, true)  # Zone override (the paved fortress road).
 	if tex == null:
-		tex = texture(EnvironmentArtData.ROAD_KEY)
+		tex = texture(EnvironmentArtData.ROAD_KEY, true)
 	if tex == null:
 		return false
 	var h := float(tex.get_height())  # Strip height (layout px).
@@ -137,10 +141,9 @@ static func draw_road(ci: CanvasItem, rect: Rect2, style: String) -> bool:
 		return true  # Art exists; the road is just out of view.
 	SpriteBank.apply_sharp(ci)
 	var w := float(tex.get_width())  # Strip piece width (art px = layout px).
-	var x := floorf(rect.position.x / w) * w  # First piece, on the strip's own grid from x = 0.
-	while x < rect.end.x:
-		ci.draw_texture_rect(tex, Rect2(x, top, w, h), false)
-		x += w
+	var x0 := floorf(rect.position.x / w) * w  # First piece, on the strip's own grid from x = 0.
+	var x1 := ceilf(rect.end.x / w) * w  # End of the last piece.
+	ci.draw_texture_rect(tex, Rect2(x0, top, x1 - x0, h), true)
 	return true
 
 

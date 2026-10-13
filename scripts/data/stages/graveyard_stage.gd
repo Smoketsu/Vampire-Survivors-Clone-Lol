@@ -346,8 +346,10 @@ const ARENA := {
 	"clear_radius": 220.0,  # TUNING (not in GDD)
 	"layout_seed": 7177,  # TUNING (not in GDD)
 	"kinds": {
-		# Broken tombs and headstones (GDD §11 art).
-		"gravestone": {"weight": 0.45, "shape": "circle", "sizes": [11.0, 13.0, 15.0]},  # TUNING (not in GDD)
+		# Broken tombs and headstones (GDD §11 art). Two sizes, matching the
+		# owner's anchor sprites obstacles/gravestone_s (footprint 22 px) and
+		# obstacles/gravestone_l (30 px), ART_BIBLE Anchor 5.
+		"gravestone": {"weight": 0.45, "shape": "circle", "sizes": [11.0, 15.0]},  # TUNING (not in GDD)
 		# Dead trees (GDD §11 art); the collision is the trunk, branches are cosmetic.
 		"dead_tree": {"weight": 0.25, "shape": "circle", "sizes": [13.0, 15.0, 18.0]},  # TUNING (not in GDD)
 		# Crypt walls (GDD §11 art "crypts").

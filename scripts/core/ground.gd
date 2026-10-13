@@ -5,10 +5,11 @@
 ## when the camera crosses into a new REDRAW_CELL, not every frame.
 ## Art pass (EnvironmentArt): when the zone's floor tile PNG exists
 ## (_tile_key(), e.g. tiles/graveyard.png) the base colour and joint grid are
-## replaced by a grid of that tile and its variants, one tile per decoration
-## CELL, the variant picked from the same cell hash as the decoration
-## (_cell_hash()), drawn 1 art px = 1 layout px through the sharp-pixel
-## shader; the code decorations stay on top. No PNG: the code floor as before.
+## replaced by a grid of that tile and its variants (tiles/<zone>_2, _3), one
+## tile per decoration CELL, the variant picked from the same cell hash as the
+## decoration (_cell_hash()), drawn 1 art px = 1 layout px through the
+## sharp-pixel shader on the same redraws as before (a few draw calls per
+## redraw); the code decorations stay on top. No PNG: the code floor as before.
 ## Purely cosmetic: nothing here collides.
 class_name Ground
 extends Node2D
@@ -77,23 +78,13 @@ func _tile_key() -> String:
 	return EnvironmentArtData.TILE_PREFIX + "graveyard"
 
 
-## Covers `rect` with the current zone's floor tile and its variants (one per
-## CELL, which equals EnvironmentArtData.TILE_SIZE, so tiles sit on whole px
-## at multiples of the cell size). Returns false, drawing nothing, when the
-## zone has no tile PNG.
+## Covers `rect` with the current zone's floor tile and its variants
+## (EnvironmentArt.draw_floor(): one repeating rect on the world tile grid,
+## variants per cell from _cell_hash(); a 128 px tile cell is exactly one
+## decoration CELL). Returns false, drawing nothing, when the zone has no tile
+## PNG.
 func _draw_tiles(rect: Rect2) -> bool:
-	var tiles := EnvironmentArt.tile_set(_tile_key())  # Base tile, then variants ([] = no art).
-	if tiles.is_empty():
-		return false
-	SpriteBank.apply_sharp(self)
-	var size := EnvironmentArtData.TILE_SIZE  # Tile side (layout px).
-	var c0 := Vector2i(floori(rect.position.x / size), floori(rect.position.y / size))  # First tile cell.
-	var c1 := Vector2i(floori((rect.end.x - 0.5) / size), floori((rect.end.y - 0.5) / size))  # Last tile cell.
-	for cy in range(c0.y, c1.y + 1):
-		for cx in range(c0.x, c1.x + 1):
-			var tile := EnvironmentArt.pick_tile(tiles, _cell_hash(cx, cy))  # This cell's tile.
-			draw_texture_rect(tile, Rect2(float(cx) * size, float(cy) * size, size, size), false)
-	return true
+	return EnvironmentArt.draw_floor(self, rect, _tile_key(), _cell_hash)
 
 
 ## Draws the (hash-chosen) decoration of one cell, if any.
