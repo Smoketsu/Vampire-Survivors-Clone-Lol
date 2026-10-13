@@ -311,15 +311,18 @@ tiny tweaks.
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
 2. **Small fixes:** menu key hints should reflect rebinds. (Archers now hold their ground: user
    decision, GDD §15.0.)
-3. **Real art (Phase 2), in progress:** **pixel art** style, locked by the approved necromancer.
-   The owner generates sprites in ChatGPT from `docs/art/ART_BIBLE.md` (manifest of every asset,
-   with file keys and sizes); process each with `python3 tools/prepare_sprite.py <image> <key>`.
-   `SpriteBank` draws `assets/sprites/<key>.png` when present and falls back to the glyph, so art
-   lands piecemeal (skins too: `player/<character>_<skin>`, 16 rows, palette stand-ins until then). Done: `player/necromancer`; every summon and the first three evolutions (incl. `risen`); every enemy soldier (incl. the
-   Reckoning's `inquisitor`); both `bosses/`; all five `structures/`. Still to do: the pickups, the five newer evolutions (Gravebow, Bone Colossus, Shadow Reaper, Cathedral Horror, Winter Revenant), the three newest classes with their evolutions (Bone Hound / Hellhound, Banshee / Keening Lady, Corpse Catapult / Ossuary Engine), the eleven playable characters (`player/<id>`, drawn as the tinted necromancer until then), and the five later spells' icons (spells, evolutions, passives) and effects (`soul_lightning`, `bone_wall_rise`, `bone_wall_burst`, `wither_aura`, `doom_burst`, `raise_dead`, `legion_burst`, already hooked). Effects are
-   short animations (`prepare_sprite.py --anim <sheet or GIF> <id>` → `assets/sprites/effects/`,
-   timing in `anim_data.gd`); `shadow_blast` (test), `dread_rally` and `grave_step_trail` are hooked so far, hook the rest via
-   `EffectManager.ring(..., anim)` / `Effect.anim_id` as their art arrives. Pickups, ground tiles and obstacles come later.
+3. **Real art (Phase 2): the true pixel-art pass** (owner-approved, GDD §15.0 "Art pass (true pixel art)"). The
+   ChatGPT placeholders (31 sprites, all to be redone) are replaced by pixel art made at its real size: 1 art px
+   = 2 screen px, sharp whole-number scaling, one locked palette, violet only for the player, Zoom Normal ×1 /
+   Close ×1.5 (Far dropped). The owner generates images with AI tools from prompts in `docs/art/ART_BIBLE.md`;
+   `tools/prepare_sprite.py` (grid mode) snaps them to the grid and palette, outlines them and aligns the
+   feet, and the check sheet shows them at game size before approval. `SpriteBank` still falls back to the
+   code glyph when a PNG is missing, so art lands piecemeal. Order: foundations (sharp scaling, palette,
+   tools, engine motion for every unit) → anchors approved in-game (necromancer, Skeleton Warrior, Covenant
+   Recruit, Graveyard tile, gravestone, one icon) → units by screen time → environments (9 zone floors with
+   variants and decals, 26 obstacle kinds in fixed size variants) → icons, pickups, projectiles, UI kit and
+   pixel font → walk cycles (characters and summon classes first), action and boss poses, effects (strips via
+   `prepare_sprite.py --anim`, timing in `anim_data.gd`, hooked through `EffectManager.ring(..., anim)`).
 4. **Web build** (owner decision, after the art is done; GDD §15.0 "Web build after the art"): a
    no-threads Godot Web export for desktop browsers, the audio synthesis load checked, Quit hidden,
    and a CI job that publishes it for playtesters. Phones (touch controls, mobile UI scale,
