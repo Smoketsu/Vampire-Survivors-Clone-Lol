@@ -10,7 +10,12 @@
 ##   sanctuary  — marble slabs with veins and pools of stained-glass light.
 ## Corruption (SanctumDirector, 0..1 as chambers are cleansed and altars
 ## fall) blends every colour toward a necromantic purple (set_corruption()).
-## MarchDirector calls set_zone() at each zone change. Purely cosmetic.
+## MarchDirector calls set_zone() at each zone change. Art pass: the zone's
+## floor tile (tiles/sanctum_<style>.png, no purple baked in) replaces the base
+## colour and the joint pattern when its PNG exists (Ground header,
+## EnvironmentArt); the corruption then tints it with one translucent overlay
+## of the corruption colour at the same blend strength as _t(), which equals
+## lerping every tile pixel toward it. Purely cosmetic.
 class_name SanctumGround
 extends Ground
 
@@ -62,17 +67,22 @@ func _draw() -> void:
 	_drawn_corruption = _corruption
 	var center := Vector2(_center_cell) * REDRAW_CELL + Vector2.ONE * REDRAW_CELL * 0.5
 	var rect := Rect2(center - Vector2.ONE * HALF_EXTENT, Vector2.ONE * HALF_EXTENT * 2.0)
-	draw_rect(rect, _t(_look["base"]))
 	var style := String(_look["style"])
-	match style:
-		"courtyard":
-			_courses(rect, 48.0, 72.0)
-		"halls":
-			_grid(rect, 24.0, 1.0)
-		"cloisters":
-			_grid(rect, GRID * 2.0, 6.0)
-		_:
-			_grid(rect, GRID, 1.0)
+	if _draw_tiles(rect):
+		var k := _corruption * _corrupt_tint  # Blend toward purple (0..1), as in _t().
+		if k > 0.0:
+			draw_rect(rect, Color(_corrupt_color, k))  # tile * (1 - k) + purple * k.
+	else:
+		draw_rect(rect, _t(_look["base"]))
+		match style:
+			"courtyard":
+				_courses(rect, 48.0, 72.0)
+			"halls":
+				_grid(rect, 24.0, 1.0)
+			"cloisters":
+				_grid(rect, GRID * 2.0, 6.0)
+			_:
+				_grid(rect, GRID, 1.0)
 	var c0 := Vector2i(floori(rect.position.x / CELL), floori(rect.position.y / CELL))
 	var c1 := Vector2i(floori(rect.end.x / CELL), floori(rect.end.y / CELL))
 	for cy in range(c0.y, c1.y + 1):
@@ -107,9 +117,19 @@ func _grid(rect: Rect2, step: float, width: float) -> void:
 		y += step
 
 
+## The Sanctum's cell hash (salted, so its decorations differ from the Graveyard's).
+func _cell_hash(cx: int, cy: int) -> int:
+	return absi(hash(Vector3i(cx, cy, 313)))
+
+
+## Floor tile key of the current zone: tiles/sanctum_<style>.
+func _tile_key() -> String:
+	return EnvironmentArtData.TILE_PREFIX + "sanctum_" + String(_look["style"])
+
+
 ## Draws the (hash-chosen) decoration of one cell for the current zone.
 func _draw_sanctum_cell(cx: int, cy: int, style: String) -> void:
-	var h := absi(hash(Vector3i(cx, cy, 313)))
+	var h := _cell_hash(cx, cy)
 	var roll := float(h % 1000) / 1000.0
 	var p := Vector2(float(cx) * CELL + float((h >> 10) % 96) + 16.0, float(cy) * CELL + float((h >> 17) % 96) + 16.0)
 	match style:

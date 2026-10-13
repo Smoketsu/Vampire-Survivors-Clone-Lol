@@ -3,6 +3,12 @@
 ## The arena is an endless open plane, so decorations are generated from a
 ## hash of the grid cell (stable when revisited). The canvas is only redrawn
 ## when the camera crosses into a new REDRAW_CELL, not every frame.
+## Art pass (EnvironmentArt): when the zone's floor tile PNG exists
+## (_tile_key(), e.g. tiles/graveyard.png) the base colour and joint grid are
+## replaced by a grid of that tile and its variants, one tile per decoration
+## CELL, the variant picked from the same cell hash as the decoration
+## (_cell_hash()), drawn 1 art px = 1 layout px through the sharp-pixel
+## shader; the code decorations stay on top. No PNG: the code floor as before.
 ## Purely cosmetic: nothing here collides.
 class_name Ground
 extends Node2D
@@ -35,15 +41,16 @@ func update_view(focus: Vector2) -> void:
 func _draw() -> void:
 	var center := Vector2(_center_cell) * REDRAW_CELL + Vector2.ONE * REDRAW_CELL * 0.5
 	var rect := Rect2(center - Vector2.ONE * HALF_EXTENT, Vector2.ONE * HALF_EXTENT * 2.0)
-	draw_rect(rect, Palette.GROUND)
-	var x := floorf(rect.position.x / GRID) * GRID
-	while x <= rect.end.x:
-		draw_line(Vector2(x, rect.position.y), Vector2(x, rect.end.y), Palette.GROUND_LINE, 1.0)
-		x += GRID
-	var y := floorf(rect.position.y / GRID) * GRID
-	while y <= rect.end.y:
-		draw_line(Vector2(rect.position.x, y), Vector2(rect.end.x, y), Palette.GROUND_LINE, 1.0)
-		y += GRID
+	if not _draw_tiles(rect):
+		draw_rect(rect, Palette.GROUND)
+		var x := floorf(rect.position.x / GRID) * GRID
+		while x <= rect.end.x:
+			draw_line(Vector2(x, rect.position.y), Vector2(x, rect.end.y), Palette.GROUND_LINE, 1.0)
+			x += GRID
+		var y := floorf(rect.position.y / GRID) * GRID
+		while y <= rect.end.y:
+			draw_line(Vector2(rect.position.x, y), Vector2(rect.end.x, y), Palette.GROUND_LINE, 1.0)
+			y += GRID
 	var c0 := Vector2i(floori(rect.position.x / CELL), floori(rect.position.y / CELL))
 	var c1 := Vector2i(floori(rect.end.x / CELL), floori(rect.end.y / CELL))
 	for cy in range(c0.y, c1.y + 1):
@@ -58,9 +65,40 @@ func set_zone(_look: Dictionary) -> void:
 	pass
 
 
+## Stable hash (>= 0) of decoration cell (cx, cy): it places the cell's
+## decoration and picks its floor tile variant. MarchGround and SanctumGround
+## salt it with their own value.
+func _cell_hash(cx: int, cy: int) -> int:
+	return absi(hash(Vector2i(cx, cy)))
+
+
+## Floor tile key of the current zone (EnvironmentArtData key scheme).
+func _tile_key() -> String:
+	return EnvironmentArtData.TILE_PREFIX + "graveyard"
+
+
+## Covers `rect` with the current zone's floor tile and its variants (one per
+## CELL, which equals EnvironmentArtData.TILE_SIZE, so tiles sit on whole px
+## at multiples of the cell size). Returns false, drawing nothing, when the
+## zone has no tile PNG.
+func _draw_tiles(rect: Rect2) -> bool:
+	var tiles := EnvironmentArt.tile_set(_tile_key())  # Base tile, then variants ([] = no art).
+	if tiles.is_empty():
+		return false
+	SpriteBank.apply_sharp(self)
+	var size := EnvironmentArtData.TILE_SIZE  # Tile side (layout px).
+	var c0 := Vector2i(floori(rect.position.x / size), floori(rect.position.y / size))  # First tile cell.
+	var c1 := Vector2i(floori((rect.end.x - 0.5) / size), floori((rect.end.y - 0.5) / size))  # Last tile cell.
+	for cy in range(c0.y, c1.y + 1):
+		for cx in range(c0.x, c1.x + 1):
+			var tile := EnvironmentArt.pick_tile(tiles, _cell_hash(cx, cy))  # This cell's tile.
+			draw_texture_rect(tile, Rect2(float(cx) * size, float(cy) * size, size, size), false)
+	return true
+
+
 ## Draws the (hash-chosen) decoration of one cell, if any.
 func _draw_cell(cx: int, cy: int) -> void:
-	var h := absi(hash(Vector2i(cx, cy)))
+	var h := _cell_hash(cx, cy)
 	var roll := float(h % 1000) / 1000.0
 	var ox := float((h >> 10) % 96) + 16.0
 	var oy := float((h >> 17) % 96) + 16.0
