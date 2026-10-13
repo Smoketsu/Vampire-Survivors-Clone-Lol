@@ -9,8 +9,8 @@ Guidance for Claude Code (and any agent) working in this repo. Read this first, 
 horde (Warriors, Archers, Mages, the Mender
 and Warder priest orders, plus Abominations, Rogues, Gargoyles, Frost Wraiths, Bone Hounds,
 Banshees and Corpse Catapults) against the holy Crimson Covenant. It is built in **Godot 4.3**
-with **GDScript**, top-down 2D and the GL Compatibility renderer. There are no external assets: art is
-drawn in code (`_draw`), and sound and music are synthesized at startup.
+with **GDScript**, top-down 2D and the GL Compatibility renderer. Art is true pixel art (PNGs in `assets/`, made in the Oct 2026 art pass;
+the code drawings in `_draw` stay as the fallback for any missing PNG), and sound and music are synthesized at startup.
 
 ## Sources of truth
 
@@ -311,19 +311,12 @@ tiny tweaks.
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
 2. **Small fixes:** menu key hints should reflect rebinds. (Archers now hold their ground: user
    decision, GDD §15.0.)
-3. **Real art (Phase 2): the true pixel-art pass** (owner-approved, GDD §15.0 "Art pass (true pixel art)"). The
-   ChatGPT placeholders (31 sprites, all to be redone) are replaced by pixel art made at its real size: 1 art px
-   = 1 screen px (necromancer 56 art px; GDD §15.0 "Art pass grid"), drawn through the sharp-pixel shader
-   (`SpriteBank.apply_sharp()`, edges blended over 0.5 px), one locked palette (`tools/palette.json`), violet
-   only for the player, Zoom Normal ×1 / Close ×2 (Far dropped), fonts Jacquard 24 + Pixelify Sans Bold. The owner generates images with AI tools from prompts in `docs/art/ART_BIBLE.md`;
-   `tools/prepare_sprite.py` (grid mode) snaps them to the grid and palette, outlines them and aligns the
-   feet, and the check sheet shows them at game size before approval. `SpriteBank` still falls back to the
-   code glyph when a PNG is missing, so art lands piecemeal. Order: foundations (sharp scaling, palette,
-   tools, engine motion for every unit) → anchors approved in-game (necromancer, Skeleton Warrior, Covenant
-   Recruit, Graveyard tile, gravestone, one icon) → units by screen time → environments (9 zone floors with
-   variants and decals, 26 obstacle kinds in fixed size variants) → icons, pickups, projectiles, UI kit and
-   pixel font → walk cycles (characters and summon classes first), action and boss poses, effects (strips via
-   `prepare_sprite.py --anim`, timing in `anim_data.gd`, hooked through `EffectManager.ring(..., anim)`).
+3. **Art pass: done (Oct 2026)** (GDD §15.0 "Art pass (true pixel art)" and the rows after it). Every unit,
+   character, skin, boss, structure, pickup, projectile, icon, obstacle (both orientations), zone floor, decal, effect
+   strip, walk cycle (49 units), the UI kit and the NECROPATHY logo are pixel art at 1 art px = 1 screen px through the
+   sharp-pixel shader; fonts Jersey 10 (UI, numbers) + Jacquard 24 (banners). Tools: `tools/gen_image.py` (API
+   generation, cost ledger `docs/art/generation_ledger.csv`), `prepare_sprite.py`, `art_check.py`, `make_tile.py`,
+   `walk_cycle.py`, `ui_kit.py`. Possible later polish: action and boss poses, arm swing, more effect hooks.
 4. **Web build** (owner decision, after the art is done; GDD §15.0 "Web build after the art"): a
    no-threads Godot Web export for desktop browsers, the audio synthesis load checked, Quit hidden,
    and a CI job that publishes it for playtesters. Phones (touch controls, mobile UI scale,

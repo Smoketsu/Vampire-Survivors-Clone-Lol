@@ -1022,7 +1022,7 @@ integration").
 
 ### Fonts
 
-Two open-licence pixel fonts are in `assets/fonts/` (SIL Open Font License; the licence texts sit next to them): **Pixelify Sans Bold** for the HUD, numbers, headings, labels, buttons and card names, and **Jacquard 24** for event, zone, stance and evolution banners (owner choice, GDD §15.0 "Pixel fonts"). Long descriptions use Godot's default font. Pixelify is always drawn from its clean 11 or 23 px pixel size and scaled to each label's size through the sharp-pixel filter, so glyphs stay correct and crisp at any window size; Jacquard is drawn only at its 43 px em (GDD §15.0 "Pixel fonts wired").
+Two open-licence pixel fonts are in `assets/fonts/` (SIL Open Font License; the licence texts sit next to them): **Jersey 10** for the HUD, numbers, headings, labels, buttons, card names and damage numbers, and **Jacquard 24** for event, zone, stance and evolution banners (owner choice, GDD §15.0). Long descriptions use Godot's default font. Jersey 10 is drawn from one exact 19 px raster at 1, 1.5, 2 or 3 times its pixel size through the sharp-pixel filter, so it stays crisp and correct at any window size; Jacquard is drawn only at its 43 px em.
 
 ### Camera zoom
 
