@@ -1,0 +1,21 @@
+A sprite sheet of 2 small FLOOR DECALS for a top-down 2D pixel-art game, on a fully TRANSPARENT background.
+Layout: a grid of 2 columns x 1 rows; each decal sits alone in the centre of its own cell, with wide empty
+transparent gaps between them (nothing touches, nothing overlaps a cell border).
+
+Every decal is a flat detail LYING ON THE GROUND, seen STRAIGHT FROM ABOVE (orthographic top-down view, like a map:
+no perspective, no 3/4 view, no side view, no visible height or thickness). NO cast shadow, no drop shadow, no
+shading under it, no glow halo, no outline frame. Nothing may look like a standing object or an obstacle: everything
+is flattened into the ground, like a stain, a scatter or a thing that fell over and lies flat.
+
+LOW-RESOLUTION pixel art: each decal is only about 18 to 24 pixels across, shown enlarged so every pixel is a big crisp
+square block (nearest-neighbour), with chunky 2-3 pixel details. No gradients, no dithering, no soft blur, no
+anti-aliasing, no texture noise. Very DARK, LOW CONTRAST and QUIET colours, close to the dark floor they lie on
+(the attached image is that floor: match its darkness and pixel size, but do NOT draw the floor itself, the
+background must stay transparent).
+
+The decals, left to right, top to bottom:
+1. An open grave seen from directly above (about 22 x 14 pixels): a rectangular dug pit, its inside pitch black, its rim of loose dark soil and a few broken stone edge pieces lying flat, a small heap of dug-up earth on one side.
+2. A smaller collapsed open grave seen from above (about 20 x 13 pixels): a dark sunken pit, crumbled rim of dark soil, a cracked flat stone slab edge.
+
+Colours: ONLY flat fills from this list: #0F141C near-black (the pit), #161A1C dark soil, #221C17 dark earth (most of the rim), #3B4352 dark grey stone, #6B7A94 grey (a few stone highlights only).
+No text, no labels, no numbers, no border, no watermark.

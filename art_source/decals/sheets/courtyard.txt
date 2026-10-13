@@ -1,0 +1,25 @@
+A sprite sheet of 6 small FLOOR DECALS for a top-down 2D pixel-art game, on a fully TRANSPARENT background.
+Layout: a grid of 3 columns x 2 rows; each decal sits alone in the centre of its own cell, with wide empty
+transparent gaps between them (nothing touches, nothing overlaps a cell border).
+
+Every decal is a flat detail LYING ON THE GROUND, seen STRAIGHT FROM ABOVE (orthographic top-down view, like a map:
+no perspective, no 3/4 view, no side view, no visible height or thickness). NO cast shadow, no drop shadow, no
+shading under it, no glow halo, no outline frame. Nothing may look like a standing object or an obstacle: everything
+is flattened into the ground, like a stain, a scatter or a thing that fell over and lies flat.
+
+LOW-RESOLUTION pixel art: each decal is only about 12 to 20 pixels across, shown enlarged so every pixel is a big crisp
+square block (nearest-neighbour), with chunky 2-3 pixel details. No gradients, no dithering, no soft blur, no
+anti-aliasing, no texture noise. Very DARK, LOW CONTRAST and QUIET colours, close to the dark floor they lie on
+(the attached image is that floor: match its darkness and pixel size, but do NOT draw the floor itself, the
+background must stay transparent); the only brighter pixels allowed are the small gold glints and the pale petals.
+
+The decals, left to right, top to bottom:
+1. A patch of dark moss growing flat over pale stone (about 20 x 14 pixels): an irregular soft clump, dark green with a few lighter moss pixels.
+2. A smaller moss patch (about 14 x 10 pixels), dark green, irregular.
+3. A gold four-pointed star inlaid flush into a stone floor (about 19 x 19 pixels): thin dull-gold star rays with a small bright gold centre stud, completely flat like a mosaic inlay.
+4. A smaller inlaid gold star (about 15 x 15 pixels), dull gold, flat inlay.
+5. A few fallen pale petals lying flat on the ground (about 14 x 8 pixels): four or five tiny cream-white petals.
+6. Three fallen pale petals (about 10 x 6 pixels).
+
+Colours: ONLY flat fills from this list: #1A2218 very dark green, #26301F dark green, #3B5529 muted green, #8C6040 dull gold-brown, #E0A92E gold, #FFDC66 light gold (one or two glint pixels), #B4AA8A pale cream (petals), #7F785F dull cream (petal shade).
+No text, no labels, no numbers, no border, no watermark.

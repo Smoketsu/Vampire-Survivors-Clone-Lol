@@ -1,0 +1,25 @@
+A sprite sheet of 6 small FLOOR DECALS for a top-down 2D pixel-art game, on a fully TRANSPARENT background.
+Layout: a grid of 3 columns x 2 rows; each decal sits alone in the centre of its own cell, with wide empty
+transparent gaps between them (nothing touches, nothing overlaps a cell border).
+
+Every decal is a flat detail LYING ON THE GROUND, seen STRAIGHT FROM ABOVE (orthographic top-down view, like a map:
+no perspective, no 3/4 view, no side view, no visible height or thickness). NO cast shadow, no drop shadow, no
+shading under it, no glow halo, no outline frame. Nothing may look like a standing object or an obstacle: everything
+is flattened into the ground, like a stain, a scatter or a thing that fell over and lies flat.
+
+LOW-RESOLUTION pixel art: each decal is only about 16 to 32 pixels across, shown enlarged so every pixel is a big crisp
+square block (nearest-neighbour), with chunky 2-3 pixel details. No gradients, no dithering, no soft blur, no
+anti-aliasing, no texture noise. Very DARK, LOW CONTRAST and QUIET colours, close to the dark floor they lie on
+(the attached image is that floor: match its darkness and pixel size, but do NOT draw the floor itself, the
+background must stay transparent); the only brighter pixels allowed are small gold glints and the tiny flowers.
+
+The decals, left to right, top to bottom:
+1. A round mosaic rosette inlaid flush into a dark-gold mosaic floor (about 32 x 32 pixels): a ring of eight dull-gold petals around a small gold centre, made of tiny square tesserae, completely flat.
+2. A smaller round mosaic rosette inlay (about 24 x 24 pixels): ring of dull-gold tesserae, dark centre, flat.
+3. A bronze sundial ring inlaid flat into the ground, seen from directly above (about 28 x 28 pixels): a thin dull-bronze circle with twelve small hour notches and one bronze pointer line from the centre, completely flat, no standing gnomon.
+4. A square floor inlay (about 20 x 20 pixels): a dark grey marble square with a thin dull-gold border and a small gold diamond in the middle, flush with the floor.
+5. A small flower bed patch seen from above (about 30 x 12 pixels): low dark green leaves with five or six tiny muted cream and dusty rose flowers.
+6. A few fallen dry leaves lying flat (about 18 x 8 pixels): three small dull ochre-brown leaves.
+
+Colours: ONLY flat fills from this list: #2E2615 dark ochre, #4F3320 dark brown, #8C6040 dull gold-brown (most of the gold), #E0A92E gold (few pixels), #3B4352 dark grey, #2D2E33 dark marble grey, #1A2218 very dark green, #3B5529 muted green, #B4AA8A muted cream, #7A0E1B dusty dark rose.
+No text, no labels, no numbers, no border, no watermark.
