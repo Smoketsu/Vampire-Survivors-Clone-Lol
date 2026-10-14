@@ -352,6 +352,17 @@ var _level_at_mark: PackedInt32Array = PackedInt32Array()
 var _build_complete_time: float = -1.0
 ## Level of that hand (0 = never).
 var _build_complete_level: int = 0
+## Level-up hands seen by choose_action() (rerolled hands count again).
+var _hands_seen: int = 0
+## NEW-item cards offered in those hands (an item not owned yet: spell, summon
+## class or passive, from level 0).
+var _new_offers: int = 0
+## Of those, cards of a later item ("shared_card_pool", LevelUpData.WEIGHT_NEW_LATER).
+var _new_later_offers: int = 0
+## Hands that held at least one later-item NEW card.
+var _hands_with_later: int = 0
+## Distinct later items offered at least once (id -> true).
+var _later_seen: Dictionary = {}
 ## Highest Profane Pact level seen so far.
 var _pact_seen: int = 0
 ## "Ln@mm:ss" for every Profane Pact level taken.
@@ -629,12 +640,37 @@ func _print_metrics() -> void:
 	_death_mark = game.horde.total_deaths
 
 
+## Counts a level-up hand for the summary's "level-up offers" line: NEW-item
+## cards, and how many of them are later items (LevelUpData.WEIGHT_NEW_LATER).
+func _count_offers(offers: Array[Dictionary]) -> void:
+	_hands_seen += 1
+	var later_in_hand := false  # This hand holds a later item's NEW card.
+	for o in offers:
+		var kind := String(o["kind"])
+		if not kind in ["spell", "summon", "passive"] or int(o.get("from", 1)) != 0:
+			continue
+		_new_offers += 1
+		var id := String(o["id"])
+		var later := false  # The item is flagged "shared_card_pool" in its data.
+		match kind:
+			"spell": later = bool(AbilityData.SPELLS[id].get("shared_card_pool", false))
+			"summon": later = bool(UnitData.UNITS[id].get("shared_card_pool", false))
+			"passive": later = bool(PassiveData.PASSIVES[id].get("shared_card_pool", false))
+		if later:
+			_new_later_offers += 1
+			_later_seen[id] = true
+			later_in_hand = true
+	if later_in_hand:
+		_hands_with_later += 1
+
+
 ## Decides what to do with a level-up hand: {"action": "pick" | "reroll" |
 ## "banish" | "skip", "index": card}. Evolutions are always picked. army /
 ## evolve banish BANISH_IDS items, reroll hands scoring below REROLL_BELOW,
 ## and skip when the only useful card would heal an unhurt necromancer.
 ## Deterministic for a given offer list and charge state.
 func choose_action(offers: Array[Dictionary]) -> Dictionary:
+	_count_offers(offers)
 	if _build_complete_time < 0.0:
 		var only_fallbacks := true  # Hand holds nothing but fallback cards (or the optional Pact).
 		for o in offers:
@@ -1056,6 +1092,9 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] synergies active at end: %s | activations: %s" % [
 		", ".join(syn.active_ids()) if not syn.active_ids().is_empty() else "none",
 		", ".join(syn.activation_log) if not syn.activation_log.is_empty() else "none"])
+	print("[autotest] level-up offers: hands %d, new-item cards %d, later items %d (%.0f%%) in %d hands (%.0f%%), distinct later items offered %d" % [
+		_hands_seen, _new_offers, _new_later_offers, 100.0 * _new_later_offers / maxf(1.0, float(_new_offers)),
+		_hands_with_later, 100.0 * _hands_with_later / maxf(1.0, float(_hands_seen)), _later_seen.size()])
 	print("[autotest] level-up actions: rerolls used %d/%d, banishes used %d/%d (banished: %s), skips %d" % [
 		ab.rerolls_max - ab.rerolls_left, ab.rerolls_max, ab.banishes_max - ab.banishes_left, ab.banishes_max,
 		", ".join(PackedStringArray(ab.banished.keys())) if not ab.banished.is_empty() else "none", ab.skips_used])

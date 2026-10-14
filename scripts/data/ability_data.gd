@@ -54,10 +54,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 ##   labels       — stat key -> UI label, in display order. Only these keys
 ##                  are listed on cards.
 ##   levels       — 5 rows of absolute stats.
-##   shared_card_pool — true (the four newer spells): while not owned, this
-##                  spell's NEW card shares LevelUpData.NEW_SPELL_POOL_WEIGHT
-##                  with the other shared spells; absent: the full
-##                  LevelUpData.WEIGHT_NEW (the GDD spells).
+##   shared_card_pool — true (every spell after the GDD's three): a later
+##                  item, its NEW card weighs LevelUpData.WEIGHT_NEW_LATER;
+##                  absent: the full LevelUpData.WEIGHT_NEW (the GDD spells).
 ##
 ## Shadow Bolt stat keys:
 ##   damage (per bolt), cooldown (s), count (bolts per cast), pierce (extra
@@ -155,7 +154,7 @@ const SPELLS := {
 		"display_name": "Bone Spear",
 		"icon": "bone_spear",
 		"description": "Hurls piercing bone spears ahead of you as you walk.",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Damage", "count": "Spears", "cooldown": "Cooldown (s)", "pierce": "Pierce", "range": "Range"},
 		"levels": [
 			{"damage": 18.0, "cooldown": 1.3, "count": 1, "pierce": 2, "speed": 520.0, "range": 360.0},  # TUNING (not in GDD)
@@ -169,7 +168,7 @@ const SPELLS := {
 		"display_name": "Soul Siphon",
 		"icon": "soul_siphon",
 		"description": "Soul tethers drain the strongest nearby foes to heal you.",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Drain", "targets": "Tethers", "cooldown": "Drain every (s)", "range": "Range", "lifesteal": "Lifesteal", "heal_cap": "Heal cap (HP/s)"},
 		"levels": [
 			{"damage": 7.0, "cooldown": 0.5, "targets": 1, "range": 170.0, "lifesteal": 0.25, "heal_cap": 1.0},  # TUNING (not in GDD)
@@ -183,7 +182,7 @@ const SPELLS := {
 		"display_name": "Corpse Explosion",
 		"icon": "corpse_explosion",
 		"description": "Detonates fresh corpses near you in bursts of bone.",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Damage", "radius": "Radius", "count": "Corpses per cast", "cooldown": "Cooldown (s)", "range": "Range"},
 		"levels": [
 			# Combined balance pass: damage 24/30/30/36/40 -> 22/26/26/30/34 and cooldown
@@ -201,7 +200,7 @@ const SPELLS := {
 		"display_name": "Plague Cloud",
 		"icon": "plague_cloud",
 		"description": "Plague clouds settle on packed foes and rot them to take more damage.",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT (combined balance pass)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Damage per tick", "radius": "Radius", "duration": "Duration (s)", "cooldown": "Cooldown (s)", "rot": "Rot (damage taken)"},
 		"levels": [
 			# Two cuts: the first pass (4-8 dmg/tick, 4-6 s, every 3.0-2.2 s) and a second
@@ -222,7 +221,7 @@ const SPELLS := {
 		"display_name": "Death Mark",
 		"icon": "death_mark",
 		"description": "Brands the strongest foes, and the branded dead rise to fight for you.",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Brand damage per tick", "duration": "Brand duration (s)", "count": "Brands per cast", "cooldown": "Cooldown (s)", "risen_cap": "Risen at once"},
 		"levels": [
 			# Owner: no damage-taken amplification; the brand alone must kill early
@@ -238,7 +237,7 @@ const SPELLS := {
 		"display_name": "Bone Wall",
 		"icon": "bone_wall",
 		"description": "Raises a wall of bone spikes that holds foes back and tears them.",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Spike damage per tick", "segments": "Wall segments", "duration": "Wall duration (s)", "cooldown": "Cooldown (s)"},
 		"levels": [
 			{"damage": 4.0, "cooldown": 7.0, "duration": 3.5, "segments": 5, "distance": 70.0},  # TUNING (not in GDD)
@@ -252,7 +251,7 @@ const SPELLS := {
 		"display_name": "Soul Chains",
 		"icon": "soul_chains",
 		"description": "Soul lightning arcs from foe to foe, slowing each one it strikes.",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Damage", "jumps": "Jumps", "falloff": "Falloff per jump", "cooldown": "Cooldown (s)", "slow": "Slow", "slow_duration": "Slow duration (s)"},
 		"levels": [
 			{"damage": 18.0, "cooldown": 1.6, "jumps": 2, "falloff": 0.2, "jump_range": 110.0, "range": 320.0, "slow": 0.25, "slow_duration": 0.6},  # TUNING (not in GDD)
@@ -266,7 +265,7 @@ const SPELLS := {
 		"display_name": "Wither",
 		"icon": "wither",
 		"description": "A decay aura withers nearby foes and rots their armour away.",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Damage per pulse", "radius": "Radius", "cooldown": "Pulse every (s)", "shred": "Armour removed"},
 		"levels": [
 			# First pass (radius 60-85, damage 4-10) dealt 2.4k in 10 minutes of a forced
@@ -282,7 +281,7 @@ const SPELLS := {
 		"display_name": "Raise Dead",
 		"icon": "raise_dead",
 		"description": "Skeletons briefly claw up beside nearby foes, beyond your army's limit.",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SPELL_POOL_WEIGHT like the other later spells
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"count": "Skeletons", "cooldown": "Cooldown (s)", "life": "Skeleton life (s)", "skeleton_hp": "Skeleton HP", "skeleton_damage": "Skeleton damage"},
 		"levels": [
 			{"count": 2, "cooldown": 9.0, "life": 7.0, "skeleton_hp": 0.5, "skeleton_damage": 0.6, "range": 260.0},  # TUNING (not in GDD)

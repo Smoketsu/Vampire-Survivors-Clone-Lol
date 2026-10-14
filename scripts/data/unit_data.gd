@@ -101,11 +101,10 @@ const CORE_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
 ##                             Dominion, Legion of Bone) this class receives,
 ##                             rounded down; 1 when absent. Low-population
 ##                             elite classes would otherwise double in size.
-##   shared_card_pool        — true: while not owned, this class's NEW card
-##                             shares LevelUpData.NEW_SUMMON_POOL_WEIGHT with
-##                             the other shared classes (the four later
-##                             classes); absent (the GDD summon roles):
-##                             LevelUpData.WEIGHT_NEW_CORE_SUMMON.
+##   shared_card_pool        — true (every class after the GDD roles): a later
+##                             item, its NEW card weighs
+##                             LevelUpData.WEIGHT_NEW_LATER; absent (the GDD
+##                             summon roles): LevelUpData.WEIGHT_NEW_CORE_SUMMON.
 ##   new_card_weight_mult    — multiplier on that NEW-card weight (1 when
 ##                             absent). The Mender and Warder are the GDD's one
 ##                             Priest role split in two, so each has 0.5: the
@@ -354,7 +353,7 @@ const UNITS := {
 		"formation": "front",  # TUNING (not in GDD) frontline arc with the warriors
 		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2, not +5
 		"behavior": "stomp",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"special": {
 			"stomp_damage": 22.0,  # TUNING (not in GDD) AoE damage to every enemy in the ring
 			"stomp_radius": 64.0,  # TUNING (not in GDD) px around the abomination
@@ -398,7 +397,7 @@ const UNITS := {
 		"formation": "mid",
 		"capacity_bonus_mult": 0.6,  # TUNING (not in GDD) Grave Dominion V: +3
 		"behavior": "dash",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"special": {
 			"dash_damage": 24.0,  # TUNING (not in GDD) to every enemy in the lane
 			"dash_length": 130.0,  # TUNING (not in GDD) max lane length (px)
@@ -447,7 +446,7 @@ const UNITS := {
 		"formation": "front",
 		"capacity_bonus_mult": 0.6,  # TUNING (not in GDD) Grave Dominion V: +3
 		"behavior": "swoop",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"special": {
 			"swoop_damage": 30.0,  # TUNING (not in GDD) AoE damage where it lands
 			"swoop_radius": 50.0,  # TUNING (not in GDD) impact radius (px)
@@ -500,7 +499,7 @@ const UNITS := {
 		"formation": "mid",
 		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2
 		"behavior": "frost",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"special": {
 			"chill_slow": 0.35,  # TUNING (not in GDD) fraction of speed a frost bolt removes
 			"chill_duration": 1.8,  # TUNING (not in GDD) s the chill lasts
@@ -550,7 +549,7 @@ const UNITS := {
 		"formation": "mid",
 		"capacity_bonus_mult": 0.6,  # TUNING (not in GDD) Grave Dominion V: +3 (the pack is already the biggest class)
 		"behavior": "pack",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"special": {
 			"pack_bonus": 0.15,  # TUNING (not in GDD) +15% bite damage per other hound biting the same foe
 			"pack_cap": 3,  # TUNING (not in GDD) at most 3 packmates count (+45%)
@@ -597,7 +596,7 @@ const UNITS := {
 		"formation": "mid",
 		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2
 		"behavior": "dirge",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"special": {
 			"dirge_radius": 72.0,  # TUNING (not in GDD) px around the target
 			"dirge_cooldown": 6.0,  # TUNING (not in GDD) s between Dirges (owner brief: every ~6 s)
@@ -646,7 +645,7 @@ const UNITS := {
 		"formation": "back",
 		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2
 		"behavior": "barrage",
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_SUMMON_POOL_WEIGHT
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"special": {
 			"boulder_speed": 300.0,  # TUNING (not in GDD) px/s along the ground: flight time = distance / this
 			"boulder_flight_min": 0.55,  # TUNING (not in GDD) s, shortest flight (the telegraph is always readable)

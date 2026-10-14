@@ -641,13 +641,10 @@ func _apply_fallback(id: String) -> void:
 
 
 ## Every upgradeable item not banished and not in `exclude` (id -> true), as
-## {"offer", "weight", "dead"} entries for the weighted draw. The later
-## summon classes (UnitData "shared_card_pool") split
-## LevelUpData.NEW_SUMMON_POOL_WEIGHT between their NEW cards and the newer
-## spells (AbilityData "shared_card_pool") split
-## LevelUpData.NEW_SPELL_POOL_WEIGHT, so a larger roster does not crowd
-## spells, passives, upgrades and the GDD classes out; the GDD summon roles
-## get LevelUpData.WEIGHT_NEW_CORE_SUMMON.
+## {"offer", "weight", "dead"} entries for the weighted draw. A NEW card of a
+## later item (spell, summon class or passive flagged "shared_card_pool")
+## weighs LevelUpData.WEIGHT_NEW_LATER, an original spell / passive
+## LevelUpData.WEIGHT_NEW and a GDD summon role LevelUpData.WEIGHT_NEW_CORE_SUMMON.
 func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var can_new_active := active_count() < PlayerData.ACTIVE_SLOTS
@@ -658,19 +655,12 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 	var owns_spell := false
 	for id: String in AbilityData.SPELL_ORDER:
 		owns_spell = owns_spell or spell_level(id) > 0
-	# Shared-pool spells (AbilityData "shared_card_pool": the newer spells)
-	# that can still appear as a NEW card split NEW_SPELL_POOL_WEIGHT.
-	var unowned_spells := 0
-	for id: String in AbilityData.SPELL_ORDER:
-		if spell_level(id) == 0 and not banished.has(id) and bool(AbilityData.SPELLS[id].get("shared_card_pool", false)):
-			unowned_spells += 1
-	var w_new_spell := minf(LevelUpData.WEIGHT_NEW, LevelUpData.NEW_SPELL_POOL_WEIGHT / float(maxi(unowned_spells, 1)))  # Weight of one new shared-pool spell.
 	for id: String in AbilityData.SPELL_ORDER:
 		var lvl := spell_level(id)
 		var max_lvl := (AbilityData.SPELLS[id]["levels"] as Array).size()
 		if banished.has(id) or exclude.has(id) or evolved.has(id) or lvl >= max_lvl or (lvl == 0 and not can_new_active):
 			continue
-		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (w_new_spell if bool(AbilityData.SPELLS[id].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW)
+		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (LevelUpData.WEIGHT_NEW_LATER if bool(AbilityData.SPELLS[id].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW)
 		var evo := EvolutionData.for_spell(id)
 		if lvl > 0 and evo != "" and passive_level(EvolutionData.EVOLUTIONS[evo]["passive"]) > 0:
 			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
@@ -678,40 +668,23 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 			w *= game.autotest.card_weight_mult(id)  # Test only: --spells items come up more often.
 		out.append({"offer": _spell_offer(id, lvl), "weight": w, "dead": false})
 	var evos := game.horde.evolutions  # Summon-evolution card hooks.
-	# Shared-pool summon classes (UnitData "shared_card_pool": the later
-	# classes) that can still appear as a NEW card (not owned, not banished,
-	# not locked). They split NEW_SUMMON_POOL_WEIGHT; the other classes (the
-	# GDD summon roles) get WEIGHT_NEW_CORE_SUMMON each.
-	var unowned := 0
-	for cls: String in UnitData.CLASS_ORDER:
-		if int(game.horde.class_levels[cls]) == 0 and not banished.has(cls) and not evos.is_locked(cls) \
-				and bool(UnitData.UNITS[cls].get("shared_card_pool", false)):
-			unowned += 1
-	var w_new_summon := minf(LevelUpData.WEIGHT_NEW, LevelUpData.NEW_SUMMON_POOL_WEIGHT / float(maxi(unowned, 1)))  # Weight of one new class.
 	for cls: String in UnitData.CLASS_ORDER:
 		var lvl: int = game.horde.class_levels[cls]
 		if banished.has(cls) or exclude.has(cls) or lvl >= (UnitData.LEVELS[cls] as Array).size() or (lvl == 0 and not can_new_active):
 			continue
 		if evos.is_locked(cls):
 			continue  # Merged away, or only created by an evolution.
-		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (w_new_summon if bool(UnitData.UNITS[cls].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW_CORE_SUMMON)
+		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (LevelUpData.WEIGHT_NEW_LATER if bool(UnitData.UNITS[cls].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW_CORE_SUMMON)
 		if lvl == 0:
 			w *= float(UnitData.UNITS[cls].get("new_card_weight_mult", 1.0))  # The split priest orders share one role's weight.
 		if lvl > 0 and evos.on_path(cls):
 			w *= LevelUpData.WEIGHT_EVOLUTION_PATH
 		out.append({"offer": _summon_offer(cls, lvl), "weight": w, "dead": false})
-	# Shared-pool passives (PassiveData "shared_card_pool": the later horde
-	# passives) that can still appear as a NEW card split NEW_PASSIVE_POOL_WEIGHT.
-	var unowned_passives := 0  # Unowned, unbanished shared-pool passives.
-	for id: String in PassiveData.ORDER:
-		if passive_level(id) == 0 and not banished.has(id) and bool(PassiveData.PASSIVES[id].get("shared_card_pool", false)):
-			unowned_passives += 1
-	var w_new_passive := minf(LevelUpData.WEIGHT_NEW, LevelUpData.NEW_PASSIVE_POOL_WEIGHT / float(maxi(unowned_passives, 1)))  # Weight of one new shared-pool passive.
 	for id: String in PassiveData.ORDER:
 		var lvl := passive_level(id)
 		if banished.has(id) or exclude.has(id) or lvl >= (PassiveData.PASSIVES[id]["levels"] as Array).size() or (lvl == 0 and not can_new_passive):
 			continue
-		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (w_new_passive if bool(PassiveData.PASSIVES[id].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW)
+		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (LevelUpData.WEIGHT_NEW_LATER if bool(PassiveData.PASSIVES[id].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW)
 		var paired := _paired_spell(id)
 		if paired != "" and spell_level(paired) > 0 and not evolved.has(paired):
 			w *= LevelUpData.WEIGHT_EVOLUTION_PATH

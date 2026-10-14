@@ -189,9 +189,9 @@ const LEDGER_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
 ##                        `classes` (Mender, Warder, Profane Bishop).
 ##   classes            — (optional) summon classes the passive affects; it
 ##                        is a "dead" card while none of them is owned.
-##   shared_card_pool   — (optional) true for the later horde passives: their
-##                        NEW cards share LevelUpData.NEW_PASSIVE_POOL_WEIGHT
-##                        (like the later summon classes and the newer spells).
+##   shared_card_pool   — (optional) true for the later passives: a later item,
+##                        its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+##                        (like the later summon classes and spells).
 ##   flat_reduction     — damage every hit on a minion loses (after the other
 ##                        reductions, before barriers; it keeps at least
 ##                        PLATING_MIN_FRACTION of the hit).
@@ -404,7 +404,7 @@ const PASSIVES := {
 		"icon": "bone_plating",
 		"description": "Bone plates turn the edge of every blow your minions take.",
 		"labels": {"flat_reduction": ["Damage ignored per hit", "int"]},
-		"shared_card_pool": true,
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"flat_reduction": 2},  # TUNING (not in GDD) user brief: 2 -> 6
 			{"flat_reduction": 3},  # TUNING (not in GDD)
@@ -418,7 +418,7 @@ const PASSIVES := {
 		"icon": "unholy_precision",
 		"description": "Your minions' attacks can strike critically for double damage.",
 		"labels": {"crit_chance": ["Minion critical chance", "pct"]},
-		"shared_card_pool": true,
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"crit_chance": 0.05},  # TUNING (not in GDD) user brief: 5% -> 25%
 			{"crit_chance": 0.10},  # TUNING (not in GDD)
@@ -432,7 +432,7 @@ const PASSIVES := {
 		"icon": "unholy_resilience",
 		"description": "Your minions shrug off slams, sweeps, holy fire and consecrated ground.",
 		"labels": {"area_holy_reduction": ["Area and holy damage taken", "neg_pct"]},
-		"shared_card_pool": true,
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"area_holy_reduction": 0.08},  # TUNING (not in GDD) user brief: 8% -> 35%
 			{"area_holy_reduction": 0.15},  # TUNING (not in GDD)
@@ -446,7 +446,7 @@ const PASSIVES := {
 		"icon": "bound_souls",
 		"description": "Your minions move faster, roam farther and return to you sooner.",
 		"labels": {"minion_move_speed": ["Minion move speed", "pct"], "leash_range": ["Leash range", "pct"], "return_reduction": ["Return time", "neg_pct"]},
-		"shared_card_pool": true,
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"minion_move_speed": 0.06, "leash_range": 0.10, "return_reduction": 0.10},  # TUNING (not in GDD) user brief: +6% / +10% / -10% at Lv 1
 			{"minion_move_speed": 0.12, "leash_range": 0.20, "return_reduction": 0.20},  # TUNING (not in GDD)
@@ -460,7 +460,7 @@ const PASSIVES := {
 		"icon": "grim_ledger",
 		"description": "Elites, minibosses and bosses take more damage from everything.",
 		"labels": {"elite_damage": ["Damage to elites and bosses", "pct"]},
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"elite_damage": 0.05},  # TUNING (not in GDD)
 			{"elite_damage": 0.10},  # TUNING (not in GDD)
@@ -474,7 +474,7 @@ const PASSIVES := {
 		"icon": "spirit_binding",
 		"description": "Every slow, chill, freeze and stun you inflict lasts longer.",
 		"labels": {"cc_duration": ["Slow, freeze and stun duration", "pct"]},
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"cc_duration": 0.08},  # TUNING (not in GDD)
 			{"cc_duration": 0.16},  # TUNING (not in GDD)
@@ -488,7 +488,7 @@ const PASSIVES := {
 		"icon": "restless_dead",
 		"description": "Temporary summons last longer and strike harder.",
 		"labels": {"temp_duration": ["Temporary summon lifetime", "pct"], "temp_damage": ["Temporary summon damage", "pct"]},
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"temp_duration": 0.10, "temp_damage": 0.08},  # TUNING (not in GDD)
 			{"temp_duration": 0.20, "temp_damage": 0.16},  # TUNING (not in GDD)
@@ -502,7 +502,7 @@ const PASSIVES := {
 		"icon": "blood_scent",
 		"description": "Your swiftest dead move and attack faster.",
 		"labels": {"fast_move_speed": ["Fast summon move speed", "pct"], "fast_attack_speed": ["Fast summon attack speed", "pct"]},
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"fast_move_speed": 0.05, "fast_attack_speed": 0.06},  # TUNING (not in GDD)
 			{"fast_move_speed": 0.10, "fast_attack_speed": 0.12},  # TUNING (not in GDD)
@@ -516,7 +516,7 @@ const PASSIVES := {
 		"icon": "mournsong",
 		"description": "Slows, chills, curses, Rot and Dirges you inflict all last longer.",
 		"labels": {"debuff_duration": ["Weakening effect duration", "pct"]},
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"debuff_duration": 0.10},  # TUNING (not in GDD)
 			{"debuff_duration": 0.20},  # TUNING (not in GDD)
@@ -530,7 +530,7 @@ const PASSIVES := {
 		"icon": "siegecraft",
 		"description": "Summons deal more damage to structures, elites and minibosses.",
 		"labels": {"siege_damage": ["Summon damage to structures, elites, minibosses", "pct"]},
-		"shared_card_pool": true,  # TUNING (not in GDD) shares LevelUpData.NEW_PASSIVE_POOL_WEIGHT (does not crowd early hands)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"siege_damage": 0.10},  # TUNING (not in GDD)
 			{"siege_damage": 0.20},  # TUNING (not in GDD)

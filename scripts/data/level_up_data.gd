@@ -24,17 +24,6 @@ const WEIGHT_OWNED: float = 2.5  # TUNING (not in GDD)
 ## Weight multiplier for a card on an evolution path: the paired passive of an
 ## owned spell, or an owned spell whose paired passive is owned.
 const WEIGHT_EVOLUTION_PATH: float = 1.5  # TUNING (not in GDD)
-## Total draw weight shared by the NEW cards of the later summon classes
-## (UnitData "shared_card_pool": Abomination, Rogue, Gargoyle, Frost Wraith):
-## each unowned one gets min(WEIGHT_NEW, this / number of them). The GDD's
-## summon roles (Archer, Mage, Mender, Warder) get WEIGHT_NEW_CORE_SUMMON
-## (they had the full WEIGHT_NEW like a spell until the combined balance
-## pass). A single pool over all eight classes (3.0, the first version) left
-## each core class at 0.375: an army build could go most of a run without
-## being offered Mages or a priest order, and collapsed on the Crimson March.
-## Locked classes (the evolution-only Profane Bishop, merged Menders /
-## Warders) are never offered and do not count.
-const NEW_SUMMON_POOL_WEIGHT: float = 1.5  # TUNING (not in GDD)
 ## Draw weight of a NEW card for one of the GDD's summon roles (Archer, Mage,
 ## Mender, Warder: classes without UnitData "shared_card_pool"; the Warrior is
 ## owned from the start). The Mender and Warder, one Priest role split in
@@ -44,29 +33,18 @@ const NEW_SUMMON_POOL_WEIGHT: float = 1.5  # TUNING (not in GDD)
 ## Mage or Warder card in 24 level-ups and collapsed). "The army is your
 ## weapon" (GDD pillar), so the roles come up half again as often as a spell.
 const WEIGHT_NEW_CORE_SUMMON: float = 1.5  # TUNING (not in GDD)
-## Total draw weight shared by the NEW cards of the four newer spells
-## (AbilityData "shared_card_pool": Bone Spear, Soul Siphon, Corpse
-## Explosion, Plague Cloud), like NEW_SUMMON_POOL_WEIGHT for the later
-## classes: each unowned one gets min(WEIGHT_NEW, this / number of them).
-## The GDD spells (Orb Shield, Shadow Blast) keep WEIGHT_NEW. Combined
-## balance pass: with six new spells at full weight, new spells were about a
-## quarter of every early hand and crowded the summon roles out.
-## At the start: 2 (GDD spells) + 2 (newer spells) new-spell weight against
-## 3 x 1.5 (Archer, Mage, Priest orders) + 1.5 (later classes) new-summon
-## weight, beside about 12 of passives and 5 of owned upgrades.
-## The five later spells (Death Mark, Bone Wall, Soul Chains, Wither, Raise
-## Dead) joined this pool unchanged, so nine spells now share it and early
-## hands hold no more new-spell weight than before; likewise their three new
-## passives (Grim Ledger, Spirit Binding, Restless Dead) joined
-## NEW_PASSIVE_POOL_WEIGHT.
-const NEW_SPELL_POOL_WEIGHT: float = 2.0  # TUNING (not in GDD)
-## Total draw weight shared by the NEW cards of the four later horde passives
-## (PassiveData "shared_card_pool": Bone Plating, Unholy Precision, Unholy
-## Resilience, Bound Souls), like NEW_SPELL_POOL_WEIGHT: each unowned one
-## gets min(WEIGHT_NEW, this / number of them). At full weight they would add
-## 4 to the about 12 of passive weight at the start and crowd the summon
-## roles and spells out of early hands; owned ones level at WEIGHT_OWNED.
-const NEW_PASSIVE_POOL_WEIGHT: float = 2.0  # TUNING (not in GDD)
+## Draw weight of a NEW card for one of the later items: the spells, summon
+## classes and passives flagged "shared_card_pool" in AbilityData, UnitData and
+## PassiveData (every spell after Orb Shield / Shadow Blast, every class after
+## the GDD roles, every horde / spell passive added after the first twelve).
+## Half an original item's WEIGHT_NEW, so the GDD summon roles still lead
+## early hands (the reason these items were held back), but each later item
+## keeps its own weight however many there are. Owner decision (Oct 2026
+## playtest, "I rarely ever see the newer additions"): replaces three shared
+## pools (spells 2.0, classes 1.5, passives 2.0 split between every unowned
+## later item), which had fallen to ~0.2 per item (~2% of hands each) as the
+## roster grew to 9 / 7 / 10 later items; at 0.5 each is offered in ~5% of hands.
+const WEIGHT_NEW_LATER: float = 0.5  # TUNING (not in GDD) owner decision
 ## Weight multiplier for a "dead" card (no current effect on the build, e.g.
 ## an army passive with no summon class owned). At most CARDS-1 dead cards are
 ## offered while a live card exists.
