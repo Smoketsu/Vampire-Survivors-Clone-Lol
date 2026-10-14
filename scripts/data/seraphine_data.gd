@@ -119,7 +119,7 @@ const SHATTER_SHARDS: int = 36  # TUNING (not in GDD)
 ## The boss row (keys in the header).
 const BOSS := {
 	"display_name": "Grand Inquisitor Seraphine, Voice of the Dawn",  # GDD §7.5
-	"max_hp": 30000.0,  # TUNING (not in GDD) x the stage HP multiplier (33,000 in the Sanctum); 40,000 was tuned on the Graveyard, but in her own crowded stage (x1.1-1.2) it often outlasted the countdown
+	"max_hp": 18000.0,  # TUNING (not in GDD) x the stage HP multiplier (33,000 in the Sanctum); 40,000 was tuned on the Graveyard, but in her own crowded stage (x1.1-1.2) it often outlasted the countdown
 	"move_speed": 48.0,  # TUNING (not in GDD)
 	"damage": 11.0,  # TUNING (not in GDD) staff strike in reach
 	"attack_interval": 1.1,  # TUNING (not in GDD)
