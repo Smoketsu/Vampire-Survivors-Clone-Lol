@@ -1,12 +1,15 @@
 ## StanceBar — the HUD part of the army stances (StanceData, ArmyStance):
 ##   * a column of four stance icons beside the army list (bottom left), in
-##     key order 1-4, each with its key; the active stance is lit with a
+##     key order 1-4, each with its key as an InputHints chip (the keyboard
+##     key, or on a pad the right stick with its flick arrow, redrawn when
+##     the device or a binding changes); the active stance is lit with a
 ##     border in its colour (and a thin bar for the switch lockout), the
 ##     others are dimmed, and a locked stance (Spearhead before its Ossuary
 ##     unlock) is dark with a padlock. Icons go through Glyphs.draw_icon(),
 ##     so icon art (icons/stance_<id>.png) plugs in by itself.
-##   * the one-word banner on a stance change ("ONSLAUGHT") under the
-##     necromancer, and the once-per-run "Locked: ..." banner.
+##   * the one-word banner on a stance change ("Onslaught") under the
+##     necromancer, and the once-per-run "Locked: ..." banner; it fades and
+##     rises in and out, and is hidden while a panel pauses the run.
 ## A full-screen, input-transparent overlay added by the Hud; it polls the
 ## run like the rest of the HUD.
 class_name StanceBar
@@ -21,10 +24,10 @@ const ICON_GAP: float = 4.0
 const LEFT: float = 256.0
 ## Bottom margin (px) of the column (same as the army panel).
 const BOTTOM: float = 16.0
-## Font size of the key hints next to the icons (pixel font).
-const KEY_FONT: int = 11
 ## Banner centre below the screen centre (px), i.e. under the necromancer.
 const BANNER_DROP: float = 70.0
+## Distance (px) the banner rises over its life (in and out).
+const BANNER_RISE: float = 8.0  # TUNING (not in GDD) menu modernization
 
 ## Owning run.
 var game: Game
@@ -49,6 +52,8 @@ func _ready() -> void:
 	_banner.offset_bottom = BANNER_DROP + 48.0
 	_banner.visible = false
 	add_child(_banner)
+	InputHints.tracker().device_changed.connect(func(_d: int) -> void: queue_redraw())  # Chips follow the device.
+	Settings.changed.connect(queue_redraw)  # ... and rebinds.
 
 
 func _process(_delta: float) -> void:
@@ -69,8 +74,8 @@ func _refresh_banner(st: ArmyStance) -> void:
 	var age := game.elapsed - at
 	var hold := StanceData.LOCKED_BANNER_TIME if locked else StanceData.BANNER_TIME  # Fully visible seconds.
 	var total := hold + StanceData.BANNER_FADE
-	if age < 0.0 or age > total:
-		_banner.visible = false
+	if age < 0.0 or age > total or game.run_state != Game.RunState.PLAYING:
+		_banner.visible = false  # Over, or hidden under a panel (game time waits).
 		return
 	_banner.visible = true
 	if locked:
@@ -81,7 +86,11 @@ func _refresh_banner(st: ArmyStance) -> void:
 		UiTheme.set_tier(_banner, UiTheme.Tier.TITLE)  # The stance word in Jacquard 24 (a stance banner),
 		_banner.text = String(st.def()["display_name"])  # in title case: blackletter capitals read poorly.
 		_banner.add_theme_color_override("font_color", (st.def()["color"] as Color).lightened(0.2))
-	_banner.modulate.a = clampf(1.0 - (age - hold) / StanceData.BANNER_FADE, 0.0, 1.0)
+	var k_in := clampf(age / 0.15, 0.0, 1.0)  # 0..1 through a quick fade-in.
+	_banner.modulate.a = minf(k_in, clampf(1.0 - (age - hold) / StanceData.BANNER_FADE, 0.0, 1.0))
+	var rise := BANNER_RISE * (1.0 - age / total)  # Drifts up over its life (px).
+	_banner.offset_top = roundf(BANNER_DROP + rise)
+	_banner.offset_bottom = _banner.offset_top + 48.0
 
 
 func _draw() -> void:
@@ -91,7 +100,6 @@ func _draw() -> void:
 	var st := game.stance
 	var n := StanceData.ORDER.size()
 	var top := size.y - BOTTOM - float(n) * ICON_SIZE.y - float(n - 1) * ICON_GAP  # Top of the column.
-	var font := get_theme_default_font()  # The theme's pixel font.
 	for i in n:
 		var id: String = StanceData.ORDER[i]
 		var d := StanceData.def(id)
@@ -108,6 +116,6 @@ func _draw() -> void:
 			StanceGlyphs.draw_lock(self, rect.get_center() + Vector2(rect.size.x * 0.18, rect.size.y * 0.18), rect.size.x * 0.32)
 		else:
 			draw_rect(rect, Color(0, 0, 0, 0.38))
-		var key := Settings.key_name(StanceData.ACTIONS[i])  # Bound key ("1").
-		var key_col := UiTheme.TEXT if id == st.current else UiTheme.TEXT_DIM
-		draw_string(font, Vector2(rect.end.x + 4.0, rect.get_center().y + 4.0), key, HORIZONTAL_ALIGNMENT_LEFT, -1.0, UiTheme.font_px(KEY_FONT), key_col)
+		var g := InputHints.glyph(StanceData.ACTIONS[i])  # Key chip ("1", or RS + flick arrow on a pad).
+		var at := Vector2(rect.end.x + 4.0, roundf(rect.get_center().y - float(InputHintData.CHIP_HEIGHT) * 0.5))  # Chip corner.
+		InputHints.draw_chip(self, at, g)
