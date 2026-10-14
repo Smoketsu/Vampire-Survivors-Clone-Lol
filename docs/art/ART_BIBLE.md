@@ -190,6 +190,19 @@ The tool turns any image into palette-correct grid art, but **what it can keep d
   blocks) come out as outline only. Repaint the lit column by hand (the recruit's shaft: the left
   column in wood brown, the right one kept as its outline).
 
+### Converting small figures (figure redesign, Oct 2026)
+
+A detailed AI figure is about 19 source px per art px at 48 px, and `prepare_sprite.py`'s cell vote
+fattens thin shapes and drops one-pixel dark lines: the redesigned Banshee's neckline and the gap
+between her bust and her hair vanished into one bone-white torso. Two fixes, used on the Banshee and
+the Keening Lady: `python3 tools/pixelate_source.py <source> <art height> <grid copy>` puts the source
+on the exact art grid first (premultiplied box downscale, one flat block per art pixel), and
+`prepare_sprite.py <grid copy> <key> --ink-l 0.15 --no-cleanup` keeps a dark slate gown as cloth
+(the default `INK_L` 0.27 turned it into outline ink) and keeps the single-pixel neckline (the check
+then warns about specks; the floors still pass). Keep the levels on for these two: with
+`--no-levels` the Keening Lady's dark gown failed every March and Sanctum floor. As with any
+pre-processed source, copy the untouched original back to `art_source/<key>.png`.
+
 ### Converting skin (figure redesign, Oct 2026)
 
 The `skin` ramp's lightest shade is the ivory `bone`, and on a source with a lot of skin (the
@@ -372,13 +385,13 @@ Process: `python3 tools/prepare_sprite.py <image> icons/shadow_bolt --art-height
 
 ## Walk cycles (`tools/walk_cycle.py`)
 
-**Status:** 51 strips: the necromancer and the 11 other characters, their 16 skins; Grand Inquisitor
-Seraphine and her Avatar of the Dawn (a glide: robe hem sway, bob and bust bounce; figure redesign,
+**Status:** 53 strips: the necromancer and the 11 other characters, their 16 skins; Grand Inquisitor
+Seraphine, her Avatar of the Dawn, the Banshee and the Keening Lady (glides: robe hem sway, bob and bust bounce; figure redesign,
 Oct 2026); the summons
 Warrior, Archer, Mage, Mender, Warder, Rogue, Risen and Bone Hound and the walking evolutions Death
 Knight, Gravebow, Shadow Reaper and Hellhound; the Covenant Recruit, Footman, Archer, Chaplain,
 Purifier, Shieldbearer, Halberdier, Templar and Banner Bearer. Every other unit (the other bosses, structures,
-the floating Banshee, Keening Lady, Frost Wraith, Winter Revenant and Lich, the airborne Gargoyle and
+the floating Frost Wraith, Winter Revenant and Lich, the airborne Gargoyle and
 Cathedral Horror, the Bishop, the giant summons, the Corpse Catapult and Ossuary Engine, the Inquisitor
 and the Sanctum kinds) keeps its still plus the engine motion. A skin's rig is derived from its character's
 (`SKINS` / `skin_rig()`: the same hip height above the feet, the columns moved by the offset between
@@ -417,8 +430,9 @@ overshoots as the body rises, rebounds, settles on the contact, so frame 0 stays
 are only moved within their column (nearest, inverse mapping), never recoloured, so the strip passes
 the same checks. Used on the Wither Witch (2 px; her box starts right of her near arm, which shook
 when it was inside), the Soulbinder (2 px), their Hyper skins (boxes derived by `skin_rig()`),
-Seraphine and her Avatar (3 px). The walk bounce plays while the unit moves; standing, these units play
-their idle strip (below).
+Seraphine and her Avatar (3 px), and the floating Banshee and Keening Lady (2 px, glide strips like
+Seraphine's). The walk bounce plays while the unit moves; standing, these units play their idle strip
+(below).
 
 **Strip layout (the engine contract).** `assets/sprites/<key>_walk.png` = 8 frames side by side, no
 gaps, **each exactly the still's width and height** (frame i at x = i x W), feet on the same bottom row
@@ -565,8 +579,8 @@ The undead army: bone, cold grey and teal soul fire, one accent per class, **no 
 | `bone_colossus.png` | Bone Colossus (Abomination evolution): a towering hulk of moss-grey corpse flesh armoured in fused bone plates: a ribbed bone breastplate, spiked bone pauldrons, a horned bone helm with teal eyes, a bone-slab club arm | 100 | done |
 | `bone_hound.png` | Bone Hound: a lean, low skeletal hound seen from the side, long ribcage, thin legs, a long snouted skull with a teal eye, a curled bone tail; small, fast, feral | 32 | done |
 | `hellhound.png` | Hellhound (Bone Hound evolution): the hound charred dark brown with glowing fire cracks along the ribs, a mane of flame along the neck and back, burning eyes; bigger and fiercer | 40 | done |
-| `banshee.png` | Banshee: a legless floating spectre in a pale bone-white veil that frays into wisps, long white hair streaming back, arms raised, a dark wide-open wailing mouth, faint teal glow | 48 | done |
-| `keening_lady.png` | Keening Lady (Banshee evolution): a taller, regal banshee in a flowing dark cold-grey gown, a bone circlet with a teal gem, a pale screaming face, teal sound ripples | 56 | done |
+| `banshee.png` | Banshee: a floating spectre with an exaggerated hourglass figure (a very large bust, cinched waist, wide hips; figure redesign, Oct 2026), pale bone-white skin, a fitted low-necked slate gown with a high slit that frays into wisps below the hips, long silver-blue hair streaming back (kept off her chest so the bust reads at 48 px), arms out, mouth open mid-wail, teal eyes. Converted through `pixelate_source.py`, then `--ink-l 0.15 --no-cleanup` | 48 | done |
+| `keening_lady.png` | Keening Lady (Banshee evolution): a taller, regal banshee with the same redesigned figure, a fitted low-necked dark cold-grey gown with a high slit fraying into wisps, a bone circlet with a teal gem, silver-blue hair, a pale screaming face, teal sound ripples. Converted like the Banshee | 56 | done |
 | `corpse_catapult.png` | Corpse Catapult: a squat siege engine of old coffin wood (brown) and bone beams on two bone wheels, sinew ropes, a diagonal throwing arm with a skull boulder (teal eyes) in its cup | 56 | done |
 | `ossuary_engine.png` | Ossuary Engine (Corpse Catapult evolution): a bigger siege engine of ribcages and spines, fire-lit sinew, a triple cup of three burning skulls | 72 | done |
 
