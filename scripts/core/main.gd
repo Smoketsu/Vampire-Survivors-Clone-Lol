@@ -11,6 +11,9 @@
 ## (UiMotion.transition; instant under the autotest and with Reduce motion).
 ## Main also installs the UI motion hook (UiMotion.install: card lift and
 ## button squash) once at startup.
+## Music: the menu asks Sfx for the main menu theme, a run for the in-run
+## loop (Sfx.play_music crossfades them; the menu-to-run fade starts with the
+## fade through black).
 extends Node
 
 ## Current run (null while the menu is shown).
@@ -37,6 +40,7 @@ func _ready() -> void:
 ## Frees whatever is shown and displays the main menu.
 func _show_menu() -> void:
 	_clear()
+	Sfx.play_music(Sfx.MUSIC_MENU)
 	_menu_layer = CanvasLayer.new()
 	add_child(_menu_layer)
 	var menu := MainMenu.new()
@@ -49,12 +53,14 @@ func _show_menu() -> void:
 func _on_stage_chosen(config: RunConfig) -> void:
 	_run_config = config
 	GameState.last_stage_id = config.stage_id
+	Sfx.play_music(Sfx.MUSIC_RUN)
 	UiMotion.transition(self, _start_game)
 
 
 ## Frees whatever is shown and starts a new run with `_run_config`.
 func _start_game() -> void:
 	_clear()
+	Sfx.play_music(Sfx.MUSIC_RUN)
 	_game = Game.new()
 	_game.run_config = _run_config.duplicate_config() if _run_config != null else RunConfig.new()
 	_game.restart_requested.connect(UiMotion.transition.bind(self, _start_game), CONNECT_DEFERRED)
