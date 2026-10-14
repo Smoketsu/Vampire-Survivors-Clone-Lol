@@ -20,7 +20,7 @@ Sanctum of Judgment* (unlocked by slaying Marshal Vael), built in Godot 4.3
 with no addons. The art is true pixel art (PNGs in `assets/`; the code
 drawings remain as the fallback for any missing image), and the sound and
 music are synthesized at startup. Latest release notes:
-[`docs/release_notes/v0.5.0.md`](docs/release_notes/v0.5.0.md).
+[`docs/release_notes/v0.6.0.md`](docs/release_notes/v0.6.0.md).
 
 Design documents:
 - [`docs/Gravebound_Complete_Game_Design_and_Horde_Spec.txt`](docs/Gravebound_Complete_Game_Design_and_Horde_Spec.txt):
@@ -1844,7 +1844,7 @@ push a version tag. The export job creates a GitHub Release titled "Necropathy <
 notes as its body and GitHub's generated changelog below them:
 
 ```bash
-git tag v0.5.0 && git push origin v0.5.0
+git tag v0.6.0 && git push origin v0.6.0
 ```
 
 To export locally, install the 4.3 export templates (**Editor → Manage Export Templates**), then use
