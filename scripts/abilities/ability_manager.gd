@@ -109,6 +109,7 @@ func setup(p_game: Game) -> void:
 		passive_levels[id] = 0
 	var start := game.character.starting_spell()  # AbilityData.STARTING_SPELL for the Gravecaller.
 	spell_levels[start] = 1
+	game.codex.meet(CodexData.SPELL, start)  # Codex: the starting spell (records only).
 	if start == "orb_shield":
 		_create_orb_shield()
 	# Fortune tree (GDD §9.2 "rerolls", open question 7): extra charges.
@@ -577,6 +578,7 @@ func apply_offer(o: Dictionary) -> void:
 			if id == "orb_shield" and orb_shield == null:
 				_create_orb_shield()
 			game.character.on_spell_level(id, to)  # Character unlock rule (Meta save).
+			game.codex.meet(CodexData.SPELL, id)  # Codex: a spell learned (records only).
 		"summon":
 			game.horde.set_class_level(id, to)
 		"passive":

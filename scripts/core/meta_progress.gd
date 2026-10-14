@@ -70,6 +70,18 @@
 ## award_run() reports what a run unlocked ("hyper_unlocked", "hyper_clear",
 ## "unlocked_skins") for the end screen. Older saves without these sections
 ## get the defaults; unknown ids are ignored.
+## Codex (GDD §10.1 "Collection / Codex", CodexData): what the player has met
+## in any run, per CodexData category (spells learned, summon classes raised,
+## Covenant kinds slain, stage bosses faced), in `codex_seen`, saved as
+## [codex] <category> = "<id>,<id>,..." (a comma-separated id list, like
+## [prerun] modifiers). The run's CodexLog calls codex_record() on a first
+## sight; a new entry is saved once at the end of that frame (a deferred
+## save, so a burst of first sights writes once), never under the autotest
+## (can_write()). Lifetime kills per Covenant kind (`codex_kills`, from the
+## run's "kill_<kind>" stats in award_run()) are saved as [codex_kills]
+## <kind> = count. Evolutions are not in [codex]: the Codex reads the
+## [recipes] discoveries (owner rule: hidden until obtained). Older saves
+## have neither section and start with nothing met; unknown ids are ignored.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -124,6 +136,14 @@ var hyper_clears: Dictionary = {}
 var prerun_hyper: bool = false
 ## Character id -> SkinData id last chosen for that character.
 var chosen_skins: Dictionary = {}
+## Codex: CodexData category -> {entry id -> true} for every entry met in
+## any run (one Dictionary per CodexData.CATEGORIES entry, always present).
+var codex_seen: Dictionary = {}
+## Codex: Covenant kind (CodexData ENEMY id) -> enemies of that kind slain
+## over all runs (finished runs only, like the lifetime stats).
+var codex_kills: Dictionary = {}
+## True while a deferred codex save is queued for the end of this frame.
+var _codex_save_queued: bool = false
 
 ## Keys of every stage record (all floats, like the lifetime stats).
 const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills"]
@@ -279,6 +299,7 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 		# The Dread Sovereign skin reuses the achievement's role check
 		# (Game._on_boss_defeated: the four GDD roles when the boss fell).
 		_add_lifetime("seraphine_kills_full_army", 1.0 if float(st.get("boss_kill_full_army", 0.0)) > 0.0 else 0.0)
+	_add_codex_kills(st)
 	award["hyper_unlocked"] = slew_unlock_boss and not hyper_unlocked
 	if slew_unlock_boss:
 		hyper_unlocked = true
@@ -526,6 +547,91 @@ func discovered_count() -> int:
 
 
 # =====================================================================================
+# Codex (GDD §10.1 "Collection / Codex"; CodexData)
+# =====================================================================================
+
+## Records codex entry `id` of category `cat` (CodexData) as met. Returns
+## true when it is new (then a save is queued for the end of the frame);
+## unknown categories / ids and known entries are ignored. In memory only
+## under the autotest (can_write()). Never touches gameplay state.
+func codex_record(cat: String, id: String) -> bool:
+	var seen: Dictionary = codex_seen.get(cat, {})  # This category's met ids.
+	if seen.has(id) or not CodexData.is_known(cat, id):
+		return false
+	seen[id] = true
+	codex_seen[cat] = seen
+	if can_write() and not _codex_save_queued:
+		_codex_save_queued = true
+		_flush_codex.call_deferred()
+	return true
+
+
+## The deferred half of codex_record(): one save for every first sight of
+## this frame.
+func _flush_codex() -> void:
+	_codex_save_queued = false
+	save()
+
+
+## True once codex entry `id` of category `cat` was met in some run.
+func is_codex_met(cat: String, id: String) -> bool:
+	return (codex_seen.get(cat, {}) as Dictionary).has(id)
+
+
+## Number of known entries of category `cat` met so far.
+func codex_count(cat: String) -> int:
+	var n := 0  # Met ids still in the codex data.
+	for id: String in (codex_seen.get(cat, {}) as Dictionary):
+		if CodexData.is_known(cat, id):
+			n += 1
+	return n
+
+
+## Enemies of Covenant kind `kind` slain over all finished runs.
+func codex_kill_count(kind: String) -> int:
+	return int(float(codex_kills.get(kind, 0.0)))
+
+
+## Adds a finished run's "kill_<kind>" stats (`st`) to the lifetime kills
+## per Covenant kind (and records each kind as met, in case it was not).
+func _add_codex_kills(st: Dictionary) -> void:
+	for key: Variant in st:
+		var k := String(key)  # Stat name.
+		if not k.begins_with("kill_"):
+			continue
+		var kind := k.substr(5)  # Covenant kind.
+		if not CodexData.is_known(CodexData.ENEMY, kind):
+			continue
+		codex_kills[kind] = minf(float(codex_kills.get(kind, 0.0)) + float(st[key]), float(MAX_STORED))
+		(codex_seen[CodexData.ENEMY] as Dictionary)[kind] = true
+
+
+## Empty met-sets, one per codex category.
+static func _empty_codex() -> Dictionary:
+	var out := {}  # Category -> {}.
+	for cat: String in CodexData.CATEGORIES:
+		out[cat] = {}
+	return out
+
+
+## Reads [codex] (comma-separated id lists per category) and [codex_kills]
+## (count per Covenant kind). Missing sections or keys = nothing met; wrong
+## types and unknown ids are ignored.
+func _load_codex(cfg: ConfigFile) -> void:
+	for cat: String in CodexData.CATEGORIES:
+		var v: Variant = cfg.get_value("codex", cat, "")
+		if typeof(v) != TYPE_STRING:
+			continue
+		for id: String in String(v).split(",", false):
+			if CodexData.is_known(cat, id):
+				(codex_seen[cat] as Dictionary)[id] = true
+	if cfg.has_section("codex_kills"):
+		for kind: String in cfg.get_section_keys("codex_kills"):
+			if CodexData.is_known(CodexData.ENEMY, kind):
+				codex_kills[kind] = _read_float(cfg, "codex_kills", kind, 0.0)
+
+
+# =====================================================================================
 # Stages (GDD §9.3 campaign unlocks)
 # =====================================================================================
 
@@ -689,6 +795,10 @@ func save() -> Error:
 		cfg.set_value("hyper_clears", key, true)
 	for ch: String in chosen_skins:
 		cfg.set_value("skins", ch, String(chosen_skins[ch]))
+	for cat: String in CodexData.CATEGORIES:
+		cfg.set_value("codex", cat, ",".join(PackedStringArray((codex_seen[cat] as Dictionary).keys())))
+	for kind: String in codex_kills:
+		cfg.set_value("codex_kills", kind, float(codex_kills[kind]))
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -734,6 +844,7 @@ func load_save() -> void:
 	_load_recipes(cfg)
 	_load_characters(cfg)
 	_load_hyper_skins(cfg)
+	_load_codex(cfg)
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -861,6 +972,8 @@ func _reset() -> void:
 	hyper_clears = {}
 	prerun_hyper = false
 	chosen_skins = {}
+	codex_seen = _empty_codex()
+	codex_kills = {}
 	load_status = "fresh"
 
 
