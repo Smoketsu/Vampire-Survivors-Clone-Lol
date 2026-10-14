@@ -32,18 +32,89 @@ const CENTER: int = 4  # TUNING (not in GDD) art pass UI kit
 ##   tip   : tooltip panel (bone ring).
 ##   scroll: scroll bar track; grab: its grabber.
 ##   line  : horizontal separator (3 px tall, stretched sideways).
+## Ornamented kinds (menu modernization, GDD §15.0 "Ornamented UI kit"):
+##   ornate : hero panel, bone filigree corners and a skull keystone crest
+##            (UiTheme.ornate_panel()).
+##   header : title band with pointed end caps and gem finial crests
+##            (UiTheme.header_band()).
+##   ribbon : banner backing with swallow-tail ends (UiTheme.ribbon()).
+##   divider: section separator line with a centred skull crest (UiTheme.divider()).
+##   track  : HSlider track (recessed socket); fill: its filled part.
+## This is the horizontal (left / right) margin; SLICE_V overrides the
+## top / bottom margin of the kinds whose fill carries a gradient.
 const SLICE: Dictionary = {
-	"button": 5,  # TUNING (not in GDD) art pass UI kit
-	"panel": 7,  # TUNING (not in GDD) art pass UI kit
-	"card": 10,  # TUNING (not in GDD) art pass UI kit
-	"focus": 6,  # TUNING (not in GDD) art pass UI kit
+	"button": 6,  # TUNING (not in GDD) art pass UI kit
+	"panel": 12,  # TUNING (not in GDD) art pass UI kit
+	"card": 15,  # TUNING (not in GDD) art pass UI kit
+	"focus": 8,  # TUNING (not in GDD) art pass UI kit
 	"slot": 4,  # TUNING (not in GDD) art pass UI kit
 	"bar": 3,  # TUNING (not in GDD) art pass UI kit
 	"tip": 4,  # TUNING (not in GDD) art pass UI kit
 	"scroll": 3,  # TUNING (not in GDD) art pass UI kit
 	"grab": 3,  # TUNING (not in GDD) art pass UI kit
 	"line": 2,  # TUNING (not in GDD) art pass UI kit
+	"ornate": 26,  # TUNING (not in GDD) ornamented UI kit
+	"header": 18,  # TUNING (not in GDD) ornamented UI kit
+	"ribbon": 40,  # TUNING (not in GDD) ornamented UI kit
+	"divider": 6,  # TUNING (not in GDD) ornamented UI kit
+	"track": 3,  # TUNING (not in GDD) ornamented UI kit
+	"fill": 3,  # TUNING (not in GDD) ornamented UI kit
 }
+
+## Top / bottom 9-slice margin (texels = layout px) of the kinds whose top and
+## bottom rows differ from SLICE (kinds not listed use SLICE). The dithered
+## fill gradient (lighter top, darker bottom) lives in these rows, so it keeps
+## its pixel size at any control height; a control must be at least twice this
+## tall (the smallest kit buttons are 30 px, the recipe lock tile 48 px).
+const SLICE_V: Dictionary = {
+	"button": 10,  # TUNING (not in GDD) ornamented UI kit
+	"panel": 16,  # TUNING (not in GDD) ornamented UI kit
+	"card": 22,  # TUNING (not in GDD) ornamented UI kit
+	"slot": 6,  # TUNING (not in GDD) ornamented UI kit
+	"tip": 7,  # TUNING (not in GDD) ornamented UI kit
+	"header": 9,  # TUNING (not in GDD) ornamented UI kit
+	"ribbon": 18,  # TUNING (not in GDD) ornamented UI kit
+	"divider": 0,  # TUNING (not in GDD) ornamented UI kit (the line keeps its own height)
+	"track": 3,  # TUNING (not in GDD) ornamented UI kit
+	"fill": 3,  # TUNING (not in GDD) ornamented UI kit
+}
+
+## Content margins (layout px: left, top, right, bottom) of the ornamented
+## kinds; the older kinds keep the margins UiTheme._textured() gives them
+## (buttons, panels, cards 10 / 6, as the flat boxes had).
+const CONTENT: Dictionary = {
+	"ornate": [24, 24, 24, 20],  # TUNING (not in GDD) ornamented UI kit: inside the double frame and corners
+	"header": [26, 5, 26, 5],  # TUNING (not in GDD) ornamented UI kit: clear of the end caps
+	"ribbon": [44, 6, 44, 9],  # TUNING (not in GDD) ornamented UI kit: clear of the swallow tails and the hems
+	"divider": [0, 0, 0, 0],  # TUNING (not in GDD) ornamented UI kit: the divider holds no content
+	"track": [0, 4, 0, 4],  # TUNING (not in GDD) ornamented UI kit: top + bottom = the 8 px slider track height
+	"fill": [0, 4, 0, 4],  # TUNING (not in GDD) ornamented UI kit
+}
+
+## Crests: fixed-size art drawn over a frame without being 9-sliced (UiTheme
+## KitStyleBox), so they never stretch. File "<kind>_<accent>_<crest>.png".
+## kind -> list of [crest name, anchor x, anchor y, offset x, offset y]: the
+## crest's top-left is placed at rect.position + rect.size * anchor + offset
+## (layout px, floored to whole px). "keystone": the skull keystone hanging
+## over the ornate panel's top edge; "cap": the header's gem finial, drawn on
+## its left and right ends (symmetric art, lit from the top left on both);
+## "crest": the divider's central skull.
+const CRESTS: Dictionary = {
+	"ornate": [["keystone", 0.5, 0.0, -30.0, -9.0]],  # TUNING (not in GDD) ornamented UI kit: 60 px wide, 9 px above the top
+	"header": [["cap", 0.0, 0.5, -6.0, -7.0], ["cap", 1.0, 0.5, -8.0, -7.0]],  # TUNING (not in GDD) 14 x 14 px finials, 6 px outside each end
+	"divider": [["crest", 0.5, 0.5, -16.0, -7.0]],  # TUNING (not in GDD) ornamented UI kit: 33 x 15 px, centred
+}
+
+## Height (layout px) of the divider's line strip (its PNG height), drawn
+## through the middle of the divider Control (UiTheme.divider()).
+const DIVIDER_LINE: int = 5  # TUNING (not in GDD) ornamented UI kit
+
+## Height (layout px) of the whole divider Control: fits its 15 px skull crest.
+const DIVIDER_HEIGHT: float = 15.0  # TUNING (not in GDD) ornamented UI kit
+
+## The HSlider grabber icons (grabber_normal / _hover / _disabled.png, 12 x 20
+## px, tools/ui_kit.py GRABBER_SIZE) are drawn at their own size; the slider
+## track and fill are UiArtData.CONTENT["track"] (8 px) tall.
 
 ## Layout px the focus ring is drawn outside the focused control (its
 ## StyleBoxTexture expand margin), so it frames the control's own border.
