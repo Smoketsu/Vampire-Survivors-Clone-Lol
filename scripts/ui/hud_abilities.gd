@@ -7,7 +7,8 @@
 ##   right : Dread Rally (ultimate) icon, darkened above the soul meter's
 ##           level, a meter bar beside it, a pulsing "READY" border when
 ##           full, and the buff's remaining time while the rally runs.
-## Key names come from Settings.key_name(), so they follow rebinds. Icons go
+## Key names come from InputHints.key_text(), so they follow rebinds and the
+## last device used (keyboard key, or the pad's RB / LB). Icons go
 ## through Glyphs.draw_icon(), so icon art (assets/sprites/icons/grave_step
 ## / dread_rally.png) plugs in. Polls game.grave_step / game.dread_rally and
 ## redraws every frame (two small icons); purely visual. Pixel-art UI kit:
@@ -28,7 +29,7 @@ const HALF_WIDTH: float = 236.0
 ## Opacity of the "not ready" darkening.
 const SHADE_ALPHA: float = 0.68
 ## Font size (px) of the key and status labels, as the UI scripts size text
-## (drawn at UiTheme.font_px() in the pixel font).
+## (drawn at UiTheme.font_px() in the pixel font: the BODY tier, 19 px).
 const FONT: int = 11
 ## Pulse speed (rad/s of game time) of the ready border.
 const PULSE: float = 6.0
@@ -65,7 +66,7 @@ func _draw() -> void:
 func _draw_step(o: Vector2) -> void:
 	var gs := game.grave_step
 	var rect := Rect2(o, Vector2(ICON, ICON))
-	_key_label(o, Settings.key_name("dash"))
+	_key_label(o, InputHints.key_text("dash"))
 	_socket(rect)
 	Glyphs.draw_icon(self, "grave_step", rect)
 	if gs.charges <= 0:
@@ -90,7 +91,7 @@ func _draw_step(o: Vector2) -> void:
 func _draw_rally(o: Vector2) -> void:
 	var dr := game.dread_rally
 	var rect := Rect2(o, Vector2(ICON, ICON))
-	_key_label(o, Settings.key_name("ultimate"))
+	_key_label(o, InputHints.key_text("ultimate"))
 	_socket(rect)
 	Glyphs.draw_icon(self, "dread_rally", rect)
 	var f := dr.fraction()  # Meter fill 0..1.

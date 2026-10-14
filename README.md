@@ -75,6 +75,18 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Settings (volume, shake, damage numbers, fullscreen, zoom Normal / Close, keys) | **Settings** in the main or pause menu; Esc / Back closes | Focus + **A**; **B** closes |
 | Rebind a key (in Settings) | Select a binding, then press the new key | **B** cancels |
 
+On-screen hints show these controls as small key / button chips drawn from your
+**current** bindings and the **last device you used**: keycaps for the keyboard,
+Xbox-style **A / B / X / Y**, **LB / RB**, **Start** and stick chips for a
+controller. They switch the moment you touch the other device and follow rebinds
+at once. The main menu, pause menu, level-up panel (the 1 / 2 / 3 card keys and
+the Reroll / Banish / Skip buttons), chest Claim button, Settings and the HUD's
+Shadow Bolt aim line and ability keys all use them. The HUD carries no permanent
+controls line any more, and its difficulty / modifiers box only appears when the
+run differs from the standard one (another difficulty, a run modifier, Hyper,
+the Pact or the Oath). The F3 debug overlay still works but is no longer
+advertised on screen.
+
 You don't aim or cast anything yourself. Spells, summons, targeting, healing and
 replacing fallen units all happen automatically (GDD §4, §21). The only two
 buttons you press in a fight are the dash and the ultimate (below).
@@ -1026,7 +1038,9 @@ integration").
 
 ### Fonts
 
-Two open-licence pixel fonts are in `assets/fonts/` (SIL Open Font License; the licence texts sit next to them): **Jersey 10** for the HUD, numbers, headings, labels, buttons, card names and damage numbers, and **Jacquard 24** for event, zone, stance and evolution banners (owner choice, GDD §15.0). Long descriptions use Godot's default font. Jersey 10 is drawn from one exact 19 px raster at 1, 1.5, 2 or 3 times its pixel size through the sharp-pixel filter, so it stays crisp and correct at any window size; Jacquard is drawn only at its 43 px em.
+Two open-licence pixel fonts are in `assets/fonts/` (SIL Open Font License; the licence texts sit next to them): **Jersey 10** for all UI text (the HUD, numbers, headings, labels, buttons, card names, long descriptions and damage numbers; owner: "Jersey, let's keep it cohesive", so no smooth font is left), and **Jacquard 24** for screen titles and event, zone, stance and evolution banners (owner choice, GDD §15.0). Jersey 10 is drawn from one exact 19 px raster at 1, 1.5, 2 or 3 times its pixel size through the sharp-pixel filter, so it stays crisp and correct at any window size; Jacquard is drawn only at its 43 px em.
+
+Every screen sizes its text by role through five **type tiers** (`UiTheme.Tier`, sizes in `UiArtData.TYPE_*`): **TITLE** (Jacquard 24 at 43 px, screen titles and banners, in title case), **HERO** (Jersey 57, big numbers), **HEADER** (Jersey 38, section headers, the HUD timer), **NAME** (Jersey 28, item and card names, buttons) and **BODY** (Jersey 19, descriptions and secondary lines), plus a **LABEL** style (Jersey 19, upper case, letter-spaced 2 px) for small section labels.
 
 ### Camera zoom
 
@@ -1336,8 +1350,11 @@ scripts/
                             (their icons), stance_bar (HUD stance icons + banner),
                             stance_glyphs (stance icons, padlock, ground outline shapes),
                             character_picker (pre-run character tiles + detail panel),
-                            character_glyphs (characters in the world and as portraits)
+                            character_glyphs (characters in the world and as portraits),
+                            input_hints (key / pad-button chips from the current bindings,
+                            last-device tracking, the bottom-of-screen hint strip)
   data/                     DESIGNER-TUNABLE DATA (no logic):
+    input_hint_data.gd      Input hint chips: sizes, colours, pad glyph names, device thresholds
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
     stages/graveyard_stage.gd      Stage 1: segments, events, Reckoning flavour, graves, desecration,
                                    Crypt Defender, obstacle layout, boss arrival
@@ -1698,7 +1715,6 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 - Power-up, chest and Pact / Oath numbers are tuned only against the bots.
   The Profane Oath at tier V is a true hard mode: the army bot never dies
   but kills Sir Alaric in only about 1 run in 4 (8 seeds).
-- Menu hint text still shows the default keys (Esc, T) after you rebind them.
 - Nobody has played it on real hardware yet. Audio, visuals and performance
   have only been verified headless (simulation step about 0.9–1.3 ms on
   average over a 20-minute run, with up to 180 enemies and ~45 summons). Rendering cost has not been profiled.

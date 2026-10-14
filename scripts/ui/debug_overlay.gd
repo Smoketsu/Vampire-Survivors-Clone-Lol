@@ -24,7 +24,7 @@ func _ready() -> void:
 	offset_right = -16.0
 	offset_top = 118.0
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_label = UiTheme.label("", 13)
+	_label = UiTheme.tier_label("", UiTheme.Tier.BODY)
 	add_child(_label)
 	visible = GameState.debug_overlay_visible
 

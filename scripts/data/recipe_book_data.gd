@@ -9,7 +9,7 @@ class_name RecipeBookData
 extends RefCounted
 
 ## Pause menu button and view title.
-const TITLE: String = "RECIPES"  # TUNING (not in GDD)
+const TITLE: String = "Recipes"  # TUNING (not in GDD)
 ## Discovery count under the title: discovered, total.
 const COUNT: String = "%d / %d discovered"  # TUNING (not in GDD)
 ## One ingredient of a discovered recipe: name, level required ("Soul Conduit Lv 5").

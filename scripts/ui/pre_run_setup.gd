@@ -8,10 +8,15 @@
 ##   * the playable character (CharacterPicker, its own file: portrait
 ##     tiles and a detail panel; locked ones show their unlock condition),
 ##   * four difficulty cards in a 2 x 2 grid (DifficultyData, easiest to
-##     hardest): name and Soul Ash multiplier, the GDD effect line and every
-##     number that differs from the standard level; exactly one is selected,
-##   * a grid of the eight run modifiers (RunModifierData): name, effect and
-##     its Soul Ash reward; each toggles on / off and they stack,
+##     hardest): name and Soul Ash multiplier and the GDD effect line; every
+##     number that differs from the standard level is in the card's
+##     tooltip (the totals show the combined numbers); exactly one is
+##     selected,
+##   * a grid of the eight run modifiers (RunModifierData): name, Soul Ash
+##     reward and state on one line (Jersey 10 body text is too wide for a
+##     second line); the focused / hovered modifier's effect shows in the
+##     line under the grid (and in its tooltip); each toggles on / off and
+##     they stack,
 ##   * the Hyper toggle and the skin selector (PreRunHyperSkins, its own
 ##     file: HyperData, SkinData; Hyper stays locked until Seraphine falls),
 ##   * the stacked result: the TOTAL Soul Ash multiplier (difficulty x plus
@@ -25,7 +30,9 @@
 ## the choices remembered in the Meta save (Meta.prerun_config) and Begin
 ## remembers the new ones (Meta.remember_prerun) before emitting `confirmed`
 ## with the finished RunConfig. All difficulty levels are open from the
-## start (GDD §15.0: the GDD names no difficulty unlocks).
+## start (GDD §15.0: the GDD names no difficulty unlocks). Text sizes are
+## UiTheme type tiers (Jacquard title, LABEL section labels, NAME card
+## names, BODY descriptions and totals).
 class_name PreRunSetup
 extends Control
 
@@ -41,13 +48,17 @@ const RIGHT_WIDTH: float = 760.0
 ## Gap (px) between the two columns.
 const COLUMN_GAP: int = 22
 ## Size (px) of one difficulty card (two per row fill RIGHT_WIDTH).
-const LEVEL_CARD_SIZE := Vector2(375, 104)
+const LEVEL_CARD_SIZE := Vector2(375, 84)
 ## Difficulty cards per grid row.
 const LEVEL_COLUMNS: int = 2
 ## Size (px) of one run-modifier card (two per row fill RIGHT_WIDTH).
-const MOD_CARD_SIZE := Vector2(375, 44)
+const MOD_CARD_SIZE := Vector2(375, 32)
 ## Run-modifier cards per grid row.
 const MOD_COLUMNS: int = 2
+## Height (px) kept for the modifier effect line under the grid (two BODY lines).
+const MOD_DETAIL_HEIGHT: float = 42.0
+## Modifier effect line while no modifier card is focused or hovered.
+const MOD_HINT: String = "Each run modifier adds Soul Ash; they stack."
 ## UI kit accent of the selected difficulty card (gold frame, UiTheme.style()).
 const SELECTED_ACCENT: String = "gold"
 ## UI kit accent of an active run-modifier card (crimson frame).
@@ -65,6 +76,8 @@ var _level_names: Dictionary = {}
 var _mod_buttons: Dictionary = {}
 ## Run modifier id -> its "ON" / "off" state Label.
 var _mod_states: Dictionary = {}
+## Effect line of the focused / hovered run modifier (under the grid).
+var _mod_detail: Label
 ## Headline: the total Soul Ash multiplier.
 var _total_label: Label
 ## Breakdown of the total and the Oath note.
@@ -111,9 +124,11 @@ func _ready() -> void:
 	head.add_theme_constant_override("separation", 14)
 	head.alignment = BoxContainer.ALIGNMENT_CENTER
 	vb.add_child(head)
-	head.add_child(UiTheme.label("PREPARE THE RITUAL", 22, UiTheme.TEXT_GOLD))
+	head.add_child(UiTheme.title("Prepare the Ritual"))
 	var def := config.stage_def()  # The chosen stage.
-	head.add_child(UiTheme.label("%s  -  %s" % [String(def["chapter"]), String(def["display_name"])], 14, UiTheme.TEXT_DIM))
+	var stage_l := UiTheme.tier_label("%s  -  %s" % [String(def["chapter"]), String(def["display_name"])], UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
+	stage_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	head.add_child(stage_l)
 	var cols := HBoxContainer.new()
 	cols.add_theme_constant_override("separation", COLUMN_GAP)
 	vb.add_child(cols)
@@ -136,7 +151,7 @@ func _ready() -> void:
 	right.add_theme_constant_override("separation", 6)
 	right.custom_minimum_size = Vector2(RIGHT_WIDTH, 0)
 	cols.add_child(right)
-	right.add_child(UiTheme.label("DIFFICULTY", 12, UiTheme.TEXT_DIM))
+	right.add_child(UiTheme.tier_label("Difficulty", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))
 	var lgrid := GridContainer.new()
 	lgrid.columns = LEVEL_COLUMNS
 	lgrid.add_theme_constant_override("h_separation", 10)
@@ -144,7 +159,7 @@ func _ready() -> void:
 	right.add_child(lgrid)
 	for id: String in DifficultyData.ORDER:
 		lgrid.add_child(_build_level_card(id))
-	right.add_child(UiTheme.label("RUN MODIFIERS  (optional, they stack; each adds Soul Ash)", 12, UiTheme.TEXT_DIM))
+	right.add_child(UiTheme.tier_label("Run modifiers (optional, they stack)", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))
 	var grid := GridContainer.new()
 	grid.columns = MOD_COLUMNS
 	grid.add_theme_constant_override("h_separation", 10)
@@ -152,27 +167,31 @@ func _ready() -> void:
 	right.add_child(grid)
 	for id: String in RunModifierData.ORDER:
 		grid.add_child(_build_mod_card(id))
-	_total_label = UiTheme.label("", 20, MetaGlyphs.EMBER.lightened(0.2))
+	_mod_detail = UiTheme.para(MOD_HINT, RIGHT_WIDTH, UiTheme.TEXT_DIM)
+	_mod_detail.custom_minimum_size.y = MOD_DETAIL_HEIGHT  # Two lines kept, so the totals never jump.
+	right.add_child(_mod_detail)
+	_total_label = UiTheme.tier_label("", UiTheme.Tier.NAME, MetaGlyphs.EMBER.lightened(0.2))
 	_total_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	right.add_child(_total_label)
-	_breakdown_label = _wrapped_total(13, UiTheme.TEXT_DIM)
+	_breakdown_label = _wrapped_total(UiTheme.TEXT_DIM)
 	right.add_child(_breakdown_label)
-	_foes_label = _wrapped_total(13, Palette.CRIMSON.lightened(0.45))
+	_foes_label = _wrapped_total(Palette.CRIMSON.lightened(0.45))
 	right.add_child(_foes_label)
 	var buttons := HBoxContainer.new()
 	buttons.add_theme_constant_override("separation", 10)
 	vb.add_child(buttons)
 	_back = _make_button("Back", buttons, close)
-	_reset = _make_button("Standard (Necromancer, no modifiers, no Hyper)", buttons, _reset_choice)
-	_begin = _make_button("Begin the march", buttons, _start)
+	_reset = _make_button("Standard", buttons, _reset_choice)  # Necromancer, no modifiers, no Hyper.
+	_reset.tooltip_text = "Necromancer, no run modifiers, no Hyper."
+	_begin = _make_button("Begin", buttons, _start)
 	_refresh()
 	_queue_wire()
 	_begin.grab_focus.call_deferred()
 
 
-## A centred, word-wrapped totals line of the right column.
-func _wrapped_total(size_px: int, color: Color) -> Label:
-	var l := UiTheme.label("", size_px, color)
+## A centred, word-wrapped totals line (BODY tier) of the right column.
+func _wrapped_total(color: Color) -> Label:
+	var l := UiTheme.tier_label("", UiTheme.Tier.BODY, color)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.custom_minimum_size = Vector2(RIGHT_WIDTH, 0)
@@ -222,19 +241,15 @@ func _build_level_card(id: String) -> Button:
 	b.pressed.connect(_select_level.bind(id))
 	var head := HBoxContainer.new()
 	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var name_l := UiTheme.label(String(lv["display_name"]), 17, UiTheme.TEXT)
+	var name_l := UiTheme.tier_label(String(lv["display_name"]), UiTheme.Tier.NAME, UiTheme.TEXT)
 	name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(name_l)
-	head.add_child(UiTheme.label(_level_reward(lv), 12, MetaGlyphs.EMBER.lightened(0.2)))
+	var reward := UiTheme.tier_label(_level_reward(lv), UiTheme.Tier.BODY, MetaGlyphs.EMBER.lightened(0.2))
+	reward.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	head.add_child(reward)
 	box.add_child(head)
-	var tag := UiTheme.body(String(lv["tagline"]), 11, UiTheme.TEXT_DIM)  # Card description: body font.
-	tag.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	tag.custom_minimum_size = Vector2(LEVEL_CARD_SIZE.x - 20.0, 0)
-	box.add_child(tag)
-	var nums := UiTheme.body(_level_numbers(lv), 11, UiTheme.TEXT)  # Card description: body font.
-	nums.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	nums.custom_minimum_size = Vector2(LEVEL_CARD_SIZE.x - 20.0, 0)
-	box.add_child(nums)
+	box.add_child(UiTheme.para(String(lv["tagline"]), LEVEL_CARD_SIZE.x - 20.0, UiTheme.TEXT_DIM))
+	b.tooltip_text = _level_numbers(lv)  # The numbers that differ from the standard level.
 	_level_buttons[id] = b
 	_level_names[id] = name_l
 	return b
@@ -270,21 +285,31 @@ func _build_mod_card(id: String) -> Button:
 	b.pressed.connect(_toggle_mod.bind(id))
 	var head := HBoxContainer.new()
 	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var name_l := UiTheme.label(String(md["display_name"]), 15, UiTheme.TEXT)
+	var name_l := UiTheme.tier_label(String(md["display_name"]), UiTheme.Tier.BODY, UiTheme.TEXT)
 	name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(name_l)
 	head.add_theme_constant_override("separation", 8)
-	head.add_child(UiTheme.label("+%d%% Ash" % roundi(float(md["ash_gain"]) * 100.0), 12, MetaGlyphs.EMBER.lightened(0.2)))
-	var state := UiTheme.label("", 13, UiTheme.TEXT_DIM)
+	head.add_child(UiTheme.tier_label("+%d%% Ash" % roundi(float(md["ash_gain"]) * 100.0), UiTheme.Tier.BODY, MetaGlyphs.EMBER.lightened(0.2)))
+	var state := UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	head.add_child(state)
 	box.add_child(head)
-	var desc := UiTheme.body(String(md["description"]), 11, UiTheme.TEXT_DIM)  # Card description: body font.
-	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc.custom_minimum_size = Vector2(MOD_CARD_SIZE.x - 20.0, 0)
-	box.add_child(desc)
+	b.tooltip_text = String(md["description"])
+	b.focus_entered.connect(_show_mod_detail.bind(id))
+	b.mouse_entered.connect(_show_mod_detail.bind(id))
+	b.focus_exited.connect(_show_mod_detail.bind(""))
 	_mod_buttons[id] = b
 	_mod_states[id] = state
 	return b
+
+
+## Shows run modifier `id`'s effect in the line under the grid ("" = the
+## general hint).
+func _show_mod_detail(id: String) -> void:
+	if id == "" or not RunModifierData.MODIFIERS.has(id):
+		_mod_detail.text = MOD_HINT
+		return
+	var md: Dictionary = RunModifierData.MODIFIERS[id]
+	_mod_detail.text = "%s: %s" % [String(md["display_name"]), String(md["description"])]
 
 
 ## Wires the focus neighbours once the containers have laid the cards out

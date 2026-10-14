@@ -14,9 +14,6 @@ extends HBoxContainer
 const ICON: float = 32.0
 ## Gap (px) between an icon and a "+" / "=" sign.
 const GAP: int = 4
-## Font size (px) of the "+" and "=" signs, as the UI scripts size text (the
-## pixel font at UiTheme.font_px(): 28 px, its x1.5 size).
-const SIGN_FONT: int = 22
 
 
 ## The icon row for evolution `evo_id`, or null when the card must show
@@ -55,6 +52,6 @@ static func _icon(kind: String) -> IconGlyph:
 
 ## A "+" or "=" sign between the icons.
 static func _sign(s: String) -> Label:
-	var l := UiTheme.label(s, SIGN_FONT, UiTheme.TEXT_GOLD)
+	var l := UiTheme.tier_label(s, UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)  # Jersey 28, the x1.5 size.
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	return l

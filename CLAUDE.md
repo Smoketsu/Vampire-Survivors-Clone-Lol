@@ -309,12 +309,14 @@ tiny tweaks.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
-2. **Small fixes:** menu key hints should reflect rebinds. (Archers now hold their ground: user
-   decision, GDD §15.0.)
+2. **Small fixes:** none open. (Menu key hints now follow rebinds and the last device used:
+   `InputHints` chips, GDD §15.0 "Input hints". Archers now hold their ground: user decision,
+   GDD §15.0.)
 3. **Art pass: done (Oct 2026)** (GDD §15.0 "Art pass (true pixel art)" and the rows after it). Every unit,
    character, skin, boss, structure, pickup, projectile, icon, obstacle (both orientations), zone floor, decal, effect
    strip, walk cycle (49 units), the UI kit and the NECROPATHY logo are pixel art at 1 art px = 1 screen px through the
-   sharp-pixel shader; fonts Jersey 10 (UI, numbers) + Jacquard 24 (banners). Tools: `tools/gen_image.py` (API
+   sharp-pixel shader; fonts Jersey 10 (all UI text, descriptions included) + Jacquard 24 (titles, banners), sized
+   by the `UiTheme.Tier` type tiers (GDD §15.0 "Type tiers"). Tools: `tools/gen_image.py` (API
    generation, cost ledger `docs/art/generation_ledger.csv`), `prepare_sprite.py`, `art_check.py`, `make_tile.py`,
    `walk_cycle.py`, `ui_kit.py`. Boss attack poses are in (`boss_pose_data.gd`). Possible later polish: attack poses for regular units, arm swing, more effect hooks.
 4. **Web build** (owner decision, after the art is done; GDD §15.0 "Web build after the art"): a

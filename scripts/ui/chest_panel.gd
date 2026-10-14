@@ -4,6 +4,8 @@
 ## then one row per reward appears (icon, name, "Lv 2 -> Lv 3" /
 ## "EVOLVED" / the fallback effect). Confirm (Enter / Space / click / pad A)
 ## first skips the animation, then closes the panel; Game resumes the run.
+## The Claim button carries the confirm key's InputHints chip (current
+## device and bindings); text sizes are UiTheme type tiers.
 ## The autotest closes it at once.
 class_name ChestPanel
 extends Control
@@ -13,7 +15,7 @@ signal closed
 
 ## Owning run (autotest hook).
 var game: Game
-## Title label ("TREASURE CHEST").
+## Title label ("Treasure Chest").
 var _title: Label
 ## Subtitle ("3 upgrades").
 var _subtitle: Label
@@ -59,10 +61,9 @@ func _ready() -> void:
 	vb.add_theme_constant_override("separation", 8)
 	vb.custom_minimum_size = Vector2(460, 0)
 	panel.add_child(vb)
-	_title = UiTheme.label("TREASURE CHEST", 28, UiTheme.TEXT_GOLD)
-	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title = UiTheme.title("Treasure Chest")
 	vb.add_child(_title)
-	_subtitle = UiTheme.label("", 14, UiTheme.TEXT_DIM)
+	_subtitle = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(_subtitle)
 	_reveal = ChestReveal.new()
@@ -73,7 +74,8 @@ func _ready() -> void:
 	_rows_box.add_theme_constant_override("separation", 4)
 	vb.add_child(_rows_box)
 	_claim = Button.new()
-	_claim.text = "Claim   [Enter / A]"
+	_claim.text = "Claim"
+	InputHints.attach(_claim, "ui_accept")  # Confirm key chip (Enter / A).
 	_claim.custom_minimum_size = Vector2(220, 42)
 	_claim.focus_mode = Control.FOCUS_ALL
 	_claim.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -114,7 +116,7 @@ func _make_row(r: Dictionary) -> Control:
 	texts.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(texts)
 	var kind := String(r["kind"])  # Offer kind (spell / summon / passive / evolution / fallback).
-	texts.add_child(UiTheme.label(String(r["name"]), 17, UiTheme.TEXT_GOLD if kind == "evolution" else UiTheme.TEXT))
+	texts.add_child(UiTheme.tier_label(String(r["name"]), UiTheme.Tier.NAME, UiTheme.TEXT_GOLD if kind == "evolution" else UiTheme.TEXT))
 	var change := ""  # "Lv 2 -> Lv 3", "EVOLVED" or the fallback effect.
 	match kind:
 		"evolution":
@@ -124,7 +126,7 @@ func _make_row(r: Dictionary) -> Control:
 			change = deltas[0] if not deltas.is_empty() else ""
 		_:
 			change = "NEW!  Lv 1" if int(r["from"]) == 0 else "Lv %d  ->  Lv %d" % [int(r["from"]), int(r["to"])]
-	texts.add_child(UiTheme.label(change, 14, UiTheme.TEXT_GOOD))
+	texts.add_child(UiTheme.tier_label(change, UiTheme.Tier.BODY, UiTheme.TEXT_GOOD))
 	return row
 
 

@@ -4,8 +4,10 @@
 ## tile_rows()). Shows one portrait tile per character playable in this build
 ## (CharacterModifiers.available_ids(): a character whose starting spell is
 ## missing would stay hidden; all twelve exist now) in a compact grid, and
-## under it a detail panel for the focused / hovered tile: portrait, name
-## and title, starting spell, the innate passive and the stat modifiers. Locked characters (Meta.is_character_unlocked(): the
+## under it a detail panel for the focused / hovered tile: portrait, name,
+## starting spell, the innate passive and the stat modifiers (the flavour
+## title is the tile's tooltip: with Jersey 10 body text the panel has no
+## room for it at 720 px). Locked characters (Meta.is_character_unlocked(): the
 ## owner's rule, Lv 5 with the character's spell in any run) show a padlock
 ## and their unlock condition and cannot be chosen. Choosing one (Enter / A
 ## / click) sets RunConfig.character_id through set_character() and emits
@@ -29,8 +31,9 @@ const BIG_PORTRAIT := Vector2(84, 84)
 ## inside the left column).
 const DETAIL_TEXT_WIDTH: float = 330.0
 ## Minimum height (px) of the detail panel, so the screen does not jump
-## when the focused character's texts are shorter or longer.
-const DETAIL_MIN_HEIGHT: float = 118.0
+## when the focused character's texts are shorter or longer (the tallest
+## character's detail in Jersey 10 BODY text).
+const DETAIL_MIN_HEIGHT: float = 170.0  # TUNING (not in GDD) layout fit: the Umbral Warden, locked
 ## UI kit accent of the chosen character's tile (gold frame, UiTheme.style()).
 const SELECTED_ACCENT: String = "gold"
 
@@ -48,8 +51,6 @@ var _shown: String = ""
 var _big: Portrait
 ## Detail panel: name line.
 var _name_l: Label
-## Detail panel: flavour title.
-var _title_l: Label
 ## Detail panel: starting spell line.
 var _spell_l: Label
 ## Detail panel: innate line.
@@ -82,10 +83,7 @@ func _ready() -> void:
 	if config == null:
 		config = RunConfig.new()
 	add_theme_constant_override("separation", 4)
-	var head := UiTheme.label("CHARACTER  (unlock one by reaching Lv %d with its spell)" % CharacterData.UNLOCK_LEVEL, 12, UiTheme.TEXT_DIM)
-	head.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	head.custom_minimum_size = Vector2(TILE_SIZE.x * TILE_COLUMNS + 5.0 * 6.0, 0)
-	add_child(head)
+	add_child(UiTheme.tier_label("Character", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))  # A locked tile's detail names its unlock.
 	var grid := GridContainer.new()
 	grid.columns = TILE_COLUMNS
 	grid.add_theme_constant_override("h_separation", 6)
@@ -104,7 +102,7 @@ func _build_tile(id: String) -> Button:
 	var b := Button.new()
 	b.custom_minimum_size = TILE_SIZE
 	b.focus_mode = Control.FOCUS_ALL
-	b.tooltip_text = String(CharacterData.CHARACTERS[id]["display_name"])
+	b.tooltip_text = "%s: %s" % [String(CharacterData.CHARACTERS[id]["display_name"]), String(CharacterData.CHARACTERS[id]["title"])]
 	var p := Portrait.new(id, not Meta.is_character_unlocked(id), Vector2.ZERO)
 	p.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	p.offset_left = 4
@@ -130,27 +128,22 @@ func _build_detail() -> Control:
 	var text := VBoxContainer.new()
 	text.add_theme_constant_override("separation", 1)
 	box.add_child(text)
-	_name_l = UiTheme.label("", 17, UiTheme.TEXT)
+	_name_l = UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT)
 	text.add_child(_name_l)
-	_title_l = _wrapped(12, UiTheme.TEXT_DIM)
-	text.add_child(_title_l)
-	_spell_l = UiTheme.label("", 13, UiTheme.TEXT)
+	_spell_l = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT)
 	text.add_child(_spell_l)
-	_innate_l = _wrapped(12, UiTheme.TEXT_GOOD)
+	_innate_l = _wrapped(UiTheme.TEXT_GOOD)
 	text.add_child(_innate_l)
-	_stats_l = _wrapped(12, UiTheme.TEXT)
+	_stats_l = _wrapped(UiTheme.TEXT)
 	text.add_child(_stats_l)
-	_lock_l = _wrapped(12, Palette.CRIMSON.lightened(0.45))
+	_lock_l = _wrapped(Palette.CRIMSON.lightened(0.45))
 	text.add_child(_lock_l)
 	return box
 
 
-## A word-wrapped detail label `size_px` px in `color`.
-func _wrapped(size_px: int, color: Color) -> Label:
-	var l := UiTheme.body("", size_px, color)  # Detail paragraphs: body font.
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	l.custom_minimum_size = Vector2(DETAIL_TEXT_WIDTH, 0)
-	return l
+## A word-wrapped BODY-tier detail paragraph in `color`.
+func _wrapped(color: Color) -> Label:
+	return UiTheme.para("", DETAIL_TEXT_WIDTH, color)
 
 
 ## Shows character `id` in the detail panel.
@@ -166,7 +159,6 @@ func _show(id: String) -> void:
 	var chosen := id == config.character_id  # The current choice.
 	_name_l.text = String(d["display_name"]) + ("  (chosen)" if chosen else "")
 	_name_l.add_theme_color_override("font_color", UiTheme.TEXT_GOLD if chosen else UiTheme.TEXT)
-	_title_l.text = String(d["title"])
 	_spell_l.text = "Starting spell:  %s" % CharacterModifiers.spell_name(id)
 	var inn: Dictionary = d["innate"]  # {} = none.
 	_innate_l.text = "Innate:  none - the classic necromancer" if inn.is_empty() else "Innate - %s:  %s" % [String(inn["name"]), String(inn["description"])]

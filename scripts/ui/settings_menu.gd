@@ -8,7 +8,10 @@
 ##                 (press a binding, then any key; controller B or a mouse
 ##                 click cancels), and "Reset keys".
 ## Fully usable with a controller: sliders move with left / right, toggles
-## and buttons take A, and the first slider is focused on open.
+## and buttons take A, and the first slider is focused on open. Under the
+## key rows an InputHints strip (rebind / back chips of the current device
+## and bindings) replaces the old prose. Text sizes are UiTheme type tiers:
+## the title in Jacquard 24, LABEL section labels, BODY rows and key buttons.
 ## Open it with SettingsMenu.open_over(parent, button_to_refocus).
 class_name SettingsMenu
 extends Control
@@ -66,9 +69,7 @@ func _ready() -> void:
 	var root := VBoxContainer.new()
 	root.add_theme_constant_override("separation", 12)
 	panel.add_child(root)
-	var title := UiTheme.label("SETTINGS", 30, UiTheme.TEXT_GOLD)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	root.add_child(title)
+	root.add_child(UiTheme.title("Settings"))
 	var cols := HBoxContainer.new()
 	cols.add_theme_constant_override("separation", 28)
 	root.add_child(cols)
@@ -87,11 +88,11 @@ func _build_left() -> Control:
 	var vb := VBoxContainer.new()
 	vb.custom_minimum_size = Vector2(COLUMN_WIDTH, 0)
 	vb.add_theme_constant_override("separation", 8)
-	vb.add_child(UiTheme.label("Audio", 18, UiTheme.TEXT_GOLD))
+	vb.add_child(UiTheme.tier_label("Audio", UiTheme.Tier.LABEL, UiTheme.TEXT_GOLD))
 	for bus: String in VOLUME_ROWS.keys():
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 10)
-		var name_label := UiTheme.label(VOLUME_ROWS[bus], 15)
+		var name_label := UiTheme.tier_label(VOLUME_ROWS[bus], UiTheme.Tier.BODY)
 		name_label.custom_minimum_size = Vector2(70, 0)
 		row.add_child(name_label)
 		var s := HSlider.new()
@@ -105,7 +106,7 @@ func _build_left() -> Control:
 		s.set_value_no_signal(roundf(float(Settings.volumes[bus]) * 100.0))
 		s.value_changed.connect(_on_volume_changed.bind(bus))
 		row.add_child(s)
-		var value_label := UiTheme.label("", 15, UiTheme.TEXT_DIM)
+		var value_label := UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 		value_label.custom_minimum_size = Vector2(48, 0)
 		value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		row.add_child(value_label)
@@ -116,12 +117,13 @@ func _build_left() -> Control:
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 8)
 	vb.add_child(gap)
-	vb.add_child(UiTheme.label("Display and feel", 18, UiTheme.TEXT_GOLD))
+	vb.add_child(UiTheme.tier_label("Display and feel", UiTheme.Tier.LABEL, UiTheme.TEXT_GOLD))
 	_add_toggle(vb, "fullscreen", "Fullscreen", Settings.fullscreen, Settings.set_fullscreen)
 	_add_toggle(vb, "screen_shake", "Screen shake", Settings.screen_shake, Settings.set_screen_shake)
 	_add_toggle(vb, "damage_numbers", "Damage numbers", Settings.damage_numbers, Settings.set_damage_numbers)
 	zoom_button = Button.new()
 	zoom_button.custom_minimum_size = Vector2(0, 36)
+	UiTheme.set_tier(zoom_button, UiTheme.Tier.BODY)  # An option row, like the toggles.
 	zoom_button.pressed.connect(_on_zoom_pressed)
 	vb.add_child(zoom_button)
 	_refresh_zoom()
@@ -145,14 +147,15 @@ func _build_right() -> Control:
 	var vb := VBoxContainer.new()
 	vb.custom_minimum_size = Vector2(COLUMN_WIDTH, 0)
 	vb.add_theme_constant_override("separation", KEY_ROW_GAP)
-	vb.add_child(UiTheme.label("Keyboard", 18, UiTheme.TEXT_GOLD))
+	vb.add_child(UiTheme.tier_label("Keyboard", UiTheme.Tier.LABEL, UiTheme.TEXT_GOLD))
 	for action: String in Settings.REBINDABLE:
 		var row := HBoxContainer.new()
-		var l := UiTheme.label(Settings.ACTION_LABELS.get(action, action), 15)
+		var l := UiTheme.tier_label(String(Settings.ACTION_LABELS.get(action, action)), UiTheme.Tier.BODY)
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(l)
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(150, KEY_ROW_HEIGHT)
+		UiTheme.set_tier(b, UiTheme.Tier.BODY)  # Key names in a 30 px row.
 		b.pressed.connect(_start_listening.bind(action))
 		row.add_child(b)
 		key_buttons[action] = b
@@ -160,10 +163,13 @@ func _build_right() -> Control:
 	var reset := Button.new()
 	reset.text = "Reset keys"
 	reset.custom_minimum_size = Vector2(0, KEY_ROW_HEIGHT)
+	UiTheme.set_tier(reset, UiTheme.Tier.BODY)
 	reset.pressed.connect(_on_reset_keys)
 	vb.add_child(reset)
-	var hint := UiTheme.label("Select a binding, then press a key.\nController B or a click cancels.\nArrow keys and controller stay bound.", 12, UiTheme.TEXT_DIM)
-	vb.add_child(hint)
+	vb.add_child(InputHints.strip([["ui_accept", "Rebind"], ["ui_cancel", "Back"]]))
+	var note := UiTheme.tier_label("Arrow keys and the pad stay bound.", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
+	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vb.add_child(note)
 	_refresh_keys()
 	return vb
 

@@ -18,13 +18,16 @@ func _init(px: float = 18.0) -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
-## An HBox holding a badge of `px` px and the caption `text` (gold).
-static func row(text: String, px: float = 18.0, font_size: int = 13) -> HBoxContainer:
+## An HBox holding a badge of `px` px and the caption `text` (gold, in type
+## tier `tier`, BODY by default).
+static func row(text: String, px: float = 18.0, tier: UiTheme.Tier = UiTheme.Tier.BODY) -> HBoxContainer:
 	var hb := HBoxContainer.new()
 	hb.add_theme_constant_override("separation", 6)
 	hb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hb.add_child(HyperBadge.new(px))
-	hb.add_child(UiTheme.label(text, font_size, UiTheme.TEXT_GOLD))
+	var l := UiTheme.tier_label(text, tier, UiTheme.TEXT_GOLD)
+	l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	hb.add_child(l)
 	return hb
 
 
