@@ -1,38 +1,35 @@
 ## PreRunSetup — the pre-run setup screen (GDD §10.2 "Select ... difficulty
 ## (§8.4) and modifiers (§8.5). Show the total reward multiplier from stacked
-## modifiers"). The stage select opens it after a stage is chosen. It fits
-## 1280 x 720 in two columns under a one-line title (GDD §15.0 "Pre-run
-## setup layout"): the LEFT column is who plays (character, skin, Hyper),
-## the RIGHT column how hard (difficulty, run modifiers, the totals), with
-## Back / Standard / Begin across the bottom:
-##   * the playable character (CharacterPicker, its own file: portrait
-##     tiles and a detail panel; locked ones show their unlock condition),
-##   * four difficulty cards in a 2 x 2 grid (DifficultyData, easiest to
-##     hardest): name and Soul Ash multiplier and the GDD effect line; every
-##     number that differs from the standard level is in the card's
-##     tooltip (the totals show the combined numbers); exactly one is
-##     selected,
-##   * a grid of the eight run modifiers (RunModifierData): name, Soul Ash
-##     reward and state on one line (Jersey 10 body text is too wide for a
-##     second line); the focused / hovered modifier's effect shows in the
-##     line under the grid (and in its tooltip); each toggles on / off and
-##     they stack,
-##   * the Hyper toggle and the skin selector (PreRunHyperSkins, its own
-##     file: HyperData, SkinData; Hyper stays locked until Seraphine falls),
-##   * the stacked result: the TOTAL Soul Ash multiplier (difficulty x plus
-##     the modifiers' rewards) and the combined enemy multipliers, plus a
-##     note when a Profane Oath tier is active (it stacks on top),
-##   * Back (to the stage select), Standard (Necromancer, no modifiers) and
-##     Begin.
+## modifiers"; GDD §15.0 "Front door screens"). The stage select opens it
+## after a stage is chosen. It fits 1280 x 720 over the menu's diorama (a low
+## scrim, FrontDoorData.PRERUN_SCRIM) under a one-line title, in two columns:
+##   * LEFT, the hero (PreRunHero, an ornate panel): the character being
+##     looked at, big (3x) and walking in place on the stage's floor, in the
+##     skin it would wear, with its name, innate and starting spell; under it
+##     the skin tiles and the Hyper tile with one detail line
+##     (PreRunHyperSkins: SkinData, HyperData; Hyper stays locked until
+##     Seraphine falls),
+##   * RIGHT, the setup panel: the character grid (CharacterPicker, one row of
+##     twelve portrait tiles; locked ones padlocked), four difficulty cards
+##     (DifficultyData, easiest to hardest: an icon, the name, ONE line and the
+##     Soul Ash multiplier; every number that differs from the standard level
+##     and the GDD line are the card's tooltip; exactly one is selected, in
+##     gold), the eight run modifiers as compact toggle tiles (RunModifierData:
+##     a rune pip, the name and the Soul Ash reward; active ones crimson; the
+##     focused / hovered one's effect shows in the one line under the grid and
+##     in its tooltip; they stack), and the TOTAL Soul Ash multiplier as one
+##     gold plaque that rolls to each new value (its tooltip holds the
+##     breakdown, the combined enemy numbers and the Profane Oath note),
+##   * Back (to the stage select), Standard (Necromancer, no modifiers, no
+##     Hyper) and the strong gold Begin under the setup panel.
 ## Fully keyboard / mouse / controller navigable (arrows / D-pad move between
-## cards and buttons with explicit focus neighbours, Enter / A selects or
-## toggles, Esc / B goes back), in the shared UiTheme. The screen opens on
-## the choices remembered in the Meta save (Meta.prerun_config) and Begin
-## remembers the new ones (Meta.remember_prerun) before emitting `confirmed`
-## with the finished RunConfig. All difficulty levels are open from the
-## start (GDD §15.0: the GDD names no difficulty unlocks). Text sizes are
-## UiTheme type tiers (Jacquard title, LABEL section labels, NAME card
-## names, BODY descriptions and totals).
+## tiles, cards and buttons with explicit focus neighbours, rebuilt whenever
+## the skin tiles change; Enter / A selects or toggles, Esc / B goes back). The
+## screen opens on the choices remembered in the Meta save
+## (Meta.prerun_config) and Begin remembers the new ones (Meta.remember_prerun)
+## before emitting `confirmed` with the finished RunConfig. All difficulty
+## levels are open from the start (GDD §15.0: the GDD names no difficulty
+## unlocks). Text sizes are UiTheme type tiers.
 class_name PreRunSetup
 extends Control
 
@@ -41,27 +38,9 @@ signal confirmed(config: RunConfig)
 ## The screen closed without starting (Back / Esc).
 signal closed
 
-## Width (px) of the left column (character, skin, Hyper).
-const LEFT_WIDTH: float = 414.0
-## Width (px) of the right column (difficulty, modifiers, totals).
-const RIGHT_WIDTH: float = 760.0
-## Gap (px) between the two columns.
-const COLUMN_GAP: int = 22
-## Size (px) of one difficulty card (two per row fill RIGHT_WIDTH).
-const LEVEL_CARD_SIZE := Vector2(375, 84)
-## Difficulty cards per grid row.
-const LEVEL_COLUMNS: int = 2
-## Size (px) of one run-modifier card (two per row fill RIGHT_WIDTH).
-const MOD_CARD_SIZE := Vector2(375, 32)
-## Run-modifier cards per grid row.
-const MOD_COLUMNS: int = 2
-## Height (px) kept for the modifier effect line under the grid (two BODY lines).
-const MOD_DETAIL_HEIGHT: float = 42.0
-## Modifier effect line while no modifier card is focused or hovered.
-const MOD_HINT: String = "Each run modifier adds Soul Ash; they stack."
 ## UI kit accent of the selected difficulty card (gold frame, UiTheme.style()).
 const SELECTED_ACCENT: String = "gold"
-## UI kit accent of an active run-modifier card (crimson frame).
+## UI kit accent of an active run-modifier tile (crimson frame).
 const ACTIVE_ACCENT: String = "crimson"
 
 ## The config being edited (its stage is fixed; difficulty and modifiers change).
@@ -72,28 +51,41 @@ var return_focus: Control = null
 var _level_buttons: Dictionary = {}
 ## Difficulty id -> its name Label (recoloured when selected).
 var _level_names: Dictionary = {}
-## Run modifier id -> its card Button.
+## Run modifier id -> its tile Button.
 var _mod_buttons: Dictionary = {}
-## Run modifier id -> its "ON" / "off" state Label.
-var _mod_states: Dictionary = {}
+## Run modifier id -> its rune pip (MaskIcon: lit while active).
+var _mod_pips: Dictionary = {}
+## Run modifier id -> its name Label.
+var _mod_names: Dictionary = {}
 ## Effect line of the focused / hovered run modifier (under the grid).
 var _mod_detail: Label
-## Headline: the total Soul Ash multiplier.
+## The gold total plaque (its tooltip holds the breakdown).
+var _plaque: PanelContainer
+## The plaque's number ("x1.45").
 var _total_label: Label
-## Breakdown of the total and the Oath note.
-var _breakdown_label: Label
-## Combined enemy multipliers of the current choice.
-var _foes_label: Label
+## The plaque's Profane Oath note ("" when no Oath tier is active).
+var _oath_label: Label
+## Total Soul Ash multiplier shown right now (rolls toward the real one).
+var _shown_total: float = -1.0
+## Running roll of the total (null when settled).
+var _total_tween: Tween = null
 ## Back button.
 var _back: Button
 ## Standard (reset) button.
 var _reset: Button
 ## Begin button (focused on open).
 var _begin: Button
-## The playable-character section (CharacterPicker, top of the left column).
+## The hero panel (left column).
+var _hero: PreRunHero
+## The playable-character grid (top of the setup panel).
 var _picker: CharacterPicker
-## Skin cards and the Hyper toggle (PreRunHyperSkins, under the picker).
+## Skin tiles and the Hyper tile (PreRunHyperSkins, in the hero panel).
 var _extras: PreRunHyperSkins
+## Character the hero shows (follows the focused tile).
+var _hero_char: String = ""
+## Skin previewed on the chosen character while its skin tile is focused
+## ("" = none: the worn skin).
+var _preview_skin: String = ""
 
 
 ## Opens the screen over `parent` for `p_config`; focus returns to `refocus`
@@ -111,158 +103,159 @@ func _ready() -> void:
 		config = RunConfig.new()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	add_child(UiTheme.backdrop(0.9))
+	add_child(UiTheme.backdrop(FrontDoorData.PRERUN_SCRIM))
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(center)
-	var panel := PanelContainer.new()
-	center.add_child(panel)
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 6)
-	panel.add_child(vb)
-	var head := HBoxContainer.new()
-	head.add_theme_constant_override("separation", 14)
-	head.alignment = BoxContainer.ALIGNMENT_CENTER
-	vb.add_child(head)
-	head.add_child(UiTheme.title("Prepare the Ritual"))
-	var def := config.stage_def()  # The chosen stage.
-	var stage_l := UiTheme.tier_label("%s  -  %s" % [String(def["chapter"]), String(def["display_name"])], UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
-	stage_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	head.add_child(stage_l)
+	center.add_child(vb)
+	vb.add_child(_head())
 	var cols := HBoxContainer.new()
-	cols.add_theme_constant_override("separation", COLUMN_GAP)
+	cols.add_theme_constant_override("separation", FrontDoorData.PRERUN_COLUMN_GAP)
 	vb.add_child(cols)
-	# Left column: who plays (character, skin, Hyper).
-	var left := VBoxContainer.new()
-	left.add_theme_constant_override("separation", 6)
-	left.custom_minimum_size = Vector2(LEFT_WIDTH, 0)
-	cols.add_child(left)
+	# Left column: the hero, with the skin / Hyper row.
+	_hero = PreRunHero.new()
+	_hero.stage_id = config.stage_id
+	cols.add_child(_hero)
+	_extras = PreRunHyperSkins.new()
+	_extras.config = config
+	_extras.changed.connect(_on_extras_changed)
+	_extras.rebuilt.connect(_queue_wire)
+	_extras.skin_focused.connect(_on_skin_focused)
+	_hero.add_extra(_extras)
+	# Right column: the setup panel, then the buttons.
+	var right := VBoxContainer.new()
+	right.add_theme_constant_override("separation", 8)
+	right.custom_minimum_size.x = FrontDoorData.SETUP_WIDTH
+	cols.add_child(right)
+	var panel := PanelContainer.new()
+	panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right.add_child(panel)
+	var setup := VBoxContainer.new()
+	setup.add_theme_constant_override("separation", 8)
+	panel.add_child(setup)
+	setup.add_child(_section("Character"))
 	_picker = CharacterPicker.new()
 	_picker.config = config
 	_picker.character_changed.connect(_on_character_changed)
-	left.add_child(_picker)
-	_extras = PreRunHyperSkins.new()
-	_extras.config = config
-	_extras.changed.connect(_refresh)
-	_extras.rebuilt.connect(_queue_wire)
-	left.add_child(_extras)
-	# Right column: how hard (difficulty, run modifiers, the totals).
-	var right := VBoxContainer.new()
-	right.add_theme_constant_override("separation", 6)
-	right.custom_minimum_size = Vector2(RIGHT_WIDTH, 0)
-	cols.add_child(right)
-	right.add_child(UiTheme.tier_label("Difficulty", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))
-	var lgrid := GridContainer.new()
-	lgrid.columns = LEVEL_COLUMNS
-	lgrid.add_theme_constant_override("h_separation", 10)
-	lgrid.add_theme_constant_override("v_separation", 8)
-	right.add_child(lgrid)
+	_picker.shown_changed.connect(_show_hero)
+	setup.add_child(_picker)
+	setup.add_child(_section("Difficulty"))
+	var lrow := HBoxContainer.new()
+	lrow.add_theme_constant_override("separation", 8)
+	setup.add_child(lrow)
 	for id: String in DifficultyData.ORDER:
-		lgrid.add_child(_build_level_card(id))
-	right.add_child(UiTheme.tier_label("Run modifiers (optional, they stack)", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))
+		lrow.add_child(_build_level_card(id))
+	setup.add_child(_section("Modifiers"))
 	var grid := GridContainer.new()
-	grid.columns = MOD_COLUMNS
-	grid.add_theme_constant_override("h_separation", 10)
+	grid.columns = FrontDoorData.MOD_COLUMNS
+	grid.add_theme_constant_override("h_separation", 8)
 	grid.add_theme_constant_override("v_separation", 6)
-	right.add_child(grid)
+	setup.add_child(grid)
 	for id: String in RunModifierData.ORDER:
-		grid.add_child(_build_mod_card(id))
-	_mod_detail = UiTheme.para(MOD_HINT, RIGHT_WIDTH, UiTheme.TEXT_DIM)
-	_mod_detail.custom_minimum_size.y = MOD_DETAIL_HEIGHT  # Two lines kept, so the totals never jump.
-	right.add_child(_mod_detail)
-	_total_label = UiTheme.tier_label("", UiTheme.Tier.NAME, MetaGlyphs.EMBER.lightened(0.2))
-	_total_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	right.add_child(_total_label)
-	_breakdown_label = _wrapped_total(UiTheme.TEXT_DIM)
-	right.add_child(_breakdown_label)
-	_foes_label = _wrapped_total(Palette.CRIMSON.lightened(0.45))
-	right.add_child(_foes_label)
+		grid.add_child(_build_mod_tile(id))
+	_mod_detail = UiTheme.tier_label(FrontDoorData.MOD_HINT, UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
+	_mod_detail.clip_text = true
+	_mod_detail.custom_minimum_size.x = FrontDoorData.SETUP_WIDTH - 24.0
+	setup.add_child(_mod_detail)
+	var spacer := Control.new()
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	setup.add_child(spacer)
+	setup.add_child(_build_plaque())
 	var buttons := HBoxContainer.new()
-	buttons.add_theme_constant_override("separation", 10)
-	vb.add_child(buttons)
-	_back = _make_button("Back", buttons, close)
-	_reset = _make_button("Standard", buttons, _reset_choice)  # Necromancer, no modifiers, no Hyper.
-	_reset.tooltip_text = "Necromancer, no run modifiers, no Hyper."
-	_begin = _make_button("Begin", buttons, _start)
+	buttons.add_theme_constant_override("separation", 8)
+	right.add_child(buttons)
+	_back = _make_button("Back", FrontDoorData.PRERUN_BUTTON, buttons, close)
+	_reset = _make_button("Standard", FrontDoorData.PRERUN_BUTTON, buttons, _reset_choice)  # Necromancer, no modifiers, no Hyper.
+	_reset.tooltip_text = "Necromancer, no modifiers, no Hyper."
+	var fill := Control.new()
+	fill.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	buttons.add_child(fill)
+	_begin = _make_button("Begin", FrontDoorData.BEGIN_BUTTON, buttons, _start)
+	UiTheme.style_button(_begin, "button", "gold")  # The strong primary action.
+	for fc: String in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color"]:
+		_begin.add_theme_color_override(fc, UiTheme.TEXT_GOLD.lightened(0.25 if fc != "font_color" else 0.0))
+	_begin.set_meta(UiMotion.META_LIFT, false)
 	_refresh()
+	_show_hero(config.character_id)
 	_queue_wire()
+	add_child(InputHints.bottom_strip([[InputHints.MOVE, "Move"], ["ui_accept", "Select"], ["ui_cancel", "Back"]]))
 	_begin.grab_focus.call_deferred()
 	UiMotion.open(self)  # Fade / rise in.
 
 
-## A centred, word-wrapped totals line (BODY tier) of the right column.
-func _wrapped_total(color: Color) -> Label:
-	var l := UiTheme.tier_label("", UiTheme.Tier.BODY, color)
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	l.custom_minimum_size = Vector2(RIGHT_WIDTH, 0)
-	return l
+## The title line: the TITLE and the chosen stage (LABEL).
+func _head() -> Control:
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 16)
+	head.alignment = BoxContainer.ALIGNMENT_CENTER
+	head.add_child(UiTheme.title("Prepare the Ritual"))
+	var def := config.stage_def()  # The chosen stage.
+	var stage_l := UiTheme.tier_label("%s  ·  %s" % [String(def["chapter"]), String(def["short_name"])], UiTheme.Tier.LABEL, UiTheme.TEXT_DIM)
+	stage_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	head.add_child(stage_l)
+	return head
 
 
-## A character was chosen: its skin cards follow (PreRunHyperSkins) and the
-## totals redraw.
-func _on_character_changed(_id: String) -> void:
-	_refresh()
+## A small section label (LABEL tier).
+static func _section(text: String) -> Label:
+	return UiTheme.tier_label(text, UiTheme.Tier.LABEL, UiTheme.TEXT_DIM)
 
 
-## A bottom-row button that expands to share the row.
-func _make_button(text: String, parent: Control, action: Callable) -> Button:
+## A bottom-row button of `size_px`.
+func _make_button(text: String, size_px: Vector2, parent: Control, action: Callable) -> Button:
 	var b := Button.new()
 	b.text = text
-	b.custom_minimum_size = Vector2(0, 44)
-	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.custom_minimum_size = size_px
 	b.pressed.connect(action)
 	parent.add_child(b)
 	return b
 
 
-## Common card Button with a VBox of labels inside (labels ignore the mouse).
-func _card(size_px: Vector2) -> Array:
+## One difficulty card: icon and name, one line, the Soul Ash multiplier.
+func _build_level_card(id: String) -> Button:
+	var lv: Dictionary = DifficultyData.LEVELS[id]
 	var b := Button.new()
-	b.custom_minimum_size = size_px
+	b.custom_minimum_size = FrontDoorData.LEVEL_CARD
 	b.focus_mode = Control.FOCUS_ALL
+	b.pressed.connect(_select_level.bind(id))
+	b.tooltip_text = "%s\n%s" % [String(lv["tagline"]), _level_numbers(lv)]  # The GDD line and the numbers.
 	var box := VBoxContainer.new()
 	box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	box.offset_left = 10
-	box.offset_right = -10
-	box.offset_top = 4
-	box.offset_bottom = -4
-	box.add_theme_constant_override("separation", 1)
+	box.offset_right = -8
+	box.offset_top = 6
+	box.offset_bottom = -6
+	box.add_theme_constant_override("separation", 0)
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(box)
-	return [b, box]
-
-
-## One difficulty card: name, the GDD effect line and its numbers.
-func _build_level_card(id: String) -> Button:
-	var lv: Dictionary = DifficultyData.LEVELS[id]
-	var parts := _card(LEVEL_CARD_SIZE)
-	var b: Button = parts[0]
-	var box: VBoxContainer = parts[1]
-	b.pressed.connect(_select_level.bind(id))
 	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 8)
 	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var icon := MaskIcon.new(String(FrontDoorData.LEVEL_ICONS.get(id, "skull")), FrontDoorData.LEVEL_ICON_SCALE)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	head.add_child(icon)
 	var name_l := UiTheme.tier_label(String(lv["display_name"]), UiTheme.Tier.NAME, UiTheme.TEXT)
-	name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	head.add_child(name_l)
-	var reward := UiTheme.tier_label(_level_reward(lv), UiTheme.Tier.BODY, MetaGlyphs.EMBER.lightened(0.2))
-	reward.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	head.add_child(reward)
 	box.add_child(head)
-	box.add_child(UiTheme.para(String(lv["tagline"]), LEVEL_CARD_SIZE.x - 20.0, UiTheme.TEXT_DIM))
-	b.tooltip_text = _level_numbers(lv)  # The numbers that differ from the standard level.
+	box.add_child(UiTheme.tier_label(String(FrontDoorData.LEVEL_LINES.get(id, "")), UiTheme.Tier.BODY, UiTheme.TEXT_DIM))
+	box.add_child(UiTheme.tier_label(_level_reward(lv), UiTheme.Tier.BODY, MetaGlyphs.EMBER.lightened(0.25)))
 	_level_buttons[id] = b
 	_level_names[id] = name_l
 	return b
 
 
-## The reward part of level row `lv` for its card header: the Soul Ash
-## multiplier and, when not standard, the XP multiplier (kept on the header
-## line so it can never spill past the card's bottom edge).
+## The reward line of level row `lv`: the Soul Ash multiplier and, when not
+## standard, the XP multiplier.
 static func _level_reward(lv: Dictionary) -> String:
-	var out := "Soul Ash x%.2f" % float(lv["ash_mult"])  # Header text.
+	var out := "Soul Ash ×%.2f" % float(lv["ash_mult"])  # Reward text.
 	if float(lv["xp_mult"]) != 1.0:
-		out += "  XP x%.2f" % float(lv["xp_mult"])
+		out += "  XP ×%.2f" % float(lv["xp_mult"])
 	return out
 
 
@@ -271,51 +264,115 @@ static func _level_numbers(lv: Dictionary) -> String:
 	var foes := PackedStringArray()  # "HP x1.20"...
 	for key: String in ["enemy_hp", "hp_scaling", "enemy_damage", "damage_scaling", "enemy_spawn", "enemy_speed", "boss_hp"]:
 		if float(lv[key]) != 1.0:
-			foes.append("%s x%.2f" % [DifficultyData.SHORT[key], float(lv[key])])
+			foes.append("%s ×%.2f" % [DifficultyData.SHORT[key], float(lv[key])])
 	if float(lv["elite_chance"]) > 0.0:
 		foes.append("+%.1f%% elites" % (float(lv["elite_chance"]) * 100.0))
 	return "Foes: " + (", ".join(foes) if not foes.is_empty() else "standard")
 
 
-## One run-modifier card: name, Soul Ash reward and state, then the effect.
-func _build_mod_card(id: String) -> Button:
+## One run-modifier tile: rune pip, name and Soul Ash reward.
+func _build_mod_tile(id: String) -> Button:
 	var md: Dictionary = RunModifierData.MODIFIERS[id]
-	var parts := _card(MOD_CARD_SIZE)
-	var b: Button = parts[0]
-	var box: VBoxContainer = parts[1]
+	var b := Button.new()
+	b.custom_minimum_size = FrontDoorData.MOD_TILE
+	b.focus_mode = Control.FOCUS_ALL
 	b.pressed.connect(_toggle_mod.bind(id))
-	var head := HBoxContainer.new()
-	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.tooltip_text = String(md["description"])
+	var box := HBoxContainer.new()
+	box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	box.offset_left = 8
+	box.offset_right = -10
+	box.add_theme_constant_override("separation", 6)
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(box)
+	var pip := MaskIcon.new("rune_off", 2)
+	pip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	box.add_child(pip)
 	var name_l := UiTheme.tier_label(String(md["display_name"]), UiTheme.Tier.BODY, UiTheme.TEXT)
 	name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	head.add_child(name_l)
-	head.add_theme_constant_override("separation", 8)
-	head.add_child(UiTheme.tier_label("+%d%% Ash" % roundi(float(md["ash_gain"]) * 100.0), UiTheme.Tier.BODY, MetaGlyphs.EMBER.lightened(0.2)))
-	var state := UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
-	head.add_child(state)
-	box.add_child(head)
-	b.tooltip_text = String(md["description"])
+	name_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	name_l.clip_text = true
+	box.add_child(name_l)
+	var ash := UiTheme.tier_label("+%d%%" % roundi(float(md["ash_gain"]) * 100.0), UiTheme.Tier.BODY, MetaGlyphs.EMBER.lightened(0.25))
+	ash.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	box.add_child(ash)
 	b.focus_entered.connect(_show_mod_detail.bind(id))
 	b.mouse_entered.connect(_show_mod_detail.bind(id))
 	b.focus_exited.connect(_show_mod_detail.bind(""))
 	_mod_buttons[id] = b
-	_mod_states[id] = state
+	_mod_pips[id] = pip
+	_mod_names[id] = name_l
 	return b
+
+
+## The gold total plaque: the Soul Ash icon, "Soul Ash", the multiplier.
+func _build_plaque() -> Control:
+	_plaque = PanelContainer.new()
+	_plaque.add_theme_stylebox_override("panel", UiTheme.style("panel", "gold"))
+	_plaque.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_plaque.mouse_filter = Control.MOUSE_FILTER_STOP  # For the tooltip.
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_plaque.add_child(row)
+	var icon := MainMenu.soul_ash_icon(FrontDoorData.PLAQUE_ICON_PX)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(icon)
+	var name_l := UiTheme.tier_label("Soul Ash", UiTheme.Tier.LABEL, MetaGlyphs.EMBER.lightened(0.25))
+	name_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(name_l)
+	_total_label = UiTheme.tier_label("", UiTheme.Tier.HEADER, UiTheme.TEXT_GOLD)
+	_total_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(_total_label)
+	_oath_label = UiTheme.tier_label("", UiTheme.Tier.BODY, Palette.CRIMSON.lightened(0.45))
+	_oath_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(_oath_label)
+	return _plaque
 
 
 ## Shows run modifier `id`'s effect in the line under the grid ("" = the
 ## general hint).
 func _show_mod_detail(id: String) -> void:
 	if id == "" or not RunModifierData.MODIFIERS.has(id):
-		_mod_detail.text = MOD_HINT
+		_mod_detail.text = FrontDoorData.MOD_HINT
+		_mod_detail.add_theme_color_override("font_color", UiTheme.TEXT_DIM)
 		return
 	var md: Dictionary = RunModifierData.MODIFIERS[id]
 	_mod_detail.text = "%s: %s" % [String(md["display_name"]), String(md["description"])]
+	_mod_detail.add_theme_color_override("font_color", UiTheme.TEXT)
 
 
-## Wires the focus neighbours once the containers have laid the cards out
+## The hero presents character `id` in the skin it would wear.
+func _show_hero(id: String) -> void:
+	_hero_char = id
+	var skin := config.skin_id if id == config.character_id else Meta.chosen_skin(id)  # Worn skin.
+	if id == config.character_id and _preview_skin != "":
+		skin = _preview_skin  # A focused skin tile wins.
+	_hero.show_character(id, skin, id == config.character_id)
+
+
+## A skin tile is focused ("" = none): the hero wears it (the chosen character).
+func _on_skin_focused(skin_id: String) -> void:
+	_preview_skin = skin_id
+	_show_hero(config.character_id)
+
+
+## Hyper or the skin changed: totals and hero redraw.
+func _on_extras_changed() -> void:
+	_refresh()
+	_show_hero(config.character_id)
+
+
+## A character was chosen: its skin tiles follow (PreRunHyperSkins) and the
+## totals redraw.
+func _on_character_changed(_id: String) -> void:
+	_refresh()
+	_show_hero(config.character_id)
+
+
+## Wires the focus neighbours once the containers have laid the tiles out
 ## (the cross-column links match rows by their on-screen height). Called on
-## open and whenever the skin cards are rebuilt for another character.
+## open and whenever the skin tiles are rebuilt for another character.
 func _queue_wire() -> void:
 	if not is_inside_tree():
 		return
@@ -325,25 +382,24 @@ func _queue_wire() -> void:
 
 
 ## Explicit focus neighbours, so arrows / D-pad never leave the screen:
-## inside each column the rows link up and down (left: character tiles, skin
-## cards, Hyper; right: difficulty cards, modifier cards), the end of a row
-## crosses to the other column's row nearest in height, the last rows lead
-## down to the bottom buttons (left: Back, right: Standard /
-## Begin) and the bottom buttons lead back up.
+## inside each column the rows link up and down (left: the skin / Hyper row;
+## right: the character tiles, difficulty cards, modifier rows), the end of a
+## row crosses to the other column's row nearest in height, the last rows
+## lead down to the bottom buttons and the bottom buttons lead back up.
 func _wire_focus() -> void:
-	var left: Array = _picker.tile_rows() + _extras.rows()  # Left column rows.
-	var right: Array = _rows_of(_level_buttons, DifficultyData.ORDER, LEVEL_COLUMNS) + _rows_of(_mod_buttons, RunModifierData.ORDER, MOD_COLUMNS)  # Right column rows.
-	_wire_column(left, [], right, [_back])
-	_wire_column(right, left, [], [_reset, _begin])
+	var left: Array = _extras.rows()  # Left column rows.
+	var right: Array = _picker.tile_rows() + _rows_of(_level_buttons, DifficultyData.ORDER, DifficultyData.ORDER.size()) \
+			+ _rows_of(_mod_buttons, RunModifierData.ORDER, FrontDoorData.MOD_COLUMNS)  # Right column rows.
 	var bottom := [_back, _reset, _begin]  # Bottom row, left to right.
+	_wire_column(left, [], right, [_back])
+	_wire_column(right, left, [], bottom)
 	for j in bottom.size():
 		var b: Button = bottom[j]
-		_link(b, "left", bottom[maxi(0, j - 1)])
+		_link(b, "left", bottom[maxi(0, j - 1)] if j > 0 else (left.back() as Array).back())
 		_link(b, "right", bottom[mini(bottom.size() - 1, j + 1)])
 		_link(b, "bottom", b)
-	_link(_back, "top", (left.back() as Array).front())
-	_link(_reset, "top", (right.back() as Array).front())
-	_link(_begin, "top", (right.back() as Array).back())
+		var last: Array = right.back()  # The last modifier row.
+		_link(b, "top", last[_nearest(j, bottom.size(), last.size())])
 
 
 ## The Buttons of `buttons` (id -> Button) in `order`, as rows of `cols`.
@@ -358,7 +414,7 @@ static func _rows_of(buttons: Dictionary, order: Array, cols: int) -> Array:
 
 
 ## Links one column's `rows`: left / right inside a row, the row's first
-## (last) card to the row of `left_rows` (`right_rows`) nearest in height
+## (last) item to the row of `left_rows` (`right_rows`) nearest in height
 ## (stays put when there is none), up / down between rows by column
 ## position, the top row's "top" to itself and the last row's "bottom" to
 ## `below` (spread by column).
@@ -442,47 +498,70 @@ func _reset_choice() -> void:
 	_refresh()
 
 
-## Redraws the selection states and the stacked totals.
+## Redraws the selection states and the total plaque.
 func _refresh() -> void:
 	for id: String in DifficultyData.ORDER:
 		var sel := id == config.difficulty_id  # This card is the chosen level.
-		_style(_level_buttons[id], sel, SELECTED_ACCENT)
+		UiTheme.style_button(_level_buttons[id], "button", SELECTED_ACCENT if sel else "")
 		(_level_names[id] as Label).add_theme_color_override("font_color", UiTheme.TEXT_GOLD if sel else UiTheme.TEXT)
-		(_level_names[id] as Label).text = String(DifficultyData.LEVELS[id]["display_name"]) + ("  (chosen)" if sel else "")
 	for id: String in RunModifierData.ORDER:
 		var on := config.has_modifier(id)  # This modifier is active.
-		_style(_mod_buttons[id], on, ACTIVE_ACCENT)
-		var st: Label = _mod_states[id]
-		st.text = "ON" if on else "off"
-		st.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.5) if on else UiTheme.TEXT_DIM)
+		UiTheme.style_button(_mod_buttons[id], "button", ACTIVE_ACCENT if on else "")
+		(_mod_pips[id] as MaskIcon).set_icon("rune_on" if on else "rune_off")
+		(_mod_names[id] as Label).add_theme_color_override("font_color", Color(1.0, 0.78, 0.74) if on else UiTheme.TEXT)
 	_extras.refresh()
+	_set_total(DifficultyModifiers.reward_mult(config.difficulty_id, config.modifiers, config.hyper))
+	var tier := Meta.oath_active_tier()  # Profane Oath tier (0 = off).
+	_oath_label.text = "+ Oath %s" % DifficultyModifiers.roman(tier) if tier > 0 else ""
+	_oath_label.visible = tier > 0
+	_plaque.tooltip_text = _breakdown()
+
+
+## Rolls the plaque's number to `total` (instant with motion off or on open).
+func _set_total(total: float) -> void:
+	if _total_tween != null:
+		_total_tween.kill()
+		_total_tween = null
+	if _shown_total < 0.0 or not UiMotion.enabled() or is_equal_approx(_shown_total, total):
+		_show_total(total)
+		return
+	_total_tween = create_tween()
+	_total_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_total_tween.tween_method(_show_total, _shown_total, total, FrontDoorData.PLAQUE_COUNT_TIME) \
+			.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+
+
+## Writes total `v` on the plaque (a tick when the shown hundredths change).
+func _show_total(v: float) -> void:
+	var text := "×%.2f" % v  # Plaque text.
+	if _shown_total >= 0.0 and text != _total_label.text:
+		Sfx.play("ui_tick")
+	_shown_total = v
+	_total_label.text = text
+
+
+## The plaque's tooltip: the breakdown, the combined enemy numbers and the
+## Profane Oath note.
+func _breakdown() -> String:
 	var lv: Dictionary = DifficultyData.LEVELS[config.difficulty_id]
 	var mods_ash := DifficultyModifiers.modifiers_ash(config.modifiers)  # Summed modifier reward.
-	_total_label.text = "Total Soul Ash reward:  x%.2f" % DifficultyModifiers.reward_mult(config.difficulty_id, config.modifiers, config.hyper)
 	var parts := PackedStringArray([
-		"%s x%.2f" % [String(lv["display_name"]), float(lv["ash_mult"])],
-		"%d run modifier%s +%d%%" % [config.modifiers.size(), "" if config.modifiers.size() == 1 else "s", roundi(mods_ash * 100.0)],
+		"%s ×%.2f" % [String(lv["display_name"]), float(lv["ash_mult"])],
+		"%d modifier%s +%d%%" % [config.modifiers.size(), "" if config.modifiers.size() == 1 else "s", roundi(mods_ash * 100.0)],
 	])
 	if config.hyper:
 		parts.append("%s +%d%%" % [HyperData.DISPLAY_NAME, roundi(HyperData.ASH_BONUS * 100.0)])
-	var note := "   (plus the stage bonus, Ash Harvest and the Pact)"  # Breakdown tail (one line at RIGHT_WIDTH).
+	var out := " + ".join(parts) + "\n(plus the stage bonus, Ash Harvest and the Pact)"
 	if Meta.oath_active_tier() > 0:
-		note = "   (plus Profane Oath %s: +%d%% Soul Ash, its penalties on top)" % [
+		out += "\nProfane Oath %s: +%d%% Soul Ash, its penalties on top" % [
 			DifficultyModifiers.roman(Meta.oath_active_tier()), roundi(float(Meta.oath_active_tier()) * float(PactData.OATH_PER_TIER["ash_gain"]) * 100.0)]
-	_breakdown_label.text = " + ".join(parts) + note
 	var pv := DifficultyModifiers.preview(config.difficulty_id, config.modifiers, config.hyper)  # Combined enemy multipliers.
-	var foes := "Foes: HP x%.2f (x%.2f by 0:00)   damage x%.2f (x%.2f by 0:00)   spawn x%.2f   speed x%.2f   boss HP x%.2f" % [
+	out += "\nFoes: HP ×%.2f (×%.2f by 0:00), damage ×%.2f (×%.2f by 0:00)\nspawn ×%.2f, speed ×%.2f, boss HP ×%.2f" % [
 		float(pv["enemy_hp"]), float(pv["enemy_hp_end"]), float(pv["enemy_damage"]), float(pv["enemy_damage_end"]),
 		float(pv["enemy_spawn"]), float(pv["enemy_speed"]), float(pv["boss_hp"])]
 	if float(pv["elite_chance"]) > 0.0:
-		foes += "   trickle elites %.1f%%" % (float(pv["elite_chance"]) * 100.0)
-	_foes_label.text = foes
-
-
-## Applies the selected / active look (UI kit frame in `accent`) to card `b`
-## (normal and hover styles), or the theme look when off.
-static func _style(b: Button, on: bool, accent: String) -> void:
-	UiTheme.style_button(b, "button", accent if on else "")
+		out += ", trickle elites %.1f%%" % (float(pv["elite_chance"]) * 100.0)
+	return out
 
 
 ## Begin: remember the choice (Meta save) and hand the config on.

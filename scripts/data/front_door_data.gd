@@ -1,0 +1,250 @@
+## FrontDoorData: every number and short caption of the front door screens
+## (GDD §15.0 "Front door screens"): the main menu (MainMenu, MenuLogo,
+## SoulMarker), the stage select (StageSelect, StageVignette) and the pre-run
+## setup (PreRunSetup, CharacterPicker, PreRunHero, PreRunHyperSkins). Sizes
+## are layout px on the 1280x720 layout (x1.5 in a 1080p window). Art keys are
+## SpriteData keys (res://assets/sprites/<key>.png). Data only, no logic.
+class_name FrontDoorData
+extends RefCounted
+
+# ------------------------------------------------------------------ main menu
+
+## Main-menu entries top to bottom: [id, one-word caption]. "codex" and
+## "credits" open screens added by another branch (MainMenu loads them at
+## runtime and plays `denied` while they are missing); "quit" asks first when
+## the confirm dialog exists.
+const MENU_ITEMS: Array = [
+	["play", "Play"],  # TUNING (not in GDD) owner: one-word buttons
+	["codex", "Codex"],  # TUNING (not in GDD)
+	["ossuary", "Ossuary"],  # TUNING (not in GDD)
+	["settings", "Settings"],  # TUNING (not in GDD)
+	["credits", "Credits"],  # TUNING (not in GDD)
+	["quit", "Quit"],  # TUNING (not in GDD)
+]
+## Tagline under the logo (BODY tier).
+const MENU_TAGLINE: String = "Begin as the hunted. Raise the fallen. Become the army."  # TUNING (not in GDD)
+## Distance (px) from the screen top to the logo's top.
+const MENU_TOP: float = 30.0  # TUNING (not in GDD)
+## Width (px) of the menu button column (narrow: one-word buttons).
+const MENU_COLUMN_WIDTH: float = 232.0  # TUNING (not in GDD)
+## Height (px) of one menu button (the kit button needs at least 20).
+const MENU_BUTTON_HEIGHT: float = 36.0  # TUNING (not in GDD)
+## Gap (px) between two menu buttons.
+const MENU_BUTTON_GAP: int = 6  # TUNING (not in GDD)
+## Gap (px) between the column's blocks (logo, tagline, buttons, plaque).
+const MENU_BLOCK_GAP: int = 12  # TUNING (not in GDD)
+## Dark band of the diorama behind the column: full width (px) and peak
+## alpha (0-1); MenuBackdrop.set_band().
+const MENU_BAND_WIDTH: float = 600.0  # TUNING (not in GDD) the 492 px logo plus a soft margin
+const MENU_BAND_ALPHA: float = 0.55  # TUNING (not in GDD)
+## Soul Ash plaque: icon size (px) and the gap (px) between its parts.
+const PLAQUE_ICON_PX: float = 28.0  # TUNING (not in GDD)
+const PLAQUE_GAP: int = 8  # TUNING (not in GDD)
+## Lifetime stats row: icon scale (layout px per art px), gap (px) between an
+## icon and its number, and between two stats.
+const STAT_ICON_SCALE: int = 2  # TUNING (not in GDD)
+const STAT_INNER_GAP: int = 5  # TUNING (not in GDD)
+const STAT_GAP: int = 20  # TUNING (not in GDD)
+## Version label inset (px) from the bottom-right corner, and its alpha (0-1).
+const VERSION_INSET: Vector2 = Vector2(14.0, 12.0)  # TUNING (not in GDD)
+const VERSION_ALPHA: float = 0.55  # TUNING (not in GDD)
+## Menu entrance: delay (s) before the buttons' staggered rise.
+const MENU_STAGGER_DELAY: float = 0.12  # TUNING (not in GDD)
+
+# ------------------------------------------------------------------ logo
+
+## Colours (8-bit RGB) of the logo's soul flames in assets/ui/logo.png: these
+## pixels sway (MenuLogo); the dark one is the flames' own outline.
+const LOGO_FLAME_COLORS: Array = [
+	Color8(28, 107, 88), Color8(61, 204, 148), Color8(168, 255, 210), Color8(8, 24, 20),
+]  # TUNING (not in GDD) measured from logo.png
+## Flame animation: frames in the loop, frames per second, and the sway's
+## largest sideways shift (art px) at a flame's tip.
+const LOGO_FLAME_FRAMES: int = 8  # TUNING (not in GDD)
+const LOGO_FLAME_FPS: float = 7.0  # TUNING (not in GDD)
+const LOGO_FLAME_SWAY: float = 1.6  # TUNING (not in GDD) whole art px after rounding: 0-2
+## Phase step (rad) per art px of height above a flame's base: the wave that
+## climbs each flame.
+const LOGO_FLAME_WAVE: float = 0.55  # TUNING (not in GDD)
+## Soul glow behind each flame: menu glow art scale, alpha, pulse share (0-1)
+## and period (s).
+const LOGO_GLOW_SCALE: float = 0.5  # TUNING (not in GDD)
+const LOGO_GLOW_ALPHA: float = 0.22  # TUNING (not in GDD)
+const LOGO_GLOW_PULSE: float = 0.3  # TUNING (not in GDD)
+const LOGO_GLOW_PERIOD: float = 3.2  # TUNING (not in GDD)
+## Embers rising from the flame tips: seconds between two (random in range),
+## rise speed (art px/s), sideways drift (art px/s), life (s), most at once.
+const LOGO_EMBER_INTERVAL: Vector2 = Vector2(0.35, 0.9)  # TUNING (not in GDD)
+const LOGO_EMBER_RISE: Vector2 = Vector2(6.0, 11.0)  # TUNING (not in GDD)
+const LOGO_EMBER_DRIFT: float = 2.5  # TUNING (not in GDD)
+const LOGO_EMBER_LIFE: Vector2 = Vector2(1.4, 2.4)  # TUNING (not in GDD)
+const LOGO_EMBER_MAX: int = 8  # TUNING (not in GDD)
+## Ember colours, bright first.
+const LOGO_EMBER_COLORS: Array = [Color8(168, 255, 210), Color8(61, 204, 148)]  # TUNING (not in GDD)
+
+# ------------------------------------------------------------------ focus wisp
+
+## The soul wisp marking the focused menu button (SoulMarker, menu/wisp art):
+## gap (px) between the button's edge and the wisp, frames per second, the
+## slide time (s) to a newly focused button, bob (px) and bob period (s).
+const MARKER_GAP: float = 8.0  # TUNING (not in GDD)
+const MARKER_FPS: float = 8.0  # TUNING (not in GDD)
+const MARKER_SLIDE_TIME: float = 0.12  # TUNING (not in GDD)
+const MARKER_BOB: float = 1.0  # TUNING (not in GDD)
+const MARKER_BOB_PERIOD: float = 1.6  # TUNING (not in GDD)
+## Glow under the wisp: menu glow art scale and alpha.
+const MARKER_GLOW_SCALE: float = 0.55  # TUNING (not in GDD)
+const MARKER_GLOW_ALPHA: float = 0.35  # TUNING (not in GDD)
+
+# ------------------------------------------------------------------ stage select
+
+## One stage card (px).
+const CARD_SIZE: Vector2 = Vector2(300.0, 424.0)  # TUNING (not in GDD)
+## Gap (px) between two stage cards.
+const CARD_GAP: int = 20  # TUNING (not in GDD)
+## Inset (px) of a card's content from its edge.
+const CARD_INSET: float = 12.0  # TUNING (not in GDD)
+## The vignette scene of a card (px; the card's width minus its insets).
+const VIGNETTE_SIZE: Vector2 = Vector2(276.0, 232.0)  # TUNING (not in GDD)
+## Back button of the stage select (px).
+const STAGE_BACK_SIZE: Vector2 = Vector2(180.0, 36.0)  # TUNING (not in GDD)
+## Vignette brightness while its card is not focused (1 = full).
+const VIGNETTE_IDLE_BRIGHT: float = 0.72  # TUNING (not in GDD)
+## Seconds for a vignette to brighten / dim with focus.
+const VIGNETTE_FOCUS_TIME: float = 0.2  # TUNING (not in GDD)
+## Edge shading of a vignette: alpha (0-1) of the dark inner frame bands and
+## their width (px) in steps (stepped, pixel-art style).
+const VIGNETTE_EDGE_ALPHA: float = 0.5  # TUNING (not in GDD)
+const VIGNETTE_EDGE_STEPS: Array = [6.0, 12.0, 20.0]  # TUNING (not in GDD)
+## Locked vignette: the silhouette tint of every sprite and the floor's tint.
+const LOCK_SILHOUETTE: Color = Color(0.05, 0.035, 0.07)  # TUNING (not in GDD)
+const LOCK_FLOOR: Color = Color(0.66, 0.6, 0.76)  # TUNING (not in GDD)
+## Padlock scale (layout px per art px) on a locked vignette.
+const LOCK_ICON_SCALE: int = 3  # TUNING (not in GDD)
+## Unit drop shadow: width share of the sprite, vertical squash, alpha.
+const VIGNETTE_SHADOW: Vector3 = Vector3(0.62, 0.32, 0.38)  # TUNING (not in GDD)
+## Denied shake of a locked card: amplitude (px) and duration (s).
+const DENIED_SHAKE_PX: float = 5.0  # TUNING (not in GDD)
+const DENIED_SHAKE_TIME: float = 0.28  # TUNING (not in GDD)
+
+## One line per stage (owner: no wall of text; the long GDD description is
+## the card's tooltip).
+const STAGE_LINES: Dictionary = {
+	"graveyard": "Hold your burial grounds for twenty minutes.",  # TUNING (not in GDD)
+	"crimson_march": "Burn the road to the Covenant's fortress.",  # TUNING (not in GDD)
+	"sanctum": "Storm the cathedral. End the Covenant.",  # TUNING (not in GDD)
+}
+
+## Vignette scene per stage: "tile" (floor tile, repeated), "items" (drawn in
+## order: [sprite key, x, y, flip]; x is the centre, y the feet (bottom) in
+## px from the vignette's top-left; decals are centred on y), "fx" (ambient
+## motes: "wisps" rising soul flames, "embers" drifting sparks, "motes" holy
+## light), "fx_color". Built from art the game already has; the boss stands in
+## an attack pose (bosses/<id>_windup / _cast) facing the undead.
+const VIGNETTES: Dictionary = {
+	"graveyard": {
+		"tile": "tiles/graveyard",
+		"items": [
+			["decals/graveyard_grave", 70, 150, false], ["decals/graveyard_grass", 210, 40, false],
+			["obstacles/dead_tree_m", 36, 96, false], ["obstacles/gravestone_l", 118, 78, false],
+			["obstacles/gravestone_s", 150, 60, true], ["obstacles/cypress_s", 248, 92, false],
+			["obstacles/gravestone_s", 22, 150, false],
+			["summons/archer", 30, 188, false], ["summons/warrior", 52, 214, false], ["summons/mage", 92, 226, false],
+			["bosses/alaric_windup", 190, 222, true],
+		],
+		"fx": "wisps", "fx_color": Color8(61, 204, 148),
+	},  # TUNING (not in GDD)
+	"crimson_march": {
+		"tile": "tiles/march_burned",
+		"items": [
+			["decals/march_burned_embers", 150, 160, false], ["decals/march_arrow", 60, 130, false],
+			["obstacles/burned_house_m", 60, 64, false], ["obstacles/barricade_s", 130, 104, false],
+			["structures/watchtower", 200, 100, false], ["obstacles/charred_tree_m", 250, 84, false],
+			["enemies/shieldbearer", 238, 172, true],
+			["summons/archer", 26, 186, false], ["summons/warrior", 46, 214, false], ["summons/rogue", 90, 224, false],
+			["bosses/vael_windup", 176, 222, true],
+		],
+		"fx": "embers", "fx_color": Color8(255, 140, 38),
+	},  # TUNING (not in GDD)
+	"sanctum": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["decals/sanctum_halls_carpet", 138, 150, false],
+			["obstacles/marble_column_m", 26, 94, false], ["obstacles/marble_column_m", 250, 94, false],
+			["structures/sacred_altar", 140, 82, false],
+			["enemies/high_confessor", 226, 162, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+			["bosses/seraphine_cast", 178, 222, true],
+		],
+		"fx": "motes", "fx_color": Color8(255, 226, 140),
+	},  # TUNING (not in GDD)
+}
+## Ambient motes of a vignette: most at once, seconds between two (random in
+## range), life (s), rise speed (px/s), sideways sway (px).
+const VIGNETTE_FX_MAX: int = 7  # TUNING (not in GDD)
+const VIGNETTE_FX_INTERVAL: Vector2 = Vector2(0.25, 0.7)  # TUNING (not in GDD)
+const VIGNETTE_FX_LIFE: Vector2 = Vector2(1.6, 3.0)  # TUNING (not in GDD)
+const VIGNETTE_FX_RISE: Vector2 = Vector2(8.0, 18.0)  # TUNING (not in GDD)
+const VIGNETTE_FX_SWAY: float = 3.0  # TUNING (not in GDD)
+
+# ------------------------------------------------------------------ pre-run setup
+
+## Alpha (0-1) of the pre-run screen's own scrim: low, so the diorama shows
+## around its panels (the stage select under it keeps its own scrim).
+const PRERUN_SCRIM: float = 0.3  # TUNING (not in GDD)
+## Gap (px) between the hero column and the setup column.
+const PRERUN_COLUMN_GAP: int = 14  # TUNING (not in GDD)
+## Width (px) of the hero panel (the left column).
+const HERO_WIDTH: float = 410.0  # TUNING (not in GDD)
+## The hero's stage box inside the panel (px).
+const HERO_STAGE_SIZE: Vector2 = Vector2(362.0, 226.0)  # TUNING (not in GDD)
+## The hero's scale (layout px per art px): 3x, the selected character big.
+const HERO_SCALE: int = 3  # TUNING (not in GDD) owner brief: the character is the hero
+## Walk-cycle frames per second of the hero (walking in place).
+const HERO_WALK_FPS: float = 8.0  # TUNING (not in GDD)
+## Height (px) from the stage box's bottom to the hero's feet.
+const HERO_FEET_UP: float = 16.0  # TUNING (not in GDD)
+## The hero's pedestal glow (the character's school colour): menu glow art
+## scale and alpha (0-1), and the floor tile's brightness under it (0-1).
+const HERO_GLOW_SCALE: float = 2.6  # TUNING (not in GDD)
+const HERO_GLOW_ALPHA: float = 0.32  # TUNING (not in GDD)
+## How far the glow's school colour is lightened toward white (0-1).
+const HERO_GLOW_LIGHTEN: float = 0.35  # TUNING (not in GDD)
+const HERO_FLOOR_BRIGHT: float = 0.8  # TUNING (not in GDD)
+## Width (px) of the hero panel's text (innate wraps inside it).
+const HERO_TEXT_WIDTH: float = 362.0  # TUNING (not in GDD)
+## Width (px) of the setup column (character grid, difficulty, modifiers, plaque).
+const SETUP_WIDTH: float = 806.0  # TUNING (not in GDD)
+## Character tile (px) and tiles per row (12 = one row).
+const CHAR_TILE: Vector2 = Vector2(60.0, 60.0)  # TUNING (not in GDD)
+const CHAR_COLUMNS: int = 12  # TUNING (not in GDD)
+const CHAR_GAP: int = 5  # TUNING (not in GDD)
+## Skin portrait tile (px) and the Hyper tile (px).
+const SKIN_TILE: Vector2 = Vector2(56.0, 64.0)  # TUNING (not in GDD)
+const HYPER_TILE: Vector2 = Vector2(150.0, 64.0)  # TUNING (not in GDD)
+## Difficulty card (px; four in a row), its icon scale.
+const LEVEL_CARD: Vector2 = Vector2(194.0, 90.0)  # TUNING (not in GDD)
+const LEVEL_ICON_SCALE: int = 2  # TUNING (not in GDD)
+## Run-modifier tile (px) and tiles per row.
+const MOD_TILE: Vector2 = Vector2(194.0, 38.0)  # TUNING (not in GDD)
+const MOD_COLUMNS: int = 4  # TUNING (not in GDD)
+## Seconds the gold total plaque rolls to a new value.
+const PLAQUE_COUNT_TIME: float = 0.35  # TUNING (not in GDD)
+## Bottom buttons (px): Back and Standard, and the primary Begin.
+const PRERUN_BUTTON: Vector2 = Vector2(150.0, 40.0)  # TUNING (not in GDD)
+const BEGIN_BUTTON: Vector2 = Vector2(260.0, 40.0)  # TUNING (not in GDD)
+
+## One line per difficulty card (the full GDD line and its numbers are the
+## card's tooltip).
+const LEVEL_LINES: Dictionary = {
+	"initiate": "Gentler scaling.",  # TUNING (not in GDD)
+	"necromancer": "The standard ritual.",  # TUNING (not in GDD)
+	"lich": "Tougher, faster foes.",  # TUNING (not in GDD)
+	"deathlord": "Elites join the march.",  # TUNING (not in GDD)
+}
+## MaskIconData icon per difficulty card.
+const LEVEL_ICONS: Dictionary = {
+	"initiate": "candle", "necromancer": "skull", "lich": "lich", "deathlord": "deathlord",
+}  # TUNING (not in GDD)
+## Hint line under the modifiers while none is focused.
+const MOD_HINT: String = "Modifiers stack and add Soul Ash."  # TUNING (not in GDD)

@@ -1,17 +1,21 @@
 ## StageSelect — the stage-select screen opened by Play (GDD §10.2 "Select
 ## stage: Graveyard, Crimson March or Sanctum (progression-locked
-## initially)"). One card per StageRegistry stage: chapter, name, a short
-## description, a code-drawn emblem, and either the lock requirement (GDD
-## §9.3: defeat the previous stage's boss) or the stage's best time, boss
-## kills and Soul Ash bonus (Meta.stage_record()), plus a gold HYPER badge
-## once the stage was cleared on Hyper (HyperBadge; Meta.hyper_clears, per
-## stage and character). Keyboard, mouse and
-## controller navigable (arrows / D-pad between cards, Enter / A to march,
-## Esc / B back), in the shared UiTheme and its type tiers (the title in
-## Jacquard 24, LABEL chapters, NAME stage names, BODY descriptions).
-## Choosing an unlocked stage opens the pre-run setup (PreRunSetup: GDD
-## §8.4 difficulty and §8.5 run modifiers, starting from the choices
-## remembered in the Meta save) over this screen; when it confirms,
+## initially)"; GDD §15.0 "Front door screens"). Three tall vignette cards,
+## one per StageRegistry stage, over the menu's diorama: a composed pixel
+## scene of the stage (StageVignette: its floor, props and its boss in an
+## attack pose facing the undead), the chapter (LABEL), the name (NAME) and
+## ONE line (FrontDoorData.STAGE_LINES; the full GDD description is the
+## card's tooltip), then a footer with the best time and boss kills (small
+## pixel icons), the stage's Soul Ash bonus and a gold Hyper badge once the
+## stage was cleared on Hyper (HyperBadge; Meta.hyper_clears). A LOCKED stage
+## (GDD §9.3: slay the previous stage's boss) shows its scene as a silhouette
+## under a padlock and a one-liner naming the boss to slay; pressing it plays
+## `denied` and shakes the card. Focusing a card turns the diorama to that
+## stage's mood (MenuBackdrop.set_mood(): night, dusk, dawn) and brightens
+## its scene. Keyboard, mouse and controller navigable (arrows / D-pad
+## between cards, Enter / A to march, Esc / B back).
+## Choosing an unlocked stage opens the pre-run setup (PreRunSetup) over this
+## screen (this screen's cards fade out while it is open); when it confirms,
 ## `stage_chosen` is emitted with the finished RunConfig. Backing out of it
 ## returns to the stage card.
 class_name StageSelect
@@ -22,74 +26,22 @@ signal stage_chosen(config: RunConfig)
 ## The screen closed without a choice (Back / Esc).
 signal closed
 
-## Width (px) of one stage card.
-const CARD_WIDTH: float = 360.0
-## Height (px) of one stage card.
-const CARD_HEIGHT: float = 372.0
-
 ## Control that gets focus back when the screen closes.
 var return_focus: Control = null
 ## Stage id -> its card Button.
 var _cards: Dictionary = {}
+## Stage id -> its StageVignette.
+var _vignettes: Dictionary = {}
 ## Back button.
 var _back: Button
-
-
-## Small code-drawn stage emblem: a moonlit tombstone (Graveyard), a
-## crimson banner over a road to the fortress (Crimson March) or a cathedral
-## facade with a rose window under a dawn sun (Sanctum of Judgment).
-class StageEmblem:
-	extends Control
-	## StageRegistry id it depicts.
-	var stage_id: String = ""
-	## True while the stage is locked (drawn dimmed with a padlock).
-	var locked: bool = false
-
-	func _init(id: String, is_locked: bool) -> void:
-		stage_id = id
-		locked = is_locked
-		custom_minimum_size = Vector2(0, 86)
-		mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	func _draw() -> void:
-		var s := size
-		var c := Vector2(s.x * 0.5, s.y * 0.55)
-		draw_rect(Rect2(Vector2.ZERO, s), Color(0.03, 0.02, 0.05, 0.9))
-		if stage_id == "sanctum":
-			draw_rect(Rect2(Vector2.ZERO, Vector2(s.x, s.y * 0.6)), Color(0.16, 0.12, 0.08, 0.6))  # Dawn sky.
-			draw_circle(Vector2(s.x * 0.2, s.y * 0.3), 13.0, Color(Palette.GOLD, 0.85))
-			draw_rect(Rect2(Vector2(0, s.y * 0.8), Vector2(s.x, s.y * 0.2)), Color(0.24, 0.23, 0.21))
-			var facade := Rect2(Vector2(c.x - 40, s.y * 0.32), Vector2(80, s.y * 0.48))
-			draw_rect(facade, Color(0.42, 0.40, 0.37))
-			draw_colored_polygon(PackedVector2Array([Vector2(c.x - 44, s.y * 0.32), Vector2(c.x, s.y * 0.06), Vector2(c.x + 44, s.y * 0.32)]), Color(0.36, 0.34, 0.31))
-			for tx: float in [c.x - 54.0, c.x + 42.0]:  # Bell towers.
-				draw_rect(Rect2(Vector2(tx, s.y * 0.2), Vector2(12, s.y * 0.6)), Color(0.36, 0.34, 0.31))
-			draw_circle(Vector2(c.x, s.y * 0.44), 10.0, Palette.GOLD.darkened(0.2))  # Rose window.
-			for i in 6:
-				draw_line(Vector2(c.x, s.y * 0.44), Vector2(c.x, s.y * 0.44) + Vector2.from_angle(TAU * float(i) / 6.0) * 10.0, Palette.CRIMSON, 1.5)
-			draw_rect(Rect2(Vector2(c.x - 9, s.y * 0.62), Vector2(18, s.y * 0.18)), Color(0.10, 0.08, 0.07))  # Doors.
-		elif stage_id == "crimson_march":
-			draw_rect(Rect2(Vector2(0, s.y * 0.62), Vector2(s.x, s.y * 0.38)), Color(0.12, 0.09, 0.07))
-			draw_colored_polygon(PackedVector2Array([Vector2(c.x - 14, s.y), Vector2(c.x + 14, s.y), Vector2(c.x + 3, s.y * 0.62), Vector2(c.x - 3, s.y * 0.62)]), Color(0.24, 0.19, 0.14))
-			for i in 3:  # Distant fortress towers.
-				var tx := c.x + (float(i) - 1.0) * 34.0
-				draw_rect(Rect2(Vector2(tx - 8, s.y * 0.3), Vector2(16, s.y * 0.32)), Color(0.18, 0.17, 0.2))
-				draw_rect(Rect2(Vector2(tx - 10, s.y * 0.26), Vector2(20, 6)), Color(0.18, 0.17, 0.2))
-			draw_line(Vector2(c.x + 60, s.y * 0.9), Vector2(c.x + 60, s.y * 0.15), Palette.GOLD.darkened(0.3), 2.0)
-			draw_colored_polygon(PackedVector2Array([Vector2(c.x + 61, s.y * 0.15), Vector2(c.x + 92, s.y * 0.2), Vector2(c.x + 80, s.y * 0.3), Vector2(c.x + 92, s.y * 0.4), Vector2(c.x + 61, s.y * 0.4)]), Palette.CRIMSON)
-		else:
-			draw_circle(Vector2(s.x * 0.78, s.y * 0.28), 14.0, Color(0.82, 0.86, 0.85, 0.85))
-			draw_rect(Rect2(Vector2(0, s.y * 0.7), Vector2(s.x, s.y * 0.3)), Color(0.06, 0.07, 0.08))
-			for i in 5:
-				var tx := s.x * (0.12 + 0.19 * float(i))
-				var hgt := 18.0 + 8.0 * absf(sin(float(i) * 1.7))
-				draw_rect(Rect2(Vector2(tx - 7, s.y * 0.72 - hgt), Vector2(14, hgt)), Color(0.16, 0.17, 0.19))
-				draw_circle(Vector2(tx, s.y * 0.72 - hgt), 7.0, Color(0.16, 0.17, 0.19))
-				draw_circle(Vector2(tx, s.y * 0.74), 10.0, Color(Palette.NECRO_GREEN, 0.08))
-		if locked:
-			draw_rect(Rect2(Vector2.ZERO, s), Color(0.0, 0.0, 0.0, 0.55))
-			draw_rect(Rect2(c + Vector2(-11, -2), Vector2(22, 18)), Palette.SILVER.darkened(0.3))
-			draw_arc(c + Vector2(0, -2), 8.0, PI, TAU, 12, Palette.SILVER.darkened(0.3), 3.0)
+## The screen's own content (title, cards, Back, hint strip): faded out while
+## the pre-run setup is open over it.
+var _content: Control
+## The diorama behind the menu (null when opened elsewhere): follows the
+## focused stage's mood.
+var _backdrop: MenuBackdrop = null
+## Running fade of the content's alpha (null when settled).
+var _content_tween: Tween = null
 
 
 ## Opens the screen over `parent`; focus returns to `refocus` when it closes.
@@ -104,88 +56,168 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(UiTheme.backdrop(0.85))
+	_backdrop = _find_backdrop()
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(center)
-	var panel := PanelContainer.new()
-	center.add_child(panel)
+	_content = center
 	var vb := VBoxContainer.new()
-	vb.add_theme_constant_override("separation", 12)
-	panel.add_child(vb)
+	vb.add_theme_constant_override("separation", 14)
+	center.add_child(vb)
 	vb.add_child(UiTheme.title("Choose Your Battlefield"))
-	var sub := UiTheme.tier_label("Each chapter is a 20:00 march against the Covenant, its boss with 3:00 left, then the Reckoning.", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
-	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vb.add_child(sub)
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 16)
+	row.add_theme_constant_override("separation", FrontDoorData.CARD_GAP)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	vb.add_child(row)
+	var cards: Array = []  # Staggered in.
 	for id: String in StageRegistry.ORDER:
 		var card := _build_card(id)
 		row.add_child(card)
 		_cards[id] = card
+		cards.append(card)
 	_back = Button.new()
 	_back.text = "Back"
-	_back.custom_minimum_size = Vector2(0, 42)
+	_back.custom_minimum_size = FrontDoorData.STAGE_BACK_SIZE
+	_back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_back.pressed.connect(close)
 	vb.add_child(_back)
+	var hints := InputHints.bottom_strip([[InputHints.MOVE, "Move"], ["ui_accept", "March"], ["ui_cancel", "Back"]])
+	add_child(hints)
 	_wire_focus()
+	child_entered_tree.connect(_on_child_entered)
+	child_exiting_tree.connect(_on_child_exiting)
 	var first: Button = _cards.get(GameState.last_stage_id, _cards[StageRegistry.ORDER[0]])
-	if first.disabled:
+	if not Meta.is_stage_unlocked(String(first.get_meta(&"stage_id"))):
 		first = _cards[StageRegistry.ORDER[0]]
 	first.grab_focus.call_deferred()
 	UiMotion.open(self)  # Fade / rise in.
+	UiMotion.stagger(cards, 0.05)
 
 
-## One stage card: a Button holding the emblem, the texts and the status.
+## One stage card: a Button holding the vignette, the texts and the footer.
 func _build_card(id: String) -> Button:
 	var def: Dictionary = StageRegistry.STAGES[id]
 	var unlocked := Meta.is_stage_unlocked(id)
 	var b := Button.new()
-	b.custom_minimum_size = Vector2(CARD_WIDTH, CARD_HEIGHT)
-	b.disabled = not unlocked
+	b.custom_minimum_size = FrontDoorData.CARD_SIZE
 	b.focus_mode = Control.FOCUS_ALL  # Locked cards stay focusable so their requirement can be read.
+	b.set_meta(&"stage_id", id)
+	UiTheme.style_button(b, "card", "violet")
+	b.tooltip_text = String(def["description"])  # The long GDD description.
 	b.pressed.connect(_choose.bind(id))
+	b.focus_entered.connect(_on_card_focus.bind(id, true))
+	b.focus_exited.connect(_on_card_focus.bind(id, false))
+	b.mouse_entered.connect(func() -> void: b.grab_focus())
 	var box := VBoxContainer.new()
 	box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	box.offset_left = 12
-	box.offset_right = -12
-	box.offset_top = 10
-	box.offset_bottom = -10
-	box.add_theme_constant_override("separation", 6)
+	var inset := FrontDoorData.CARD_INSET  # Content inset (px).
+	box.offset_left = inset
+	box.offset_right = -inset
+	box.offset_top = inset
+	box.offset_bottom = -inset
+	box.add_theme_constant_override("separation", 4)
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(box)
-	box.add_child(StageEmblem.new(id, not unlocked))
+	var vig := StageVignette.new(id, not unlocked)
+	box.add_child(vig)
+	_vignettes[id] = vig
+	var gap := Control.new()  # A little air under the scene.
+	gap.custom_minimum_size = Vector2(0, 4)
+	gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(gap)
 	box.add_child(UiTheme.tier_label(String(def["chapter"]), UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))
 	box.add_child(UiTheme.tier_label(String(def["display_name"]), UiTheme.Tier.NAME, UiTheme.TEXT_GOLD if unlocked else UiTheme.TEXT_DIM))
-	box.add_child(UiTheme.para(String(def["description"]), CARD_WIDTH - 24.0, UiTheme.TEXT if unlocked else UiTheme.TEXT_DIM))
+	var line := String(FrontDoorData.STAGE_LINES.get(id, ""))  # The one line.
+	if unlocked:
+		box.add_child(UiTheme.para(line, FrontDoorData.VIGNETTE_SIZE.x, UiTheme.TEXT))
+	else:
+		box.add_child(_lock_line(def))
 	var spacer := Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(spacer)
-	var status := UiTheme.tier_label(_status_text(id, unlocked), UiTheme.Tier.BODY, Palette.NECRO_GREEN if unlocked else Palette.CRIMSON.lightened(0.35))
-	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	status.custom_minimum_size = Vector2(CARD_WIDTH - 24.0, 0)
-	box.add_child(status)
-	var hyper_n := Meta.hyper_clear_count(id)  # Characters that cleared it on Hyper.
-	if unlocked and hyper_n > 0:
-		box.add_child(HyperBadge.row("HYPER CLEARED" + (" (%d characters)" % hyper_n if hyper_n > 1 else "")))
+	box.add_child(_footer(id, def) if unlocked else _locked_footer())
 	return b
 
 
-## Status line of a card: the unlock requirement, or the stage's record.
-func _status_text(id: String, unlocked: bool) -> String:
-	var def: Dictionary = StageRegistry.STAGES[id]
-	if not unlocked:
-		return "LOCKED  -  %s" % String(def["unlock_text"])
+## A locked card's footer: a small padlock and "Locked".
+static func _locked_footer() -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var icon := MaskIcon.new("padlock", 1)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(icon)
+	var l := UiTheme.tier_label("Locked", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM)
+	l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(l)
+	return row
+
+
+## A locked card's one-liner: the boss to slay to open it, in crimson.
+func _lock_line(def: Dictionary) -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var icon := MaskIcon.new("skull_crown", 2)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(icon)
+	row.add_child(UiTheme.tier_label(_lock_text(def), UiTheme.Tier.BODY, Palette.CRIMSON.lightened(0.4)))
+	return row
+
+
+## "Slay <boss>" for the stage `def` requires (StageRegistry unlock), else
+## the stage's own unlock text.
+static func _lock_text(def: Dictionary) -> String:
+	var req: Dictionary = def.get("unlock", {})
+	var need := String(req.get("stage", ""))  # Stage whose boss must fall.
+	if StageRegistry.STAGES.has(need):
+		return "Slay %s" % String(StageRegistry.STAGES[need]["boss"]["short_name"])
+	return String(def.get("unlock_text", "Locked"))
+
+
+## An unlocked card's footer: best time and boss kills (pixel icons), the
+## Soul Ash bonus, and the Hyper badge once cleared on Hyper.
+func _footer(id: String, def: Dictionary) -> Control:
 	var rec := Meta.stage_record(id)
-	var best := int(float(rec["best_time"]))
-	var parts := PackedStringArray()
-	parts.append("Best %d:%02d" % [floori(float(best) / 60.0), best % 60] if best > 0 else "Not yet attempted")
-	parts.append("%s slain %d" % [String(def["boss"]["short_name"]), int(float(rec["boss_kills"]))])
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var best := int(float(rec["best_time"]))  # Best time (s).
+	row.add_child(_stat("hourglass", "%d:%02d" % [floori(float(best) / 60.0), best % 60] if best > 0 else "--:--"))
+	row.add_child(_stat("skull_crown", "%d" % int(float(rec["boss_kills"]))))
 	if float(def["ash_mult"]) > 1.0:
-		parts.append("Soul Ash x%.2f" % float(def["ash_mult"]))
-	return "   |   ".join(parts)
+		row.add_child(_stat("ember", "×%.2f" % float(def["ash_mult"]), MetaGlyphs.EMBER.lightened(0.25)))
+	var fill := Control.new()
+	fill.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(fill)
+	if Meta.hyper_clear_count(id) > 0:
+		row.add_child(HyperBadge.row("Hyper", 18))
+	return row
+
+
+## A small footer stat: pixel icon `icon` and `text`.
+static func _stat(icon: String, text: String, color: Color = UiTheme.TEXT) -> Control:
+	var hb := HBoxContainer.new()
+	hb.add_theme_constant_override("separation", 5)
+	hb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var i := MaskIcon.new(icon, 2)
+	i.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	hb.add_child(i)
+	var l := UiTheme.tier_label(text, UiTheme.Tier.BODY, color)
+	l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	hb.add_child(l)
+	return hb
+
+
+## A card gained / lost focus: its scene brightens, the diorama takes the
+## stage's mood.
+func _on_card_focus(id: String, on: bool) -> void:
+	(_vignettes[id] as StageVignette).set_focused(on)
+	if on and _backdrop != null:
+		_backdrop.set_mood(id)
 
 
 ## Explicit focus neighbours: cards left/right in a row, Back below them.
@@ -199,24 +231,88 @@ func _wire_focus() -> void:
 		b.focus_neighbor_right = b.get_path_to(right)
 		b.focus_neighbor_bottom = b.get_path_to(_back)
 		b.focus_neighbor_top = b.get_path_to(b)
-	_back.focus_neighbor_top = _back.get_path_to(_cards[ids[0]])
+	var mid: Button = _cards[ids[ids.size() / 2]]
+	_back.focus_neighbor_top = _back.get_path_to(mid)
+	_back.focus_neighbor_left = _back.get_path_to(_back)
+	_back.focus_neighbor_right = _back.get_path_to(_back)
+	_back.focus_neighbor_bottom = _back.get_path_to(_back)
 
 
-## An unlocked stage was chosen: open the pre-run setup with its RunConfig
-## (remembered difficulty and modifiers); its Begin hands the config on.
+## A card was pressed: an unlocked stage opens the pre-run setup with its
+## RunConfig (remembered choices); a locked one is denied with a shake.
 func _choose(id: String) -> void:
 	if not Meta.is_stage_unlocked(id):
+		Sfx.play_ui("denied")
+		_shake(_cards[id])
 		return
 	Sfx.play("ui_confirm")
 	var setup := PreRunSetup.open_over(self, _cards[id], Meta.prerun_config(id))  # Difficulty / modifiers step.
 	setup.confirmed.connect(func(c: RunConfig) -> void: stage_chosen.emit(c))
 
 
-## Restores focus to the opener and frees the screen.
+## A short sideways shake of `c` (denied), on real time; none with motion off.
+func _shake(c: Control) -> void:
+	if not UiMotion.enabled():
+		return
+	var tw := c.create_tween()
+	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	var amp := FrontDoorData.DENIED_SHAKE_PX  # Amplitude (px).
+	var step := FrontDoorData.DENIED_SHAKE_TIME / 5.0  # One swing (s).
+	var x := c.position.x  # Rest x.
+	for dx: float in [amp, -amp, amp * 0.5, -amp * 0.5, 0.0]:
+		tw.tween_property(c, "position:x", x + dx, step)
+	tw.tween_callback(func() -> void:
+		if c.get_parent() is Container:
+			(c.get_parent() as Container).queue_sort())
+
+
+## The pre-run setup opened over this screen: fade the cards out (the
+## setup's own scrim stays low, so the diorama shows around it).
+func _on_child_entered(node: Node) -> void:
+	if node is PreRunSetup:
+		_fade_content(false)
+
+
+## The pre-run setup is leaving: bring the cards back.
+func _on_child_exiting(node: Node) -> void:
+	if node is PreRunSetup:
+		_fade_content(true)
+
+
+## Fades this screen's content in (`shown`) or out over MenuBackdropData.DIM_TIME
+## (at once with motion off); the hint strip hides with it.
+func _fade_content(shown: bool) -> void:
+	if _content_tween != null:
+		_content_tween.kill()
+		_content_tween = null
+	if not UiMotion.enabled():
+		_content.modulate.a = 1.0 if shown else 0.0
+	else:
+		_content_tween = create_tween()
+		_content_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		_content_tween.tween_property(_content, "modulate:a", 1.0 if shown else 0.0, MenuBackdropData.DIM_TIME)
+	for c: Node in get_children():
+		if c is HBoxContainer:  # The hint strip.
+			(c as Control).visible = shown
+
+
+## The diorama of the MainMenu this screen is opened over (null elsewhere).
+func _find_backdrop() -> MenuBackdrop:
+	var n: Node = get_parent()
+	while n != null:
+		if n is MainMenu:
+			return (n as MainMenu).backdrop()
+		n = n.get_parent()
+	return null
+
+
+## Restores focus to the opener and the diorama's mood, then frees the screen.
 func close() -> void:
 	if UiMotion.is_closing(self):
 		return
 	closed.emit()
+	if _backdrop != null:
+		_backdrop.set_mood(MenuBackdropData.DEFAULT_MOOD)
 	if return_focus != null and is_instance_valid(return_focus) and return_focus.is_visible_in_tree():
 		return_focus.grab_focus()
 	UiMotion.close(self, queue_free)  # Quick fade out, then freed.
