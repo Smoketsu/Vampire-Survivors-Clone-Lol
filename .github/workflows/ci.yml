@@ -12,6 +12,8 @@
 #               uploads them as workflow artifacts (Actions tab -> run -> Artifacts).
 # On a pushed tag starting with "v" (e.g. v0.2.0) the export job also creates a
 # GitHub Release with both builds attached, so testers can just download and play.
+# Its title is "Necropathy <tag>" and its body is docs/release_notes/<tag>.md
+# (an empty body if that file is missing), followed by GitHub's generated changelog.
 
 name: CI
 
@@ -184,10 +186,20 @@ jobs:
           name: Necropathy-linux
           path: build/linux/Necropathy.x86_64
 
+      - name: Release notes file (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          # The hand-written notes for this tag; an empty file keeps the release step working without one.
+          NOTES="docs/release_notes/${GITHUB_REF_NAME}.md"
+          if [ ! -f "$NOTES" ]; then mkdir -p docs/release_notes && : > "$NOTES"; fi
+          echo "RELEASE_NOTES=$NOTES" >> "$GITHUB_ENV"
+
       - name: Create GitHub Release (tags only)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
+          name: Necropathy ${{ github.ref_name }}
+          body_path: ${{ env.RELEASE_NOTES }}
           files: |
             build/Necropathy-windows.zip
             build/Necropathy-linux.zip

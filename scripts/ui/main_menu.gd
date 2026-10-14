@@ -76,7 +76,9 @@ func _ready() -> void:
 		13, UiTheme.TEXT_DIM)
 	controls.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(controls)
-	var version := UiTheme.label("Prototype build  -  Godot 4.3", 12, Color(UiTheme.TEXT_DIM, 0.6))
+	# Release version from project.godot (application/config/version, bumped for each tagged release).
+	var version_text: String = "v%s" % str(ProjectSettings.get_setting("application/config/version", "dev"))
+	var version := UiTheme.label(version_text, 12, Color(UiTheme.TEXT_DIM, 0.6))
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(version)
 	_play.grab_focus.call_deferred()

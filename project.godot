@@ -11,7 +11,8 @@ config_version=5
 [application]
 
 config/name="Necropathy"
-config/description="Prototype: a Vampire Survivors-like where a necromancer commands an autonomous undead horde."
+config/version="0.5.0"
+config/description="A Vampire Survivors-like where a necromancer commands an autonomous undead horde."
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://assets/ui/icon.png"

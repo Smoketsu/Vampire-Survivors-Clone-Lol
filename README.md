@@ -1,4 +1,6 @@
-# Necropathy — Godot 4.3 prototype
+# Necropathy
+
+![The undead horde holds the line against Grand Inquisitor Seraphine](docs/media/v0.5.0/hero.gif)
 
 **Necropathy** is a dark-fantasy bullet-heaven / horde-survival roguelite in the
 vein of *Vampire Survivors*, with one twist: **the army is your weapon**. You play
@@ -12,11 +14,13 @@ you. Late in a run your summons can evolve into Death Knights, Liches, Profane
 Bishops, Shadow Reapers, Cathedral Horrors, Hellhounds, Keening Ladies and
 Ossuary Engines.
 
-This repository has a playable **prototype** of the three campaign stages,
-*The Desecrated Graveyard*, *The Crimson March* (unlocked by slaying Sir
-Alaric) and *The Sanctum of Judgment* (unlocked by slaying Marshal Vael),
-built in Godot 4.3. Every visual is drawn in code, and there are no external
-assets or addons.
+This repository holds the game's three campaign stages, *The Desecrated
+Graveyard*, *The Crimson March* (unlocked by slaying Sir Alaric) and *The
+Sanctum of Judgment* (unlocked by slaying Marshal Vael), built in Godot 4.3
+with no addons. The art is true pixel art (PNGs in `assets/`; the code
+drawings remain as the fallback for any missing image), and the sound and
+music are synthesized at startup. Latest release notes:
+[`docs/release_notes/v0.5.0.md`](docs/release_notes/v0.5.0.md).
 
 Design documents:
 - [`docs/Gravebound_Complete_Game_Design_and_Horde_Spec.txt`](docs/Gravebound_Complete_Game_Design_and_Horde_Spec.txt):
@@ -1603,11 +1607,14 @@ uptime.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in
    the executable), runs the autotest again on the exported Linux build, and uploads both as workflow artifacts.
 
-To publish a downloadable release, push a version tag. The export job then creates a GitHub Release with both zips
-attached:
+To publish a downloadable release, bump `config/version` in `project.godot` (shown on the main menu) and the
+`application/*_version` fields in `export_presets.cfg`, write the player-facing notes in
+`docs/release_notes/<tag>.md` (images go in `docs/media/<tag>/`, linked by their raw GitHub URL at the tag), then
+push a version tag. The export job creates a GitHub Release titled "Necropathy <tag>" with both zips attached, the
+notes as its body and GitHub's generated changelog below them:
 
 ```bash
-git tag v0.2.0 && git push origin v0.2.0
+git tag v0.5.0 && git push origin v0.5.0
 ```
 
 To export locally, install the 4.3 export templates (**Editor → Manage Export Templates**), then use
