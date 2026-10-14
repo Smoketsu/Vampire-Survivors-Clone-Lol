@@ -124,7 +124,7 @@ buttons you press in a fight are the dash and the ultimate (below).
 ### Audio, Feel & Settings
 
 - **Audio, with no audio files.** `Synth` builds every sound effect and a 12 s
-  dark D-minor ambient loop (drone, choir pad, heartbeat) as 16-bit PCM
+  dark D-minor ambient loop for runs (drone, choir pad, heartbeat) as 16-bit PCM
   `AudioStreamWAV`s on worker threads at startup. The main thread is blocked
   for under 1 ms; all sounds are ready in about 0.15–0.3 s and the music in
   about 0.3–0.5 s. Recipes and voice limits live in `scripts/data/sound_data.gd`.
@@ -132,6 +132,27 @@ buttons you press in a fight are the dash and the ultimate (below).
   sounds from a pool of 24 voices. Each sound also has its own voice cap,
   cooldown and priority, so 150 enemies dying at once play only a few voices.
   In headless runs everything runs except actually starting the players.
+- **Menu theme ("Grave Lullaby").** The main menu and every screen opened
+  from it (stage select, pre-run setup, Ossuary, settings, Codex, Credits)
+  have their own music: a 51.2 s loop in D minor at 75 BPM, 16 bars in an
+  A / B form. A (bars 1-8, i–VI–III–VII then i–VI–iv–V) is a music-box
+  motif over an "ooh" choir pad and a soft pedal organ; a lute-like harp
+  joins in bar 5. B (bars 9-16, iv–i–VI–III–iv–bII–V) is a sung "aah" lead
+  over flowing harp arpeggios, peaking on the Neapolitan E-flat and pulling
+  back to the top through a timpani roll. A deep church bell tolls each
+  phrase, and a wind and candle-crackle bed runs throughout, in a dark
+  cathedral reverb. `MenuThemeSynth` renders the score in
+  `scripts/data/menu_theme_data.gd` the same no-files way. It runs lazily,
+  only once the menu asks for it, so the autotest never pays for it: on a
+  worker thread on desktop (about 1.5 s of compute, so the theme fades in
+  that long after launch), in 4 ms per-frame steps on the Web. The result is
+  bit-identical either way. The loop is seamless: note tails wrap to the
+  top, and the reverb and wind are primed with the loop's end. It is
+  22.05 kHz mono (2.3 MB) and matched in loudness to the in-run loop.
+  `Sfx.play_music()` crossfades the two tracks on real time: the menu theme
+  fades out as Play's fade through black starts and the in-run loop fades
+  in (2.5 s); returning to the menu fades the run music out (1 s) and the
+  theme back in from its top (2 s). The Music volume slider sets both.
 - **Feel (`Juice` autoload).** Trauma-based screen shake (bigger for boss
   impacts and player damage), plus a short hit-stop on Hammerfall impacts,
   boss kills and elite kills. Hit-stop is off under `--autotest` and while
@@ -1414,6 +1435,7 @@ scripts/
   pickups/chest.gd, chest_manager.gd       Pooled treasure chests and their drop rules
   audio/sfx.gd              Autoload: audio buses, pooled voices with per-sound and global voice limits
   audio/synth.gd            Procedural sound and music synthesis (no audio files)
+  audio/menu_theme_synth.gd Main menu theme renderer: wavetable choir, music box, bell, harp, reverb (chunked)
   fx/juice.gd               Autoload: screen shake, hit-stop, hooks for particles and damage numbers
   fx/fx_layer.gd            One node that draws all particles and damage numbers from fixed buffers
   fx/stance_outline.gd      Faint ground outline of the army's shape after a stance change
@@ -1508,6 +1530,7 @@ scripts/
                             motion, stage vignette scenes, hero panel
     mask_icon_data.gd       Small pixel UI icons as character masks (padlock, hourglass, skulls, ...)
     sound_data.gd           Sound recipes, voice limits, priorities
+    menu_theme_data.gd      Menu theme score (chords, melody, choir lead, harp, bell, timpani), mix, reverb
     ui_motion_data.gd       UI motion timings, distances, scales and easings (UiMotion)
     player_data.gd          Player stats, XP curve, slot counts
     player_ability_data.gd  Grave Step and Dread Rally numbers (and the bots' use of them)

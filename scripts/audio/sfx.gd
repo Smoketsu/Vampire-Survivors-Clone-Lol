@@ -1,10 +1,20 @@
 ## Sfx — audio autoload (GDD §12 Audio). It:
 ##   * creates the Music and SFX buses (both send to Master) at startup, plus
 ##     a hard limiter on Master so a burst of sounds never clips;
-##   * synthesizes every sound in SoundData and the ambient music loop with
+##   * synthesizes every sound in SoundData and the ambient in-run loop with
 ##     Synth on WorkerThreadPool threads, so startup is never blocked (the
 ##     main thread only queues the tasks). Sounds requested before the bank
 ##     is ready are silently skipped. Timings are printed once as "[audio]";
+##   * plays two music tracks on the Music bus and crossfades between them
+##     (play_music(), called by Main): the main menu theme (MenuThemeSynth,
+##     "Grave Lullaby", MenuThemeData) on the menu and every screen opened
+##     from it, the in-run loop during a run. The menu theme is rendered
+##     lazily, the first time the menu asks for it (so the autotest, which
+##     never shows the menu, never renders it): on a worker thread on
+##     desktop, in small per-frame steps on the Web (WEB_FRAME_BUDGET_MS),
+##     where worker threads may be missing. A track whose loop is not ready
+##     yet starts (fading in) as soon as it is. Fades run on real time, so
+##     the autotest's time scale and hit-stop never touch them;
 ##   * plays sounds through a fixed pool of MAX_VOICES AudioStreamPlayers
 ##     with per-sound limits from SoundData (max_voices, min_interval,
 ##     priority): GDD §12 "aggressive audio voice limits". A sound at its own
@@ -41,8 +51,13 @@ const CULL_DISTANCE: float = 900.0  # TUNING (not in GDD)
 const DISTANCE_ATTEN_DB: float = 12.0  # TUNING (not in GDD)
 ## Volume (dB) of the music player on the Music bus.
 const MUSIC_DB: float = -8.0  # TUNING (not in GDD)
-## Seconds the music fades in once its loop has been generated.
+## Seconds the in-run music fades in (when a run starts, or once its loop
+## has been generated).
 const MUSIC_FADE_IN: float = 2.5  # TUNING (not in GDD)
+## play_music() mode: the main menu theme.
+const MUSIC_MENU: StringName = &"menu"
+## play_music() mode: the in-run loop.
+const MUSIC_RUN: StringName = &"run"
 ## Name of the music bus.
 const BUS_MUSIC: StringName = &"Music"
 ## Name of the sound-effect bus.
@@ -63,6 +78,10 @@ var bank_ready: bool = false
 var sfx_ready_msec: float = 0.0
 ## Wall-clock ms from startup until the music loop was ready.
 var music_ready_msec: float = 0.0
+## Wall-clock ms from startup until the menu theme was ready (0 = not yet).
+var menu_theme_ready_msec: float = 0.0
+## Compute ms the menu theme's synthesis took (summed over its steps).
+var menu_theme_compute_msec: float = 0.0
 ## Ms the main thread spent in _ready (bus setup + queuing synth tasks).
 var startup_msec: float = 0.0
 ## Total sound-effect plays accepted (debug / tests).
@@ -100,10 +119,34 @@ var _silent: bool = false
 var _voice_prio: PackedInt32Array = PackedInt32Array()
 ## id -> last accepted play time (ms), for min_interval.
 var _last_play: Dictionary = {}
-## Looping music player on the Music bus.
+## Looping in-run music player on the Music bus.
 var _music: AudioStreamPlayer
-## Seconds of music fade-in remaining.
-var _music_fade: float = 0.0
+## Looping main-menu theme player on the Music bus.
+var _menu_music: AudioStreamPlayer
+## Current music mode: MUSIC_MENU, MUSIC_RUN or &"" (none asked yet).
+var _music_mode: StringName = &""
+## Linear fade gain (0..1) of the in-run player (applied on top of MUSIC_DB).
+var _run_gain: float = 0.0
+## Gain the in-run player is fading toward (0 or 1).
+var _run_target: float = 0.0
+## Gain change per real second of the in-run player's current fade.
+var _run_rate: float = 1.0
+## Linear fade gain (0..1) of the menu-theme player (on top of its MUSIC_DB).
+var _menu_gain: float = 0.0
+## Gain the menu-theme player is fading toward (0 or 1).
+var _menu_target: float = 0.0
+## Gain change per real second of the menu-theme player's current fade.
+var _menu_rate: float = 1.0
+## The menu theme's renderer while it works (null before it is asked for
+## and once its stream is on the player).
+var _menu_synth: MenuThemeSynth = null
+## WorkerThreadPool task id of the menu theme's synthesis (-1 = none; the
+## Web build steps it on the main thread instead).
+var _menu_task: int = -1
+## True when the menu theme renders in per-frame steps (Web).
+var _menu_incremental: bool = false
+## usec timestamp of the previous _process (real time, for the music fades).
+var _last_usec: int = 0
 ## Camera centre this frame (Vector2.INF when there is no 2D camera).
 var _listener: Vector2 = Vector2.INF
 ## Cosmetic RNG for pitch variation (never the global, seeded RNG).
@@ -129,6 +172,11 @@ func _ready() -> void:
 	_music.bus = BUS_MUSIC
 	_music.volume_db = MUSIC_DB
 	add_child(_music)
+	_menu_music = AudioStreamPlayer.new()
+	_menu_music.bus = BUS_MUSIC
+	_menu_music.volume_db = MenuThemeData.MUSIC_DB
+	add_child(_menu_music)
+	_last_usec = Time.get_ticks_usec()
 	# Longest renders first, so the slowest sounds never start last and
 	# stretch the total synthesis time.
 	var order: Array = SoundData.SOUNDS.keys()
@@ -151,15 +199,21 @@ func _exit_tree() -> void:
 	if _music_task >= 0:
 		WorkerThreadPool.wait_for_task_completion(_music_task)
 		_music_task = -1
+	if _menu_task >= 0:
+		WorkerThreadPool.wait_for_task_completion(_menu_task)
+		_menu_task = -1
+	_menu_synth = null
 	# Release playbacks so the audio server holds no stream at exit.
 	_music.stop()
 	_music.stream = null
+	_menu_music.stop()
+	_menu_music.stream = null
 	for p in _voices:
 		p.stop()
 		p.stream = null
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var cam := get_viewport().get_camera_2d()
 	_listener = cam.get_screen_center_position() if cam != null else Vector2.INF
 	if _sfx_task >= 0 and WorkerThreadPool.is_group_task_completed(_sfx_task):
@@ -179,14 +233,88 @@ func _process(delta: float) -> void:
 		_music.stream = _music_stream
 		_mutex.unlock()
 		music_ready_msec = float(Time.get_ticks_usec() - _t0_usec) / 1000.0
-		_music.volume_db = -60.0
-		_music_fade = MUSIC_FADE_IN
-		if not _silent:
-			_music.play()
 		_report_if_done()
-	if _music_fade > 0.0:
-		_music_fade = maxf(0.0, _music_fade - delta)
-		_music.volume_db = lerpf(MUSIC_DB, -60.0, _music_fade / MUSIC_FADE_IN)
+	_update_menu_theme()
+	# Music fades run on real time (delta follows Engine.time_scale).
+	var now := Time.get_ticks_usec()
+	var real_dt := minf(0.1, float(now - _last_usec) / 1000000.0)
+	_last_usec = now
+	_run_gain = _fade_player(_music, MUSIC_DB, _run_gain, _run_target, _run_rate, real_dt)
+	_menu_gain = _fade_player(_menu_music, MenuThemeData.MUSIC_DB, _menu_gain, _menu_target, _menu_rate, real_dt)
+
+
+## Switches the music to `mode`: MUSIC_MENU (the main menu theme, rendered
+## on first use) or MUSIC_RUN (the in-run loop). The other track fades out
+## and stops; the asked one starts from its beginning (unless it was still
+## fading out, then it just fades back in). Called by Main when the menu is
+## shown and when a run starts; asking for the current mode does nothing.
+func play_music(mode: StringName) -> void:
+	if mode == _music_mode:
+		return
+	_music_mode = mode
+	if mode == MUSIC_MENU:
+		_start_menu_theme()
+		_menu_target = 1.0
+		_menu_rate = 1.0 / MenuThemeData.FADE_IN
+		_run_target = 0.0
+		_run_rate = 1.0 / MenuThemeData.RUN_FADE_OUT
+	else:
+		_run_target = 1.0
+		_run_rate = 1.0 / MUSIC_FADE_IN
+		_menu_target = 0.0
+		_menu_rate = 1.0 / MenuThemeData.FADE_OUT
+
+
+## Moves one music player's fade gain toward `target` over `dt` real
+## seconds, starts it (from the top) when it should be heard and its loop
+## exists, stops it once faded out, and sets its volume. Returns the gain.
+func _fade_player(p: AudioStreamPlayer, base_db: float, gain: float, target: float, rate: float, dt: float) -> float:
+	if p.stream == null:
+		return 0.0
+	gain = move_toward(gain, target, rate * dt)
+	if gain <= 0.0:
+		if p.playing:
+			p.stop()
+		return 0.0
+	p.volume_db = base_db + linear_to_db(gain)
+	if not p.playing and not _silent:
+		p.play()
+	return gain
+
+
+## Creates the menu theme's renderer (first call only): a worker task on
+## desktop, per-frame steps on the Web.
+func _start_menu_theme() -> void:
+	if _menu_synth != null or _menu_music.stream != null:
+		return
+	_menu_synth = MenuThemeSynth.new()
+	_menu_incremental = OS.has_feature("web")
+	if not _menu_incremental:
+		_menu_task = WorkerThreadPool.add_task(_menu_synth.render_all, true, "Necropathy menu theme synth")
+
+
+## Advances the menu theme's synthesis (Web: one frame's budget, only while
+## the menu is shown) and hands the finished loop to its player.
+func _update_menu_theme() -> void:
+	if _menu_synth == null:
+		return
+	if _menu_incremental:
+		if _music_mode != MUSIC_MENU:
+			return  # Never spend a run's frames on the menu theme.
+		if not _menu_synth.step(int(MenuThemeData.WEB_FRAME_BUDGET_MS * 1000.0)):
+			return
+	else:
+		if not WorkerThreadPool.is_task_completed(_menu_task):
+			return
+		WorkerThreadPool.wait_for_task_completion(_menu_task)
+		_menu_task = -1
+	_menu_music.stream = _menu_synth.stream
+	menu_theme_compute_msec = float(_menu_synth.compute_usec) / 1000.0
+	menu_theme_ready_msec = float(Time.get_ticks_usec() - _t0_usec) / 1000.0
+	print("[audio] menu theme: %.1f s loop, %.0f ms compute (%s), ready %.0f ms after startup" % [
+		_menu_synth.loop_seconds(), menu_theme_compute_msec,
+		"per-frame steps" if _menu_incremental else "worker thread", menu_theme_ready_msec])
+	_menu_synth = null
 
 
 ## Prints the synthesis timings once both the bank and the music exist.
