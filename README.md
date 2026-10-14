@@ -69,6 +69,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Dread Rally (ultimate, when its soul meter is full) | **Space** | **LB** |
 | Army stance: Escort / Onslaught / Spearhead / Bone Ring | **1 / 2 / 3 / 4** (rebindable) | **Right-stick flick** up / right / down / left |
 | Pause (Resume / Recipes / Settings / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
+| Results card (end of a run): Restart / Main Menu | **R** / **Esc**, or the buttons | **X** / **B**, or focus + **A** |
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move over the grid, Esc / Back closes | D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
 | Ossuary (Soul Ash upgrades) | **The Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
@@ -83,8 +84,10 @@ On-screen hints show these controls as small key / button chips drawn from your
 Xbox-style **A / B / X / Y**, **LB / RB**, **Start** and stick chips for a
 controller. They switch the moment you touch the other device and follow rebinds
 at once. The main menu, pause menu, level-up panel (the 1 / 2 / 3 card keys and
-the Reroll / Banish / Skip buttons), chest Claim button, Settings and the HUD's
-Shadow Bolt aim line and ability keys all use them. The HUD carries no permanent
+the Reroll / Banish / Skip buttons), chest Claim button, the results card's
+Restart / Main Menu buttons, Settings and the HUD's Shadow Bolt aim line,
+ability keys and stance bar all use them (on a controller the stance bar shows
+the right stick with its flick arrow). The HUD carries no permanent
 controls line any more, and its difficulty / modifiers box only appears when the
 run differs from the standard one (another difficulty, a run modifier, Hyper,
 the Pact or the Oath). The F3 debug overlay still works but is no longer
@@ -116,8 +119,8 @@ buttons you press in a fight are the dash and the ultimate (below).
 - Both live in the HUD's bottom centre, either side of the ability bar: the
   Grave Step icon with one pip per charge (it darkens and counts down while
   no charge is ready) and the Dread Rally icon with its meter (a pulsing
-  border and READY when full, the buff time while it runs). The key names
-  follow your rebinds. Everything runs on game time, so pauses, level-ups and
+  border and READY under the icon when full, the buff time while it runs).
+  Their key chips sit above the icons and follow your rebinds and device. Everything runs on game time, so pauses, level-ups and
   chests freeze the cooldown, the meter and the buff, and the Space / A that
   confirms a card or closes a chest never casts the rally.
 
@@ -153,6 +156,37 @@ buttons you press in a fight are the dash and the ultimate (below).
   Esc / pad B inside a screen, soft **panel open / close** whooshes, a
   bone-chime **purchase** in the Ossuary, a dull **denied** thud for what
   can't be bought or is locked, and a **tick** for count-ups.
+- **In-run screens (numbers in `in_run_ui_data.gd`).** Colour carries meaning:
+  gold for evolutions, chests and victory, crimson for danger and defeat,
+  soul-teal for what is new or focused.
+  - **Level-up:** two columns of violet light rise beside the cards as the
+    panel opens. Each card shows its key chip and kind tag (and **NEW** for a
+    new item), a 64 px icon, the name, **level pips** (owned levels violet, the
+    level this card grants soul-teal), its one-sentence description and stat
+    changes, and, once you have discovered it, the evolution recipe as icons.
+    Evolution cards are gold, with a vortex collapsing into their icon and a
+    gold sheen.
+  - **Treasure chest:** the chest rattles, bursts open and lifts its lid on a
+    band of light with turning rays; then the rewards rise one by one as
+    centred rows (icon, name, level change, level pips). An evolution reward
+    is a gold row with its own burst and sheen. Confirm skips the reveal, then
+    claims.
+  - **Pause:** the run on the left (stage, time left, character, the
+    difficulty and modifiers when not standard, your spells and passives with
+    their levels, your army with unit counts, the four stances) and the
+    buttons on the right; the run controls as chips underneath.
+  - **Results card (end screen):** a gold *Victory* or crimson *Defeat*
+    ribbon, your character (or skin) on the stage's floor, the time survived,
+    kills, level and the boss as tiles, your build and army as icons, the
+    Soul Ash rolling up while each bonus line ticks in, and every unlock of
+    the run (character, stage, skin, Hyper, achievements) as a gold plate.
+  - **HUD:** one banner at a time on a ribbon (gold for an evolution or a
+    synergy, crimson for Covenant and boss events, violet otherwise), always
+    one line (a long event splits at its colon into a headline and a smaller
+    line), fading and rising in and out; later banners queue briefly. Banners
+    hide while a level-up, chest, pause or end screen is open and carry on
+    afterwards. The XP bar sits in its frame with room for its numbers; the HP
+    bar has quarter notches and a pale trail where HP was just lost.
 - **Settings (`Settings` autoload, `SettingsMenu`).** Three tabs (Q / E or
   LB / RB): **Audio** (Master / Music / Effects sliders), **Video**
   (fullscreen, the camera zoom Normal / Close, screen shake, damage numbers,
@@ -226,7 +260,9 @@ back) never changes.
   keys: the active one lit (a thin bar shows the switch lockout), the others
   dimmed, a locked one dark with a padlock. A change shows a one-word banner
   under the necromancer, plays a command horn and draws a faint outline of the
-  new shape on the ground for 1 s. The pause menu lists what each stance does.
+  new shape on the ground for 1 s. The pause screen shows the four stances
+  as small tiles (icon, name, a short tagline, the key; hover one for the
+  full description), the active one framed.
 - The stance resets to **Escort** at the start of every run (and on Restart).
 - No stance gives a stat bonus yet. Flavour bonuses (Onslaught +10% army
   attack speed, Spearhead +30% push on the tip, Bone Ring -10% army damage
@@ -602,7 +638,7 @@ The pre-run setup screen's hero panel ends with the **skin tiles** and the
 
 **Hyper mode** (`hyper_data.gd`, owner-approved) is locked until you slay
 **Grand Inquisitor Seraphine** once, on any difficulty (the end screen of
-that run shows a gold *HYPER MODE UNLOCKED* banner; a save that already has
+that run shows a gold *Hyper mode unlocked* plate; a save that already has
 her kill is unlocked on load). Until then its tile is locked and names the condition. It
 stacks on whichever difficulty level you pick, through the same
 `DifficultyModifiers` path, applied once:
@@ -646,7 +682,8 @@ exists; until then the character's own look (its sprite, or while it has no
 art the school-tinted stand-in, never the Gravecaller's) is drawn with the
 skin's **palette tint**, a small emblem (crown, halo, cracked halo, gold sun corona, plague
 mask) and a faint aura ring (`SkinGlyphs`), so every skin is visible before
-its art. New unlocks are announced on the end screen (*NEW SKIN*). The three
+its art. New unlocks are announced on the end screen (a gold *New skin: ...*
+plate). The three
 counters (`rot_kills`, `high_confessor_kills`, `seraphine_kills_full_army`)
 are lifetime stats in the save; unlocks are derived from them, the
 achievements and the Hyper clears, never stored separately.
@@ -1234,7 +1271,7 @@ never touches gameplay. Its art is in `assets/sprites/menu/`, rebuilt by
 | Playable characters (§10.2, §11.4) | Twelve characters, one per spell, each with its starting spell, one innate passive and stat modifiers; chosen on the pre-run setup screen, unlocked by reaching Lv 5 with the character's spell, remembered in the save. The Gravecaller is the default and plays exactly like the game before characters. See *Characters* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
 | Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
-| UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu (with a **Recipes** view of the discovered evolution recipes), end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, event banner and boss HP; kills; army per class with replacement progress (compact rows, at most one per active slot); ability slots with levels (an evolved class shows its evolution's icon and name). |
+| UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu (with a **Recipes** view of the discovered evolution recipes), end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, the one banner slot (event banners and announcements, one at a time) and boss HP; kills; army per class with replacement progress (compact rows, at most one per active slot); ability slots with levels (an evolved class shows its evolution's icon and name). |
 | Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, Menders are round with a halo, Warders are downward heater shapes under a floating ward sigil, Bishops wear a tall mitre over a bell robe, Death Knights have horned helms, spiked pauldrons and a greatsword, Liches float as crowned wisps, the Lich's risen dead are bare ribcages, abominations are huge stitched blobs, rogues are hooded chevrons with daggers, gargoyles have bat wings, frost wraiths are legless ice ghosts, Shadow Reapers are smoke-trailing hooded scythe assassins, Cathedral Horrors are huge marble gargoyles on a broken plinth). Hit flashes, death pops and an evolution glow are included. |
 
 ### Where the numbers come from
@@ -1467,7 +1504,13 @@ scripts/
                             codex_art (an entry's art: whole-scale sprite / badge, flat
                             silhouette, "?"), credits_screen (Credits roll and Licences page),
                             confirm_dialog (the shared confirm dialog: ConfirmDialog.ask()),
-                            menu_backdrop (the animated pixel-art graveyard behind the main menu)
+                            menu_backdrop (the animated pixel-art graveyard behind the main menu),
+                            hud_banners (the HUD's one banner slot: queue, ribbon accent by
+                            meaning, one-line fit, hidden under panels), ui_fx (effect strips
+                            in the UI at a whole-number scale, real time), ui_shimmer (the gold
+                            evolution sheen), level_pips (card / reward level pips), run_build
+                            (read-only build / army snapshots and their icon rows for the pause
+                            screen and the results card)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     input_hint_data.gd      Input hint chips: sizes, colours, pad glyph names, device thresholds
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
@@ -1509,6 +1552,8 @@ scripts/
     mask_icon_data.gd       Small pixel UI icons as character masks (padlock, hourglass, skulls, ...)
     sound_data.gd           Sound recipes, voice limits, priorities
     ui_motion_data.gd       UI motion timings, distances, scales and easings (UiMotion)
+    in_run_ui_data.gd       In-run screens: level-up cards and pillars, chest reveal, pause and
+                            results card layout, HUD banner queue and bars (all cosmetic)
     player_data.gd          Player stats, XP curve, slot counts
     player_ability_data.gd  Grave Step and Dread Rally numbers (and the bots' use of them)
     motion_data.gd          Engine motion (tier 0) amplitudes, timings, dust colours, cost caps

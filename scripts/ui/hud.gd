@@ -2,7 +2,7 @@
 ##   Top edge      : XP bar.
 ##   Top left      : level, HP, shields (Orb Shield intercept charges).
 ##   Top center    : timer, battle zone (Crimson March, Sanctum; the Sanctum
-##                   adds its corruption), objective / event banner, boss HP
+##                   adds its corruption), objective, boss HP
 ##                   when present (named after the stage boss), and a smaller
 ##                   miniboss bar under it while a stage miniboss lives (the
 ##                   Sanctum's Cathedral Guardian, registered by its kit:
@@ -24,24 +24,26 @@
 ##                   replacement progress bars (an evolved class shows its
 ##                   evolution's icon and name); active army synergies
 ##                   (GDD §6.3) listed above them.
-##   Upper middle  : progression banner announcing a synergy activation or a
-##                   spell evolution (announce()).
+##   Upper middle  : the ONE banner slot (HudBanners): event banners from the
+##                   enemy director and the announcements (announce(): a
+##                   synergy, an evolution, a zone, a revive), one at a time
+##                   from a short queue, on a ribbon plate (gold evolution /
+##                   synergy, crimson Covenant events, violet otherwise),
+##                   hidden while a panel pauses the run.
 ##   Bottom left   : beside the army list, the army stance column (four
 ##                   stance icons with their keys) and, under the
 ##                   necromancer, the stance banner (StanceBar).
 ## Built entirely in code and refreshed at 10 Hz by polling the Game (cheaper
 ## and simpler than wiring dozens of per-frame signals). Text sizes are
 ## UiTheme type tiers; the Shadow Bolt aim line carries the aim key's
-## InputHints chip (current device and bindings).
+## InputHints chip (current device and bindings). The XP bar is inset from
+## the screen edge in its kit frame with room for its numbers, and the HP
+## bar has quarter notches and a damage trail (HudBar; InRunUiData).
 class_name Hud
 extends Control
 
 ## HUD refresh period in seconds.
 const REFRESH: float = 0.1
-## Seconds of game time the progression banner stays fully visible.
-const ANNOUNCE_TIME: float = 3.5  # TUNING (not in GDD)
-## Seconds the progression banner takes to fade out afterwards.
-const ANNOUNCE_FADE: float = 0.8  # TUNING (not in GDD)
 
 ## Owning run.
 var game: Game
@@ -64,8 +66,8 @@ var _timer_label: Label
 var _zone_label: Label
 ## Current objective text.
 var _objective_label: Label
-## Event banner (gold, temporary).
-var _banner_label: Label
+## The one banner slot (event banners and announcements).
+var _banners: HudBanners
 ## Container for the boss name + HP bar (hidden until the boss arrives).
 var _boss_box: VBoxContainer
 ## Boss HP bar.
@@ -93,16 +95,6 @@ var _aim_label: Label
 var _aim_row: HBoxContainer
 ## Synergy id -> HBoxContainer row (icon + name), shown while active.
 var _synergy_rows: Dictionary = {}
-## Progression banner container (title, name, description).
-var _announce_box: VBoxContainer
-## Progression banner small title ("SYNERGY AWAKENED" / "EVOLUTION").
-var _announce_title: Label
-## Progression banner big name line.
-var _announce_name: Label
-## Progression banner effect description line.
-var _announce_desc: Label
-## Game time (Game.elapsed) at which the current banner was shown (-1 = none).
-var _announce_at: float = -1.0
 ## "Modifiers" label (top right): difficulty, run modifiers, Pact / Oath;
 ## hidden while the run is the standard one.
 var _mods_label: Label
@@ -148,26 +140,31 @@ func _box(vertical: bool, ax: float, ay: float, l: float, t: float, r: float, b:
 
 ## Builds every widget.
 func _build() -> void:
-	# XP bar: full width along the top edge.
-	_xp_bar = HudBar.new(Palette.XP, Vector2(0, 12))
+	# XP bar: full width along the top edge, inset so its kit frame shows.
+	_xp_bar = HudBar.new(Palette.XP, Vector2(0, InRunUiData.XP_HEIGHT))
 	_xp_bar.anchor_right = 1.0
-	_xp_bar.offset_bottom = 12.0
+	_xp_bar.offset_left = InRunUiData.XP_INSET_X
+	_xp_bar.offset_right = -InRunUiData.XP_INSET_X
+	_xp_bar.offset_top = InRunUiData.XP_TOP
+	_xp_bar.offset_bottom = InRunUiData.XP_TOP + InRunUiData.XP_HEIGHT
 	_xp_bar.font_size = 11
 	add_child(_xp_bar)
 
 	# Top left: level, HP, shields.
-	var top_left := _box(true, 0.0, 0.0, 16, 20, 300, 110, BoxContainer.ALIGNMENT_BEGIN)
+	var top_left := _box(true, 0.0, 0.0, 16, 24, 300, 114, BoxContainer.ALIGNMENT_BEGIN)
 	_level_label = UiTheme.tier_label("Lv 1", UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
 	top_left.add_child(_level_label)
-	_hp_bar = HudBar.new(Palette.HP_FRIENDLY, Vector2(240, 18))
+	_hp_bar = HudBar.new(Palette.HP_FRIENDLY, InRunUiData.HP_SIZE)
+	_hp_bar.notch = InRunUiData.HP_NOTCH
+	_hp_bar.trail = true
 	top_left.add_child(_hp_bar)
 	_ward_label = UiTheme.tier_label("", UiTheme.Tier.BODY, Palette.VIOLET.lightened(0.3))
 	top_left.add_child(_ward_label)
 	_shield_label = UiTheme.tier_label("", UiTheme.Tier.BODY, Palette.NECRO_GREEN)
 	top_left.add_child(_shield_label)
 
-	# Top center: timer, objective, banner, boss.
-	var tc := _box(true, 0.5, 0.0, -260, 16, 260, 160, BoxContainer.ALIGNMENT_BEGIN)
+	# Top center: timer, zone, objective, boss (the banner slot sits under it).
+	var tc := _box(true, 0.5, 0.0, -260, 20, 260, 160, BoxContainer.ALIGNMENT_BEGIN)
 	tc.grow_horizontal = Control.GROW_DIRECTION_BOTH  # Stays centred when the banner widens it.
 	_timer_label = UiTheme.tier_label("00:00", UiTheme.Tier.HEADER)
 	_timer_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -182,10 +179,6 @@ func _build() -> void:
 	_objective_label = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_objective_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tc.add_child(_objective_label)
-	_banner_label = UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
-	_banner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	UiTheme.banner(_banner_label, UiArtData.BANNER_WRAP)  # Event / zone banner: Jacquard 24, wraps.
-	tc.add_child(_banner_label)
 	_boss_box = VBoxContainer.new()
 	_boss_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_boss_box.visible = false
@@ -209,7 +202,7 @@ func _build() -> void:
 	tc.add_child(_mini_box)
 
 	# Top right: kills, modifiers (only when not the standard run).
-	var top_right := _box(true, 1.0, 0.0, -300, 20, -16, 110, BoxContainer.ALIGNMENT_BEGIN)
+	var top_right := _box(true, 1.0, 0.0, -300, 24, -16, 114, BoxContainer.ALIGNMENT_BEGIN)
 	_kills_label = UiTheme.tier_label("Kills: 0", UiTheme.Tier.NAME)
 	_kills_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	top_right.add_child(_kills_label)
@@ -221,7 +214,7 @@ func _build() -> void:
 	top_right.add_child(_mods_label)
 
 	# Left, under the HP block: running power-up buffs with time left.
-	var buffs := _box(true, 0.0, 0.0, 16, 116, 300, 220, BoxContainer.ALIGNMENT_BEGIN)  # Buff rows column.
+	var buffs := _box(true, 0.0, 0.0, 16, 120, 300, 224, BoxContainer.ALIGNMENT_BEGIN)  # Buff rows column.
 	for kind: String in PowerupData.TIMED:
 		var def: Dictionary = PowerupData.POWERUPS[kind]  # Buff definition.
 		var brow := HBoxContainer.new()  # Icon + "Name 7.2s" + time bar.
@@ -275,16 +268,11 @@ func _build() -> void:
 		syn.add_child(srow)
 		_synergy_rows[id] = srow
 
-	# Upper middle: progression banner (synergy activation / evolution).
-	_announce_box = _box(true, 0.5, 0.0, -360, 196, 360, 316, BoxContainer.ALIGNMENT_BEGIN)  # Below a 2-line Jacquard event banner.
-	_announce_title = UiTheme.tier_label("", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM)
-	_announce_name = UiTheme.tier_label("", UiTheme.Tier.HEADER, UiTheme.TEXT_GOLD)
-	UiTheme.banner(_announce_name)  # The evolution / synergy name: an event banner in Jacquard 24.
-	_announce_desc = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT)
-	for l: Label in [_announce_title, _announce_name, _announce_desc]:
-		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		_announce_box.add_child(l)
-	_announce_box.visible = false
+	# Upper middle, under the top-centre block: the one banner slot.
+	_banners = HudBanners.new()
+	_banners.game = game
+	_banners.anchor_box = tc
+	add_child(_banners)
 
 	# Bottom left, beside the army list: the army stance bar and its banner.
 	var stance_bar := StanceBar.new()  # Stance icons + banner overlay.
@@ -355,7 +343,6 @@ func _refresh() -> void:
 		if game.enemies.sanctum != null:
 			_zone_label.text += game.enemies.sanctum.hud_suffix()
 	_objective_label.text = game.enemies.objective_text()
-	_banner_label.text = game.enemies.banner_text if game.elapsed < game.enemies.banner_until else ""
 	var boss := game.enemies.boss
 	_boss_box.visible = boss != null and boss.active
 	if _boss_box.visible:
@@ -380,7 +367,6 @@ func _refresh() -> void:
 	_aim_label.text = "%s aim: %s" % [game.abilities.spell_name("shadow_bolt"), game.abilities.bolt_aim_name()] if _aim_row.visible else ""
 	for id: String in SynergyData.ORDER:
 		(_synergy_rows[id] as Control).visible = h.synergies.is_active(id)
-	_refresh_announce()
 	_refresh_modifiers()
 	var actives := game.abilities.owned_actives()
 	for i in _active_icons.size():
@@ -413,26 +399,10 @@ func _refresh_modifiers() -> void:
 	_mods_label.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.45))
 
 
-## Shows the progression banner: `title` (small), `item_name` (big, in `color`)
-## and `desc`. It stays ANNOUNCE_TIME s of game time, so a banner raised
-## while the level-up panel pauses the game is seen after resuming.
+## Shows an announcement in the banner slot: `title` (the small kicker),
+## `item_name` (the headline, in `color` unless it is an evolution /
+## synergy, which are gold) and `desc` (the sub-line). Queued behind a
+## banner on show; timed in game time, so one raised while the level-up
+## panel pauses the game is seen after resuming (HudBanners).
 func announce(title: String, item_name: String, desc: String, color: Color) -> void:
-	_announce_title.text = title
-	_announce_name.text = item_name
-	_announce_name.add_theme_color_override("font_color", color)
-	_announce_desc.text = desc
-	_announce_at = game.elapsed
-	_announce_box.visible = true
-	_announce_box.modulate.a = 1.0
-
-
-## Fades out and hides the progression banner once its time is over.
-func _refresh_announce() -> void:
-	if _announce_at < 0.0:
-		return
-	var age := game.elapsed - _announce_at
-	if age > ANNOUNCE_TIME + ANNOUNCE_FADE:
-		_announce_box.visible = false
-		_announce_at = -1.0
-	else:
-		_announce_box.modulate.a = clampf(1.0 - (age - ANNOUNCE_TIME) / ANNOUNCE_FADE, 0.0, 1.0)
+	_banners.push_announce(title, item_name, desc, color)

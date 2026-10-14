@@ -3,12 +3,14 @@
 ## ability bar:
 ##   left  : Grave Step (dash) icon, darkened from the top while no charge is
 ##           ready (the recharge sweep), one pip per charge (filled = ready,
-##           the recharging one fills up), and its bound key above it.
+##           the recharging one fills up), and its key chip above it.
 ##   right : Dread Rally (ultimate) icon, darkened above the soul meter's
-##           level, a meter bar beside it, a pulsing "READY" border when
-##           full, and the buff's remaining time while the rally runs.
-## Key names come from InputHints.key_text(), so they follow rebinds and the
-## last device used (keyboard key, or the pad's RB / LB). Icons go
+##           level, a meter bar beside it, a pulsing border and "READY"
+##           under the icon (never over it) when full, and the buff's
+##           remaining time while the rally runs.
+## The keys are InputHints chips drawn above the icons (InputHints.draw_chip),
+## so they follow rebinds and the last device used (keyboard key, or the
+## pad's RB / LB). Icons go
 ## through Glyphs.draw_icon(), so icon art (assets/sprites/icons/grave_step
 ## / dread_rally.png) plugs in. Polls game.grave_step / game.dread_rally and
 ## redraws every frame (two small icons); purely visual. Pixel-art UI kit:
@@ -19,8 +21,8 @@ extends Control
 
 ## Size (px) of one ability icon.
 const ICON: float = 48.0
-## Height (px) of the key label row above the icons.
-const KEY_ROW: float = 14.0
+## Height (px) of the key chip row above the icons (a chip and a 2 px gap).
+const KEY_ROW: float = 22.0
 ## Width (px) of the Dread Rally meter bar.
 const BAR_W: float = 6.0
 ## Half-width (px) of the widget: the icons sit at its two ends, outside the
@@ -47,8 +49,8 @@ func _init(p_game: Game) -> void:
 	anchor_bottom = 1.0
 	offset_left = -HALF_WIDTH
 	offset_right = HALF_WIDTH
-	offset_top = -118.0
-	offset_bottom = -40.0
+	offset_top = -104.0 - KEY_ROW
+	offset_bottom = -36.0
 
 
 func _process(_delta: float) -> void:
@@ -66,7 +68,7 @@ func _draw() -> void:
 func _draw_step(o: Vector2) -> void:
 	var gs := game.grave_step
 	var rect := Rect2(o, Vector2(ICON, ICON))
-	_key_label(o, InputHints.key_text("dash"))
+	_key_label(o, "dash")
 	_socket(rect)
 	Glyphs.draw_icon(self, "grave_step", rect)
 	if gs.charges <= 0:
@@ -91,7 +93,7 @@ func _draw_step(o: Vector2) -> void:
 func _draw_rally(o: Vector2) -> void:
 	var dr := game.dread_rally
 	var rect := Rect2(o, Vector2(ICON, ICON))
-	_key_label(o, InputHints.key_text("ultimate"))
+	_key_label(o, "ultimate")
 	_socket(rect)
 	Glyphs.draw_icon(self, "dread_rally", rect)
 	var f := dr.fraction()  # Meter fill 0..1.
@@ -108,7 +110,7 @@ func _draw_rally(o: Vector2) -> void:
 	if dr.is_full():
 		var pulse := 0.55 + 0.45 * sin(game.elapsed * PULSE)  # Ready-border brightness.
 		draw_rect(rect.grow(1.5), Color(Palette.NECRO_GREEN, pulse), false, 2.5)
-		_status(o, "READY")
+		_below(o, "READY", Palette.NECRO_GREEN.lightened(0.2))
 	else:
 		draw_rect(Rect2(o, Vector2(ICON, ICON * (1.0 - f))), Color(0.0, 0.0, 0.0, SHADE_ALPHA))
 		_status(o, "%d%%" % int(f * 100.0))
@@ -136,16 +138,29 @@ func _font() -> Font:
 	return get_theme_default_font()
 
 
-## Bound key name centred above the icon at `o`.
-func _key_label(o: Vector2, text: String) -> void:
-	var font := _font()
+## The key chip of `action` centred above the icon at `o` (InputHints:
+## the current device's key or pad button; nothing when it has none).
+func _key_label(o: Vector2, action: String) -> void:
+	var g := InputHints.glyph(action)  # Chip glyph for the current device.
+	var w := float(InputHints.chip_width(g))  # Chip width (px).
+	if w <= 0.0:
+		return
 	SpriteBank.apply_sharp(self)  # Pixel-font text is rasterised at layout size (UiArtData).
-	draw_string(font, Vector2(o.x - 20.0, o.y - 3.0), text, HORIZONTAL_ALIGNMENT_CENTER, ICON + 40.0, UiTheme.font_px(FONT), UiTheme.TEXT_DIM)
+	InputHints.draw_chip(self, Vector2(roundf(o.x + (ICON - w) * 0.5), o.y - KEY_ROW), g)
 
 
-## Status text (seconds left, %, READY) on the lower part of the icon at `o`.
+## Status text (seconds left, %) on the lower part of the icon at `o`.
 func _status(o: Vector2, text: String) -> void:
 	var font := _font()
 	var p := Vector2(o.x, o.y + ICON - 5.0)
 	draw_string(font, p + Vector2(1, 1), text, HORIZONTAL_ALIGNMENT_CENTER, ICON, UiTheme.font_px(FONT), Color(0, 0, 0, 0.85))
 	draw_string(font, p, text, HORIZONTAL_ALIGNMENT_CENTER, ICON, UiTheme.font_px(FONT), Color.WHITE)
+
+
+## Status text `text` in `col`, centred just under the icon at `o` (the
+## Dread Rally's READY, clear of the icon art).
+func _below(o: Vector2, text: String, col: Color) -> void:
+	var font := _font()
+	var p := Vector2(o.x - 12.0, o.y + ICON + 14.0)  # Baseline under the icon (px).
+	draw_string(font, p + Vector2(1, 1), text, HORIZONTAL_ALIGNMENT_CENTER, ICON + 24.0, UiTheme.font_px(FONT), Color(0, 0, 0, 0.85))
+	draw_string(font, p, text, HORIZONTAL_ALIGNMENT_CENTER, ICON + 24.0, UiTheme.font_px(FONT), col)

@@ -1,12 +1,27 @@
 ## LevelUpPanel — pauses combat and shows three large upgrade cards
 ## (GDD §10.4 "Level-up panel: Pause combat; three large cards with icon, name,
 ## old/new level, description, actual stat delta, evolution readiness").
-## Evolution cards are highlighted in gold. A card whose spell / class /
-## passive feeds an evolution shows that recipe as an icon row at its bottom
-## (RecipeIconRow), only once the recipe is discovered (owner decision, GDD
-## §15.0 "Recipe icon row"). Under the cards, an action bar
-## offers Reroll / Banish (limited charges) and Skip (unlimited, small heal),
-## GDD §9.1 and LevelUpData.
+## Under the cards, an action bar offers Reroll / Banish (limited charges)
+## and Skip (unlimited, small heal), GDD §9.1 and LevelUpData.
+##
+## Presentation (menu modernization wave 2, numbers in InRunUiData):
+##   * "Level N" in the TITLE tier; two columns of violet light (the
+##     `level_up` effect strip, UiFx) rise at both sides of the card row each
+##     time the panel opens, and the cards rise in one after another
+##     (UiMotion.stagger) and lift on hover / focus (UiMotion.liftable).
+##   * A card, top to bottom: its number key chip and kind tag (and a
+##     soul-teal NEW for a new item), the 64 px icon (the 32 px badge at x2),
+##     the name, the level pips (owned levels violet, the level this card
+##     grants soul-teal, levels to come dark; LevelPips), a skull divider,
+##     the one-sentence description, the stat deltas, and at the bottom the
+##     evolution recipe as icons (RecipeIconRow), only once that recipe is
+##     discovered (owner decision, GDD §15.0 "Recipe icon row").
+##   * Evolution cards are gold (gold = evolution): gold frame, divider and
+##     name, the `evolution` strip collapsing into the icon as the card
+##     enters, and a gold sheen sweeping across it (UiShimmer).
+##   * While the panel is open the HUD banners are hidden (Hud mutes them
+##     whenever the run is not PLAYING), so nothing shows through.
+## Every motion is instant under the autotest and with "Reduce motion".
 ##
 ## Controls (all also reachable by focus navigation + A / Enter / click):
 ##   pick a card     1 / 2 / 3, click, or focus + A
@@ -16,10 +31,9 @@
 ##   Skip            N            controller RB
 ## Controller Y stays the Shadow Bolt aim toggle, so it is not used here.
 ## These keys are shown as InputHints chips (the current device's: keyboard
-## keys or pad buttons), never as text: a hint strip under the title (pick /
-## choose), a "1" / "2" / "3" key chip on each card (keyboard only), a chip
-## inside each action button and a cancel chip on the banish prompt.
-## Text sizes are UiTheme type tiers (the title in Jacquard 24).
+## keys or pad buttons), never as text: a hint strip under the title, a
+## "1" / "2" / "3" key chip on each card (keyboard only), a chip inside each
+## action button and a cancel chip on the banish prompt.
 class_name LevelUpPanel
 extends Control
 
@@ -30,17 +44,6 @@ signal card_chosen(offer: Dictionary)
 ## Clicks/keys within this many ms of opening are ignored, so a held key or
 ## an in-flight click doesn't pick a card by accident.
 const INPUT_GRACE_MSEC: int = 250
-## Card width in px (fixed so text wraps predictably).
-const CARD_WIDTH: float = 270.0
-## Minimum card height in px; cards grow taller to fit their content and the
-## row stretches every card to the tallest one.
-const CARD_MIN_HEIGHT: float = 340.0
-## Inner padding of a card in px (left/right).
-const CARD_PAD_X: int = 14
-## Inner padding of a card in px (top/bottom).
-const CARD_PAD_Y: int = 12
-## Width in px of each action-bar button (its key chip sits inside, left).
-const ACTION_WIDTH: float = 230.0
 ## Card number keys (1 / 2 / 3, keyboard only), shown as chips on the cards.
 const CARD_KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3]
 
@@ -62,6 +65,10 @@ var _status_cancel: Control
 var _buttons: Array[Button] = []
 ## Card root containers in display order (freed when the panel reopens).
 var _cards: Array[Control] = []
+## The two level-up light pillars beside the card row (left, right).
+var _pillars: Array[UiFx] = []
+## Zero-height anchor under the card row that holds the pillars.
+var _pillar_anchor: Control
 ## Reroll action button.
 var _reroll_btn: Button
 ## Banish action button (toggles banish mode).
@@ -81,12 +88,12 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	visible = false
 	set_meta(UiMotion.META_CANCEL_SILENT, true)  # Esc / B is no "back" here.
-	add_child(UiTheme.backdrop(0.72))
+	add_child(UiTheme.backdrop(InRunUiData.LEVEL_BACKDROP))
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
 	var vb := VBoxContainer.new()
-	vb.add_theme_constant_override("separation", 14)
+	vb.add_theme_constant_override("separation", 12)
 	center.add_child(vb)
 	_title = UiTheme.title("Level Up")
 	vb.add_child(_title)
@@ -96,12 +103,14 @@ func _ready() -> void:
 	picks.append(InputHints.raw(-1, JOY_BUTTON_A))
 	vb.add_child(InputHints.strip([[picks, "Choose one"]]))
 	_cards_box = HBoxContainer.new()
-	_cards_box.add_theme_constant_override("separation", 18)
+	_cards_box.add_theme_constant_override("separation", InRunUiData.CARD_GAP)
 	_cards_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	vb.add_child(_cards_box)
+	_build_pillars(vb)
 	var status_row := HBoxContainer.new()  # Status line + its cancel hint.
 	status_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	status_row.add_theme_constant_override("separation", 14)
+	status_row.custom_minimum_size = Vector2(0, InputHintData.CHIP_HEIGHT)
 	vb.add_child(status_row)
 	_status = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_GOLD)
 	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -110,7 +119,7 @@ func _ready() -> void:
 	_status_cancel.add_child(InputHints.hint([InputHints.raw(KEY_ESCAPE, JOY_BUTTON_B)], "Cancel"))
 	status_row.add_child(_status_cancel)
 	var actions := HBoxContainer.new()
-	actions.add_theme_constant_override("separation", 18)
+	actions.add_theme_constant_override("separation", InRunUiData.CARD_GAP)
 	actions.alignment = BoxContainer.ALIGNMENT_CENTER
 	vb.add_child(actions)
 	_reroll_btn = _action_button(actions, _reroll, InputHints.raw(KEY_R, JOY_BUTTON_X))
@@ -118,11 +127,30 @@ func _ready() -> void:
 	_skip_btn = _action_button(actions, _skip, InputHints.raw(KEY_N, JOY_BUTTON_RIGHT_SHOULDER))
 
 
+## Adds the zero-height anchor right under the card row and the two light
+## pillars on it (bottom-anchored `level_up` columns just outside the row).
+func _build_pillars(vb: VBoxContainer) -> void:
+	_pillar_anchor = Control.new()
+	_pillar_anchor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vb.add_child(_pillar_anchor)
+	var half := (3.0 * InRunUiData.CARD_WIDTH + 2.0 * float(InRunUiData.CARD_GAP)) * 0.5 + InRunUiData.PILLAR_MARGIN  # Pillar x from the centre (px).
+	for side: float in [-1.0, 1.0]:
+		var fx := UiFx.new("level_up", InRunUiData.PILLAR_SCALE, Vector2(0.5, 1.0))
+		fx.anchor_left = 0.5
+		fx.anchor_right = 0.5
+		fx.offset_left = side * half
+		fx.offset_right = side * half
+		fx.offset_top = -12.0  # The row's bottom edge (the VBox separation above the anchor).
+		fx.offset_bottom = -12.0
+		_pillar_anchor.add_child(fx)
+		_pillars.append(fx)
+
+
 ## Adds one action-bar button calling `cb` to `parent`, with the key chip of
 ## `hint` (an InputHints spec) inside its left edge.
 func _action_button(parent: Control, cb: Callable, hint: Dictionary) -> Button:
 	var b := Button.new()
-	b.custom_minimum_size = Vector2(ACTION_WIDTH, 40)
+	b.custom_minimum_size = Vector2(InRunUiData.ACTION_WIDTH, InRunUiData.ACTION_HEIGHT)
 	b.focus_mode = Control.FOCUS_ALL
 	b.pressed.connect(func() -> void: _on_action(cb))
 	InputHints.attach(b, hint)
@@ -137,13 +165,14 @@ func open(offers: Array[Dictionary], for_level: int) -> void:
 	_opened_msec = Time.get_ticks_msec()
 	UiMotion.open(self, false)  # Fade in (no whoosh: the level-up chime plays).
 	_show(offers)
+	for i in _pillars.size():
+		_pillars[i].play(float(i) * InRunUiData.PILLAR_STAGGER)
 
 
 ## (Re)builds the cards for `offers` and refreshes the action bar.
 func _show(offers: Array[Dictionary]) -> void:
 	_offers = offers
-	for c in _cards:
-		c.queue_free()
+	RunBuild.clear(_cards_box)  # Detached at once: the row never holds two sets (rerolls).
 	_cards.clear()
 	_buttons.clear()
 	for i in offers.size():
@@ -155,6 +184,9 @@ func _show(offers: Array[Dictionary]) -> void:
 	_waiting = true
 	_refresh_actions()
 	UiMotion.stagger(_cards)  # Cards rise in one after another.
+	for i in _cards.size():
+		if _cards[i].has_meta(&"evo_fx"):
+			(_cards[i].get_meta(&"evo_fx") as UiFx).play(float(i) * UiMotionData.STAGGER_INTERVAL)  # Evolution burst as the card enters.
 	if not _buttons.is_empty():
 		_buttons[0].grab_focus.call_deferred()
 	if game != null and game.autotest != null:
@@ -175,15 +207,15 @@ func _refresh_actions() -> void:
 	_reroll_btn.disabled = ab.rerolls_left <= 0
 	_banish_btn.text = ("Cancel" if _banish_mode else "Banish (%d)" % ab.banishes_left)
 	_banish_btn.disabled = ab.banishes_left <= 0 and not _banish_mode
-	_skip_btn.text = "Skip (+%d%% HP)" % int(roundf(LevelUpData.SKIP_HEAL_FRACTION * 100.0))
+	_skip_btn.text = "Skip +%d%% HP" % int(roundf(LevelUpData.SKIP_HEAL_FRACTION * 100.0))
 	var has_evo := false
 	for o in _offers:
 		has_evo = has_evo or String(o["kind"]) == "evolution"
 	if _banish_mode:
-		_status.text = "Banish: pick the card to remove from this run"
+		_status.text = "Pick a card to banish"
 		_status.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.35))
 	elif has_evo:
-		_status.text = "An evolution is ready!"
+		_status.text = "Evolution ready"
 		_status.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
 	else:
 		_status.text = ""
@@ -195,71 +227,53 @@ func _refresh_actions() -> void:
 
 ## Builds one card for offer `o` (index `idx`). Layout: a MarginContainer
 ## root whose minimum size is the max of its children, holding a full-size
-## Button (focus / click / controller A) underneath a padded content column.
-## The card therefore grows to fit its text and can never overflow.
-## Evolution cards get a gold frame and background.
+## Button (focus / click / controller A) underneath a padded content column
+## (and, on an evolution card, the gold sheen over it). The card therefore
+## grows to fit its text and can never overflow.
 func _make_card(o: Dictionary, idx: int) -> Control:
+	var kind := String(o["kind"])
+	var evo := kind == "evolution"  # Gold card.
+	var accent := "gold" if evo else "violet"  # Kit accent of the frame and divider.
 	var card := MarginContainer.new()
-	card.custom_minimum_size = Vector2(CARD_WIDTH, CARD_MIN_HEIGHT)
+	card.custom_minimum_size = Vector2(InRunUiData.CARD_WIDTH, InRunUiData.CARD_MIN_HEIGHT)
 	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var b := Button.new()
 	b.focus_mode = Control.FOCUS_ALL
 	b.pressed.connect(_choose.bind(idx, false))
-	var kind := String(o["kind"])
-	# Card frame (UI kit): gold for evolutions, violet otherwise.
-	UiTheme.style_button(b, "card", "gold" if kind == "evolution" else "violet")
+	UiTheme.style_button(b, "card", accent)  # Card frame (UI kit).
 	card.add_child(b)
 	UiMotion.liftable(b, card)  # The whole card lifts on hover / focus.
 	_buttons.append(b)
 	var content := MarginContainer.new()
 	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	content.add_theme_constant_override("margin_left", CARD_PAD_X)
-	content.add_theme_constant_override("margin_right", CARD_PAD_X)
-	content.add_theme_constant_override("margin_top", CARD_PAD_Y)
-	content.add_theme_constant_override("margin_bottom", CARD_PAD_Y)
+	content.add_theme_constant_override("margin_left", InRunUiData.CARD_PAD_X)
+	content.add_theme_constant_override("margin_right", InRunUiData.CARD_PAD_X)
+	content.add_theme_constant_override("margin_top", InRunUiData.CARD_PAD_Y)
+	content.add_theme_constant_override("margin_bottom", InRunUiData.CARD_PAD_Y)
 	card.add_child(content)
 	var vb := VBoxContainer.new()
 	vb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vb.add_theme_constant_override("separation", 6)
 	content.add_child(vb)
-	var text_width := CARD_WIDTH - 2.0 * float(CARD_PAD_X)
-	var tag_color := Palette.NECRO_GREEN
-	match String(o["tag"]):
-		"SPELL":
-			tag_color = Palette.VIOLET.lightened(0.3)
-		"PASSIVE":
-			tag_color = Palette.COLD_BLUE
-		"RESTORE", "BOON", "EVOLUTION":
-			tag_color = Palette.GOLD
-		"PACT":
-			tag_color = Palette.CRIMSON.lightened(0.3)  # Profane Pact (difficulty passive).
-	var tag_row := HBoxContainer.new()  # Number key chip (keyboard only) + kind tag.
-	tag_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tag_row.add_theme_constant_override("separation", 6)
-	tag_row.custom_minimum_size = Vector2(0, InputHintData.CHIP_HEIGHT)
-	if idx < CARD_KEYS.size():
-		tag_row.add_child(InputHints.chip(InputHints.raw(CARD_KEYS[idx])))
-	var tag_l := UiTheme.tier_label(String(o["tag"]), UiTheme.Tier.LABEL, tag_color)
-	tag_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	tag_row.add_child(tag_l)
-	vb.add_child(tag_row)
-	var icon_center := CenterContainer.new()
-	icon_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	icon_center.add_child(IconGlyph.new(o["icon"], Vector2(68, 68)))
-	vb.add_child(icon_center)
-	var name_label := UiTheme.tier_label(String(o["name"]), UiTheme.Tier.NAME, UiTheme.TEXT_GOLD if kind == "evolution" else UiTheme.TEXT)
+	var text_width := InRunUiData.CARD_WIDTH - 2.0 * float(InRunUiData.CARD_PAD_X)  # Wrap width (px).
+	vb.add_child(_tag_row(o, idx))
+	var icon_box := CenterContainer.new()  # The icon, and the evolution burst over it.
+	icon_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icon_box.add_child(IconGlyph.new(String(o["icon"]), Vector2(InRunUiData.CARD_ICON, InRunUiData.CARD_ICON)))
+	vb.add_child(icon_box)
+	if evo:
+		var fx := UiFx.new("evolution", InRunUiData.EVO_FX_SCALE)  # Played as the card enters (_show()).
+		icon_box.add_child(fx)
+		card.set_meta(&"evo_fx", fx)
+	var name_label := UiTheme.tier_label(String(o["name"]), UiTheme.Tier.NAME, UiTheme.TEXT_GOLD if evo else UiTheme.TEXT)
 	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART  # Long evolution names wrap.
 	name_label.custom_minimum_size = Vector2(text_width, 0)
 	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(name_label)
-	var lvl_text := ""
-	if kind == "evolution":
-		lvl_text = "Lv %d  ->  EVOLVED" % int(o["from"])
-	elif kind != "fallback":
-		lvl_text = "NEW!  Lv 1" if int(o["from"]) == 0 else "Lv %d  ->  Lv %d" % [int(o["from"]), int(o["to"])]
-	var lvl_label := UiTheme.tier_label(lvl_text, UiTheme.Tier.BODY, UiTheme.TEXT_GOLD)
-	lvl_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vb.add_child(lvl_label)
+	var lvl_row := _level_row(o)  # Pips, the evolution line, or null (fallback cards).
+	if lvl_row != null:
+		vb.add_child(lvl_row)
+	vb.add_child(UiTheme.divider(accent))
 	vb.add_child(UiTheme.para(String(o["description"]), text_width, UiTheme.TEXT_DIM))
 	var deltas := UiTheme.tier_label("\n".join(o["deltas"]), UiTheme.Tier.BODY, UiTheme.TEXT_GOOD)
 	deltas.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -275,7 +289,73 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 		push.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		vb.add_child(push)
 		vb.add_child(recipe)
+	if evo:
+		content.add_child(UiShimmer.new())  # Gold sheen over the card's content.
 	return card
+
+
+## The card's top row: its number key chip (keyboard only), its kind tag in
+## the kind's colour and, for a new item, a soul-teal NEW at the right.
+func _tag_row(o: Dictionary, idx: int) -> HBoxContainer:
+	var tag_color := Palette.NECRO_GREEN  # Summons.
+	match String(o["tag"]):
+		"SPELL":
+			tag_color = Palette.VIOLET.lightened(0.3)
+		"PASSIVE":
+			tag_color = Palette.COLD_BLUE
+		"RESTORE", "BOON", "EVOLUTION":
+			tag_color = Palette.GOLD
+		"PACT":
+			tag_color = Palette.CRIMSON.lightened(0.3)  # Profane Pact (difficulty passive).
+	var row := HBoxContainer.new()
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_theme_constant_override("separation", 6)
+	row.custom_minimum_size = Vector2(0, InputHintData.CHIP_HEIGHT)
+	if idx < CARD_KEYS.size():
+		row.add_child(InputHints.chip(InputHints.raw(CARD_KEYS[idx])))
+	var tag_l := UiTheme.tier_label(String(o["tag"]), UiTheme.Tier.LABEL, tag_color)
+	tag_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	tag_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(tag_l)
+	if _max_level(o) > 0 and int(o["from"]) == 0:
+		var new_l := UiTheme.tier_label("New", UiTheme.Tier.LABEL, InRunUiData.PIP_NEW)
+		new_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(new_l)
+	return row
+
+
+## The card's level line: level pips for a spell / summon / passive, a gold
+## "Lv N -> Evolved" line for an evolution, nothing for the fallback cards.
+func _level_row(o: Dictionary) -> Control:
+	var kind := String(o["kind"])
+	if kind == "evolution":
+		var l := UiTheme.tier_label("Lv %d  ->  Evolved" % int(o["from"]), UiTheme.Tier.BODY, UiTheme.TEXT_GOLD)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		return l
+	var top := _max_level(o)  # Pip count (0 = no level track).
+	if top <= 0:
+		return null
+	var row := HBoxContainer.new()  # Pips + "Lv N".
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_theme_constant_override("separation", 8)
+	row.add_child(LevelPips.new(int(o["from"]), int(o["to"]), top))
+	row.add_child(UiTheme.tier_label("Lv %d" % int(o["to"]), UiTheme.Tier.BODY, InRunUiData.PIP_NEW))
+	return row
+
+
+## Highest level of the item offer `o` upgrades (its level table's length),
+## or 0 for an offer without levels (evolution, fallback, skip). Read-only.
+static func _max_level(o: Dictionary) -> int:
+	var id := String(o["id"])
+	match String(o["kind"]):
+		"spell":
+			return (AbilityData.SPELLS[id]["levels"] as Array).size() if AbilityData.SPELLS.has(id) else 0
+		"passive":
+			return (PassiveData.PASSIVES[id]["levels"] as Array).size() if PassiveData.PASSIVES.has(id) else 0
+		"summon":
+			return (UnitData.LEVELS[id] as Array).size() if UnitData.LEVELS.has(id) else 0
+	return 0
 
 
 ## True while input is accepted (open, waiting, grace period over) or forced.

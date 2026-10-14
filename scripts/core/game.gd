@@ -328,6 +328,7 @@ func _build_ui() -> void:
 	pause_menu.main_menu_pressed.connect(func() -> void: main_menu_requested.emit())
 	root.add_child(pause_menu)
 	end_screen = EndScreen.new()
+	end_screen.game = self  # Read-only: the results card's build and army icons.
 	end_screen.restart_pressed.connect(func() -> void: restart_requested.emit())
 	end_screen.main_menu_pressed.connect(func() -> void: main_menu_requested.emit())
 	root.add_child(end_screen)
