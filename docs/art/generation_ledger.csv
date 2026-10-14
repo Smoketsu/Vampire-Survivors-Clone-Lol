@@ -396,3 +396,11 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-14 19:28,art/curvy3_seraphine_avatar_cast,gpt-image-2.5-flare,medium,1024x1024,2,279,2048,439,0.0309,src_seraphine_avatar_cast.png
 2026-10-14 19:28,art/curvy3_seraphine_avatar,gpt-image-2.5-flare,medium,1024x1024,2,287,2048,439,0.0310,src_seraphine_avatar.png
 2026-10-14 19:28,art/curvy3_wither_witch_hyper,gpt-image-2.5-flare,medium,1024x1024,2,286,2048,439,0.0310,src_wither_witch_hyper.png
+2026-10-14 19:49,art/figure_banshee,gpt-image-2.5-flare,medium,1024x1024,1,500,480,439,0.0195,src_banshee.png
+2026-10-14 19:49,art/figure_keening_lady,gpt-image-2.5-flare,medium,1024x1024,1,506,588,439,0.0204,src_keening_lady.png
+2026-10-14 19:51,art/figure2_banshee,gpt-image-2.5-flare,medium,1024x1024,1,348,1024,439,0.0231,src2_banshee.png
+2026-10-14 19:51,art/figure2_keening_lady,gpt-image-2.5-flare,medium,1024x1024,1,362,1024,439,0.0232,src2_keening_lady.png
+2026-10-14 19:54,enemies/battle_sister,gpt-image-2.5-flare,medium,1024x1024,2,784,2048,439,0.0335,src_v1.png
+2026-10-14 19:54,enemies/battle_sister,gpt-image-2.5-flare,medium,1024x1024,2,784,2048,439,0.0335,src_v2.png
+2026-10-14 19:56,enemies/battle_sister,gpt-image-2.5-flare,medium,1024x1024,2,587,2048,439,0.0325,src_v5.png
+2026-10-14 19:56,enemies/battle_sister,gpt-image-2.5-flare,medium,1024x1024,2,587,2048,439,0.0325,src_v6.png
