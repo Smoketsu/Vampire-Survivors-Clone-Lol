@@ -4,6 +4,13 @@
 class_name PlayerData
 extends RefCounted
 
+## Global multiplier on ALL damage the player's side deals to enemies: every
+## spell, evolution, summon attack, summon special / hazard, damage over time
+## and the Soul Nova pickup (all of it enters through CombatResolver.damage_enemy(),
+## where this is applied once, before crits, Siegecraft and the enemy-side
+## modifiers). 1.0 = no change. Owner request (Oct 2026, playtest): "the player
+## is feeling a bit weak", +5% to every player and summon damage source.
+const ALL_DAMAGE_MULT: float = 1.05  # TUNING (not in GDD)
 ## Starting and maximum health of the necromancer (HP).
 const MAX_HP: float = 120.0  # TUNING (not in GDD)
 ## Natural HP regeneration of the necromancer (HP per second, 30 HP per
