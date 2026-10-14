@@ -14,7 +14,8 @@
 ##   * the living enemies that own a CovenantKit, for the autotest
 ##     autopilot's danger hints (danger_push(); zero when there are none);
 ##   * the kill hook (on_enemy_killed): CovenantKit.on_killed, then the
-##     death record.
+##     death record (also read, never claimed, by death_near(): the Sister
+##     of the Scourge's zeal).
 ## Stats: confessor_revives_started, confessor_revives,
 ## confessor_revives_cancelled, confessor_revives_capped, revived_killed.
 class_name CovenantRites
@@ -97,6 +98,17 @@ func on_enemy_killed(e: Enemy) -> void:
 	rec.pos = e.position
 	rec.time = game.elapsed
 	rec.used = false
+
+
+## True if an ordinary soldier (one the ring records) fell within `radius`
+## px of `pos` after game time `since` (s). Read-only: a Sister of the
+## Scourge's zeal (BattleSisterKit) never claims the death, so a Confessor
+## can still raise it.
+func death_near(pos: Vector2, radius: float, since: float) -> bool:
+	for rec in _deaths:
+		if rec.kind != "" and rec.time > since and rec.pos.distance_to(pos) <= radius:
+			return true
+	return false
 
 
 ## True while Confessor `owner` channels a revival.

@@ -70,7 +70,8 @@ const RECKONING_OBJECTIVE: String = "THE RECKONING: the whole garrison marches o
 
 ## Continuous spawning segments, sorted by start time (keys as
 ## GraveyardStage.SEGMENTS). New kinds: shieldbearer from 4:00, banner bearer
-## from 9:00, halberdier from 12:00 (MarchEnemyData).
+## from 9:00, halberdier from 12:00 (MarchEnemyData); the Sister of the Scourge
+## (BattleSisterData) from 6:00, her weight taken from the recruits'.
 const SEGMENTS := [
 	# Zone I, the Burned Road: GDD §8.2 "00:00 Patrols".
 	{"start": 0.0, "rate": 1.5, "max_alive": 32,  # TUNING (not in GDD)
@@ -94,41 +95,41 @@ const SEGMENTS := [
 		"objective": "Break through the checkpoint"},
 	# GDD §8.2 "06:00 Templar ambush".
 	{"start": 360.0, "rate": 2.9, "max_alive": 85,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.5, "footman": 0.2, "archer": 0.1, "shieldbearer": 0.1, "chaplain": 0.05, "templar": 0.05},
+		"weights": {"recruit": 0.47, "footman": 0.2, "archer": 0.1, "shieldbearer": 0.1, "chaplain": 0.05, "templar": 0.05, "battle_sister": 0.03},
 		"objective": "Templar ambush: hold your lines"},
 	{"start": 420.0, "rate": 2.6, "max_alive": 80,  # TUNING (not in GDD) lull
-		"weights": {"recruit": 0.5, "footman": 0.2, "archer": 0.1, "shieldbearer": 0.1, "chaplain": 0.05, "templar": 0.05},
+		"weights": {"recruit": 0.47, "footman": 0.2, "archer": 0.1, "shieldbearer": 0.1, "chaplain": 0.05, "templar": 0.05, "battle_sister": 0.03},
 		"objective": "The road to the siege camp opens"},
 	{"start": 450.0, "rate": 3.0, "max_alive": 90,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.46, "footman": 0.2, "archer": 0.1, "shieldbearer": 0.1, "chaplain": 0.05, "purifier": 0.06, "templar": 0.03},
+		"weights": {"recruit": 0.43, "footman": 0.2, "archer": 0.1, "shieldbearer": 0.1, "chaplain": 0.05, "purifier": 0.06, "templar": 0.03, "battle_sister": 0.03},
 		"objective": "Purifiers hunt your undead along the road"},
 	# Zone III, the Siege Camp: GDD §8.2 "09:00 Siege outpost".
 	{"start": 540.0, "rate": 3.4, "max_alive": 105,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.42, "footman": 0.18, "archer": 0.12, "shieldbearer": 0.1, "chaplain": 0.05, "purifier": 0.08, "templar": 0.03, "banner_bearer": 0.02},
+		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "shieldbearer": 0.1, "chaplain": 0.05, "purifier": 0.08, "templar": 0.03, "banner_bearer": 0.02, "battle_sister": 0.04},
 		"objective": "The Siege Camp: Banner Bearers rally the Covenant"},
 	{"start": 600.0, "rate": 3.8, "max_alive": 115,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.42, "footman": 0.18, "archer": 0.12, "shieldbearer": 0.1, "chaplain": 0.05, "purifier": 0.08, "templar": 0.03, "banner_bearer": 0.02},
+		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "shieldbearer": 0.1, "chaplain": 0.05, "purifier": 0.08, "templar": 0.03, "banner_bearer": 0.02, "battle_sister": 0.04},
 		"objective": "Burn the siege camp"},
 	{"start": 660.0, "rate": 3.4, "max_alive": 110,  # TUNING (not in GDD) lull before the heavy infantry
-		"weights": {"recruit": 0.42, "footman": 0.18, "archer": 0.12, "shieldbearer": 0.1, "chaplain": 0.05, "purifier": 0.08, "templar": 0.03, "banner_bearer": 0.02},
+		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "shieldbearer": 0.1, "chaplain": 0.05, "purifier": 0.08, "templar": 0.03, "banner_bearer": 0.02, "battle_sister": 0.04},
 		"objective": "Steel yourself: the heavy infantry forms up"},
 	# GDD §8.2 "12:00 Heavy infantry".
 	{"start": 720.0, "rate": 4.4, "max_alive": 135,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.36, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.08, "chaplain": 0.05, "purifier": 0.07, "templar": 0.03, "banner_bearer": 0.02},
+		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.08, "chaplain": 0.05, "purifier": 0.07, "templar": 0.03, "banner_bearer": 0.02, "battle_sister": 0.04},
 		"objective": "Heavy infantry: halberds cleave your packed ranks"},
 	{"start": 780.0, "rate": 4.8, "max_alive": 145,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.36, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.08, "chaplain": 0.05, "purifier": 0.07, "templar": 0.03, "banner_bearer": 0.02},
+		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.08, "chaplain": 0.05, "purifier": 0.07, "templar": 0.03, "banner_bearer": 0.02, "battle_sister": 0.04},
 		"objective": "Grind through the heavy infantry"},
 	{"start": 840.0, "rate": 4.4, "max_alive": 140,  # TUNING (not in GDD) lull before the fortress
-		"weights": {"recruit": 0.36, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.08, "chaplain": 0.05, "purifier": 0.07, "templar": 0.03, "banner_bearer": 0.02},
+		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.08, "chaplain": 0.05, "purifier": 0.07, "templar": 0.03, "banner_bearer": 0.02, "battle_sister": 0.04},
 		"objective": "The fortress towers rise ahead"},
 	# Zone IV, the Fortress Approach: GDD §8.2 "15:00 Ward generator".
 	{"start": 900.0, "rate": 6.0, "max_alive": 165,  # TUNING (not in GDD) the density peak of the run
-		"weights": {"recruit": 0.36, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.08, "chaplain": 0.05, "purifier": 0.08, "templar": 0.03, "banner_bearer": 0.02},
+		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.08, "chaplain": 0.05, "purifier": 0.08, "templar": 0.03, "banner_bearer": 0.02, "battle_sister": 0.04},
 		"objective": "The Fortress Approach: holy wards protect the walls"},
 	# GDD §8.2 "18:00 Cathedral defenders mobilize" (moved to 16:00, before the boss).
 	{"start": 960.0, "rate": 5.0, "max_alive": 160,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.1, "chaplain": 0.06, "purifier": 0.08, "templar": 0.04, "banner_bearer": 0.02},
+		"weights": {"recruit": 0.28, "footman": 0.16, "archer": 0.12, "shieldbearer": 0.12, "halberdier": 0.1, "chaplain": 0.06, "purifier": 0.08, "templar": 0.04, "banner_bearer": 0.02, "battle_sister": 0.04},
 		"objective": "The cathedral defenders mobilize: Marshal Vael approaches"},
 	# 17:00, Marshal Vael: a thinner trickle so the duel stays readable.
 	{"start": BOSS_TIME, "rate": 3.2, "max_alive": 100,  # TUNING (not in GDD)
@@ -217,6 +218,9 @@ const EVENTS := [
 		"escort": [{"kind": "footman", "count": 3, "elite": false}, {"kind": "recruit", "count": 3, "elite": false}]},  # TUNING (not in GDD)
 	{"time": 435.0, "type": "wave", "banner": "Purifiers and archers flank the road!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "purifier", "count": 6, "elite": false}, {"kind": "archer", "count": 4, "elite": false}]},
+	# Sisters of the Scourge (BattleSisterData, owner request): a quick squad from 7:35.
+	{"time": 455.0, "type": "wave", "banner": "Sisters of the Scourge lash through the smoke!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "battle_sister", "count": 4, "elite": false}, {"kind": "footman", "count": 4, "elite": false}]},
 	{"time": 480.0, "type": "wave", "banner": "A shield wall marches on you!", "formation": "line",  # TUNING (not in GDD)
 		"groups": [{"kind": "shieldbearer", "count": 8, "elite": false}, {"kind": "chaplain", "count": 1, "elite": true}, {"kind": "archer", "count": 3, "elite": false}]},
 	{"time": 515.0, "type": "wave", "banner": "The Covenant surges down the road!", "formation": "ring",  # TUNING (not in GDD)
@@ -241,6 +245,8 @@ const EVENTS := [
 	# GDD §8.2 12:00 Heavy infantry.
 	{"time": 720.0, "type": "wave", "banner": "Heavy infantry advances: halberds and tower shields!", "formation": "line",  # GDD §8.2 12:00
 		"groups": [{"kind": "halberdier", "count": 6, "elite": false}, {"kind": "shieldbearer", "count": 6, "elite": false}, {"kind": "halberdier", "count": 1, "elite": true}]},
+	{"time": 745.0, "type": "wave", "banner": "A Mother Superior leads her Sisters of the Scourge!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "battle_sister", "count": 5, "elite": false}, {"kind": "battle_sister", "count": 1, "elite": true}, {"kind": "recruit", "count": 8, "elite": false}]},
 	{"time": 765.0, "type": "wave", "banner": "Halberdiers and archers under a banner!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "halberdier", "count": 4, "elite": false}, {"kind": "archer", "count": 6, "elite": false}, {"kind": "banner_bearer", "count": 1, "elite": false}]},
 	{"time": 800.0, "type": "cart", "banner": "The war chest is on the move: seize it!",  # GDD §8.2 supply carts

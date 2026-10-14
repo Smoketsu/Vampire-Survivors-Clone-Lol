@@ -105,6 +105,7 @@ const HEIGHTS: Dictionary = {
 	"enemies/high_confessor": 64.0,  # TUNING (not in GDD) art pass: 56 before; the mitre and crook rise above the head (body ~52)
 	"enemies/sun_paladin": 70.0,  # TUNING (not in GDD) art pass: 56 before; the lance rises above the plumed helm (body ~56)
 	"enemies/cathedral_guardian": 140.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"enemies/battle_sister": 52.0,  # TUNING (not in GDD) Sister of the Scourge: soldier tier (body 52 head to feet, the veil the top; the scourge hangs at her side, no overhang)
 	"bosses/alaric": 120.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"bosses/vael": 120.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"bosses/seraphine": 130.0,  # TUNING (not in GDD) ART_BIBLE manifest size

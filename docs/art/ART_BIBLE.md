@@ -372,12 +372,13 @@ Process: `python3 tools/prepare_sprite.py <image> icons/shadow_bolt --art-height
 
 ## Walk cycles (`tools/walk_cycle.py`)
 
-**Status:** 51 strips: the necromancer and the 11 other characters, their 16 skins; Grand Inquisitor
+**Status:** 52 strips: the necromancer and the 11 other characters, their 16 skins; Grand Inquisitor
 Seraphine and her Avatar of the Dawn (a glide: robe hem sway, bob and bust bounce; figure redesign,
 Oct 2026); the summons
 Warrior, Archer, Mage, Mender, Warder, Rogue, Risen and Bone Hound and the walking evolutions Death
 Knight, Gravebow, Shadow Reaper and Hellhound; the Covenant Recruit, Footman, Archer, Chaplain,
-Purifier, Shieldbearer, Halberdier, Templar and Banner Bearer. Every other unit (the other bosses, structures,
+Purifier, Shieldbearer, Halberdier, Templar and Banner Bearer, and the Sister of the Scourge (legs, 2 px
+bust bounce). Every other unit (the other bosses, structures,
 the floating Banshee, Keening Lady, Frost Wraith, Winter Revenant and Lich, the airborne Gargoyle and
 Cathedral Horror, the Bishop, the giant summons, the Corpse Catapult and Ossuary Engine, the Inquisitor
 and the Sanctum kinds) keeps its still plus the engine motion. A skin's rig is derived from its character's
@@ -417,7 +418,7 @@ overshoots as the body rises, rebounds, settles on the contact, so frame 0 stays
 are only moved within their column (nearest, inverse mapping), never recoloured, so the strip passes
 the same checks. Used on the Wither Witch (2 px; her box starts right of her near arm, which shook
 when it was inside), the Soulbinder (2 px), their Hyper skins (boxes derived by `skin_rig()`),
-Seraphine and her Avatar (3 px). A bounce plays only while the unit moves; standing shows the still.
+Seraphine and her Avatar (3 px), the Sister of the Scourge (2 px). A bounce plays only while the unit moves; standing shows the still.
 
 **Strip layout (the engine contract).** `assets/sprites/<key>_walk.png` = 8 frames side by side, no
 gaps, **each exactly the still's width and height** (frame i at x = i x W), feet on the same bottom row
@@ -571,6 +572,7 @@ Crimson, ivory and warm steel; gold for elites, the Sanctum kinds and the Reckon
 | `radiant_inquisitor.png` | Radiant Inquisitor (Stage 3 elite caster): a tall inquisitor in ivory robes with a crimson stole, face hidden under a hood, a gold sunburst halo of rays, a gold-bound tome | 68 (body 56, halo above) | done |
 | `high_confessor.png` | High Confessor (Stage 3 elite priest): a broad figure in wide ivory vestments with a crimson stole, a tall gold mitre, a gold crook staff with a faint halo | 64 (body 52, mitre and crook above) | done |
 | `sun_paladin.png` | Sun Paladin (Stage 3 elite): gilded heavy plate, a gold heater shield with a crimson sun, a gold great helm with an ivory plume, a lance | 70 (body 56, lance above) | done |
+| `battle_sister.png` | Sister of the Scourge (Crimson March and Sanctum; owner request, Oct 2026, the figure-redesign style): an alluring battle-nun with an exaggerated hourglass figure (a very large bust, cinched waist, wide hips) in a fitted, low-necked crimson corset gown with ivory trim and a very high slit, an ivory veil with a gold circlet, a warm-steel pauldron, gauntlets and greave boot, a three-tailed crimson scourge with steel barbs trailing from her front hand; fully clothed. Signature: the veil, the figure and the trailing scourge. Generated with Seraphine and the Halberdier attached (enlarged), then once more from that design asking for a 52-block grid (much cleaner conversion); `skin_cap.py` then `--no-levels`; the ivory panels that snapped to `holy_white` repainted `bone` by hand (no glow on soldiers). Walk strip with a 2 px bust bounce | 52 | done |
 | `cathedral_guardian.png` | Cathedral Guardian (Stage 3 miniboss): a giant colossus of pale cathedral stone with gold trim, a stained-glass rose window in its chest (arcane blue, crimson, gold), a square head crowned with three gold spires, two huge stone fists | 140 | done |
 
 ### Bosses (`assets/sprites/bosses/`)

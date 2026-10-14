@@ -10,7 +10,8 @@
 ##   High Confessor      = wide ivory robe, tall gold mitre, crook with a halo
 ##   Sun Paladin         = gold heater shield with a sun emblem, plumed gold helm
 ##   Cathedral Guardian  = giant stone colossus, stained-glass chest, spire crown
-## Glyphs.draw_enemy() delegates kinds MarchGlyphs does not know to here.
+## Glyphs.draw_enemy() delegates kinds MarchGlyphs does not know to here
+## (the Sister of the Scourge's fallback body is SisterGlyphs').
 ## Sprite art (SpriteData keys "enemies/<kind>") replaces the bodies when it
 ## exists; the overlays below are always drawn.
 class_name SanctumGlyphs
@@ -48,6 +49,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			_draw_paladin(ci, o, r, flash)
 		"cathedral_guardian":
 			_draw_guardian(ci, o, r, flash)
+		"battle_sister":
+			SisterGlyphs.draw_body(ci, o, r, flash)  # Sister of the Scourge (any stage).
 		_:
 			return false
 	return true

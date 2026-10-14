@@ -131,7 +131,7 @@ Autotest options (full table in the README):
   `wither_witch`)
 - `--hyper` (Hyper mode, lock bypassed) and `--skin=ID` (force a cosmetic skin, e.g. `dread_sovereign`)
 - `--spawn=kind@T[xN],...` (force-spawn any enemy kind at T game seconds on any stage, e.g.
-  `sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300`)
+  `sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `battle_sister@60x6`)
 - `--pact`
 - `--meta=none|mid|max`
 - `--oath=0-5`
@@ -207,7 +207,7 @@ tiny tweaks.
   `scripts/data/stages/` behind `StageRegistry` (read through `game.stage_def`; `wave_data.gd` and
   `arena_data.gd` keep only shared rules), a RunConfig and stage select, the Meta `[stages]` save
   section, four clock-driven battle zones, outposts, Holy Ward Generators, supply carts, the
-  Shieldbearer, Banner Bearer and Halberdier, a `Boss` base class, Marshal Vael, and ×1.25 Soul Ash;
+  Shieldbearer, Banner Bearer and Halberdier (and later the Sister of the Scourge, below), a `Boss` base class, Marshal Vael, and ×1.25 Soul Ash;
   `--stage=graveyard|crimson_march`;
 - the GDD §8.4 **difficulty levels** (Initiate, Necromancer = the standard game, Lich, Deathlord;
   `difficulty_data.gd`) and the eight §8.5 **run modifiers** (`run_modifier_data.gd`), chosen on a
@@ -355,6 +355,15 @@ tiny tweaks.
     acts at once);
   - the synthesized menu theme **"Grave Lullaby"** (`menu_theme_synth.gd`, score and mix in
     `menu_theme_data.gd`; rendered lazily, crossfaded with the run loop by `Sfx.play_music()`).
+- the **Sister of the Scourge** (owner request, Oct 2026: a female Covenant soldier in the figure-redesign
+  style; GDD §7.2, §15.0): kind `battle_sister`, data in `battle_sister_data.gd` (looked up by
+  `EnemyDirector.enemy_def()` after `MarchEnemyData`), a `CovenantKit` (`BattleSisterKit`,
+  `sanctum/sister_kit.gd`: a telegraphed 62 px lash that strikes the first two bodies in its line,
+  summons or the necromancer, and a zeal surge when a soldier falls nearby, read from
+  `CovenantRites.death_near()`), fallback glyph `SisterGlyphs`; on the Crimson March from 6:00 and the
+  Sanctum from 7:45 (trickle + two squads each, real id in both timelines); Codex soldier entry;
+  pixel art `enemies/battle_sister` (52 px) with a walk strip and bust bounce; autotest `battle
+  sister` line, `--spawn=battle_sister@T`.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
