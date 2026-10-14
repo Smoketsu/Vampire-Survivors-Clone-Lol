@@ -102,7 +102,8 @@ crowds you fight through:
   | Marshal Vael (Crimson March) | 35,200 | **21,120** (−40%) |
   | Grand Inquisitor Seraphine (Sanctum) | 33,000 | **23,100** (−30%) |
 
-  A strong army build now kills each of them in about BOSS_KILL_RANGE of their 3:00.
+  A strong army build now kills each of them in about 1:10–1:35 of their 3:00 (Vael took 2:23 and
+  sometimes outlasted the clock).
 - **Spells deal 20% more damage.** All twelve spells and their evolutions; the level-up cards show the real numbers.
 - **Frost Wraiths, Bone Hounds and Banshees hit much harder.** Tested side by side in an army, they dealt only a
   quarter to a half of what the other summons do per unit. Frost bolts go 12 → 18, hound bites 7.5 → 12 and the
