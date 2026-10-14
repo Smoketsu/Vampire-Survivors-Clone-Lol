@@ -72,22 +72,24 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Results card (end of a run): Restart / Main Menu | **R** / **Esc**, or the buttons | **X** / **B**, or focus + **A** |
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move over the grid, Esc / Back closes | D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
-| Ossuary (Soul Ash upgrades) | **The Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
+| Ossuary (Soul Ash upgrades) | **Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
 | Settings (Audio / Video / Controls tabs: volume, fullscreen, zoom Normal / Close, shake, damage numbers, reduce motion, keys) | **Settings** in the main or pause menu; **Q / E** switch tabs; Esc / Back closes | Focus + **A**; **LB / RB** switch tabs; **B** closes |
 | Codex (achievements, spells, summons, the Covenant) | **Codex** in the main menu; **Q / E** switch tabs, arrows move through the tiles, Esc / Back closes | **LB / RB** switch tabs; D-pad / stick move; **B** closes |
 | Credits (and the Godot / font licences) | **Credits** in the main menu; **Q / E** switch Credits / Licences, Up / Down scroll, Esc / Back closes | **LB / RB**, D-pad up / down, **B** closes |
-| Confirm dialogs (Quit, pause Restart / Main Menu, Refund all, Reset keys) | Cancel is focused; Enter on the other button confirms; Esc cancels | **A** confirms the focused button, **B** cancels |
+| Confirm dialogs (Quit, pause Restart / Main Menu, Reset keys, the Ossuary's Refund all) | Cancel is focused; Enter on the other button confirms; Esc cancels | **A** confirms the focused button, **B** cancels |
 | Rebind a key (in Settings) | Select a binding, then press the new key | **B** cancels |
 
 On-screen hints show these controls as small key / button chips drawn from your
 **current** bindings and the **last device you used**: keycaps for the keyboard,
 Xbox-style **A / B / X / Y**, **LB / RB**, **Start** and stick chips for a
 controller. They switch the moment you touch the other device and follow rebinds
-at once. The main menu, pause menu, level-up panel (the 1 / 2 / 3 card keys and
-the Reroll / Banish / Skip buttons), chest Claim button, the results card's
-Restart / Main Menu buttons, Settings and the HUD's Shadow Bolt aim line,
-ability keys and stance bar all use them (on a controller the stance bar shows
-the right stick with its flick arrow). The HUD carries no permanent
+at once. Every menu screen shows them in a bottom hint strip or on its
+buttons (main menu, stage select, pre-run setup, Ossuary, Settings, Codex,
+Credits, pause, Recipes), and so do
+the level-up panel (the 1 / 2 / 3 card keys and the Reroll / Banish / Skip
+buttons), the chest Claim button, the results card's Restart / Main Menu
+buttons and the HUD's Shadow Bolt aim line, ability keys and stance bar (on a
+controller the stance bar shows the right stick with its flick arrow). The HUD carries no permanent
 controls line any more, and its difficulty / modifiers box only appears when the
 run differs from the standard one (another difficulty, a run modifier, Hyper,
 the Pact or the Oath). The F3 debug overlay still works but is no longer
@@ -219,7 +221,9 @@ buttons you press in a fight are the dash and the ultimate (below).
   controller bindings stay fixed, and binding a key that is already in use
   swaps the two keys. A hint strip at the bottom shows the controls of the
   device in use. Everything works with a controller. Settings are saved
-  to `user://settings.cfg` when the menu closes and loaded at startup.
+  to `user://settings.cfg` when the menu closes and loaded at startup
+  (`[audio]` volumes, `[feel] screen_shake` / `damage_numbers` /
+  `reduce_motion`, `[video] fullscreen` / `zoom`, `[input]` key bindings).
 
 ### How a run works
 
@@ -250,9 +254,9 @@ buttons you press in a fight are the dash and the ultimate (below).
   waves of *Inquisitors of the End* arrive every 10 s, each wave larger and
   tougher than the last. Normally they will kill you.
 - How the run ends:
-  - Dying **after 0:00** shows **VICTORY – Run Complete**, with how long you
-    lasted past zero.
-  - Dying **before 0:00** shows **DEFEAT**.
+  - Dying **after 0:00** shows a gold **Victory** results card, with how long
+    you lasted past zero.
+  - Dying **before 0:00** shows a crimson **Defeat** card.
 
 ### Army stances
 
@@ -353,9 +357,9 @@ number is in `scripts/data/unit_data.gd`.
   needs its paired passive maxed) **and the run has reached 8:00 elapsed** (12:00
   left on the timer), the **next treasure chest** grants its evolution first
   (the GDD's "special elite reward"); while an evolution waits, a chest drops
-  within about 40 s. Evolutions never appear on level-up cards, and the
-  spell / passive card hints say so ("from a treasure chest, timer 12:00 or
-  less"). The evolution replaces the spell in its slot. The whole eligibility
+  within about 40 s. Evolutions never appear on level-up cards, and no card
+  spells out a recipe: a card shows its recipe as icons only once you have
+  discovered it (see *Recipe book* below). The evolution replaces the spell in its slot. The whole eligibility
   check is `AbilityManager.ready_evolutions()` with its numbers in
   `EvolutionData` (`BASE_LEVEL_REQUIRED`, `PASSIVE_LEVEL_REQUIRED`,
   `MIN_ELAPSED`).
@@ -397,10 +401,9 @@ number is in `scripts/data/unit_data.gd`.
 | Corpse Catapult Lv 5 | Siegecraft **Lv 5** (summons deal more to structures, elites, minibosses) | **Ossuary Engine**: a siege engine of ribcages and spines, ×1.35 HP; **three boulders per volley** (×0.75 damage each, volleys ×1.2 slower), and each leaves a field of **burning bone shards** for 3 s (30 px; 10% of the boulder's damage every 0.5 s) |
 
   The numbers live in `scripts/data/summon_evolution_data.gd`; the runtime is
-  `HordeDirector.evolutions` (`scripts/horde/summon_evolutions.gd`). Summon
-  cards and the paired passives' cards show the path ("Evolves into Death
-  Knights at Lv 5 with Dark Command Lv 5 ...") and "Evolution ready" once it
-  holds. Stage-event temporary summons (graves, crypt) always keep the base kit.
+  `HordeDirector.evolutions` (`scripts/horde/summon_evolutions.gd`). Like the
+  spells, summon and passive cards show the recipe as icons only once it is
+  discovered. Stage-event temporary summons (graves, crypt) always keep the base kit.
 - **Recipe book** (owner decision: evolutions are meant to be *discovered*).
   The pause menu's **Recipes** view is a grid with one tile per evolution
   recipe, but shows only the ones you have **obtained in some run**: a
@@ -569,8 +572,8 @@ tooltip). Arrows / D-pad move, Enter / A chooses.
 **Unlocking:** **The Gravecaller** is open from the start. Every other
 character unlocks the **first time you reach Lv 5 with its starting spell in
 any run** (with any character, on any stage), e.g. take Bone Spear to Lv 5 to
-unlock the Bone Oracle. Locked tiles show a padlock and the condition; the end
-screen announces **NEW CHARACTER UNLOCKED**. The last chosen character is
+unlock the Bone Oracle. Locked tiles show a padlock (the hero panel names the
+condition); the results card announces it with a gold *New character: ...* plate. The last chosen character is
 remembered with the difficulty and modifiers, and **Restart** keeps it.
 
 | Character | Starting spell | Innate passive | Stats |
@@ -694,8 +697,10 @@ with that character, and four characters have an **achievement skin**:
 | **The Heretic Saint** | Fallen Confessor | 50 High Confessors slain (lifetime counter) |
 | Hyper skins: Eclipsed Gravecaller, Sunless Warden, Starless Voidcaller, Gilded Oracle, Crowned Carrion Lord, Fallen Seraph, Blighted Scholar, Final-Hour Doomsayer, Gilded Barrow King, Radiant Soulbinder, Thorn-Crowned Witch, Golden Herald | one each | clear the Sanctum on Hyper with that character |
 
-The selector shows one compact card per skin of the selected character with
-a live preview (it follows the character picker); a locked skin shows its condition and progress (*1,234 / 5,000*).
+The selector shows one small portrait tile per skin of the selected character
+(it follows the character picker; a locked skin is dark under a padlock), and
+the line under the tiles names the focused skin and, while it is locked, its
+condition and progress (*1,234 / 5,000*).
 It works with keyboard, mouse and controller like the rest of the screen.
 The choice is remembered per character (`[skins] <character> = <skin id>`).
 A skin draws `assets/sprites/player/<character>_<skin>.png` when that file
@@ -1048,10 +1053,11 @@ integration").
   License 1.1 of both fonts (the `assets/fonts/OFL-*.txt` files are shipped in
   the exports for it).
 - **Confirm dialogs.** Quit (main menu), Restart and Main Menu (pause: the
-  run would be lost, no Soul Ash is earned), Refund all and Lower Oath
-  (Ossuary) and Reset keys (Settings) ask first in one shared dialog
-  (`ConfirmDialog`): crimson for destructive actions, Cancel focused by
-  default, Esc / B cancels.
+  run would be lost, no Soul Ash is earned) and Reset keys (Settings) ask
+  first in one shared dialog (`ConfirmDialog`): crimson for destructive
+  actions, Cancel focused by default, Esc / B cancels. The Ossuary's Refund
+  all asks in its own crimson dialog (it shows the Soul Ash you get back),
+  and Lower Oath acts at once: it is free and reversible.
 - **Save file.** `user://save.cfg` (ConfigFile, separate from `settings.cfg`)
   stores `save_version`, Soul Ash, every tier, lifetime stats and achievements.
   It is written on every run end, purchase and refund (via a temp file and a
@@ -1123,7 +1129,8 @@ integration").
   median 5 for the army bot, 7 for the summon bot, 2-3 for naive runs; the
   Crimson March adds its ward-generator and Vael chests: army median 7). Chests never despawn (at most 3 on the
   ground), and none drop from Reckoning enemies or after 0:00. Walking over
-  one pauses the run and shows a short code-drawn reveal. Before **15:00
+  one pauses the run and shows a short reveal (the chest bursts open, then the
+  rewards rise in; see *In-run screens*). Before **15:00
   elapsed** a chest grants **1** upgrade; from then on **1, 3 or 5**
   (weights 85 / 12 / 3), drawn from the normal level-up pool with the usual
   card weights, listed with their old → new levels. **A chest only upgrades what you already own**
@@ -1180,7 +1187,7 @@ pixels even when the window scale is fractional, e.g. a 1080p window). The old F
 dropped; a saved Far loads as Normal. Zooming in never changes gameplay (enemy spawns use the Normal view or wider). A green ring on the
 ground marks the necromancer.
 
-### Sprite art (in progress)
+### Sprite art
 
 Units can use real sprite art instead of their code-drawn shapes. `SpriteBank` draws
 `assets/sprites/<category>/<id>.png` whenever that file exists and otherwise falls back to the
@@ -1253,16 +1260,17 @@ own gravestones, dead trees, crypt walls and statue plus a mausoleum and an iron
 ground on the Graveyard tile; three drifting fog banks; soul wisps rising from the graves; soul
 lanterns and candles; and small troupes of undead (and now and then the necromancer) shuffling past
 on their walk strips. Layers sway with a slow parallax camera drift; a wider window shows more of
-the scene. When a sub-screen opens over the menu (stage select, Ossuary, settings), the menu's own
+the scene. When a sub-screen opens over the menu (stage select, pre-run setup, Ossuary, settings, Codex,
+Credits), the menu's own
 content (logo, buttons, plaque, version, hint strip) fades out and the diorama dims behind it.
 
 **Title screen.** Over the diorama sits a composed column: the NECROPATHY logo, alive (its soul
 flames sway as pixel art, glow and shed embers; `MenuLogo`), the tagline, a narrow column of one-word
 buttons (Play, Codex, Ossuary, Settings, Credits, Quit) with a soul wisp flanking the focused one
 (`SoulMarker`), the gold Soul Ash plaque and the lifetime stats as small pixel icons (`MaskIcon`,
-drawn from character masks in `mask_icon_data.gd`). Codex and Credits open their screens when
-those are in the build (they are loaded by path), and Quit asks first through the confirm
-dialog when it exists. All numbers are in `scripts/data/front_door_data.gd`. It runs on real time with its own RNG and
+drawn from character masks in `mask_icon_data.gd`). Codex and Credits open their screens and Quit
+asks first through the confirm dialog (the menu loads those three scripts by path, so a build
+without one still runs: the button answers `denied`, or Quit quits at once). All numbers are in `scripts/data/front_door_data.gd`. It runs on real time with its own RNG and
 never touches gameplay. Its art is in `assets/sprites/menu/`, rebuilt by
 `python3 art_source/menu/make_menu_art.py` (procedural pixel art plus two converted AI sources).
 
@@ -1287,13 +1295,13 @@ never touches gameplay. Its art is in `assets/sprites/menu/`, rebuilt by
 | Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
 | Stage 3 (§8.3, §7.2, §7.4) | The Sanctum of Judgment: four battle zones on the clock (courtyards, golden halls, cloisters, final sanctuary), two sanctified chambers with ward crystals, the Cathedral Guardian miniboss (slams, sweeping beam, its own HUD bar, chest), three optional sacred altars (−6% soldier HP each, one healer fewer for Seraphine), floor corruption, Dawn's Wrath with Sun Paladins, and four new Covenant kinds (Sanctified Sentinel, Radiant Inquisitor with suppression, High Confessor with holy shields and revivals, Sun Paladin). See *Stage 3* above. |
 | Stage 3 boss (§7.5) | Grand Inquisitor Seraphine with her three GDD phases (Divine Judgment, Avatar of the Dawn, The Last Light): radiant fans, delayed holy circles, Templar squads, teleports, healing attendants, rotating holy beams, barrages, constructs, undead suppression, the safe-zone Judgment nova, the collapsing arena and a final guard, the relic shatter and the ending text. She ends the Sanctum of Judgment; `--boss=seraphine` also puts her on any other stage. See *Stage 3 boss* above. |
-| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades plus the Spearhead stance unlock, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
+| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades plus the Spearhead stance unlock, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, the Codex (GDD §10.1 Collection / Codex and Achievements), and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Playable characters (§10.2, §11.4) | Twelve characters, one per spell, each with its starting spell, one innate passive and stat modifiers; chosen on the pre-run setup screen, unlocked by reaching Lv 5 with the character's spell, remembered in the save. The Gravecaller is the default and plays exactly like the game before characters. See *Characters* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
-| Audio, feel and settings (§12, §38) | Synthesized sound effects and music with voice limits, screen shake, hit-stop, damage numbers and particles. The settings menu has volumes, toggles, fullscreen and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
-| UI (§16) | Main menu, HUD, level-up cards (they grow to fit their text), pause menu (with a **Recipes** view of the discovered evolution recipes), end screens and the F3 debug overlay; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, the one banner slot (event banners and announcements, one at a time) and boss HP; kills; army per class with replacement progress (compact rows, at most one per active slot); ability slots with levels (an evolved class shows its evolution's icon and name). |
-| Art (§16, §17) | Placeholder shapes drawn in code. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, Menders are round with a halo, Warders are downward heater shapes under a floating ward sigil, Bishops wear a tall mitre over a bell robe, Death Knights have horned helms, spiked pauldrons and a greatsword, Liches float as crowned wisps, the Lich's risen dead are bare ribcages, abominations are huge stitched blobs, rogues are hooded chevrons with daggers, gargoyles have bat wings, frost wraiths are legless ice ghosts, Shadow Reapers are smoke-trailing hooded scythe assassins, Cathedral Horrors are huge marble gargoyles on a broken plinth). Hit flashes, death pops and an evolution glow are included. |
+| Audio, feel and settings (§12, §38) | Synthesized sound effects, the in-run loop and the menu theme with voice limits and crossfades, screen shake, hit-stop, damage numbers and particles, UI motion and UI sounds. The tabbed settings menu has volumes, toggles (Reduce motion included), fullscreen, zoom and key rebinding, saved to `user://settings.cfg`. See *Audio, Feel & Settings* above. |
+| UI (§16) | Main menu over the animated diorama, stage select, pre-run setup, Ossuary, Settings, Codex, Credits, confirm dialogs, HUD, level-up cards, the chest reveal, pause menu (with a **Recipes** view of the discovered evolution recipes), the results card and the F3 debug overlay, on the ornamented pixel UI kit with key / pad hint chips; all are fully usable with a controller (`ui_accept` / `ui_cancel` include pad A / B, and each screen focuses a button when it opens). The HUD shows: XP bar; HP, orb shields and the Warder ward; countdown, objective, the one banner slot (event banners and announcements, one at a time) and boss HP; kills; army per class with replacement progress (compact rows, at most one per active slot); ability slots with levels (an evolved class shows its evolution's icon and name). |
+| Art (§16, §17) | True pixel art for every unit, boss, structure, pickup, icon, floor and the UI (see *Sprite art*); the shapes drawn in code below remain the fallback for any missing PNG. Undead use blue, violet, green and bone; the Covenant uses crimson, ivory, silver and gold. **Every unit and enemy type has its own silhouette** (for example, warriors are squares with shields, archers are triangles, mages are diamonds, Menders are round with a halo, Warders are downward heater shapes under a floating ward sigil, Bishops wear a tall mitre over a bell robe, Death Knights have horned helms, spiked pauldrons and a greatsword, Liches float as crowned wisps, the Lich's risen dead are bare ribcages, abominations are huge stitched blobs, rogues are hooded chevrons with daggers, gargoyles have bat wings, frost wraiths are legless ice ghosts, Shadow Reapers are smoke-trailing hooded scythe assassins, Cathedral Horrors are huge marble gargoyles on a broken plinth). Hit flashes, death pops and an evolution glow are included. |
 
 ### Where the numbers come from
 
@@ -1480,6 +1488,9 @@ scripts/
   fx/unit_motion.gd         One unit's procedural motion (bob, lean, squashes, lunge, rise) on its body layer
   fx/unit_layer.gd          A unit's body / overlay drawing layer (child node calling back into the unit)
   fx/unit_dissolve.gd       Pooled death dissolve: the dead unit's look collapsing into bone dust / holy ash
+  fx/anim_bursts.gd         Art-only one-shot effect strips (Shadow Bolt hit splash, level-up column, evolution flash)
+  fx/hurt_vignette.gd       The red screen-edge flash when the necromancer is hurt
+  fx/sharp_pixel.gdshader   The sharp-pixel filter: grid pixel art (and the pixel fonts) crisp at any window scale
   fx/flat_silhouette.gdshader  Pixel art as one flat colour (the Codex's unmet entries), sharp-pixel sampling
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
@@ -1511,13 +1522,14 @@ scripts/
                             soul_ash_icon (the Soul Ash icon: its art when present, else the glyph),
                             hyper_badge (the gold Hyper-clear badge), recipes_panel (pause menu
                             Recipes view: a grid of recipe tiles, locked ones empty sockets),
+                            recipe_icon_row ([base] + [passive] = [evolution] as icons, once discovered),
                             hud_abilities (Grave Step charges and Dread Rally meter), ability_glyphs
                             (their icons), stance_bar (HUD stance icons + banner),
                             stance_glyphs (stance icons, padlock, ground outline shapes),
                             character_picker (pre-run character tiles),
                             character_glyphs (characters in the world and as portraits),
                             input_hints (key / pad-button chips from the current bindings,
-                            last-device tracking, the bottom-of-screen hint strip)
+                            last-device tracking, the bottom-of-screen hint strip),
                             ui_motion (shared UI motion: panel open / close, staggered
                             entrances, card lift, press squash, count-ups, fade through black),
                             codex_screen (Achievements + Codex screen: tabs, tile grids, detail
@@ -1568,6 +1580,13 @@ scripts/
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
     environment_art_data.gd Floor tile / obstacle sprite key scheme, tile variants, obstacle feet and shadow
+    sprite_data.gd          Sprite keys and their on-screen heights (art px) for the optional sprite art
+    walk_data.gd            Unit walk cycles: frame counts and timing of the `<key>_walk` strips
+    anim_data.gd            One-shot effect animations: strip ids, frame timing and fill
+    decal_data.gd           Floor decal keys and drawing numbers (Ground, MarchGround, SanctumGround)
+    boss_pose_data.gd       Which attack-pose sprite each stage boss shows per attack phase
+    view_data.gd            Camera zoom levels (Normal / Close) and the player's ground marker
+    ui_art_data.gd          The UI kit and logo (9-slice margins, crests), pixel font sizes, the type tiers
     menu_backdrop_data.gd   Main-menu diorama: layers, props, fog, wisps, walkers, bats, moods (colour sets)
     front_door_data.gd      Main menu, stage select and pre-run setup: sizes, captions, logo / wisp
                             motion, stage vignette scenes, hero panel
@@ -1897,8 +1916,8 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
   2 of 4 seeds at 16:30-17:10 (before: 4 of 4 at 12:45-14:00); the spell
   bot's Abyssal Detonation and Eclipse Ward land at 8:43-13:00 (GDD §15.0).
   Not retuned yet (final balance pass).
-- No mid-run saves. Skins exist (cosmetic; most still draw a palette-tinted
-  stand-in until their art arrives). The difficulty levels and
+- No mid-run saves. Skins are cosmetic only (every skin has its art; the
+  palette-tinted stand-in is only the fallback). The difficulty levels and
   run modifiers have first-pass numbers checked only with the autotest bots
   (see GDD §15.0), and no difficulty is locked. Army bot, `--mortal`:
   Initiate (4 seeds) lowest HP 106-114 vs 37-109 on Necromancer; Deathlord
@@ -1927,9 +1946,12 @@ Gravebow and Bone Colossus are in); saves; density and minion-HP-bar settings (�
 **Phase 3 – Campaign:** all three stages are in: the Crimson March with
 Marshal Vael and the Sanctum of Judgment with its Covenant kinds and Grand
 Inquisitor Seraphine (a human playtest and balance pass are next). Left: Soul
-Ash balance against the full-length stage, the real achievement unlocks (the
-campaign epilogue for *Dawn Extinguished*) and the skin art (skins, Hyper mode and the
-Hyper badges are in, with palette stand-ins until the art arrives).
+Ash balance against the full-length stage and the real achievement unlocks (the
+campaign epilogue for *Dawn Extinguished*); skins, Hyper mode, the Hyper badges
+and the Codex are in, with their art.
 
-**Phase 4 – Polish:** real art and animation, audio, accessibility, full
-controller UX, profiling on target hardware (§40 stress scenarios), balance.
+**Phase 4 – Polish:** the pixel art, the menus (the menu modernization: UI kit,
+type, motion, hints, diorama, every screen rebuilt, the Codex, Credits and the
+menu theme) and full controller UX are in; left: animation polish,
+accessibility beyond rebinding and Reduce motion, the Web build, profiling on
+target hardware (§40 stress scenarios), balance.

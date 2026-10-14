@@ -618,12 +618,13 @@ right, trail to the left), transparent background. Art px = the longest side (`S
 
 ### Icons (`assets/sprites/icons/`, 32×32 art px)
 
-Square **badge icons** for level-up cards, the HUD ability bar and buff timers: a **dark rounded-square
+Square **badge icons** for level-up cards, the HUD ability bar and buff timers: a **dark cut-corner square
 badge** with a 1 px border and **one bold symbol**, 32×32 art px (shown about 1× to 2× in the 32, 48
 and 64 px boxes). Player
 spells and passives use violet with bone; summon icons use their class colours; never Covenant gold or
 crimson on the player's icons (the Hyper badge and the Profane Pact excepted). Evolutions add a
 gold-trimmed frame. The Shadow Bolt icon is Anchor 6. **Status: all done** (Oct 2026): the API generated each **symbol alone** on a transparent background, converted to fit 26×26 art px, and composited onto one badge template: a 32×32 frame with Anchor 6's **cut corners** (owner decision: cut corners on every UI element; a brief square version was reverted), a 1 px border, an ink-violet face: a **violet** border for ordinary icons, a **gold** border for the evolutions (spell and summon). Small skull faces keep their eye sockets with `prepare_sprite.py --no-cleanup` or `--method mode`, picked per icon. The **Hyper badge** is the exception: a bare 16×16 gold sun (no badge frame), drawn 1:1 by `HyperBadge` at its 16-18 px sizes.
+
 **Ossuary and Soul Ash icons** (menu modernization wave 2, Oct 2026): the Soul Ash currency, the four
 tree emblems and every Ossuary upgrade that was still code-drawn (`MetaGlyphs`, now only the fallback) got
 badges the same way: one symbol per prompt (26 art px, `--ref icons/shadow_bolt.png`), converted with
@@ -635,6 +636,10 @@ the Fortune gold is the meta tree's colour, not Covenant gold. **Soul Ash** also
 `soul_ash_small` for inline costs. API for every screen: `IconGlyph.new("soul_ash", Vector2(32, 32))` (the
 badge, 1:1; 64 for x2) and `IconGlyph.new("soul_ash_small", Vector2(16, 16))`. 31 images (24 symbols, 5
 retries, 2 Soul Ash variants), about $0.47.
+
+**Achievement badges** (menu modernization wave 2, the Codex's Achievements tab, `CodexData`): four badges
+`ach_<achievement>` made the same way but on a **gold** border (an achievement is a reward, like an evolution),
+shown at x2 (64 px). 4 images, about $0.06.
 
 | File | Subject |
 |---|---|
@@ -739,6 +744,10 @@ retries, 2 Soul Ash variants), about $0.47.
 | `ash_harvest.png` | Ossuary: a bone scythe over a heap of ash with embers |
 | `fates_thread.png` | Ossuary: a wooden spool of glowing gold thread, its loose end looping |
 | `banishing_rite.png` | Ossuary: a bone card with a violet sigil cut by a violet slash |
+| `ach_bone_legion.png` | Achievement *Bone Legion* (gold border): a helmed skull with teal eyes over crossed bones |
+| `ach_heretics_bane.png` | Achievement *Heretic's Bane* (gold border): a gold holy sunburst cracked through by a violet rift |
+| `ach_dread_sovereign.png` | Achievement *Dread Sovereign* (gold border): a bone skull with teal eyes under a gold crown |
+| `ach_dawn_extinguished.png` | Achievement *Dawn Extinguished* (gold border): a gold sun eclipsed by a violet disc |
 | `profane_oath.png` | Ossuary Profane Oath: a skeletal hand raised in an oath under a crimson flame (the Oath is the one crimson Ossuary icon, like the Pact) |
 | `warrior.png` | Summon class badge (hotbar and army list): a skeleton warrior's helmed skull behind a round shield |
 | `archer.png` | Summon class badge: a moss-hooded skeleton drawing a bone bow with a teal arrow |
@@ -1098,6 +1107,12 @@ unappealing") rules:
 - Crispness: `UiTheme` gives Buttons, panels, scroll bars and sliders the shared sharp-pixel material as
   they enter the tree, so 1 px rings stay even at the ×1.5 1080p scale; crests are drawn by the same
   node, so they are sharp too.
+- **Small UI marks drawn in code** (menu modernization), all on whole layout pixels through the same
+  sharp-pixel shader, in palette colours, with cut corners: `MaskIcon` (pixel icons from character masks
+  in `mask_icon_data.gd`: padlock, hourglass, tomb, skulls, trophy, candle, rune pips, ember; drawn at
+  whole-number scales), `PixelMarks` (level pips, the → arrow Jersey 10 lacks, padlock, empty recipe
+  socket), `LevelPips` (card and reward level pips) and the `InputHints` chips (bone keycaps; Xbox-style
+  A / B / X / Y octagons in green / red / blue / yellow, grey LB / RB / Start / stick chips, never round).
 
 **Fonts** (font pass; numbers in `UiArtData`, logic in `UiTheme`):
 
@@ -1115,12 +1130,15 @@ unappealing") rules:
   labels grew about 20-30% and the screens were checked to still fit at 1280×720. The font's empty
   line slack (a 20 font px line box for 14 font px of ASCII) is trimmed by 2 px top and bottom
   (`UiArtData.LINE_TRIM`, a FontVariation).
-- **Jacquard 24** (event, zone, stance and evolution banners): its outlines sit on a 30-unit grid of a
-  1290-unit em, so it is drawn only at **43 px** (its pixel em, rasterised at layout size). Long banners
-  wrap at 680 px; the stance word is shown in title case (blackletter capitals read poorly).
-- **Long descriptions** (card and stage descriptions, character details, Ossuary and recipe
-  descriptions, the pause menu's stance help) keep Godot's default font (`UiTheme.body()`), smooth at
-  any window scale.
+- **Jacquard 24** (screen titles and the event, zone, stance and evolution banners: the TITLE tier): its
+  outlines sit on a 30-unit grid of a 1290-unit em, so it is drawn only at **43 px** (its pixel em,
+  rasterised at layout size). Titles and the stance word are in title case (blackletter capitals read
+  poorly). HUD banners never wrap: a long headline splits at its colon, then steps down to Jersey 38 / 28
+  (GDD §15.0 "HUD banner queue").
+- **Long descriptions** are Jersey 10 too, at the BODY tier (19 px; owner: "Jersey, let's keep it
+  cohesive"): no smooth font is left in the UI. Every label is sized by role through the type tiers
+  (`UiTheme.Tier`: TITLE Jacquard 43, HERO 57, HEADER 38, NAME 28, BODY 19, LABEL 19 upper case with
+  +2 px letter spacing; sizes in `UiArtData.TYPE_*`; GDD §15.0 "Type tiers").
 - Both pixel fonts are imported with anti-aliasing, hinting and subpixel positioning off and
   oversampling 1.0 (rasterised at layout size, not at layout size × window scale).
 - Credits: Jersey 10 © 2023 The Soft Type Project Authors and Jacquard 24, both SIL Open Font License
@@ -1128,7 +1146,8 @@ unappealing") rules:
 
 ### Menu diorama (`assets/sprites/menu/`)
 
-**Status:** in the game (Oct 2026, menu modernization). The main menu's backdrop is a living
+**Status:** in the game (Oct 2026, menu modernization). The main menu's backdrop (behind every
+screen opened from it; the stage select turns it to the focused stage's mood) is a living
 pixel-art graveyard at night (`scripts/ui/menu_backdrop.gd`, every number in
 `scripts/data/menu_backdrop_data.gd`, GDD §15.0 "Menu diorama"), built mostly from art the game
 already has: the gravestones, dead trees, crypt walls, cypresses, saint statue, ruined tower base

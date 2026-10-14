@@ -10,7 +10,8 @@ horde (Warriors, Archers, Mages, the Mender
 and Warder priest orders, plus Abominations, Rogues, Gargoyles, Frost Wraiths, Bone Hounds,
 Banshees and Corpse Catapults) against the holy Crimson Covenant. It is built in **Godot 4.3**
 with **GDScript**, top-down 2D and the GL Compatibility renderer. Art is true pixel art (PNGs in `assets/`, made in the Oct 2026 art pass;
-the code drawings in `_draw` stay as the fallback for any missing PNG), and sound and music are synthesized at startup.
+the code drawings in `_draw` stay as the fallback for any missing PNG), and sound and music are synthesized in-engine
+(the sounds and the run loop at startup, the menu theme lazily the first time the menu shows).
 
 ## Sources of truth
 
@@ -86,6 +87,20 @@ the code drawings in `_draw` stay as the fallback for any missing PNG), and soun
   enemy HP / damage time scaling ×2 (the Reckoning too), stage boss HP ×1.5, Soul Ash +100% as its
   own line. A Hyper clear (victory) earns a per-stage, per-character gold badge. **Skins**
   (`skin_data.gd`) are **purely cosmetic**: never let one touch a stat.
+- **Discovery:** evolution recipes are never hinted. The pause menu's Recipes view, the level-up
+  recipe icon row and the main menu's **Codex** show an evolution only once it was obtained in some
+  run (Meta `[recipes]`); other Codex entries (spells, summon classes, Covenant kinds, bosses) fill in
+  as a run meets them (Meta `[codex]`) and are dark silhouettes until then. The Codex only reads the
+  achievement counters; it never changes how anything is earned.
+- **UI rules (menu modernization, owner decisions):** cut (chamfered) corners on every UI element;
+  Jersey 10 for all text, only at 19 / 28 / 38 / 57 px, and Jacquard 24 only at 43 px (titles and
+  banners), through the `UiTheme.Tier` type tiers; one-word buttons and few words; controls shown as
+  `InputHints` chips (current bindings, last device), never hard-coded key names; colour carries
+  meaning (gold = evolution / chest / victory / selection, crimson = danger / penalty / defeat,
+  soul-teal = affordable / focused / new, violet base); UI motion is short, stops, runs on real time,
+  is instant under `--autotest` and with Reduce motion, and never touches gameplay state or RNG;
+  destructive actions ask first with Cancel focused (`ConfirmDialog`; the Ossuary's Refund all keeps
+  its own crimson dialog with the Soul Ash icon), free and reversible ones (Lower Oath) act at once.
 
 ## Tools and commands
 
@@ -306,12 +321,47 @@ tiny tweaks.
   Mournsong multiply on slows and chills, and every Rot goes through `rot_enemy()` (Mournsong
   included); the pre-run setup screen in two columns at 1280×720 (left: character, skin, Hyper;
   right: difficulty 2×2, modifiers 2×4, totals) with explicit cross-column focus links.
+- **the menu modernization** (owner-approved, Oct 2026; nine parallel branches merged on
+  `integration`, GDD §15.0 from "Ornamented UI kit" to "Menu modernization integration"; visual and
+  UI only, gameplay unchanged; the autotest gains one `codex` summary line):
+  - foundations: the **ornamented kit** (`tools/ui_kit.py`: dithered gradient fills, tiled edges,
+    bone rosettes, the `ornate` / `header` / `ribbon` / `divider` kinds and the kit slider; crests
+    drawn by `kit_style_box.gd`, placed by `UiArtData.CRESTS`); the **type tiers** (`UiTheme.Tier`:
+    TITLE Jacquard 43, HERO / HEADER / NAME / BODY Jersey 57 / 38 / 28 / 19, LABEL; sizes in
+    `UiArtData.TYPE_*`) with **Jersey 10 body text** (no smooth font left); **`UiMotion`**
+    (`ui_motion.gd`, `ui_motion_data.gd`: open / close, staggered entrances, lift, squash,
+    count-ups, the fade through black) with the UI sounds (`ui_back`, `panel_open` / `_close`,
+    `purchase`, `denied`, `ui_tick` through `Sfx.play_ui()`) and a **Reduce motion** setting
+    (`[feel] reduce_motion`); **`InputHints`** (`input_hints.gd`, `input_hint_data.gd`: key / pad
+    chips from the current bindings and the last device, the bottom hint strip; developer text
+    removed); the **menu diorama** (`menu_backdrop.gd`, `menu_backdrop_data.gd`, art rebuilt by
+    `art_source/menu/make_menu_art.py`; moods for the stage select);
+  - screens: the **title screen** (`main_menu.gd`: living logo `menu_logo.gd`, `SoulMarker` wisps,
+    Play / Codex / Ossuary / Settings / Credits / Quit; numbers in `front_door_data.gd`, icons in
+    `mask_icon_data.gd`), **stage select** vignette cards (`stage_vignette.gd`), the **pre-run
+    setup** with the character as the hero (`prerun_hero.gd`), the **Ossuary** tiles and detail panel
+    (`ossuary_tile.gd`, `ossuary_ui_data.gd`, pixel badges for Soul Ash, the trees and every upgrade),
+    tabbed **Settings** (`settings_ui_data.gd`), the **Recipes** grid (`recipe_book_data.gd`); in a
+    run (`in_run_ui_data.gd`, `ui_fx.gd`, `ui_shimmer.gd`, `level_pips.gd`, `run_build.gd`): the
+    **level-up** cards, the **chest** reveal, the two-column **pause** screen, the **results card**
+    (end screen, unlock plates) and the **HUD banner queue** (`hud_banners.gd`) and bars;
+  - new screens: the **Codex** with achievements (`codex_screen.gd`, `codex_entries.gd`,
+    `codex_feat_row.gd`, `codex_art.gd`, `codex_data.gd`; `CodexLog` as `game.codex` records what a
+    run meets, Meta `[codex]` / `[codex_kills]`, GDD §10.1 Collection / Codex and Achievements),
+    **Credits** with the Godot and OFL licences (`credits_screen.gd`, `credits_data.gd`), and the
+    shared **confirm dialog** (`confirm_dialog.gd`, `confirm_data.gd`: main-menu Quit, pause Restart
+    and Main Menu, Settings Reset keys; the Ossuary keeps its own Refund all dialog and Lower Oath
+    acts at once);
+  - the synthesized menu theme **"Grave Lullaby"** (`menu_theme_synth.gd`, score and mix in
+    `menu_theme_data.gd`; rendered lazily, crossfaded with the run loop by `Sfx.play_music()`).
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
-2. **Small fixes:** none open. (Menu key hints now follow rebinds and the last device used:
-   `InputHints` chips, GDD §15.0 "Input hints". Archers now hold their ground: user decision,
-   GDD §15.0.)
+2. **Small fixes:** none open. (Menu modernization wave 1 closed the last one: menu key hints now
+   follow rebinds and the last device used, `InputHints` chips, GDD §15.0 "Input hints". Archers
+   now hold their ground: user decision, GDD §15.0.)
+   **Menu modernization: done (Oct 2026)** (see the Done list above); the menu diorama ships to
+   `main` only after the owner has seen its recorded video.
 3. **Art pass: done (Oct 2026)** (GDD §15.0 "Art pass (true pixel art)" and the rows after it). Every unit,
    character, skin, boss, structure, pickup, projectile, icon, obstacle (both orientations), zone floor, decal, effect
    strip, walk cycle (49 units), the UI kit and the NECROPATHY logo are pixel art at 1 art px = 1 screen px through the
@@ -321,14 +371,17 @@ tiny tweaks.
    `walk_cycle.py`, `ui_kit.py`. Boss attack poses are in (`boss_pose_data.gd`). Possible later polish: attack poses for regular units, arm swing, more effect hooks.
 4. **Web build** (owner decision, after the art is done; GDD §15.0 "Web build after the art"): a
    no-threads Godot Web export for desktop browsers, the audio synthesis load checked, Quit hidden,
-   and a CI job that publishes it for playtesters. Phones (touch controls, mobile UI scale,
-   performance setting) only after the browser build is measured.
+   and a CI job that publishes it for playtesters. The menu theme is already Web-ready (on the Web it
+   renders in 4 ms per-frame slices while the menu shows, bit-identical to the desktop worker
+   thread); the in-run music and sound synthesis still run on worker threads at startup, which
+   need checking (or a sliced fallback) for a no-threads build. Phones (touch controls, mobile UI
+   scale, performance setting) only after the browser build is measured.
 5. **Content candidates** (owner to choose): achievement rewards / the Bone Golem (and the
    campaign epilogue that *Dawn Extinguished* should unlock), synergies for the newer classes, more
    ultimates, a victory screen after the Reckoning.
 6. **Phase 3 campaign:** Stage 3 is done (the Sanctum of Judgment and Grand Inquisitor Seraphine);
-   left: skin art (skins and Hyper mode are in), achievement rewards, the campaign epilogue, art for the Sanctum kinds, structures
-   and Seraphine.
+   left: achievement rewards and the campaign epilogue (skins, Hyper mode, the Codex and all their
+   art are in).
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner is happy with balance for now and wants value tweaks deferred to this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
