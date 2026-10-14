@@ -21,6 +21,14 @@
 ## walking unit). The bob is cut to WalkData.BOB_SCALE then, as the strip
 ## carries its own 1 art px dip.
 ##
+## Idle strips (IdleData, GDD §15.0 "Idle breathing bounce"): when the body's
+## sprite has an idle strip (the body layer's idle_count), a standing unit
+## plays it, frame floor((now - idle_at) * IdleData.FPS) mod n, where idle_at
+## is the game time it began standing, so each unit's breath starts on frame 0
+## (the still) when it stops and units fall out of step without any RNG or id.
+## Frozen, stunned, stone, dead, dashing, airborne and structure bodies show
+## the still; walking always shows the walk frame instead.
+##
 ## Visual only: it reads the unit's position, facing and state and never
 ## writes any of them; events (hit(), lunge(), begin_rise()) only store game
 ## times. Its clock is Game.elapsed, so it slows with the hit-stop and stops
@@ -75,6 +83,11 @@ var _lunge_sy: float = 1.0
 ## True while the unit counts as walking for its walk strip (WalkData
 ## START_SPEED / STOP_SPEED hysteresis); false = the still is shown.
 var walking: bool = false
+## True while the idle loop runs (standing with an idle strip); false = it
+## restarts at frame 0 the next time the unit stands.
+var _idle_on: bool = false
+## Game time (s) the current idle loop started (valid while _idle_on).
+var idle_at: float = 0.0
 
 
 ## Builds the two layers as children of `p_host`: `body_fn` draws the body
@@ -110,6 +123,9 @@ func reset(p_feet: float, radius: float, scale_k: float, p_hit_only: bool) -> vo
 	facing = 1.0 if host.scale.x >= 0.0 else -1.0
 	walking = false
 	body.walk_frame = -1  # Starts on the still (the activation redraws the layers).
+	body.idle_frame = -1
+	_idle_on = false
+	idle_at = 0.0
 	_set_identity()
 
 
@@ -163,8 +179,10 @@ func update(now: float, dt: float, still: bool, quiet: bool, no_bob: bool = fals
 		phase = fposmod(phase + vel.length() * dt / stride * PI, TAU)
 		var target := clampf(vel.x * facing / MotionData.LEAN_FULL_SPEED, -1.0, 1.0) * MotionData.LEAN_MAX  # Lean wanted.
 		lean += (target - lean) * minf(1.0, dt * MotionData.LEAN_RATE)
-	if body.walk_count > 0 and not still and not no_bob:
+	if (body.walk_count > 0 or body.idle_count > 0) and not still and not no_bob:
 		_update_walk(quiet or hit_only)  # Frozen, dead and dashing bodies keep their frame.
+	if body.idle_count > 0:
+		_update_idle(now, still or no_bob or quiet or hit_only)
 	if still:
 		if not _identity:
 			_set_identity()
@@ -227,12 +245,30 @@ func _update_walk(stand: bool) -> void:
 	else:
 		walking = speed >= WalkData.START_SPEED
 	var f := -1  # Frame to show (-1 = the still).
-	if walking:
+	if walking and body.walk_count > 0:
 		var n := body.walk_count  # Frames in the strip.
 		var slot := TAU / float(n)  # Phase covered by one frame (rad).
 		f = int(fposmod(phase - WalkData.PHASE_AT_FRAME_0 + slot * 0.5, TAU) / slot) % n
 	if f != body.walk_frame:
 		body.walk_frame = f
+		body.queue_redraw()
+
+
+## Picks the idle frame at game time `now` (IdleData): while the unit
+## stands, the loop runs from the game time it began standing; -1 (the still)
+## while it walks or when `off` (frozen, dead, dashing, airborne, structure).
+## Redraws the body layer only when the frame changes.
+func _update_idle(now: float, off: bool) -> void:
+	var f := -1  # Frame to show (-1 = the still).
+	if off or walking:
+		_idle_on = false
+	else:
+		if not _idle_on:
+			_idle_on = true
+			idle_at = now
+		f = int(maxf(0.0, now - idle_at) * IdleData.FPS) % body.idle_count
+	if f != body.idle_frame:
+		body.idle_frame = f
 		body.queue_redraw()
 
 

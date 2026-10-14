@@ -1584,6 +1584,7 @@ scripts/
     environment_art_data.gd Floor tile / obstacle sprite key scheme, tile variants, obstacle feet and shadow
     sprite_data.gd          Sprite keys and their on-screen heights (art px) for the optional sprite art
     walk_data.gd            Unit walk cycles: frame counts and timing of the `<key>_walk` strips
+    idle_data.gd            Idle breathing loops: frame count and rate of the `<key>_idle` strips (bust rigs)
     anim_data.gd            One-shot effect animations: strip ids, frame timing and fill
     decal_data.gd           Floor decal keys and drawing numbers (Ground, MarchGround, SanctumGround)
     boss_pose_data.gd       Which attack-pose sprite each stage boss shows per attack phase

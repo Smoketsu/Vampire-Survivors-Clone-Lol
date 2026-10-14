@@ -10,7 +10,7 @@
 ## The frame is picked from the unit's engine-motion step phase (UnitMotion:
 ## the phase advances by PI per step, at the unit's measured speed over its
 ## stride), so the legs keep time with the step bob and the speed; standing
-## units show the still. Purely visual: game time and positions only, no RNG,
+## units show the still (or play their idle strip, IdleData). Purely visual: game time and positions only, no RNG,
 ## so a run is unchanged. Data only, no logic.
 class_name WalkData
 extends RefCounted
