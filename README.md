@@ -72,7 +72,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move through the list, Esc / Back closes | Focus + **A**; D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
 | Ossuary (Soul Ash upgrades) | **The Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
-| Settings (volume, shake, damage numbers, fullscreen, zoom Normal / Close, keys) | **Settings** in the main or pause menu; Esc / Back closes | Focus + **A**; **B** closes |
+| Settings (volume, shake, damage numbers, reduce motion, fullscreen, zoom Normal / Close, keys) | **Settings** in the main or pause menu; Esc / Back closes | Focus + **A**; **B** closes |
 | Rebind a key (in Settings) | Select a binding, then press the new key | **B** cancels |
 
 On-screen hints show these controls as small key / button chips drawn from your
@@ -137,8 +137,21 @@ buttons you press in a fight are the dash and the ultimate (below).
   fixed ring buffers, and hits on the same enemy merge into one number.
   `Juice` gets most events from the run's existing signals and stats.
   Gameplay code only calls it in a few one-line hooks.
+- **UI motion and sounds (`UiMotion`, numbers in `ui_motion_data.gd`).** Every
+  screen fades in while its panel rises a few px and grows into place (about
+  0.18 s), and fades out quickly when it closes; level-up cards and chest rows
+  enter one after another; a hovered or focused card or tile lifts 3 px and
+  brightens; buttons squash a little while held; the end screen's Soul Ash
+  rolls up with ticks; and the switch between the menu and a run (and
+  Restart) fades through black. Motion runs on real time while the game is
+  paused, never touches the game's time scale, and is instant under
+  `--autotest` and with **Reduce motion**. UI sounds: hover and confirm
+  clicks on every button, a **back** sound for Back / Cancel buttons and for
+  Esc / pad B inside a screen, soft **panel open / close** whooshes, a
+  bone-chime **purchase** in the Ossuary, a dull **denied** thud for what
+  can't be bought or is locked, and a **tick** for count-ups.
 - **Settings (`Settings` autoload, `SettingsMenu`).** Volume sliders, screen
-  shake, damage numbers, fullscreen, the camera zoom (Normal / Close), and keyboard rebinding of the primary key
+  shake, damage numbers, Reduce motion (instant UI motion), fullscreen, the camera zoom (Normal / Close), and keyboard rebinding of the primary key
   for Move up / down / left / right, Shadow Bolt aim, Grave Step, Dread Rally,
   Pause and the four army stances. Arrow keys and
   controller bindings stay fixed, and binding a key that is already in use
@@ -1355,6 +1368,8 @@ scripts/
                             character_glyphs (characters in the world and as portraits),
                             input_hints (key / pad-button chips from the current bindings,
                             last-device tracking, the bottom-of-screen hint strip)
+                            ui_motion (shared UI motion: panel open / close, staggered
+                            entrances, card lift, press squash, count-ups, fade through black)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     input_hint_data.gd      Input hint chips: sizes, colours, pad glyph names, device thresholds
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
@@ -1385,6 +1400,7 @@ scripts/
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
     environment_art_data.gd Floor tile / obstacle sprite key scheme, tile variants, obstacle feet and shadow
     sound_data.gd           Sound recipes, voice limits, priorities
+    ui_motion_data.gd       UI motion timings, distances, scales and easings (UiMotion)
     player_data.gd          Player stats, XP curve, slot counts
     player_ability_data.gd  Grave Step and Dread Rally numbers (and the bots' use of them)
     motion_data.gd          Engine motion (tier 0) amplitudes, timings, dust colours, cost caps

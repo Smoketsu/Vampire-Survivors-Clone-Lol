@@ -80,6 +80,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	visible = false
+	set_meta(UiMotion.META_CANCEL_SILENT, true)  # Esc / B is no "back" here.
 	add_child(UiTheme.backdrop(0.72))
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -134,6 +135,7 @@ func open(offers: Array[Dictionary], for_level: int) -> void:
 	_for_level = for_level
 	_banish_mode = false
 	_opened_msec = Time.get_ticks_msec()
+	UiMotion.open(self, false)  # Fade in (no whoosh: the level-up chime plays).
 	_show(offers)
 
 
@@ -152,6 +154,7 @@ func _show(offers: Array[Dictionary]) -> void:
 	visible = true
 	_waiting = true
 	_refresh_actions()
+	UiMotion.stagger(_cards)  # Cards rise in one after another.
 	if not _buttons.is_empty():
 		_buttons[0].grab_focus.call_deferred()
 	if game != null and game.autotest != null:
@@ -160,7 +163,7 @@ func _show(offers: Array[Dictionary]) -> void:
 
 ## Hides the panel.
 func close() -> void:
-	visible = false
+	UiMotion.hide(self, false)  # Quick fade out, then hidden.
 	_waiting = false
 	_banish_mode = false
 
@@ -206,6 +209,7 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 	# Card frame (UI kit): gold for evolutions, violet otherwise.
 	UiTheme.style_button(b, "card", "gold" if kind == "evolution" else "violet")
 	card.add_child(b)
+	UiMotion.liftable(b, card)  # The whole card lifts on hover / focus.
 	_buttons.append(b)
 	var content := MarginContainer.new()
 	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -309,6 +313,7 @@ func _reroll() -> void:
 
 ## Enters / leaves banish mode (the next picked card is banished).
 func _toggle_banish() -> void:
+	UiMotion.settle(_cards)  # The banish dim must not be overwritten by an entrance.
 	_banish_mode = not _banish_mode and game.abilities.banishes_left > 0
 	_refresh_actions()
 

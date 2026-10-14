@@ -259,6 +259,41 @@ const SOUNDS: Dictionary = {  # TUNING (not in GDD)
 		"layers": [
 			{"wave": "tri", "f0": 660.0, "dur": 0.08, "amp": 0.3, "decay": 0.03},
 			{"wave": "tri", "f0": 880.0, "start": 0.05, "dur": 0.1, "amp": 0.3, "decay": 0.04}]},
+	# Back / cancel (Back buttons, Esc / pad B in a screen): ui_confirm's two notes
+	# mirrored downward (D5 -> A4), a little softer.
+	"ui_back": {"dur": 0.15, "volume_db": -18.0, "max_voices": 2, "min_interval": 60, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "tri", "f0": 587.33, "dur": 0.08, "amp": 0.3, "decay": 0.03},
+			{"wave": "tri", "f0": 440.0, "start": 0.05, "dur": 0.1, "amp": 0.3, "decay": 0.04}]},
+	# Panel open (UiMotion.open): a soft, short airy whoosh rising into place.
+	"panel_open": {"dur": 0.2, "volume_db": -23.0, "max_voices": 1, "min_interval": 80, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.2, "amp": 0.5, "attack": 0.07, "decay": 0.06, "lp0": 500.0, "lp1": 2600.0},
+			{"wave": "sine", "f0": 196.0, "f1": 294.0, "dur": 0.18, "amp": 0.18, "attack": 0.05, "decay": 0.07}]},
+	# Panel close (UiMotion.close / hide): the open whoosh falling away, shorter and softer.
+	"panel_close": {"dur": 0.15, "volume_db": -25.0, "max_voices": 1, "min_interval": 80, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.15, "amp": 0.5, "attack": 0.02, "decay": 0.05, "lp0": 2400.0, "lp1": 450.0},
+			{"wave": "sine", "f0": 294.0, "f1": 180.0, "dur": 0.12, "amp": 0.15, "decay": 0.04}]},
+	# Purchase (Ossuary buy): a bright bone-chime, a dry knock then a rising C-G-C sparkle.
+	"purchase": {"dur": 0.65, "volume_db": -13.0, "max_voices": 1, "min_interval": 90, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.03, "amp": 0.3, "decay": 0.008, "lp0": 5000.0},
+			{"wave": "square", "f0": 700.0, "f1": 520.0, "dur": 0.05, "amp": 0.12, "decay": 0.015, "lp0": 3000.0},
+			{"wave": "tri", "f0": 1046.5, "start": 0.02, "dur": 0.4, "amp": 0.3, "decay": 0.13},
+			{"wave": "sine", "f0": 1567.98, "start": 0.07, "dur": 0.4, "amp": 0.24, "decay": 0.14},
+			{"wave": "sine", "f0": 2093.0, "start": 0.12, "dur": 0.5, "amp": 0.18, "decay": 0.18, "vib_hz": 9.0, "vib_depth": 0.006}]},
+	# Denied (can't afford / locked): a dull, low thud with no ring.
+	"denied": {"dur": 0.18, "volume_db": -15.0, "max_voices": 1, "min_interval": 90, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 120.0, "f1": 70.0, "dur": 0.18, "amp": 0.55, "decay": 0.05},
+			{"wave": "square", "f0": 92.0, "f1": 80.0, "dur": 0.12, "amp": 0.18, "decay": 0.04, "lp0": 380.0},
+			{"wave": "noise", "dur": 0.05, "amp": 0.25, "decay": 0.015, "lp0": 700.0}]},
+	# Count-up tick (UiMotion.count_up, pitch rises with the count): a tiny bone tick.
+	"ui_tick": {"dur": 0.03, "volume_db": -25.0, "max_voices": 2, "min_interval": 45, "pitch_var": 0.02, "priority": 1,
+		"layers": [
+			{"wave": "tri", "f0": 1480.0, "dur": 0.03, "amp": 0.3, "decay": 0.008},
+			{"wave": "noise", "dur": 0.01, "amp": 0.12, "decay": 0.003, "lp0": 6000.0}]},
 	# --- Army stance command (ArmyStance change): a low horn over a drum thump --
 	"stance_command": {"dur": 0.45, "volume_db": -13.0, "max_voices": 1, "min_interval": 150, "pitch_var": 0.0, "priority": 3,
 		"layers": [

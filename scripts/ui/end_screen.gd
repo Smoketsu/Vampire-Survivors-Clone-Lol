@@ -164,7 +164,7 @@ func _show_ash(ash: Dictionary, boss_name: String) -> void:
 	if int(ash["bounty"]) > 0:
 		names.append("Achievement bounties")
 		values.append("+%d" % int(ash["bounty"]))
-	_ash_title.text = "+%d SOUL ASH" % (int(ash["total"]) + int(ash["bounty"]))
+	UiMotion.count_up(_ash_title, int(ash["total"]) + int(ash["bounty"]), "+%d SOUL ASH")  # Rolls up with ticks.
 	_ash_lines.text = "\n".join(names)
 	_ash_values.text = "\n".join(values)
 	var total_lines := PackedStringArray(["Soul Ash total: %d   (kept even in death)" % int(ash["new_total"])])
@@ -246,5 +246,5 @@ func open(summary: Dictionary) -> void:
 	_stats.text = "\n".join(lines)
 	_show_ash(summary.get("soul_ash", {}), boss_name)
 	_show_unlocks(summary.get("unlocked_characters", PackedStringArray()))
-	visible = true
+	UiMotion.open(self)  # Fade / rise in (makes it visible).
 	_restart.grab_focus.call_deferred()

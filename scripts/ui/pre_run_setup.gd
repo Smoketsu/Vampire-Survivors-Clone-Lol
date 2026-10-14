@@ -187,6 +187,7 @@ func _ready() -> void:
 	_refresh()
 	_queue_wire()
 	_begin.grab_focus.call_deferred()
+	UiMotion.open(self)  # Fade / rise in.
 
 
 ## A centred, word-wrapped totals line (BODY tier) of the right column.
@@ -493,12 +494,12 @@ func _start() -> void:
 
 ## Restores focus to the opener and frees the screen.
 func close() -> void:
-	if is_queued_for_deletion():
+	if UiMotion.is_closing(self):
 		return
 	closed.emit()
 	if return_focus != null and is_instance_valid(return_focus) and return_focus.is_visible_in_tree():
 		return_focus.grab_focus()
-	queue_free()
+	UiMotion.close(self, queue_free)  # Quick fade out, then freed.
 
 
 ## Esc / controller B goes back to the stage select.

@@ -13,7 +13,14 @@
 ##     important than the new sound, otherwise the new sound is dropped. So
 ##     150 enemies dying in one frame cost at most a handful of voices;
 ##   * gives every Button / Slider in the UI hover and confirm sounds by
-##     watching SceneTree.node_added (no UI script needs to know about audio).
+##     watching SceneTree.node_added (no UI script needs to know about audio);
+##     a Back / Cancel button (BACK_LABELS, or meta "ui_back" true) plays the
+##     back sound instead of the confirm click, and Esc / pad B (ui_cancel)
+##     pressed while the focus is inside a screen opened by UiMotion.open()
+##     plays it too (watched on the root window's window_input, before any
+##     screen handles the event; meta "ui_cancel_silent" on the screen turns
+##     that off). play_ui() plays a sound that replaces the generic click of
+##     the same press (purchase, denied, card_select).
 ## Positional sounds are not panned; they are attenuated with distance from
 ## the camera centre and culled beyond CULL_DISTANCE.
 ## Runs with PROCESS_MODE_ALWAYS so menus and the level-up panel (tree
@@ -44,6 +51,11 @@ const BUS_SFX: StringName = &"SFX"
 const SYNTH_SEED: int = 9001
 ## A card_select within this many ms replaces the generic ui_confirm click.
 const CONFIRM_SUPPRESS_MSEC: int = 120  # TUNING (not in GDD)
+## Sounds that replace the generic ui_confirm click of the same press when
+## played through play_ui() (the click is cut or skipped within CONFIRM_SUPPRESS_MSEC).
+const CONFIRM_REPLACERS: Array = ["card_select", "purchase", "denied", "ui_back"]
+## Button captions that mean "go back": they play ui_back instead of ui_confirm.
+const BACK_LABELS: Array = ["Back", "Cancel", "Close"]
 
 ## True once every sound effect has been generated.
 var bank_ready: bool = false
@@ -127,6 +139,7 @@ func _ready() -> void:
 	_music_task = WorkerThreadPool.add_task(_synth_music, true, "Necropathy music synth")
 	_sfx_task = WorkerThreadPool.add_group_task(_synth_one, _ids.size(), -1, true, "Necropathy sfx synth")
 	get_tree().node_added.connect(_on_node_added)
+	get_tree().root.window_input.connect(_on_window_input)
 	startup_msec = float(Time.get_ticks_usec() - _t0_usec) / 1000.0
 
 
@@ -311,7 +324,7 @@ func _on_node_added(node: Node) -> void:
 		var b := node as BaseButton
 		b.mouse_entered.connect(_on_ui_hover)
 		b.focus_entered.connect(_on_ui_hover)
-		b.pressed.connect(_on_ui_confirm)
+		b.pressed.connect(_on_ui_confirm.bind(b))
 	elif node is Range:
 		var r := node as Range
 		if r.focus_mode != Control.FOCUS_NONE:
@@ -323,10 +336,17 @@ func _on_ui_hover() -> void:
 	play("ui_hover")
 
 
-func _on_ui_confirm() -> void:
-	# The level-up card's own card_select sound replaces the generic click.
-	if Time.get_ticks_msec() - int(_last_play.get("card_select", -100000)) < CONFIRM_SUPPRESS_MSEC:
+## A button was pressed: the back sound for Back / Cancel buttons, else the
+## confirm click (skipped when a replacing sound, e.g. card_select or a
+## purchase, was just played for the same press).
+func _on_ui_confirm(b: BaseButton) -> void:
+	if is_instance_valid(b) and (bool(b.get_meta(&"ui_back", false)) or (b is Button and BACK_LABELS.has((b as Button).text))):
+		play_ui("ui_back")
 		return
+	var now := Time.get_ticks_msec()
+	for id: String in CONFIRM_REPLACERS:
+		if now - int(_last_play.get(id, -100000)) < CONFIRM_SUPPRESS_MSEC:
+			return
 	play("ui_confirm")
 
 
@@ -334,12 +354,40 @@ func _on_slider_changed(_value: float) -> void:
 	play("ui_hover", Vector2.INF, 1.3)
 
 
+## Root window input, seen before any node handles it: Esc / pad B
+## (ui_cancel) pressed while the keyboard / pad focus is inside a UI screen
+## (UiMotion.open() marked it with meta "ui_screen", and it does not carry
+## "ui_cancel_silent") plays the back sound. Nothing plays in play (no
+## focus), during a fade through black, or for key repeats.
+func _on_window_input(event: InputEvent) -> void:
+	if not event.is_action_pressed("ui_cancel", false) or get_tree().root.is_input_disabled():
+		return
+	var f := get_viewport().gui_get_focus_owner()  # Focused control (null in play).
+	if f == null or not f.is_visible_in_tree():
+		return
+	var n: Node = f  # Walks up to the nearest screen root.
+	while n != null:
+		if n.has_meta(&"ui_screen"):
+			if not bool(n.get_meta(&"ui_cancel_silent", false)):
+				play_ui("ui_back")
+			return
+		n = n.get_parent()
+
+
 ## Plays the level-up card pick sound, cutting a generic confirm click that
 ## the same button press may have started just before.
 func play_card_select() -> void:
+	play_ui("card_select")
+
+
+## Plays UI sound `id` (purchase, denied, card_select, ui_back...) in place
+## of the generic confirm click of the same press: a ui_confirm started
+## within CONFIRM_SUPPRESS_MSEC is cut, and one requested just after is
+## skipped (CONFIRM_REPLACERS).
+func play_ui(id: String) -> void:
 	var now := Time.get_ticks_msec()
 	for i in MAX_VOICES:
 		if _voice_id[i] == "ui_confirm" and now < _voice_end[i] and now - _voice_start[i] < CONFIRM_SUPPRESS_MSEC:
 			_voices[i].stop()
 			_voice_end[i] = 0
-	play("card_select")
+	play(id)

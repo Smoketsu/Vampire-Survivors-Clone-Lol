@@ -7,6 +7,10 @@
 ## mode the menu is skipped and a run starts immediately on the --stage=
 ## stage (locks ignored) with --difficulty=, --modifiers=, --character= and
 ## --hyper (its unlock bypassed).
+## Switching between the menu and a run (and Restart) fades through black
+## (UiMotion.transition; instant under the autotest and with Reduce motion).
+## Main also installs the UI motion hook (UiMotion.install: card lift and
+## button squash) once at startup.
 extends Node
 
 ## Current run (null while the menu is shown).
@@ -18,6 +22,7 @@ var _run_config: RunConfig = null
 
 
 func _ready() -> void:
+	UiMotion.install()
 	if GameState.autotest:
 		_run_config = RunConfig.for_stage(GameState.autotest_stage)
 		_run_config.set_difficulty(GameState.autotest_difficulty)
@@ -44,7 +49,7 @@ func _show_menu() -> void:
 func _on_stage_chosen(config: RunConfig) -> void:
 	_run_config = config
 	GameState.last_stage_id = config.stage_id
-	_start_game()
+	UiMotion.transition(self, _start_game)
 
 
 ## Frees whatever is shown and starts a new run with `_run_config`.
@@ -52,8 +57,8 @@ func _start_game() -> void:
 	_clear()
 	_game = Game.new()
 	_game.run_config = _run_config.duplicate_config() if _run_config != null else RunConfig.new()
-	_game.restart_requested.connect(_start_game, CONNECT_DEFERRED)
-	_game.main_menu_requested.connect(_show_menu, CONNECT_DEFERRED)
+	_game.restart_requested.connect(UiMotion.transition.bind(self, _start_game), CONNECT_DEFERRED)
+	_game.main_menu_requested.connect(UiMotion.transition.bind(self, _show_menu), CONNECT_DEFERRED)
 	add_child(_game)
 
 

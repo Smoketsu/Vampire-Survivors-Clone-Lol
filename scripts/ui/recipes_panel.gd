@@ -83,6 +83,7 @@ func _ready() -> void:
 		_rows[0].grab_focus.call_deferred()
 	else:
 		_back.grab_focus.call_deferred()
+	UiMotion.open(self)  # Fade / rise in.
 
 
 ## Builds the recipe rows for `discovered` (evolution id -> true) and returns
@@ -205,12 +206,12 @@ func _link_focus() -> void:
 
 ## Closes the view and refocuses the button that opened it.
 func close() -> void:
-	if is_queued_for_deletion():
+	if UiMotion.is_closing(self):
 		return
 	closed.emit()
 	if return_focus != null and is_instance_valid(return_focus) and return_focus.is_visible_in_tree():
 		return_focus.grab_focus()
-	queue_free()
+	UiMotion.close(self, queue_free)  # Quick fade out, then freed.
 
 
 ## Runs before PauseMenu._unhandled_input, so Esc / B / pause close this
