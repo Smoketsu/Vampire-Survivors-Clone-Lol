@@ -74,6 +74,11 @@ const RALLY_ATTACK_SPEED_BONUS: float = 0.4  # TUNING (not in GDD) owner brief
 ## Fraction of its max HP every summon heals when the rally starts
 ## (CombatResolver.heal_unit).
 const RALLY_HEAL_FRACTION: float = 0.3  # TUNING (not in GDD) owner brief
+## True: the rally also raises the WHOLE army: every missing unit of every
+## owned class comes back at once (HordeDirector.raise_all_missing(), the same
+## path as the "Call of the Grave" card), at full HP and with the rally buff.
+## Owner decision (Oct 2026 playtest): "the ultimate should res your whole army".
+const RALLY_RAISES_ARMY: bool = true  # TUNING (not in GDD) owner decision
 ## Seconds of the surge: summons outside their formation band drop their
 ## target and return to the necromancer, and every summon moves faster.
 const SURGE_DURATION: float = 1.5  # TUNING (not in GDD)

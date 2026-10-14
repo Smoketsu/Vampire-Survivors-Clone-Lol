@@ -121,9 +121,6 @@ func is_minion_source(source: String) -> bool:
 func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if not e.active or amount <= 0.0:
 		return 0.0
-	# Global player-side damage multiplier (PlayerData.ALL_DAMAGE_MULT): every
-	# source reaching this function is the necromancer's or the army's.
-	amount *= PlayerData.ALL_DAMAGE_MULT
 	var crit_mult := 1.0  # Unholy Precision multiplier of this hit.
 	var crit := game.abilities.passive_value("unholy_precision", "crit_chance")  # 0..1, 0 when not owned.
 	if crit > 0.0 and is_minion_source(source) and _crit_rng.randf() < crit:

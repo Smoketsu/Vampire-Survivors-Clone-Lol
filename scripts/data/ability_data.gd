@@ -300,6 +300,13 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]
+## Multiplier on every spell's and spell evolution's `damage` / `pulse_damage`
+## (and so on the hits defined as fractions of them: split arrows, second
+## hits, spike fields), applied in AbilityManager.apply_spell_mods() with Soul
+## Conduit and the Ossuary, so the level-up cards show the real numbers.
+## Owner balance pass (Oct 2026 playtest): raise the necromancer's own
+## damage "in general" instead of a hidden multiplier on every damage source.
+const SPELL_DAMAGE_MULT: float = 1.2  # TUNING (not in GDD) owner balance pass
 
 ## Shadow Bolt: score bonus (px-equivalent) for enemies currently attacking a
 ## summon, so bolts "preferentially hit enemies threatening warriors" (GDD §33).

@@ -11,6 +11,10 @@
 ##     SURGE_SPEED_BONUS faster for SURGE_DURATION s (no teleport),
 ##   * heals every summon RALLY_HEAL_FRACTION of its max HP (CombatResolver
 ##     .heal_unit, the one healing path),
+##   * raises the whole army (RALLY_RAISES_ARMY, owner decision): every
+##     missing unit of every owned class is queued for an immediate spawn
+##     through HordeDirector.raise_all_missing() (the "Call of the Grave"
+##     path), so the fallen rise beside the necromancer at full HP,
 ##   * buffs the army for RALLY_DURATION s: +RALLY_DAMAGE_BONUS damage and
 ##     +RALLY_ATTACK_SPEED_BONUS attack speed, read by HordeDirector
 ##     .compute_stats() through bonus() as its own category (like Dark
@@ -132,6 +136,13 @@ func _cast() -> void:
 	_fill_start = game.elapsed  # Overwritten when the buff ends (kills do not charge meanwhile).
 	# Buffed stats first (HP fraction kept), then the heal on the new max HP.
 	game.horde.recompute_all(game.horde.capacity_snapshot())
+	# Raise the whole army: every fallen unit is queued for an immediate spawn
+	# (they rise beside the necromancer at full HP over the next frames, with
+	# the rally buff already in their stats).
+	if PlayerAbilityData.RALLY_RAISES_ARMY:
+		var missing := game.horde.missing_count()  # Units brought back by this rally.
+		game.horde.raise_all_missing()
+		game.stat_add("rally_raised", float(missing))
 	for u in game.horde.units:
 		if not u.active or u.state == SummonedUnit.State.DEAD:
 			continue

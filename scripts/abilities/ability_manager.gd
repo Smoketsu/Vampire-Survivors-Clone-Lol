@@ -194,6 +194,7 @@ func _apply_spell_buffs(out: Dictionary) -> Dictionary:
 ## Applies the spell passives and meta upgrades to a stats row (GDD §6.4
 ## stacking: each passive and each meta stat is its own category, so it
 ## multiplies the level / evolution value):
+##   AbilityData.SPELL_DAMAGE_MULT -> damage, pulse_damage (base balance)
 ##   Soul Conduit  -> damage, pulse_damage               x (1 + spell_damage)
 ##   Abyssal Focus -> cooldown, recharge, pulse_interval x (1 - cooldown_reduction)
 ##   meta spell_damage / spell_cooldown -> the same keys, x (1 +/- value)
@@ -204,7 +205,8 @@ func _apply_spell_buffs(out: Dictionary) -> Dictionary:
 ## Pass `conduit_lvl` / `focus_lvl` >= 0 to preview other passive levels.
 func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -1) -> Dictionary:
 	var out := row.duplicate()
-	var dmg_mult := (1.0 + _passive_value_at("soul_conduit", "spell_damage", conduit_lvl)) * (1.0 + game.meta.value("spell_damage"))
+	var dmg_mult := AbilityData.SPELL_DAMAGE_MULT \
+			* (1.0 + _passive_value_at("soul_conduit", "spell_damage", conduit_lvl)) * (1.0 + game.meta.value("spell_damage"))
 	var cd_mult := (1.0 - _passive_value_at("abyssal_focus", "cooldown_reduction", focus_lvl)) * (1.0 - game.meta.value("spell_cooldown"))
 	var area_mult := (1.0 + game.meta.value("spell_area")) * (1.0 + passive_value("necrotic_expanse", "spell_area")) \
 			* (1.0 + game.character.value("spell_area"))  # Playable character (0 for the Gravecaller).
