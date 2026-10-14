@@ -404,3 +404,16 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-14 19:54,enemies/battle_sister,gpt-image-2.5-flare,medium,1024x1024,2,784,2048,439,0.0335,src_v2.png
 2026-10-14 19:56,enemies/battle_sister,gpt-image-2.5-flare,medium,1024x1024,2,587,2048,439,0.0325,src_v5.png
 2026-10-14 19:56,enemies/battle_sister,gpt-image-2.5-flare,medium,1024x1024,2,587,2048,439,0.0325,src_v6.png
+2026-10-14 21:25,icons/syn_flesh_rampart,gpt-image-2.5-flare,medium,1024x1024,1,362,4,439,0.0150,syn_flesh_rampart.png
+2026-10-14 21:25,icons/syn_killing_field,gpt-image-2.5-flare,medium,1024x1024,1,372,4,439,0.0151,syn_killing_field.png
+2026-10-14 21:25,icons/syn_death_from_above,gpt-image-2.5-flare,medium,1024x1024,1,368,4,439,0.0150,syn_death_from_above.png
+2026-10-14 21:26,icons/syn_wild_hunt,gpt-image-2.5-flare,medium,1024x1024,1,375,4,439,0.0151,syn_wild_hunt.png
+2026-10-14 21:26,icons/syn_cold_blood,gpt-image-2.5-flare,medium,1024x1024,1,355,4,439,0.0150,syn_cold_blood.png
+2026-10-14 21:26,icons/syn_shatterfall,gpt-image-2.5-flare,medium,1024x1024,1,364,4,439,0.0150,syn_shatterfall.png
+2026-10-14 21:26,icons/syn_requiem,gpt-image-2.5-flare,medium,1024x1024,1,356,4,439,0.0150,syn_requiem.png
+2026-10-14 21:26,icons/syn_baying,gpt-image-2.5-flare,medium,1024x1024,1,370,4,439,0.0151,syn_baying.png
+2026-10-14 21:27,icons/syn_charnel_menagerie,gpt-image-2.5-flare,medium,1024x1024,1,364,4,439,0.0150,syn_charnel_menagerie.png
+2026-10-14 21:28,icons/syn_shieldwall,gpt-image-2.5-flare,medium,1024x1024,1,360,4,439,0.0150,syn_shieldwall.png
+2026-10-14 21:28,icons/syn_volley,gpt-image-2.5-flare,medium,1024x1024,1,364,4,439,0.0150,syn_volley.png
+2026-10-14 21:28,icons/syn_deathless,gpt-image-2.5-flare,medium,1024x1024,1,360,4,439,0.0150,syn_deathless.png
+2026-10-14 21:28,icons/syn_unholy_host,gpt-image-2.5-flare,medium,1024x1024,1,364,4,439,0.0150,syn_unholy_host.png
