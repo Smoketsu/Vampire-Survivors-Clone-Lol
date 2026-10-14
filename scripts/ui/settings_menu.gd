@@ -424,7 +424,8 @@ func select_tab(i: int) -> void:
 ## kept in the page when it was there: then on the new page's first control).
 func _step_tab(d: int) -> void:
 	var f := get_viewport().gui_get_focus_owner()
-	var on_tabs := f != null and _tabs.has(f)
+	# True when a tab button has focus (`_tabs` is a typed Button array, so only a Button may be looked up).
+	var on_tabs := f is Button and _tabs.has(f as Button)
 	select_tab(_tab + d)
 	Sfx.play("ui_hover")
 	if on_tabs:
