@@ -208,7 +208,7 @@ func open(rewards: Array[Dictionary], count: int) -> void:
 		if _rows[i].has_meta(&"evo_fx"):
 			(_rows[i].get_meta(&"evo_fx") as UiFx).play(InRunUiData.ROWS_START + float(i) * InRunUiData.ROW_INTERVAL)
 	Sfx.play("chest_open")
-	_claim.grab_focus.call_deferred()
+	UiTheme.focus_deferred(_claim)
 	if game != null and game.autotest != null:
 		_finish.call_deferred()
 

@@ -188,7 +188,7 @@ func _show(offers: Array[Dictionary]) -> void:
 		if _cards[i].has_meta(&"evo_fx"):
 			(_cards[i].get_meta(&"evo_fx") as UiFx).play(float(i) * UiMotionData.STAGGER_INTERVAL)  # Evolution burst as the card enters.
 	if not _buttons.is_empty():
-		_buttons[0].grab_focus.call_deferred()
+		UiTheme.focus_deferred(_buttons[0])
 	if game != null and game.autotest != null:
 		_autoplay.call_deferred()
 
@@ -405,7 +405,7 @@ func _banish(idx: int) -> void:
 	_banish_mode = false
 	_show(game.abilities.banish_offer(_offers, idx))
 	if idx < _buttons.size():
-		_buttons[idx].grab_focus.call_deferred()
+		UiTheme.focus_deferred(_buttons[idx])
 
 
 ## Skips this level-up (small heal, see LevelUpData).

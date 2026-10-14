@@ -450,6 +450,16 @@ static func banner(l: Label, wrap: float = 0.0) -> bool:
 	return true
 
 
+## Focuses `c` at the end of the frame, but only if it still exists and is in
+## the tree then (a panel can rebuild or close in between, e.g. the autotest
+## picking a level-up card at once, which would make a plain deferred
+## grab_focus() print an engine ERROR).
+static func focus_deferred(c: Control) -> void:
+	(func() -> void:
+		if is_instance_valid(c) and c.is_inside_tree() and c.is_visible_in_tree():
+			c.grab_focus()).call_deferred()
+
+
 ## Convenience: creates a full-screen dimming backdrop.
 static func backdrop(alpha: float = 0.65) -> ColorRect:
 	var r := ColorRect.new()
