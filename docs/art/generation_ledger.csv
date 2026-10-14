@@ -380,3 +380,11 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-14 01:28,icons/tree_fortune,gpt-image-2.5-flare,medium,1024x1024,1,338,4,439,0.0149,tree_fortune.png
 2026-10-14 01:29,icons/soul_ash2,gpt-image-2.5-flare,medium,1024x1024,1,416,4,439,0.0153,soul_ash2.png
 2026-10-14 01:29,icons/soul_ash3,gpt-image-2.5-flare,medium,1024x1024,1,393,4,439,0.0152,soul_ash3.png
+2026-10-14 19:15,bosses/seraphine_curvy,gpt-image-2.5-flare,medium,1024x1024,1,487,928,439,0.0230,src_seraphine.png
+2026-10-14 19:15,player/wither_witch_curvy,gpt-image-2.5-flare,medium,1024x1024,1,485,480,439,0.0194,src_wither_witch.png
+2026-10-14 19:15,player/soulbinder_curvy,gpt-image-2.5-flare,medium,1024x1024,1,458,713,439,0.0212,src_soulbinder.png
+2026-10-14 19:17,art/curvy_soulbinder_hyper,gpt-image-2.5-flare,medium,1024x1024,2,445,1728,439,0.0292,src_soulbinder_hyper.png
+2026-10-14 19:17,art/curvy_seraphine_avatar_cast,gpt-image-2.5-flare,medium,1024x1024,2,424,1888,439,0.0304,src_seraphine_avatar_cast.png
+2026-10-14 19:17,art/curvy_wither_witch_hyper,gpt-image-2.5-flare,medium,1024x1024,2,444,1524,439,0.0276,src_wither_witch_hyper.png
+2026-10-14 19:17,art/curvy_seraphine_avatar,gpt-image-2.5-flare,medium,1024x1024,2,433,2048,439,0.0317,src_seraphine_avatar.png
+2026-10-14 19:17,art/curvy_seraphine_cast,gpt-image-2.5-flare,medium,1024x1024,2,418,1696,439,0.0288,src_seraphine_cast.png
