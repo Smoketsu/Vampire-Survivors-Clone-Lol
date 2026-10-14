@@ -83,6 +83,11 @@ DIP = (0, 1, 0, 0)
 # Per frame (both steps): hem shift at the hem bottom as a share of a robe rig's
 # `sway` (+ = forward, the facing side): the hem swings forward on each step.
 ROBE_SWAY = (0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
+# Per frame (both steps): the bust box's vertical offset from the body, as a share of a
+# rig's `bust` bounce px (+ = down). Secondary motion (owner request, Oct 2026: "jiggle"):
+# the bust lags the body by one pose, so it stays up while the body dips ("down") and
+# overshoots down as the body rises ("passing"), then settles; frame 0 (the still) is 0.
+BUST_BOUNCE = (0.0, -1.0, 1.0, 0.0, 0.0, -1.0, 1.0, 0.0)
 
 # Rigs: how each still is cut. Columns and rows are art px in the still (x from
 # the left, y from the top; ranges are [start, end) ). Keys:
@@ -97,6 +102,9 @@ ROBE_SWAY = (0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
 #   lift    px the swinging foot rises at passing ("legs").
 #   sway    px the hem bottom swings at most ("robe").
 #   dip     px the body dips on the "down" pose (0 or 1; 1 for every unit so far).
+#   bust    optional (x0, x1, y0, y1, px): the box of the still holding the bust (art px,
+#           [start, end) ) and the bounce in whole px; it moves BUST_BOUNCE * px rows
+#           relative to the body each frame (rows only, so every pixel stays an approved one).
 RIGS = {
     # The pilot (ART_BIBLE "Walk cycles"): the three units with the most screen time.
     "player/necromancer": dict(mode="legs", hip=47, back=(0, 20), front=(20, 33), rigid=[(33, 46, 0, None)], spread=1, lift=1, dip=1),
@@ -127,8 +135,9 @@ RIGS = {
     "player/plague_scholar": dict(mode="legs", hip=43, back=(0, 26), front=(26, 60), rigid=[], spread=2, lift=1, dip=1),
     "player/doomsayer": dict(mode="legs", hip=47, back=(0, 17), front=(17, 32), rigid=[], spread=1, lift=1, dip=1),
     "player/barrow_warden": dict(mode="legs", hip=52, back=(0, 18), front=(18, 30), rigid=[(30, 44, 0, None)], spread=1, lift=1, dip=1),
-    "player/soulbinder": dict(mode="legs", hip=54, back=(0, 24), front=(24, 46), rigid=[], spread=1, lift=1, dip=1),
-    "player/wither_witch": dict(mode="legs", hip=42, back=(0, 20), front=(20, 26), rigid=[(26, 40, 0, None)], spread=1, lift=1, dip=1),
+    # Redesigned figures (owner request, Oct 2026): the bust box bounces 1 px (BUST_BOUNCE).
+    "player/soulbinder": dict(mode="legs", hip=54, back=(0, 24), front=(24, 44), rigid=[], spread=1, lift=1, dip=1, bust=(20, 33, 20, 26, 1)),
+    "player/wither_witch": dict(mode="legs", hip=40, back=(0, 18), front=(18, 26), rigid=[(26, 36, 0, None)], spread=1, lift=1, dip=1, bust=(14, 27, 15, 21, 1)),
     "player/grave_herald": dict(mode="legs", hip=53, back=(0, 24), front=(24, 46), rigid=[], spread=1, lift=1, dip=1),
     # Later units with long screen time: the walking summon evolutions and two March soldiers.
     "summons/death_knight": dict(mode="legs", hip=41, back=(0, 25), front=(25, 54), rigid=[], spread=2, lift=2, dip=1),
@@ -193,6 +202,9 @@ def skin_rig(skin: str, base: str) -> dict:
         rig["back"], rig["front"] = cols(rig["back"]), cols(rig["front"])
     rig["rigid"] = [(*cols((x0, x1)), y0 if y0 == 0 else y0 + dy, None if y1 is None else y1 + dy)
                     for x0, x1, y0, y1 in rig.get("rigid", [])]
+    if "bust" in rig:
+        bx0, bx1, by0, by1, bpx = rig["bust"]
+        rig["bust"] = (*cols((bx0, bx1)), by0 + dy, by1 + dy, bpx)
     rig.update(SKIN_FIX.get(skin, {}))
     return rig
 
@@ -300,9 +312,27 @@ def frames_of(key: str) -> list:
         else:
             hem = _shift_rows(parts["hem"], hip, dy, 0, ROBE_SWAY[f] * rig["sway"])
             frame = _stack([hem] + body)
+        if "bust" in rig:
+            frame = _bounce(frame, rig["bust"], dy, int(round(BUST_BOUNCE[f] * rig["bust"][4])))
         out.append(frame)
     if not np.array_equal(out[0], still):
         sys.exit(f"{key}: frame 0 differs from the still (rig error)")
+    return out
+
+
+def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: int) -> np.ndarray:
+    """Moves the bust box of `frame` (the still's box `bust` lowered by the body dip `dy`)
+    `s` rows (+ = down) inside its columns. The rows it leaves keep their old pixels (the
+    edge row stretches by one), the rows it lands on are overwritten, so no new colour
+    appears. s = 0 returns the frame unchanged."""
+    if s == 0:
+        return frame
+    x0, x1, y0, y1 = bust[0], bust[1], bust[2] + dy, bust[3] + dy  # Box in this frame (art px).
+    out = frame.copy()
+    h = frame.shape[0]  # Frame height (art px).
+    src = frame[y0:y1, x0:x1]  # The bust rows as the body placed them.
+    a, b = max(0, y0 + s), min(h, y1 + s)  # Landing rows, clipped to the frame.
+    out[a:b, x0:x1] = src[a - (y0 + s):b - (y0 + s)]
     return out
 
 
