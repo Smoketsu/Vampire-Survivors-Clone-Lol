@@ -300,7 +300,7 @@ const ENEMIES := {
 ##     advance_speed_mult     — his move-speed multiplier while striding.
 const VAEL := {
 	"display_name": "Marshal Vael, the Crimson Bulwark",  # GDD §7.5
-	"max_hp": 32000.0,  # TUNING (not in GDD) x1.1 stage HP = 35,200; Shieldwall, the Holy Standard and Last Stand make him tougher than his HP says
+	"max_hp": 19200.0,  # TUNING (not in GDD) x1.1 stage HP = 21,120; owner balance pass (Oct 2026): 32000 -> 19200 (-40%), the outlier fight (a strong army needed 2:29 of his 3:00 and often failed); Shieldwall, the Holy Standard and Last Stand make him tougher than his HP says
 	"move_speed": 50.0,  # TUNING (not in GDD)
 	"damage": 14.0,  # TUNING (not in GDD) flaming sword swing
 	"attack_interval": 1.1,  # TUNING (not in GDD)

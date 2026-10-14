@@ -302,7 +302,7 @@ const SEPARATION_STRENGTH: float = 0.9  # TUNING (not in GDD)
 ##   recover_time       — s he stands still after any special.
 const BOSS := {
 	"display_name": "Sir Alaric, the Gravebreaker",  # GDD §11
-	"max_hp": 42000.0,  # TUNING (not in GDD) a 2-3-minute fight against a near-complete build; balance pass 46000 -> 42000 after the Void Barrage nerf
+	"max_hp": 27300.0,  # TUNING (not in GDD) owner balance pass (Oct 2026): 42000 -> 27300 (-35%) with Dread Rally raising the army; a strong army kills him in ~1:30 of his 3:00 (was 46000 -> 42000 after the Void Barrage nerf)
 	"move_speed": 52.0,  # TUNING (not in GDD)
 	"damage": 12.0,  # TUNING (not in GDD) basic hammer swing
 	"attack_interval": 1.0,  # TUNING (not in GDD)
