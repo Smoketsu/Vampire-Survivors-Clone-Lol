@@ -1,0 +1,8 @@
+Pixel-art background element for a dark 2D pixel-art game's title screen: a DISTANT gothic cathedral standing on a low hill, seen from the SIDE at night, far away on the horizon.
+
+LOW-RESOLUTION pixel art: the whole element is only about 220 pixels wide and 150 pixels tall, shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky simple shapes: one tall central spire with a cross on top, two shorter towers, a long nave roof, flying buttresses, a big round rose window, a low wall in front and a few bare dead trees on the hill slope.
+
+It is a near-SILHOUETTE against a moonlit sky: the masonry is very dark cold blue-grey (#0F141C outline, #1B2130 body, #2A3242 for the few faces lit by the moon on the upper-left edges). Only a FEW small windows glow warm gold (#E0A92E, a couple of #FFDC66 pixels) and the rose window glows faint crimson (#7A0E1B, #C71A29). No other colours.
+
+No gradients, no dithering, no anti-aliasing, no soft glow haze, no texture noise, flat colour areas. Fully transparent background (real alpha): no sky, no moon, no stars, no ground beyond the hill itself, no text, no frame, no watermark. The hill's bottom edge is a flat horizontal line at the bottom of the element.
+Attached: sprites of this game, for the pixel size, outline weight and the dark mood.

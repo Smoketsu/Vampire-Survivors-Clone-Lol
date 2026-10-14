@@ -1101,6 +1101,19 @@ Frozen, stunned, stone-form and airborne units hold still. It is purely visual (
 gameplay state or uses the gameplay RNG; same-seed autotest summaries are unchanged), runs on game
 time (hit-stop and pause included), and all numbers live in `scripts/data/motion_data.gd`.
 
+**Menu diorama (main menu backdrop).** Behind the main menu lives an animated pixel-art graveyard at
+night (`MenuBackdrop`, numbers in `scripts/data/menu_backdrop_data.gd`): a banded sky with a pixel
+moon, twinkling stars, drifting clouds, a few bats and a rare shooting star; the Covenant's cathedral
+and a ruined tower on the far hills with flickering torches; a mid graveyard built from the game's
+own gravestones, dead trees, crypt walls and statue plus a mausoleum and an iron fence; the near
+ground on the Graveyard tile; three drifting fog banks; soul wisps rising from the graves; soul
+lanterns and candles; and small troupes of undead (and now and then the necromancer) shuffling past
+on their walk strips. Layers sway with a slow parallax camera drift; a wider window shows more of
+the scene. When a sub-screen opens over the menu (stage select, Ossuary, settings), the menu's own
+logo and buttons fade out and the diorama dims behind it. It runs on real time with its own RNG and
+never touches gameplay. Its art is in `assets/sprites/menu/`, rebuilt by
+`python3 art_source/menu/make_menu_art.py` (procedural pixel art plus two converted AI sources).
+
 ## What is implemented (vs. the GDD)
 
 | Area | Status in this prototype |
@@ -1336,7 +1349,8 @@ scripts/
                             (their icons), stance_bar (HUD stance icons + banner),
                             stance_glyphs (stance icons, padlock, ground outline shapes),
                             character_picker (pre-run character tiles + detail panel),
-                            character_glyphs (characters in the world and as portraits)
+                            character_glyphs (characters in the world and as portraits),
+                            menu_backdrop (the animated pixel-art graveyard behind the main menu)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
     stages/graveyard_stage.gd      Stage 1: segments, events, Reckoning flavour, graves, desecration,
@@ -1365,6 +1379,7 @@ scripts/
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
     environment_art_data.gd Floor tile / obstacle sprite key scheme, tile variants, obstacle feet and shadow
+    menu_backdrop_data.gd   Main-menu diorama: layers, props, fog, wisps, walkers, bats, moods (colour sets)
     sound_data.gd           Sound recipes, voice limits, priorities
     player_data.gd          Player stats, XP curve, slot counts
     player_ability_data.gd  Grave Step and Dread Rally numbers (and the bots' use of them)

@@ -1047,3 +1047,53 @@ logo's O (shield, skull, flame) onto a 64×64 dark violet badge, saved 2× (128 
   oversampling 1.0 (rasterised at layout size, not at layout size × window scale).
 - Credits: Jersey 10 © 2023 The Soft Type Project Authors and Jacquard 24, both SIL Open Font License
   1.1 (`assets/fonts/OFL-Jersey10.txt`, `OFL-Jacquard24.txt`).
+
+### Menu diorama (`assets/sprites/menu/`)
+
+**Status:** in the game (Oct 2026, menu modernization). The main menu's backdrop is a living
+pixel-art graveyard at night (`scripts/ui/menu_backdrop.gd`, every number in
+`scripts/data/menu_backdrop_data.gd`, GDD §15.0 "Menu diorama"), built mostly from art the game
+already has: the gravestones, dead trees, crypt walls, cypresses, saint statue, ruined tower base
+and rubble from `obstacles/`, the Graveyard floor tile and its grass and open-grave decals, and the
+walk strips of the Warrior, Archer, Mage, Rogue, Risen, Bone Hound and the necromancer. Everything
+is grid art drawn 1 art px = 1 layout px through the sharp-pixel shader (loaded through
+`EnvironmentArt.texture()`, which always wraps a PNG as grid art, so the menu keys need no
+`SpriteData.HEIGHTS` entry). Depth comes from **tints** (the mood's far / mid / near multipliers push
+lit art back into the night) and from **draw order**, never from scaling.
+
+New art, all rebuilt by `python3 art_source/menu/make_menu_art.py` (deterministic, `--sheet OUT.png`
+writes a x3 review sheet):
+
+| File | Size (art px) | Made by | Notes |
+|---|---|---|---|
+| `moon` | 104×104 | procedural | bone ramp disc (bone, bone_mid maria, bone_shade crater shadows, holy_white rim on the upper left), no outline against the sky |
+| `moon_halo` | 320×320 | procedural | white, 4 stepped alpha discs (255 / 150 / 85 / 40); tinted and faded in game |
+| `stars` | 3 frames of 5×5 | procedural | dot, small plus, bright plus; white, tinted |
+| `cloud_1..3` | 220×22, 300×28, 150×16 | procedural | long lens-shaped bands, lit white top over a grey body, stepped alpha; tinted |
+| `hills_far`, `hills_mid` | 320×70, 384×60 | procedural | tileable silhouette masks (periodic ridge), crosses, stones, dead trees and cypresses on the ridge; tinted flat |
+| `ground_lip` | 128×18 | procedural | tileable soil edge with dead grass tufts (floor_soil, floor_moss, moss_dark, moss); its bottom breaks up over the Graveyard tile |
+| `fog_1`, `fog_2` | 512×44, 384×34 | procedural | tileable fog banks, white, 3 alpha steps, densest at the bottom; tinted, scrolled |
+| `fence` | 64×30 | procedural | wrought-iron section, 2 px bars with spear tips, one bent bar; ink_cold + grey_dark |
+| `wisp` | 4 frames of 9×14 | procedural | soul flame teardrop (soul_dark, soul, soul_glow core), swaying tip |
+| `flame_soul`, `flame_fire` | 3 frames of 5×8 | procedural | lantern flames (soul ramp / crimson, flame, gold_light) |
+| `candle_flame` | 3 frames of 3×5 | procedural | gold_light, holy_white, flame |
+| `glow` | 48×48 | procedural | white, 4 stepped alpha discs; tinted under flames, wisps and torches |
+| `lantern` | 13×46 | procedural | iron grave lantern on a post (ink_cold, grey), glass lit soul_dark; the flame is drawn over the cage |
+| `candles` | 15×11 | procedural | three melted candles (bone, bone_mid, ink_warm) |
+| `bat` | 2 frames of 13×7 | procedural | ink silhouette, wings up / down |
+| `cathedral` | 200×130 | AI source, converted | the Covenant's cathedral on a hill: a near-silhouette (ink_cold, floor_soil, floor_slate, grey_dark) with gold windows and a crimson rose window |
+| `mausoleum` | 55×64 | AI source, converted | stone crypt (grey ramp), moss, iron door ajar with a soul-teal glow |
+
+**Glow and fog rule.** The tintable masks (halo, glow, clouds, fog) use 2-4 **stepped** alpha levels
+with hard edges on the art grid, never a smooth gradient, so they stay pixel art. The game tints them
+per mood (`MenuBackdropData.MOODS`: `graveyard` night, `crimson_march` dusk, `sanctum` dawn), so no
+mood colour is baked in.
+
+**AI sources** (`art_source/menu/sources/<name>.png`, prompt in `<name>.txt`, generated through
+`tools/gen_image.py` with three graveyard sprites x6 as the style reference; the moon source was
+generated too but the procedural moon was rounder and cleaner). Both sources came back as chunky pixel
+art on a regular block grid, so `make_menu_art.py` converts them at their **native grid** (6.4 and
+13.5 source px per art px): each art px takes the median colour of its block's central samples,
+snapped (OKLab nearest) to a short palette list, then lone pixels are removed. No outline or rim is
+added: the sources already had them. `prepare_sprite.py` was not used because its faction ramps and
+level stretch would light the near-silhouette cathedral.

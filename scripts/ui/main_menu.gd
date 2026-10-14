@@ -2,7 +2,13 @@
 ## "Upgrades") / Settings / Quit (GDD §10.1 lists more buttons — customization,
 ## codex, achievements — which are out of prototype scope). It shows the Soul
 ## Ash balance and a lifetime line (runs, best time, boss kills, achievements).
-## The candle-lit crypt backdrop is drawn in _draw(). The title is the
+## Behind it lives the animated pixel-art graveyard diorama (MenuBackdrop,
+## GDD §15.0 "Menu diorama"), the menu's first child. Every sub-screen opened
+## over the menu (any other child added later: stage select, Ossuary,
+## settings, ...) fades the menu's own content out (so no logo or button pokes
+## out above the overlay), dims the diorama and lowers the overlay's own
+## full-screen scrim so the graveyard stays visible around its panel; closing
+## the last overlay restores both. The title is the
 ## pixel-art NECROPATHY logo (UiArtData.LOGO, drawn at UiArtData.LOGO_SCALE
 ## through the sharp-pixel shader); the plain label is the fallback when the
 ## PNG is missing.
@@ -23,14 +29,30 @@ var _play: Button
 var _ash_label: Label
 ## Lifetime statistics line under the balance.
 var _lifetime_label: Label
+## The animated diorama behind everything (first child). W2 hooks: its
+## set_dim(), set_band() and set_mood() (MenuBackdrop header).
+var _backdrop: MenuBackdrop
+## The menu's own content (logo, Soul Ash, buttons, hints): faded out while an
+## overlay is open. Its alpha only goes to 0 (it stays visible), so the
+## overlays' close() can still return focus to a menu button.
+var _content: Control
+## Sub-screens currently open over the menu (direct children other than the
+## backdrop and the content).
+var _overlays: int = 0
+## Running fade of the content's alpha (null when settled).
+var _content_tween: Tween = null
 
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	resized.connect(queue_redraw)
+	_backdrop = MenuBackdrop.new()
+	add_child(_backdrop)
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
+	_content = center
+	child_entered_tree.connect(_on_child_entered)
+	child_exiting_tree.connect(_on_child_exiting)
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 14)
 	vb.custom_minimum_size = Vector2(420, 0)
@@ -119,30 +141,45 @@ func _refresh_meta() -> void:
 		Meta.achievements.size(), MetaData.ACHIEVEMENT_ORDER.size()]
 
 
-func _draw() -> void:
-	var s := size
-	draw_rect(Rect2(Vector2.ZERO, s), Color(0.03, 0.02, 0.05))
-	# Moon and its glow.
-	var moon := Vector2(s.x * 0.8, s.y * 0.2)
-	draw_circle(moon, 90.0, Color(0.6, 0.75, 0.8, 0.05))
-	draw_circle(moon, 48.0, Color(0.82, 0.86, 0.85, 0.85))
-	# Rolling graveyard ground.
-	var ground := PackedVector2Array([Vector2(0, s.y), Vector2(0, s.y * 0.78)])
-	for i in 9:
-		var x := s.x * float(i) / 8.0
-		ground.append(Vector2(x, s.y * (0.76 + 0.03 * sin(float(i) * 1.7))))
-	ground.append(Vector2(s.x, s.y))
-	draw_colored_polygon(ground, Color(0.06, 0.07, 0.08))
-	# Tombstone silhouettes with faint necrotic glows.
-	for i in 12:
-		var x := s.x * (0.04 + 0.08 * float(i))
-		var y := s.y * (0.80 + 0.02 * sin(float(i) * 2.3))
-		var hgt := 26.0 + 10.0 * absf(sin(float(i) * 1.3))
-		draw_circle(Vector2(x, y + 4), 22.0, Color(Palette.NECRO_GREEN, 0.04))
-		draw_rect(Rect2(Vector2(x - 9, y - hgt), Vector2(18, hgt)), Color(0.12, 0.13, 0.15))
-		draw_circle(Vector2(x, y - hgt), 9.0, Color(0.12, 0.13, 0.15))
-	# Red Covenant torches on the horizon (GDD §11: red torches advance).
-	for i in 5:
-		var tp := Vector2(s.x * (0.15 + 0.17 * float(i)), s.y * 0.74)
-		draw_circle(tp, 10.0, Color(Palette.FLAME, 0.12))
-		draw_circle(tp, 3.0, Palette.FLAME)
+## A sub-screen was added over the menu: fade the content out, dim the
+## diorama, and once the overlay is built lower its full-screen scrim.
+func _on_child_entered(node: Node) -> void:
+	if node == _backdrop or node == _content:
+		return
+	_overlays += 1
+	if node is Control and not node.is_node_ready():
+		node.ready.connect(_tame_scrim.bind(node as Control), CONNECT_ONE_SHOT)
+	_set_overlay_look(true)
+
+
+## A sub-screen is leaving: restore the menu once the last one has gone.
+func _on_child_exiting(node: Node) -> void:
+	if node == _backdrop or node == _content:
+		return
+	_overlays = maxi(0, _overlays - 1)
+	if _overlays == 0:
+		_set_overlay_look(false)
+
+
+## Fades the menu content out (`covered`) or back in, and dims / undims the
+## diorama, over MenuBackdropData.DIM_TIME real seconds.
+func _set_overlay_look(covered: bool) -> void:
+	_backdrop.set_dim(covered)
+	if _content_tween != null:
+		_content_tween.kill()
+	_content_tween = create_tween()
+	_content_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_content_tween.tween_property(_content, "modulate:a", 0.0 if covered else 1.0, MenuBackdropData.DIM_TIME)
+
+
+## Lowers the overlay's own full-screen scrim (a direct ColorRect child, as
+## UiTheme.backdrop() makes) to MenuBackdropData.OVERLAY_SCRIM_ALPHA, so the
+## dimmed diorama shows around the overlay's panel.
+func _tame_scrim(overlay: Control) -> void:
+	if not is_instance_valid(overlay):
+		return
+	for c in overlay.get_children():
+		if c is ColorRect:
+			var r := c as ColorRect  # The scrim.
+			r.color.a = minf(r.color.a, MenuBackdropData.OVERLAY_SCRIM_ALPHA)
+			return

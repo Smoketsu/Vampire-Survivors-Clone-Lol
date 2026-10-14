@@ -3,6 +3,9 @@
 ## When a PNG exists, SpriteBank draws it instead of the code-drawn glyph, scaled
 ## so its height (in world px) is the value below. Keys without a file keep
 ## their glyph, so art can be added one piece at a time. Data only, no logic.
+## The main-menu diorama's art (assets/sprites/menu/) needs no entry here: it
+## is drawn through EnvironmentArt.texture(), always as grid art at its texel
+## size (MenuBackdropData, docs/art/ART_BIBLE.md "Menu diorama").
 class_name SpriteData
 extends RefCounted
 

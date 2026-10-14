@@ -1,0 +1,4 @@
+Pixel-art FULL MOON for a dark 2D pixel-art game's title screen at night.
+
+LOW-RESOLUTION pixel art: the moon disc is only about 96 pixels across, shown enlarged so every pixel is a big crisp square block (nearest-neighbour). A perfectly round disc with a few large chunky craters and darker maria patches, lit evenly, slightly brighter on the upper-left. Pale bone-ivory and cold grey shades ONLY: #E8E1C8 (most of the disc), #B4AA8A and #A7B3C6 (maria and crater floors), #7F785F (a few crater shadows). At most 4 shades, flat colour areas, no gradients, no dithering, no anti-aliasing, no glow, no halo, no outline.
+Fully transparent background (real alpha) around the disc: no sky, no clouds, no stars, no text, no frame, no watermark.
