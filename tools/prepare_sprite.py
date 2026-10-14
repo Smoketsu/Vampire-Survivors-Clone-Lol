@@ -939,6 +939,7 @@ def prepare_anim(src: Path, anim_id: str, frames_n: int, grid: str, frame_px: in
 
 
 def main() -> None:
+    global INK_L  # --ink-l rebinds the module threshold read by grid_cells().
     parser = argparse.ArgumentParser(usage=__doc__)
     parser.add_argument("source", help="image, GIF or sprite sheet to process")
     parser.add_argument("key", help="sprite key (e.g. player/necromancer) or, with --anim, effect id")
@@ -953,6 +954,9 @@ def main() -> None:
     parser.add_argument("--method", choices=("ramp", "mode", "mean"), default=METHOD, help="grid mode: how a cell's colour is chosen")
     parser.add_argument("--ramps", default="", help="grid mode: comma-separated ramps allowed (default: the folder's faction set)")
     parser.add_argument("--no-levels", dest="levels", action="store_false", help="grid mode: no per-material lightness stretch")
+    parser.add_argument("--ink-l", type=float, default=INK_L,
+                        help="grid mode, ramp method: OKLab lightness (0-1) below which source pixels are linework "
+                             "(default INK_L; lower it for a dark cloth that must stay cloth, e.g. 0.15)")
     parser.add_argument("--no-outline", dest="outline", action="store_false", help="grid mode: no 1 px outline (tiles)")
     parser.add_argument("--inside-outline", action="store_true",
                         help="grid mode: turn the sprite's own edge into the outline (sources drawn at the target grid)")
@@ -963,6 +967,7 @@ def main() -> None:
     parser.add_argument("--allow-floor", action="store_true", help="grid mode: allow the floor colours (ground tiles, decals)")
     parser.add_argument("--out", default="", help="grid mode: write here instead of assets/sprites/<key>.png")
     args = parser.parse_args()
+    INK_L = args.ink_l  # --ink-l overrides the linework threshold for this run (read by grid_cells()).
     src = Path(args.source).expanduser()  # Image to process.
     key = args.key.strip("/")  # Sprite key or effect id.
     if args.anim:

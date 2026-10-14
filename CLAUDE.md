@@ -365,14 +365,15 @@ tiny tweaks.
    `main` only after the owner has seen its recorded video.
 3. **Art pass: done (Oct 2026)** (GDD §15.0 "Art pass (true pixel art)" and the rows after it). Every unit,
    character, skin, boss, structure, pickup, projectile, icon, obstacle (both orientations), zone floor, decal, effect
-   strip, walk cycle (51 units), the UI kit and the NECROPATHY logo are pixel art at 1 art px = 1 screen px through the
+   strip, walk cycle (53 units), the UI kit and the NECROPATHY logo are pixel art at 1 art px = 1 screen px through the
    sharp-pixel shader; fonts Jersey 10 (all UI text, descriptions included) + Jacquard 24 (titles, banners), sized
    by the `UiTheme.Tier` type tiers (GDD §15.0 "Type tiers"). Tools: `tools/gen_image.py` (API
    generation, cost ledger `docs/art/generation_ledger.csv`), `prepare_sprite.py`, `art_check.py`, `make_tile.py`,
-   `walk_cycle.py`, `ui_kit.py`, `skin_cap.py`. Boss attack poses are in (`boss_pose_data.gd`). **Figure redesign** (owner
+   `walk_cycle.py`, `ui_kit.py`, `skin_cap.py`, `pixelate_source.py`. Boss attack poses are in (`boss_pose_data.gd`). **Figure redesign** (owner
    request, GDD §15.0 "Figure redesign of the female characters"): the Wither Witch, the Soulbinder, their Hyper skins and
-   Seraphine (all four sprites) have exaggerated hourglass figures (fully clothed) and a procedural bust bounce in their walk
-   / glide strips (`walk_cycle.py` rig key `bust`); Seraphine and her Avatar have glide strips. Possible later polish: attack poses for regular units, arm swing, more effect hooks.
+   Seraphine (all four sprites), the Banshee and the Keening Lady have exaggerated hourglass figures (fully clothed) and a procedural bust bounce in their walk
+   / glide strips (`walk_cycle.py` rig key `bust`); Seraphine, her Avatar, the Banshee and the Keening Lady have glide
+   strips. Small detailed figures go through `pixelate_source.py` first. Possible later polish: attack poses for regular units, arm swing, more effect hooks.
 4. **Web build** (owner decision, after the art is done; GDD §15.0 "Web build after the art"): a
    no-threads Godot Web export for desktop browsers, the audio synthesis load checked, Quit hidden,
    and a CI job that publishes it for playtesters. The menu theme is already Web-ready (on the Web it

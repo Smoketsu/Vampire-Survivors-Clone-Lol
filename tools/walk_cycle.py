@@ -150,6 +150,9 @@ RIGS = {
     # The still's relic staff stays rigid down to row 90, where it meets the robe.
     "bosses/seraphine": dict(mode="robe", hip=70, rigid=[(68, 98, 0, 90)], sway=2, dip=1, bust=(42, 64, 44, 58, 3)),
     "bosses/seraphine_avatar": dict(mode="robe", hip=106, rigid=[], sway=2, dip=1, bust=(74, 97, 61, 78, 3)),
+    # The floating Banshee and Keening Lady (figure redesign): a glide like Seraphine's.
+    "summons/banshee": dict(mode="robe", hip=24, rigid=[], sway=2, dip=1, bust=(18, 29, 12, 18, 2)),
+    "summons/keening_lady": dict(mode="robe", hip=26, rigid=[], sway=2, dip=1, bust=(19, 30, 13, 19, 2)),
     "player/grave_herald": dict(mode="legs", hip=53, back=(0, 24), front=(24, 46), rigid=[], spread=1, lift=1, dip=1),
     # Later units with long screen time: the walking summon evolutions and two March soldiers.
     "summons/death_knight": dict(mode="legs", hip=41, back=(0, 25), front=(25, 54), rigid=[], spread=2, lift=2, dip=1),
