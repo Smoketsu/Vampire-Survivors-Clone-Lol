@@ -1,15 +1,16 @@
-# Necropathy v0.6.0: the menus come alive
+# Necropathy 0.6.0: the menus come alive, the bosses come down
 
-![The title screen over the living graveyard](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v0.6.0/docs/media/v0.6.0/title.gif)
+![The title screen over the living graveyard](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v.0.6.0/docs/media/v0.6.0/title.gif)
 
-v0.5.0 gave the game its name, its final stage and its pixel art. **v0.6.0 rebuilds every screen around that art.** It
+v0.5.0 gave the game its name, its final stage and its pixel art. **0.6.0 rebuilds every screen around that art, and rebalances the boss fights.** It
 adds:
 
 - a title screen over a living graveyard, with a theme of its own;
 - stage cards showing each boss mid-attack;
 - a **Codex** that fills in as you play.
 
-The level-up, chest, pause and end screens are redone too, and your army hits a little harder. Your save carries over
+The level-up, chest, pause and end screens are redone too. Dread Rally now raises your whole army, every boss has
+less HP, your spells hit harder, and the newer spells, summons and passives finally show up in your level-ups. Your save carries over
 as always.
 
 ## Download and play
@@ -32,7 +33,7 @@ Keyboard and mouse or a controller both work. Every key can be rebound in **Sett
 
 ## Choose your battlefield
 
-![Stage select: each chapter's boss mid-attack](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v0.6.0/docs/media/v0.6.0/stages.gif)
+![Stage select: each chapter's boss mid-attack](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v.0.6.0/docs/media/v0.6.0/stages.gif)
 
 - **Stage cards.** Each chapter's card is a small pixel scene: its ground, its ruins, and its boss mid-attack against
   your undead. Behind them the sky turns to night, dusk or dawn as you move between chapters. Locked chapters are
@@ -40,11 +41,11 @@ Keyboard and mouse or a controller both work. Every key can be rebound in **Sett
 - **Pre-run setup.** Your chosen necromancer walks large at the centre in the skin they'll wear. Difficulty takes
   one card per level, and run modifiers are compact toggles. One gold **Soul Ash** plaque rolls to your total reward.
 
-![Prepare the Ritual](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v0.6.0/docs/media/v0.6.0/prerun.jpg)
+![Prepare the Ritual](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v.0.6.0/docs/media/v0.6.0/prerun.jpg)
 
 ## The Codex (new)
 
-![Codex: the Covenant and its bosses](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v0.6.0/docs/media/v0.6.0/covenant.jpg)
+![Codex: the Covenant and its bosses](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v.0.6.0/docs/media/v0.6.0/covenant.jpg)
 
 An illustrated compendium of everything you've met: **spells, summons, the Covenant's soldiers, its champions and its
 bosses**, each with its art, a line of lore and its numbers. Entries start as dark silhouettes and fill in as your runs
@@ -55,7 +56,7 @@ meet them, starting with this version.
 
 ## Every screen, rebuilt
 
-![Level-up cards](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v0.6.0/docs/media/v0.6.0/levelup.jpg)
+![Level-up cards](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v.0.6.0/docs/media/v0.6.0/levelup.jpg)
 
 - **Level-up:** cards rise in with level pips. Evolution cards are gold, with a burst and a sheen.
 - **Treasure chests:** the chest rattles, bursts open on a beam of light, and your rewards rise one by one.
@@ -70,7 +71,7 @@ meet them, starting with this version.
   is a new **Reduce motion** option.
 - **Recipes:** a grid of the evolutions you've discovered. Undiscovered ones give nothing away.
 
-![The Ossuary](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v0.6.0/docs/media/v0.6.0/ossuary.jpg)
+![The Ossuary](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v.0.6.0/docs/media/v0.6.0/ossuary.jpg)
 
 ## Feel and polish
 
@@ -87,9 +88,26 @@ meet them, starting with this version.
 
 ## Balance
 
-- **+5% damage for everything on your side:** every spell, evolution, summon attack and damage over time. Playtesters
-  found the necromancer a little weak. Across 16 test runs, weaker builds survive a little more often (9 → 7 deaths before 0:00). Strong
-  builds are unchanged, and the pacing is the same: evolutions around 10-11 minutes, builds complete around 16-17.
+Playtesters could do everything right and still not bring Marshal Vael down. In test runs a strong army needed
+2:29 of his 3:00 and often failed. This pass makes every boss a fight a good build wins, without thinning the
+crowds you fight through:
+
+- **Dread Rally raises your whole army.** Every fallen summon rises beside you at full HP when you unleash it,
+  on top of the heal, the +40% damage and attack speed, and the knockback.
+- **Boss HP:**
+
+  | Boss | Before | Now |
+  |---|---|---|
+  | Sir Alaric | 42,000 | **27,300** (−35%) |
+  | Marshal Vael (Crimson March) | 35,200 | **21,120** (−40%) |
+  | Grand Inquisitor Seraphine (Sanctum) | 33,000 | **23,100** (−30%) |
+
+  A strong army build now kills each of them in about BOSS_KILL_RANGE of their 3:00.
+- **Spells deal 20% more damage.** All twelve spells and their evolutions; the level-up cards show the real numbers.
+- **The newer additions show up.** The newer spells, summons and passives used to share a few fixed slots in
+  the level-up draw, so each appeared in about 2% of hands. Each one now has its own weight and appears in about
+  5% of hands; about a third of the new-item cards you see are newer items.
+- The short-lived "+5% damage to everything" from the first playtest build is gone, replaced by the changes above.
 
 ## Fixes
 
@@ -98,13 +116,14 @@ meet them, starting with this version.
 
 ## Known issues
 
-- A full balance pass is still to come; weaker builds may still find the last minutes harsh.
+- Weak builds on a fresh save still die early on the Crimson March and in the Sanctum; with a few Ossuary upgrades
+  (the usual state by then) that mostly goes away.
 - The Codex starts empty on existing saves and fills in from your next run.
 
-![Results card](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v0.6.0/docs/media/v0.6.0/results.jpg)
+![Results card](https://raw.githubusercontent.com/Smoketsu/vampire-survivors-clone-lol/v.0.6.0/docs/media/v0.6.0/results.jpg)
 
 **New since v0.4?** v0.5.0 brought the third stage and Grand Inquisitor Seraphine, twelve necromancers to play, new
 spells, summons and evolutions, Hyper mode, skins and the full pixel-art look. Its notes are
-[here](https://github.com/Smoketsu/vampire-survivors-clone-lol/blob/v0.6.0/docs/release_notes/v0.5.0.md).
+[here](https://github.com/Smoketsu/vampire-survivors-clone-lol/blob/v.0.6.0/docs/release_notes/v0.5.0.md).
 
 Thank you for playing and for every bit of feedback. Tell us what your horde gets up to.

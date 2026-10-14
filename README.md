@@ -20,7 +20,7 @@ Sanctum of Judgment* (unlocked by slaying Marshal Vael), built in Godot 4.3
 with no addons. The art is true pixel art (PNGs in `assets/`; the code
 drawings remain as the fallback for any missing image), and the sound and
 music are synthesized at startup. Latest release notes:
-[`docs/release_notes/v0.6.0.md`](docs/release_notes/v0.6.0.md).
+[`docs/release_notes/v.0.6.0.md`](docs/release_notes/v.0.6.0.md).
 
 Design documents:
 - [`docs/Gravebound_Complete_Game_Design_and_Horde_Spec.txt`](docs/Gravebound_Complete_Game_Design_and_Horde_Spec.txt):
@@ -115,7 +115,9 @@ buttons you press in a fight are the dash and the ultimate (below).
   full until you use it, and kills made during a rally do not charge it.
   Casting it calls the army: every summon outside its formation band
   returns to you and the whole army moves +120% faster for 1.5 s, every
-  summon heals 30% of its max HP, and for 8 s the army deals **+40% damage**
+  summon heals 30% of its max HP, **every fallen summon rises again at once**
+  (the whole army comes back beside you at full HP, owner decision Oct 2026),
+  and for 8 s the army deals **+40% damage**
   with **+40% attack speed**. Enemies within 120 px are knocked back (heavier
   ones less, bosses barely).
 - Both live in the HUD's bottom centre, either side of the ability bar: the
@@ -419,8 +421,8 @@ number is in `scripts/data/unit_data.gd`.
   so new recipes appear automatically; texts in `recipe_book_data.gd`.
 - **Later horde passives** (GDD §34 names; effects are the prototype's,
   GDD §15.0). Like every army passive they are a dead card while you own no
-  summon class; their NEW cards share one weight
-  (`NEW_PASSIVE_POOL_WEIGHT` = 2). Each card already names the summon
+  summon class; their NEW cards weigh 0.5 each like every later item
+  (`WEIGHT_NEW_LATER`). Each card already names the summon
   evolution it unlocks, and Soul Recycling's card names the Frost Wraith's:
 
 | Passive | Effect (Lv 1 → 5) | Will evolve (with the class at Lv 5) |
@@ -453,16 +455,16 @@ number is in `scripts/data/unit_data.gd`.
   summon). The Profane Bishop counts as both priest orders, so merging keeps
   both synergies.
 - **Level-up cards** are weighted: upgrades to items you own (2.5), and items
-  on an evolution path, come up more often. New cards: Orb Shield and Shadow
-  Blast weigh 1 each and the four newer spells share one weight
-  (`NEW_SPELL_POOL_WEIGHT` = 2, split between the ones you don't own); the
-  GDD summon roles weigh 1.5 (`WEIGHT_NEW_CORE_SUMMON`: Archer, Mage, and the
-  one Priest role whose two orders, Mender and Warder, get 0.75 each); the
-  four later classes share one weight (`NEW_SUMMON_POOL_WEIGHT` = 1.5; the
-  Bishop is never offered and merged classes don't count); the four later
-  horde passives share `NEW_PASSIVE_POOL_WEIGHT` = 2 the same way. So the larger
-  roster doesn't crowd passives, upgrades and the core classes out of the
-  hands (Shadow Bolt is always yours); once your 6
+  on an evolution path, come up more often. New cards: Orb Shield, Shadow
+  Blast and the first twelve passives weigh 1 each; the GDD summon roles weigh
+  1.5 (`WEIGHT_NEW_CORE_SUMMON`: Archer, Mage, and the one Priest role whose two
+  orders, Mender and Warder, get 0.75 each); every **later** item (the nine
+  newer spells, the seven later summon classes and the ten later passives,
+  flagged `shared_card_pool`) weighs **0.5** (`WEIGHT_NEW_LATER`, owner
+  decision Oct 2026: they used to split fixed pools and had fallen to about
+  0.2 each, ~2% of hands; now each is in ~5% of hands and about a third of
+  all new-item cards are later items). The Bishop is never offered and
+  merged classes don't count. So the core classes still lead early hands (Shadow Bolt is always yours); once your 6
   active slots are full, no new summon or spell is offered at all. A hand is never made only of useless
   cards, and fallback cards (heal, +max HP, raise every fallen summon) fill
   any empty slots once everything is maxed. Use **Reroll** (2 per run),
@@ -502,8 +504,8 @@ Five more owner-approved spells take the game to **12 spells** (code in
 `scripts/abilities/spells/`, behind the same `NecroSpellBook` dispatch; per-level
 rows in `AbilityData` / `EvolutionData` / `PassiveData`, fixed rules in
 `GraveSpellData`; all `TUNING`). Their NEW cards share the newer spells' card
-weight (`LevelUpData.NEW_SPELL_POOL_WEIGHT`), and their three new passives share
-`NEW_PASSIVE_POOL_WEIGHT`, so early hands are not crowded. Every evolution follows
+weight like every later item (`LevelUpData.WEIGHT_NEW_LATER` = 0.5), and so do
+their three new passives. Every evolution follows
 the owner rule (base Lv 5 + paired passive Lv 5 + 8:00 + a treasure chest) and
 appears in the Recipes view automatically.
 
@@ -736,7 +738,7 @@ achievements and the Hyper clears, never stored separately.
     for 60 s, in time for Sir Alaric.
   - **Call to Arms** waves at 18:00 and 19:00 reinforce Alaric on top of his
     own Call to Arms.
-- **Sir Alaric** (42 000 HP, arrives with 3:00 left) uses all five GDD
+- **Sir Alaric** (27,300 HP since the Oct 2026 balance pass, was 42,000; arrives with 3:00 left) uses all five GDD
   abilities. Each one is telegraphed:
   - **Hammerfall**: a gold circle. Each summon inside soaks 20% of the hit
     on you.
@@ -793,7 +795,7 @@ open). The zone is shown under the timer.
     show a gold chevron). Your summons prioritise it.
   - **Crimson Halberdier** (long halberd): slow and armoured; a hit on a
     summon also cleaves two neighbours.
-- **Marshal Vael, the Crimson Bulwark** (35,200 HP with the stage bonus):
+- **Marshal Vael, the Crimson Bulwark** (21,120 HP with the stage bonus; 35,200 before the Oct 2026 balance pass):
   - **Radiant Cleave**: a gold sector telegraph, then a flaming sweep; each
     summon caught in it soaks part of your damage.
   - **Crusader's Command**: rally banners mark a shield line that forms
@@ -923,8 +925,8 @@ them; the autotest's `--spawn=` puts them in any run.
 numbers in `scripts/data/seraphine_data.gd`) is the Sanctum of Judgment's boss
 (any stage's boss slot can send her: `StageRegistry` boss id `seraphine`; the
 autotest's `--boss=seraphine` tests her on the Graveyard or the March). She
-arrives at 17:00 (3:00 left) with a banner and the boss bar, 30,000 HP before
-the stage's HP multiplier (33,000 in the Sanctum), and fights in three phases. She never kites: between
+arrives at 17:00 (3:00 left) with a banner and the boss bar, 21,000 HP before
+the stage's HP multiplier (23,100 in the Sanctum; 33,000 before the Oct 2026 balance pass), and fights in three phases. She never kites: between
 specials she walks at you and strikes in reach, and every special holds her in
 place or brings her closer. Every big hit is telegraphed; your undead never
 dodge, only you can step out.
@@ -1144,8 +1146,8 @@ integration").
   weight), it takes a passive slot, has 5 levels and can be banished. Per
   level: enemies **+5% spawn rate** (trickle rate and soft cap), **+5%
   HP**, **+3% damage**; rewards **+8% XP**, **+12% Soul Ash**, **+15%
-  power-up drop chance**. Sir Alaric gets only 20% of the HP bonus (42,000
-  → 44,100 at Lv 5). The card lists every penalty and reward as old → new.
+  power-up drop chance**. Sir Alaric gets only 20% of the HP bonus (27,300
+  → 28,665 at Lv 5). The card lists every penalty and reward as old → new.
   Measured with an army build that takes it at once (`--policy=army --pact`,
   `--mortal`, 8 seeds): no deaths, lowest HP 26-94 (vs 92-114 without it),
   Sir Alaric killed in 5 of 8 runs (the others left him at 200-7,100 HP),
@@ -1285,7 +1287,7 @@ never touches gameplay. Its art is in `assets/sprites/menu/`, rebuilt by
 | **Warrior blocking** | Warriors are physical blockers. Enemies can't pass through them; overlaps are resolved through the spatial hash, weighted by mass. An enemy touching a warrior is *engaged*: it moves at 60% speed and attacks that warrior. Warriors also shield-bash on a cooldown (damage plus knockback). Sir Alaric's Divine Charge loses distance for every undead body it hits, so a thick enough wall stops it. |
 | **Priest orders** (user request: the GDD's Priest split in two) | **Grave Mender** (round teal robe, green halo): heals allies and the necromancer with the §31 formula, a critically hurt necromancer first (the old priest heal, unchanged). **Crypt Warder** (heater-shaped blue robe, ward sigil): whenever you are under threat (hit in the last 1.5 s, or any enemy within 90 px) it casts an instant damage-absorbing **ward** on you, as long as no ward is active and its own ward cooldown is ready (the old priest ward, same numbers); it also casts an instant **barrier** (12 HP, +25–80% by level) on the most threatened ally in reach every 3 s: an ally hit in the last 2 s, or a warrior fighting in melee, whose barrier is below half. Barriers don't stack with Shieldwall's (the stronger one wins). Both orders fire weak bolts when idle. Each has its own card, cap (1-2 by level), 15 s replenishment and HUD row; the ward shows as a ring on the necromancer and in the HUD. |
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
-| Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Plus Bone Spear, Soul Siphon, Corpse Explosion and Plague Cloud (see *The newer spells*), and Death Mark, Bone Wall, Soul Chains, Wither and Raise Dead (see *The later spells*): 12 spells. Each has 5 levels. |
+| Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Plus Bone Spear, Soul Siphon, Corpse Explosion and Plague Cloud (see *The newer spells*), and Death Mark, Bone Wall, Soul Chains, Wither and Raise Dead (see *The later spells*): 12 spells. Each has 5 levels. Every spell and spell evolution deals ×1.2 its listed base damage (`AbilityData.SPELL_DAMAGE_MULT`, Oct 2026 balance pass; the cards show the real numbers). |
 | Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed; at Lv 5 it evolves Warriors), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual, Abyssal Focus, Shade Stride, Vampiric Rite, Necrotic Expanse, Lingering Malediction, Forbidden Knowledge (mage damage and splash) and Dark Benediction (heals, wards and barriers), and the later horde passives Bone Plating (flat damage off every hit on a minion), Unholy Precision (minion crits), Unholy Resilience (less area / holy damage to minions) and Bound Souls (minion speed, leash and return), and the later spells' passives Grim Ledger (damage to elites and bosses), Spirit Binding (longer slows, freezes and stuns) and Restless Dead (longer, stronger temporary summons); Grave Dominion and Necrotic Vigor also evolve Bone Wall and Wither. Every evolution needs its paired passive at Lv 5. Bonus stacking follows §34. |
 | Evolutions & synergies (§6) | Void Barrage, Eclipse Ward, Abyssal Detonation, Ossuary Lance, Soul Rapture, Grave Eruption, Pestilence, Doom Brand, Charnel Bastion, Chains of the Damned, Necrotic Blight and Legion of Bones; the summon evolutions Death Knight, Lich, Profane Bishop (a merge of the two priest orders), Shadow Reaper and Cathedral Horror; four army synergies; weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
 | Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 13:00. |
@@ -1388,7 +1390,7 @@ scripts/
     stance_bot.gd           The autotest's army-stance driver (--stance, or its switching rule)
   player/necromancer.gd
   player/grave_step.gd      Grave Step dash: charges, obstacle-clamped step, i-frames, shadow trail
-  player/dread_rally.gd     Dread Rally ultimate: kill-charged soul meter, surge, heal, army buff, knockback
+  player/dread_rally.gd     Dread Rally ultimate: kill-charged soul meter, surge, heal, raises the army, buff, knockback
   horde/
     horde_director.gd       Army registry, pools, caps, effective stats, replenishment queues,
                             formation anchors, threat evaluation, staggered 5 Hz AI ticks
@@ -1844,7 +1846,7 @@ push a version tag. The export job creates a GitHub Release titled "Necropathy <
 notes as its body and GitHub's generated changelog below them:
 
 ```bash
-git tag v0.6.0 && git push origin v0.6.0
+git tag v.0.6.0 && git push origin v.0.6.0
 ```
 
 To export locally, install the 4.3 export templates (**Editor → Manage Export Templates**), then use
