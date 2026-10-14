@@ -142,13 +142,14 @@ RIGS = {
     "player/plague_scholar": dict(mode="legs", hip=43, back=(0, 26), front=(26, 60), rigid=[], spread=2, lift=1, dip=1),
     "player/doomsayer": dict(mode="legs", hip=47, back=(0, 17), front=(17, 32), rigid=[], spread=1, lift=1, dip=1),
     "player/barrow_warden": dict(mode="legs", hip=52, back=(0, 18), front=(18, 30), rigid=[(30, 44, 0, None)], spread=1, lift=1, dip=1),
-    # Redesigned figures (owner request, Oct 2026): the bust box bounces 1 px (BUST_BOUNCE).
-    "player/soulbinder": dict(mode="legs", hip=54, back=(0, 24), front=(24, 44), rigid=[], spread=1, lift=1, dip=1, bust=(18, 31, 21, 26, 2)),
-    "player/wither_witch": dict(mode="legs", hip=40, back=(0, 18), front=(18, 26), rigid=[(26, 36, 0, None)], spread=1, lift=1, dip=1, bust=(14, 25, 15, 21, 2)),
+    # Redesigned figures (owner request, Oct 2026): the bust box bounces (BUST_BOUNCE). The
+    # Wither Witch's box starts right of her near arm so the arm never shakes.
+    "player/soulbinder": dict(mode="legs", hip=54, back=(0, 24), front=(24, 44), rigid=[], spread=1, lift=1, dip=1, bust=(19, 30, 20, 27, 2)),
+    "player/wither_witch": dict(mode="legs", hip=40, back=(0, 18), front=(18, 26), rigid=[(26, 36, 0, None)], spread=1, lift=1, dip=1, bust=(16, 24, 15, 21, 2)),
     # Seraphine floats: her "walk" is a glide (robe hem sway, the body bob, the bust bounce).
     # The still's relic staff stays rigid down to row 90, where it meets the robe.
-    "bosses/seraphine": dict(mode="robe", hip=70, rigid=[(68, 98, 0, 90)], sway=2, dip=1, bust=(45, 61, 45, 57, 3)),
-    "bosses/seraphine_avatar": dict(mode="robe", hip=104, rigid=[], sway=2, dip=1, bust=(81, 97, 63, 75, 3)),
+    "bosses/seraphine": dict(mode="robe", hip=70, rigid=[(68, 98, 0, 90)], sway=2, dip=1, bust=(42, 64, 44, 58, 3)),
+    "bosses/seraphine_avatar": dict(mode="robe", hip=106, rigid=[], sway=2, dip=1, bust=(74, 97, 61, 78, 3)),
     "player/grave_herald": dict(mode="legs", hip=53, back=(0, 24), front=(24, 46), rigid=[], spread=1, lift=1, dip=1),
     # Later units with long screen time: the walking summon evolutions and two March soldiers.
     "summons/death_knight": dict(mode="legs", hip=41, back=(0, 25), front=(25, 54), rigid=[], spread=2, lift=2, dip=1),
