@@ -104,6 +104,10 @@ crowds you fight through:
 
   A strong army build now kills each of them in about BOSS_KILL_RANGE of their 3:00.
 - **Spells deal 20% more damage.** All twelve spells and their evolutions; the level-up cards show the real numbers.
+- **Frost Wraiths, Bone Hounds and Banshees hit much harder.** Tested side by side in an army, they dealt only a
+  quarter to a half of what the other summons do per unit. Frost bolts go 12 → 18, hound bites 7.5 → 12 and the
+  Banshee's shriek 7 → 14, and their evolutions (Winter Revenant, Hellhound, Keening Lady) rise with them.
+  The other newer summons (Abomination, Rogue, Gargoyle, Corpse Catapult) already out-damage the originals.
 - **The newer additions show up.** The newer spells, summons and passives used to share a few fixed slots in
   the level-up draw, so each appeared in about 2% of hands. Each one now has its own weight and shows up about twice as often:
   three level-ups in four now offer at least one newer item (was one in two).

@@ -475,7 +475,7 @@ const UNITS := {
 		# Combined balance pass: 8 -> 12. At 8 it dealt about 18k per run at Lv 5 (the other
 		# later classes 73-120k, warriors / Death Knights 120-140k) and about 4k in naive
 		# runs, so a Wraith slot was nearly dead weight outside its Deep Freeze.
-		"damage": 12.0,  # TUNING (not in GDD) frost bolt
+		"damage": 18.0,  # TUNING (not in GDD) frost bolt; owner balance pass (Oct 2026) 12 -> 18: forced into an army it dealt 55% of a core unit's damage per unit
 		"attack_interval": 1.5,  # TUNING (not in GDD)
 		"attack_range": 160.0,  # TUNING (not in GDD) centre-to-edge (px)
 		"move_speed": 88.0,  # TUNING (not in GDD)
@@ -525,7 +525,7 @@ const UNITS := {
 		# times in a run and dealt 7% of the army's damage, and in the Sanctum the Sentinels'
 		# flat armour 6 ate most of each bite. Heavier, slower bites (same damage per second).
 		"max_hp": 40.0,  # TUNING (not in GDD) cheap and fragile; was 26
-		"damage": 7.5,  # TUNING (not in GDD) bite (melee); was 5.5
+		"damage": 12.0,  # TUNING (not in GDD) bite (melee); owner balance pass (Oct 2026) 7.5 -> 12: a hound dealt 43% of a core unit's damage, the whole pack about half a core class (was 5.5 before 7.5)
 		"attack_interval": 1.0,  # TUNING (not in GDD) s; was 0.8
 		"attack_range": 14.0,  # TUNING (not in GDD) edge-to-edge (px)
 		"move_speed": 122.0,  # TUNING (not in GDD) the fastest summon (px/s; rogues 112)
@@ -572,7 +572,7 @@ const UNITS := {
 		"plural": "Banshees",
 		"description": "A floating banshee whose wailing Dirge slows foes and weakens their blows.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
 		"max_hp": 40.0,  # TUNING (not in GDD) was 36 (63-70 deaths a run in the first forced tests)
-		"damage": 7.0,  # TUNING (not in GDD) spectral shriek bolt
+		"damage": 14.0,  # TUNING (not in GDD) spectral shriek bolt; owner balance pass (Oct 2026) 7 -> 14: it dealt 23% of a core unit's damage (the Dirge debuff aside)
 		"attack_interval": 1.8,  # TUNING (not in GDD) s
 		"attack_range": 150.0,  # TUNING (not in GDD) centre-to-edge (px); also the Dirge's reach
 		"move_speed": 92.0,  # TUNING (not in GDD) px/s
