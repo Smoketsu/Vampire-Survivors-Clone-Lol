@@ -383,7 +383,7 @@ tiny tweaks.
    left: achievement rewards and the campaign epilogue (skins, Hyper mode, the Codex and all their
    art are in).
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
-   The owner is happy with balance for now and wants value tweaks deferred to this pass (naive-bot
+   The owner is happy with balance for now (after a playtest-requested +5% to all player and summon damage, `PlayerData.ALL_DAMAGE_MULT`, Oct 2026) and wants further value tweaks deferred to this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
    known and accepted until then).
 
