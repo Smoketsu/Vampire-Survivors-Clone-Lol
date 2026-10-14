@@ -465,8 +465,8 @@ and its wobble, 1.5 s exhaled, the inhale and its wobble, 0.75 s at rest. In the
 a standing unit (not walking by the `WalkData` hysteresis) plays it on game time from the moment it
 stopped (frame 0 first, so stopping never pops and units fall out of step with no RNG or id); a walk
 frame always wins, and frozen, stunned, stone, dead, dashing, airborne and structure bodies show the
-still. Boss attack poses keep their pose stills. Six strips: the Wither Witch, the Soulbinder, their
-Hyper skins, Seraphine and her Avatar.
+still. Boss attack poses keep their pose stills. Eight strips: the Wither Witch, the Soulbinder, their
+Hyper skins, Seraphine, her Avatar, the Banshee and the Keening Lady.
 
 **Adding a unit.** Look at the still on a grid (rows and columns), write its rig, then
 `python3 tools/walk_cycle.py build <key>`, `python3 tools/walk_cycle.py preview <key> --out-dir DIR`
