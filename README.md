@@ -69,10 +69,10 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Dread Rally (ultimate, when its soul meter is full) | **Space** | **LB** |
 | Army stance: Escort / Onslaught / Spearhead / Bone Ring | **1 / 2 / 3 / 4** (rebindable) | **Right-stick flick** up / right / down / left |
 | Pause (Resume / Recipes / Settings / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
-| Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move through the list, Esc / Back closes | Focus + **A**; D-pad / stick move; **B** closes |
+| Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move over the grid, Esc / Back closes | D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
 | Ossuary (Soul Ash upgrades) | **The Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
-| Settings (volume, shake, damage numbers, reduce motion, fullscreen, zoom Normal / Close, keys) | **Settings** in the main or pause menu; Esc / Back closes | Focus + **A**; **B** closes |
+| Settings (Audio / Video / Controls tabs: volume, fullscreen, zoom Normal / Close, shake, damage numbers, reduce motion, keys) | **Settings** in the main or pause menu; **Q / E** switch tabs; Esc / Back closes | Focus + **A**; **LB / RB** switch tabs; **B** closes |
 | Rebind a key (in Settings) | Select a binding, then press the new key | **B** cancels |
 
 On-screen hints show these controls as small key / button chips drawn from your
@@ -150,12 +150,17 @@ buttons you press in a fight are the dash and the ultimate (below).
   Esc / pad B inside a screen, soft **panel open / close** whooshes, a
   bone-chime **purchase** in the Ossuary, a dull **denied** thud for what
   can't be bought or is locked, and a **tick** for count-ups.
-- **Settings (`Settings` autoload, `SettingsMenu`).** Volume sliders, screen
-  shake, damage numbers, Reduce motion (instant UI motion), fullscreen, the camera zoom (Normal / Close), and keyboard rebinding of the primary key
-  for Move up / down / left / right, Shadow Bolt aim, Grave Step, Dread Rally,
-  Pause and the four army stances. Arrow keys and
+- **Settings (`Settings` autoload, `SettingsMenu`).** Three tabs (Q / E or
+  LB / RB): **Audio** (Master / Music / Effects sliders), **Video**
+  (fullscreen, the camera zoom Normal / Close, screen shake, damage numbers,
+  Reduce motion = instant UI motion) and **Controls**: the keyboard key of
+  Move up / down / left / right, Shadow Bolt aim, Grave Step, Dread Rally,
+  Pause and the four army stances, in three groups (Move, Actions, Stances),
+  each shown as a key chip you can rebind next to its fixed controller
+  binding (a pad chip, read-only), plus **Reset keys**. Arrow keys and
   controller bindings stay fixed, and binding a key that is already in use
-  swaps the two keys. Everything works with a controller. Settings are saved
+  swaps the two keys. A hint strip at the bottom shows the controls of the
+  device in use. Everything works with a controller. Settings are saved
   to `user://settings.cfg` when the menu closes and loaded at startup.
 
 ### How a run works
@@ -337,12 +342,14 @@ number is in `scripts/data/unit_data.gd`.
   Knights at Lv 5 with Dark Command Lv 5 ...") and "Evolution ready" once it
   holds. Stage-event temporary summons (graves, crypt) always keep the base kit.
 - **Recipe book** (owner decision: evolutions are meant to be *discovered*).
-  The pause menu's **Recipes** view lists every evolution recipe, but shows
-  only the ones you have **obtained in some run**: the evolution's icon and
-  name, its kind, and the recipe ("Shadow Bolt Lv 5 + Soul Conduit Lv 5 ->
-  Void Barrage"; both priest orders for the Profane Bishop). Every other
-  recipe is a locked dark "?" tile with no names or ingredients, and a
-  count ("3 / 10 discovered") shows how many exist. There are no other new
+  The pause menu's **Recipes** view is a grid with one tile per evolution
+  recipe, but shows only the ones you have **obtained in some run**: a
+  gold tile with the recipe as icons (base + passive = evolution; both
+  priest orders for the Profane Bishop), and under the grid the focused
+  recipe's name, kind and ingredients ("Shadow Bolt Lv 5 + Soul Conduit
+  Lv 5"). Every other recipe is the same dark tile of three empty sockets,
+  with no names, icons or ingredient count, and a count ("7 / 23
+  discovered") shows how many exist. There are no other new
   hints (no card lines, no HUD signal). Discoveries are saved at once in
   the save file's `[recipes]` section. The list is built from
   `EvolutionData` + `SummonEvolutionData` (`scripts/core/evolution_recipes.gd`),
@@ -921,10 +928,16 @@ integration").
   | Fortune | Soul Magnet pickup radius +10% (4, 30→155) · Grave Tithe XP gain +4% (3, 60→200) · Ash Harvest Soul Ash +5% (3, 80→270) · Fate's Thread +1 reroll (2, 120→250) · Banishing Rite +1 banish (2, 150→310; needs Thread I) |
   | Oath (standalone) | **Profane Oath**: opt-in difficulty (5, 25→125). See *Power-ups & Profane Pact* below |
 
-  Every button shows the tier pips, the effect delta (`Minion HP +6% -> +12%`)
-  and whether it is affordable, too expensive, locked or maxed. **Refund all**
-  (respec) returns every spent Soul Ash after a confirmation. The screen is
-  fully usable with keyboard or controller.
+  Each tree sits under a header band with its emblem; each upgrade is a tile
+  with its icon, name, tier pips and next cost, framed by its state (teal:
+  affordable, violet: too expensive, gold: maxed, dim with a padlock:
+  locked). One detail panel follows the focused tile: the one-line effect,
+  the current → next value (`Minion HP +6% → +12%`), the cost or the missing
+  prerequisite, and a Buy chip. Buying plays a bone-chime with a flash and
+  spark burst on the tile while the Soul Ash total counts down; what can't
+  be bought answers with a thud and a shake. **Refund all** (respec) returns
+  every spent Soul Ash after a confirmation. The screen is fully usable with
+  keyboard or controller.
 - **One modifier path.** At run start `Meta.run_modifiers()` turns the
   purchased tiers into a `MetaModifiers` object (`game.meta`). The existing
   stat code reads it in a few places (horde `compute_stats` / `capacity` /
@@ -1027,13 +1040,14 @@ integration").
   `--mortal`, 8 seeds): no deaths, lowest HP 26-94 (vs 92-114 without it),
   Sir Alaric killed in 5 of 8 runs (the others left him at 200-7,100 HP),
   Soul Ash about 745 instead of about 455.
-- **Profane Oath** (Ossuary, standalone "Oath" entry between Refund all and
-  Back; 5 tiers costing 25 / 50 / 75 / 100 / 125). Each **active** tier
-  applies from the first second: enemies +6% spawn rate, +5% HP, +4%
-  damage; rewards +5% XP, +10% Soul Ash, +10% drop chance. **Lower Oath**
-  (with a confirmation) lowers the active tier by one, down to off, with no
-  refund; owned tiers can be raised again for free. Refund all returns
-  everything.
+- **Profane Oath** (Ossuary, the crimson tile at the bottom right above
+  Lower Oath, Refund all and Back; 5 tiers costing 25 / 50 / 75 / 100 / 125;
+  its pips show the active tiers bright and owned-but-lowered tiers dark).
+  Each **active** tier applies from the first second: enemies +6% spawn
+  rate, +5% HP, +4% damage; rewards +5% XP, +10% Soul Ash, +10% drop
+  chance. **Lower Oath** lowers the active tier by one at once (free and
+  reversible), down to off, with no refund; owned tiers can be raised again
+  for free from the Oath tile. Refund all returns everything.
 - **One difficulty path, additive.** `DifficultyModifiers` (`game.difficulty`)
   adds the Pact and Oath bonuses of each key (one stacking category) and
   hands out the multipliers: `EnemyDirector` multiplies its `hp_mult` /
@@ -1354,13 +1368,16 @@ scripts/
                             Keening Lady, Corpse Catapult, Ossuary Engine, their icons, the
                             Blood Scent / Mournsong / Siegecraft icons, the Dirge mark, fire
                             patches, shard fields, boulders),
-                            ossuary_menu (Soul Ash shop), meta_glyphs (Soul Ash / tree / upgrade icons),
+                            ossuary_menu (Soul Ash shop: tree columns, one detail panel, Oath),
+                            ossuary_tile (one upgrade tile: icon, name, pips, cost, buy flash / shake),
+                            pixel_marks (code-drawn pixel pips, arrow, padlock, recipe socket),
+                            meta_glyphs (fallback drawings of the Soul Ash / tree / upgrade icons),
                             chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
                             stage_select (stage cards, locks, best times, Hyper badges), pre_run_setup
                             (difficulty level, run modifiers, total Soul Ash multiplier),
                             prerun_hyper_skins (its Hyper toggle and skin selector with previews),
                             hyper_badge (the gold Hyper-clear badge), recipes_panel (pause menu
-                            Recipes view: discovered evolution recipes, locked "?" placeholders),
+                            Recipes view: a grid of recipe tiles, locked ones empty sockets),
                             hud_abilities (Grave Step charges and Dread Rally meter), ability_glyphs
                             (their icons), stance_bar (HUD stance icons + banner),
                             stance_glyphs (stance icons, padlock, ground outline shapes),
@@ -1391,7 +1408,9 @@ scripts/
     passive_data.gd         Passive level tables
     evolution_data.gd       Evolution recipes and stats
     grave_spell_data.gd     Fixed rules of the five later spells (ticks, caps, wall geometry, Risen)
-    recipe_book_data.gd     Texts of the pause menu's Recipes view (discovered evolutions)
+    recipe_book_data.gd     Texts and grid layout of the pause menu's Recipes view (discovered evolutions)
+    ossuary_ui_data.gd      Ossuary screen layout, pip colours, purchase flash / burst / shake, words
+    settings_ui_data.gd     Settings tabs, binding groups, short labels, sizes, tab keys
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
                             Winter Revenant, Shadow Reaper, Cathedral Horror, Gravebow,
                             Bone Colossus, Hellhound, Keening Lady, Ossuary Engine) and stats

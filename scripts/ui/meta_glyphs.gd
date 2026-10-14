@@ -4,6 +4,13 @@
 ## necromancy violet / green / bone, Survival cold blue, Fortune gold), and
 ## Glyphs.draw_icon() falls through to draw_icon() here, so IconGlyph can show
 ## these kinds with the usual dark backdrop and level pips.
+## Since the menu modernization (wave 2) every kind here has pixel art: a
+## 32x32 cut-corner badge in assets/sprites/icons/<kind>.png (and the bare
+## 16x16 "soul_ash_small" symbol for inline costs), which Glyphs.draw_icon()
+## draws first; these code drawings are only the fallback for a missing PNG.
+## Soul Ash API for every screen: IconGlyph.new("soul_ash", Vector2(32, 32))
+## (the badge, 1:1; 64 for x2) and IconGlyph.new("soul_ash_small",
+## Vector2(16, 16)) (the bare symbol next to a number).
 class_name MetaGlyphs
 extends RefCounted
 
@@ -17,7 +24,7 @@ const ASH := Color(0.55, 0.52, 0.56)
 ## kind is unknown.
 static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> bool:
 	match kind:
-		"soul_ash":
+		"soul_ash", "soul_ash_small":
 			draw_soul_ash(ci, c, s)
 		"tree_necromancy":
 			Glyphs._skull(ci, c + Vector2(0, -s * 0.05), s * 0.5, false, Palette.NECRO_GREEN)
