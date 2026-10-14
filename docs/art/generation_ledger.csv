@@ -388,3 +388,11 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-14 19:17,art/curvy_wither_witch_hyper,gpt-image-2.5-flare,medium,1024x1024,2,444,1524,439,0.0276,src_wither_witch_hyper.png
 2026-10-14 19:17,art/curvy_seraphine_avatar,gpt-image-2.5-flare,medium,1024x1024,2,433,2048,439,0.0317,src_seraphine_avatar.png
 2026-10-14 19:17,art/curvy_seraphine_cast,gpt-image-2.5-flare,medium,1024x1024,2,418,1696,439,0.0288,src_seraphine_cast.png
+2026-10-14 19:28,art/curvy3_seraphine,gpt-image-2.5-flare,medium,1024x1024,1,230,1024,439,0.0225,src_seraphine.png
+2026-10-14 19:28,art/curvy3_wither_witch,gpt-image-2.5-flare,medium,1024x1024,1,230,1024,439,0.0225,src_wither_witch.png
+2026-10-14 19:28,art/curvy3_soulbinder,gpt-image-2.5-flare,medium,1024x1024,1,230,1024,439,0.0225,src_soulbinder.png
+2026-10-14 19:28,art/curvy3_soulbinder_hyper,gpt-image-2.5-flare,medium,1024x1024,2,285,2048,439,0.0310,src_soulbinder_hyper.png
+2026-10-14 19:28,art/curvy3_seraphine_cast,gpt-image-2.5-flare,medium,1024x1024,2,277,2048,439,0.0309,src_seraphine_cast.png
+2026-10-14 19:28,art/curvy3_seraphine_avatar_cast,gpt-image-2.5-flare,medium,1024x1024,2,279,2048,439,0.0309,src_seraphine_avatar_cast.png
+2026-10-14 19:28,art/curvy3_seraphine_avatar,gpt-image-2.5-flare,medium,1024x1024,2,287,2048,439,0.0310,src_seraphine_avatar.png
+2026-10-14 19:28,art/curvy3_wither_witch_hyper,gpt-image-2.5-flare,medium,1024x1024,2,286,2048,439,0.0310,src_wither_witch_hyper.png
