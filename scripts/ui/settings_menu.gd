@@ -166,7 +166,8 @@ func _build_right() -> Control:
 	reset.text = "Reset keys"
 	reset.custom_minimum_size = Vector2(0, KEY_ROW_HEIGHT)
 	UiTheme.set_tier(reset, UiTheme.Tier.BODY)
-	reset.pressed.connect(_on_reset_keys)
+	# W2-NewScreens: Reset keys asks first (ConfirmDialog wraps the old handler; not a danger action).
+	reset.pressed.connect(func() -> void: ConfirmDialog.ask(self, ConfirmData.RESET_KEYS[0], ConfirmData.RESET_KEYS[1], ConfirmData.RESET_KEYS[2], _on_reset_keys, false))
 	vb.add_child(reset)
 	vb.add_child(InputHints.strip([["ui_accept", "Rebind"], ["ui_cancel", "Back"]]))
 	var note := UiTheme.tier_label("Arrow keys and the pad stay bound.", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)

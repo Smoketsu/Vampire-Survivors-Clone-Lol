@@ -518,6 +518,7 @@ func _kill_enemy(e: Enemy) -> void:
 		game.pickups.spawn(e.position, e.xp_value)
 		game.stat_add("xp_dropped", e.xp_value)
 	game.stat_add("kill_" + e.kind, 1.0)
+	game.codex.meet(CodexData.ENEMY, e.kind)  # Codex: a Covenant kind slain (records only).
 	if e.rot_until > game.elapsed:
 		game.stat_add("rot_kills", 1.0)  # Slain while Rotting (Plague Doctor skin, SkinData)
 	if e.is_elite:

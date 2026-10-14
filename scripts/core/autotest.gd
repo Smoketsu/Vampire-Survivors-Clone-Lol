@@ -53,6 +53,10 @@
 ##   * the recipe book: a "recipe book" line lists the evolutions discovered
 ##     so far (Meta [recipes]; in memory only unless --meta-save) and the
 ##     pause menu's Recipes rows are built once, headless,
+##   * the codex: a "codex" line counts the entries this run met per
+##     category (spells learned, summon classes raised, Covenant kinds slain,
+##     bosses faced; CodexLog), how many were new to the save, and the save's
+##     codex totals (Meta [codex]; in memory only unless --meta-save),
 ##   * summon evolutions and the priest split: the summary lists every
 ##     evolution by type (spell / summon) with its time, the damage, heals
 ##     and shields of every summon source and class (dmg_<tag>, heal_by_<tag>,
@@ -1039,6 +1043,7 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] evolutions: %s" % (", ".join(ab.evolution_history) if not ab.evolution_history.is_empty() else "none"))
 	_print_summon_evolutions(st_all)
 	_print_recipe_book()
+	print("[autotest] codex: %s" % game.codex.summary_line())  # Codex records (CodexLog).
 	print("[autotest] gravebow / bone colossus: %s | %s" % [GravebowKit.summary_line(st_all), ColossusKit.summary_line(st_all)])
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())
 	print("[autotest] later spells: %s" % ab.spells.later_summary_line())

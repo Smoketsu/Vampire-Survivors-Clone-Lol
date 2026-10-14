@@ -73,6 +73,9 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
 | Ossuary (Soul Ash upgrades) | **The Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
 | Settings (volume, shake, damage numbers, reduce motion, fullscreen, zoom Normal / Close, keys) | **Settings** in the main or pause menu; Esc / Back closes | Focus + **A**; **B** closes |
+| Codex (achievements, spells, summons, the Covenant) | **Codex** in the main menu; **Q / E** switch tabs, arrows move through the tiles, Esc / Back closes | **LB / RB** switch tabs; D-pad / stick move; **B** closes |
+| Credits (and the Godot / font licences) | **Credits** in the main menu; **Q / E** switch Credits / Licences, Up / Down scroll, Esc / Back closes | **LB / RB**, D-pad up / down, **B** closes |
+| Confirm dialogs (Quit, pause Restart / Main Menu, Refund all, Lower Oath, Reset keys) | Cancel is focused; Enter on the other button confirms; Esc cancels | **A** confirms the focused button, **B** cancels |
 | Rebind a key (in Settings) | Select a binding, then press the new key | **B** cancels |
 
 On-screen hints show these controls as small key / button chips drawn from your
@@ -923,7 +926,8 @@ integration").
 
   Every button shows the tier pips, the effect delta (`Minion HP +6% -> +12%`)
   and whether it is affordable, too expensive, locked or maxed. **Refund all**
-  (respec) returns every spent Soul Ash after a confirmation. The screen is
+  (respec) returns every spent Soul Ash after a confirmation (the shared
+  confirm dialog, like Lower Oath). The screen is
   fully usable with keyboard or controller.
 - **One modifier path.** At run start `Meta.run_modifiers()` turns the
   purchased tiers into a `MetaModifiers` object (`game.meta`). The existing
@@ -942,6 +946,34 @@ integration").
   so each pays a one-time Soul Ash bounty (100 / 100 / 150 / 200) for now. Capacity upgrades that
   apply to "every class" (Legion of Bone, Grave Dominion) count the Mender
   and the Warder as two classes and the merged Bishop as one.
+- **The Codex** (main menu; GDD §10.1 "Collection / Codex" and "Achievements").
+  Four tabs. **Achievements** lists every achievement and every *feat* (the
+  lifetime-counter skin unlocks: The Plague Doctor, The Heretic Saint, The
+  Dread Sovereign skin; the Hyper unlock; the Hyper skins) with its badge,
+  goal, a progress bar and the reward (the skin it unlocks, Hyper mode, the
+  Soul Ash bounty); earned rows turn gold. It only reads the existing
+  counters: nothing about earning them changed. **Spells**, **Summons** and
+  **Covenant** are an illustrated compendium: a grid of tiles (icon badges,
+  1x sprite busts, big boss tiles) and a detail panel (the art at a whole
+  scale, name, one-line description, base stats, and a lifetime record such
+  as "Slain: 1,234" or "Best level reached: 5"). Entries fill in as you
+  **meet** them in runs: a spell learned, a summon class raised, a Covenant
+  kind slain (soldiers, structures, the Reckoning's Inquisitor, the
+  Cathedral Guardian), a boss faced; until then they are dark silhouettes
+  named "Unknown". **Evolutions follow the recipe rule**: until you obtain
+  one it is a "?" with no name, art or hint (it reads the `[recipes]` book).
+  Achievements use four new badge icons (`assets/sprites/icons/ach_*.png`).
+- **Credits** (main menu): a slow roll (the studio, Smoketsu; Godot Engine;
+  the Jersey 10 and Jacquard 24 fonts; the synthesized audio; the
+  playtesters; "Thanks for playing") and a **Licences** page with Godot's MIT
+  licence, its third-party notices and licence texts, and the SIL Open Font
+  License 1.1 of both fonts (the `assets/fonts/OFL-*.txt` files are shipped in
+  the exports for it).
+- **Confirm dialogs.** Quit (main menu), Restart and Main Menu (pause: the
+  run would be lost, no Soul Ash is earned), Refund all and Lower Oath
+  (Ossuary) and Reset keys (Settings) ask first in one shared dialog
+  (`ConfirmDialog`): crimson for destructive actions, Cancel focused by
+  default, Esc / B cancels.
 - **Save file.** `user://save.cfg` (ConfigFile, separate from `settings.cfg`)
   stores `save_version`, Soul Ash, every tier, lifetime stats and achievements.
   It is written on every run end, purchase and refund (via a temp file and a
@@ -971,7 +1003,13 @@ integration").
   `[prerun] hyper` and `[skins] <character> = <skin id>`, plus three lifetime
   counters (`rot_kills`, `high_confessor_kills`, `seraphine_kills_full_army`);
   an older save without them starts locked, with default skins (a past
-  Seraphine kill in the Sanctum record unlocks Hyper on load).
+  Seraphine kill in the Sanctum record unlocks Hyper on load). The Codex adds
+  `[codex] <category> = "<id>,<id>,..."` (categories `spell`, `summon`,
+  `enemy`, `boss`; comma-separated id lists, written once at the end of the
+  frame an entry is first met, never in the autotest) and `[codex_kills]
+  <enemy kind> = count` (lifetime kills per Covenant kind, added at each run's
+  end); an older save without them starts with nothing met, and unknown ids
+  are dropped.
 
 ### Power-ups & Profane Pact
 
@@ -1236,6 +1274,8 @@ scripts/
     seraphine_glyphs.gd     Grand Inquisitor Seraphine's shape (wings, sun halo, relic staff; Avatar form)
     evolution_recipes.gd    Read-only list of every evolution recipe (spell + summon data), for the
                             Recipes view, the Meta [recipes] section and the autotest
+    codex_log.gd            One run's Codex sightings (game.codex): first sights go to Meta [codex];
+                            records only, the autotest's codex line
     autotest.gd             Headless self-test driver
     stance_bot.gd           The autotest's army-stance driver (--stance, or its switching rule)
   player/necromancer.gd
@@ -1339,6 +1379,7 @@ scripts/
   fx/unit_motion.gd         One unit's procedural motion (bob, lean, squashes, lunge, rise) on its body layer
   fx/unit_layer.gd          A unit's body / overlay drawing layer (child node calling back into the unit)
   fx/unit_dissolve.gd       Pooled death dissolve: the dead unit's look collapsing into bone dust / holy ash
+  fx/flat_silhouette.gdshader  Pixel art as one flat colour (the Codex's unmet entries), sharp-pixel sampling
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
                             kit_style_box (a kit 9-slice frame plus fixed-size crests:
@@ -1369,7 +1410,13 @@ scripts/
                             input_hints (key / pad-button chips from the current bindings,
                             last-device tracking, the bottom-of-screen hint strip)
                             ui_motion (shared UI motion: panel open / close, staggered
-                            entrances, card lift, press squash, count-ups, fade through black)
+                            entrances, card lift, press squash, count-ups, fade through black),
+                            codex_screen (Achievements + Codex screen: tabs, tile grids, detail
+                            panel), codex_entries (its rows and entries, read from the data and
+                            Meta), codex_feat_row (an achievement row: badge, goal, bar, reward),
+                            codex_art (an entry's art: whole-scale sprite / badge, flat
+                            silhouette, "?"), credits_screen (Credits roll and Licences page),
+                            confirm_dialog (the shared confirm dialog: ConfirmDialog.ask())
   data/                     DESIGNER-TUNABLE DATA (no logic):
     input_hint_data.gd      Input hint chips: sizes, colours, pad glyph names, device thresholds
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
@@ -1392,6 +1439,10 @@ scripts/
     evolution_data.gd       Evolution recipes and stats
     grave_spell_data.gd     Fixed rules of the five later spells (ticks, caps, wall geometry, Risen)
     recipe_book_data.gd     Texts of the pause menu's Recipes view (discovered evolutions)
+    codex_data.gd           The Codex: categories, tabs, sections, Covenant descriptions, layout,
+                            achievement badges and the feats' texts
+    credits_data.gd         The Credits roll, the licence files and the roll's motion
+    confirm_data.gd         The confirm dialogs' texts and sizes
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
                             Winter Revenant, Shadow Reaper, Cathedral Horror, Gravebow,
                             Bone Colossus, Hellhound, Keening Lady, Ossuary Engine) and stats
@@ -1482,7 +1533,7 @@ Options (after `--`):
 | `--timeout=N` | Give up after N game seconds (default 1500: the 20:00 countdown plus the Reckoning). |
 | `--policy=NAME` | Level-up card policy: `naive` (default; takes every new summon class, then new spells, then new passives), `army` (a summoner build that levels summons and army passives first, both priest orders included; it maxes Dark Command, so it usually gets the Death Knight too), `evolve` (a spell build that chases the three spell evolutions), `summon` (a summoner build that chases the three summon evolutions: Warriors + Dark Command, Mages + Forbidden Knowledge, Menders + Warders + Dark Benediction) or `pact` (the naive build that takes every Profane Pact card at once, to measure the Pact). Every other policy ranks the Pact below every card, fallbacks included, so balance runs never take it. |
 | `--meta=PROFILE` | Simulated Soul Ash purchases, applied in memory only: `none` (default, so balance runs stay comparable), `mid` (about half of every tree) or `max` (everything). |
-| `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). Every run's summary has a `recipe book` line (evolutions discovered so far, in memory only without this flag) and builds the Recipes view rows once, headless. |
+| `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). Every run's summary has a `recipe book` line (evolutions discovered so far, in memory only without this flag) and builds the Recipes view rows once, headless, and a `codex` line (entries this run met per category, how many were new to the save, the save's codex totals). |
 | `--oath=N` | Active Profane Oath tier 0-5 (default 0). No `--meta` profile includes the Oath, so `--meta=max` balance runs stay comparable. |
 | `--classes=a,b` | Forces summon classes (`abomination`, `rogue`, `gargoyle`, `frost_wraith`, `bone_hound`, `banshee`, `corpse_catapult`, or any offerable class id; the merge-only `bishop` is ignored): each is raised to Lv 1 at the start (while active slots allow) and every policy upgrades it first, so its special gets exercised. |
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |

@@ -461,8 +461,8 @@ func confirm_open() -> bool:
 func _open_confirm() -> void:
 	if _confirm != null or Meta.spent_total() <= 0:
 		return
-	_open_dialog("REFUND ALL UPGRADES?", "Every upgrade returns to tier 0 and you get back\n%d Soul Ash to spend again." % Meta.spent_total(),
-		"Refund", _confirm_refund, refund_button)
+	# W2-NewScreens: the shared ConfirmDialog replaces the local _open_dialog() here.
+	ConfirmDialog.ask(self, ConfirmData.REFUND[0], ConfirmData.REFUND[1] % Meta.spent_total(), ConfirmData.REFUND[2], _confirm_refund)
 
 
 ## Shows the "Lower the Oath?" confirmation with Cancel focused.
@@ -471,8 +471,8 @@ func _open_lower_confirm() -> void:
 	if _confirm != null or active <= 0:
 		return
 	var to := "off" if active == 1 else "tier %s" % DifficultyModifiers.roman(active - 1)  # Target state text.
-	_open_dialog("LOWER THE PROFANE OATH?", "The Oath drops from tier %s to %s for future runs.\nNo Soul Ash is refunded; owned tiers can be raised again for free." % [DifficultyModifiers.roman(active), to],
-		"Lower", _confirm_lower, oath_lower_button)
+	# W2-NewScreens: the shared ConfirmDialog replaces the local _open_dialog() here.
+	ConfirmDialog.ask(self, ConfirmData.LOWER_OATH[0], ConfirmData.LOWER_OATH[1] % to, ConfirmData.LOWER_OATH[2], _confirm_lower)
 
 
 ## Confirmed: lowers the active Oath tier by one and closes the dialog.

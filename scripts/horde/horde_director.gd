@@ -167,6 +167,8 @@ func step(delta: float) -> void:
 func set_class_level(cls: String, level: int) -> void:
 	var old_cap := capacity(cls)
 	class_levels[cls] = level
+	if level > 0:
+		game.codex.meet(CodexData.SUMMON, cls)  # Codex: a summon class raised (records only).
 	_refresh_class(cls, old_cap)
 	synergies.evaluate()
 

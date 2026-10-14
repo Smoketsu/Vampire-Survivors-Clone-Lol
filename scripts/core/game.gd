@@ -151,6 +151,9 @@ var character: CharacterModifiers
 var innates: CharacterInnates
 ## Faint ground outline of the army's shape after a stance change.
 var stance_outline: StanceOutline
+## What this run has met for the Codex (CodexLog; never null once _ready
+## ran; records only, never changes gameplay).
+var codex: CodexLog
 
 # --- UI ---------------------------------------------------------------------------
 
@@ -188,6 +191,7 @@ func _ready() -> void:
 	enemy_grid = SpatialHash.new(GRID_CELL)
 	ally_grid = SpatialHash.new(GRID_CELL)
 	combat = CombatResolver.new(self)
+	codex = CodexLog.new(self)  # Codex records (first, so every hook below can reach it).
 	difficulty = DifficultyModifiers.new(self)
 	dread_rally = DreadRally.new(self)
 	stance = ArmyStance.new(self)
@@ -268,6 +272,7 @@ func _ready() -> void:
 		player.invulnerable = not GameState.autotest_mortal
 	player.died.connect(_on_player_died)
 	enemies.boss_defeated.connect(_on_boss_defeated)
+	enemies.boss_spawned.connect(codex.on_boss_spawned)  # Codex: the boss was faced.
 	# Counters that should appear in the summary even when they stay at 0.
 	for key: String in ["priest_wards", "ward_absorbed", "priest_heals", "player_healing"]:
 		stats[key] = 0.0

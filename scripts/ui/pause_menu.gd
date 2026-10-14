@@ -1,7 +1,8 @@
 ## PauseMenu — Esc / controller Start pause screen with Resume, Recipes,
 ## Settings, Restart and Main Menu (GDD §4 "Esc: Pause/settings"). Recipes
 ## opens the RecipesPanel view of the discovered evolution recipes (owner
-## decision "Evolution recipe book", GDD §15.0). It also owns the "pause" input
+## decision "Evolution recipe book", GDD §15.0). Restart and Main Menu ask
+## first (ConfirmDialog: the run in progress would be lost). It also owns the "pause" input
 ## handling because it keeps processing while the tree is paused. While the
 ## menu is open, ui_cancel (Esc / controller B) also resumes. Under the
 ## buttons an InputHints strip (move, Shadow Bolt aim, resume: chips of the
@@ -53,8 +54,9 @@ func _ready() -> void:
 	_resume = _button(vb, "Resume", func() -> void: resume_pressed.emit())
 	_recipes_btn = _button(vb, "Recipes", _open_recipes)
 	_button(vb, "Settings", func() -> void: SettingsMenu.open_over(self, get_viewport().gui_get_focus_owner()))
-	_button(vb, "Restart", func() -> void: restart_pressed.emit())
-	_button(vb, "Main Menu", func() -> void: main_menu_pressed.emit())
+	# W2-NewScreens: Restart and Main Menu ask first (the run would be lost; ConfirmDialog wraps the old handlers).
+	_button(vb, "Restart", func() -> void: ConfirmDialog.ask(self, ConfirmData.RESTART[0], ConfirmData.RESTART[1], ConfirmData.RESTART[2], func() -> void: restart_pressed.emit()))
+	_button(vb, "Main Menu", func() -> void: ConfirmDialog.ask(self, ConfirmData.MAIN_MENU[0], ConfirmData.MAIN_MENU[1], ConfirmData.MAIN_MENU[2], func() -> void: main_menu_pressed.emit()))
 	vb.add_child(InputHints.strip([[InputHints.MOVE, "Move"], ["toggle_aim", "Bolt aim"], ["ui_cancel", "Resume"]]))
 	vb.add_child(UiTheme.tier_label("Army stance", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))
 	_stance_box = VBoxContainer.new()

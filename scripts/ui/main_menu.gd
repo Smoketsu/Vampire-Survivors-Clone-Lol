@@ -1,6 +1,7 @@
 ## MainMenu — title screen with Play / Ossuary (Soul Ash upgrades, GDD §10.1
-## "Upgrades") / Settings / Quit (GDD §10.1 lists more buttons — customization,
-## codex, achievements — which are out of prototype scope). It shows the Soul
+## "Upgrades") / Settings / Codex (achievements + compendium, CodexScreen,
+## GDD §10.1 "Collection / Codex", "Achievements") / Credits (CreditsScreen) /
+## Quit (asks first, ConfirmDialog). It shows the Soul
 ## Ash balance and a lifetime line (runs, best time, boss kills, achievements).
 ## The candle-lit crypt backdrop is drawn in _draw(). The title is the
 ## pixel-art NECROPATHY logo (UiArtData.LOGO, drawn at UiArtData.LOGO_SCALE
@@ -69,10 +70,22 @@ func _ready() -> void:
 	settings.custom_minimum_size = Vector2(0, 44)
 	settings.pressed.connect(func() -> void: SettingsMenu.open_over(self, settings))
 	vb.add_child(settings)
+	# W2-NewScreens: Codex (achievements + compendium) and Credits entries.
+	var codex := Button.new()
+	codex.text = "Codex"
+	codex.custom_minimum_size = Vector2(0, 44)
+	codex.pressed.connect(func() -> void: CodexScreen.open_over(self))
+	vb.add_child(codex)
+	var credits := Button.new()
+	credits.text = "Credits"
+	credits.custom_minimum_size = Vector2(0, 44)
+	credits.pressed.connect(func() -> void: CreditsScreen.open_over(self))
+	vb.add_child(credits)
 	var quit := Button.new()
 	quit.text = "Quit"
 	quit.custom_minimum_size = Vector2(0, 44)
-	quit.pressed.connect(func() -> void: get_tree().quit())
+	# W2-NewScreens: Quit asks first (ConfirmDialog wraps the old handler).
+	quit.pressed.connect(func() -> void: ConfirmDialog.ask(self, ConfirmData.QUIT[0], ConfirmData.QUIT[1], ConfirmData.QUIT[2], func() -> void: get_tree().quit()))
 	vb.add_child(quit)
 	# Release version from project.godot (application/config/version, bumped for each tagged release).
 	var version_text: String = "v%s" % str(ProjectSettings.get_setting("application/config/version", "dev"))
