@@ -21,6 +21,10 @@ const SPRITE_TINT_LIGHTEN: float = 0.25  # TUNING (not in GDD)
 const PORTRAIT_FILL: float = 0.8  # TUNING (not in GDD)
 ## Fraction of a portrait's side used by the starting-spell icon badge.
 const BADGE_FILL: float = 0.34  # TUNING (not in GDD)
+## Alpha (0-1) of the dark veil over a locked character's portrait.
+const LOCK_VEIL: float = 0.62  # TUNING (not in GDD)
+## Scale (layout px per art px) of the pixel padlock (MaskIcon) on a locked portrait.
+const LOCK_ICON_SCALE: int = 2  # TUNING (not in GDD)
 
 
 ## Draws character `id` centred near `o` (body radius `r`, hit `flash`).
@@ -85,7 +89,7 @@ static func _fc(c: Color, flash: bool) -> Color:
 
 ## Picker portrait of character `id` filling `rect`: a dark backdrop in the
 ## school colour, the character, its starting-spell icon badge (bottom
-## right) and, when `locked`, a dimming veil with a padlock.
+## right) and, when `locked`, a dimming veil with the pixel padlock (MaskIcon).
 static func draw_portrait(ci: CanvasItem, id: String, rect: Rect2, locked: bool) -> void:
 	var d := CharacterModifiers.def(id)  # Character row.
 	var tint: Color = d["tint"]
@@ -99,8 +103,6 @@ static func draw_portrait(ci: CanvasItem, id: String, rect: Rect2, locked: bool)
 		var side := minf(rect.size.x, rect.size.y) * BADGE_FILL  # Badge size (px).
 		Glyphs.draw_icon(ci, String(AbilityData.SPELLS[sid]["icon"]), Rect2(rect.end - Vector2(side, side) - Vector2(2, 2), Vector2(side, side)))
 	if locked:
-		var c := rect.get_center()  # Padlock centre.
-		ci.draw_rect(rect, Color(0.0, 0.0, 0.0, 0.62))
-		ci.draw_rect(Rect2(c + Vector2(-10, -2), Vector2(20, 16)), Palette.SILVER.darkened(0.25))
-		ci.draw_arc(c + Vector2(0, -2), 7.0, PI, TAU, 12, Palette.SILVER.darkened(0.25), 3.0)
-		ci.draw_circle(c + Vector2(0, 5), 2.2, Color(0.05, 0.03, 0.06))
+		ci.draw_rect(rect, Color(0.0, 0.0, 0.0, LOCK_VEIL))
+		var s := MaskIcon.art_size("padlock") * float(LOCK_ICON_SCALE)  # Pixel padlock (px).
+		MaskIcon.paint(ci, "padlock", rect.get_center() - s * 0.5, LOCK_ICON_SCALE)

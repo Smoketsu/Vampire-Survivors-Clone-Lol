@@ -1,39 +1,28 @@
-## CharacterPicker — the playable-character section of the pre-run setup
-## screen (PreRunSetup puts it at the top of its left column, the "who"
-## column, above the skin and Hyper cards, and wires its focus through
-## tile_rows()). Shows one portrait tile per character playable in this build
-## (CharacterModifiers.available_ids(): a character whose starting spell is
-## missing would stay hidden; all twelve exist now) in a compact grid, and
-## under it a detail panel for the focused / hovered tile: portrait, name,
-## starting spell, the innate passive and the stat modifiers (the flavour
-## title is the tile's tooltip: with Jersey 10 body text the panel has no
-## room for it at 720 px). Locked characters (Meta.is_character_unlocked(): the
-## owner's rule, Lv 5 with the character's spell in any run) show a padlock
-## and their unlock condition and cannot be chosen. Choosing one (Enter / A
-## / click) sets RunConfig.character_id through set_character() and emits
-## `character_changed`; PreRunSetup's Begin remembers it in the Meta save.
-## Keyboard / controller: arrows / D-pad move between tiles (explicit focus
-## neighbours set by PreRunSetup from tile_rows()).
+## CharacterPicker — the playable-character grid of the pre-run setup screen
+## (PreRunSetup puts it at the top of its setup column and wires its focus
+## through tile_rows(); GDD §15.0 "Front door screens"). One portrait tile per
+## character playable in this build (CharacterModifiers.available_ids(): a
+## character whose starting spell is missing would stay hidden; all twelve
+## exist now) in a tidy grid (FrontDoorData.CHAR_COLUMNS per row, one row
+## of twelve), the chosen one in a gold frame. The character a tile shows is
+## presented big in the hero panel (PreRunHero) while its tile is focused or
+## hovered (`shown_changed`); when the focus leaves the grid the hero returns
+## to the chosen character. Locked characters (Meta.is_character_unlocked():
+## the owner's rule, Lv 5 with the character's spell in any run) show a
+## padlock and cannot be chosen (pressing plays `denied`; the hero panel names
+## the unlock). Choosing one (Enter / A / click) sets RunConfig.character_id
+## through set_character() and emits `character_changed`; PreRunSetup's Begin
+## remembers it in the Meta save. Name and flavour title are each tile's
+## tooltip.
 class_name CharacterPicker
-extends VBoxContainer
+extends GridContainer
 
 ## A character was chosen (RunConfig.character_id already set).
 signal character_changed(id: String)
+## The hero panel should present character `id` (a tile was focused /
+## hovered, or the focus left the grid: the chosen one).
+signal shown_changed(id: String)
 
-## Size (px) of one portrait tile (six to a row fill the setup screen's
-## left column, PreRunSetup.LEFT_WIDTH).
-const TILE_SIZE := Vector2(62, 62)
-## Tiles per grid row (12 characters = two rows).
-const TILE_COLUMNS: int = 6
-## Size (px) of the detail panel's big portrait.
-const BIG_PORTRAIT := Vector2(84, 84)
-## Width (px) of the detail panel's text column (beside the big portrait,
-## inside the left column).
-const DETAIL_TEXT_WIDTH: float = 330.0
-## Minimum height (px) of the detail panel, so the screen does not jump
-## when the focused character's texts are shorter or longer (the tallest
-## character's detail in Jersey 10 BODY text).
-const DETAIL_MIN_HEIGHT: float = 170.0  # TUNING (not in GDD) layout fit: the Umbral Warden, locked
 ## UI kit accent of the chosen character's tile (gold frame, UiTheme.style()).
 const SELECTED_ACCENT: String = "gold"
 
@@ -43,22 +32,6 @@ var config: RunConfig = null
 var _ids: PackedStringArray = PackedStringArray()
 ## Character id -> its tile Button.
 var _tiles: Dictionary = {}
-## Character id -> its tile Portrait.
-var _portraits: Dictionary = {}
-## Character id shown in the detail panel.
-var _shown: String = ""
-## Detail panel: big portrait.
-var _big: Portrait
-## Detail panel: name line.
-var _name_l: Label
-## Detail panel: starting spell line.
-var _spell_l: Label
-## Detail panel: innate line.
-var _innate_l: Label
-## Detail panel: stat modifiers line.
-var _stats_l: Label
-## Detail panel: lock / unlock condition line.
-var _lock_l: Label
 
 
 ## A character portrait (CharacterGlyphs.draw_portrait) filling its rect.
@@ -82,27 +55,21 @@ class Portrait:
 func _ready() -> void:
 	if config == null:
 		config = RunConfig.new()
-	add_theme_constant_override("separation", 4)
-	add_child(UiTheme.tier_label("Character", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))  # A locked tile's detail names its unlock.
-	var grid := GridContainer.new()
-	grid.columns = TILE_COLUMNS
-	grid.add_theme_constant_override("h_separation", 6)
-	grid.add_theme_constant_override("v_separation", 6)
-	add_child(grid)
+	columns = FrontDoorData.CHAR_COLUMNS
+	add_theme_constant_override("h_separation", FrontDoorData.CHAR_GAP)
+	add_theme_constant_override("v_separation", FrontDoorData.CHAR_GAP)
 	_ids = CharacterModifiers.available_ids()
 	for id: String in _ids:
-		grid.add_child(_build_tile(id))
-	add_child(_build_detail())
+		add_child(_build_tile(id))
 	_refresh()
-	_show(config.character_id)
 
 
-## One portrait tile Button (focus / hover show its details, press chooses).
+## One portrait tile Button (focus / hover present it, press chooses).
 func _build_tile(id: String) -> Button:
 	var b := Button.new()
-	b.custom_minimum_size = TILE_SIZE
+	b.custom_minimum_size = FrontDoorData.CHAR_TILE
 	b.focus_mode = Control.FOCUS_ALL
-	b.tooltip_text = "%s: %s" % [String(CharacterData.CHARACTERS[id]["display_name"]), String(CharacterData.CHARACTERS[id]["title"])]
+	b.tooltip_text = "%s\n%s" % [String(CharacterData.CHARACTERS[id]["display_name"]), String(CharacterData.CHARACTERS[id]["title"])]
 	var p := Portrait.new(id, not Meta.is_character_unlocked(id), Vector2.ZERO)
 	p.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	p.offset_left = 4
@@ -111,83 +78,51 @@ func _build_tile(id: String) -> Button:
 	p.offset_bottom = -4
 	b.add_child(p)
 	b.pressed.connect(_choose.bind(id))
-	b.focus_entered.connect(_show.bind(id))
-	b.mouse_entered.connect(_show.bind(id))
+	b.focus_entered.connect(func() -> void: shown_changed.emit(id))
+	b.mouse_entered.connect(func() -> void: shown_changed.emit(id))
+	b.focus_exited.connect(_on_tile_left)
+	b.mouse_exited.connect(_on_tile_left)
 	_tiles[id] = b
-	_portraits[id] = p
 	return b
 
 
-## The detail panel: big portrait beside the text lines.
-func _build_detail() -> Control:
-	var box := HBoxContainer.new()
-	box.add_theme_constant_override("separation", 10)
-	box.custom_minimum_size = Vector2(0, DETAIL_MIN_HEIGHT)
-	_big = Portrait.new(CharacterData.DEFAULT_ID, false, BIG_PORTRAIT)
-	box.add_child(_big)
-	var text := VBoxContainer.new()
-	text.add_theme_constant_override("separation", 1)
-	box.add_child(text)
-	_name_l = UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT)
-	text.add_child(_name_l)
-	_spell_l = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT)
-	text.add_child(_spell_l)
-	_innate_l = _wrapped(UiTheme.TEXT_GOOD)
-	text.add_child(_innate_l)
-	_stats_l = _wrapped(UiTheme.TEXT)
-	text.add_child(_stats_l)
-	_lock_l = _wrapped(Palette.CRIMSON.lightened(0.45))
-	text.add_child(_lock_l)
-	return box
+## A tile lost focus / hover: once neither the focus nor the mouse is on a
+## tile, the hero shows the chosen character again.
+func _on_tile_left() -> void:
+	_check_left.call_deferred()
 
 
-## A word-wrapped BODY-tier detail paragraph in `color`.
-func _wrapped(color: Color) -> Label:
-	return UiTheme.para("", DETAIL_TEXT_WIDTH, color)
+## The deferred half of _on_tile_left().
+func _check_left() -> void:
+	if not is_inside_tree():
+		return
+	var f := get_viewport().gui_get_focus_owner()  # Current focus.
+	if f != null and is_ancestor_of(f):
+		return
+	for id: String in _ids:
+		if (_tiles[id] as Button).is_hovered():
+			return
+	shown_changed.emit(config.character_id)
 
 
-## Shows character `id` in the detail panel.
-func _show(id: String) -> void:
-	if not _tiles.has(id):
-		id = CharacterData.DEFAULT_ID
-	_shown = id
-	var d := CharacterModifiers.def(id)  # Character row.
-	var locked := not Meta.is_character_unlocked(id)  # Cannot be chosen yet.
-	_big.char_id = id
-	_big.locked = locked
-	_big.queue_redraw()
-	var chosen := id == config.character_id  # The current choice.
-	_name_l.text = String(d["display_name"]) + ("  (chosen)" if chosen else "")
-	_name_l.add_theme_color_override("font_color", UiTheme.TEXT_GOLD if chosen else UiTheme.TEXT)
-	_spell_l.text = "Starting spell:  %s" % CharacterModifiers.spell_name(id)
-	var inn: Dictionary = d["innate"]  # {} = none.
-	_innate_l.text = "Innate:  none - the classic necromancer" if inn.is_empty() else "Innate - %s:  %s" % [String(inn["name"]), String(inn["description"])]
-	_stats_l.text = CharacterModifiers.stats_text(id)
-	_lock_l.text = "LOCKED - %s" % CharacterModifiers.unlock_text(id) if locked else ""
-
-
-## Chooses character `id` when it is unlocked (else nothing happens; the
-## detail panel already says how to unlock it).
+## Chooses character `id` when it is unlocked (else `denied`; the hero panel
+## already names its unlock).
 func _choose(id: String) -> void:
 	if not Meta.is_character_unlocked(id):
-		Sfx.play_ui("denied")  # Locked.
-		_show(id)
+		Sfx.play_ui("denied")
+		shown_changed.emit(id)
 		return
 	config.set_character(id)
 	Sfx.play("ui_confirm")
 	_refresh()
-	_show(id)
 	character_changed.emit(config.character_id)
+	shown_changed.emit(id)
 
 
-## Redraws the chosen / locked looks of every tile.
+## Redraws the chosen look of every tile.
 func _refresh() -> void:
 	for id: String in _ids:
-		var b: Button = _tiles[id]
-		if id == config.character_id:
-			UiTheme.style_button(b, "button", SELECTED_ACCENT)
-		else:
-			UiTheme.style_button(b, "button", "")
+		UiTheme.style_button(_tiles[id] as Button, "button", SELECTED_ACCENT if id == config.character_id else "")
 
 
 ## The tile Buttons in display order.
@@ -203,6 +138,6 @@ func tiles() -> Array[Button]:
 func tile_rows() -> Array:
 	var t := tiles()
 	var out: Array = []  # Rows of Buttons.
-	for i in range(0, t.size(), TILE_COLUMNS):
-		out.append(t.slice(i, mini(t.size(), i + TILE_COLUMNS)))
+	for i in range(0, t.size(), FrontDoorData.CHAR_COLUMNS):
+		out.append(t.slice(i, mini(t.size(), i + FrontDoorData.CHAR_COLUMNS)))
 	return out

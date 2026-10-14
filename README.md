@@ -58,8 +58,8 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 |---|---|---|
 | Move | WASD or arrow keys | Left stick / D-pad |
 | Menu / card navigation and confirm | Mouse, arrow keys, Enter / Space | D-pad or left stick, **A** |
-| Stage select (after **Play**) | Left / right between stages, Enter marches, Esc goes back | D-pad / stick, **A**, **B** |
-| Pre-run setup: character, difficulty, run modifiers | Arrows move between the character tiles, difficulty cards, modifier cards and buttons; Enter chooses / toggles; Esc goes back | D-pad / stick, **A**, **B** |
+| Stage select (after **Play**) | Left / right between stages (the diorama follows the focused stage's mood), Enter marches, Esc goes back | D-pad / stick, **A**, **B** |
+| Pre-run setup: character, skin, Hyper, difficulty, run modifiers | Arrows move between the character tiles, difficulty cards, modifier tiles, the hero panel's skin / Hyper tiles and the buttons; Enter chooses / toggles; Esc goes back | D-pad / stick, **A**, **B** |
 | Pick a level-up card | Click, or keys **1 / 2 / 3** | Focus + **A** |
 | Level-up: Reroll all cards (2 per run) | **R**, or the Reroll button | **X**, or focus the button + **A** |
 | Level-up: Banish a card (2 per run) | **B**, then pick the card (**B** / **Esc** cancels) | **LB**, then pick the card (**LB** / **B** cancels) |
@@ -479,9 +479,15 @@ Gargoyles and summons still rising.
 
 ### Stages
 
-**Play** opens the stage select: one card per stage with its chapter, name,
-a short description and a small emblem, plus either its lock requirement or
-your best time, boss kills and Soul Ash bonus there. Every stage runs the same
+**Play** opens the stage select: three tall cards, each topped by a small
+composed pixel scene of the stage (its floor, a few of its props and its boss
+in an attack pose facing your undead), then its chapter, name and one line
+(the full description is the tooltip), and a footer with your best time, boss
+kills, the stage's Soul Ash bonus and a gold **Hyper** badge once cleared on
+Hyper. A locked stage shows its scene as a silhouette under a padlock and the
+boss to slay ("Slay Sir Alaric"); pressing it is refused with a shake.
+Focusing a card turns the menu diorama to the stage's mood (night, dusk,
+dawn). Every stage runs the same
 structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
 
 | Stage | Unlock | Boss | Soul Ash |
@@ -492,17 +498,16 @@ structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
 
 ### Characters
 
-The left column of the **pre-run setup** screen (after the stage select) picks your
+The **pre-run setup** screen (after the stage select) picks your
 **playable character**: one necromancer per spell, each starting the run with
 its own spell at Lv 1 instead of Shadow Bolt, with **one innate passive** and a
 few stat modifiers (`character_data.gd`). There are no character-only level-up
-cards (owner decision: innates only). A grid of portrait tiles (two rows of
-six) shows every character (the necromancer tinted in the spell school's
-colour until each character's own art exists) with its starting spell as a
-badge; the detail panel under it shows the name, title, starting spell,
-innate and stats. Arrows / D-pad move, Enter / A chooses; the bottom tiles
-lead down to the skin cards, the right-hand tiles across to the difficulty
-cards.
+cards (owner decision: innates only). One row of twelve portrait tiles (top of the setup
+panel) shows every character with its starting spell as a badge; the
+character you are looking at stands big in the **hero panel** on the left,
+walking in place at 3× on the stage's floor in the skin it would wear, with
+its name, starting spell, stat changes and innate (the flavour title is the
+tooltip). Arrows / D-pad move, Enter / A chooses.
 
 **Unlocking:** **The Gravecaller** is open from the start. Every other
 character unlocks the **first time you reach Lv 5 with its starting spell in
@@ -536,15 +541,17 @@ numbers) → `CharacterInnates` (`game.innates`: the innate hooks).
 ### Difficulty & run modifiers
 
 Choosing a stage opens the **pre-run setup** screen (GDD §10.2). It fits
-1280×720 in two columns under a one-line title: the **left** column is who
-plays (the character picker, its skins and the Hyper toggle), the **right**
-column how hard (the four GDD §8.4 **difficulty levels** as a 2×2 grid, the
-eight §8.5 **run modifiers** as a 2×4 grid, then the totals), with Back /
-Standard / Begin across the bottom. Every card lists its exact effect and
-Soul Ash reward (a difficulty card shows its Soul Ash multiplier beside its
-name), and the screen shows the **total Soul Ash multiplier** of the stack and
-the combined enemy multipliers (plus a note when a Profane Oath tier is
-active). It works with keyboard, mouse and controller (arrows / D-pad move
+1280×720 over the menu diorama in two columns under a one-line title: on the
+**left** the hero panel (the character, its skins and the Hyper tile), on the
+**right** the setup panel (the character tiles, the four GDD §8.4
+**difficulty levels** as icon cards in one row, the eight §8.5 **run
+modifiers** as compact toggle tiles, 4×2, and one gold **Soul Ash ×N**
+plaque that rolls to each new total), with Back / Standard and a gold
+**Begin** under it. A difficulty card shows an icon, one line and its Soul Ash
+multiplier (the GDD line and the enemy numbers are its tooltip); a modifier
+tile shows its name and reward (the focused one's effect is the line under
+the grid); the plaque's tooltip holds the breakdown, the combined enemy
+multipliers and the Profane Oath note. It works with keyboard, mouse and controller (arrows / D-pad move
 inside a column and across to the other one, Enter / A selects or toggles,
 Esc / B goes back to the stage select). Your last choice
 is remembered (saved in `user://save.cfg`), **Restart** keeps it, and
@@ -589,13 +596,14 @@ every modifier: ×2.75).
 
 ### Hyper mode & skins
 
-The pre-run setup screen's left column ends with the **skin selector** and
-the **Hyper** toggle (`PreRunHyperSkins`), under the character picker.
+The pre-run setup screen's hero panel ends with the **skin tiles** and the
+**Hyper** tile (`PreRunHyperSkins`), with one line naming the focused tile
+(a focused skin is shown on the hero).
 
 **Hyper mode** (`hyper_data.gd`, owner-approved) is locked until you slay
 **Grand Inquisitor Seraphine** once, on any difficulty (the end screen of
 that run shows a gold *HYPER MODE UNLOCKED* banner; a save that already has
-her kill is unlocked on load). Until then its card shows the condition. It
+her kill is unlocked on load). Until then its tile is locked and names the condition. It
 stacks on whichever difficulty level you pick, through the same
 `DifficultyModifiers` path, applied once:
 
@@ -898,8 +906,8 @@ integration").
 
 - **Soul Ash** is earned at the end of **every** run and kept even if you die
   (survivor convention). The end screen shows the breakdown and the new total;
-  the main menu shows the balance and a lifetime line (runs, best time, boss
-  kills, achievements). Formula (all `TUNING`, in `scripts/data/meta_data.gd`):
+  the main menu shows the balance on a gold plaque and the lifetime stats
+  (runs, best time, boss kills, achievements) as small icons with numbers. Formula (all `TUNING`, in `scripts/data/meta_data.gd`):
 
   | Part | Rate | Good 20:00 run |
   |---|---|---|
@@ -1188,7 +1196,15 @@ ground on the Graveyard tile; three drifting fog banks; soul wisps rising from t
 lanterns and candles; and small troupes of undead (and now and then the necromancer) shuffling past
 on their walk strips. Layers sway with a slow parallax camera drift; a wider window shows more of
 the scene. When a sub-screen opens over the menu (stage select, Ossuary, settings), the menu's own
-logo and buttons fade out and the diorama dims behind it. It runs on real time with its own RNG and
+content (logo, buttons, plaque, version, hint strip) fades out and the diorama dims behind it.
+
+**Title screen.** Over the diorama sits a composed column: the NECROPATHY logo, alive (its soul
+flames sway as pixel art, glow and shed embers; `MenuLogo`), the tagline, a narrow column of one-word
+buttons (Play, Codex, Ossuary, Settings, Credits, Quit) with a soul wisp flanking the focused one
+(`SoulMarker`), the gold Soul Ash plaque and the lifetime stats as small pixel icons (`MaskIcon`,
+drawn from character masks in `mask_icon_data.gd`). Codex and Credits open their screens when
+those are in the build (they are loaded by path), and Quit asks first through the confirm
+dialog when it exists. All numbers are in `scripts/data/front_door_data.gd`. It runs on real time with its own RNG and
 never touches gameplay. Its art is in `assets/sprites/menu/`, rebuilt by
 `python3 art_source/menu/make_menu_art.py` (procedural pixel art plus two converted AI sources).
 
@@ -1426,15 +1442,20 @@ scripts/
                             pixel_marks (code-drawn pixel pips, arrow, padlock, recipe socket),
                             meta_glyphs (fallback drawings of the Soul Ash / tree / upgrade icons),
                             chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
-                            stage_select (stage cards, locks, best times, Hyper badges), pre_run_setup
-                            (difficulty level, run modifiers, total Soul Ash multiplier),
-                            prerun_hyper_skins (its Hyper toggle and skin selector with previews),
+                            stage_select (vignette stage cards, locks, best times, Hyper badges),
+                            stage_vignette (a stage card's composed pixel scene), pre_run_setup
+                            (character, difficulty level, run modifiers, total Soul Ash plaque),
+                            prerun_hero (the pre-run hero panel: the character big, walking),
+                            prerun_hyper_skins (its Hyper tile and skin tiles with previews),
+                            menu_logo (the living title logo), soul_marker (the menu's focus
+                            wisps), mask_icon (small pixel icons from character masks),
+                            soul_ash_icon (the Soul Ash icon: its art when present, else the glyph),
                             hyper_badge (the gold Hyper-clear badge), recipes_panel (pause menu
                             Recipes view: a grid of recipe tiles, locked ones empty sockets),
                             hud_abilities (Grave Step charges and Dread Rally meter), ability_glyphs
                             (their icons), stance_bar (HUD stance icons + banner),
                             stance_glyphs (stance icons, padlock, ground outline shapes),
-                            character_picker (pre-run character tiles + detail panel),
+                            character_picker (pre-run character tiles),
                             character_glyphs (characters in the world and as portraits),
                             input_hints (key / pad-button chips from the current bindings,
                             last-device tracking, the bottom-of-screen hint strip)
@@ -1483,6 +1504,9 @@ scripts/
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
     environment_art_data.gd Floor tile / obstacle sprite key scheme, tile variants, obstacle feet and shadow
     menu_backdrop_data.gd   Main-menu diorama: layers, props, fog, wisps, walkers, bats, moods (colour sets)
+    front_door_data.gd      Main menu, stage select and pre-run setup: sizes, captions, logo / wisp
+                            motion, stage vignette scenes, hero panel
+    mask_icon_data.gd       Small pixel UI icons as character masks (padlock, hourglass, skulls, ...)
     sound_data.gd           Sound recipes, voice limits, priorities
     ui_motion_data.gd       UI motion timings, distances, scales and easings (UiMotion)
     player_data.gd          Player stats, XP curve, slot counts
