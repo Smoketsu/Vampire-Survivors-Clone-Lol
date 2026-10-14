@@ -89,14 +89,14 @@ func _open_recipes() -> void:
 
 ## Shows the menu and focuses Resume.
 func open() -> void:
-	visible = true
+	UiMotion.open(self)  # Fade / rise in (makes it visible).
 	_stance_label.text = _stance_help()
 	_resume.grab_focus.call_deferred()
 
 
 ## Hides the menu (and drops an open Recipes view).
 func close() -> void:
-	visible = false
+	UiMotion.hide(self)  # Quick fade out, then hidden.
 	if _recipes != null and is_instance_valid(_recipes):
 		_recipes.queue_free()
 	_recipes = null

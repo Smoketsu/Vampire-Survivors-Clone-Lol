@@ -48,6 +48,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
+	set_meta(UiMotion.META_CANCEL_SILENT, true)  # Esc / B claims here, no "back".
 	add_child(UiTheme.backdrop(0.7))
 	var center := CenterContainer.new()  # Centres the panel on screen.
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -90,13 +91,13 @@ func open(rewards: Array[Dictionary], count: int) -> void:
 	_subtitle.text = "%d upgrade%s" % [count, "" if count == 1 else "s"]
 	for r in rewards:
 		var row := _make_row(r)  # One reward line.
-		row.modulate.a = 0.0
 		_rows_box.add_child(row)
 		_rows.append(row)
 	_t = 0.0
 	_reveal.open_frac = 0.0
 	_open = true
-	visible = true
+	UiMotion.open(self, false)  # Fade in (the chest sound plays instead of the whoosh).
+	UiMotion.stagger(_rows, ChestData.REVEAL_TIME, ChestData.ROW_INTERVAL, UiMotionData.LIST_SLIDE_OFFSET)  # Rows slide in after the lid.
 	Sfx.play("chest_open")
 	_claim.grab_focus.call_deferred()
 	if game != null and game.autotest != null:
@@ -135,9 +136,6 @@ func _process(delta: float) -> void:
 	_reveal.age += delta
 	_reveal.open_frac = clampf(_t / ChestData.REVEAL_TIME, 0.0, 1.0)
 	_reveal.queue_redraw()
-	for i in _rows.size():
-		var shown_at := ChestData.REVEAL_TIME + float(i) * ChestData.ROW_INTERVAL  # When row i appears.
-		_rows[i].modulate.a = clampf((_t - shown_at) / 0.15, 0.0, 1.0)
 
 
 ## Total reveal length for the current rewards (s).
@@ -151,6 +149,7 @@ func _confirm() -> void:
 		return
 	if _t < _reveal_length():
 		_t = _reveal_length() + 1.0
+		UiMotion.settle(_rows)  # Every row at once.
 		return
 	_finish()
 
@@ -160,7 +159,7 @@ func _finish() -> void:
 	if not _open:
 		return
 	_open = false
-	visible = false
+	UiMotion.hide(self, false)  # Quick fade out, then hidden.
 	closed.emit()
 
 

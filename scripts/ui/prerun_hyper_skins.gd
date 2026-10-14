@@ -202,7 +202,7 @@ func rows() -> Array:
 ## Hyper card pressed: toggles Hyper (no-op while locked).
 func _toggle_hyper() -> void:
 	if not Meta.hyper_unlocked:
-		Sfx.play("ui_hover")
+		Sfx.play_ui("denied")  # Locked.
 		return
 	config.hyper = not config.hyper
 	Sfx.play("ui_confirm")
@@ -213,7 +213,7 @@ func _toggle_hyper() -> void:
 ## Skin card pressed: wears skin `id` if it is unlocked.
 func _choose_skin(id: String) -> void:
 	if not Meta.is_skin_unlocked(id):
-		Sfx.play("ui_hover")
+		Sfx.play_ui("denied")  # Locked.
 		return
 	config.skin_id = id
 	Sfx.play("ui_confirm")

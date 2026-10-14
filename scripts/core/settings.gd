@@ -4,6 +4,9 @@
 ## persists": only these options so far).
 ##   * Volumes: Master / Music / SFX, linear 0..1 per bus (0 mutes the bus).
 ##   * Screen shake and floating damage numbers on/off (read by Juice).
+##   * Reduce motion on/off (read by UiMotion.enabled(): every UI motion,
+##     panel open / close, entrances, lift, squash, count-ups and the fade
+##     through black, becomes instant).
 ##   * Fullscreen on/off (ignored on the headless display server).
 ##   * Keyboard rebinding of the REBINDABLE actions. Only the PRIMARY
 ##     keyboard key of each action (its first InputEventKey in the project
@@ -38,6 +41,8 @@ var volumes: Dictionary = DEFAULT_VOLUMES.duplicate()
 var screen_shake: bool = true
 ## Floating damage numbers enabled.
 var damage_numbers: bool = true
+## True = UI motion is instant (accessibility "Reduce motion"; UiMotion).
+var reduce_motion: bool = false
 ## Fullscreen window.
 var fullscreen: bool = false
 ## Camera zoom level id (ViewData.ZOOM_LEVELS key).
@@ -67,6 +72,7 @@ func load_settings() -> void:
 			volumes[bus] = clampf(float(cfg.get_value("audio", bus.to_lower(), DEFAULT_VOLUMES[bus])), 0.0, 1.0)
 		screen_shake = bool(cfg.get_value("feel", "screen_shake", true))
 		damage_numbers = bool(cfg.get_value("feel", "damage_numbers", true))
+		reduce_motion = bool(cfg.get_value("feel", "reduce_motion", false))
 		fullscreen = bool(cfg.get_value("video", "fullscreen", false))
 		var z := String(cfg.get_value("video", "zoom", ViewData.DEFAULT_ZOOM))  # Saved zoom id.
 		zoom_id = z if ViewData.ZOOM_LEVELS.has(z) else ViewData.DEFAULT_ZOOM  # The dropped "far" (or junk) loads as Normal.
@@ -86,6 +92,7 @@ func save_settings() -> Error:
 		cfg.set_value("audio", bus.to_lower(), volumes[bus])
 	cfg.set_value("feel", "screen_shake", screen_shake)
 	cfg.set_value("feel", "damage_numbers", damage_numbers)
+	cfg.set_value("feel", "reduce_motion", reduce_motion)
 	cfg.set_value("video", "fullscreen", fullscreen)
 	cfg.set_value("video", "zoom", zoom_id)
 	for action: String in REBINDABLE:
@@ -139,6 +146,12 @@ func set_screen_shake(on: bool) -> void:
 ## Enables / disables floating damage numbers.
 func set_damage_numbers(on: bool) -> void:
 	damage_numbers = on
+	changed.emit()
+
+
+## Enables / disables reduced UI motion (UiMotion becomes instant).
+func set_reduce_motion(on: bool) -> void:
+	reduce_motion = on
 	changed.emit()
 
 

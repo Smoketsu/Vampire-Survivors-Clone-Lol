@@ -3,7 +3,7 @@
 ## at once through the Settings autoload; the file is saved when the menu
 ## closes (Back, Esc / controller B, or the pause action).
 ##   Left column : Master / Music / SFX volume sliders; Fullscreen, Screen
-##                 shake and Damage numbers toggles.
+##                 shake, Damage numbers and Reduce motion toggles.
 ##   Right column: keyboard rebinding for the Settings.REBINDABLE actions
 ##                 (press a binding, then any key; controller B or a mouse
 ##                 click cancels), and "Reset keys".
@@ -33,7 +33,7 @@ var return_focus: Control = null
 var sliders: Dictionary = {}
 ## Settings bus name -> its "NN%" value label.
 var _slider_labels: Dictionary = {}
-## Option name ("fullscreen", "screen_shake", "damage_numbers") -> CheckButton.
+## Option name ("fullscreen", "screen_shake", "damage_numbers", "reduce_motion") -> CheckButton.
 var toggles: Dictionary = {}
 ## Action -> its rebinding button.
 var key_buttons: Dictionary = {}
@@ -80,6 +80,7 @@ func _ready() -> void:
 	_back.pressed.connect(close)
 	root.add_child(_back)
 	(sliders["Master"] as HSlider).grab_focus.call_deferred()
+	UiMotion.open(self)  # Fade / rise in.
 
 
 ## Audio sliders and feel / display toggles.
@@ -120,6 +121,7 @@ func _build_left() -> Control:
 	_add_toggle(vb, "fullscreen", "Fullscreen", Settings.fullscreen, Settings.set_fullscreen)
 	_add_toggle(vb, "screen_shake", "Screen shake", Settings.screen_shake, Settings.set_screen_shake)
 	_add_toggle(vb, "damage_numbers", "Damage numbers", Settings.damage_numbers, Settings.set_damage_numbers)
+	_add_toggle(vb, "reduce_motion", "Reduce motion", Settings.reduce_motion, Settings.set_reduce_motion)
 	zoom_button = Button.new()
 	zoom_button.custom_minimum_size = Vector2(0, 36)
 	zoom_button.pressed.connect(_on_zoom_pressed)
@@ -230,13 +232,13 @@ func _on_reset_keys() -> void:
 
 ## Saves, restores focus to the opener and frees the menu.
 func close() -> void:
-	if is_queued_for_deletion():
+	if UiMotion.is_closing(self):
 		return
 	Settings.save_settings()
 	closed.emit()
 	if return_focus != null and is_instance_valid(return_focus) and return_focus.is_visible_in_tree():
 		return_focus.grab_focus()
-	queue_free()
+	UiMotion.close(self, queue_free)  # Quick fade out, then freed.
 
 
 ## Key capture runs in _input (before the GUI and before PauseMenu's

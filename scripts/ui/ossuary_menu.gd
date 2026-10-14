@@ -134,6 +134,7 @@ func _ready() -> void:
 	_refresh()
 	var first: Button = _grid[0][0]
 	first.grab_focus.call_deferred()
+	UiMotion.open(self)  # Fade / rise in.
 
 
 ## Title, subtitle and the Soul Ash balance.
@@ -424,15 +425,18 @@ func _on_upgrade_pressed(id: String) -> void:
 		return
 	match Meta.purchase_block(id):
 		"maxed":
+			Sfx.play_ui("denied")
 			_set_status("%s is already at its highest tier." % display_name, UiTheme.TEXT_GOLD)
 		"locked":
+			Sfx.play_ui("denied")
 			_set_status("%s is locked. Buy its prerequisite first." % display_name, Palette.CRIMSON.lightened(0.35))
 		"cost":
+			Sfx.play_ui("denied")
 			_set_status("Not enough Soul Ash for %s (%d more needed)." % [display_name, Meta.next_cost(id) - Meta.soul_ash], Palette.CRIMSON.lightened(0.35))
 		_:
 			var cost := Meta.next_cost(id)
 			if Meta.purchase(id):
-				Sfx.play("ui_confirm")
+				Sfx.play_ui("purchase")  # Bright bone-chime.
 				_set_status("Bought %s %s for %d Soul Ash." % [display_name, ROMAN[Meta.tier(id)], cost], UiTheme.TEXT_GOOD)
 
 
@@ -540,12 +544,12 @@ func _close_confirm() -> void:
 
 ## Restores focus to the opener and frees the menu.
 func close() -> void:
-	if is_queued_for_deletion():
+	if UiMotion.is_closing(self):
 		return
 	closed.emit()
 	if return_focus != null and is_instance_valid(return_focus) and return_focus.is_visible_in_tree():
 		return_focus.grab_focus()
-	queue_free()
+	UiMotion.close(self, queue_free)  # Quick fade out, then freed.
 
 
 ## Esc / controller B: closes the confirmation first, then the menu.

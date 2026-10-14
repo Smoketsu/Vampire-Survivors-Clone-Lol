@@ -135,6 +135,7 @@ func _ready() -> void:
 	if first.disabled:
 		first = _cards[StageRegistry.ORDER[0]]
 	first.grab_focus.call_deferred()
+	UiMotion.open(self)  # Fade / rise in.
 
 
 ## One stage card: a Button holding the emblem, the texts and the status.
@@ -217,12 +218,12 @@ func _choose(id: String) -> void:
 
 ## Restores focus to the opener and frees the screen.
 func close() -> void:
-	if is_queued_for_deletion():
+	if UiMotion.is_closing(self):
 		return
 	closed.emit()
 	if return_focus != null and is_instance_valid(return_focus) and return_focus.is_visible_in_tree():
 		return_focus.grab_focus()
-	queue_free()
+	UiMotion.close(self, queue_free)  # Quick fade out, then freed.
 
 
 ## Esc / controller B closes the screen.

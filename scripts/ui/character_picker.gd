@@ -178,7 +178,7 @@ func _show(id: String) -> void:
 ## detail panel already says how to unlock it).
 func _choose(id: String) -> void:
 	if not Meta.is_character_unlocked(id):
-		Sfx.play("ui_hover")
+		Sfx.play_ui("denied")  # Locked.
 		_show(id)
 		return
 	config.set_character(id)
