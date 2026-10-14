@@ -181,6 +181,9 @@ func _add_toggle(parent: Control, key: String, text: String, on: bool, setter: C
 
 ## Gives a slider the UI theme's colours and a visible focus border.
 func _style_slider(s: HSlider) -> void:
+	if UiTheme.has_kit_slider():  # The Theme's kit track, fill and grabber (UiTheme._kit_slider()).
+		s.add_theme_stylebox_override("focus", UiTheme.box(Color(0, 0, 0, 0), UiTheme.BORDER_FOCUS, 2))
+		return
 	var track := UiTheme.box(Color(0.03, 0.02, 0.05), UiTheme.BORDER, 1)
 	track.content_margin_top = 3
 	track.content_margin_bottom = 3

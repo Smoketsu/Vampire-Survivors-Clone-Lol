@@ -69,15 +69,15 @@ static var _styles: Dictionary = {}
 static var _hook: _SharpHook = null
 
 
-## Sets the sharp-pixel material on each Button / panel / scroll bar added to
-## the tree (they draw the kit's pixel frames) and on each Label (pixel-font
-## text rasterised at layout size). Visual only.
+## Sets the sharp-pixel material on each Button / panel / scroll bar / slider
+## added to the tree (they draw the kit's pixel frames) and on each Label
+## (pixel-font text rasterised at layout size). Visual only.
 class _SharpHook:
 	extends RefCounted
 
 	## SceneTree.node_added: a node entered the tree.
 	func on_node_added(n: Node) -> void:
-		if n is Button or n is PanelContainer or n is Panel or n is ScrollBar or n is Label:
+		if n is Button or n is PanelContainer or n is Panel or n is ScrollBar or n is Label or n is Slider:
 			SpriteBank.apply_sharp(n as CanvasItem)
 
 
@@ -115,7 +115,7 @@ static func get_theme() -> Theme:
 
 
 ## Kit-only theme entries (left at Godot's defaults when the PNGs are missing):
-## tooltips, scroll bars, separators and the CheckButton toggle icons.
+## tooltips, scroll bars, separators, sliders and the CheckButton toggle icons.
 static func _kit_extras(t: Theme) -> void:
 	if _texture("tip_bone_normal") != null:
 		t.set_stylebox("panel", "TooltipPanel", style("tip", "bone"))
@@ -129,6 +129,7 @@ static func _kit_extras(t: Theme) -> void:
 			t.set_stylebox("grabber_pressed", sb, style("grab", "violet", "pressed"))
 	if _texture("line_violet_normal") != null:
 		t.set_stylebox("separator", "HSeparator", style("line"))
+	_kit_slider(t)
 	var on := _texture("toggle_on")  # CheckButton icons (32 x 16, the default size).
 	var off := _texture("toggle_off")
 	if on != null and off != null:
@@ -138,11 +139,15 @@ static func _kit_extras(t: Theme) -> void:
 
 
 ## The kit frame `kind` (UiArtData.SLICE: button, panel, card, focus, slot,
-## bar, tip, scroll, grab, line) in `accent` (violet, gold, crimson, soul,
-## dim, ...) and `state` (normal, hover, pressed, disabled): a 9-slice
-## StyleBoxTexture of assets/ui/<kind>_<accent>_<state>.png, or the flat
-## fallback when that PNG is missing. Content margins match the old flat
-## boxes (buttons, panels, cards: 10 / 6 px). Cached; do not modify the result.
+## bar, tip, scroll, grab, line, and the ornamented ornate, header, ribbon,
+## divider, track, fill) in `accent` (violet, gold, crimson, soul, dim, ...;
+## the ornamented kinds come in violet, gold and crimson) and `state` (normal,
+## hover, pressed, disabled): a 9-slice StyleBoxTexture of
+## assets/ui/<kind>_<accent>_<state>.png (a KitStyleBox that also draws the
+## kind's crests for ornate, header and divider), or the flat fallback when
+## that PNG is missing. Content margins match the old flat boxes (buttons,
+## panels, cards: 10 / 6 px; the ornamented kinds: UiArtData.CONTENT).
+## Cached; do not modify the result.
 static func style(kind: String, accent: String = "violet", state: String = "normal") -> StyleBox:
 	if kind == "focus":
 		accent = "soul"
@@ -153,6 +158,8 @@ static func style(kind: String, accent: String = "violet", state: String = "norm
 		return _styles[key]
 	var tex := _texture(key)  # Kit PNG (null = fallback).
 	var sb: StyleBox = _flat(kind, accent, state) if tex == null else _textured(kind, tex)
+	if tex != null and (UiArtData.CRESTS.has(kind) or kind == "divider"):
+		sb = _crested(kind, accent, sb)
 	_styles[key] = sb
 	return sb
 
@@ -167,8 +174,22 @@ static func _texture(stem: String) -> Texture2D:
 static func _textured(kind: String, tex: Texture2D) -> StyleBoxTexture:
 	var sb := StyleBoxTexture.new()
 	sb.texture = tex
-	var m := float(UiArtData.SLICE.get(kind, 4))  # 9-slice margin (texels).
-	sb.set_texture_margin_all(m)
+	var m := float(UiArtData.SLICE.get(kind, 4))  # 9-slice margin, left / right (texels).
+	var mv := float(UiArtData.SLICE_V.get(kind, m))  # 9-slice margin, top / bottom (texels).
+	sb.texture_margin_left = m
+	sb.texture_margin_right = m
+	sb.texture_margin_top = mv
+	sb.texture_margin_bottom = mv
+	# Tile (never stretch) the edges and the centre: 1 texel stays 1 layout px, so
+	# the fills' dither and the edge rings repeat cleanly at any size.
+	sb.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_TILE
+	sb.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_TILE
+	if UiArtData.CONTENT.has(kind):
+		var c: Array = UiArtData.CONTENT[kind]  # [left, top, right, bottom] (layout px).
+		sb.content_margin_left = float(c[0])
+		sb.content_margin_top = float(c[1])
+		sb.content_margin_right = float(c[2])
+		sb.content_margin_bottom = float(c[3])
 	match kind:
 		"button", "panel", "card":
 			sb.content_margin_left = 10
@@ -194,6 +215,9 @@ static func _textured(kind: String, tex: Texture2D) -> StyleBoxTexture:
 			sb.texture_margin_bottom = 0
 			sb.content_margin_top = 1.5
 			sb.content_margin_bottom = 1.5
+		"divider":
+			sb.texture_margin_top = 0  # The strip is drawn at its own height (KitStyleBox.frame_height).
+			sb.texture_margin_bottom = 0
 	return sb
 
 
@@ -331,3 +355,114 @@ static func backdrop(alpha: float = 0.65) -> ColorRect:
 	r.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	r.mouse_filter = Control.MOUSE_FILTER_STOP
 	return r
+
+
+# --- Ornamented UI kit (menu modernization; GDD §15.0 "Ornamented UI kit") ---
+# Helpers for the ornamented kinds drawn by tools/ui_kit.py: the ornate hero
+# panel (bone filigree corners, skull keystone), the header band, the banner
+# ribbon, the skull divider, and the kit slider (Theme default for HSlider).
+# Accents: "violet" (default), "gold" (victory, evolution, chest, selection),
+# "crimson" (danger, penalties, defeat). All visual only.
+
+## Text colour of a header band per accent (violet: bone text; gold: gold
+## text; crimson: a pale crimson that reads on the dark crimson band).
+const HEADER_TEXT: Dictionary = {
+	"violet": TEXT,
+	"gold": TEXT_GOLD,
+	"crimson": Color(1.0, 0.62, 0.55),
+}
+
+
+## Wraps the 9-slice `frame` of ornamented `kind` in a KitStyleBox that also
+## draws the kind's crests (UiArtData.CRESTS; assets/ui/<kind>_<accent>_<crest>.png,
+## skipped when missing) and, for the divider, draws the frame as a centred
+## UiArtData.DIVIDER_LINE px strip. Content margins are copied from `frame`.
+static func _crested(kind: String, accent: String, frame: StyleBox) -> KitStyleBox:
+	var k := KitStyleBox.new()
+	k.frame = frame
+	for side: int in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+		k.set_content_margin(side, frame.get_content_margin(side))
+	if kind == "divider":
+		k.frame_height = float(UiArtData.DIVIDER_LINE)
+	for c: Array in UiArtData.CRESTS.get(kind, []):
+		var tex := _texture("%s_%s_%s" % [kind, accent, String(c[0])])  # Crest art (null = none).
+		if tex == null:
+			continue
+		k.crest_textures.append(tex)
+		k.crest_anchors.append(Vector2(float(c[1]), float(c[2])))
+		k.crest_offsets.append(Vector2(float(c[3]), float(c[4])))
+	return k
+
+
+## Theme defaults for HSlider from the kit: the recessed track, the violet
+## fill (brighter while hovered / focused) and the bone-and-gem grabber
+## (soul-teal gem while hovered / focused, dim when disabled), replacing
+## Godot's white round grabber. Left at Godot's defaults when a PNG is missing.
+static func _kit_slider(t: Theme) -> void:
+	var grab := _texture("grabber_normal")  # Grabber icons (12 x 20 px).
+	var grab_hi := _texture("grabber_hover")  # Hovered / focused grabber.
+	var grab_off := _texture("grabber_disabled")  # Disabled grabber.
+	if not has_kit_slider() or _texture("fill_violet_normal") == null or grab_hi == null or grab_off == null:
+		return
+	t.set_stylebox("slider", "HSlider", style("track"))
+	t.set_stylebox("grabber_area", "HSlider", style("fill"))
+	t.set_stylebox("grabber_area_highlight", "HSlider", style("fill", "violet", "hover"))
+	t.set_icon("grabber", "HSlider", grab)
+	t.set_icon("grabber_highlight", "HSlider", grab_hi)
+	t.set_icon("grabber_disabled", "HSlider", grab_off)
+
+
+## True when the kit slider's PNGs exist (so the Theme gives every HSlider
+## the kit look and a screen can drop its own slider overrides).
+static func has_kit_slider() -> bool:
+	return _texture("track_violet_normal") != null and _texture("grabber_normal") != null
+
+
+## A new PanelContainer framed as the ornate hero panel in `accent` (bone
+## filigree corners, a skull keystone rising 9 px above its top edge; content
+## inset UiArtData.CONTENT["ornate"]). Add the screen's content as its child.
+## Usage: var p := UiTheme.ornate_panel("gold"); p.add_child(vbox)
+static func ornate_panel(accent: String = "violet") -> PanelContainer:
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", style("ornate", accent))
+	return p
+
+
+## A new header band (a PanelContainer framed as the title strip in `accent`,
+## pointed end caps with gem finials 6 px outside each end) holding a centred
+## pixel-font Label with `text` at `size` (UiTheme.font_px() sizes; the Label
+## is the band's only child: band.get_child(0)). Ignores the mouse.
+## Usage: vbox.add_child(UiTheme.header_band("Difficulty", "violet", 28))
+static func header_band(text: String, accent: String = "violet", size: int = 28) -> PanelContainer:
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", style("header", accent))
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var l := label(text, size, HEADER_TEXT.get(accent, TEXT))
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	p.add_child(l)
+	return p
+
+
+## A new banner ribbon (a PanelContainer framed as a cloth band with
+## swallow-tail ends in `accent`; content inset UiArtData.CONTENT["ribbon"])
+## for the in-run Jacquard banners: add the banner Label as its child. Ignores
+## the mouse. Usage: var r := UiTheme.ribbon("gold"); r.add_child(banner_label)
+static func ribbon(accent: String = "violet") -> PanelContainer:
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", style("ribbon", accent))
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return p
+
+
+## A new section divider: a Panel UiArtData.DIVIDER_HEIGHT px tall filling its
+## container's width, with a thin `accent` rule and a small bone skull between
+## two gem studs in the middle. Ignores the mouse.
+## Usage: vbox.add_child(UiTheme.divider())
+static func divider(accent: String = "violet") -> Panel:
+	var p := Panel.new()
+	p.add_theme_stylebox_override("panel", style("divider", accent))
+	p.custom_minimum_size = Vector2(0.0, UiArtData.DIVIDER_HEIGHT)
+	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return p

@@ -10,7 +10,9 @@
 // and stays crisp. SpriteBank puts it on any CanvasItem that draws grid art
 // (SpriteBank.apply_sharp()). When a texture is drawn smaller than its texels
 // (legacy 3x placeholders, minified icons) it falls back to plain linear
-// sampling, so other art drawn by the same node looks exactly as before.
+// sampling, so other art drawn by the same node looks exactly as before. The
+// fallback is decided per axis, so the tile seams of the UI kit's tiled 9-slice
+// frames (UiTheme) stay crisp.
 // Untextured shapes sample Godot's white default texture: unchanged too.
 shader_type canvas_item;
 
@@ -30,13 +32,14 @@ void fragment() {
 	vec2 size = vec2(textureSize(TEXTURE, 0));  // Texture size (texels).
 	vec2 pix = UV * size;  // Position in texels.
 	vec2 per_px = fwidth(pix);  // Texels covered by one screen px (< 1 = magnified).
-	if (max(per_px.x, per_px.y) > 1.01) {
-		// Minified (more texels than screen px): plain linear sampling.
-		COLOR = texture(TEXTURE, UV) * vertex_colour;
-	} else {
-		vec2 corner = floor(pix + 0.5);  // Nearest texel corner (between two texel centres).
-		vec2 band = max(per_px * edge_softness, vec2(1e-4));  // Blend band (texels).
-		pix = corner + clamp((pix - corner) / band, -0.5, 0.5);
-		COLOR = texture(TEXTURE, pix / size) * vertex_colour;
-	}
+	vec2 corner = floor(pix + 0.5);  // Nearest texel corner (between two texel centres).
+	vec2 band = max(per_px * edge_softness, vec2(1e-4));  // Blend band (texels).
+	vec2 sharp = corner + clamp((pix - corner) / band, -0.5, 0.5);  // Sharp-pixel sample position.
+	// Per axis: an axis drawn smaller than its texels (minified) samples plainly
+	// (linear) along that axis. Decided per axis so the seams of a tiled 9-slice
+	// UI frame (where the texel coordinate jumps along one axis) do not blur its
+	// 1-texel rings along the other; a uniformly scaled sprite behaves as before
+	// (both axes sharp, or both plain).
+	pix = mix(sharp, pix, step(vec2(1.01), per_px));
+	COLOR = texture(TEXTURE, pix / size) * vertex_colour;
 }

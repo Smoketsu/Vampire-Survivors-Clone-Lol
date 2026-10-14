@@ -1004,22 +1004,64 @@ logo's O (shield, skull, flame) onto a 64×64 dark violet badge, saved 2× (128 
 
 **Frames** are drawn by code, not by the image AI (AI frames are ornate and uneven and do not 9-slice):
 `python3 tools/ui_kit.py frames [--preview sheet.png]` writes `<kind>_<accent>_<state>.png`, each
-`2 × UiArtData.SLICE[kind] + CENTER` texels square, 1 texel = 1 layout px. Rules:
+`2 × UiArtData.SLICE[kind] + CENTER` texels wide and `2 × SLICE_V[kind] + CENTER` tall (SLICE_V defaults
+to SLICE), 1 texel = 1 layout px; the preview sheet shows every kind at typical sizes with its crests.
+The ornamented kit (menu modernization, owner: "I like the ornaments, we don't want it to look plain and
+unappealing") rules:
 
-- Rings from the outside in, 1 texel each: an ink outline, a bevelled bright ring (lit top / left one
-  shade lighter, like the sprites), an inner ring, an ink gap, then the flat fill; chamfered corners.
-- Palette colours only for rings and ornaments; the fills keep the UI's own dark fills (`UiTheme.BG`,
-  `BG_HOVER`, the selected gold and evolution fills), which are UI-only and never used by sprites.
+- **Rings** from the outside in, 1 texel each: an ink outline, bevels lit one shade lighter on the top /
+  left (like the sprites), ink gaps; **cut (chamfered) corners on every element**.
+- **Fills**: an ordered-dither (4×4 Bayer) **vertical gradient**, lighter at the top (the fill mixed
+  `TINT_STEP` per level toward the accent's tint), darker at the bottom (`DARK_STEP` toward black),
+  living in the top / bottom 9-slice margins (`SLICE_V`) so it keeps its pixel size at any control
+  height; a pressed button or card inverts it (lit from below), sockets (slot, slider track, the off
+  toggle) are shadowed at the top. The gradient shades are UI-only fills, like `UiTheme.BG`.
+- **Tiling**: `UiTheme` tiles (never stretches) the edges and the centre
+  (`AXIS_STRETCH_MODE_TILE`), so the dither stays 1:1. Every edge must repeat cleanly: edges are uniform
+  along their length (or periodic in CENTER = 4, like the ribbon's stitching), and every ornament texel
+  *and its outline* stays inside the corner squares **one texel clear of the tiled band** (at a tile
+  seam the filter reads the texel beside it; `shade_layer()` raises otherwise). The sharp-pixel shader
+  falls back to linear sampling per axis, so tile seams do not blur the 1-texel rings.
+- **Ornaments** are material masks (`B` bone, `W` white bone, `G` gem, `K` ink) mirrored to the corners
+  (and across the diagonal) and only then shaded by one light from the top left (edges facing up / left
+  lit, down / right shaded) and outlined in ink, so every mirrored corner is lit correctly. Bone uses
+  bone / bone_mid / bone_shade; gems use the accent ramp (violet flare-glow-violet, gold light-gold-brown,
+  crimson flame-crimson-dark, soul glow-soul-dark) with a holy-white glint.
+- **Crests** (art that must sit mid-edge and never stretch) are separate PNGs `<kind>_<accent>_<crest>`
+  drawn on top at their own size by `KitStyleBox` (`UiArtData.CRESTS`: an anchor fraction of the rect
+  plus a px offset).
+- Palette colours only for rings, ornaments and outlines.
 - Accents: **violet** (default), **gold** (evolution cards, chest panel, victory screen, selected
-  tiles), **crimson** (active run modifier, Profane Oath), **soul** (affordable Ossuary upgrade),
-  **dim** (locked / disabled), **grey** (HUD slot sockets), **bone** (tooltips).
-- Kinds: `button` (normal / hover / pressed / disabled), `panel` (bone corner studs), `card` (level-up
-  cards, bone corner brackets), `focus` (a 3 px soul-teal ring drawn 3 px outside the focused control,
-  thick corner brackets: keyboard / controller focus is always obvious), `slot` (HUD ability socket),
-  `bar` (HUD bar frame, open centre), `tip`, `scroll` / `grab`, `line`, and the CheckButton `toggle_on` /
-  `toggle_off` icons (32×16).
-- Crispness: `UiTheme` gives Buttons, panels and scroll bars the shared sharp-pixel material as they
-  enter the tree, so 1 px rings stay even at the ×1.5 1080p scale.
+  tiles), **crimson** (active run modifier, Profane Oath, danger, defeat), **soul** (affordable Ossuary
+  upgrade, focus), **dim** (locked / disabled), **grey** (HUD slot sockets), **bone** (tooltips).
+- Kinds (content margins unchanged for the older kinds, so no layout moved):
+  - `button` (normal / hover / pressed / disabled; violet, gold, crimson, soul, dim): ring + bevel,
+    gradient, a 3-texel glint by the top-left cut.
+  - `panel` (violet, gold, dim): raised moulding, a bone rosette with a gem in each cut corner.
+  - `card` (level-up cards; violet / gold × normal / hover / pressed): a double frame (moulding, dark
+    channel, inner rail), the corner rosette plus a bone bracket with serif ends on the inner rail.
+  - `focus`: ink, soul-glow and soul rings drawn 3 px outside the focused control, thick soul-glow
+    corner brackets outlined in ink.
+  - `slot` (recessed HUD socket), `bar` (open centre), `tip` (bone ring), `scroll` / `grab`, `line`, the
+    CheckButton `toggle_on` / `toggle_off` icons (32×16: socket + bone knob with a gem).
+  - **`ornate`** (violet / gold / crimson; `UiTheme.ornate_panel()`): a 5-ring moulding, a bone inlay
+    line, a dark channel and an inner rail, chamfer 6; **bone filigree corners** (a rosette with a large
+    gem, a knuckled 3-texel bone arm with a thorn, ending in a spiral curl) and the **skull keystone**
+    crest (`keystone`, 60×26: a wedge in the frame colours holding a skull with gem eyes, with bone wings
+    lying on the inlay that end in small gem rosettes; it rises 9 px above the top edge).
+  - **`header`** (`UiTheme.header_band()`): a title band with 45° pointed end caps and a double rule,
+    plus the `cap` crest (a 14×14 bone diamond with a gem) sitting on each end.
+  - **`ribbon`** (`UiTheme.ribbon()`): a banner backing for the Jacquard banners: a cloth band with
+    hems and a stitched bone line, and swallow-tail cloth tails hanging behind its lower half (wholly in
+    the bottom margin, so the ribbon keeps its shape at any height), joined by a shaded fold.
+  - **`divider`** (`UiTheme.divider()`): a thin ink / accent / ink rule tapering to bone dots, with the
+    `crest` (33×15: the skull between bone bars ending in gem diamonds) in the middle.
+  - **Slider** (Theme default for every HSlider): `track` (recessed socket), `fill` (raised violet bar,
+    brighter on hover / focus) and the `grabber_normal / _hover / _disabled` icons (12×20 bone-rimmed gem
+    pommel: violet, soul-teal while hovered / focused, dim), replacing Godot's white round knob.
+- Crispness: `UiTheme` gives Buttons, panels, scroll bars and sliders the shared sharp-pixel material as
+  they enter the tree, so 1 px rings stay even at the ×1.5 1080p scale; crests are drawn by the same
+  node, so they are sharp too.
 
 **Fonts** (font pass; numbers in `UiArtData`, logic in `UiTheme`):
 

@@ -1314,6 +1314,8 @@ scripts/
   fx/unit_dissolve.gd       Pooled death dissolve: the dead unit's look collapsing into bone dust / holy ash
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
+                            kit_style_box (a kit 9-slice frame plus fixed-size crests:
+                            the ornate panel's skull keystone, header finials, divider skull),
                             progression_glyphs (evolution/synergy icons), summon_glyphs
                             (Warder, Bishop, Death Knight, Lich, risen skeleton,
                             Abomination, Rogue, Gargoyle, Frost Wraith shapes and
