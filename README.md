@@ -795,6 +795,9 @@ open). The zone is shown under the timer.
     show a gold chevron). Your summons prioritise it.
   - **Crimson Halberdier** (long halberd): slow and armoured; a hit on a
     summon also cleaves two neighbours.
+  - **Sister of the Scourge** (a battle-nun in crimson and ivory with a
+    three-tailed scourge; from 6:00, plus two squads at 7:35 and 12:25; also
+    in the Sanctum from 7:45): see *The Sister of the Scourge* below.
 - **Marshal Vael, the Crimson Bulwark** (21,120 HP with the stage bonus; 35,200 before the Oct 2026 balance pass):
   - **Radiant Cleave**: a gold sector telegraph, then a flaming sweep; each
     summon caught in it soaks part of your damage.
@@ -875,6 +878,27 @@ countdown with the boss at 17:00 like the other stages.
   short aliases (`SanctumStage.KINDS`: sentinel, confessor, paladin, radiant,
   guardian), and the boss slot is Seraphine's own arrival
   (`SeraphineData.ARRIVAL`). Both are described below.
+
+### The Sister of the Scourge
+
+A quick Covenant zealot in a fitted crimson corset gown and ivory veil
+(owner request, Oct 2026: the figure-redesign style of the Wither Witch,
+Soulbinder and Seraphine; `BattleSisterData`, `BattleSisterKit`). She
+marches on the **Crimson March** from 6:00 (trickle, and squads at 7:35 and
+12:25, the second led by an elite "Mother Superior") and in the **Sanctum of
+Judgment** from 7:45 (trickle, squads at 9:40 and 15:00); `--spawn=` puts her
+in any run.
+
+- 44 HP, 10% armour, 66 px/s (quicker than a Recruit), 4 XP; a weak
+  scourge-handle blow in contact.
+- **Lash**: when her target is within ~56 px she stops, a crimson line
+  flickers toward it for 0.35 s, then the scourge cracks 62 px along it and
+  strikes the **first two bodies** in the line, summons or you (8 damage to a
+  summon, 7 to you, before time scaling); every 2.4 s. A summon in front of
+  you shares the crack with you, so step out of the line.
+- **Zeal**: when a fellow soldier falls within 110 px, she surges for 2.5 s
+  (+30% speed, lash cooldown 1.6× faster; once per 6 s).
+- She always advances on you; she never kites.
 
 ### Stage 3 Covenant kinds (the Sanctum of Judgment)
 
@@ -1381,6 +1405,7 @@ scripts/
     sanctum_glyphs.gd       Sanctum of Judgment Covenant shapes (Sentinel, Radiant Inquisitor, High Confessor,
                             Sun Paladin, Cathedral Guardian) and their overlays (holy shield, sun ward,
                             revival pillar, suppression sigil, Guardian beam)
+    sister_glyphs.gd        Sister of the Scourge: fallback body, lash windup line, zeal glow
     seraphine_glyphs.gd     Grand Inquisitor Seraphine's shape (wings, sun halo, relic staff; Avatar form)
     evolution_recipes.gd    Read-only list of every evolution recipe (spell + summon data), for the
                             Recipes view, the Meta [recipes] section and the autotest
@@ -1456,6 +1481,7 @@ scripts/
       confessor_kit.gd        High Confessor: holy shields and revival (heals use the shared healer AI)
       paladin_kit.gd          Sun Paladin: sun ward aura (the charge is the shared Templar rush)
       guardian_kit.gd         Cathedral Guardian miniboss: ground slams, sweeping beam, XP burst
+      sister_kit.gd           Sister of the Scourge (March and Sanctum): telegraphed two-body lash, zeal surge
   abilities/
     ability_manager.gd      Spell casting, passive values, level-up card generation + deltas
     orb_shield.gd           Shadow Orb Shield
@@ -1560,6 +1586,7 @@ scripts/
     unit_data.gd            Summon classes (and their specials), level tables, AI weights, leash/rates
     enemy_data.gd           Graveyard enemy roster, Sir Alaric, Reckoning enemy, elites
     march_enemy_data.gd     Crimson March soldiers and structures, Marshal Vael
+    battle_sister_data.gd   The Sister of the Scourge (Crimson March and Sanctum): stats, lash and zeal numbers
     sanctum_enemy_data.gd   Sanctum of Judgment kinds (Sentinel, Radiant Inquisitor, High Confessor,
                             Sun Paladin, Cathedral Guardian) and their kit numbers
     seraphine_data.gd       Grand Inquisitor Seraphine: phases, kit, attendants, arrival and ending text
@@ -1690,7 +1717,7 @@ Options (after `--`):
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | `--stance=ID` | Army stance for the whole run: `escort`, `onslaught`, `spearhead` or `bone_ring` (forcing ignores the Spearhead unlock). Without it, `army`, `summon` and `evolve` switch stances by a simple rule (Bone Ring when the necromancer is in danger or the boss is within 260 px; Onslaught when at most 6 enemies are within 220 px and a Crimson March structure or a Sanctum crystal / altar is within 420 px or at most 10 enemies are within 480 px; Spearhead, when owned, toward a chest or power-up within 300 px; else Escort; `StanceBot`), while `naive` and `pact` keep Escort so their baselines do not move. |
-| `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). |
+| `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
 | `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |
 | `--hyper` | Hyper mode (`HyperData`: enemy HP / damage growth ×2, stage boss HP ×1.5, Soul Ash +100%), bypassing the Seraphine unlock. Every summary has a `hyper` line (on / off, the effective growth and boss HP, the 0:00 multipliers vs the standard game, the Hyper Soul Ash line, seconds survived past 0:00, the unlock and Hyper-clear state, in memory only without `--meta-save`). |
 | `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |

@@ -138,7 +138,11 @@
 ##     Sentinel sweeps and flat armour absorbed, Inquisitor zones and
 ##     suppressions with the horde's suppression counters, Confessor heals /
 ##     shields / revives / cancelled revives, Paladin ward damage prevented,
-##     Cathedral Guardian slams / beams / kills / time to kill / chests).
+##     Cathedral Guardian slams / beams / kills / time to kill / chests);
+##     when a Sister of the Scourge spawned (BattleSisterData; March, Sanctum
+##     or --spawn=battle_sister@T) a "battle sister" line adds her spawns,
+##     kills, lashes, lash hits on summons and the player, zeal surges and
+##     her damage.
 ##   * playable characters: --character=ID plays that character (locks
 ##     bypassed; Main builds the RunConfig). For any character but the
 ##     Gravecaller the army / evolve / summon build lists swap the
@@ -1117,6 +1121,7 @@ func finish(summary: Dictionary) -> void:
 		print("[autotest] sanctum: %s | minion dmg prevented by chambers %d" % [sd.summary_line(), int(st.get("sanctum_chamber_dmg_prevented", 0.0))])
 		print("[autotest] sanctum events (%d): %s" % [sd.fired.size(), ", ".join(sd.fired)])
 	_print_sanctum(st)
+	_print_battle_sister(st)
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired
@@ -1328,6 +1333,21 @@ func _print_sanctum(st: Dictionary) -> void:
 		i.call("summon_dmg_from_guardian_slam") + i.call("summon_dmg_from_guardian_beam") + i.call("summon_dmg_from_cathedral_guardian")])
 
 
+## Sister of the Scourge (BattleSisterData, BattleSisterKit): printed only
+## when one spawned this run (so every other run's summary is unchanged).
+func _print_battle_sister(st: Dictionary) -> void:
+	var spawned := int(st.get("spawned_" + BattleSisterData.ID, 0.0))  # Sisters spawned.
+	if spawned <= 0:
+		return
+	var i := func(key: String) -> int: return int(st.get(key, 0.0))
+	var lashes := maxi(1, i.call("sister_lashes"))  # Lashes started (avoid / 0).
+	print("[autotest] battle sister: spawned %d, killed %d | lashes %d (summon hits %d, player hits %d, %.2f bodies a lash) | zeal surges %d | lash dmg to player %d, summons %d (summons slain by it %d) | contact dmg to player %d, summons %d" % [
+		spawned, i.call("kill_" + BattleSisterData.ID), i.call("sister_lashes"), i.call("sister_lash_summon_hits"), i.call("sister_lash_player_hits"),
+		float(i.call("sister_lash_summon_hits") + i.call("sister_lash_player_hits")) / float(lashes), i.call("sister_zeal"),
+		i.call("player_dmg_from_sister_lash"), i.call("summon_dmg_from_sister_lash"), int(_sum_suffix(st, "_by_sister_lash")),
+		i.call("player_dmg_from_" + BattleSisterData.ID), i.call("summon_dmg_from_" + BattleSisterData.ID)])
+
+
 ## Prints the power-up drop / buff counters and the Profane Pact / Oath lines.
 func _print_powerups(summary: Dictionary) -> void:
 	var st: Dictionary = summary["stats"]  # Run counters.
@@ -1435,6 +1455,15 @@ static func _sum_prefix(st: Dictionary, prefix: String) -> float:
 	var total := 0.0
 	for k: String in st.keys():
 		if k.begins_with(prefix):
+			total += float(st[k])
+	return total
+
+
+## Sum of every stat whose key ends with `suffix` (e.g. "death_*_by_<source>").
+static func _sum_suffix(st: Dictionary, suffix: String) -> float:
+	var total := 0.0
+	for k: String in st.keys():
+		if k.ends_with(suffix):
 			total += float(st[k])
 	return total
 

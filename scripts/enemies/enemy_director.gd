@@ -470,7 +470,8 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## EnemyData.ENEMIES (Graveyard roster) first, then
 ## SanctumObjectiveData.STRUCTURES (Sanctum ward crystals and altars), then
 ## MarchEnemyData.ENEMIES (Crimson March soldiers and structures), then
-## SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
+## BattleSisterData.ENEMIES (the Sister of the Scourge, March and Sanctum),
+## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
 	kind = resolve_kind(kind)
@@ -480,6 +481,8 @@ func enemy_def(kind: String) -> Dictionary:
 		return SanctumObjectiveData.STRUCTURES[kind]
 	if MarchEnemyData.ENEMIES.has(kind):
 		return MarchEnemyData.ENEMIES[kind]
+	if BattleSisterData.ENEMIES.has(kind):
+		return BattleSisterData.ENEMIES[kind]
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -487,7 +490,8 @@ func enemy_def(kind: String) -> Dictionary:
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
 	return EnemyData.ENEMIES.has(kind) or SanctumObjectiveData.STRUCTURES.has(kind) \
-			or MarchEnemyData.ENEMIES.has(kind) or SanctumEnemyData.ENEMIES.has(kind)
+			or MarchEnemyData.ENEMIES.has(kind) or BattleSisterData.ENEMIES.has(kind) \
+			or SanctumEnemyData.ENEMIES.has(kind)
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar

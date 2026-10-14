@@ -5,6 +5,8 @@
 ##   "confessor"  High Confessor       ConfessorKit  (shields, revival)
 ##   "paladin"    Sun Paladin          PaladinKit    (sun ward aura)
 ##   "guardian"   Cathedral Guardian   GuardianKit   (slams, sweeping beam)
+##   "sister"     Sister of the Scourge BattleSisterKit (lash, zeal;
+##                BattleSisterData, Crimson March and Sanctum)
 ## Enemy only ever talks to this file and the CovenantKit base class.
 class_name CovenantKits
 extends RefCounted
@@ -30,6 +32,8 @@ static func for_enemy(current: CovenantKit, id: String) -> CovenantKit:
 			k = PaladinKit.new()
 		"guardian":
 			k = GuardianKit.new()
+		"sister":
+			k = BattleSisterKit.new()
 		_:
 			push_error("CovenantKits: unknown kit id '%s'" % id)
 	if k != null:

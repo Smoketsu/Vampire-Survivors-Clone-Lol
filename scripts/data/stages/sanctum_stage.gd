@@ -115,6 +115,8 @@ const RECKONING_OBJECTIVE: String = "DAWN'S WRATH: the Sanctum's light falls on 
 ## Confessors from 8:30, Sun Paladins from 13:00) come in the EVENTS waves
 ## only: always-elite kinds in the trickle meant ~70 elites a run, twice the
 ## chests and Soul Ash of the other stages and armies ground down by 7:00.
+## The Sister of the Scourge (BattleSisterData, not a Stage 3 kind, so named
+## by her real id) trickles from 7:45, her weight taken from the recruits'.
 const SEGMENTS := [
 	# Zone I, the Outer Courtyards: GDD §8.3 "00:00 Outer defenders".
 	{"start": 0.0, "rate": 1.5, "max_alive": 32,  # TUNING (not in GDD)
@@ -144,34 +146,34 @@ const SEGMENTS := [
 		"weights": {"recruit": 0.46, "footman": 0.2, "archer": 0.1, "sentinel": 0.02, "shieldbearer": 0.06, "chaplain": 0.05},
 		"objective": "The cloisters lie beyond the halls"},
 	{"start": 465.0, "rate": 3.1, "max_alive": 92,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.42, "footman": 0.2, "archer": 0.1, "sentinel": 0.02, "shieldbearer": 0.06, "chaplain": 0.05, "purifier": 0.04},
+		"weights": {"recruit": 0.39, "footman": 0.2, "archer": 0.1, "sentinel": 0.02, "shieldbearer": 0.06, "chaplain": 0.05, "purifier": 0.04, "battle_sister": 0.03},
 		"objective": "Purifiers hunt your dead between the pillars"},
 	# Zone III, the Cloisters: GDD §8.3 "10:00 High Confessor ambush" (8:30).
 	{"start": 510.0, "rate": 3.5, "max_alive": 106,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "sentinel": 0.022, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
+		"weights": {"recruit": 0.35, "footman": 0.18, "archer": 0.12, "sentinel": 0.022, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05, "battle_sister": 0.03},
 		"objective": "The Cloisters: High Confessors shield the faithful"},
 	{"start": 570.0, "rate": 3.9, "max_alive": 116,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "sentinel": 0.022, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
+		"weights": {"recruit": 0.35, "footman": 0.18, "archer": 0.12, "sentinel": 0.022, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05, "battle_sister": 0.03},
 		"objective": "Purge the cloisters"},
 	# GDD §8.3 "13:00 Altar destruction" (10:30).
 	{"start": 630.0, "rate": 3.6, "max_alive": 112,  # TUNING (not in GDD) room for the altar hunt
-		"weights": {"recruit": 0.38, "footman": 0.18, "archer": 0.12, "sentinel": 0.022, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
+		"weights": {"recruit": 0.35, "footman": 0.18, "archer": 0.12, "sentinel": 0.022, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05, "battle_sister": 0.03},
 		"objective": "Sacred altars bless the Covenant: destroy them to weaken it"},
 	{"start": 720.0, "rate": 4.4, "max_alive": 136,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.34, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
+		"weights": {"recruit": 0.31, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05, "battle_sister": 0.03},
 		"objective": "The sanctuary doors tremble"},
 	# Zone IV, the Final Sanctuary: GDD §8.3 "16:00 Elite paladins" (13:00).
 	{"start": 780.0, "rate": 4.9, "max_alive": 146,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
+		"weights": {"recruit": 0.29, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05, "battle_sister": 0.03},
 		"objective": "The Final Sanctuary: Sun Paladins defend the inner sanctum"},
 	{"start": 840.0, "rate": 4.5, "max_alive": 140,  # TUNING (not in GDD) lull
-		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
+		"weights": {"recruit": 0.29, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05, "battle_sister": 0.03},
 		"objective": "Stained light falls on the last defenders"},
 	{"start": 900.0, "rate": 5.6, "max_alive": 160,  # TUNING (not in GDD) the density peak of the run
-		"weights": {"recruit": 0.32, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05},
+		"weights": {"recruit": 0.29, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.04, "purifier": 0.05, "battle_sister": 0.03},
 		"objective": "The final sanctuary opens"},
 	{"start": 960.0, "rate": 5.0, "max_alive": 158,  # TUNING (not in GDD)
-		"weights": {"recruit": 0.3, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.05, "purifier": 0.05},
+		"weights": {"recruit": 0.27, "footman": 0.16, "archer": 0.12, "sentinel": 0.025, "halberdier": 0.05, "shieldbearer": 0.06, "chaplain": 0.05, "purifier": 0.05, "battle_sister": 0.03},
 		"objective": "The Voice of the Dawn approaches"},
 	# 17:00, the boss: a thinner trickle so the duel stays readable.
 	{"start": BOSS_TIME, "rate": 3.2, "max_alive": 100,  # TUNING (not in GDD)
@@ -255,6 +257,9 @@ const EVENTS := [
 			{"kind": "footman", "count": 8, "elite": false}]},
 	{"time": 560.0, "type": "wave", "banner": "Archers fire from the cloister arches!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "archer", "count": 6, "elite": false}, {"kind": "purifier", "count": 4, "elite": false}, {"kind": "sentinel", "count": 2, "elite": false}]},
+	# Sisters of the Scourge (BattleSisterData, owner request): from the cloisters on.
+	{"time": 580.0, "type": "wave", "banner": "Sisters of the Scourge rush the cloister walks!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "battle_sister", "count": 4, "elite": false}, {"kind": "footman", "count": 4, "elite": false}]},
 	{"time": 600.0, "type": "wave", "banner": "The cloister garrison closes the ring!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "recruit", "count": 24, "elite": false}, {"kind": "footman", "count": 6, "elite": false}, {"kind": "radiant", "count": 2, "elite": false}, {"kind": "chaplain", "count": 1, "elite": true}]},
 	# GDD §8.3 13:00 "Altar destruction" (moved to 10:30): optional altars.
@@ -273,6 +278,8 @@ const EVENTS := [
 		"groups": [{"kind": "recruit", "count": 24, "elite": false}, {"kind": "confessor", "count": 1, "elite": false}, {"kind": "radiant", "count": 3, "elite": false}, {"kind": "sentinel", "count": 2, "elite": false}]},
 	{"time": 870.0, "type": "wave", "banner": "Paladins and halberdiers strike together!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "paladin", "count": 2, "elite": false}, {"kind": "halberdier", "count": 3, "elite": false}, {"kind": "chaplain", "count": 2, "elite": false}]},
+	{"time": 900.0, "type": "wave", "banner": "A Mother Superior leads her Sisters of the Scourge!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "battle_sister", "count": 5, "elite": false}, {"kind": "battle_sister", "count": 1, "elite": true}, {"kind": "recruit", "count": 8, "elite": false}]},
 	# GDD §8.3 19:00 "Final sanctuary opens" (moved to 15:30).
 	{"time": 930.0, "type": "wave", "banner": "THE FINAL SANCTUARY OPENS: its last defenders surround you!", "formation": "ring",  # GDD §8.3 19:00, moved to 15:30
 		"groups": [{"kind": "recruit", "count": 22, "elite": false}, {"kind": "footman", "count": 8, "elite": false}, {"kind": "sentinel", "count": 2, "elite": false},

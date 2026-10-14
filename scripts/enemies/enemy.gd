@@ -30,7 +30,8 @@
 ## Sanctum of Judgment kinds (SanctumEnemyData, GDD §8.3) add optional keys
 ## read here (absent = off): `kit` (a CovenantKit with the kind's specials:
 ## Sentinel sweep, Inquisitor zones and suppression, Confessor shields and
-## revival, Paladin ward, Guardian slams and beam; hooks in activate(),
+## revival, Paladin ward, Guardian slams and beam, the Sister of the
+## Scourge's lash and zeal (BattleSisterData); hooks in activate(),
 ## deactivate(), think(), physics_step() and _draw()), always_elite,
 ## construct (never healed), flat_armor, miniboss, projectile "radiant" and
 ## heal_stat. Every enemy can carry a holy shield (absorb, High Confessor)

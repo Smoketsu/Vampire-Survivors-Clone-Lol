@@ -41,7 +41,7 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
-		"shieldbearer", "banner_bearer", "halberdier",
+		"shieldbearer", "banner_bearer", "halberdier", "battle_sister",
 		"sanctified_sentinel", "radiant_inquisitor", "high_confessor", "sun_paladin"]
 ## Covenant structures (enemy kinds that are buildings or carts).
 const STRUCTURES: Array[String] = ["watchtower", "outpost", "ward_generator", "supply_cart", "holy_standard",
@@ -70,6 +70,7 @@ const DESCRIPTIONS: Dictionary = {
 	"shieldbearer": "Tower-shield infantry that block projectiles from the front.",  # GDD §7.2
 	"banner_bearer": "Standard-bearers whose banner strengthens nearby soldiers.",  # GDD §7.2
 	"halberdier": "Slow, armoured soldiers whose sweeps cleave packed summons.",  # GDD §8.2
+	"battle_sister": "Battle-nuns whose scourges lash past the front line, zealous when a comrade falls.",  # GDD §15.0 "Sister of the Scourge" (owner request)
 	"sanctified_sentinel": "Stone constructs with flat armour and a sweeping strike.",  # GDD §7.2
 	"radiant_inquisitor": "Inquisitors who lay holy ground and suppress the undead.",  # GDD §7.2
 	"high_confessor": "Confessors who heal, shield allies and raise the fallen.",  # GDD §7.2
@@ -281,7 +282,7 @@ static func total(cat: String) -> int:
 static func enemy_row(id: String) -> Dictionary:
 	if id == "inquisitor":
 		return EnemyData.RECKONING_ENEMY
-	for table: Dictionary in [EnemyData.ENEMIES, MarchEnemyData.ENEMIES, SanctumEnemyData.ENEMIES, SanctumObjectiveData.STRUCTURES]:
+	for table: Dictionary in [EnemyData.ENEMIES, MarchEnemyData.ENEMIES, BattleSisterData.ENEMIES, SanctumEnemyData.ENEMIES, SanctumObjectiveData.STRUCTURES]:
 		if table.has(id):
 			return table[id]
 	match id:
