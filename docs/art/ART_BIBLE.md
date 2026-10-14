@@ -417,7 +417,8 @@ overshoots as the body rises, rebounds, settles on the contact, so frame 0 stays
 are only moved within their column (nearest, inverse mapping), never recoloured, so the strip passes
 the same checks. Used on the Wither Witch (2 px; her box starts right of her near arm, which shook
 when it was inside), the Soulbinder (2 px), their Hyper skins (boxes derived by `skin_rig()`),
-Seraphine and her Avatar (3 px). A bounce plays only while the unit moves; standing shows the still.
+Seraphine and her Avatar (3 px). The walk bounce plays while the unit moves; standing, these units play
+their idle strip (below).
 
 **Strip layout (the engine contract).** `assets/sprites/<key>_walk.png` = 8 frames side by side, no
 gaps, **each exactly the still's width and height** (frame i at x = i x W), feet on the same bottom row
@@ -434,6 +435,24 @@ still. The body layer is redrawn only when the frame changes (a Recruit at 58 px
 second), and the stretch bob drops to `WalkData.BOB_SCALE` (35%) since the strip carries its own 1 px
 dip. Hit flash, tints (skins, characters), elites, facing and the sharp-pixel shader work as for the
 still. Visual only: game time and positions, no RNG.
+
+**Idle strips (idle breathing bounce, Oct 2026; owner request).** Every rig with a `bust` box also has
+an idle loop, `assets/sprites/<key>_idle.png` (`python3 tools/walk_cycle.py idle <key> | --all`;
+`idle-preview <key> --out-dir DIR` writes a GIF at the game's rate and a frame sheet). Same contract as
+a walk strip: **24 frames** (`IdleData.FRAMES`), each the still's exact size, frame 0 the still, no
+colour the still lacks. The stills fill their frame up to row 0 (hats, halos, staff heads), so the
+breath cannot rise above the still: the still is the full breath, and the exhale sinks every row above
+the hip by 1 art px (`IDLE_SINK`; the last row above the hip is the one taken out, `IDLE_FIX` "waist"
+to choose another), so the hip, the legs or hem and the feet never move. The bust reacts through the
+same `_bounce()` field, kicked by each sink and rise like a damped spring (`IDLE_BUST` = lag -0.5,
+overshoot +0.75, a smaller rebound -0.375 that only moves the box's centre, then rest; mirrored on the
+inhale). The loop at `IdleData.FPS` (8 frames a second, 3.0 s a breath): 0.75 s at rest, the exhale
+and its wobble, 1.5 s exhaled, the inhale and its wobble, 0.75 s at rest. In the game (`UnitMotion`)
+a standing unit (not walking by the `WalkData` hysteresis) plays it on game time from the moment it
+stopped (frame 0 first, so stopping never pops and units fall out of step with no RNG or id); a walk
+frame always wins, and frozen, stunned, stone, dead, dashing, airborne and structure bodies show the
+still. Boss attack poses keep their pose stills. Six strips: the Wither Witch, the Soulbinder, their
+Hyper skins, Seraphine and her Avatar.
 
 **Adding a unit.** Look at the still on a grid (rows and columns), write its rig, then
 `python3 tools/walk_cycle.py build <key>`, `python3 tools/walk_cycle.py preview <key> --out-dir DIR`

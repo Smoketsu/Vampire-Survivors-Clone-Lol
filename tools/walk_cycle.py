@@ -7,6 +7,20 @@ Usage (from the repo root):
         per key: <id>_walk.gif (walking in place, 4x) and <id>_walk_sheet.png
         (the still, then every frame, 6x, on the Graveyard soil)
     python3 tools/walk_cycle.py sheet <key> [...] --out PNG  one review sheet for many keys
+    python3 tools/walk_cycle.py idle <key> [...] | --all     write assets/sprites/<key>_idle.png
+        (the idle breathing loop; only rigs with a `bust` box; --all = those)
+    python3 tools/walk_cycle.py idle-preview <key> [...] | --all --out-dir DIR
+        per key: <id>_idle.gif (the breathing loop at IdleData.FPS, 4x) and
+        <id>_idle_sheet.png (the still, then every frame, 6x)
+
+Idle strips (the "Idle" section below): IDLE_FRAMES frames, the walk-strip
+contract (each frame the still's size, frame 0 the still, no new colour). The
+stills fill their frame up to row 0, so the breath cannot rise above the still:
+the still is the full breath and the exhale sinks every row above the hip 1 art
+px (the last row above the hip is the one taken out, so the hip and everything
+below it never move, the feet stay planted), then rises back. The bust reacts
+through the same _bounce() field as the walk, timed like a damped spring
+(IDLE_BUST: lag, overshoot, a smaller rebound, settle) on each sink and rise.
 
 Why procedural (ART_BIBLE "Walk cycles", the pilot): the owner approved the
 stills pixel by pixel. An AI walk sheet, even with the still attached, redraws
@@ -421,15 +435,134 @@ def review_sheet(keys: list, out: Path, scale: int = 4) -> None:
     print(f"review sheet: {out} ({len(keys)} units)")
 
 
+# ------------------------------------------------------------------ idle (breathing) strips
+
+IDLE_DATA = ROOT / "scripts" / "data" / "idle_data.gd"  # Idle frame count and suffix live there.
+
+
+def _idle_const(name: str, default: str) -> str:
+    """Reads constant `name` from idle_data.gd (one source of truth for the engine and the tool)."""
+    if not IDLE_DATA.exists():
+        return default
+    m = re.search(rf"const {name}: \w+ = \"?([\w.]+)\"?", IDLE_DATA.read_text())
+    return m.group(1) if m else default
+
+
+IDLE_FRAMES = int(_idle_const("FRAMES", "24"))  # Frames per idle loop (IdleData.FRAMES).
+IDLE_SUFFIX = _idle_const("SUFFIX", "_idle")  # Idle strip key suffix (IdleData.SUFFIX).
+IDLE_FPS = float(_idle_const("FPS", "8.0"))  # Frames per second of the loop (IdleData.FPS; the preview GIF's rate).
+# Per frame: art px every row above the hip sinks (0 = the still = the full breath, 1 = exhaled).
+# 0.75 s at rest, the exhale, 1.5 s exhaled, the inhale, 0.75 s at rest (at 8 fps).
+IDLE_SINK = (0,) * 6 + (1,) * 12 + (0,) * 6
+# Per frame: the bust underside's move relative to the body, as a share of the rig's `bust` px
+# (+ = down; the same field as BUST_BOUNCE). A damped spring kicked by each sink and rise: it
+# lags the body (stays up as the body sinks, down as it rises), overshoots, rebounds less (only
+# the box's centre still moves), then settles; at rest it is 0, so frame 0 stays the still.
+IDLE_BUST = ((0.0,) * 6
+             + (-0.5, 0.75, -0.375) + (0.0,) * 9
+             + (0.5, -0.75, 0.375) + (0.0,) * 3)
+# Per-key overrides of the idle cut (set after review): "waist" = the row taken out on the
+# exhale (default the rig's hip - 1, the last row above the hip).
+IDLE_FIX = {}
+if len(IDLE_SINK) != IDLE_FRAMES or len(IDLE_BUST) != IDLE_FRAMES:
+    sys.exit(f"idle_data.gd FRAMES is {IDLE_FRAMES}; IDLE_SINK / IDLE_BUST hold {len(IDLE_SINK)} / {len(IDLE_BUST)}")
+
+
+def idle_keys() -> list:
+    """Keys whose rig has a bust box (the only ones with idle strips)."""
+    return [k for k, r in RIGS.items() if "bust" in r]
+
+
+def _sink(still: np.ndarray, waist: int, dy: int) -> np.ndarray:
+    """The still with rows 0 .. waist - dy moved `dy` rows down (row `waist` and the dy - 1
+    rows above it are covered, the top dy rows emptied); rows below `waist` are untouched."""
+    if dy == 0:
+        return still.copy()
+    out = still.copy()
+    out[dy:waist + 1] = still[0:waist + 1 - dy]
+    out[:dy] = 0
+    return out
+
+
+def idle_frames_of(key: str) -> list:
+    """The IDLE_FRAMES idle frames of `key` (RGBA arrays the still's size); frame 0 is the still."""
+    rig = RIGS[key]
+    if "bust" not in rig:
+        sys.exit(f"{key}: no bust box in its rig (idle strips are for bust rigs only)")
+    still = load(key)
+    waist = int(IDLE_FIX.get(key, {}).get("waist", rig["hip"] - 1))  # Row taken out on the exhale.
+    out = []
+    for f in range(IDLE_FRAMES):
+        dy = IDLE_SINK[f]  # Body sink this frame (art px).
+        frame = _sink(still, waist, dy)
+        frame = _bounce(frame, rig["bust"], dy, IDLE_BUST[f] * rig["bust"][4])
+        out.append(frame)
+    if not np.array_equal(out[0], still):
+        sys.exit(f"{key}: idle frame 0 differs from the still (rig error)")
+    if any(not np.array_equal(f[waist + 1:], still[waist + 1:]) for f in out):
+        sys.exit(f"{key}: an idle frame moved a row below the waist (rig error)")
+    return out
+
+
+def build_idle(key: str) -> Path:
+    """Writes assets/sprites/<key>_idle.png and returns its path."""
+    frames = idle_frames_of(key)
+    strip = np.concatenate(frames, axis=1)
+    dest = SPRITE_DIR / (key + IDLE_SUFFIX + ".png")
+    still = frames[0]
+    new_cols = {tuple(c) for f in frames for c in f[f[:, :, 3] > 0].tolist()} - {tuple(c) for c in still[still[:, :, 3] > 0].tolist()}
+    if new_cols:
+        sys.exit(f"{key}: idle frames hold colours the still does not ({len(new_cols)})")
+    Image.fromarray(strip, "RGBA").save(dest, optimize=True)
+    print(f"{key}{IDLE_SUFFIX}: {len(frames)} frames of {still.shape[1]}x{still.shape[0]} -> {dest.relative_to(ROOT)} "
+          f"({strip.shape[1]}x{strip.shape[0]})")
+    return dest
+
+
+def preview_idle(key: str, out_dir: Path, gif_scale: int = 4, sheet_scale: int = 6) -> None:
+    """A GIF of the breathing loop and a frame sheet for `key` (on the Graveyard soil)."""
+    frames = idle_frames_of(key)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    name = key.replace("/", "_")
+    h, w = frames[0].shape[:2]
+    pad = 4
+    gif = []
+    for f in frames:
+        c = Image.new("RGBA", (w + 2 * pad, h + 2 * pad), SOIL)
+        c.alpha_composite(Image.fromarray(f, "RGBA"), (pad, pad))
+        gif.append(c.convert("RGB").resize(((w + 2 * pad) * gif_scale, (h + 2 * pad) * gif_scale), Image.NEAREST))
+    # Identical neighbouring frames would be merged by the GIF writer; disposal keeps them apart.
+    gif[0].save(out_dir / (name + "_idle.gif"), save_all=True, append_images=gif[1:],
+                duration=int(round(1000.0 / IDLE_FPS)), loop=0, optimize=False, disposal=1)
+    cells = [frames[0]] + frames
+    sheet = Image.new("RGBA", ((w + pad) * len(cells) + pad, h + 2 * pad), SOIL)
+    for i, f in enumerate(cells):
+        sheet.alpha_composite(Image.fromarray(f, "RGBA"), (pad + i * (w + pad), pad))
+    sheet = sheet.resize((sheet.width * sheet_scale, sheet.height * sheet_scale), Image.NEAREST)
+    sheet.save(out_dir / (name + "_idle_sheet.png"))
+    print(f"{key}: {out_dir / (name + '_idle.gif')}, {out_dir / (name + '_idle_sheet.png')}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["build", "preview", "sheet"])
+    ap.add_argument("cmd", choices=["build", "preview", "sheet", "idle", "idle-preview"])
     ap.add_argument("keys", nargs="*")
-    ap.add_argument("--all", action="store_true", help="every key in RIGS")
-    ap.add_argument("--out-dir", default="", help="preview: output folder")
+    ap.add_argument("--all", action="store_true", help="every key in RIGS (idle commands: every bust rig)")
+    ap.add_argument("--out-dir", default="", help="preview / idle-preview: output folder")
     ap.add_argument("--out", default="", help="sheet: output PNG")
     args = ap.parse_args()
     keys = list(RIGS) if args.all else args.keys
+    if args.cmd in ("idle", "idle-preview"):
+        keys = idle_keys() if args.all else args.keys
+        unknown = [k for k in keys if k not in RIGS]
+        if unknown:
+            sys.exit(f"no rig for: {', '.join(unknown)}")
+        for k in keys:
+            if args.cmd == "idle":
+                build_idle(k)
+            else:
+                preview_idle(k, Path(args.out_dir or "."))
+        return
     unknown = [k for k in keys if k not in RIGS]
     if unknown:
         sys.exit(f"no rig for: {', '.join(unknown)}")

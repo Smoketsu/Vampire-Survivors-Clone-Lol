@@ -47,6 +47,12 @@
 ## (same corner, same size, same shadow, tint and flash), so a frame lines up
 ## pixel for pixel with the still. Everything else (icons, previews, death
 ## dissolves, layers with walk_frame -1) draws the still.
+##
+## Idle strips (IdleData, GDD §15.0 "Idle breathing bounce"): the same contract
+## for "<key>_idle.png", the loop a unit plays while it stands. draw() reports
+## its frame count in the layer's idle_count and draws the layer's idle_frame
+## from it when no walk frame is shown (a walk frame always wins). Boss attack
+## poses (draw_pose()) keep their pose stills.
 class_name SpriteBank
 extends RefCounted
 
@@ -65,6 +71,13 @@ static var _walk: Dictionary = {}
 
 ## key -> frames in that key's walk strip (0 = no strip). Filled with _walk.
 static var _walk_frames: Dictionary = {}
+
+## key -> idle strip texture of grid-art sprite `key` (IdleData; wrapped like
+## _walk), or null when it has none or its size does not fit the still.
+static var _idle: Dictionary = {}
+
+## key -> frames in that key's idle strip (0 = no strip). Filled with _idle.
+static var _idle_frames: Dictionary = {}
 
 ## The shared sharp-pixel ShaderMaterial (SpriteData.SHARP_SHADER), built on
 ## first use by apply_sharp(); null until then.
@@ -110,23 +123,42 @@ static func texture(key: String) -> Texture2D:
 static func walk_frames(key: String) -> int:
 	if _walk_frames.has(key):
 		return int(_walk_frames[key])
-	var n := 0  # Frames in the strip (0 = none).
-	var strip: Texture2D = null  # Wrapped strip texture.
-	var still := texture(key)  # The still: the strip is only used with grid art.
-	var path := SpriteData.ROOT + key + WalkData.SUFFIX + ".png"  # Expected strip file.
-	if still != null and bool(_grid[key]) and ResourceLoader.exists(path):
-		var tex := load(path) as Texture2D  # Raw strip.
-		var w := still.get_width()  # Frame width = the still's width (texels).
-		if tex != null and w > 0 and tex.get_height() == still.get_height() \
-				and tex.get_width() % w == 0 and tex.get_width() / w >= 2:
-			n = tex.get_width() / w
-			var sharp := CanvasTexture.new()  # Same per-draw filter override as grid art.
-			sharp.diffuse_texture = tex
-			sharp.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-			strip = sharp
+	var strip := _load_strip(key, WalkData.SUFFIX)  # Wrapped strip texture, or null.
 	_walk[key] = strip
-	_walk_frames[key] = n
-	return n
+	_walk_frames[key] = 0 if strip == null else strip.get_width() / texture(key).get_width()
+	return int(_walk_frames[key])
+
+
+## Frames in the idle strip of sprite `key` (IdleData; 0 when it has no
+## usable strip: no file, no grid still, or a size that does not fit). Loads
+## and caches the strip on first use, with walk_frames()' checks.
+static func idle_frames(key: String) -> int:
+	if _idle_frames.has(key):
+		return int(_idle_frames[key])
+	var strip := _load_strip(key, IdleData.SUFFIX)  # Wrapped strip texture, or null.
+	_idle[key] = strip
+	_idle_frames[key] = 0 if strip == null else strip.get_width() / texture(key).get_width()
+	return int(_idle_frames[key])
+
+
+## The strip "<key><suffix>.png" of grid-art sprite `key`, wrapped in a
+## linear-filtered CanvasTexture like grid art, or null when there is no file,
+## the still is not grid art, or the strip's size does not fit the still
+## (height equal, width a whole multiple of the still's of at least 2).
+static func _load_strip(key: String, suffix: String) -> Texture2D:
+	var still := texture(key)  # The still: a strip is only used with grid art.
+	var path := SpriteData.ROOT + key + suffix + ".png"  # Expected strip file.
+	if still == null or not bool(_grid[key]) or not ResourceLoader.exists(path):
+		return null
+	var tex := load(path) as Texture2D  # Raw strip.
+	var w := still.get_width()  # Frame width = the still's width (texels).
+	if tex == null or w <= 0 or tex.get_height() != still.get_height() \
+			or tex.get_width() % w != 0 or tex.get_width() / w < 2:
+		return null
+	var sharp := CanvasTexture.new()  # Same per-draw filter override as grid art.
+	sharp.diffuse_texture = tex
+	sharp.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	return sharp
 
 
 ## Gives `ci` the shared sharp-pixel ShaderMaterial so the grid art it draws
@@ -217,14 +249,21 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Col
 		var step := 1.0 if icon else float(SpriteData.ART_SCALE)  # Grid pitch (local px).
 		top_left = (top_left / step).round() * step
 		if not icon and ci is UnitLayer:
-			# A unit body: walk frame from its strip, if it has one (see the header).
+			# A unit body: walk frame from its strip, else idle frame from its
+			# idle strip, if it has them (see the header).
 			var layer := ci as UnitLayer  # The body layer being drawn.
 			var n := walk_frames(key)  # Frames in this sprite's walk strip (0 = none).
 			layer.walk_count = n
+			var m := idle_frames(key)  # Frames in this sprite's idle strip (0 = none).
+			layer.idle_count = m
+			var fw := float(tex.get_width())  # Frame width (texels) = the still's width.
 			if layer.walk_frame > 0 and layer.walk_frame < n:
-				var fw := float(tex.get_width())  # Frame width (texels) = the still's width.
 				var src := Rect2(fw * float(layer.walk_frame), 0.0, fw, float(tex.get_height()))  # Frame in the strip.
 				ci.draw_texture_rect_region(_walk[key], Rect2(top_left, size), src, mod)
+				return true
+			if layer.idle_frame > 0 and layer.idle_frame < m:
+				var isrc := Rect2(fw * float(layer.idle_frame), 0.0, fw, float(tex.get_height()))  # Frame in the idle strip.
+				ci.draw_texture_rect_region(_idle[key], Rect2(top_left, size), isrc, mod)
 				return true
 	ci.draw_texture_rect(tex, Rect2(top_left, size), false, mod)
 	return true

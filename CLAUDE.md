@@ -372,7 +372,9 @@ tiny tweaks.
    `walk_cycle.py`, `ui_kit.py`, `skin_cap.py`. Boss attack poses are in (`boss_pose_data.gd`). **Figure redesign** (owner
    request, GDD §15.0 "Figure redesign of the female characters"): the Wither Witch, the Soulbinder, their Hyper skins and
    Seraphine (all four sprites) have exaggerated hourglass figures (fully clothed) and a procedural bust bounce in their walk
-   / glide strips (`walk_cycle.py` rig key `bust`); Seraphine and her Avatar have glide strips. Possible later polish: attack poses for regular units, arm swing, more effect hooks.
+   / glide strips (`walk_cycle.py` rig key `bust`); Seraphine and her Avatar have glide strips. Every bust rig also has
+   a 24-frame **idle breathing strip** `<key>_idle.png` (`walk_cycle.py idle`, `IdleData`, GDD §15.0 "Idle breathing
+   bounce") that plays while the unit stands, on game time, through the same `SpriteBank.draw()` path. Possible later polish: attack poses for regular units, arm swing, more effect hooks.
 4. **Web build** (owner decision, after the art is done; GDD §15.0 "Web build after the art"): a
    no-threads Godot Web export for desktop browsers, the audio synthesis load checked, Quit hidden,
    and a CI job that publishes it for playtesters. The menu theme is already Web-ready (on the Web it

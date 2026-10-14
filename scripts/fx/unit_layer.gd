@@ -11,6 +11,8 @@
 ## strip on this layer and reports the strip's frame count in `walk_count`;
 ## UnitMotion picks the frame from the step phase and redraws the layer only
 ## when the frame changes. No unit or glyph code needs to know about it.
+## Idle strips (IdleData) work the same way through `idle_frame` / `idle_count`
+## (the breathing loop of a standing unit; a walk frame wins over it).
 class_name UnitLayer
 extends Node2D
 
@@ -23,9 +25,16 @@ var walk_frame: int = -1
 ## Frames in the walk strip of the sprite this layer drew last (0 = none: no
 ## strip, a glyph, or not drawn yet). Set by SpriteBank.draw() during _draw().
 var walk_count: int = 0
+## Idle frame to draw (0..idle_count - 1), or -1 for the still sprite (walking,
+## frozen, dead, dashing, airborne, or a layer that never idles).
+var idle_frame: int = -1
+## Frames in the idle strip of the sprite this layer drew last (0 = none). Set
+## by SpriteBank.draw() during _draw(), like walk_count.
+var idle_count: int = 0
 
 
 func _draw() -> void:
 	walk_count = 0
+	idle_count = 0
 	if draw_fn.is_valid():
 		draw_fn.call(self)
