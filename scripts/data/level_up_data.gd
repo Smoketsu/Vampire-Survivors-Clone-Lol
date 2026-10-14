@@ -43,7 +43,8 @@ const WEIGHT_NEW_CORE_SUMMON: float = 1.5  # TUNING (not in GDD)
 ## playtest, "I rarely ever see the newer additions"): replaces three shared
 ## pools (spells 2.0, classes 1.5, passives 2.0 split between every unowned
 ## later item), which had fallen to ~0.2 per item (~2% of hands each) as the
-## roster grew to 9 / 7 / 10 later items; at 0.5 each is offered in ~5% of hands.
+## roster grew to 9 / 7 / 10 later items; at 0.5 each is offered in ~4% of hands
+## (from ~2%) and 74% of opening hands hold a later item (from 48%).
 const WEIGHT_NEW_LATER: float = 0.5  # TUNING (not in GDD) owner decision
 ## Weight multiplier for a "dead" card (no current effect on the build, e.g.
 ## an army passive with no summon class owned). At most CARDS-1 dead cards are

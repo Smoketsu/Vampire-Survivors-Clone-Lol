@@ -462,8 +462,8 @@ number is in `scripts/data/unit_data.gd`.
   newer spells, the seven later summon classes and the ten later passives,
   flagged `shared_card_pool`) weighs **0.5** (`WEIGHT_NEW_LATER`, owner
   decision Oct 2026: they used to split fixed pools and had fallen to about
-  0.2 each, ~2% of hands; now each is in ~5% of hands and about a third of
-  all new-item cards are later items). The Bishop is never offered and
+  0.2 each, ~2% of hands; now each is in ~4% of hands, three hands in four
+  hold at least one later item, and about a third of all new-item cards are later items). The Bishop is never offered and
   merged classes don't count. So the core classes still lead early hands (Shadow Bolt is always yours); once your 6
   active slots are full, no new summon or spell is offered at all. A hand is never made only of useless
   cards, and fallback cards (heal, +max HP, raise every fallen summon) fill

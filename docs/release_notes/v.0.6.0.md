@@ -105,8 +105,8 @@ crowds you fight through:
   A strong army build now kills each of them in about BOSS_KILL_RANGE of their 3:00.
 - **Spells deal 20% more damage.** All twelve spells and their evolutions; the level-up cards show the real numbers.
 - **The newer additions show up.** The newer spells, summons and passives used to share a few fixed slots in
-  the level-up draw, so each appeared in about 2% of hands. Each one now has its own weight and appears in about
-  5% of hands; about a third of the new-item cards you see are newer items.
+  the level-up draw, so each appeared in about 2% of hands. Each one now has its own weight and shows up about twice as often:
+  three level-ups in four now offer at least one newer item (was one in two).
 - The short-lived "+5% damage to everything" from the first playtest build is gone, replaced by the changes above.
 
 ## Fixes
