@@ -342,3 +342,6 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-13 23:11,icons/gargoyle,gpt-image-2.5-flare,medium,1024x1024,1,345,1024,439,0.0231,gargoyle.png
 2026-10-13 23:11,icons/frost_wraith,gpt-image-2.5-flare,medium,1024x1024,1,343,1024,439,0.0231,frost_wraith.png
 2026-10-13 23:11,icons/abomination,gpt-image-2.5-flare,medium,1024x1024,1,375,1024,439,0.0232,abomination.png
+2026-10-14 00:25,menu/cathedral,gpt-image-2.5-flare,medium,1536x1024,1,348,882,343,0.0191,cathedral.png
+2026-10-14 00:25,menu/moon,gpt-image-2.5-flare,medium,1024x1024,0,202,0,439,0.0142,moon.png
+2026-10-14 00:25,menu/mausoleum,gpt-image-2.5-flare,medium,1024x1024,1,316,882,439,0.0218,mausoleum.png
