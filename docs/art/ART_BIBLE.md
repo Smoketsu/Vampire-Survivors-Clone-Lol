@@ -624,6 +624,17 @@ and 64 px boxes). Player
 spells and passives use violet with bone; summon icons use their class colours; never Covenant gold or
 crimson on the player's icons (the Hyper badge and the Profane Pact excepted). Evolutions add a
 gold-trimmed frame. The Shadow Bolt icon is Anchor 6. **Status: all done** (Oct 2026): the API generated each **symbol alone** on a transparent background, converted to fit 26×26 art px, and composited onto one badge template: a 32×32 frame with Anchor 6's **cut corners** (owner decision: cut corners on every UI element; a brief square version was reverted), a 1 px border, an ink-violet face: a **violet** border for ordinary icons, a **gold** border for the evolutions (spell and summon). Small skull faces keep their eye sockets with `prepare_sprite.py --no-cleanup` or `--method mode`, picked per icon. The **Hyper badge** is the exception: a bare 16×16 gold sun (no badge frame), drawn 1:1 by `HyperBadge` at its 16-18 px sizes.
+**Ossuary and Soul Ash icons** (menu modernization wave 2, Oct 2026): the Soul Ash currency, the four
+tree emblems and every Ossuary upgrade that was still code-drawn (`MetaGlyphs`, now only the fallback) got
+badges the same way: one symbol per prompt (26 art px, `--ref icons/shadow_bolt.png`), converted with
+`prepare_sprite.py --no-center --no-prune --no-levels` (`--no-cleanup` where embers or eyes need their
+single pixels: Soul Ash, Undying Will, Ash Harvest, Profane Oath) and composited on the badge template cut
+from an approved badge (its cut-corner alpha and violet ring). Upgrade symbols use their tree's colour
+(Necromancy soul teal + bone, Shadowcraft violet + bone, Survival cold blue, Fortune gold + teal crystals);
+the Fortune gold is the meta tree's colour, not Covenant gold. **Soul Ash** also has a bare 16×16
+`soul_ash_small` for inline costs. API for every screen: `IconGlyph.new("soul_ash", Vector2(32, 32))` (the
+badge, 1:1; 64 for x2) and `IconGlyph.new("soul_ash_small", Vector2(16, 16))`. 31 images (24 symbols, 5
+retries, 2 Soul Ash variants), about $0.47.
 
 | File | Subject |
 |---|---|
@@ -704,6 +715,31 @@ gold-trimmed frame. The Shadow Bolt icon is Anchor 6. **Status: all done** (Oct 
 | `dread_rally.png` | Dread Rally (ultimate): a skull inside a dark violet burst ring, soul wisps rising |
 | `twin_shadow.png` | Ossuary Twin Shadow: two overlapping hooded shadow silhouettes (second dash charge) |
 | `restless_shade.png` | Ossuary Restless Shade: a hooded shadow inside a teal clock arc (shorter dash cooldown) |
+| `soul_ash.png` | **Soul Ash** (the currency: main menu, Ossuary, end screen): a heap of grey soul ash with orange embers glowing through it and a teal soul flame rising from its peak |
+| `soul_ash_small.png` | The same Soul Ash symbol **bare, 16×16** (no badge, like the Hyper badge), for inline costs next to a number |
+| `tree_necromancy.png` | Ossuary tree emblem: a bone skull with teal eyes over crossed bones |
+| `tree_shadowcraft.png` | Ossuary tree emblem: a violet crescent moon cradling a white-hot star |
+| `tree_survival.png` | Ossuary tree emblem: a cold-blue kite shield with a bone heart |
+| `tree_fortune.png` | Ossuary tree emblem: a gold skull coin with a white sparkle |
+| `necrotic_marrow.png` | Ossuary: a thick bone with a glowing teal marrow crack |
+| `sharpened_bones.png` | Ossuary: two crossed bone blades with a teal glint |
+| `grave_call.png` | Ossuary: a bone war horn pouring teal soul mist |
+| `risen_vanguard.png` | Ossuary: a helmed skeleton head with teal eyes and a teal plus |
+| `legion_of_bone.png` | Ossuary: a skull-topped bone standard with a tattered teal pennant |
+| `umbral_potency.png` | Ossuary: a tall violet flame rising from a bone rune circle |
+| `quickened_rites.png` | Ossuary: an open book under a violet circular refresh arrow |
+| `widening_dark.png` | Ossuary: a violet orb with four bone arrows pointing outward |
+| `shadow_mastery.png` | Ossuary: a violet eight-pointed star sigil inside a bone ring |
+| `grave_flesh.png` | Ossuary: a stone-grey heart with an ice-blue plus |
+| `bone_mail.png` | Ossuary: a bone ribcage breastplate with a cold-blue gem |
+| `fleet_shade.png` | Ossuary: a cold-blue hooded shade dashing right with ice speed streaks |
+| `undying_will.png` | Ossuary: a bone skull rising out of cold-blue soul flames |
+| `soul_magnet.png` | Ossuary: a grey horseshoe magnet with gold tips pulling teal crystals |
+| `grave_tithe.png` | Ossuary: a gold offering bowl heaped with teal soul crystals |
+| `ash_harvest.png` | Ossuary: a bone scythe over a heap of ash with embers |
+| `fates_thread.png` | Ossuary: a wooden spool of glowing gold thread, its loose end looping |
+| `banishing_rite.png` | Ossuary: a bone card with a violet sigil cut by a violet slash |
+| `profane_oath.png` | Ossuary Profane Oath: a skeletal hand raised in an oath under a crimson flame (the Oath is the one crimson Ossuary icon, like the Pact) |
 | `warrior.png` | Summon class badge (hotbar and army list): a skeleton warrior's helmed skull behind a round shield |
 | `archer.png` | Summon class badge: a moss-hooded skeleton drawing a bone bow with a teal arrow |
 | `mage.png` | Summon class badge: a skull in an arcane-blue hood beside an orb staff |

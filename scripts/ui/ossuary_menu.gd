@@ -1,87 +1,81 @@
 ## OssuaryMenu — the Soul Ash upgrade shop (GDD §10.1 "Upgrades", §9.2 four
-## upgrade trees), opened from the main menu. Four columns (Necromancy,
-## Shadowcraft, Survival, Fortune); each upgrade is one button showing its
-## code-drawn icon with tier pips, name and tier, the effect delta
-## ("Minion HP +6% -> +12%") and its cost / locked / maxed state. Pressing an
-## upgrade buys its next tier through the Meta autoload (which saves at once).
-## "Refund all" (respec) asks for confirmation first, then returns every
-## spent Soul Ash.
+## upgrade trees), opened from the main menu. Menu modernization wave 2 (GDD
+## §15.0 "Ossuary redesign"; owner: "go the extra mile", "less wordy"):
+##   * a title row: "The Ossuary" and the Soul Ash balance (the Soul Ash
+##     badge and the number, which counts down after a purchase while the
+##     spent amount floats away);
+##   * four tree columns (Necromancy, Shadowcraft, Survival, Fortune) under
+##     header bands with their pixel emblems; each upgrade is one OssuaryTile
+##     (icon, name, level pips, next cost; its frame colour is its state:
+##     soul teal affordable, violet too expensive, gold maxed, dim locked);
+##   * ONE ornate detail panel that follows the focused / hovered tile: its
+##     icon at x2, name and pips, the one-line effect, the current → next
+##     value with a pixel arrow, the cost with the Soul Ash symbol (or what it
+##     needs / "Maxed") and a Buy chip when it can be bought;
+##   * bottom right: the standalone Profane Oath tile (opt-in difficulty,
+##     MetaData "oath", crimson once owned: its pips show the active tiers
+##     bright and owned-but-lowered tiers dark), "Lower Oath" (lowers the
+##     ACTIVE tier by one at once: free and reversible, owned tiers stay owned,
+##     Meta.set_oath_active), "Refund all" (respec; asks first) and Back.
+## Pressing an affordable tile buys its next tier through the Meta autoload
+## (which saves at once) with the `purchase` sound, a flash and spark burst on
+## the tile; a locked, too expensive or maxed tile plays `denied` and shakes.
+## A lowered Oath tile raises the active tier again for free. Refund all and
+## Lower Oath never look disabled (Lower Oath turns crimson while an Oath
+## tier is active): with nothing to refund / lower they answer `denied`.
 ## Fully usable with keyboard and controller: explicit focus neighbours make
-## the upgrade buttons a grid (up / down inside a tree, left / right across
-## trees at the same row, down from the last row to Refund all / Back), A /
-## Enter buys, B / Esc closes the confirmation or the menu. The first upgrade
-## is focused on open.
-## The standalone Profane Oath (opt-in difficulty, MetaData "oath") sits in
-## the bottom row between Refund all and Back: its button buys the next tier
-## (or raises the active tier again for free when it was lowered), and
-## "Lower Oath" asks for confirmation, then lowers the ACTIVE tier by one
-## (down to off) with no refund (owned tiers stay owned, Meta.set_oath_active).
+## the tiles a grid (up / down inside a tree, left / right across trees at the
+## same row, down from any tree to the Oath tile, up from it back to the tree
+## last visited), A / Enter buys, B / Esc closes the confirmation or the
+## menu. The first upgrade is focused on open. Every number is in
+## OssuaryUiData; the upgrade data stays in MetaData.
 ## Open it with OssuaryMenu.open_over(parent, button_to_refocus).
-## Text sizes are UiTheme type tiers (Jacquard title, HEADER balance, NAME
-## tree names, BODY upgrade lines and descriptions).
 class_name OssuaryMenu
 extends Control
 
 ## Emitted when the menu is about to be freed.
 signal closed
 
-## Size (px) of one upgrade button.
-const BUTTON_SIZE := Vector2(280, 72)
-## Gap (px) between tree columns.
-const COLUMN_GAP: int = 14
-## Gap (px) between upgrade buttons in a column.
-const ROW_GAP: int = 5
-## Size (px) of the icon on an upgrade button (includes the pip row).
-const ICON_SIZE := Vector2(44, 52)
-## Button height (px) and row gap (px) used instead of BUTTON_SIZE.y /
-## ROW_GAP when a tree holds more than COMPACT_ROWS upgrades (Necromancy
-## with the Spearhead stance unlock), so the screen still fits 720 px.
-const COMPACT_BUTTON_HEIGHT: float = 62.0
-## Row gap (px) of the compact layout.
-const COMPACT_ROW_GAP: int = 3
-## Upgrades per tree above which the compact layout is used.
-const COMPACT_ROWS: int = 5
-## Height (px) kept for the description line: two Jersey 10 BODY lines, so
-## a long description wraps instead of widening the panel, and the bottom
-## row never jumps.
-const DETAIL_HEIGHT: float = 42.0  # TUNING (not in GDD) layout fit
-## Roman numerals for tier names in prerequisite text.
+## Roman numerals for tier names in prerequisite text (index = tier, 0..6).
 const ROMAN := ["0", "I", "II", "III", "IV", "V", "VI"]
 
 ## Control focused again when the menu closes (may be null).
 var return_focus: Control = null
-## Upgrade id -> its Button.
+## Upgrade id -> its OssuaryTile (the four trees and the Oath).
 var buttons: Dictionary = {}
-## Upgrade id -> {"icon": IconGlyph, "name": Label, "effect": Label, "cost": Label}.
-var _parts: Dictionary = {}
-## Buttons per tree column, in MetaData.TREE_ORDER (focus grid).
+## Tiles per tree column, in MetaData.TREE_ORDER (the focus grid).
 var _grid: Array = []
 ## "Refund all" button.
 var refund_button: Button
 ## "Back" button.
 var back_button: Button
-## Soul Ash balance label.
+## Profane Oath tile (bottom right).
+var oath_button: OssuaryTile
+## "Lower Oath" button: lowers the active Oath tier by one (free, reversible).
+var oath_lower_button: Button
+## Soul Ash balance label (HEADER tier).
 var _ash_label: Label
-## "Invested" label (ash currently spent on upgrades).
-var _spent_label: Label
-## Achievement progress line (GDD §9.4).
-var _achievements: Label
-## Description of the focused upgrade.
-var _detail: Label
-## Feedback line (purchase result, refund result).
-var _status: Label
+## Floating "-N" label shown next to the balance after a purchase.
+var _spent_float: Label
+## Balance to count from on the next refresh (-1 = set the text at once).
+var _count_from: int = -1
+## Upgrade id shown in the detail panel ("" = none yet).
+var _focus_id: String = ""
+## Tree column (0..3) of the last focused upgrade tile (the Oath tile's "up").
+var _last_col: int = 0
+## Detail panel (ornate PanelContainer; its accent follows the state).
+var _detail_panel: PanelContainer
+## Detail panel parts: "icon" IconGlyph, "name" Label, "pips" Pips, "desc"
+## Label, "stat" / "cur" / "arrow" / "next" (first value), "stat2" / "cur2" /
+## "arrow2" / "next2" (second value, the Oath's Ash line), "cost_icon"
+## IconGlyph, "cost" Label, "hint" input hint, "hint_word" its Label.
+var _d: Dictionary = {}
 ## Refund confirmation overlay (null while closed).
 var _confirm: Control = null
 ## Confirmation "Refund" button (valid while _confirm is open).
 var confirm_yes: Button = null
 ## Confirmation "Cancel" button (valid while _confirm is open).
 var confirm_no: Button = null
-## Profane Oath upgrade button (bottom row).
-var oath_button: Button
-## "Lower Oath" button: lowers / disables the active Oath tier (asks first).
-var oath_lower_button: Button
-## Button focused again when the confirmation closes.
-var _confirm_return: Button = null
 
 
 ## Creates the menu as a full-screen child of `parent` and returns it.
@@ -100,146 +94,199 @@ func _ready() -> void:
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
-	var panel := PanelContainer.new()
-	center.add_child(panel)
-	var root := VBoxContainer.new()
-	root.add_theme_constant_override("separation", 8)
-	panel.add_child(root)
+	var root := VBoxContainer.new()  # Title row, trees, bottom row.
+	root.add_theme_constant_override("separation", OssuaryUiData.BLOCK_GAP)
+	center.add_child(root)
 	root.add_child(_build_header())
-	var cols := HBoxContainer.new()
-	cols.add_theme_constant_override("separation", COLUMN_GAP)
+	var cols := HBoxContainer.new()  # The four tree columns.
+	cols.add_theme_constant_override("separation", OssuaryUiData.COLUMN_GAP)
 	root.add_child(cols)
 	for tree_id: String in MetaData.TREE_ORDER:
 		cols.add_child(_build_column(tree_id))
-	_achievements = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
-	root.add_child(_achievements)
-	_detail = UiTheme.para("", 0.0, UiTheme.TEXT)  # Upgrade description (wraps inside the panel).
-	_detail.custom_minimum_size.y = DETAIL_HEIGHT
-	root.add_child(_detail)
-	_status = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_GOLD)
-	_status.custom_minimum_size = Vector2(0, 20)
-	root.add_child(_status)
-	var bottom := HBoxContainer.new()
-	bottom.add_theme_constant_override("separation", 18)
-	bottom.alignment = BoxContainer.ALIGNMENT_CENTER
-	root.add_child(bottom)
-	refund_button = _plain_button(bottom, "", _open_confirm)
-	refund_button.focus_entered.connect(func() -> void: _detail.text = "Respec: refund every upgrade and get all spent Soul Ash back (asks first).")
-	oath_button = _upgrade_button(PactData.OATH_ID)
-	bottom.add_child(oath_button)
-	oath_lower_button = _plain_button(bottom, "", _open_lower_confirm)
-	oath_lower_button.custom_minimum_size = Vector2(170, 42)
-	oath_lower_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	oath_lower_button.focus_entered.connect(func() -> void: _detail.text = "Lower the active Profane Oath by one tier (to off). No refund; owned tiers can be raised again for free.")
-	back_button = _plain_button(bottom, "Back", close)
-	refund_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	back_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	back_button.focus_entered.connect(func() -> void: _detail.text = "Return to the main menu. Purchases are already saved.")
+	root.add_child(_build_bottom())
 	_wire_focus()
 	Meta.changed.connect(_refresh)
 	_refresh()
 	var first: Button = _grid[0][0]
 	first.grab_focus.call_deferred()
+	_show_detail(String((first as OssuaryTile).upgrade_id))
 	UiMotion.open(self)  # Fade / rise in.
+	var tiles: Array = []  # Entrance order: column by column.
+	for col: Array in _grid:
+		tiles.append_array(col)
+	UiMotion.stagger(tiles, 0.04, 0.018)
 
 
-## Title, subtitle and the Soul Ash balance.
+## Title and the Soul Ash balance (badge, number and the floating "-N").
 func _build_header() -> Control:
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 12)
-	var titles := VBoxContainer.new()
-	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	titles.add_theme_constant_override("separation", 0)
-	titles.add_child(UiTheme.tier_label("The Ossuary", UiTheme.Tier.TITLE, UiTheme.TEXT_GOLD))
-	titles.add_child(UiTheme.tier_label("Spend Soul Ash on permanent upgrades. Ash is earned every run and kept even in death.", UiTheme.Tier.BODY, UiTheme.TEXT_DIM))
-	row.add_child(titles)
-	row.add_child(IconGlyph.new("soul_ash", Vector2(40, 40)))
-	var ash_box := VBoxContainer.new()
-	ash_box.add_theme_constant_override("separation", 0)
-	_ash_label = UiTheme.tier_label("", UiTheme.Tier.HEADER, MetaGlyphs.EMBER.lightened(0.2))
-	_ash_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	ash_box.add_child(_ash_label)
-	_spent_label = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
-	_spent_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	ash_box.add_child(_spent_label)
-	row.add_child(ash_box)
+	row.add_theme_constant_override("separation", 10)
+	var title := UiTheme.tier_label(OssuaryUiData.TITLE, UiTheme.Tier.TITLE, UiTheme.TEXT_GOLD)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	row.add_child(title)
+	var icon := IconGlyph.new("soul_ash", Vector2(OssuaryUiData.BALANCE_ICON, OssuaryUiData.BALANCE_ICON))
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(icon)
+	_ash_label = UiTheme.tier_label("", UiTheme.Tier.HEADER, OssuaryUiData.ASH_COLOR)
+	_ash_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_ash_label.custom_minimum_size.x = 96.0  # Room for 5 digits: the row does not jump while counting.
+	row.add_child(_ash_label)
+	_spent_float = UiTheme.tier_label("", UiTheme.Tier.NAME, OssuaryUiData.DENIED)
+	_spent_float.modulate.a = 0.0
+	_ash_label.add_child(_spent_float)  # Floats over the balance (a Label is not a Container).
 	return row
 
 
-## One tree column: header plus one button per upgrade.
+## One tree column: a header band (emblem + name), then one tile per upgrade.
 func _build_column(tree_id: String) -> Control:
 	var def: Dictionary = MetaData.TREES[tree_id]
 	var vb := VBoxContainer.new()
-	vb.add_theme_constant_override("separation", COMPACT_ROW_GAP if _compact() else ROW_GAP)
-	var head := HBoxContainer.new()
-	head.add_theme_constant_override("separation", 8)
-	head.add_child(IconGlyph.new(String(def["icon"]), Vector2(36, 36)))
-	var names := VBoxContainer.new()
-	names.add_theme_constant_override("separation", 0)
-	names.add_child(UiTheme.tier_label(String(def["display_name"]), UiTheme.Tier.NAME, def["color"]))
-	names.add_child(UiTheme.tier_label(String(def["improves"]), UiTheme.Tier.BODY, UiTheme.TEXT_DIM))
-	head.add_child(names)
-	vb.add_child(head)
+	vb.add_theme_constant_override("separation", OssuaryUiData.ROW_GAP)
+	vb.add_child(_tree_band(def))
 	var column: Array[Button] = []
 	for id: String in MetaData.upgrades_in(tree_id):
-		var b := _upgrade_button(id)
+		var b := _make_tile(id)
 		vb.add_child(b)
 		column.append(b)
 	_grid.append(column)
 	return vb
 
 
-## True when the tallest tree has more than COMPACT_ROWS upgrades.
-static func _compact() -> bool:
-	for tree_id: String in MetaData.TREE_ORDER:
-		if MetaData.upgrades_in(tree_id).size() > COMPACT_ROWS:
-			return true
-	return false
-
-
-## Builds the button of upgrade `id` (contents are filled by _refresh()).
-func _upgrade_button(id: String) -> Button:
-	var b := Button.new()
-	b.custom_minimum_size = Vector2(BUTTON_SIZE.x, COMPACT_BUTTON_HEIGHT) if _compact() else BUTTON_SIZE
-	b.focus_mode = Control.FOCUS_ALL
-	b.pressed.connect(_on_upgrade_pressed.bind(id))
-	b.focus_entered.connect(_show_detail.bind(id))
-	b.mouse_entered.connect(_show_detail.bind(id))
-	var row := HBoxContainer.new()
-	row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	row.offset_left = 8
-	row.offset_right = -8
-	row.offset_top = 4
-	row.offset_bottom = -4
-	row.add_theme_constant_override("separation", 8)
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	b.add_child(row)
-	var icon := IconGlyph.new(String(MetaData.UPGRADES[id]["icon"]), ICON_SIZE)
+## A tree's header band: the kit header strip holding the tree emblem and
+## its name in the tree's colour.
+func _tree_band(def: Dictionary) -> Control:
+	var band := PanelContainer.new()
+	band.add_theme_stylebox_override("panel", UiTheme.style("header", "violet"))
+	band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	band.custom_minimum_size.x = OssuaryUiData.TILE_SIZE.x
+	var hb := HBoxContainer.new()
+	hb.alignment = BoxContainer.ALIGNMENT_CENTER
+	hb.add_theme_constant_override("separation", 8)
+	hb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	band.add_child(hb)
+	var icon := IconGlyph.new(String(def["icon"]), Vector2(OssuaryUiData.TREE_ICON, OssuaryUiData.TREE_ICON))
 	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	row.add_child(icon)
-	var texts := VBoxContainer.new()
-	texts.add_theme_constant_override("separation", 0)
-	texts.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	texts.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	texts.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_child(texts)
-	var name_label := UiTheme.tier_label("", UiTheme.Tier.BODY)
-	var effect := UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_GOOD)
-	var cost := UiTheme.tier_label("", UiTheme.Tier.BODY)
-	for l: Label in [name_label, effect, cost]:
-		l.clip_text = true
-		l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		texts.add_child(l)
+	hb.add_child(icon)
+	var name_label := UiTheme.tier_label(String(def["display_name"]), UiTheme.Tier.NAME, (def["color"] as Color).lightened(0.3))
+	name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	hb.add_child(name_label)
+	return band
+
+
+## Builds the tile of upgrade `id` (its state is filled by _refresh()).
+func _make_tile(id: String) -> OssuaryTile:
+	var b := OssuaryTile.new(id)
+	b.pressed.connect(_on_upgrade_pressed.bind(id))
+	b.focus_entered.connect(_on_tile_focus.bind(id))
+	b.mouse_entered.connect(_show_detail.bind(id))
 	buttons[id] = b
-	_parts[id] = {"icon": icon, "name": name_label, "effect": effect, "cost": cost}
 	return b
+
+
+## Bottom row: the detail panel (left, three columns wide) and the Oath /
+## Refund all / Back cluster (right, one column wide).
+func _build_bottom() -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", OssuaryUiData.COLUMN_GAP)
+	row.add_child(_build_detail())
+	var right := VBoxContainer.new()  # Oath tile, Lower + Refund, Back.
+	right.add_theme_constant_override("separation", OssuaryUiData.ROW_GAP)
+	right.custom_minimum_size.x = OssuaryUiData.TILE_SIZE.x
+	right.size_flags_vertical = Control.SIZE_SHRINK_END
+	row.add_child(right)
+	oath_button = _make_tile(PactData.OATH_ID)
+	right.add_child(oath_button)
+	var pair := HBoxContainer.new()
+	pair.add_theme_constant_override("separation", OssuaryUiData.ROW_GAP)
+	right.add_child(pair)
+	oath_lower_button = _plain_button(pair, OssuaryUiData.LOWER, lower_oath)
+	refund_button = _plain_button(pair, OssuaryUiData.REFUND, _on_refund_pressed)
+	back_button = _plain_button(right, OssuaryUiData.BACK, close)
+	back_button.set_meta(&"ui_back", true)
+	InputHints.attach(back_button, "ui_cancel", true, 12.0)
+	return row
+
+
+## The ornate detail panel (contents filled by _show_detail()).
+func _build_detail() -> Control:
+	_detail_panel = UiTheme.ornate_panel("violet")
+	_detail_panel.custom_minimum_size.x = OssuaryUiData.TILE_SIZE.x * 3.0 + float(OssuaryUiData.COLUMN_GAP) * 2.0
+	_detail_panel.size_flags_vertical = Control.SIZE_SHRINK_END
+	var hb := HBoxContainer.new()
+	hb.add_theme_constant_override("separation", 16)
+	_detail_panel.add_child(hb)
+	var icon := IconGlyph.new("", Vector2(OssuaryUiData.DETAIL_ICON, OssuaryUiData.DETAIL_ICON))
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	hb.add_child(icon)
+	_d["icon"] = icon
+	var vb := VBoxContainer.new()
+	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vb.add_theme_constant_override("separation", 3)
+	hb.add_child(vb)
+	var top := HBoxContainer.new()  # Name, pips.
+	top.add_theme_constant_override("separation", 12)
+	vb.add_child(top)
+	var name_label := UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
+	top.add_child(name_label)
+	_d["name"] = name_label
+	var pips := PixelMarks.Pips.new(OssuaryUiData.PIP_SIZE_BIG)
+	top.add_child(pips)
+	_d["pips"] = pips
+	var desc := UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
+	desc.clip_text = true
+	desc.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	desc.custom_minimum_size.x = 600.0  # The panel's width decides; this only stops a long line widening it.
+	desc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vb.add_child(desc)
+	_d["desc"] = desc
+	var vals := HBoxContainer.new()  # Stat values, spacer, cost, Buy chip.
+	vals.add_theme_constant_override("separation", 8)
+	vb.add_child(vals)
+	for suffix: String in ["", "2"]:
+		var stat := UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
+		stat.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		vals.add_child(stat)
+		var cur := UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT)
+		vals.add_child(cur)
+		var arrow := PixelMarks.Arrow.new(UiTheme.TEXT_DIM)
+		vals.add_child(arrow)
+		var nxt := UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT_GOOD)
+		vals.add_child(nxt)
+		_d["stat" + suffix] = stat
+		_d["cur" + suffix] = cur
+		_d["arrow" + suffix] = arrow
+		_d["next" + suffix] = nxt
+		if suffix == "":
+			var gap := Control.new()  # Between the Oath's two value groups.
+			gap.custom_minimum_size.x = 14.0
+			gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			vals.add_child(gap)
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vals.add_child(spacer)
+	var cost_icon := IconGlyph.new("soul_ash_small", Vector2(OssuaryUiData.COST_ICON, OssuaryUiData.COST_ICON))
+	cost_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	vals.add_child(cost_icon)
+	_d["cost_icon"] = cost_icon
+	var cost := UiTheme.tier_label("", UiTheme.Tier.NAME, OssuaryUiData.ASH_COLOR)
+	vals.add_child(cost)
+	_d["cost"] = cost
+	var hint := InputHints.hint("ui_accept", OssuaryUiData.BUY)
+	hint.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	vals.add_child(hint)
+	_d["hint"] = hint
+	_d["hint_word"] = hint.get_child(hint.get_child_count() - 1)
+	return _detail_panel
 
 
 ## Adds a bottom-row button calling `cb`.
 func _plain_button(parent: Control, text: String, cb: Callable) -> Button:
 	var b := Button.new()
 	b.text = text
-	b.custom_minimum_size = Vector2(240, 42)
+	b.custom_minimum_size = Vector2((OssuaryUiData.TILE_SIZE.x - float(OssuaryUiData.ROW_GAP)) * 0.5, OssuaryUiData.BUTTON_HEIGHT)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	b.focus_mode = Control.FOCUS_ALL
 	b.pressed.connect(cb)
 	parent.add_child(b)
@@ -254,8 +301,7 @@ func _wire_focus() -> void:
 		for r in col.size():
 			var b: Button = col[r]
 			var up: Control = col[r - 1] if r > 0 else b
-			var bottom_row: Array[Control] = [refund_button, oath_button, oath_lower_button, back_button]  # Bottom row, left to right.
-			var down: Control = col[r + 1] if r < col.size() - 1 else bottom_row[mini(c, bottom_row.size() - 1)]
+			var down: Control = col[r + 1] if r < col.size() - 1 else oath_button
 			var left_col: Array = _grid[c - 1] if c > 0 else col
 			var right_col: Array = _grid[c + 1] if c < n_cols - 1 else col
 			var left: Control = left_col[mini(r, left_col.size() - 1)]
@@ -263,14 +309,11 @@ func _wire_focus() -> void:
 			_set_neighbors(b, up, down, left, right)
 			b.focus_previous = b.get_path_to(left)
 			b.focus_next = b.get_path_to(right)
-	var first_col: Array = _grid[0]
 	var last_col: Array = _grid[n_cols - 1]
-	var col2: Array = _grid[mini(1, n_cols - 1)]  # Column above the Oath button.
-	var col3: Array = _grid[mini(2, n_cols - 1)]  # Column above the Lower button.
-	_set_neighbors(refund_button, first_col[first_col.size() - 1], refund_button, refund_button, oath_button)
-	_set_neighbors(oath_button, col2[col2.size() - 1], oath_button, refund_button, oath_lower_button)
-	_set_neighbors(oath_lower_button, col3[col3.size() - 1], oath_lower_button, oath_button, back_button)
-	_set_neighbors(back_button, last_col[last_col.size() - 1], back_button, oath_lower_button, back_button)
+	_set_neighbors(oath_button, last_col[last_col.size() - 1], oath_lower_button, oath_button, oath_button)
+	_set_neighbors(oath_lower_button, oath_button, back_button, oath_lower_button, refund_button)
+	_set_neighbors(refund_button, oath_button, back_button, oath_lower_button, refund_button)
+	_set_neighbors(back_button, oath_lower_button, back_button, back_button, back_button)
 
 
 ## Sets the four focus neighbours of `b`.
@@ -281,115 +324,77 @@ func _set_neighbors(b: Control, up: Control, down: Control, left: Control, right
 	b.focus_neighbor_right = b.get_path_to(right)
 
 
+## A tile took focus: show it, and make the Oath tile's "up" return to this
+## tree column.
+func _on_tile_focus(id: String) -> void:
+	_show_detail(id)
+	for c in _grid.size():
+		var col: Array = _grid[c]
+		for b: Button in col:
+			if b == buttons[id]:
+				_last_col = c
+				var back_to: Button = col[col.size() - 1]  # Bottom tile of this column.
+				oath_button.focus_neighbor_top = oath_button.get_path_to(back_to)
+				return
+
+
 # =====================================================================================
 # Display
 # =====================================================================================
 
-## Refreshes the balance, every upgrade button and the refund button.
+## Refreshes the balance, every tile, the bottom buttons and the detail panel.
 func _refresh() -> void:
-	_ash_label.text = "%d Soul Ash" % Meta.soul_ash
-	_spent_label.text = "Invested: %d / %d" % [Meta.spent_total(), MetaData.max_total_cost()]
-	for id: String in MetaData.UPGRADE_ORDER:
-		_refresh_upgrade(id)
-	var ach := PackedStringArray()
-	for aid: String in MetaData.ACHIEVEMENT_ORDER:
-		var a: Dictionary = MetaData.ACHIEVEMENTS[aid]
-		var done := Meta.achievements.has(aid)
-		var prog := mini(int(Meta.achievement_progress(aid)), int(a["goal"]))
-		ach.append("%s %s (%s)" % ["[x]" if done else "[ ]", a["display_name"], "done" if done else "%d/%d" % [prog, int(a["goal"])]])
-	_achievements.text = "Achievements:  " + "    ".join(ach)
-	refund_button.text = "Refund all  (+%d)" % Meta.spent_total()
-	refund_button.disabled = Meta.spent_total() <= 0
-	var active := Meta.oath_active_tier()  # Active Profane Oath tier.
-	oath_lower_button.text = "Lower Oath  (%s)" % DifficultyModifiers.roman(active) if active > 0 else "Oath is off"
-	oath_lower_button.disabled = active <= 0
-	var focused := get_viewport().gui_get_focus_owner() if is_inside_tree() else null
+	_show_balance()
 	for id: String in buttons:
-		if buttons[id] == focused:
-			_show_detail(id)
+		_refresh_tile(id)
+	# Never the disabled look: Lower Oath turns crimson while an Oath tier is
+	# active; with nothing to lower / refund a press answers `denied`.
+	UiTheme.style_button(oath_lower_button, "button", "crimson" if Meta.oath_active_tier() > 0 else "")
+	if _focus_id != "":
+		_show_detail(_focus_id)
 
 
-## Updates one upgrade button: icon pips, name / tier, effect delta, cost
-## line and a UI kit frame accent for its state (affordable soul green,
-## maxed gold, locked dim, too expensive the default violet).
-func _refresh_upgrade(id: String) -> void:
-	var def: Dictionary = MetaData.UPGRADES[id]
-	var p: Dictionary = _parts[id]
+## Writes the Soul Ash balance: counts from _count_from when a purchase or
+## refund just changed it (UiMotion.count_up(); instant without motion).
+func _show_balance() -> void:
+	if _count_from >= 0 and _count_from != Meta.soul_ash:
+		UiMotion.count_up(_ash_label, Meta.soul_ash, "%d", _count_from, false, 0.0, OssuaryUiData.COUNT_TIME)
+	else:
+		_ash_label.text = str(Meta.soul_ash)
+	_count_from = -1
+
+
+## The display state of upgrade `id`: "buy", "cost", "maxed" or "locked"
+## (Meta.purchase_block(); a lowered Oath counts as "buy": its raise is free).
+static func _state_of(id: String) -> String:
+	if id == PactData.OATH_ID and Meta.oath_active_tier() < Meta.tier(id):
+		return "buy"
+	var block := Meta.purchase_block(id)
+	return "buy" if block == "" else block
+
+
+## Updates one tile from Meta.
+func _refresh_tile(id: String) -> void:
+	var tile: OssuaryTile = buttons[id]
+	var state := _state_of(id)
 	var t := Meta.tier(id)
 	var mx := MetaData.max_tier(id)
-	(p["icon"] as IconGlyph).set_icon(String(def["icon"]), t, mx)
-	var name_label: Label = p["name"]
-	name_label.text = "%s  %d/%d" % [def["display_name"], t, mx]
-	(p["effect"] as Label).text = effect_text(id)
-	var cost: Label = p["cost"]
-	var block := Meta.purchase_block(id)
-	var accent := "violet"  # UI kit frame accent (UiTheme.style()).
-	match block:
-		"maxed":
-			cost.text = "MAXED"
-			cost.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
-			name_label.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
-			accent = "gold"
-		"locked":
-			var req: Dictionary = def["requires"]
-			cost.text = "Needs %s %s" % [MetaData.UPGRADES[req["id"]]["display_name"], ROMAN[int(req["tier"])]]
-			cost.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.35))
-			name_label.add_theme_color_override("font_color", UiTheme.TEXT_DIM)
-			accent = "dim"
-		"cost":
-			cost.text = "Cost %d  (need %d more)" % [Meta.next_cost(id), Meta.next_cost(id) - Meta.soul_ash]
-			cost.add_theme_color_override("font_color", UiTheme.TEXT_DIM)
-			name_label.add_theme_color_override("font_color", UiTheme.TEXT)
-		_:
-			cost.text = "Cost %d  -  buy" % Meta.next_cost(id)
-			cost.add_theme_color_override("font_color", UiTheme.TEXT_GOOD)
-			name_label.add_theme_color_override("font_color", UiTheme.TEXT)
-			accent = "soul"
+	var cost := Meta.next_cost(id) if state != "maxed" else 0
 	if id == PactData.OATH_ID:
-		accent = _refresh_oath(p, accent)
-	UiTheme.style_button(buttons[id] as Button, "button", accent)
+		tile.show_state(state, Meta.oath_active_tier(), mx, cost, t)
+		if Meta.oath_active_tier() < t:
+			tile.cost_icon.visible = false
+			tile.cost_label.text = OssuaryUiData.FREE
+			tile.cost_label.add_theme_color_override("font_color", UiTheme.TEXT_GOOD)
+		return
+	tile.show_state(state, t, mx, cost)
 
 
-## Profane Oath button extras: the name shows the ACTIVE / owned tiers and,
-## when the active tier was lowered, the cost line offers the free raise.
-## Returns the UI kit frame accent to use (crimson once an Oath tier is owned).
-func _refresh_oath(p: Dictionary, accent: String) -> String:
-	var owned := Meta.tier(PactData.OATH_ID)  # Tiers bought.
-	var active := Meta.oath_active_tier()  # Tier applied to runs.
-	var name_label: Label = p["name"]  # "Profane Oath III (owned 3/5)".
-	name_label.text = "Profane Oath  %s (owned %d/%d)" % [DifficultyModifiers.roman(active) if active > 0 else "off", owned, MetaData.max_tier(PactData.OATH_ID)]
-	if active < owned:
-		var cost: Label = p["cost"]  # Cost / action line.
-		cost.text = "Raise to %s  -  free (owned)" % DifficultyModifiers.roman(active + 1)
-		cost.add_theme_color_override("font_color", UiTheme.TEXT_GOOD)
-		return "crimson"
-	return "crimson" if owned > 0 else accent
-
-
-## Oath effect line: "Foes +16% -> +24% HP, Ash +20% -> +30%" for the next
-## active tier (or the current values at the top tier).
-static func _oath_effect_text() -> String:
-	var t := Meta.oath_active_tier()  # Active tier now.
-	var per: Dictionary = PactData.OATH_PER_TIER  # Bonus per tier.
-	var hp := float(per["enemy_hp"])  # HP penalty per tier.
-	var ash := float(per["ash_gain"])  # Soul Ash reward per tier.
-	if t >= MetaData.max_tier(PactData.OATH_ID):
-		return "Foes HP +%d%%, Ash +%d%% (max)" % [int(roundf(hp * t * 100.0)), int(roundf(ash * t * 100.0))]
-	return "Foes HP +%d%% -> +%d%%, Ash +%d%% -> +%d%%" % [int(roundf(hp * t * 100.0)), int(roundf(hp * (t + 1) * 100.0)),
-		int(roundf(ash * t * 100.0)), int(roundf(ash * (t + 1) * 100.0))]
-
-
-## "Label old -> new" for the next tier (or "Label value (max)").
-static func effect_text(id: String) -> String:
-	if id == PactData.OATH_ID:
-		return _oath_effect_text()
+## "+6%" style value of upgrade `id` at tier `t` (MetaData.STATS format).
+static func _value(id: String, t: int) -> String:
 	var def: Dictionary = MetaData.UPGRADES[id]
 	var stat_def: Array = MetaData.STATS[String(def["stat"])]
-	var per := float(def["per_tier"])
-	var t := Meta.tier(id)
-	if t >= MetaData.max_tier(id):
-		return "%s %s (max)" % [stat_def[0], format_stat(per * float(t), String(stat_def[1]))]
-	return "%s %s -> %s" % [stat_def[0], format_stat(per * float(t), String(stat_def[1])), format_stat(per * float(t + 1), String(stat_def[1]))]
+	return format_stat(float(def["per_tier"]) * float(t), String(stat_def[1]))
 
 
 ## Formats a modifier value per its MetaData.STATS format.
@@ -400,94 +405,208 @@ static func format_stat(v: float, fmt: String) -> String:
 		"neg_pct":
 			return "-%d%%" % int(roundf(v * 100.0))
 		"unlock":
-			return "unlocked" if v >= 1.0 else "locked"
+			return "Unlocked" if v >= 1.0 else "Locked"
 	return "+%d" % int(roundf(v))
 
 
-## Shows the description line of upgrade `id`.
+## Shows upgrade `id` in the detail panel: icon, name, pips, one-line
+## effect, current → next value, cost (or prerequisite / Maxed) and the Buy
+## chip when it can be bought.
 func _show_detail(id: String) -> void:
+	_focus_id = id
 	var def: Dictionary = MetaData.UPGRADES[id]
-	var tree_name: String = MetaData.TREES[String(def["tree"])]["display_name"]
-	_detail.text = "%s (%s): %s" % [def["display_name"], tree_name, def["description"]]
-	if id == PactData.OATH_ID:
-		var parts := PackedStringArray()  # "spawn +8%" per key, per tier.
-		for key: String in PactData.KEYS:
-			parts.append("%s +%d%%" % [PactData.SHORT[key], int(roundf(float(PactData.OATH_PER_TIER[key]) * 100.0))])
-		_detail.text = "Profane Oath (opt-in difficulty), per tier: %s. Stacks with the in-run Profane Pact." % ", ".join(parts)
+	var state := _state_of(id)
+	var t := Meta.tier(id)
+	var mx := MetaData.max_tier(id)
+	var is_oath := id == PactData.OATH_ID
+	(_d["icon"] as IconGlyph).set_icon(String(def["icon"]))
+	(_d["icon"] as IconGlyph).modulate = OssuaryUiData.LOCKED_ICON_TINT if state == "locked" else Color.WHITE
+	var name_label: Label = _d["name"]
+	name_label.text = String(def["display_name"])
+	var accent := "violet"  # Detail panel frame accent.
+	var name_col := UiTheme.TEXT
+	match state:
+		"maxed":
+			accent = "gold"
+			name_col = UiTheme.TEXT_GOLD
+		"locked":
+			name_col = UiTheme.TEXT_DIM
+	if is_oath:
+		accent = "crimson"
+		name_col = UiTheme.HEADER_TEXT["crimson"]
+	name_label.add_theme_color_override("font_color", name_col)
+	_detail_panel.add_theme_stylebox_override("panel", UiTheme.style("ornate", accent))
+	var pips: PixelMarks.Pips = _d["pips"]
+	if is_oath:
+		pips.set_pips(mx, Meta.oath_active_tier(), OssuaryUiData.PIP_OATH, t)
+	else:
+		pips.set_pips(mx, t, OssuaryUiData.PIP_MAXED if state == "maxed" else OssuaryUiData.PIP_OWNED)
+	(_d["desc"] as Label).text = OssuaryUiData.OATH_LINE if is_oath else String(def["description"])
+	if is_oath:
+		_show_oath_values()
+	else:
+		var stat_def: Array = MetaData.STATS[String(def["stat"])]
+		_set_value("", String(stat_def[0]), _value(id, t), _value(id, t + 1) if t < mx else "")
+		_set_value("2", "", "", "")
+	_show_cost(id, state)
+
+
+## Fills value group `suffix` ("" or "2"): `stat` label, `cur` value, and
+## `nxt` after the arrow (no arrow / next when empty: maxed). An empty
+## `stat` hides the whole group.
+func _set_value(suffix: String, stat: String, cur: String, nxt: String) -> void:
+	var on := stat != ""
+	(_d["stat" + suffix] as Label).text = stat
+	(_d["stat" + suffix] as Label).visible = on
+	(_d["cur" + suffix] as Label).text = cur
+	(_d["cur" + suffix] as Label).visible = on
+	(_d["arrow" + suffix] as Control).visible = on and nxt != ""
+	(_d["next" + suffix] as Label).text = nxt
+	(_d["next" + suffix] as Label).visible = on and nxt != ""
+
+
+## The Oath's two values for the next ACTIVE tier: enemy HP and Soul Ash.
+func _show_oath_values() -> void:
+	var t := Meta.oath_active_tier()  # Active tier now.
+	var per: Dictionary = PactData.OATH_PER_TIER  # Bonus per tier.
+	var hp := float(per["enemy_hp"])
+	var ash := float(per["ash_gain"])
+	var top := t >= MetaData.max_tier(PactData.OATH_ID)  # No next tier.
+	_set_value("", OssuaryUiData.OATH_HP, "+%d%%" % int(roundf(hp * t * 100.0)), "" if top else "+%d%%" % int(roundf(hp * (t + 1) * 100.0)))
+	_set_value("2", OssuaryUiData.OATH_ASH, "+%d%%" % int(roundf(ash * t * 100.0)), "" if top else "+%d%%" % int(roundf(ash * (t + 1) * 100.0)))
+	(_d["next"] as Label).add_theme_color_override("font_color", OssuaryUiData.DENIED)
+
+
+## The cost corner of the detail panel for upgrade `id` in `state`.
+func _show_cost(id: String, state: String) -> void:
+	var cost: Label = _d["cost"]
+	var icon: IconGlyph = _d["cost_icon"]
+	var hint: Control = _d["hint"]
+	var word: Label = _d["hint_word"]
+	(_d["next"] as Label).add_theme_color_override("font_color", OssuaryUiData.DENIED if id == PactData.OATH_ID else UiTheme.TEXT_GOOD)
+	icon.visible = true
+	hint.visible = false
+	word.text = OssuaryUiData.BUY
+	cost.add_theme_color_override("font_color", OssuaryUiData.ASH_COLOR)
+	if id == PactData.OATH_ID and Meta.oath_active_tier() < Meta.tier(id):
+		icon.visible = false
+		cost.text = OssuaryUiData.FREE
+		cost.add_theme_color_override("font_color", UiTheme.TEXT_GOOD)
+		word.text = OssuaryUiData.RAISE
+		hint.visible = true
+		return
+	match state:
+		"maxed":
+			icon.visible = false
+			cost.text = OssuaryUiData.MAXED_LONG
+			cost.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
+		"locked":
+			var req: Dictionary = MetaData.UPGRADES[id]["requires"]
+			icon.visible = false
+			cost.text = OssuaryUiData.NEEDS % [String(MetaData.UPGRADES[req["id"]]["display_name"]), ROMAN[int(req["tier"])]]
+			cost.add_theme_color_override("font_color", OssuaryUiData.DENIED)
+		"cost":
+			cost.text = str(Meta.next_cost(id))
+			cost.add_theme_color_override("font_color", OssuaryUiData.COST_SHORT)
+		_:
+			cost.text = str(Meta.next_cost(id))
+			hint.visible = true
 
 
 # =====================================================================================
 # Actions
 # =====================================================================================
 
-## Buys the next tier of `id`, or explains why it cannot be bought.
+## Buys the next tier of `id` (or raises a lowered Oath for free), or
+## answers `denied` with a shake when it cannot be bought.
 func _on_upgrade_pressed(id: String) -> void:
-	var display_name: String = MetaData.UPGRADES[id]["display_name"]
+	var tile: OssuaryTile = buttons[id]
 	if id == PactData.OATH_ID and Meta.oath_active_tier() < Meta.tier(id):
 		# A lowered Oath goes back up for free (the tier is still owned).
 		Meta.set_oath_active(Meta.oath_active_tier() + 1)
-		Sfx.play("ui_confirm")
-		_set_status("Profane Oath raised to %s (no cost: already owned)." % DifficultyModifiers.roman(Meta.oath_active_tier()), Palette.CRIMSON.lightened(0.4))
+		Sfx.play_ui("purchase")
+		tile.flash()
 		return
-	match Meta.purchase_block(id):
-		"maxed":
-			Sfx.play_ui("denied")
-			_set_status("%s is already at its highest tier." % display_name, UiTheme.TEXT_GOLD)
-		"locked":
-			Sfx.play_ui("denied")
-			_set_status("%s is locked. Buy its prerequisite first." % display_name, Palette.CRIMSON.lightened(0.35))
-		"cost":
-			Sfx.play_ui("denied")
-			_set_status("Not enough Soul Ash for %s (%d more needed)." % [display_name, Meta.next_cost(id) - Meta.soul_ash], Palette.CRIMSON.lightened(0.35))
-		_:
-			var cost := Meta.next_cost(id)
-			if Meta.purchase(id):
-				Sfx.play_ui("purchase")  # Bright bone-chime.
-				_set_status("Bought %s %s for %d Soul Ash." % [display_name, ROMAN[Meta.tier(id)], cost], UiTheme.TEXT_GOOD)
+	if Meta.purchase_block(id) != "":
+		Sfx.play_ui("denied")  # Maxed, locked or too expensive.
+		tile.shake()
+		_flash_cost()
+		return
+	var cost := Meta.next_cost(id)
+	_count_from = Meta.soul_ash
+	if Meta.purchase(id):  # Emits Meta.changed: _refresh() counts the balance down.
+		Sfx.play_ui("purchase")  # Bright bone-chime.
+		tile.flash()
+		_float_spent(cost)
+	_count_from = -1
 
 
-## Sets the feedback line.
-func _set_status(text: String, col: Color) -> void:
-	_status.text = text
-	_status.add_theme_color_override("font_color", col)
+## The detail panel's cost line blinks red (a denied press).
+func _flash_cost() -> void:
+	var cost: Label = _d["cost"]
+	if not UiMotion.enabled():
+		return
+	cost.modulate = Color(1.6, 0.6, 0.6)
+	var tw := cost.create_tween()  # Short, real time is not needed (menus run at time scale 1).
+	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tw.tween_property(cost, "modulate", Color.WHITE, OssuaryUiData.SHAKE_TIME)
 
+
+## Shows "-N" over the balance, rising and fading (skipped without motion).
+func _float_spent(n: int) -> void:
+	if not UiMotion.enabled():
+		return
+	_spent_float.text = "-%d" % n
+	var y0 := -OssuaryUiData.SPENT_FLOAT_START  # Just above the balance number.
+	_spent_float.position = Vector2(0.0, y0)
+	_spent_float.modulate.a = 1.0
+	var tw := _spent_float.create_tween()
+	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tw.set_parallel(true)
+	tw.tween_property(_spent_float, "position:y", y0 - OssuaryUiData.SPENT_FLOAT_RISE, OssuaryUiData.SPENT_FLOAT_TIME).set_ease(Tween.EASE_OUT)
+	tw.tween_property(_spent_float, "modulate:a", 0.0, OssuaryUiData.SPENT_FLOAT_TIME).set_ease(Tween.EASE_IN)
+
+
+## Lower Oath: lowers the ACTIVE Oath tier by one at once (free and
+## reversible: owned tiers stay owned and raise again for free), or answers
+## `denied` when the Oath is off.
+func lower_oath() -> void:
+	var active := Meta.oath_active_tier()
+	if active <= 0:
+		Sfx.play_ui("denied")
+		return
+	Meta.set_oath_active(active - 1)
+	Sfx.play("ui_confirm")
+
+
+## Refund all pressed: asks first (or `denied` when nothing is spent).
+## W2-NewScreens may replace the body with ConfirmDialog.ask(..., refund_all).
+func _on_refund_pressed() -> void:
+	if Meta.spent_total() <= 0:
+		Sfx.play_ui("denied")
+		return
+	_ask_refund()
+
+
+## Refunds every upgrade (respec): the balance counts back up.
+func refund_all() -> void:
+	_count_from = Meta.soul_ash
+	Meta.refund_all()
+	_count_from = -1
+	Sfx.play_ui("purchase")
+
+
+# --- Refund confirmation (a small crimson ornate dialog, Cancel focused) -----------------
 
 ## True while the refund confirmation is shown.
 func confirm_open() -> bool:
 	return _confirm != null
 
 
-## Shows the "Refund all?" confirmation with Cancel focused.
-func _open_confirm() -> void:
-	if _confirm != null or Meta.spent_total() <= 0:
+## Shows "Refund every upgrade?" with the Soul Ash it returns; Cancel is focused.
+func _ask_refund() -> void:
+	if _confirm != null:
 		return
-	# W2-NewScreens: the shared ConfirmDialog replaces the local _open_dialog() here.
-	ConfirmDialog.ask(self, ConfirmData.REFUND[0], ConfirmData.REFUND[1] % Meta.spent_total(), ConfirmData.REFUND[2], _confirm_refund)
-
-
-## Shows the "Lower the Oath?" confirmation with Cancel focused.
-func _open_lower_confirm() -> void:
-	var active := Meta.oath_active_tier()  # Tier before lowering.
-	if _confirm != null or active <= 0:
-		return
-	var to := "off" if active == 1 else "tier %s" % DifficultyModifiers.roman(active - 1)  # Target state text.
-	# W2-NewScreens: the shared ConfirmDialog replaces the local _open_dialog() here.
-	ConfirmDialog.ask(self, ConfirmData.LOWER_OATH[0], ConfirmData.LOWER_OATH[1] % to, ConfirmData.LOWER_OATH[2], _confirm_lower)
-
-
-## Confirmed: lowers the active Oath tier by one and closes the dialog.
-func _confirm_lower() -> void:
-	Meta.set_oath_active(Meta.oath_active_tier() - 1)
-	_close_confirm()
-	Sfx.play("ui_confirm")
-	var active := Meta.oath_active_tier()  # Tier after lowering.
-	_set_status("Profane Oath is now %s." % ("off" if active <= 0 else "tier %s" % DifficultyModifiers.roman(active)), UiTheme.TEXT_GOLD)
-
-
-## Builds a two-button confirmation dialog (Cancel focused). `yes_cb` runs on
-## the confirm button; `return_to` regains focus when it closes.
-func _open_dialog(title_text: String, body: String, yes_text: String, yes_cb: Callable, return_to: Button) -> void:
-	_confirm_return = return_to
 	_confirm = Control.new()
 	_confirm.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_confirm.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -495,26 +614,33 @@ func _open_dialog(title_text: String, body: String, yes_text: String, yes_cb: Ca
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_confirm.add_child(center)
-	var panel := PanelContainer.new()
+	var panel := UiTheme.ornate_panel("crimson")
 	center.add_child(panel)
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 12)
-	vb.custom_minimum_size = Vector2(420, 0)
+	vb.custom_minimum_size = Vector2(380, 0)
 	panel.add_child(vb)
-	var title := UiTheme.tier_label(title_text, UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
+	var title := UiTheme.tier_label(OssuaryUiData.REFUND_ASK, UiTheme.Tier.NAME, UiTheme.HEADER_TEXT["crimson"])
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(title)
-	var text := UiTheme.tier_label(body, UiTheme.Tier.BODY, UiTheme.TEXT)  # Dialog paragraph.
-	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vb.add_child(text)
+	var gain := HBoxContainer.new()  # Soul Ash symbol and "+N".
+	gain.alignment = BoxContainer.ALIGNMENT_CENTER
+	gain.add_theme_constant_override("separation", 8)
+	vb.add_child(gain)
+	var icon := IconGlyph.new("soul_ash", Vector2(OssuaryUiData.BALANCE_ICON, OssuaryUiData.BALANCE_ICON))
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	gain.add_child(icon)
+	gain.add_child(UiTheme.tier_label(OssuaryUiData.REFUND_GAIN % Meta.spent_total(), UiTheme.Tier.HEADER, OssuaryUiData.ASH_COLOR))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 16)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	vb.add_child(row)
-	confirm_yes = _plain_button(row, yes_text, yes_cb)
-	confirm_yes.custom_minimum_size = Vector2(170, 42)
-	confirm_no = _plain_button(row, "Cancel", _close_confirm)
-	confirm_no.custom_minimum_size = Vector2(170, 42)
+	confirm_yes = _plain_button(row, OssuaryUiData.REFUND_YES, _confirm_refund)
+	UiTheme.style_button(confirm_yes, "button", "crimson")
+	confirm_no = _plain_button(row, OssuaryUiData.REFUND_NO, _close_confirm)
+	confirm_no.set_meta(&"ui_back", true)
+	for b: Button in [confirm_yes, confirm_no]:
+		b.custom_minimum_size = Vector2(160, OssuaryUiData.BUTTON_HEIGHT)
 	add_child(_confirm)
 	# Focus stays inside the dialog: the two buttons only lead to each other.
 	_set_neighbors(confirm_yes, confirm_yes, confirm_yes, confirm_yes, confirm_no)
@@ -528,13 +654,11 @@ func _open_dialog(title_text: String, body: String, yes_text: String, yes_cb: Ca
 
 ## Confirmed: refunds everything and closes the dialog.
 func _confirm_refund() -> void:
-	var refunded := Meta.refund_all()
 	_close_confirm()
-	Sfx.play("ui_confirm")
-	_set_status("Refunded %d Soul Ash. Every tree is reset." % refunded, UiTheme.TEXT_GOLD)
+	refund_all()
 
 
-## Closes the confirmation and focuses Refund all (or Back if now disabled).
+## Closes the confirmation and focuses Refund all again.
 func _close_confirm() -> void:
 	if _confirm == null:
 		return
@@ -542,10 +666,7 @@ func _close_confirm() -> void:
 	_confirm = null
 	confirm_yes = null
 	confirm_no = null
-	if _confirm_return != null and not _confirm_return.disabled:
-		_confirm_return.grab_focus()
-	else:
-		back_button.grab_focus()
+	refund_button.grab_focus()
 
 
 ## Restores focus to the opener and frees the menu.

@@ -22,9 +22,8 @@ const QUIT := ["Quit?", "Close Necropathy and return to the desktop.", "Quit"]  
 const RESTART := ["Restart?", "This run ends here: no Soul Ash is earned.", "Restart"]  # TUNING (not in GDD)
 ## Pause menu Main Menu (the run in progress is lost).
 const MAIN_MENU := ["Abandon the Run?", "Return to the main menu: no Soul Ash is earned.", "Abandon"]  # TUNING (not in GDD)
-## Ossuary Refund all (%d = the Soul Ash refunded).
+## Ossuary Refund all (%d = the Soul Ash refunded). Unused while the Ossuary keeps its own
+## refund dialog (it shows the Soul Ash icon); kept for a switch to the shared dialog.
 const REFUND := ["Refund All?", "Every upgrade returns to tier 0 and %d Soul Ash comes back.", "Refund"]  # TUNING (not in GDD)
-## Ossuary Lower Oath (%s = the tier it drops to: "off" or "tier II").
-const LOWER_OATH := ["Lower the Oath?", "The Profane Oath drops to %s. Owned tiers rise again for free.", "Lower"]  # TUNING (not in GDD)
 ## Settings Reset keys.
 const RESET_KEYS := ["Reset Keys?", "Every key binding returns to its default.", "Reset"]  # TUNING (not in GDD)

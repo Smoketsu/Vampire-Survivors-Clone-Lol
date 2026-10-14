@@ -2,44 +2,78 @@
 ## recipe book", GDD §15.0). Evolutions are meant to be discovered: this is
 ## the only place the game shows a recipe, and only for evolutions the player
 ## has already obtained in some run (Meta.discovered_recipes, the [recipes]
-## save section). One row per recipe in EvolutionRecipes.ids() order, so new
-## recipes in EvolutionData / SummonEvolutionData appear automatically:
-##   discovered — the evolution's icon and name, its kind, and the recipe as
-##                "[icon] Shadow Bolt Lv 5 + [icon] Soul Conduit Lv 5 -> Void
-##                Barrage" (both bases for a merge),
-##   locked     — a dark "?" tile with no name or ingredients.
-## A "N / M discovered" count sits under the title. Opened over the pause
-## menu with RecipesPanel.open_over(parent, button_to_refocus); Back, Esc /
-## controller B or the pause action close it. Fully keyboard / controller
-## navigable: every row takes focus (up / down), the list scrolls to follow
-## focus, and the first row is focused on open. It never changes the run.
-## Text sizes are UiTheme type tiers (Jacquard title, NAME recipe names,
-## LABEL kind tags, BODY recipe lines).
+## save section). Menu modernization wave 2 (GDD §15.0 "Recipes book grid"):
+## a grid of tiles in EvolutionRecipes.ids() order (so new recipes in
+## EvolutionData / SummonEvolutionData appear automatically) inside an ornate
+## panel, under a "7 / 23 discovered" count:
+##   discovered — a gold-framed tile with the recipe as icons, base + passive
+##                = evolution (RecipeIconRow; both bases for a merge);
+##   locked     — a dark tile with three empty sockets, identical for every
+##                undiscovered recipe (no names, no icons, no ingredient
+##                count: owner rule, no hints).
+## The focused / hovered tile's detail sits under the grid: the evolution's
+## name and kind, and its ingredients with their levels (or just
+## "Undiscovered"). Opened over the pause menu with
+## RecipesPanel.open_over(parent, button_to_refocus); Back, Esc / controller
+## B or the pause action close it. Fully keyboard / controller navigable: the
+## tiles are a focus grid (arrows / D-pad), down from the last row is Back,
+## and the first tile is focused on open. It never changes the run. Layout
+## numbers and words are in RecipeBookData.
 class_name RecipesPanel
 extends Control
 
 ## Emitted when the view closes (before it is freed).
 signal closed
 
-## Width in px of one recipe row.
-const ROW_WIDTH: float = 640.0
-## Height in px of the scrolling recipe list.
-const LIST_HEIGHT: float = 430.0
-## Size in px of the evolution icon / locked tile at the left of a row.
-const ICON_SIZE: float = 48.0
-## Size in px of an ingredient icon in the recipe line.
-const CHIP_ICON_SIZE: float = 22.0
-## Inner padding of a row in px (left / right).
-const ROW_PAD_X: int = 12
-## Inner padding of a row in px (top / bottom).
-const ROW_PAD_Y: int = 8
-
 ## Control focused again when the view closes (may be null).
 var return_focus: Control = null
-## Focusable row buttons in display order.
+## Focusable recipe tiles in display order.
 var _rows: Array[Button] = []
 ## Back button.
 var _back: Button
+## Detail line: evolution name (NAME tier).
+var _detail_name: Label
+## Detail line: kind tag (LABEL tier).
+var _detail_tag: Label
+## Detail line: the ingredient row ("Name Lv 5" labels; the icons are on the tile).
+var _detail_line: HBoxContainer
+
+
+## An undiscovered recipe's tile face: three dark sockets joined by dim
+## "+" and "=" marks, the last one holding a dim "?" (the same for every
+## locked recipe).
+class _LockedFace:
+	extends Control
+
+	func _init() -> void:
+		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	func _ready() -> void:
+		SpriteBank.apply_sharp(self)
+
+	func _draw() -> void:
+		var s := RecipeBookData.SOCKET
+		var gap := RecipeBookData.SOCKET_GAP
+		var total := s * 3.0 + gap * 2.0  # Width of the three sockets and their gaps.
+		var x0 := floorf((size.x - total) * 0.5)
+		var y0 := floorf((size.y - s) * 0.5)
+		for i in 3:
+			var r := Rect2(Vector2(x0 + float(i) * (s + gap), y0), Vector2(s, s))
+			PixelMarks.draw_socket(self, r, RecipeBookData.SOCKET_FILL, RecipeBookData.SOCKET_RIM)
+		var cy := y0 + floorf(s * 0.5)  # Middle row of the marks.
+		var mark := RecipeBookData.SOCKET_MARK
+		var px := x0 + s + floorf(gap * 0.5) - 3.0  # "+" between sockets 1 and 2.
+		draw_rect(Rect2(Vector2(px, cy - 1.0), Vector2(6, 2)), mark)
+		draw_rect(Rect2(Vector2(px + 2.0, cy - 3.0), Vector2(2, 6)), mark)
+		var ex := x0 + s * 2.0 + gap + floorf(gap * 0.5) - 3.0  # "=" between sockets 2 and 3.
+		draw_rect(Rect2(Vector2(ex, cy - 3.0), Vector2(6, 2)), mark)
+		draw_rect(Rect2(Vector2(ex, cy + 1.0), Vector2(6, 2)), mark)
+		var f := UiTheme.font_for()
+		if f != null:
+			var q := RecipeBookData.LOCKED_GLYPH
+			var qx := x0 + s * 2.0 + gap * 2.0  # Result socket.
+			draw_string(f, Vector2(qx, y0 + s * 0.5 + 7.0), q, HORIZONTAL_ALIGNMENT_CENTER, s, UiTheme.tier_px(UiTheme.Tier.NAME), RecipeBookData.SOCKET_MARK.lightened(0.15))
 
 
 ## Creates the view as a full-screen child of `parent` and returns it.
@@ -54,154 +88,175 @@ static func open_over(parent: Control, refocus: Control) -> RecipesPanel:
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	add_child(UiTheme.backdrop(0.7))
-	var center := CenterContainer.new()  # Centres the panel on screen.
+	add_child(UiTheme.backdrop(0.78))
+	var center := CenterContainer.new()  # Centres the content on screen.
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
-	var panel := PanelContainer.new()  # Framed panel.
-	center.add_child(panel)
-	var vb := VBoxContainer.new()  # Title, count, list, Back.
+	var vb := VBoxContainer.new()  # Title, count, panel, Back (with its Esc / B chip).
 	vb.add_theme_constant_override("separation", 10)
-	panel.add_child(vb)
+	center.add_child(vb)
 	vb.add_child(UiTheme.title(RecipeBookData.TITLE))
-	var count := UiTheme.tier_label(RecipeBookData.COUNT % [Meta.discovered_count(), EvolutionRecipes.ids().size()], UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
-	count.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vb.add_child(count)
-	var scroll := ScrollContainer.new()  # Scrolls the rows; follows keyboard / pad focus.
-	scroll.custom_minimum_size = Vector2(ROW_WIDTH + 14.0, LIST_HEIGHT)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.follow_focus = true
-	vb.add_child(scroll)
-	scroll.add_child(build_list(Meta.discovered_recipes, _rows))
+	vb.add_child(_build_count())
+	var panel := UiTheme.ornate_panel("violet")
+	vb.add_child(panel)
+	var inner := VBoxContainer.new()  # Grid, divider, detail.
+	inner.add_theme_constant_override("separation", 10)
+	panel.add_child(inner)
+	var grid := build_list(Meta.discovered_recipes, _rows)
+	inner.add_child(grid)
+	inner.add_child(UiTheme.divider("violet"))
+	inner.add_child(_build_detail())
 	_back = Button.new()
-	_back.text = "Back"
-	_back.custom_minimum_size = Vector2(0, 44)
+	_back.text = RecipeBookData.BACK
+	_back.custom_minimum_size = Vector2(240, 44)
+	_back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_back.set_meta(&"ui_back", true)
 	_back.pressed.connect(close)
+	InputHints.attach(_back, "ui_cancel", true, 12.0)
 	vb.add_child(_back)
+	var ids := EvolutionRecipes.ids()
+	for i in _rows.size():
+		_rows[i].focus_entered.connect(_show_detail.bind(ids[i]))
+		_rows[i].mouse_entered.connect(_show_detail.bind(ids[i]))
 	_link_focus()
 	if not _rows.is_empty():
 		_rows[0].grab_focus.call_deferred()
+		_show_detail(ids[0])
 	else:
 		_back.grab_focus.call_deferred()
 	UiMotion.open(self)  # Fade / rise in.
+	UiMotion.stagger(_rows, 0.04, 0.012)
 
 
-## Builds the recipe rows for `discovered` (evolution id -> true) and returns
-## their column; every row's focus button is appended to `buttons`. Static
-## and tree-free so the autotest can build it headless.
-static func build_list(discovered: Dictionary, buttons: Array[Button]) -> VBoxContainer:
-	var list := VBoxContainer.new()  # One row per recipe.
-	list.add_theme_constant_override("separation", 6)
-	for id: String in EvolutionRecipes.ids():
-		var row := _make_row(id, discovered.has(id), buttons)
-		list.add_child(row)
-	return list
-
-
-## One row: a MarginContainer holding a focusable Button (focus / hover
-## frame) under a padded content row, like the level-up cards, so it grows
-## to fit its text. `known` = discovered.
-static func _make_row(id: String, known: bool, buttons: Array[Button]) -> Control:
-	var row := MarginContainer.new()  # Row root; its size is the max of its children.
-	row.custom_minimum_size = Vector2(ROW_WIDTH, 0)
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var b := Button.new()  # Focus target (no action).
-	b.focus_mode = Control.FOCUS_ALL
-	row.add_child(b)
-	buttons.append(b)
-	var pad := MarginContainer.new()  # Padding around the content.
-	pad.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	pad.add_theme_constant_override("margin_left", ROW_PAD_X)
-	pad.add_theme_constant_override("margin_right", ROW_PAD_X)
-	pad.add_theme_constant_override("margin_top", ROW_PAD_Y)
-	pad.add_theme_constant_override("margin_bottom", ROW_PAD_Y)
-	row.add_child(pad)
-	var hb := HBoxContainer.new()  # Icon | text column.
-	hb.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hb.add_theme_constant_override("separation", 12)
-	pad.add_child(hb)
-	var text := VBoxContainer.new()  # Name line, recipe line.
-	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	text.alignment = BoxContainer.ALIGNMENT_CENTER
-	if not known:
-		hb.add_child(_locked_tile())
-		hb.add_child(text)
-		text.add_child(UiTheme.tier_label(RecipeBookData.LOCKED_NAME, UiTheme.Tier.NAME, UiTheme.TEXT_DIM))
-		text.add_child(UiTheme.para(RecipeBookData.LOCKED_TEXT, 0.0, UiTheme.TEXT_DIM))
-		pad.modulate = Color(1, 1, 1, RecipeBookData.LOCKED_ALPHA)  # Dims the content, not the focus frame.
-		return row
-	var r := EvolutionRecipes.recipe(id)  # Normalised recipe.
-	var icon_box := CenterContainer.new()  # Keeps the icon square in a tall row.
-	icon_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	icon_box.add_child(IconGlyph.new(String(r["icon"]), Vector2(ICON_SIZE, ICON_SIZE)))
-	hb.add_child(icon_box)
-	hb.add_child(text)
-	var head := HBoxContainer.new()  # Name + kind tag.
-	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var name_label := UiTheme.tier_label(String(r["name"]), UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
-	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	head.add_child(name_label)
-	var tag_key := "spell" if String(r["kind"]) == "spell" else String(r["mode"])  # RecipeBookData.TAGS key.
-	var tag := UiTheme.tier_label(String(RecipeBookData.TAGS.get(tag_key, "")), UiTheme.Tier.LABEL, UiTheme.TEXT_DIM)
-	tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	head.add_child(tag)
-	text.add_child(head)
-	var line := HFlowContainer.new()  # Ingredients + arrow + evolution; wraps if long.
-	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	line.add_theme_constant_override("h_separation", 6)
-	line.add_theme_constant_override("v_separation", 2)
-	var first := true
-	for ing: Dictionary in r["ingredients"]:
-		if not first:
-			line.add_child(_mid_label(RecipeBookData.PLUS, UiTheme.TEXT_DIM))
-		first = false
-		line.add_child(IconGlyph.new(String(ing["icon"]), Vector2(CHIP_ICON_SIZE, CHIP_ICON_SIZE)))
-		line.add_child(_mid_label(RecipeBookData.INGREDIENT % [String(ing["name"]), int(ing["level"])], UiTheme.TEXT))
-	line.add_child(_mid_label(RecipeBookData.ARROW, UiTheme.TEXT_DIM))
-	line.add_child(_mid_label(String(r["name"]), UiTheme.TEXT_GOLD))
-	text.add_child(line)
+## "7 / 23" (HEADER, gold) and "DISCOVERED" (LABEL) centred.
+func _build_count() -> Control:
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 10)
+	var num := UiTheme.tier_label(RecipeBookData.COUNT_NUM % [Meta.discovered_count(), EvolutionRecipes.ids().size()], UiTheme.Tier.HEADER, UiTheme.TEXT_GOLD)
+	row.add_child(num)
+	var word := UiTheme.tier_label(RecipeBookData.COUNT_WORD, UiTheme.Tier.LABEL, UiTheme.TEXT_DIM)
+	word.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	row.add_child(word)
 	return row
 
 
-## A BODY-tier label centred vertically in the recipe line.
+## The detail block under the grid: name + tag row, ingredient row.
+func _build_detail() -> Control:
+	var box := VBoxContainer.new()
+	box.custom_minimum_size.y = RecipeBookData.DETAIL_HEIGHT
+	box.add_theme_constant_override("separation", 2)
+	var head := HBoxContainer.new()
+	head.alignment = BoxContainer.ALIGNMENT_CENTER
+	head.add_theme_constant_override("separation", 12)
+	box.add_child(head)
+	_detail_name = UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
+	head.add_child(_detail_name)
+	_detail_tag = UiTheme.tier_label("", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM)
+	_detail_tag.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	head.add_child(_detail_tag)
+	_detail_line = HBoxContainer.new()
+	_detail_line.alignment = BoxContainer.ALIGNMENT_CENTER
+	_detail_line.add_theme_constant_override("separation", 6)
+	box.add_child(_detail_line)
+	return box
+
+
+## Builds the recipe grid for `discovered` (evolution id -> true) and
+## returns it (one tile per recipe, EvolutionRecipes.ids() order); every
+## tile's focus button is appended to `buttons`. Static and tree-free so the
+## autotest can build it headless (it counts the children).
+static func build_list(discovered: Dictionary, buttons: Array[Button]) -> GridContainer:
+	var grid := GridContainer.new()
+	grid.columns = RecipeBookData.COLUMNS
+	grid.add_theme_constant_override("h_separation", RecipeBookData.TILE_GAP)
+	grid.add_theme_constant_override("v_separation", RecipeBookData.TILE_GAP)
+	for id: String in EvolutionRecipes.ids():
+		grid.add_child(_make_tile(id, discovered.has(id), buttons))
+	return grid
+
+
+## One tile: a focusable kit button (gold frame when discovered, dim when
+## not) holding the recipe icon row or the locked face.
+static func _make_tile(id: String, known: bool, buttons: Array[Button]) -> Button:
+	var b := Button.new()
+	b.custom_minimum_size = RecipeBookData.TILE_SIZE
+	b.focus_mode = Control.FOCUS_ALL
+	b.set_meta(&"ui_lift", true)
+	UiTheme.style_button(b, "button", "gold" if known else "dim")
+	buttons.append(b)
+	if not known:
+		b.add_child(_LockedFace.new())
+		return b
+	var row := RecipeIconRow.new()  # [base] + [passive] = [evolution].
+	row.build(id)
+	row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	b.add_child(row)
+	return b
+
+
+## Shows recipe `id` in the detail block (or "Undiscovered").
+func _show_detail(id: String) -> void:
+	for c: Node in _detail_line.get_children():
+		c.queue_free()
+	if not Meta.is_recipe_discovered(id):
+		_detail_name.text = RecipeBookData.LOCKED_TEXT
+		_detail_name.add_theme_color_override("font_color", UiTheme.TEXT_DIM)
+		_detail_tag.text = ""
+		return
+	var r := EvolutionRecipes.recipe(id)  # Normalised recipe.
+	_detail_name.text = String(r["name"])
+	_detail_name.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
+	var tag_key := "spell" if String(r["kind"]) == "spell" else String(r["mode"])  # RecipeBookData.TAGS key.
+	_detail_tag.text = String(RecipeBookData.TAGS.get(tag_key, ""))
+	var first := true
+	for ing: Dictionary in r["ingredients"]:
+		if not first:
+			_detail_line.add_child(_mid_label(RecipeBookData.PLUS, UiTheme.TEXT_DIM))
+		first = false
+		_detail_line.add_child(_mid_label(RecipeBookData.INGREDIENT % [String(ing["name"]), int(ing["level"])], UiTheme.TEXT))
+
+
+## A BODY-tier label centred vertically in the ingredient row.
 static func _mid_label(s: String, color: Color) -> Label:
 	var l := UiTheme.tier_label(s, UiTheme.Tier.BODY, color)
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	l.custom_minimum_size = Vector2(0, CHIP_ICON_SIZE)
 	return l
 
 
-## The dark "?" tile of a locked recipe (same size as an evolution icon).
-static func _locked_tile() -> Control:
-	var tile := PanelContainer.new()  # Dark framed square.
-	tile.custom_minimum_size = Vector2(ICON_SIZE, ICON_SIZE)
-	tile.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	tile.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tile.add_theme_stylebox_override("panel", UiTheme.style("panel", "dim"))  # Dark locked frame (UI kit).
-	var q := UiTheme.tier_label(RecipeBookData.LOCKED_GLYPH, UiTheme.Tier.HEADER, UiTheme.TEXT_DIM)
-	q.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	q.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	tile.add_child(q)
-	return tile
+## Focuses tile `i` (screenshots, tests).
+func focus_index(i: int) -> void:
+	if i >= 0 and i < _rows.size():
+		_rows[i].grab_focus()
 
 
-## Chains focus explicitly: rows top to bottom, then Back, wrapping around,
-## so up / down never leave the view.
+## Explicit grid focus: arrows move between tiles (left / right also step to
+## the previous / next row's end), down from the last row goes to Back, up
+## from Back to the last tile; nothing leaves the view.
 func _link_focus() -> void:
-	var chain: Array[Control] = []
-	for b in _rows:
-		chain.append(b)
-	chain.append(_back)
-	for i in chain.size():
-		var prev := chain[(i - 1 + chain.size()) % chain.size()]
-		var nxt := chain[(i + 1) % chain.size()]
-		chain[i].focus_neighbor_top = chain[i].get_path_to(prev)
-		chain[i].focus_neighbor_bottom = chain[i].get_path_to(nxt)
-		chain[i].focus_neighbor_left = chain[i].get_path_to(chain[i])
-		chain[i].focus_neighbor_right = chain[i].get_path_to(chain[i])
-		chain[i].focus_previous = chain[i].get_path_to(prev)
-		chain[i].focus_next = chain[i].get_path_to(nxt)
+	var n := _rows.size()
+	var cols := RecipeBookData.COLUMNS
+	for i in n:
+		var b := _rows[i]
+		var up: Control = _rows[i - cols] if i - cols >= 0 else b
+		var down: Control = _back
+		if i + cols < n:
+			down = _rows[i + cols]
+		elif floori(float(i) / float(cols)) < floori(float(n - 1) / float(cols)):
+			down = _rows[n - 1]  # A short last row: the nearest tile below.
+		var left: Control = _rows[i - 1] if i > 0 else b
+		var right: Control = _rows[i + 1] if i < n - 1 else b
+		b.focus_neighbor_top = b.get_path_to(up)
+		b.focus_neighbor_bottom = b.get_path_to(down)
+		b.focus_neighbor_left = b.get_path_to(left)
+		b.focus_neighbor_right = b.get_path_to(right)
+		b.focus_previous = b.get_path_to(left)
+		b.focus_next = b.get_path_to(right)
+	var last: Control = _rows[n - 1] if n > 0 else _back
+	_back.focus_neighbor_top = _back.get_path_to(last)
+	_back.focus_neighbor_bottom = _back.get_path_to(_back)
+	_back.focus_neighbor_left = _back.get_path_to(_back)
+	_back.focus_neighbor_right = _back.get_path_to(_back)
 
 
 ## Closes the view and refocuses the button that opened it.
