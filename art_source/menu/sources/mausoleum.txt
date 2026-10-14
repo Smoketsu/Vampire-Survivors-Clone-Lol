@@ -1,0 +1,7 @@
+Pixel-art background element for a dark 2D pixel-art game's title screen: an old stone MAUSOLEUM (a small crypt house) in a graveyard at night, seen from the FRONT-SIDE, standing on the ground.
+
+LOW-RESOLUTION pixel art: about 90 pixels wide and 80 pixels tall, shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky simple shapes: a triangular pediment roof with a small stone skull carving, two thick columns, a dark iron door slightly ajar with a thin teal-green glow (#3DCC94, #A8FFD2 a few pixels) leaking from the gap, cracked stone blocks, a few moss patches (#3B5529), worn steps in front.
+
+Stone colours ONLY: #0F141C outline, #3B4352 shadow, #6B7A94 stone, #A7B3C6 moonlit top-left edges. Moss #3B5529, #76984A. Door #1C110B. A clean 1-pixel dark outline around the whole object. Light from the top-left (the moon). No gradients, no dithering, no anti-aliasing, no soft glow haze, no texture noise.
+Fully transparent background (real alpha): no sky, no ground plane, no grass, no text, no frame, no watermark.
+Attached: sprites of this game, for the pixel size, outline weight and palette.
