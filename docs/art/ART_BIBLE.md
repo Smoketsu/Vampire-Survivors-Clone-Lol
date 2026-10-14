@@ -190,6 +190,17 @@ The tool turns any image into palette-correct grid art, but **what it can keep d
   blocks) come out as outline only. Repaint the lit column by hand (the recruit's shaft: the left
   column in wood brown, the right one kept as its outline).
 
+### Converting skin (figure redesign, Oct 2026)
+
+The `skin` ramp's lightest shade is the ivory `bone`, and on a source with a lot of skin (the
+redesigned Seraphine) the default conversion's per-material lightness stretch also sank her gold to
+`brown_light`. Seraphine's four sprites are converted with `--no-levels` (her gold stays gold), after
+`python3 tools/skin_cap.py <source> <capped copy>`, which sets every skin pixel brighter than the
+palette's `skin` (found by a warm-peach hue band between the ivory cloth and the gold trim) to exactly
+`skin`, so no highlight turns into ivory. Copy the untouched source back to `art_source/<key>.png`
+afterwards (prepare_sprite archives whatever it was given). The violet characters need neither (their
+ramps have no `skin`: the necromancers' pale skin is `bone` by design).
+
 ## Anchors (the first six, approved in-game before everything else)
 
 **Status:** anchors 1-3 are in the game: the necromancer (owner's ~65 px image, `--inside-outline`, hood
@@ -361,10 +372,12 @@ Process: `python3 tools/prepare_sprite.py <image> icons/shadow_bolt --art-height
 
 ## Walk cycles (`tools/walk_cycle.py`)
 
-**Status:** 49 strips: the necromancer and the 11 other characters, their 16 skins; the summons
+**Status:** 51 strips: the necromancer and the 11 other characters, their 16 skins; Grand Inquisitor
+Seraphine and her Avatar of the Dawn (a glide: robe hem sway, bob and bust bounce; figure redesign,
+Oct 2026); the summons
 Warrior, Archer, Mage, Mender, Warder, Rogue, Risen and Bone Hound and the walking evolutions Death
 Knight, Gravebow, Shadow Reaper and Hellhound; the Covenant Recruit, Footman, Archer, Chaplain,
-Purifier, Shieldbearer, Halberdier, Templar and Banner Bearer. Every other unit (bosses, structures,
+Purifier, Shieldbearer, Halberdier, Templar and Banner Bearer. Every other unit (the other bosses, structures,
 the floating Banshee, Keening Lady, Frost Wraith, Winter Revenant and Lich, the airborne Gargoyle and
 Cathedral Horror, the Bishop, the giant summons, the Corpse Catapult and Ossuary Engine, the Inquisitor
 and the Sanctum kinds) keeps its still plus the engine motion. A skin's rig is derived from its character's
@@ -393,6 +406,18 @@ the still does not. One cycle is **8 frames** (`WalkData.FRAMES`), two steps of 
 (the still itself), down, passing (feet together, swinging foot lifted), up; the first step swings the
 back leg, the second the front one. Typical rigs: `spread` 2-3 and `lift` 2 for legged soldiers and
 skeletons, 1 and 1 for the long robes, `dip` 1 everywhere.
+
+**Bust bounce (figure redesign, Oct 2026; owner request).** A rig may carry `bust = (x0, x1, y0, y1,
+px)`: the box holding the bust (y0 the neckline, y1 - 1 the underside) and the bounce in art px. Each
+frame warps that box vertically (`_bounce()`): the neckline stays, the underside moves `BUST_BOUNCE`
+x `px` at the box's centre column and less toward its sides (a sine bell), fading back to 0 over
+`BUST_TAIL_PER_PX` x `px` rows below it, so the belly takes up the motion and nothing tears. The timing
+is a damped spring driven by the step (`BUST_BOUNCE` = 0, -0.5, +1, -0.5 per pose: it lags the dip,
+overshoots as the body rises, rebounds, settles on the contact, so frame 0 stays the still). Pixels
+are only moved within their column (nearest, inverse mapping), never recoloured, so the strip passes
+the same checks. Used on the Wither Witch (2 px; her box starts right of her near arm, which shook
+when it was inside), the Soulbinder (2 px), their Hyper skins (boxes derived by `skin_rig()`),
+Seraphine and her Avatar (3 px). A bounce plays only while the unit moves; standing shows the still.
 
 **Strip layout (the engine contract).** `assets/sprites/<key>_walk.png` = 8 frames side by side, no
 gaps, **each exactly the still's width and height** (frame i at x = i x W), feet on the same bottom row
@@ -452,8 +477,8 @@ colour.
 | `plague_scholar.png` | **The Plague Scholar** (Plague Cloud): a hunched necromancer in decaying moss-green alchemist robes over violet, a beaked plague mask, vials at the belt, a staff hung with a smoking censer leaking moss-green fumes. Signature: the beak and censer | 48 | done |
 | `doomsayer.png` | **The Doomsayer** (Death Mark): a tall gaunt prophet in a near-black violet robe lined with crimson, a branding iron glowing in one hand, a crimson eye sigil on the hood. Signature: the tall thin hooded shape and branding iron | 53 (body 48, branding iron above) | done |
 | `barrow_warden.png` | **The Barrow Warden** (Bone Wall): a heavy-set warden in a mossy cold-grey cloak over violet, stacked bone-and-stone armour, a bone-slab tower shield, a shovel-headed staff. Signature: the slab shield | 59 (body 48, shovel staff above) | done |
-| `soulbinder.png` | **The Soulbinder** (Soul Chains): a slender necromancer in a dark violet robe wrapped in spectral chains, pale icy lightning crackling along the chains and from her raised hand, robe edges lifting. Signature: the chains and raised hand | 61 (body 48, lightning hand above) | done |
-| `wither_witch.png` | **The Wither Witch** (Wither): a crooked witch in a withered brown shawl over a violet robe, a wide frayed hat, dead leaves falling, a twisted dead-branch staff, a faint moss-green aura at her feet. Signature: the wide hat | 48 | done |
+| `soulbinder.png` | **The Soulbinder** (Soul Chains): an alluring sorceress with an exaggerated hourglass figure (a very large bust, cinched waist, wide hips) in a fitted, low-necked dark violet gown with a high slit, spectral chains around her waist and hips, pale icy lightning crackling along the chains and from her raised hand. Signature: the chains, the raised hand and the figure (figure redesign, Oct 2026) | 61 (body 48, lightning hand above) | done |
+| `wither_witch.png` | **The Wither Witch** (Wither): an alluring witch standing tall with an exaggerated hourglass figure (a very large bust, cinched waist, wide hips) in a fitted, low-necked violet corset dress with a high slit under a withered brown shawl, a wide frayed hat, dead leaves falling, a twisted dead-branch staff, a faint moss-green aura at her feet. Signature: the wide hat and the figure (figure redesign, Oct 2026; she was crooked before) | 48 | done |
 | `grave_herald.png` | **The Grave Herald** (Raise Dead): a necromancer herald in a dark violet tabard over bone mail, a raised bone horn, a banner pole topped with a skull, teal soul fire at his feet. Signature: the skull banner | 62 (body 48, skull banner above) | done |
 
 ### Player skins (`assets/sprites/player/<character>_<skin>.png`, body as the character's)
@@ -491,8 +516,8 @@ behind the head; ask for "a 2-pixel-thick ring with chunky rays" if one is redon
 | `plague_scholar_hyper.png` | Blighted Scholar (Plague Scholar) | The Plague Scholar **blighted gold**: robes of sickly gold-green, gold vials, a gold sun corona | 53 (body 48, corona above) | done |
 | `doomsayer_hyper.png` | Final-Hour Doomsayer (Doomsayer) | The Doomsayer **gilded**: gold hourglass and chains, gold trim, a gold sun corona | 54 (body 45, branding iron and corona above) | done |
 | `barrow_warden_hyper.png` | Gilded Barrow King (Barrow Warden) | The Barrow Warden as a **barrow king**: gold grave-goods armour, a gold circlet, a gold sun corona | 63 (body 49, shovel staff and corona above) | done |
-| `soulbinder_hyper.png` | Radiant Soulbinder (Soulbinder) | The Soulbinder **gilded**: gold soul chains, radiant gold trim, a gold sun corona | 63 (body 49, lightning hand and corona above) | done |
-| `wither_witch_hyper.png` | Thorn-Crowned Witch (Wither Witch) | The Wither Witch **gilded**: a crown of gold thorns, gold-dusted withered robes, a gold sun corona | 50 (body 48, thorn tips above the hat) | done |
+| `soulbinder_hyper.png` | Radiant Soulbinder (Soulbinder) | The Soulbinder **gilded** (her redesigned figure): gold soul chains, radiant gold trim, a gold sun corona | 63 (body 49, lightning hand and corona above) | done |
+| `wither_witch_hyper.png` | Thorn-Crowned Witch (Wither Witch) | The Wither Witch **gilded** (her redesigned figure): a crown of gold thorns, gold-dusted withered robes, a gold sun corona | 50 (body 48, thorn tips above the hat) | done |
 | `grave_herald_hyper.png` | Golden Herald (Grave Herald) | The Grave Herald **gilded**: a gold horn and tabard, gold trim, a gold sun corona | 63 (body 48, skull banner and corona above) | done |
 
 ### Summons (`assets/sprites/summons/`)
@@ -553,7 +578,7 @@ Crimson, ivory and warm steel; gold for elites, the Sanctum kinds and the Reckon
 |---|---|---|---|
 | `alaric.png` | Sir Alaric, the Gravebreaker: a giant paladin, a holy warhammer, gold, ivory and warm steel | 120 | done |
 | `vael.png` | Marshal Vael, the Crimson Bulwark: a great crimson kite shield, a flaming sword, a crimson plume | 120 | done |
-| `seraphine.png` | Grand Inquisitor Seraphine, Voice of the Dawn (Stage 3): a winged Inquisitor in a white-and-gold bell robe with a crimson stole and a gold sun on the chest, a white veil and gold circlet, a gold **sun halo** with rays, two feathered ivory wings spread up behind her shoulders, a tall gold **relic staff** crowned by a sunburst reliquary | 130 | done |
+| `seraphine.png` | Grand Inquisitor Seraphine, Voice of the Dawn (Stage 3): a statuesque winged Inquisitor with an exaggerated hourglass figure (a very large bust, cinched waist, wide hips; figure redesign, Oct 2026) in a fitted, low-necked white-and-gold bodice gown with a high slit, a crimson stole and a gold sun on the chest, a white veil and gold circlet, a gold **sun halo** with rays, two feathered ivory wings spread up behind her shoulders, a tall gold **relic staff** crowned by a sunburst reliquary | 130 | done |
 | `seraphine_avatar.png` | *Optional.* Her **Avatar of the Dawn** form (phases 2-3): the same figure larger and brighter, wings spread wide with gold-edged feathers, a long-rayed halo, the relic blazing holy white | 156 | done |
 | `alaric_windup.png` | **Attack pose** (`BossPoseData` pose 1): both hands raise the warhammer high overhead, leaning back | 177 | done |
 | `alaric_charge.png` | Attack pose 2: a shoulder-first charge, hammer trailing low, cape streaming | 117 | done |

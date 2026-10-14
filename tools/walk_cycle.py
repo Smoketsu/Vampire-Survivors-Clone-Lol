@@ -83,6 +83,15 @@ DIP = (0, 1, 0, 0)
 # Per frame (both steps): hem shift at the hem bottom as a share of a robe rig's
 # `sway` (+ = forward, the facing side): the hem swings forward on each step.
 ROBE_SWAY = (0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
+# Per frame (both steps): how far the bust's underside moves relative to the body, as a
+# share of the rig's `bust` bounce px (+ = down). Secondary motion (owner request, Oct 2026:
+# "jiggle"), timed like a damped spring driven by the step: the bust lags the body's dip
+# ("down": it stays up, -0.5), overshoots as the body rises ("passing": +1), rebounds
+# ("up": -0.5) and settles on the contact (0, so frame 0 stays the still).
+BUST_BOUNCE = (0.0, -0.5, 1.0, -0.5, 0.0, -0.5, 1.0, -0.5)
+# Rows below the bust box over which the warp fades back to zero, per bounce px (the
+# belly takes up the motion instead of tearing at the box edge).
+BUST_TAIL_PER_PX = 1
 
 # Rigs: how each still is cut. Columns and rows are art px in the still (x from
 # the left, y from the top; ranges are [start, end) ). Keys:
@@ -97,6 +106,12 @@ ROBE_SWAY = (0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
 #   lift    px the swinging foot rises at passing ("legs").
 #   sway    px the hem bottom swings at most ("robe").
 #   dip     px the body dips on the "down" pose (0 or 1; 1 for every unit so far).
+#   bust    optional (x0, x1, y0, y1, px): the box of the still holding the bust (art px,
+#           [start, end) ; y0 = the neckline, y1 - 1 = the underside) and the bounce in
+#           px at its strongest point. Each frame warps that box vertically (_bounce): the
+#           neckline stays, the underside moves BUST_BOUNCE * px at the box's centre column,
+#           less toward its sides, fading out below it. Pixels are only moved, never
+#           recoloured, so every pixel stays an approved one.
 RIGS = {
     # The pilot (ART_BIBLE "Walk cycles"): the three units with the most screen time.
     "player/necromancer": dict(mode="legs", hip=47, back=(0, 20), front=(20, 33), rigid=[(33, 46, 0, None)], spread=1, lift=1, dip=1),
@@ -127,8 +142,14 @@ RIGS = {
     "player/plague_scholar": dict(mode="legs", hip=43, back=(0, 26), front=(26, 60), rigid=[], spread=2, lift=1, dip=1),
     "player/doomsayer": dict(mode="legs", hip=47, back=(0, 17), front=(17, 32), rigid=[], spread=1, lift=1, dip=1),
     "player/barrow_warden": dict(mode="legs", hip=52, back=(0, 18), front=(18, 30), rigid=[(30, 44, 0, None)], spread=1, lift=1, dip=1),
-    "player/soulbinder": dict(mode="legs", hip=54, back=(0, 24), front=(24, 46), rigid=[], spread=1, lift=1, dip=1),
-    "player/wither_witch": dict(mode="legs", hip=42, back=(0, 20), front=(20, 26), rigid=[(26, 40, 0, None)], spread=1, lift=1, dip=1),
+    # Redesigned figures (owner request, Oct 2026): the bust box bounces (BUST_BOUNCE). The
+    # Wither Witch's box starts right of her near arm so the arm never shakes.
+    "player/soulbinder": dict(mode="legs", hip=54, back=(0, 24), front=(24, 44), rigid=[], spread=1, lift=1, dip=1, bust=(19, 30, 20, 27, 2)),
+    "player/wither_witch": dict(mode="legs", hip=40, back=(0, 18), front=(18, 26), rigid=[(26, 36, 0, None)], spread=1, lift=1, dip=1, bust=(16, 24, 15, 21, 2)),
+    # Seraphine floats: her "walk" is a glide (robe hem sway, the body bob, the bust bounce).
+    # The still's relic staff stays rigid down to row 90, where it meets the robe.
+    "bosses/seraphine": dict(mode="robe", hip=70, rigid=[(68, 98, 0, 90)], sway=2, dip=1, bust=(42, 64, 44, 58, 3)),
+    "bosses/seraphine_avatar": dict(mode="robe", hip=106, rigid=[], sway=2, dip=1, bust=(74, 97, 61, 78, 3)),
     "player/grave_herald": dict(mode="legs", hip=53, back=(0, 24), front=(24, 46), rigid=[], spread=1, lift=1, dip=1),
     # Later units with long screen time: the walking summon evolutions and two March soldiers.
     "summons/death_knight": dict(mode="legs", hip=41, back=(0, 25), front=(25, 54), rigid=[], spread=2, lift=2, dip=1),
@@ -193,6 +214,9 @@ def skin_rig(skin: str, base: str) -> dict:
         rig["back"], rig["front"] = cols(rig["back"]), cols(rig["front"])
     rig["rigid"] = [(*cols((x0, x1)), y0 if y0 == 0 else y0 + dy, None if y1 is None else y1 + dy)
                     for x0, x1, y0, y1 in rig.get("rigid", [])]
+    if "bust" in rig:
+        bx0, bx1, by0, by1, bpx = rig["bust"]
+        rig["bust"] = (*cols((bx0, bx1)), by0 + dy, by1 + dy, bpx)
     rig.update(SKIN_FIX.get(skin, {}))
     return rig
 
@@ -300,9 +324,41 @@ def frames_of(key: str) -> list:
         else:
             hem = _shift_rows(parts["hem"], hip, dy, 0, ROBE_SWAY[f] * rig["sway"])
             frame = _stack([hem] + body)
+        if "bust" in rig:
+            frame = _bounce(frame, rig["bust"], dy, BUST_BOUNCE[f] * rig["bust"][4])
         out.append(frame)
     if not np.array_equal(out[0], still):
         sys.exit(f"{key}: frame 0 differs from the still (rig error)")
+    return out
+
+
+def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float) -> np.ndarray:
+    """Warps the bust of `frame` (the still's box `bust` lowered by the body dip `dy`) so its
+    underside moves `s` px (+ = down) at the box's centre column. Displacement field: a
+    sine bell across the columns (1 at the centre, 0 just outside the box) times a ramp down
+    the rows (0 at the neckline, 1 on the underside), then a fade back to 0 over the
+    BUST_TAIL_PER_PX * |s| rows below. Each pixel takes the pixel |d| rows above or below it
+    in the same column (nearest, inverse mapping: no holes, no new colours). s = 0 returns
+    the frame unchanged."""
+    if s == 0:
+        return frame
+    x0, x1 = bust[0], bust[1]  # Box columns [x0, x1) (art px).
+    y0, y1 = bust[2] + dy, bust[3] + dy  # Box rows in this frame: neckline .. underside + 1.
+    tail = int(np.ceil(abs(s) * BUST_TAIL_PER_PX)) + 1  # Fade-out rows below the box.
+    h = frame.shape[0]  # Frame height (art px).
+    out = frame.copy()
+    span = float(x1 - x0)  # Box width (art px).
+    for x in range(x0, x1):
+        wx = float(np.sin(np.pi * (x - x0 + 0.5) / span))  # Column weight: 1 at the centre.
+        for y in range(max(0, y0), min(h, y1 + tail)):
+            if y < y1:
+                wy = (y - y0 + 1) / float(y1 - y0)  # 0 at the neckline, 1 on the underside.
+            else:
+                wy = 1.0 - (y - y1 + 1) / float(tail + 1)  # Fades out under the bust.
+            d = int(round(s * wx * wy))  # Rows this pixel's content moves (+ = down).
+            sy = y - d  # Source row (inverse mapping).
+            if d != 0 and 0 <= sy < h:
+                out[y, x] = frame[sy, x]
     return out
 
 
