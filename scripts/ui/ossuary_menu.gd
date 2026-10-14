@@ -580,7 +580,7 @@ func lower_oath() -> void:
 
 
 ## Refund all pressed: asks first (or `denied` when nothing is spent).
-## W2-NewScreens may replace the body with ConfirmDialog.ask(..., refund_all).
+## The Ossuary keeps its own refund dialog (it shows the Soul Ash it returns).
 func _on_refund_pressed() -> void:
 	if Meta.spent_total() <= 0:
 		Sfx.play_ui("denied")

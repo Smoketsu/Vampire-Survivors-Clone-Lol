@@ -19,10 +19,8 @@
 ## overlay's own scrim so the graveyard stays visible around its panel;
 ## closing the last overlay restores both and the focus.
 ##
-## Codex and Credits open screens another branch adds (CodexScreen /
-## CreditsScreen); Quit asks through ConfirmDialog. Those scripts are loaded at
-## RUNTIME by path (_optional()), so this file compiles and runs without them:
-## a missing screen plays `denied`, and Quit without the dialog quits at once.
+## Codex and Credits open CodexScreen / CreditsScreen over the menu; Quit asks
+## first through the shared ConfirmDialog (texts in ConfirmData.QUIT).
 ## Play opens the stage select (StageSelect, GDD §10.2), which opens the
 ## pre-run setup (PreRunSetup); the finished RunConfig reaches Main through
 ## `stage_chosen`.
@@ -33,15 +31,6 @@ extends Control
 signal play_pressed
 ## A stage was chosen in the stage select: Main starts a run with `config`.
 signal stage_chosen(config: RunConfig)
-
-## Script of the codex / achievements screen (another branch; static
-## open_over(host)). Loaded at runtime, may be missing.
-const CODEX_SCRIPT: String = "res://scripts/ui/codex_screen.gd"
-## Script of the credits screen (another branch; static open_over(host)).
-const CREDITS_SCRIPT: String = "res://scripts/ui/credits_screen.gd"
-## Script of the confirm dialog (another branch; static ask(host, title,
-## body, confirm_label, on_confirm, danger)).
-const CONFIRM_SCRIPT: String = "res://scripts/ui/confirm_dialog.gd"
 
 ## Play button (focused on open for keyboard / controller users).
 var _play: Button
@@ -183,9 +172,9 @@ func _on_item(id: String, b: Button) -> void:
 		"settings":
 			SettingsMenu.open_over(self, b)
 		"codex":
-			_open_optional(CODEX_SCRIPT)
+			CodexScreen.open_over(self)
 		"credits":
-			_open_optional(CREDITS_SCRIPT)
+			CreditsScreen.open_over(self)
 		"quit":
 			_quit()
 
@@ -263,31 +252,9 @@ func _open_stage_select() -> void:
 	sel.stage_chosen.connect(func(config: RunConfig) -> void: stage_chosen.emit(config))
 
 
-## Opens the screen whose script is at `path` (static open_over(host)) over
-## the menu, or plays `denied` when that script is not in this build.
-func _open_optional(path: String) -> void:
-	var script := _optional(path)
-	if script == null:
-		Sfx.play_ui("denied")
-		return
-	script.call("open_over", self)
-
-
-## Quit: asks first through the confirm dialog when it exists, else quits.
+## Quit: asks first through the shared confirm dialog (Cancel focused).
 func _quit() -> void:
-	var dialog := _optional(CONFIRM_SCRIPT)
-	if dialog == null:
-		get_tree().quit()
-		return
-	dialog.call("ask", self, "Quit?", "The dead will wait.", "Quit", func() -> void: get_tree().quit(), true)
-
-
-## The script at `path` loaded at runtime, or null when it is not in this
-## build (so this file never depends on another branch's classes).
-static func _optional(path: String) -> Script:
-	if not ResourceLoader.exists(path):
-		return null
-	return load(path) as Script
+	ConfirmDialog.ask(self, ConfirmData.QUIT[0], ConfirmData.QUIT[1], ConfirmData.QUIT[2], func() -> void: get_tree().quit(), true)
 
 
 ## Updates the Soul Ash balance and the lifetime stats.

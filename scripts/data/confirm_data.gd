@@ -17,7 +17,7 @@ const CANCEL: String = "Cancel"  # TUNING (not in GDD)
 
 ## The wired dialogs: id -> [title, body, confirm word]. Titles are the
 ## Jacquard TITLE tier (title case).
-const QUIT := ["Quit?", "Close Necropathy and return to the desktop.", "Quit"]  # TUNING (not in GDD)
+const QUIT := ["Quit?", "The dead will wait.", "Quit"]  # TUNING (not in GDD)
 ## Pause menu Restart (the run in progress is lost).
 const RESTART := ["Restart?", "This run ends here: no Soul Ash is earned.", "Restart"]  # TUNING (not in GDD)
 ## Pause menu Main Menu (the run in progress is lost).

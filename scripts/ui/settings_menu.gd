@@ -12,8 +12,8 @@
 ##             button (press it, then any key; controller B or a mouse click
 ##             cancels; binding a key another action uses swaps the two) and
 ##             its controller binding as a read-only pad chip (the pad layout
-##             is fixed). "Reset keys" restores the defaults (W2-NewScreens
-##             wraps _on_reset_keys() with its confirm dialog).
+##             is fixed). "Reset keys" restores the defaults after the shared
+##             ConfirmDialog (it wraps _on_reset_keys()).
 ## Tabs: click / focus a tab button, or Q / E (LB / RB on a pad) from
 ## anywhere. Fully usable with a controller: explicit focus links join the
 ## tab row and each page, sliders move with left / right, toggles and
@@ -341,7 +341,7 @@ func _build_controls(vb: VBoxContainer, focus: Array[Control]) -> void:
 	reset_button.text = SettingsUiData.RESET
 	reset_button.custom_minimum_size = SettingsUiData.RESET_SIZE
 	reset_button.size_flags_horizontal = Control.SIZE_SHRINK_END
-	# W2-NewScreens: Reset keys asks first (the shared ConfirmDialog wraps the handler; not a danger action).
+	# Reset keys asks first (the shared ConfirmDialog wraps the handler; not a danger action).
 	reset_button.pressed.connect(func() -> void: ConfirmDialog.ask(self, ConfirmData.RESET_KEYS[0], ConfirmData.RESET_KEYS[1], ConfirmData.RESET_KEYS[2], _on_reset_keys, false))
 	var gap := Control.new()
 	gap.custom_minimum_size.y = 6.0
@@ -477,8 +477,8 @@ func _stop_listening() -> void:
 		b.grab_focus()
 
 
-## Reset keys pressed: restores every default key binding at once (W2-NewScreens
-## wraps this with its confirm dialog).
+## Reset keys confirmed: restores every default key binding at once (the
+## Reset keys button asks first through the shared ConfirmDialog).
 func _on_reset_keys() -> void:
 	listening_action = ""
 	Settings.reset_bindings()

@@ -89,13 +89,13 @@ func _ready() -> void:
 
 ## Restart pressed: asks first through the shared ConfirmDialog.
 func _on_restart() -> void:
-	# W2-NewScreens: asks first (the run in progress would be lost).
+	# asks first (the run in progress would be lost).
 	ConfirmDialog.ask(self, ConfirmData.RESTART[0], ConfirmData.RESTART[1], ConfirmData.RESTART[2], func() -> void: restart_pressed.emit())
 
 
 ## Main Menu pressed: asks first through the shared ConfirmDialog.
 func _on_main_menu() -> void:
-	# W2-NewScreens: asks first (the run in progress would be lost).
+	# asks first (the run in progress would be lost).
 	ConfirmDialog.ask(self, ConfirmData.MAIN_MENU[0], ConfirmData.MAIN_MENU[1], ConfirmData.MAIN_MENU[2], func() -> void: main_menu_pressed.emit())
 
 
