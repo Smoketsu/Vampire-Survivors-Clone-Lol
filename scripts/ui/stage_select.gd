@@ -7,7 +7,8 @@
 ## once the stage was cleared on Hyper (HyperBadge; Meta.hyper_clears, per
 ## stage and character). Keyboard, mouse and
 ## controller navigable (arrows / D-pad between cards, Enter / A to march,
-## Esc / B back), in the shared UiTheme.
+## Esc / B back), in the shared UiTheme and its type tiers (the title in
+## Jacquard 24, LABEL chapters, NAME stage names, BODY descriptions).
 ## Choosing an unlocked stage opens the pre-run setup (PreRunSetup: GDD
 ## §8.4 difficulty and §8.5 run modifiers, starting from the choices
 ## remembered in the Meta save) over this screen; when it confirms,
@@ -24,7 +25,7 @@ signal closed
 ## Width (px) of one stage card.
 const CARD_WIDTH: float = 360.0
 ## Height (px) of one stage card.
-const CARD_HEIGHT: float = 330.0
+const CARD_HEIGHT: float = 372.0
 
 ## Control that gets focus back when the screen closes.
 var return_focus: Control = null
@@ -111,10 +112,8 @@ func _ready() -> void:
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 12)
 	panel.add_child(vb)
-	var title := UiTheme.label("CHOOSE YOUR BATTLEFIELD", 30, UiTheme.TEXT_GOLD)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vb.add_child(title)
-	var sub := UiTheme.label("Each chapter is a 20:00 march against the Covenant, its boss with 3:00 left, then the Reckoning.", 13, UiTheme.TEXT_DIM)
+	vb.add_child(UiTheme.title("Choose Your Battlefield"))
+	var sub := UiTheme.tier_label("Each chapter is a 20:00 march against the Covenant, its boss with 3:00 left, then the Reckoning.", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(sub)
 	var row := HBoxContainer.new()
@@ -156,17 +155,14 @@ func _build_card(id: String) -> Button:
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(box)
 	box.add_child(StageEmblem.new(id, not unlocked))
-	box.add_child(UiTheme.label(String(def["chapter"]).to_upper(), 12, UiTheme.TEXT_DIM))
-	box.add_child(UiTheme.label(String(def["display_name"]), 22, UiTheme.TEXT_GOLD if unlocked else UiTheme.TEXT_DIM))
-	var desc := UiTheme.body(String(def["description"]), 13, UiTheme.TEXT if unlocked else UiTheme.TEXT_DIM)  # Body font.
-	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc.custom_minimum_size = Vector2(CARD_WIDTH - 24.0, 0)
-	box.add_child(desc)
+	box.add_child(UiTheme.tier_label(String(def["chapter"]), UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))
+	box.add_child(UiTheme.tier_label(String(def["display_name"]), UiTheme.Tier.NAME, UiTheme.TEXT_GOLD if unlocked else UiTheme.TEXT_DIM))
+	box.add_child(UiTheme.para(String(def["description"]), CARD_WIDTH - 24.0, UiTheme.TEXT if unlocked else UiTheme.TEXT_DIM))
 	var spacer := Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(spacer)
-	var status := UiTheme.label(_status_text(id, unlocked), 13, Palette.NECRO_GREEN if unlocked else Palette.CRIMSON.lightened(0.35))
+	var status := UiTheme.tier_label(_status_text(id, unlocked), UiTheme.Tier.BODY, Palette.NECRO_GREEN if unlocked else Palette.CRIMSON.lightened(0.35))
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	status.custom_minimum_size = Vector2(CARD_WIDTH - 24.0, 0)
 	box.add_child(status)

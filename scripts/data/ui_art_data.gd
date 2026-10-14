@@ -72,7 +72,8 @@ const SLOT_EXPAND: float = 2.0  # TUNING (not in GDD) art pass UI kit
 ##   * the sizes in the UI scripts are still the ones they were written for
 ##     (a 0.70-em cap height); UiTheme.font_px() turns each into the PIXEL_SIZES
 ##     entry nearest the same cap height (x CAP_MATCH), so the hierarchy holds.
-## Long descriptions keep a smooth body font instead (UiTheme.body()).
+## Long descriptions use Jersey 10 too, at the BODY tier (owner: "Jersey,
+## let's keep it cohesive"; UiTheme.body()): no smooth font is left in the UI.
 
 ## Jersey 10: the HUD, numbers, headings, labels, buttons, card names and the
 ## in-world damage numbers (the theme's default font).
@@ -109,6 +110,34 @@ const BANNER_SIZE: int = 43  # TUNING (not in GDD) GDD §15.0 "Pixel fonts": who
 ## Width (layout px) at which a Jacquard event banner wraps (between the
 ## top-left HP block and the top-right modifiers block).
 const BANNER_WRAP: float = 680.0  # TUNING (not in GDD) font pass
+
+## --- Type tiers (menu modernization, GDD §15.0 "Type tiers") ------------
+## Five named sizes give every screen the same hierarchy (UiTheme.Tier,
+## UiTheme.tier_label(), UiTheme.set_tier()). Jersey 10 tiers are PIXEL_SIZES
+## entries only (1, 1.5, 2 or 3 layout px per font pixel); the TITLE tier is
+## Jacquard 24 at BANNER_SIZE (its 43 px em).
+##   TITLE : screen titles and banners (Jacquard 24, title case).
+##   HERO  : big numbers (Soul Ash totals, end-screen headline numbers).
+##   HEADER: section headers, the HUD timer.
+##   NAME  : item / card / upgrade names, buttons.
+##   BODY  : descriptions, stats, secondary lines, hints.
+##   LABEL : small section labels ("DIFFICULTY"): BODY size, upper case,
+##           letter-spaced LABEL_SPACING px.
+
+## Jersey 10 size (layout px) of the HERO tier: big numbers.
+const TYPE_HERO: int = 57  # TUNING (not in GDD) menu modernization type tiers
+## Jersey 10 size (layout px) of the HEADER tier: section headers.
+const TYPE_HEADER: int = 38  # TUNING (not in GDD) menu modernization type tiers
+## Jersey 10 size (layout px) of the NAME tier: item names and buttons.
+const TYPE_NAME: int = 28  # TUNING (not in GDD) menu modernization type tiers
+## Jersey 10 size (layout px) of the BODY tier: descriptions and secondary text.
+const TYPE_BODY: int = 19  # TUNING (not in GDD) menu modernization type tiers
+## Jersey 10 size (layout px) of the LABEL tier: small upper-case section labels.
+const TYPE_LABEL: int = 19  # TUNING (not in GDD) menu modernization type tiers
+## Extra space (layout px = whole font px at 19 px, so the glyphs stay on
+## the pixel grid) after every letter of the LABEL tier: the letter-spaced
+## small-caps look of section labels. 0..3 px.
+const LABEL_SPACING: int = 2  # TUNING (not in GDD) menu modernization type tiers
 
 ## Title logo PNG (pixel art at 1 texel per art px; NECROPATHY wordmark).
 const LOGO: String = "res://assets/ui/logo.png"

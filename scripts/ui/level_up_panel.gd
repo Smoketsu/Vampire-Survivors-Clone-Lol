@@ -15,6 +15,11 @@
 ##                                B / LB again, Esc or controller B cancels)
 ##   Skip            N            controller RB
 ## Controller Y stays the Shadow Bolt aim toggle, so it is not used here.
+## These keys are shown as InputHints chips (the current device's: keyboard
+## keys or pad buttons), never as text: a hint strip under the title (pick /
+## choose), a "1" / "2" / "3" key chip on each card (keyboard only), a chip
+## inside each action button and a cancel chip on the banish prompt.
+## Text sizes are UiTheme type tiers (the title in Jacquard 24).
 class_name LevelUpPanel
 extends Control
 
@@ -34,8 +39,10 @@ const CARD_MIN_HEIGHT: float = 340.0
 const CARD_PAD_X: int = 14
 ## Inner padding of a card in px (top/bottom).
 const CARD_PAD_Y: int = 12
-## Width in px of each action-bar button.
-const ACTION_WIDTH: float = 190.0
+## Width in px of each action-bar button (its key chip sits inside, left).
+const ACTION_WIDTH: float = 230.0
+## Card number keys (1 / 2 / 3, keyboard only), shown as chips on the cards.
+const CARD_KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3]
 
 ## Owning run (abilities, autotest hook).
 var game: Game
@@ -45,10 +52,12 @@ var _offers: Array[Dictionary] = []
 var _for_level: int = 0
 ## Container holding the card buttons.
 var _cards_box: HBoxContainer
-## "LEVEL N" title.
+## "Level N" title.
 var _title: Label
 ## Status line under the cards (banish mode prompt, evolution notice).
 var _status: Label
+## Cancel chip and word beside the status line (shown in banish mode).
+var _status_cancel: Control
 ## Card buttons in display order (focus / click targets).
 var _buttons: Array[Button] = []
 ## Card root containers in display order (freed when the panel reopens).
@@ -78,34 +87,44 @@ func _ready() -> void:
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 14)
 	center.add_child(vb)
-	_title = UiTheme.label("LEVEL UP", 34, UiTheme.TEXT_GOLD)
-	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title = UiTheme.title("Level Up")
 	vb.add_child(_title)
-	var sub := UiTheme.label("Choose one  -  click, press 1 / 2 / 3, or use a controller", 14, UiTheme.TEXT_DIM)
-	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vb.add_child(sub)
+	var picks: Array = []  # "1" "2" "3" (keyboard) and A (pad).
+	for k: Key in CARD_KEYS:
+		picks.append(InputHints.raw(k))
+	picks.append(InputHints.raw(-1, JOY_BUTTON_A))
+	vb.add_child(InputHints.strip([[picks, "Choose one"]]))
 	_cards_box = HBoxContainer.new()
 	_cards_box.add_theme_constant_override("separation", 18)
 	_cards_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	vb.add_child(_cards_box)
-	_status = UiTheme.label("", 15, UiTheme.TEXT_GOLD)
+	var status_row := HBoxContainer.new()  # Status line + its cancel hint.
+	status_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	status_row.add_theme_constant_override("separation", 14)
+	vb.add_child(status_row)
+	_status = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_GOLD)
 	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vb.add_child(_status)
+	status_row.add_child(_status)
+	_status_cancel = MarginContainer.new()  # Wrapper: its visibility is ours, the hint's is InputHints'.
+	_status_cancel.add_child(InputHints.hint([InputHints.raw(KEY_ESCAPE, JOY_BUTTON_B)], "Cancel"))
+	status_row.add_child(_status_cancel)
 	var actions := HBoxContainer.new()
 	actions.add_theme_constant_override("separation", 18)
 	actions.alignment = BoxContainer.ALIGNMENT_CENTER
 	vb.add_child(actions)
-	_reroll_btn = _action_button(actions, _reroll)
-	_banish_btn = _action_button(actions, _toggle_banish)
-	_skip_btn = _action_button(actions, _skip)
+	_reroll_btn = _action_button(actions, _reroll, InputHints.raw(KEY_R, JOY_BUTTON_X))
+	_banish_btn = _action_button(actions, _toggle_banish, InputHints.raw(KEY_B, JOY_BUTTON_LEFT_SHOULDER))
+	_skip_btn = _action_button(actions, _skip, InputHints.raw(KEY_N, JOY_BUTTON_RIGHT_SHOULDER))
 
 
-## Adds one action-bar button calling `cb` to `parent`.
-func _action_button(parent: Control, cb: Callable) -> Button:
+## Adds one action-bar button calling `cb` to `parent`, with the key chip of
+## `hint` (an InputHints spec) inside its left edge.
+func _action_button(parent: Control, cb: Callable, hint: Dictionary) -> Button:
 	var b := Button.new()
 	b.custom_minimum_size = Vector2(ACTION_WIDTH, 40)
 	b.focus_mode = Control.FOCUS_ALL
 	b.pressed.connect(func() -> void: _on_action(cb))
+	InputHints.attach(b, hint)
 	parent.add_child(b)
 	return b
 
@@ -129,7 +148,7 @@ func _show(offers: Array[Dictionary]) -> void:
 		var card := _make_card(offers[i], i)
 		_cards_box.add_child(card)
 		_cards.append(card)
-	_title.text = "LEVEL %d" % _for_level
+	_title.text = "Level %d" % _for_level
 	visible = true
 	_waiting = true
 	_refresh_actions()
@@ -149,22 +168,23 @@ func close() -> void:
 ## Updates the action-bar labels / availability and the status line.
 func _refresh_actions() -> void:
 	var ab := game.abilities
-	_reroll_btn.text = "Reroll (%d)   [R / X]" % ab.rerolls_left
+	_reroll_btn.text = "Reroll (%d)" % ab.rerolls_left
 	_reroll_btn.disabled = ab.rerolls_left <= 0
-	_banish_btn.text = ("Cancel banish   [B / LB]" if _banish_mode else "Banish (%d)   [B / LB]" % ab.banishes_left)
+	_banish_btn.text = ("Cancel" if _banish_mode else "Banish (%d)" % ab.banishes_left)
 	_banish_btn.disabled = ab.banishes_left <= 0 and not _banish_mode
-	_skip_btn.text = "Skip (+%d%% HP)   [N / RB]" % int(roundf(LevelUpData.SKIP_HEAL_FRACTION * 100.0))
+	_skip_btn.text = "Skip (+%d%% HP)" % int(roundf(LevelUpData.SKIP_HEAL_FRACTION * 100.0))
 	var has_evo := false
 	for o in _offers:
 		has_evo = has_evo or String(o["kind"]) == "evolution"
 	if _banish_mode:
-		_status.text = "BANISH: pick the card to remove from this run  (Esc / B to cancel)"
+		_status.text = "Banish: pick the card to remove from this run"
 		_status.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.35))
 	elif has_evo:
 		_status.text = "An evolution is ready!"
 		_status.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
 	else:
 		_status.text = ""
+	_status_cancel.visible = _banish_mode
 	for i in _cards.size():
 		var dim := _banish_mode and not ab.can_banish(_offers[i])
 		_cards[i].modulate = Color(1, 1, 1, 0.4) if dim else (Color(1.0, 0.78, 0.78) if _banish_mode else Color.WHITE)
@@ -209,12 +229,23 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 			tag_color = Palette.GOLD
 		"PACT":
 			tag_color = Palette.CRIMSON.lightened(0.3)  # Profane Pact (difficulty passive).
-	vb.add_child(UiTheme.label("[%d]  %s" % [idx + 1, o["tag"]], 12, tag_color))
+	var tag_row := HBoxContainer.new()  # Number key chip (keyboard only) + kind tag.
+	tag_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tag_row.add_theme_constant_override("separation", 6)
+	tag_row.custom_minimum_size = Vector2(0, InputHintData.CHIP_HEIGHT)
+	if idx < CARD_KEYS.size():
+		tag_row.add_child(InputHints.chip(InputHints.raw(CARD_KEYS[idx])))
+	var tag_l := UiTheme.tier_label(String(o["tag"]), UiTheme.Tier.LABEL, tag_color)
+	tag_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	tag_row.add_child(tag_l)
+	vb.add_child(tag_row)
 	var icon_center := CenterContainer.new()
 	icon_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon_center.add_child(IconGlyph.new(o["icon"], Vector2(68, 68)))
 	vb.add_child(icon_center)
-	var name_label := UiTheme.label(o["name"], 20, UiTheme.TEXT_GOLD if kind == "evolution" else UiTheme.TEXT)
+	var name_label := UiTheme.tier_label(String(o["name"]), UiTheme.Tier.NAME, UiTheme.TEXT_GOLD if kind == "evolution" else UiTheme.TEXT)
+	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART  # Long evolution names wrap.
+	name_label.custom_minimum_size = Vector2(text_width, 0)
 	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(name_label)
 	var lvl_text := ""
@@ -222,23 +253,17 @@ func _make_card(o: Dictionary, idx: int) -> Control:
 		lvl_text = "Lv %d  ->  EVOLVED" % int(o["from"])
 	elif kind != "fallback":
 		lvl_text = "NEW!  Lv 1" if int(o["from"]) == 0 else "Lv %d  ->  Lv %d" % [int(o["from"]), int(o["to"])]
-	var lvl_label := UiTheme.label(lvl_text, 15, UiTheme.TEXT_GOLD)
+	var lvl_label := UiTheme.tier_label(lvl_text, UiTheme.Tier.BODY, UiTheme.TEXT_GOLD)
 	lvl_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(lvl_label)
-	var desc := UiTheme.body(o["description"], 13, UiTheme.TEXT_DIM)  # Long description: body font.
-	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc.custom_minimum_size = Vector2(text_width, 0)
-	vb.add_child(desc)
-	var deltas := UiTheme.label("\n".join(o["deltas"]), 14, UiTheme.TEXT_GOOD)
+	vb.add_child(UiTheme.para(String(o["description"]), text_width, UiTheme.TEXT_DIM))
+	var deltas := UiTheme.tier_label("\n".join(o["deltas"]), UiTheme.Tier.BODY, UiTheme.TEXT_GOOD)
 	deltas.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	deltas.custom_minimum_size = Vector2(text_width, 0)
 	vb.add_child(deltas)
 	var hint := String(o.get("evo_hint", ""))
 	if hint != "":
-		var hint_label := UiTheme.body(hint, 12, UiTheme.TEXT_GOLD)  # Long description: body font.
-		hint_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		hint_label.custom_minimum_size = Vector2(text_width, 0)
-		vb.add_child(hint_label)
+		vb.add_child(UiTheme.para(hint, text_width, UiTheme.TEXT_GOLD))
 	var recipe := RecipeIconRow.for_card(String(o.get("evo_recipe", "")))  # Null = nothing to show.
 	if recipe != null:
 		var push := Control.new()  # Pushes the recipe to the card's bottom edge.

@@ -17,9 +17,19 @@
 ## everywhere by default, always drawn from its one exact raster and scaled
 ## to one of its clean sizes (font_for(), applied by label() and
 ## pixel_text()), drawn through the sharp-pixel shader (which the hook also
-## puts on every Label); long descriptions use the clean body font (body(),
-## Godot's default font); event banners use Jacquard 24 at its 43 px em
-## (banner()).
+## puts on every Label); long descriptions use Jersey 10 too, at the BODY
+## tier (body(); owner: "Jersey, let's keep it cohesive", so no smooth font is
+## left); event banners use Jacquard 24 at its 43 px em (banner()).
+##
+## Type tiers (GDD §15.0 "Type tiers", sizes in UiArtData.TYPE_*): every
+## screen sizes its text by role, not by number: Tier.TITLE (Jacquard 24,
+## screen titles and banners), HERO (Jersey 57, big numbers), HEADER (38),
+## NAME (28, names and buttons), BODY (19, descriptions and secondary lines)
+## and LABEL (19, upper case, letter-spaced section labels). tier_label() makes a
+## Label in a tier, set_tier() restyles an existing Label / Button, tier_px()
+## gives the size for code-drawn text. The theme's Buttons default to NAME and
+## everything else to BODY. label(text, size) still works (font_px() maps a
+## legacy size), but new code should use the tiers.
 class_name UiTheme
 extends RefCounted
 
@@ -55,8 +65,20 @@ const FALLBACK: Dictionary = {
 	"dim": [BG, BG_HOVER, Color(0.2, 0.135, 0.315), 2],
 }
 
+## Text roles of the type scale (sizes in UiArtData.TYPE_*):
+##   TITLE  : screen titles and banners, Jacquard 24 at its 43 px em.
+##   HERO   : big numbers, Jersey 10 at 57 px.
+##   HEADER : section headers and the HUD timer, Jersey 10 at 38 px.
+##   NAME   : item / card / upgrade names and buttons, Jersey 10 at 28 px.
+##   BODY   : descriptions and secondary lines, Jersey 10 at 19 px.
+##   LABEL  : section labels, Jersey 10 at 19 px, upper case, letter-spaced.
+enum Tier { TITLE, HERO, HEADER, NAME, BODY, LABEL }
+
 ## Cached theme instance.
 static var _theme: Theme = null
+## Jersey 10 with UiArtData.LABEL_SPACING px after each letter (the LABEL
+## tier; null until first used or when the font file is missing).
+static var _spaced: Font = null
 ## Cached Jacquard 24 banner font (null until first used or when missing).
 static var _banner_font: Font = null
 ## Jersey 10 drawn from its fixed raster (null until first used or when the
@@ -89,7 +111,10 @@ static func get_theme() -> Theme:
 	t.default_font_size = FONT_SIZE
 	if font_for() != null:
 		t.default_font = font_for()  # Jersey 10 everywhere by default.
-		t.default_font_size = font_px(FONT_SIZE)
+		t.default_font_size = tier_px(Tier.BODY)  # Labels and the rest: BODY.
+		t.set_font_size("font_size", "Button", tier_px(Tier.NAME))  # Buttons: NAME.
+		t.set_font_size("font_size", "CheckButton", tier_px(Tier.BODY))  # Option rows: BODY.
+		t.set_font_size("font_size", "TooltipLabel", tier_px(Tier.BODY))
 	t.set_stylebox("normal", "Button", style("button", "violet", "normal"))
 	t.set_stylebox("hover", "Button", style("button", "violet", "hover"))
 	t.set_stylebox("pressed", "Button", style("button", "violet", "pressed"))
@@ -295,26 +320,103 @@ static func label(text: String, size: int = FONT_SIZE, color: Color = TEXT) -> L
 	return l
 
 
-## Convenience: a Label for long descriptions in the clean body font (Godot's
-## default font, smooth at any window scale; owner rule: long card
-## descriptions keep a body font). `size` is used as given.
-static func body(text: String, size: int = 13, color: Color = TEXT_DIM) -> Label:
+## Convenience: a Label for long descriptions, in Jersey 10 at the BODY tier
+## (owner: "Jersey, let's keep it cohesive"; it replaced Godot's smooth
+## fallback font). `_size` is ignored (kept so older calls still compile):
+## descriptions are always BODY. See para() for a wrapped paragraph.
+static func body(s: String, _size: int = 13, color: Color = TEXT_DIM) -> Label:
+	return tier_label(s, Tier.BODY, color)
+
+
+## Layout px of tier `t` (Jacquard's em for TITLE), for code-drawn text
+## (draw_string) and size maths.
+static func tier_px(t: Tier) -> int:
+	match t:
+		Tier.TITLE:
+			return UiArtData.BANNER_SIZE
+		Tier.HERO:
+			return UiArtData.TYPE_HERO
+		Tier.HEADER:
+			return UiArtData.TYPE_HEADER
+		Tier.NAME:
+			return UiArtData.TYPE_NAME
+		Tier.LABEL:
+			return UiArtData.TYPE_LABEL
+	return UiArtData.TYPE_BODY
+
+
+## Gives Control `c` (a Label or a Button) the font and size of tier `t`:
+## Jacquard 24 for TITLE (Jersey 38 when its file is missing), Jersey 10 for
+## the others, the letter-spaced Jersey variant for LABEL (a Label is also
+## set to upper case).
+static func set_tier(c: Control, t: Tier) -> void:
+	if t == Tier.TITLE:
+		var f := _banner()  # Jacquard 24 (null when the file is missing).
+		if f != null:
+			c.add_theme_font_override("font", f)
+			c.add_theme_font_size_override("font_size", UiArtData.BANNER_SIZE)
+			return
+		t = Tier.HEADER  # Fallback look without the banner font.
+	var font := _spaced_font() if t == Tier.LABEL else font_for()  # Jersey 10 (or its spaced variant).
+	if font != null:
+		c.add_theme_font_override("font", font)
+	c.add_theme_font_size_override("font_size", tier_px(t))
+	if t == Tier.LABEL and c is Label:
+		(c as Label).uppercase = true
+
+
+## Convenience: a Label showing `s` in tier `t` and `color` (mouse ignored).
+## LABEL text is shown in upper case; pick TEXT_DIM for it, like the old
+## section labels.
+static func tier_label(s: String, t: Tier, color: Color = TEXT) -> Label:
 	var l := Label.new()
-	l.text = text
-	l.add_theme_font_override("font", ThemeDB.fallback_font)
-	l.add_theme_font_size_override("font_size", size)
+	l.text = s
+	set_tier(l, t)
 	l.add_theme_color_override("font_color", color)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
+
+
+## Convenience: a word-wrapped BODY paragraph `width` px wide (0 = wrap at
+## whatever width its container gives it).
+static func para(s: String, width: float = 0.0, color: Color = TEXT_DIM) -> Label:
+	var l := tier_label(s, Tier.BODY, color)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.custom_minimum_size.x = width
+	return l
+
+
+## Convenience: a centred screen title in the TITLE tier (Jacquard 24; use
+## title case, blackletter capitals are hard to read).
+static func title(s: String, color: Color = TEXT_GOLD) -> Label:
+	var l := tier_label(s, Tier.TITLE, color)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	return l
+
+
+## Jersey 10 with UiArtData.LABEL_SPACING px of letter spacing (the LABEL
+## tier), built on font_for()'s raster. Null when the font file is missing.
+static func _spaced_font() -> Font:
+	if _spaced == null and font_for() != null:
+		var v := FontVariation.new()  # Same raster and line trim, wider tracking.
+		v.base_font = font_for()
+		v.spacing_glyph = UiArtData.LABEL_SPACING
+		_spaced = v
+	return _spaced
+
+
+## Jacquard 24, loaded once (null when the file is missing).
+static func _banner() -> Font:
+	if _banner_font == null and ResourceLoader.exists(UiArtData.FONT_BANNER):
+		_banner_font = load(UiArtData.FONT_BANNER) as Font
+	return _banner_font
 
 
 ## Turns `l` into an event / zone banner: Jacquard 24 at its 43 px em
 ## (UiArtData.BANNER_SIZE), word-wrapped at `wrap` px when wrap > 0. Leaves the
 ## label as it is (and returns false) when the font file is missing.
 static func banner(l: Label, wrap: float = 0.0) -> bool:
-	if _banner_font == null and ResourceLoader.exists(UiArtData.FONT_BANNER):
-		_banner_font = load(UiArtData.FONT_BANNER) as Font
-	if _banner_font == null:
+	if _banner() == null:
 		return false
 	l.add_theme_font_override("font", _banner_font)
 	l.add_theme_font_size_override("font_size", UiArtData.BANNER_SIZE)

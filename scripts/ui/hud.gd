@@ -8,10 +8,13 @@
 ##                   Sanctum's Cathedral Guardian, registered by its kit:
 ##                   EnemyDirector.miniboss_alive(), named by its display
 ##                   name).
-##   Top right     : kill count, pause hint, modifiers (the difficulty
-##                   level, the active run modifiers and their Soul Ash
-##                   multiplier, then the Profane Pact level and Profane
-##                   Oath tier with their combined effect; game.difficulty).
+##   Top right     : kill count, modifiers (the difficulty level, the
+##                   active run modifiers and their Soul Ash multiplier,
+##                   then the Profane Pact level and Profane Oath tier with
+##                   their combined effect; game.difficulty), shown only
+##                   when something differs from the standard run (no
+##                   permanent developer hint line: the pause menu shows
+##                   the controls as InputHints chips).
 ##   Left, under HP: timed power-up buffs (Hyper, Stasis, Dark Frenzy) with
 ##                   their remaining time (game.powerups).
 ##   Bottom center : active ability slots (6) and passive slots (6) with levels,
@@ -27,7 +30,9 @@
 ##                   stance icons with their keys) and, under the
 ##                   necromancer, the stance banner (StanceBar).
 ## Built entirely in code and refreshed at 10 Hz by polling the Game (cheaper
-## and simpler than wiring dozens of per-frame signals).
+## and simpler than wiring dozens of per-frame signals). Text sizes are
+## UiTheme type tiers; the Shadow Bolt aim line carries the aim key's
+## InputHints chip (current device and bindings).
 class_name Hud
 extends Control
 
@@ -84,6 +89,8 @@ var _active_icons: Array[IconGlyph] = []
 var _passive_icons: Array[IconGlyph] = []
 ## Shadow Bolt aim mode label above the ability bar.
 var _aim_label: Label
+## Row holding the aim label and the aim key chip (hidden without the bolt).
+var _aim_row: HBoxContainer
 ## Synergy id -> HBoxContainer row (icon + name), shown while active.
 var _synergy_rows: Dictionary = {}
 ## Progression banner container (title, name, description).
@@ -96,7 +103,8 @@ var _announce_name: Label
 var _announce_desc: Label
 ## Game time (Game.elapsed) at which the current banner was shown (-1 = none).
 var _announce_at: float = -1.0
-## "Modifiers" label (top right): difficulty, run modifiers, Pact / Oath.
+## "Modifiers" label (top right): difficulty, run modifiers, Pact / Oath;
+## hidden while the run is the standard one.
 var _mods_label: Label
 ## Timed buff id -> {"row": HBoxContainer, "label": Label, "bar": HudBar}.
 var _buff_rows: Dictionary = {}
@@ -149,39 +157,39 @@ func _build() -> void:
 
 	# Top left: level, HP, shields.
 	var top_left := _box(true, 0.0, 0.0, 16, 20, 300, 110, BoxContainer.ALIGNMENT_BEGIN)
-	_level_label = UiTheme.label("Lv 1", 22, UiTheme.TEXT_GOLD)
+	_level_label = UiTheme.tier_label("Lv 1", UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
 	top_left.add_child(_level_label)
 	_hp_bar = HudBar.new(Palette.HP_FRIENDLY, Vector2(240, 18))
 	top_left.add_child(_hp_bar)
-	_ward_label = UiTheme.label("", 13, Palette.VIOLET.lightened(0.3))
+	_ward_label = UiTheme.tier_label("", UiTheme.Tier.BODY, Palette.VIOLET.lightened(0.3))
 	top_left.add_child(_ward_label)
-	_shield_label = UiTheme.label("", 13, Palette.NECRO_GREEN)
+	_shield_label = UiTheme.tier_label("", UiTheme.Tier.BODY, Palette.NECRO_GREEN)
 	top_left.add_child(_shield_label)
 
 	# Top center: timer, objective, banner, boss.
 	var tc := _box(true, 0.5, 0.0, -260, 16, 260, 160, BoxContainer.ALIGNMENT_BEGIN)
 	tc.grow_horizontal = Control.GROW_DIRECTION_BOTH  # Stays centred when the banner widens it.
-	_timer_label = UiTheme.label("00:00", 32)
+	_timer_label = UiTheme.tier_label("00:00", UiTheme.Tier.HEADER)
 	_timer_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tc.add_child(_timer_label)
 	var zone_col := Palette.CRIMSON.lightened(0.45)  # Zone line colour (the stage's zone colour if set).
 	if game.enemies.march != null and game.enemies.march.config.has("zone_color"):
 		zone_col = game.enemies.march.zone_color()
-	_zone_label = UiTheme.label("", 13, zone_col)
+	_zone_label = UiTheme.tier_label("", UiTheme.Tier.BODY, zone_col)
 	_zone_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_zone_label.visible = false
 	tc.add_child(_zone_label)
-	_objective_label = UiTheme.label("", 14, UiTheme.TEXT_DIM)
+	_objective_label = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_objective_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tc.add_child(_objective_label)
-	_banner_label = UiTheme.label("", 20, UiTheme.TEXT_GOLD)
+	_banner_label = UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
 	_banner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	UiTheme.banner(_banner_label, UiArtData.BANNER_WRAP)  # Event / zone banner: Jacquard 24, wraps.
 	tc.add_child(_banner_label)
 	_boss_box = VBoxContainer.new()
 	_boss_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_boss_box.visible = false
-	var boss_name := UiTheme.label(String(game.stage_def["boss"]["display_name"]), 16, UiTheme.TEXT_GOLD)  # The stage boss.
+	var boss_name := UiTheme.tier_label(String(game.stage_def["boss"]["display_name"]), UiTheme.Tier.BODY, UiTheme.TEXT_GOLD)  # The stage boss.
 	boss_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_boss_box.add_child(boss_name)
 	_boss_bar = HudBar.new(Palette.GOLD, Vector2(520, 14))
@@ -191,7 +199,7 @@ func _build() -> void:
 	_mini_box = VBoxContainer.new()
 	_mini_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_mini_box.visible = false
-	_mini_name = UiTheme.label("", 14, UiTheme.TEXT_GOLD)
+	_mini_name = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_GOLD)
 	_mini_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_mini_box.add_child(_mini_name)
 	_mini_bar = HudBar.new(Palette.HP_ENEMY, Vector2(360, 10))
@@ -200,15 +208,13 @@ func _build() -> void:
 	_mini_box.add_child(_mini_bar)
 	tc.add_child(_mini_box)
 
-	# Top right: kills, pause hint, modifiers.
+	# Top right: kills, modifiers (only when not the standard run).
 	var top_right := _box(true, 1.0, 0.0, -300, 20, -16, 110, BoxContainer.ALIGNMENT_BEGIN)
-	_kills_label = UiTheme.label("Kills: 0", 20)
+	_kills_label = UiTheme.tier_label("Kills: 0", UiTheme.Tier.NAME)
 	_kills_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	top_right.add_child(_kills_label)
-	var hint := UiTheme.label("Esc: Pause   T / Y: Bolt aim   F3: Debug", 13, UiTheme.TEXT_DIM)
-	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	top_right.add_child(hint)
-	_mods_label = UiTheme.label("Modifiers: none  |  Difficulty: Necromancer", 13, UiTheme.TEXT_DIM)
+	_mods_label = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
+	_mods_label.visible = false
 	_mods_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_mods_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART  # Many run modifiers wrap.
 	_mods_label.custom_minimum_size = Vector2(284, 0)
@@ -221,7 +227,7 @@ func _build() -> void:
 		var brow := HBoxContainer.new()  # Icon + "Name 7.2s" + time bar.
 		brow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		brow.add_child(IconGlyph.new(String(def["icon"]), Vector2(24, 24)))
-		var blabel := UiTheme.label("", 14, (def["color"] as Color).lightened(0.25))  # "Hyper 7.2s".
+		var blabel := UiTheme.tier_label("", UiTheme.Tier.BODY, (def["color"] as Color).lightened(0.25))  # "Hyper 7.2s".
 		blabel.custom_minimum_size = Vector2(130, 0)
 		brow.add_child(blabel)
 		var bbar := HudBar.new(def["color"], Vector2(70, 6))  # Remaining-time bar.
@@ -240,14 +246,14 @@ func _build() -> void:
 	# inside the 190 px box (24 px rows with the default 4 px gaps would not).
 	var bl := _box(true, 0.0, 1.0, 16, -206, 300, -16, BoxContainer.ALIGNMENT_END)
 	bl.add_theme_constant_override("separation", 2)
-	_army_label = UiTheme.label("Army 0 / 0", 18, Palette.NECRO_GREEN)
+	_army_label = UiTheme.tier_label("Army 0 / 0", UiTheme.Tier.NAME, Palette.NECRO_GREEN)
 	bl.add_child(_army_label)
 	for cls: String in UnitData.CLASS_ORDER:
 		var row := HBoxContainer.new()
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var icon := IconGlyph.new(cls, Vector2(22, 22))  # Class (or evolution) icon.
 		row.add_child(icon)
-		var lbl := UiTheme.label("", 14)
+		var lbl := UiTheme.tier_label("", UiTheme.Tier.BODY)
 		lbl.custom_minimum_size = Vector2(130, 0)  # Fits "Frost Wraiths 3/3".
 		row.add_child(lbl)
 		var bar := HudBar.new(Palette.NECRO_GREEN, Vector2(70, 6))
@@ -264,17 +270,17 @@ func _build() -> void:
 		var srow := HBoxContainer.new()
 		srow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		srow.add_child(IconGlyph.new(String(SynergyData.SYNERGIES[id]["icon"]), Vector2(22, 22)))
-		srow.add_child(UiTheme.label(String(SynergyData.SYNERGIES[id]["short_name"]), 13, Palette.NECRO_GREEN.lightened(0.2)))
+		srow.add_child(UiTheme.tier_label(String(SynergyData.SYNERGIES[id]["short_name"]), UiTheme.Tier.BODY, Palette.NECRO_GREEN.lightened(0.2)))
 		srow.visible = false
 		syn.add_child(srow)
 		_synergy_rows[id] = srow
 
 	# Upper middle: progression banner (synergy activation / evolution).
 	_announce_box = _box(true, 0.5, 0.0, -360, 196, 360, 316, BoxContainer.ALIGNMENT_BEGIN)  # Below a 2-line Jacquard event banner.
-	_announce_title = UiTheme.label("", 15, UiTheme.TEXT_DIM)
-	_announce_name = UiTheme.label("", 30, UiTheme.TEXT_GOLD)
+	_announce_title = UiTheme.tier_label("", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM)
+	_announce_name = UiTheme.tier_label("", UiTheme.Tier.HEADER, UiTheme.TEXT_GOLD)
 	UiTheme.banner(_announce_name)  # The evolution / synergy name: an event banner in Jacquard 24.
-	_announce_desc = UiTheme.label("", 14, UiTheme.TEXT)
+	_announce_desc = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT)
 	for l: Label in [_announce_title, _announce_name, _announce_desc]:
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		_announce_box.add_child(l)
@@ -287,9 +293,16 @@ func _build() -> void:
 
 	# Bottom center: ability bar (actives row, passives row).
 	var bc := _box(true, 0.5, 1.0, -200, -130, 200, -12, BoxContainer.ALIGNMENT_END)
-	_aim_label = UiTheme.label("", 13, Palette.VIOLET.lightened(0.35))
-	_aim_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	bc.add_child(_aim_label)
+	_aim_row = HBoxContainer.new()
+	_aim_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	_aim_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_aim_row.add_theme_constant_override("separation", 6)
+	_aim_row.visible = false
+	bc.add_child(_aim_row)
+	_aim_label = UiTheme.tier_label("", UiTheme.Tier.BODY, Palette.VIOLET.lightened(0.35))
+	_aim_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_aim_row.add_child(_aim_label)
+	_aim_row.add_child(InputHints.chip("toggle_aim"))  # Aim toggle key (T / Y), follows rebinds.
 	var actives := HBoxContainer.new()
 	actives.alignment = BoxContainer.ALIGNMENT_CENTER
 	actives.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -363,7 +376,8 @@ func _refresh() -> void:
 			(row["icon"] as IconGlyph).set_icon(h.evolutions.class_icon(cls))
 			(row["label"] as Label).text = "%s %d/%d" % [h.evolutions.class_plural(cls), h.count_of(cls), h.capacity(cls)]
 			(row["bar"] as HudBar).set_values(h.replenish_progress(cls))
-	_aim_label.text = "%s aim: %s  [T / Y]" % [game.abilities.spell_name("shadow_bolt"), game.abilities.bolt_aim_name()] if game.abilities.spell_level("shadow_bolt") > 0 else ""
+	_aim_row.visible = game.abilities.spell_level("shadow_bolt") > 0
+	_aim_label.text = "%s aim: %s" % [game.abilities.spell_name("shadow_bolt"), game.abilities.bolt_aim_name()] if _aim_row.visible else ""
 	for id: String in SynergyData.ORDER:
 		(_synergy_rows[id] as Control).visible = h.synergies.is_active(id)
 	_refresh_announce()
@@ -395,7 +409,8 @@ func _refresh_modifiers() -> void:
 	var dif := game.difficulty  # The one difficulty path.
 	_mods_label.text = "\n".join(dif.hud_lines())
 	var hot := dif.is_active() or dif.has_run_setup()  # Anything beyond the standard run.
-	_mods_label.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.45) if hot else UiTheme.TEXT_DIM)
+	_mods_label.visible = hot  # The standard run shows nothing here.
+	_mods_label.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.45))
 
 
 ## Shows the progression banner: `title` (small), `item_name` (big, in `color`)

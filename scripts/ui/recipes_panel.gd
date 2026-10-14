@@ -13,6 +13,8 @@
 ## controller B or the pause action close it. Fully keyboard / controller
 ## navigable: every row takes focus (up / down), the list scrolls to follow
 ## focus, and the first row is focused on open. It never changes the run.
+## Text sizes are UiTheme type tiers (Jacquard title, NAME recipe names,
+## LABEL kind tags, BODY recipe lines).
 class_name RecipesPanel
 extends Control
 
@@ -61,10 +63,8 @@ func _ready() -> void:
 	var vb := VBoxContainer.new()  # Title, count, list, Back.
 	vb.add_theme_constant_override("separation", 10)
 	panel.add_child(vb)
-	var title := UiTheme.label(RecipeBookData.TITLE, 30, UiTheme.TEXT_GOLD)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vb.add_child(title)
-	var count := UiTheme.label(RecipeBookData.COUNT % [Meta.discovered_count(), EvolutionRecipes.ids().size()], 15, UiTheme.TEXT_DIM)
+	vb.add_child(UiTheme.title(RecipeBookData.TITLE))
+	var count := UiTheme.tier_label(RecipeBookData.COUNT % [Meta.discovered_count(), EvolutionRecipes.ids().size()], UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	count.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(count)
 	var scroll := ScrollContainer.new()  # Scrolls the rows; follows keyboard / pad focus.
@@ -126,10 +126,8 @@ static func _make_row(id: String, known: bool, buttons: Array[Button]) -> Contro
 	if not known:
 		hb.add_child(_locked_tile())
 		hb.add_child(text)
-		text.add_child(UiTheme.label(RecipeBookData.LOCKED_NAME, 18, UiTheme.TEXT_DIM))
-		var lt := UiTheme.body(RecipeBookData.LOCKED_TEXT, 13, UiTheme.TEXT_DIM)  # Description: body font.
-		lt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		text.add_child(lt)
+		text.add_child(UiTheme.tier_label(RecipeBookData.LOCKED_NAME, UiTheme.Tier.NAME, UiTheme.TEXT_DIM))
+		text.add_child(UiTheme.para(RecipeBookData.LOCKED_TEXT, 0.0, UiTheme.TEXT_DIM))
 		pad.modulate = Color(1, 1, 1, RecipeBookData.LOCKED_ALPHA)  # Dims the content, not the focus frame.
 		return row
 	var r := EvolutionRecipes.recipe(id)  # Normalised recipe.
@@ -140,11 +138,13 @@ static func _make_row(id: String, known: bool, buttons: Array[Button]) -> Contro
 	hb.add_child(text)
 	var head := HBoxContainer.new()  # Name + kind tag.
 	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var name_label := UiTheme.label(String(r["name"]), 18, UiTheme.TEXT_GOLD)
+	var name_label := UiTheme.tier_label(String(r["name"]), UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(name_label)
 	var tag_key := "spell" if String(r["kind"]) == "spell" else String(r["mode"])  # RecipeBookData.TAGS key.
-	head.add_child(UiTheme.label(String(RecipeBookData.TAGS.get(tag_key, "")), 12, UiTheme.TEXT_DIM))
+	var tag := UiTheme.tier_label(String(RecipeBookData.TAGS.get(tag_key, "")), UiTheme.Tier.LABEL, UiTheme.TEXT_DIM)
+	tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	head.add_child(tag)
 	text.add_child(head)
 	var line := HFlowContainer.new()  # Ingredients + arrow + evolution; wraps if long.
 	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -163,9 +163,9 @@ static func _make_row(id: String, known: bool, buttons: Array[Button]) -> Contro
 	return row
 
 
-## A 13 px label centred vertically in the recipe line.
+## A BODY-tier label centred vertically in the recipe line.
 static func _mid_label(s: String, color: Color) -> Label:
-	var l := UiTheme.label(s, 13, color)
+	var l := UiTheme.tier_label(s, UiTheme.Tier.BODY, color)
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	l.custom_minimum_size = Vector2(0, CHIP_ICON_SIZE)
 	return l
@@ -178,7 +178,7 @@ static func _locked_tile() -> Control:
 	tile.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	tile.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tile.add_theme_stylebox_override("panel", UiTheme.style("panel", "dim"))  # Dark locked frame (UI kit).
-	var q := UiTheme.label(RecipeBookData.LOCKED_GLYPH, 26, UiTheme.TEXT_DIM)
+	var q := UiTheme.tier_label(RecipeBookData.LOCKED_GLYPH, UiTheme.Tier.HEADER, UiTheme.TEXT_DIM)
 	q.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	q.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	tile.add_child(q)

@@ -6,6 +6,9 @@
 ## pixel-art NECROPATHY logo (UiArtData.LOGO, drawn at UiArtData.LOGO_SCALE
 ## through the sharp-pixel shader); the plain label is the fallback when the
 ## PNG is missing.
+## Text sizes come from the UiTheme type tiers; the old controls manual is
+## gone (developer text): one InputHints strip at the bottom of the screen
+## shows the select chip of the current device and bindings.
 ## Play opens the stage select (StageSelect, GDD §10.2), which opens the
 ## pre-run setup (PreRunSetup: difficulty and run modifiers); the finished
 ## RunConfig reaches Main through `stage_chosen`.
@@ -36,28 +39,28 @@ func _ready() -> void:
 	vb.custom_minimum_size = Vector2(420, 0)
 	center.add_child(vb)
 	vb.add_child(_title())
-	var tagline := UiTheme.label("Begin as the hunted. Raise the fallen. Become the army.", 16, UiTheme.TEXT_DIM)
+	var tagline := UiTheme.tier_label("Begin as the hunted. Raise the fallen. Become the army.", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	tagline.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(tagline)
 	var ash_row := HBoxContainer.new()
 	ash_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	ash_row.add_theme_constant_override("separation", 8)
 	ash_row.add_child(IconGlyph.new("soul_ash", Vector2(30, 30)))
-	_ash_label = UiTheme.label("", 20, MetaGlyphs.EMBER.lightened(0.2))
+	_ash_label = UiTheme.tier_label("", UiTheme.Tier.NAME, MetaGlyphs.EMBER.lightened(0.2))
 	ash_row.add_child(_ash_label)
 	vb.add_child(ash_row)
-	_lifetime_label = UiTheme.label("", 13, UiTheme.TEXT_DIM)
+	_lifetime_label = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_lifetime_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(_lifetime_label)
 	Meta.changed.connect(_refresh_meta)
 	_refresh_meta()
 	_play = Button.new()
-	_play.text = "Play  -  Choose a battlefield"
+	_play.text = "Play"  # One-word buttons (owner).
 	_play.custom_minimum_size = Vector2(0, 52)
 	_play.pressed.connect(_open_stage_select)
 	vb.add_child(_play)
 	var ossuary := Button.new()
-	ossuary.text = "The Ossuary  -  Soul Ash upgrades"
+	ossuary.text = "Ossuary"
 	ossuary.custom_minimum_size = Vector2(0, 44)
 	ossuary.pressed.connect(func() -> void: OssuaryMenu.open_over(self, ossuary))
 	vb.add_child(ossuary)
@@ -71,16 +74,12 @@ func _ready() -> void:
 	quit.custom_minimum_size = Vector2(0, 44)
 	quit.pressed.connect(func() -> void: get_tree().quit())
 	vb.add_child(quit)
-	var controls := UiTheme.label(
-		"Move: WASD / Arrow keys / Left stick\nSpells and undead act on their own.\nEsc / Start: Pause    T / Y: Shadow Bolt aim (Nearest / Strongest)    F3: Debug overlay\nLevel-up: click, 1 / 2 / 3, or controller A",
-		13, UiTheme.TEXT_DIM)
-	controls.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vb.add_child(controls)
 	# Release version from project.godot (application/config/version, bumped for each tagged release).
 	var version_text: String = "v%s" % str(ProjectSettings.get_setting("application/config/version", "dev"))
-	var version := UiTheme.label(version_text, 12, Color(UiTheme.TEXT_DIM, 0.6))
+	var version := UiTheme.tier_label(version_text, UiTheme.Tier.BODY, Color(UiTheme.TEXT_DIM, 0.6))
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(version)
+	add_child(InputHints.bottom_strip([["ui_accept", "Select"]]))  # Hint strip at the screen's bottom.
 	_play.grab_focus.call_deferred()
 
 
@@ -96,9 +95,7 @@ func _title() -> Control:
 		logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		SpriteBank.apply_sharp(logo)  # Crisp, even pixels at any window scale.
 		return logo
-	var title := UiTheme.label("NECROPATHY", 72, Palette.NECRO_GREEN)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	return title
+	return UiTheme.title("Necropathy", Palette.NECRO_GREEN)
 
 
 ## Play: opens the stage select over the menu (focus returns to Play when

@@ -17,6 +17,8 @@
 ## "Lower Oath" asks for confirmation, then lowers the ACTIVE tier by one
 ## (down to off) with no refund (owned tiers stay owned, Meta.set_oath_active).
 ## Open it with OssuaryMenu.open_over(parent, button_to_refocus).
+## Text sizes are UiTheme type tiers (Jacquard title, HEADER balance, NAME
+## tree names, BODY upgrade lines and descriptions).
 class_name OssuaryMenu
 extends Control
 
@@ -39,6 +41,10 @@ const COMPACT_BUTTON_HEIGHT: float = 62.0
 const COMPACT_ROW_GAP: int = 3
 ## Upgrades per tree above which the compact layout is used.
 const COMPACT_ROWS: int = 5
+## Height (px) kept for the description line: two Jersey 10 BODY lines, so
+## a long description wraps instead of widening the panel, and the bottom
+## row never jumps.
+const DETAIL_HEIGHT: float = 42.0  # TUNING (not in GDD) layout fit
 ## Roman numerals for tier names in prerequisite text.
 const ROMAN := ["0", "I", "II", "III", "IV", "V", "VI"]
 
@@ -105,12 +111,12 @@ func _ready() -> void:
 	root.add_child(cols)
 	for tree_id: String in MetaData.TREE_ORDER:
 		cols.add_child(_build_column(tree_id))
-	_achievements = UiTheme.label("", 12, UiTheme.TEXT_DIM)
+	_achievements = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	root.add_child(_achievements)
-	_detail = UiTheme.body("", 14, UiTheme.TEXT)  # Upgrade description: body font.
-	_detail.custom_minimum_size = Vector2(0, 20)
+	_detail = UiTheme.para("", 0.0, UiTheme.TEXT)  # Upgrade description (wraps inside the panel).
+	_detail.custom_minimum_size.y = DETAIL_HEIGHT
 	root.add_child(_detail)
-	_status = UiTheme.label("", 14, UiTheme.TEXT_GOLD)
+	_status = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_GOLD)
 	_status.custom_minimum_size = Vector2(0, 20)
 	root.add_child(_status)
 	var bottom := HBoxContainer.new()
@@ -143,16 +149,16 @@ func _build_header() -> Control:
 	var titles := VBoxContainer.new()
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	titles.add_theme_constant_override("separation", 0)
-	titles.add_child(UiTheme.label("THE OSSUARY", 30, UiTheme.TEXT_GOLD))
-	titles.add_child(UiTheme.label("Spend Soul Ash on permanent upgrades. Ash is earned every run and kept even in death.", 13, UiTheme.TEXT_DIM))
+	titles.add_child(UiTheme.tier_label("The Ossuary", UiTheme.Tier.TITLE, UiTheme.TEXT_GOLD))
+	titles.add_child(UiTheme.tier_label("Spend Soul Ash on permanent upgrades. Ash is earned every run and kept even in death.", UiTheme.Tier.BODY, UiTheme.TEXT_DIM))
 	row.add_child(titles)
 	row.add_child(IconGlyph.new("soul_ash", Vector2(40, 40)))
 	var ash_box := VBoxContainer.new()
 	ash_box.add_theme_constant_override("separation", 0)
-	_ash_label = UiTheme.label("", 22, MetaGlyphs.EMBER.lightened(0.2))
+	_ash_label = UiTheme.tier_label("", UiTheme.Tier.HEADER, MetaGlyphs.EMBER.lightened(0.2))
 	_ash_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	ash_box.add_child(_ash_label)
-	_spent_label = UiTheme.label("", 13, UiTheme.TEXT_DIM)
+	_spent_label = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_spent_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	ash_box.add_child(_spent_label)
 	row.add_child(ash_box)
@@ -169,8 +175,8 @@ func _build_column(tree_id: String) -> Control:
 	head.add_child(IconGlyph.new(String(def["icon"]), Vector2(36, 36)))
 	var names := VBoxContainer.new()
 	names.add_theme_constant_override("separation", 0)
-	names.add_child(UiTheme.label(String(def["display_name"]), 18, def["color"]))
-	names.add_child(UiTheme.label(String(def["improves"]), 12, UiTheme.TEXT_DIM))
+	names.add_child(UiTheme.tier_label(String(def["display_name"]), UiTheme.Tier.NAME, def["color"]))
+	names.add_child(UiTheme.tier_label(String(def["improves"]), UiTheme.Tier.BODY, UiTheme.TEXT_DIM))
 	head.add_child(names)
 	vb.add_child(head)
 	var column: Array[Button] = []
@@ -216,9 +222,9 @@ func _upgrade_button(id: String) -> Button:
 	texts.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	texts.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_child(texts)
-	var name_label := UiTheme.label("", 14)
-	var effect := UiTheme.label("", 13, UiTheme.TEXT_GOOD)
-	var cost := UiTheme.label("", 13)
+	var name_label := UiTheme.tier_label("", UiTheme.Tier.BODY)
+	var effect := UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_GOOD)
+	var cost := UiTheme.tier_label("", UiTheme.Tier.BODY)
 	for l: Label in [name_label, effect, cost]:
 		l.clip_text = true
 		l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -491,10 +497,10 @@ func _open_dialog(title_text: String, body: String, yes_text: String, yes_cb: Ca
 	vb.add_theme_constant_override("separation", 12)
 	vb.custom_minimum_size = Vector2(420, 0)
 	panel.add_child(vb)
-	var title := UiTheme.label(title_text, 22, UiTheme.TEXT_GOLD)
+	var title := UiTheme.tier_label(title_text, UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(title)
-	var text := UiTheme.body(body, 15, UiTheme.TEXT)  # Dialog paragraph: body font.
+	var text := UiTheme.tier_label(body, UiTheme.Tier.BODY, UiTheme.TEXT)  # Dialog paragraph.
 	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(text)
 	var row := HBoxContainer.new()

@@ -13,7 +13,8 @@
 ## time, summary "unlocked_characters") get a banner line under the Soul
 ## Ash; the other unlocks of the run (Hyper mode, a Hyper clear's stage
 ## badge, new skins) appear as a gold banner under the subtitle and as lines
-## under the balance.
+## under the balance. Text sizes are UiTheme type tiers (the title in
+## Jacquard 24, the Soul Ash headline in the HEADER tier).
 class_name EndScreen
 extends Control
 
@@ -22,7 +23,7 @@ signal restart_pressed
 ## Main Menu button pressed.
 signal main_menu_pressed
 
-## Big VICTORY / DEFEAT title.
+## Big Victory / Defeat title.
 var _title: Label
 ## One-line flavour text under the title.
 var _subtitle: Label
@@ -58,20 +59,19 @@ func _ready() -> void:
 	vb.add_theme_constant_override("separation", 12)
 	vb.custom_minimum_size = Vector2(760, 0)
 	_panel.add_child(vb)
-	_title = UiTheme.label("", 44)
-	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title = UiTheme.title("")
 	vb.add_child(_title)
-	_subtitle = UiTheme.label("", 15, UiTheme.TEXT_DIM)
+	_subtitle = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(_subtitle)
-	_unlock_banner = UiTheme.label("", 20, UiTheme.TEXT_GOLD)
+	_unlock_banner = UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
 	_unlock_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_unlock_banner.visible = false
 	vb.add_child(_unlock_banner)
 	var cols := HBoxContainer.new()
 	cols.add_theme_constant_override("separation", 28)
 	vb.add_child(cols)
-	_stats = UiTheme.label("", 15)
+	_stats = UiTheme.tier_label("", UiTheme.Tier.BODY)
 	_stats.custom_minimum_size = Vector2(390, 0)
 	_stats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART  # A long run-modifier list wraps.
 	cols.add_child(_stats)
@@ -96,18 +96,19 @@ func _build_ash_column() -> Control:
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 8)
 	head.add_child(IconGlyph.new("soul_ash", Vector2(30, 30)))
-	_ash_title = UiTheme.label("", 20, MetaGlyphs.EMBER.lightened(0.2))
+	_ash_title = UiTheme.tier_label("", UiTheme.Tier.HEADER, MetaGlyphs.EMBER.lightened(0.2))
+	_ash_title.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	head.add_child(_ash_title)
 	col.add_child(head)
 	var table := HBoxContainer.new()
-	_ash_lines = UiTheme.label("", 14, UiTheme.TEXT_DIM)
+	_ash_lines = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_ash_lines.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	table.add_child(_ash_lines)
-	_ash_values = UiTheme.label("", 14)
+	_ash_values = UiTheme.tier_label("", UiTheme.Tier.BODY)
 	_ash_values.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	table.add_child(_ash_values)
 	col.add_child(table)
-	_ash_total = UiTheme.label("", 15, UiTheme.TEXT_GOLD)
+	_ash_total = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_GOLD)
 	_ash_total.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_ash_total.custom_minimum_size = Vector2(340, 0)
 	col.add_child(_ash_total)
@@ -210,11 +211,11 @@ func open(summary: Dictionary) -> void:
 	var won: bool = summary["victory"]
 	_panel.add_theme_stylebox_override("panel", UiTheme.style("panel", "gold" if won else "violet"))
 	if won:
-		_title.text = "VICTORY - RUN COMPLETE"
+		_title.text = "Victory"
 		_title.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
 		_subtitle.text = "You outlasted the Covenant. The Reckoning finally claimed you."
 	else:
-		_title.text = "DEFEAT" if summary["reason"] != "timeout" else "TIME'S UP"
+		_title.text = "Defeat" if summary["reason"] != "timeout" else "Time's Up"
 		_title.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.2))
 		_subtitle.text = "The Covenant purges the necromancer... for now."
 	var t := int(float(summary["time"]))

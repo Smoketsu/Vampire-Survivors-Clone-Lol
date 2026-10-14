@@ -389,16 +389,14 @@ func modifier_names() -> PackedStringArray:
 # =====================================================================================
 
 ## HUD Modifiers area: the difficulty level and run modifiers (with the total
-## Soul Ash multiplier), then the Pact / Oath lines (describe_lines()).
+## Soul Ash multiplier), then the Pact / Oath lines (describe_lines()). The
+## HUD shows it only when the run differs from the standard one.
 func hud_lines() -> PackedStringArray:
 	var out := PackedStringArray()  # HUD lines.
 	var shorts := PackedStringArray()  # One word per active run modifier.
 	for id: String in _mods:
 		shorts.append(String(RunModifierData.MODIFIERS[id]["short_name"]))
-	var line := "Difficulty: %s" % difficulty_label()  # First line ("Lich + Hyper").
-	if shorts.is_empty():
-		line += "  |  Modifiers: none"
-	out.append(line)
+	out.append("Difficulty: %s" % difficulty_label())  # First line ("Lich + Hyper"); no "Modifiers: none" noise.
 	if not shorts.is_empty():
 		out.append("Modifiers: " + ", ".join(shorts))
 	if has_run_setup():

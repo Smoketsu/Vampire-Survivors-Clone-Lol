@@ -23,11 +23,6 @@ const LEFT: float = 256.0
 const BOTTOM: float = 16.0
 ## Font size of the key hints next to the icons (pixel font).
 const KEY_FONT: int = 11
-## Font size of the stance banner when the Jacquard banner font is missing
-## (with it, the banner is Jacquard 24 at UiArtData.BANNER_SIZE).
-const BANNER_FONT: int = 26
-## Font size of the locked banner (pixel font, UiTheme.pixel_text()).
-const LOCKED_FONT: int = 16
 ## Banner centre below the screen centre (px), i.e. under the necromancer.
 const BANNER_DROP: float = 70.0
 
@@ -42,7 +37,7 @@ var _drawn: Array = []
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_banner = UiTheme.label("", BANNER_FONT, UiTheme.TEXT_GOLD)
+	_banner = UiTheme.tier_label("", UiTheme.Tier.TITLE, UiTheme.TEXT_GOLD)  # Stance word: a banner (Jacquard 24).
 	_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_banner.anchor_left = 0.5
 	_banner.anchor_right = 0.5
@@ -80,13 +75,11 @@ func _refresh_banner(st: ArmyStance) -> void:
 	_banner.visible = true
 	if locked:
 		_banner.text = StanceData.LOCKED_TEXT
-		UiTheme.pixel_text(_banner, LOCKED_FONT)  # The pixel font for the locked sentence.
+		UiTheme.set_tier(_banner, UiTheme.Tier.BODY)  # The pixel font for the locked sentence.
 		_banner.add_theme_color_override("font_color", Palette.CRIMSON.lightened(0.4))
 	else:
-		_banner.text = String(st.def()["display_name"]).to_upper()
-		UiTheme.pixel_text(_banner, BANNER_FONT)  # Fallback look without the banner font.
-		if UiTheme.banner(_banner):  # The stance word in Jacquard 24 (a stance banner),
-			_banner.text = String(st.def()["display_name"])  # in title case: blackletter capitals read poorly.
+		UiTheme.set_tier(_banner, UiTheme.Tier.TITLE)  # The stance word in Jacquard 24 (a stance banner),
+		_banner.text = String(st.def()["display_name"])  # in title case: blackletter capitals read poorly.
 		_banner.add_theme_color_override("font_color", (st.def()["color"] as Color).lightened(0.2))
 	_banner.modulate.a = clampf(1.0 - (age - hold) / StanceData.BANNER_FADE, 0.0, 1.0)
 

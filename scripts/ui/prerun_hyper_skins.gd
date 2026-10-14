@@ -87,11 +87,11 @@ func _ready() -> void:
 	if config == null:
 		config = RunConfig.new()
 	add_theme_constant_override("separation", 4)
-	add_child(UiTheme.label("SKIN  (purely cosmetic)", 12, UiTheme.TEXT_DIM))
+	add_child(UiTheme.tier_label("Skin (cosmetic)", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))
 	_row = VBoxContainer.new()
 	_row.add_theme_constant_override("separation", 4)
 	add_child(_row)
-	add_child(UiTheme.label("HYPER MODE", 12, UiTheme.TEXT_DIM))
+	add_child(UiTheme.tier_label("Hyper mode", UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))
 	add_child(_build_hyper_card())
 	_rebuild_skins()
 	refresh()
@@ -121,15 +121,13 @@ func _build_hyper_card() -> Button:
 	_hyper_button.pressed.connect(_toggle_hyper)
 	var head := HBoxContainer.new()
 	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hyper_name = UiTheme.label("", 17, UiTheme.TEXT)
+	_hyper_name = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT)
 	_hyper_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(_hyper_name)
-	_hyper_badge = HyperBadge.row("Cleared", 16, 12)
+	_hyper_badge = HyperBadge.row("Cleared", 16)
 	head.add_child(_hyper_badge)
 	box.add_child(head)
-	_hyper_desc = UiTheme.body("", 11, UiTheme.TEXT_DIM)  # Card description: body font.
-	_hyper_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_hyper_desc.custom_minimum_size = Vector2(HYPER_CARD_SIZE.x - 20.0, 0)
+	_hyper_desc = UiTheme.para("", HYPER_CARD_SIZE.x - 20.0, UiTheme.TEXT_DIM)
 	box.add_child(_hyper_desc)
 	return _hyper_button
 
@@ -164,7 +162,7 @@ func _build_skin_card(id: String) -> Button:
 	texts.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	texts.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	box.add_child(texts)
-	var name_l := UiTheme.label(String(row["display_name"]), 13, UiTheme.TEXT if unlocked else UiTheme.TEXT_DIM)
+	var name_l := UiTheme.tier_label(String(row["display_name"]), UiTheme.Tier.BODY, UiTheme.TEXT if unlocked else UiTheme.TEXT_DIM)
 	name_l.clip_text = true
 	texts.add_child(name_l)
 	var detail := ""  # Second line.
@@ -173,7 +171,7 @@ func _build_skin_card(id: String) -> Button:
 	else:
 		var prog := Meta.skin_progress(id)  # "n / goal" or "".
 		detail = "LOCKED: " + String(row["unlock_short"]) + ("  (%s)" % prog if prog != "" else "")
-	var d := UiTheme.label(detail, 10, UiTheme.TEXT_DIM if unlocked else Palette.CRIMSON.lightened(0.4))
+	var d := UiTheme.tier_label(detail, UiTheme.Tier.BODY, UiTheme.TEXT_DIM if unlocked else Palette.CRIMSON.lightened(0.4))
 	d.clip_text = true
 	texts.add_child(d)
 	_skin_buttons[id] = b
