@@ -302,7 +302,10 @@ You don't control units one by one, but you choose how the whole army fights.
 A stance only changes numbers the horde AI already uses (where each unit's
 formation post is, how far units chase, how hard they pull back to their
 post); every unit keeps its own AI. The hard recall (650 px, the teleport
-back) never changes.
+back) never changes. A summon that is trying to rejoin you but is wedged (it
+moves less than 12 px in 3 s, e.g. caught between a tree and a Covenant
+watchtower) gets the same teleport back to its post (the *stall recall*; the
+autotest's summons line counts them).
 
 | Key | Stance | Shape | Chase distance |
 |---|---|---|---|

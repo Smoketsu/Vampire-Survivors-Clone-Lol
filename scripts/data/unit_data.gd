@@ -845,6 +845,17 @@ const ENGAGE_RADIUS: float = 220.0  # GDD §24
 const SOFT_RECALL: float = 320.0  # GDD §24
 ## Beyond this distance a unit is spectrally teleported back (should be rare).
 const HARD_RECALL: float = 650.0  # GDD §24
+## Stall recall: a unit that is RETURNING (or FOLLOWING more than
+## STALL_MIN_GAP px from its formation spot) but moves less than
+## STALL_DISTANCE px in STALL_TIME s is wedged (e.g. between an obstacle and a
+## Covenant structure, where the push-out and the structure's push cancel) and
+## gets the hard recall's teleport back to its spot. Moving units cover
+## ~100 px/s, so it never fires on a unit that is merely slow.
+const STALL_TIME: float = 3.0  # TUNING (not in GDD) s, playtest fix (Oct 2026)
+## Movement (px) that restarts the stall window.
+const STALL_DISTANCE: float = 12.0  # TUNING (not in GDD)
+## A FOLLOWING unit closer than this (px) to its formation spot is not trying to move.
+const STALL_MIN_GAP: float = 48.0  # TUNING (not in GDD)
 ## Minimum spawn distance from the player (px).
 const SPAWN_MIN: float = 35.0  # GDD §24
 ## Maximum spawn distance from the player (px).

@@ -53,6 +53,11 @@ var generation: int = 0
 var state: State = State.DEAD
 ## Seconds spent in the current state.
 var state_time: float = 0.0
+## Stall check (UnitData.STALL_TIME): where the current no-progress window
+## started (world px) ...
+var _stall_pos: Vector2 = Vector2.ZERO
+## ... and when (game s; -1 = no window, the unit is not trying to move).
+var _stall_since: float = -1.0
 ## Which of the AI_TICK_DIVISOR physics ticks this unit thinks on (stagger).
 var think_slot: int = 0
 
@@ -283,6 +288,7 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	active = true
 	position = pos
 	velocity = Vector2.ZERO
+	_stall_since = -1.0  # No stall window carried over from the pooled unit's last life.
 	max_hp = 0.0
 	apply_stats(stats, false)
 	hp = max_hp
@@ -479,6 +485,8 @@ func think() -> void:
 		_safe_recall()
 		return
 	_update_threat_avoidance()
+	if _check_stall(player_pos):
+		return
 	if state == State.RETURNING:
 		if d_player <= band_max + UnitData.RETURN_ARRIVE_MARGIN:
 			_enter(State.FOLLOWING)
@@ -624,6 +632,29 @@ func _can_shield_player() -> bool:
 		if e.active:
 			return true
 	return false
+
+
+## Stall recall (UnitData.STALL_TIME): true (and recalls the unit) when it
+## is trying to rejoin the player but has moved less than STALL_DISTANCE px for
+## STALL_TIME s. Deterministic: positions and game time only.
+func _check_stall(player_pos: Vector2) -> bool:
+	var moving := state == State.RETURNING or (state == State.FOLLOWING \
+			and position.distance_to(player_pos + anchor_offset) > UnitData.STALL_MIN_GAP)  # Trying to get somewhere.
+	if not moving:
+		_stall_since = -1.0
+		return false
+	if _stall_since < 0.0 or position.distance_to(_stall_pos) > UnitData.STALL_DISTANCE:
+		_stall_pos = position
+		_stall_since = game.elapsed
+		return false
+	if game.elapsed - _stall_since < UnitData.STALL_TIME:
+		return false
+	_stall_since = -1.0
+	director.stall_recalls += 1
+	if GameState.autotest:
+		print("[autotest] stall recall: %s %s at %s, %.0f px from the player, touching an obstacle: %s" % [unit_class, State.keys()[state], str(position.round()), position.distance_to(player_pos), str(game.arena.is_blocked(position, radius + 3.0))])
+	_safe_recall()
+	return true
 
 
 ## Teleports a stranded unit next to the player (GDD §24 hard recall).

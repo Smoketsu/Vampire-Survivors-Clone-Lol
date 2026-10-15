@@ -1073,7 +1073,7 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] level pacing: %s | reached: %s" % [" ".join(at_mark), " ".join(reached)])
 	print("[autotest] build complete: %s" % ("at %s, level %d" % [_clock(_build_complete_time), _build_complete_level] if _build_complete_time >= 0.0 else "no"))
 	print("[autotest] horde: %d alive / capacity %d (%s)" % [int(summary["horde_total"]), int(summary["horde_capacity"]), ", ".join(classes)])
-	print("[autotest] summons spawned: %d, died: %d, hard recalls: %d" % [game.horde.total_spawned, game.horde.total_deaths, game.horde.hard_recalls])
+	print("[autotest] summons spawned: %d, died: %d, hard recalls: %d (stall recalls: %d)" % [game.horde.total_spawned, game.horde.total_deaths, game.horde.hard_recalls, game.horde.stall_recalls])
 	var boss_line := "boss spawned: %s" % ("yes at %.1f s" % _boss_spawn_time if summary["boss_spawned"] else "no")
 	boss_line += " | boss defeated: %s" % ("yes at %.1f s" % _boss_death_time if summary["boss_defeated"] else "no")
 	if summary["boss_spawned"]:

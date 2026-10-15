@@ -76,6 +76,9 @@ var total_spawned: int = 0
 var total_deaths: int = 0
 ## Total hard recalls (should stay rare, GDD §24).
 var hard_recalls: int = 0
+## Of those, stall recalls: units teleported because they were wedged and
+## made no progress (UnitData.STALL_TIME); also counted in hard_recalls.
+var stall_recalls: int = 0
 ## Temporary summons currently alive (not in class_counts).
 var temp_alive: int = 0
 ## Temporary summons spawned this run.
