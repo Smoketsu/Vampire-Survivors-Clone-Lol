@@ -417,3 +417,8 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-14 21:28,icons/syn_volley,gpt-image-2.5-flare,medium,1024x1024,1,364,4,439,0.0150,syn_volley.png
 2026-10-14 21:28,icons/syn_deathless,gpt-image-2.5-flare,medium,1024x1024,1,360,4,439,0.0150,syn_deathless.png
 2026-10-14 21:28,icons/syn_unholy_host,gpt-image-2.5-flare,medium,1024x1024,1,364,4,439,0.0150,syn_unholy_host.png
+2026-10-15 14:04,structures/consecration_grave,gpt-image-2.5-flare,medium,1024x1024,2,370,852,439,0.0218,src_consecration_grave.png
+2026-10-15 14:04,structures/battlefield_dead,gpt-image-2.5-flare,medium,1024x1024,2,422,852,439,0.0221,src_battlefield_dead.png
+2026-10-15 14:04,structures/sanctum_crypt,gpt-image-2.5-flare,medium,1024x1024,2,415,852,439,0.0221,src_sanctum_crypt.png
+2026-10-15 14:04,structures/crypt_door,gpt-image-2.5-flare,medium,1024x1024,2,411,852,439,0.0220,src_crypt_door.png
+2026-10-15 14:05,structures/empowered_grave,gpt-image-2.5-flare,medium,1024x1024,2,433,852,439,0.0222,src_empowered_grave.png
