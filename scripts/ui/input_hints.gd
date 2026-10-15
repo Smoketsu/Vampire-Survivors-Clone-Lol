@@ -7,9 +7,14 @@
 ##     chips, sticks and the D-pad with a drawn direction arrow);
 ##   * the last device used: a tiny always-processing node (installed under
 ##     the tree root on first use) watches every input event and flips
-##     between KEYBOARD (keys, mouse) and PAD (buttons, sticks past
-##     InputHintData.AXIS_THRESHOLD); every chip redraws when it changes, and
-##     when a key is rebound (Settings.changed);
+##     between KEYBOARD (keys, mouse), PAD (buttons, sticks past
+##     InputHintData.AXIS_THRESHOLD) and TOUCH (a finger on a touchscreen;
+##     GDD §15.0 "Mobile browser support": no chips at all, a phone has no
+##     keys, and the in-run TouchControls show). The mouse events Godot
+##     emulates from a finger are not decisive, so a tap never flips the
+##     hints back to the keyboard; a phone or tablet starts in TOUCH
+##     (TouchSupport.install()). Every chip redraws when the device changes,
+##     and when a key is rebound (Settings.changed);
 ##   * a reusable hint strip for the bottom of a screen:
 ##     InputHints.strip([["ui_accept", "Select"], ["ui_cancel", "Back"]]).
 ## A hint "spec" is one of:
@@ -29,7 +34,8 @@ extends RefCounted
 ## Which family of input the hints show.
 ##   KEYBOARD: keyboard and mouse (the default until a pad is used).
 ##   PAD     : a game controller.
-enum Device { KEYBOARD, PAD }
+##   TOUCH   : a finger on a touchscreen (no chips; TouchControls in a run).
+enum Device { KEYBOARD, PAD, TOUCH }
 
 ## Pseudo-action spec: the movement keys (keyboard) or the left stick (pad).
 const MOVE: String = "move"
@@ -47,7 +53,7 @@ static var _frames: Dictionary = {}
 ## session.
 class _Tracker:
 	extends Node
-	## The hints' device changed (KEYBOARD <-> PAD).
+	## The hints' device changed (KEYBOARD / PAD / TOUCH).
 	signal device_changed(device: int)
 
 	func _ready() -> void:
@@ -133,8 +139,14 @@ static func set_device(d: Device) -> void:
 
 
 ## The device `event` comes from, or -1 when it says nothing (a key release,
-## a tiny mouse move, a resting stick).
+## a tiny mouse move, a resting stick, a mouse event emulated from a finger).
 static func device_of(event: InputEvent) -> int:
+	if event is InputEventScreenTouch:
+		return Device.TOUCH if event.is_pressed() else -1
+	if event is InputEventScreenDrag:
+		return Device.TOUCH
+	if event is InputEventMouse and event.device == InputEvent.DEVICE_ID_EMULATION:
+		return -1  # Godot's mouse emulation of a touch: the finger already decided.
 	if event is InputEventKey or event is InputEventMouseButton:
 		return Device.KEYBOARD if event.is_pressed() else -1
 	if event is InputEventMouseMotion:
@@ -171,9 +183,11 @@ static func raw(key: int, pad: int = -1) -> Dictionary:
 
 ## The glyph of `spec` on device `d`: {"text": chip text ("" = nothing on
 ## this device), "style": "key" / "face" / "pad", "arrow": Vector2 direction
-## of a drawn arrow (ZERO = none)}.
+## of a drawn arrow (ZERO = none)}. TOUCH has no chips (text always "").
 static func glyph(spec: Variant, d: int = -1) -> Dictionary:
 	var dev: int = int(_device) if d < 0 else d  # Device to describe.
+	if dev == Device.TOUCH:
+		return {"text": "", "style": "key", "arrow": Vector2.ZERO}
 	if dev == Device.KEYBOARD:
 		return {"text": _key_text(spec), "style": "key", "arrow": Vector2.ZERO}
 	return _pad_glyph(spec)

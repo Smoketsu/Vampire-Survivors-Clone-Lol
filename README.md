@@ -75,7 +75,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move over the grid, Esc / Back closes | D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
 | Ossuary (Soul Ash upgrades) | **Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
-| Settings (Audio / Video / Controls tabs: volume, fullscreen, zoom Normal / Close, shake, damage numbers, reduce motion, keys) | **Settings** in the main or pause menu; **Q / E** switch tabs; Esc / Back closes | Focus + **A**; **LB / RB** switch tabs; **B** closes |
+| Settings (Audio / Video / Controls tabs: volume, fullscreen, zoom Normal / Close, effects Full / Reduced, shake, damage numbers, reduce motion, keys) | **Settings** in the main or pause menu; **Q / E** switch tabs; Esc / Back closes | Focus + **A**; **LB / RB** switch tabs; **B** closes |
 | Codex (achievements, spells, summons, the Covenant) | **Codex** in the main menu; **Q / E** switch tabs, arrows move through the tiles, Esc / Back closes | **LB / RB** switch tabs; D-pad / stick move; **B** closes |
 | Credits (and the Godot / font licences) | **Credits** in the main menu; **Q / E** switch Credits / Licences, Up / Down scroll, Esc / Back closes | **LB / RB**, D-pad up / down, **B** closes |
 | Confirm dialogs (Quit, pause Restart / Main Menu, Reset keys, the Ossuary's Refund all) | Cancel is focused; Enter on the other button confirms; Esc cancels | **A** confirms the focused button, **B** cancels |
@@ -96,6 +96,28 @@ controls line any more, and its difficulty / modifiers box only appears when the
 run differs from the standard one (another difficulty, a run modifier, Hyper,
 the Pact or the Oath). The F3 debug overlay still works but is no longer
 advertised on screen.
+
+**Phones and tablets (touch, in the browser).** Menus are played by tapping
+(buttons, cards, tiles, tabs; sliders drag; the Codex lists scroll with a
+finger). In a run, semi-transparent controls appear (thumb-sized at any screen
+size; numbers in `touch_data.gd`):
+
+| Action | Touch |
+|---|---|
+| Move | Put a thumb anywhere on the **left half** of the screen: a joystick appears under it (it follows the thumb if you slide far) |
+| Grave Step (dash) | The big button at the **bottom right** (its charges as pips, darkened while it recharges) |
+| Dread Rally (ultimate) | The button **left of it**: it fills with the soul meter and gets a bright green border when ready |
+| Army stance | The **four-way rose above Grave Step**: Escort up, Onslaught right, Spearhead down, Bone Ring left (the controller's flick directions); tap or slide into a quarter |
+| Shadow Bolt aim | The small button **above Dread Rally** (shown while you have the bolt; the HUD line says which aim) |
+| Pause | The button in the **top-right corner** |
+| Ossuary | Tap a tile to see it, tap it **again** to buy |
+
+The controls use the same input actions as the keys, so cooldowns, the stance
+lockout and every rule are unchanged, and several fingers work at once. Key
+chips are hidden on a touch device; pressing a key or a pad button brings them
+back and hides the touch controls (and a touch brings the touch controls back).
+On a phone held upright a "Turn your device" screen covers the game (a running
+game pauses). See *Play in the browser* for the phone details.
 
 You don't aim or cast anything yourself. Spells, summons, targeting, healing and
 replacing fallen units all happen automatically (GDD §4, §21). The only two
@@ -219,8 +241,9 @@ buttons you press in a fight are the dash and the ultimate (below).
     bar has quarter notches and a pale trail where HP was just lost.
 - **Settings (`Settings` autoload, `SettingsMenu`).** Three tabs (Q / E or
   LB / RB): **Audio** (Master / Music / Effects sliders), **Video**
-  (fullscreen, the camera zoom Normal / Close, screen shake, damage numbers,
-  Reduce motion = instant UI motion) and **Controls**: the keyboard key of
+  (fullscreen, the camera zoom Normal / Close, **Effects** Full / Reduced,
+  screen shake, damage numbers, Reduce motion = instant UI motion) and
+  **Controls**: the keyboard key of
   Move up / down / left / right, Shadow Bolt aim, Grave Step, Dread Rally,
   Pause and the four army stances, in three groups (Move, Actions, Stances),
   each shown as a key chip you can rebind next to its fixed controller
@@ -230,7 +253,15 @@ buttons you press in a fight are the dash and the ultimate (below).
   device in use. Everything works with a controller. Settings are saved
   to `user://settings.cfg` when the menu closes and loaded at startup
   (`[audio]` volumes, `[feel] screen_shake` / `damage_numbers` /
-  `reduce_motion`, `[video] fullscreen` / `zoom`, `[input]` key bindings).
+  `reduce_motion`, `[video] fullscreen` / `zoom` / `effects`, `[input]` key bindings).
+- **Effects: Full / Reduced** (for weak devices; a phone or tablet starts on
+  Reduced, a desktop on Full, until you choose). Reduced spawns 40% of the
+  cosmetic particles, shows only the big damage numbers (40+ or boss hits),
+  stops drawing cosmetic effects (pops, slashes, rings, beams) beyond 70 at
+  once (telegraphs always draw) and halves the screen shake. It is purely
+  visual: a run plays out exactly the same (checked: same-seed autotest
+  summaries are identical with Reduced forced on), and the autotest always
+  uses Full.
 
 ### How a run works
 
@@ -1607,9 +1638,17 @@ scripts/
                             in the UI at a whole-number scale, real time), ui_shimmer (the gold
                             evolution sheen), level_pips (card / reward level pips), run_build
                             (read-only build / army snapshots and their icon rows for the pause
-                            screen and the results card)
+                            screen and the results card),
+                            touch_support (phones and tablets: detection, the mobile UI scale,
+                            fit_to_screen() for screens taller than a phone, drag-scrolling lists,
+                            the portrait overlay), touch_controls (the in-run joystick, Grave Step,
+                            Dread Rally, aim, stance rose and pause buttons; they inject the usual
+                            input actions), rotate_overlay ("turn your device" in portrait)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     input_hint_data.gd      Input hint chips: sizes, colours, pad glyph names, device thresholds
+    touch_data.gd           Phones / tablets: touch control sizes (CSS px), places, colours, stick dead
+                            zone, mobile UI scale limits, fit margin, portrait overlay words and sizes
+    effects_data.gd         The Effects setting (Full / Reduced): defaults and what Reduced draws less of
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
     stages/graveyard_stage.gd      Stage 1: segments, events, Reckoning flavour, graves, desecration,
                                    Crypt Defender, obstacle layout, boss arrival
@@ -1679,6 +1718,8 @@ scripts/
     character_data.gd       Playable characters: starting spell, innate (text + numbers), stats, art key,
                             school colour, unlock rule
     palette.gd              Colour language
+web/mobile_shell.html       The Web export's page: Godot's stock shell plus the phone support (viewport,
+                            no zoom / scroll bounce, audio unlock on the first tap, landscape lock)
 ```
 
 **Simulation order.** Each physics tick (60 Hz), `Game` runs these steps in order:
@@ -1928,8 +1969,10 @@ playtesters; both are skipped unless configured, so the workflow stays green wit
 
 The `Web` preset in `export_presets.cfg` is a Godot 4.3 Web export **without thread support**: it needs no
 SharedArrayBuffer and no cross-origin isolation (COOP / COEP) headers, so any static host serves it (itch.io, GitHub
-Pages, a plain `python3 -m http.server`). It targets **desktop browsers** with a keyboard or a controller (Chrome,
-Edge, Firefox; Safari should work but is untested); phones are not supported yet.
+Pages, a plain `python3 -m http.server`). It runs in **desktop browsers** with a keyboard or a controller (Chrome,
+Edge, Firefox; Safari should work but is untested) and on **phones and tablets in landscape** (mobile Chrome /
+Safari; see *Phones and tablets* below). Its page is `web/mobile_shell.html` (Godot's stock page plus the phone
+support).
 
 - **Play:** download the `Necropathy-web` artifact (or `Necropathy-web.zip` from a release), unzip it and serve the
   folder: `python3 -m http.server 8000`, then open <http://localhost:8000>. Opening `index.html` straight from disk
@@ -1958,12 +2001,39 @@ Edge, Firefox; Safari should work but is untested); phones are not supported yet
     compute in Chromium, so at 60 fps all sounds exist about 1.6 s after the title and the run music about 2.2 s,
     the UI sounds within the first frames). A sound asked for earlier is skipped, and the run music fades in once
     it exists.
+- **Phones and tablets** (GDD §15.0 "Mobile browser support"):
+  - **Detection:** a device whose main pointer is a finger (the browser's `pointer: coarse`, or touch with no fine
+    pointer, which also catches iPads) starts with touch controls and no key chips. Any other device switches to
+    touch on its first real touch, and back on a key or pad press.
+  - **Controls:** the touch joystick and buttons (see *Controls*); the menus are played by tapping. Hit areas are at
+    least 48 CSS px (about 7.5 mm) and sized in CSS px, so they stay thumb-sized on any screen.
+  - **Landscape:** the game is laid out for landscape. Held upright, a "Turn your device" screen covers it and a
+    running game pauses. A browser locks the orientation only in fullscreen, so the page asks for landscape when it
+    enters fullscreen (Android Chrome; iOS Safari has no lock and no fullscreen for pages, so there the overlay is
+    the guard).
+  - **UI scale:** a phone in landscape is only about 360-430 CSS px tall, so the 1280 × 720 layout would show text
+    at about half size. On a window at most 540 CSS px tall the layout is enlarged up to ×1.2 (while at least
+    1280 × 600 layout px stay visible): on a Pixel 7 (863 × 360 CSS px) body text grows from about 9.5 to 11.4 CSS
+    px. A screen taller than what is left (a long level-up card, the Codex, the title column) shrinks just enough
+    to fit. Tablets keep the desktop layout (an iPad already shows it at 0.8×).
+  - **Performance:** phones and tablets start on **Effects: Reduced** (Settings → Video).
+  - **Page:** no pinch or double-tap zoom, no scroll bounce or pull-to-refresh, no long-press callout; sound starts
+    with the first tap (the page resumes the audio on the first touchend as well, which iOS Safari requires).
+  - **Limits:** measured only in Chromium's phone and tablet emulation (Pixel 7, iPad landscape) with software
+    WebGL, not yet on real phones (iOS Safari in particular: the audio unlock and performance are unverified; the
+    page keeps the browser's default safe-area insets, so a notch letterboxes the canvas instead of covering it). No haptics, no on-screen keyboard (the game has no text entry), and the Controls
+    tab still lists keyboard / pad bindings only (the touch layout is fixed). Native Android / iOS apps are not
+    planned yet.
+- **itch.io for phones:** on the project's **Edit game** page, under *Embed options*, tick **Mobile friendly** and
+  set **Orientation** to **Landscape** (and keep "Click to launch in fullscreen" off or on as you like; fullscreen is
+  what lets Android lock the orientation). The CI upload itself needs no change.
 - **Publishing (optional, off by default)** from pushes to `main` and from `v*` tags:
   - **itch.io:** create an HTML project on itch.io, then in GitHub **Settings → Secrets and variables → Actions** add
     the repository **secret** `BUTLER_API_KEY` (an itch.io API key from <https://itch.io/user/settings/api-keys>)
     and the repository **variable** `ITCH_TARGET` (`user/project:channel`, e.g. `user/necropathy:html5`). The
     `publish-itch` job then pushes the build with butler. On itch.io, tick "This file will be played in the browser"
-    for the `html5` channel's upload once and set the embed size to 1280 × 720 (or "click to launch in fullscreen").
+    for the `html5` channel's upload once and set the embed size to 1280 × 720 (or "click to launch in fullscreen");
+    for phones also tick **Mobile friendly** with **Orientation: Landscape** (above).
   - **GitHub Pages:** in **Settings → Pages**, set **Source** to **GitHub Actions**, then add the repository
     **variable** `WEB_PAGES` = `true`. The `publish-pages` job then deploys the build. Pages on a private repository
     needs a paid GitHub plan, and the site is public. To deploy from `v*` tags too, allow them in **Settings →
@@ -2071,8 +2141,9 @@ and the Codex are in, with their art.
 
 **Phase 4 – Polish:** the pixel art, the menus (the menu modernization: UI kit,
 type, motion, hints, diorama, every screen rebuilt, the Codex, Credits and the
-menu theme) and full controller UX are in, and so is the desktop-browser Web
-build (see *Play in the browser*); left: animation polish, accessibility
-beyond rebinding and Reduce motion, phones (touch controls, a mobile UI scale,
-a performance setting) once the browser build has been measured on real
-hardware, profiling on target hardware (§40 stress scenarios), balance.
+menu theme) and full controller UX are in, and so is the Web build for desktop
+browsers, phones and tablets (touch controls, a mobile UI scale, the portrait
+overlay and the Effects setting; see *Play in the browser*); left: animation
+polish, accessibility beyond rebinding and Reduce motion, measuring the phone
+build on real devices (iOS Safari first), native Android / iOS apps (deferred),
+profiling on target hardware (§40 stress scenarios), balance.

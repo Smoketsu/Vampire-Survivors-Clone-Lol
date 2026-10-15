@@ -12,7 +12,8 @@ Banshees and Corpse Catapults) against the holy Crimson Covenant. It is built in
 with **GDScript**, top-down 2D and the GL Compatibility renderer. Art is true pixel art (PNGs in `assets/`, made in the Oct 2026 art pass;
 the code drawings in `_draw` stay as the fallback for any missing PNG), and sound and music are synthesized in-engine
 (the sounds and the run loop at startup, the menu theme lazily the first time the menu shows; on the no-threads
-Web build both in small per-frame steps, bit-identical). It also runs in desktop browsers (the `Web` export preset).
+Web build both in small per-frame steps, bit-identical). It also runs in desktop browsers and on phones /
+tablets in landscape (the `Web` export preset; touch controls, mobile UI scale, GDD §15.0 "Mobile browser support").
 
 ## Sources of truth
 
@@ -396,6 +397,20 @@ tiny tweaks.
   fullscreen toggle follows the browser's real state and is not restored at startup; saves in IndexedDB
   (checked across a reload); CI exports it (artifact `Necropathy-web`, release zip) with optional
   itch.io / GitHub Pages publishing. Tested in headless Chromium (title, a run, reload).
+- **phones and tablets in the browser** (owner request "make it mobile friendly", GDD §15.0 "Mobile
+  browser support"; native apps still deferred): `TouchSupport` (detection by a coarse pointer, the
+  mobile UI scale `content_scale_factor` up to ×1.2 on short phone screens, `fit_to_screen()` on every
+  screen's centre container so a screen taller than the visible area shrinks to fit, `pass_drags()` for
+  the Codex lists, the portrait `RotateOverlay` that pauses a run); `InputHints.Device.TOUCH` (no chips;
+  emulated mouse events are not decisive); `TouchControls` in a run (floating joystick on the `move_*`
+  actions through `Input.action_press`, Grave Step / Dread Rally / aim / pause buttons and a four-way
+  stance rose that inject the existing actions as `InputEventAction`s: no second path for any rule;
+  sizes in CSS px in `touch_data.gd`); the Ossuary buys on a second tap on touch; the **Effects**
+  setting Full / Reduced (`effects_data.gd`, Reduced by default on phones, purely visual, autotest
+  always Full); the page `web/mobile_shell.html` (no zoom / bounce, audio unlock on touchend, landscape
+  lock in fullscreen). Tested with Playwright phone / tablet emulation (real taps, synthetic
+  multi-touch) and a desktop viewport. Keep new screens inside 1280 × 600 layout px or call
+  `TouchSupport.fit_to_screen()` on their centre container.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -417,9 +432,9 @@ tiny tweaks.
    strips. Small detailed figures go through `pixelate_source.py` first. Every bust rig also has a 24-frame **idle
    breathing strip** `<key>_idle.png` (`walk_cycle.py idle`, `IdleData`, GDD §15.0 "Idle breathing bounce") that plays
    while the unit stands, on game time, through the same `SpriteBank.draw()` path. Possible later polish: attack poses for regular units, arm swing, more effect hooks.
-4. **Phones** (owner decision: only after the browser build has been measured on real hardware): touch
-   controls (joystick and buttons), a mobile UI scale, landscape lock and a performance setting; native
-   Android / iOS later. First get playtesters' numbers from the Web build (load time, frame rate).
+4. **Phones: done for the browser (Oct 2026)** (see the Done list; GDD §15.0 "Mobile browser
+   support"). Left: measure it on real phones (iOS Safari audio unlock and frame rate first, via the
+   itch.io embed with "Mobile friendly" / "Landscape"); native Android / iOS apps stay deferred.
 5. **Content candidates** (owner to choose): achievement rewards / the Bone Golem (and the
    campaign epilogue that *Dawn Extinguished* should unlock), more ultimates, a victory screen after
    the Reckoning.

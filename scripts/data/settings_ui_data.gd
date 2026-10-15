@@ -29,8 +29,8 @@ const TAB_SIZE := Vector2(160, 42)  # TUNING (not in GDD)
 const TAB_GAP: int = 8  # TUNING (not in GDD)
 ## Size (layout px) of the page area inside the ornate panel: every tab has
 ## the same size, so switching tabs never moves the screen (wide enough for
-## the three Controls groups, tall enough for the five Video rows).
-const PAGE_SIZE := Vector2(980, 262)  # TUNING (not in GDD) layout fit
+## the three Controls groups, tall enough for the six Video rows).
+const PAGE_SIZE := Vector2(980, 306)  # TUNING (not in GDD) layout fit; 6 rows x 46 + 5 gaps x 6 (Effects row added for phones)
 ## Height (layout px) of an option row (slider, toggle, zoom).
 const ROW_HEIGHT: float = 46.0  # TUNING (not in GDD)
 ## Gap (layout px) between option rows.
@@ -84,6 +84,8 @@ const VOLUME_ROWS: Dictionary = {"Master": "Master", "Music": "Music", "SFX": "E
 const TOGGLES: Dictionary = {"fullscreen": "Fullscreen", "screen_shake": "Screen shake", "damage_numbers": "Damage numbers", "reduce_motion": "Reduce motion"}  # TUNING (not in GDD)
 ## Zoom row label (its value is ViewData.ZOOM_LEVELS[...]["label"]).
 const ZOOM: String = "Zoom"  # TUNING (not in GDD)
+## Effects row label (its value is EffectsData.LABELS[...]: Full / Reduced).
+const EFFECTS: String = "Effects"  # TUNING (not in GDD) mobile
 ## Reset keys button.
 const RESET: String = "Reset keys"  # TUNING (not in GDD)
 ## Hint strip words.

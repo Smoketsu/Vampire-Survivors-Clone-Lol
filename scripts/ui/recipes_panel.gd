@@ -92,6 +92,7 @@ func _ready() -> void:
 	var center := CenterContainer.new()  # Centres the content on screen.
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
+	TouchSupport.fit_to_screen(center)  # A short phone layout: shrink to fit (no-op at 720 px).
 	var vb := VBoxContainer.new()  # Title, count, panel, Back (with its Esc / B chip).
 	vb.add_theme_constant_override("separation", 10)
 	center.add_child(vb)

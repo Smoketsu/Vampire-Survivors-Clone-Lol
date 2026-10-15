@@ -30,6 +30,8 @@
 ## stepped by the player) and `dread_rally` (DreadRally, Space / LB ultimate
 ## with a kill-charged soul meter, stepped right after the player); both are
 ## requested from _unhandled_input(), so they only fire while PLAYING.
+## On a phone or tablet the same actions come from TouchControls (added to
+## the UI layer outside the autotest), which injects them as input events.
 ## Army stances (StanceData): `stance` (ArmyStance) holds the army's stance
 ## for this run (Escort at the start, so Restart resets it); the stance keys
 ## and right-stick flicks reach it from _unhandled_input() while playing.
@@ -313,6 +315,12 @@ func _build_ui() -> void:
 	debug_overlay = DebugOverlay.new()
 	debug_overlay.game = self
 	root.add_child(debug_overlay)
+	if not GameState.autotest:
+		# Phones / tablets: joystick and buttons that inject the usual input
+		# actions (shown only on touch input; under the panels below).
+		var touch := TouchControls.new()
+		touch.game = self
+		root.add_child(touch)
 	level_up_panel = LevelUpPanel.new()
 	level_up_panel.game = self
 	level_up_panel.card_chosen.connect(_on_card_chosen)

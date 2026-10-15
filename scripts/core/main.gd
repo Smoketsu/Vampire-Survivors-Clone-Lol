@@ -11,6 +11,9 @@
 ## (UiMotion.transition; instant under the autotest and with Reduce motion).
 ## Main also installs the UI motion hook (UiMotion.install: card lift and
 ## button squash) once at startup.
+## Phones and tablets (GDD §15.0 "Mobile browser support"): Main installs
+## TouchSupport (touch input hints, the mobile UI scale, the portrait
+## overlay) and pauses a running game when the device turns to portrait.
 ## Music: the menu asks Sfx for the main menu theme, a run for the in-run
 ## loop (Sfx.play_music crossfades them; the menu-to-run fade starts with the
 ## fade through black).
@@ -26,6 +29,9 @@ var _run_config: RunConfig = null
 
 func _ready() -> void:
 	UiMotion.install()
+	var touch := TouchSupport.install(self)  # Phones / tablets: touch hints, UI scale, portrait overlay (null in the autotest).
+	if touch != null:
+		touch.portrait_changed.connect(_on_portrait_changed)
 	if GameState.autotest:
 		_run_config = RunConfig.for_stage(GameState.autotest_stage)
 		_run_config.set_difficulty(GameState.autotest_difficulty)
@@ -66,6 +72,13 @@ func _start_game() -> void:
 	_game.restart_requested.connect(UiMotion.transition.bind(self, _start_game), CONNECT_DEFERRED)
 	_game.main_menu_requested.connect(UiMotion.transition.bind(self, _show_menu), CONNECT_DEFERRED)
 	add_child(_game)
+
+
+## A phone or tablet turned to portrait: a running game pauses (its pause
+## menu waits under the "turn your device" overlay).
+func _on_portrait_changed(portrait: bool) -> void:
+	if portrait and _game != null and _game.run_state == Game.RunState.PLAYING:
+		_game.toggle_pause()
 
 
 ## Unpauses and removes the current run / menu.

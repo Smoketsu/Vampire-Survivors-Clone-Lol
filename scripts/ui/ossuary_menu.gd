@@ -27,7 +27,8 @@
 ## the tiles a grid (up / down inside a tree, left / right across trees at the
 ## same row, down from any tree to the Oath tile, up from it back to the tree
 ## last visited), A / Enter buys, B / Esc closes the confirmation or the
-## menu. The first upgrade is focused on open. Every number is in
+## menu. On a touchscreen (no hover) the first tap on a tile shows its
+## details and a second tap on the same tile buys. The first upgrade is focused on open. Every number is in
 ## OssuaryUiData; the upgrade data stays in MetaData.
 ## Open it with OssuaryMenu.open_over(parent, button_to_refocus).
 class_name OssuaryMenu
@@ -63,6 +64,9 @@ var _count_from: int = -1
 var _focus_id: String = ""
 ## Tree column (0..3) of the last focused upgrade tile (the Oath tile's "up").
 var _last_col: int = 0
+## Touch input only: the upgrade tile tapped once (its details shown); a
+## second tap on it buys ("" = none). Keys, pads and mice buy at once.
+var _touch_armed: String = ""
 ## Detail panel (ornate PanelContainer; its accent follows the state).
 var _detail_panel: PanelContainer
 ## Detail panel parts: "icon" IconGlyph, "name" Label, "pips" Pips, "desc"
@@ -94,6 +98,7 @@ func _ready() -> void:
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
+	TouchSupport.fit_to_screen(center)  # A short phone layout: shrink to fit (no-op at 720 px).
 	var root := VBoxContainer.new()  # Title row, trees, bottom row.
 	root.add_theme_constant_override("separation", OssuaryUiData.BLOCK_GAP)
 	center.add_child(root)
@@ -521,6 +526,13 @@ func _show_cost(id: String, state: String) -> void:
 ## answers `denied` with a shake when it cannot be bought.
 func _on_upgrade_pressed(id: String) -> void:
 	var tile: OssuaryTile = buttons[id]
+	if InputHints.device() == InputHints.Device.TOUCH and _touch_armed != id:
+		# A finger has no hover: the first tap on a tile shows its details,
+		# a second tap on the same tile buys (GDD §15.0 "Mobile browser support").
+		_touch_armed = id
+		_show_detail(id)
+		Sfx.play_ui("ui_tick")
+		return
 	if id == PactData.OATH_ID and Meta.oath_active_tier() < Meta.tier(id):
 		# A lowered Oath goes back up for free (the tier is still owned).
 		Meta.set_oath_active(Meta.oath_active_tier() + 1)
