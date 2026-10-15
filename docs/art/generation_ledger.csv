@@ -422,3 +422,13 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-15 14:04,structures/sanctum_crypt,gpt-image-2.5-flare,medium,1024x1024,2,415,852,439,0.0221,src_sanctum_crypt.png
 2026-10-15 14:04,structures/crypt_door,gpt-image-2.5-flare,medium,1024x1024,2,411,852,439,0.0220,src_crypt_door.png
 2026-10-15 14:05,structures/empowered_grave,gpt-image-2.5-flare,medium,1024x1024,2,433,852,439,0.0222,src_empowered_grave.png
+2026-10-15 14:53,icons/heal,gpt-image-2.5-flare,medium,1024x1024,1,404,560,439,0.0197,src_icon_heal.png
+2026-10-15 14:53,icons/grave_fortitude,gpt-image-2.5-flare,medium,1024x1024,1,450,560,439,0.0199,src_icon_fortitude.png
+2026-10-15 14:53,overlays/frozen_shell,gpt-image-2.5-flare,medium,1024x1024,1,383,720,439,0.0208,src_frozen_shell.png
+2026-10-15 14:53,markers/covenant_sheet,gpt-image-2.5-flare,medium,1536x1024,1,679,720,343,0.0194,src_covenant_markers.png
+2026-10-15 14:53,markers/player_sheet,gpt-image-2.5-flare,medium,1536x1024,1,648,720,343,0.0193,src_player_markers.png
+2026-10-15 14:53,projectiles/placeholder_sheet,gpt-image-2.5-flare,medium,1536x1024,1,726,720,343,0.0197,src_projectiles.png
+2026-10-15 14:53,decals/corpse_sheet,gpt-image-2.5-flare,medium,1536x1024,1,465,720,343,0.0184,src_corpses.png
+2026-10-15 14:53,icons/call_of_the_grave,gpt-image-2.5-flare,medium,1024x1024,1,423,560,439,0.0198,src_icon_call.png
+2026-10-15 14:53,structures/bone_wall_sheet,gpt-image-2.5-flare,medium,1536x1024,1,533,720,343,0.0187,src_bone_walls.png
+2026-10-15 14:57,projectiles/corpse_boulder,gpt-image-2.5-flare,medium,1536x1024,1,513,1155,343,0.0221,src_boulders.png
