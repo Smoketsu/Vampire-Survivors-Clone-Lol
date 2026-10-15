@@ -78,6 +78,9 @@
 ##                         forcing ignores the Spearhead unlock. Without it,
 ##                         army / summon / evolve switch stances (StanceBot)
 ##                         and naive / pact keep Escort.
+##   --synergies=off       Autotest A/B switch: no army synergy (the four
+##                         original ones and the newer classes') ever
+##                         activates (default on).
 ##   --spawn=k@T[xN],...   Autotest test hook: force-spawns N (default 1)
 ##                         enemies of kind k (any stage's data: EnemyData,
 ##                         MarchEnemyData or SanctumEnemyData ids) at T game
@@ -140,6 +143,9 @@ var autotest_skin: String = ""
 ## Autotest: StanceData id forced for the whole run by --stance= ("" = the
 ## stance bot's rule, StanceBot).
 var autotest_stance: String = ""
+## Autotest: true when --synergies=off keeps every army synergy off (old and
+## new; SynergyManager.evaluate()) for A/B balance runs.
+var autotest_synergies_off: bool = false
 ## Autotest: forced spawns from --spawn= ({"kind", "time" s, "count"}, in
 ## the order given; empty = none).
 var autotest_spawns: Array[Dictionary] = []
@@ -243,6 +249,12 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_stance = sid
 			else:
 				push_error("Unknown --stance=%s (expected one of %s)" % [sid, ", ".join(PackedStringArray(StanceData.ORDER))])
+		elif arg.begins_with("--synergies="):
+			var sv := arg.get_slice("=", 1).to_lower()  # "off" or "on".
+			if sv == "off" or sv == "on":
+				autotest_synergies_off = sv == "off"
+			else:
+				push_error("Unknown --synergies=%s (expected on or off)" % sv)
 		elif arg.begins_with("--spawn="):
 			for entry: String in arg.get_slice("=", 1).split(",", false):
 				var kind := entry.get_slice("@", 0)  # Enemy kind id.

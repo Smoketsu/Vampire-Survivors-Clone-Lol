@@ -10,6 +10,9 @@
 ##      knocked outward (stomp_knockback / enemy mass); a shockwave, dust burst
 ##      and screen shake (Juice) sell the hit,
 ##   3. it stands still for stomp_recover s, then rejoins the shared FSM.
+## Synergies: every enemy the stomp hits is marked staggered
+## (SynergyManager.mark_staggered(): only while Flesh Rampart or Killing
+## Field is active) before the damage lands.
 ## Stats: abom_stomps, abom_stomp_hits, dmg_abom_stomp (via CombatResolver).
 class_name AbominationBehavior
 extends SummonBehavior
@@ -77,6 +80,7 @@ func _impact(u: SummonedUnit) -> void:
 		var dir := away / away.length() if away.length() > 0.01 else Vector2.RIGHT
 		e.knockback += dir * kb / maxf(e.mass, 0.1)
 		hits += 1
+		u.director.synergies.mark_staggered(e)  # Flesh Rampart / Killing Field (no-op without them).
 		game.combat.damage_enemy(e, dmg, "abom_stomp")
 	game.effects.ring(pos, r, Palette.BONE, 0.35)
 	game.effects.ring(pos, r * 0.6, Palette.CORPSE_FLESH, 0.3)

@@ -249,11 +249,12 @@ func total_capacity(dominion_level: int = -1) -> int:
 
 
 ## Seconds between replacements for `cls` (GDD §24 base x Soul Recycling x
-## meta Grave Call).
+## meta Grave Call x the Charnel Menagerie synergy for the newer classes,
+## SynergyManager.replenish_mult(); 1 while inactive).
 func replenish_interval(cls: String) -> float:
 	var base: float = UnitData.UNITS[cls]["replenish_interval"]
 	return base * (1.0 - game.abilities.passive_value("soul_recycling", "replace_reduction")) \
-			* (1.0 - game.meta.value("replace_reduction"))
+			* (1.0 - game.meta.value("replace_reduction")) * synergies.replenish_mult(cls)
 
 
 ## Effective stats of class `cls` at skill `level` with the CURRENT passives
@@ -266,7 +267,9 @@ func replenish_interval(cls: String) -> float:
 ## Dread Rally ultimate (game.dread_rally) is another such timed category:
 ## damage and attack speed during its buff, move speed during its surge.
 ## Blood Scent adds a move-speed and an attack-speed category for the fast
-## classes (PassiveData.FAST_SUMMON_SPEED).
+## classes (PassiveData.FAST_SUMMON_SPEED). The Baying of the Damned frenzy
+## (SynergyManager.frenzy_value(), timed like the Dread Rally, only with
+## `with_buffs`) adds one more attack- and move-speed category to its class.
 ## Bound Souls adds the move-speed category and sets the per-unit leash keys
 ## (engage_radius, soft_recall: the army stance's leash x (1 + leash_range);
 ## Escort's leash is UnitData's) and the RETURNING speed (return_speed_mult).
@@ -324,6 +327,13 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		spd_mult *= 1.0 + ab.passive_value("blood_scent", "fast_attack_speed")
 	if rally != null:
 		move_mult *= 1.0 + rally.bonus("move_speed")  # Dread Rally surge.
+	# Baying of the Damned (synergy): the hounds' timed frenzy after a Dirge,
+	# its own category on attack and move speed (0 unless it runs).
+	if with_buffs:
+		var fr_spd := synergies.frenzy_value(cls, "attack_speed")  # Frenzy attack-speed bonus.
+		if fr_spd > 0.0:
+			spd_mult *= 1.0 + fr_spd
+			move_mult *= 1.0 + synergies.frenzy_value(cls, "move_speed")
 	var leash_mult := 1.0 + ab.passive_value("bound_souls", "leash_range")  # Leash distance multiplier.
 	var return_mult := 1.0 / maxf(0.1, 1.0 - ab.passive_value("bound_souls", "return_reduction"))  # RETURNING speed multiplier (the 0.1 floor only guards a 100% value).
 	var heal_mult := 1.0 + float(row.get("heal_bonus", 0.0))

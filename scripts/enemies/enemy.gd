@@ -255,6 +255,21 @@ var weaken_cut: float = 0.0
 ## Keening Lady Dirge: game time (s) until which this enemy is silenced (its
 ## heals fail, CombatResolver.heal_enemy()). 0 = never silenced.
 var silence_until: float = 0.0
+## Banshee Dirge: length (s, after Mournsong) of the longest Dirge on this
+## enemy since it was last unweakened; Requiem (CombatResolver.
+## extend_weaken()) never stretches weaken_until beyond now + this.
+var weaken_span: float = 0.0
+## Synergy mark: game time (s) until which this enemy is staggered by an
+## Abomination / Bone Colossus stomp (SynergyManager.mark_staggered(); only
+## written while Flesh Rampart or Killing Field is active). 0 = never.
+var staggered_until: float = 0.0
+## Synergy mark: game time (s) until which this enemy is swooped by a
+## Gargoyle / Cathedral Horror dive (SynergyManager.mark_swooped(); only
+## written while Death from Above or The Wild Hunt is active). 0 = never.
+var swooped_until: float = 0.0
+## Death from Above: true once a rogue hit spent this swoop mark's dash reset
+## (a new swoop mark re-arms it).
+var swoop_reset_spent: bool = false
 ## Seconds left of the brief slowdown after a ranged unit fires.
 var _shoot_slow_timer: float = 0.0
 ## True while a Stasis power-up holds this enemy (EnemyDirector skips its
@@ -400,6 +415,10 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	weaken_until = 0.0
 	weaken_cut = 0.0
 	silence_until = 0.0
+	weaken_span = 0.0
+	staggered_until = 0.0
+	swooped_until = 0.0
+	swoop_reset_spent = false
 	_shoot_slow_timer = 0.0
 	frozen = false
 	freeze_timer = 0.0

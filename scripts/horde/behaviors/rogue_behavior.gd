@@ -31,6 +31,16 @@
 ##   * kill reset: a dash hit that kills sets a reset; when the chain ends
 ##     the cooldown drops to dash_reset_floor (never 0) instead of the full
 ##     dash_cooldown. At most one reset per chain, so kills cannot loop.
+## Synergies (SynergyData; numbers read through SynergyManager.value(), 0
+## while inactive, so the base behaviour is unchanged without them):
+##   * Cold Blood: chilled or Deep-Frozen enemies get prefer_bonus on the
+##     target score, so dashes go for them (the damage bonus itself is in
+##     SynergyManager.hit_mult()).
+##   * Death from Above: swooped enemies get its prefer_bonus on the target
+##     score (the higher of the two synergy preferences applies), and the
+##     first rogue hit (strike or dash hit) on each swooped enemy, once per
+##     swoop mark, cuts the dash cooldown to dash_reset_floor
+##     (_swoop_reset(); stat syn_dfa_resets).
 ## Stats: rogue_dashes, rogue_dash_hits, dmg_rogue_dash, dmg_rogue_bleed,
 ## summon_special_end_blocked (a dash that ended inside an obstacle: must be 0);
 ## Shadow Reaper: reaper_chain_dashes, reaper_cd_resets,
@@ -162,6 +172,7 @@ func _hit_lane(u: SummonedUnit, pos: Vector2) -> void:
 			continue
 		_hits[e] = e.generation
 		u.game.stat_add("rogue_dash_hits", 1.0)
+		_swoop_reset(u, e)  # Death from Above (no-op without it).
 		_add_bleed(u, e)
 		u.game.combat.damage_enemy(e, float(u.special["dash_damage"]), "rogue_dash")
 		if not e.active and int(u.special.get("dash_kill_reset", 0)) > 0:
@@ -277,12 +288,41 @@ func _tick_bleeds(u: SummonedUnit, delta: float) -> void:
 		i += 1
 
 
-## Assassin preference: backline enemies, and enemies far from the player.
+## Death from Above (synergy): the first rogue hit (a melee strike or a dash
+## hit) on a swooped enemy whose swoop mark has not been spent yet spends it
+## and cuts this rogue's dash cooldown to the synergy's dash_reset_floor
+## (never 0, so resets cannot loop). Call before the damage (`e` may die).
+func _swoop_reset(u: SummonedUnit, e: Enemy) -> void:
+	if e.swoop_reset_spent or e.swooped_until <= u.game.elapsed:
+		return
+	var floor_s := u.director.synergies.value("death_from_above", "dash_reset_floor")  # s; 0 = inactive.
+	if floor_s <= 0.0:
+		return
+	e.swoop_reset_spent = true
+	special_cd = minf(special_cd, floor_s)
+	u.game.stat_add("syn_dfa_resets", 1.0)
+
+
+## Death from Above: a melee strike also spends a swoop mark's dash reset
+## (called after the strike; `e` may have died, its mark still counts).
+func on_melee_hit(u: SummonedUnit, e: Enemy, _dealt: float) -> void:
+	_swoop_reset(u, e)
+
+
+## Assassin preference: backline enemies, and enemies far from the player;
+## with Cold Blood (synergy) also chilled or Deep-Frozen enemies, with Death
+## from Above swooped ones (the higher synergy preference only).
 func score_bonus(u: SummonedUnit, e: Enemy, dp: float) -> float:
 	var s := float(u.special["far_bonus"]) * clampf(dp / u.engage_radius, 0.0, 1.0)  # Bonus.
 	if e.behavior in BACKLINE:
 		s += float(u.special["backline_bonus"])
-	return s
+	var syn := u.director.synergies  # Army synergies (0 values while inactive).
+	var mark := 0.0  # Best synergy preference for this foe (the higher one, like the hit bonus).
+	if e.chill_timer > 0.0 or e.freeze_timer > 0.0:
+		mark = syn.value("cold_blood", "prefer_bonus")  # 0 without Cold Blood.
+	if e.swooped_until > u.game.elapsed:
+		mark = maxf(mark, syn.value("death_from_above", "prefer_bonus"))  # 0 without Death from Above.
+	return s + mark
 
 
 ## Lane telegraph (filling like the Templar lane) and the dash streak.

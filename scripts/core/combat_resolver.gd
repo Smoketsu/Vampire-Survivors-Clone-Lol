@@ -65,6 +65,13 @@
 ## weaken_enemy() slows the foe and cuts the damage of its hits
 ## (Enemy.hit_mult()); a Keening Lady's Dirge also silences it, and a
 ## silenced healer's heals fail in heal_enemy().
+## Synergies of the newer classes (SynergyData, SynergyManager): damage_enemy()
+## multiplies every hit by SynergyManager.hit_mult() once, right after
+## Siegecraft (the highest mark bonus of the hit's class on a staggered /
+## swooped / chilled / frozen / weakened foe, half on the stage boss, times
+## the Charnel Menagerie for the newer classes; exactly 1 while none is
+## active) and reports the dealt damage to record_hit(). Requiem stretches a
+## Dirge through extend_weaken() (capped at Enemy.weaken_span).
 ## Every damage to a structure is also counted per source (structdmg_<tag>).
 ## Spirit Binding and Mournsong both lengthen slows and chills (slow_enemy(),
 ## chill_enemy()); the two multipliers stack multiplicatively.
@@ -132,6 +139,12 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 			and (is_minion_source(source) or source in PassiveData.MINION_DOT_SOURCES):
 		siege = game.abilities.passive_value("siegecraft", "siege_damage")  # 0 when not owned.
 		amount *= 1.0 + siege
+	# Synergies of the newer classes (SynergyManager.hit_mult(), the one
+	# synergy hit path): the highest mark bonus of the hit's class, times the
+	# Charnel Menagerie. Exactly 1 while none of them is active.
+	var syn := game.horde.synergies  # Army synergies.
+	var syn_mult := syn.hit_mult(source, e)  # Synergy multiplier of this hit.
+	amount *= syn_mult
 	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
 	# undead fighting on it hit weaker.
 	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).
@@ -194,6 +207,8 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 		game.stat_add("minion_crit_bonus_dmg", dealt * (1.0 - 1.0 / crit_mult))
 	if siege > 0.0:
 		game.stat_add("siege_bonus_dmg", dealt * siege / (1.0 + siege))
+	if syn_mult > 1.0:
+		syn.record_hit(dealt)  # syn_<id>_hits / _bonus_dmg.
 	e.hp -= dealt
 	e.on_hit()
 	game.stat_add("damage_dealt", dealt)
@@ -425,9 +440,11 @@ func weaken_enemy(e: Enemy, slow: float, cut: float, duration: float, boss_mult:
 	game.stat_add("dirge_debuff_seconds", maxf(0.0, now + d - maxf(e.weaken_until, now)))
 	if e.weaken_until <= now:
 		e.weaken_cut = cut * k
+		e.weaken_span = d
 		e.queue_redraw()
 	else:
 		e.weaken_cut = maxf(e.weaken_cut, cut * k)
+		e.weaken_span = maxf(e.weaken_span, d)
 	e.weaken_until = maxf(e.weaken_until, now + d)
 	game.stat_add("dirge_debuffs", 1.0)
 	if silence:
@@ -435,6 +452,23 @@ func weaken_enemy(e: Enemy, slow: float, cut: float, duration: float, boss_mult:
 			game.stat_add("keening_silenced", 1.0)
 		e.silence_until = maxf(e.silence_until, now + d)
 	return true
+
+
+## Requiem (synergy, SynergyManager.hit_mult()): stretches a running Dirge
+## weakening on `e` by `seconds`, never beyond now + the Dirge's own length
+## (Enemy.weaken_span), so a stretched Dirge is never longer than a fresh
+## one. Only the weakening (the damage cut, Enemy.hit_mult()) is stretched,
+## not the Dirge's slow. Returns the seconds added (0 when not weakened).
+func extend_weaken(e: Enemy, seconds: float) -> float:
+	var now := game.elapsed  # Run time (s).
+	if not e.active or e.weaken_until <= now or seconds <= 0.0:
+		return 0.0
+	var until := minf(e.weaken_until + seconds, now + e.weaken_span)  # New end, capped (s).
+	if until <= e.weaken_until:
+		return 0.0
+	var added := until - e.weaken_until  # Seconds added.
+	e.weaken_until = until
+	return added
 
 
 ## True while enemy `e` is silenced by a Keening Lady's Dirge (its heals fail).

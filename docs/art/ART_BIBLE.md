@@ -702,6 +702,15 @@ retries, 2 Soul Ash variants), about $0.47.
 `ach_<achievement>` made the same way but on a **gold** border (an achievement is a reward, like an evolution),
 shown at x2 (64 px). 4 images, about $0.06.
 
+**Synergy badges** (Synergies for the newer classes, Oct 2026): the thirteen army synergies `syn_<id>`
+(the four original ones, which were code-drawn until then, the eight setter / finisher pairs and the
+Charnel Menagerie) made the same way on the **violet** border: one symbol per prompt (26 art px,
+`--ref icons/shadow_bolt.png`), `prepare_sprite.py --no-center --no-prune --no-levels` (`--no-cleanup`
+for the skull faces and eyes: Killing Field, The Wild Hunt, Baying, the Menagerie, Deathless, Unholy
+Host), composited on the cut-corner badge template. Each pair shows its setter's material (flesh,
+stone wing, ice, wail) meeting its finisher's (sword, boulder, dagger, hound skull, mage orb). Shown at
+22 px in the HUD list. `ProgressionGlyphs` keeps code-drawn fallbacks. 13 images, about $0.20.
+
 | File | Subject |
 |---|---|
 | `shadow_bolt.png` | Violet bolt (Anchor 6) |
@@ -809,6 +818,19 @@ shown at x2 (64 px). 4 images, about $0.06.
 | `ach_heretics_bane.png` | Achievement *Heretic's Bane* (gold border): a gold holy sunburst cracked through by a violet rift |
 | `ach_dread_sovereign.png` | Achievement *Dread Sovereign* (gold border): a bone skull with teal eyes under a gold crown |
 | `ach_dawn_extinguished.png` | Achievement *Dawn Extinguished* (gold border): a gold sun eclipsed by a violet disc |
+| `syn_shieldwall.png` | Synergy Shieldwall of the Damned: a round bone shield behind a teal barrier arc |
+| `syn_volley.png` | Synergy Volley of the Fallen: a bone arrow flying into a violet diamond mark |
+| `syn_deathless.png` | Synergy March of the Deathless: a bone skull rushing right with teal speed streaks |
+| `syn_unholy_host.png` | Synergy The Unholy Host: three bone skulls in a violet aura ring |
+| `syn_flesh_rampart.png` | Synergy Flesh Rampart: a bone sword striking down into a moss-green flesh shockwave |
+| `syn_killing_field.png` | Synergy Killing Field: a skull-faced bone boulder falling onto a flesh shockwave |
+| `syn_death_from_above.png` | Synergy Death from Above: a stone gargoyle diving with a bone dagger |
+| `syn_wild_hunt.png` | Synergy The Wild Hunt: a stone gargoyle wing over a snarling hound skull with a teal eye |
+| `syn_cold_blood.png` | Synergy Cold Blood: a bone dagger stabbed through an ice crystal |
+| `syn_shatterfall.png` | Synergy Shatterfall: a bone boulder smashing an ice crystal into shards |
+| `syn_requiem.png` | Synergy Requiem: an arcane-blue orb bursting between two pale wail ripples |
+| `syn_baying.png` | Synergy Baying of the Damned: a howling hound skull with pale wail ripples |
+| `syn_charnel_menagerie.png` | Synergy The Charnel Menagerie: a skull-topped rib cage holding a teal soul flame |
 | `profane_oath.png` | Ossuary Profane Oath: a skeletal hand raised in an oath under a crimson flame (the Oath is the one crimson Ossuary icon, like the Pact) |
 | `warrior.png` | Summon class badge (hotbar and army list): a skeleton warrior's helmed skull behind a round shield |
 | `archer.png` | Summon class badge: a moss-hooded skeleton drawing a bone bow with a teal arrow |

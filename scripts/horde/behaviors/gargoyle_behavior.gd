@@ -31,6 +31,9 @@
 ##     body-blocks enemies. special_time restarts with the stone phase (a
 ##     separately bounded hold, so the autotest overtime check still bounds
 ##     the swoop and the stone each on their own). A recall ends it at once.
+## Synergies: every enemy the dive hits is marked swooped
+## (SynergyManager.mark_swooped(): only while Death from Above or The Wild
+## Hunt is active) before the damage lands.
 ## Stats: gargoyle_swoops, gargoyle_swoop_hits, dmg_gargoyle_swoop,
 ## summon_special_end_blocked (a landing inside an obstacle: must be 0);
 ## Cathedral Horror: horror_stuns, horror_boss_stuns, horror_stone_forms,
@@ -164,6 +167,7 @@ func _impact(u: SummonedUnit, pos: Vector2) -> void:
 		var away := e.position - pos  # Push direction.
 		e.knockback += (away / away.length() if away.length() > 0.01 else Vector2.UP) * kb / maxf(e.mass, 0.1)
 		hits += 1
+		u.director.synergies.mark_swooped(e)  # Death from Above / The Wild Hunt (no-op without them).
 		game.combat.damage_enemy(e, float(u.special["swoop_damage"]), "gargoyle_swoop")
 		if stun > 0.0 and e.active:
 			# Cathedral Horror: the dive stuns what it hits.
