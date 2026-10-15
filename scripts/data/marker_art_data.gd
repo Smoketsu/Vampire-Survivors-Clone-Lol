@@ -38,6 +38,14 @@ const DEATH_BRAND_DOOM: String = "markers/death_brand_doom"  # TUNING (not in GD
 ## Gap (px) between the top of the body circle and the brand skull's centre
 ## (the code skull sat 9 px above it).
 const DEATH_BRAND_RISE: float = 10.0  # TUNING (not in GDD)
+## Height (px) of an over-the-head marker's centre above the TOP of its unit's
+## drawn sprite (Enemy.marker_y()): the buff chevron, the mage mark, the stun
+## stars and the Death Mark skull sit just above the head instead of on it
+## (they were placed from the body radius, which falls inside tall sprites).
+const MARKER_LIFT: float = 6.0  # TUNING (not in GDD) owner review of the batch
+## Extra height (px) of the mage mark when the buff chevron is also shown, so
+## the two never overlap.
+const MARKER_STACK: float = 8.0  # TUNING (not in GDD)
 ## Stun stars over a stunned enemy (ReaperHorrorGlyphs.draw_stun()); a still
 ## (the overlay layer redraws only when the unit's look changes, so a loop
 ## would need per-frame redraws).

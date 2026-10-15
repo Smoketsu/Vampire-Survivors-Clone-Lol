@@ -175,13 +175,16 @@ static func _closed(pts: PackedVector2Array) -> PackedVector2Array:
 ## sigil around it and a small skull above it (its pixel art,
 ## MarkerArtData.DEATH_BRAND / _DOOM, when present); it flickers in its last
 ## second (`left` s of brand left). `doom` draws the green Doom Brand.
-static func draw_brand(ci: CanvasItem, p: Vector2, r: float, phase: float, doom: bool, left: float) -> void:
+## `skull_y` is the skull's y relative to `p` (px; NAN = the old body-radius
+## placement, r + DEATH_BRAND_RISE above `p`).
+static func draw_brand(ci: CanvasItem, p: Vector2, r: float, phase: float, doom: bool, left: float, skull_y: float = NAN) -> void:
 	var a := 0.55 + 0.45 * clampf(left, 0.0, 1.0) * (0.75 + 0.25 * sin(phase * 9.0))  # Alpha (flickers out).
 	var col := DOOM if doom else Palette.VIOLET  # Sigil colour.
 	_sigil(ci, p, r + 5.0, Color(col, a), phase * 1.6)
 	ci.draw_arc(p, r + 7.5, phase * 2.0, phase * 2.0 + PI * 0.6, 8, Color(Palette.NECRO_GREEN, 0.6 * a), 1.5)
 	var key := MarkerArtData.DEATH_BRAND_DOOM if doom else MarkerArtData.DEATH_BRAND  # Brand skull art.
-	if SpriteBank.draw_flat(ci, key, p + Vector2(0, -r - MarkerArtData.DEATH_BRAND_RISE), 0.0, Color(1.0, 1.0, 1.0, a)):
+	var sy := -r - MarkerArtData.DEATH_BRAND_RISE if is_nan(skull_y) else skull_y  # Skull height (px).
+	if SpriteBank.draw_flat(ci, key, p + Vector2(0, sy), 0.0, Color(1.0, 1.0, 1.0, a)):
 		return
 	Glyphs._skull(ci, p + Vector2(0, -r - 9.0), 3.2, false, col)
 

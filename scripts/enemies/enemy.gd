@@ -505,6 +505,18 @@ func motion_sprite_key() -> String:
 	return "enemies/" + kind
 
 
+## Local y (px, negative = up) of an over-the-head marker's centre: just
+## above the top of this enemy's drawn sprite (MarkerArtData.MARKER_LIFT), or
+## `fallback` (the old body-radius placement) when that is higher or the
+## enemy has no sprite art. Visual only.
+func marker_y(fallback: float) -> float:
+	var key := motion_sprite_key()  # This enemy's art key.
+	if not SpriteBank.has(key):
+		return fallback
+	var top := -SpriteBank.drawn_height(key) * (0.5 - SpriteData.CENTER_OFFSET)  # Sprite top (px, the sprite centre sits CENTER_OFFSET of its height above the origin).
+	return minf(fallback, top - MarkerArtData.MARKER_LIFT)
+
+
 ## Marks this enemy for `duration` s (Volley of the Fallen mage mark).
 func apply_mark(duration: float) -> void:
 	if mark_time <= 0.0:
@@ -1056,11 +1068,13 @@ func _draw_over(ci: CanvasItem) -> void:
 		SanctumGlyphs.draw_holy_shield(ci, radius)  # High Confessor shield.
 	if ward_until > 0.0:
 		SanctumGlyphs.draw_ward(ci, Vector2(-radius * 1.05, -radius * 1.2), 3.5)  # Sun Paladin ward.
+	var head := marker_y(-radius * 2.4)  # Over-the-head marker height (px).
 	if buff_time > 0.0:
-		MarchGlyphs.draw_buffed(ci, Vector2(0, -radius * 2.4), 4.0)  # Aura buff chevron.
+		MarchGlyphs.draw_buffed(ci, Vector2(0, head), 4.0)  # Aura buff chevron.
 	if mark_time > 0.0:
-		if not SpriteBank.draw_flat(ci, MarkerArtData.MAGE_MARK, Vector2(0, -radius * 2.5), 0.0):
-			ProgressionGlyphs.draw_mage_mark(ci, Vector2(0, -radius * 2.5), 4.0)  # Volley mark (code shape without its art).
+		var my := head - (MarkerArtData.MARKER_STACK if buff_time > 0.0 else 0.0)  # Above the chevron when both show.
+		if not SpriteBank.draw_flat(ci, MarkerArtData.MAGE_MARK, Vector2(0, my), 0.0):
+			ProgressionGlyphs.draw_mage_mark(ci, Vector2(0, my), 4.0)  # Volley mark (code shape without its art).
 	if curse_until > 0.0:
 		GravebowColossusGlyphs.draw_curse(ci, Vector2.ZERO, radius)  # Gravebow curse tint.
 	if weaken_until > 0.0:
@@ -1072,7 +1086,7 @@ func _draw_over(ci: CanvasItem) -> void:
 		Glyphs.hp_bar(ci, Vector2(0, -radius * 1.8), radius * 2.0, hp / max_hp, Palette.HP_ENEMY)
 		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if frozen and stun_timer > 0.0 and freeze_timer <= 0.0:
-		ReaperHorrorGlyphs.draw_stun(ci, Vector2(0, -radius * 1.35), radius)  # Stunned, not frozen (Stasis on top shows the stun too).
+		ReaperHorrorGlyphs.draw_stun(ci, Vector2(0, marker_y(-radius * 1.35)), radius)  # Stunned, not frozen (Stasis on top shows the stun too).
 	elif frozen:
 		PowerupGlyphs.draw_frozen(ci, Vector2.ZERO, radius)
 	elif chill_timer > 0.0:
