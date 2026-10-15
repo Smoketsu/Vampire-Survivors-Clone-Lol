@@ -7,7 +7,12 @@
 ##   * Reduce motion on/off (read by UiMotion.enabled(): every UI motion,
 ##     panel open / close, entrances, lift, squash, count-ups and the fade
 ##     through black, becomes instant).
-##   * Fullscreen on/off (ignored on the headless display server).
+##   * Fullscreen on/off (ignored on the headless display server). On the
+##     Web build it is the browser's fullscreen (GDD §15.0 "Web build"): it is
+##     never restored at startup (a browser only allows it right after a click
+##     or key press, so the toggle in Settings works), and `fullscreen` follows
+##     the page's real state (Esc or F11 change it outside the game;
+##     sync_fullscreen()).
 ##   * Keyboard rebinding of the REBINDABLE actions. Only the PRIMARY
 ##     keyboard key of each action (its first InputEventKey in the project
 ##     InputMap) is remapped; secondary keys (arrow keys) and gamepad
@@ -104,7 +109,10 @@ func save_settings() -> Error:
 func apply_all() -> void:
 	for bus: String in DEFAULT_VOLUMES.keys():
 		_apply_volume(bus)
-	_apply_fullscreen()
+	if OS.has_feature("web"):
+		sync_fullscreen()  # No user gesture here: the browser would refuse.
+	else:
+		_apply_fullscreen()
 	for action: String in REBINDABLE:
 		_apply_binding(action)
 	changed.emit()
@@ -153,6 +161,14 @@ func set_damage_numbers(on: bool) -> void:
 func set_reduce_motion(on: bool) -> void:
 	reduce_motion = on
 	changed.emit()
+
+
+## Web build: sets `fullscreen` from the page's real state (the player can
+## leave the browser's fullscreen with Esc, or enter it with F11). Called by
+## apply_all() and when the Settings menu builds its toggle.
+func sync_fullscreen() -> void:
+	if OS.has_feature("web"):
+		fullscreen = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
 
 
 ## Switches fullscreen on / off.

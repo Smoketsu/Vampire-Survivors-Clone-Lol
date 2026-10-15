@@ -5,7 +5,11 @@
 ## Every function is static and touches only its own buffers and its own
 ## seeded RandomNumberGenerator, so Sfx can run them on WorkerThreadPool
 ## threads and the result is identical on every run. The global RNG (which
-## the autotest seeds for gameplay) is never used.
+## the autotest seeds for gameplay) is never used. The pieces of a render
+## (sound_buffer(), add_layer() per layer, peak_of() / encode_range() /
+## pcm_stream() for to_stream(); RunLoopSynth for the music loop) are public
+## so the Web build (StartupSynth) can run them in per-frame steps with
+## bit-identical results.
 ##
 ## A layer is an oscillator (sine / triangle / saw / square / white noise)
 ## with an exponential pitch sweep, linear attack, exponential decay, an
@@ -25,17 +29,26 @@ const PEAK: float = 0.89  # TUNING (not in GDD)
 const TAIL_FADE: float = 0.006  # TUNING (not in GDD)
 ## Wave name -> internal id (ints are cheaper to branch on per sample).
 const WAVES: Dictionary = {"sine": 0, "tri": 1, "saw": 2, "square": 3, "noise": 4}
+## Starting value of a peak search (peak_of()): a silent buffer is never
+## divided by zero.
+const PEAK_FLOOR: float = 0.0001
 
 
 ## Renders one SoundData recipe to a (non-looping) stream.
 static func render_sound(recipe: Dictionary, rng_seed: int) -> AudioStreamWAV:
-	var buf := PackedFloat32Array()
-	buf.resize(maxi(1, int(float(recipe["dur"]) * SFX_RATE)))
+	var buf := sound_buffer(recipe)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = rng_seed
 	for layer: Dictionary in recipe["layers"]:
 		add_layer(buf, SFX_RATE, layer, rng)
 	return to_stream(buf, SFX_RATE, false)
+
+
+## The silent SFX_RATE buffer a recipe's layers are mixed into (its "dur").
+static func sound_buffer(recipe: Dictionary) -> PackedFloat32Array:
+	var buf := PackedFloat32Array()
+	buf.resize(maxi(1, int(float(recipe["dur"]) * SFX_RATE)))
+	return buf
 
 
 ## Mixes one layer (keys documented in SoundData) into `buf`.
@@ -108,15 +121,37 @@ static func add_layer(buf: PackedFloat32Array, rate: int, l: Dictionary, rng: Ra
 ## Normalises `buf` to PEAK and packs it into a 16-bit mono AudioStreamWAV.
 ## `loop` makes it a seamless forward loop over the whole buffer.
 static func to_stream(buf: PackedFloat32Array, rate: int, loop: bool) -> AudioStreamWAV:
-	var peak := 0.0001
-	for v in buf:
-		peak = maxf(peak, absf(v))
-	var gain := PEAK / peak * 32767.0
 	var n := buf.size()
 	var bytes := PackedByteArray()
 	bytes.resize(n * 2)
-	for i in n:
+	encode_range(bytes, buf, peak_gain(peak_of(buf, 0, n, PEAK_FLOOR)), 0, n)
+	return pcm_stream(bytes, rate, loop)
+
+
+## Largest absolute sample of buf[from, to), at least `peak` (start with
+## PEAK_FLOOR; chain calls over consecutive ranges for the whole buffer).
+static func peak_of(buf: PackedFloat32Array, from: int, to: int, peak: float) -> float:
+	for i in range(from, to):
+		peak = maxf(peak, absf(buf[i]))
+	return peak
+
+
+## Sample-to-PCM gain that normalises a buffer whose peak is `peak` to PEAK.
+static func peak_gain(peak: float) -> float:
+	return PEAK / peak * 32767.0
+
+
+## Writes buf[from, to) scaled by `gain` as 16-bit samples into `bytes`
+## (sized 2 bytes per sample).
+static func encode_range(bytes: PackedByteArray, buf: PackedFloat32Array, gain: float, from: int, to: int) -> void:
+	for i in range(from, to):
 		bytes.encode_s16(i * 2, int(buf[i] * gain))
+
+
+## Wraps 16-bit mono PCM `bytes` at `rate` Hz in an AudioStreamWAV; `loop`
+## makes it a forward loop over the whole buffer.
+static func pcm_stream(bytes: PackedByteArray, rate: int, loop: bool) -> AudioStreamWAV:
+	var n := bytes.size() / 2
 	var stream := AudioStreamWAV.new()
 	stream.format = AudioStreamWAV.FORMAT_16_BITS
 	stream.mix_rate = rate
@@ -136,83 +171,7 @@ static func snap(hz: float, loop_s: float) -> float:
 
 
 ## Renders the dark, minor-key ambient loop (GDD §12 "ominous choirs, low
-## percussion and ambient drones"): a beating D drone, a slow wind bed, a
-## four-chord "choir" pad crossfading around the loop (SoundData.MUSIC_CHORDS)
-## and a soft heartbeat thump. Every oscillator and LFO completes a whole
-## number of cycles per loop, so the loop point is seamless.
+## percussion and ambient drones") in one go: see RunLoopSynth, which holds
+## the recipe as a list of small jobs (the Web build runs them over frames).
 static func render_music(rng_seed: int) -> AudioStreamWAV:
-	var rate := MUSIC_RATE
-	var loop_s := SoundData.MUSIC_LOOP_SECONDS
-	var n := int(loop_s * rate)
-	var buf := PackedFloat32Array()
-	buf.resize(n)
-	var rng := RandomNumberGenerator.new()
-	rng.seed = rng_seed
-	var inv_rate := 1.0 / float(rate)
-	# --- Drone (two slightly detuned low-passed saws + sub sine) and wind.
-	var f1 := snap(SoundData.MUSIC_ROOT_HZ, loop_s)
-	var f2 := snap(SoundData.MUSIC_ROOT_HZ * 1.006, loop_s)
-	var f_sub := snap(SoundData.MUSIC_ROOT_HZ * 0.5, loop_s)
-	var lfo := TAU * 2.0 / loop_s  # wind swells twice per loop
-	var drone_a := TAU * 60.0 * inv_rate  # one-pole low-pass at ~60 Hz
-	var wind_a := TAU * 140.0 * inv_rate  # one-pole low-pass at ~140 Hz
-	# The filters start `warm` samples before 0 (with matching phases, since
-	# every frequency loops) so their state at sample 0 equals the state at
-	# the loop end: no click at the loop point.
-	var warm := rate / 10
-	var p1 := fposmod(-f1 * warm * inv_rate, 1.0)
-	var p2 := fposmod(-f2 * warm * inv_rate, 1.0)
-	var p3 := fposmod(-f_sub * warm * inv_rate, 1.0)
-	var y_drone := 0.0
-	var y_wind := 0.0
-	for i in range(-warm, n):
-		var t := float(i) * inv_rate
-		var saw := (2.0 * p1 - 1.0) + (2.0 * p2 - 1.0)
-		y_drone += drone_a * (saw - y_drone)
-		var wind_amp := 0.05 + 0.04 * sin(lfo * t)
-		y_wind += wind_a * (rng.randf() * 2.0 - 1.0 - y_wind)
-		if i >= 0:
-			buf[i] = y_drone * 0.32 + sin(TAU * p3) * 0.22 + y_wind * wind_amp * 3.0
-		p1 += f1 * inv_rate
-		p1 -= floorf(p1)
-		p2 += f2 * inv_rate
-		p2 -= floorf(p2)
-		p3 += f_sub * inv_rate
-		p3 -= floorf(p3)
-	# --- Choir pad: each chord fades in/out over its segment plus overlap,
-	# wrapping around the loop end so the last chord crossfades into the first.
-	var chords: Array = SoundData.MUSIC_CHORDS
-	var seg := n / chords.size()
-	var overlap := seg / 4
-	var win := seg + 2 * overlap
-	var vib := TAU * snap(5.0, loop_s) * inv_rate
-	for c in chords.size():
-		var voices: Array = chords[c]
-		var freqs := PackedFloat32Array()
-		var phases := PackedFloat32Array()
-		for hz: float in voices:
-			freqs.append(snap(hz, loop_s) * inv_rate)
-			phases.append(0.0)
-		var first := c * seg - overlap
-		var vib_phase := 0.0
-		for j in win:
-			var w := sin(PI * float(j) / float(win))
-			w *= w
-			var s := 0.0
-			var wob := 1.0 + 0.004 * sin(vib_phase)
-			for v in freqs.size():
-				var ph := phases[v]
-				s += 1.0 - 4.0 * absf(ph - 0.5)
-				ph += freqs[v] * wob * (1.0 + 0.0015 * float(v))
-				phases[v] = ph - floorf(ph)
-			vib_phase += vib
-			var idx := posmod(first + j, n)
-			buf[idx] += s * w * 0.11
-	# --- Heartbeat: "lub-dub" low thumps every MUSIC_BEAT_SECONDS.
-	var beats := int(loop_s / SoundData.MUSIC_BEAT_SECONDS)
-	for b in beats:
-		for k in 2:
-			var at := b * SoundData.MUSIC_BEAT_SECONDS + 0.28 * float(k)
-			add_layer(buf, rate, {"wave": "sine", "f0": 58.0, "f1": 36.0, "start": at, "dur": 0.35,
-				"amp": 0.5 if k == 0 else 0.32, "attack": 0.004, "decay": 0.09}, rng)
-	return to_stream(buf, rate, true)
+	return RunLoopSynth.new(rng_seed).render_all()

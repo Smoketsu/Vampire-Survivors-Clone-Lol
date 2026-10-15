@@ -359,3 +359,13 @@ const MUSIC_CHORDS: Array = [  # TUNING (not in GDD)
 ]
 ## Seconds between low "heartbeat" percussion hits.
 const MUSIC_BEAT_SECONDS: float = 2.0  # TUNING (not in GDD)
+
+## Web build (no worker threads, GDD §15.0 "Web build"): main-thread time
+## budget (ms per frame) for rendering the sound bank and the in-run loop in
+## small steps (StartupSynth), so the page never freezes while they render.
+## 6 ms of a 16.7 ms frame: the menu keeps 60 fps on a desktop browser.
+const WEB_SYNTH_BUDGET_MS: float = 6.0  # TUNING (not in GDD)
+## Web build: samples per job of the in-run loop's long passes (drone, chords,
+## encoding; RunLoopSynth). Only sets how finely the work is split; the
+## rendered loop is the same for any value (>= 1).
+const WEB_SYNTH_CHUNK_SAMPLES: int = 8192  # TUNING (not in GDD)

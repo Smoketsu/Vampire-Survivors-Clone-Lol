@@ -8,12 +8,22 @@
 #               (--stage=sanctum, army policy so its objectives are
 #               exercised). Fails on any script error/warning or if a run
 #               doesn't complete.
-#   2. export - builds single-file Windows (.exe) and Linux executables and
-#               uploads them as workflow artifacts (Actions tab -> run -> Artifacts).
+#   2. export - builds single-file Windows (.exe) and Linux executables and the
+#               no-threads Web build (index.html + .js + .wasm + .pck, any static
+#               host) and uploads them as workflow artifacts (Actions tab -> run
+#               -> Artifacts: Necropathy-windows, Necropathy-linux, Necropathy-web).
 # On a pushed tag starting with "v" (e.g. v0.2.0) the export job also creates a
-# GitHub Release with both builds attached, so testers can just download and play.
+# GitHub Release with the three zips attached, so testers can just download and play.
 # Its title is "Necropathy <tag>" and its body is docs/release_notes/<tag>.md
 # (an empty body if that file is missing), followed by GitHub's generated changelog.
+#   3. publish-itch / publish-pages - OPTIONAL, off by default: on pushes to
+#               main and on v* tags they publish the Web build for playtesters.
+#               publish-itch runs only when the repository secret BUTLER_API_KEY
+#               and the repository variable ITCH_TARGET (e.g. user/necropathy:html5)
+#               both exist; publish-pages only when the repository variable
+#               WEB_PAGES is "true" (and GitHub Pages is set to "GitHub Actions"
+#               in Settings -> Pages). Without them both jobs are skipped and the
+#               workflow stays green. See README "Play in the browser".
 
 name: CI
 
@@ -132,7 +142,7 @@ jobs:
           path: |
             /home/runner/godot
             ~/.local/share/godot/export_templates/4.3.stable
-          key: godot-${{ env.GODOT_VERSION }}-linux-templates-win-linux
+          key: godot-${{ env.GODOT_VERSION }}-linux-templates-win-linux-web
 
       - name: Download Godot and templates
         run: |
@@ -143,27 +153,39 @@ jobs:
           fi
           # TEMPLATE_DIR: where Godot looks for 4.3 export templates on Linux.
           TEMPLATE_DIR=~/.local/share/godot/export_templates/4.3.stable
-          if [ ! -f "$TEMPLATE_DIR/windows_release_x86_64.exe" ]; then
+          if [ ! -f "$TEMPLATE_DIR/windows_release_x86_64.exe" ] || [ ! -f "$TEMPLATE_DIR/web_nothreads_release.zip" ]; then
             mkdir -p "$TEMPLATE_DIR"
             curl -sSL -o /tmp/templates.tpz "$TEMPLATES_URL"
-            # Only extract the templates we export with, to keep the cache small.
+            # Only extract the templates we export with, to keep the cache small
+            # (the Web preset is the no-threads variant: web_nothreads_*.zip).
             unzip -q -o -j /tmp/templates.tpz \
               templates/windows_release_x86_64.exe templates/windows_debug_x86_64.exe \
               templates/linux_release.x86_64 templates/linux_debug.x86_64 \
+              templates/web_nothreads_release.zip templates/web_nothreads_debug.zip \
               templates/version.txt -d "$TEMPLATE_DIR"
             rm /tmp/templates.tpz
           fi
 
       - name: Export builds
         run: |
-          mkdir -p build/windows build/linux
+          mkdir -p build/windows build/linux build/web
+          # build/.gdignore keeps Godot from importing the Web export's PNGs
+          # (favicon, splash) as project resources.
+          touch build/.gdignore
           "$GODOT_BIN" --headless --import > /dev/null 2>&1
           "$GODOT_BIN" --headless --export-release "Windows Desktop" build/windows/Necropathy.exe
           "$GODOT_BIN" --headless --export-release "Linux" build/linux/Necropathy.x86_64
+          "$GODOT_BIN" --headless --export-release "Web" build/web/index.html 2>&1 | tee export_web.log
           test -s build/windows/Necropathy.exe
           test -s build/linux/Necropathy.x86_64
+          test -s build/web/index.html && test -s build/web/index.wasm && test -s build/web/index.pck
+          if grep -qE "SCRIPT ERROR|ERROR:" export_web.log; then
+            echo "::error::Errors during the Web export"; exit 1
+          fi
           (cd build/windows && zip -q ../Necropathy-windows.zip Necropathy.exe)
           (cd build/linux && chmod +x Necropathy.x86_64 && zip -q ../Necropathy-linux.zip Necropathy.x86_64)
+          # index.html at the zip's root, as itch.io and static hosts expect.
+          (cd build/web && zip -q -r ../Necropathy-web.zip .)
 
       - name: Smoke-test exported Linux build
         run: |
@@ -186,6 +208,13 @@ jobs:
           name: Necropathy-linux
           path: build/linux/Necropathy.x86_64
 
+      - name: Upload Web build
+        uses: actions/upload-artifact@v4
+        with:
+          # The export folder (index.html at the root of the artifact zip).
+          name: Necropathy-web
+          path: build/web/
+
       - name: Release notes file (tags only)
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
@@ -203,4 +232,72 @@ jobs:
           files: |
             build/Necropathy-windows.zip
             build/Necropathy-linux.zip
+            build/Necropathy-web.zip
           generate_release_notes: true
+
+  # Optional: pushes the Web build to itch.io with butler. Runs only on pushes
+  # to main and on v* tags, and only when the repository secret BUTLER_API_KEY
+  # (an itch.io API key) and the repository variable ITCH_TARGET (the butler
+  # target, e.g. user/necropathy:html5) are both set; otherwise it is skipped.
+  publish-itch:
+    needs: export
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && vars.ITCH_TARGET != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # BUTLER_API_KEY: read by butler; empty when the secret does not exist.
+      BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+      # ITCH_TARGET: itch.io project and channel, e.g. user/necropathy:html5.
+      ITCH_TARGET: ${{ vars.ITCH_TARGET }}
+    steps:
+      - name: Download Web build
+        if: env.BUTLER_API_KEY != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: Necropathy-web
+          path: web
+
+      - name: Push to itch.io
+        if: env.BUTLER_API_KEY != ''
+        run: |
+          curl -sSL -o /tmp/butler.zip https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
+          mkdir -p /tmp/butler && unzip -q /tmp/butler.zip -d /tmp/butler && chmod +x /tmp/butler/butler
+          # The tag name on tags, the short commit on main.
+          VERSION="${GITHUB_REF_NAME}"
+          if [ "$GITHUB_REF_TYPE" != "tag" ]; then VERSION="main-${GITHUB_SHA::7}"; fi
+          /tmp/butler/butler push web "$ITCH_TARGET" --userversion "$VERSION"
+
+  # Optional: deploys the Web build to GitHub Pages. Runs only on pushes to
+  # main and on v* tags, and only when the repository variable WEB_PAGES is
+  # "true" (Settings -> Pages -> Source must be "GitHub Actions").
+  publish-pages:
+    needs: export
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && vars.WEB_PAGES == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      # pages / id-token: write are what actions/deploy-pages needs.
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    concurrency:
+      # One Pages deployment at a time; a newer push waits for the running one.
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - name: Download Web build
+        uses: actions/download-artifact@v4
+        with:
+          name: Necropathy-web
+          path: web
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

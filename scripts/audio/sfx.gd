@@ -3,8 +3,13 @@
 ##     a hard limiter on Master so a burst of sounds never clips;
 ##   * synthesizes every sound in SoundData and the ambient in-run loop with
 ##     Synth on WorkerThreadPool threads, so startup is never blocked (the
-##     main thread only queues the tasks). Sounds requested before the bank
-##     is ready are silently skipped. Timings are printed once as "[audio]";
+##     main thread only queues the tasks). The no-threads Web build has no
+##     worker threads (a task would run inside _ready and freeze the page), so
+##     there StartupSynth renders the same samples in small per-frame steps
+##     (SoundData.WEB_SYNTH_BUDGET_MS), the short UI sounds first, each sound
+##     playable as soon as it exists (GDD §15.0 "Web build"). A sound
+##     requested before it exists is silently skipped, and the in-run loop
+##     fades in once it exists. Timings are printed once as "[audio]";
 ##   * plays two music tracks on the Music bus and crossfades between them
 ##     (play_music(), called by Main): the main menu theme (MenuThemeSynth,
 ##     "Grave Lullaby", MenuThemeData) on the menu and every screen opened
@@ -84,6 +89,10 @@ var menu_theme_ready_msec: float = 0.0
 var menu_theme_compute_msec: float = 0.0
 ## Ms the main thread spent in _ready (bus setup + queuing synth tasks).
 var startup_msec: float = 0.0
+## Web build: compute ms the per-frame sound-effect synthesis took (0 on desktop).
+var sfx_compute_msec: float = 0.0
+## Web build: compute ms the per-frame synthesis of the sounds and the loop took (0 on desktop).
+var startup_compute_msec: float = 0.0
 ## Total sound-effect plays accepted (debug / tests).
 var plays_started: int = 0
 ## Plays dropped by a voice limit or cooldown (debug / tests).
@@ -93,8 +102,12 @@ var plays_dropped: int = 0
 var _ids: PackedStringArray = PackedStringArray()
 ## Streams written by the synth tasks, one slot per id (guarded by _mutex).
 var _rendered: Array[AudioStreamWAV] = []
-## id -> AudioStreamWAV once the bank is ready.
+## id -> AudioStreamWAV: on desktop every id at once when the bank is ready,
+## on the Web each id as soon as it is rendered.
 var _streams: Dictionary = {}
+## Web build: the per-frame renderer of the sounds and the in-run loop (null
+## on desktop, and once both are done).
+var _startup_synth: StartupSynth = null
 ## Guards _rendered and _music_stream while worker threads write them.
 var _mutex: Mutex = Mutex.new()
 ## WorkerThreadPool group task id of the sound-effect synthesis (-1 = none).
@@ -184,8 +197,18 @@ func _ready() -> void:
 	for id: String in order:
 		_ids.append(id)
 	_rendered.resize(_ids.size())
-	_music_task = WorkerThreadPool.add_task(_synth_music, true, "Necropathy music synth")
-	_sfx_task = WorkerThreadPool.add_group_task(_synth_one, _ids.size(), -1, true, "Necropathy sfx synth")
+	if OS.has_feature("web"):
+		# Same sounds, same seeds (SYNTH_SEED + index in _ids), rendered over
+		# frames, cheapest (the UI clicks) first.
+		var web_ids := PackedStringArray()  # Render order.
+		var seeds := PackedInt32Array()  # Seed of each, by render order.
+		for i in range(_ids.size() - 1, -1, -1):
+			web_ids.append(_ids[i])
+			seeds.append(SYNTH_SEED + i)
+		_startup_synth = StartupSynth.new(web_ids, seeds, SYNTH_SEED - 1)
+	else:
+		_music_task = WorkerThreadPool.add_task(_synth_music, true, "Necropathy music synth")
+		_sfx_task = WorkerThreadPool.add_group_task(_synth_one, _ids.size(), -1, true, "Necropathy sfx synth")
 	get_tree().node_added.connect(_on_node_added)
 	get_tree().root.window_input.connect(_on_window_input)
 	startup_msec = float(Time.get_ticks_usec() - _t0_usec) / 1000.0
@@ -234,6 +257,8 @@ func _process(_delta: float) -> void:
 		_mutex.unlock()
 		music_ready_msec = float(Time.get_ticks_usec() - _t0_usec) / 1000.0
 		_report_if_done()
+	if _startup_synth != null:
+		_step_startup_synth()
 	_update_menu_theme()
 	# Music fades run on real time (delta follows Engine.time_scale).
 	var now := Time.get_ticks_usec()
@@ -241,6 +266,27 @@ func _process(_delta: float) -> void:
 	_last_usec = now
 	_run_gain = _fade_player(_music, MUSIC_DB, _run_gain, _run_target, _run_rate, real_dt)
 	_menu_gain = _fade_player(_menu_music, MenuThemeData.MUSIC_DB, _menu_gain, _menu_target, _menu_rate, real_dt)
+
+
+## Web build: runs one frame's budget of the sound / loop synthesis and
+## takes what it finished: each new sound becomes playable at once, the bank
+## is ready with the last one, and the loop goes on its player (fading in if
+## a run is on).
+func _step_startup_synth() -> void:
+	var all_done := _startup_synth.step(int(SoundData.WEB_SYNTH_BUDGET_MS * 1000.0))
+	for id: String in _startup_synth.finished.keys():
+		_streams[id] = _startup_synth.finished[id]
+	_startup_synth.finished.clear()
+	if _startup_synth.sounds_done and not bank_ready:
+		bank_ready = true
+		sfx_ready_msec = float(Time.get_ticks_usec() - _t0_usec) / 1000.0
+		sfx_compute_msec = float(_startup_synth.sounds_usec) / 1000.0
+	if all_done:
+		_music.stream = _startup_synth.music_stream
+		music_ready_msec = float(Time.get_ticks_usec() - _t0_usec) / 1000.0
+		startup_compute_msec = float(_startup_synth.compute_usec) / 1000.0
+		_startup_synth = null
+		_report_if_done()
 
 
 ## Switches the music to `mode`: MUSIC_MENU (the main menu theme, rendered
@@ -320,8 +366,11 @@ func _update_menu_theme() -> void:
 ## Prints the synthesis timings once both the bank and the music exist.
 func _report_if_done() -> void:
 	if bank_ready and _music_task < 0 and _music.stream != null:
-		print("[audio] main-thread startup %.1f ms; %d sfx ready after %.0f ms, music loop after %.0f ms (worker threads); display: %s" % [
-			startup_msec, _ids.size(), sfx_ready_msec, music_ready_msec, DisplayServer.get_name()])
+		var how := "worker threads"  # Where the synthesis ran.
+		if startup_compute_msec > 0.0:
+			how = "per-frame steps: %.0f ms compute, %.0f ms of it sfx" % [startup_compute_msec, sfx_compute_msec]
+		print("[audio] main-thread startup %.1f ms; %d sfx ready after %.0f ms, music loop after %.0f ms (%s); display: %s" % [
+			startup_msec, _ids.size(), sfx_ready_msec, music_ready_msec, how, DisplayServer.get_name()])
 
 
 ## Rough render cost of sound `id` (duration x layer count).
@@ -367,11 +416,9 @@ func _setup_buses() -> void:
 ## per-play pitch variation. Cheap when rejected (cooldown is checked first),
 ## so gameplay may call it for every hit.
 func play(id: String, pos: Vector2 = Vector2.INF, pitch: float = 1.0) -> void:
-	if not bank_ready:
-		return
-	var def: Dictionary = SoundData.SOUNDS.get(id, {})
-	if def.is_empty():
-		return
+	if not _streams.has(id):
+		return  # Not rendered yet (or not a sound).
+	var def: Dictionary = SoundData.SOUNDS[id]
 	var now := Time.get_ticks_msec()
 	if now - int(_last_play.get(id, -100000)) < int(def["min_interval"]):
 		plays_dropped += 1

@@ -41,6 +41,8 @@ Code comments cite the spec as `GDD §N`.
   **More info → Run anyway**.
 - **Latest commit:** open **Actions → CI**, click the newest green run, and download the `Necropathy-windows`
   artifact at the bottom of the page. You must be signed in to GitHub.
+- **In a browser:** the `Necropathy-web` artifact (or `Necropathy-web.zip` in a release) is the Web build; see
+  [Play in the browser](#play-in-the-browser-web-build).
 
 ### Option B: run from source in Godot
 
@@ -134,7 +136,10 @@ buttons you press in a fight are the dash and the ultimate (below).
   dark D-minor ambient loop for runs (drone, choir pad, heartbeat) as 16-bit PCM
   `AudioStreamWAV`s on worker threads at startup. The main thread is blocked
   for under 1 ms; all sounds are ready in about 0.15–0.3 s and the music in
-  about 0.3–0.5 s. Recipes and voice limits live in `scripts/data/sound_data.gd`.
+  about 0.3–0.5 s. The Web build has no worker threads, so there
+  `StartupSynth` renders the same samples in 6 ms per-frame steps instead
+  (the UI sounds first, each sound playable as soon as it exists; the loop's
+  recipe is a list of small jobs in `RunLoopSynth`). Recipes and voice limits live in `scripts/data/sound_data.gd`.
   The `Sfx` autoload creates the **Master / Music / SFX** buses and plays
   sounds from a pool of 24 voices. Each sound also has its own voice cap,
   cooldown and priority, so 150 enemies dying at once play only a few voices.
@@ -1536,6 +1541,8 @@ scripts/
   pickups/chest.gd, chest_manager.gd       Pooled treasure chests and their drop rules
   audio/sfx.gd              Autoload: audio buses, pooled voices with per-sound and global voice limits
   audio/synth.gd            Procedural sound and music synthesis (no audio files)
+  audio/run_loop_synth.gd   The in-run music loop's recipe as a list of small jobs (run at once, or over frames)
+  audio/startup_synth.gd    Web build: renders the sound bank and the run loop in per-frame steps (no threads)
   audio/menu_theme_synth.gd Main menu theme renderer: wavetable choir, music box, bell, harp, reverb (chunked)
   fx/juice.gd               Autoload: screen shake, hit-stop, hooks for particles and damage numbers
   fx/fx_layer.gd            One node that draws all particles and damage numbers from fixed buffers
@@ -1895,7 +1902,10 @@ uptime.
    40 minutes for the job).
    It fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if a run doesn't complete.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in
-   the executable), runs the autotest again on the exported Linux build, and uploads both as workflow artifacts.
+   the executable) and the no-threads Web build, runs the autotest again on the exported Linux build, and uploads all
+   three as workflow artifacts (`Necropathy-windows`, `Necropathy-linux`, `Necropathy-web`).
+3. **publish-itch / publish-pages** (optional, skipped unless configured; see *Play in the browser* below): on pushes
+   to `main` and on `v*` tags, push the Web build to itch.io or deploy it to GitHub Pages.
 
 To publish a downloadable release, bump `config/version` in `project.godot` (shown on the main menu) and the
 `application/*_version` fields in `export_presets.cfg`, write the player-facing notes in
@@ -1909,6 +1919,55 @@ git tag v.0.6.0 && git push origin v.0.6.0
 
 To export locally, install the 4.3 export templates (**Editor → Manage Export Templates**), then use
 **Project → Export**, or run `godot --headless --export-release "Windows Desktop" build/windows/Necropathy.exe`.
+
+The export job also builds the **Web** preset (below), uploads it as the `Necropathy-web` artifact (the export folder,
+`index.html` at its root), and attaches `Necropathy-web.zip` to tagged releases. Two optional jobs publish it for
+playtesters; both are skipped unless configured, so the workflow stays green without them.
+
+### Play in the browser (Web build)
+
+The `Web` preset in `export_presets.cfg` is a Godot 4.3 Web export **without thread support**: it needs no
+SharedArrayBuffer and no cross-origin isolation (COOP / COEP) headers, so any static host serves it (itch.io, GitHub
+Pages, a plain `python3 -m http.server`). It targets **desktop browsers** with a keyboard or a controller (Chrome,
+Edge, Firefox; Safari should work but is untested); phones are not supported yet.
+
+- **Play:** download the `Necropathy-web` artifact (or `Necropathy-web.zip` from a release), unzip it and serve the
+  folder: `python3 -m http.server 8000`, then open <http://localhost:8000>. Opening `index.html` straight from disk
+  (`file://`) does not work; browsers block it.
+- **Export locally:** install the 4.3 export templates (the Web preset uses `web_nothreads_release.zip` /
+  `web_nothreads_debug.zip`), then:
+
+  ```bash
+  mkdir -p build/web && touch build/.gdignore   # .gdignore: Godot must not import the exported PNGs
+  godot --headless --export-release "Web" build/web/index.html
+  ```
+- **Size and load:** `index.wasm` is 35.4 MB (8.0 MB gzipped) and `index.pck` 7.8 MB (7.5 MB gzipped); most hosts
+  serve them compressed. Godot's loading bar shows while they download and the engine starts.
+- **What differs from the desktop builds:**
+  - **No Quit button** on the title screen (a tab cannot close itself); close the tab instead.
+  - **Saves live in the browser** (`user://` is IndexedDB): Soul Ash, unlocks and settings persist across reloads
+    but are per browser and per site, and clearing the site's data deletes them. Desktop saves are not shared.
+  - **Fullscreen** is the browser's: the Settings toggle works (a click or key press allows it), F11 works too, and
+    Esc always leaves it first (a browser rule). It is not restored at startup (browsers refuse without a click or
+    key press), and the toggle shows the page's real state.
+  - **Sound starts with the first click or key press** (browsers block audio before any input).
+  - **The master-bus hard limiter is not applied** (Godot's Web sample playback skips bus effects), so a very
+    dense burst of sounds can be a little louder than on desktop; the per-sound voice limits still apply.
+  - **Audio synthesis is spread over frames:** with no worker threads, the sound effects and the in-run loop are
+    rendered in 6 ms per-frame steps after the title screen appears (the same samples as on desktop; about 0.8 s of
+    compute in Chromium, so at 60 fps all sounds exist about 1.6 s after the title and the run music about 2.2 s,
+    the UI sounds within the first frames). A sound asked for earlier is skipped, and the run music fades in once
+    it exists.
+- **Publishing (optional, off by default)** from pushes to `main` and from `v*` tags:
+  - **itch.io:** create an HTML project on itch.io, then in GitHub **Settings → Secrets and variables → Actions** add
+    the repository **secret** `BUTLER_API_KEY` (an itch.io API key from <https://itch.io/user/settings/api-keys>)
+    and the repository **variable** `ITCH_TARGET` (`user/project:channel`, e.g. `user/necropathy:html5`). The
+    `publish-itch` job then pushes the build with butler. On itch.io, tick "This file will be played in the browser"
+    for the `html5` channel's upload once and set the embed size to 1280 × 720 (or "click to launch in fullscreen").
+  - **GitHub Pages:** in **Settings → Pages**, set **Source** to **GitHub Actions**, then add the repository
+    **variable** `WEB_PAGES` = `true`. The `publish-pages` job then deploys the build. Pages on a private repository
+    needs a paid GitHub plan, and the site is public. To deploy from `v*` tags too, allow them in **Settings →
+    Environments → github-pages → Deployment branches and tags** (by default only `main` may deploy).
 
 ---
 
@@ -2012,6 +2071,8 @@ and the Codex are in, with their art.
 
 **Phase 4 – Polish:** the pixel art, the menus (the menu modernization: UI kit,
 type, motion, hints, diorama, every screen rebuilt, the Codex, Credits and the
-menu theme) and full controller UX are in; left: animation polish,
-accessibility beyond rebinding and Reduce motion, the Web build, profiling on
-target hardware (§40 stress scenarios), balance.
+menu theme) and full controller UX are in, and so is the desktop-browser Web
+build (see *Play in the browser*); left: animation polish, accessibility
+beyond rebinding and Reduce motion, phones (touch controls, a mobile UI scale,
+a performance setting) once the browser build has been measured on real
+hardware, profiling on target hardware (§40 stress scenarios), balance.

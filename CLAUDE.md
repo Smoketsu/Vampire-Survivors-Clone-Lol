@@ -11,7 +11,8 @@ and Warder priest orders, plus Abominations, Rogues, Gargoyles, Frost Wraiths, B
 Banshees and Corpse Catapults) against the holy Crimson Covenant. It is built in **Godot 4.3**
 with **GDScript**, top-down 2D and the GL Compatibility renderer. Art is true pixel art (PNGs in `assets/`, made in the Oct 2026 art pass;
 the code drawings in `_draw` stay as the fallback for any missing PNG), and sound and music are synthesized in-engine
-(the sounds and the run loop at startup, the menu theme lazily the first time the menu shows).
+(the sounds and the run loop at startup, the menu theme lazily the first time the menu shows; on the no-threads
+Web build both in small per-frame steps, bit-identical). It also runs in desktop browsers (the `Web` export preset).
 
 ## Sources of truth
 
@@ -151,8 +152,12 @@ Autotest options (full table in the README):
 
 CI (`.github/workflows/ci.yml`) runs the import, the Graveyard autotest with the naive and army
 policies, a Crimson March autotest, a Sanctum of Judgment autotest (army policy), the
-Windows/Linux exports and an exported-build smoke test. Pushing a `v*` tag publishes a GitHub Release
-with both zips.
+Windows/Linux/Web exports (artifacts `Necropathy-windows` / `-linux` / `-web`) and an exported-build
+smoke test. Pushing a `v*` tag publishes a GitHub Release with the three zips. Two optional jobs publish
+the Web build from `main` pushes and `v*` tags and are skipped unless configured: `publish-itch`
+(secret `BUTLER_API_KEY` + variable `ITCH_TARGET`) and `publish-pages` (variable `WEB_PAGES` = `true`,
+Pages source "GitHub Actions"). Local web export: `mkdir -p build/web && touch build/.gdignore`, then
+`godot --headless --export-release "Web" build/web/index.html` (templates `web_nothreads_*.zip`).
 
 ## Balance targets (check with multi-seed batches, `--mortal`)
 
@@ -383,6 +388,15 @@ tiny tweaks.
   pixel art `enemies/battle_sister` (52 px) with a walk strip and bust bounce; autotest `battle
   sister` line, `--spawn=battle_sister@T`.
 
+- the **Web build** (owner decision, GDD §15.0 "Web build after the art" and "Web build"): a no-threads
+  Godot 4.3 `Web` export preset (no SharedArrayBuffer / COOP-COEP, any static host; canvas fills the window);
+  the startup synthesis spread over frames on the Web (`StartupSynth`, the run loop as jobs in
+  `RunLoopSynth`; 6 ms per frame, `SoundData.WEB_SYNTH_BUDGET_MS`; bit-identical, the desktop path
+  unchanged), so the page no longer freezes for it; Quit hidden (`FrontDoorData.WEB_HIDDEN_ITEMS`); the
+  fullscreen toggle follows the browser's real state and is not restored at startup; saves in IndexedDB
+  (checked across a reload); CI exports it (artifact `Necropathy-web`, release zip) with optional
+  itch.io / GitHub Pages publishing. Tested in headless Chromium (title, a run, reload).
+
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
 2. **Small fixes:** none open. (Menu modernization wave 1 closed the last one: menu key hints now
@@ -403,13 +417,9 @@ tiny tweaks.
    strips. Small detailed figures go through `pixelate_source.py` first. Every bust rig also has a 24-frame **idle
    breathing strip** `<key>_idle.png` (`walk_cycle.py idle`, `IdleData`, GDD §15.0 "Idle breathing bounce") that plays
    while the unit stands, on game time, through the same `SpriteBank.draw()` path. Possible later polish: attack poses for regular units, arm swing, more effect hooks.
-4. **Web build** (owner decision, after the art is done; GDD §15.0 "Web build after the art"): a
-   no-threads Godot Web export for desktop browsers, the audio synthesis load checked, Quit hidden,
-   and a CI job that publishes it for playtesters. The menu theme is already Web-ready (on the Web it
-   renders in 4 ms per-frame slices while the menu shows, bit-identical to the desktop worker
-   thread); the in-run music and sound synthesis still run on worker threads at startup, which
-   need checking (or a sliced fallback) for a no-threads build. Phones (touch controls, mobile UI
-   scale, performance setting) only after the browser build is measured.
+4. **Phones** (owner decision: only after the browser build has been measured on real hardware): touch
+   controls (joystick and buttons), a mobile UI scale, landscape lock and a performance setting; native
+   Android / iOS later. First get playtesters' numbers from the Web build (load time, frame rate).
 5. **Content candidates** (owner to choose): achievement rewards / the Bone Golem (and the
    campaign epilogue that *Dawn Extinguished* should unlock), more ultimates, a victory screen after
    the Reckoning.

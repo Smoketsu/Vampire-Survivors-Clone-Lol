@@ -251,6 +251,7 @@ func _build_audio(vb: VBoxContainer, focus: Array[Control]) -> void:
 
 ## Video: the toggles and the zoom level.
 func _build_video(vb: VBoxContainer, focus: Array[Control]) -> void:
+	Settings.sync_fullscreen()  # Web: the browser's real fullscreen state.
 	var setters: Dictionary = {
 		"fullscreen": [Settings.fullscreen, Settings.set_fullscreen],
 		"screen_shake": [Settings.screen_shake, Settings.set_screen_shake],

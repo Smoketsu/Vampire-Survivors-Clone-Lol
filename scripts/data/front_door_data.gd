@@ -21,6 +21,9 @@ const MENU_ITEMS: Array = [
 	["credits", "Credits"],  # TUNING (not in GDD)
 	["quit", "Quit"],  # TUNING (not in GDD)
 ]
+## MENU_ITEMS ids left out of the title screen on the Web build (a browser
+## tab cannot quit; GDD §15.0 "Web build").
+const WEB_HIDDEN_ITEMS: Array = ["quit"]  # TUNING (not in GDD)
 ## Tagline under the logo (BODY tier).
 const MENU_TAGLINE: String = "Begin as the hunted. Raise the fallen. Become the army."  # TUNING (not in GDD)
 ## Distance (px) from the screen top to the logo's top.

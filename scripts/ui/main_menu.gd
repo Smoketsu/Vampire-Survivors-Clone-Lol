@@ -20,7 +20,9 @@
 ## closing the last overlay restores both and the focus.
 ##
 ## Codex and Credits open CodexScreen / CreditsScreen over the menu; Quit asks
-## first through the shared ConfirmDialog (texts in ConfirmData.QUIT).
+## first through the shared ConfirmDialog (texts in ConfirmData.QUIT). The Web
+## build has no Quit (FrontDoorData.WEB_HIDDEN_ITEMS, see menu_items()): the
+## column and its wrap-around focus links are built from the shown items only.
 ## Play opens the stage select (StageSelect, GDD §10.2), which opens the
 ## pre-run setup (PreRunSetup); the finished RunConfig reaches Main through
 ## `stage_chosen`.
@@ -86,7 +88,7 @@ func _ready() -> void:
 	list.add_theme_constant_override("separation", FrontDoorData.MENU_BUTTON_GAP)
 	list.custom_minimum_size = Vector2(FrontDoorData.MENU_COLUMN_WIDTH, 0)
 	list.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	for item: Array in FrontDoorData.MENU_ITEMS:
+	for item: Array in menu_items():
 		list.add_child(_menu_button(String(item[0]), String(item[1])))
 	_play = _buttons["play"]
 	blocks.append(list)
@@ -141,6 +143,18 @@ func _menu_button(id: String, caption: String) -> Button:
 	return b
 
 
+## The [id, caption] items of the button column: FrontDoorData.MENU_ITEMS,
+## minus WEB_HIDDEN_ITEMS on the Web build (no Quit in a browser tab).
+static func menu_items() -> Array:
+	if not OS.has_feature("web"):
+		return FrontDoorData.MENU_ITEMS
+	var items: Array = []  # The shown items, in menu order.
+	for item: Array in FrontDoorData.MENU_ITEMS:
+		if not FrontDoorData.WEB_HIDDEN_ITEMS.has(String(item[0])):
+			items.append(item)
+	return items
+
+
 ## A menu button got focus: mark it.
 func _on_button_focus(b: Button) -> void:
 	_last_focus = b
@@ -150,7 +164,7 @@ func _on_button_focus(b: Button) -> void:
 ## Up / down wrap around the column; left / right stay put.
 func _wire_focus() -> void:
 	var ids: Array = []  # Button ids, top to bottom.
-	for item: Array in FrontDoorData.MENU_ITEMS:
+	for item: Array in menu_items():
 		ids.append(String(item[0]))
 	for i in ids.size():
 		var b: Button = _buttons[ids[i]]

@@ -1,0 +1,245 @@
+## RunLoopSynth — renders the dark, minor-key ambient in-run loop (GDD §12
+## "ominous choirs, low percussion and ambient drones"; numbers in SoundData)
+## into one seamless looping 16-bit mono AudioStreamWAV at Synth.MUSIC_RATE:
+## a beating D drone, a slow wind bed, a four-chord "choir" pad crossfading
+## around the loop (SoundData.MUSIC_CHORDS) and a soft heartbeat thump. Every
+## oscillator and LFO completes a whole number of cycles per loop, so the loop
+## point is seamless.
+##
+## The recipe is a fixed list of small jobs (WEB_SYNTH_CHUNK_SAMPLES of the
+## drone pass, of one chord's window, of the peak search or of the encoding;
+## the heartbeat; the finish), run in order by step(). Every bit of state a
+## pass carries from one sample to the next (oscillator phases, filter states,
+## the RNG) lives in members, so the loop is the same however the jobs are
+## spread: Synth.render_music() runs them all at once (on a worker thread on
+## desktop), the Web build's StartupSynth a few per frame (GDD §15.0 "Web
+## build"). Only its own buffers and its own seeded RNG are touched (never
+## the gameplay RNG).
+class_name RunLoopSynth
+extends RefCounted
+
+## Low-pass cutoff (Hz) of the one-pole filter on the drone's saws.
+const DRONE_LP_HZ: float = 60.0  # TUNING (not in GDD)
+## Low-pass cutoff (Hz) of the one-pole filter on the wind's noise.
+const WIND_LP_HZ: float = 140.0  # TUNING (not in GDD)
+## Wind swells per loop (its amplitude LFO).
+const WIND_SWELLS: float = 2.0  # TUNING (not in GDD)
+## Pad vibrato rate (Hz, snapped to whole cycles per loop).
+const PAD_VIBRATO_HZ: float = 5.0  # TUNING (not in GDD)
+
+## The finished loop (null until done()).
+var stream: AudioStreamWAV = null
+## Microseconds of compute spent so far (sum over every step() call).
+var compute_usec: int = 0
+## Number of jobs in the fixed list (constant after _init).
+var job_count: int = 0
+
+## Fixed job list (Callables), run in order.
+var _jobs: Array[Callable] = []
+## Index of the next job to run (== _jobs.size() once done).
+var _next: int = 0
+## Mix buffer, one float per sample of the loop.
+var _buf: PackedFloat32Array = PackedFloat32Array()
+## Samples in the loop (MUSIC_LOOP_SECONDS x MUSIC_RATE).
+var _n: int = 0
+## Loop length in seconds (SoundData.MUSIC_LOOP_SECONDS).
+var _loop_s: float = 0.0
+## 1 / MUSIC_RATE (seconds per sample).
+var _inv_rate: float = 0.0
+## The loop's own seeded RNG (wind noise; never the gameplay RNG).
+var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+## Drone saw 1 frequency (Hz, snapped to the loop).
+var _f1: float = 0.0
+## Drone saw 2 frequency (Hz, detuned by 0.6%, snapped).
+var _f2: float = 0.0
+## Sub-octave sine frequency (Hz, snapped).
+var _f_sub: float = 0.0
+## Wind swell LFO rate (radians per second).
+var _lfo: float = 0.0
+## Drone low-pass coefficient (~2*pi*fc/rate).
+var _drone_a: float = 0.0
+## Wind low-pass coefficient (~2*pi*fc/rate).
+var _wind_a: float = 0.0
+## Samples the drone / wind filters run before sample 0 (their state at 0
+## then equals their state at the loop end).
+var _warm: int = 0
+## Phase (cycles, 0..1) of drone saw 1.
+var _p1: float = 0.0
+## Phase (cycles, 0..1) of drone saw 2.
+var _p2: float = 0.0
+## Phase (cycles, 0..1) of the sub sine.
+var _p3: float = 0.0
+## Drone low-pass filter state.
+var _y_drone: float = 0.0
+## Wind low-pass filter state.
+var _y_wind: float = 0.0
+## Samples per chord segment (loop / chord count).
+var _seg: int = 0
+## Crossfade overlap (samples) on each side of a chord segment.
+var _overlap: int = 0
+## Samples of one chord's window (segment plus both overlaps).
+var _win: int = 0
+## Pad vibrato phase step per sample (radians).
+var _vib: float = 0.0
+## Current chord's per-voice phase increments (cycles per sample; float32
+## storage, as the recipe has always used).
+var _freqs: PackedFloat32Array = PackedFloat32Array()
+## Current chord's per-voice phases (cycles, 0..1; float32 storage).
+var _phases: PackedFloat32Array = PackedFloat32Array()
+## Current chord's vibrato phase (radians).
+var _vib_phase: float = 0.0
+## Running peak of the finished mix (Synth.peak_of()).
+var _peak: float = Synth.PEAK_FLOOR
+## 16-bit PCM of the loop (2 bytes per sample).
+var _bytes: PackedByteArray = PackedByteArray()
+
+
+## Sets the loop up (cheap: no audio is rendered here) and schedules every
+## job. `rng_seed` seeds the wind noise.
+func _init(rng_seed: int) -> void:
+	var rate := Synth.MUSIC_RATE  # Samples per second.
+	_loop_s = SoundData.MUSIC_LOOP_SECONDS
+	_n = int(_loop_s * rate)
+	_buf.resize(_n)
+	_rng.seed = rng_seed
+	_inv_rate = 1.0 / float(rate)
+	_f1 = Synth.snap(SoundData.MUSIC_ROOT_HZ, _loop_s)
+	_f2 = Synth.snap(SoundData.MUSIC_ROOT_HZ * 1.006, _loop_s)
+	_f_sub = Synth.snap(SoundData.MUSIC_ROOT_HZ * 0.5, _loop_s)
+	_lfo = TAU * WIND_SWELLS / _loop_s
+	_drone_a = TAU * DRONE_LP_HZ * _inv_rate
+	_wind_a = TAU * WIND_LP_HZ * _inv_rate
+	# The filters start `warm` samples before 0 (with matching phases, since
+	# every frequency loops) so their state at sample 0 equals the state at
+	# the loop end: no click at the loop point.
+	_warm = rate / 10
+	_p1 = fposmod(-_f1 * _warm * _inv_rate, 1.0)
+	_p2 = fposmod(-_f2 * _warm * _inv_rate, 1.0)
+	_p3 = fposmod(-_f_sub * _warm * _inv_rate, 1.0)
+	var chunk := maxi(1, SoundData.WEB_SYNTH_CHUNK_SAMPLES)  # Samples per pass job.
+	_schedule(_job_drone, -_warm, _n, chunk)
+	var chords: Array = SoundData.MUSIC_CHORDS  # One chord per loop segment.
+	_seg = _n / chords.size()
+	_overlap = _seg / 4
+	_win = _seg + 2 * _overlap
+	_vib = TAU * Synth.snap(PAD_VIBRATO_HZ, _loop_s) * _inv_rate
+	# A chord job does about 3 voices' work per sample: a third of a chunk.
+	for c in chords.size():
+		_schedule(_job_chord.bind(c), 0, _win, maxi(1, chunk / 3))
+	_jobs.append(_job_heartbeat)
+	_schedule(_job_peak, 0, _n, chunk)
+	_jobs.append(_job_alloc)
+	_schedule(_job_encode, 0, _n, chunk)
+	_jobs.append(_job_finish)
+	job_count = _jobs.size()
+
+
+## True once the stream exists.
+func done() -> bool:
+	return _next >= _jobs.size()
+
+
+## Runs jobs until `budget_usec` microseconds have passed (at least one job;
+## a budget < 0 runs everything). Returns done().
+func step(budget_usec: int) -> bool:
+	var t0 := Time.get_ticks_usec()
+	while _next < _jobs.size():
+		_jobs[_next].call()
+		_next += 1
+		if budget_usec >= 0 and Time.get_ticks_usec() - t0 >= budget_usec:
+			break
+	compute_usec += Time.get_ticks_usec() - t0
+	return done()
+
+
+## Renders the whole loop in one go and returns it.
+func render_all() -> AudioStreamWAV:
+	step(-1)
+	return stream
+
+
+## Appends `job` once per `chunk` samples of [from, to), as job(a, b).
+func _schedule(job: Callable, from: int, to: int, chunk: int) -> void:
+	var a := from
+	while a < to:
+		var b := mini(to, a + chunk)
+		_jobs.append(job.bind(a, b))
+		a = b
+
+
+## Drone (two slightly detuned low-passed saws + sub sine) and wind, samples
+## [a, b) of the pass that starts at -_warm.
+func _job_drone(a: int, b: int) -> void:
+	for i in range(a, b):
+		var t := float(i) * _inv_rate
+		var saw := (2.0 * _p1 - 1.0) + (2.0 * _p2 - 1.0)
+		_y_drone += _drone_a * (saw - _y_drone)
+		var wind_amp := 0.05 + 0.04 * sin(_lfo * t)
+		_y_wind += _wind_a * (_rng.randf() * 2.0 - 1.0 - _y_wind)
+		if i >= 0:
+			_buf[i] = _y_drone * 0.32 + sin(TAU * _p3) * 0.22 + _y_wind * wind_amp * 3.0
+		_p1 += _f1 * _inv_rate
+		_p1 -= floorf(_p1)
+		_p2 += _f2 * _inv_rate
+		_p2 -= floorf(_p2)
+		_p3 += _f_sub * _inv_rate
+		_p3 -= floorf(_p3)
+
+
+## Choir pad, chord `c`, samples [a, b) of its window: the chord fades in /
+## out over its segment plus the overlaps, wrapping around the loop end so
+## the last chord crossfades into the first.
+func _job_chord(a: int, b: int, c: int) -> void:
+	if a == 0:
+		_freqs = PackedFloat32Array()
+		_phases = PackedFloat32Array()
+		var voices: Array = SoundData.MUSIC_CHORDS[c]  # This chord's voice frequencies (Hz).
+		for hz: float in voices:
+			_freqs.append(Synth.snap(hz, _loop_s) * _inv_rate)
+			_phases.append(0.0)
+		_vib_phase = 0.0
+	var first := c * _seg - _overlap  # Loop sample of the window's start.
+	for j in range(a, b):
+		var w := sin(PI * float(j) / float(_win))
+		w *= w
+		var s := 0.0
+		var wob := 1.0 + 0.004 * sin(_vib_phase)
+		for v in _freqs.size():
+			var ph := _phases[v]
+			s += 1.0 - 4.0 * absf(ph - 0.5)
+			ph += _freqs[v] * wob * (1.0 + 0.0015 * float(v))
+			_phases[v] = ph - floorf(ph)
+		_vib_phase += _vib
+		var idx := posmod(first + j, _n)
+		_buf[idx] += s * w * 0.11
+
+
+## Heartbeat: "lub-dub" low thumps every MUSIC_BEAT_SECONDS.
+func _job_heartbeat() -> void:
+	var beats := int(_loop_s / SoundData.MUSIC_BEAT_SECONDS)
+	for b in beats:
+		for k in 2:
+			var at := b * SoundData.MUSIC_BEAT_SECONDS + 0.28 * float(k)
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": 58.0, "f1": 36.0, "start": at, "dur": 0.35,
+				"amp": 0.5 if k == 0 else 0.32, "attack": 0.004, "decay": 0.09}, _rng)
+
+
+## Peak search over samples [a, b) of the finished mix.
+func _job_peak(a: int, b: int) -> void:
+	_peak = Synth.peak_of(_buf, a, b, _peak)
+
+
+## Sizes the PCM buffer (2 bytes per sample).
+func _job_alloc() -> void:
+	_bytes.resize(_n * 2)
+
+
+## Normalises and encodes samples [a, b) to 16-bit PCM.
+func _job_encode(a: int, b: int) -> void:
+	Synth.encode_range(_bytes, _buf, Synth.peak_gain(_peak), a, b)
+
+
+## Wraps the PCM in the looping stream and frees the mix buffer.
+func _job_finish() -> void:
+	stream = Synth.pcm_stream(_bytes, Synth.MUSIC_RATE, true)
+	_buf = PackedFloat32Array()
