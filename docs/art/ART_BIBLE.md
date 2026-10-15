@@ -637,6 +637,11 @@ Crimson, ivory and warm steel; gold for elites, the Sanctum kinds and the Reckon
 | `watchtower.png` | Checkpoint watchtower: a wooden tower with a crimson pennant | 96 | done |
 | `ward_crystal.png` | Sanctum ward crystal: a tall faceted ivory-and-gold crystal on a round pale-stone plinth, gold glow | 64 | done |
 | `sacred_altar.png` | Sanctum sacred altar: a wide pale-stone altar block draped in gold cloth with a crimson stripe, two lit candles, a gold sun disc standing behind it | 72 | done |
+| `empowered_grave.png` | The Graveyard's empowered grave: an open earthen grave pit pouring green soul-light, a small cracked tombstone at its head, bones and a skull at the lip (stage data `sprite`; the claim ring, glow and reward icon stay drawn in code) | 40 | done |
+| `battlefield_dead.png` | The Crimson March's empowered grave: a heap of fallen Covenant soldiers (crimson-and-ivory shields, a helmet, a broken spear, skulls) seeping green soul-light. Converted through `pixelate_source.py` and `--no-cleanup` (the direct conversion turned the shields into crimson blotches) | 36 | done |
+| `sanctum_crypt.png` | The Sanctum's empowered grave: white marble flagstones with gold inlay cracking open over a dark crypt slab, green soul-light through the cracks (the marble's whites take the gold ramp's holy white: `art_check` warns about glow, kept for the marble) | 36 | done |
+| `crypt_door.png` | The Crypt Defender's crypt: a half-sunk stone crypt facade, an arched door ajar with green light in the gap, three green runes and a skull keystone, moss | 56 | done |
+| `consecration_grave.png` | A grave the Chaplains try to consecrate: a plain earthen mound and a weathered tombstone, no glow (the gold target ring and channel arc stay drawn in code) | 30 | done |
 
 (`ward_crystal` and `sacred_altar` have their `SpriteData.HEIGHTS` entries now; the supply cart is 60 tall so the wide side-on cart keeps its old ~84 px width.)
 on screen.)
