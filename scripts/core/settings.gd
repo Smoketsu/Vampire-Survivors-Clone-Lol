@@ -7,6 +7,12 @@
 ##   * Reduce motion on/off (read by UiMotion.enabled(): every UI motion,
 ##     panel open / close, entrances, lift, squash, count-ups and the fade
 ##     through black, becomes instant).
+##   * Effects quality, Full / Reduced (EffectsData; GDD §15.0 "Mobile
+##     browser support"): Reduced draws fewer particles, damage numbers and
+##     cosmetic effects and halves the screen shake, purely visually (read
+##     by FxLayer, EffectManager and Juice through reduced_effects()). With
+##     no saved value a phone or tablet starts on Reduced, a desktop on
+##     Full; the autotest always plays on Full.
 ##   * Fullscreen on/off (ignored on the headless display server). On the
 ##     Web build it is the browser's fullscreen (GDD §15.0 "Web build"): it is
 ##     never restored at startup (a browser only allows it right after a click
@@ -48,6 +54,9 @@ var screen_shake: bool = true
 var damage_numbers: bool = true
 ## True = UI motion is instant (accessibility "Reduce motion"; UiMotion).
 var reduce_motion: bool = false
+## Effects quality: an EffectsData.ORDER value ("full" / "reduced"); set in
+## _ready() from the device until a saved value overrides it.
+var effects: String = EffectsData.DEFAULT_DESKTOP
 ## Fullscreen window.
 var fullscreen: bool = false
 ## Camera zoom level id (ViewData.ZOOM_LEVELS key).
@@ -65,6 +74,7 @@ func _ready() -> void:
 		var kc := _primary_key(action)
 		default_bindings[action] = kc
 		key_bindings[action] = kc
+	effects = _default_effects()
 	load_settings()
 
 
@@ -78,6 +88,8 @@ func load_settings() -> void:
 		screen_shake = bool(cfg.get_value("feel", "screen_shake", true))
 		damage_numbers = bool(cfg.get_value("feel", "damage_numbers", true))
 		reduce_motion = bool(cfg.get_value("feel", "reduce_motion", false))
+		var fx := String(cfg.get_value("video", "effects", _default_effects()))  # Saved effects quality.
+		effects = fx if EffectsData.ORDER.has(fx) else _default_effects()
 		fullscreen = bool(cfg.get_value("video", "fullscreen", false))
 		var z := String(cfg.get_value("video", "zoom", ViewData.DEFAULT_ZOOM))  # Saved zoom id.
 		zoom_id = z if ViewData.ZOOM_LEVELS.has(z) else ViewData.DEFAULT_ZOOM  # The dropped "far" (or junk) loads as Normal.
@@ -100,6 +112,7 @@ func save_settings() -> Error:
 	cfg.set_value("feel", "reduce_motion", reduce_motion)
 	cfg.set_value("video", "fullscreen", fullscreen)
 	cfg.set_value("video", "zoom", zoom_id)
+	cfg.set_value("video", "effects", effects)
 	for action: String in REBINDABLE:
 		cfg.set_value("input", action, key_bindings[action])
 	return cfg.save(PATH)
@@ -155,6 +168,24 @@ func set_screen_shake(on: bool) -> void:
 func set_damage_numbers(on: bool) -> void:
 	damage_numbers = on
 	changed.emit()
+
+
+## Sets the effects quality (an EffectsData.ORDER value).
+func set_effects(value: String) -> void:
+	if EffectsData.ORDER.has(value):
+		effects = value
+		changed.emit()
+
+
+## True while effects are Reduced (never in the autotest, whose runs must not
+## depend on a player's settings; purely visual either way).
+func reduced_effects() -> bool:
+	return effects == "reduced" and not GameState.autotest
+
+
+## The effects quality used when none is saved: Reduced on a phone or tablet.
+func _default_effects() -> String:
+	return EffectsData.DEFAULT_MOBILE if TouchSupport.is_mobile() else EffectsData.DEFAULT_DESKTOP
 
 
 ## Enables / disables reduced UI motion (UiMotion becomes instant).

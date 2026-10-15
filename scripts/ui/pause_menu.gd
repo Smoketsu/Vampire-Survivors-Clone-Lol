@@ -52,6 +52,7 @@ func _ready() -> void:
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
+	TouchSupport.fit_to_screen(center)  # A short phone layout: shrink to fit (no-op at 720 px).
 	var outer := VBoxContainer.new()  # The two columns over the hint strip.
 	outer.add_theme_constant_override("separation", 14)
 	center.add_child(outer)

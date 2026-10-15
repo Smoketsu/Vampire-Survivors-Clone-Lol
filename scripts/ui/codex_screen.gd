@@ -20,7 +20,8 @@
 ## pad B or Back close the screen and focus returns to the opener. Every
 ## number lives in CodexData; text sizes are the UiTheme type tiers. Opens and
 ## closes with UiMotion; the tiles enter with a short stagger. Under the
-## autotest nothing opens it.
+## autotest nothing opens it. On a touchscreen a tap shows a tile's details
+## and a finger drags the lists (TouchSupport.pass_drags()).
 class_name CodexScreen
 extends Control
 
@@ -74,6 +75,7 @@ func _ready() -> void:
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(center)
+	TouchSupport.fit_to_screen(center)  # A short phone layout: shrink to fit (no-op at 720 px).
 	var panel := UiTheme.ornate_panel("violet")
 	panel.custom_minimum_size = CodexData.PANEL_SIZE
 	center.add_child(panel)
@@ -230,6 +232,7 @@ func _feats_page() -> Control:
 	_first[id] = rows[0]
 	_items[id] = rows
 	_counts[id] = CodexData.EARNED_COUNT % [earned, rows.size()]
+	TouchSupport.pass_drags(scroll)  # A finger can drag the list from any card.
 	return scroll
 
 
@@ -282,6 +285,7 @@ func _codex_page(id: String, sections: Array) -> Control:
 	var c := CodexEntries.counts(sections)
 	_counts[id] = CodexData.RECORDED_COUNT % [c.x, c.y]
 	_show_detail(id, (sections[0]["entries"] as Array)[0])
+	TouchSupport.pass_drags(scroll)  # A finger can drag the grid from any tile.
 	return page
 
 

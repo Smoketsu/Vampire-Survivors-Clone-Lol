@@ -158,6 +158,7 @@ func _ready() -> void:
 	var center := CenterContainer.new()  # Centres the panel on screen.
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
+	TouchSupport.fit_to_screen(center)  # A short phone layout: shrink to fit (no-op at 720 px).
 	var panel := UiTheme.ornate_panel("gold")  # Gold hero frame (gold = chest).
 	center.add_child(panel)
 	var vb := VBoxContainer.new()  # Panel contents, top to bottom.

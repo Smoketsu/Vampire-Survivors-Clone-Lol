@@ -14,7 +14,9 @@
 ##                   their combined effect; game.difficulty), shown only
 ##                   when something differs from the standard run (no
 ##                   permanent developer hint line: the pause menu shows
-##                   the controls as InputHints chips).
+##                   the controls as InputHints chips). It moves left while
+##                   the touch controls' pause button holds the corner
+##                   (set_top_right_inset(); phones and tablets).
 ##   Left, under HP: timed power-up buffs (Hyper, Stasis, Dark Frenzy) with
 ##                   their remaining time (game.powerups).
 ##   Bottom center : active ability slots (6) and passive slots (6) with levels,
@@ -100,6 +102,12 @@ var _synergy_rows: Dictionary = {}
 var _mods_label: Label
 ## Timed buff id -> {"row": HBoxContainer, "label": Label, "bar": HudBar}.
 var _buff_rows: Dictionary = {}
+## Top-right block (kills, modifiers); moved left while the touch controls'
+## pause button sits in that corner (set_top_right_inset()).
+var _top_right: BoxContainer
+## The top-right block's left / right offsets from the right edge (layout
+## px, before any inset).
+var _top_right_offsets := Vector2(-300.0, -16.0)
 
 
 func _ready() -> void:
@@ -202,7 +210,8 @@ func _build() -> void:
 	tc.add_child(_mini_box)
 
 	# Top right: kills, modifiers (only when not the standard run).
-	var top_right := _box(true, 1.0, 0.0, -300, 24, -16, 114, BoxContainer.ALIGNMENT_BEGIN)
+	var top_right := _box(true, 1.0, 0.0, _top_right_offsets.x, 24, _top_right_offsets.y, 114, BoxContainer.ALIGNMENT_BEGIN)
+	_top_right = top_right
 	_kills_label = UiTheme.tier_label("Kills: 0", UiTheme.Tier.NAME)
 	_kills_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	top_right.add_child(_kills_label)
@@ -411,3 +420,13 @@ func _refresh_modifiers() -> void:
 ## panel pauses the game is seen after resuming (HudBanners).
 func announce(title: String, item_name: String, desc: String, color: Color) -> void:
 	_banners.push_announce(title, item_name, desc, color)
+
+
+## Moves the top-right block (kills, modifiers) `px` layout px to the left,
+## clear of the touch controls' pause button (TouchControls; 0 = its usual
+## place). Purely layout.
+func set_top_right_inset(px: float) -> void:
+	if _top_right == null:
+		return
+	_top_right.offset_left = _top_right_offsets.x - px
+	_top_right.offset_right = _top_right_offsets.y - px

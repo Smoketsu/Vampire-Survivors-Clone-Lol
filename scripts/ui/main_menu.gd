@@ -78,6 +78,7 @@ func _ready() -> void:
 	col.add_theme_constant_override("separation", FrontDoorData.MENU_BLOCK_GAP)
 	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_content.add_child(col)
+	TouchSupport.fit_to_screen(_content, col, true)  # A short phone layout: the column shrinks to fit (no-op at 720 px).
 	var blocks: Array = []  # Staggered in on open, top to bottom.
 	blocks.append(_title())
 	var tagline := UiTheme.tier_label(FrontDoorData.MENU_TAGLINE, UiTheme.Tier.BODY, UiTheme.TEXT_DIM)

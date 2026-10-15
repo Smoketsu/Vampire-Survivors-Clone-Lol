@@ -6,6 +6,8 @@
 ## buffer is full the oldest entry is overwritten.
 ## Damage numbers are batched per enemy: hits on the same enemy within
 ## MERGE_WINDOW add up into one number instead of spawning a new one.
+## Reduced effects (Settings, EffectsData) spawn fewer particles and draw only
+## the big damage numbers; purely visual (this layer has its own RNG).
 ## Owned by the Juice autoload; it sits on the default canvas so the run's
 ## Camera2D transforms it like any world node. It pauses with the tree (the
 ## level-up panel freezes it) and slows with Engine.time_scale (hit-stop).
@@ -98,6 +100,7 @@ func _ready() -> void:
 ## Spawns `count` particles at `pos` flying outward at up to `speed` px/s.
 ## Alternate particles use `alt` (e.g. bone shards with a crimson pop).
 func burst(pos: Vector2, color: Color, alt: Color, count: int, speed: float, life: float, size: float) -> void:
+	count = _quality_count(count)
 	for i in count:
 		var s := _p_next
 		_p_next = (_p_next + 1) % MAX_PARTICLES
@@ -113,6 +116,7 @@ func burst(pos: Vector2, color: Color, alt: Color, count: int, speed: float, lif
 
 ## XP sparkle: a few small particles drifting upward around `pos`.
 func sparkle(pos: Vector2, color: Color, count: int) -> void:
+	count = _quality_count(count)
 	for i in count:
 		var s := _p_next
 		_p_next = (_p_next + 1) % MAX_PARTICLES
@@ -130,6 +134,7 @@ func sparkle(pos: Vector2, color: Color, count: int) -> void:
 ## motes spread across a body of radius `r` px at its feet `pos`, drifting
 ## up and sideways (MotionData.DUST_*), alternating `color` and `alt`.
 func dust(pos: Vector2, color: Color, alt: Color, count: int, r: float) -> void:
+	count = _quality_count(count)
 	for i in count:
 		var s := _p_next
 		_p_next = (_p_next + 1) % MAX_PARTICLES
@@ -142,6 +147,14 @@ func dust(pos: Vector2, color: Color, alt: Color, count: int, r: float) -> void:
 		_p_size[s] = MotionData.DUST_SIZE
 		_p_col[s] = color if i % 2 == 0 else alt
 	_p_alive = mini(MAX_PARTICLES, _p_alive + count)
+
+
+## Particles to spawn for a request of `count`: all of them on Full effects,
+## EffectsData.REDUCED_PARTICLES of them (at least one) on Reduced.
+func _quality_count(count: int) -> int:
+	if count <= 0 or not Settings.reduced_effects():
+		return count
+	return maxi(1, int(ceilf(float(count) * EffectsData.REDUCED_PARTICLES)))
 
 
 ## Shows (or merges) a damage number for the enemy with instance id `key`.
@@ -216,9 +229,12 @@ func _draw() -> void:
 			continue
 		var sz := _p_size[i]
 		draw_rect(Rect2(_p_pos[i] - Vector2(sz, sz) * 0.5, Vector2(sz, sz)), Color(_p_col[i], l / _p_max[i]))
+	var only_big := Settings.reduced_effects()  # Reduced effects: the big numbers only.
 	for i in MAX_NUMBERS:
 		var a := _n_age[i]
 		if a >= NUMBER_LIFE:
+			continue
+		if only_big and _n_big[i] == 0 and _n_val[i] < EffectsData.REDUCED_NUMBER_MIN:
 			continue
 		var k := a / NUMBER_LIFE
 		var alpha := 1.0 if k < 0.6 else (1.0 - k) / 0.4

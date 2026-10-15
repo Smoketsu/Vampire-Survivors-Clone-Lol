@@ -19,7 +19,8 @@
 ## covers the world (polled from game.powerups); pickups flash it brighter.
 ## Screen shake: Game.shake(px) adds trauma; the camera offset is
 ## MAX_SHAKE_PX * trauma^2 along smooth pseudo-noise and trauma decays
-## linearly in real time. Off when Settings.screen_shake is false.
+## linearly in real time. Off when Settings.screen_shake is false, scaled by
+## EffectsData.REDUCED_SHAKE on Reduced effects.
 ## Hit-stop: Engine.time_scale drops to HITSTOP_SCALE for a few real-time
 ## milliseconds on boss impacts and big kills, then is restored. It is never
 ## used in autotest mode (the autotest owns Engine.time_scale) or while the
@@ -176,6 +177,8 @@ func _process(_delta: float) -> void:
 	if _trauma > 0.0 and Settings.screen_shake:
 		_shake_t += real_dt
 		var amp := MAX_SHAKE_PX * _trauma * _trauma
+		if Settings.reduced_effects():
+			amp *= EffectsData.REDUCED_SHAKE  # Reduced effects: a calmer camera.
 		_offset = Vector2(sin(_shake_t * SHAKE_FREQ.x + _shake_phase.x) * 0.6 + sin(_shake_t * SHAKE_FREQ.y) * 0.4,
 				sin(_shake_t * SHAKE_FREQ.y + _shake_phase.y) * 0.6 + sin(_shake_t * SHAKE_FREQ.x) * 0.4) * amp
 	else:

@@ -5,8 +5,9 @@
 ## Settings autoload; the file is saved when the menu closes (Back, Esc /
 ## controller B, or the pause action).
 ##   Audio   : Master / Music / Effects volume (the kit slider).
-##   Video   : Fullscreen, Zoom (Normal / Close), Screen shake, Damage
-##             numbers, Reduce motion (UI motion instant).
+##   Video   : Fullscreen, Zoom (Normal / Close), Effects (Full / Reduced:
+##             a lighter visual load for phones; EffectsData), Screen shake,
+##             Damage numbers, Reduce motion (UI motion instant).
 ##   Controls: the twelve rebindable actions in three groups (Move, Actions,
 ##             Stances): each row shows its keyboard key as a key chip on a
 ##             button (press it, then any key; controller B or a mouse click
@@ -42,6 +43,10 @@ var listening_action: String = ""
 var zoom_button: Button
 ## Label showing the zoom level on the zoom button.
 var _zoom_value: Label
+## Effects quality button (cycles EffectsData.ORDER: Full / Reduced).
+var effects_button: Button
+## Label showing the effects quality on its button.
+var _effects_value: Label
 ## Reset keys button (Controls tab).
 var reset_button: Button
 ## Back button.
@@ -135,6 +140,7 @@ func _ready() -> void:
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
+	TouchSupport.fit_to_screen(center)  # A short phone layout: shrink to fit (no-op at 720 px).
 	var root := VBoxContainer.new()  # Title, tabs, panel, Back, hints.
 	root.add_theme_constant_override("separation", 12)
 	center.add_child(root)
@@ -277,6 +283,7 @@ func _build_video(vb: VBoxContainer, focus: Array[Control]) -> void:
 		focus.append(c)
 		if key == "fullscreen":
 			_add_zoom(vb, focus)
+			_add_effects(vb, focus)
 
 
 ## The zoom row: a button cycling ViewData.ZOOM_ORDER, its value on the right.
@@ -296,6 +303,26 @@ func _add_zoom(vb: VBoxContainer, focus: Array[Control]) -> void:
 	vb.add_child(zoom_button)
 	focus.append(zoom_button)
 	_refresh_zoom()
+
+
+## The effects row: a button cycling EffectsData.ORDER (Full / Reduced),
+## its value on the right (like the zoom row).
+func _add_effects(vb: VBoxContainer, focus: Array[Control]) -> void:
+	effects_button = Button.new()
+	effects_button.text = SettingsUiData.EFFECTS
+	effects_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	effects_button.custom_minimum_size = Vector2(SettingsUiData.ROW_WIDTH, SettingsUiData.ROW_HEIGHT)
+	effects_button.pressed.connect(_on_effects_pressed)
+	_effects_value = UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
+	_effects_value.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
+	_effects_value.offset_left = -160.0
+	_effects_value.offset_right = -12.0
+	_effects_value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_effects_value.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	effects_button.add_child(_effects_value)
+	vb.add_child(effects_button)
+	focus.append(effects_button)
+	_refresh_effects()
 
 
 ## Controls: three binding groups side by side, then Reset keys.
@@ -449,6 +476,18 @@ func _on_zoom_pressed() -> void:
 ## Shows the current zoom level on its button.
 func _refresh_zoom() -> void:
 	_zoom_value.text = String(ViewData.ZOOM_LEVELS[Settings.zoom_id]["label"])
+
+
+## Cycles the effects quality (Full <-> Reduced, EffectsData.ORDER).
+func _on_effects_pressed() -> void:
+	var i := EffectsData.ORDER.find(Settings.effects)  # Current position in the cycle.
+	Settings.set_effects(EffectsData.ORDER[(i + 1) % EffectsData.ORDER.size()])
+	_refresh_effects()
+
+
+## Shows the current effects quality on its button.
+func _refresh_effects() -> void:
+	_effects_value.text = String(EffectsData.LABELS.get(Settings.effects, ""))
 
 
 func _on_volume_changed(value: float, bus: String) -> void:

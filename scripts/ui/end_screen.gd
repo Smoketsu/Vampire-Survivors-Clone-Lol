@@ -135,6 +135,7 @@ func _ready() -> void:
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
+	TouchSupport.fit_to_screen(center)  # A short phone layout: shrink to fit (no-op at 720 px).
 	_panel = UiTheme.ornate_panel("gold")
 	center.add_child(_panel)
 	var vb := VBoxContainer.new()
