@@ -21,7 +21,7 @@ Everything for the project page at itch.io, ready to paste. itch.io has no API f
 | Release status | In development |
 | Pricing | No payments (or "Name your own price" with $0 minimum, if you want tips) |
 | Uploads | the `html5` upload from CI: tick **This file will be played in the browser** |
-| Embed options | Viewport **1280 × 720**, **Fullscreen button** on, **Automatically start on page load** off (the click unlocks audio), **Mobile friendly** on with orientation **Landscape** once the mobile update is live |
+| Embed options | Viewport **1280 × 720**, **Fullscreen button** on, **Automatically start on page load** off (the click unlocks audio), **Mobile friendly** on with orientation **Landscape** (touch controls, phone layout; GDD §15.0 "Mobile browser support") |
 | Genre | Action |
 | Tags | `survivors-like`, `roguelite`, `pixel-art`, `horde`, `necromancer`, `undead`, `top-down`, `dark-fantasy`, `singleplayer`, `controller-support` |
 | App store links | none |
@@ -74,7 +74,7 @@ Everything for the project page at itch.io, ready to paste. itch.io has no API f
 >   risk and more reward, **Hyper mode** and unlockable skins.
 > - A **Codex** that fills in as you meet spells, summons and Covenant soldiers.
 >
-> **Controls:** keyboard and mouse, or a controller. Move with WASD / the left stick; Shift / RB
+> **Controls:** keyboard and mouse, a controller, or touch on phones and tablets (landscape). Move with WASD / the left stick; Shift / RB
 > to dash, Space / LB for the ultimate, 1-4 / right-stick flicks for stances, Esc / Start to
 > pause. Every key can be rebound in Settings.
 >
