@@ -23,6 +23,9 @@
 ## (phase WAVES, still CASTING), wave i reaching dirge_radius x (1 + i x
 ## wave_growth), and every wave silences what it reaches (weaken_enemy
 ## `silence`: its heals fail for the Dirge duration).
+## Synergies: each Dirge (its first wave) calls SynergyManager.on_dirge()
+## (Baying of the Damned: the hounds' frenzy); Requiem's mage bonus on
+## weakened foes and its stretch live in SynergyManager.hit_mult().
 ## Stats: banshee_dirges, banshee_dirge_hits (enemies weakened per wave),
 ## keening_waves (extra waves), dirge_debuffs / dirge_debuff_seconds /
 ## keening_silenced / keening_heals_silenced (CombatResolver).
@@ -81,6 +84,7 @@ func step_special(u: SummonedUnit, _delta: float) -> bool:
 			if phase_time >= float(u.special["dirge_windup"]):
 				_wail(u, 0)
 				u.game.stat_add("banshee_dirges", 1.0)
+				u.director.synergies.on_dirge()  # Baying of the Damned (no-op without it).
 				if waves > 1:
 					next_phase(WAVES)
 				else:

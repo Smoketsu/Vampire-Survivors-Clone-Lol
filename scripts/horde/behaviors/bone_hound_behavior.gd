@@ -28,6 +28,11 @@
 ##   * split pack: with pack_split 2 the pack is two halves (think slot
 ##     parity); each half focuses its own prey, and a hound is steered off the
 ##     other half's lead prey (minus focus_bonus).
+## Synergies: with The Wild Hunt a swooped foe (Enemy.swooped_until) within
+## prey_reach px of the hound gets prey_bonus on its score, so the pack
+## turns on what the Gargoyles dive on (its bite bonus is in
+## SynergyManager.hit_mult()); Baying of the Damned speeds the pack up after
+## each Dirge through HordeDirector.compute_stats().
 ## Stats: hound_bites, hound_pack_bites (bites with a packmate on the foe),
 ## hound_pack_bonus_dmg; Hellhound: hellhound_burns, dmg_hellhound_burn,
 ## hellhound_trail_patches, dmg_hellhound_trail (HordeHazards).
@@ -115,6 +120,12 @@ func score_bonus(u: SummonedUnit, e: Enemy, dp: float) -> float:
 		s += float(u.special["focus_bonus"]) * clampf(float(n) / maxf(float(u.special["pack_cap"]), 1.0), 0.0, 1.0)
 	if e == _rival and n == 0:
 		s -= float(u.special["focus_bonus"])  # Split pack: leave it to the other half.
+	if e.swooped_until > u.game.elapsed:
+		# The Wild Hunt (synergy): a swooped foe within reach is the prey.
+		var syn := u.director.synergies  # Army synergies (0 values while inactive).
+		var prey := syn.value("wild_hunt", "prey_bonus")  # Score bonus (0 = inactive).
+		if prey > 0.0 and u.position.distance_to(e.position) <= syn.value("wild_hunt", "prey_reach"):
+			s += prey
 	return s
 
 

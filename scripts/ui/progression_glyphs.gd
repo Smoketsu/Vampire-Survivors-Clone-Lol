@@ -75,6 +75,9 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 			Glyphs._skull(ci, c + Vector2(-s * 0.3, 0), s * 0.18, false)
 			Glyphs._skull(ci, c + Vector2(s * 0.3, 0), s * 0.18, false)
 			Glyphs._skull(ci, c + Vector2(0, -s * 0.3), s * 0.2, false, Palette.NECRO_GREEN)
+		"syn_flesh_rampart", "syn_killing_field", "syn_death_from_above", "syn_wild_hunt", \
+				"syn_cold_blood", "syn_shatterfall", "syn_requiem", "syn_baying", "syn_charnel_menagerie":
+			_draw_newer_synergy(ci, kind, c, s)
 		"grave_fortitude":
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -s * 0.6), c + Vector2(s * 0.5, -s * 0.3), c + Vector2(s * 0.4, s * 0.3),
 				c + Vector2(0, s * 0.6), c + Vector2(-s * 0.4, s * 0.3), c + Vector2(-s * 0.5, -s * 0.3)]), Palette.STONE.lightened(0.15))
@@ -89,6 +92,59 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 		_:
 			return false
 	return true
+
+
+## Fallback drawings of the newer classes' synergy icons (the pixel art in
+## icons/syn_*.png is used when present): the setter's colour marks the left /
+## background shape, the finisher's the right / foreground one.
+static func _draw_newer_synergy(ci: CanvasItem, kind: String, c: Vector2, s: float) -> void:
+	match kind:
+		"syn_flesh_rampart":
+			# A flesh stomp ring under a bone sword.
+			ci.draw_arc(c + Vector2(0, s * 0.3), s * 0.55, PI, TAU, 14, Palette.CORPSE_FLESH, 3.0)
+			ci.draw_line(c + Vector2(0, s * 0.45), c + Vector2(0, -s * 0.6), Palette.BONE, 2.5)
+			ci.draw_line(c + Vector2(-s * 0.25, -s * 0.05), c + Vector2(s * 0.25, -s * 0.05), Palette.BONE, 2.0)
+		"syn_killing_field":
+			# A boulder falling into a flesh stomp ring.
+			ci.draw_arc(c + Vector2(0, s * 0.3), s * 0.55, PI, TAU, 14, Palette.CORPSE_FLESH, 3.0)
+			ci.draw_circle(c + Vector2(s * 0.1, -s * 0.2), s * 0.25, Palette.BONE)
+			ci.draw_line(c + Vector2(-s * 0.45, -s * 0.65), c + Vector2(-s * 0.1, -s * 0.35), Color(Palette.BONE, 0.6), 1.5)
+		"syn_death_from_above":
+			# A stone wing swooping onto a violet dagger.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.65, -s * 0.5), c + Vector2(0, -s * 0.15),
+				c + Vector2(-s * 0.2, -s * 0.6)]), Palette.GARGOYLE_STONE)
+			ci.draw_line(c + Vector2(-s * 0.1, s * 0.6), c + Vector2(s * 0.5, -s * 0.1), Palette.VIOLET, 3.0)
+		"syn_wild_hunt":
+			# A stone wing over a bone hound fang.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.65, -s * 0.5), c + Vector2(0, -s * 0.15),
+				c + Vector2(-s * 0.2, -s * 0.6)]), Palette.GARGOYLE_STONE)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, s * 0.0), c + Vector2(s * 0.45, s * 0.0),
+				c + Vector2(s * 0.2, s * 0.6)]), Palette.BONE)
+		"syn_cold_blood":
+			# A frost shard crossed by a violet dagger.
+			ci.draw_colored_polygon(Glyphs.regular_polygon(c, s * 0.5, 4, 0.0), Color(Palette.FROST, 0.75))
+			ci.draw_line(c + Vector2(-s * 0.5, s * 0.5), c + Vector2(s * 0.5, -s * 0.5), Palette.VIOLET, 3.0)
+		"syn_shatterfall":
+			# A boulder shattering a frost shard.
+			ci.draw_colored_polygon(Glyphs.regular_polygon(c + Vector2(0, s * 0.2), s * 0.45, 4, 0.0), Color(Palette.FROST, 0.75))
+			ci.draw_circle(c + Vector2(s * 0.2, -s * 0.35), s * 0.25, Palette.BONE)
+		"syn_requiem":
+			# A wail ripple around a mage orb.
+			ci.draw_arc(c, s * 0.6, -PI * 0.8, -PI * 0.2, 10, WarbandGlyphs.WAIL, 2.0)
+			ci.draw_arc(c, s * 0.6, PI * 0.2, PI * 0.8, 10, WarbandGlyphs.WAIL, 2.0)
+			ci.draw_circle(c, s * 0.28, Palette.COLD_BLUE)
+			ci.draw_circle(c, s * 0.12, Palette.BONE)
+		"syn_baying":
+			# A wail ripple behind a bone hound fang.
+			ci.draw_arc(c + Vector2(-s * 0.2, 0), s * 0.55, PI * 0.6, PI * 1.4, 10, WarbandGlyphs.WAIL, 2.0)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.1, -s * 0.3), c + Vector2(s * 0.5, -s * 0.3),
+				c + Vector2(s * 0.2, s * 0.5)]), Palette.BONE)
+		"syn_charnel_menagerie":
+			# Four small marks of the newer classes around a skull.
+			Glyphs._skull(ci, c, s * 0.25, false, Palette.NECRO_GREEN)
+			var cols: Array[Color] = [Palette.CORPSE_FLESH, Palette.GARGOYLE_STONE, Palette.FROST, Palette.BONE]  # Corner colours.
+			for i in 4:
+				ci.draw_circle(c + Vector2.from_angle(PI * 0.25 + PI * 0.5 * float(i)) * s * 0.6, s * 0.14, cols[i])
 
 
 ## Volley of the Fallen mark: a small violet diamond with a green core.

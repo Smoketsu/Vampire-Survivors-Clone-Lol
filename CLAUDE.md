@@ -65,6 +65,10 @@ the code drawings in `_draw` stay as the fallback for any missing PNG), and soun
   **at Lv5 too** (owner rule: every evolution, spell or summon, needs its paired passive maxed) and the
   run has reached 8:00 elapsed. Summon evolutions (Death Knight, Lich, Profane Bishop) use the same
   delivery and gate with their own recipes (`summon_evolution_data.gd`).
+- **Synergies** switch on at Lv 2 of every required class and are hinted (card line, banner), never
+  secret. The newer classes' synergies are setter / finisher pairs: **one mark bonus per hit** (the
+  highest), **half against the stage boss**, no extra tier for evolved pairs; every synergy damage
+  bonus goes through `SynergyManager.hit_mult()` from `CombatResolver.damage_enemy()`.
 - **Shadow Bolt** has a Nearest/Strongest aim toggle (T / pad Y).
 - **Army stances** (keys 1-4 / right-stick flicks, 1.5 s lockout): Escort (default, exactly the
   original formation and leash), Onslaught, Spearhead (Ossuary unlock) and Bone Ring only override
@@ -130,6 +134,7 @@ Autotest options (full table in the README):
 - `--character=ID` (playable character, default `gravecaller`; locks bypassed, e.g. `bone_oracle`,
   `wither_witch`)
 - `--hyper` (Hyper mode, lock bypassed) and `--skin=ID` (force a cosmetic skin, e.g. `dread_sovereign`)
+- `--synergies=off` (no army synergy ever activates, old or new: A/B runs for synergy balance)
 - `--spawn=kind@T[xN],...` (force-spawn any enemy kind at T game seconds on any stage, e.g.
   `sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `battle_sister@60x6`)
 - `--pact`
@@ -355,6 +360,19 @@ tiny tweaks.
     acts at once);
   - the synthesized menu theme **"Grave Lullaby"** (`menu_theme_synth.gd`, score and mix in
     `menu_theme_data.gd`; rendered lazily, crossfaded with the run loop by `Sfx.play_music()`).
+- **synergies for the newer classes** (owner-approved; GDD §6.3 and §15.0 "Synergies for the newer
+  classes"): eight setter / finisher pairs (Flesh Rampart, Killing Field, Death from Above, The Wild
+  Hunt, Cold Blood, Shatterfall, Requiem, Baying of the Damned) and the capstone The Charnel Menagerie
+  (any 4 of the 7 newer classes, `distinct_of`), all in `SynergyData`. Two timed enemy marks
+  (`Enemy.staggered_until` from the Abomination / Colossus stomp, `swooped_until` from the Gargoyle /
+  Cathedral Horror dive), written only while a synergy reads them; ONE hit path,
+  `SynergyManager.hit_mult()` called once from `CombatResolver.damage_enemy()` (source -> class through
+  `SynergyData.SOURCE_CLASS`; one mark bonus per hit, the highest; half on the stage boss; the
+  Menagerie its own category); behaviour hooks for catapult aim, Pack Hunt prey, rogue dash preference
+  and reset, the Baying frenzy (`compute_stats()`), Requiem's `CombatResolver.extend_weaken()` and the
+  Menagerie's `replenish_interval()`. HUD list fits 8 rows; pixel badges for all 13 synergies
+  (`icons/syn_*`). Autotest `--synergies=off` and a `synergy bonus` line; the army / summon / evolve
+  summaries are unchanged.
 - the **Sister of the Scourge** (owner request, Oct 2026: a female Covenant soldier in the figure-redesign
   style; GDD §7.2, §15.0): kind `battle_sister`, data in `battle_sister_data.gd` (looked up by
   `EnemyDirector.enemy_def()` after `MarchEnemyData`), a `CovenantKit` (`BattleSisterKit`,
@@ -393,8 +411,8 @@ tiny tweaks.
    need checking (or a sliced fallback) for a no-threads build. Phones (touch controls, mobile UI
    scale, performance setting) only after the browser build is measured.
 5. **Content candidates** (owner to choose): achievement rewards / the Bone Golem (and the
-   campaign epilogue that *Dawn Extinguished* should unlock), synergies for the newer classes, more
-   ultimates, a victory screen after the Reckoning.
+   campaign epilogue that *Dawn Extinguished* should unlock), more ultimates, a victory screen after
+   the Reckoning.
 6. **Phase 3 campaign:** Stage 3 is done (the Sanctum of Judgment and Grand Inquisitor Seraphine);
    left: achievement rewards and the campaign epilogue (skins, Hyper mode, the Codex and all their
    art are in).

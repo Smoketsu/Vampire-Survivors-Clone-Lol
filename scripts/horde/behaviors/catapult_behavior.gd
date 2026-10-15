@@ -16,7 +16,8 @@
 ##     splash, via the shared cluster value): score_bonus() adds
 ##     structure_bonus for a structure (outposts, ward generators, supply
 ##     carts, ward crystals, altars) and elite_bonus for an elite, a miniboss
-##     or the boss.
+##     or the boss; with Killing Field or Shatterfall (synergies) a staggered
+##     or a Deep-Frozen foe gets the synergy's aim_bonus (the higher one).
 ## Ossuary Engine (summon evolution; keys from SummonEvolutionData
 ## "special_set", absent / 0 on the base catapult, which keeps exactly the
 ## behaviour above): `volley` boulders per volley (one on the aim point, the
@@ -61,13 +62,17 @@ func release_attack(u: SummonedUnit) -> void:
 	Sfx.play("catapult_launch", u.position)
 
 
-## Siege preference: structures first, then elites / minibosses / the boss.
+## Siege preference: structures first, then elites / minibosses / the boss;
+## with Killing Field / Shatterfall (synergies) also the foes an Abomination
+## staggers and the Deep-Frozen ones (SynergyManager.catapult_aim_bonus(), 0
+## without them).
 func score_bonus(u: SummonedUnit, e: Enemy, _dp: float) -> float:
 	if e.is_structure:
 		return float(u.special["structure_bonus"])
+	var s := u.director.synergies.catapult_aim_bonus(e)  # Synergy aim bonus.
 	if e.is_elite or e.is_miniboss or e.is_boss:
-		return float(u.special["elite_bonus"])
-	return 0.0
+		return float(u.special["elite_bonus"]) + s
+	return s
 
 
 ## Redraws every tick of the windup so the winding arm animates.

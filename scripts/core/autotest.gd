@@ -124,6 +124,13 @@
 ##     why), hits ignored during dash i-frames, rallies, the meter fill
 ##     times, knockbacks, summons called back, rally healing and the minion
 ##     damage dealt under the buff.
+##   * army synergies: the "synergies active at end" line lists every active
+##     synergy and when each awoke; the "synergy bonus" line reports, for the
+##     newer classes' synergies, the hits each mark bonus raised and the
+##     damage it added, the Baying frenzies, the staggered / swooped marks,
+##     the Death from Above dash resets and the seconds Requiem stretched
+##     (SynergyManager.summary_line()). --synergies=off keeps every synergy
+##     off for A/B runs (the line is then marked "synergies off").
 ##   * army stances: StanceBot drives the stance (--stance=ID forces one for
 ##     the whole run; army / summon / evolve switch by its rule; naive /
 ##     pact keep Escort, their baseline) and the summary adds an "army
@@ -1096,6 +1103,7 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] synergies active at end: %s | activations: %s" % [
 		", ".join(syn.active_ids()) if not syn.active_ids().is_empty() else "none",
 		", ".join(syn.activation_log) if not syn.activation_log.is_empty() else "none"])
+	print("[autotest] synergy bonus%s: %s" % [" (synergies off)" if GameState.autotest_synergies_off else "", SynergyManager.summary_line(st_all)])
 	print("[autotest] level-up offers: hands %d, new-item cards %d, later items %d (%.0f%%) in %d hands (%.0f%%), distinct later items offered %d" % [
 		_hands_seen, _new_offers, _new_later_offers, 100.0 * _new_later_offers / maxf(1.0, float(_new_offers)),
 		_hands_with_later, 100.0 * _hands_with_later / maxf(1.0, float(_hands_seen)), _later_seen.size()])

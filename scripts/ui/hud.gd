@@ -257,8 +257,13 @@ func _build() -> void:
 		bl.add_child(row)
 		_class_rows[cls] = {"row": row, "icon": icon, "label": lbl, "bar": bar}
 
-	# Bottom left, above the army panel: active synergies.
-	var syn := _box(true, 0.0, 1.0, 16, -316, 300, -210, BoxContainer.ALIGNMENT_END)
+	# Bottom left, above the army panel: active synergies (only the active
+	# ones show). With the newer classes' synergies up to 7 can be active at
+	# once (6 active slots); compact rows (22 px icons, 2 px gaps) fit 8 in
+	# the 200 px box (8 x 24 = 192 px), which ends 4 px above the army panel
+	# and starts well below the buff rows (y 120-224).
+	var syn := _box(true, 0.0, 1.0, 16, -410, 300, -210, BoxContainer.ALIGNMENT_END)
+	syn.add_theme_constant_override("separation", 2)
 	for id: String in SynergyData.ORDER:
 		var srow := HBoxContainer.new()
 		srow.mouse_filter = Control.MOUSE_FILTER_IGNORE

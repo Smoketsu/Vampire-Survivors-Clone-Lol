@@ -454,6 +454,32 @@ number is in `scripts/data/unit_data.gd`.
   either priest order: +15% attack speed, −15% damage taken, aura on every
   summon). The Profane Bishop counts as both priest orders, so merging keeps
   both synergies.
+- **Synergies of the newer classes** (owner-approved, GDD §6.3 / §15.0) work
+  the same way (Lv 2+, banner, HUD row, the level-up card's "Activates
+  synergy" hint) and follow a **setter / finisher** pattern: a control class
+  marks foes, a damage class cashes the mark in. Evolved forms count as their
+  class. **Flesh Rampart** (Abomination + Warriors: a stomp *staggers* foes
+  for 4 s; warriors and Death Knights deal +40% to staggered foes),
+  **Killing Field** (Abomination + Corpse Catapult: boulders +50% on
+  staggered foes, and catapults aim at them), **Death from Above** (Gargoyle
+  + Rogues: a dive *swoops* foes for 5 s; rogues go for them and deal +40%
+  to them, and the first rogue hit on each swooped foe resets that rogue's
+  dash to 0.6 s), **The Wild Hunt** (Gargoyle + Bone Hounds: a swooped foe
+  within 220 px becomes the pack's prey; hounds deal +35% to it), **Cold
+  Blood** (Frost Wraith + Rogues: rogues deal +40% to chilled or frozen foes
+  and dash at them), **Shatterfall** (Frost Wraith + Corpse Catapult:
+  boulders +75% on Deep-Frozen foes, +40% on chilled ones; catapults aim at
+  frozen foes), **Requiem** (Banshee + Mages: mage and Lich explosions deal +40% to
+  weakened foes and add 1 s to the Dirge, never past its own length),
+  **Baying of the Damned** (Banshee + Bone Hounds: every Dirge gives the
+  hounds +15% attack speed and +10% move speed for 4 s) and the capstone
+  **The Charnel Menagerie** (any 4 of the 7 newer classes: they deal +10%
+  damage and replenish 20% faster). Only **one** mark bonus applies to a hit
+  (the highest: Cold Blood and Death from Above never stack, nor do Killing
+  Field and Shatterfall), the **stage boss takes half** of it (minibosses and
+  elites the full bonus), and the Menagerie's bonus multiplies as its own
+  category. All of it goes through `SynergyManager.hit_mult()`, called once
+  from `CombatResolver.damage_enemy()`; numbers in `synergy_data.gd`.
 - **Level-up cards** are weighted: upgrades to items you own (2.5), and items
   on an evolution path, come up more often. New cards: Orb Shield, Shadow
   Blast and the first twelve passives weigh 1 each; the GDD summon roles weigh
@@ -1313,7 +1339,7 @@ never touches gameplay. Its art is in `assets/sprites/menu/`, rebuilt by
 | Staggered AI and performance (§25, §38) | Unit and enemy decisions run at 5 Hz spread over 12 ticks. Formation updates at 4 Hz, threat checks at 5 Hz, enemy separation at 10 Hz. A uniform-grid spatial hash handles all neighbour and target queries. Projectiles, enemies, summons, XP crystals and effects are all pooled. |
 | Spells (§8) | Shadow Bolt (starting spell, homing, multi-shot, pierce; the player can switch its aim between *Nearest* and *Strongest*, i.e. highest current HP, with ties going to the nearest; extra bolts go to the next-ranked targets; shown on the HUD above the ability bar). Shadow Orb Shield (orbiting damage; intercepts a limited number of projectiles, then recharges). Shadow Blast (area damage plus slow). Plus Bone Spear, Soul Siphon, Corpse Explosion and Plague Cloud (see *The newer spells*), and Death Mark, Bone Wall, Soul Chains, Wither and Raise Dead (see *The later spells*): 12 spells. Each has 5 levels. Every spell and spell evolution deals ×1.2 its listed base damage (`AbilityData.SPELL_DAMAGE_MULT`, Oct 2026 balance pass; the cards show the real numbers). |
 | Passives (§34) | Grave Dominion (capacity), Necrotic Vigor (minion HP), Dark Command (minion damage and attack speed; at Lv 5 it evolves Warriors), Soul Recycling (faster replacement), plus the evolution passives Soul Conduit, Warding Ritual, Abyssal Focus, Shade Stride, Vampiric Rite, Necrotic Expanse, Lingering Malediction, Forbidden Knowledge (mage damage and splash) and Dark Benediction (heals, wards and barriers), and the later horde passives Bone Plating (flat damage off every hit on a minion), Unholy Precision (minion crits), Unholy Resilience (less area / holy damage to minions) and Bound Souls (minion speed, leash and return), and the later spells' passives Grim Ledger (damage to elites and bosses), Spirit Binding (longer slows, freezes and stuns) and Restless Dead (longer, stronger temporary summons); Grave Dominion and Necrotic Vigor also evolve Bone Wall and Wither. Every evolution needs its paired passive at Lv 5. Bonus stacking follows §34. |
-| Evolutions & synergies (§6) | Void Barrage, Eclipse Ward, Abyssal Detonation, Ossuary Lance, Soul Rapture, Grave Eruption, Pestilence, Doom Brand, Charnel Bastion, Chains of the Damned, Necrotic Blight and Legion of Bones; the summon evolutions Death Knight, Lich, Profane Bishop (a merge of the two priest orders), Shadow Reaper and Cathedral Horror; four army synergies; weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
+| Evolutions & synergies (§6) | Void Barrage, Eclipse Ward, Abyssal Detonation, Ossuary Lance, Soul Rapture, Grave Eruption, Pestilence, Doom Brand, Charnel Bastion, Chains of the Damned, Necrotic Blight and Legion of Bones; the summon evolutions Death Knight, Lich, Profane Bishop (a merge of the two priest orders), Shadow Reaper and Cathedral Horror; thirteen army synergies (the GDD's four, eight setter / finisher pairs of the newer classes and the Charnel Menagerie); weighted level-up cards with Reroll, Banish and Skip. See *Evolutions & Synergies* above. |
 | Enemies (§10, §35) | Covenant Recruit, Crimson Footman (armoured), Zealous Archer (ranged), Chaplain (heals other enemies), Purifier (hunts undead, ×2 damage to summons), elite variants, and the Reckoning's *Inquisitor of the End*. Survivor convention: **every enemy always advances on the player**. Archers shoot and Chaplains heal while walking in (archers slow briefly after each shot); nobody kites or holds at range. Undead have no dodge AI and act as body blockers, so enemy arrows hit the first summon in their path. **Templar Knights** (heavy charging melee) join at 13:00. |
 | Waves and stage events (§11) | The data-driven 20-minute Graveyard timeline at the GDD's real times (Sir Alaric at 17:00), then the Reckoning. It includes empowered graves, Desecration, Templar Knights and the Crypt Defender, and the arena has solid obstacles. See *Stage & Boss* above. |
 | Boss (§11) | Sir Alaric with all five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead), plus a *Wrath* phase at 50% HP. |
@@ -1419,7 +1445,9 @@ scripts/
   horde/
     horde_director.gd       Army registry, pools, caps, effective stats, replenishment queues,
                             formation anchors, threat evaluation, staggered 5 Hz AI ticks
-    synergy_manager.gd      Army synergy activation and effects
+    synergy_manager.gd      Army synergy activation and effects; the newer classes' marks
+                            (staggered, swooped), the one synergy hit bonus (hit_mult()), the
+                            Baying frenzy and the Menagerie replenishment
     summoned_unit.gd        The ONE shared FSM/steering/targeting AI for all summon classes
     summon_abilities.gd     Data-driven kits the shared AI hooks into: Warder / Bishop ally
                             barrier, Bishop aura pulse, Death Knight cleave + life drain
@@ -1605,7 +1633,8 @@ scripts/
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
                             Winter Revenant, Shadow Reaper, Cathedral Horror, Gravebow,
                             Bone Colossus, Hellhound, Keening Lady, Ossuary Engine) and stats
-    synergy_data.gd         Army synergy requirements and effects
+    synergy_data.gd         Army synergy requirements and effects (13 synergies, the damage-source
+                            -> class table, mark durations)
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
     environment_art_data.gd Floor tile / obstacle sprite key scheme, tile variants, obstacle feet and shadow
@@ -1717,6 +1746,7 @@ Options (after `--`):
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | `--stance=ID` | Army stance for the whole run: `escort`, `onslaught`, `spearhead` or `bone_ring` (forcing ignores the Spearhead unlock). Without it, `army`, `summon` and `evolve` switch stances by a simple rule (Bone Ring when the necromancer is in danger or the boss is within 260 px; Onslaught when at most 6 enemies are within 220 px and a Crimson March structure or a Sanctum crystal / altar is within 420 px or at most 10 enemies are within 480 px; Spearhead, when owned, toward a chest or power-up within 300 px; else Escort; `StanceBot`), while `naive` and `pact` keep Escort so their baselines do not move. |
+| `--synergies=off` | A/B switch: no army synergy ever activates (the four original ones and the newer classes' nine). Every summary has a `synergy bonus` line (per newer synergy: the hits its mark bonus raised and the damage it added; the Baying frenzies; staggered / swooped marks; Death from Above dash resets; the seconds Requiem stretched), marked "(synergies off)" with this switch. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
 | `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |
 | `--hyper` | Hyper mode (`HyperData`: enemy HP / damage growth ×2, stage boss HP ×1.5, Soul Ash +100%), bypassing the Seraphine unlock. Every summary has a `hyper` line (on / off, the effective growth and boss HP, the 0:00 multipliers vs the standard game, the Hyper Soul Ash line, seconds survived past 0:00, the unlock and Hyper-clear state, in memory only without `--meta-save`). |
