@@ -113,10 +113,12 @@ static func draw_cathedral_horror(ci: CanvasItem, o: Vector2, r: float, flash: b
 
 ## Stun stars over a stunned enemy (drawn in its _draw()): three small
 ## four-point stars on a faint ring, centred at `c` above the body of
-## radius `r`.
+## radius `r` (the stars' pixel art, MarkerArtData.STUN_STARS, when present).
 static func draw_stun(ci: CanvasItem, c: Vector2, r: float) -> void:
 	var rr := maxf(r * 0.7, 6.0)  # Ring radius (px).
 	ci.draw_arc(c, rr, 0.0, TAU, 16, Color(STUN_STAR, 0.35), 1.0)
+	if SpriteBank.draw_flat(ci, MarkerArtData.STUN_STARS, c, 0.0):
+		return  # Pixel-art stars over the faint ring.
 	for i in 3:
 		var p := c + Vector2.from_angle(TAU * float(i) / 3.0 - PI / 2.0) * Vector2(rr, rr * 0.45)  # Star centre.
 		var s := maxf(r * 0.22, 2.5)  # Star half-size (px).

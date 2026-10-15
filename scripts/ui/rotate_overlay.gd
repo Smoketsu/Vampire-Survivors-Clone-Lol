@@ -6,7 +6,8 @@
 ## taps) until the device is turned; Main pauses a running game meanwhile.
 ## It draws one block in layout px at the type tiers (the title in Jacquard
 ## 24, the line in Jersey 10), an upright phone outline, an arrow and the
-## same phone turned to landscape, every outline with cut corners, and
+## same phone turned to landscape, every outline with cut corners (the phone is
+## the pixel art MarkerArtData.ROTATE_PHONE when present), and
 ## scales the block as a whole to fill TouchData.ROTATE_FILL of the screen
 ## width. Static: no motion, so nothing to slow down for Reduce motion.
 class_name RotateOverlay
@@ -14,6 +15,11 @@ extends CanvasLayer
 
 ## The full-screen Control that draws the overlay and stops the taps.
 var _pane: Control = null
+
+## The block's draw transform this redraw (block px -> pane px: the centring
+## offset and the fill scale), set by _draw_pane() and restored after the
+## pixel-art phone is drawn turned.
+var _block: Transform2D = Transform2D.IDENTITY
 
 
 func _init() -> void:
@@ -40,7 +46,8 @@ func _draw_pane() -> void:
 	var s := minf(view.x * TouchData.ROTATE_FILL / b.x, view.y * TouchData.ROTATE_FILL / b.y)  # Block scale.
 	s = maxf(s, 0.1)
 	var origin := (view - b * s) * 0.5  # Block top-left (layout px).
-	_pane.draw_set_transform(origin, 0.0, Vector2(s, s))
+	_block = Transform2D(0.0, Vector2(s, s), 0.0, origin)
+	_pane.draw_set_transform_matrix(_block)
 	var col := TouchData.ROTATE_COLOR
 	var ph := TouchData.ROTATE_PHONE_SIZE
 	var mid := Vector2(b.x * 0.5, ph.y * 0.5 + 4.0)  # Centre of the drawing row.
@@ -61,8 +68,20 @@ func _draw_pane() -> void:
 	_pane.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
-## A phone outline in `r` (cut corners, a screen inset and a home dot).
+## A phone outline in `r` (cut corners, a screen inset and a home dot): the
+## pixel-art phone (MarkerArtData.ROTATE_PHONE, drawn upright) stretched over
+## `r`, turned a quarter right when `r` is wider than tall, faded by `col`'s
+## alpha; the code outline without the art.
 func _phone(r: Rect2, col: Color) -> void:
+	var tex := SpriteBank.texture(MarkerArtData.ROTATE_PHONE)  # Phone art, or null.
+	if tex != null:
+		var upright := r.size.y >= r.size.x  # The art is drawn upright.
+		var sz := r.size if upright else Vector2(r.size.y, r.size.x)  # Upright size (layout px).
+		var xf := Transform2D(0.0 if upright else PI * 0.5, r.get_center())  # Block px -> the phone's centred, turned frame.
+		_pane.draw_set_transform_matrix(_block * xf)
+		_pane.draw_texture_rect(tex, Rect2(-sz * 0.5, sz), false, Color(1.0, 1.0, 1.0, col.a))
+		_pane.draw_set_transform_matrix(_block)
+		return
 	var cut := minf(r.size.x, r.size.y) * 0.18  # Corner cut (layout px).
 	var outline := TouchControls.chamfer(r, cut)
 	_pane.draw_colored_polygon(outline, Color(0.08, 0.05, 0.12))

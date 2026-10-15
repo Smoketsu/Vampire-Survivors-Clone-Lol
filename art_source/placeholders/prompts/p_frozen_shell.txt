@@ -1,0 +1,11 @@
+A single pixel-art game overlay sprite for a top-down 2D horde-survival game (like Vampire Survivors): an ICE SHELL that is drawn OVER an enemy frozen solid. Seen from the front.
+
+LOW-RESOLUTION pixel art: only 40 x 40 pixels, shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple shapes; no detail smaller than 2 pixels except glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze.
+
+Subject: a ROUND RING of jagged ice crystals, like a cracked frost crust: a ring about 4-6 pixels thick made of angular pale ice shards (#A6D9EA main, #E4FAFF lit top-left facets, #6B7A94 shadow facets), with three bigger pointed ice spikes sticking outward (one up-left, one up-right, one down), a few white glints. The MIDDLE of the ring is EMPTY and FULLY TRANSPARENT (the frozen enemy shows through it).
+
+Colours: ONLY flat fills from this list: #0F141C (outline), #6B7A94, #A6D9EA, #E4FAFF.
+Outline: a clean 1-pixel dark outline (#0F141C) around the ring, inside and out. Light from the top-left.
+
+Output: a square PNG with a FULLY TRANSPARENT background and a fully transparent centre (real alpha, not a checkerboard, not white), the ring centred and filling about 85% of the image. No enemy, no ground, no cast shadow, no text, no frame, no watermark.
+Attached: approved sprites of this game. Match their pixel size, outline weight and palette exactly.

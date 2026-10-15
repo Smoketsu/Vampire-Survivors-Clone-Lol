@@ -1307,6 +1307,14 @@ from the unit's origin; HUD and card icons use the largest whole-number scale th
 taller than its `HEIGHTS` entry is a legacy 3× placeholder and keeps the old smooth scaling, so
 the 31 placeholders keep working until they are replaced.
 
+**Markers, overlays and spell props.** The small things drawn over and around units (the boss
+rally pennant, the Stasis / Deep Freeze ice shell, the aura-buff chevron, the Sun Paladin ward, the
+Volley mark, the Death Mark / Doom Brand skulls, stun stars, Seraphine's nova safe-spot cross, the
+Corpse Explosion corpses, Bone Wall / Charnel Bastion segments, catapult boulders, the Bone Oracle's
+shards, the Eclipse Ward orbs and the Cathedral Horror's stone form) are pixel art too: each site
+reads its key from `MarkerArtData` and keeps its code drawing as the fallback; rings, telegraphs,
+glows and progress arcs stay drawn in code (docs/art/ART_BIBLE.md "Placeholder art batch").
+
 **Environment art (floors and obstacles).** `EnvironmentArt` does the same for the stage floors and
 obstacles, always as grid art (1 art px = 1 layout px, sharp). When a zone's floor tile
 `tiles/<zone>.png` (128×128, seamless; `graveyard`, `march_<style>`, `sanctum_<style>`) exists, the
@@ -1689,6 +1697,7 @@ scripts/
     idle_data.gd            Idle breathing loops: frame count and rate of the `<key>_idle` strips (bust rigs)
     anim_data.gd            One-shot effect animations: strip ids, frame timing and fill
     decal_data.gd           Floor decal keys and drawing numbers (Ground, MarchGround, SanctumGround)
+    marker_art_data.gd      Pixel-art keys and placement of the world markers, overlays and spell props (rally pennant, ice shell, brands, corpses, bone walls, boulders)
     boss_pose_data.gd       Which attack-pose sprite each stage boss shows per attack phase
     view_data.gd            Camera zoom levels (Normal / Close) and the player's ground marker
     ui_art_data.gd          The UI kit and logo (9-slice margins, crests), pixel font sizes, the type tiers

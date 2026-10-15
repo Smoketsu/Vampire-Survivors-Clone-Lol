@@ -1,0 +1,13 @@
+A SHEET of FOUR small separate pixel-art game sprites for a top-down 2D horde-survival game (like Vampire Survivors), laid out LEFT TO RIGHT in ONE horizontal row, each one standing alone with a WIDE fully transparent gap between them (they must not touch). Same style for all four. Seen from the front.
+
+LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze. A clean 1-pixel dark outline around each sprite in the darkest shade of its own colour (never pure black). Light from the top-left.
+
+1) A small DEATH MARK SKULL (a curse brand floating over a doomed enemy): a bone-white skull (#E8E1C8, #B4AA8A, #7F785F shadow) seen from the front, with two glowing VIOLET eye sockets (#A35CFA) and a tiny violet flame (#7A42AD, #DDBDFF) on its brow. Only 10 pixels wide and 10 pixels tall.
+2) The same skull, angrier, its eye sockets glowing bright SOUL GREEN (#3DCC94, #A8FFD2) and a small violet doom flame crown (#7A42AD, #A35CFA) above it. Only 10 pixels wide and 11 pixels tall.
+3) A small VIOLET DIAMOND gem (taller than wide) with a bright soul-green core pixel (#3DCC94), violet #7A42AD main, #A35CFA lit edge, #4A2569 shadow. Only 7 pixels wide and 9 pixels tall.
+4) THREE small pale-gold FOUR-POINTED STARS (dizzy stun stars) in a shallow arc, the middle one higher and slightly bigger, pale gold #FFDC66 with white cores #FFFAE8 and #E0A92E shadows. The whole group only 24 pixels wide and 10 pixels tall.
+
+Colours: ONLY flat fills from these lists: bone #1C110B (outline), #7F785F, #B4AA8A, #E8E1C8; violet #160A21 (outline), #4A2569, #7A42AD, #A35CFA, #DDBDFF; soul green #081814 (outline), #3DCC94, #A8FFD2; gold #E0A92E, #FFDC66, #FFFAE8.
+
+Output: a PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white). No ground, no cast shadow, no text, no labels, no numbers, no frame, no watermark.
+Attached: approved sprites of this game. Match their pixel size, outline weight and palette exactly.

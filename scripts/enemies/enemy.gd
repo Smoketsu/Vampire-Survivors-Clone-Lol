@@ -1059,7 +1059,8 @@ func _draw_over(ci: CanvasItem) -> void:
 	if buff_time > 0.0:
 		MarchGlyphs.draw_buffed(ci, Vector2(0, -radius * 2.4), 4.0)  # Aura buff chevron.
 	if mark_time > 0.0:
-		ProgressionGlyphs.draw_mage_mark(ci, Vector2(0, -radius * 2.5), 4.0)
+		if not SpriteBank.draw_flat(ci, MarkerArtData.MAGE_MARK, Vector2(0, -radius * 2.5), 0.0):
+			ProgressionGlyphs.draw_mage_mark(ci, Vector2(0, -radius * 2.5), 4.0)  # Volley mark (code shape without its art).
 	if curse_until > 0.0:
 		GravebowColossusGlyphs.draw_curse(ci, Vector2.ZERO, radius)  # Gravebow curse tint.
 	if weaken_until > 0.0:

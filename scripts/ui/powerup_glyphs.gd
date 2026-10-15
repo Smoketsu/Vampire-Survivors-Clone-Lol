@@ -143,8 +143,18 @@ static func draw_chest(ci: CanvasItem, c: Vector2, s: float, age: float, open_fr
 	ci.draw_circle(c + Vector2(0, -s * 0.2 - lift * 0.5), s * 0.16, Palette.IVORY)
 
 
-## Frost shell over an enemy frozen by Stasis (drawn in its _draw()).
+## Frost shell over an enemy frozen by Stasis (drawn in its _draw()): the
+## pixel-art ice ring (MarkerArtData.FROZEN_SHELL) over a translucent cold
+## disc, sized to the body radius `r`, or the code shell without the art.
 static func draw_frozen(ci: CanvasItem, c: Vector2, r: float) -> void:
+	var key := MarkerArtData.FROZEN_SHELL  # Ice shell sprite key.
+	if SpriteBank.has(key):
+		var base := float(SpriteData.FLAT_SIZES[key])  # The shell's 1:1 height (px).
+		var k := maxf(1.0, roundf(r * MarkerArtData.FROZEN_SHELL_PER_RADIUS / base))  # Whole-number scale (even pixels), never below 1:1.
+		var at := c + Vector2(0.0, -r * MarkerArtData.FROZEN_SHELL_LIFT)  # Shell centre (px).
+		ci.draw_circle(at, base * k * MarkerArtData.FROZEN_DISC_FRACTION, Color(Palette.COLD_BLUE, 0.28))
+		SpriteBank.draw_flat(ci, key, at, 0.0, Color(1.0, 1.0, 1.0, MarkerArtData.FROZEN_SHELL_ALPHA), k)
+		return
 	ci.draw_circle(c, r * 1.15, Color(Palette.COLD_BLUE, 0.28))
 	ci.draw_arc(c, r * 1.15, 0.0, TAU, 20, Color(ICE, 0.8), 1.5)
 	for i in 3:
