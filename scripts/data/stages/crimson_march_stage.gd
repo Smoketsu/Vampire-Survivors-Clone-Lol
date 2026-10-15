@@ -295,6 +295,7 @@ const EVENTS := [
 ##   rise_banner    — HUD banner when one appears.
 ##   reinforce_banner / replenish_banner — HUD banners when claimed.
 ##   objective      — HUD objective while one is unclaimed.
+##   sprite         — SpriteBank key of its pixel art (the code glyph when missing).
 const EMPOWERED_GRAVES := {
 	"first": 45.0,  # TUNING (not in GDD)
 	"interval": 75.0,  # TUNING (not in GDD)
@@ -315,6 +316,7 @@ const EMPOWERED_GRAVES := {
 	"reinforce_banner": "The fallen rise to march with you!",
 	"replenish_banner": "The battlefield feeds your army: your fallen return!",
 	"objective": "Fallen soldiers stir nearby: walk onto them to raise them",
+	"sprite": "structures/battlefield_dead",  # Art: a heap of fallen Covenant soldiers seeping soul-light
 }
 
 ## Battle zones (open question 3: the clock is authoritative). Keys:

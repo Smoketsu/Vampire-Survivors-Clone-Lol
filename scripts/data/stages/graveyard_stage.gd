@@ -237,6 +237,8 @@ const EVENTS := [
 ##   reinforce_duration — s before they crumble.
 ##   reinforce_hp_mult / reinforce_damage_mult — their stat multipliers on
 ##                    top of the class's current effective stats.
+##   sprite         — SpriteBank key of the grave's pixel art (StageDirector
+##                    draws its code glyph when the art is missing).
 const EMPOWERED_GRAVES := {
 	"first": 45.0,  # TUNING (not in GDD)
 	"interval": 75.0,  # TUNING (not in GDD) about 15 graves in a 20-minute run
@@ -252,6 +254,7 @@ const EMPOWERED_GRAVES := {
 	"reinforce_duration": 25.0,  # TUNING (not in GDD)
 	"reinforce_hp_mult": 1.0,  # TUNING (not in GDD)
 	"reinforce_damage_mult": 1.0,  # TUNING (not in GDD)
+	"sprite": "structures/empowered_grave",  # Art: an open grave pouring green soul-light (figure pass, Oct 2026)
 }
 
 ## Desecration events (GDD §11 "priests attempt to consecrate selected
@@ -277,6 +280,7 @@ const EMPOWERED_GRAVES := {
 ##     player_damage     — damage to the necromancer per player_interval.
 ##     player_interval   — s between hits on the necromancer inside.
 const CONSECRATION := {
+	"sprite": "structures/consecration_grave",  # Art of the marked grave (a plain mound and tombstone; the gold ring is drawn in code)
 	"grave_distance_min": 170.0,  # TUNING (not in GDD)
 	"grave_distance_max": 240.0,  # TUNING (not in GDD)
 	"consecrator_kind": "chaplain",  # GDD §11 "priests attempt to consecrate"
@@ -309,6 +313,7 @@ const CONSECRATION := {
 ##   guardian_hp_mult / guardian_damage_mult — stat multipliers on top of
 ##                      the class's current effective stats.
 const CRYPT_DEFENDER := {
+	"sprite": "structures/crypt_door",  # Art of the crypt (a stone door with green runes; the claim ring is drawn in code)
 	"distance_min": 140.0,  # TUNING (not in GDD)
 	"distance_max": 210.0,  # TUNING (not in GDD)
 	"lifetime": 25.0,  # TUNING (not in GDD)

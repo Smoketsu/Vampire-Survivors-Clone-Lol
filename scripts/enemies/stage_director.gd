@@ -570,8 +570,9 @@ func _draw_grave(g: ConsecrationGrave, now: float) -> void:
 	var r := float(c["zone"]["radius"])
 	var blink := 0.5 + 0.5 * sin(now * 6.0)
 	draw_arc(g.pos, r, 0.0, TAU, 48, Color(Palette.GOLD, 0.25 + 0.25 * blink), 1.5)
-	draw_rect(Rect2(g.pos + Vector2(-9, -6), Vector2(18, 12)), Color(0.05, 0.05, 0.06))
-	draw_rect(Rect2(g.pos + Vector2(-9, -6), Vector2(18, 12)), Palette.GOLD, false, 1.5)
+	if not SpriteBank.draw(self, String(c.get("sprite", "")), g.pos, false):
+		draw_rect(Rect2(g.pos + Vector2(-9, -6), Vector2(18, 12)), Color(0.05, 0.05, 0.06))
+		draw_rect(Rect2(g.pos + Vector2(-9, -6), Vector2(18, 12)), Palette.GOLD, false, 1.5)
 	var k := clampf(g.channel / float(c["channel_time"]), 0.0, 1.0)
 	draw_arc(g.pos, 24.0, -PI / 2.0, -PI / 2.0 + TAU, 32, Color(0, 0, 0, 0.5), 5.0)
 	if k > 0.0:
@@ -581,12 +582,19 @@ func _draw_grave(g: ConsecrationGrave, now: float) -> void:
 
 
 ## Empowered grave (green-glowing open grave) or crypt (stone door with
-## runes), with the claim ring; both fade in their last seconds.
+## runes), with the claim ring; both fade in their last seconds. Each draws
+## its stage's pixel art (`sprite` in the stage data) when it exists, faded
+## through the tint's alpha, and the code glyph below otherwise.
 func _draw_shrine(s: Shrine, now: float) -> void:
 	var fade := clampf(s.life / 3.0, 0.25, 1.0)
 	var pulse := 0.5 + 0.5 * sin(now * 5.0)
 	draw_circle(s.pos, s.claim_radius * 1.6, Color(Palette.NECRO_GREEN, (0.06 + 0.06 * pulse) * fade))
 	draw_arc(s.pos, s.claim_radius, 0.0, TAU, 32, Color(Palette.NECRO_GREEN, 0.8 * fade), 2.0)
+	var key := String((_crypt_def if s.kind == "crypt" else _graves_def).get("sprite", ""))  # Art key ("" = glyph).
+	if SpriteBank.draw(self, key, s.pos, false, Color(1.0, 1.0, 1.0, fade)):
+		if s.kind != "crypt":
+			Glyphs.draw_icon(self, "warrior" if s.reward == "reinforce" else "soul_recycling", Rect2(s.pos + Vector2(-7, -SpriteBank.drawn_height(key) * 0.5 - 22.0), Vector2(14, 14)))
+		return
 	if s.kind == "crypt":
 		var door := Rect2(s.pos + Vector2(-14, -18), Vector2(28, 30))
 		draw_rect(door.grow(3.0), Color(0.06, 0.06, 0.07))

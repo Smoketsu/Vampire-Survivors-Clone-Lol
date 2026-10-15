@@ -316,6 +316,7 @@ const EMPOWERED_GRAVES := {
 	"reinforce_banner": "The cathedral's buried dead rise to serve you!",
 	"replenish_banner": "The crypt feeds your army: your fallen return!",
 	"objective": "A crypt has opened nearby: walk onto it to raise its dead",
+	"sprite": "structures/sanctum_crypt",  # Art: marble flagstones cracking over a crypt (key documented on GraveyardStage.EMPOWERED_GRAVES)
 }
 
 # =====================================================================================

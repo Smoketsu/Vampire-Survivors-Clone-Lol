@@ -125,6 +125,11 @@ const HEIGHTS: Dictionary = {
 	"structures/watchtower": 96.0,  # TUNING (not in GDD) ART_BIBLE manifest size
 	"structures/ward_crystal": 64.0,  # TUNING (not in GDD) art pass: a tall thin crystal, ~26 px wide for its 15 px radius
 	"structures/sacred_altar": 72.0,  # TUNING (not in GDD) ART_BIBLE manifest size
+	"structures/empowered_grave": 40.0,  # TUNING (not in GDD) the Graveyard's empowered grave (StageDirector shrine), ~44 px wide for its 30 px claim radius
+	"structures/battlefield_dead": 36.0,  # TUNING (not in GDD) the Crimson March's empowered grave: a heap of fallen soldiers
+	"structures/sanctum_crypt": 36.0,  # TUNING (not in GDD) the Sanctum's empowered grave: marble flagstones cracking over a crypt
+	"structures/crypt_door": 56.0,  # TUNING (not in GDD) the Crypt Defender event's crypt (StageDirector shrine "crypt")
+	"structures/consecration_grave": 30.0,  # TUNING (not in GDD) a grave a Chaplain tries to consecrate (desecration event)
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
