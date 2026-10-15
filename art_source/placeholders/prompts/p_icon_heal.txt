@@ -1,0 +1,11 @@
+A single pixel-art game icon SYMBOL for a dark-fantasy necromancer game, on a FULLY TRANSPARENT background (real alpha), with NO badge, NO frame, NO border and NO background square: just the symbol itself.
+
+LOW-RESOLUTION pixel art: the whole symbol is only 26 x 26 pixels, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). One bold, simple, readable shape; no detail smaller than 2 pixels except small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze.
+
+Symbol: "Dark Restoration" (the necromancer drains the fallen to mend his body): a plump heart in violet (#7A42AD main, #4A2569 shadow, #A35CFA lit top-left edge), with a bright soul-teal plus sign (#3DCC94, core #A8FFD2) on its front, and two small teal soul wisps curling up into the heart from below.
+
+Colours: ONLY flat fills from this list: violet #160A21 (outline), #4A2569, #7A42AD, #A35CFA, #DDBDFF (one glint); soul teal #081814 (outline), #1C6B58, #3DCC94, #A8FFD2.
+Outline: a clean 1-pixel dark outline around the symbol in the darkest shade of each part's colour (never pure black). Light from the top-left.
+
+Output: a square PNG, the symbol centred, filling about 80% of the image. No text, no frame, no watermark.
+Attached: approved icons of this game (shown with their badge): match their pixel size, outline weight and palette exactly, but draw ONLY the symbol, without the badge.

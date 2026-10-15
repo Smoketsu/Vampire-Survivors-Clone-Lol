@@ -1,0 +1,13 @@
+A SHEET of FOUR small separate pixel-art game projectile sprites for a top-down 2D horde-survival game (like Vampire Survivors), laid out LEFT TO RIGHT in ONE horizontal row, each one alone with a WIDE fully transparent gap between them (they must not touch). Same style for all four, seen from above.
+
+LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no motion trails. A clean 1-pixel dark outline around each sprite in the darkest shade of its own colour (never pure black). Light from the top-left.
+
+1) A CORPSE BOULDER thrown by an undead catapult: a round lumpy ball of fused grey-green corpse flesh (#3B5529, #76984A) bound with bone (#B4AA8A, #E8E1C8), a bone skull face on its front with two small soul-teal eyes (#3DCC94), two short bone spurs sticking out. Only 14 x 14 pixels.
+2) The SAME boulder BURNING: charred dark brown flesh (#4F3320, #8C6040), glowing orange fire cracks (#FF8C26, #FFDC66) across it, the skull's eyes burning orange, a few flame tongues on top (#C71A29, #FF8C26). Only 14 x 14 pixels.
+3) A floating BONE SHARD: a long thin pointed splinter of polished bone (#E8E1C8, #B4AA8A, #7F785F) lying horizontally, sharp tip pointing RIGHT, a small violet glint (#A35CFA). Only 16 pixels long and 6 pixels tall.
+4) An ECLIPSED ORB: a round black orb (#160A21 with a #4A2569 rim) ringed by a thin glowing violet corona (#7A42AD, #A35CFA), with a bright soul-green crescent (#3DCC94, #A8FFD2) on its RIGHT edge, like a dark eclipse. Only 18 x 18 pixels.
+
+Colours: ONLY flat fills from these lists: moss #081814 (outline), #3B5529, #76984A; bone #1C110B (outline), #7F785F, #B4AA8A, #E8E1C8; soul #1C6B58, #3DCC94, #A8FFD2; fire #26070C (outline), #C71A29, #FF8C26, #FFDC66; brown #4F3320, #8C6040; violet #160A21, #4A2569, #7A42AD, #A35CFA, #DDBDFF.
+
+Output: a PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white). No ground, no cast shadow, no text, no labels, no numbers, no frame, no watermark.
+Attached: approved sprites of this game (orbs, a bone spear, units). Match their pixel size, outline weight and palette exactly.

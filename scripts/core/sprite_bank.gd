@@ -309,8 +309,10 @@ static func draw_pose(ci: CanvasItem, key: String, pose: int, o: Vector2, flash:
 ## colours (e.g. a dim uncharged orb). Grid art (longest side no more than
 ## its FLAT_SIZES entry: projectiles, orbs, pickups) is drawn 1:1 at
 ## SpriteData.ART_SCALE through the sharp-pixel shader, its corner on whole
-## px when unrotated. Returns false when there is no art.
-static func draw_flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tint: Color = Color.WHITE) -> bool:
+## px when unrotated. `scale` (default 1) enlarges it further (an ice shell
+## sized to a boss, a boulder high in its arc); the shader keeps the pixels
+## sharp. Returns false when there is no art.
+static func draw_flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tint: Color = Color.WHITE, scale: float = 1.0) -> bool:
 	var tex := texture(key)  # Art for this key, or null.
 	if tex == null:
 		return false
@@ -319,7 +321,7 @@ static func draw_flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tin
 	var h := float(tex.get_height())  # Texture height (px).
 	var grid := bool(_grid[key])  # True pixel art at art resolution.
 	var k := float(SpriteData.ART_SCALE) if grid else long_side / maxf(w, h)  # Texture px -> world px.
-	var size := Vector2(w, h) * k  # Drawn size (px).
+	var size := Vector2(w, h) * k * scale  # Drawn size (px).
 	var corner := -size * 0.5  # Rect corner in the rotated frame (px).
 	if grid:
 		apply_sharp(ci)
@@ -328,6 +330,42 @@ static func draw_flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tin
 	ci.draw_set_transform(o, angle, Vector2.ONE)
 	ci.draw_texture_rect(tex, Rect2(corner, size), false, tint)
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	return true
+
+
+## Draws sprite `key` like draw() (centred near `o`, feet below it, a drop
+## shadow), but only its top `rise` (0..1) of rows, their bottom on the
+## sprite's feet line: the sprite grows up out of the ground as `rise` goes
+## 0 -> 1 and sinks back as it falls (Bone Wall segments rising and
+## crumbling). `flip` mirrors it horizontally (a wall alternates its
+## segments). `tint` multiplies the colours. Grid art only (it needs whole
+## texel rows); returns false and draws nothing otherwise, so the caller
+## draws its glyph.
+static func draw_rising(ci: CanvasItem, key: String, o: Vector2, rise: float, flip: bool, tint: Color = Color.WHITE) -> bool:
+	var tex := texture(key)  # Art for this key, or null.
+	if tex == null or not bool(_grid[key]) or icon_cap > 0.0:
+		return false
+	var rows := ceilf(float(tex.get_height()) * clampf(rise, 0.0, 1.0))  # Texel rows shown (top of the sprite).
+	if rows <= 0.0:
+		return true
+	var size := _drawn_size(key, tex)  # Full drawn size (px).
+	var k := size.y / float(tex.get_height())  # Layout px per texel.
+	var centre := o + Vector2(0.0, size.y * SpriteData.CENTER_OFFSET)  # Full sprite centre (px).
+	var feet := centre.y + size.y * 0.5  # Feet line (px).
+	var sw := size.y * SpriteData.SHADOW_WIDTH * clampf(rise, 0.0, 1.0)  # Shadow width (px), grows with the sprite.
+	ci.draw_set_transform(centre + Vector2(0.0, size.y * 0.46), 0.0, Vector2(1.0, SpriteData.SHADOW_SQUASH))
+	ci.draw_circle(Vector2.ZERO, sw * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA * tint.a))
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	var shown := Vector2(size.x, rows * k)  # Drawn part (px).
+	var top_left := (Vector2(centre.x - size.x * 0.5, feet - shown.y) / k).round() * k  # On whole art px.
+	var src := Rect2(0.0, 0.0, float(tex.get_width()), rows)  # Top rows of the texture.
+	apply_sharp(ci)
+	if flip:
+		# Mirror about the sprite's vertical centre line.
+		ci.draw_set_transform(Vector2(top_left.x * 2.0 + size.x, 0.0), 0.0, Vector2(-1.0, 1.0))
+	ci.draw_texture_rect_region(tex, Rect2(top_left, shown), src, tint)
+	if flip:
+		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	return true
 
 

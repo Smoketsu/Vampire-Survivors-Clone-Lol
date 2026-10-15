@@ -147,7 +147,9 @@ static func _draw_newer_synergy(ci: CanvasItem, kind: String, c: Vector2, s: flo
 				ci.draw_circle(c + Vector2.from_angle(PI * 0.25 + PI * 0.5 * float(i)) * s * 0.6, s * 0.14, cols[i])
 
 
-## Volley of the Fallen mark: a small violet diamond with a green core.
+## Volley of the Fallen mark: a small violet diamond with a green core (the
+## code shape: the synergy icon fallback, and the mark over an enemy when its
+## pixel art MarkerArtData.MAGE_MARK is missing, see Enemy._draw_over()).
 static func draw_mage_mark(ci: CanvasItem, c: Vector2, r: float) -> void:
 	var d := PackedVector2Array([c + Vector2(0, -r), c + Vector2(r * 0.75, 0), c + Vector2(0, r), c + Vector2(-r * 0.75, 0)])
 	ci.draw_colored_polygon(d, Palette.VIOLET)

@@ -273,8 +273,17 @@ static func draw_shard_field(ci: CanvasItem, pos: Vector2, r: float, k: float) -
 
 
 ## A catapult boulder at `pos` (radius `r`) spun by `rot` radians; a
-## `burning` one (Ossuary Engine) glows with embers.
+## `burning` one (Ossuary Engine) glows with embers. With its pixel art
+## (MarkerArtData.BOULDER / BOULDER_BURNING: a skull, upright so the flames
+## rise) it is drawn larger as `r` grows (high in its arc) and does not spin.
 static func draw_boulder(ci: CanvasItem, pos: Vector2, r: float, rot: float, burning: bool) -> void:
+	var key := MarkerArtData.BOULDER_BURNING if burning else MarkerArtData.BOULDER  # Boulder art key.
+	if SpriteBank.has(key):
+		if burning:
+			ci.draw_circle(pos, r * 1.6, Color(HordeHazards.EMBER, 0.3))  # Ember glow stays drawn.
+		var k := maxf(1.0, r / MarkerArtData.BOULDER_BASE_RADIUS)  # Scale (never below 1:1).
+		SpriteBank.draw_flat(ci, key, pos + (MarkerArtData.BOULDER_BURNING_OFFSET * k if burning else Vector2.ZERO), 0.0, Color.WHITE, k)
+		return
 	if burning:
 		ci.draw_circle(pos, r * 1.6, Color(HordeHazards.EMBER, 0.3))
 	ci.draw_circle(pos, r + 1.0, Glyphs.OUTLINE)

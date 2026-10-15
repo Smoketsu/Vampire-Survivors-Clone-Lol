@@ -146,6 +146,9 @@ func _draw_eclipse() -> void:
 		var local := orb_positions[i] - position
 		var charged := recharge[i] <= 0.0
 		draw_circle(local, AbilityData.ORB_RADIUS + 4.0, Color(Palette.VIOLET, 0.45 if charged else 0.12))
-		draw_circle(local, AbilityData.ORB_RADIUS + 0.5, Color(0.03, 0.0, 0.05))
 		var face := (local).angle()
+		# Pixel-art eclipsed orb, its green crescent turned outward (dim while recharging).
+		if SpriteBank.draw_flat(self, MarkerArtData.ECLIPSE_ORB, local, face, Color(1, 1, 1, 1.0 if charged else MarkerArtData.ECLIPSE_ORB_DIM_ALPHA)):
+			continue
+		draw_circle(local, AbilityData.ORB_RADIUS + 0.5, Color(0.03, 0.0, 0.05))
 		draw_arc(local, AbilityData.ORB_RADIUS + 0.5, face - 1.2, face + 1.2, 10, Palette.NECRO_GREEN if charged else Color(Palette.NECRO_GREEN, 0.35), 2.0)

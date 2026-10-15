@@ -249,6 +249,8 @@ func _draw() -> void:
 				var c := Vector2(0.0, CharacterData.SHARD_ORBIT_LIFT) + Vector2.from_angle(a) * CharacterData.SHARD_ORBIT_RADIUS  # Local centre.
 				var d := Vector2.from_angle(a + PI * 0.5) * 7.0  # Half-length along the orbit.
 				draw_circle(c, 7.0, Color(Palette.BONE, 0.18))
+				if SpriteBank.draw_flat(self, MarkerArtData.ORACLE_SHARD, c, a + PI * 0.5):
+					continue  # Pixel-art shard, its tip along the orbit (the faint glow above stays drawn).
 				draw_line(c - d, c + d, Color(0, 0, 0, 0.6), 5.0)
 				draw_line(c - d, c + d, Palette.BONE, 3.0)
 				draw_circle(c + d, 2.2, Palette.BONE)

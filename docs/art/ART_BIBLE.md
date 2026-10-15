@@ -847,6 +847,65 @@ stone wing, ice, wail) meeting its finisher's (sword, boulder, dagger, hound sku
 | `frost_wraith.png` | Summon class badge: a pale icy hooded wraith trailing frost |
 | `abomination.png` | Summon class badge: a stitched corpse-flesh brute with bone spikes |
 
+### Placeholder art batch (markers, overlays, spell props; Oct 2026)
+
+The last code-drawn things a player sees in a run (and four icons the code asked for without a PNG)
+got pixel art, exactly like the empowered graves: each drawing site names its key in
+`scripts/data/marker_art_data.gd` (`MarkerArtData`, with the placement numbers), draws it through
+`SpriteBank.draw()` / `draw_flat()` / `draw_rising()` / the icon path, and **keeps its code drawing as
+the fallback** when the PNG is missing. Rings, telegraphs, zones, glows and progress arcs stay in code
+(the rally's closing ring, the brand's turning sigil, the stun ring, the nova's safe rings, the cold
+disc under the ice shell, the ember glow under a burning boulder). Flat sprites are drawn 1:1 without
+a shadow (`SpriteData.FLAT_SIZES` = the longest side); the two wall segments and the stone still are
+world sprites (`SpriteData.HEIGHTS`). Purely visual: no gameplay state, no RNG (the corpse variant is
+the corpse's pool slot `k % 3`, the wall segment's mirror its index `k % 2`).
+
+| Key | Subject | Art px (w × h) | Drawn by | Status |
+|---|---|---|---|---|
+| `markers/rally_pennant` | A boss's Call to Arms rally point: a warm-steel pole with a gold knob and a crimson swallow-tailed pennant with a gold stripe | 28 × 30 | `StageDirector._draw_mark()` (the crimson closing ring stays code) | done |
+| `markers/buff_chevron` | Gold up-chevron over a Covenant soldier buffed by a Banner Bearer / Holy Standard aura | 10 × 7 | `MarchGlyphs.draw_buffed()` | done |
+| `markers/sun_ward` | Sun Paladin ward: a tiny gold heater shield with a crimson sun | 8 × 10 | `SanctumGlyphs.draw_ward()` | done |
+| `markers/sanctuary_cross` | Seraphine's nova safe spot: an ivory cross with a ring round its crossing, icy glints | 20 × 28 | `SeraphineHazards._draw_overlay()` (the safe rings and countdown arc stay code) | done |
+| `markers/mage_mark` | Volley of the Fallen mark: a violet diamond with a soul-green core | 8 × 10 | `Enemy._draw_over()` (the code diamond stays the synergy icon fallback) | done |
+| `markers/death_brand` | Death Mark: a bone skull with violet eye sockets and a small violet flame | 12 × 14 | `GraveSpellGlyphs.draw_brand()` (the turning sigil stays code) | done |
+| `markers/death_brand_doom` | Doom Brand: the skull with soul-green eyes under a taller violet flame | 12 × 16 | same | done |
+| `markers/stun_stars` | Three pale-gold four-point stars in an arc (a still: the overlay layer redraws only when a unit's look changes, so a loop would need per-frame redraws) | 16 × 11 | `ReaperHorrorGlyphs.draw_stun()` (the faint ring stays code) | done |
+| `overlays/frozen_shell` | Stasis / Deep Freeze: a ring of jagged ice crystals with three spikes, the centre open | 36 × 40 | `PowerupGlyphs.draw_frozen()`: a whole-number scale of body radius × 3.2 / 40 (`FROZEN_SHELL_PER_RADIUS`; ×1 for soldiers up to a radius of ~18 px, ×2 for the bosses, so its pixels stay even), alpha 0.9 over the code's translucent cold disc | done |
+| `decals/corpse`, `_2`, `_3` | Corpse Explosion corpses: crossed bones and a skull; a skull by a broken ribcage; scattered bones on a torn crimson rag. Unlike the floor decals they keep an outline (they are spell targets, not floor texture) | 12 × 12, 16 × 10, 16 × 10 | `SpellGlyphs.draw_corpse()`, variant by pool slot, fading 1.0 → 0.35 | done |
+| `structures/bone_wall_segment` | One Bone Wall segment: three curved bone spikes erupting from a cold-grey rubble mound, a violet glint | 20 × 26 | `GraveSpellGlyphs.draw_wall_segment()` through `SpriteBank.draw_rising()` (grows out of the ground as it rises and sinks as it crumbles; odd segments mirrored) | done |
+| `structures/bone_wall_bastion` | One Charnel Bastion segment: four spikes, a skull with teal eyes at their base, soul-teal light in the mound's cracks | 24 × 30 | same | done |
+| `projectiles/corpse_boulder` | Corpse Catapult boulder: a big bone skull with teal eyes and a cranium crack (the catapult's own cup skull) | 16 × 14 | `WarbandGlyphs.draw_boulder()`: upright (no spin), 1:1 up to a radius of 7 px, larger high in its arc | done |
+| `projectiles/corpse_boulder_burning` | Ossuary Engine boulder: the skull with burning orange eyes under a crown of flames | 14 × 23 | same (centred on the skull; the code ember glow stays) | done |
+| `projectiles/oracle_shard` | Bone Oracle Ossuary Ward shard: a polished bone splinter with a violet tip glint | 20 × 6 | `CharacterInnates._draw()`, turned along the orbit | done |
+| `projectiles/eclipse_orb` | Eclipse Ward orb: a black orb in a violet corona with a soul-green crescent | 20 × 18 | `OrbShield._draw_eclipse()`, its crescent turned outward, dim while recharging (the band, segments and charge arc stay code) | done |
+| `summons/cathedral_horror_stone` | The Cathedral Horror's stone form: its still with every colour on the grey ramp by lightness, its teal runes dark (derived, not generated) | 72 × 64 | `SummonedUnit._draw_body()` while `stone_form` (`summons/<kind>_stone`; the code stone shell is skipped) | done |
+| `icons/heal` | Dark Restoration fallback card: a violet heart with a soul-teal plus, two teal soul wisps curling into it | 32 × 32 | icon path | done |
+| `icons/grave_fortitude` | Grave Fortitude fallback card: a rounded grey tombstone shield with a carved soul-teal plus on a heap of grave earth | 32 × 32 | icon path | done |
+| `icons/call_of_the_grave` | Call of the Grave fallback card: three skeletal hands clawing up out of one grave mound, teal soul fire between them | 32 × 32 | icon path | done |
+| `icons/tree_oath` | The Ossuary's Oath tree emblem: a copy of `icons/profane_oath` (the tree's only upgrade) | 32 × 32 | icon path | done |
+| `ui/rotate_phone` | The "turn your device" overlay's phone: a soul-teal case with cut corners, a dark screen, a speaker slit and a home bar (procedural) | 35 × 60 | `RotateOverlay._phone()`, drawn ×2 upright (faded) and turned | done |
+
+Not made: `summons/gargoyle_stone` (only the Cathedral Horror has a stone form: `stone_duration` is
+set only in its evolution recipe, so a Crypt Gargoyle never turns to stone).
+
+**How they were made** (10 images, about $0.20, `tools/gen_image.py`; prompts in
+`art_source/placeholders/prompts/`). Small markers were **batched**: one 1536×1024 sheet per family
+(Covenant marks, player / undead marks, projectiles, corpses, bone walls) with 2-4 subjects in a row
+and wide transparent gaps, the approved sprites ×8 attached, each subject's art px size in the
+prompt; the sheets were cut apart at their empty columns and each piece converted with
+`prepare_sprite.py --art-height N --ramps ... --no-levels` (the folder has no faction set, so the
+ramps are always given). The image AI drew these sheets as chunky pixel art with its own outline
+(12-17 source px per block), so: the tiny marks convert well directly (add `--no-cleanup` for eyes
+and star cores); the corpses, the sun ward, the boulders and the Call of the Grave symbol came out
+cleaner with **`--inside-outline`** (the source's own outline kept, no second ring), while
+`pixelate_source.py` first gave blotches here. The first corpse boulder (a lumpy flesh ball with a
+bone through it) was unreadable at 14 px and was regenerated as a plain skull matching the
+catapult's cup (`p_boulders.txt`). The icons follow the icon rules (one symbol per prompt at 26 px,
+`--no-center --no-prune --no-levels`). The derived pieces are rebuilt by
+`python3 art_source/placeholders/make_placeholder_art.py` (deterministic): the three fallback badges
+(the 26 px symbols in `art_source/placeholders/symbols/` centred on the violet cut-corner badge cut
+from `icons/tree_survival`), the Oath tree copy, the stone still and the procedural phone.
+
 ### Environments (later pass, no prompts yet)
 
 Floors, decals and obstacles come after the units. Floors are **dark, low-saturation and

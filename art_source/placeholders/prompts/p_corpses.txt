@@ -1,0 +1,13 @@
+A SHEET of THREE small separate pixel-art floor details for a top-down 2D horde-survival game (like Vampire Survivors), laid out LEFT TO RIGHT in ONE horizontal row, each one alone with a WIDE fully transparent gap between them (they must not touch). Each is a flat detail LYING ON THE GROUND, seen from above at a steep three-quarter angle; nothing stands up.
+
+LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except eye sockets and glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze. A clean 1-pixel dark outline in the darkest shade of each part's colour (never pure black). Light from the top-left.
+
+The remains of fallen enemies, ready to be detonated by a necromancer:
+1) Two crossed long bones with a small skull lying at their top, the skull's eye sockets dark with a faint soul-teal glint (#3DCC94). Only 14 pixels wide and 10 pixels tall.
+2) A small skull lying beside a broken ribcage (three curved bone ribs on a short spine). Only 14 pixels wide and 10 pixels tall.
+3) A small heap of scattered bones (a long bone, two short ones) with a skull on its side, a tiny scrap of torn crimson cloth (#7A0E1B) under it. Only 14 pixels wide and 10 pixels tall.
+
+Colours: ONLY flat fills from these lists: bone #1C110B (outline), #7F785F, #B4AA8A, #E8E1C8; soul teal #3DCC94; dark cloth #7A0E1B.
+
+Output: a PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white). No ground, no dirt patch, no cast shadow, no text, no labels, no frame, no watermark.
+Attached: approved sprites of this game. Match their pixel size, outline weight and palette exactly.

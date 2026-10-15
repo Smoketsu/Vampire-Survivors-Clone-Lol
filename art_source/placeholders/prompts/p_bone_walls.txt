@@ -1,0 +1,11 @@
+A SHEET of TWO separate pixel-art game sprites for a top-down 2D horde-survival game (like Vampire Survivors), side by side with a WIDE fully transparent gap between them (they must not touch). Three-quarter top-down view (camera above and slightly in front). Same style for both.
+
+LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze. A clean 1-pixel dark outline in the darkest shade of each part's colour (never pure black). Light from the top-left.
+
+1) ONE SEGMENT OF A BONE WALL raised by a necromancer: a tight cluster of THREE jagged bone spikes (the middle one tallest, curved slightly like ribs or tusks) erupting out of a small low mound of dark cold-grey grave earth and stone. Bone #E8E1C8 lit, #B4AA8A main, #7F785F shadow; mound #3B4352, #6B7A94; one small violet glint (#A35CFA) at the base. Only 26 pixels tall and 20 pixels wide.
+2) The EVOLVED version, a CHARNEL BASTION segment: the same cluster but heavier: FOUR bone spikes, a small skull wedged at their base with soul-teal eyes (#3DCC94), and soul-teal grave light (#1C6B58, #3DCC94) seeping from cracks in the mound. Only 28 pixels tall and 22 pixels wide.
+
+Colours: ONLY flat fills from these lists: bone #1C110B (outline), #7F785F, #B4AA8A, #E8E1C8; grey stone #0F141C (outline), #3B4352, #6B7A94; soul #081814, #1C6B58, #3DCC94, #A8FFD2; violet #A35CFA.
+
+Output: a PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white). No ground plane, no cast shadow, no text, no labels, no frame, no watermark.
+Attached: approved sprites of this game. Match their pixel size, outline weight and palette exactly.

@@ -191,8 +191,11 @@ static func draw_aura(ci: CanvasItem, radius: float) -> void:
 	ci.draw_arc(Vector2.ZERO, radius, 0.0, TAU, 40, Color(Palette.GOLD, 0.28), 1.0)
 
 
-## Small gold chevron over a soldier buffed by an aura.
+## Small gold chevron over a soldier buffed by an aura (its pixel art,
+## MarkerArtData.BUFF_CHEVRON, when present).
 static func draw_buffed(ci: CanvasItem, c: Vector2, s: float) -> void:
+	if SpriteBank.draw_flat(ci, MarkerArtData.BUFF_CHEVRON, c, 0.0):
+		return
 	ci.draw_polyline(PackedVector2Array([c + Vector2(-s, s * 0.5), c + Vector2(0, -s * 0.5), c + Vector2(s, s * 0.5)]), Palette.GOLD, 2.0)
 
 

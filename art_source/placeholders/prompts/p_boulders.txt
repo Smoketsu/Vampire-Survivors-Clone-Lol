@@ -1,0 +1,12 @@
+A SHEET of TWO small separate pixel-art projectile sprites for a top-down 2D horde-survival game (like Vampire Survivors), side by side with a WIDE fully transparent gap between them (they must not touch). Same style for both.
+
+LOW-RESOLUTION pixel art: each is only 14 x 14 pixels (the second one 14 wide and 18 tall with its flames), shown enlarged so every pixel is a big crisp square block (nearest-neighbour). VERY chunky and simple: big flat shapes, no detail smaller than 2 pixels except the eyes. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no motion trail. A clean 1-pixel dark outline in the darkest shade of each part's colour (never pure black). Light from the top-left.
+
+These are the boulders hurled by the undead catapults in the attached image (the skull in the catapult's cup):
+1) A SKULL BOULDER: one big round bone-white skull seen from the front, filling the whole sprite (bone #E8E1C8 lit top-left, #B4AA8A main, #7F785F shadow), two big dark eye sockets each with one bright soul-teal eye pixel (#3DCC94), a dark nose hole, a short row of teeth, one dark crack across the cranium.
+2) The SAME skull BURNING (from the bone siege engine): the same big skull, its eye sockets glowing orange (#FF8C26), wreathed in a crown of chunky flames rising from its top (#C71A29 outer, #FF8C26 middle, #FFDC66 core).
+
+Colours: ONLY flat fills from these lists: bone #1C110B (outline), #7F785F, #B4AA8A, #E8E1C8; soul #3DCC94; fire #26070C (outline), #C71A29, #FF8C26, #FFDC66.
+
+Output: a PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white). No ground, no cast shadow, no text, no labels, no frame, no watermark.
+Attached: approved sprites of this game (the catapults and their skulls). Match their pixel size, outline weight and palette exactly.

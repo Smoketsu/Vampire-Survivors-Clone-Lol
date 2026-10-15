@@ -1,0 +1,13 @@
+A SHEET of FOUR small separate pixel-art game sprites for a top-down 2D horde-survival game (like Vampire Survivors), laid out LEFT TO RIGHT in ONE horizontal row, each one standing alone with a WIDE fully transparent gap between them (they must not touch). Same style for all four. Seen from the front (three-quarter top-down game view).
+
+LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze. A clean 1-pixel dark outline around each sprite in the darkest shade of its own colour (never pure black). Light from the top-left (top-left edges one shade lighter).
+
+1) A RALLY PENNANT planted in the ground (an enemy commander's call to arms): a thin straight warm-steel pole (#9C978C, #D4D0C6 lit) with a small gold knob on top (#E0A92E), and near the top a small bright crimson swallow-tailed pennant flag (#C71A29 main, #7A0E1B shadow) flying to the RIGHT with a short gold stripe. Only 30 pixels tall and 14 pixels wide.
+2) A small GOLD CHEVRON pointing UP (an inverted V, like a rank badge, "^"), solid gold #E0A92E with a #FFDC66 lit top edge, 2 pixels thick. Only 9 pixels wide and 5 pixels tall.
+3) A tiny GOLD HEATER SHIELD badge (flat top, pointed bottom) in gold #E0A92E with a lit edge #FFDC66 and a small round crimson sun (#C71A29) in its middle. Only 8 pixels wide and 9 pixels tall.
+4) A HOLY SANCTUARY CROSS standing upright: a tall ivory-white cross (#E8E1C8 main, #B4AA8A shadow) with a small ring around the crossing of its arms, and a pale icy-blue glint (#A6D9EA, #E4FAFF) on the ring. Only 28 pixels tall and 20 pixels wide.
+
+Colours: ONLY flat fills from these lists: crimson #26070C (outline), #7A0E1B, #C71A29; gold #1C110B (outline), #8C6040, #E0A92E, #FFDC66; warm steel #5C5852, #9C978C, #D4D0C6; ivory #7F785F, #B4AA8A, #E8E1C8; ice #A6D9EA, #E4FAFF.
+
+Output: a PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white). No ground, no cast shadow, no text, no labels, no numbers, no frame, no watermark.
+Attached: approved sprites of this game. Match their pixel size, outline weight and palette exactly.

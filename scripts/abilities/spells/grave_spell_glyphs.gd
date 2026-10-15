@@ -172,22 +172,34 @@ static func _closed(pts: PackedVector2Array) -> PackedVector2Array:
 # =====================================================================================
 
 ## A Death Mark brand on an enemy of body radius `r` at `p`: a slowly turning
-## sigil around it and a small skull above it; it flickers in its last
+## sigil around it and a small skull above it (its pixel art,
+## MarkerArtData.DEATH_BRAND / _DOOM, when present); it flickers in its last
 ## second (`left` s of brand left). `doom` draws the green Doom Brand.
-static func draw_brand(ci: CanvasItem, p: Vector2, r: float, phase: float, doom: bool, left: float) -> void:
+## `skull_y` is the skull's y relative to `p` (px; NAN = the old body-radius
+## placement, r + DEATH_BRAND_RISE above `p`).
+static func draw_brand(ci: CanvasItem, p: Vector2, r: float, phase: float, doom: bool, left: float, skull_y: float = NAN) -> void:
 	var a := 0.55 + 0.45 * clampf(left, 0.0, 1.0) * (0.75 + 0.25 * sin(phase * 9.0))  # Alpha (flickers out).
 	var col := DOOM if doom else Palette.VIOLET  # Sigil colour.
 	_sigil(ci, p, r + 5.0, Color(col, a), phase * 1.6)
 	ci.draw_arc(p, r + 7.5, phase * 2.0, phase * 2.0 + PI * 0.6, 8, Color(Palette.NECRO_GREEN, 0.6 * a), 1.5)
+	var key := MarkerArtData.DEATH_BRAND_DOOM if doom else MarkerArtData.DEATH_BRAND  # Brand skull art.
+	var sy := -r - MarkerArtData.DEATH_BRAND_RISE if is_nan(skull_y) else skull_y  # Skull height (px).
+	if SpriteBank.draw_flat(ci, key, p + Vector2(0, sy), 0.0, Color(1.0, 1.0, 1.0, a)):
+		return
 	Glyphs._skull(ci, p + Vector2(0, -r - 9.0), 3.2, false, col)
 
 
 ## One bone-wall segment of radius `r` at `p`: a cluster of three bone
 ## spikes over a dark mound, scaled by `grow` (0 -> 1 rising, 1 -> 0 when
 ## crumbling). `k` varies the spike heights; `ring` tints the Charnel Bastion
-## green; `phase` animates the glint.
+## green; `phase` animates the glint. With its pixel art
+## (MarkerArtData.BONE_WALL_SEGMENT / BONE_WALL_BASTION) the segment grows up
+## out of the ground with `grow`, odd segments mirrored.
 static func draw_wall_segment(ci: CanvasItem, p: Vector2, r: float, grow: float, k: int, ring: bool, phase: float) -> void:
 	if grow <= 0.01:
+		return
+	var key := MarkerArtData.BONE_WALL_BASTION if ring else MarkerArtData.BONE_WALL_SEGMENT  # Segment art key.
+	if SpriteBank.draw_rising(ci, key, p, grow, k % 2 == 1):
 		return
 	ci.draw_circle(p + Vector2(0, r * 0.35), r * 0.95, Color(0.07, 0.05, 0.09, 0.55 * grow))
 	var rim := Palette.NECRO_GREEN if ring else Palette.VIOLET  # Mound rim.

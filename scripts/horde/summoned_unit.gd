@@ -1120,7 +1120,15 @@ func _draw() -> void:
 ## Body layer on `ci`: the sprite or glyph, lifted while it flies / floats.
 func _draw_body(ci: CanvasItem) -> void:
 	var lift := behavior.body_lift(self) if behavior != null else 0.0  # px the body is drawn above the ground (Gargoyle flight).
+	if stone_form and SpriteBank.draw(ci, stone_key(), Vector2(0, -lift), flash > 0.0):
+		return  # Stone-form still (the Cathedral Horror turned to grey stone).
 	Glyphs.draw_summon(ci, glyph_kind if glyph_kind != "" else unit_class, Vector2(0, -lift), radius, flash > 0.0)
+
+
+## Sprite key of this unit's stone-form still ("summons/<kind>_stone",
+## MarkerArtData.STONE_SUFFIX), drawn while stone_form when its PNG exists.
+func stone_key() -> String:
+	return "summons/" + (glyph_kind if glyph_kind != "" else unit_class) + MarkerArtData.STONE_SUFFIX
 
 
 ## Overlay layer on `ci`: class overlays, the barrier and the HP bar.

@@ -225,9 +225,11 @@ func body_lift(u: SummonedUnit) -> float:
 	return 0.0
 
 
-## Stone form overlay over the body (cracked stone shell, violet runes).
+## Stone form overlay over the body (cracked stone shell, violet runes); not
+## needed when the unit has a stone-form still (SummonedUnit._draw_body()
+## draws "summons/<kind>" + MarkerArtData.STONE_SUFFIX instead).
 func draw_over(u: SummonedUnit, ci: CanvasItem) -> void:
-	if phase == STONE:
+	if phase == STONE and not SpriteBank.has(u.stone_key()):
 		ReaperHorrorGlyphs.draw_stone_shell(ci, Vector2.ZERO, u.radius)
 
 

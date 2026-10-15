@@ -420,7 +420,8 @@ tiny tweaks.
    **Menu modernization: done (Oct 2026)** (see the Done list above); the menu diorama ships to
    `main` only after the owner has seen its recorded video.
 3. **Art pass: done (Oct 2026)** (GDD §15.0 "Art pass (true pixel art)" and the rows after it). Every unit,
-   character, skin, boss, structure, pickup, projectile, icon, obstacle (both orientations), zone floor, decal, effect
+   character, skin, boss, structure, pickup, projectile, icon, world marker and overlay (`MarkerArtData`, GDD §15.0
+   "Placeholder art batch"), obstacle (both orientations), zone floor, decal, effect
    strip, walk cycle (54 units), the UI kit and the NECROPATHY logo are pixel art at 1 art px = 1 screen px through the
    sharp-pixel shader; fonts Jersey 10 (all UI text, descriptions included) + Jacquard 24 (titles, banners), sized
    by the `UiTheme.Tier` type tiers (GDD §15.0 "Type tiers"). Tools: `tools/gen_image.py` (API

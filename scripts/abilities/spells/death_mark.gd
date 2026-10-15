@@ -242,4 +242,4 @@ func _draw() -> void:
 		var e := b.enemy
 		if e == null or not e.active or e.generation != b.gen:
 			continue
-		GraveSpellGlyphs.draw_brand(self, e.position, e.radius, _phase, b.doom, b.time_left)
+		GraveSpellGlyphs.draw_brand(self, e.position, e.radius, _phase, b.doom, b.time_left, e.marker_y(-e.radius - MarkerArtData.DEATH_BRAND_RISE))

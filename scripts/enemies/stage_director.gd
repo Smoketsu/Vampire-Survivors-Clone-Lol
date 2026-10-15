@@ -614,12 +614,15 @@ func _draw_shrine(s: Shrine, now: float) -> void:
 		Glyphs.draw_icon(self, "warrior" if s.reward == "reinforce" else "soul_recycling", Rect2(s.pos + Vector2(-7, -40), Vector2(14, 14)))
 
 
-## Boss marks: a crimson rally banner (Call to Arms) or an ivory judgment
-## sigil filling up until the light falls (Judgment of the Dead).
+## Boss marks: a crimson rally banner (Call to Arms; its pixel-art pennant
+## MarkerArtData.RALLY_PENNANT when present) or an ivory judgment sigil
+## filling up until the light falls (Judgment of the Dead).
 func _draw_mark(m: Mark, now: float) -> void:
 	var k := clampf(m.t / m.duration, 0.0, 1.0)
 	if m.style == MarkStyle.RALLY:
 		draw_arc(m.pos, m.radius * (1.6 - 0.6 * k), 0.0, TAU, 20, Color(Palette.CRIMSON, 0.9), 2.0)
+		if SpriteBank.draw_flat(self, MarkerArtData.RALLY_PENNANT, m.pos + MarkerArtData.RALLY_PENNANT_OFFSET, 0.0):
+			return  # Pixel-art pennant (the closing ring above stays drawn).
 		draw_line(m.pos + Vector2(0, 6), m.pos + Vector2(0, -22), Palette.SILVER, 2.0)
 		draw_colored_polygon(PackedVector2Array([m.pos + Vector2(1, -22), m.pos + Vector2(13, -18), m.pos + Vector2(1, -13)]), Palette.CRIMSON)
 		return

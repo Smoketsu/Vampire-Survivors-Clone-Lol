@@ -130,6 +130,10 @@ const HEIGHTS: Dictionary = {
 	"structures/sanctum_crypt": 36.0,  # TUNING (not in GDD) the Sanctum's empowered grave: marble flagstones cracking over a crypt
 	"structures/crypt_door": 56.0,  # TUNING (not in GDD) the Crypt Defender event's crypt (StageDirector shrine "crypt")
 	"structures/consecration_grave": 30.0,  # TUNING (not in GDD) a grave a Chaplain tries to consecrate (desecration event)
+	# Placeholder art batch (MarkerArtData): spell walls and the stone form.
+	"structures/bone_wall_segment": 26.0,  # TUNING (not in GDD) one Bone Wall segment (9 px radius, 16 px apart): three bone spikes on a mound, ~20 px wide
+	"structures/bone_wall_bastion": 30.0,  # TUNING (not in GDD) one Charnel Bastion segment: four spikes and a skull, ~24 px wide
+	"summons/cathedral_horror_stone": 64.0,  # TUNING (not in GDD) the Cathedral Horror's stone form: its still turned to grey stone, same size
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
@@ -150,7 +154,9 @@ const ICON_FILL: float = 0.9  # TUNING (not in GDD)
 
 ## Longest side (world px) of flat sprites drawn by SpriteBank.draw_flat():
 ## projectiles (art pointing right), orbs and the pickups (drawn centred,
-## unrotated). Keys "projectiles/<id>" and "pickups/<id>". Grid art is stored
+## unrotated). Keys "projectiles/<id>" and "pickups/<id>", plus the flat
+## markers, overlays and corpses of the placeholder art batch ("markers/",
+## "overlays/", "decals/corpse*", "ui/rotate_phone"). Grid art is stored
 ## at exactly this longest side (or less) and drawn 1:1.
 const FLAT_SIZES: Dictionary = {
 	"pickups/xp_crystal_s": 12.0,  # TUNING (not in GDD) XP crystal worth 1-2 (the code glyph was ~10-12 px tall)
@@ -175,6 +181,25 @@ const FLAT_SIZES: Dictionary = {
 	"projectiles/bone_spear": 26.0,  # TUNING (not in GDD)
 	"projectiles/ossuary_lance": 46.0,  # TUNING (not in GDD) art pass: 44 before; the grid art with its outline is 46 px long
 	"projectiles/orb": 18.0,  # TUNING (not in GDD) Shadow Orb Shield orb
+	# Placeholder art batch (MarkerArtData): markers, overlays and spell props,
+	# drawn flat (no shadow) at 1 art px = 1 px. The longest side of each PNG.
+	"projectiles/eclipse_orb": 20.0,  # TUNING (not in GDD) Eclipse Ward orb (the code orb was ~18 px across)
+	"projectiles/oracle_shard": 20.0,  # TUNING (not in GDD) Bone Oracle orbiting shard (code shard 14 px long)
+	"projectiles/corpse_boulder": 16.0,  # TUNING (not in GDD) catapult skull boulder, 16 x 14 (code boulder 12-18 px across)
+	"projectiles/corpse_boulder_burning": 23.0,  # TUNING (not in GDD) Ossuary Engine burning skull, 14 x 23 with its flames
+	"markers/rally_pennant": 30.0,  # TUNING (not in GDD) Call to Arms pennant, 28 x 30 (code pole 28 px tall)
+	"markers/buff_chevron": 10.0,  # TUNING (not in GDD) aura buff chevron, 10 x 7 (code chevron 8 x 4)
+	"markers/sun_ward": 10.0,  # TUNING (not in GDD) Sun Paladin ward badge, 8 x 10 (code pip 7 x 8)
+	"markers/sanctuary_cross": 28.0,  # TUNING (not in GDD) Seraphine nova safe-spot cross, 20 x 28 (code cross 20 x 28)
+	"markers/mage_mark": 10.0,  # TUNING (not in GDD) Volley of the Fallen mark, 8 x 10 (code diamond 6 x 8)
+	"markers/death_brand": 14.0,  # TUNING (not in GDD) Death Mark skull, 12 x 14 with its flame
+	"markers/death_brand_doom": 16.0,  # TUNING (not in GDD) Doom Brand skull, 12 x 16 with its flame
+	"markers/stun_stars": 16.0,  # TUNING (not in GDD) stun stars, 16 x 11
+	"overlays/frozen_shell": 40.0,  # TUNING (not in GDD) ice shell ring, 36 x 40, scaled up by body radius (MarkerArtData)
+	"decals/corpse": 12.0,  # TUNING (not in GDD) Corpse Explosion corpse, crossed bones and a skull, 12 x 12
+	"decals/corpse_2": 16.0,  # TUNING (not in GDD) corpse variant: a skull and a ribcage, 16 x 10
+	"decals/corpse_3": 16.0,  # TUNING (not in GDD) corpse variant: scattered bones on a torn cloth, 16 x 10
+	"ui/rotate_phone": 60.0,  # TUNING (not in GDD) the rotate overlay's phone, 35 x 60 (drawn x2: 70 x 120 layout px)
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

@@ -177,8 +177,11 @@ static func draw_holy_shield(ci: CanvasItem, r: float) -> void:
 	ci.draw_arc(Vector2.ZERO, r * 1.2, -2.4, -1.4, 8, Color(Palette.IVORY, 0.9), 1.5)
 
 
-## Sun Paladin ward: a small gold shield pip at `c` (`s` px half-size).
+## Sun Paladin ward: a small gold shield pip at `c` (`s` px half-size; its
+## pixel art, MarkerArtData.SUN_WARD, at its own size when present).
 static func draw_ward(ci: CanvasItem, c: Vector2, s: float) -> void:
+	if SpriteBank.draw_flat(ci, MarkerArtData.SUN_WARD, c, 0.0):
+		return
 	ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s, -s), c + Vector2(s, -s), c + Vector2(s, s * 0.2),
 		c + Vector2(0, s * 1.2), c + Vector2(-s, s * 0.2)]), Palette.GOLD)
 	ci.draw_circle(c + Vector2(0, -s * 0.1), s * 0.35, Palette.CRIMSON)

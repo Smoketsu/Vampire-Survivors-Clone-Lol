@@ -479,7 +479,9 @@ func _draw_overlay() -> void:
 			overlay.draw_arc(s, sr + 4.0 + 3.0 * pulse, 0.0, TAU, 40, Color(Palette.COLD_BLUE, 0.6), 2.0)
 			# Countdown: the inner arc drains as the blast nears.
 			overlay.draw_arc(s, sr - 7.0, -PI * 0.5, -PI * 0.5 + TAU * (1.0 - k), 40, Color(Palette.COLD_BLUE, 0.9), 4.0)
-			# A small ward sigil in the middle (a cross in a ring).
+			# A small ward sigil in the middle (a cross in a ring): its pixel art when present.
+			if SpriteBank.draw_flat(overlay, MarkerArtData.SANCTUARY_CROSS, s, 0.0, Color(1.0, 1.0, 1.0, MarkerArtData.SANCTUARY_CROSS_ALPHA)):
+				continue
 			overlay.draw_arc(s, 9.0, 0.0, TAU, 16, Color(Palette.IVORY, 0.8), 2.0)
 			overlay.draw_line(s + Vector2(0, -14), s + Vector2(0, 14), Color(Palette.IVORY, 0.8), 2.0)
 			overlay.draw_line(s + Vector2(-10, -3), s + Vector2(10, -3), Color(Palette.IVORY, 0.8), 2.0)

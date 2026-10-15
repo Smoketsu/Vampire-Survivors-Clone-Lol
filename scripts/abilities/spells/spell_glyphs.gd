@@ -200,8 +200,14 @@ static func _along(pts: PackedVector2Array, t: float) -> Vector2:
 
 
 ## A fresh corpse left for Corpse Explosion: crossed bones and a small
-## skull, fading as it ages (`fresh` 1 -> 0). `k` varies the bone angle.
+## skull, fading as it ages (`fresh` 1 -> 0). `k` (the corpse's pool slot)
+## varies the bone angle, or picks the pixel-art variant
+## (MarkerArtData.CORPSES, by slot: no RNG) when the art exists.
 static func draw_corpse(ci: CanvasItem, p: Vector2, fresh: float, k: int) -> void:
+	var key: String = MarkerArtData.CORPSES[posmod(k, MarkerArtData.CORPSES.size())]  # This slot's variant.
+	var fade := lerpf(MarkerArtData.CORPSE_ALPHA_OLD, MarkerArtData.CORPSE_ALPHA_FRESH, clampf(fresh, 0.0, 1.0))  # Sprite opacity.
+	if SpriteBank.draw_flat(ci, key, p, 0.0, Color(1.0, 1.0, 1.0, fade)):
+		return
 	var a := 0.2 + clampf(fresh, 0.0, 1.0) * 0.5  # Alpha.
 	var v := Vector2.from_angle(float(k) * 0.7) * 5.0  # First bone direction.
 	var col := Color(Palette.BONE, a)
