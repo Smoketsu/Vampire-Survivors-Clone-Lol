@@ -411,7 +411,10 @@ tiny tweaks.
   sizes in CSS px in `touch_data.gd`); the Ossuary buys on a second tap on touch; the **Effects**
   setting Full / Reduced (`effects_data.gd`, Reduced by default on phones, purely visual, autotest
   always Full); the page `web/mobile_shell.html` (no zoom / bounce, audio unlock on touchend, landscape
-  lock in fullscreen). Tested with Playwright phone / tablet emulation (real taps, synthetic
+  lock in fullscreen); iPhone (GDD §15.0 "iPhone sound and fullscreen"): the shell asks for the
+  "playback" audio session (the silent switch no longer mutes the game; silent `<audio>` loop before iOS 16.4),
+  resumes "interrupted" contexts too and keeps the hardware sample rate, and Settings replaces the Fullscreen
+  toggle with a line where the browser has no page fullscreen (`Settings.fullscreen_mode()`). Tested with Playwright phone / tablet emulation (real taps, synthetic
   multi-touch) and a desktop viewport. Keep new screens inside 1280 × 600 layout px or call
   `TouchSupport.fit_to_screen()` on their centre container.
 

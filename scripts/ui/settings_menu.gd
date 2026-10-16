@@ -7,7 +7,9 @@
 ##   Audio   : Master / Music / Effects volume (the kit slider).
 ##   Video   : Fullscreen, Zoom (Normal / Close), Effects (Full / Reduced:
 ##             a lighter visual load for phones; EffectsData), Screen shake,
-##             Damage numbers, Reduce motion (UI motion instant).
+##             Damage numbers, Reduce motion (UI motion instant). Where the
+##             browser has no page fullscreen (iPhone Safari) a dim line takes
+##             the Fullscreen toggle's place (Settings.fullscreen_mode()).
 ##   Controls: the twelve rebindable actions in three groups (Move, Actions,
 ##             Stances): each row shows its keyboard key as a key chip on a
 ##             button (press it, then any key; controller B or a mouse click
@@ -265,6 +267,11 @@ func _build_video(vb: VBoxContainer, focus: Array[Control]) -> void:
 		"reduce_motion": [Settings.reduce_motion, Settings.set_reduce_motion],
 	}  # Option key -> [current value, Settings setter].
 	for key: String in SettingsUiData.TOGGLES.keys():
+		if key == "fullscreen" and Settings.fullscreen_mode() != Settings.FULLSCREEN_TOGGLE:
+			_add_fullscreen_note(vb)  # iPhone Safari: no page fullscreen (a line, or nothing).
+			_add_zoom(vb, focus)
+			_add_effects(vb, focus)
+			continue
 		var c := CheckButton.new()
 		c.text = String(SettingsUiData.TOGGLES[key])
 		UiTheme.set_tier(c, UiTheme.Tier.NAME)
@@ -284,6 +291,20 @@ func _build_video(vb: VBoxContainer, focus: Array[Control]) -> void:
 		if key == "fullscreen":
 			_add_zoom(vb, focus)
 			_add_effects(vb, focus)
+
+
+## Web build without page fullscreen (Settings.fullscreen_mode()): a dim, unfocusable
+## line in place of the Fullscreen toggle saying what works instead (nothing when the
+## game already runs fullscreen from the home screen).
+func _add_fullscreen_note(vb: VBoxContainer) -> void:
+	var mode := Settings.fullscreen_mode()  # Settings.FULLSCREEN_* value.
+	if mode == Settings.FULLSCREEN_NONE:
+		return
+	var text := SettingsUiData.FULLSCREEN_HOME_SCREEN if mode == Settings.FULLSCREEN_HOME_SCREEN else SettingsUiData.FULLSCREEN_UNAVAILABLE  # The line's words.
+	var note := UiTheme.tier_label(text, UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
+	note.custom_minimum_size = Vector2(SettingsUiData.ROW_WIDTH, SettingsUiData.ROW_HEIGHT)
+	note.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	vb.add_child(note)
 
 
 ## The zoom row: a button cycling ViewData.ZOOM_ORDER, its value on the right.

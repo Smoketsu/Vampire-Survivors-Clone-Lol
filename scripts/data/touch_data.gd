@@ -19,6 +19,16 @@ extends RefCounted
 ## with the keyboard hints and switches to touch on its first real touch.
 const MOBILE_QUERY: String = "(window.matchMedia && (window.matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints > 0 && !window.matchMedia('(any-pointer: fine)').matches)))"  # TUNING (not in GDD) mobile
 
+## JavaScript expression (Web build) that is true when the browser can put the page in
+## fullscreen (the Fullscreen API; false on iPhone Safari, where only videos can).
+const FULLSCREEN_QUERY: String = "!!(document.fullscreenEnabled || document.webkitFullscreenEnabled)"  # TUNING (not in GDD) mobile
+## JavaScript expression (Web build) that is true when the page runs as a home-screen app
+## (iOS standalone launch or an installed web app: already fullscreen).
+const STANDALONE_QUERY: String = "(navigator.standalone === true || (window.matchMedia && window.matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches))"  # TUNING (not in GDD) mobile
+## JavaScript expression (Web build) that is true when the game is embedded in another
+## page (an iframe, e.g. the itch.io game page).
+const EMBEDDED_QUERY: String = "(window.self !== window.top)"  # TUNING (not in GDD) mobile
+
 # --- Mobile UI scale --------------------------------------------------------------------
 
 ## The menus and the HUD are laid out for 1280 x 720 layout px. On a phone the

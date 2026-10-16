@@ -82,6 +82,12 @@ const TITLE: String = "Settings"  # TUNING (not in GDD)
 const VOLUME_ROWS: Dictionary = {"Master": "Master", "Music": "Music", "SFX": "Effects"}  # TUNING (not in GDD)
 ## Option key -> toggle row label, in Video tab order.
 const TOGGLES: Dictionary = {"fullscreen": "Fullscreen", "screen_shake": "Screen shake", "damage_numbers": "Damage numbers", "reduce_motion": "Reduce motion"}  # TUNING (not in GDD)
+## Web build where the browser has no page fullscreen (iPhone Safari: only videos go
+## fullscreen; GDD §15.0 "iPhone sound and fullscreen"): the Fullscreen toggle becomes
+## this dim line when the game is the page itself (a home-screen launch is fullscreen).
+const FULLSCREEN_HOME_SCREEN: String = "Fullscreen: Share, Add to Home Screen"  # TUNING (not in GDD) mobile
+## The same, when the game is embedded in another page (itch.io): nothing can help there.
+const FULLSCREEN_UNAVAILABLE: String = "Fullscreen: not in this browser"  # TUNING (not in GDD) mobile
 ## Zoom row label (its value is ViewData.ZOOM_LEVELS[...]["label"]).
 const ZOOM: String = "Zoom"  # TUNING (not in GDD)
 ## Effects row label (its value is EffectsData.LABELS[...]: Full / Reduced).

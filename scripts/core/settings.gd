@@ -18,7 +18,8 @@
 ##     never restored at startup (a browser only allows it right after a click
 ##     or key press, so the toggle in Settings works), and `fullscreen` follows
 ##     the page's real state (Esc or F11 change it outside the game;
-##     sync_fullscreen()).
+##     sync_fullscreen()). Where the browser has no page fullscreen (iPhone
+##     Safari) the Settings screen shows a line instead (fullscreen_mode()).
 ##   * Keyboard rebinding of the REBINDABLE actions. Only the PRIMARY
 ##     keyboard key of each action (its first InputEventKey in the project
 ##     InputMap) is remapped; secondary keys (arrow keys) and gamepad
@@ -43,6 +44,14 @@ const ACTION_LABELS: Dictionary = {"move_up": "Move up", "move_down": "Move down
 	"ultimate": "Dread Rally (ultimate)", "pause": "Pause",
 	"stance_escort": "Stance: Escort", "stance_onslaught": "Stance: Onslaught", "stance_spearhead": "Stance: Spearhead",
 	"stance_bone_ring": "Stance: Bone Ring"}
+## fullscreen_mode(): the Settings screen shows the Fullscreen toggle.
+const FULLSCREEN_TOGGLE: int = 0
+## fullscreen_mode(): already fullscreen (home-screen launch), no row at all.
+const FULLSCREEN_NONE: int = 1
+## fullscreen_mode(): no Fullscreen API, the game is the page: the "Add to Home Screen" line.
+const FULLSCREEN_HOME_SCREEN: int = 2
+## fullscreen_mode(): no Fullscreen API and embedded in another page: the "not here" line.
+const FULLSCREEN_UNAVAILABLE: int = 3
 ## Default bus volumes (linear 0..1).
 const DEFAULT_VOLUMES: Dictionary = {"Master": 0.8, "Music": 0.6, "SFX": 0.8}  # TUNING (not in GDD)
 
@@ -59,6 +68,8 @@ var reduce_motion: bool = false
 var effects: String = EffectsData.DEFAULT_DESKTOP
 ## Fullscreen window.
 var fullscreen: bool = false
+## Cached fullscreen_mode() (-1 = not asked yet, else a FULLSCREEN_* value).
+var _fullscreen_mode: int = -1
 ## Camera zoom level id (ViewData.ZOOM_LEVELS key).
 var zoom_id: String = ViewData.DEFAULT_ZOOM
 ## action -> physical keycode of its primary keyboard key (current).
@@ -200,6 +211,30 @@ func set_reduce_motion(on: bool) -> void:
 func sync_fullscreen() -> void:
 	if OS.has_feature("web"):
 		fullscreen = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+
+
+## What the Settings screen offers for fullscreen (GDD §15.0 "iPhone sound and
+## fullscreen"): FULLSCREEN_TOGGLE (desktop, and browsers with the Fullscreen API),
+## FULLSCREEN_NONE (already fullscreen: a home-screen launch), FULLSCREEN_HOME_SCREEN
+## (no Fullscreen API, the game is the page: iPhone Safari, where "Add to Home Screen"
+## opens it fullscreen) or FULLSCREEN_UNAVAILABLE (no Fullscreen API and embedded in
+## another page, e.g. itch.io on an iPhone). Asked once, then cached.
+func fullscreen_mode() -> int:
+	if _fullscreen_mode < 0:
+		_fullscreen_mode = FULLSCREEN_TOGGLE
+		if OS.has_feature("web") and DisplayServer.get_name() != "headless":
+			if _js_true(TouchData.STANDALONE_QUERY):
+				_fullscreen_mode = FULLSCREEN_NONE
+			elif not _js_true(TouchData.FULLSCREEN_QUERY):
+				_fullscreen_mode = FULLSCREEN_UNAVAILABLE if _js_true(TouchData.EMBEDDED_QUERY) else FULLSCREEN_HOME_SCREEN
+	return _fullscreen_mode
+
+
+## Web build: evaluates the JavaScript boolean expression `expr` on the page (a JS
+## boolean comes back as a bool or a number depending on the bridge: ask for 1 / 0).
+func _js_true(expr: String) -> bool:
+	var answer: Variant = JavaScriptBridge.eval("(%s) ? 1 : 0" % expr, true)
+	return (typeof(answer) == TYPE_INT or typeof(answer) == TYPE_FLOAT or typeof(answer) == TYPE_BOOL) and int(answer) == 1
 
 
 ## Switches fullscreen on / off.

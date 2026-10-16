@@ -2007,6 +2007,13 @@ support).
     Esc always leaves it first (a browser rule). It is not restored at startup (browsers refuse without a click or
     key press), and the toggle shows the page's real state.
   - **Sound starts with the first click or key press** (browsers block audio before any input).
+  - **iPhone and iPad** (GDD §15.0 "iPhone sound and fullscreen"): iPhone Safari has no page fullscreen (only videos
+    go fullscreen), so Settings shows "Fullscreen: Share, Add to Home Screen" in place of the toggle (a home-screen
+    launch plays fullscreen and has its own saves), or "Fullscreen: not in this browser" when the game is embedded
+    in another page (the itch.io page). The page asks iOS for the "playback" audio session, so the ring / silent
+    switch no longer mutes the game (it pauses other apps' music, as a video does); older iOS (before 16.4) gets
+    the same from a looping silent `<audio>`. Every tap resumes a context iOS left "suspended" or "interrupted"
+    (after a call, Siri or another app), and Godot's AudioContext keeps the device's own sample rate there.
   - **Sound memory (patched engine script):** Godot 4.3's Web player copies a sound's whole buffer every time it
     plays. That is about 1-2 MB of garbage a second in a run, enough to get a phone tab killed for memory and
     reloaded mid-run (the "game resets after a while" bug). `tools/patch_web_audio.py` makes every play share the
