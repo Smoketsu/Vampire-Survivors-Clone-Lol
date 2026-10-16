@@ -1995,6 +1995,7 @@ support).
   ```bash
   mkdir -p build/web && touch build/.gdignore   # .gdignore: Godot must not import the exported PNGs
   godot --headless --export-release "Web" build/web/index.html
+  python3 tools/patch_web_audio.py build/web/index.js   # required: see "Sound memory" below
   ```
 - **Size and load:** `index.wasm` is 35.4 MB (8.0 MB gzipped) and `index.pck` 7.8 MB (7.5 MB gzipped); most hosts
   serve them compressed. Godot's loading bar shows while they download and the engine starts.
@@ -2006,6 +2007,11 @@ support).
     Esc always leaves it first (a browser rule). It is not restored at startup (browsers refuse without a click or
     key press), and the toggle shows the page's real state.
   - **Sound starts with the first click or key press** (browsers block audio before any input).
+  - **Sound memory (patched engine script):** Godot 4.3's Web player copies a sound's whole buffer every time it
+    plays. That is about 1-2 MB of garbage a second in a run, enough to get a phone tab killed for memory and
+    reloaded mid-run (the "game resets after a while" bug). `tools/patch_web_audio.py` makes every play share the
+    sample's one buffer. CI runs it after the Web export and fails if the engine script no longer matches, and a
+    local export needs it too (GDD §15.0 "Web audio buffer patch").
   - **The master-bus hard limiter is not applied** (Godot's Web sample playback skips bus effects), so a very
     dense burst of sounds can be a little louder than on desktop; the per-sound voice limits still apply.
   - **Audio synthesis is spread over frames:** with no worker threads, the sound effects and the in-run loop are

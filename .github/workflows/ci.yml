@@ -182,6 +182,11 @@ jobs:
           if grep -qE "SCRIPT ERROR|ERROR:" export_web.log; then
             echo "::error::Errors during the Web export"; exit 1
           fi
+          # Godot 4.3 copies a sound's whole buffer on every Web play; the garbage
+          # got phone tabs killed (page reload) mid-run. The patch shares the buffer
+          # and fails the build if the engine's script no longer matches (GDD §15.0
+          # "Web audio buffer patch").
+          python3 tools/patch_web_audio.py build/web/index.js
           (cd build/windows && zip -q ../Necropathy-windows.zip Necropathy.exe)
           (cd build/linux && chmod +x Necropathy.x86_64 && zip -q ../Necropathy-linux.zip Necropathy.x86_64)
           # index.html at the zip's root, as itch.io and static hosts expect.

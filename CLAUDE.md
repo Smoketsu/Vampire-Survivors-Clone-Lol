@@ -158,7 +158,9 @@ smoke test. Pushing a `v*` tag publishes a GitHub Release with the three zips. T
 the Web build from `main` pushes and `v*` tags and are skipped unless configured: `publish-itch`
 (secret `BUTLER_API_KEY` + variable `ITCH_TARGET`) and `publish-pages` (variable `WEB_PAGES` = `true`,
 Pages source "GitHub Actions"). Local web export: `mkdir -p build/web && touch build/.gdignore`, then
-`godot --headless --export-release "Web" build/web/index.html` (templates `web_nothreads_*.zip`).
+`godot --headless --export-release "Web" build/web/index.html` (templates `web_nothreads_*.zip`), then
+**always** `python3 tools/patch_web_audio.py build/web/index.js` (shares sample buffers; without it phone tabs
+run out of memory and reload mid-run; GDD §15.0 "Web audio buffer patch").
 
 ## Balance targets (check with multi-seed batches, `--mortal`)
 
@@ -395,7 +397,8 @@ tiny tweaks.
   `RunLoopSynth`; 6 ms per frame, `SoundData.WEB_SYNTH_BUDGET_MS`; bit-identical, the desktop path
   unchanged), so the page no longer freezes for it; Quit hidden (`FrontDoorData.WEB_HIDDEN_ITEMS`); the
   fullscreen toggle follows the browser's real state and is not restored at startup; saves in IndexedDB
-  (checked across a reload); CI exports it (artifact `Necropathy-web`, release zip) with optional
+  (checked across a reload); the engine's copy of a sound's buffer on every play is patched out of the exported
+  `index.js` (`tools/patch_web_audio.py`; it got phone tabs killed for memory mid-run); CI exports it (artifact `Necropathy-web`, release zip) with optional
   itch.io / GitHub Pages publishing. Tested in headless Chromium (title, a run, reload).
 - **phones and tablets in the browser** (owner request "make it mobile friendly", GDD §15.0 "Mobile
   browser support"; native apps still deferred): `TouchSupport` (detection by a coarse pointer, the
