@@ -19,6 +19,8 @@
       "playback" audio session so the ring / silent switch no longer mutes the game
       (a looping silent <audio> on iOS older than 16.4), and on Apple touch devices
       Godot's AudioContext keeps the hardware sample rate;
+    * saves: the page asks for persistent storage (navigator.storage.persist), so the
+      browser does not evict the IndexedDB that holds user:// under storage pressure;
     * landscape: a browser can lock the screen orientation only in fullscreen, so
       when the page enters fullscreen on a touch device it asks for landscape
       (screen.orientation.lock; refused quietly where unsupported, e.g. iOS). The
@@ -208,6 +210,11 @@ body {
 	}
 	document.addEventListener('fullscreenchange', lockLandscape);
 	document.addEventListener('webkitfullscreenchange', lockLandscape);
+	// Saves: ask the browser to keep this site's storage (IndexedDB, where Godot keeps
+	// user://) instead of evicting it under storage pressure; quietly refused where unsupported.
+	if (navigator.storage && navigator.storage.persist) {
+		navigator.storage.persist().catch(() => {});
+	}
 	// iOS Safari ignores user-scalable=no for pinches: cancel its gesture events.
 	document.addEventListener('gesturestart', (e) => e.preventDefault());
 }());

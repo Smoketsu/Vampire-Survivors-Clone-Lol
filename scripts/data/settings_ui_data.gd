@@ -9,9 +9,9 @@ extends RefCounted
 # --- Tabs -----------------------------------------------------------------------------
 
 ## Tab ids, left to right (SettingsMenu builds one page per id).
-const TABS: Array[String] = ["audio", "video", "controls"]  # TUNING (not in GDD)
+const TABS: Array[String] = ["audio", "video", "controls", "save"]  # TUNING (not in GDD); "save" = save backup codes (SaveBackup)
 ## Tab id -> tab button caption (one word, owner: "less wordy").
-const TAB_NAMES: Dictionary = {"audio": "Audio", "video": "Video", "controls": "Controls"}  # TUNING (not in GDD)
+const TAB_NAMES: Dictionary = {"audio": "Audio", "video": "Video", "controls": "Controls", "save": "Save"}  # TUNING (not in GDD)
 ## Key that selects the previous tab (keyboard; Q).
 const TAB_PREV_KEY: int = KEY_Q  # TUNING (not in GDD)
 ## Key that selects the next tab (keyboard; E).

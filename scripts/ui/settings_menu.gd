@@ -10,6 +10,8 @@
 ##             Damage numbers, Reduce motion (UI motion instant). Where the
 ##             browser has no page fullscreen (iPhone Safari) a dim line takes
 ##             the Fullscreen toggle's place (Settings.fullscreen_mode()).
+##   Save    : Backup / Restore of the progress as a save code (SaveBackup;
+##             for iPhone Safari, which forgets an embedded game's saves).
 ##   Controls: the twelve rebindable actions in three groups (Move, Actions,
 ##             Stances): each row shows its keyboard key as a key chip on a
 ##             button (press it, then any key; controller B or a mouse click
@@ -64,6 +66,8 @@ var _page_focus: Array = []
 var _tab: int = 0
 ## The hint strip's "Select" / "Rebind" word.
 var _accept_word: Label
+## Status line of the Save tab (Backup / Restore results).
+var _save_status: Label
 ## Top key button of each Controls group (their "up" leads to the tab row).
 var _bind_tops: Array[Control] = []
 
@@ -220,8 +224,91 @@ func _build_page(id: String) -> Control:
 			_build_video(vb, focus)
 		"controls":
 			_build_controls(vb, focus)
+		"save":
+			_build_save(vb, focus)
 	_page_focus.append(focus)
 	return page
+
+
+## Save: the save backup codes (SaveBackup; GDD §15.0 "Save backup codes and the GitHub
+## Pages build"): a dim line, Backup and Restore, and a status line. Restore asks for the
+## code, checks it, then asks first (ConfirmDialog, Cancel focused); during a run it only
+## says to restore from the main menu (a restore mid-run would mix two profiles).
+func _build_save(vb: VBoxContainer, focus: Array[Control]) -> void:
+	var info := UiTheme.para(SaveBackupData.INFO, SettingsUiData.ROW_WIDTH, UiTheme.TEXT_DIM)
+	vb.add_child(info)
+	var backup := Button.new()
+	backup.text = SaveBackupData.BACKUP
+	backup.custom_minimum_size = Vector2(SettingsUiData.ROW_WIDTH, SettingsUiData.ROW_HEIGHT)
+	backup.pressed.connect(_on_backup)
+	vb.add_child(backup)
+	focus.append(backup)
+	var restore := Button.new()
+	restore.text = SaveBackupData.RESTORE
+	restore.custom_minimum_size = Vector2(SettingsUiData.ROW_WIDTH, SettingsUiData.ROW_HEIGHT)
+	restore.pressed.connect(_on_restore)
+	vb.add_child(restore)
+	focus.append(restore)
+	_save_status = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
+	_save_status.custom_minimum_size = Vector2(SettingsUiData.ROW_WIDTH, SettingsUiData.ROW_HEIGHT)
+	_save_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_save_status.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	vb.add_child(_save_status)
+
+
+## Backup pressed: the code goes to the clipboard (or the browser's box on the Web build).
+func _on_backup() -> void:
+	var code := SaveBackup.export_code()  # The progress as a save code ("" = none yet).
+	if code == "":
+		_set_save_status(SaveBackupData.NOTHING, UiTheme.TEXT_DIM)
+		return
+	SaveBackup.give_to_player(code)
+	if not OS.has_feature("web"):
+		_set_save_status(SaveBackupData.COPIED, UiTheme.TEXT_GOOD)
+		return
+	# The browser answers the clipboard request later (real time: the menu may pause the tree).
+	get_tree().create_timer(SaveBackupData.COPY_CHECK_DELAY, true, false, true).timeout.connect(func() -> void:
+		if is_instance_valid(_save_status):
+			var r := SaveBackup.copied_on_web()  # 1 copied, 2 shown in the box, 0 no answer yet.
+			_set_save_status(SaveBackupData.COPIED if r == 1 else SaveBackupData.SHOWN, UiTheme.TEXT_GOOD))
+
+
+## Restore pressed: asks for a code, checks it, then asks before replacing the progress.
+func _on_restore() -> void:
+	if _in_run():
+		_set_save_status(SaveBackupData.IN_RUN, UiTheme.TEXT_DIM)
+		return
+	var code := SaveBackup.ask_player()  # What the player pasted (or the desktop clipboard).
+	if code.strip_edges() == "":
+		_set_save_status("", UiTheme.TEXT_DIM)
+		return
+	if SaveBackup.decode(code) == "":
+		_set_save_status(SaveBackupData.INVALID, Palette.CRIMSON.lightened(0.45))
+		Sfx.play_ui("denied")
+		return
+	ConfirmDialog.ask(self, SaveBackupData.CONFIRM[0], SaveBackupData.CONFIRM[1], SaveBackupData.CONFIRM[2], func() -> void:
+		var err := SaveBackup.import_code(code)  # OK, or why the restore failed.
+		if err == OK:
+			_set_save_status(SaveBackupData.RESTORED, UiTheme.TEXT_GOOD)
+			Sfx.play_ui("purchase")
+		else:
+			_set_save_status(SaveBackupData.FAILED, Palette.CRIMSON.lightened(0.45)))
+
+
+## Shows `text` in the Save tab's status line, in `color`.
+func _set_save_status(text: String, color: Color) -> void:
+	_save_status.text = text
+	_save_status.add_theme_color_override("font_color", color)
+
+
+## True when this menu was opened from a run (the pause menu): a Game is an ancestor.
+func _in_run() -> bool:
+	var n := get_parent()  # Walks up from the menu's parent.
+	while n != null:
+		if n is Game:
+			return true
+		n = n.get_parent()
+	return false
 
 
 ## Audio: one row per bus (name, kit slider, "80%").

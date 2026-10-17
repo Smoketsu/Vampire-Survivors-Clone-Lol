@@ -1446,6 +1446,8 @@ scripts/
   core/
     game_state.gd           Autoload: CLI options (autotest), session prefs, last run summary
     save_migration.gd       First-launch copy of the Gravebound saves (the rename)
+    save_backup.gd          Save codes (Settings -> Save): the progress file gzipped + base64, copied out
+                            (clipboard / the browser's prompt box) and validated + restored through Meta
     settings.gd             Autoload: persistent settings (volumes, toggles, key rebinds) in user://settings.cfg
     meta_progress.gd        Autoload "Meta": Soul Ash, upgrade tiers, lifetime stats, achievements,
                             discovered evolution recipes, per-spell best levels (character unlocks),
@@ -1683,6 +1685,7 @@ scripts/
     recipe_book_data.gd     Texts and grid layout of the pause menu's Recipes view (discovered evolutions)
     ossuary_ui_data.gd      Ossuary screen layout, pip colours, purchase flash / burst / shake, words
     settings_ui_data.gd     Settings tabs, binding groups, short labels, sizes, tab keys
+    save_backup_data.gd     Save code prefix and size limit, Save tab words
     codex_data.gd           The Codex: categories, tabs, sections, Covenant descriptions, layout,
                             achievement badges and the feats' texts
     credits_data.gd         The Credits roll, the licence files and the roll's motion
@@ -1957,8 +1960,9 @@ uptime.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in
    the executable) and the no-threads Web build, runs the autotest again on the exported Linux build, and uploads all
    three as workflow artifacts (`Necropathy-windows`, `Necropathy-linux`, `Necropathy-web`).
-3. **publish-itch / publish-pages** (optional, skipped unless configured; see *Play in the browser* below): on pushes
-   to `main` and on `v*` tags, push the Web build to itch.io or deploy it to GitHub Pages.
+3. **publish-itch / publish-pages / publish-pages-repo** (optional, skipped unless configured; see *Play in the
+   browser* below): on pushes to `main` and on `v*` tags, push the Web build to itch.io, deploy it to GitHub Pages,
+   or push it to a separate public repository that GitHub Pages serves.
 
 To publish a downloadable release, bump `config/version` in `project.godot` (shown on the main menu) and the
 `application/*_version` fields in `export_presets.cfg`, write the player-facing notes in
@@ -2003,6 +2007,16 @@ support).
   - **No Quit button** on the title screen (a tab cannot close itself); close the tab instead.
   - **Saves live in the browser** (`user://` is IndexedDB): Soul Ash, unlocks and settings persist across reloads
     but are per browser and per site, and clearing the site's data deletes them. Desktop saves are not shared.
+    The page asks the browser to keep that storage (`navigator.storage.persist()`).
+  - **iPhone saves** (GDD §15.0 "Save backup codes and the GitHub Pages build"): Safari keeps the saves of a game
+    that is its own page, but a game embedded in another site's frame (the itch.io page) has storage that lasts
+    only until Safari closes. iPhone players should play the GitHub Pages build (below), and can add it to the home
+    screen for fullscreen (a home-screen launch keeps its own saves).
+  - **Save codes:** **Settings → Save** has **Backup** (the progress as a code of about 1,000 characters,
+    `NECRO1:` + base64 of the gzipped `save.cfg`; the browser's clipboard, else a prompt box showing it to copy;
+    on desktop the system clipboard) and **Restore** (paste a code into the browser's prompt box, or copy it on
+    desktop first; checked, then confirmed, then loaded; not during a run). A code moves the profile between
+    devices and builds; settings and key bindings are not in it.
   - **Fullscreen** is the browser's: the Settings toggle works (a click or key press allows it), F11 works too, and
     Esc always leaves it first (a browser rule). It is not restored at startup (browsers refuse without a click or
     key press), and the toggle shows the page's real state.
@@ -2063,6 +2077,14 @@ support).
     **variable** `WEB_PAGES` = `true`. The `publish-pages` job then deploys the build. Pages on a private repository
     needs a paid GitHub plan, and the site is public. To deploy from `v*` tags too, allow them in **Settings →
     Environments → github-pages → Deployment branches and tags** (by default only `main` may deploy).
+  - **GitHub Pages from a separate public repository** (no paid plan needed; it holds only the built game, never
+    the source): create an empty **public** repository (e.g. `necropathy-play`); create a fine-grained personal
+    access token (GitHub **Settings → Developer settings → Fine-grained tokens**) limited to that repository with
+    **Contents: Read and write**; in this repository add the **secret** `PAGES_TOKEN` (the token) and the
+    **variable** `PAGES_REPO` (`owner/name`, e.g. `Smoketsu/necropathy-play`). The `publish-pages-repo` job then
+    force-pushes each build as one commit to that repository's `main`. In that repository, set **Settings → Pages →
+    Build and deployment** to **Deploy from a branch**, `main`, `/ (root)` once the first build is there; the game
+    is then at `https://<owner>.github.io/<name>/`.
 
 ---
 

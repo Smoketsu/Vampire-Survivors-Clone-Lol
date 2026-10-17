@@ -24,6 +24,10 @@
 #               WEB_PAGES is "true" (and GitHub Pages is set to "GitHub Actions"
 #               in Settings -> Pages). Without them both jobs are skipped and the
 #               workflow stays green. See README "Play in the browser".
+#   4. publish-pages-repo - OPTIONAL: pushes the Web build to a separate public
+#               repository served by GitHub Pages (variable PAGES_REPO + secret
+#               PAGES_TOKEN), for a private repository without Pages; iPhone Safari
+#               keeps the saves of a top-level site but not of the itch.io frame.
 
 name: CI
 
@@ -306,3 +310,48 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
+
+  # Optional: publishes the Web build to its own GitHub Pages site through a separate,
+  # PUBLIC repository that holds only the built game (no source), for accounts whose
+  # private repositories cannot use Pages (GDD §15.0 "Save backup codes and the GitHub
+  # Pages build"). iPhone Safari keeps a top-level site's saves, but forgets the saves of
+  # a game embedded in another site's frame (the itch.io page) when Safari closes.
+  # Runs on pushes to main and v* tags when the repository variable PAGES_REPO
+  # (e.g. Smoketsu/necropathy-play) and the secret PAGES_TOKEN (a fine-grained token
+  # with Contents: read and write on that repository only) both exist; that repository
+  # serves its main branch root with Settings -> Pages -> "Deploy from a branch".
+  publish-pages-repo:
+    needs: export
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && vars.PAGES_REPO != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # PAGES_TOKEN: push access to PAGES_REPO; empty when the secret does not exist.
+      PAGES_TOKEN: ${{ secrets.PAGES_TOKEN }}
+      # PAGES_REPO: owner/name of the public repository that serves the build.
+      PAGES_REPO: ${{ vars.PAGES_REPO }}
+    steps:
+      - name: Download Web build
+        if: env.PAGES_TOKEN != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: Necropathy-web
+          path: web
+
+      - name: Push the build to the Pages repository
+        if: env.PAGES_TOKEN != ''
+        run: |
+          # One fresh commit each time, force-pushed: the repository keeps only the latest
+          # build (no history of 40 MB builds piling up).
+          mkdir site && cp -r web/. site/
+          # .nojekyll: serve the files as they are (no Jekyll pass).
+          touch site/.nojekyll
+          VERSION="${GITHUB_REF_NAME}"
+          if [ "$GITHUB_REF_TYPE" != "tag" ]; then VERSION="main-${GITHUB_SHA::7}"; fi
+          cd site
+          git init -q -b main
+          git config user.name "necropathy-ci"
+          git config user.email "necropathy-ci@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Necropathy Web build ${VERSION}"
+          git push -q -f "https://x-access-token:${PAGES_TOKEN}@github.com/${PAGES_REPO}.git" HEAD:main

@@ -156,8 +156,9 @@ policies, a Crimson March autotest, a Sanctum of Judgment autotest (army policy)
 Windows/Linux/Web exports (artifacts `Necropathy-windows` / `-linux` / `-web`) and an exported-build
 smoke test. Pushing a `v*` tag publishes a GitHub Release with the three zips. Two optional jobs publish
 the Web build from `main` pushes and `v*` tags and are skipped unless configured: `publish-itch`
-(secret `BUTLER_API_KEY` + variable `ITCH_TARGET`) and `publish-pages` (variable `WEB_PAGES` = `true`,
-Pages source "GitHub Actions"). Local web export: `mkdir -p build/web && touch build/.gdignore`, then
+(secret `BUTLER_API_KEY` + variable `ITCH_TARGET`), `publish-pages` (variable `WEB_PAGES` = `true`,
+Pages source "GitHub Actions") and `publish-pages-repo` (variable `PAGES_REPO` + secret `PAGES_TOKEN`: a separate
+public build-only repository served by Pages). Local web export: `mkdir -p build/web && touch build/.gdignore`, then
 `godot --headless --export-release "Web" build/web/index.html` (templates `web_nothreads_*.zip`), then
 **always** `python3 tools/patch_web_audio.py build/web/index.js` (shares sample buffers; without it phone tabs
 run out of memory and reload mid-run; GDD §15.0 "Web audio buffer patch").
@@ -414,7 +415,11 @@ tiny tweaks.
   lock in fullscreen); iPhone (GDD §15.0 "iPhone sound and fullscreen"): the shell asks for the
   "playback" audio session (the silent switch no longer mutes the game; silent `<audio>` loop before iOS 16.4),
   resumes "interrupted" contexts too and keeps the hardware sample rate, and Settings replaces the Fullscreen
-  toggle with a line where the browser has no page fullscreen (`Settings.fullscreen_mode()`). Tested with Playwright phone / tablet emulation (real taps, synthetic
+  toggle with a line where the browser has no page fullscreen (`Settings.fullscreen_mode()`); saves (GDD §15.0
+  "Save backup codes and the GitHub Pages build"): Settings → Save backs the progress up as a code and restores it
+  (`SaveBackup`, `save_backup_data.gd`), the page asks for persistent storage, and the optional CI job
+  `publish-pages-repo` (variable `PAGES_REPO` + secret `PAGES_TOKEN`) serves the build from a public build-only
+  repository's GitHub Pages, whose saves iPhone Safari keeps (it forgets the itch.io frame's). Tested with Playwright phone / tablet emulation (real taps, synthetic
   multi-touch) and a desktop viewport. Keep new screens inside 1280 × 600 layout px or call
   `TouchSupport.fit_to_screen()` on their centre container.
 
