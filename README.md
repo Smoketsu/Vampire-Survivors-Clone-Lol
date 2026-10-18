@@ -1713,11 +1713,12 @@ scripts/
     seraph_feathers.gd      Act II: the Fallen Seraph's feather rings (pooled, created on first use)
     seraph_texts.gd         Act II: Fallen Seraph / Fallen Grace / Seraph of Ruin card and autotest text
     behaviors/seraph_behavior.gd  Act II: the Fallen Seraph's feather blades and Dive
-    (summoned_unit.gd's held_until: the generic hold a Netcaster's net uses)
     synergy_manager.gd      Army synergy activation and effects; the newer classes' marks
                             (staggered, swooped), the one synergy hit bonus (hit_mult()), the
                             Baying frenzy and the Menagerie replenishment
     summoned_unit.gd        The ONE shared FSM/steering/targeting AI for all summon classes
+                            (Act II: held_until for a Netcaster's net, misdirect() for the
+                            Librarian's beam, compel() for a Siren's lure and a Spawn's grip)
     summon_abilities.gd     Data-driven kits the shared AI hooks into: Warder / Bishop ally
                             barrier, Bishop aura pulse, Death Knight cleave + life drain
     summon_evolutions.gd    Summon evolutions: eligibility, stat overlay, in-place transform,
