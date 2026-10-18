@@ -412,6 +412,8 @@ func _run_event(ev: Dictionary) -> void:
 		"buoys", "caches", "harbourmaster":
 			if harbour != null:
 				harbour.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
 		"tomes", "librarian", "rift":
 			if archive != null:
 				archive.start_event(ev)  # Act II, the Hollow Archive.
