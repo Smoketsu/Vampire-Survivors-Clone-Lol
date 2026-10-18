@@ -25,6 +25,9 @@
 ##       (owner-approved; they upgrade the class kit through special_set,
 ##       read by BoneHoundBehavior / BansheeBehavior / CatapultBehavior and
 ##       HordeHazards)
+##   Fallen Seraph Lv 5    + Fallen Grace Lv 5        = Seraph of Ruin
+##       (Act II, GDD §15.0 "Fallen Seraph"; chained dives and a second,
+##       wider feather ring through special_set, read by SeraphBehavior)
 ## Owner rule: every evolution, spell or summon, needs its paired passive at
 ## Lv 5 (EvolutionData.PASSIVE_LEVEL_REQUIRED); `passive_level` below is 5
 ## for every recipe.
@@ -51,7 +54,9 @@ extends RefCounted
 ## Display / check order of the summon evolutions.
 const ORDER := ["death_knight", "lich", "profane_bishop",
 	"winter_revenant", "shadow_reaper", "cathedral_horror", "gravebow", "bone_colossus",
-	"hellhound", "keening_lady", "ossuary_engine"]
+	"hellhound", "keening_lady", "ossuary_engine",
+	# --- Act II: Fallen Seraph ---
+	"ruin_seraph"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -543,6 +548,42 @@ const EVOLUTIONS := {
 			"shard_radius": 30.0,  # TUNING (not in GDD) px
 			"shard_tick": 0.5,  # TUNING (not in GDD) s
 			"shard_fraction": 0.1,  # TUNING (not in GDD) of the boulder damage per tick (was 0.15, then 0.12)
+		},
+	},
+	# --- Act II: Fallen Seraph ---
+	# Seraph of Ruin (GDD §15.0 "Fallen Seraph"): Fallen Seraph Lv 5 + Fallen
+	# Grace Lv 5. Each dive chains to a second pack and lays two feather rings,
+	# the second wider (SeraphBehavior; rings in SeraphFeathers).
+	# Seraph of Ruin keys (special_set; SeraphBehavior):
+	#   chain_dives — extra dives after the first: when a dive's recovery ends,
+	#                 the densest pack within chain_range px of the impact (not
+	#                 the one just struck) is dived on at once (no rise),
+	#   chain_range — px around the impact searched for the chained dive,
+	#   rings       — feather rings laid per impact,
+	#   ring_delay  — s between those rings starting,
+	#   ring_growth — ring i reaches ring_radius x (1 + i x this).
+	"ruin_seraph": {
+		"mode": "transform",
+		"bases": ["fallen_seraph"],
+		"passive": "fallen_grace",
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: every evolution needs its passive maxed
+		"display_name": "Seraph of Ruin",  # TUNING (not in GDD) Act II workstream name
+		"plural": "Seraphs of Ruin",
+		"icon": "ruin_seraph",
+		"description": "Each dive chains to a second pack and cuts a second, wider ring of feathers.",
+		"mult": {
+			"max_hp": 1.3,  # TUNING (not in GDD)
+			"damage": 1.2,  # TUNING (not in GDD) feather blades
+		},
+		"set": {
+			"radius": 11.0,  # TUNING (not in GDD) fallen seraphs are 10
+		},
+		"special_set": {
+			"chain_dives": 1,  # TUNING (not in GDD) one chained dive per special
+			"chain_range": 170.0,  # TUNING (not in GDD) px around the first impact
+			"rings": 2,  # TUNING (not in GDD) two feather rings per impact
+			"ring_delay": 0.22,  # TUNING (not in GDD) s
+			"ring_growth": 0.4,  # TUNING (not in GDD) the second ring reaches 1.4 x ring_radius
 		},
 	},
 }

@@ -86,7 +86,9 @@
 ## passives and summon classes (UnlockData) a run unlocked by slaying a boss
 ## or earning an achievement are kept in `unlocked_items`, saved as
 ## [unlocks] <id> = true (award_run() fills award "unlocked_items" for the end
-## screen's plates); older saves have no section and start with none.
+## screen's plates); older saves have no section and start with none, except
+## that an item unlocked by a boss already slain on the stage records is
+## opened on load (_load_unlocks(): the Fallen Seraph for an old Seraphine kill).
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -924,12 +926,29 @@ func _load_characters(cfg: ConfigFile) -> void:
 
 
 ## Reads the [unlocks] section (missing = locked; only `true` booleans of
-## known UnlockData ids count).
+## known UnlockData ids count). Retroactive boss unlocks (GDD §15.0 "Fallen
+## Seraph"): an item whose row names a `boss` is also open when the stage
+## record of that boss's stage already shows a kill, so a save that slew the
+## boss before the item existed (Seraphine before the Fallen Seraph) has it
+## (the same rule as Hyper's migration, _load_hyper_skins()). Stage records
+## are read first (load()).
 func _load_unlocks(cfg: ConfigFile) -> void:
 	for id: String in UnlockData.UNLOCKS:
 		var v: Variant = cfg.get_value("unlocks", id, false)
 		if typeof(v) == TYPE_BOOL and bool(v):
 			unlocked_items[id] = true
+		var row: Dictionary = UnlockData.UNLOCKS[id]
+		if row.has("boss") and _boss_slain_on_record(String(row["boss"])):
+			unlocked_items[id] = true
+
+
+## True when some stage whose boss slot is boss `boss_id` records a boss kill.
+func _boss_slain_on_record(boss_id: String) -> bool:
+	for sid: String in StageRegistry.ORDER:
+		var boss: Dictionary = StageRegistry.STAGES[sid]["boss"]  # The stage's boss slot.
+		if String(boss.get("id", "")) == boss_id and float(stage_record(sid)["boss_kills"]) > 0.0:
+			return true
+	return false
 
 
 ## True when Act II item `id` (UnlockData) was unlocked in some run. Callers

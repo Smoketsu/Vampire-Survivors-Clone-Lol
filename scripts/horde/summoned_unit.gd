@@ -43,7 +43,7 @@ var director: HordeDirector
 var game: Game
 ## Class id (UnitData.CLASS_ORDER): "warrior" | "archer" | "mage" | "mender" |
 ## "warder" | "bishop" | "abomination" | "rogue" | "gargoyle" | "frost_wraith" |
-## "bone_hound" | "banshee" | "corpse_catapult".
+## "bone_hound" | "banshee" | "corpse_catapult" | "fallen_seraph" (Act II).
 var unit_class: String = ""
 ## True while alive in the world (false = pooled).
 var active: bool = false
@@ -134,7 +134,7 @@ var shield_cooldown: float = 0.0
 var heal_role_priority: float = 0.5
 ## Attack branch: "melee" | "arrow" | "aoe" | "heal" | "ward", or a
 ## class-specific profile released by the behaviour ("frost", "dirge",
-## "boulder").
+## "boulder", "feather").
 var attack_profile: String = "melee"
 ## Barrier HP this unit casts on a threatened ally (Warder / Bishop; 0 = none).
 var ally_shield_amount: float = 0.0

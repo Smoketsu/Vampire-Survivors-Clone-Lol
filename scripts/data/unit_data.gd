@@ -25,7 +25,11 @@ extends RefCounted
 ## Catapult.
 const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"abomination", "rogue", "gargoyle", "frost_wraith",
-		"bone_hound", "banshee", "corpse_catapult"]
+		"bone_hound", "banshee", "corpse_catapult",
+		# --- Act II: Fallen Seraph ---
+		# Unlockable (UnlockData: slaying Grand Inquisitor Seraphine once), so a
+		# save that never slew her never offers it (Unlocks.offerable()).
+		"fallen_seraph"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -110,7 +114,8 @@ const CORE_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
 ##                             Priest role split in two, so each has 0.5: the
 ##                             two orders together come up as often as one role.
 ##   behavior                — SummonBehavior id ("stomp" | "dash" | "swoop" |
-##                             "frost" | "pack" | "dirge" | "barrage");
+##                             "frost" | "pack" | "dirge" | "barrage" |
+##                             "dive" (Act II: the Fallen Seraph));
 ##                             absent = no special action.
 ##   special                 — the behaviour's numbers. HordeDirector scales
 ##                             them by suffix (see _special_stats()):
@@ -658,6 +663,69 @@ const UNITS := {
 			"elite_bonus": 0.7,  # TUNING (not in GDD) target-score bonus for an elite, a miniboss or the boss
 		},
 	},
+	# --- Act II: Fallen Seraph ---
+	# Fallen Seraph (owner-approved, GDD §15.0 "Fallen Seraph"): a corrupted
+	# angel raised from the Covenant's fallen, granted by slaying Grand
+	# Inquisitor Seraphine (UnlockData). She HOVERS like the Banshee (drawn
+	# above a shadow, but not airborne: enemies can target and hit her, so she
+	# keeps a little distance, w_threat) and throws black feather blades
+	# (attack_profile "feather", released by SeraphBehavior). Her special
+	# (SeraphBehavior, "dive"): she dives onto the densest pack in reach and
+	# leaves a ring of black feathers that cuts outward (SeraphFeathers).
+	# Every number is TUNING (not in GDD).
+	"fallen_seraph": {
+		"display_name": "Fallen Seraph",  # TUNING (not in GDD) owner-approved class
+		"plural": "Fallen Seraphs",
+		"description": "A fallen seraph who dives onto packed foes and leaves a ring of cutting feathers.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
+		"max_hp": 55.0,  # TUNING (not in GDD) between the Banshee (40) and the Gargoyle (70): she dives into the crowd
+		"damage": 12.0,  # TUNING (not in GDD) one feather blade (ranged)
+		"attack_interval": 1.6,  # TUNING (not in GDD) s
+		"attack_range": 140.0,  # TUNING (not in GDD) centre-to-edge (px)
+		"move_speed": 90.0,  # TUNING (not in GDD) px/s; below PassiveData.FAST_SUMMON_SPEED (not a Blood Scent class)
+		"radius": 10.0,  # TUNING (not in GDD) body radius (px)
+		"acquisition_range": 250.0,  # TUNING (not in GDD) px
+		"replenish_interval": 15.0,  # TUNING (not in GDD) s
+		"band_min": 80.0,  # TUNING (not in GDD) midline (px)
+		"band_max": 140.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.5,  # TUNING (not in GDD)
+		"w_formation": 0.6,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.7,  # TUNING (not in GDD) keeps a little distance between dives
+		"attack_profile": "feather",
+		"target_profile": "seraph",
+		"windup": 0.2,  # TUNING (not in GDD) s
+		"projectile_speed": 380.0,  # TUNING (not in GDD) px/s
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "mid",
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "dive",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"dive_damage": 18.0,  # TUNING (not in GDD) to every enemy within dive_radius where she lands
+			"dive_radius": 40.0,  # TUNING (not in GDD) impact radius (px)
+			"dive_cooldown": 7.0,  # TUNING (not in GDD) s between dives
+			"dive_rise": 0.25,  # TUNING (not in GDD) s she rises in place before the dive
+			"dive_speed": 380.0,  # TUNING (not in GDD) px/s while diving
+			"dive_max_flight": 0.9,  # TUNING (not in GDD) s; the dive lands wherever she is by then
+			"dive_recover": 0.3,  # TUNING (not in GDD) s she hovers over the impact before rejoining the army
+			"dive_range_min": 40.0,  # TUNING (not in GDD) px; a closer pack is not dived on (she throws feathers)
+			"dive_range_max": 220.0,  # TUNING (not in GDD) px; the farthest pack she dives on
+			"dive_min_enemies": 4,  # TUNING (not in GDD) enemies within dive_radius of the pack centre (an elite / boss alone also counts)
+			"dive_candidates": 10,  # TUNING (not in GDD) enemies compared per pack search (performance cap)
+			"dive_retry": 0.6,  # TUNING (not in GDD) s before searching again when no pack was worth it
+			"dive_knockback": 110.0,  # TUNING (not in GDD) px/s impulse, divided by enemy mass
+			"dive_lift": 16.0,  # TUNING (not in GDD) px she is drawn above her shadow at the top of the rise
+			"dive_shake": 1.0,  # TUNING (not in GDD) screen-shake request (px, Juice)
+			"feather_damage": 10.0,  # TUNING (not in GDD) to every enemy the feather ring cuts (once each)
+			"ring_radius": 85.0,  # TUNING (not in GDD) px the feather ring reaches
+			"ring_start": 0.3,  # TUNING (not in GDD) the ring starts at this fraction of ring_radius
+			"ring_time": 0.4,  # TUNING (not in GDD) s the ring takes to reach ring_radius
+			"ring_feathers": 14,  # TUNING (not in GDD) feathers drawn on the ring (drawing only)
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -789,6 +857,15 @@ const LEVELS := {
 		{"count": 2, "damage_bonus": 0.35, "splash_bonus": 0.15, "hp_bonus": 0.2},
 		{"count": 3, "damage_bonus": 0.35, "splash_bonus": 0.3, "hp_bonus": 0.2, "speed_bonus": 0.15},
 	],
+	# --- Act II: Fallen Seraph ---
+	# TUNING (not in GDD): 1 -> 3 seraphs; harder dives, a wider ring, then more frequent dives.
+	"fallen_seraph": [
+		{"count": 1},
+		{"count": 1, "special_bonus": 0.2},
+		{"count": 2, "special_bonus": 0.2},
+		{"count": 2, "special_bonus": 0.2, "special_area": 0.15},
+		{"count": 3, "damage_bonus": 0.2, "special_bonus": 0.4, "special_area": 0.15, "special_haste": 0.2},
+	],
 }
 
 ## Ally-barrier targeting (Warder / Profane Bishop, SummonAbilities):
@@ -835,6 +912,10 @@ const TARGET_WEIGHTS := {
 	# Corpse Catapults: the densest pack (cluster value inside the boulder's
 	# splash), structures / elites / minibosses first (CatapultBehavior bonus).
 	"siege": {"distance": 0.2, "threat": 0.4, "role": 0.4, "tactical": 0.0, "cluster": 1.4, "overkill": 1.5},  # TUNING (not in GDD)
+	# --- Act II: Fallen Seraph ---
+	# Fallen Seraphs: feather blades at foes closing on the necromancer, never
+	# wasted on doomed targets; the dive picks its own pack (SeraphBehavior).
+	"seraph": {"distance": 0.6, "threat": 1.1, "role": 0.4, "tactical": 0.0, "cluster": 0.0, "overkill": 2.0},  # TUNING (not in GDD)
 }
 
 # --- Leash / lifecycle (GDD §24) ---------------------------------------------

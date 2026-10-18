@@ -7,6 +7,7 @@
 ##   "pack"   Bone Hounds         BoneHoundBehavior
 ##   "dirge"  Banshee             BansheeBehavior
 ##   "barrage" Corpse Catapult    CatapultBehavior
+##   "dive"   Fallen Seraph       SeraphBehavior (Act II)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -38,6 +39,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 			b = BansheeBehavior.new()
 		"barrage":
 			b = CatapultBehavior.new()
+		# --- Act II: Fallen Seraph ---
+		"dive":
+			b = SeraphBehavior.new()
 	if b != null:
 		b.kind = kind
 	return b
@@ -100,6 +104,16 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			if a.is_empty():
 				out.append("Bone Barrage: boulders splash %s px, from behind the army" % _f(nxt["splash_radius"]))
 				out.append("Targets structures, elites and dense packs first")
+		# --- Act II: Fallen Seraph ---
+		"dive":
+			if a.is_empty():
+				out.append("Dive: %s dmg in %s px on the densest pack every %ss" % [_f(b["dive_damage"]), _f(b["dive_radius"]), _f(b["dive_cooldown"])])
+				out.append("Feather ring: %s dmg to every foe within %s px" % [_f(b["feather_damage"]), _f(b["ring_radius"])])
+			else:
+				_delta(out, "Dive damage", a, b, "dive_damage")
+				_delta(out, "Feather damage", a, b, "feather_damage")
+				_delta(out, "Feather ring radius", a, b, "ring_radius")
+				_delta(out, "Dive cooldown (s)", a, b, "dive_cooldown")
 	return out
 
 

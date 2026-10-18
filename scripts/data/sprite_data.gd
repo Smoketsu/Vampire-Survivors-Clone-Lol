@@ -134,6 +134,9 @@ const HEIGHTS: Dictionary = {
 	"structures/bone_wall_segment": 26.0,  # TUNING (not in GDD) one Bone Wall segment (9 px radius, 16 px apart): three bone spikes on a mound, ~20 px wide
 	"structures/bone_wall_bastion": 30.0,  # TUNING (not in GDD) one Charnel Bastion segment: four spikes and a skull, ~24 px wide
 	"summons/cathedral_horror_stone": 64.0,  # TUNING (not in GDD) the Cathedral Horror's stone form: its still turned to grey stone, same size
+	# --- Act II: Fallen Seraph ---
+	"summons/fallen_seraph": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size (body ~46, the halo above)
+	"summons/ruin_seraph": 60.0,  # TUNING (not in GDD) ART_BIBLE manifest size (body ~52, the thorn halo above)
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
@@ -200,6 +203,8 @@ const FLAT_SIZES: Dictionary = {
 	"decals/corpse_2": 16.0,  # TUNING (not in GDD) corpse variant: a skull and a ribcage, 16 x 10
 	"decals/corpse_3": 16.0,  # TUNING (not in GDD) corpse variant: scattered bones on a torn cloth, 16 x 10
 	"ui/rotate_phone": 60.0,  # TUNING (not in GDD) the rotate overlay's phone, 35 x 60 (drawn x2: 70 x 120 layout px)
+	# --- Act II: Fallen Seraph ---
+	"projectiles/seraph_feather": 14.0,  # TUNING (not in GDD) one black feather blade of the Fallen Seraph's feather ring (SeraphGlyphs.draw_ring())
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

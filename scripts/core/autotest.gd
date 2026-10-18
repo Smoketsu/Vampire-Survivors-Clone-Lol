@@ -69,7 +69,10 @@
 ##     Dirges, enemies weakened, debuff uptime, Keening waves and silences;
 ##     Catapult volleys, boulders, hits, structure damage, Ossuary shard
 ##     fields), a "class passives" line (Blood Scent, Mournsong, Siegecraft
-##     and summon damage to structures), and the stuck
+##     and summon damage to structures), a "fallen seraph" line in runs that
+##     had her (Act II class: dives, chained dives, feather rings and cuts,
+##     damage by source, Fallen Grace; an unlockable class never raised is
+##     left out of the class lists, so other runs print as before), and the stuck
 ##     check also counts a special that runs past SPECIAL_STUCK_TIME
 ##     (airborne / dashing units) or ends inside an obstacle,
 ##   * --spells=a,b: every policy first takes those spells and their
@@ -615,10 +618,19 @@ func _enemy_wants_move(e: Enemy) -> bool:
 	return e.position.distance_to(t.position) - e.radius - tr > e.attack_range + 4.0
 
 
+## True for an unlockable summon class (UnlockData, Act II) that was never
+## raised this run: left out of the class lists, so a run without it prints
+## exactly what it printed before the class existed.
+func _unused_locked_class(cls: String) -> bool:
+	return UnlockData.UNLOCKS.has(cls) and int(game.horde.class_levels[cls]) <= 0 and game.horde.count_of(cls) <= 0 			and game.horde.capacity(cls) <= 0
+
+
 ## Prints the per-window "[metric]" lines parsed by the tuning scripts.
 func _print_metrics() -> void:
 	var cc := PackedStringArray()
 	for cls: String in UnitData.CLASS_ORDER:
+		if _unused_locked_class(cls):
+			continue  # Act II: an unlockable class never raised this run (lines as before).
 		cc.append("%s%d/%d" % [cls.substr(0, 1), game.horde.count_of(cls), game.horde.capacity(cls)])
 	print("[metric] t=%d avg_horde=%.1f now=%d cap=%d %s deaths_win=%d lvl=%d kills=%d enemies=%d hp=%d boss_hp=%d crystals=%d xp=%d" % [
 		int(game.elapsed), _horde_sum / maxf(1.0, _horde_n), game.horde.units.size(), game.horde.total_capacity(), " ".join(cc),
@@ -1045,6 +1057,8 @@ func finish(summary: Dictionary) -> void:
 	var caps: Dictionary = summary["horde_caps"]
 	var classes := PackedStringArray()
 	for cls: String in UnitData.CLASS_ORDER:
+		if _unused_locked_class(cls):
+			continue  # Act II: an unlockable class never raised this run (lines as before).
 		classes.append("%s %d/%d" % [cls, int(counts[cls]), int(caps[cls])])
 	var stat_parts := PackedStringArray()
 	var st: Dictionary = summary["stats"]
@@ -1099,6 +1113,8 @@ func finish(summary: Dictionary) -> void:
 		ab.passive_level("restless_dead"), game.horde.temp_spawned])
 	print("[autotest] horde passives: %s" % MinionPassives.summary_line(game))
 	print("[autotest] class passives: %s" % ClassPassives.summary_line(game))
+	if SeraphTexts.used(game):
+		print("[autotest] fallen seraph: %s" % SeraphTexts.summary_line(game))  # Act II: only in runs that had her.
 	var syn := game.horde.synergies
 	print("[autotest] synergies active at end: %s | activations: %s" % [
 		", ".join(syn.active_ids()) if not syn.active_ids().is_empty() else "none",
@@ -1210,6 +1226,8 @@ func _print_summon_evolutions(st: Dictionary) -> void:
 	tags["bishop_aura"] = "bishop"
 	for tag: String in ClassPassives.EXTRA_TAGS:
 		tags[tag] = ClassPassives.EXTRA_TAGS[tag]  # Hellhound burn / trail, Ossuary Engine shards.
+	tags[SeraphBehavior.SRC_DIVE] = SeraphTexts.CLASS_ID  # Act II: the Fallen Seraph's dive ...
+	tags[SeraphBehavior.SRC_FEATHERS] = SeraphTexts.CLASS_ID  # ... and feather rings.
 	var by_src := PackedStringArray()  # "tag=dmg/heal/shield" per source.
 	var by_cls := {}  # Base class -> [dmg, heal, shield].
 	for tag: String in tags:

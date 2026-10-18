@@ -176,6 +176,10 @@ RIGS = {
     "enemies/templar": dict(mode="legs", hip=69, back=(0, 18), front=(18, 36), rigid=[(28, 32, 0, 72), (0, 7, 0, 72)], spread=2, lift=2, dip=1),
     "enemies/banner_bearer": dict(mode="legs", hip=75, back=(0, 16), front=(16, 40), rigid=[(27, 31, 0, 79)], spread=2, lift=2, dip=1),
     "enemies/battle_sister": dict(mode="legs", hip=38, back=(0, 15), front=(15, 24), rigid=[(24, 36, 0, None)], spread=1, lift=1, dip=1, bust=(14, 22, 11, 17, 2)),
+    # --- Act II: Fallen Seraph --- (figure redesign; she hovers: a glide like the Banshee's).
+    # The near wing hangs below the hip, so its columns ride with the body (rigid).
+    "summons/fallen_seraph": dict(mode="robe", hip=25, rigid=[(24, 36, 0, 40)], sway=2, dip=1, bust=(13, 23, 15, 22, 2)),
+    "summons/ruin_seraph": dict(mode="robe", hip=29, rigid=[(30, 44, 0, 40), (0, 10, 0, 32)], sway=2, dip=1, bust=(18, 28, 18, 25, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

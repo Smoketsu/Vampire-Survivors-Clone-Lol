@@ -308,6 +308,10 @@ built; until then their cards read "Coming soon". The act's shared rules are in:
   every stage, the counter-passives only in Act II. The end screen shows a plate for each
   unlock, and the Codex (its new **Ancient Eye** tab too) names the condition of a locked one.
 - **Music.** Act II runs play their own loop, "Below the Tide".
+- **The Fallen Seraph** (Seraphine's gift). Slaying Grand Inquisitor Seraphine once unlocks a
+  new summon class, the **Fallen Seraph**, and its passive **Fallen Grace**; both are offered on
+  every stage from then on (a save that already slew her has them at once). See *Summon
+  classes* and *Evolutions & Synergies*.
 
 ### How a run works
 
@@ -389,6 +393,7 @@ number is in `scripts/data/unit_data.gd`.
 | **Bone Hound** | 3 → 9 | 6 s | Pack hunter | Cheap, fast (122 px/s) skeletal hounds, the biggest pack in the army; melee, never kite. **Pack Hunt**: the pack shares a target (archers, casters, priests and banner bearers first), and every other hound biting the same foe adds +15% to a bite (at most +45%). Evolves into **Hellhounds** |
 | **Banshee** | 1 → 3 | 14 s | Debuffer | A floating spectral caster with shriek bolts; enemies **can** hit it (it is not airborne like a swooping Gargoyle, it just keeps its distance). **Dirge** every 6 s: a telegraphed wail around its target that slows foes 30% and cuts the damage of their hits by 25% for 4 s (bosses and minibosses half; Reckoning enemies and structures immune). Evolves into the **Keening Lady** |
 | **Corpse Catapult** | 1 → 3 | 18 s | Siege artillery | Posts behind you and holds its ground. **Bone Barrage**: lobs a bone boulder (235 px reach) on an arc with a landing telegraph; it splashes 50 px around the landing point. Targets structures (outposts, generators, carts, ward crystals, altars), elites, minibosses and the densest packs first. Evolves into the **Ossuary Engine** |
+| **Fallen Seraph** (Act II unlock) | 1 → 3 | 15 s | Diver | Unlocked by slaying Seraphine once. A hovering corrupted angel that throws black feather blades (its volley: fans of feather blades); enemies **can** hit her (she is not airborne, she keeps a little distance). **Dive** every 7 s: she rises, dives onto the densest pack within 40-220 px (4+ foes within 40 px, or an elite / miniboss / the boss), strikes everything within 40 px and lays a **ring of black feathers** that cuts outward to 85 px, hitting each foe it passes once; then she flies back to her post. Evolves into the **Seraph of Ruin** |
 
 - **Global capacity bonuses** (Grave Dominion, Legion of Bone) give every GDD
   class the full bonus, and the Mender and Warder each count as a class; the
@@ -470,6 +475,7 @@ number is in `scripts/data/unit_data.gd`.
 | Bone Hound Lv 5 | Blood Scent **Lv 5** (fast summons move and attack faster) | **Hellhound**: a charred hound with a flaming mane, ×1.3 HP, ×1.2 damage; **burning bites** (60% of each bite again as fire over 3 s); a **fire trail** behind every running hound (14 px patches that burn for 1.6 s); the **pack splits** into two halves that hunt two prey at once |
 | Banshee Lv 5 | Mournsong **Lv 5** (every weakening effect lasts longer) | **Keening Lady**: a crowned banshee in a violet gown, ×1.3 HP, ×1.25 damage; every Dirge rolls out in **three widening waves** (radius ×1, ×1.3, ×1.6, 0.35 s apart) and **silences** every foe it reaches for its duration: Chaplains, High Confessors and Seraphine's attendants cannot heal |
 | Corpse Catapult Lv 5 | Siegecraft **Lv 5** (summons deal more to structures, elites, minibosses) | **Ossuary Engine**: a siege engine of ribcages and spines, ×1.35 HP; **three boulders per volley** (×0.75 damage each, volleys ×1.2 slower), and each leaves a field of **burning bone shards** for 3 s (30 px; 10% of the boulder's damage every 0.5 s) |
+| Fallen Seraph Lv 5 | Fallen Grace **Lv 5** (summon specials recharge faster) | **Seraph of Ruin**: wings whole and a thorned halo, ×1.3 HP, ×1.2 damage; each dive **chains** to a second pack near the first (no rise), and every impact lays **two feather rings**, the second 0.22 s later and 40% wider; its showpiece volley is a whirl of feathers at every impact |
 
   The numbers live in `scripts/data/summon_evolution_data.gd`; the runtime is
   `HordeDirector.evolutions` (`scripts/horde/summon_evolutions.gd`). Like the
@@ -504,6 +510,7 @@ number is in `scripts/data/unit_data.gd`.
 | Blood Scent | The **fast** summon classes (base move speed 95+ px/s: Bone Hounds, Rogues, Gargoyles, Archers) move +5% → +25% and attack +6% → +30% faster | Bone Hounds → **Hellhounds** |
 | Mournsong | Every **weakening** effect on enemies lasts +10% → +50% longer: slows (Shadow Blast, Corpse Explosion fields), Frost Wraith chills, the Dirge, Gravebow curses and Plague Cloud Rot (not Deep Freeze or stuns) | Banshees → **Keening Ladies** |
 | Siegecraft | Summons deal +10% → +50% damage to **structures, elites and minibosses** (not the stage boss), bleed / burn / fire ticks included | Catapults → **Ossuary Engines** |
+| Fallen Grace (Act II unlock) | Every summon **special** recharges +5% → +25% faster (Stomp, Dash Strike, Swoop, Deep Freeze, Dirge, Dive; its own category on the cooldowns) | Fallen Seraphs → **Seraphs of Ruin** |
 
   Their hooks are on the single paths: `CombatResolver` (crits, Resilience,
   Plating; the crit rolls use their own seeded RNG, so runs stay
@@ -1533,6 +1540,9 @@ scripts/
                             hits through CombatResolver), summon volleys, spell echoes, Rally Barrage,
                             the shot art and the impact / launch bursts (drawing only)
     eye_claims.gd           Act II Claims (game.claims): fallen summons rise as hostile Drowned Thralls
+    seraph_feathers.gd      Act II: the Fallen Seraph's feather rings (pooled, created on first use)
+    seraph_texts.gd         Act II: Fallen Seraph / Fallen Grace / Seraph of Ruin card and autotest text
+    behaviors/seraph_behavior.gd  Act II: the Fallen Seraph's feather blades and Dive
     synergy_manager.gd      Army synergy activation and effects; the newer classes' marks
                             (staggered, swooped), the one synergy hit bonus (hit_mult()), the
                             Baying frenzy and the Menagerie replenishment
@@ -1655,6 +1665,8 @@ scripts/
                             Keening Lady, Corpse Catapult, Ossuary Engine, their icons, the
                             Blood Scent / Mournsong / Siegecraft icons, the Dirge mark, fire
                             patches, shard fields, boulders),
+                            seraph_glyphs (Act II: Fallen Seraph, Seraph of Ruin, Fallen Grace,
+                            the dive marker and the feather ring),
                             ossuary_menu (Soul Ash shop: tree columns, one detail panel, Oath),
                             ossuary_tile (one upgrade tile: icon, name, pips, cost, buy flash / shake),
                             pixel_marks (code-drawn pixel pips, arrow, padlock, recipe socket),
@@ -1851,7 +1863,7 @@ Options (after `--`):
 | `--meta=PROFILE` | Simulated Soul Ash purchases, applied in memory only: `none` (default, so balance runs stay comparable), `mid` (about half of every tree) or `max` (everything). |
 | `--meta-save` | Test flag: lets the autotest read and write `user://save.cfg` (by default it never touches it). Every run's summary has a `recipe book` line (evolutions discovered so far, in memory only without this flag) and builds the Recipes view rows once, headless, and a `codex` line (entries this run met per category, how many were new to the save, the save's codex totals). |
 | `--oath=N` | Active Profane Oath tier 0-5 (default 0). No `--meta` profile includes the Oath, so `--meta=max` balance runs stay comparable. |
-| `--classes=a,b` | Forces summon classes (`abomination`, `rogue`, `gargoyle`, `frost_wraith`, `bone_hound`, `banshee`, `corpse_catapult`, or any offerable class id; the merge-only `bishop` is ignored): each is raised to Lv 1 at the start (while active slots allow) and every policy upgrades it first, so its special gets exercised. |
+| `--classes=a,b` | Forces summon classes (`abomination`, `rogue`, `gargoyle`, `frost_wraith`, `bone_hound`, `banshee`, `corpse_catapult`, the Act II unlock `fallen_seraph`, or any offerable class id; the merge-only `bishop` is ignored; a forced lockable class counts as unlocked, and a run that had the Fallen Seraph prints a `fallen seraph` line: dives, chained dives, searches without a pack, dive hits, rings and feather cuts, damage by source, Fallen Grace's level): each is raised to Lv 1 at the start (while active slots allow) and every policy upgrades it first, so its special gets exercised. |
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
