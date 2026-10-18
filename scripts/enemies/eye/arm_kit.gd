@@ -147,7 +147,7 @@ func _slam(e: Enemy) -> void:
 	var steps := maxi(1, int(length / 90.0))
 	for i in steps:
 		g.effects.pop(e.position + dir * length * (float(i) + 0.5) / float(steps), Palette.EYE_DROWNED, 22.0)
-	g.effects.impact(e.position + dir * length * 0.5, 40.0, Palette.EYE_DROWNED_DARK)
+	g.effects.impact(e.position + dir * length * 0.5, 40.0, Palette.EYE_DROWNED_DARK, "vhalneth_slam")
 	g.shake(5.0)
 	Sfx.play("abom_stomp", e.position + dir * length * 0.5, 0.6)
 

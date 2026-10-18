@@ -34,7 +34,7 @@ const SPECIALS := ["slam", "gaze", "roar", "arms"]
 ## Boss row: Enemy row keys plus her ability numbers (see the header).
 const BOSS := {
 	"display_name": "Vhal'Neth, the Dreaming Mother",
-	"max_hp": 34000.0,  # TUNING (not in GDD) x the stage HP multiplier; a final boss a little past Seraphine (21,000 x 1.1), split between her arms and her face
+	"max_hp": 20000.0,  # TUNING (not in GDD) x the stage HP multiplier (25,000 in Ul-Thalos, Seraphine 23,100 in the Sanctum), split between her arms and her face (balance passes: 34,000 -> 28,000 -> 24,000 -> 20,000, a 1-2 min fight)
 	"move_speed": 0.0,  # She glides along the coast (glide_speed), she never walks.
 	"damage": 14.0,  # TUNING (not in GDD) a bite of the face in reach (Waking)
 	"attack_interval": 1.4,  # TUNING (not in GDD)
@@ -92,14 +92,14 @@ const BOSS := {
 	"gaze_drift": 30.0,  # TUNING (not in GDD) px/s it follows the necromancer while resting (he outruns it)
 	"gaze_dread": 14.0,  # TUNING (not in GDD) Dread per second inside (proposal: "climbs fast")
 	"gaze_tick": 0.5,  # TUNING (not in GDD) s between gaze damage ticks
-	"gaze_summon_damage": 3.0,  # TUNING (not in GDD) per summon per tick, before time scaling: the undead wither in it
+	"gaze_summon_damage": 1.0,  # TUNING (not in GDD) per summon per tick, before time scaling: the undead wither in it (balance pass 1: 3 -> 1, the gaze rests on the Bone Ring and wiped the army)
 	"gaze_player_damage": 2.0,  # TUNING (not in GDD) per tick on a stage without Dread (--boss on Act I), before time scaling
 	# Her roar (Waking): a nova around the face.
 	"roar_first": 4.0,  # TUNING (not in GDD) s into the Waking
 	"roar_interval": 11.0,  # TUNING (not in GDD)
-	"roar_telegraph": 1.3,  # TUNING (not in GDD)
-	"roar_radius": 190.0,  # TUNING (not in GDD) px around the face
-	"roar_damage_player": 20.0,  # TUNING (not in GDD) before time scaling
+	"roar_telegraph": 1.8,  # TUNING (not in GDD) long enough to walk out of the ring (balance pass 2: 1.3 -> 1.8)
+	"roar_radius": 165.0,  # TUNING (not in GDD) px around the face (balance pass 2: 190 -> 165)
+	"roar_damage_player": 10.0,  # TUNING (not in GDD) before time scaling (balance passes 2 and 4: 20 -> 14 -> 10, two roars took the bot to 4 HP)
 	"roar_damage_summon": 12.0,  # TUNING (not in GDD) before time scaling
 	"roar_knockback": 70.0,  # TUNING (not in GDD) px summons are thrown out of the ring
 	# The finale.

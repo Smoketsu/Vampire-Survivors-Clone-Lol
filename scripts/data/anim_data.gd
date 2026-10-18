@@ -46,6 +46,10 @@ const ANIMS: Dictionary = {
 	"bolt_impact": {"duration": 0.25, "fill": 1.1},  # TUNING (not in GDD) a Shadow Bolt / Void Bolt / Void Shard hit splash (6 frames of 128 px)
 	"level_up": {"duration": 0.8, "fill": 1.0},  # TUNING (not in GDD) the level-up column on the necromancer (8 frames of 192 px; tall art, base on the frame's bottom row)
 	"evolution": {"duration": 0.9, "fill": 1.3},  # TUNING (not in GDD) an evolution from a chest: vortex collapsing into a violet-gold flash (10 frames of 192 px)
+	# --- Act II: Ul-Thalos ---
+	"vhalneth_slam": {"duration": 0.4, "fill": 1.3},  # TUNING (not in GDD) one of Vhal'Neth's arms crashing down: a ring of sea spray and foam (8 frames of 192 px; ArmKit EffectManager.impact() 0.4 s)
+	"drowned_tendrils": {"duration": 0.35, "fill": 1.3},  # TUNING (not in GDD) Call of the Drowned eruption: tendrils lashing up out of a whirlpool (8 frames of 128 px; CallOfTheDrowned ring() 0.35 s)
+	"vhalneth_gaze": {"duration": 1.4, "fill": 1.15},  # TUNING (not in GDD) Vhal'Neth's gaze opening on the ground (8 frames of 256 px; VhalnethHazards ring() = VhalnethData gaze_telegraph 1.4 s)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).

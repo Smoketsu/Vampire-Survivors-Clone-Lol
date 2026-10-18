@@ -104,7 +104,8 @@ const RECKONING_OBJECTIVE: String = "THE WAKING: the god's dream drowns the isla
 ## Continuous spawning segments, sorted by start time (keys as
 ## GraveyardStage.SEGMENTS; kind keys are KINDS aliases). The elites (Sirens,
 ## Hierophants) come only in the scripted waves; Spawns of the Deep trickle
-## from the Sunken Steps on. The Spire's caps stay below the Sanctum's peak:
+## from the Sunken Steps on (thinly: 2.5-6.5%; balance pass 1 cut them by
+## about 40%, they and their grabs dealt most of the damage to the army). The Spire's caps stay below the Sanctum's peak:
 ## the island is small by then and every cultist climbs out at its shore.
 const SEGMENTS := [
 	# Zone I, the Breakwater: the Eye's last free congregation.
@@ -125,49 +126,49 @@ const SEGMENTS := [
 		"objective": "The outer ring will flood: fall back toward the spire"},
 	# Zone II, the Sunken Steps: Spawns of the Deep.
 	{"start": 300.0, "rate": 3.2, "max_alive": 80,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.86, "chanter": 0.1, "spawn": 0.04},
+		"weights": {"initiate": 0.875, "chanter": 0.1, "spawn": 0.025},
 		"objective": "The Sunken Steps: Spawns of the Deep crawl out of the flood"},
 	{"start": 360.0, "rate": 3.5, "max_alive": 90,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.85, "chanter": 0.1, "spawn": 0.05},
+		"weights": {"initiate": 0.87, "chanter": 0.1, "spawn": 0.03},
 		"objective": "Break the grip of the deep"},
 	{"start": 420.0, "rate": 3.3, "max_alive": 88,  # TUNING (not in GDD) lull
-		"weights": {"initiate": 0.85, "chanter": 0.1, "spawn": 0.05},
+		"weights": {"initiate": 0.87, "chanter": 0.1, "spawn": 0.03},
 		"objective": "The steps descend into the sea"},
 	{"start": 480.0, "rate": 3.8, "max_alive": 98,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.83, "chanter": 0.1, "spawn": 0.07},
+		"weights": {"initiate": 0.855, "chanter": 0.1, "spawn": 0.045},
 		"objective": "The Dream Gate lies beyond the steps"},
 	{"start": 540.0, "rate": 4.1, "max_alive": 106,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.83, "chanter": 0.1, "spawn": 0.07},
+		"weights": {"initiate": 0.855, "chanter": 0.1, "spawn": 0.045},
 		"objective": "The sea is rising again: half the island will go"},
 	# Zone III, the Dream Gate: Hierophants (waves) and the dream pillars.
 	{"start": 600.0, "rate": 4.3, "max_alive": 112,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.82, "chanter": 0.1, "spawn": 0.08},
+		"weights": {"initiate": 0.85, "chanter": 0.1, "spawn": 0.05},
 		"objective": "The Dream Gate: Hierophants guard it; break their Ascension"},
 	{"start": 660.0, "rate": 4.6, "max_alive": 120,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.81, "chanter": 0.1, "spawn": 0.09},
+		"weights": {"initiate": 0.845, "chanter": 0.1, "spawn": 0.055},
 		"objective": "Topple the dream pillars to weaken the god's dream"},
 	{"start": 720.0, "rate": 4.4, "max_alive": 118,  # TUNING (not in GDD) lull
-		"weights": {"initiate": 0.81, "chanter": 0.1, "spawn": 0.09},
+		"weights": {"initiate": 0.845, "chanter": 0.1, "spawn": 0.055},
 		"objective": "The god dreams beneath the gate"},
 	{"start": 780.0, "rate": 4.9, "max_alive": 128,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.8, "chanter": 0.1, "spawn": 0.1},
+		"weights": {"initiate": 0.84, "chanter": 0.1, "spawn": 0.06},
 		"objective": "The faithful pour through the Dream Gate"},
 	{"start": 840.0, "rate": 5.2, "max_alive": 134,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.8, "chanter": 0.1, "spawn": 0.1},
+		"weights": {"initiate": 0.84, "chanter": 0.1, "spawn": 0.06},
 		"objective": "The sea is rising: only the spire will remain"},
 	# Zone IV, the Spire: a small island; the density peak of the run.
 	{"start": 900.0, "rate": 5.0, "max_alive": 124,  # TUNING (not in GDD) a small island: a lower cap, a higher pace
-		"weights": {"initiate": 0.79, "chanter": 0.1, "spawn": 0.11},
+		"weights": {"initiate": 0.835, "chanter": 0.1, "spawn": 0.065},
 		"objective": "The Spire: the last stone above the sea"},
 	{"start": 960.0, "rate": 5.4, "max_alive": 130,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.79, "chanter": 0.1, "spawn": 0.11},
+		"weights": {"initiate": 0.835, "chanter": 0.1, "spawn": 0.065},
 		"objective": "The Dreaming Mother stirs beneath the spire"},
 	# 17:00, the boss: a thinner trickle so the fight stays readable.
 	{"start": BOSS_TIME, "rate": 3.0, "max_alive": 86,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.84, "chanter": 0.08, "spawn": 0.08},
+		"weights": {"initiate": 0.87, "chanter": 0.08, "spawn": 0.05},
 		"objective": "Sever her arms and break the Dreaming Mother"},
 	{"start": 1110.0, "rate": 3.6, "max_alive": 98,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.82, "chanter": 0.08, "spawn": 0.1},
+		"weights": {"initiate": 0.86, "chanter": 0.08, "spawn": 0.06},
 		"objective": "Sever her arms and break the Dreaming Mother"},
 ]
 
@@ -276,7 +277,7 @@ const ZONES := [
 			"kinds": {
 				"step_ruin": {"weight": 0.5, "shape": "rect", "sizes": [64.0, 80.0, 96.0], "short": 22.0},  # TUNING (not in GDD)
 				"barnacle_pillar": {"weight": 0.3, "shape": "circle", "sizes": [12.0, 15.0, 18.0]},  # TUNING (not in GDD)
-				"drowned_idol": {"weight": 0.2, "shape": "circle", "sizes": [20.0, 24.0]},  # TUNING (not in GDD)
+				"sunken_idol": {"weight": 0.2, "shape": "circle", "sizes": [20.0, 24.0]},  # TUNING (not in GDD)
 			}}},
 	{"start": 600.0, "numeral": "III", "name": "The Dream Gate", "shore": 880.0,  # GDD §15.0 zone III "half the island is gone"
 		"blurb": "Dark basalt veined with the light of the god's dream",

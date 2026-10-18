@@ -97,6 +97,9 @@ func start_gaze(r: float) -> void:
 	_gaze_tick = float(def["gaze_tick"])
 	game.stat_add("boss_atk_gaze", 1.0)
 	Sfx.play("boss_telegraph", gaze_pos, 0.6)
+	# The eye opening on the ground (its strip when the art exists, else a
+	# biolume ring), as long as the telegraph.
+	game.effects.ring(gaze_pos, r, Palette.EYE_BIOLUME, float(def["gaze_telegraph"]), "vhalneth_gaze")
 
 
 ## True while a gaze opens or rests.

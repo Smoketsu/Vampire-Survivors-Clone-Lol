@@ -241,6 +241,34 @@ RECIPES = {
         "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
         "sheet_floors": ["march_fortress"],
     },
+    # --- Act II: Ul-Thalos ---
+    # The four zone floors of the Risen Spire (SpireGround) and the sea around the island
+    # (SinkingDirector draws tiles/spire_water). The API sources came back with a
+    # transparent background, so they were flattened to opaque RGB before archiving.
+    "spire_breakwater": {
+        "source": "spire_breakwater.png", "variants": halves("spire_breakwater_v.png"), "method": "quilt",
+        "colors": ["ink_drowned", "floor_soil", "floor_grass", "floor_moss", "floor_slate"],
+        "keep": ["ink_drowned"],
+    },
+    "spire_steps": {
+        "source": "spire_steps.png", "variants": halves("spire_steps_v.png"), "method": "quilt",
+        "colors": ["ink_drowned", "floor_soil", "floor_grass", "floor_moss"],
+    },
+    "spire_gate": {
+        "source": "spire_gate.png", "variants": halves("spire_gate_v.png"), "method": "quilt",
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "biolume_dark"],
+        "bias": {"biolume_dark": 0.02}, "keep": ["biolume_dark"],
+    },
+    "spire_spire": {
+        "source": "spire_spire.png", "method": "quilt",
+        "colors": ["ink_drowned", "floor_soil", "floor_slate", "floor_marble"],
+    },
+    "spire_water": {
+        "source": "spire_water.png", "method": "quilt",
+        "colors": ["ink_drowned", "drowned_dark", "drowned"],
+        "shares": {"ink_drowned": 0.30, "drowned_dark": 0.66, "drowned": 0.04},
+        "keep": ["drowned"],
+    },
 }
 
 

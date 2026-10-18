@@ -4,7 +4,7 @@
 ## obstacle has no sprite art (obstacles/<kind>_<size>.png). The solid outline
 ## matches the collision shape. Purely visual.
 ##   cyclopean_block, barnacle_pillar, fallen_idol   (the Breakwater)
-##   step_ruin, drowned_idol                         (the Sunken Steps)
+##   step_ruin, sunken_idol                          (the Sunken Steps)
 ##   gate_pylon, toppled_arch                        (the Dream Gate)
 ##   spire_shard                                     (the Spire)
 class_name SpireTerrainGlyphs
@@ -46,7 +46,7 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 					ci.draw_circle(c + Vector2.from_angle(a) * r * 0.6, 2.0, BARNACLE)
 			else:
 				ci.draw_line(c + Vector2(-r * 0.4, -r * 0.1), c + Vector2(r * 0.4, r * 0.15), Color(GLOW, 0.8), 1.5)
-		"drowned_idol":
+		"sunken_idol":
 			var r := o.radius
 			ci.draw_circle(c + Vector2(4, 5), r * 1.05, SHADOW)
 			ci.draw_circle(c, r, EDGE)

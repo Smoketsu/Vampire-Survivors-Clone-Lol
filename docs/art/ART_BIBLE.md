@@ -1370,3 +1370,49 @@ art on a regular block grid, so `make_menu_art.py` converts them at their **nati
 snapped (OKLab nearest) to a short palette list, then lone pixels are removed. No outline or rim is
 added: the sources already had them. `prepare_sprite.py` was not used because its faction ramps and
 level stretch would light the near-silhouette cathedral.
+
+### Act II: Ul-Thalos, the Risen Spire (Stage 6; Oct 2026)
+
+Generated with `tools/gen_image.py` (prompts in the ART_BIBLE template; the anchors and the nearest
+approved sprites as `--ref`), converted with `prepare_sprite.py` (the `eye/` folder ramps for the
+Ancient Eye; `--ramps bone,drowned,biolume,moss` for Vhal'Neth; the summons and player sets for the
+bound undead and the Tide Widow, both heroines at `--ink-l 0.20` so their figures do not sink into
+the outline ink). Walk / glide strips by `walk_cycle.py` (rigs under `# --- Act II: Ul-Thalos ---`),
+idle breathing strips for the two bust rigs. All **done**.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `eye/eye_siren` | Siren of the Eye: an alluring sea priestess (figure redesign, fully clothed), kelp hair streaming back, one hand at her lips, a kelp hem instead of feet | 36x56 | robe glide + bust bounce (`_walk`), idle breathing (`_idle`) |
+| `eye/eye_spawn` | Spawn of the Deep (the Eye's): a barnacled tentacled heavy, one biolume eye | 68x66 | robe sway (`_walk`) |
+| `eye/eye_hierophant` | Hierophant of the Eye: a tall eye mitre, barnacled bone plates, a ringed driftwood staff | 38x64 | robe sway, staff rigid |
+| `eye/eye_waking_horror` | Dreamspawn of the Waking (the Reckoning kind): a gaunt drowned figure with a head of eyes and long claws | 62x70 | legs walk |
+| `eye/dream_pillar` | Dream pillar: a slanted cyclopean obelisk with a glowing eye glyph | 88 tall | structure, no strip |
+| `eye/vhalneth_arm` | One of Vhal'Neth's arms: a tentacle rising from a ring of foam, biolume suckers | 124 tall | no strip |
+| `bosses/vhalneth` | Vhal'Neth, the Dreaming Mother: her face, neck and shoulders above the sea, tendril hair, coral circlet, eyes open (Stirring) | 150 tall | `_dreaming` (eyes shut, 148x150) and `_waking` (roaring, two arms, 156x156) made with the face as reference |
+| `summons/spawn_of_the_deep` | The bound Spawn of the Deep (summon class): grey-bone shell, shackled tentacles, a soul-fire eye | 64x60 | robe sway |
+| `summons/leviathan` | Leviathan (its evolution): a spiked bone-crowned shell, eight tentacles, two soul-fire eyes | 76x76 | robe sway |
+| `summons/drowned_thrall_ally` | Drowned Thrall raised by Call of the Drowned: a hunched sea-soaked corpse in grey with seaweed | 36x44 | legs walk; Tidecaller's Host's Spawns use the class sprite tinted (`SpireGlyphs.HOST_TINT`) |
+| `player/tide_widow` | The Tide Widow (figure redesign, fully clothed): violet gown with a slit, seaweed shawl, widow's veil, coral crown, conch staff | 44x56 | robe walk (staff rigid) + bust, idle breathing |
+| `player/tide_widow_hyper` | Gilded Tide Widow (Hyper skin): the same with gold coral, gold trim and bangles | 44x58 | walk + idle through `SKINS` |
+| `tiles/spire_breakwater` (+ `_2`, `_3`) | Zone I floor: wet green drowned flagstones, slime, tide pools | 128 | `make_tile.py` quilt; the API sources came back with alpha, flattened to RGB |
+| `tiles/spire_steps` (+ `_2`, `_3`) | Zone II floor: one wet green-grey stone, slime streaks | 128 | quilt |
+| `tiles/spire_gate` (+ `_2`, `_3`) | Zone III floor: dark basalt with thin biolume veins | 128 | quilt, `biolume_dark` kept as accents |
+| `tiles/spire_spire` | Zone IV floor: smooth dark stone at the spire's foot | 128 | quilt, no variants |
+| `tiles/spire_water` | The sea around the island (`SinkingDirector`) | 128 | quilt by shares (ink / drowned_dark / drowned 30 / 66 / 4%) |
+| `obstacles/cyclopean_block_{s,m,l}` (+ `_v`) | A slab of wet green cyclopean stone at wrong angles, barnacles at its base | 60x42 / 72x52 / 92x65; `_v` 36 wide | footprint + 2 wide |
+| `obstacles/barnacle_pillar_{s,m,l}` | A broken barnacled column | 28x52 / 32x62 / 40x79 | |
+| `obstacles/fallen_idol_{s,l}` (+ `_v`) | A fallen idol with a closed-eye relief | 46x26 / 56x32; `_v` 28 wide | |
+| `obstacles/step_ruin_{s,m,l}` (+ `_v`) | A broken flight of sunken steps | 64x52 / 84x66 / 96x77; `_v` 28 wide | |
+| `obstacles/sunken_idol_{s,l}` | A squat sea-god idol with one closed eye | 42x52 / 50x62 | |
+| `obstacles/gate_pylon_{s,m,l}` | A leaning basalt pylon with a biolume eye glyph | 32x58 / 36x70 / 44x83 | |
+| `obstacles/toppled_arch_{s,l}` | A toppled arch segment with a small glyph | 64x29 / 76x36 | no `_v` (the portrait source read as a tower: the vertical one keeps its code glyph) |
+| `obstacles/spire_shard_{s,l}` | A jagged shard of the spire thrust up at a slant | 24x41 / 32x52 | |
+| `icons/call_of_the_drowned`, `abyssal_pact`, `crushing_depths`, `spawn_of_the_deep` | Badges (violet border): tendrils from a whirlpool; a skull in a soul ring; a tentacle crushing a shield; the bound Spawn's head | 32 | symbols 26 px on the cut-corner template |
+| `icons/tidecallers_host`, `leviathan`, `ach_the_dead_god_serves` | Gold-border badges: the evolutions and the achievement (the goddess's face under a violet chain) | 32 | |
+| `effects/vhalneth_slam` | An arm crashing down: a ring of dark sea spray and foam | 8 x 192 | `ArmKit` impact |
+| `effects/drowned_tendrils` | Call of the Drowned: tendrils lashing up out of a whirlpool | 8 x 128 | eruption ring |
+| `effects/vhalneth_gaze` | Her gaze opening on the ground: a biolume eye of light | 8 x 256 | gaze telegraph ring (1.4 s) |
+
+Code-drawn on purpose: the floor decals (`decals/spire_<style>_<name>`: barnacles, kelp, glyphs,
+bones; soft and sparse, they read well drawn), the sea's flood band, foam and telegraph ring, the
+Ascension pillar, the slam lanes, the gaze and roar rings and the binding finale.

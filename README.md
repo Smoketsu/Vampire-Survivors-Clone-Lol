@@ -1086,6 +1086,75 @@ Reckoning (Dawn's Wrath in the Sanctum) still begins at 0:00. Measurements on
 her own stage are in *Known limitations* and GDD §15.0 ("Stage 3
 integration").
 
+### Stage 6: Ul-Thalos, the Risen Spire (Act II finale, not yet playable)
+
+The last stage of Act II (GDD §15.0 "Ul-Thalos, the Risen Spire"; data in
+`scripts/data/stages/spire_stage.gd`, still `"playable": false` until the lead's Act II gate).
+The god's city surfaces mid-ocean: wet green cyclopean stone and wrong angles around the spire
+where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.25.
+
+- **Four zones on the clock** (run by `MarchDirector`, as on the March and in the Sanctum): the
+  Breakwater (20:00), the Sunken Steps (15:00), the Dream Gate (10:00) and the Spire (5:00),
+  each with its own floor (`SpireGround`) and obstacles (`SpireTerrainGlyphs` without art).
+- **The sinking** (`SinkingDirector`): the island is a circle around the spire, 1650 px across
+  at first. Eight seconds before each zone change the new shoreline is drawn as a biolume ring;
+  then the sea rises over 20 s, to 1250, 880 and 520 px, and at 0:00 the Waking floods it to
+  320 px. Deep water is the edge of the world: the arena push-out moves the necromancer, the
+  undead (fliers excepted), the enemies and every crystal, power-up and chest back onto the
+  stone, so nothing is ever left in the sea; obstacles never stand near a shore that will
+  flood, and the Eye's cultists climb out of the sea at the shore (at least 300 px from you).
+- **Dream pillars** (10:25, `SpireDirector`): three optional structures near the spire, each
+  with a Hierophant guard. Standing near one raises Dread; each one toppled pays XP and a little
+  Soul Ash, and each one still standing when Vhal'Neth arrives gives her opening phase one more
+  arm. There is no miniboss.
+- **The kinds** (`spire_enemy_data.gd`, kits in `scripts/enemies/eye/`):
+  - the **Siren of the Eye** (elite, from 2:30), whose telegraphed song lures up to 10
+    undead out of the Bone Ring toward her for 2 s;
+  - the **Spawn of the Deep** (from 5:00), a heavy that reaches with a tentacle, holds one
+    summon for 3 s, drags it in and squeezes it (killing the Spawn frees it);
+  - the **Hierophant of the Eye** (elite, from 10:00), whose **Ascension** is a 12 s channel
+    in a biolume pillar. Kill it or take a quarter of its HP during the channel to break it;
+    if the rite finishes, it becomes an elite Spawn of the Deep.
+  - Kinds of Gullhaven and the Archive join as guest squads when their data is in the build.
+- **Vhal'Neth, the Dreaming Mother** (17:00, `boss_vhalneth.gd`, numbers in
+  `vhalneth_data.gd`; 20,000 HP × 1.25 on her stage). She fights in three phases:
+  - **Dreaming:** eyes shut, out of reach in the sea. Two arms (plus one per standing pillar)
+    rise at the shore and slam telegraphed lanes; severing them wounds her, and the last one
+    ends the phase.
+  - **Stirring:** her face rises at the shore and can be struck. Her **gaze** opens over your
+    path, raises Dread fast while you stand in it and withers the undead inside, and her arms
+    regrow.
+  - **Waking (35%):** she rises onto the island, ringed by four arms, and takes 40% more damage.
+    Her telegraphed **roar** throws the army back.
+
+  When she dies, the Eye's own ritual binds her to the necromancer: "THE DEAD GOD SERVES".
+  The achievement of the same name opens the **campaign epilogue** (main menu → Epilogue, an
+  `EpilogueScreen` covering both acts; its Act I part opens with *Dawn Extinguished*).
+- **The Waking** (0:00): this stage's Reckoning, with its own kind, the **Dreamspawn of the
+  Waking**, marching with Spawns of the Deep while the island sinks to its last stones.
+- **Unlocks** (all by slaying Vhal'Neth): the spell **Call of the Drowned**, the passives
+  **Abyssal Pact** and **Crushing Depths**, and the **Spawn of the Deep** summon class.
+  - **Call of the Drowned:** every 6 s (5 s at Lv 5), 1–3 tendrils erupt under the strongest
+    foes in reach, hitting and slowing them. A foe they kill rises as a **Drowned Thrall**
+    that fights for you for 12 s (at most 6, through the one `spawn_temporary()` path).
+  - **Tidecaller's Host** (Lv 5 + Abyssal Pact Lv 5): the drowned rise as Spawns of the Deep
+    that seize foes.
+  - **Abyssal Pact:** temporary summons release a healing soul burst when they crumble.
+  - **The Tide Widow** is its character: her innate *Drowned Chorus* makes Thralls 40% sturdier
+    and lets two more stand at once; she has +10 max HP and is 5% slower. Her Hyper skin is the
+    Gilded Tide Widow.
+  - **Spawn of the Deep** (the 13th offerable class, a later item at 0.5 card weight, on every
+    stage once unlocked): a slow front-line heavy whose *Grasp* stuns and squeezes one foe,
+    with its own volley.
+  - **Leviathan** (Spawn Lv 5 + **Crushing Depths** Lv 5): seizes two foes at once and sweeps
+    the ground around it. Crushing Depths gives summons up to +40% damage against held,
+    stunned or frozen foes.
+- **Autotest:** `--stage=spire`, `--boss=vhalneth`, `--classes=spawn_of_the_deep`,
+  `--spells=call_of_the_drowned`, `--character=tide_widow` and `--spawn=` with `eye_siren`,
+  `eye_spawn`, `eye_hierophant` or `eye_waking_horror`; the summary gains the `spire sinking`,
+  `spire`, `spire kinds`, `vhalneth`, `the waking`, `call of the drowned` and
+  `spawn_of_the_deep` lines (`SpireReport`).
+
 ### Meta-progression (Soul Ash)
 
 - **Soul Ash** is earned at the end of **every** run and kept even if you die

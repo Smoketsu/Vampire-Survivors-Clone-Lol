@@ -148,6 +148,7 @@ const HEIGHTS: Dictionary = {
 	"summons/leviathan": 76.0,  # TUNING (not in GDD) its evolution, bigger
 	"summons/drowned_thrall_ally": 44.0,  # TUNING (not in GDD) Call of the Drowned's Thrall (soldier tier)
 	"player/tide_widow": 56.0,  # TUNING (not in GDD) character tier: body ~48 like the necromancer, the coral crown above
+	"player/tide_widow_hyper": 58.0,  # TUNING (not in GDD) skin art: the Tide Widow's body, the taller gold coral crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

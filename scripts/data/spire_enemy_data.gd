@@ -85,7 +85,7 @@ const ENEMIES := {
 		"display_name": "Spawn of the Deep",
 		"max_hp": 300.0,  # TUNING (not in GDD) a heavy (Sanctified Sentinel 120 + flat armour)
 		"move_speed": 40.0,  # TUNING (not in GDD) px/s
-		"damage": 10.0,  # TUNING (not in GDD) tentacle lash in contact
+		"damage": 7.0,  # TUNING (not in GDD) tentacle lash in contact (balance pass 3: 10 -> 7)
 		"attack_interval": 1.5,  # TUNING (not in GDD) s
 		"attack_range": 8.0,  # TUNING (not in GDD) px edge to edge
 		"radius": 17.0,  # TUNING (not in GDD) px
@@ -108,12 +108,12 @@ const ENEMIES := {
 		# and squeezing grab_damage every grab_tick s (time-scaled). The Spawn
 		# keeps fighting while it holds.
 		"grab_first": 3.0,  # TUNING (not in GDD) s after spawning
-		"grab_cooldown": 7.0,  # TUNING (not in GDD) s from one grab's end to the next
+		"grab_cooldown": 9.0,  # TUNING (not in GDD) s from one grab's end to the next (balance pass 1: 7 -> 9)
 		"grab_range": 80.0,  # TUNING (not in GDD) px edge to edge
 		"grab_windup": 0.6,  # TUNING (not in GDD) s the tentacle reaches (telegraph)
 		"grab_hold": 3.0,  # TUNING (not in GDD) s the summon is held
 		"grab_tick": 0.5,  # TUNING (not in GDD) s between squeezes
-		"grab_damage": 4.0,  # TUNING (not in GDD) per squeeze, before time scaling
+		"grab_damage": 2.5,  # TUNING (not in GDD) per squeeze, before time scaling (balance pass 1: 4 -> 2.5)
 		"grab_pull": 90.0,  # TUNING (not in GDD) px/s the held summon is dragged in
 	},
 	# Hierophant of the Eye: the elite leader that guards the Dream Gate. Its
@@ -151,9 +151,9 @@ const ENEMIES := {
 		"aura_speed_mult": 1.1,  # TUNING (not in GDD)
 		"aura_taken_mult": 1.0,  # TUNING (not in GDD) no damage resistance
 		# Ascension (HierophantKit).
-		"ascend_first": 4.0,  # TUNING (not in GDD) s after spawning before the ritual starts
+		"ascend_first": 10.0,  # TUNING (not in GDD) s after spawning before the ritual starts (balance pass 2: 4 -> 10, it climbs out of the sea at the shore and channelled out of the army's reach)
 		"ascend_channel": 12.0,  # Proposal: "survives 12 s of its ritual"
-		"ascend_break": 0.4,  # TUNING (not in GDD) fraction of max HP lost during the channel that breaks it
+		"ascend_break": 0.25,  # TUNING (not in GDD) fraction of max HP lost during the channel that breaks it (balance pass 1: 0.4 -> 0.25, 11 of 16 rites finished)
 		"ascend_retry": 9.0,  # TUNING (not in GDD) s after a broken channel before it starts again
 		"ascend_elite": true,  # TUNING (not in GDD) the risen Spawn is elite (more HP, bigger, elite XP)
 	},
@@ -216,8 +216,8 @@ const ENEMIES := {
 		"slam_length": 900.0,  # TUNING (not in GDD) px (the far shore cuts it)
 		"slam_width": 60.0,  # TUNING (not in GDD) px
 		"slam_telegraph": 1.5,  # TUNING (not in GDD) s (GDD §10.5 clear telegraphs)
-		"slam_damage_player": 18.0,  # TUNING (not in GDD) before time scaling
-		"slam_damage_summon": 14.0,  # TUNING (not in GDD) before time scaling (the lane crosses the army)
+		"slam_damage_player": 12.0,  # TUNING (not in GDD) before time scaling (balance pass 3: 18 -> 12, two slams took a third of the bot's HP each)
+		"slam_damage_summon": 9.0,  # TUNING (not in GDD) before time scaling (the lane crosses the army; balance pass 1: 14 -> 9)
 		"slam_knockback": 50.0,  # TUNING (not in GDD) px a struck summon is thrown out of the lane
 		"slam_recover": 0.6,  # TUNING (not in GDD) s the arm lies along the lane after the impact (drawing)
 	},
