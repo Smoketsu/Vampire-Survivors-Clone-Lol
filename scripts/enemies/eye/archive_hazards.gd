@@ -283,7 +283,8 @@ func _apply_to_player(delta: float) -> void:
 			break
 
 
-## Summons inside a spore cloud choke every spore_tick s.
+## Summons inside a spore cloud choke every spore_tick s (once a tick, however
+## many clouds overlap).
 func _spore_damage(delta: float) -> void:
 	if clouds.is_empty():
 		_spore_tick = 0.0
@@ -295,11 +296,14 @@ func _spore_damage(delta: float) -> void:
 		return
 	_spore_tick -= tick
 	var dmg := float(h["spore_summon_dps"]) * tick * game.enemies.damage_mult  # Per summon this tick.
+	var choked := {}  # Summons already hurt this tick (overlapping clouds hurt once).
 	for c in clouds:
 		game.ally_grid.query(c.pos, c.radius + UnitData.MAX_BLOCK_RADIUS, _tmp)
 		for u: SummonedUnit in _tmp:
-			if u.active and u.state != SummonedUnit.State.SPAWNING and u.position.distance_to(c.pos) <= c.radius + u.radius * 0.5:
-				game.combat.damage_unit(u, dmg, "spores")
+			if choked.has(u) or not u.active or u.state == SummonedUnit.State.SPAWNING or u.position.distance_to(c.pos) > c.radius + u.radius * 0.5:
+				continue
+			choked[u] = true
+			game.combat.damage_unit(u, dmg, "spores")
 
 
 ## Pages hover, then hunt the necromancer; a hit hurts and leaves ink.

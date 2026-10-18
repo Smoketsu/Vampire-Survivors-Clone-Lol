@@ -281,7 +281,7 @@ const EVOLUTIONS := {
 		"labels": {"damage": "Cut damage", "pages": "Pages", "inscribe": "Inscription (s)", "burst": "Ink burst", "radius": "Burst radius", "chain": "Bursts each burst sets off"},
 		"stats": {
 			"pages": 6, "damage": 20.0, "orbit_radius": 84.0, "orbit_speed": 3.0, "hit_cooldown": 0.4, "inscribe": 7.0,  # TUNING (not in GDD) owner-approved "six pages"
-			"burst": 2.0, "radius": 66.0, "cooldown": 3.5, "chain": 1,  # TUNING (not in GDD) owner-approved "each ink burst can set off one more"
+			"burst": 1.5, "radius": 56.0, "cooldown": 3.5, "chain": 1,  # TUNING (not in GDD) owner-approved "each ink burst can set off one more"
 		},
 	},
 }

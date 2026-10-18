@@ -21,7 +21,7 @@ const WOOD_DARK: Color = Color(0.16, 0.10, 0.07)
 ## Book spine colours (the code shelves).
 const SPINES := [Color(0.42, 0.14, 0.16), Color(0.18, 0.26, 0.36), Color(0.36, 0.33, 0.20), Color(0.24, 0.30, 0.20)]
 ## Length (px) of one tile of the orrery-arm sprite (it is repeated along an arm).
-const ARM_TILE: float = 64.0
+const ARM_TILE: float = 62.0
 ## Long side (px) the ink pool / well decal is drawn at for a 1.0 scale (its FLAT_SIZES entry).
 const POOL_ART: float = 64.0
 

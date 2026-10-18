@@ -46,6 +46,8 @@ const ANIMS: Dictionary = {
 	"bolt_impact": {"duration": 0.25, "fill": 1.1},  # TUNING (not in GDD) a Shadow Bolt / Void Bolt / Void Shard hit splash (6 frames of 128 px)
 	"level_up": {"duration": 0.8, "fill": 1.0},  # TUNING (not in GDD) the level-up column on the necromancer (8 frames of 192 px; tall art, base on the frame's bottom row)
 	"evolution": {"duration": 0.9, "fill": 1.3},  # TUNING (not in GDD) an evolution from a chest: vortex collapsing into a violet-gold flash (10 frames of 192 px)
+	# --- Act II: the Hollow Archive ---
+	"ink_burst": {"duration": 0.35, "fill": 1.1},  # TUNING (not in GDD) Forbidden Verse ink burst of an inscribed death (6 frames of 128 px; 0.35 s, as its code ring)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).

@@ -232,7 +232,7 @@ const ZONES := [
 		"blurb": "Pools of black ink fill the mind with dread",
 		"ground": {"style": "wells", "base": Color(0.10, 0.10, 0.12), "line": Color(0.07, 0.07, 0.09),
 			"accent": Color(0.05, 0.05, 0.09), "trim": Color(0.30, 0.32, 0.46)},
-		"arena": {"density": 0.22, "clear_radius": 220.0, "layout_seed": 7202,  # TUNING (not in GDD)
+		"arena": {"density": 0.22, "clear_radius": 220.0, "layout_seed": 7202, "orient": "h",  # TUNING (not in GDD) every rect lies along x (one sprite per size)
 			"kinds": {
 				"book_pile": {"weight": 0.5, "shape": "circle", "sizes": [12.0, 15.0, 18.0]},  # TUNING (not in GDD)
 				"toppled_shelf": {"weight": 0.5, "shape": "rect", "sizes": [56.0, 68.0, 80.0], "short": 18.0},  # TUNING (not in GDD)
@@ -242,7 +242,7 @@ const ZONES := [
 		"clear": 400.0,  # TUNING (not in GDD) room for the orrery's arms (ARCHIVE orrery arm_length + margin)
 		"ground": {"style": "orrery", "base": Color(0.11, 0.10, 0.11), "line": Color(0.08, 0.07, 0.08),
 			"accent": Color(0.20, 0.17, 0.10), "trim": Color(0.55, 0.44, 0.22)},
-		"arena": {"density": 0.14, "clear_radius": 220.0, "layout_seed": 7303,  # TUNING (not in GDD) open floor around the orrery
+		"arena": {"density": 0.14, "clear_radius": 220.0, "layout_seed": 7303, "orient": "h",  # TUNING (not in GDD) open floor around the orrery
 			"kinds": {
 				"brass_globe": {"weight": 0.6, "shape": "circle", "sizes": [14.0, 18.0, 22.0]},  # TUNING (not in GDD)
 				"chart_table": {"weight": 0.4, "shape": "rect", "sizes": [44.0, 52.0], "short": 26.0},  # TUNING (not in GDD)
@@ -251,7 +251,7 @@ const ZONES := [
 		"blurb": "Blank pages drift where the rifts fold the stacks",
 		"ground": {"style": "stacks", "base": Color(0.15, 0.14, 0.13), "line": Color(0.11, 0.10, 0.10),
 			"accent": Color(0.30, 0.28, 0.25), "trim": Color(0.36, 0.34, 0.46)},
-		"arena": {"density": 0.28, "clear_radius": 220.0, "layout_seed": 7404,  # TUNING (not in GDD)
+		"arena": {"density": 0.28, "clear_radius": 220.0, "layout_seed": 7404, "orient": "h",  # TUNING (not in GDD)
 			"kinds": {
 				"blank_shelf": {"weight": 0.5, "shape": "rect", "sizes": [72.0, 84.0, 96.0], "short": 20.0},  # TUNING (not in GDD)
 				"page_heap": {"weight": 0.5, "shape": "circle", "sizes": [13.0, 16.0]},  # TUNING (not in GDD)
@@ -287,7 +287,9 @@ const MARCH := {
 ##                     alternates every turn), reassemble_range (px: when the
 ##                     necromancer is farther than this from the hub at the end
 ##                     of a turn, the orrery folds and rises around him again),
-##                     fold_time (s it takes to fold away and to rise).
+##                     fold_time (s it takes to fold away and to rise),
+##                     slide_speed (px/s a body held against a resting arm
+##                     slides toward its tip, so nobody presses on it for ever).
 ##   tome_guards     — the guard squad spawned beside each lectern.
 ##   burn_radius     — px; the necromancer burns a tome standing this close.
 ##   burn_time       — s of standing to burn it (the channel).
@@ -318,6 +320,7 @@ const ARCHIVE := {
 		"turn_step": PI / 4.0,  # TUNING (not in GDD) 45 degrees a turn
 		"reassemble_range": 720.0,  # TUNING (not in GDD) px
 		"fold_time": 1.2,  # TUNING (not in GDD) s
+		"slide_speed": 70.0,  # TUNING (not in GDD) px/s a body held against a resting arm slides toward its tip
 	},
 	"tome_guards": [{"kind": "scribe", "count": 1, "elite": false}, {"kind": "eye_initiate", "count": 3, "elite": false}],  # Owner-approved "each guarded by a Scribe"
 	"burn_radius": 30.0,  # TUNING (not in GDD) px

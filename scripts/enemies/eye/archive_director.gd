@@ -266,7 +266,7 @@ func _step_orrery(delta: float) -> void:
 					_orr_assemble(game.player.position)
 					game.stat_add("orrery_reassembled", 1.0)
 	if orr_phase in [ORR_HOLD, ORR_TELEGRAPH, ORR_TURN]:
-		_orr_push()
+		_orr_push(delta)
 
 
 ## Unit direction of arm `i` (rad offset of the first arm: orr_angle).
@@ -276,26 +276,31 @@ func _arm_dir(i: int) -> Vector2:
 
 
 ## Pushes the necromancer, the summons and the walking enemies out of the
-## hub and the arms (a turning arm sweeps them along its way).
-func _orr_push() -> void:
+## hub and the arms (a turning arm sweeps them along its way). Summons and
+## enemies held against a resting arm also slide along it toward its tip
+## (orrery slide_speed px/s), so a body walking into an arm finds its way
+## around the end instead of pressing on it for ever.
+func _orr_push(delta: float) -> void:
 	var o: Dictionary = config["orrery"]
 	var reach := float(o["arm_length"]) + 30.0
+	var slide := float(o["slide_speed"]) * delta  # px a held body slides along the arm this tick.
 	var pl := game.player
-	pl.position = _push_body(pl.position, pl.radius)
+	pl.position = _push_body(pl.position, pl.radius, 0.0)
 	game.ally_grid.query(orr_hub, reach + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.state != SummonedUnit.State.SPAWNING and not u.airborne:
-			u.position = _push_body(u.position, u.radius)
+			u.position = _push_body(u.position, u.radius, slide)
 	game.enemy_grid.query(orr_hub, reach + 30.0, _tmp)
 	for e: Enemy in _tmp:
 		if e.active and not e.is_structure and not e.phases_obstacles and not e.is_boss:
-			e.position = _push_body(e.position, e.radius)
+			e.position = _push_body(e.position, e.radius, slide)
 
 
 ## Where a body of radius `r` at `p` ends up after the hub and the arms push
 ## it out (unchanged when nothing touches it, or when the push would put it
-## in an obstacle: nobody is ever trapped).
-func _push_body(p: Vector2, r: float) -> Vector2:
+## in an obstacle: nobody is ever trapped); `slide` px along a resting arm
+## toward its tip.
+func _push_body(p: Vector2, r: float, slide: float) -> Vector2:
 	var o: Dictionary = config["orrery"]
 	var hub_r := float(o["hub_radius"])
 	var off := p - orr_hub
@@ -322,6 +327,8 @@ func _push_body(p: Vector2, r: float) -> Vector2:
 		if orr_phase == ORR_TURN:
 			sgn = orr_dir  # A turning arm sweeps bodies the way it turns.
 		var target := orr_hub + dir * along + nrm * sgn * (half + r + 0.5)
+		if orr_phase != ORR_TURN:
+			target += dir * slide  # Held against a resting arm: slide toward its open tip.
 		if game.arena.is_blocked(target, r):
 			game.stat_add("orrery_push_skipped", 1.0)
 			continue  # The arm would press it into an obstacle: let it through.

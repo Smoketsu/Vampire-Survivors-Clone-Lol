@@ -278,8 +278,8 @@ const CHARACTERS := {
 		"spell": "forbidden_verse",
 		"innate": {
 			"id": "illuminated_margins", "name": "Illuminated Margins",
-			"description": "Your ink bursts reach 40% farther.",
-			"values": {"verse_burst_radius": 0.4},  # TUNING (not in GDD)
+			"description": "Your ink bursts reach 30% farther.",
+			"values": {"verse_burst_radius": 0.3},  # TUNING (not in GDD)
 		},
 		"stats": {"max_hp": -10.0, "move_speed": 0.05},  # TUNING (not in GDD) a frail, quick reader
 		"sprite": "player/heretic_scribe",

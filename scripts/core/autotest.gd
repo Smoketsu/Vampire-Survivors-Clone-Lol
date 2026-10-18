@@ -1015,7 +1015,7 @@ func get_move_vector() -> Vector2:
 	if goal == Vector2.INF and game.enemies.sanctum != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
 		# Sanctum: close in on ward crystals and sacred altars when calm.
 		goal = game.enemies.sanctum.seek_point(p, OBJECTIVE_SEEK_RADIUS)
-	if goal == Vector2.INF and game.enemies.archive != null and away.length() < 0.2:
+	if goal == Vector2.INF and game.enemies.archive != null and away.length() < 0.5:
 		# The Hollow Archive: walk onto forbidden tomes when calm (burns them).
 		goal = game.enemies.archive.seek_point(p, OBJECTIVE_SEEK_RADIUS)
 	if goal != Vector2.INF:
@@ -1178,7 +1178,7 @@ func _print_archive(st: Dictionary) -> void:
 		print("[autotest] archive events (%d): %s" % [ad.fired.size(), ", ".join(ad.fired)])
 	var spawned := PackedStringArray()  # "kind spawned/killed" per Archive kind met.
 	var any := false
-	for kind: String in ArchiveEnemyData.ORDER + ArchiveEnemyData.MASS_KINDS.slice(1) + [ArchiveEnemyData.RIFT, ArchiveEnemyData.RECKONER]:
+	for kind: String in ArchiveEnemyData.ORDER + ArchiveEnemyData.MASS_KINDS.slice(1) + [ArchiveEnemyData.RIFT]:
 		var n := int(st.get("spawned_" + kind, 0.0))  # Counted for kinds with a kit (Enemy.activate()).
 		var k := int(st.get("kill_" + kind, 0.0))
 		if n > 0 or k > 0:

@@ -189,6 +189,19 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(255, 226, 140),
 	},  # TUNING (not in GDD)
+	# --- Act II: the Hollow Archive ---
+	"archive": {
+		"tile": "tiles/archive_halls",
+		"items": [
+			["decals/ink_pool", 196, 168, false],
+			["obstacles/bookshelf_l", 54, 70, false], ["obstacles/blank_shelf_m", 226, 62, false],
+			["structures/forbidden_lectern", 138, 104, false],
+			["eye/scribe", 236, 150, true], ["eye/ink_wraith", 206, 188, true],
+			["summons/archer", 26, 186, false], ["summons/warrior", 48, 214, false], ["summons/mage", 92, 226, false],
+			["bosses/archivist_cast", 176, 226, true],
+		],
+		"fx": "wisps", "fx_color": Color8(240, 156, 242),
+	},  # TUNING (not in GDD)
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

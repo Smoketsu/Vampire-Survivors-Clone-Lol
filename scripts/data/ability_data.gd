@@ -307,11 +307,11 @@ const SPELLS := {
 		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act II spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER (owner-approved 0.5)
 		"labels": {"damage": "Cut damage", "pages": "Pages", "inscribe": "Inscription (s)", "burst": "Ink burst", "radius": "Burst radius", "cooldown": "Sweep every (s)"},
 		"levels": [
-			{"pages": 3, "damage": 9.0, "orbit_radius": 64.0, "orbit_speed": 2.4, "hit_cooldown": 0.5, "inscribe": 4.0, "burst": 1.6, "radius": 46.0, "cooldown": 5.0},  # TUNING (not in GDD) owner-approved "three pages"
-			{"pages": 3, "damage": 12.0, "orbit_radius": 64.0, "orbit_speed": 2.4, "hit_cooldown": 0.5, "inscribe": 4.0, "burst": 1.6, "radius": 46.0, "cooldown": 5.0},  # TUNING (not in GDD)
-			{"pages": 3, "damage": 12.0, "orbit_radius": 72.0, "orbit_speed": 2.6, "hit_cooldown": 0.5, "inscribe": 5.0, "burst": 1.8, "radius": 52.0, "cooldown": 4.5},  # TUNING (not in GDD)
-			{"pages": 3, "damage": 15.0, "orbit_radius": 72.0, "orbit_speed": 2.6, "hit_cooldown": 0.45, "inscribe": 5.0, "burst": 1.8, "radius": 52.0, "cooldown": 4.5},  # TUNING (not in GDD)
-			{"pages": 3, "damage": 18.0, "orbit_radius": 80.0, "orbit_speed": 2.9, "hit_cooldown": 0.45, "inscribe": 6.0, "burst": 2.0, "radius": 60.0, "cooldown": 4.0},  # TUNING (not in GDD)
+			{"pages": 3, "damage": 9.0, "orbit_radius": 64.0, "orbit_speed": 2.4, "hit_cooldown": 0.5, "inscribe": 4.0, "burst": 1.0, "radius": 40.0, "cooldown": 5.0},  # TUNING (not in GDD) owner-approved "three pages"
+			{"pages": 3, "damage": 12.0, "orbit_radius": 64.0, "orbit_speed": 2.4, "hit_cooldown": 0.5, "inscribe": 4.0, "burst": 1.0, "radius": 40.0, "cooldown": 5.0},  # TUNING (not in GDD)
+			{"pages": 3, "damage": 12.0, "orbit_radius": 72.0, "orbit_speed": 2.6, "hit_cooldown": 0.5, "inscribe": 5.0, "burst": 1.2, "radius": 44.0, "cooldown": 4.5},  # TUNING (not in GDD)
+			{"pages": 3, "damage": 15.0, "orbit_radius": 72.0, "orbit_speed": 2.6, "hit_cooldown": 0.45, "inscribe": 5.0, "burst": 1.2, "radius": 44.0, "cooldown": 4.5},  # TUNING (not in GDD)
+			{"pages": 3, "damage": 18.0, "orbit_radius": 80.0, "orbit_speed": 2.9, "hit_cooldown": 0.45, "inscribe": 6.0, "burst": 1.4, "radius": 50.0, "cooldown": 4.0},  # TUNING (not in GDD) first pass (burst 1.6-2.0, radius 46-60) dealt ~80% of its damage in bursts, 260k in an army run
 		],
 	},
 }

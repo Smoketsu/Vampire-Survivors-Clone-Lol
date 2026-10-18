@@ -120,7 +120,7 @@ const ENEMIES := {
 		"kit": "spore_pilgrim",
 		# Spore clouds (SporePilgrimKit; their effect is HAZARDS below).
 		"cloud_first": 1.5,  # TUNING (not in GDD) s after spawning before the first cloud
-		"cloud_interval": 3.0,  # TUNING (not in GDD) s between clouds while it walks
+		"cloud_interval": 4.5,  # TUNING (not in GDD) s between clouds while it walks
 		"cloud_radius": 44.0,  # TUNING (not in GDD) px
 		"cloud_life": 6.0,  # TUNING (not in GDD) s
 		"death_cloud_radius": 70.0,  # TUNING (not in GDD) px; the burst when it dies
@@ -137,7 +137,7 @@ const ENEMIES := {
 		"attack_range": 5.0,  # TUNING (not in GDD) px edge to edge
 		"radius": 17.0,  # TUNING (not in GDD) px
 		"armor": 0.1,  # TUNING (not in GDD)
-		"xp": 6,  # TUNING (not in GDD) (the splits pay their own)
+		"xp": 5,  # TUNING (not in GDD) (the splits pay their own)
 		"behavior": "melee",
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
@@ -162,7 +162,7 @@ const ENEMIES := {
 		"attack_range": 4.0,  # TUNING (not in GDD) px edge to edge
 		"radius": 12.0,  # TUNING (not in GDD) px
 		"armor": 0.05,  # TUNING (not in GDD)
-		"xp": 3,  # TUNING (not in GDD)
+		"xp": 2,  # TUNING (not in GDD)
 		"behavior": "melee",
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
@@ -349,13 +349,13 @@ const ENEMIES := {
 ##   pool_fade / cloud_fade — s a pool / cloud takes to fade in and out (look).
 const HAZARDS := {
 	"ink_slow": 0.3,  # TUNING (not in GDD) owner-approved proposal: ink pools slow
-	"ink_dread": 6.0,  # TUNING (not in GDD) Dread per second; a Pilgrim-free well costs ~a step in 4 s
+	"ink_dread": 14.0,  # TUNING (not in GDD) Dread per second; it must outpace the kills' calming (1 per kill) to bite
 	"ink_linger": 0.3,  # TUNING (not in GDD) s
-	"spore_dread": 5.0,  # TUNING (not in GDD) Dread per second
-	"spore_summon_dps": 1.6,  # TUNING (not in GDD) light: the clouds deny ground, they do not shred the army
+	"spore_dread": 10.0,  # TUNING (not in GDD) Dread per second
+	"spore_summon_dps": 0.8,  # TUNING (not in GDD) light: the clouds deny ground, they do not shred the army (1.6, per overlapping cloud, was half of all summon damage)
 	"spore_tick": 0.5,  # TUNING (not in GDD) s
 	"max_pools": 24,  # TUNING (not in GDD)
-	"max_clouds": 28,  # TUNING (not in GDD)
+	"max_clouds": 18,  # TUNING (not in GDD)
 	"pool_fade": 0.6,  # TUNING (not in GDD) visual
 	"cloud_fade": 0.8,  # TUNING (not in GDD) visual
 }
