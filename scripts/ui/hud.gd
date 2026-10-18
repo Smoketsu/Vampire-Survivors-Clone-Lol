@@ -368,6 +368,8 @@ func _refresh() -> void:
 		_zone_label.text = game.enemies.march.zone_label()
 		if game.enemies.sanctum != null:
 			_zone_label.text += game.enemies.sanctum.hud_suffix()
+		if game.enemies.tide != null:
+			_zone_label.text += game.enemies.tide.hud_suffix()  # Act II: the Harbour's tide.
 	_objective_label.text = game.enemies.objective_text()
 	var boss := game.enemies.boss
 	_boss_box.visible = boss != null and boss.active

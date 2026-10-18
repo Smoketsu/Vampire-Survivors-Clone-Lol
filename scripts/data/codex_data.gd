@@ -57,11 +57,20 @@ const BOSSES: Array[String] = ["alaric", "vael", "seraphine"]
 ## Eye tab): its soldiers in the order the stages bring them (the Drowned
 ## Thrall last: the claimed dead), its minibosses, and its stage bosses
 ## (StageRegistry.BOSS_ARRIVALS ids). Each Act II stage adds its own as it is built.
-const EYE_SOLDIERS: Array[String] = ["eye_initiate", "eye_chanter", "drowned_thrall"]
+const EYE_SOLDIERS: Array[String] = ["eye_initiate", "eye_chanter",
+	# --- Act II: Gullhaven Harbour ---
+	"deep_kin", "tide_caller", "netcaster", "deep_herald",
+	"drowned_thrall"]
 ## Ancient Eye minibosses (enemy kinds).
-const EYE_CHAMPIONS: Array[String] = []
+const EYE_CHAMPIONS: Array[String] = [
+	# --- Act II: Gullhaven Harbour ---
+	"harbourmaster",
+]
 ## Ancient Eye stage bosses (StageRegistry.BOSS_ARRIVALS ids).
-const EYE_BOSSES: Array[String] = []
+const EYE_BOSSES: Array[String] = [
+	# --- Act II: Gullhaven Harbour ---
+	"merrow",
+]
 
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
@@ -103,6 +112,13 @@ const DESCRIPTIONS: Dictionary = {
 	"eye_initiate": "Robed, slow cultists of the Ancient Eye who come in great crowds.",  # GDD §15.0 Act II
 	"eye_chanter": "Leads a squad of Initiates; a summon that falls near it is claimed.",  # GDD §15.0 Act II Claims
 	"drowned_thrall": "One of your own dead, claimed by the Eye. Free its soul.",  # GDD §15.0 Act II Claims
+	# --- Act II: Gullhaven Harbour ---
+	"deep_kin": "Scaled fisherfolk of the deep who leap onto your front rank and swim at full speed.",  # owner-approved roster
+	"tide_caller": "Fishwives of the Eye who raise a line of water that throws your dead back.",  # owner-approved roster
+	"netcaster": "Net-menders who pin one of your dead in place until the net is cut.",  # owner-approved roster
+	"deep_herald": "What the deep sends once the countdown ends.",  # GDD §15.0 run structure (the Harbour's Reckoning)
+	"harbourmaster": "A hulking Deep Kin who drags your dead in on a chained anchor.",  # owner-approved proposal
+	"merrow": "The Voice of the Deep, Gullhaven's priest, halfway through his Change.",  # owner-approved proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -110,6 +126,12 @@ const DESCRIPTIONS: Dictionary = {
 const SPRITE_KEYS: Dictionary = {
 	"profane_bishop": "summons/bishop",
 	"inquisitor": "enemies/inquisitor",
+	# --- Act II: Gullhaven Harbour (the Ancient Eye's art is in eye/) ---
+	"deep_kin": "eye/deep_kin",
+	"tide_caller": "eye/tide_caller",
+	"netcaster": "eye/netcaster",
+	"deep_herald": "eye/deep_herald",
+	"harbourmaster": "eye/harbourmaster",
 }
 
 ## Stat labels and record lines of the detail panel (format strings use
@@ -239,6 +261,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"heretics_bane": "ach_heretics_bane",  # TUNING (not in GDD)
 	"dread_sovereign": "ach_dread_sovereign",  # TUNING (not in GDD)
 	"dawn_extinguished": "ach_dawn_extinguished",  # TUNING (not in GDD)
+	# --- Act II: Gullhaven Harbour ---
+	"low_tide": "ach_low_tide",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -246,6 +270,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"heretics_bane": "dark_benediction",
 	"dread_sovereign": "dark_command",
 	"dawn_extinguished": "hyper_badge",
+	# --- Act II: Gullhaven Harbour ---
+	"low_tide": "brinewalker",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)
@@ -318,4 +344,6 @@ static func enemy_row(id: String) -> Dictionary:
 			return MarchEnemyData.VAEL
 		"seraphine":
 			return SeraphineData.BOSS
+		"merrow":
+			return MerrowData.BOSS  # Act II: Gullhaven Harbour.
 	return {}

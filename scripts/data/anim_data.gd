@@ -48,6 +48,8 @@ const ANIMS: Dictionary = {
 	"evolution": {"duration": 0.9, "fill": 1.3},  # TUNING (not in GDD) an evolution from a chest: vortex collapsing into a violet-gold flash (10 frames of 192 px)
 	# --- Act II: Fallen Seraph --- (art-only bursts, EffectManager.burst())
 	"seraph_dive": {"duration": 0.35, "fill": 1.3},  # TUNING (not in GDD) the Fallen Seraph's dive impact: black feathers and ash bursting outward (SeraphBehavior)
+	# --- Act II: Gullhaven Harbour ---
+	"tide_splash": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) a splash of sea water: Deep Kin landing, the Harbourmaster's anchor, Abbot Merrow's blows, a bell buoy sinking (6 frames of 128 px; EffectManager.impact() 0.4 s)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).

@@ -48,7 +48,9 @@ extends RefCounted
 ## Character ids in picker order (the spells' AbilityData order, then the
 ## five later spells).
 const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fallen_confessor",
-	"carrion_lord", "plague_scholar", "doomsayer", "barrow_warden", "soulbinder", "wither_witch", "grave_herald"]
+	"carrion_lord", "plague_scholar", "doomsayer", "barrow_warden", "soulbinder", "wither_witch", "grave_herald",
+	# --- Act II: Gullhaven Harbour (Undertow's character) ---
+	"brine_widow"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -82,10 +84,14 @@ const STAT_LABELS := {
 ##   wither_rot              Wither._pulse (Rot fraction per pulse)
 ##   wither_rot_linger       Wither._pulse (s the Rot outlasts the pulse)
 ##   temp_summon_duration    HordeDirector.spawn_temporary (every source)
+##   undertow_shallows_every Undertow._cast (a wave in every N leaves shallows;
+##                           the spell's own rule is every 3rd)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
-	"wither_rot_linger", "temp_summon_duration"]
+	"wither_rot_linger", "temp_summon_duration",
+	# --- Act II: Gullhaven Harbour ---
+	"undertow_shallows_every"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -262,6 +268,26 @@ const CHARACTERS := {
 		"stats": {},  # Owner spec: baseline
 		"sprite": "player/grave_herald",
 		"tint": Color(0.42, 0.95, 0.55),  # TUNING (not in GDD) necrotic green
+		"starts_unlocked": false,
+	},
+	# --- Act II: Gullhaven Harbour ---
+	# Undertow's character (owner rule: each new spell comes with its playable
+	# character; figure-redesign style: an hourglass figure, fully clothed in a
+	# violet mourning gown with a drowned-teal kelp shawl and veil). Undertow
+	# must be unlocked (Abbot Merrow) before she can be earned, by the usual
+	# Lv 5 rule.
+	"brine_widow": {
+		"display_name": "The Brine Widow",
+		"title": "The sea took her husband; she took the sea.",
+		"spell": "undertow",
+		"innate": {
+			"id": "riptide", "name": "Riptide",
+			"description": "Every second Undertow wave leaves shallow water, not every third.",
+			"values": {"undertow_shallows_every": 2},  # TUNING (not in GDD) waves per patch
+		},
+		"stats": {"spell_area": 0.06, "max_hp": -5.0},  # TUNING (not in GDD) a wider reach, a frailer body
+		"sprite": "player/brine_widow",
+		"tint": Color(0.45, 0.78, 0.86),  # TUNING (not in GDD) stolen tide blue
 		"starts_unlocked": false,
 	},
 }

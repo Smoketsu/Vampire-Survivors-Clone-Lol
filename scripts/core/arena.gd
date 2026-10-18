@@ -376,6 +376,8 @@ func _draw_obstacle(o: Obstacle) -> void:
 		return  # Its sprite (art pass); otherwise the code glyph below.
 	if MarchGlyphs.draw_obstacle(self, o):
 		return  # A Crimson March obstacle kind.
+	if HarbourGlyphs.draw_obstacle(self, o):
+		return  # A Gullhaven Harbour obstacle kind (Act II).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

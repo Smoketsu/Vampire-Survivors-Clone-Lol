@@ -292,6 +292,9 @@ func summary_line() -> String:
 			counters = "extra jumps %d (casts %d)" % [int(st.get("conductor_extra_jumps", 0.0)), int(st.get("chains_casts", 0.0))]
 		"creeping_rot":
 			counters = "rot applied %d (rot bonus dmg %d)" % [int(st.get("creeping_rot_applied", 0.0)), int(st.get("rot_bonus_dmg", 0.0))]
+		# --- Act II: Gullhaven Harbour ---
+		"riptide":
+			counters = "extra shallows %d (patches %d, waves %d)" % [int(st.get("riptide_extra_shallows", 0.0)), int(st.get("undertow_shallows", 0.0)), int(st.get("undertow_waves", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

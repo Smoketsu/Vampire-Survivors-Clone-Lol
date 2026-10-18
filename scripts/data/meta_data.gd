@@ -236,7 +236,9 @@ const UPGRADES := {
 # --- Achievements (GDD §9.4) ---------------------------------------------------------
 
 ## Display order of achievements.
-const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "dawn_extinguished"]
+const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "dawn_extinguished",
+	# --- Act II: Gullhaven Harbour ---
+	"low_tide"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). The GDD
 ## unlocks (Bone Golem, priest evolution unlock, Dread Sovereign skin) do not
@@ -265,6 +267,11 @@ const ACHIEVEMENTS := {
 	# (counted from the stage record, so it works for any boss the stage names).
 	"dawn_extinguished": {"display_name": "Dawn Extinguished", "description": "Defeat Grand Inquisitor Seraphine in the Sanctum of Judgment",
 		"stat": "boss_kills", "stage": "sanctum", "goal": 1, "unlock": "The campaign epilogue", "bounty": 200},  # GDD §7.5 ending; bounty TUNING (not in GDD)
+	# --- Act II: Gullhaven Harbour ---
+	# Owner-approved Act II achievement: a victory (the run reached 0:00) on
+	# Gullhaven Harbour, counted from the stage record; it unlocks Brinewalker.
+	"low_tide": {"display_name": "Low Tide", "description": "Clear Gullhaven Harbour",
+		"stat": "victories", "stage": "harbour", "goal": 1, "unlock": "The Brinewalker passive", "bounty": 200},  # owner-approved proposal; bounty TUNING (not in GDD)
 }
 
 ## Damage sources whose killing blow counts as a Skeleton Warrior kill (the

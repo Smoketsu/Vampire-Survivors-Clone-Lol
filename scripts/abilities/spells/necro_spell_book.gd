@@ -13,6 +13,10 @@
 ##   Soul Chains      -> SoulChains       (evolves into Chains of the Damned)
 ##   Wither           -> Wither           (evolves into Necrotic Blight)
 ##   Raise Dead       -> RaiseDead        (evolves into Legion of Bones)
+## Act II's abyssal spells (owner-approved, GDD §15.0; ACT2_IDS) join the
+## same dispatch and the generic NecroSpell hooks, with their own autotest
+## lines (HarbourReport) so the Act I summaries keep their text:
+##   Undertow         -> Undertow         (evolves into Maelstrom)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -31,6 +35,12 @@ const IDS := ["bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud",
 ## The five later spells (their own autotest line, later_summary_line(), and
 ## the generic NecroSpell hooks).
 const LATER_IDS := ["death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
+## Act II's abyssal spells (unlockable; the generic NecroSpell hooks, their
+## own autotest lines).
+const ACT2_IDS := [
+	# --- Act II: Gullhaven Harbour ---
+	"undertow",
+]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -43,6 +53,8 @@ const SOURCES := {
 	"soul_chains": ["soul_chains", "chains_damned"],
 	"wither": ["wither", "blight"],
 	"raise_dead": ["raised_dead", "legion_burst"],
+	# --- Act II: Gullhaven Harbour ---
+	"undertow": ["undertow", "maelstrom"],
 }
 
 ## Owning run.
@@ -57,6 +69,13 @@ var nodes: Dictionary = {}
 func step(delta: float) -> void:
 	var ab := game.abilities  # The owning AbilityManager.
 	for id: String in IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.step(delta, ab.spell_stats(id))
+	for id: String in ACT2_IDS:
 		if ab.spell_level(id) <= 0:
 			continue
 		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
@@ -85,6 +104,8 @@ func _create(id: String) -> NecroSpell:
 			node = Wither.new()
 		"raise_dead":
 			node = RaiseDead.new()
+		"undertow":
+			node = Undertow.new()  # Act II: Gullhaven Harbour.
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -107,6 +128,10 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # A later spell's node, if learned.
 		if node != null:
 			node.on_enemy_killed(e)
+	for id: String in ACT2_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
+		if node != null:
+			node.on_enemy_killed(e)
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
@@ -114,6 +139,10 @@ func on_enemy_killed(e: Enemy) -> void:
 func after_physics(delta: float) -> void:
 	for id: String in LATER_IDS:
 		var node: NecroSpell = nodes.get(id)  # A later spell's node, if learned.
+		if node != null:
+			node.after_physics(delta)
+	for id: String in ACT2_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
 		if node != null:
 			node.after_physics(delta)
 
@@ -225,6 +254,22 @@ func later_summary_line() -> String:
 			int(damage_of(id)), int(evo_dmg), int(_boss_damage_of(id)), int(kills_of(id)),
 			node.summary_extra() if node != null else ""])
 	return " | ".join(parts)
+
+
+## The autotest line of one Act II spell `id` (HarbourReport): its level (and
+## EVOLVED), damage (and the evolved part), boss damage, kills and the spell's
+## own counters; "" when it was never learned.
+func act2_summary(id: String) -> String:
+	var ab := game.abilities  # The owning AbilityManager.
+	var lvl := ab.spell_level(id)  # Final level (0 = never learned).
+	if lvl <= 0:
+		return ""
+	var srcs: Array = SOURCES[id]  # Base source first.
+	var evo_dmg := damage_of(id) - float(game.stats.get("dmg_" + String(srcs[0]), 0.0))  # Evolution's share.
+	var node: NecroSpell = nodes.get(id)  # Its node (null if never ticked).
+	return "%s: Lv%d%s dmg=%d (evolved %d) boss=%d kills=%d %s" % [id, lvl, " EVOLVED" if ab.evolved.has(id) else "",
+		int(damage_of(id)), int(evo_dmg), int(_boss_damage_of(id)), int(kills_of(id)),
+		node.summary_extra() if node != null else ""]
 
 
 ## Killing blows landed by spell `id` (kills_by_* stats of its sources).

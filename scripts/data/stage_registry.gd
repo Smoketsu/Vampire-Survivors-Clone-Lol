@@ -59,6 +59,10 @@
 ##                        chambers, altars, corruption).
 ##   kind_aliases       — {alias: real kind}: short kind names the stage's
 ##                        timeline uses (EnemyDirector.resolve_kind()).
+##   tide               — TideDirector config (HarbourStage.TIDE: the rising
+##                        water, tide surges, High Water; Act II).
+##   harbour            — HarbourDirector config (HarbourStage.HARBOUR: bell
+##                        buoys, smugglers' caches, the Harbourmaster; Act II).
 class_name StageRegistry
 extends RefCounted
 
@@ -111,4 +115,6 @@ const BOSS_ARRIVALS := {
 	"alaric": GraveyardStage.BOSS,
 	"vael": CrimsonMarchStage.BOSS,
 	"seraphine": SeraphineData.ARRIVAL,
+	# --- Act II: Gullhaven Harbour ---
+	"merrow": MerrowData.ARRIVAL,
 }

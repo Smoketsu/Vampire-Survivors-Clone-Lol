@@ -70,6 +70,16 @@
 ##                  Dirge, dive) recharges faster: every special *_cooldown is
 ##                  divided by (1 + special_haste) in HordeDirector.
 ##                  _special_stats() (Fallen Seraphs -> Seraphs of Ruin).
+## plus Act II's passives (owner-approved "Unlockable spells and passives",
+## GDD §15.0; both are unlockable items, UnlockData):
+##   Salt of the Deep — more damage to slowed, chilled or frozen enemies
+##                      (CombatResolver.damage_enemy(); evolves Undertow into
+##                      Maelstrom; unlocked with Undertow by slaying Merrow).
+##   Brinewalker      — a counter-passive, offered only on Act II stages
+##                      ("act": 2): water and ink slow the necromancer less,
+##                      and summons from BRINEWALKER_SUMMON_LEVEL (TerrainSlow,
+##                      the one ground-slow path; unlocked by the Low Tide
+##                      achievement).
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -91,7 +101,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	"grim_ledger", "spirit_binding", "restless_dead",
 	"blood_scent", "mournsong", "siegecraft", PactData.ID,
 	# --- Act II: Fallen Seraph ---
-	"fallen_grace"]
+	"fallen_grace",
+	# --- Act II: Gullhaven Harbour ---
+	"salt_of_the_deep", "brinewalker"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -159,6 +171,12 @@ const AREA_HOLY_SOURCES := {
 	"seraphine_beam": "holy",  # TUNING (not in GDD) Seraphine's rotating holy beams.
 	"seraphine_nova": "holy",  # TUNING (not in GDD) Seraphine's Judgment nova.
 	"seraphine_collapse": "holy",  # TUNING (not in GDD) the holy fire of her collapsing arena.
+	# --- Act II: Gullhaven Harbour ---
+	"deep_kin_leap": "area",  # TUNING (not in GDD) a Deep Kin's landing.
+	"tide_wall": "area",  # TUNING (not in GDD) a Tide Caller's water line.
+	"harbourmaster_sweep": "area",  # TUNING (not in GDD) the Harbourmaster's anchor sweep.
+	"merrow_wave": "area",  # TUNING (not in GDD) Abbot Merrow's Brine Wave.
+	"merrow_whirl": "area",  # TUNING (not in GDD) Abbot Merrow's Whirl.
 }
 ## Bone Plating: a plated hit always keeps at least this fraction (0..1) of
 ## its damage, so the flat reduction never makes a summon immune to the
@@ -173,6 +191,12 @@ const PLATING_EXEMPT_SOURCES := ["holy_zone", "seraphine_beam", "seraphine_colla
 ## Grim Ledger: damage sources it does NOT amplify. The Soul Nova power-up
 ## deals an exact share of max HP (like the Gravebow curse exemption).
 const LEDGER_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
+## Salt of the Deep: damage sources it does NOT amplify (the Soul Nova deals an
+## exact share of max HP, like Grim Ledger's exemption).
+const SALT_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
+## Brinewalker: the passive level from which it also helps the summons
+## (owner-approved "and summons from Lv 3").
+const BRINEWALKER_SUMMON_LEVEL: int = 3  # owner-approved
 
 ## Passive definitions.
 ##   display_name — UI name.
@@ -239,6 +263,13 @@ const LEDGER_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
 ##                        minibosses (not the stage boss).
 ##   special_haste      — summon special cooldowns divided by (1 + this)
 ##                        (Fallen Grace; its own category).
+##   slowed_damage      — +% damage enemies take while slowed, chilled or
+##                        frozen (Salt of the Deep).
+##   water_slow_cut     — share (0..1) of a water / ink slow on the
+##                        necromancer removed (Brinewalker; 1 = none), and on
+##                        summons from BRINEWALKER_SUMMON_LEVEL.
+##   act                — (optional) the only campaign act whose stages offer
+##                        the card (Unlocks.act_allows()).
 const PASSIVES := {
 	# Profane Pact (difficulty / reward passive): defined in PactData.
 	PactData.ID: PactData.PASSIVE,
@@ -566,6 +597,36 @@ const PASSIVES := {
 			{"special_haste": 0.15},  # TUNING (not in GDD)
 			{"special_haste": 0.20},  # TUNING (not in GDD)
 			{"special_haste": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act II: Gullhaven Harbour ---
+	"salt_of_the_deep": {
+		"display_name": "Salt of the Deep",
+		"icon": "salt_of_the_deep",
+		"description": "Slowed, chilled and frozen foes take more damage from everything.",
+		"labels": {"slowed_damage": ["Damage to slowed foes", "pct"]},
+		"shared_card_pool": true,  # owner-approved: unlocked Act II items weigh the later items' 0.5
+		"levels": [
+			{"slowed_damage": 0.06},  # owner-approved "+6% a level"
+			{"slowed_damage": 0.12},  # owner-approved
+			{"slowed_damage": 0.18},  # owner-approved
+			{"slowed_damage": 0.24},  # owner-approved
+			{"slowed_damage": 0.30},  # owner-approved "+30% at Lv 5"
+		],
+	},
+	"brinewalker": {
+		"display_name": "Brinewalker",
+		"icon": "brinewalker",
+		"description": "Water and ink slow you less, and your summons too once it grows.",
+		"labels": {"water_slow_cut": ["Water and ink slow removed", "pct"]},
+		"shared_card_pool": true,  # owner-approved: Act II items weigh the later items' 0.5
+		"act": 2,  # owner-approved: counter-passives are offered only on Act II stages
+		"levels": [
+			{"water_slow_cut": 0.20},  # owner-approved "-20% a level"
+			{"water_slow_cut": 0.40},  # owner-approved
+			{"water_slow_cut": 0.60},  # owner-approved (summons too from Lv 3)
+			{"water_slow_cut": 0.80},  # owner-approved
+			{"water_slow_cut": 1.00},  # owner-approved "no slow at Lv 5"
 		],
 	},
 }

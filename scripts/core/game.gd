@@ -217,6 +217,8 @@ func _ready() -> void:
 			ground = MarchGround.new()
 		"sanctum":
 			ground = SanctumGround.new()
+		"harbour":
+			ground = HarbourGround.new()  # Act II: Gullhaven Harbour.
 		_:
 			ground = Ground.new()
 	add_child(ground)

@@ -180,6 +180,14 @@ RIGS = {
     # The near wing hangs below the hip, so its columns ride with the body (rigid).
     "summons/fallen_seraph": dict(mode="robe", hip=25, rigid=[(24, 36, 0, 40)], sway=2, dip=1, bust=(13, 23, 15, 22, 2)),
     "summons/ruin_seraph": dict(mode="robe", hip=29, rigid=[(30, 44, 0, 40), (0, 10, 0, 32)], sway=2, dip=1, bust=(18, 28, 18, 25, 2)),
+    # --- Act II: Gullhaven Harbour ---
+    # The Deep Kin's long arms hang below the hip: rigid, so the claws ride with the body.
+    "eye/deep_kin": dict(mode="legs", hip=44, back=(4, 18), front=(18, 30), rigid=[(0, 6, 0, None), (30, 38, 0, None)], spread=2, lift=1, dip=1),
+    "eye/netcaster": dict(mode="legs", hip=43, back=(8, 21), front=(21, 33), rigid=[(33, 44, 0, None)], spread=2, lift=1, dip=1),
+    # Figure redesign: the Tide Caller and the Brine Widow glide on their gowns (hem sway),
+    # the staff rigid, with the bust bounce and (bust rigs) an idle breathing strip.
+    "eye/tide_caller": dict(mode="robe", hip=40, rigid=[(25, 36, 0, None)], sway=1, dip=1, bust=(15, 24, 16, 22, 2)),
+    "player/brine_widow": dict(mode="robe", hip=44, rigid=[(37, 52, 0, None)], sway=1, dip=1, bust=(22, 34, 20, 27, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

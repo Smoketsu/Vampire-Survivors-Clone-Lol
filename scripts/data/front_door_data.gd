@@ -189,6 +189,18 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(255, 226, 140),
 	},  # TUNING (not in GDD)
+	# --- Act II: Gullhaven Harbour ---
+	"harbour": {
+		"tile": "tiles/harbour_mudflats",
+		"items": [
+			["obstacles/wreck_ribs_s", 60, 70, false], ["obstacles/mooring_post_l", 250, 86, false],
+			["structures/bell_buoy", 150, 96, false], ["obstacles/net_pile_s", 24, 150, false],
+			["eye/deep_kin", 236, 170, true], ["eye/tide_caller", 206, 150, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+			["bosses/merrow_sermon", 172, 226, true],
+		],
+		"fx": "wisps", "fx_color": Color8(127, 181, 172),
+	},  # TUNING (not in GDD) drowned teal wisps
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).
