@@ -60,6 +60,11 @@ var _facing: float = 1.0
 ## SkinData id of the cosmetic skin worn this run ("" = the default look;
 ## set by Game at run start). Purely visual, never a stat.
 var skin_id: String = ""
+## Act II ground slow (the Hollow Archive's ink; apply_ground_slow()): the
+## fraction (0..1) of his speed lost while it holds ...
+var ground_slow: float = 0.0
+## ... and the game time (s) until which it holds (0 = none).
+var ground_slow_until: float = 0.0
 ## Engine motion (UnitMotion: body / overlay layers, bob, lean, squashes,
 ## cast recoils); purely visual.
 var motion: UnitMotion = null
@@ -92,6 +97,8 @@ func step(delta: float) -> void:
 	if not game.grave_step.step(delta, input):
 		# Shade Stride passive: its own +% move speed category on top of move_speed.
 		velocity = input * move_speed * (1.0 + game.abilities.passive_value("shade_stride", "move_speed"))
+		if ground_slow_until > game.elapsed:
+			velocity *= 1.0 - ground_slow  # Act II ground slow (ink): its own category.
 		position += velocity * delta
 	if absf(velocity.x) > 1.0:
 		var f := signf(velocity.x)
@@ -118,6 +125,15 @@ func step(delta: float) -> void:
 		if shield_time <= 0.0:
 			shield_hp = 0.0
 			queue_redraw()
+
+
+## Act II ground slow (the ONE path: the Hollow Archive's ink pools and wells):
+## for `duration` s he moves `fraction` (0..1) slower; the strongest slow
+## holding wins and the longest duration is kept. Grave Step ignores it.
+func apply_ground_slow(fraction: float, duration: float) -> void:
+	if ground_slow_until <= game.elapsed or fraction > ground_slow:
+		ground_slow = clampf(fraction, 0.0, 0.9)
+	ground_slow_until = maxf(ground_slow_until, game.elapsed + duration)
 
 
 ## Applies (or refreshes) a priest ward absorbing `amount` for `duration` s.

@@ -108,6 +108,13 @@ var sanctum: SanctumDirector = null
 ## The stage's enemy kind aliases (StageRegistry "kind_aliases"; alias ->
 ## real kind id; {} = none).
 var _kind_aliases: Dictionary = {}
+## The Hollow Archive's mechanics (Act II: ink wells, the orrery, forbidden
+## tomes, rifts; null on stages without its "archive" config).
+var archive: ArchiveDirector = null
+## The Archive kinds' world hazards (ink pools, spore clouds, pending mass
+## splits; ArchiveHazards): created on first use on ANY stage (an Archive kind
+## can be spawned anywhere), null until then; archive_hazards() creates it.
+var archive_haz: ArchiveHazards = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -140,6 +147,11 @@ func _ready() -> void:
 		sanctum.game = game
 		sanctum.config = stage_def["sanctum"]
 		add_child(sanctum)
+	if not (stage_def.get("archive", {}) as Dictionary).is_empty():
+		archive = ArchiveDirector.new()  # Act II, the Hollow Archive.
+		archive.game = game
+		archive.config = stage_def["archive"]
+		add_child(archive)
 
 
 # =====================================================================================
@@ -207,6 +219,19 @@ func step(delta: float) -> void:
 		march.step(delta)
 	if sanctum != null:
 		sanctum.step(delta)
+	if archive != null:
+		archive.step(delta)
+	if archive_haz != null:
+		archive_haz.step(delta)
+
+
+## The Archive kinds' world hazards (ArchiveHazards), created on first use.
+func archive_hazards() -> ArchiveHazards:
+	if archive_haz == null:
+		archive_haz = ArchiveHazards.new()
+		archive_haz.game = game
+		add_child(archive_haz)
+	return archive_haz
 
 
 ## Removes enemies killed since the last step from `active` (and pools the
@@ -248,6 +273,10 @@ func objective_text() -> String:
 		var sanctum_text := sanctum.objective_override()  # Ward crystals / Guardian / altars.
 		if sanctum_text != "":
 			return sanctum_text
+	if archive != null:
+		var archive_text := archive.objective_override()  # Rifts / the Librarian / tomes.
+		if archive_text != "":
+			return archive_text
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -344,6 +373,11 @@ func _run_event(ev: Dictionary) -> void:
 		"chamber", "guardian", "altars":
 			if sanctum != null:
 				sanctum.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
+		"tomes", "librarian", "rift":
+			if archive != null:
+				archive.start_event(ev)  # Act II, the Hollow Archive.
 			game.stat_add("wave_events", 1.0)
 			return
 	show_banner(ev["banner"])

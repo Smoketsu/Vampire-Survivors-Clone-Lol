@@ -48,6 +48,9 @@
 ##   Wither shred   — damage_enemy(): an enemy inside the Wither aura
 ##                    (Enemy.wither_until) has its armour and flat armour cut
 ##                    by wither_shred: wither_shred_bonus_dmg.
+##   Marginalia     — damage_enemy() (Act II, paired with Forbidden Verse):
+##                    every on-death effect (VerseData.MARGINALIA_SOURCES)
+##                    deals on_death_damage more: marginalia_bonus_dmg.
 ##   Spirit Binding — slow_enemy(), chill_enemy(), freeze_enemy() and
 ##                    stun_enemy() lengthen every duration by cc_duration
 ##                    (cc_mult(); the one path for those statuses).
@@ -186,6 +189,13 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 		if ledger > 0.0 and not source in PassiveData.LEDGER_EXEMPT_SOURCES:
 			game.stat_add("grim_ledger_bonus_dmg", amount * ledger * (1.0 - e.armor))
 			amount *= 1.0 + ledger
+	# Marginalia (Act II passive, VerseData): every on-death effect (ink bursts,
+	# corpse bursts, the frozen shatter, bone shrapnel...) hits harder. 0 when
+	# not owned, so the source list is only searched while it is.
+	var marg := game.abilities.passive_value(VerseData.MARGINALIA, VerseData.MARGINALIA_KEY)  # On-death bonus fraction.
+	if marg > 0.0 and source in VerseData.MARGINALIA_SOURCES:
+		game.stat_add("marginalia_bonus_dmg", amount * marg * (1.0 - e.armor))
+		amount *= 1.0 + marg
 	# Wither aura (Enemy.wither_until): armour and flat armour cut by the shred.
 	var shred := e.wither_shred if e.wither_until > game.elapsed else 0.0  # 0..1 of armour removed.
 	var armor := e.armor * (1.0 - shred)  # Effective percentage armour of this hit.

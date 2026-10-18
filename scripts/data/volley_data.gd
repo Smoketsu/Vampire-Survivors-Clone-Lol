@@ -232,6 +232,9 @@ const SPELLS := {
 		"life": 0.7, "share": 0.6, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.40, 0.30, 0.55)},  # TUNING (not in GDD) (share of a pulse)
 	"raise_dead": {"every": 1, "clock": "cooldown", "aim": "densest", "pattern": "rain", "counts": [6, 9, 14], "speed": 420.0,
 		"life": 0.22, "share": 1.0, "pierce": 0, "radius": 5.0, "style": "shard", "color": Color(0.87, 0.85, 0.76), "scatter": 50.0, "flat": 14.0},  # TUNING (not in GDD) bone rain; the spell has no damage key: `flat` = the base damage
+	# --- Act II: the Hollow Archive ---
+	"forbidden_verse": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "spiral", "counts": [6, 9, 14], "speed": 210.0,
+		"life": 0.75, "share": 0.5, "pierce": 1, "radius": 4.0, "style": "feather", "color": Color(0.90, 0.86, 0.74), "curve": 2.0},  # TUNING (not in GDD) a swirl of loose pages at each sweep (share of a cut)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

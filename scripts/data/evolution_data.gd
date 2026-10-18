@@ -49,7 +49,9 @@ const MIN_ELAPSED: float = 480.0  # TUNING (not in GDD) decision for open questi
 ## Display / card order of evolutions.
 const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	"ossuary_lance", "soul_rapture", "grave_eruption", "pestilence",
-	"doom_brand", "charnel_bastion", "chains_of_the_damned", "necrotic_blight", "legion_of_bones"]
+	"doom_brand", "charnel_bastion", "chains_of_the_damned", "necrotic_blight", "legion_of_bones",
+	# --- Act II: the Hollow Archive ---
+	"unwritten_word"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -105,6 +107,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 ## Necrotic Blight extra keys:
 ##   heal (HP healed per enemy inside per pulse), heal_cap (HP/s: the most
 ##   the aura heals per second).
+## The Unwritten Word extra keys (Act II, the Hollow Archive):
+##   chain (how many more ink bursts each burst can set off: the first
+##   inscribed enemies it kills burst too; VerseData.CHAIN_MAX_DEPTH links).
 ## Legion of Bones extra keys:
 ##   damage (bone burst damage to each enemy within `radius` px when a
 ##   skeleton expires or falls), radius (px).
@@ -264,6 +269,19 @@ const EVOLUTIONS := {
 		"stats": {
 			"count": 6, "cooldown": 7.0, "life": 10.0, "skeleton_hp": 0.8, "skeleton_damage": 1.1, "range": 320.0,  # TUNING (not in GDD)
 			"damage": 32.0, "radius": 60.0,  # TUNING (not in GDD)
+		},
+	},
+	# --- Act II: the Hollow Archive ---
+	"unwritten_word": {
+		"base": "forbidden_verse",
+		"passive": "marginalia",
+		"display_name": "The Unwritten Word",
+		"icon": "unwritten_word",
+		"description": "Six pages circle you, and every ink burst can set off another.",
+		"labels": {"damage": "Cut damage", "pages": "Pages", "inscribe": "Inscription (s)", "burst": "Ink burst", "radius": "Burst radius", "chain": "Bursts each burst sets off"},
+		"stats": {
+			"pages": 6, "damage": 20.0, "orbit_radius": 84.0, "orbit_speed": 3.0, "hit_cooldown": 0.4, "inscribe": 7.0,  # TUNING (not in GDD) owner-approved "six pages"
+			"burst": 2.0, "radius": 66.0, "cooldown": 3.5, "chain": 1,  # TUNING (not in GDD) owner-approved "each ink burst can set off one more"
 		},
 	},
 }

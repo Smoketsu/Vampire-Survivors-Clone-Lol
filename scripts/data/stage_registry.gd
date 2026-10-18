@@ -59,6 +59,8 @@
 ##                        chambers, altars, corruption).
 ##   kind_aliases       — {alias: real kind}: short kind names the stage's
 ##                        timeline uses (EnemyDirector.resolve_kind()).
+##   archive            — ArchiveDirector config (ArchiveStage.ARCHIVE: the
+##                        Ink Wells, the Orrery, the forbidden tomes, rifts).
 class_name StageRegistry
 extends RefCounted
 
@@ -111,4 +113,6 @@ const BOSS_ARRIVALS := {
 	"alaric": GraveyardStage.BOSS,
 	"vael": CrimsonMarchStage.BOSS,
 	"seraphine": SeraphineData.ARRIVAL,
+	# --- Act II: the Hollow Archive ---
+	"archivist": ArchivistData.ARRIVAL,
 }

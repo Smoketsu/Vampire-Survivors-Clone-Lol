@@ -55,11 +55,17 @@ const BOSSES: Array[String] = ["alaric", "vael", "seraphine"]
 ## Eye tab): its soldiers in the order the stages bring them (the Drowned
 ## Thrall last: the claimed dead), its minibosses, and its stage bosses
 ## (StageRegistry.BOSS_ARRIVALS ids). Each Act II stage adds its own as it is built.
-const EYE_SOLDIERS: Array[String] = ["eye_initiate", "eye_chanter", "drowned_thrall"]
+const EYE_SOLDIERS: Array[String] = ["eye_initiate", "eye_chanter", "drowned_thrall",
+		# --- Act II: the Hollow Archive ---
+		"scribe", "ink_wraith", "spore_pilgrim", "gibbering_mass"]
 ## Ancient Eye minibosses (enemy kinds).
-const EYE_CHAMPIONS: Array[String] = []
+const EYE_CHAMPIONS: Array[String] = [
+		# --- Act II: the Hollow Archive ---
+		"librarian"]
 ## Ancient Eye stage bosses (StageRegistry.BOSS_ARRIVALS ids).
-const EYE_BOSSES: Array[String] = []
+const EYE_BOSSES: Array[String] = [
+		# --- Act II: the Hollow Archive ---
+		"archivist"]
 
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
@@ -101,6 +107,13 @@ const DESCRIPTIONS: Dictionary = {
 	"eye_initiate": "Robed, slow cultists of the Ancient Eye who come in great crowds.",  # GDD §15.0 Act II
 	"eye_chanter": "Leads a squad of Initiates; a summon that falls near it is claimed.",  # GDD §15.0 Act II Claims
 	"drowned_thrall": "One of your own dead, claimed by the Eye. Free its soul.",  # GDD §15.0 Act II Claims
+	# --- Act II: the Hollow Archive ---
+	"scribe": "Inks a curse on the cultists around it: a cursed cultist claims your dead.",  # GDD §15.0 Act II: the Hollow Archive
+	"ink_wraith": "Slips through shelves and walls and rises out of the ink.",  # GDD §15.0 Act II: the Hollow Archive
+	"spore_pilgrim": "Leaves spore clouds in its wake that fill your mind with dread.",  # GDD §15.0 Act II: the Hollow Archive
+	"gibbering_mass": "A heaving tank that splits into smaller masses when it dies, twice.",  # GDD §15.0 Act II: the Hollow Archive
+	"librarian": "A floating eye in tendrils whose slow beam turns your dead around.",  # GDD §15.0 Act II: the Hollow Archive
+	"archivist": "The Keeper of the Unwritten, whose face is an open book.",  # GDD §15.0 Act II: the Hollow Archive
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -237,6 +250,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"heretics_bane": "ach_heretics_bane",  # TUNING (not in GDD)
 	"dread_sovereign": "ach_dread_sovereign",  # TUNING (not in GDD)
 	"dawn_extinguished": "ach_dawn_extinguished",  # TUNING (not in GDD)
+	# --- Act II: the Hollow Archive ---
+	"nothing_unwritten": "ach_nothing_unwritten",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -244,6 +259,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"heretics_bane": "dark_benediction",
 	"dread_sovereign": "dark_command",
 	"dawn_extinguished": "hyper_badge",
+	# --- Act II: the Hollow Archive ---
+	"nothing_unwritten": "forbidden_verse",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)
@@ -316,4 +333,7 @@ static func enemy_row(id: String) -> Dictionary:
 			return MarchEnemyData.VAEL
 		"seraphine":
 			return SeraphineData.BOSS
+		# --- Act II: the Hollow Archive ---
+		"archivist":
+			return ArchivistData.BOSS
 	return {}

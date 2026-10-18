@@ -217,6 +217,8 @@ func _ready() -> void:
 			ground = MarchGround.new()
 		"sanctum":
 			ground = SanctumGround.new()
+		"archive":
+			ground = ArchiveGround.new()  # Act II, the Hollow Archive.
 		_:
 			ground = Ground.new()
 	add_child(ground)

@@ -13,6 +13,10 @@
 ##   Soul Chains      -> SoulChains       (evolves into Chains of the Damned)
 ##   Wither           -> Wither           (evolves into Necrotic Blight)
 ##   Raise Dead       -> RaiseDead        (evolves into Legion of Bones)
+## and Act II's unlockable spells (GDD §15.0 "Act II: the Ancient Eye"; locked
+## until earned, UnlockData), same generic NecroSpell hooks, their own
+## autotest line (act2_summary_line(), printed only when one was taken):
+##   Forbidden Verse  -> ForbiddenVerse   (evolves into The Unwritten Word)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -27,10 +31,17 @@ extends Node2D
 
 ## Spell ids this book drives, in AbilityData.SPELL_ORDER order.
 const IDS := ["bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud",
-	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
+	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead",
+	# --- Act II: the Hollow Archive ---
+	"forbidden_verse"]
 ## The five later spells (their own autotest line, later_summary_line(), and
 ## the generic NecroSpell hooks).
 const LATER_IDS := ["death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
+## Act II's unlockable spells (generic NecroSpell hooks; their own autotest
+## line, act2_summary_line(), so the Act I lines stay as they were).
+const ACT2_IDS := [
+	# --- Act II: the Hollow Archive ---
+	"forbidden_verse"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -43,6 +54,8 @@ const SOURCES := {
 	"soul_chains": ["soul_chains", "chains_damned"],
 	"wither": ["wither", "blight"],
 	"raise_dead": ["raised_dead", "legion_burst"],
+	# --- Act II: the Hollow Archive ---
+	"forbidden_verse": ["verse", "unwritten_word", "ink_burst"],
 }
 
 ## Owning run.
@@ -85,6 +98,9 @@ func _create(id: String) -> NecroSpell:
 			node = Wither.new()
 		"raise_dead":
 			node = RaiseDead.new()
+		# --- Act II: the Hollow Archive ---
+		"forbidden_verse":
+			node = ForbiddenVerse.new()
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -107,6 +123,10 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # A later spell's node, if learned.
 		if node != null:
 			node.on_enemy_killed(e)
+	for id: String in ACT2_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
+		if node != null:
+			node.on_enemy_killed(e)
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
@@ -114,6 +134,10 @@ func on_enemy_killed(e: Enemy) -> void:
 func after_physics(delta: float) -> void:
 	for id: String in LATER_IDS:
 		var node: NecroSpell = nodes.get(id)  # A later spell's node, if learned.
+		if node != null:
+			node.after_physics(delta)
+	for id: String in ACT2_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
 		if node != null:
 			node.after_physics(delta)
 
@@ -183,8 +207,8 @@ func summary_line() -> String:
 	var st := game.stats  # Run counters.
 	var parts := PackedStringArray()  # One "id: ..." chunk per spell.
 	for id: String in IDS:
-		if id in LATER_IDS:
-			continue  # Reported by later_summary_line().
+		if id in LATER_IDS or id in ACT2_IDS:
+			continue  # Reported by later_summary_line() / act2_summary_line().
 		var lvl := ab.spell_level(id)  # Final level (0 = never learned).
 		if lvl <= 0:
 			parts.append("%s: not taken" % id)
@@ -225,6 +249,29 @@ func later_summary_line() -> String:
 			int(damage_of(id)), int(evo_dmg), int(_boss_damage_of(id)), int(kills_of(id)),
 			node.summary_extra() if node != null else ""])
 	return " | ".join(parts)
+
+
+## The autotest line of Act II's unlockable spells (same layout as
+## later_summary_line()); "" when none was ever learned this run, so the
+## autotest prints it only then.
+func act2_summary_line() -> String:
+	var ab := game.abilities  # The owning AbilityManager.
+	var st := game.stats  # Run counters.
+	var parts := PackedStringArray()  # One "id: ..." chunk per spell.
+	var any := false  # True once one of them was learned.
+	for id: String in ACT2_IDS:
+		var lvl := ab.spell_level(id)  # Final level (0 = never learned).
+		if lvl <= 0:
+			parts.append("%s: not taken" % id)
+			continue
+		any = true
+		var srcs: Array = SOURCES[id]  # Base source first.
+		var evo_dmg := damage_of(id) - float(st.get("dmg_" + String(srcs[0]), 0.0))  # Evolution's share (and the bursts).
+		var node: NecroSpell = nodes.get(id)  # Its node (null if never ticked).
+		parts.append("%s: Lv%d%s dmg=%d (beyond the base cut %d) boss=%d kills=%d %s" % [id, lvl, " EVOLVED" if ab.evolved.has(id) else "",
+			int(damage_of(id)), int(evo_dmg), int(_boss_damage_of(id)), int(kills_of(id)),
+			node.summary_extra() if node != null else ""])
+	return " | ".join(parts) if any else ""
 
 
 ## Killing blows landed by spell `id` (kills_by_* stats of its sources).

@@ -44,7 +44,9 @@ const STARTING_SPELL: String = "shadow_bolt"
 ## Display / card order of spells.
 const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	"bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud",
-	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
+	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead",
+	# --- Act II: the Hollow Archive ---
+	"forbidden_verse"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -110,6 +112,12 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 ##   skeleton_hp / skeleton_damage (fractions of a Skeleton Warrior's current
 ##   HP / damage), range (px around the necromancer in which enemies are
 ##   looked for).
+## Forbidden Verse stat keys (Act II, the Hollow Archive; unlocked by slaying
+## the Archivist, UnlockData; rules in VerseData):
+##   pages (orbiting pages), damage (per cut), orbit_radius (px), orbit_speed
+##   (rad/s), hit_cooldown (s between two cuts on the same enemy), inscribe (s
+##   an enemy stays inscribed), burst (ink burst damage as a fraction of
+##   `damage`), radius (px burst radius), cooldown (s between page sweeps).
 const SPELLS := {
 	"shadow_bolt": {
 		"display_name": "Shadow Bolt",
@@ -289,6 +297,21 @@ const SPELLS := {
 			{"count": 3, "cooldown": 8.0, "life": 8.0, "skeleton_hp": 0.6, "skeleton_damage": 0.8, "range": 280.0},  # TUNING (not in GDD)
 			{"count": 4, "cooldown": 8.0, "life": 8.0, "skeleton_hp": 0.6, "skeleton_damage": 0.9, "range": 280.0},  # TUNING (not in GDD)
 			{"count": 4, "cooldown": 7.0, "life": 9.0, "skeleton_hp": 0.7, "skeleton_damage": 1.0, "range": 300.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act II: the Hollow Archive ---
+	"forbidden_verse": {
+		"display_name": "Forbidden Verse",
+		"icon": "forbidden_verse",
+		"description": "Pages of scripture circle you, cutting foes and inscribing them to burst into ink.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act II spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER (owner-approved 0.5)
+		"labels": {"damage": "Cut damage", "pages": "Pages", "inscribe": "Inscription (s)", "burst": "Ink burst", "radius": "Burst radius", "cooldown": "Sweep every (s)"},
+		"levels": [
+			{"pages": 3, "damage": 9.0, "orbit_radius": 64.0, "orbit_speed": 2.4, "hit_cooldown": 0.5, "inscribe": 4.0, "burst": 1.6, "radius": 46.0, "cooldown": 5.0},  # TUNING (not in GDD) owner-approved "three pages"
+			{"pages": 3, "damage": 12.0, "orbit_radius": 64.0, "orbit_speed": 2.4, "hit_cooldown": 0.5, "inscribe": 4.0, "burst": 1.6, "radius": 46.0, "cooldown": 5.0},  # TUNING (not in GDD)
+			{"pages": 3, "damage": 12.0, "orbit_radius": 72.0, "orbit_speed": 2.6, "hit_cooldown": 0.5, "inscribe": 5.0, "burst": 1.8, "radius": 52.0, "cooldown": 4.5},  # TUNING (not in GDD)
+			{"pages": 3, "damage": 15.0, "orbit_radius": 72.0, "orbit_speed": 2.6, "hit_cooldown": 0.45, "inscribe": 5.0, "burst": 1.8, "radius": 52.0, "cooldown": 4.5},  # TUNING (not in GDD)
+			{"pages": 3, "damage": 18.0, "orbit_radius": 80.0, "orbit_speed": 2.9, "hit_cooldown": 0.45, "inscribe": 6.0, "burst": 2.0, "radius": 60.0, "cooldown": 4.0},  # TUNING (not in GDD)
 		],
 	},
 }

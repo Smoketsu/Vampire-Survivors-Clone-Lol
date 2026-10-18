@@ -236,7 +236,9 @@ const UPGRADES := {
 # --- Achievements (GDD §9.4) ---------------------------------------------------------
 
 ## Display order of achievements.
-const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "dawn_extinguished"]
+const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "dawn_extinguished",
+	# --- Act II: the Hollow Archive ---
+	"nothing_unwritten"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). The GDD
 ## unlocks (Bone Golem, priest evolution unlock, Dread Sovereign skin) do not
@@ -265,6 +267,12 @@ const ACHIEVEMENTS := {
 	# (counted from the stage record, so it works for any boss the stage names).
 	"dawn_extinguished": {"display_name": "Dawn Extinguished", "description": "Defeat Grand Inquisitor Seraphine in the Sanctum of Judgment",
 		"stat": "boss_kills", "stage": "sanctum", "goal": 1, "unlock": "The campaign epilogue", "bounty": 200},  # GDD §7.5 ending; bounty TUNING (not in GDD)
+	# --- Act II: the Hollow Archive ---
+	# Owner-approved proposal: burn every forbidden tome in one Hollow Archive
+	# run (ArchiveDirector sets the run stat archive_all_tomes; MetaProgress
+	# counts such runs in the lifetime counter archive_all_tomes_runs).
+	"nothing_unwritten": {"display_name": "Nothing Unwritten", "description": "Burn every forbidden tome in one Hollow Archive run",
+		"stat": "archive_all_tomes_runs", "goal": 1, "unlock": "The Iron Mind passive", "bounty": 150},  # bounty TUNING (not in GDD)
 }
 
 ## Damage sources whose killing blow counts as a Skeleton Warrior kill (the

@@ -48,7 +48,9 @@ extends RefCounted
 ## Character ids in picker order (the spells' AbilityData order, then the
 ## five later spells).
 const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fallen_confessor",
-	"carrion_lord", "plague_scholar", "doomsayer", "barrow_warden", "soulbinder", "wither_witch", "grave_herald"]
+	"carrion_lord", "plague_scholar", "doomsayer", "barrow_warden", "soulbinder", "wither_witch", "grave_herald",
+	# --- Act II: the Hollow Archive ---
+	"heretic_scribe"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -82,10 +84,13 @@ const STAT_LABELS := {
 ##   wither_rot              Wither._pulse (Rot fraction per pulse)
 ##   wither_rot_linger       Wither._pulse (s the Rot outlasts the pulse)
 ##   temp_summon_duration    HordeDirector.spawn_temporary (every source)
+##   verse_burst_radius      ForbiddenVerse._release_bursts (extra ink burst radius fraction)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
-	"wither_rot_linger", "temp_summon_duration"]
+	"wither_rot_linger", "temp_summon_duration",
+	# --- Act II: the Hollow Archive ---
+	"verse_burst_radius"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -262,6 +267,23 @@ const CHARACTERS := {
 		"stats": {},  # Owner spec: baseline
 		"sprite": "player/grave_herald",
 		"tint": Color(0.42, 0.95, 0.55),  # TUNING (not in GDD) necrotic green
+		"starts_unlocked": false,
+	},
+	# --- Act II: the Hollow Archive ---
+	# Forbidden Verse's character (owner rule: each new spell comes with its
+	# playable character; his spell must be unlocked first, by the Archivist).
+	"heretic_scribe": {
+		"display_name": "The Heretic Scribe",
+		"title": "He reads the Eye's scripture aloud, and the words cut.",
+		"spell": "forbidden_verse",
+		"innate": {
+			"id": "illuminated_margins", "name": "Illuminated Margins",
+			"description": "Your ink bursts reach 40% farther.",
+			"values": {"verse_burst_radius": 0.4},  # TUNING (not in GDD)
+		},
+		"stats": {"max_hp": -10.0, "move_speed": 0.05},  # TUNING (not in GDD) a frail, quick reader
+		"sprite": "player/heretic_scribe",
+		"tint": Color(0.48, 0.30, 0.86),  # TUNING (not in GDD) scripture violet ink
 		"starts_unlocked": false,
 	},
 }

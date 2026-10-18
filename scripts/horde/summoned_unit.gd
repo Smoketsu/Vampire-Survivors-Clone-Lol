@@ -275,6 +275,14 @@ var temp_life: float = 0.0
 var holy_slow: float = 0.0
 ## Seconds the holy-ground slow still applies (refreshed by StageDirector).
 var holy_slow_timer: float = 0.0
+## Act II, the Hollow Archive (the Librarian's beam, misdirect()): game time
+## (s) until which this summon is TURNED AROUND: it walks along
+## `misdirect_dir` and neither thinks nor fights (0 = never / expired).
+var misdirect_until: float = 0.0
+## Unit direction a turned-around summon walks in.
+var misdirect_dir: Vector2 = Vector2.ZERO
+## Fraction (0..1) of its move speed a turned-around summon walks at.
+var misdirect_speed: float = 1.0
 
 
 # =====================================================================================
@@ -316,6 +324,7 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	temp_life = 0.0
 	holy_slow = 0.0
 	holy_slow_timer = 0.0
+	misdirect_until = 0.0
 	slot_jitter = randf()
 	band_jitter = randf()
 	anchor_offset = pos - game.player.position
@@ -473,6 +482,27 @@ func target_alive() -> bool:
 	return _target_valid()
 
 
+## Act II, the Hollow Archive (the Librarian's beam; the one path that turns a
+## summon around): for `duration` s the summon drops its target, stops
+## fighting and walks along `dir` at `speed_mult` x its move speed; the leash
+## (hard recall) still applies. A spawning, airborne or special-casting unit
+## is not turned. Returns true when it was turned.
+func misdirect(dir: Vector2, duration: float, speed_mult: float) -> bool:
+	if not active or state == State.SPAWNING or state == State.DEAD or airborne:
+		return false
+	if behavior != null and behavior.is_busy():
+		return false
+	_drop_target()
+	if state == State.CASTING:
+		cast_time = 0.0
+	_enter(State.FOLLOWING)
+	misdirect_until = game.elapsed + duration
+	misdirect_dir = dir.normalized() if dir.length() > 0.01 else Vector2.RIGHT
+	misdirect_speed = speed_mult
+	queue_redraw()
+	return true
+
+
 # =====================================================================================
 # think() — 5 Hz decisions (GDD §39 UNIT pseudocode)
 # =====================================================================================
@@ -487,6 +517,8 @@ func think() -> void:
 	if d_player > UnitData.HARD_RECALL:
 		_safe_recall()
 		return
+	if misdirect_until > game.elapsed:
+		return  # Turned around (misdirect()): no decisions until it wears off.
 	_update_threat_avoidance()
 	if _check_stall(player_pos):
 		return
@@ -855,7 +887,9 @@ func physics_step(delta: float) -> void:
 		if aura_cd <= 0.0:
 			aura_cd = aura_interval
 			SummonAbilities.aura_pulse(self)
-	if behavior != null and behavior.physics(self, delta):
+	if misdirect_until > game.elapsed:
+		velocity = misdirect_dir * move_speed * misdirect_speed  # Turned around (misdirect()).
+	elif behavior != null and behavior.physics(self, delta):
 		pass  # A class special owns this tick (it set the velocity).
 	elif state == State.CASTING:
 		_step_cast(delta)

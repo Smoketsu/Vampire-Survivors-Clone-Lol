@@ -160,6 +160,18 @@ var claim_radius: float = 0.0
 ## Game time (s) until which this enemy is a marked claimer (a Scribe's curse,
 ## reach EyeEnemyData.CLAIM.curse_radius); 0 = never marked.
 var claimer_until: float = 0.0
+## Act II, the Hollow Archive (ArchiveEnemyData "phases"): true for a body
+## that slips through obstacles (the Ink Wraith, the Unwritten): Arena
+## .resolve_all() skips it.
+var phases_obstacles: bool = false
+## Act II (ArchiveEnemyData "floating"): true for a body drawn hovering (the
+## Ink Wraith, the Librarian; visual only).
+var floating: bool = false
+## Forbidden Verse inscribe mark: game time (s) until which this enemy is
+## inscribed (it bursts into ink when it dies). Written only by the
+## ForbiddenVerse spell node, i.e. only while someone owns the spell; timed on
+## Game.elapsed like Rot. 0 = never inscribed / expired.
+var inscribed_until: float = 0.0
 ## True for animated stone (Sentinel, Guardian): never healed, shielded or
 ## raised by Covenant priests.
 var is_construct: bool = false
@@ -340,6 +352,9 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	wear_tint = Color.WHITE
 	claim_radius = float(def.get("claim_radius", 0.0))
 	claimer_until = 0.0
+	phases_obstacles = bool(def.get("phases", false))
+	floating = bool(def.get("floating", false))
+	inscribed_until = 0.0
 	display_name = def["display_name"]
 	max_hp = float(def["max_hp"]) * hp_mult
 	move_speed = def["move_speed"]
