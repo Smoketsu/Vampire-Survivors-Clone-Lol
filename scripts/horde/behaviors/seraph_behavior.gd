@@ -20,9 +20,10 @@
 ##     (ties: the first) must reach dive_min_enemies; with none she waits
 ##     dive_retry s before searching again. Then (CASTING, phases below)
 ##       RISE     dive_rise s rising in place to dive_lift px,
-##       DIVE     she flies at the pack centre (fixed at the search, so the
-##                dive reads as a committed strike) at dive_speed, for at
-##                most dive_max_flight s (it lands wherever she is by then),
+##       DIVE     she flies at the pack centre (the enemy the search picked,
+##                followed while it lives, generation-guarded; its last
+##                position once it died) at dive_speed, for at most
+##                dive_max_flight s (it lands wherever she is by then),
 ##       impact   dive_damage to every enemy within dive_radius (source
 ##                "seraph_dive", CombatResolver.damage_enemy()) with a small
 ##                knockback, and a feather ring is laid at the impact
@@ -69,6 +70,13 @@ const SRC_FEATHERS: String = "seraph_feathers"
 
 ## World point the running dive is aimed at (the pack centre).
 var dive_point: Vector2 = Vector2.ZERO
+## Enemy at the centre of the pack being dived on (null once it died or was
+## recycled; dive_point then keeps its last position).
+var dive_target: Enemy = null
+## Generation of dive_target when it was picked (stale-reference guard).
+var dive_gen: int = 0
+## Enemy at the centre of the pack the last find_pack() returned.
+var _found: Enemy = null
 ## World point the dive started from (drawing the dive streak).
 var _dive_from: Vector2 = Vector2.ZERO
 ## Height (px) the body is drawn above the ground at the start of the dive.
@@ -96,7 +104,7 @@ func think(u: SummonedUnit) -> bool:
 		special_cd = float(s.get("dive_retry", 0.6))  # Nothing worth a dive: look again a little later.
 		u.game.stat_add("seraph_no_pack", 1.0)
 		return false
-	dive_point = best
+	_aim_at_found(best)
 	_chain_left = int(s.get("chain_dives", 0))
 	begin_special(u, RISE)
 	Sfx.play("gargoyle_takeoff", u.position, 1.18)
@@ -134,6 +142,7 @@ func find_pack(u: SummonedUnit, from: Vector2, r_min: float, r_max: float, exclu
 		if n > best_n:
 			best_n = n
 			best = e.position
+			_found = e
 	return best if best_n >= need else Vector2.INF
 
 
@@ -146,6 +155,10 @@ func step_special(u: SummonedUnit, delta: float) -> bool:
 			if phase_time >= float(s["dive_rise"]):
 				_start_dive(u)
 		DIVE:
+			if dive_target != null and dive_target.active and dive_target.generation == dive_gen:
+				dive_point = dive_target.position  # Follow the pack centre.
+			else:
+				dive_target = null
 			var to := dive_point - u.position  # Remaining dive vector.
 			var step_len := float(s["dive_speed"]) * delta  # px this tick.
 			if to.length() <= step_len or phase_time >= float(s["dive_max_flight"]):
@@ -161,8 +174,21 @@ func step_special(u: SummonedUnit, delta: float) -> bool:
 			if phase_time >= float(s["dive_recover"]):
 				if _chain_left > 0 and _try_chain(u):
 					return true
+				dive_target = null
 				end_special(u, SummonedUnit.State.ENGAGING if u.target_alive() else SummonedUnit.State.FOLLOWING)
 	return true
+
+
+## Aims the dive at `pos`, the centre find_pack() just returned (`_found`).
+func _aim_at_found(pos: Vector2) -> void:
+	dive_point = pos
+	dive_target = _found
+	dive_gen = _found.generation if _found != null else 0
+
+
+## A recall cancelled the dive: drop the followed pack centre.
+func on_cancel(_u: SummonedUnit) -> void:
+	dive_target = null
 
 
 ## Begins the dive phase toward dive_point.
@@ -181,7 +207,7 @@ func _try_chain(u: SummonedUnit) -> bool:
 	var next := find_pack(u, u.position, 0.0, float(s.get("chain_range", 0.0)), dive_point)
 	if next == Vector2.INF:
 		return false
-	dive_point = next
+	_aim_at_found(next)
 	special_time = 0.0  # Each chained dive is bounded on its own (see the header).
 	_start_dive(u)
 	u.game.stat_add("seraph_chain_dives", 1.0)

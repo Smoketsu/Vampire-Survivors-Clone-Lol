@@ -585,6 +585,8 @@ The undead army: bone, cold grey and teal soul fire, one accent per class, **no 
 | `keening_lady.png` | Keening Lady (Banshee evolution): a taller, regal banshee with the same redesigned figure, a fitted low-necked dark cold-grey gown with a high slit fraying into wisps, a bone circlet with a teal gem, silver-blue hair, a pale screaming face, teal sound ripples. Converted like the Banshee | 56 | done |
 | `corpse_catapult.png` | Corpse Catapult: a squat siege engine of old coffin wood (brown) and bone beams on two bone wheels, sinew ropes, a diagonal throwing arm with a skull boulder (teal eyes) in its cup | 56 | done |
 | `ossuary_engine.png` | Ossuary Engine (Corpse Catapult evolution): a bigger siege engine of ribcages and spines, fire-lit sinew, a triple cup of three burning skulls | 72 | done |
+| `fallen_seraph.png` | Fallen Seraph (Act II, Seraphine's gift; figure redesign): a hovering corrupted angel with an exaggerated hourglass figure (a very large bust, cinched waist, wide hips), fully clothed in a fitted, low-necked ash-grey gown with a high slit fraying into wisps, pale bone skin, long ash-white hair down her back, teal eyes, a cracked pale halo above her head, two broken black wings (the far one raised, the near one snapped and hanging), a black feather blade in her near hand. Never Covenant gold: bone, grey and a teal glint only. Generated with Seraphine and the Banshee attached, then redrawn from that design on a 52-block grid; `deglow.py` (the AI's soft dark haze dropped below alpha 230), `pixelate_source.py`, `prepare_sprite.py --ink-l 0.15 --no-cleanup --no-prune --ramps bone,grey,soul`; the wing pixels shaded one step down by hand (`grey_light` -> `grey` -> `grey_dark`) so the wings read black against the ash gown (passes every floor). Glide strip (robe rig, the hanging wing rigid) and idle strip with a 2 px bust bounce | 52 | done |
+| `ruin_seraph.png` | Seraph of Ruin (Fallen Seraph evolution): the same figure taller in a charcoal gown, both black wings whole and spread wide, a cracked halo with a crown of black thorns. Generated from the Fallen Seraph source with the Keening Lady attached; converted and wing-shaded like her. Glide and idle strips (both wings rigid, 2 px bust bounce) | 60 | done |
 
 ### Covenant enemies (`assets/sprites/enemies/`)
 
@@ -681,6 +683,7 @@ right, trail to the left), transparent background. Art px = the longest side (`S
 | `orb.png` | Shadow Orb Shield orb: a round violet orb (not pointed; it doesn't rotate) | 18 | done |
 | `enemy_arrow.png` | Covenant arrow: an ivory shaft with a gold head | 20 | done |
 | `radiant_bolt.png` | Covenant holy bolt: a gold and holy-white spark | 20 | done |
+| `seraph_feather.png` | One black feather blade of the Fallen Seraph's feather ring (drawn rotated around the expanding ring, `SeraphGlyphs.draw_ring()`): hand-placed 14x5 pixels, `ink_cold` outline, `grey_dark` vane, `grey` and `grey_light` spine | 14 | done |
 
 ### Volley shots and bursts (`assets/sprites/volleys/`, two `effects/` strips)
 
@@ -790,6 +793,8 @@ stone wing, ice, wail) meeting its finisher's (sword, boulder, dagger, hound sku
 | `hellhound.png` | Flaming charred hound head (evolution frame) |
 | `keening_lady.png` | Crowned banshee face with teal sound ripples (evolution frame) |
 | `ossuary_engine.png` | Triple cup of burning skulls on a rib-cage arm (evolution frame) |
+| `fallen_seraph.png` | A pale fallen angel in profile with a cracked halo and a broken black wing |
+| `ruin_seraph.png` | Two spread black wings under a thorn-crowned cracked halo (evolution frame) |
 | `grave_dominion.png` | Gravestone with a violet rune |
 | `necrotic_vigor.png` | A heart made of bone with a violet glint |
 | `dark_command.png` | Violet crown |
@@ -813,6 +818,7 @@ stone wing, ice, wail) meeting its finisher's (sword, boulder, dagger, hound sku
 | `blood_scent.png` | A blood drop with bone-white speed streaks (one crimson accent is fine) |
 | `mournsong.png` | A pale weeping spectral face with two teal notes |
 | `siegecraft.png` | A cracked grey tower struck by a bone boulder |
+| `fallen_grace.png` | A cracked pale halo with a black feather falling through it, teal sparks at the crack |
 | `profane_pact.png` | Torn scroll with a crimson seal (the curse: the one icon allowed crimson) |
 | `powerup_magnet.png` | Teal soul vortex |
 | `powerup_feast.png` | Roasted meat on a bone |
@@ -1162,6 +1168,7 @@ anim id, or `burst()` for the art-only effects that never had a drawn shape: `bo
 | `doom_burst` | Doom Brand detonation: a violet brand sigil (Death Mark is the player's violet) flaring and bursting into a ring of violet doom-fire | 8 | 128 | each branded death | done |
 | `raise_dead` | Raise Dead: grave dirt cracking open and a teal soul-fire swirl as a skeletal hand claws up (mound at the feet) | 8 | 128 | each raised skeleton | done |
 | `legion_burst` | Legion of Bones: a crumbling skeleton bursting into a ring of bone shards and dust | 8 | 128 | each skeleton's burst | done |
+| `seraph_dive` | Fallen Seraph dive impact: a pale flash, then a ring of black feathers and ash dust flung outward with a thin ash shock ring, fading to wisps (teal sparks) | 8 | 128 | `burst()` at each dive impact (`SeraphBehavior._impact()`) | done |
 
 **How the effects pass made them** (Oct 2026, `tools/gen_image.py`, 24 images for 24 strips, then
 a second pass of 3 images for `bolt_impact`, `level_up` and `evolution`): one
