@@ -40,7 +40,7 @@ const ENEMIES := {
 		"display_name": "Initiate of the Eye",
 		"max_hp": 17.0,  # TUNING (not in GDD) Recruit 14
 		"move_speed": 52.0,  # TUNING (not in GDD) px/s; "robed and slow" (Recruit 58)
-		"damage": 3.5,  # TUNING (not in GDD) Recruit 3
+		"damage": 3.0,  # TUNING (not in GDD) Recruit 3; Act II integration: 3.5 made the Initiate swarm the naive bot's top killer on all three stages
 		"attack_interval": 1.0,  # TUNING (not in GDD) s
 		"attack_range": 4.0,  # TUNING (not in GDD) px edge to edge
 		"radius": 9.0,  # TUNING (not in GDD) px
@@ -78,7 +78,7 @@ const ENEMIES := {
 		"target_priority": 0.85,  # TUNING (not in GDD) 0..1; kill it before it claims your dead
 		"mass": 1.2,  # TUNING (not in GDD)
 		"faction": FACTION,
-		"claim_radius": 120.0,  # TUNING (not in GDD) px; about the reach of a squad around it
+		"claim_radius": 90.0,  # TUNING (not in GDD) px; about the reach of a squad around it (Act II integration: 120 let a losing army feed the Eye a stream of Thralls)
 	},
 	# A claimed summon. Its HP, damage and speed are set from the summon it
 	# was (EyeClaims, CLAIM below); these are the floors and the rest of the row.
@@ -133,7 +133,7 @@ const CLAIM := {
 	"curse_radius": 90.0,  # TUNING (not in GDD) px
 	"query_radius": 160.0,  # TUNING (not in GDD) px; >= every claim_radius
 	"thrall_rally_points": 4.0,  # TUNING (not in GDD) an elite's worth of soul
-	"max_thralls": 8,  # TUNING (not in GDD)
+	"max_thralls": 5,  # TUNING (not in GDD) Act II integration: 8 let a weak army snowball into defeat (the Archive's seed 7, the naive bot everywhere)
 	"temporary_claimable": false,  # TUNING (not in GDD) only your real army is fought over
 	"tint": Color(0.45, 0.85, 0.78),  # TUNING (not in GDD) drowned teal (EyePalette)
 	"rise_color": Color(0.30, 0.75, 0.68),  # TUNING (not in GDD) drowned teal
