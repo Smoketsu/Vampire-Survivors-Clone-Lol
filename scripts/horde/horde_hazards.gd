@@ -269,6 +269,8 @@ func _land(b: Boulder) -> void:
 			game.stat_add("catapult_structure_dmg", dealt)
 		hits += 1
 	game.stat_add("catapult_boulder_hits", float(hits))
+	# Bullet heaven pass: the boulder bursts into bone fragments (the Ossuary Engine's burn).
+	game.volleys.on_special(null, b.to, b.to + Vector2.RIGHT, b.damage, "corpse_catapult", "ossuary_engine" if b.source == "ossuary_engine" else "")
 	game.effects.ring(b.to, b.radius, Palette.BONE, 0.35)
 	game.effects.ring(b.to, b.radius * 0.55, Palette.CORPSE_FLESH, 0.3)
 	Juice.fx.burst(b.to, Palette.BONE, Palette.CORPSE_FLESH, 12, b.radius * 2.0, 0.5, 3.0)

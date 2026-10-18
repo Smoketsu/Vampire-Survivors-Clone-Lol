@@ -116,6 +116,11 @@ var horde: HordeDirector
 var enemies: EnemyDirector
 ## All projectiles.
 var projectiles: ProjectileManager
+## The bullet heaven pass's volley shots (VolleyDirector; idle when volleys_on is false).
+var volleys: VolleyDirector
+## True when this run plays with the bullet heaven pass (VolleyData): the Volleys setting,
+## or --volleys= under the autotest (default on). Read once, before the systems are built.
+var volleys_on: bool = true
 ## Spells, passives and level-up offers.
 var abilities: AbilityManager
 ## XP crystals.
@@ -192,6 +197,7 @@ func _ready() -> void:
 	character = CharacterModifiers.for_id(run_config.character_id)
 	enemy_grid = SpatialHash.new(GRID_CELL)
 	ally_grid = SpatialHash.new(GRID_CELL)
+	volleys_on = GameState.autotest_volleys if GameState.autotest else Settings.volleys  # Before DifficultyModifiers (denser fodder).
 	combat = CombatResolver.new(self)
 	codex = CodexLog.new(self)  # Codex records (first, so every hook below can reach it).
 	difficulty = DifficultyModifiers.new(self)
@@ -258,6 +264,9 @@ func _ready() -> void:
 	projectiles.game = self
 	projectiles.z_index = 2
 	add_child(projectiles)
+	volleys = VolleyDirector.new()
+	add_child(volleys)
+	volleys.setup(self)
 	camera = Camera2D.new()
 	camera.zoom = Vector2.ONE * Settings.zoom_value()
 	Settings.changed.connect(_on_settings_changed)
@@ -377,6 +386,7 @@ func _physics_process(delta: float) -> void:
 	arena.resolve_all(delta)
 	abilities.spells.after_physics(delta)  # Bone Wall holds enemies on their final positions.
 	projectiles.step(delta)
+	volleys.step(delta)  # Bullet heaven pass (no-op when off).
 	pickups.step(delta)
 	powerups.step(delta)
 	chests.step(delta)

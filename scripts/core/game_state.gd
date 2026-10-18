@@ -146,6 +146,10 @@ var autotest_stance: String = ""
 ## Autotest: true when --synergies=off keeps every army synergy off (old and
 ## new; SynergyManager.evaluate()) for A/B balance runs.
 var autotest_synergies_off: bool = false
+## Autotest: false when --volleys=off runs without the bullet heaven pass (VolleyData:
+## no summon volleys, spell patterns, Rally Barrage or denser fodder; the game exactly
+## as before it). Default true, like the setting.
+var autotest_volleys: bool = true
 ## Autotest: forced spawns from --spawn= ({"kind", "time" s, "count"}, in
 ## the order given; empty = none).
 var autotest_spawns: Array[Dictionary] = []
@@ -255,6 +259,12 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_synergies_off = sv == "off"
 			else:
 				push_error("Unknown --synergies=%s (expected on or off)" % sv)
+		elif arg.begins_with("--volleys="):
+			var vv := arg.get_slice("=", 1).to_lower()  # "off" or "on".
+			if vv == "off" or vv == "on":
+				autotest_volleys = vv == "on"
+			else:
+				push_error("Unknown --volleys=%s (expected on or off)" % vv)
 		elif arg.begins_with("--spawn="):
 			for entry: String in arg.get_slice("=", 1).split(",", false):
 				var kind := entry.get_slice("@", 0)  # Enemy kind id.

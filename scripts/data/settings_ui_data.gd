@@ -30,7 +30,7 @@ const TAB_GAP: int = 8  # TUNING (not in GDD)
 ## Size (layout px) of the page area inside the ornate panel: every tab has
 ## the same size, so switching tabs never moves the screen (wide enough for
 ## the three Controls groups, tall enough for the six Video rows).
-const PAGE_SIZE := Vector2(980, 306)  # TUNING (not in GDD) layout fit; 6 rows x 46 + 5 gaps x 6 (Effects row added for phones)
+const PAGE_SIZE := Vector2(980, 358)  # TUNING (not in GDD) layout fit; 7 rows x 46 + 6 gaps x 6 (Effects row for phones, Volleys row for the bullet heaven pass)
 ## Height (layout px) of an option row (slider, toggle, zoom).
 const ROW_HEIGHT: float = 46.0  # TUNING (not in GDD)
 ## Gap (layout px) between option rows.
@@ -81,7 +81,7 @@ const TITLE: String = "Settings"  # TUNING (not in GDD)
 ## Bus name -> volume row label.
 const VOLUME_ROWS: Dictionary = {"Master": "Master", "Music": "Music", "SFX": "Effects"}  # TUNING (not in GDD)
 ## Option key -> toggle row label, in Video tab order.
-const TOGGLES: Dictionary = {"fullscreen": "Fullscreen", "screen_shake": "Screen shake", "damage_numbers": "Damage numbers", "reduce_motion": "Reduce motion"}  # TUNING (not in GDD)
+const TOGGLES: Dictionary = {"fullscreen": "Fullscreen", "volleys": "Volleys", "screen_shake": "Screen shake", "damage_numbers": "Damage numbers", "reduce_motion": "Reduce motion"}  # TUNING (not in GDD)
 ## Web build where the browser has no page fullscreen (iPhone Safari: only videos go
 ## fullscreen; GDD §15.0 "iPhone sound and fullscreen"): the Fullscreen toggle becomes
 ## this dim line when the game is the page itself (a home-screen launch is fullscreen).

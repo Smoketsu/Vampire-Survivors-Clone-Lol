@@ -118,6 +118,7 @@ func _wail(u: SummonedUnit, i: int) -> void:
 					float(u.special["dirge_duration"]), float(u.special["dirge_boss_mult"]), silence):
 				hits += 1
 	_waves_done = i + 1
+	game.volleys.on_special(u, wail_point, wail_point + Vector2.RIGHT, u.damage)  # Bullet heaven: the Dirge's rings.
 	game.stat_add("banshee_dirge_hits", float(hits))
 	game.effects.ring(wail_point, r, WarbandGlyphs.WAIL, 0.45)
 	game.effects.ring(wail_point, r * 0.65, Palette.VIOLET, 0.35)

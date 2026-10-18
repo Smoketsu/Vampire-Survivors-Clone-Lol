@@ -137,6 +137,7 @@ Autotest options (full table in the README):
   `wither_witch`)
 - `--hyper` (Hyper mode, lock bypassed) and `--skin=ID` (force a cosmetic skin, e.g. `dread_sovereign`)
 - `--synergies=off` (no army synergy ever activates, old or new: A/B runs for synergy balance)
+- `--volleys=on|off` (the bullet heaven pass, default on; `off` = the game exactly as before it)
 - `--spawn=kind@T[xN],...` (force-spawn any enemy kind at T game seconds on any stage, e.g.
   `sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `battle_sister@60x6`)
 - `--pact`
@@ -422,6 +423,15 @@ tiny tweaks.
   repository's GitHub Pages, whose saves iPhone Safari keeps (it forgets the itch.io frame's). Tested with Playwright phone / tablet emulation (real taps, synthetic
   multi-touch) and a desktop viewport. Keep new screens inside 1280 × 600 layout px or call
   `TouchSupport.fit_to_screen()` on their centre container.
+
+- the **bullet heaven pass** (owner request, Oct 2026, built to try out; GDD §15.0 "Bullet heaven pass"):
+  `VolleyDirector` + `volley_data.gd` behind **Settings → Video → Volleys** (`Game.volleys_on`, default on;
+  `--volleys=off` reproduces the game before it exactly): summon volleys from class Lv 3 (Lv 5 grows, each
+  summon evolution a showpiece; attack-triggered through `SummonedUnit._step_cast()`, specials from their own
+  moment), spell echoes from spell Lv 3, the Rally Barrage, denser fodder (spawn ×1.25, HP ×0.8, XP ×0.8 in
+  `DifficultyModifiers` / `CombatResolver`); shots are packed-array data (cap 320 everywhere, 160 drawn on
+  Reduced effects), every hit through `CombatResolver.damage_enemy()` with the firing class's source, at most
+  2 boss hits a volley; autotest `volleys` line. The owner decides after playing it whether it stays.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.

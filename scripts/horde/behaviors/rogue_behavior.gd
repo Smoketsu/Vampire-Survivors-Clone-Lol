@@ -187,6 +187,7 @@ func _finish(u: SummonedUnit, pos: Vector2) -> void:
 	if u.game.arena.is_blocked(u.position, u.radius):
 		u.game.stat_add("summon_special_end_blocked", 1.0)
 	u.game.effects.slash(u.position, dash_dir, Palette.VIOLET, u.radius * 1.8)
+	u.game.volleys.on_special(u, u.position, u.position + dash_dir * 60.0, u.damage)  # Bullet heaven: thrown daggers.
 	if _chain_left > 0 and _try_chain(u):
 		return
 	if _reset_pending:

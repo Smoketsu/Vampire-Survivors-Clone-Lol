@@ -4,6 +4,8 @@
 ## persists": only these options so far).
 ##   * Volumes: Master / Music / SFX, linear 0..1 per bus (0 mutes the bus).
 ##   * Screen shake and floating damage numbers on/off (read by Juice).
+##   * Volleys on/off: the bullet heaven pass (summon volleys, spell patterns,
+##     the Rally Barrage, denser fodder; VolleyData), applied from the next run.
 ##   * Reduce motion on/off (read by UiMotion.enabled(): every UI motion,
 ##     panel open / close, entrances, lift, squash, count-ups and the fade
 ##     through black, becomes instant).
@@ -63,6 +65,10 @@ var screen_shake: bool = true
 var damage_numbers: bool = true
 ## True = UI motion is instant (accessibility "Reduce motion"; UiMotion).
 var reduce_motion: bool = false
+## Bullet heaven pass (VolleyData; GDD §15.0 "Bullet heaven pass"): true = summon volleys,
+## spell patterns, the Rally Barrage and the denser fodder waves. Read once when a run
+## starts (Game.volleys_on), so a change applies from the next run. Default on.
+var volleys: bool = true
 ## Effects quality: an EffectsData.ORDER value ("full" / "reduced"); set in
 ## _ready() from the device until a saved value overrides it.
 var effects: String = EffectsData.DEFAULT_DESKTOP
@@ -99,6 +105,7 @@ func load_settings() -> void:
 		screen_shake = bool(cfg.get_value("feel", "screen_shake", true))
 		damage_numbers = bool(cfg.get_value("feel", "damage_numbers", true))
 		reduce_motion = bool(cfg.get_value("feel", "reduce_motion", false))
+		volleys = bool(cfg.get_value("feel", "volleys", true))
 		var fx := String(cfg.get_value("video", "effects", _default_effects()))  # Saved effects quality.
 		effects = fx if EffectsData.ORDER.has(fx) else _default_effects()
 		fullscreen = bool(cfg.get_value("video", "fullscreen", false))
@@ -121,6 +128,7 @@ func save_settings() -> Error:
 	cfg.set_value("feel", "screen_shake", screen_shake)
 	cfg.set_value("feel", "damage_numbers", damage_numbers)
 	cfg.set_value("feel", "reduce_motion", reduce_motion)
+	cfg.set_value("feel", "volleys", volleys)
 	cfg.set_value("video", "fullscreen", fullscreen)
 	cfg.set_value("video", "zoom", zoom_id)
 	cfg.set_value("video", "effects", effects)
@@ -166,6 +174,12 @@ func zoom_value() -> float:
 func set_volume(bus: String, value: float) -> void:
 	volumes[bus] = clampf(value, 0.0, 1.0)
 	_apply_volume(bus)
+	changed.emit()
+
+
+## Enables / disables the bullet heaven pass (from the next run on).
+func set_volleys(on: bool) -> void:
+	volleys = on
 	changed.emit()
 
 

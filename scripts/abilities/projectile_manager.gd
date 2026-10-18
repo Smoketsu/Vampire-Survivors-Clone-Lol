@@ -343,3 +343,5 @@ func _explode(p: Projectile) -> void:
 				e.apply_mark(mark)
 			game.combat.damage_enemy(e, p.damage, p.source)
 	game.stat_add("mage_explosions", 1.0)
+	if p.source == "mage" or p.source == "lich":
+		game.volleys.on_mage_burst(p.dest, p.damage, p.source)  # Bullet heaven: forking sparks / the Lich's spiral.

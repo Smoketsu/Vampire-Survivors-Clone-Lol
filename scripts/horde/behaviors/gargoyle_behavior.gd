@@ -182,6 +182,7 @@ func _impact(u: SummonedUnit, pos: Vector2) -> void:
 	Juice.fx.burst(pos, Palette.GARGOYLE_STONE, Palette.VIOLET, 10, r * 2.0, 0.45, 2.5)
 	game.shake(float(u.special["swoop_shake"]))
 	Sfx.play("gargoyle_dive", pos)
+	game.volleys.on_special(u, pos, pos + Vector2.RIGHT, float(u.special["swoop_damage"]))  # Bullet heaven: stone shards.
 	game.stat_add("gargoyle_swoop_hits", float(hits))
 
 

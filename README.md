@@ -239,10 +239,11 @@ buttons you press in a fight are the dash and the ultimate (below).
     hide while a level-up, chest, pause or end screen is open and carry on
     afterwards. The XP bar sits in its frame with room for its numbers; the HP
     bar has quarter notches and a pale trail where HP was just lost.
-- **Settings (`Settings` autoload, `SettingsMenu`).** Three tabs (Q / E or
+- **Settings (`Settings` autoload, `SettingsMenu`).** Four tabs (Q / E or
   LB / RB): **Audio** (Master / Music / Effects sliders), **Video**
-  (fullscreen, the camera zoom Normal / Close, **Effects** Full / Reduced,
-  screen shake, damage numbers, Reduce motion = instant UI motion) and
+  (fullscreen, **Volleys** = the bullet heaven pass, the camera zoom Normal / Close,
+  **Effects** Full / Reduced, screen shake, damage numbers, Reduce motion = instant
+  UI motion), **Save** (Backup / Restore save codes, see *Play in the browser*) and
   **Controls**: the keyboard key of
   Move up / down / left / right, Shadow Bolt aim, Grave Step, Dread Rally,
   Pause and the four army stances, in three groups (Move, Actions, Stances),
@@ -262,6 +263,27 @@ buttons you press in a fight are the dash and the ultimate (below).
   visual: a run plays out exactly the same (checked: same-seed autotest
   summaries are identical with Reduced forced on), and the autotest always
   uses Full.
+
+### Bullet heaven pass (Volleys)
+
+An experimental pass, on by default and switched with **Settings → Video → Volleys** (from the next
+run; GDD §15.0 "Bullet heaven pass", numbers in `scripts/data/volley_data.gd`):
+
+- **Summon volleys.** From class **Lv 3** every summon class adds a glowing signature volley to its
+  attack, with more shots at Lv 5: Warriors throw bone-shard fans off the line, Archers multishot,
+  Mages' orbs fork into sparks, Menders release seeking soul sparks, Warders shatter barrier shards,
+  Abominations' stomps throw flesh chunks, Rogues end a dash in thrown daggers, Gargoyles' dives burst
+  into stone shards, Frost Wraiths fire ice cones, Bone Hounds howl ghost wolves, Banshees' Dirge turns
+  into rings, and catapult boulders burst into bone fragments. Each summon evolution has a showpiece
+  (the Death Knight's sword wave, the Gravebow's arrow rain, the Lich's spiral and so on).
+- **Spell echoes.** From **Lv 3** every owned spell releases a themed echo volley on its own cooldown.
+- **Rally Barrage.** Dread Rally makes every summon fire its volley at once, and volleys come twice
+  as often while the rally lasts.
+- **Denser fodder.** 25% more soldiers with 20% less HP each, and 20% less XP per kill, so the extra
+  bodies don't level you faster.
+
+Volley shots split the attack's damage rather than adding to it, and a volley lands at most two hits on
+a boss or miniboss. With Volleys off the game plays exactly as before the pass.
 
 ### How a run works
 
@@ -1494,6 +1516,8 @@ scripts/
   horde/
     horde_director.gd       Army registry, pools, caps, effective stats, replenishment queues,
                             formation anchors, threat evaluation, staggered 5 Hz AI ticks
+    volley_director.gd      Bullet heaven pass: every volley shot (packed arrays, one _draw, spatial-hash
+                            hits through CombatResolver), summon volleys, spell echoes, Rally Barrage
     synergy_manager.gd      Army synergy activation and effects; the newer classes' marks
                             (staggered, swooped), the one synergy hit bonus (hit_mult()), the
                             Baying frenzy and the Menagerie replenishment
@@ -1693,6 +1717,8 @@ scripts/
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
                             Winter Revenant, Shadow Reaper, Cathedral Horror, Gravebow,
                             Bone Colossus, Hellhound, Keening Lady, Ossuary Engine) and stats
+    volley_data.gd          Bullet heaven pass: volley shapes per class / evolution / spell, shot cap,
+                            boss-hit cap, Rally Barrage rate, denser-fodder spawn / HP / XP multipliers
     synergy_data.gd         Army synergy requirements and effects (13 synergies, the damage-source
                             -> class table, mark durations)
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
@@ -1809,6 +1835,7 @@ Options (after `--`):
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | `--stance=ID` | Army stance for the whole run: `escort`, `onslaught`, `spearhead` or `bone_ring` (forcing ignores the Spearhead unlock). Without it, `army`, `summon` and `evolve` switch stances by a simple rule (Bone Ring when the necromancer is in danger or the boss is within 260 px; Onslaught when at most 6 enemies are within 220 px and a Crimson March structure or a Sanctum crystal / altar is within 420 px or at most 10 enemies are within 480 px; Spearhead, when owned, toward a chest or power-up within 300 px; else Escort; `StanceBot`), while `naive` and `pact` keep Escort so their baselines do not move. |
+| `--volleys=on\|off` | The bullet heaven pass (default on, like the setting): `off` runs the game exactly as before it (same-seed summaries identical). Every summary has a `volleys` line: shots fired, hits, volley damage, peak shots in flight against the cap, volleys thinned by the cap, boss hits refused by the per-volley cap, Rally Barrages, and the volley damage by class / spell. |
 | `--synergies=off` | A/B switch: no army synergy ever activates (the four original ones and the newer classes' nine). Every summary has a `synergy bonus` line (per newer synergy: the hits its mark bonus raised and the damage it added; the Baying frenzies; staggered / swooped marks; Death from Above dash resets; the seconds Requiem stretched), marked "(synergies off)" with this switch. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
 | `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |

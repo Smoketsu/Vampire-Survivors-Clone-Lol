@@ -157,6 +157,8 @@ var lifesteal: float = 0.0
 ## Summon evolution of this unit ("" = none, or a SummonEvolutionData
 ## "transform" id: "death_knight", "lich", "gravebow", "bone_colossus").
 var evolution: String = ""
+## Bullet heaven pass: attack releases since this unit's last volley (VolleyDirector).
+var volley_count: int = 0
 ## Statistics tag of this unit's damage, heals and shields: the evolution id
 ## if evolved, else the class id ("lich_risen" for Lich-raised skeletons).
 var dmg_source: String = ""
@@ -289,6 +291,7 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	position = pos
 	velocity = Vector2.ZERO
 	_stall_since = -1.0  # No stall window carried over from the pooled unit's last life.
+	volley_count = 0  # Bullet heaven pass: attack releases toward the next volley.
 	max_hp = 0.0
 	apply_stats(stats, false)
 	hp = max_hp
@@ -1029,6 +1032,7 @@ func _step_cast(delta: float) -> void:
 	if cast_time > 0.0:
 		return
 	_release_attack()
+	game.volleys.on_attack(self)  # Bullet heaven pass: every Nth release fires the class volley.
 	attack_cd = attack_interval
 	if _target_valid() or _heal_target_valid():
 		_enter(State.ENGAGING)

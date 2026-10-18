@@ -10,6 +10,8 @@
 ## multipliers instead of checking any of these itself:
 ##   enemy_spawn_mult()   EnemyDirector._spawn_trickle (rate and max_alive)
 ##   enemy_hp_mult()      EnemyDirector.step (hp_mult; also the Reckoning)
+##   (both also carry the bullet heaven pass's denser, frailer fodder when
+##   Game.volleys_on: VolleyData.FODDER_SPAWN_MULT / FODDER_HP_MULT)
 ##   hp_scaling()         EnemyDirector.step (growth part of the HP time scaling)
 ##   enemy_damage_mult()  EnemyDirector.step (damage_mult)
 ##   damage_scaling()     EnemyDirector.step (growth part of the damage scaling)
@@ -235,12 +237,23 @@ func optional_value(key: String) -> float:
 
 ## Multiplier on the trickle spawn rate and the segment soft cap.
 func enemy_spawn_mult() -> float:
-	return float(_level["enemy_spawn"]) * (1.0 + optional_value("enemy_spawn"))
+	return float(_level["enemy_spawn"]) * (1.0 + optional_value("enemy_spawn")) * _fodder_spawn()
 
 
 ## Multiplier on enemy max HP (time-scaled enemies and the Reckoning).
 func enemy_hp_mult() -> float:
-	return float(_level["enemy_hp"]) * (1.0 + optional_value("enemy_hp"))
+	return float(_level["enemy_hp"]) * (1.0 + optional_value("enemy_hp")) * _fodder_hp()
+
+
+## Bullet heaven pass (Game.volleys_on; VolleyData): denser fodder waves (spawn rate and
+## caps x FODDER_SPAWN_MULT) ...
+func _fodder_spawn() -> float:
+	return VolleyData.FODDER_SPAWN_MULT if game != null and game.volleys_on else 1.0
+
+
+## ... with frailer soldiers (every non-boss enemy's HP x FODDER_HP_MULT). 1 when off.
+func _fodder_hp() -> float:
+	return VolleyData.FODDER_HP_MULT if game != null and game.volleys_on else 1.0
 
 
 ## Multiplier on the growth part of the enemy HP time scaling: the level's,

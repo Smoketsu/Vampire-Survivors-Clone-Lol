@@ -163,6 +163,7 @@ func _cast() -> void:
 	game.effects.abyss(pos, PlayerAbilityData.KNOCKBACK_RADIUS * 0.45)
 	game.shake(PlayerAbilityData.RALLY_SHAKE)
 	Sfx.play("death_nova", pos)
+	game.volleys.barrage(PlayerAbilityData.RALLY_DURATION)  # Bullet heaven: the Rally Barrage.
 
 
 ## Surge: a summon outside its formation band (and not busy with a class

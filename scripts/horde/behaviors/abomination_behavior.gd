@@ -87,6 +87,7 @@ func _impact(u: SummonedUnit) -> void:
 	Juice.fx.burst(pos, Palette.CORPSE_FLESH, Palette.BONE, 14, r * 2.0, 0.5, 3.0)
 	game.shake(float(u.special["stomp_shake"]))
 	Sfx.play("abom_stomp", pos)
+	game.volleys.on_special(u, pos, pos + Vector2.RIGHT, dmg)  # Bullet heaven: flesh chunks.
 	game.stat_add("abom_stomps", 1.0)
 	game.stat_add("abom_stomp_hits", float(hits))
 

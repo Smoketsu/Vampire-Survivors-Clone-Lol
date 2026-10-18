@@ -37,7 +37,7 @@ var return_focus: Control = null
 var sliders: Dictionary = {}
 ## Settings bus name -> its "NN%" value label.
 var _slider_labels: Dictionary = {}
-## Option name ("fullscreen", "screen_shake", "damage_numbers", "reduce_motion") -> CheckButton.
+## Option name ("fullscreen", "volleys", "screen_shake", "damage_numbers", "reduce_motion") -> CheckButton.
 var toggles: Dictionary = {}
 ## Action -> its rebinding button.
 var key_buttons: Dictionary = {}
@@ -349,6 +349,7 @@ func _build_video(vb: VBoxContainer, focus: Array[Control]) -> void:
 	Settings.sync_fullscreen()  # Web: the browser's real fullscreen state.
 	var setters: Dictionary = {
 		"fullscreen": [Settings.fullscreen, Settings.set_fullscreen],
+		"volleys": [Settings.volleys, Settings.set_volleys],
 		"screen_shake": [Settings.screen_shake, Settings.set_screen_shake],
 		"damage_numbers": [Settings.damage_numbers, Settings.set_damage_numbers],
 		"reduce_motion": [Settings.reduce_motion, Settings.set_reduce_motion],
