@@ -64,6 +64,12 @@
 ##   Siegecraft   — summons deal more damage to structures, elites and
 ##                  minibosses (CombatResolver.damage_enemy(); Corpse
 ##                  Catapults -> Ossuary Engines).
+## plus the passive paired with the Fallen Seraph (Act II, GDD §15.0
+## "Fallen Seraph"; unlocked with her by slaying Seraphine, UnlockData):
+##   Fallen Grace — every summon special (stomp, dash, swoop, Deep Freeze,
+##                  Dirge, dive) recharges faster: every special *_cooldown is
+##                  divided by (1 + special_haste) in HordeDirector.
+##                  _special_stats() (Fallen Seraphs -> Seraphs of Ruin).
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -83,13 +89,17 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	"shade_stride", "vampiric_rite", "necrotic_expanse", "lingering_malediction",
 	"bone_plating", "unholy_precision", "unholy_resilience", "bound_souls",
 	"grim_ledger", "spirit_binding", "restless_dead",
-	"blood_scent", "mournsong", "siegecraft", PactData.ID]
+	"blood_scent", "mournsong", "siegecraft", PactData.ID,
+	# --- Act II: Fallen Seraph ---
+	"fallen_grace"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
 const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycling",
 	"bone_plating", "unholy_precision", "unholy_resilience", "bound_souls",
-	"blood_scent", "siegecraft"]
+	"blood_scent", "siegecraft",
+	# --- Act II: Fallen Seraph ---
+	"fallen_grace"]
 
 ## Blood Scent: a summon class is "fast" (and gets the passive) when its
 ## UnitData base move_speed is at least this (px/s): Bone Hounds 122, Grave
@@ -123,7 +133,9 @@ const MINION_EXTRA_TAGS := ["lich_risen", "death_mark_risen", "raised_dead"]
 ## Colossus's death shrapnel). The Rogue's
 ## bleed ("rogue_bleed") is left out on purpose: it is a damage-over-time
 ## tick, not a strike.
-const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_swoop", "colossus_shrapnel"]
+const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_swoop", "colossus_shrapnel",
+	# --- Act II: Fallen Seraph --- (SeraphBehavior dive impact, SeraphFeathers ring)
+	"seraph_dive", "seraph_feathers"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -225,6 +237,8 @@ const LEDGER_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
 ##                        (slows, chills, the Dirge, curses, Rot).
 ##   siege_damage       — +% summon damage to structures, elites and
 ##                        minibosses (not the stage boss).
+##   special_haste      — summon special cooldowns divided by (1 + this)
+##                        (Fallen Grace; its own category).
 const PASSIVES := {
 	# Profane Pact (difficulty / reward passive): defined in PactData.
 	PactData.ID: PactData.PASSIVE,
@@ -537,6 +551,21 @@ const PASSIVES := {
 			{"siege_damage": 0.30},  # TUNING (not in GDD)
 			{"siege_damage": 0.40},  # TUNING (not in GDD)
 			{"siege_damage": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act II: Fallen Seraph ---
+	"fallen_grace": {
+		"display_name": "Fallen Grace",  # TUNING (not in GDD) Act II workstream name
+		"icon": "fallen_grace",
+		"description": "Your summons' special attacks recharge faster.",
+		"labels": {"special_haste": ["Summon special recharge speed", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"special_haste": 0.05},  # TUNING (not in GDD)
+			{"special_haste": 0.10},  # TUNING (not in GDD)
+			{"special_haste": 0.15},  # TUNING (not in GDD)
+			{"special_haste": 0.20},  # TUNING (not in GDD)
+			{"special_haste": 0.25},  # TUNING (not in GDD)
 		],
 	},
 }

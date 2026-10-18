@@ -37,7 +37,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
 const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "warder", "abomination",
-		"rogue", "gargoyle", "frost_wraith", "bone_hound", "banshee", "corpse_catapult"]
+		"rogue", "gargoyle", "frost_wraith", "bone_hound", "banshee", "corpse_catapult",
+		# --- Act II: Fallen Seraph --- (a locked silhouette naming its unlock until met)
+		"fallen_seraph"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",

@@ -23,6 +23,14 @@ extends RefCounted
 
 ## Item id -> unlock row (keys above).
 const UNLOCKS := {
+	# --- Act II: Fallen Seraph ---
+	# Grand Inquisitor Seraphine's gift (GDD §15.0 "Fallen Seraph"): her fall
+	# raises a corrupted angel for the necromancer, with its paired passive.
+	# Offered on every stage (no card-row "act" key). A save that slew her
+	# before these rows existed has them open at once (MetaProgress
+	# _load_unlocks(): her stage record shows the kill).
+	"fallen_seraph": {"type": "class", "boss": "seraphine", "text": "Slay Grand Inquisitor Seraphine."},  # TUNING (not in GDD)
+	"fallen_grace": {"type": "passive", "boss": "seraphine", "text": "Slay Grand Inquisitor Seraphine."},  # TUNING (not in GDD)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

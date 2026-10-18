@@ -929,6 +929,8 @@ func _passive_offer(id: String, lvl: int) -> Dictionary:
 			deltas.append(MinionPassives.card_line(game, id, nxt))  # The later horde passives.
 		"blood_scent", "mournsong", "siegecraft":
 			deltas.append(ClassPassives.card_line(game, id, nxt))  # The newest classes' passives.
+		"fallen_grace":
+			deltas.append(SeraphTexts.card_line(game, id, nxt))  # Act II: Fallen Grace (the Fallen Seraph's passive).
 		_:
 			spells.passive_example(id, nxt, deltas)  # The newer spells' passives.
 	var spell := _paired_spell(id)

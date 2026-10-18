@@ -28,6 +28,8 @@
 ##   * the ground and air effects of the newest classes through its
 ##     HordeHazards (`hazards`): Corpse Catapult boulders in flight, Hellhound
 ##     fire trails and Ossuary Engine bone shards.
+##   * Act II: the Fallen Seraph's feather rings through SeraphFeathers
+##     (`feathers`, created on first use by seraph_feathers()).
 ## Ranged overkill reservations are stored on the enemies themselves
 ## (Enemy.incoming_damage) and managed by ProjectileManager.
 class_name HordeDirector
@@ -95,6 +97,9 @@ var colossi: ColossusKit
 var suppression: SuppressionField
 ## Catapult boulders, Hellhound fire trails and Ossuary Engine shards (HordeHazards).
 var hazards: HordeHazards
+## Act II: the Fallen Seraph's feather rings (SeraphFeathers); null until the
+## first ring is laid (seraph_feathers()), so runs without her never create it.
+var feathers: SeraphFeathers = null
 ## Radius (px) Enemy.resolve_blocking() adds to its own to find blockers:
 ## UnitData.MAX_BLOCK_RADIUS, raised to the widest block_radius ever spawned
 ## this run (the Corpse Abomination's), never lowered.
@@ -132,6 +137,16 @@ func add_suppression(pos: Vector2, radius: float, duration: float, damage_mult: 
 	suppression.add(pos, radius, duration, damage_mult, telegraph, source)
 
 
+## Act II: the Fallen Seraph's feather rings, created on first use (a run
+## without a Fallen Seraph never calls this).
+func seraph_feathers() -> SeraphFeathers:
+	if feathers == null:
+		feathers = SeraphFeathers.new()
+		feathers.game = game
+		add_child(feathers)
+	return feathers
+
+
 # =====================================================================================
 # Per-tick update (GDD §39 update_horde)
 # =====================================================================================
@@ -143,6 +158,8 @@ func step(delta: float) -> void:
 		_update_temporaries(delta)
 	suppression.step(delta)
 	hazards.step(delta)
+	if feathers != null:
+		feathers.step(delta)  # Act II: Fallen Seraph feather rings.
 	_update_replenishment(delta)
 	synergies.step(delta)
 	if _frame % UnitData.FORMATION_TICK_DIVISOR == 0:
@@ -419,12 +436,16 @@ func apply_stance() -> void:
 ## x Dark Frenzy) and the level row's special_bonus; *_radius / *_length by
 ## special_area; *_cooldown divided by (1 + special_haste); *_duration by
 ## special_duration. Attack-speed bonuses do not shorten special cooldowns.
+## Fallen Grace (Act II passive, paired with the Fallen Seraph) divides every
+## *_cooldown again by (1 + its special_haste): its own category (exactly 1
+## while it is not owned, so every other run is unchanged).
 func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dictionary:
 	var out := {}  # Effective special numbers.
 	var src: Dictionary = base.get("special", {})  # Base special numbers.
 	var dmg := dmg_mult * (1.0 + float(row.get("special_bonus", 0.0)))  # Special damage multiplier.
 	var area := 1.0 + float(row.get("special_area", 0.0))  # Radius / length multiplier.
 	var haste := 1.0 + float(row.get("special_haste", 0.0))  # Cooldown divisor.
+	haste *= 1.0 + game.abilities.passive_value("fallen_grace", "special_haste")  # Fallen Grace (0 when not owned).
 	var dur := 1.0 + float(row.get("special_duration", 0.0))  # Status duration multiplier.
 	for key: String in src:
 		var v := float(src[key])  # Base value of this key.

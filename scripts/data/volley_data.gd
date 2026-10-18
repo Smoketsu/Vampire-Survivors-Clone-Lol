@@ -170,6 +170,9 @@ const CLASSES := {
 		"life": 0.55, "share": 0.5, "pierce": 1, "radius": 4.0, "style": "note", "color": Color(0.80, 0.70, 1.0)},  # TUNING (not in GDD) the Dirge's visible rings (share of the shriek bolt)
 	"corpse_catapult": {"trigger": "special", "pattern": "ring", "counts": [6, 10], "speed": 250.0,
 		"life": 0.38, "share": 0.25, "pierce": 0, "radius": 4.0, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) bone fragments where the boulder lands
+	# --- Act II: Fallen Seraph ---
+	"fallen_seraph": {"trigger": "attack", "every": 2, "pattern": "fan", "counts": [3, 5], "spread": 44.0, "speed": 360.0,
+		"life": 0.5, "share": 0.3, "pierce": 0, "radius": 3.5, "style": "feather", "color": Color(0.72, 0.74, 0.80)},  # TUNING (not in GDD) fans of black feather blades (an ash-pale tint: shots are drawn additively, black would not show)
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -197,6 +200,9 @@ const EVOLVED := {
 		"life": 0.6, "share": 0.45, "pierce": 1, "radius": 4.0, "style": "note", "color": Color(0.80, 0.70, 1.0)},  # TUNING (not in GDD) each of the three waves
 	"ossuary_engine": {"trigger": "special", "pattern": "ring", "counts": [8], "speed": 240.0,
 		"life": 0.42, "share": 0.25, "pierce": 0, "radius": 4.0, "style": "shard", "color": Color(1.0, 0.62, 0.30)},  # TUNING (not in GDD) burning bone fragments
+	# --- Act II: Fallen Seraph ---
+	"ruin_seraph": {"trigger": "special", "pattern": "spiral", "counts": [12], "speed": 230.0,
+		"life": 0.6, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "feather", "color": Color(0.72, 0.74, 0.80), "curve": 2.4},  # TUNING (not in GDD) a whirl of black feathers at every dive impact
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------

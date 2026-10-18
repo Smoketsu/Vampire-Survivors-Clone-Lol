@@ -28,6 +28,7 @@
 ## The Gravebow and Bone Colossus (and their icons) are drawn by
 ## GravebowColossusGlyphs, the Bone Hound, Banshee and Corpse Catapult (their
 ## evolutions, passives and icons) by WarbandGlyphs, dispatched from here.
+## Act II's Fallen Seraph (her evolution, passive and icons) by SeraphGlyphs.
 ## Also draws the icons of the horde passives tied to summon evolutions
 ## (Forbidden Knowledge, Dark Benediction, and the four later ones: Bone
 ## Plating, Unholy Precision, Unholy Resilience, Bound Souls), the
@@ -76,6 +77,8 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 			return GravebowColossusGlyphs.draw_summon(ci, kind, o, r, flash)
 		"bone_hound", "hellhound", "banshee", "keening_lady", "corpse_catapult", "ossuary_engine":
 			return WarbandGlyphs.draw_summon(ci, kind, o, r, flash)
+		"fallen_seraph", "ruin_seraph":
+			return SeraphGlyphs.draw_summon(ci, kind, o, r, flash)  # Act II: the Fallen Seraph.
 		_:
 			return false
 	return true
@@ -131,6 +134,8 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 		"bone_hound", "hellhound", "banshee", "keening_lady", "corpse_catapult", "ossuary_engine", \
 				"blood_scent", "mournsong", "siegecraft":
 			return WarbandGlyphs.draw_icon(ci, kind, c, s)  # The newest classes, evolutions and passives.
+		"fallen_seraph", "ruin_seraph", "fallen_grace":
+			return SeraphGlyphs.draw_icon(ci, kind, c, s)  # Act II: the Fallen Seraph, her evolution and passive.
 		_:
 			return false
 	return true
