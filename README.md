@@ -1108,7 +1108,7 @@ where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.2
   Soul Ash, and each one still standing when Vhal'Neth arrives gives her opening phase one more
   arm. There is no miniboss.
 - **The kinds** (`spire_enemy_data.gd`, kits in `scripts/enemies/eye/`):
-  - the **Siren of the Eye** (elite, from 2:30), whose telegraphed song lures up to 10
+  - the **Siren of the Eye** (elite, from 2:30), whose telegraphed song lures up to 6
     undead out of the Bone Ring toward her for 2 s;
   - the **Spawn of the Deep** (from 5:00), a heavy that reaches with a tentacle, holds one
     summon for 3 s, drags it in and squeezes it (killing the Spawn frees it);

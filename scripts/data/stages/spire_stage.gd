@@ -110,25 +110,25 @@ const RECKONING_OBJECTIVE: String = "THE WAKING: the god's dream drowns the isla
 const SEGMENTS := [
 	# Zone I, the Breakwater: the Eye's last free congregation.
 	{"start": 0.0, "rate": 1.6, "max_alive": 36,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.95, "chanter": 0.05},
+		"weights": {"initiate": 1.0},  # TUNING (not in GDD) balance passes 5-6: no Chanter in the first minute (was 0.05)
 		"objective": "The Breakwater: the Eye's last congregation gathers"},
-	{"start": 60.0, "rate": 2.0, "max_alive": 46,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.93, "chanter": 0.07},
+	{"start": 60.0, "rate": 1.8, "max_alive": 44,  # TUNING (not in GDD) balance pass 6: 2.0 / 46 -> 1.8 / 44, the Sanctum's second minute
+		"weights": {"initiate": 0.97, "chanter": 0.03},  # TUNING (not in GDD) balance passes 5-6: 0.07 -> 0.03
 		"objective": "Chanters lead the faithful: kill them before they claim your dead"},
-	{"start": 120.0, "rate": 2.4, "max_alive": 56,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.91, "chanter": 0.09},
+	{"start": 120.0, "rate": 2.1, "max_alive": 52,  # TUNING (not in GDD) balance pass 7: 2.4 / 56 -> 2.1 / 52
+		"weights": {"initiate": 0.95, "chanter": 0.05},  # TUNING (not in GDD) balance pass 5: 0.09 -> 0.05
 		"objective": "Sirens sing from the breakwater"},
-	{"start": 180.0, "rate": 2.7, "max_alive": 64,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.91, "chanter": 0.09},
+	{"start": 180.0, "rate": 2.4, "max_alive": 60,  # TUNING (not in GDD) balance pass 7: 2.7 / 64 -> 2.4 / 60
+		"weights": {"initiate": 0.94, "chanter": 0.06},  # TUNING (not in GDD) balance pass 5: 0.09 -> 0.06
 		"objective": "The sea is rising: watch the shoreline"},
-	{"start": 240.0, "rate": 3.0, "max_alive": 72,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.9, "chanter": 0.1},
+	{"start": 240.0, "rate": 2.7, "max_alive": 68,  # TUNING (not in GDD) balance pass 7: 3.0 / 72 -> 2.7 / 68
+		"weights": {"initiate": 0.93, "chanter": 0.07},  # TUNING (not in GDD) balance pass 5: 0.1 -> 0.07
 		"objective": "The outer ring will flood: fall back toward the spire"},
 	# Zone II, the Sunken Steps: Spawns of the Deep.
-	{"start": 300.0, "rate": 3.2, "max_alive": 80,  # TUNING (not in GDD)
+	{"start": 300.0, "rate": 3.0, "max_alive": 76,  # TUNING (not in GDD) balance pass 9: 3.2 / 80 -> 3.0 / 76
 		"weights": {"initiate": 0.875, "chanter": 0.1, "spawn": 0.025},
 		"objective": "The Sunken Steps: Spawns of the Deep crawl out of the flood"},
-	{"start": 360.0, "rate": 3.5, "max_alive": 90,  # TUNING (not in GDD)
+	{"start": 360.0, "rate": 3.3, "max_alive": 86,  # TUNING (not in GDD) balance pass 9: 3.5 / 90 -> 3.3 / 86
 		"weights": {"initiate": 0.87, "chanter": 0.1, "spawn": 0.03},
 		"objective": "Break the grip of the deep"},
 	{"start": 420.0, "rate": 3.3, "max_alive": 88,  # TUNING (not in GDD) lull
@@ -186,7 +186,7 @@ const EVENTS := [
 	# armoured kinds in the first minute starve the starting army).
 	{"time": 15.0, "type": "wave", "banner": "Initiates of the Eye wade up the breakwater!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "initiate", "count": 8, "elite": false}]},
-	{"time": 50.0, "type": "wave", "banner": "A Chanter leads its squad: it claims the dead!", "formation": "arc",  # TUNING (not in GDD)
+	{"time": 75.0, "type": "wave", "banner": "A Chanter leads its squad: it claims the dead!", "formation": "arc",  # TUNING (not in GDD) balance pass 6: 50 -> 75 s
 		"groups": [{"kind": "chanter", "count": 1, "elite": false}, {"kind": "initiate", "count": 10, "elite": false}]},
 	{"time": 90.0, "type": "wave", "banner": "The congregation rises out of the surf!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "initiate", "count": 14, "elite": false}]},
@@ -200,9 +200,9 @@ const EVENTS := [
 		"groups": [{"kind": "siren", "count": 2, "elite": false}, {"kind": "chanter", "count": 1, "elite": false}, {"kind": "initiate", "count": 10, "elite": false}]},
 	# Zone II, the Sunken Steps (5:00): Spawns of the Deep.
 	{"time": 305.0, "type": "wave", "banner": "SPAWNS OF THE DEEP crawl up the sunken steps!", "formation": "line",  # GDD §15.0 zone II
-		"groups": [{"kind": "spawn", "count": 3, "elite": false}, {"kind": "initiate", "count": 10, "elite": false}]},
+		"groups": [{"kind": "spawn", "count": 2, "elite": false}, {"kind": "initiate", "count": 10, "elite": false}]},  # TUNING (not in GDD) balance pass 9: 3 -> 2 Spawns
 	{"time": 345.0, "type": "wave", "banner": "The congregation surrounds the steps!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "initiate", "count": 22, "elite": false}, {"kind": "chanter", "count": 2, "elite": false}]},
+		"groups": [{"kind": "initiate", "count": 16, "elite": false}, {"kind": "chanter", "count": 1, "elite": false}]},  # TUNING (not in GDD) balance pass 9: 22 + 2 -> 16 + 1
 	{"time": 390.0, "type": "wave", "banner": "Sirens sing over the drowned steps!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "siren", "count": 2, "elite": false}, {"kind": "spawn", "count": 2, "elite": false}, {"kind": "initiate", "count": 8, "elite": false}]},
 	{"time": 440.0, "type": "wave", "banner": "Chanters gather the faithful!", "formation": "ring",  # TUNING (not in GDD)

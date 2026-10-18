@@ -45,7 +45,7 @@ const ENEMIES := {
 	# telegraph, or the army near her breaks formation and walks to her.
 	"eye_siren": {
 		"display_name": "Siren of the Eye",
-		"max_hp": 150.0,  # TUNING (not in GDD) an elite caster's HP (Radiant Inquisitor 150)
+		"max_hp": 120.0,  # TUNING (not in GDD) an elite caster's HP (Radiant Inquisitor 150; balance pass 8: 150 -> 120, a weak army must still bring her down)
 		"move_speed": 50.0,  # TUNING (not in GDD) px/s; a slow glide
 		"damage": 5.0,  # TUNING (not in GDD) weak touch in contact
 		"attack_interval": 1.2,  # TUNING (not in GDD) s
@@ -68,14 +68,14 @@ const ENEMIES := {
 		# within song_radius px of her is LURED for song_lure s: it drops its
 		# target and walks to her (SummonedUnit.compel()), out of formation.
 		"song_first": 4.0,  # TUNING (not in GDD) s after spawning before the first song
-		"song_cooldown": 10.0,  # TUNING (not in GDD) s between songs
+		"song_cooldown": 15.0,  # TUNING (not in GDD) s between songs (balance pass 8: 10 -> 15)
 		"song_range": 240.0,  # TUNING (not in GDD) px; sings only with summons this close
-		"song_min_summons": 2,  # TUNING (not in GDD) summons inside song_radius to bother singing
+		"song_min_summons": 3,  # TUNING (not in GDD) summons inside song_radius to bother singing (balance pass 8: 2 -> 3, a tiny army is not lured apart)
 		"song_radius": 190.0,  # TUNING (not in GDD) px reach of the lure
 		"song_telegraph": 1.2,  # TUNING (not in GDD) s of rising notes (GDD §10.5 telegraphed)
 		"song_lure": 2.0,  # Proposal: "lures summons out of formation for 2 s"
 		"song_lure_speed": 0.8,  # TUNING (not in GDD) x the summon's move speed while lured
-		"song_max_lured": 10,  # TUNING (not in GDD) summons one song can lure
+		"song_max_lured": 6,  # TUNING (not in GDD) summons one song can lure (balance pass 8: 10 -> 6)
 	},
 	# Spawn of the Deep: a tentacled heavy in a barnacle shell. Slow, armoured,
 	# it advances like any melee kind; when a summon comes into reach it seizes
