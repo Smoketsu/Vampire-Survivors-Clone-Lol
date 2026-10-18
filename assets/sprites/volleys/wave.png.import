@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cnrwp0qgrrc1p"
-path="res://.godot/imported/stance_bone_ring.png-2d5b387989861b53b9c55e0de13c087b.ctex"
+uid="uid://br0hbav3nbk7s"
+path="res://.godot/imported/wave.png-b725f95d6b474232476a13d55d691b92.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/icons/stance_bone_ring.png"
-dest_files=["res://.godot/imported/stance_bone_ring.png-2d5b387989861b53b9c55e0de13c087b.ctex"]
+source_file="res://assets/sprites/volleys/wave.png"
+dest_files=["res://.godot/imported/wave.png-b725f95d6b474232476a13d55d691b92.ctex"]
 
 [params]
 

@@ -147,16 +147,6 @@ const PAUSE_BUTTON_HEIGHT: float = 42.0  # TUNING (not in GDD)
 const PAUSE_GAP: int = 22  # TUNING (not in GDD)
 ## Build icon size on the pause screen (px; the icon square, pips below it).
 const PAUSE_ICON: float = 32.0  # TUNING (not in GDD)
-## Stance icon size on the pause screen (px).
-const PAUSE_STANCE_ICON: float = 32.0  # TUNING (not in GDD)
-## Stance id -> the two- or three-word tagline under its name on the pause
-## screen (the full StanceData description is the tile's tooltip).
-const STANCE_TAGLINES: Dictionary = {
-	"escort": "Guard in bands",  # TUNING (not in GDD) UI text
-	"onslaught": "Surge at the foe",  # TUNING (not in GDD) UI text
-	"spearhead": "Wedge ahead",  # TUNING (not in GDD) UI text
-	"bone_ring": "Closed circle",  # TUNING (not in GDD) UI text
-}
 
 # --- Results card (EndScreen) -------------------------------------------------------------
 

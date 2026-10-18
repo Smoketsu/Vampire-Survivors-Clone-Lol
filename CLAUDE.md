@@ -72,10 +72,12 @@ tablets in landscape (the `Web` export preset; touch controls, mobile UI scale, 
   highest), **half against the stage boss**, no extra tier for evolved pairs; every synergy damage
   bonus goes through `SynergyManager.hit_mult()` from `CombatResolver.damage_enemy()`.
 - **Shadow Bolt** has a Nearest/Strongest aim toggle (T / pad Y).
-- **Army stances** (keys 1-4 / right-stick flicks, 1.5 s lockout): Escort (default, exactly the
-  original formation and leash), Onslaught, Spearhead (Ossuary unlock) and Bone Ring only override
-  numbers the horde AI already uses (`stance_data.gd`, read by the horde director); the hard recall
-  never changes, the flavour bonuses stay off, and the stance resets to Escort every run.
+- **The Bone Ring is the only formation** (owner decision Oct 2026, GDD §15.0 "Bone Ring is the only
+  formation"; it replaced the four switchable stances): the army always rings the necromancer
+  (blockers, flankers and ranged interleaved on the ring, priests and catapults inside) and its
+  volleys fly outward. It only overrides numbers the horde AI already uses (`stance_data.gd`, read
+  through `game.stance` by the horde director); the hard recall never changes and the flavour bonus
+  stays off. There are no stance keys, stick flicks, stance bar, touch rose or Spearhead unlock.
 - **Spells:** Shadow Bolt, Orb Shield, Shadow Blast, plus Bone Spear, Soul Siphon, Corpse Explosion
   and Plague Cloud, plus Death Mark, Bone Wall, Soul Chains, Wither and Raise Dead
   (`scripts/abilities/spells/`, one dispatch through `NecroSpellBook`). 24 actives
@@ -132,12 +134,11 @@ Autotest options (full table in the README):
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
 - `--difficulty=initiate|necromancer|lich|deathlord` (GDD §8.4; default necromancer = today's game)
 - `--modifiers=a,b` (GDD §8.5 run modifiers, e.g. `hardened_faith,scarcity`, or `all`)
-- `--stance=escort|onslaught|spearhead|bone_ring` (force an army stance for the whole run)
 - `--character=ID` (playable character, default `gravecaller`; locks bypassed, e.g. `bone_oracle`,
   `wither_witch`)
 - `--hyper` (Hyper mode, lock bypassed) and `--skin=ID` (force a cosmetic skin, e.g. `dread_sovereign`)
 - `--synergies=off` (no army synergy ever activates, old or new: A/B runs for synergy balance)
-- `--volleys=on|off` (the bullet heaven pass, default on; `off` = the game exactly as before it)
+- `--volleys=on|off` (the bullet heaven pass, default on; `off` = none of the pass runs; the Bone Ring stays)
 - `--spawn=kind@T[xN],...` (force-spawn any enemy kind at T game seconds on any stage, e.g.
   `sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `battle_sister@60x6`)
 - `--pact`
@@ -257,11 +258,11 @@ tiny tweaks.
   (owner decision Oct 2026, `RALLY_RAISES_ARMY`), +40% damage and
   attack speed for 8 s through `compute_stats`, knockback); numbers in `player_ability_data.gd`,
   HUD in `hud_abilities.gd`, rebindable, used by every autotest bot.
-- **army stances** (Escort, Onslaught, Spearhead, Bone Ring; `stance_data.gd`, `army_stance.gd`,
-  `stance_formations.gd`): keys 1-4 / right-stick flicks, a HUD stance bar, banner, command sound
-  and ground outline, a pause-menu line per stance, Spearhead bought in the Ossuary (Spearhead
-  Doctrine); the flavour bonuses exist but are off until the final balance pass; `--stance=`, and
-  the army / summon / evolve bots switch by a simple rule (`stance_bot.gd`; naive / pact keep Escort).
+- **army stances**, later reduced to **the Bone Ring as the only formation** (owner decision Oct 2026,
+  GDD §15.0): `stance_data.gd`, `army_stance.gd` (`game.stance`), `stance_formations.gd` (the ring
+  posts: radius from the army size, 60-150 px, two deep past that); the switching, HUD stance bar,
+  banner, ground outline, pause tiles, touch rose, `--stance=` and the stance bot are gone, and a save
+  that bought Spearhead Doctrine gets its 200 Soul Ash back (`MetaData.RETIRED_REFUNDS`).
 - **Stage 3, the Sanctum of Judgment**, the last stage of the campaign: `sanctum_stage.gd`
   (unlocked by Marshal Vael, ×1.5 Soul Ash), four clock-driven zones through `MarchDirector`
   (`SanctumGround`, `SanctumTerrainGlyphs`), and `SanctumDirector` for the two sanctified chambers
@@ -408,8 +409,8 @@ tiny tweaks.
   screen's centre container so a screen taller than the visible area shrinks to fit, `pass_drags()` for
   the Codex lists, the portrait `RotateOverlay` that pauses a run); `InputHints.Device.TOUCH` (no chips;
   emulated mouse events are not decisive); `TouchControls` in a run (floating joystick on the `move_*`
-  actions through `Input.action_press`, Grave Step / Dread Rally / aim / pause buttons and a four-way
-  stance rose that inject the existing actions as `InputEventAction`s: no second path for any rule;
+  actions through `Input.action_press`, Grave Step / Dread Rally / aim / pause buttons that inject the
+  existing actions as `InputEventAction`s: no second path for any rule;
   sizes in CSS px in `touch_data.gd`); the Ossuary buys on a second tap on touch; the **Effects**
   setting Full / Reduced (`effects_data.gd`, Reduced by default on phones, purely visual, autotest
   always Full); the page `web/mobile_shell.html` (no zoom / bounce, audio unlock on touchend, landscape
@@ -426,12 +427,15 @@ tiny tweaks.
 
 - the **bullet heaven pass** (owner request, Oct 2026, built to try out; GDD §15.0 "Bullet heaven pass"):
   `VolleyDirector` + `volley_data.gd` behind **Settings → Video → Volleys** (`Game.volleys_on`, default on;
-  `--volleys=off` reproduces the game before it exactly): summon volleys from class Lv 3 (Lv 5 grows, each
+  `--volleys=off` runs none of it; before the Bone Ring it reproduced the old game exactly): summon volleys from class Lv 3 (Lv 5 grows, each
   summon evolution a showpiece; attack-triggered through `SummonedUnit._step_cast()`, specials from their own
-  moment), spell echoes from spell Lv 3, the Rally Barrage, denser fodder (spawn ×1.25, HP ×0.8, XP ×0.8 in
-  `DifficultyModifiers` / `CombatResolver`); shots are packed-array data (cap 320 everywhere, 160 drawn on
+  moment), spell echoes from spell Lv 3, the Rally Barrage, denser fodder (spawn ×1.25, HP ×0.8 in
+  `DifficultyModifiers`; kills keep full XP, owner decision); shots are packed-array data (cap 320 everywhere, 160 drawn on
   Reduced effects), every hit through `CombatResolver.damage_enemy()` with the firing class's source, at most
   2 boss hits a volley; autotest `volleys` line. The owner decides after playing it whether it stays.
+  **Volley art** (GDD §15.0 "Volley art"): grey tint masks per shot look (`assets/sprites/volleys/`) and the
+  `volley_hit` / `volley_flash` strips, tinted with the shot colour and drawn additively (bursts in a ring buffer
+  in `VolleyDirector`, drawing only, nothing loaded headless); made with `tools/volley_art.py`.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.

@@ -69,7 +69,6 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Shadow Bolt aim: Nearest / Strongest | **T** | **Y** |
 | Grave Step (dash) | **Shift** | **RB** |
 | Dread Rally (ultimate, when its soul meter is full) | **Space** | **LB** |
-| Army stance: Escort / Onslaught / Spearhead / Bone Ring | **1 / 2 / 3 / 4** (rebindable) | **Right-stick flick** up / right / down / left |
 | Pause (Resume / Recipes / Settings / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
 | Results card (end of a run): Restart / Main Menu | **R** / **Esc**, or the buttons | **X** / **B**, or focus + **A** |
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move over the grid, Esc / Back closes | D-pad / stick move; **B** closes |
@@ -90,8 +89,7 @@ buttons (main menu, stage select, pre-run setup, Ossuary, Settings, Codex,
 Credits, pause, Recipes), and so do
 the level-up panel (the 1 / 2 / 3 card keys and the Reroll / Banish / Skip
 buttons), the chest Claim button, the results card's Restart / Main Menu
-buttons and the HUD's Shadow Bolt aim line, ability keys and stance bar (on a
-controller the stance bar shows the right stick with its flick arrow). The HUD carries no permanent
+buttons and the HUD's Shadow Bolt aim line and ability keys. The HUD carries no permanent
 controls line any more, and its difficulty / modifiers box only appears when the
 run differs from the standard one (another difficulty, a run modifier, Hyper,
 the Pact or the Oath). The F3 debug overlay still works but is no longer
@@ -107,13 +105,12 @@ size; numbers in `touch_data.gd`):
 | Move | Put a thumb anywhere on the **left half** of the screen: a joystick appears under it (it follows the thumb if you slide far) |
 | Grave Step (dash) | The big button at the **bottom right** (its charges as pips, darkened while it recharges) |
 | Dread Rally (ultimate) | The button **left of it**: it fills with the soul meter and gets a bright green border when ready |
-| Army stance | The **four-way rose above Grave Step**: Escort up, Onslaught right, Spearhead down, Bone Ring left (the controller's flick directions); tap or slide into a quarter |
 | Shadow Bolt aim | The small button **above Dread Rally** (shown while you have the bolt; the HUD line says which aim) |
 | Pause | The button in the **top-right corner** |
 | Ossuary | Tap a tile to see it, tap it **again** to buy |
 
-The controls use the same input actions as the keys, so cooldowns, the stance
-lockout and every rule are unchanged, and several fingers work at once. Key
+The controls use the same input actions as the keys, so cooldowns and every
+rule are unchanged, and several fingers work at once. Key
 chips are hidden on a touch device; pressing a key or a pad button brings them
 back and hides the touch controls (and a touch brings the touch controls back).
 On a phone held upright a "Turn your device" screen covers the game (a running
@@ -225,7 +222,7 @@ buttons you press in a fight are the dash and the ultimate (below).
     claims.
   - **Pause:** the run on the left (stage, time left, character, the
     difficulty and modifiers when not standard, your spells and passives with
-    their levels, your army with unit counts, the four stances) and the
+    their levels, your army with unit counts) and the
     buttons on the right; the run controls as chips underneath.
   - **Results card (end screen):** a gold *Victory* or crimson *Defeat*
     ribbon, your character (or skin) on the stage's floor, the time survived,
@@ -246,7 +243,7 @@ buttons you press in a fight are the dash and the ultimate (below).
   UI motion), **Save** (Backup / Restore save codes, see *Play in the browser*) and
   **Controls**: the keyboard key of
   Move up / down / left / right, Shadow Bolt aim, Grave Step, Dread Rally,
-  Pause and the four army stances, in three groups (Move, Actions, Stances),
+  Pause, in two groups (Move, Actions),
   each shown as a key chip you can rebind next to its fixed controller
   binding (a pad chip, read-only), plus **Reset keys**. Arrow keys and
   controller bindings stay fixed, and binding a key that is already in use
@@ -279,11 +276,16 @@ run; GDD §15.0 "Bullet heaven pass", numbers in `scripts/data/volley_data.gd`):
 - **Spell echoes.** From **Lv 3** every owned spell releases a themed echo volley on its own cooldown.
 - **Rally Barrage.** Dread Rally makes every summon fire its volley at once, and volleys come twice
   as often while the rally lasts.
-- **Denser fodder.** 25% more soldiers with 20% less HP each, and 20% less XP per kill, so the extra
-  bodies don't level you faster.
+- **Denser fodder.** 25% more soldiers with 20% less HP each. Every kill keeps its full XP (owner
+  decision: a build that completes a little earlier is fine).
 
 Volley shots split the attack's damage rather than adding to it, and a volley lands at most two hits on
-a boss or miniboss. With Volleys off the game plays exactly as before the pass.
+a boss or miniboss. With Volleys off nothing of the pass runs (no volleys, the usual fodder); the army still stands in the Bone Ring.
+
+The shots are pixel-art sprites (bone shards, orbs, daggers, sparks, sound crescents, stone feathers and
+the Death Knight's sword wave) tinted in each class's colour and drawn as additive glow; every hit
+bursts into a small starburst and every volley opens with a rune-ring flash (`assets/sprites/volleys/`,
+`effects/volley_hit` and `volley_flash`; ART_BIBLE "Volley shots and bursts").
 
 ### How a run works
 
@@ -318,44 +320,28 @@ a boss or miniboss. With Volleys off the game plays exactly as before the pass.
     you lasted past zero.
   - Dying **before 0:00** shows a crimson **Defeat** card.
 
-### Army stances
+### The army formation: the Bone Ring
 
-You don't control units one by one, but you choose how the whole army fights.
-A stance only changes numbers the horde AI already uses (where each unit's
-formation post is, how far units chase, how hard they pull back to their
-post); every unit keeps its own AI. The hard recall (650 px, the teleport
+You don't control units one by one: the army always stands in the **Bone Ring**
+around you (GDD §15.0 "Bone Ring is the only formation"; the four switchable
+stances of earlier builds are gone). Blockers, flankers and ranged units stand
+evenly spaced on a closed circle, interleaved, and the priests and the Corpse
+Catapults stand inside it, so every volley flies outward in all directions.
+The ring is 60 px out for a small army and widens with the army (about 24 px
+of ring per unit) up to 150 px; past that it stands two deep. Units fight what
+reaches the ring and chase up to 210 px from you (times Bound Souls) before
+they turn back to their post. The formation only changes numbers the horde AI
+already uses (where each unit's post is, how far units chase, how hard they
+pull back); every unit keeps its own AI. The hard recall (650 px, the teleport
 back) never changes. A summon that is trying to rejoin you but is wedged (it
 moves less than 12 px in 3 s, e.g. caught between a tree and a Covenant
 watchtower) gets the same teleport back to its post (the *stall recall*; the
 autotest's summons line counts them).
 
-| Key | Stance | Shape | Chase distance |
-|---|---|---|---|
-| **1** | **Escort** (default) | The usual formation: blockers on an arc facing the threat, the rest in their bands around you | 220 px |
-| **2** | **Onslaught** | Loose: fighters surge at the nearest enemy groups, priests trail between you and the fight. Exposes you | 440 px (formation pull cut to a third) |
-| **3** | **Spearhead** | A wedge pointed where you move (or last moved): blockers at the tip, Rogues on the flanks, ranged and priests close around you. The rear is open | 150 px |
-| **4** | **Bone Ring** | A closed circle 60-90 px out with the blockers spaced evenly, ranged and priests inside. Safest, fewest kills | 110 px |
-
-- **Escort, Onslaught and Bone Ring** are available from the first run.
-  **Spearhead** is bought in the Ossuary (*Spearhead Doctrine*, Necromancy,
-  200 Soul Ash). Before that, its key only shows "Locked: unlock Spearhead in
-  the Ossuary" (once per run).
-- Keys **1-4** (rebindable in Settings) or a **right-stick flick** (up /
-  right / down / left; release the stick before the next flick). After a
-  change, the next one is possible after **1.5 s** of game time. Stance keys
-  do nothing while a menu or the level-up panel is open.
-- The **stance bar** beside the army list shows the four stances with their
-  keys: the active one lit (a thin bar shows the switch lockout), the others
-  dimmed, a locked one dark with a padlock. A change shows a one-word banner
-  under the necromancer, plays a command horn and draws a faint outline of the
-  new shape on the ground for 1 s. The pause screen shows the four stances
-  as small tiles (icon, name, a short tagline, the key; hover one for the
-  full description), the active one framed.
-- The stance resets to **Escort** at the start of every run (and on Restart).
-- No stance gives a stat bonus yet. Flavour bonuses (Onslaught +10% army
-  attack speed, Spearhead +30% push on the tip, Bone Ring -10% army damage
-  taken) exist in `scripts/data/stance_data.gd` but are switched off
-  (`BONUSES_ENABLED`).
+- The ring gives no stat bonus (its -10% army damage taken exists in
+  `scripts/data/stance_data.gd` but is switched off, `BONUSES_ENABLED`).
+- Saves that bought the retired *Spearhead Doctrine* (Ossuary) get its
+  **200 Soul Ash** back once, when the save loads.
 
 ### Summon classes
 
@@ -1099,9 +1085,9 @@ integration").
   A strong run earns about **450** at no upgrades (about 550-610 with mid / max
   upgrades, Ash Harvest included): two or three mid-tier upgrades. A death at
   9-11 min still keeps about 100-150. The Reckoning pays only about 8% of a
-  good run. Buying everything costs **9,835** (8,965 before the two Grave
-  Step upgrades and the Spearhead stance unlock), about 22 good runs (17–28 including weaker runs and Ash
-  Harvest), plus 375 for the optional Profane Oath (10,210 in all). The Profane Pact and Oath rewards add their own bonus
+  good run. Buying everything costs **9,635** (8,965 before the two Grave
+  Step upgrades), about 21 good runs (16–27 including weaker runs and Ash
+  Harvest), plus 375 for the optional Profane Oath (10,010 in all). The Profane Pact and Oath rewards add their own bonus
   lines on top (below).
 - **The Ossuary** (main menu) holds the four GDD §9.2 trees. Each upgrade
   raises one stat per tier, costs rise per tier, and some need a prerequisite
@@ -1109,7 +1095,7 @@ integration").
 
   | Tree | Upgrades (per tier, tiers, cost of tier 1 → last) |
   |---|---|
-  | Necromancy | Necrotic Marrow minion HP +6% (5, 40→230) · Sharpened Bones minion damage +5% (5, 40→230) · Grave Call replacement time −6% (3, 60→200) · Risen Vanguard +1 Warrior capacity (2, 130→280; needs Marrow II) · Legion of Bone +1 capacity for every class (1, 500; needs Vanguard II) · Spearhead Doctrine unlocks the Spearhead army stance (1, 200) |
+  | Necromancy | Necrotic Marrow minion HP +6% (5, 40→230) · Sharpened Bones minion damage +5% (5, 40→230) · Grave Call replacement time −6% (3, 60→200) · Risen Vanguard +1 Warrior capacity (2, 130→280; needs Marrow II) · Legion of Bone +1 capacity for every class (1, 500; needs Vanguard II) |
   | Shadowcraft | Umbral Potency spell damage +5% (5, 40→230) · Quickened Rites spell cooldowns −3% (4, 60→250) · Widening Dark Shadow Blast / pulse radius +6% (3, 70→230; needs Potency I) · Shadow Mastery spell damage +10% (1, 450; needs Rites III) · Restless Shade Grave Step cooldown −10% (3, 60→190; 5 s → 3.5 s) |
   | Survival | Grave-Hardened Flesh max HP +10 (5, 40→230) · Bone Mail damage taken −3% (4, 60→250) · Fleet Shade move speed +4% (3, 50→175) · Undying Will one revival per run at 50% HP with a knock-back burst (1, 550; needs Bone Mail II) · Twin Shadow +1 Grave Step charge (1, 300; needs Fleet Shade I) |
   | Fortune | Soul Magnet pickup radius +10% (4, 30→155) · Grave Tithe XP gain +4% (3, 60→200) · Ash Harvest Soul Ash +5% (3, 80→270) · Fate's Thread +1 reroll (2, 120→250) · Banishing Rite +1 banish (2, 150→310; needs Thread I) |
@@ -1288,7 +1274,7 @@ integration").
 
 ### Fonts
 
-Two open-licence pixel fonts are in `assets/fonts/` (SIL Open Font License; the licence texts sit next to them): **Jersey 10** for all UI text (the HUD, numbers, headings, labels, buttons, card names, long descriptions and damage numbers; owner: "Jersey, let's keep it cohesive", so no smooth font is left), and **Jacquard 24** for screen titles and event, zone, stance and evolution banners (owner choice, GDD §15.0). Jersey 10 is drawn from one exact 19 px raster at 1, 1.5, 2 or 3 times its pixel size through the sharp-pixel filter, so it stays crisp and correct at any window size; Jacquard is drawn only at its 43 px em.
+Two open-licence pixel fonts are in `assets/fonts/` (SIL Open Font License; the licence texts sit next to them): **Jersey 10** for all UI text (the HUD, numbers, headings, labels, buttons, card names, long descriptions and damage numbers; owner: "Jersey, let's keep it cohesive", so no smooth font is left), and **Jacquard 24** for screen titles and event, zone and evolution banners (owner choice, GDD §15.0). Jersey 10 is drawn from one exact 19 px raster at 1, 1.5, 2 or 3 times its pixel size through the sharp-pixel filter, so it stays crisp and correct at any window size; Jacquard is drawn only at its 43 px em.
 
 Every screen sizes its text by role through five **type tiers** (`UiTheme.Tier`, sizes in `UiArtData.TYPE_*`): **TITLE** (Jacquard 24 at 43 px, screen titles and banners, in title case), **HERO** (Jersey 57, big numbers), **HEADER** (Jersey 38, section headers, the HUD timer), **NAME** (Jersey 28, item and card names, buttons) and **BODY** (Jersey 19, descriptions and secondary lines), plus a **LABEL** style (Jersey 19, upper case, letter-spaced 2 px) for small section labels.
 
@@ -1360,6 +1346,9 @@ frames at `assets/sprites/effects/<id>.png`. An effect given an animation id pla
 to its radius (timing and fill in `scripts/data/anim_data.gd`), and keeps its drawn shape when the
 file is missing. Shadow Blast (the test), the Dread Rally burst (`dread_rally`) and the Grave Step
 departure puff (`grave_step_trail`) are wired so far.
+The bullet heaven volleys use **grey tint masks** instead (`assets/sprites/volleys/<style>.png` and the
+`volley_hit` / `volley_flash` strips, made with `python3 tools/volley_art.py shot|strip ...`): the game
+tints them with each class's colour and draws them additively.
 
 **Engine motion (tier 0, art pass).** Every unit is still one image, so the engine animates it
 procedurally: a **step bob** matched to its real speed, a small **lean** into the movement, a
@@ -1416,7 +1405,7 @@ never touches gameplay. Its art is in `assets/sprites/menu/`, rebuilt by
 | Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
 | Stage 3 (§8.3, §7.2, §7.4) | The Sanctum of Judgment: four battle zones on the clock (courtyards, golden halls, cloisters, final sanctuary), two sanctified chambers with ward crystals, the Cathedral Guardian miniboss (slams, sweeping beam, its own HUD bar, chest), three optional sacred altars (−6% soldier HP each, one healer fewer for Seraphine), floor corruption, Dawn's Wrath with Sun Paladins, and four new Covenant kinds (Sanctified Sentinel, Radiant Inquisitor with suppression, High Confessor with holy shields and revivals, Sun Paladin). See *Stage 3* above. |
 | Stage 3 boss (§7.5) | Grand Inquisitor Seraphine with her three GDD phases (Divine Judgment, Avatar of the Dawn, The Last Light): radiant fans, delayed holy circles, Templar squads, teleports, healing attendants, rotating holy beams, barrages, constructs, undead suppression, the safe-zone Judgment nova, the collapsing arena and a final guard, the relic shatter and the ending text. She ends the Sanctum of Judgment; `--boss=seraphine` also puts her on any other stage. See *Stage 3 boss* above. |
-| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades plus the Spearhead stance unlock, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, the Codex (GDD §10.1 Collection / Codex and Achievements), and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
+| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, the Codex (GDD §10.1 Collection / Codex and Achievements), and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Playable characters (§10.2, §11.4) | Twelve characters, one per spell, each with its starting spell, one innate passive and stat modifiers; chosen on the pre-run setup screen, unlocked by reaching Lv 5 with the character's spell, remembered in the save. The Gravecaller is the default and plays exactly like the game before characters. See *Characters* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
@@ -1509,7 +1498,6 @@ scripts/
     codex_log.gd            One run's Codex sightings (game.codex): first sights go to Meta [codex];
                             records only, the autotest's codex line
     autotest.gd             Headless self-test driver
-    stance_bot.gd           The autotest's army-stance driver (--stance, or its switching rule)
   player/necromancer.gd
   player/grave_step.gd      Grave Step dash: charges, obstacle-clamped step, i-frames, shadow trail
   player/dread_rally.gd     Dread Rally ultimate: kill-charged soul meter, surge, heal, raises the army, buff, knockback
@@ -1517,7 +1505,8 @@ scripts/
     horde_director.gd       Army registry, pools, caps, effective stats, replenishment queues,
                             formation anchors, threat evaluation, staggered 5 Hz AI ticks
     volley_director.gd      Bullet heaven pass: every volley shot (packed arrays, one _draw, spatial-hash
-                            hits through CombatResolver), summon volleys, spell echoes, Rally Barrage
+                            hits through CombatResolver), summon volleys, spell echoes, Rally Barrage,
+                            the shot art and the impact / launch bursts (drawing only)
     synergy_manager.gd      Army synergy activation and effects; the newer classes' marks
                             (staggered, swooped), the one synergy hit bonus (hit_mult()), the
                             Baying frenzy and the Menagerie replenishment
@@ -1535,10 +1524,10 @@ scripts/
                             Lady and Ossuary Engine evolution cards) and their autotest line
     horde_hazards.gd        Pooled catapult boulders in flight (arc, landing telegraph, splash),
                             Hellhound fire-trail patches and Ossuary Engine bone-shard fields
-    army_stance.gd          The run's army stance (game.stance): lockout, keys / right-stick
-                            flicks, Ossuary unlock, the numbers the director reads, summary stats
-    stance_formations.gd    Formation posts of Onslaught, Spearhead and Bone Ring (Escort is the
-                            director's own layout)
+    army_stance.gd          The run's army formation (game.stance, always the Bone Ring): the
+                            numbers the director reads, summary stats
+    stance_formations.gd    Formation posts of the Bone Ring (the director's own escort layout
+                            is only the fallback)
     behaviors/              Class special actions plugged into that AI (one SummonBehavior per unit):
       summon_behavior.gd      Base class: think / physics / attack / score / draw hooks, recall-safe
       summon_behaviors.gd     Registry (behavior id -> class) and the level-up card lines
@@ -1614,7 +1603,6 @@ scripts/
   audio/menu_theme_synth.gd Main menu theme renderer: wavetable choir, music box, bell, harp, reverb (chunked)
   fx/juice.gd               Autoload: screen shake, hit-stop, hooks for particles and damage numbers
   fx/fx_layer.gd            One node that draws all particles and damage numbers from fixed buffers
-  fx/stance_outline.gd      Faint ground outline of the army's shape after a stance change
   fx/motion_director.gd     Engine motion: animates every unit's body once per frame, pools death dissolves
   fx/unit_motion.gd         One unit's procedural motion (bob, lean, squashes, lunge, rise) on its body layer
   fx/unit_layer.gd          A unit's body / overlay drawing layer (child node calling back into the unit)
@@ -1655,8 +1643,7 @@ scripts/
                             Recipes view: a grid of recipe tiles, locked ones empty sockets),
                             recipe_icon_row ([base] + [passive] = [evolution] as icons, once discovered),
                             hud_abilities (Grave Step charges and Dread Rally meter), ability_glyphs
-                            (their icons), stance_bar (HUD stance icons + banner),
-                            stance_glyphs (stance icons, padlock, ground outline shapes),
+                            (their icons),
                             character_picker (pre-run character tiles),
                             character_glyphs (characters in the world and as portraits),
                             input_hints (key / pad-button chips from the current bindings,
@@ -1679,7 +1666,7 @@ scripts/
                             touch_support (phones and tablets: detection, the mobile UI scale,
                             fit_to_screen() for screens taller than a phone, drag-scrolling lists,
                             the portrait overlay), touch_controls (the in-run joystick, Grave Step,
-                            Dread Rally, aim, stance rose and pause buttons; they inject the usual
+                            Dread Rally, aim and pause buttons; they inject the usual
                             input actions), rotate_overlay ("turn your device" in portrait)
   data/                     DESIGNER-TUNABLE DATA (no logic):
     input_hint_data.gd      Input hint chips: sizes, colours, pad glyph names, device thresholds
@@ -1718,7 +1705,8 @@ scripts/
                             Winter Revenant, Shadow Reaper, Cathedral Horror, Gravebow,
                             Bone Colossus, Hellhound, Keening Lady, Ossuary Engine) and stats
     volley_data.gd          Bullet heaven pass: volley shapes per class / evolution / spell, shot cap,
-                            boss-hit cap, Rally Barrage rate, denser-fodder spawn / HP / XP multipliers
+                            boss-hit cap, Rally Barrage rate, denser-fodder spawn / HP multipliers, the
+                            shot / burst art sizes and timings
     synergy_data.gd         Army synergy requirements and effects (13 synergies, the damage-source
                             -> class table, mark durations)
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
@@ -1754,8 +1742,8 @@ scripts/
     hyper_data.gd           Hyper mode: growth x2, boss HP x1.5, Soul Ash +100%, unlock boss, texts
     skin_data.gd            Per-character (CharacterData) default / Hyper / achievement skins, unlock rules,
                             palette fallbacks (tint, accent, glow, emblem)
-    stance_data.gd          Army stances: leash / recall / pull overrides, shapes, lockout,
-                            switched-off flavour bonuses, the autotest stance bot's thresholds
+    stance_data.gd          The Bone Ring: leash / recall / pull overrides, ring radii and spacing,
+                            the switched-off flavour bonus
     character_data.gd       Playable characters: starting spell, innate (text + numbers), stats, art key,
                             school colour, unlock rule
     palette.gd              Colour language
@@ -1766,7 +1754,7 @@ web/mobile_shell.html       The Web export's page: Godot's stock shell plus the 
 **Simulation order.** Each physics tick (60 Hz), `Game` runs these steps in order:
 
 1. Rebuild the enemy and ally spatial hashes.
-2. Player, then the army stance's bookkeeping (move direction, per-stance stats).
+2. Player, then the army formation's bookkeeping (summary stats).
 3. Spells, then the character's innate (Echoing Dark bursts, Ossuary Ward shards).
 4. Horde: replenishment, formation (4 Hz), threat (5 Hz), then each unit's
    `think()` on its stagger slot and `physics_step()` every tick.
@@ -1834,8 +1822,7 @@ Options (after `--`):
 | `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march` or `sanctum`. Stage locks are ignored. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
-| `--stance=ID` | Army stance for the whole run: `escort`, `onslaught`, `spearhead` or `bone_ring` (forcing ignores the Spearhead unlock). Without it, `army`, `summon` and `evolve` switch stances by a simple rule (Bone Ring when the necromancer is in danger or the boss is within 260 px; Onslaught when at most 6 enemies are within 220 px and a Crimson March structure or a Sanctum crystal / altar is within 420 px or at most 10 enemies are within 480 px; Spearhead, when owned, toward a chest or power-up within 300 px; else Escort; `StanceBot`), while `naive` and `pact` keep Escort so their baselines do not move. |
-| `--volleys=on\|off` | The bullet heaven pass (default on, like the setting): `off` runs the game exactly as before it (same-seed summaries identical). Every summary has a `volleys` line: shots fired, hits, volley damage, peak shots in flight against the cap, volleys thinned by the cap, boss hits refused by the per-volley cap, Rally Barrages, and the volley damage by class / spell. |
+| `--volleys=on\|off` | The bullet heaven pass (default on, like the setting): `off` runs none of the pass (no volleys, the usual fodder; the army still holds the Bone Ring). Every summary has a `volleys` line: shots fired, hits, volley damage, peak shots in flight against the cap, volleys thinned by the cap, boss hits refused by the per-volley cap, Rally Barrages, and the volley damage by class / spell. |
 | `--synergies=off` | A/B switch: no army synergy ever activates (the four original ones and the newer classes' nine). Every summary has a `synergy bonus` line (per newer synergy: the hits its mark bonus raised and the damage it added; the Baying frenzies; staggered / swooped marks; Death from Above dash resets; the seconds Requiem stretched), marked "(synergies off)" with this switch. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
 | `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |
@@ -1954,11 +1941,9 @@ hits and damage, death novas, nova hits, nova freezes and nova damage
 (`wr_*` stats, `dmg_winter_revenant_shatter` / `_nova`). The stuck check also counts a
 special still running after 4 s (a dashing or airborne unit) and any dash or
 landing that ends inside an obstacle; specials cancelled by a recall are
-reported too. The **army stance** line says how the stance was driven
-(forced, bot switching or the Escort baseline) and lists, per stance, the
-seconds held, times entered, kills, army damage taken, hard recalls and the
-unit spread (largest and mean distance from the necromancer), plus the
-number of switches.
+reported too. The **army formation** line lists, for the Bone Ring, the
+seconds held, kills, army damage taken, hard recalls and the unit spread
+(largest and mean distance from the necromancer).
 
 Every policy also uses the **dash and the ultimate**: Grave Step when 3+
 enemies touch a 45 px circle around the necromancer, when he was hit in the

@@ -73,11 +73,6 @@
 ##   --skin=ID             Autotest skin (SkinData id, e.g. dread_sovereign
 ##                         or gravecaller_hyper), forced for screenshots:
 ##                         ignores the unlock and the character. Cosmetic.
-##   --stance=ID           Autotest army stance for the whole run (StanceData
-##                         ids: escort, onslaught, spearhead, bone_ring);
-##                         forcing ignores the Spearhead unlock. Without it,
-##                         army / summon / evolve switch stances (StanceBot)
-##                         and naive / pact keep Escort.
 ##   --synergies=off       Autotest A/B switch: no army synergy (the four
 ##                         original ones and the newer classes') ever
 ##                         activates (default on).
@@ -140,9 +135,6 @@ var autotest_modifiers: PackedStringArray = PackedStringArray()
 var autotest_hyper: bool = false
 ## Autotest: SkinData id forced by --skin= ("" = the default look).
 var autotest_skin: String = ""
-## Autotest: StanceData id forced for the whole run by --stance= ("" = the
-## stance bot's rule, StanceBot).
-var autotest_stance: String = ""
 ## Autotest: true when --synergies=off keeps every army synergy off (old and
 ## new; SynergyManager.evaluate()) for A/B balance runs.
 var autotest_synergies_off: bool = false
@@ -247,12 +239,6 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_skin = skid
 			else:
 				push_error("Unknown --skin=%s (expected one of %s)" % [skid, ", ".join(SkinData.all_ids())])
-		elif arg.begins_with("--stance="):
-			var sid := arg.get_slice("=", 1).to_lower()  # Requested stance id.
-			if StanceData.STANCES.has(sid):
-				autotest_stance = sid
-			else:
-				push_error("Unknown --stance=%s (expected one of %s)" % [sid, ", ".join(PackedStringArray(StanceData.ORDER))])
 		elif arg.begins_with("--synergies="):
 			var sv := arg.get_slice("=", 1).to_lower()  # "off" or "on".
 			if sv == "off" or sv == "on":

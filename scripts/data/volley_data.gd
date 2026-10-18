@@ -3,7 +3,8 @@
 ## every owned spell releases a themed echo volley, Dread Rally fires the whole army's
 ## volleys at once (the Rally Barrage) and fodder waves come denser but frailer. The whole
 ## pass is one switch: Settings.volleys (Settings -> Video -> Volleys, default on), read
-## once per run as Game.volleys_on; --volleys=off runs the game exactly as before it.
+## once per run as Game.volleys_on; --volleys=off runs none of the pass (no volleys, the
+## usual fodder; the army keeps the Bone Ring, GDD §15.0 "Bone Ring is the only formation").
 ## VolleyDirector reads this file; no logic here.
 ##
 ## Shot patterns (the "pattern" key of a volley):
@@ -62,11 +63,9 @@ const BARRAGE_RATE: int = 2  # TUNING (not in GDD) owner decision Oct 2026
 const BARRAGE_MIN_LEVEL: int = 3  # TUNING (not in GDD)
 ## Denser fodder (owner: yes): enemy trickle spawn rate and caps x this ...
 const FODDER_SPAWN_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026
-## ... and every non-boss enemy's HP x this (about the same total HP on screen) ...
+## ... and every non-boss enemy's HP x this (about the same total HP on screen). Kills
+## keep their full XP (owner: the build may complete earlier).
 const FODDER_HP_MULT: float = 0.8  # TUNING (not in GDD) owner decision Oct 2026
-## ... and each kill's XP x this (CombatResolver; 1 / FODDER_SPAWN_MULT), so the extra
-## bodies do not level the necromancer faster (the build still completes at 16-18 min).
-const FODDER_XP_MULT: float = 0.8  # TUNING (not in GDD)
 ## Every shot's `life` x this (one knob for the volleys' reach: range = speed x life x it).
 const LIFE_MULT: float = 1.6  # TUNING (not in GDD) first look: shots died before reaching the enemies at the screen edge
 ## Drawn size of a shot as a multiple of its collision radius (drawing only).
@@ -80,6 +79,66 @@ const GLOW_ALPHA: float = 0.35  # TUNING (not in GDD) visual
 ## Core opacity of a volley shot (0..1, drawing only): slightly see-through, so the
 ## Covenant's solid attacks and telegraphs always read on top.
 const CORE_ALPHA: float = 0.9  # TUNING (not in GDD) visual
+
+# --- Art (GDD §15.0 "Volley art"; drawing only, never read by gameplay) ---------------
+# The art is grey TINT MASKS (tools/volley_art.py): white = hot core, greys = glow. The
+# director multiplies each by the shot's colour and draws it additively; a missing file
+# keeps the code-drawn shape.
+
+## Sprite key prefix of the shot masks: assets/sprites/volleys/<style>.png.
+const ART_DIR: String = "volleys/"  # TUNING (not in GDD)
+## Style -> drawn length of its mask (longest side, px) as a multiple of the shot's drawn
+## radius (radius x DRAW_SCALE). The masks include their own trails.
+const ART_LEN := {
+	"shard": 5.2,  # TUNING (not in GDD) visual
+	"orb": 4.6,  # TUNING (not in GDD) visual
+	"dagger": 5.0,  # TUNING (not in GDD) visual
+	"spark": 4.8,  # TUNING (not in GDD) visual
+	"note": 3.6,  # TUNING (not in GDD) visual
+	"feather": 5.2,  # TUNING (not in GDD) visual
+	"wave": 3.4,  # TUNING (not in GDD) visual (radius 12: about 94 px across)
+}
+## How far the mask's centre sits behind the shot's position, as a fraction of its drawn
+## length (the head of the art leads, the trail follows).
+const ART_LEAD: float = 0.28  # TUNING (not in GDD) visual
+## Fraction the mask's tint is lightened toward white (keeps a hot white-ish core).
+const ART_WHITEN: float = 0.3  # TUNING (not in GDD) visual
+## Opacity of the mask (0..1).
+const ART_ALPHA: float = 0.95  # TUNING (not in GDD) visual
+## Glow halo drawn under a mask: radius as a multiple of the drawn radius ...
+const ART_GLOW: float = 1.5  # TUNING (not in GDD) visual
+## ... at most this many px (a big sword wave keeps a small halo, not a disc) ...
+const ART_GLOW_MAX: float = 12.0  # TUNING (not in GDD) visual
+## ... and this opacity (0..1).
+const ART_GLOW_ALPHA: float = 0.22  # TUNING (not in GDD) visual
+
+## Impact burst played where a shot hits (effect strip assets/sprites/effects/<id>.png,
+## tinted with the shot's colour). No burst without the art.
+const HIT_ANIM: String = "volley_hit"  # TUNING (not in GDD)
+## Impact burst duration (s, game time).
+const HIT_TIME: float = 0.22  # TUNING (not in GDD) visual
+## Impact burst diameter as a multiple of the shot's drawn radius (radius x DRAW_SCALE).
+const HIT_SIZE: float = 3.6  # TUNING (not in GDD) visual
+## Impact burst opacity (0..1).
+const HIT_ALPHA: float = 0.9  # TUNING (not in GDD) visual
+## Impact burst diameter range (px).
+const HIT_MIN: float = 18.0  # TUNING (not in GDD) visual
+const HIT_MAX: float = 56.0  # TUNING (not in GDD) visual
+## Launch flash played where a volley is fired (strip id, tinted with the volley colour).
+const FLASH_ANIM: String = "volley_flash"  # TUNING (not in GDD)
+## Launch flash opacity (0..1): kept low, as a full ring of summons firing at once stacks
+## its flashes additively over the army.
+const FLASH_ALPHA: float = 0.45  # TUNING (not in GDD) visual first look: 1.0 washed the ring out to white
+## Launch flash duration (s, game time).
+const FLASH_TIME: float = 0.28  # TUNING (not in GDD) visual
+## Launch flash diameter (px): base + per shot in the volley, at most FLASH_MAX.
+const FLASH_BASE: float = 22.0  # TUNING (not in GDD) visual
+const FLASH_PER_SHOT: float = 2.5  # TUNING (not in GDD) visual
+const FLASH_MAX: float = 64.0  # TUNING (not in GDD) visual
+## Bursts (impacts + flashes) remembered at once: a ring buffer, the oldest replaced.
+const FX_CAP: int = 96  # TUNING (not in GDD) visual
+## Most bursts drawn with Effects = Reduced (phones).
+const FX_DRAW_REDUCED: int = 24  # TUNING (not in GDD) mobile
 
 # --- Summon classes (switch on at LEVEL_ON, grow at LEVEL_GROW) -----------------------
 
@@ -102,7 +161,7 @@ const CLASSES := {
 	"rogue": {"trigger": "special", "pattern": "fan", "counts": [3, 5], "spread": 40.0, "speed": 380.0,
 		"life": 0.4, "share": 0.35, "pierce": 0, "radius": 3.0, "style": "dagger", "color": Color(0.74, 0.55, 0.98)},  # TUNING (not in GDD) thrown daggers at the dash end
 	"gargoyle": {"trigger": "special", "pattern": "ring", "counts": [6, 8], "speed": 260.0,
-		"life": 0.4, "share": 0.3, "pierce": 0, "radius": 4.0, "style": "shard", "color": Color(0.62, 0.66, 0.74)},  # TUNING (not in GDD) stone shards from the dive
+		"life": 0.4, "share": 0.3, "pierce": 0, "radius": 4.0, "style": "feather", "color": Color(0.62, 0.66, 0.74)},  # TUNING (not in GDD) stone feather darts from the dive
 	"frost_wraith": {"trigger": "attack", "every": 1, "pattern": "fan", "counts": [3, 5], "spread": 30.0, "speed": 340.0,
 		"life": 0.5, "share": 0.3, "pierce": 0, "radius": 3.5, "style": "shard", "color": Color(0.62, 0.84, 1.0)},  # TUNING (not in GDD) ice shard cone
 	"bone_hound": {"trigger": "attack", "every": 3, "pattern": "fan", "counts": [3, 4], "spread": 46.0, "speed": 320.0,
@@ -129,7 +188,7 @@ const EVOLVED := {
 	"shadow_reaper": {"trigger": "special", "pattern": "ring", "counts": [8], "speed": 360.0,
 		"life": 0.38, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "dagger", "color": Color(0.74, 0.55, 0.98)},  # TUNING (not in GDD) dagger storm at each dash end
 	"cathedral_horror": {"trigger": "special", "pattern": "ring", "counts": [12], "speed": 270.0,
-		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "shard", "color": Color(0.62, 0.66, 0.74)},  # TUNING (not in GDD) stone shards in every direction
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "feather", "color": Color(0.62, 0.66, 0.74)},  # TUNING (not in GDD) stone feather darts in every direction
 	"winter_revenant": {"trigger": "attack", "every": 1, "pattern": "spiral", "counts": [8], "speed": 220.0,
 		"life": 0.6, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.62, 0.84, 1.0), "curve": 3.0},  # TUNING (not in GDD) blizzard swirl
 	"hellhound": {"trigger": "attack", "every": 3, "pattern": "fan", "counts": [4], "spread": 50.0, "speed": 340.0,

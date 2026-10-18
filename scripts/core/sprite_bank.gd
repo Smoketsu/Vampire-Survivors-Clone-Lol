@@ -403,8 +403,9 @@ static func has_anim(id: String) -> bool:
 
 ## Draws frame `progress` (0..1 through the animation) of effect animation `id`
 ## centred on `o`, `diameter` px across (square frames in a horizontal strip;
-## frame count = width / height). `alpha` fades it. Returns false without art.
-static func draw_anim(ci: CanvasItem, id: String, o: Vector2, diameter: float, progress: float, alpha: float = 1.0) -> bool:
+## frame count = width / height). `alpha` fades it; `tint` multiplies its colours
+## (the volley bursts, grey masks tinted with the shot's colour). Returns false without art.
+static func draw_anim(ci: CanvasItem, id: String, o: Vector2, diameter: float, progress: float, alpha: float = 1.0, tint: Color = Color.WHITE) -> bool:
 	var tex := texture("effects/" + id)  # Strip of square frames, or null.
 	if tex == null:
 		return false
@@ -413,5 +414,5 @@ static func draw_anim(ci: CanvasItem, id: String, o: Vector2, diameter: float, p
 	var f := mini(int(progress * float(frames)), frames - 1)  # Current frame.
 	var src := Rect2(fh * float(f), 0.0, fh, fh)  # Frame region in the strip.
 	var dst := Rect2(o - Vector2.ONE * diameter * 0.5, Vector2.ONE * diameter)  # On-screen rect.
-	ci.draw_texture_rect_region(tex, dst, src, Color(1, 1, 1, alpha))
+	ci.draw_texture_rect_region(tex, dst, src, Color(tint, tint.a * alpha))
 	return true

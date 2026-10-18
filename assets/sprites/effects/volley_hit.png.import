@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fgkcfvvdvgw1"
-path="res://.godot/imported/stance_spearhead.png-c718b327556cf554e9dafaeb747a326d.ctex"
+uid="uid://bqao3yiw3xkbg"
+path="res://.godot/imported/volley_hit.png-cc5e0c783dda63ce80859b20f2ac31b8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/icons/stance_spearhead.png"
-dest_files=["res://.godot/imported/stance_spearhead.png-c718b327556cf554e9dafaeb747a326d.ctex"]
+source_file="res://assets/sprites/effects/volley_hit.png"
+dest_files=["res://.godot/imported/volley_hit.png-cc5e0c783dda63ce80859b20f2ac31b8.ctex"]
 
 [params]
 

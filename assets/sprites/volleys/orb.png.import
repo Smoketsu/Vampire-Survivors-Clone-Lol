@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0om2yglf5vvo"
-path="res://.godot/imported/stance_onslaught.png-ebcb8c71bf2c41bbc6be299357777533.ctex"
+uid="uid://i3iduqdcoc0s"
+path="res://.godot/imported/orb.png-bef20dc2f14bd608b5a989e1397f6b79.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/icons/stance_onslaught.png"
-dest_files=["res://.godot/imported/stance_onslaught.png-ebcb8c71bf2c41bbc6be299357777533.ctex"]
+source_file="res://assets/sprites/volleys/orb.png"
+dest_files=["res://.godot/imported/orb.png-bef20dc2f14bd608b5a989e1397f6b79.ctex"]
 
 [params]
 

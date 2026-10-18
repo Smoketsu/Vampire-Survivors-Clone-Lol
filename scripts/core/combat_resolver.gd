@@ -86,8 +86,6 @@ extends RefCounted
 
 ## Owning run.
 var game: Game
-## Bullet heaven pass: XP fraction carried between kills (VolleyData.FODDER_XP_MULT).
-var _xp_carry: float = 0.0
 ## Damage-source tag -> true for every minion attack that can crit (built
 ## once from PassiveData, UnitData and SummonEvolutionData).
 var _minion_sources: Dictionary = {}
@@ -550,17 +548,9 @@ func _kill_enemy(e: Enemy) -> void:
 	game.effects.pop(e.position, Palette.CRIMSON if not e.is_boss else Palette.GOLD, e.radius * 1.2, "enemy_death")  # Animation when its art exists (visual only).
 	game.motion.on_enemy_killed(e)  # Collapses into holy ash (visual only; not bosses or structures).
 	Juice.enemy_killed(e)
-	var xp := e.xp_value  # XP this death drops.
-	if game.volleys_on and xp > 0:
-		# Bullet heaven pass: the denser fodder would level the necromancer faster, so each
-		# kill's XP is x FODDER_XP_MULT, the remainder carried to the next kill (exact over
-		# a run, no RNG).
-		_xp_carry += float(xp) * VolleyData.FODDER_XP_MULT
-		xp = int(floorf(_xp_carry))
-		_xp_carry -= float(xp)
-	if xp > 0:
-		game.pickups.spawn(e.position, xp)
-		game.stat_add("xp_dropped", xp)
+	if e.xp_value > 0:
+		game.pickups.spawn(e.position, e.xp_value)
+		game.stat_add("xp_dropped", e.xp_value)
 	game.stat_add("kill_" + e.kind, 1.0)
 	game.codex.meet(CodexData.ENEMY, e.kind)  # Codex: a Covenant kind slain (records only).
 	if e.rot_until > game.elapsed:

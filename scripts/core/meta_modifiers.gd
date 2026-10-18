@@ -7,7 +7,7 @@
 ##   value(stat)          summed bonus of every upgrade raising `stat`
 ##   capacity_bonus(cls)  extra summon capacity of class `cls`
 ##   apply_to_player(p)   one-time player stats at run start
-##   unlocks(stat)        an "unlock" upgrade is owned (Spearhead stance)
+##   unlocks(stat)        an "unlock" upgrade is owned (none on sale at present)
 ## Each meta stat is its own stacking category (GDD §6.4): it multiplies the
 ## level / passive / synergy bonuses instead of adding to them. An empty
 ## instance (no upgrades) returns 0 everywhere, so a run without purchases
@@ -51,8 +51,7 @@ func is_empty() -> bool:
 	return tiers.is_empty()
 
 
-## True when an "unlock" stat (MetaData.STATS format "unlock", e.g. the
-## Spearhead army stance's "stance_spearhead") is owned.
+## True when an "unlock" stat (MetaData.STATS format "unlock") is owned.
 func unlocks(stat: String) -> bool:
 	return value(stat) >= 1.0
 

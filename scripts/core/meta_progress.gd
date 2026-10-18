@@ -108,6 +108,8 @@ var last_load_error: Error = OK
 ## What the last load did: "fresh" (not loaded), "missing", "corrupt", "ok",
 ## "migrated" (older save_version) or "newer" (save from a newer build).
 var load_status: String = "fresh"
+## Soul Ash refunded by the last load for retired upgrades (MetaData.RETIRED_REFUNDS; 0 = none).
+var retired_refund: int = 0
 ## Breakdown Dictionary of the most recent award_run() (see compute_ash()).
 var last_award: Dictionary = {}
 ## Profane Oath tier that applies to runs (0..owned tier; 0 = switched off).
@@ -828,6 +830,12 @@ func load_save() -> void:
 	var version := _read_int(cfg, "meta", "save_version", 0)
 	_migrate(cfg, version)
 	soul_ash = _read_int(cfg, "currency", "soul_ash", 0)
+	# Retired upgrades (MetaData.RETIRED_REFUNDS): an owned one pays its Soul Ash back;
+	# save() never writes the key again, so the refund happens once.
+	for old_id: String in MetaData.RETIRED_REFUNDS:
+		if _read_int(cfg, "upgrades", old_id, 0) > 0:
+			soul_ash = mini(soul_ash + int(MetaData.RETIRED_REFUNDS[old_id]), MAX_STORED)
+			retired_refund += int(MetaData.RETIRED_REFUNDS[old_id])
 	for id: String in MetaData.UPGRADE_ORDER:
 		tiers[id] = mini(_read_int(cfg, "upgrades", id, 0), MetaData.max_tier(id))
 	for key: String in lifetime:
@@ -955,6 +963,7 @@ func _enforce_prerequisites() -> void:
 ## Clears every persistent value to a fresh profile (in memory only).
 func _reset() -> void:
 	soul_ash = 0
+	retired_refund = 0
 	tiers = {}
 	for id: String in MetaData.UPGRADE_ORDER:
 		tiers[id] = 0

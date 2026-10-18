@@ -296,16 +296,17 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 	# Run modifiers (Vengeful Dead, DifficultyModifiers): own category, 1 when off.
 	hp_mult *= game.difficulty.minion_hp_mult()
 	dmg_mult *= game.difficulty.minion_damage_mult()
-	# Army stance (ArmyStance): leash, soft recall and formation pull overrides
-	# (Escort = UnitData's numbers) and its flavour bonuses (0 while off).
+	# Army formation (ArmyStance, always the Bone Ring): leash, soft recall and
+	# formation pull overrides (UnitData's numbers outside a run) and its flavour
+	# bonuses (0 while off).
 	var st := game.stance  # Current army stance (null only outside a run).
 	var engage := st.engage_radius() if st != null else UnitData.ENGAGE_RADIUS  # Chase leash before Bound Souls (px).
 	var recall := st.soft_recall() if st != null else UnitData.SOFT_RECALL  # Soft recall before Bound Souls (px).
 	var pull := st.formation_pull() if st != null else 1.0  # Formation pull multiplier.
-	var stance_speed := st.bonus("attack_speed") if st != null else 0.0  # Onslaught bonus (0 = off).
+	var stance_speed := st.bonus("attack_speed") if st != null else 0.0  # Formation attack-speed bonus (the ring has none: 0).
 	if stance_speed != 0.0:
 		spd_mult *= 1.0 + stance_speed
-	var push := 1.0  # Block mass / bash knockback multiplier of a "front" class (Spearhead tip).
+	var push := 1.0  # Block mass / bash knockback multiplier of a "front" class (formation bonus; the ring has none).
 	if st != null and StanceFormations.role(cls) == "front":
 		push += st.bonus("front_push")
 	if with_buffs and game.powerups != null:
@@ -640,10 +641,12 @@ func count_of(cls: String) -> int:
 ## archers + mages share the midline ring; the support classes (Mender,
 ## Warder, Profane Bishop) sit on the side away from the threat, and the
 ## "back" classes (Corpse Catapults) in their own farther band behind them. Stable per-unit jitter keeps it from looking geometric.
-## This is the Escort stance; any other army stance places its own shape
-## (StanceFormations).
+## In a run the Bone Ring places every post instead (StanceFormations); this banded
+## layout is the fallback when no formation exists.
 func _calculate_formation_anchors() -> void:
-	if game.stance != null and game.stance.shape() != "escort":
+	if game.stance != null:
+		# The Bone Ring (the only formation; StanceFormations). The banded layout below
+		# is only the fallback outside a run.
 		StanceFormations.assign(self, game.stance.shape(), game.stance.jitter())
 		return
 	var warriors: Array[SummonedUnit] = []

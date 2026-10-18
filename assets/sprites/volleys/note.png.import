@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://kd7wfxm52axa"
-path="res://.godot/imported/stance_escort.png-8730aec28e31e02d40571ba2042c428e.ctex"
+uid="uid://btmaejhw37stg"
+path="res://.godot/imported/note.png-312865d7fc562a90df2c00bda955ad08.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/icons/stance_escort.png"
-dest_files=["res://.godot/imported/stance_escort.png-8730aec28e31e02d40571ba2042c428e.ctex"]
+source_file="res://assets/sprites/volleys/note.png"
+dest_files=["res://.godot/imported/note.png-312865d7fc562a90df2c00bda955ad08.ctex"]
 
 [params]
 

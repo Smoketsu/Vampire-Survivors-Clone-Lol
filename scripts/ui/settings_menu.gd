@@ -12,8 +12,8 @@
 ##             the Fullscreen toggle's place (Settings.fullscreen_mode()).
 ##   Save    : Backup / Restore of the progress as a save code (SaveBackup;
 ##             for iPhone Safari, which forgets an embedded game's saves).
-##   Controls: the twelve rebindable actions in three groups (Move, Actions,
-##             Stances): each row shows its keyboard key as a key chip on a
+##   Controls: the eight rebindable actions in two groups (Move, Actions):
+##             each row shows its keyboard key as a key chip on a
 ##             button (press it, then any key; controller B or a mouse click
 ##             cancels; binding a key another action uses swaps the two) and
 ##             its controller binding as a read-only pad chip (the pad layout

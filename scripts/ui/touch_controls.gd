@@ -16,16 +16,11 @@
 ##     a recharge sweep), Dread Rally (darkened above its soul meter's level
 ##     like the HUD icon, a bright green border when READY, violet while the
 ##     rally runs), the Shadow Bolt aim toggle (only while the bolt is owned;
-##     the HUD line says which aim) and the four army stances as a rose
-##     above Grave Step (each stance in the direction of its controller
-##     flick: Escort up, Onslaught right, Spearhead down, Bone Ring left; a
-##     finger anywhere in a quarter of the rose picks that stance; the active
-##     one is lit in its colour with the lockout bar, a locked one shows its
-##     padlock). Pause sits in the top-right corner (the HUD's top-right
+##     the HUD line says which aim). Pause sits in the top-right corner (the HUD's top-right
 ##     block moves left for it, Hud.set_top_right_inset()).
 ##   * Every button injects its existing input action as an InputEventAction
 ##     (press on finger down, release on finger up) through
-##     Input.parse_input_event(), so Game._unhandled_input(), ArmyStance and
+##     Input.parse_input_event(), so Game._unhandled_input() and
 ##     PauseMenu apply their usual rules, cooldowns and lockouts: there is no
 ##     second path for any action.
 ## Multi-touch: each finger is tracked by its index, so the stick and any
@@ -54,8 +49,6 @@ var _stick_centre: Vector2 = Vector2.ZERO
 var _stick_at: Vector2 = Vector2.ZERO
 ## Button id -> finger index holding it (absent = not held).
 var _held: Dictionary = {}
-## Finger index on the stance rose (-1 = none).
-var _rose_finger: int = -1
 ## Move action -> strength currently pressed by the stick (released at 0).
 var _pressed_moves: Dictionary = {}
 ## Drawing layer of the idle controls (modulate alpha IDLE_ALPHA).
@@ -131,21 +124,15 @@ func _input(event: InputEvent) -> void:
 	if drag != null:
 		if drag.index == _stick_finger:
 			_stick_move(drag.position)
-		elif drag.index == _rose_finger:
-			_rose_pick(drag.position, false)
 
 
-## A finger landed at `at` (layout px): a button, the rose, or the stick.
+## A finger landed at `at` (layout px): a button, or the stick.
 func _finger_down(finger: int, at: Vector2) -> void:
 	for id: String in TouchData.BUTTON_ORDER:
 		if _button_shown(id) and not _held.has(id) and at.distance_to(_button_centre(id)) <= float(TouchData.BUTTONS[id]["hit"]) * _k:
 			_held[id] = finger
 			_send(String(TouchData.BUTTONS[id]["action"]), true)
 			return
-	if _rose_finger < 0 and at.distance_to(_rose_centre()) <= TouchData.ROSE_HIT * _k:
-		_rose_finger = finger
-		_rose_pick(at, true)
-		return
 	if _stick_finger < 0 and at.x < size.x * TouchData.STICK_ZONE:
 		_stick_finger = finger
 		_stick_centre = at
@@ -157,8 +144,6 @@ func _finger_up(finger: int) -> void:
 	if finger == _stick_finger:
 		_stick_finger = -1
 		_set_move(Vector2.ZERO)
-	if finger == _rose_finger:
-		_rose_finger = -1
 	for id: String in _held.keys():
 		if int(_held[id]) == finger:
 			_held.erase(id)
@@ -168,7 +153,6 @@ func _finger_up(finger: int) -> void:
 ## Lets go of everything (the controls hid: a panel opened, a key was used).
 func _release_all() -> void:
 	_stick_finger = -1
-	_rose_finger = -1
 	_set_move(Vector2.ZERO)
 	for id: String in _held.keys():
 		_send(String(TouchData.BUTTONS[id]["action"]), false)
@@ -233,7 +217,7 @@ func _press_move(action: String, strength: float) -> void:
 
 
 # =====================================================================================
-# Buttons and the stance rose
+# Buttons
 # =====================================================================================
 
 ## Whether button `id` is shown now (the aim toggle needs the Shadow Bolt).
@@ -252,34 +236,6 @@ func _button_centre(id: String) -> Vector2:
 	return Vector2(size.x - c.x, size.y - c.y)
 
 
-## Centre (layout px) of the stance rose.
-func _rose_centre() -> Vector2:
-	return Vector2(size.x - TouchData.ROSE_CENTRE.x * _k, size.y - TouchData.ROSE_CENTRE.y * _k)
-
-
-## The rose finger is at `at`: picks the stance of its quarter on landing,
-## and again when it slides into another quarter once the lockout is over
-## (ArmyStance applies the lockout and the Spearhead lock either way).
-func _rose_pick(at: Vector2, first: bool) -> void:
-	var off := at - _rose_centre()
-	if off.length() < TouchData.ROSE_DEAD * _k:
-		return
-	var best := ""  # Stance whose direction is closest to the finger.
-	var best_dot := -2.0
-	for id: String in StanceData.ORDER:
-		var dot := off.normalized().dot(TouchData.ROSE_DIRS[id])
-		if dot > best_dot:
-			best_dot = dot
-			best = id
-	if best == "":
-		return
-	if not first and (game.stance.current == best or game.stance.lockout_left() > 0.0 or not game.stance.is_unlocked(best)):
-		return  # Sliding: no repeats, no requests during the lockout.
-	var action := String(StanceData.ACTIONS[StanceData.ORDER.find(best)])
-	_send(action, true)
-	_send(action, false)
-
-
 # =====================================================================================
 # Drawing (two layers: idle and held)
 # =====================================================================================
@@ -290,8 +246,6 @@ func _draw_layer(layer: Control, active: bool) -> void:
 		return
 	if (_stick_finger >= 0) == active:
 		_draw_stick(layer)
-	if (_rose_finger >= 0) == active:
-		_draw_rose(layer)
 	for id: String in TouchData.BUTTON_ORDER:
 		if _button_shown(id) and _held.has(id) == active:
 			_draw_button(layer, id)
@@ -314,33 +268,6 @@ func _draw_stick(ci: CanvasItem) -> void:
 	var knob := _square(_stick_centre + (_stick_at - _stick_centre).limit_length(r), kh)
 	ci.draw_colored_polygon(knob, TouchData.FACE_PRESSED)
 	_outline(ci, knob, col, TouchData.BORDER_WIDTH)
-
-
-## The stance rose on `ci`: four stance icons around a small hub.
-func _draw_rose(ci: CanvasItem) -> void:
-	var c := _rose_centre()
-	var st := game.stance
-	var hub := TouchData.ROSE_OFFSET * 0.42 * _k  # Hub half size.
-	_outline(ci, _square(c, hub), TouchData.BORDER, TouchData.BORDER_WIDTH)
-	var h := TouchData.ROSE_HALF * _k  # Half size of one stance face.
-	for id: String in StanceData.ORDER:
-		var d := StanceData.def(id)
-		var at: Vector2 = c + (TouchData.ROSE_DIRS[id] as Vector2) * TouchData.ROSE_OFFSET * _k
-		var rect := Rect2(at - Vector2(h, h), Vector2(h, h) * 2.0)
-		var face := _square(at, h)
-		var current := st.current == id
-		ci.draw_colored_polygon(face, TouchData.FACE_FILL)
-		Glyphs.draw_icon(ci, String(d["icon"]), rect.grow(-h * 0.12))
-		if not st.is_unlocked(id):
-			ci.draw_colored_polygon(face, TouchData.SHADE)
-			StanceGlyphs.draw_lock(ci, at + Vector2(h, h) * 0.3, h * 0.6)
-		elif not current:
-			ci.draw_colored_polygon(face, Color(0.0, 0.0, 0.0, 0.3))  # The others are dimmed, as on the HUD.
-		var col: Color = d["color"] if current else TouchData.BORDER
-		_outline(ci, face, col, TouchData.BORDER_WIDTH * (1.5 if current else 1.0))
-		if current and st.lockout_left() > 0.0:
-			var left := st.lockout_left() / StanceData.SWITCH_LOCKOUT  # 1 -> 0 lockout bar.
-			ci.draw_rect(Rect2(rect.position + Vector2(0.0, rect.size.y + 2.0), Vector2(rect.size.x * left, 2.0 * _k)), col)
 
 
 ## Button `id` on `ci`: its face, icon and state.

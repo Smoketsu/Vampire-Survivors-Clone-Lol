@@ -342,8 +342,6 @@ static func _draw_icon_body(ci: CanvasItem, kind: String, c: Vector2, s: float) 
 			var tip := c + Vector2.from_angle(0.3) * s * 0.5
 			ci.draw_colored_polygon(PackedVector2Array([tip + Vector2(-s * 0.2, 0), tip + Vector2(s * 0.2, 0), tip + Vector2(0, -s * 0.25)]), Palette.NECRO_GREEN)
 			_skull(ci, c, s * 0.2, false)
-		"stance_escort", "stance_onslaught", "stance_spearhead", "stance_bone_ring":
-			StanceGlyphs.draw_icon(ci, kind, c, s)  # Army stance icons (StanceGlyphs).
 		"heal":
 			ci.draw_rect(Rect2(c + Vector2(-s * 0.12, -s * 0.5), Vector2(s * 0.24, s * 1.0)), Palette.NECRO_GREEN)
 			ci.draw_rect(Rect2(c + Vector2(-s * 0.5, -s * 0.12), Vector2(s * 1.0, s * 0.24)), Palette.NECRO_GREEN)

@@ -131,11 +131,9 @@
 ##     the Death from Above dash resets and the seconds Requiem stretched
 ##     (SynergyManager.summary_line()). --synergies=off keeps every synergy
 ##     off for A/B runs (the line is then marked "synergies off").
-##   * army stances: StanceBot drives the stance (--stance=ID forces one for
-##     the whole run; army / summon / evolve switch by its rule; naive /
-##     pact keep Escort, their baseline) and the summary adds an "army
-##     stance" line (time, entries, kills, army damage taken, hard recalls
-##     and unit spread per stance, and the number of switches).
+##   * the army formation (the Bone Ring, the only one): the summary has an
+##     "army formation" line (time, kills, army damage taken, hard recalls
+##     and the unit spread).
 ##   * forced spawns: --spawn=kind@T[xN],... spawns N enemies of any kind
 ##     (Graveyard, Crimson March or Sanctum data) in an arc on the spawn ring
 ##     at T game seconds, on any stage (a test hook for new kinds). The
@@ -386,8 +384,6 @@ var _end_blocked_seen: int = 0
 var _overtime_seen: Dictionary = {}
 ## Item id -> true for the --spells spells and their evolution passives.
 var _forced: Dictionary = {}
-## Army-stance driver (forced --stance, or the bot's switching rule).
-var _stance_bot: StanceBot = StanceBot.new()
 ## --spawn entries sorted by time ({"kind", "time", "count"}).
 var _spawns: Array[Dictionary] = []
 ## Index of the next --spawn entry to run.
@@ -462,7 +458,6 @@ func step(delta: float) -> void:
 	while _next_spawn < _spawns.size() and game.elapsed >= float(_spawns[_next_spawn]["time"]):
 		_forced_spawn(_spawns[_next_spawn])
 		_next_spawn += 1
-	_stance_bot.step(game)
 	if _start_max_hp < 0.0:
 		_start_max_hp = game.player.max_hp
 	var wards := int(game.stats.get("priest_wards", 0.0))
@@ -1142,7 +1137,7 @@ func finish(summary: Dictionary) -> void:
 	_print_class_specials(st)
 	print("[autotest] special evolutions: %s" % SpecialEvolutions.summary_line(game))
 	_print_abilities(st)
-	print("[autotest] army stance (%s): %s" % [StanceBot.mode(), game.stance.summary_line()])
+	print("[autotest] army formation: %s" % game.stance.summary_line())
 	print("[autotest] character: %s" % game.innates.summary_line())
 	print("[autotest] stuck_units=%d (touching an obstacle: %d) %s" % [_stuck_units, _stuck_at_obstacle, str(_stuck_by)])
 	print("[metric] boss_hp_at_0=%d min_hp_before_0=%d" % [int(_boss_hp_at_0), int(_min_hp)])

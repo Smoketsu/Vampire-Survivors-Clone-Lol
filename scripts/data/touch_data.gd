@@ -135,25 +135,6 @@ const BUTTONS: Dictionary = {
 ## Draw order of the buttons.
 const BUTTON_ORDER: Array[String] = ["dash", "ultimate", "toggle_aim", "pause"]  # TUNING (not in GDD) mobile
 
-# --- Stance rose (above Grave Step) ------------------------------------------------------
-
-## Centre of the four-way stance rose, CSS px from the bottom-right corner.
-const ROSE_CENTRE := Vector2(80.0, 172.0)  # TUNING (not in GDD) mobile
-## Distance (CSS px) from the rose centre to each stance icon's centre.
-const ROSE_OFFSET: float = 30.0  # TUNING (not in GDD) mobile
-## Half size (CSS px) of one stance icon face.
-const ROSE_HALF: float = 15.0  # TUNING (not in GDD) mobile
-## Radius (CSS px) of the rose's hit area: a finger in it picks the stance of
-## its quarter (a 90 degree wedge, about 50 CSS px across at mid radius).
-const ROSE_HIT: float = 60.0  # TUNING (not in GDD) mobile
-## Fingers closer than this to the rose centre (CSS px) pick nothing.
-const ROSE_DEAD: float = 8.0  # TUNING (not in GDD) mobile
-## Stance id -> direction of its icon in the rose: the same directions as the
-## controller's right-stick flicks (project.godot), so both read alike.
-const ROSE_DIRS: Dictionary = {
-	"escort": Vector2.UP, "onslaught": Vector2.RIGHT, "spearhead": Vector2.DOWN, "bone_ring": Vector2.LEFT,
-}
-
 # --- HUD room -----------------------------------------------------------------------------
 
 ## While the touch controls show, the HUD's top-right block (kills,

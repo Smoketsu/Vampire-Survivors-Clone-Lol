@@ -10,8 +10,8 @@
 ## a volley hit as that class's or spell's own. A volley lands at most
 ## VolleyData.BOSS_HITS_PER_VOLLEY hits on bosses and minibosses.
 ## Off (Game.volleys_on false: the Volleys setting, or --volleys=off) every entry point
-## returns at once and nothing here runs, draws or touches the RNG: the game is exactly as
-## before the pass. Deterministic per seed: every pattern is fixed math on the volley
+## returns at once and nothing here runs, draws or touches the RNG: the game without the
+## pass. Deterministic per seed: every pattern is fixed math on the volley
 ## counter (rain landing points on a golden-angle spiral), never an RNG.
 class_name VolleyDirector
 extends Node2D
@@ -76,6 +76,29 @@ var _tmp2: Array = []
 ## Style names, in style-index order (drawing).
 const STYLES: Array[String] = ["shard", "orb", "dagger", "spark", "note", "feather", "wave"]
 
+# --- Art and bursts (drawing only; GDD §15.0 "Volley art") ------------------------------
+
+## Shot mask texture per style index (VolleyData.ART_DIR; null = no art, code shape).
+var _art: Array = []
+## True when the impact burst strip exists (VolleyData.HIT_ANIM).
+var _has_hit_art: bool = false
+## True when the launch flash strip exists (VolleyData.FLASH_ANIM).
+var _has_flash_art: bool = false
+## Burst ring buffer (VolleyData.FX_CAP slots): centre (world px).
+var _fx_pos := PackedVector2Array()
+## Burst game time of birth (s; -1 = empty slot).
+var _fx_t0 := PackedFloat32Array()
+## Burst diameter (px).
+var _fx_size := PackedFloat32Array()
+## Burst tint.
+var _fx_col := PackedColorArray()
+## Burst kind: 0 = impact (HIT_ANIM), 1 = launch flash (FLASH_ANIM).
+var _fx_kind := PackedInt32Array()
+## Next burst slot to write (the oldest is replaced).
+var _fx_next: int = 0
+## Game time (s) until which some burst is still playing (keeps redrawing).
+var _fx_until: float = 0.0
+
 # --- Statistics (autotest volleys line) -------------------------------------------------
 
 ## Shots fired.
@@ -115,6 +138,13 @@ func _init() -> void:
 	for i in n:
 		_free[i] = n - 1 - i
 	_boss_hits.resize(VolleyData.VOLLEY_SLOTS)
+	var f := VolleyData.FX_CAP  # Burst slots.
+	_fx_pos.resize(f)
+	_fx_t0.resize(f)
+	_fx_size.resize(f)
+	_fx_col.resize(f)
+	_fx_kind.resize(f)
+	_fx_t0.fill(-1.0)
 
 
 ## Called once by Game after the run's systems exist: reads the switch.
@@ -126,6 +156,13 @@ func setup(p_game: Game) -> void:
 	var mat := CanvasItemMaterial.new()
 	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	material = mat
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR  # The masks are scaled smoothly (effects art).
+	if not on or DisplayServer.get_name() == "headless":
+		return  # Nothing is drawn: no art to load.
+	for st: String in STYLES:
+		_art.append(SpriteBank.texture(VolleyData.ART_DIR + st))
+	_has_hit_art = SpriteBank.has_anim(VolleyData.HIT_ANIM)
+	_has_flash_art = SpriteBank.has_anim(VolleyData.FLASH_ANIM)
 
 
 # =====================================================================================
@@ -211,6 +248,8 @@ func step(delta: float) -> void:
 		return
 	_step_spells(delta)
 	if alive == 0:
+		if game.elapsed < _fx_until:
+			queue_redraw()  # The last bursts are still playing.
 		return
 	var n := VolleyData.SHOT_CAP
 	for i in n:
@@ -417,6 +456,9 @@ func _fire(v: Dictionary, from: Vector2, aim: Vector2, base_damage: float, sourc
 		alive += 1
 	shots_fired += n
 	peak_alive = maxi(peak_alive, alive)
+	if _has_flash_art:
+		var at := aim if pattern == "rain" else from  # The rain flashes where it lands.
+		_burst(1, at, minf(VolleyData.FLASH_MAX, VolleyData.FLASH_BASE + VolleyData.FLASH_PER_SHOT * float(n)), v["color"])
 
 
 ## Up to `n` enemies nearest to `from` (within the spell range), `first` first if given.
@@ -456,6 +498,8 @@ func _collide(i: int) -> void:
 		var key := _src[i]
 		var dealt := game.combat.damage_enemy(e, _dmg[i], key)
 		hits += 1
+		if _has_hit_art:
+			_burst(0, p.lerp(e.position, 0.35), clampf(r * VolleyData.DRAW_SCALE * VolleyData.HIT_SIZE, VolleyData.HIT_MIN, VolleyData.HIT_MAX), _col[i])
 		var cls := String(SynergyData.SOURCE_CLASS.get(key, key))  # Class (or spell) the damage counts for.
 		dmg_by[cls] = float(dmg_by.get(cls, 0.0)) + dealt
 		_last_hit[i] = e
@@ -474,11 +518,25 @@ func _kill(i: int) -> void:
 	alive -= 1
 
 
-## Clears every shot (run end).
+## Records one burst (drawing only; kind 0 impact, 1 launch flash) in the ring buffer.
+func _burst(kind: int, at: Vector2, size: float, col: Color) -> void:
+	var j := _fx_next  # Slot written (the oldest burst).
+	_fx_next = (_fx_next + 1) % VolleyData.FX_CAP
+	_fx_pos[j] = at
+	_fx_t0[j] = game.elapsed
+	_fx_size[j] = size
+	_fx_col[j] = col
+	_fx_kind[j] = kind
+	_fx_until = maxf(_fx_until, game.elapsed + maxf(VolleyData.HIT_TIME, VolleyData.FLASH_TIME))
+
+
+## Clears every shot and burst (run end).
 func clear() -> void:
 	for i in VolleyData.SHOT_CAP:
 		if _life[i] > 0.0:
 			_kill(i)
+	_fx_t0.fill(-1.0)
+	_fx_until = 0.0
 	queue_redraw()
 
 
@@ -487,9 +545,12 @@ func clear() -> void:
 # =====================================================================================
 
 func _draw() -> void:
-	if not on or alive == 0:
+	if not on:
 		return
-	var reduced := Settings.reduced_effects()  # Phones: draw at most DRAW_CAP_REDUCED.
+	var reduced := Settings.reduced_effects()  # Phones: draw fewer shots and bursts.
+	_draw_bursts(reduced)
+	if alive == 0:
+		return
 	var drawn := 0
 	for i in VolleyData.SHOT_CAP:
 		if _life[i] <= 0.0:
@@ -503,10 +564,15 @@ func _draw() -> void:
 		var c := _col[i]
 		var r := _rad[i] * VolleyData.DRAW_SCALE  # Drawn size (px).
 		var dir := v.normalized() if v.length() > 0.01 else Vector2.RIGHT
+		var style := STYLES[_style[i]]  # Look of this shot.
+		var tex: Texture2D = _art[_style[i]] if _style[i] < _art.size() else null  # Its mask, or null.
+		if tex != null:
+			_draw_art(tex, style, p, dir, r, c)
+			continue
 		var tail := p - v * (VolleyData.TRAIL / 60.0)  # Trail start.
 		var glow := Color(c, VolleyData.GLOW_ALPHA)
 		var core := Color(c, VolleyData.CORE_ALPHA)
-		match STYLES[_style[i]]:
+		match style:
 			"shard":
 				draw_line(tail, p, glow, r * 1.6)
 				draw_line(p - dir * r * 2.2, p + dir * r * 0.8, core, maxf(1.5, r * 0.7))
@@ -525,8 +591,47 @@ func _draw() -> void:
 				draw_line(tail, p, glow, r * 1.5)
 				draw_circle(p, r * VolleyData.GLOW * 0.75, glow)
 				draw_circle(p, r * 0.8, core)
-				if STYLES[_style[i]] == "spark":
+				if style == "spark":
 					draw_circle(p, r * 0.35, Color(1, 1, 1, 0.8))
+
+
+## Draws one shot from its tint mask: a soft glow, then the mask rotated along the
+## flight path (pointing right in the file), its head on the shot, tinted with the
+## shot's colour lightened toward white.
+func _draw_art(tex: Texture2D, style: String, p: Vector2, dir: Vector2, r: float, c: Color) -> void:
+	var w := float(tex.get_width())  # Mask width (px).
+	var h := float(tex.get_height())  # Mask height (px).
+	var length := r * float(VolleyData.ART_LEN.get(style, 5.0))  # Drawn longest side (px).
+	var k := length / maxf(w, h)  # Mask px -> world px.
+	var size := Vector2(w, h) * k  # Drawn size (px).
+	draw_circle(p, minf(r * VolleyData.ART_GLOW, VolleyData.ART_GLOW_MAX), Color(c, VolleyData.ART_GLOW_ALPHA))
+	draw_set_transform(p - dir * size.x * VolleyData.ART_LEAD, dir.angle(), Vector2.ONE)
+	draw_texture_rect(tex, Rect2(-size * 0.5, size), false, Color(c.lerp(Color.WHITE, VolleyData.ART_WHITEN), VolleyData.ART_ALPHA))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+## Draws the impact bursts and launch flashes still playing (newest last).
+func _draw_bursts(reduced: bool) -> void:
+	if game.elapsed >= _fx_until:
+		return
+	var drawn := 0  # Bursts drawn (Reduced effects cap).
+	for n in VolleyData.FX_CAP:
+		var j := (_fx_next + n) % VolleyData.FX_CAP  # Oldest first.
+		var t0 := _fx_t0[j]
+		if t0 < 0.0:
+			continue
+		var dur := VolleyData.HIT_TIME if _fx_kind[j] == 0 else VolleyData.FLASH_TIME  # Burst length (s).
+		var prog := (game.elapsed - t0) / dur  # 0..1 through the strip.
+		if prog >= 1.0 or prog < 0.0:
+			continue
+		if reduced:
+			drawn += 1
+			if drawn > VolleyData.FX_DRAW_REDUCED:
+				return
+		var hit := _fx_kind[j] == 0  # An impact (else a launch flash).
+		var c := _fx_col[j].lerp(Color.WHITE, VolleyData.ART_WHITEN) if hit else _fx_col[j]  # Impacts burn hot, flashes keep the class colour.
+		SpriteBank.draw_anim(self, VolleyData.HIT_ANIM if hit else VolleyData.FLASH_ANIM, _fx_pos[j], _fx_size[j], prog,
+				VolleyData.HIT_ALPHA if hit else VolleyData.FLASH_ALPHA, c)
 
 
 # =====================================================================================

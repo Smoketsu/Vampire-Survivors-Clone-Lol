@@ -13,9 +13,9 @@
 ##   ash  = floor(raw * (1 + Ash Harvest bonus))
 ## A strong 20-minute run (~3,000 kills, ~15 elites, boss slain, ~30 s of
 ## Reckoning) earns roughly 150 + 90 + 60 + 75 + 75 = ~450 ash: two or three
-## mid-tier purchases. Every upgrade maxed costs 9,835 (Oath excluded; 8,965 before the
-## two Grave Step upgrades and the Spearhead stance unlock; max_total_cost() adds the
-## Oath's 375), i.e. about 22 good runs (very roughly 17-28 with weaker runs and Ash Harvest).
+## mid-tier purchases. Every upgrade maxed costs 9,635 (Oath excluded; 8,965 before the
+## two Grave Step upgrades; max_total_cost() adds the Oath's 375), i.e. about 21 good
+## runs (very roughly 16-27 with weaker runs and Ash Harvest).
 ##
 ## Four upgrade trees (GDD §9.2 table):
 ##   Necromancy  — minion cap, health and damage (+ replacement speed)
@@ -35,9 +35,9 @@
 ##                 ACTIVE tier in the Ossuary for free (owned tiers stay owned,
 ##                 Meta.oath_active), and the autotest profiles never include
 ##                 it (use --oath=N).
-## Unlocks (owner decision: the Spearhead army stance is bought here,
-## StanceData): an upgrade whose stat has the "unlock" format is a one-tier
-## purchase that switches something on; MetaModifiers.unlocks() reads it.
+## Unlocks: an upgrade whose stat has the "unlock" format is a one-tier
+## purchase that switches something on; MetaModifiers.unlocks() reads it (none
+## is on sale since the Spearhead stance was retired, RETIRED_REFUNDS).
 ## Each upgrade raises ONE modifier stat (STATS) by `per_tier` per tier.
 ## Costs rise per tier. `requires` names a prerequisite inside the same tree
 ## ({} = none). MetaModifiers sums the stats; the game's stat code reads them.
@@ -107,7 +107,6 @@ const TREES := {
 ##   rerolls, banishes            AbilityManager.setup (added to LevelUpData)
 ##   oath_tier                    DifficultyModifiers.oath_tier (Profane Oath)
 ##   dash_charges, dash_cooldown  GraveStep._ready (Grave Step dash)
-##   stance_spearhead             ArmyStance.is_unlocked (MetaModifiers.unlocks)
 const STATS := {
 	"oath_tier": ["Oath tier", "int"],
 	"minion_hp": ["Minion HP", "pct"],
@@ -129,7 +128,6 @@ const STATS := {
 	"banishes": ["Banishes per run", "int"],
 	"dash_charges": ["Grave Step charges", "int"],
 	"dash_cooldown": ["Grave Step cooldown", "neg_pct"],
-	"stance_spearhead": ["Spearhead", "unlock"],
 }
 
 # --- Upgrades ----------------------------------------------------------------------
@@ -141,8 +139,12 @@ const UPGRADE_ORDER := [
 	"grave_flesh", "bone_mail", "fleet_shade", "undying_will", "twin_shadow",
 	"soul_magnet", "grave_tithe", "ash_harvest", "fates_thread", "banishing_rite",
 	"profane_oath",
-	"spearhead_doctrine",
 ]
+## Retired upgrades (no longer sold) -> the Soul Ash a save that owns one gets back on its
+## next load (MetaProgress.load_save(); the key is not written again, so it is paid once).
+##   spearhead_doctrine: unlocked the Spearhead army stance, gone since the Bone Ring became
+##   the only formation (GDD §15.0 "Bone Ring is the only formation").
+const RETIRED_REFUNDS := {"spearhead_doctrine": 200}  # TUNING (not in GDD) = its old price
 
 ## Upgrade definitions.
 ##   tree         — TREES key.
@@ -229,12 +231,6 @@ const UPGRADES := {
 	"banishing_rite": {"tree": "fortune", "display_name": "Banishing Rite", "icon": "banishing_rite",
 		"description": "Cast one more offer into the void: +1 level-up banish per run.",
 		"stat": "banishes", "per_tier": 1.0, "costs": [150, 310], "requires": {"id": "fates_thread", "tier": 1}},  # TUNING (not in GDD)
-	# Army stances (owner decision: Spearhead is unlocked in the Ossuary;
-	# Escort, Onslaught and Bone Ring are available from the first run).
-	# Priced like a mid-tier Necromancy purchase (Grave Call III, Risen Vanguard I-II).
-	"spearhead_doctrine": {"tree": "necromancy", "display_name": "Spearhead Doctrine", "icon": "stance_spearhead",
-		"description": "Teach your horde the wedge: unlocks the Spearhead army stance (key 3 / right stick down).",
-		"stat": "stance_spearhead", "per_tier": 1.0, "costs": [200], "requires": {}},  # TUNING (not in GDD)
 }
 
 # --- Achievements (GDD §9.4) ---------------------------------------------------------

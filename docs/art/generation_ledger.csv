@@ -432,3 +432,12 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-15 14:53,icons/call_of_the_grave,gpt-image-2.5-flare,medium,1024x1024,1,423,560,439,0.0198,src_icon_call.png
 2026-10-15 14:53,structures/bone_wall_sheet,gpt-image-2.5-flare,medium,1536x1024,1,533,720,343,0.0187,src_bone_walls.png
 2026-10-15 14:57,projectiles/corpse_boulder,gpt-image-2.5-flare,medium,1536x1024,1,513,1155,343,0.0221,src_boulders.png
+2026-10-18 05:46,volleys/feather,gpt-image-2.5-flare,medium,1024x1024,2,236,2476,439,0.0342,feather.png
+2026-10-18 05:46,volleys/dagger,gpt-image-2.5-flare,medium,1024x1024,2,251,2476,439,0.0342,dagger.png
+2026-10-18 05:46,effects/volley_hit,gpt-image-2.5-flare,medium,1536x1024,2,278,1959,343,0.0274,hit.png
+2026-10-18 05:46,volleys/note,gpt-image-2.5-flare,medium,1024x1024,2,249,2476,439,0.0342,note.png
+2026-10-18 05:46,volleys/orb,gpt-image-2.5-flare,medium,1024x1024,2,239,2476,439,0.0342,orb.png
+2026-10-18 05:46,volleys/shard,gpt-image-2.5-flare,medium,1024x1024,2,253,2476,439,0.0342,shard.png
+2026-10-18 05:46,volleys/wave,gpt-image-2.5-flare,medium,1024x1024,2,252,2476,439,0.0342,wave.png
+2026-10-18 05:46,effects/volley_muzzle,gpt-image-2.5-flare,medium,1536x1024,2,292,1959,343,0.0274,muzzle.png
+2026-10-18 05:46,volleys/spark,gpt-image-2.5-flare,medium,1024x1024,2,237,2476,439,0.0342,spark.png

@@ -63,13 +63,11 @@ const RESET_SIZE := Vector2(200, 40)  # TUNING (not in GDD)
 const GROUPS: Array = [
 	["Move", ["move_up", "move_down", "move_left", "move_right"]],  # TUNING (not in GDD)
 	["Actions", ["toggle_aim", "dash", "ultimate", "pause"]],  # TUNING (not in GDD)
-	["Stances", ["stance_escort", "stance_onslaught", "stance_spearhead", "stance_bone_ring"]],  # TUNING (not in GDD)
 ]
 ## Short row labels (the group names say the rest: "Up" under Move).
 const SHORT_LABELS: Dictionary = {
 	"move_up": "Up", "move_down": "Down", "move_left": "Left", "move_right": "Right",  # TUNING (not in GDD)
 	"toggle_aim": "Bolt aim", "dash": "Grave Step", "ultimate": "Dread Rally", "pause": "Pause",  # TUNING (not in GDD)
-	"stance_escort": "Escort", "stance_onslaught": "Onslaught", "stance_spearhead": "Spearhead", "stance_bone_ring": "Bone Ring",  # TUNING (not in GDD)
 }
 ## Caption of a binding button while it waits for a key.
 const LISTENING: String = "..."  # TUNING (not in GDD)

@@ -123,15 +123,6 @@ func _rebuild_info() -> void:
 	var army := RunBuild.army(game)
 	var army_row := RunBuild.army_row(army, InRunUiData.PAUSE_ICON)
 	_build_line(grid, "Army", army_row, army.is_empty())
-	_info_box.add_child(UiTheme.divider("violet"))
-	_info_box.add_child(RunBuild.caption("Army stance"))
-	var stances := GridContainer.new()  # 2 x 2 stance tiles.
-	stances.columns = 2
-	stances.add_theme_constant_override("h_separation", 8)
-	stances.add_theme_constant_override("v_separation", 6)
-	_info_box.add_child(stances)
-	for i in StanceData.ORDER.size():
-		stances.add_child(_stance_tile(i))
 
 
 ## The summary's first row: the stage name and the countdown (or the
@@ -169,63 +160,6 @@ func _build_line(grid: GridContainer, title: String, row: Control, empty: bool) 
 		grid.add_child(none)
 	else:
 		grid.add_child(row)
-
-
-## The compact tile of stance `i` (StanceData.ORDER): icon, name over its
-## tagline, and the key / pad chip; framed in the stance colour while it is
-## the active one, dimmed with a padlock while locked.
-func _stance_tile(i: int) -> Control:
-	var id: String = StanceData.ORDER[i]
-	var d := StanceData.def(id)
-	var active := game.stance != null and game.stance.current == id  # The stance in force.
-	var locked := game.stance != null and not game.stance.is_unlocked(id)  # Needs its Ossuary unlock.
-	var tile := PanelContainer.new()
-	tile.add_theme_stylebox_override("panel", UiTheme.style("button", "soul" if active else "dim"))
-	tile.tooltip_text = String(d["description"])
-	tile.mouse_filter = Control.MOUSE_FILTER_PASS
-	tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tile.add_child(row)
-	var icon := StanceIcon.new(String(d["icon"]), locked)
-	icon.custom_minimum_size = Vector2(InRunUiData.PAUSE_STANCE_ICON, InRunUiData.PAUSE_STANCE_ICON)
-	row.add_child(icon)
-	var texts := VBoxContainer.new()
-	texts.add_theme_constant_override("separation", -2)
-	texts.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	texts.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_child(texts)
-	var col: Color = (d["color"] as Color).lightened(0.3) if not locked else UiTheme.TEXT_DIM
-	texts.add_child(UiTheme.tier_label(String(d["display_name"]), UiTheme.Tier.BODY, col))
-	var tag := "Locked" if locked else String(InRunUiData.STANCE_TAGLINES.get(id, ""))
-	texts.add_child(UiTheme.tier_label(tag, UiTheme.Tier.BODY, UiTheme.TEXT_DIM.darkened(0.15)))
-	var chip := InputHints.chip(StanceData.ACTIONS[i])
-	row.add_child(chip)
-	return tile
-
-
-## A stance icon (icon art through Glyphs.draw_icon), dark with a padlock
-## when locked.
-class StanceIcon:
-	extends Control
-	## Icon kind (StanceData "icon").
-	var kind: String = ""
-	## True when the stance still needs its Ossuary unlock.
-	var locked: bool = false
-
-	func _init(p_kind: String, p_locked: bool) -> void:
-		kind = p_kind
-		locked = p_locked
-		mouse_filter = Control.MOUSE_FILTER_IGNORE
-		size_flags_vertical = Control.SIZE_SHRINK_CENTER
-
-	func _draw() -> void:
-		var r := Rect2(Vector2.ZERO, size)
-		Glyphs.draw_icon(self, kind, r)
-		if locked:
-			draw_rect(r, Color(0, 0, 0, 0.62))
-			StanceGlyphs.draw_lock(self, r.get_center(), r.size.x * 0.42)
 
 
 ## Adds a full-width button to `parent`.

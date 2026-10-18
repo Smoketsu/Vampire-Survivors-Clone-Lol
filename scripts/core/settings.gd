@@ -37,15 +37,12 @@ signal changed
 ## Settings file location.
 const PATH: String = "user://settings.cfg"
 ## Actions the player may rebind (keyboard primary key only), in menu order.
-## (`dash` = Grave Step, `ultimate` = Dread Rally, GDD §5.5; `stance_*` = the army stances.)
-const REBINDABLE: Array = ["move_up", "move_down", "move_left", "move_right", "toggle_aim", "dash", "ultimate", "pause",
-	"stance_escort", "stance_onslaught", "stance_spearhead", "stance_bone_ring"]
+## (`dash` = Grave Step, `ultimate` = Dread Rally, GDD §5.5.)
+const REBINDABLE: Array = ["move_up", "move_down", "move_left", "move_right", "toggle_aim", "dash", "ultimate", "pause"]
 ## Menu labels for REBINDABLE actions.
 const ACTION_LABELS: Dictionary = {"move_up": "Move up", "move_down": "Move down", "move_left": "Move left",
 	"move_right": "Move right", "toggle_aim": "Shadow Bolt aim", "dash": "Grave Step (dash)",
-	"ultimate": "Dread Rally (ultimate)", "pause": "Pause",
-	"stance_escort": "Stance: Escort", "stance_onslaught": "Stance: Onslaught", "stance_spearhead": "Stance: Spearhead",
-	"stance_bone_ring": "Stance: Bone Ring"}
+	"ultimate": "Dread Rally (ultimate)", "pause": "Pause"}
 ## fullscreen_mode(): the Settings screen shows the Fullscreen toggle.
 const FULLSCREEN_TOGGLE: int = 0
 ## fullscreen_mode(): already fullscreen (home-screen launch), no row at all.

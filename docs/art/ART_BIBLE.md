@@ -682,6 +682,39 @@ right, trail to the left), transparent background. Art px = the longest side (`S
 | `enemy_arrow.png` | Covenant arrow: an ivory shaft with a gold head | 20 | done |
 | `radiant_bolt.png` | Covenant holy bolt: a gold and holy-white spark | 20 | done |
 
+### Volley shots and bursts (`assets/sprites/volleys/`, two `effects/` strips)
+
+The bullet heaven pass (GDD §15.0 "Bullet heaven pass" and "Volley art") fires hundreds of shots at
+once, in every class's colour, so its art breaks the palette rule on purpose: each file is a **grey
+tint mask** (white = the hot core, stepped greys = glow and trail, binary alpha, no hue). The game
+multiplies it by the shot's colour (lightened 30% toward white for a hot core, `VolleyData.ART_WHITEN`)
+and draws it **additively** with linear filtering, so one image serves all twelve classes, their
+evolutions and the spell echoes. Shots point **right** (head right, trail left) and include their own
+trail. Converted with `tools/volley_art.py` (crop, scale to 40 px on the longest side, 72 for the
+wave, 5 stepped greys, binary alpha; strips: frames split at the transparent gaps, centred on their
+alpha centroid in one shared square, 64 px frames). Sizes and timing are in `scripts/data/volley_data.gd`
+(`ART_*`, `HIT_*`, `FLASH_*`); without a file the code shapes stay.
+
+| File | Subject | Stored px | Used by | Status |
+|---|---|---|---|---|
+| `volleys/shard.png` | A jagged bone splinter with a crackling comet trail and two flying sparks | 40×14 | Warrior, Archer, Warder, Frost Wraith, catapult and spell shards | done |
+| `volleys/orb.png` | A blazing orb with a ring halo, two orbiting motes and a flared tail | 40×21 | Abomination / Colossus chunks, Bone Hound / Hellhound wolves, Bishop / Profane Bishop orbs, spell orbs | done |
+| `volleys/dagger.png` | A spectral thrown dagger with speed streaks and a star glint on the tip | 40×15 | Rogue, Shadow Reaper | done |
+| `volleys/spark.png` | A four-pointed starburst with lightning arcs and a short tail | 40×22 | Mage forks, Mender seekers, Lich spiral, spell sparks | done |
+| `volleys/note.png` | A bright sound-wave crescent with two fading echo arcs | 40×31 | Banshee, Keening Lady | done |
+| `volleys/feather.png` | A pointed stone feather dart with a wispy trail | 40×15 | Gargoyle, Cathedral Horror | done |
+| `volleys/wave.png` | A broad crescent sword slash, white edge, streaks behind | 72×50 | Death Knight showpiece | done |
+| `effects/volley_hit.png` | Impact: a white-hot starburst, then a ring breaking into sparkles (6 frames) | 64 | every volley hit, tinted with the shot | done |
+| `effects/volley_flash.png` | Launch: a rune ring flaring open with rays, then spinning into motes (6 frames) | 64 | every volley fired (at the landing point for a rain), at 45% opacity | done |
+
+**How it was made** (Oct 2026, `tools/gen_image.py`, 9 images, about $0.29): one prompt per shot
+(1024×1024, "ONLY pure white and light-to-mid greys: the game tints it") and one 6-frame sheet each for
+the impact and the launch flash (1536×1024, the effects-sheet prompt above with the same colour line),
+references `art_source/projectiles/shadow_bolt.png` and `art_source/effects/shadow_blast.png`
+(`bolt_impact.png` for the sheets). Every image was used as it came. First in-game look: the launch
+flashes at full opacity stacked over a 45-unit ring into a white blob, so they draw at 45%, and the
+sword wave's glow halo is capped at 12 px.
+
 ### Icons (`assets/sprites/icons/`, 32×32 art px)
 
 Square **badge icons** for level-up cards, the HUD ability bar and buff timers: a **dark cut-corner square
@@ -780,10 +813,6 @@ stone wing, ice, wail) meeting its finisher's (sword, boulder, dagger, hound sku
 | `blood_scent.png` | A blood drop with bone-white speed streaks (one crimson accent is fine) |
 | `mournsong.png` | A pale weeping spectral face with two teal notes |
 | `siegecraft.png` | A cracked grey tower struck by a bone boulder |
-| `stance_escort.png` | Army stance Escort (HUD stance bar): a teal guard arc of bone escorts sheltering a small violet necromancer mark |
-| `stance_onslaught.png` | Army stance Onslaught: three flame arrows bursting outward from a small violet mark |
-| `stance_spearhead.png` | Army stance Spearhead (also its Ossuary unlock): a V-wedge of bone pointing up, the violet mark behind its tip |
-| `stance_bone_ring.png` | Army stance Bone Ring: a closed ring of bone around a small violet mark |
 | `profane_pact.png` | Torn scroll with a crimson seal (the curse: the one icon allowed crimson) |
 | `powerup_magnet.png` | Teal soul vortex |
 | `powerup_feast.png` | Roasted meat on a bone |

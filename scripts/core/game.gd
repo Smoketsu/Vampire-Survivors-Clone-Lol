@@ -32,9 +32,8 @@
 ## requested from _unhandled_input(), so they only fire while PLAYING.
 ## On a phone or tablet the same actions come from TouchControls (added to
 ## the UI layer outside the autotest), which injects them as input events.
-## Army stances (StanceData): `stance` (ArmyStance) holds the army's stance
-## for this run (Escort at the start, so Restart resets it); the stance keys
-## and right-stick flicks reach it from _unhandled_input() while playing.
+## The army formation (StanceData): `stance` (ArmyStance) holds the Bone Ring's numbers
+## for this run (the only formation; there is no switching).
 ## Playable characters (CharacterData): `character` (CharacterModifiers,
 ## built once from run_config.character_id) is the one character path: the
 ## starting spell, the stat modifiers (applied once, after the Soul Ash
@@ -149,15 +148,13 @@ var meta: MetaModifiers
 var grave_step: GraveStep
 ## The necromancer's ultimate (Dread Rally: soul meter, army buff).
 var dread_rally: DreadRally
-## The army's stance this run (ArmyStance; never null once _ready ran).
+## The army's formation this run (ArmyStance, always the Bone Ring; never null once _ready ran).
 var stance: ArmyStance
 ## The playable character of this run (CharacterModifiers; never null).
 var character: CharacterModifiers
 ## The character's innate passive (CharacterInnates; every hook is a no-op
 ## for a character without one).
 var innates: CharacterInnates
-## Faint ground outline of the army's shape after a stance change.
-var stance_outline: StanceOutline
 ## What this run has met for the Codex (CodexLog; never null once _ready
 ## ran; records only, never changes gameplay).
 var codex: CodexLog
@@ -227,9 +224,6 @@ func _ready() -> void:
 	add_child(chests)
 	effects = EffectManager.new()
 	add_child(effects)
-	stance_outline = StanceOutline.new()
-	stance_outline.game = self
-	add_child(stance_outline)
 	motion = MotionDirector.new()  # Before the horde and enemies: dissolving bodies sit under the living.
 	motion.game = self
 	add_child(motion)
@@ -365,8 +359,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("ultimate") and run_state == RunState.PLAYING:
 		dread_rally.request()
-		get_viewport().set_input_as_handled()
-	elif run_state == RunState.PLAYING and stance.handle_input(event):
 		get_viewport().set_input_as_handled()
 
 
