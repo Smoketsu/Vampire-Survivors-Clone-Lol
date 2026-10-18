@@ -1249,6 +1249,7 @@ kept outside the repository; the sources are in `art_source/`.
 | `icons/salt_of_the_deep.png` | salt crystals and a violet spark (violet badge) | 32 | |
 | `icons/brinewalker.png` | a boot on a wave (violet badge) | 32 | |
 | `icons/ach_low_tide.png` | a crescent moon over calm water with an anchor (gold achievement badge) | 32 | |
+| `effects/tide_splash.png` | a splash of sea water spreading into a foam ring (6 frames) | 128 frames | `--anim --grid 3x2`; `AnimData` "tide_splash" (0.4 s, the `impact()` duration): Deep Kin landings, the Harbourmaster's anchor, Merrow's wave and whirl, a buoy sinking |
 
 The water itself is not art: `scripts/fx/tide_water.gdshader` draws it (flat teal bands on a 2 px
 grid, the foam line, sparse glints, the seawall lip and the surge telegraph). The Undertow wave,

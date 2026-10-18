@@ -320,14 +320,14 @@ and **the Seawall** (5:00, high tide). Abbot Merrow arrives with 3:00 left.
 - **The tide** (`TideDirector`). The town floods more each zone (about 4% of the ground at the
   start, 40% in the Chapel); in the Seawall only a long strip of dry stone stays above water.
   **Water slows everyone in it by 25%**: you, your dead and the cultists alike, except the
-  Deep Kin, the Harbourmaster, the Heralds and Merrow, who swim. Every 4 minutes (from 5:30) a
+  Deep Kin, the Harbourmaster, the Heralds and Merrow, who swim. Every 4 minutes (from 14:30) a
   **tide surge** is telegraphed (a band with drifting chevrons), then a wave sweeps along it,
   shoving everything it passes and flooding the band for a while. At the Reckoning the sea
   takes everything but the seawall's top.
-- **Bell buoys** (2:30, optional). Three buoys out on the flats toll up small squads while you
+- **Bell buoys** (17:30, optional). Three buoys out on the flats toll up small squads while you
   are near; each one you sink makes every later scripted wave 12% smaller and the trickle 5%
   thinner.
-- **Smugglers' caches** (6:00 and 11:40). Locked crates at the end of dry piers (a narrow lane
+- **Smugglers' caches** (14:00 and 8:20). Locked crates at the end of dry piers (a narrow lane
   out into the water); break one and it drops a treasure chest.
 - **The Eye's kinds.** **Deep Kin** (a bruiser: a telegraphed leap onto your front rank),
   **Tide Callers** (fishwives who raise a line of water that throws your dead back),

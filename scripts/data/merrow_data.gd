@@ -41,7 +41,7 @@ const CHANGED_SPECIALS := ["lash", "whirl"]
 ## Abbot Merrow's design row.
 const BOSS := {
 	"display_name": "Abbot Silas Merrow, Voice of the Deep",
-	"max_hp": 22000.0,  # TUNING (not in GDD) x the stage HP multiplier (25,300 at Gullhaven); Seraphine 21,000, Vael 19,200
+	"max_hp": 26000.0,  # TUNING (not in GDD) x the stage HP multiplier (29,900 at Gullhaven); Seraphine 21,000, Vael 19,200. At 22,000 a good army killed him in 63-75 s (6 seeds): raised toward the 1-2 min target
 	"move_speed": 46.0,  # TUNING (not in GDD) robed; The Change raises it (change_speed_mult)
 	"damage": 12.0,  # TUNING (not in GDD) a blow in reach
 	"attack_interval": 1.1,  # TUNING (not in GDD) s

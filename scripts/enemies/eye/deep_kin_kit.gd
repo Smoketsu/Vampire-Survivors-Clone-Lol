@@ -112,7 +112,7 @@ func _land(e: Enemy) -> void:
 	var g := e.game
 	var r := float(d["leap_radius"])
 	var mult := hit_scale(e)  # Time scaling x aura buff x Dirge.
-	g.effects.impact(to, r, Palette.EYE_DROWNED)
+	g.effects.impact(to, r, Palette.EYE_DROWNED, "tide_splash")
 	Sfx.play("abom_stomp", to, 1.2)
 	var hits := 0  # Summons inside the circle.
 	g.ally_grid.query(to, r + UnitData.MAX_BLOCK_RADIUS, _tmp)

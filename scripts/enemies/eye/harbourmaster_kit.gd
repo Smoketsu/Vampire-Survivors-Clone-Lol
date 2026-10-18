@@ -216,7 +216,7 @@ func _hurl_tick(e: Enemy, from: float, to: float) -> bool:
 		return false
 	var mult := hit_scale(e)  # Time scaling x aura buff x Dirge.
 	var beside := e.position + dir * (e.radius + 14.0)  # Where the reeled body lands.
-	g.effects.impact(best.position, 26.0, Palette.EYE_DROWNED)
+	g.effects.impact(best.position, 26.0, Palette.EYE_DROWNED, "tide_splash")
 	Sfx.play("boss_impact", best.position, 1.2)
 	if best is SummonedUnit:
 		var u := best as SummonedUnit
@@ -250,7 +250,7 @@ func on_killed(e: Enemy) -> void:
 	var each := maxi(1, floori(float(d["reward_xp"]) / float(n)))  # XP per crystal.
 	for i in n:
 		g.pickups.spawn(e.position + Vector2.from_angle(TAU * float(i) / float(n)) * (24.0 + 6.0 * float(i % 3)), each)
-	g.effects.impact(e.position, e.radius * 3.0, Palette.EYE_DROWNED)
+	g.effects.impact(e.position, e.radius * 3.0, Palette.EYE_DROWNED, "tide_splash")
 	g.shake(10.0)
 	g.enemies.show_banner("The Harbourmaster sinks beneath the waves!")
 	g.stat_add("harbourmaster_kills", 1.0)

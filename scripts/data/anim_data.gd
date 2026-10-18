@@ -46,6 +46,8 @@ const ANIMS: Dictionary = {
 	"bolt_impact": {"duration": 0.25, "fill": 1.1},  # TUNING (not in GDD) a Shadow Bolt / Void Bolt / Void Shard hit splash (6 frames of 128 px)
 	"level_up": {"duration": 0.8, "fill": 1.0},  # TUNING (not in GDD) the level-up column on the necromancer (8 frames of 192 px; tall art, base on the frame's bottom row)
 	"evolution": {"duration": 0.9, "fill": 1.3},  # TUNING (not in GDD) an evolution from a chest: vortex collapsing into a violet-gold flash (10 frames of 192 px)
+	# --- Act II: Gullhaven Harbour ---
+	"tide_splash": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) a splash of sea water: Deep Kin landing, the Harbourmaster's anchor, Abbot Merrow's blows, a bell buoy sinking (6 frames of 128 px; EffectManager.impact() 0.4 s)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).

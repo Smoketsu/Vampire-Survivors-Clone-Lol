@@ -310,7 +310,7 @@ func _resolve_wave() -> void:
 	var r := float(boss_def["wave_radius"])
 	var half := float(boss_def["wave_half_angle"])
 	var mult := game.enemies.damage_mult * hit_mult()  # Time scaling x buffs.
-	game.effects.impact(position + aim * r * 0.55, r * 0.5, Palette.EYE_DROWNED)
+	game.effects.impact(position + aim * r * 0.55, r * 0.5, Palette.EYE_DROWNED, "tide_splash")
 	Sfx.play("catapult_impact", position, 0.7)
 	game.shake(6.0)
 	var hits := 0
@@ -428,7 +428,7 @@ func _start_whirl() -> void:
 func _resolve_whirl() -> void:
 	var r := float(boss_def["whirl_radius"])
 	var mult := game.enemies.damage_mult * hit_mult()  # Time scaling x buffs.
-	game.effects.impact(position, r, Palette.EYE_DROWNED)
+	game.effects.impact(position, r, Palette.EYE_DROWNED, "tide_splash")
 	Sfx.play("abom_stomp", position, 0.8)
 	game.shake(6.0)
 	var hits := 0

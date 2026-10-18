@@ -62,7 +62,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 ## (the Sanctum's is 1.1: Act II starts a little above it and climbs).
 const ENEMY_HP_MULT: float = 1.15  # TUNING (not in GDD)
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.15  # TUNING (not in GDD)
+const ENEMY_DAMAGE_MULT: float = 1.22  # TUNING (not in GDD) 1.15 left the naive bot dying no more often than on the Sanctum (4/9 vs 2/4); the army bot had a wide margin (min HP 95-116)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them): Zone II, the Fish Market (the
 ## Sanctum's from Zone III; from 0:00 they would lift an Initiate past the
@@ -361,7 +361,7 @@ const TIDE := {
 	],
 	"levels": [[0.0, 0.17], [290.0, 0.22], [305.0, 0.30], [590.0, 0.35], [605.0, 0.42], [890.0, 0.46]],  # TUNING (not in GDD) ~4% -> ~45% flooded
 	"slow": 0.25,  # owner-approved proposal "Water slows everyone in it by 25%"
-	"swimmers": ["deep_kin", "harbourmaster", "deep_herald"],  # owner-approved "Deep Kin are the exception"
+	"swimmers": ["deep_kin", "harbourmaster", "deep_herald", "merrow"],  # owner-approved "Deep Kin are the exception"; "merrow" = the stage boss (TideDirector.swims() matches a boss by its arrival id)
 	"tick": 0.2,  # TUNING (not in GDD) s
 	"linger": 0.3,  # TUNING (not in GDD) s
 	"seawall": {"start": 900.0, "half_width": 230.0, "island_level": 0.80},  # TUNING (not in GDD) owner-approved "a long strip of dry stone"

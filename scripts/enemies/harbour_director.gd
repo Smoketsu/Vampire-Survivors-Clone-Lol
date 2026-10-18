@@ -228,7 +228,7 @@ func _on_destroyed(s: Structure) -> void:
 			buoy_times.append(_clock())
 			game.stat_add("objective_ash", float(config["ash_per_buoy"]))
 			game.stat_add("harbour_buoys_sunk", 1.0)
-			game.effects.impact(s.pos, 60.0, Palette.EYE_BIOLUME)
+			game.effects.impact(s.pos, 60.0, Palette.EYE_BIOLUME, "tide_splash")
 			game.enemies.show_banner("A bell buoy sinks: the Eye's waves shrink (-%d%%)!" % roundi((1.0 - wave_mult()) * 100.0))
 			_log("buoy_sunk")
 		"cache":
