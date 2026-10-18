@@ -421,7 +421,7 @@ const STAGE := {
 	"short_name": "Gullhaven",
 	"chapter": "Chapter IV",
 	"act": 2,  # Act II, the Ancient Eye.
-	"playable": false,  # The lead flips it after the integration and the owner's playtest.
+	"playable": true,  # Act II integration (balance-checked, 8-seed batches); the owner playtests it from here.
 	"description": "A fishing town at low tide, at night, where the Ancient Eye has lived in the open for generations. The tide rises on the clock and floods the lanes; sink the bell buoys, raid the smugglers' caches and silence Abbot Silas Merrow, Voice of the Deep.",
 	"unlock": {"stage": "sanctum", "boss_kills": 1},  # owner-approved: each boss unlocks the next stage
 	"unlock_text": "Slay Grand Inquisitor Seraphine in the Sanctum of Judgment to unlock.",

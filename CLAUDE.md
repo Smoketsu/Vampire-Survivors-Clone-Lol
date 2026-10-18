@@ -141,8 +141,8 @@ Autotest options (full table in the README):
 - `--spells=a,b` (force spells and their evolution passives, e.g.
   `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or `death_mark,bone_wall,soul_chains`)
 - `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
-- `--stage=graveyard|crimson_march|sanctum|harbour|archive|spire` (default graveyard; stage locks and
-  Act II's "Coming soon" are ignored)
+- `--stage=graveyard|crimson_march|sanctum|harbour|archive|spire` (default graveyard; stage locks are
+  ignored)
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
@@ -168,7 +168,7 @@ Autotest options (full table in the README):
 - for balance-affecting changes, a multi-seed check against the targets below.
 
 CI (`.github/workflows/ci.yml`) runs the import, the Graveyard autotest with the naive and army
-policies, a Crimson March autotest, a Sanctum of Judgment autotest (army policy), the
+policies, a Crimson March autotest, a Sanctum of Judgment autotest (army policy), one army autotest per Act II stage, the
 Windows/Linux/Web exports (artifacts `Necropathy-windows` / `-linux` / `-web`) and an exported-build
 smoke test. Pushing a `v*` tag publishes a GitHub Release with the three zips. Two optional jobs publish
 the Web build from `main` pushes and `v*` tags and are skipped unless configured: `publish-itch`
@@ -452,8 +452,8 @@ tiny tweaks.
   in `VolleyDirector`, drawing only, nothing loaded headless); made with `tools/volley_art.py`.
 
 - the **Act II foundation** (phase 1 of the owner-approved Act II, GDD §15.0 "Act II foundation (phase
-  1)"): three registered stages (`harbour_stage.gd`, `archive_stage.gd`, `spire_stage.gd`: stubs with
-  "playable": false, shown as "Coming soon"; act 2, Dread, Claims, the tide music; unlock chain from
+  1)"): three registered stages (`harbour_stage.gd`, `archive_stage.gd`, `spire_stage.gd`: at first
+  stubs behind "playable": false, "Coming soon"; act 2, Dread, Claims, the tide music; unlock chain from
   Seraphine; own boss ids with a placeholder `script`), act tabs on the stage select, the Ancient Eye's
   shared kinds (`EyeEnemyData`; per-stage tables `HarbourEnemyData` / `ArchiveEnemyData` /
   `SpireEnemyData`, looked up by `EnemyDirector.enemy_def()` / `eye_def()`), Eye kits and bosses loaded
@@ -464,16 +464,29 @@ tiny tweaks.
   "Below the Tide" (`SoundData.TIDE_SCORE`, score-driven `RunLoopSynth`), autotest `--stage=` /
   `--unlocks=` and the `dread` / `claims` lines. Gate passed: stages 1–3 same-seed summaries unchanged.
 
+- **Act II phase 2** (owner: all three stages in parallel after the foundation; GDD §15.0 rows
+  "Gullhaven Harbour (Act II phase 2)", "Act II: the Hollow Archive (Stage 5)", "Ul-Thalos, the Risen
+  Spire" and the rows after it, "Fallen Seraph", "Act II integration (phase 2)"), merged on `integration`
+  and playable: **Gullhaven Harbour** (`TideDirector`: rising water that slows all but the swimmers,
+  surges every 4 min; `HarbourDirector`: bell buoys, smugglers' caches, the Harbourmaster; Deep Kin,
+  Tide Caller, Netcaster; Abbot Merrow, `boss_merrow.gd`; Undertow / Maelstrom + Salt of the Deep;
+  Brinewalker through `TerrainSlow`, the one ground-slow path; the Brine Widow), **the Hollow Archive**
+  (`ArchiveDirector`: ink wells, the orrery, tomes, the Librarian; `RiftDirector`; Scribe, Ink Wraith,
+  Pilgrim of the Spore, Gibbering Mass; the Archivist, `boss_archivist.gd`; Forbidden Verse / The Unwritten
+  Word + Marginalia; Iron Mind; the Heretic Scribe), **Ul-Thalos** (`SinkingDirector`: the island
+  sinks ring by ring; `SpireDirector`: dream pillars, guest squads; Siren of the Eye, Spawn of the Deep,
+  Hierophant and Ascension; Vhal'Neth, `boss_vhalneth.gd`, arms and face, the Waking, the ending and the
+  main-menu Epilogue for both acts; Call of the Drowned / Tidecaller's Host + Abyssal Pact; the Tide
+  Widow), the summon classes **Spawn of the Deep** (Leviathan; unlocked by Vhal'Neth) and **Fallen
+  Seraph** (Seraph of Ruin + Fallen Grace; unlocked by Seraphine, also retroactively from a save's
+  stage record); the achievements Low Tide, Nothing Unwritten and The Dead God Serves; summon hooks
+  `held_until` / `misdirect()` / `compel()`; per-stage autotest report lines. Integration balance in
+  GDD §15.0 "Act II integration (phase 2)".
+
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
-1b. **Act II phase 2, in parallel** (owner: all three stages at once after the foundation): Gullhaven
-   Harbour (the tide, Deep Kin, Tide Caller, Netcaster, the Harbourmaster, Abbot Merrow, Undertow + Salt
-   of the Deep, Brinewalker), the Hollow Archive (rifts, tomes, Scribe, Ink Wraith, Pilgrim of the Spore,
-   Gibbering Mass, the Librarian, the Archivist, Forbidden Verse + Marginalia, Iron Mind) and Ul-Thalos
-   (the sinking, dream pillars, Siren, Spawn of the Deep, Hierophant / Ascension, Vhal'Neth, the Waking,
-   Call of the Drowned + Abyssal Pact, the ending and epilogue), each with its character, art and
-   achievement; plus the Spawn of the Deep and Fallen Seraph summon classes. Each stage turns
-   "playable" on only after its 16-seed check and the owner's playtest.
+   Act II is new: its feel, difficulty (the Archive's boss fight is the sharpest spike) and the
+   placeholder Soul Ash multipliers wait for the owner's runs.
 2. **Small fixes:** none open. (Menu modernization wave 1 closed the last one: menu key hints now
    follow rebinds and the last device used, `InputHints` chips, GDD §15.0 "Input hints". Archers
    now hold their ground: user decision, GDD §15.0.)

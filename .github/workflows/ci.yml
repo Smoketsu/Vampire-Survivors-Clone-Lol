@@ -6,7 +6,8 @@
 #               (naive and army policies), on the Crimson March
 #               (--stage=crimson_march) and in the Sanctum of Judgment
 #               (--stage=sanctum, army policy so its objectives are
-#               exercised). Fails on any script error/warning or if a run
+#               exercised), and on the three Act II stages (--stage=harbour,
+#               archive, spire; army policy). Fails on any script error/warning or if a run
 #               doesn't complete.
 #   2. export - builds single-file Windows (.exe) and Linux executables and the
 #               no-threads Web build (index.html + .js + .wasm + .pck, any static
@@ -120,6 +121,39 @@ jobs:
           status=${PIPESTATUS[0]}
           if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_sanctum.log; then
             echo "::error::Errors/warnings during Sanctum autotest"; exit 1
+          fi
+          exit $status
+
+      - name: Autotest (Act II Stage 4, Gullhaven Harbour)
+        run: |
+          # Act II (the Ancient Eye): the army bot, so the stage's objectives,
+          # Claims and Dread all run; --stage ignores the stage lock.
+          timeout 900 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest --stage=harbour --policy=army 2>&1 | tee autotest_harbour.log
+          status=${PIPESTATUS[0]}
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_harbour.log; then
+            echo "::error::Errors/warnings during Stage 4, Gullhaven Harbour autotest"; exit 1
+          fi
+          exit $status
+
+      - name: Autotest (Act II Stage 5, the Hollow Archive)
+        run: |
+          # Act II (the Ancient Eye): the army bot, so the stage's objectives,
+          # Claims and Dread all run; --stage ignores the stage lock.
+          timeout 900 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest --stage=archive --policy=army 2>&1 | tee autotest_archive.log
+          status=${PIPESTATUS[0]}
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_archive.log; then
+            echo "::error::Errors/warnings during Stage 5, the Hollow Archive autotest"; exit 1
+          fi
+          exit $status
+
+      - name: Autotest (Act II Stage 6, Ul-Thalos)
+        run: |
+          # Act II (the Ancient Eye): the army bot, so the stage's objectives,
+          # Claims and Dread all run; --stage ignores the stage lock.
+          timeout 900 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest --stage=spire --policy=army 2>&1 | tee autotest_spire.log
+          status=${PIPESTATUS[0]}
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_spire.log; then
+            echo "::error::Errors/warnings during Stage 6, Ul-Thalos autotest"; exit 1
           fi
           exit $status
 

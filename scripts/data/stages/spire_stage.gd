@@ -394,7 +394,7 @@ const STAGE := {
 	"short_name": "Ul-Thalos",
 	"chapter": "Chapter VI",
 	"act": 2,  # Act II, the Ancient Eye.
-	"playable": false,  # The lead flips it after integration (Act II phase 2 gate).
+	"playable": true,  # Act II integration (balance-checked, 8-seed batches); the owner playtests it from here.
 	"description": "The god's city surfaces mid-ocean: wet green stone and wrong angles around the spire where it lies dreaming. The city sinks back as the clock runs; at its heart Vhal'Neth, the Dreaming Mother, wakes. She is dead. Raise her.",
 	"unlock": {"stage": "archive", "boss_kills": 1},  # owner-approved: each boss unlocks the next stage
 	"unlock_text": "Slay the Archivist in the Hollow Archive to unlock.",

@@ -293,8 +293,8 @@ After Grand Inquisitor Seraphine falls, Act II opens: the necromancer's dead sta
 song from under the sea, and **the Ancient Eye**, a cult of a dead god dreaming in the deep,
 fights you **for the dead** (GDD §15.0 "Act II: the Ancient Eye"). The stage select shows one
 act at a time (Q / E, LB / RB, or the Act tabs). Its three stages, Gullhaven Harbour, the
-Hollow Archive and Ul-Thalos, the Risen Spire, each unlocked by the previous boss, are being
-built; until then their cards read "Coming soon". The act's shared rules are in:
+Hollow Archive and Ul-Thalos, the Risen Spire, each unlocked by the previous boss, are
+playable (balance-checked by the bots; your playtest decides the rest). The act's shared rules:
 
 - **Claims.** A summon that dies near a Chanter of the Eye (the leader of an Initiate squad)
   rises for 15 s as a hostile **Drowned Thrall** wearing its own sprite, tinted drowned teal.
@@ -361,8 +361,7 @@ reaching Lv 5 with Undertow.
 ### Stage 5: The Hollow Archive
 
 The buried library and observatory where the Eye keeps its god's scripture (GDD §15.0 "Act II:
-the Hollow Archive"; `archive_stage.gd`, `ArchiveDirector`, `RiftDirector`; still "Coming soon"
-on the stage select until the Act II integration). Unlocked by slaying Abbot Merrow; ×2.0 Soul
+the Hollow Archive"; `archive_stage.gd`, `ArchiveDirector`, `RiftDirector`). Unlocked by slaying Abbot Merrow; ×2.0 Soul
 Ash. Four zones on the clock:
 
 - **The Reading Halls** (20:00): rows of long shelves split the field into aisles.
@@ -1191,7 +1190,7 @@ integration").
 ### Stage 6: Ul-Thalos, the Risen Spire (Act II finale, not yet playable)
 
 The last stage of Act II (GDD §15.0 "Ul-Thalos, the Risen Spire"; data in
-`scripts/data/stages/spire_stage.gd`, still `"playable": false` until the lead's Act II gate).
+`scripts/data/stages/spire_stage.gd`).
 The god's city surfaces mid-ocean: wet green cyclopean stone and wrong angles around the spire
 where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.25.
 
@@ -2062,8 +2061,7 @@ Options (after `--`):
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, or the Act II stages `harbour`, `archive` and `spire`. Stage locks (and Act II's "Coming soon") are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, or the Act II stages `harbour`, `archive` and `spire`. Stage locks (and Act II's "Coming soon") are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, or the Act II stages `harbour`, `archive` and `spire`. Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
@@ -2212,7 +2210,8 @@ uptime.
 
 1. **test:** imports the project with Godot 4.3 headless and runs the full 20-minute autotest with the naive and
    army policies on the Graveyard, then once on the Crimson March (`--stage=crimson_march`) and once in the
-   Sanctum (`--stage=sanctum --policy=army`) (`--quit-after 15000`, at most 10 wall-clock minutes per run,
+   Sanctum (`--stage=sanctum --policy=army`), then once per Act II stage with the army policy
+   (`--stage=harbour`, `archive`, `spire`) (`--quit-after 15000`, at most 10-15 wall-clock minutes per run,
    40 minutes for the job).
    It fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if a run doesn't complete.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in

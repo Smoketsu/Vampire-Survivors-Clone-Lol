@@ -361,7 +361,7 @@ const STAGE := {
 	"short_name": "Archive",
 	"chapter": "Chapter V",
 	"act": 2,  # Act II, the Ancient Eye.
-	"playable": false,  # The lead turns it on after the integration check and the owner's playtest.
+	"playable": true,  # Act II integration (balance-checked, 8-seed batches); the owner playtests it from here.
 	"description": "A buried library and observatory under the cliffs where the Eye keeps its god's scripture. Rifts fold the stacks and open doors behind you; the Archivist, Keeper of the Unwritten, guards the last page.",
 	"unlock": {"stage": "harbour", "boss_kills": 1},  # owner-approved: each boss unlocks the next stage
 	"unlock_text": "Slay Abbot Merrow in Gullhaven Harbour to unlock.",
