@@ -380,6 +380,8 @@ func _show_ash(ash: Dictionary, boss_name: String) -> PackedStringArray:
 		unlocks.append("Achievement: %s" % String(MetaData.ACHIEVEMENTS[id]["display_name"]))
 	for sid: String in ash.get("unlocked_stages", PackedStringArray()):
 		unlocks.append("New stage: %s" % String(StageRegistry.STAGES[sid]["display_name"]))
+	for item: String in ash.get("unlocked_items", PackedStringArray()):
+		unlocks.append(_item_plate(item))  # Act II spells, passives and summon classes (UnlockData).
 	if bool(ash.get("hyper_unlocked", false)):
 		unlocks.append("Hyper mode unlocked")
 	var cleared := String(ash.get("hyper_clear", ""))  # Stage first cleared on Hyper by this character.
@@ -388,6 +390,14 @@ func _show_ash(ash: Dictionary, boss_name: String) -> PackedStringArray:
 	for sk: String in ash.get("unlocked_skins", PackedStringArray()):
 		unlocks.append("New skin: %s" % String(SkinData.skin(sk)["display_name"]))
 	return unlocks
+
+
+## Plate text of a newly unlocked Act II item (UnlockData): "<heading>: <name>".
+static func _item_plate(id: String) -> String:
+	var row: Dictionary = UnlockData.UNLOCKS.get(id, {})
+	var heading := String(UnlockData.PLATE_HEADINGS.get(String(row.get("type", "")), "Unlocked"))  # "Spell unlocked"...
+	var card := Unlocks.card_row(id)  # The item's own card row (its name).
+	return "%s: %s" % [heading, String(card.get("display_name", id))]
 
 
 ## Fills the unlock plates with `texts` (hidden when empty); they rise in

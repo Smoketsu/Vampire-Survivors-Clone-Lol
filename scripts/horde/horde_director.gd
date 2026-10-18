@@ -610,6 +610,7 @@ func on_unit_died(u: SummonedUnit, as_death: bool = true) -> void:
 		units.pop_back()
 	if as_death:
 		game.innates.on_summon_died(u)  # Carrion Lord corpses (no-op without the innate).
+		claim_fallen(u)  # Act II: the Ancient Eye may claim it (no-op elsewhere).
 	if u.is_temporary:
 		temp_alive -= 1
 	else:
@@ -625,6 +626,14 @@ func on_unit_died(u: SummonedUnit, as_death: bool = true) -> void:
 	if as_death:
 		summon_died.emit(u)
 	summon_count_changed.emit()
+
+
+## Act II Claims (EyeClaims, GDD §15.0 "Act II: the Ancient Eye"): the ONE path
+## through which a fallen summon can be claimed and rise as a hostile Drowned
+## Thrall. Does nothing on a stage without claims (game.claims null). Returns
+## true when `u` was claimed.
+func claim_fallen(u: SummonedUnit) -> bool:
+	return game.claims != null and game.claims.claim_fallen(u)
 
 
 ## Number of living units of `cls`.

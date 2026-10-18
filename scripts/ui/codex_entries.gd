@@ -58,6 +58,17 @@ static func section_entries(section: String) -> Array:
 		"bosses":
 			for id: String in CodexData.BOSSES:
 				out.append(_boss(id))
+		"eye_soldiers":
+			for id: String in CodexData.EYE_SOLDIERS:
+				out.append(_covenant(id, section))
+		"eye_champions":
+			for id: String in CodexData.EYE_CHAMPIONS:
+				out.append(_covenant(id, section))
+		"eye_bosses":
+			for id: String in CodexData.EYE_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)
 	return out
 
 
@@ -81,16 +92,27 @@ static func _spell(id: String) -> Dictionary:
 	for key: String in labels.keys().slice(0, 2):
 		stats.append([String(labels[key]), "%s  ->  %s" % [num(float(levels[0][key])), num(float(levels[levels.size() - 1][key]))]])
 	var best := Meta.spell_max_level(id)  # Highest level it reached in any run.
-	return _entry(id, "spells", Meta.is_codex_met(CodexData.SPELL, id), false, String(d["display_name"]),
+	var e := _entry(id, "spells", Meta.is_codex_met(CodexData.SPELL, id), false, String(d["display_name"]),
 		String(d["description"]), "", String(d["icon"]), stats, String(CodexData.TEXT["best_level"]) % best if best > 0 else "")
+	_lock_hint(e, id)
+	return e
 
 
 ## A summon class entry.
 static func _summon(id: String) -> Dictionary:
 	var d: Dictionary = UnitData.UNITS[id]
 	var stats: Array = [[_t("hp"), num(float(d["max_hp"]))], [_t("damage"), num(float(d["damage"]))], [_t("speed"), num(float(d["move_speed"]))]]
-	return _entry(id, "summons", Meta.is_codex_met(CodexData.SUMMON, id), false, String(d["display_name"]),
+	var e := _entry(id, "summons", Meta.is_codex_met(CodexData.SUMMON, id), false, String(d["display_name"]),
 		String(d["description"]), "summons/" + id, id, stats, "")
+	_lock_hint(e, id)
+	return e
+
+
+## A still-locked Act II item (Unlocks) shows its unlock condition instead of
+## the page's hint while it is unrecorded (entry key "lock_hint").
+static func _lock_hint(e: Dictionary, id: String) -> void:
+	if not bool(e["met"]) and not Unlocks.is_open(id):
+		e["lock_hint"] = Unlocks.lock_text(id)
 
 
 ## A spell or summon evolution entry (`section` names which).

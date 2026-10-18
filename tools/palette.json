@@ -76,7 +76,15 @@
     {"name": "floor_ash", "hex": "#2A2724", "ramp": "floor", "index": 5, "group": "floor", "role": "grey ash and weathered stone: March I ash, Sanctum I and III stone"},
     {"name": "floor_dirt", "hex": "#30261B", "ramp": "floor", "index": 6, "group": "floor", "role": "trampled brown dirt: March III camp, the March road"},
     {"name": "floor_moss", "hex": "#26301F", "ramp": "floor", "index": 7, "group": "floor", "role": "lit grass blades and turf (the lighter green of floor_grass)"},
-    {"name": "floor_marble", "hex": "#2D2E33", "ramp": "floor", "index": 8, "group": "floor", "role": "cool grey marble, Sanctum IV slabs (floor_stone's lightness, cool)"}
+    {"name": "floor_marble", "hex": "#2D2E33", "ramp": "floor", "index": 8, "group": "floor", "role": "cool grey marble, Sanctum IV slabs (floor_stone's lightness, cool)"},
+    {"name": "ink_drowned", "hex": "#06151A", "ramp": "drowned", "index": 0, "group": "ink", "role": "outline of the Ancient Eye's drowned teal (Act II)"},
+    {"name": "drowned_dark", "hex": "#1B4650", "ramp": "drowned", "index": 1, "group": "unit", "role": "Ancient Eye robes in shadow, wet stone, deep water (Act II; darker and bluer than the soul teal)"},
+    {"name": "drowned", "hex": "#3A7C80", "ramp": "drowned", "index": 2, "group": "unit", "role": "Ancient Eye drowned teal: robes, scales, sea-worn cloth (Act II)"},
+    {"name": "drowned_light", "hex": "#7FB5AC", "ramp": "drowned", "index": 3, "group": "unit", "role": "drowned teal highlights, foam, barnacles (Act II)"},
+    {"name": "ink_biolume", "hex": "#1E0A22", "ramp": "biolume", "index": 0, "group": "ink", "role": "outline of the Ancient Eye's bioluminescence (Act II)"},
+    {"name": "biolume_dark", "hex": "#5A2262", "ramp": "biolume", "index": 1, "group": "unit", "role": "bioluminescent flesh in shadow, tendrils (Act II; magenta-leaning, never the player's violet)"},
+    {"name": "biolume", "hex": "#B04CC0", "ramp": "biolume", "index": 2, "group": "unit", "role": "bioluminescent glow spots, eyes of the deep, the Eye's sigils (Act II)"},
+    {"name": "biolume_glow", "hex": "#F09CF2", "ramp": "biolume", "index": 3, "group": "glow", "role": "bioluminescent glow core (Act II)"}
   ],
   "ramps": {
     "violet": {"members": ["ink_violet", "violet_deep", "violet", "violet_glow", "violet_flare"], "role": "the player only: necromancer, the 12 characters, their spells and icons"},
@@ -92,6 +100,8 @@
     "gold": {"members": ["ink_warm", "brown_light", "gold", "gold_light", "holy_white"], "role": "Covenant gold (elites, Sanctum kinds, bosses), halos, holy white glow"},
     "skin": {"members": ["ink_warm", "brown_light", "skin", "bone"], "role": "Covenant faces and hands"},
     "flame": {"members": ["ink_red", "crimson", "flame", "gold_light"], "role": "fire and embers"},
+    "drowned": {"members": ["ink_drowned", "drowned_dark", "drowned", "drowned_light"], "role": "the Ancient Eye's drowned teal (Act II): robes, scales, wet stone; kept clearly apart from the soul teal (UI 'affordable / focused / new')"},
+    "biolume": {"members": ["ink_biolume", "biolume_dark", "biolume", "biolume_glow"], "role": "the Ancient Eye's bioluminescence (Act II): glow spots, eyes, sigils; magenta-leaning so it never reads as the player's violet"},
     "floor": {"members": ["floor_soil", "floor_earth", "floor_grass", "floor_ochre", "floor_slate", "floor_ash", "floor_dirt", "floor_moss", "floor_marble", "floor_stone"], "role": "ground colours of the three stages (tiles only, never sprites), dark -> light; the zone tiles add close shades per zone"}
   }
 }

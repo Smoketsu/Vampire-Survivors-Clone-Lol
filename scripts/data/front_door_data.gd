@@ -136,7 +136,15 @@ const STAGE_LINES: Dictionary = {
 	"graveyard": "Hold your burial grounds for twenty minutes.",  # TUNING (not in GDD)
 	"crimson_march": "Burn the road to the Covenant's fortress.",  # TUNING (not in GDD)
 	"sanctum": "Storm the cathedral. End the Covenant.",  # TUNING (not in GDD)
+	"harbour": "Follow your stolen dead to the drowning town.",  # TUNING (not in GDD) Act II
+	"archive": "Learn where the god sleeps.",  # TUNING (not in GDD) Act II
+	"spire": "The god is dead. Raise her.",  # TUNING (not in GDD) Act II
 }
+
+## Size (px) of an act tab button on the stage select (Act I / Act II).
+const ACT_TAB_SIZE: Vector2 = Vector2(300.0, 40.0)  # TUNING (not in GDD)
+## Lock line of a registered stage that is not yet playable (StageRegistry "playable").
+const COMING_SOON: String = "Coming soon"  # TUNING (not in GDD)
 
 ## Vignette scene per stage: "tile" (floor tile, repeated), "items" (drawn in
 ## order: [sprite key, x, y, flip]; x is the centre, y the feet (bottom) in

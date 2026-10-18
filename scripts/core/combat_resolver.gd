@@ -320,6 +320,8 @@ func damage_player(amount: float, source: String) -> void:
 		return  # Ossuary Ward shard (Bone Oracle) absorbed the whole hit.
 	amount *= 1.0 - game.abilities.passive_value("warding_ritual", "damage_reduction")
 	amount *= 1.0 - game.meta.value("damage_reduction")
+	if game.dread != null:
+		amount *= game.dread.taken_mult()  # Act II Dread: its own multiplier (DreadData).
 	var lost := game.player.take_damage(amount)
 	if lost > 0.0:
 		game.stat_add("damage_to_player", lost)
@@ -562,6 +564,8 @@ func _kill_enemy(e: Enemy) -> void:
 	game.powerups.on_enemy_killed(e)  # Power-up drop roll (PowerupData rules).
 	game.chests.on_enemy_killed(e)  # Treasure chest roll (ChestData rules).
 	game.dread_rally.on_enemy_killed(e)  # Dread Rally soul meter.
+	if game.dread != null:
+		game.dread.on_kill()  # Act II: a kill steadies the mind.
 	if e.is_elite and not e.is_boss and not e.is_structure:
 		_holy_retribution(e)
 	game.enemies.on_enemy_killed(e)

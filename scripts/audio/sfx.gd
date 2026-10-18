@@ -10,10 +10,13 @@
 ##     playable as soon as it exists (GDD §15.0 "Web build"). A sound
 ##     requested before it exists is silently skipped, and the in-run loop
 ##     fades in once it exists. Timings are printed once as "[audio]";
-##   * plays two music tracks on the Music bus and crossfades between them
+##   * plays music tracks on the Music bus and crossfades between them
 ##     (play_music(), called by Main): the main menu theme (MenuThemeSynth,
 ##     "Grave Lullaby", MenuThemeData) on the menu and every screen opened
-##     from it, the in-run loop during a run. The menu theme is rendered
+##     from it, the in-run loop during a run, and on an Act II stage the
+##     second run loop "Below the Tide" (RunLoopSynth with
+##     SoundData.TIDE_SCORE; rendered lazily the first time an Act II run
+##     asks for it, like the menu theme, and never headless). The menu theme is rendered
 ##     lazily, the first time the menu asks for it (so the autotest, which
 ##     never shows the menu, never renders it): on a worker thread on
 ##     desktop, in small per-frame steps on the Web (WEB_FRAME_BUDGET_MS),
@@ -63,6 +66,9 @@ const MUSIC_FADE_IN: float = 2.5  # TUNING (not in GDD)
 const MUSIC_MENU: StringName = &"menu"
 ## play_music() mode: the in-run loop.
 const MUSIC_RUN: StringName = &"run"
+## play_music() mode: the Act II in-run loop "Below the Tide" (SoundData.TIDE_SCORE;
+## a stage whose STAGE has "music": "tide").
+const MUSIC_TIDE: StringName = &"tide"
 ## Name of the music bus.
 const BUS_MUSIC: StringName = &"Music"
 ## Name of the sound-effect bus.
@@ -144,6 +150,22 @@ var _run_gain: float = 0.0
 var _run_target: float = 0.0
 ## Gain change per real second of the in-run player's current fade.
 var _run_rate: float = 1.0
+## Looping Act II run-loop player ("Below the Tide") on the Music bus.
+var _tide_music: AudioStreamPlayer
+## Linear fade gain (0..1) of the tide player (on top of MUSIC_DB).
+var _tide_gain: float = 0.0
+## Gain the tide player is fading toward (0 or 1).
+var _tide_target: float = 0.0
+## Gain change per real second of the tide player's current fade.
+var _tide_rate: float = 1.0
+## The tide loop's renderer while it works (null before the first Act II run
+## asks for it and once its stream is on the player).
+var _tide_synth: RunLoopSynth = null
+## WorkerThreadPool task id of the tide loop's synthesis (-1 = none; the Web
+## build steps it on the main thread instead).
+var _tide_task: int = -1
+## True when the tide loop renders in per-frame steps (Web).
+var _tide_incremental: bool = false
 ## Linear fade gain (0..1) of the menu-theme player (on top of its MUSIC_DB).
 var _menu_gain: float = 0.0
 ## Gain the menu-theme player is fading toward (0 or 1).
@@ -189,6 +211,10 @@ func _ready() -> void:
 	_menu_music.bus = BUS_MUSIC
 	_menu_music.volume_db = MenuThemeData.MUSIC_DB
 	add_child(_menu_music)
+	_tide_music = AudioStreamPlayer.new()
+	_tide_music.bus = BUS_MUSIC
+	_tide_music.volume_db = MUSIC_DB
+	add_child(_tide_music)
 	_last_usec = Time.get_ticks_usec()
 	# Longest renders first, so the slowest sounds never start last and
 	# stretch the total synthesis time.
@@ -226,6 +252,12 @@ func _exit_tree() -> void:
 		WorkerThreadPool.wait_for_task_completion(_menu_task)
 		_menu_task = -1
 	_menu_synth = null
+	if _tide_task >= 0:
+		WorkerThreadPool.wait_for_task_completion(_tide_task)
+		_tide_task = -1
+	_tide_synth = null
+	_tide_music.stop()
+	_tide_music.stream = null
 	# Release playbacks so the audio server holds no stream at exit.
 	_music.stop()
 	_music.stream = null
@@ -260,12 +292,14 @@ func _process(_delta: float) -> void:
 	if _startup_synth != null:
 		_step_startup_synth()
 	_update_menu_theme()
+	_update_tide()
 	# Music fades run on real time (delta follows Engine.time_scale).
 	var now := Time.get_ticks_usec()
 	var real_dt := minf(0.1, float(now - _last_usec) / 1000000.0)
 	_last_usec = now
 	_run_gain = _fade_player(_music, MUSIC_DB, _run_gain, _run_target, _run_rate, real_dt)
 	_menu_gain = _fade_player(_menu_music, MenuThemeData.MUSIC_DB, _menu_gain, _menu_target, _menu_rate, real_dt)
+	_tide_gain = _fade_player(_tide_music, MUSIC_DB, _tide_gain, _tide_target, _tide_rate, real_dt)
 
 
 ## Web build: runs one frame's budget of the sound / loop synthesis and
@@ -290,10 +324,12 @@ func _step_startup_synth() -> void:
 
 
 ## Switches the music to `mode`: MUSIC_MENU (the main menu theme, rendered
-## on first use) or MUSIC_RUN (the in-run loop). The other track fades out
-## and stops; the asked one starts from its beginning (unless it was still
+## on first use), MUSIC_RUN (the in-run loop) or MUSIC_TIDE (the Act II loop,
+## rendered on first use; it fades in once it exists). The other tracks fade
+## out and stop; the asked one starts from its beginning (unless it was still
 ## fading out, then it just fades back in). Called by Main when the menu is
-## shown and when a run starts; asking for the current mode does nothing.
+## shown and when a run starts (run_mode_for() picks the run's loop); asking
+## for the current mode does nothing.
 func play_music(mode: StringName) -> void:
 	if mode == _music_mode:
 		return
@@ -304,11 +340,58 @@ func play_music(mode: StringName) -> void:
 		_menu_rate = 1.0 / MenuThemeData.FADE_IN
 		_run_target = 0.0
 		_run_rate = 1.0 / MenuThemeData.RUN_FADE_OUT
+		_tide_target = 0.0
+		_tide_rate = 1.0 / MenuThemeData.RUN_FADE_OUT
 	else:
-		_run_target = 1.0
-		_run_rate = 1.0 / MUSIC_FADE_IN
+		var tide := mode == MUSIC_TIDE  # The Act II loop instead of Act I's.
+		if tide:
+			_start_tide()
+		_run_target = 0.0 if tide else 1.0
+		_run_rate = 1.0 / (MenuThemeData.RUN_FADE_OUT if tide else MUSIC_FADE_IN)
+		_tide_target = 1.0 if tide else 0.0
+		_tide_rate = 1.0 / (MUSIC_FADE_IN if tide else MenuThemeData.RUN_FADE_OUT)
 		_menu_target = 0.0
 		_menu_rate = 1.0 / MenuThemeData.FADE_OUT
+
+
+## The run-loop mode of stage `stage_id`: MUSIC_TIDE for a stage whose STAGE
+## has "music": "tide" (Act II), MUSIC_RUN otherwise.
+static func run_mode_for(stage_id: String) -> StringName:
+	if StageRegistry.STAGES.has(stage_id) and String((StageRegistry.STAGES[stage_id] as Dictionary).get("music", "")) == "tide":
+		return MUSIC_TIDE
+	return MUSIC_RUN
+
+
+## Creates the tide loop's renderer (first call only; never headless): a
+## worker task on desktop, per-frame steps on the Web.
+func _start_tide() -> void:
+	if _silent or _tide_synth != null or _tide_music.stream != null:
+		return
+	_tide_synth = RunLoopSynth.new(SYNTH_SEED - 2, SoundData.TIDE_SCORE)
+	_tide_incremental = OS.has_feature("web")
+	if not _tide_incremental:
+		_tide_task = WorkerThreadPool.add_task(_tide_synth.render_all, true, "Necropathy tide loop synth")
+
+
+## Advances the tide loop's synthesis (Web: one frame's budget, after the
+## startup synthesis is done) and hands the finished loop to its player.
+func _update_tide() -> void:
+	if _tide_synth == null:
+		return
+	if _tide_incremental:
+		if _startup_synth != null:
+			return  # The sounds and the Act I loop first.
+		if not _tide_synth.step(int(SoundData.WEB_SYNTH_BUDGET_MS * 1000.0)):
+			return
+	else:
+		if not WorkerThreadPool.is_task_completed(_tide_task):
+			return
+		WorkerThreadPool.wait_for_task_completion(_tide_task)
+		_tide_task = -1
+	_tide_music.stream = _tide_synth.stream
+	print("[audio] tide loop: %.0f ms compute (%s)" % [float(_tide_synth.compute_usec) / 1000.0,
+		"per-frame steps" if _tide_incremental else "worker thread"])
+	_tide_synth = null
 
 
 ## Moves one music player's fade gain toward `target` over `dt` real

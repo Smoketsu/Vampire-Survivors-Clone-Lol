@@ -147,6 +147,19 @@ var buff_speed: float = 1.0
 var buff_taken: float = 1.0
 ## Sanctum kit (SanctumEnemyData "kit"; null for every other kind).
 var kit: CovenantKit = null
+## Sprite key this enemy wears instead of its own kind's art ("" = its own):
+## a Drowned Thrall wears the claimed summon's ("summons/<class>"; EyeClaims).
+var wears: String = ""
+## Summon class drawn by the code glyph when `wears` has no sprite art.
+var wears_class: String = ""
+## Colour multiplied over the worn sprite (EyeEnemyData.CLAIM.tint).
+var wear_tint: Color = Color.WHITE
+## px; a summon dying this close is claimed by the Ancient Eye (EyeEnemyData
+## "claim_radius"; 0 = this enemy claims nothing). EyeClaims reads it.
+var claim_radius: float = 0.0
+## Game time (s) until which this enemy is a marked claimer (a Scribe's curse,
+## reach EyeEnemyData.CLAIM.curse_radius); 0 = never marked.
+var claimer_until: float = 0.0
 ## True for animated stone (Sentinel, Guardian): never healed, shielded or
 ## raised by Covenant priests.
 var is_construct: bool = false
@@ -322,6 +335,11 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	is_elite = elite
 	position = pos
 	think_slot = slot
+	wears = ""
+	wears_class = ""
+	wear_tint = Color.WHITE
+	claim_radius = float(def.get("claim_radius", 0.0))
+	claimer_until = 0.0
 	display_name = def["display_name"]
 	max_hp = float(def["max_hp"]) * hp_mult
 	move_speed = def["move_speed"]
@@ -1056,6 +1074,13 @@ func _draw_under() -> void:
 
 ## Body layer on `ci`: the sprite or glyph. Bosses override.
 func _draw_body(ci: CanvasItem) -> void:
+	if wears != "":
+		# A Drowned Thrall: the claimed summon's sprite, tinted; its code
+		# glyph with a drowned wash when it has no art.
+		if not SpriteBank.draw(ci, wears, Vector2.ZERO, flash > 0.0, wear_tint):
+			Glyphs.draw_summon(ci, wears_class, Vector2.ZERO, radius, flash > 0.0)
+			ci.draw_circle(Vector2.ZERO, radius * 1.05, Color(wear_tint, 0.35))
+		return
 	Glyphs.draw_enemy(ci, kind, Vector2.ZERO, radius, flash > 0.0, is_elite)
 
 

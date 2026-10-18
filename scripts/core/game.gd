@@ -158,6 +158,12 @@ var innates: CharacterInnates
 ## What this run has met for the Codex (CodexLog; never null once _ready
 ## ran; records only, never changes gameplay).
 var codex: CodexLog
+## Act II Dread on the necromancer (DreadMeter; null unless the stage's STAGE
+## has "dread": true, so Act I never runs it).
+var dread: DreadMeter = null
+## Act II Claims, the Ancient Eye stealing the fallen (EyeClaims; null unless
+## the stage's STAGE has "claims": true).
+var claims: EyeClaims = null
 
 # --- UI ---------------------------------------------------------------------------
 
@@ -200,6 +206,10 @@ func _ready() -> void:
 	difficulty = DifficultyModifiers.new(self)
 	dread_rally = DreadRally.new(self)
 	stance = ArmyStance.new(self)
+	if bool(stage_def.get("dread", false)):
+		dread = DreadMeter.new(self)  # Act II only.
+	if bool(stage_def.get("claims", false)):
+		claims = EyeClaims.new(self)  # Act II only.
 
 	# World layers, back to front (tree order + z_index).
 	match String(stage_def["ground"]):
@@ -371,6 +381,8 @@ func _physics_process(delta: float) -> void:
 	player.step(delta)
 	dread_rally.step(delta)
 	stance.step(delta)
+	if dread != null:
+		dread.step(delta)  # Act II Dread statistics (no-op elsewhere).
 	abilities.step(delta)
 	innates.step(delta)
 	horde.step(delta)

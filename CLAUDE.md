@@ -72,6 +72,17 @@ tablets in landscape (the `Web` export preset; touch controls, mobile UI scale, 
   highest), **half against the stage boss**, no extra tier for evolved pairs; every synergy damage
   bonus goes through `SynergyManager.hit_mult()` from `CombatResolver.damage_enemy()`.
 - **Shadow Bolt** has a Nearest/Strongest aim toggle (T / pad Y).
+- **Act II, the Ancient Eye** (owner decisions, GDD §15.0 "Act II: the Ancient Eye"): the faction is
+  **the Ancient Eye** (never "the Drowned Choir"); it fights the necromancer **for the dead**. Its shared
+  rules each have one path: **Claims** (`HordeDirector.claim_fallen()` → `EyeClaims`, `game.claims`: a
+  summon dying near a claimer rises 15 s as a hostile Drowned Thrall; killed, its soul is Dread Rally
+  charge), **Dread** (`DreadMeter`, `game.dread`: +5% damage taken per 25, applied once in
+  `CombatResolver.damage_player()`; raised only through `game.dread.add()`), **unlocks** (`Unlocks.is_open()`
+  / `offerable()`, `UnlockData`, Meta `[unlocks]`: Act II spells by its bosses, offered on every stage;
+  its counter-passives by its achievements, Act II only through the card row's `act`). Act I runs never
+  create any of it (`game.dread` / `game.claims` stay null): stages 1–3 must keep their same-seed
+  summaries. Every female character is in the figure-redesign style; the finale (and Seraphine) grant
+  new summon classes; each new spell comes with its playable character.
 - **The Bone Ring is the only formation** (owner decision Oct 2026, GDD §15.0 "Bone Ring is the only
   formation"; it replaced the four switchable stances): the army always rings the necromancer
   (blockers, flankers and ranged interleaved on the ring, priests and catapults inside) and its
@@ -130,7 +141,10 @@ Autotest options (full table in the README):
 - `--spells=a,b` (force spells and their evolution passives, e.g.
   `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or `death_mark,bone_wall,soul_chains`)
 - `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
-- `--stage=graveyard|crimson_march|sanctum` (default graveyard; stage locks are ignored)
+- `--stage=graveyard|crimson_march|sanctum|harbour|archive|spire` (default graveyard; stage locks and
+  Act II's "Coming soon" are ignored)
+- `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
+  are open either way)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
 - `--difficulty=initiate|necromancer|lich|deathlord` (GDD §8.4; default necromancer = today's game)
 - `--modifiers=a,b` (GDD §8.5 run modifiers, e.g. `hardened_faith,scarcity`, or `all`)
@@ -437,8 +451,29 @@ tiny tweaks.
   `volley_hit` / `volley_flash` strips, tinted with the shot colour and drawn additively (bursts in a ring buffer
   in `VolleyDirector`, drawing only, nothing loaded headless); made with `tools/volley_art.py`.
 
+- the **Act II foundation** (phase 1 of the owner-approved Act II, GDD §15.0 "Act II foundation (phase
+  1)"): three registered stages (`harbour_stage.gd`, `archive_stage.gd`, `spire_stage.gd`: stubs with
+  "playable": false, shown as "Coming soon"; act 2, Dread, Claims, the tide music; unlock chain from
+  Seraphine; own boss ids with a placeholder `script`), act tabs on the stage select, the Ancient Eye's
+  shared kinds (`EyeEnemyData`; per-stage tables `HarbourEnemyData` / `ArchiveEnemyData` /
+  `SpireEnemyData`, looked up by `EnemyDirector.enemy_def()` / `eye_def()`), Eye kits and bosses loaded
+  by name from `scripts/enemies/eye/`, Claims and the Drowned Thrall (`EyeClaims`, `EyeThrallKit`,
+  `Enemy.wears`), Dread (`DreadMeter`, `dread_data.gd`, HUD meter, `DreadVignette`), unlocks
+  (`UnlockData`, `Unlocks`, Meta `[unlocks]`, end-screen plates, Codex lock lines), the Codex's Ancient
+  Eye tab, palette ramps `drowned` / `biolume` and the `eye/` sprite folder (`EyeGlyphs` fallbacks),
+  "Below the Tide" (`SoundData.TIDE_SCORE`, score-driven `RunLoopSynth`), autotest `--stage=` /
+  `--unlocks=` and the `dread` / `claims` lines. Gate passed: stages 1–3 same-seed summaries unchanged.
+
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
+1b. **Act II phase 2, in parallel** (owner: all three stages at once after the foundation): Gullhaven
+   Harbour (the tide, Deep Kin, Tide Caller, Netcaster, the Harbourmaster, Abbot Merrow, Undertow + Salt
+   of the Deep, Brinewalker), the Hollow Archive (rifts, tomes, Scribe, Ink Wraith, Pilgrim of the Spore,
+   Gibbering Mass, the Librarian, the Archivist, Forbidden Verse + Marginalia, Iron Mind) and Ul-Thalos
+   (the sinking, dream pillars, Siren, Spawn of the Deep, Hierophant / Ascension, Vhal'Neth, the Waking,
+   Call of the Drowned + Abyssal Pact, the ending and epilogue), each with its character, art and
+   achievement; plus the Spawn of the Deep and Fallen Seraph summon classes. Each stage turns
+   "playable" on only after its 16-seed check and the owner's playtest.
 2. **Small fixes:** none open. (Menu modernization wave 1 closed the last one: menu key hints now
    follow rebinds and the last device used, `InputHints` chips, GDD §15.0 "Input hints". Archers
    now hold their ground: user decision, GDD §15.0.)

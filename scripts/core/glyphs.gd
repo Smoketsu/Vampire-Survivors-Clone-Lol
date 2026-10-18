@@ -138,8 +138,10 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	if elite:
 		ci.draw_circle(o, r * 1.45, Color(Palette.GOLD, 0.12))
 		ci.draw_arc(o, r * 1.4, 0.0, TAU, 24, Palette.GOLD, 2.0)
-	# Sprite art, if any: soldiers in enemies/, buildings and carts in structures/.
-	if SpriteBank.draw(ci, "enemies/" + kind, o, flash) or SpriteBank.draw(ci, "structures/" + kind, o, flash):
+	# Sprite art, if any: soldiers in enemies/, buildings and carts in
+	# structures/, the Ancient Eye's kinds (Act II) in eye/.
+	if SpriteBank.draw(ci, "enemies/" + kind, o, flash) or SpriteBank.draw(ci, "structures/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "eye/" + kind, o, flash):
 		return
 	match kind:
 		"recruit":
@@ -158,7 +160,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			_draw_templar(ci, o, r, flash)
 		_:
 			if not MarchGlyphs.draw_enemy(ci, kind, o, r, flash):  # Crimson March kinds ...
-				SanctumGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Sanctum's.
+				if not SanctumGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Sanctum's ...
+					EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
 
 
 ## Covenant Recruit: small crimson round body, ivory tabard, silver helm, spear.

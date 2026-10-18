@@ -54,8 +54,13 @@
 ##                         same way as the --spells items, so a passive's
 ##                         effect can be exercised.
 ##   --stage=ID           Autotest stage: "graveyard" (default),
-##                         "crimson_march" or "sanctum" (StageRegistry ids;
-##                         stage locks are ignored).
+##                         "crimson_march", "sanctum", or the Act II stages
+##                         "harbour", "archive" and "spire" (StageRegistry
+##                         ids; stage locks and "playable" are ignored).
+##   --unlocks=all|none    all = every lockable item (UnlockData: Act II's
+##                         spells, passives and classes) may be offered;
+##                         none (default) = a fresh save's pool. Items forced
+##                         by --spells / --passives / --classes are open either way.
 ##   --boss=ID             Autotest boss test: puts boss ID ("alaric", "vael"
 ##                         or "seraphine"; StageRegistry.BOSS_ARRIVALS) in
 ##                         the stage's boss slot at the stage's boss time,
@@ -142,6 +147,9 @@ var autotest_synergies_off: bool = false
 ## no summon volleys, spell patterns, Rally Barrage or denser fodder; the game exactly
 ## as before it). Default true, like the setting.
 var autotest_volleys: bool = true
+## Autotest: true when --unlocks=all opens every lockable item (UnlockData:
+## Act II's spells, passives and summon classes) in the card pool.
+var autotest_unlock_all: bool = false
 ## Autotest: forced spawns from --spawn= ({"kind", "time" s, "count"}, in
 ## the order given; empty = none).
 var autotest_spawns: Array[Dictionary] = []
@@ -251,6 +259,12 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_volleys = vv == "on"
 			else:
 				push_error("Unknown --volleys=%s (expected on or off)" % vv)
+		elif arg.begins_with("--unlocks="):
+			var uv := arg.get_slice("=", 1).to_lower()  # "all" or "none".
+			if uv == "all" or uv == "none":
+				autotest_unlock_all = uv == "all"
+			else:
+				push_error("Unknown --unlocks=%s (expected all or none)" % uv)
 		elif arg.begins_with("--spawn="):
 			for entry: String in arg.get_slice("=", 1).split(",", false):
 				var kind := entry.get_slice("@", 0)  # Enemy kind id.
@@ -275,3 +289,9 @@ func _parse_args(args: PackedStringArray) -> void:
 				if UnitData.UNITS.has(cls) and not autotest_classes.has(cls) \
 						and not bool(UnitData.UNITS[cls].get("evolved_only", false)):
 					autotest_classes.append(cls)
+
+
+## Autotest: true when item `id` is forced by --spells= / --passives= /
+## --classes= (Unlocks.is_open() treats it as unlocked).
+func autotest_forces(id: String) -> bool:
+	return autotest_spells.has(id) or autotest_passives.has(id) or autotest_classes.has(id)

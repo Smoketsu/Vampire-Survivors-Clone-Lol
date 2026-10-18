@@ -411,7 +411,10 @@ func _show_detail(page: String, e: Dictionary) -> void:
 	name_l.add_theme_color_override("font_color", UiTheme.TEXT_GOLD if met and (evo or bool(e["boss"])) else (UiTheme.TEXT if met else UiTheme.TEXT_DIM))
 	(d["tag"] as Label).text = String(e["tag"])
 	var hint_key := "evolution" if evo else String(e["section"])  # LOCKED_HINT key.
-	(d["desc"] as Label).text = String(e["desc"]) if met else String(CodexData.LOCKED_HINT.get(hint_key, CodexData.LOCKED_HINT.get(page, "")))
+	var hint := String(e.get("lock_hint", ""))  # An Act II item's unlock condition, if it is locked.
+	if hint == "":
+		hint = String(CodexData.LOCKED_HINT.get(hint_key, CodexData.LOCKED_HINT.get(page, "")))
+	(d["desc"] as Label).text = String(e["desc"]) if met else hint
 	var stats: VBoxContainer = d["stats"]
 	for c in stats.get_children():
 		stats.remove_child(c)

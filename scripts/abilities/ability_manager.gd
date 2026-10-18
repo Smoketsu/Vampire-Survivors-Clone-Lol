@@ -660,6 +660,8 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 		var max_lvl := (AbilityData.SPELLS[id]["levels"] as Array).size()
 		if banished.has(id) or exclude.has(id) or evolved.has(id) or lvl >= max_lvl or (lvl == 0 and not can_new_active):
 			continue
+		if lvl == 0 and not Unlocks.offerable(id, game.stage_def):
+			continue  # Act II: locked, or another act's card (Unlocks).
 		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (LevelUpData.WEIGHT_NEW_LATER if bool(AbilityData.SPELLS[id].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW)
 		var evo := EvolutionData.for_spell(id)
 		if lvl > 0 and evo != "" and passive_level(EvolutionData.EVOLUTIONS[evo]["passive"]) > 0:
@@ -674,6 +676,8 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 			continue
 		if evos.is_locked(cls):
 			continue  # Merged away, or only created by an evolution.
+		if lvl == 0 and not Unlocks.offerable(cls, game.stage_def):
+			continue  # Act II: locked, or another act's card (Unlocks).
 		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (LevelUpData.WEIGHT_NEW_LATER if bool(UnitData.UNITS[cls].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW_CORE_SUMMON)
 		if lvl == 0:
 			w *= float(UnitData.UNITS[cls].get("new_card_weight_mult", 1.0))  # The split priest orders share one role's weight.
@@ -684,6 +688,8 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 		var lvl := passive_level(id)
 		if banished.has(id) or exclude.has(id) or lvl >= (PassiveData.PASSIVES[id]["levels"] as Array).size() or (lvl == 0 and not can_new_passive):
 			continue
+		if lvl == 0 and not Unlocks.offerable(id, game.stage_def):
+			continue  # Act II: locked, or another act's card (Unlocks).
 		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (LevelUpData.WEIGHT_NEW_LATER if bool(PassiveData.PASSIVES[id].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW)
 		var paired := _paired_spell(id)
 		if paired != "" and spell_level(paired) > 0 and not evolved.has(paired):

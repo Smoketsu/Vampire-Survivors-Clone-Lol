@@ -15,6 +15,14 @@
 ## desktop), the Web build's StartupSynth a few per frame (GDD §15.0 "Web
 ## build"). Only its own buffers and its own seeded RNG are touched (never
 ## the gameplay RNG).
+##
+## SCORES (Act II, GDD §15.0 "Act II: the Ancient Eye"): an optional score
+## Dictionary (SoundData.TIDE_SCORE, "Below the Tide") replaces the Act I
+## numbers below key by key; an empty score is the Act I loop exactly, sample
+## for sample. Keys (all optional): loop_seconds, root_hz, chords, drone_lp_hz,
+## wind_lp_hz, wind_swells, vibrato_hz, vibrato_depth, beat_seconds, and
+## "toll" (a tolling bell instead of the heartbeat: {every, partials [[ratio,
+## amp], ...], root_hz, dur, decay}).
 class_name RunLoopSynth
 extends RefCounted
 
@@ -26,6 +34,8 @@ const WIND_LP_HZ: float = 140.0  # TUNING (not in GDD)
 const WIND_SWELLS: float = 2.0  # TUNING (not in GDD)
 ## Pad vibrato rate (Hz, snapped to whole cycles per loop).
 const PAD_VIBRATO_HZ: float = 5.0  # TUNING (not in GDD)
+## Pad vibrato depth (fraction of the pitch).
+const PAD_VIBRATO_DEPTH: float = 0.004  # TUNING (not in GDD)
 
 ## The finished loop (null until done()).
 var stream: AudioStreamWAV = null
@@ -92,23 +102,37 @@ var _vib_phase: float = 0.0
 var _peak: float = Synth.PEAK_FLOOR
 ## 16-bit PCM of the loop (2 bytes per sample).
 var _bytes: PackedByteArray = PackedByteArray()
+## The score (see the header; {} = the Act I loop).
+var _score: Dictionary = {}
+## Pad chords (Hz per voice), one per loop segment (the score's or SoundData's).
+var _chords: Array = []
+## Pad vibrato depth (fraction of the pitch).
+var _vib_depth: float = PAD_VIBRATO_DEPTH
+## Seconds between two heartbeats (the score's or SoundData's).
+var _beat_s: float = 0.0
 
 
 ## Sets the loop up (cheap: no audio is rendered here) and schedules every
-## job. `rng_seed` seeds the wind noise.
-func _init(rng_seed: int) -> void:
+## job. `rng_seed` seeds the wind noise; `score` (optional) is the track's
+## score (see the header; {} = the Act I loop).
+func _init(rng_seed: int, score: Dictionary = {}) -> void:
 	var rate := Synth.MUSIC_RATE  # Samples per second.
-	_loop_s = SoundData.MUSIC_LOOP_SECONDS
+	_score = score
+	_loop_s = float(score.get("loop_seconds", SoundData.MUSIC_LOOP_SECONDS))
 	_n = int(_loop_s * rate)
 	_buf.resize(_n)
 	_rng.seed = rng_seed
 	_inv_rate = 1.0 / float(rate)
-	_f1 = Synth.snap(SoundData.MUSIC_ROOT_HZ, _loop_s)
-	_f2 = Synth.snap(SoundData.MUSIC_ROOT_HZ * 1.006, _loop_s)
-	_f_sub = Synth.snap(SoundData.MUSIC_ROOT_HZ * 0.5, _loop_s)
-	_lfo = TAU * WIND_SWELLS / _loop_s
-	_drone_a = TAU * DRONE_LP_HZ * _inv_rate
-	_wind_a = TAU * WIND_LP_HZ * _inv_rate
+	var root := float(score.get("root_hz", SoundData.MUSIC_ROOT_HZ))  # Drone root (Hz).
+	_f1 = Synth.snap(root, _loop_s)
+	_f2 = Synth.snap(root * 1.006, _loop_s)
+	_f_sub = Synth.snap(root * 0.5, _loop_s)
+	_lfo = TAU * float(score.get("wind_swells", WIND_SWELLS)) / _loop_s
+	_drone_a = TAU * float(score.get("drone_lp_hz", DRONE_LP_HZ)) * _inv_rate
+	_wind_a = TAU * float(score.get("wind_lp_hz", WIND_LP_HZ)) * _inv_rate
+	_chords = score.get("chords", SoundData.MUSIC_CHORDS)
+	_vib_depth = float(score.get("vibrato_depth", PAD_VIBRATO_DEPTH))
+	_beat_s = float(score.get("beat_seconds", SoundData.MUSIC_BEAT_SECONDS))
 	# The filters start `warm` samples before 0 (with matching phases, since
 	# every frequency loops) so their state at sample 0 equals the state at
 	# the loop end: no click at the loop point.
@@ -118,15 +142,15 @@ func _init(rng_seed: int) -> void:
 	_p3 = fposmod(-_f_sub * _warm * _inv_rate, 1.0)
 	var chunk := maxi(1, SoundData.WEB_SYNTH_CHUNK_SAMPLES)  # Samples per pass job.
 	_schedule(_job_drone, -_warm, _n, chunk)
-	var chords: Array = SoundData.MUSIC_CHORDS  # One chord per loop segment.
+	var chords: Array = _chords  # One chord per loop segment.
 	_seg = _n / chords.size()
 	_overlap = _seg / 4
 	_win = _seg + 2 * _overlap
-	_vib = TAU * Synth.snap(PAD_VIBRATO_HZ, _loop_s) * _inv_rate
+	_vib = TAU * Synth.snap(float(score.get("vibrato_hz", PAD_VIBRATO_HZ)), _loop_s) * _inv_rate
 	# A chord job does about 3 voices' work per sample: a third of a chunk.
 	for c in chords.size():
 		_schedule(_job_chord.bind(c), 0, _win, maxi(1, chunk / 3))
-	_jobs.append(_job_heartbeat)
+	_jobs.append(_job_toll if score.has("toll") else _job_heartbeat)
 	_schedule(_job_peak, 0, _n, chunk)
 	_jobs.append(_job_alloc)
 	_schedule(_job_encode, 0, _n, chunk)
@@ -193,7 +217,7 @@ func _job_chord(a: int, b: int, c: int) -> void:
 	if a == 0:
 		_freqs = PackedFloat32Array()
 		_phases = PackedFloat32Array()
-		var voices: Array = SoundData.MUSIC_CHORDS[c]  # This chord's voice frequencies (Hz).
+		var voices: Array = _chords[c]  # This chord's voice frequencies (Hz).
 		for hz: float in voices:
 			_freqs.append(Synth.snap(hz, _loop_s) * _inv_rate)
 			_phases.append(0.0)
@@ -203,7 +227,7 @@ func _job_chord(a: int, b: int, c: int) -> void:
 		var w := sin(PI * float(j) / float(_win))
 		w *= w
 		var s := 0.0
-		var wob := 1.0 + 0.004 * sin(_vib_phase)
+		var wob := 1.0 + _vib_depth * sin(_vib_phase)
 		for v in _freqs.size():
 			var ph := _phases[v]
 			s += 1.0 - 4.0 * absf(ph - 0.5)
@@ -216,12 +240,26 @@ func _job_chord(a: int, b: int, c: int) -> void:
 
 ## Heartbeat: "lub-dub" low thumps every MUSIC_BEAT_SECONDS.
 func _job_heartbeat() -> void:
-	var beats := int(_loop_s / SoundData.MUSIC_BEAT_SECONDS)
+	var beats := int(_loop_s / _beat_s)
 	for b in beats:
 		for k in 2:
-			var at := b * SoundData.MUSIC_BEAT_SECONDS + 0.28 * float(k)
+			var at := b * _beat_s + 0.28 * float(k)
 			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": 58.0, "f1": 36.0, "start": at, "dur": 0.35,
 				"amp": 0.5 if k == 0 else 0.32, "attack": 0.004, "decay": 0.09}, _rng)
+
+
+## Tolling bell (a score's "toll", Act II): a struck bell every `every` s, its
+## inharmonic partials decaying slowly; each toll ends before the next (and
+## before the loop end), so the loop stays seamless.
+func _job_toll() -> void:
+	var t: Dictionary = _score["toll"]
+	var every := float(t["every"])  # Seconds between tolls.
+	var root := float(t["root_hz"])  # Bell strike pitch (Hz).
+	var tolls := int(_loop_s / every)
+	for b in tolls:
+		for p: Array in t["partials"]:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": root * float(p[0]), "start": float(b) * every,
+				"dur": minf(float(t["dur"]), every - 0.05), "amp": float(p[1]), "attack": 0.006, "decay": float(t["decay"])}, _rng)
 
 
 ## Peak search over samples [a, b) of the finished mix.

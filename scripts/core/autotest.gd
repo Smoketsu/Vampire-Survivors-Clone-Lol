@@ -1087,6 +1087,10 @@ func finish(summary: Dictionary) -> void:
 	_print_recipe_book()
 	print("[autotest] codex: %s" % game.codex.summary_line())  # Codex records (CodexLog).
 	print("[autotest] volleys: %s" % game.volleys.summary_line())  # Bullet heaven pass (VolleyDirector).
+	if game.dread != null:
+		print("[autotest] dread: %s" % game.dread.summary_line())  # Act II Dread (DreadMeter; Act II stages only).
+	if game.claims != null:
+		print("[autotest] claims: %s" % game.claims.summary_line())  # Act II Claims (EyeClaims; Act II stages only).
 	print("[autotest] gravebow / bone colossus: %s | %s" % [GravebowKit.summary_line(st_all), ColossusKit.summary_line(st_all)])
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())
 	print("[autotest] later spells: %s" % ab.spells.later_summary_line())

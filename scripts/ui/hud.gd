@@ -55,6 +55,10 @@ var _xp_bar: HudBar
 var _level_label: Label
 ## Player HP bar.
 var _hp_bar: HudBar
+## Act II Dread meter under the HP bar (null on a stage without Dread).
+var _dread_bar: HudBar = null
+## Act II screen-edge darkening with Dread (null on a stage without Dread).
+var _dread_vignette: DreadVignette = null
 ## Orb Shield charges ("shields") label.
 var _ward_label: Label
 ## Ward on the necromancer label (cast by Warders / Profane Bishops).
@@ -164,6 +168,15 @@ func _build() -> void:
 	_hp_bar.notch = InRunUiData.HP_NOTCH
 	_hp_bar.trail = true
 	top_left.add_child(_hp_bar)
+	if game != null and game.dread != null:
+		# Act II: the Dread meter (DreadMeter) and the edge darkening under every widget.
+		_dread_bar = HudBar.new(DreadData.BAR_COLOR, InRunUiData.DREAD_SIZE)
+		_dread_bar.font_size = 11
+		top_left.add_child(_dread_bar)
+		_dread_vignette = DreadVignette.new()
+		_dread_vignette.game = game
+		add_child(_dread_vignette)
+		move_child(_dread_vignette, 0)
 	_ward_label = UiTheme.tier_label("", UiTheme.Tier.BODY, Palette.VIOLET.lightened(0.3))
 	top_left.add_child(_ward_label)
 	_shield_label = UiTheme.tier_label("", UiTheme.Tier.BODY, Palette.NECRO_GREEN)
@@ -330,6 +343,12 @@ func _refresh() -> void:
 	_xp_bar.set_values(float(game.xp) / float(game.xp_to_next), "XP %d / %d" % [game.xp, game.xp_to_next])
 	_level_label.text = "Lv %d" % game.level
 	_hp_bar.set_values(p.hp / p.max_hp, "%d / %d" % [ceili(p.hp), int(p.max_hp)])
+	if _dread_bar != null:
+		var dr := game.dread  # Act II Dread.
+		_dread_bar.fill_color = DreadData.BAR_HOT_COLOR if dr.steps() >= 2 else DreadData.BAR_COLOR
+		var bonus := roundi((dr.taken_mult() - 1.0) * 100.0)  # Extra damage taken (%).
+		_dread_bar.set_values(dr.fraction(), "Dread %d" % roundi(dr.value) + ("  +%d%% taken" % bonus if bonus > 0 else ""))
+		_dread_vignette.refresh()
 	var orbs := game.abilities.orb_shield
 	if orbs != null:
 		_ward_label.text = "Orb shields ready: %d / %d" % [orbs.charges_ready(), orbs.recharge.size()]

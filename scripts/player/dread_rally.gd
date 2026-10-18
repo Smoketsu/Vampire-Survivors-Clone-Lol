@@ -91,13 +91,20 @@ func request() -> void:
 ## A kill charges the meter (CombatResolver._kill_enemy). Kills during the
 ## buff do not count unless PlayerAbilityData.CHARGE_DURING_BUFF.
 func on_enemy_killed(e: Enemy) -> void:
-	if is_full() or (buff_left > 0.0 and not PlayerAbilityData.CHARGE_DURING_BUFF):
-		return
 	var pts := PlayerAbilityData.POINTS_PER_KILL  # Soul points of this kill.
 	if e.is_boss:
 		pts = PlayerAbilityData.POINTS_PER_BOSS
 	elif e.is_elite or e.is_structure:
 		pts = PlayerAbilityData.POINTS_PER_ELITE
+	add_points(pts)
+
+
+## Adds `pts` soul points to the meter (a kill, or a freed Drowned Thrall's
+## soul returning, EyeClaims), under the same rules as a kill: nothing while
+## full or, unless PlayerAbilityData.CHARGE_DURING_BUFF, during the buff.
+func add_points(pts: float) -> void:
+	if is_full() or (buff_left > 0.0 and not PlayerAbilityData.CHARGE_DURING_BUFF):
+		return
 	meter = minf(PlayerAbilityData.KILLS_TO_FILL, meter + pts)
 	if is_full():
 		fill_times.append(game.elapsed - _fill_start)

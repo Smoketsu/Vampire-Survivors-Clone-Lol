@@ -32,7 +32,7 @@ const CATEGORIES: Array[String] = [SPELL, SUMMON, ENEMY, BOSS]
 
 ## Screen tabs, left to right: [tab id, button text]. "feats" is the
 ## achievements list; the others are codex pages.
-const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons", "Summons"], ["covenant", "Covenant"]]  # TUNING (not in GDD)
+const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons", "Summons"], ["covenant", "Covenant"], ["eye", "Ancient Eye"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -51,11 +51,22 @@ const CHAMPIONS: Array[String] = ["inquisitor", "cathedral_guardian"]
 ## Stage bosses (StageRegistry.BOSS_ARRIVALS ids), campaign order.
 const BOSSES: Array[String] = ["alaric", "vael", "seraphine"]
 
+## Act II, the Ancient Eye (GDD §15.0 "Act II: the Ancient Eye"; the Ancient
+## Eye tab): its soldiers in the order the stages bring them (the Drowned
+## Thrall last: the claimed dead), its minibosses, and its stage bosses
+## (StageRegistry.BOSS_ARRIVALS ids). Each Act II stage adds its own as it is built.
+const EYE_SOLDIERS: Array[String] = ["eye_initiate", "eye_chanter", "drowned_thrall"]
+## Ancient Eye minibosses (enemy kinds).
+const EYE_CHAMPIONS: Array[String] = []
+## Ancient Eye stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const EYE_BOSSES: Array[String] = []
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
 	"summons": [["summons", "Summons"], ["summon_evolutions", "Evolutions"]],  # TUNING (not in GDD)
 	"covenant": [["soldiers", "Soldiers"], ["structures", "Structures"], ["champions", "Champions"], ["bosses", "Bosses"]],  # TUNING (not in GDD)
+	"eye": [["eye_soldiers", "Soldiers"], ["eye_champions", "Champions"], ["eye_bosses", "Bosses"]],  # TUNING (not in GDD) Act II
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -87,6 +98,9 @@ const DESCRIPTIONS: Dictionary = {
 	"alaric": "The Gravebreaker, master of the Desecrated Graveyard.",  # GDD §11
 	"vael": "The Crimson Bulwark, who holds the March behind her shieldwall.",  # GDD §7.5
 	"seraphine": "The Voice of the Dawn, judge of the Sanctum.",  # GDD §7.5
+	"eye_initiate": "Robed, slow cultists of the Ancient Eye who come in great crowds.",  # GDD §15.0 Act II
+	"eye_chanter": "Leads a squad of Initiates; a summon that falls near it is claimed.",  # GDD §15.0 Act II Claims
+	"drowned_thrall": "One of your own dead, claimed by the Eye. Free its soul.",  # GDD §15.0 Act II Claims
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -120,6 +134,9 @@ const LOCKED_HINT: Dictionary = {
 	"structures": "Destroy one to record it.",  # TUNING (not in GDD)
 	"champions": "Slay one to record it.",  # TUNING (not in GDD)
 	"bosses": "Face it to record it.",  # TUNING (not in GDD)
+	"eye_soldiers": "Slay one to record it.",  # TUNING (not in GDD)
+	"eye_champions": "Slay one to record it.",  # TUNING (not in GDD)
+	"eye_bosses": "Face it to record it.",  # TUNING (not in GDD)
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -136,6 +153,9 @@ const TAGS: Dictionary = {
 	"structures": "Covenant structure",  # TUNING (not in GDD)
 	"champions": "Champion",  # TUNING (not in GDD)
 	"bosses": "Stage boss",  # TUNING (not in GDD)
+	"eye_soldiers": "Ancient Eye",  # TUNING (not in GDD)
+	"eye_champions": "Champion of the Eye",  # TUNING (not in GDD)
+	"eye_bosses": "Stage boss",  # TUNING (not in GDD)
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -257,9 +277,10 @@ static func is_known(cat: String, id: String) -> bool:
 		SUMMON:
 			return SUMMON_ORDER.has(id)
 		ENEMY:
-			return SOLDIERS.has(id) or STRUCTURES.has(id) or CHAMPIONS.has(id)
+			return SOLDIERS.has(id) or STRUCTURES.has(id) or CHAMPIONS.has(id) \
+					or EYE_SOLDIERS.has(id) or EYE_CHAMPIONS.has(id)
 		BOSS:
-			return BOSSES.has(id)
+			return BOSSES.has(id) or EYE_BOSSES.has(id)
 	return false
 
 
@@ -271,9 +292,9 @@ static func total(cat: String) -> int:
 		SUMMON:
 			return SUMMON_ORDER.size()
 		ENEMY:
-			return SOLDIERS.size() + STRUCTURES.size() + CHAMPIONS.size()
+			return SOLDIERS.size() + STRUCTURES.size() + CHAMPIONS.size() + EYE_SOLDIERS.size() + EYE_CHAMPIONS.size()
 		BOSS:
-			return BOSSES.size()
+			return BOSSES.size() + EYE_BOSSES.size()
 	return 0
 
 
@@ -285,6 +306,9 @@ static func enemy_row(id: String) -> Dictionary:
 	for table: Dictionary in [EnemyData.ENEMIES, MarchEnemyData.ENEMIES, BattleSisterData.ENEMIES, SanctumEnemyData.ENEMIES, SanctumObjectiveData.STRUCTURES]:
 		if table.has(id):
 			return table[id]
+	var eye := EnemyDirector.eye_def(id)  # Act II kinds ({} when none).
+	if not eye.is_empty():
+		return eye
 	match id:
 		"alaric":
 			return EnemyData.BOSS

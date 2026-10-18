@@ -360,6 +360,31 @@ const MUSIC_CHORDS: Array = [  # TUNING (not in GDD)
 ## Seconds between low "heartbeat" percussion hits.
 const MUSIC_BEAT_SECONDS: float = 2.0  # TUNING (not in GDD)
 
+## "Below the Tide", the Act II run loop (GDD §15.0 "Act II: the Ancient Eye":
+## "low drones, slow glides, a tolling bell"): the RunLoopSynth score of every
+## stage whose STAGE has "music": "tide" (keys in RunLoopSynth's header).
+## Rendered lazily (Sfx), never under the autotest.
+const TIDE_SCORE := {
+	"loop_seconds": 16.0,  # TUNING (not in GDD) a slower swell than Act I's 12 s
+	"root_hz": 55.0,  # TUNING (not in GDD) A1: a fifth below the Act I drone
+	# Am -> F -> Dm -> E (A minor with a raised, uneasy dominant), voiced low.
+	"chords": [
+		[110.0, 130.81, 164.81],
+		[87.31, 110.0, 130.81],
+		[73.42, 87.31, 110.0],
+		[82.41, 103.83, 123.47],
+	],  # TUNING (not in GDD)
+	"drone_lp_hz": 45.0,  # TUNING (not in GDD) darker than Act I's 60
+	"wind_lp_hz": 90.0,  # TUNING (not in GDD) a low surf instead of wind
+	"wind_swells": 4.0,  # TUNING (not in GDD) four wave surges per loop
+	"vibrato_hz": 0.25,  # TUNING (not in GDD) the slow glides
+	"vibrato_depth": 0.015,  # TUNING (not in GDD)
+	# A drowned bell: struck every 8 s, inharmonic partials (ratios of a bell),
+	# a long slow decay; G3 against the A drone, slightly wrong on purpose.
+	"toll": {"every": 8.0, "root_hz": 196.0, "dur": 7.5, "decay": 2.2,
+		"partials": [[1.0, 0.30], [2.76, 0.16], [5.4, 0.08], [0.5, 0.18]]},  # TUNING (not in GDD)
+}
+
 ## Web build (no worker threads, GDD §15.0 "Web build"): main-thread time
 ## budget (ms per frame) for rendering the sound bank and the in-run loop in
 ## small steps (StartupSynth), so the page never freezes while they render.

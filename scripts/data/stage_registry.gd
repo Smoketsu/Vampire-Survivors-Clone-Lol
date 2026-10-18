@@ -1,5 +1,7 @@
 ## StageRegistry — the campaign's stages (GDD §8 "Stages and Wave Timelines",
-## §9.3 "Graveyard -> Crimson March -> Sanctum"). One entry per stage, each
+## §9.3 "Graveyard -> Crimson March -> Sanctum"; Act II, GDD §15.0 "Act II: the
+## Ancient Eye": Gullhaven Harbour -> the Hollow Archive -> Ul-Thalos, opened
+## by slaying Seraphine). One entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
 ## in the game hard-codes a stage.
@@ -21,7 +23,9 @@
 ##   events             — timeline events (GraveyardStage.EVENTS keys, plus
 ##                        the Crimson March types in CrimsonMarchStage.EVENTS
 ##                        and the Sanctum types in SanctumStage.EVENTS).
-##   reckoning          — Reckoning escalation and its banner.
+##   reckoning          — Reckoning escalation and its banner (optional key
+##                        "kind": the main wave's enemy kind, an Act II
+##                        stage's own; absent = the Reckoning Inquisitor).
 ##   reckoning_objective — HUD objective after 0:00.
 ##   empowered_graves   — StageDirector empowered graves ({} = none).
 ##   consecration       — StageDirector desecration events ({} = none).
@@ -39,6 +43,18 @@
 ##   march              — MarchDirector config ({} = no march mechanics; the
 ##                        Sanctum uses it for its battle zones only).
 ## Optional keys (absent = off):
+##   act                — campaign act (1 = the Crimson Covenant, 2 = the
+##                        Ancient Eye; absent = 1). The stage select shows one
+##                        act at a time; Act II-only cards (PassiveData "act")
+##                        are offered only on stages of that act.
+##   playable           — false hides a registered stage from the stage select
+##                        (shown as "Coming soon"); the autotest still runs it
+##                        (absent = true). The Act II foundation stubs use it.
+##   dread              — true: Dread on the necromancer (DreadMeter, Act II).
+##   claims             — true: the Ancient Eye claims fallen summons as
+##                        Drowned Thralls (EyeClaims, Act II).
+##   music              — run loop id ("" / absent = the Act I loop; "tide" =
+##                        "Below the Tide", RunLoopSynth).
 ##   sanctum            — SanctumDirector config (SanctumStage.SANCTUM:
 ##                        chambers, altars, corruption).
 ##   kind_aliases       — {alias: real kind}: short kind names the stage's
@@ -47,7 +63,7 @@ class_name StageRegistry
 extends RefCounted
 
 ## Stages in campaign order (stage select order, unlock chain).
-const ORDER := ["graveyard", "crimson_march", "sanctum"]
+const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "spire"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -55,7 +71,37 @@ const STAGES := {
 	"graveyard": GraveyardStage.STAGE,
 	"crimson_march": CrimsonMarchStage.STAGE,
 	"sanctum": SanctumStage.STAGE,
+	"harbour": HarbourStage.STAGE,
+	"archive": ArchiveStage.STAGE,
+	"spire": SpireStage.STAGE,
 }
+
+## Acts in order: act number -> {name, subtitle} (stage select tabs).
+const ACTS := {
+	1: {"name": "Act I", "subtitle": "The Crimson Covenant"},
+	2: {"name": "Act II", "subtitle": "The Ancient Eye"},
+}
+
+
+## Act of stage `id` (STAGE "act", 1 when absent or unknown).
+static func act_of(id: String) -> int:
+	if not STAGES.has(id):
+		return 1
+	return int((STAGES[id] as Dictionary).get("act", 1))
+
+
+## Stage ids of act `act`, in campaign order.
+static func stages_of_act(act: int) -> PackedStringArray:
+	var out := PackedStringArray()
+	for id: String in ORDER:
+		if act_of(id) == act:
+			out.append(id)
+	return out
+
+
+## False for a registered stage hidden from the stage select (STAGE "playable").
+static func is_playable(id: String) -> bool:
+	return STAGES.has(id) and bool((STAGES[id] as Dictionary).get("playable", true))
 
 ## Boss script id -> that boss's arrival dictionary (the STAGE "boss" keys).
 ## The autotest option --boss=ID puts one of them in the run's stage slot

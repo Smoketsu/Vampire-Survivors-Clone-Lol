@@ -82,6 +82,11 @@
 ## <kind> = count. Evolutions are not in [codex]: the Codex reads the
 ## [recipes] discoveries (owner rule: hidden until obtained). Older saves
 ## have neither section and start with nothing met; unknown ids are ignored.
+## Act II (GDD §15.0 "Act II: the Ancient Eye"): the unlockable spells,
+## passives and summon classes (UnlockData) a run unlocked by slaying a boss
+## or earning an achievement are kept in `unlocked_items`, saved as
+## [unlocks] <id> = true (award_run() fills award "unlocked_items" for the end
+## screen's plates); older saves have no section and start with none.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -144,6 +149,9 @@ var codex_seen: Dictionary = {}
 ## Codex: Covenant kind (CodexData ENEMY id) -> enemies of that kind slain
 ## over all runs (finished runs only, like the lifetime stats).
 var codex_kills: Dictionary = {}
+## Act II unlockable items (UnlockData ids) unlocked in some run: id -> true
+## (the [unlocks] save section; read through Unlocks.is_open()).
+var unlocked_items: Dictionary = {}
 ## True while a deferred codex save is queued for the end of this frame.
 var _codex_save_queued: bool = false
 
@@ -320,6 +328,12 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("ash_earned", float(bounty))
 	soul_ash = mini(soul_ash + int(award["total"]) + bounty, MAX_STORED)
 	award["achievements"] = unlocked
+	# Act II unlockable items (UnlockData): by the boss slain this run or by an achievement now held.
+	var slain_boss := String(summary.get("boss_id", "")) if bool(summary.get("boss_defeated", false)) else ""  # Boss slain this run ("" = none).
+	var items := Unlocks.newly_unlocked(slain_boss, achievements, unlocked_items)
+	for id: String in items:
+		unlocked_items[id] = true
+	award["unlocked_items"] = items
 	var new_skins := PackedStringArray()  # Skins this run unlocked.
 	for id: String in unlocked_skin_ids():
 		if not skins_before.has(id):
@@ -801,6 +815,9 @@ func save() -> Error:
 		cfg.set_value("codex", cat, ",".join(PackedStringArray((codex_seen[cat] as Dictionary).keys())))
 	for kind: String in codex_kills:
 		cfg.set_value("codex_kills", kind, float(codex_kills[kind]))
+	for id: String in UnlockData.UNLOCKS:
+		if unlocked_items.has(id):
+			cfg.set_value("unlocks", id, true)
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -853,6 +870,7 @@ func load_save() -> void:
 	_load_characters(cfg)
 	_load_hyper_skins(cfg)
 	_load_codex(cfg)
+	_load_unlocks(cfg)
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -903,6 +921,21 @@ func _load_characters(cfg: ConfigFile) -> void:
 			spell_max_levels[id] = lvl
 	var c: Variant = cfg.get_value("prerun", "character", CharacterData.DEFAULT_ID)
 	prerun_character = String(c) if typeof(c) == TYPE_STRING and CharacterModifiers.is_known(String(c)) else CharacterData.DEFAULT_ID
+
+
+## Reads the [unlocks] section (missing = locked; only `true` booleans of
+## known UnlockData ids count).
+func _load_unlocks(cfg: ConfigFile) -> void:
+	for id: String in UnlockData.UNLOCKS:
+		var v: Variant = cfg.get_value("unlocks", id, false)
+		if typeof(v) == TYPE_BOOL and bool(v):
+			unlocked_items[id] = true
+
+
+## True when Act II item `id` (UnlockData) was unlocked in some run. Callers
+## use Unlocks.is_open(), which also opens every non-lockable item.
+func is_item_unlocked(id: String) -> bool:
+	return unlocked_items.has(id)
 
 
 ## Reads the [recipes] discoveries (missing section or keys = undiscovered;
@@ -983,6 +1016,7 @@ func _reset() -> void:
 	chosen_skins = {}
 	codex_seen = _empty_codex()
 	codex_kills = {}
+	unlocked_items = {}
 	load_status = "fresh"
 
 

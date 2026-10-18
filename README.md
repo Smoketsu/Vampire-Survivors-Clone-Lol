@@ -287,6 +287,28 @@ the Death Knight's sword wave) tinted in each class's colour and drawn as additi
 bursts into a small starburst and every volley opens with a rune-ring flash (`assets/sprites/volleys/`,
 `effects/volley_hit` and `volley_flash`; ART_BIBLE "Volley shots and bursts").
 
+### Act II: the Ancient Eye (in development)
+
+After Grand Inquisitor Seraphine falls, Act II opens: the necromancer's dead start hearing a
+song from under the sea, and **the Ancient Eye**, a cult of a dead god dreaming in the deep,
+fights you **for the dead** (GDD §15.0 "Act II: the Ancient Eye"). The stage select shows one
+act at a time (Q / E, LB / RB, or the Act tabs). Its three stages, Gullhaven Harbour, the
+Hollow Archive and Ul-Thalos, the Risen Spire, each unlocked by the previous boss, are being
+built; until then their cards read "Coming soon". The act's shared rules are in:
+
+- **Claims.** A summon that dies near a Chanter of the Eye (the leader of an Initiate squad)
+  rises for 15 s as a hostile **Drowned Thrall** wearing its own sprite, tinted drowned teal.
+  Kill it and its soul comes back as Dread Rally charge; your replenishment is unchanged, so
+  nothing is lost for good. Kill the Chanters first.
+- **Dread.** A 0–100 meter under your HP bar. The Eye's hazards raise it, every kill lowers it
+  by 1, and each 25 Dread makes you take 5% more damage (+20% at 100). The screen edges darken
+  with it (lighter with Reduce motion or Effects = Reduced); it never takes control away.
+- **Unlockable spells and passives.** Act II's spells are unlocked by slaying its bosses and
+  its two counter-passives by its achievements; once unlocked, the spells can be offered on
+  every stage, the counter-passives only in Act II. The end screen shows a plate for each
+  unlock, and the Codex (its new **Ancient Eye** tab too) names the condition of a locked one.
+- **Music.** Act II runs play their own loop, "Below the Tide".
+
 ### How a run works
 
 - A **20:00 countdown** runs at the top of the screen.
@@ -1457,6 +1479,9 @@ scripts/
   core/
     game_state.gd           Autoload: CLI options (autotest), session prefs, last run summary
     save_migration.gd       First-launch copy of the Gravebound saves (the rename)
+    dread_meter.gd          Act II Dread on the necromancer (game.dread): sources, kills, damage-taken mult
+    unlocks.gd              The one unlock check of Act II's spells / passives / classes (UnlockData, Meta)
+    eye_glyphs.gd           Code-drawn fallbacks of the Ancient Eye's kinds (Act II)
     save_backup.gd          Save codes (Settings -> Save): the progress file gzipped + base64, copied out
                             (clipboard / the browser's prompt box) and validated + restored through Meta
     settings.gd             Autoload: persistent settings (volumes, toggles, key rebinds) in user://settings.cfg
@@ -1507,6 +1532,7 @@ scripts/
     volley_director.gd      Bullet heaven pass: every volley shot (packed arrays, one _draw, spatial-hash
                             hits through CombatResolver), summon volleys, spell echoes, Rally Barrage,
                             the shot art and the impact / launch bursts (drawing only)
+    eye_claims.gd           Act II Claims (game.claims): fallen summons rise as hostile Drowned Thralls
     synergy_manager.gd      Army synergy activation and effects; the newer classes' marks
                             (staggered, swooped), the one synergy hit bonus (hit_mult()), the
                             Baying frenzy and the Menagerie replenishment
@@ -1553,6 +1579,8 @@ scripts/
     boss_vael.gd            Marshal Vael (extends Boss): Cleave, Command, Holy Standard, Shieldwall, Last Stand
     boss_seraphine.gd       Grand Inquisitor Seraphine (extends Boss): three phases, attendants, teleport,
                             fans, circles, beams, barrages, summons, suppression adapter, nova, Last Light
+    eye/                    The Ancient Eye's kits ("<id>_kit.gd", loaded by name) and bosses
+                            ("boss_<id>.gd"); thrall_kit.gd: the Drowned Thrall's life and soul return
     seraphine_hazards.gd    Her world-space hazards: holy circles, rotating beams, Judgment nova and safe
                             circles, suppression rings, the collapsing arena (timing, damage, drawing)
     stage_director.gd       Empowered graves, Desecration, Crypt Defender, holy ground (incl. ward-generator zones)
@@ -1609,6 +1637,7 @@ scripts/
   fx/unit_dissolve.gd       Pooled death dissolve: the dead unit's look collapsing into bone dust / holy ash
   fx/anim_bursts.gd         Art-only one-shot effect strips (Shadow Bolt hit splash, level-up column, evolution flash)
   fx/hurt_vignette.gd       The red screen-edge flash when the necromancer is hurt
+  fx/dread_vignette.gd      Act II: the screen edges darkening with Dread (visual only)
   fx/sharp_pixel.gdshader   The sharp-pixel filter: grid pixel art (and the pixel fonts) crisp at any window scale
   fx/flat_silhouette.gdshader  Pixel art as one flat colour (the Codex's unmet entries), sharp-pixel sampling
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
@@ -1680,6 +1709,13 @@ scripts/
                                    stage multipliers, boss arrival
     stages/sanctum_stage.gd        Stage 3: kind aliases (KINDS -> SanctumEnemyData ids), segments, events,
                                    zones, chamber / altar / corruption rules, Dawn's Wrath, boss arrival
+    stages/harbour_stage.gd        Act II stages (foundation stubs until built): Gullhaven Harbour,
+    stages/archive_stage.gd        the Hollow Archive and Ul-Thalos; act 2, Dread, Claims, "Below the
+    stages/spire_stage.gd          Tide", their unlock chain and boss ids
+    eye_enemy_data.gd       The Ancient Eye's shared kinds (Initiate, Chanter, Drowned Thrall), Claim rules
+    harbour_enemy_data.gd   Each Act II stage's own kinds (archive_ / spire_enemy_data.gd likewise)
+    dread_data.gd           Act II Dread: steps, damage taken, kill calm, Iron Mind keys, the vignette look
+    unlock_data.gd          Act II unlockable items (boss / achievement), end-screen plate headings
     sanctum_objective_data.gd      Sanctum structures: ward crystal, sacred altar
     unit_data.gd            Summon classes (and their specials), level tables, AI weights, leash/rates
     enemy_data.gd           Graveyard enemy roster, Sir Alaric, Reckoning enemy, elites
@@ -1819,7 +1855,8 @@ Options (after `--`):
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march` or `sanctum`. Stage locks are ignored. |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, or the Act II stages `harbour`, `archive` and `spire`. Stage locks (and Act II's "Coming soon") are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). |
+| `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | `--volleys=on\|off` | The bullet heaven pass (default on, like the setting): `off` runs none of the pass (no volleys, the usual fodder; the army still holds the Bone Ring). Every summary has a `volleys` line: shots fired, hits, volley damage, peak shots in flight against the cap, volleys thinned by the cap, boss hits refused by the per-volley cap, Rally Barrages, and the volley damage by class / spell. |

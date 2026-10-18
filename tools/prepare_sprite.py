@@ -175,6 +175,10 @@ FACTION_RAMPS = {
     "enemies": ["bone", "steel", "crimson", "brown", "gold", "skin", "flame"],
     "bosses": ["bone", "steel", "crimson", "brown", "gold", "skin", "flame"],
     "structures": ["bone", "steel", "crimson", "brown", "gold", "flame"],
+    # The Ancient Eye (Act II, assets/sprites/eye/): drowned teal, bone white and
+    # bioluminescence, plus cloth, wet stone, skin and rot; never the player's
+    # violet or the Covenant's crimson and gold.
+    "eye": ["bone", "drowned", "biolume", "grey", "brown", "skin", "moss"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
 # blue of the Mage and Lich and the icy cyan of the frost summons never mix (GDD 15.0 art

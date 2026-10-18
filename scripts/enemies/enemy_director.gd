@@ -41,6 +41,9 @@
 class_name EnemyDirector
 extends Node2D
 
+## Folder of the Ancient Eye's boss scripts ("boss_<id>.gd", each a Boss; Act II).
+const EYE_BOSS_DIR: String = "res://scripts/enemies/eye/"
+
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
 ## The boss died (big reward; the run continues).
@@ -395,13 +398,21 @@ func show_banner(text: String) -> void:
 ## the difficulty level's boss_hp and a share of the opt-in HP bonus,
 ## DifficultyModifiers.boss_hp_mult, and by the stage's enemy HP multiplier).
 func _spawn_boss() -> void:
-	match String(boss_info["id"]):
+	# The boss script: the arrival's "script" when given (an Act II stub's
+	# placeholder), else its id. Act I bosses by name; any other id is an
+	# Ancient Eye boss loaded from EYE_BOSS_DIR + "boss_<id>.gd" (each Act II
+	# stage adds its boss as a new file); Sir Alaric when none exists.
+	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
+	match sid:
 		"vael":
 			boss = BossVael.new()
 		"seraphine":
 			boss = BossSeraphine.new()
-		_:
+		"alaric":
 			boss = BossAlaric.new()
+		_:
+			var path := EYE_BOSS_DIR + "boss_" + sid + ".gd"  # An Ancient Eye boss script.
+			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
 	_next_slot = (_next_slot + 1) % UnitData.AI_TICK_DIVISOR
@@ -423,8 +434,11 @@ func _spawn_reckoning_wave() -> void:
 	var hp_scale := hp_mult * pow(float(r["hp_growth"]), float(reckoning_wave))
 	var dmg_scale := pow(float(r["damage_growth"]), float(reckoning_wave))
 	var offset := randf() * TAU
+	var rk := String(r.get("kind", ""))  # Optional main kind (an Act II stage's own); "" = the Reckoning Inquisitor.
+	var rkind := resolve_kind(rk) if rk != "" else "inquisitor"  # Real kind of the main wave.
+	var rdef: Dictionary = enemy_def(rk) if rk != "" else EnemyData.RECKONING_ENEMY  # Its design row.
 	for i in count:
-		var e := _spawn_enemy_def("inquisitor", EnemyData.RECKONING_ENEMY, _ring_point(offset + TAU * float(i) / float(count)), hp_scale, false)
+		var e := _spawn_enemy_def(rkind, rdef, _ring_point(offset + TAU * float(i) / float(count)), hp_scale, false)
 		e.damage *= dmg_scale
 		e.is_reckoning = true
 	for comp: Dictionary in r.get("companions", []):
@@ -471,7 +485,9 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## SanctumObjectiveData.STRUCTURES (Sanctum ward crystals and altars), then
 ## MarchEnemyData.ENEMIES (Crimson March soldiers and structures), then
 ## BattleSisterData.ENEMIES (the Sister of the Scourge, March and Sanctum),
-## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
+## then the Ancient Eye's tables (Act II: EyeEnemyData, then each stage's own
+## HarbourEnemyData / ArchiveEnemyData / SpireEnemyData), then
+## SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
 	kind = resolve_kind(kind)
@@ -483,7 +499,25 @@ func enemy_def(kind: String) -> Dictionary:
 		return MarchEnemyData.ENEMIES[kind]
 	if BattleSisterData.ENEMIES.has(kind):
 		return BattleSisterData.ENEMIES[kind]
+	var eye := eye_def(kind)  # Act II kinds ({} when not an Eye kind).
+	if not eye.is_empty():
+		return eye
 	return SanctumEnemyData.ENEMIES[kind]
+
+
+## Design row of Ancient Eye kind `kind` (real id), or {} when it is none:
+## EyeEnemyData (the shared kinds and the Drowned Thrall) first, then each
+## Act II stage's own table.
+static func eye_def(kind: String) -> Dictionary:
+	if EyeEnemyData.ENEMIES.has(kind):
+		return EyeEnemyData.ENEMIES[kind]
+	if HarbourEnemyData.ENEMIES.has(kind):
+		return HarbourEnemyData.ENEMIES[kind]
+	if ArchiveEnemyData.ENEMIES.has(kind):
+		return ArchiveEnemyData.ENEMIES[kind]
+	if SpireEnemyData.ENEMIES.has(kind):
+		return SpireEnemyData.ENEMIES[kind]
+	return {}
 
 
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
@@ -491,7 +525,7 @@ func enemy_def(kind: String) -> Dictionary:
 static func is_known_kind(kind: String) -> bool:
 	return EnemyData.ENEMIES.has(kind) or SanctumObjectiveData.STRUCTURES.has(kind) \
 			or MarchEnemyData.ENEMIES.has(kind) or BattleSisterData.ENEMIES.has(kind) \
-			or SanctumEnemyData.ENEMIES.has(kind)
+			or SanctumEnemyData.ENEMIES.has(kind) or not eye_def(kind).is_empty()
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar

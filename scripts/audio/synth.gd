@@ -173,5 +173,5 @@ static func snap(hz: float, loop_s: float) -> float:
 ## Renders the dark, minor-key ambient loop (GDD §12 "ominous choirs, low
 ## percussion and ambient drones") in one go: see RunLoopSynth, which holds
 ## the recipe as a list of small jobs (the Web build runs them over frames).
-static func render_music(rng_seed: int) -> AudioStreamWAV:
-	return RunLoopSynth.new(rng_seed).render_all()
+static func render_music(rng_seed: int, score: Dictionary = {}) -> AudioStreamWAV:
+	return RunLoopSynth.new(rng_seed, score).render_all()

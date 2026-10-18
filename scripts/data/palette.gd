@@ -55,6 +55,19 @@ const GOLD := Color(1.0, 0.82, 0.30)
 ## Orange-gold purifying flame.
 const FLAME := Color(1.0, 0.55, 0.15)
 
+# --- Hostile (the Ancient Eye, Act II) ------------------------------------------------
+
+## Drowned teal of the Ancient Eye's robes (tools/palette.json "drowned"; darker and
+## bluer than the UI's soul-teal, which means "affordable / focused / new").
+const EYE_DROWNED := Color(0.227, 0.486, 0.502)
+## Drowned teal in shadow ("drowned_dark").
+const EYE_DROWNED_DARK := Color(0.106, 0.275, 0.314)
+## Bioluminescent glow of the Eye's eyes and sigils ("biolume"; magenta-leaning, never
+## the player's violet).
+const EYE_BIOLUME := Color(0.690, 0.298, 0.753)
+## Bioluminescent glow core ("biolume_glow").
+const EYE_BIOLUME_GLOW := Color(0.941, 0.612, 0.949)
+
 # --- World / UI ---------------------------------------------------------------
 
 ## Graveyard soil base colour.

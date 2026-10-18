@@ -14,6 +14,12 @@
 ## stage's mood (MenuBackdrop.set_mood(): night, dusk, dawn) and brightens
 ## its scene. Keyboard, mouse and controller navigable (arrows / D-pad
 ## between cards, Enter / A to march, Esc / B back).
+## ACTS (GDD §15.0 "Act II: the Ancient Eye"): the campaign's stages are shown
+## one act at a time (StageRegistry.ACTS / "act"): tab buttons above the cards
+## (Q / E, LB / RB, or a click) switch between Act I and Act II; the screen opens
+## on the act of the last stage played. A registered stage that is not yet
+## playable (StageRegistry "playable": false, the Act II foundation stubs) shows
+## a locked card reading "Coming soon".
 ## Choosing an unlocked stage opens the pre-run setup (PreRunSetup) over this
 ## screen (this screen's cards fade out while it is open); when it confirms,
 ## `stage_chosen` is emitted with the finished RunConfig. Backing out of it
@@ -42,6 +48,12 @@ var _content: Control
 var _backdrop: MenuBackdrop = null
 ## Running fade of the content's alpha (null when settled).
 var _content_tween: Tween = null
+## Act shown (StageRegistry.ACTS key).
+var _act: int = 1
+## Act number -> its tab Button (empty when only one act has stages).
+var _act_tabs: Dictionary = {}
+## The row holding the shown act's cards.
+var _row: HBoxContainer
 
 
 ## Opens the screen over `parent`; focus returns to `refocus` when it closes.
@@ -67,39 +79,107 @@ func _ready() -> void:
 	vb.add_theme_constant_override("separation", 14)
 	center.add_child(vb)
 	vb.add_child(UiTheme.title("Choose Your Battlefield"))
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", FrontDoorData.CARD_GAP)
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	vb.add_child(row)
-	var cards: Array = []  # Staggered in.
-	for id: String in StageRegistry.ORDER:
-		var card := _build_card(id)
-		row.add_child(card)
-		_cards[id] = card
-		cards.append(card)
+	_act = StageRegistry.act_of(GameState.last_stage_id)
+	if _acts().size() > 1:
+		vb.add_child(_act_row())
+	_row = HBoxContainer.new()
+	_row.add_theme_constant_override("separation", FrontDoorData.CARD_GAP)
+	_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	vb.add_child(_row)
 	_back = Button.new()
 	_back.text = "Back"
 	_back.custom_minimum_size = FrontDoorData.STAGE_BACK_SIZE
 	_back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_back.pressed.connect(close)
 	vb.add_child(_back)
-	var hints := InputHints.bottom_strip([[InputHints.MOVE, "Move"], ["ui_accept", "March"], ["ui_cancel", "Back"]])
+	var strip: Array = [[InputHints.MOVE, "Move"], ["ui_accept", "March"], ["ui_cancel", "Back"]]  # Bottom hints.
+	if not _act_tabs.is_empty():
+		strip.push_front([[InputHints.raw(KEY_Q, JOY_BUTTON_LEFT_SHOULDER), InputHints.raw(KEY_E, JOY_BUTTON_RIGHT_SHOULDER)], "Act"])
+	var hints := InputHints.bottom_strip(strip)
 	add_child(hints)
-	_wire_focus()
 	child_entered_tree.connect(_on_child_entered)
 	child_exiting_tree.connect(_on_child_exiting)
-	var first: Button = _cards.get(GameState.last_stage_id, _cards[StageRegistry.ORDER[0]])
-	if not Meta.is_stage_unlocked(String(first.get_meta(&"stage_id"))):
-		first = _cards[StageRegistry.ORDER[0]]
-	first.grab_focus.call_deferred()
 	UiMotion.open(self)  # Fade / rise in.
+	_show_act(_act, GameState.last_stage_id)
+
+
+## Acts that hold at least one stage, in order.
+static func _acts() -> Array:
+	var out: Array = []
+	for a: int in StageRegistry.ACTS:
+		if not StageRegistry.stages_of_act(a).is_empty():
+			out.append(a)
+	out.sort()
+	return out
+
+
+## The act tabs: [Q] Act I · subtitle, Act II · subtitle [E].
+func _act_row() -> Control:
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 8)
+	var lb := InputHints.chip(InputHints.raw(KEY_Q, JOY_BUTTON_LEFT_SHOULDER))
+	lb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(lb)
+	for a: int in _acts():
+		var info: Dictionary = StageRegistry.ACTS[a]
+		var b := Button.new()
+		b.text = "%s · %s" % [String(info["name"]), String(info["subtitle"])]
+		b.custom_minimum_size = FrontDoorData.ACT_TAB_SIZE
+		b.focus_mode = Control.FOCUS_NONE  # Switched by Q / E or a click; focus stays on the cards.
+		b.set_meta(UiMotion.META_LIFT, false)
+		b.pressed.connect(func() -> void: _switch_act(a))
+		row.add_child(b)
+		_act_tabs[a] = b
+	var rb := InputHints.chip(InputHints.raw(KEY_E, JOY_BUTTON_RIGHT_SHOULDER))
+	rb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(rb)
+	return row
+
+
+## Shows act `act`'s cards (rebuilt), the gold frame on its tab, and focuses
+## `focus_id`'s card when it is in the act and unlocked, else the act's first.
+func _show_act(act: int, focus_id: String = "") -> void:
+	_act = act
+	for a: int in _act_tabs:
+		UiTheme.style_button(_act_tabs[a] as Button, "button", "gold" if a == act else "")
+	for c: Node in _row.get_children():
+		_row.remove_child(c)
+		c.queue_free()
+	_cards = {}
+	_vignettes = {}
+	var cards: Array = []  # Staggered in.
+	for id: String in StageRegistry.stages_of_act(act):
+		var card := _build_card(id)
+		_row.add_child(card)
+		_cards[id] = card
+		cards.append(card)
+	_wire_focus()
+	var ids := StageRegistry.stages_of_act(act)
+	var first: Button = _cards.get(focus_id, _cards[ids[0]])
+	if not _is_open(String(first.get_meta(&"stage_id"))):
+		first = _cards[ids[0]]
+	first.grab_focus.call_deferred()
 	UiMotion.stagger(cards, 0.05)
+
+
+## Switches to act `act` (a tab click or Q / E); nothing when already shown.
+func _switch_act(act: int) -> void:
+	if act == _act or not _act_tabs.has(act):
+		return
+	Sfx.play_ui("ui_tick")
+	_show_act(act)
+
+
+## True when stage `id` can be played: unlocked and playable.
+static func _is_open(id: String) -> bool:
+	return StageRegistry.is_playable(id) and Meta.is_stage_unlocked(id)
 
 
 ## One stage card: a Button holding the vignette, the texts and the footer.
 func _build_card(id: String) -> Button:
 	var def: Dictionary = StageRegistry.STAGES[id]
-	var unlocked := Meta.is_stage_unlocked(id)
+	var unlocked := _is_open(id)
 	var b := Button.new()
 	b.custom_minimum_size = FrontDoorData.CARD_SIZE
 	b.focus_mode = Control.FOCUS_ALL  # Locked cards stay focusable so their requirement can be read.
@@ -156,7 +236,8 @@ static func _locked_footer() -> Control:
 	return row
 
 
-## A locked card's one-liner: the boss to slay to open it, in crimson.
+## A locked card's one-liner: the boss to slay to open it, in crimson (or
+## "Coming soon" for a stage not yet playable).
 func _lock_line(def: Dictionary) -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
@@ -169,8 +250,10 @@ func _lock_line(def: Dictionary) -> Control:
 
 
 ## "Slay <boss>" for the stage `def` requires (StageRegistry unlock), else
-## the stage's own unlock text.
+## the stage's own unlock text; "Coming soon" for a stage not yet playable.
 static func _lock_text(def: Dictionary) -> String:
+	if not bool(def.get("playable", true)):
+		return FrontDoorData.COMING_SOON
 	var req: Dictionary = def.get("unlock", {})
 	var need := String(req.get("stage", ""))  # Stage whose boss must fall.
 	if StageRegistry.STAGES.has(need):
@@ -223,7 +306,7 @@ func _on_card_focus(id: String, on: bool) -> void:
 
 ## Explicit focus neighbours: cards left/right in a row, Back below them.
 func _wire_focus() -> void:
-	var ids: Array = StageRegistry.ORDER
+	var ids: Array = Array(StageRegistry.stages_of_act(_act))
 	for i in ids.size():
 		var b: Button = _cards[ids[i]]
 		var left: Button = _cards[ids[maxi(0, i - 1)]]
@@ -242,7 +325,7 @@ func _wire_focus() -> void:
 ## A card was pressed: an unlocked stage opens the pre-run setup with its
 ## RunConfig (remembered choices); a locked one is denied with a shake.
 func _choose(id: String) -> void:
-	if not Meta.is_stage_unlocked(id):
+	if not _is_open(id):
 		Sfx.play_ui("denied")
 		_shake(_cards[id])
 		return
@@ -324,3 +407,18 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		close()
+		return
+	var step := CreditsScreen._page_step(event)  # -1 / +1 for an act switch (Q / E, LB / RB), 0 otherwise.
+	if step != 0 and not _act_tabs.is_empty() and not _has_setup_open():
+		get_viewport().set_input_as_handled()
+		var acts := _acts()
+		var i := clampi(acts.find(_act) + step, 0, acts.size() - 1)
+		_switch_act(int(acts[i]))
+
+
+## True while the pre-run setup is open over this screen (it owns Q / E then).
+func _has_setup_open() -> bool:
+	for c: Node in get_children():
+		if c is PreRunSetup:
+			return true
+	return false

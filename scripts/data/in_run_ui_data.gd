@@ -225,6 +225,8 @@ const XP_TOP: float = 4.0  # TUNING (not in GDD)
 const XP_HEIGHT: float = 15.0  # TUNING (not in GDD)
 ## HP bar size (px).
 const HP_SIZE := Vector2(240.0, 20.0)  # TUNING (not in GDD)
+## Size (px) of the Act II Dread meter under the HP bar.
+const DREAD_SIZE := Vector2(240.0, 12.0)  # TUNING (not in GDD)
 ## HP bar notches: one dark notch every this fraction of the bar (0 = none).
 const HP_NOTCH: float = 0.25  # TUNING (not in GDD)
 ## Seconds (real time) the HP bar's damage trail waits before it drains.
