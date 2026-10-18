@@ -96,7 +96,7 @@ func _update_zone() -> void:
 ## terrain around the necromancer as the new zone.
 func _enter_zone(z: Dictionary) -> void:
 	var p := game.player.position
-	game.arena.set_layout(z["arena"], p, float(config["transition_clear"]))
+	game.arena.set_layout(z["arena"], p, float(z.get("clear", config["transition_clear"])))  # A zone may ask a wider clear circle (the Archive's Orrery).
 	game.ground.set_zone(z["ground"])
 	var title := String(config.get("zone_title", "THE MARCH ADVANCES  -  ZONE %s"))  # Banner title format.
 	if game.hud != null:

@@ -63,6 +63,8 @@
 ##                        water, tide surges, High Water; Act II).
 ##   harbour            — HarbourDirector config (HarbourStage.HARBOUR: bell
 ##                        buoys, smugglers' caches, the Harbourmaster; Act II).
+##   archive            — ArchiveDirector config (ArchiveStage.ARCHIVE: the
+##                        Ink Wells, the Orrery, the forbidden tomes, rifts).
 class_name StageRegistry
 extends RefCounted
 
@@ -117,4 +119,6 @@ const BOSS_ARRIVALS := {
 	"seraphine": SeraphineData.ARRIVAL,
 	# --- Act II: Gullhaven Harbour ---
 	"merrow": MerrowData.ARRIVAL,
+	# --- Act II: the Hollow Archive ---
+	"archivist": ArchivistData.ARRIVAL,
 }

@@ -197,6 +197,14 @@ func _generate(key: Vector2i) -> Obstacle:
 		var long_half := minf(size * 0.5, ArenaData.MAX_HALF_EXTENT)
 		var short_half := float(def["short"]) * 0.5
 		vertical = _rng.randf() >= 0.5
+		# Optional layout `orient` (the Hollow Archive's Reading Halls: rows of
+		# shelves): "h" lays every rect along x, "v" along y. The draw above
+		# still runs, keeping each cell's RNG stream the same shape.
+		match String(_layout.get("orient", "")):
+			"h":
+				vertical = false
+			"v":
+				vertical = true
 		o.half = Vector2(short_half, long_half) if vertical else Vector2(long_half, short_half)
 	o.art_key = EnvironmentArt.obstacle_key(kind, o.size_index, sizes.size(), vertical)
 	return o
@@ -298,8 +306,8 @@ func resolve_all(delta: float) -> void:
 		if u.position != before:
 			resolved_summons += 1
 	for e in game.enemies.active:
-		if not e.active:
-			continue
+		if not e.active or e.phases_obstacles:
+			continue  # (A phasing body, the Ink Wraith, slips through obstacles.)
 		var before := e.position
 		e.position = _resolve_body(e.position, e.radius, e.velocity, e.get_instance_id(), delta, now)
 		if e.position != before:
@@ -378,6 +386,8 @@ func _draw_obstacle(o: Obstacle) -> void:
 		return  # A Crimson March obstacle kind.
 	if HarbourGlyphs.draw_obstacle(self, o):
 		return  # A Gullhaven Harbour obstacle kind (Act II).
+	if ArchiveGlyphs.draw_obstacle(self, o):
+		return  # A Hollow Archive obstacle kind (Act II).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

@@ -362,5 +362,5 @@ static func _draw_icon_body(ci: CanvasItem, kind: String, c: Vector2, s: float) 
 			if not ProgressionGlyphs.draw_icon(ci, kind, c, s) and not MetaGlyphs.draw_icon(ci, kind, c, s) \
 					and not PowerupGlyphs.draw_icon(ci, kind, c, s) and not SummonGlyphs.draw_icon(ci, kind, c, s) \
 					and not SpellGlyphs.draw_icon(ci, kind, c, s) and not GraveSpellGlyphs.draw_icon(ci, kind, c, s) \
-					and not AbilityGlyphs.draw_icon(ci, kind, c, s):
+					and not AbilityGlyphs.draw_icon(ci, kind, c, s) and not ArchiveGlyphs.draw_icon(ci, kind, c, s):
 				ci.draw_circle(c, s * 0.3, Palette.BONE)

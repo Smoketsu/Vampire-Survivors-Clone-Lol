@@ -241,6 +241,9 @@ const SPELLS := {
 	# --- Act II: Gullhaven Harbour ---
 	"undertow": {"every": 1, "clock": "cooldown", "aim": "densest", "pattern": "fan", "counts": [4, 6, 9], "spread": 60.0,
 		"speed": 300.0, "life": 0.55, "share": 0.25, "pierce": 1, "radius": 4.0, "style": "wave", "color": Color(0.36, 0.62, 0.78)},  # TUNING (not in GDD) spray of brine
+	# --- Act II: the Hollow Archive ---
+	"forbidden_verse": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "spiral", "counts": [6, 9, 14], "speed": 210.0,
+		"life": 0.75, "share": 0.5, "pierce": 1, "radius": 4.0, "style": "feather", "color": Color(0.90, 0.86, 0.74), "curve": 2.0},  # TUNING (not in GDD) a swirl of loose pages at each sweep (share of a cut)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

@@ -306,6 +306,7 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("boss_kills_full_army", float(st.get("boss_kill_full_army", 0.0)))
 	_add_lifetime("rot_kills", float(st.get("rot_kills", 0.0)))
 	_add_lifetime("high_confessor_kills", float(st.get("kill_high_confessor", 0.0)))
+	_add_lifetime("archive_all_tomes_runs", 1.0 if float(st.get("archive_all_tomes", 0.0)) > 0.0 else 0.0)  # Nothing Unwritten (Act II)
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
 		# The Dread Sovereign skin reuses the achievement's role check
@@ -1055,6 +1056,8 @@ static func _default_lifetime() -> Dictionary:
 		"rot_kills": 0.0,  # enemies slain while Rotting (Plague Doctor skin)
 		"high_confessor_kills": 0.0,  # High Confessors slain (Heretic Saint skin)
 		"seraphine_kills_full_army": 0.0,  # Seraphine slain with the 4 GDD roles (Dread Sovereign skin)
+		# --- Act II: the Hollow Archive ---
+		"archive_all_tomes_runs": 0.0,  # Hollow Archive runs that burned every tome (Nothing Unwritten)
 	}
 
 

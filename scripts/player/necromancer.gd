@@ -134,6 +134,14 @@ func step(delta: float) -> void:
 			queue_redraw()
 
 
+## Act II ground slow from the Hollow Archive's ink pools and wells: for at
+## least `duration` s he moves `fraction` (0..1) slower. It goes through
+## TerrainSlow, the one ground-slow path (like the Harbour's tide), so
+## Brinewalker cuts it too; the strongest slow holding wins. Grave Step ignores it.
+func apply_ground_slow(fraction: float, duration: float) -> void:
+	TerrainSlow.slow_player(game, clampf(fraction, 0.0, 0.9), duration)
+
+
 ## Applies (or refreshes) a priest ward absorbing `amount` for `duration` s.
 ## The stronger of the current and new ward wins.
 func apply_shield(amount: float, duration: float) -> void:

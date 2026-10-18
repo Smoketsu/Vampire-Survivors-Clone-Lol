@@ -35,6 +35,10 @@ const UNLOCKS := {
 	"undertow": {"type": "spell", "boss": "merrow", "text": "Slay Abbot Silas Merrow in Gullhaven Harbour to unlock."},  # owner-approved
 	"salt_of_the_deep": {"type": "passive", "boss": "merrow", "text": "Slay Abbot Silas Merrow in Gullhaven Harbour to unlock."},  # Undertow's paired passive, unlocked with it
 	"brinewalker": {"type": "passive", "achievement": "low_tide", "text": "Earn Low Tide: clear Gullhaven Harbour."},  # owner-approved
+	# --- Act II: the Hollow Archive ---
+	"forbidden_verse": {"type": "spell", "boss": "archivist", "text": "Slay the Archivist in the Hollow Archive to unlock."},  # Owner-approved proposal
+	"marginalia": {"type": "passive", "boss": "archivist", "text": "Slay the Archivist in the Hollow Archive to unlock."},  # Forbidden Verse's paired passive, unlocked with it
+	"iron_mind": {"type": "passive", "achievement": "nothing_unwritten", "text": "Earn Nothing Unwritten: burn every forbidden tome in one Hollow Archive run."},  # Owner-approved proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

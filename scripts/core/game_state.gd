@@ -292,6 +292,14 @@ func _parse_args(args: PackedStringArray) -> void:
 
 
 ## Autotest: true when item `id` is forced by --spells= / --passives= /
-## --classes= (Unlocks.is_open() treats it as unlocked).
+## --classes= (Unlocks.is_open() treats it as unlocked). A forced spell's
+## evolution passive counts too (--spells forces both; an Act II spell's
+## paired passive is locked with it).
 func autotest_forces(id: String) -> bool:
-	return autotest_spells.has(id) or autotest_passives.has(id) or autotest_classes.has(id)
+	if autotest_spells.has(id) or autotest_passives.has(id) or autotest_classes.has(id):
+		return true
+	for sp: String in autotest_spells:
+		var evo := EvolutionData.for_spell(sp)  # The forced spell's evolution ("" if none).
+		if evo != "" and String(EvolutionData.EVOLUTIONS[evo]["passive"]) == id:
+			return true
+	return false

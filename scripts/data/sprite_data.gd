@@ -150,6 +150,22 @@ const HEIGHTS: Dictionary = {
 	"structures/bell_buoy": 64.0,  # TUNING (not in GDD) a bell buoy: the float and its bell cage
 	"structures/smuggler_cache": 40.0,  # TUNING (not in GDD) a smugglers' cache: an iron-bound crate, ~34 px wide for its 15 px radius
 	"player/brine_widow": 58.0,  # TUNING (not in GDD) the Brine Widow: body ~48 like the necromancer, the hooked staff above
+	# --- Act II: the Hollow Archive ---
+	"eye/scribe": 48.0,  # TUNING (not in GDD) soldier tier: body 44, the raised quill above
+	"eye/ink_wraith": 44.0,  # TUNING (not in GDD) a floating flanker (soldier tier)
+	"eye/spore_pilgrim": 50.0,  # TUNING (not in GDD) soldier tier: body 44, the mushroom staff above
+	"eye/gibbering_mass": 60.0,  # TUNING (not in GDD) heavy tier: a wide lumpy mound
+	"eye/gibbering_lesser": 44.0,  # TUNING (not in GDD) the first split (same art, smaller)
+	"eye/gibbering_least": 32.0,  # TUNING (not in GDD) the last split (same art, smallest)
+	"eye/librarian": 110.0,  # TUNING (not in GDD) miniboss tier: the floating eye and its hanging tentacles
+	"eye/unwritten_one": 60.0,  # TUNING (not in GDD) the Reckoning's soldier (the Inquisitor is 64)
+	"bosses/archivist": 130.0,  # TUNING (not in GDD) boss tier: the open-book head and the quill staff
+	"bosses/archivist_cast": 152.0,  # TUNING (not in GDD) boss attack pose (Recitation: tome and quill raised, pages flying up; BossPoseData)
+	"bosses/archivist_split": 134.0,  # TUNING (not in GDD) boss attack pose (Footnotes: arms flung wide, the pages fanned; BossPoseData)
+	"bosses/archivist_strike": 124.0,  # TUNING (not in GDD) boss attack pose (the chained tome slammed forward; BossPoseData)
+	"player/heretic_scribe": 60.0,  # TUNING (not in GDD) body ~48 like the necromancer, the quill-staff above
+	"structures/archive_rift": 64.0,  # TUNING (not in GDD) a rift's tear (18 px body radius)
+	"structures/forbidden_lectern": 52.0,  # TUNING (not in GDD) a lectern with its open tome
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
@@ -218,6 +234,15 @@ const FLAT_SIZES: Dictionary = {
 	"ui/rotate_phone": 60.0,  # TUNING (not in GDD) the rotate overlay's phone, 35 x 60 (drawn x2: 70 x 120 layout px)
 	# --- Act II: Fallen Seraph ---
 	"projectiles/seraph_feather": 14.0,  # TUNING (not in GDD) one black feather blade of the Fallen Seraph's feather ring (SeraphGlyphs.draw_ring())
+	# --- Act II: the Hollow Archive ---
+	"structures/orrery_hub": 75.0,  # TUNING (not in GDD) the orrery's brass hub seen from above, 72 x 75 (36 px radius)
+	"obstacles/orrery_arm": 62.0,  # TUNING (not in GDD) one tile of an orrery arm, 62 x 17, repeated along the arm (ArchiveGlyphs.ARM_TILE)
+	"obstacles/orrery_planet": 24.0,  # TUNING (not in GDD) the planet on an arm's tip, 24 x 19
+	"decals/ink_pool": 64.0,  # TUNING (not in GDD) an ink pool, 64 x 49, scaled to the pool's radius
+	"decals/ink_well": 64.0,  # TUNING (not in GDD) an Ink Wells well (the pool's art), scaled to its radius
+	"projectiles/archive_page": 12.0,  # TUNING (not in GDD) a Recitation page, 12 x 9
+	"projectiles/verse_page": 13.0,  # TUNING (not in GDD) a Forbidden Verse page, 12 x 13
+	"projectiles/unwritten_page": 14.0,  # TUNING (not in GDD) a The Unwritten Word page, 14 x 14 (gilded)
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

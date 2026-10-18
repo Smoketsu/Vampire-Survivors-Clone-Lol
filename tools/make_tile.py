@@ -223,6 +223,30 @@ RECIPES = {
         "l_ranges": {"stone": (0.25, 0.33)}, "bias": {"grey_dark": 0.02},
         "cell_shift": True, "cell_l": 0.005,
     },
+    # --- Act II: the Hollow Archive (no variants: one source each) ---
+    "archive_halls": {
+        "source": "archive_halls.png", "method": "layout",
+        "layout": {"type": "courses", "rows": [16, 16, 16, 16, 16, 16, 16, 16], "joint": 1,
+                   "slabs": [[64, 64], [48, 80], [96, 32], [40, 88], [64, 64], [72, 56], [32, 96], [56, 72]],
+                   "offsets": [0, 24, 8, 40, 16, 56, 4, 32]},
+        "regions": {"stone": ["floor_earth", "floor_dirt"], "joint": ["ink_warm"]},
+        "cell_shift": True, "cell_l": 0.008, "bevel": 0.006,
+    },
+    "archive_wells": {
+        "source": "archive_wells.png", "method": "quilt",
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_marble"],
+        "shares": {"ink_cold": 0.10, "floor_soil": 0.40, "floor_slate": 0.38, "floor_marble": 0.12},
+    },
+    "archive_orrery": {
+        "source": "archive_orrery.png", "method": "quilt",
+        "colors": ["floor_soil", "floor_slate", "floor_stone", "floor_ochre"],
+        "keep": ["floor_ochre"], "bias": {"floor_ochre": 0.02},
+    },
+    "archive_stacks": {
+        "source": "archive_stacks.png", "method": "quilt",
+        "colors": ["floor_ash", "floor_stone", "floor_marble", "floor_slate"],
+        "l_range": (0.26, 0.31),
+    },
     "march_road": {
         "source": "march_road.png", "method": "quilt", "road": (192, 140), "overlap": 18,
         "box": (0.02, 0.02, 0.98, 0.98), "flatten_axis": "x", "fray": 4,

@@ -80,6 +80,17 @@
 ##                      and summons from BRINEWALKER_SUMMON_LEVEL (TerrainSlow,
 ##                      the one ground-slow path; unlocked by the Low Tide
 ##                      achievement).
+## plus the Hollow Archive's two (Act II, GDD §15.0 "Act II: the Hollow
+## Archive"; both locked until earned, UnlockData):
+##   Marginalia — every on-death effect hits harder (ink bursts, corpse
+##                bursts, the frozen shatter, bone shrapnel...;
+##                CombatResolver.damage_enemy(), VerseData.MARGINALIA_SOURCES;
+##                evolves Forbidden Verse into The Unwritten Word). Unlocked
+##                with the spell by slaying the Archivist.
+##   Iron Mind  — an Act II counter-passive ("act": 2, offered only on Act II
+##                stages; unlocked by the achievement Nothing Unwritten): Dread
+##                rises slower and, at Lv 5, kills calm it twice as fast
+##                (DreadMeter reads its two level keys). Evolves nothing.
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -103,7 +114,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act II: Fallen Seraph ---
 	"fallen_grace",
 	# --- Act II: Gullhaven Harbour ---
-	"salt_of_the_deep", "brinewalker"]
+	"salt_of_the_deep", "brinewalker",
+	# --- Act II: the Hollow Archive ---
+	"marginalia", "iron_mind"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -627,6 +640,36 @@ const PASSIVES := {
 			{"water_slow_cut": 0.60},  # owner-approved (summons too from Lv 3)
 			{"water_slow_cut": 0.80},  # owner-approved
 			{"water_slow_cut": 1.00},  # owner-approved "no slow at Lv 5"
+		],
+	},
+	# --- Act II: the Hollow Archive ---
+	"marginalia": {
+		"display_name": "Marginalia",
+		"icon": "marginalia",
+		"description": "Every blast a death sets off hits harder.",
+		"labels": {"on_death_damage": ["On-death effect damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"on_death_damage": 0.08},  # Owner-approved proposal "+8% a level"
+			{"on_death_damage": 0.16},  # Owner-approved proposal
+			{"on_death_damage": 0.24},  # Owner-approved proposal
+			{"on_death_damage": 0.32},  # Owner-approved proposal
+			{"on_death_damage": 0.40},  # Owner-approved proposal
+		],
+	},
+	"iron_mind": {
+		"display_name": "Iron Mind",
+		"icon": "iron_mind",
+		"description": "Dread takes hold of you more slowly, and kills calm it faster.",
+		"labels": {"dread_rise_reduction": ["Dread rise", "neg_pct"], "dread_fall_mult": ["Dread calmed per kill (x)", "num"]},
+		"act": 2,  # Act II only (Unlocks.act_allows()): never a dead card.
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"dread_rise_reduction": 0.10, "dread_fall_mult": 1.0},  # Owner-approved proposal "10% slower a level"
+			{"dread_rise_reduction": 0.20, "dread_fall_mult": 1.0},  # Owner-approved proposal
+			{"dread_rise_reduction": 0.30, "dread_fall_mult": 1.0},  # Owner-approved proposal
+			{"dread_rise_reduction": 0.40, "dread_fall_mult": 1.0},  # Owner-approved proposal
+			{"dread_rise_reduction": 0.50, "dread_fall_mult": 2.0},  # Owner-approved proposal "falls twice as fast per kill at Lv 5"
 		],
 	},
 }

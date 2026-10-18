@@ -1262,6 +1262,34 @@ The water itself is not art: `scripts/fx/tide_water.gdshader` draws it (flat tea
 grid, the foam line, sparse glints, the seawall lip and the surge telegraph). The Undertow wave,
 shallows and whirlpools are code-drawn (an optional `effects/undertow_wave` strip is read when it
 exists). Floor decals (`decals/harbour_<style>_<name>`) are not made yet: the code decorations stay.
+### Act II: the Hollow Archive (Stage 5; Oct 2026)
+
+Made in one pass through the usual pipeline (`gen_image.py` with enlarged anchors attached,
+`prepare_sprite.py`, `walk_cycle.py`, `make_tile.py`); the Ancient Eye's units use the `eye` ramp
+set (drowned teal, bone, biolume magenta, grey, brown, moss); the boss, the lectern, the rift and
+the orrery use it too (`--ramps bone,drowned,biolume,grey,brown[,gold]`). Small props, icons and
+pages were generated as sheets of separate sprites, cut apart at their empty columns and converted
+one by one to their exact sizes. None of the Archive's characters is female, so none needs the
+figure-redesign rig.
+
+| File | Subject | Art px | Status |
+|---|---|---|---|
+| `eye/scribe.png` | Scribe of the Unwritten: a hooded drowned-teal cultist, an open book held out, a raised quill. Walk strip (robe shuffle) | 48 | done |
+| `eye/ink_wraith.png` | Ink Wraith: a floating hooded ghost of blue-black ink, reaching claws, a dripping tail. Glide strip | 44 | done |
+| `eye/spore_pilgrim.png` | Pilgrim of the Spore: a tattered teal-and-brown pilgrim, mushroom-capped staff, moss spore sacs. Walk strip (staff rigid) | 50 | done |
+| `eye/gibbering_mass.png`, `_lesser`, `_least` | Gibbering Mass: a lumpy teal mound of eyes and mouths; the two splits are the same source at 44 and 32 | 60 / 44 / 32 | done |
+| `eye/librarian.png` | The Librarian (miniboss): a giant floating eyeball wrapped in hanging teal tentacles, torn pages caught in them | 110 | done |
+| `eye/unwritten_one.png` | The Unwritten (the Archive's Reckoning): a gaunt horror wrapped in blank parchment, one magenta slit | 60 | done |
+| `bosses/archivist.png` + `_cast`, `_split`, `_strike` | The Archivist: a tall robed figure whose head is an open book, a parchment stole, a chained tome and a quill staff; poses: Recitation (both raised, pages flying), Footnotes (arms wide, pages fanned), the tome slammed forward (BossPoseData). Footnote copies draw the still pale and without its shadow | 130 / 152 / 134 / 124 | done |
+| `player/heretic_scribe.png` | The Heretic Scribe: a hooded violet scholar with a tall violet quill-staff and a written scroll. Walk strip; his Hyper skin uses the tint fallback | 60 | done |
+| `structures/forbidden_lectern.png`, `structures/archive_rift.png` | A chained open tome with a magenta eye sigil on a carved lectern; a vertical tear of magenta light | 52 / 64 | done |
+| `structures/orrery_hub.png`, `obstacles/orrery_arm.png`, `obstacles/orrery_planet.png` | The orrery from above: a brass hub, a 62 px brass arm tile repeated along each arm, a teal planet on its tip (flat sprites) | 75 / 62 / 24 | done |
+| `obstacles/bookshelf_*`, `reading_desk_*`, `toppled_shelf_*`, `book_pile_*`, `brass_globe_*`, `chart_table_*`, `blank_shelf_*`, `page_heap_*` | The zones' obstacles (every rect horizontal: the stage layouts' `orient` "h", so no `_v`) | footprint + height | done |
+| `tiles/archive_halls.png`, `archive_wells.png`, `archive_orrery.png`, `archive_stacks.png` | Zone floors: dark parquet (layout courses), black marble with ink (quilt), dark observatory stone, pale worn stone (no variants) | 128 | done |
+| `decals/ink_pool.png`, `decals/ink_well.png` | An ink blot from above (flat, scaled to the pool's radius; the well reuses it) | 64 | done |
+| `projectiles/archive_page.png`, `verse_page.png`, `unwritten_page.png` | A Recitation page; Forbidden Verse's violet page; the gilded page of The Unwritten Word | 12 / 13 / 14 | done |
+| `icons/forbidden_verse.png`, `unwritten_word.png`, `marginalia.png`, `iron_mind.png`, `ach_nothing_unwritten.png` | Spell, evolution, passives and achievement badges | 32 | done |
+| `effects/spore_cloud.png`, `effects/ink_burst.png` (`--anim`) | A billowing spore cloud (drawn by ArchiveHazards); the ink burst of an inscribed death (AnimData "ink_burst") | 6 x 128 | done |
 
 ### UI kit and title logo (`assets/ui/`)
 

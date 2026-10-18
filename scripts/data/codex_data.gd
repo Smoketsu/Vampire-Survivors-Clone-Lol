@@ -60,16 +60,22 @@ const BOSSES: Array[String] = ["alaric", "vael", "seraphine"]
 const EYE_SOLDIERS: Array[String] = ["eye_initiate", "eye_chanter",
 	# --- Act II: Gullhaven Harbour ---
 	"deep_kin", "tide_caller", "netcaster", "deep_herald",
+	# --- Act II: the Hollow Archive ---
+	"scribe", "ink_wraith", "spore_pilgrim", "gibbering_mass",
 	"drowned_thrall"]
 ## Ancient Eye minibosses (enemy kinds).
 const EYE_CHAMPIONS: Array[String] = [
 	# --- Act II: Gullhaven Harbour ---
 	"harbourmaster",
+	# --- Act II: the Hollow Archive ---
+	"librarian", "unwritten_one",
 ]
 ## Ancient Eye stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const EYE_BOSSES: Array[String] = [
 	# --- Act II: Gullhaven Harbour ---
 	"merrow",
+	# --- Act II: the Hollow Archive ---
+	"archivist",
 ]
 
 ## Section headers of each page: page id -> [[section id, header text], ...].
@@ -119,6 +125,14 @@ const DESCRIPTIONS: Dictionary = {
 	"deep_herald": "What the deep sends once the countdown ends.",  # GDD §15.0 run structure (the Harbour's Reckoning)
 	"harbourmaster": "A hulking Deep Kin who drags your dead in on a chained anchor.",  # owner-approved proposal
 	"merrow": "The Voice of the Deep, Gullhaven's priest, halfway through his Change.",  # owner-approved proposal
+	# --- Act II: the Hollow Archive ---
+	"scribe": "Inks a curse on the cultists around it: a cursed cultist claims your dead.",  # GDD §15.0 Act II: the Hollow Archive
+	"ink_wraith": "Slips through shelves and walls and rises out of the ink.",  # GDD §15.0 Act II: the Hollow Archive
+	"spore_pilgrim": "Leaves spore clouds in its wake that fill your mind with dread.",  # GDD §15.0 Act II: the Hollow Archive
+	"gibbering_mass": "A heaving tank that splits into smaller masses when it dies, twice.",  # GDD §15.0 Act II: the Hollow Archive
+	"librarian": "A floating eye in tendrils whose slow beam turns your dead around.",  # GDD §15.0 Act II: the Hollow Archive
+	"archivist": "The Keeper of the Unwritten, whose face is an open book.",  # GDD §15.0 Act II: the Hollow Archive
+	"unwritten_one": "Page-wrapped horrors the Archive sends once the countdown ends.",  # GDD §15.0 Act II: the Hollow Archive (its Reckoning)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -263,6 +277,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"dawn_extinguished": "ach_dawn_extinguished",  # TUNING (not in GDD)
 	# --- Act II: Gullhaven Harbour ---
 	"low_tide": "ach_low_tide",  # TUNING (not in GDD)
+	# --- Act II: the Hollow Archive ---
+	"nothing_unwritten": "ach_nothing_unwritten",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -272,6 +288,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"dawn_extinguished": "hyper_badge",
 	# --- Act II: Gullhaven Harbour ---
 	"low_tide": "brinewalker",
+	# --- Act II: the Hollow Archive ---
+	"nothing_unwritten": "forbidden_verse",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)
@@ -346,4 +364,7 @@ static func enemy_row(id: String) -> Dictionary:
 			return SeraphineData.BOSS
 		"merrow":
 			return MerrowData.BOSS  # Act II: Gullhaven Harbour.
+		# --- Act II: the Hollow Archive ---
+		"archivist":
+			return ArchivistData.BOSS
 	return {}

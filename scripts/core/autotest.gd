@@ -932,6 +932,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 	var danger := game.enemies.stage.danger_push(pos) + game.enemies.rites.danger_push(pos)
 	if game.enemies.boss != null and game.enemies.boss.active:
 		danger += game.enemies.boss.danger_push(pos)
+	if game.enemies.archive_haz != null:
+		danger += game.enemies.archive_haz.danger_push(pos)  # Act II: pages, spore clouds, ink (null elsewhere).
 	return danger
 
 
@@ -1016,6 +1018,8 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.tide.danger_push(p)  # Act II: out of a telegraphed tide surge.
 	if game.enemies.boss != null and game.enemies.boss.active:
 		danger += game.enemies.boss.danger_push(p)
+	if game.enemies.archive_haz != null:
+		danger += game.enemies.archive_haz.danger_push(p)  # Act II: pages, spore clouds, ink (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1028,6 +1032,9 @@ func get_move_vector() -> Vector2:
 	if goal == Vector2.INF and game.enemies.harbour != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
 		# Gullhaven Harbour: close in on bell buoys and smugglers' caches when calm.
 		goal = game.enemies.harbour.seek_point(p, OBJECTIVE_SEEK_RADIUS)
+	if goal == Vector2.INF and game.enemies.archive != null and away.length() < 0.5:
+		# The Hollow Archive: walk onto forbidden tomes when calm (burns them).
+		goal = game.enemies.archive.seek_point(p, OBJECTIVE_SEEK_RADIUS)
 	if goal != Vector2.INF:
 		objective = (goal - p).normalized()
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
@@ -1153,6 +1160,7 @@ func finish(summary: Dictionary) -> void:
 	# --- Act II: Gullhaven Harbour ---
 	HarbourReport.print_lines(game, st)
 	_print_battle_sister(st)
+	_print_archive(st)  # Act II: the Hollow Archive (only when its stage or kinds ran).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired
@@ -1179,6 +1187,57 @@ func finish(summary: Dictionary) -> void:
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
+
+
+## Act II, the Hollow Archive: its stage mechanics (tomes, wells, the
+## orrery, the Librarian, rifts), its kinds, the Archivist, Forbidden Verse and
+## the Archive's passives. Each line prints only when it has something to
+## say, so the other stages' summaries are unchanged.
+func _print_archive(st: Dictionary) -> void:
+	var ad := game.enemies.archive  # The Archive's director (null elsewhere).
+	if ad != null:
+		print("[autotest] archive: %s | objective ash %d" % [ad.summary_line(), int(st.get("objective_ash", 0.0))])
+		print("[autotest] archive rifts: %s" % ad.rifts.summary_line())
+		print("[autotest] archive events (%d): %s" % [ad.fired.size(), ", ".join(ad.fired)])
+	var spawned := PackedStringArray()  # "kind spawned/killed" per Archive kind met.
+	var any := false
+	for kind: String in ArchiveEnemyData.ORDER + ArchiveEnemyData.MASS_KINDS.slice(1) + [ArchiveEnemyData.RIFT]:
+		var n := int(st.get("spawned_" + kind, 0.0))  # Counted for kinds with a kit (Enemy.activate()).
+		var k := int(st.get("kill_" + kind, 0.0))
+		if n > 0 or k > 0:
+			any = true
+		spawned.append("%s %d/%d" % [kind, n, k])
+	if any:
+		print("[autotest] archive enemies (spawned/killed): %s" % " ".join(spawned))
+		print("[autotest] archive kits: scribe curses %d (cultists cursed %d) | ink wraith rises %d, dives %d | spore clouds %d (+%d death clouds), summon dmg from spores %d | masses split %d (capped %d) | librarian beams %d (player hits %d), summons turned %d, lashes %d (summon hits %d), killed %d (avg %.1f s), dmg taken %d" % [
+			int(st.get("scribe_curses", 0.0)), int(st.get("scribe_cursed", 0.0)), int(st.get("ink_wraith_rises", 0.0)), int(st.get("ink_wraith_dives", 0.0)),
+			int(st.get("spore_clouds_left", 0.0)), int(st.get("spore_death_clouds", 0.0)), int(st.get("summon_dmg_from_spores", 0.0)),
+			int(st.get("gibbering_splits", 0.0)), int(st.get("gibbering_splits_capped", 0.0)),
+			int(st.get("librarian_beams", 0.0)), int(st.get("librarian_beam_player_hits", 0.0)), int(st.get("librarian_turned", 0.0)),
+			int(st.get("librarian_lashes", 0.0)), int(st.get("librarian_lash_summon_hits", 0.0)), int(st.get("librarian_kills", 0.0)),
+			float(st.get("librarian_ttk", 0.0)) / maxf(1.0, float(st.get("librarian_kills", 0.0))), int(_sum_prefix(st, "minibossdmg_"))])
+		print("[autotest] archive hazards: ink pools %d, spore clouds %d | necromancer in ink %.0f s, in spores %.0f s | player dmg from pages %d, librarian %d, archive kinds %d" % [
+			int(st.get("archive_ink_pools", 0.0)), int(st.get("archive_spore_clouds", 0.0)),
+			float(st.get("archive_ink_seconds", 0.0)), float(st.get("archive_spore_seconds", 0.0)),
+			int(st.get("player_dmg_from_archivist_page", 0.0)), int(float(st.get("player_dmg_from_librarian_beam", 0.0)) + float(st.get("player_dmg_from_librarian_lash", 0.0))),
+			int(_archive_kind_player_dmg(st))])
+	if game.enemies.boss is BossArchivist:
+		print("[autotest] archivist: %s" % BossArchivist.summary_line(st))
+	var verse := game.abilities.spells.act2_summary_line()  # "" unless an Act II spell was taken.
+	if verse != "":
+		print("[autotest] act ii spells: %s" % verse)
+	var ab := game.abilities
+	if ab.passive_level("marginalia") > 0 or ab.passive_level("iron_mind") > 0:
+		print("[autotest] act ii passives: marginalia Lv%d bonus_dmg=%d | iron_mind Lv%d" % [
+			ab.passive_level("marginalia"), int(st.get("marginalia_bonus_dmg", 0.0)), ab.passive_level("iron_mind")])
+
+
+## Damage the necromancer took from the Archive's soldier kinds.
+static func _archive_kind_player_dmg(st: Dictionary) -> float:
+	var total := 0.0
+	for kind: String in ArchiveEnemyData.ORDER + ArchiveEnemyData.MASS_KINDS.slice(1):
+		total += float(st.get("player_dmg_from_" + kind, 0.0))
+	return total
 
 
 ## Prints the Meta recipe book (evolutions discovered in any run; in memory

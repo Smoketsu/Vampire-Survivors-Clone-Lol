@@ -50,6 +50,8 @@ const ANIMS: Dictionary = {
 	"seraph_dive": {"duration": 0.35, "fill": 1.3},  # TUNING (not in GDD) the Fallen Seraph's dive impact: black feathers and ash bursting outward (SeraphBehavior)
 	# --- Act II: Gullhaven Harbour ---
 	"tide_splash": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) a splash of sea water: Deep Kin landing, the Harbourmaster's anchor, Abbot Merrow's blows, a bell buoy sinking (6 frames of 128 px; EffectManager.impact() 0.4 s)
+	# --- Act II: the Hollow Archive ---
+	"ink_burst": {"duration": 0.35, "fill": 1.1},  # TUNING (not in GDD) Forbidden Verse ink burst of an inscribed death (6 frames of 128 px; 0.35 s, as its code ring)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).

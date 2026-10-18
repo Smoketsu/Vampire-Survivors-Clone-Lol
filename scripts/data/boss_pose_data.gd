@@ -21,4 +21,6 @@ const POSES: Dictionary = {
 	# --- Act II: Gullhaven Harbour ---
 	"bosses/merrow": {1: "sermon"},  # TUNING (not in GDD) preaching / casting with both arms raised
 	"bosses/merrow_changed": {3: "strike"},  # TUNING (not in GDD) the limbs lashing forward
+	# --- Act II: the Hollow Archive ---
+	"bosses/archivist": {1: "cast", 2: "split", 3: "strike"},  # TUNING (not in GDD) Recitation / Footnotes / the tome slammed down (BossArchivist)
 }

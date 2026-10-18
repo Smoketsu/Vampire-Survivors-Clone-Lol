@@ -188,6 +188,14 @@ RIGS = {
     # the staff rigid, with the bust bounce and (bust rigs) an idle breathing strip.
     "eye/tide_caller": dict(mode="robe", hip=40, rigid=[(25, 36, 0, None)], sway=1, dip=1, bust=(15, 24, 16, 22, 2)),
     "player/brine_widow": dict(mode="robe", hip=44, rigid=[(37, 52, 0, None)], sway=1, dip=1, bust=(22, 34, 20, 27, 2)),
+    # --- Act II: the Hollow Archive ---
+    # The robed Scribe and Pilgrim shuffle on their hems (the Pilgrim's staff stays rigid);
+    # the Ink Wraith glides (its dripping tail sways); the Heretic Scribe walks like the
+    # other robed characters, his quill-staff rigid.
+    "eye/scribe": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1),
+    "eye/spore_pilgrim": dict(mode="robe", hip=40, rigid=[(29, 36, 0, None)], sway=1, dip=1),
+    "eye/ink_wraith": dict(mode="robe", hip=26, rigid=[], sway=2, dip=1),
+    "player/heretic_scribe": dict(mode="legs", hip=48, back=(0, 22), front=(22, 33), rigid=[(33, 44, 0, None)], spread=1, lift=1, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
