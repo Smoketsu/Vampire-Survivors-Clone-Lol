@@ -45,12 +45,12 @@ const ID: String = "archive"
 const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling.
-const ENEMY_HP_MULT: float = 1.25  # TUNING (not in GDD) Act II climbs: Sanctum 1.1, the Archive a step above Gullhaven
+const ENEMY_HP_MULT: float = 1.2  # TUNING (not in GDD) Act II climbs: Sanctum 1.1, the Archive a step above Gullhaven (Act II integration: 1.25; the naive bot died in 7 of 8 runs)
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
 const ENEMY_DAMAGE_MULT: float = 1.2  # TUNING (not in GDD)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies: Zone II (the boss always gets them).
-const ENEMY_MULT_FROM: float = 300.0  # TUNING (not in GDD)
+const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) (Act II integration: 300.0; the naive bot died in 7 of 8 runs)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
 const ASH_MULT: float = 2.0  # TUNING (not in GDD) owner-approved proposal placeholder (Act I: x1.25, x1.5)
 

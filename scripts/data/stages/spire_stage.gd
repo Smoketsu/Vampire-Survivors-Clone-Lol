@@ -70,13 +70,13 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (the last stage of Act II: above the Sanctum's 1.1).
-const ENEMY_HP_MULT: float = 1.25  # TUNING (not in GDD) the act climbs stage by stage
+const ENEMY_HP_MULT: float = 1.2  # TUNING (not in GDD) the act climbs stage by stage (Act II integration: 1.25; the naive bot died in 7 of 8 runs)
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.25  # TUNING (not in GDD)
+const ENEMY_DAMAGE_MULT: float = 1.2  # TUNING (not in GDD) (Act II integration: 1.25; the naive bot died in 7 of 8 runs)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies: Zone II, the Sunken Steps (the boss always gets them). From 0:00
 ## they would lift an Initiate past the starting Shadow Bolt's one-shot.
-const ENEMY_MULT_FROM: float = 300.0  # TUNING (not in GDD) Zone II
+const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) Zone II (Act II integration: 300.0; the naive bot died in 7 of 8 runs)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
 const ASH_MULT: float = 2.25  # TUNING (not in GDD) owner-approved proposal placeholder (Act I: x1.25, x1.5)
 
