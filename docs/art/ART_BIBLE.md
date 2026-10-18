@@ -1203,6 +1203,58 @@ Tips:
   only the expansion changes", or send the sheet to Claude.
 - A short GIF works as well as a sheet; send whichever comes out cleaner.
 
+### Gullhaven Harbour (Act II, Stage 4; Oct 2026)
+
+Every Gullhaven asset (GDD §15.0 "Gullhaven Harbour (Act II phase 2)"), generated through
+`tools/gen_image.py` (the ledger in the main checkout) with enlarged approved sprites attached
+as style references (the Warrior and the Halberdier for soldiers, the Wither Witch and the Sister
+of the Scourge for the figure-redesign women, Vael and the Cathedral Guardian for the big ones, the
+fountain / barricade obstacles for the props, the Grim Ledger badge for the icons). The Ancient
+Eye's units use the `eye` ramp set (drowned teal, biolume, bone, grey, brown, skin, moss); the
+bosses and props were converted with `--ramps` of the same set. Prompts and contact sheets were
+kept outside the repository; the sources are in `art_source/`.
+
+| File | Subject | Art px | Notes |
+|---|---|---|---|
+| `eye/deep_kin.png` (+ `_walk`) | Deep Kin: a hunched, scaled fisherman halfway into the sea, a spiny fin ridge, one magenta eye, ragged oilskin trousers | 56 | walk rig: legs, the long arms rigid |
+| `eye/tide_caller.png` (+ `_walk`, `_idle`) | Tide Caller: a fishwife priestess in the figure-redesign style (fitted drowned-teal oilskin gown, kelp shawl, bone cowl), a conch-topped staff | 54 | `pixelate_source.py` then `--ink-l 0.15 --no-cleanup`; glide strip and idle breathing with a 2 px bust bounce |
+| `eye/netcaster.png` (+ `_walk`) | Netcaster: a hooded net-mender, a weighted net over one arm, a gaff hook | 50 | walk rig: legs, the gaff rigid |
+| `eye/deep_herald.png` | Herald of the Deep (the Harbour's Reckoning kind): coral-horned, barnacle-plated sea horror | 64 | still only |
+| `eye/harbourmaster.png` | the Harbourmaster miniboss: a hulking Deep Kin in a peaked cap and torn oilskin, a giant anchor on a chain | 124 | still only (136 wide) |
+| `bosses/merrow.png` | Abbot Silas Merrow, robed: drowned-teal cassock, bone stole with the Eye, tall mitre, tentacles under the hem | 130 | |
+| `bosses/merrow_sermon.png` | pose 1: preaching, both arms raised, the Eye sigil above | 150 | `BossPoseData` |
+| `bosses/merrow_changed.png` | after The Change: a gaunt scaled horror, frill crown, four long spotted tentacle limbs | 136 | 160 wide |
+| `bosses/merrow_changed_strike.png` | pose 3 of the changed form: lunging, the limbs lashing forward | 120 | `BossPoseData` |
+| `structures/bell_buoy.png` | a bell buoy: a weathered float with the Eye painted on it, an iron cage and a bell | 64 | |
+| `structures/smuggler_cache.png` | an iron-bound, padlocked crate with rope and bottles | 40 | |
+| `player/brine_widow.png` (+ `_walk`, `_idle`) | The Brine Widow (Undertow's character): figure-redesign style, a fitted violet mourning gown, an icy-blue veil under a shell crown, a hooked driftwood staff curling with water | 58 | `pixelate_source.py` then `--ink-l 0.15 --no-cleanup`; glide strip and idle with a 2 px bust bounce |
+| `tiles/harbour_mudflats.png` | wet sand ripples | 128 | `make_tile.py` quilt, new source; mean L 0.26 |
+| `tiles/harbour_market.png` | wet market cobbles | 128 | `make_tile.py` voronoi layout on the fortress source; mean L 0.27 |
+| `tiles/harbour_chapel.png` | slimed flagstones | 128 | grid layout on the sanctuary source; mean L 0.28 |
+| `tiles/harbour_seawall.png` | the promenade's long paving stones | 128 | courses layout on the courtyard source; mean L 0.29 |
+| `obstacles/mooring_post_s/_l` | a roped mooring post | 22x39 / 28x50 | circle r 9 / 12 |
+| `obstacles/wreck_ribs_s/_l` | a wrecked boat's ribs and keel | 50x44 / 64x55 | r 24 / 30 |
+| `obstacles/net_pile_s/_l` | heaped nets with floats and rope | 30x31 / 40x40 | r 14 / 18 |
+| `obstacles/fish_stall_s/_m/_l` | a round stall heaped with fish under a striped awning | 44x56 / 52x67 / 60x78 | r 20 / 24 / 28 |
+| `obstacles/barrel_stack_s/_l` | three fish barrels | 26x28 / 34x35 | r 12 / 15 |
+| `obstacles/crate_stack_s/_l` | fish crates | 32x29 / 38x35 | r 14 / 17 |
+| `obstacles/drowned_idol_s/_l` | a barnacled idol of the Eye in a basin | 36x41 / 44x50 | r 16 / 20 |
+| `obstacles/coral_pillar_s/_l` | a coral-grown pillar in a basin | 30x34 / 36x41 | r 13 / 16 |
+| `obstacles/tide_font_s/_l` | the cult's holy-water font | 44x46 / 52x55 | r 20 / 24 |
+| `obstacles/bollard_s/_l` | an iron bollard | 20x22 / 24x27 | r 8 / 10 |
+| `obstacles/anchor_monument_s/_l` | an anchor set in a stone base | 44x50 / 52x59 | r 20 / 24 |
+| `obstacles/lobster_pots_s/_l` | stacked lobster pots | 26x20 / 32x25 | r 12 / 15 |
+| `icons/undertow.png` | a breaking wave (violet badge) | 32 | symbol at 26 px composited on the badge cut from `grim_ledger` |
+| `icons/maelstrom.png` | a whirlpool (gold evolution badge) | 32 | |
+| `icons/salt_of_the_deep.png` | salt crystals and a violet spark (violet badge) | 32 | |
+| `icons/brinewalker.png` | a boot on a wave (violet badge) | 32 | |
+| `icons/ach_low_tide.png` | a crescent moon over calm water with an anchor (gold achievement badge) | 32 | |
+
+The water itself is not art: `scripts/fx/tide_water.gdshader` draws it (flat teal bands on a 2 px
+grid, the foam line, sparse glints, the seawall lip and the surge telegraph). The Undertow wave,
+shallows and whirlpools are code-drawn (an optional `effects/undertow_wave` strip is read when it
+exists). Floor decals (`decals/harbour_<style>_<name>`) are not made yet: the code decorations stay.
+
 ### UI kit and title logo (`assets/ui/`)
 
 **Status:** in the game. The UI stays Godot Controls built in code; the kit only reskins them through

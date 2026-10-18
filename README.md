@@ -309,6 +309,51 @@ built; until then their cards read "Coming soon". The act's shared rules are in:
   unlock, and the Codex (its new **Ancient Eye** tab too) names the condition of a locked one.
 - **Music.** Act II runs play their own loop, "Below the Tide".
 
+### Stage 4: Gullhaven Harbour (Act II)
+
+A fishing town at low tide, at night, where the Ancient Eye has lived in the open for
+generations (GDD §15.0 "Gullhaven Harbour (Act II phase 2)"; `scripts/data/stages/harbour_stage.gd`).
+Like the Crimson March and the Sanctum, the clock drives four zones: **the Mudflats** (20:00),
+**the Fish Market** (15:00, narrow lanes between the stalls), **the Chapel of the Deep** (10:00)
+and **the Seawall** (5:00, high tide). Abbot Merrow arrives with 3:00 left.
+
+- **The tide** (`TideDirector`). The town floods more each zone (about 4% of the ground at the
+  start, 40% in the Chapel); in the Seawall only a long strip of dry stone stays above water.
+  **Water slows everyone in it by 25%**: you, your dead and the cultists alike, except the
+  Deep Kin, the Harbourmaster, the Heralds and Merrow, who swim. Every 4 minutes (from 5:30) a
+  **tide surge** is telegraphed (a band with drifting chevrons), then a wave sweeps along it,
+  shoving everything it passes and flooding the band for a while. At the Reckoning the sea
+  takes everything but the seawall's top.
+- **Bell buoys** (2:30, optional). Three buoys out on the flats toll up small squads while you
+  are near; each one you sink makes every later scripted wave 12% smaller and the trickle 5%
+  thinner.
+- **Smugglers' caches** (6:00 and 11:40). Locked crates at the end of dry piers (a narrow lane
+  out into the water); break one and it drops a treasure chest.
+- **The Eye's kinds.** **Deep Kin** (a bruiser: a telegraphed leap onto your front rank),
+  **Tide Callers** (fishwives who raise a line of water that throws your dead back),
+  **Netcasters** (a net pins one summon in place for 3 s; kill the caster to cut it), the
+  **Harbourmaster** miniboss at 9:00 left (an anchor sweep that drags what it hits toward him
+  and an anchor hurl that reels in the first body it strikes; it drops the miniboss chest),
+  plus the Initiates and the Chanters' Claims. The Reckoning sends **Heralds of the Deep**.
+- **Abbot Silas Merrow, Voice of the Deep.** Robed, he preaches from a pulpit (**Sermon**: every
+  cultist around him hits harder, walks faster and takes less damage; hit him hard enough to
+  break it off) and throws a **Brine Wave**. Below 60% HP he undergoes **The Change**: robes
+  shed, he fights with long whipping limbs (**Limb Lash**, three lanes; **Whirl**, a circle).
+  Below 30% he calls **High Water**: the dry ground shrinks to the seawall's edge.
+- **Unlocks.** Slaying Merrow unlocks the spell **Undertow** and its paired passive **Salt of
+  the Deep**; clearing the stage earns the achievement **Low Tide**, which unlocks the Act II
+  counter-passive **Brinewalker**.
+
+**Undertow** (spell, every stage once unlocked): a wave rolls out toward your aim over a 120°
+cone, hurting and shoving back every foe in it; every third wave leaves shallow water that slows
+foes for 3 s. **Maelstrom** (evolution, with **Salt of the Deep** at Lv 5): every wave ends in a
+whirlpool that drags the cone into one knot and grinds it (bosses and minibosses are slowed,
+never dragged). **Salt of the Deep**: slowed, chilled and frozen foes take +6% damage a level
+(+30% at Lv 5). **Brinewalker** (Act II only): water and ink slow you 20% less a level (not at
+all at Lv 5), and your summons too from Lv 3. Undertow's character is **the Brine Widow**
+(innate **Riptide**: every second wave leaves shallows; +6% spell area, -5 max HP), earned by
+reaching Lv 5 with Undertow.
+
 ### How a run works
 
 - A **20:00 countdown** runs at the top of the screen.
@@ -1482,6 +1527,10 @@ scripts/
     dread_meter.gd          Act II Dread on the necromancer (game.dread): sources, kills, damage-taken mult
     unlocks.gd              The one unlock check of Act II's spells / passives / classes (UnlockData, Meta)
     eye_glyphs.gd           Code-drawn fallbacks of the Ancient Eye's kinds (Act II)
+    harbour_ground.gd       Gullhaven's zone floors (mudflats, market, chapel, seawall)
+    harbour_glyphs.gd       Gullhaven's fallback shapes: kinds, obstacles, piers, nets, anchor, Merrow
+    harbour_report.gd       Gullhaven's autotest lines (tide, harbour, kinds, Merrow, Act II spell / passives)
+    terrain_slow.gd         The one ground-slow path (tide water, later ink): Brinewalker applies here
     save_backup.gd          Save codes (Settings -> Save): the progress file gzipped + base64, copied out
                             (clipboard / the browser's prompt box) and validated + restored through Meta
     settings.gd             Autoload: persistent settings (volumes, toggles, key rebinds) in user://settings.cfg
@@ -1533,6 +1582,7 @@ scripts/
                             hits through CombatResolver), summon volleys, spell echoes, Rally Barrage,
                             the shot art and the impact / launch bursts (drawing only)
     eye_claims.gd           Act II Claims (game.claims): fallen summons rise as hostile Drowned Thralls
+    (summoned_unit.gd's held_until: the generic hold a Netcaster's net uses)
     synergy_manager.gd      Army synergy activation and effects; the newer classes' marks
                             (staggered, swooped), the one synergy hit bonus (hit_mult()), the
                             Baying frenzy and the Menagerie replenishment
@@ -1587,6 +1637,10 @@ scripts/
     march_director.gd       Crimson March: battle zones, outposts, ward generators, supply carts, timed structures
                             (also the Sanctum's battle zones)
     sanctum_director.gd     Sanctum: sanctified chambers, Cathedral Guardian, sacred altars, corruption, Dawn's Wrath light
+    tide_director.gd        Gullhaven (Act II): the rising tide, the water slow, tide surges, High Water (shader drawn)
+    harbour_director.gd     Gullhaven (Act II): bell buoys, smugglers' caches and their piers, the Harbourmaster
+    eye/deep_kin_kit.gd, tide_caller_kit.gd, netcaster_kit.gd, harbourmaster_kit.gd   Gullhaven's kinds
+    eye/boss_merrow.gd      Abbot Silas Merrow, Voice of the Deep (Gullhaven's boss)
     enemy_director.gd       The stage's wave timeline, events, boss, Reckoning, pooling, recycling,
                             the miniboss slot (HUD bar)
     sanctum/                The Sanctum of Judgment's Covenant kits (one CovenantKit per enemy, like
@@ -1638,6 +1692,7 @@ scripts/
   fx/anim_bursts.gd         Art-only one-shot effect strips (Shadow Bolt hit splash, level-up column, evolution flash)
   fx/hurt_vignette.gd       The red screen-edge flash when the necromancer is hurt
   fx/dread_vignette.gd      Act II: the screen edges darkening with Dread (visual only)
+  fx/tide_water.gdshader    Gullhaven: the water, foam, seawall lip and surge drawn from the same test as TideDirector
   fx/sharp_pixel.gdshader   The sharp-pixel filter: grid pixel art (and the pixel fonts) crisp at any window scale
   fx/flat_silhouette.gdshader  Pixel art as one flat colour (the Codex's unmet entries), sharp-pixel sampling
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
@@ -1712,8 +1767,13 @@ scripts/
     stages/harbour_stage.gd        Act II stages (foundation stubs until built): Gullhaven Harbour,
     stages/archive_stage.gd        the Hollow Archive and Ul-Thalos; act 2, Dread, Claims, "Below the
     stages/spire_stage.gd          Tide", their unlock chain and boss ids
+                                   (Gullhaven is built: zones, timeline, TIDE, HARBOUR, the Reckoning restyle)
+    merrow_data.gd          Act II: Abbot Merrow (arrival, Sermon, Brine Wave, The Change, lashes, High Water)
+    undertow_data.gd        Act II: Undertow / Maelstrom fixed rules (cone, shallows, whirlpools)
     eye_enemy_data.gd       The Ancient Eye's shared kinds (Initiate, Chanter, Drowned Thrall), Claim rules
-    harbour_enemy_data.gd   Each Act II stage's own kinds (archive_ / spire_enemy_data.gd likewise)
+    harbour_enemy_data.gd   Each Act II stage's own kinds (archive_ / spire_enemy_data.gd likewise); Gullhaven:
+                            Deep Kin, Tide Caller, Netcaster, the Harbourmaster, the Herald of the Deep,
+                            the bell buoy and the smugglers' cache
     dread_data.gd           Act II Dread: steps, damage taken, kill calm, Iron Mind keys, the vignette look
     unlock_data.gd          Act II unlockable items (boss / achievement), end-screen plate headings
     sanctum_objective_data.gd      Sanctum structures: ward crystal, sacred altar
@@ -1855,7 +1915,7 @@ Options (after `--`):
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, or the Act II stages `harbour`, `archive` and `spire`. Stage locks (and Act II's "Coming soon") are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, or the Act II stages `harbour`, `archive` and `spire`. Stage locks (and Act II's "Coming soon") are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |

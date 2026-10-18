@@ -326,8 +326,9 @@ const MARCH := {
 ##   field          — [kx, ky, phase, amp] per wave (rad/px, rad/px, rad, h).
 ##   levels         — [elapsed s, level] keyframes, linearly interpolated (the
 ##                    tide rises on the clock; each zone change steps it up).
-##                    Measured shares of flooded ground: 0.20 ~6%, 0.32 ~20%,
-##                    0.44 ~40%.
+##                    Measured shares of flooded ground (200,000 random
+##                    points): 0.17 ~4%, 0.22 ~8%, 0.30 ~17%, 0.35 ~23%,
+##                    0.42 ~34%, 0.46 ~40%.
 ##   slow           — fraction of move speed lost in the water (everyone but
 ##                    the `swimmers`; owner-approved "25%").
 ##   swimmers       — enemy kinds that swim at full speed.
