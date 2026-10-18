@@ -23,6 +23,11 @@ extends RefCounted
 
 ## Item id -> unlock row (keys above).
 const UNLOCKS := {
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"call_of_the_drowned": {"type": "spell", "boss": "vhalneth", "text": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos."},  # Proposal: unlocked by defeating Vhal'Neth
+	"abyssal_pact": {"type": "passive", "boss": "vhalneth", "text": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos."},  # TUNING (not in GDD) with its spell
+	"spawn_of_the_deep": {"type": "class", "boss": "vhalneth", "text": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos."},  # Proposal decision 5: the finale's reward
+	"crushing_depths": {"type": "passive", "boss": "vhalneth", "text": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos."},  # TUNING (not in GDD) with its class
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

@@ -65,6 +65,10 @@
 ## weaken_enemy() slows the foe and cuts the damage of its hits
 ## (Enemy.hit_mult()); a Keening Lady's Dirge also silences it, and a
 ## silenced healer's heals fail in heal_enemy().
+## Act II (Ul-Thalos): Crushing Depths — damage_enemy(): a minion attack on a
+## foe that is held, stunned or frozen (Enemy.stun_timer / freeze_timer
+## running) is raised by held_damage (stat crushing_depths_bonus_dmg); exactly
+## 1 while the passive is not owned.
 ## Synergies of the newer classes (SynergyData, SynergyManager): damage_enemy()
 ## multiplies every hit by SynergyManager.hit_mult() once, right after
 ## Siegecraft (the highest mark bonus of the hit's class on a staggered /
@@ -139,6 +143,11 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 			and (is_minion_source(source) or source in PassiveData.MINION_DOT_SOURCES):
 		siege = game.abilities.passive_value("siegecraft", "siege_damage")  # 0 when not owned.
 		amount *= 1.0 + siege
+	# Crushing Depths (Act II): minion attacks on a held, stunned or frozen foe.
+	var depths := game.abilities.passive_value("crushing_depths", "held_damage")  # 0 when not owned.
+	if depths > 0.0 and (e.stun_timer > 0.0 or e.freeze_timer > 0.0) and is_minion_source(source):
+		game.stat_add("crushing_depths_bonus_dmg", amount * depths)
+		amount *= 1.0 + depths
 	# Synergies of the newer classes (SynergyManager.hit_mult(), the one
 	# synergy hit path): the highest mark bonus of the hit's class, times the
 	# Charnel Menagerie. Exactly 1 while none of them is active.

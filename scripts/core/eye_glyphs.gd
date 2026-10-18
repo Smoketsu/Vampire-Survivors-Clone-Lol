@@ -11,6 +11,8 @@ extends RefCounted
 ## Draws Ancient Eye kind `kind` (any kind; the plain cultist when it has no
 ## shape of its own). Always returns true.
 static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash: bool) -> bool:
+	if SpireGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # Act II: Ul-Thalos kinds.
 	_cultist(ci, o, r, flash)
 	if kind == "eye_chanter":
 		# A staff topped by the Eye's sigil, held to the right.

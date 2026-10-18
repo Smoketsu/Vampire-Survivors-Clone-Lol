@@ -59,6 +59,11 @@
 ##                        chambers, altars, corruption).
 ##   kind_aliases       — {alias: real kind}: short kind names the stage's
 ##                        timeline uses (EnemyDirector.resolve_kind()).
+##   sinking            — SinkingDirector config (SpireStage.SINKING, Act II
+##                        Ul-Thalos): the island shrinks with the zones (each
+##                        zone's `shore` radius); the sea is the world's edge.
+##   spire              — SpireDirector config (SpireStage.SPIRE: dream
+##                        pillars, guest squads of the earlier Act II kinds).
 class_name StageRegistry
 extends RefCounted
 
@@ -111,4 +116,6 @@ const BOSS_ARRIVALS := {
 	"alaric": GraveyardStage.BOSS,
 	"vael": CrimsonMarchStage.BOSS,
 	"seraphine": SeraphineData.ARRIVAL,
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"vhalneth": VhalnethData.ARRIVAL,
 }

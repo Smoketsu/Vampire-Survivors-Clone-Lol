@@ -27,10 +27,14 @@ extends Node2D
 
 ## Spell ids this book drives, in AbilityData.SPELL_ORDER order.
 const IDS := ["bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud",
-	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
+	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"call_of_the_drowned"]
 ## The five later spells (their own autotest line, later_summary_line(), and
 ## the generic NecroSpell hooks).
-const LATER_IDS := ["death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
+const LATER_IDS := ["death_mark", "bone_wall", "soul_chains", "wither", "raise_dead",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"call_of_the_drowned"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -43,6 +47,8 @@ const SOURCES := {
 	"soul_chains": ["soul_chains", "chains_damned"],
 	"wither": ["wither", "blight"],
 	"raise_dead": ["raised_dead", "legion_burst"],
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"call_of_the_drowned": ["drowned_tendril", "tide_tendril"],
 }
 
 ## Owning run.
@@ -85,6 +91,8 @@ func _create(id: String) -> NecroSpell:
 			node = Wither.new()
 		"raise_dead":
 			node = RaiseDead.new()
+		"call_of_the_drowned":
+			node = CallOfTheDrowned.new()  # Act II: Ul-Thalos, the Risen Spire.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

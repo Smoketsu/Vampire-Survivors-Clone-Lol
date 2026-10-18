@@ -44,7 +44,9 @@ const STARTING_SPELL: String = "shadow_bolt"
 ## Display / card order of spells.
 const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	"bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud",
-	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
+	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"call_of_the_drowned"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -291,11 +293,37 @@ const SPELLS := {
 			{"count": 4, "cooldown": 7.0, "life": 9.0, "skeleton_hp": 0.7, "skeleton_damage": 1.0, "range": 300.0},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	# Call of the Drowned (GDD §15.0 "Ul-Thalos, the Risen Spire"; unlocked by
+	# slaying Vhal'Neth, UnlockData): the Eye's Claim turned against it.
+	# Tendrils rise under the strongest foes in range every `cooldown` s
+	# (`targets` of them, after a short telegraph): `damage` to every foe
+	# within `radius` px of each, slowing them; a foe they kill rises as YOUR
+	# Drowned Thrall for `life` s (HordeDirector.spawn_temporary(), so Restless
+	# Dead and the Grave Herald's innate apply), with `thrall_hp` /
+	# `thrall_damage` of a Skeleton Warrior's current stats. Logic:
+	# CallOfTheDrowned; fixed rules: CallDrownedData.
+	"call_of_the_drowned": {
+		"display_name": "Call of the Drowned",
+		"icon": "call_of_the_drowned",
+		"description": "Tendrils drag the strongest foes under; those they drown rise to fight for you.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Tendril damage", "targets": "Tendrils", "cooldown": "Cooldown (s)", "life": "Thrall life (s)", "thrall_damage": "Thrall damage"},
+		"levels": [
+			{"damage": 26.0, "targets": 1, "radius": 34.0, "cooldown": 6.0, "range": 280.0, "life": 12.0, "thrall_hp": 0.5, "thrall_damage": 0.6},  # TUNING (not in GDD) proposal "every 6 s", "for 12 s"
+			{"damage": 32.0, "targets": 1, "radius": 36.0, "cooldown": 6.0, "range": 290.0, "life": 12.0, "thrall_hp": 0.55, "thrall_damage": 0.7},  # TUNING (not in GDD)
+			{"damage": 40.0, "targets": 2, "radius": 38.0, "cooldown": 6.0, "range": 300.0, "life": 12.0, "thrall_hp": 0.6, "thrall_damage": 0.8},  # TUNING (not in GDD)
+			{"damage": 48.0, "targets": 2, "radius": 40.0, "cooldown": 5.5, "range": 310.0, "life": 12.0, "thrall_hp": 0.65, "thrall_damage": 0.9},  # TUNING (not in GDD)
+			{"damage": 58.0, "targets": 3, "radius": 44.0, "cooldown": 5.0, "range": 320.0, "life": 12.0, "thrall_hp": 0.7, "thrall_damage": 1.0},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
 const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", "nova", "nova_rot_bonus",
-	"falloff", "shred", "skeleton_hp", "skeleton_damage"]
+	"falloff", "shred", "skeleton_hp", "skeleton_damage",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"thrall_hp", "thrall_damage"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

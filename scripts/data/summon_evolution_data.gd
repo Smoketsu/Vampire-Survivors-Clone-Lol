@@ -51,7 +51,9 @@ extends RefCounted
 ## Display / check order of the summon evolutions.
 const ORDER := ["death_knight", "lich", "profane_bishop",
 	"winter_revenant", "shadow_reaper", "cathedral_horror", "gravebow", "bone_colossus",
-	"hellhound", "keening_lady", "ossuary_engine"]
+	"hellhound", "keening_lady", "ossuary_engine",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"leviathan"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -543,6 +545,35 @@ const EVOLUTIONS := {
 			"shard_radius": 30.0,  # TUNING (not in GDD) px
 			"shard_tick": 0.5,  # TUNING (not in GDD) s
 			"shard_fraction": 0.1,  # TUNING (not in GDD) of the boulder damage per tick (was 0.15, then 0.12)
+		},
+	},
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	# Leviathan (GDD §15.0 "Ul-Thalos, the Risen Spire"): Spawn of the Deep
+	# Lv 5 + Crushing Depths Lv 5 (a NEW passive, owner rule). Its Grasp seizes
+	# two foes and its tentacles sweep everything around it, throwing them back
+	# (DeepSpawnBehavior reads the special_set keys).
+	"leviathan": {
+		"mode": "transform",
+		"bases": ["spawn_of_the_deep"],
+		"passive": "crushing_depths",
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: every evolution needs its passive maxed
+		"display_name": "Leviathan",  # TUNING (not in GDD)
+		"plural": "Leviathans",
+		"icon": "leviathan",
+		"description": "Leviathans seize two foes at once and sweep the ground around them with their tentacles.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.25,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 18.0,  # TUNING (not in GDD) spawns are 15
+		},
+		"special_set": {
+			"grasp_targets": 2,  # TUNING (not in GDD)
+			"sweep": 1,  # TUNING (not in GDD) 1 = the tentacle sweep with every grasp
+			"sweep_radius": 80.0,  # TUNING (not in GDD) px around the Leviathan
+			"sweep_fraction": 2.0,  # TUNING (not in GDD) sweep damage = this x one squeeze
+			"sweep_knockback": 180.0,  # TUNING (not in GDD) px/s impulse, divided by enemy mass
 		},
 	},
 }

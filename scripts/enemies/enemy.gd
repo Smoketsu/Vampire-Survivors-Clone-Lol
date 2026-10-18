@@ -154,6 +154,11 @@ var wears: String = ""
 var wears_class: String = ""
 ## Colour multiplied over the worn sprite (EyeEnemyData.CLAIM.tint).
 var wear_tint: Color = Color.WHITE
+# --- Act II: Ul-Thalos, the Risen Spire ---
+## True while nothing can target, hit or block this enemy: it is left out of
+## the enemy spatial hash (Game._rebuild_grids()). Vhal'Neth's face while it
+## lies under the sea (BossVhalneth); false for every other enemy.
+var untargetable: bool = false
 ## px; a summon dying this close is claimed by the Ancient Eye (EyeEnemyData
 ## "claim_radius"; 0 = this enemy claims nothing). EyeClaims reads it.
 var claim_radius: float = 0.0
@@ -338,6 +343,7 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	wears = ""
 	wears_class = ""
 	wear_tint = Color.WHITE
+	untargetable = false
 	claim_radius = float(def.get("claim_radius", 0.0))
 	claimer_until = 0.0
 	display_name = def["display_name"]
@@ -520,6 +526,8 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 
 ## Sprite key of this enemy's art (the engine-motion pivot); bosses override.
 func motion_sprite_key() -> String:
+	if SpriteBank.has("eye/" + kind):
+		return "eye/" + kind  # An Ancient Eye kind's art (Act II, assets/sprites/eye/).
 	return "enemies/" + kind
 
 

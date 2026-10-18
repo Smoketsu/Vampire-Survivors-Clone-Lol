@@ -217,6 +217,8 @@ func _ready() -> void:
 			ground = MarchGround.new()
 		"sanctum":
 			ground = SanctumGround.new()
+		"spire":
+			ground = SpireGround.new()  # Act II: Ul-Thalos, the Risen Spire.
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -416,7 +418,7 @@ func _process(_delta: float) -> void:
 func _rebuild_grids() -> void:
 	enemy_grid.clear()
 	for e in enemies.active:
-		if e.active:
+		if e.active and not e.untargetable:  # Act II: Vhal'Neth's submerged face is out of reach.
 			enemy_grid.insert(e, e.position)
 	ally_grid.clear()
 	for u in horde.units:

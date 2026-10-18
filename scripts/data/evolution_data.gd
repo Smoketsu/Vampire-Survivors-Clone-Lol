@@ -49,7 +49,9 @@ const MIN_ELAPSED: float = 480.0  # TUNING (not in GDD) decision for open questi
 ## Display / card order of evolutions.
 const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	"ossuary_lance", "soul_rapture", "grave_eruption", "pestilence",
-	"doom_brand", "charnel_bastion", "chains_of_the_damned", "necrotic_blight", "legion_of_bones"]
+	"doom_brand", "charnel_bastion", "chains_of_the_damned", "necrotic_blight", "legion_of_bones",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"tidecallers_host"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -264,6 +266,24 @@ const EVOLUTIONS := {
 		"stats": {
 			"count": 6, "cooldown": 7.0, "life": 10.0, "skeleton_hp": 0.8, "skeleton_damage": 1.1, "range": 320.0,  # TUNING (not in GDD)
 			"damage": 32.0, "radius": 60.0,  # TUNING (not in GDD)
+		},
+	},
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	# Tidecaller's Host (GDD §15.0 "Ul-Thalos, the Risen Spire"): Call of the
+	# Drowned + Abyssal Pact (a NEW passive, owner rule: at Lv 5). The
+	# drowned rise as Spawns of the Deep (the Spawn of the Deep summon class's
+	# kit, CallDrownedData.HOST_CLASS: bigger, and they grab and hold an
+	# enemy). Detected by the "host" key.
+	"tidecallers_host": {
+		"base": "call_of_the_drowned",
+		"passive": "abyssal_pact",
+		"display_name": "Tidecaller's Host",
+		"icon": "tidecallers_host",
+		"description": "The drowned rise as Spawns of the Deep that seize your foes and hold them fast.",
+		"labels": {"damage": "Tendril damage", "targets": "Tendrils", "cooldown": "Cooldown (s)", "life": "Spawn life (s)", "thrall_damage": "Spawn damage"},
+		"stats": {
+			"damage": 80.0, "targets": 3, "radius": 50.0, "cooldown": 4.5, "range": 340.0, "life": 14.0, "thrall_hp": 0.9, "thrall_damage": 1.0,  # TUNING (not in GDD)
+			"host": 1,  # The evolution flag: the drowned rise as Spawns of the Deep.
 		},
 	},
 }

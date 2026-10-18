@@ -170,6 +170,9 @@ const CLASSES := {
 		"life": 0.55, "share": 0.5, "pierce": 1, "radius": 4.0, "style": "note", "color": Color(0.80, 0.70, 1.0)},  # TUNING (not in GDD) the Dirge's visible rings (share of the shriek bolt)
 	"corpse_catapult": {"trigger": "special", "pattern": "ring", "counts": [6, 10], "speed": 250.0,
 		"life": 0.38, "share": 0.25, "pierce": 0, "radius": 4.0, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) bone fragments where the boulder lands
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"spawn_of_the_deep": {"trigger": "special", "pattern": "ring", "counts": [6, 9], "speed": 230.0,
+		"life": 0.45, "share": 0.5, "pierce": 0, "radius": 4.5, "style": "orb", "color": Color(0.45, 0.80, 0.74)},  # TUNING (not in GDD) brine spray from the grasp (share of a squeeze)
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -197,6 +200,9 @@ const EVOLVED := {
 		"life": 0.6, "share": 0.45, "pierce": 1, "radius": 4.0, "style": "note", "color": Color(0.80, 0.70, 1.0)},  # TUNING (not in GDD) each of the three waves
 	"ossuary_engine": {"trigger": "special", "pattern": "ring", "counts": [8], "speed": 240.0,
 		"life": 0.42, "share": 0.25, "pierce": 0, "radius": 4.0, "style": "shard", "color": Color(1.0, 0.62, 0.30)},  # TUNING (not in GDD) burning bone fragments
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"leviathan": {"trigger": "special", "pattern": "spiral", "counts": [14], "speed": 210.0,
+		"life": 0.6, "share": 0.4, "pierce": 1, "radius": 5.0, "style": "wave", "color": Color(0.45, 0.80, 0.74), "curve": 2.0},  # TUNING (not in GDD) a whirl of brine with every sweep
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -232,6 +238,9 @@ const SPELLS := {
 		"life": 0.7, "share": 0.6, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.40, 0.30, 0.55)},  # TUNING (not in GDD) (share of a pulse)
 	"raise_dead": {"every": 1, "clock": "cooldown", "aim": "densest", "pattern": "rain", "counts": [6, 9, 14], "speed": 420.0,
 		"life": 0.22, "share": 1.0, "pierce": 0, "radius": 5.0, "style": "shard", "color": Color(0.87, 0.85, 0.76), "scatter": 50.0, "flat": 14.0},  # TUNING (not in GDD) bone rain; the spell has no damage key: `flat` = the base damage
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"call_of_the_drowned": {"every": 1, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [3, 5, 8], "speed": 240.0,
+		"life": 1.0, "share": 0.3, "pierce": 0, "radius": 4.0, "style": "spark", "color": Color(0.45, 0.80, 0.74), "homing": 7.0},  # TUNING (not in GDD) drowned souls that seek the strongest foe
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

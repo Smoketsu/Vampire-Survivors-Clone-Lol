@@ -613,6 +613,7 @@ func on_unit_died(u: SummonedUnit, as_death: bool = true) -> void:
 		claim_fallen(u)  # Act II: the Ancient Eye may claim it (no-op elsewhere).
 	if u.is_temporary:
 		temp_alive -= 1
+		AbyssalPact.on_temporary_gone(game, u)  # Act II: the Abyssal Pact's soul burst (no-op unless owned).
 	else:
 		class_counts[u.unit_class] = maxi(0, int(class_counts[u.unit_class]) - 1)
 		if as_death:

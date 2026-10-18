@@ -27,6 +27,12 @@
 ## crystals, sacred altars) ask keep_clear(), so no later layout puts an
 ## obstacle on them, and its Sanctified Halls layout is `aligned` (each
 ## obstacle at its cell's centre: rows of pillars).
+## Act II, Ul-Thalos (the sinking island): when a SinkingDirector is set as
+## `shore`, the sea is the edge of the world through ONE rule: resolve_all()
+## ends with shore.contain_all() (nobody is ever left in deep water),
+## free_point() clamps every placement inside the shore, and no obstacle is
+## generated in the sea or on the shoreline being flooded to (obstacle_ok()).
+## Without a shore (every other stage) nothing here changes.
 class_name Arena
 extends Node2D
 
@@ -87,6 +93,10 @@ var _road_half: float = 0.0
 ## Circles kept free of obstacle centres in every cell generated from now on
 ## (x, y = centre, z = radius in px): live stage objectives (keep_clear()).
 var _keep_clear: Array[Vector3] = []
+# --- Act II: Ul-Thalos, the Risen Spire ---
+## The sinking island's shore (Ul-Thalos; set by SinkingDirector, null on
+## every other stage): the sea is the edge of the world (see the header).
+var shore: SinkingDirector = null
 
 
 func _ready() -> void:
@@ -168,6 +178,8 @@ func _generate(key: Vector2i) -> Obstacle:
 			return _empty  # A live stage objective stands here.
 	if _road_half > 0.0 and absf(center.y) < _road_half + ArenaData.MAX_HALF_EXTENT:
 		return _empty  # Crimson March: the road stays open.
+	if shore != null and not shore.obstacle_ok(center):
+		return _empty  # Ul-Thalos: nothing stands in the sea or on the shore being flooded to.
 	var total := 0.0
 	for k: String in _kinds:
 		total += float(_kinds[k]["weight"])
@@ -239,7 +251,7 @@ func is_blocked(pos: Vector2, r: float) -> bool:
 ## gets ArenaData.FREE_POINT_MARGIN on top, so a tiny penetration far from
 ## the origin cannot round away in 32-bit floats.
 func free_point(pos: Vector2, r: float) -> Vector2:
-	var p := pos
+	var p := pos if shore == null else shore.clamp_point(pos, r)  # Ul-Thalos: never in the sea.
 	for _i in 3:
 		var o := obstacle_at(p)
 		if o == null:
@@ -248,7 +260,7 @@ func free_point(pos: Vector2, r: float) -> Vector2:
 		if push == Vector2.ZERO:
 			return p
 		p += push * 1.05 + push.normalized() * ArenaData.FREE_POINT_MARGIN
-	return p
+	return p if shore == null else shore.clamp_point(p, r)
 
 
 ## Distance (<= `length`) a body of radius `r` can travel from `from` along
@@ -306,6 +318,8 @@ func resolve_all(delta: float) -> void:
 			resolved_enemies += 1
 	if _frame % 600 == 0:
 		_purge_slide(now)
+	if shore != null:
+		shore.contain_all()  # Ul-Thalos: the sea is the edge of the world.
 
 
 ## Resolves one body: push-out, then turns the blocked (into-the-obstacle)
@@ -376,6 +390,8 @@ func _draw_obstacle(o: Obstacle) -> void:
 		return  # Its sprite (art pass); otherwise the code glyph below.
 	if MarchGlyphs.draw_obstacle(self, o):
 		return  # A Crimson March obstacle kind.
+	if SpireTerrainGlyphs.draw_obstacle(self, o):
+		return  # An Ul-Thalos obstacle kind (Act II).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

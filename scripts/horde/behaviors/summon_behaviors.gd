@@ -7,6 +7,7 @@
 ##   "pack"   Bone Hounds         BoneHoundBehavior
 ##   "dirge"  Banshee             BansheeBehavior
 ##   "barrage" Corpse Catapult    CatapultBehavior
+##   "grasp"  Spawn of the Deep   DeepSpawnBehavior (Act II, Ul-Thalos)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -38,6 +39,8 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 			b = BansheeBehavior.new()
 		"barrage":
 			b = CatapultBehavior.new()
+		"grasp":
+			b = DeepSpawnBehavior.new()  # Act II: the Spawn of the Deep.
 	if b != null:
 		b.kind = kind
 	return b
@@ -100,6 +103,15 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			if a.is_empty():
 				out.append("Bone Barrage: boulders splash %s px, from behind the army" % _f(nxt["splash_radius"]))
 				out.append("Targets structures, elites and dense packs first")
+		# --- Act II: Ul-Thalos, the Risen Spire ---
+		"grasp":
+			if a.is_empty():
+				out.append("Blocks enemies with its heavy body")
+				out.append("Grasp: holds a foe %ss, %s dmg a squeeze, every %ss" % [_f(b["grasp_duration"]), _f(b["grasp_damage"]), _f(b["grasp_cooldown"])])
+			else:
+				_delta(out, "Squeeze damage", a, b, "grasp_damage")
+				_delta(out, "Hold time (s)", a, b, "grasp_duration")
+				_delta(out, "Grasp cooldown (s)", a, b, "grasp_cooldown")
 	return out
 
 

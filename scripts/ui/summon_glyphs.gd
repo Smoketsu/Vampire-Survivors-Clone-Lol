@@ -77,7 +77,7 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 		"bone_hound", "hellhound", "banshee", "keening_lady", "corpse_catapult", "ossuary_engine":
 			return WarbandGlyphs.draw_summon(ci, kind, o, r, flash)
 		_:
-			return false
+			return SpireGlyphs.draw_summon(ci, kind, o, r, flash)  # Act II: Ul-Thalos summons (false when unknown).
 	return true
 
 

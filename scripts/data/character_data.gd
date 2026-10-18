@@ -48,7 +48,9 @@ extends RefCounted
 ## Character ids in picker order (the spells' AbilityData order, then the
 ## five later spells).
 const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fallen_confessor",
-	"carrion_lord", "plague_scholar", "doomsayer", "barrow_warden", "soulbinder", "wither_witch", "grave_herald"]
+	"carrion_lord", "plague_scholar", "doomsayer", "barrow_warden", "soulbinder", "wither_witch", "grave_herald",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"tide_widow"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -82,10 +84,14 @@ const STAT_LABELS := {
 ##   wither_rot              Wither._pulse (Rot fraction per pulse)
 ##   wither_rot_linger       Wither._pulse (s the Rot outlasts the pulse)
 ##   temp_summon_duration    HordeDirector.spawn_temporary (every source)
+##   thrall_hp_bonus         CallOfTheDrowned._raise (extra Thrall HP fraction)
+##   thrall_cap_bonus        CallOfTheDrowned._raise (extra Thralls at once)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
-	"wither_rot_linger", "temp_summon_duration"]
+	"wither_rot_linger", "temp_summon_duration",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"thrall_hp_bonus", "thrall_cap_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -262,6 +268,25 @@ const CHARACTERS := {
 		"stats": {},  # Owner spec: baseline
 		"sprite": "player/grave_herald",
 		"tint": Color(0.42, 0.95, 0.55),  # TUNING (not in GDD) necrotic green
+		"starts_unlocked": false,
+	},
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	# The Tide Widow (the Call of the Drowned's character; female, in the
+	# figure-redesign style: fully clothed, the bust rig and idle breathing).
+	# A drowned priestess of the Eye who walked back out of the sea as a
+	# necromancer: the Thralls she calls rise sturdier, and more of them.
+	"tide_widow": {
+		"display_name": "The Tide Widow",
+		"title": "She sang the drowned home; now they answer her.",
+		"spell": "call_of_the_drowned",
+		"innate": {
+			"id": "drowned_chorus", "name": "Drowned Chorus",
+			"description": "The Thralls you call rise 40% sturdier, and two more may stand at once.",
+			"values": {"thrall_hp_bonus": 0.4, "thrall_cap_bonus": 2.0},  # TUNING (not in GDD) HP fraction, Thralls
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.05},  # TUNING (not in GDD) sturdier, slower: the sea's weight
+		"sprite": "player/tide_widow",
+		"tint": Color(0.36, 0.78, 0.72),  # TUNING (not in GDD) drowned teal
 		"starts_unlocked": false,
 	},
 }

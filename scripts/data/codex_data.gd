@@ -37,7 +37,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
 const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "warder", "abomination",
-		"rogue", "gargoyle", "frost_wraith", "bone_hound", "banshee", "corpse_catapult"]
+		"rogue", "gargoyle", "frost_wraith", "bone_hound", "banshee", "corpse_catapult",
+		# --- Act II: Ul-Thalos, the Risen Spire ---
+		"spawn_of_the_deep"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -55,11 +57,17 @@ const BOSSES: Array[String] = ["alaric", "vael", "seraphine"]
 ## Eye tab): its soldiers in the order the stages bring them (the Drowned
 ## Thrall last: the claimed dead), its minibosses, and its stage bosses
 ## (StageRegistry.BOSS_ARRIVALS ids). Each Act II stage adds its own as it is built.
-const EYE_SOLDIERS: Array[String] = ["eye_initiate", "eye_chanter", "drowned_thrall"]
-## Ancient Eye minibosses (enemy kinds).
-const EYE_CHAMPIONS: Array[String] = []
+const EYE_SOLDIERS: Array[String] = ["eye_initiate", "eye_chanter", "drowned_thrall",
+		# --- Act II: Ul-Thalos, the Risen Spire ---
+		"eye_siren", "eye_spawn", "eye_hierophant"]
+## Ancient Eye minibosses (enemy kinds) and the Act II Reckoning kinds.
+const EYE_CHAMPIONS: Array[String] = [
+		# --- Act II: Ul-Thalos, the Risen Spire ---
+		"eye_waking_horror"]
 ## Ancient Eye stage bosses (StageRegistry.BOSS_ARRIVALS ids).
-const EYE_BOSSES: Array[String] = []
+const EYE_BOSSES: Array[String] = [
+		# --- Act II: Ul-Thalos, the Risen Spire ---
+		"vhalneth"]
 
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
@@ -101,6 +109,12 @@ const DESCRIPTIONS: Dictionary = {
 	"eye_initiate": "Robed, slow cultists of the Ancient Eye who come in great crowds.",  # GDD §15.0 Act II
 	"eye_chanter": "Leads a squad of Initiates; a summon that falls near it is claimed.",  # GDD §15.0 Act II Claims
 	"drowned_thrall": "One of your own dead, claimed by the Eye. Free its soul.",  # GDD §15.0 Act II Claims
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"eye_siren": "A singer of the deep whose song lures your dead out of their ranks.",  # GDD §15.0 Siren of the Eye
+	"eye_spawn": "A tentacled, armoured spawn that seizes one of your dead and holds it fast.",  # GDD §15.0 Spawn of the Deep
+	"eye_hierophant": "An elite of the Eye whose Ascension turns it into a Spawn of the Deep.",  # GDD §15.0 Hierophant
+	"eye_waking_horror": "The god's last surge when the countdown ends: the Waking.",  # GDD §15.0 the Waking
+	"vhalneth": "The Dreaming Mother, dead god of the Eye. Raise her.",  # GDD §15.0 final boss
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -237,6 +251,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"heretics_bane": "ach_heretics_bane",  # TUNING (not in GDD)
 	"dread_sovereign": "ach_dread_sovereign",  # TUNING (not in GDD)
 	"dawn_extinguished": "ach_dawn_extinguished",  # TUNING (not in GDD)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"the_dead_god_serves": "ach_the_dead_god_serves",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -244,6 +260,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"heretics_bane": "dark_benediction",
 	"dread_sovereign": "dark_command",
 	"dawn_extinguished": "hyper_badge",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"the_dead_god_serves": "call_of_the_drowned",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)
@@ -316,4 +334,7 @@ static func enemy_row(id: String) -> Dictionary:
 			return MarchEnemyData.VAEL
 		"seraphine":
 			return SeraphineData.BOSS
+		# --- Act II: Ul-Thalos, the Risen Spire ---
+		"vhalneth":
+			return VhalnethData.BOSS
 	return {}

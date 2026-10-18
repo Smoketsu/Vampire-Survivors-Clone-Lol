@@ -236,7 +236,9 @@ const UPGRADES := {
 # --- Achievements (GDD §9.4) ---------------------------------------------------------
 
 ## Display order of achievements.
-const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "dawn_extinguished"]
+const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "dawn_extinguished",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"the_dead_god_serves"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). The GDD
 ## unlocks (Bone Golem, priest evolution unlock, Dread Sovereign skin) do not
@@ -265,6 +267,13 @@ const ACHIEVEMENTS := {
 	# (counted from the stage record, so it works for any boss the stage names).
 	"dawn_extinguished": {"display_name": "Dawn Extinguished", "description": "Defeat Grand Inquisitor Seraphine in the Sanctum of Judgment",
 		"stat": "boss_kills", "stage": "sanctum", "goal": 1, "unlock": "The campaign epilogue", "bounty": 200},  # GDD §7.5 ending; bounty TUNING (not in GDD)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	# The finale of Act II (proposal: "Achievement The Dead God Serves unlocks
+	# the campaign epilogue"): Vhal'Neth slain on Ul-Thalos. With Dawn
+	# Extinguished it opens the epilogue (EpilogueData, the main menu's
+	# Epilogue screen): Dawn Extinguished the Act I part, this one Act II's.
+	"the_dead_god_serves": {"display_name": "The Dead God Serves", "description": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos and raise her",
+		"stat": "boss_kills", "stage": "spire", "goal": 1, "unlock": "The campaign epilogue", "bounty": 300},  # Proposal; bounty TUNING (not in GDD)
 }
 
 ## Damage sources whose killing blow counts as a Skeleton Warrior kill (the
