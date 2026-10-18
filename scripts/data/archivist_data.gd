@@ -88,7 +88,7 @@ const BOSS := {
 	"page_turn": 2.4,  # TUNING (not in GDD) rad/s homing turn rate (a sharp sidestep beats it)
 	"page_life": 4.5,  # TUNING (not in GDD) s a page hunts before it crumbles
 	"page_radius": 8.0,  # TUNING (not in GDD) px contact radius
-	"page_damage_player": 8.0,  # TUNING (not in GDD) before time scaling
+	"page_damage_player": 6.0,  # TUNING (not in GDD) before time scaling (8 at first: the pages were the top hitter of the builds that died to her)
 	"page_damage_summon": 5.0,  # TUNING (not in GDD) before time scaling
 	"page_pool_radius": 34.0,  # TUNING (not in GDD) px ink pool where a page hits
 	"page_pool_life": 4.0,  # TUNING (not in GDD) owner-approved proposal "a short-lived ink pool"

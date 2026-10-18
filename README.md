@@ -309,6 +309,56 @@ built; until then their cards read "Coming soon". The act's shared rules are in:
   unlock, and the Codex (its new **Ancient Eye** tab too) names the condition of a locked one.
 - **Music.** Act II runs play their own loop, "Below the Tide".
 
+### Stage 5: The Hollow Archive
+
+The buried library and observatory where the Eye keeps its god's scripture (GDD §15.0 "Act II:
+the Hollow Archive"; `archive_stage.gd`, `ArchiveDirector`, `RiftDirector`; still "Coming soon"
+on the stage select until the Act II integration). Unlocked by slaying Abbot Merrow; ×2.0 Soul
+Ash. Four zones on the clock:
+
+- **The Reading Halls** (20:00): rows of long shelves split the field into aisles.
+- **The Ink Wells** (15:00): pools of black ink in the floor. Standing in ink slows you by 30%
+  and raises your Dread; Ink Wraiths rise out of the wells.
+- **The Orrery** (10:00): a huge brass orrery rises around you. Its arms are moving walls: they
+  rest, the next sweep glows for 2 s, then they turn 45°, sweeping you and the army along (never
+  into a wall). Walk too far away and it folds and rises around you again.
+- **The Unwritten Stacks** (5:00): a **rift** every 45 s. A rift glows for 3 s, then tears open
+  behind your army and spits the Eye out next to you; it closes by itself after 10 s, or sooner
+  if the army breaks it. Single rifts also open earlier as a warning.
+
+**Forbidden tomes** (optional): five lecterns over the run (2:30, 7:00, 12:00), each guarded by a
+Scribe. Stand on one for 1.5 s to burn its tome: a free level-up card, but +20 Dread. Unburned,
+a tome seals itself after 90 s. Burn all five in one run for the achievement **Nothing
+Unwritten** (it unlocks the Iron Mind passive).
+
+**The Archive's kinds** (any stage can spawn them; `scripts/enemies/eye/`):
+**Scribe of the Unwritten** (inks a curse on up to three cultists around it: for 10 s each is a
+claimer, so a summon dying near it rises as a Drowned Thrall; kill Scribes first), **Ink Wraith**
+(a fast flanker that slips through shelves and every obstacle and rises out of ink), **Pilgrim of
+the Spore** (leaves spore clouds that raise your Dread and choke the undead inside; bursts into a
+big one when it dies), **Gibbering Mass** (a tank that splits into two smaller masses when it
+dies, and each of those once more), the **Librarian** miniboss at 9:00 (a floating eye in
+tendrils: a slow, telegraphed beam turns the summons it crosses around for 2 s, a tendril lash
+throws the crowd back; HUD bar, guaranteed chest) and the Reckoning's **Unwritten**.
+
+**The Archivist, Keeper of the Unwritten** (3:00 left; `boss_archivist.gd`, `archivist_data.gd`):
+**Recitation** (pages rise around her, hover, then home on you; one that hits you or a summon
+bursts into a short-lived ink pool), **Footnotes** (from 60% HP she splits into three; only the
+one casting a shadow takes damage, blows on the copies are wasted), **Erasure** (the field's edge
+closes in 60 px every 20 s, telegraphed, down to 260 px; you and your army are pushed back
+inside), faster at 25% (the Last Page). Slaying her unlocks **Forbidden Verse** and
+**Marginalia**.
+
+**Forbidden Verse** (`forbidden_verse.gd`, rules in `verse_data.gd`; unlocked by the Archivist,
+then offered on every stage): three pages orbit you, cutting what they pass and inscribing it;
+every few seconds they sweep wide. An inscribed enemy that dies (to anything) bursts into ink.
+Evolution **The Unwritten Word** (with **Marginalia** at Lv 5): six pages, and each ink burst can
+set off one more. **Marginalia**: every on-death effect hits harder, +8% a level (ink bursts,
+Corpse Explosion, Grave Eruption, the frozen shatter, bone shrapnel, Doom Brand and Legion bursts,
+Soul Rapture). **Iron Mind** (Act II only): Dread rises 10% slower a level, and at Lv 5 kills calm
+it twice as fast. Its character, **the Heretic Scribe** (innate Illuminated Margins: ink bursts
+reach 30% farther; −10 HP, +5% move speed), unlocks the first time Forbidden Verse reaches Lv 5.
+
 ### How a run works
 
 - A **20:00 countdown** runs at the top of the screen.
@@ -1512,6 +1562,8 @@ scripts/
     march_ground.gd         Crimson March floor: the road and each battle zone's look (extends Ground)
     march_glyphs.gd         Crimson March shapes: new soldiers, structures, Marshal Vael, obstacles, corpse piles
     sanctum_ground.gd       Sanctum floor: each battle zone's look, corruption tint (extends Ground)
+    archive_ground.gd       Hollow Archive floor: each zone's look (extends Ground)
+    archive_glyphs.gd       Hollow Archive drawing: kinds, Archivist, obstacles, hazards, orrery, tomes, Erasure, icons
     sanctum_terrain_glyphs.gd  Sanctum shapes: ward crystals, sacred altars, the four zones' obstacles
     sanctum_glyphs.gd       Sanctum of Judgment Covenant shapes (Sentinel, Radiant Inquisitor, High Confessor,
                             Sun Paladin, Cathedral Guardian) and their overlays (holy shield, sun ward,
@@ -1581,6 +1633,14 @@ scripts/
                             fans, circles, beams, barrages, summons, suppression adapter, nova, Last Light
     eye/                    The Ancient Eye's kits ("<id>_kit.gd", loaded by name) and bosses
                             ("boss_<id>.gd"); thrall_kit.gd: the Drowned Thrall's life and soul return
+      archive_director.gd   The Hollow Archive: Ink Wells, the Orrery's moving arms, forbidden tomes, the
+                            Librarian, the Reckoning's ink (owns rift_director.gd: telegraphed rifts)
+      archive_hazards.gd    The Archive kinds' world hazards on any stage: ink pools, spore clouds,
+                            the Archivist's pages, mass splits (archive_hazard_overlay.gd draws pages
+                            and the Scribes' curse sigils above the bodies)
+      scribe_kit.gd, ink_wraith_kit.gd, spore_pilgrim_kit.gd, gibbering_kit.gd, librarian_kit.gd,
+      rift_kit.gd           The Archive kinds' specials
+      boss_archivist.gd     The Archivist (extends Boss): Recitation, Footnotes (archivist_copy.gd), Erasure
     seraphine_hazards.gd    Her world-space hazards: holy circles, rotating beams, Judgment nova and safe
                             circles, suppression rings, the collapsing arena (timing, damage, drawing)
     stage_director.gd       Empowered graves, Desecration, Crypt Defender, holy ground (incl. ward-generator zones)
@@ -1621,6 +1681,7 @@ scripts/
       raise_dead.gd         Raise Dead / Legion of Bones (temporary skeletons, bone bursts)
       grave_spell_glyphs.gd The five later spells' icons and world visuals
       grave_spell_lines.gd  Card lines of Grim Ledger, Spirit Binding and Restless Dead
+      forbidden_verse.gd    Act II: Forbidden Verse / The Unwritten Word (orbiting pages, inscriptions, ink bursts)
   pickups/xp_crystal.gd, xp_manager.gd     Pooled XP crystals with magnet
   pickups/powerup.gd, powerup_manager.gd   Pooled power-up drops, drop rules, timed buffs, Soul Nova
   pickups/chest.gd, chest_manager.gd       Pooled treasure chests and their drop rules
@@ -1714,6 +1775,9 @@ scripts/
     stages/spire_stage.gd          Tide", their unlock chain and boss ids
     eye_enemy_data.gd       The Ancient Eye's shared kinds (Initiate, Chanter, Drowned Thrall), Claim rules
     harbour_enemy_data.gd   Each Act II stage's own kinds (archive_ / spire_enemy_data.gd likewise)
+    archive_enemy_data.gd   The Hollow Archive's kinds, the Librarian, rifts, the Unwritten, the hazard rules
+    archivist_data.gd       The Archivist: phases, Recitation, Footnotes, Erasure, arrival and ending text
+    verse_data.gd           Forbidden Verse's fixed rules and Marginalia's on-death sources
     dread_data.gd           Act II Dread: steps, damage taken, kill calm, Iron Mind keys, the vignette look
     unlock_data.gd          Act II unlockable items (boss / achievement), end-screen plate headings
     sanctum_objective_data.gd      Sanctum structures: ward crystal, sacred altar
@@ -1856,6 +1920,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, or the Act II stages `harbour`, `archive` and `spire`. Stage locks (and Act II's "Coming soon") are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). |
+| (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |

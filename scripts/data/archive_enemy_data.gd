@@ -44,7 +44,7 @@ const ENEMIES := {
 		"attack_range": 4.0,  # TUNING (not in GDD) px edge to edge
 		"radius": 10.0,  # TUNING (not in GDD) px
 		"armor": 0.05,  # TUNING (not in GDD)
-		"xp": 4,  # TUNING (not in GDD)
+		"xp": 3,  # TUNING (not in GDD) (4 at first: builds completed by ~12:45, a minute early)
 		"behavior": "melee",
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
@@ -69,19 +69,19 @@ const ENEMIES := {
 		"display_name": "Ink Wraith",
 		"max_hp": 32.0,  # TUNING (not in GDD)
 		"move_speed": 80.0,  # TUNING (not in GDD) px/s; a flanker (the necromancer runs at 110)
-		"damage": 5.0,  # TUNING (not in GDD) claws
+		"damage": 4.0,  # TUNING (not in GDD) claws (5 at first: with the rise beside the necromancer, the top hitter of naive builds)
 		"attack_interval": 0.9,  # TUNING (not in GDD) s
 		"attack_range": 4.0,  # TUNING (not in GDD) px edge to edge
 		"radius": 9.0,  # TUNING (not in GDD) px
 		"armor": 0.0,  # TUNING (not in GDD)
-		"xp": 3,  # TUNING (not in GDD)
+		"xp": 2,  # TUNING (not in GDD) (3 at first)
 		"behavior": "melee",
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
 		"heal_amount": 0.0,
 		"heal_interval": 0.0,
 		"heal_radius": 0.0,
-		"target_priority": 0.5,  # TUNING (not in GDD) 0..1
+		"target_priority": 0.7,  # TUNING (not in GDD) 0..1 (0.5 at first): the army hunts the flanker that rose beside its master
 		"mass": 0.8,  # TUNING (not in GDD)
 		"faction": EyeEnemyData.FACTION,
 		"kit": "ink_wraith",
@@ -107,7 +107,7 @@ const ENEMIES := {
 		"attack_range": 4.0,  # TUNING (not in GDD) px edge to edge
 		"radius": 11.0,  # TUNING (not in GDD) px
 		"armor": 0.1,  # TUNING (not in GDD)
-		"xp": 5,  # TUNING (not in GDD)
+		"xp": 4,  # TUNING (not in GDD) (5 at first)
 		"behavior": "melee",
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
@@ -137,7 +137,7 @@ const ENEMIES := {
 		"attack_range": 5.0,  # TUNING (not in GDD) px edge to edge
 		"radius": 17.0,  # TUNING (not in GDD) px
 		"armor": 0.1,  # TUNING (not in GDD)
-		"xp": 5,  # TUNING (not in GDD) (the splits pay their own)
+		"xp": 4,  # TUNING (not in GDD) (5 at first; the splits pay their own)
 		"behavior": "melee",
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
@@ -162,7 +162,7 @@ const ENEMIES := {
 		"attack_range": 4.0,  # TUNING (not in GDD) px edge to edge
 		"radius": 12.0,  # TUNING (not in GDD) px
 		"armor": 0.05,  # TUNING (not in GDD)
-		"xp": 2,  # TUNING (not in GDD)
+		"xp": 1,  # TUNING (not in GDD) (2 at first)
 		"behavior": "melee",
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,

@@ -61,7 +61,7 @@ const EYE_SOLDIERS: Array[String] = ["eye_initiate", "eye_chanter", "drowned_thr
 ## Ancient Eye minibosses (enemy kinds).
 const EYE_CHAMPIONS: Array[String] = [
 		# --- Act II: the Hollow Archive ---
-		"librarian"]
+		"librarian", "unwritten_one"]
 ## Ancient Eye stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const EYE_BOSSES: Array[String] = [
 		# --- Act II: the Hollow Archive ---
@@ -114,6 +114,7 @@ const DESCRIPTIONS: Dictionary = {
 	"gibbering_mass": "A heaving tank that splits into smaller masses when it dies, twice.",  # GDD §15.0 Act II: the Hollow Archive
 	"librarian": "A floating eye in tendrils whose slow beam turns your dead around.",  # GDD §15.0 Act II: the Hollow Archive
 	"archivist": "The Keeper of the Unwritten, whose face is an open book.",  # GDD §15.0 Act II: the Hollow Archive
+	"unwritten_one": "Page-wrapped horrors the Archive sends once the countdown ends.",  # GDD §15.0 Act II: the Hollow Archive (its Reckoning)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":

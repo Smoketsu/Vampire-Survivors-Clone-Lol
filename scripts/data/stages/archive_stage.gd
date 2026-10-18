@@ -166,7 +166,7 @@ const EVENTS := [
 		"groups": [{"kind": "gibbering_mass", "count": 2, "elite": false}, {"kind": "eye_chanter", "count": 1, "elite": true}, {"kind": "eye_initiate", "count": 10, "elite": false}]},
 	# Zone II, the Ink Wells.
 	{"time": 320.0, "type": "wave", "banner": "Pilgrims of the Spore wander through the wells!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "spore_pilgrim", "count": 4, "elite": false}, {"kind": "eye_initiate", "count": 12, "elite": false}]},
+		"groups": [{"kind": "spore_pilgrim", "count": 3, "elite": false}, {"kind": "spore_pilgrim", "count": 1, "elite": true}, {"kind": "eye_initiate", "count": 12, "elite": false}]},
 	{"time": 370.0, "type": "wave", "banner": "Wraiths rise from the ink!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "ink_wraith", "count": 8, "elite": false}, {"kind": "scribe", "count": 2, "elite": false}, {"kind": "eye_initiate", "count": 12, "elite": false}]},
 	{"time": 420.0, "type": "tomes", "banner": "Two more forbidden tomes lie open: each a gift, each a dread!",  # TUNING (not in GDD)
@@ -179,7 +179,7 @@ const EVENTS := [
 		"groups": [{"kind": "scribe", "count": 1, "elite": true}, {"kind": "spore_pilgrim", "count": 5, "elite": false}, {"kind": "eye_initiate", "count": 10, "elite": false}]},
 	# Zone III, the Orrery.
 	{"time": 620.0, "type": "wave", "banner": "The faithful march between the orrery's arms!", "formation": "line",  # TUNING (not in GDD)
-		"groups": [{"kind": "eye_initiate", "count": 20, "elite": false}, {"kind": "gibbering_mass", "count": 3, "elite": false}]},
+		"groups": [{"kind": "eye_initiate", "count": 20, "elite": false}, {"kind": "gibbering_mass", "count": 2, "elite": false}, {"kind": "gibbering_mass", "count": 1, "elite": true}]},
 	{"time": 660.0, "type": "librarian", "banner": "THE LIBRARIAN opens its eye: its gaze turns your dead around!",  # Owner-approved proposal: the Librarian at 9:00
 		"kind": "librarian", "elite": false},
 	{"time": 720.0, "type": "tomes", "banner": "The last forbidden tomes lie open: burn them all to leave nothing unwritten!",  # TUNING (not in GDD)
@@ -192,7 +192,7 @@ const EVENTS := [
 		"groups": [{"kind": "scribe", "count": 4, "elite": false}, {"kind": "eye_chanter", "count": 2, "elite": false}, {"kind": "eye_initiate", "count": 14, "elite": false}]},
 	# Zone IV, the Unwritten Stacks (its rifts are ARCHIVE "rifts" periodic).
 	{"time": 930.0, "type": "wave", "banner": "The Unwritten Stacks empty their aisles!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "eye_initiate", "count": 24, "elite": false}, {"kind": "spore_pilgrim", "count": 4, "elite": false}, {"kind": "gibbering_mass", "count": 2, "elite": false}]},
+		"groups": [{"kind": "eye_initiate", "count": 24, "elite": false}, {"kind": "spore_pilgrim", "count": 3, "elite": false}, {"kind": "spore_pilgrim", "count": 1, "elite": true}, {"kind": "gibbering_mass", "count": 2, "elite": false}]},
 	{"time": 985.0, "type": "wave", "banner": "The Keeper's chosen gather before her!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "scribe", "count": 2, "elite": true}, {"kind": "ink_wraith", "count": 6, "elite": false}, {"kind": "eye_chanter", "count": 2, "elite": false}, {"kind": "eye_initiate", "count": 12, "elite": false}]},
 	# 17:00 the Archivist (BOSS_TIME), plus two sallies.
