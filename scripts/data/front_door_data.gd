@@ -20,6 +20,8 @@ const MENU_ITEMS: Array = [
 	["settings", "Settings"],  # TUNING (not in GDD)
 	["credits", "Credits"],  # TUNING (not in GDD)
 	["quit", "Quit"],  # TUNING (not in GDD)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	["epilogue", "Epilogue"],  # TUNING (not in GDD) the campaign epilogue (EpilogueData); shown once a part is open, above Credits
 ]
 ## MENU_ITEMS ids left out of the title screen on the Web build (a browser
 ## tab cannot quit; GDD §15.0 "Web build").
@@ -214,6 +216,19 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "wisps", "fx_color": Color8(240, 156, 242),
 	},  # TUNING (not in GDD)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"spire": {
+		"tile": "tiles/spire_breakwater",
+		"items": [
+			["decals/spire_breakwater_barnacles", 150, 150, false],
+			["obstacles/barnacle_pillar_m", 28, 96, false], ["obstacles/cyclopean_block_s", 248, 104, false],
+			["eye/dream_pillar", 140, 98, false],
+			["eye/eye_siren", 248, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/spawn_of_the_deep", 92, 226, false],
+			["eye/vhalneth_arm", 178, 226, true],
+		],
+		"fx": "motes", "fx_color": Color8(176, 76, 192),
+	},  # TUNING (not in GDD) the Eye's biolume motes
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

@@ -37,7 +37,9 @@ extends Node2D
 const IDS := ["bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud",
 	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead",
 	# --- Act II: the Hollow Archive ---
-	"forbidden_verse"]
+	"forbidden_verse",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"call_of_the_drowned"]
 ## The five later spells (their own autotest line, later_summary_line(), and
 ## the generic NecroSpell hooks).
 const LATER_IDS := ["death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
@@ -48,6 +50,8 @@ const ACT2_IDS := [
 	"undertow",
 	# --- Act II: the Hollow Archive ---
 	"forbidden_verse",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"call_of_the_drowned",
 ]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
@@ -65,6 +69,8 @@ const SOURCES := {
 	"undertow": ["undertow", "maelstrom"],
 	# --- Act II: the Hollow Archive ---
 	"forbidden_verse": ["verse", "unwritten_word", "ink_burst"],
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"call_of_the_drowned": ["drowned_tendril", "tide_tendril"],
 }
 
 ## Owning run.
@@ -119,6 +125,8 @@ func _create(id: String) -> NecroSpell:
 		# --- Act II: the Hollow Archive ---
 		"forbidden_verse":
 			node = ForbiddenVerse.new()
+		"call_of_the_drowned":
+			node = CallOfTheDrowned.new()  # Act II: Ul-Thalos, the Risen Spire.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

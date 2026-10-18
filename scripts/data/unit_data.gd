@@ -29,7 +29,9 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		# --- Act II: Fallen Seraph ---
 		# Unlockable (UnlockData: slaying Grand Inquisitor Seraphine once), so a
 		# save that never slew her never offers it (Unlocks.offerable()).
-		"fallen_seraph"]
+		"fallen_seraph",
+		# --- Act II: Ul-Thalos, the Risen Spire ---
+		"spawn_of_the_deep"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -726,6 +728,63 @@ const UNITS := {
 			"ring_feathers": 14,  # TUNING (not in GDD) feathers drawn on the ring (drawing only)
 		},
 	},
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	# Spawn of the Deep (GDD §15.0 "Ul-Thalos, the Risen Spire": the finale's
+	# reward, unlocked by slaying Vhal'Neth, UnlockData): a tentacled,
+	# barnacled heavy of the deep, bound to the necromancer. A frontline
+	# blocker (like the Abomination, a little lighter) whose special, Grasp
+	# (DeepSpawnBehavior), seizes the strongest foe in reach and holds it fast
+	# (the Cathedral Horror's stun hold, CombatResolver.stun_enemy()),
+	# dragging it in and squeezing it. Its evolution, the Leviathan, holds two
+	# and sweeps everything around it (SummonEvolutionData).
+	"spawn_of_the_deep": {
+		"display_name": "Spawn of the Deep",  # Owner-approved class (proposal decision 5)
+		"plural": "Spawns of the Deep",
+		"description": "Tentacled spawn of the deep that seize foes and hold them fast.",  # Card text: one short sentence (owner rule).
+		"max_hp": 210.0,  # TUNING (not in GDD) a heavy (Abomination 260)
+		"damage": 14.0,  # TUNING (not in GDD) tentacle lash (melee)
+		"attack_interval": 1.4,  # TUNING (not in GDD)
+		"attack_range": 14.0,  # TUNING (not in GDD) edge-to-edge melee reach (px)
+		"move_speed": 66.0,  # TUNING (not in GDD) px/s, slow
+		"radius": 15.0,  # TUNING (not in GDD) body radius (px)
+		"acquisition_range": 150.0,  # TUNING (not in GDD)
+		"replenish_interval": 18.0,  # TUNING (not in GDD) slow to rebuild (s)
+		"band_min": 45.0,  # TUNING (not in GDD) with the frontline (px)
+		"band_max": 95.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a heavy never shies away
+		"attack_profile": "melee",
+		"target_profile": "guard",  # Threats to the necromancer first (GDD §27).
+		"windup": 0.3,  # TUNING (not in GDD)
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.85,  # TUNING (not in GDD) healers value the heavy
+		"block_radius": 18.0,  # TUNING (not in GDD) blocks like a warrior, wider (px)
+		"block_mass": 6.0,  # TUNING (not in GDD) warrior 3, Abomination 8
+		"engaged_speed_mult": 0.55,  # TUNING (not in GDD) touching enemies move at 55%
+		"formation": "front",  # TUNING (not in GDD) the frontline arc
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2, not +5
+		"behavior": "grasp",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"grasp_damage": 7.0,  # TUNING (not in GDD) per squeeze tick
+			"grasp_tick": 0.5,  # TUNING (not in GDD) s between squeezes
+			"grasp_duration": 2.4,  # TUNING (not in GDD) s a foe is held (the stun hold)
+			"grasp_cooldown": 7.0,  # TUNING (not in GDD) s between grasps
+			"grasp_range": 90.0,  # TUNING (not in GDD) px edge to edge
+			"grasp_windup": 0.35,  # TUNING (not in GDD) s the tentacle reaches
+			"grasp_recover": 0.25,  # TUNING (not in GDD) s it stands after the grasp
+			"grasp_pull": 120.0,  # TUNING (not in GDD) px/s a held foe is dragged in (not bosses, minibosses, structures)
+			"grasp_boss_mult": 0.25,  # TUNING (not in GDD) share of the hold on the boss / a miniboss
+			"grasp_elite_mult": 0.6,  # TUNING (not in GDD) share of the hold on an elite
+			"grasp_targets": 1,  # Foes seized per grasp (the Leviathan: 2).
+			"elite_bonus": 0.6,  # TUNING (not in GDD) target-score bonus for an elite, a miniboss or the boss
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -865,6 +924,16 @@ const LEVELS := {
 		{"count": 2, "special_bonus": 0.2},
 		{"count": 2, "special_bonus": 0.2, "special_area": 0.15},
 		{"count": 3, "damage_bonus": 0.2, "special_bonus": 0.4, "special_area": 0.15, "special_haste": 0.2},
+	],
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	# TUNING (not in GDD): 1 -> 3 spawns; harder squeezes, then longer and
+	# more frequent grasps.
+	"spawn_of_the_deep": [
+		{"count": 1},
+		{"count": 1, "special_bonus": 0.2},
+		{"count": 2, "special_bonus": 0.2, "hp_bonus": 0.2},
+		{"count": 2, "damage_bonus": 0.2, "special_bonus": 0.2, "hp_bonus": 0.2, "special_duration": 0.25},
+		{"count": 3, "damage_bonus": 0.2, "special_bonus": 0.4, "hp_bonus": 0.2, "special_duration": 0.25, "special_haste": 0.2},
 	],
 }
 

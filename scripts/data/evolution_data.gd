@@ -56,7 +56,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act II: Gullhaven Harbour ---
 	"maelstrom",
 	# --- Act II: the Hollow Archive ---
-	"unwritten_word"]
+	"unwritten_word",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"tidecallers_host"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -304,6 +306,24 @@ const EVOLUTIONS := {
 		"stats": {
 			"pages": 6, "damage": 20.0, "orbit_radius": 84.0, "orbit_speed": 3.0, "hit_cooldown": 0.4, "inscribe": 7.0,  # TUNING (not in GDD) owner-approved "six pages"
 			"burst": 1.5, "radius": 56.0, "cooldown": 3.5, "chain": 1,  # TUNING (not in GDD) owner-approved "each ink burst can set off one more"
+		},
+	},
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	# Tidecaller's Host (GDD §15.0 "Ul-Thalos, the Risen Spire"): Call of the
+	# Drowned + Abyssal Pact (a NEW passive, owner rule: at Lv 5). The
+	# drowned rise as Spawns of the Deep (the Spawn of the Deep summon class's
+	# kit, CallDrownedData.HOST_CLASS: bigger, and they grab and hold an
+	# enemy). Detected by the "host" key.
+	"tidecallers_host": {
+		"base": "call_of_the_drowned",
+		"passive": "abyssal_pact",
+		"display_name": "Tidecaller's Host",
+		"icon": "tidecallers_host",
+		"description": "The drowned rise as Spawns of the Deep that seize your foes and hold them fast.",
+		"labels": {"damage": "Tendril damage", "targets": "Tendrils", "cooldown": "Cooldown (s)", "life": "Spawn life (s)", "thrall_damage": "Spawn damage"},
+		"stats": {
+			"damage": 80.0, "targets": 3, "radius": 50.0, "cooldown": 4.5, "range": 340.0, "life": 14.0, "thrall_hp": 0.9, "thrall_damage": 1.0,  # TUNING (not in GDD)
+			"host": 1,  # The evolution flag: the drowned rise as Spawns of the Deep.
 		},
 	},
 }

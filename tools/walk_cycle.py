@@ -196,6 +196,17 @@ RIGS = {
     "eye/spore_pilgrim": dict(mode="robe", hip=40, rigid=[(29, 36, 0, None)], sway=1, dip=1),
     "eye/ink_wraith": dict(mode="robe", hip=26, rigid=[], sway=2, dip=1),
     "player/heretic_scribe": dict(mode="legs", hip=48, back=(0, 22), front=(22, 33), rigid=[(33, 44, 0, None)], spread=1, lift=1, dip=1),
+    # --- Act II: Ul-Thalos ---
+    # The Siren floats (a kelp hem, robe); the Tide Widow's gown is a robe with her staff rigid;
+    # the Spawns crawl (their tentacle skirts sway like a hem).
+    "eye/eye_siren": dict(mode="robe", hip=32, rigid=[], sway=2, dip=1, bust=(17, 27, 17, 25, 2)),
+    "eye/eye_hierophant": dict(mode="robe", hip=46, rigid=[(26, 38, 0, None)], sway=2, dip=1),
+    "eye/eye_spawn": dict(mode="robe", hip=50, rigid=[], sway=2, dip=1),
+    "eye/eye_waking_horror": dict(mode="legs", hip=52, back=(0, 33), front=(33, 62), rigid=[], spread=2, lift=2, dip=1),
+    "summons/spawn_of_the_deep": dict(mode="robe", hip=46, rigid=[], sway=2, dip=1),
+    "summons/leviathan": dict(mode="robe", hip=58, rigid=[], sway=2, dip=1),
+    "summons/drowned_thrall_ally": dict(mode="legs", hip=34, back=(0, 17), front=(17, 36), rigid=[], spread=2, lift=1, dip=1),
+    "player/tide_widow": dict(mode="robe", hip=35, rigid=[(30, 44, 0, None)], sway=2, dip=1, bust=(21, 30, 18, 26, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -218,6 +229,7 @@ SKINS = {
     "player/soulbinder_hyper": "player/soulbinder",
     "player/wither_witch_hyper": "player/wither_witch",
     "player/grave_herald_hyper": "player/grave_herald",
+    "player/tide_widow_hyper": "player/tide_widow",  # --- Act II: Ul-Thalos ---
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {}

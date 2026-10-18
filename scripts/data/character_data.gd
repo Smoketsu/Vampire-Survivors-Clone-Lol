@@ -52,7 +52,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act II: Gullhaven Harbour (Undertow's character) ---
 	"brine_widow",
 	# --- Act II: the Hollow Archive ---
-	"heretic_scribe"]
+	"heretic_scribe",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"tide_widow"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -89,6 +91,8 @@ const STAT_LABELS := {
 ##   undertow_shallows_every Undertow._cast (a wave in every N leaves shallows;
 ##                           the spell's own rule is every 3rd)
 ##   verse_burst_radius      ForbiddenVerse._release_bursts (extra ink burst radius fraction)
+##   thrall_hp_bonus         CallOfTheDrowned._raise (extra Thrall HP fraction)
+##   thrall_cap_bonus        CallOfTheDrowned._raise (extra Thralls at once)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -96,7 +100,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act II: Gullhaven Harbour ---
 	"undertow_shallows_every",
 	# --- Act II: the Hollow Archive ---
-	"verse_burst_radius"]
+	"verse_burst_radius",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"thrall_hp_bonus", "thrall_cap_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -310,6 +316,25 @@ const CHARACTERS := {
 		"stats": {"max_hp": -10.0, "move_speed": 0.05},  # TUNING (not in GDD) a frail, quick reader
 		"sprite": "player/heretic_scribe",
 		"tint": Color(0.48, 0.30, 0.86),  # TUNING (not in GDD) scripture violet ink
+		"starts_unlocked": false,
+	},
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	# The Tide Widow (the Call of the Drowned's character; female, in the
+	# figure-redesign style: fully clothed, the bust rig and idle breathing).
+	# A drowned priestess of the Eye who walked back out of the sea as a
+	# necromancer: the Thralls she calls rise sturdier, and more of them.
+	"tide_widow": {
+		"display_name": "The Tide Widow",
+		"title": "She sang the drowned home; now they answer her.",
+		"spell": "call_of_the_drowned",
+		"innate": {
+			"id": "drowned_chorus", "name": "Drowned Chorus",
+			"description": "The Thralls you call rise 40% sturdier, and two more may stand at once.",
+			"values": {"thrall_hp_bonus": 0.4, "thrall_cap_bonus": 2.0},  # TUNING (not in GDD) HP fraction, Thralls
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.05},  # TUNING (not in GDD) sturdier, slower: the sea's weight
+		"sprite": "player/tide_widow",
+		"tint": Color(0.36, 0.78, 0.72),  # TUNING (not in GDD) drowned teal
 		"starts_unlocked": false,
 	},
 }

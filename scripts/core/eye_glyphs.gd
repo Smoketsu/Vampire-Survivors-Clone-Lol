@@ -16,6 +16,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		return true  # A Harbour kind or structure (Deep Kin, Tide Caller, buoys...).
 	if ArchiveGlyphs.draw_enemy(ci, kind, o, r, flash):
 		return true  # A Hollow Archive kind (Act II, Stage 5).
+	if SpireGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # Act II: Ul-Thalos kinds.
 	_cultist(ci, o, r, flash)
 	if kind == "eye_chanter":
 		# A staff topped by the Eye's sigil, held to the right.

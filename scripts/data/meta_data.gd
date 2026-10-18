@@ -240,7 +240,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act II: Gullhaven Harbour ---
 	"low_tide",
 	# --- Act II: the Hollow Archive ---
-	"nothing_unwritten"]
+	"nothing_unwritten",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"the_dead_god_serves"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). The GDD
 ## unlocks (Bone Golem, priest evolution unlock, Dread Sovereign skin) do not
@@ -280,6 +282,13 @@ const ACHIEVEMENTS := {
 	# counts such runs in the lifetime counter archive_all_tomes_runs).
 	"nothing_unwritten": {"display_name": "Nothing Unwritten", "description": "Burn every forbidden tome in one Hollow Archive run",
 		"stat": "archive_all_tomes_runs", "goal": 1, "unlock": "The Iron Mind passive", "bounty": 150},  # bounty TUNING (not in GDD)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	# The finale of Act II (proposal: "Achievement The Dead God Serves unlocks
+	# the campaign epilogue"): Vhal'Neth slain on Ul-Thalos. With Dawn
+	# Extinguished it opens the epilogue (EpilogueData, the main menu's
+	# Epilogue screen): Dawn Extinguished the Act I part, this one Act II's.
+	"the_dead_god_serves": {"display_name": "The Dead God Serves", "description": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos and raise her",
+		"stat": "boss_kills", "stage": "spire", "goal": 1, "unlock": "The campaign epilogue", "bounty": 300},  # Proposal; bounty TUNING (not in GDD)
 }
 
 ## Damage sources whose killing blow counts as a Skeleton Warrior kill (the

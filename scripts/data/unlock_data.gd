@@ -39,6 +39,11 @@ const UNLOCKS := {
 	"forbidden_verse": {"type": "spell", "boss": "archivist", "text": "Slay the Archivist in the Hollow Archive to unlock."},  # Owner-approved proposal
 	"marginalia": {"type": "passive", "boss": "archivist", "text": "Slay the Archivist in the Hollow Archive to unlock."},  # Forbidden Verse's paired passive, unlocked with it
 	"iron_mind": {"type": "passive", "achievement": "nothing_unwritten", "text": "Earn Nothing Unwritten: burn every forbidden tome in one Hollow Archive run."},  # Owner-approved proposal
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"call_of_the_drowned": {"type": "spell", "boss": "vhalneth", "text": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos."},  # Proposal: unlocked by defeating Vhal'Neth
+	"abyssal_pact": {"type": "passive", "boss": "vhalneth", "text": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos."},  # TUNING (not in GDD) with its spell
+	"spawn_of_the_deep": {"type": "class", "boss": "vhalneth", "text": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos."},  # Proposal decision 5: the finale's reward
+	"crushing_depths": {"type": "passive", "boss": "vhalneth", "text": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos."},  # TUNING (not in GDD) with its class
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

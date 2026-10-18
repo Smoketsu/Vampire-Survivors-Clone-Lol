@@ -116,7 +116,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act II: Gullhaven Harbour ---
 	"salt_of_the_deep", "brinewalker",
 	# --- Act II: the Hollow Archive ---
-	"marginalia", "iron_mind"]
+	"marginalia", "iron_mind",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"abyssal_pact", "crushing_depths"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -124,7 +126,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	"bone_plating", "unholy_precision", "unholy_resilience", "bound_souls",
 	"blood_scent", "siegecraft",
 	# --- Act II: Fallen Seraph ---
-	"fallen_grace"]
+	"fallen_grace",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"crushing_depths"]
 
 ## Blood Scent: a summon class is "fast" (and gets the passive) when its
 ## UnitData base move_speed is at least this (px/s): Bone Hounds 122, Grave
@@ -152,7 +156,9 @@ const CRIT_DAMAGE_MULT: float = 2.0  # TUNING (not in GDD) user brief: "a crit d
 const MINION_SOURCE_SUFFIXES := ["", "_bash", "_cleave", "_aura"]
 ## Unholy Precision: summon tags that are not a class or evolution id (the
 ## Lich's raised skeletons, Death Mark's Risen and Raise Dead's skeletons).
-const MINION_EXTRA_TAGS := ["lich_risen", "death_mark_risen", "raised_dead"]
+const MINION_EXTRA_TAGS := ["lich_risen", "death_mark_risen", "raised_dead",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"drowned_thrall_ally", "tide_host_spawn"]
 ## Unholy Precision: the other minion damage sources that can crit: the
 ## basic warrior shield bash and the later classes' specials (and the Bone
 ## Colossus's death shrapnel). The Rogue's
@@ -160,7 +166,9 @@ const MINION_EXTRA_TAGS := ["lich_risen", "death_mark_risen", "raised_dead"]
 ## tick, not a strike.
 const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_swoop", "colossus_shrapnel",
 	# --- Act II: Fallen Seraph --- (SeraphBehavior dive impact, SeraphFeathers ring)
-	"seraph_dive", "seraph_feathers"]
+	"seraph_dive", "seraph_feathers",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"deep_grasp", "leviathan_sweep"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -175,6 +183,9 @@ const AREA_HOLY_SOURCES := {
 	"purifier": "holy",  # TUNING (not in GDD) Purifier holy fire (bonus vs undead).
 	"holy_zone": "holy",  # TUNING (not in GDD) holy ground: grave consecration, Holy Ward Generators, boss holy zones.
 	"holy_retribution": "holy",  # TUNING (not in GDD) radiant bolts of the Holy Retribution run modifier.
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"vhalneth_slam": "area",  # TUNING (not in GDD) an arm of Vhal'Neth crashing along its lane.
+	"vhalneth_roar": "area",  # TUNING (not in GDD) her roar's blast.
 	"sentinel_sweep": "area",  # TUNING (not in GDD) a Sanctified Sentinel's frontal sweep.
 	"guardian_slam": "area",  # TUNING (not in GDD) the Cathedral Guardian's ground slam.
 	"guardian_beam": "holy",  # TUNING (not in GDD) the Cathedral Guardian's sweeping beam.
@@ -670,6 +681,46 @@ const PASSIVES := {
 			{"dread_rise_reduction": 0.30, "dread_fall_mult": 1.0},  # Owner-approved proposal
 			{"dread_rise_reduction": 0.40, "dread_fall_mult": 1.0},  # Owner-approved proposal
 			{"dread_rise_reduction": 0.50, "dread_fall_mult": 2.0},  # Owner-approved proposal "falls twice as fast per kill at Lv 5"
+		],
+	},
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	# Abyssal Pact (GDD §15.0 "Ul-Thalos, the Risen Spire"; unlocked by slaying
+	# Vhal'Neth, UnlockData): every temporary summon (a Drowned Thrall, a
+	# Death Mark Risen, a Raise Dead / Legion skeleton, a Lich's raised dead,
+	# a stage reinforcement) releases a soul burst when it crumbles or falls,
+	# healing every summon within burst_radius px by burst_heal HP
+	# (AbyssalPact, called from HordeDirector.on_unit_died()). Pairs with
+	# Call of the Drowned -> Tidecaller's Host.
+	"abyssal_pact": {
+		"display_name": "Abyssal Pact",
+		"icon": "abyssal_pact",
+		"description": "Temporary summons release a healing soul burst when they crumble.",
+		"labels": {"burst_heal": ["Soul burst heal", "int"], "burst_radius": ["Soul burst radius", "int"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"burst_heal": 6.0, "burst_radius": 70.0},  # TUNING (not in GDD)
+			{"burst_heal": 9.0, "burst_radius": 80.0},  # TUNING (not in GDD)
+			{"burst_heal": 12.0, "burst_radius": 90.0},  # TUNING (not in GDD)
+			{"burst_heal": 16.0, "burst_radius": 100.0},  # TUNING (not in GDD)
+			{"burst_heal": 20.0, "burst_radius": 110.0},  # TUNING (not in GDD)
+		],
+	},
+	# Crushing Depths (GDD §15.0; unlocked by slaying Vhal'Neth): summons deal
+	# more damage to foes that are held, stunned or frozen (CombatResolver.
+	# damage_enemy(): an enemy with a stun or a Deep Freeze running). Pairs
+	# with the Spawn of the Deep -> Leviathan.
+	"crushing_depths": {
+		"display_name": "Crushing Depths",
+		"icon": "crushing_depths",
+		"description": "Summons strike harder at foes that are held, stunned or frozen.",
+		"labels": {"held_damage": ["Summon damage to held foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"held_damage": 0.08},  # TUNING (not in GDD)
+			{"held_damage": 0.16},  # TUNING (not in GDD)
+			{"held_damage": 0.24},  # TUNING (not in GDD)
+			{"held_damage": 0.32},  # TUNING (not in GDD)
+			{"held_damage": 0.40},  # TUNING (not in GDD)
 		],
 	},
 }

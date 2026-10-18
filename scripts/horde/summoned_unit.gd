@@ -29,6 +29,11 @@
 ## hooks into SummonAbilities: the instant ally barrier (Warder / Bishop), the
 ## aura pulse (Bishop) and the cleave + life drain after a melee hit (Death
 ## Knight). Statistics are tagged with `dmg_source` (class or evolution id).
+##
+## Act II (Ul-Thalos): the Ancient Eye can COMPEL a summon through ONE call,
+## compel(): a Siren's song lures it toward her (it drops its target and
+## walks there), a Spawn of the Deep's grip holds it in place. While
+## compelled it neither thinks nor attacks; afterwards the shared FSM resumes.
 class_name SummonedUnit
 extends Node2D
 
@@ -287,6 +292,14 @@ var misdirect_until: float = 0.0
 var misdirect_dir: Vector2 = Vector2.ZERO
 ## Fraction (0..1) of its move speed a turned-around summon walks at.
 var misdirect_speed: float = 1.0
+# --- Act II: Ul-Thalos, the Risen Spire ---
+## Game time (s) until which the Ancient Eye compels this unit (compel(); a
+## Siren's lure, a Spawn of the Deep's grip); 0 = free.
+var compel_until: float = 0.0
+## World point a compelled unit walks to (the singing Siren).
+var compel_point: Vector2 = Vector2.ZERO
+## Multiplier on move speed while compelled (0 = held fast: it cannot move).
+var compel_speed: float = 0.0
 
 
 # =====================================================================================
@@ -330,6 +343,7 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	holy_slow_timer = 0.0
 	held_until = 0.0
 	misdirect_until = 0.0
+	compel_until = 0.0
 	slot_jitter = randf()
 	band_jitter = randf()
 	anchor_offset = pos - game.player.position
@@ -515,6 +529,9 @@ func misdirect(dir: Vector2, duration: float, speed_mult: float) -> bool:
 ## Staggered AI decision step.
 func think() -> void:
 	if not active or state == State.DEAD or state == State.SPAWNING:
+		return
+	if compel_until > game.elapsed:
+		_stall_since = -1.0  # Held or lured: no stall window, no decisions.
 		return
 	var player_pos := game.player.position
 	var d_player := position.distance_to(player_pos)
@@ -894,6 +911,8 @@ func physics_step(delta: float) -> void:
 			SummonAbilities.aura_pulse(self)
 	if misdirect_until > game.elapsed:
 		velocity = misdirect_dir * move_speed * misdirect_speed  # Turned around (misdirect()).
+	elif compel_until > 0.0 and _step_compelled(delta):
+		pass  # Lured or held by the Ancient Eye (compel()): it set the velocity.
 	elif behavior != null and behavior.physics(self, delta):
 		pass  # A class special owns this tick (it set the velocity).
 	elif state == State.CASTING:
@@ -907,6 +926,46 @@ func physics_step(delta: float) -> void:
 			_facing = f
 			scale.x = _facing
 			queue_redraw()  # HP bar counter-flip depends on facing
+
+
+## Act II, the ONE compel path (a Siren's lure, a Spawn of the Deep's grip):
+## until game time `until` the unit drops its target, stops thinking and
+## attacking, and walks toward `point` at `speed_mult` x its move speed (0 =
+## held where it stands; the holder may drag it). A running special is
+## cancelled (the unit leaves CASTING). Airborne and spawning units are
+## immune. Returns true when it took hold.
+func compel(point: Vector2, until: float, speed_mult: float) -> bool:
+	if not active or airborne or state == State.SPAWNING or state == State.DEAD:
+		return false
+	compel_point = point
+	compel_until = maxf(compel_until, until)
+	compel_speed = speed_mult
+	_drop_target()
+	_enter(State.FOLLOWING)  # Leaves CASTING: a special in progress is cancelled.
+	velocity = Vector2.ZERO
+	queue_redraw()
+	return true
+
+
+## True while the Ancient Eye compels this unit.
+func is_compelled() -> bool:
+	return compel_until > game.elapsed
+
+
+## Movement while compelled (compel()). Returns false (and frees the unit)
+## once the compulsion ran out.
+func _step_compelled(_delta: float) -> bool:
+	if compel_until <= game.elapsed:
+		compel_until = 0.0
+		queue_redraw()
+		return false
+	if compel_speed <= 0.0:
+		velocity = Vector2.ZERO
+		return true
+	var to := compel_point - position
+	var d := to.length()
+	velocity = to / d * move_speed * compel_speed if d > radius + 10.0 else Vector2.ZERO
+	return true
 
 
 ## Blends steering behaviours into a velocity (GDD §26: formation
@@ -1214,6 +1273,8 @@ func _draw_over(ci: CanvasItem) -> void:
 		behavior.draw_over(self, ci)  # Overlays on the body (Cathedral Horror stone).
 	if barrier_hp > 0.0:
 		ProgressionGlyphs.draw_barrier(ci, Vector2.ZERO, radius, barrier_hp / maxf(max_hp, 1.0))
+	if compel_until > 0.0 and game != null and compel_until > game.elapsed:
+		SpireGlyphs.draw_compelled(ci, radius, compel_speed > 0.0)  # Act II: lured (notes) or held (a tentacle coil).
 	if hp < max_hp - 0.5 and state != State.SPAWNING:
 		# The node is mirrored via scale.x; counter-flip so the bar always
 		# fills left-to-right.

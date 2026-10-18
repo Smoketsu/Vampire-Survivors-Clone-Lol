@@ -118,6 +118,11 @@ var tide: TideDirector = null
 ## Gullhaven Harbour's stage events (Act II; null on stages without a
 ## "harbour" config).
 var harbour: HarbourDirector = null
+# --- Act II: Ul-Thalos, the Risen Spire ---
+## The sinking island of Ul-Thalos (StageRegistry "sinking"; null elsewhere).
+var sinking: SinkingDirector = null
+## Ul-Thalos objectives: dream pillars, guest squads (StageRegistry "spire"; null elsewhere).
+var spire: SpireDirector = null
 ## The stage's enemy kind aliases (StageRegistry "kind_aliases"; alias ->
 ## real kind id; {} = none).
 var _kind_aliases: Dictionary = {}
@@ -176,6 +181,17 @@ func _ready() -> void:
 		archive.game = game
 		archive.config = stage_def["archive"]
 		add_child(archive)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	if not (stage_def.get("sinking", {}) as Dictionary).is_empty():
+		sinking = SinkingDirector.new()
+		sinking.game = game
+		sinking.config = stage_def["sinking"]
+		add_child(sinking)
+	if not (stage_def.get("spire", {}) as Dictionary).is_empty():
+		spire = SpireDirector.new()
+		spire.game = game
+		spire.config = stage_def["spire"]
+		add_child(spire)
 
 
 # =====================================================================================
@@ -251,6 +267,11 @@ func step(delta: float) -> void:
 		archive.step(delta)
 	if archive_haz != null:
 		archive_haz.step(delta)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	if sinking != null:
+		sinking.step(delta)
+	if spire != null:
+		spire.step(delta)
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -309,6 +330,11 @@ func objective_text() -> String:
 		var archive_text := archive.objective_override()  # Rifts / the Librarian / tomes.
 		if archive_text != "":
 			return archive_text
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	if sinking != null and sinking.objective_override() != "":
+		return sinking.objective_override()  # The sea is rising.
+	if spire != null and spire.objective_override() != "":
+		return spire.objective_override()  # Dream pillars.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -417,6 +443,12 @@ func _run_event(ev: Dictionary) -> void:
 		"tomes", "librarian", "rift":
 			if archive != null:
 				archive.start_event(ev)  # Act II, the Hollow Archive.
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act II: Ul-Thalos, the Risen Spire ---
+		"pillars":
+			if spire != null:
+				spire.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
 	show_banner(ev["banner"])
@@ -662,6 +694,8 @@ func despawn(e: Enemy) -> void:
 ## The position is moved out of any obstacle first.
 func _spawn_enemy_def(kind: String, def: Dictionary, pos: Vector2, hp_scale: float, elite: bool) -> Enemy:
 	var body_r := float(def["radius"]) * (EnemyData.ELITE_RADIUS_MULT if elite else 1.0)
+	if sinking != null:
+		pos = sinking.spawn_point(pos)  # Act II, Ul-Thalos: a cultist spawned at sea climbs out at the shore.
 	pos = game.arena.free_point(pos, body_r)
 	var e: Enemy
 	if _pool.is_empty():
@@ -684,7 +718,10 @@ func _spawn_enemy_def(kind: String, def: Dictionary, pos: Vector2, hp_scale: flo
 func _recycle(e: Enemy) -> void:
 	var v := game.player.velocity
 	var angle := v.angle() + randf_range(-1.0, 1.0) if v.length() > 1.0 else randf() * TAU
-	e.position = game.arena.free_point(_ring_point(angle), e.radius)
+	var at := _ring_point(angle)  # Recycle point on the spawn ring.
+	if sinking != null:
+		at = sinking.spawn_point(at)  # Act II, Ul-Thalos: out of the sea at the shore.
+	e.position = game.arena.free_point(at, e.radius)
 	e.sep = Vector2.ZERO
 	total_recycled += 1
 

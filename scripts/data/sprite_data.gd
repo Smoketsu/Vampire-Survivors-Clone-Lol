@@ -166,6 +166,21 @@ const HEIGHTS: Dictionary = {
 	"player/heretic_scribe": 60.0,  # TUNING (not in GDD) body ~48 like the necromancer, the quill-staff above
 	"structures/archive_rift": 64.0,  # TUNING (not in GDD) a rift's tear (18 px body radius)
 	"structures/forbidden_lectern": 52.0,  # TUNING (not in GDD) a lectern with its open tome
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"eye/eye_siren": 56.0,  # TUNING (not in GDD) elite caster: body ~52 (figure redesign), the hair crest above
+	"eye/eye_spawn": 66.0,  # TUNING (not in GDD) heavy tier (60-72)
+	"eye/eye_hierophant": 64.0,  # TUNING (not in GDD) elite leader: body ~52, the tall mitre and the staff's sigil above
+	"eye/eye_waking_horror": 70.0,  # TUNING (not in GDD) the Waking's Dreamspawn (the Inquisitor of the End is 64)
+	"eye/dream_pillar": 88.0,  # TUNING (not in GDD) structure tier: a cyclopean obelisk (~36 px wide for its 18 px radius)
+	"eye/vhalneth_arm": 124.0,  # TUNING (not in GDD) boss part: an arm rearing out of the surf
+	"bosses/vhalneth": 150.0,  # TUNING (not in GDD) boss tier: her face, eyes open (Stirring)
+	"bosses/vhalneth_dreaming": 150.0,  # TUNING (not in GDD) her face under the sea, eyes shut (Dreaming)
+	"bosses/vhalneth_waking": 156.0,  # TUNING (not in GDD) her face risen, roaring (Waking)
+	"summons/spawn_of_the_deep": 60.0,  # TUNING (not in GDD) a heavy summon (Abomination 88, Corpse Catapult 56)
+	"summons/leviathan": 76.0,  # TUNING (not in GDD) its evolution, bigger
+	"summons/drowned_thrall_ally": 44.0,  # TUNING (not in GDD) Call of the Drowned's Thrall (soldier tier)
+	"player/tide_widow": 56.0,  # TUNING (not in GDD) character tier: body ~48 like the necromancer, the coral crown above
+	"player/tide_widow_hyper": 58.0,  # TUNING (not in GDD) skin art: the Tide Widow's body, the taller gold coral crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

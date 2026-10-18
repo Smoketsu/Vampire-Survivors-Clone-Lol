@@ -52,6 +52,10 @@ const ANIMS: Dictionary = {
 	"tide_splash": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) a splash of sea water: Deep Kin landing, the Harbourmaster's anchor, Abbot Merrow's blows, a bell buoy sinking (6 frames of 128 px; EffectManager.impact() 0.4 s)
 	# --- Act II: the Hollow Archive ---
 	"ink_burst": {"duration": 0.35, "fill": 1.1},  # TUNING (not in GDD) Forbidden Verse ink burst of an inscribed death (6 frames of 128 px; 0.35 s, as its code ring)
+	# --- Act II: Ul-Thalos ---
+	"vhalneth_slam": {"duration": 0.4, "fill": 1.3},  # TUNING (not in GDD) one of Vhal'Neth's arms crashing down: a ring of sea spray and foam (8 frames of 192 px; ArmKit EffectManager.impact() 0.4 s)
+	"drowned_tendrils": {"duration": 0.35, "fill": 1.3},  # TUNING (not in GDD) Call of the Drowned eruption: tendrils lashing up out of a whirlpool (8 frames of 128 px; CallOfTheDrowned ring() 0.35 s)
+	"vhalneth_gaze": {"duration": 1.4, "fill": 1.15},  # TUNING (not in GDD) Vhal'Neth's gaze opening on the ground (8 frames of 256 px; VhalnethHazards ring() = VhalnethData gaze_telegraph 1.4 s)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).

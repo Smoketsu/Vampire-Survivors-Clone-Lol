@@ -80,7 +80,7 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 		"fallen_seraph", "ruin_seraph":
 			return SeraphGlyphs.draw_summon(ci, kind, o, r, flash)  # Act II: the Fallen Seraph.
 		_:
-			return false
+			return SpireGlyphs.draw_summon(ci, kind, o, r, flash)  # Act II: Ul-Thalos summons (false when unknown).
 	return true
 
 

@@ -173,6 +173,9 @@ const CLASSES := {
 	# --- Act II: Fallen Seraph ---
 	"fallen_seraph": {"trigger": "attack", "every": 2, "pattern": "fan", "counts": [3, 5], "spread": 44.0, "speed": 360.0,
 		"life": 0.5, "share": 0.3, "pierce": 0, "radius": 3.5, "style": "feather", "color": Color(0.72, 0.74, 0.80)},  # TUNING (not in GDD) fans of black feather blades (an ash-pale tint: shots are drawn additively, black would not show)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"spawn_of_the_deep": {"trigger": "special", "pattern": "ring", "counts": [6, 9], "speed": 230.0,
+		"life": 0.45, "share": 0.5, "pierce": 0, "radius": 4.5, "style": "orb", "color": Color(0.45, 0.80, 0.74)},  # TUNING (not in GDD) brine spray from the grasp (share of a squeeze)
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -203,6 +206,9 @@ const EVOLVED := {
 	# --- Act II: Fallen Seraph ---
 	"ruin_seraph": {"trigger": "special", "pattern": "spiral", "counts": [12], "speed": 230.0,
 		"life": 0.6, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "feather", "color": Color(0.72, 0.74, 0.80), "curve": 2.4},  # TUNING (not in GDD) a whirl of black feathers at every dive impact
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"leviathan": {"trigger": "special", "pattern": "spiral", "counts": [14], "speed": 210.0,
+		"life": 0.6, "share": 0.4, "pierce": 1, "radius": 5.0, "style": "wave", "color": Color(0.45, 0.80, 0.74), "curve": 2.0},  # TUNING (not in GDD) a whirl of brine with every sweep
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -244,6 +250,9 @@ const SPELLS := {
 	# --- Act II: the Hollow Archive ---
 	"forbidden_verse": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "spiral", "counts": [6, 9, 14], "speed": 210.0,
 		"life": 0.75, "share": 0.5, "pierce": 1, "radius": 4.0, "style": "feather", "color": Color(0.90, 0.86, 0.74), "curve": 2.0},  # TUNING (not in GDD) a swirl of loose pages at each sweep (share of a cut)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"call_of_the_drowned": {"every": 1, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [3, 5, 8], "speed": 240.0,
+		"life": 1.0, "share": 0.3, "pierce": 0, "radius": 4.0, "style": "spark", "color": Color(0.45, 0.80, 0.74), "homing": 7.0},  # TUNING (not in GDD) drowned souls that seek the strongest foe
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

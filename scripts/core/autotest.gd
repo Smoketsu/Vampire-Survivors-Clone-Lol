@@ -1035,6 +1035,16 @@ func get_move_vector() -> Vector2:
 	if goal == Vector2.INF and game.enemies.archive != null and away.length() < 0.5:
 		# The Hollow Archive: walk onto forbidden tomes when calm (burns them).
 		goal = game.enemies.archive.seek_point(p, OBJECTIVE_SEEK_RADIUS)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	if goal == Vector2.INF and game.enemies.spire != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
+		goal = game.enemies.spire.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # Ul-Thalos: topple the dream pillars when calm.
+	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
+		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
+		var at := (game.enemies.boss as BossVhalneth).approach_point(p)
+		if at != Vector2.INF and p.distance_to(at) > 150.0 and away.length() < 0.6:
+			goal = at
+	if game.enemies.sinking != null:
+		danger += game.enemies.sinking.danger_push(p) * 0.5  # Ul-Thalos: keep off the shore the sea is about to take.
 	if goal != Vector2.INF:
 		objective = (goal - p).normalized()
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
@@ -1161,6 +1171,7 @@ func finish(summary: Dictionary) -> void:
 	HarbourReport.print_lines(game, st)
 	_print_battle_sister(st)
 	_print_archive(st)  # Act II: the Hollow Archive (only when its stage or kinds ran).
+	SpireReport.print_all(game, st)  # Act II, Ul-Thalos: the sinking, pillars, kinds, Vhal'Neth, the Waking, its items (only when they ran).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

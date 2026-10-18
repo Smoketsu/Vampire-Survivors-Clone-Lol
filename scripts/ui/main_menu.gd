@@ -145,14 +145,24 @@ func _menu_button(id: String, caption: String) -> Button:
 
 
 ## The [id, caption] items of the button column: FrontDoorData.MENU_ITEMS,
-## minus WEB_HIDDEN_ITEMS on the Web build (no Quit in a browser tab).
+## minus WEB_HIDDEN_ITEMS on the Web build (no Quit in a browser tab). The
+## Epilogue (Act II, EpilogueData) is shown only once one of its parts is
+## open, placed just above Credits.
 static func menu_items() -> Array:
-	if not OS.has_feature("web"):
-		return FrontDoorData.MENU_ITEMS
 	var items: Array = []  # The shown items, in menu order.
+	var epilogue: Array = []  # The Epilogue item (shown above Credits once open).
 	for item: Array in FrontDoorData.MENU_ITEMS:
-		if not FrontDoorData.WEB_HIDDEN_ITEMS.has(String(item[0])):
-			items.append(item)
+		if String(item[0]) == "epilogue":
+			epilogue = item
+	for item: Array in FrontDoorData.MENU_ITEMS:
+		var id := String(item[0])
+		if id == "epilogue":
+			continue
+		if id == "credits" and not epilogue.is_empty() and EpilogueData.any_open():
+			items.append(epilogue)
+		if OS.has_feature("web") and FrontDoorData.WEB_HIDDEN_ITEMS.has(id):
+			continue
+		items.append(item)
 	return items
 
 
@@ -190,6 +200,8 @@ func _on_item(id: String, b: Button) -> void:
 			CodexScreen.open_over(self)
 		"credits":
 			CreditsScreen.open_over(self)
+		"epilogue":
+			EpilogueScreen.open_over(self)  # Act II: the campaign epilogue.
 		"quit":
 			_quit()
 

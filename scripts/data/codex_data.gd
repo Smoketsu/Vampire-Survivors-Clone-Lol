@@ -39,7 +39,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "warder", "abomination",
 		"rogue", "gargoyle", "frost_wraith", "bone_hound", "banshee", "corpse_catapult",
 		# --- Act II: Fallen Seraph --- (a locked silhouette naming its unlock until met)
-		"fallen_seraph"]
+		"fallen_seraph",
+		# --- Act II: Ul-Thalos, the Risen Spire ---
+		"spawn_of_the_deep"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -62,13 +64,17 @@ const EYE_SOLDIERS: Array[String] = ["eye_initiate", "eye_chanter",
 	"deep_kin", "tide_caller", "netcaster", "deep_herald",
 	# --- Act II: the Hollow Archive ---
 	"scribe", "ink_wraith", "spore_pilgrim", "gibbering_mass",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"eye_siren", "eye_spawn", "eye_hierophant",
 	"drowned_thrall"]
-## Ancient Eye minibosses (enemy kinds).
+## Ancient Eye minibosses (enemy kinds) and the Act II Reckoning kinds.
 const EYE_CHAMPIONS: Array[String] = [
 	# --- Act II: Gullhaven Harbour ---
 	"harbourmaster",
 	# --- Act II: the Hollow Archive ---
 	"librarian", "unwritten_one",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"eye_waking_horror",
 ]
 ## Ancient Eye stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const EYE_BOSSES: Array[String] = [
@@ -76,6 +82,8 @@ const EYE_BOSSES: Array[String] = [
 	"merrow",
 	# --- Act II: the Hollow Archive ---
 	"archivist",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"vhalneth",
 ]
 
 ## Section headers of each page: page id -> [[section id, header text], ...].
@@ -133,6 +141,12 @@ const DESCRIPTIONS: Dictionary = {
 	"librarian": "A floating eye in tendrils whose slow beam turns your dead around.",  # GDD §15.0 Act II: the Hollow Archive
 	"archivist": "The Keeper of the Unwritten, whose face is an open book.",  # GDD §15.0 Act II: the Hollow Archive
 	"unwritten_one": "Page-wrapped horrors the Archive sends once the countdown ends.",  # GDD §15.0 Act II: the Hollow Archive (its Reckoning)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"eye_siren": "A singer of the deep whose song lures your dead out of their ranks.",  # GDD §15.0 Siren of the Eye
+	"eye_spawn": "A tentacled, armoured spawn that seizes one of your dead and holds it fast.",  # GDD §15.0 Spawn of the Deep
+	"eye_hierophant": "An elite of the Eye whose Ascension turns it into a Spawn of the Deep.",  # GDD §15.0 Hierophant
+	"eye_waking_horror": "The god's last surge when the countdown ends: the Waking.",  # GDD §15.0 the Waking
+	"vhalneth": "The Dreaming Mother, dead god of the Eye. Raise her.",  # GDD §15.0 final boss
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -279,6 +293,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"low_tide": "ach_low_tide",  # TUNING (not in GDD)
 	# --- Act II: the Hollow Archive ---
 	"nothing_unwritten": "ach_nothing_unwritten",  # TUNING (not in GDD)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"the_dead_god_serves": "ach_the_dead_god_serves",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -290,6 +306,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"low_tide": "brinewalker",
 	# --- Act II: the Hollow Archive ---
 	"nothing_unwritten": "forbidden_verse",
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"the_dead_god_serves": "call_of_the_drowned",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)
@@ -367,4 +385,7 @@ static func enemy_row(id: String) -> Dictionary:
 		# --- Act II: the Hollow Archive ---
 		"archivist":
 			return ArchivistData.BOSS
+		# --- Act II: Ul-Thalos, the Risen Spire ---
+		"vhalneth":
+			return VhalnethData.BOSS
 	return {}

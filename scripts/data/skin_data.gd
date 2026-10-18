@@ -70,6 +70,8 @@ const HYPER_NAMES := {
 	"brine_widow": "Pearl-Crowned Widow",  # TUNING (not in GDD)
 	# --- Act II: the Hollow Archive ---
 	"heretic_scribe": "Illuminated Heretic",  # TUNING (not in GDD)
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"tide_widow": "Gilded Tide Widow",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -90,6 +92,8 @@ const HYPER_TINTS := {
 	"brine_widow": Color(1.2, 1.1, 0.7),  # TUNING (not in GDD) gilded, pearl
 	# --- Act II: the Hollow Archive ---
 	"heretic_scribe": Color(1.2, 1.05, 0.65),  # TUNING (not in GDD) gilded, an illuminated manuscript
+	# --- Act II: Ul-Thalos, the Risen Spire ---
+	"tide_widow": Color(1.15, 1.0, 0.6),  # TUNING (not in GDD) gilded
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD
