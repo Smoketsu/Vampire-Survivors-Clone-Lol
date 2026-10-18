@@ -176,6 +176,14 @@ RIGS = {
     "enemies/templar": dict(mode="legs", hip=69, back=(0, 18), front=(18, 36), rigid=[(28, 32, 0, 72), (0, 7, 0, 72)], spread=2, lift=2, dip=1),
     "enemies/banner_bearer": dict(mode="legs", hip=75, back=(0, 16), front=(16, 40), rigid=[(27, 31, 0, 79)], spread=2, lift=2, dip=1),
     "enemies/battle_sister": dict(mode="legs", hip=38, back=(0, 15), front=(15, 24), rigid=[(24, 36, 0, None)], spread=1, lift=1, dip=1, bust=(14, 22, 11, 17, 2)),
+    # --- Act II: Gullhaven Harbour ---
+    # The Deep Kin's long arms hang below the hip: rigid, so the claws ride with the body.
+    "eye/deep_kin": dict(mode="legs", hip=44, back=(4, 18), front=(18, 30), rigid=[(0, 6, 0, None), (30, 38, 0, None)], spread=2, lift=1, dip=1),
+    "eye/netcaster": dict(mode="legs", hip=43, back=(8, 21), front=(21, 33), rigid=[(33, 44, 0, None)], spread=2, lift=1, dip=1),
+    # Figure redesign: the Tide Caller and the Brine Widow glide on their gowns (hem sway),
+    # the staff rigid, with the bust bounce and (bust rigs) an idle breathing strip.
+    "eye/tide_caller": dict(mode="robe", hip=40, rigid=[(25, 36, 0, None)], sway=1, dip=1, bust=(15, 24, 16, 22, 2)),
+    "player/brine_widow": dict(mode="robe", hip=44, rigid=[(37, 52, 0, None)], sway=1, dip=1, bust=(22, 34, 20, 27, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

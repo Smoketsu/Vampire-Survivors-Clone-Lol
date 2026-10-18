@@ -519,8 +519,13 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 
 
 ## Sprite key of this enemy's art (the engine-motion pivot); bosses override.
+## An Ancient Eye kind's art lives in eye/ (Act II): used when it has no
+## enemies/ art (visual only; every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
-	return "enemies/" + kind
+	var key := "enemies/" + kind  # Covenant soldier art.
+	if not SpriteBank.has(key) and SpriteBank.has("eye/" + kind):
+		return "eye/" + kind
+	return key
 
 
 ## Local y (px, negative = up) of an over-the-head marker's centre: just

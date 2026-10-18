@@ -15,6 +15,10 @@
 ## instead of using CharacterBody2D physics.
 ## He is drawn as the run's playable character (CharacterGlyphs; the
 ## Gravecaller is the classic necromancer).
+## Slowing ground (Act II: the Harbour's tide water) slows his walk through
+## `terrain_slow`, set only by TerrainSlow (the one ground-slow path, where
+## Brinewalker applies); it is never set in Act I, so his walk is unchanged
+## there.
 class_name Necromancer
 extends Node2D
 
@@ -55,6 +59,12 @@ var incoming_heal: float = 0.0
 var time_since_hit: float = 999.0
 ## Revivals left this run (set at run start by MetaModifiers.apply_to_player).
 var revives_left: int = 0
+## Fraction (0..1) of walking speed lost on slowing ground (TerrainSlow;
+## the Harbour's water). Applies while terrain_slow_timer > 0.
+var terrain_slow: float = 0.0
+## Seconds the ground slow still applies (refreshed by TerrainSlow while he
+## stands on it; 0 = none).
+var terrain_slow_timer: float = 0.0
 ## Facing sign (+1 right, -1 left) used to mirror the sprite.
 var _facing: float = 1.0
 ## SkinData id of the cosmetic skin worn this run ("" = the default look;
@@ -92,7 +102,11 @@ func step(delta: float) -> void:
 	if not game.grave_step.step(delta, input):
 		# Shade Stride passive: its own +% move speed category on top of move_speed.
 		velocity = input * move_speed * (1.0 + game.abilities.passive_value("shade_stride", "move_speed"))
+		if terrain_slow_timer > 0.0:
+			velocity *= 1.0 - terrain_slow  # Slowing ground (TerrainSlow: tide water; Brinewalker already applied).
 		position += velocity * delta
+	if terrain_slow_timer > 0.0:
+		terrain_slow_timer -= delta
 	if absf(velocity.x) > 1.0:
 		var f := signf(velocity.x)
 		if f != _facing:

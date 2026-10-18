@@ -73,6 +73,10 @@
 ## active) and reports the dealt damage to record_hit(). Requiem stretches a
 ## Dirge through extend_weaken() (capped at Enemy.weaken_span).
 ## Every damage to a structure is also counted per source (structdmg_<tag>).
+## Act II (Gullhaven Harbour): Salt of the Deep — damage_enemy(): an enemy that
+## is slowed, chilled or frozen (Enemy.slow_timer / chill_timer / freeze_timer)
+## takes slowed_damage more from every source but the Soul Nova
+## (PassiveData.SALT_EXEMPT_SOURCES): salt_bonus_dmg.
 ## Spirit Binding and Mournsong both lengthen slows and chills (slow_enemy(),
 ## chill_enemy()); the two multipliers stack multiplicatively.
 ## Playable characters (CharacterInnates, game.innates; every hook is a
@@ -186,6 +190,11 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 		if ledger > 0.0 and not source in PassiveData.LEDGER_EXEMPT_SOURCES:
 			game.stat_add("grim_ledger_bonus_dmg", amount * ledger * (1.0 - e.armor))
 			amount *= 1.0 + ledger
+	# Salt of the Deep (Act II passive): slowed, chilled or frozen foes take more.
+	var salt := game.abilities.passive_value("salt_of_the_deep", "slowed_damage")  # 0 when not owned.
+	if salt > 0.0 and (e.slow_timer > 0.0 or e.chill_timer > 0.0 or e.freeze_timer > 0.0) and not source in PassiveData.SALT_EXEMPT_SOURCES:
+		game.stat_add("salt_bonus_dmg", amount * salt * (1.0 - e.armor))
+		amount *= 1.0 + salt
 	# Wither aura (Enemy.wither_until): armour and flat armour cut by the shred.
 	var shred := e.wither_shred if e.wither_until > game.elapsed else 0.0  # 0..1 of armour removed.
 	var armor := e.armor * (1.0 - shred)  # Effective percentage armour of this hit.

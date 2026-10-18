@@ -23,6 +23,10 @@ extends RefCounted
 
 ## Item id -> unlock row (keys above).
 const UNLOCKS := {
+	# --- Act II: Gullhaven Harbour ---
+	"undertow": {"type": "spell", "boss": "merrow", "text": "Slay Abbot Silas Merrow in Gullhaven Harbour to unlock."},  # owner-approved
+	"salt_of_the_deep": {"type": "passive", "boss": "merrow", "text": "Slay Abbot Silas Merrow in Gullhaven Harbour to unlock."},  # Undertow's paired passive, unlocked with it
+	"brinewalker": {"type": "passive", "achievement": "low_tide", "text": "Earn Low Tide: clear Gullhaven Harbour."},  # owner-approved
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

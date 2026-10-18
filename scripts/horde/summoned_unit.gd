@@ -275,6 +275,10 @@ var temp_life: float = 0.0
 var holy_slow: float = 0.0
 ## Seconds the holy-ground slow still applies (refreshed by StageDirector).
 var holy_slow_timer: float = 0.0
+## Game time (s) until which something holds this summon in place (Act II:
+## a Netcaster's net, NetcasterKit): it cannot walk, but still strikes and
+## casts. 0 = never held (every Act I run).
+var held_until: float = 0.0
 
 
 # =====================================================================================
@@ -316,6 +320,7 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	temp_life = 0.0
 	holy_slow = 0.0
 	holy_slow_timer = 0.0
+	held_until = 0.0
 	slot_jitter = randf()
 	band_jitter = randf()
 	anchor_offset = pos - game.player.position
@@ -876,6 +881,9 @@ func physics_step(delta: float) -> void:
 ## along the obstacle), so there is no separate obstacle term here. Holy
 ## ground slows the unit.
 func _step_movement(delta: float) -> void:
+	if held_until > game.elapsed:
+		velocity = Vector2.ZERO  # Held in place (a Netcaster's net).
+		return
 	var player_pos := game.player.position
 	var anchor := player_pos + anchor_offset
 	var desired := Vector2.ZERO

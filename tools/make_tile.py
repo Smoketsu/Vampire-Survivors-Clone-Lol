@@ -241,6 +241,31 @@ RECIPES = {
         "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
         "sheet_floors": ["march_fortress"],
     },
+    # --- Act II: Gullhaven Harbour (HarbourGround, tiles/harbour_<style>) ---
+    "harbour_mudflats": {
+        "source": "harbour_mudflats.png", "method": "quilt",  # Wet sand ripples at low tide.
+        "colors": ["floor_soil", "floor_slate", "floor_stone"],
+        "shares": {"floor_soil": 0.22, "floor_slate": 0.68, "floor_stone": 0.10},
+    },
+    "harbour_market": {
+        "source": "march_fortress.png", "method": "layout",  # Wet market cobbles (the fortress grit as their texture).
+        "layout": {"type": "voronoi", "count": 64, "seed": 4, "joint": 1.6},
+        "regions": {"stone": ["floor_slate", "floor_stone", "floor_marble"], "joint": ["floor_soil"]},
+        "cell_shift": True, "cell_l": 0.012, "bevel": 0.01,
+    },
+    "harbour_chapel": {
+        "source": "sanctum_sanctuary.png", "method": "layout",  # Slimed flagstones of the chapel square.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["floor_slate", "floor_moss"], "joint": ["ink_green"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.008,
+    },
+    "harbour_seawall": {
+        "source": "sanctum_courtyard.png", "method": "layout",  # The promenade's long dressed paving stones.
+        "layout": {"type": "courses", "rows": [32, 32, 32, 32], "joint": 1,
+                   "slabs": [[64, 64], [48, 80], [72, 56], [56, 72]], "offsets": [0, 24, 8, 36]},
+        "regions": {"stone": ["floor_slate", "floor_marble"], "joint": ["floor_soil"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
 }
 
 

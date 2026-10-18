@@ -32,6 +32,12 @@
 ##                 and lowered armour while inside.
 ##   Raise Dead  — temporary skeletons claw up beside nearby enemies and fight
 ##                 for a few seconds, outside the army cap.
+## Act II's abyssal spells (owner-approved "Unlockable spells and passives",
+## GDD §15.0; each unlocked once by slaying one of the act's bosses,
+## UnlockData, then offered on every stage at the later items' weight):
+##   Undertow    — a wave rolls out in the aim direction over a 120° cone and
+##                 shoves enemies back; every third wave leaves slowing
+##                 shallow water (Gullhaven Harbour, Abbot Merrow).
 class_name AbilityData
 extends RefCounted
 
@@ -44,7 +50,9 @@ const STARTING_SPELL: String = "shadow_bolt"
 ## Display / card order of spells.
 const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	"bone_spear", "soul_siphon", "corpse_explosion", "plague_cloud",
-	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead"]
+	"death_mark", "bone_wall", "soul_chains", "wither", "raise_dead",
+	# --- Act II: Gullhaven Harbour ---
+	"undertow"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -110,6 +118,10 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 ##   skeleton_hp / skeleton_damage (fractions of a Skeleton Warrior's current
 ##   HP / damage), range (px around the necromancer in which enemies are
 ##   looked for).
+## Undertow stat keys (fixed rules in UndertowData):
+##   damage (per enemy in the cone), cooldown (s), range (px reach of the
+##   cone), push (px/s shove impulse, divided by enemy mass), slow (fraction
+##   of speed removed by the shallow water), slow_duration (s; owner-approved 3).
 const SPELLS := {
 	"shadow_bolt": {
 		"display_name": "Shadow Bolt",
@@ -289,6 +301,21 @@ const SPELLS := {
 			{"count": 3, "cooldown": 8.0, "life": 8.0, "skeleton_hp": 0.6, "skeleton_damage": 0.8, "range": 280.0},  # TUNING (not in GDD)
 			{"count": 4, "cooldown": 8.0, "life": 8.0, "skeleton_hp": 0.6, "skeleton_damage": 0.9, "range": 280.0},  # TUNING (not in GDD)
 			{"count": 4, "cooldown": 7.0, "life": 9.0, "skeleton_hp": 0.7, "skeleton_damage": 1.0, "range": 300.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act II: Gullhaven Harbour ---
+	"undertow": {
+		"display_name": "Undertow",
+		"icon": "undertow",
+		"description": "A wave rolls out before you, shoving foes back and leaving slowing shallows.",
+		"shared_card_pool": true,  # owner-approved: unlocked Act II spells weigh the later items' 0.5
+		"labels": {"damage": "Damage", "range": "Reach", "cooldown": "Cooldown (s)", "push": "Shove", "slow": "Shallows slow"},
+		"levels": [
+			{"damage": 16.0, "cooldown": 2.6, "range": 150.0, "push": 220.0, "slow": 0.30, "slow_duration": 3.0},  # TUNING (not in GDD); slow_duration owner-approved 3 s
+			{"damage": 20.0, "cooldown": 2.6, "range": 150.0, "push": 240.0, "slow": 0.30, "slow_duration": 3.0},  # TUNING (not in GDD)
+			{"damage": 20.0, "cooldown": 2.3, "range": 170.0, "push": 260.0, "slow": 0.35, "slow_duration": 3.0},  # TUNING (not in GDD)
+			{"damage": 25.0, "cooldown": 2.3, "range": 170.0, "push": 280.0, "slow": 0.35, "slow_duration": 3.0},  # TUNING (not in GDD)
+			{"damage": 30.0, "cooldown": 2.0, "range": 190.0, "push": 300.0, "slow": 0.40, "slow_duration": 3.0},  # TUNING (not in GDD)
 		],
 	},
 }

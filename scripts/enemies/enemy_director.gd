@@ -38,6 +38,14 @@
 ##     High Confessor revivals and danger hints) and tracks the living
 ##     miniboss (the Cathedral Guardian: its kit registers it with
 ##     set_miniboss() for the HUD's one miniboss bar; never recycled).
+##   * Act II, Gullhaven Harbour (GDD §15.0 "Gullhaven Harbour (Act II phase
+##     2)"): on a stage with a "tide" config it owns the TideDirector (the
+##     rising water, surges, High Water; `tide`), and with a "harbour" config
+##     the HarbourDirector (bell buoys, smugglers' caches, the Harbourmaster;
+##     `harbour`), and hands it the "buoys" / "caches" / "harbourmaster"
+##     events. Each sunk buoy shrinks later scripted waves and the trickle
+##     (HarbourDirector.wave_mult() / trickle_mult(), applied once here). Both
+##     are null on every other stage, so Act I is unchanged.
 class_name EnemyDirector
 extends Node2D
 
@@ -105,6 +113,11 @@ var stage: StageDirector
 var march: MarchDirector = null
 ## Sanctum of Judgment objectives (GDD §8.3; null on stages without them).
 var sanctum: SanctumDirector = null
+## Gullhaven Harbour's tide (Act II; null on stages without a "tide" config).
+var tide: TideDirector = null
+## Gullhaven Harbour's stage events (Act II; null on stages without a
+## "harbour" config).
+var harbour: HarbourDirector = null
 ## The stage's enemy kind aliases (StageRegistry "kind_aliases"; alias ->
 ## real kind id; {} = none).
 var _kind_aliases: Dictionary = {}
@@ -140,6 +153,17 @@ func _ready() -> void:
 		sanctum.game = game
 		sanctum.config = stage_def["sanctum"]
 		add_child(sanctum)
+	# --- Act II: Gullhaven Harbour ---
+	if not (stage_def.get("tide", {}) as Dictionary).is_empty():
+		tide = TideDirector.new()
+		tide.game = game
+		tide.config = stage_def["tide"]
+		add_child(tide)
+	if not (stage_def.get("harbour", {}) as Dictionary).is_empty():
+		harbour = HarbourDirector.new()
+		harbour.game = game
+		harbour.config = stage_def["harbour"]
+		add_child(harbour)
 
 
 # =====================================================================================
@@ -207,6 +231,10 @@ func step(delta: float) -> void:
 		march.step(delta)
 	if sanctum != null:
 		sanctum.step(delta)
+	if tide != null:
+		tide.step(delta)  # Act II: the Harbour's water.
+	if harbour != null:
+		harbour.step(delta)  # Act II: buoys, caches, the Harbourmaster.
 
 
 ## Removes enemies killed since the last step from `active` (and pools the
@@ -248,6 +276,10 @@ func objective_text() -> String:
 		var sanctum_text := sanctum.objective_override()  # Ward crystals / Guardian / altars.
 		if sanctum_text != "":
 			return sanctum_text
+	if harbour != null:
+		var harbour_text := harbour.objective_override()  # Harbourmaster / caches / buoys.
+		if harbour_text != "":
+			return harbour_text
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -283,6 +315,8 @@ func soft_cap() -> int:
 func _spawn_trickle(delta: float) -> void:
 	var seg: Dictionary = segments[segment_index]
 	var spawn_mult := game.difficulty.enemy_spawn_mult()  # Difficulty spawn multiplier.
+	if harbour != null:
+		spawn_mult *= harbour.trickle_mult()  # Act II: sunk bell buoys thin the trickle.
 	spawn_accum += float(seg["rate"]) * spawn_mult * delta
 	var cap: int = soft_cap()
 	var alive := regular_alive()
@@ -346,9 +380,28 @@ func _run_event(ev: Dictionary) -> void:
 				sanctum.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
+		"buoys", "caches", "harbourmaster":
+			if harbour != null:
+				harbour.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
 	show_banner(ev["banner"])
-	spawn_formation(String(ev["formation"]), ev["groups"])
+	var groups: Array = ev["groups"]
+	if harbour != null and harbour.wave_mult() < 1.0:
+		groups = _scaled_groups(groups, harbour.wave_mult())  # Act II: sunk bell buoys shrink the Eye's waves.
+	spawn_formation(String(ev["formation"]), groups)
 	game.stat_add("wave_events", 1.0)
+
+
+## A copy of wave `groups` with every count scaled by `mult` (rounded down,
+## at least 1 per group; Gullhaven's sunk bell buoys, HarbourDirector).
+static func _scaled_groups(groups: Array, mult: float) -> Array:
+	var out: Array = []
+	for g: Dictionary in groups:
+		var c := g.duplicate()
+		c["count"] = maxi(1, floori(float(g["count"]) * mult))
+		out.append(c)
+	return out
 
 
 ## Spawns `groups` (list of {kind, count, elite}) in `formation` ("ring",

@@ -134,6 +134,19 @@ const HEIGHTS: Dictionary = {
 	"structures/bone_wall_segment": 26.0,  # TUNING (not in GDD) one Bone Wall segment (9 px radius, 16 px apart): three bone spikes on a mound, ~20 px wide
 	"structures/bone_wall_bastion": 30.0,  # TUNING (not in GDD) one Charnel Bastion segment: four spikes and a skull, ~24 px wide
 	"summons/cathedral_horror_stone": 64.0,  # TUNING (not in GDD) the Cathedral Horror's stone form: its still turned to grey stone, same size
+	# --- Act II: Gullhaven Harbour ---
+	"eye/deep_kin": 56.0,  # TUNING (not in GDD) Deep Kin: a bruiser, between soldier and heavy (the fin ridge rises above the hunched head)
+	"eye/tide_caller": 54.0,  # TUNING (not in GDD) Tide Caller: soldier tier (body ~48, the conch staff above)
+	"eye/netcaster": 50.0,  # TUNING (not in GDD) Netcaster: soldier tier
+	"eye/deep_herald": 64.0,  # TUNING (not in GDD) Herald of the Deep: the Reckoning's heavy
+	"eye/harbourmaster": 124.0,  # TUNING (not in GDD) the Harbourmaster: miniboss tier (the Cathedral Guardian is 140)
+	"bosses/merrow": 130.0,  # TUNING (not in GDD) Abbot Merrow, robed (the mitre the top)
+	"bosses/merrow_sermon": 150.0,  # TUNING (not in GDD) boss attack pose (preaching, arms raised; BossPoseData): body as tall as the still, the raised arms above
+	"bosses/merrow_changed": 136.0,  # TUNING (not in GDD) Abbot Merrow after The Change (the frill crown the top, limbs spread wide)
+	"bosses/merrow_changed_strike": 120.0,  # TUNING (not in GDD) boss attack pose (lunging lash; BossPoseData)
+	"structures/bell_buoy": 64.0,  # TUNING (not in GDD) a bell buoy: the float and its bell cage
+	"structures/smuggler_cache": 40.0,  # TUNING (not in GDD) a smugglers' cache: an iron-bound crate, ~34 px wide for its 15 px radius
+	"player/brine_widow": 58.0,  # TUNING (not in GDD) the Brine Widow: body ~48 like the necromancer, the hooked staff above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

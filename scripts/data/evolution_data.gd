@@ -17,6 +17,9 @@
 ##   Soul Chains       + Spirit Binding        = Chains of the Damned
 ##   Wither            + Necrotic Vigor        = Necrotic Blight
 ##   Raise Dead        + Restless Dead         = Legion of Bones
+## plus Act II's abyssal spells (owner-approved, GDD §15.0; each with a NEW
+## paired passive, unlocked with its spell):
+##   Undertow          + Salt of the Deep      = Maelstrom
 ##
 ## Evolution condition (GDD open question 27; decisions recorded in GDD
 ## §15.0): the base spell is at its max level (5), the paired passive is at
@@ -49,7 +52,9 @@ const MIN_ELAPSED: float = 480.0  # TUNING (not in GDD) decision for open questi
 ## Display / card order of evolutions.
 const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	"ossuary_lance", "soul_rapture", "grave_eruption", "pestilence",
-	"doom_brand", "charnel_bastion", "chains_of_the_damned", "necrotic_blight", "legion_of_bones"]
+	"doom_brand", "charnel_bastion", "chains_of_the_damned", "necrotic_blight", "legion_of_bones",
+	# --- Act II: Gullhaven Harbour ---
+	"maelstrom"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -264,6 +269,23 @@ const EVOLUTIONS := {
 		"stats": {
 			"count": 6, "cooldown": 7.0, "life": 10.0, "skeleton_hp": 0.8, "skeleton_damage": 1.1, "range": 320.0,  # TUNING (not in GDD)
 			"damage": 32.0, "radius": 60.0,  # TUNING (not in GDD)
+		},
+	},
+	# --- Act II: Gullhaven Harbour ---
+	# Maelstrom extra keys (Undertow): whirl_damage (per grind tick to each enemy
+	# at the whirlpool's heart), whirl_tick (s), whirl_life (s a whirlpool
+	# lasts), whirl_radius (px grind radius; it drags from
+	# UndertowData.WHIRL_DRAG_RADIUS_MULT x this), whirl_pull (px/s drag speed).
+	"maelstrom": {
+		"base": "undertow",
+		"passive": "salt_of_the_deep",
+		"display_name": "Maelstrom",
+		"icon": "maelstrom",
+		"description": "Every wave ends in a whirlpool that drags foes into one knot and grinds them.",
+		"labels": {"damage": "Damage", "range": "Reach", "cooldown": "Cooldown (s)", "whirl_damage": "Whirlpool damage per tick", "whirl_life": "Whirlpool duration (s)", "whirl_pull": "Whirlpool drag"},
+		"stats": {
+			"damage": 36.0, "cooldown": 1.9, "range": 200.0, "push": 300.0, "slow": 0.45, "slow_duration": 3.0,  # TUNING (not in GDD)
+			"whirl_damage": 7.0, "whirl_tick": 0.25, "whirl_life": 2.5, "whirl_radius": 60.0, "whirl_pull": 240.0,  # TUNING (not in GDD)
 		},
 	},
 }

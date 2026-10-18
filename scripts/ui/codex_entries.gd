@@ -143,7 +143,7 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		stats.append([_t("armour"), "%d%%" % roundi(float(d["armor"]) * 100.0)])
 	elif float(d.get("move_speed", 0.0)) > 0.0:
 		stats.append([_t("speed"), num(float(d["move_speed"]))])
-	var sprite := "enemies/" + id  # Soldiers and champions...
+	var sprite := String(CodexData.SPRITE_KEYS.get(id, "enemies/" + id))  # Soldiers and champions (the Ancient Eye's in eye/)...
 	if not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

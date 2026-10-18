@@ -66,6 +66,8 @@ const HYPER_NAMES := {
 	"soulbinder": "Radiant Soulbinder",  # TUNING (not in GDD)
 	"wither_witch": "Thorn-Crowned Witch",  # TUNING (not in GDD)
 	"grave_herald": "Golden Herald",  # TUNING (not in GDD)
+	# --- Act II: Gullhaven Harbour ---
+	"brine_widow": "Pearl-Crowned Widow",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -82,6 +84,8 @@ const HYPER_TINTS := {
 	"soulbinder": Color(1.25, 1.1, 0.7),  # TUNING (not in GDD) gilded, radiant
 	"wither_witch": Color(1.0, 0.85, 0.5),  # TUNING (not in GDD) gilded
 	"grave_herald": Color(1.3, 1.1, 0.55),  # TUNING (not in GDD) gilded
+	# --- Act II: Gullhaven Harbour ---
+	"brine_widow": Color(1.2, 1.1, 0.7),  # TUNING (not in GDD) gilded, pearl
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD

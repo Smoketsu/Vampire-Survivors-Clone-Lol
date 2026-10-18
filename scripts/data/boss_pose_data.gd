@@ -18,4 +18,7 @@ const POSES: Dictionary = {
 	"bosses/vael": {1: "windup", 2: "guard", 3: "strike"},  # TUNING (not in GDD) flaming sword raised / Shieldwall / cleave follow-through
 	"bosses/seraphine": {1: "cast"},  # TUNING (not in GDD) relic staff raised in a cast (teleport and recover keep the still)
 	"bosses/seraphine_avatar": {1: "cast"},  # TUNING (not in GDD) the Avatar's cast
+	# --- Act II: Gullhaven Harbour ---
+	"bosses/merrow": {1: "sermon"},  # TUNING (not in GDD) preaching / casting with both arms raised
+	"bosses/merrow_changed": {3: "strike"},  # TUNING (not in GDD) the limbs lashing forward
 }

@@ -1000,6 +1000,8 @@ func get_move_vector() -> Vector2:
 			best_d = d
 			toward = (c.position - p) / maxf(d, 1.0)
 	var danger := game.enemies.stage.danger_push(p) + game.enemies.rites.danger_push(p)
+	if game.enemies.tide != null:
+		danger += game.enemies.tide.danger_push(p)  # Act II: out of a telegraphed tide surge.
 	if game.enemies.boss != null and game.enemies.boss.active:
 		danger += game.enemies.boss.danger_push(p)
 	var objective := Vector2.ZERO
@@ -1011,6 +1013,9 @@ func get_move_vector() -> Vector2:
 	if goal == Vector2.INF and game.enemies.sanctum != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
 		# Sanctum: close in on ward crystals and sacred altars when calm.
 		goal = game.enemies.sanctum.seek_point(p, OBJECTIVE_SEEK_RADIUS)
+	if goal == Vector2.INF and game.enemies.harbour != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
+		# Gullhaven Harbour: close in on bell buoys and smugglers' caches when calm.
+		goal = game.enemies.harbour.seek_point(p, OBJECTIVE_SEEK_RADIUS)
 	if goal != Vector2.INF:
 		objective = (goal - p).normalized()
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
@@ -1129,6 +1134,8 @@ func finish(summary: Dictionary) -> void:
 		print("[autotest] sanctum: %s | minion dmg prevented by chambers %d" % [sd.summary_line(), int(st.get("sanctum_chamber_dmg_prevented", 0.0))])
 		print("[autotest] sanctum events (%d): %s" % [sd.fired.size(), ", ".join(sd.fired)])
 	_print_sanctum(st)
+	# --- Act II: Gullhaven Harbour ---
+	HarbourReport.print_lines(game, st)
 	_print_battle_sister(st)
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))

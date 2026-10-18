@@ -436,6 +436,23 @@ const MOODS: Dictionary = {
 		"torch": Color(1.0, 0.75, 0.3),
 		"actor": Color(0.9, 0.88, 0.95),
 	},
+	# --- Act II: Gullhaven Harbour (a sea mood: a drowned-teal night over the water) ---
+	"harbour": {
+		"sky": [Color("040a0e"), Color("071219"), Color("0b1a22"), Color("10232b"), Color("152d34"), Color("1b383d"), Color("204244")],
+		"moon": Color(0.86, 0.98, 0.95),
+		"halo": Color(0.45, 0.82, 0.78, 0.12),
+		"cloud": Color(0.12, 0.22, 0.25, 0.9),
+		"star": Color(0.82, 0.96, 0.94, 0.7),
+		"far": Color(0.52, 0.66, 0.68),
+		"far_hills": Color("0f1d22"),
+		"mid_hills": Color("081014"),
+		"mid": Color(0.52, 0.66, 0.7),
+		"near": Color(0.45, 0.56, 0.6),
+		"ground": Color(0.9, 1.02, 1.05),
+		"fog": Color(0.5, 0.78, 0.76),
+		"torch": Color(0.69, 0.3, 0.75),
+		"actor": Color(0.86, 0.96, 1.0),
+	},  # TUNING (not in GDD)
 }
 ## Default mood (the menu's night graveyard).
 const DEFAULT_MOOD: String = "graveyard"  # TUNING (not in GDD)
