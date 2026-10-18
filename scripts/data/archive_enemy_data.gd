@@ -132,7 +132,7 @@ const ENEMIES := {
 		"display_name": "Gibbering Mass",
 		"max_hp": 170.0,  # TUNING (not in GDD) a tank (Sentinel 120 with flat armour)
 		"move_speed": 36.0,  # TUNING (not in GDD) px/s
-		"damage": 10.0,  # TUNING (not in GDD) crushing bulk
+		"damage": 8.0,  # TUNING (not in GDD) crushing bulk (10 in the Act II integration batch: the naive bot's second killer here)
 		"attack_interval": 1.4,  # TUNING (not in GDD) s
 		"attack_range": 5.0,  # TUNING (not in GDD) px edge to edge
 		"radius": 17.0,  # TUNING (not in GDD) px
