@@ -544,3 +544,4 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-18 16:22,tiles/archive_orrery,gpt-image-2.5-flare,medium,1024x1024,1,360,1024,439,0.0232,archive_orrery.png
 2026-10-18 16:22,tiles/archive_stacks,gpt-image-2.5-flare,medium,1024x1024,1,357,1024,439,0.0231,archive_stacks.png
 2026-10-18 16:25,player/tide_widow_hyper,gpt-image-2.5-flare,medium,1024x1024,2,666,1036,439,0.0248,tide_widow_hyper.png
+2026-10-18 17:29,effects/tide_splash,gpt-image-2.5-flare,medium,1536x1024,0,246,0,343,0.0115,fx_tide_splash.png
