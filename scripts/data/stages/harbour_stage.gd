@@ -108,59 +108,59 @@ const SEGMENTS := [
 		"weights": {"initiate": 1.0},
 		"objective": "Chanters lead the Initiates: kill them before they claim your dead"},
 	{"start": 120.0, "rate": 2.2, "max_alive": 54,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.93, "chanter": 0.04, "deep_kin": 0.03},
+		"weights": {"initiate": 0.96, "chanter": 0.04, "deep_kin": 0.0},
 		"objective": "Deep Kin crawl out of the tide pools"},
 	{"start": 180.0, "rate": 2.4, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.90, "chanter": 0.05, "deep_kin": 0.05},
+		"weights": {"initiate": 0.92, "chanter": 0.05, "deep_kin": 0.03},
 		"objective": "Bell buoys toll out on the flats: sink them to thin the Eye's waves"},
 	{"start": 240.0, "rate": 2.7, "max_alive": 68,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.88, "chanter": 0.05, "deep_kin": 0.07},
+		"weights": {"initiate": 0.90, "chanter": 0.05, "deep_kin": 0.05},
 		"objective": "The tide is turning"},
 	# Zone II, the Fish Market: the first Tide Callers, the first surge.
 	{"start": 300.0, "rate": 3.0, "max_alive": 78,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.80, "chanter": 0.05, "deep_kin": 0.11, "tide_caller": 0.04},
+		"weights": {"initiate": 0.82, "chanter": 0.05, "deep_kin": 0.09, "tide_caller": 0.04},
 		"objective": "The Fish Market: Tide Callers raise the water between the stalls"},
 	{"start": 360.0, "rate": 3.2, "max_alive": 86,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.79, "chanter": 0.05, "deep_kin": 0.12, "tide_caller": 0.04},
+		"weights": {"initiate": 0.81, "chanter": 0.05, "deep_kin": 0.10, "tide_caller": 0.04},
 		"objective": "Smugglers' caches on the piers: break them open for treasure"},
 	{"start": 420.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD) lull
-		"weights": {"initiate": 0.79, "chanter": 0.05, "deep_kin": 0.12, "tide_caller": 0.04},
+		"weights": {"initiate": 0.81, "chanter": 0.05, "deep_kin": 0.10, "tide_caller": 0.04},
 		"objective": "Fight through the market lanes"},
 	{"start": 480.0, "rate": 3.5, "max_alive": 96,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.77, "chanter": 0.06, "deep_kin": 0.12, "tide_caller": 0.05},
+		"weights": {"initiate": 0.79, "chanter": 0.06, "deep_kin": 0.10, "tide_caller": 0.05},
 		"objective": "The congregation follows the water"},
 	{"start": 540.0, "rate": 3.8, "max_alive": 106,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.77, "chanter": 0.06, "deep_kin": 0.12, "tide_caller": 0.05},
+		"weights": {"initiate": 0.79, "chanter": 0.06, "deep_kin": 0.10, "tide_caller": 0.05},
 		"objective": "The chapel bell answers the buoys"},
 	# Zone III, the Chapel of the Deep: Netcasters; the Harbourmaster at 9:00 left.
 	{"start": 600.0, "rate": 4.1, "max_alive": 118,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.72, "chanter": 0.06, "deep_kin": 0.12, "tide_caller": 0.05, "netcaster": 0.05},
+		"weights": {"initiate": 0.74, "chanter": 0.06, "deep_kin": 0.10, "tide_caller": 0.05, "netcaster": 0.05},
 		"objective": "The Chapel of the Deep: Netcasters snare your dead"},
 	{"start": 660.0, "rate": 4.3, "max_alive": 124,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.72, "chanter": 0.06, "deep_kin": 0.12, "tide_caller": 0.05, "netcaster": 0.05},
+		"weights": {"initiate": 0.74, "chanter": 0.06, "deep_kin": 0.10, "tide_caller": 0.05, "netcaster": 0.05},
 		"objective": "The Harbourmaster drags his anchor up the chapel steps"},
 	{"start": 720.0, "rate": 4.0, "max_alive": 120,  # TUNING (not in GDD) lull
-		"weights": {"initiate": 0.72, "chanter": 0.06, "deep_kin": 0.12, "tide_caller": 0.05, "netcaster": 0.05},
+		"weights": {"initiate": 0.74, "chanter": 0.06, "deep_kin": 0.10, "tide_caller": 0.05, "netcaster": 0.05},
 		"objective": "The tide fills the chapel square"},
 	{"start": 780.0, "rate": 4.7, "max_alive": 134,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.70, "chanter": 0.06, "deep_kin": 0.13, "tide_caller": 0.05, "netcaster": 0.06},
+		"weights": {"initiate": 0.72, "chanter": 0.06, "deep_kin": 0.11, "tide_caller": 0.05, "netcaster": 0.06},
 		"objective": "The Eye's faithful wade in from the sea"},
 	{"start": 840.0, "rate": 5.0, "max_alive": 142,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.70, "chanter": 0.06, "deep_kin": 0.13, "tide_caller": 0.05, "netcaster": 0.06},
+		"weights": {"initiate": 0.72, "chanter": 0.06, "deep_kin": 0.11, "tide_caller": 0.05, "netcaster": 0.06},
 		"objective": "High tide is coming"},
 	# Zone IV, the Seawall: high tide, a long strip of dry stone.
 	{"start": 900.0, "rate": 5.5, "max_alive": 152,  # TUNING (not in GDD) the density peak of the run
-		"weights": {"initiate": 0.68, "chanter": 0.07, "deep_kin": 0.13, "tide_caller": 0.06, "netcaster": 0.06},
+		"weights": {"initiate": 0.70, "chanter": 0.07, "deep_kin": 0.11, "tide_caller": 0.06, "netcaster": 0.06},
 		"objective": "The Seawall: hold the last dry stone"},
 	{"start": 960.0, "rate": 5.2, "max_alive": 150,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.68, "chanter": 0.07, "deep_kin": 0.13, "tide_caller": 0.06, "netcaster": 0.06},
+		"weights": {"initiate": 0.70, "chanter": 0.07, "deep_kin": 0.11, "tide_caller": 0.06, "netcaster": 0.06},
 		"objective": "The Voice of the Deep approaches"},
 	# 17:00, the boss: a thinner trickle so the duel stays readable.
 	{"start": BOSS_TIME, "rate": 3.4, "max_alive": 104,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.74, "chanter": 0.06, "deep_kin": 0.12, "netcaster": 0.04, "tide_caller": 0.04},
+		"weights": {"initiate": 0.76, "chanter": 0.06, "deep_kin": 0.10, "netcaster": 0.04, "tide_caller": 0.04},
 		"objective": "Slay Abbot Silas Merrow"},
 	{"start": 1110.0, "rate": 4.2, "max_alive": 124,  # TUNING (not in GDD)
-		"weights": {"initiate": 0.72, "chanter": 0.06, "deep_kin": 0.13, "netcaster": 0.05, "tide_caller": 0.04},
+		"weights": {"initiate": 0.74, "chanter": 0.06, "deep_kin": 0.11, "netcaster": 0.05, "tide_caller": 0.04},
 		"objective": "Slay Abbot Silas Merrow"},
 ]
 
@@ -188,13 +188,15 @@ const EVENTS := [
 		"groups": [{"kind": "initiate", "count": 10, "elite": false}]},
 	{"time": 95.0, "type": "wave", "banner": "A Chanter leads its squad: it claims the dead!", "formation": "arc",  # TUNING (not in GDD) the stub's Claims beat (the first army is fragile)
 		"groups": [{"kind": "chanter", "count": 1, "elite": false}, {"kind": "initiate", "count": 9, "elite": false}]},
-	{"time": 125.0, "type": "wave", "banner": "A Deep Kin leaps from the tide pools!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "deep_kin", "count": 1, "elite": false}, {"kind": "initiate", "count": 8, "elite": false}]},
+	{"time": 125.0, "type": "wave", "banner": "The tide pools stir: Initiates wade ashore!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "initiate", "count": 10, "elite": false}]},
 	{"time": 150.0, "type": "buoys", "banner": "Three bell buoys toll out on the flats: sink them to thin the Eye's waves!",  # owner-approved proposal "Bell buoys"
 		"kind": "bell_buoy", "count": 3, "distance_min": 320.0, "distance_max": 440.0,  # TUNING (not in GDD)
 		"reward_xp": 24, "reward_crystals": 5},  # TUNING (not in GDD)
-	{"time": 190.0, "type": "wave", "banner": "A great Deep Kin leads the pod!", "formation": "arc",  # TUNING (not in GDD) first elite
-		"groups": [{"kind": "deep_kin", "count": 1, "elite": true}, {"kind": "initiate", "count": 10, "elite": false}]},
+	{"time": 175.0, "type": "wave", "banner": "A Deep Kin leaps from the tide pools!", "formation": "arc",  # TUNING (not in GDD) after the first army has grown (an earlier Deep Kin broke it on 2 seeds of 5)
+		"groups": [{"kind": "deep_kin", "count": 1, "elite": false}, {"kind": "initiate", "count": 8, "elite": false}]},
+	{"time": 220.0, "type": "wave", "banner": "A pod of Deep Kin comes ashore!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "deep_kin", "count": 2, "elite": false}, {"kind": "initiate", "count": 10, "elite": false}]},
 	{"time": 240.0, "type": "wave", "banner": "Two squads close in from the dunes!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "chanter", "count": 2, "elite": false}, {"kind": "initiate", "count": 16, "elite": false}, {"kind": "deep_kin", "count": 1, "elite": false}]},
 	# Zone II: the Fish Market.
@@ -396,7 +398,7 @@ const TIDE := {
 const HARBOUR := {
 	"toll_interval": 22.0,  # TUNING (not in GDD) "ring to call reinforcements"
 	"toll_radius": 760.0,  # TUNING (not in GDD)
-	"toll_groups": [{"kind": "initiate", "count": 3, "elite": false}, {"kind": "deep_kin", "count": 1, "elite": false}],  # TUNING (not in GDD)
+	"toll_groups": [{"kind": "initiate", "count": 4, "elite": false}],  # TUNING (not in GDD) Initiates only (a Deep Kin per toll broke early armies)
 	"wave_cut_per_buoy": 0.12,  # TUNING (not in GDD) owner-approved "each one you sink makes the cult's wave smaller"
 	"trickle_cut_per_buoy": 0.05,  # TUNING (not in GDD)
 	"ash_per_buoy": 8,  # TUNING (not in GDD) "small", like an altar

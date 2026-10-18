@@ -35,7 +35,7 @@ const ENEMIES := {
 	# soldier, slow on land; its leap is the danger.
 	"deep_kin": {
 		"display_name": "Deep Kin",
-		"max_hp": 84.0,  # TUNING (not in GDD) a bruiser (Footman 36, Shieldbearer 52, Sister 44)
+		"max_hp": 76.0,  # TUNING (not in GDD) a bruiser (Footman 36, Shieldbearer 52, Sister 44)
 		"move_speed": 56.0,  # TUNING (not in GDD) px/s; lumbering on land, never slowed in water (HarbourStage.TIDE swimmers)
 		"damage": 7.0,  # TUNING (not in GDD) claws in contact
 		"attack_interval": 1.2,  # TUNING (not in GDD) s
@@ -61,7 +61,7 @@ const ENEMIES := {
 		"leap_telegraph": 0.85,  # TUNING (not in GDD) s; the landing circle shows this long
 		"leap_air_time": 0.45,  # TUNING (not in GDD) s in the air
 		"leap_radius": 44.0,  # TUNING (not in GDD) px landing circle
-		"leap_damage_summon": 10.0,  # TUNING (not in GDD) before time scaling
+		"leap_damage_summon": 8.0,  # TUNING (not in GDD) before time scaling
 		"leap_damage_player": 12.0,  # TUNING (not in GDD) before time scaling
 		"leap_knockback": 28.0,  # TUNING (not in GDD) px summons are thrown out of the circle
 		"leap_recover": 0.6,  # TUNING (not in GDD) s it crouches after landing
