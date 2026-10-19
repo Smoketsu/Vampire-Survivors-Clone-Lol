@@ -554,3 +554,14 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-19 04:26,obstacles/net_pile,gpt-image-2.5-flare,medium,1024x1024,1,584,1024,439,0.0243,prop_net_pile.png
 2026-10-19 04:26,bosses/merrow_sermon,gpt-image-2.5-flare,medium,1024x1024,1,646,1024,439,0.0246,merrow_sermon.png
 2026-10-19 14:09,eye/scribe,gpt-image-2.5-flare,medium,1024x1024,2,709,1632,439,0.0298,scribe.png
+2026-10-19 15:40,epilogue/act1_1,gpt-image-2.5-flare,medium,1536x1024,2,824,1957,343,0.0301,act1_1.png
+2026-10-19 15:45,epilogue/act2_2,gpt-image-2.5-flare,medium,1536x1024,2,801,1440,343,0.0258,act2_2.png
+2026-10-19 15:45,epilogue/close,gpt-image-2.5-flare,medium,1536x1024,2,770,1461,343,0.0258,close.png
+2026-10-19 15:45,epilogue/act1_3,gpt-image-2.5-flare,medium,1536x1024,2,788,2085,343,0.0309,act1_3.png
+2026-10-19 15:45,epilogue/act2_3,gpt-image-2.5-flare,medium,1536x1024,2,755,1756,343,0.0281,act2_3.png
+2026-10-19 15:45,epilogue/act2_4,gpt-image-2.5-flare,medium,1536x1024,2,793,1756,343,0.0283,act2_4.png
+2026-10-19 15:45,epilogue/act2_1,gpt-image-2.5-flare,medium,1536x1024,2,811,1374,343,0.0253,act2_1.png
+2026-10-19 15:45,epilogue/act1_2,gpt-image-2.5-flare,medium,1536x1024,2,816,1957,343,0.0300,act1_2.png
+2026-10-19 15:46,epilogue/close,gpt-image-2.5-flare,medium,1536x1024,2,826,1461,343,0.0261,close_v2.png
+2026-10-19 15:46,summons/bone_golem,gpt-image-2.5-flare,medium,1024x1024,3,672,91,439,0.0173,src_golem_1.png
+2026-10-19 15:55,icons/sovereigns_decree,gpt-image-2.5-flare,medium,1024x1024,1,379,4,439,0.0151,sovereigns_decree_icon.png
