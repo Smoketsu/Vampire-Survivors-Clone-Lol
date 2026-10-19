@@ -26,9 +26,11 @@
 ##     structures are immune there); bosses and minibosses are never frozen or
 ##     stunned: CombatResolver.slow_enemy() slows them ECLIPSE_BOSS_SLOW
 ##     instead. Every enemy caught is exposed through
-##     CombatResolver.expose_enemy() (the one Eclipse debuff): from the end of
-##     the darkness it takes ECLIPSE_EXPOSE_AMP more damage for
-##     ECLIPSE_EXPOSE_DURATION s (half on bosses and minibosses).
+##     CombatResolver.expose_enemy() (the one Eclipse debuff): from
+##     ECLIPSE_EXPOSE_LEAD s before the end of the darkness (from the cast at
+##     the default) it takes ECLIPSE_EXPOSE_AMP more damage, until
+##     ECLIPSE_EXPOSE_DURATION s after the darkness (ECLIPSE_EXPOSE_BOSS_MULT
+##     of it on bosses and minibosses).
 ##   * Grave Tide (TIDE_*): for 10 s every enemy that dies (on_enemy_killed(),
 ##     from CombatResolver._kill_enemy()) rises where it fell as a temporary
 ##     Risen fighting for the necromancer (HordeDirector.spawn_temporary(), so
@@ -250,17 +252,19 @@ func _ended() -> void:
 
 ## Eclipse: holds every enemy on screen not caught yet by this Eclipse for the
 ## darkness left (bosses and minibosses slowed instead) and exposes it from
-## the darkness' end (Enemy.expose_from marks the catch).
+## ECLIPSE_EXPOSE_LEAD s before the darkness' end (Enemy.expose_from marks the catch).
 func _eclipse_catch() -> void:
 	var left := eclipse_end - game.elapsed  # Darkness left (s).
 	if left <= 0.0:
 		return
+	var lead := clampf(UltimateData.ECLIPSE_EXPOSE_LEAD, 0.0, UltimateData.ECLIPSE_DARK_DURATION)  # Exposure lead (s).
+	var expose_from := eclipse_end - lead  # Game time this Eclipse's exposure starts (also its catch marker).
 	var view := Rect2(game.player.position - UltimateData.ECLIPSE_HALF_VIEW, UltimateData.ECLIPSE_HALF_VIEW * 2.0)  # "On screen".
 	var c := game.combat
 	for e: Enemy in game.enemies.active:
 		if not e.active or e.is_structure or e.is_reckoning or not view.has_point(e.position):
 			continue
-		if e.expose_from == eclipse_end:
+		if e.expose_from == expose_from:
 			continue  # Already caught by this Eclipse (held for the rest of the darkness).
 		var big := e.is_boss or e.is_miniboss  # Never frozen or stunned (owner guardrail).
 		if big:
@@ -269,7 +273,7 @@ func _eclipse_catch() -> void:
 		elif c.freeze_enemy(e, left, 0.0, UltimateData.ECLIPSE_ELITE_MULT) > 0.0:
 			game.stat_add("eclipse_frozen", 1.0)
 		var amp := UltimateData.ECLIPSE_EXPOSE_AMP * (UltimateData.ECLIPSE_EXPOSE_BOSS_MULT if big else 1.0)  # Exposure of this enemy.
-		c.expose_enemy(e, amp, eclipse_end, UltimateData.ECLIPSE_EXPOSE_DURATION)
+		c.expose_enemy(e, amp, expose_from, UltimateData.ECLIPSE_EXPOSE_DURATION + lead)
 
 
 ## Grave Tide: raises queued deaths as temporary Risen (cap alive, cap per tick).

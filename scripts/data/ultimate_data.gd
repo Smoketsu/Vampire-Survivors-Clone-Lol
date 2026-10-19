@@ -102,8 +102,17 @@ const ECLIPSE_EXPOSE_AMP: float = 0.3  # owner-approved Proposal 4 "+30% damage"
 ## Seconds the exposure lasts (before Mournsong, which lengthens it like every
 ## weakening effect).
 const ECLIPSE_EXPOSE_DURATION: float = 6.0  # owner-approved Proposal 4 "for 6 s"
-## Share of the exposure on bosses and minibosses (half, like the synergy marks).
-const ECLIPSE_EXPOSE_BOSS_MULT: float = 0.5  # TUNING (not in GDD)
+## Share (0..1) of the exposure on bosses and minibosses. 1 = the full +30%, as
+## the owner's proposal words it (A/B batch: at 0.5 the Eclipse failed 3 of 4
+## Archivist fights while Dread Rally won all 4; bosses are only slowed by the
+## darkness, never held, so the exposure is the Eclipse's one boss tool).
+const ECLIPSE_EXPOSE_BOSS_MULT: float = 1.0  # TUNING (not in GDD)
+## Seconds (0..ECLIPSE_DARK_DURATION) before the darkness ends that the
+## exposure already starts. 0 = the proposal's wording (exposed only after the
+## darkness); ECLIPSE_DARK_DURATION = frozen foes are exposed from the cast, so
+## the army cashes in on the sitting ducks (A/B batch: without it the Eclipse
+## starved for kills in the Archive and lost 2 of 4 runs Dread Rally won).
+const ECLIPSE_EXPOSE_LEAD: float = 4.0  # TUNING (not in GDD)
 ## Peak opacity (0..1) of the darkness overlay (visual only).
 const ECLIPSE_OVERLAY_ALPHA: float = 0.45  # TUNING (not in GDD) cosmetic
 ## Radius (px) of the Eclipse burst rings.

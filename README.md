@@ -164,7 +164,7 @@ rewards; until then they are open). Numbers in `scripts/data/ultimate_data.gd`.
 |---|---|---|
 | **Dread Rally** | Raises every fallen summon, heals the army 30%, +40% damage and attack speed for 8 s, knockback, the Rally Barrage | All-rounder: rescues a broken army |
 | **Sovereign's Decree** | For 8 s every summon **taunts** the foes within 150 px and takes **50% less damage**; you **cannot be targeted** (foes turn on your summons, and any hit that still reaches you, a projectile already flying, a boss attack, a hazard, does nothing) | Bosses and swarms that dive you |
-| **Eclipse** | **Darkness for 4 s**: every foe on screen **freezes** (bosses and minibosses are only slowed 60%, never frozen; the Reckoning and structures are immune), then the foes it caught take **+30% damage** for 6 s (half on bosses) | An emergency brake when surrounded |
+| **Eclipse** | **Darkness for 4 s**: every foe on screen **freezes** (bosses and minibosses are only slowed 60%, never frozen; the Reckoning and structures are immune), and every foe it caught takes **+30% damage** from the cast until 6 s after the darkness (bosses too) | An emergency brake when surrounded |
 | **Grave Tide** | For **10 s** every foe that dies **rises as a Risen** fighting for you for 12 s (Restless Dead and the Grave Herald make them last longer); never a boss, miniboss, Reckoning foe or structure; at most 24 at once | Snowballing a big wave into an army |
 
 ### Audio, Feel & Settings
