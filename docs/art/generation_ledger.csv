@@ -553,3 +553,4 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-19 04:26,structures/bell_buoy,gpt-image-2.5-flare,medium,1024x1024,2,633,2048,439,0.0327,prop_bell_buoy.png
 2026-10-19 04:26,obstacles/net_pile,gpt-image-2.5-flare,medium,1024x1024,1,584,1024,439,0.0243,prop_net_pile.png
 2026-10-19 04:26,bosses/merrow_sermon,gpt-image-2.5-flare,medium,1024x1024,1,646,1024,439,0.0246,merrow_sermon.png
+2026-10-19 14:09,eye/scribe,gpt-image-2.5-flare,medium,1024x1024,2,709,1632,439,0.0298,scribe.png

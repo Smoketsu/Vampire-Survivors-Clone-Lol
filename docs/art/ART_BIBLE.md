@@ -1274,7 +1274,7 @@ figure-redesign rig.
 
 | File | Subject | Art px | Status |
 |---|---|---|---|
-| `eye/scribe.png` | Scribe of the Unwritten: a hooded drowned-teal cultist, an open book held out, a raised quill. Walk strip (robe shuffle) | 48 | done |
+| `eye/scribe.png` | Scribe of the Unwritten: a hooded drowned-teal cultist with ONE HUGE EYE for a head inside the hood (owner's review, round 2: "his face looks messed up"), an open book held out, a raised quill. Walk strip (robe shuffle); pixelated first, `--no-prune` | 48 | done |
 | `eye/ink_wraith.png` | Ink Wraith: a floating hooded ghost of blue-black ink, reaching claws, a dripping tail. Glide strip | 44 | done |
 | `eye/spore_pilgrim.png` | Pilgrim of the Spore: a tattered teal-and-brown pilgrim, mushroom-capped staff, moss spore sacs. Walk strip (staff rigid) | 50 | done |
 | `eye/gibbering_mass.png`, `_lesser`, `_least` | Gibbering Mass: a lumpy teal mound of eyes and mouths; the two splits are the same source at 44 and 32 | 60 / 44 / 32 | done |
@@ -1481,7 +1481,7 @@ idle breathing strips for the two bust rigs. All **done**.
 | `summons/leviathan` | Leviathan (its evolution): a spiked bone-crowned shell, eight tentacles, two soul-fire eyes | 76x76 | robe sway |
 | `summons/drowned_thrall_ally` | Drowned Thrall raised by Call of the Drowned: a hunched sea-soaked corpse in grey with seaweed | 36x44 | legs walk; Tidecaller's Host's Spawns use the class sprite tinted (`SpireGlyphs.HOST_TINT`) |
 | `player/tide_widow` | The Tide Widow (figure redesign, fully clothed): violet gown with a slit, seaweed shawl, widow's veil, coral crown, conch staff | 44x56 | robe walk (staff rigid) + bust, idle breathing |
-| `player/tide_widow_hyper` | Gilded Tide Widow (Hyper skin): the same with gold coral, gold trim and bangles | 44x58 | walk + idle through `SKINS` |
+| `player/tide_widow_hyper` | Gilded Tide Widow (Hyper skin): the same with gold coral, gold trim and bangles | 44x58 | walk + idle through `SKINS`; `SKIN_FIX` bust box rows 17-25, cols 19-32, two lobes (owner's review: both sides bounce) |
 | `tiles/spire_breakwater` (+ `_2`, `_3`) | Zone I floor: wet green drowned flagstones, slime, tide pools | 128 | `make_tile.py` quilt; the API sources came back with alpha, flattened to RGB |
 | `tiles/spire_steps` (+ `_2`, `_3`) | Zone II floor: one wet green-grey stone, slime streaks | 128 | quilt |
 | `tiles/spire_gate` (+ `_2`, `_3`) | Zone III floor: dark basalt with thin biolume veins | 128 | quilt, `biolume_dark` kept as accents |

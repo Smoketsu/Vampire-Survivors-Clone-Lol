@@ -125,7 +125,10 @@ BUST_TAIL_PER_PX = 1
 #           px at its strongest point. Each frame warps that box vertically (_bounce): the
 #           neckline stays, the underside moves BUST_BOUNCE * px at the box's centre column,
 #           less toward its sides, fading out below it. Pixels are only moved, never
-#           recoloured, so every pixel stays an approved one.
+#           recoloured, so every pixel stays an approved one. An optional sixth field
+#           `lobes` (default 1) = 2 puts one bell under each side instead of one across the
+#           box (each side peaks at its own centre, the cleavage stays): for a wide bust whose
+#           outer sides barely moved under one bell (owner's art review, round 2).
 RIGS = {
     # The pilot (ART_BIBLE "Walk cycles"): the three units with the most screen time.
     "player/necromancer": dict(mode="legs", hip=47, back=(0, 20), front=(20, 33), rigid=[(33, 46, 0, None)], spread=1, lift=1, dip=1),
@@ -235,7 +238,8 @@ SKINS = {
 SKIN_FIX = {
     # The Hyper gown's crown adds 2 rows on top but her bust sits no lower than the base
     # Tide Widow's, so the derived box (rows 20-28) landed on the waist (owner's art review).
-    "player/tide_widow_hyper": {"bust": (19, 30, 17, 25, 2)},
+    # Round 2: 2 px wider to the right and two lobes, so both sides bounce ("just one is bouncing").
+    "player/tide_widow_hyper": {"bust": (19, 32, 17, 25, 2, 2)},
 }
 
 
@@ -269,8 +273,8 @@ def skin_rig(skin: str, base: str) -> dict:
     rig["rigid"] = [(*cols((x0, x1)), y0 if y0 == 0 else y0 + dy, None if y1 is None else y1 + dy)
                     for x0, x1, y0, y1 in rig.get("rigid", [])]
     if "bust" in rig:
-        bx0, bx1, by0, by1, bpx = rig["bust"]
-        rig["bust"] = (*cols((bx0, bx1)), by0 + dy, by1 + dy, bpx)
+        bx0, bx1, by0, by1, bpx = rig["bust"][:5]
+        rig["bust"] = (*cols((bx0, bx1)), by0 + dy, by1 + dy, bpx, *rig["bust"][5:])
     rig.update(SKIN_FIX.get(skin, {}))
     return rig
 
@@ -397,13 +401,14 @@ def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float) -> np.ndarray:
     if s == 0:
         return frame
     x0, x1 = bust[0], bust[1]  # Box columns [x0, x1) (art px).
+    lobes = bust[5] if len(bust) > 5 else 1  # Bells across the box: 1 (centre) or 2 (one per side).
     y0, y1 = bust[2] + dy, bust[3] + dy  # Box rows in this frame: neckline .. underside + 1.
     tail = int(np.ceil(abs(s) * BUST_TAIL_PER_PX)) + 1  # Fade-out rows below the box.
     h = frame.shape[0]  # Frame height (art px).
     out = frame.copy()
     span = float(x1 - x0)  # Box width (art px).
     for x in range(x0, x1):
-        wx = float(np.sin(np.pi * (x - x0 + 0.5) / span))  # Column weight: 1 at the centre.
+        wx = abs(float(np.sin(lobes * np.pi * (x - x0 + 0.5) / span)))  # Column weight: 1 at each bell's centre.
         for y in range(max(0, y0), min(h, y1 + tail)):
             if y < y1:
                 wy = (y - y0 + 1) / float(y1 - y0)  # 0 at the neckline, 1 on the underside.
