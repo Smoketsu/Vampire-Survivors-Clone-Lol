@@ -545,3 +545,11 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-18 16:22,tiles/archive_stacks,gpt-image-2.5-flare,medium,1024x1024,1,357,1024,439,0.0231,archive_stacks.png
 2026-10-18 16:25,player/tide_widow_hyper,gpt-image-2.5-flare,medium,1024x1024,2,666,1036,439,0.0248,tide_widow_hyper.png
 2026-10-18 17:29,effects/tide_splash,gpt-image-2.5-flare,medium,1536x1024,0,246,0,343,0.0115,fx_tide_splash.png
+2026-10-19 04:25,bosses/merrow,gpt-image-2.5-flare,medium,1024x1024,2,703,2048,439,0.0331,merrow.png
+2026-10-19 04:25,obstacles/lobster_pots,gpt-image-2.5-flare,medium,1024x1024,1,600,1024,439,0.0244,prop_lobster_pots.png
+2026-10-19 04:25,eye/deep_herald,gpt-image-2.5-flare,medium,1024x1024,2,702,2048,439,0.0331,deep_herald.png
+2026-10-19 04:25,eye/harbourmaster,gpt-image-2.5-flare,medium,1024x1024,2,716,2048,439,0.0331,harbourmaster.png
+2026-10-19 04:26,tiles/harbour_chapel,gpt-image-2.5-flare,medium,1024x1024,1,414,1024,439,0.0234,tile_chapel_wood.png
+2026-10-19 04:26,structures/bell_buoy,gpt-image-2.5-flare,medium,1024x1024,2,633,2048,439,0.0327,prop_bell_buoy.png
+2026-10-19 04:26,obstacles/net_pile,gpt-image-2.5-flare,medium,1024x1024,1,584,1024,439,0.0243,prop_net_pile.png
+2026-10-19 04:26,bosses/merrow_sermon,gpt-image-2.5-flare,medium,1024x1024,1,646,1024,439,0.0246,merrow_sermon.png

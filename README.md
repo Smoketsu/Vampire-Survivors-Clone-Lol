@@ -1495,7 +1495,9 @@ drawn by the game on all 9 stage floors next to the necromancer, a Skeleton Warr
 Recruit at Normal (×1) and Close (×2) zoom through the game's sharp-pixel shader, a big zoom,
 greyscale and silhouette, and the rule checks (it runs
 its own Godot scene from `tools/art_check/` in a scratch copy of the project; `tools/` is ignored by
-Godot, so it never ships). `python3 tools/pixel_palette.py --preview <png>` draws the palette. The
+Godot, so it never ships). `python3 tools/pixel_palette.py --preview <png>` draws the palette.
+`python3 tools/mesh_props.py` draws Gullhaven's lobster pots and net piles pixel by pixel (a rope mesh
+does not survive the reduction of an AI source to 20-29 px). The
 31 sprites made before the pixel-art pass (the necromancer, the first summons and evolutions, the
 Stage 1-2 soldiers and the Reckoning's Inquisitor, Sir Alaric, Marshal Vael and the five March
 structures) are placeholders to be redone; the anchors (necromancer, Skeleton Warrior, Covenant

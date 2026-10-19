@@ -199,7 +199,7 @@ RIGS = {
     # --- Act II: Ul-Thalos ---
     # The Siren floats (a kelp hem, robe); the Tide Widow's gown is a robe with her staff rigid;
     # the Spawns crawl (their tentacle skirts sway like a hem).
-    "eye/eye_siren": dict(mode="robe", hip=32, rigid=[], sway=2, dip=1, bust=(17, 27, 17, 25, 2)),
+    "eye/eye_siren": dict(mode="robe", hip=32, rigid=[], sway=2, dip=1, bust=(23, 32, 11, 19, 2)),  # Bust box raised after the owner's art review (was rows 17-25, too low).
     "eye/eye_hierophant": dict(mode="robe", hip=46, rigid=[(26, 38, 0, None)], sway=2, dip=1),
     "eye/eye_spawn": dict(mode="robe", hip=50, rigid=[], sway=2, dip=1),
     "eye/eye_waking_horror": dict(mode="legs", hip=52, back=(0, 33), front=(33, 62), rigid=[], spread=2, lift=2, dip=1),
@@ -232,7 +232,11 @@ SKINS = {
     "player/tide_widow_hyper": "player/tide_widow",  # --- Act II: Ul-Thalos ---
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
-SKIN_FIX = {}
+SKIN_FIX = {
+    # The Hyper gown's crown adds 2 rows on top but her bust sits no lower than the base
+    # Tide Widow's, so the derived box (rows 20-28) landed on the waist (owner's art review).
+    "player/tide_widow_hyper": {"bust": (19, 30, 17, 25, 2)},
+}
 
 
 def load(key: str) -> np.ndarray:

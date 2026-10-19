@@ -499,7 +499,7 @@ tiny tweaks.
    sharp-pixel shader; fonts Jersey 10 (all UI text, descriptions included) + Jacquard 24 (titles, banners), sized
    by the `UiTheme.Tier` type tiers (GDD §15.0 "Type tiers"). Tools: `tools/gen_image.py` (API
    generation, cost ledger `docs/art/generation_ledger.csv`), `prepare_sprite.py`, `art_check.py`, `make_tile.py`,
-   `walk_cycle.py`, `ui_kit.py`, `skin_cap.py`, `pixelate_source.py`. Boss attack poses are in (`boss_pose_data.gd`). **Figure redesign** (owner
+   `walk_cycle.py`, `ui_kit.py`, `skin_cap.py`, `pixelate_source.py`, `mesh_props.py` (see-through harbour props drawn on the grid). Boss attack poses are in (`boss_pose_data.gd`). **Figure redesign** (owner
    request, GDD §15.0 "Figure redesign of the female characters"): the Wither Witch, the Soulbinder, their Hyper skins and
    Seraphine (all four sprites), the Banshee and the Keening Lady have exaggerated hourglass figures (fully clothed) and a procedural bust bounce in their walk
    / glide strips (`walk_cycle.py` rig key `bust`); Seraphine, her Avatar, the Banshee and the Keening Lady have glide

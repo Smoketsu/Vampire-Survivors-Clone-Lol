@@ -278,10 +278,17 @@ RECIPES = {
         "cell_shift": True, "cell_l": 0.012, "bevel": 0.01,
     },
     "harbour_chapel": {
-        "source": "sanctum_sanctuary.png", "method": "layout",  # Slimed flagstones of the chapel square.
-        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
-        "regions": {"stone": ["floor_slate", "floor_moss"], "joint": ["ink_green"]},
-        "cell_shift": True, "cell_l": 0.01, "bevel": 0.008,
+        # The village chapel's old hardwood floor (owner's art review: "a village chapel would have a
+        # hardwood floor"; it replaced slimed flagstones): long, narrow 8 px planks in staggered
+        # courses over a wood-grain source (16 px courses read as bricks), warmer than the
+        # Archive's dark 16 px boards.
+        "source": "harbour_chapel_wood.png", "method": "layout",
+        "layout": {"type": "courses", "rows": [8] * 16, "joint": 1,
+                   "slabs": [[80, 48], [128], [56, 72], [96, 32], [128], [48, 80], [72, 56], [128],
+                             [40, 88], [104, 24], [64, 64], [128], [88, 40], [32, 96], [128], [112, 16]],
+                   "offsets": [0, 52, 20, 84, 36, 8, 100, 68, 44, 12, 76, 28, 116, 60, 92, 4]},
+        "regions": {"stone": ["floor_dirt", "floor_ochre"], "joint": ["ink_warm"]},
+        "cell_shift": True, "cell_l": 0.012, "bevel": 0.006,
     },
     "harbour_seawall": {
         "source": "sanctum_courtyard.png", "method": "layout",  # The promenade's long dressed paving stones.
