@@ -569,3 +569,4 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-19 15:55,icons/eclipse,gpt-image-2.5-flare,medium,1024x1024,1,379,4,439,0.0151,eclipse_icon.png
 2026-10-19 15:56,effects/eclipse,gpt-image-2.5-flare,medium,1536x1024,2,448,2904,343,0.0358,eclipse_fx_a.png
 2026-10-19 15:56,icons/grave_tide,gpt-image-2.5-flare,medium,1024x1024,1,370,4,439,0.0151,grave_tide_icon.png
+2026-10-19 15:56,effects/grave_tide,gpt-image-2.5-flare,medium,1536x1024,2,444,2904,343,0.0357,grave_tide_fx_a.png
