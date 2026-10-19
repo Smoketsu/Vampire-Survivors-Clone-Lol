@@ -631,3 +631,7 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-19 21:39,player/heretic_scribe_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,981,2476,439,0.0379,heretic_scribe_deathlord_v2.png
 2026-10-19 21:39,player/barrow_warden_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,984,2476,439,0.0379,barrow_warden_deathlord_v2.png
 2026-10-19 21:39,player/voidcaller_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,1011,2476,439,0.0380,voidcaller_deathlord_v2.png
+2026-10-19 22:20,player/voidcaller_untouchable,gpt-image-2.5-flare,medium,1024x1024,3,1245,3500,439,0.0474,voidcaller_untouchable_r2a.png
+2026-10-19 22:20,player/voidcaller_deathlord,gpt-image-2.5-flare,medium,1024x1024,3,1271,3500,439,0.0475,voidcaller_deathlord_r2b.png
+2026-10-19 22:20,player/voidcaller_untouchable,gpt-image-2.5-flare,medium,1024x1024,3,1245,3500,439,0.0474,voidcaller_untouchable_r2b.png
+2026-10-19 22:20,player/voidcaller_deathlord,gpt-image-2.5-flare,medium,1024x1024,3,1271,3500,439,0.0475,voidcaller_deathlord_r2a.png
