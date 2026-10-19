@@ -469,8 +469,9 @@ stopped (frame 0 first, so stopping never pops and units fall out of step with n
 frame always wins, and frozen, stunned, stone, dead, dashing, airborne and structure bodies show the
 still. Boss attack poses keep their pose stills. Nine strips: the Wither Witch, the Soulbinder, their
 Hyper skins, Seraphine, her Avatar, the Banshee, the Keening Lady and the Sister of the Scourge (who
-stands only while she lashes). The wave 2 art review added eight: the Untouchable and Deathlord skins of
-the Soulbinder, the Wither Witch, the Brine Widow and the Tide Widow.
+stands only while she lashes). The wave 2 art review added ten: the Untouchable and Deathlord skins of
+the Soulbinder, the Wither Witch, the Brine Widow, the Tide Widow and (round 2, redrawn in the figure-redesign
+style) the Voidcaller.
 
 **Adding a unit.** Look at the still on a grid (rows and columns), write its rig, then
 `python3 tools/walk_cycle.py build <key>`, `python3 tools/walk_cycle.py preview <key> --out-dir DIR`
@@ -584,9 +585,12 @@ keeps the character's body height; a crown or drifting ghost hair adds rows on t
 the cold white, outlined, teal eyes, the veil behind it, a darker icy bodice so the hourglass reads; the
 v1 faces vanished pale-on-pale) and eleven Deathlords ("v2 (clean)": flat mid-violet cloth, black iron
 on a few big pieces, gold on a few large pieces, no scattered specks). Walk strips come from the derived
-skin rigs (`walk_cycle.py` `SKINS`); the 8 bust skins also get idle strips; `SKIN_FIX` sets the bust
-box of the ghost Wither Witch (her wisps widen her lower body, so the derived columns slid right) and of
-the crowned Brine Widow (her bust sits no lower than the base widow's). Every still passes
+skin rigs (`walk_cycle.py` `SKINS`); the 10 bust skins also get idle strips; `SKIN_FIX` sets the bust
+box of the ghost Wither Witch (her wisps widen her lower body, so the derived columns slid right), of
+the crowned Brine Widow (her bust sits no lower than the base widow's) and, after the owner's review round
+2, of the crowned Tide Widow (her derived box ended on the belt) and of both Voidcaller skins (her base
+rig has no bust box). Check a box with a motion map: only the bust's underside (and the few rows of fade
+below it) may change between the rest frames of a strip. Every still passes
 `art_check.py` (height, alpha, palette, feet, lightness on the Graveyard and March floors, no speck
 warning).
 
@@ -596,8 +600,8 @@ warning).
 | `gravecaller_deathlord.png` | Deathlord (Gravecaller) | The Gravecaller as a crowned dread-king: a tall black-iron HORNED CROWN with gold spikes on top of the hood (two curved horns); black-iron plate pauldrons with gold edges instead of the skulls; a heavy crimson-lined mantle fastened by a gold skull clasp; the staff black iron with gold bands, its skull burning in violet flame | 46x60 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
 | `umbral_warden_untouchable.png` | Untouchable (Umbral Warden) | The Umbral Warden as a ghost-white phantom: the plate armour becomes pale moonlit ghost-steel; the black sun on the staff becomes a white ghost-sun ringed with soul-teal light, the orbs pale teal wisps | 44x63 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
 | `umbral_warden_deathlord.png` | Deathlord (Umbral Warden) | The Umbral Warden as a crowned dread-king: a black-iron great helm under a gold spiked crown; heavy black plate armour with gold edges; a crimson-lined black mantle; the staff's black sun ringed with a gold-and-crimson corona | 40x63 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
-| `voidcaller_untouchable.png` | Untouchable (Voidcaller) | The Voidcaller as a ghost-white phantom: her hair turns long and ghost-white, drifting upward; her face pale with glowing teal eyes; the void ring in her hand becomes a ring of soul-teal light | 34x53 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
-| `voidcaller_deathlord.png` | Deathlord (Voidcaller) | The Voidcaller as a crowned dread-king: a tall black-and-gold spiked crown on her dark hair; a high-collared black mantle lined in crimson over her robe; gold bracers; the void ring in her hand a crimson-and-violet ring | 36x55 | done: source v1, `--inside-outline --no-prune --no-levels` (the v2 went too dark); walk |
+| `voidcaller_untouchable.png` | Untouchable (Voidcaller) | The Voidcaller as a ghost-white phantom **in the figure-redesign style** (owner's review round 2): an exaggerated hourglass (very large bust, cinched waist, very wide hips and a full rear) in a fitted low-necked ghost gown with a high slit, fully clothed; long ghost-white hair framing a warm bone face with teal eyes; the void ring a ring of soul-teal light | 34x53 | done (round 2): source r2a, refs = her sprite + the Soulbinder's Untouchable (figure guide) + the anchors; `pixelate_source.py`, then `--no-prune --no-levels` (the `--inside-outline` copies flattened the bust white-on-white); one eye hand-painted (18, 10); walk + idle, `SKIN_FIX` bust box (14-25, rows 13-19, two lobes) |
+| `voidcaller_deathlord.png` | Deathlord (Voidcaller) | The Voidcaller as a crowned dread-king **in the figure-redesign style** (owner's review round 2): the same hourglass figure in a fitted mid-violet gown with a high slit, black-iron pauldrons and corset plate, a tall gold spiked crown on her dark hair, a crimson-lined collar and mantle, gold bracers; the void ring crimson and violet | 40x56 | done (round 2): source r2b, refs = her sprite + the Soulbinder's Deathlord (figure guide) + the anchors; `--inside-outline --no-prune --no-levels` (the pixelate path turned the gold crown brown); one eye hand-painted (23, 11); walk + idle, `SKIN_FIX` bust box (17-28, rows 16-21, two lobes) |
 | `bone_oracle_untouchable.png` | Untouchable (Bone Oracle) | The Bone Oracle as a ghost-white phantom: the skull mask is polished white with teal eye glints; the spear is pale ghost-bone with a teal-glowing tip; the floating shards become pale glowing spirit shards | 38x57 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
 | `bone_oracle_deathlord.png` | Deathlord (Bone Oracle) | The Bone Oracle as a crowned dread-king: a black skull mask under a tall gold horned crown; black robes with gold trim and a crimson sash; the spear black iron with a gold head; the floating shards gold | 36x56 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
 | `fallen_confessor_untouchable.png` | Untouchable (Fallen Confessor) | The Fallen Confessor as a ghost-white phantom: the stole becomes pale ice-blue; the censer is ghost-silver leaking soul-teal smoke; teal soul wisps in his open hand | 42x48 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
@@ -621,7 +625,7 @@ warning).
 | `heretic_scribe_untouchable.png` | Untouchable (Heretic Scribe) | The Heretic Scribe as a ghost-white phantom: the quill-staff's feather glows soul-teal; the scroll is pale and glowing with teal writing | 46x60 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
 | `heretic_scribe_deathlord.png` | Deathlord (Heretic Scribe) | The Heretic Scribe as a crowned dread-king: a black hood under a gold spiked crown; black robes with gold trim and a crimson mantle; the quill-staff gold with a crimson feather; a black scroll with gold writing | 44x61 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
 | `tide_widow_untouchable.png` | Untouchable (Tide Widow) | The Tide Widow as a ghost-white phantom: the shawl and veil are pale ghost-white and frayed into wisps; the coral crown is pale pearl-white; the conch on the staff glows soul-teal | 38x56 | done: source v2 (face), `--inside-outline --no-prune --no-levels`; walk + idle (bust) |
-| `tide_widow_deathlord.png` | Deathlord (Tide Widow) | The Tide Widow as a crowned dread-king: a tall black-and-gold spiked crown; a regal black gown with gold trim and a crimson shawl; the conch staff black with a gold conch | 42x58 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk + idle (bust) |
+| `tide_widow_deathlord.png` | Deathlord (Tide Widow) | The Tide Widow as a crowned dread-king: a tall black-and-gold spiked crown; a regal black gown with gold trim and a crimson shawl; the conch staff black with a gold conch | 42x58 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk + idle (bust); round 2: `SKIN_FIX` bust box moved up onto the bust (19-28, rows 17-23; the derived box ended on her gold belt: "she's jiggling her belt"), both strips rebuilt |
 
 **Content wave 2: the title frame (code only, no PNG; owner review).** The Heretic's Bane frame is drawn
 in code on the pixel grid (`TitleFrame`).
