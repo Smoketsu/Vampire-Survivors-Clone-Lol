@@ -27,6 +27,21 @@
 ## skin, Hyper mode or Hyper clear badge, achievements) as small gold plates.
 ## Restart (R / pad X) and Main Menu (Esc / pad B) carry their InputHints
 ## chips. Every motion is instant under the autotest and "Reduce motion".
+##
+## Victory path (content wave 2, GDD §15.0 "Victory screen (content wave 2)";
+## texts and sizes in VictoryData, numbers from VictoryResults, widgets from
+## VictoryCard; the defeat card above is unchanged): the ribbon carries the
+## stage's victory title, a slot for the player's title (empty and hidden until
+## the achievement-reward titles fill it), then the stage boss's line when the
+## boss fell (else the act's line); the portrait gives way to the stage seal
+## (the stage-select vignette, gold on a Hyper clear) over the same character /
+## stage / difficulty lines; the middle column shows the time survived past
+## 0:00 with the stage's Best record and a "New record" ribbon, two stat tiles
+## and the run highlights; the Soul Ash column and the unlock plates are the
+## shared ones; the buttons are Next (the next stage with the same pre-run
+## choices, shown only when that stage is unlocked and playable; N / pad Y),
+## Again (R / pad X) and Menu (Esc / pad B). `victory_info` keeps the last
+## VictoryResults.build() result (the autotest prints it).
 class_name EndScreen
 extends Control
 
@@ -34,6 +49,8 @@ extends Control
 signal restart_pressed
 ## Main Menu button pressed.
 signal main_menu_pressed
+## Victory card: Next pressed, start stage `stage_id` (VictoryResults.next_stage()).
+signal next_pressed(stage_id: String)
 
 ## Owning run, read for the build and army icons (set by Game; may be null,
 ## then the build rows are left out and the army comes from the summary).
@@ -70,6 +87,36 @@ var _toasts: HFlowContainer
 var _restart: Button
 ## Main Menu button.
 var _menu: Button
+
+# --- Content wave 2: A. Victory screen (the victory path) -----------------------------
+
+## VictoryResults.build() of the last victory shown ({} = none yet / a defeat).
+var victory_info: Dictionary = {}
+## Stage the Next button starts ("" = no next stage: the button is hidden).
+var _next_stage: String = ""
+## The player's title under the victory title (achievement-reward titles; empty
+## and hidden until that system fills `text`). Workstream B sets it at integration.
+var player_title: Label
+## The portrait column (its portrait gives way to the seal on a victory).
+var _portrait_col: VBoxContainer
+## Holder of the stage seal in the portrait column (rebuilt on a victory).
+var _seal_box: VBoxContainer
+## The defeat card's middle column (stat tiles, build and army).
+var _stats_col: VBoxContainer
+## The victory card's middle column holder (rebuilt on a victory).
+var _victory_box: VBoxContainer
+## Defeat buttons row (Restart, Main Menu).
+var _defeat_buttons: HBoxContainer
+## Victory buttons row (Next, Again, Menu).
+var _victory_buttons: HBoxContainer
+## Victory: Next button (hidden without a next stage).
+var _next: Button
+## Victory: Again button (the same stage and pre-run choices).
+var _again: Button
+## Victory: Menu button.
+var _vmenu: Button
+## The Soul Ash column frame (narrower on the victory card).
+var _ash_frame: Control
 
 
 ## The character portrait: the stage's floor tile (darkened) in the kit's
@@ -147,15 +194,25 @@ func _ready() -> void:
 	vb.add_child(_ribbon)
 	_title = UiTheme.title("")
 	_ribbon.add_child(_title)
+	player_title = UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)  # Victory: the player's title slot (empty = hidden).
+	player_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	player_title.visible = false
+	vb.add_child(player_title)
 	_subtitle = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vb.add_child(_subtitle)
 	var cols := HBoxContainer.new()  # Portrait | stats + build | Soul Ash.
 	cols.add_theme_constant_override("separation", InRunUiData.END_GAP)
 	vb.add_child(cols)
-	cols.add_child(_build_portrait_column())
-	cols.add_child(_build_stats_column())
-	cols.add_child(_build_ash_column())
+	_portrait_col = _build_portrait_column()
+	cols.add_child(_portrait_col)
+	_stats_col = _build_stats_column()
+	cols.add_child(_stats_col)
+	_victory_box = VBoxContainer.new()  # Victory middle column (VictoryCard.middle()).
+	_victory_box.visible = false
+	cols.add_child(_victory_box)
+	_ash_frame = _build_ash_column()
+	cols.add_child(_ash_frame)
 	_toasts = HFlowContainer.new()  # Wraps two or three plates per line.
 	_toasts.alignment = FlowContainer.ALIGNMENT_CENTER
 	_toasts.add_theme_constant_override("h_separation", 8)
@@ -165,9 +222,21 @@ func _ready() -> void:
 	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
 	buttons.add_theme_constant_override("separation", 18)
 	vb.add_child(buttons)
+	_defeat_buttons = buttons
 	_restart = _button(buttons, "Restart", InputHints.raw(KEY_R, JOY_BUTTON_X), func() -> void: restart_pressed.emit())
 	_menu = _button(buttons, "Main Menu", "ui_cancel", func() -> void: main_menu_pressed.emit())
 	_menu.set_meta(&"ui_back", true)  # Plays the back sound (UiMotion / Sfx).
+	_victory_buttons = HBoxContainer.new()  # Victory: Next, Again, Menu (one word each).
+	_victory_buttons.alignment = BoxContainer.ALIGNMENT_CENTER
+	_victory_buttons.add_theme_constant_override("separation", 18)
+	_victory_buttons.visible = false
+	vb.add_child(_victory_buttons)
+	_next = _button(_victory_buttons, VictoryData.BUTTON_NEXT, InputHints.raw(KEY_N, JOY_BUTTON_Y), func() -> void: _on_next())
+	_again = _button(_victory_buttons, VictoryData.BUTTON_AGAIN, InputHints.raw(KEY_R, JOY_BUTTON_X), func() -> void: restart_pressed.emit())
+	_vmenu = _button(_victory_buttons, VictoryData.BUTTON_MENU, "ui_cancel", func() -> void: main_menu_pressed.emit())
+	_vmenu.set_meta(&"ui_back", true)  # Plays the back sound (UiMotion / Sfx).
+	for b: Button in [_next, _again, _vmenu]:
+		b.custom_minimum_size = Vector2(VictoryData.BUTTON_WIDTH, VictoryData.BUTTON_HEIGHT)
 
 
 ## A results button with the key chip of `spec` inside its left edge.
@@ -182,13 +251,16 @@ func _button(parent: Control, text: String, spec: Variant, cb: Callable) -> Butt
 
 
 ## Left column: the portrait and the character / stage / difficulty lines.
-func _build_portrait_column() -> Control:
+func _build_portrait_column() -> VBoxContainer:
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 2)
 	col.custom_minimum_size = Vector2(InRunUiData.END_PORTRAIT_WIDTH, 0)
 	_portrait = Portrait.new()
 	_portrait.custom_minimum_size = Vector2(InRunUiData.END_PORTRAIT_WIDTH, InRunUiData.END_PORTRAIT_HEIGHT)
 	col.add_child(_portrait)
+	_seal_box = VBoxContainer.new()  # Victory: the stage seal (VictoryCard.seal()).
+	_seal_box.visible = false
+	col.add_child(_seal_box)
 	var gap := Control.new()  # Air under the frame.
 	gap.custom_minimum_size = Vector2(0, 4)
 	col.add_child(gap)
@@ -204,7 +276,7 @@ func _build_portrait_column() -> Control:
 
 
 ## Middle column: the stat tiles, then the build and the army.
-func _build_stats_column() -> Control:
+func _build_stats_column() -> VBoxContainer:
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 10)
 	col.custom_minimum_size = Vector2(InRunUiData.END_STATS_WIDTH, 0)
@@ -437,20 +509,71 @@ func open(summary: Dictionary) -> void:
 	_portrait.queue_redraw()
 	_char_name.text = String(summary.get("character_name", "The Gravecaller"))
 	_stage_name.text = String(summary.get("stage_name", "The Desecrated Graveyard"))
+	_show_victory(summary if won else {})  # Victory path (content wave 2); a defeat restores the defeat layout.
 	var label := String(summary.get("difficulty_label", summary.get("difficulty_name", "Necromancer")))  # Difficulty (+ Hyper).
 	var mods: PackedStringArray = summary.get("modifier_names", PackedStringArray())  # Active run modifiers.
 	var standard := String(summary.get("difficulty_id", "necromancer")) == "necromancer" and mods.is_empty() and not bool(summary.get("hyper", false))
 	_difficulty.text = label + ("" if mods.is_empty() else " · %d modifier%s" % [mods.size(), "" if mods.size() == 1 else "s"])
 	_difficulty.add_theme_color_override("font_color", UiTheme.TEXT_DIM if standard else Palette.CRIMSON.lightened(0.45))
-	_show_stats(summary)
-	_show_build(summary)
+	if not won:
+		_show_stats(summary)
+		_show_build(summary)
 	var unlocks := PackedStringArray()  # Unlock plates: characters first.
 	for cid: String in summary.get("unlocked_characters", PackedStringArray()):
 		unlocks.append("New character: %s" % String(CharacterModifiers.def(cid)["display_name"]))
 	unlocks.append_array(_show_ash(summary.get("soul_ash", {}), String(summary.get("boss_name", "Sir Alaric"))))
 	_show_toasts(unlocks)
 	UiMotion.open(self)  # Fade / rise in (makes it visible).
-	_restart.grab_focus.call_deferred()
+	if won:
+		UiMotion.stagger([_seal_box], 0.15)  # The seal stamps in.
+		(_next if _next.visible else _again).grab_focus.call_deferred()
+	else:
+		_restart.grab_focus.call_deferred()
+
+
+## The victory path for `summary` (a won run), or back to the defeat layout
+## when `summary` is empty: title, boss / act line, seal, middle column,
+## buttons (see the header).
+func _show_victory(summary: Dictionary) -> void:
+	var won := not summary.is_empty()
+	_portrait.visible = not won
+	_seal_box.visible = won
+	_stats_col.visible = not won
+	_victory_box.visible = won
+	_defeat_buttons.visible = not won
+	_victory_buttons.visible = won
+	_portrait_col.custom_minimum_size.x = FrontDoorData.VIGNETTE_SIZE.x + 8.0 if won else InRunUiData.END_PORTRAIT_WIDTH
+	for l: Label in [_char_name, _stage_name, _difficulty]:
+		l.custom_minimum_size.x = _portrait_col.custom_minimum_size.x
+	_ribbon.custom_minimum_size.x = VictoryData.RIBBON_WIDTH if won else InRunUiData.END_RIBBON_WIDTH
+	_ash_frame.custom_minimum_size.x = VictoryData.ASH_WIDTH if won else InRunUiData.END_ASH_WIDTH
+	player_title.visible = won and player_title.text != ""
+	if not won:
+		victory_info = {}
+		_subtitle.add_theme_color_override("font_color", UiTheme.TEXT_DIM)
+		return
+	victory_info = VictoryResults.build(summary)
+	_title.text = String(victory_info["title"])
+	var boss_line := String(victory_info["boss_line"])  # "" while the boss lives.
+	_subtitle.text = boss_line if boss_line != "" else String(victory_info["line"])
+	_subtitle.add_theme_color_override("font_color", UiTheme.TEXT_GOLD if boss_line != "" else UiTheme.TEXT_DIM)
+	RunBuild.clear(_seal_box)
+	_seal_box.add_child(VictoryCard.seal(victory_info))
+	RunBuild.clear(_victory_box)
+	var mid: Array = VictoryCard.middle(victory_info, summary)  # [column, record ribbon or null].
+	_victory_box.add_child(mid[0] as Control)
+	if mid[1] != null:
+		UiMotion.stagger([mid[1]], VictoryData.RECORD_DELAY)  # "New record" stamps in.
+	_next_stage = VictoryResults.next_stage(String(victory_info["stage_id"]))
+	_next.visible = _next_stage != ""
+	if _next.visible:
+		_next.tooltip_text = String(StageRegistry.STAGES[_next_stage]["display_name"])
+
+
+## Victory card: Next (only while a next stage exists).
+func _on_next() -> void:
+	if _next_stage != "":
+		next_pressed.emit(_next_stage)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -462,6 +585,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			or (pad != null and pad.pressed and pad.button_index == JOY_BUTTON_X):
 		get_viewport().set_input_as_handled()
 		restart_pressed.emit()
+	elif _victory_buttons.visible and _next.visible and ((key != null and key.pressed and not key.echo and key.physical_keycode == KEY_N)
+			or (pad != null and pad.pressed and pad.button_index == JOY_BUTTON_Y)):
+		get_viewport().set_input_as_handled()
+		_on_next()  # Victory card: Next.
 	elif event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		main_menu_pressed.emit()

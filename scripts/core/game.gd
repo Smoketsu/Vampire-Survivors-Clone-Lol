@@ -43,6 +43,13 @@
 ## Hyper mode (HyperData) is part of `difficulty`; the cosmetic skin
 ## (SkinData, run_config.skin_id or --skin=) is resolved once into
 ## player.skin_id and only changes how the necromancer is drawn.
+## Victory screen (content wave 2, VictoryData): a won run plays the last stand
+## (LastStand, visual only, after the death is counted and the summary built)
+## and then the victory results card; the summary carries the few counters the
+## card's highlights need (boss_kill_time, peak_army, evolution_log), kept out
+## of `stats` so the autotest summary lines stay as they were. The card's Next
+## button raises next_stage_requested for Main. A --victory-preview debug run
+## (VictoryPreview) ends as a scripted victory after a few seconds.
 class_name Game
 extends Node2D
 
@@ -50,6 +57,8 @@ extends Node2D
 signal restart_requested
 ## Pause menu / end screen asked to return to the main menu.
 signal main_menu_requested
+## The victory card's Next: start stage `stage_id` with the same pre-run choices.
+signal next_stage_requested(stage_id: String)
 
 ## High-level run state.
 enum RunState { PLAYING, LEVEL_UP, PAUSED, ENDED, CHEST }
@@ -75,6 +84,10 @@ var pending_level_ups: int = 0
 var victory: bool = false
 ## True once Sir Alaric has been killed.
 var boss_defeated: bool = false
+## Game time (s) the stage boss fell at (-1 = not slain; the victory card's highlight).
+var boss_kill_time: float = -1.0
+## Most summons alive at once this run (the victory card's "Largest army"; 0..army cap).
+var peak_army: int = 0
 ## Why the run ended: "run_complete" | "defeat" | "timeout" ("" while running).
 var end_reason: String = ""
 ## Free-form counters (damage dealt, heals, intercepts...) for the summary.
@@ -178,6 +191,8 @@ var level_up_panel: LevelUpPanel
 var pause_menu: PauseMenu
 ## Victory / defeat screen.
 var end_screen: EndScreen
+## The last stand before the victory card (LastStand; visual only).
+var last_stand: LastStand
 ## Treasure-chest reveal.
 var chest_panel: ChestPanel
 ## F3 debug overlay.
@@ -303,6 +318,8 @@ func _ready() -> void:
 		stats[key] = 0.0
 	# GDD brief: the run starts with 2 Skeleton Warriors (warrior level 1).
 	horde.set_class_level("warrior", 1)
+	if GameState.victory_preview:
+		VictoryPreview.setup(self)  # Debug: a small army for the scripted victory.
 	_build_ui()
 	ground.update_view(player.position)
 
@@ -313,7 +330,7 @@ func _ready() -> void:
 ## (or none) returns "" so the normal necromancer drawing is used.
 func _resolve_skin() -> String:
 	var id := run_config.skin_id  # Requested skin.
-	if GameState.autotest and GameState.autotest_skin != "":
+	if (GameState.autotest or GameState.victory_preview) and GameState.autotest_skin != "":
 		id = GameState.autotest_skin
 	elif not SkinData.skins_for(run_config.character_key()).has(id) or not Meta.is_skin_unlocked(id):
 		return ""
@@ -358,10 +375,14 @@ func _build_ui() -> void:
 	pause_menu.restart_pressed.connect(func() -> void: restart_requested.emit())
 	pause_menu.main_menu_pressed.connect(func() -> void: main_menu_requested.emit())
 	root.add_child(pause_menu)
+	last_stand = LastStand.new()  # Over the frozen world and the HUD, under the results card.
+	last_stand.game = self
+	root.add_child(last_stand)
 	end_screen = EndScreen.new()
 	end_screen.game = self  # Read-only: the results card's build and army icons.
 	end_screen.restart_pressed.connect(func() -> void: restart_requested.emit())
 	end_screen.main_menu_pressed.connect(func() -> void: main_menu_requested.emit())
+	end_screen.next_pressed.connect(func(id: String) -> void: next_stage_requested.emit(id))
 	root.add_child(end_screen)
 
 
@@ -396,6 +417,7 @@ func _physics_process(delta: float) -> void:
 	abilities.step(delta)
 	innates.step(delta)
 	horde.step(delta)
+	peak_army = maxi(peak_army, horde.units.size())  # Victory card highlight (read only).
 	enemies.step(delta)
 	arena.resolve_all(delta)
 	abilities.spells.after_physics(delta)  # Bone Wall holds enemies on their final positions.
@@ -413,6 +435,8 @@ func _physics_process(delta: float) -> void:
 		autotest.step(delta)
 	if pending_level_ups > 0 and run_state == RunState.PLAYING:
 		_open_level_up()
+	if GameState.victory_preview and elapsed >= VictoryData.PREVIEW_DELAY:
+		VictoryPreview.fire(self)  # Debug: the scripted victory (no-op once ended).
 
 
 func _process(_delta: float) -> void:
@@ -584,6 +608,8 @@ func _on_player_died() -> void:
 ## Boss kill: reward only (dropped by EnemyDirector); the run goes on.
 func _on_boss_defeated() -> void:
 	boss_defeated = true
+	if boss_kill_time < 0.0:
+		boss_kill_time = elapsed  # Victory card highlight.
 	stat_add("boss_kills", 1.0)
 	# Dread Sovereign achievement (GDD §9.4): boss slain with all 4 GDD
 	# summon roles (MetaData.DREAD_SOVEREIGN_CLASSES = UnitData.CORE_CLASSES;
@@ -593,7 +619,9 @@ func _on_boss_defeated() -> void:
 		stat_add("boss_kill_full_army", 1.0)
 
 
-## Ends the run: freezes the world and shows the victory / defeat screen.
+## Ends the run: freezes the world and shows the victory / defeat screen. A
+## victory with UI motion on plays the last stand first (LastStand; the summary,
+## the Soul Ash and the autotest report are all done before it starts).
 func end_run(won: bool, reason: String) -> void:
 	if run_state == RunState.ENDED:
 		return
@@ -606,7 +634,11 @@ func end_run(won: bool, reason: String) -> void:
 	var summary := build_summary()
 	summary["soul_ash"] = Meta.award_run(summary, meta)
 	GameState.last_run_summary = summary
-	end_screen.open(summary)
+	if won and LastStand.wanted():
+		last_stand.finished.connect(end_screen.open.bind(summary), CONNECT_ONE_SHOT)
+		last_stand.play(summary)
+	else:
+		end_screen.open(summary)
 	if autotest != null:
 		autotest.finish(summary)
 
@@ -638,6 +670,9 @@ func build_summary() -> Dictionary:
 		"time_remaining": maxf(0.0, WaveData.RUN_DURATION - elapsed),
 		"reckoning_waves": enemies.reckoning_wave,
 		"boss_defeated": boss_defeated,
+		"boss_kill_time": boss_kill_time,  # Victory card highlight (s, -1 = not slain).
+		"peak_army": peak_army,  # Victory card highlight.
+		"evolution_log": abilities.evolution_history.duplicate(),  # "id@m:ss" (victory card).
 		"kills": kills,
 		"level": level,
 		"horde_total": horde.units.size(),

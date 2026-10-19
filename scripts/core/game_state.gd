@@ -96,6 +96,15 @@
 ##                         An unknown id (or one whose starting spell is not
 ##                         in the build) is refused with an error and the
 ##                         default is played.
+##   --victory-preview     Debug (content wave 2, the victory screen): skips the
+##                         menu like the autotest (with or without --autotest;
+##                         --stage=, --difficulty=, --character=, --hyper and
+##                         --skin= apply), raises a small army, and after
+##                         VictoryData.PREVIEW_DELAY game seconds ends the run
+##                         as a scripted victory (time past 0:00, a boss kill,
+##                         evolutions and chests from VictoryData.PREVIEW_*), so
+##                         the last stand and the victory card can be seen and
+##                         screenshot at once. Nothing is saved (Meta.can_write()).
 ## The environment variable NECROPATHY_AUTOTEST=1 (or the pre-rename GRAVEBOUND_AUTOTEST=1) is equivalent to --autotest.
 extends Node
 
@@ -160,6 +169,9 @@ var autotest_spawns: Array[Dictionary] = []
 ## Autotest: CharacterData id of the playable character (--character=;
 ## locks bypassed, only characters whose starting spell exists).
 var autotest_character: String = CharacterData.DEFAULT_ID
+## Debug: true when --victory-preview ends the run as a scripted victory
+## (VictoryPreview; the menu is skipped and nothing is saved).
+var victory_preview: bool = false
 ## Stage chosen last in the stage select this session (focused next time).
 var last_stage_id: String = StageRegistry.DEFAULT_ID
 ## Whether the F3 debug overlay is shown; persists across restarts.
@@ -183,6 +195,8 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest = true
 		elif arg == "--mortal":
 			autotest_mortal = true
+		elif arg == "--victory-preview":
+			victory_preview = true  # Content wave 2: debug preview of the victory screen.
 		elif arg.begins_with("--speed="):
 			autotest_speed = clampf(arg.get_slice("=", 1).to_float(), 0.25, 32.0)
 		elif arg.begins_with("--seed="):
