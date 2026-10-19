@@ -61,14 +61,14 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Move | WASD or arrow keys | Left stick / D-pad |
 | Menu / card navigation and confirm | Mouse, arrow keys, Enter / Space | D-pad or left stick, **A** |
 | Stage select (after **Play**) | Left / right between stages (the diorama follows the focused stage's mood), Enter marches, Esc goes back | D-pad / stick, **A**, **B** |
-| Pre-run setup: character, skin, Hyper, difficulty, run modifiers | Arrows move between the character tiles, difficulty cards, modifier tiles, the hero panel's skin / Hyper tiles and the buttons; Enter chooses / toggles; Esc goes back | D-pad / stick, **A**, **B** |
+| Pre-run setup: character, skin, Hyper, ultimate, difficulty, run modifiers | Arrows move between the character tiles, difficulty cards, modifier tiles, the hero panel's skin / Hyper tiles and ultimate tiles, and the buttons; Enter chooses / toggles; Esc goes back | D-pad / stick, **A**, **B** |
 | Pick a level-up card | Click, or keys **1 / 2 / 3** | Focus + **A** |
 | Level-up: Reroll all cards (2 per run) | **R**, or the Reroll button | **X**, or focus the button + **A** |
 | Level-up: Banish a card (2 per run) | **B**, then pick the card (**B** / **Esc** cancels) | **LB**, then pick the card (**LB** / **B** cancels) |
 | Level-up: Skip (unlimited, heals 8% HP) | **N**, or the Skip button | **RB**, or focus the button + **A** |
 | Shadow Bolt aim: Nearest / Strongest | **T** | **Y** |
 | Grave Step (dash) | **Shift** | **RB** |
-| Dread Rally (ultimate, when its soul meter is full) | **Space** | **LB** |
+| Ultimate (Dread Rally or the one chosen before the run, when its soul meter is full) | **Space** | **LB** |
 | Pause (Resume / Recipes / Settings / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
 | Results card (end of a run): Restart / Main Menu | **R** / **Esc**, or the buttons | **X** / **B**, or focus + **A** |
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move over the grid, Esc / Back closes | D-pad / stick move; **B** closes |
@@ -104,8 +104,8 @@ size; numbers in `touch_data.gd`):
 |---|---|
 | Move | Put a thumb anywhere on the **left half** of the screen: a joystick appears under it (it follows the thumb if you slide far) |
 | Grave Step (dash) | The big button at the **bottom right** (its charges as pips, darkened while it recharges) |
-| Dread Rally (ultimate) | The button **left of it**: it fills with the soul meter and gets a bright green border when ready |
-| Shadow Bolt aim | The small button **above Dread Rally** (shown while you have the bolt; the HUD line says which aim) |
+| Ultimate (Dread Rally or your chosen one) | The button **left of it**: it shows your ultimate's icon, fills with the soul meter and gets a bright green border when ready |
+| Shadow Bolt aim | The small button **above the ultimate** (shown while you have the bolt; the HUD line says which aim) |
 | Pause | The button in the **top-right corner** |
 | Ossuary | Tap a tile to see it, tap it **again** to buy |
 
@@ -148,6 +148,24 @@ buttons you press in a fight are the dash and the ultimate (below).
   Their key chips sit above the icons and follow your rebinds and device. Everything runs on game time, so pauses, level-ups and
   chests freeze the cooldown, the meter and the buff, and the Space / A that
   confirms a card or closes a chest never casts the rally.
+
+### Ultimates (content wave 2)
+
+Dread Rally is one of four ultimates. All four use the **same soul meter** (240 points, filled by
+kills as above, no charge while one runs), the same key / button and the same HUD slot; you pick
+one on the **pre-run setup screen** (the row of four tiles under the skins: icon and one word, the
+chosen one framed in gold, a locked one padlocked with how to earn it; the full effect is the
+tooltip). The choice is remembered, kept by Restart and open to every character; the HUD icon, the
+touch button and the pause screen's **Ultimate** line show it. Dread Rally stays the default and is
+always open; the other three are earned by achievements (their lock rows come with the achievement
+rewards; until then they are open). Numbers in `scripts/data/ultimate_data.gd`.
+
+| Ultimate | What it does | The right pick for |
+|---|---|---|
+| **Dread Rally** | Raises every fallen summon, heals the army 30%, +40% damage and attack speed for 8 s, knockback, the Rally Barrage | All-rounder: rescues a broken army |
+| **Sovereign's Decree** | For 8 s every summon **taunts** the foes within 150 px and takes **50% less damage**; you **cannot be targeted** (foes turn on your summons, and any hit that still reaches you, a projectile already flying, a boss attack, a hazard, does nothing) | Bosses and swarms that dive you |
+| **Eclipse** | **Darkness for 4 s**: every foe on screen **freezes** (bosses and minibosses are only slowed 60%, never frozen; the Reckoning and structures are immune), then the foes it caught take **+30% damage** for 6 s (half on bosses) | An emergency brake when surrounded |
+| **Grave Tide** | For **10 s** every foe that dies **rises as a Risen** fighting for you for 12 s (Restless Dead and the Grave Herald make them last longer); never a boss, miniboss, Reckoning foe or structure; at most 24 at once | Snowballing a big wave into an army |
 
 ### Audio, Feel & Settings
 
@@ -242,7 +260,7 @@ buttons you press in a fight are the dash and the ultimate (below).
   **Effects** Full / Reduced, screen shake, damage numbers, Reduce motion = instant
   UI motion), **Save** (Backup / Restore save codes, see *Play in the browser*) and
   **Controls**: the keyboard key of
-  Move up / down / left / right, Shadow Bolt aim, Grave Step, Dread Rally,
+  Move up / down / left / right, Shadow Bolt aim, Grave Step, Ultimate,
   Pause, in two groups (Move, Actions),
   each shown as a key chip you can rebind next to its fixed controller
   binding (a pad chip, read-only), plus **Reset keys**. Arrow keys and
@@ -1703,6 +1721,8 @@ scripts/
     autotest.gd             Headless self-test driver
   player/necromancer.gd
   player/grave_step.gd      Grave Step dash: charges, obstacle-clamped step, i-frames, shadow trail
+  player/ultimate_system.gd The run's ultimate (game.ultimates): which one the soul meter casts, and
+                            Sovereign's Decree, Eclipse and Grave Tide through the single paths
   player/dread_rally.gd     Dread Rally ultimate: kill-charged soul meter, surge, heal, raises the army, buff, knockback
   horde/
     horde_director.gd       Army registry, pools, caps, effective stats, replenishment queues,
@@ -1829,6 +1849,7 @@ scripts/
   fx/fx_layer.gd            One node that draws all particles and damage numbers from fixed buffers
   fx/motion_director.gd     Engine motion: animates every unit's body once per frame, pools death dissolves
   fx/unit_motion.gd         One unit's procedural motion (bob, lean, squashes, lunge, rise) on its body layer
+  fx/ultimate_overlay.gd    The new ultimates' screen overlays (taunt rings, darkness, edge mist; visual only)
   fx/unit_layer.gd          A unit's body / overlay drawing layer (child node calling back into the unit)
   fx/unit_dissolve.gd       Pooled death dissolve: the dead unit's look collapsing into bone dust / holy ash
   fx/anim_bursts.gd         Art-only one-shot effect strips (Shadow Bolt hit splash, level-up column, evolution flash)
@@ -1864,6 +1885,8 @@ scripts/
                             (character, difficulty level, run modifiers, total Soul Ash plaque),
                             prerun_hero (the pre-run hero panel: the character big, walking),
                             prerun_hyper_skins (its Hyper tile and skin tiles with previews),
+                            prerun_ultimates (its ultimate picker), ultimate_glyphs (their
+                            fallback icons),
                             menu_logo (the living title logo), soul_marker (the menu's focus
                             wisps), mask_icon (small pixel icons from character masks),
                             soul_ash_icon (the Soul Ash icon: its art when present, else the glyph),
@@ -1976,6 +1999,7 @@ scripts/
                             results card layout, HUD banner queue and bars (all cosmetic)
     player_data.gd          Player stats, XP curve, slot counts
     player_ability_data.gd  Grave Step and Dread Rally numbers (and the bots' use of them)
+    ultimate_data.gd        The four ultimates: names, icons, sounds and every number of the new three
     motion_data.gd          Engine motion (tier 0) amplitudes, timings, dust colours, cost caps
     meta_data.gd            Soul Ash formula, upgrade trees / tiers / costs, achievements, autotest profiles
     powerup_data.gd         Power-up types, weights, durations, drop chances, pity, cap, lifetime
@@ -2072,6 +2096,7 @@ Options (after `--`):
 | `--synergies=off` | A/B switch: no army synergy ever activates (the four original ones and the newer classes' nine). Every summary has a `synergy bonus` line (per newer synergy: the hits its mark bonus raised and the damage it added; the Baying frenzies; staggered / swooped marks; Death from Above dash resets; the seconds Requiem stretched), marked "(synergies off)" with this switch. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
 | `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |
+| `--ultimate=ID` | The ultimate (`ultimate_data.gd`): `dread_rally` (default, today's game), `sovereigns_decree`, `eclipse` or `grave_tide`; locks are bypassed. The bots cast it with the Dread Rally rule; the header names it and an `ultimate` line follows the unchanged `dread rally` line: casts, Decree time, enemies taunted, summon damage prevented, hits on the necromancer ignored (and their damage); Eclipse foes frozen, bosses slowed, foes exposed and the exposure's bonus damage; Grave Tide Risen raised, capped, their damage and kills. |
 | `--hyper` | Hyper mode (`HyperData`: enemy HP / damage growth ×2, stage boss HP ×1.5, Soul Ash +100%), bypassing the Seraphine unlock. Every summary has a `hyper` line (on / off, the effective growth and boss HP, the 0:00 multipliers vs the standard game, the Hyper Soul Ash line, seconds survived past 0:00, the unlock and Hyper-clear state, in memory only without `--meta-save`). |
 | `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
@@ -2195,7 +2220,7 @@ Every policy also uses the **dash and the ultimate**: Grave Step when 3+
 enemies touch a 45 px circle around the necromancer, when he was hit in the
 last 0.6 s while in danger, or to leave a boss / stage telegraph, toward the
 safest of 12 directions (clear length, enemies and danger at the landing
-point, the flee direction); Dread Rally once the meter is full and he is in
+point, the flee direction); the ultimate (Dread Rally, or `--ultimate=`) once the meter is full and he is in
 danger, the stage boss is alive, or the army is badly hurt (average HP under
 60% or under 70% of its capacity alive). The **grave step** line reports
 dashes and why the bot took them (`bot_dash_crowd` / `_hit` / `_telegraph`),

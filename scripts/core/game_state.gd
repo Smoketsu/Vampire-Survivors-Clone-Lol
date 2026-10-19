@@ -306,10 +306,12 @@ func _parse_args(args: PackedStringArray) -> void:
 ## Autotest: true when item `id` is forced by --spells= / --passives= /
 ## --classes= (Unlocks.is_open() treats it as unlocked). A forced spell's
 ## evolution passive counts too (--spells forces both; an Act II spell's
-## paired passive is locked with it).
+## paired passive is locked with it), and so does the ultimate of --ultimate=.
 func autotest_forces(id: String) -> bool:
 	if autotest_spells.has(id) or autotest_passives.has(id) or autotest_classes.has(id):
 		return true
+	if id == autotest_ultimate:
+		return true  # Content wave 2: --ultimate= opens its ultimate on its own (never through --unlocks=all).
 	for sp: String in autotest_spells:
 		var evo := EvolutionData.for_spell(sp)  # The forced spell's evolution ("" if none).
 		if evo != "" and String(EvolutionData.EVOLUTIONS[evo]["passive"]) == id:
