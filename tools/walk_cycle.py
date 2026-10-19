@@ -284,6 +284,14 @@ SKIN_FIX = {
     # The crowned widow's crown adds 2 rows, but her bust sits no lower than the base Brine
     # Widow's (like the Tide Widow's Hyper skin): the derived box (rows 22-29) was on the bodice.
     "player/brine_widow_deathlord": {"bust": (19, 31, 19, 26, 2)},
+    # Owner's review round 2 ("she's jiggling her belt"): the derived box (rows 20-27) ended on
+    # the gold belt (rows 25-26); her bust is rows 17-23, cols 19-28 of the still.
+    "player/tide_widow_deathlord": {"bust": (19, 29, 17, 24, 2)},
+    # Owner's review round 2: the Voidcaller's two skins are redrawn in the figure-redesign style
+    # (her base sprite is not, so its rig has no bust box): a bust box each, two lobes so both
+    # sides bounce (like the Tide Widow's Hyper skin), and idle strips.
+    "player/voidcaller_untouchable": {"bust": (14, 25, 13, 20, 2, 2)},
+    "player/voidcaller_deathlord": {"bust": (17, 29, 16, 22, 2, 2)},
 }
 
 
