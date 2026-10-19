@@ -182,8 +182,8 @@ const HEIGHTS: Dictionary = {
 	"player/tide_widow": 56.0,  # TUNING (not in GDD) character tier: body ~48 like the necromancer, the coral crown above
 	"player/tide_widow_hyper": 58.0,  # TUNING (not in GDD) skin art: the Tide Widow's body, the taller gold coral crown above
 	# --- Content wave 2: Bone Golem ---
-	"summons/bone_golem": 80.0,  # TUNING (not in GDD) lead brief 72-80; a wide fortress block (88 wide), drawn up to x1.25 by Ossuary Hunger
-	"summons/ossuary_titan": 104.0,  # TUNING (not in GDD) its evolution, the tallest summon (Bone Colossus 100)
+	"summons/bone_golem": 80.0,  # TUNING (not in GDD) lead brief 72-80; one huge skull for a torso on stumpy legs (84 wide, wave 2 art review), drawn up to x1.25 by Ossuary Hunger
+	"summons/ossuary_titan": 104.0,  # TUNING (not in GDD) its evolution, the tallest summon (Bone Colossus 100); the crowned huge-skull torso (108 wide)
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
