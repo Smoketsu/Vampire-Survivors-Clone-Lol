@@ -1494,7 +1494,7 @@ slowly in a 944×424 window. Panels are whole opaque scenes, **1024×576 art px*
 | `act2_1` | Act II ¶1: the tide pulls back from Gullhaven | AI source, converted | drained mudflats, stranded boats and chains, the harbour town and chapel, the Eye's faithful praying on the pier, a wall of water and a vast eye on the horizon |
 | `act2_2` | Act II ¶2: the Archive's last page burns | AI source, converted | towering shelves and the brass orrery, the giant book on a lectern in violet / soul-teal fire, the Archivist kneeling, the necromancer's raised hand |
 | `act2_3` | Act II ¶3: Ul-Thalos sinks | AI source, converted | the drowned spire city tilting into foam rings under a full moon, abyssal violet windows; the necromancer and two skeletons on the rocks |
-| `act2_4` | Act II ¶4: Vhal'Neth kneels | AI source, converted | the goddess (her coral crown, tentacle mane, eyes closed) bowing on the shore, hands on the sand; the army with bone banners and the necromancer raising his staff |
+| `act2_4` | Act II ¶4: Vhal'Neth kneels | AI source (two edits of the first one), converted | the goddess bowing on the shore, bone hands on the sand; the army with bone banners and the necromancer raising his staff. **Wave 2 art review redo** (owner: "more undead looking and hotter"): a drowned dead goddess (dead blue-grey skin, rotted cheek, glowing violet eyes, skeletal forearms and hands, ribs through a tear in her gown, barnacled coral, frayed tentacles) in the figure-redesign style (hourglass figure, fully covered by a high-necked kelp gown); converted with 64 clusters and flame / crimson dropped (`PANEL_OPTS`) so the gown stays flat shades |
 | `close` | Closing card: "The Beacons Burn" | AI source, converted | beacons on the peaks, a fortress gate with three orders' banners (white / gold sun, blue / silver star, grey / white sword), knights in steel and blue cloaks marching out; never Covenant crimson, never necromancer violet |
 
 **How they are made.** `art_source/epilogue/<id>.png` (1536×1024, `tools/gen_image.py`, prompt in
@@ -1571,15 +1571,22 @@ evolution). The Ossuary Hunger growth is a sprite scale in the engine (`UnitMoti
 x1.25), no extra art. Not a female character (no bust rig, no idle strip). **For the owner's review.**
 7 images, about $0.11.
 
+**Wave 2 art review redo (Oct 2026).** The owner asked for bigger details: the Golem's torso became one
+huge skull, the Titan followed, the class badge's skull fills the frame, and the slam's crater no longer
+drifts. Sources by `tools/gen_image.py` (Golem: `--ref` the old Golem and the Bone Colossus; Titan: the new
+Golem's source and the old Titan; symbol: the new Golem and an approved badge), deglowed (alpha < 230
+dropped) and converted with `prepare_sprite.py --art-height <h>` (summon ramps, cleanup on); the badges were
+then hand-pixelled on the palette. 3 images, about $0.10.
+
 | Key | What it is | Art px | Notes |
 |---|---|---|---|
-| `summons/bone_golem` | Bone Golem (summon class): a squat fortress of bone slabs bound with brown grave dirt, rows of skulls like battlements on both shoulders, a small skull head with teal eyes sunk between them, a teal soul-fire hearth in the ribcage, two huge low fists of bone and grey stone | 88x80 | legs walk (`_walk`) |
-| `summons/ossuary_titan` | Ossuary Titan (its evolution): the same keep grown taller, a ribcage portcullis over blazing soul fire, cracked grey gravestone pauldrons topped with skulls, a crown of three skull towers behind the head | 104x104 | legs walk (`_walk`); the tallest summon (Bone Colossus 100) |
-| `icons/bone_golem` | Badge (violet border): the Golem's skull head between two skull-battlement shoulders | 32 | |
-| `icons/ossuary_titan` | Gold-border badge: the Titan's skull under its three skull towers, gravestone pauldrons | 32 | |
+| `summons/bone_golem` | Bone Golem (summon class), **redone after the wave 2 art review** (owner: "make his torso a huge skull"): the whole torso is one huge bone skull (no separate head), enormous eye sockets with teal soul flames, the jaw at the belly with teal fire between the teeth, arms of stacked bones bound with brown grave dirt ending in huge low fists of bone and grey stone, two stumpy stacked-bone legs | 84x80 | legs walk (`_walk`, rig re-cut: hip 60, the fists rigid boxes over the leg tops) |
+| `summons/ossuary_titan` | Ossuary Titan (its evolution), **redone with the Golem**: the same huge-skull torso grown grander, a crown of five bone spikes on the cranium, cracked grey gravestone pauldrons, heavier stacked-bone arms and colossal fists, pillar legs | 108x104 | legs walk (`_walk`, rig hip 80); the tallest summon (Bone Colossus 100) |
+| `icons/bone_golem` | Badge (violet border), **redone** (owner: "make the skull bigger"): the Golem's huge skull filling the badge (26 px wide), teal flames in the sockets, a teal glow between the teeth, the tops of both fists at its lower corners | 32 | hand-pixelled on the palette from the AI symbol (`art_source/icons/bone_golem.png`): at 26 px the conversion lost the sockets' dark rims |
+| `icons/ossuary_titan` | Gold-border badge, **redone to match the new Titan**: the Golem badge's skull under a crown of three bone spikes, gravestone pauldrons at its sides | 32 | hand-pixelled from the Golem badge (28 rows) |
 | `icons/grave_masonry` | Badge (violet border): a wall of stacked bone bricks with a skull keystone | 32 | |
 | `icons/syn_bone_bastion` | Synergy badge Bone Bastion (violet border): a squat ring wall of stacked bone blocks with a skull keystone, teal soul fire sheltered inside (replaced the Charnel House fist, owner decision) | 32 | HUD list at 22 px |
-| `effects/golem_slam` | A Golem slam: an impact flash, then a ring of cracked grave dirt with bone shards flying out, settling | 8 x 128 | `GolemBehavior` slam ring (0.3 s) |
+| `effects/golem_slam` | A Golem slam: an impact flash, then a ring of cracked grave dirt with bone shards flying out, settling | 8 x 128 | `GolemBehavior` slam ring (0.3 s). **Wave 2 art review fix** (owner: the crater moved about 3 frames in): every frame shifted by whole px so the crater's centre sits on the frame centre, the slam point (`AnimBursts` draws centred); shifts (dx, dy) per frame (-2,-10) (5,-8) (3,-9) (1,-9) (0,15) (-2,15) (-1,13) (-1,13), applied after `prepare_sprite.py --anim` (a reconversion must reapply them) |
 
 Code-drawn on purpose: the Bulwark's ring of bone stakes around a planted Golem and its faint taunt
 reach (`GolemGlyphs.draw_bulwark_stakes()`), the absorb beam and the Titan's collapse wall (the Bone
