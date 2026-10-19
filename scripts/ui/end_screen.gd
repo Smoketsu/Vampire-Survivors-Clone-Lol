@@ -94,8 +94,8 @@ var _menu: Button
 var victory_info: Dictionary = {}
 ## Stage the Next button starts ("" = no next stage: the button is hidden).
 var _next_stage: String = ""
-## The player's title under the victory title (achievement-reward titles; empty
-## and hidden until that system fills `text`). Workstream B sets it at integration.
+## The player's worn title under the victory title (an achievement-reward
+## title, TitleData; hidden when none is worn).
 var player_title: Label
 ## The portrait column (its portrait gives way to the seal on a victory).
 var _portrait_col: VBoxContainer
@@ -547,6 +547,7 @@ func _show_victory(summary: Dictionary) -> void:
 		l.custom_minimum_size.x = _portrait_col.custom_minimum_size.x
 	_ribbon.custom_minimum_size.x = VictoryData.RIBBON_WIDTH if won else InRunUiData.END_RIBBON_WIDTH
 	_ash_frame.custom_minimum_size.x = VictoryData.ASH_WIDTH if won else InRunUiData.END_ASH_WIDTH
+	player_title.text = TitleData.display_text(Meta.selected_title()) if won else ""  # The worn title ("" = none).
 	player_title.visible = won and player_title.text != ""
 	if not won:
 		victory_info = {}
