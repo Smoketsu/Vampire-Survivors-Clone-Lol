@@ -385,7 +385,8 @@ Process: `python3 tools/prepare_sprite.py <image> icons/shadow_bolt --art-height
 
 ## Walk cycles (`tools/walk_cycle.py`)
 
-**Status:** 54 strips: the necromancer and the 11 other characters, their 16 skins; Grand Inquisitor
+**Status:** 54 strips: the necromancer and the 11 other characters, their 16 skins (since the wave 2 art
+review also the 30 Untouchable and Deathlord skins of all 15 characters, from the derived skin rigs); Grand Inquisitor
 Seraphine, her Avatar of the Dawn, the Banshee and the Keening Lady (glides: robe hem sway, bob and bust bounce; figure redesign,
 Oct 2026); the summons
 Warrior, Archer, Mage, Mender, Warder, Rogue, Risen and Bone Hound and the walking evolutions Death
@@ -468,7 +469,8 @@ stopped (frame 0 first, so stopping never pops and units fall out of step with n
 frame always wins, and frozen, stunned, stone, dead, dashing, airborne and structure bodies show the
 still. Boss attack poses keep their pose stills. Nine strips: the Wither Witch, the Soulbinder, their
 Hyper skins, Seraphine, her Avatar, the Banshee, the Keening Lady and the Sister of the Scourge (who
-stands only while she lashes).
+stands only while she lashes). The wave 2 art review added eight: the Untouchable and Deathlord skins of
+the Soulbinder, the Wither Witch, the Brine Widow and the Tide Widow.
 
 **Adding a unit.** Look at the still on a grid (rows and columns), write its rig, then
 `python3 tools/walk_cycle.py build <key>`, `python3 tools/walk_cycle.py preview <key> --out-dir DIR`
@@ -555,16 +557,77 @@ behind the head; ask for "a 2-pixel-thick ring with chunky rays" if one is redon
 | `wither_witch_hyper.png` | Thorn-Crowned Witch (Wither Witch) | The Wither Witch **gilded** (her redesigned figure): a crown of gold thorns, gold-dusted withered robes, a gold sun corona | 50 (body 48, thorn tips above the hat) | done |
 | `grave_herald_hyper.png` | Golden Herald (Grave Herald) | The Grave Herald **gilded**: a gold horn and tabard, gold trim, a gold sun corona | 63 (body 48, skull banner and corona above) | done |
 
-**Content wave 2: universal skins and the title frame (code only, no PNG; owner review).** The two
-universal skins exist for **every** character, so they are palette variants drawn by `SkinGlyphs` on
-the character's own sprite (no per-character art, `SkinData.UNIVERSAL_SKINS`); a PNG
-`player/<character>_untouchable.png` / `_deathlord.png` would replace one character's look if ever made.
-The Heretic's Bane frame is drawn in code on the pixel grid (`TitleFrame`).
+**Wave 2 art review: the Untouchable and Deathlord skins (drawn art for every character).** The two
+universal skins (`SkinData.UNIVERSAL_SKINS`) began as palette variants of each character's sprite; the
+owner's review: "Don't just tint here, let's make a cool new skin", and the owner chose full drawn art for
+every character (GDD §15.0 "Wave 2 art review: Untouchable and Deathlord skins"). All 30 are in;
+`SkinGlyphs` draws a skin's PNG as-is, and the tint (sprite × `Color(2.2, 3.2, 3.0, 0.78)` for Untouchable,
+× `Color(0.4, 0.33, 0.4)` plus the gold `crown` emblem for Deathlord, with an aura ring) is only the
+fallback for a missing PNG.
+
+- **Untouchable**, a ghost-white phantom: pale luminous robes and armour in ice white and pale blue
+  (`ice_light`, `ice`, `grey` shadow), the hem and loose cloth dissolving into a few big wisp tails (at
+  least 3 px wide), soul-teal eyes, flames and weapon glows, a pale lavender lining (`violet_flare`) so
+  the player's violet stays. Main-shape OKLab L about 0.76-0.86: it clears every floor.
+- **Deathlord**, a crowned dread-king: a big spiked or horned gold crown (spikes 2+ px), a **flat
+  mid-violet** robe or gown (`violet` main: black cloth sank into the floors), black-iron armour pieces
+  (`grey_dark` with `grey` edges), gold only on a few large pieces (crown, one band, the weapon head:
+  scattered gold trim converted into specks), a crimson-lined mantle. Main-shape L 0.50-0.53, like the
+  violet base characters (the same two code-drawn Sanctum floors fall short, as for every violet sprite).
+
+Process: `tools/gen_image.py` with two references, the character's own sprite enlarged ×12 (square
+canvas) and the anchors sheet; the prompt template with "a NEW costume skin of the character in the
+first attached image: same pose, silhouette and proportions; redesign the costume completely, not a
+recolour". Converted with `--inside-outline --no-prune --no-levels` (variant "b") at the art height that
+keeps the character's body height; a crown or drifting ghost hair adds rows on top. Two review redraws
+(prompt additions): the four female ghosts ("v2 (face)": the face uncovered in warm bone skin against
+the cold white, outlined, teal eyes, the veil behind it, a darker icy bodice so the hourglass reads; the
+v1 faces vanished pale-on-pale) and eleven Deathlords ("v2 (clean)": flat mid-violet cloth, black iron
+on a few big pieces, gold on a few large pieces, no scattered specks). Walk strips come from the derived
+skin rigs (`walk_cycle.py` `SKINS`); the 8 bust skins also get idle strips; `SKIN_FIX` sets the bust
+box of the ghost Wither Witch (her wisps widen her lower body, so the derived columns slid right) and of
+the crowned Brine Widow (her bust sits no lower than the base widow's). Every still passes
+`art_check.py` (height, alpha, palette, feet, lightness on the Graveyard and March floors, no speck
+warning).
+
+| File | Skin (character) | Subject | Art px (W×H) | Status |
+|---|---|---|---|---|
+| `gravecaller_untouchable.png` | Untouchable (Gravecaller) | The Gravecaller as a ghost-white phantom: the skull pauldrons become pale spectral skulls with teal eye sockets; the staff is pale ghost-bone and its skull burns with soul-teal flame | 42x56 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
+| `gravecaller_deathlord.png` | Deathlord (Gravecaller) | The Gravecaller as a crowned dread-king: a tall black-iron HORNED CROWN with gold spikes on top of the hood (two curved horns); black-iron plate pauldrons with gold edges instead of the skulls; a heavy crimson-lined mantle fastened by a gold skull clasp; the staff black iron with gold bands, its skull burning in violet flame | 46x60 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
+| `umbral_warden_untouchable.png` | Untouchable (Umbral Warden) | The Umbral Warden as a ghost-white phantom: the plate armour becomes pale moonlit ghost-steel; the black sun on the staff becomes a white ghost-sun ringed with soul-teal light, the orbs pale teal wisps | 44x63 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
+| `umbral_warden_deathlord.png` | Deathlord (Umbral Warden) | The Umbral Warden as a crowned dread-king: a black-iron great helm under a gold spiked crown; heavy black plate armour with gold edges; a crimson-lined black mantle; the staff's black sun ringed with a gold-and-crimson corona | 40x63 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
+| `voidcaller_untouchable.png` | Untouchable (Voidcaller) | The Voidcaller as a ghost-white phantom: her hair turns long and ghost-white, drifting upward; her face pale with glowing teal eyes; the void ring in her hand becomes a ring of soul-teal light | 34x53 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
+| `voidcaller_deathlord.png` | Deathlord (Voidcaller) | The Voidcaller as a crowned dread-king: a tall black-and-gold spiked crown on her dark hair; a high-collared black mantle lined in crimson over her robe; gold bracers; the void ring in her hand a crimson-and-violet ring | 36x55 | done: source v1, `--inside-outline --no-prune --no-levels` (the v2 went too dark); walk |
+| `bone_oracle_untouchable.png` | Untouchable (Bone Oracle) | The Bone Oracle as a ghost-white phantom: the skull mask is polished white with teal eye glints; the spear is pale ghost-bone with a teal-glowing tip; the floating shards become pale glowing spirit shards | 38x57 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
+| `bone_oracle_deathlord.png` | Deathlord (Bone Oracle) | The Bone Oracle as a crowned dread-king: a black skull mask under a tall gold horned crown; black robes with gold trim and a crimson sash; the spear black iron with a gold head; the floating shards gold | 36x56 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
+| `fallen_confessor_untouchable.png` | Untouchable (Fallen Confessor) | The Fallen Confessor as a ghost-white phantom: the stole becomes pale ice-blue; the censer is ghost-silver leaking soul-teal smoke; teal soul wisps in his open hand | 42x48 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
+| `fallen_confessor_deathlord.png` | Deathlord (Fallen Confessor) | The Fallen Confessor as a crowned dread-king: a black hood with a gold spiked crown over it; black vestments with a crimson stole edged in gold; the censer gold, leaking crimson smoke | 48x53 | done: source v2 (clean), `--inside-outline` (levels on: the no-levels copy sank to L 0.38); walk |
+| `carrion_lord_untouchable.png` | Untouchable (Carrion Lord) | The Carrion Lord as a ghost-white phantom: the heavy mantle becomes a pale spectral shroud; the bone plates and ribcage pauldron glow faintly teal at the joints; the cleaver is a pale ghost-blade with a teal edge | 58x52 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
+| `carrion_lord_deathlord.png` | Deathlord (Carrion Lord) | The Carrion Lord as a crowned dread-king: a massive black-iron horned crown; black-iron plates edged in gold and a crimson fur-trimmed mantle; the cleaver a black-iron blade with gold edge | 58x56 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
+| `plague_scholar_untouchable.png` | Untouchable (Plague Scholar) | The Plague Scholar as a ghost-white phantom: the long beaked mask is bone-white with two teal-glowing lenses; the censer leaks pale teal ghost-smoke; the vials glow teal | 62x49 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
+| `plague_scholar_deathlord.png` | Deathlord (Plague Scholar) | The Plague Scholar as a crowned dread-king: a black beaked mask under a small gold crown; a black mantle lined crimson; the censer gold leaking violet smoke; gold vials | 54x52 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
+| `doomsayer_untouchable.png` | Untouchable (Doomsayer) | The Doomsayer as a ghost-white phantom: the eye sigil on the hood glows teal; the branding iron burns with soul-teal fire | 30x53 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
+| `doomsayer_deathlord.png` | Deathlord (Doomsayer) | The Doomsayer as a crowned dread-king: a tall black-iron crown with gold spikes over the hood; a heavy crimson mantle; the eye sigil gold; the branding iron gold-hot | 32x55 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
+| `barrow_warden_untouchable.png` | Untouchable (Barrow Warden) | The Barrow Warden as a ghost-white phantom: the slab shield is pale ghost-stone with a glowing teal skull rune; the armour pale spectral bone; the shovel staff pale ghost-wood | 40x59 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
+| `barrow_warden_deathlord.png` | Deathlord (Barrow Warden) | The Barrow Warden as a crowned dread-king: a black-iron horned crown over the hood; black-iron armour with gold edges; the slab shield black stone with a gold skull; a crimson mantle | 44x61 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
+| `soulbinder_untouchable.png` | Untouchable (Soulbinder) | The Soulbinder as a ghost-white phantom: her hair ghost-white and drifting; the chains are pale glowing soul-teal spirit chains; teal lightning from the raised hand | 40x61 | done: source v2 (face), `--inside-outline --no-prune --no-levels`; one eye hand-painted (22, 14); walk + idle (bust) |
+| `soulbinder_deathlord.png` | Deathlord (Soulbinder) | The Soulbinder as a crowned dread-king: a tall black-and-gold spiked crown; a regal black gown with gold trim and a high crimson-lined collar; gold chains; violet lightning from the raised hand | 40x63 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk + idle (bust) |
+| `wither_witch_untouchable.png` | Untouchable (Wither Witch) | The Wither Witch as a ghost-white phantom: the wide hat and shawl become pale ghost-white and frayed into wisps; the branch staff is bleached ghost-wood with a teal glow at its tip | 34x49 | done: source v2 (face), `--inside-outline --no-prune --no-levels`; `SKIN_FIX` bust box; walk + idle (bust) |
+| `wither_witch_deathlord.png` | Deathlord (Wither Witch) | The Wither Witch as a crowned dread-king: the wide hat black with a gold crown band and gold thorn spikes; a black corset dress with crimson lining and gold trim; a crimson shawl; the branch staff black with a gold tip | 32x50 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk + idle (bust) |
+| `grave_herald_untouchable.png` | Untouchable (Grave Herald) | The Grave Herald as a ghost-white phantom: the tabard is ghost-white with a teal skull mark; the horn pale ghost-bone; the banner a pale spectral banner whose end frays into wisps, the skull on the pole glowing teal | 48x62 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
+| `grave_herald_deathlord.png` | Deathlord (Grave Herald) | The Grave Herald as a crowned dread-king: a black-iron horned crown over the hood; a black tabard with a gold skull; the horn gold; the banner crimson with a gold skull and the pole's skull crowned in gold | 44x63 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
+| `brine_widow_untouchable.png` | Untouchable (Brine Widow) | The Brine Widow as a ghost-white phantom: the veil becomes a long pale ice-blue spirit veil; the crown is a pale pearl crown; the hooked staff is bleached driftwood with soul-teal water curling around it | 46x58 | done: source v2 (face), `--inside-outline --no-prune --no-levels`; walk + idle (bust) |
+| `brine_widow_deathlord.png` | Deathlord (Brine Widow) | The Brine Widow as a crowned dread-king: a tall black-and-gold spiked crown over a crimson veil; a regal black gown with gold trim; the hooked staff black iron with gold bands | 48x60 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; `SKIN_FIX` bust box; walk + idle (bust) |
+| `heretic_scribe_untouchable.png` | Untouchable (Heretic Scribe) | The Heretic Scribe as a ghost-white phantom: the quill-staff's feather glows soul-teal; the scroll is pale and glowing with teal writing | 46x60 | done: source v1, `--inside-outline --no-prune --no-levels`; walk |
+| `heretic_scribe_deathlord.png` | Deathlord (Heretic Scribe) | The Heretic Scribe as a crowned dread-king: a black hood under a gold spiked crown; black robes with gold trim and a crimson mantle; the quill-staff gold with a crimson feather; a black scroll with gold writing | 44x61 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk |
+| `tide_widow_untouchable.png` | Untouchable (Tide Widow) | The Tide Widow as a ghost-white phantom: the shawl and veil are pale ghost-white and frayed into wisps; the coral crown is pale pearl-white; the conch on the staff glows soul-teal | 38x56 | done: source v2 (face), `--inside-outline --no-prune --no-levels`; walk + idle (bust) |
+| `tide_widow_deathlord.png` | Deathlord (Tide Widow) | The Tide Widow as a crowned dread-king: a tall black-and-gold spiked crown; a regal black gown with gold trim and a crimson shawl; the conch staff black with a gold conch | 42x58 | done: source v2 (clean), `--inside-outline --no-prune --no-levels`; walk + idle (bust) |
+
+**Content wave 2: the title frame (code only, no PNG; owner review).** The Heretic's Bane frame is drawn
+in code on the pixel grid (`TitleFrame`).
 
 | Look | Where | How it is drawn | Status |
 |---|---|---|---|
-| **Untouchable** (ghost-white) | every character | sprite × `Color(2.2, 3.2, 3.0, 0.78)`: the colours wash to a cold lavender-white, the dark outline stays, see-through; pale spectral aura ring | code, for review |
-| **Deathlord** (crowned) | every character | sprite × near-black iron `Color(0.4, 0.33, 0.4)`, the `crown` emblem in gold with its crimson jewel, crimson eye glow, gold aura ring | code, for review |
 | **Heretic's Bane frame** | pre-run hero box | a 4 px gold band with 10 px cut corners and a darker inner line, a 9 × 8 px gold skull (×2) on each corner, a Chaplain's skull under a holy cross (×3) at the top centre | code, for review |
 
 ### Summons (`assets/sprites/summons/`)

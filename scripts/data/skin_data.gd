@@ -170,9 +170,11 @@ const ACHIEVEMENT_SKINS := {
 # --- Content wave 2: B. Achievement rewards ---
 ## Skin FAMILIES worn by EVERY character (owner-approved Proposal 2, GDD
 ## §15.0 "Achievement rewards (content wave 2)"): each family generates the
-## skin "<character>_<family>" for every character, a palette variant of that
-## character's own look (purely cosmetic, like every skin: the tint, aura and
-## emblem below go through SkinGlyphs / SpriteBank.draw()'s tint). A family is
+## skin "<character>_<family>" for every character (purely cosmetic, like every
+## skin). Each one has its own drawn art, "player/<character>_<family>.png"
+## (GDD §15.0 "Wave 2 art review: Untouchable and Deathlord skins"); the tint,
+## aura and emblem below are only the fallback SkinGlyphs draws over the
+## character's own sprite while a skin's PNG is missing. A family is
 ## unlocked for all characters at once by the UnlockData "skin" row of the
 ## family id (Unlocks.is_open(family)), earned by its achievement. Keys as in
 ## ACHIEVEMENT_SKINS, without `character`, `unlock` and `unlock_text` (built
@@ -286,7 +288,7 @@ static func skin(id: String) -> Dictionary:
 		u["unlock"] = {"type": "reward", "id": fam}  # Unlocks.is_open(family) (Meta.is_skin_unlocked()).
 		u["unlock_text"] = String((UnlockData.UNLOCKS.get(fam, {}) as Dictionary).get("text", ""))
 		u["kind"] = "universal"
-		u["sprite"] = "player/%s_%s" % [ch, fam]  # No such art: the palette variant of the character is drawn.
+		u["sprite"] = "player/%s_%s" % [ch, fam]  # The skin's drawn art (without the PNG: the palette fallback).
 		return u
 	if id.ends_with("_default"):
 		var d: Dictionary = DEFAULT_LOOK.duplicate()
