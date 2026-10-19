@@ -79,7 +79,7 @@ const BOSS_MARK_MULT: float = 0.5  # TUNING (not in GDD) owner decision
 # --- Content wave 2: Bone Golem ---
 ## Seconds a Bone Golem (or Ossuary Titan) slam leaves a foe "slammed"
 ## (Charnel House; Enemy.slammed_until).
-const SLAM_MARK_DURATION: float = 4.0  # TUNING (not in GDD) about two slams; like the 4 s stagger
+const SLAM_MARK_DURATION: float = 6.0  # TUNING (not in GDD) one stomp cooldown (4 s and 6 s gave the same 27 bonus stomp hits in a forced Titan + Abomination run)
 ## Damage-source tag (CombatResolver.damage_enemy `source`) -> the summon
 ## class it belongs to, for the mark bonuses and the Charnel Menagerie. Only
 ## the classes these synergies name are listed: a class's basic attack (its

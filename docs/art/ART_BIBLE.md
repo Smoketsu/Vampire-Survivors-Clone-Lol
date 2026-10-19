@@ -1504,3 +1504,32 @@ idle breathing strips for the two bust rigs. All **done**.
 Code-drawn on purpose: the floor decals (`decals/spire_<style>_<name>`: barnacles, kelp, glyphs,
 bones; soft and sparse, they read well drawn), the sea's flood band, foam and telegraph ring, the
 Ascension pillar, the slam lanes, the gaze and roar rings and the binding finale.
+
+### Content wave 2: the Bone Golem (Oct 2026)
+
+Generated with `tools/gen_image.py` (the template above; `--ref` the Warrior, the Corpse Abomination
+and the Bone Colossus for the Golem, the Golem's own source and the Colossus for the Titan, the Shadow
+Bolt and Bone Colossus badges for the symbols). The API sources come back on a soft dark glow: every
+alpha below 230 was dropped first (the Fallen Seraph's "deglow"), and the skulls' eye sockets, thinner
+than one art px, were grown 6 source px before the conversion so the battlements keep their faces.
+Stills converted with `prepare_sprite.py --art-height <h> --no-cleanup` (summon ramps), walk strips by
+`walk_cycle.py` (rigs under `# --- Content wave 2: Bone Golem ---`: two stumping legs, both low fists
+rigid). Badges: the symbol converted to fit 26 px (`--no-center --no-prune --no-levels --no-cleanup`)
+and composited on the cut-corner template cut from an approved badge (violet border; gold for the
+evolution). The Ossuary Hunger growth is a sprite scale in the engine (`UnitMotion.set_size()`, up to
+x1.25), no extra art. Not a female character (no bust rig, no idle strip). **For the owner's review.**
+7 images, about $0.11.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `summons/bone_golem` | Bone Golem (summon class): a squat fortress of bone slabs bound with brown grave dirt, rows of skulls like battlements on both shoulders, a small skull head with teal eyes sunk between them, a teal soul-fire hearth in the ribcage, two huge low fists of bone and grey stone | 88x80 | legs walk (`_walk`) |
+| `summons/ossuary_titan` | Ossuary Titan (its evolution): the same keep grown taller, a ribcage portcullis over blazing soul fire, cracked grey gravestone pauldrons topped with skulls, a crown of three skull towers behind the head | 104x104 | legs walk (`_walk`); the tallest summon (Bone Colossus 100) |
+| `icons/bone_golem` | Badge (violet border): the Golem's skull head between two skull-battlement shoulders | 32 | |
+| `icons/ossuary_titan` | Gold-border badge: the Titan's skull under its three skull towers, gravestone pauldrons | 32 | |
+| `icons/grave_masonry` | Badge (violet border): a wall of stacked bone bricks with a skull keystone | 32 | |
+| `icons/syn_charnel_house` | Synergy badge (violet border): a bone fist slamming into the ground, bone shards and flesh chunks flying | 32 | HUD list at 22 px |
+| `effects/golem_slam` | A Golem slam: an impact flash, then a ring of cracked grave dirt with bone shards flying out, settling | 8 x 128 | `GolemBehavior` slam ring (0.3 s) |
+
+Code-drawn on purpose: the Bulwark's ring of bone stakes around a planted Golem and its faint taunt
+reach (`GolemGlyphs.draw_bulwark_stakes()`), the absorb beam and the Titan's collapse wall (the Bone
+Wall spell's own segments).

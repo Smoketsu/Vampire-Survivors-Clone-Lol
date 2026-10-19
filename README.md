@@ -488,6 +488,7 @@ number is in `scripts/data/unit_data.gd`.
 | **Banshee** | 1 → 3 | 14 s | Debuffer | A floating spectral caster with shriek bolts; enemies **can** hit it (it is not airborne like a swooping Gargoyle, it just keeps its distance). **Dirge** every 6 s: a telegraphed wail around its target that slows foes 30% and cuts the damage of their hits by 25% for 4 s (bosses and minibosses half; Reckoning enemies and structures immune). Evolves into the **Keening Lady** |
 | **Corpse Catapult** | 1 → 3 | 18 s | Siege artillery | Posts behind you and holds its ground. **Bone Barrage**: lobs a bone boulder (235 px reach) on an arc with a landing telegraph; it splashes 50 px around the landing point. Targets structures (outposts, generators, carts, ward crystals, altars), elites, minibosses and the densest packs first. Evolves into the **Ossuary Engine** |
 | **Fallen Seraph** (Act II unlock) | 1 → 3 | 15 s | Diver | Unlocked by slaying Seraphine once. A hovering corrupted angel that throws black feather blades (its volley: fans of feather blades); enemies **can** hit her (she is not airborne, she keeps a little distance). **Dive** every 7 s: she rises, dives onto the densest pack within 40-220 px (4+ foes within 40 px, or an elite / miniboss / the boss), strikes everything within 40 px and lays a **ring of black feathers** that cuts outward to 85 px, hitting each foe it passes once; then she flies back to her post. Evolves into the **Seraph of Ruin** |
+| **Bone Golem** (unlock: Bone Legion) | 1 → 2 | 24 s | Anchor | Unlocked by the **Bone Legion** achievement (Warriors slay 1,000 foes), with its passive Grave Masonry; offered on every stage. A slow fortress of bone and grave dirt (420 HP, 48 px/s; it lumbers faster only to rejoin its post on the Bone Ring), the biggest body in the army and a blocker. Its **slam** (32 dmg every 2.2 s, long arms) hits its target and 70% of that to every foe within 40 px; from Lv 3 every slam throws a ring of bone shards. **Ossuary Hunger**: a summon of yours that dies within 140 px is absorbed by the nearest Golem: +4% max HP each, up to +60%, and it is drawn up to 25% bigger. **Bulwark** every 12 s (with 3+ foes within 80 px, or an elite): it plants for 3 s: it cannot walk but still slams, nothing shoves it or walks through it, and every foe within 120 px targets it (bosses, Reckoning foes and structures ignore it). Evolves into the **Ossuary Titan** |
 
 - **Global capacity bonuses** (Grave Dominion, Legion of Bone) give every GDD
   class the full bonus, and the Mender and Warder each count as a class; the
@@ -570,6 +571,7 @@ number is in `scripts/data/unit_data.gd`.
 | Banshee Lv 5 | Mournsong **Lv 5** (every weakening effect lasts longer) | **Keening Lady**: a crowned banshee in a violet gown, ×1.3 HP, ×1.25 damage; every Dirge rolls out in **three widening waves** (radius ×1, ×1.3, ×1.6, 0.35 s apart) and **silences** every foe it reaches for its duration: Chaplains, High Confessors and Seraphine's attendants cannot heal |
 | Corpse Catapult Lv 5 | Siegecraft **Lv 5** (summons deal more to structures, elites, minibosses) | **Ossuary Engine**: a siege engine of ribcages and spines, ×1.35 HP; **three boulders per volley** (×0.75 damage each, volleys ×1.2 slower), and each leaves a field of **burning bone shards** for 3 s (30 px; 10% of the boulder's damage every 0.5 s) |
 | Fallen Seraph Lv 5 | Fallen Grace **Lv 5** (summon specials recharge faster) | **Seraph of Ruin**: wings whole and a thorned halo, ×1.3 HP, ×1.2 damage; each dive **chains** to a second pack near the first (no rise), and every impact lays **two feather rings**, the second 0.22 s later and 40% wider; its showpiece volley is a whirl of feathers at every impact |
+| Bone Golem Lv 5 | Grave Masonry **Lv 5** (blockers take less damage and hold longer) | **Ossuary Titan**: a walking ossuary keep with skull towers and gravestone pauldrons, ×1.4 HP, ×1.3 damage, a bigger body (19 px) and blocking ring (23 px, mass 12), slam radius +25%; every body it absorbs **heals** it 8% of its max HP and (at most every 2 s) gives every summon within 110 px an **18 HP barrier** (the Warder's barrier rule: the stronger one wins); when it falls it **collapses into a bone wall** of 7 Bone Wall segments for 6 s across the line from you to it (enemies only are pushed out; bosses, minibosses, Reckoning foes and structures pass; its spikes deal 30% of its slam each tick); its showpiece volley is a spiral of bone shards at every slam |
 
   The numbers live in `scripts/data/summon_evolution_data.gd`; the runtime is
   `HordeDirector.evolutions` (`scripts/horde/summon_evolutions.gd`). Like the
@@ -605,6 +607,7 @@ number is in `scripts/data/unit_data.gd`.
 | Mournsong | Every **weakening** effect on enemies lasts +10% → +50% longer: slows (Shadow Blast, Corpse Explosion fields), Frost Wraith chills, the Dirge, Gravebow curses and Plague Cloud Rot (not Deep Freeze or stuns) | Banshees → **Keening Ladies** |
 | Siegecraft | Summons deal +10% → +50% damage to **structures, elites and minibosses** (not the stage boss), bleed / burn / fire ticks included | Catapults → **Ossuary Engines** |
 | Fallen Grace (Act II unlock) | Every summon **special** recharges +5% → +25% faster (Stomp, Dash Strike, Swoop, Deep Freeze, Dirge, Dive; its own category on the cooldowns) | Fallen Seraphs → **Seraphs of Ruin** |
+| Grave Masonry (unlock: Bone Legion) | Your **blockers** (Warriors, Abominations, Bone Golems and their evolutions) take 5% → 18% less damage and **hold** +10% → +30% longer: more block mass, and a longer Bulwark | Golems → **Ossuary Titans** |
 
   Their hooks are on the single paths: `CombatResolver` (crits, Resilience,
   Plating; the crit rolls use their own seeded RNG, so runs stay
@@ -643,8 +646,11 @@ number is in `scripts/data/unit_data.gd`.
   weakened foes and add 1 s to the Dirge, never past its own length),
   **Baying of the Damned** (Banshee + Bone Hounds: every Dirge gives the
   hounds +15% attack speed and +10% move speed for 4 s) and the capstone
-  **The Charnel Menagerie** (any 4 of the 7 newer classes: they deal +10%
-  damage and replenish 20% faster). Only **one** mark bonus applies to a hit
+  **The Charnel Menagerie** (any 4 of the 7 newer classes, the Bone Golem
+  now an eighth: they deal +10% damage and replenish 20% faster). Content
+  wave 2 adds **Charnel House** (Bone Golem + Abomination: a Golem slam marks
+  foes *slammed* for 6 s; Abomination and Bone Colossus stomps deal +50% to
+  slammed foes). Only **one** mark bonus applies to a hit
   (the highest: Cold Blood and Death from Above never stack, nor do Killing
   Field and Shatterfall), the **stage boss takes half** of it (minibosses and
   elites the full bonus), and the Menagerie's bonus multiplies as its own
@@ -1714,6 +1720,11 @@ scripts/
     seraph_feathers.gd      Act II: the Fallen Seraph's feather rings (pooled, created on first use)
     seraph_texts.gd         Act II: Fallen Seraph / Fallen Grace / Seraph of Ruin card and autotest text
     behaviors/seraph_behavior.gd  Act II: the Fallen Seraph's feather blades and Dive
+    behaviors/golem_behavior.gd   Content wave 2: the Bone Golem's slam, Bulwark plant and growth
+    golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
+                            collapse wall (HordeDirector.golems, created by the first Golem)
+    golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
+                            autotest text
     synergy_manager.gd      Army synergy activation and effects; the newer classes' marks
                             (staggered, swooped), the one synergy hit bonus (hit_mult()), the
                             Baying frenzy and the Menagerie replenishment
@@ -1854,6 +1865,8 @@ scripts/
                             patches, shard fields, boulders),
                             seraph_glyphs (Act II: Fallen Seraph, Seraph of Ruin, Fallen Grace,
                             the dive marker and the feather ring),
+                            golem_glyphs (content wave 2: Bone Golem, Ossuary Titan, Grave
+                            Masonry, Charnel House, the Bulwark stakes),
                             ossuary_menu (Soul Ash shop: tree columns, one detail panel, Oath),
                             ossuary_tile (one upgrade tile: icon, name, pips, cost, buy flash / shake),
                             pixel_marks (code-drawn pixel pips, arrow, padlock, recipe socket),
@@ -2063,6 +2076,7 @@ Options (after `--`):
 | `--pact` | Any policy also takes every Profane Pact card at once (`--policy=army --pact` is a strong build with the Pact; it gives up Warding Ritual for the Pact's slot, not the Void Barrage passive). |
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
+| Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> charnel_house_bonus=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and Charnel House hits. |
 | `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, or the Act II stages `harbour`, `archive` and `spire`. Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. |
