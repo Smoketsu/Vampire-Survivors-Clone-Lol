@@ -159,10 +159,14 @@ jobs:
 
       - name: Upload test logs
         if: always()
+        # The logs are a convenience: a full artifact store must not fail the tests.
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: test-logs
           path: "*.log"
+          # Kept 3 days (the account's artifact storage is small; GitHub's default is 90).
+          retention-days: 3
 
   export:
     needs: test
@@ -244,12 +248,16 @@ jobs:
         with:
           name: Necropathy-windows
           path: build/windows/Necropathy.exe
+          # Kept 7 days: tagged builds live on in the GitHub Release, and the artifact store is small.
+          retention-days: 7
 
       - name: Upload Linux build
         uses: actions/upload-artifact@v4
         with:
           name: Necropathy-linux
           path: build/linux/Necropathy.x86_64
+          # Kept 7 days: tagged builds live on in the GitHub Release, and the artifact store is small.
+          retention-days: 7
 
       - name: Upload Web build
         uses: actions/upload-artifact@v4
@@ -257,6 +265,8 @@ jobs:
           # The export folder (index.html at the root of the artifact zip).
           name: Necropathy-web
           path: build/web/
+          # Kept 7 days (the publish jobs read it within the same run).
+          retention-days: 7
 
       - name: Release notes file (tags only)
         if: startsWith(github.ref, 'refs/tags/v')

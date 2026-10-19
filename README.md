@@ -2218,7 +2218,9 @@ uptime.
    It fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if a run doesn't complete.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in
    the executable) and the no-threads Web build, runs the autotest again on the exported Linux build, and uploads all
-   three as workflow artifacts (`Necropathy-windows`, `Necropathy-linux`, `Necropathy-web`).
+   three as workflow artifacts (`Necropathy-windows`, `Necropathy-linux`, `Necropathy-web`), kept 7 days (test logs
+   3 days): the account's artifact storage is small, and when it is full no build can be uploaded, so the publish
+   jobs have nothing to publish (tagged builds stay in their GitHub Release).
 3. **publish-itch / publish-pages / publish-pages-repo** (optional, skipped unless configured; see *Play in the
    browser* below): on pushes to `main` and on `v*` tags, push the Web build to itch.io, deploy it to GitHub Pages,
    or push it to a separate public repository that GitHub Pages serves.
