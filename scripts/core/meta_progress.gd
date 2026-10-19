@@ -89,6 +89,9 @@
 ## screen's plates); older saves have no section and start with none, except
 ## that an item unlocked by a boss already slain on the stage records is
 ## opened on load (_load_unlocks(): the Fallen Seraph for an old Seraphine kill).
+## Epilogue (content wave 2): the parts of the illustrated epilogue already
+## shown are kept in `epilogue_seen`, saved as [epilogue] seen_<part id> = true
+## (older saves: none seen, so an earned part plays once after the next run).
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -156,6 +159,11 @@ var codex_kills: Dictionary = {}
 var unlocked_items: Dictionary = {}
 ## True while a deferred codex save is queued for the end of this frame.
 var _codex_save_queued: bool = false
+# --- Content wave 2: E. Illustrated epilogue ---
+## Epilogue part id (EpilogueData.PARTS "id") -> true once that part was shown
+## (the [epilogue] seen_<id> save keys): the epilogue plays an open, unseen
+## part once on its own after a run (EpilogueScreen.play_unseen()).
+var epilogue_seen: Dictionary = {}
 
 ## Keys of every stage record (all floats, like the lifetime stats).
 const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills"]
@@ -821,6 +829,8 @@ func save() -> Error:
 	for id: String in UnlockData.UNLOCKS:
 		if unlocked_items.has(id):
 			cfg.set_value("unlocks", id, true)
+	for id: String in epilogue_seen:  # Content wave 2: E. Illustrated epilogue.
+		cfg.set_value("epilogue", "seen_" + id, true)
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -874,6 +884,7 @@ func load_save() -> void:
 	_load_hyper_skins(cfg)
 	_load_codex(cfg)
 	_load_unlocks(cfg)
+	_load_epilogue(cfg)
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -950,6 +961,36 @@ func _boss_slain_on_record(boss_id: String) -> bool:
 		if String(boss.get("id", "")) == boss_id and float(stage_record(sid)["boss_kills"]) > 0.0:
 			return true
 	return false
+
+
+# --- Content wave 2: E. Illustrated epilogue ---
+
+## Reads the [epilogue] seen flags (missing = unseen; only `true` booleans of
+## known EpilogueData part ids count).
+func _load_epilogue(cfg: ConfigFile) -> void:
+	for part: Dictionary in EpilogueData.PARTS:
+		var id := String(part["id"])  # The part's id.
+		var v: Variant = cfg.get_value("epilogue", "seen_" + id, false)
+		if typeof(v) == TYPE_BOOL and bool(v):
+			epilogue_seen[id] = true
+
+
+## True once epilogue part `id` (EpilogueData.PARTS "id") was shown.
+func is_epilogue_seen(id: String) -> bool:
+	return epilogue_seen.has(id)
+
+
+## Marks epilogue parts `ids` as shown and saves once when one was new (never
+## under the autotest: save() checks can_write()). Returns true when any was new.
+func mark_epilogue_seen(ids: PackedStringArray) -> bool:
+	var any_new := false  # True when at least one id was not seen yet.
+	for id: String in ids:
+		if not epilogue_seen.has(id):
+			epilogue_seen[id] = true
+			any_new = true
+	if any_new:
+		save()
+	return any_new
 
 
 ## True when Act II item `id` (UnlockData) was unlocked in some run. Callers
@@ -1037,6 +1078,7 @@ func _reset() -> void:
 	codex_seen = _empty_codex()
 	codex_kills = {}
 	unlocked_items = {}
+	epilogue_seen = {}
 	load_status = "fresh"
 
 

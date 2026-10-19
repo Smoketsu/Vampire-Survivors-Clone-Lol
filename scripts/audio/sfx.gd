@@ -16,7 +16,10 @@
 ##     from it, the in-run loop during a run, and on an Act II stage the
 ##     second run loop "Below the Tide" (RunLoopSynth with
 ##     SoundData.TIDE_SCORE; rendered lazily the first time an Act II run
-##     asks for it, like the menu theme, and never headless). The menu theme is rendered
+##     asks for it, like the menu theme, and never headless), and while the
+##     epilogue plays its slow "Grave Lullaby" cue (MUSIC_EPILOGUE:
+##     MenuThemeSynth with MenuThemeData.EPILOGUE_VARIANT, rendered the first
+##     time an epilogue asks for it, never headless). The menu theme is rendered
 ##     lazily, the first time the menu asks for it (so the autotest, which
 ##     never shows the menu, never renders it): on a worker thread on
 ##     desktop, in small per-frame steps on the Web (WEB_FRAME_BUDGET_MS),
@@ -69,6 +72,9 @@ const MUSIC_RUN: StringName = &"run"
 ## play_music() mode: the Act II in-run loop "Below the Tide" (SoundData.TIDE_SCORE;
 ## a stage whose STAGE has "music": "tide").
 const MUSIC_TIDE: StringName = &"tide"
+## play_music() mode: the epilogue's slow "Grave Lullaby" cue (content wave 2;
+## MenuThemeData.EPILOGUE_VARIANT, rendered the first time the epilogue plays).
+const MUSIC_EPILOGUE: StringName = &"epilogue"
 ## Name of the music bus.
 const BUS_MUSIC: StringName = &"Music"
 ## Name of the sound-effect bus.
@@ -180,6 +186,23 @@ var _menu_synth: MenuThemeSynth = null
 var _menu_task: int = -1
 ## True when the menu theme renders in per-frame steps (Web).
 var _menu_incremental: bool = false
+# --- Content wave 2: E. Illustrated epilogue ---
+## Looping epilogue-cue player on the Music bus (MUSIC_EPILOGUE).
+var _epi_music: AudioStreamPlayer
+## Linear fade gain (0..1) of the epilogue cue (on top of MenuThemeData.EPILOGUE_MUSIC_DB).
+var _epi_gain: float = 0.0
+## Gain the epilogue cue is fading toward (0 or 1).
+var _epi_target: float = 0.0
+## Gain change per real second of the epilogue cue's current fade.
+var _epi_rate: float = 1.0
+## The epilogue cue's renderer while it works (null before the first epilogue
+## asks for it and once its stream is on the player).
+var _epi_synth: MenuThemeSynth = null
+## WorkerThreadPool task id of the cue's synthesis (-1 = none; the Web build
+## steps it on the main thread instead, only while the epilogue plays).
+var _epi_task: int = -1
+## True when the epilogue cue renders in per-frame steps (Web).
+var _epi_incremental: bool = false
 ## usec timestamp of the previous _process (real time, for the music fades).
 var _last_usec: int = 0
 ## Camera centre this frame (Vector2.INF when there is no 2D camera).
@@ -215,6 +238,10 @@ func _ready() -> void:
 	_tide_music.bus = BUS_MUSIC
 	_tide_music.volume_db = MUSIC_DB
 	add_child(_tide_music)
+	_epi_music = AudioStreamPlayer.new()  # Content wave 2: the epilogue cue (no new bus: GDD §15.0 "Web sound fix").
+	_epi_music.bus = BUS_MUSIC
+	_epi_music.volume_db = MenuThemeData.EPILOGUE_MUSIC_DB
+	add_child(_epi_music)
 	_last_usec = Time.get_ticks_usec()
 	# Longest renders first, so the slowest sounds never start last and
 	# stretch the total synthesis time.
@@ -258,6 +285,12 @@ func _exit_tree() -> void:
 	_tide_synth = null
 	_tide_music.stop()
 	_tide_music.stream = null
+	if _epi_task >= 0:
+		WorkerThreadPool.wait_for_task_completion(_epi_task)
+		_epi_task = -1
+	_epi_synth = null
+	_epi_music.stop()
+	_epi_music.stream = null
 	# Release playbacks so the audio server holds no stream at exit.
 	_music.stop()
 	_music.stream = null
@@ -293,6 +326,7 @@ func _process(_delta: float) -> void:
 		_step_startup_synth()
 	_update_menu_theme()
 	_update_tide()
+	_update_epilogue_cue()
 	# Music fades run on real time (delta follows Engine.time_scale).
 	var now := Time.get_ticks_usec()
 	var real_dt := minf(0.1, float(now - _last_usec) / 1000000.0)
@@ -300,6 +334,7 @@ func _process(_delta: float) -> void:
 	_run_gain = _fade_player(_music, MUSIC_DB, _run_gain, _run_target, _run_rate, real_dt)
 	_menu_gain = _fade_player(_menu_music, MenuThemeData.MUSIC_DB, _menu_gain, _menu_target, _menu_rate, real_dt)
 	_tide_gain = _fade_player(_tide_music, MUSIC_DB, _tide_gain, _tide_target, _tide_rate, real_dt)
+	_epi_gain = _fade_player(_epi_music, MenuThemeData.EPILOGUE_MUSIC_DB, _epi_gain, _epi_target, _epi_rate, real_dt)
 
 
 ## Web build: runs one frame's budget of the sound / loop synthesis and
@@ -334,6 +369,19 @@ func play_music(mode: StringName) -> void:
 	if mode == _music_mode:
 		return
 	_music_mode = mode
+	# Content wave 2 (epilogue): every mode but MUSIC_EPILOGUE fades the cue out;
+	# the epilogue fades the menu theme and both run loops out under it.
+	_epi_target = 0.0
+	_epi_rate = 1.0 / MenuThemeData.EPILOGUE_FADE_OUT
+	if mode == MUSIC_EPILOGUE:
+		_start_epilogue_cue()
+		_epi_target = 1.0
+		_epi_rate = 1.0 / MenuThemeData.EPILOGUE_FADE_IN
+		_menu_target = 0.0
+		_menu_rate = 1.0 / MenuThemeData.EPILOGUE_FADE_IN
+		_run_target = 0.0
+		_tide_target = 0.0
+		return
 	if mode == MUSIC_MENU:
 		_start_menu_theme()
 		_menu_target = 1.0
@@ -392,6 +440,40 @@ func _update_tide() -> void:
 	print("[audio] tide loop: %.0f ms compute (%s)" % [float(_tide_synth.compute_usec) / 1000.0,
 		"per-frame steps" if _tide_incremental else "worker thread"])
 	_tide_synth = null
+
+
+## Creates the epilogue cue's renderer (first call only; never headless): a
+## worker task on desktop, per-frame steps on the Web. Its stream is kept, so a
+## replay starts at once.
+func _start_epilogue_cue() -> void:
+	if _silent or _epi_synth != null or _epi_music.stream != null:
+		return
+	_epi_synth = MenuThemeSynth.new(MenuThemeData.EPILOGUE_VARIANT)
+	_epi_incremental = OS.has_feature("web")
+	if not _epi_incremental:
+		_epi_task = WorkerThreadPool.add_task(_epi_synth.render_all, true, "Necropathy epilogue cue synth")
+
+
+## Advances the epilogue cue's synthesis (Web: one frame's budget, only while
+## the epilogue plays and after the startup synthesis) and hands the finished
+## loop to its player, which then fades in if the epilogue is still open.
+func _update_epilogue_cue() -> void:
+	if _epi_synth == null:
+		return
+	if _epi_incremental:
+		if _music_mode != MUSIC_EPILOGUE or _startup_synth != null:
+			return
+		if not _epi_synth.step(int(MenuThemeData.WEB_FRAME_BUDGET_MS * 1000.0)):
+			return
+	else:
+		if not WorkerThreadPool.is_task_completed(_epi_task):
+			return
+		WorkerThreadPool.wait_for_task_completion(_epi_task)
+		_epi_task = -1
+	_epi_music.stream = _epi_synth.stream
+	print("[audio] epilogue cue: %.1f s loop, %.0f ms compute (%s)" % [_epi_synth.loop_seconds(),
+		float(_epi_synth.compute_usec) / 1000.0, "per-frame steps" if _epi_incremental else "worker thread"])
+	_epi_synth = null
 
 
 ## Moves one music player's fade gain toward `target` over `dt` real

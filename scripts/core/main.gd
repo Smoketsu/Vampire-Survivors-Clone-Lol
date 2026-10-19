@@ -45,6 +45,7 @@ func _ready() -> void:
 
 ## Frees whatever is shown and displays the main menu.
 func _show_menu() -> void:
+	var after_run := _game != null  # Back from a run (not the startup menu).
 	_clear()
 	Sfx.play_music(Sfx.MUSIC_MENU)
 	_menu_layer = CanvasLayer.new()
@@ -53,6 +54,14 @@ func _show_menu() -> void:
 	menu.theme = UiTheme.get_theme()
 	menu.stage_chosen.connect(_on_stage_chosen, CONNECT_DEFERRED)
 	_menu_layer.add_child(menu)
+	# Content wave 2 (illustrated epilogue): back from a run, an epilogue part
+	# the run opened (and the player has not seen) plays once over the menu;
+	# `--epilogue[=all]` opens it at startup (debug, screenshots).
+	var debug := EpilogueScreen.debug_request()  # "" = none.
+	if debug != "":
+		EpilogueScreen.open_debug(menu, debug == EpilogueScreen.DEBUG_ALL)
+	elif after_run:
+		EpilogueScreen.play_unseen(menu)
 
 
 ## The stage select and pre-run setup confirmed a config: start a run with it.
