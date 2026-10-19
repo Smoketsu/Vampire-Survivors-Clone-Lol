@@ -2335,11 +2335,12 @@ support).
     needs a paid GitHub plan, and the site is public. To deploy from `v*` tags too, allow them in **Settings →
     Environments → github-pages → Deployment branches and tags** (by default only `main` may deploy).
   - **GitHub Pages from a separate public repository** (no paid plan needed; it holds only the built game, never
-    the source): create an empty **public** repository (e.g. `necropathy-play`); create a fine-grained personal
+    the source): create an empty **public** repository (e.g. `NecropathyPlay`); create a fine-grained personal
     access token (GitHub **Settings → Developer settings → Fine-grained tokens**) limited to that repository with
     **Contents: Read and write**; in this repository add the **secret** `PAGES_TOKEN` (the token) and the
-    **variable** `PAGES_REPO` (`owner/name`, e.g. `Smoketsu/necropathy-play`). The `publish-pages-repo` job then
-    force-pushes each build as one commit to that repository's `main`. In that repository, set **Settings → Pages →
+    **variable** `PAGES_REPO` (`owner/name`, exactly as the repository is named, e.g. `Smoketsu/NecropathyPlay`).
+    The `publish-pages-repo` job then force-pushes each build as one commit to that repository's `main`, on every
+    push to `main` or a `v*` tag and on a manual **Actions → CI → Run workflow** of `main`. In that repository, set **Settings → Pages →
     Build and deployment** to **Deploy from a branch**, `main`, `/ (root)` once the first build is there; the game
     is then at `https://<owner>.github.io/<name>/`.
 

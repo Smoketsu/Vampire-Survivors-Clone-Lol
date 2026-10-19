@@ -350,13 +350,14 @@ jobs:
   # private repositories cannot use Pages (GDD §15.0 "Save backup codes and the GitHub
   # Pages build"). iPhone Safari keeps a top-level site's saves, but forgets the saves of
   # a game embedded in another site's frame (the itch.io page) when Safari closes.
-  # Runs on pushes to main and v* tags when the repository variable PAGES_REPO
-  # (e.g. Smoketsu/necropathy-play) and the secret PAGES_TOKEN (a fine-grained token
-  # with Contents: read and write on that repository only) both exist; that repository
-  # serves its main branch root with Settings -> Pages -> "Deploy from a branch".
+  # Runs on pushes to main and v* tags, and on a manual "Run workflow" of main (Actions
+  # tab), when the repository variable PAGES_REPO (e.g. Smoketsu/NecropathyPlay) and the
+  # secret PAGES_TOKEN (a fine-grained token with Contents: read and write on that
+  # repository only) both exist; that repository serves its main branch root with
+  # Settings -> Pages -> "Deploy from a branch".
   publish-pages-repo:
     needs: export
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && vars.PAGES_REPO != ''
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && vars.PAGES_REPO != ''
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
