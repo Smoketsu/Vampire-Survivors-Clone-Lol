@@ -565,3 +565,7 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-19 15:46,epilogue/close,gpt-image-2.5-flare,medium,1536x1024,2,826,1461,343,0.0261,close_v2.png
 2026-10-19 15:46,summons/bone_golem,gpt-image-2.5-flare,medium,1024x1024,3,672,91,439,0.0173,src_golem_1.png
 2026-10-19 15:55,icons/sovereigns_decree,gpt-image-2.5-flare,medium,1024x1024,1,379,4,439,0.0151,sovereigns_decree_icon.png
+2026-10-19 15:55,effects/sovereigns_decree,gpt-image-2.5-flare,medium,1536x1024,2,460,2904,343,0.0358,sovereigns_decree_fx_a.png
+2026-10-19 15:55,icons/eclipse,gpt-image-2.5-flare,medium,1024x1024,1,379,4,439,0.0151,eclipse_icon.png
+2026-10-19 15:56,effects/eclipse,gpt-image-2.5-flare,medium,1536x1024,2,448,2904,343,0.0358,eclipse_fx_a.png
+2026-10-19 15:56,icons/grave_tide,gpt-image-2.5-flare,medium,1024x1024,1,370,4,439,0.0151,grave_tide_icon.png
