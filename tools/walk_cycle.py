@@ -259,6 +259,16 @@ SKINS = {
     "player/barrow_warden_deathlord": "player/barrow_warden",
     "player/grave_herald_untouchable": "player/grave_herald",
     "player/grave_herald_deathlord": "player/grave_herald",
+    "player/soulbinder_untouchable": "player/soulbinder",
+    "player/soulbinder_deathlord": "player/soulbinder",
+    "player/wither_witch_untouchable": "player/wither_witch",
+    "player/wither_witch_deathlord": "player/wither_witch",
+    "player/brine_widow_untouchable": "player/brine_widow",
+    "player/brine_widow_deathlord": "player/brine_widow",
+    "player/heretic_scribe_untouchable": "player/heretic_scribe",
+    "player/heretic_scribe_deathlord": "player/heretic_scribe",
+    "player/tide_widow_untouchable": "player/tide_widow",
+    "player/tide_widow_deathlord": "player/tide_widow",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
@@ -266,6 +276,9 @@ SKIN_FIX = {
     # Tide Widow's, so the derived box (rows 20-28) landed on the waist (owner's art review).
     # Round 2: 2 px wider to the right and two lobes, so both sides bounce ("just one is bouncing").
     "player/tide_widow_hyper": {"bust": (19, 32, 17, 25, 2, 2)},
+    # Wave 2 skins: the ghost witch's wisps widen her lower body to the left, so the derived box
+    # (cols 18-26) sat right of her bust; her bust is cols 13-22, rows 17-23 of the still.
+    "player/wither_witch_untouchable": {"bust": (13, 22, 17, 23, 2)},
 }
 
 

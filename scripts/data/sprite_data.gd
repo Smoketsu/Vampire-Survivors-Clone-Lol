@@ -207,6 +207,16 @@ const HEIGHTS: Dictionary = {
 	"player/barrow_warden_deathlord": 61.0,  # TUNING (not in GDD) skin art: body 49 like the Barrow Warden, the crown and the shovel staff above
 	"player/grave_herald_untouchable": 62.0,  # TUNING (not in GDD) skin art: body 48 like the Grave Herald, the spectral skull banner above
 	"player/grave_herald_deathlord": 63.0,  # TUNING (not in GDD) skin art: body 48 like the Grave Herald, the crowned skull banner above
+	"player/soulbinder_untouchable": 61.0,  # TUNING (not in GDD) skin art: body 49 like the Soulbinder, the soul-teal lightning hand above
+	"player/soulbinder_deathlord": 63.0,  # TUNING (not in GDD) skin art: body 49 like the Soulbinder, the spiked crown and the violet lightning hand above
+	"player/wither_witch_untouchable": 49.0,  # TUNING (not in GDD) skin art: body 48 like the Wither Witch, the ghost hat tip above
+	"player/wither_witch_deathlord": 50.0,  # TUNING (not in GDD) skin art: body 48 like the Wither Witch, the crown band's spikes above the hat
+	"player/brine_widow_untouchable": 58.0,  # TUNING (not in GDD) skin art: body 48 like the Brine Widow, the bleached hooked staff above
+	"player/brine_widow_deathlord": 60.0,  # TUNING (not in GDD) skin art: body 48 like the Brine Widow, the spiked crown above
+	"player/heretic_scribe_untouchable": 60.0,  # TUNING (not in GDD) skin art: body 48 like the Heretic Scribe, the soul-teal quill-staff above
+	"player/heretic_scribe_deathlord": 61.0,  # TUNING (not in GDD) skin art: body 48 like the Heretic Scribe, the crimson quill-staff above
+	"player/tide_widow_untouchable": 56.0,  # TUNING (not in GDD) skin art: body 48 like the Tide Widow, the pearl crown and the soul conch above
+	"player/tide_widow_deathlord": 58.0,  # TUNING (not in GDD) skin art: body 48 like the Tide Widow, the taller spiked crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
