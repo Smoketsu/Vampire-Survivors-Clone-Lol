@@ -279,6 +279,9 @@ SKIN_FIX = {
     # Wave 2 skins: the ghost witch's wisps widen her lower body to the left, so the derived box
     # (cols 18-26) sat right of her bust; her bust is cols 13-22, rows 17-23 of the still.
     "player/wither_witch_untouchable": {"bust": (13, 22, 17, 23, 2)},
+    # The crowned widow's crown adds 2 rows, but her bust sits no lower than the base Brine
+    # Widow's (like the Tide Widow's Hyper skin): the derived box (rows 22-29) was on the bodice.
+    "player/brine_widow_deathlord": {"bust": (19, 31, 19, 26, 2)},
 }
 
 

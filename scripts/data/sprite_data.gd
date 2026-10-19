@@ -190,7 +190,7 @@ const HEIGHTS: Dictionary = {
 	"player/gravecaller_untouchable": 56.0,  # TUNING (not in GDD) skin art: body 49 like the necromancer, the soul-teal flame staff above
 	"player/gravecaller_deathlord": 60.0,  # TUNING (not in GDD) skin art: body 49 like the necromancer, the horned crown and the flame staff above
 	"player/umbral_warden_untouchable": 63.0,  # TUNING (not in GDD) skin art: body 48 like the Umbral Warden, the ghost-sun staff above
-	"player/umbral_warden_deathlord": 63.0,  # TUNING (not in GDD) skin art: body 48 like the Umbral Warden, the crowned helm and the black-sun staff above
+	"player/umbral_warden_deathlord": 63.0,  # TUNING (not in GDD) skin art: body 48 like the Umbral Warden, the crowned hood and the black-sun staff above
 	"player/voidcaller_untouchable": 53.0,  # TUNING (not in GDD) skin art: body 48 like the Voidcaller, the drifting ghost hair and the soul ring above
 	"player/voidcaller_deathlord": 55.0,  # TUNING (not in GDD) skin art: body 48 like the Voidcaller, the spiked crown above
 	"player/bone_oracle_untouchable": 57.0,  # TUNING (not in GDD) skin art: body 48 like the Bone Oracle, the teal-tipped spear above
