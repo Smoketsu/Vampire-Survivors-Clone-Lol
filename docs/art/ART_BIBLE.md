@@ -1471,6 +1471,39 @@ snapped (OKLab nearest) to a short palette list, then lone pixels are removed. N
 added: the sources already had them. `prepare_sprite.py` was not used because its faction ramps and
 level stretch would light the near-silhouette cathedral.
 
+### Epilogue panels (`assets/sprites/epilogue/`; content wave 2)
+
+**Status:** in the game (Oct 2026), waiting for the owner's art review. The illustrated campaign
+epilogue (`EpilogueScreen`, data in `scripts/data/epilogue_data.gd`, GDD §15.0 "Illustrated
+epilogue (content wave 2)") shows one picture panel per paragraph and a closing card, each panning
+slowly in a 944×424 window. Panels are whole opaque scenes, **1024×576 art px** (16:9), drawn
+1 art px = 1 layout px through the sharp-pixel shader like the menu diorama (loaded through
+`EnvironmentArt.texture()`, so they need no `SpriteData.HEIGHTS` entry).
+
+| File | Paragraph / scene | Made by | Notes |
+|---|---|---|---|
+| `act1_1` | Act I ¶1: the Sanctum burns, the relic shattered | AI source, converted | white-gold cathedral in flat flames, smoke; the broken gold sun relic on the floor; the necromancer and three skeletons watching from the left |
+| `act1_2` | Act I ¶2: the dawn goes out, the dead walk the pilgrim roads | AI source, converted | a dark crimson-ringed sun sinking, shuttered village, toppled sun shrine, a long column of undead down the winding road |
+| `act1_3` | Act I ¶3: the army drifts toward the coast | AI source, converted | cliff path to the shore, the necromancer on the cliff edge, a teal and violet eye-glow under the black sea, moon |
+| `act2_1` | Act II ¶1: the tide pulls back from Gullhaven | AI source, converted | drained mudflats, stranded boats and chains, the harbour town and chapel, the Eye's faithful praying on the pier, a wall of water and a vast eye on the horizon |
+| `act2_2` | Act II ¶2: the Archive's last page burns | AI source, converted | towering shelves and the brass orrery, the giant book on a lectern in violet / soul-teal fire, the Archivist kneeling, the necromancer's raised hand |
+| `act2_3` | Act II ¶3: Ul-Thalos sinks | AI source, converted | the drowned spire city tilting into foam rings under a full moon, abyssal violet windows; the necromancer and two skeletons on the rocks |
+| `act2_4` | Act II ¶4: Vhal'Neth kneels | AI source, converted | the goddess (her coral crown, tentacle mane, eyes closed) bowing on the shore, hands on the sand; the army with bone banners and the necromancer raising his staff |
+| `close` | Closing card: "The Beacons Burn" | AI source, converted | beacons on the peaks, a fortress gate with three orders' banners (white / gold sun, blue / silver star, grey / white sword), knights in steel and blue cloaks marching out; never Covenant crimson, never necromancer violet |
+
+**How they are made.** `art_source/epilogue/<id>.png` (1536×1024, `tools/gen_image.py`, prompt in
+`<id>.txt`: a shared style block plus the scene; references were sheets of the game's sprites ×5,
+the necromancer, skeletons, the stage boss of the scene, and floor tiles of the act's stages) are
+converted by `python3 tools/epilogue_panel.py <source> <id>` (`--all` rebuilds every panel exactly):
+composited over ink_cold, cropped to 16:9 (`y_bias` per panel), a 3×3 mode filter merges the AI's
+colour noise inside its blocks, a box downscale (1.5 source px per art px: the AI's 4-5 px blocks
+become ~3 art px, so shapes stay 2+ art px), then 128 median-cut / k-means colour clusters, each
+snapped (OKLab nearest) to the locked palette (floor colours included as the scene's dark grounds;
+ramps dropped per panel in the tool's `PANEL_OPTS`, e.g. skin and ice everywhere, violet on the
+closing card), and a lone-pixel cleanup (a pixel sharing its colour with at most one neighbour takes
+the majority of 4+). Clustering first keeps a wall one or two shades instead of a scatter of
+near-equal hues (the owner's "no busy specks" note); no outline is added, the sources have them.
+
 ### Act II: Ul-Thalos, the Risen Spire (Stage 6; Oct 2026)
 
 Generated with `tools/gen_image.py` (prompts in the ART_BIBLE template; the anchors and the nearest

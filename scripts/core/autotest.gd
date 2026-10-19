@@ -57,6 +57,9 @@
 ##     category (spells learned, summon classes raised, Covenant kinds slain,
 ##     bosses faced; CodexLog), how many were new to the save, and the save's
 ##     codex totals (Meta [codex]; in memory only unless --meta-save),
+##   * the epilogue: an "epilogue" line counts its parts, how many the save has
+##     opened and seen, the panels and whether one would autoplay on the
+##     return to the menu (read only; the screen never opens headless),
 ##   * summon evolutions and the priest split: the summary lists every
 ##     evolution by type (spell / summon) with its time, the damage, heals
 ##     and shields of every summon source and class (dmg_<tag>, heal_by_<tag>,
@@ -1122,6 +1125,7 @@ func finish(summary: Dictionary) -> void:
 	_print_summon_evolutions(st_all)
 	_print_recipe_book()
 	print("[autotest] codex: %s" % game.codex.summary_line())  # Codex records (CodexLog).
+	print("[autotest] epilogue: %s" % _epilogue_line())  # Illustrated epilogue (EpilogueData; read only).
 	print("[autotest] volleys: %s" % game.volleys.summary_line())  # Bullet heaven pass (VolleyDirector).
 	if bool(summary["victory"]) and not game.end_screen.victory_info.is_empty():
 		print("[autotest] victory screen: %s" % VictoryResults.summary_line(game.end_screen.victory_info))  # Content wave 2 (victories only).
@@ -1582,3 +1586,23 @@ static func _sum_suffix(st: Dictionary, suffix: String) -> float:
 static func _clock(t: float) -> String:
 	var s := int(t)
 	return "%02d:%02d" % [floori(float(s) / 60.0), s % 60]
+
+
+## The "epilogue" summary line (content wave 2: E. Illustrated epilogue):
+## parts, how many are open and seen in the save, panels and whether an open,
+## unseen part would autoplay. Reads EpilogueData and Meta only.
+func _epilogue_line() -> String:
+	var opened := 0  # Parts the save has opened (their achievement earned).
+	var seen := 0  # Parts already shown once.
+	var pending := 0  # Open parts not yet seen (they autoplay on the return to the menu).
+	var panels := 0  # Picture panels across all parts.
+	for part: Dictionary in EpilogueData.PARTS:
+		panels += (part["panels"] as Array).size()
+		var id := String(part["id"])  # The part's [epilogue] seen_<id> key.
+		if EpilogueData.is_open(part):
+			opened += 1
+			if Meta.is_epilogue_seen(id):
+				seen += 1
+			else:
+				pending += 1
+	return "parts=%d open=%d seen=%d panels=%d autoplay_pending=%s" % [EpilogueData.PARTS.size(), opened, seen, panels, pending > 0]

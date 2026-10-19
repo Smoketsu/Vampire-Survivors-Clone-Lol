@@ -35,6 +35,10 @@
 ##     spent, so the Web build can spread it over frames; Sfx renders it on a
 ##     worker thread on desktop (render_all()). The job order is fixed, so the
 ##     result is identical however it is chunked.
+## Variants (content wave 2): MenuThemeSynth.new(variant) renders the same
+## score at another tempo, as a loop of its first bars only, with layers left
+## out (MenuThemeData.EPILOGUE_VARIANT: the epilogue's slow cue); with no
+## variant every job is exactly the menu theme's.
 ## It only touches its own buffers and its own seeded RandomNumberGenerator
 ## (never the gameplay RNG), so it is safe on a worker thread and the same
 ## on every run.
@@ -123,13 +127,28 @@ var _drone_y: PackedFloat64Array = PackedFloat64Array()
 var _stats: PackedFloat64Array = PackedFloat64Array([0.0, 0.0, 0.0])
 ## Final PCM bytes (16-bit little-endian), filled by the encode pass.
 var _bytes: PackedByteArray = PackedByteArray()
+# --- Content wave 2: E. Illustrated epilogue (score variants) ---
+## Tempo (beats per minute) of this render: MenuThemeData.BPM, or a variant's "bpm".
+var _bpm: float = MenuThemeData.BPM
+## Bars in this render's loop: MenuThemeData.BARS, or a variant's "bars" (the
+## loop is then the score's first bars only; later events are left out).
+var _bars: int = MenuThemeData.BARS
+## Layers a variant leaves out ("mute": any of "pad", "bass", "bell",
+## "timpani", "music_box", "harp", "choir", "crackle").
+var _mute: Array = []
 
 
-## Schedules every job (cheap: no audio is rendered here).
-func _init() -> void:
+## Schedules every job (cheap: no audio is rendered here). `variant` (empty =
+## the menu theme itself, bit for bit) renders a variant of the same score
+## (MenuThemeData.EPILOGUE_VARIANT: the epilogue's slow cue): "bpm" a tempo,
+## "bars" a shorter loop of the first bars, "mute" layers left out.
+func _init(variant: Dictionary = {}) -> void:
+	_bpm = float(variant.get("bpm", MenuThemeData.BPM))
+	_bars = clampi(int(variant.get("bars", MenuThemeData.BARS)), 1, MenuThemeData.BARS)
+	_mute = variant.get("mute", []) as Array
 	_rng.seed = MenuThemeData.SEED
-	_spb = float(MenuThemeData.RATE_LO) * 60.0 / MenuThemeData.BPM
-	_n_lo = int(roundf(_spb * MenuThemeData.BEATS_PER_BAR * MenuThemeData.BARS)) / 2 * 2
+	_spb = float(MenuThemeData.RATE_LO) * 60.0 / _bpm
+	_n_lo = int(roundf(_spb * MenuThemeData.BEATS_PER_BAR * _bars)) / 2 * 2
 	_n_hi = _n_lo * 2
 	_jobs.append(_job_setup)
 	_schedule_pad_and_bass()
@@ -137,7 +156,8 @@ func _init() -> void:
 	_schedule_music_box()
 	_schedule_harp()
 	_schedule_choir()
-	_jobs.append(_job_crackle)
+	if not _mute.has("crackle"):
+		_jobs.append(_job_crackle)
 	_bed_from = -int(BED_PRIME * MenuThemeData.RATE_LO) / BED_BLOCK * BED_BLOCK
 	_schedule_pass(_job_bed, _bed_from, _n_lo)
 	# The reverb runs at RATE_LO / 2: its pass counts in those samples.
@@ -204,7 +224,17 @@ func _beat_lo(beat: float) -> int:
 ## The BAR_DYNAMICS gain at `beat` (bars wrap around the loop).
 func _dyn(beat: float) -> float:
 	var dyn: Array = MenuThemeData.BAR_DYNAMICS
-	return float(dyn[posmod(int(floorf(beat / MenuThemeData.BEATS_PER_BAR)), dyn.size())])
+	return float(dyn[posmod(int(floorf(beat / MenuThemeData.BEATS_PER_BAR)), mini(dyn.size(), _bars))])
+
+
+## True when an event of layer `layer` starting at `beat` is part of this
+## render: its layer is not muted and, for a shorter variant loop, it starts
+## inside the loop (the full score keeps every event, so the menu theme is
+## unchanged).
+func _keeps(layer: String, beat: float) -> bool:
+	if _mute.has(layer):
+		return false
+	return _bars >= MenuThemeData.BARS or beat < float(_bars * MenuThemeData.BEATS_PER_BAR) - 0.001
 
 
 ## Pad (three "ooh" voices) and pedal organ for every chord of CHORDS.
@@ -220,11 +250,15 @@ func _schedule_pad_and_bass() -> void:
 		var g1 := _dyn(beat + beats)
 		var voices: Array = ch[2]
 		for v in voices.size():
+			if not _keeps("pad", beat):
+				break
 			var note := int(voices[v])
 			_jobs.append(_job_voice.bind(BUS_DEEP, "pad", note, beat - xf * 0.5, beats + xf,
 				xf, xf, MenuThemeData.PAD_GAIN * g0, MenuThemeData.PAD_GAIN * g1,
 				MenuThemeData.PAD_SECOND_SINGER, MenuThemeData.PAD_DETUNE_CENTS,
 				vib.x * (1.0 + 0.07 * float(v)), vib.y, 0.0, 0.13 * float(v) + 0.05 * float(c)))
+		if not _keeps("bass", beat):
+			continue
 		_jobs.append(_job_voice.bind(BUS_DEEP, "bass", int(ch[3]), beat - bxf * 0.5, beats + bxf,
 			bxf, bxf, MenuThemeData.BASS_GAIN * g0, MenuThemeData.BASS_GAIN * g1, 0.0, 0.0,
 			0.0, 0.0, 0.0, 0.0))
@@ -233,6 +267,8 @@ func _schedule_pad_and_bass() -> void:
 ## Church bell tolls and the timpani hits / roll.
 func _schedule_bells_and_timpani() -> void:
 	for toll: Array in MenuThemeData.BELL_TOLLS:
+		if not _keeps("bell", float(toll[0])):
+			continue
 		var hz := midi_hz(float(toll[1]))
 		var amp := MenuThemeData.BELL_GAIN * float(toll[2])
 		for p: Array in MenuThemeData.BELL_PARTIALS:
@@ -254,6 +290,8 @@ func _schedule_bells_and_timpani() -> void:
 ## One timpani stroke: its first `modes` modes (decay times x `decay`) plus
 ## a soft felt thump.
 func _queue_timpani(beat: float, note: int, vel: float, modes: int, decay: float) -> void:
+	if not _keeps("timpani", beat):
+		return
 	var hz := midi_hz(float(note))
 	var amp := MenuThemeData.TIMPANI_GAIN * vel
 	for m in mini(modes, MenuThemeData.TIMPANI_MODES.size()):
@@ -267,6 +305,8 @@ func _queue_timpani(beat: float, note: int, vel: float, modes: int, decay: float
 func _schedule_music_box() -> void:
 	for nt: Array in MenuThemeData.MELODY:
 		var beat: float = nt[0]
+		if not _keeps("music_box", beat):
+			continue
 		var hz := midi_hz(float(nt[1]))
 		var amp := MenuThemeData.MUSIC_BOX_GAIN * float(nt[3])
 		for p: Array in MenuThemeData.MUSIC_BOX_PARTIALS:
@@ -292,7 +332,8 @@ func _schedule_harp() -> void:
 			var note := int(tones[int(pattern[k % pattern.size()])])
 			# A gentle lilt: downbeats of each pattern cycle a little stronger.
 			var accent := 1.0 if k % pattern.size() == 0 else 0.82
-			_jobs.append(_job_pluck.bind(beat, note, float(ph[4]) * accent * _dyn(beat)))
+			if _keeps("harp", beat):
+				_jobs.append(_job_pluck.bind(beat, note, float(ph[4]) * accent * _dyn(beat)))
 			beat += step
 			k += 1
 
@@ -310,10 +351,12 @@ func _chord_at(beat: float) -> Array:
 func _schedule_choir() -> void:
 	var env: Vector2 = MenuThemeData.CHOIR_ENVELOPE
 	var vib: Vector3 = MenuThemeData.CHOIR_VIBRATO
-	var att_beats := env.x * MenuThemeData.BPM / 60.0
-	var rel_beats := env.y * MenuThemeData.BPM / 60.0
+	var att_beats := env.x * _bpm / 60.0
+	var rel_beats := env.y * _bpm / 60.0
 	for i in MenuThemeData.CHOIR_LEAD.size():
 		var nt: Array = MenuThemeData.CHOIR_LEAD[i]
+		if not _keeps("choir", float(nt[0])):
+			continue
 		var g := MenuThemeData.CHOIR_GAIN * float(nt[3]) * _dyn(float(nt[0]))
 		_jobs.append(_job_voice.bind(BUS_WET, "choir", int(nt[1]), float(nt[0]), float(nt[2]) + rel_beats,
 			att_beats, rel_beats, g, g * 0.9, MenuThemeData.CHOIR_SECOND_SINGER,
@@ -639,7 +682,7 @@ func _job_bed(a: int, b: int) -> void:
 	var notes: Array = MenuThemeData.DRONE_NOTES
 	var gains: Array = MenuThemeData.DRONE_GAINS
 	var bar_gain: Array = MenuThemeData.DRONE_BAR_GAIN
-	var bars := bar_gain.size()
+	var bars := mini(bar_gain.size(), _bars)  # A shorter variant loop wraps its own bars.
 	var bar_len := _spb * MenuThemeData.BEATS_PER_BAR
 	var dn := notes.size()
 	var dc := PackedFloat64Array()

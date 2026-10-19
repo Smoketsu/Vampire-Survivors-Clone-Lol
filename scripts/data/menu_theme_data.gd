@@ -288,3 +288,28 @@ const REVERB_PRIME: float = 4.0  # TUNING (not in GDD)
 ## Reverb return level (the wet bus feeds the reverb fully; the bright
 ## bus, only short pings and crackle, stays dry).
 const REVERB_WET: float = 0.16  # TUNING (not in GDD)
+
+# --- Content wave 2: E. Illustrated epilogue ---
+# The epilogue's music cue (GDD §15.0 "Illustrated epilogue (content wave 2)"):
+# a short, slow, sparse variant of this same score, rendered by MenuThemeSynth
+# (MenuThemeSynth.new(EPILOGUE_VARIANT)) the first time the epilogue plays and
+# crossfaded through Sfx.play_music(Sfx.MUSIC_EPILOGUE).
+
+## The variant: "bpm" its tempo (3/4 of BPM: one beat exactly 11760 samples at
+## RATE_LO), "bars" the loop is section A only (the music-box motif over the
+## pad, bell and drone: 8 bars = 34.1 s at that tempo), "mute" the layers left
+## out (the timpani, the harp arpeggios and the candle crackle: sparser).
+const EPILOGUE_VARIANT: Dictionary = {  # TUNING (not in GDD)
+	"bpm": 56.25,
+	"bars": 8,
+	"mute": ["timpani", "harp", "crackle"],
+}
+## Volume (dB) of the epilogue cue's player on the Music bus: measured RMS
+## -14.1 dBFS at full scale against the theme's -14.5, so -10.5 sits about
+## 1 dB under the theme (a quiet cue under reading).
+const EPILOGUE_MUSIC_DB: float = -10.5  # TUNING (not in GDD)
+## Seconds the cue takes to fade in (and the menu theme or run loop to fade
+## out under it) when the epilogue opens, or once it is rendered.
+const EPILOGUE_FADE_IN: float = 2.5  # TUNING (not in GDD)
+## Seconds the cue takes to fade out when the epilogue closes.
+const EPILOGUE_FADE_OUT: float = 1.5  # TUNING (not in GDD)
