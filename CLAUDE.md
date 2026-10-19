@@ -167,10 +167,15 @@ Autotest options (full table in the README):
 - `stuck_units=0`;
 - for balance-affecting changes, a multi-seed check against the targets below.
 
-CI (`.github/workflows/ci.yml`) runs the import, the Graveyard autotest with the naive and army
-policies, a Crimson March autotest, a Sanctum of Judgment autotest (army policy), one army autotest per Act II stage, the
-Windows/Linux/Web exports (artifacts `Necropathy-windows` / `-linux` / `-web`) and an exported-build
-smoke test. Pushing a `v*` tag publishes a GitHub Release with the three zips. **GitHub Pages is the game's web
+**Test lean** (owner request Oct 2026, GDD §15.0 "Parallel CI and lean testing"): while building, run only
+the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
+the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
+
+CI (`.github/workflows/ci.yml`) runs the import and, as seven **parallel** matrix jobs, the Graveyard
+autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
+policy) and one army autotest per Act II stage; beside them, the Windows/Linux/Web exports (artifacts
+`Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test. The release and publish jobs
+wait for all of them. Pushing a `v*` tag publishes a GitHub Release with the three zips. **GitHub Pages is the game's web
 home** (owner decision Oct 2026; itch.io publishing dropped, GDD §15.0 "GitHub Pages is the web home"):
 `publish-pages-repo` (variable `PAGES_REPO` = `Smoketsu/NecropathyPlay` + secret `PAGES_TOKEN`) pushes the Web build
 from `main` pushes, `v*` tags and manual runs of `main` to that public build-only repository, served at
@@ -525,5 +530,6 @@ tiny tweaks.
    known and accepted until then).
 
 **Pace:** the owner lifted the one-agent limit (Oct 2026): independent features may run as parallel
-agents in worktrees, merged on `integration`. Keep test batches proportionate (sanity checks plus
-the multi-seed screens a change needs), and at most 4 Godot processes on the 4-core machine.
+agents in worktrees, merged on `integration`. Keep test batches proportionate (see **Test lean** above: sanity checks
+while building, the full set once per batch, multi-seed screens only for balance), and at most 4 Godot
+processes on the 4-core machine.

@@ -1,7 +1,8 @@
 # Necropathy CI
 #
-# On every push / pull request:
-#   1. test   - imports the project with Godot 4.3 headless and runs the
+# On every push / pull request (test and export run at the same time; the
+# release and publish jobs wait for both, GDD 15.0 "Parallel CI and lean testing"):
+#   1. test   - one parallel job per playthrough: imports the project with Godot 4.3 headless and runs the
 #               automated full playthrough (--autotest) on the Graveyard
 #               (naive and army policies), on the Crimson March
 #               (--stage=crimson_march) and in the Sanctum of Judgment
@@ -13,7 +14,7 @@
 #               no-threads Web build (index.html + .js + .wasm + .pck, any static
 #               host) and uploads them as workflow artifacts (Actions tab -> run
 #               -> Artifacts: Necropathy-windows, Necropathy-linux, Necropathy-web).
-# On a pushed tag starting with "v" (e.g. v0.2.0) the export job also creates a
+# On a pushed tag starting with "v" (e.g. v0.2.0) the release job creates a
 # GitHub Release with the three zips attached, so testers can just download and play.
 # Its title is "Necropathy <tag>" and its body is docs/release_notes/<tag>.md
 # (an empty body if that file is missing), followed by GitHub's generated changelog.
@@ -48,9 +49,32 @@ env:
 
 jobs:
   test:
+    # One job per playthrough, all at once (owner request Oct 2026, GDD 15.0 "Parallel CI and lean testing"):
+    # each full run takes ~3 min, so the whole set finishes in ~4 min instead of ~21 min
+    # one after another. Same coverage as before.
+    name: test (${{ matrix.name }})
     runs-on: ubuntu-latest
-    # Four full runs (Graveyard naive + army, Crimson March, Sanctum) of ~2-4 min each.
-    timeout-minutes: 40
+    timeout-minutes: 20
+    strategy:
+      # fail-fast false: one failing stage does not cancel the others, so every
+      # broken stage shows up in the same run.
+      fail-fast: false
+      matrix:
+        # Each entry is one playthrough:
+        #   id      - short key, used in the log file and artifact names.
+        #   name    - human-readable label shown in the Actions tab.
+        #   args    - autotest options after `--autotest` (--stage ignores stage locks;
+        #             the army bot walks to each stage's objectives, so they run too).
+        #   timeout - wall-clock limit in seconds (`timeout`), above a normal run's
+        #             ~1.5-3 min; the Act II stages are slower, so they get 900 s.
+        include:
+          - {id: graveyard, name: "Graveyard, naive", args: "", timeout: 600}
+          - {id: graveyard_army, name: "Graveyard, army policy", args: "--policy=army", timeout: 600}
+          - {id: march, name: "Stage 2, the Crimson March", args: "--stage=crimson_march", timeout: 600}
+          - {id: sanctum, name: "Stage 3, the Sanctum of Judgment", args: "--stage=sanctum --policy=army", timeout: 600}
+          - {id: harbour, name: "Act II Stage 4, Gullhaven Harbour", args: "--stage=harbour --policy=army", timeout: 900}
+          - {id: archive, name: "Act II Stage 5, the Hollow Archive", args: "--stage=archive --policy=army", timeout: 900}
+          - {id: spire, name: "Act II Stage 6, Ul-Thalos", args: "--stage=spire --policy=army", timeout: 900}
     steps:
       - uses: actions/checkout@v4
 
@@ -76,81 +100,18 @@ jobs:
             echo "::error::Script errors during import"; exit 1
           fi
 
-      - name: Autotest (full run, player invulnerable until the Reckoning)
+      - name: Autotest (${{ matrix.name }})
         run: |
           # Exit code is 0 only when the run completes (reaches 0:00).
-          # A full run is ~1220-1260 game s (20:00 countdown + Reckoning) and
-          # takes ~1.5-2 min of wall time. At the default --speed=8 one frame
-          # is 2/15 game s, so --quit-after 15000 frames allows 2000 game s,
-          # above the autotest's own 1500 s timeout; `timeout 600` (wall
-          # seconds) keeps both runs inside the 20-minute job limit.
-          timeout 600 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest 2>&1 | tee autotest.log
+          # A full run is ~1220-1260 game s (20:00 countdown + Reckoning). At the
+          # default --speed=8 one frame is 2/15 game s, so --quit-after 15000 frames
+          # allows 2000 game s, above the autotest's own 1500 s timeout.
+          # LOG: this playthrough's log file.
+          LOG="autotest_${{ matrix.id }}.log"
+          timeout ${{ matrix.timeout }} "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest ${{ matrix.args }} 2>&1 | tee "$LOG"
           status=${PIPESTATUS[0]}
-          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest.log; then
-            echo "::error::Errors/warnings during autotest"; exit 1
-          fi
-          exit $status
-
-      - name: Autotest (army policy)
-        run: |
-          timeout 600 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest --policy=army 2>&1 | tee autotest_army.log
-          status=${PIPESTATUS[0]}
-          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_army.log; then
-            echo "::error::Errors/warnings during army autotest"; exit 1
-          fi
-          exit $status
-
-      - name: Autotest (Stage 2, the Crimson March)
-        run: |
-          # --stage ignores the stage lock; same pass rules as the Graveyard runs.
-          timeout 600 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest --stage=crimson_march 2>&1 | tee autotest_march.log
-          status=${PIPESTATUS[0]}
-          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_march.log; then
-            echo "::error::Errors/warnings during Crimson March autotest"; exit 1
-          fi
-          exit $status
-
-      - name: Autotest (Stage 3, the Sanctum of Judgment)
-        run: |
-          # --stage ignores the stage lock; the army bot walks to the ward
-          # crystals and sacred altars, so the chamber / altar code runs too.
-          timeout 600 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest --stage=sanctum --policy=army 2>&1 | tee autotest_sanctum.log
-          status=${PIPESTATUS[0]}
-          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_sanctum.log; then
-            echo "::error::Errors/warnings during Sanctum autotest"; exit 1
-          fi
-          exit $status
-
-      - name: Autotest (Act II Stage 4, Gullhaven Harbour)
-        run: |
-          # Act II (the Ancient Eye): the army bot, so the stage's objectives,
-          # Claims and Dread all run; --stage ignores the stage lock.
-          timeout 900 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest --stage=harbour --policy=army 2>&1 | tee autotest_harbour.log
-          status=${PIPESTATUS[0]}
-          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_harbour.log; then
-            echo "::error::Errors/warnings during Stage 4, Gullhaven Harbour autotest"; exit 1
-          fi
-          exit $status
-
-      - name: Autotest (Act II Stage 5, the Hollow Archive)
-        run: |
-          # Act II (the Ancient Eye): the army bot, so the stage's objectives,
-          # Claims and Dread all run; --stage ignores the stage lock.
-          timeout 900 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest --stage=archive --policy=army 2>&1 | tee autotest_archive.log
-          status=${PIPESTATUS[0]}
-          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_archive.log; then
-            echo "::error::Errors/warnings during Stage 5, the Hollow Archive autotest"; exit 1
-          fi
-          exit $status
-
-      - name: Autotest (Act II Stage 6, Ul-Thalos)
-        run: |
-          # Act II (the Ancient Eye): the army bot, so the stage's objectives,
-          # Claims and Dread all run; --stage ignores the stage lock.
-          timeout 900 "$GODOT_BIN" --headless --fixed-fps 60 --quit-after 15000 -- --autotest --stage=spire --policy=army 2>&1 | tee autotest_spire.log
-          status=${PIPESTATUS[0]}
-          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" autotest_spire.log; then
-            echo "::error::Errors/warnings during Stage 6, Ul-Thalos autotest"; exit 1
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" "$LOG"; then
+            echo "::error::Errors/warnings during the ${{ matrix.name }} autotest"; exit 1
           fi
           exit $status
 
@@ -160,18 +121,16 @@ jobs:
         continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
-          name: test-logs
+          name: test-logs-${{ matrix.id }}
           path: "*.log"
           # Kept 3 days (the account's artifact storage is small; GitHub's default is 90).
           retention-days: 3
 
   export:
-    needs: test
+    # No `needs: test`: the export runs beside the playthroughs (it only builds and
+    # smoke-tests); everything that ships (release, publishing) waits for both.
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    permissions:
-      # contents: write is needed to create a GitHub Release on tag pushes.
-      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -265,16 +224,42 @@ jobs:
           # Kept 7 days (the publish jobs read it within the same run).
           retention-days: 7
 
-      - name: Release notes file (tags only)
+      - name: Upload release zips (tags only)
         if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4
+        with:
+          # The three zips the release job attaches once every test has passed.
+          name: Necropathy-release-zips
+          path: build/Necropathy-*.zip
+          retention-days: 7
+
+  # Creates the GitHub Release on a pushed v* tag, only after every playthrough
+  # and the export succeeded.
+  release:
+    needs: [test, export]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      # contents: write is needed to create a GitHub Release.
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download release zips
+        uses: actions/download-artifact@v4
+        with:
+          name: Necropathy-release-zips
+          path: build
+
+      - name: Release notes file
         run: |
           # The hand-written notes for this tag; an empty file keeps the release step working without one.
           NOTES="docs/release_notes/${GITHUB_REF_NAME}.md"
           if [ ! -f "$NOTES" ]; then mkdir -p docs/release_notes && : > "$NOTES"; fi
           echo "RELEASE_NOTES=$NOTES" >> "$GITHUB_ENV"
 
-      - name: Create GitHub Release (tags only)
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           name: Necropathy ${{ github.ref_name }}
@@ -289,7 +274,8 @@ jobs:
   # main and on v* tags, and only when the repository variable WEB_PAGES is
   # "true" (Settings -> Pages -> Source must be "GitHub Actions").
   publish-pages:
-    needs: export
+    # Waits for every playthrough too, so a failing test never goes live.
+    needs: [test, export]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && vars.WEB_PAGES == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -331,7 +317,8 @@ jobs:
   # repository only) both exist; that repository serves its main branch root with
   # Settings -> Pages -> "Deploy from a branch".
   publish-pages-repo:
-    needs: export
+    # Waits for every playthrough too, so a failing test never goes live.
+    needs: [test, export]
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && vars.PAGES_REPO != ''
     runs-on: ubuntu-latest
     timeout-minutes: 15

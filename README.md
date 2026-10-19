@@ -2354,19 +2354,22 @@ uptime.
 
 ### Continuous integration and builds
 
-`.github/workflows/ci.yml` runs on every push and pull request:
+`.github/workflows/ci.yml` runs on every push and pull request. The playthroughs and the export run at the same
+time, and everything that ships waits for all of them (GDD §15.0 "Parallel CI and lean testing": about 8-10 minutes from a push to
+the live build instead of about 30):
 
-1. **test:** imports the project with Godot 4.3 headless and runs the full 20-minute autotest with the naive and
-   army policies on the Graveyard, then once on the Crimson March (`--stage=crimson_march`) and once in the
-   Sanctum (`--stage=sanctum --policy=army`), then once per Act II stage with the army policy
-   (`--stage=harbour`, `archive`, `spire`) (`--quit-after 15000`, at most 10-15 wall-clock minutes per run,
-   40 minutes for the job).
-   It fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if a run doesn't complete.
+1. **test:** seven parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs one
+   full 20-minute autotest: the Graveyard with the naive and the army policy, the Crimson March
+   (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each Act II stage with the army
+   policy (`--stage=harbour`, `archive`, `spire`) (`--quit-after 15000`, at most 10-15 wall-clock minutes per run).
+   A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
+   not cancel the others. Logs: `test-logs-<id>`.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in
    the executable) and the no-threads Web build, runs the autotest again on the exported Linux build, and uploads all
    three as workflow artifacts (`Necropathy-windows`, `Necropathy-linux`, `Necropathy-web`), kept 7 days (test logs
    3 days): the account's artifact storage is small, and when it is full no build can be uploaded, so the publish
-   jobs have nothing to publish (tagged builds stay in their GitHub Release).
+   jobs have nothing to publish (tagged builds stay in their GitHub Release). On a `v*` tag, the **release** job
+   creates the GitHub Release once every test and the export have passed.
 3. **publish-pages-repo** (the game's web home; see *Play in the browser* below): on pushes to `main`, on `v*` tags
    and on a manual run of `main`, pushes the Web build to a separate public repository that GitHub Pages serves.
    **publish-pages** (optional, off by default) deploys it to this repository's own Pages instead. itch.io
@@ -2375,7 +2378,7 @@ uptime.
 To publish a downloadable release, bump `config/version` in `project.godot` (shown on the main menu) and the
 `application/*_version` fields in `export_presets.cfg`, write the player-facing notes in
 `docs/release_notes/<tag>.md` (images go in `docs/media/<tag>/`, linked by their raw GitHub URL at the tag), then
-push a version tag. The export job creates a GitHub Release titled "Necropathy <tag>" with the three zips attached (Windows, Linux, Web), the
+push a version tag. The release job creates a GitHub Release titled "Necropathy <tag>" with the three zips attached (Windows, Linux, Web), the
 notes as its body and GitHub's generated changelog below them:
 
 ```bash
