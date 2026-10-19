@@ -41,7 +41,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act II: Fallen Seraph --- (a locked silhouette naming its unlock until met)
 		"fallen_seraph",
 		# --- Act II: Ul-Thalos, the Risen Spire ---
-		"spawn_of_the_deep"]
+		"spawn_of_the_deep",
+		# --- Content wave 2: Bone Golem --- (a silhouette naming Bone Legion until met)
+		"bone_golem"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",

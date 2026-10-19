@@ -14,6 +14,9 @@
 ##                       PassiveData.AREA_HOLY_SOURCES.
 ##   Bone Plating      — damage_unit(): a flat amount off every hit, after
 ##                       the other reductions and before barriers.
+##   Grave Masonry     — damage_unit() (content wave 2): the blockers
+##                       (PassiveData.MASONRY_CLASSES) take blocker_reduction
+##                       less, after Unholy Resilience and before Bone Plating.
 ## Cathedral Horror (summon evolution): stun_enemy() (the dive stun) and the
 ## stone form check in damage_unit().
 ## The Gravebow curse (a status, curse_enemy()) amplifies damage here too, and
@@ -315,6 +318,11 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 		game.stat_add("resilience_dmg_prevented", amount * res)
 		game.stat_add("resilience_dmg_prevented_" + String(PassiveData.AREA_HOLY_SOURCES[source]), amount * res)
 		amount *= 1.0 - res
+	# Grave Masonry (content wave 2): the blockers take less, its own category.
+	var mason := ab.passive_value("grave_masonry", "blocker_reduction")  # 0..1, 0 when not owned.
+	if mason > 0.0 and u.unit_class in PassiveData.MASONRY_CLASSES:
+		game.stat_add("masonry_dmg_prevented", amount * mason)
+		amount *= 1.0 - mason
 	var plate := ab.passive_value("bone_plating", "flat_reduction")  # Flat damage off this hit.
 	if plate > 0.0 and not source in PassiveData.PLATING_EXEMPT_SOURCES:
 		var cut := minf(plate, amount * (1.0 - PassiveData.PLATING_MIN_FRACTION))  # Damage actually removed.

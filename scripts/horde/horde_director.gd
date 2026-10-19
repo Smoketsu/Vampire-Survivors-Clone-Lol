@@ -30,6 +30,10 @@
 ##     fire trails and Ossuary Engine bone shards.
 ##   * Act II: the Fallen Seraph's feather rings through SeraphFeathers
 ##     (`feathers`, created on first use by seraph_feathers()).
+##   * Content wave 2: the Bone Golem's Ossuary Hunger and the Ossuary
+##     Titan's heal, barrier and death wall through GolemKit (`golems`,
+##     created by the first Golem, golem_kit()); Grave Masonry's hold bonus in
+##     compute_stats().
 ## Ranged overkill reservations are stored on the enemies themselves
 ## (Enemy.incoming_damage) and managed by ProjectileManager.
 class_name HordeDirector
@@ -100,6 +104,9 @@ var hazards: HordeHazards
 ## Act II: the Fallen Seraph's feather rings (SeraphFeathers); null until the
 ## first ring is laid (seraph_feathers()), so runs without her never create it.
 var feathers: SeraphFeathers = null
+## Content wave 2: the Bone Golem's army-wide rules (GolemKit); null until the
+## first Golem rises (golem_kit()), so runs without one never create it.
+var golems: GolemKit = null
 ## Radius (px) Enemy.resolve_blocking() adds to its own to find blockers:
 ## UnitData.MAX_BLOCK_RADIUS, raised to the widest block_radius ever spawned
 ## this run (the Corpse Abomination's), never lowered.
@@ -145,6 +152,14 @@ func seraph_feathers() -> SeraphFeathers:
 		feathers.game = game
 		add_child(feathers)
 	return feathers
+
+
+## Content wave 2: the Bone Golem's kit, created on first use (the first
+## Golem's activation; a run without a Golem never calls this).
+func golem_kit() -> GolemKit:
+	if golems == null:
+		golems = GolemKit.new(self)
+	return golems
 
 
 # =====================================================================================
@@ -357,6 +372,9 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 			move_mult *= 1.0 + synergies.frenzy_value(cls, "move_speed")
 	var leash_mult := 1.0 + ab.passive_value("bound_souls", "leash_range")  # Leash distance multiplier.
 	var return_mult := 1.0 / maxf(0.1, 1.0 - ab.passive_value("bound_souls", "return_reduction"))  # RETURNING speed multiplier (the 0.1 floor only guards a 100% value).
+	# Content wave 2 (UnitData "rejoin_speed_mult", the Bone Golem; 1 for every
+	# other class): a slow anchor lumbers faster only to rejoin its post.
+	var rejoin := float(base.get("rejoin_speed_mult", 1.0))  # Catch-up / return speed factor.
 	var heal_mult := 1.0 + float(row.get("heal_bonus", 0.0))
 	var splash_mult := 1.0 + float(row.get("splash_bonus", 0.0))
 	var shield_mult := 1.0 + float(row.get("shield_bonus", 0.0))
@@ -370,7 +388,8 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		"move_speed": float(base["move_speed"]) * move_mult,
 		"engage_radius": engage * leash_mult,
 		"soft_recall": recall * leash_mult,
-		"return_speed_mult": UnitData.RETURN_SPEED_MULT * return_mult,
+		"return_speed_mult": UnitData.RETURN_SPEED_MULT * return_mult * rejoin,
+		"catchup_mult": UnitData.CATCHUP_SPEED_MULT * rejoin,
 		"radius": float(base["radius"]),
 		"band_min": float(base["band_min"]) * UnitData.FORMATION_SPREAD,
 		"band_max": float(base["band_max"]) * UnitData.FORMATION_SPREAD,
@@ -411,6 +430,15 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		"special": _special_stats(base, row, dmg_mult),
 	}
 	evolutions.modify_stats(cls, out, with_evolution)
+	# Grave Masonry (content wave 2): its blockers hold longer, after the
+	# evolution overlay (a Death Knight / Bone Colossus / Ossuary Titan sets its
+	# own block mass first). 0 when not owned, so every other run is unchanged.
+	var hold := ab.passive_value("grave_masonry", "hold_bonus") if cls in PassiveData.MASONRY_CLASSES else 0.0  # Hold bonus fraction.
+	if hold > 0.0:
+		out["block_mass"] = float(out["block_mass"]) * (1.0 + hold)
+		var sp: Dictionary = out["special"]  # This class's special numbers (fresh per call).
+		if sp.has("bulwark_duration"):
+			sp["bulwark_duration"] = float(sp["bulwark_duration"]) * (1.0 + hold)
 	return out
 
 
@@ -632,6 +660,8 @@ func on_unit_died(u: SummonedUnit, as_death: bool = true) -> void:
 	if as_death:
 		game.innates.on_summon_died(u)  # Carrion Lord corpses (no-op without the innate).
 		claim_fallen(u)  # Act II: the Ancient Eye may claim it (no-op elsewhere).
+		if golems != null:
+			golems.on_summon_died(u)  # Content wave 2: Ossuary Hunger / a Titan's wall (no-op without a Golem).
 	if u.is_temporary:
 		temp_alive -= 1
 		AbyssalPact.on_temporary_gone(game, u)  # Act II: the Abyssal Pact's soul burst (no-op unless owned).

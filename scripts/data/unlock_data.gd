@@ -75,6 +75,11 @@ const UNLOCKS := {
 		"text": "Earn Untouchable: reach 0:00 without dropping below half health."},  # owner-approved Proposal 2
 	"deathlord": {"type": "skin", "achievement": "deathlords_due",
 		"text": "Earn Deathlord's Due: clear any stage on Deathlord difficulty."},  # owner-approved Proposal 2
+	# --- Content wave 2: Bone Golem ---
+	# The Bone Legion achievement's reward (owner decision, GDD §15.0 "Content
+	# wave 2"): the Bone Golem and its paired passive, offered on every stage.
+	"bone_golem": {"type": "class", "achievement": "bone_legion", "text": "Earn Bone Legion: Skeleton Warriors slay 1,000 foes."},  # Owner-approved proposal 5
+	"grave_masonry": {"type": "passive", "achievement": "bone_legion", "text": "Earn Bone Legion: Skeleton Warriors slay 1,000 foes."},  # Its paired passive, unlocked with it
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

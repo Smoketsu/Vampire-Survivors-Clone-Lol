@@ -88,6 +88,10 @@ var walking: bool = false
 var _idle_on: bool = false
 ## Game time (s) the current idle loop started (valid while _idle_on).
 var idle_at: float = 0.0
+## Size factor of the body (1 = its sprite or glyph size): a uniform scale about
+## the feet on top of every pose (content wave 2: a Bone Golem grown by
+## Ossuary Hunger, set_size()). Visual only; 1 for every other unit.
+var size_k: float = 1.0
 
 
 ## Builds the two layers as children of `p_host`: `body_fn` draws the body
@@ -126,7 +130,17 @@ func reset(p_feet: float, radius: float, scale_k: float, p_hit_only: bool) -> vo
 	body.idle_frame = -1
 	_idle_on = false
 	idle_at = 0.0
+	size_k = 1.0
 	_set_identity()
+
+
+## Sets the body's size factor (size_k); the next update() applies it (also
+## to a still body). Visual only.
+func set_size(k: float) -> void:
+	if is_equal_approx(k, size_k):
+		return
+	size_k = k
+	_identity = false
 
 
 ## Redraws both layers (called from the unit's own _draw(), so every state
@@ -218,6 +232,8 @@ func update(now: float, dt: float, still: bool, quiet: bool, no_bob: bool = fals
 		sy *= e * (1.0 + MotionData.RISE_OVERSHOOT * sin(PI * ru))
 		sx *= 1.0 + MotionData.RISE_WIDEN * (1.0 - ru)
 		alpha = clampf(ru * 2.5, 0.0, 1.0)
+	sx *= size_k  # Grown body (Bone Golem); 1 for every other unit.
+	sy *= size_k
 	if alpha != _alpha:
 		_alpha = alpha
 		body.modulate.a = alpha
@@ -297,9 +313,10 @@ func _lunge_terms(now: float) -> float:
 	return MotionData.LUNGE_SHEAR * e * lx
 
 
-## Puts the body back to rest (identity transform, full opacity).
+## Puts the body back to rest (identity transform, or only the size_k scale
+## about the feet; full opacity).
 func _set_identity() -> void:
-	body.transform = Transform2D.IDENTITY
+	body.transform = Transform2D.IDENTITY if size_k == 1.0 else Transform2D(Vector2(size_k, 0.0), Vector2(0.0, size_k), Vector2(0.0, feet * (1.0 - size_k)))
 	_identity = true
 	if _alpha != 1.0:
 		_alpha = 1.0

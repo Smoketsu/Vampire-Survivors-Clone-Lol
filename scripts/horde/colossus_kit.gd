@@ -37,15 +37,19 @@ func _init(p_director: HordeDirector) -> void:
 
 
 ## Rebuilds the taunter list (HordeDirector.step, formation tick). Costs one
-## pass over the living units; nothing at all until a class has evolved.
+## pass over the living units; nothing at all until a class has evolved or a
+## Bone Golem has risen (content wave 2: a planted Golem's Bulwark taunts too,
+## SummonBehavior.taunt_reach()).
 func refresh() -> void:
 	_taunters.clear()
-	if director.evolutions.evolved.is_empty():
+	if director.evolutions.evolved.is_empty() and director.golems == null:
 		return
 	for u in director.units:
 		if not u.active or u.state == SummonedUnit.State.SPAWNING:
 			continue
 		var r := float(u.special.get("taunt_radius", 0.0))  # Taunt reach (px; 0 = none).
+		if u.behavior != null:
+			r = maxf(r, u.behavior.taunt_reach(u))  # Bone Golem Bulwark (0 for every other kit).
 		if r > 0.0:
 			_taunters.append([u, u.generation, r])
 
@@ -66,6 +70,12 @@ func taunt_target(e: Enemy) -> SummonedUnit:
 			best_d = d
 			best = u
 	return best
+
+
+## Stats key that counts an enemy redirected onto taunter `u`: a Bone Golem's
+## Bulwark has its own (golem_taunts), so the Colossus's count is unchanged.
+static func taunt_stat(u: SummonedUnit) -> String:
+	return "golem_taunts" if u.unit_class == GolemKit.CLASS_ID else "colossus_taunts"
 
 
 ## Death hook (CombatResolver.damage_unit, just before the unit is pooled):

@@ -297,6 +297,10 @@ var staggered_until: float = 0.0
 ## Gargoyle / Cathedral Horror dive (SynergyManager.mark_swooped(); only
 ## written while Death from Above or The Wild Hunt is active). 0 = never.
 var swooped_until: float = 0.0
+## Synergy mark (content wave 2): game time (s) until which this enemy is
+## slammed by a Bone Golem / Ossuary Titan slam (SynergyManager.mark_slammed();
+## only written while Charnel House is active). 0 = never.
+var slammed_until: float = 0.0
 ## Death from Above: true once a rogue hit spent this swoop mark's dash reset
 ## (a new swoop mark re-arms it).
 var swoop_reset_spent: bool = false
@@ -457,6 +461,7 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	weaken_span = 0.0
 	staggered_until = 0.0
 	swooped_until = 0.0
+	slammed_until = 0.0
 	swoop_reset_spent = false
 	_shoot_slow_timer = 0.0
 	frozen = false
@@ -627,7 +632,7 @@ func _pick_target(search: float, prefer_undead: bool) -> void:
 	var taunter := game.horde.colossi.taunt_target(self)  # null = no taunt applies.
 	if taunter != null:
 		if target != taunter:
-			game.stat_add("colossus_taunts", 1.0)
+			game.stat_add(ColossusKit.taunt_stat(taunter), 1.0)
 		_set_target(taunter)
 		return
 	var player := game.player

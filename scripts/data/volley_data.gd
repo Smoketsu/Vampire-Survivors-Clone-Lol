@@ -176,6 +176,9 @@ const CLASSES := {
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"spawn_of_the_deep": {"trigger": "special", "pattern": "ring", "counts": [6, 9], "speed": 230.0,
 		"life": 0.45, "share": 0.5, "pierce": 0, "radius": 4.5, "style": "orb", "color": Color(0.45, 0.80, 0.74)},  # TUNING (not in GDD) brine spray from the grasp (share of a squeeze)
+	# --- Content wave 2: Bone Golem ---
+	"bone_golem": {"trigger": "attack", "every": 1, "pattern": "ring", "counts": [8, 12], "speed": 230.0,
+		"life": 0.5, "share": 0.25, "pierce": 0, "radius": 4.5, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) owner-approved: every slam throws a ring of bone shards outward
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -209,6 +212,9 @@ const EVOLVED := {
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"leviathan": {"trigger": "special", "pattern": "spiral", "counts": [14], "speed": 210.0,
 		"life": 0.6, "share": 0.4, "pierce": 1, "radius": 5.0, "style": "wave", "color": Color(0.45, 0.80, 0.74), "curve": 2.0},  # TUNING (not in GDD) a whirl of brine with every sweep
+	# --- Content wave 2: Bone Golem ---
+	"ossuary_titan": {"trigger": "attack", "every": 1, "pattern": "spiral", "counts": [16], "speed": 220.0,
+		"life": 0.6, "share": 0.22, "pierce": 1, "radius": 5.0, "style": "shard", "color": Color(0.80, 0.92, 0.84), "curve": 2.2},  # TUNING (not in GDD) a whirl of bone and soul-lit shards with every slam
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------

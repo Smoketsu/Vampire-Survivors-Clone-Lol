@@ -23,6 +23,10 @@
 ## expires, bursts into shrapnel: `pulse_damage` once to every enemy within
 ## GraveSpellData.BASTION_SHRAPNEL_RADIUS px of any segment.
 ## Walls are pooled Wall records simulated and drawn by this one node.
+## Content wave 2: raise_wall() lets the Ossuary Titan (GolemKit) collapse
+## into a straight wall of its own here, with its own damage source and stats
+## (titan_wall_hits / titan_wall_pushes); the same push-out rules hold. When
+## the spell is not learned the node only ages such walls (idle_step()).
 class_name BoneWall
 extends NecroSpell
 
@@ -49,6 +53,9 @@ class Wall:
 	var damage: float = 0.0
 	## Charnel Bastion shrapnel damage when it expires (0 = none).
 	var shrapnel: float = 0.0
+	## Damage source of its spikes ("" = the spell's own: "bone_wall" /
+	## "bastion"; content wave 2: "titan_wall" for an Ossuary Titan's wall).
+	var source: String = ""
 
 ## Standing walls (oldest first).
 var _walls: Array[Wall] = []
@@ -83,6 +90,50 @@ func step(delta: float, stats: Dictionary) -> void:
 	_timer -= delta
 	if _timer <= 0.0:
 		_timer = float(stats["cooldown"]) if _cast(stats) else AbilityData.SPELL_RETRY
+	_step_walls(delta)
+
+
+## The spell is not learned (NecroSpellBook): only the standing walls age
+## (an Ossuary Titan's collapse wall); nothing is cast.
+func idle_step(delta: float) -> void:
+	_phase += delta
+	_step_walls(delta)
+
+
+## Content wave 2: raises a straight wall of segments `segs` (world px, already
+## clear of obstacles) facing `normal` (the push direction for an enemy on a
+## segment centre) for `duration` s, its spikes dealing `damage` per tick as
+## `source` (no Stonebone, no shrapnel). Shares the spell's segment cap.
+## Returns false when `segs` is empty.
+func raise_wall(segs: PackedVector2Array, normal: Vector2, duration: float, damage: float, source: String) -> bool:
+	if segs.is_empty():
+		return false
+	var w: Wall = _pool.pop_back() if not _pool.is_empty() else Wall.new()
+	w.segs = segs.duplicate()
+	w.ring = false
+	w.center = segs[segs.size() >> 1]
+	w.normal = normal
+	w.duration = duration
+	w.time_left = duration
+	w.tick = GraveSpellData.BONE_WALL_TICK
+	w.damage = damage
+	w.shrapnel = 0.0
+	w.source = source
+	_walls.append(w)
+	_seg_count += w.segs.size()
+	while _seg_count > GraveSpellData.BONE_WALL_MAX_SEGMENTS and _walls.size() > 1:
+		var old: Wall = _walls.pop_front()  # The oldest wall crumbles.
+		_seg_count -= old.segs.size()
+		_pool.append(old)
+	for k in w.segs.size():
+		if k % 2 == 0:
+			game.effects.ring(w.segs[k], GraveSpellData.BONE_WALL_SEGMENT_RADIUS * 1.6, Palette.BONE, 0.25, "bone_wall_rise")
+	queue_redraw()
+	return true
+
+
+## Ages, ticks and expires every standing wall (spell or Titan).
+func _step_walls(delta: float) -> void:
 	var i := 0  # Index into _walls (ordered: the oldest is dropped first).
 	while i < _walls.size():
 		var w := _walls[i]
@@ -140,6 +191,7 @@ func _cast(stats: Dictionary) -> bool:
 	w.tick = GraveSpellData.BONE_WALL_TICK
 	w.damage = float(stats["damage"])
 	w.shrapnel = float(stats.get("pulse_damage", 0.0))
+	w.source = ""
 	_walls.append(w)
 	_seg_count += w.segs.size()
 	while _seg_count > GraveSpellData.BONE_WALL_MAX_SEGMENTS and _walls.size() > 1:
@@ -198,7 +250,7 @@ func _step_wall(w: Wall, delta: float) -> bool:
 
 ## One spike tick: `damage` once to every enemy pressing on the wall.
 func _spike_tick(w: Wall) -> void:
-	var src := "bastion" if w.ring else "bone_wall"  # Stats tag.
+	var src := w.source if w.source != "" else ("bastion" if w.ring else "bone_wall")  # Damage tag.
 	var reach := GraveSpellData.BONE_WALL_SEGMENT_RADIUS + GraveSpellData.BONE_WALL_TOUCH_MARGIN  # Touch reach beyond the body.
 	_seen.clear()
 	for q: Vector2 in w.segs:
@@ -209,7 +261,7 @@ func _spike_tick(w: Wall) -> void:
 	for e: Enemy in _seen:
 		if e.active:
 			game.combat.damage_enemy(e, w.damage, src)
-	game.stat_add("wall_spike_hits", float(_seen.size()))
+	game.stat_add("wall_spike_hits" if w.source == "" else w.source + "_hits", float(_seen.size()))
 	_seen.clear()
 
 
@@ -258,6 +310,9 @@ func after_physics(delta: float) -> void:
 					continue
 				var n := diff / d if d > 0.01 else (_ring_normal(w, q) if w.ring else w.normal)  # Push direction.
 				e.position += n * (min_d - d)
+				if w.source != "":
+					game.stat_add(w.source + "_pushes", 1.0)  # Content wave 2: a Titan's wall (own counter).
+					continue
 				game.stat_add("wall_pushes", 1.0)
 				if not _seen.has(e):
 					_seen.append(e)

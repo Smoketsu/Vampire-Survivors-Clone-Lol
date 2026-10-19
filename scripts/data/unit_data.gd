@@ -31,7 +31,11 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		# save that never slew her never offers it (Unlocks.offerable()).
 		"fallen_seraph",
 		# --- Act II: Ul-Thalos, the Risen Spire ---
-		"spawn_of_the_deep"]
+		"spawn_of_the_deep",
+		# --- Content wave 2: Bone Golem ---
+		# Unlockable (UnlockData: the Bone Legion achievement), so a fresh save
+		# never offers it (Unlocks.offerable()).
+		"bone_golem"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -103,6 +107,9 @@ const CORE_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
 ##                             support classes (Mender, Warder, Bishop) always
 ##                             take the support ring (HordeDirector
 ##                             _calculate_formation_anchors()).
+##   rejoin_speed_mult       — content wave 2 (the Bone Golem): multiplier on its
+##                             catch-up (FOLLOWING far from its post) and
+##                             RETURNING speeds; 1 when absent.
 ##   capacity_bonus_mult     — share (0..1) of GLOBAL capacity bonuses (Grave
 ##                             Dominion, Legion of Bone) this class receives,
 ##                             rounded down; 1 when absent. Low-population
@@ -117,7 +124,8 @@ const CORE_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
 ##                             two orders together come up as often as one role.
 ##   behavior                — SummonBehavior id ("stomp" | "dash" | "swoop" |
 ##                             "frost" | "pack" | "dirge" | "barrage" |
-##                             "dive" (Act II: the Fallen Seraph));
+##                             "dive" (Act II: the Fallen Seraph) |
+##                             "bulwark" (content wave 2: the Bone Golem));
 ##                             absent = no special action.
 ##   special                 — the behaviour's numbers. HordeDirector scales
 ##                             them by suffix (see _special_stats()):
@@ -785,6 +793,88 @@ const UNITS := {
 			"elite_bonus": 0.6,  # TUNING (not in GDD) target-score bonus for an elite, a miniboss or the boss
 		},
 	},
+	# --- Content wave 2: Bone Golem ---
+	# Bone Golem (owner-approved proposal 5, GDD §15.0 "Bone Golem (content
+	# wave 2)"; locked until the Bone Legion achievement, UnlockData): a slow,
+	# living fortress built from the necromancer's fallen. Not a second
+	# Abomination: an ANCHOR that holds its post on the Bone Ring (formation
+	# "front", a blocker like the Warriors), grows during a run and protects
+	# the dead. Its attack is a heavy two-handed slam: an ordinary "melee"
+	# strike on its target plus a splash of slam_fraction of it on every other
+	# foe within slam_radius of the struck one (GolemBehavior.on_melee_hit(),
+	# source "golem_slam"). Its specials (GolemBehavior, "bulwark"):
+	#   Ossuary Hunger: a summon of yours that dies within hunger_reach px of a
+	#     Golem is absorbed by the nearest one (GolemKit): +hunger_hp max HP
+	#     each, up to hunger_cap, and the body is drawn up to hunger_size
+	#     bigger (a sprite scale, UnitMotion.size_k). Same on every stage
+	#     (owner rule: no act-specific summon mechanics).
+	#   Bulwark: every bulwark_cooldown s, with bulwark_min_enemies foes within
+	#     bulwark_trigger px (or an elite / the boss), it plants itself for
+	#     bulwark_duration s: it cannot walk (it still slams), its block mass
+	#     becomes bulwark_mass (nothing walks through it: Enemy.
+	#     resolve_blocking()'s push-out) and every foe within bulwark_reach px
+	#     targets it (ColossusKit's taunt; bosses, Reckoning foes and structures
+	#     ignore it).
+	# Every number is TUNING (not in GDD).
+	"bone_golem": {
+		"display_name": "Bone Golem",  # Owner-approved proposal 5
+		"plural": "Bone Golems",
+		"description": "A slow fortress of bone that holds its ground, slams foes and grows from your fallen.",  # Card text: one short sentence (owner rule).
+		"max_hp": 420.0,  # TUNING (not in GDD) the biggest body in the army (Abomination 260)
+		# Balance screen (4 seeds x Graveyard / Sanctum, --mortal --policy=army, the Golem vs the
+		# Abomination beside Warriors, Archers, Mages): at 26 damage, 130 px reach and a 60%
+		# splash the Golem was as safe (min HP 109 / 83 vs 100 / 92) but dealt 42-57% of the
+		# Abomination's damage; it now hits harder and looks a little farther.
+		"damage": 32.0,  # TUNING (not in GDD) the two-handed slam on its target (melee); was 26
+		"attack_interval": 2.2,  # TUNING (not in GDD) s; a slow, heavy slam
+		"attack_range": 28.0,  # TUNING (not in GDD) edge-to-edge melee reach (px): long arms (Abomination 16); 18 at first, it chased foes it could not catch
+		"move_speed": 48.0,  # TUNING (not in GDD) px/s; about half a Warrior's 85 (proposal: very slow)
+		# First forced tests: at its fighting speed it trailed the moving army (60% of its
+		# time without a target, 106 slams a run); it now lumbers faster only to rejoin its
+		# post (catch-up 46 x 1.35 x this, return 46 x 1.5 x this px/s).
+		"rejoin_speed_mult": 1.7,  # TUNING (not in GDD) optional key (1 when absent): catch-up and return speed factor
+		"radius": 18.0,  # TUNING (not in GDD) body radius (px); <= UnitData.MAX_BLOCK_RADIUS (the Bone Colossus is 19)
+		"acquisition_range": 160.0,  # TUNING (not in GDD) px; an anchor does not chase far (was 130)
+		"replenish_interval": 24.0,  # TUNING (not in GDD) s; the slowest to rebuild
+		"band_min": 45.0,  # TUNING (not in GDD) with the frontline (px)
+		"band_max": 95.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.35,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a fortress never shies away
+		"attack_profile": "melee",
+		"target_profile": "fortress",  # The nearest foes first, never filtered by the necromancer's danger (an anchor fights what reaches it).
+		"windup": 0.35,  # TUNING (not in GDD) s; both fists raised before the slam (0.45 at first: half the slams missed a foe that had moved or died)
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) healers value the fortress
+		"block_radius": 22.0,  # TUNING (not in GDD) blocks like a warrior, wider (px); same 4 px reach gap as the Abomination
+		"block_mass": 10.0,  # TUNING (not in GDD) Abomination 8, Colossus 11; the boss (12) still shoves it unless it plants
+		"engaged_speed_mult": 0.45,  # TUNING (not in GDD) touching enemies move at 45%
+		"formation": "front",  # TUNING (not in GDD) holds a post on the Bone Ring like a blocker
+		"capacity_bonus_mult": 0.2,  # TUNING (not in GDD) Grave Dominion V: +1, not +5 (a 1-2 body class)
+		"behavior": "bulwark",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"slam_radius": 40.0,  # TUNING (not in GDD) px around the struck foe the slam splashes
+			"slam_fraction": 0.7,  # TUNING (not in GDD) splash damage = this x the slam's damage, to every other foe in slam_radius (was 0.6)
+			"slam_shake": 1.5,  # TUNING (not in GDD) screen-shake request (px, Juice)
+			"hunger_reach": 140.0,  # Owner-approved proposal: a summon dying within 140 px is absorbed (not area-scaled: no _radius suffix)
+			"hunger_hp": 0.04,  # Owner-approved proposal: +4% max HP per absorbed body
+			"hunger_cap": 0.60,  # Owner-approved proposal: at most +60% max HP
+			"hunger_size": 0.25,  # TUNING (not in GDD) the body is drawn up to 25% bigger at the cap (visual only)
+			"bulwark_cooldown": 12.0,  # Owner-approved proposal: plants every 12 s
+			"bulwark_duration": 3.0,  # Owner-approved proposal: for 3 s (Grave Masonry and special_duration lengthen it)
+			"bulwark_reach": 120.0,  # Owner-approved proposal: draws foes within 120 px (taunt; not area-scaled)
+			"bulwark_trigger": 80.0,  # TUNING (not in GDD) px; foes this close make it plant
+			"bulwark_min_enemies": 3,  # TUNING (not in GDD) foes within bulwark_trigger to plant (an elite / the boss alone also counts)
+			"bulwark_mass": 400.0,  # TUNING (not in GDD) block mass while planted: the boss (12) moves it by 3% of an overlap
+			"planted_reach_bonus": 2.0,  # TUNING (not in GDD) target-score bonus while planted for a foe within slam reach (the shared score is ~1-3)
+			"planted_far_penalty": 1.0,  # TUNING (not in GDD) target-score penalty while planted for a foe out of reach (it cannot walk)
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -935,6 +1025,16 @@ const LEVELS := {
 		{"count": 2, "damage_bonus": 0.2, "special_bonus": 0.2, "hp_bonus": 0.2, "special_duration": 0.25},
 		{"count": 3, "damage_bonus": 0.2, "special_bonus": 0.4, "hp_bonus": 0.2, "special_duration": 0.25, "special_haste": 0.2},
 	],
+	# --- Content wave 2: Bone Golem ---
+	# TUNING (not in GDD): 1 -> 2 golems (owner-approved proposal: 2 at Lv 5);
+	# more bulk and a wider slam, then longer and more frequent Bulwarks.
+	"bone_golem": [
+		{"count": 1},
+		{"count": 1, "hp_bonus": 0.15, "damage_bonus": 0.10},
+		{"count": 1, "hp_bonus": 0.15, "damage_bonus": 0.20, "special_area": 0.15},
+		{"count": 1, "hp_bonus": 0.30, "damage_bonus": 0.20, "special_area": 0.15, "special_duration": 0.15},
+		{"count": 2, "hp_bonus": 0.30, "damage_bonus": 0.30, "special_area": 0.25, "special_duration": 0.15, "special_haste": 0.2},
+	],
 }
 
 ## Ally-barrier targeting (Warder / Profane Bishop, SummonAbilities):
@@ -985,6 +1085,12 @@ const TARGET_WEIGHTS := {
 	# Fallen Seraphs: feather blades at foes closing on the necromancer, never
 	# wasted on doomed targets; the dive picks its own pack (SeraphBehavior).
 	"seraph": {"distance": 0.6, "threat": 1.1, "role": 0.4, "tactical": 0.0, "cluster": 0.0, "overkill": 2.0},  # TUNING (not in GDD)
+	# --- Content wave 2: Bone Golem ---
+	# Bone Golems: the nearest foes first (it is too slow to chase), threats to
+	# the necromancer second. Not "guard": the guard profile only looks near a
+	# necromancer in danger, which left the slow anchor idle at its post (first
+	# forced test: 106 slams in a run, 60% of its time without a target).
+	"fortress": {"distance": 1.6, "threat": 0.8, "role": 0.2, "tactical": 0.0, "cluster": 0.0, "overkill": 0.5},  # TUNING (not in GDD)
 }
 
 # --- Leash / lifecycle (GDD §24) ---------------------------------------------

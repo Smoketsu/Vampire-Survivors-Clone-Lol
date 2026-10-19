@@ -19,7 +19,8 @@
 ##                             (CombatResolver.damage_unit), aura drawn on
 ##                             every summon (SummonedUnit._draw).
 ## The newer classes' synergies (setter / finisher, SynergyData header):
-##   marks        mark_staggered() (AbominationBehavior stomp) and
+##   marks        mark_staggered() (AbominationBehavior stomp), mark_slammed()
+##                (GolemBehavior slam; content wave 2, Charnel House) and
 ##                mark_swooped() (GargoyleBehavior dive) write the timed
 ##                Enemy tags, only while a synergy that reads them is active
 ##                (so nothing changes without one); chill, Deep Freeze and the
@@ -52,6 +53,10 @@ const REGEN_TICK: float = 1.0  # TUNING (not in GDD)
 ## Synergies with a per-hit bonus, reported in summary_line() (display order).
 const HIT_IDS := ["flesh_rampart", "killing_field", "death_from_above", "wild_hunt",
 		"cold_blood", "shatterfall", "requiem", "charnel_menagerie"]
+## Content wave 2: hit synergies kept OUT of summary_line() (their numbers are
+## on the autotest's "bone golem" line), so the "synergy bonus" line keeps its
+## text in every run.
+const WAVE2_HIT_IDS := ["charnel_house"]
 
 ## Owning horde director.
 var director: HordeDirector
@@ -86,7 +91,7 @@ var _frenzy_on: bool = false
 
 func _init(p_director: HordeDirector) -> void:
 	director = p_director
-	for id: String in HIT_IDS:
+	for id: String in HIT_IDS + WAVE2_HIT_IDS:
 		_keys[id] = ["syn_%s_hits" % id, "syn_%s_bonus_dmg" % id]
 
 
@@ -292,6 +297,17 @@ func mark_swooped(e: Enemy) -> void:
 	game.stat_add("syn_swooped_marks", 1.0)
 
 
+## Content wave 2: Bone Golem / Ossuary Titan slam hit `e`: it is slammed for
+## SynergyData.SLAM_MARK_DURATION s, while a synergy reads the mark (Charnel
+## House). Structures and Reckoning enemies are never marked.
+func mark_slammed(e: Enemy) -> void:
+	if not _marks.has("slammed") or not e.active or e.is_structure or e.is_reckoning:
+		return
+	var game := director.game
+	e.slammed_until = maxf(e.slammed_until, game.elapsed + SynergyData.SLAM_MARK_DURATION)
+	game.stat_add("syn_slammed_marks", 1.0)
+
+
 ## Damage multiplier the synergies give a hit of `source` on `e` (1 = none),
 ## called once per hit by CombatResolver.damage_enemy(): (1 + the highest
 ## mark bonus of the active synergies the source's class finishes, halved on
@@ -342,6 +358,8 @@ func _mark_bonus(id: String, source: String, e: Enemy) -> float:
 			return float(def["bonus_chilled"]) if e.chill_timer > 0.0 else 0.0
 		"weakened":
 			return float(def["bonus"]) if e.weaken_until > now else 0.0
+		"slammed":
+			return float(def["bonus"]) if e.slammed_until > now else 0.0  # Content wave 2: Charnel House.
 	return 0.0
 
 

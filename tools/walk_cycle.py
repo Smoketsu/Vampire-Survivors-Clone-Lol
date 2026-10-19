@@ -210,6 +210,11 @@ RIGS = {
     "summons/leviathan": dict(mode="robe", hip=58, rigid=[], sway=2, dip=1),
     "summons/drowned_thrall_ally": dict(mode="legs", hip=34, back=(0, 17), front=(17, 36), rigid=[], spread=2, lift=1, dip=1),
     "player/tide_widow": dict(mode="robe", hip=35, rigid=[(30, 44, 0, None)], sway=2, dip=1, bust=(21, 30, 18, 26, 2)),
+    # --- Content wave 2: Bone Golem ---
+    # Heavy stumping legs (short spread and lift); both huge low fists hang below the hip
+    # and ride with the body (rigid), so only the two stumps step.
+    "summons/bone_golem": dict(mode="legs", hip=59, back=(20, 45), front=(45, 67), rigid=[(0, 20, 59, None), (67, 88, 59, None)], spread=2, lift=2, dip=1),
+    "summons/ossuary_titan": dict(mode="legs", hip=77, back=(22, 53), front=(53, 80), rigid=[(0, 22, 77, None), (80, 104, 77, None)], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
