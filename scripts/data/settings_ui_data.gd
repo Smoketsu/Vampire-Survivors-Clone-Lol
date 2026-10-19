@@ -67,7 +67,7 @@ const GROUPS: Array = [
 ## Short row labels (the group names say the rest: "Up" under Move).
 const SHORT_LABELS: Dictionary = {
 	"move_up": "Up", "move_down": "Down", "move_left": "Left", "move_right": "Right",  # TUNING (not in GDD)
-	"toggle_aim": "Bolt aim", "dash": "Grave Step", "ultimate": "Dread Rally", "pause": "Pause",  # TUNING (not in GDD)
+	"toggle_aim": "Bolt aim", "dash": "Grave Step", "ultimate": "Ultimate", "pause": "Pause",  # TUNING (not in GDD)
 }
 ## Caption of a binding button while it waits for a key.
 const LISTENING: String = "..."  # TUNING (not in GDD)

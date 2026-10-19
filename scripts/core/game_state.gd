@@ -105,6 +105,10 @@
 ##                         evolutions and chests from VictoryData.PREVIEW_*), so
 ##                         the last stand and the victory card can be seen and
 ##                         screenshot at once. Nothing is saved (Meta.can_write()).
+##   --ultimate=ID         Autotest ultimate (UltimateData ids: dread_rally
+##                         (default, today's game), sovereigns_decree,
+##                         eclipse, grave_tide); locks are bypassed. The bots
+##                         cast it with the Dread Rally rule (_rally_wanted()).
 ## The environment variable NECROPATHY_AUTOTEST=1 (or the pre-rename GRAVEBOUND_AUTOTEST=1) is equivalent to --autotest.
 extends Node
 
@@ -172,6 +176,8 @@ var autotest_character: String = CharacterData.DEFAULT_ID
 ## Debug: true when --victory-preview ends the run as a scripted victory
 ## (VictoryPreview; the menu is skipped and nothing is saved).
 var victory_preview: bool = false
+## Autotest: UltimateData id of the ultimate (--ultimate=; locks bypassed).
+var autotest_ultimate: String = UltimateData.DEFAULT_ID
 ## Stage chosen last in the stage select this session (focused next time).
 var last_stage_id: String = StageRegistry.DEFAULT_ID
 ## Whether the F3 debug overlay is shown; persists across restarts.
@@ -307,6 +313,12 @@ func _parse_args(args: PackedStringArray) -> void:
 					cid, String(CharacterData.CHARACTERS[cid]["spell"]), ", ".join(CharacterModifiers.available_ids()), CharacterData.DEFAULT_ID])
 			else:
 				autotest_character = cid
+		elif arg.begins_with("--ultimate="):
+			var uid := arg.get_slice("=", 1).to_lower()  # Requested ultimate id.
+			if UltimateData.ULTIMATES.has(uid):
+				autotest_ultimate = uid
+			else:
+				push_error("Unknown --ultimate=%s (expected one of %s)" % [uid, ", ".join(PackedStringArray(UltimateData.ORDER))])
 		elif arg.begins_with("--classes="):
 			for cls: String in arg.get_slice("=", 1).split(",", false):
 				# Evolution-only classes (the Profane Bishop) cannot be forced.
@@ -318,10 +330,12 @@ func _parse_args(args: PackedStringArray) -> void:
 ## Autotest: true when item `id` is forced by --spells= / --passives= /
 ## --classes= (Unlocks.is_open() treats it as unlocked). A forced spell's
 ## evolution passive counts too (--spells forces both; an Act II spell's
-## paired passive is locked with it).
+## paired passive is locked with it), and so does the ultimate of --ultimate=.
 func autotest_forces(id: String) -> bool:
 	if autotest_spells.has(id) or autotest_passives.has(id) or autotest_classes.has(id):
 		return true
+	if id == autotest_ultimate:
+		return true  # Content wave 2: --ultimate= opens its ultimate on its own (never through --unlocks=all).
 	for sp: String in autotest_spells:
 		var evo := EvolutionData.for_spell(sp)  # The forced spell's evolution ("" if none).
 		if evo != "" and String(EvolutionData.EVOLUTIONS[evo]["passive"]) == id:

@@ -840,6 +840,9 @@ stone wing, ice, wail) meeting its finisher's (sword, boulder, dagger, hound sku
 | `powerup_nova.png` | Violet starburst |
 | `grave_step.png` | Grave Step (dash): a hooded violet shadow stepping sideways, two fading afterimages behind it |
 | `dread_rally.png` | Dread Rally (ultimate): a skull inside a dark violet burst ring, soul wisps rising |
+| `sovereigns_decree.png` | Sovereign's Decree (content wave 2 ultimate): a bone skull with teal eyes under a big three-pointed violet crown (symbol at 26 px, `--no-cleanup` keeps the sockets and teeth) |
+| `eclipse.png` | Eclipse (content wave 2 ultimate): a black sun disc inside a thick violet corona ring with four short rays and a pale crescent on its upper-left rim |
+| `grave_tide.png` | Grave Tide (content wave 2 ultimate): a curling soul-teal wave with two bone skeletal hands reaching up out of it |
 | `twin_shadow.png` | Ossuary Twin Shadow: two overlapping hooded shadow silhouettes (second dash charge) |
 | `restless_shade.png` | Ossuary Restless Shade: a hooded shadow inside a teal clock arc (shorter dash cooldown) |
 | `soul_ash.png` | **Soul Ash** (the currency: main menu, Ossuary, end screen): a heap of grey soul ash with orange embers glowing through it and a teal soul flame rising from its peak |
@@ -1181,6 +1184,9 @@ anim id, or `burst()` for the art-only effects that never had a drawn shape: `bo
 | `raise_dead` | Raise Dead: grave dirt cracking open and a teal soul-fire swirl as a skeletal hand claws up (mound at the feet) | 8 | 128 | each raised skeleton | done |
 | `legion_burst` | Legion of Bones: a crumbling skeleton bursting into a ring of bone shards and dust | 8 | 128 | each skeleton's burst | done |
 | `seraph_dive` | Fallen Seraph dive impact: a pale flash, then a ring of black feathers and ash dust flung outward with a thin ash shock ring, fading to wisps (teal sparks) | 8 | 128 | `burst()` at each dive impact (`SeraphBehavior._impact()`) | done |
+| `sovereigns_decree` | Sovereign's Decree cast (content wave 2): a bone crown of light flaring at the centre while a ring of chunky violet rune marks spreads outward, then the runes break into sparks (the hazy sheet had its alpha below 32 keyed out) | 10 | 256 | `UltimateSystem.cast()` ring (`DECREE_RING_TIME` 0.6 s) | done |
+| `eclipse` | Eclipse cast (content wave 2): a black sun with a pale violet corona; the disc grows and swallows the corona while dark violet smoke rolls outward, ending as a thin crescent | 10 | 256 | `UltimateSystem.cast()` ring (`ECLIPSE_RING_TIME` 0.7 s) | done |
+| `grave_tide` | Grave Tide cast (content wave 2): a ring of soul-teal fire rolling outward with bone skeletal hands breaking its front, thinning into teal wisps and bone specks | 10 | 256 | `UltimateSystem.cast()` ring (`TIDE_RING_TIME` 0.65 s) | done |
 
 **How the effects pass made them** (Oct 2026, `tools/gen_image.py`, 24 images for 24 strips, then
 a second pass of 3 images for `bolt_impact`, `level_up` and `evolution`): one

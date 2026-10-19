@@ -75,6 +75,25 @@ static func icon_row(entries: Array[Dictionary], side: float) -> HBoxContainer:
 	return row
 
 
+## The run's ultimate (content wave 2, game.ultimates) as one icon (`side` px)
+## and its name (BODY tier); its effect is the tooltip.
+static func ultimate_row(game: Game, side: float) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_theme_constant_override("separation", GAP + 2)
+	if game == null or game.ultimates == null:
+		return row
+	var ul := game.ultimates
+	var g := IconGlyph.new(ul.icon(), Vector2(side, side))
+	g.tooltip_text = String(ul.row()["description"])
+	g.mouse_filter = Control.MOUSE_FILTER_PASS  # Shows the effect on hover.
+	row.add_child(g)
+	var name_l := UiTheme.tier_label(ul.display_name(), UiTheme.Tier.BODY, UiTheme.TEXT)
+	name_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(name_l)
+	return row
+
+
 ## A row of class icons (`side` px) with their unit counts ("x7") for
 ## `entries` (army() format); the class name is the tooltip.
 static func army_row(entries: Array[Dictionary], side: float) -> HBoxContainer:

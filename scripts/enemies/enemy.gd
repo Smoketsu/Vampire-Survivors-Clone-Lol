@@ -268,6 +268,14 @@ var rot_amp: float = 0.0
 var curse_until: float = 0.0
 ## Gravebow curse: extra damage fraction taken while cursed (0..1).
 var curse_amp: float = 0.0
+## Eclipse exposure (ultimate, CombatResolver.expose_enemy()): game time (s)
+## from which this enemy takes `expose_amp` more damage from every source
+## (the end of the darkness that caught it; also marks the catch). 0 = never.
+var expose_from: float = 0.0
+## Eclipse exposure: game time (s) until which it lasts. 0 = never / expired.
+var expose_until: float = 0.0
+## Eclipse exposure: extra damage fraction taken while exposed (0..1).
+var expose_amp: float = 0.0
 ## Wither aura: game time (s) until which this enemy's armour is shredded
 ## (set by the Wither spell each pulse it stands inside; timed on
 ## Game.elapsed like Rot, so it needs no ticking). 0 = never / expired.
@@ -449,6 +457,9 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	rot_amp = 0.0
 	curse_until = 0.0
 	curse_amp = 0.0
+	expose_from = 0.0
+	expose_until = 0.0
+	expose_amp = 0.0
 	wither_until = 0.0
 	wither_shred = 0.0
 	weaken_until = 0.0
@@ -621,9 +632,17 @@ func think() -> void:
 
 ## Targets the player unless a summon within `search` px is closer (or, for
 ## Purifiers, unless any summon is within `search` px at all). A Bone
-## Colossus in taunt reach (ColossusKit) wins over both: it changes only the
-## target choice, so every kind keeps its own movement (enemies always advance).
+## Colossus in taunt reach (ColossusKit) wins over both, and a summon taunting
+## under Sovereign's Decree (UltimateSystem.taunt_target()) wins over that: each
+## changes only the target choice, so every kind keeps its own movement
+## (enemies always advance).
 func _pick_target(search: float, prefer_undead: bool) -> void:
+	var decreed := game.ultimates.taunt_target(self)  # Sovereign's Decree taunt (null unless it runs).
+	if decreed != null:
+		if target != decreed:
+			game.stat_add("decree_taunts", 1.0)
+		_set_target(decreed)
+		return
 	var taunter := game.horde.colossi.taunt_target(self)  # null = no taunt applies.
 	if taunter != null:
 		if target != taunter:

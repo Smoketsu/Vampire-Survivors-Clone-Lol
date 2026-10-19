@@ -130,6 +130,12 @@
 ##     why), hits ignored during dash i-frames, rallies, the meter fill
 ##     times, knockbacks, summons called back, rally healing and the minion
 ##     damage dealt under the buff.
+##   * ultimates (content wave 2, --ultimate=ID, UltimateData): the bots cast
+##     the chosen ultimate with the same rule as Dread Rally (_rally_wanted());
+##     with another ultimate than Dread Rally an "ultimate" line follows the
+##     "dread rally" line (UltimateSystem.summary_line(): casts and effect
+##     stats: taunted, damage prevented, frozen, exposed, risen...), and the
+##     header names it. The Dread Rally run prints neither (unchanged).
 ##   * army synergies: the "synergies active at end" line lists every active
 ##     synergy and when each awoke; the "synergy bonus" line reports, for the
 ##     newer classes' synergies, the hits each mark bonus raised and the
@@ -441,6 +447,8 @@ func _ready() -> void:
 		String(CharacterData.CHARACTERS[GameState.autotest_character]["spell"])])
 	if GameState.autotest_hyper or GameState.autotest_skin != "":
 		print("[autotest] hyper: %s | skin: %s" % [str(GameState.autotest_hyper), GameState.autotest_skin if GameState.autotest_skin != "" else "default"])
+	if GameState.autotest_ultimate != UltimateData.DEFAULT_ID:
+		print("[autotest] ultimate: %s" % GameState.autotest_ultimate)  # Content wave 2 (UltimateData).
 
 
 ## --classes: raises every forced class to Lv 1 while an active slot is free.
@@ -1379,6 +1387,8 @@ func _print_abilities(st: Dictionary) -> void:
 		dr.rallies, dr.fill_times.size(), " ".join(fills), total / maxf(1.0, float(dr.fill_times.size())), int(dr.fraction() * 100.0),
 		int(st.get("rally_knockbacks", 0.0)), int(st.get("rally_recalled", 0.0)), int(st.get("rally_heal", 0.0)),
 		int(under), int(under * bonus / (1.0 + bonus)), float(st.get("rally_buff_time", 0.0))])
+	if not game.ultimates.is_default():
+		print("[autotest] ultimate: " + game.ultimates.summary_line(st))  # Content wave 2 (UltimateSystem).
 
 
 ## Special ids of the stage boss (from the boss once he arrived, else from

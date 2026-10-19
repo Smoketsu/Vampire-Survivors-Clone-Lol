@@ -41,6 +41,7 @@ func _ready() -> void:
 		_run_config.set_modifiers(GameState.autotest_modifiers)
 		_run_config.set_character(GameState.autotest_character)
 		_run_config.hyper = GameState.autotest_hyper
+		_run_config.set_ultimate(GameState.autotest_ultimate)  # --ultimate= (lock bypassed).
 		_start_game()
 	else:
 		_show_menu()

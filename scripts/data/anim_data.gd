@@ -58,6 +58,10 @@ const ANIMS: Dictionary = {
 	"vhalneth_gaze": {"duration": 1.4, "fill": 1.15},  # TUNING (not in GDD) Vhal'Neth's gaze opening on the ground (8 frames of 256 px; VhalnethHazards ring() = VhalnethData gaze_telegraph 1.4 s)
 	# --- Content wave 2: Bone Golem ---
 	"golem_slam": {"duration": 0.3, "fill": 1.3},  # TUNING (not in GDD) a Bone Golem slam: a ring of cracked grave dirt and bone shards (8 frames of 128 px; GolemBehavior ring() 0.3 s)
+	# --- Content wave 2: Ultimates --- (UltimateSystem cast bursts; durations = UltimateData *_RING_TIME)
+	"sovereigns_decree": {"duration": 0.6, "fill": 1.15},  # TUNING (not in GDD) Sovereign's Decree: a gold crown-shaped flare over a ring of violet sigils spreading out (DECREE_RING_TIME)
+	"eclipse": {"duration": 0.7, "fill": 1.15},  # TUNING (not in GDD) Eclipse: a black sun swallowing its pale blue corona, a dark shock ring rolling outward (ECLIPSE_RING_TIME)
+	"grave_tide": {"duration": 0.65, "fill": 1.15},  # TUNING (not in GDD) Grave Tide: a soul-green wave rolling outward with skeletal hands breaking its surface (TIDE_RING_TIME)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).

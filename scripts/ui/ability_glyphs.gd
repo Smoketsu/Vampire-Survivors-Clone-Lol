@@ -8,6 +8,8 @@
 ##                    Grave Step charge).
 ##   restless_shade — a step silhouette inside a clock arc (Ossuary: Grave
 ##                    Step cooldown).
+## The three content-wave-2 ultimates are drawn by UltimateGlyphs (asked
+## from the fall-through below).
 ## Glyphs.draw_icon() reaches draw_icon() here last in its fall-through chain
 ## (after SpellGlyphs), and dedicated icon art (assets/sprites/icons/<kind>.png,
 ## ART_BIBLE) still wins over these shapes. Purely visual.
@@ -47,7 +49,7 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 			ci.draw_arc(c, s * 0.68, -PI / 2.0, PI * 0.6, 16, Palette.NECRO_GREEN, 3.0)
 			_shade(ci, c + Vector2(0.0, s * 0.05), s * 0.45, SHADE.lightened(0.15))
 		_:
-			return false
+			return UltimateGlyphs.draw_icon(ci, kind, c, s)  # Content wave 2: the new ultimates.
 	return true
 
 

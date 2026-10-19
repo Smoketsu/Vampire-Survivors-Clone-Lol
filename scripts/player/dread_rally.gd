@@ -26,6 +26,13 @@
 ##     sprite-sheet art plugs in through AnimData) and a big screen shake.
 ## Game steps it right after the player; all timers run on game time. The
 ## autotest bots call request() directly. No RNG: deterministic per seed.
+## Ultimates (content wave 2, UltimateData): this is the ONE soul meter and the
+## ONE cast request of every ultimate. With the run's ultimate (game.ultimates,
+## RunConfig.ultimate_id) left at Dread Rally, the default, everything above
+## runs exactly as before; with another one, a full meter's cast spends the
+## meter and hands over to UltimateSystem.cast() instead (no surge, heal, raise,
+## buff, knockback or Rally Barrage), and the meter does not charge while that
+## ultimate runs (UltimateSystem.active(), the CHARGE_DURING_BUFF rule).
 class_name DreadRally
 extends RefCounted
 
@@ -103,7 +110,7 @@ func on_enemy_killed(e: Enemy) -> void:
 ## soul returning, EyeClaims), under the same rules as a kill: nothing while
 ## full or, unless PlayerAbilityData.CHARGE_DURING_BUFF, during the buff.
 func add_points(pts: float) -> void:
-	if is_full() or (buff_left > 0.0 and not PlayerAbilityData.CHARGE_DURING_BUFF):
+	if is_full() or ((buff_left > 0.0 or game.ultimates.active()) and not PlayerAbilityData.CHARGE_DURING_BUFF):
 		return
 	meter = minf(PlayerAbilityData.KILLS_TO_FILL, meter + pts)
 	if is_full():
@@ -117,7 +124,10 @@ func step(delta: float) -> void:
 	if _queued:
 		_queued = false
 		if is_full() and not game.player.dead:
-			_cast()
+			if game.ultimates.is_default():
+				_cast()
+			else:
+				_cast_other()
 	if surge_left > 0.0:
 		surge_left -= delta
 		if surge_left <= 0.0:
@@ -130,6 +140,19 @@ func step(delta: float) -> void:
 			buff_left = 0.0
 			_fill_start = game.elapsed
 			game.horde.recompute_all(game.horde.capacity_snapshot())
+
+
+## Another ultimate (UltimateSystem): spends the meter and casts it. Its fill
+## timing restarts when it ends (restart_fill()).
+func _cast_other() -> void:
+	meter = 0.0
+	_fill_start = game.elapsed
+	game.ultimates.cast()
+
+
+## The meter's next fill is timed from now (UltimateSystem, when its ultimate ends).
+func restart_fill() -> void:
+	_fill_start = game.elapsed
 
 
 ## Spends the meter: surge, heal, buff, knockback and the burst.

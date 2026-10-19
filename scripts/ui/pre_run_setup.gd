@@ -18,7 +18,9 @@
 ##     gold), the eight run modifiers as compact toggle tiles (RunModifierData:
 ##     a rune pip, the name and the Soul Ash reward; active ones crimson; the
 ##     focused / hovered one's effect shows in the one line under the grid and
-##     in its tooltip; they stack), and the TOTAL Soul Ash multiplier as one
+##     in its tooltip; they stack), the ultimate picker (PreRunUltimates,
+##     content wave 2: Dread Rally and the three new ultimates; locked ones
+##     padlocked with how to earn them), and the TOTAL Soul Ash multiplier as one
 ##     gold plaque that rolls to each new value (its tooltip holds the
 ##     breakdown, the combined enemy numbers and the Profane Oath note),
 ##   * Back (to the stage select), Standard (Necromancer, no modifiers, no
@@ -84,6 +86,8 @@ var _picker: CharacterPicker
 var _extras: PreRunHyperSkins
 ## Content wave 2: the title picker (PreRunTitleRow, in the hero panel under the skins).
 var _titles: PreRunTitleRow
+## The ultimate picker (PreRunUltimates, in the right column under the modifiers).
+var _ults: PreRunUltimates
 ## Character the hero shows (follows the focused tile).
 var _hero_char: String = ""
 ## Skin previewed on the chosen character while its skin tile is focused
@@ -167,21 +171,33 @@ func _ready() -> void:
 	_mod_detail.clip_text = true
 	_mod_detail.custom_minimum_size.x = FrontDoorData.SETUP_WIDTH - 24.0
 	setup.add_child(_mod_detail)
+	# Content wave 2: the ultimate picker, under the modifiers (wide tiles lined up with them).
+	setup.add_child(_section("Ultimate"))
+	_ults = PreRunUltimates.new()
+	_ults.config = config
+	_ults.tile_size = UltimateData.PICKER_TILE_WIDE
+	_ults.gap = UltimateData.PICKER_GAP_WIDE
+	_ults.detail_width = FrontDoorData.SETUP_WIDTH - 24.0
+	_ults.detail_lines = UltimateData.PICKER_WIDE_DETAIL_LINES
+	setup.add_child(_ults)
 	var spacer := Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	setup.add_child(spacer)
-	setup.add_child(_build_plaque())
 	var buttons := HBoxContainer.new()
 	buttons.add_theme_constant_override("separation", 8)
 	right.add_child(buttons)
 	_back = _make_button("Back", FrontDoorData.PRERUN_BUTTON, buttons, close)
 	_reset = _make_button("Standard", FrontDoorData.PRERUN_BUTTON, buttons, _reset_choice)  # Necromancer, no modifiers, no Hyper.
 	_reset.tooltip_text = "Necromancer, no modifiers, no Hyper."
-	var fill := Control.new()
+	# The total Soul Ash plaque sits in the button row between Standard and Begin
+	# (content wave 2: the ultimate picker took its place in the panel, and the
+	# screen must stay clear of the bottom hint strip at 720 px).
+	var fill := CenterContainer.new()
 	fill.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	buttons.add_child(fill)
+	fill.add_child(_build_plaque())
 	_begin = _make_button("Begin", FrontDoorData.BEGIN_BUTTON, buttons, _start)
 	UiTheme.style_button(_begin, "button", "gold")  # The strong primary action.
 	for fc: String in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color"]:
@@ -389,14 +405,15 @@ func _queue_wire() -> void:
 
 
 ## Explicit focus neighbours, so arrows / D-pad never leave the screen:
-## inside each column the rows link up and down (left: the skin / Hyper row;
-## right: the character tiles, difficulty cards, modifier rows), the end of a
+## inside each column the rows link up and down (left: the skin / Hyper row,
+## then the title row; right: the character tiles, difficulty cards,
+## modifier rows, the ultimate row), the end of a
 ## row crosses to the other column's row nearest in height, the last rows
 ## lead down to the bottom buttons and the bottom buttons lead back up.
 func _wire_focus() -> void:
 	var left: Array = _extras.rows() + _titles.rows()  # Left column rows (skins / Hyper, then the title).
 	var right: Array = _picker.tile_rows() + _rows_of(_level_buttons, DifficultyData.ORDER, DifficultyData.ORDER.size()) \
-			+ _rows_of(_mod_buttons, RunModifierData.ORDER, FrontDoorData.MOD_COLUMNS)  # Right column rows.
+			+ _rows_of(_mod_buttons, RunModifierData.ORDER, FrontDoorData.MOD_COLUMNS) + _ults.rows()  # Right column rows (the ultimates last).
 	var bottom := [_back, _reset, _begin]  # Bottom row, left to right.
 	_wire_column(left, [], right, [_back])
 	_wire_column(right, left, [], bottom)
@@ -405,7 +422,7 @@ func _wire_focus() -> void:
 		_link(b, "left", bottom[maxi(0, j - 1)] if j > 0 else (left.back() as Array).back())
 		_link(b, "right", bottom[mini(bottom.size() - 1, j + 1)])
 		_link(b, "bottom", b)
-		var last: Array = right.back()  # The last modifier row.
+		var last: Array = right.back()  # The last right-column row (the ultimates).
 		_link(b, "top", last[_nearest(j, bottom.size(), last.size())])
 
 

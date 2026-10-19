@@ -56,7 +56,9 @@ const MELEE_SOURCES := ["warrior", "bash", "lich_risen", "death_mark_risen", "ra
 	"gargoyle", "gargoyle_swoop", "bishop_aura",
 	"shadow_reaper", "cathedral_horror", "bone_colossus", "colossus_shrapnel",
 	"bone_hound", "hellhound", "hellhound_burn", "hellhound_trail",
-	"corpse_catapult", "ossuary_engine", "ossuary_shards"]
+	"corpse_catapult", "ossuary_engine", "ossuary_shards",
+	# --- Content wave 2: Ultimates --- (Grave Tide's Risen strike like Death Mark's)
+	"grave_tide_risen"]
 ## Seconds an aura buff (Banner Bearer, Holy Standard) lingers on a soldier
 ## after it leaves the aura (auras refresh at the 5 Hz think rate).
 const AURA_LINGER: float = 0.6  # TUNING (not in GDD)

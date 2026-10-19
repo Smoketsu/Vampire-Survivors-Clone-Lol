@@ -30,6 +30,10 @@
 ## stepped by the player) and `dread_rally` (DreadRally, Space / LB ultimate
 ## with a kill-charged soul meter, stepped right after the player); both are
 ## requested from _unhandled_input(), so they only fire while PLAYING.
+## `ultimates` (UltimateSystem, content wave 2) says which ultimate the one
+## meter casts (run_config.ultimate_id: Dread Rally by default, or Sovereign's
+## Decree, Eclipse, Grave Tide) and runs the new ones, stepped right after
+## `dread_rally`; a locked choice falls back to Dread Rally.
 ## On a phone or tablet the same actions come from TouchControls (added to
 ## the UI layer outside the autotest), which injects them as input events.
 ## The army formation (StanceData): `stance` (ArmyStance) holds the Bone Ring's numbers
@@ -161,6 +165,8 @@ var meta: MetaModifiers
 var grave_step: GraveStep
 ## The necromancer's ultimate (Dread Rally: soul meter, army buff).
 var dread_rally: DreadRally
+## The run's chosen ultimate (UltimateSystem; never null once _ready ran).
+var ultimates: UltimateSystem
 ## The army's formation this run (ArmyStance, always the Bone Ring; never null once _ready ran).
 var stance: ArmyStance
 ## The playable character of this run (CharacterModifiers; never null).
@@ -223,6 +229,7 @@ func _ready() -> void:
 	codex = CodexLog.new(self)  # Codex records (first, so every hook below can reach it).
 	difficulty = DifficultyModifiers.new(self)
 	dread_rally = DreadRally.new(self)
+	ultimates = UltimateSystem.new(self, _resolve_ultimate())
 	stance = ArmyStance.new(self)
 	if bool(stage_def.get("dread", false)):
 		dread = DreadMeter.new(self)  # Act II only.
@@ -306,6 +313,8 @@ func _ready() -> void:
 	camera.position_smoothing_speed = 8.0
 	add_child(camera)
 	camera.make_current()
+	if not ultimates.is_default():
+		add_child(UltimateOverlay.new(self))  # The new ultimates' screen overlays (visual only).
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -335,6 +344,16 @@ func _resolve_skin() -> String:
 	elif not SkinData.skins_for(run_config.character_key()).has(id) or not Meta.is_skin_unlocked(id):
 		return ""
 	return "" if String(SkinData.skin(id).get("kind", "default")) == "default" else id
+
+
+## The ultimate this run casts (UltimateData id): run_config.ultimate_id when
+## it is open (Unlocks.is_open(); the autotest's --ultimate= bypasses the
+## lock), else Dread Rally.
+func _resolve_ultimate() -> String:
+	var uid := run_config.ultimate_id  # Requested ultimate.
+	if not UltimateData.ULTIMATES.has(uid) or (not GameState.autotest and not Unlocks.is_open(uid)):
+		return UltimateData.DEFAULT_ID
+	return uid
 
 
 ## Builds the CanvasLayer UI. It processes while the tree is paused so menus
@@ -411,6 +430,7 @@ func _physics_process(delta: float) -> void:
 	_rebuild_grids()
 	player.step(delta)
 	dread_rally.step(delta)
+	ultimates.step(delta)  # The new ultimates (no-op with Dread Rally).
 	stance.step(delta)
 	if dread != null:
 		dread.step(delta)  # Act II Dread statistics (no-op elsewhere).

@@ -4,10 +4,11 @@
 ##   left  : Grave Step (dash) icon, darkened from the top while no charge is
 ##           ready (the recharge sweep), one pip per charge (filled = ready,
 ##           the recharging one fills up), and its key chip above it.
-##   right : Dread Rally (ultimate) icon, darkened above the soul meter's
-##           level, a meter bar beside it, a pulsing border and "READY"
-##           under the icon (never over it) when full, and the buff's
-##           remaining time while the rally runs.
+##   right : the ultimate's icon (the run's choice, game.ultimates: Dread
+##           Rally or a content-wave-2 ultimate), darkened above the soul
+##           meter's level, a meter bar beside it, a pulsing border and
+##           "READY" under the icon (never over it) when full, and the
+##           remaining time while it runs.
 ## The keys are InputHints chips drawn above the icons (InputHints.draw_chip),
 ## so they follow rebinds and the last device used (keyboard key, or the
 ## pad's RB / LB). Icons go
@@ -95,16 +96,18 @@ func _draw_rally(o: Vector2) -> void:
 	var rect := Rect2(o, Vector2(ICON, ICON))
 	_key_label(o, "ultimate")
 	_socket(rect)
-	Glyphs.draw_icon(self, "dread_rally", rect)
+	var ul := game.ultimates  # The run's ultimate (icon, running time).
+	Glyphs.draw_icon(self, ul.icon(), rect)
 	var f := dr.fraction()  # Meter fill 0..1.
 	var bar := Rect2(Vector2(o.x + ICON + 3.0, o.y), Vector2(BAR_W, ICON))
 	draw_rect(bar, Color(0.0, 0.0, 0.0, 0.6))
 	_bar_frame(bar)
-	if dr.buff_active():
-		var k := dr.buff_left / PlayerAbilityData.RALLY_DURATION  # Buff time left 0..1.
+	var left := ul.time_left()  # Seconds of the running ultimate left (0 = none).
+	if left > 0.0:
+		var k := clampf(left / ul.duration(), 0.0, 1.0)  # Time left 0..1.
 		draw_rect(Rect2(Vector2(bar.position.x, bar.end.y - ICON * k), Vector2(BAR_W, ICON * k)), Palette.VIOLET)
 		draw_rect(rect, Color(Palette.VIOLET, 0.22))
-		_status(o, "%.1fs" % dr.buff_left)
+		_status(o, "%.1fs" % left)
 		return
 	draw_rect(Rect2(Vector2(bar.position.x, bar.end.y - ICON * f), Vector2(BAR_W, ICON * f)), Palette.NECRO_GREEN)
 	if dr.is_full():

@@ -62,6 +62,9 @@
 ##     stage and character ([hyper_clears] "<stage>-<character>" = true; the
 ##     stage-select gold badges and the Hyper skins read it),
 ##   * `prerun_hyper` is the Hyper toggle last confirmed ([prerun] hyper),
+##   * `prerun_ultimate` is the ultimate last confirmed ([prerun] ultimate,
+##     an UltimateData id; content wave 2; missing or unknown = Dread Rally;
+##     a locked one opens the setup screen on Dread Rally, Unlocks.is_open()),
 ##   * `chosen_skins` is the skin last chosen per character ([skins]
 ##     <character> = <skin id>); skin UNLOCKS are not stored but derived
 ##     (is_skin_unlocked()) from the Hyper clears, achievements and three
@@ -159,6 +162,8 @@ var hyper_unlocked: bool = false
 var hyper_clears: Dictionary = {}
 ## Hyper toggle last confirmed on the setup screen.
 var prerun_hyper: bool = false
+## Ultimate (UltimateData id) last confirmed on the setup screen (content wave 2).
+var prerun_ultimate: String = UltimateData.DEFAULT_ID
 ## Character id -> SkinData id last chosen for that character.
 var chosen_skins: Dictionary = {}
 ## Codex: CodexData category -> {entry id -> true} for every entry met in
@@ -435,8 +440,8 @@ func achievement_progress(id: String) -> float:
 ## A RunConfig for stage `stage_id` with the remembered difficulty level,
 ## run modifiers, character (a remembered character that is locked or
 ## missing from this build falls back to the default), Hyper toggle (only
-## while unlocked) and the skin chosen for that character (the setup screen
-## opens on it).
+## while unlocked), the skin chosen for that character (the setup screen
+## opens on it) and the ultimate (Dread Rally when the remembered one is locked).
 func prerun_config(stage_id: String) -> RunConfig:
 	var c := RunConfig.for_stage(stage_id)
 	c.set_difficulty(prerun_difficulty)
@@ -444,21 +449,24 @@ func prerun_config(stage_id: String) -> RunConfig:
 	c.set_character(prerun_character if is_character_unlocked(prerun_character) else CharacterData.DEFAULT_ID)
 	c.hyper = prerun_hyper and hyper_unlocked
 	c.skin_id = chosen_skin(c.character_key())
+	c.set_ultimate(prerun_ultimate if Unlocks.is_open(prerun_ultimate) else UltimateData.DEFAULT_ID)  # Content wave 2.
 	return c
 
 
-## Remembers the difficulty level, run modifiers, character, Hyper toggle
-## and skin of `config` for the next setup screen (and the next session) and
+## Remembers the difficulty level, run modifiers, character, Hyper toggle,
+## skin and ultimate of `config` for the next setup screen (and the next session) and
 ## saves when they changed.
 func remember_prerun(config: RunConfig) -> void:
 	var skin_changed := _remember_skin(config)  # The character's skin choice changed.
 	if config.difficulty_id == prerun_difficulty and config.modifiers == prerun_modifiers \
-			and config.character_id == prerun_character and config.hyper == prerun_hyper and not skin_changed:
+			and config.character_id == prerun_character and config.hyper == prerun_hyper and not skin_changed \
+			and config.ultimate_id == prerun_ultimate:
 		return
 	prerun_difficulty = config.difficulty_id
 	prerun_modifiers = config.modifiers.duplicate()
 	prerun_character = config.character_id
 	prerun_hyper = config.hyper
+	prerun_ultimate = config.ultimate_id
 	save()
 	changed.emit()
 
@@ -932,6 +940,7 @@ func save() -> Error:
 	for id: String in EvolutionRecipes.ids():
 		cfg.set_value("recipes", id, discovered_recipes.has(id))
 	cfg.set_value("prerun", "hyper", prerun_hyper)
+	cfg.set_value("prerun", "ultimate", prerun_ultimate)  # Content wave 2: the chosen ultimate.
 	cfg.set_value("hyper", "unlocked", hyper_unlocked)
 	for key: String in hyper_clears:
 		cfg.set_value("hyper_clears", key, true)
@@ -1152,6 +1161,8 @@ func _load_hyper_skins(cfg: ConfigFile) -> void:
 				hyper_clears[_hyper_key(sid, ch)] = true
 	var h: Variant = cfg.get_value("prerun", "hyper", false)
 	prerun_hyper = typeof(h) == TYPE_BOOL and bool(h)
+	var ult: Variant = cfg.get_value("prerun", "ultimate", UltimateData.DEFAULT_ID)  # Content wave 2.
+	prerun_ultimate = String(ult) if typeof(ult) == TYPE_STRING and UltimateData.ULTIMATES.has(String(ult)) else UltimateData.DEFAULT_ID
 	for ch: String in CharacterData.ORDER:
 		var sk: Variant = cfg.get_value("skins", ch, "")
 		if typeof(sk) == TYPE_STRING and SkinData.skins_for(ch).has(String(sk)):
@@ -1200,6 +1211,7 @@ func _reset() -> void:
 	hyper_unlocked = false
 	hyper_clears = {}
 	prerun_hyper = false
+	prerun_ultimate = UltimateData.DEFAULT_ID
 	chosen_skins = {}
 	codex_seen = _empty_codex()
 	codex_kills = {}

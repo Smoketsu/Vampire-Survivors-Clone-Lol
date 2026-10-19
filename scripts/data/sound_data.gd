@@ -342,6 +342,26 @@ const SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "tri", "f0": 659.25, "start": 0.25, "dur": 0.4, "amp": 0.25, "decay": 0.15},
 			{"wave": "tri", "f0": 783.99, "start": 0.35, "dur": 0.4, "amp": 0.25, "decay": 0.15},
 			{"wave": "sine", "f0": 1046.5, "start": 0.45, "dur": 0.55, "amp": 0.25, "decay": 0.25, "vib_hz": 8.0, "vib_depth": 0.01}]},
+	# --- Content wave 2: Ultimates --- (UltimateSystem.cast(), UltimateData "sound")
+	# Sovereign's Decree: a low bell struck under a dark brass fifth.
+	"ult_decree": {"dur": 1.0, "volume_db": -9.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.0, "priority": 4,
+		"layers": [
+			{"wave": "sine", "f0": 146.83, "dur": 1.0, "amp": 0.5, "decay": 0.45, "vib_hz": 5.0, "vib_depth": 0.004},
+			{"wave": "tri", "f0": 220.0, "dur": 0.9, "amp": 0.3, "attack": 0.01, "decay": 0.35},
+			{"wave": "saw", "f0": 73.42, "dur": 0.7, "amp": 0.22, "attack": 0.03, "decay": 0.3, "lp0": 700.0, "lp1": 250.0},
+			{"wave": "noise", "dur": 0.08, "amp": 0.3, "decay": 0.02, "lp0": 5000.0, "lp1": 1500.0}]},
+	# Eclipse: the light sucked away, a falling hollow drone.
+	"ult_eclipse": {"dur": 1.2, "volume_db": -9.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.0, "priority": 4,
+		"layers": [
+			{"wave": "sine", "f0": 880.0, "f1": 110.0, "dur": 0.9, "amp": 0.3, "decay": 0.5},
+			{"wave": "sine", "f0": 55.0, "f1": 41.2, "dur": 1.2, "amp": 0.55, "attack": 0.05, "decay": 0.6},
+			{"wave": "noise", "dur": 1.1, "amp": 0.35, "attack": 0.02, "decay": 0.45, "lp0": 6000.0, "lp1": 120.0}]},
+	# Grave Tide: a rising wave of earth and souls.
+	"ult_tide": {"dur": 1.0, "volume_db": -9.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.0, "priority": 4,
+		"layers": [
+			{"wave": "noise", "dur": 0.9, "amp": 0.45, "attack": 0.25, "decay": 0.3, "lp0": 300.0, "lp1": 2500.0},
+			{"wave": "saw", "f0": 73.42, "f1": 146.83, "dur": 0.8, "amp": 0.25, "attack": 0.2, "decay": 0.3, "lp0": 400.0, "lp1": 1400.0},
+			{"wave": "sine", "f0": 220.0, "f1": 330.0, "start": 0.3, "dur": 0.6, "amp": 0.2, "decay": 0.25, "vib_hz": 7.0, "vib_depth": 0.02}]},
 }
 
 ## Music drone loop length in seconds (all oscillators are snapped to a whole
