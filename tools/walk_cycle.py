@@ -249,6 +249,16 @@ SKINS = {
     "player/bone_oracle_deathlord": "player/bone_oracle",
     "player/fallen_confessor_untouchable": "player/fallen_confessor",
     "player/fallen_confessor_deathlord": "player/fallen_confessor",
+    "player/carrion_lord_untouchable": "player/carrion_lord",
+    "player/carrion_lord_deathlord": "player/carrion_lord",
+    "player/plague_scholar_untouchable": "player/plague_scholar",
+    "player/plague_scholar_deathlord": "player/plague_scholar",
+    "player/doomsayer_untouchable": "player/doomsayer",
+    "player/doomsayer_deathlord": "player/doomsayer",
+    "player/barrow_warden_untouchable": "player/barrow_warden",
+    "player/barrow_warden_deathlord": "player/barrow_warden",
+    "player/grave_herald_untouchable": "player/grave_herald",
+    "player/grave_herald_deathlord": "player/grave_herald",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

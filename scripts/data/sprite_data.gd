@@ -197,6 +197,16 @@ const HEIGHTS: Dictionary = {
 	"player/bone_oracle_deathlord": 56.0,  # TUNING (not in GDD) skin art: body 48 like the Bone Oracle, the horned crown and the gold spear above
 	"player/fallen_confessor_untouchable": 48.0,  # TUNING (not in GDD) skin art: body 48 like the Fallen Confessor (no overhang)
 	"player/fallen_confessor_deathlord": 53.0,  # TUNING (not in GDD) skin art: body 48 like the Fallen Confessor, the spiked crown above
+	"player/carrion_lord_untouchable": 52.0,  # TUNING (not in GDD) skin art: body 52 like the Carrion Lord (the ghost cleaver no higher than the hood)
+	"player/carrion_lord_deathlord": 56.0,  # TUNING (not in GDD) skin art: body 52 like the Carrion Lord, the horned crown above
+	"player/plague_scholar_untouchable": 49.0,  # TUNING (not in GDD) skin art: body 48 like the Plague Scholar, the hood tip above
+	"player/plague_scholar_deathlord": 52.0,  # TUNING (not in GDD) skin art: body 48 like the Plague Scholar, the crown above
+	"player/doomsayer_untouchable": 53.0,  # TUNING (not in GDD) skin art: body 45 like the Doomsayer, the soul-fire branding iron above
+	"player/doomsayer_deathlord": 55.0,  # TUNING (not in GDD) skin art: body 45 like the Doomsayer, the crown and the gold branding iron above
+	"player/barrow_warden_untouchable": 59.0,  # TUNING (not in GDD) skin art: body 49 like the Barrow Warden, the ghost shovel staff above
+	"player/barrow_warden_deathlord": 61.0,  # TUNING (not in GDD) skin art: body 49 like the Barrow Warden, the crown and the shovel staff above
+	"player/grave_herald_untouchable": 62.0,  # TUNING (not in GDD) skin art: body 48 like the Grave Herald, the spectral skull banner above
+	"player/grave_herald_deathlord": 63.0,  # TUNING (not in GDD) skin art: body 48 like the Grave Herald, the crowned skull banner above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
