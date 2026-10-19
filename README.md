@@ -2221,9 +2221,10 @@ uptime.
    three as workflow artifacts (`Necropathy-windows`, `Necropathy-linux`, `Necropathy-web`), kept 7 days (test logs
    3 days): the account's artifact storage is small, and when it is full no build can be uploaded, so the publish
    jobs have nothing to publish (tagged builds stay in their GitHub Release).
-3. **publish-itch / publish-pages / publish-pages-repo** (optional, skipped unless configured; see *Play in the
-   browser* below): on pushes to `main` and on `v*` tags, push the Web build to itch.io, deploy it to GitHub Pages,
-   or push it to a separate public repository that GitHub Pages serves.
+3. **publish-pages-repo** (the game's web home; see *Play in the browser* below): on pushes to `main`, on `v*` tags
+   and on a manual run of `main`, pushes the Web build to a separate public repository that GitHub Pages serves.
+   **publish-pages** (optional, off by default) deploys it to this repository's own Pages instead. itch.io
+   publishing was dropped (owner decision, Oct 2026: GDD §15.0 "GitHub Pages is the web home").
 
 To publish a downloadable release, bump `config/version` in `project.godot` (shown on the main menu) and the
 `application/*_version` fields in `export_presets.cfg`, write the player-facing notes in
@@ -2239,14 +2240,14 @@ To export locally, install the 4.3 export templates (**Editor → Manage Export 
 **Project → Export**, or run `godot --headless --export-release "Windows Desktop" build/windows/Necropathy.exe`.
 
 The export job also builds the **Web** preset (below), uploads it as the `Necropathy-web` artifact (the export folder,
-`index.html` at its root), and attaches `Necropathy-web.zip` to tagged releases. Two optional jobs publish it for
-playtesters; both are skipped unless configured, so the workflow stays green without them.
+`index.html` at its root), and attaches `Necropathy-web.zip` to tagged releases. The publish jobs put it online for
+playtesters; each is skipped unless configured, so the workflow stays green without them.
 
 ### Play in the browser (Web build)
 
 The `Web` preset in `export_presets.cfg` is a Godot 4.3 Web export **without thread support**: it needs no
-SharedArrayBuffer and no cross-origin isolation (COOP / COEP) headers, so any static host serves it (itch.io, GitHub
-Pages, a plain `python3 -m http.server`). It runs in **desktop browsers** with a keyboard or a controller (Chrome,
+SharedArrayBuffer and no cross-origin isolation (COOP / COEP) headers, so any static host serves it (GitHub Pages,
+where the game lives, or a plain `python3 -m http.server`). It runs in **desktop browsers** with a keyboard or a controller (Chrome,
 Edge, Firefox; Safari should work but is untested) and on **phones and tablets in landscape** (mobile Chrome /
 Safari; see *Phones and tablets* below). Its page is `web/mobile_shell.html` (Godot's stock page plus the phone
 support).
@@ -2270,9 +2271,8 @@ support).
     but are per browser and per site, and clearing the site's data deletes them. Desktop saves are not shared.
     The page asks the browser to keep that storage (`navigator.storage.persist()`).
   - **iPhone saves** (GDD §15.0 "Save backup codes and the GitHub Pages build"): Safari keeps the saves of a game
-    that is its own page, but a game embedded in another site's frame (the itch.io page) has storage that lasts
-    only until Safari closes. iPhone players should play the GitHub Pages build (below), and can add it to the home
-    screen for fullscreen (a home-screen launch keeps its own saves).
+    that is its own page (the GitHub Pages build), but a game embedded in another site's frame has storage that
+    lasts only until Safari closes. A home-screen launch plays fullscreen and keeps its own saves.
   - **Save codes:** **Settings → Save** has **Backup** (the progress as a code of about 1,000 characters,
     `NECRO1:` + base64 of the gzipped `save.cfg`; the browser's clipboard, else a prompt box showing it to copy;
     on desktop the system clipboard) and **Restore** (paste a code into the browser's prompt box, or copy it on
@@ -2281,11 +2281,15 @@ support).
   - **Fullscreen** is the browser's: the Settings toggle works (a click or key press allows it), F11 works too, and
     Esc always leaves it first (a browser rule). It is not restored at startup (browsers refuse without a click or
     key press), and the toggle shows the page's real state.
-  - **Sound starts with the first click or key press** (browsers block audio before any input).
+  - **A Play button starts the game** (GDD §15.0 "GitHub Pages is the web home"): the page downloads the engine and
+    the game at once, shows the NECROPATHY logo and **Play** when they are ready, and starts the game on a click,
+    tap or key. Godot creates its audio while it starts, so the sound is created inside that gesture, which every
+    browser allows (Edge stayed silent when the audio was made on page load and only resumed by a later click).
+    If a browser still holds the sound back, any later click, tap or key resumes it.
   - **iPhone and iPad** (GDD §15.0 "iPhone sound and fullscreen"): iPhone Safari has no page fullscreen (only videos
     go fullscreen), so Settings shows "Fullscreen: Share, Add to Home Screen" in place of the toggle (a home-screen
     launch plays fullscreen and has its own saves), or "Fullscreen: not in this browser" when the game is embedded
-    in another page (the itch.io page). The page asks iOS for the "playback" audio session, so the ring / silent
+    in another page. The page asks iOS for the "playback" audio session, so the ring / silent
     switch no longer mutes the game (it pauses other apps' music, as a video does); older iOS (before 16.4) gets
     the same from a looping silent `<audio>`. Every tap resumes a context iOS left "suspended" or "interrupted"
     (after a call, Siri or another app), and Godot's AudioContext keeps the device's own sample rate there.
@@ -2324,16 +2328,7 @@ support).
     page keeps the browser's default safe-area insets, so a notch letterboxes the canvas instead of covering it). No haptics, no on-screen keyboard (the game has no text entry), and the Controls
     tab still lists keyboard / pad bindings only (the touch layout is fixed). Native Android / iOS apps are not
     planned yet.
-- **itch.io for phones:** on the project's **Edit game** page, under *Embed options*, tick **Mobile friendly** and
-  set **Orientation** to **Landscape** (and keep "Click to launch in fullscreen" off or on as you like; fullscreen is
-  what lets Android lock the orientation). The CI upload itself needs no change.
-- **Publishing (optional, off by default)** from pushes to `main` and from `v*` tags:
-  - **itch.io:** create an HTML project on itch.io, then in GitHub **Settings → Secrets and variables → Actions** add
-    the repository **secret** `BUTLER_API_KEY` (an itch.io API key from <https://itch.io/user/settings/api-keys>)
-    and the repository **variable** `ITCH_TARGET` (`user/project:channel`, e.g. `user/necropathy:html5`). The
-    `publish-itch` job then pushes the build with butler. On itch.io, tick "This file will be played in the browser"
-    for the `html5` channel's upload once and set the embed size to 1280 × 720 (or "click to launch in fullscreen");
-    for phones also tick **Mobile friendly** with **Orientation: Landscape** (above).
+- **Publishing** from pushes to `main` and from `v*` tags (the separate public repository is the game's home):
   - **GitHub Pages:** in **Settings → Pages**, set **Source** to **GitHub Actions**, then add the repository
     **variable** `WEB_PAGES` = `true`. The `publish-pages` job then deploys the build. Pages on a private repository
     needs a paid GitHub plan, and the site is public. To deploy from `v*` tags too, allow them in **Settings →

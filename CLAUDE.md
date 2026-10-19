@@ -170,11 +170,12 @@ Autotest options (full table in the README):
 CI (`.github/workflows/ci.yml`) runs the import, the Graveyard autotest with the naive and army
 policies, a Crimson March autotest, a Sanctum of Judgment autotest (army policy), one army autotest per Act II stage, the
 Windows/Linux/Web exports (artifacts `Necropathy-windows` / `-linux` / `-web`) and an exported-build
-smoke test. Pushing a `v*` tag publishes a GitHub Release with the three zips. Two optional jobs publish
-the Web build from `main` pushes and `v*` tags and are skipped unless configured: `publish-itch`
-(secret `BUTLER_API_KEY` + variable `ITCH_TARGET`), `publish-pages` (variable `WEB_PAGES` = `true`,
-Pages source "GitHub Actions") and `publish-pages-repo` (variable `PAGES_REPO` + secret `PAGES_TOKEN`: a separate
-public build-only repository served by Pages). Local web export: `mkdir -p build/web && touch build/.gdignore`, then
+smoke test. Pushing a `v*` tag publishes a GitHub Release with the three zips. **GitHub Pages is the game's web
+home** (owner decision Oct 2026; itch.io publishing dropped, GDD §15.0 "GitHub Pages is the web home"):
+`publish-pages-repo` (variable `PAGES_REPO` = `Smoketsu/NecropathyPlay` + secret `PAGES_TOKEN`) pushes the Web build
+from `main` pushes, `v*` tags and manual runs of `main` to that public build-only repository, served at
+<https://smoketsu.github.io/NecropathyPlay/>; `publish-pages` (variable `WEB_PAGES` = `true`, this repository's own
+Pages) stays optional and off. Artifacts are kept 7 days (test logs 3): a full artifact store blocks every publish. Local web export: `mkdir -p build/web && touch build/.gdignore`, then
 `godot --headless --export-release "Web" build/web/index.html` (templates `web_nothreads_*.zip`), then
 **always** `python3 tools/patch_web_audio.py build/web/index.js` (shares sample buffers; without it phone tabs
 run out of memory and reload mid-run; GDD §15.0 "Web audio buffer patch").
@@ -415,8 +416,9 @@ tiny tweaks.
   unchanged), so the page no longer freezes for it; Quit hidden (`FrontDoorData.WEB_HIDDEN_ITEMS`); the
   fullscreen toggle follows the browser's real state and is not restored at startup; saves in IndexedDB
   (checked across a reload); the engine's copy of a sound's buffer on every play is patched out of the exported
-  `index.js` (`tools/patch_web_audio.py`; it got phone tabs killed for memory mid-run); CI exports it (artifact `Necropathy-web`, release zip) with optional
-  itch.io / GitHub Pages publishing. Tested in headless Chromium (title, a run, reload).
+  `index.js` (`tools/patch_web_audio.py`; it got phone tabs killed for memory mid-run); CI exports it (artifact `Necropathy-web`, release zip) and
+  publishes it to GitHub Pages; the page starts the game from a **Play** button so the audio is created inside a
+  gesture (Edge was silent otherwise). Tested in headless Chromium (title, a run, reload).
 - **phones and tablets in the browser** (owner request "make it mobile friendly", GDD §15.0 "Mobile
   browser support"; native apps still deferred): `TouchSupport` (detection by a coarse pointer, the
   mobile UI scale `content_scale_factor` up to ×1.2 on short phone screens, `fit_to_screen()` on every
@@ -435,7 +437,7 @@ tiny tweaks.
   "Save backup codes and the GitHub Pages build"): Settings → Save backs the progress up as a code and restores it
   (`SaveBackup`, `save_backup_data.gd`), the page asks for persistent storage, and the optional CI job
   `publish-pages-repo` (variable `PAGES_REPO` + secret `PAGES_TOKEN`) serves the build from a public build-only
-  repository's GitHub Pages, whose saves iPhone Safari keeps (it forgets the itch.io frame's). Tested with Playwright phone / tablet emulation (real taps, synthetic
+  repository's GitHub Pages, whose saves iPhone Safari keeps (it forgets an embedded frame's). Tested with Playwright phone / tablet emulation (real taps, synthetic
   multi-touch) and a desktop viewport. Keep new screens inside 1280 × 600 layout px or call
   `TouchSupport.fit_to_screen()` on their centre container.
 
@@ -507,8 +509,8 @@ tiny tweaks.
    breathing strip** `<key>_idle.png` (`walk_cycle.py idle`, `IdleData`, GDD §15.0 "Idle breathing bounce") that plays
    while the unit stands, on game time, through the same `SpriteBank.draw()` path. Possible later polish: attack poses for regular units, arm swing, more effect hooks.
 4. **Phones: done for the browser (Oct 2026)** (see the Done list; GDD §15.0 "Mobile browser
-   support"). Left: measure it on real phones (iOS Safari audio unlock and frame rate first, via the
-   itch.io embed with "Mobile friendly" / "Landscape"); native Android / iOS apps stay deferred.
+   support"). Left: measure it on real phones (iOS Safari audio unlock and frame rate first, on the
+   GitHub Pages build); native Android / iOS apps stay deferred.
 5. **Content candidates** (owner to choose): achievement rewards / the Bone Golem (and the
    campaign epilogue that *Dawn Extinguished* should unlock), more ultimates, a victory screen after
    the Reckoning.

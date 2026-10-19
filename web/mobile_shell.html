@@ -25,6 +25,11 @@
       when the page enters fullscreen on a touch device it asks for landscape
       (screen.orientation.lock; refused quietly where unsupported, e.g. iOS). The
       game shows its own "turn your device" overlay otherwise (RotateOverlay).
+    * start gate (GDD 15.0 "GitHub Pages is the web home"): the engine downloads at once,
+      but the game starts only on a click / tap / key on the Play button. Godot creates
+      its AudioContext while it starts, so it is created inside that gesture and every
+      browser lets it play (Edge stayed silent when the context was made on page load and
+      only resumed by a later click; itch.io's "Run game" button used to be this gesture).
   Template placeholders ($GODOT_*) are filled by the exporter.
 -->
 <html lang="en">
@@ -83,7 +88,7 @@ body {
 }
 
 #status {
-	background-color: #242424;
+	background-color: #161a1c;  /* The game's ground colour (Palette.GROUND). */
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -92,9 +97,13 @@ body {
 }
 
 #status-splash {
+	/* The NECROPATHY logo (the boot splash, 246 x 90 art px) at a whole-number zoom, sharp pixels. */
+	width: min(70vw, 738px);
+	height: auto;
 	max-height: 100%;
 	max-width: 100%;
 	margin: auto;
+	image-rendering: pixelated;
 }
 
 #status-progress, #status-notice {
@@ -105,6 +114,30 @@ body {
 	bottom: 10%;
 	width: 50%;
 	margin: 0 auto;
+}
+
+#status-play {
+	display: none;
+	position: absolute;
+	bottom: 8%;
+	left: 50%;
+	transform: translateX(-50%);
+	min-width: 12rem;
+	padding: 0.7rem 2.4rem;
+	border: 0;
+	background-color: #6b4fa8;
+	color: #f2ecff;
+	font: 700 1.6rem/1 'Trebuchet MS', 'Segoe UI', sans-serif;
+	letter-spacing: 0.08em;
+	cursor: pointer;
+	/* Cut corners, like every UI element in the game. */
+	clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+}
+
+#status-play:hover, #status-play:focus-visible {
+	background-color: #8f6bd1;
+	outline: none;
+	box-shadow: inset 0 0 0 3px #4fd1b8;
 }
 
 #status-notice {
@@ -233,6 +266,7 @@ body {
 		<div id="status">
 			<img id="status-splash" src="$GODOT_SPLASH" alt="">
 			<progress id="status-progress"></progress>
+			<button id="status-play" type="button">Play</button>
 			<div id="status-notice"></div>
 		</div>
 
@@ -246,6 +280,7 @@ const engine = new Engine(GODOT_CONFIG);
 	const statusOverlay = document.getElementById('status');
 	const statusProgress = document.getElementById('status-progress');
 	const statusNotice = document.getElementById('status-notice');
+	const statusPlay = document.getElementById('status-play');  // The start gate's Play button.
 
 	let initializing = true;
 	let statusMode = '';
@@ -261,6 +296,7 @@ const engine = new Engine(GODOT_CONFIG);
 		}
 		statusOverlay.style.visibility = 'visible';
 		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
+		statusPlay.style.display = mode === 'play' ? 'block' : 'none';
 		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
 		statusMode = mode;
 	}
@@ -319,7 +355,11 @@ const engine = new Engine(GODOT_CONFIG);
 		}
 	} else {
 		setStatusMode('progress');
-		engine.startGame({
+		// engine.startGame() split in two (same steps as Godot 4.3's): download the engine and
+		// the game pack now, start them only on the Play gesture (see the start gate above).
+		const exe = GODOT_CONFIG['executable'];  // Base name of the exported files ("index").
+		const pack = `${exe}.pck`;  // The game data the engine mounts as its main pack.
+		engine.config.update({
 			'onProgress': function (current, total) {
 				if (current > 0 && total > 0) {
 					statusProgress.value = current;
@@ -329,8 +369,30 @@ const engine = new Engine(GODOT_CONFIG);
 					statusProgress.removeAttribute('max');
 				}
 			},
-		}).then(() => {
-			setStatusMode('hidden');
+		});
+		let started = false;  // True once the Play gesture has started the engine.
+		function play() {
+			if (started) {
+				return;
+			}
+			started = true;
+			setStatusMode('progress');
+			statusProgress.removeAttribute('value');
+			engine.start({ 'args': ['--main-pack', pack].concat(GODOT_CONFIG['args']) }).then(() => {
+				setStatusMode('hidden');
+			}, displayFailureNotice);
+		}
+		Promise.all([engine.init(exe), engine.preloadFile(pack, pack)]).then(() => {
+			setStatusMode('play');
+			statusPlay.focus();
+			statusPlay.addEventListener('click', play);
+			// A key anywhere also starts (Enter / Space on the focused button already click it).
+			window.addEventListener('keydown', function onKey(e) {
+				if (!e.repeat && statusMode === 'play') {
+					window.removeEventListener('keydown', onKey);
+					play();
+				}
+			});
 		}, displayFailureNotice);
 	}
 }());
