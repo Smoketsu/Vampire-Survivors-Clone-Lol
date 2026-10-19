@@ -213,8 +213,10 @@ RIGS = {
     # --- Content wave 2: Bone Golem ---
     # Heavy stumping legs (short spread and lift); both huge low fists hang below the hip
     # and ride with the body (rigid), so only the two stumps step.
-    "summons/bone_golem": dict(mode="legs", hip=59, back=(20, 45), front=(45, 67), rigid=[(0, 20, 59, None), (67, 88, 59, None)], spread=2, lift=2, dip=1),
-    "summons/ossuary_titan": dict(mode="legs", hip=77, back=(22, 53), front=(53, 80), rigid=[(0, 22, 77, None), (80, 104, 77, None)], spread=2, lift=2, dip=1),
+    # Wave 2 art review (the huge-skull redo): the jaw ends above the hip; each low fist hangs
+    # over its leg's top, so the fist is a rigid box down to the foot, then a narrower box beside it.
+    "summons/bone_golem": dict(mode="legs", hip=60, back=(0, 43), front=(43, 84), rigid=[(0, 29, 60, 71), (0, 23, 71, None), (61, 84, 60, 70)], spread=2, lift=2, dip=1),
+    "summons/ossuary_titan": dict(mode="legs", hip=80, back=(0, 58), front=(58, 108), rigid=[(0, 34, 80, 93), (0, 28, 93, None), (86, 108, 80, None)], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

@@ -58,7 +58,9 @@ PANEL_OPTS = {
     "act2_1": {"drop": ["skin", "ice"]},
     "act2_2": {"drop": ["skin", "ice"]},
     "act2_3": {"drop": ["skin", "ice"]},
-    "act2_4": {"drop": ["skin", "ice"]},
+    # Wave 2 art review redo (undead Vhal'Neth): fewer clusters keep her dead-grey gown and skin two
+    # or three flat shades instead of blotches; flame / crimson dropped (rust specks in the kelp).
+    "act2_4": {"drop": ["skin", "ice", "flame", "crimson"], "clusters": 64},
     "close": {"drop": ["skin", "ice", "violet", "biolume"]},  # The holy orders: no necromancer violet.
 }
 
