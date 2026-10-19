@@ -121,8 +121,11 @@ var retired_refund: int = 0
 var last_award: Dictionary = {}
 ## Profane Oath tier that applies to runs (0..owned tier; 0 = switched off).
 var oath_active: int = 0
-## Stage id -> {runs, victories, best_time, boss_kills} (STAGE_RECORD_KEYS),
-## one entry per StageRegistry stage.
+## Stage id -> {runs, victories, best_time, boss_kills, best_reckoning}
+## (STAGE_RECORD_KEYS), one entry per StageRegistry stage. best_reckoning (content
+## wave 2, the victory card's Best record) is the most seconds survived past 0:00
+## in a victory there; an older save without the key reads 0, and a save from
+## before [stages] gets the lifetime best_reckoning on the Graveyard record.
 var stage_records: Dictionary = {}
 
 ## Difficulty level (DifficultyData id) last confirmed on the setup screen.
@@ -158,7 +161,9 @@ var unlocked_items: Dictionary = {}
 var _codex_save_queued: bool = false
 
 ## Keys of every stage record (all floats, like the lifetime stats).
-const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills"]
+const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills",
+	# --- Content wave 2: A. Victory screen ---
+	"best_reckoning"]
 
 
 func _ready() -> void:
@@ -291,12 +296,14 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	for sid: String in StageRegistry.ORDER:
 		if not is_stage_unlocked(sid):
 			was_locked.append(sid)
+	var best_before := float(stage_record(String(summary.get("stage_id", ""))).get("best_reckoning", 0.0))  # Victory card: the stage's Best before this run (s).
 	_record_stage_run(summary)
 	var opened := PackedStringArray()  # Stages this run unlocked.
 	for sid: String in was_locked:
 		if is_stage_unlocked(sid):
 			opened.append(sid)
 	award["unlocked_stages"] = opened
+	award["best_reckoning_before"] = best_before  # Victory card (VictoryResults): the "New record" check.
 	_add_lifetime("runs", 1.0)
 	_add_lifetime("victories", 1.0 if bool(summary.get("victory", false)) else 0.0)
 	_add_lifetime("total_kills", float(summary.get("kills", 0)))
@@ -684,6 +691,8 @@ func _record_stage_run(summary: Dictionary) -> void:
 	if bool(summary.get("boss_defeated", false)):
 		rec["boss_kills"] = minf(float(rec["boss_kills"]) + 1.0, float(MAX_STORED))
 	rec["best_time"] = maxf(float(rec["best_time"]), float(summary.get("time", 0.0)))
+	if bool(summary.get("victory", false)):
+		rec["best_reckoning"] = maxf(float(rec["best_reckoning"]), float(summary.get("time_past_zero", 0.0)))  # Victory card Best.
 
 
 ## A zeroed stage record.
@@ -776,9 +785,10 @@ func refund_all() -> int:
 # Save / load
 # =====================================================================================
 
-## False in the autotest (unless --meta-save), so tests never touch user://.
+## False in the autotest (unless --meta-save), so tests never touch user://,
+## and in a --victory-preview run (its scripted victory is never saved).
 func can_write() -> bool:
-	return not GameState.autotest or GameState.autotest_meta_save
+	return (not GameState.autotest or GameState.autotest_meta_save) and not GameState.victory_preview
 
 
 ## Writes everything to save_path (temp file + rename, so a crash mid-write

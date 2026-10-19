@@ -1123,6 +1123,8 @@ func finish(summary: Dictionary) -> void:
 	_print_recipe_book()
 	print("[autotest] codex: %s" % game.codex.summary_line())  # Codex records (CodexLog).
 	print("[autotest] volleys: %s" % game.volleys.summary_line())  # Bullet heaven pass (VolleyDirector).
+	if bool(summary["victory"]) and not game.end_screen.victory_info.is_empty():
+		print("[autotest] victory screen: %s" % VictoryResults.summary_line(game.end_screen.victory_info))  # Content wave 2 (victories only).
 	if game.dread != null:
 		print("[autotest] dread: %s" % game.dread.summary_line())  # Act II Dread (DreadMeter; Act II stages only).
 	if game.claims != null:

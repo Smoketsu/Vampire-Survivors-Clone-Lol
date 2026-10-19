@@ -436,9 +436,47 @@ reach 30% farther; −10 HP, +5% move speed), unlocks the first time Forbidden V
   waves of *Inquisitors of the End* arrive every 10 s, each wave larger and
   tougher than the last. Normally they will kill you.
 - How the run ends:
-  - Dying **after 0:00** shows a gold **Victory** results card, with how long
-    you lasted past zero.
+  - Dying **after 0:00** is a victory: a short **last stand** plays, then the
+    gold **victory card** (see "The victory screen" below).
   - Dying **before 0:00** shows a crimson **Defeat** card.
+
+### The victory screen
+
+A won run (the necromancer falls after 0:00) ends on a moment (content wave 2,
+GDD §15.0 "Victory screen (content wave 2)"; texts, timings and sizes in
+`scripts/data/victory_data.gd`):
+
+- **The last stand** (about 3 s, real time). The death is already counted and
+  the world is frozen; the screen drains of colour, the surviving army turns
+  outward and kneels in the Bone Ring (nearest first, rippling out), a gold wash
+  rises and the stage's title card fades in. Any key, button, click or tap skips
+  it. It is skipped entirely with **Reduce motion** and under the autotest, and it
+  never touches the run (it only draws).
+- **The victory card.** The stage's own title and, when its boss fell, the boss's
+  line:
+
+  | Stage | Title | Line when the boss fell |
+  | --- | --- | --- |
+  | The Desecrated Graveyard | The Graveyard Is Yours | Sir Alaric's oath dies with him. |
+  | The Crimson March | The March Ends in Ash | Marshal Vael's banners burn. |
+  | The Sanctum of Judgment | The Dawn Goes Out | The relic lies shattered. |
+  | Gullhaven Harbour | The Tide Turns | Abbot Merrow sinks with his sermon. |
+  | The Hollow Archive | The Last Page Burns | The Archivist's book is closed. |
+  | Ul-Thalos | The Dead God Serves | Vhal'Neth kneels. |
+
+  (With the boss alive the line is the act's: "You outlasted the Covenant / the
+  Eye. The Reckoning claimed you at last.") Under the title is a slot for the
+  player's title (empty until the achievement-reward titles fill it). The card
+  shows the **stage seal** (the stage-select scene, stamped in gold with the Hyper
+  badge on a Hyper clear), the **time past 0:00** with the stage's **Best** record
+  and a **New record** ribbon when you beat it (saved per stage in Meta's
+  `[stages]` records as `<stage>_best_reckoning`), enemies slain and level, the
+  **highlights** (the summon class that dealt the most damage, up to three
+  evolutions with their game times, chests opened, the largest army, the boss
+  kill time), the unlock plates and the Soul Ash breakdown as on any results
+  card, and three buttons: **Next** (N / pad Y: the next stage with the same
+  pre-run choices; only when that stage is unlocked and playable), **Again**
+  (R / pad X) and **Menu** (Esc / pad B). The defeat card is unchanged.
 
 ### The army formation: the Bone Ring
 
@@ -1362,7 +1400,8 @@ where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.2
   copies `save.cfg` and `settings.cfg` from the old `app_userdata/Gravebound`
   folder (kept as a backup). Never in the autotest.
   The active Profane Oath tier is saved as `[oath] active`. Per-stage records
-  (runs, victories, best time, boss kills) are saved under `[stages]`; they
+  (runs, victories, best time, boss kills, and the best time past 0:00 in a
+  victory, `best_reckoning`, the victory card's Best) are saved under `[stages]`; they
   drive the stage unlocks. An older save without that section is migrated:
   its lifetime stats become the Graveyard record, so a past Alaric kill
   unlocks the Crimson March. The last pre-run choice is saved as
@@ -1700,6 +1739,9 @@ scripts/
                             Recipes view, the Meta [recipes] section and the autotest
     codex_log.gd            One run's Codex sightings (game.codex): first sights go to Meta [codex];
                             records only, the autotest's codex line
+    victory_results.gd      The victory card's numbers from a run summary (title, boss line, time past
+                            0:00 and the stage Best, New record, highlights, the Next stage); read-only
+    victory_preview.gd      --victory-preview: a short debug run that ends as a scripted victory
     autotest.gd             Headless self-test driver
   player/necromancer.gd
   player/grave_step.gd      Grave Step dash: charges, obstacle-clamped step, i-frames, shadow trail
@@ -1837,6 +1879,7 @@ scripts/
   fx/tide_water.gdshader    Gullhaven: the water, foam, seawall lip and surge drawn from the same test as TideDirector
   fx/sharp_pixel.gdshader   The sharp-pixel filter: grid pixel art (and the pixel fonts) crisp at any window scale
   fx/flat_silhouette.gdshader  Pixel art as one flat colour (the Codex's unmet entries), sharp-pixel sampling
+  fx/victory_wash.gdshader  The last stand's full-screen pass: drains the frozen world of colour, washes it gold
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
                             kit_style_box (a kit 9-slice frame plus fixed-size crests:
@@ -1895,8 +1938,14 @@ scripts/
                             fit_to_screen() for screens taller than a phone, drag-scrolling lists,
                             the portrait overlay), touch_controls (the in-run joystick, Grave Step,
                             Dread Rally, aim and pause buttons; they inject the usual
-                            input actions), rotate_overlay ("turn your device" in portrait)
+                            input actions), rotate_overlay ("turn your device" in portrait),
+                            last_stand (the ~3 s beat before the victory card: kneeling army,
+                            gold wash, title card; real time, skippable), victory_card (the
+                            victory card's stage seal and middle column: time past 0:00, Best,
+                            New record, highlights)
   data/                     DESIGNER-TUNABLE DATA (no logic):
+    victory_data.gd         The victory screen: stage titles and boss lines, last-stand timings,
+                            card sizes and texts, the Hyper gold seal, the --victory-preview script
     input_hint_data.gd      Input hint chips: sizes, colours, pad glyph names, device thresholds
     touch_data.gd           Phones / tablets: touch control sizes (CSS px), places, colours, stick dead
                             zone, mobile UI scale limits, fit margin, portrait overlay words and sizes
@@ -2073,6 +2122,7 @@ Options (after `--`):
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
 | `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |
 | `--hyper` | Hyper mode (`HyperData`: enemy HP / damage growth ×2, stage boss HP ×1.5, Soul Ash +100%), bypassing the Seraphine unlock. Every summary has a `hyper` line (on / off, the effective growth and boss HP, the 0:00 multipliers vs the standard game, the Hyper Soul Ash line, seconds survived past 0:00, the unlock and Hyper-clear state, in memory only without `--meta-save`). |
+| `--victory-preview` | Debug (with or without `--autotest`): skips the menu, raises a small army and after 6 game seconds ends the run as a scripted victory (83 s past 0:00, the boss slain, four evolutions, seven chests; `VictoryData.PREVIEW_*`), so the last stand and the victory card can be seen and screenshot at once; `--stage=`, `--difficulty=`, `--character=`, `--hyper` and `--skin=` apply. Nothing is saved. Every victory's summary has a `victory screen` line: `title=<stage title> best_overtime=<s> new_record=<bool> highlights=<n>` (the card's logic runs headless; under the autotest the Best starts from an empty in-memory record). |
 | `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 

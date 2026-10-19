@@ -14,6 +14,9 @@
 ## Phones and tablets (GDD §15.0 "Mobile browser support"): Main installs
 ## TouchSupport (touch input hints, the mobile UI scale, the portrait
 ## overlay) and pauses a running game when the device turns to portrait.
+## Victory card (content wave 2): its Next button asks for the next stage with
+## the same pre-run choices (Game.next_stage_requested -> _start_next_stage()).
+## A --victory-preview debug run skips the menu like the autotest.
 ## Music: the menu asks Sfx for the main menu theme, a run for the in-run
 ## loop (Sfx.play_music crossfades them; the menu-to-run fade starts with the
 ## fade through black).
@@ -32,7 +35,7 @@ func _ready() -> void:
 	var touch := TouchSupport.install(self)  # Phones / tablets: touch hints, UI scale, portrait overlay (null in the autotest).
 	if touch != null:
 		touch.portrait_changed.connect(_on_portrait_changed)
-	if GameState.autotest:
+	if GameState.autotest or GameState.victory_preview:
 		_run_config = RunConfig.for_stage(GameState.autotest_stage)
 		_run_config.set_difficulty(GameState.autotest_difficulty)
 		_run_config.set_modifiers(GameState.autotest_modifiers)
@@ -71,7 +74,19 @@ func _start_game() -> void:
 	_game.run_config = _run_config.duplicate_config() if _run_config != null else RunConfig.new()
 	_game.restart_requested.connect(UiMotion.transition.bind(self, _start_game), CONNECT_DEFERRED)
 	_game.main_menu_requested.connect(UiMotion.transition.bind(self, _show_menu), CONNECT_DEFERRED)
+	_game.next_stage_requested.connect(_start_next_stage, CONNECT_DEFERRED)  # Victory card: Next.
 	add_child(_game)
+
+
+## The victory card's Next: the same pre-run choices (difficulty, modifiers,
+## character, Hyper, skin and anything else RunConfig.duplicate_config() keeps)
+## on stage `stage_id`, through the usual fade.
+func _start_next_stage(stage_id: String) -> void:
+	var c := _run_config.duplicate_config() if _run_config != null else RunConfig.new()
+	c.stage_id = stage_id if StageRegistry.STAGES.has(stage_id) else c.stage_id
+	_run_config = c
+	GameState.last_stage_id = c.stage_id
+	UiMotion.transition(self, _start_game)
 
 
 ## A phone or tablet turned to portrait: a running game pauses (its pause
