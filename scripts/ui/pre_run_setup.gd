@@ -8,7 +8,8 @@
 ##     skin it would wear, with its name, innate and starting spell; under it
 ##     the skin tiles and the Hyper tile with one detail line
 ##     (PreRunHyperSkins: SkinData, HyperData; Hyper stays locked until
-##     Seraphine falls),
+##     Seraphine falls), then the title row (PreRunTitleRow, content wave 2:
+##     the worn title, shown under the character's name),
 ##   * RIGHT, the setup panel: the character grid (CharacterPicker, one row of
 ##     twelve portrait tiles; locked ones padlocked), four difficulty cards
 ##     (DifficultyData, easiest to hardest: an icon, the name, ONE line and the
@@ -81,6 +82,8 @@ var _hero: PreRunHero
 var _picker: CharacterPicker
 ## Skin tiles and the Hyper tile (PreRunHyperSkins, in the hero panel).
 var _extras: PreRunHyperSkins
+## Content wave 2: the title picker (PreRunTitleRow, in the hero panel under the skins).
+var _titles: PreRunTitleRow
 ## Character the hero shows (follows the focused tile).
 var _hero_char: String = ""
 ## Skin previewed on the chosen character while its skin tile is focused
@@ -126,6 +129,9 @@ func _ready() -> void:
 	_extras.rebuilt.connect(_queue_wire)
 	_extras.skin_focused.connect(_on_skin_focused)
 	_hero.add_extra(_extras)
+	_titles = PreRunTitleRow.new()  # Content wave 2: the worn title.
+	_titles.changed.connect(_hero.show_title)
+	_hero.add_extra(_titles)
 	# Right column: the setup panel, then the buttons.
 	var right := VBoxContainer.new()
 	right.add_theme_constant_override("separation", 8)
@@ -388,7 +394,7 @@ func _queue_wire() -> void:
 ## row crosses to the other column's row nearest in height, the last rows
 ## lead down to the bottom buttons and the bottom buttons lead back up.
 func _wire_focus() -> void:
-	var left: Array = _extras.rows()  # Left column rows.
+	var left: Array = _extras.rows() + _titles.rows()  # Left column rows (skins / Hyper, then the title).
 	var right: Array = _picker.tile_rows() + _rows_of(_level_buttons, DifficultyData.ORDER, DifficultyData.ORDER.size()) \
 			+ _rows_of(_mod_buttons, RunModifierData.ORDER, FrontDoorData.MOD_COLUMNS)  # Right column rows.
 	var bottom := [_back, _reset, _begin]  # Bottom row, left to right.

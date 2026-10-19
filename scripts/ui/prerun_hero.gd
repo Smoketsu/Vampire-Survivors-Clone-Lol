@@ -7,7 +7,9 @@
 ## locked character stands still as a dark silhouette with a padlock, and its
 ## unlock condition replaces the innate. PreRunSetup calls show_character()
 ## when a character tile or a skin tile is focused, and slots the skin / Hyper
-## row (PreRunHyperSkins) under the texts through add_extra(). Purely visual:
+## row (PreRunHyperSkins) under the texts through add_extra(). Content wave 2:
+## the worn title (TitleData) sits under the name, and its portrait frame
+## (TitleFrame) over the hero box (show_title()). Purely visual:
 ## real time, no gameplay state.
 class_name PreRunHero
 extends PanelContainer
@@ -30,6 +32,12 @@ var _spell_l: Label
 var _stats_l: Label
 ## The column holding everything (add_extra() appends to it).
 var _col: VBoxContainer
+## Content wave 2: the worn title under the name (TitleData; shown once any
+## title is earned, empty while None is worn).
+var _title_l: Label
+## Content wave 2: the worn title's portrait frame over the hero box
+## (TitleFrame; Heretic's Bane's gold Chaplain-skull frame).
+var _frame: TitleFrame
 
 
 ## The pedestal box: the stage floor, a soul glow and the character walking
@@ -142,6 +150,11 @@ func _init() -> void:
 	_col.add_child(_stage)
 	_name_l = UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT_GOLD)
 	_col.add_child(_name_l)
+	_title_l = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_GOLD)  # Content wave 2: the worn title.
+	_col.add_child(_title_l)
+	_frame = TitleFrame.new()  # Content wave 2: the worn title's portrait frame.
+	_frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_stage.add_child(_frame)
 	var spell := HBoxContainer.new()  # Spell icon, name and stats.
 	spell.add_theme_constant_override("separation", 6)
 	spell.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -171,6 +184,19 @@ func add_extra(c: Control) -> void:
 	_col.add_child(c)
 
 
+## Content wave 2: shows the worn title (Meta.selected_title()) under the
+## name and its frame over the hero box. The line takes its place once any
+## title is earned (so wearing None does not make the panel jump).
+func show_title() -> void:
+	var t := Meta.selected_title()  # Worn title ("" = none).
+	_title_l.text = TitleData.display_text(t)
+	_title_l.visible = not Meta.unlocked_titles().is_empty()
+	var fk := TitleData.frame_of(t)  # Its frame ("" = none).
+	_frame.kind = fk
+	_frame.visible = fk != ""
+	_frame.queue_redraw()
+
+
 ## Shows character `id` in skin `skin` (`chosen`: the current choice, gold name).
 func show_character(id: String, skin: String, chosen: bool) -> void:
 	var d := CharacterModifiers.def(id)  # Character row.
@@ -183,6 +209,7 @@ func show_character(id: String, skin: String, chosen: bool) -> void:
 	_name_l.text = String(d["display_name"])
 	_name_l.add_theme_color_override("font_color", UiTheme.TEXT_GOLD if chosen else (UiTheme.TEXT_DIM if locked else UiTheme.TEXT))
 	tooltip_text = String(d["title"])  # The flavour line.
+	show_title()
 	var sid := String(d["spell"])  # Starting spell id.
 	_spell_icon.set_icon(String(AbilityData.SPELLS[sid]["icon"]) if AbilityData.SPELLS.has(sid) else "")
 	_spell_l.text = CharacterModifiers.spell_name(id)

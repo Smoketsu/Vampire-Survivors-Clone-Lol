@@ -299,3 +299,16 @@ const LEVEL_ICONS: Dictionary = {
 }  # TUNING (not in GDD)
 ## Hint line under the modifiers while none is focused.
 const MOD_HINT: String = "Modifiers stack and add Soul Ash."  # TUNING (not in GDD)
+
+# --- Content wave 2: B. Achievement rewards ---
+## The skin row of the setup screen (PreRunHyperSkins) with more skin tiles
+## than this (every character now has the two universal skins, SkinData
+## UNIVERSAL_SKINS) uses the compact sizes below, so up to five skins and the
+## Hyper tile stay inside the hero panel's 362 px.
+const SKIN_TILES_FULL: int = 3  # TUNING (not in GDD)
+## Compact skin portrait tile (px).
+const SKIN_TILE_COMPACT: Vector2 = Vector2(44.0, 64.0)  # TUNING (not in GDD)
+## Compact Hyper tile (px).
+const HYPER_TILE_COMPACT: Vector2 = Vector2(112.0, 64.0)  # TUNING (not in GDD)
+## Gap between compact skin tiles (px; the full row uses 6).
+const SKIN_GAP_COMPACT: int = 4  # TUNING (not in GDD)

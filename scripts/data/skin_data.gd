@@ -8,7 +8,9 @@
 ##   * its DEFAULT look ("<character>_default", the character's own sprite),
 ##   * a HYPER skin ("<character>_hyper"), unlocked by clearing the Sanctum
 ##     of Judgment on Hyper (HyperData) with that character,
-## and four characters have an ACHIEVEMENT skin (ACHIEVEMENT_SKINS).
+## and four characters have an ACHIEVEMENT skin (ACHIEVEMENT_SKINS); every
+## character also has the two UNIVERSAL skins ("<character>_untouchable",
+## "<character>_deathlord"; content wave 2, UNIVERSAL_SKINS).
 ##
 ## Rendering: a skin's sprite key is "player/<character>_<skin>" (the default
 ## skin uses the character's own key). While that PNG does not exist yet the
@@ -165,6 +167,39 @@ const ACHIEVEMENT_SKINS := {
 	},
 }
 
+# --- Content wave 2: B. Achievement rewards ---
+## Skin FAMILIES worn by EVERY character (owner-approved Proposal 2, GDD
+## §15.0 "Achievement rewards (content wave 2)"): each family generates the
+## skin "<character>_<family>" for every character, a palette variant of that
+## character's own look (purely cosmetic, like every skin: the tint, aura and
+## emblem below go through SkinGlyphs / SpriteBank.draw()'s tint). A family is
+## unlocked for all characters at once by the UnlockData "skin" row of the
+## family id (Unlocks.is_open(family)), earned by its achievement. Keys as in
+## ACHIEVEMENT_SKINS, without `character`, `unlock` and `unlock_text` (built
+## from the UnlockData row by skin()).
+const UNIVERSAL_SKINS := {
+	"untouchable": {
+		"display_name": "Untouchable",  # owner-approved Proposal 2
+		"look": "A ghost-white, half-seen shade of the character",  # owner-approved Proposal 2
+		"unlock_short": "Earn Untouchable",  # TUNING (not in GDD)
+		"tint": Color(1.55, 1.62, 1.72, 0.72),  # TUNING (not in GDD) bleached pale and see-through (alpha 0..1)
+		"accent": Color(0.78, 0.95, 1.0),  # TUNING (not in GDD) pale spectral aura
+		"glow": Color(0.86, 1.0, 1.0),  # TUNING (not in GDD)
+		"emblem": "none",
+	},
+	"deathlord": {
+		"display_name": "Deathlord",  # owner-approved Proposal 2
+		"look": "Black-iron regalia under a crimson-jewelled gold crown",  # TUNING (not in GDD)
+		"unlock_short": "Earn Deathlord's Due",  # TUNING (not in GDD)
+		"tint": Color(0.4, 0.33, 0.4),  # TUNING (not in GDD) near-black iron
+		"accent": Color(1.0, 0.8, 0.28),  # TUNING (not in GDD) Palette.GOLD crown
+		"glow": Color(0.95, 0.25, 0.3),  # TUNING (not in GDD) crimson eyes
+		"emblem": "crown",
+	},
+}
+## Universal skin families in UI order (after each character's own skins).
+const UNIVERSAL_ORDER := ["untouchable", "deathlord"]  # TUNING (not in GDD)
+
 
 ## Character id of a RunConfig-style value (unknown / empty -> the default
 ## character, CharacterData.DEFAULT_ID).
@@ -189,14 +224,32 @@ static func default_skin(character: String) -> String:
 
 
 ## Skin ids of character `character` in UI order: default, Hyper, then its
-## achievement skin (if any).
+## achievement skin (if any), then the universal skins (UNIVERSAL_ORDER).
 static func skins_for(character: String) -> PackedStringArray:
 	var ch := character_or_default(character)  # Known character id.
 	var out := PackedStringArray([ch + "_default", ch + "_hyper"])  # Ids.
 	for id: String in ACHIEVEMENT_SKINS:
 		if String(ACHIEVEMENT_SKINS[id]["character"]) == ch:
 			out.append(id)
+	for fam: String in UNIVERSAL_ORDER:
+		out.append("%s_%s" % [ch, fam])
 	return out
+
+
+## UI name of universal skin family `family` ("" if unknown).
+static func universal_name(family: String) -> String:
+	if not UNIVERSAL_SKINS.has(family):
+		return ""
+	return String(UNIVERSAL_SKINS[family]["display_name"])
+
+
+## The universal family of skin id `id` ("" when `id` is not a universal skin).
+static func universal_family(id: String) -> String:
+	for fam: String in UNIVERSAL_ORDER:
+		var suffix := "_" + fam  # "_untouchable"...
+		if id.ends_with(suffix) and CharacterData.CHARACTERS.has(id.substr(0, id.length() - suffix.length())):
+			return fam
+	return ""
 
 
 ## Every skin id (all characters), in character order.
@@ -225,6 +278,16 @@ static func skin(id: String) -> Dictionary:
 	var ch := _generated_character(id)  # Owning character ("" = unknown id).
 	if ch == "":
 		return {}
+	var fam := universal_family(id)  # Universal family ("" = a default / Hyper skin).
+	if fam != "":
+		var u: Dictionary = (UNIVERSAL_SKINS[fam] as Dictionary).duplicate()
+		u["character"] = ch
+		u["family"] = fam
+		u["unlock"] = {"type": "reward", "id": fam}  # Unlocks.is_open(family) (Meta.is_skin_unlocked()).
+		u["unlock_text"] = String((UnlockData.UNLOCKS.get(fam, {}) as Dictionary).get("text", ""))
+		u["kind"] = "universal"
+		u["sprite"] = "player/%s_%s" % [ch, fam]  # No such art: the palette variant of the character is drawn.
+		return u
 	if id.ends_with("_default"):
 		var d: Dictionary = DEFAULT_LOOK.duplicate()
 		d["character"] = ch
@@ -252,10 +315,13 @@ static func skin(id: String) -> Dictionary:
 	}
 
 
-## Character of a generated "<character>_default" / "<character>_hyper" id
-## ("" when `id` is not one).
+## Character of a generated "<character>_default" / "<character>_hyper" /
+## "<character>_<universal family>" id ("" when `id` is not one).
 static func _generated_character(id: String) -> String:
-	for suffix: String in ["_default", "_hyper"]:
+	var suffixes := PackedStringArray(["_default", "_hyper"])  # Generated id endings.
+	for fam: String in UNIVERSAL_ORDER:
+		suffixes.append("_" + fam)
+	for suffix: String in suffixes:
 		if id.ends_with(suffix):
 			var ch := id.substr(0, id.length() - suffix.length())  # Candidate character id.
 			if CharacterData.CHARACTERS.has(ch):

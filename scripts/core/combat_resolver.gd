@@ -350,8 +350,10 @@ func damage_player(amount: float, source: String) -> void:
 	amount *= 1.0 - game.meta.value("damage_reduction")
 	if game.dread != null:
 		amount *= game.dread.taken_mult()  # Act II Dread: its own multiplier (DreadData).
+	var hp_before := game.player.hp  # For the Untouchable counter (RunRewards).
 	var lost := game.player.take_damage(amount)
 	if lost > 0.0:
+		game.rewards.note_player_hit(hp_before, lost, game.player.max_hp)  # Content wave 2: reads only.
 		game.stat_add("damage_to_player", lost)
 		game.stat_add("player_dmg_from_" + source, lost)
 		game.shake(4.0)

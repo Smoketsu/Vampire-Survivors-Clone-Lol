@@ -295,6 +295,12 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"nothing_unwritten": "ach_nothing_unwritten",  # TUNING (not in GDD)
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"the_dead_god_serves": "ach_the_dead_god_serves",  # TUNING (not in GDD)
+	# --- Content wave 2: B. Achievement rewards (no badge PNGs yet: the fallbacks draw) ---
+	"mass_grave": "ach_mass_grave",  # TUNING (not in GDD)
+	"untouchable": "ach_untouchable",  # TUNING (not in GDD)
+	"full_ossuary": "ach_full_ossuary",  # TUNING (not in GDD)
+	"deathlords_due": "ach_deathlords_due",  # TUNING (not in GDD)
+	"swift_judgment": "ach_swift_judgment",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -308,6 +314,12 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"nothing_unwritten": "forbidden_verse",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"the_dead_god_serves": "call_of_the_drowned",
+	# --- Content wave 2: B. Achievement rewards ---
+	"mass_grave": "raise_dead",
+	"untouchable": "warding_ritual",
+	"full_ossuary": "forbidden_knowledge",
+	"deathlords_due": "dread_rally",
+	"swift_judgment": "death_mark",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

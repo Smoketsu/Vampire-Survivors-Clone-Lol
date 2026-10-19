@@ -17,9 +17,57 @@ extends RefCounted
 static func is_open(id: String) -> bool:
 	if not UnlockData.UNLOCKS.has(id):
 		return true
-	if GameState.autotest and (GameState.autotest_unlock_all or GameState.autotest_forces(id)):
+	if GameState.autotest and GameState.autotest_forces(id):
 		return true
+	if GameState.autotest and GameState.autotest_unlock_all and not is_reward(id):
+		return true  # --unlocks=all opens the card pool only (not titles, skins, ultimates).
 	return Meta.is_item_unlocked(id)
+
+
+# --- Content wave 2: B. Achievement rewards ---
+
+## True when lockable item `id` is an achievement reward (UnlockData.REWARD_TYPES:
+## an ultimate, a title or a skin), not a level-up card.
+static func is_reward(id: String) -> bool:
+	return UnlockData.REWARD_TYPES.has(item_type(id))
+
+
+## UnlockData type of item `id` ("" when it is not lockable).
+static func item_type(id: String) -> String:
+	return String((UnlockData.UNLOCKS.get(id, {}) as Dictionary).get("type", ""))
+
+
+## UI name of lockable item `id`: an ultimate's row `name`, a title's
+## TitleData name, a skin family's SkinData name, else the card row's name.
+static func item_name(id: String) -> String:
+	var row: Dictionary = UnlockData.UNLOCKS.get(id, {})
+	match String(row.get("type", "")):
+		"ultimate":
+			return String(row.get("name", id))
+		"title":
+			return TitleData.display_text(id)
+		"skin":
+			return SkinData.universal_name(id)
+	return String(card_row(id).get("display_name", id))
+
+
+## Ids of the UnlockData rows that achievement `achievement` unlocks, in
+## table order (the Codex's reward column).
+static func rewards_of(achievement: String) -> PackedStringArray:
+	var out := PackedStringArray()
+	for id: String in UnlockData.UNLOCKS:
+		if String((UnlockData.UNLOCKS[id] as Dictionary).get("achievement", "")) == achievement:
+			out.append(id)
+	return out
+
+
+## Ids of every UnlockData row of type `type` (e.g. "title"), in table order.
+static func ids_of_type(type: String) -> PackedStringArray:
+	var out := PackedStringArray()
+	for id: String in UnlockData.UNLOCKS:
+		if item_type(id) == type:
+			out.append(id)
+	return out
 
 
 ## True when item `id`'s card row allows stage `stage_def`'s act.

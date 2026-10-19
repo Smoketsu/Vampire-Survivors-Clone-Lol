@@ -89,6 +89,15 @@
 ## screen's plates); older saves have no section and start with none, except
 ## that an item unlocked by a boss already slain on the stage records is
 ## opened on load (_load_unlocks(): the Fallen Seraph for an old Seraphine kill).
+## Achievement rewards (content wave 2, GDD §15.0 "Achievement rewards
+## (content wave 2)"): ultimates, titles and universal skins are UnlockData
+## rows too (same [unlocks] section; an achievement earned before its row
+## existed opens it on load). The five one-run achievements read the run's
+## RunRewards stats through run_counters() into five lifetime counters; the
+## autotest checks them only with --meta-save or --rewards=on
+## (run_achievements_checked()). The worn title is `prerun_title` ([prerun]
+## title; selected_title(), set_selected_title()). Older saves have none of
+## it and start with no title; unknown ids are ignored.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -154,6 +163,10 @@ var codex_kills: Dictionary = {}
 ## Act II unlockable items (UnlockData ids) unlocked in some run: id -> true
 ## (the [unlocks] save section; read through Unlocks.is_open()).
 var unlocked_items: Dictionary = {}
+## Content wave 2: TitleData id of the title the player wears ("" = none);
+## saved as [prerun] title. Read through selected_title(), which drops a
+## title that is not (or no longer) unlocked.
+var prerun_title: String = ""
 ## True while a deferred codex save is queued for the end of this frame.
 var _codex_save_queued: bool = false
 
@@ -307,6 +320,7 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("rot_kills", float(st.get("rot_kills", 0.0)))
 	_add_lifetime("high_confessor_kills", float(st.get("kill_high_confessor", 0.0)))
 	_add_lifetime("archive_all_tomes_runs", 1.0 if float(st.get("archive_all_tomes", 0.0)) > 0.0 else 0.0)  # Nothing Unwritten (Act II)
+	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
 		# The Dread Sovereign skin reuses the achievement's role check
@@ -324,6 +338,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	var bounty := 0
 	for id: String in MetaData.ACHIEVEMENT_ORDER:
 		var def: Dictionary = MetaData.ACHIEVEMENTS[id]
+		if bool(def.get("run", false)) and not run_achievements_checked():
+			continue  # Content wave 2: not under the default autotest (its summaries stay as before).
 		if not achievements.has(id) and achievement_progress(id) >= float(def["goal"]):
 			achievements[id] = true
 			unlocked.append(id)
@@ -339,8 +355,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	award["unlocked_items"] = items
 	var new_skins := PackedStringArray()  # Skins this run unlocked.
 	for id: String in unlocked_skin_ids():
-		if not skins_before.has(id):
-			new_skins.append(id)
+		if not skins_before.has(id) and SkinData.universal_family(id) == "":
+			new_skins.append(id)  # A universal skin family is one "skin" item plate (unlocked_items), not one per character.
 	award["unlocked_skins"] = new_skins
 	award["bounty"] = bounty
 	award["new_total"] = soul_ash
@@ -348,6 +364,41 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	save()
 	changed.emit()
 	return award
+
+
+## Content wave 2: what ONE run (`summary`, Game.build_summary(); its stats
+## from RunRewards) adds to each one-run achievement's lifetime counter
+## (MetaData.ACHIEVEMENTS rows with "run"): "best_*" keys are this run's
+## record (kept as a lifetime maximum), the others 1 or 0 (a qualifying run).
+## Pure (reads nothing of the save): the autotest reads it too.
+func run_counters(summary: Dictionary) -> Dictionary:
+	var st: Dictionary = summary.get("stats", {})
+	var reached_zero := float(summary.get("time", 0.0)) >= float(summary.get("countdown", WaveData.RUN_DURATION))  # The run reached 0:00.
+	var boss_secs := float(st.get("rw_boss_kill_secs", INF))  # Seconds the boss lasted after its arrival (INF = it did not fall).
+	return {
+		"best_temp_raised": float(st.get("rw_temp_raised", 0.0)),  # Mass Grave
+		"untouchable_runs": 1.0 if reached_zero and float(st.get("rw_min_hp_frac", 1.0)) >= MetaData.UNTOUCHABLE_HP_FRACTION else 0.0,  # Untouchable
+		"best_evolutions_held": float(st.get("evolutions", 0.0)),  # Full Ossuary
+		"deathlord_victories": 1.0 if bool(summary.get("victory", false)) and String(summary.get("difficulty_id", "")) == MetaData.DEATHLORD_DIFFICULTY_ID else 0.0,  # Deathlord's Due
+		"swift_boss_kills": 1.0 if bool(summary.get("boss_defeated", false)) and boss_secs <= MetaData.SWIFT_JUDGMENT_SECONDS else 0.0,  # Swift Judgment
+	}
+
+
+## Adds a finished run's run_counters() to the lifetime counters.
+func _add_run_counters(summary: Dictionary) -> void:
+	var c := run_counters(summary)  # This run's contributions.
+	for key: String in c:
+		if key.begins_with("best_"):
+			lifetime[key] = minf(maxf(float(lifetime.get(key, 0.0)), float(c[key])), float(MAX_STORED))
+		else:
+			_add_lifetime(key, float(c[key]))
+
+
+## True when award_run() checks the one-run achievements ("run" rows): always
+## in the game; under the autotest only with --meta-save or --rewards=on, so
+## the default autotest summaries (bounty, Soul Ash total) stay as before.
+func run_achievements_checked() -> bool:
+	return not GameState.autotest or GameState.autotest_meta_save or GameState.autotest_rewards
 
 
 ## Progress of achievement `id` toward its goal: its `stat` in the record of
@@ -461,6 +512,8 @@ func is_skin_unlocked(id: String) -> bool:
 			return achievements.has(String(u["id"]))
 		"lifetime":
 			return float(lifetime.get(String(u["stat"]), 0.0)) >= float(u["goal"])
+		"reward":
+			return Unlocks.is_open(String(u["id"]))  # Content wave 2: a universal skin family (UnlockData "skin" row).
 	return false
 
 
@@ -479,7 +532,21 @@ func skin_progress(id: String) -> String:
 			if MetaData.ACHIEVEMENTS.has(aid):
 				var goal := int(MetaData.ACHIEVEMENTS[aid]["goal"])  # Its goal.
 				return "%d / %d" % [mini(int(achievement_progress(aid)), goal), goal]
+		"reward":
+			return reward_progress(String(u["id"]))
 	return ""
+
+
+## Content wave 2: progress text of lockable reward `id`'s achievement
+## ("123 / 500"; "" when its row names no achievement or the goal is 1).
+func reward_progress(id: String) -> String:
+	var aid := String((UnlockData.UNLOCKS.get(id, {}) as Dictionary).get("achievement", ""))  # The achievement that earns it.
+	if not MetaData.ACHIEVEMENTS.has(aid):
+		return ""
+	var goal := int(MetaData.ACHIEVEMENTS[aid]["goal"])  # Its goal.
+	if goal <= 1:
+		return ""
+	return "%d / %d" % [mini(int(achievement_progress(aid)), goal), goal]
 
 
 ## Every unlocked skin id (all characters, SkinData order).
@@ -499,6 +566,42 @@ func chosen_skin(character: String) -> String:
 	if id != "" and SkinData.skins_for(ch).has(id) and is_skin_unlocked(id):
 		return id
 	return SkinData.default_skin(ch)
+
+
+# =====================================================================================
+# Titles (content wave 2; TitleData, unlocked through Unlocks.is_open())
+# =====================================================================================
+
+## The title the player wears (TitleData id), or "" when none is chosen or the
+## chosen one is not unlocked. The victory card shows
+## TitleData.display_text(Meta.selected_title()).
+func selected_title() -> String:
+	if prerun_title == "" or not TitleData.has(prerun_title) or not Unlocks.is_open(prerun_title):
+		return ""
+	return prerun_title
+
+
+## Wears title `id` ("" = none; a locked or unknown id is refused) and saves
+## when it changed (a free, reversible cosmetic choice: it acts at once).
+## Returns true when it changed.
+func set_selected_title(id: String) -> bool:
+	if id != "" and (not TitleData.has(id) or not Unlocks.is_open(id)):
+		return false
+	if id == selected_title():
+		return false
+	prerun_title = id
+	save()
+	changed.emit()
+	return true
+
+
+## Every unlocked title id, in TitleData.ORDER.
+func unlocked_titles() -> PackedStringArray:
+	var out := PackedStringArray()
+	for id: String in TitleData.ORDER:
+		if Unlocks.is_open(id):
+			out.append(id)
+	return out
 
 
 # =====================================================================================
@@ -821,6 +924,7 @@ func save() -> Error:
 	for id: String in UnlockData.UNLOCKS:
 		if unlocked_items.has(id):
 			cfg.set_value("unlocks", id, true)
+	cfg.set_value("prerun", "title", prerun_title)  # Content wave 2: the worn title ("" = none).
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -874,6 +978,7 @@ func load_save() -> void:
 	_load_hyper_skins(cfg)
 	_load_codex(cfg)
 	_load_unlocks(cfg)
+	_load_title(cfg)
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -941,6 +1046,15 @@ func _load_unlocks(cfg: ConfigFile) -> void:
 		var row: Dictionary = UnlockData.UNLOCKS[id]
 		if row.has("boss") and _boss_slain_on_record(String(row["boss"])):
 			unlocked_items[id] = true
+		if row.has("achievement") and achievements.has(String(row["achievement"])):
+			unlocked_items[id] = true  # Content wave 2: an achievement earned before its reward row existed.
+
+
+## Content wave 2: reads the worn title ([prerun] title; missing, wrong type
+## or unknown id = none; a locked title is kept but selected_title() hides it).
+func _load_title(cfg: ConfigFile) -> void:
+	var t: Variant = cfg.get_value("prerun", "title", "")
+	prerun_title = String(t) if typeof(t) == TYPE_STRING and TitleData.has(String(t)) else ""
 
 
 ## True when some stage whose boss slot is boss `boss_id` records a boss kill.
@@ -1037,6 +1151,7 @@ func _reset() -> void:
 	codex_seen = _empty_codex()
 	codex_kills = {}
 	unlocked_items = {}
+	prerun_title = ""
 	load_status = "fresh"
 
 
@@ -1058,6 +1173,12 @@ static func _default_lifetime() -> Dictionary:
 		"seraphine_kills_full_army": 0.0,  # Seraphine slain with the 4 GDD roles (Dread Sovereign skin)
 		# --- Act II: the Hollow Archive ---
 		"archive_all_tomes_runs": 0.0,  # Hollow Archive runs that burned every tome (Nothing Unwritten)
+		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
+		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
+		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)
+		"best_evolutions_held": 0.0,  # most evolutions held at once in one run (Full Ossuary)
+		"deathlord_victories": 0.0,  # victories on Deathlord difficulty (Deathlord's Due)
+		"swift_boss_kills": 0.0,  # stage bosses slain within 45 s of arriving (Swift Judgment)
 	}
 
 
