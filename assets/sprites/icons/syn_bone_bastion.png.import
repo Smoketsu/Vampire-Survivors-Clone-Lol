@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwaf3osyus645"
-path="res://.godot/imported/syn_charnel_house.png-1a3deaea6abefb341c55730d27ca9a45.ctex"
+uid="uid://ljd7snmy04g2"
+path="res://.godot/imported/syn_bone_bastion.png-417578660c731c3f8d86c77a5320272d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/icons/syn_charnel_house.png"
-dest_files=["res://.godot/imported/syn_charnel_house.png-1a3deaea6abefb341c55730d27ca9a45.ctex"]
+source_file="res://assets/sprites/icons/syn_bone_bastion.png"
+dest_files=["res://.godot/imported/syn_bone_bastion.png-417578660c731c3f8d86c77a5320272d.ctex"]
 
 [params]
 

@@ -14,7 +14,7 @@
 ##                       PassiveData.AREA_HOLY_SOURCES.
 ##   Bone Plating      — damage_unit(): a flat amount off every hit, after
 ##                       the other reductions and before barriers.
-##   Grave Masonry     — damage_unit() (content wave 2): the blockers
+##   Grave Masonry     — damage_unit() (content wave 2; with Bone Bastion): the blockers
 ##                       (PassiveData.MASONRY_CLASSES) take blocker_reduction
 ##                       less, after Unholy Resilience and before Bone Plating.
 ## Cathedral Horror (summon evolution): stun_enemy() (the dive stun) and the
@@ -318,11 +318,23 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 		game.stat_add("resilience_dmg_prevented", amount * res)
 		game.stat_add("resilience_dmg_prevented_" + String(PassiveData.AREA_HOLY_SOURCES[source]), amount * res)
 		amount *= 1.0 - res
-	# Grave Masonry (content wave 2): the blockers take less, its own category.
+	# Grave Masonry and Bone Bastion (content wave 2): the blockers take less
+	# (Masonry) and so does every summon near a Golem (the Bone Bastion synergy);
+	# together they cut at most Bone Bastion's max_combined of the hit.
 	var mason := ab.passive_value("grave_masonry", "blocker_reduction")  # 0..1, 0 when not owned.
-	if mason > 0.0 and u.unit_class in PassiveData.MASONRY_CLASSES:
-		game.stat_add("masonry_dmg_prevented", amount * mason)
-		amount *= 1.0 - mason
+	if not u.unit_class in PassiveData.MASONRY_CLASSES:
+		mason = 0.0
+	var bastion := game.horde.synergies.bastion_reduction(u)  # 0..1, 0 while the synergy is off.
+	if mason > 0.0 or bastion > 0.0:
+		var floor_mult := 1.0 - float(SynergyData.SYNERGIES["bone_bastion"]["max_combined"])  # Least share of the hit kept.
+		var mult := maxf(floor_mult, (1.0 - mason) * (1.0 - bastion))  # Share of the hit kept.
+		var prevented := amount * (1.0 - mult)  # HP the two cut together.
+		var by_mason := minf(prevented, amount * mason)  # Masonry's share (counted first).
+		if mason > 0.0:
+			game.stat_add("masonry_dmg_prevented", by_mason)
+		if bastion > 0.0:
+			game.stat_add("syn_bastion_prevented", prevented - by_mason)
+		amount *= mult
 	var plate := ab.passive_value("bone_plating", "flat_reduction")  # Flat damage off this hit.
 	if plate > 0.0 and not source in PassiveData.PLATING_EXEMPT_SOURCES:
 		var cut := minf(plate, amount * (1.0 - PassiveData.PLATING_MIN_FRACTION))  # Damage actually removed.

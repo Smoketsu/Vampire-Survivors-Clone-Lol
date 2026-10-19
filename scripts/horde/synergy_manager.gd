@@ -19,8 +19,7 @@
 ##                             (CombatResolver.damage_unit), aura drawn on
 ##                             every summon (SummonedUnit._draw).
 ## The newer classes' synergies (setter / finisher, SynergyData header):
-##   marks        mark_staggered() (AbominationBehavior stomp), mark_slammed()
-##                (GolemBehavior slam; content wave 2, Charnel House) and
+##   marks        mark_staggered() (AbominationBehavior stomp) and
 ##                mark_swooped() (GargoyleBehavior dive) write the timed
 ##                Enemy tags, only while a synergy that reads them is active
 ##                (so nothing changes without one); chill, Deep Freeze and the
@@ -53,13 +52,18 @@ const REGEN_TICK: float = 1.0  # TUNING (not in GDD)
 ## Synergies with a per-hit bonus, reported in summary_line() (display order).
 const HIT_IDS := ["flesh_rampart", "killing_field", "death_from_above", "wild_hunt",
 		"cold_blood", "shatterfall", "requiem", "charnel_menagerie"]
-## Content wave 2: hit synergies kept OUT of summary_line() (their numbers are
-## on the autotest's "bone golem" line), so the "synergy bonus" line keeps its
-## text in every run.
-const WAVE2_HIT_IDS := ["charnel_house"]
+## Content wave 2: hit synergies kept OUT of summary_line(), so the "synergy
+## bonus" line keeps its text in every run (none since Bone Bastion replaced
+## Charnel House: Bone Bastion is an aura, not a hit bonus).
+const WAVE2_HIT_IDS: Array = []
 
 ## Owning horde director.
 var director: HordeDirector
+## Summon class whose Golems project Bone Bastion (UnitData id).
+const BASTION_CLASS: String = "bone_golem"
+## Bone Bastion: [position (Vector2), planted (bool)] of every live Golem this
+## tick (_refresh_bastions(); empty while the synergy is off).
+var _bastions: Array = []
 ## Synergy id -> true while active.
 var active: Dictionary = {}
 ## "synergy_id@mm:ss" for every activation this run (summary / autotest).
@@ -227,8 +231,10 @@ func _on_activated(id: String) -> void:
 		game.hud.announce("SYNERGY AWAKENED", String(def["display_name"]), String(def["description"]), Palette.NECRO_GREEN)
 
 
-## Per-tick synergy effects (barriers, regeneration, the Baying frenzy's end).
+## Per-tick synergy effects (barriers, regeneration, the Baying frenzy's end,
+## Bone Bastion's list of Golems).
 func step(delta: float) -> void:
+	_refresh_bastions()
 	if active.has("shieldwall"):
 		_barrier_timer -= delta
 		if _barrier_timer <= 0.0:
@@ -242,6 +248,34 @@ func step(delta: float) -> void:
 	if _frenzy_on and (director.game.elapsed >= _frenzy_until or not active.has("baying")):
 		_frenzy_on = false
 		_refresh_frenzy_class()
+
+
+## Bone Bastion (content wave 2): rebuilds the list of live Golems once a
+## tick (empty while the synergy is off), so damage_unit() checks a short list.
+func _refresh_bastions() -> void:
+	_bastions.clear()
+	if not active.has("bone_bastion"):
+		return
+	for g in director.units:
+		if g.active and g.unit_class == BASTION_CLASS and g.state != SummonedUnit.State.SPAWNING \
+				and g.state != SummonedUnit.State.DEAD:
+			var b := g.behavior as GolemBehavior  # Its kit, for the planted state.
+			_bastions.append([g.position, b != null and b.planted_left > 0.0])
+
+
+## Bone Bastion's damage-taken cut (0..1) for summon `u` (0 while the synergy
+## is off, for a Golem itself and outside every Golem's reach): the planted cut
+## when the nearest bastion in reach is planted, else the base cut; the best wins.
+func bastion_reduction(u: SummonedUnit) -> float:
+	if _bastions.is_empty() or u.unit_class == BASTION_CLASS:
+		return 0.0
+	var def: Dictionary = SynergyData.SYNERGIES["bone_bastion"]
+	var r := float(def["radius"])  # Bastion reach (px).
+	var best := 0.0  # Best cut found.
+	for entry: Array in _bastions:
+		if (entry[0] as Vector2).distance_to(u.position) <= r:
+			best = maxf(best, float(def["planted_reduction"]) if bool(entry[1]) else float(def["reduction"]))
+	return best
 
 
 ## Shieldwall: while a Warder (or a Profane Bishop) lives, every warrior's
@@ -297,17 +331,6 @@ func mark_swooped(e: Enemy) -> void:
 	game.stat_add("syn_swooped_marks", 1.0)
 
 
-## Content wave 2: Bone Golem / Ossuary Titan slam hit `e`: it is slammed for
-## SynergyData.SLAM_MARK_DURATION s, while a synergy reads the mark (Charnel
-## House). Structures and Reckoning enemies are never marked.
-func mark_slammed(e: Enemy) -> void:
-	if not _marks.has("slammed") or not e.active or e.is_structure or e.is_reckoning:
-		return
-	var game := director.game
-	e.slammed_until = maxf(e.slammed_until, game.elapsed + SynergyData.SLAM_MARK_DURATION)
-	game.stat_add("syn_slammed_marks", 1.0)
-
-
 ## Damage multiplier the synergies give a hit of `source` on `e` (1 = none),
 ## called once per hit by CombatResolver.damage_enemy(): (1 + the highest
 ## mark bonus of the active synergies the source's class finishes, halved on
@@ -358,8 +381,6 @@ func _mark_bonus(id: String, source: String, e: Enemy) -> float:
 			return float(def["bonus_chilled"]) if e.chill_timer > 0.0 else 0.0
 		"weakened":
 			return float(def["bonus"]) if e.weaken_until > now else 0.0
-		"slammed":
-			return float(def["bonus"]) if e.slammed_until > now else 0.0  # Content wave 2: Charnel House.
 	return 0.0
 
 

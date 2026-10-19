@@ -5,9 +5,7 @@
 ##   * The slam: every landed melee strike is a two-handed slam. After the hit
 ##     on its target (the shared melee path), on_melee_hit() splashes
 ##     slam_fraction of the unit's damage onto every OTHER foe within
-##     slam_radius px of the struck one (source "golem_slam"), and marks
-##     every foe it hit slammed (SynergyManager.mark_slammed(): only while
-##     Charnel House is active). The slam's volley (a ring of bone shards) is
+##     slam_radius px of the struck one (source "golem_slam"). The slam's volley (a ring of bone shards) is
 ##     the class's attack-triggered volley (VolleyData, from class Lv 3).
 ##   * Bulwark: think() plants the Golem every bulwark_cooldown s once
 ##     bulwark_min_enemies foes stand within bulwark_trigger px (or an elite /
@@ -160,15 +158,12 @@ func absorb(u: SummonedUnit) -> float:
 	return growth - old
 
 
-## The slam's splash, marks and impact after a landed melee strike on `e`.
+## The slam's splash and impact after a landed melee strike on `e`.
 func on_melee_hit(u: SummonedUnit, e: Enemy, _dealt: float) -> void:
 	var game := u.game
 	var center := e.position  # Impact point (the struck foe may have died).
 	var r := float(u.special.get("slam_radius", 40.0))  # Splash radius (px).
 	var dmg := u.damage * float(u.special.get("slam_fraction", 0.6))  # Splash damage per foe.
-	var syn := u.director.synergies  # Charnel House marks (no-op while inactive).
-	if e.active:
-		syn.mark_slammed(e)
 	game.enemy_grid.query(center, r + ProjectileManager.MAX_BODY_RADIUS, _buf)
 	var victims: Array = []  # Own copy: kills may run other queries.
 	for o: Enemy in _buf:
@@ -176,7 +171,6 @@ func on_melee_hit(u: SummonedUnit, e: Enemy, _dealt: float) -> void:
 			victims.append(o)
 	for o: Enemy in victims:
 		if o.active:
-			syn.mark_slammed(o)
 			game.combat.damage_enemy(o, dmg, SLAM_SOURCE)
 	game.effects.ring(center, r, Palette.BONE, 0.3, SLAM_ANIM)
 	Juice.fx.burst(center, Palette.BONE, Palette.STONE, 8, r * 1.6, 0.4, 2.0)

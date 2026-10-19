@@ -576,3 +576,4 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-19 16:27,icons/grave_masonry,gpt-image-2.5-flare,medium,1024x1024,2,386,8,439,0.0152,src_icon_grave_masonry.png
 2026-10-19 16:27,icons/syn_charnel_house,gpt-image-2.5-flare,medium,1024x1024,2,404,8,439,0.0153,src_icon_syn_charnel_house.png
 2026-10-19 16:29,effects/golem_slam,gpt-image-2.5-flare,medium,1536x1024,0,239,0,343,0.0115,src_fx_golem_slam.png
+2026-10-19 18:55,icons/syn_bone_bastion,gpt-image-2.5-flare,medium,1024x1024,2,405,2048,439,0.0316,src_syn_bone_bastion.png

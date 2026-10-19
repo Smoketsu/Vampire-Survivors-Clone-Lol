@@ -17,7 +17,7 @@
 ##   The Charnel Menagerie (any 4 of the 7 newer classes)   the newer classes deal more damage, replenish faster
 ## and content wave 2's pair (owner-approved proposal 5; the Bone Golem also
 ## joins NEWER_CLASSES, so it counts toward the Menagerie):
-##   Charnel House         (Bone Golem + Abomination)       slams mark foes; stomps hit slammed foes harder
+##   Bone Bastion          (Bone Golem + Warrior or Abom.)  an aura: summons near a Golem take less damage (no mark)
 ## Evolved forms keep their class id, so they count (and finish) as their
 ## class (Bone Colossus, Cathedral Horror, Winter Revenant, Keening Lady,
 ## Shadow Reaper, Hellhound, Ossuary Engine; Death Knight, Lich).
@@ -59,7 +59,7 @@ const ORDER := ["shieldwall", "volley", "deathless", "unholy_host",
 		"flesh_rampart", "killing_field", "death_from_above", "wild_hunt",
 		"cold_blood", "shatterfall", "requiem", "baying", "charnel_menagerie",
 		# --- Content wave 2: Bone Golem ---
-		"charnel_house"]
+		"bone_bastion"]
 
 ## The seven newer summon classes (UnitData ids): the classes the Charnel
 ## Menagerie counts and whose damage and replenishment it raises.
@@ -76,10 +76,6 @@ const SWOOPED_DURATION: float = 5.0  # TUNING (not in GDD) proposal 3.0; pair sc
 ## Share (0..1) of a mark bonus the stage boss takes (owner decision: half;
 ## minibosses and elites take the full bonus).
 const BOSS_MARK_MULT: float = 0.5  # TUNING (not in GDD) owner decision
-# --- Content wave 2: Bone Golem ---
-## Seconds a Bone Golem (or Ossuary Titan) slam leaves a foe "slammed"
-## (Charnel House; Enemy.slammed_until).
-const SLAM_MARK_DURATION: float = 6.0  # TUNING (not in GDD) one stomp cooldown (4 s and 6 s gave the same 27 bonus stomp hits in a forced Titan + Abomination run)
 ## Damage-source tag (CombatResolver.damage_enemy `source`) -> the summon
 ## class it belongs to, for the mark bonuses and the Charnel Menagerie. Only
 ## the classes these synergies name are listed: a class's basic attack (its
@@ -127,8 +123,7 @@ const MAGE_SOURCES := ["mage", "lich"]
 ##   mark         — optional (the newer pairs): the foe state the finisher
 ##                  cashes in: "staggered" (Enemy.staggered_until),
 ##                  "swooped" (Enemy.swooped_until), "chilled" (chilled or
-##                  Deep-Frozen), "slammed" (Enemy.slammed_until, a Bone
-##                  Golem slam), "frozen" (Deep-Frozen takes `bonus`, only
+##                  Deep-Frozen), "frozen" (Deep-Frozen takes `bonus`, only
 ##                  chilled takes `bonus_chilled`), "weakened" (the Dirge,
 ##                  Enemy.weaken_until) or "dirge" (no hit bonus: Baying).
 ##   finisher     — optional: the class (a SOURCE_CLASS value) whose hits
@@ -324,17 +319,24 @@ const SYNERGIES := {
 		"replenish_speed": 0.20,  # TUNING (not in GDD) owner-approved proposal
 	},
 	# --- Content wave 2: Bone Golem ---
-	"charnel_house": {
-		"display_name": "Charnel House",  # Owner-approved proposal 5
-		"short_name": "Charnel House",
-		"icon": "syn_charnel_house",
-		"description": "Golem slams mark foes; Abomination stomps hit marked foes harder.",
-		"requires": ["bone_golem", "abomination"],
+	"bone_bastion": {
+		# Owner decision (Oct 2026, GDD §15.0 "Bone Bastion"): it replaced Charnel House
+		# (a slam mark the Abomination stomps cashed in), which almost never fired because
+		# Golems and Abominations hold different Bone Ring posts. No mark: an aura.
+		"display_name": "Bone Bastion",  # Owner decision
+		"short_name": "Bone Bastion",
+		"icon": "syn_bone_bastion",
+		"description": "Summons near a Bone Golem take less damage, far less while it is planted.",
+		## The Golem and any blocker class (a Warrior or an Abomination, evolved forms too).
+		"requires": ["bone_golem", ["warrior", "abomination"]],  # Owner decision
 		"distinct": 0,
-		"mark": "slammed",
-		"finisher": "abomination",
-		"sources": ["abom_stomp"],
-		## Extra Abomination / Bone Colossus stomp damage on a slammed foe (+50%).
-		"bonus": 0.50,  # TUNING (not in GDD) like Killing Field's boulders (one stomp every 6 s)
+		## Reach of a Golem's bastion, centre to centre (px): Bulwark's taunt reach.
+		"radius": 120.0,  # TUNING (not in GDD) owner-approved proposal
+		## Damage-taken cut (0..1) for the other summons inside a Golem's reach.
+		"reduction": 0.15,  # TUNING (not in GDD) owner-approved proposal
+		## The cut while that Golem is planted (Bulwark).
+		"planted_reduction": 0.30,  # TUNING (not in GDD) owner-approved proposal
+		## Most (0..1) Grave Masonry and the bastion may cut one hit together.
+		"max_combined": 0.60,  # TUNING (not in GDD) owner-approved proposal
 	},
 }

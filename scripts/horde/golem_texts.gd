@@ -6,7 +6,7 @@
 ## build_offer) and the autotest summary line. The effects live on their single
 ## paths: the slam and the Bulwark in GolemBehavior, Ossuary Hunger and the
 ## Titan in GolemKit, Grave Masonry in CombatResolver.damage_unit() (damage)
-## and HordeDirector.compute_stats() (hold), Charnel House in SynergyManager.
+## and HordeDirector.compute_stats() (hold), Bone Bastion in SynergyManager (the aura) and damage_unit() (the cut).
 ## Data only in UnitData / PassiveData / SummonEvolutionData / SynergyData; no
 ## state here.
 class_name GolemTexts
@@ -18,8 +18,8 @@ const CLASS_ID: String = "bone_golem"
 const PASSIVE_ID: String = "grave_masonry"
 ## Evolution id of the Ossuary Titan (SummonEvolutionData).
 const EVOLUTION_ID: String = "ossuary_titan"
-## Synergy id of Charnel House (SynergyData).
-const SYNERGY_ID: String = "charnel_house"
+## Synergy id of Bone Bastion (SynergyData).
+const SYNERGY_ID: String = "bone_bastion"
 ## Example hit (damage) shown on the Grave Masonry card (UI illustration only,
 ## not a balance number).
 const EXAMPLE_HIT: float = 20.0
@@ -76,7 +76,7 @@ static func used(game: Game) -> bool:
 
 
 ## Autotest summary line ("bone golem: ..."): the owner's fields first
-## (absorbed, max growth, Bulwarks, Titan, Charnel House bonus damage), then the
+## (absorbed, max growth, Bulwarks, Titan, damage Bone Bastion prevented), then the
 ## class's damage, deaths, slams, taunts, Grave Masonry and the Titan's kit.
 static func summary_line(game: Game) -> String:
 	var st := game.stats  # Run counters.
@@ -85,9 +85,9 @@ static func summary_line(game: Game) -> String:
 	var dmg := 0.0  # Every Golem damage source.
 	for src: String in [CLASS_ID, EVOLUTION_ID, GolemBehavior.SLAM_SOURCE, GolemKit.WALL_SOURCE]:
 		dmg += float(st.get("dmg_" + src, 0.0))
-	return "absorbed=%d max_growth=%d%% bulwarks=%d titan=%s charnel_house_bonus=%d | Lv %d (%s), alive %d/%d, deaths %d | dmg %d (slams %d, splash %d, wall %d) slams=%d slam_hits=%d planted_s=%d taunts=%d | grave_masonry Lv %d prevented=%d | titan heal=%d barriers=%d (%d HP) walls=%d (segments %d, hits %d, pushes %d) | charnel_house hits=%d" % [
+	return "absorbed=%d max_growth=%d%% bulwarks=%d titan=%s bone_bastion_prevented=%d | Lv %d (%s), alive %d/%d, deaths %d | dmg %d (slams %d, splash %d, wall %d) slams=%d slam_hits=%d planted_s=%d taunts=%d | grave_masonry Lv %d prevented=%d | titan heal=%d barriers=%d (%d HP) walls=%d (segments %d, hits %d, pushes %d) | bone_bastion active=%s" % [
 		int(st.get("golem_absorbed", 0.0)), int(roundf(float(st.get("golem_max_growth_pct", 0.0)))), int(st.get("golem_bulwarks", 0.0)),
-		str(titan), int(st.get("syn_%s_bonus_dmg" % SYNERGY_ID, 0.0)),
+		str(titan), int(st.get("syn_bastion_prevented", 0.0)),
 		int(h.class_levels[CLASS_ID]), h.evolutions.class_plural(CLASS_ID), h.count_of(CLASS_ID), h.capacity(CLASS_ID),
 		int(SeraphTexts._sum_prefix(st, "death_%s_by_" % CLASS_ID)), int(dmg),
 		int(float(st.get("dmg_" + CLASS_ID, 0.0)) + float(st.get("dmg_" + EVOLUTION_ID, 0.0))),
@@ -96,4 +96,4 @@ static func summary_line(game: Game) -> String:
 		int(st.get("golem_taunts", 0.0)), game.abilities.passive_level(PASSIVE_ID), int(st.get("masonry_dmg_prevented", 0.0)),
 		int(st.get("titan_heal", 0.0)), int(st.get("titan_barriers", 0.0)), int(st.get("titan_barrier_hp", 0.0)),
 		int(st.get("titan_walls", 0.0)), int(st.get("titan_wall_segments", 0.0)), int(st.get("titan_wall_hits", 0.0)),
-		int(st.get("titan_wall_pushes", 0.0)), int(st.get("syn_%s_hits" % SYNERGY_ID, 0.0))]
+		int(st.get("titan_wall_pushes", 0.0)), str(h.synergies.is_active(SYNERGY_ID))]

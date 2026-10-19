@@ -1572,7 +1572,7 @@ x1.25), no extra art. Not a female character (no bust rig, no idle strip). **For
 | `icons/bone_golem` | Badge (violet border): the Golem's skull head between two skull-battlement shoulders | 32 | |
 | `icons/ossuary_titan` | Gold-border badge: the Titan's skull under its three skull towers, gravestone pauldrons | 32 | |
 | `icons/grave_masonry` | Badge (violet border): a wall of stacked bone bricks with a skull keystone | 32 | |
-| `icons/syn_charnel_house` | Synergy badge (violet border): a bone fist slamming into the ground, bone shards and flesh chunks flying | 32 | HUD list at 22 px |
+| `icons/syn_bone_bastion` | Synergy badge Bone Bastion (violet border): a squat ring wall of stacked bone blocks with a skull keystone, teal soul fire sheltered inside (replaced the Charnel House fist, owner decision) | 32 | HUD list at 22 px |
 | `effects/golem_slam` | A Golem slam: an impact flash, then a ring of cracked grave dirt with bone shards flying out, settling | 8 x 128 | `GolemBehavior` slam ring (0.3 s) |
 
 Code-drawn on purpose: the Bulwark's ring of bone stakes around a planted Golem and its faint taunt

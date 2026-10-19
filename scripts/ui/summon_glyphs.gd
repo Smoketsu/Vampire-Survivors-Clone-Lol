@@ -138,7 +138,7 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 			return WarbandGlyphs.draw_icon(ci, kind, c, s)  # The newest classes, evolutions and passives.
 		"fallen_seraph", "ruin_seraph", "fallen_grace":
 			return SeraphGlyphs.draw_icon(ci, kind, c, s)  # Act II: the Fallen Seraph, her evolution and passive.
-		"bone_golem", "ossuary_titan", "grave_masonry", "syn_charnel_house":
+		"bone_golem", "ossuary_titan", "grave_masonry", "syn_bone_bastion":
 			return GolemGlyphs.draw_icon(ci, kind, c, s)  # Content wave 2: the Golem, Titan, passive and synergy.
 		_:
 			return false

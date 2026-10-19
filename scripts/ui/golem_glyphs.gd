@@ -12,8 +12,8 @@
 ##                    crown of three skull towers behind the head,
 ##   Grave Masonry  = a bone wall of stacked blocks behind a skull keystone
 ##                    (passive icon),
-##   Charnel House  = a bone fist slamming into a flesh stomp ring (synergy
-##                    icon: the Golem's setter meets the Abomination's finisher),
+##   Bone Bastion   = a bone fist over a ring (synergy icon; drawn for the
+##                    former Charnel House, the art kept for Bone Bastion),
 ##   Bulwark        = a ring of short bone stakes around a planted Golem's feet.
 ## Colour language (ART_BIBLE): the undead army's bone, cold grey, grave-dirt
 ## brown and teal soul fire; never violet, gold only on the evolution frame
@@ -64,8 +64,8 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 			Glyphs.draw_summon(ci, kind, c + Vector2(0, s * 0.12), s * 0.4, false)
 		"grave_masonry":
 			_icon_masonry(ci, c, s)
-		"syn_charnel_house":
-			_icon_charnel_house(ci, c, s)
+		"syn_bone_bastion":
+			_icon_bone_bastion(ci, c, s)
 		_:
 			return false
 	return true
@@ -137,8 +137,8 @@ static func _icon_masonry(ci: CanvasItem, c: Vector2, s: float) -> void:
 	Glyphs._skull(ci, c + Vector2(0, -s * 0.42), s * 0.24, false, SOUL)
 
 
-## Charnel House: a bone fist slamming into a flesh stomp ring.
-static func _icon_charnel_house(ci: CanvasItem, c: Vector2, s: float) -> void:
+## Bone Bastion (drawn for the former Charnel House): a bone fist over a ring.
+static func _icon_bone_bastion(ci: CanvasItem, c: Vector2, s: float) -> void:
 	ci.draw_arc(c + Vector2(0, s * 0.32), s * 0.58, PI, TAU, 16, Palette.CORPSE_FLESH, 3.0)
 	ci.draw_rect(Rect2(c + Vector2(-s * 0.12, -s * 0.62), Vector2(s * 0.24, s * 0.5)), DIRT_LIGHT)
 	ci.draw_circle(c + Vector2(0, s * 0.02), s * 0.3, Palette.BONE)
