@@ -1230,7 +1230,8 @@ where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.2
 
   When she dies, the Eye's own ritual binds her to the necromancer: "THE DEAD GOD SERVES".
   The achievement of the same name opens the **campaign epilogue** (main menu → Epilogue, an
-  `EpilogueScreen` covering both acts; its Act I part opens with *Dawn Extinguished*).
+  `EpilogueScreen` covering both acts; its Act I part opens with *Dawn Extinguished*; see
+  "The illustrated epilogue" below).
 - **The Waking** (0:00): this stage's Reckoning, with its own kind, the **Dreamspawn of the
   Waking**, marching with Spawns of the Deep while the island sinks to its last stones.
 - **Unlocks** (all by slaying Vhal'Neth): the spell **Call of the Drowned**, the passives
@@ -1255,6 +1256,35 @@ where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.2
   `eye_spawn`, `eye_hierophant` or `eye_waking_horror`; the summary gains the `spire sinking`,
   `spire`, `spire kinds`, `vhalneth`, `the waking`, `call of the drowned` and
   `spawn_of_the_deep` lines (`SpireReport`).
+
+### The illustrated epilogue
+
+The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
+cutscene of eight slides over a black backdrop: one pixel-art picture panel per paragraph (Act I
+"When the Dawn Went Out": the Sanctum burning, the dawn going out over the pilgrim roads, the dead
+drifting to the coast; Act II "The Dead God Serves": the tide pulled back from Gullhaven, the
+Archive's last page burning, Ul-Thalos sinking, Vhal'Neth kneeling to the necromancer) and a closing
+card after Act II, "The Beacons Burn", where the other holy orders march out (the sequel's set-up).
+
+- Each panel (1024×576 art px, `assets/sprites/epilogue/`) pans slowly in a framed window
+  (944×424, 1 art px = 1 layout px through the sharp-pixel shader); the paragraph fades in under it.
+  A slide moves on by itself after 6 s plus reading time; any key, pad button, click or tap moves on
+  at once; Esc / pad B or **Skip** (for touch) ends it. With Reduce motion the picture stands still
+  and every fade is instant. A part not earned yet is one "Sealed" slide with its goal over its
+  first picture as a dark silhouette.
+- **It plays once on its own**: when you return to the main menu after a run, every epilogue part
+  that is open and not seen yet plays before you get the menu (Meta `[epilogue] seen_act1` /
+  `seen_act2`; an older save that already earned a part sees it after its next run). The
+  **Epilogue** menu item (above Credits, once a part is open) replays everything.
+- **Music:** a slow, sparse "Grave Lullaby" cue (section A only at 3/4 tempo, no timpani, harp or
+  crackle; `MenuThemeData.EPILOGUE_VARIANT`, 34.1 s loop) rendered by `MenuThemeSynth` the first
+  time the epilogue plays (worker thread on desktop, per-frame steps on the Web, where the slides
+  start at once and the cue fades in when it exists) and crossfaded through `Sfx.play_music()`
+  (`MUSIC_EPILOGUE`); closing brings the menu theme back.
+- **Debug:** `-- --epilogue` opens it at startup with the save's real state, `-- --epilogue=all`
+  shows every part as if open and saves nothing (screenshots). The autotest never shows it.
+- **Art:** `python3 tools/epilogue_panel.py --all` rebuilds the panels from the AI sources in
+  `art_source/epilogue/` (prompts beside them; docs/art/ART_BIBLE.md "Epilogue panels").
 
 ### Meta-progression (Soul Ash)
 
@@ -1577,6 +1607,9 @@ asks first through the confirm dialog (the menu loads those three scripts by pat
 without one still runs: the button answers `denied`, or Quit quits at once). All numbers are in `scripts/data/front_door_data.gd`. It runs on real time with its own RNG and
 never touches gameplay. Its art is in `assets/sprites/menu/`, rebuilt by
 `python3 art_source/menu/make_menu_art.py` (procedural pixel art plus two converted AI sources).
+The epilogue's eight picture panels (`assets/sprites/epilogue/`) are converted from wide AI scenes by
+`python3 tools/epilogue_panel.py` (16:9 crop, mode filter, box downscale to 1024×576, colour clusters
+snapped to the locked palette, lone-pixel cleanup; `--all` rebuilds every panel exactly).
 
 ## What is implemented (vs. the GDD)
 
@@ -1824,7 +1857,8 @@ scripts/
   audio/synth.gd            Procedural sound and music synthesis (no audio files)
   audio/run_loop_synth.gd   The in-run music loop's recipe as a list of small jobs (run at once, or over frames)
   audio/startup_synth.gd    Web build: renders the sound bank and the run loop in per-frame steps (no threads)
-  audio/menu_theme_synth.gd Main menu theme renderer: wavetable choir, music box, bell, harp, reverb (chunked)
+  audio/menu_theme_synth.gd Main menu theme renderer: wavetable choir, music box, bell, harp, reverb (chunked);
+                            also score variants (the epilogue's slow cue)
   fx/juice.gd               Autoload: screen shake, hit-stop, hooks for particles and damage numbers
   fx/fx_layer.gd            One node that draws all particles and damage numbers from fixed buffers
   fx/motion_director.gd     Engine motion: animates every unit's body once per frame, pools death dissolves
@@ -1883,6 +1917,8 @@ scripts/
                             Meta), codex_feat_row (an achievement row: badge, goal, bar, reward),
                             codex_art (an entry's art: whole-scale sprite / badge, flat
                             silhouette, "?"), credits_screen (Credits roll and Licences page),
+                            epilogue_screen (the illustrated epilogue: panning picture slides,
+                            autoplay once after a run, Skip),
                             confirm_dialog (the shared confirm dialog: ConfirmDialog.ask()),
                             menu_backdrop (the animated pixel-art graveyard behind the main menu),
                             hud_banners (the HUD's one banner slot: queue, ribbon accent by
@@ -1944,6 +1980,8 @@ scripts/
     codex_data.gd           The Codex: categories, tabs, sections, Covenant descriptions, layout,
                             achievement badges and the feats' texts
     credits_data.gd         The Credits roll, the licence files and the roll's motion
+    epilogue_data.gd        The epilogue's parts, paragraphs, picture panels and pans, closing card,
+                            layout and slide timings
     confirm_data.gd         The confirm dialogs' texts and sizes
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
                             Winter Revenant, Shadow Reaper, Cathedral Horror, Gravebow,
@@ -1970,7 +2008,8 @@ scripts/
                             motion, stage vignette scenes, hero panel
     mask_icon_data.gd       Small pixel UI icons as character masks (padlock, hourglass, skulls, ...)
     sound_data.gd           Sound recipes, voice limits, priorities
-    menu_theme_data.gd      Menu theme score (chords, melody, choir lead, harp, bell, timpani), mix, reverb
+    menu_theme_data.gd      Menu theme score (chords, melody, choir lead, harp, bell, timpani), mix, reverb,
+                            and the epilogue cue's variant (tempo, bars, muted layers)
     ui_motion_data.gd       UI motion timings, distances, scales and easings (UiMotion)
     in_run_ui_data.gd       In-run screens: level-up cards and pillars, chest reveal, pause and
                             results card layout, HUD banner queue and bars (all cosmetic)
@@ -2447,7 +2486,7 @@ Gravebow and Bone Colossus are in); saves; density and minion-HP-bar settings (�
 Marshal Vael and the Sanctum of Judgment with its Covenant kinds and Grand
 Inquisitor Seraphine (a human playtest and balance pass are next). Left: Soul
 Ash balance against the full-length stage and the real achievement unlocks (the
-campaign epilogue for *Dawn Extinguished*); skins, Hyper mode, the Hyper badges
+illustrated campaign epilogue is in); skins, Hyper mode, the Hyper badges
 and the Codex are in, with their art.
 
 **Phase 4 – Polish:** the pixel art, the menus (the menu modernization: UI kit,

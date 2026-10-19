@@ -241,7 +241,7 @@ func _ready() -> void:
 	col.add_child(_frame())
 	var text_box := VBoxContainer.new()  # Paragraph and tag, a fixed height so nothing jumps between slides.
 	text_box.custom_minimum_size = Vector2(frame_w, EpilogueData.TEXT_HEIGHT)
-	text_box.add_theme_constant_override("separation", 2)
+	text_box.add_theme_constant_override("separation", EpilogueData.TAG_GAP)
 	text_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_text = UiTheme.tier_label("", UiTheme.Tier.NAME, UiTheme.TEXT)
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -263,7 +263,7 @@ func _ready() -> void:
 func _header(width: float) -> Control:
 	var row := HBoxContainer.new()
 	row.custom_minimum_size.x = width
-	row.add_theme_constant_override("separation", 14)
+	row.add_theme_constant_override("separation", EpilogueData.HEADER_GAP)
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_heading = UiTheme.tier_label("", UiTheme.Tier.HEADER, UiTheme.TEXT_GOLD)
 	_heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL

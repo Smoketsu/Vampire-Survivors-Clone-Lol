@@ -88,6 +88,10 @@ const FRAME_PAD: float = 6.0  # TUNING (not in GDD)
 const TEXT_HEIGHT: float = 96.0  # TUNING (not in GDD)
 ## Gap (px) between the column's rows (header, picture, text).
 const ROW_GAP: int = 8  # TUNING (not in GDD)
+## Gap (px) between the header row's heading, act label and Skip button.
+const HEADER_GAP: int = 14  # TUNING (not in GDD)
+## Gap (px) between the paragraph and the closing card's tag line.
+const TAG_GAP: int = 2  # TUNING (not in GDD)
 ## Width (px) of the Skip button (top right; touch players have no Esc key).
 const SKIP_WIDTH: float = 96.0  # TUNING (not in GDD)
 ## Height (px) of the Skip button.
