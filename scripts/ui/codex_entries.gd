@@ -193,7 +193,9 @@ static func feats() -> Array:
 		var a: Dictionary = MetaData.ACHIEVEMENTS[id]
 		var skin := _skin_for_achievement(id)  # A skin this achievement unlocks ("" = none).
 		var reward := CodexData.BOUNTY_TEXT % int(a["bounty"])
-		if skin != "":
+		if String(a.get("unlock", "")) != "":
+			reward = "%s, %s" % [String(a["unlock"]), reward]  # Content wave 2: every achievement names its reward.
+		elif skin != "":
 			reward = "%s, %s" % [String(SkinData.skin(skin)["display_name"]), reward]
 		out.append({"name": String(a["display_name"]), "goal": String(a["description"]),
 			"progress": Meta.achievement_progress(id), "target": float(a["goal"]), "earned": Meta.achievements.has(id),
@@ -229,6 +231,10 @@ static func _skin_for_achievement(id: String) -> String:
 		var u: Dictionary = SkinData.ACHIEVEMENT_SKINS[sid]["unlock"]
 		if String(u["type"]) == "achievement" and String(u["id"]) == id:
 			return sid
+	# Content wave 2: a universal skin family (UnlockData "skin" row), shown on the Gravecaller.
+	for rid: String in Unlocks.rewards_of(id):
+		if Unlocks.item_type(rid) == "skin" and SkinData.UNIVERSAL_SKINS.has(rid):
+			return "%s_%s" % [CharacterData.DEFAULT_ID, rid]
 	return ""
 
 

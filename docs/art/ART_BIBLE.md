@@ -555,6 +555,18 @@ behind the head; ask for "a 2-pixel-thick ring with chunky rays" if one is redon
 | `wither_witch_hyper.png` | Thorn-Crowned Witch (Wither Witch) | The Wither Witch **gilded** (her redesigned figure): a crown of gold thorns, gold-dusted withered robes, a gold sun corona | 50 (body 48, thorn tips above the hat) | done |
 | `grave_herald_hyper.png` | Golden Herald (Grave Herald) | The Grave Herald **gilded**: a gold horn and tabard, gold trim, a gold sun corona | 63 (body 48, skull banner and corona above) | done |
 
+**Content wave 2: universal skins and the title frame (code only, no PNG; owner review).** The two
+universal skins exist for **every** character, so they are palette variants drawn by `SkinGlyphs` on
+the character's own sprite (no per-character art, `SkinData.UNIVERSAL_SKINS`); a PNG
+`player/<character>_untouchable.png` / `_deathlord.png` would replace one character's look if ever made.
+The Heretic's Bane frame is drawn in code on the pixel grid (`TitleFrame`).
+
+| Look | Where | How it is drawn | Status |
+|---|---|---|---|
+| **Untouchable** (ghost-white) | every character | sprite × `Color(2.2, 3.2, 3.0, 0.78)`: the colours wash to a cold lavender-white, the dark outline stays, see-through; pale spectral aura ring | code, for review |
+| **Deathlord** (crowned) | every character | sprite × near-black iron `Color(0.4, 0.33, 0.4)`, the `crown` emblem in gold with its crimson jewel, crimson eye glow, gold aura ring | code, for review |
+| **Heretic's Bane frame** | pre-run hero box | a 4 px gold band with 10 px cut corners and a darker inner line, a 9 × 8 px gold skull (×2) on each corner, a Chaplain's skull under a holy cross (×3) at the top centre | code, for review |
+
 ### Summons (`assets/sprites/summons/`)
 
 The undead army: bone, cold grey and teal soul fire, one accent per class, **no violet**.

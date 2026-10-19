@@ -10,7 +10,11 @@
 ## as a silhouette naming its unlock (`text`).
 ## Keys of a row:
 ##   type        — "spell" (AbilityData), "passive" (PassiveData) or "class"
-##                 (UnitData): which card table the id belongs to.
+##                 (UnitData): which card table the id belongs to; or an
+##                 achievement reward type (REWARD_TYPES, content wave 2):
+##                 "ultimate", "title" (TitleData) or "skin" (SkinData).
+##   name        — UI name of an "ultimate" row (the others name themselves
+##                 through their own table; Unlocks.item_name()).
 ##   boss        — boss script id (StageRegistry.BOSS_ARRIVALS): slaying it in
 ##                 any run unlocks the item; or
 ##   achievement — MetaData.ACHIEVEMENTS id: earning it unlocks the item.
@@ -44,6 +48,33 @@ const UNLOCKS := {
 	"abyssal_pact": {"type": "passive", "boss": "vhalneth", "text": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos."},  # TUNING (not in GDD) with its spell
 	"spawn_of_the_deep": {"type": "class", "boss": "vhalneth", "text": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos."},  # Proposal decision 5: the finale's reward
 	"crushing_depths": {"type": "passive", "boss": "vhalneth", "text": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos."},  # TUNING (not in GDD) with its class
+	# --- Content wave 2: B. Achievement rewards ---
+	# Achievement rewards (owner-approved Proposal 2, GDD §15.0 "Achievement
+	# rewards (content wave 2)"): options and cosmetics only, never raw power.
+	# Three more types (REWARD_TYPES): "ultimate" (UltimateData id; the pre-run
+	# ultimate picker asks Unlocks.is_open(); `name` is its UI name), "title"
+	# (TitleData id; its name comes from TitleData) and "skin" (a SkinData
+	# UNIVERSAL_SKINS family id: that look for every character). A save that
+	# earned the achievement before a row existed has the reward at once
+	# (MetaProgress._load_unlocks()).
+	"sovereigns_decree": {"type": "ultimate", "achievement": "dread_sovereign", "name": "Sovereign's Decree",
+		"text": "Earn Dread Sovereign: slay a stage boss while commanding Warriors, Archers, Mages and a priest order."},  # owner-approved Proposal 2
+	"eclipse": {"type": "ultimate", "achievement": "dawn_extinguished", "name": "Eclipse",
+		"text": "Earn Dawn Extinguished: defeat Grand Inquisitor Seraphine."},  # owner-approved Proposal 2
+	"grave_tide": {"type": "ultimate", "achievement": "mass_grave", "name": "Grave Tide",
+		"text": "Earn Mass Grave: raise 500 temporary undead in one run."},  # owner-approved Proposal 2
+	"heretics_bane": {"type": "title", "achievement": "heretics_bane",
+		"text": "Earn Heretic's Bane: defeat 500 Covenant Chaplains."},  # owner-approved Proposal 2
+	"master_of_the_drowned": {"type": "title", "achievement": "the_dead_god_serves",
+		"text": "Earn The Dead God Serves: slay Vhal'Neth on Ul-Thalos."},  # owner-approved Proposal 2
+	"archnecromancer": {"type": "title", "achievement": "full_ossuary",
+		"text": "Earn Full Ossuary: hold 4 evolutions at once in one run."},  # owner-approved Proposal 2
+	"executioner": {"type": "title", "achievement": "swift_judgment",
+		"text": "Earn Swift Judgment: slay a stage boss within 45 s of its arrival."},  # owner-approved Proposal 2
+	"untouchable": {"type": "skin", "achievement": "untouchable",
+		"text": "Earn Untouchable: reach 0:00 without dropping below half health."},  # owner-approved Proposal 2
+	"deathlord": {"type": "skin", "achievement": "deathlords_due",
+		"text": "Earn Deathlord's Due: clear any stage on Deathlord difficulty."},  # owner-approved Proposal 2
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.
@@ -51,4 +82,14 @@ const PLATE_HEADINGS := {
 	"spell": "Spell unlocked",  # TUNING (not in GDD)
 	"passive": "Passive unlocked",  # TUNING (not in GDD)
 	"class": "Summon unlocked",  # TUNING (not in GDD)
+	# --- Content wave 2: B. Achievement rewards ---
+	"ultimate": "Ultimate unlocked",  # TUNING (not in GDD)
+	"title": "Title earned",  # TUNING (not in GDD)
+	"skin": "Skin unlocked",  # TUNING (not in GDD)
 }
+
+# --- Content wave 2: B. Achievement rewards ---
+## Row types that are achievement rewards, not level-up cards: never in a
+## card pool, and not opened by the autotest's --unlocks=all (which is about
+## the card pool; Unlocks.is_open()).
+const REWARD_TYPES := ["ultimate", "title", "skin"]  # TUNING (not in GDD)

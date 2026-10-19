@@ -392,12 +392,13 @@ func _show_ash(ash: Dictionary, boss_name: String) -> PackedStringArray:
 	return unlocks
 
 
-## Plate text of a newly unlocked Act II item (UnlockData): "<heading>: <name>".
+## Plate text of a newly unlocked item (UnlockData): "<heading>: <name>"
+## ("Spell unlocked", ...; content wave 2: "Ultimate unlocked", "Title
+## earned", "Skin unlocked").
 static func _item_plate(id: String) -> String:
 	var row: Dictionary = UnlockData.UNLOCKS.get(id, {})
 	var heading := String(UnlockData.PLATE_HEADINGS.get(String(row.get("type", "")), "Unlocked"))  # "Spell unlocked"...
-	var card := Unlocks.card_row(id)  # The item's own card row (its name).
-	return "%s: %s" % [heading, String(card.get("display_name", id))]
+	return "%s: %s" % [heading, Unlocks.item_name(id)]  # Its name (content wave 2: ultimates, titles and skins too).
 
 
 ## Fills the unlock plates with `texts` (hidden when empty); they rise in

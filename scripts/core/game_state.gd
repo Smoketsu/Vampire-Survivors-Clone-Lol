@@ -150,6 +150,10 @@ var autotest_volleys: bool = true
 ## Autotest: true when --unlocks=all opens every lockable item (UnlockData:
 ## Act II's spells, passives and summon classes) in the card pool.
 var autotest_unlock_all: bool = false
+## Autotest: true when --rewards=on checks the five one-run achievements of
+## content wave 2 (MetaData "run" rows) in memory, as the game does; off by
+## default so the default summaries (bounty, Soul Ash total) stay as before.
+var autotest_rewards: bool = false
 ## Autotest: forced spawns from --spawn= ({"kind", "time" s, "count"}, in
 ## the order given; empty = none).
 var autotest_spawns: Array[Dictionary] = []
@@ -265,6 +269,12 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_unlock_all = uv == "all"
 			else:
 				push_error("Unknown --unlocks=%s (expected all or none)" % uv)
+		elif arg.begins_with("--rewards="):
+			var rv := arg.get_slice("=", 1).to_lower()  # "on" or "off".
+			if rv == "on" or rv == "off":
+				autotest_rewards = rv == "on"
+			else:
+				push_error("Unknown --rewards=%s (expected on or off)" % rv)
 		elif arg.begins_with("--spawn="):
 			for entry: String in arg.get_slice("=", 1).split(",", false):
 				var kind := entry.get_slice("@", 0)  # Enemy kind id.

@@ -242,35 +242,43 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act II: the Hollow Archive ---
 	"nothing_unwritten",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	"the_dead_god_serves"]
+	"the_dead_god_serves",
+	# --- Content wave 2: B. Achievement rewards ---
+	"mass_grave", "untouchable", "full_ossuary", "deathlords_due", "swift_judgment"]
 
-## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). The GDD
-## unlocks (Bone Golem, priest evolution unlock, Dread Sovereign skin) do not
-## exist in the prototype yet, so each achievement is tracked and recorded in
-## the save, and pays a one-time Soul Ash `bounty` until its unlock exists.
+## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
+## achievement is tracked and recorded in the save and pays a one-time Soul
+## Ash `bounty`; its REWARD (content wave 2, GDD §15.0 "Achievement rewards
+## (content wave 2)": a new option or a cosmetic, never raw power) is an
+## UnlockData row whose `achievement` names it (an ultimate, a title, a skin,
+## a summon class or a passive), an achievement skin (SkinData) or the epilogue.
 ##   stat   — lifetime counter in Meta.lifetime that is compared with `goal`
 ##            (or, with `stage`, that key of the stage's record).
 ##   stage  — optional StageRegistry id: `stat` is read from that stage's
 ##            record (Meta.stage_record(); Meta.achievement_progress()).
-##   unlock — the GDD reward, shown as "(coming later)".
+##   unlock — the reward as one line for the Codex's reward column (the
+##            rewards themselves are the UnlockData / SkinData rows).
+##   run    — optional, true for the content-wave-2 achievements earned by
+##            ONE run's counters (RunRewards): the autotest checks them only
+##            with --meta-save or --rewards=on (MetaProgress.award_run()).
 ## Wording decisions for open question 40: "Warrior kills" are kills whose
 ## killing blow came from a Skeleton Warrior (strike or shield bash, also as a
 ## Death Knight); "priests" are Covenant Chaplains. Priest split (GDD §15.0):
 ## Dread Sovereign's "all 4 summon classes" are the GDD's four roles, with
 ## either priest order (Mender / Warder, or the merged Profane Bishop) as the
-## priest. The Profane Bishop is available from the start for now, so Heretic's
-## Bane still pays its bounty until a real Bishop-related unlock exists.
+## priest. Dread Sovereign counts a kill of ANY stage boss (Sir Alaric, Marshal
+## Vael, Seraphine or an Act II boss), not only Sir Alaric's.
 const ACHIEVEMENTS := {
 	"bone_legion": {"display_name": "Bone Legion", "description": "Skeleton Warriors slay 1,000 foes",
-		"stat": "warrior_kills", "goal": 1000, "unlock": "Bone Golem", "bounty": 100},  # GDD §9.4 goal; bounty TUNING (not in GDD)
+		"stat": "warrior_kills", "goal": 1000, "unlock": "The Bone Golem summon class, the Ivory Seer skin", "bounty": 100},  # GDD §9.4 goal; bounty TUNING (not in GDD)
 	"heretics_bane": {"display_name": "Heretic's Bane", "description": "Defeat 500 Covenant Chaplains",
-		"stat": "chaplain_kills", "goal": 500, "unlock": "Profane Bishop unlock", "bounty": 100},  # GDD §9.4 goal; bounty TUNING (not in GDD)
+		"stat": "chaplain_kills", "goal": 500, "unlock": "Title Heretic's Bane, a gold Chaplain-skull frame", "bounty": 100},  # GDD §9.4 goal; bounty TUNING (not in GDD)
 	"dread_sovereign": {"display_name": "Dread Sovereign", "description": "Slay a stage boss while commanding Warriors, Archers, Mages and a priest order",
-		"stat": "boss_kills_full_army", "goal": 1, "unlock": "The Dread Sovereign skin", "bounty": 150},  # GDD §9.4 goal; bounty TUNING (not in GDD)
+		"stat": "boss_kills_full_army", "goal": 1, "unlock": "Ultimate Sovereign's Decree", "bounty": 150},  # GDD §9.4 goal; bounty TUNING (not in GDD)
 	# Owner-approved Stage 3 achievement: the stage boss of the Sanctum slain
 	# (counted from the stage record, so it works for any boss the stage names).
 	"dawn_extinguished": {"display_name": "Dawn Extinguished", "description": "Defeat Grand Inquisitor Seraphine in the Sanctum of Judgment",
-		"stat": "boss_kills", "stage": "sanctum", "goal": 1, "unlock": "The campaign epilogue", "bounty": 200},  # GDD §7.5 ending; bounty TUNING (not in GDD)
+		"stat": "boss_kills", "stage": "sanctum", "goal": 1, "unlock": "Ultimate Eclipse, the Act I epilogue", "bounty": 200},  # GDD §7.5 ending; bounty TUNING (not in GDD)
 	# --- Act II: Gullhaven Harbour ---
 	# Owner-approved Act II achievement: a victory (the run reached 0:00) on
 	# Gullhaven Harbour, counted from the stage record; it unlocks Brinewalker.
@@ -288,8 +296,33 @@ const ACHIEVEMENTS := {
 	# Extinguished it opens the epilogue (EpilogueData, the main menu's
 	# Epilogue screen): Dawn Extinguished the Act I part, this one Act II's.
 	"the_dead_god_serves": {"display_name": "The Dead God Serves", "description": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos and raise her",
-		"stat": "boss_kills", "stage": "spire", "goal": 1, "unlock": "The campaign epilogue", "bounty": 300},  # Proposal; bounty TUNING (not in GDD)
+		"stat": "boss_kills", "stage": "spire", "goal": 1, "unlock": "Title Master of the Drowned, the Act II epilogue", "bounty": 300},  # Proposal; bounty TUNING (not in GDD)
+	# --- Content wave 2: B. Achievement rewards ---
+	# Five one-run achievements (owner-approved Proposal 2). Their lifetime
+	# counters are filled by MetaProgress.award_run() from the run's RunRewards
+	# counters (MetaProgress.run_counters()): a best-run record ("best_*", compared with the goal, so the Codex
+	# bar shows the best run so far) or a count of qualifying runs (goal 1).
+	"mass_grave": {"display_name": "Mass Grave", "description": "Raise 500 temporary undead in one run",
+		"stat": "best_temp_raised", "goal": 500, "run": true, "unlock": "Ultimate Grave Tide", "bounty": 150},  # owner-approved goal; bounty TUNING (not in GDD)
+	"untouchable": {"display_name": "Untouchable", "description": "Reach 0:00 on any stage without dropping below half health",
+		"stat": "untouchable_runs", "goal": 1, "run": true, "unlock": "The Untouchable skin (any character)", "bounty": 200},  # owner-approved goal; bounty TUNING (not in GDD)
+	"full_ossuary": {"display_name": "Full Ossuary", "description": "Hold 4 evolutions at once in one run (spell or summon)",
+		"stat": "best_evolutions_held", "goal": 4, "run": true, "unlock": "Title Archnecromancer", "bounty": 150},  # owner-approved goal; bounty TUNING (not in GDD)
+	"deathlords_due": {"display_name": "Deathlord's Due", "description": "Clear any stage on Deathlord difficulty",
+		"stat": "deathlord_victories", "goal": 1, "run": true, "unlock": "The Deathlord skin (any character)", "bounty": 250},  # owner-approved goal; bounty TUNING (not in GDD)
+	"swift_judgment": {"display_name": "Swift Judgment", "description": "Slay a stage boss within 45 s of its arrival",
+		"stat": "swift_boss_kills", "goal": 1, "run": true, "unlock": "Title Executioner", "bounty": 150},  # owner-approved goal; bounty TUNING (not in GDD)
 }
+
+# --- Content wave 2: B. Achievement rewards ---
+## Untouchable: the lowest share of max HP (0..1) the necromancer may fall to
+## before 0:00; a hit that leaves him lower (or kills him) spoils the run.
+const UNTOUCHABLE_HP_FRACTION: float = 0.5  # owner-approved Proposal 2
+## Swift Judgment: most game seconds from the stage boss's arrival
+## (EnemyDirector.boss_spawned) to its death.
+const SWIFT_JUDGMENT_SECONDS: float = 45.0  # owner-approved Proposal 2
+## Deathlord's Due: the DifficultyData id whose victories count.
+const DEATHLORD_DIFFICULTY_ID: String = "deathlord"  # owner-approved Proposal 2
 
 ## Damage sources whose killing blow counts as a Skeleton Warrior kill (the
 ## Death Knight is an evolved Skeleton Warrior: strike, bash and cleave).

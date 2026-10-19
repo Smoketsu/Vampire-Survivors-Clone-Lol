@@ -164,6 +164,9 @@ var dread: DreadMeter = null
 ## Act II Claims, the Ancient Eye stealing the fallen (EyeClaims; null unless
 ## the stage's STAGE has "claims": true).
 var claims: EyeClaims = null
+## Content wave 2: the run counters of the one-run achievements (RunRewards;
+## never null once _ready ran; reads the run only, never changes gameplay).
+var rewards: RunRewards
 
 # --- UI ---------------------------------------------------------------------------
 
@@ -294,6 +297,7 @@ func _ready() -> void:
 	player.died.connect(_on_player_died)
 	enemies.boss_defeated.connect(_on_boss_defeated)
 	enemies.boss_spawned.connect(codex.on_boss_spawned)  # Codex: the boss was faced.
+	rewards = RunRewards.new(self)  # Content wave 2: one-run achievement counters (read-only).
 	# Counters that should appear in the summary even when they stay at 0.
 	for key: String in ["priest_wards", "ward_absorbed", "priest_heals", "player_healing"]:
 		stats[key] = 0.0
@@ -662,5 +666,6 @@ func build_summary() -> Dictionary:
 		"difficulty_label": difficulty.difficulty_label(),
 		"boss_id": String(boss_info.get("id", "")),
 		"skin_id": player.skin_id,
+		"run_rewards": rewards.counters(),  # Content wave 2: the one-run achievement counters (RunRewards).
 		"stats": stats.duplicate(),
 	}

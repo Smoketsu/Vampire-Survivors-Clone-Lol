@@ -2,7 +2,8 @@
 ## pre-run setup screen (PreRunSetup puts it in the hero panel, under the
 ## character's texts; GDD §15.0 "Front door screens"). One row:
 ##   * a small portrait tile per skin of the run's character
-##     (SkinData.skins_for: default, Hyper skin, achievement skin): a live
+##     (SkinData.skins_for: default, Hyper skin, achievement skin, the two
+##     universal skins; compact tiles past FrontDoorData.SKIN_TILES_FULL): a live
 ##     preview (SkinGlyphs); a locked skin is dark under the pixel padlock.
 ##     Choosing an unlocked skin sets RunConfig.skin_id (remembered per
 ##     character in the Meta save when the run begins). Skins are purely
@@ -147,6 +148,10 @@ func _rebuild_skins() -> void:
 	_skin_buttons.clear()
 	_character = config.character_key()
 	_skin_ids = SkinData.skins_for(_character)
+	# Content wave 2: more skins (the universal ones) -> compact tiles, so the row keeps its width.
+	var compact := _skin_ids.size() > FrontDoorData.SKIN_TILES_FULL  # Compact row.
+	_row.add_theme_constant_override("separation", FrontDoorData.SKIN_GAP_COMPACT if compact else 6)
+	_hyper_button.custom_minimum_size = FrontDoorData.HYPER_TILE_COMPACT if compact else FrontDoorData.HYPER_TILE
 	var i := 0  # Insert position.
 	for id: String in _skin_ids:
 		var b := _build_skin_tile(id)
@@ -161,7 +166,7 @@ func _build_skin_tile(id: String) -> Button:
 	var row := SkinData.skin(id)  # The skin's data.
 	var unlocked := Meta.is_skin_unlocked(id)  # May be worn.
 	var b := Button.new()
-	b.custom_minimum_size = FrontDoorData.SKIN_TILE
+	b.custom_minimum_size = FrontDoorData.SKIN_TILE_COMPACT if _skin_ids.size() > FrontDoorData.SKIN_TILES_FULL else FrontDoorData.SKIN_TILE
 	b.focus_mode = Control.FOCUS_ALL
 	b.tooltip_text = "%s\n%s" % [String(row["display_name"]), String(row["look"])]
 	var p := SkinPreview.new(id, not unlocked)
