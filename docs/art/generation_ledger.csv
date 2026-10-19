@@ -635,3 +635,5 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-19 22:20,player/voidcaller_deathlord,gpt-image-2.5-flare,medium,1024x1024,3,1271,3500,439,0.0475,voidcaller_deathlord_r2b.png
 2026-10-19 22:20,player/voidcaller_untouchable,gpt-image-2.5-flare,medium,1024x1024,3,1245,3500,439,0.0474,voidcaller_untouchable_r2b.png
 2026-10-19 22:20,player/voidcaller_deathlord,gpt-image-2.5-flare,medium,1024x1024,3,1271,3500,439,0.0475,voidcaller_deathlord_r2a.png
+2026-10-19 23:02,epilogue/act2_4,gpt-image-2.5-flare,medium,1536x1024,2,650,2490,343,0.0335,src_act2_4_3.png
+2026-10-19 23:04,epilogue/act2_4,gpt-image-2.5-flare,medium,1536x1024,2,732,2112,343,0.0308,src_round3a.png

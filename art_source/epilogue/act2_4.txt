@@ -56,6 +56,23 @@ eerie. Keep true pixel art with big flat colour blocks, a 1-pixel dark outline, 
 gradients, no glow haze, no specks; her face must read clearly. Fully opaque, no text, no border.
 One single wide 3:2 picture.
 
+STEP 3 (round 3 review, owner: "her figure needs to pop more hence she needs to be hotter, we need cleavage"): an edit of the step-2 source (attached first) with the original round-1 panel (attached second, for the left side brightness); its output is the kept source:
+
+EDIT the FIRST attached image (an ending panel of a dark 2D pixel-art game). Keep the composition, the camera, the pixel size, the left cliff with the violet-hooded necromancer, his skeleton army and bone banners, the sky, the sea and the shore. Keep the giant undead sea goddess Vhal'Neth on the right in the same place and pose (kneeling in the surf, bowing toward the necromancer, her bony hands flat on the wet sand), with her tentacle mane, her bone-and-violet coral crown, her glowing violet eyes and her undead details (drowned blue-grey skin, bone forearms and finger bones, a few pale ribs through a tear at the side of her waist, not on her chest).
+
+Change her FIGURE and GOWN so she is far more alluring and her body is the first thing you read:
+- replace the high-necked gown with a low, plunging sweetheart neckline of wet clinging kelp and tattered drowned sea-silk that shows deep, clear CLEAVAGE of a very full, generous bust;
+- push her hourglass figure further: a very large bust, a tightly cinched narrow waist and wide hips, the wet fabric clinging to her curves as she leans forward;
+- a beautiful, striking face with full dark lips and high cheekbones, still undead pale;
+- a thin bright rim light of pale teal (#7FB5AC, #A8FFD2) along her shoulders, bust and arms so her silhouette pops against the dark sky.
+She stays clothed: the gown covers her nipples and her body below the neckline; no nudity, nothing explicit, tasteful and regal, eerie and seductive.
+
+The left side (necromancer, army, banners, cliff) must be as bright and colourful as in the SECOND attached image (the original panel): bright violet #A35CFA flames and robes, pale bone #E8E1C8 skeletons, clearly readable. Do not darken it.
+
+STYLE (keep the first image's style): true pixel art, crisp square pixels, every pixel a flat colour block about 3 to 4 image pixels wide, nearest-neighbour, a 1-pixel dark outline around figures, light from the upper left, at most 3 shades per material, big bold simple shapes, no tiny busy details, no specks, no texture noise, no dithering, no gradients, no soft glow haze, no blur. Fully opaque edge to edge, no border, no text, no watermark. Use only colours close to this palette: inks #0F141C #160A21 #1C110B #081814; dark grounds #161A1C #26272A #2D2E33; stone #3B4352 #6B7A94 #A7B3C6; bone #7F785F #B4AA8A #E8E1C8; violet #4A2569 #7A42AD #A35CFA #DDBDFF; soul teal #1C6B58 #3DCC94 #A8FFD2; moss #3B5529 #76984A; drowned sea #1B4650 #3A7C80 #7FB5AC; abyssal glow #5A2262 #B04CC0 #F09CF2.
+One single wide 3:2 picture.
+
+
 ----- The first version's prompt (scene and the shared style block): -----
 
 SCENE: "The Covenant is ash. The Eye is blind. The army is endless, and it is only beginning." On a dark beach at dawn, the colossal sea goddess Vhal'Neth (like the attached giant boss sprite: teal skin, a crown of bone-white coral and violet coral, a mane of thick tentacles) rises from the shallow water and BOWS HER HEAD in submission, her great hands flat on the sand, her eyes closed (no glow), toward the small necromancer. The violet-hooded necromancer stands on a rock in the lower left foreground, his flame staff raised high, its violet flame bright. Around and behind him on the beach his undead army stands in ranks: skeleton warriors with round shields, archers, mages, raised banners of bone. The sky behind is a cold grey-violet dawn (#26272A, #4A2569, a thin #7FB5AC line at the horizon). A moment of triumph, very readable: the huge bowing goddess on the right, the tiny master on the left.
