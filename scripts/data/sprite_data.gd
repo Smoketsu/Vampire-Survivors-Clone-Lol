@@ -184,6 +184,19 @@ const HEIGHTS: Dictionary = {
 	# --- Content wave 2: Bone Golem ---
 	"summons/bone_golem": 80.0,  # TUNING (not in GDD) lead brief 72-80; a wide fortress block (88 wide), drawn up to x1.25 by Ossuary Hunger
 	"summons/ossuary_titan": 104.0,  # TUNING (not in GDD) its evolution, the tallest summon (Bone Colossus 100)
+	# --- Wave 2 art review: Untouchable and Deathlord skins (drawn art for every character) ---
+	# Each keeps its character's body height (head to feet); a crown, horns or drifting
+	# ghost hair above the head adds rows on top.
+	"player/gravecaller_untouchable": 56.0,  # TUNING (not in GDD) skin art: body 49 like the necromancer, the soul-teal flame staff above
+	"player/gravecaller_deathlord": 60.0,  # TUNING (not in GDD) skin art: body 49 like the necromancer, the horned crown and the flame staff above
+	"player/umbral_warden_untouchable": 63.0,  # TUNING (not in GDD) skin art: body 48 like the Umbral Warden, the ghost-sun staff above
+	"player/umbral_warden_deathlord": 63.0,  # TUNING (not in GDD) skin art: body 48 like the Umbral Warden, the crowned helm and the black-sun staff above
+	"player/voidcaller_untouchable": 53.0,  # TUNING (not in GDD) skin art: body 48 like the Voidcaller, the drifting ghost hair and the soul ring above
+	"player/voidcaller_deathlord": 55.0,  # TUNING (not in GDD) skin art: body 48 like the Voidcaller, the spiked crown above
+	"player/bone_oracle_untouchable": 57.0,  # TUNING (not in GDD) skin art: body 48 like the Bone Oracle, the teal-tipped spear above
+	"player/bone_oracle_deathlord": 56.0,  # TUNING (not in GDD) skin art: body 48 like the Bone Oracle, the horned crown and the gold spear above
+	"player/fallen_confessor_untouchable": 48.0,  # TUNING (not in GDD) skin art: body 48 like the Fallen Confessor (no overhang)
+	"player/fallen_confessor_deathlord": 53.0,  # TUNING (not in GDD) skin art: body 48 like the Fallen Confessor, the spiked crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

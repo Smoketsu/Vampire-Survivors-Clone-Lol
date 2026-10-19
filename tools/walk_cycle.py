@@ -238,6 +238,17 @@ SKINS = {
     "player/wither_witch_hyper": "player/wither_witch",
     "player/grave_herald_hyper": "player/grave_herald",
     "player/tide_widow_hyper": "player/tide_widow",  # --- Act II: Ul-Thalos ---
+    # --- Wave 2 art review: the Untouchable and Deathlord skins (drawn art, every character) ---
+    "player/gravecaller_untouchable": "player/necromancer",
+    "player/gravecaller_deathlord": "player/necromancer",
+    "player/umbral_warden_untouchable": "player/umbral_warden",
+    "player/umbral_warden_deathlord": "player/umbral_warden",
+    "player/voidcaller_untouchable": "player/voidcaller",
+    "player/voidcaller_deathlord": "player/voidcaller",
+    "player/bone_oracle_untouchable": "player/bone_oracle",
+    "player/bone_oracle_deathlord": "player/bone_oracle",
+    "player/fallen_confessor_untouchable": "player/fallen_confessor",
+    "player/fallen_confessor_deathlord": "player/fallen_confessor",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
