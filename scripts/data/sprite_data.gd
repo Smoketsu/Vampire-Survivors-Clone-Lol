@@ -184,6 +184,39 @@ const HEIGHTS: Dictionary = {
 	# --- Content wave 2: Bone Golem ---
 	"summons/bone_golem": 80.0,  # TUNING (not in GDD) lead brief 72-80; one huge skull for a torso on stumpy legs (84 wide, wave 2 art review), drawn up to x1.25 by Ossuary Hunger
 	"summons/ossuary_titan": 104.0,  # TUNING (not in GDD) its evolution, the tallest summon (Bone Colossus 100); the crowned huge-skull torso (108 wide)
+	# --- Wave 2 art review: Untouchable and Deathlord skins (drawn art for every character) ---
+	# Each keeps its character's body height (head to feet); a crown, horns or drifting
+	# ghost hair above the head adds rows on top.
+	"player/gravecaller_untouchable": 56.0,  # TUNING (not in GDD) skin art: body 49 like the necromancer, the soul-teal flame staff above
+	"player/gravecaller_deathlord": 60.0,  # TUNING (not in GDD) skin art: body 49 like the necromancer, the horned crown and the flame staff above
+	"player/umbral_warden_untouchable": 63.0,  # TUNING (not in GDD) skin art: body 48 like the Umbral Warden, the ghost-sun staff above
+	"player/umbral_warden_deathlord": 63.0,  # TUNING (not in GDD) skin art: body 48 like the Umbral Warden, the crowned hood and the black-sun staff above
+	"player/voidcaller_untouchable": 53.0,  # TUNING (not in GDD) skin art: body 48 like the Voidcaller, the drifting ghost hair and the soul ring above
+	"player/voidcaller_deathlord": 55.0,  # TUNING (not in GDD) skin art: body 48 like the Voidcaller, the spiked crown above
+	"player/bone_oracle_untouchable": 57.0,  # TUNING (not in GDD) skin art: body 48 like the Bone Oracle, the teal-tipped spear above
+	"player/bone_oracle_deathlord": 56.0,  # TUNING (not in GDD) skin art: body 48 like the Bone Oracle, the horned crown and the gold spear above
+	"player/fallen_confessor_untouchable": 48.0,  # TUNING (not in GDD) skin art: body 48 like the Fallen Confessor (no overhang)
+	"player/fallen_confessor_deathlord": 53.0,  # TUNING (not in GDD) skin art: body 48 like the Fallen Confessor, the spiked crown above
+	"player/carrion_lord_untouchable": 52.0,  # TUNING (not in GDD) skin art: body 52 like the Carrion Lord (the ghost cleaver no higher than the hood)
+	"player/carrion_lord_deathlord": 56.0,  # TUNING (not in GDD) skin art: body 52 like the Carrion Lord, the horned crown above
+	"player/plague_scholar_untouchable": 49.0,  # TUNING (not in GDD) skin art: body 48 like the Plague Scholar, the hood tip above
+	"player/plague_scholar_deathlord": 52.0,  # TUNING (not in GDD) skin art: body 48 like the Plague Scholar, the crown above
+	"player/doomsayer_untouchable": 53.0,  # TUNING (not in GDD) skin art: body 45 like the Doomsayer, the soul-fire branding iron above
+	"player/doomsayer_deathlord": 55.0,  # TUNING (not in GDD) skin art: body 45 like the Doomsayer, the crown and the gold branding iron above
+	"player/barrow_warden_untouchable": 59.0,  # TUNING (not in GDD) skin art: body 49 like the Barrow Warden, the ghost shovel staff above
+	"player/barrow_warden_deathlord": 61.0,  # TUNING (not in GDD) skin art: body 49 like the Barrow Warden, the crown and the shovel staff above
+	"player/grave_herald_untouchable": 62.0,  # TUNING (not in GDD) skin art: body 48 like the Grave Herald, the spectral skull banner above
+	"player/grave_herald_deathlord": 63.0,  # TUNING (not in GDD) skin art: body 48 like the Grave Herald, the crowned skull banner above
+	"player/soulbinder_untouchable": 61.0,  # TUNING (not in GDD) skin art: body 49 like the Soulbinder, the soul-teal lightning hand above
+	"player/soulbinder_deathlord": 63.0,  # TUNING (not in GDD) skin art: body 49 like the Soulbinder, the spiked crown and the violet lightning hand above
+	"player/wither_witch_untouchable": 49.0,  # TUNING (not in GDD) skin art: body 48 like the Wither Witch, the ghost hat tip above
+	"player/wither_witch_deathlord": 50.0,  # TUNING (not in GDD) skin art: body 48 like the Wither Witch, the crown band's spikes above the hat
+	"player/brine_widow_untouchable": 58.0,  # TUNING (not in GDD) skin art: body 48 like the Brine Widow, the bleached hooked staff above
+	"player/brine_widow_deathlord": 60.0,  # TUNING (not in GDD) skin art: body 48 like the Brine Widow, the spiked crown above
+	"player/heretic_scribe_untouchable": 60.0,  # TUNING (not in GDD) skin art: body 48 like the Heretic Scribe, the soul-teal quill-staff above
+	"player/heretic_scribe_deathlord": 61.0,  # TUNING (not in GDD) skin art: body 48 like the Heretic Scribe, the crimson quill-staff above
+	"player/tide_widow_untouchable": 56.0,  # TUNING (not in GDD) skin art: body 48 like the Tide Widow, the pearl crown and the soul conch above
+	"player/tide_widow_deathlord": 58.0,  # TUNING (not in GDD) skin art: body 48 like the Tide Widow, the taller spiked crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

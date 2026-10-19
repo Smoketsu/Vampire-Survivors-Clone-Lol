@@ -240,6 +240,37 @@ SKINS = {
     "player/wither_witch_hyper": "player/wither_witch",
     "player/grave_herald_hyper": "player/grave_herald",
     "player/tide_widow_hyper": "player/tide_widow",  # --- Act II: Ul-Thalos ---
+    # --- Wave 2 art review: the Untouchable and Deathlord skins (drawn art, every character) ---
+    "player/gravecaller_untouchable": "player/necromancer",
+    "player/gravecaller_deathlord": "player/necromancer",
+    "player/umbral_warden_untouchable": "player/umbral_warden",
+    "player/umbral_warden_deathlord": "player/umbral_warden",
+    "player/voidcaller_untouchable": "player/voidcaller",
+    "player/voidcaller_deathlord": "player/voidcaller",
+    "player/bone_oracle_untouchable": "player/bone_oracle",
+    "player/bone_oracle_deathlord": "player/bone_oracle",
+    "player/fallen_confessor_untouchable": "player/fallen_confessor",
+    "player/fallen_confessor_deathlord": "player/fallen_confessor",
+    "player/carrion_lord_untouchable": "player/carrion_lord",
+    "player/carrion_lord_deathlord": "player/carrion_lord",
+    "player/plague_scholar_untouchable": "player/plague_scholar",
+    "player/plague_scholar_deathlord": "player/plague_scholar",
+    "player/doomsayer_untouchable": "player/doomsayer",
+    "player/doomsayer_deathlord": "player/doomsayer",
+    "player/barrow_warden_untouchable": "player/barrow_warden",
+    "player/barrow_warden_deathlord": "player/barrow_warden",
+    "player/grave_herald_untouchable": "player/grave_herald",
+    "player/grave_herald_deathlord": "player/grave_herald",
+    "player/soulbinder_untouchable": "player/soulbinder",
+    "player/soulbinder_deathlord": "player/soulbinder",
+    "player/wither_witch_untouchable": "player/wither_witch",
+    "player/wither_witch_deathlord": "player/wither_witch",
+    "player/brine_widow_untouchable": "player/brine_widow",
+    "player/brine_widow_deathlord": "player/brine_widow",
+    "player/heretic_scribe_untouchable": "player/heretic_scribe",
+    "player/heretic_scribe_deathlord": "player/heretic_scribe",
+    "player/tide_widow_untouchable": "player/tide_widow",
+    "player/tide_widow_deathlord": "player/tide_widow",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
@@ -247,6 +278,12 @@ SKIN_FIX = {
     # Tide Widow's, so the derived box (rows 20-28) landed on the waist (owner's art review).
     # Round 2: 2 px wider to the right and two lobes, so both sides bounce ("just one is bouncing").
     "player/tide_widow_hyper": {"bust": (19, 32, 17, 25, 2, 2)},
+    # Wave 2 skins: the ghost witch's wisps widen her lower body to the left, so the derived box
+    # (cols 18-26) sat right of her bust; her bust is cols 13-22, rows 17-23 of the still.
+    "player/wither_witch_untouchable": {"bust": (13, 22, 17, 23, 2)},
+    # The crowned widow's crown adds 2 rows, but her bust sits no lower than the base Brine
+    # Widow's (like the Tide Widow's Hyper skin): the derived box (rows 22-29) was on the bodice.
+    "player/brine_widow_deathlord": {"bust": (19, 31, 19, 26, 2)},
 }
 
 
