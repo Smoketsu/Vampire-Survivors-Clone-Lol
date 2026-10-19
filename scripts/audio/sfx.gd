@@ -479,11 +479,19 @@ func _synth_music() -> void:
 
 
 ## Adds the Music and SFX buses (if missing) and a limiter on Master.
+## Buses are appended with set_bus_count(), never add_bus(): Godot 4.3's Web player
+## mirrors add_bus() (always sent as "at -1", even with an explicit end position)
+## through GodotAudio.Bus.addAt / move in index.js, which splices the new bus in
+## BEFORE Master. Its bus order then no longer matches the engine's, the
+## set_bus_send below wires Master into Music / SFX and nothing reaches the
+## speakers (the Web build was silent in every browser; GDD §15.0 "Web sound fix").
+## set_bus_count() is mirrored by Bus.setCount, which appends in order. On desktop
+## both calls build the same buses.
 func _setup_buses() -> void:
 	for bus_name: StringName in [BUS_MUSIC, BUS_SFX]:
 		if AudioServer.get_bus_index(bus_name) == -1:
-			AudioServer.add_bus()
-			var idx := AudioServer.bus_count - 1
+			var idx := AudioServer.bus_count  # Index the new bus gets (the end of the list).
+			AudioServer.set_bus_count(idx + 1)
 			AudioServer.set_bus_name(idx, bus_name)
 			AudioServer.set_bus_send(idx, &"Master")
 	if AudioServer.get_bus_effect_count(0) == 0:

@@ -2284,8 +2284,15 @@ support).
   - **A Play button starts the game** (GDD §15.0 "GitHub Pages is the web home"): the page downloads the engine and
     the game at once, shows the NECROPATHY logo and **Play** when they are ready, and starts the game on a click,
     tap or key. Godot creates its audio while it starts, so the sound is created inside that gesture, which every
-    browser allows (Edge stayed silent when the audio was made on page load and only resumed by a later click).
-    If a browser still holds the sound back, any later click, tap or key resumes it.
+    browser allows. If a browser still holds the sound back, any later click, tap or key resumes it.
+  - **Sound buses** (GDD §15.0 "Web sound fix"): the Web build had no sound at all in any browser until Oct 2026.
+    Godot 4.3's Web player mirrors `AudioServer.add_bus()` by inserting the new bus before Master, so its bus order
+    no longer matched the engine's and the Music / SFX routing wired Master into a muted loop with nothing reaching
+    the speakers. `Sfx._setup_buses()` therefore appends buses with `AudioServer.set_bus_count()`; never use
+    `add_bus()` in this project. Checked by measuring the page's real output in Chromium (a tap on everything sent
+    to the speakers): silent before, the UI clicks and the menu theme after.
+  - **The menu theme** is rendered in small per-frame steps on the Web, so the title screen has only the UI sounds
+    for its first seconds (about 2 s of compute spread over the frames), then the theme fades in.
   - **iPhone and iPad** (GDD §15.0 "iPhone sound and fullscreen"): iPhone Safari has no page fullscreen (only videos
     go fullscreen), so Settings shows "Fullscreen: Share, Add to Home Screen" in place of the toggle (a home-screen
     launch plays fullscreen and has its own saves), or "Fullscreen: not in this browser" when the game is embedded

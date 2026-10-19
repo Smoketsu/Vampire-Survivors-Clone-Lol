@@ -418,7 +418,8 @@ tiny tweaks.
   (checked across a reload); the engine's copy of a sound's buffer on every play is patched out of the exported
   `index.js` (`tools/patch_web_audio.py`; it got phone tabs killed for memory mid-run); CI exports it (artifact `Necropathy-web`, release zip) and
   publishes it to GitHub Pages; the page starts the game from a **Play** button so the audio is created inside a
-  gesture (Edge was silent otherwise). Tested in headless Chromium (title, a run, reload).
+  gesture. **Never call `AudioServer.add_bus()`**: Godot 4.3's Web player inserts the bus before Master, which muted
+  the whole Web build (GDD §15.0 "Web sound fix"); `Sfx._setup_buses()` uses `set_bus_count()`. Tested in headless Chromium (title, a run, reload).
 - **phones and tablets in the browser** (owner request "make it mobile friendly", GDD §15.0 "Mobile
   browser support"; native apps still deferred): `TouchSupport` (detection by a coarse pointer, the
   mobile UI scale `content_scale_factor` up to ×1.2 on short phone screens, `fit_to_screen()` on every

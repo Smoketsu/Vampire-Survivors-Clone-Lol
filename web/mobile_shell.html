@@ -27,9 +27,10 @@
       game shows its own "turn your device" overlay otherwise (RotateOverlay).
     * start gate (GDD 15.0 "GitHub Pages is the web home"): the engine downloads at once,
       but the game starts only on a click / tap / key on the Play button. Godot creates
-      its AudioContext while it starts, so it is created inside that gesture and every
-      browser lets it play (Edge stayed silent when the context was made on page load and
-      only resumed by a later click; itch.io's "Run game" button used to be this gesture).
+      its AudioContext while it starts, so it is created inside that gesture and starts
+      running at once in every browser (itch.io's "Run game" button used to be this
+      gesture). The Web build's silence itself was a bus-order bug, fixed in sfx.gd
+      _setup_buses() (GDD 15.0 "Web sound fix").
   Template placeholders ($GODOT_*) are filled by the exporter.
 -->
 <html lang="en">
