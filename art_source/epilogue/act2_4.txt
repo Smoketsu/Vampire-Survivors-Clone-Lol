@@ -1,3 +1,63 @@
+Wave 2 art review redo (owner: "Make her more undead looking and hotter"). Two image edits with tools/gen_image.py at 1536x1024.
+
+STEP 1: an edit of the first act2_4 source (attached first) with a sheet of the figure-redesign heroines and Vhal'Neth's dreaming boss sprite (attached second):
+
+EDIT the FIRST attached image (an ending panel of a dark 2D pixel-art game). Keep EVERYTHING on the left
+half exactly as it is: the dark cliff, the violet-hooded necromancer raising his violet flame staff, the
+skeleton army, the bone banners, the stormy grey-violet sky, the dark sea, the shoreline and surf, the
+composition, the camera and the pixel size. Redraw ONLY the giant sea goddess on the right, Vhal'Neth,
+in the same place and the same pose: kneeling in the shallow surf, bowing her head toward the
+necromancer in submission, her two great hands flat on the wet sand, her mane of thick teal tentacles
+and her crown of bone-white and violet coral kept.
+
+Make her clearly UNDEAD, a drowned dead goddess: cold drowned-corpse pallor (a paler, greyer sea-green
+skin, #7FB5AC and #3A7C80 with #1B4650 shadow), sunken cheeks, dark hollow eye sockets with small
+glowing violet-pink pupils looking down (#F09CF2), dark lips, a few patches where pale bone shows
+through (a cheekbone, the collarbones, exposed ribs at the side of her waist, the bony knuckles and
+finger bones of her hands), barnacles and rotted, broken grey-bone coral growing on her shoulders and
+arms, the tentacle tips tattered and frayed, strands of dead kelp hanging from her.
+
+Make her strikingly beautiful and alluring in the style of the other attached heroines of this game
+(the second image): an elegant face with high cheekbones, and an exaggerated hourglass figure: a full,
+generous bust, a very narrow cinched waist and wide hips, shown leaning forward as she bows. She is
+FULLY CLOTHED and covered: a fitted, high-necked gown of dark tattered kelp and drowned sea-silk
+(deep sea teal #1B4650 and moss #3B5529 with violet coral clasps) that covers her chest, torso and
+body completely, its torn hem and sleeves trailing into the water. Tasteful, regal and eerie, never
+nude, nothing exposed except the bone patches named above.
+
+STYLE (keep the first image's style): true pixel art, crisp square pixels, every pixel a flat colour
+block about 3 to 4 image pixels wide, nearest-neighbour, a 1-pixel dark outline around figures, light
+from the upper left, at most 3 shades per material, BIG BOLD SIMPLE SHAPES, no tiny busy details, no
+scattered specks, no texture noise, no dithering, no gradients, no soft glow haze, no blur. Her face
+must read clearly at a glance. Fully opaque image edge to edge, no border, no text, no watermark. Use
+only colours close to this palette: inks #0F141C #160A21 #1C110B #081814; dark grounds #161A1C #26272A
+#2D2E33; stone #3B4352 #6B7A94 #A7B3C6; bone #7F785F #B4AA8A #E8E1C8; violet #4A2569 #7A42AD #A35CFA
+#DDBDFF; soul teal #1C6B58 #3DCC94 #A8FFD2; moss #3B5529 #76984A; drowned sea #1B4650 #3A7C80
+#7FB5AC; abyssal glow #5A2262 #B04CC0 #F09CF2.
+One single wide 3:2 picture.
+
+STEP 2: an edit of the step-1 result alone; its output is the kept source (act2_4.png):
+
+EDIT the attached image (an ending panel of a dark 2D pixel-art game). Keep the whole picture exactly
+as it is (the left cliff, the necromancer and his skeleton army and banners, the sky, the sea, the
+shore, the composition, the pixel size, and the giant sea goddess's pose, crown, tentacle mane, kelp
+gown and hourglass figure). Change ONLY the goddess, to make her look MORE UNDEAD, a drowned dead
+goddess, while she stays beautiful:
+- her face: deeper hollow dark eye sockets around her small glowing violet-pink eyes, sunken cheeks,
+  and on her left cheek and jaw (the side away from the light) the skin rotted away showing a patch of
+  pale bone (cheekbone and a few teeth at the edge of the jaw); dark grey-violet lips;
+- her skin: paler and greyer, a cold dead blue-grey-green, with darker veins of rot at the edges;
+- her arms: patches of skin gone on both forearms showing pale bones, her hands skeletal bone fingers;
+- her side: the exposed ribs at her waist larger and clearer (a few big pale bone ribs through a tear
+  in the gown);
+- barnacles and broken rotted coral on her shoulders, the tentacle tips tattered and torn.
+She stays FULLY CLOTHED in her high-necked kelp gown that covers her chest and body; tasteful, regal,
+eerie. Keep true pixel art with big flat colour blocks, a 1-pixel dark outline, no dithering, no
+gradients, no glow haze, no specks; her face must read clearly. Fully opaque, no text, no border.
+One single wide 3:2 picture.
+
+----- The first version's prompt (scene and the shared style block): -----
+
 SCENE: "The Covenant is ash. The Eye is blind. The army is endless, and it is only beginning." On a dark beach at dawn, the colossal sea goddess Vhal'Neth (like the attached giant boss sprite: teal skin, a crown of bone-white coral and violet coral, a mane of thick tentacles) rises from the shallow water and BOWS HER HEAD in submission, her great hands flat on the sand, her eyes closed (no glow), toward the small necromancer. The violet-hooded necromancer stands on a rock in the lower left foreground, his flame staff raised high, its violet flame bright. Around and behind him on the beach his undead army stands in ranks: skeleton warriors with round shields, archers, mages, raised banners of bone. The sky behind is a cold grey-violet dawn (#26272A, #4A2569, a thin #7FB5AC line at the horizon). A moment of triumph, very readable: the huge bowing goddess on the right, the tiny master on the left.
 
 STYLE (same for every panel of this set): a wide cinematic illustration panel for the ending of a dark 2D pixel-art game, true pixel art like the attached game sprites: crisp square pixels, every pixel a flat colour block about 3 to 4 image pixels wide (the whole scene is roughly 450 pixels wide), nearest-neighbour, a 1-pixel dark outline around figures, light from the upper left, at most 3 shades per material. BIG, BOLD, SIMPLE SHAPES that read at a glance: a clear foreground, middle ground and background, large flat areas of colour, strong silhouettes. Figures are few and large enough to read; whenever the necromancer appears he wears the violet hooded robe with a tall pointed hood and holds a tall bone staff topped with a violet flame, exactly as in the attached sprite, and his skeleton soldiers look like the attached skeleton sprites. No tiny busy details, no scattered single-pixel specks, no texture noise, no dithering, no gradients, no soft glow haze, no anti-aliasing, no blur. Fully opaque image edge to edge (no transparency), no border, no frame, no text, no letters, no watermark, no UI. Dark gothic mood. Use only colours close to this palette: inks #0F141C #160A21 #1C110B #081814 #26070C #06151A; dark grounds #161A1C #221C17 #26272A #312E2B #2D2E33; stone #3B4352 #6B7A94 #A7B3C6; bone #7F785F #B4AA8A #E8E1C8; violet #4A2569 #7A42AD #A35CFA #DDBDFF; soul teal #1C6B58 #3DCC94 #A8FFD2; gold #E0A92E #FFDC66 #FFFAE8; crimson #7A0E1B #C71A29; fire #FF8C26; moss #3B5529 #76984A; brown #4F3320 #8C6040; deep blue #243A99 #4F78EB; drowned sea #1B4650 #3A7C80 #7FB5AC; abyssal glow #5A2262 #B04CC0 #F09CF2.
