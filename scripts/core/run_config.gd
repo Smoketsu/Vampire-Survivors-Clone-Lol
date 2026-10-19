@@ -12,6 +12,9 @@
 ## CharacterPicker, remembered in the Meta save) is `character_id`; the run
 ## reads it only through CharacterModifiers (the one character path), and
 ## everything else (skins, Hyper clears) through character_key().
+## The ultimate (UltimateData id, content wave 2) is `ultimate_id`, chosen on
+## the same screen under the character and skin; the run reads it only through
+## UltimateSystem (game.ultimates).
 class_name RunConfig
 extends RefCounted
 
@@ -31,6 +34,10 @@ var hyper: bool = false
 ## SkinData id of the cosmetic skin ("" = the character's default look).
 ## Purely visual: Game hands it to the Necromancer's drawing only.
 var skin_id: String = ""
+## UltimateData id of the ultimate the soul meter casts (default: Dread Rally;
+## set through set_ultimate(), which validates; locks are checked by the
+## picker, Meta.prerun_config() and Game, --ultimate= bypasses them).
+var ultimate_id: String = UltimateData.DEFAULT_ID
 
 
 ## A config for stage `id` (unknown ids fall back to the default stage),
@@ -73,6 +80,11 @@ func has_modifier(id: String) -> bool:
 	return modifiers.has(id)
 
 
+## Sets the ultimate (unknown ids fall back to Dread Rally).
+func set_ultimate(id: String) -> void:
+	ultimate_id = id if UltimateData.ULTIMATES.has(id) else UltimateData.DEFAULT_ID
+
+
 ## The run's character id (`character_id`, a CharacterData id; the one
 ## accessor skins and Hyper clears use).
 func character_key() -> String:
@@ -80,7 +92,7 @@ func character_key() -> String:
 
 
 ## A copy for a restart: the same stage, difficulty, modifiers, character,
-## Hyper and skin.
+## Hyper, skin and ultimate.
 func duplicate_config() -> RunConfig:
 	var c := RunConfig.for_stage(stage_id)
 	c.set_difficulty(difficulty_id)
@@ -88,4 +100,5 @@ func duplicate_config() -> RunConfig:
 	c.set_character(character_id)
 	c.hyper = hyper
 	c.skin_id = skin_id
+	c.set_ultimate(ultimate_id)
 	return c

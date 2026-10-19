@@ -13,9 +13,9 @@
 ##     through its one Input.get_vector() path. A faint rest ring shows where
 ##     to put the thumb while no finger holds it.
 ##   * Right side: Grave Step (the big thumb button, its charges as pips and
-##     a recharge sweep), Dread Rally (darkened above its soul meter's level
-##     like the HUD icon, a bright green border when READY, violet while the
-##     rally runs), the Shadow Bolt aim toggle (only while the bolt is owned;
+##     a recharge sweep), the ultimate (the run's choice, game.ultimates;
+##     darkened above its soul meter's level like the HUD icon, a bright green
+##     border when READY, violet while it runs), the Shadow Bolt aim toggle (only while the bolt is owned;
 ##     the HUD line says which aim). Pause sits in the top-right corner (the HUD's top-right
 ##     block moves left for it, Hud.set_top_right_inset()).
 ##   * Every button injects its existing input action as an InputEventAction
@@ -291,9 +291,9 @@ func _draw_button(ci: CanvasItem, id: String) -> void:
 				_shade(ci, face, rect, 1.0 - gs.recharge_fraction())
 			_pips(ci, rect, gs.max_charges, gs.charges, gs.recharge_fraction())
 		"ultimate":
-			Glyphs.draw_icon(ci, String(d["icon"]), icon_rect)
+			Glyphs.draw_icon(ci, game.ultimates.icon(), icon_rect)  # The run's ultimate.
 			var dr := game.dread_rally
-			if dr.buff_active():
+			if game.ultimates.time_left() > 0.0:
 				ci.draw_colored_polygon(face, Color(Palette.VIOLET, 0.3))
 				border = Palette.VIOLET.lightened(0.3)
 			elif dr.is_full():

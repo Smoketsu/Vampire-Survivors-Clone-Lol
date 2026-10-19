@@ -96,6 +96,10 @@
 ##                         An unknown id (or one whose starting spell is not
 ##                         in the build) is refused with an error and the
 ##                         default is played.
+##   --ultimate=ID         Autotest ultimate (UltimateData ids: dread_rally
+##                         (default, today's game), sovereigns_decree,
+##                         eclipse, grave_tide); locks are bypassed. The bots
+##                         cast it with the Dread Rally rule (_rally_wanted()).
 ## The environment variable NECROPATHY_AUTOTEST=1 (or the pre-rename GRAVEBOUND_AUTOTEST=1) is equivalent to --autotest.
 extends Node
 
@@ -156,6 +160,8 @@ var autotest_spawns: Array[Dictionary] = []
 ## Autotest: CharacterData id of the playable character (--character=;
 ## locks bypassed, only characters whose starting spell exists).
 var autotest_character: String = CharacterData.DEFAULT_ID
+## Autotest: UltimateData id of the ultimate (--ultimate=; locks bypassed).
+var autotest_ultimate: String = UltimateData.DEFAULT_ID
 ## Stage chosen last in the stage select this session (focused next time).
 var last_stage_id: String = StageRegistry.DEFAULT_ID
 ## Whether the F3 debug overlay is shown; persists across restarts.
@@ -283,6 +289,12 @@ func _parse_args(args: PackedStringArray) -> void:
 					cid, String(CharacterData.CHARACTERS[cid]["spell"]), ", ".join(CharacterModifiers.available_ids()), CharacterData.DEFAULT_ID])
 			else:
 				autotest_character = cid
+		elif arg.begins_with("--ultimate="):
+			var uid := arg.get_slice("=", 1).to_lower()  # Requested ultimate id.
+			if UltimateData.ULTIMATES.has(uid):
+				autotest_ultimate = uid
+			else:
+				push_error("Unknown --ultimate=%s (expected one of %s)" % [uid, ", ".join(PackedStringArray(UltimateData.ORDER))])
 		elif arg.begins_with("--classes="):
 			for cls: String in arg.get_slice("=", 1).split(",", false):
 				# Evolution-only classes (the Profane Bishop) cannot be forced.

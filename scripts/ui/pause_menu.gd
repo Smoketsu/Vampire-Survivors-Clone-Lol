@@ -9,7 +9,7 @@
 ##     character and, when the run is not the standard one, the difficulty
 ##     and modifiers in crimson; the build as icon rows with level pips
 ##     (spells, passives) and the army as class icons with unit counts
-##     (RunBuild); then the four army stances as compact tiles (stance icon,
+##     (RunBuild), and the run's ultimate (icon and name; content wave 2); then the four army stances as compact tiles (stance icon,
 ##     name, a two-word tagline, the key / pad chip; the active one framed in
 ##     its colour, a locked one dimmed with a padlock; the full description
 ##     is the tile's tooltip);
@@ -84,7 +84,8 @@ func _ready() -> void:
 	_button(vb, "Settings", func() -> void: SettingsMenu.open_over(self, get_viewport().gui_get_focus_owner()))
 	_button(vb, "Restart", _on_restart)
 	_button(vb, "Main Menu", _on_main_menu)
-	outer.add_child(InputHints.strip([[InputHints.MOVE, "Move"], ["dash", "Step"], ["ultimate", "Rally"],
+	var ult_word := String(game.ultimates.row()["short"]) if game != null and game.ultimates != null else "Rally"  # The run's ultimate, one word.
+	outer.add_child(InputHints.strip([[InputHints.MOVE, "Move"], ["dash", "Step"], ["ultimate", ult_word],
 		["toggle_aim", "Bolt aim"], ["ui_cancel", "Resume"]]))
 
 
@@ -123,6 +124,7 @@ func _rebuild_info() -> void:
 	var army := RunBuild.army(game)
 	var army_row := RunBuild.army_row(army, InRunUiData.PAUSE_ICON)
 	_build_line(grid, "Army", army_row, army.is_empty())
+	_build_line(grid, "Ultimate", RunBuild.ultimate_row(game, InRunUiData.PAUSE_ICON), false)  # Content wave 2: the chosen ultimate.
 
 
 ## The summary's first row: the stage name and the countdown (or the

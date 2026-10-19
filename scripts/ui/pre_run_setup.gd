@@ -8,7 +8,9 @@
 ##     skin it would wear, with its name, innate and starting spell; under it
 ##     the skin tiles and the Hyper tile with one detail line
 ##     (PreRunHyperSkins: SkinData, HyperData; Hyper stays locked until
-##     Seraphine falls),
+##     Seraphine falls), and under them the ultimate picker (PreRunUltimates,
+##     content wave 2: Dread Rally and the three new ultimates; locked ones
+##     padlocked with how to earn them),
 ##   * RIGHT, the setup panel: the character grid (CharacterPicker, one row of
 ##     twelve portrait tiles; locked ones padlocked), four difficulty cards
 ##     (DifficultyData, easiest to hardest: an icon, the name, ONE line and the
@@ -81,6 +83,8 @@ var _hero: PreRunHero
 var _picker: CharacterPicker
 ## Skin tiles and the Hyper tile (PreRunHyperSkins, in the hero panel).
 var _extras: PreRunHyperSkins
+## The ultimate picker (PreRunUltimates, in the hero panel under the skins).
+var _ults: PreRunUltimates
 ## Character the hero shows (follows the focused tile).
 var _hero_char: String = ""
 ## Skin previewed on the chosen character while its skin tile is focused
@@ -126,6 +130,9 @@ func _ready() -> void:
 	_extras.rebuilt.connect(_queue_wire)
 	_extras.skin_focused.connect(_on_skin_focused)
 	_hero.add_extra(_extras)
+	_ults = PreRunUltimates.new()  # Content wave 2: the ultimate picker.
+	_ults.config = config
+	_hero.add_extra(_ults)
 	# Right column: the setup panel, then the buttons.
 	var right := VBoxContainer.new()
 	right.add_theme_constant_override("separation", 8)
@@ -383,12 +390,13 @@ func _queue_wire() -> void:
 
 
 ## Explicit focus neighbours, so arrows / D-pad never leave the screen:
-## inside each column the rows link up and down (left: the skin / Hyper row;
-## right: the character tiles, difficulty cards, modifier rows), the end of a
+## inside each column the rows link up and down (left: the skin / Hyper row,
+## then the ultimate row; right: the character tiles, difficulty cards,
+## modifier rows), the end of a
 ## row crosses to the other column's row nearest in height, the last rows
 ## lead down to the bottom buttons and the bottom buttons lead back up.
 func _wire_focus() -> void:
-	var left: Array = _extras.rows()  # Left column rows.
+	var left: Array = _extras.rows() + _ults.rows()  # Left column rows (skins / Hyper, then the ultimates).
 	var right: Array = _picker.tile_rows() + _rows_of(_level_buttons, DifficultyData.ORDER, DifficultyData.ORDER.size()) \
 			+ _rows_of(_mod_buttons, RunModifierData.ORDER, FrontDoorData.MOD_COLUMNS)  # Right column rows.
 	var bottom := [_back, _reset, _begin]  # Bottom row, left to right.

@@ -92,6 +92,21 @@
 ## shard absorb the hit first, and heal_player() passes the HP healed to
 ## Stolen Grace. Rot (Plague Cloud, Contagion, the Wither Witch's aura) is
 ## applied through rot_enemy().
+## Ultimates (content wave 2, UltimateSystem as game.ultimates; every hook is a
+## no-op unless that ultimate runs, so Dread Rally runs are unchanged):
+##   Sovereign's Decree — damage_unit(): every summon takes
+##                        UltimateData.DECREE_DAMAGE_REDUCTION less (its own
+##                        category, decree_dmg_prevented); damage_player():
+##                        the untargetable necromancer ignores every hit
+##                        before any other rule (decree_player_hits_ignored).
+##   Eclipse exposure   — expose_enemy() (the one Eclipse debuff): from
+##                        Enemy.expose_from to expose_until the enemy takes
+##                        expose_amp more damage from every source in
+##                        damage_enemy(), after the curse (eclipse_bonus_dmg).
+##                        The Eclipse's hold is freeze_enemy() and its boss
+##                        slow slow_enemy(), the existing paths.
+##   Grave Tide         — _kill_enemy() reports every kill to
+##                        game.ultimates.on_enemy_killed() (the Tide's raises).
 class_name CombatResolver
 extends RefCounted
 
@@ -196,6 +211,11 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	if e.curse_until > game.elapsed and not source in SummonEvolutionData.CURSE_EXEMPT_SOURCES:
 		curse = e.curse_amp
 		amount *= 1.0 + curse
+	# Eclipse exposure (ultimate, expose_enemy()): +expose_amp from every source
+	# once the darkness ended. 0 for an enemy no Eclipse caught.
+	var expose := e.expose_amp if (e.expose_until > game.elapsed and e.expose_from <= game.elapsed) else 0.0  # Exposure bonus fraction.
+	if expose > 0.0:
+		amount *= 1.0 + expose
 	# Grim Ledger (passive): elites, minibosses and bosses take more.
 	if e.is_elite or e.is_boss or e.is_miniboss:
 		var ledger := game.abilities.passive_value("grim_ledger", "elite_damage")  # 0 when not owned.
@@ -230,6 +250,8 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 		game.stat_add("rot_bonus_dmg", dealt * rot / (1.0 + rot))
 	if curse > 0.0:
 		game.stat_add("curse_bonus_dmg", dealt * curse / (1.0 + curse))
+	if expose > 0.0:
+		game.stat_add("eclipse_bonus_dmg", dealt * expose / (1.0 + expose))
 	if crit_mult > 1.0:
 		game.stat_add("minion_crits", 1.0)
 		game.stat_add("minion_crit_bonus_dmg", dealt * (1.0 - 1.0 / crit_mult))
@@ -309,6 +331,10 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	if stance_dr > 0.0:
 		game.stat_add("stance_dmg_prevented", amount * stance_dr)
 		amount *= 1.0 - stance_dr
+	var decree_dr := game.ultimates.unit_damage_reduction()  # Sovereign's Decree (0 unless it runs).
+	if decree_dr > 0.0:
+		game.stat_add("decree_dmg_prevented", amount * decree_dr)
+		amount *= 1.0 - decree_dr
 	var ab := game.abilities  # Passive levels.
 	var res := ab.passive_value("unholy_resilience", "area_holy_reduction")  # 0..1, 0 when not owned.
 	if res > 0.0 and PassiveData.AREA_HOLY_SOURCES.has(source):
@@ -342,8 +368,12 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 ## Damages the necromancer (i-frames are handled by the player). `source`
 ## tags the attacker kind for the player_dmg_from_* statistics. Warding Ritual
 ## (evolution passive) and the meta Bone Mail armor (own category) reduce the
-## damage first.
+## damage first. While Sovereign's Decree runs (UltimateSystem
+## .player_untargetable()) every hit is ignored before anything else.
 func damage_player(amount: float, source: String) -> void:
+	if game.ultimates.player_untargetable():
+		game.ultimates.on_player_hit_ignored(amount)
+		return  # Sovereign's Decree: the necromancer cannot be targeted (every hit ignored).
 	if game.innates.try_block_hit():
 		return  # Ossuary Ward shard (Bone Oracle) absorbed the whole hit.
 	amount *= 1.0 - game.abilities.passive_value("warding_ritual", "damage_reduction")
@@ -527,6 +557,21 @@ func curse_enemy(e: Enemy, amp: float, duration: float) -> void:
 	e.curse_until = maxf(e.curse_until, now + duration)
 
 
+## Eclipse exposure (the ultimate's one debuff, UltimateSystem): enemy `e`
+## takes `amp` (0..1) more damage from every source (damage_enemy()) from game
+## time `from` (the end of the darkness) for `duration` s, lengthened by
+## Mournsong like every weakening effect (debuff_time()). Reckoning enemies
+## and structures are immune. A newer exposure replaces an older one. Timed
+## on Game.elapsed like the curse. Stat: eclipse_exposed.
+func expose_enemy(e: Enemy, amp: float, from: float, duration: float) -> void:
+	if not e.active or e.is_reckoning or e.is_structure or amp <= 0.0 or duration <= 0.0:
+		return
+	e.expose_amp = amp
+	e.expose_from = from
+	e.expose_until = from + debuff_time(duration)
+	game.stat_add("eclipse_exposed", 1.0)
+
+
 ## Frost Wraith Deep Freeze: holds `e` for `duration` s through the Stasis
 ## freeze path (EnemyDirector skips its AI, attacks and movement while
 ## Enemy.freeze_timer > 0). The boss (and a miniboss) gets `boss_mult` of the duration, elites
@@ -592,6 +637,7 @@ func _kill_enemy(e: Enemy) -> void:
 	game.powerups.on_enemy_killed(e)  # Power-up drop roll (PowerupData rules).
 	game.chests.on_enemy_killed(e)  # Treasure chest roll (ChestData rules).
 	game.dread_rally.on_enemy_killed(e)  # Dread Rally soul meter.
+	game.ultimates.on_enemy_killed(e)  # Grave Tide raises (no-op unless it runs).
 	if game.dread != null:
 		game.dread.on_kill()  # Act II: a kill steadies the mind.
 	if e.is_elite and not e.is_boss and not e.is_structure:
