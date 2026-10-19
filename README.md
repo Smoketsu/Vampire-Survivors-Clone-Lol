@@ -263,7 +263,7 @@ buttons you press in a fight are the dash and the ultimate (below).
 
 ### Bullet heaven pass (Volleys)
 
-An experimental pass, on by default and switched with **Settings → Video → Volleys** (from the next
+A pass kept after the owner played it (GDD §15.0 "Volleys kept"), on by default and switched with **Settings → Video → Volleys** (from the next
 run; GDD §15.0 "Bullet heaven pass", numbers in `scripts/data/volley_data.gd`):
 
 - **Summon volleys.** From class **Lv 3** every summon class adds a glowing signature volley to its

@@ -442,14 +442,15 @@ tiny tweaks.
   multi-touch) and a desktop viewport. Keep new screens inside 1280 × 600 layout px or call
   `TouchSupport.fit_to_screen()` on their centre container.
 
-- the **bullet heaven pass** (owner request, Oct 2026, built to try out; GDD §15.0 "Bullet heaven pass"):
+- the **bullet heaven pass** (owner request, Oct 2026, built to try out, then kept; GDD §15.0 "Bullet heaven pass"):
   `VolleyDirector` + `volley_data.gd` behind **Settings → Video → Volleys** (`Game.volleys_on`, default on;
   `--volleys=off` runs none of it; before the Bone Ring it reproduced the old game exactly): summon volleys from class Lv 3 (Lv 5 grows, each
   summon evolution a showpiece; attack-triggered through `SummonedUnit._step_cast()`, specials from their own
   moment), spell echoes from spell Lv 3, the Rally Barrage, denser fodder (spawn ×1.25, HP ×0.8 in
   `DifficultyModifiers`; kills keep full XP, owner decision); shots are packed-array data (cap 320 everywhere, 160 drawn on
   Reduced effects), every hit through `CombatResolver.damage_enemy()` with the firing class's source, at most
-  2 boss hits a volley; autotest `volleys` line. The owner decides after playing it whether it stays.
+  2 boss hits a volley; autotest `volleys` line. **Kept** (owner decision Oct 2026: "volleys are great, makes the screen
+  much more visually interesting"; GDD §15.0 "Volleys kept"); the Settings toggle stays.
   **Volley art** (GDD §15.0 "Volley art"): grey tint masks per shot look (`assets/sprites/volleys/`) and the
   `volley_hit` / `volley_flash` strips, tinted with the shot colour and drawn additively (bursts in a ring buffer
   in `VolleyDirector`, drawing only, nothing loaded headless); made with `tools/volley_art.py`.
