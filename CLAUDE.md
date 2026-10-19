@@ -492,6 +492,24 @@ tiny tweaks.
   `held_until` / `misdirect()` / `compel()`; per-stage autotest report lines. Integration balance in
   GDD §15.0 "Act II integration (phase 2)".
 
+- **content wave 2** (owner-approved proposals, Oct 2026; five parallel branches merged on `integration`,
+  GDD §15.0 "Content wave 2 (owner decisions)" and the rows after it): the **victory screen** (`VictoryResults`,
+  `LastStand`, `VictoryCard`, `victory_data.gd`: a ~3 s last stand after the Reckoning, per-stage title and boss line,
+  best time past 0:00, highlights, Next / Again / Menu; `--victory-preview`); **achievement rewards** (`UnlockData`
+  reward types ultimate / title / skin, `TitleData`, `PreRunTitleRow`, `TitleFrame`, `RunRewards`; five new
+  achievements Mass Grave, Untouchable, Full Ossuary, Deathlord's Due, Swift Judgment; universal skins Untouchable and
+  Deathlord; `--rewards=on`); **more ultimates** (`UltimateData`, `UltimateSystem` as `game.ultimates`: Sovereign's
+  Decree, Eclipse, Grave Tide beside Dread Rally on the shared meter; `PreRunUltimates` under the modifiers;
+  `--ultimate=ID`; none beats Dread Rally, Eclipse is weakest on the Archive and waits for the owner's playtest); the
+  **Bone Golem** (15th summon class, locked until Bone Legion: `GolemBehavior`, `GolemKit`, Ossuary Hunger, Bulwark;
+  evolution Ossuary Titan + Grave Masonry; synergy **Bone Bastion** = Golem + any blocker, a damage-cut aura through
+  `SynergyManager.bastion_reduction()` in `CombatResolver.damage_unit()`; no act-specific summon rules, owner rule);
+  the **illustrated epilogue** (`EpilogueScreen`, `epilogue_data.gd`, 8 panels, plays once after the clear that opens
+  it, Meta `[epilogue]`). Default runs stay bit-for-bit identical. Art: wave 2 review page for the owner
+  (<https://claude.ai/artifact/6DzAFbmX7Wat8h6nbcatN7>).
+- **parallel CI** (owner request, GDD §15.0 "Parallel CI and lean testing"): ~30 → ~4 min from a push to the live
+  build.
+
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
    Act II is new: its feel, difficulty (the Archive's boss fight is the sharpest spike) and the
@@ -518,12 +536,10 @@ tiny tweaks.
 4. **Phones: done for the browser (Oct 2026)** (see the Done list; GDD §15.0 "Mobile browser
    support"). Left: measure it on real phones (iOS Safari audio unlock and frame rate first, on the
    GitHub Pages build); native Android / iOS apps stay deferred.
-5. **Content candidates** (owner to choose): achievement rewards / the Bone Golem (and the
-   campaign epilogue that *Dawn Extinguished* should unlock), more ultimates, a victory screen after
-   the Reckoning.
-6. **Phase 3 campaign:** Stage 3 is done (the Sanctum of Judgment and Grand Inquisitor Seraphine);
-   left: achievement rewards and the campaign epilogue (skins, Hyper mode, the Codex and all their
-   art are in).
+5. **Content wave 2 art review** (owner): the marks on the wave 2 review page; then any redo.
+6. **Act III, the Electronic Empire** (owner-approved proposal doc, Oct 2026: all eleven decisions answered;
+   Kestrel the Dead Pixel, the Motherboard, Deus Ex Machina; Death Ray, Hollow Puppet, Scrap Swarm). Starts after
+   the wave 2 review, built like Act II: foundation first, then the three stages in parallel.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
