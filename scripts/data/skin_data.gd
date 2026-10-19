@@ -182,7 +182,7 @@ const UNIVERSAL_SKINS := {
 		"display_name": "Untouchable",  # owner-approved Proposal 2
 		"look": "A ghost-white, half-seen shade of the character",  # owner-approved Proposal 2
 		"unlock_short": "Earn Untouchable",  # TUNING (not in GDD)
-		"tint": Color(1.55, 1.62, 1.72, 0.72),  # TUNING (not in GDD) bleached pale and see-through (alpha 0..1)
+		"tint": Color(2.2, 3.2, 3.0, 0.78),  # TUNING (not in GDD) over-bright multiply: colours wash to a cold white, the dark outline stays; see-through (alpha 0..1)
 		"accent": Color(0.78, 0.95, 1.0),  # TUNING (not in GDD) pale spectral aura
 		"glow": Color(0.86, 1.0, 1.0),  # TUNING (not in GDD)
 		"emblem": "none",

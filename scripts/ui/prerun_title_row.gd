@@ -6,8 +6,8 @@
 ##     (Meta.set_selected_title(): a free, reversible cosmetic choice, saved
 ##     at once); with no title earned it is `denied`,
 ##   * one detail line: how many titles are earned and, while some are
-##     locked, the next locked one with the achievement that earns it; the
-##     tile's tooltip lists every title and how to earn it.
+##     locked, the next locked one; the tile's (and the line's) tooltip lists
+##     every title and how to earn it (and so does the Codex).
 ## The worn title shows under the character's name on the hero (PreRunHero),
 ## with its portrait frame (Heretic's Bane: TitleFrame). Titles are purely
 ## cosmetic. rows() gives the tile as one focus row for the setup screen's
@@ -102,9 +102,7 @@ func refresh() -> void:
 			next = id
 		tips.append("%s: %s" % [TitleData.display_text(id), "earned" if open else Unlocks.lock_text(id)])
 	if next != "":
-		var aid := TitleData.achievement_of(next)  # Its achievement.
-		var arow: Dictionary = MetaData.ACHIEVEMENTS.get(aid, {})  # Its achievement row.
-		text += TitleData.NEXT_TEXT % [TitleData.display_text(next), String(arow.get("display_name", aid))]
+		text += TitleData.NEXT_TEXT % TitleData.display_text(next)
 	_detail.text = text
 	_button.tooltip_text = "\n".join(tips)
 	_detail.tooltip_text = _button.tooltip_text

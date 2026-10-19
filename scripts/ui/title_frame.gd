@@ -3,7 +3,8 @@
 ## "frame": "chaplain_skull"). PreRunHero lays it over its hero box when the
 ## worn title has that frame. Drawn in code on the pixel grid (no PNG): a gold
 ## band with cut corners (UI rule: chamfered corners), a small gold skull on
-## each corner and a mitred Chaplain skull crowning the top centre, each
+## each corner and a Chaplain's skull under its holy cross crowning the top
+## centre, each
 ## stamped from a tiny bitmap at a whole-number scale so it reads as pixel
 ## art. Purely visual: it never touches gameplay state.
 class_name TitleFrame
@@ -20,14 +21,14 @@ const SKULL := [
 	".#######.",
 	"..#.#.#..",
 ]
-## The Chaplain's mitre (with its cross cut out) set on the crest skull, 9 x 6 px.
-const MITRE := [
-	"....#....",
-	"...###...",
-	"..##o##..",
-	".##ooo##.",
-	".###o###.",
-	"#########",
+## The Chaplain's holy cross over the crest skull (a slain Covenant
+## Chaplain's), 5 x 5 px.
+const CROSS := [
+	"..#..",
+	"#####",
+	"..#..",
+	"..#..",
+	"..#..",
 ]
 ## Frame kind drawn ("chaplain_skull"; anything else draws nothing).
 var kind: String = "chaplain_skull"
@@ -70,9 +71,9 @@ func _draw() -> void:
 			Vector2(inset, h - inset - sk.y), Vector2(w - inset - sk.x, h - inset - sk.y)]:
 		_stamp(SKULL, p.round(), cs, gold, deep)
 	var k := TitleData.FRAME_CREST_SCALE  # Crest scale.
-	var crest := Vector2(roundf(w * 0.5 - 4.5 * float(k)), b + 1.0)  # Mitre top-left (px).
-	_stamp(MITRE, crest, k, gold, deep)
-	_stamp(SKULL, crest + Vector2(0.0, 6.0 * float(k)), k, gold, deep)
+	var skull_at := Vector2(roundf(w * 0.5 - 4.5 * float(k)), b + 2.0 + 4.0 * float(k))  # Crest skull top-left (px).
+	_stamp(CROSS, skull_at + Vector2(2.0 * float(k), -5.0 * float(k) + float(k)), k, gold, deep)  # The cross rises from the brow.
+	_stamp(SKULL, skull_at, k, gold, deep)
 
 
 ## Stamps `bitmap` (rows of '#', 'o', '.') with its top-left at `at`, `s`

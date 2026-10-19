@@ -93,7 +93,8 @@
 ## (content wave 2)"): ultimates, titles and universal skins are UnlockData
 ## rows too (same [unlocks] section; an achievement earned before its row
 ## existed opens it on load). The five one-run achievements read the run's
-## RunRewards stats through run_counters() into five lifetime counters; the
+## RunRewards counters (summary "run_rewards") through run_counters() into
+## five lifetime counters; the
 ## autotest checks them only with --meta-save or --rewards=on
 ## (run_achievements_checked()). The worn title is `prerun_title` ([prerun]
 ## title; selected_title(), set_selected_title()). Older saves have none of
@@ -366,21 +367,22 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	return award
 
 
-## Content wave 2: what ONE run (`summary`, Game.build_summary(); its stats
-## from RunRewards) adds to each one-run achievement's lifetime counter
-## (MetaData.ACHIEVEMENTS rows with "run"): "best_*" keys are this run's
-## record (kept as a lifetime maximum), the others 1 or 0 (a qualifying run).
+## Content wave 2: what ONE run (`summary`, Game.build_summary(); its
+## "run_rewards" counters from RunRewards) adds to each one-run achievement's
+## lifetime counter (MetaData.ACHIEVEMENTS rows with "run"): "best_*" keys
+## are this run's record (kept as a lifetime maximum), the others 1 or 0 (a
+## qualifying run). A summary without "run_rewards" adds nothing.
 ## Pure (reads nothing of the save): the autotest reads it too.
 func run_counters(summary: Dictionary) -> Dictionary:
-	var st: Dictionary = summary.get("stats", {})
+	var rr: Dictionary = summary.get("run_rewards", {})  # RunRewards.counters().
 	var reached_zero := float(summary.get("time", 0.0)) >= float(summary.get("countdown", WaveData.RUN_DURATION))  # The run reached 0:00.
-	var boss_secs := float(st.get("rw_boss_kill_secs", INF))  # Seconds the boss lasted after its arrival (INF = it did not fall).
+	var boss_secs := float(rr.get("boss_kill_secs", -1.0))  # Seconds the boss lasted after its arrival (-1 = it did not fall).
 	return {
-		"best_temp_raised": float(st.get("rw_temp_raised", 0.0)),  # Mass Grave
-		"untouchable_runs": 1.0 if reached_zero and float(st.get("rw_min_hp_frac", 1.0)) >= MetaData.UNTOUCHABLE_HP_FRACTION else 0.0,  # Untouchable
-		"best_evolutions_held": float(st.get("evolutions", 0.0)),  # Full Ossuary
+		"best_temp_raised": float(rr.get("temp_raised", 0.0)),  # Mass Grave
+		"untouchable_runs": 1.0 if not rr.is_empty() and reached_zero and float(rr.get("min_hp_frac", 0.0)) >= MetaData.UNTOUCHABLE_HP_FRACTION else 0.0,  # Untouchable
+		"best_evolutions_held": float(rr.get("evolutions", 0.0)),  # Full Ossuary
 		"deathlord_victories": 1.0 if bool(summary.get("victory", false)) and String(summary.get("difficulty_id", "")) == MetaData.DEATHLORD_DIFFICULTY_ID else 0.0,  # Deathlord's Due
-		"swift_boss_kills": 1.0 if bool(summary.get("boss_defeated", false)) and boss_secs <= MetaData.SWIFT_JUDGMENT_SECONDS else 0.0,  # Swift Judgment
+		"swift_boss_kills": 1.0 if bool(summary.get("boss_defeated", false)) and boss_secs >= 0.0 and boss_secs <= MetaData.SWIFT_JUDGMENT_SECONDS else 0.0,  # Swift Judgment
 	}
 
 

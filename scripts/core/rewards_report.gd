@@ -15,7 +15,7 @@ extends RefCounted
 
 ## Prints the rewards line for the finished run `summary` (Game.build_summary()
 ## plus its "soul_ash" award); `host` parents the throwaway title row.
-static func print_line(host: Node, game: Game, summary: Dictionary) -> void:
+static func print_line(host: Node, summary: Dictionary) -> void:
 	var ash: Dictionary = summary.get("soul_ash", {})  # Meta.award_run() result.
 	var earned: PackedStringArray = ash.get("achievements", PackedStringArray())  # Achievements earned this run.
 	var items: PackedStringArray = ash.get("unlocked_items", PackedStringArray())  # UnlockData items unlocked this run.
@@ -23,7 +23,6 @@ static func print_line(host: Node, game: Game, summary: Dictionary) -> void:
 	for id: String in items:
 		if Unlocks.is_reward(id):
 			rewards.append("%s:%s" % [Unlocks.item_type(id), id])
-	var st: Dictionary = summary.get("stats", {})
 	var c := Meta.run_counters(summary)  # This run's one-run achievement counters.
 	var qualifies := PackedStringArray()  # One-run achievements this run meets on its own.
 	for id: String in MetaData.ACHIEVEMENT_ORDER:
@@ -36,7 +35,7 @@ static func print_line(host: Node, game: Game, summary: Dictionary) -> void:
 	row.queue_free()
 	print("[autotest] rewards: achievements=%d (%s) titles=%d unlocks=%s | run: %s | one-run achievements met: %s (%s) | worn title: %s | title row choices %d" % [
 		earned.size(), ", ".join(earned) if not earned.is_empty() else "none", Meta.unlocked_titles().size(),
-		",".join(rewards) if not rewards.is_empty() else "none", game.rewards.summary_text(st),
+		",".join(rewards) if not rewards.is_empty() else "none", RunRewards.summary_text(summary.get("run_rewards", {})),
 		", ".join(qualifies) if not qualifies.is_empty() else "none",
 		"checked" if Meta.run_achievements_checked() else "not checked: --rewards=on",
 		TitleData.display_text(Meta.selected_title()) if Meta.selected_title() != "" else "none", choices])

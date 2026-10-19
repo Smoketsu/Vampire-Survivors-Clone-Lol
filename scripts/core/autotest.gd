@@ -1195,7 +1195,7 @@ func finish(summary: Dictionary) -> void:
 	_print_powerups(summary)
 	_print_soul_ash(summary)
 	_print_hyper_skins(summary)
-	RewardsReport.print_line(self, game, summary)  # Content wave 2: achievement rewards.
+	RewardsReport.print_line(self, summary)  # Content wave 2: achievement rewards.
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)

@@ -37,21 +37,22 @@ const NONE_TEXT: String = "None"  # TUNING (not in GDD)
 const ROW_LABEL: String = "Title"  # TUNING (not in GDD)
 ## The row's detail line: "<earned>/<all> earned" and, while some are locked,
 ## the next locked title with the achievement that earns it.
-const COUNT_TEXT: String = "%d/%d earned"  # TUNING (not in GDD)
-## Detail suffix naming the next locked title and its achievement.
-const NEXT_TEXT: String = " · next: %s (%s)"  # TUNING (not in GDD)
+const COUNT_TEXT: String = "%d/%d"  # TUNING (not in GDD)
+## Detail suffix naming the next locked title (its achievement and goal are
+## in the tooltip and the Codex).
+const NEXT_TEXT: String = " · next: %s"  # TUNING (not in GDD)
 ## Size of the row's cycle tile (layout px, 1280 x 720 design).
-const ROW_TILE: Vector2 = Vector2(196.0, 36.0)  # TUNING (not in GDD)
+const ROW_TILE: Vector2 = Vector2(186.0, 36.0)  # TUNING (not in GDD)
 
 ## The Heretic's Bane frame (TitleFrame): band width (px), chamfer of the cut
-## corners (px), pixel scale of the corner skulls and of the mitred Chaplain
-## skull at the top centre (screen px per bitmap px).
+## corners (px), pixel scale of the corner skulls and of the Chaplain's skull
+## under its cross at the top centre (screen px per bitmap px).
 const FRAME_BAND: float = 4.0  # TUNING (not in GDD)
 ## Chamfer of the frame's cut corners (px).
 const FRAME_CHAMFER: float = 10.0  # TUNING (not in GDD)
 ## Pixel scale of the four corner skulls.
 const FRAME_CORNER_SCALE: int = 2  # TUNING (not in GDD)
-## Pixel scale of the mitred Chaplain skull at the top centre.
+## Pixel scale of the Chaplain's skull and cross at the top centre.
 const FRAME_CREST_SCALE: int = 3  # TUNING (not in GDD)
 
 

@@ -894,6 +894,8 @@ with that character, and four characters have an **achievement skin**:
 | **The Plague Doctor** | Plague Scholar | 5,000 enemies slain while Rotting (Plague Cloud; lifetime counter) |
 | **The Heretic Saint** | Fallen Confessor | 50 High Confessors slain (lifetime counter) |
 | Hyper skins: Eclipsed Gravecaller, Sunless Warden, Starless Voidcaller, Gilded Oracle, Crowned Carrion Lord, Fallen Seraph, Blighted Scholar, Final-Hour Doomsayer, Gilded Barrow King, Radiant Soulbinder, Thorn-Crowned Witch, Golden Herald | one each | clear the Sanctum on Hyper with that character |
+| **Untouchable** (ghost-white, see-through) | every character | the *Untouchable* achievement (content wave 2) |
+| **Deathlord** (black iron, crimson-jewelled gold crown) | every character | the *Deathlord's Due* achievement (content wave 2) |
 
 The selector shows one small portrait tile per skin of the selected character
 (it follows the character picker; a locked skin is dark under a padlock), and
@@ -907,7 +909,9 @@ art the school-tinted stand-in, never the Gravecaller's) is drawn with the
 skin's **palette tint**, a small emblem (crown, halo, cracked halo, gold sun corona, plague
 mask) and a faint aura ring (`SkinGlyphs`), so every skin is visible before
 its art. New unlocks are announced on the end screen (a gold *New skin: ...*
-plate). The three
+plate; a universal skin is one *Skin unlocked: ...* plate). With the two
+universal skins a character has 4-5 skin tiles, which then use a compact
+size so the row keeps its width. The three
 counters (`rot_kills`, `high_confessor_kills`, `seraphine_kills_full_army`)
 are lifetime stats in the save; unlocks are derived from them, the
 achievements and the Hyper clears, never stored separately.
@@ -1311,15 +1315,43 @@ where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.2
   its own stacking category (GDD §6.4), and with no purchases every value is 0.
 - **Achievements** (GDD §9.4, tracked over all runs): *Bone Legion* (Skeleton
   Warriors, also as Death Knights, land 1,000 killing blows), *Heretic's Bane*
-  (500 Chaplains slain), *Dread Sovereign* (slay Sir Alaric while commanding
+  (500 Chaplains slain), *Dread Sovereign* (slay any stage boss while commanding
   Warriors, Archers, Mages and a priest order: Menders, Warders or Bishops),
   *Dawn Extinguished* (slay the Sanctum's boss, Grand Inquisitor Seraphine;
-  counted from the Sanctum's stage record).
-  Their unlocks (Bone Golem, a Profane Bishop unlock, a skin, the campaign
-  epilogue) don't exist yet (the Profane Bishop is available from the start),
-  so each pays a one-time Soul Ash bounty (100 / 100 / 150 / 200) for now. Capacity upgrades that
+  counted from the Sanctum's stage record), the Act II ones and the five
+  one-run achievements below. Each pays a one-time Soul Ash bounty and gives
+  a reward (see **Achievement rewards**). Capacity upgrades that
   apply to "every class" (Legion of Bone, Grave Dominion) count the Mender
   and the Warder as two classes and the merged Bishop as one.
+- **Achievement rewards** (content wave 2; GDD §15.0 "Achievement rewards
+  (content wave 2)"): a reward is a new option or a cosmetic, never raw power
+  (the Ossuary stays the only strength). All of them are `UnlockData` rows
+  read through `Unlocks.is_open()`:
+
+  | Achievement | How you earn it | Reward |
+  | --- | --- | --- |
+  | Bone Legion | Warriors land 1,000 killing blows (lifetime) | the Bone Golem summon class, the Ivory Seer skin |
+  | Heretic's Bane | 500 Covenant Chaplains slain | title *Heretic's Bane* + a gold Chaplain-skull portrait frame |
+  | Dread Sovereign | a stage boss slain with the four roles | ultimate *Sovereign's Decree* |
+  | Dawn Extinguished | Seraphine slain | ultimate *Eclipse*, the Act I epilogue |
+  | Low Tide / Nothing Unwritten | (Act II) | Brinewalker / Iron Mind |
+  | The Dead God Serves | Vhal'Neth slain | title *Master of the Drowned*, the Act II epilogue |
+  | Mass Grave | 500 temporary undead raised in one run | ultimate *Grave Tide* |
+  | Untouchable | reach 0:00 never left below half HP by a hit | the *Untouchable* skin (ghost-white, every character) |
+  | Full Ossuary | 4 evolutions (spell or summon) in one run | title *Archnecromancer* |
+  | Deathlord's Due | a victory on Deathlord | the *Deathlord* skin (crowned, every character) |
+  | Swift Judgment | the stage boss slain within 45 s of its arrival | title *Executioner* |
+
+  **Titles** (`TitleData`) are worn under the character's name on the pre-run
+  screen (and on the victory card): the **Title** row under the skins cycles
+  None and every earned title (saved at once as Meta `[prerun] title`; its
+  line shows "2/4 · next: ..." and its tooltip how to earn each). Heretic's
+  Bane also frames the hero in gold Chaplain skulls (`TitleFrame`). The two
+  **universal skins** (`SkinData.UNIVERSAL_SKINS`) are palette variants of
+  every character, offered in every character's skin row. The end screen
+  shows "Ultimate unlocked", "Title earned" and "Skin unlocked" plates, and
+  the Codex's reward column names every achievement's reward. A save that
+  already held an achievement gets its new reward when it loads.
 - **The Codex** (main menu; GDD §10.1 "Collection / Codex" and "Achievements").
   Four tabs. **Achievements** lists every achievement and every *feat* (the
   lifetime-counter skin unlocks: The Plague Doctor, The Heretic Saint, The
@@ -1652,7 +1684,10 @@ scripts/
     game_state.gd           Autoload: CLI options (autotest), session prefs, last run summary
     save_migration.gd       First-launch copy of the Gravebound saves (the rename)
     dread_meter.gd          Act II Dread on the necromancer (game.dread): sources, kills, damage-taken mult
-    unlocks.gd              The one unlock check of Act II's spells / passives / classes (UnlockData, Meta)
+    unlocks.gd              The one unlock check of Act II's spells / passives / classes and of the
+                            achievement rewards (ultimates, titles, skins; UnlockData, Meta)
+    run_rewards.gd          One run's counters for the one-run achievements (game.rewards; read-only)
+    rewards_report.gd       The autotest's rewards line (achievements, titles, reward unlocks)
     eye_glyphs.gd           Code-drawn fallbacks of the Ancient Eye's kinds (Act II)
     harbour_ground.gd       Gullhaven's zone floors (mudflats, market, chapel, seawall)
     harbour_glyphs.gd       Gullhaven's fallback shapes: kinds, obstacles, piers, nets, anchor, Merrow
@@ -1864,6 +1899,8 @@ scripts/
                             (character, difficulty level, run modifiers, total Soul Ash plaque),
                             prerun_hero (the pre-run hero panel: the character big, walking),
                             prerun_hyper_skins (its Hyper tile and skin tiles with previews),
+                            prerun_title_row (the Title cycle row), title_frame (Heretic's Bane's
+                            gold Chaplain-skull frame, drawn on the pixel grid),
                             menu_logo (the living title logo), soul_marker (the menu's focus
                             wisps), mask_icon (small pixel icons from character masks),
                             soul_ash_icon (the Soul Ash icon: its art when present, else the glyph),
@@ -1923,7 +1960,9 @@ scripts/
     archivist_data.gd       The Archivist: phases, Recitation, Footnotes, Erasure, arrival and ending text
     verse_data.gd           Forbidden Verse's fixed rules and Marginalia's on-death sources
     dread_data.gd           Act II Dread: steps, damage taken, kill calm, Iron Mind keys, the vignette look
-    unlock_data.gd          Act II unlockable items (boss / achievement), end-screen plate headings
+    unlock_data.gd          Act II unlockable items (boss / achievement), achievement rewards
+                            (ultimate / title / skin rows), end-screen plate headings
+    title_data.gd           Titles (content wave 2): names, earning achievement, portrait frame, row texts
     sanctum_objective_data.gd      Sanctum structures: ward crystal, sacred altar
     unit_data.gd            Summon classes (and their specials), level tables, AI weights, leash/rates
     enemy_data.gd           Graveyard enemy roster, Sir Alaric, Reckoning enemy, elites
@@ -1984,7 +2023,8 @@ scripts/
     difficulty_data.gd      GDD §8.4 difficulty levels (Initiate, Necromancer, Lich, Deathlord)
     run_modifier_data.gd    GDD §8.5 run modifiers: effects and Soul Ash rewards
     hyper_data.gd           Hyper mode: growth x2, boss HP x1.5, Soul Ash +100%, unlock boss, texts
-    skin_data.gd            Per-character (CharacterData) default / Hyper / achievement skins, unlock rules,
+    skin_data.gd            Per-character (CharacterData) default / Hyper / achievement skins, the
+                            universal Untouchable / Deathlord skins, unlock rules,
                             palette fallbacks (tint, accent, glow, emblem)
     stance_data.gd          The Bone Ring: leash / recall / pull overrides, ring radii and spacing,
                             the switched-off flavour bonus
@@ -2065,7 +2105,8 @@ Options (after `--`):
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, or the Act II stages `harbour`, `archive` and `spire`. Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
-| `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. |
+| `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |
+| `--rewards=on\|off` | Content wave 2: `on` checks the five one-run achievements (Mass Grave, Untouchable, Full Ossuary, Deathlord's Due, Swift Judgment) in memory, as the game does; by default (`off`) the autotest leaves them unchecked (unless `--meta-save`), so the default summaries' bounty and Soul Ash are unchanged. Every summary ends with a `rewards` line: achievements earned this run, titles open, reward items unlocked (`ultimate:` / `title:` / `skin:`), the run counters (temporary undead raised, lowest HP before 0:00, evolutions, the boss's lifetime after arrival), the one-run achievements this run met and whether they were checked, the worn title, and the setup screen's title row built once headless. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | `--volleys=on\|off` | The bullet heaven pass (default on, like the setting): `off` runs none of the pass (no volleys, the usual fodder; the army still holds the Bone Ring). Every summary has a `volleys` line: shots fired, hits, volley damage, peak shots in flight against the cap, volleys thinned by the cap, boss hits refused by the per-volley cap, Rally Barrages, and the volley damage by class / spell. |
@@ -2073,7 +2114,7 @@ Options (after `--`):
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
 | `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |
 | `--hyper` | Hyper mode (`HyperData`: enemy HP / damage growth ×2, stage boss HP ×1.5, Soul Ash +100%), bypassing the Seraphine unlock. Every summary has a `hyper` line (on / off, the effective growth and boss HP, the 0:00 multipliers vs the standard game, the Hyper Soul Ash line, seconds survived past 0:00, the unlock and Hyper-clear state, in memory only without `--meta-save`). |
-| `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |
+| `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`, or a universal one such as `gravecaller_untouchable` / `brine_widow_deathlord`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 
 Setting the environment variable `NECROPATHY_AUTOTEST=1` (or the pre-rename `GRAVEBOUND_AUTOTEST=1`) is the same as `--autotest`.

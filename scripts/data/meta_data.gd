@@ -300,7 +300,7 @@ const ACHIEVEMENTS := {
 	# --- Content wave 2: B. Achievement rewards ---
 	# Five one-run achievements (owner-approved Proposal 2). Their lifetime
 	# counters are filled by MetaProgress.award_run() from the run's RunRewards
-	# stats: a best-run record ("best_*", compared with the goal, so the Codex
+	# counters (MetaProgress.run_counters()): a best-run record ("best_*", compared with the goal, so the Codex
 	# bar shows the best run so far) or a count of qualifying runs (goal 1).
 	"mass_grave": {"display_name": "Mass Grave", "description": "Raise 500 temporary undead in one run",
 		"stat": "best_temp_raised", "goal": 500, "run": true, "unlock": "Ultimate Grave Tide", "bounty": 150},  # owner-approved goal; bounty TUNING (not in GDD)

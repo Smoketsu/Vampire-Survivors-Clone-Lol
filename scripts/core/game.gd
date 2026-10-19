@@ -603,7 +603,6 @@ func end_run(won: bool, reason: String) -> void:
 	get_tree().paused = true
 	level_up_panel.close()
 	pause_menu.close()
-	rewards.write_stats()  # Content wave 2: the one-run achievement counters into the stats.
 	var summary := build_summary()
 	summary["soul_ash"] = Meta.award_run(summary, meta)
 	GameState.last_run_summary = summary
@@ -667,5 +666,6 @@ func build_summary() -> Dictionary:
 		"difficulty_label": difficulty.difficulty_label(),
 		"boss_id": String(boss_info.get("id", "")),
 		"skin_id": player.skin_id,
+		"run_rewards": rewards.counters(),  # Content wave 2: the one-run achievement counters (RunRewards).
 		"stats": stats.duplicate(),
 	}
