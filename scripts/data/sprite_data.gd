@@ -181,6 +181,9 @@ const HEIGHTS: Dictionary = {
 	"summons/drowned_thrall_ally": 44.0,  # TUNING (not in GDD) Call of the Drowned's Thrall (soldier tier)
 	"player/tide_widow": 56.0,  # TUNING (not in GDD) character tier: body ~48 like the necromancer, the coral crown above
 	"player/tide_widow_hyper": 58.0,  # TUNING (not in GDD) skin art: the Tide Widow's body, the taller gold coral crown above
+	# --- Content wave 2: Bone Golem ---
+	"summons/bone_golem": 80.0,  # TUNING (not in GDD) lead brief 72-80; a wide fortress block (88 wide), drawn up to x1.25 by Ossuary Hunger
+	"summons/ossuary_titan": 104.0,  # TUNING (not in GDD) its evolution, the tallest summon (Bone Colossus 100)
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

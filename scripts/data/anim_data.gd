@@ -56,6 +56,8 @@ const ANIMS: Dictionary = {
 	"vhalneth_slam": {"duration": 0.4, "fill": 1.3},  # TUNING (not in GDD) one of Vhal'Neth's arms crashing down: a ring of sea spray and foam (8 frames of 192 px; ArmKit EffectManager.impact() 0.4 s)
 	"drowned_tendrils": {"duration": 0.35, "fill": 1.3},  # TUNING (not in GDD) Call of the Drowned eruption: tendrils lashing up out of a whirlpool (8 frames of 128 px; CallOfTheDrowned ring() 0.35 s)
 	"vhalneth_gaze": {"duration": 1.4, "fill": 1.15},  # TUNING (not in GDD) Vhal'Neth's gaze opening on the ground (8 frames of 256 px; VhalnethHazards ring() = VhalnethData gaze_telegraph 1.4 s)
+	# --- Content wave 2: Bone Golem ---
+	"golem_slam": {"duration": 0.3, "fill": 1.3},  # TUNING (not in GDD) a Bone Golem slam: a ring of cracked grave dirt and bone shards (8 frames of 128 px; GolemBehavior ring() 0.3 s)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).

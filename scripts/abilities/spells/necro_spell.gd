@@ -21,6 +21,14 @@ func step(_delta: float, _stats: Dictionary) -> void:
 	pass
 
 
+## Called instead of step() while the spell is NOT learned but its node exists
+## (content wave 2: the Ossuary Titan's collapse wall lives in the Bone Wall
+## node, NecroSpellBook.bone_wall_node()). Optional override: it may only age
+## what already stands, never cast.
+func idle_step(_delta: float) -> void:
+	pass
+
+
 ## Kill hook (NecroSpellBook.on_enemy_killed, from CombatResolver's kill
 ## path while `e` is still active and in place). Optional override: the
 ## five later spells use it (Death Mark Risen); the four older spells are

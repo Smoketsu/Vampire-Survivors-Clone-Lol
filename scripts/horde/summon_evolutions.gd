@@ -355,6 +355,7 @@ func build_offer(evo: String) -> Dictionary:
 		deltas.append_array(ColossusKit.offer_lines(cur, nxt))
 		deltas.append_array(ClassPassives.evolution_lines(evo, cur, nxt))  # Hellhound / Keening Lady / Ossuary Engine.
 		deltas.append_array(SeraphTexts.evolution_lines(evo, cur, nxt))  # Act II: Seraph of Ruin.
+		deltas.append_array(GolemTexts.evolution_lines(evo, cur, nxt))  # Content wave 2: the Ossuary Titan.
 		hint = "Transforms your %s in place" % String(UnitData.UNITS[cls]["plural"]).to_lower()
 	var lvl_from := int(SummonEvolutionData.BASE_LEVEL_REQUIRED)
 	return ab._offer("evolution", evo, String(def["display_name"]), String(def["icon"]), lvl_from, lvl_from, "EVOLUTION",

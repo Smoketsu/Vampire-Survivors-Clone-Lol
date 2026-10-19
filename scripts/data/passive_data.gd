@@ -91,6 +91,13 @@
 ##                stages; unlocked by the achievement Nothing Unwritten): Dread
 ##                rises slower and, at Lv 5, kills calm it twice as fast
 ##                (DreadMeter reads its two level keys). Evolves nothing.
+## plus content wave 2's passive (owner-approved proposal 5, GDD §15.0 "Bone
+## Golem (content wave 2)"; locked until Bone Legion, UnlockData):
+##   Grave Masonry — the blockers (MASONRY_CLASSES: Warriors, Abominations,
+##                   Bone Golems and their evolutions) take less damage
+##                   (CombatResolver.damage_unit()) and hold their ground
+##                   longer: more block mass and a longer Bulwark
+##                   (HordeDirector.compute_stats(); Golems -> Ossuary Titans).
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -118,7 +125,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act II: the Hollow Archive ---
 	"marginalia", "iron_mind",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	"abyssal_pact", "crushing_depths"]
+	"abyssal_pact", "crushing_depths",
+	# --- Content wave 2: Bone Golem ---
+	"grave_masonry"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -128,7 +137,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act II: Fallen Seraph ---
 	"fallen_grace",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	"crushing_depths"]
+	"crushing_depths",
+	# --- Content wave 2: Bone Golem ---
+	"grave_masonry"]
 
 ## Blood Scent: a summon class is "fast" (and gets the passive) when its
 ## UnitData base move_speed is at least this (px/s): Bone Hounds 122, Grave
@@ -139,7 +150,9 @@ const FAST_SUMMON_SPEED: float = 95.0  # TUNING (not in GDD) owner brief: "defin
 ## damage for its bonus (the strike sources are CombatResolver.
 ## is_minion_source(); these ticks are left out of crits and suppression
 ## like the Rogue bleed, but a siege bonus applies to them too).
-const MINION_DOT_SOURCES := ["rogue_bleed", "hellhound_burn", "hellhound_trail", "ossuary_shards"]
+const MINION_DOT_SOURCES := ["rogue_bleed", "hellhound_burn", "hellhound_trail", "ossuary_shards",
+	# --- Content wave 2: Bone Golem --- (the Ossuary Titan's collapse wall spikes)
+	"titan_wall"]
 ## Passives that only help shadow spells (a "dead" card while no spell is owned).
 const SPELL_PASSIVES := ["soul_conduit", "abyssal_focus"]
 
@@ -168,7 +181,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Act II: Fallen Seraph --- (SeraphBehavior dive impact, SeraphFeathers ring)
 	"seraph_dive", "seraph_feathers",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	"deep_grasp", "leviathan_sweep"]
+	"deep_grasp", "leviathan_sweep",
+	# --- Content wave 2: Bone Golem --- (the slam's splash, GolemBehavior)
+	"golem_slam"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -221,6 +236,12 @@ const SALT_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
 ## Brinewalker: the passive level from which it also helps the summons
 ## (owner-approved "and summons from Lv 3").
 const BRINEWALKER_SUMMON_LEVEL: int = 3  # owner-approved
+# --- Content wave 2: Bone Golem ---
+## Grave Masonry: the blocker classes it protects (UnitData ids; their
+## evolutions keep the class id: Death Knight, Bone Colossus, Ossuary Titan).
+## Read by CombatResolver.damage_unit() (blocker_reduction) and
+## HordeDirector.compute_stats() (hold_bonus).
+const MASONRY_CLASSES := ["warrior", "abomination", "bone_golem"]  # Owner-approved proposal 5
 
 ## Passive definitions.
 ##   display_name — UI name.
@@ -292,6 +313,11 @@ const BRINEWALKER_SUMMON_LEVEL: int = 3  # owner-approved
 ##   water_slow_cut     — share (0..1) of a water / ink slow on the
 ##                        necromancer removed (Brinewalker; 1 = none), and on
 ##                        summons from BRINEWALKER_SUMMON_LEVEL.
+##   blocker_reduction  — -% damage the MASONRY_CLASSES take (Grave Masonry;
+##                        its own category in CombatResolver.damage_unit()).
+##   hold_bonus         — +% block mass of the MASONRY_CLASSES and +% Bulwark
+##                        plant time of the Bone Golem (Grave Masonry; after
+##                        the evolution overlay in compute_stats()).
 ##   act                — (optional) the only campaign act whose stages offer
 ##                        the card (Unlocks.act_allows()).
 const PASSIVES := {
@@ -721,6 +747,26 @@ const PASSIVES := {
 			{"held_damage": 0.24},  # TUNING (not in GDD)
 			{"held_damage": 0.32},  # TUNING (not in GDD)
 			{"held_damage": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# --- Content wave 2: Bone Golem ---
+	# Grave Masonry (owner-approved proposal 5; locked with the Golem until the
+	# Bone Legion achievement, UnlockData): the blockers (MASONRY_CLASSES) take
+	# less damage and hold their ground longer. Pairs with the Bone Golem ->
+	# Ossuary Titan.
+	"grave_masonry": {
+		"display_name": "Grave Masonry",  # Owner-approved proposal 5
+		"icon": "grave_masonry",
+		"description": "Your Warriors, Abominations and Golems take less damage and hold their ground longer.",
+		"labels": {"blocker_reduction": ["Blocker damage taken", "neg_pct"], "hold_bonus": ["Blocker hold (mass, Bulwark time)", "pct"]},
+		"classes": MASONRY_CLASSES,  # A dead card while none of them is owned.
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"blocker_reduction": 0.05, "hold_bonus": 0.10},  # TUNING (not in GDD)
+			{"blocker_reduction": 0.08, "hold_bonus": 0.15},  # TUNING (not in GDD)
+			{"blocker_reduction": 0.11, "hold_bonus": 0.20},  # TUNING (not in GDD)
+			{"blocker_reduction": 0.14, "hold_bonus": 0.25},  # TUNING (not in GDD)
+			{"blocker_reduction": 0.18, "hold_bonus": 0.30},  # TUNING (not in GDD)
 		],
 	},
 }

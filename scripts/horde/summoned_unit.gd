@@ -48,7 +48,8 @@ var director: HordeDirector
 var game: Game
 ## Class id (UnitData.CLASS_ORDER): "warrior" | "archer" | "mage" | "mender" |
 ## "warder" | "bishop" | "abomination" | "rogue" | "gargoyle" | "frost_wraith" |
-## "bone_hound" | "banshee" | "corpse_catapult" | "fallen_seraph" (Act II).
+## "bone_hound" | "banshee" | "corpse_catapult" | "fallen_seraph" (Act II) |
+## "spawn_of_the_deep" (Act II) | "bone_golem" (content wave 2).
 var unit_class: String = ""
 ## True while alive in the world (false = pooled).
 var active: bool = false
@@ -91,6 +92,10 @@ var soft_recall: float = UnitData.SOFT_RECALL
 ## Speed multiplier while RETURNING: UnitData.RETURN_SPEED_MULT, raised by
 ## Bound Souls (shorter return time).
 var return_speed_mult: float = UnitData.RETURN_SPEED_MULT
+## Speed multiplier while FOLLOWING far from its formation post:
+## UnitData.CATCHUP_SPEED_MULT, x the class's rejoin_speed_mult (content wave
+## 2: the Bone Golem; 1 for every other class).
+var catchup_mult: float = UnitData.CATCHUP_SPEED_MULT
 ## Body radius in px.
 var radius: float = 10.0
 ## Inner edge of this class's formation band (px from player).
@@ -402,6 +407,7 @@ func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
 	engage_radius = float(stats.get("engage_radius", UnitData.ENGAGE_RADIUS))
 	soft_recall = float(stats.get("soft_recall", UnitData.SOFT_RECALL))
 	return_speed_mult = float(stats.get("return_speed_mult", UnitData.RETURN_SPEED_MULT))
+	catchup_mult = float(stats.get("catchup_mult", UnitData.CATCHUP_SPEED_MULT))
 	radius = stats["radius"]
 	band_min = stats["band_min"]
 	band_max = stats["band_max"]
@@ -447,6 +453,8 @@ func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
 	_wv = w["tactical"]
 	_wc = w["cluster"]
 	_wo = w["overkill"]
+	if behavior != null:
+		behavior.adjust_stats(self)  # Per-unit kit stats (Bone Golem growth / Bulwark; no-op elsewhere).
 	if preserve_pct:
 		hp = max_hp * frac
 	if motion != null:
@@ -697,7 +705,7 @@ func _can_shield_player() -> bool:
 func _check_stall(player_pos: Vector2) -> bool:
 	var moving := state == State.RETURNING or (state == State.FOLLOWING \
 			and position.distance_to(player_pos + anchor_offset) > UnitData.STALL_MIN_GAP)  # Trying to get somewhere.
-	if not moving:
+	if not moving or (behavior != null and behavior.rooted()):  # A rooted Bulwark stands on purpose.
 		_stall_since = -1.0
 		return false
 	if _stall_since < 0.0 or position.distance_to(_stall_pos) > UnitData.STALL_DISTANCE:
@@ -974,8 +982,8 @@ func _step_compelled(_delta: float) -> bool:
 ## along the obstacle), so there is no separate obstacle term here. Holy
 ## ground slows the unit.
 func _step_movement(delta: float) -> void:
-	if held_until > game.elapsed:
-		velocity = Vector2.ZERO  # Held in place (a Netcaster's net).
+	if held_until > game.elapsed or (behavior != null and behavior.rooted()):
+		velocity = Vector2.ZERO  # Held in place (a Netcaster's net, a Bone Golem's Bulwark).
 		return
 	var player_pos := game.player.position
 	var anchor := player_pos + anchor_offset
@@ -985,7 +993,7 @@ func _step_movement(delta: float) -> void:
 		State.FOLLOWING, State.ACQUIRING:
 			desired = _arrive(anchor)
 			if position.distance_to(anchor) > UnitData.CATCHUP_DISTANCE:
-				speed *= UnitData.CATCHUP_SPEED_MULT
+				speed *= catchup_mult
 		State.RETURNING:
 			desired = (anchor - position).normalized()
 			speed *= return_speed_mult

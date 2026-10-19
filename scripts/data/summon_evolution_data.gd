@@ -28,6 +28,9 @@
 ##   Fallen Seraph Lv 5    + Fallen Grace Lv 5        = Seraph of Ruin
 ##       (Act II, GDD §15.0 "Fallen Seraph"; chained dives and a second,
 ##       wider feather ring through special_set, read by SeraphBehavior)
+##   Bone Golem Lv 5       + Grave Masonry Lv 5       = Ossuary Titan
+##       (content wave 2, GDD §15.0 "Bone Golem (content wave 2)"; heals and
+##       shields from absorbed bones, falls into a bone wall: GolemKit)
 ## Owner rule: every evolution, spell or summon, needs its paired passive at
 ## Lv 5 (EvolutionData.PASSIVE_LEVEL_REQUIRED); `passive_level` below is 5
 ## for every recipe.
@@ -58,7 +61,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act II: Fallen Seraph ---
 	"ruin_seraph",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	"leviathan"]
+	"leviathan",
+	# --- Content wave 2: Bone Golem ---
+	"ossuary_titan"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -615,6 +620,54 @@ const EVOLUTIONS := {
 			"sweep_radius": 80.0,  # TUNING (not in GDD) px around the Leviathan
 			"sweep_fraction": 2.0,  # TUNING (not in GDD) sweep damage = this x one squeeze
 			"sweep_knockback": 180.0,  # TUNING (not in GDD) px/s impulse, divided by enemy mass
+		},
+	},
+	# --- Content wave 2: Bone Golem ---
+	# Ossuary Titan (owner-approved proposal 5): Bone Golem Lv 5 + Grave
+	# Masonry Lv 5 (a NEW passive, owner rule). The Golem's kit stays
+	# (GolemBehavior: slam, Bulwark, Ossuary Hunger); GolemKit reads these
+	# special_set keys (final, not suffix-scaled):
+	#   absorb_heal      — fraction of its max HP an absorbed body heals,
+	#   barrier_amount   — barrier HP every other summon within barrier_reach px
+	#                      gets on an absorb (the Warder's barrier path:
+	#                      SummonAbilities.grant_barrier(), the stronger wins),
+	#   barrier_cooldown — s between those barriers from one Titan,
+	#   wall_segments    — Bone Wall segments it collapses into when it falls
+	#                      (BoneWall.raise_wall(); fewer if obstacles are in the way),
+	#   wall_duration    — s that wall stands,
+	#   wall_damage      — spike damage per wall tick as a fraction of its damage
+	#                      (source "titan_wall").
+	# Body and blocking ring grow together (the Bone Colossus's 4 px reach gap);
+	# its 19 px body equals UnitData.MAX_BLOCK_RADIUS.
+	"ossuary_titan": {
+		"mode": "transform",
+		"bases": ["bone_golem"],
+		"passive": "grave_masonry",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Ossuary Titan",  # Owner-approved proposal 5
+		"plural": "Ossuary Titans",
+		"icon": "ossuary_titan",
+		"description": "Titans heal on the bones they absorb, shield the army around them and fall as a wall of bone.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD) the slam
+		},
+		"set": {
+			"radius": 19.0,  # TUNING (not in GDD) golems are 18 (= UnitData.MAX_BLOCK_RADIUS)
+			"block_radius": 23.0,  # TUNING (not in GDD) golems are 22; same 4 px reach gap
+			"block_mass": 12.0,  # TUNING (not in GDD) golems are 10
+		},
+		"special_mult": {
+			"slam_radius": 1.25,  # TUNING (not in GDD) a wider slam
+		},
+		"special_set": {
+			"absorb_heal": 0.08,  # TUNING (not in GDD) 8% of its max HP per absorbed body
+			"barrier_amount": 18.0,  # TUNING (not in GDD) barrier HP (a Warder's is 12, a Bishop's 16)
+			"barrier_reach": 110.0,  # TUNING (not in GDD) px around the Titan
+			"barrier_cooldown": 2.0,  # TUNING (not in GDD) s between barrier waves from one Titan
+			"wall_segments": 7,  # TUNING (not in GDD) about 100 px of wall (GraveSpellData.BONE_WALL_SPACING 16)
+			"wall_duration": 6.0,  # Owner-approved proposal: a bone wall for 6 s
+			"wall_damage": 0.3,  # TUNING (not in GDD) spike damage per tick, x its slam damage
 		},
 	},
 }

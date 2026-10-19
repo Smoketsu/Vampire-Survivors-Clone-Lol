@@ -79,6 +79,8 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 			return WarbandGlyphs.draw_summon(ci, kind, o, r, flash)
 		"fallen_seraph", "ruin_seraph":
 			return SeraphGlyphs.draw_summon(ci, kind, o, r, flash)  # Act II: the Fallen Seraph.
+		"bone_golem", "ossuary_titan":
+			return GolemGlyphs.draw_summon(ci, kind, o, r, flash)  # Content wave 2: the Bone Golem.
 		_:
 			return SpireGlyphs.draw_summon(ci, kind, o, r, flash)  # Act II: Ul-Thalos summons (false when unknown).
 	return true
@@ -136,6 +138,8 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, s: float) -> boo
 			return WarbandGlyphs.draw_icon(ci, kind, c, s)  # The newest classes, evolutions and passives.
 		"fallen_seraph", "ruin_seraph", "fallen_grace":
 			return SeraphGlyphs.draw_icon(ci, kind, c, s)  # Act II: the Fallen Seraph, her evolution and passive.
+		"bone_golem", "ossuary_titan", "grave_masonry", "syn_charnel_house":
+			return GolemGlyphs.draw_icon(ci, kind, c, s)  # Content wave 2: the Golem, Titan, passive and synergy.
 		_:
 			return false
 	return true

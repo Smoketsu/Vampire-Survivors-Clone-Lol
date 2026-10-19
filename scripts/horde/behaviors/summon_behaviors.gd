@@ -9,6 +9,7 @@
 ##   "barrage" Corpse Catapult    CatapultBehavior
 ##   "dive"   Fallen Seraph       SeraphBehavior (Act II)
 ##   "grasp"  Spawn of the Deep   DeepSpawnBehavior (Act II, Ul-Thalos)
+##   "bulwark" Bone Golem         GolemBehavior (content wave 2)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -45,6 +46,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 			b = SeraphBehavior.new()
 		"grasp":
 			b = DeepSpawnBehavior.new()  # Act II: the Spawn of the Deep.
+		# --- Content wave 2: Bone Golem ---
+		"bulwark":
+			b = GolemBehavior.new()
 	if b != null:
 		b.kind = kind
 	return b
@@ -126,6 +130,9 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 				_delta(out, "Squeeze damage", a, b, "grasp_damage")
 				_delta(out, "Hold time (s)", a, b, "grasp_duration")
 				_delta(out, "Grasp cooldown (s)", a, b, "grasp_cooldown")
+		# --- Content wave 2: Bone Golem ---
+		"bulwark":
+			GolemTexts.class_lines(out, a, b, nxt)
 	return out
 
 

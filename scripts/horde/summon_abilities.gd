@@ -11,6 +11,8 @@
 ##                       in its aura and damages every enemy in it.
 ##   after_melee()       Death Knight: cleave around the struck enemy, then
 ##                       life drain from all the damage dealt.
+##   grant_barrier()     the barrier rule for other casters (content wave 2:
+##                       the Ossuary Titan).
 ## All damage and healing goes through CombatResolver. Statistics use the
 ## unit's dmg_source tag: heal_by_<tag>, shield_by_<tag> and the damage
 ## sources ("death_knight_cleave", "bishop_aura"...).
@@ -58,6 +60,19 @@ static func try_ally_barrier(u: SummonedUnit) -> void:
 	game.effects.beam(u.position, best.position, Palette.COLD_BLUE)
 	game.stat_add("ally_barriers", 1.0)
 	game.stat_add("shield_by_" + u.dmg_source, gained)
+
+
+## The Warder's barrier rule for any other caster (content wave 2: the Ossuary
+## Titan's absorb barrier, GolemKit): raises `a`'s barrier to `amount` HP when
+## that is stronger (no stacking, the stronger barrier wins; absorbed in
+## CombatResolver.damage_unit()). Returns the barrier HP added (0 = none).
+static func grant_barrier(a: SummonedUnit, amount: float) -> float:
+	if not a.active or amount <= a.barrier_hp:
+		return 0.0
+	var gained := amount - a.barrier_hp  # Barrier HP actually added.
+	a.barrier_hp = amount
+	a.queue_redraw()
+	return gained
 
 
 ## Profane Bishop aura pulse: heals every living ally and the necromancer

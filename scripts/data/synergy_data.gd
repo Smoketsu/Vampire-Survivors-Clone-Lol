@@ -15,6 +15,9 @@
 ##   Requiem               (Banshee + Mages)                mage explosions hit weakened foes harder, stretch the Dirge
 ##   Baying of the Damned  (Banshee + Bone Hounds)          every Dirge sends the pack into a short frenzy
 ##   The Charnel Menagerie (any 4 of the 7 newer classes)   the newer classes deal more damage, replenish faster
+## and content wave 2's pair (owner-approved proposal 5; the Bone Golem also
+## joins NEWER_CLASSES, so it counts toward the Menagerie):
+##   Charnel House         (Bone Golem + Abomination)       slams mark foes; stomps hit slammed foes harder
 ## Evolved forms keep their class id, so they count (and finish) as their
 ## class (Bone Colossus, Cathedral Horror, Winter Revenant, Keening Lady,
 ## Shadow Reaper, Hellhound, Ossuary Engine; Death Knight, Lich).
@@ -54,12 +57,16 @@ const BANNER_TIME: float = 3.5  # TUNING (not in GDD)
 ## newer classes, then the capstone.
 const ORDER := ["shieldwall", "volley", "deathless", "unholy_host",
 		"flesh_rampart", "killing_field", "death_from_above", "wild_hunt",
-		"cold_blood", "shatterfall", "requiem", "baying", "charnel_menagerie"]
+		"cold_blood", "shatterfall", "requiem", "baying", "charnel_menagerie",
+		# --- Content wave 2: Bone Golem ---
+		"charnel_house"]
 
 ## The seven newer summon classes (UnitData ids): the classes the Charnel
 ## Menagerie counts and whose damage and replenishment it raises.
 const NEWER_CLASSES := ["abomination", "rogue", "gargoyle", "frost_wraith",
-		"bone_hound", "banshee", "corpse_catapult"]
+		"bone_hound", "banshee", "corpse_catapult",
+		# --- Content wave 2: Bone Golem --- (owner-approved: it counts toward the Menagerie)
+		"bone_golem"]
 ## Seconds an Abomination (or Bone Colossus) stomp leaves a foe "staggered"
 ## (Flesh Rampart, Killing Field; Enemy.staggered_until).
 const STAGGER_DURATION: float = 4.0  # TUNING (not in GDD) proposal 2.5; pair screens: 2/3 of the 6 s stomp cooldown
@@ -69,6 +76,10 @@ const SWOOPED_DURATION: float = 5.0  # TUNING (not in GDD) proposal 3.0; pair sc
 ## Share (0..1) of a mark bonus the stage boss takes (owner decision: half;
 ## minibosses and elites take the full bonus).
 const BOSS_MARK_MULT: float = 0.5  # TUNING (not in GDD) owner decision
+# --- Content wave 2: Bone Golem ---
+## Seconds a Bone Golem (or Ossuary Titan) slam leaves a foe "slammed"
+## (Charnel House; Enemy.slammed_until).
+const SLAM_MARK_DURATION: float = 4.0  # TUNING (not in GDD) about two slams; like the 4 s stagger
 ## Damage-source tag (CombatResolver.damage_enemy `source`) -> the summon
 ## class it belongs to, for the mark bonuses and the Charnel Menagerie. Only
 ## the classes these synergies name are listed: a class's basic attack (its
@@ -92,6 +103,8 @@ const SOURCE_CLASS := {
 	"banshee": "banshee", "keening_lady": "banshee",
 	"corpse_catapult": "corpse_catapult", "ossuary_engine": "corpse_catapult",
 	"ossuary_shards": "corpse_catapult",
+	# --- Content wave 2: Bone Golem ---
+	"bone_golem": "bone_golem", "ossuary_titan": "bone_golem", "golem_slam": "bone_golem", "titan_wall": "bone_golem",
 }
 ## The boulder sources (a Corpse Catapult's and an Ossuary Engine's splash):
 ## Killing Field and Shatterfall raise these only, not the shard fields.
@@ -114,7 +127,8 @@ const MAGE_SOURCES := ["mage", "lich"]
 ##   mark         — optional (the newer pairs): the foe state the finisher
 ##                  cashes in: "staggered" (Enemy.staggered_until),
 ##                  "swooped" (Enemy.swooped_until), "chilled" (chilled or
-##                  Deep-Frozen), "frozen" (Deep-Frozen takes `bonus`, only
+##                  Deep-Frozen), "slammed" (Enemy.slammed_until, a Bone
+##                  Golem slam), "frozen" (Deep-Frozen takes `bonus`, only
 ##                  chilled takes `bonus_chilled`), "weakened" (the Dirge,
 ##                  Enemy.weaken_until) or "dirge" (no hit bonus: Baying).
 ##   finisher     — optional: the class (a SOURCE_CLASS value) whose hits
@@ -308,5 +322,19 @@ const SYNERGIES := {
 		"damage": 0.10,  # TUNING (not in GDD) owner-approved proposal
 		## Replenishment speed bonus of the newer classes (+20%: interval / 1.2), its own category.
 		"replenish_speed": 0.20,  # TUNING (not in GDD) owner-approved proposal
+	},
+	# --- Content wave 2: Bone Golem ---
+	"charnel_house": {
+		"display_name": "Charnel House",  # Owner-approved proposal 5
+		"short_name": "Charnel House",
+		"icon": "syn_charnel_house",
+		"description": "Golem slams mark foes; Abomination stomps hit marked foes harder.",
+		"requires": ["bone_golem", "abomination"],
+		"distinct": 0,
+		"mark": "slammed",
+		"finisher": "abomination",
+		"sources": ["abom_stomp"],
+		## Extra Abomination / Bone Colossus stomp damage on a slammed foe (+50%).
+		"bonus": 0.50,  # TUNING (not in GDD) like Killing Field's boulders (one stomp every 6 s)
 	},
 }

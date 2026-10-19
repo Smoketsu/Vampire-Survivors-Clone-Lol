@@ -86,6 +86,8 @@ func step(delta: float) -> void:
 	var ab := game.abilities  # The owning AbilityManager.
 	for id: String in IDS:
 		if ab.spell_level(id) <= 0:
+			if nodes.has(id):
+				(nodes[id] as NecroSpell).idle_step(delta)  # Content wave 2: a Titan's wall without the spell.
 			continue
 		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
 		if node == null:
@@ -98,6 +100,17 @@ func step(delta: float) -> void:
 		if node == null:
 			node = _create(id)
 		node.step(delta, ab.spell_stats(id))
+
+
+## Content wave 2: the Bone Wall node, created when missing (the Ossuary
+## Titan's collapse wall reuses its segment system, BoneWall.raise_wall(),
+## also when the spell was never learned: the node then only ages its walls,
+## NecroSpell.idle_step(), and after_physics() still pushes enemies out).
+func bone_wall_node() -> BoneWall:
+	var node: BoneWall = nodes.get("bone_wall")  # Existing node, or null.
+	if node == null:
+		node = _create("bone_wall") as BoneWall
+	return node
 
 
 ## Builds the node of spell `id` and adds it as a child (world space).

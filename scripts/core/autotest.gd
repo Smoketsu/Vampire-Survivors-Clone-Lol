@@ -1137,6 +1137,8 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] class passives: %s" % ClassPassives.summary_line(game))
 	if SeraphTexts.used(game):
 		print("[autotest] fallen seraph: %s" % SeraphTexts.summary_line(game))  # Act II: only in runs that had her.
+	if GolemTexts.used(game):
+		print("[autotest] bone golem: %s" % GolemTexts.summary_line(game))  # Content wave 2: only in runs with the Golem or Grave Masonry.
 	var syn := game.horde.synergies
 	print("[autotest] synergies active at end: %s | activations: %s" % [
 		", ".join(syn.active_ids()) if not syn.active_ids().is_empty() else "none",
@@ -1305,6 +1307,8 @@ func _print_summon_evolutions(st: Dictionary) -> void:
 		tags[tag] = ClassPassives.EXTRA_TAGS[tag]  # Hellhound burn / trail, Ossuary Engine shards.
 	tags[SeraphBehavior.SRC_DIVE] = SeraphTexts.CLASS_ID  # Act II: the Fallen Seraph's dive ...
 	tags[SeraphBehavior.SRC_FEATHERS] = SeraphTexts.CLASS_ID  # ... and feather rings.
+	tags[GolemBehavior.SLAM_SOURCE] = GolemKit.CLASS_ID  # Content wave 2: the Golem's slam splash ...
+	tags[GolemKit.WALL_SOURCE] = GolemKit.CLASS_ID  # ... and the Titan's collapse wall.
 	var by_src := PackedStringArray()  # "tag=dmg/heal/shield" per source.
 	var by_cls := {}  # Base class -> [dmg, heal, shield].
 	for tag: String in tags:

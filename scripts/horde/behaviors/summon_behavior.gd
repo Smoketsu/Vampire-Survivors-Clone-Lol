@@ -24,6 +24,9 @@
 ##   draw_under(u) / body_lift(u)  telegraphs / shadow and the drawn height.
 ##   draw_over(u, ci)    overlays drawn after the body on `ci`, the unit's
 ##                       overlay layer (Cathedral Horror stone).
+##   adjust_stats(u) / rooted() / taunt_reach(u)  per-unit stats after
+##                       apply_stats(), a root without CASTING, a taunt
+##                       (content wave 2: the Bone Golem).
 ##
 ## Determinism (CLAUDE.md): only the seeded global RNG, never instance ids.
 class_name SummonBehavior
@@ -137,6 +140,27 @@ func draw_over(_u: SummonedUnit, _ci: CanvasItem) -> void:
 
 ## Height in px the body is drawn above its ground position.
 func body_lift(_u: SummonedUnit) -> float:
+	return 0.0
+
+
+# --- Content wave 2: Bone Golem (generic hooks; no-ops for every other class) ---
+
+## Per-unit stat adjustment at the end of SummonedUnit.apply_stats(), after
+## the director's effective stats were copied (Bone Golem: Ossuary Hunger's max
+## HP growth and the Bulwark's block mass). Must change nothing once reset.
+func adjust_stats(_u: SummonedUnit) -> void:
+	pass
+
+
+## True while the special roots the unit in place without CASTING: it cannot
+## walk, but it still thinks and attacks (Bone Golem Bulwark).
+func rooted() -> bool:
+	return false
+
+
+## Taunt reach in px the unit has right now (ColossusKit.refresh(); Bone
+## Golem Bulwark); 0 = none.
+func taunt_reach(_u: SummonedUnit) -> float:
 	return 0.0
 
 
