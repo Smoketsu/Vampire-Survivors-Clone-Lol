@@ -2,8 +2,11 @@
 shown next to its round 1 version with the owner's note, plus the round 1 images left unmarked. Marks go in the
 db collection act3_art_r2.
 
-Usage: python3 docs/act3/tools/make_act3_review_r2.py <round 1 marks dir> <out.html>
-  <round 1 marks dir>: the JSON files of an ArtifactData `list` of act3_art_r1 with `out_dir` (one per review id).
+Usage: python3 docs/act3/tools/make_act3_review_r2.py <previous marks dir> <out.html> [<before rev> <round>]
+  <previous marks dir>: the JSON files of an ArtifactData `list` of the previous round's collection with `out_dir`
+  (one per review id). <before rev> (default 51abf8a) is the commit holding the previous round's images; <round>
+  (default 2) names the collection act3_art_r<round>. From round 3 on, only the flagged images are shown (the
+  unmarked group is a round 2 catch-up).
 Run from the repository root on the merged `integration` tree.
 """
 import glob
@@ -41,7 +44,7 @@ def card(key: str, group: str, what: str, note: str, before: bytes | None) -> st
     w, h = Image.open(io.BytesIO(now)).size
     frames = r1.frames_of(key, w, h)
     s = r1.scale_for(key, w, h, frames)
-    stage = fig(now, "Now", "now", s, key) + (fig(before, "Round 1", "was", s, key) if before else "")
+    stage = fig(now, "Now", "now", s, key) + (fig(before, "Before", "was", s, key) if before else "")
     kind = ("walk strip" if key.endswith("_walk") else "idle strip" if key.endswith("_idle") else
             "effect strip" if frames > 1 else "icon" if key.startswith("icons/") else "floor tile" if key.startswith("tiles/")
             else "still")
@@ -67,7 +70,12 @@ def card(key: str, group: str, what: str, note: str, before: bytes | None) -> st
 
 
 def main() -> None:
+    global BEFORE_REV, COLLECTION
     marks_dir, out = sys.argv[1], sys.argv[2]
+    rnd = int(sys.argv[4]) if len(sys.argv) > 4 else 2  # Review round this page is.
+    if len(sys.argv) > 3:
+        BEFORE_REV = sys.argv[3]
+    COLLECTION = "act3_art_r%d" % rnd
     marks = {}  # Round 1 review id -> {verdict, note}.
     for f in glob.glob(os.path.join(marks_dir, "*.json")):
         d = json.load(open(f))
@@ -82,13 +90,13 @@ def main() -> None:
         all_now.update(r1.added(rev))
     all_now = {k.replace("obstacles/cargo_crate", "obstacles/citadel_crate") if k.startswith("obstacles/cargo_crate")
                and not os.path.exists(os.path.join("assets/sprites", k + ".png")) else k for k in all_now}
-    for k in sorted(all_now, key=r1.order):
+    for k in sorted(all_now, key=r1.order) if rnd == 2 else []:
         if k.replace("/", "__") not in marks and os.path.exists(os.path.join("assets/sprites", k + ".png")):
             unmarked.append(k)
     redo.sort(key=r1.order)
     note_of = {k: (marks[k.replace("/", "__")].get("note") or "").strip() for k in redo}
     groups = [
-        ("redo", "Redone", "The images you flagged, new next to round 1. Strips animate both.",
+        ("redo", "Redone", "The images you flagged, new next to the last round. Strips animate both.",
          [card(k, "redo", r1.describe(k, rows), note_of[k], old(k)) for k in redo]),
         ("unmarked", "Not marked yet", "These had no mark in round 1. They are unchanged.",
          [card(k, "unmarked", r1.describe(k, rows), "", None) for k in unmarked]),
@@ -102,8 +110,8 @@ def main() -> None:
     page = open(r1.TEMPLATE, encoding="utf-8").read()
     page = (page.replace("<title>Act II Art Review</title>", "<title>Act III Art Review</title>")
             .replace("<h1>Act II Art Review</h1>", "<h1>Act III Art Review</h1>")
-            .replace("{{LEDE}}", "Round 2: the %d images you flagged, redone next to their round 1 version, and the %d you "
-                     "had not marked yet. Mark each one OK or Redo." % (len(redo), len(unmarked)))
+            .replace("{{LEDE}}", ("Round %d: the %d images you flagged, redone next to their round %d version" % (rnd, len(redo), rnd - 1))
+                     + (", and the %d you had not marked yet" % len(unmarked) if unmarked else "") + ". Mark each one OK or Redo.")
             .replace("{{COLLECTION}}", json.dumps(COLLECTION))
             .replace("{{NAV}}", "".join('<a href="#%s">%s</a>' % (g, l) for g, l, _, _ in groups))
             .replace("{{CARDS}}", "\n".join(parts)).replace("{{TOTAL}}", str(total))
