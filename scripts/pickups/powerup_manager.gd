@@ -241,7 +241,7 @@ func collect(kind: String, pos: Vector2) -> void:
 ## elite_hp_fraction of their current HP, the boss boss_max_hp_fraction of
 ## his max HP. Reckoning enemies are immune.
 func _soul_nova(def: Dictionary) -> void:
-	var half := game.view_size() * 0.5 + Vector2.ONE * float(def["screen_margin"])  # Half-extent of the hit area.
+	var half := game.gameplay_view_size() * 0.5 + Vector2.ONE * float(def["screen_margin"])  # Half-extent of the hit area (co-op: one fixed size).
 	var area := Rect2(game.player.position - half, half * 2.0)  # Visible world rect.
 	var kills_before := game.kills  # To count the Nova's kills.
 	for e in game.enemies.active:

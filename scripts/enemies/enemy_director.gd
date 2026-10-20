@@ -720,7 +720,7 @@ func _reckoning_wave_here(r: Dictionary) -> void:
 
 ## Radius (px) of the off-screen spawn ring around the player.
 func _ring_radius() -> float:
-	return game.view_size().length() * 0.5 + WaveData.SPAWN_MARGIN
+	return game.gameplay_view_size().length() * 0.5 + WaveData.SPAWN_MARGIN  # Co-op: one fixed size on every machine.
 
 
 ## Point on the spawn ring at `angle`.

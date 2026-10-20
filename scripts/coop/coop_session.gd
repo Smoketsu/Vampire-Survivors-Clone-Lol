@@ -69,6 +69,9 @@ var level_rounds: int = 0
 var peak_enemies: int = 0
 ## True once the --coop-down test knocked slot 1 down.
 var _test_down_done: bool = false
+## The online lockstep driver (CoopLockstep; null in the one-process
+## --coop-bot run, where both slots are bots and nothing travels).
+var lockstep: CoopLockstep = null
 
 
 ## Builds the session for loadouts `loadouts` (one Dictionary per slot, see
@@ -124,7 +127,7 @@ func adopt_slot0() -> void:
 	s.volleys = game.volleys
 	s.dread = game.dread
 	s.rewards = game.rewards
-	s.bot = game.autotest
+	s.bot = game.autotest if lockstep == null else null  # Online: no slot bot (each machine's bot sends its inputs; a takeover bot comes with a drop).
 	s.powerup_timers = game.powerups.timers
 	_finish_slot(s)
 	bound = 0
@@ -200,6 +203,12 @@ func _finish_slot(s: CoopSlot) -> void:
 	s.player.character_id = s.character.id
 	s.player.dash = s.grave_step
 	s.grave_step.who = s.player
+
+
+## The ultimate slot `i` casts (Game._ready builds slot 0's with it: on the
+## guest's machine the host's choice, never a lock check of the local save).
+func ultimate_for(i: int) -> String:
+	return _resolve_ultimate(slots[i])
 
 
 ## The ultimate slot `s` casts: its loadout's ultimate_id when known (the
@@ -631,8 +640,9 @@ func _bot_pick(s: CoopSlot) -> void:
 
 
 ## A treasure chest collected at `pos` by the bound slot: its rewards follow
-## that player's build and apply at once (no pause in co-op: the reveal would
-## freeze both machines; the opener's screen shows it, the next milestone).
+## that player's build and apply at once. Online (lockstep) the opener's screen
+## then shows the reveal and the run waits for his confirm on both machines
+## (CoopLockstep.on_chest_opened()); the --coop-bot run never waits.
 func open_chest(pos: Vector2) -> void:
 	var s := slots[bound]
 	var count := game.chests.roll_count()
@@ -644,6 +654,8 @@ func open_chest(pos: Vector2) -> void:
 		if String(o["kind"]) == "evolution":
 			game.effects.burst(Vector2.ZERO, AnimData.EVOLUTION_RADIUS, "evolution", game.player)
 			break
+	if lockstep != null:
+		lockstep.on_chest_opened(s.index, rewards, count)  # Online: the opener's reveal holds both (CoopLockstep).
 
 
 ## A kill was dealt while the bound slot acted (CombatResolver._kill_enemy()).
@@ -663,7 +675,7 @@ func print_report() -> void:
 		var picks := ab.pick_history
 		var tail := picks.slice(maxi(0, picks.size() - 10))  # Last picks (the full list is long).
 		print("[autotest] coop slot %d (%s, %s, policy %s): level %d | kills %d | min HP before 0:00 %d / %d | downs %d (%.0f s down), revives given %d | army %d alive, peak %d | chests %d | evolutions: %s | picks %d (last: %s)" % [
-			s.index, s.display_name, s.character.id, s.bot.policy() if s.bot != null else "human",
+			s.index, s.display_name, s.character.id, "net" if lockstep != null else (s.bot.policy() if s.bot != null else "human"),
 			game.level, s.kills, int(s.min_hp), int(s.player.max_hp), s.downs, s.downed_time, s.revives_given,
 			s.horde.units.size(), s.peak_army, s.chests_opened,
 			", ".join(ab.evolution_history) if not ab.evolution_history.is_empty() else "none",

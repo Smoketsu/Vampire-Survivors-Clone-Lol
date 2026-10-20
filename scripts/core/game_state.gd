@@ -129,6 +129,17 @@
 ##   --character2=ID       --coop-bot: slot 1's character (default gravecaller).
 ##   --classes2=a,b        --coop-bot: slot 1's forced summon classes.
 ##   --spells2=a,b         --coop-bot: slot 1's forced spells (+ evolution passives).
+##   --coop-net=host|join  Online co-op through the lockstep (co-op milestone 2,
+##                         CoopNetBot): this process hosts a lobby (printing
+##                         COOP_CODE=<code>) or joins --coop-code=<code>, both
+##                         against --relay=ws://... (tools/coop_relay.py), the
+##                         host starts with --seed=, and each process's army bot
+##                         plays ITS slot through CoopLockstep (its own
+##                         --character= is its loadout). Run both with the same
+##                         run flags. tools/coop_lockstep_gate.py runs the pair;
+##                         the summary adds a "coop lockstep" line (ticks,
+##                         frames sent / received, checksums, the chain).
+##   --coop-code=CODE      --coop-net=join: the lobby code to join.
 ##   --effects=reduced     Draws with Effects = Reduced (default Full; drawing only).
 ##   --perf-real=A-B,...   --perf, and those game-second windows run at real
 ##                         time (1x) so the rendered-frame times there are real.
@@ -224,6 +235,11 @@ var autotest_spells2: PackedStringArray = PackedStringArray()
 ## Autotest (--coop-bot): game second at which --coop-down=T knocks slot 1's
 ## necromancer down once (a test of the downed / revive rule; -1 = never).
 var autotest_coop_down: float = -1.0
+## Autotest: "host" or "join" for --coop-net= (online co-op through the
+## lockstep, CoopNetBot); "" = none.
+var autotest_coop_net: String = ""
+## Autotest (--coop-net=join): the lobby code of --coop-code= ("" = none).
+var autotest_coop_code: String = ""
 ## Autotest: true when --perf prints the per-tick timing table (PerfProbe).
 var autotest_perf: bool = false
 ## Autotest: "reduced" when --effects=reduced draws with Effects = Reduced
@@ -301,6 +317,10 @@ func _parse_args(args: PackedStringArray) -> void:
 		elif arg.begins_with("--perf-real="):
 			autotest_perf = true
 			autotest_perf_real = arg.get_slice("=", 1)  # Real-time windows (game seconds).
+		elif arg.begins_with("--coop-net="):
+			autotest_coop_net = arg.get_slice("=", 1).to_lower()  # Online co-op through the lockstep (CoopNetBot).
+		elif arg.begins_with("--coop-code="):
+			autotest_coop_code = arg.get_slice("=", 1).to_upper()
 		elif arg.begins_with("--coop-down="):
 			autotest_coop_down = arg.get_slice("=", 1).to_float()  # Test: slot 1 downed at T s.
 		elif arg.begins_with("--policy2="):

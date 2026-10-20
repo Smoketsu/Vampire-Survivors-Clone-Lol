@@ -9,8 +9,12 @@ Standard library only (asyncio with a small RFC 6455 WebSocket server): CI needs
 answer the plain HTTP routes (POST /lobby, CORS preflight) that the `websockets` package refuses to parse.
 
     python3 tools/coop_relay.py [--host 127.0.0.1] [--port 8765] [--allow-origin '*'] [--quiet]
+                                [--delay-ms 0] [--jitter-ms 0] [--seed N]
 
 With --port 0 a free port is chosen. The first line printed is always `LISTENING <host> <port>`.
+Test only (the Worker has neither): --delay-ms holds every relayed message that long before passing it on, and
+--jitter-ms adds a random extra 0..jitter ms to each (seeded by --seed), never reordering a player's stream (the
+lockstep latency test, tools/coop_lockstep_gate.py).
 """
 
 import argparse
@@ -18,6 +22,7 @@ import asyncio
 import base64
 import hashlib
 import json
+import random
 import secrets
 import struct
 import sys
@@ -85,6 +90,7 @@ class Sock:
         self.msgs = MSG_BURST  # Message bucket (messages).
         self.bytes = BYTE_BURST  # Byte bucket (bytes).
         self.bucket_at = time.monotonic()  # Last bucket refill (s, monotonic).
+        self.last_due = 0.0  # --delay-ms: loop time the last delayed message to this socket is due (s).
 
     def peer(self):
         """The hello fields the partner sees."""
@@ -157,10 +163,13 @@ class Lobby:
 class Relay:
     """The relay server: lobbies by code, the HTTP routes and the WebSocket loop."""
 
-    def __init__(self, allow_origins, quiet):
+    def __init__(self, allow_origins, quiet, delay_ms=0.0, jitter_ms=0.0, seed=1):
         self.lobbies = {}  # Code -> Lobby.
         self.allow_origins = allow_origins  # Allowed browser origins ("*" = any).
         self.quiet = quiet  # True: no per-event log lines.
+        self.delay = max(0.0, delay_ms) / 1000.0  # Test latency added to every relayed message (s).
+        self.jitter = max(0.0, jitter_ms) / 1000.0  # Test jitter: a random 0..jitter extra per message (s).
+        self.rng = random.Random(seed)  # Jitter draws (test only).
 
     def log(self, *args):
         if not self.quiet:
@@ -205,7 +214,7 @@ class Relay:
 
     def after_leave(self, lobby, slot):
         for p in lobby.players():
-            p.send_obj({"t": "left", "slot": slot})
+            self.send_to(p, 0x1, json.dumps({"t": "left", "slot": slot}, separators=(",", ":")).encode("utf-8"))
         if slot == 0 and not lobby.started:
             for p in lobby.players():
                 self.drop(p, "host_left")
@@ -215,7 +224,17 @@ class Relay:
     def relay(self, lobby, slot, opcode, payload):
         for p in lobby.players():
             if p.slot != slot:
-                p.frame(opcode, payload)
+                self.send_to(p, opcode, payload)
+
+    def send_to(self, p, opcode, payload):
+        """Passes one message on to player `p`: at once, or after the test latency (--delay-ms / --jitter-ms), each
+        due strictly after the previous one to that player so the stream keeps its order."""
+        if self.delay <= 0.0 and self.jitter <= 0.0:
+            return p.frame(opcode, payload)
+        loop = asyncio.get_running_loop()
+        due = max(p.last_due + 1e-6, loop.time() + self.delay + self.rng.uniform(0.0, self.jitter))
+        p.last_due = due
+        loop.call_at(due, p.frame, opcode, payload)
 
     def on_message(self, s, opcode, payload):
         lobby = s.lobby
@@ -450,8 +469,12 @@ async def main():
     ap.add_argument("--allow-origin", default="*",
                     help="comma-separated browser origins allowed (default '*' = any)")
     ap.add_argument("--quiet", action="store_true", help="no per-event log lines")
+    ap.add_argument("--delay-ms", type=float, default=0.0, help="test: latency added to every relayed message (ms)")
+    ap.add_argument("--jitter-ms", type=float, default=0.0, help="test: random extra latency 0..N per message (ms)")
+    ap.add_argument("--seed", type=int, default=1, help="test: seed of the jitter draws")
     args = ap.parse_args()
-    relay = Relay({o.strip() for o in args.allow_origin.split(",") if o.strip()}, args.quiet)
+    relay = Relay({o.strip() for o in args.allow_origin.split(",") if o.strip()}, args.quiet,
+                  args.delay_ms, args.jitter_ms, args.seed)
     server = await asyncio.start_server(relay.handle, args.host, args.port)
     port = server.sockets[0].getsockname()[1]
     print("LISTENING %s %d" % (args.host, port), flush=True)

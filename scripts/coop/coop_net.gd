@@ -317,10 +317,13 @@ static func make_loadout(config: RunConfig, player_name: String = "") -> Diction
 
 
 ## The host's run settings from `config`: stage, difficulty, modifiers, Hyper,
-## and the host's active Profane Oath tier (DESIGN.md: it sets the run's Oath).
+## the host's active Profane Oath tier (DESIGN.md: it sets the run's Oath) and
+## the host's Volleys setting (the bullet heaven pass changes the simulation,
+## so both machines play the host's; Game._ready()).
 static func config_dict(config: RunConfig) -> Dictionary:
 	return {"stage_id": config.stage_id, "difficulty_id": config.difficulty_id,
-		"modifiers": Array(config.modifiers), "hyper": config.hyper, "oath": Meta.oath_active_tier()}
+		"modifiers": Array(config.modifiers), "hyper": config.hyper, "oath": Meta.oath_active_tier(),
+		"volleys": Settings.volleys}
 
 
 ## A RunConfig for seat `slot` of start info `info`: the host's stage,

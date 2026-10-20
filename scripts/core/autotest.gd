@@ -429,6 +429,14 @@ var _char_override: String = ""
 var _classes_override: PackedStringArray = PackedStringArray()
 ## True once a slot-1 bot switched its Shadow Bolt aim at the boss's arrival.
 var _aim_switched: bool = false
+## True for a bot that only steers and picks for one slot (a --coop-bot slot-1
+## bot, or the bot that takes a dropped partner's necromancer over): its
+## _ready() skips the run setup (seeding, the clock), whatever its slot.
+var helper: bool = false
+## Online co-op (--coop-net=host|join, CoopLockstep): true for the run's own
+## bot, which drives this machine's slot through the lockstep (its dash,
+## ultimate and aim go out as inputs, never as direct requests).
+var net: bool = false
 
 
 ## Co-op: sets up this object as the bot of slot `i` > 0 (--coop-bot): its
@@ -437,6 +445,7 @@ var _aim_switched: bool = false
 ## the clock, the report) stays with slot 0's Autotest node.
 func init_bot(i: int) -> void:
 	slot = i
+	helper = true
 	_policy_override = GameState.autotest_policy2 if GameState.autotest_policy2 != "" else "army"
 	_char_override = GameState.autotest_character2
 	_classes_override = GameState.autotest_classes2
@@ -445,6 +454,17 @@ func init_bot(i: int) -> void:
 		var evo := EvolutionData.for_spell(id)  # Its evolution ("" if none).
 		if evo != "":
 			_forced[String(EvolutionData.EVOLUTIONS[evo]["passive"])] = true
+
+
+## Online co-op: sets up this object as the bot that takes a dropped partner's
+## slot `i` over (CoopLockstep): card policy `pol`, the partner's character
+## `char_id` (its build list swap), no forced classes or spells.
+func init_takeover(i: int, pol: String, char_id: String) -> void:
+	slot = i
+	helper = true
+	_policy_override = pol
+	_char_override = char_id
+	_forced_done = true  # Nothing forced: the partner's build stays his.
 
 
 ## This bot's card policy ("naive", "army", ...).
@@ -471,13 +491,13 @@ func step_slot(_delta: float) -> void:
 	if not _aim_switched and game.enemies.boss != null:
 		_aim_switched = true
 		if not game.abilities.bolt_aim_strongest:
-			game.abilities.toggle_bolt_aim()
+			_toggle_aim()
 	_drive_abilities()
 
 
 func _ready() -> void:
-	if slot > 0:
-		return  # Co-op: a slot-1 bot only picks and steers (init_bot()); the run's own Autotest does the rest.
+	if slot > 0 or helper:
+		return  # Co-op: a slot bot only picks and steers (init_bot() / init_takeover()); the run's own Autotest does the rest.
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	seed(GameState.autotest_seed)
 	for id: String in GameState.autotest_spells:
@@ -557,7 +577,7 @@ func step(delta: float) -> void:
 		_boss_spawn_time = game.elapsed
 		print("[autotest] boss spawned at %.1f s" % game.elapsed)
 		if not game.abilities.bolt_aim_strongest:
-			game.abilities.toggle_bolt_aim()
+			_toggle_aim()
 			_bolt_dmg_at_switch = _bolt_damage(game.stats, "dmg_")
 			print("[autotest] Shadow Bolt aim switched to %s" % game.abilities.bolt_aim_name())
 	if _boss_death_time < 0.0 and game.boss_defeated:
@@ -998,10 +1018,30 @@ func _drive_abilities() -> void:
 		if why != "":
 			var dir := _safest_dash_dir()  # Zero when every direction is blocked.
 			if dir != Vector2.ZERO:
-				gs.request(dir)
+				if _routed():
+					game.coop.lockstep.press(CoopLockstep.BTN_DASH, dir)  # Online co-op: an input for the lockstep.
+				else:
+					gs.request(dir)
 				game.stat_add("bot_dash_" + why, 1.0)
 	if game.dread_rally.is_full() and _rally_wanted():
-		game.dread_rally.request()
+		if _routed():
+			game.coop.lockstep.press(CoopLockstep.BTN_ULT)
+		else:
+			game.dread_rally.request()
+
+
+## True when this bot's presses travel as lockstep inputs (online co-op: the
+## run's own bot, for this machine's slot), never as direct requests.
+func _routed() -> bool:
+	return net and game.coop != null and game.coop.lockstep != null and game.coop.lockstep.networked(slot)
+
+
+## Switches the bound slot's Shadow Bolt aim (through the lockstep when routed).
+func _toggle_aim() -> void:
+	if _routed():
+		game.coop.lockstep.press(CoopLockstep.BTN_AIM)
+	else:
+		game.abilities.toggle_bolt_aim()
 
 
 ## Why the bot should dash now: "telegraph" (a boss / stage danger zone
@@ -1356,6 +1396,9 @@ func finish(summary: Dictionary) -> void:
 		game.coop.print_report()  # --coop-bot: a line per slot and the coop line (CoopSession).
 	if game.perf != null:
 		game.perf.print_table()  # --perf: the per-tick timing table (PerfProbe).
+	if game.coop != null and game.coop.lockstep != null:
+		print("[autotest] coop %s" % game.coop.lockstep.report_line())  # Online co-op: ticks, frames, checksums.
+		await get_tree().create_timer(CoopLockstepData.LINGER_S, true, false, true).timeout  # The last frames reach the partner.
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
