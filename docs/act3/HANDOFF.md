@@ -1,4 +1,9 @@
-# Act III handoff (second lead session, Oct 20, 2026, 15:45 UTC)
+# Act III handoff (second lead session, Oct 20, 2026, 15:45 UTC; updated 23:15 UTC)
+
+**Update, 23:15 UTC: Act III is live.** The owner stopped the balance pass and asked to ship as is; the three stages are
+playable on `integration` / `main` (GDD §15.0 "Act III goes live"). The owner will send manual balancing notes from
+playtests: apply them as data changes, record each as a GDD §15.0 row, and keep test runs minimal (the owner asked to
+save usage). The sections below describe the state before this; items 1–4 of "What is left" are done.
 
 Read this first, then `CLAUDE.md` (the project rules; they win any conflict), `docs/act3/PROPOSAL.md` (the
 owner-approved design) and `docs/act3/BRIEF_PHASE2.md` (how the three stages were briefed). GDD §15.0 rows from

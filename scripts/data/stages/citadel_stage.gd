@@ -393,7 +393,7 @@ const STAGE := {
 	"short_name": "Iron Citadel",
 	"chapter": "Chapter IX",
 	"act": 3,  # Act III, the Electronic Empire.
-	"playable": false,  # Built (Act III phase 2); the lead flips it after the multi-seed check and the owner's playtest.
+	"playable": true,  # Owner decision (Oct 20, 2026): ship Act III as is for the owner's playtest; balance by hand from it (GDD §15.0 "Act III goes live").
 	"description": "The Empire's throne of iron, where death was conquered with steel. Varn, the Root User, waits at its summit inside Deus Ex Machina, the god it built.",
 	"unlock": {"stage": "assembly", "boss_kills": 1},  # Owner-approved: each boss unlocks the next stage
 	"unlock_text": "Shut down the Motherboard in the Assembly Halls to unlock.",

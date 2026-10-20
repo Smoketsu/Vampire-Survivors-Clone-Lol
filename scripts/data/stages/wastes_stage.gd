@@ -337,7 +337,7 @@ const STAGE := {
 	"short_name": "Scrap Wastes",
 	"chapter": "Chapter VII",
 	"act": 3,  # Act III, the Electronic Empire.
-	"playable": false,  # Hidden from the stage select until the lead's balance pass and the owner's playtest.
+	"playable": true,  # Owner decision (Oct 20, 2026): ship Act III as is for the owner's playtest; balance by hand from it (GDD §15.0 "Act III goes live").
 	"description": "The Empire's old battlefield: slag hills, rusting war machines the size of buildings and red signal masts on the ridges. It saw the beacons of Ul-Thalos burning and came for the one who lit them; Kestrel, the Dead Pixel, hunts the wastes.",
 	"unlock": {"stage": "spire", "boss_kills": 1},  # Owner-approved: Act III opens when Vhal'Neth falls
 	"unlock_text": "Slay Vhal'Neth on Ul-Thalos to unlock.",

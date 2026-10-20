@@ -370,7 +370,7 @@ const STAGE := {
 	"short_name": "Assembly Halls",
 	"chapter": "Chapter VIII",
 	"act": 3,  # Act III, the Electronic Empire.
-	"playable": false,  # The lead flips it after the multi-seed check and the owner's playtest.
+	"playable": true,  # Owner decision (Oct 20, 2026): ship Act III as is for the owner's playtest; balance by hand from it (GDD §15.0 "Act III goes live").
 	"description": "The Empire's endless factory floors, where the fallen are rebuilt on moving lines under hard amber light. Ride out the conveyors, smash the fabricators, keep clear of the furnace channels and shut down the Motherboard.",
 	"unlock": {"stage": "wastes", "boss_kills": 1},  # Owner-approved: each boss unlocks the next stage
 	"unlock_text": "Delete Kestrel in the Scrap Wastes to unlock.",

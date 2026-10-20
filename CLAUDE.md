@@ -548,6 +548,17 @@ tiny tweaks.
   (`EmpireGlyphs` fallbacks), "Iron Requiem" (`SoundData.IRON_SCORE`) and the lazy Empire sound pack, autotest
   `--stage=wastes|assembly|citadel` and the `line of fire` / `lock-on` / `steel` / `purge protocol` / `empire kinds` /
   `empire stage` lines (`EmpireReport`). Gate passed: stages 1–6 same-seed summaries unchanged.
+- **Act III phase 2, live** (GDD §15.0 rows "The Scrap Wastes (Act III phase 2)" through "Act III goes live"; three
+  parallel stage branches merged on `integration`): **the Scrap Wastes** (Signal Pylons, scrap storms, the Trojan Horse,
+  Kestrel the Dead Pixel; Aegis Bot, Mortar Walker; Death Ray / Event Horizon + Conductive Marrow; the Lightning Abbess;
+  Static in the Wastes → Lead-Lined Bones), **the Assembly Halls** (conveyors through `TerrainSlow`, fabricators, furnace
+  channels, the Beta Build, the Motherboard; Arc Engineer, Juggernaut; Hollow Puppet / Puppet King + Strings of the Dead;
+  the Marionette; the Grave Drone / Wraith Drone + Overclock; Cold Assembly → Signal Ghost), **the Iron Citadel** (shield
+  gates, laser grids, citadel guns through `EmpireRules.strike()`, Sentry Turrets, Valkyrie 2.0, Deus Ex Machina with Varn
+  in three phases; Valkyrie Duelist; Scrap Swarm / Deathless Swarm + Machine Soul; the Rust Prophet; the Iron Revenant /
+  Deus Revenant + Recoil Frame; Nothing Is Deathless → title Breaker of Engines and the Act III epilogue "The Machines Go
+  Dark", 4 panels). Art approved by the owner in six review rounds; Web performance below Ul-Thalos. The double-stepped
+  Act II spells fixed (GDD §15.0 "Double-stepped Act II spells").
 
 - **online co-op** (owner request "add co-op, a lobby and code system", Oct 2026; `docs/coop/`): the relay and lobby
   (`coop-net`: Worker + `tools/coop_relay.py`, `CoopNet`, Co-op on the title screen, Host / Join with a letter pad,
@@ -586,9 +597,9 @@ tiny tweaks.
    support"). Left: measure it on real phones (iOS Safari audio unlock and frame rate first, on the
    GitHub Pages build); native Android / iOS apps stay deferred.
 5. **Content wave 2 art review** (owner): the marks on the wave 2 review page; then any redo.
-6. **Act III, the Electronic Empire** (owner-approved proposal `docs/act3/PROPOSAL.md`: Kestrel the Dead Pixel, the
-   Motherboard, Deus Ex Machina; Death Ray, Hollow Puppet, Scrap Swarm). Foundation done (see the Done list); phase 2
-   is the three stages in parallel (`docs/act3/BRIEF_PHASE2.md`), then integration, balance and the art review.
+6. **Act III, the Electronic Empire: live (Oct 2026).** The three stages are playable (GDD §15.0 "Act III goes
+   live"); the owner balances by hand from playtests (their notes outrank the bots). Open: the naive survival rate,
+   the placeholder Soul Ash multipliers, a real-iPhone check; CI has no Act III job yet. Handoff: `docs/act3/HANDOFF.md`.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
