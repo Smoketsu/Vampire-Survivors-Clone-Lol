@@ -113,6 +113,10 @@ var _top_right_offsets := Vector2(-300.0, -16.0)
 ## Top-centre block (timer, zone, objective, boss and miniboss bars); the
 ## chest beacon's edge arrows stay below it (top_centre_bottom()).
 var _top_centre: BoxContainer = null
+## Online co-op only: the co-op visuals and the lockstep driver's API
+## (CoopUi: show_waiting(), clear_waiting(), notice()); its partner plate sits
+## in the top-right block under the kill count. Null in a solo run.
+var coop_ui: CoopUi = null
 
 
 func _ready() -> void:
@@ -230,6 +234,9 @@ func _build() -> void:
 	_kills_label = UiTheme.tier_label("Kills: 0", UiTheme.Tier.NAME)
 	_kills_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	top_right.add_child(_kills_label)
+	if game.coop != null:
+		coop_ui = CoopUi.new(game)  # Co-op: the partner plate goes under the kill count.
+		top_right.add_child(coop_ui.partner_bar)
 	_mods_label = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_mods_label.visible = false
 	_mods_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -337,6 +344,8 @@ func _build() -> void:
 	# Bottom center, flanking the ability bar: Grave Step charges and the
 	# Dread Rally meter (HudAbilities draws and refreshes itself).
 	add_child(HudAbilities.new(game))
+	if coop_ui != null:
+		add_child(coop_ui)  # Co-op: the self plate, the arrows, the markers, the waiting panel.
 
 
 ## Pulls current values from the Game into the widgets.
@@ -438,6 +447,13 @@ func _refresh_modifiers() -> void:
 ## panel pauses the game is seen after resuming (HudBanners).
 func announce(title: String, item_name: String, desc: String, color: Color) -> void:
 	_banners.push_announce(title, item_name, desc, color)
+
+
+## Shows a notice in the banner slot (co-op, CoopUi.notice()): `kicker`,
+## `headline`, `sub`, on the `accent` ribbon ("violet" / "crimson"), held
+## `hold` game seconds, queued like every banner.
+func notice(kicker: String, headline: String, sub: String, accent: String, hold: float) -> void:
+	_banners.push_notice(kicker, headline, sub, accent, hold)
 
 
 ## Bottom edge (layout px from the top of the screen) of the top-centre

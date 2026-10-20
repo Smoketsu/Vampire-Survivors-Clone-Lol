@@ -491,11 +491,12 @@ func _on_player_down(i: int) -> void:
 			game.end_run(false, "defeat")
 
 
-## --coop-down test: knocks slot 1's necromancer down with one lethal hit
+## --coop-down test: knocks slot 1's (or --coop-down-slot='s) necromancer down with one lethal hit
 ## (through CombatResolver, as any hit), whatever his invulnerability.
 func _test_down() -> void:
 	_test_down_done = true
-	var p := slots[slots.size() - 1].player
+	var k := GameState.autotest_coop_down_slot if GameState.autotest_coop_down_slot in range(slots.size()) else slots.size() - 1  # --coop-down-slot= (default: the last slot).
+	var p := slots[k].player
 	var was := p.invulnerable
 	p.invulnerable = false
 	p.iframes = 0.0
@@ -503,7 +504,7 @@ func _test_down() -> void:
 	p.revives_left = 0
 	game.combat.damage_player(p.max_hp * 100.0, "coop_test_down", p)
 	p.invulnerable = was
-	print("[autotest] %s coop test: slot %d knocked down (downed: %s)" % [Autotest._clock(game.elapsed), slots.size() - 1, str(slots[slots.size() - 1].downed)])
+	print("[autotest] %s coop test: slot %d knocked down (downed: %s)" % [Autotest._clock(game.elapsed), k, str(slots[k].downed)])
 
 
 ## Builds revive progress for every downed slot whose partner stands close,

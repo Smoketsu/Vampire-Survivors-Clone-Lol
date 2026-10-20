@@ -122,6 +122,9 @@ var _again: Button
 var _vmenu: Button
 ## The Soul Ash column frame (narrower on the victory card).
 var _ash_frame: Control
+## Online co-op only: the co-op column (CoopResults) in the portrait / seal
+## column's place (null in a solo run).
+var _coop_col: Control = null
 
 # --- Feedback button (owner request, Oct 2026) ------------------------------------------
 
@@ -560,6 +563,8 @@ func open(summary: Dictionary) -> void:
 	if not won:
 		_show_stats(summary)
 		_show_build(summary)
+	if game != null and game.coop != null:
+		_show_coop(summary)
 	var unlocks := PackedStringArray()  # Unlock plates: characters first.
 	for cid: String in summary.get("unlocked_characters", PackedStringArray()):
 		unlocks.append("New character: %s" % String(CharacterModifiers.def(cid)["display_name"]))
@@ -611,6 +616,20 @@ func _show_victory(summary: Dictionary) -> void:
 	_next.visible = _next_stage != ""
 	if _next.visible:
 		_next.tooltip_text = String(StageRegistry.STAGES[_next_stage]["display_name"])
+
+
+## Co-op: the co-op column (both players, this machine's first; CoopResults)
+## takes the portrait / seal column's place, and the defeat card's own build
+## rows give way to the players' build rows on their cards.
+func _show_coop(summary: Dictionary) -> void:
+	if _coop_col != null:
+		_coop_col.get_parent().remove_child(_coop_col)
+		_coop_col.queue_free()
+	_coop_col = CoopResults.column(game, summary)
+	_portrait_col.get_parent().add_child(_coop_col)
+	_portrait_col.get_parent().move_child(_coop_col, _portrait_col.get_index())
+	_portrait_col.visible = false
+	_build_box.visible = false
 
 
 ## Victory card: Next (only while a next stage exists).
