@@ -16,6 +16,7 @@ reported a desync; both ran the same number of ticks with the same checksum chai
 --kill-join-at T kills the join process (SIGKILL, no goodbye) once it reports game time T: the drop test. The host
 must then finish the run alone with the bot steering the guest's slot (`partner lost ... bot took over`).
 --timeout-game T ends both runs at game second T (`--timeout=`), for a shorter CI gate.
+--real-time paces both by the clock (with --speed 1: a real 60 Hz game, for the latency test).
 --web-join prints the join command line instead of starting it (the Web build joins by hand, see README).
 Exit status 0 on success.
 """
@@ -50,8 +51,9 @@ def pump(proc, sink, tag, found, echo):
             found[tag + "_t"] = int(m.group(1)) * 60 + int(m.group(2))
 
 
-def godot(binary, args):
-    return subprocess.Popen([binary, "--headless", "--path", ROOT, "--fixed-fps", "60", "--"] + args,
+def godot(binary, args, real_time=False):
+    pace = [] if real_time else ["--fixed-fps", "60"]  # --fixed-fps: as fast as the CPU goes; without it, real time.
+    return subprocess.Popen([binary, "--headless", "--path", ROOT] + pace + ["--"] + args,
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
 
 
@@ -75,6 +77,8 @@ def main():
     ap.add_argument("--relay", default="", help="use this relay instead of starting the local one")
     ap.add_argument("--web-join", action="store_true", help="start only the host and print the code (a Web page joins)")
     ap.add_argument("--echo", action="store_true", help="echo every line of both processes")
+    ap.add_argument("--real-time", action="store_true",
+                    help="pace both processes by the clock (no --fixed-fps; with --speed 1 a real 60 Hz game)")
     ap.add_argument("extra", nargs="*", help="extra autotest flags for both processes")
     args = ap.parse_args()
 
@@ -97,7 +101,7 @@ def main():
         common.append("--timeout=%g" % args.timeout_game)
     out_h, out_j, found = [], [], {}
     t0 = time.time()
-    host = godot(args.godot, common + ["--coop-net=host", "--character=" + args.host_character])
+    host = godot(args.godot, common + ["--coop-net=host", "--character=" + args.host_character], args.real_time)
     th = threading.Thread(target=pump, args=(host, out_h, "host", found, args.echo), daemon=True)
     th.start()
     while "code" not in found and host.poll() is None and time.time() - t0 < 90:
@@ -119,7 +123,7 @@ def main():
         for l in pick(out_h, "[autotest] coop") + pick(out_h, "[coop]"):
             print(l)
         return 0 if code in (0, 1) else 1
-    join = godot(args.godot, join_args)
+    join = godot(args.godot, join_args, args.real_time)
     tj = threading.Thread(target=pump, args=(join, out_j, "join", found, args.echo), daemon=True)
     tj.start()
     killed = False
