@@ -27,4 +27,6 @@ const POSES: Dictionary = {
 	"bosses/motherboard": {1: "windup", 3: "strike"},  # TUNING (not in GDD) crane arms raised for a special / claws slammed down (BossMotherboard)
 	# --- Act III: the Scrap Wastes ---
 	"bosses/kestrel": {1: "aim"},  # TUNING (not in GDD) kneeling with the rifle raised on her perch (BossKestrel; the leap keeps the still; her blades are their own still, bosses/kestrel_blades)
+	# --- Act III: the Iron Citadel ---
+	"bosses/deus_ex_machina": {1: "fire"},  # TUNING (not in GDD) the Walker firing: chaingun spun up, missile pods open (BossDeusExMachina)
 }

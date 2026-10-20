@@ -1459,6 +1459,52 @@ where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.2
   `spire`, `spire kinds`, `vhalneth`, `the waking`, `call of the drowned` and
   `spawn_of_the_deep` lines (`SpireReport`).
 
+### Stage 9: the Iron Citadel (Act III finale, not yet playable)
+
+The last stage of the campaign (GDD §15.0 "The Iron Citadel (Act III phase 2)" and the rows after
+it; data in `scripts/data/stages/citadel_stage.gd`). The Empire's throne of iron, where death was
+conquered with steel; Varn, the Root User, waits at its summit inside Deus Ex Machina. Unlocked by
+shutting down the Motherboard; Soul Ash ×3.0 (placeholder).
+
+- **Four zones on the clock** (`MarchDirector`): the Shield Gates (20:00), the Laser Courts
+  (15:00), the Spire Lifts (10:00) and the Core (5:00), each with its own pixel-art floor
+  (`CitadelGround`) and obstacles (barricades, cargo crates, bollards, emitter pylons, lift winches,
+  core conduits).
+- **Shield gates** (3:20, 5:30, 10:15; `CitadelDirector`): an energy wall ahead of you, held up by
+  two generators behind it and guarded by a Sentry Turret; soldiers pour out every 14 s while it
+  stands. The wall stops only you (go round it, or break both generators: XP and 10 Soul Ash). A
+  gate left standing when its zone ends goes into lockdown: a squad, and the next zone's guns fire
+  more often.
+- **Citadel guns:** orbital strikes on red circles, more and faster in each zone (the Purge
+  Protocol's strike code, shared). **Laser grids** (the Courts and the Core): red bands for 1 s,
+  then sweeping beams that hurt the Empire's soldiers too.
+- **Sentry Turrets:** emplacements that aim (a red flare) and fire bursts at you or your nearest
+  summon; each one destroyed pays 3 Soul Ash. Two waves rise at 7:30 and 13:40.
+- **Kinds:** the **Valkyrie Duelist** (an elite cyborg duellist who lunges through your ring at you;
+  a Warrior or any other blocker in her line stops her) and the miniboss **Valkyrie 2.0** at 12:30
+  (jet dash, shield bash, blade storm; her chest and 12 Soul Ash). The sister stages' Aegis Bots,
+  Mortar Walkers, Arc Engineers and Juggernauts join as guests once their stages are merged.
+- **Deus Ex Machina** (17:00): **the Walker** strides on four legs whose armour plates must be
+  broken before its body takes full damage; it sweeps a chaingun (your dead are cover), paints four
+  missile Lock-On lines at once and stomps. **The Siege Core** plants itself behind six shield
+  drones (shoot them down to expose the core), sweeps the Judgment Lance (a summon in the beam
+  blocks it for you) and opens hangar doors. **The Founder:** Varn takes the frame, with overload
+  pulses that grow every time and teleports. When it falls, its machines go dark, and the ending
+  text plays.
+- **Rewards** (unlocked by slaying Deus Ex Machina, offered on every stage): the spell **Scrap
+  Swarm** (drones orbiting just outside the Bone Ring that shoot foes before they reach your army;
+  evolution **Deathless Swarm** with the passive **Machine Soul**, armour pierce on every hit), the
+  character **the Rust Prophet** (starts with Scrap Swarm; his temporary Risen fire scrap bolts),
+  the summon class **Iron Revenant** (a war walker inside the ring firing slowing cannon shells;
+  evolution **Deus Revenant**, twin cannons and missile salvos, with the passive **Recoil Frame**:
+  ranged summons fire faster and reach farther), the achievement **Nothing Is Deathless** and the
+  title **Breaker of Engines**.
+- **Autotest:** `--stage=citadel`, `--boss=deus_ex_machina`, `--spells=scrap_swarm`,
+  `--classes=iron_revenant`, `--passives=machine_soul,recoil_frame`, `--character=rust_prophet`,
+  `--spawn=valkyrie_duelist@T`, `sentry_turret`, `valkyrie_prime`; the summary gains the `citadel`,
+  `citadel events`, `citadel kinds`, `ranged share`, `deus ex machina`, `scrap swarm` and
+  `iron revenant` lines (`CitadelReport`).
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2441,6 +2487,7 @@ Options (after `--`):
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind) and `empire stage`. The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Assembly Halls) | `--stage=assembly` adds `assembly` (fabricators destroyed / placed / planned and when, soldiers built and capped, the wave and trickle thinning, Cold Assembly, the Beta Build, objective Soul Ash), `assembly floor` (seconds carried by belts for you / summons / enemies, furnace flares, furnace hits and damage per side), `assembly events`, `assembly kinds` (Arc Engineer repairs and jams, Juggernaut flames and flat armour, the Beta Build's swipes, rivets, patching and kill time) and `motherboard` (grabs, hurls, stamps, magnet pulls, turret builds, turrets and their shots, when Full Load and Overclock began, its damage). Reward lines print when owned: `hollow puppet` (`--spells=hollow_puppet`), `class grave_drone` (`--classes=grave_drone`), `signal ghost` (`--passives=signal_ghost`) and `marionette` (`--character=marionette`). `--spawn=arc_engineer@60x4,juggernaut@120x2,beta_build@180` works on any stage. |
+| (the Iron Citadel) | `--stage=citadel` adds `citadel` (gates raised / broken / locked down, garrison spawns, wall pushes, laser cycles and their hits on you, summons and enemies, citadel gun salvos, strikes and hits, turrets placed / destroyed / left behind, guests, objective Soul Ash), `citadel events`, `citadel kinds` (Duelist lunges: blocked / reached you / summons sliced; turret bursts; Valkyrie 2.0: spawned, killed and time to kill, dashes (blocked, hit you), bashes, storms, summon hits), `ranged share` (the share of Empire spawns that attack from range) and, when it fought, `deus ex machina` (phase times, plates broken, chaingun / salvo / footfall / stomp counts and hits, drones launched and downed, exposures, lances and their blocked ticks, hangars, pulses, teleports, machines gone dark, damage to you by attack). On every stage, `scrap swarm` (level, damage, kills, bolts, kill drones, peak drones, orbit radius; Machine Soul's bonus damage) and `iron revenant` (level, damage by source, bursts, shells, salvos, missiles; Recoil Frame) print only when used. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |
 | `--rewards=on\|off` | Content wave 2: `on` checks the five one-run achievements (Mass Grave, Untouchable, Full Ossuary, Deathlord's Due, Swift Judgment) in memory, as the game does; by default (`off`) the autotest leaves them unchecked (unless `--meta-save`), so the default summaries' bounty and Soul Ash are unchanged. Every summary ends with a `rewards` line: achievements earned this run, titles open, reward items unlocked (`ultimate:` / `title:` / `skin:`), the run counters (temporary undead raised, lowest HP before 0:00, evolutions, the boss's lifetime after arrival), the one-run achievements this run met and whether they were checked, the worn title, and the setup screen's title row built once headless. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |

@@ -21,7 +21,9 @@ class_name TitleData
 extends RefCounted
 
 ## Title ids in display order (the setup screen's cycle order after "None").
-const ORDER := ["heretics_bane", "master_of_the_drowned", "archnecromancer", "executioner"]  # owner-approved Proposal 2
+const ORDER := ["heretics_bane", "master_of_the_drowned", "archnecromancer", "executioner",
+	# --- Act III: the Iron Citadel ---
+	"breaker_of_engines"]  # owner-approved Proposal 2; Act III proposal
 
 ## Title id -> row (keys above).
 const TITLES := {
@@ -29,6 +31,8 @@ const TITLES := {
 	"master_of_the_drowned": {"display_name": "Master of the Drowned", "achievement": "the_dead_god_serves", "frame": ""},  # owner-approved Proposal 2
 	"archnecromancer": {"display_name": "Archnecromancer", "achievement": "full_ossuary", "frame": ""},  # owner-approved Proposal 2
 	"executioner": {"display_name": "Executioner", "achievement": "swift_judgment", "frame": ""},  # owner-approved Proposal 2
+	# --- Act III: the Iron Citadel ---
+	"breaker_of_engines": {"display_name": "Breaker of Engines", "achievement": "nothing_is_deathless", "frame": ""},  # Owner-approved Act III proposal
 }
 
 ## Text of the "no title" choice on the setup screen's cycle row.

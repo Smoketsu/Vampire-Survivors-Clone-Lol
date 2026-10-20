@@ -11,6 +11,7 @@
 ##   "grasp"  Spawn of the Deep   DeepSpawnBehavior (Act II, Ul-Thalos)
 ##   "bulwark" Bone Golem         GolemBehavior (content wave 2)
 ##   "hover"  Grave Drone         GraveDroneBehavior (Act III, the Assembly Halls)
+##   "suppress" Iron Revenant     RevenantBehavior (Act III, the Iron Citadel)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -53,6 +54,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act III: the Assembly Halls ---
 		"hover":
 			b = GraveDroneBehavior.new()
+		# --- Act III: the Iron Citadel ---
+		"suppress":
+			b = RevenantBehavior.new()  # The Iron Revenant.
 	if b != null:
 		b.kind = kind
 	return b
@@ -144,6 +148,14 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 				out.append("Bone darts: %s dmg each, %s px reach" % [_f(nxt["damage"]), _f(nxt["attack_range"])])
 			elif int(b.get("dart_count", 1)) != int(a.get("dart_count", 1)):
 				out.append("Darts per attack %d -> %d" % [int(a.get("dart_count", 1)), int(b.get("dart_count", 1))])
+		# --- Act III: the Iron Citadel ---
+		"suppress":
+			if a.is_empty():
+				out.append("Holds a post inside the Bone Ring, a heavy gunner")
+				out.append("Suppressive fire: %d shells a burst, each slows %d%% for %ss" % [int(b["shells"]), int(roundf(float(b["slow"]) * 100.0)), _f(b["slow_duration"])])
+			else:
+				_delta(out, "Shells per burst", a, b, "shells")
+				_delta(out, "Slow time (s)", a, b, "slow_duration")
 	return out
 
 

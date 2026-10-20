@@ -143,7 +143,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act III: the Assembly Halls ---
 	"strings_of_the_dead", "overclock", "signal_ghost",
 	# --- Act III: the Scrap Wastes ---
-	"conductive_marrow", "lead_lined_bones"]
+	"conductive_marrow", "lead_lined_bones",
+	# --- Act III: the Iron Citadel ---
+	"machine_soul", "recoil_frame"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -159,7 +161,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act III: the Assembly Halls ---
 	"overclock",
 	# --- Act III: the Scrap Wastes ---
-	"lead_lined_bones"]
+	"lead_lined_bones",
+	# --- Act III: the Iron Citadel ---
+	"recoil_frame"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -217,7 +221,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"deep_grasp", "leviathan_sweep",
 	# --- Content wave 2: Bone Golem --- (the slam's splash, GolemBehavior)
-	"golem_slam"]
+	"golem_slam",
+	# --- Act III: the Iron Citadel --- (the Deus Revenant's missiles; the Rust Prophet's Risen scrap bolts)
+	"deus_revenant_missile", "scrap_bolt"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -284,6 +290,13 @@ const BRINEWALKER_SUMMON_LEVEL: int = 3  # owner-approved
 ## Read by CombatResolver.damage_unit() (blocker_reduction) and
 ## HordeDirector.compute_stats() (hold_bonus).
 const MASONRY_CLASSES := ["warrior", "abomination", "bone_golem"]  # Owner-approved proposal 5
+# --- Act III: the Iron Citadel ---
+## Recoil Frame: the attack profiles (UnitData "attack_profile", after a summon
+## evolution's overlay) that count as RANGED summons: they fire faster and
+## farther with it (HordeDirector.compute_stats()). Archers / Gravebows, Mages /
+## Liches, Catapults / Ossuary Engines, Fallen Seraphs, Frost Wraiths and Iron
+## Revenants.
+const RECOIL_PROFILES := ["arrow", "aoe", "boulder", "feather", "frost", "suppress"]  # TUNING (not in GDD)
 
 ## Passive definitions.
 ##   display_name — UI name.
@@ -906,6 +919,47 @@ const PASSIVES := {
 			{"ranged_reduction": 0.18},  # TUNING (not in GDD)
 			{"ranged_reduction": 0.24},  # TUNING (not in GDD)
 			{"ranged_reduction": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act III: the Iron Citadel ---
+	# Machine Soul (GDD §15.0 "Scrap Swarm, Machine Soul and the Rust Prophet";
+	# unlocked by defeating Deus Ex Machina, UnlockData): the soul the Empire
+	# forgot to delete, now the necromancer's: every hit of his (spells and
+	# summons alike) pierces armour_pierce of the foe's armour, percentage and
+	# flat (CombatResolver.damage_enemy(): the stronger of it and the Wither
+	# shred applies). Useful on every stage (Footmen, Templars, Sentinels and the
+	# Empire's chrome alike). Pairs with Scrap Swarm -> Deathless Swarm.
+	"machine_soul": {
+		"display_name": "Machine Soul",
+		"icon": "machine_soul",
+		"description": "Every hit you and your dead land pierces part of the foe's armour.",
+		"labels": {"armor_pierce": ["Armour pierced", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"armor_pierce": 0.1},  # TUNING (not in GDD)
+			{"armor_pierce": 0.2},  # TUNING (not in GDD)
+			{"armor_pierce": 0.3},  # TUNING (not in GDD)
+			{"armor_pierce": 0.4},  # TUNING (not in GDD)
+			{"armor_pierce": 0.5},  # TUNING (not in GDD) first pass 0.6
+		],
+	},
+	# Recoil Frame (GDD §15.0 "Iron Revenant, Deus Revenant and Recoil Frame";
+	# unlocked by defeating Deus Ex Machina): the ranged summons
+	# (RECOIL_PROFILES) fire faster and reach farther (HordeDirector.
+	# compute_stats(), after the evolution overlay). Pairs with the Iron
+	# Revenant -> Deus Revenant.
+	"recoil_frame": {
+		"display_name": "Recoil Frame",
+		"icon": "recoil_frame",
+		"description": "Your ranged summons fire faster and reach farther.",
+		"labels": {"ranged_haste": ["Ranged summon attack speed", "pct"], "ranged_reach": ["Ranged summon range", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"ranged_haste": 0.06, "ranged_reach": 0.04},  # TUNING (not in GDD)
+			{"ranged_haste": 0.12, "ranged_reach": 0.08},  # TUNING (not in GDD)
+			{"ranged_haste": 0.18, "ranged_reach": 0.12},  # TUNING (not in GDD)
+			{"ranged_haste": 0.24, "ranged_reach": 0.16},  # TUNING (not in GDD)
+			{"ranged_haste": 0.30, "ranged_reach": 0.20},  # TUNING (not in GDD)
 		],
 	},
 }

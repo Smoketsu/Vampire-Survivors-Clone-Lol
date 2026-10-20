@@ -58,7 +58,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act III: the Assembly Halls ---
 	"marionette",
 	# --- Act III: the Scrap Wastes ---
-	"lightning_abbess"]
+	"lightning_abbess",
+	# --- Act III: the Iron Citadel ---
+	"rust_prophet"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -100,6 +102,10 @@ const STAT_LABELS := {
 ##   puppet_duration         HollowPuppet._raise (extra puppet life fraction)
 ##   puppet_damage           HollowPuppet._raise (extra puppet damage fraction)
 ##   ray_extra_sparks        DeathRay._spark_from (extra sparks per beam kill)
+##   risen_bolt_interval     CharacterInnates.on_temporary_spawned / step (s
+##                           between a temporary Risen's scrap bolts; Act III)
+##   risen_bolt_damage       CharacterInnates (damage of each scrap bolt, before
+##                           the Risen's own summon bonuses)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -113,7 +119,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act III: the Assembly Halls ---
 	"puppet_duration", "puppet_damage",
 	# --- Act III: the Scrap Wastes ---
-	"ray_extra_sparks"]
+	"ray_extra_sparks",
+	# --- Act III: the Iron Citadel ---
+	"risen_bolt_interval", "risen_bolt_damage"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -387,6 +395,27 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a light, quick abbess
 		"sprite": "player/lightning_abbess",
 		"tint": Color(0.70, 0.55, 1.0),  # TUNING (not in GDD) storm violet
+		"starts_unlocked": false,
+	},
+	# --- Act III: the Iron Citadel ---
+	# The Rust Prophet (Scrap Swarm's character; owner-approved Act III proposal:
+	# "an Empire engineer who defected to death"; his spell must be unlocked
+	# first, by Deus Ex Machina). He taught the Empire's scrap to obey the dead:
+	# every temporary Risen he raises carries a scrap launcher and fires a bolt
+	# every few seconds (HordeDirector.spawn_temporary() hands it to
+	# CharacterInnates, the one temporary-summon path).
+	"rust_prophet": {
+		"display_name": "The Rust Prophet",
+		"title": "He built the Empire's machines. Now he builds them for the dead.",
+		"spell": "scrap_swarm",
+		"innate": {
+			"id": "scrap_prophecy", "name": "Scrap Prophecy",
+			"description": "Every temporary Risen you raise fires a scrap bolt every few seconds.",
+			"values": {"risen_bolt_interval": 2.5, "risen_bolt_damage": 10.0},  # TUNING (not in GDD) s, damage per bolt
+		},
+		"stats": {"max_hp": 5.0, "spell_area": 0.05},  # TUNING (not in GDD) an engineer's plating and a wider reach
+		"sprite": "player/rust_prophet",
+		"tint": Color(0.86, 0.58, 0.34),  # TUNING (not in GDD) rust orange over the violet
 		"starts_unlocked": false,
 	},
 }

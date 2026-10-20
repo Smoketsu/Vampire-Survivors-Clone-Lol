@@ -78,6 +78,8 @@ const HYPER_NAMES := {
 	"marionette": "Gilded Marionette",  # TUNING (not in GDD)
 	# --- Act III: the Scrap Wastes ---
 	"lightning_abbess": "Gilded Stormbride",  # TUNING (not in GDD)
+	# --- Act III: the Iron Citadel ---
+	"rust_prophet": "Gilded Prophet",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -104,6 +106,8 @@ const HYPER_TINTS := {
 	"marionette": Color(1.2, 1.05, 0.65),  # TUNING (not in GDD) gilded (the palette fallback; the skin has its own art)
 	# --- Act III: the Scrap Wastes ---
 	"lightning_abbess": Color(1.2, 1.05, 0.65),  # TUNING (not in GDD) gilded (the fallback tint; her Hyper skin has its own art)
+	# --- Act III: the Iron Citadel ---
+	"rust_prophet": Color(1.2, 1.05, 0.6),  # TUNING (not in GDD) gilded brass (the drawn skin replaces the tint)
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD

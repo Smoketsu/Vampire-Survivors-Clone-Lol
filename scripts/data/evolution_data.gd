@@ -65,7 +65,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act III: the Assembly Halls ---
 	"puppet_king",
 	# --- Act III: the Scrap Wastes ---
-	"event_horizon"]
+	"event_horizon",
+	# --- Act III: the Iron Citadel ---
+	"deathless_swarm"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -372,6 +374,24 @@ const EVOLUTIONS := {
 			"beams": 2,  # Owner-approved proposal: "two beams sweeping opposite each other"
 			"chain": 4,  # Owner-approved proposal: "chain lightning through up to 4 enemies"
 			"chain_falloff": 0.25,  # TUNING (not in GDD) damage lost per jump
+		},
+	},
+	# --- Act III: the Iron Citadel ---
+	# Deathless Swarm (GDD §15.0 "Scrap Swarm, Machine Soul and the Rust
+	# Prophet"): Scrap Swarm + Machine Soul (a NEW passive, owner rule: at Lv 5).
+	# More drones, and every foe their bolts kill launches one more drone for
+	# 10 s (owner-approved: "more drones; each kill adds one for 10 s"), at most
+	# `kill_drones` extra. Detected by the "kill_drones" key.
+	"deathless_swarm": {
+		"base": "scrap_swarm",
+		"passive": "machine_soul",
+		"display_name": "Deathless Swarm",
+		"icon": "deathless_swarm",
+		"description": "A greater swarm, and every foe it kills sends another drone into the orbit.",
+		"labels": {"damage": "Bolt damage", "drones": "Drones", "cooldown": "Fire interval (s)", "range": "Range", "kill_drones": "Kill drones (10 s)"},
+		"stats": {
+			"drones": 6, "damage": 18.0, "cooldown": 0.8, "range": 260.0, "orbit_speed": 1.3,  # TUNING (not in GDD) first pass 7 x 24 every 0.75 s dealt 256k in a forced army run
+			"kill_drones": 4,  # TUNING (not in GDD) the evolution flag: extra drones from kills, at most this many (first pass 6)
 		},
 	},
 }
