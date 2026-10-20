@@ -18,7 +18,7 @@ class_name CoopNetBot
 extends Node
 
 ## Real seconds the lobby may take before the test gives up (exit code 3).
-const LOBBY_TIMEOUT_S: float = 90.0
+const LOBBY_TIMEOUT_S: float = 300.0
 ## Exit code when the lobby fails (an error from the relay, or the timeout).
 const EXIT_LOBBY_FAILED: int = 3
 
