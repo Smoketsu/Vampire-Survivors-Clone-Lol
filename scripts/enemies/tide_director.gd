@@ -109,6 +109,9 @@ var _shoved_units: Dictionary = {}
 var _shoved_enemies: Dictionary = {}
 ## True once the current wave shoved the necromancer.
 var _shoved_player: bool = false
+## Co-op: slot index -> true for every necromancer past slot 0 the current wave
+## shoved (slot 0 keeps _shoved_player, so solo is unchanged).
+var _shoved_more: Dictionary = {}
 ## Wave front of the previous tick (px along the band).
 var _prev_front: float = 0.0
 ## Reusable query buffer.
@@ -273,18 +276,21 @@ func swims(e: Enemy) -> bool:
 func _apply_water(tick: float) -> void:
 	var slow := float(config["slow"])  # Speed fraction lost in water.
 	var linger := float(config["linger"])  # s a check's slow lasts.
-	var p := game.player
-	if flooded(p.position):
-		if TerrainSlow.slow_player(game, slow, linger) > 0.0:
-			game.stat_add("tide_player_wet_s", tick)
-		else:
-			game.stat_add("tide_player_wet_resisted_s", tick)  # Brinewalker Lv 5.
 	var wet_units := 0  # Summons in water this check.
-	for u in game.horde.units:
-		if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:
-			continue
-		if flooded(u.position) and TerrainSlow.slow_summon(game, u, slow, linger) > 0.0:
-			wet_units += 1
+	for k in game.all_players.size():  # Each necromancer and his army (co-op: bound in turn).
+		var prev := game.bind_index(k)
+		var p := game.player
+		if flooded(p.position):
+			if TerrainSlow.slow_player(game, slow, linger) > 0.0:
+				game.stat_add("tide_player_wet_s", tick)
+			else:
+				game.stat_add("tide_player_wet_resisted_s", tick)  # Brinewalker Lv 5.
+		for u in game.horde.units:
+			if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:
+				continue
+			if flooded(u.position) and TerrainSlow.slow_summon(game, u, slow, linger) > 0.0:
+				wet_units += 1
+		game.unbind(prev)
 	if wet_units > 0:
 		game.stat_add("tide_summon_wet_s", float(wet_units) * tick)
 	var wet_enemies := 0  # Enemies in water this check.
@@ -376,6 +382,7 @@ func _start_surge() -> void:
 	_shoved_units.clear()
 	_shoved_enemies.clear()
 	_shoved_player = false
+	_shoved_more.clear()
 	surges += 1
 	var s := int(game.elapsed)
 	surge_times.append("%d:%02d" % [floori(float(s) / 60.0), s % 60])
@@ -424,12 +431,19 @@ func _shove(from: float, to: float) -> void:
 			_shoved_enemies[e] = e.generation
 			e.position += surge_dir * push
 			game.stat_add("tide_surge_shoved_enemies", 1.0)
-	var pl := game.player
-	if not _shoved_player and _front_passed(pl.position, pl.radius, from, to):
-		_shoved_player = true
-		if not game.grave_step.is_dashing() and game.grave_step.dodge_time <= 0.0:
-			pl.position += surge_dir * float(_surge["push_player"])
-			game.stat_add("tide_surge_shoved_player", 1.0)
+	for k in game.all_players.size():  # Each necromancer (co-op: bound in turn).
+		var prev := game.bind_index(k)
+		var pl := game.player
+		var done := _shoved_player if k == 0 else _shoved_more.has(k)  # Already shoved by this wave.
+		if not done and _front_passed(pl.position, pl.radius, from, to):
+			if k == 0:
+				_shoved_player = true
+			else:
+				_shoved_more[k] = true
+			if not game.grave_step.is_dashing() and game.grave_step.dodge_time <= 0.0:
+				pl.position += surge_dir * float(_surge["push_player"])
+				game.stat_add("tide_surge_shoved_player", 1.0)
+		game.unbind(prev)
 
 
 # =====================================================================================

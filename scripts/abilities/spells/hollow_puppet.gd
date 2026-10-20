@@ -153,7 +153,7 @@ func _draw() -> void:
 	if game == null:
 		return
 	var now := game.elapsed
-	var from := game.player.position + Vector2(0, -18)
+	var from := caster_pos() + Vector2(0, -18)
 	var i := _fx.size() - 1
 	while i >= 0:
 		var f: Array = _fx[i]

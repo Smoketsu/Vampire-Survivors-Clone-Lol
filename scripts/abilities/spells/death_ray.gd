@@ -271,7 +271,7 @@ func summary_extra() -> String:
 ## lightning. Visual only.
 func _draw() -> void:
 	if _sweeping and not _stats.is_empty():
-		var p := game.player.position  # The beam's origin.
+		var p := caster_pos()  # The beam's origin.
 		var length := float(_stats["beam_length"])
 		var w := float(_stats["beam_width"])
 		var beams := _struck.size()

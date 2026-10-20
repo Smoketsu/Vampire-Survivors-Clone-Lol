@@ -141,7 +141,7 @@ func _step_rift(r: Rift, delta: float) -> bool:
 	r.spit_cd -= delta
 	if r.spit_cd <= 0.0:
 		r.spit_cd = float(config["spit_interval"])
-		_spit(r, config["spit_groups"], WaveData.HARD_CAP - 10)
+		_spit(r, config["spit_groups"], game.enemies.hard_cap() - 10)
 	return true
 
 
@@ -162,7 +162,7 @@ func _open(r: Rift) -> void:
 	game.effects.ring(r.pos, 60.0, config["color"], 0.6)
 	game.shake(3.0)
 	Sfx.play("deep_freeze", r.pos, 0.7)
-	_spit(r, r.groups, WaveData.HARD_CAP)
+	_spit(r, r.groups, game.enemies.hard_cap())
 
 
 ## Spits `groups` out around the rift (up to `cap` living enemies).

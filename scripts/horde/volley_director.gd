@@ -20,6 +20,9 @@ extends Node2D
 var game: Game
 ## True while the pass is on for this run (copied from Game.volleys_on in setup()).
 var on: bool = false
+## False while this army's necromancer lies downed in co-op (CoopSession): his
+## spells cast no echoes; shots already flying keep flying. Always true in solo.
+var echoes_on: bool = true
 
 # --- Shots (parallel arrays; slot i is one shot) ---------------------------------------
 
@@ -277,6 +280,8 @@ func step(delta: float) -> void:
 
 ## Spell echoes: each owned spell at LEVEL_ON+ fires its echo every `every` cooldowns.
 func _step_spells(delta: float) -> void:
+	if not echoes_on:
+		return
 	var ab := game.abilities  # Spell owner.
 	for id: String in VolleyData.SPELLS:
 		var lvl := ab.spell_level(id)  # 0 = not owned.

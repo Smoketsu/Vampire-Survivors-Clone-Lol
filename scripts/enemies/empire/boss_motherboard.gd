@@ -412,10 +412,10 @@ func _land_hurl() -> void:
 	game.effects.impact(hurl_at, r * 1.2, Palette.EMPIRE_SIGNAL_AMBER)
 	Sfx.play("press_stamp", hurl_at, 1.2)
 	game.shake(5.0)
-	var p := game.player
-	if p.position.distance_to(hurl_at) <= r + p.radius:
-		game.combat.damage_player(float(boss_def["hurl_damage_player"]) * mult * float(thrown.size()), MotherboardData.HURL_SOURCE)
-		game.stat_add("motherboard_hurl_player_hits", 1.0)
+	for p in game.all_players:  # (Co-op: every necromancer inside.)
+		if p.position.distance_to(hurl_at) <= r + p.radius:
+			game.combat.damage_player(float(boss_def["hurl_damage_player"]) * mult * float(thrown.size()), MotherboardData.HURL_SOURCE, p)
+			game.stat_add("motherboard_hurl_player_hits", 1.0)
 	game.ally_grid.query(hurl_at, r + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	for u: SummonedUnit in _tmp:
 		if not u.active or u.state == SummonedUnit.State.SPAWNING or u.position.distance_to(hurl_at) > r + u.radius:

@@ -100,10 +100,10 @@ func _burn(e: Enemy) -> void:
 		hits += 1
 		g.combat.damage_unit(u, float(d["flame_damage_summon"]) * mult * e.undead_damage_mult, SOURCE)
 	g.stat_add("juggernaut_flame_summon_hits", float(hits))
-	var p := g.player
-	if in_sector(e.position, dir, reach, half, e.radius, p.position, p.radius):
-		g.stat_add("juggernaut_flame_player_hits", 1.0)
-		g.combat.damage_player(float(d["flame_damage_player"]) * mult, SOURCE)
+	for p in g.all_players:  # (Co-op: every necromancer inside.)
+		if in_sector(e.position, dir, reach, half, e.radius, p.position, p.radius):
+			g.stat_add("juggernaut_flame_player_hits", 1.0)
+			g.combat.damage_player(float(d["flame_damage_player"]) * mult, SOURCE, p)
 
 
 ## Autopilot hint: out of the telegraphed or burning cone.

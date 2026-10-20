@@ -202,7 +202,7 @@ func _release_splits() -> void:
 	for s: Split in list:
 		var side := Vector2(-s.dir.y, s.dir.x)  # Perpendicular to the line to the necromancer.
 		for i in s.count:
-			if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+			if game.enemies.regular_alive() >= game.enemies.hard_cap():
 				game.stat_add("gibbering_splits_capped", 1.0)
 				break
 			var k := float(i) - float(s.count - 1) * 0.5  # -0.5, +0.5 for two.
@@ -268,6 +268,14 @@ func ink_toward(target: Vector2, from: Vector2, reach: float, min_gain: float) -
 
 ## Spore clouds and ink act on the necromancer: Dread and the ink slow.
 func _apply_to_player(delta: float) -> void:
+	for k in game.all_players.size():  # Each necromancer (co-op: his slot bound, his Dread).
+		var prev := game.bind_index(k)
+		_apply_to_bound(delta)
+		game.unbind(prev)
+
+
+## _apply_to_player() for the bound necromancer.
+func _apply_to_bound(delta: float) -> void:
 	var pl := game.player
 	var h: Dictionary = ArchiveEnemyData.HAZARDS
 	if in_ink(pl.position):
@@ -309,9 +317,9 @@ func _spore_damage(delta: float) -> void:
 ## Pages hover, then hunt the necromancer; a hit hurts and leaves ink.
 func _step_pages(delta: float) -> void:
 	var i := pages.size() - 1
-	var pl := game.player
 	while i >= 0:
 		var p := pages[i]
+		var pl := game.nearest_player(p.pos)  # The necromancer it hunts (co-op: the nearest).
 		p.t += delta
 		p.life -= delta
 		if p.rise_left > 0.0:
@@ -342,12 +350,12 @@ func _step_pages(delta: float) -> void:
 func _page_hit(p: Page) -> bool:
 	var d := p.def
 	var r := float(d["page_radius"])
-	var pl := game.player
-	if p.pos.distance_to(pl.position) <= r + pl.radius:
-		game.combat.damage_player(float(d["page_damage_player"]) * p.mult, "archivist_page")
-		game.stat_add("archivist_page_player_hits", 1.0)
-		_page_burst(p)
-		return true
+	for pl in game.all_players:  # (Co-op: either necromancer.)
+		if p.pos.distance_to(pl.position) <= r + pl.radius:
+			game.combat.damage_player(float(d["page_damage_player"]) * p.mult, "archivist_page", pl)
+			game.stat_add("archivist_page_player_hits", 1.0)
+			_page_burst(p)
+			return true
 	game.ally_grid.query(p.pos, r + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.state != SummonedUnit.State.SPAWNING and p.pos.distance_to(u.position) <= r + u.radius:

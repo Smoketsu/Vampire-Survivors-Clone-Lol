@@ -83,6 +83,14 @@ static func offerable(id: String, stage_def: Dictionary) -> bool:
 	return is_open(id) and act_allows(id, stage_def)
 
 
+## Co-op: as offerable(), but with a partner's own unlocks `unlocked` (id ->
+## true, from the lobby loadout) instead of this device's save, so each
+## player's card pool follows their own progress.
+static func offerable_with(id: String, stage_def: Dictionary, unlocked: Dictionary) -> bool:
+	var open := not UnlockData.UNLOCKS.has(id) or unlocked.has(id) or (GameState.autotest and GameState.autotest_forces(id))
+	return open and act_allows(id, stage_def)
+
+
 ## The card row of item `id` (spell, passive or summon class; {} if none).
 static func card_row(id: String) -> Dictionary:
 	if AbilityData.SPELLS.has(id):

@@ -317,10 +317,12 @@ func _step_erasure(_delta: float) -> void:
 			erase_radius = nr
 			game.stat_add("archivist_erasure_steps", 1.0)
 			game.shake(4.0)
-	_contain(game.player)
-	for u in game.horde.units:
-		if u.active and u.state != SummonedUnit.State.SPAWNING and not u.airborne:
-			_contain(u)
+	for pl in game.all_players:  # (Co-op: each necromancer and army.)
+		_contain(pl)
+	for h in game.all_hordes:
+		for u in h.units:
+			if u.active and u.state != SummonedUnit.State.SPAWNING and not u.airborne:
+				_contain(u)
 	_erase_layer.queue_redraw()
 
 

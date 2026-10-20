@@ -94,6 +94,16 @@ var _tmp: Array = []
 var _cands: Array = []
 ## The four newer spells (NecroSpellBook; created in setup()).
 var spells: NecroSpellBook = null
+## Co-op: this player's own random stream for level-up hands and chest draws
+## (seeded per slot by CoopSession), so one player's picks never shift the
+## other's offers. Null in solo: the run's global stream, as before.
+var offer_rng: RandomNumberGenerator = null
+## False for a co-op guest: the Profane Pact is the host's pick (it sets the
+## run's difficulty), so it is left out of the guest's card pool.
+var allow_pact: bool = true
+## Co-op: this player's unlocked lockable items (id -> true, from the lobby
+## loadout; Unlocks.offerable_with()). Null = this device's own save, as solo.
+var offer_unlocks: Variant = null
 
 
 ## Initialises levels: the character's starting spell at level 1 (its Orb
@@ -109,7 +119,8 @@ func setup(p_game: Game) -> void:
 		passive_levels[id] = 0
 	var start := game.character.starting_spell()  # AbilityData.STARTING_SPELL for the Gravecaller.
 	spell_levels[start] = 1
-	game.codex.meet(CodexData.SPELL, start)  # Codex: the starting spell (records only).
+	if game.records_here():
+		game.codex.meet(CodexData.SPELL, start)  # Codex: the starting spell (records only).
 	if start == "orb_shield":
 		_create_orb_shield()
 	# Fortune tree (GDD §9.2 "rerolls", open question 7): extra charges.
@@ -585,8 +596,9 @@ func apply_offer(o: Dictionary) -> void:
 			spell_levels[id] = to
 			if id == "orb_shield" and orb_shield == null:
 				_create_orb_shield()
-			game.character.on_spell_level(id, to)  # Character unlock rule (Meta save).
-			game.codex.meet(CodexData.SPELL, id)  # Codex: a spell learned (records only).
+			if game.records_here():  # Co-op: only this machine's own player records.
+				game.character.on_spell_level(id, to)  # Character unlock rule (Meta save).
+				game.codex.meet(CodexData.SPELL, id)  # Codex: a spell learned (records only).
 		"summon":
 			game.horde.set_class_level(id, to)
 		"passive":
@@ -598,7 +610,8 @@ func apply_offer(o: Dictionary) -> void:
 				game.horde.evolutions.apply(id)
 			else:
 				_apply_evolution(id)
-			Meta.discover_recipe(id)  # Recipe book: the pause menu's Recipes view (saved at once).
+			if game.records_here():
+				Meta.discover_recipe(id)  # Recipe book: the pause menu's Recipes view (saved at once).
 		"fallback":
 			_apply_fallback(id)
 		"skip":
@@ -666,7 +679,7 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 		var max_lvl := (AbilityData.SPELLS[id]["levels"] as Array).size()
 		if banished.has(id) or exclude.has(id) or evolved.has(id) or lvl >= max_lvl or (lvl == 0 and not can_new_active):
 			continue
-		if lvl == 0 and not Unlocks.offerable(id, game.stage_def):
+		if lvl == 0 and not _offerable(id):
 			continue  # Act II: locked, or another act's card (Unlocks).
 		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (LevelUpData.WEIGHT_NEW_LATER if bool(AbilityData.SPELLS[id].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW)
 		var evo := EvolutionData.for_spell(id)
@@ -682,7 +695,7 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 			continue
 		if evos.is_locked(cls):
 			continue  # Merged away, or only created by an evolution.
-		if lvl == 0 and not Unlocks.offerable(cls, game.stage_def):
+		if lvl == 0 and not _offerable(cls):
 			continue  # Act II: locked, or another act's card (Unlocks).
 		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (LevelUpData.WEIGHT_NEW_LATER if bool(UnitData.UNITS[cls].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW_CORE_SUMMON)
 		if lvl == 0:
@@ -694,8 +707,10 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 		var lvl := passive_level(id)
 		if banished.has(id) or exclude.has(id) or lvl >= (PassiveData.PASSIVES[id]["levels"] as Array).size() or (lvl == 0 and not can_new_passive):
 			continue
-		if lvl == 0 and not Unlocks.offerable(id, game.stage_def):
+		if lvl == 0 and not _offerable(id):
 			continue  # Act II: locked, or another act's card (Unlocks).
+		if id == PactData.ID and not allow_pact:
+			continue  # Co-op guest: the Profane Pact is the host's pick.
 		var w := LevelUpData.WEIGHT_OWNED if lvl > 0 else (LevelUpData.WEIGHT_NEW_LATER if bool(PassiveData.PASSIVES[id].get("shared_card_pool", false)) else LevelUpData.WEIGHT_NEW)
 		var paired := _paired_spell(id)
 		if paired != "" and spell_level(paired) > 0 and not evolved.has(paired):
@@ -714,12 +729,20 @@ func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 	return out
 
 
+## True when item `id` may be offered as a NEW card: Unlocks.offerable() (this
+## device's save), or in co-op this player's own unlocks (offer_unlocks).
+func _offerable(id: String) -> bool:
+	if offer_unlocks == null:
+		return Unlocks.offerable(id, game.stage_def)
+	return Unlocks.offerable_with(id, game.stage_def, offer_unlocks as Dictionary)
+
+
 ## Removes and returns one weighted-random offer from `cands`.
 func _draw_weighted(cands: Array[Dictionary]) -> Dictionary:
 	var total := 0.0
 	for c in cands:
 		total += float(c["weight"])
-	var r := randf() * total
+	var r := (offer_rng.randf() if offer_rng != null else randf()) * total  # Co-op: the slot's own stream.
 	var idx := cands.size() - 1
 	for i in cands.size():
 		r -= float(cands[i]["weight"])

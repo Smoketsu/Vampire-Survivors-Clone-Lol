@@ -138,6 +138,9 @@ var _reward_index: int = 0
 var _zone_tick: float = 0.0
 ## Seconds until a zone may hurt the necromancer again.
 var _player_zone_cd: float = 0.0
+## Co-op: the same holy-zone hit cooldown (s) of each necromancer past slot 0
+## (slot index -> s; slot 0 keeps _player_zone_cd, so solo is unchanged).
+var _zone_cd_more: Dictionary = {}
 ## True if something was drawn last frame (one final redraw clears it).
 var _drew: bool = false
 ## Reusable query buffer.
@@ -241,6 +244,8 @@ func in_holy_zone(pos: Vector2) -> bool:
 ## Arms, ages and applies every holy zone.
 func _step_zones(delta: float) -> void:
 	_player_zone_cd -= delta
+	for k: int in _zone_cd_more:
+		_zone_cd_more[k] = float(_zone_cd_more[k]) - delta
 	var boss_hold := _boss_frozen()  # Boss zones do not arm while he is frozen.
 	var i := 0
 	while i < zones.size():
@@ -267,13 +272,18 @@ func _step_zones(delta: float) -> void:
 	var tick := _zone_tick >= WaveData.ZONE_TICK
 	if tick:
 		_zone_tick -= WaveData.ZONE_TICK
-	var player := game.player
 	for z in zones:
 		if z.arm_left > 0.0:
 			continue
-		if _player_zone_cd <= 0.0 and player.position.distance_to(z.pos) <= z.radius + player.radius * 0.5:
-			_player_zone_cd = z.player_interval
-			game.combat.damage_player(z.player_damage * game.enemies.damage_mult, "holy_zone")
+		for k in game.all_players.size():  # Each necromancer (co-op: his own hit cooldown).
+			var player := game.all_players[k]
+			var cd := _player_zone_cd if k == 0 else float(_zone_cd_more.get(k, 0.0))  # His cooldown (s).
+			if cd <= 0.0 and player.position.distance_to(z.pos) <= z.radius + player.radius * 0.5:
+				if k == 0:
+					_player_zone_cd = z.player_interval
+				else:
+					_zone_cd_more[k] = z.player_interval
+				game.combat.damage_player(z.player_damage * game.enemies.damage_mult, "holy_zone", player)
 		if not tick:
 			continue
 		game.ally_grid.query(z.pos, z.radius + UnitData.MAX_BLOCK_RADIUS, _tmp)
@@ -349,19 +359,31 @@ func start_crypt(ev: Dictionary) -> void:
 
 ## Ages shrines and claims the ones the necromancer reaches.
 func _step_shrines(delta: float) -> void:
-	var p := game.player.position
 	var i := 0
 	while i < shrines.size():
 		var s := shrines[i]
 		s.life -= delta
-		if p.distance_to(s.pos) <= s.claim_radius:
+		var by := _claimer(s)  # Necromancer index in reach (-1 = none; co-op: the first in slot order).
+		if by >= 0:
+			var prev := game.bind_index(by)  # Co-op: the reward is the claimer's.
 			_claim(s)
+			game.unbind(prev)
 			shrines.remove_at(i)
 		elif s.life <= 0.0:
 			_log(s.kind + "_expired")
 			shrines.remove_at(i)
 		else:
 			i += 1
+
+
+## Index in Game.all_players of the first necromancer within shrine `s`'s
+## claim reach (-1 = none).
+func _claimer(s: Shrine) -> int:
+	for k in game.all_players.size():
+		var pl := game.all_players[k]
+		if pl.position.distance_to(s.pos) <= s.claim_radius:
+			return k
+	return -1
 
 
 ## Applies a claimed shrine's reward.
@@ -430,7 +452,7 @@ func start_consecration(ev: Dictionary) -> void:
 		graves.append(g)
 		for grp: Dictionary in ev["escort"]:
 			for _k in int(grp["count"]):
-				if ed.regular_alive() >= WaveData.HARD_CAP:
+				if ed.regular_alive() >= game.enemies.hard_cap():
 					break
 				ed.spawn_at(String(grp["kind"]), start + Vector2(randf_range(-40.0, 40.0), randf_range(-40.0, 40.0)), bool(grp["elite"]))
 	ed.show_banner(String(ev["banner"]))

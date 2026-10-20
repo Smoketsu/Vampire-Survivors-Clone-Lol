@@ -109,10 +109,10 @@ func _rise(e: Enemy) -> void:
 		u.position += dir * float(d["wall_push"])
 		g.combat.damage_unit(u, float(d["wall_damage_summon"]) * mult, SOURCE)
 	g.stat_add("tide_caller_wall_summon_hits", float(hits))
-	var p := g.player
-	if _in_line(p.position, p.radius):
-		g.stat_add("tide_caller_wall_player_hits", 1.0)
-		g.combat.damage_player(float(d["wall_damage_player"]) * mult, SOURCE)
+	for p in g.all_players:  # (Co-op: every necromancer in the line.)
+		if _in_line(p.position, p.radius):
+			g.stat_add("tide_caller_wall_player_hits", 1.0)
+			g.combat.damage_player(float(d["wall_damage_player"]) * mult, SOURCE, p)
 
 
 ## Autopilot hint: out of the line, toward the necromancer's side.

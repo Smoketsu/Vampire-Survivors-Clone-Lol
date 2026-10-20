@@ -106,4 +106,4 @@ func summary_extra() -> String:
 
 
 func _draw() -> void:
-	GraveSpellGlyphs.draw_wither(self, game.player.position, _radius, _phase, _flash, _blight, _inside > 0)
+	GraveSpellGlyphs.draw_wither(self, caster_pos(), _radius, _phase, _flash, _blight, _inside > 0)

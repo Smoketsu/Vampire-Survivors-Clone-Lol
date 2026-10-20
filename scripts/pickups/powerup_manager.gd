@@ -21,6 +21,11 @@
 ## Drop rolls use their own RandomNumberGenerator (seeded from the autotest
 ## seed), so they never shift the gameplay RNG stream and runs stay
 ## deterministic per seed.
+## Co-op (CoopSession): a drop goes to whichever standing necromancer touches
+## it first (slot order), collected with that slot bound; `timers` /
+## `stasis_total` are the BOUND slot's (CoopSession.bind() swaps them), so a
+## Hyper or Dark Frenzy buff powers its collector's spells and army only, while
+## a Stasis from either player holds every enemy (freezes()).
 class_name PowerupManager
 extends Node2D
 
@@ -49,8 +54,8 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 func _ready() -> void:
 	z_index = -1
-	if GameState.autotest:
-		_rng.seed = hash("powerups:%d" % GameState.autotest_seed)
+	if game.seeded():
+		_rng.seed = hash("powerups:%d" % game.run_seed())
 	else:
 		_rng.randomize()
 
@@ -77,6 +82,40 @@ func step(delta: float) -> void:
 			_release(i)
 			continue
 		i += 1
+	tick_buffs(delta)
+
+
+## Co-op (CoopSession.step()): ages the drops and collects the ones a standing
+## necromancer touches (the first in slot order), with that slot bound. The
+## buffs tick per slot afterwards (tick_buffs()).
+func step_drops(delta: float) -> void:
+	since_drop += delta
+	var co := game.coop
+	var i := 0  # Index into `active` (swap-remove while iterating).
+	while i < active.size():
+		var d := active[i]  # Drop being updated.
+		var taker := -1  # Slot that touches it (-1 = none).
+		for s in co.slots:
+			if s.alive() and d.position.distance_to(s.player.position) <= s.player.radius + PowerupData.PICKUP_RADIUS:
+				taker = s.index
+				break
+		if taker >= 0:
+			_release(i)
+			var prev := co.bound
+			co.bind(taker)
+			collect(d.kind, d.position)
+			co.bind(prev)
+			continue
+		if not d.tick(delta):
+			game.stat_add("pu_expired_" + d.kind, 1.0)
+			_release(i)
+			continue
+		i += 1
+
+
+## Ticks the timed buffs of the bound player (solo: the one; co-op: called once
+## per slot with it bound).
+func tick_buffs(delta: float) -> void:
 	for kind: String in PowerupData.TIMED:
 		var left := float(timers.get(kind, 0.0))  # Seconds left on this buff.
 		if left <= 0.0:
@@ -263,11 +302,24 @@ func frenzy_bonus(key: String) -> float:
 ## except Reckoning enemies (immune) and the stage boss (and a miniboss, the
 ## Cathedral Guardian) after the first boss_fraction of the duration.
 func freezes(e: Enemy) -> bool:
+	if game.coop != null:
+		return game.coop.stasis_freezes(e)  # Co-op: a Stasis of either player stops time.
 	var left := time_left("stasis")  # Stasis seconds left.
 	if left <= 0.0 or e.is_reckoning:
 		return false
 	if e.is_boss or e.is_miniboss:
 		return stasis_total - left < stasis_total * float(PowerupData.POWERUPS["stasis"]["boss_fraction"])
+	return true
+
+
+## The freezes() rule for one player's buff timers `t` and Stasis length
+## `total` (co-op: CoopSession.stasis_freezes() asks it for each slot).
+static func stasis_holds(t: Dictionary, total: float, e: Enemy) -> bool:
+	var left := maxf(0.0, float(t.get("stasis", 0.0)))  # Stasis seconds left.
+	if left <= 0.0 or e.is_reckoning:
+		return false
+	if e.is_boss or e.is_miniboss:
+		return total - left < total * float(PowerupData.POWERUPS["stasis"]["boss_fraction"])
 	return true
 
 

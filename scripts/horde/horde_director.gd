@@ -50,6 +50,9 @@ signal summon_cap_changed
 
 ## Owning run.
 var game: Game
+## Co-op slot of the player this army belongs to (0 in solo; CoopSession).
+## CombatResolver binds it before resolving a hit on one of its summons.
+var slot: int = 0
 ## Living (or spawning) units. Dead units are removed immediately.
 var units: Array[SummonedUnit] = []
 ## Pooled, inactive unit nodes ready for reuse.
@@ -141,6 +144,10 @@ func _ready() -> void:
 ## `source` tags it for the stats ("inquisitor", "seraphine"...). Replacement
 ## resumes normally afterwards (SuppressionField).
 func add_suppression(pos: Vector2, radius: float, duration: float, damage_mult: float = 1.0, telegraph: float = 0.0, source: String = "inquisitor") -> void:
+	if game.coop != null:
+		for h in game.all_hordes:
+			h.suppression.add(pos, radius, duration, damage_mult, telegraph, source)  # Co-op: holy ground holds every army.
+		return
 	suppression.add(pos, radius, duration, damage_mult, telegraph, source)
 
 
@@ -203,7 +210,8 @@ func set_class_level(cls: String, level: int) -> void:
 	var old_cap := capacity(cls)
 	class_levels[cls] = level
 	if level > 0:
-		game.codex.meet(CodexData.SUMMON, cls)  # Codex: a summon class raised (records only).
+		if game.records_here():
+			game.codex.meet(CodexData.SUMMON, cls)  # Codex: a summon class raised (records only).
 	_refresh_class(cls, old_cap)
 	synergies.evaluate()
 

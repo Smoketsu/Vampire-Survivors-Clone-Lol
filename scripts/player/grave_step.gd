@@ -57,6 +57,9 @@ var _queued_dir: Vector2 = Vector2.ZERO
 var _trail_accum: float = 0.0
 ## Afterimages: each [position (Vector2), age in s (float), facing sign (float)].
 var _trail: Array = []
+## Co-op: the necromancer this dash belongs to (drawing only: his look and
+## skin; set by CoopSession). Null in solo, where it is game.player.
+var who: Necromancer = null
 
 
 func _ready() -> void:
@@ -173,13 +176,19 @@ func _age_trail(delta: float) -> void:
 func _draw() -> void:
 	# Sprite key of the afterimage: the run's character as drawn (its own art, else the necromancer's).
 	var key := "player/necromancer"
-	if game != null and not game.character.is_default():
-		var drawn := CharacterGlyphs.drawn_sprite_key(game.character.id)  # "" when no art exists.
+	var pl: Necromancer = who if who != null else (game.player if game != null else null)  # Whose dash this is.
+	var cid := ""  # His character ("" = the default look).
+	if who != null:
+		cid = who.character_id if who.character_id != CharacterData.DEFAULT_ID else ""
+	elif game != null and not game.character.is_default():
+		cid = game.character.id
+	if cid != "":
+		var drawn := CharacterGlyphs.drawn_sprite_key(cid)  # "" when no art exists.
 		if drawn != "":
 			key = drawn
-	if game != null and game.player != null and game.player.skin_id != "":
+	if pl != null and pl.skin_id != "":
 		# A worn skin with its own art (SkinData, cosmetic): the afterimage takes its silhouette.
-		var skin_key := String(SkinData.skin(game.player.skin_id).get("sprite", ""))  # The skin's sprite key ("" = unknown skin).
+		var skin_key := String(SkinData.skin(pl.skin_id).get("sprite", ""))  # The skin's sprite key ("" = unknown skin).
 		if skin_key != "" and SpriteBank.has(skin_key):
 			key = skin_key
 	var tex := SpriteBank.texture(key)  # Sprite art, or null (drawn shape).

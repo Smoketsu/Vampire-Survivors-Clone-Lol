@@ -85,8 +85,11 @@ func _init(p_game: Game) -> void:
 ## hook: 0 while that passive does not exist, so exactly paint_time today).
 func paint_time(target: Node2D) -> float:
 	var t := float(EmpireRulesData.LOCK_ON["paint_time"])  # Base paint (s).
-	if target == game.player:
+	if target is Necromancer:
+		var k := 0 if game.coop == null else game.coop.slot_of(target as Necromancer)  # (Co-op: that necromancer's own passive.)
+		var prev := game.bind_index(k)
 		t *= 1.0 + game.abilities.passive_value(EmpireRulesData.SIGNAL_GHOST, EmpireRulesData.SIGNAL_GHOST_KEY)
+		game.unbind(prev)
 	return t
 
 
@@ -121,7 +124,7 @@ func paint(owner: Enemy, target: Node2D, damage: float, speed: float, reach: flo
 	_reach[i] = reach
 	_src[i] = source
 	game.stat_add("lockon_painted", 1.0)
-	game.stat_add("lockon_on_player" if target == game.player else "lockon_on_summon", 1.0)
+	game.stat_add("lockon_on_player" if target is Necromancer else "lockon_on_summon", 1.0)
 	Sfx.play("lock_on", owner.position)
 	return true
 

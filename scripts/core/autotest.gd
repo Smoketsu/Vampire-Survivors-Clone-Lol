@@ -413,9 +413,67 @@ var _char_lists: Dictionary = {}
 ## Item ids the --character build never banishes (its starting spell and its
 ## evolution passive; empty for the Gravecaller).
 var _char_keep: Dictionary = {}
+# --- Co-op (--coop-bot; CoopSession) ----------------------------------------------------
+## Co-op slot this bot drives (0 = the run's own Autotest node; 1 = a bot
+## node built by CoopSession.build_slot(), which skips _ready()'s run setup).
+var slot: int = 0
+## Card policy of a slot-1 bot (--policy2=; "" = GameState.autotest_policy).
+var _policy_override: String = ""
+## Character of a slot-1 bot (--character2=; "" = GameState.autotest_character).
+var _char_override: String = ""
+## Forced summon classes of a slot-1 bot (--classes2=).
+var _classes_override: PackedStringArray = PackedStringArray()
+## True once a slot-1 bot switched its Shadow Bolt aim at the boss's arrival.
+var _aim_switched: bool = false
+
+
+## Co-op: sets up this object as the bot of slot `i` > 0 (--coop-bot): its
+## policy (--policy2=, army by default), character (--character2=), forced
+## classes (--classes2=) and spells (--spells2=). The run-level work (seeding,
+## the clock, the report) stays with slot 0's Autotest node.
+func init_bot(i: int) -> void:
+	slot = i
+	_policy_override = GameState.autotest_policy2 if GameState.autotest_policy2 != "" else "army"
+	_char_override = GameState.autotest_character2
+	_classes_override = GameState.autotest_classes2
+	for id: String in GameState.autotest_spells2:
+		_forced[id] = true
+		var evo := EvolutionData.for_spell(id)  # Its evolution ("" if none).
+		if evo != "":
+			_forced[String(EvolutionData.EVOLUTIONS[evo]["passive"])] = true
+
+
+## This bot's card policy ("naive", "army", ...).
+func policy() -> String:
+	return _policy_override if _policy_override != "" else GameState.autotest_policy
+
+
+## This bot's character (CharacterData id).
+func _char_id() -> String:
+	return _char_override if _char_override != "" else GameState.autotest_character
+
+
+## This bot's forced summon classes (--classes= / --classes2=).
+func _classes() -> PackedStringArray:
+	return _classes_override if slot > 0 else GameState.autotest_classes
+
+
+## Co-op: one tick of a slot-1 bot (its slot bound; CoopSession.step_bots()):
+## the forced classes once, the Strongest aim when the boss comes, the dash and
+## the ultimate. The run-level checks stay in slot 0's step().
+func step_slot(_delta: float) -> void:
+	if not _forced_done:
+		_apply_forced_classes()
+	if not _aim_switched and game.enemies.boss != null:
+		_aim_switched = true
+		if not game.abilities.bolt_aim_strongest:
+			game.abilities.toggle_bolt_aim()
+	_drive_abilities()
 
 
 func _ready() -> void:
+	if slot > 0:
+		return  # Co-op: a slot-1 bot only picks and steers (init_bot()); the run's own Autotest does the rest.
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	seed(GameState.autotest_seed)
 	for id: String in GameState.autotest_spells:
@@ -461,7 +519,7 @@ func _ready() -> void:
 ## --classes: raises every forced class to Lv 1 while an active slot is free.
 func _apply_forced_classes() -> void:
 	_forced_done = true
-	for cls: String in GameState.autotest_classes:
+	for cls: String in _classes():
 		if int(game.horde.class_levels[cls]) > 0:
 			continue
 		if game.abilities.active_count() >= PlayerData.ACTIVE_SLOTS:
@@ -505,7 +563,8 @@ func step(delta: float) -> void:
 		_reckoning_time = game.elapsed
 		print("[autotest] countdown reached 0:00 at %.1f s - THE RECKONING begins" % game.elapsed)
 	if _reckoning_time >= 0.0 and game.player.invulnerable and game.elapsed >= _reckoning_time + RECKONING_GRACE:
-		game.player.invulnerable = false
+		for pl in game.all_players:
+			pl.invulnerable = false  # Co-op: every necromancer (one in solo).
 		print("[autotest] %.1f s: Reckoning wave %d reached, player made mortal" % [game.elapsed, game.enemies.reckoning_wave])
 	if game.elapsed < WaveData.RUN_DURATION:
 		_min_hp = minf(_min_hp, game.player.hp)
@@ -550,7 +609,7 @@ func _forced_spawn(sp: Dictionary) -> void:
 ## (airborne / dashing units) are checked separately: one that runs longer
 ## than SPECIAL_STUCK_TIME, or ends inside an obstacle, is a stuck unit.
 func _sample_stuck() -> void:
-	for u in game.horde.units:
+	for u in _all_units():
 		if u.active:
 			_track(u, u.generation, u.radius, _summon_wants_move(u), "summon_" + u.unit_class)
 			if u.behavior != null and u.behavior.is_busy() and u.behavior.special_time > SPECIAL_STUCK_TIME \
@@ -588,6 +647,23 @@ func _track(n: Node2D, gen: int, r: float, wants: bool, label: String) -> void:
 	_stuck_track[id] = [gen, n.position, game.elapsed]
 
 
+## Every summon of the run (co-op: both armies; solo: the one).
+func _all_units() -> Array[SummonedUnit]:
+	if game.coop == null:
+		return game.horde.units
+	var out: Array[SummonedUnit] = []
+	for h in game.all_hordes:
+		out.append_array(h.units)
+	return out
+
+
+## Where summon `u`'s necromancer stands (co-op: its own army's).
+func _owner_pos(u: SummonedUnit) -> Vector2:
+	if game.coop == null or u.director == null:
+		return game.player.position
+	return game.coop.slots[u.director.slot].player.position
+
+
 ## Records one stuck episode labelled `label` and prints `detail`.
 func _count_stuck(label: String, detail: String) -> void:
 	_stuck_units += 1
@@ -602,7 +678,7 @@ func _summon_wants_move(u: SummonedUnit) -> bool:
 		SummonedUnit.State.RETURNING, SummonedUnit.State.RETREATING, SummonedUnit.State.REPOSITIONING:
 			return true
 		SummonedUnit.State.FOLLOWING, SummonedUnit.State.ACQUIRING:
-			return u.position.distance_to(game.player.position + u.anchor_offset) > STUCK_ANCHOR_SLACK
+			return u.position.distance_to(_owner_pos(u) + u.anchor_offset) > STUCK_ANCHOR_SLACK
 		SummonedUnit.State.ENGAGING:
 			var t := u.target
 			if u.attack_profile == "melee" and t != null and t.active and t.generation == u.target_gen:
@@ -615,7 +691,7 @@ func _summon_wants_move(u: SummonedUnit) -> bool:
 func _enemy_wants_move(e: Enemy) -> bool:
 	if e.engaged_timer > 0.0 or (e.kit != null and e.kit.is_busy()):
 		return false  # Fighting a blocker, or standing in a Sanctum windup / cast.
-	var pl := game.player
+	var pl := game.nearest_player(e.position)  # (Co-op: the one it advances on.)
 	if e.is_boss:
 		var b := e as Boss
 		return b.is_walking() and e.position.distance_to(pl.position) - e.radius - pl.radius > e.attack_range + 4.0
@@ -632,7 +708,7 @@ func _enemy_wants_move(e: Enemy) -> bool:
 	var t := e.target
 	if t == null:
 		return false
-	var tr := pl.radius if t == pl else (t as SummonedUnit).radius
+	var tr := (t as Necromancer).radius if t is Necromancer else (t as SummonedUnit).radius
 	return e.position.distance_to(t.position) - e.radius - tr > e.attack_range + 4.0
 
 
@@ -722,13 +798,13 @@ func choose_action(offers: Array[Dictionary]) -> Dictionary:
 		if s > best_score:
 			best_score = s
 			best = i
-	var policy := GameState.autotest_policy
+	var pol := policy()  # This bot's card policy.
 	var ab := game.abilities
 	if best_score <= FORCED_BLOCK_SCORE:
 		# --spells: only slot-stealing actives on offer; keep the slots.
 		return {"action": "reroll", "index": -1} if ab.rerolls_left > 0 else {"action": "skip", "index": -1}
-	if policy in ["army", "evolve", "summon"] and best_score < EVOLUTION_SCORE:
-		var banish_ids: Array = BANISH_IDS.get(policy, [])
+	if pol in ["army", "evolve", "summon"] and best_score < EVOLUTION_SCORE:
+		var banish_ids: Array = BANISH_IDS.get(pol, [])
 		for i in offers.size():
 			if ab.can_banish(offers[i]) and String(offers[i]["id"]) in banish_ids and not _forced.has(String(offers[i]["id"])) \
 					and not _char_keep.has(String(offers[i]["id"])):
@@ -760,24 +836,24 @@ func _card_score(o: Dictionary) -> float:
 			return FALLBACK_SCORE
 	var id := String(o["id"])
 	if id == PactData.ID:
-		var eager := GameState.autotest_policy == "pact" or GameState.autotest_pact  # --policy=pact or --pact.
+		var eager := policy() == "pact" or GameState.autotest_pact  # --policy=pact or --pact.
 		return (PACT_EAGER_SCORE if eager else PACT_SCORE) - float(o["to"])
-	if String(o["kind"]) == "summon" and GameState.autotest_classes.has(id):
+	if String(o["kind"]) == "summon" and _classes().has(id):
 		return FORCED_CLASS_SCORE - float(o["to"])  # --classes: upgrade it first.
 	if _forced.has(id):
 		return FORCED_SPELL_SCORE - float(o["to"]) * 3.0  # --spells: take and level these first.
 	if int(o["from"]) == 0 and not _reserved_ids().has(id) and _forced_slots_short(String(o["kind"])):
 		return FORCED_BLOCK_SCORE  # Would take a slot a --spells item (or a summon-bot core class) still needs.
-	var listed: Dictionary = _build_list(GameState.autotest_policy)  # Build list ({} = naive / pact).
+	var listed: Dictionary = _build_list(policy())  # Build list ({} = naive / pact).
 	if not listed.is_empty() and int(o["from"]) == 0 and not listed.has(id):
 		# Off-build item (the newer spells and passives, the later summon
 		# classes, the other policies' items): a focused build never spends a
 		# slot on it; reroll or skip instead (FORCED_BLOCK_SCORE).
 		return FORCED_BLOCK_SCORE
-	if GameState.autotest_policy in ["army", "summon"] and int(o["from"]) == 0 and String(o["kind"]) == "passive" \
+	if policy() in ["army", "summon"] and int(o["from"]) == 0 and String(o["kind"]) == "passive" \
 			and bool(PassiveData.PASSIVES[id].get("shared_card_pool", false)) and game.abilities.passive_level(LATE_PASSIVE_GATE) <= 0:
 		return FORCED_BLOCK_SCORE  # A later horde passive before the bot's top passive (LATE_PASSIVE_GATE).
-	match GameState.autotest_policy:
+	match policy():
 		"army":
 			var pri := float(_build_list("army").get(id, 0.0))  # Card priority.
 			if GameState.autotest_pact and id == "warding_ritual":
@@ -820,7 +896,7 @@ func _build_list(policy: String) -> Dictionary:
 			base = EVOLVE_PRIORITY
 		"summon":
 			base = SUMMON_PRIORITY
-	if base.is_empty() or GameState.autotest_character == CharacterData.DEFAULT_ID:
+	if base.is_empty() or _char_id() == CharacterData.DEFAULT_ID:
 		return base
 	if not _char_lists.has(policy):
 		_char_lists[policy] = _character_list(base)
@@ -833,7 +909,7 @@ func _build_list(policy: String) -> Dictionary:
 ## Conduit's the same way. Both are recorded in _char_keep (never banished).
 func _character_list(base: Dictionary) -> Dictionary:
 	var out := base.duplicate()  # Swapped copy.
-	var start := String(CharacterData.CHARACTERS[GameState.autotest_character]["spell"])  # Starting spell.
+	var start := String(CharacterData.CHARACTERS[_char_id()]["spell"])  # Starting spell.
 	_swap(out, AbilityData.STARTING_SPELL, start)
 	_char_keep[start] = true
 	var evo := EvolutionData.for_spell(start)  # Its evolution ("" if none).
@@ -864,7 +940,7 @@ static func _swap(list: Dictionary, from: String, to: String) -> void:
 ## ARMY_CORE under --policy=army.
 func _reserved_ids() -> Dictionary:
 	var core: Array = []  # The policy's core classes.
-	match GameState.autotest_policy:
+	match policy():
 		"summon":
 			core = SUMMON_CORE
 		"army":
@@ -1052,23 +1128,23 @@ func get_move_vector() -> Vector2:
 	if goal == Vector2.INF and game.enemies.march != null and away.length() < 0.2:
 		# Crimson March: close in on outposts, generators and carts when calm.
 		goal = game.enemies.march.seek_point(p, OBJECTIVE_SEEK_RADIUS)
-	if goal == Vector2.INF and game.enemies.sanctum != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
+	if goal == Vector2.INF and game.enemies.sanctum != null and away.length() < 0.2 and policy() in SANCTUM_SEEK_POLICIES:
 		# Sanctum: close in on ward crystals and sacred altars when calm.
 		goal = game.enemies.sanctum.seek_point(p, OBJECTIVE_SEEK_RADIUS)
-	if goal == Vector2.INF and game.enemies.harbour != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
+	if goal == Vector2.INF and game.enemies.harbour != null and away.length() < 0.2 and policy() in SANCTUM_SEEK_POLICIES:
 		# Gullhaven Harbour: close in on bell buoys and smugglers' caches when calm.
 		goal = game.enemies.harbour.seek_point(p, OBJECTIVE_SEEK_RADIUS)
 	if goal == Vector2.INF and game.enemies.archive != null and away.length() < 0.5:
 		# The Hollow Archive: walk onto forbidden tomes when calm (burns them).
 		goal = game.enemies.archive.seek_point(p, OBJECTIVE_SEEK_RADIUS)
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	if goal == Vector2.INF and game.enemies.spire != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
+	if goal == Vector2.INF and game.enemies.spire != null and away.length() < 0.2 and policy() in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.spire.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # Ul-Thalos: topple the dream pillars when calm.
 	# --- Act III: the Assembly Halls ---
-	if goal == Vector2.INF and game.enemies.assembly != null and away.length() < 0.3 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
+	if goal == Vector2.INF and game.enemies.assembly != null and away.length() < 0.3 and policy() in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.assembly.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # Smash the fabricators when calm.
 	# --- Act III: the Scrap Wastes ---
-	if goal == Vector2.INF and game.enemies.wastes != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
+	if goal == Vector2.INF and game.enemies.wastes != null and away.length() < 0.2 and policy() in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.wastes.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Scrap Wastes: tear down the Signal Pylons when calm.
 	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
 		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
@@ -1082,7 +1158,24 @@ func get_move_vector() -> Vector2:
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
 	var wander := Vector2.from_angle(game.elapsed * 0.3) * 0.35
 	var loot := _loot_vector(p, away.length())  # Toward a nearby chest / drop when safe.
+	if game.coop != null:
+		return _coop_move(away, toward, objective, danger, avoid, wander, loot)
 	return (away * 1.5 + toward * 1.2 + objective * 1.0 + danger * 3.0 + avoid * 1.5 + wander + loot * 1.4).limit_length(1.0)
+
+
+## Co-op autopilot mix (--coop-bot): the solo mix, plus a walk to a downed
+## partner (held in revive reach, ignoring the crowd) and a drift back toward
+## a partner who is far away (CoopSession.revive_vector() / cohesion_vector()).
+## Slot 1 wanders the other way round, so the two do not walk in step.
+func _coop_move(away: Vector2, toward: Vector2, objective: Vector2, danger: Vector2, avoid: Vector2, wander: Vector2, loot: Vector2) -> Vector2:
+	var p := game.player
+	var co := game.coop
+	if co.holding_revive(p):
+		return (danger * 3.0 + avoid * 1.5).limit_length(0.3)  # Stay on the partner: only dodge telegraphs and obstacles.
+	var revive := co.revive_vector(p) * CoopData.BOT_REVIVE_WEIGHT
+	var cohesion := co.cohesion_vector(p) * CoopData.BOT_COHESION_WEIGHT
+	var w := wander if slot == 0 else -wander
+	return (away * 1.5 + toward * 1.2 + objective * 1.0 + danger * 3.0 + avoid * 1.5 + w + loot * 1.4 + revive + cohesion).limit_length(1.0)
 
 
 ## Unit vector toward the nearest chest (within ChestData.AUTOTEST_SEEK_RADIUS,
@@ -1237,6 +1330,10 @@ func finish(summary: Dictionary) -> void:
 	_print_hyper_skins(summary)
 	RewardsReport.print_line(self, summary)  # Content wave 2: achievement rewards.
 	print("[autotest] feedback: %s" % FeedbackReport.summary_line(game, summary))  # Feedback buttons: three sample reports built, nothing opened.
+	if game.coop != null:
+		game.coop.print_report()  # --coop-bot: a line per slot and the coop line (CoopSession).
+	if game.perf != null:
+		game.perf.print_table()  # --perf: the per-tick timing table (PerfProbe).
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)

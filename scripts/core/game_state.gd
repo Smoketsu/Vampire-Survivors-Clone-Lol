@@ -117,6 +117,22 @@
 ##                         autotest (its summary only reports url_set=true).
 ##   --feedback-entry=ID   Debug: the form's prefill field id (e.g.
 ##                         entry.123456789) instead of FeedbackData.DETAILS_ENTRY.
+##   --coop-bot            Online co-op without the network (docs/coop/DESIGN.md):
+##                         a two-player run in this one process, both slots
+##                         driven by the bots (army policy for both unless
+##                         --policy= / --policy2= say otherwise), the camera on
+##                         slot 0. The summary adds a line per slot and a "coop"
+##                         line (CoopSession.print_report()).
+##   --policy2=NAME        --coop-bot: slot 1's card policy (default army).
+##   --character2=ID       --coop-bot: slot 1's character (default gravecaller).
+##   --classes2=a,b        --coop-bot: slot 1's forced summon classes.
+##   --spells2=a,b         --coop-bot: slot 1's forced spells (+ evolution passives).
+##   --perf                Prints a table of the simulation's milliseconds per
+##                         tick (mean / p95 / max per minute, and at the busy
+##                         moments: boss fight, Reckoning, Rally Barrages) at the
+##                         end (PerfProbe; reads the clock only).
+## On the Web build the same options can come from the page URL
+## (?necro_autotest=--coop-bot,--perf,...; GameState._web_args()).
 ## The environment variable NECROPATHY_AUTOTEST=1 (or the pre-rename GRAVEBOUND_AUTOTEST=1) is equivalent to --autotest.
 extends Node
 
@@ -186,6 +202,25 @@ var autotest_character: String = CharacterData.DEFAULT_ID
 var victory_preview: bool = false
 ## Autotest: UltimateData id of the ultimate (--ultimate=; locks bypassed).
 var autotest_ultimate: String = UltimateData.DEFAULT_ID
+## Autotest: true when --coop-bot plays a co-op run in this one process, both
+## slots driven by the bots, the camera on slot 0, no network (CoopSession).
+var autotest_coop: bool = false
+## Autotest: true when --policy= was given (--coop-bot then keeps it for slot 0;
+## without it both slots play the army policy).
+var autotest_policy_given: bool = false
+## Autotest (--coop-bot): card policy of slot 1 (--policy2=; "" = the army policy).
+var autotest_policy2: String = ""
+## Autotest (--coop-bot): CharacterData id of slot 1 (--character2=).
+var autotest_character2: String = CharacterData.DEFAULT_ID
+## Autotest (--coop-bot): summon classes forced for slot 1 (--classes2=a,b).
+var autotest_classes2: PackedStringArray = PackedStringArray()
+## Autotest (--coop-bot): spells forced for slot 1 (--spells2=a,b).
+var autotest_spells2: PackedStringArray = PackedStringArray()
+## Autotest: true when --perf prints the per-tick timing table (PerfProbe).
+var autotest_perf: bool = false
+## Autotest: --perf-real=A-B,C-D game-second windows run at real time (1x) so
+## the rendered-frame times there are real ("" = none; PerfProbe).
+var autotest_perf_real: String = ""
 ## Debug: the feedback form link from --feedback-url= ("" = FeedbackData.FORM_URL).
 var feedback_url: String = ""
 ## Debug: the form's prefill field id from --feedback-entry= ("" =
@@ -201,10 +236,27 @@ var last_run_summary: Dictionary = {}
 
 func _ready() -> void:
 	_parse_args(OS.get_cmdline_user_args())
+	_parse_args(_web_args())  # Web build only: the page URL's test flag (empty elsewhere).
 	if OS.get_environment("NECROPATHY_AUTOTEST") == "1" or OS.get_environment("GRAVEBOUND_AUTOTEST") == "1":
 		autotest = true  # GRAVEBOUND_AUTOTEST: the pre-rename name, still accepted.
 	if not autotest:
 		SaveMigration.run()  # First autoload: carry the Gravebound saves over before Settings / Meta load.
+
+
+## Web build: the autotest options of the page URL's `necro_autotest` query
+## parameter (comma-separated, e.g. ?necro_autotest=--coop-bot,--perf,--seed=7),
+## with --autotest in front, so a headless browser can start a test run (the
+## performance measurement, docs/coop/PERF.md). Empty without the parameter
+## and on every other platform. The autotest never touches the player's save.
+func _web_args() -> PackedStringArray:
+	if not OS.has_feature("web"):
+		return PackedStringArray()
+	var q: Variant = JavaScriptBridge.eval("new URLSearchParams(window.location.search).get('necro_autotest') || ''", true)
+	if typeof(q) != TYPE_STRING or String(q) == "":
+		return PackedStringArray()
+	var out := PackedStringArray(["--autotest"])  # The test switch, then the given options.
+	out.append_array(String(q).split(",", false))
+	return out
 
 
 ## Parses user command-line arguments (the ones after `--`).
@@ -228,6 +280,32 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_timeout = maxf(30.0, arg.get_slice("=", 1).to_float())
 		elif arg.begins_with("--policy="):
 			autotest_policy = arg.get_slice("=", 1)
+			autotest_policy_given = true
+		elif arg == "--coop-bot":
+			autotest_coop = true  # Co-op in one process, both slots by the bots (CoopSession).
+		elif arg == "--perf":
+			autotest_perf = true  # Per-tick timing table (PerfProbe).
+		elif arg.begins_with("--perf-real="):
+			autotest_perf = true
+			autotest_perf_real = arg.get_slice("=", 1)  # Real-time windows (game seconds).
+		elif arg.begins_with("--policy2="):
+			autotest_policy2 = arg.get_slice("=", 1)
+		elif arg.begins_with("--character2="):
+			var cid2 := arg.get_slice("=", 1).to_lower()  # Slot 1's character.
+			if CharacterModifiers.is_available(cid2):
+				autotest_character2 = cid2
+			else:
+				push_error("Unknown or unavailable --character2=%s (playable: %s)" % [cid2, ", ".join(CharacterModifiers.available_ids())])
+		elif arg.begins_with("--classes2="):
+			for cls: String in arg.get_slice("=", 1).split(",", false):
+				if UnitData.UNITS.has(cls) and not autotest_classes2.has(cls) and not bool(UnitData.UNITS[cls].get("evolved_only", false)):
+					autotest_classes2.append(cls)
+		elif arg.begins_with("--spells2="):
+			for id: String in arg.get_slice("=", 1).split(",", false):
+				if id in AbilityData.SPELL_ORDER:
+					autotest_spells2.append(id)
+				else:
+					push_warning("--spells2: unknown spell id '%s' ignored" % id)
 		elif arg.begins_with("--meta="):
 			var profile := arg.get_slice("=", 1)
 			autotest_meta = profile if profile in MetaData.AUTOTEST_PROFILES else "none"
@@ -342,18 +420,23 @@ func _parse_args(args: PackedStringArray) -> void:
 				if UnitData.UNITS.has(cls) and not autotest_classes.has(cls) \
 						and not bool(UnitData.UNITS[cls].get("evolved_only", false)):
 					autotest_classes.append(cls)
+	if autotest_coop and not autotest_policy_given:
+		autotest_policy = "army"  # --coop-bot: both slots play the army policy unless told otherwise.
 
 
 ## Autotest: true when item `id` is forced by --spells= / --passives= /
 ## --classes= (Unlocks.is_open() treats it as unlocked). A forced spell's
 ## evolution passive counts too (--spells forces both; an Act II spell's
 ## paired passive is locked with it), and so does the ultimate of --ultimate=.
+## --coop-bot's --spells2= / --classes2= (slot 1) count the same way.
 func autotest_forces(id: String) -> bool:
 	if autotest_spells.has(id) or autotest_passives.has(id) or autotest_classes.has(id):
 		return true
+	if autotest_spells2.has(id) or autotest_classes2.has(id):
+		return true
 	if id == autotest_ultimate:
 		return true  # Content wave 2: --ultimate= opens its ultimate on its own (never through --unlocks=all).
-	for sp: String in autotest_spells:
+	for sp: String in autotest_spells + autotest_spells2:
 		var evo := EvolutionData.for_spell(sp)  # The forced spell's evolution ("" if none).
 		if evo != "" and String(EvolutionData.EVOLUTIONS[evo]["passive"]) == id:
 			return true

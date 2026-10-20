@@ -12,6 +12,15 @@ extends Node2D
 var game: Game
 ## Reusable spatial-hash query buffer.
 var _tmp: Array = []
+## Co-op: its necromancer's position at the last step (set by NecroSpellBook),
+## so a spell drawn while another slot is bound still draws at its own caster.
+var origin: Vector2 = Vector2.ZERO
+
+
+## Where this spell's caster stands, for drawing: game.player in solo (as
+## before), the position of its own necromancer at the last step in co-op.
+func caster_pos() -> Vector2:
+	return origin if game.coop != null else game.player.position
 
 
 ## Advances the spell by `delta` s with its effective `stats` row

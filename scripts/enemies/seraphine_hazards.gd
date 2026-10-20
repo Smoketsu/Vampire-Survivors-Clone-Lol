@@ -185,9 +185,9 @@ func _blast_circle(c: HolyCircle) -> void:
 			hits += 1
 			game.combat.damage_unit(u, float(def["circles_damage_summon"]), "seraphine_circle")
 	game.stat_add("seraphine_circle_summon_hits", float(hits))
-	var pl := game.player
-	if pl.position.distance_to(c.pos) <= c.radius + pl.radius:
-		game.combat.damage_player(float(def["circles_damage_player"]) * game.enemies.damage_mult, "seraphine_circle")
+	for pl in game.all_players:  # (Co-op: either necromancer.)
+		if pl.position.distance_to(c.pos) <= c.radius + pl.radius:
+			game.combat.damage_player(float(def["circles_damage_player"]) * game.enemies.damage_mult, "seraphine_circle", pl)
 
 
 # =====================================================================================
@@ -257,12 +257,12 @@ func _in_beam(i: int, p: Vector2, r: float) -> bool:
 ## One damage pulse of every beam on the necromancer and the summons.
 func _beam_pulse() -> void:
 	var n := int(def["beams_count"])
-	var pl := game.player
-	for i in n:
-		if _in_beam(i, pl.position, pl.radius):
-			game.combat.damage_player(float(def["beams_damage_player"]) * game.enemies.damage_mult, "seraphine_beam")
-			game.stat_add("seraphine_beam_player_pulses", 1.0)
-			break
+	for pl in game.all_players:  # (Co-op: either necromancer.)
+		for i in n:
+			if _in_beam(i, pl.position, pl.radius):
+				game.combat.damage_player(float(def["beams_damage_player"]) * game.enemies.damage_mult, "seraphine_beam", pl)
+				game.stat_add("seraphine_beam_player_pulses", 1.0)
+				break
 	game.ally_grid.query(boss.position, float(def["beams_length"]) + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	var hits := 0  # Summon pulses this tick.
 	for u: SummonedUnit in _tmp:
@@ -326,23 +326,24 @@ func _blast_nova() -> void:
 	game.shake(9.0)
 	Sfx.play("boss_impact", nova_center, 0.8)
 	game.stat_add("seraphine_novas", 1.0)
-	var pl := game.player
-	if pl.position.distance_to(nova_center) <= r:
-		if in_safe(pl.position, pl.radius):
-			game.stat_add("seraphine_nova_player_safe", 1.0)
-		else:
-			game.combat.damage_player(float(def["nova_damage_player"]) * game.enemies.damage_mult, "seraphine_nova")
-			game.stat_add("seraphine_nova_player_hit", 1.0)
+	for pl in game.all_players:  # (Co-op: either necromancer.)
+		if pl.position.distance_to(nova_center) <= r:
+			if in_safe(pl.position, pl.radius):
+				game.stat_add("seraphine_nova_player_safe", 1.0)
+			else:
+				game.combat.damage_player(float(def["nova_damage_player"]) * game.enemies.damage_mult, "seraphine_nova", pl)
+				game.stat_add("seraphine_nova_player_hit", 1.0)
 	var hit := 0  # Summons burned.
 	var spared := 0  # Summons standing in a safe circle.
-	for u in game.horde.units:
-		if not u.active or u.state == SummonedUnit.State.SPAWNING or u.position.distance_to(nova_center) > r:
-			continue
-		if in_safe(u.position, u.radius):
-			spared += 1
-			continue
-		hit += 1
-		game.combat.damage_unit(u, float(def["nova_damage_summon"]), "seraphine_nova")
+	for h in game.all_hordes:  # (Co-op: every army.)
+		for u in h.units:
+			if not u.active or u.state == SummonedUnit.State.SPAWNING or u.position.distance_to(nova_center) > r:
+				continue
+			if in_safe(u.position, u.radius):
+				spared += 1
+				continue
+			hit += 1
+			game.combat.damage_unit(u, float(def["nova_damage_summon"]), "seraphine_nova")
 	game.stat_add("seraphine_nova_summon_hits", float(hit))
 	game.stat_add("seraphine_nova_summon_spared", float(spared))
 
@@ -377,15 +378,16 @@ func _step_collapse(delta: float) -> void:
 		return
 	collapse_tick_left += float(def["collapse_tick"])
 	var r := collapse_radius()
-	var pl := game.player
-	if pl.position.distance_to(collapse_center) > r:
-		game.combat.damage_player(float(def["collapse_damage_player"]) * game.enemies.damage_mult, "seraphine_collapse")
-		game.stat_add("seraphine_collapse_player_ticks", 1.0)
+	for pl in game.all_players:  # (Co-op: either necromancer.)
+		if pl.position.distance_to(collapse_center) > r:
+			game.combat.damage_player(float(def["collapse_damage_player"]) * game.enemies.damage_mult, "seraphine_collapse", pl)
+			game.stat_add("seraphine_collapse_player_ticks", 1.0)
 	var burned := 0  # Summons outside this tick.
-	for u in game.horde.units:
-		if u.active and u.state != SummonedUnit.State.SPAWNING and u.position.distance_to(collapse_center) > r:
-			burned += 1
-			game.combat.damage_unit(u, float(def["collapse_damage_summon"]), "seraphine_collapse")
+	for h in game.all_hordes:  # (Co-op: every army.)
+		for u in h.units:
+			if u.active and u.state != SummonedUnit.State.SPAWNING and u.position.distance_to(collapse_center) > r:
+				burned += 1
+				game.combat.damage_unit(u, float(def["collapse_damage_summon"]), "seraphine_collapse")
 	game.stat_add("seraphine_collapse_summon_ticks", float(burned))
 
 

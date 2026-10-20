@@ -73,6 +73,12 @@ var skin_id: String = ""
 ## Engine motion (UnitMotion: body / overlay layers, bob, lean, squashes,
 ## cast recoils); purely visual.
 var motion: UnitMotion = null
+## His own Grave Step (set by Game / CoopSession; MotionDirector reads it for
+## the dash pose, so each co-op necromancer shows his own dash).
+var dash: GraveStep = null
+## CharacterData id he is drawn as ("" = the run's character, game.character;
+## a co-op slot sets its own so each necromancer looks like his player's pick).
+var character_id: String = ""
 
 
 func _ready() -> void:
@@ -96,6 +102,8 @@ func step(delta: float) -> void:
 	var input := Vector2.ZERO
 	if game.autotest != null:
 		input = game.autotest.get_move_vector()
+	elif game.coop != null:
+		input = game.coop.move_input()  # Online co-op: this slot's lockstep input.
 	else:
 		input = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	# Grave Step (dash) moves him itself while a step runs.
@@ -235,7 +243,8 @@ func _draw() -> void:
 ## (CharacterGlyphs; the classic necromancer for the Gravecaller).
 func _draw_body(ci: CanvasItem) -> void:
 	if skin_id == "" or not SkinGlyphs.draw_skin(ci, skin_id, Vector2.ZERO, radius, flash > 0.0):
-		CharacterGlyphs.draw_player(ci, game.character.id if game != null else CharacterData.DEFAULT_ID, Vector2.ZERO, radius, flash > 0.0)
+		var cid := character_id if character_id != "" else (game.character.id if game != null else CharacterData.DEFAULT_ID)  # Drawn character.
+		CharacterGlyphs.draw_player(ci, cid, Vector2.ZERO, radius, flash > 0.0)
 
 
 ## Overlay layer on `ci`: the priest ward bubble.

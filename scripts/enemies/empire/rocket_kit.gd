@@ -95,9 +95,9 @@ func _burst(e: Enemy, at: Vector2, why: String) -> void:
 	var dmg := e.damage * CovenantKit.hit_scale(e)  # Time-scaled burst damage.
 	g.effects.impact(at, r, Palette.EMPIRE_SIGNAL_AMBER, "wastes_blast")
 	Sfx.play("rocket_burst", at)
-	var pl := g.player
-	if not pl.dead and pl.position.distance_to(at) <= r + pl.radius:
-		g.combat.damage_player(dmg, e.kind)
+	for pl in g.all_players:  # (Co-op: every necromancer inside.)
+		if not pl.dead and pl.position.distance_to(at) <= r + pl.radius:
+			g.combat.damage_player(dmg, e.kind, pl)
 	g.ally_grid.query(at, r + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.position.distance_to(at) <= r + u.radius:

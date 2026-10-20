@@ -51,6 +51,9 @@ var charge_left: float = 0.0
 var _special_cds: Dictionary = {}
 ## Whether the player was already hit by the current charge.
 var _charge_hit_player: bool = false
+## Co-op: the other necromancers (past the first in Game.all_players) the
+## current charge already hit (Necromancer -> true; the first keeps the flag).
+var _charge_hit_more: Dictionary = {}
 ## Instance ids of summons already hit by the current charge.
 var _charge_hit_units: Dictionary = {}
 ## Last special used, so the same one is not chosen twice in a row when
@@ -155,7 +158,7 @@ func _special_usable(id: String, d: float) -> bool:
 
 ## Call to Arms needs room under the enemy hard cap.
 func _can_call() -> bool:
-	return game.enemies.regular_alive() < WaveData.HARD_CAP - 10
+	return game.enemies.regular_alive() < game.enemies.hard_cap() - 10
 
 
 ## Boss physics: inherited walk/melee while in WALK, otherwise specials.
@@ -262,12 +265,12 @@ func _resolve_hammerfall() -> void:
 		if u.active and u.state != SummonedUnit.State.SPAWNING and u.position.distance_to(hammer_point) <= r + u.radius:
 			soakers += 1
 			game.combat.damage_unit(u, float(boss_def["hammer_damage_summon"]), "boss_hammer")
-	var player := game.player
-	if player.position.distance_to(hammer_point) <= r + player.radius:
-		var soak := minf(float(boss_def["hammer_soak_max"]), float(soakers) * float(boss_def["hammer_soak_per_unit"]))
-		if soak > 0.0:
-			game.stat_add("boss_hammer_soaked", 1.0)
-		game.combat.damage_player(float(boss_def["hammer_damage_player"]) * game.enemies.damage_mult * (1.0 - soak), "boss_hammer")
+	for player in game.all_players:  # (Co-op: every necromancer inside.)
+		if player.position.distance_to(hammer_point) <= r + player.radius:
+			var soak := minf(float(boss_def["hammer_soak_max"]), float(soakers) * float(boss_def["hammer_soak_per_unit"]))
+			if soak > 0.0:
+				game.stat_add("boss_hammer_soaked", 1.0)
+			game.combat.damage_player(float(boss_def["hammer_damage_player"]) * game.enemies.damage_mult * (1.0 - soak), "boss_hammer", player)
 
 
 # =====================================================================================
@@ -280,6 +283,7 @@ func _start_charge() -> void:
 	charge_dir = to_p.normalized() if to_p.length() > 1.0 else Vector2.RIGHT
 	charge_left = game.arena.clear_length(position, charge_dir, float(boss_def["charge_length"]), radius * 0.8)
 	_charge_hit_player = false
+	_charge_hit_more.clear()
 	_charge_hit_units.clear()
 	game.effects.telegraph_line(position, position + charge_dir * charge_left, float(boss_def["charge_width"]), float(boss_def["charge_telegraph"]), self)
 	_begin_special("charge", Phase.CHARGE_WINDUP)
@@ -306,10 +310,15 @@ func _step_charge(delta: float) -> void:
 			charge_left -= absorb
 			soaked = soaked or charge_left <= 0.0
 			game.combat.damage_unit(u, float(boss_def["charge_damage_summon"]), "boss_charge")
-	var player := game.player
-	if not _charge_hit_player and player.position.distance_to(position) <= hit_r + player.radius:
-		_charge_hit_player = true
-		game.combat.damage_player(float(boss_def["charge_damage_player"]) * game.enemies.damage_mult, "boss_charge")
+	for k in game.all_players.size():  # (Co-op: every necromancer in the lane, once.)
+		var player := game.all_players[k]
+		var done := _charge_hit_player if k == 0 else _charge_hit_more.has(player)  # Already hit by this charge.
+		if not done and player.position.distance_to(position) <= hit_r + player.radius:
+			if k == 0:
+				_charge_hit_player = true
+			else:
+				_charge_hit_more[player] = true
+			game.combat.damage_player(float(boss_def["charge_damage_player"]) * game.enemies.damage_mult, "boss_charge", player)
 	if charge_left <= 0.0:
 		if soaked:
 			# Undead bodies soaked the rest of the charge (body-blocking).
@@ -381,7 +390,7 @@ func _start_call() -> void:
 ## respected).
 func _resolve_call() -> void:
 	for i in _call_points.size():
-		if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+		if game.enemies.regular_alive() >= game.enemies.hard_cap():
 			break
 		game.enemies.spawn_at(_call_kinds[i], _call_points[i], false)
 		game.effects.spawn_ring(_call_points[i], Palette.GOLD)

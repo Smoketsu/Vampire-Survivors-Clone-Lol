@@ -209,15 +209,12 @@ func _step_one(i: int, delta: float) -> bool:
 	var r := _radius[si]  # Hit radius (px).
 	# The Orb Shield first (the hostile-arrow rules): any orb destroys a shot
 	# with the Eclipsed Guard innate, else a charge-limited intercept.
-	if game.innates.eclipsed_guard(b, r) or game.abilities.try_intercept(b, r):
+	if _orb_stops(b, r):
 		game.effects.pop(b, Palette.VIOLET, 6.0)
 		game.stat_add("los_blocked_orb", 1.0)
 		return false
 	# The first body on the path a -> b: a Bone Wall segment, a summon or the necromancer.
-	var best_t := INF  # Path fraction (0..1) of the first touch.
-	var wall: BoneWall = game.abilities.spells.nodes.get("bone_wall")  # Null until a wall exists.
-	if wall != null:
-		best_t = wall.shot_block_t(a, b, r)
+	var best_t := _wall_block_t(a, b, r)  # Path fraction (0..1) of the first touch (INF = none yet).
 	var hit_unit: SummonedUnit = null  # First summon touched (null = none before best_t).
 	var half := (b - a).length() * 0.5  # Half the path length (px).
 	game.ally_grid.query((a + b) * 0.5, half + r + float(EmpireRulesData.LINE_OF_FIRE["summon_slack"]), _tmp)
@@ -228,21 +225,22 @@ func _step_one(i: int, delta: float) -> bool:
 		if t < best_t:
 			best_t = t
 			hit_unit = u
-	var pl := game.player  # The necromancer.
-	var hit_player := false  # The necromancer is the first body touched.
-	if not pl.dead:
-		var tp := segment_t(a, b, pl.position, pl.radius + r)
-		if tp < best_t:
-			best_t = tp
-			hit_player = true
-			hit_unit = null
+	var hit_pl: Necromancer = null  # The necromancer touched first (co-op: either), null = none.
+	for pl in game.all_players:
+		if not pl.dead:
+			var tp := segment_t(a, b, pl.position, pl.radius + r)
+			if tp < best_t:
+				best_t = tp
+				hit_pl = pl
+				hit_unit = null
+	var hit_player := hit_pl != null  # The necromancer is the first body touched.
 	if best_t == INF:
 		return true  # Nothing touched: it flies on.
 	var at := a.lerp(b, best_t)  # Where it struck.
 	var heavy := _heavy[si]  # A Lock-On rail.
 	if hit_player:
 		var before := float(game.stats.get("damage_to_player", 0.0))  # To count what landed.
-		game.combat.damage_player(_dmg[i], _src[i])
+		game.combat.damage_player(_dmg[i], _src[i], hit_pl)
 		game.stat_add("los_hit_player", 1.0)
 		game.stat_add("los_player_dmg", float(game.stats.get("damage_to_player", 0.0)) - before)
 		if heavy:
@@ -261,15 +259,43 @@ func _step_one(i: int, delta: float) -> bool:
 	return false
 
 
+## True when an Orb Shield stops a shot of radius `r` at `b`: the Eclipsed
+## Guard innate's orbs, else a charge-limited intercept (co-op: each standing
+## necromancer's in slot order, his slot bound).
+func _orb_stops(b: Vector2, r: float) -> bool:
+	if game.coop == null:
+		return game.innates.eclipsed_guard(b, r) or game.abilities.try_intercept(b, r)
+	for k in game.all_players.size():
+		var prev := game.bind_index(k)
+		var stop := not game.player.dead and (game.innates.eclipsed_guard(b, r) or game.abilities.try_intercept(b, r))
+		game.unbind(prev)
+		if stop:
+			return true
+	return false
+
+
+## Path fraction (0..1) at which a Bone Wall segment first blocks the path
+## a -> b of radius `r` (INF = none; co-op: the nearest of every player's walls).
+func _wall_block_t(a: Vector2, b: Vector2, r: float) -> float:
+	var best := INF
+	for k in game.all_players.size():
+		var prev := game.bind_index(k)
+		var wall: BoneWall = game.abilities.spells.nodes.get("bone_wall")  # Null until a wall exists.
+		if wall != null:
+			best = minf(best, wall.shot_block_t(a, b, r))
+		game.unbind(prev)
+	return best
+
+
 ## An arcing shot lands: everything within its style's splash takes its damage.
 func _arc_burst(i: int) -> void:
 	var at := _pos[i]  # Landing point.
 	var splash := float(_styles[_style[i]]["splash"])  # Burst radius (px).
 	game.effects.impact(at, splash, Color(_styles[_style[i]]["color"]))
 	game.stat_add("los_arc_bursts", 1.0)
-	var pl := game.player  # The necromancer.
-	if not pl.dead and pl.position.distance_to(at) <= splash + pl.radius:
-		game.combat.damage_player(_dmg[i], _src[i])
+	for pl in game.all_players:  # The necromancer (co-op: either).
+		if not pl.dead and pl.position.distance_to(at) <= splash + pl.radius:
+			game.combat.damage_player(_dmg[i], _src[i], pl)
 	game.ally_grid.query(at, splash + float(EmpireRulesData.LINE_OF_FIRE["summon_slack"]), _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.position.distance_to(at) <= splash + u.radius:

@@ -322,20 +322,21 @@ func avoid_vector(pos: Vector2, r: float, look: float) -> Vector2:
 func resolve_all(delta: float) -> void:
 	_frame += 1
 	var now := game.elapsed
-	var p := game.player
-	var o := obstacle_at(p.position)
-	if o != null:
-		var push := separation(o, p.position, p.radius)
-		if push != Vector2.ZERO:
-			p.position += push
-			resolved_player += 1
-	for u in game.horde.units:
-		if not u.active or u.state == SummonedUnit.State.SPAWNING or u.airborne or u.flies:
-			continue  # A flying Gargoyle passes over obstacles (it lands on a free point); so does a hovering Grave Drone (Act III).
-		var before := u.position
-		u.position = _resolve_body(u.position, u.radius, u.velocity, u.get_instance_id(), delta, now)
-		if u.position != before:
-			resolved_summons += 1
+	for p in game.all_players:  # The necromancer (co-op: each one).
+		var o := obstacle_at(p.position)
+		if o != null:
+			var push := separation(o, p.position, p.radius)
+			if push != Vector2.ZERO:
+				p.position += push
+				resolved_player += 1
+	for h in game.all_hordes:  # The army (co-op: each one).
+		for u in h.units:
+			if not u.active or u.state == SummonedUnit.State.SPAWNING or u.airborne or u.flies:
+				continue  # A flying Gargoyle passes over obstacles (it lands on a free point); so does a hovering Grave Drone (Act III).
+			var before := u.position
+			u.position = _resolve_body(u.position, u.radius, u.velocity, u.get_instance_id(), delta, now)
+			if u.position != before:
+				resolved_summons += 1
 	for e in game.enemies.active:
 		if not e.active or e.phases_obstacles:
 			continue  # (A phasing body, the Ink Wraith, slips through obstacles.)

@@ -59,6 +59,15 @@
 ##     2)"): on a stage with a "wastes" config it owns the WastesDirector (the
 ##     Signal Pylons, the scrap storms, the Trojan Horse; `wastes`) and hands it
 ##     the "pylons" / "storm" / "trojan" events. Null on every other stage.
+##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
+##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
+##     it advances on, aims at and recycles around that one (bosses and kits
+##     too); the stage directors step with the primary slot bound. The trickle
+##     rings each standing necromancer in turn (CoopSession.spawn_anchor()),
+##     formation and Reckoning waves spawn one copy around each, the hard cap is
+##     hard_cap() (x CoopData alive_cap) and a miniboss gets CoopData's HP
+##     (set_miniboss()). The doubled trickle and soft cap come through
+##     DifficultyModifiers.coop_mult(). In solo none of it runs.
 class_name EnemyDirector
 extends Node2D
 
@@ -272,9 +281,13 @@ func step(delta: float) -> void:
 	var recycle := maxf(WaveData.RECYCLE_DISTANCE, _ring_radius() + WaveData.RECYCLE_MARGIN)
 	var recycle2 := recycle * recycle
 	var pw := game.powerups  # Stasis check (power-up freeze).
+	var co := game.coop  # Co-op session (null in solo).
 	for e in active:
 		if not e.active:
 			continue
+		if co != null:
+			co.bind_nearest(e.position)  # Co-op: this enemy acts on its nearest standing necromancer.
+			player_pos = game.player.position
 		var frozen := pw.freezes(e) or e.freeze_timer > 0.0 or e.stun_timer > 0.0  # Held by Stasis, a Deep Freeze or a Cathedral Horror stun this tick.
 		e.set_frozen(frozen)
 		if frozen:
@@ -289,6 +302,8 @@ func step(delta: float) -> void:
 		e.resolve_blocking()
 		if not e.is_boss and not e.is_objective and not e.is_miniboss and e.position.distance_squared_to(player_pos) > recycle2:
 			_recycle(e)
+	if co != null:
+		co.bind_primary()  # Co-op: the stage directors act around the primary necromancer.
 	stage.step(delta)
 	rites.step(delta)
 	if march != null:
@@ -402,7 +417,7 @@ func _update_segment(t: float) -> void:
 ## (Crimson March outposts) stop at it; scripted waves only respect HARD_CAP.
 func soft_cap() -> int:
 	var seg: Dictionary = segments[segment_index]
-	return mini(roundi(float(seg["max_alive"]) * game.difficulty.enemy_spawn_mult()), WaveData.HARD_CAP)
+	return mini(roundi(float(seg["max_alive"]) * game.difficulty.enemy_spawn_mult()), hard_cap())
 
 
 ## Trickle spawner: `rate` enemies/s up to soft_cap(), both scaled by the
@@ -429,7 +444,7 @@ func _spawn_trickle(delta: float) -> void:
 		if alive >= cap:
 			continue
 		var kind := _pick_kind(game.difficulty.trickle_weights(seg["weights"], game.elapsed))
-		var pos := _ring_point(randf() * TAU)  # Spawn point on the ring.
+		var pos := _ring_point(randf() * TAU) if game.coop == null else _ring_point_at(game.coop.spawn_anchor(), randf() * TAU)  # Spawn point on the ring (co-op: each necromancer in turn).
 		var elite := elite_chance > 0.0 and randf() < elite_chance  # Promoted by the level.
 		var e := _spawn_enemy(kind, pos, elite)  # The new soldier.
 		if elite:
@@ -532,10 +547,33 @@ static func _scaled_groups(groups: Array, mult: float) -> Array:
 	return out
 
 
+## The hard cap on living regular enemies: WaveData.HARD_CAP, x CoopData's
+## alive_cap in co-op (DifficultyModifiers.coop_mult(); exactly HARD_CAP solo).
+func hard_cap() -> int:
+	if game.coop == null:
+		return WaveData.HARD_CAP
+	return roundi(float(WaveData.HARD_CAP) * game.difficulty.coop_mult("alive_cap"))
+
+
 ## Spawns `groups` (list of {kind, count, elite}) in `formation` ("ring",
 ## "arc" or "line") on the spawn ring around the player (HARD_CAP respected).
-## Used by "wave" events and by MarchDirector's escort waves.
+## Used by "wave" events and by MarchDirector's escort waves. Co-op: one copy
+## around each standing necromancer (CoopData: the doubled enemies).
 func spawn_formation(formation: String, groups: Array) -> void:
+	if game.coop != null:
+		var co := game.coop
+		var prev := co.bound
+		var alive := co.alive_slots()
+		for k in mini(alive.size(), CoopData.WAVE_COPIES_MAX):
+			co.bind(alive[k])
+			_spawn_formation_here(formation, groups)
+		co.bind(prev)
+		return
+	_spawn_formation_here(formation, groups)
+
+
+## One copy of a formation wave around the bound necromancer (spawn_formation()).
+func _spawn_formation_here(formation: String, groups: Array) -> void:
 	var members: Array[Dictionary] = []
 	for g: Dictionary in groups:
 		for i in int(g["count"]):
@@ -545,8 +583,9 @@ func spawn_formation(formation: String, groups: Array) -> void:
 	var ring := _ring_radius()
 	var p := game.player.position
 	var alive := regular_alive()
+	var cap := hard_cap()  # Living regular enemies allowed.
 	for i in n:
-		if alive >= WaveData.HARD_CAP:
+		if alive >= cap:
 			break
 		var pos: Vector2
 		match formation:
@@ -614,6 +653,22 @@ func _spawn_reckoning_wave() -> void:
 	if reckoning_wave == 0:
 		show_banner(r["banner"])
 		reckoning_started.emit()
+	if game.coop != null:
+		var co := game.coop  # Co-op: one wave around each standing necromancer (the doubling).
+		var prev := co.bound
+		var alive := co.alive_slots()
+		for k in mini(alive.size(), CoopData.WAVE_COPIES_MAX):
+			co.bind(alive[k])
+			_reckoning_wave_here(r)
+		co.bind(prev)
+	else:
+		_reckoning_wave_here(r)
+	reckoning_wave += 1
+	_next_reckoning += float(r["interval"])
+
+
+## One Reckoning wave (stage data `r`) around the bound necromancer.
+func _reckoning_wave_here(r: Dictionary) -> void:
 	var count: int = int(r["base_count"]) + int(r["count_growth"]) * reckoning_wave
 	var hp_scale := hp_mult * pow(float(r["hp_growth"]), float(reckoning_wave))
 	var dmg_scale := pow(float(r["damage_growth"]), float(reckoning_wave))
@@ -633,8 +688,6 @@ func _spawn_reckoning_wave() -> void:
 			c.damage *= dmg_scale
 			c.is_reckoning = true
 		count += n
-	reckoning_wave += 1
-	_next_reckoning += float(r["interval"])
 	game.stat_add("reckoning_spawned", float(count))
 
 
@@ -650,6 +703,11 @@ func _ring_radius() -> float:
 ## Point on the spawn ring at `angle`.
 func _ring_point(angle: float) -> Vector2:
 	return game.player.position + Vector2.from_angle(angle) * _ring_radius()
+
+
+## Point at `angle` on the spawn ring around `center` (co-op: another necromancer).
+func _ring_point_at(center: Vector2, angle: float) -> Vector2:
+	return center + Vector2.from_angle(angle) * _ring_radius()
 
 
 ## Public spawn-ring point (StageDirector sends consecrators from it).
@@ -735,6 +793,10 @@ static func is_known_kind(kind: String) -> bool:
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar
 ## under its display name).
 func set_miniboss(e: Enemy) -> void:
+	if game.coop != null and (miniboss != e or miniboss_gen != e.generation):
+		var m := game.difficulty.coop_mult("miniboss_hp")  # Co-op: tougher for two armies (CoopData).
+		e.max_hp *= m
+		e.hp *= m
 	miniboss = e
 	miniboss_gen = e.generation
 

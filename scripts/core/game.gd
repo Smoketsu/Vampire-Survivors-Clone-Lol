@@ -58,6 +58,14 @@
 ## runs the Electronic Empire's shared rules (Line of Fire, Lock-On, Steel has
 ## no soul, the Purge Protocol), stepped right after the projectiles; null on
 ## Acts I and II unless an Empire kind forced there asks for it (empire_rules()).
+## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
+## slots in this one simulation; the per-player fields below (player, horde,
+## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
+## meta, volleys, dread, rewards) then point at the BOUND slot (bind_slot()),
+## and _physics_process() hands the tick to CoopSession.step(). `all_players`
+## / `all_hordes` list every necromancer / army (one each in solo), for shared
+## code that must test them all. With no co-op `coop` is null and nothing of it
+## runs: solo plays bit-for-bit as before.
 class_name Game
 extends Node2D
 
@@ -197,6 +205,20 @@ var empire: EmpireRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
+## Online co-op: the two player slots and their binding (CoopSession); null in
+## a solo run, so nothing of co-op exists there.
+var coop: CoopSession = null
+## Every necromancer of the run ([player] in solo; both slots' in co-op), for
+## shared code that tests each one (hazards, pickups, obstacle push-out).
+var all_players: Array[Necromancer] = []
+## Every undead army of the run ([horde] in solo; both slots' in co-op).
+var all_hordes: Array[HordeDirector] = []
+## Opt-in per-tick timing of the simulation (--perf; PerfProbe), null otherwise.
+var perf: PerfProbe = null
+## Co-op start message (CoopNet.start_info: seed, config, loadouts, local_slot,
+## version), set by Main before add_child for an online co-op run; empty = no
+## network co-op (the --coop-bot autotest builds its own loadouts).
+var coop_start: Dictionary = {}
 
 # --- UI ---------------------------------------------------------------------------
 
@@ -231,8 +253,11 @@ func _ready() -> void:
 		autotest = Autotest.new()
 		autotest.game = self
 		add_child(autotest)
-	meta = Meta.run_modifiers()
-	character = CharacterModifiers.for_id(run_config.character_id)
+	_make_coop()  # Online co-op / --coop-bot only (coop stays null in solo).
+	if GameState.autotest and GameState.autotest_perf:
+		perf = PerfProbe.new(self)  # --perf: per-tick timing (reads the clock only).
+	meta = Meta.run_modifiers() if coop == null else coop.meta_for(0)
+	character = CharacterModifiers.for_id(run_config.character_id) if coop == null else coop.character_for(0)
 	enemy_grid = SpatialHash.new(GRID_CELL)
 	ally_grid = SpatialHash.new(GRID_CELL)
 	volleys_on = GameState.autotest_volleys if GameState.autotest else Settings.volleys  # Before DifficultyModifiers (denser fodder).
@@ -305,7 +330,10 @@ func _ready() -> void:
 	add_child(grave_step)
 	player = Necromancer.new()
 	player.game = self
+	player.dash = grave_step  # His own dash (drawing: MotionDirector).
 	add_child(player)
+	all_players = [player]
+	all_hordes = [horde]
 	meta.apply_to_player(player)
 	character.apply_to_player(player)  # Character stats; no-op for the Gravecaller.
 	difficulty.apply_to_player(player)  # Frail Master (run modifier); no-op otherwise.
@@ -344,7 +372,8 @@ func _ready() -> void:
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
-	player.died.connect(_on_player_died)
+	if coop == null:
+		player.died.connect(_on_player_died)  # Co-op: the downed rule instead (CoopSession).
 	enemies.boss_defeated.connect(_on_boss_defeated)
 	enemies.boss_spawned.connect(codex.on_boss_spawned)  # Codex: the boss was faced.
 	rewards = RunRewards.new(self)  # Content wave 2: one-run achievement counters (read-only).
@@ -353,6 +382,8 @@ func _ready() -> void:
 		stats[key] = 0.0
 	# GDD brief: the run starts with 2 Skeleton Warriors (warrior level 1).
 	horde.set_class_level("warrior", 1)
+	if coop != null:
+		_build_coop_slots()
 	if GameState.victory_preview:
 		VictoryPreview.setup(self)  # Debug: a small army for the scripted victory.
 	_build_ui()
@@ -380,6 +411,88 @@ func _resolve_ultimate() -> String:
 	if not UltimateData.ULTIMATES.has(uid) or (not GameState.autotest and not Unlocks.is_open(uid)):
 		return UltimateData.DEFAULT_ID
 	return uid
+
+
+## Creates the co-op session when this run is co-op: the --coop-bot autotest
+## (both slots driven by the bots, the camera on slot 0) or an online start
+## (`coop_start`, CoopNet.start_info). Leaves `coop` null otherwise (solo).
+func _make_coop() -> void:
+	if GameState.autotest and GameState.autotest_coop:
+		var lo0 := {"character_id": run_config.character_id, "name": "P1"}  # Slot 0: the usual --character=.
+		var lo1 := {"character_id": GameState.autotest_character2, "name": "P2"}  # Slot 1: --character2=.
+		coop = CoopSession.new(self, [lo0, lo1], 0, true, GameState.autotest_seed)
+	elif not coop_start.is_empty():
+		var los: Array = coop_start.get("loadouts", [])
+		if los.size() >= CoopData.SLOTS:
+			coop = CoopSession.new(self, los, int(coop_start.get("local_slot", 0)), false, int(coop_start.get("seed", 0)))
+			seed(coop.run_seed)  # Both machines run the same global stream.
+
+
+## Co-op: takes the solo-built objects as slot 0's, builds slot 1's beside them,
+## starts slot 1's army like slot 0's (two Skeleton Warriors) and hooks the
+## downed rule. Slot 0 stays bound afterwards.
+func _build_coop_slots() -> void:
+	coop.adopt_slot0()
+	for i in range(1, coop.slots.size()):
+		coop.build_slot(i)
+		coop.bind(i)
+		horde.set_class_level("warrior", 1)
+		if autotest != null:
+			player.invulnerable = not GameState.autotest_mortal
+		coop.bind(0)
+	coop.finish_setup()
+	if coop.view_slot != 0:
+		coop.bind(coop.view_slot)
+
+
+## Binds co-op slot `i` (CoopSession.bind(): Game's per-player fields point at
+## that slot's objects). No-op in solo.
+func bind_slot(i: int) -> void:
+	if coop != null:
+		coop.bind(i)
+
+
+## Shared code acting on each necromancer in turn (hazards, ground, stage
+## rules) loops `for k in all_players.size()` and calls this first: in co-op it
+## binds slot `k` (so `player`, `horde`, `abilities`... are that player's) and
+## returns the slot bound before, for unbind(); in solo it does nothing and
+## returns -1 (k is 0, the one player, already bound).
+func bind_index(k: int) -> int:
+	if coop == null:
+		return -1
+	var prev := coop.bound
+	coop.bind(k)
+	return prev
+
+
+## Restores the binding bind_index() returned (no-op for -1, i.e. solo).
+func unbind(prev: int) -> void:
+	if prev >= 0 and coop != null:
+		coop.bind(prev)
+
+
+## The standing necromancer nearest to `pos` (enemy targeting): `player` in
+## solo; in co-op the nearest one not downed (CoopSession.nearest_player()).
+func nearest_player(pos: Vector2) -> Necromancer:
+	return player if coop == null else coop.nearest_player(pos)
+
+
+## True when the bound player's progress is this machine's to record (Meta
+## unlocks, the recipe book, the Codex): always in solo; in co-op only for the
+## slot this machine plays (each player records their own, on their own device).
+func records_here() -> bool:
+	return coop == null or coop.bound == coop.view_slot
+
+
+## True when the run's private random streams are seeded (the autotest, or an
+## online co-op run, whose two machines must draw the same numbers).
+func seeded() -> bool:
+	return GameState.autotest or (coop != null and not coop.bots)
+
+
+## Seed of the run's private random streams (see seeded()).
+func run_seed() -> int:
+	return coop.run_seed if coop != null and not GameState.autotest else GameState.autotest_seed
 
 
 ## Builds the CanvasLayer UI. It processes while the tree is paused so menus
@@ -451,6 +564,9 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if run_state != RunState.PLAYING:
 		return
+	if coop != null:
+		_physics_coop(delta)
+		return
 	var t0 := Time.get_ticks_usec()
 	elapsed += delta
 	_rebuild_grids()
@@ -479,6 +595,8 @@ func _physics_process(delta: float) -> void:
 	worst_step_usec = maxi(worst_step_usec, last_step_usec)
 	_step_usec_total += last_step_usec
 	_step_count += 1
+	if perf != null:
+		perf.record(last_step_usec)  # --perf only (reads the clock, never gameplay).
 	if autotest != null:
 		autotest.step(delta)
 	if pending_level_ups > 0 and run_state == RunState.PLAYING:
@@ -487,11 +605,31 @@ func _physics_process(delta: float) -> void:
 		VictoryPreview.fire(self)  # Debug: the scripted victory (no-op once ended).
 
 
+## One co-op tick: CoopSession.step() runs both slots and the shared systems
+## in its fixed order, then the bots and the shared level-ups (both pick).
+func _physics_coop(delta: float) -> void:
+	var t0 := Time.get_ticks_usec()
+	coop.step(delta)
+	last_step_usec = Time.get_ticks_usec() - t0
+	worst_step_usec = maxi(worst_step_usec, last_step_usec)
+	_step_usec_total += last_step_usec
+	_step_count += 1
+	if perf != null:
+		perf.record(last_step_usec)
+	if autotest != null:
+		autotest.step(delta)  # Slot 0's bot and the run-level checks (slot 0 is bound).
+		coop.step_bots(delta)
+	if pending_level_ups > 0 and run_state == RunState.PLAYING:
+		coop.resolve_level_ups()
+
+
 func _process(_delta: float) -> void:
 	# Camera follow + trauma-based screen shake (Juice autoload, cosmetic).
 	camera.position = player.position
 	camera.offset = Juice.camera_offset()
 	ground.update_view(player.position)
+	if perf != null:
+		perf.frame()  # --perf: rendered-frame times (the Web measurement).
 
 
 ## The Electronic Empire's shared rules (Act III), created on first use: at
@@ -560,7 +698,11 @@ func add_xp(amount: int) -> void:
 		stat_add("oath_bonus_xp", base * difficulty.oath_value("xp_gain"))
 	if difficulty.level_value("xp_mult") != 1.0:
 		stat_add("difficulty_bonus_xp", base * (difficulty.xp_mult() - 1.0 - difficulty.value("xp_gain")))
-	var gained := base * difficulty.xp_mult() + _xp_carry
+	var scaled := base * difficulty.xp_mult()  # XP after the difficulty rewards.
+	if coop != null:
+		scaled *= difficulty.coop_mult("xp")  # Co-op: the ONE shared bar (CoopData.SCALING).
+		coop.slots[coop.bound].xp_collected += amount
+	var gained := scaled + _xp_carry
 	amount = floori(gained)
 	_xp_carry = gained - float(amount)
 	xp += amount
@@ -602,6 +744,9 @@ func _on_card_chosen(offer: Dictionary) -> void:
 ## run and shows the reveal. Resumes in _on_chest_closed().
 func open_chest(pos: Vector2) -> void:
 	if run_state != RunState.PLAYING:
+		return
+	if coop != null:
+		coop.open_chest(pos)  # Co-op: the opener's rewards, no pause (CoopSession).
 		return
 	var count := chests.roll_count()  # 1, 3 or 5 upgrades.
 	var rewards := abilities.chest_rewards(count)  # Applied rewards, in order.
@@ -683,6 +828,8 @@ func _on_boss_defeated() -> void:
 func end_run(won: bool, reason: String) -> void:
 	if run_state == RunState.ENDED:
 		return
+	if coop != null:
+		coop.bind(coop.view_slot)  # The summary, the Soul Ash and the autotest report are this machine's player's.
 	run_state = RunState.ENDED
 	victory = won
 	end_reason = reason
