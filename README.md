@@ -1506,7 +1506,7 @@ card after Act II, "The Beacons Burn", where the other holy orders march out (th
   the Codex's reward column names every achievement's reward. A save that
   already held an achievement gets its new reward when it loads.
 - **The Codex** (main menu; GDD §10.1 "Collection / Codex" and "Achievements").
-  Four tabs. **Achievements** lists every achievement and every *feat* (the
+  Six tabs. **Achievements** lists every achievement and every *feat* (the
   lifetime-counter skin unlocks: The Plague Doctor, The Heretic Saint, The
   Dread Sovereign skin; the Hyper unlock; the Hyper skins) with its badge,
   goal, a progress bar and the reward (the skin it unlocks, Hyper mode, the
@@ -1519,7 +1519,9 @@ card after Act II, "The Beacons Burn", where the other holy orders march out (th
   **meet** them in runs: a spell learned, a summon class raised, a Covenant
   kind slain (soldiers, structures, the Reckoning's Inquisitor, the
   Cathedral Guardian), a boss faced; until then they are dark silhouettes
-  named "Unknown". **Evolutions follow the recipe rule**: until you obtain
+  named "Unknown". **Ancient Eye** (Act II) and **Empire** (Act III) list
+  their faction's soldiers, champions and bosses the same way.
+  **Evolutions follow the recipe rule**: until you obtain
   one it is a "?" with no name, art or hint (it reads the `[recipes]` book).
   Achievements use four new badge icons (`assets/sprites/icons/ach_*.png`).
 - **Credits** (main menu): a slow roll (the studio, Smoketsu; Godot Engine;
