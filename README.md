@@ -2258,7 +2258,7 @@ scripts/
                             school colour, unlock rule
     palette.gd              Colour language
 web/mobile_shell.html       The Web export's page: Godot's stock shell plus the phone support (viewport,
-                            no zoom / scroll bounce, audio unlock on the first tap, landscape lock)
+                            no zoom / scroll bounce, audio unlock on the first tap, landscape lock, the canvas fitted to the safe area by fitCanvas())
 ```
 
 **Simulation order.** Each physics tick (60 Hz), `Game` runs these steps in order:

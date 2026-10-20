@@ -4,9 +4,16 @@
   Godot 4.3's stock page (godot.html: loading bar, error notice, engine start),
   unchanged in behaviour, plus phone and tablet support (GDD 15.0 "Mobile browser
   support"):
-    * viewport: device width, no pinch or double-tap zoom (no viewport-fit=cover:
-      the browser keeps the canvas clear of a notch, so the HUD edges and the
-      touch buttons never sit under it); no scroll bounce or pull-to-refresh (fixed body,
+    * viewport: device width, no pinch or double-tap zoom, viewport-fit=cover with a
+      black-translucent status bar, so the page always covers the whole screen; the
+      canvas is then fitted by THIS page into the safe area (fitCanvas() below:
+      clear of a notch, the status-bar strip and the home bar), and Godot leaves its
+      size alone (export preset html/canvas_resize_policy = 0). On an iPhone Home
+      Screen web app in landscape, the page drawn under a reserved status-bar strip
+      while touches were measured without it put every tap a fixed distance above the
+      finger (owner report, GDD 15.0 "Home Screen touch offset"); one rectangle that
+      the page sets itself keeps drawing and touches in the same coordinates;
+      no scroll bounce or pull-to-refresh (fixed body,
       overscroll-behavior: none); no text selection, callout or tap highlight on
       the canvas; touch-action: none on the canvas (Godot reads every finger);
     * audio unlock: browsers start audio only from a user gesture, and iOS Safari
@@ -36,10 +43,10 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 		<title>$GODOT_PROJECT_NAME</title>
 		<style>
 html, body, #canvas {
@@ -66,6 +73,9 @@ body {
 
 #canvas {
 	display: block;
+	position: fixed;  /* Placed and sized by fitCanvas() inside the safe area. */
+	left: 0;
+	top: 0;
 	touch-action: none;
 	user-select: none;
 	-webkit-user-select: none;
@@ -75,6 +85,14 @@ body {
 
 #canvas:focus {
 	outline: none;
+}
+
+/* Never shown: fitCanvas() reads the safe-area insets from its padding. */
+#safe-probe {
+	position: fixed;
+	visibility: hidden;
+	pointer-events: none;
+	padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
 }
 
 #status, #status-splash, #status-progress {
@@ -259,6 +277,7 @@ body {
 		<canvas id="canvas">
 			Your browser does not support the canvas tag.
 		</canvas>
+		<div id="safe-probe"></div>
 
 		<noscript>
 			Your browser does not support JavaScript.
@@ -276,6 +295,50 @@ body {
 const GODOT_CONFIG = $GODOT_CONFIG;
 const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
 const engine = new Engine(GODOT_CONFIG);
+
+// Canvas fit (GDD 15.0 "Home Screen touch offset"): this page, not Godot, sizes the canvas
+// (export preset html/canvas_resize_policy = 0), as the safe area of the screen: the window
+// minus the notch, status-bar and home-bar insets (all 0 on a desktop). Godot reads the new
+// canvas.width / height every frame and resizes its window to match, and its touch maths
+// measures the canvas rectangle on every event, so drawing and touches always agree.
+(function () {
+	const canvas = document.getElementById('canvas');
+	const probe = document.getElementById('safe-probe');  // Holds the env(safe-area-inset-*) padding.
+	function px(v) { return parseFloat(v) || 0; }  // CSS length -> px (0 when unset).
+	function fitCanvas() {
+		const fs = document.fullscreenElement || document.webkitFullscreenElement;  // Canvas fullscreen: the whole screen.
+		const cs = getComputedStyle(probe);
+		const top = fs ? 0 : px(cs.paddingTop);  // Insets (CSS px).
+		const right = fs ? 0 : px(cs.paddingRight);
+		const bottom = fs ? 0 : px(cs.paddingBottom);
+		const left = fs ? 0 : px(cs.paddingLeft);
+		const w = Math.max(1, Math.round(window.innerWidth - left - right));  // Safe area (CSS px).
+		const h = Math.max(1, Math.round(window.innerHeight - top - bottom));
+		const dpr = window.devicePixelRatio || 1;  // Device px per CSS px (Godot's hidpi ratio).
+		canvas.style.left = `${left}px`;
+		canvas.style.top = `${top}px`;
+		canvas.style.width = `${w}px`;
+		canvas.style.height = `${h}px`;
+		const bw = Math.round(w * dpr);  // Drawing buffer (device px).
+		const bh = Math.round(h * dpr);
+		if (canvas.width !== bw || canvas.height !== bh) {
+			canvas.width = bw;
+			canvas.height = bh;
+		}
+		// A fixed page never scrolls on purpose; undo any scroll iOS left after a rotation.
+		if (window.scrollX !== 0 || window.scrollY !== 0) {
+			window.scrollTo(0, 0);
+		}
+	}
+	fitCanvas();
+	window.addEventListener('resize', fitCanvas);
+	window.addEventListener('orientationchange', () => { fitCanvas(); setTimeout(fitCanvas, 300); });
+	document.addEventListener('fullscreenchange', fitCanvas);
+	document.addEventListener('webkitfullscreenchange', fitCanvas);
+	if (window.visualViewport) {
+		window.visualViewport.addEventListener('resize', fitCanvas);
+	}
+}());
 
 (function () {
 	const statusOverlay = document.getElementById('status');

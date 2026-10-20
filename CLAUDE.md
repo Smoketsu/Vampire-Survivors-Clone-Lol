@@ -424,7 +424,7 @@ tiny tweaks.
   sister` line, `--spawn=battle_sister@T`.
 
 - the **Web build** (owner decision, GDD §15.0 "Web build after the art" and "Web build"): a no-threads
-  Godot 4.3 `Web` export preset (no SharedArrayBuffer / COOP-COEP, any static host; canvas fills the window);
+  Godot 4.3 `Web` export preset (no SharedArrayBuffer / COOP-COEP, any static host; the page sizes the canvas to the screen's safe area, `fitCanvas()` in `web/mobile_shell.html` with canvas_resize_policy 0, GDD §15.0 "Home Screen touch offset");
   the startup synthesis spread over frames on the Web (`StartupSynth`, the run loop as jobs in
   `RunLoopSynth`; 6 ms per frame, `SoundData.WEB_SYNTH_BUDGET_MS`; bit-identical, the desktop path
   unchanged), so the page no longer freezes for it; Quit hidden (`FrontDoorData.WEB_HIDDEN_ITEMS`); the
