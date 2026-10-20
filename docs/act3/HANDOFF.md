@@ -1,123 +1,127 @@
-# Act III handoff (from the previous lead session, Oct 20, 2026)
+# Act III handoff (second lead session, Oct 20, 2026, 15:45 UTC)
 
-The owner asked for a fresh session to build Act III. This file is everything the new lead needs. Read it first,
-then `CLAUDE.md` (the project rules; they override everything here if they conflict), then `docs/act3/PROPOSAL.md`
-(the owner-approved design), then `docs/act3/BRIEF_FOUNDATION.md` (the phase 1 brief).
+Read this first, then `CLAUDE.md` (the project rules; they win any conflict), `docs/act3/PROPOSAL.md` (the
+owner-approved design) and `docs/act3/BRIEF_PHASE2.md` (how the three stages were briefed). GDD §15.0 rows from
+"Act III foundation (phase 1)" to the end of the table record every Act III decision.
 
 ## Where things stand
 
-- **`main`** is at the `integration` tip `c0189e9`: all of content wave 2, its art redos, the chest beacon, the
-  Feedback button (live, the owner's Google Form) and the Reckoning-death crash fix. It is live on GitHub Pages
-  (https://smoketsu.github.io/NecropathyPlay/). CI takes about 4 minutes; `main` pushes publish automatically.
-- **`act3-foundation`** (this branch) is phase 1, **most of it built but not yet merged**:
-  - `a125078`, the foundation:
-    - three stub stages behind "Coming soon": `wastes`, `assembly`, `citadel`, an Act III tab, the unlock chain from
-      Vhal'Neth, placeholder bosses and timelines, `EmpireGround` floors;
-    - **Line of Fire** (`EmpireShots`: pooled packed-array shots stopped by the first summon, Bone Wall segment or
-      Orb Shield; barriers absorb; arcing shots fly over);
-    - **Lock-On** (`LockOn`: 1.5 s paint, max 3 lines, a boss override, a Signal Ghost hook);
-    - **Steel has no soul** (`Enemy.leaves_corpse()` gates every corpse and raise path; cyborgs rise as Grave Gunners
-      through `HordeDirector.raise_corpse()` / `spawn_temporary()`);
-    - the Purge Protocol Reckoning hook (kill-drones, orbital strikes);
-    - `EmpireEnemyData` (Scout Drone, Line Trooper, Spotter, Kill-Drone) with per-stage tables; kits and bosses load
-      by name from `scripts/enemies/empire/`;
-    - the Codex Empire tab, palette ramps chrome / signal, the "Iron Requiem" loop and an Empire sound pack;
-    - art for the three shared kinds plus the Grave Gunner;
-    - autotest `--stage=wastes|assembly|citadel` and the lines `line of fire`, `lock-on`, `steel`, `purge protocol`,
-      `empire kinds`, `empire stage`.
-  - `06e4792`: edits that were uncommitted at a container restart (README, ART_BIBLE, `empire_enemy_data.gd`,
-    `front_door_data.gd`, the three `*_stage.gd`). They may be half-done: review them.
-  - `0fc2676` (the Grave Gunner gets a bone plate so it never reads as a Line Trooper) and `374416f` (a README fix).
-- **The Act I/II same-seed gate passed** on the earlier run (seed 7: graveyard default and army, harbour army, spire
-  army against `c0189e9`). The only diffs were the Codex catalog totals (enemy 41 → 45, boss 6 → 9). Re-run it on
-  the final code.
+- **`main`** (`8525012`, live on GitHub Pages): the Act III foundation only (stubs behind "Coming soon", the Act III
+  tab) plus two web hotfixes from the co-op lead session. No Act III stage content is on `main` yet.
+- **`integration`** (`30ba528` and this file): everything below.
+  - **Phase 1** (the foundation) and **phase 2**: the Scrap Wastes, the Assembly Halls and the Iron Citadel. Each
+    stage has its kinds, miniboss, boss, spell + evolution + paired passive, character + 3 skins, achievement, art,
+    sounds, Codex entries, report lines and GDD rows. The Grave Drone and Iron Revenant classes are in. All three
+    stages stay `"playable": false`.
+  - **Merge fixes:**
+    - the Assembly and Wastes event branches each keep their `return` in `EnemyDirector._run_event()`;
+    - the Citadel's `cargo_crate` obstacle is renamed `citadel_crate` (it clashed with the Assembly's);
+    - the art ledger's duplicated rows are removed (`25f86ff`).
+  - **The double-step bug fix** (`e829bb7`; the owner chose "fix and rebalance"): Forbidden Verse and Call of the
+    Drowned were stepped twice a tick. Call of the Drowned's cooldowns are halved to keep it as played. GDD row
+    "Double-stepped Act II spells".
+  - **Art review round 1 redos**: both batches merged (`98392c1`, `501ffda`).
+  - The co-op session's `main` hotfix, merged in (`30ba528`).
+- **Verified on integration:**
+  - Before the art merges:
+    - `--import` clean;
+    - all three stages `--policy=army --mortal` seed 7: victory, boss killed, 0 errors, `stuck_units=0`;
+    - the stages 1–6 same-seed gate (seed 7: Graveyard default and army, Gullhaven and Ul-Thalos army): identical
+      except catalog totals;
+    - Graveyard `--mortal` clean.
+  - After the art merges (art and tool changes only, plus drawing heights): `--import` clean. The machines agent also
+    ran one Assembly army autotest on its branch: clean.
+  - Regenerate the gate base with `docs/act3/tools/gate.sh <tree> <outdir>`; the scratchpad logs die with the
+    container.
 
-## Phase 1: what is left before merging
+## In flight when this session ended
 
-1. Check the foundation against the checklist in `BRIEF_FOUNDATION.md` and finish anything missing.
-2. GDD §15.0 rows: done (inserted by the new lead).
-3. Full verification:
-   - `--import` clean;
-   - the gate (`docs/act3/tools/gate.sh TREE OUTDIR` runs the four seed-7 runs; diff the summaries with
-     `docs/act3/tools/same_seed_gate.py base.log new.log`);
-   - each Act III stub with `--policy=army` reaching 0:00 with zero `SCRIPT ERROR` / `ERROR:` / `WARNING:`,
-     `stuck_units=0`, and Line of Fire, Lock-On and Grave Gunners showing in the summary;
-   - the default, `--mortal` and `--policy=army` Graveyard runs.
-4. Merge `act3-foundation` into `integration` (`--no-ff`), let CI run, then fast-forward `main`. The stubs stay
-   "Coming soon", so players see only the Act III tab.
-5. Update `CLAUDE.md`: add the Act III foundation to the Done list (like the Act II foundation entry), and add an
-   Act III design-pillar bullet next to the Act II one (the Empire, its three one-path rules, inert on Acts I/II).
+1. **The Act III balance pass**: an agent on branch **`act3-balance`** (worktree `/home/user/wt/act3-balance`, from
+   `e829bb7`). Its brief:
+   - one shared fix for the act's opening (the naive bot dies at 3:30–4:30 on all three stages);
+   - each stage a step harder than Ul-Thalos (the army bot reaches 0:00 and kills the boss);
+   - ranged share about 60%;
+   - pacing (the Assembly had 29 chests on one seed);
+   - Death Ray, far too strong (412k of 475k damage in a Graveyard run): reduce its reach or sweep rate;
+   - checks of Hollow Puppet, Scrap Swarm, the Grave Drone and the Iron Revenant;
+   - a Soul Ash proposal for the placeholder multipliers (×2.5 / ×2.75 / ×3.0); the owner decides;
+   - the same-seed gate;
+   - one GDD row "Act III integration (phase 2)".
 
-## Phase 2: the three stages in parallel (after phase 1 is merged)
+   **Check the branch** (`git log origin/act3-balance`). If it has commits beyond `e829bb7`: read its GDD row,
+   re-run the gate and the three army runs, then merge it into `integration` (expect only data-file and GDD
+   conflicts). If it has none, re-run the pass from that brief (it is data-only).
+2. **Art review round 2** for the owner: https://claude.ai/artifact/HZ7DPk6wWCeDpKWJv6aUFn.
+   - Round 2 marks are in the db collection `act3_art_r2`; round 1 marks are in `act3_art_r1`. The owner was marking
+     it (9 OKs so far).
+   - Read the marks with ArtifactData `list` on `act3_art_r2` and redo what is flagged.
+   - For round 3, adapt `docs/act3/tools/make_act3_review_r2.py`: it reads a marks dir and has a `BEFORE_REV`. Show
+     each new image next to its round 2 version.
+   - The 7 images left unmarked in round 1 (the 4 Deus Ex Machina images, the Valkyrie 2.0 still, the Lightning
+     Abbess and Deathlord Abbess stills) are on the round 2 page. If they are still unmarked, they count as OK.
+3. **The OpenAI image key is invalid.** `api.openai.com` answers 401 `invalid_api_key` for the proxy-injected
+   "Chat GPT API" credential.
+   - The owner has been told to replace it: the environment's settings (cloud environment menu, Edit, the API
+     credentials / network secrets for api.openai.com). A new session picks it up.
+   - Until then only hand-drawn fixes work.
+   - The **Untouchable Marionette** was fixed by hand; regenerate it once the key works.
 
-Three Opus agents in worktrees, one per stage, briefed like the Act II phase 2 agents. Read the GDD §15.0 rows
-"Gullhaven Harbour (Act II phase 2)" through "Act II integration (phase 2)" for how those were split and merged.
-Split the rest of the content so no two agents tune the same data:
+## Coordination with the co-op lead session
 
-| Agent | Stage content | Shared content it also owns |
-| --- | --- | --- |
-| Wastes | Signal Pylons, scrap storms, the Trojan Horse, Kestrel the Dead Pixel, achievement Static in the Wastes → Lead-Lined Bones | kinds Aegis Bot, Mortar Walker; spell Death Ray / Event Horizon + Conductive Marrow; the Lightning Abbess |
-| Assembly | conveyors (a ground-push rule; check `TerrainSlow` for the one ground path), fabricators, furnace channels, the Beta Build, the Motherboard, Cold Assembly → Signal Ghost | kinds Arc Engineer, Juggernaut; spell Hollow Puppet / Puppet King + Strings of the Dead; the Marionette; class Grave Drone / Wraith Drone + Overclock |
-| Citadel | shield gates and generators, laser grids, citadel guns, Valkyrie 2.0, Deus Ex Machina (3 phases) with Varn, the ending, Nothing Is Deathless → epilogue part 3 + title "Breaker of Engines" | kinds Valkyrie Duelist, Sentry Turret; spell Scrap Swarm / Deathless Swarm + Machine Soul; the Rust Prophet; class Iron Revenant / Deus Revenant + Recoil Frame |
+The previous lead session (`session_01FLPv2RqRe5qVsRWxUhur7z`) is building **online co-op** on branch `coop`, with two
+agents. Agreements:
+- **Tell it before every fast-forward of `main`**, and it tells you. Use send_message of the claude-code-remote MCP
+  server, with the session_id above.
+- It merges co-op into `integration` after Act III phase 2; data-only balance changes are fine to land meanwhile.
+- New enemy code that targets the necromancer is audited at its merge (enemies will target the nearest necromancer
+  through one accessor). Nothing to change on the Act III side now.
 
-Each agent also makes its art (kinds, structures, obstacles in both orientations, four zone floors, effects, icons;
-its characters with Hyper skins and the Untouchable and Deathlord skins), its synthesized sounds, its Codex
-entries, autotest lines and docs.
+## What is left for Act III, in order
 
-Then integration:
-- merge on `integration`;
-- the gates;
-- a balance pass with multi-seed batches: each stage a step harder than Ul-Thalos, and the army bot should still
-  usually reach 0:00;
-- performance in the Web build on a phone-sized viewport (many shots);
-- the art review page for the owner;
-- the epilogue part 3 (4 panels);
-- the owner's redo of the Act II closing card `epilogue/close` "with electronic empire vibes" once Act III art
-  exists.
-
-The stages turn playable only after the multi-seed check and the owner's playtest.
+1. Merge the balance pass (above). Confirm it with multiple seeds: 8 seeds per stage, army `--mortal` and naive
+   `--meta=mid --mortal`.
+2. Finish the art review rounds until all images are OK.
+3. **Performance in the Web build at phone size**, with many Empire shots on screen (Effects: Reduced draws 140 of
+   360), before any stage turns playable:
+   - export the Web build (CLAUDE.md "Local web export", always run `patch_web_audio.py`);
+   - test in headless Chromium at a phone viewport on the Citadel at 15:00 or later.
+4. **The Act III epilogue part 3**: 4 panels, "The Machines Go Dark", through the hook `EpilogueData.ACT3_PART`,
+   opened by Nothing Is Deathless. Also the owner's redo of the Act II closing card `epilogue/close` "with electronic
+   empire vibes". Both need the image key.
+5. The owner's playtest. Then flip the three stages to `"playable": true`, update CLAUDE.md (Done list: Act III phase
+   2), tell the co-op session, and fast-forward `main`.
+6. CI does not run any Act III stage yet; add an Act III army job when the stages turn playable.
 
 ## How the owner works (keep doing this)
 
-- **The owner decides; you recommend.** Use the AskUserQuestion tool for real choices, with a recommended option
-  first. Record every decision as a GDD §15.0 row.
-- **Art is reviewed by the owner at the end, on a review page.**
-  - Use an Artifact with the `db` + `user` capabilities: cards with OK / Redo and a note per image, marks saved in
-    a db collection.
-  - The template and the generator used for wave 2 are in `docs/act3/tools/`.
-  - Read the marks back with the ArtifactData tool (`list` on the collection), redo what is flagged, and publish a
-    round 2 / round 3 page with new next to old, until all are OK.
-- **Owner art notes:**
-  - details big enough to read at game size, no busy specks;
-  - faces must read clearly;
-  - thin meshes or lattices don't survive conversion, so draw them on the grid (`tools/mesh_props.py`);
-  - **never a plain tint for a skin**: drawn art;
-  - every female character in the **figure-redesign style**: an exaggerated hourglass figure, a big bust and wide
-    hips, a bust bounce in walk strips (`walk_cycle.py` `bust` rig), a 24-frame idle breathing strip;
-  - the owner likes them clearly attractive (on the Vhal'Neth epilogue panel they asked for cleavage), always
-    clothed, never explicit;
-  - check bounce boxes sit on the bust, not the belt.
-- **Testing:** the owner asked for lean testing (CLAUDE.md "Test lean"). Run only the area's runs while building,
-  and the full set once per batch before `main` moves. CI runs everything in parallel.
-- **The owner tests on an iPhone** (Safari, the Pages build). Phone memory and WebGL are the weak spots.
-  - **Never use a shader that reads the screen.** That crashed the owner's phone on a Reckoning death; CLAUDE.md has
-    the rule.
-  - **Never call `AudioServer.add_bus()`.**
-  - Many Act III shots means a performance check on the Web build at phone size before any stage turns playable.
-- **Feedback:** players send reports through the in-game Feedback button to the owner's Google Form. The owner may
-  forward them.
+- **The owner decides; you recommend.** Use AskUserQuestion for real choices, recommended option first. Record every
+  decision as a GDD §15.0 row. Write short, plain messages.
+- **Art is reviewed on a review page** (db + user capabilities; OK / Redo and a note per image), round after round,
+  new next to old, until all are OK. Owner art notes:
+  - details big enough to read at game size, no busy specks; faces read clearly;
+  - thin meshes are drawn on the grid (`tools/mesh_props.py`);
+  - never a plain tint for a skin;
+  - every female character in the figure-redesign style: hourglass figure, big bust and wide hips, fully clothed,
+    clearly attractive, never explicit, with a bust bounce in walk strips and a 24-frame idle breathing strip;
+  - **check the bounce box sits on the chest, not the belt**: most round 1 figure notes were about that;
+  - machines are chrome but need clear coloured parts, or they read as a silver blob;
+  - flyers hover (a bob, flapping wings, spinning propellers); they don't walk.
+- **Testing is lean** (CLAUDE.md "Test lean"). Run at most 4 Godot processes on the 4-core machine, and split that
+  budget when several agents run.
+- **The owner tests on an iPhone** (Safari, the Pages build): no screen-reading shaders, never `AudioServer.add_bus()`.
 - **Image generation:**
-  - ALWAYS run `GEN_LEDGER=<repo or worktree root>/docs/art/generation_ledger.csv python3 tools/gen_image.py ...` (absolute path; the clone's
-    folder name differs between containers, e.g. `/home/user/Vampire-Survivors-Clone-Lol`).
-  - **Never read, print, echo, search for or set any API key** (the proxy injects it).
-  - Commit the ledger when it changes.
-  - `docs/act3/ART_PIPELINE_NOTES.md` is the art brief the wave 2 agents used.
-- **Machine and git:**
-  - Run at most 4 Godot processes in parallel.
-  - Commits end with the attribution lines the session gives you, and never mention model identifiers.
-  - Pushing tags and editing GitHub releases is 403 from cloud sessions; the owner does those.
-- **Content that waits on the owner's playtest:**
-  - Act II's difficulty (the Archive boss is the sharpest spike);
-  - the placeholder Soul Ash multipliers;
-  - Eclipse being the weakest ultimate on the Archive;
-  - Bone Bastion strength.
+  - run `GEN_LEDGER=<repo or worktree root>/docs/art/generation_ledger.csv python3 tools/gen_image.py ...` with an
+    absolute path; the clone's folder name differs between containers (here `/home/user/Vampire-Survivors-Clone-Lol`);
+  - never read, print, echo, search for or set any API key;
+  - commit the ledger rows;
+  - when merging branches, union the ledger and drop exact duplicate rows (a "keep both" merge doubled it once).
+- **Merging parallel branches:** most conflicts are both sides appending to the same list or dict, so keep both. Watch
+  for:
+  - a list's closing `]` (join the two sides with a comma);
+  - a dict entry cut off mid-way;
+  - a `match` arm or function body whose last lines git took as shared (the lost `return` bug happened twice).
+
+  Run `--import` and one run per touched stage after every merge.
+- Commits end with the session's attribution lines and never mention model identifiers. Tags and releases are the
+  owner's to push (403 from cloud sessions).
+- This session's worktrees (`/home/user/wt/act3-*`) are lost with the container; every branch is pushed.
