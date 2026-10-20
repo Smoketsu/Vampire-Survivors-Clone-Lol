@@ -82,6 +82,11 @@
 ##                        zone's `shore` radius); the sea is the world's edge.
 ##   spire              — SpireDirector config (SpireStage.SPIRE: dream
 ##                        pillars, guest squads of the earlier Act II kinds).
+##   citadel            — CitadelDirector config (CitadelStage.CITADEL, Act
+##                        III, the Iron Citadel: Shield Gates, laser grids, the
+##                        Citadel's guns, Sentry Turrets, Valkyrie 2.0, guest
+##                        squads of the earlier Act III kinds); ground
+##                        "citadel" is its CitadelGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 
@@ -151,5 +156,6 @@ const BOSS_ARRIVALS := {
 	# gives the boss its own data file) ---
 	"kestrel": WastesStage.BOSS,
 	"motherboard": AssemblyStage.BOSS,
-	"deus_ex_machina": CitadelStage.BOSS,
+	# --- Act III: the Iron Citadel --- (its own data file, Act III phase 2)
+	"deus_ex_machina": DeusData.ARRIVAL,
 }

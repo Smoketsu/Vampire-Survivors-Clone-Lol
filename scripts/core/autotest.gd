@@ -941,6 +941,9 @@ func _dash_reason() -> String:
 		return "crowd"
 	if p.time_since_hit < PlayerAbilityData.BOT_DASH_HIT_WINDOW and game.horde.player_in_danger:
 		return "hit"
+	# --- Act III: the Iron Citadel --- (Grave Step through an overload pulse's front)
+	if game.enemies.boss is BossDeusExMachina and game.enemies.boss.active and (game.enemies.boss as BossDeusExMachina).pulse_near(p.position):
+		return "pulse"
 	return ""
 
 
@@ -954,6 +957,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.enemies.archive_haz.danger_push(pos)  # Act II: pages, spore clouds, ink (null elsewhere).
 	if game.empire != null:
 		danger += game.empire.danger_push(pos)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
+	if game.enemies.citadel != null:
+		danger += game.enemies.citadel.danger_push(pos)  # Act III, the Iron Citadel: laser grids (null elsewhere).
 	return danger
 
 
@@ -1042,6 +1047,8 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.archive_haz.danger_push(p)  # Act II: pages, spore clouds, ink (null elsewhere).
 	if game.empire != null:
 		danger += game.empire.danger_push(p)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
+	if game.enemies.citadel != null:
+		danger += game.enemies.citadel.danger_push(p)  # Act III, the Iron Citadel: laser grids (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1060,6 +1067,9 @@ func get_move_vector() -> Vector2:
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	if goal == Vector2.INF and game.enemies.spire != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.spire.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # Ul-Thalos: topple the dream pillars when calm.
+	# --- Act III: the Iron Citadel ---
+	if goal == Vector2.INF and game.enemies.citadel != null and away.length() < 0.3 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
+		goal = game.enemies.citadel.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Iron Citadel: gate generators, then turrets, when calm.
 	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
 		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
 		var at := (game.enemies.boss as BossVhalneth).approach_point(p)

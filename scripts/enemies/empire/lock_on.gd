@@ -54,6 +54,9 @@ var _speed: PackedFloat32Array = PackedFloat32Array()
 var _reach: PackedFloat32Array = PackedFloat32Array()
 ## Damage tag of each line's heavy shot.
 var _src: PackedStringArray = PackedStringArray()
+## EmpireRulesData.SHOT_STYLES id of each line's heavy shot ("rail" unless a
+## boss paints with its own, e.g. Deus Ex Machina's "missile"; Act III phase 2).
+var _style: PackedStringArray = PackedStringArray()
 ## Hard cap on lines (EmpireRulesData.LOCK_ON boss_max_lines).
 var _cap: int = 0
 ## True if the last redraw showed lines (one more redraw clears them).
@@ -78,6 +81,7 @@ func _init(p_game: Game) -> void:
 	_speed.resize(_cap)
 	_reach.resize(_cap)
 	_src.resize(_cap)
+	_style.resize(_cap)
 
 
 ## Paint time (s) of a line on `target`: EmpireRulesData.LOCK_ON paint_time,
@@ -94,10 +98,13 @@ func paint_time(target: Node2D) -> float:
 ## summon): after the paint its heavy shot deals `damage` (time-scaled) at
 ## `speed` px/s over `reach` px, tagged `source`. Refused (false) when the owner
 ## already paints or max_lines lines are painted; `boss_override` lifts
-## max_lines up to boss_max_lines; `paint_s` > 0 sets a boss's own paint time.
+## max_lines up to boss_max_lines and lets one owner paint several lines at once
+## (a boss's salvo: Deus Ex Machina's four lines; Act III phase 2); `paint_s` > 0
+## sets a boss's own paint time; `style` is the heavy shot's
+## EmpireRulesData.SHOT_STYLES id ("rail" by default, every Spotter's).
 func paint(owner: Enemy, target: Node2D, damage: float, speed: float, reach: float, source: String,
-		boss_override: bool = false, paint_s: float = -1.0) -> bool:
-	if owner == null or target == null or has_line(owner):
+		boss_override: bool = false, paint_s: float = -1.0, style: String = "rail") -> bool:
+	if owner == null or target == null or (not boss_override and has_line(owner)):
 		return false
 	var limit := _cap if boss_override else mini(_cap, int(EmpireRulesData.LOCK_ON["max_lines"]))  # Lines allowed now.
 	if count >= limit:
@@ -118,6 +125,7 @@ func paint(owner: Enemy, target: Node2D, damage: float, speed: float, reach: flo
 	_speed[i] = speed
 	_reach[i] = reach
 	_src[i] = source
+	_style[i] = style
 	game.stat_add("lockon_painted", 1.0)
 	game.stat_add("lockon_on_player" if target == game.player else "lockon_on_summon", 1.0)
 	Sfx.play("lock_on", owner.position)
@@ -147,6 +155,7 @@ func _remove(i: int) -> void:
 		_speed[i] = _speed[last]
 		_reach[i] = _reach[last]
 		_src[i] = _src[last]
+		_style[i] = _style[last]
 	_owner[last] = null
 	_target[last] = null
 	count = last
@@ -202,7 +211,7 @@ func _muzzle(i: int) -> Vector2:
 ## Fires line `i`'s heavy shot down the line (EmpireShots: Line of Fire applies).
 func _fire(i: int) -> void:
 	var at := _muzzle(i)
-	game.empire.shots.fire(at, _dir[i], _speed[i], _dmg[i], _owner[i].undead_damage_mult, "rail", _src[i], _reach[i])
+	game.empire.shots.fire(at, _dir[i], _speed[i], _dmg[i], _owner[i].undead_damage_mult, _style[i], _src[i], _reach[i])
 	_owner[i].motion_lunge(_dir[i], MotionData.POWER_SHOT)
 	game.effects.pop(at, Palette.EMPIRE_SIGNAL_GLOW, 8.0)
 	game.stat_add("lockon_fired", 1.0)

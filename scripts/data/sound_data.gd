@@ -496,6 +496,109 @@ const EMPIRE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "noise", "dur": 0.85, "amp": 0.6, "attack": 0.005, "decay": 0.25, "lp0": 4000.0, "lp1": 120.0},
 			{"wave": "sine", "f0": 70.0, "f1": 30.0, "dur": 0.8, "amp": 0.7, "decay": 0.3},
 			{"wave": "square", "f0": 900.0, "f1": 120.0, "dur": 0.3, "amp": 0.12, "decay": 0.1, "lp0": 2000.0}]},
+	# --- Act III: the Iron Citadel --- (Act III phase 2; appended, so the pack's
+	# earlier sounds keep their seeds; Sfx.PACK_SEED + index)
+	# Valkyrie jets firing: a roaring thrust with a rising whine.
+	"jet_burst": {"dur": 0.45, "volume_db": -15.0, "max_voices": 2, "min_interval": 120, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.42, "amp": 0.5, "attack": 0.02, "decay": 0.15, "lp0": 2500.0, "lp1": 6000.0},
+			{"wave": "saw", "f0": 300.0, "f1": 900.0, "dur": 0.3, "amp": 0.12, "decay": 0.1, "lp0": 3000.0}]},
+	# A lunge stopped by a blocker: a bright steel clang.
+	"blade_clang": {"dur": 0.4, "volume_db": -14.0, "max_voices": 2, "min_interval": 90, "pitch_var": 0.1, "priority": 2,
+		"layers": [
+			{"wave": "square", "f0": 1660.0, "dur": 0.35, "amp": 0.18, "decay": 0.12, "lp0": 7000.0},
+			{"wave": "square", "f0": 2490.0, "dur": 0.3, "amp": 0.1, "decay": 0.1, "lp0": 8000.0},
+			{"wave": "noise", "dur": 0.05, "amp": 0.35, "decay": 0.015, "lp0": 8000.0}]},
+	# Valkyrie 2.0's blade storm: whirling metal.
+	"blade_storm": {"dur": 1.0, "volume_db": -14.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.95, "amp": 0.35, "attack": 0.05, "decay": 0.4, "lp0": 3000.0, "lp1": 5000.0},
+			{"wave": "saw", "f0": 220.0, "f1": 440.0, "dur": 0.9, "amp": 0.1, "decay": 0.3, "lp0": 2000.0}]},
+	# Valkyrie 2.0's shield bash: a heavy thud and a metal ring.
+	"shield_bash": {"dur": 0.4, "volume_db": -12.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 120.0, "f1": 60.0, "dur": 0.3, "amp": 0.6, "decay": 0.1},
+			{"wave": "square", "f0": 880.0, "dur": 0.3, "amp": 0.1, "decay": 0.1, "lp0": 4000.0}]},
+	# Sentry Turret burst: two dry electric pops.
+	"turret_fire": {"dur": 0.3, "volume_db": -20.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "square", "f0": 600.0, "f1": 200.0, "dur": 0.08, "amp": 0.25, "decay": 0.02, "lp0": 4000.0},
+			{"wave": "square", "f0": 600.0, "f1": 200.0, "start": 0.16, "dur": 0.08, "amp": 0.25, "decay": 0.02, "lp0": 4000.0}]},
+	# A Shield Gate rising: a low electric hum swelling.
+	"gate_hum": {"dur": 1.2, "volume_db": -13.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 55.0, "f1": 110.0, "dur": 1.1, "amp": 0.3, "attack": 0.3, "decay": 0.5, "lp0": 600.0, "lp1": 1500.0},
+			{"wave": "sine", "f0": 220.0, "dur": 1.1, "amp": 0.15, "attack": 0.4, "decay": 0.5}]},
+	# A Shield Gate falling: a power-down whine and a crash.
+	"gate_fall": {"dur": 1.0, "volume_db": -11.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 440.0, "f1": 40.0, "dur": 0.9, "amp": 0.25, "decay": 0.3, "lp0": 3000.0, "lp1": 300.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.5, "amp": 0.4, "decay": 0.2, "lp0": 3000.0, "lp1": 400.0}]},
+	# A laser grid charging: a thin rising tone (its 1 s telegraph).
+	"laser_charge": {"dur": 0.9, "volume_db": -16.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 600.0, "f1": 2400.0, "dur": 0.85, "amp": 0.2, "attack": 0.2, "decay": 0.3}]},
+	# A laser grid firing: a hard sizzle.
+	"laser_fire": {"dur": 0.5, "volume_db": -12.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.45, "amp": 0.45, "decay": 0.18, "lp0": 9000.0, "lp1": 2000.0},
+			{"wave": "square", "f0": 2200.0, "f1": 1800.0, "dur": 0.4, "amp": 0.1, "decay": 0.15, "lp0": 6000.0}]},
+	# Deus Ex Machina's chaingun: a long rattling roar.
+	"chaingun": {"dur": 1.2, "volume_db": -14.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "square", "f0": 14.0, "dur": 1.15, "amp": 0.25, "decay": 0.5, "lp0": 3000.0},
+			{"wave": "noise", "dur": 1.15, "amp": 0.3, "decay": 0.5, "lp0": 4000.0, "lp1": 1500.0}]},
+	# The missile salvo locking on: four quick beeps.
+	"missile_lock": {"dur": 0.5, "volume_db": -13.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "square", "f0": 1760.0, "dur": 0.06, "amp": 0.18, "decay": 0.03, "lp0": 5000.0},
+			{"wave": "square", "f0": 1760.0, "start": 0.12, "dur": 0.06, "amp": 0.18, "decay": 0.03, "lp0": 5000.0},
+			{"wave": "square", "f0": 1760.0, "start": 0.24, "dur": 0.06, "amp": 0.18, "decay": 0.03, "lp0": 5000.0},
+			{"wave": "square", "f0": 2349.3, "start": 0.36, "dur": 0.1, "amp": 0.2, "decay": 0.05, "lp0": 5000.0}]},
+	# A leg plate (or the shield drones) breaking: a screech of torn metal.
+	"plate_break": {"dur": 0.7, "volume_db": -11.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.08, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 900.0, "f1": 160.0, "dur": 0.6, "amp": 0.25, "decay": 0.2, "lp0": 5000.0, "lp1": 800.0},
+			{"wave": "noise", "dur": 0.3, "amp": 0.45, "decay": 0.1, "lp0": 6000.0, "lp1": 1200.0}]},
+	# Deus Ex Machina transforming between phases: grinding servos and a boom.
+	"deus_transform": {"dur": 1.6, "volume_db": -9.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 80.0, "f1": 160.0, "dur": 1.2, "amp": 0.3, "attack": 0.1, "decay": 0.5, "lp0": 900.0},
+			{"wave": "sine", "f0": 60.0, "f1": 28.0, "start": 1.0, "dur": 0.55, "amp": 0.7, "decay": 0.25}]},
+	# The Judgment Lance charging: a deep swelling hum.
+	"lance_charge": {"dur": 1.4, "volume_db": -12.0, "max_voices": 1, "min_interval": 800, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 70.0, "f1": 280.0, "dur": 1.35, "amp": 0.28, "attack": 0.4, "decay": 0.5, "lp0": 800.0, "lp1": 3000.0}]},
+	# The Judgment Lance firing: a roaring blast.
+	"lance_fire": {"dur": 2.2, "volume_db": -10.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 2.1, "amp": 0.45, "attack": 0.02, "decay": 0.9, "lp0": 5000.0, "lp1": 1500.0},
+			{"wave": "saw", "f0": 140.0, "dur": 2.0, "amp": 0.2, "decay": 0.9, "lp0": 1200.0}]},
+	# The hangar doors opening: a hydraulic hiss and a clank.
+	"hangar_open": {"dur": 0.9, "volume_db": -13.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.0, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.6, "amp": 0.35, "decay": 0.25, "lp0": 6000.0, "lp1": 2000.0},
+			{"wave": "sine", "f0": 140.0, "f1": 70.0, "start": 0.6, "dur": 0.25, "amp": 0.5, "decay": 0.08}]},
+	# An overload pulse rolling out: a deep electric thump.
+	"overload_pulse": {"dur": 0.9, "volume_db": -9.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 90.0, "f1": 30.0, "dur": 0.8, "amp": 0.8, "decay": 0.3},
+			{"wave": "square", "f0": 400.0, "f1": 80.0, "dur": 0.4, "amp": 0.15, "decay": 0.12, "lp0": 2500.0}]},
+	# A teleport charging at its destination: a warbling rise.
+	"teleport_charge": {"dur": 0.9, "volume_db": -14.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "square", "f0": 300.0, "f1": 1600.0, "dur": 0.85, "amp": 0.15, "attack": 0.1, "decay": 0.3, "lp0": 3000.0}]},
+	# A teleport landing: a sharp crack.
+	"teleport_land": {"dur": 0.5, "volume_db": -10.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.2, "amp": 0.6, "decay": 0.06, "lp0": 9000.0, "lp1": 2000.0},
+			{"wave": "sine", "f0": 110.0, "f1": 40.0, "dur": 0.4, "amp": 0.6, "decay": 0.15}]},
+	# Deus Ex Machina falling: a long power-down and a crash.
+	"deus_fall": {"dur": 2.4, "volume_db": -8.0, "max_voices": 1, "min_interval": 2000, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 600.0, "f1": 30.0, "dur": 2.2, "amp": 0.25, "decay": 0.9, "lp0": 3000.0, "lp1": 200.0},
+			{"wave": "noise", "start": 0.4, "dur": 1.6, "amp": 0.4, "decay": 0.6, "lp0": 2500.0, "lp1": 200.0},
+			{"wave": "sine", "f0": 55.0, "f1": 25.0, "start": 0.4, "dur": 1.2, "amp": 0.7, "decay": 0.4}]},
 }
 
 ## Web build (no worker threads, GDD §15.0 "Web build"): main-thread time

@@ -36,6 +36,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			ci.draw_rect(Rect2(o + Vector2(r * 0.15, -r * 0.15), Vector2(r * 1.8, r * 0.14)), Glyphs._c(Palette.EMPIRE_CHROME_LIGHT, flash))
 			ci.draw_circle(o + Vector2(r * 0.7, -r * 0.35), r * 0.16, Glyphs._c(Palette.EMPIRE_SIGNAL_RED, flash))
 		_:
+			# --- Act III: the Iron Citadel --- (its own kinds' shapes)
+			if CitadelGlyphs.draw_enemy(ci, kind, o, r, flash):
+				return true
 			if String(row.get("body", "")) == EmpireEnemyData.MACHINE and bool(row.get("floating", false)):
 				_drone(ci, o, r, flash, Palette.EMPIRE_SIGNAL_AMBER)
 			else:

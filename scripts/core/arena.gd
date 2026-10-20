@@ -33,6 +33,9 @@
 ## free_point() clamps every placement inside the shore, and no obstacle is
 ## generated in the sea or on the shoreline being flooded to (obstacle_ok()).
 ## Without a shore (every other stage) nothing here changes.
+## Act III, the Iron Citadel: when a CitadelDirector is set as `citadel`,
+## resolve_all() ends with citadel.contain_all() (its Shield Gate walls are
+## solid for the necromancer); null on every other stage.
 class_name Arena
 extends Node2D
 
@@ -97,6 +100,10 @@ var _keep_clear: Array[Vector3] = []
 ## The sinking island's shore (Ul-Thalos; set by SinkingDirector, null on
 ## every other stage): the sea is the edge of the world (see the header).
 var shore: SinkingDirector = null
+# --- Act III: the Iron Citadel ---
+## The Iron Citadel's director (set by CitadelDirector, null on every other
+## stage): its Shield Gate walls push the necromancer out (see the header).
+var citadel: CitadelDirector = null
 
 
 func _ready() -> void:
@@ -328,6 +335,8 @@ func resolve_all(delta: float) -> void:
 		_purge_slide(now)
 	if shore != null:
 		shore.contain_all()  # Ul-Thalos: the sea is the edge of the world.
+	if citadel != null:
+		citadel.contain_all()  # Act III, the Iron Citadel: the Shield Gate walls.
 
 
 ## Resolves one body: push-out, then turns the blocked (into-the-obstacle)
@@ -406,6 +415,8 @@ func _draw_obstacle(o: Obstacle) -> void:
 		return  # An Ul-Thalos obstacle kind (Act II).
 	if EmpireGlyphs.draw_obstacle(self, o):
 		return  # An Act III stub's placeholder obstacle kind.
+	if CitadelGlyphs.draw_obstacle(self, o):
+		return  # An Iron Citadel obstacle kind (Act III).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

@@ -259,6 +259,8 @@ func _ready() -> void:
 			ground = ArchiveGround.new()  # Act II, the Hollow Archive.
 		"spire":
 			ground = SpireGround.new()  # Act II: Ul-Thalos, the Risen Spire.
+		"citadel":
+			ground = CitadelGround.new()  # Act III: the Iron Citadel (its four zone floors).
 		"empire":
 			var eg := EmpireGround.new()  # Act III placeholder floor (the STAGE's "floor").
 			eg.look = stage_def.get("floor", {})
