@@ -51,20 +51,20 @@ owner-approved design) and `docs/act3/BRIEF_PHASE2.md` (how the three stages wer
    **Check the branch** (`git log origin/act3-balance`). If it has commits beyond `e829bb7`: read its GDD row,
    re-run the gate and the three army runs, then merge it into `integration` (expect only data-file and GDD
    conflicts). If it has none, re-run the pass from that brief (it is data-only).
-2. **Art review round 2** for the owner: https://claude.ai/artifact/HZ7DPk6wWCeDpKWJv6aUFn.
-   - Round 2 marks are in the db collection `act3_art_r2`; round 1 marks are in `act3_art_r1`. The owner was marking
-     it (9 OKs so far).
-   - Read the marks with ArtifactData `list` on `act3_art_r2` and redo what is flagged.
-   - For round 3, adapt `docs/act3/tools/make_act3_review_r2.py`: it reads a marks dir and has a `BEFORE_REV`. Show
-     each new image next to its round 2 version.
-   - The 7 images left unmarked in round 1 (the 4 Deus Ex Machina images, the Valkyrie 2.0 still, the Lightning
-     Abbess and Deathlord Abbess stills) are on the round 2 page. If they are still unmarked, they count as OK.
-3. **The OpenAI image key is invalid.** `api.openai.com` answers 401 `invalid_api_key` for the proxy-injected
-   "Chat GPT API" credential.
-   - The owner has been told to replace it: the environment's settings (cloud environment menu, Edit, the API
-     credentials / network secrets for api.openai.com). A new session picks it up.
-   - Until then only hand-drawn fixes work.
-   - The **Untouchable Marionette** was fixed by hand; regenerate it once the key works.
+2. **Art review: round 2 is done** (owner, db collection `act3_art_r2`): 45 OK, 9 redo, all hand-fixable. An
+   agent is redoing them by hand on branch **`act3-art-redo-r2`** (worktree `/home/user/wt/act3-art-redo-r2`):
+   - the 4 Deus Ex Machina images: more colour (they read monochrome), like the approved Arc Engineer / Juggernaut fix;
+   - `bosses/kestrel_aim` and `kestrel_blades`: remove the extra line where the rear meets the leg; thicker thighs;
+   - `empire/valkyrie_prime_walk`: the feet split in the animation (a walk-rig fix);
+   - `player/lightning_abbess_deathlord_idle` / `_walk`: the bounce box 1 px further right.
+
+   Check the branch; merge it into `integration` (`--import`), then publish **round 3** (only those 9 keys, new next
+   to round 2) by adapting `docs/act3/tools/make_act3_review_r2.py` (set `BEFORE_REV` to the integration commit before
+   the merge, a new collection `act3_art_r3`, and read the marks dir of `act3_art_r2`). Everything else is approved.
+3. **The OpenAI image key**: the owner replaced it (Oct 20, ~16:00 UTC), but this session still got 401
+   `invalid_api_key` (environment changes reach new sessions only). **First thing in a new session:** check with a free
+   `curl -sS -o /dev/null -w "%{http_code}" https://api.openai.com/v1/models` (200 = good). The owner approved the
+   hand-fixed Untouchable Marionette in round 2, so it needs no regeneration.
 
 ## Coordination with the co-op lead session
 
