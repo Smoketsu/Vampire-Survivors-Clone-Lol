@@ -254,15 +254,18 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "embers", "fx_color": Color8(255, 174, 26),
 	},  # TUNING (not in GDD) signal-amber sparks
+	# --- Act III: the Assembly Halls (its own floor, props, kinds and boss) ---
 	"assembly": {
-		"tile": "tiles/march_burned",
+		"tile": "tiles/assembly_fabricator",
 		"items": [
-			["empire/scout_drone", 150, 80, true], ["empire/line_trooper", 236, 176, true],
-			["empire/line_trooper", 190, 226, true],
-			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+			["obstacles/press_machine_s", 40, 84, false], ["obstacles/fuel_drum_l", 252, 90, false],
+			["empire/fabricator", 146, 100, false],
+			["empire/arc_engineer", 240, 170, true], ["empire/juggernaut", 206, 156, true],
+			["summons/warrior", 46, 214, false], ["summons/grave_drone", 92, 200, false],
+			["bosses/motherboard", 178, 236, true],
 		],
 		"fx": "embers", "fx_color": Color8(255, 174, 26),
-	},  # TUNING (not in GDD)
+	},  # TUNING (not in GDD) signal-amber sparks over the fabricator floor
 	"citadel": {
 		"tile": "tiles/march_burned",
 		"items": [

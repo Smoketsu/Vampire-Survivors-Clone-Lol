@@ -1694,6 +1694,63 @@ the Lock-On lines and reticles, the orbital strike circles, the Spotter's red gl
 (`EmpireGlyphs`, red-eyed) and the stubs' placeholder floors and obstacles; phase 2 brings the
 stages' own art.
 
+### Act III: the Assembly Halls (Stage 8; Oct 2026)
+
+<!-- --- Act III: the Assembly Halls --- -->
+The Assembly Halls' art and its rewards' art (GDD §15.0 "The Assembly Halls (Act III phase 2)"), in the
+Empire style above: chrome bodies, signal lights; the Motherboard adds the `gold` ramp for its circuit
+board chest, plus `moss` for the board itself (`--ramps chrome,signal,moss,steel,gold`: without gold its
+traces snapped to signal red). Pipeline for the Empire sprites as above (alpha cut 230,
+`pixelate_source.py`, `prepare_sprite.py --no-levels --no-prune --ink-l 0.15 --no-cleanup`).
+**Shade lift:** every machine first failed the floor-lightness check at L 0.35, so each chrome / steel
+pixel below the top two shades was moved one shade lighter, by a deterministic script over the stills,
+strips and poses. After the lift they measure L 0.5 and up. The Marionette and her skins come from
+the `_cut` sources with `--ink-l 0.20 --ramps violet,bone,soul,brown,gold,ice,crimson,grey,skin`, because
+without `skin` her face read as blotches. Hyper uses `--inside-outline --no-prune --no-levels`. She is in
+the figure-redesign style (hourglass figure, fully clothed), with a bust box in her walk and idle rigs.
+Icons were generated as two 4-up sheets, cut, converted at 30 px and centred on 32×32 canvases.
+
+**No API cost for the floors and props:**
+- **Floors.** `make_tile.py` recipes from existing sources:
+  - `assembly_docks`: the Sanctum courtyard flags, as a staggered 64 px plate grid;
+  - `assembly_conveyor`: flat slate with a 16 px plate grid;
+  - `assembly_fabricator`: grated steel;
+  - `assembly_furnace`: scorched brick courses.
+- **Obstacles.** `tools/assembly_props.py` draws all 24 obstacle PNGs on the palette: round props
+  at `_s` / `_l`, and rect props also as `_s_v` / `_l_v`.
+- **Code-drawn on purpose** (`AssemblyGlyphs`):
+  - the belts (moving chevrons) and the furnace channels (dormant / glowing / burning);
+  - the jam field, the arc beams and the Juggernaut's flame cone;
+  - the fabricator build frames, the press-stamp squares, the crane claws and cables, and the
+    magnet field;
+  - the puppets' soul strings. A puppet is the seized foe's own sprite, tinted violet
+    (`PuppetData.TINT`).
+
+**Cost:** 20 API images, $0.66 in all (rows of 2026-10-20 06:12–06:16 in the ledger).
+**For the owner's review.** A known weak spot: the Juggernaut's tank pack sits beside its helmet and
+can read as a second head at game size.
+
+| Key | What it is | Art px | Cost | Notes |
+|---|---|---|---|---|
+| `empire/arc_engineer` | Arc Engineer (support, a cyborg): chrome suit, amber visor, an arc tool levelled forward | 54x50 | $0.032 | legs walk (hip 31) |
+| `empire/juggernaut` | Juggernaut (heavy elite, a machine): bulky chrome walker with a flamethrower and a fuel pack | 68x62 | $0.032 | legs walk (hip 40) |
+| `empire/fabricator` | Fabricator (structure): a chrome bay with an amber-lit hatch, hazard lights and a small build arm | 50x54 | $0.032 | still |
+| `empire/motherboard_turret` | Motherboard turret (structure the boss builds): a small chrome gun post | 24x32 | $0.032 | still |
+| `empire/beta_build` | The Beta Build (miniboss): a tall, half-finished chrome war machine with an amber visor slot and an arm cannon | 102x104 | $0.032 | legs walk (hip 64, spread 3) |
+| `bosses/motherboard` | The Motherboard (boss): a walking factory on two tracks, a circuit board chest, red eyes, two raised crane arms | 120x150 | $0.032 | still |
+| `bosses/motherboard_windup` | its windup pose (arms up, claws open) | 124x150 | $0.024 | BossPoseData index 1 |
+| `bosses/motherboard_strike` | its strike pose (both cranes slammed down) | 190x150 | $0.024 | BossPoseData index 3 |
+| `summons/grave_drone` | Grave Drone (summon): a bone skull on crossed-bone rotors, soul-teal eyes | 44x26 | $0.036 | glide (robe rig, hip 20) |
+| `summons/wraith_drone` | Wraith Drone (its evolution): the skull wreathed in soul-teal wraith flame | 38x30 | $0.036 | glide (hip 23) |
+| `player/marionette` | The Marionette (character): violet gown, a dark crown, a puppeteer's control bar with soul-teal strings | 40x56 | $0.037 | walk + idle (bust 17–28, 17–24) |
+| `player/marionette_hyper` | Hyper skin: a gold gown and crown | 36x58 | $0.032 | walk + idle |
+| `player/marionette_untouchable` | Untouchable skin: white and ice, pale hair | 36x56 | $0.032 | walk + idle |
+| `player/marionette_deathlord` | Deathlord skin: violet and crimson, a crimson cape and a gold crown | 44x60 | $0.032 | walk + idle |
+| `icons/hollow_puppet`, `icons/puppet_king`, `icons/strings_of_the_dead`, `icons/overclock` | spell, evolution, two passives | 32x32 | $0.031 (sheet) | one 4-up sheet |
+| `icons/grave_drone`, `icons/wraith_drone`, `icons/signal_ghost`, `icons/ach_cold_assembly` | class, evolution, passive, achievement | 32x32 | $0.031 (sheet) | one 4-up sheet |
+| `tiles/assembly_docks`, `_conveyor`, `_fabricator`, `_furnace` | the four zone floors | 128x128 | $0 | `make_tile.py` |
+| `obstacles/cargo_crate`, `press_machine`, `servo_cabinet`, `ingot_stack` (`_s`, `_l`, `_s_v`, `_l_v`); `fuel_drum`, `parts_bin`, `robot_arm`, `crucible` (`_s`, `_l`) | the four zones' obstacles | 22x27–64x47 | $0 | `tools/assembly_props.py` |
+
 ### Chest beacon (owner request, Oct 2026)
 
 The chest beacon's two markers (GDD §15.0 "Chest beacon"; keys in `scripts/data/chest_beacon_data.gd`). Shapes this
