@@ -290,14 +290,17 @@ RIGS = {
     # boxes span the two lobes (two bells), the still's further right and the blades pose's further
     # left than before ("the jiggle needs to extend").
     "bosses/kestrel": dict(mode="legs", hip=88, back=(0, 68), front=(79, 144), rigid=[(68, 79, 88, 94)], spread=2, lift=2, dip=1, bust=(64, 88, 24, 38, 2, 2)),
-    "bosses/kestrel_blades": dict(mode="legs", hip=82, back=(0, 60), front=(60, 120), rigid=[(94, 120, 0, 100)], spread=2, lift=2, dip=1, bust=(44, 72, 38, 51, 2, 2)),
+    "bosses/kestrel_blades": dict(mode="legs", hip=82, back=(0, 61), front=(61, 120), rigid=[(94, 120, 0, 100)], spread=2, lift=2, dip=1, bust=(44, 72, 38, 51, 2, 2)),  # Round 2 redo: legs split at col 61 (was 60): the thicker back thigh reaches col 60.
     "player/lightning_abbess": dict(mode="robe", hip=38, rigid=[(29, 44, 0, None)], sway=2, dip=1, bust=(20, 31, 18, 25, 2)),  # Round 1 redo: box 2 px right (was cols 18-28).
     # --- Act III: the Iron Citadel ---
     # The two Valkyries are in the figure-redesign style (bust bounce + idle breathing); Valkyrie
     # 2.0's blade arm (left) and tower shield (right) hang below the hip and move with the body.
     # The Rust Prophet walks in his robe, the scrap staff rigid; the revenants stomp on two legs.
     "empire/valkyrie_duelist": dict(mode="legs", hip=32, back=(0, 27), front=(27, 52), rigid=[], spread=2, lift=2, dip=1, bust=(22, 34, 13, 21, 2)),
-    "empire/valkyrie_prime": dict(mode="legs", hip=70, back=(14, 36), front=(36, 52), rigid=[(0, 14, 0, None), (52, 76, 0, None)], spread=2, lift=3, dip=1, bust=(28, 44, 27, 39, 3, 2)),  # Round 1 redo: box raised onto the whole breastplate (was rows 30-39, cols 28-45: "extend upward").
+    # Round 2 redo ("her feet split"): the blade (cols 0-10) and shield (cols 49-75) are rigid only down to
+    # row 85, where they end; below it the legs own every column, so the toes (cols 6-13 and 52-55, which the
+    # old full-height rigid columns 0-14 / 52-76 held still while the rest of the foot moved) stay whole.
+    "empire/valkyrie_prime": dict(mode="legs", hip=70, back=(0, 36), front=(36, 76), rigid=[(0, 11, 0, 86), (49, 76, 0, 86)], spread=2, lift=3, dip=1, bust=(28, 44, 27, 39, 3, 2)),  # Round 1 redo: box raised onto the whole breastplate (was rows 30-39, cols 28-45: "extend upward").
     "player/rust_prophet": dict(mode="robe", hip=40, rigid=[(30, 42, 0, None)], sway=1, dip=1),
     "summons/iron_revenant": dict(mode="legs", hip=34, back=(0, 26), front=(26, 58), rigid=[], spread=2, lift=2, dip=1),
     "summons/deus_revenant": dict(mode="legs", hip=44, back=(0, 27), front=(27, 66), rigid=[], spread=2, lift=2, dip=1),  # Round 1 redo (simpler drawing).
@@ -386,12 +389,13 @@ SKIN_FIX = {
     "player/voidcaller_deathlord": {"bust": (17, 29, 16, 22, 2, 2)},
     # Act III art review, round 1 redo: the ghost Abbess's derived box stopped short of the right
     # of her bust (cols 20-29, rows 18-24); the crowned Abbess's (cols 12-22, rows 20-26) sat low
-    # and left, on the gold belt (row 26): her bust is cols 14-23, rows 17-23, the box ending above the belt ("up and to the right").
+    # and left, on the gold belt (row 26): her bust is cols 14-23, rows 17-23, the box ending above the belt ("up and to the right");
+    # round 2 moved it 1 px right (cols 15-24: "a little bit more to the right, maybe 1 pixel").
     "player/lightning_abbess_untouchable": {"bust": (19, 31, 18, 25, 2)},
     # The Gilded Stormbride was redrawn simpler (round 1 redo, "too much detail"): her bust is
     # cols 13-22, rows 17-23, the box ending above the gold sash (row 26) and left of the staff.
     "player/lightning_abbess_hyper": {"bust": (13, 23, 17, 24, 2)},
-    "player/lightning_abbess_deathlord": {"bust": (14, 24, 17, 24, 2)},
+    "player/lightning_abbess_deathlord": {"bust": (15, 25, 17, 24, 2)},  # Round 2 redo: 1 px right (was cols 14-23).
 }
 
 
