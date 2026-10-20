@@ -24,11 +24,29 @@ tick and Web frame times at a phone viewport, solo vs co-op, at the busiest mome
 | `integration` | `30ba528`: Act III phase 2 fully merged (by the Act III session) + main merged in. |
 | `coop` | `457aea0`: DESIGN.md + **`coop-net` merged** (done, see below). Based on integration 18f72a5. |
 | `coop-net` | Done. Relay Worker `server/relay/` (Durable Object per lobby, hibernation API), `tools/coop_relay.py` (same protocol, local tests), `CoopNet` autoload (`scripts/coop/coop_net.gd`, data `scripts/data/coop_net_data.gd`, default relay `wss://necropathy-relay.smoketsu.workers.dev`, overrides `?relay=` / `--relay=`), the lobby screens (title-screen Co-op item, Host / Join, a letter pad, two player cards, host's stage / setup synced read-only), `--coop-net-test`, CI jobs `coop-net` and `deploy-relay`. Screens in `docs/coop/shots/`. **Start still runs a solo game on each machine**: `Main.start_coop_run(info)` is the marked stub hook for the sim. |
-| `coop-sim` | **In progress** (an agent was running when this session stopped). Pushed: `6b96cbe` two player slots in one simulation, `--coop-bot`, `--perf`; `d30bddc` `--effects=reduced` for the Web measurement; `693a53a` integration 18f72a5 merged; `3a02f69` Citadel audit, tick sections in `--perf`, `--coop-down` revive test. Check `git log origin/coop-sim` for anything newer and `docs/coop/PERF.md` (asked for; may not exist yet). Its milestone 1 brief: the slots refactor, co-op rules, `--coop-bot`, solo same-seed gate unchanged, the perf measurement, then STOP and report. |
+| `coop-sim` | **Milestone 1 done** at `fafb14e` (integration 18f72a5 merged in; not yet merged into `coop`). Two slots (`scripts/coop/coop_session.gd`, `coop_slot.gd`, `scripts/data/coop_data.gd`), enemies step with their nearest standing necromancer bound as `game.player`, `CombatResolver` binds the owner's slot, ~40 area attacks hit every necromancer inside, the co-op rules, `--coop-bot` (+ `--policy2` / `--character2` / `--classes2` / `--spells2`), `--coop-down=T`, `--perf`, `--perf-real`, `--effects=reduced`, the Web build reads `?necro_autotest=`, `tools/coop_web_perf.js`. Solo gate identical (seed 7: Graveyard default + army, Harbour army, Wastes army); co-op full runs clean (Graveyard, --mortal, Harbour, Wastes, Citadel). Perf in `docs/coop/PERF.md`. |
+
+## Milestone 1 results (the owner has been told)
+
+- ms per tick (budget 16.7): native solo 2.2 / co-op 5.4 whole run, co-op busiest minute 10.6 mean / 16.3 p95, both
+  Rally Barrages 8.5; Web (WASM) solo 3.0 / co-op 6.6-7.8, 15:00-16:00 12-15 with 12-21% of ticks over budget.
+- **Volleys are not the problem**: each army keeps its own 320-shot cap (~590 shots together, 0.5-0.7 ms a tick). The
+  cost is the doubled enemies (3.4-4.7 ms late) plus two armies. Headless Chromium draws on the CPU, so its frame
+  times (278-488 ms) mean nothing: real phones must be measured.
+- Agent's recommendations (NOT applied, ask the owner): co-op alive cap ×1.6 (288) instead of ×2, keep the trickle
+  doubled; keep the per-army shot cap; stagger enemy blocking checks; measure on real phones.
+- **Must fix before lockstep:** the same seed already diverges between Web and native and between window sizes within
+  the first minute (solo too), because gameplay reads `Game.view_size()` (spawn ring, recycle distance, Soul Nova).
+  Co-op needs one fixed gameplay view size on both machines; then check WASM vs native maths.
+- Agent's own calls (record or confirm): the host's Pact / Oath set the difficulty (the guest is never offered the
+  Pact); chests apply at once without a pause in co-op; Hyper / Frenzy power-ups help only the collector, a Stasis from
+  either freezes everything; stage events centre on the lowest-numbered standing player; Templar / Duelist / Valkyrie
+  lunges still hit only the nearest player.
+- Not done in milestone 1: partner HUD bar and arrow, the opener's chest reveal, the network input hook (`move_input`).
 
 ## Next steps, in order
 
-1. **Finish milestone 1 of `coop-sim`.** Read its commits and PERF.md; if the agent is gone, run the measurements
+1. **(Done: milestone 1, see above.) Merge `coop-sim` into `coop`** and verify it there. Read its commits and PERF.md; if the agent is gone, run the measurements
    yourself or brief a new Opus agent in a worktree on `coop-sim` with the milestone 1 brief (below). Verify: `--import`
    clean; `--coop-bot` full runs (Graveyard, one Act II, one Act III stage) with zero `SCRIPT ERROR` / `ERROR:` /
    `WARNING:` and `stuck_units=0`; the solo same-seed gate (`docs/act3/tools/gate.sh`, `same_seed_gate.py`, seed 7,
