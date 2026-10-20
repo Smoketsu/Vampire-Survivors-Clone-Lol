@@ -93,12 +93,12 @@ const ENEMIES := {
 		"move_speed": 44.0,  # TUNING (not in GDD) px/s; a steady march
 		"damage": 4.0,  # Owner-approved proposal: rifle shots 4-6 damage (before the time scaling)
 		"attack_interval": 6.0,  # TUNING (not in GDD) s between bursts (Act III balance: 4.0 -> 6.0, the top killer of every early death on all three stages; first pass 2.8 s: 3x an Act I archer's fire, the army bot's army fell to 2 by 2:00)
-		"attack_range": 400.0,  # Owner-approved proposal: "Long (400 px)"
+		"attack_range": 380.0,  # Owner-approved proposal: "Long (400 px)", rifle range 380-520 px; Act III balance: 400 -> 380 (the band's short end)
 		"radius": 10.0,  # TUNING (not in GDD) px
 		"armor": 0.15,  # TUNING (not in GDD) chrome plate
 		"xp": 2,  # TUNING (not in GDD)
 		"behavior": "ranged",
-		"projectile_speed": 560.0,  # TUNING (not in GDD) px/s rifle round
+		"projectile_speed": 420.0,  # TUNING (not in GDD) px/s rifle round (Act III balance: 560 -> 420, a round a walking necromancer or a stepping summon can meet or leave)
 		"undead_damage_mult": 0.75,  # TUNING (not in GDD) your dead are cover: a round on a summon hurts it less than one on you
 		"heal_amount": 0.0,
 		"heal_interval": 0.0,

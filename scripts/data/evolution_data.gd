@@ -370,7 +370,7 @@ const EVOLUTIONS := {
 		"description": "Two soul lasers sweep opposite each other; every kill sets off wild chain lightning.",
 		"labels": {"damage": "Beam damage", "beams": "Beams", "beam_length": "Beam length", "cooldown": "Sweep every (s)", "chain": "Chain lightning jumps", "spark": "Lightning damage"},
 		"stats": {
-			"damage": 30.0, "cooldown": 3.0, "sweep_time": 1.3, "beam_length": 440.0, "beam_width": 16.0, "spark": 0.3, "spark_range": 150.0,  # TUNING (not in GDD) first pass 64 dmg / 2.6 s / spark 0.6 / falloff 0.15: cut with the base spell; pass 2: 48 dmg / spark 0.4 -> 30 / 0.3 (each enemy meets both beams every sweep)
+			"damage": 30.0, "cooldown": 5.8, "sweep_time": 1.3, "beam_length": 330.0, "beam_width": 16.0, "spark": 0.3, "spark_range": 150.0,  # TUNING (not in GDD) Act III balance: cooldown 3.0 -> 5.8 s and beam 440 -> 330 px (the base spell's slower, shorter sweep); first pass 64 dmg / 2.6 s / spark 0.6 / falloff 0.15: cut with the base spell; pass 2: 48 dmg / spark 0.4 -> 30 / 0.3 (each enemy meets both beams every sweep)
 			"beams": 2,  # Owner-approved proposal: "two beams sweeping opposite each other"
 			"chain": 4,  # Owner-approved proposal: "chain lightning through up to 4 enemies"
 			"chain_falloff": 0.25,  # TUNING (not in GDD) damage lost per jump

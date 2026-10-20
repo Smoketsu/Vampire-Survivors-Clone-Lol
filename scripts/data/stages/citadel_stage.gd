@@ -68,9 +68,9 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (Act III starts at Act II's last step and climbs stage by stage).
-const ENEMY_HP_MULT: float = 1.35  # TUNING (not in GDD) placeholder, tuned in the lead's balance pass
+const ENEMY_HP_MULT: float = 1.4  # TUNING (not in GDD) a step above Ul-Thalos (1.2) (Act III balance: 1.35 -> 1.4; the act's danger is its ranged fire, so each stage's step above Ul-Thalos is in HP, not in damage: the naive bot bled to death between 8:00 and 12:00)
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.3  # TUNING (not in GDD) placeholder, tuned in the lead's balance pass
+const ENEMY_DAMAGE_MULT: float = 1.15  # TUNING (not in GDD) (Act III balance: 1.3 -> 1.15; the act's danger is its ranged fire, so each stage's step above Ul-Thalos is in HP, not in damage: the naive bot bled to death between 8:00 and 12:00)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00 (the Archive and Ul-Thalos)
@@ -125,37 +125,37 @@ const SEGMENTS := [
 		"objective": "The Laser Courts lie beyond the gates"},
 	# Zone II, the Laser Courts: laser grids, emplacements.
 	{"start": 300.0, "rate": 2.7, "max_alive": 66,  # TUNING (not in GDD)
-		"weights": {"drone": 0.47, "trooper": 0.18, "duelist": 0.01, "spotter": 0.005, "aegis_bot": 0.25},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.6, the rest to the drones (the Zone II ramp), Aegis Bots 0.25 from the drones): was {"drone": 0.6, "trooper": 0.3, "duelist": 0.08, "spotter": 0.02}
+		"weights": {"drone": 0.6, "trooper": 0.135, "duelist": 0.01, "spotter": 0.005, "aegis_bot": 0.165},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.6, the rest to the drones (the Zone II ramp), Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis Bots +0.12 from the drones): was {"drone": 0.6, "trooper": 0.3, "duelist": 0.08, "spotter": 0.02}
 		"objective": "The Laser Courts: step into the gaps of the grid"},
 	{"start": 420.0, "rate": 3.0, "max_alive": 74,  # TUNING (not in GDD)
-		"weights": {"drone": 0.374, "trooper": 0.256, "duelist": 0.011, "spotter": 0.007, "aegis_bot": 0.25},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.8, the rest to the drones (the Zone II ramp), Aegis Bots 0.25 from the drones): was {"drone": 0.56, "trooper": 0.32, "duelist": 0.09, "spotter": 0.03}
+		"weights": {"drone": 0.504, "trooper": 0.192, "duelist": 0.011, "spotter": 0.007, "aegis_bot": 0.184},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.8, the rest to the drones (the Zone II ramp), Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis Bots +0.12 from the drones): was {"drone": 0.56, "trooper": 0.32, "duelist": 0.09, "spotter": 0.03}
 		"objective": "The grid burns the Empire's own: lead them into it"},
 	{"start": 540.0, "rate": 3.2, "max_alive": 80,  # TUNING (not in GDD)
-		"weights": {"drone": 0.3, "trooper": 0.33, "duelist": 0.011, "spotter": 0.007, "aegis_bot": 0.25},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Aegis Bots 0.25 from the drones): was {"drone": 0.55, "trooper": 0.33, "duelist": 0.09, "spotter": 0.03}
+		"weights": {"drone": 0.43, "trooper": 0.247, "duelist": 0.011, "spotter": 0.007, "aegis_bot": 0.203},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis Bots +0.12 from the drones): was {"drone": 0.55, "trooper": 0.33, "duelist": 0.09, "spotter": 0.03}
 		"objective": "The Spire Lifts rise ahead"},
 	# Zone III, the Spire Lifts: faster guns, the last gate, Valkyrie 2.0.
 	{"start": 600.0, "rate": 3.4, "max_alive": 86,  # TUNING (not in GDD)
-		"weights": {"drone": 0.28, "trooper": 0.33, "duelist": 0.012, "spotter": 0.01, "aegis_bot": 0.25},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Aegis Bots 0.25 from the drones): was {"drone": 0.53, "trooper": 0.33, "duelist": 0.1, "spotter": 0.04}
+		"weights": {"drone": 0.41, "trooper": 0.247, "duelist": 0.012, "spotter": 0.01, "aegis_bot": 0.203},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis Bots +0.12 from the drones): was {"drone": 0.53, "trooper": 0.33, "duelist": 0.1, "spotter": 0.04}
 		"objective": "The Spire Lifts: the fortress fires on you from above"},
 	{"start": 720.0, "rate": 3.6, "max_alive": 92,  # TUNING (not in GDD)
-		"weights": {"drone": 0.27, "trooper": 0.34, "duelist": 0.012, "spotter": 0.01, "aegis_bot": 0.25},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Aegis Bots 0.25 from the drones): was {"drone": 0.52, "trooper": 0.34, "duelist": 0.1, "spotter": 0.04}
+		"weights": {"drone": 0.4, "trooper": 0.255, "duelist": 0.012, "spotter": 0.01, "aegis_bot": 0.205},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis Bots +0.12 from the drones): was {"drone": 0.52, "trooper": 0.34, "duelist": 0.1, "spotter": 0.04}
 		"objective": "Valkyrie 2.0 leads the Citadel's guard"},
 	{"start": 840.0, "rate": 3.8, "max_alive": 98,  # TUNING (not in GDD)
-		"weights": {"drone": 0.25, "trooper": 0.35, "duelist": 0.013, "spotter": 0.01, "aegis_bot": 0.25},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Aegis Bots 0.25 from the drones): was {"drone": 0.5, "trooper": 0.35, "duelist": 0.11, "spotter": 0.04}
+		"weights": {"drone": 0.38, "trooper": 0.262, "duelist": 0.013, "spotter": 0.01, "aegis_bot": 0.207},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis Bots +0.12 from the drones): was {"drone": 0.5, "trooper": 0.35, "duelist": 0.11, "spotter": 0.04}
 		"objective": "The Core lies at the top of the lifts"},
 	# Zone IV, the Core.
 	{"start": 900.0, "rate": 4.0, "max_alive": 102,  # TUNING (not in GDD)
-		"weights": {"drone": 0.23, "trooper": 0.36, "duelist": 0.013, "spotter": 0.013, "aegis_bot": 0.25},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Aegis Bots 0.25 from the drones): was {"drone": 0.48, "trooper": 0.36, "duelist": 0.11, "spotter": 0.05}
+		"weights": {"drone": 0.36, "trooper": 0.27, "duelist": 0.013, "spotter": 0.013, "aegis_bot": 0.21},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis Bots +0.12 from the drones): was {"drone": 0.48, "trooper": 0.36, "duelist": 0.11, "spotter": 0.05}
 		"objective": "The Core: the god the Empire built wakes beneath you"},
 	{"start": 960.0, "rate": 4.2, "max_alive": 106,  # TUNING (not in GDD)
-		"weights": {"drone": 0.23, "trooper": 0.36, "duelist": 0.013, "spotter": 0.013, "aegis_bot": 0.25},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Aegis Bots 0.25 from the drones): was {"drone": 0.48, "trooper": 0.36, "duelist": 0.11, "spotter": 0.05}
+		"weights": {"drone": 0.36, "trooper": 0.27, "duelist": 0.013, "spotter": 0.013, "aegis_bot": 0.21},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis Bots +0.12 from the drones): was {"drone": 0.48, "trooper": 0.36, "duelist": 0.11, "spotter": 0.05}
 		"objective": "Deus Ex Machina rises in the Core"},
 	# 17:00, the boss: a thinner trickle so the fight stays readable.
 	{"start": BOSS_TIME, "rate": 2.4, "max_alive": 66,  # TUNING (not in GDD)
-		"weights": {"drone": 0.35, "trooper": 0.3, "duelist": 0.008, "spotter": 0.007, "aegis_bot": 0.25},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Aegis Bots 0.25 from the drones): was {"drone": 0.6, "trooper": 0.3, "duelist": 0.07, "spotter": 0.03}
+		"weights": {"drone": 0.48, "trooper": 0.225, "duelist": 0.008, "spotter": 0.007, "aegis_bot": 0.195},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis Bots +0.12 from the drones): was {"drone": 0.6, "trooper": 0.3, "duelist": 0.07, "spotter": 0.03}
 		"objective": "Break Deus Ex Machina"},
 	{"start": 1110.0, "rate": 2.8, "max_alive": 76,  # TUNING (not in GDD)
-		"weights": {"drone": 0.33, "trooper": 0.31, "duelist": 0.01, "spotter": 0.007, "aegis_bot": 0.25},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Aegis Bots 0.25 from the drones): was {"drone": 0.58, "trooper": 0.31, "duelist": 0.08, "spotter": 0.03}
+		"weights": {"drone": 0.46, "trooper": 0.232, "duelist": 0.01, "spotter": 0.007, "aegis_bot": 0.197},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Duelists x0.12, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis Bots +0.12 from the drones): was {"drone": 0.58, "trooper": 0.31, "duelist": 0.08, "spotter": 0.03}
 		"objective": "Break Deus Ex Machina"},
 ]
 
@@ -344,7 +344,7 @@ const CITADEL := {
 		"turret_spread": 170.0,  # TUNING (not in GDD) px
 		"turret_back": 90.0,  # TUNING (not in GDD) px
 		"garrison_first": 4.0,  # TUNING (not in GDD) s
-		"garrison_interval": 14.0,  # TUNING (not in GDD) s ("enemies pour out of the gate while it holds"); balance pass 3: 8 -> 14 (the first gate's drones shot the starting army's necromancer down by 2:20)
+		"garrison_interval": 18.0,  # TUNING (not in GDD) s ("enemies pour out of the gate while it holds"); Act III balance: 14 -> 18; balance pass 3: 8 -> 14 (the first gate's drones shot the starting army's necromancer down by 2:20)
 		"active_radius": 900.0,  # TUNING (not in GDD) px
 		"despawn_distance": 1800.0,  # TUNING (not in GDD) px
 		"reward_xp": 40,  # TUNING (not in GDD)
@@ -357,7 +357,7 @@ const CITADEL := {
 		"max_alive": 8,  # TUNING (not in GDD)
 		"despawn_distance": 1700.0,  # TUNING (not in GDD) px
 	},
-	"guest_first": 150.0,  # TUNING (not in GDD)
+	"guest_first": 300.0,  # TUNING (not in GDD) Act III balance: 150 -> 300 (the shared opening has no heavies before 5:00: a guest Juggernaut's flames burned the army bot's army down at 4:00)
 	"guest_interval": 75.0,  # TUNING (not in GDD)
 	"guest_until": 1000.0,  # TUNING (not in GDD) the boss fight keeps its own roster
 	"guest_count": 3,  # TUNING (not in GDD)

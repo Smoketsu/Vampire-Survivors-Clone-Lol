@@ -61,9 +61,9 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (Act III starts at Act II's last step and climbs stage by stage).
-const ENEMY_HP_MULT: float = 1.3  # TUNING (not in GDD) a step above Ul-Thalos (1.2)
+const ENEMY_HP_MULT: float = 1.35  # TUNING (not in GDD) a step above Ul-Thalos (1.2) (Act III balance: 1.3 -> 1.35; the act's danger is its ranged fire, so each stage's step above Ul-Thalos is in HP, not in damage: the naive bot bled to death between 8:00 and 12:00)
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.25  # TUNING (not in GDD) a step above Ul-Thalos (1.2)
+const ENEMY_DAMAGE_MULT: float = 1.1  # TUNING (not in GDD) (Act III balance: 1.25 -> 1.1; the act's danger is its ranged fire, so each stage's step above Ul-Thalos is in HP, not in damage: the naive bot bled to death between 8:00 and 12:00)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them): Zone II.
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as the Archive and Ul-Thalos (7:00)
@@ -113,37 +113,37 @@ const SEGMENTS := [
 		"objective": "Arc Engineers repair the machines: cut them down first"},
 	# Zone II, the Conveyor Floor.
 	{"start": 300.0, "rate": 2.6, "max_alive": 64,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.44, "aegis": 0.32, "line_trooper": 0.15, "arc_engineer": 0.05, "juggernaut": 0.007, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Troopers x0.6, the rest to the drones (the Zone II ramp), Aegis +0.08 from the drones): was {"scout_drone": 0.42, "aegis": 0.24, "line_trooper": 0.25, "arc_engineer": 0.05, "juggernaut": 0.015, "spotter": 0.02}
+		"weights": {"scout_drone": 0.44, "aegis": 0.357, "line_trooper": 0.112, "arc_engineer": 0.05, "juggernaut": 0.007, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Troopers x0.6, the rest to the drones (the Zone II ramp), Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis +0.08 from the drones): was {"scout_drone": 0.42, "aegis": 0.24, "line_trooper": 0.25, "arc_engineer": 0.05, "juggernaut": 0.015, "spotter": 0.02}
 		"objective": "The Conveyor Floor: the belts drag everyone out of position"},
 	{"start": 420.0, "rate": 2.9, "max_alive": 74,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.362, "aegis": 0.32, "line_trooper": 0.208, "arc_engineer": 0.05, "juggernaut": 0.01, "spotter": 0.005, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Troopers x0.8, the rest to the drones (the Zone II ramp), Aegis +0.08 from the drones): was {"scout_drone": 0.39, "aegis": 0.24, "line_trooper": 0.26, "arc_engineer": 0.05, "juggernaut": 0.02, "spotter": 0.02, "mortar": 0.02}
+		"weights": {"scout_drone": 0.362, "aegis": 0.372, "line_trooper": 0.156, "arc_engineer": 0.05, "juggernaut": 0.01, "spotter": 0.005, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Troopers x0.8, the rest to the drones (the Zone II ramp), Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis +0.08 from the drones): was {"scout_drone": 0.39, "aegis": 0.24, "line_trooper": 0.26, "arc_engineer": 0.05, "juggernaut": 0.02, "spotter": 0.02, "mortar": 0.02}
 		"objective": "Keep your dead between you and the guns"},
 	{"start": 540.0, "rate": 3.2, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.3, "aegis": 0.32, "line_trooper": 0.26, "arc_engineer": 0.05, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Aegis +0.08 from the drones): was {"scout_drone": 0.38, "aegis": 0.24, "line_trooper": 0.26, "arc_engineer": 0.05, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
+		"weights": {"scout_drone": 0.3, "aegis": 0.385, "line_trooper": 0.195, "arc_engineer": 0.05, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis +0.08 from the drones): was {"scout_drone": 0.38, "aegis": 0.24, "line_trooper": 0.26, "arc_engineer": 0.05, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
 		"objective": "The line never stops"},
 	# Zone III, the Fabricator Hall.
 	{"start": 600.0, "rate": 3.4, "max_alive": 92,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.27, "aegis": 0.33, "line_trooper": 0.26, "arc_engineer": 0.06, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Aegis +0.08 from the drones): was {"scout_drone": 0.35, "aegis": 0.25, "line_trooper": 0.26, "arc_engineer": 0.06, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
+		"weights": {"scout_drone": 0.27, "aegis": 0.395, "line_trooper": 0.195, "arc_engineer": 0.06, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis +0.08 from the drones): was {"scout_drone": 0.35, "aegis": 0.25, "line_trooper": 0.26, "arc_engineer": 0.06, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
 		"objective": "The Fabricator Hall: every bay builds another soldier"},
 	{"start": 720.0, "rate": 3.6, "max_alive": 100,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.27, "aegis": 0.33, "line_trooper": 0.26, "arc_engineer": 0.06, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Aegis +0.08 from the drones): was {"scout_drone": 0.35, "aegis": 0.25, "line_trooper": 0.26, "arc_engineer": 0.06, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
+		"weights": {"scout_drone": 0.27, "aegis": 0.395, "line_trooper": 0.195, "arc_engineer": 0.06, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis +0.08 from the drones): was {"scout_drone": 0.35, "aegis": 0.25, "line_trooper": 0.26, "arc_engineer": 0.06, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
 		"objective": "Smash the fabricators and the Beta Build has nothing to patch itself with"},
 	{"start": 840.0, "rate": 3.9, "max_alive": 108,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.26, "aegis": 0.33, "line_trooper": 0.27, "arc_engineer": 0.06, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Aegis +0.08 from the drones): was {"scout_drone": 0.34, "aegis": 0.25, "line_trooper": 0.27, "arc_engineer": 0.06, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
+		"weights": {"scout_drone": 0.26, "aegis": 0.398, "line_trooper": 0.203, "arc_engineer": 0.06, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis +0.08 from the drones): was {"scout_drone": 0.34, "aegis": 0.25, "line_trooper": 0.27, "arc_engineer": 0.06, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
 		"objective": "The heat rises from the furnaces below"},
 	# Zone IV, the Furnace.
 	{"start": 900.0, "rate": 4.2, "max_alive": 116,  # TUNING (not in GDD) the density peak of the run
-		"weights": {"scout_drone": 0.26, "aegis": 0.33, "line_trooper": 0.27, "arc_engineer": 0.06, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Aegis +0.08 from the drones): was {"scout_drone": 0.34, "aegis": 0.25, "line_trooper": 0.27, "arc_engineer": 0.06, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
+		"weights": {"scout_drone": 0.26, "aegis": 0.398, "line_trooper": 0.203, "arc_engineer": 0.06, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis +0.08 from the drones): was {"scout_drone": 0.34, "aegis": 0.25, "line_trooper": 0.27, "arc_engineer": 0.06, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
 		"objective": "The Furnace: keep out of the channels when they flare"},
 	{"start": 960.0, "rate": 4.4, "max_alive": 122,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.26, "aegis": 0.33, "line_trooper": 0.27, "arc_engineer": 0.06, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Aegis +0.08 from the drones): was {"scout_drone": 0.34, "aegis": 0.25, "line_trooper": 0.27, "arc_engineer": 0.06, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
+		"weights": {"scout_drone": 0.26, "aegis": 0.398, "line_trooper": 0.203, "arc_engineer": 0.06, "juggernaut": 0.01, "spotter": 0.007, "mortar": 0.02},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis +0.08 from the drones): was {"scout_drone": 0.34, "aegis": 0.25, "line_trooper": 0.27, "arc_engineer": 0.06, "juggernaut": 0.02, "spotter": 0.03, "mortar": 0.02}
 		"objective": "Something vast is booting up in the furnace hall"},
 	# 17:00, the boss: a thinner trickle so the duel stays readable.
 	{"start": BOSS_TIME, "rate": 2.7, "max_alive": 80,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.34, "aegis": 0.32, "line_trooper": 0.26, "arc_engineer": 0.05, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Aegis +0.08 from the drones): was {"scout_drone": 0.42, "aegis": 0.24, "line_trooper": 0.26, "arc_engineer": 0.05, "spotter": 0.03}
+		"weights": {"scout_drone": 0.34, "aegis": 0.385, "line_trooper": 0.195, "arc_engineer": 0.05, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis +0.08 from the drones): was {"scout_drone": 0.42, "aegis": 0.24, "line_trooper": 0.26, "arc_engineer": 0.05, "spotter": 0.03}
 		"objective": "Shut down the Motherboard"},
 	{"start": 1110.0, "rate": 3.2, "max_alive": 90,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.32, "aegis": 0.33, "line_trooper": 0.26, "arc_engineer": 0.05, "juggernaut": 0.005, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Aegis +0.08 from the drones): was {"scout_drone": 0.4, "aegis": 0.25, "line_trooper": 0.26, "arc_engineer": 0.05, "juggernaut": 0.01, "spotter": 0.03}
+		"weights": {"scout_drone": 0.32, "aegis": 0.395, "line_trooper": 0.195, "arc_engineer": 0.05, "juggernaut": 0.005, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Juggernauts x0.5, Troopers x0.75, the rest to the Aegis Bots (the ranged share), Aegis +0.08 from the drones): was {"scout_drone": 0.4, "aegis": 0.25, "line_trooper": 0.26, "arc_engineer": 0.05, "juggernaut": 0.01, "spotter": 0.03}
 		"objective": "Shut down the Motherboard"},
 ]
 

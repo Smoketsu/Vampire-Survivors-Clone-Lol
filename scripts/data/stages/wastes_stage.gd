@@ -46,9 +46,9 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (Act III starts a step above Act II's last stage, Ul-Thalos 1.2).
-const ENEMY_HP_MULT: float = 1.25  # TUNING (not in GDD) placeholder, tuned in the lead's balance pass
+const ENEMY_HP_MULT: float = 1.3  # TUNING (not in GDD) a step above Ul-Thalos (1.2) (Act III balance: 1.25 -> 1.3; the act's danger is its ranged fire, so each stage's step above Ul-Thalos is in HP, not in damage: the naive bot bled to death between 8:00 and 12:00)
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.2  # TUNING (not in GDD) placeholder, tuned in the lead's balance pass
+const ENEMY_DAMAGE_MULT: float = 1.05  # TUNING (not in GDD) (Act III balance: 1.2 -> 1.05; the act's danger is its ranged fire, so each stage's step above Ul-Thalos is in HP, not in damage: the naive bot bled to death between 8:00 and 12:00)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them): Zone II, as on the Archive and Ul-Thalos.
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) (the Archive and Ul-Thalos: 7:00)
@@ -99,43 +99,43 @@ const SEGMENTS := [
 		"objective": "Spotters paint their targets: step out of the red line"},
 	# Zone II, the Wreck Gullies: Mortar Walkers lob shells over the wrecks.
 	{"start": 300.0, "rate": 2.6, "max_alive": 60,  # TUNING (not in GDD) pass 3: 2.7 / 66 -> 2.6 / 60 (the army bot's army broke at 5:00-6:00)
-		"weights": {"scout_drone": 0.484, "aegis_bot": 0.32, "line_trooper": 0.156, "mortar_walker": 0.02, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.6, the rest to the drones (the Zone II ramp)): was {"scout_drone": 0.38, "aegis_bot": 0.32, "line_trooper": 0.26, "mortar_walker": 0.02, "spotter": 0.02}
+		"weights": {"scout_drone": 0.484, "aegis_bot": 0.359, "line_trooper": 0.117, "mortar_walker": 0.02, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.6, the rest to the drones (the Zone II ramp), Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.38, "aegis_bot": 0.32, "line_trooper": 0.26, "mortar_walker": 0.02, "spotter": 0.02}
 		"objective": "The Wreck Gullies: blockers hold the narrow paths"},
 	{"start": 390.0, "rate": 2.9, "max_alive": 70,  # TUNING (not in GDD) pass 3: 3.0 / 74 -> 2.9 / 70
-		"weights": {"scout_drone": 0.438, "aegis_bot": 0.35, "line_trooper": 0.162, "mortar_walker": 0.03, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.6, the rest to the drones (the Zone II ramp)): was {"scout_drone": 0.33, "aegis_bot": 0.35, "line_trooper": 0.27, "mortar_walker": 0.03, "spotter": 0.02}
+		"weights": {"scout_drone": 0.438, "aegis_bot": 0.39, "line_trooper": 0.121, "mortar_walker": 0.03, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.6, the rest to the drones (the Zone II ramp), Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.33, "aegis_bot": 0.35, "line_trooper": 0.27, "mortar_walker": 0.03, "spotter": 0.02}
 		"objective": "Mortar shells fall on the red circles: keep moving"},
 	{"start": 480.0, "rate": 3.3, "max_alive": 82,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.348, "aegis_bot": 0.37, "line_trooper": 0.232, "mortar_walker": 0.03, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.8, the rest to the drones (the Zone II ramp)): was {"scout_drone": 0.29, "aegis_bot": 0.37, "line_trooper": 0.29, "mortar_walker": 0.03, "spotter": 0.02}
+		"weights": {"scout_drone": 0.348, "aegis_bot": 0.428, "line_trooper": 0.174, "mortar_walker": 0.03, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.8, the rest to the drones (the Zone II ramp), Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.29, "aegis_bot": 0.37, "line_trooper": 0.29, "mortar_walker": 0.03, "spotter": 0.02}
 		"objective": "The Empire salvages its dead and sends them back"},
 	{"start": 540.0, "rate": 3.4, "max_alive": 84,  # TUNING (not in GDD) lull before the ridge
-		"weights": {"scout_drone": 0.29, "aegis_bot": 0.37, "line_trooper": 0.29, "mortar_walker": 0.03, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25): was {"scout_drone": 0.29, "aegis_bot": 0.37, "line_trooper": 0.29, "mortar_walker": 0.03, "spotter": 0.02}
+		"weights": {"scout_drone": 0.29, "aegis_bot": 0.443, "line_trooper": 0.217, "mortar_walker": 0.03, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.29, "aegis_bot": 0.37, "line_trooper": 0.29, "mortar_walker": 0.03, "spotter": 0.02}
 		"objective": "Signal masts glow on the ridge ahead"},
 	# Zone III, Pylon Ridge: the Signal Pylons and the Trojan Horse.
 	{"start": 600.0, "rate": 3.6, "max_alive": 90,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.28, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.03, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25): was {"scout_drone": 0.28, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.03, "spotter": 0.03}
+		"weights": {"scout_drone": 0.28, "aegis_bot": 0.435, "line_trooper": 0.225, "mortar_walker": 0.03, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.28, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.03, "spotter": 0.03}
 		"objective": "Pylon Ridge: tear down the Signal Pylons"},
 	{"start": 690.0, "rate": 3.9, "max_alive": 98,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.28, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.03, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25): was {"scout_drone": 0.28, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.03, "spotter": 0.03}
+		"weights": {"scout_drone": 0.28, "aegis_bot": 0.435, "line_trooper": 0.225, "mortar_walker": 0.03, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.28, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.03, "spotter": 0.03}
 		"objective": "The ridge bristles with guns"},
 	{"start": 780.0, "rate": 4.2, "max_alive": 106,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.27, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.03, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25): was {"scout_drone": 0.27, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.03, "spotter": 0.03}
+		"weights": {"scout_drone": 0.27, "aegis_bot": 0.438, "line_trooper": 0.232, "mortar_walker": 0.03, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.27, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.03, "spotter": 0.03}
 		"objective": "The Outer Wall lies beyond the ridge"},
 	{"start": 840.0, "rate": 4.1, "max_alive": 104,  # TUNING (not in GDD) lull
-		"weights": {"scout_drone": 0.27, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.03, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25): was {"scout_drone": 0.27, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.03, "spotter": 0.03}
+		"weights": {"scout_drone": 0.27, "aegis_bot": 0.438, "line_trooper": 0.232, "mortar_walker": 0.03, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.27, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.03, "spotter": 0.03}
 		"objective": "The Empire masses on its wall"},
 	# Zone IV, the Outer Wall: the density peak of the run.
 	{"start": 900.0, "rate": 4.5, "max_alive": 112,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.26, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.04, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25): was {"scout_drone": 0.26, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.04, "spotter": 0.03}
+		"weights": {"scout_drone": 0.26, "aegis_bot": 0.438, "line_trooper": 0.232, "mortar_walker": 0.04, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.26, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.04, "spotter": 0.03}
 		"objective": "The Outer Wall: break through the Empire's frontier"},
 	{"start": 960.0, "rate": 4.8, "max_alive": 118,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.26, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.04, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25): was {"scout_drone": 0.26, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.04, "spotter": 0.03}
+		"weights": {"scout_drone": 0.26, "aegis_bot": 0.438, "line_trooper": 0.232, "mortar_walker": 0.04, "spotter": 0.007},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.26, "aegis_bot": 0.36, "line_trooper": 0.31, "mortar_walker": 0.04, "spotter": 0.03}
 		"objective": "A sniper's laser sweeps the wall"},
 	# 17:00, the boss: a thinner trickle so the fight stays readable.
 	{"start": BOSS_TIME, "rate": 3.0, "max_alive": 80,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.3, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.02, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25): was {"scout_drone": 0.3, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.02, "spotter": 0.02}
+		"weights": {"scout_drone": 0.3, "aegis_bot": 0.435, "line_trooper": 0.225, "mortar_walker": 0.02, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.3, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.02, "spotter": 0.02}
 		"objective": "Delete Kestrel, the Dead Pixel"},
 	{"start": 1110.0, "rate": 3.6, "max_alive": 92,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.29, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.03, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25): was {"scout_drone": 0.29, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.03, "spotter": 0.02}
+		"weights": {"scout_drone": 0.29, "aegis_bot": 0.435, "line_trooper": 0.225, "mortar_walker": 0.03, "spotter": 0.005},  # TUNING (not in GDD) Act III balance (Spotters x0.25, Troopers x0.75, the rest to the Aegis Bots (the ranged share)): was {"scout_drone": 0.29, "aegis_bot": 0.36, "line_trooper": 0.3, "mortar_walker": 0.03, "spotter": 0.02}
 		"objective": "Delete Kestrel, the Dead Pixel"},
 ]
 
