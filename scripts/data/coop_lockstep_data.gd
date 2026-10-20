@@ -18,9 +18,12 @@ const TICK_DELTA: float = 1.0 / 60.0  # TUNING (not in GDD) must equal 1 / TICK_
 ## The one gameplay view size of a co-op run (world px at Normal zoom): the
 ## spawn ring, the recycle distance and the Soul Nova read it on every machine
 ## (Game.gameplay_view_size()), whatever the window, browser or phone. It is
-## the headless autotest's viewport (1280 x 720 at ViewData.GAMEPLAY_ZOOM 1),
-## so a --coop-bot run plays exactly as before. Rendering keeps the real size.
-const GAMEPLAY_VIEW: Vector2 = Vector2(1280.0, 720.0)  # TUNING (not in GDD) lead decision: the design layout
+## the headless autotest's visible area (the 1280 px design width on the
+## headless 100 x 100 px window, stretch "expand": 1280 x 1280 at
+## ViewData.GAMEPLAY_ZOOM 1), so a --coop-bot run plays exactly as before: the
+## spawn ring sits ~905 px out, off screen on every window up to ~1810 px wide
+## at Normal zoom. Rendering keeps the real size.
+const GAMEPLAY_VIEW: Vector2 = Vector2(1280.0, 1280.0)  # TUNING (not in GDD) lead brief: the headless autotest's value
 
 # ------------------------------------------------------------------ input delay
 

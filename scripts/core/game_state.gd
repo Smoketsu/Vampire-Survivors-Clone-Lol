@@ -153,7 +153,7 @@
 ##                         (CoopNetData.ALLOW_MIXED_PLATFORMS is off; the Web-vs-native
 ##                         checksum test, tools/coop_web_lockstep.js).
 ##   --view=WxH            Test: Game.view_size() reports a W x H window (layout px)
-##                         instead of the real one (headless has a fixed 1280 x 720), to
+##                         instead of the real one (headless has a fixed 1280 x 1280), to
 ##                         check that co-op gameplay ignores the window (one fixed size).
 ##   --effects=reduced     Draws with Effects = Reduced (default Full; drawing only).
 ##   --perf-real=A-B,...   --perf, and those game-second windows run at real

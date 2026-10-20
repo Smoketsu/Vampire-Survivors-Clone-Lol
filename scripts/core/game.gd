@@ -752,13 +752,13 @@ func shake(amount: float) -> void:
 func view_size() -> Vector2:
 	var size := get_viewport_rect().size  # Visible layout area (px).
 	if GameState.autotest and GameState.autotest_view != Vector2.ZERO:
-		size = GameState.autotest_view  # --view=WxH: a test window size (headless is always 1280 x 720).
+		size = GameState.autotest_view  # --view=WxH: a test window size (headless is always 1280 x 1280).
 	return size / minf(camera.zoom.x, ViewData.GAMEPLAY_ZOOM)
 
 
 ## World size in px that GAMEPLAY treats as "on screen" (the enemy spawn ring,
 ## the recycle distance, the Soul Nova): view_size() in solo; in co-op one fixed
-## size (CoopLockstepData.GAMEPLAY_VIEW, the headless autotest's 1280 x 720 at
+## size (CoopLockstepData.GAMEPLAY_VIEW, the headless autotest's 1280 x 1280 at
 ## GAMEPLAY_ZOOM) on every machine, so the same seed plays the same whatever
 ## each player's window, browser or phone. Drawing keeps view_size().
 func gameplay_view_size() -> Vector2:
