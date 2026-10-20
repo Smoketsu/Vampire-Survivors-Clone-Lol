@@ -145,7 +145,7 @@ MIX = [
 #   colors      allowed palette colour names (quilt)
 #   shares      {colour: fraction} exact proportions by lightness rank (quilt, rank_snap());
 #               patches {colour: fraction} taken first by hue
-#   layout      the joint pattern: {"type": courses | walks | grid | voronoi, ...} (see its function)
+#   layout      the joint pattern: {"type": courses | walks | grid | voronoi | belts, ...} (see its function)
 #   regions     layout: {region: colours}; l_ranges {region: (lo, hi)} per region
 #   cell_shift  layout: each stone reads the texture at its own seeded offset (seed)
 #   cell_l      layout: +/- per-stone OKLab L offset; bevel: L added on lit / taken on shaded edges
@@ -329,10 +329,16 @@ RECIPES = {
         "l_ranges": {"stone": (0.21, 0.30)}, "cell_shift": True, "cell_l": 0.008, "bevel": 0.008,
     },
     "assembly_conveyor": {
-        "source": "march_fortress.png", "method": "layout",  # Grated walkway: a fine square grid.
-        "layout": {"type": "grid", "step": 16, "joint": 1},
-        "regions": {"stone": ["floor_slate"], "joint": ["ink_cold"]},
-        "flat": True, "cell_l": 0.0,
+        # Owner's art review, round 1 ("conveyor belts don't look like this"; was a 16 px slate
+        # grid): long parallel rubber belts running along x like the zone's live belts (which
+        # AssemblyGlyphs draws on top, near-black with scrolling amber chevrons), ridged slats
+        # across the rubber, steel side rails with roller hubs, a dark floor gap between belts.
+        "source": "march_fortress.png", "method": "layout",
+        "layout": {"type": "belts", "period": 64, "gap": 6, "rail": 4, "slat": 8, "roller": 16, "roller_offset": 6},
+        "regions": {"gap": ["floor_soil"], "rail": ["chrome_dark"], "rail_light": ["grey_dark"],
+                    "rail_dark": ["ink_chrome"], "roller": ["ink_chrome"], "roller_light": ["chrome"],
+                    "rubber": ["floor_slate", "floor_marble"], "ridge": ["ink_cold"], "ridge_light": ["floor_marble"]},
+        "l_ranges": {"rubber": (0.25, 0.27)}, "flat": True, "cell_l": 0.0,
     },
     "assembly_fabricator": {
         "source": "sanctum_courtyard.png", "method": "layout",  # Polished square panels, blue-steel.
@@ -730,9 +736,51 @@ def _voronoi(n: int, spec: dict) -> tuple:
     return cell, region
 
 
+def _belts(n: int, spec: dict) -> tuple:
+    """Conveyor belts (owner's art review, round 1: "conveyor belts don't look like this"):
+    long parallel belts running along x, one every `period` px (the tile height must be a
+    multiple). Down each period: `gap` px of floor between two belts (region "gap"), the top
+    steel side rail (`rail` px: its first row "rail_light", the lit top edge, the rest "rail"),
+    the rubber belt, the bottom rail ("rail", its last row "rail_dark", the shaded edge). The
+    rubber is cut across into slats every `slat` px (a cell each): the slat's first column is a
+    "ridge" (the dark groove between slats), its second "ridge_light" (the lit lip of the next
+    slat), the rest "rubber". Each rail carries a roller hub every `roller` px ("roller": a 2 px
+    wide dark block on the rail's inner rows, its top-left pixel "roller_light"), offset by
+    `roller_offset` px. Lengths in art px; n must be a multiple of `period`, `slat` and
+    `roller`, so the tile wraps."""
+    per, gap, rail = spec["period"], spec.get("gap", 4), spec.get("rail", 3)
+    slat, roller, roff = spec.get("slat", 8), spec.get("roller", 16), spec.get("roller_offset", 4)
+    if n % per or n % slat or n % roller:
+        raise SystemExit("belts: the tile size must be a multiple of period, slat and roller")
+    cell = np.zeros((n, n), dtype=np.int64)
+    region = np.full((n, n), "rubber", dtype=object)
+    belt_h = per - gap - 2 * rail  # Rubber rows per belt (art px).
+    for y in range(n):
+        b, r = divmod(y, per)  # Belt index, row inside the period.
+        for x in range(n):
+            if r < gap:
+                region[y, x], cell[y, x] = "gap", 0
+                continue
+            rr = r - gap  # Row from the top rail's top edge.
+            top_rail, bottom_rail = rr < rail, rr >= rail + belt_h
+            if top_rail or bottom_rail:
+                cell[y, x] = 1
+                region[y, x] = "rail_light" if rr == 0 else ("rail_dark" if rr == per - gap - 1 else "rail")
+                ry = rr if top_rail else rr - rail - belt_h  # Row inside this rail (0 = its top).
+                if (x - roff) % roller < 2 and 0 < ry < rail - (0 if top_rail else 1):
+                    region[y, x] = "roller_light" if ((x - roff) % roller == 0 and ry == 1) else "roller"
+                continue
+            cell[y, x] = 2 + b * (n // slat) + x // slat  # One cell per slat.
+            c = x % slat  # Column inside the slat.
+            region[y, x] = "ridge" if c == 0 else ("ridge_light" if c == 1 else "rubber")
+    return cell, region
+
+
 def build_layout(n_w: int, n_h: int, spec: dict) -> tuple:
     """(cell ids, region names) of layout `spec["type"]` (periodic by construction)."""
     t = spec["type"]
+    if t == "belts":
+        return _belts(n_w, spec)
     if t == "courses":
         return _courses(n_w, n_h, spec)
     if t == "walks":
