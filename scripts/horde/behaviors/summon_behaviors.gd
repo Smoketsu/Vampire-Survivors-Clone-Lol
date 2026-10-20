@@ -10,6 +10,7 @@
 ##   "dive"   Fallen Seraph       SeraphBehavior (Act II)
 ##   "grasp"  Spawn of the Deep   DeepSpawnBehavior (Act II, Ul-Thalos)
 ##   "bulwark" Bone Golem         GolemBehavior (content wave 2)
+##   "hover"  Grave Drone         GraveDroneBehavior (Act III, the Assembly Halls)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -49,6 +50,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Content wave 2: Bone Golem ---
 		"bulwark":
 			b = GolemBehavior.new()
+		# --- Act III: the Assembly Halls ---
+		"hover":
+			b = GraveDroneBehavior.new()
 	if b != null:
 		b.kind = kind
 	return b
@@ -133,6 +137,13 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 		# --- Content wave 2: Bone Golem ---
 		"bulwark":
 			GolemTexts.class_lines(out, a, b, nxt)
+		# --- Act III: the Assembly Halls ---
+		"hover":
+			if a.is_empty():
+				out.append("Hovers over the army: flies over obstacles and belts")
+				out.append("Bone darts: %s dmg each, %s px reach" % [_f(nxt["damage"]), _f(nxt["attack_range"])])
+			elif int(b.get("dart_count", 1)) != int(a.get("dart_count", 1)):
+				out.append("Darts per attack %d -> %d" % [int(a.get("dart_count", 1)), int(b.get("dart_count", 1))])
 	return out
 
 

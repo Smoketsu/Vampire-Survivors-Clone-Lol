@@ -52,6 +52,9 @@ const ACT2_IDS := [
 	"forbidden_verse",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"call_of_the_drowned",
+	# --- Act III: the Assembly Halls --- (an unlockable spell of the next act:
+	# the same generic hooks and act2_summary_line(); its own EmpireReport line)
+	"hollow_puppet",
 ]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
@@ -71,6 +74,8 @@ const SOURCES := {
 	"forbidden_verse": ["verse", "unwritten_word", "ink_burst"],
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"call_of_the_drowned": ["drowned_tendril", "tide_tendril"],
+	# --- Act III: the Assembly Halls ---
+	"hollow_puppet": ["hollow_puppet", "puppet_burst"],
 }
 
 ## Owning run.
@@ -140,6 +145,8 @@ func _create(id: String) -> NecroSpell:
 			node = ForbiddenVerse.new()
 		"call_of_the_drowned":
 			node = CallOfTheDrowned.new()  # Act II: Ul-Thalos, the Risen Spire.
+		"hollow_puppet":
+			node = HollowPuppet.new()  # Act III: the Assembly Halls.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

@@ -23,4 +23,6 @@ const POSES: Dictionary = {
 	"bosses/merrow_changed": {3: "strike"},  # TUNING (not in GDD) the limbs lashing forward
 	# --- Act II: the Hollow Archive ---
 	"bosses/archivist": {1: "cast", 2: "split", 3: "strike"},  # TUNING (not in GDD) Recitation / Footnotes / the tome slammed down (BossArchivist)
+	# --- Act III: the Assembly Halls ---
+	"bosses/motherboard": {1: "windup", 3: "strike"},  # TUNING (not in GDD) crane arms raised for a special / claws slammed down (BossMotherboard)
 }

@@ -76,6 +76,9 @@ static func draw_necromancer(ci: CanvasItem, o: Vector2, r: float, flash: bool) 
 
 ## Dispatches to the shape for summon class `cls`.
 static func draw_summon(ci: CanvasItem, cls: String, o: Vector2, r: float, flash: bool) -> void:
+	if cls.begins_with(PuppetData.GLYPH_PREFIX):
+		AssemblyGlyphs.draw_puppet(ci, cls.substr(PuppetData.GLYPH_PREFIX.length()), o, r, flash)
+		return  # Act III: a Hollow Puppet (the foe's own art on soul strings).
 	if SpriteBank.draw(ci, "summons/" + cls, o, flash):
 		return  # Sprite art exists (assets/sprites/summons/<cls>.png).
 	match cls:

@@ -184,6 +184,11 @@ var behavior: SummonBehavior = null
 ## True while flying (Gargoyle swoop): no obstacle collision, not in the ally
 ## grid (enemies cannot target or be blocked by it) and immune to damage.
 var airborne: bool = false
+## Act III, the Assembly Halls (UnitData "flies": the Grave Drone): true for a
+## class that always hovers: it passes over obstacles (Arena.resolve_all()
+## skips it) and rides no conveyor belt, but unlike a swooping Gargoyle it stays
+## in the ally grid, so enemies target and hit it like any summon.
+var flies: bool = false
 ## True while a Cathedral Horror stands as stone after a swoop
 ## (GargoyleBehavior): on the ground and body-blocking, but immune to damage
 ## (CombatResolver.damage_unit()).
@@ -355,6 +360,7 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	think_slot = slot
 	visible = true
 	airborne = false
+	flies = bool(UnitData.UNITS[cls].get("flies", false))  # Act III: a hovering Grave Drone.
 	stone_form = false
 	self_modulate = Color.WHITE  # A pooled node may have been stone-tinted.
 	evo_volleys = 0

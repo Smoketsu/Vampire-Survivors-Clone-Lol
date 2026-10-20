@@ -390,6 +390,50 @@ The shared kinds so far: the **Scout Drone** (fast flying fodder with short zaps
 Trooper** (a cyborg rifleman firing three-round bursts from 400 px while it marches) and the
 **Spotter** (an elite marksman with the Lock-On rail). The Codex has an **Empire** tab.
 
+### Stage 8: the Assembly Halls (Act III, built, not yet playable)
+
+<!-- --- Act III: the Assembly Halls --- -->
+The Empire's factory, where the dead are rebuilt as soldiers (GDD §15.0 "The Assembly Halls (Act III
+phase 2)"; `scripts/data/stages/assembly_stage.gd`). It is built but still shows "Coming soon" on the
+stage select until the act is released. The clock drives four zones: **the Loading Docks** (20:00,
+crates and fuel drums), **the Conveyor Floor** (15:00), **the Fabricator Hall** (10:00) and **the
+Furnace** (5:00). The Motherboard arrives with 3:00 left.
+
+- **Conveyors.** Belts on the Conveyor Floor and in the Fabricator Hall carry everyone standing on
+  them (you, your summons, enemies) along the belt. Neighbouring lanes run in opposite directions.
+  Flying units are not carried. The push goes through `TerrainSlow`, the one ground-effect path.
+- **Fabricators.** Sets of two or three fabricators power up at 17:30, 14:00, 9:45 and 6:50. Each
+  one builds an Empire soldier every few seconds until you smash it. Every fabricator you smash
+  makes the waves and the trickle a little thinner, and pays XP and Soul Ash. Smash every
+  fabricator in one run to earn the achievement **Cold Assembly**.
+- **Furnace channels.** Molten channels in the Fabricator Hall and the Furnace run on a fixed,
+  staggered rhythm: dormant, then a warning glow, then burning. A burning channel hurts everyone
+  standing in it, enemies too (the stage boss takes half).
+- **The Beta Build** (miniboss, 9:00). A half-finished war machine with a claw swipe and rivet
+  sprays. It patches itself while fabricators still stand, so smash them first.
+- **The Motherboard** (boss). A walking factory with two crane arms:
+  - it grabs your summons and hurls them at you;
+  - it drops press-stamps on telegraphed squares;
+  - at Full Load it magnet-pulls the army out of the ring and builds its own turrets;
+  - below a quarter of its HP it overclocks, with faster specials and more stamps.
+- **New kinds.** The **Arc Engineer** repairs damaged machines and jams your summons (they deal
+  less damage while jammed). The **Juggernaut** is a flamethrower walker with flat armour, which
+  shrugs off light hits.
+
+**Rewards** (unlocked by slaying the Motherboard; offered on every stage):
+- **Hollow Puppet** (spell). It seizes the strongest nearby non-boss foes. Each one fights for you
+  as a temporary summon for 8 s, then dies, and its XP drops where it falls. It evolves into
+  **Puppet King** with its paired passive **Strings of the Dead**: two puppets at a time, and each
+  puppet bursts when it dies. Strings of the Dead makes every temporary summon taunt nearby foes
+  and rise with more HP.
+- **Grave Drone** (summon class). Hovering skull drones fire bone darts from inside the ring.
+  They fly over the belts, and they still stop Empire shots. They evolve into the **Wraith Drone**
+  with **Overclock**, which makes every ranged summon attack faster.
+- **The Marionette**, Hollow Puppet's character. Her innate, *Puppeteer*: puppets last 25% longer
+  and hit 25% harder. She has Hyper, Untouchable and Deathlord skins.
+- **Signal Ghost** (passive, Act III only). Lock-On lines take longer to paint on you. It is
+  unlocked by **Cold Assembly**.
+
 ### Stage 4: Gullhaven Harbour (Act II)
 
 A fishing town at low tide, at night, where the Ancient Eye has lived in the open for
@@ -1854,6 +1898,11 @@ scripts/
                             Act III stubs' placeholder obstacles (Act III)
     empire_ground.gd        The Act III stubs' placeholder floor (the STAGE's "floor": scrap / assembly / citadel)
     empire_report.gd        The autotest's Act III lines (line of fire, lock-on, steel, purge protocol, kinds, stage)
+    assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
+    assembly_glyphs.gd      The Assembly Halls' code drawings: belts, furnace channels, jam fields, arcs, flames,
+                            build frames, stamps, claws, the magnet, puppets on soul strings, fallback obstacles
+    assembly_report.gd      The autotest's lines for the Assembly Halls' rewards (Hollow Puppet, Grave Drone,
+                            Signal Ghost, the Marionette)
     harbour_ground.gd       Gullhaven's zone floors (mudflats, market, chapel, seawall)
     harbour_glyphs.gd       Gullhaven's fallback shapes: kinds, obstacles, piers, nets, anchor, Merrow
     harbour_report.gd       Gullhaven's autotest lines (tide, harbour, kinds, Merrow, Act II spell / passives)
@@ -2004,6 +2053,12 @@ scripts/
                             the Signal Ghost hook
       empire_kit.gd         Base kit: marching fire (bursts through EmpireShots), fire_shot() / fire_arc_at()
       drone_kit.gd, trooper_kit.gd, spotter_kit.gd   The Scout Drone / Kill-Drone, Line Trooper, Spotter
+      assembly_director.gd  The Assembly Halls: conveyor belts (push through TerrainSlow), fabricators (build,
+                            thin the waves, Cold Assembly), furnace channels, the Beta Build event
+      arc_engineer_kit.gd, juggernaut_kit.gd, fabricator_kit.gd, beta_build_kit.gd, motherboard_turret_kit.gd
+                            The Arc Engineer, Juggernaut, fabricator, Beta Build (miniboss), Motherboard turret
+      boss_motherboard.gd   The Motherboard (crane grab and hurl, press-stamps, magnet pull, turret builds,
+                            Full Load / Overclock); motherboard_hazards.gd holds its stamps and landings
     eye/deep_kin_kit.gd, tide_caller_kit.gd, netcaster_kit.gd, harbourmaster_kit.gd   Gullhaven's kinds
     eye/boss_merrow.gd      Abbot Silas Merrow, Voice of the Deep (Gullhaven's boss)
     enemy_director.gd       The stage's wave timeline, events, boss, Reckoning, pooling, recycling,
@@ -2165,11 +2220,16 @@ scripts/
                             Purge Protocol's Kill-Drone), the machine / cyborg body flag (Act III)
     wastes_enemy_data.gd    Each Act III stage's own kinds (assembly_ / citadel_enemy_data.gd likewise; empty
                             until phase 2)
+    assembly_enemy_data.gd  The Assembly Halls' kinds: Arc Engineer, Juggernaut, fabricator, Beta Build,
+                            Motherboard turret
+    motherboard_data.gd     Act III: the Motherboard (arrival, phases, grab / hurl, stamps, magnet, turrets)
+    puppet_data.gd          Act III: Hollow Puppet / Puppet King fixed rules (classes, cap, glyph, strings)
     empire_rules_data.gd    Act III's shared rules: LINE_OF_FIRE, SHOT_STYLES, LOCK_ON (+ Signal Ghost hook),
                             STEEL (Grave Gunners), PURGE (orbital strikes)
     stages/wastes_stage.gd         Act III stages (foundation stubs): the Scrap Wastes, the Assembly Halls
     stages/assembly_stage.gd       and the Iron Citadel; act 3, "empire": true, "Iron Requiem", the Purge
     stages/citadel_stage.gd        Protocol Reckoning, placeholder floors / obstacles / timelines / boss scripts
+                                   (the Assembly Halls is built: zones, belts, channels, timeline, ASSEMBLY)
     harbour_enemy_data.gd   Each Act II stage's own kinds (archive_ / spire_enemy_data.gd likewise); Gullhaven:
                             Deep Kin, Tide Caller, Netcaster, the Harbourmaster, the Herald of the Deep,
                             the bell buoy and the smugglers' cache
@@ -2333,6 +2393,7 @@ Options (after `--`):
 | `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, or the Act III stubs `wastes`, `assembly` and `citadel`. Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind) and `empire stage`. The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina` (placeholder scripts). |
+| (Assembly Halls) | `--stage=assembly` adds `assembly` (fabricators destroyed / placed / planned and when, soldiers built and capped, the wave and trickle thinning, Cold Assembly, the Beta Build, objective Soul Ash), `assembly floor` (seconds carried by belts for you / summons / enemies, furnace flares, furnace hits and damage per side), `assembly events`, `assembly kinds` (Arc Engineer repairs and jams, Juggernaut flames and flat armour, the Beta Build's swipes, rivets, patching and kill time) and `motherboard` (grabs, hurls, stamps, magnet pulls, turret builds, turrets and their shots, when Full Load and Overclock began, its damage). Reward lines print when owned: `hollow puppet` (`--spells=hollow_puppet`), `class grave_drone` (`--classes=grave_drone`), `signal ghost` (`--passives=signal_ghost`) and `marionette` (`--character=marionette`). `--spawn=arc_engineer@60x4,juggernaut@120x2,beta_build@180` works on any stage. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |
 | `--rewards=on\|off` | Content wave 2: `on` checks the five one-run achievements (Mass Grave, Untouchable, Full Ossuary, Deathlord's Due, Swift Judgment) in memory, as the game does; by default (`off`) the autotest leaves them unchecked (unless `--meta-save`), so the default summaries' bounty and Soul Ash are unchanged. Every summary ends with a `rewards` line: achievements earned this run, titles open, reward items unlocked (`ultimate:` / `title:` / `skin:`), the run counters (temporary undead raised, lowest HP before 0:00, evolutions, the boss's lifetime after arrival), the one-run achievements this run met and whether they were checked, the worn title, and the setup screen's title row built once headless. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |

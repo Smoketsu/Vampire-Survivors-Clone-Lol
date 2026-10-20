@@ -80,6 +80,16 @@ const UNLOCKS := {
 	# wave 2"): the Bone Golem and its paired passive, offered on every stage.
 	"bone_golem": {"type": "class", "achievement": "bone_legion", "text": "Earn Bone Legion: Skeleton Warriors slay 1,000 foes."},  # Owner-approved proposal 5
 	"grave_masonry": {"type": "passive", "achievement": "bone_legion", "text": "Earn Bone Legion: Skeleton Warriors slay 1,000 foes."},  # Its paired passive, unlocked with it
+	# --- Act III: the Assembly Halls ---
+	# The Motherboard's gifts (owner-approved Act III proposal "Rewards"): the
+	# spell Hollow Puppet and the summon class Grave Drone, each with its
+	# paired passive; Cold Assembly's counter-passive Signal Ghost ("act": 3 on
+	# its card row: offered only on Act III stages).
+	"hollow_puppet": {"type": "spell", "boss": "motherboard", "text": "Shut down the Motherboard in the Assembly Halls to unlock."},  # Owner-approved proposal
+	"strings_of_the_dead": {"type": "passive", "boss": "motherboard", "text": "Shut down the Motherboard in the Assembly Halls to unlock."},  # Hollow Puppet's paired passive, unlocked with it
+	"grave_drone": {"type": "class", "boss": "motherboard", "text": "Shut down the Motherboard in the Assembly Halls to unlock."},  # Owner-approved proposal
+	"overclock": {"type": "passive", "boss": "motherboard", "text": "Shut down the Motherboard in the Assembly Halls to unlock."},  # The Grave Drone's paired passive, unlocked with it
+	"signal_ghost": {"type": "passive", "achievement": "cold_assembly", "text": "Earn Cold Assembly: destroy every fabricator in one Assembly Halls run."},  # Owner-approved proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

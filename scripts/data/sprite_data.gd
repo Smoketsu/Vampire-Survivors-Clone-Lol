@@ -222,6 +222,21 @@ const HEIGHTS: Dictionary = {
 	"player/heretic_scribe_deathlord": 61.0,  # TUNING (not in GDD) skin art: body 48 like the Heretic Scribe, the crimson quill-staff above
 	"player/tide_widow_untouchable": 56.0,  # TUNING (not in GDD) skin art: body 48 like the Tide Widow, the pearl crown and the soul conch above
 	"player/tide_widow_deathlord": 58.0,  # TUNING (not in GDD) skin art: body 48 like the Tide Widow, the taller spiked crown above
+	# --- Act III: the Assembly Halls ---
+	"empire/arc_engineer": 50.0,  # TUNING (not in GDD) support tier, like the Line Trooper (the toolkit drum adds width)
+	"empire/juggernaut": 62.0,  # TUNING (not in GDD) heavy elite: a squat armoured walker
+	"empire/fabricator": 54.0,  # TUNING (not in GDD) a structure: the build bay with its robot arm above
+	"empire/motherboard_turret": 32.0,  # TUNING (not in GDD) the boss's small tripod turret
+	"empire/beta_build": 104.0,  # TUNING (not in GDD) miniboss tier (the Harbourmaster 124, the Cathedral Guardian 140): a tall, thin, unfinished mech
+	"bosses/motherboard": 150.0,  # TUNING (not in GDD) boss tier: the titan on its treads, both crane arms raised
+	"bosses/motherboard_windup": 150.0,  # TUNING (not in GDD) attack pose: both crane arms raised high (BossPoseData 1)
+	"bosses/motherboard_strike": 150.0,  # TUNING (not in GDD) attack pose: both claws slammed down in front (BossPoseData 3)
+	"summons/grave_drone": 26.0,  # TUNING (not in GDD) a small flying skull drone (drawn hovering)
+	"summons/wraith_drone": 30.0,  # TUNING (not in GDD) its evolution, wreathed in ghost flame
+	"player/marionette": 56.0,  # TUNING (not in GDD) character tier: body ~50, the jester bun above
+	"player/marionette_hyper": 58.0,  # TUNING (not in GDD) skin art: the Marionette's body, the tall gold jester crown above
+	"player/marionette_untouchable": 56.0,  # TUNING (not in GDD) skin art: body like the Marionette's
+	"player/marionette_deathlord": 60.0,  # TUNING (not in GDD) skin art: body like the Marionette's, the spiked crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

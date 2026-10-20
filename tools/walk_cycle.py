@@ -226,6 +226,21 @@ RIGS = {
     "empire/spotter": dict(mode="legs", hip=41, back=(0, 28), front=(28, 62), rigid=[], spread=2, lift=2, dip=1),
     "empire/scout_drone": dict(mode="robe", hip=24, rigid=[], sway=1, dip=1),
     "summons/grave_gunner": dict(mode="legs", hip=27, back=(0, 23), front=(23, 48), rigid=[], spread=2, lift=2, dip=1),
+    # --- Act III: the Assembly Halls ---
+    # The Arc Engineer and the Juggernaut march on their legs (the emitter / flamethrower ride
+    # with the body); the Beta Build stalks on its long frame legs; the two drone summons hover
+    # (a glide: the body bobs over its lowest part). The Marionette and her three skins glide
+    # in their long gowns (figure redesign: bust bounce, idle breathing), the puppet strings
+    # above the hip ride with the body.
+    "empire/arc_engineer": dict(mode="legs", hip=31, back=(0, 24), front=(24, 54), rigid=[], spread=2, lift=2, dip=1),
+    "empire/juggernaut": dict(mode="legs", hip=40, back=(0, 31), front=(31, 68), rigid=[], spread=2, lift=2, dip=1),
+    "empire/beta_build": dict(mode="legs", hip=64, back=(0, 53), front=(53, 102), rigid=[], spread=3, lift=3, dip=1),
+    "summons/grave_drone": dict(mode="robe", hip=20, rigid=[], sway=1, dip=1),
+    "summons/wraith_drone": dict(mode="robe", hip=23, rigid=[], sway=1, dip=1),
+    "player/marionette": dict(mode="robe", hip=31, rigid=[], sway=2, dip=1, bust=(17, 28, 17, 24, 2)),
+    "player/marionette_hyper": dict(mode="robe", hip=33, rigid=[], sway=2, dip=1, bust=(12, 26, 17, 24, 2)),
+    "player/marionette_untouchable": dict(mode="robe", hip=31, rigid=[], sway=2, dip=1, bust=(10, 24, 15, 22, 2)),
+    "player/marionette_deathlord": dict(mode="robe", hip=35, rigid=[], sway=2, dip=1, bust=(18, 31, 17, 25, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

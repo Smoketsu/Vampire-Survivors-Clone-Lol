@@ -42,8 +42,9 @@ func _init(p_director: HordeDirector) -> void:
 ## SummonBehavior.taunt_reach()).
 func refresh() -> void:
 	_taunters.clear()
-	if director.evolutions.evolved.is_empty() and director.golems == null:
-		return
+	if director.evolutions.evolved.is_empty() and director.golems == null \
+			and director.game.abilities.passive_level("strings_of_the_dead") <= 0:
+		return  # (Act III: Strings of the Dead gives every temporary summon a taunt reach.)
 	for u in director.units:
 		if not u.active or u.state == SummonedUnit.State.SPAWNING:
 			continue
@@ -75,6 +76,8 @@ func taunt_target(e: Enemy) -> SummonedUnit:
 ## Stats key that counts an enemy redirected onto taunter `u`: a Bone Golem's
 ## Bulwark has its own (golem_taunts), so the Colossus's count is unchanged.
 static func taunt_stat(u: SummonedUnit) -> String:
+	if u.is_temporary:
+		return "strings_taunts"  # Act III: a temporary summon taunting through Strings of the Dead.
 	return "golem_taunts" if u.unit_class == GolemKit.CLASS_ID else "colossus_taunts"
 
 

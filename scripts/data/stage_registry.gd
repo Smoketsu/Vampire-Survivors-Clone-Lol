@@ -82,6 +82,10 @@
 ##                        zone's `shore` radius); the sea is the world's edge.
 ##   spire              — SpireDirector config (SpireStage.SPIRE: dream
 ##                        pillars, guest squads of the earlier Act II kinds).
+##   assembly           — AssemblyDirector config (AssemblyStage.ASSEMBLY, Act
+##                        III the Assembly Halls: fabricators, the furnace
+##                        rhythm, guest aliases; its zones' "belts" /
+##                        "channels"); with ground "assembly" (AssemblyGround).
 class_name StageRegistry
 extends RefCounted
 
@@ -150,6 +154,6 @@ const BOSS_ARRIVALS := {
 	# --- Act III: the Electronic Empire (stubs: each stage's BOSS until phase 2
 	# gives the boss its own data file) ---
 	"kestrel": WastesStage.BOSS,
-	"motherboard": AssemblyStage.BOSS,
+	"motherboard": MotherboardData.ARRIVAL,  # Act III: the Assembly Halls (its own data file)
 	"deus_ex_machina": CitadelStage.BOSS,
 }

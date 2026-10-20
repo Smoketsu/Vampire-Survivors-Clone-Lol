@@ -47,6 +47,38 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			String(sd["id"]), String(sd["display_name"]), str(StageRegistry.is_playable(String(sd["id"]))),
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
 			_clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]), String((sd["reckoning"] as Dictionary).get("kind", "inquisitor"))])
+	# --- Act III: the Assembly Halls ---
+	_assembly_lines(game, st)
+
+
+# --- Act III: the Assembly Halls ---
+## The Assembly Halls' lines (GDD §15.0 "The Assembly Halls (Act III phase 2)"):
+##   assembly:        fabricators (placed / destroyed, built, the waves' cut),
+##                    Cold Assembly, the Beta Build
+##   assembly floor:  belts (body-seconds carried) and furnace channels (burns)
+##   assembly events: the timeline log
+##   assembly kinds:  Arc Engineer repairs / jams, Juggernaut flames, the Beta
+##                    Build's specials and patching (when any of them spawned)
+##   motherboard:     the boss's fight (when it spawned)
+## Each prints only when its system ran this run.
+static func _assembly_lines(game: Game, st: Dictionary) -> void:
+	var ad := game.enemies.assembly  # The stage's director (null off the Assembly Halls).
+	if ad != null:
+		print("[autotest] assembly: %s" % ad.summary_line())
+		print("[autotest] assembly floor: %s" % ad.floor_line())
+		print("[autotest] assembly events (%d): %s" % [ad.fired.size(), ", ".join(ad.fired)])
+	var any_kind := false  # An Assembly kind spawned this run.
+	for k: String in [AssemblyEnemyData.ARC_ENGINEER, AssemblyEnemyData.JUGGERNAUT, AssemblyEnemyData.BETA_BUILD, AssemblyEnemyData.FABRICATOR]:
+		any_kind = any_kind or float(st.get("spawned_" + k, 0.0)) > 0.0
+	if any_kind:
+		print("[autotest] assembly kinds: arc engineer repairs %d (hp %d), jams %d | juggernaut flames %d (summon hits %d, player hits %d, flat armour absorbed %d) | beta build swipes %d (hits %d), rivet sprays %d, patched %d hp (%d ticks fed by fabricators), killed %d (in %.0f s) | fabricated %d" % [
+			int(st.get("arc_repairs", 0.0)), int(st.get("arc_repaired_hp", 0.0)), int(st.get("arc_jams", 0.0)),
+			int(st.get("juggernaut_flames", 0.0)), int(st.get("juggernaut_flame_summon_hits", 0.0)), int(st.get("juggernaut_flame_player_hits", 0.0)),
+			int(st.get("flat_armor_absorbed_" + AssemblyEnemyData.JUGGERNAUT, 0.0)),
+			int(st.get("beta_swipe_used", 0.0)), int(st.get("beta_swipe_hits", 0.0)), int(st.get("beta_rivets_used", 0.0)), int(st.get("beta_patched_hp", 0.0)),
+			int(st.get("beta_patch_ticks_with_fabs", 0.0)), int(st.get("beta_kills", 0.0)), float(st.get("beta_ttk", 0.0)), int(st.get("assembly_fabricated", 0.0))])
+	if float(st.get("boss_atk_grab", 0.0)) + float(st.get("boss_atk_stamp", 0.0)) > 0.0 or game.enemies.boss is BossMotherboard:
+		print("[autotest] motherboard: %s" % BossMotherboard.summary_line(st))
 
 
 ## "m:ss" of `t` game seconds.
