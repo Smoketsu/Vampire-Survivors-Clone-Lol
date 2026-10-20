@@ -1,0 +1,368 @@
+<title>Act II Art Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jacquard+24&family=Jersey+10&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark;
+    --ground: #161A1C;
+    --panel: #20252A;
+    --panel-2: #2A3036;
+    --stage: #101315;
+    --line: #3A424A;
+    --ink: #E6E1D6;
+    --ink-dim: #A39E94;
+    --violet: #8F6BD1;
+    --teal: #4FD1B8;
+    --gold: #E2B44C;
+    --crimson: #D9534F;
+    --cut: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: 19px/1.25 "Jersey 10", system-ui, sans-serif;
+    padding: 0 16px 64px;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  .cut { clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); }
+  h1, h2 { font-family: "Jacquard 24", serif; font-weight: 400; margin: 0; }
+  h1 { font-size: 43px; line-height: 1; }
+  h2 { font-size: 43px; line-height: 1; color: var(--violet); }
+  h3, h4 { font-weight: 400; margin: 0; }
+  p { margin: 0; }
+  button { font: inherit; color: inherit; }
+
+  .top {
+    background: var(--ground);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 0 10px;
+    margin: 0 -16px 0;
+    padding-left: 16px; padding-right: 16px;
+  }
+  .top-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; }
+  .lede { color: var(--ink-dim); max-width: 70ch; margin-top: 4px; }
+  .tally { display: flex; gap: 14px; flex-wrap: wrap; font-size: 28px; margin-left: auto; }
+  .tally b { font-weight: 400; }
+  .tally .t-ok b { color: var(--teal); }
+  .tally .t-redo b { color: var(--crimson); }
+  .tally .t-left b { color: var(--gold); }
+  .bar { height: 6px; background: var(--panel-2); margin-top: 8px; display: flex; }
+  .bar i { display: block; height: 100%; }
+  .bar .b-ok { background: var(--teal); }
+  .bar .b-redo { background: var(--crimson); }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-top: 10px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    background: var(--panel-2); border: 0; padding: 4px 12px; cursor: pointer; min-height: 32px;
+  }
+  .chip[aria-pressed="true"] { background: var(--violet); color: #fff; }
+  .chip:focus-visible, .v:focus-visible, .note:focus-visible, nav a:focus-visible, .zoom:focus-visible, .play:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  nav { display: flex; gap: 6px 14px; flex-wrap: wrap; }
+  nav a { color: var(--ink-dim); text-decoration: none; padding: 4px 0; }
+  nav a:hover { color: var(--ink); }
+  .bg-pick { display: flex; gap: 6px; align-items: center; color: var(--ink-dim); }
+  .notice { margin-top: 10px; padding: 8px 12px; background: #3A2224; color: #F2C7C5; display: none; }
+  .notice.on { display: block; }
+
+  .ws { margin-top: 36px; }
+  .ws-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+  .ws-blurb { color: var(--ink-dim); flex: 1 1 320px; }
+  .ws-count { color: var(--ink-dim); }
+  .folder { font-size: 28px; margin: 22px 0 10px; color: var(--ink); }
+  .folder .n { color: var(--ink-dim); font-size: 19px; }
+  .grid {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  .card { background: var(--panel); display: flex; flex-direction: column; min-width: 0; }
+  .card.wide { grid-column: 1 / -1; }
+  .card[data-v="ok"] { box-shadow: inset 0 -4px 0 var(--teal); }
+  .card[data-v="redo"] { box-shadow: inset 0 -4px 0 var(--crimson); }
+  .card.hidden { display: none; }
+  .stage {
+    background: var(--stage); padding: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    min-height: 120px; overflow-x: auto; position: relative;
+  }
+  body.bg-light .stage { background: #8C8A84; }
+  body.bg-check .stage {
+    background-color: #2B2F33;
+    background-image: linear-gradient(45deg, #3A3F44 25%, transparent 25%, transparent 75%, #3A3F44 75%), linear-gradient(45deg, #3A3F44 25%, transparent 25%, transparent 75%, #3A3F44 75%);
+    background-size: 16px 16px; background-position: 0 0, 8px 8px;
+  }
+  .stage img, .anim, .tiled { image-rendering: pixelated; image-rendering: crisp-edges; }
+  .stage img { max-width: none; display: block; cursor: zoom-in; }
+  .ba { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; justify-content: center; }
+  .ba figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .ba figcaption { color: var(--ink-dim); }
+  .ba .was img { opacity: .8; }
+  .prev-note { color: var(--gold); }
+  .stage img.big { cursor: zoom-out; }
+  .tiled { width: 100%; height: 220px; background-repeat: repeat; }
+  .anim-wrap { display: flex; align-items: center; gap: 10px; }
+  .anim { background-repeat: no-repeat; }
+  .play, .zoom {
+    background: var(--panel-2); border: 0; padding: 2px 10px; min-height: 30px; cursor: pointer; color: var(--ink-dim);
+  }
+  .info { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .title-row { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; }
+  .title-row h4 { font-size: 28px; line-height: 1; }
+  .kind { color: var(--violet); white-space: nowrap; }
+  .key, .meta { color: var(--ink-dim); word-break: break-all; }
+  .subject { color: var(--ink); opacity: .85; }
+  .verdict { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+  .v { border: 0; background: var(--panel-2); min-height: 36px; min-width: 72px; padding: 4px 14px; cursor: pointer; }
+  .v.ok[aria-pressed="true"] { background: var(--teal); color: #0D1A17; }
+  .v.redo[aria-pressed="true"] { background: var(--crimson); color: #fff; }
+  .v:disabled { opacity: .5; cursor: default; }
+  .saved { color: var(--ink-dim); margin-left: auto; text-align: right; }
+  .saved.err { color: var(--crimson); }
+  .note-label { color: var(--ink-dim); margin-top: 4px; }
+  .note {
+    width: 100%; resize: vertical; background: var(--stage); color: var(--ink); border: 1px solid var(--line);
+    font: inherit; padding: 6px 8px;
+  }
+  .note:disabled { opacity: .5; }
+  .by { color: var(--ink-dim); }
+  .empty-filter { display: none; color: var(--ink-dim); margin-top: 24px; }
+  .empty-filter.on { display: block; }
+  @media (max-width: 520px) {
+    .tally { margin-left: 0; font-size: 19px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="top">
+  <div class="top-row">
+    <h1>Act II Art Review</h1>
+    <div class="tally" aria-live="polite">
+      <span class="t-ok"><b id="n-ok">0</b> OK</span>
+      <span class="t-redo"><b id="n-redo">0</b> Redo</span>
+      <span class="t-left"><b id="n-left">{{TOTAL}}</b> left</span>
+    </div>
+  </div>
+  <p class="lede">{{LEDE}}</p>
+  <div class="bar" aria-hidden="true"><i class="b-ok" id="b-ok" style="width:0"></i><i class="b-redo" id="b-redo" style="width:0"></i></div>
+  <div class="controls">
+    <div class="chips" role="group" aria-label="Show">
+      <button type="button" class="chip" data-f="all" aria-pressed="true">All</button>
+      <button type="button" class="chip" data-f="left" aria-pressed="false">Unmarked</button>
+      <button type="button" class="chip" data-f="redo" aria-pressed="false">Redo</button>
+      <button type="button" class="chip" data-f="ok" aria-pressed="false">OK</button>
+    </div>
+    <div class="bg-pick chips" role="group" aria-label="Backdrop">
+      <span>Backdrop</span>
+      <button type="button" class="chip" data-bg="dark" aria-pressed="true">Dark</button>
+      <button type="button" class="chip" data-bg="light" aria-pressed="false">Light</button>
+      <button type="button" class="chip" data-bg="check" aria-pressed="false">Check</button>
+    </div>
+    <nav aria-label="Sections">{{NAV}}</nav>
+  </div>
+  <p class="notice" id="notice">Marks can't be saved in this view. Open the page on claude.ai while signed in to record them.</p>
+</div>
+
+<main>
+{{CARDS}}
+<p class="empty-filter" id="empty-filter">Nothing matches this filter.</p>
+</main>
+
+<script>
+(() => {
+  // Per-section image counts, from the generator.
+  const COUNTS = {{COUNTS}};
+  // The db collection this round's marks are saved in.
+  const COLLECTION = {{COLLECTION}};
+  // Every card, keyed by its review id (the sprite key with "/" as "__").
+  const cards = new Map();
+  document.querySelectorAll(".card").forEach(c => cards.set(c.dataset.id, c));
+  const TOTAL = cards.size;
+  // Latest saved review per id: {verdict, note, at, by}.
+  const reviews = new Map();
+  // The current filter: all | left | ok | redo.
+  let filter = "all";
+  // The db namespace (null until resolved, or when this view cannot save).
+  let db = null;
+  // The viewer's opaque id, stored on each mark.
+  let me = null;
+
+  // Animated preview for every multi-frame strip.
+  const prefersStill = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  cards.forEach(card => {
+    const frames = +card.dataset.frames;
+    if (frames < 2) return;
+    const img = card.querySelector(".stage img");
+    if (!img) return;
+    const s = +card.dataset.s;
+    const fw = Math.round(+card.dataset.w / frames) * s;  // One frame, on screen px.
+    const fh = +card.dataset.h * s;
+    const zoom = Math.max(1, Math.min(3, Math.floor(160 / fh))) ;  // Extra zoom for the preview.
+    const wrap = document.createElement("div");
+    wrap.className = "anim-wrap";
+    const anim = document.createElement("div");
+    anim.className = "anim";
+    anim.setAttribute("role", "img");
+    anim.setAttribute("aria-label", "Animated preview");
+    anim.style.width = fw * zoom + "px";
+    anim.style.height = fh * zoom + "px";
+    anim.style.backgroundImage = "url(" + img.src + ")";
+    anim.style.backgroundSize = (fw * frames * zoom) + "px " + (fh * zoom) + "px";
+    const fps = frames >= 20 ? 12 : 10;
+    const a = anim.animate(
+      [{ backgroundPosition: "0 0" }, { backgroundPosition: (-fw * frames * zoom) + "px 0" }],
+      { duration: frames / fps * 1000, iterations: Infinity, easing: "steps(" + frames + ", end)" });
+    const play = document.createElement("button");
+    play.type = "button";
+    play.className = "play";
+    const setLabel = () => { play.textContent = a.playState === "running" ? "Pause" : "Play"; };
+    if (prefersStill) a.pause();
+    setLabel();
+    play.addEventListener("click", () => { a.playState === "running" ? a.pause() : a.play(); setLabel(); });
+    wrap.append(anim, play);
+    card.querySelector(".stage").prepend(wrap);
+  });
+
+  // Click an image to double it (and back).
+  document.querySelectorAll(".stage img").forEach(img => {
+    const w = img.width, h = img.height;
+    img.addEventListener("click", () => {
+      const big = img.classList.toggle("big");
+      img.width = big ? w * 2 : w;
+      img.height = big ? h * 2 : h;
+    });
+  });
+
+  function paintCard(card) {
+    const r = reviews.get(card.dataset.id);
+    const v = r ? r.verdict : "";
+    card.dataset.v = v || "";
+    card.querySelectorAll(".v").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
+    const note = card.querySelector(".note");
+    if (document.activeElement !== note) note.value = r && r.note ? r.note : "";
+  }
+
+  function paintTotals() {
+    let ok = 0, redo = 0;
+    const per = {};
+    reviews.forEach((r, id) => {
+      const card = cards.get(id);
+      if (!card) return;
+      if (r.verdict === "ok") ok++;
+      else if (r.verdict === "redo") redo++;
+      else return;
+      per[card.dataset.owner] = (per[card.dataset.owner] || 0) + 1;
+    });
+    document.getElementById("n-ok").textContent = ok;
+    document.getElementById("n-redo").textContent = redo;
+    document.getElementById("n-left").textContent = TOTAL - ok - redo;
+    document.getElementById("b-ok").style.width = (ok / TOTAL * 100) + "%";
+    document.getElementById("b-redo").style.width = (redo / TOTAL * 100) + "%";
+    document.querySelectorAll(".ws-count").forEach(p => {
+      const g = p.dataset.count;
+      p.textContent = (per[g] || 0) + " of " + COUNTS[g] + " marked";
+    });
+  }
+
+  function applyFilter() {
+    let shown = 0;
+    cards.forEach(card => {
+      const v = card.dataset.v || "";
+      const show = filter === "all" || (filter === "left" ? !v : v === filter);
+      card.classList.toggle("hidden", !show);
+      if (show) shown++;
+    });
+    document.querySelectorAll(".grid").forEach(g => {
+      const any = g.querySelector(".card:not(.hidden)");
+      g.style.display = any ? "" : "none";
+      g.previousElementSibling.style.display = any ? "" : "none";
+    });
+    document.querySelectorAll(".ws").forEach(ws => {
+      ws.style.display = ws.querySelector(".card:not(.hidden)") ? "" : "none";
+    });
+    document.getElementById("empty-filter").classList.toggle("on", shown === 0);
+  }
+
+  document.querySelectorAll(".chip[data-f]").forEach(ch => ch.addEventListener("click", () => {
+    filter = ch.dataset.f;
+    document.querySelectorAll(".chip[data-f]").forEach(c => c.setAttribute("aria-pressed", String(c === ch)));
+    applyFilter();
+  }));
+  document.querySelectorAll(".chip[data-bg]").forEach(ch => ch.addEventListener("click", () => {
+    document.body.classList.remove("bg-light", "bg-check");
+    if (ch.dataset.bg !== "dark") document.body.classList.add("bg-" + ch.dataset.bg);
+    document.querySelectorAll(".chip[data-bg]").forEach(c => c.setAttribute("aria-pressed", String(c === ch)));
+    try { localStorage.setItem("bg", ch.dataset.bg); } catch (e) {}
+  }));
+  try {
+    const bg = localStorage.getItem("bg");
+    const ch = bg && document.querySelector('.chip[data-bg="' + bg + '"]');
+    if (ch) ch.click();
+  } catch (e) {}
+
+  // Saves are serialized per card: one write at a time per document.
+  const pending = new Map();
+  async function save(card, patch) {
+    const status = card.querySelector(".saved");
+    if (!db) { status.textContent = "Not saved"; status.classList.add("err"); return; }
+    const id = card.dataset.id;
+    const prev = reviews.get(id) || {};
+    const next = { verdict: prev.verdict || "", note: prev.note || "", ...patch, at: Date.now(), by: me || "" };
+    if (next.verdict === (prev.verdict || "") && next.note === (prev.note || "")) return;
+    reviews.set(id, next);
+    paintCard(card); paintTotals(); applyFilter();
+    status.classList.remove("err");
+    status.textContent = "Saving…";
+    const run = (pending.get(id) || Promise.resolve()).then(() => db.doc(COLLECTION + "/" + id).set(next));
+    pending.set(id, run.catch(() => {}));
+    try {
+      await run;
+      status.textContent = "Saved";
+    } catch (e) {
+      status.classList.add("err");
+      status.textContent = e && e.code === "not_granted" ? "No permission to save" : "Couldn't save";
+    }
+  }
+
+  cards.forEach(card => {
+    card.querySelectorAll(".v").forEach(b => b.addEventListener("click", () => {
+      const cur = (reviews.get(card.dataset.id) || {}).verdict || "";
+      save(card, { verdict: cur === b.dataset.v ? "" : b.dataset.v, note: card.querySelector(".note").value.trim() });
+    }));
+    const note = card.querySelector(".note");
+    note.addEventListener("change", () => save(card, { note: note.value.trim() }));
+  });
+
+  function setEnabled(on) {
+    document.querySelectorAll(".v, .note").forEach(el => { el.disabled = !on; });
+  }
+
+  paintTotals();
+  setEnabled(false);
+
+  (async () => {
+    try {
+      db = await claude.use("db");
+      const user = await claude.use("user");
+      if (user) { try { me = await user.id(); } catch (e) {} }
+    } catch (e) { db = null; }
+    if (!db) { document.getElementById("notice").classList.add("on"); return; }
+    setEnabled(true);
+    db.collection(COLLECTION).onSnapshot(snap => {
+      snap.docChanges().forEach(ch => {
+        if (ch.type === "removed") reviews.delete(ch.doc.id);
+        else reviews.set(ch.doc.id, ch.doc.data());
+        const card = cards.get(ch.doc.id);
+        if (card) paintCard(card);
+      });
+      paintTotals(); applyFilter();
+    }, err => {
+      const n = document.getElementById("notice");
+      n.textContent = "Lost the connection to the saved marks (" + (err && err.code || "error") + "). Reload to try again.";
+      n.classList.add("on");
+    });
+  })();
+})();
+</script>
