@@ -94,7 +94,7 @@ const ENEMIES := {
 		"max_hp": 210.0,  # TUNING (not in GDD) x the time scaling: a structure to siege
 		"move_speed": 0.0,  # Owner-approved proposal: "they never move"
 		"damage": 5.0,  # TUNING (not in GDD) per bolt, before the time scaling (proposal: rifle shots 4-6)
-		"attack_interval": 2.6,  # TUNING (not in GDD) s between two-bolt bursts
+		"attack_interval": 3.6,  # TUNING (not in GDD) s between two-bolt bursts (Act III balance: 2.6 -> 3.6, in step with the Line Troopers' slower fire: the first gate's turret was the third killer of the army bot's opening deaths)
 		"attack_range": 460.0,  # Owner-approved proposal: "Long" (380-520 px)
 		"radius": 15.0,  # TUNING (not in GDD) px
 		"armor": 0.25,  # TUNING (not in GDD) armoured emplacement
