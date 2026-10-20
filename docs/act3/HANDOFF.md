@@ -102,7 +102,7 @@ agents. Agreements:
 
 1. Merge the balance pass (above). Confirm it with multiple seeds: 8 seeds per stage, army `--mortal` and naive
    `--meta=mid --mortal`.
-2. Finish the art review rounds until all images are OK.
+2. ~~Finish the art review rounds~~ **Done**: every Act III image approved after six rounds (GDD §15.0 "Act III art review: all approved").
 3. **Performance in the Web build at phone size**, with many Empire shots on screen (Effects: Reduced draws 140 of
    360), before any stage turns playable:
    - export the Web build (CLAUDE.md "Local web export", always run `patch_web_audio.py`);
