@@ -637,3 +637,7 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-19 22:20,player/voidcaller_deathlord,gpt-image-2.5-flare,medium,1024x1024,3,1271,3500,439,0.0475,voidcaller_deathlord_r2a.png
 2026-10-19 23:02,epilogue/act2_4,gpt-image-2.5-flare,medium,1536x1024,2,650,2490,343,0.0335,src_act2_4_3.png
 2026-10-19 23:04,epilogue/act2_4,gpt-image-2.5-flare,medium,1536x1024,2,732,2112,343,0.0308,src_round3a.png
+2026-10-20 03:02,empire/line_trooper,gpt-image-2.5-flare,medium,1024x1024,2,644,2545,439,0.0367,line_trooper.png
+2026-10-20 03:03,empire/spotter,gpt-image-2.5-flare,medium,1024x1024,2,663,2545,439,0.0368,spotter.png
+2026-10-20 03:03,empire/scout_drone,gpt-image-2.5-flare,medium,1024x1024,2,605,2545,439,0.0366,scout_drone.png
+2026-10-20 03:06,empire/spotter,gpt-image-2.5-flare,medium,1024x1024,3,733,3569,439,0.0454,spotter2.png
