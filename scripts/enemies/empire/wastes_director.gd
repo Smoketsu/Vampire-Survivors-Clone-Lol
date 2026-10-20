@@ -310,14 +310,14 @@ func standing_pylons() -> int:
 
 
 ## HUD objective for the live Wastes objective ("" if none): the Trojan Horse
-## first, then a storm, then the standing pylons.
+## first, then a storm, then the standing pylons (until the boss arrives).
 func objective_override() -> String:
 	if _trojan != null:
 		return "Bring down the Trojan Horse: shoot its rockets out of the sky"
 	if storm_active():
 		return "Scrap storm: their guns are half blind, close in on the shooters!"
 	var n := standing_pylons()
-	if n > 0:
+	if n > 0 and game.enemies.boss == null:
 		return "Tear down the Signal Pylons: they lengthen the Empire's guns (%d left)" % n
 	return ""
 

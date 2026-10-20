@@ -1694,6 +1694,54 @@ the Lock-On lines and reticles, the orbital strike circles, the Spotter's red gl
 (`EmpireGlyphs`, red-eyed) and the stubs' placeholder floors and obstacles; phase 2 brings the
 stages' own art.
 
+### Act III: the Scrap Wastes (Stage 7; Act III phase 2, Oct 2026)
+
+Generated with `tools/gen_image.py` (the template above; `--ref` the Line Trooper's and Scout Drone's
+sources for the machines, the Spotter's and Seraphine's for Kestrel, the Tide Widow's and the
+necromancer's for the Lightning Abbess, then each new source as the reference of its own poses and
+skins; the cyclopean block and the Aegis Bot for the obstacles; Ul-Thalos's spire floor for the tiles;
+an approved badge for the symbols). The Empire's pipeline (foundation): alpha below 230 dropped,
+`tools/pixelate_source.py` onto the art grid, then `prepare_sprite.py --no-levels --no-prune --ink-l 0.15
+--no-cleanup` (Kestrel with `--ramps chrome,signal,skin`); the Abbess at `--ink-l 0.20` (levels on for
+the base and the ghost, off for the gold Hyper and Deathlord skins), one face pixel group hand-painted
+on the base still (her eye and cheek; the veil hid it). Obstacles: one source per kind, the three rect
+kinds as an H + V pair on one image (split at the widest transparent gap), every size converted from
+it to its footprint width (`--ramps brown,chrome,signal,grey,steel`). Tiles: `make_tile.py` quilt
+recipes (`wastes_*`, no variants). Badges: symbol at 26 px composited on a cut-corner template cleared
+from an approved badge (violet border; gold for the evolution and the achievement). Walk / idle strips
+by `walk_cycle.py` (rigs under `# --- Act III: the Scrap Wastes ---`; Kestrel and the Abbess have
+bust boxes and idle breathing strips). 28 API images, about $0.75 (ledger estimate). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `empire/aegis_bot` | Aegis Bot: a squat chrome walker behind a big round amber-rimmed shield plate | 40x48 | legs walk, the shield rigid; the energy arc in front is code-drawn (AegisKit) |
+| `empire/mortar_walker` | Mortar Walker: a low four-legged chrome walker, a stubby mortar tube on its back, a red eye | 60x48 | legs walk (the two leg pairs) |
+| `empire/signal_pylon` | Signal Pylon: a chrome mast on a tripod, two amber dishes, a red beacon on top | 96 tall | structure; the beacon blink and the reach ring are code-drawn (PylonKit) |
+| `empire/trojan_horse` | The Trojan Horse: a horse-shaped four-legged drone tank, two missile pods, a red eye | 132x104 | legs walk |
+| `empire/trojan_horse_split` | The same with its flank hull split open, glowing amber drone bays inside | 128x104 | legs walk; drawn once the hull splits |
+| `bosses/kestrel` | Kestrel, the Dead Pixel (figure redesign, fully clothed): a chrome-plated bodysuit, tall collar, short cape, silver hair, a red cyber eye, a very long sniper rifle | 142x124 | legs walk + bust bounce, idle breathing |
+| `bosses/kestrel_aim` | Her perch pose: kneeling, the rifle raised to the shoulder | 154x108 | pose 1 (BossPoseData) |
+| `bosses/kestrel_blades` | Her last phase: two amber energy arm blades, one raised high | 118x124 | the blades still (legs walk + bust, idle); its strike pose falls back on it |
+| `player/lightning_abbess` | The Lightning Abbess (figure redesign, fully clothed): a long violet habit with a slit, veil and wimple, a bone rib collar, a crescent staff crackling with violet lightning | 44x56 | robe glide + bust, idle breathing |
+| `player/lightning_abbess_hyper` | Gilded Stormbride (Hyper): gold trim, a gold storm crown, a gold staff | 42x58 | through `SKINS` |
+| `player/lightning_abbess_untouchable` | Untouchable: a ghost-white phantom, wisp tails, soul-teal eyes and staff | 44x56 | through `SKINS` |
+| `player/lightning_abbess_deathlord` | Deathlord: a spiked gold crown, iron pauldrons, crimson mantle, mid-violet gown | 38x58 | through `SKINS` |
+| `tiles/wastes_slag`, `wastes_gullies`, `wastes_ridge`, `wastes_wall` | The four zone floors: slag crust, rust grit, cracked ash rock, concrete slabs | 128 | quilt; mean L 0.23 / 0.24 / 0.25 / 0.26 |
+| `obstacles/slag_mound_{s,m,l}` | A heap of slag and scrap with a red seam | 28 / 36 / 44 wide | circle |
+| `obstacles/ridge_boulder_{s,m,l}` | A cracked ash boulder under a snapped cable | 32 / 40 / 52 wide | circle |
+| `obstacles/tank_trap_{s,l}` | A rusted steel tank trap | 24 / 30 wide | circle |
+| `obstacles/wreck_plate_{s,l}` (+ `_v`) | A rusted armour slab half sunk in the ground | 48 / 64; `_v` 28 wide | H + V pair |
+| `obstacles/titan_hull_{s,l}` (+ `_v`) | A fallen war titan's chrome limb segment | 84 / 104; `_v` 36 wide | H + V pair |
+| `obstacles/wall_segment_{s,l}` (+ `_v`) | A broken concrete wall length with rebar and hazard stripes | 88 / 104; `_v` 32 wide | H + V pair (a little wider than the footprint: the rebar) |
+| `icons/death_ray`, `conductive_marrow`, `lead_lined_bones` | Badges (violet border): a skull firing a soul laser; a bone with lightning in its marrow; a lead-plated ribcage stopping a bullet | 32 | |
+| `icons/event_horizon`, `ach_static_in_the_wastes` | Gold-border badges: two opposite beams round a skull; a toppled red pylon in static over a skull | 32 | |
+| `effects/wastes_blast` | A rocket / shell blast: amber flash, fire and chrome shards, a smoke ring | 10 x 128 | `AnimData` (rockets, the stomp, pylons falling, the Trojan Horse) |
+
+Code-drawn on purpose: the Swarm Rocket (turned along its heading, `WastesGlyphs.draw_rocket()`), the
+Aegis shield arc, the pylon beacon and reach ring, the dead zones, the scrap storm's dust veil (rings
+and grit streaks, no shader), Kestrel's decoy holograms (her sprite drawn see-through in amber with
+scan lines), the Death Ray beams and the lightning (Soul Chains' arcs).
+
 ### Chest beacon (owner request, Oct 2026)
 
 The chest beacon's two markers (GDD §15.0 "Chest beacon"; keys in `scripts/data/chest_beacon_data.gd`). Shapes this

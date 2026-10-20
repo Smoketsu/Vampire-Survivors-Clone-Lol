@@ -12,8 +12,9 @@
 ##              paint.
 ## Art pass: the zone's floor tile (tiles/wastes_<style>.png and its variants)
 ## replaces the base colour and joints when its PNG exists (Ground header,
-## EnvironmentArt); the decorations stay code-drawn (sparse and flat: a plate,
-## a bolt, a crack, a dead signal light). MarchDirector calls set_zone() at
+## EnvironmentArt); the plates and cracks are then left out (the tile has its
+## own) and the rest stay code-drawn (sparse and flat: a dead signal light,
+## hazard paint, a cable). MarchDirector calls set_zone() at
 ## each zone change. Purely cosmetic: nothing here collides.
 class_name WastesGround
 extends Ground
@@ -85,6 +86,8 @@ func _draw_wastes_cell(cx: int, cy: int, style: String) -> void:
 	var p := Vector2(float(cx) * CELL + float((h >> 10) % 96) + 16.0, float(cy) * CELL + float((h >> 17) % 96) + 16.0)
 	var accent: Color = _look["accent"]
 	var trim: Color = _look["trim"]
+	if _art_floor and roll < 0.16:
+		return  # The tile already has its own grit and plates: no flat code plates or cracks on it.
 	if roll < 0.10:
 		# A scrap plate lying flat (rusted chrome).
 		var w := 10.0 + float(h % 12)  # Plate width (px).

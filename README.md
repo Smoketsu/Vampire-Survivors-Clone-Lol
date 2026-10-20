@@ -390,6 +390,37 @@ The shared kinds so far: the **Scout Drone** (fast flying fodder with short zaps
 Trooper** (a cyborg rifleman firing three-round bursts from 400 px while it marches) and the
 **Spotter** (an elite marksman with the Lock-On rail). The Codex has an **Empire** tab.
 
+### Stage 7: the Scrap Wastes (Act III, built, not yet playable)
+
+The Empire's old battlefield: slag hills, fallen war titans and red signal masts (GDD §15.0 "The
+Scrap Wastes (Act III phase 2)"). Four zones on the clock: **the Slag Fields** (open ground), **the
+Wreck Gullies** (narrow lanes between fallen titans), **Pylon Ridge** and **the Outer Wall**.
+
+- **Signal Pylons.** Tall masts with a Soul Ash bounty. While one stands, the Empire's shooters near
+  it fire from 30% farther; tear it down and their range in that area shrinks for the rest of the run.
+- **Scrap storms.** Every few minutes a dust storm rolls in for 20 s and halves the Empire's sight
+  (every shooter's reach): close in on the riflemen. Your own army's ranges are unchanged.
+- **Its kinds.** The **Aegis Bot** walks in front of the riflemen behind a frontal energy shield that
+  stops your arrows, bolts, spears and volley shots (it breaks after a while and comes back): hit it
+  from the side, with area spells, melee or stomps. The **Mortar Walker** lobs shells onto red
+  landing circles over your army (arcs ignore Line of Fire: keep moving).
+- **The Trojan Horse** (miniboss, 9:00 left): a horse-shaped drone tank whose slow homing rockets
+  burst on the first undead in their path (your army intercepts and shoots them down); it stomps,
+  and badly damaged its hull splits open and Scout Drones pour out. Its chest drops when it falls.
+- **Kestrel, the Dead Pixel** (3:00 left): a cyborg sniper who leaps between perches and paints
+  **three Lock-On lines at once** (their rails come one after another), releases **decoy drones**
+  (holograms of her that draw your army's fire) and, at the end, drops the rifle for **twin
+  blades** and charges down a telegraphed lane (a Warrior, Golem or Abomination in her path stops
+  her). Slaying her unlocks **Death Ray** and **Conductive Marrow**.
+- **Static in the Wastes** (clear the Scrap Wastes) unlocks **Lead-Lined Bones** (ranged hits on your
+  summons deal less; offered only in Act III).
+- **Death Ray** (a spell, offered on every stage once unlocked): a violet soul laser sweeps a full
+  circle around you every few seconds, out to about 420 px at Lv 5; each beam kill sparks lightning to
+  a nearby foe. **Event Horizon** (Lv 5 + Conductive Marrow Lv 5, from a chest): two opposite beams,
+  and every kill sets off chain lightning through up to 4 foes. Its character is **the Lightning
+  Abbess** (innate *Storm Litany*: beam kills spark to one more foe; Hyper skin *Gilded Stormbride*,
+  and the Untouchable and Deathlord skins).
+
 ### Stage 4: Gullhaven Harbour (Act II)
 
 A fishing town at low tide, at night, where the Ancient Eye has lived in the open for
@@ -1854,6 +1885,10 @@ scripts/
                             Act III stubs' placeholder obstacles (Act III)
     empire_ground.gd        The Act III stubs' placeholder floor (the STAGE's "floor": scrap / assembly / citadel)
     empire_report.gd        The autotest's Act III lines (line of fire, lock-on, steel, purge protocol, kinds, stage)
+    wastes_report.gd        The Scrap Wastes' autotest lines (wastes, wastes kinds, trojan horse, kestrel,
+                            act III spell, act III passives)
+    wastes_ground.gd        The Scrap Wastes' zone floors (slag, gullies, ridge, wall)
+    wastes_glyphs.gd        The Scrap Wastes' fallback shapes: the Trojan Horse, rockets, Kestrel, obstacles
     harbour_ground.gd       Gullhaven's zone floors (mudflats, market, chapel, seawall)
     harbour_glyphs.gd       Gullhaven's fallback shapes: kinds, obstacles, piers, nets, anchor, Merrow
     harbour_report.gd       Gullhaven's autotest lines (tide, harbour, kinds, Merrow, Act II spell / passives)
@@ -2004,6 +2039,13 @@ scripts/
                             the Signal Ghost hook
       empire_kit.gd         Base kit: marching fire (bursts through EmpireShots), fire_shot() / fire_arc_at()
       drone_kit.gd, trooper_kit.gd, spotter_kit.gd   The Scout Drone / Kill-Drone, Line Trooper, Spotter
+      wastes_director.gd    The Scrap Wastes: Signal Pylons (the stage's reach modifier), scrap storms and
+                            their dust veil, the Trojan Horse event
+      aegis_kit.gd, mortar_kit.gd, pylon_kit.gd   The Aegis Bot (frontal projectile shield), Mortar Walker,
+                            Signal Pylon (beacon drawing)
+      trojan_kit.gd, rocket_kit.gd   The Trojan Horse miniboss and its Swarm Rockets
+      decoy_kit.gd          Kestrel's Decoy Drones (her hologram)
+      boss_kestrel.gd       Kestrel, the Dead Pixel (perches, triple Lock-On, decoys, twin blades, charge)
     eye/deep_kin_kit.gd, tide_caller_kit.gd, netcaster_kit.gd, harbourmaster_kit.gd   Gullhaven's kinds
     eye/boss_merrow.gd      Abbot Silas Merrow, Voice of the Deep (Gullhaven's boss)
     enemy_director.gd       The stage's wave timeline, events, boss, Reckoning, pooling, recycling,
@@ -2163,11 +2205,14 @@ scripts/
     eye_enemy_data.gd       The Ancient Eye's shared kinds (Initiate, Chanter, Drowned Thrall), Claim rules
     empire_enemy_data.gd    The Electronic Empire's shared kinds (Scout Drone, Line Trooper, Spotter, the
                             Purge Protocol's Kill-Drone), the machine / cyborg body flag (Act III)
-    wastes_enemy_data.gd    Each Act III stage's own kinds (assembly_ / citadel_enemy_data.gd likewise; empty
-                            until phase 2)
+    wastes_enemy_data.gd    The Scrap Wastes' kinds: Aegis Bot, Mortar Walker, Signal Pylon, the Trojan Horse,
+                            Swarm Rocket, Decoy Drone (assembly_ / citadel_enemy_data.gd: the other stages')
+    kestrel_data.gd         Act III: Kestrel, the Dead Pixel (arrival, rifle, perches, triple Lock-On,
+                            decoys, twin blades)
+    death_ray_data.gd       Act III: Death Ray / Event Horizon fixed rules (sweep start, sparks, drawing)
     empire_rules_data.gd    Act III's shared rules: LINE_OF_FIRE, SHOT_STYLES, LOCK_ON (+ Signal Ghost hook),
                             STEEL (Grave Gunners), PURGE (orbital strikes)
-    stages/wastes_stage.gd         Act III stages (foundation stubs): the Scrap Wastes, the Assembly Halls
+    stages/wastes_stage.gd         Act III stages: the Scrap Wastes (built: zones, timeline, WASTES), the Assembly Halls
     stages/assembly_stage.gd       and the Iron Citadel; act 3, "empire": true, "Iron Requiem", the Purge
     stages/citadel_stage.gd        Protocol Reckoning, placeholder floors / obstacles / timelines / boss scripts
     harbour_enemy_data.gd   Each Act II stage's own kinds (archive_ / spire_enemy_data.gd likewise); Gullhaven:
@@ -2332,7 +2377,7 @@ Options (after `--`):
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
 | `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, or the Act III stubs `wastes`, `assembly` and `citadel`. Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
-| (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind) and `empire stage`. The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina` (placeholder scripts). |
+| (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind) and `empire stage`. The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |
 | `--rewards=on\|off` | Content wave 2: `on` checks the five one-run achievements (Mass Grave, Untouchable, Full Ossuary, Deathlord's Due, Swift Judgment) in memory, as the game does; by default (`off`) the autotest leaves them unchecked (unless `--meta-save`), so the default summaries' bounty and Soul Ash are unchanged. Every summary ends with a `rewards` line: achievements earned this run, titles open, reward items unlocked (`ultimate:` / `title:` / `skin:`), the run counters (temporary undead raised, lowest HP before 0:00, evolutions, the boss's lifetime after arrival), the one-run achievements this run met and whether they were checked, the worn title, and the setup screen's title row built once headless. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
