@@ -61,10 +61,32 @@ owner-approved design) and `docs/act3/BRIEF_PHASE2.md` (how the three stages wer
    Check the branch; merge it into `integration` (`--import`), then publish **round 3** (only those 9 keys, new next
    to round 2) by adapting `docs/act3/tools/make_act3_review_r2.py` (set `BEFORE_REV` to the integration commit before
    the merge, a new collection `act3_art_r3`, and read the marks dir of `act3_art_r2`). Everything else is approved.
+   **Update:** merged (`2c75989`); round 3 is published on the same page (collection `act3_art_r3`, 9 images; the
+   generator now takes `<marks dir> <out> <before rev> <round>`). Read its marks when the owner says done.
 3. **The OpenAI image key**: the owner replaced it (Oct 20, ~16:00 UTC), but this session still got 401
    `invalid_api_key` (environment changes reach new sessions only). **First thing in a new session:** check with a free
    `curl -sS -o /dev/null -w "%{http_code}" https://api.openai.com/v1/models` (200 = good). The owner approved the
    hand-fixed Untouchable Marionette in round 2, so it needs no regeneration.
+
+## The image-API art job (needs a session started by the owner with the OpenAI connector on)
+
+The OpenAI key is a claude.ai **connector** ("Chat GPT API", https://claude.ai/customize/connectors), read when a session
+starts; a session created by another session gets no connector ("Missing bearer authentication"). The owner starts that
+session. Its job, on branch `act3-epilogue` from `integration`:
+1. Check the key: `curl -sS -o /dev/null -w "%{http_code}" https://api.openai.com/v1/models` must print 200.
+2. **The Act III epilogue part "The Machines Go Dark": 4 panels**, one per line of `EpilogueData.ACT3_PART["lines"]`,
+   made like the Act I / II panels (ART_BIBLE "Epilogue panels": `art_source/epilogue/act3_<n>.png` 1536x1024 from
+   `tools/gen_image.py`, prompt saved beside it, `python3 tools/epilogue_panel.py <source> act3_<n>`). Ideas: (1) the
+   Empire's chrome city, citizens rebuilt not buried, amber lights; (2) the Citadel's Core, Deus Ex Machina on its knees,
+   the necromancer (violet) reaching into the engine for Varn's soul (soul teal); (3) the machines going dark rank after
+   rank, Varn rising to serve; (4) the ashes of Covenant, Eye and Empire under the risen dead. Fill `ACT3_PART["panels"]`
+   and append `ACT3_PART` to `PARTS` (the hook's comment says how; Meta `[epilogue] seen_act3`).
+3. **The owner's redo of the Act II closing card `epilogue/close`** "with electronic empire vibes": the beacons burning
+   on the hilltops, the Electronic Empire watching from beyond the mountains (chrome towers, a rising wall, amber
+   lights, drones). Update `CLOSING`'s text to match (the Empire saw the beacons and came; nobody called it), two short
+   lines plus "To be continued.".
+4. Ledger rows committed (budget about $0.40); ART_BIBLE rows; GDD §15.0 row "Act III epilogue and the new closing card";
+   `--import` clean and one default autotest clean. Then the lead merges it and adds the 5 images to the art review.
 
 ## Coordination with the co-op lead session
 
