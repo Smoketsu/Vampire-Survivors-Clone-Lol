@@ -136,9 +136,9 @@ const BOSS := {
 	"hangar_offset": 64.0,  # TUNING (not in GDD) px the two doors sit either side of the core
 	"hangar_groups": [{"kind": "line_trooper", "count": 3, "elite": false}, {"kind": "valkyrie_duelist", "count": 1, "elite": false}],  # Owner-approved proposal: "release Line Troopers and Valkyrie Duelists"
 	# The Founder: overload pulses and teleports.
-	"founder_damage_taken": 1.15,  # TUNING (not in GDD) the cracked core
+	"founder_damage_taken": 0.9,  # TUNING (not in GDD) the frame overloads (first pass 1.15: a strong army ended the Founder in 4 s, before its first pulse)
 	"founder_speed": 26.0,  # TUNING (not in GDD) px/s it drags itself between teleports
-	"pulse_first": 3.0,  # TUNING (not in GDD) s into the phase
+	"pulse_first": 1.5,  # TUNING (not in GDD) s into the phase
 	"pulse_interval": 5.5,  # TUNING (not in GDD) s between pulses at first ...
 	"pulse_interval_step": 0.35,  # TUNING (not in GDD) ... shorter by this for every pulse ...
 	"pulse_interval_min": 3.0,  # TUNING (not in GDD) ... down to this
@@ -150,7 +150,7 @@ const BOSS := {
 	"pulse_damage_summon": 8.0,  # TUNING (not in GDD)
 	"pulse_growth": 0.2,  # Owner-approved proposal "each one stronger": +20% per pulse ...
 	"pulse_growth_max": 3.0,  # TUNING (not in GDD) ... up to x3
-	"teleport_first": 4.0,  # TUNING (not in GDD) s into the phase
+	"teleport_first": 2.5,  # TUNING (not in GDD) s into the phase
 	"teleport_interval": 8.0,  # TUNING (not in GDD) s
 	"teleport_glow": 0.9,  # TUNING (not in GDD) s the destination glows first
 	"teleport_min": 220.0,  # TUNING (not in GDD) px from the necromancer
