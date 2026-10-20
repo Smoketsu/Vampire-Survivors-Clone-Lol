@@ -63,10 +63,10 @@ const SEGMENTS := [
 		"weights": {"scout_drone": 1.0},
 		"objective": "Drones patrol the assembly lines: hold your ground"},
 	{"start": 60.0, "rate": 1.6, "max_alive": 38,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.86, "line_trooper": 0.14},
+		"weights": {"scout_drone": 0.9, "line_trooper": 0.1},
 		"objective": "Line Troopers march in firing: your dead are cover"},
 	{"start": 180.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.76, "line_trooper": 0.24},
+		"weights": {"scout_drone": 0.8, "line_trooper": 0.2},
 		"objective": "Keep your dead between you and the guns"},
 	{"start": 300.0, "rate": 2.4, "max_alive": 62,  # TUNING (not in GDD)
 		"weights": {"scout_drone": 0.66, "line_trooper": 0.32, "spotter": 0.02},

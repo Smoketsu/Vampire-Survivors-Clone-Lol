@@ -360,6 +360,36 @@ playable (balance-checked by the bots; your playtest decides the rest). The act'
   every stage from then on (a save that already slew her has them at once). See *Summon
   classes* and *Evolutions & Synergies*.
 
+### Act III: the Electronic Empire (foundation, not yet playable)
+
+When Vhal'Neth falls, the beacons of Ul-Thalos are seen from far away: **the Electronic Empire**,
+a machine power that conquered death with steel, comes for the necromancer who lit them (GDD §15.0
+"Act III foundation (phase 1)"). Its citizens are rebuilt, not reborn, and most of its soldiers
+fight from range. The stage select has an **Act III** tab with its three stages, **the Scrap
+Wastes**, **the Assembly Halls** and **the Iron Citadel** (bosses Kestrel the Dead Pixel, the
+Motherboard, Deus Ex Machina with Varn, the Root User); each is unlocked by the previous boss, and
+all three show "Coming soon" until their stages are built (phase 2). The act's shared rules:
+
+- **Line of Fire: your dead are cover.** Every Empire shot is a real projectile that stops on the
+  first summon in its path; a Bone Wall stops it, a Warder's barrier absorbs it, the Orb Shield
+  intercepts it. You are hit only by the shots that find a gap. Mortars (arcing shots) fly over
+  everything.
+- **Lock-On: the big shots are telegraphed.** A Spotter paints a thin red line on you or a summon
+  for 1.5 s, then fires a heavy rail shot down it. Step out of the line (Grave Step), put a summon
+  in it, or kill the Spotter first. Spotters glow red and the army targets them first. At most
+  three lines at once.
+- **Steel has no soul.** Machines (drones, turrets, mechs) leave nothing to raise: no Corpse
+  Explosion corpse, no Risen, no Lich or Grave Tide raise. A **cyborg** raised as a Risen keeps its
+  rifle and fires for you as a **Grave Gunner**. Dread Rally still charges from every kill.
+- **The Purge Protocol.** At 0:00 kill-drones pour in from every edge while orbital strikes land
+  on red circles, faster each minute.
+- **Music.** Act III runs play their own loop, "Iron Requiem" (a pulsing low synth, metallic hits
+  and a cold arpeggio), and the Empire's weapons have their own synthesized sounds.
+
+The shared kinds so far: the **Scout Drone** (fast flying fodder with short zaps), the **Line
+Trooper** (a cyborg rifleman firing three-round bursts from 400 px while it marches) and the
+**Spotter** (an elite marksman with the Lock-On rail). The Codex has an **Empire** tab.
+
 ### Stage 4: Gullhaven Harbour (Act II)
 
 A fishing town at low tide, at night, where the Ancient Eye has lived in the open for
@@ -1818,6 +1848,10 @@ scripts/
     run_rewards.gd          One run's counters for the one-run achievements (game.rewards; read-only)
     rewards_report.gd       The autotest's rewards line (achievements, titles, reward unlocks)
     eye_glyphs.gd           Code-drawn fallbacks of the Ancient Eye's kinds (Act II)
+    empire_glyphs.gd        Code-drawn fallbacks of the Electronic Empire's kinds, the Grave Gunner and the
+                            Act III stubs' placeholder obstacles (Act III)
+    empire_ground.gd        The Act III stubs' placeholder floor (the STAGE's "floor": scrap / assembly / citadel)
+    empire_report.gd        The autotest's Act III lines (line of fire, lock-on, steel, purge protocol, kinds, stage)
     harbour_ground.gd       Gullhaven's zone floors (mudflats, market, chapel, seawall)
     harbour_glyphs.gd       Gullhaven's fallback shapes: kinds, obstacles, piers, nets, anchor, Merrow
     harbour_report.gd       Gullhaven's autotest lines (tide, harbour, kinds, Merrow, Act II spell / passives)
@@ -1958,6 +1992,16 @@ scripts/
     sanctum_director.gd     Sanctum: sanctified chambers, Cathedral Guardian, sacred altars, corruption, Dawn's Wrath light
     tide_director.gd        Gullhaven (Act II): the rising tide, the water slow, tide surges, High Water (shader drawn)
     harbour_director.gd     Gullhaven (Act II): bell buoys, smugglers' caches and their piers, the Harbourmaster
+    empire/                 The Electronic Empire (Act III): its kits ("<id>_kit.gd", loaded by name after the
+                            Eye's) and bosses ("boss_<id>.gd"), and the act's shared rules:
+      empire_rules.gd       Game.empire: owns the shots and Lock-On lines, the Purge Protocol's orbital
+                            strikes, the bot's danger hint and the autotest lines (null on Acts I and II)
+      empire_shots.gd       LINE OF FIRE: every Empire shot (packed arrays, hard cap), stopped by the first
+                            summon / Bone Wall segment / Orb Shield on its path; arcing shots fly over
+      lock_on.gd            LOCK-ON: painted lines (track, lock, fire the rail), max 3, boss override,
+                            the Signal Ghost hook
+      empire_kit.gd         Base kit: marching fire (bursts through EmpireShots), fire_shot() / fire_arc_at()
+      drone_kit.gd, trooper_kit.gd, spotter_kit.gd   The Scout Drone / Kill-Drone, Line Trooper, Spotter
     eye/deep_kin_kit.gd, tide_caller_kit.gd, netcaster_kit.gd, harbourmaster_kit.gd   Gullhaven's kinds
     eye/boss_merrow.gd      Abbot Silas Merrow, Voice of the Deep (Gullhaven's boss)
     enemy_director.gd       The stage's wave timeline, events, boss, Reckoning, pooling, recycling,
@@ -2000,8 +2044,10 @@ scripts/
   pickups/chest.gd, chest_manager.gd       Pooled treasure chests and their drop rules
   pickups/chest_beacon.gd   Chest beacon: chevrons over the chests, ground glow, edge-arrow layout, autotest counts
   audio/sfx.gd              Autoload: audio buses, pooled voices with per-sound and global voice limits
+                            (score loops: "Below the Tide", "Iron Requiem"; the Act III sound pack, lazy)
   audio/synth.gd            Procedural sound and music synthesis (no audio files)
   audio/run_loop_synth.gd   The in-run music loop's recipe as a list of small jobs (run at once, or over frames)
+                            (a score adds a tolling bell, or Act III's pulse, metallic hits and arpeggio)
   audio/startup_synth.gd    Web build: renders the sound bank and the run loop in per-frame steps (no threads)
   audio/menu_theme_synth.gd Main menu theme renderer: wavetable choir, music box, bell, harp, reverb (chunked);
                             also score variants (the epilogue's slow cue)
@@ -2113,6 +2159,15 @@ scripts/
     merrow_data.gd          Act II: Abbot Merrow (arrival, Sermon, Brine Wave, The Change, lashes, High Water)
     undertow_data.gd        Act II: Undertow / Maelstrom fixed rules (cone, shallows, whirlpools)
     eye_enemy_data.gd       The Ancient Eye's shared kinds (Initiate, Chanter, Drowned Thrall), Claim rules
+    empire_enemy_data.gd    The Electronic Empire's shared kinds (Scout Drone, Line Trooper, Spotter, the
+                            Purge Protocol's Kill-Drone), the machine / cyborg body flag (Act III)
+    wastes_enemy_data.gd    Each Act III stage's own kinds (assembly_ / citadel_enemy_data.gd likewise; empty
+                            until phase 2)
+    empire_rules_data.gd    Act III's shared rules: LINE_OF_FIRE, SHOT_STYLES, LOCK_ON (+ Signal Ghost hook),
+                            STEEL (Grave Gunners), PURGE (orbital strikes)
+    stages/wastes_stage.gd         Act III stages (foundation stubs): the Scrap Wastes, the Assembly Halls
+    stages/assembly_stage.gd       and the Iron Citadel; act 3, "empire": true, "Iron Requiem", the Purge
+    stages/citadel_stage.gd        Protocol Reckoning, placeholder floors / obstacles / timelines / boss scripts
     harbour_enemy_data.gd   Each Act II stage's own kinds (archive_ / spire_enemy_data.gd likewise); Gullhaven:
                             Deep Kin, Tide Caller, Netcaster, the Harbourmaster, the Herald of the Deep,
                             the bell buoy and the smugglers' cache
@@ -2273,8 +2328,9 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, or the Act II stages `harbour`, `archive` and `spire`. Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, or the Act III stubs `wastes`, `assembly` and `citadel`. Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
+| (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind) and `empire stage`. The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina` (placeholder scripts). |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |
 | `--rewards=on\|off` | Content wave 2: `on` checks the five one-run achievements (Mass Grave, Untouchable, Full Ossuary, Deathlord's Due, Swift Judgment) in memory, as the game does; by default (`off`) the autotest leaves them unchecked (unless `--meta-save`), so the default summaries' bounty and Soul Ash are unchanged. Every summary ends with a `rewards` line: achievements earned this run, titles open, reward items unlocked (`ultimate:` / `title:` / `skin:`), the run counters (temporary undead raised, lowest HP before 0:00, evolutions, the boss's lifetime after arrival), the one-run achievements this run met and whether they were checked, the worn title, and the setup screen's title row built once headless. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |

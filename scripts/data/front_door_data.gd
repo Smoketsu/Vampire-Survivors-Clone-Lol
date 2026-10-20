@@ -243,6 +243,35 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(176, 76, 192),
 	},  # TUNING (not in GDD) the Eye's biolume motes
+	# --- Act III: the Electronic Empire (placeholder scenes from the shared kinds' art
+	# until each stage brings its own floor, props and boss) ---
+	"wastes": {
+		"tile": "tiles/march_burned",
+		"items": [
+			["empire/scout_drone", 196, 70, true], ["empire/scout_drone", 244, 100, true],
+			["empire/spotter", 236, 170, true], ["empire/line_trooper", 196, 226, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "embers", "fx_color": Color8(255, 174, 26),
+	},  # TUNING (not in GDD) signal-amber sparks
+	"assembly": {
+		"tile": "tiles/march_burned",
+		"items": [
+			["empire/scout_drone", 150, 80, true], ["empire/line_trooper", 236, 176, true],
+			["empire/line_trooper", 190, 226, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "embers", "fx_color": Color8(255, 174, 26),
+	},  # TUNING (not in GDD)
+	"citadel": {
+		"tile": "tiles/march_burned",
+		"items": [
+			["empire/spotter", 240, 160, true], ["empire/spotter", 196, 226, true],
+			["empire/scout_drone", 150, 70, true],
+			["summons/warrior", 46, 214, false], ["summons/grave_gunner", 92, 226, false],
+		],
+		"fx": "embers", "fx_color": Color8(224, 57, 30),
+	},  # TUNING (not in GDD) warning-red sparks
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

@@ -64,7 +64,7 @@ const ENEMIES := {
 		"display_name": "Scout Drone",
 		"max_hp": 10.0,  # TUNING (not in GDD) frail fodder (Recruit 14)
 		"move_speed": 88.0,  # TUNING (not in GDD) px/s; fast (Recruit 58)
-		"damage": 2.0,  # TUNING (not in GDD) per zap, before the time scaling (first pass 2.5 every 1.1 s shredded the early army)
+		"damage": 1.5,  # TUNING (not in GDD) per zap, before the time scaling (first pass 2.5 every 1.1 s shredded the early army; 2.0 still bled a weak army's necromancer to death by 3:30)
 		"attack_interval": 1.4,  # TUNING (not in GDD) s between zaps
 		"attack_range": 110.0,  # TUNING (not in GDD) px; "short range"
 		"radius": 8.0,  # TUNING (not in GDD) px
