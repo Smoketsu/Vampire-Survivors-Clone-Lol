@@ -39,7 +39,11 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		# --- Act III: the Assembly Halls ---
 		# Unlockable (UnlockData: slaying the Motherboard), so a fresh save never
 		# offers it (Unlocks.offerable()).
-		"grave_drone"]
+		"grave_drone",
+		# --- Act III: the Iron Citadel ---
+		# Unlockable (UnlockData: defeating Deus Ex Machina), so a fresh save
+		# never offers it.
+		"iron_revenant"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -930,6 +934,51 @@ const UNITS := {
 			"hover_lift": 15.0,  # TUNING (not in GDD) px the body hovers above its shadow (drawing only)
 		},
 	},
+	# --- Act III: the Iron Citadel ---
+	# Iron Revenant (owner-approved proposal "the finale's reward, from Deus Ex
+	# Machina"; GDD §15.0 "Iron Revenant, Deus Revenant and Recoil Frame"): one of
+	# the Empire's war walkers, reanimated, its plating bound with bone and soul
+	# fire. The army's heavy gunner: it holds a back post inside the Bone Ring
+	# (formation "back", like the Corpse Catapult) and lays down suppressive fire
+	# that slows what it hits (attack_profile "suppress", released by
+	# RevenantBehavior). Unlockable (UnlockData), then offered on every stage.
+	"iron_revenant": {
+		"display_name": "Iron Revenant",  # Owner-approved proposal
+		"plural": "Iron Revenants",
+		"description": "A reanimated war walker that holds the ring's heart and lays down slowing suppressive fire.",  # Card text: one short sentence (owner rule).
+		"max_hp": 170.0,  # TUNING (not in GDD) a war walker's frame (Catapult 90, Abomination 260)
+		"damage": 6.0,  # TUNING (not in GDD) per shell (3 shells a burst)
+		"attack_interval": 1.7,  # TUNING (not in GDD) s between bursts
+		"attack_range": 270.0,  # TUNING (not in GDD) centre-to-edge (px): reaches past the ring
+		"move_speed": 56.0,  # TUNING (not in GDD) px/s; a heavy walker
+		"radius": 15.0,  # TUNING (not in GDD)
+		"acquisition_range": 330.0,  # TUNING (not in GDD) px
+		"replenish_interval": 20.0,  # TUNING (not in GDD) s; slow to rebuild
+		"band_min": 90.0,  # TUNING (not in GDD) px
+		"band_max": 130.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.3,  # TUNING (not in GDD)
+		"w_formation": 0.7,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.1,  # TUNING (not in GDD) holds its ground like the Archers
+		"attack_profile": "suppress",
+		"target_profile": "ranged",
+		"windup": 0.3,  # TUNING (not in GDD) s the cannon swings round
+		"projectile_speed": 560.0,  # TUNING (not in GDD) px/s shells
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.7,  # TUNING (not in GDD)
+		"formation": "back",  # Owner-approved proposal: "It holds a back post on the Bone Ring"
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "suppress",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"shells": 3,  # TUNING (not in GDD) shells per burst
+			"shell_spread": 0.07,  # TUNING (not in GDD) rad between two shells
+			"slow": 0.3,  # Owner-approved proposal "suppressive fire that slows what it hits"; TUNING (not in GDD) 30%
+			"slow_duration": 1.2,  # TUNING (not in GDD) s (special_duration lengthens it)
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1099,6 +1148,16 @@ const LEVELS := {
 		{"count": 4, "damage_bonus": 0.20, "hp_bonus": 0.15},
 		{"count": 5, "damage_bonus": 0.25, "hp_bonus": 0.15, "speed_bonus": 0.10},
 		{"count": 6, "damage_bonus": 0.35, "hp_bonus": 0.25, "speed_bonus": 0.15, "pierce": 1},
+	],
+	# --- Act III: the Iron Citadel ---
+	# TUNING (not in GDD): 1 -> 3 revenants; harder shells, then longer slows
+	# and faster bursts.
+	"iron_revenant": [
+		{"count": 1},
+		{"count": 1, "damage_bonus": 0.2},
+		{"count": 2, "damage_bonus": 0.2, "hp_bonus": 0.2},
+		{"count": 2, "damage_bonus": 0.35, "hp_bonus": 0.2, "special_duration": 0.3},
+		{"count": 3, "damage_bonus": 0.35, "hp_bonus": 0.2, "special_duration": 0.3, "speed_bonus": 0.15},
 	],
 }
 

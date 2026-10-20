@@ -250,6 +250,23 @@ const HEIGHTS: Dictionary = {
 	"player/lightning_abbess_hyper": 58.0,  # TUNING (not in GDD) skin art: her body, the gold storm crown above
 	"player/lightning_abbess_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the soul-teal staff above
 	"player/lightning_abbess_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	# --- Act III: the Iron Citadel ---
+	"empire/valkyrie_duelist": 52.0,  # TUNING (not in GDD) elite tier, female (figure redesign): body ~46, the winged helmet above
+	"empire/valkyrie_prime": 104.0,  # TUNING (not in GDD) Valkyrie 2.0, the miniboss (the Cathedral Guardian is 140): her crest and jet pack above
+	"empire/sentry_turret": 44.0,  # TUNING (not in GDD) structure: a squat domed emplacement (its barrel is drawn by SentryKit)
+	"empire/shield_generator": 64.0,  # TUNING (not in GDD) structure: a chrome pylon with its amber core
+	"empire/deus_leg_plate": 32.0,  # TUNING (not in GDD) one of Deus Ex Machina's knee plates (drawn over its leg)
+	"empire/deus_shield_drone": 24.0,  # TUNING (not in GDD) a Siege Core shield drone
+	"bosses/deus_ex_machina": 156.0,  # TUNING (not in GDD) boss tier, "a walking fortress the height of the screen" (proposal): the Walker
+	"bosses/deus_ex_machina_fire": 156.0,  # TUNING (not in GDD) boss attack pose (cannons blazing; BossPoseData)
+	"bosses/deus_ex_machina_siege": 140.0,  # TUNING (not in GDD) the Siege Core: knelt and planted, lower
+	"bosses/deus_ex_machina_founder": 156.0,  # TUNING (not in GDD) the Founder: the cracked core, Varn's face in the light
+	"player/rust_prophet": 58.0,  # TUNING (not in GDD) character tier: body ~48 like the necromancer, the gear-topped staff above
+	"player/rust_prophet_hyper": 58.0,  # TUNING (not in GDD) skin art: his body, the gilded staff above
+	"player/rust_prophet_untouchable": 58.0,  # TUNING (not in GDD) skin art: his body, the ghost staff above
+	"player/rust_prophet_deathlord": 60.0,  # TUNING (not in GDD) skin art: his body, the crowned hood and staff above
+	"summons/iron_revenant": 58.0,  # TUNING (not in GDD) a heavy summon (Corpse Catapult 56, Spawn of the Deep 60)
+	"summons/deus_revenant": 70.0,  # TUNING (not in GDD) its evolution, bigger
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

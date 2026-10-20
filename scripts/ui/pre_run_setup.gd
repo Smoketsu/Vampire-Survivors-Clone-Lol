@@ -33,6 +33,12 @@
 ## before emitting `confirmed` with the finished RunConfig. All difficulty
 ## levels are open from the start (GDD §15.0: the GDD names no difficulty
 ## unlocks). Text sizes are UiTheme type tiers.
+## Online co-op (GDD §15.0 "Online co-op: relay and lobby"): the lobby opens
+## this screen with its own Begin caption ("Done": it returns the choice to
+## the lobby instead of starting), and for the guest with `coop_guest`: the
+## difficulty, modifiers, Hyper and Standard show the host's choice read-only
+## (pressing them is `denied`), the hint line says so, the lobby keeps them in
+## step (apply_host_run()) and Done does not remember them in the Meta save.
 class_name PreRunSetup
 extends Control
 
@@ -50,6 +56,10 @@ const ACTIVE_ACCENT: String = "crimson"
 var config: RunConfig = null
 ## Control that gets focus back when the screen closes.
 var return_focus: Control = null
+## Caption of the Begin button ("Done" from the co-op lobby).
+var begin_text: String = "Begin"
+## Co-op guest: the run part (difficulty, modifiers, Hyper) is the host's, read-only.
+var coop_guest: bool = false
 ## Difficulty id -> its card Button.
 var _level_buttons: Dictionary = {}
 ## Difficulty id -> its name Label (recoloured when selected).
@@ -96,11 +106,14 @@ var _preview_skin: String = ""
 
 
 ## Opens the screen over `parent` for `p_config`; focus returns to `refocus`
-## when it closes.
-static func open_over(parent: Control, refocus: Control, p_config: RunConfig) -> PreRunSetup:
+## when it closes. The co-op lobby passes its Begin caption and `guest`.
+static func open_over(parent: Control, refocus: Control, p_config: RunConfig, p_begin_text: String = "Begin",
+		guest: bool = false) -> PreRunSetup:
 	var s := PreRunSetup.new()
 	s.config = p_config
 	s.return_focus = refocus
+	s.begin_text = p_begin_text
+	s.coop_guest = guest
 	parent.add_child(s)
 	return s
 
@@ -129,6 +142,7 @@ func _ready() -> void:
 	cols.add_child(_hero)
 	_extras = PreRunHyperSkins.new()
 	_extras.config = config
+	_extras.host_owned = coop_guest
 	_extras.changed.connect(_on_extras_changed)
 	_extras.rebuilt.connect(_queue_wire)
 	_extras.skin_focused.connect(_on_skin_focused)
@@ -167,7 +181,7 @@ func _ready() -> void:
 	setup.add_child(grid)
 	for id: String in RunModifierData.ORDER:
 		grid.add_child(_build_mod_tile(id))
-	_mod_detail = UiTheme.tier_label(FrontDoorData.MOD_HINT, UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
+	_mod_detail = UiTheme.tier_label(_mod_hint(), UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_mod_detail.clip_text = true
 	_mod_detail.custom_minimum_size.x = FrontDoorData.SETUP_WIDTH - 24.0
 	setup.add_child(_mod_detail)
@@ -198,7 +212,7 @@ func _ready() -> void:
 	fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	buttons.add_child(fill)
 	fill.add_child(_build_plaque())
-	_begin = _make_button("Begin", FrontDoorData.BEGIN_BUTTON, buttons, _start)
+	_begin = _make_button(begin_text, FrontDoorData.BEGIN_BUTTON, buttons, _start)
 	UiTheme.style_button(_begin, "button", "gold")  # The strong primary action.
 	for fc: String in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color"]:
 		_begin.add_theme_color_override(fc, UiTheme.TEXT_GOLD.lightened(0.25 if fc != "font_color" else 0.0))
@@ -357,7 +371,7 @@ func _build_plaque() -> Control:
 ## general hint).
 func _show_mod_detail(id: String) -> void:
 	if id == "" or not RunModifierData.MODIFIERS.has(id):
-		_mod_detail.text = FrontDoorData.MOD_HINT
+		_mod_detail.text = _mod_hint()
 		_mod_detail.add_theme_color_override("font_color", UiTheme.TEXT_DIM)
 		return
 	var md: Dictionary = RunModifierData.MODIFIERS[id]
@@ -494,8 +508,30 @@ static func _link(b: Control, side: String, to: Control) -> void:
 	b.set("focus_neighbor_" + side, b.get_path_to(to))
 
 
+## The general line under the modifiers (co-op guest: the host picks them).
+func _mod_hint() -> String:
+	return FrontDoorData.COOP_GUEST_HINT if coop_guest else FrontDoorData.MOD_HINT
+
+
+## True (after a `denied`) when the run part is the co-op host's (read-only).
+func _host_owned() -> bool:
+	if coop_guest:
+		Sfx.play_ui("denied")
+	return coop_guest
+
+
+## Co-op guest: shows the host's run settings `cfg` (CoopNet.config_dict() form).
+func apply_host_run(cfg: Dictionary) -> void:
+	config.set_difficulty(String(cfg.get("difficulty_id", DifficultyData.DEFAULT_ID)))
+	config.set_modifiers(PackedStringArray(cfg.get("modifiers", [])))
+	config.hyper = bool(cfg.get("hyper", false))
+	_refresh()
+
+
 ## Selects difficulty `id`.
 func _select_level(id: String) -> void:
+	if _host_owned():
+		return
 	config.set_difficulty(id)
 	Sfx.play("ui_confirm")
 	_refresh()
@@ -503,6 +539,8 @@ func _select_level(id: String) -> void:
 
 ## Toggles run modifier `id`.
 func _toggle_mod(id: String) -> void:
+	if _host_owned():
+		return
 	var ids := config.modifiers.duplicate()  # New modifier list.
 	if ids.has(id):
 		ids.remove_at(ids.find(id))
@@ -515,6 +553,8 @@ func _toggle_mod(id: String) -> void:
 
 ## Standard: the Necromancer level and no run modifiers.
 func _reset_choice() -> void:
+	if _host_owned():
+		return
 	config.set_difficulty(DifficultyData.DEFAULT_ID)
 	config.set_modifiers(PackedStringArray())
 	_extras.reset()  # Hyper off (the skin is kept: cosmetic).
@@ -591,7 +631,8 @@ func _breakdown() -> String:
 ## Begin: remember the choice (Meta save) and hand the config on.
 func _start() -> void:
 	Sfx.play("ui_confirm")
-	Meta.remember_prerun(config)
+	if not coop_guest:  # A co-op guest's difficulty / modifiers are the host's: not remembered.
+		Meta.remember_prerun(config)
 	confirmed.emit(config)
 
 

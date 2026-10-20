@@ -182,6 +182,9 @@ const CLASSES := {
 	# --- Act III: the Assembly Halls ---
 	"grave_drone": {"trigger": "attack", "every": 4, "pattern": "seek", "counts": [2, 3], "speed": 360.0,
 		"life": 0.6, "share": 0.4, "pierce": 0, "radius": 3.0, "style": "shard", "color": Color(0.87, 0.85, 0.76), "homing": 9.0},  # TUNING (not in GDD) seeking bone splinters
+	# --- Act III: the Iron Citadel ---
+	"iron_revenant": {"trigger": "attack", "every": 3, "pattern": "fan", "counts": [4, 6], "spread": 30.0, "speed": 400.0,
+		"life": 0.55, "share": 0.4, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a spray of soul-lit shrapnel
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -221,6 +224,9 @@ const EVOLVED := {
 	# --- Act III: the Assembly Halls ---
 	"wraith_drone": {"trigger": "attack", "every": 3, "pattern": "seek", "counts": [5], "speed": 380.0,
 		"life": 0.7, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "spark", "color": Color(0.66, 1.0, 0.82), "homing": 10.0},  # TUNING (not in GDD) a flight of soul-lit wraith darts
+	# --- Act III: the Iron Citadel ---
+	"deus_revenant": {"trigger": "attack", "every": 3, "pattern": "spiral", "counts": [12], "speed": 300.0,
+		"life": 0.6, "share": 0.3, "pierce": 1, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86), "curve": 1.6},  # TUNING (not in GDD) a whirl of shrapnel from the twin cannons
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -271,6 +277,9 @@ const SPELLS := {
 	# --- Act III: the Scrap Wastes ---
 	"death_ray": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [8, 12, 16], "speed": 320.0,
 		"life": 0.5, "share": 0.2, "pierce": 1, "radius": 3.5, "style": "spark", "color": Color(0.80, 0.62, 1.0)},  # TUNING (not in GDD) a ring of violet sparks with each sweep
+	# --- Act III: the Iron Citadel ---
+	"scrap_swarm": {"every": 5, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 14], "speed": 280.0,
+		"life": 0.6, "share": 0.5, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) a ring of scrap shards (every 5 drone intervals)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

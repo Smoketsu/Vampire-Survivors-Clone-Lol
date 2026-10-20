@@ -23,6 +23,11 @@
 #               the Web build to a separate public repository served by GitHub Pages
 #               (variable PAGES_REPO + secret PAGES_TOKEN; skipped without them). itch.io
 #               publishing was dropped (owner decision, Oct 2026).
+#   coop-net - online co-op connectivity: the relay protocol check and the two-process network test
+#               against the local Python relay (tools/coop_relay*.py, tools/coop_net_test.py).
+#   deploy-relay - on pushes to main after coop-net: deploys the co-op relay Worker (server/relay) with
+#               wrangler when the secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID exist
+#               (skipped otherwise; docs/coop/RELAY_SETUP.md).
 #   4. publish-pages - OPTIONAL, off by default: deploys the Web build to this
 #               repository's own GitHub Pages when the repository variable WEB_PAGES is
 #               "true" (Settings -> Pages -> "GitHub Actions"; needs a public repository
@@ -125,6 +130,87 @@ jobs:
           path: "*.log"
           # Kept 3 days (the account's artifact storage is small; GitHub's default is 90).
           retention-days: 3
+
+  coop-net:
+    # Online co-op connectivity (GDD 15.0 "Online co-op: relay and lobby"): the relay protocol check
+    # against the local Python relay (tools/coop_relay_check.py, the same checks the Cloudflare Worker
+    # passes under `wrangler dev`), then two headless Godot processes that make a lobby, join it by code,
+    # start and exchange 10000 frames each way through it (tools/coop_net_test.py). About 2 minutes.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/godot
+          key: godot-${{ env.GODOT_VERSION }}-linux
+
+      - name: Download Godot
+        run: |
+          if [ ! -x "$GODOT_BIN" ]; then
+            mkdir -p "$(dirname "$GODOT_BIN")"
+            curl -sSL -o /tmp/godot.zip "$GODOT_URL"
+            unzip -q /tmp/godot.zip -d "$(dirname "$GODOT_BIN")"
+          fi
+          "$GODOT_BIN" --headless --version
+
+      - name: Import project
+        run: |
+          "$GODOT_BIN" --headless --import 2>&1 | tee import.log
+          if grep -qE "SCRIPT ERROR|Parse Error|ERROR:" import.log; then
+            echo "::error::Script errors during import"; exit 1
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Relay protocol check
+        run: |
+          # The checker's WebSocket client (the relay itself needs only the standard library).
+          pip install --quiet websockets
+          python3 tools/coop_relay.py --port 8765 --quiet &
+          sleep 1
+          python3 tools/coop_relay_check.py http://127.0.0.1:8765
+
+      - name: Two-process network test
+        run: python3 tools/coop_net_test.py --godot "$GODOT_BIN" 2>&1 | tee coop_net.log
+
+  deploy-relay:
+    # Deploys the co-op relay (server/relay, a Cloudflare Worker) on pushes to main, once the network
+    # test passed, when the secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID exist (skipped
+    # cleanly otherwise; setup steps in docs/coop/RELAY_SETUP.md). The Worker serves
+    # wss://necropathy-relay.<subdomain>.workers.dev (CoopNetData.RELAY_URL).
+    needs: [coop-net]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # CLOUDFLARE_API_TOKEN: a token from the "Edit Cloudflare Workers" template; empty without the secret.
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # CLOUDFLARE_ACCOUNT_ID: the Cloudflare account the Worker lives in; empty without the secret.
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Skip without the Cloudflare secrets
+        if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == ''
+        run: echo "::notice::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set; relay not deployed (docs/coop/RELAY_SETUP.md)."
+
+      - uses: actions/checkout@v4
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+
+      - uses: actions/setup-node@v4
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        with:
+          node-version: "22"
+
+      - name: Deploy the relay Worker
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        working-directory: server/relay
+        run: |
+          npm install --no-audit --no-fund
+          npx wrangler deploy
 
   export:
     # No `needs: test`: the export runs beside the playthroughs (it only builds and

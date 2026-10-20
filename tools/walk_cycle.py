@@ -254,6 +254,15 @@ RIGS = {
     "bosses/kestrel": dict(mode="legs", hip=88, back=(0, 72), front=(72, 142), rigid=[], spread=2, lift=2, dip=1, bust=(62, 82, 24, 36, 2)),
     "bosses/kestrel_blades": dict(mode="legs", hip=90, back=(0, 64), front=(64, 98), rigid=[(98, 118, 0, None)], spread=2, lift=2, dip=1, bust=(48, 74, 34, 48, 2)),
     "player/lightning_abbess": dict(mode="robe", hip=38, rigid=[(29, 44, 0, None)], sway=2, dip=1, bust=(18, 29, 18, 25, 2)),
+    # --- Act III: the Iron Citadel ---
+    # The two Valkyries are in the figure-redesign style (bust bounce + idle breathing); Valkyrie
+    # 2.0's blade arm (left) and tower shield (right) hang below the hip and move with the body.
+    # The Rust Prophet walks in his robe, the scrap staff rigid; the revenants stomp on two legs.
+    "empire/valkyrie_duelist": dict(mode="legs", hip=32, back=(0, 27), front=(27, 52), rigid=[], spread=2, lift=2, dip=1, bust=(22, 34, 13, 21, 2)),
+    "empire/valkyrie_prime": dict(mode="legs", hip=70, back=(14, 36), front=(36, 52), rigid=[(0, 14, 0, None), (52, 76, 0, None)], spread=2, lift=3, dip=1, bust=(28, 46, 30, 40, 3, 2)),
+    "player/rust_prophet": dict(mode="robe", hip=40, rigid=[(30, 42, 0, None)], sway=1, dip=1),
+    "summons/iron_revenant": dict(mode="legs", hip=34, back=(0, 26), front=(26, 58), rigid=[], spread=2, lift=2, dip=1),
+    "summons/deus_revenant": dict(mode="legs", hip=38, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -312,6 +321,10 @@ SKINS = {
     "player/lightning_abbess_hyper": "player/lightning_abbess",
     "player/lightning_abbess_untouchable": "player/lightning_abbess",
     "player/lightning_abbess_deathlord": "player/lightning_abbess",
+    # --- Act III: the Iron Citadel ---
+    "player/rust_prophet_hyper": "player/rust_prophet",
+    "player/rust_prophet_untouchable": "player/rust_prophet",
+    "player/rust_prophet_deathlord": "player/rust_prophet",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

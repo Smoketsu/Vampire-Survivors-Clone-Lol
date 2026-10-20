@@ -33,6 +33,10 @@
 ## Play opens the stage select (StageSelect, GDD §10.2), which opens the
 ## pre-run setup (PreRunSetup); the finished RunConfig reaches Main through
 ## `stage_chosen`.
+## Co-op (with two small skulls: two necromancers; GDD §15.0 "Online co-op:
+## relay and lobby") opens CoopScreen; its lobby's start reaches Main through
+## `coop_start`. A Web page opened from a shared link (`?join=CODE`) opens the
+## Co-op screen's Join pad filled in, once per session.
 class_name MainMenu
 extends Control
 
@@ -40,6 +44,8 @@ extends Control
 signal play_pressed
 ## A stage was chosen in the stage select: Main starts a run with `config`.
 signal stage_chosen(config: RunConfig)
+## The co-op lobby started the run: Main.start_coop_run(info) (CoopNet.start_info).
+signal coop_start(info: Dictionary)
 
 ## Play button (focused on open for keyboard / controller users).
 var _play: Button
@@ -117,6 +123,9 @@ func _ready() -> void:
 	UiMotion.count_up(_ash_label, Meta.soul_ash, "%d", 0, false)  # The balance rolls up on open (silent).
 	UiMotion.stagger(blocks, FrontDoorData.MENU_STAGGER_DELAY)
 	_play.grab_focus.call_deferred()
+	var link := CoopNet.take_link_code()  # A shared co-op link's code ("" = none).
+	if link != "" and _buttons.has("coop"):
+		_open_coop.call_deferred(_buttons["coop"], link)
 
 
 ## The title: the living pixel-art logo when its PNG exists, else the word.
@@ -161,6 +170,17 @@ func _menu_button(id: String, caption: String) -> Button:
 		icon.offset_left = FeedbackData.MENU_ICON_INSET
 		icon.offset_right = FeedbackData.MENU_ICON_INSET + icon.custom_minimum_size.x
 		b.add_child(icon)
+	elif id == "coop":
+		var icons := HBoxContainer.new()  # Two skulls: two necromancers.
+		icons.add_theme_constant_override("separation", 2)
+		icons.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		for i in FrontDoorData.COOP_ICON_COUNT:
+			icons.add_child(MaskIcon.new(FrontDoorData.COOP_ICON, FrontDoorData.COOP_ICON_SCALE))
+		icons.anchor_top = 0.5
+		icons.anchor_bottom = 0.5
+		icons.grow_vertical = Control.GROW_DIRECTION_BOTH
+		icons.offset_left = FrontDoorData.COOP_ICON_INSET
+		b.add_child(icons)
 	return b
 
 
@@ -215,6 +235,8 @@ func _on_item(id: String, b: Button) -> void:
 	match id:
 		"play":
 			_open_stage_select()
+		"coop":
+			_open_coop(b)
 		"ossuary":
 			OssuaryMenu.open_over(self, b)
 		"settings":
@@ -302,6 +324,13 @@ func _open_stage_select() -> void:
 	play_pressed.emit()
 	var sel := StageSelect.open_over(self, _play)
 	sel.stage_chosen.connect(func(config: RunConfig) -> void: stage_chosen.emit(config))
+
+
+## Co-op: opens the Co-op screen over the menu (focus returns to `b`); `code`
+## opens its Join pad filled in. The lobby's start is forwarded to Main.
+func _open_coop(b: Button, code: String = "") -> void:
+	var s := CoopScreen.open_over(self, b, code)
+	s.run_started.connect(func(info: Dictionary) -> void: coop_start.emit(info))
 
 
 ## Quit: asks first through the shared confirm dialog (Cancel focused).

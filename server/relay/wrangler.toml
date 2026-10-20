@@ -1,0 +1,26 @@
+# Cloudflare Worker config of the Necropathy co-op relay (see PROTOCOL.md and docs/coop/RELAY_SETUP.md).
+# CI deploys it with `wrangler deploy` from this folder (job deploy-relay in .github/workflows/ci.yml).
+
+# name: the Worker's name; its address becomes https://necropathy-relay.<account>.workers.dev
+name = "necropathy-relay"
+# main: the Worker's entry module.
+main = "src/index.js"
+# compatibility_date: the Workers runtime behaviour this code was written against.
+compatibility_date = "2024-11-11"
+# workers_dev: serve the Worker on its free workers.dev address (no custom domain needed).
+workers_dev = true
+
+# One Durable Object per lobby, reached as env.LOBBY (class Lobby in src/index.js).
+[[durable_objects.bindings]]
+name = "LOBBY"
+class_name = "Lobby"
+
+# The Lobby class is SQLite-backed: the kind of Durable Object the free plan allows.
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Lobby"]
+
+[vars]
+# ALLOWED_ORIGINS: browser origins that may use the relay, comma-separated ("*" = any). Requests without an
+# Origin header (the desktop game) are always allowed. The GitHub Pages home of the game, plus local test servers.
+ALLOWED_ORIGINS = "https://smoketsu.github.io,http://localhost:8060,http://127.0.0.1:8060,http://localhost:8000,http://127.0.0.1:8000"

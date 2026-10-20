@@ -28,6 +28,7 @@ Sfx="*res://scripts/audio/sfx.gd"
 Settings="*res://scripts/core/settings.gd"
 Meta="*res://scripts/core/meta_progress.gd"
 Juice="*res://scripts/fx/juice.gd"
+CoopNet="*res://scripts/coop/coop_net.gd"
 
 [display]
 

@@ -111,6 +111,11 @@ var golems: GolemKit = null
 ## UnitData.MAX_BLOCK_RADIUS, raised to the widest block_radius ever spawned
 ## this run (the Corpse Abomination's), never lowered.
 var block_query_radius: float = UnitData.MAX_BLOCK_RADIUS
+# --- Act III: the Iron Citadel ---
+## Radius (px) of the Bone Ring's posts at the last formation pass
+## (StanceFormations._ring(); StanceData.RING_MIN before the first): the Scrap
+## Swarm spell orbits just outside it. Read only; it changes no unit.
+var ring_radius: float = StanceData.RING_MIN
 
 
 func _init() -> void:
@@ -446,6 +451,13 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		var sp: Dictionary = out["special"]  # This class's special numbers (fresh per call).
 		if sp.has("bulwark_duration"):
 			sp["bulwark_duration"] = float(sp["bulwark_duration"]) * (1.0 + hold)
+	# Recoil Frame (Act III, the Iron Citadel): the ranged summons fire faster and
+	# farther, after the evolution overlay. 0 when not owned (every run unchanged).
+	if String(out["attack_profile"]) in PassiveData.RECOIL_PROFILES:
+		var haste := ab.passive_value("recoil_frame", "ranged_haste")  # Attack-speed fraction.
+		if haste > 0.0:
+			out["attack_interval"] = float(out["attack_interval"]) / (1.0 + haste)
+			out["attack_range"] = float(out["attack_range"]) * (1.0 + ab.passive_value("recoil_frame", "ranged_reach"))
 	return out
 
 
@@ -634,6 +646,7 @@ func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float,
 	temp_spawned += 1
 	if herald > 0.0:
 		game.stat_add("restless_extra_seconds", herald)  # Grave Herald innate (autotest).
+	game.innates.on_temporary_spawned(u)  # Act III: the Rust Prophet's scrap bolts (no-op for every other character).
 	game.effects.spawn_ring(at, Palette.NECRO_GREEN, "summon_rise")  # Animation when its art exists (visual only).
 	return u
 

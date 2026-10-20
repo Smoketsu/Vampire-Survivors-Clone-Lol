@@ -67,7 +67,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act III: the Assembly Halls ---
 	"hollow_puppet",
 	# --- Act III: the Scrap Wastes ---
-	"death_ray"]
+	"death_ray",
+	# --- Act III: the Iron Citadel ---
+	"scrap_swarm"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -430,6 +432,28 @@ const SPELLS := {
 			{"damage": 23.0, "cooldown": 3.8, "sweep_time": 1.4, "beam_length": 360.0, "beam_width": 12.0, "spark": 0.4, "spark_range": 130.0, "beams": 1},  # TUNING (not in GDD)
 			{"damage": 27.0, "cooldown": 3.6, "sweep_time": 1.4, "beam_length": 390.0, "beam_width": 12.0, "spark": 0.4, "spark_range": 130.0, "beams": 1},  # TUNING (not in GDD)
 			{"damage": 32.0, "cooldown": 3.4, "sweep_time": 1.3, "beam_length": 420.0, "beam_width": 14.0, "spark": 0.4, "spark_range": 140.0, "beams": 1},  # Owner-approved proposal "out to about 420 px"; TUNING (not in GDD) the rest (first pass 52 dmg / 3.0 s / spark 0.6 + Event Horizon dealt 456k, 5,500 kills in a Graveyard evolve run: cut; pass 2: 40 dmg / spark 0.45 still dealt 435k, 91% of the run, against 125k for Bone Spear on the same seed: damage -20% on every level)
+		],
+	},
+	# --- Act III: the Iron Citadel ---
+	# Scrap Swarm (GDD §15.0 "Scrap Swarm, Machine Soul and the Rust Prophet";
+	# unlocked by defeating Deus Ex Machina, UnlockData): `drones` bone-and-scrap
+	# drones orbit OUTSIDE the Bone Ring (owner-approved: about 40 px past its
+	# outer edge, so the orbit widens with the army) at `orbit_speed` rad/s;
+	# each fires a bolt every `cooldown` s at the nearest foe within `range` px
+	# that has not reached the army yet, for `damage`. Logic: ScrapSwarm; fixed
+	# rules: ScrapSwarmData.
+	"scrap_swarm": {
+		"display_name": "Scrap Swarm",
+		"icon": "scrap_swarm",
+		"description": "Drones of bone and scrap orbit beyond your ring and shoot foes before they reach your army.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bolt damage", "drones": "Drones", "cooldown": "Fire interval (s)", "range": "Range"},
+		"levels": [
+			{"drones": 3, "damage": 9.0, "cooldown": 1.2, "range": 200.0, "orbit_speed": 1.0},  # TUNING (not in GDD)
+			{"drones": 3, "damage": 11.0, "cooldown": 1.1, "range": 210.0, "orbit_speed": 1.05},  # TUNING (not in GDD)
+			{"drones": 4, "damage": 11.0, "cooldown": 1.05, "range": 220.0, "orbit_speed": 1.1},  # TUNING (not in GDD)
+			{"drones": 4, "damage": 13.0, "cooldown": 0.95, "range": 230.0, "orbit_speed": 1.15},  # TUNING (not in GDD)
+			{"drones": 5, "damage": 15.0, "cooldown": 0.85, "range": 240.0, "orbit_speed": 1.2},  # TUNING (not in GDD) first pass 19 (with the evolution 296k damage in a forced army run)
 		],
 	},
 }

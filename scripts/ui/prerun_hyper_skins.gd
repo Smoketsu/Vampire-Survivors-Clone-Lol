@@ -36,6 +36,10 @@ const ON_ACCENT: String = "gold"
 
 ## The config being edited (shared with the setup screen).
 var config: RunConfig = null
+## Co-op guest (GDD §15.0 "Online co-op: relay and lobby"): the host owns Hyper,
+## so the tile only shows the host's choice (pressing it is `denied`) and the
+## guest's own Hyper lock never switches it off.
+var host_owned: bool = false
 ## The Hyper toggle tile.
 var _hyper_button: Button
 ## Hyper tile state label ("On" / "Off" / "Locked").
@@ -246,7 +250,7 @@ func rows() -> Array:
 
 ## Hyper tile pressed: toggles Hyper (`denied` while locked).
 func _toggle_hyper() -> void:
-	if not Meta.hyper_unlocked:
+	if not Meta.hyper_unlocked or host_owned:
 		Sfx.play_ui("denied")  # Locked.
 		return
 	config.hyper = not config.hyper
@@ -280,7 +284,7 @@ func refresh() -> void:
 		_rebuild_skins()
 	if not _skin_ids.has(config.skin_id) or not Meta.is_skin_unlocked(config.skin_id):
 		config.skin_id = Meta.chosen_skin(_character)
-	var unlocked := Meta.hyper_unlocked  # The toggle may be used.
+	var unlocked := Meta.hyper_unlocked or host_owned  # The toggle may be used (co-op guest: shows the host's choice).
 	if not unlocked:
 		config.hyper = false
 	_style(_hyper_button, config.hyper)

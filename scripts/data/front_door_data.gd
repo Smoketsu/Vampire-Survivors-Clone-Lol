@@ -16,6 +16,7 @@ extends RefCounted
 ## and is left out while no form link is set (FeedbackReport.enabled()).
 const MENU_ITEMS: Array = [
 	["play", "Play"],  # TUNING (not in GDD) owner: one-word buttons
+	["coop", "Co-op"],  # TUNING (not in GDD) online co-op (CoopScreen; GDD §15.0 "Online co-op: relay and lobby")
 	["codex", "Codex"],  # TUNING (not in GDD)
 	["ossuary", "Ossuary"],  # TUNING (not in GDD)
 	["settings", "Settings"],  # TUNING (not in GDD)
@@ -25,6 +26,13 @@ const MENU_ITEMS: Array = [
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	["epilogue", "Epilogue"],  # TUNING (not in GDD) the campaign epilogue (EpilogueData); shown once a part is open, above Credits
 ]
+## Co-op button icon: MaskIconData key, drawn COOP_ICON_COUNT times side by
+## side (two skulls: two necromancers) at COOP_ICON_SCALE x, COOP_ICON_INSET px
+## from the button's left edge.
+const COOP_ICON: String = "skull"  # TUNING (not in GDD)
+const COOP_ICON_COUNT: int = 2  # TUNING (not in GDD)
+const COOP_ICON_SCALE: int = 2  # TUNING (not in GDD)
+const COOP_ICON_INSET: float = 10.0  # TUNING (not in GDD)
 ## MENU_ITEMS ids left out of the title screen on the Web build (a browser
 ## tab cannot quit; GDD §15.0 "Web build").
 const WEB_HIDDEN_ITEMS: Array = ["quit"]  # TUNING (not in GDD)
@@ -266,12 +274,15 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "embers", "fx_color": Color8(255, 174, 26),
 	},  # TUNING (not in GDD) signal-amber sparks over the fabricator floor
+	# --- Act III: the Iron Citadel (its own floor, props, turret, Valkyrie and engine) ---
 	"citadel": {
-		"tile": "tiles/march_burned",
+		"tile": "tiles/citadel_gates",
 		"items": [
-			["empire/spotter", 240, 160, true], ["empire/spotter", 196, 226, true],
-			["empire/scout_drone", 150, 70, true],
-			["summons/warrior", 46, 214, false], ["summons/grave_gunner", 92, 226, false],
+			["obstacles/emitter_pylon_m", 30, 100, false], ["obstacles/iron_barricade_s", 244, 108, false],
+			["empire/sentry_turret", 140, 96, true],
+			["empire/valkyrie_duelist", 236, 184, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 92, 226, false],
+			["bosses/deus_ex_machina_fire", 178, 226, true],
 		],
 		"fx": "embers", "fx_color": Color8(224, 57, 30),
 	},  # TUNING (not in GDD) warning-red sparks
@@ -345,6 +356,8 @@ const LEVEL_ICONS: Dictionary = {
 }  # TUNING (not in GDD)
 ## Hint line under the modifiers while none is focused.
 const MOD_HINT: String = "Modifiers stack and add Soul Ash."  # TUNING (not in GDD)
+## That line for a co-op guest (the host picks the difficulty, modifiers and Hyper).
+const COOP_GUEST_HINT: String = "The host picks the difficulty, modifiers and Hyper."  # TUNING (not in GDD)
 
 # --- Content wave 2: B. Achievement rewards ---
 ## The skin row of the setup screen (PreRunHyperSkins) with more skin tiles

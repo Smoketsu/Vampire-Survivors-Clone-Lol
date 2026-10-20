@@ -34,6 +34,9 @@ signal closed
 
 ## Control that gets focus back when the screen closes.
 var return_focus: Control = null
+## Begin caption of the pre-run setup this screen opens ("Done" from the
+## co-op lobby, which takes the RunConfig back instead of starting a run).
+var setup_begin_text: String = "Begin"
 ## Stage id -> its card Button.
 var _cards: Dictionary = {}
 ## Stage id -> its StageVignette.
@@ -330,7 +333,7 @@ func _choose(id: String) -> void:
 		_shake(_cards[id])
 		return
 	Sfx.play("ui_confirm")
-	var setup := PreRunSetup.open_over(self, _cards[id], Meta.prerun_config(id))  # Difficulty / modifiers step.
+	var setup := PreRunSetup.open_over(self, _cards[id], Meta.prerun_config(id), setup_begin_text)  # Difficulty / modifiers step.
 	setup.confirmed.connect(func(c: RunConfig) -> void: stage_chosen.emit(c))
 
 
