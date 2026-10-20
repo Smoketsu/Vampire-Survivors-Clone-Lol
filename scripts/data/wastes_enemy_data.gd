@@ -61,7 +61,7 @@ const ENEMIES := {
 		"attack_range": 6.0,  # TUNING (not in GDD) px edge to edge
 		"radius": 11.0,  # TUNING (not in GDD) px
 		"armor": 0.1,  # TUNING (not in GDD)
-		"xp": 1,  # TUNING (not in GDD) first pass 2: with the shields in the trickle the army bot's build was complete at 14:44
+		"xp": 2,  # TUNING (not in GDD) a soldier's XP (a pass at 1 starved the army: the army bot died at 5:00-6:00 in 2 of 2 runs)
 		"behavior": "melee",
 		"projectile_speed": 0.0,
 		"undead_damage_mult": 1.0,
@@ -230,7 +230,7 @@ const ENEMIES := {
 	# hologram of her. Your army shoots the hologram first.
 	"kestrel_decoy": {
 		"display_name": "Decoy Drone",
-		"max_hp": 80.0,  # TUNING (not in GDD) before the time scaling (the boss's decoys are not scaled by her HP)
+		"max_hp": 60.0,  # TUNING (not in GDD) before the time scaling (the boss's decoys are not scaled by her HP); pass 2: 80 -> 60
 		"move_speed": 62.0,  # TUNING (not in GDD) px/s
 		"damage": 3.0,  # TUNING (not in GDD) per round, before the time scaling
 		"attack_interval": 2.4,  # TUNING (not in GDD) s between bursts

@@ -45,7 +45,7 @@ const SPECIALS := ["perch", "triple_lock", "decoys", "charge"]
 ## Kestrel's design row.
 const BOSS := {
 	"display_name": "Kestrel, the Dead Pixel",
-	"max_hp": 21000.0,  # TUNING (not in GDD) x the stage HP multiplier (26,250 on the Wastes); Merrow 26,000, Vhal'Neth 20,000: she is mobile (perches), so less HP
+	"max_hp": 17000.0,  # TUNING (not in GDD) x the stage HP multiplier (21,250 on the Wastes); Merrow 26,000, Vhal'Neth 20,000: she is mobile (perches) and her decoys draw the army's fire (pass 2: 21,000 survived an army run with 7,800 HP left)
 	"move_speed": 54.0,  # TUNING (not in GDD) px/s walking with the rifle
 	"damage": 10.0,  # TUNING (not in GDD) a rifle-butt blow in reach
 	"attack_interval": 1.1,  # TUNING (not in GDD) s
@@ -82,9 +82,9 @@ const BOSS := {
 	# landing marker telegraphed leap_windup s), flying leap_time s; there she
 	# paints the triple Lock-On and holds for perch_time s.
 	"first_perch": 2.5,  # TUNING (not in GDD) s after arrival before her first perch
-	"perch_gap": 5.0,  # TUNING (not in GDD) s of walking between two perches
-	"perch_min": 360.0,  # TUNING (not in GDD) px from the necromancer
-	"perch_max": 460.0,  # TUNING (not in GDD) px
+	"perch_gap": 6.5,  # TUNING (not in GDD) s of walking between two perches (pass 3: 5.0)
+	"perch_min": 230.0,  # TUNING (not in GDD) px from the necromancer: inside the army's reach (pass 3: 360-460 left her out of it, 9,000 HP left at the end)
+	"perch_max": 300.0,  # TUNING (not in GDD) px
 	"perch_turn_min": 0.7,  # TUNING (not in GDD) rad the perch moves around him at least
 	"perch_turn_max": 1.5,  # TUNING (not in GDD) rad at most
 	"leap_windup": 0.6,  # TUNING (not in GDD) s the landing marker shows before she jumps

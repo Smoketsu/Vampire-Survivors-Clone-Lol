@@ -86,23 +86,23 @@ const SEGMENTS := [
 		"weights": {"scout_drone": 1.0},
 		"objective": "The Slag Fields: drones sweep in, Aegis Bots raise their shields"},
 	{"start": 60.0, "rate": 1.6, "max_alive": 38,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.74, "aegis_bot": 0.16, "line_trooper": 0.1},
+		"weights": {"scout_drone": 0.76, "aegis_bot": 0.16, "line_trooper": 0.08},  # TUNING (not in GDD) pass 2: fewer early rifles (seed 7 died at 3:45 to Line Trooper fire)
 		"objective": "Hit the Aegis Bots from the side: their shields stop your shots"},
-	{"start": 120.0, "rate": 1.9, "max_alive": 46,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.56, "aegis_bot": 0.24, "line_trooper": 0.2},
+	{"start": 120.0, "rate": 1.9, "max_alive": 42,  # TUNING (not in GDD) pass 3: 46 -> 42 (the shields pile up: 66 alive at 4:00)
+		"weights": {"scout_drone": 0.68, "aegis_bot": 0.18, "line_trooper": 0.14},
 		"objective": "Line Troopers march in firing: your dead are cover"},
-	{"start": 180.0, "rate": 2.2, "max_alive": 54,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.46, "aegis_bot": 0.29, "line_trooper": 0.25},
+	{"start": 180.0, "rate": 2.2, "max_alive": 46,  # TUNING (not in GDD) pass 3: 54 -> 46
+		"weights": {"scout_drone": 0.6, "aegis_bot": 0.22, "line_trooper": 0.18},
 		"objective": "Keep your dead between you and the guns"},
-	{"start": 240.0, "rate": 2.5, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.38, "aegis_bot": 0.34, "line_trooper": 0.27, "spotter": 0.01},
+	{"start": 240.0, "rate": 2.5, "max_alive": 54,  # TUNING (not in GDD) pass 3: 60 -> 54
+		"weights": {"scout_drone": 0.5, "aegis_bot": 0.27, "line_trooper": 0.22, "spotter": 0.01},
 		"objective": "Spotters paint their targets: step out of the red line"},
 	# Zone II, the Wreck Gullies: Mortar Walkers lob shells over the wrecks.
-	{"start": 300.0, "rate": 2.7, "max_alive": 66,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.31, "aegis_bot": 0.37, "line_trooper": 0.28, "mortar_walker": 0.02, "spotter": 0.02},
+	{"start": 300.0, "rate": 2.6, "max_alive": 60,  # TUNING (not in GDD) pass 3: 2.7 / 66 -> 2.6 / 60 (the army bot's army broke at 5:00-6:00)
+		"weights": {"scout_drone": 0.38, "aegis_bot": 0.32, "line_trooper": 0.26, "mortar_walker": 0.02, "spotter": 0.02},
 		"objective": "The Wreck Gullies: blockers hold the narrow paths"},
-	{"start": 390.0, "rate": 3.0, "max_alive": 74,  # TUNING (not in GDD)
-		"weights": {"scout_drone": 0.3, "aegis_bot": 0.37, "line_trooper": 0.28, "mortar_walker": 0.03, "spotter": 0.02},
+	{"start": 390.0, "rate": 2.9, "max_alive": 70,  # TUNING (not in GDD) pass 3: 3.0 / 74 -> 2.9 / 70
+		"weights": {"scout_drone": 0.33, "aegis_bot": 0.35, "line_trooper": 0.27, "mortar_walker": 0.03, "spotter": 0.02},
 		"objective": "Mortar shells fall on the red circles: keep moving"},
 	{"start": 480.0, "rate": 3.3, "max_alive": 82,  # TUNING (not in GDD)
 		"weights": {"scout_drone": 0.29, "aegis_bot": 0.37, "line_trooper": 0.29, "mortar_walker": 0.03, "spotter": 0.02},
@@ -153,14 +153,14 @@ const EVENTS := [
 		"groups": [{"kind": "scout_drone", "count": 10, "elite": false}]},
 	{"time": 80.0, "type": "wave", "banner": "An Aegis line advances: hit them from the side!", "formation": "line",  # TUNING (not in GDD)
 		"groups": [{"kind": "aegis_bot", "count": 4, "elite": false}]},
-	{"time": 105.0, "type": "pylons", "banner": "A SIGNAL PYLON lengthens the Empire's guns: tear it down!",  # Owner-approved proposal (Signal Pylons)
+	{"time": 140.0, "type": "wave", "banner": "A firing line marches behind its shields!", "formation": "line",  # TUNING (not in GDD)
+		"groups": [{"kind": "aegis_bot", "count": 5, "elite": false}, {"kind": "line_trooper", "count": 3, "elite": false}]},  # TUNING (not in GDD) pass 2: 5 -> 3 riflemen
+	{"time": 165.0, "type": "pylons", "banner": "A SIGNAL PYLON lengthens the Empire's guns: tear it down!",  # Owner-approved proposal (Signal Pylons)
 		"kind": "signal_pylon", "count": 1, "distance_min": 300.0, "distance_max": 400.0,  # TUNING (not in GDD)
 		"reward_xp": 20, "reward_crystals": 5,  # TUNING (not in GDD)
-		"guards": [{"kind": "aegis_bot", "count": 2, "elite": false}, {"kind": "line_trooper", "count": 2, "elite": false}]},  # TUNING (not in GDD)
-	{"time": 140.0, "type": "wave", "banner": "A firing line marches behind its shields!", "formation": "line",  # TUNING (not in GDD)
-		"groups": [{"kind": "aegis_bot", "count": 5, "elite": false}, {"kind": "line_trooper", "count": 5, "elite": false}]},
+		"guards": [{"kind": "aegis_bot", "count": 2, "elite": false}, {"kind": "line_trooper", "count": 1, "elite": false}]},  # TUNING (not in GDD) pass 2: 2:45 (was 1:45 with two riflemen)
 	{"time": 200.0, "type": "wave", "banner": "A Spotter paints you: get behind your dead!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "spotter", "count": 1, "elite": false}, {"kind": "line_trooper", "count": 5, "elite": false}, {"kind": "aegis_bot", "count": 4, "elite": false}]},
+		"groups": [{"kind": "spotter", "count": 1, "elite": false}, {"kind": "line_trooper", "count": 3, "elite": false}, {"kind": "aegis_bot", "count": 4, "elite": false}]},  # TUNING (not in GDD) pass 2: 5 -> 3 riflemen
 	{"time": 245.0, "type": "storm", "banner": "A SCRAP STORM rolls in: their guns are half blind, close in!"},  # Owner-approved proposal (scrap storms, 20 s)
 	{"time": 275.0, "type": "wave", "banner": "Drones and shields close in from every side!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "scout_drone", "count": 12, "elite": false}, {"kind": "aegis_bot", "count": 6, "elite": false}]},
