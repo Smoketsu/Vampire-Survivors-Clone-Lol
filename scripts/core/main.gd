@@ -20,6 +20,10 @@
 ## Music: the menu asks Sfx for the main menu theme, a run for the in-run
 ## loop (Sfx.play_music crossfades them; the menu-to-run fade starts with the
 ## fade through black).
+## Online co-op (GDD §15.0 "Online co-op: relay and lobby"): the title screen's
+## Co-op lobby ends in MainMenu.coop_start, which calls start_coop_run() on both
+## machines with the same CoopNet.start_info. `--coop-net-test=host|join`
+## replaces the menu with the headless network test (CoopNetTest).
 extends Node
 
 ## Current run (null while the menu is shown).
@@ -32,6 +36,9 @@ var _run_config: RunConfig = null
 
 func _ready() -> void:
 	UiMotion.install()
+	if CoopNet.cli_test_role() != "":
+		add_child(CoopNetTest.new())  # Headless co-op network test (tools/coop_net_test.py): no menu, no run.
+		return
 	var touch := TouchSupport.install(self)  # Phones / tablets: touch hints, UI scale, portrait overlay (null in the autotest).
 	if touch != null:
 		touch.portrait_changed.connect(_on_portrait_changed)
@@ -57,6 +64,7 @@ func _show_menu() -> void:
 	var menu := MainMenu.new()
 	menu.theme = UiTheme.get_theme()
 	menu.stage_chosen.connect(_on_stage_chosen, CONNECT_DEFERRED)
+	menu.coop_start.connect(start_coop_run, CONNECT_DEFERRED)  # The co-op lobby's Start (both machines).
 	_menu_layer.add_child(menu)
 	# Content wave 2 (illustrated epilogue): back from a run, an epilogue part
 	# the run opened (and the player has not seen) plays once over the menu;
@@ -73,6 +81,21 @@ func _on_stage_chosen(config: RunConfig) -> void:
 	_run_config = config
 	GameState.last_stage_id = config.stage_id
 	Sfx.play_music(Sfx.run_mode_for(config.stage_id))
+	UiMotion.transition(self, _start_game)
+
+
+## CO-OP SEAM (the one hook the lobby calls; agent "sim" replaces this body
+## with the co-op run). Both machines call it with the same `info`
+## (CoopNet.start_info: seed, the host's config, both loadouts, version), which
+## differs only in `local_slot`. STUB for now: an ordinary solo run with the
+## host's stage, difficulty, modifiers and Hyper and this machine's own
+## character, skin and ultimate, seeded with the shared seed, so the lobby flow
+## can be tested end to end. CoopNet stays connected for the run.
+func start_coop_run(info: Dictionary) -> void:
+	_run_config = CoopNet.run_config_for(info, int(info.get("local_slot", 0)))
+	GameState.last_stage_id = _run_config.stage_id
+	seed(int(info.get("seed", 0)))  # Stub only: the same seed on both machines.
+	Sfx.play_music(Sfx.run_mode_for(_run_config.stage_id))
 	UiMotion.transition(self, _start_game)
 
 

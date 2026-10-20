@@ -40,6 +40,8 @@ extends Control
 signal play_pressed
 ## A stage was chosen in the stage select: Main starts a run with `config`.
 signal stage_chosen(config: RunConfig)
+## The co-op lobby started the run: Main.start_coop_run(info) (CoopNet.start_info).
+signal coop_start(info: Dictionary)
 
 ## Play button (focused on open for keyboard / controller users).
 var _play: Button
