@@ -27,6 +27,8 @@
 ## into a straight wall of its own here, with its own damage source and stats
 ## (titan_wall_hits / titan_wall_pushes); the same push-out rules hold. When
 ## the spell is not learned the node only ages such walls (idle_step()).
+## Act III (Line of Fire): every standing segment also stops Electronic Empire
+## shots; EmpireShots asks shot_block_t() (read only).
 class_name BoneWall
 extends NecroSpell
 
@@ -318,6 +320,23 @@ func after_physics(delta: float) -> void:
 					_seen.append(e)
 	game.stat_add("wall_hold_seconds", float(_seen.size()) * delta)
 	_seen.clear()
+
+
+## Act III, Line of Fire (EmpireShots): the path fraction (0..1) at which an
+## Empire shot of hit radius `r` moving from `a` to `b` first touches a standing
+## segment (the spell's walls, Bastion rings and an Ossuary Titan's wall alike),
+## or INF when it touches none. Read only; walls never change here.
+func shot_block_t(a: Vector2, b: Vector2, r: float) -> float:
+	var best := INF  # First touch so far.
+	var reach := GraveSpellData.BONE_WALL_SEGMENT_RADIUS + r  # Segment + shot radius (px).
+	var mid := (a + b) * 0.5  # Path centre.
+	var span := (b - a).length() * 0.5 + reach  # Cheap reject distance from the path centre (px).
+	for w in _walls:
+		for q: Vector2 in w.segs:
+			if q.distance_squared_to(mid) > span * span:
+				continue
+			best = minf(best, EmpireShots.segment_t(a, b, q, reach))
+	return best
 
 
 ## True if a wall holds enemy `e` (bosses, minibosses, Reckoning enemies and

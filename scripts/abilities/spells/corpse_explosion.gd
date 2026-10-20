@@ -82,8 +82,8 @@ func _ready() -> void:
 ## Eruption bursts the victim erupts at once (chain); otherwise it leaves a
 ## corpse.
 func on_enemy_killed(e: Enemy) -> void:
-	if e.is_structure:
-		return  # A destroyed Crimson March structure leaves rubble, not a corpse.
+	if not e.leaves_corpse():
+		return  # A destroyed structure leaves rubble, an Act III machine scrap: no corpse (Steel has no soul).
 	if _bursting and _eruption and _chain_left > 0:
 		_chain_left -= 1
 		_chain_queue.append(e.position)

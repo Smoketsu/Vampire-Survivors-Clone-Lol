@@ -84,7 +84,17 @@
     {"name": "ink_biolume", "hex": "#1E0A22", "ramp": "biolume", "index": 0, "group": "ink", "role": "outline of the Ancient Eye's bioluminescence (Act II)"},
     {"name": "biolume_dark", "hex": "#5A2262", "ramp": "biolume", "index": 1, "group": "unit", "role": "bioluminescent flesh in shadow, tendrils (Act II; magenta-leaning, never the player's violet)"},
     {"name": "biolume", "hex": "#B04CC0", "ramp": "biolume", "index": 2, "group": "unit", "role": "bioluminescent glow spots, eyes of the deep, the Eye's sigils (Act II)"},
-    {"name": "biolume_glow", "hex": "#F09CF2", "ramp": "biolume", "index": 3, "group": "glow", "role": "bioluminescent glow core (Act II)"}
+    {"name": "biolume_glow", "hex": "#F09CF2", "ramp": "biolume", "index": 3, "group": "glow", "role": "bioluminescent glow core (Act II)"},
+    {"name": "ink_chrome", "hex": "#0B1220", "ramp": "chrome", "index": 0, "group": "ink", "role": "outline of the Electronic Empire's chrome (Act III)"},
+    {"name": "chrome_dark", "hex": "#2C3A50", "ramp": "chrome", "index": 1, "group": "unit", "role": "Empire steel in shadow: joints, gun metal, plating seams (Act III; bluer than the undead grey)"},
+    {"name": "chrome", "hex": "#5B7397", "ramp": "chrome", "index": 2, "group": "unit", "role": "Empire chrome: machine bodies, helmets, armour plates (Act III)"},
+    {"name": "chrome_light", "hex": "#9DB6D6", "ramp": "chrome", "index": 3, "group": "unit", "role": "lit chrome: top faces of plates and visors (Act III)"},
+    {"name": "chrome_glint", "hex": "#E2EEFF", "ramp": "chrome", "index": 4, "group": "unit", "role": "specular glint on polished chrome, sparing (Act III)"},
+    {"name": "ink_signal", "hex": "#240A04", "ramp": "signal", "index": 0, "group": "ink", "role": "outline of the Empire's signal lights (Act III)"},
+    {"name": "signal_dark", "hex": "#962410", "ramp": "signal", "index": 1, "group": "unit", "role": "signal light housings, warning paint in shadow (Act III)"},
+    {"name": "signal_red", "hex": "#E0391E", "ramp": "signal", "index": 2, "group": "unit", "role": "warning red: lock-on lasers, sensor eyes, alarm lights (Act III; more orange than the Covenant crimson)"},
+    {"name": "signal_amber", "hex": "#FFAE1A", "ramp": "signal", "index": 3, "group": "unit", "role": "hard amber: running lights, screens, tracer rounds (Act III)"},
+    {"name": "signal_glow", "hex": "#FFEBA8", "ramp": "signal", "index": 4, "group": "glow", "role": "white-hot core of the Empire's lights and lasers (Act III)"}
   ],
   "ramps": {
     "violet": {"members": ["ink_violet", "violet_deep", "violet", "violet_glow", "violet_flare"], "role": "the player only: necromancer, the 12 characters, their spells and icons"},
@@ -102,6 +112,8 @@
     "flame": {"members": ["ink_red", "crimson", "flame", "gold_light"], "role": "fire and embers"},
     "drowned": {"members": ["ink_drowned", "drowned_dark", "drowned", "drowned_light"], "role": "the Ancient Eye's drowned teal (Act II): robes, scales, wet stone; kept clearly apart from the soul teal (UI 'affordable / focused / new')"},
     "biolume": {"members": ["ink_biolume", "biolume_dark", "biolume", "biolume_glow"], "role": "the Ancient Eye's bioluminescence (Act II): glow spots, eyes, sigils; magenta-leaning so it never reads as the player's violet"},
+    "chrome": {"members": ["ink_chrome", "chrome_dark", "chrome", "chrome_light", "chrome_glint"], "role": "the Electronic Empire's chrome (Act III): cold steel greys with a blue cast for machines and cyborg plating; bluer and more polished than the undead's cold grey"},
+    "signal": {"members": ["ink_signal", "signal_dark", "signal_red", "signal_amber", "signal_glow"], "role": "the Electronic Empire's signal lights (Act III): hard amber to warning red for lights, lasers and screens; never the undead's soul teal or the player's violet"},
     "floor": {"members": ["floor_soil", "floor_earth", "floor_grass", "floor_ochre", "floor_slate", "floor_ash", "floor_dirt", "floor_moss", "floor_marble", "floor_stone"], "role": "ground colours of the three stages (tiles only, never sprites), dark -> light; the zone tiles add close shades per zone"}
   }
 }

@@ -67,6 +67,9 @@ var _eclipse_pulse: float = 0.0
 var tide_left: float = 0.0
 ## Deaths waiting to rise during the Tide (positions, oldest first).
 var _tide_queue: Array[Vector2] = []
+## Act III: for each of _tide_queue, true when that foe was a cyborg (it rises
+## as a Grave Gunner, HordeDirector.raise_corpse()); a machine is never queued.
+var _tide_gunner: Array[bool] = []
 ## Living Tide Risen as [SummonedUnit, generation] (stale entries dropped).
 var _risen: Array = []
 ## Reusable spatial-query buffer.
@@ -170,16 +173,18 @@ func on_player_hit_ignored(amount: float) -> void:
 
 
 ## Kill hook (CombatResolver._kill_enemy()): during the Tide a fallen enemy
-## (never a boss, miniboss, Reckoning enemy or structure) is queued to rise.
+## (never a boss, miniboss, Reckoning enemy, structure or Act III machine:
+## Enemy.leaves_corpse()) is queued to rise; a cyborg rises as a Grave Gunner.
 func on_enemy_killed(e: Enemy) -> void:
 	if tide_left <= 0.0:
 		return
-	if e.is_boss or e.is_miniboss or e.is_reckoning or e.is_structure:
+	if e.is_boss or e.is_miniboss or e.is_reckoning or not e.leaves_corpse():
 		return
 	if _tide_queue.size() >= UltimateData.TIDE_QUEUE_MAX:
 		game.stat_add("tide_capped", 1.0)
 		return
 	_tide_queue.append(e.position)
+	_tide_gunner.append(e.rises_as_gunner())
 
 
 # =====================================================================================
@@ -281,14 +286,12 @@ func _raise_tide() -> void:
 	var n := 0  # Raised this tick.
 	while not _tide_queue.is_empty() and n < UltimateData.TIDE_RAISES_PER_TICK:
 		var pos: Vector2 = _tide_queue.pop_front()
+		var gunner: bool = _tide_gunner.pop_front()  # Act III: a cyborg's corpse.
 		if _risen_alive() >= UltimateData.TIDE_MAX_ALIVE:
 			game.stat_add("tide_capped", 1.0)
 			continue
-		var u := game.horde.spawn_temporary(UltimateData.TIDE_RISEN_CLASS, pos, UltimateData.TIDE_RISEN_LIFE,
-				UltimateData.TIDE_RISEN_HP, UltimateData.TIDE_RISEN_DAMAGE)
-		u.dmg_source = "grave_tide_risen"
-		u.glyph_kind = "risen"
-		u.queue_redraw()
+		var u := game.horde.raise_corpse(UltimateData.TIDE_RISEN_CLASS, pos, UltimateData.TIDE_RISEN_LIFE,
+				UltimateData.TIDE_RISEN_HP, UltimateData.TIDE_RISEN_DAMAGE, "grave_tide_risen", "risen", gunner)
 		_risen.append([u, u.generation])
 		game.stat_add("tide_risen", 1.0)
 		n += 1

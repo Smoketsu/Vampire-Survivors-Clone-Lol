@@ -173,7 +173,9 @@ const MINION_EXTRA_TAGS := ["lich_risen", "death_mark_risen", "raised_dead",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"drowned_thrall_ally", "tide_host_spawn",
 	# --- Content wave 2: Ultimates --- (Grave Tide's Risen, UltimateSystem)
-	"grave_tide_risen"]
+	"grave_tide_risen",
+	# --- Act III: the Electronic Empire --- (a raised cyborg's Grave Gunner, EmpireRulesData.STEEL)
+	"grave_gunner"]
 ## Unholy Precision: the other minion damage sources that can crit: the
 ## basic warrior shield bash and the later classes' specials (and the Bone
 ## Colossus's death shrapnel). The Rogue's

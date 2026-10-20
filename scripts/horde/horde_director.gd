@@ -619,6 +619,36 @@ func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float,
 	return u
 
 
+## Raises a fallen enemy's corpse as a temporary Risen: THE one path of every
+## effect that raises a slain foe (Death Mark's Risen, the Lich's raise, Grave
+## Tide, Call of the Drowned's Thralls), always through spawn_temporary(), so
+## Restless Dead and the Grave Herald's Restless apply. It rises as class `cls`
+## at `pos` for `duration` s with `hp_mult` / `dmg_mult`, tagged `tag`
+## (SummonedUnit.dmg_source) and drawn as `glyph` (glyph_kind). Act III, Steel
+## has no soul (EmpireRulesData.STEEL): when `gunner` is true (the foe was a
+## cyborg, Enemy.rises_as_gunner()) it rises instead as a GRAVE GUNNER: the
+## ranged class STEEL.class keeping its rifle's reach (attack range x
+## STEEL.range_mult), firing for you as STEEL.tag; counted in
+## steel_gunners_raised and steel_gunners_from_<tag>. A machine never gets here
+## (Enemy.leaves_corpse() gates every caller). `gunner` is false on Acts I and
+## II, where this is exactly spawn_temporary() plus the two tags.
+func raise_corpse(cls: String, pos: Vector2, duration: float, hp_mult: float, dmg_mult: float,
+		tag: String, glyph: String, gunner: bool) -> SummonedUnit:
+	var steel := EmpireRulesData.STEEL  # Grave Gunner rules.
+	var u := spawn_temporary(String(steel["class"]) if gunner else cls, pos, duration, hp_mult, dmg_mult)
+	if gunner:
+		u.attack_range *= float(steel["range_mult"])
+		u.dmg_source = String(steel["tag"])
+		u.glyph_kind = String(steel["glyph"])
+		game.stat_add("steel_gunners_raised", 1.0)
+		game.stat_add("steel_gunners_from_" + tag, 1.0)
+	else:
+		u.dmg_source = tag
+		u.glyph_kind = glyph
+	u.queue_redraw()
+	return u
+
+
 ## Ages temporary summons and crumbles the expired ones (outside the unit
 ## loop, which must not see the array change).
 func _update_temporaries(delta: float) -> void:

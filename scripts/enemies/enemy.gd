@@ -37,6 +37,10 @@
 ## heal_stat. Every enemy can carry a holy shield (absorb, High Confessor)
 ## and a sun ward (damage resistance, Sun Paladin), both applied by
 ## CombatResolver; set_heal_override() points a healer at a chosen ally.
+## Electronic Empire kinds (EmpireEnemyData, Act III) add the optional key
+## `body` ("machine" / "cyborg": leaves_corpse(), rises_as_gunner(); Steel has
+## no soul) and fire their ranged attacks through their kit's fire_ranged()
+## hook into EmpireShots (Line of Fire) instead of ProjectileManager.
 ## Survivor convention (user brief): enemies ALWAYS advance on the player;
 ## nobody kites or holds at range. Ranged units only slow down briefly after
 ## each shot (EnemyData.SHOOT_SLOW_*).
@@ -172,6 +176,12 @@ var phases_obstacles: bool = false
 ## Act II (ArchiveEnemyData "floating"): true for a body drawn hovering (the
 ## Ink Wraith, the Librarian; visual only).
 var floating: bool = false
+# --- Act III: the Electronic Empire ---
+## Body of an Electronic Empire kind (EmpireEnemyData "body"): "machine"
+## (leaves no corpse), "cyborg" (raised, rises as a Grave Gunner) or "" for
+## every flesh-and-bone kind of Acts I and II. Read through leaves_corpse() and
+## rises_as_gunner(), the one Steel-has-no-soul gate.
+var body: String = ""
 ## Forbidden Verse inscribe mark: game time (s) until which this enemy is
 ## inscribed (it bursts into ink when it dies). Written only by the
 ## ForbiddenVerse spell node, i.e. only while someone owns the spell; timed on
@@ -368,6 +378,7 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	claimer_until = 0.0
 	phases_obstacles = bool(def.get("phases", false))
 	floating = bool(def.get("floating", false))
+	body = String(def.get("body", ""))  # Act III: machine / cyborg ("" elsewhere).
 	inscribed_until = 0.0
 	display_name = def["display_name"]
 	max_hp = float(def["max_hp"]) * hp_mult
@@ -551,13 +562,33 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 
 
 ## Sprite key of this enemy's art (the engine-motion pivot); bosses override.
-## An Ancient Eye kind's art lives in eye/ (Act II): used when it has no
-## enemies/ art (visual only; every Act I kind keeps its enemies/ key).
+## An Ancient Eye kind's art lives in eye/ (Act II) and an Electronic Empire
+## kind's in empire/ (Act III): used when it has no enemies/ art (visual only;
+## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
 	var key := "enemies/" + kind  # Covenant soldier art.
-	if not SpriteBank.has(key) and SpriteBank.has("eye/" + kind):
-		return "eye/" + kind
+	if not SpriteBank.has(key):
+		if SpriteBank.has("eye/" + kind):
+			return "eye/" + kind
+		if SpriteBank.has("empire/" + kind):
+			return "empire/" + kind
 	return key
+
+
+## Steel has no soul (Act III, EmpireRulesData.STEEL): false for a MACHINE
+## (drones, turrets, mechs) and for a structure (rubble, not a corpse); true
+## for every other foe. THE one gate of every corpse and raise path: Corpse
+## Explosion's corpses, Raise Dead's anchors, Death Mark's Risen, the Lich's
+## raise, Grave Tide and Call of the Drowned. Exactly `not is_structure` on
+## Acts I and II (no machines there).
+func leaves_corpse() -> bool:
+	return not is_structure and body != EmpireEnemyData.MACHINE
+
+
+## True for a CYBORG: raised as a temporary Risen it keeps its weapon and
+## rises as a Grave Gunner (HordeDirector.raise_corpse()). False on Acts I and II.
+func rises_as_gunner() -> bool:
+	return body == EmpireEnemyData.CYBORG
 
 
 ## Local y (px, negative = up) of an over-the-head marker's centre: just
@@ -807,7 +838,9 @@ func physics_step(delta: float) -> void:
 				attack_cd = attack_interval
 				_shoot_slow_timer = EnemyData.SHOOT_SLOW_TIME
 				motion_lunge(dir, MotionData.POWER_SHOT)
-				if _radiant:
+				if kit != null and kit.fire_ranged(self, t, dir, damage * game.enemies.damage_mult * hit_mult()):
+					pass  # Act III: an Empire kit fired through EmpireShots (Line of Fire).
+				elif _radiant:
 					game.projectiles.fire_hostile(position, dir, damage * game.enemies.damage_mult * hit_mult(), projectile_speed, undead_damage_mult,
 							Projectile.Kind.RADIANT_BOLT, kind)
 				else:

@@ -109,10 +109,11 @@ func _erupt(pos: Vector2, stats: Dictionary) -> void:
 		var gen := e.generation  # To tell a kill from a survivor.
 		var at := e.position  # Where it would rise.
 		var can_rise := _can_rise(e)  # Read before the hit pools it.
+		var gunner := e.rises_as_gunner()  # Act III: a cyborg's Thrall keeps its rifle (read before the hit too).
 		game.combat.slow_enemy(e, CallDrownedData.SLOW, CallDrownedData.SLOW_TIME)
 		game.combat.damage_enemy(e, float(stats["damage"]), src)
 		if can_rise and (not e.active or e.generation != gen):
-			_raise(at, stats, host)
+			_raise(at, stats, host, gunner)
 	game.stat_add("drowned_tendrils", 1.0)
 	_fx.append([pos, game.elapsed, r])
 	if _fx.size() > CallDrownedData.MAX_PENDING * 2:
@@ -121,15 +122,19 @@ func _erupt(pos: Vector2, stats: Dictionary) -> void:
 	Sfx.play("corpse_burst", pos, 0.7)
 
 
-## True when a foe the tendrils kill may rise as a Thrall.
+## True when a foe the tendrils kill may rise as a Thrall (never a boss,
+## miniboss, Reckoning foe, objective, structure or Act III machine:
+## Enemy.leaves_corpse(), the one Steel-has-no-soul gate).
 static func _can_rise(e: Enemy) -> bool:
-	return not (e.is_boss or e.is_miniboss or e.is_structure or e.is_reckoning or e.is_objective \
+	return not (e.is_boss or e.is_miniboss or not e.leaves_corpse() or e.is_reckoning or e.is_objective \
 			or e.kind in CallDrownedData.NEVER_RISE)
 
 
 ## A drowned foe rises at `pos` as the necromancer's Thrall (a Spawn of the
-## Deep once evolved), unless the cap is full.
-func _raise(pos: Vector2, stats: Dictionary, host: bool) -> void:
+## Deep once evolved), unless the cap is full. Act III: a cyborg's Thrall
+## (`gunner`) rises as a Grave Gunner (HordeDirector.raise_corpse()); the
+## Tidecaller's Host still raises its Spawns.
+func _raise(pos: Vector2, stats: Dictionary, host: bool, gunner: bool = false) -> void:
 	var extra := int(game.character.innate_value("thrall_cap_bonus"))  # The Tide Widow's extra Thralls (0 for the others).
 	var cap := (CallDrownedData.HOST_MAX if host else CallDrownedData.THRALL_MAX) + extra
 	if _risen.size() >= cap:
@@ -139,10 +144,9 @@ func _raise(pos: Vector2, stats: Dictionary, host: bool) -> void:
 		game.stat_add("drowned_widow_extra", 1.0)  # A Thrall only the innate allowed (autotest).
 	var hp := float(stats["thrall_hp"]) * (1.0 + game.character.innate_value("thrall_hp_bonus"))  # HP share (+ the innate).
 	var cls := CallDrownedData.HOST_CLASS if host else CallDrownedData.THRALL_CLASS
-	var u := game.horde.spawn_temporary(cls, pos, float(stats["life"]), hp, float(stats["thrall_damage"]))
-	u.dmg_source = CallDrownedData.HOST_TAG if host else CallDrownedData.THRALL_TAG
-	u.glyph_kind = CallDrownedData.HOST_GLYPH if host else CallDrownedData.THRALL_TAG
-	u.queue_redraw()
+	var u := game.horde.raise_corpse(cls, pos, float(stats["life"]), hp, float(stats["thrall_damage"]),
+			CallDrownedData.HOST_TAG if host else CallDrownedData.THRALL_TAG,
+			CallDrownedData.HOST_GLYPH if host else CallDrownedData.THRALL_TAG, gunner and not host)
 	_risen.append([u, u.generation])
 	game.stat_add("drowned_host_risen" if host else "drowned_risen", 1.0)
 	game.effects.ring(pos, 22.0, Palette.NECRO_GREEN, 0.45)

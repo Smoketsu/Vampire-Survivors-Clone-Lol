@@ -46,11 +46,18 @@
 ##     events. Each sunk buoy shrinks later scripted waves and the trickle
 ##     (HarbourDirector.wave_mult() / trickle_mult(), applied once here). Both
 ##     are null on every other stage, so Act I is unchanged.
+##   * Act III, the Electronic Empire (GDD §15.0 "Act III foundation (phase
+##     1)"): its kinds are looked up through empire_def() (EmpireEnemyData,
+##     then each Act III stage's table) and its bosses load by name from
+##     EMPIRE_BOSS_DIR. Its shared rules (Line of Fire, Lock-On, Steel has no
+##     soul, the Purge Protocol) live in EmpireRules (Game.empire), not here.
 class_name EnemyDirector
 extends Node2D
 
 ## Folder of the Ancient Eye's boss scripts ("boss_<id>.gd", each a Boss; Act II).
 const EYE_BOSS_DIR: String = "res://scripts/enemies/eye/"
+## Folder of the Electronic Empire's boss scripts ("boss_<id>.gd", each a Boss; Act III).
+const EMPIRE_BOSS_DIR: String = "res://scripts/enemies/empire/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -520,7 +527,8 @@ func _spawn_boss() -> void:
 	# The boss script: the arrival's "script" when given (an Act II stub's
 	# placeholder), else its id. Act I bosses by name; any other id is an
 	# Ancient Eye boss loaded from EYE_BOSS_DIR + "boss_<id>.gd" (each Act II
-	# stage adds its boss as a new file); Sir Alaric when none exists.
+	# stage adds its boss as a new file), else an Electronic Empire boss from
+	# EMPIRE_BOSS_DIR (Act III, the same way); Sir Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -531,6 +539,8 @@ func _spawn_boss() -> void:
 			boss = BossAlaric.new()
 		_:
 			var path := EYE_BOSS_DIR + "boss_" + sid + ".gd"  # An Ancient Eye boss script.
+			if not ResourceLoader.exists(path):
+				path = EMPIRE_BOSS_DIR + "boss_" + sid + ".gd"  # Act III: an Electronic Empire boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -605,7 +615,8 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## MarchEnemyData.ENEMIES (Crimson March soldiers and structures), then
 ## BattleSisterData.ENEMIES (the Sister of the Scourge, March and Sanctum),
 ## then the Ancient Eye's tables (Act II: EyeEnemyData, then each stage's own
-## HarbourEnemyData / ArchiveEnemyData / SpireEnemyData), then
+## HarbourEnemyData / ArchiveEnemyData / SpireEnemyData), then the
+## Electronic Empire's (Act III: empire_def()), then
 ## SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
@@ -621,6 +632,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var eye := eye_def(kind)  # Act II kinds ({} when not an Eye kind).
 	if not eye.is_empty():
 		return eye
+	var empire := empire_def(kind)  # Act III kinds ({} when not an Empire kind).
+	if not empire.is_empty():
+		return empire
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -639,12 +653,28 @@ static func eye_def(kind: String) -> Dictionary:
 	return {}
 
 
+## Design row of Electronic Empire kind `kind` (real id), or {} when it is
+## none: EmpireEnemyData (the shared kinds and the Purge Protocol's kill-drone)
+## first, then each Act III stage's own table (phase 2 fills them).
+static func empire_def(kind: String) -> Dictionary:
+	if EmpireEnemyData.ENEMIES.has(kind):
+		return EmpireEnemyData.ENEMIES[kind]
+	if WastesEnemyData.ENEMIES.has(kind):
+		return WastesEnemyData.ENEMIES[kind]
+	if AssemblyEnemyData.ENEMIES.has(kind):
+		return AssemblyEnemyData.ENEMIES[kind]
+	if CitadelEnemyData.ENEMIES.has(kind):
+		return CitadelEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
 	return EnemyData.ENEMIES.has(kind) or SanctumObjectiveData.STRUCTURES.has(kind) \
 			or MarchEnemyData.ENEMIES.has(kind) or BattleSisterData.ENEMIES.has(kind) \
-			or SanctumEnemyData.ENEMIES.has(kind) or not eye_def(kind).is_empty()
+			or SanctumEnemyData.ENEMIES.has(kind) or not eye_def(kind).is_empty() \
+			or not empire_def(kind).is_empty()
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar

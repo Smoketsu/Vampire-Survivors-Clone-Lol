@@ -217,6 +217,15 @@ RIGS = {
     # over its leg's top, so the fist is a rigid box down to the foot, then a narrower box beside it.
     "summons/bone_golem": dict(mode="legs", hip=60, back=(0, 43), front=(43, 84), rigid=[(0, 29, 60, 71), (0, 23, 71, None), (61, 84, 60, 70)], spread=2, lift=2, dip=1),
     "summons/ossuary_titan": dict(mode="legs", hip=80, back=(0, 58), front=(58, 108), rigid=[(0, 34, 80, 93), (0, 28, 93, None), (86, 108, 80, None)], spread=2, lift=2, dip=1),
+    # --- Act III: the Electronic Empire (the shared kinds) ---
+    # The Line Trooper marches (its levelled rifle ends above the hip, so it rides with the
+    # body); the Spotter walks under its long coat (the hem ends above the hip, only the
+    # chrome legs step); the Scout Drone hovers: a glide whose body bobs 1 px over its
+    # zapper prongs (the hem layer). The Grave Gunner is the Trooper recoloured: same rig.
+    "empire/line_trooper": dict(mode="legs", hip=27, back=(0, 23), front=(23, 48), rigid=[], spread=2, lift=2, dip=1),
+    "empire/spotter": dict(mode="legs", hip=41, back=(0, 28), front=(28, 62), rigid=[], spread=2, lift=2, dip=1),
+    "empire/scout_drone": dict(mode="robe", hip=24, rigid=[], sway=1, dip=1),
+    "summons/grave_gunner": dict(mode="legs", hip=27, back=(0, 23), front=(23, 48), rigid=[], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

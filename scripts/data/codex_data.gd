@@ -32,7 +32,8 @@ const CATEGORIES: Array[String] = [SPELL, SUMMON, ENEMY, BOSS]
 
 ## Screen tabs, left to right: [tab id, button text]. "feats" is the
 ## achievements list; the others are codex pages.
-const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons", "Summons"], ["covenant", "Covenant"], ["eye", "Ancient Eye"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab
+const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons", "Summons"], ["covenant", "Covenant"], ["eye", "Ancient Eye"],
+		["empire", "Empire"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -88,12 +89,24 @@ const EYE_BOSSES: Array[String] = [
 	"vhalneth",
 ]
 
+## Act III, the Electronic Empire (GDD §15.0 "Act III foundation (phase 1)";
+## the Empire tab): its soldiers in the order the stages bring them, its
+## champions (minibosses and the Purge Protocol's kill-drone) and its stage
+## bosses (StageRegistry.BOSS_ARRIVALS ids). Each Act III stage adds its own as
+## it is built (phase 2).
+const EMPIRE_SOLDIERS: Array[String] = ["scout_drone", "line_trooper", "spotter"]
+## Electronic Empire champions (minibosses) and the Act III Reckoning kinds.
+const EMPIRE_CHAMPIONS: Array[String] = ["kill_drone"]
+## Electronic Empire stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const EMPIRE_BOSSES: Array[String] = ["kestrel", "motherboard", "deus_ex_machina"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
 	"summons": [["summons", "Summons"], ["summon_evolutions", "Evolutions"]],  # TUNING (not in GDD)
 	"covenant": [["soldiers", "Soldiers"], ["structures", "Structures"], ["champions", "Champions"], ["bosses", "Bosses"]],  # TUNING (not in GDD)
 	"eye": [["eye_soldiers", "Soldiers"], ["eye_champions", "Champions"], ["eye_bosses", "Bosses"]],  # TUNING (not in GDD) Act II
+	"empire": [["empire_soldiers", "Soldiers"], ["empire_champions", "Champions"], ["empire_bosses", "Bosses"]],  # TUNING (not in GDD) Act III
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -149,6 +162,14 @@ const DESCRIPTIONS: Dictionary = {
 	"eye_hierophant": "An elite of the Eye whose Ascension turns it into a Spawn of the Deep.",  # GDD §15.0 Hierophant
 	"eye_waking_horror": "The god's last surge when the countdown ends: the Waking.",  # GDD §15.0 the Waking
 	"vhalneth": "The Dreaming Mother, dead god of the Eye. Raise her.",  # GDD §15.0 final boss
+	# --- Act III: the Electronic Empire ---
+	"scout_drone": "Swarms of fast chrome drones that fly over everything and zap what is close.",  # GDD §15.0 Act III foundation
+	"line_trooper": "Rebuilt riflemen who march at you firing bursts; your dead are their cover.",  # GDD §15.0 Act III foundation (Line of Fire)
+	"spotter": "Marksmen who paint a red line on their target, then fire a rail shot down it.",  # GDD §15.0 Act III foundation (Lock-On)
+	"kill_drone": "The Purge Protocol's drones, sent from every edge once the countdown ends.",  # GDD §15.0 Act III foundation (Purge Protocol)
+	"kestrel": "The Dead Pixel, hunter of the Scrap Wastes.",  # Owner-approved Act III proposal
+	"motherboard": "The mind that runs every machine of the Assembly Halls at once.",  # Owner-approved Act III proposal
+	"deus_ex_machina": "The god the Empire built, with Varn, the Root User, at its controls.",  # Owner-approved Act III proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -191,6 +212,9 @@ const LOCKED_HINT: Dictionary = {
 	"eye_soldiers": "Slay one to record it.",  # TUNING (not in GDD)
 	"eye_champions": "Slay one to record it.",  # TUNING (not in GDD)
 	"eye_bosses": "Face it to record it.",  # TUNING (not in GDD)
+	"empire_soldiers": "Destroy one to record it.",  # TUNING (not in GDD)
+	"empire_champions": "Destroy one to record it.",  # TUNING (not in GDD)
+	"empire_bosses": "Face it to record it.",  # TUNING (not in GDD)
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -210,6 +234,9 @@ const TAGS: Dictionary = {
 	"eye_soldiers": "Ancient Eye",  # TUNING (not in GDD)
 	"eye_champions": "Champion of the Eye",  # TUNING (not in GDD)
 	"eye_bosses": "Stage boss",  # TUNING (not in GDD)
+	"empire_soldiers": "Electronic Empire",  # TUNING (not in GDD)
+	"empire_champions": "Champion of the Empire",  # TUNING (not in GDD)
+	"empire_bosses": "Stage boss",  # TUNING (not in GDD)
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -356,9 +383,10 @@ static func is_known(cat: String, id: String) -> bool:
 			return SUMMON_ORDER.has(id)
 		ENEMY:
 			return SOLDIERS.has(id) or STRUCTURES.has(id) or CHAMPIONS.has(id) \
-					or EYE_SOLDIERS.has(id) or EYE_CHAMPIONS.has(id)
+					or EYE_SOLDIERS.has(id) or EYE_CHAMPIONS.has(id) \
+					or EMPIRE_SOLDIERS.has(id) or EMPIRE_CHAMPIONS.has(id)
 		BOSS:
-			return BOSSES.has(id) or EYE_BOSSES.has(id)
+			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id)
 	return false
 
 
@@ -370,9 +398,10 @@ static func total(cat: String) -> int:
 		SUMMON:
 			return SUMMON_ORDER.size()
 		ENEMY:
-			return SOLDIERS.size() + STRUCTURES.size() + CHAMPIONS.size() + EYE_SOLDIERS.size() + EYE_CHAMPIONS.size()
+			return SOLDIERS.size() + STRUCTURES.size() + CHAMPIONS.size() + EYE_SOLDIERS.size() + EYE_CHAMPIONS.size() \
+					+ EMPIRE_SOLDIERS.size() + EMPIRE_CHAMPIONS.size()
 		BOSS:
-			return BOSSES.size() + EYE_BOSSES.size()
+			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size()
 	return 0
 
 
@@ -387,6 +416,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var eye := EnemyDirector.eye_def(id)  # Act II kinds ({} when none).
 	if not eye.is_empty():
 		return eye
+	var empire := EnemyDirector.empire_def(id)  # Act III kinds ({} when none).
+	if not empire.is_empty():
+		return empire
 	match id:
 		"alaric":
 			return EnemyData.BOSS

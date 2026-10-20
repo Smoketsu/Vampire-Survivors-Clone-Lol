@@ -405,6 +405,99 @@ const TIDE_SCORE := {
 		"partials": [[1.0, 0.30], [2.76, 0.16], [5.4, 0.08], [0.5, 0.18]]},  # TUNING (not in GDD)
 }
 
+## "Iron Requiem", the Act III run loop (GDD §15.0 "Act III foundation (phase
+## 1)", owner-approved proposal: "a pulsing low synth, metallic hits and a cold
+## arpeggio"): the RunLoopSynth score of every stage whose STAGE has "music":
+## "iron" (keys in RunLoopSynth's header). A buzzy E drone under a cold minor
+## pad, an eighth-note bass pulse instead of the heartbeat, a struck-metal
+## clang on the off-beats and a square-wave arpeggio over each chord. Rendered
+## lazily (Sfx), never under the autotest. 120 bpm: 24 beats per 12 s loop.
+const IRON_SCORE := {
+	"loop_seconds": 12.0,  # TUNING (not in GDD) 24 beats at 120 bpm
+	"root_hz": 41.2,  # TUNING (not in GDD) E1: lower and colder than Act I's D2
+	# Em -> C -> Am -> B (E minor with the hard major dominant), voiced low.
+	"chords": [
+		[164.81, 196.0, 246.94],
+		[130.81, 164.81, 196.0],
+		[110.0, 130.81, 164.81],
+		[123.47, 155.56, 185.0],
+	],  # TUNING (not in GDD)
+	"drone_lp_hz": 90.0,  # TUNING (not in GDD) buzzier than Act I's 60 (machines hum)
+	"wind_lp_hz": 70.0,  # TUNING (not in GDD) a low factory rumble instead of wind
+	"wind_swells": 6.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.5,  # TUNING (not in GDD)
+	"vibrato_depth": 0.0015,  # TUNING (not in GDD) nearly none: machines do not waver
+	# The pulsing low synth: a filtered saw on every eighth (replaces the heartbeat).
+	"pulse": {"step": 0.25, "hz": 82.41, "dur": 0.2, "amp": 0.2, "decay": 0.07, "lp0": 700.0, "lp1": 160.0,
+		"accent_every": 4, "accent_amp": 0.32},  # TUNING (not in GDD) E2, the beat accented
+	# Metallic hits: an inharmonic clang (struck steel) on the off-beats, every 1 s.
+	"hits": {"every": 1.0, "offset": 0.5, "root_hz": 610.0, "dur": 0.42, "decay": 0.09,
+		"partials": [[1.0, 0.16], [2.31, 0.1], [3.87, 0.07], [5.43, 0.05]], "click": 0.12},  # TUNING (not in GDD)
+	# The cold arpeggio: square-wave notes up each chord's tones, one per eighth.
+	"arp": {"step": 0.25, "dur": 0.18, "amp": 0.06, "decay": 0.06, "lp0": 2600.0, "wave": "square",
+		"chords": [
+			[329.63, 392.0, 493.88, 659.26],
+			[261.63, 329.63, 392.0, 523.25],
+			[220.0, 261.63, 329.63, 440.0],
+			[246.94, 311.13, 369.99, 493.88],
+		]},  # TUNING (not in GDD) two octaves over the pad
+}
+
+## Run-loop scores by STAGE "music" id (Sfx.play_music() modes; "" / absent =
+## the Act I loop): "tide" = "Below the Tide" (Act II), "iron" = "Iron Requiem"
+## (Act III). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
+const SCORES := {
+	"tide": TIDE_SCORE,
+	"iron": IRON_SCORE,
+}
+## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
+## "empire" = EMPIRE_SOUNDS, the Act III effects); absent = none.
+const SCORE_PACKS := {
+	"iron": "empire",
+}
+
+## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
+## OUT of SOUNDS so the startup bank, its order and its per-sound synth seeds
+## stay exactly as before: Sfx renders this pack lazily the first time an Act
+## III run's music is asked for (Sfx.prepare_pack(); seeds Sfx.PACK_SEED + i).
+const EMPIRE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# Line Trooper three-round burst: three dry cracks with a metal tail.
+	"rifle_burst": {"dur": 0.34, "volume_db": -19.0, "max_voices": 3, "min_interval": 90, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.05, "amp": 0.5, "decay": 0.012, "lp0": 5000.0, "lp1": 1800.0},
+			{"wave": "noise", "start": 0.12, "dur": 0.05, "amp": 0.45, "decay": 0.012, "lp0": 5000.0, "lp1": 1800.0},
+			{"wave": "noise", "start": 0.24, "dur": 0.05, "amp": 0.42, "decay": 0.012, "lp0": 5000.0, "lp1": 1800.0},
+			{"wave": "square", "f0": 180.0, "f1": 90.0, "dur": 0.3, "amp": 0.12, "decay": 0.06, "lp0": 1200.0}]},
+	# Drone zap: a short electric buzz.
+	"drone_zap": {"dur": 0.12, "volume_db": -22.0, "max_voices": 2, "min_interval": 70, "pitch_var": 0.12, "priority": 0,
+		"layers": [
+			{"wave": "square", "f0": 1400.0, "f1": 700.0, "dur": 0.1, "amp": 0.22, "decay": 0.03, "lp0": 4000.0},
+			{"wave": "noise", "dur": 0.06, "amp": 0.2, "decay": 0.015, "lp0": 6000.0}]},
+	# Lock-On paint: a rising two-tone targeting beep.
+	"lock_on": {"dur": 0.34, "volume_db": -14.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "square", "f0": 1318.5, "dur": 0.09, "amp": 0.2, "decay": 0.05, "lp0": 5000.0},
+			{"wave": "square", "f0": 1760.0, "start": 0.16, "dur": 0.12, "amp": 0.2, "decay": 0.06, "lp0": 5000.0}]},
+	# Rail shot: a hard electric crack and a falling magnetic whine.
+	"rail_shot": {"dur": 0.5, "volume_db": -12.0, "max_voices": 2, "min_interval": 120, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.6, "decay": 0.02, "lp0": 9000.0, "lp1": 3000.0},
+			{"wave": "saw", "f0": 2400.0, "f1": 300.0, "dur": 0.45, "amp": 0.25, "decay": 0.14, "lp0": 6000.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 90.0, "f1": 50.0, "dur": 0.3, "amp": 0.4, "decay": 0.1}]},
+	# Servo step (phase 2's walkers and mechs): a short hydraulic whirr and clank.
+	"servo_step": {"dur": 0.22, "volume_db": -21.0, "max_voices": 2, "min_interval": 140, "pitch_var": 0.1, "priority": 0,
+		"layers": [
+			{"wave": "saw", "f0": 260.0, "f1": 420.0, "dur": 0.12, "amp": 0.18, "decay": 0.05, "lp0": 1500.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.08, "amp": 0.3, "decay": 0.02, "lp0": 2500.0, "lp1": 800.0},
+			{"wave": "sine", "f0": 110.0, "f1": 70.0, "start": 0.1, "dur": 0.12, "amp": 0.3, "decay": 0.04}]},
+	# Orbital strike (Purge Protocol): a descending shriek and a heavy boom.
+	"orbital_strike": {"dur": 0.9, "volume_db": -10.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.85, "amp": 0.6, "attack": 0.005, "decay": 0.25, "lp0": 4000.0, "lp1": 120.0},
+			{"wave": "sine", "f0": 70.0, "f1": 30.0, "dur": 0.8, "amp": 0.7, "decay": 0.3},
+			{"wave": "square", "f0": 900.0, "f1": 120.0, "dur": 0.3, "amp": 0.12, "decay": 0.1, "lp0": 2000.0}]},
+}
+
 ## Web build (no worker threads, GDD §15.0 "Web build"): main-thread time
 ## budget (ms per frame) for rendering the sound bank and the in-run loop in
 ## small steps (StartupSynth), so the page never freezes while they render.

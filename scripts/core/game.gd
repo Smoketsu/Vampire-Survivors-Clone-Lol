@@ -54,6 +54,10 @@
 ## of `stats` so the autotest summary lines stay as they were. The card's Next
 ## button raises next_stage_requested for Main. A --victory-preview debug run
 ## (VictoryPreview) ends as a scripted victory after a few seconds.
+## Act III (GDD §15.0 "Act III foundation (phase 1)"): `empire` (EmpireRules)
+## runs the Electronic Empire's shared rules (Line of Fire, Lock-On, Steel has
+## no soul, the Purge Protocol), stepped right after the projectiles; null on
+## Acts I and II unless an Empire kind forced there asks for it (empire_rules()).
 class_name Game
 extends Node2D
 
@@ -186,6 +190,10 @@ var dread: DreadMeter = null
 ## Act II Claims, the Ancient Eye stealing the fallen (EyeClaims; null unless
 ## the stage's STAGE has "claims": true).
 var claims: EyeClaims = null
+## Act III, the Electronic Empire's shared rules (EmpireRules; null unless the
+## stage's STAGE has "empire": true, or an Empire kind spawned on another stage
+## asked for it through empire_rules(); Acts I and II never create it).
+var empire: EmpireRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -251,6 +259,10 @@ func _ready() -> void:
 			ground = ArchiveGround.new()  # Act II, the Hollow Archive.
 		"spire":
 			ground = SpireGround.new()  # Act II: Ul-Thalos, the Risen Spire.
+		"empire":
+			var eg := EmpireGround.new()  # Act III placeholder floor (the STAGE's "floor").
+			eg.look = stage_def.get("floor", {})
+			ground = eg
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -321,6 +333,8 @@ func _ready() -> void:
 	add_child(chest_beacon)
 	if not ultimates.is_default():
 		add_child(UltimateOverlay.new(self))  # The new ultimates' screen overlays (visual only).
+	if bool(stage_def.get("empire", false)):
+		empire_rules()  # Act III: the Electronic Empire's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -448,6 +462,8 @@ func _physics_process(delta: float) -> void:
 	arena.resolve_all(delta)
 	abilities.spells.after_physics(delta)  # Bone Wall holds enemies on their final positions.
 	projectiles.step(delta)
+	if empire != null:
+		empire.step(delta)  # Act III: Empire shots, Lock-On lines, the Purge Protocol.
 	volleys.step(delta)  # Bullet heaven pass (no-op when off).
 	pickups.step(delta)
 	powerups.step(delta)
@@ -470,6 +486,16 @@ func _process(_delta: float) -> void:
 	camera.position = player.position
 	camera.offset = Juice.camera_offset()
 	ground.update_view(player.position)
+
+
+## The Electronic Empire's shared rules (Act III), created on first use: at
+## the start of an Act III run, or when an Empire kind forced onto another
+## stage fires its first shot (so its shots and Lock-On still work there).
+func empire_rules() -> EmpireRules:
+	if empire == null:
+		empire = EmpireRules.new(self)
+		add_child(empire)
+	return empire
 
 
 ## Re-inserts every living enemy and summon into the spatial hashes.

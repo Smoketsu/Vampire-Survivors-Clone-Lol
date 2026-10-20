@@ -152,9 +152,12 @@ const STAGE_LINES: Dictionary = {
 	"harbour": "Follow your stolen dead to the drowning town.",  # TUNING (not in GDD) Act II
 	"archive": "Learn where the god sleeps.",  # TUNING (not in GDD) Act II
 	"spire": "The god is dead. Raise her.",  # TUNING (not in GDD) Act II
+	"wastes": "Your beacons drew the Empire. Meet it.",  # TUNING (not in GDD) Act III
+	"assembly": "Break the line that rebuilds the dead.",  # TUNING (not in GDD) Act III
+	"citadel": "Death was conquered with steel. Take it back.",  # TUNING (not in GDD) Act III
 }
 
-## Size (px) of an act tab button on the stage select (Act I / Act II).
+## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
 const ACT_TAB_SIZE: Vector2 = Vector2(300.0, 40.0)  # TUNING (not in GDD)
 ## Lock line of a registered stage that is not yet playable (StageRegistry "playable").
 const COMING_SOON: String = "Coming soon"  # TUNING (not in GDD)
