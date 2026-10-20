@@ -87,7 +87,10 @@ async function waitLog(page, re, ms = STEP_MS) {
 async function boot(page, query) {
   await page.goto(`http://127.0.0.1:${WEB_PORT}/index.html${query}`);
   await page.waitForSelector("#status-play", { state: "visible", timeout: STEP_MS });
-  await page.click("#status-play");
+  // The page's main thread can be busy for a long while (the engine's WebAssembly compiling while the other
+  // page's game runs on the same CPU), so the click gets the whole step budget; noWaitAfter: the gate's
+  // fullscreen / orientation-lock requests can leave a "navigation" pending on the phone.
+  await page.click("#status-play", { noWaitAfter: true, timeout: STEP_MS });
   await waitLog(page, /\[audio\]/);
   await sleep(2500); // The title screen's entrance.
 }
