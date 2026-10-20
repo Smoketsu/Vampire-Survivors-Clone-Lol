@@ -1,0 +1,12 @@
+{
+  "name": "necropathy-relay",
+  "private": true,
+  "description": "Necropathy co-op relay: a Cloudflare Worker with one Durable Object per lobby (see PROTOCOL.md).",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^3.114.0"
+  }
+}

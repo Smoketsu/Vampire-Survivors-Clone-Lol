@@ -19,3 +19,7 @@ Thumbs.db
 
 # Python bytecode (tools/)
 __pycache__/
+
+# Co-op relay (server/relay): the local npm install and wrangler state, never committed
+node_modules/
+.wrangler/
