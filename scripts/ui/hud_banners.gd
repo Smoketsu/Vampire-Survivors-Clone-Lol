@@ -97,6 +97,14 @@ func push_announce(title: String, item_name: String, desc: String, color: Color)
 		"color": UiTheme.TEXT_GOLD if gold else color.lightened(0.25), "hold": InRunUiData.ANNOUNCE_HOLD})
 
 
+## Queues a notice (co-op, CoopUi.notice()): kicker `kicker`, headline
+## `headline`, sub-line `sub`, on the `accent` ribbon ("violet" or
+## "crimson"; the headline in that accent's text colour), held `hold` game s.
+func push_notice(kicker: String, headline: String, sub: String, accent: String, hold: float) -> void:
+	_enqueue({"kicker": kicker, "headline": headline, "sub": sub, "accent": accent,
+		"color": UiTheme.HEADER_TEXT.get(accent, UiTheme.TEXT), "hold": hold})
+
+
 ## Queues an event banner `text` for `hold` game seconds (crimson unless
 ## it is good news for the player).
 func push_event(text: String, hold: float) -> void:

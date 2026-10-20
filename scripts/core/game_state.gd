@@ -126,6 +126,15 @@
 ##   --policy2=NAME        --coop-bot: slot 1's card policy (default army).
 ##   --coop-down=T         --coop-bot test: slot 1's necromancer is knocked down at
 ##                         T game seconds (the partner's bot walks over and revives him).
+##   --coop-down-slot=N    --coop-down test: knock slot N down instead (0 = the
+##                         viewed slot: its own "Downed" plate shows).
+##   --coop-ui-test        --coop-bot debug: walks every co-op visual state (partner
+##                         plate, edge arrow, waiting panel texts, a notice, the
+##                         downed marker) and prints a line per state (CoopUiTest).
+##   --coop-shots=victory|defeat  The same walk for screenshots: holds the world at
+##                         each state ("[coop-shot] NAME"), then ends the run with
+##                         that result for the results card (CoopUiTest).
+##   --shot-dir=DIR        --coop-shots in a native window: saves DIR/coop_NAME.png.
 ##   --character2=ID       --coop-bot: slot 1's character (default gravecaller).
 ##   --classes2=a,b        --coop-bot: slot 1's forced summon classes.
 ##   --spells2=a,b         --coop-bot: slot 1's forced spells (+ evolution passives).
@@ -224,6 +233,17 @@ var autotest_spells2: PackedStringArray = PackedStringArray()
 ## Autotest (--coop-bot): game second at which --coop-down=T knocks slot 1's
 ## necromancer down once (a test of the downed / revive rule; -1 = never).
 var autotest_coop_down: float = -1.0
+## Autotest (--coop-down-slot=N): the slot --coop-down knocks down (-1 = the
+## last slot, the default; 0 = the viewed slot).
+var autotest_coop_down_slot: int = -1
+## Debug (--coop-ui-test): walk every co-op visual state during the run (CoopUiTest).
+var autotest_coop_ui_test: bool = false
+## Debug (--coop-shots=victory|defeat): the screenshot walk, ending the run with
+## that result ("" = off; CoopUiTest).
+var autotest_coop_shots: String = ""
+## Debug (--shot-dir=DIR): where a native window's --coop-shots saves its PNGs
+## ("" = nowhere; the Web build's page takes them).
+var autotest_shot_dir: String = ""
 ## Autotest: true when --perf prints the per-tick timing table (PerfProbe).
 var autotest_perf: bool = false
 ## Autotest: "reduced" when --effects=reduced draws with Effects = Reduced
@@ -303,6 +323,14 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_perf_real = arg.get_slice("=", 1)  # Real-time windows (game seconds).
 		elif arg.begins_with("--coop-down="):
 			autotest_coop_down = arg.get_slice("=", 1).to_float()  # Test: slot 1 downed at T s.
+		elif arg.begins_with("--coop-down-slot="):
+			autotest_coop_down_slot = arg.get_slice("=", 1).to_int()  # Test: that slot instead.
+		elif arg == "--coop-ui-test":
+			autotest_coop_ui_test = true  # Debug: walk the co-op visual states (CoopUiTest).
+		elif arg.begins_with("--coop-shots="):
+			autotest_coop_shots = arg.get_slice("=", 1).to_lower()  # Debug: the screenshot walk.
+		elif arg.begins_with("--shot-dir="):
+			autotest_shot_dir = arg.substr("--shot-dir=".length()).strip_edges()  # Whole rest (a path).
 		elif arg.begins_with("--policy2="):
 			autotest_policy2 = arg.get_slice("=", 1)
 		elif arg.begins_with("--character2="):
