@@ -570,6 +570,8 @@ func _physics_process(delta: float) -> void:
 		_physics_coop(delta)
 		return
 	var t0 := Time.get_ticks_usec()
+	var pf := perf  # --perf: section laps (reads the clock only; null otherwise).
+	var tl := t0  # Start of the current section (usec).
 	elapsed += delta
 	_rebuild_grids()
 	player.step(delta)
@@ -582,17 +584,29 @@ func _physics_process(delta: float) -> void:
 	innates.step(delta)
 	horde.step(delta)
 	peak_army = maxi(peak_army, horde.units.size())  # Victory card highlight (read only).
+	if pf != null:
+		tl = pf.lap(PerfProbe.SEC_ARMY, tl)
 	enemies.step(delta)
+	if pf != null:
+		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
 	abilities.spells.after_physics(delta)  # Bone Wall holds enemies on their final positions.
+	if pf != null:
+		tl = pf.lap(PerfProbe.SEC_OBSTACLES, tl)
 	projectiles.step(delta)
 	if empire != null:
 		empire.step(delta)  # Act III: Empire shots, Lock-On lines, the Purge Protocol.
+	if pf != null:
+		tl = pf.lap(PerfProbe.SEC_PROJECTILES, tl)
 	volleys.step(delta)  # Bullet heaven pass (no-op when off).
+	if pf != null:
+		tl = pf.lap(PerfProbe.SEC_VOLLEYS, tl)
 	pickups.step(delta)
 	powerups.step(delta)
 	chests.step(delta)
 	effects.step(delta)
+	if pf != null:
+		pf.lap(PerfProbe.SEC_PICKUPS, tl)
 	last_step_usec = Time.get_ticks_usec() - t0
 	worst_step_usec = maxi(worst_step_usec, last_step_usec)
 	_step_usec_total += last_step_usec

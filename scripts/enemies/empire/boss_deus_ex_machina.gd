@@ -112,6 +112,9 @@ var _lance_len: float = 0.0
 var _lance_tick: float = 0.0
 ## True once the current lance struck the necromancer.
 var _lance_hit_player: bool = false
+## Co-op: the other necromancers this lance already hit (Necromancer -> true;
+## the first in Game.all_players keeps the flag).
+var _lance_hit_more: Dictionary = {}
 ## Seconds until the hangar doors open again.
 var _hangar_cd: float = 0.0
 ## Seconds until the next overload pulse (Founder).
@@ -506,6 +509,7 @@ func _siege(delta: float) -> void:
 				act_time = 0.0
 				_lance_tick = 0.0
 				_lance_hit_player = false
+				_lance_hit_more.clear()
 				Sfx.play("lance_fire", position)
 			return
 		Act.LANCE:
@@ -628,14 +632,19 @@ func _lance_step(delta: float) -> void:
 		_lance_tick = float(boss_def["lance_tick"])
 		game.combat.damage_unit(blocker, float(boss_def["lance_damage_summon"]) * mult, "deus_lance")
 		game.stat_add("deus_lance_blocked_ticks", 1.0)
-	var pl := game.player
-	if not _lance_hit_player:
-		var rel_p := pl.position - position
-		var along_p := rel_p.dot(dir)
-		if along_p >= 0.0 and along_p <= _lance_len and absf(rel_p.cross(dir)) <= half_w + pl.radius:
-			_lance_hit_player = true
-			game.combat.damage_player(float(boss_def["lance_damage_player"]) * mult, "deus_lance")
-			game.stat_add("deus_lance_player_hits", 1.0)
+	for k in game.all_players.size():  # (Co-op: every necromancer on the lance, once.)
+		var pl := game.all_players[k]
+		var done := _lance_hit_player if k == 0 else _lance_hit_more.has(pl)  # Already hit by this lance.
+		if not done:
+			var rel_p := pl.position - position
+			var along_p := rel_p.dot(dir)
+			if along_p >= 0.0 and along_p <= _lance_len and absf(rel_p.cross(dir)) <= half_w + pl.radius:
+				if k == 0:
+					_lance_hit_player = true
+				else:
+					_lance_hit_more[pl] = true
+				game.combat.damage_player(float(boss_def["lance_damage_player"]) * mult, "deus_lance", pl)
+				game.stat_add("deus_lance_player_hits", 1.0)
 
 
 ## World positions of the two hangar doors (either side of the core).
@@ -650,7 +659,7 @@ func _open_hangars() -> void:
 	for door in _doors():
 		for grp: Dictionary in boss_def["hangar_groups"]:
 			for _k in int(grp["count"]):
-				if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+				if game.enemies.regular_alive() >= game.enemies.hard_cap():
 					break
 				game.enemies.spawn_at(String(grp["kind"]), door + Vector2(randf_range(-14.0, 14.0), randf_range(6.0, 22.0)), bool(grp["elite"]))
 				spawned += 1

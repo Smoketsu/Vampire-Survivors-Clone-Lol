@@ -23,6 +23,23 @@ const BUDGET_MS: float = 16.7  # 60 fps frame budget (TUNING (not in GDD) measur
 const MOMENTS: Array[String] = ["boss", "reckoning", "barrage", "barrage2", "late"]
 ## Game time (s) from which a tick counts as "late" (until 0:00).
 const LATE_FROM: float = 900.0  # TUNING (not in GDD) measurement only
+## Tick sections (lap() names), in tick order: grids + necromancers + rally /
+## ultimate + spells + innate + armies; enemies (with the stage directors);
+## obstacles (push-out + Bone Wall hold); projectiles (+ the Empire's shots);
+## volleys; pickups, power-ups, chests, effects (co-op: + downed / revive).
+const SEC_ARMY: String = "army+spells"
+## See SEC_ARMY.
+const SEC_ENEMIES: String = "enemies"
+## See SEC_ARMY.
+const SEC_OBSTACLES: String = "obstacles"
+## See SEC_ARMY.
+const SEC_PROJECTILES: String = "projectiles"
+## See SEC_ARMY.
+const SEC_VOLLEYS: String = "volleys"
+## See SEC_ARMY.
+const SEC_PICKUPS: String = "pickups+fx"
+## The sections in print order.
+const SECTIONS: Array[String] = [SEC_ARMY, SEC_ENEMIES, SEC_OBSTACLES, SEC_PROJECTILES, SEC_VOLLEYS, SEC_PICKUPS]
 
 ## Owning run.
 var game: Game
@@ -53,6 +70,10 @@ var peak_shots: int = 0
 var peak_shots_one: int = 0
 ## Volleys thinned by the shot cap at the end (every army together).
 var capped: int = 0
+## Section name -> total usec spent in it over the run (lap()).
+var _sec_total: Dictionary = {}
+## Section name -> total usec in it during "late" ticks (15:00 to 0:00).
+var _sec_late: Dictionary = {}
 
 
 func _init(p_game: Game) -> void:
@@ -91,6 +112,16 @@ func record(usec: int) -> void:
 		(_moments[id] as Array).append(usec)
 		_add_row(_moment_counts[id] as Array, enemies, summons, shots)
 	_update_window()
+
+
+## Ends tick section `name` that began at `t0` (Time.get_ticks_usec()); returns
+## now, the start of the next section.
+func lap(name: String, t0: int) -> int:
+	var now := Time.get_ticks_usec()
+	_sec_total[name] = int(_sec_total.get(name, 0)) + (now - t0)
+	if game.elapsed >= LATE_FROM and game.elapsed < WaveData.RUN_DURATION:
+		_sec_late[name] = int(_sec_late.get(name, 0)) + (now - t0)
+	return now
 
 
 ## One rendered frame (Game._process()): files the real time since the last one.
@@ -209,6 +240,15 @@ func print_table() -> void:
 			continue
 		print("[perf] moment %s | %d ticks | %s | enemies %.0f, summons %.0f, shots %.0f" % [id, c[0], stats_line(PackedInt32Array(_moments[id])),
 			float(c[1]) / float(c[0]), float(c[2]) / float(c[0]), float(c[3]) / float(c[0])])
+	var ticks := maxi(1, all.size())  # Ticks recorded.
+	var late_n := 0  # Ticks in the late window.
+	for m in range(int(LATE_FROM / 60.0), mini(_minutes.size(), int(WaveData.RUN_DURATION / 60.0))):
+		late_n += _minutes[m].size()
+	var parts := PackedStringArray()  # "section mean ms (late mean ms)".
+	for sec: String in SECTIONS:
+		parts.append("%s %.2f (late %.2f)" % [sec, float(_sec_total.get(sec, 0)) / float(ticks) / 1000.0,
+			float(_sec_late.get(sec, 0)) / float(maxi(1, late_n)) / 1000.0])
+	print("[perf] sections (mean ms per tick, whole run / 15:00-0:00): %s" % " | ".join(parts))
 	print("[perf] volley shots: peak all armies %d, peak one army %d (cap %d per army) | volleys thinned by the cap %d" % [
 		peak_shots, peak_shots_one, VolleyData.SHOT_CAP, capped])
 	if not _frames.is_empty():

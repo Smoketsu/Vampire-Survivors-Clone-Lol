@@ -124,6 +124,8 @@
 ##                         slot 0. The summary adds a line per slot and a "coop"
 ##                         line (CoopSession.print_report()).
 ##   --policy2=NAME        --coop-bot: slot 1's card policy (default army).
+##   --coop-down=T         --coop-bot test: slot 1's necromancer is knocked down at
+##                         T game seconds (the partner's bot walks over and revives him).
 ##   --character2=ID       --coop-bot: slot 1's character (default gravecaller).
 ##   --classes2=a,b        --coop-bot: slot 1's forced summon classes.
 ##   --spells2=a,b         --coop-bot: slot 1's forced spells (+ evolution passives).
@@ -219,6 +221,9 @@ var autotest_character2: String = CharacterData.DEFAULT_ID
 var autotest_classes2: PackedStringArray = PackedStringArray()
 ## Autotest (--coop-bot): spells forced for slot 1 (--spells2=a,b).
 var autotest_spells2: PackedStringArray = PackedStringArray()
+## Autotest (--coop-bot): game second at which --coop-down=T knocks slot 1's
+## necromancer down once (a test of the downed / revive rule; -1 = never).
+var autotest_coop_down: float = -1.0
 ## Autotest: true when --perf prints the per-tick timing table (PerfProbe).
 var autotest_perf: bool = false
 ## Autotest: "reduced" when --effects=reduced draws with Effects = Reduced
@@ -296,6 +301,8 @@ func _parse_args(args: PackedStringArray) -> void:
 		elif arg.begins_with("--perf-real="):
 			autotest_perf = true
 			autotest_perf_real = arg.get_slice("=", 1)  # Real-time windows (game seconds).
+		elif arg.begins_with("--coop-down="):
+			autotest_coop_down = arg.get_slice("=", 1).to_float()  # Test: slot 1 downed at T s.
 		elif arg.begins_with("--policy2="):
 			autotest_policy2 = arg.get_slice("=", 1)
 		elif arg.begins_with("--character2="):

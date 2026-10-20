@@ -67,6 +67,8 @@ var wipe_time: float = -1.0
 var level_rounds: int = 0
 ## Most enemies alive at once.
 var peak_enemies: int = 0
+## True once the --coop-down test knocked slot 1 down.
+var _test_down_done: bool = false
 
 
 ## Builds the session for loadouts `loadouts` (one Dictionary per slot, see
@@ -362,6 +364,8 @@ func stasis_freezes(e: Enemy) -> bool:
 
 ## One simulation tick of a co-op run, in a fixed order (see the header).
 func step(delta: float) -> void:
+	var pf := game.perf  # --perf: section laps (reads the clock only; null otherwise).
+	var tl := Time.get_ticks_usec() if pf != null else 0  # Start of the current section (usec).
 	game.elapsed += delta
 	_rebuild_grids()
 	var army := 0  # Summons alive across both armies (victory card).
@@ -381,23 +385,33 @@ func step(delta: float) -> void:
 		army += s.horde.units.size()
 		s.peak_army = maxi(s.peak_army, s.horde.units.size())
 	game.peak_army = maxi(game.peak_army, army)
+	if pf != null:
+		tl = pf.lap(PerfProbe.SEC_ARMY, tl)
 	bind_primary()
 	game.enemies.step(delta)  # Binds each enemy's nearest necromancer.
 	peak_enemies = maxi(peak_enemies, game.enemies.active.size())
+	if pf != null:
+		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()
 	game.arena.resolve_all(delta)
 	for s in slots:
 		bind(s.index)
 		s.abilities.spells.after_physics(delta)
+	if pf != null:
+		tl = pf.lap(PerfProbe.SEC_OBSTACLES, tl)
 	bind_primary()
 	game.projectiles.step(delta)  # Binds each friendly projectile's owner.
 	bind_primary()
 	if game.empire != null:
 		game.empire.step(delta)
+	if pf != null:
+		tl = pf.lap(PerfProbe.SEC_PROJECTILES, tl)
 	for s in slots:
 		bind(s.index)
 		s.volleys.echoes_on = not s.downed
 		s.volleys.step(delta)
+	if pf != null:
+		tl = pf.lap(PerfProbe.SEC_VOLLEYS, tl)
 	bind_primary()
 	game.pickups.step(delta)
 	game.powerups.step_drops(delta)
@@ -408,10 +422,14 @@ func step(delta: float) -> void:
 	game.chests.step(delta)
 	game.effects.step(delta)
 	_step_downed(delta)
+	if GameState.autotest and GameState.autotest_coop_down >= 0.0 and not _test_down_done and game.elapsed >= GameState.autotest_coop_down:
+		_test_down()
 	for s in slots:
 		if game.elapsed < WaveData.RUN_DURATION and not s.downed:
 			s.min_hp = minf(s.min_hp, s.player.hp)
 	bind(view_slot)
+	if pf != null:
+		pf.lap(PerfProbe.SEC_PICKUPS, tl)
 
 
 ## --coop-bot: the bots of the slots past 0 drive their dash and ultimate and
@@ -461,6 +479,8 @@ func _on_player_down(i: int) -> void:
 		s.horde.on_unit_died(u, false)  # The army crumbles (no death effects, no claims).
 	bind(prev)
 	game.effects.ring(s.player.position, 70.0, Palette.CRIMSON, 0.6)
+	if GameState.autotest:
+		print("[autotest] %s coop down: slot %d" % [Autotest._clock(game.elapsed), i])
 	if game.hud != null:
 		game.hud.announce("DOWNED", s.display_name + " has fallen", "Stand by them to raise them", Palette.CRIMSON)
 	if alive_slots().is_empty():
@@ -469,6 +489,21 @@ func _on_player_down(i: int) -> void:
 			game.end_run(true, "run_complete")
 		else:
 			game.end_run(false, "defeat")
+
+
+## --coop-down test: knocks slot 1's necromancer down with one lethal hit
+## (through CombatResolver, as any hit), whatever his invulnerability.
+func _test_down() -> void:
+	_test_down_done = true
+	var p := slots[slots.size() - 1].player
+	var was := p.invulnerable
+	p.invulnerable = false
+	p.iframes = 0.0
+	p.shield_hp = 0.0
+	p.revives_left = 0
+	game.combat.damage_player(p.max_hp * 100.0, "coop_test_down", p)
+	p.invulnerable = was
+	print("[autotest] %s coop test: slot %d knocked down (downed: %s)" % [Autotest._clock(game.elapsed), slots.size() - 1, str(slots[slots.size() - 1].downed)])
 
 
 ## Builds revive progress for every downed slot whose partner stands close,
@@ -503,6 +538,8 @@ func _revive(s: CoopSlot, helper: CoopSlot) -> void:
 	p.modulate = Color.WHITE
 	helper.revives_given += 1
 	revives += 1
+	if GameState.autotest:
+		print("[autotest] %s coop revive: slot %d raised by slot %d" % [Autotest._clock(game.elapsed), s.index, helper.index])
 	game.stat_add("coop_revives", 1.0)
 	var prev := bound
 	bind(s.index)

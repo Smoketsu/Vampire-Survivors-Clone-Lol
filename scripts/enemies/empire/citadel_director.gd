@@ -294,7 +294,7 @@ func _garrison(gt: Gate, groups: Array, force: bool) -> void:
 	var p := game.player.position
 	if not force and _mid(gt).distance_to(p) > float(config["gate"]["active_radius"]):
 		return
-	var cap := WaveData.HARD_CAP if force else mini(game.enemies.soft_cap(), WaveData.HARD_CAP - 10)  # Room for the squad.
+	var cap := game.enemies.hard_cap() if force else mini(game.enemies.soft_cap(), game.enemies.hard_cap() - 10)  # Room for the squad.
 	var spawned := 0  # Soldiers sent this time.
 	for grp: Dictionary in groups:
 		for _k in int(grp["count"]):
@@ -357,20 +357,20 @@ func _power_down(gt: Gate) -> void:
 func contain_all() -> void:
 	if gates.is_empty():
 		return
-	var pl := game.player
 	var half := float(config["gate"]["wall_thickness"]) * 0.5
-	for gt in gates:
-		var ab := gt.b - gt.a
-		var t := clampf((pl.position - gt.a).dot(ab) / maxf(1.0, ab.length_squared()), 0.0, 1.0)
-		var near := gt.a + ab * t  # Closest point of the wall.
-		var off := pl.position - near
-		var reach := half + pl.radius
-		var dist := off.length()
-		if dist >= reach:
-			continue
-		var n := off / dist if dist > 0.01 else -gt.normal
-		pl.position = near + n * reach
-		game.stat_add("citadel_wall_pushes", 1.0)
+	for pl in game.all_players:  # (Co-op: each necromancer.)
+		for gt in gates:
+			var ab := gt.b - gt.a
+			var t := clampf((pl.position - gt.a).dot(ab) / maxf(1.0, ab.length_squared()), 0.0, 1.0)
+			var near := gt.a + ab * t  # Closest point of the wall.
+			var off := pl.position - near
+			var reach := half + pl.radius
+			var dist := off.length()
+			if dist >= reach:
+				continue
+			var n := off / dist if dist > 0.01 else -gt.normal
+			pl.position = near + n * reach
+			game.stat_add("citadel_wall_pushes", 1.0)
 
 
 # =====================================================================================
@@ -448,7 +448,7 @@ func _send_valkyrie(ev: Dictionary) -> void:
 	var e := game.enemies.spawn_at(String(game.enemies.resolve_kind(String(ev["kind"]))), at, false)
 	for grp: Dictionary in ev.get("escort", []):
 		for _k in int(grp["count"]):
-			if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+			if game.enemies.regular_alive() >= game.enemies.hard_cap():
 				break
 			game.enemies.spawn_at(String(grp["kind"]), e.position + Vector2.from_angle(randf() * TAU) * (e.radius + 30.0), bool(grp["elite"]))
 	_log("valkyrie")
@@ -582,11 +582,11 @@ func _in_band(p: Vector2, r: float, k0: float, k1: float) -> bool:
 func _laser_hit(k0: float, k1: float) -> void:
 	var lc := _lasers
 	var mult := game.enemies.damage_mult  # Time scaling of the fortress's beams.
-	var pl := game.player
-	if not _laser_hits.has(pl) and _in_band(pl.position, pl.radius, k0, k1):
-		_laser_hits[pl] = 0
-		game.combat.damage_player(float(lc["damage_player"]) * mult, "laser_grid")
-		game.stat_add("citadel_laser_player_hits", 1.0)
+	for pl in game.all_players:  # (Co-op: every necromancer the beams cross, once a cycle.)
+		if not _laser_hits.has(pl) and _in_band(pl.position, pl.radius, k0, k1):
+			_laser_hits[pl] = 0
+			game.combat.damage_player(float(lc["damage_player"]) * mult, "laser_grid", pl)
+			game.stat_add("citadel_laser_player_hits", 1.0)
 	var reach := float(lc["length"]) * 0.5
 	game.ally_grid.query(_laser_origin, reach, _tmp)
 	for u: SummonedUnit in _tmp:
