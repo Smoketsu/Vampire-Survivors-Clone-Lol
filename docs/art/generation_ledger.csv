@@ -1349,3 +1349,8 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-20 06:28,obstacles/citadel_rect,gpt-image-2.5-flare,medium,1024x1024,2,444,18,439,0.0155,props_rect.png
 2026-10-20 06:28,tiles/citadel_core,gpt-image-2.5-flare,medium,1024x1024,0,213,0,439,0.0142,citadel_circuit.png
 2026-10-20 06:28,icons/citadel_a,gpt-image-2.5-flare,medium,1024x1024,1,366,4,439,0.0150,icons_a.png
+2026-10-20 15:02,bosses/kestrel,gpt-image-2.5-flare,medium,1024x1024,2,711,2048,439,0.0331,kestrel.png
+2026-10-20 15:03,bosses/kestrel_aim,gpt-image-2.5-flare,medium,1024x1024,2,721,2048,439,0.0332,kestrel_aim.png
+2026-10-20 15:05,bosses/kestrel_blades,gpt-image-2.5-flare,medium,1024x1024,2,750,2048,439,0.0333,kestrel_blades.png
+2026-10-20 15:10,player/lightning_abbess_hyper,gpt-image-2.5-flare,medium,1024x1024,2,689,1696,439,0.0302,lightning_abbess_hyper.png
+2026-10-20 15:13,player/marionette,gpt-image-2.5-flare,medium,1024x1024,2,682,2048,439,0.0330,marionette.png

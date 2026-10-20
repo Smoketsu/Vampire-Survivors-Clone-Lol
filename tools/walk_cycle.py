@@ -237,29 +237,33 @@ RIGS = {
     "empire/beta_build": dict(mode="legs", hip=64, back=(0, 53), front=(53, 102), rigid=[], spread=3, lift=3, dip=1),
     "summons/grave_drone": dict(mode="robe", hip=20, rigid=[], sway=1, dip=1),
     "summons/wraith_drone": dict(mode="robe", hip=23, rigid=[], sway=1, dip=1),
-    "player/marionette": dict(mode="robe", hip=31, rigid=[], sway=2, dip=1, bust=(17, 28, 17, 24, 2)),
+    "player/marionette": dict(mode="robe", hip=31, rigid=[], sway=2, dip=1, bust=(18, 30, 14, 21, 2, 2)),  # Round 1 redo: redrawn with a larger bust and a plunging neckline; box on it (two lobes).
     "player/marionette_hyper": dict(mode="robe", hip=33, rigid=[], sway=2, dip=1, bust=(12, 26, 17, 24, 2)),
-    "player/marionette_untouchable": dict(mode="robe", hip=31, rigid=[], sway=2, dip=1, bust=(10, 24, 15, 22, 2)),
-    "player/marionette_deathlord": dict(mode="robe", hip=35, rigid=[], sway=2, dip=1, bust=(18, 31, 17, 25, 2)),
+    "player/marionette_untouchable": dict(mode="robe", hip=31, rigid=[], sway=2, dip=1, bust=(14, 24, 14, 20, 2, 2)),  # Round 1 redo: bust repainted larger; box raised onto it (was rows 15-21, "too low").
+    "player/marionette_deathlord": dict(mode="robe", hip=35, rigid=[], sway=2, dip=1, bust=(19, 30, 16, 21, 2, 2)),  # Round 1 redo: box raised off the belt (rows 23-26) onto the bust (was rows 17-24).
     # --- Act III: the Scrap Wastes ---
     # The Aegis Bot walks behind its shield (the shield's columns ride with the body); the
     # Mortar Walker and the Trojan Horse step their four legs as two pairs (left and right
-    # halves); Kestrel walks under her coat (it ends above the hip), the rifle and the near
-    # blade above the hip ride with the body, the bust bounces (figure redesign); the
+    # halves); Kestrel walks on her legs, the rifle and the raised blade above the hip ride with
+    # the body (the low blade is rigid), the bust bounces (figure redesign); the
     # Lightning Abbess glides on her habit like the Tide Widow, her crescent staff rigid.
     "empire/aegis_bot": dict(mode="legs", hip=30, back=(0, 16), front=(16, 30), rigid=[(30, 40, 0, None)], spread=2, lift=1, dip=1),
     "empire/mortar_walker": dict(mode="legs", hip=28, back=(0, 32), front=(32, 60), rigid=[], spread=2, lift=1, dip=1),
     "empire/trojan_horse": dict(mode="legs", hip=64, back=(0, 66), front=(66, 132), rigid=[], spread=2, lift=2, dip=1),
     "empire/trojan_horse_split": dict(mode="legs", hip=64, back=(0, 64), front=(64, 128), rigid=[], spread=2, lift=2, dip=1),
-    "bosses/kestrel": dict(mode="legs", hip=88, back=(0, 72), front=(72, 142), rigid=[], spread=2, lift=2, dip=1, bust=(62, 82, 24, 36, 2)),
-    "bosses/kestrel_blades": dict(mode="legs", hip=90, back=(0, 64), front=(64, 98), rigid=[(98, 118, 0, None)], spread=2, lift=2, dip=1, bust=(48, 74, 34, 48, 2)),
-    "player/lightning_abbess": dict(mode="robe", hip=38, rigid=[(29, 44, 0, None)], sway=2, dip=1, bust=(18, 29, 18, 25, 2)),
+    # Round 1 redo (owner's Act III art review): Kestrel redrawn pear-shaped (wide hips, full rear,
+    # the cape ends at the waist); the crotch tab between her legs rides with the body; both bust
+    # boxes span the two lobes (two bells), the still's further right and the blades pose's further
+    # left than before ("the jiggle needs to extend").
+    "bosses/kestrel": dict(mode="legs", hip=88, back=(0, 68), front=(79, 144), rigid=[(68, 79, 88, 94)], spread=2, lift=2, dip=1, bust=(64, 88, 24, 38, 2, 2)),
+    "bosses/kestrel_blades": dict(mode="legs", hip=82, back=(0, 60), front=(60, 120), rigid=[(94, 120, 0, 100)], spread=2, lift=2, dip=1, bust=(44, 72, 38, 51, 2, 2)),
+    "player/lightning_abbess": dict(mode="robe", hip=38, rigid=[(29, 44, 0, None)], sway=2, dip=1, bust=(20, 31, 18, 25, 2)),  # Round 1 redo: box 2 px right (was cols 18-28).
     # --- Act III: the Iron Citadel ---
     # The two Valkyries are in the figure-redesign style (bust bounce + idle breathing); Valkyrie
     # 2.0's blade arm (left) and tower shield (right) hang below the hip and move with the body.
     # The Rust Prophet walks in his robe, the scrap staff rigid; the revenants stomp on two legs.
     "empire/valkyrie_duelist": dict(mode="legs", hip=32, back=(0, 27), front=(27, 52), rigid=[], spread=2, lift=2, dip=1, bust=(22, 34, 13, 21, 2)),
-    "empire/valkyrie_prime": dict(mode="legs", hip=70, back=(14, 36), front=(36, 52), rigid=[(0, 14, 0, None), (52, 76, 0, None)], spread=2, lift=3, dip=1, bust=(28, 46, 30, 40, 3, 2)),
+    "empire/valkyrie_prime": dict(mode="legs", hip=70, back=(14, 36), front=(36, 52), rigid=[(0, 14, 0, None), (52, 76, 0, None)], spread=2, lift=3, dip=1, bust=(28, 44, 27, 39, 3, 2)),  # Round 1 redo: box raised onto the whole breastplate (was rows 30-39, cols 28-45: "extend upward").
     "player/rust_prophet": dict(mode="robe", hip=40, rigid=[(30, 42, 0, None)], sway=1, dip=1),
     "summons/iron_revenant": dict(mode="legs", hip=34, back=(0, 26), front=(26, 58), rigid=[], spread=2, lift=2, dip=1),
     "summons/deus_revenant": dict(mode="legs", hip=38, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1),
@@ -346,6 +350,14 @@ SKIN_FIX = {
     # sides bounce (like the Tide Widow's Hyper skin), and idle strips.
     "player/voidcaller_untouchable": {"bust": (14, 25, 13, 20, 2, 2)},
     "player/voidcaller_deathlord": {"bust": (17, 29, 16, 22, 2, 2)},
+    # Act III art review, round 1 redo: the ghost Abbess's derived box stopped short of the right
+    # of her bust (cols 20-29, rows 18-24); the crowned Abbess's (cols 12-22, rows 20-26) sat low
+    # and left, on the gold belt (row 26): her bust is cols 14-23, rows 17-23, the box ending above the belt ("up and to the right").
+    "player/lightning_abbess_untouchable": {"bust": (19, 31, 18, 25, 2)},
+    # The Gilded Stormbride was redrawn simpler (round 1 redo, "too much detail"): her bust is
+    # cols 13-22, rows 17-23, the box ending above the gold sash (row 26) and left of the staff.
+    "player/lightning_abbess_hyper": {"bust": (13, 23, 17, 24, 2)},
+    "player/lightning_abbess_deathlord": {"bust": (14, 24, 17, 24, 2)},
 }
 
 
