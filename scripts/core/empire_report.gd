@@ -12,7 +12,8 @@
 ##   purge protocol:  the orbital strikes after 0:00 (when the stage has them)
 ##   empire kinds:    spawns / kills of every Empire kind that spawned
 ##   empire stage:    the Act III stage itself (stub status, boss, Soul Ash)
-## Phase 2 adds one line per stage system here. Read-only: it never changes the run.
+## Phase 2 adds one line per stage system here (the Scrap Wastes: WastesReport).
+## Read-only: it never changes the run.
 class_name EmpireReport
 extends RefCounted
 
@@ -47,6 +48,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			String(sd["id"]), String(sd["display_name"]), str(StageRegistry.is_playable(String(sd["id"]))),
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
 			_clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]), String((sd["reckoning"] as Dictionary).get("kind", "inquisitor"))])
+	# --- Act III: the Scrap Wastes ---
+	WastesReport.print_lines(game, st)  # Pylons, storms, its kinds, the Trojan Horse, Kestrel.
 
 
 ## "m:ss" of `t` game seconds.

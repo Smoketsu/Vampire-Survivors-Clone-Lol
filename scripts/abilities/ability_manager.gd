@@ -223,6 +223,12 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	for key: String in ["radius", "pulse_radius"]:
 		if out.has(key):
 			out[key] = float(out[key]) * area_mult
+	# --- Act III: the Scrap Wastes --- Conductive Marrow: a longer, wider Death
+	# Ray beam (its keys exist only in the Death Ray / Event Horizon rows; the
+	# passive's value is 0 while it is not owned).
+	if out.has("beam_length"):
+		out["beam_length"] = float(out["beam_length"]) * (1.0 + passive_value("conductive_marrow", "beam_length"))
+		out["beam_width"] = float(out["beam_width"]) * (1.0 + passive_value("conductive_marrow", "beam_width"))
 	return out
 
 

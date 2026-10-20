@@ -51,6 +51,10 @@
 ##     then each Act III stage's table) and its bosses load by name from
 ##     EMPIRE_BOSS_DIR. Its shared rules (Line of Fire, Lock-On, Steel has no
 ##     soul, the Purge Protocol) live in EmpireRules (Game.empire), not here.
+##   * Act III, the Scrap Wastes (GDD §15.0 "The Scrap Wastes (Act III phase
+##     2)"): on a stage with a "wastes" config it owns the WastesDirector (the
+##     Signal Pylons, the scrap storms, the Trojan Horse; `wastes`) and hands it
+##     the "pylons" / "storm" / "trojan" events. Null on every other stage.
 class_name EnemyDirector
 extends Node2D
 
@@ -148,6 +152,10 @@ var rites: CovenantRites
 var miniboss: Enemy = null
 ## Generation of `miniboss` when it registered (stale guard).
 var miniboss_gen: int = 0
+# --- Act III: the Scrap Wastes ---
+## The Scrap Wastes' stage systems: Signal Pylons, scrap storms, the Trojan
+## Horse (StageRegistry "wastes"; null elsewhere).
+var wastes: WastesDirector = null
 
 
 func _ready() -> void:
@@ -199,6 +207,12 @@ func _ready() -> void:
 		spire.game = game
 		spire.config = stage_def["spire"]
 		add_child(spire)
+	# --- Act III: the Scrap Wastes ---
+	if not (stage_def.get("wastes", {}) as Dictionary).is_empty():
+		wastes = WastesDirector.new()
+		wastes.game = game
+		wastes.config = stage_def["wastes"]
+		add_child(wastes)
 
 
 # =====================================================================================
@@ -279,6 +293,9 @@ func step(delta: float) -> void:
 		sinking.step(delta)
 	if spire != null:
 		spire.step(delta)
+	# --- Act III: the Scrap Wastes ---
+	if wastes != null:
+		wastes.step(delta)
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -342,6 +359,9 @@ func objective_text() -> String:
 		return sinking.objective_override()  # The sea is rising.
 	if spire != null and spire.objective_override() != "":
 		return spire.objective_override()  # Dream pillars.
+	# --- Act III: the Scrap Wastes ---
+	if wastes != null and wastes.objective_override() != "":
+		return wastes.objective_override()  # The Trojan Horse, a storm, Signal Pylons.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -456,6 +476,12 @@ func _run_event(ev: Dictionary) -> void:
 		"pillars":
 			if spire != null:
 				spire.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act III: the Scrap Wastes ---
+		"pylons", "storm", "trojan":
+			if wastes != null:
+				wastes.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
 	show_banner(ev["banner"])

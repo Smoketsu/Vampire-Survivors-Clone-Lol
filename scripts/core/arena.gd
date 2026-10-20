@@ -406,6 +406,8 @@ func _draw_obstacle(o: Obstacle) -> void:
 		return  # An Ul-Thalos obstacle kind (Act II).
 	if EmpireGlyphs.draw_obstacle(self, o):
 		return  # An Act III stub's placeholder obstacle kind.
+	if WastesGlyphs.draw_obstacle(self, o):
+		return  # A Scrap Wastes obstacle kind (Act III).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

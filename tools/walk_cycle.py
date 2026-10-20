@@ -226,6 +226,19 @@ RIGS = {
     "empire/spotter": dict(mode="legs", hip=41, back=(0, 28), front=(28, 62), rigid=[], spread=2, lift=2, dip=1),
     "empire/scout_drone": dict(mode="robe", hip=24, rigid=[], sway=1, dip=1),
     "summons/grave_gunner": dict(mode="legs", hip=27, back=(0, 23), front=(23, 48), rigid=[], spread=2, lift=2, dip=1),
+    # --- Act III: the Scrap Wastes ---
+    # The Aegis Bot walks behind its shield (the shield's columns ride with the body); the
+    # Mortar Walker and the Trojan Horse step their four legs as two pairs (left and right
+    # halves); Kestrel walks under her coat (it ends above the hip), the rifle and the near
+    # blade above the hip ride with the body, the bust bounces (figure redesign); the
+    # Lightning Abbess glides on her habit like the Tide Widow, her crescent staff rigid.
+    "empire/aegis_bot": dict(mode="legs", hip=30, back=(0, 16), front=(16, 30), rigid=[(30, 40, 0, None)], spread=2, lift=1, dip=1),
+    "empire/mortar_walker": dict(mode="legs", hip=28, back=(0, 32), front=(32, 60), rigid=[], spread=2, lift=1, dip=1),
+    "empire/trojan_horse": dict(mode="legs", hip=64, back=(0, 66), front=(66, 132), rigid=[], spread=2, lift=2, dip=1),
+    "empire/trojan_horse_split": dict(mode="legs", hip=64, back=(0, 64), front=(64, 128), rigid=[], spread=2, lift=2, dip=1),
+    "bosses/kestrel": dict(mode="legs", hip=88, back=(0, 72), front=(72, 142), rigid=[], spread=2, lift=2, dip=1, bust=(62, 82, 24, 36, 2)),
+    "bosses/kestrel_blades": dict(mode="legs", hip=90, back=(0, 64), front=(64, 98), rigid=[(98, 118, 0, None)], spread=2, lift=2, dip=1, bust=(48, 74, 34, 48, 2)),
+    "player/lightning_abbess": dict(mode="robe", hip=38, rigid=[(29, 44, 0, None)], sway=2, dip=1, bust=(18, 29, 18, 25, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -280,6 +293,10 @@ SKINS = {
     "player/heretic_scribe_deathlord": "player/heretic_scribe",
     "player/tide_widow_untouchable": "player/tide_widow",
     "player/tide_widow_deathlord": "player/tide_widow",
+    # --- Act III: the Scrap Wastes ---
+    "player/lightning_abbess_hyper": "player/lightning_abbess",
+    "player/lightning_abbess_untouchable": "player/lightning_abbess",
+    "player/lightning_abbess_deathlord": "player/lightning_abbess",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

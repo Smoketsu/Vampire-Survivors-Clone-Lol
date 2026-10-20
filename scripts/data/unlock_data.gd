@@ -80,6 +80,14 @@ const UNLOCKS := {
 	# wave 2"): the Bone Golem and its paired passive, offered on every stage.
 	"bone_golem": {"type": "class", "achievement": "bone_legion", "text": "Earn Bone Legion: Skeleton Warriors slay 1,000 foes."},  # Owner-approved proposal 5
 	"grave_masonry": {"type": "passive", "achievement": "bone_legion", "text": "Earn Bone Legion: Skeleton Warriors slay 1,000 foes."},  # Its paired passive, unlocked with it
+	# --- Act III: the Scrap Wastes ---
+	# Kestrel's gift (owner-approved Act III proposal "Rewards": Death Ray is
+	# unlocked by Kestrel, the Dead Pixel) with its paired passive, offered on
+	# every stage; the stage's achievement earns Act III's first
+	# counter-passive (offered only in Act III through its card row's "act").
+	"death_ray": {"type": "spell", "boss": "kestrel", "text": "Slay Kestrel, the Dead Pixel, in the Scrap Wastes to unlock."},  # Owner-approved Act III proposal
+	"conductive_marrow": {"type": "passive", "boss": "kestrel", "text": "Slay Kestrel, the Dead Pixel, in the Scrap Wastes to unlock."},  # Death Ray's paired passive, unlocked with it
+	"lead_lined_bones": {"type": "passive", "achievement": "static_in_the_wastes", "text": "Earn Static in the Wastes: clear the Scrap Wastes."},  # Owner-approved Act III proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

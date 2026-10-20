@@ -94,9 +94,13 @@ const EYE_BOSSES: Array[String] = [
 ## champions (minibosses and the Purge Protocol's kill-drone) and its stage
 ## bosses (StageRegistry.BOSS_ARRIVALS ids). Each Act III stage adds its own as
 ## it is built (phase 2).
-const EMPIRE_SOLDIERS: Array[String] = ["scout_drone", "line_trooper", "spotter"]
+const EMPIRE_SOLDIERS: Array[String] = ["scout_drone", "line_trooper", "spotter",
+	# --- Act III: the Scrap Wastes ---
+	"aegis_bot", "mortar_walker"]
 ## Electronic Empire champions (minibosses) and the Act III Reckoning kinds.
-const EMPIRE_CHAMPIONS: Array[String] = ["kill_drone"]
+const EMPIRE_CHAMPIONS: Array[String] = ["kill_drone",
+	# --- Act III: the Scrap Wastes ---
+	"trojan_horse"]
 ## Electronic Empire stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const EMPIRE_BOSSES: Array[String] = ["kestrel", "motherboard", "deus_ex_machina"]
 
@@ -167,9 +171,13 @@ const DESCRIPTIONS: Dictionary = {
 	"line_trooper": "Rebuilt riflemen who march at you firing bursts; your dead are their cover.",  # GDD §15.0 Act III foundation (Line of Fire)
 	"spotter": "Marksmen who paint a red line on their target, then fire a rail shot down it.",  # GDD §15.0 Act III foundation (Lock-On)
 	"kill_drone": "The Purge Protocol's drones, sent from every edge once the countdown ends.",  # GDD §15.0 Act III foundation (Purge Protocol)
-	"kestrel": "The Dead Pixel, hunter of the Scrap Wastes.",  # Owner-approved Act III proposal
+	"kestrel": "The Empire's sniper commander: she leaps between perches, paints three red lines at once and, cornered, draws twin blades.",  # Owner-approved Act III proposal
 	"motherboard": "The mind that runs every machine of the Assembly Halls at once.",  # Owner-approved Act III proposal
 	"deus_ex_machina": "The god the Empire built, with Varn, the Root User, at its controls.",  # Owner-approved Act III proposal
+	# --- Act III: the Scrap Wastes ---
+	"aegis_bot": "Shield bots that walk in front of the riflemen; their shields stop your shots, so hit them from the side.",  # Owner-approved Act III proposal
+	"mortar_walker": "Four-legged walkers that lob shells onto red circles over your army's heads: keep moving.",  # Owner-approved Act III proposal
+	"trojan_horse": "A drone tank whose slow rockets your dead can intercept; broken open, it spills a swarm of drones.",  # Owner-approved Act III proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -330,6 +338,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"full_ossuary": "ach_full_ossuary",  # TUNING (not in GDD)
 	"deathlords_due": "ach_deathlords_due",  # TUNING (not in GDD)
 	"swift_judgment": "ach_swift_judgment",  # TUNING (not in GDD)
+	# --- Act III: the Scrap Wastes ---
+	"static_in_the_wastes": "ach_static_in_the_wastes",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -349,6 +359,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"full_ossuary": "forbidden_knowledge",
 	"deathlords_due": "dread_rally",
 	"swift_judgment": "death_mark",
+	# --- Act III: the Scrap Wastes ---
+	"static_in_the_wastes": "lead_lined_bones",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

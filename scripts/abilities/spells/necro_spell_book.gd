@@ -21,6 +21,11 @@
 ## until earned, UnlockData), same generic NecroSpell hooks, their own
 ## autotest line (act2_summary_line(), printed only when one was taken):
 ##   Forbidden Verse  -> ForbiddenVerse   (evolves into The Unwritten Word)
+## and Act III's unlockable spells (owner-approved Act III proposal; locked until
+## earned, UnlockData), same generic NecroSpell hooks, their own autotest line
+## (WastesReport.print_items(), only when one was taken; ACT3_IDS, so the Act I
+## and Act II lines keep their text):
+##   Death Ray        -> DeathRay         (evolves into Event Horizon)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -53,6 +58,12 @@ const ACT2_IDS := [
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"call_of_the_drowned",
 ]
+## Act III's unlockable spells (the generic NecroSpell hooks; their own autotest
+## line, WastesReport.print_items(); each Act III stage adds its own here).
+const ACT3_IDS := [
+	# --- Act III: the Scrap Wastes ---
+	"death_ray",
+]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -71,6 +82,8 @@ const SOURCES := {
 	"forbidden_verse": ["verse", "unwritten_word", "ink_burst"],
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"call_of_the_drowned": ["drowned_tendril", "tide_tendril"],
+	# --- Act III: the Scrap Wastes ---
+	"death_ray": ["death_ray", "event_horizon", "ray_spark"],
 }
 
 ## Owning run.
@@ -94,6 +107,13 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.step(delta, ab.spell_stats(id))
 	for id: String in ACT2_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.step(delta, ab.spell_stats(id))
+	for id: String in ACT3_IDS:
 		if ab.spell_level(id) <= 0:
 			continue
 		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
@@ -140,6 +160,9 @@ func _create(id: String) -> NecroSpell:
 			node = ForbiddenVerse.new()
 		"call_of_the_drowned":
 			node = CallOfTheDrowned.new()  # Act II: Ul-Thalos, the Risen Spire.
+		# --- Act III: the Scrap Wastes ---
+		"death_ray":
+			node = DeathRay.new()
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -166,6 +189,10 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
 		if node != null:
 			node.on_enemy_killed(e)
+	for id: String in ACT3_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act III spell's node, if learned.
+		if node != null:
+			node.on_enemy_killed(e)
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
@@ -177,6 +204,10 @@ func after_physics(delta: float) -> void:
 			node.after_physics(delta)
 	for id: String in ACT2_IDS:
 		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
+		if node != null:
+			node.after_physics(delta)
+	for id: String in ACT3_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act III spell's node, if learned.
 		if node != null:
 			node.after_physics(delta)
 

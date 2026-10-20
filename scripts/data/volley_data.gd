@@ -259,6 +259,9 @@ const SPELLS := {
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"call_of_the_drowned": {"every": 1, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [3, 5, 8], "speed": 240.0,
 		"life": 1.0, "share": 0.3, "pierce": 0, "radius": 4.0, "style": "spark", "color": Color(0.45, 0.80, 0.74), "homing": 7.0},  # TUNING (not in GDD) drowned souls that seek the strongest foe
+	# --- Act III: the Scrap Wastes ---
+	"death_ray": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [8, 12, 16], "speed": 320.0,
+		"life": 0.5, "share": 0.2, "pierce": 1, "radius": 3.5, "style": "spark", "color": Color(0.80, 0.62, 1.0)},  # TUNING (not in GDD) a ring of violet sparks with each sweep
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

@@ -1060,6 +1060,9 @@ func get_move_vector() -> Vector2:
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	if goal == Vector2.INF and game.enemies.spire != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.spire.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # Ul-Thalos: topple the dream pillars when calm.
+	# --- Act III: the Scrap Wastes ---
+	if goal == Vector2.INF and game.enemies.wastes != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
+		goal = game.enemies.wastes.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Scrap Wastes: tear down the Signal Pylons when calm.
 	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
 		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
 		var at := (game.enemies.boss as BossVhalneth).approach_point(p)
@@ -1153,6 +1156,7 @@ func finish(summary: Dictionary) -> void:
 	if game.claims != null:
 		print("[autotest] claims: %s" % game.claims.summary_line())  # Act II Claims (EyeClaims; Act II stages only).
 	EmpireReport.print_lines(game, st_all)  # Act III: line of fire, lock-on, steel, purge protocol, kinds, the stage (only when the Empire ran).
+	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	print("[autotest] gravebow / bone colossus: %s | %s" % [GravebowKit.summary_line(st_all), ColossusKit.summary_line(st_all)])
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())
 	print("[autotest] later spells: %s" % ab.spells.later_summary_line())

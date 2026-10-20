@@ -42,6 +42,12 @@ var salvos: int = 0
 var _tmp: Array = []
 ## True if the last redraw showed strike circles (one more redraw clears them).
 var _drawn: bool = false
+# --- Act III: the Scrap Wastes ---
+## Stage reach modifiers (objects with reach_mult_at(pos: Vector2) -> float, e.g.
+## the WastesDirector's Signal Pylons and scrap storms), multiplied by
+## reach_mult(): the one reach path of the Empire's shooters (EmpireKit). Empty
+## on every other stage (exactly 1).
+var reach_sources: Array[Object] = []
 
 
 ## Builds the rules for `p_game` (call before add_child; Game does both).
@@ -154,6 +160,25 @@ func _draw() -> void:
 
 
 # =====================================================================================
+# Act III: the Scrap Wastes (the reach path)
+# =====================================================================================
+
+## Registers stage reach modifier `src` (an object with reach_mult_at(pos)).
+func add_reach_source(src: Object) -> void:
+	if not reach_sources.has(src):
+		reach_sources.append(src)
+
+
+## Multiplier (> 0) on the firing range of an Empire shooter standing at `pos`:
+## the product of every stage reach modifier (1 when none is registered).
+func reach_mult(pos: Vector2) -> float:
+	var m := 1.0  # Product of the modifiers.
+	for src: Object in reach_sources:
+		m *= float(src.call("reach_mult_at", pos))
+	return m
+
+
+# =====================================================================================
 # Autotest
 # =====================================================================================
 
@@ -161,6 +186,7 @@ func _draw() -> void:
 ## out of every orbital strike circle about to land at `p`.
 func danger_push(p: Vector2) -> Vector2:
 	var push := lock_on.danger_push(p)
+	push += shots.arc_danger_push(p)  # Act III, the Scrap Wastes: off the mortar landing circles.
 	if not purge.is_empty():
 		var reach := float(purge["radius"]) + game.player.radius + 10.0  # Circle reach (px).
 		for s: Vector3 in _strikes:

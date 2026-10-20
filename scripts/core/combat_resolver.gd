@@ -113,6 +113,11 @@
 ## Act III (the Electronic Empire): _kill_enemy() counts machine / cyborg kills
 ## (Enemy.body; steel_kills_<body>); Empire shots reach damage_unit() /
 ## damage_player() through EmpireShots like every hit.
+## Act III, the Scrap Wastes: Lead-Lined Bones — damage_unit(): a RANGED hit
+## (is_ranged_source(): a kind whose row's behavior is "ranged", its shots
+## tagged with its kind id, or WastesEnemyData.RANGED_EXTRA_SOURCES) is cut by
+## ranged_reduction (stat lead_lined_dmg_prevented); exactly 1 while the
+## passive is not owned.
 class_name CombatResolver
 extends RefCounted
 
@@ -123,6 +128,10 @@ var game: Game
 var _minion_sources: Dictionary = {}
 ## Unholy Precision crit RNG, separate from the gameplay RNG.
 var _crit_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+# --- Act III: the Scrap Wastes ---
+## Damage-source tag -> true / false: is it a ranged hit (is_ranged_source(),
+## filled lazily, only while Lead-Lined Bones is owned).
+var _ranged_sources: Dictionary = {}
 
 
 func _init(p_game: Game) -> void:
@@ -364,6 +373,11 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 		if bastion > 0.0:
 			game.stat_add("syn_bastion_prevented", prevented - by_mason)
 		amount *= mult
+	# --- Act III: the Scrap Wastes --- Lead-Lined Bones: ranged hits deal less.
+	var lead := ab.passive_value("lead_lined_bones", "ranged_reduction")  # 0..1, 0 when not owned.
+	if lead > 0.0 and is_ranged_source(source):
+		game.stat_add("lead_lined_dmg_prevented", amount * lead)
+		amount *= 1.0 - lead
 	var plate := ab.passive_value("bone_plating", "flat_reduction")  # Flat damage off this hit.
 	if plate > 0.0 and not source in PassiveData.PLATING_EXEMPT_SOURCES:
 		var cut := minf(plate, amount * (1.0 - PassiveData.PLATING_MIN_FRACTION))  # Damage actually removed.
@@ -386,6 +400,22 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 		game.stat_add("death_" + u.unit_class + "_by_" + source, 1.0)
 		game.horde.colossi.on_unit_killed(u)  # Bone Colossus shrapnel burst.
 		game.horde.on_unit_died(u)
+
+
+# --- Act III: the Scrap Wastes ---
+## True if enemy damage tagged `source` is a RANGED hit (Lead-Lined Bones): the
+## kind id of an enemy whose design row's behavior is "ranged" (a rifle round,
+## a zap, a shell, a Covenant arrow tagged with its kind), or one of
+## WastesEnemyData.RANGED_EXTRA_SOURCES (rails, rockets, Kestrel's rifle).
+## Cached per tag.
+func is_ranged_source(source: String) -> bool:
+	if _ranged_sources.has(source):
+		return bool(_ranged_sources[source])
+	var ranged := source in WastesEnemyData.RANGED_EXTRA_SOURCES
+	if not ranged and EnemyDirector.is_known_kind(source):
+		ranged = String(game.enemies.enemy_def(source).get("behavior", "")) == "ranged"
+	_ranged_sources[source] = ranged
+	return ranged
 
 
 ## Damages the necromancer (i-frames are handled by the player). `source`

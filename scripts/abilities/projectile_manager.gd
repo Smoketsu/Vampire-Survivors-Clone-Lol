@@ -281,6 +281,8 @@ func _friendly_hits(p: Projectile) -> bool:
 			continue
 		if e == p.reserve_target:
 			_release(p)
+		if e.kit != null and e.shield_blocks(p.velocity, p.damage):
+			return false  # Act III, the Scrap Wastes: an Aegis Bot's frontal shield stops it.
 		p.hit_ids.append(id)
 		var dmg := p.damage
 		if (p.source == "archer" or p.source == "gravebow") and e.mark_time > 0.0:

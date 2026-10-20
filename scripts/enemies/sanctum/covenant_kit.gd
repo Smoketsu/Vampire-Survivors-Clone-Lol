@@ -21,6 +21,15 @@
 ##                       return true when the kit fired it itself (the Act III
 ##                       Empire kits, into EmpireShots); false (the default)
 ##                       fires the usual arrow / radiant bolt.
+##   blocks_shot(e, vel, dmg)  Act III (the Scrap Wastes' Aegis Bot): true
+##                       when the kit's shield stops a friendly projectile
+##                       moving with velocity `vel` that would deal `dmg`
+##                       (Enemy.shield_blocks(); the default false).
+##   draws_body(e) / draw_body(e, ci)  Act III (the Scrap Wastes' rockets,
+##                       decoys and the Trojan Horse's split hull): true when
+##                       the kit draws the enemy's body itself on `ci` (its
+##                       body layer) instead of the kind's sprite / glyph (the
+##                       default false).
 ##   danger_push(e, p)   autotest autopilot hint: a push away from this
 ##                       kit's live telegraph at `p` (zero when none).
 ##   draw_under(e) / draw_over(e, ci)  drawn before / after the body
@@ -79,6 +88,22 @@ func physics(_e: Enemy, _delta: float) -> bool:
 ## Ranged attack hook (see the header): true when the kit fired the shot.
 func fire_ranged(_e: Enemy, _t: Node2D, _dir: Vector2, _dmg: float) -> bool:
 	return false
+
+
+# --- Act III: the Scrap Wastes ---
+## Projectile shield hook (see the header): true when the shot is stopped.
+func blocks_shot(_e: Enemy, _vel: Vector2, _dmg: float) -> bool:
+	return false
+
+
+## Body drawing hook (see the header): true when draw_body() replaces the kind's look.
+func draws_body(_e: Enemy) -> bool:
+	return false
+
+
+## Draws the enemy's body on `_ci` (its body layer) when draws_body() is true.
+func draw_body(_e: Enemy, _ci: CanvasItem) -> void:
+	pass
 
 
 ## True while a special runs (the autotest's stuck check skips the enemy).

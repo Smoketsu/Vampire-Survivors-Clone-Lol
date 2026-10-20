@@ -244,7 +244,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"the_dead_god_serves",
 	# --- Content wave 2: B. Achievement rewards ---
-	"mass_grave", "untouchable", "full_ossuary", "deathlords_due", "swift_judgment"]
+	"mass_grave", "untouchable", "full_ossuary", "deathlords_due", "swift_judgment",
+	# --- Act III: the Scrap Wastes ---
+	"static_in_the_wastes"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -312,6 +314,12 @@ const ACHIEVEMENTS := {
 		"stat": "deathlord_victories", "goal": 1, "run": true, "unlock": "The Deathlord skin (any character)", "bounty": 250},  # owner-approved goal; bounty TUNING (not in GDD)
 	"swift_judgment": {"display_name": "Swift Judgment", "description": "Slay a stage boss within 45 s of its arrival",
 		"stat": "swift_boss_kills", "goal": 1, "run": true, "unlock": "Title Executioner", "bounty": 150},  # owner-approved goal; bounty TUNING (not in GDD)
+	# --- Act III: the Scrap Wastes ---
+	# Owner-approved Act III achievement: a victory (the run reached 0:00) on
+	# the Scrap Wastes, counted from the stage record (like Low Tide); it
+	# unlocks the Lead-Lined Bones counter-passive.
+	"static_in_the_wastes": {"display_name": "Static in the Wastes", "description": "Clear the Scrap Wastes",
+		"stat": "victories", "stage": "wastes", "goal": 1, "unlock": "The Lead-Lined Bones passive", "bounty": 250},  # Owner-approved Act III proposal; bounty TUNING (not in GDD)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

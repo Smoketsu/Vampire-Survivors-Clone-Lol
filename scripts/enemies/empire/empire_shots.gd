@@ -330,3 +330,25 @@ func _draw() -> void:
 		draw_line(p - dir * length * 0.6, p, col.lerp(Color.WHITE, 0.45), w)
 		if _heavy[si]:
 			draw_circle(p, w, Palette.EMPIRE_SIGNAL_GLOW)
+
+
+# =====================================================================================
+# Act III: the Scrap Wastes (autotest hint)
+# =====================================================================================
+
+## Autopilot hint (the autotest bot): a push out of every arcing shot's landing
+## circle (its splash plus the necromancer's body) whose telegraph shows
+## (EmpireRulesData.ARC_TELEGRAPH s before it lands). Zero when none.
+func arc_danger_push(p: Vector2) -> Vector2:
+	var push := Vector2.ZERO
+	for i in count:
+		var si := _style[i]  # Style index.
+		if not _arc[si] or _life[i] > EmpireRulesData.ARC_TELEGRAPH:
+			continue
+		var dest := _pos[i] + _vel[i] * _life[i]  # Landing point.
+		var reach := float(_styles[si]["splash"]) + game.player.radius + 8.0  # Circle reach (px).
+		var off := p - dest
+		var d := off.length()
+		if d < reach:
+			push += (off / d if d > 0.01 else Vector2.RIGHT) * (1.0 - d / reach) * 1.5
+	return push
