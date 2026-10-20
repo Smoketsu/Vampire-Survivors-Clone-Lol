@@ -92,6 +92,17 @@ tablets in landscape (the `Web` export preset; touch controls, mobile UI scale, 
   **Steel has no soul** (`Enemy.leaves_corpse()` gates every corpse and raise; cyborgs rise as Grave Gunners
   through `HordeDirector.raise_corpse()` → `spawn_temporary()`). Act I and II runs never create any of it
   (`game.empire` stays null): stages 1–6 keep their same-seed summaries. Summons never get act-only rules.
+- **Online co-op** (owner decisions Oct 2026, `docs/coop/DESIGN.md`, GDD §15.0 from "Online co-op: relay and
+  lobby" on): 2 players, lobby codes through the Cloudflare relay (`server/relay/`, `CoopNet`), each with their own
+  necromancer, army and build, in ONE deterministic simulation run on both machines (**lockstep**: only inputs travel,
+  bundled ~3 ticks a frame for the free plan; a checksum every 60 ticks; a mismatch ends the run). Shared XP bar
+  (×0.5), both pick on a level-up; downed / revived by the partner; enemies spawn ×2 (alive cap ×1.6) and advance on
+  the nearest standing necromancer; boss HP ×1.7. One path each: `game.coop` (`CoopSession`, null in solo: solo
+  stays bit-for-bit identical), the bound slot (`game.player` / `game.horde` / ... are the slot being stepped;
+  owner-specific effects bind their owner's slot), one fixed gameplay view size in co-op (`Game.view_size()` drives
+  spawns), level-ups / chests / pause as lockstep commands (never `get_tree().paused` for co-op gameplay), the visuals
+  through `game.hud.coop_ui`. Same platform only (Web and native maths differ in the last bit). Any new gameplay
+  code must read the necromancer through the bound slot and stay deterministic across machines.
 - **The Bone Ring is the only formation** (owner decision Oct 2026, GDD §15.0 "Bone Ring is the only
   formation"; it replaced the four switchable stances): the army always rings the necromancer
   (blockers, flankers and ranged interleaved on the ring, priests and catapults inside) and its
@@ -169,6 +180,10 @@ Autotest options (full table in the README):
 - `--oath=0-5`
 - `--speed=N` (default 8)
 - `--meta-save`
+- `--coop-bot` (a co-op run in one process, both slots bots; `--policy2=`, `--character2=`, `--classes2=`,
+  `--spells2=`, `--coop-down=T`), `--perf` (per-tick timing), `--coop-net=host|join --relay=URL` (a networked lockstep
+  run; the full gate is `tools/coop_lockstep_gate.py`), `--coop-net-test` (the transport test); Web builds read the
+  autotest flags from `?necro_autotest=`
 
 **"Done" means:**
 - `--import` and the autotest runs you touched (at least default, `--mortal`, `--policy=army`) show
@@ -183,8 +198,11 @@ the same-seed gates) once per batch of changes, before `main` moves; multi-seed 
 CI (`.github/workflows/ci.yml`) runs the import and, as seven **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
 policy) and one army autotest per Act II stage; beside them, the Windows/Linux/Web exports (artifacts
-`Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test. The release and publish jobs
-wait for all of them. Pushing a `v*` tag publishes a GitHub Release with the three zips. **GitHub Pages is the game's web
+`Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
+protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
+waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
+`CLOUDFLARE_ACCOUNT_ID`, at `wss://necropathy-relay.smoketsu.workers.dev`). The release and publish jobs
+wait for the tests and exports. Pushing a `v*` tag publishes a GitHub Release with the three zips. **GitHub Pages is the game's web
 home** (owner decision Oct 2026; itch.io publishing dropped, GDD §15.0 "GitHub Pages is the web home"):
 `publish-pages-repo` (variable `PAGES_REPO` = `Smoketsu/NecropathyPlay` + secret `PAGES_TOKEN`) pushes the Web build
 from `main` pushes, `v*` tags and manual runs of `main` to that public build-only repository, served at
@@ -530,6 +548,16 @@ tiny tweaks.
   (`EmpireGlyphs` fallbacks), "Iron Requiem" (`SoundData.IRON_SCORE`) and the lazy Empire sound pack, autotest
   `--stage=wastes|assembly|citadel` and the `line of fire` / `lock-on` / `steel` / `purge protocol` / `empire kinds` /
   `empire stage` lines (`EmpireReport`). Gate passed: stages 1–6 same-seed summaries unchanged.
+
+- **online co-op** (owner request "add co-op, a lobby and code system", Oct 2026; `docs/coop/`): the relay and lobby
+  (`coop-net`: Worker + `tools/coop_relay.py`, `CoopNet`, Co-op on the title screen, Host / Join with a letter pad,
+  the lobby), two slots in one simulation (`coop-sim`: `CoopSession` / `CoopSlot`, `CoopData`, the co-op rules,
+  `--coop-bot`, `--perf`; perf in `docs/coop/PERF.md`: volleys cheap, the doubled enemies the cost, so alive cap ×1.6),
+  the visuals (`coop-hud`: partner plate, off-screen arrow, revive ring, `CoopUi`, co-op results) and the lockstep
+  (`coop-lockstep`: `start_coop_run()`, the driver, bundled frames, checksums, partner drop → army bot, per-device
+  saves, the full-run two-process gate; Web vs native desync, so mixed platforms are refused; Web vs Web passes).
+  Solo same-seed summaries unchanged. Waits on the owner's real-phone test (input lag ~100-180 ms, late-game frame
+  rate).
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
