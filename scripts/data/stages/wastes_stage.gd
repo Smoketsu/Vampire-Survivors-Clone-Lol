@@ -88,11 +88,11 @@ const SEGMENTS := [
 	{"start": 60.0, "rate": 1.6, "max_alive": 38,  # TUNING (not in GDD)
 		"weights": {"scout_drone": 0.76, "aegis_bot": 0.16, "line_trooper": 0.08},  # TUNING (not in GDD) pass 2: fewer early rifles (seed 7 died at 3:45 to Line Trooper fire)
 		"objective": "Hit the Aegis Bots from the side: their shields stop your shots"},
-	{"start": 120.0, "rate": 1.9, "max_alive": 42,  # TUNING (not in GDD) pass 3: 46 -> 42 (the shields pile up: 66 alive at 4:00)
-		"weights": {"scout_drone": 0.68, "aegis_bot": 0.18, "line_trooper": 0.14},
+	{"start": 120.0, "rate": 1.7, "max_alive": 42,  # TUNING (not in GDD) pass 3: 46 -> 42 (the shields pile up: 66 alive at 4:00); pass 4: rate 1.9 -> 1.7 (the naive bot died at ~3:00 on both seeds)
+		"weights": {"scout_drone": 0.72, "aegis_bot": 0.18, "line_trooper": 0.10},  # TUNING (not in GDD) pass 4: riflemen 0.14 -> 0.10
 		"objective": "Line Troopers march in firing: your dead are cover"},
-	{"start": 180.0, "rate": 2.2, "max_alive": 46,  # TUNING (not in GDD) pass 3: 54 -> 46
-		"weights": {"scout_drone": 0.6, "aegis_bot": 0.22, "line_trooper": 0.18},
+	{"start": 180.0, "rate": 2.0, "max_alive": 46,  # TUNING (not in GDD) pass 3: 54 -> 46; pass 4: rate 2.2 -> 2.0
+		"weights": {"scout_drone": 0.64, "aegis_bot": 0.22, "line_trooper": 0.14},  # TUNING (not in GDD) pass 4: riflemen 0.18 -> 0.14
 		"objective": "Keep your dead between you and the guns"},
 	{"start": 240.0, "rate": 2.5, "max_alive": 54,  # TUNING (not in GDD) pass 3: 60 -> 54
 		"weights": {"scout_drone": 0.5, "aegis_bot": 0.27, "line_trooper": 0.22, "spotter": 0.01},

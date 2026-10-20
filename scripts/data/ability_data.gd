@@ -398,11 +398,11 @@ const SPELLS := {
 		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act III spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Beam damage", "beam_length": "Beam length", "cooldown": "Sweep every (s)", "spark": "Spark damage", "beam_width": "Beam width"},
 		"levels": [
-			{"damage": 20.0, "cooldown": 4.0, "sweep_time": 1.5, "beam_length": 300.0, "beam_width": 10.0, "spark": 0.4, "spark_range": 120.0, "beams": 1},  # TUNING (not in GDD)
-			{"damage": 24.0, "cooldown": 4.0, "sweep_time": 1.5, "beam_length": 330.0, "beam_width": 10.0, "spark": 0.4, "spark_range": 120.0, "beams": 1},  # TUNING (not in GDD)
-			{"damage": 29.0, "cooldown": 3.8, "sweep_time": 1.4, "beam_length": 360.0, "beam_width": 12.0, "spark": 0.4, "spark_range": 130.0, "beams": 1},  # TUNING (not in GDD)
-			{"damage": 34.0, "cooldown": 3.6, "sweep_time": 1.4, "beam_length": 390.0, "beam_width": 12.0, "spark": 0.45, "spark_range": 130.0, "beams": 1},  # TUNING (not in GDD)
-			{"damage": 40.0, "cooldown": 3.4, "sweep_time": 1.3, "beam_length": 420.0, "beam_width": 14.0, "spark": 0.45, "spark_range": 140.0, "beams": 1},  # Owner-approved proposal "out to about 420 px"; TUNING (not in GDD) the rest (first pass 52 dmg / 3.0 s / spark 0.6 + Event Horizon dealt 456k, 5,500 kills in a Graveyard evolve run: cut)
+			{"damage": 16.0, "cooldown": 4.0, "sweep_time": 1.5, "beam_length": 300.0, "beam_width": 10.0, "spark": 0.4, "spark_range": 120.0, "beams": 1},  # TUNING (not in GDD)
+			{"damage": 19.0, "cooldown": 4.0, "sweep_time": 1.5, "beam_length": 330.0, "beam_width": 10.0, "spark": 0.4, "spark_range": 120.0, "beams": 1},  # TUNING (not in GDD)
+			{"damage": 23.0, "cooldown": 3.8, "sweep_time": 1.4, "beam_length": 360.0, "beam_width": 12.0, "spark": 0.4, "spark_range": 130.0, "beams": 1},  # TUNING (not in GDD)
+			{"damage": 27.0, "cooldown": 3.6, "sweep_time": 1.4, "beam_length": 390.0, "beam_width": 12.0, "spark": 0.4, "spark_range": 130.0, "beams": 1},  # TUNING (not in GDD)
+			{"damage": 32.0, "cooldown": 3.4, "sweep_time": 1.3, "beam_length": 420.0, "beam_width": 14.0, "spark": 0.4, "spark_range": 140.0, "beams": 1},  # Owner-approved proposal "out to about 420 px"; TUNING (not in GDD) the rest (first pass 52 dmg / 3.0 s / spark 0.6 + Event Horizon dealt 456k, 5,500 kills in a Graveyard evolve run: cut; pass 2: 40 dmg / spark 0.45 still dealt 435k, 91% of the run, against 125k for Bone Spear on the same seed: damage -20% on every level)
 		],
 	},
 }
