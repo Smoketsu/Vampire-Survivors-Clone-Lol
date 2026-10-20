@@ -51,6 +51,10 @@
 ##     then each Act III stage's table) and its bosses load by name from
 ##     EMPIRE_BOSS_DIR. Its shared rules (Line of Fire, Lock-On, Steel has no
 ##     soul, the Purge Protocol) live in EmpireRules (Game.empire), not here.
+##     The Assembly Halls (an "assembly" config) add the AssemblyDirector
+##     (`assembly`: conveyors, furnace channels, fabricators, the Beta Build;
+##     its "fabricators" / "beta_build" events, its guest aliases, and each
+##     smashed fabricator's cut of the waves and the trickle, applied once here).
 class_name EnemyDirector
 extends Node2D
 
@@ -148,6 +152,10 @@ var rites: CovenantRites
 var miniboss: Enemy = null
 ## Generation of `miniboss` when it registered (stale guard).
 var miniboss_gen: int = 0
+# --- Act III: the Assembly Halls ---
+## The Assembly Halls' systems: conveyors, furnace channels, fabricators, the
+## Beta Build (StageRegistry "assembly"; null on every other stage).
+var assembly: AssemblyDirector = null
 
 
 func _ready() -> void:
@@ -199,6 +207,13 @@ func _ready() -> void:
 		spire.game = game
 		spire.config = stage_def["spire"]
 		add_child(spire)
+	# --- Act III: the Assembly Halls ---
+	if not (stage_def.get("assembly", {}) as Dictionary).is_empty():
+		assembly = AssemblyDirector.new()
+		assembly.game = game
+		assembly.config = stage_def["assembly"]
+		add_child(assembly)
+		_kind_aliases = AssemblyDirector.guest_aliases(_kind_aliases, assembly.config)  # Guest kinds of the other Act III stages.
 
 
 # =====================================================================================
@@ -279,6 +294,8 @@ func step(delta: float) -> void:
 		sinking.step(delta)
 	if spire != null:
 		spire.step(delta)
+	if assembly != null:
+		assembly.step(delta)  # Act III: belts, furnace channels, fabricators, the Beta Build.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -342,6 +359,8 @@ func objective_text() -> String:
 		return sinking.objective_override()  # The sea is rising.
 	if spire != null and spire.objective_override() != "":
 		return spire.objective_override()  # Dream pillars.
+	if assembly != null and assembly.objective_override() != "":
+		return assembly.objective_override()  # Act III: the Beta Build, fabricators.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -379,6 +398,8 @@ func _spawn_trickle(delta: float) -> void:
 	var spawn_mult := game.difficulty.enemy_spawn_mult()  # Difficulty spawn multiplier.
 	if harbour != null:
 		spawn_mult *= harbour.trickle_mult()  # Act II: sunk bell buoys thin the trickle.
+	if assembly != null:
+		spawn_mult *= assembly.trickle_mult()  # Act III: smashed fabricators thin the trickle.
 	spawn_accum += float(seg["rate"]) * spawn_mult * delta
 	var cap: int = soft_cap()
 	var alive := regular_alive()
@@ -458,10 +479,18 @@ func _run_event(ev: Dictionary) -> void:
 				spire.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
+		# --- Act III: the Assembly Halls ---
+		"fabricators", "beta_build":
+			if assembly != null:
+				assembly.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if harbour != null and harbour.wave_mult() < 1.0:
 		groups = _scaled_groups(groups, harbour.wave_mult())  # Act II: sunk bell buoys shrink the Eye's waves.
+	if assembly != null and assembly.wave_mult() < 1.0:
+		groups = _scaled_groups(groups, assembly.wave_mult())  # Act III: smashed fabricators shrink the Empire's waves.
 	spawn_formation(String(ev["formation"]), groups)
 	game.stat_add("wave_events", 1.0)
 

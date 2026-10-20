@@ -496,6 +496,66 @@ const EMPIRE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "noise", "dur": 0.85, "amp": 0.6, "attack": 0.005, "decay": 0.25, "lp0": 4000.0, "lp1": 120.0},
 			{"wave": "sine", "f0": 70.0, "f1": 30.0, "dur": 0.8, "amp": 0.7, "decay": 0.3},
 			{"wave": "square", "f0": 900.0, "f1": 120.0, "dur": 0.3, "amp": 0.12, "decay": 0.1, "lp0": 2000.0}]},
+	# --- Act III: the Assembly Halls ---
+	# Fabricator build: a pneumatic hiss, a stamping clunk and a rising whine.
+	"fabricate": {"dur": 0.5, "volume_db": -17.0, "max_voices": 2, "min_interval": 160, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.18, "amp": 0.35, "decay": 0.06, "lp0": 6000.0, "lp1": 2500.0},
+			{"wave": "sine", "f0": 140.0, "f1": 70.0, "start": 0.16, "dur": 0.16, "amp": 0.45, "decay": 0.05},
+			{"wave": "saw", "f0": 300.0, "f1": 900.0, "start": 0.22, "dur": 0.26, "amp": 0.12, "decay": 0.12, "lp0": 2500.0}]},
+	# Furnace channel flaring: a deep roar of heat.
+	"furnace_flare": {"dur": 0.8, "volume_db": -16.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.8, "amp": 0.5, "attack": 0.08, "decay": 0.35, "lp0": 900.0, "lp1": 400.0},
+			{"wave": "sine", "f0": 55.0, "f1": 45.0, "dur": 0.7, "amp": 0.35, "attack": 0.05, "decay": 0.3}]},
+	# Arc Engineer jam: a crackling static burst.
+	"arc_jam": {"dur": 0.45, "volume_db": -15.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.1, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.4, "amp": 0.4, "decay": 0.15, "lp0": 8000.0, "lp1": 3000.0},
+			{"wave": "square", "f0": 2200.0, "f1": 1600.0, "dur": 0.35, "amp": 0.12, "decay": 0.12, "lp0": 5000.0}]},
+	# Arc Engineer repair: a short welding sizzle.
+	"arc_repair": {"dur": 0.3, "volume_db": -21.0, "max_voices": 2, "min_interval": 180, "pitch_var": 0.12, "priority": 0,
+		"layers": [
+			{"wave": "noise", "dur": 0.28, "amp": 0.3, "decay": 0.1, "lp0": 9000.0, "lp1": 5000.0}]},
+	# Juggernaut flamethrower: a breathy whoosh of fire.
+	"flamethrower": {"dur": 1.2, "volume_db": -15.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 1.2, "amp": 0.45, "attack": 0.06, "decay": 0.5, "lp0": 2600.0, "lp1": 1200.0},
+			{"wave": "sine", "f0": 80.0, "f1": 60.0, "dur": 1.0, "amp": 0.2, "attack": 0.05, "decay": 0.4}]},
+	# Motherboard Turret bolt: a sharp electric snap.
+	"turret_shot": {"dur": 0.18, "volume_db": -19.0, "max_voices": 3, "min_interval": 90, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "square", "f0": 1200.0, "f1": 300.0, "dur": 0.15, "amp": 0.2, "decay": 0.05, "lp0": 4000.0},
+			{"wave": "noise", "dur": 0.05, "amp": 0.3, "decay": 0.015, "lp0": 7000.0}]},
+	# Crane arms whirring out.
+	"crane_whir": {"dur": 0.7, "volume_db": -15.0, "max_voices": 1, "min_interval": 300, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "saw", "f0": 120.0, "f1": 260.0, "dur": 0.65, "amp": 0.2, "attack": 0.05, "decay": 0.3, "lp0": 1400.0}]},
+	# Crane claws clamping shut: a heavy metal clack.
+	"crane_clamp": {"dur": 0.3, "volume_db": -13.0, "max_voices": 1, "min_interval": 200, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.55, "decay": 0.02, "lp0": 4000.0, "lp1": 1500.0},
+			{"wave": "square", "f0": 220.0, "f1": 110.0, "dur": 0.25, "amp": 0.18, "decay": 0.08, "lp0": 1500.0}]},
+	# Crane throw: a rising servo swing.
+	"crane_throw": {"dur": 0.5, "volume_db": -15.0, "max_voices": 1, "min_interval": 200, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "saw", "f0": 200.0, "f1": 700.0, "dur": 0.45, "amp": 0.18, "decay": 0.2, "lp0": 2200.0},
+			{"wave": "noise", "dur": 0.4, "amp": 0.2, "attack": 0.1, "decay": 0.15, "lp0": 3000.0}]},
+	# Press-stamp charging: a hydraulic build-up.
+	"press_charge": {"dur": 0.9, "volume_db": -16.0, "max_voices": 1, "min_interval": 300, "pitch_var": 0.0, "priority": 2,
+		"layers": [
+			{"wave": "saw", "f0": 80.0, "f1": 220.0, "dur": 0.85, "amp": 0.2, "attack": 0.2, "decay": 0.4, "lp0": 900.0, "lp1": 1800.0}]},
+	# Press-stamp landing: a crushing industrial slam.
+	"press_stamp": {"dur": 0.7, "volume_db": -11.0, "max_voices": 3, "min_interval": 80, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.12, "amp": 0.7, "decay": 0.04, "lp0": 3000.0, "lp1": 800.0},
+			{"wave": "sine", "f0": 65.0, "f1": 35.0, "dur": 0.6, "amp": 0.75, "decay": 0.22},
+			{"wave": "square", "f0": 160.0, "f1": 90.0, "dur": 0.2, "amp": 0.15, "decay": 0.07, "lp0": 1200.0}]},
+	# Magnet pull: a deep electric hum swelling.
+	"magnet_pull": {"dur": 1.4, "volume_db": -14.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.0, "priority": 2,
+		"layers": [
+			{"wave": "square", "f0": 60.0, "f1": 90.0, "dur": 1.4, "amp": 0.22, "attack": 0.2, "decay": 0.5, "lp0": 500.0},
+			{"wave": "sine", "f0": 120.0, "f1": 180.0, "dur": 1.3, "amp": 0.18, "attack": 0.2, "decay": 0.5}]},
 }
 
 ## Web build (no worker threads, GDD §15.0 "Web build"): main-thread time

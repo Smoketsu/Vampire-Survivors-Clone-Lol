@@ -180,6 +180,8 @@ func _generate(key: Vector2i) -> Obstacle:
 		return _empty  # Crimson March: the road stays open.
 	if shore != null and not shore.obstacle_ok(center):
 		return _empty  # Ul-Thalos: nothing stands in the sea or on the shore being flooded to.
+	if _layout.has("free_bands") and in_free_band(_layout["free_bands"], center, ArenaData.MAX_HALF_EXTENT):
+		return _empty  # Act III, the Assembly Halls: conveyor belts and furnace channels stay open.
 	var total := 0.0
 	for k: String in _kinds:
 		total += float(_kinds[k]["weight"])
@@ -220,6 +222,23 @@ func _generate(key: Vector2i) -> Obstacle:
 		o.half = Vector2(short_half, long_half) if vertical else Vector2(long_half, short_half)
 	o.art_key = EnvironmentArt.obstacle_key(kind, o.size_index, sizes.size(), vertical)
 	return o
+
+
+## Act III, the Assembly Halls (optional layout key "free_bands", GDD §15.0
+## "The Assembly Halls (Act III phase 2)"): true when `p` lies within a band's
+## half width plus `margin` px of the centre line of one of `bands` (repeating
+## world strips: each {"axis": "x" | "y" (the axis the strip runs ALONG),
+## "period", "offset", "half"} in px, a strip centred on offset + k * period
+## across that axis). The conveyor belts and furnace channels use it, so no
+## obstacle is ever generated on them; absent on every other stage.
+static func in_free_band(bands: Array, p: Vector2, margin: float) -> bool:
+	for b: Dictionary in bands:
+		var across := p.y if String(b["axis"]) == "x" else p.x  # Coordinate across the strip (px).
+		var period := float(b["period"])  # Strip spacing (px).
+		var off := fposmod(across - float(b["offset"]) + period * 0.5, period) - period * 0.5  # Signed distance to the nearest strip centre (px).
+		if absf(off) < float(b["half"]) + margin:
+			return true
+	return false
 
 
 ## Push (direction * depth) that moves a body of radius `r` at `pos` out of
@@ -311,8 +330,8 @@ func resolve_all(delta: float) -> void:
 			p.position += push
 			resolved_player += 1
 	for u in game.horde.units:
-		if not u.active or u.state == SummonedUnit.State.SPAWNING or u.airborne:
-			continue  # A flying Gargoyle passes over obstacles (it lands on a free point).
+		if not u.active or u.state == SummonedUnit.State.SPAWNING or u.airborne or u.flies:
+			continue  # A flying Gargoyle passes over obstacles (it lands on a free point); so does a hovering Grave Drone (Act III).
 		var before := u.position
 		u.position = _resolve_body(u.position, u.radius, u.velocity, u.get_instance_id(), delta, now)
 		if u.position != before:
@@ -406,6 +425,8 @@ func _draw_obstacle(o: Obstacle) -> void:
 		return  # An Ul-Thalos obstacle kind (Act II).
 	if EmpireGlyphs.draw_obstacle(self, o):
 		return  # An Act III stub's placeholder obstacle kind.
+	if AssemblyGlyphs.draw_obstacle(self, o):
+		return  # An Assembly Halls obstacle kind (Act III).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

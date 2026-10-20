@@ -263,6 +263,9 @@ func _ready() -> void:
 			var eg := EmpireGround.new()  # Act III placeholder floor (the STAGE's "floor").
 			eg.look = stage_def.get("floor", {})
 			ground = eg
+		# --- Act III: the Assembly Halls ---
+		"assembly":
+			ground = AssemblyGround.new()  # The four zone floors (AssemblyStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

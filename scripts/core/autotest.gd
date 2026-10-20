@@ -954,6 +954,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.enemies.archive_haz.danger_push(pos)  # Act II: pages, spore clouds, ink (null elsewhere).
 	if game.empire != null:
 		danger += game.empire.danger_push(pos)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
+	if game.enemies.assembly != null:
+		danger += game.enemies.assembly.danger_push(pos)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	return danger
 
 
@@ -1042,6 +1044,8 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.archive_haz.danger_push(p)  # Act II: pages, spore clouds, ink (null elsewhere).
 	if game.empire != null:
 		danger += game.empire.danger_push(p)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
+	if game.enemies.assembly != null:
+		danger += game.enemies.assembly.danger_push(p)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1060,6 +1064,9 @@ func get_move_vector() -> Vector2:
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	if goal == Vector2.INF and game.enemies.spire != null and away.length() < 0.2 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.spire.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # Ul-Thalos: topple the dream pillars when calm.
+	# --- Act III: the Assembly Halls ---
+	if goal == Vector2.INF and game.enemies.assembly != null and away.length() < 0.3 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES:
+		goal = game.enemies.assembly.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # Smash the fabricators when calm.
 	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
 		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
 		var at := (game.enemies.boss as BossVhalneth).approach_point(p)

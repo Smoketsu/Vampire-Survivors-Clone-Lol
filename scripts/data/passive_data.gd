@@ -220,6 +220,12 @@ const AREA_HOLY_SOURCES := {
 	"harbourmaster_sweep": "area",  # TUNING (not in GDD) the Harbourmaster's anchor sweep.
 	"merrow_wave": "area",  # TUNING (not in GDD) Abbot Merrow's Brine Wave.
 	"merrow_whirl": "area",  # TUNING (not in GDD) Abbot Merrow's Whirl.
+	# --- Act III: the Assembly Halls ---
+	"juggernaut_flame": "area",  # TUNING (not in GDD) a Juggernaut's flame cone.
+	"furnace": "area",  # TUNING (not in GDD) a burning furnace channel.
+	"beta_swipe": "area",  # TUNING (not in GDD) the Beta Build's weld swipe.
+	"motherboard_stamp": "area",  # TUNING (not in GDD) the Motherboard's press-stamps.
+	"motherboard_hurl": "area",  # TUNING (not in GDD) a hurled summon landing.
 }
 ## Bone Plating: a plated hit always keeps at least this fraction (0..1) of
 ## its damage, so the flat reduction never makes a summon immune to the
@@ -230,7 +236,9 @@ const PLATING_MIN_FRACTION: float = 0.25  # TUNING (not in GDD)
 ## per-hit reduction would erase; it is a field, not a hit (Unholy
 ## Resilience covers it instead).
 ## Seraphine's beam pulses and collapse fire tick the same way (fields).
-const PLATING_EXEMPT_SOURCES := ["holy_zone", "seraphine_beam", "seraphine_collapse"]
+const PLATING_EXEMPT_SOURCES := ["holy_zone", "seraphine_beam", "seraphine_collapse",
+	# --- Act III: the Assembly Halls --- (fields that tick, like holy ground)
+	"furnace", "juggernaut_flame"]
 ## Grim Ledger: damage sources it does NOT amplify. The Soul Nova power-up
 ## deals an exact share of max HP (like the Gravebow curse exemption).
 const LEDGER_EXEMPT_SOURCES := ["nova"]  # TUNING (not in GDD)
