@@ -16,6 +16,7 @@ extends RefCounted
 ## and is left out while no form link is set (FeedbackReport.enabled()).
 const MENU_ITEMS: Array = [
 	["play", "Play"],  # TUNING (not in GDD) owner: one-word buttons
+	["coop", "Co-op"],  # TUNING (not in GDD) online co-op (CoopScreen; GDD §15.0 "Online co-op: relay and lobby")
 	["codex", "Codex"],  # TUNING (not in GDD)
 	["ossuary", "Ossuary"],  # TUNING (not in GDD)
 	["settings", "Settings"],  # TUNING (not in GDD)
@@ -25,6 +26,13 @@ const MENU_ITEMS: Array = [
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	["epilogue", "Epilogue"],  # TUNING (not in GDD) the campaign epilogue (EpilogueData); shown once a part is open, above Credits
 ]
+## Co-op button icon: MaskIconData key, drawn COOP_ICON_COUNT times side by
+## side (two skulls: two necromancers) at COOP_ICON_SCALE x, COOP_ICON_INSET px
+## from the button's left edge.
+const COOP_ICON: String = "skull"  # TUNING (not in GDD)
+const COOP_ICON_COUNT: int = 2  # TUNING (not in GDD)
+const COOP_ICON_SCALE: int = 2  # TUNING (not in GDD)
+const COOP_ICON_INSET: float = 10.0  # TUNING (not in GDD)
 ## MENU_ITEMS ids left out of the title screen on the Web build (a browser
 ## tab cannot quit; GDD §15.0 "Web build").
 const WEB_HIDDEN_ITEMS: Array = ["quit"]  # TUNING (not in GDD)
@@ -345,6 +353,8 @@ const LEVEL_ICONS: Dictionary = {
 }  # TUNING (not in GDD)
 ## Hint line under the modifiers while none is focused.
 const MOD_HINT: String = "Modifiers stack and add Soul Ash."  # TUNING (not in GDD)
+## That line for a co-op guest (the host picks the difficulty, modifiers and Hyper).
+const COOP_GUEST_HINT: String = "The host picks the difficulty, modifiers and Hyper."  # TUNING (not in GDD)
 
 # --- Content wave 2: B. Achievement rewards ---
 ## The skin row of the setup screen (PreRunHyperSkins) with more skin tiles

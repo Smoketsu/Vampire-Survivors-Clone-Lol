@@ -111,6 +111,8 @@ var _ping_sent: Dictionary = {}
 var _ping_timer: float = 0.0
 ## Last time anything came from the partner (ms; 0 = never).
 var _partner_heard_ms: int = 0
+## True once take_link_code() was called (the shared link is used once).
+var _link_taken: bool = false
 
 
 func _ready() -> void:
@@ -378,6 +380,15 @@ static func link_code() -> String:
 	return c if is_valid_code(c) else ""
 
 
+## The shared link's code the first time it is asked for (the title screen
+## opens the Join pad with it once per session), "" afterwards or when none.
+func take_link_code() -> String:
+	if _link_taken:
+		return ""
+	_link_taken = true
+	return link_code()
+
+
 ## The headless network test's role from `--coop-net-test=host|join` ("" = none).
 static func cli_test_role() -> String:
 	return _cli_value("--coop-net-test=")
@@ -452,6 +463,7 @@ func _set_state(s: State) -> void:
 ## Raises error `err` (with `detail` for the line).
 func _raise(err: String, detail: String = "") -> void:
 	last_error = err
+	print("[coop] error %s%s" % [err, (" (%s)" % detail) if detail != "" else ""])
 	error_raised.emit(err, error_text(err, detail))
 
 
@@ -565,6 +577,7 @@ func _on_welcome(m: Dictionary) -> void:
 		"name": String(_pending_loadout.get("name", ""))}
 	loadouts[local_slot] = _clean_loadout(_pending_loadout, local_slot)
 	ready_flags[local_slot] = local_slot == 0
+	print("[coop] lobby %s, seat %d (%s)" % [code, local_slot, platform()])
 	_set_state(State.LOBBY)
 	var p: Variant = m.get("peer", null)
 	if p is Dictionary and not (p as Dictionary).is_empty():
@@ -582,6 +595,7 @@ func _on_peer(p: Dictionary) -> void:
 		return
 	peers[other] = p.duplicate()
 	ready_flags[other] = other == 0
+	print("[coop] partner joined: seat %d (%s)" % [other, String(p.get("platform", ""))])
 	_partner_heard_ms = Time.get_ticks_msec()
 	_ping_timer = 0.0  # Ping at once.
 	_send_loadout()
@@ -599,6 +613,7 @@ func _on_left(slot: int) -> void:
 	loadouts[slot] = {}
 	ready_flags[slot] = false
 	_ping_sent = {}
+	print("[coop] partner left: seat %d" % slot)
 	partner_left.emit()
 	lobby_changed.emit()
 
@@ -615,6 +630,7 @@ func _begin_run(info: Dictionary, slot: int) -> void:
 		for k: String in lv:
 			lv[k] = int(lv[k])
 	start_info = out
+	print("[coop] run starts: seed %d, seat %d, stage %s" % [int(out["seed"]), slot, String(cfg.get("stage_id", ""))])
 	_set_state(State.STARTED)
 	run_started.emit(start_info)
 

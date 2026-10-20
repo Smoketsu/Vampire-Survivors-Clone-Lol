@@ -168,6 +168,27 @@ rewards; until then they are open). Numbers in `scripts/data/ultimate_data.gd`.
 | **Eclipse** | **Darkness for 4 s**: every foe on screen **freezes** (bosses and minibosses are only slowed 60%, never frozen; the Reckoning and structures are immune), and every foe it caught takes **+30% damage** from the cast until 6 s after the darkness (bosses too) | An emergency brake when surrounded |
 | **Grave Tide** | For **10 s** every foe that dies **rises as a Risen** fighting for you for 12 s (Restless Dead and the Grave Herald make them last longer); never a boss, miniboss, Reckoning foe or structure; at most 24 at once | Snowballing a big wave into an army |
 
+### Online co-op (in development)
+
+Two players, each on their own screen, browser or desktop, through a small relay server (`docs/coop/DESIGN.md`).
+The lobby and connection are in; the co-op run itself is being built (for now Start begins an ordinary solo run on
+each machine with the host's stage and settings).
+
+- **Host:** title screen → **Co-op** → **Host**. The lobby shows a 5-letter code: press **Copy** (or **Share** on a
+  phone, which also sends a link that opens the game with the code filled in) and send it to your friend.
+- **Join:** title screen → **Co-op** → **Join**, then tap the code's letters on the pad (or type them) and **Join**.
+- **In the lobby** each player picks their own character, skin, ultimate and title with **Setup** (from their own
+  unlocks; their Ossuary upgrades come along). The host also picks the stage (**Stage**), the difficulty, the
+  modifiers and Hyper; the guest sees those read-only. The guest presses **Ready**, then the host **Start**.
+  **Leave** asks first. Both players need the same game version.
+- **Local testing** without Cloudflare: `python3 tools/coop_relay.py` runs the relay on port 8765; start the game
+  with `-- --relay=ws://127.0.0.1:8765` (desktop) or add `?relay=ws://127.0.0.1:8765` to the Web build's address.
+- **Tests:** `python3 tools/coop_relay_check.py http://127.0.0.1:8765` (relay protocol), `python3
+  tools/coop_net_test.py` (two headless games: lobby, join by code, start, 10,000 frames each way) and
+  `node tools/coop_lobby_shots.mjs` (the lobby screens in the Web build in headless Chromium, desktop and phone).
+- **The relay** is a Cloudflare Worker (`server/relay`, protocol in `server/relay/PROTOCOL.md`) deployed by CI's
+  `deploy-relay` job; one-time owner setup in `docs/coop/RELAY_SETUP.md`.
+
 ### Feedback
 
 A **Feedback** button sits in three places: the main menu (with a quill icon, above Quit), the pause menu
@@ -1915,7 +1936,19 @@ Catapult.
 
 ```
 scenes/main.tscn            Minimal entry scene (one Node + main.gd)
+server/relay/               Online co-op relay: Cloudflare Worker (src/index.js, a Durable Object per lobby),
+                            wrangler.toml, PROTOCOL.md (ignored by Godot: server/.gdignore)
 scripts/
+  coop/
+    coop_net.gd             Autoload CoopNet: the WebSocket to the relay, lobby state, loadouts, start_info,
+                            send_frame / frame_received, pings (idle unless co-op is used)
+    coop_net_test.gd        --coop-net-test=host|join: the headless two-process network test
+  ui/ (co-op)
+    coop_screen.gd          Title screen Co-op: Host / Join, the status line; opens the lobby
+    coop_join_pad.gd        Join page: five code slots, the on-screen letter pad, Delete / Paste / Join
+    coop_lobby.gd           The lobby: code + Copy / Share, two seats, the host's run, Stage / Setup / Ready / Start
+    coop_player_card.gd     One lobby seat: portrait, name, character, ultimate, title, ready, ping
+  data/coop_net_data.gd     Relay address, protocol, code alphabet, socket buffers, lobby sizes and texts
   core/
     game_state.gd           Autoload: CLI options (autotest), session prefs, last run summary
     save_migration.gd       First-launch copy of the Gravebound saves (the rename)
