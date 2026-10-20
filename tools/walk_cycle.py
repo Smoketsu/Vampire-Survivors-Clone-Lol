@@ -290,7 +290,7 @@ RIGS = {
     # boxes span the two lobes (two bells), the still's further right and the blades pose's further
     # left than before ("the jiggle needs to extend").
     "bosses/kestrel": dict(mode="legs", hip=88, back=(0, 68), front=(79, 144), rigid=[(68, 79, 88, 94)], spread=2, lift=2, dip=1, bust=(64, 88, 24, 38, 2, 2)),
-    "bosses/kestrel_blades": dict(mode="legs", hip=82, back=(0, 60), front=(60, 120), rigid=[(94, 120, 0, 100)], spread=2, lift=2, dip=1, bust=(44, 72, 38, 51, 2, 2)),
+    "bosses/kestrel_blades": dict(mode="legs", hip=82, back=(0, 61), front=(61, 120), rigid=[(94, 120, 0, 100)], spread=2, lift=2, dip=1, bust=(44, 72, 38, 51, 2, 2)),  # Round 2 redo: legs split at col 61 (was 60): the thicker back thigh reaches col 60.
     "player/lightning_abbess": dict(mode="robe", hip=38, rigid=[(29, 44, 0, None)], sway=2, dip=1, bust=(20, 31, 18, 25, 2)),  # Round 1 redo: box 2 px right (was cols 18-28).
     # --- Act III: the Iron Citadel ---
     # The two Valkyries are in the figure-redesign style (bust bounce + idle breathing); Valkyrie
