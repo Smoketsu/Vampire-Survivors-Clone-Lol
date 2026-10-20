@@ -51,7 +51,9 @@
 ## command, or no partner input for DROP_S real seconds hands the partner's
 ## necromancer to the autotest's army bot (Autotest.init_takeover()): his
 ## inputs already received are played first, then the bot steers him on this
-## machine alone; frames stop. No reconnect in v1.
+## machine alone; frames stop; a co-op notice says so. No reconnect in v1.
+## The waiting lines and notices go through the HUD's CoopUi (game.hud.coop_ui:
+## show_waiting() / clear_waiting() / notice()).
 ##
 ## Network timing (Time) only decides WHEN ticks run, never what they do:
 ## gameplay stays deterministic per seed and input stream.
@@ -145,8 +147,8 @@ var _wait_text: String = ""
 var _adjust_ms: int = 0
 ## Smoothed jitter of the round trip (ms).
 var _jitter_ms: float = 0.0
-## The overlay bridge (CoopUi from the HUD when present, else the fallback).
-var ui: CoopWaitBridge = null
+## The co-op visuals' API (Hud.coop_ui: the waiting panel and the notices; null without a HUD).
+var ui: CoopUi = null
 ## The partner_left / connection_lost handlers (kept to disconnect them).
 var _cb_left: Callable = Callable()
 var _cb_lost: Callable = Callable()
@@ -198,7 +200,7 @@ func _init(p_game: Game, p_session: CoopSession, p_local: int) -> void:
 
 ## Hooks the network (CoopNet) and the overlay once the run's UI exists (Game._ready).
 func start() -> void:
-	ui = CoopWaitBridge.new(game)
+	ui = game.hud.coop_ui if game.hud != null else null
 	_cb_left = _on_partner_gone.bind("left")
 	_cb_lost = _on_partner_gone.bind("lost")
 	CoopNet.frame_received.connect(_on_frame)
@@ -700,7 +702,7 @@ func _sync_state() -> void:
 func _refresh_wait() -> void:
 	var text := ""
 	if ended:
-		text = CoopLockstepData.DESYNC_TEXT if desync_tick >= 0 else ""
+		text = ""  # The results card says it (a desync too).
 	elif _stall_shown:
 		text = CoopLockstepData.WAIT_NETWORK_TEXT
 	elif not paused and not _chests.is_empty() and int(_chests[0]["slot"]) != local:
@@ -876,8 +878,8 @@ func _on_partner_gone(why: String) -> void:
 	game.add_child(_takeover)
 	session.slots[remote].bot = _takeover
 	print("[coop] partner %s at tick %d (%s): a bot takes slot %d over" % ["gone", tick, why, remote])
-	if game.hud != null:
-		game.hud.announce(String(CoopLockstepData.DROP_BANNER[0]), session.slots[remote].display_name + ": " + String(CoopLockstepData.DROP_BANNER[1]), "", Palette.CRIMSON)
+	if ui != null:
+		ui.notice(CoopLockstepData.DROP_NOTICE % session.slots[remote].display_name, true)
 	if paused and paused_by == remote:
 		paused = false  # His pause dies with him.
 		paused_by = -1
@@ -1022,7 +1024,7 @@ func on_run_end() -> void:
 	print("[coop] run ended at tick %d: final state %s" % [tick, final_digest(f)])
 	_flush()
 	CoopNet.poll()
-	_set_wait(CoopLockstepData.DESYNC_TEXT if desync_tick >= 0 else "")
+	_set_wait("")
 
 
 ## The final state's checksum fields as one hex string.

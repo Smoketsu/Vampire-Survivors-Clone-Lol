@@ -491,7 +491,8 @@ func _on_player_down(i: int) -> void:
 	if GameState.autotest:
 		print("[autotest] %s coop down: slot %d" % [Autotest._clock(game.elapsed), i])
 	if game.hud != null:
-		game.hud.announce("DOWNED", s.display_name + " has fallen", "Stand by them to raise them", Palette.CRIMSON)
+		var lines: Array = CoopData.DOWN_BANNER_SELF if i == view_slot else CoopData.DOWN_BANNER_PARTNER  # This machine's own player, or the partner.
+		game.hud.announce(String(lines[0]), String(lines[1]).replace("{name}", s.display_name), String(lines[2]), Palette.CRIMSON)
 	if alive_slots().is_empty():
 		wipe_time = game.elapsed
 		if game.countdown_finished():
@@ -500,11 +501,12 @@ func _on_player_down(i: int) -> void:
 			game.end_run(false, "defeat")
 
 
-## --coop-down test: knocks slot 1's necromancer down with one lethal hit
+## --coop-down test: knocks slot 1's (or --coop-down-slot='s) necromancer down with one lethal hit
 ## (through CombatResolver, as any hit), whatever his invulnerability.
 func _test_down() -> void:
 	_test_down_done = true
-	var p := slots[slots.size() - 1].player
+	var k := GameState.autotest_coop_down_slot if GameState.autotest_coop_down_slot in range(slots.size()) else slots.size() - 1  # --coop-down-slot= (default: the last slot).
+	var p := slots[k].player
 	var was := p.invulnerable
 	p.invulnerable = false
 	p.iframes = 0.0
@@ -512,7 +514,7 @@ func _test_down() -> void:
 	p.revives_left = 0
 	game.combat.damage_player(p.max_hp * 100.0, "coop_test_down", p)
 	p.invulnerable = was
-	print("[autotest] %s coop test: slot %d knocked down (downed: %s)" % [Autotest._clock(game.elapsed), slots.size() - 1, str(slots[slots.size() - 1].downed)])
+	print("[autotest] %s coop test: slot %d knocked down (downed: %s)" % [Autotest._clock(game.elapsed), k, str(slots[k].downed)])
 
 
 ## Builds revive progress for every downed slot whose partner stands close,
@@ -556,7 +558,8 @@ func _revive(s: CoopSlot, helper: CoopSlot) -> void:
 	bind(prev)
 	game.effects.ring(p.position, CoopData.REVIVE_RADIUS * 1.5, Palette.NECRO_GREEN, 0.6)
 	if game.hud != null:
-		game.hud.announce("RAISED", s.display_name + " rises again", "", Palette.NECRO_GREEN)
+		var lines: Array = CoopData.RAISED_BANNER_SELF if s.index == view_slot else CoopData.RAISED_BANNER_PARTNER
+		game.hud.announce(String(lines[0]), String(lines[1]).replace("{name}", s.display_name), String(lines[2]), Palette.NECRO_GREEN)
 
 
 ## Revive pull for the bot of the bound slot: toward a downed partner (zero

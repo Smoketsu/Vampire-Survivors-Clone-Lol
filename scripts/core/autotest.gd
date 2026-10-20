@@ -1394,6 +1394,8 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] feedback: %s" % FeedbackReport.summary_line(game, summary))  # Feedback buttons: three sample reports built, nothing opened.
 	if game.coop != null:
 		game.coop.print_report()  # --coop-bot: a line per slot and the coop line (CoopSession).
+		if game.hud != null and game.hud.coop_ui != null:
+			print("[autotest] %s" % game.hud.coop_ui.summary_line())  # The co-op visuals (CoopUi; read only).
 	if game.perf != null:
 		game.perf.print_table()  # --perf: the per-tick timing table (PerfProbe).
 	if game.coop != null and game.coop.lockstep != null:

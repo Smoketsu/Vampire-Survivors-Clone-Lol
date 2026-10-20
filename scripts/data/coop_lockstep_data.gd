@@ -84,19 +84,19 @@ const LINGER_S: float = 1.5  # TUNING (not in GDD)
 ## Card policy of the bot that takes a dropped partner's necromancer over.
 const TAKEOVER_POLICY: String = "army"  # TUNING (not in GDD) lead brief: the autotest's army bot
 
-# ------------------------------------------------------------------ lines shown (CoopUi waiting overlay, banners)
+# ------------------------------------------------------------------ lines shown (under the CoopUi waiting panel's "Waiting for partner" headline, the notices)
 
 ## Waiting overlay while the partner's inputs are late.
-const WAIT_NETWORK_TEXT: String = "Waiting for your partner..."  # TUNING (not in GDD)
+const WAIT_NETWORK_TEXT: String = "Connection is slow"  # TUNING (not in GDD)
 ## Waiting overlay while the partner picks a level-up card (we picked).
-const WAIT_LEVEL_TEXT: String = "Waiting for your partner's pick"  # TUNING (not in GDD)
+const WAIT_LEVEL_TEXT: String = "Your partner is choosing a card"  # TUNING (not in GDD)
 ## Waiting overlay while the partner opens a treasure chest.
 const WAIT_CHEST_TEXT: String = "Your partner opens a chest"  # TUNING (not in GDD)
 ## Pause menu line when the partner paused.
 const PAUSED_BY_PARTNER_TEXT: String = "Paused by your partner"  # TUNING (not in GDD)
-## Banner when the partner left / dropped: [title, line].
-const DROP_BANNER: Array = ["PARTNER LOST", "A bot leads their army now"]  # TUNING (not in GDD)
-## Waiting overlay text after a desync (the run ends at once).
+## Co-op notice when the partner left / dropped (CoopUi.notice(); first sentence = headline): %s = his name.
+const DROP_NOTICE: String = "%s left the run. A bot leads their necromancer now."  # TUNING (not in GDD)
+## Results card subtitle after a desync (the run ends at once; EndScreen).
 const DESYNC_TEXT: String = "The two games stopped matching (desync). The run ended; your Soul Ash is kept."  # TUNING (not in GDD)
 ## Pause menu: the word on the button that leaves a co-op run (it replaces Main Menu; Restart is hidden).
 const LEAVE_WORD: String = "Leave"  # TUNING (not in GDD)

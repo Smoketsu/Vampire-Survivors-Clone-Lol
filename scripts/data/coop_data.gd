@@ -55,6 +55,13 @@ const REVIVE_DECAY: float = 1.0  # TUNING (not in GDD)
 const REVIVE_HP_FRACTION: float = 0.5  # Owner decision Oct 2026 (docs/coop/DESIGN.md)
 ## Seconds of invulnerability after being revived (same feel as Undying Will).
 const REVIVE_IFRAMES: float = 2.0  # TUNING (not in GDD)
+## Banners of a down and a revive ([title, line, sub-line]; {name} = the player's
+## name): the SELF ones on the downed / raised player's own screen, the PARTNER
+## ones on his partner's (CoopSession, the view slot decides).
+const DOWN_BANNER_SELF: Array = ["DOWNED", "You have fallen", "Your partner can raise you"]  # TUNING (not in GDD)
+const DOWN_BANNER_PARTNER: Array = ["DOWNED", "{name} has fallen", "Stand by them to raise them"]  # TUNING (not in GDD)
+const RAISED_BANNER_SELF: Array = ["RAISED", "You rise again", ""]  # TUNING (not in GDD)
+const RAISED_BANNER_PARTNER: Array = ["RAISED", "{name} rises again", ""]  # TUNING (not in GDD)
 
 # --- Placement ----------------------------------------------------------------------------
 
