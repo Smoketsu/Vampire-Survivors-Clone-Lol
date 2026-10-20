@@ -34,7 +34,8 @@ on the `coop` branch. CLAUDE.md overrides it where they conflict. Every decision
   character innate.** Armies ring their own necromancer. Menders and Warders look after their own necromancer
   (and any undead).
 - **Enemies always advance on the nearest necromancer** (downed ones are not targets). Bosses too.
-- **Doubling:** spawn counts and the alive cap ×2 (unless the performance check forces a lower cap), XP per kill
+- **Doubling:** spawn counts ×2 and the alive cap ×1.6 (the performance check, `docs/coop/PERF.md`: ×2 put the Web
+  build's late ticks over budget), XP per kill
   ×0.5 so the shared bar keeps the solo pacing (first level-up ~0:20-0:30, builds complete ~16-18 min), stage
   boss HP ×1.7, minibosses ×1.5. Elite chests double naturally with the elites; each chest goes to whoever opens it
   (its evolution or rewards follow that player's build); the boss chest drops one per player.

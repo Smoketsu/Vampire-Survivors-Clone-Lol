@@ -16,9 +16,9 @@
 ##                 keeps the solo level pacing)
 ##   boss_hp       the stage boss's HP
 ##   miniboss_hp   a miniboss's HP (Cathedral Guardian, Harbourmaster, ...)
-## Downed and revive: a necromancer brought to 0 HP before 0:00 lies downed (his
+## Downed and revive: a necromancer brought to 0 HP before 0:00 lies downed (their
 ## army crumbles); the partner standing within REVIVE_RADIUS for REVIVE_TIME s
-## raises him at REVIVE_HP_FRACTION of max HP. Both down at once ends the run
+## raises them at REVIVE_HP_FRACTION of max HP. Both down at once ends the run
 ## (before 0:00 a defeat, after it a victory, like solo).
 class_name CoopData
 extends RefCounted
@@ -30,7 +30,8 @@ const SLOTS: int = 2  # Owner decision Oct 2026 (docs/coop/DESIGN.md)
 ## multiplies by; 1 would be "as solo".
 const SCALING := {
 	"enemy_spawn": 2.0,  # Owner decision: "double the number of enemies" (docs/coop/DESIGN.md).
-	"alive_cap": 2.0,  # Owner decision: the alive cap doubles with the enemies.
+	"alive_cap": 1.6,  # TUNING (not in GDD) lead decision Oct 2026 (docs/coop/PERF.md): x2 put the Web build's late
+	# ticks over the 16.7 ms frame budget; x1.6 (288 alive) keeps the trickle doubled while the field stays playable.
 	"xp": 0.5,  # TUNING (not in GDD) lead decision: shared bar keeps the solo pacing.
 	"boss_hp": 1.7,  # TUNING (not in GDD) lead decision.
 	"miniboss_hp": 1.5,  # TUNING (not in GDD) lead decision.
