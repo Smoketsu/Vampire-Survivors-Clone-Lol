@@ -56,7 +56,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act II: the Hollow Archive ---
 	"forbidden_verse",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	"call_of_the_drowned"]
+	"call_of_the_drowned",
+	# --- Act III: the Iron Citadel ---
+	"scrap_swarm"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -365,6 +367,28 @@ const SPELLS := {
 			{"damage": 40.0, "targets": 2, "radius": 38.0, "cooldown": 6.0, "range": 300.0, "life": 12.0, "thrall_hp": 0.6, "thrall_damage": 0.8},  # TUNING (not in GDD)
 			{"damage": 48.0, "targets": 2, "radius": 40.0, "cooldown": 5.5, "range": 310.0, "life": 12.0, "thrall_hp": 0.65, "thrall_damage": 0.9},  # TUNING (not in GDD)
 			{"damage": 58.0, "targets": 3, "radius": 44.0, "cooldown": 5.0, "range": 320.0, "life": 12.0, "thrall_hp": 0.7, "thrall_damage": 1.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act III: the Iron Citadel ---
+	# Scrap Swarm (GDD §15.0 "Scrap Swarm, Machine Soul and the Rust Prophet";
+	# unlocked by defeating Deus Ex Machina, UnlockData): `drones` bone-and-scrap
+	# drones orbit OUTSIDE the Bone Ring (owner-approved: about 40 px past its
+	# outer edge, so the orbit widens with the army) at `orbit_speed` rad/s;
+	# each fires a bolt every `cooldown` s at the nearest foe within `range` px
+	# that has not reached the army yet, for `damage`. Logic: ScrapSwarm; fixed
+	# rules: ScrapSwarmData.
+	"scrap_swarm": {
+		"display_name": "Scrap Swarm",
+		"icon": "scrap_swarm",
+		"description": "Drones of bone and scrap orbit beyond your ring and shoot foes before they reach your army.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bolt damage", "drones": "Drones", "cooldown": "Fire interval (s)", "range": "Range"},
+		"levels": [
+			{"drones": 3, "damage": 9.0, "cooldown": 1.2, "range": 200.0, "orbit_speed": 1.0},  # TUNING (not in GDD)
+			{"drones": 3, "damage": 11.0, "cooldown": 1.1, "range": 210.0, "orbit_speed": 1.05},  # TUNING (not in GDD)
+			{"drones": 4, "damage": 11.0, "cooldown": 1.05, "range": 220.0, "orbit_speed": 1.1},  # TUNING (not in GDD)
+			{"drones": 4, "damage": 13.0, "cooldown": 0.95, "range": 230.0, "orbit_speed": 1.15},  # TUNING (not in GDD)
+			{"drones": 5, "damage": 15.0, "cooldown": 0.85, "range": 240.0, "orbit_speed": 1.2},  # TUNING (not in GDD) first pass 19 (with the evolution 296k damage in a forced army run)
 		],
 	},
 }

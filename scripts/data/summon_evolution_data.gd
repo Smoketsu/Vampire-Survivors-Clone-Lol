@@ -63,7 +63,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"leviathan",
 	# --- Content wave 2: Bone Golem ---
-	"ossuary_titan"]
+	"ossuary_titan",
+	# --- Act III: the Iron Citadel ---
+	"deus_revenant"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -668,6 +670,43 @@ const EVOLUTIONS := {
 			"wall_segments": 7,  # TUNING (not in GDD) about 100 px of wall (GraveSpellData.BONE_WALL_SPACING 16)
 			"wall_duration": 6.0,  # Owner-approved proposal: a bone wall for 6 s
 			"wall_damage": 0.3,  # TUNING (not in GDD) spike damage per tick, x its slam damage
+		},
+	},
+	# --- Act III: the Iron Citadel ---
+	# Deus Revenant (GDD §15.0 "Iron Revenant, Deus Revenant and Recoil Frame";
+	# owner-approved proposal: "twin cannons, a missile salvo"): Iron Revenant
+	# Lv 5 + Recoil Frame Lv 5 (a NEW passive, owner rule). RevenantBehavior
+	# reads these special_set keys (final, not suffix-scaled):
+	#   twin / twin_offset — 1: two cannons, px apart (twice the shells);
+	#   salvo_missiles     — missiles per salvo (0 = none: the base class);
+	#   salvo_cooldown     — s between salvos;
+	#   salvo_range        — px it looks for targets;
+	#   salvo_radius       — px splash of each missile;
+	#   salvo_fraction     — each missile's damage, x the unit's damage.
+	"deus_revenant": {
+		"mode": "transform",
+		"bases": ["iron_revenant"],
+		"passive": "recoil_frame",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Deus Revenant",  # Owner-approved proposal
+		"plural": "Deus Revenants",
+		"icon": "deus_revenant",
+		"description": "Twin cannons double the suppressive fire, and missile salvos fall on the strongest foes.",
+		"mult": {
+			"max_hp": 1.35,  # TUNING (not in GDD)
+			"damage": 1.2,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 17.0,  # TUNING (not in GDD) revenants are 15
+		},
+		"special_set": {
+			"twin": 1,  # Owner-approved proposal: twin cannons
+			"twin_offset": 7.0,  # TUNING (not in GDD) px
+			"salvo_missiles": 4,  # Owner-approved proposal: a missile salvo; TUNING (not in GDD) 4
+			"salvo_cooldown": 7.0,  # TUNING (not in GDD) s
+			"salvo_range": 340.0,  # TUNING (not in GDD) px
+			"salvo_radius": 40.0,  # TUNING (not in GDD) px
+			"salvo_fraction": 2.5,  # TUNING (not in GDD) x one shell
 		},
 	},
 }

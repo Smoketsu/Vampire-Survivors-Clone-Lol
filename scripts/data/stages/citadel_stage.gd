@@ -254,7 +254,7 @@ const ZONES := [
 				"signal_bollard": {"weight": 0.5, "shape": "circle", "sizes": [11.0, 14.0, 17.0]},  # TUNING (not in GDD)
 			}},
 		"guns": {"first": 30.0, "interval": 16.0, "count": 1, "scatter": 220.0, "radius": 48.0, "telegraph": 1.5,  # TUNING (not in GDD) the guns wake
-			"damage": 9.0, "summon_damage": 7.0, "boss_mult": 1.5},  # TUNING (not in GDD) first pass 16 on summons: undead do not dodge, the guns ate the ring
+			"damage": 9.0, "summon_damage": 4.0, "boss_mult": 1.5},  # TUNING (not in GDD) passes 1-2: 16 -> 7 -> 4 on summons (undead do not dodge: the guns ate the ring, 22k summon damage a run)
 		"lasers": {}},
 	{"start": 300.0, "numeral": "II", "name": "The Laser Courts",  # Owner-approved proposal zone II
 		"blurb": "Polished courts crossed by sweeping laser grids",
@@ -266,9 +266,9 @@ const ZONES := [
 				"iron_barricade": {"weight": 0.45, "shape": "rect", "sizes": [52.0, 68.0, 84.0], "short": 26.0},  # TUNING (not in GDD)
 			}},
 		"guns": {"first": 12.0, "interval": 12.0, "count": 2, "scatter": 240.0, "radius": 48.0, "telegraph": 1.5,  # TUNING (not in GDD)
-			"damage": 9.0, "summon_damage": 7.0, "boss_mult": 1.5},  # TUNING (not in GDD) first pass 16 on summons: undead do not dodge, the guns ate the ring
+			"damage": 9.0, "summon_damage": 4.0, "boss_mult": 1.5},  # TUNING (not in GDD) passes 1-2: 16 -> 7 -> 4 on summons (undead do not dodge: the guns ate the ring, 22k summon damage a run)
 		"lasers": {"first": 8.0, "interval": 9.0, "beams": 3, "spacing": 170.0, "length": 1500.0, "telegraph": 1.0,  # Owner-approved proposal: "telegraphed a second before they fire"
-			"sweep": 60.0, "sweep_time": 0.5, "width": 10.0, "damage_player": 9.0, "damage_summon": 5.0, "damage_enemy": 30.0,  # TUNING (not in GDD) first pass 12 on summons (they cannot step out)
+			"sweep": 60.0, "sweep_time": 0.5, "width": 10.0, "damage_player": 9.0, "damage_summon": 3.0, "damage_enemy": 30.0,  # TUNING (not in GDD) passes 1-2: 12 -> 5 -> 3 on summons (they cannot step out)
 			"angles": [0.0, 90.0, 45.0, 135.0]}},
 	{"start": 600.0, "numeral": "III", "name": "The Spire Lifts",  # Owner-approved proposal zone III
 		"blurb": "Steel gratings over the lift shafts, the guns above",
@@ -280,7 +280,7 @@ const ZONES := [
 				"lift_winch": {"weight": 0.5, "shape": "circle", "sizes": [13.0, 16.0, 19.0]},  # TUNING (not in GDD)
 			}},
 		"guns": {"first": 10.0, "interval": 9.0, "count": 2, "scatter": 260.0, "radius": 50.0, "telegraph": 1.4,  # TUNING (not in GDD) faster deeper in
-			"damage": 10.0, "summon_damage": 8.0, "boss_mult": 1.5},  # TUNING (not in GDD) first pass 18
+			"damage": 10.0, "summon_damage": 4.0, "boss_mult": 1.5},  # TUNING (not in GDD) passes 1-2: 18 -> 8 -> 4
 		"lasers": {}},
 	{"start": 900.0, "numeral": "IV", "name": "The Core",  # Owner-approved proposal zone IV
 		"blurb": "A black floor veined with light around the god the Empire built",
@@ -291,9 +291,9 @@ const ZONES := [
 				"core_conduit": {"weight": 1.0, "shape": "circle", "sizes": [12.0, 15.0]},  # TUNING (not in GDD)
 			}},
 		"guns": {"first": 8.0, "interval": 7.0, "count": 3, "scatter": 280.0, "radius": 50.0, "telegraph": 1.4,  # TUNING (not in GDD) the guns at their fastest ("more often the deeper you go")
-			"damage": 10.0, "summon_damage": 8.0, "boss_mult": 1.6},  # TUNING (not in GDD) first pass 18
+			"damage": 10.0, "summon_damage": 4.0, "boss_mult": 1.6},  # TUNING (not in GDD) passes 1-2: 18 -> 8 -> 4
 		"lasers": {"first": 14.0, "interval": 13.0, "beams": 2, "spacing": 210.0, "length": 1500.0, "telegraph": 1.0,  # TUNING (not in GDD) rarer in the Core
-			"sweep": 60.0, "sweep_time": 0.5, "width": 10.0, "damage_player": 9.0, "damage_summon": 5.0, "damage_enemy": 30.0,  # TUNING (not in GDD) first pass 12 on summons (they cannot step out)
+			"sweep": 60.0, "sweep_time": 0.5, "width": 10.0, "damage_player": 9.0, "damage_summon": 3.0, "damage_enemy": 30.0,  # TUNING (not in GDD) passes 1-2: 12 -> 5 -> 3 on summons (they cannot step out)
 			"angles": [45.0, 135.0, 0.0, 90.0]}},
 ]
 

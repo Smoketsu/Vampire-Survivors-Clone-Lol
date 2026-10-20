@@ -8,7 +8,9 @@ extends Node2D
 ## Projectile kinds (drawing + hit rules). VOID_BOLT / VOID_SHARD belong to
 ## the Void Barrage evolution (GDD §6.1); FROST_BOLT is the Frost Wraith's;
 ## RADIANT_BOLT is the hostile burst of the Holy Retribution run modifier.
-enum Kind { SHADOW_BOLT, ARROW, MAGE_ORB, PRIEST_BOLT, ENEMY_ARROW, VOID_BOLT, VOID_SHARD, FROST_BOLT, RADIANT_BOLT, SOUL_ROUND }
+enum Kind { SHADOW_BOLT, ARROW, MAGE_ORB, PRIEST_BOLT, ENEMY_ARROW, VOID_BOLT, VOID_SHARD, FROST_BOLT, RADIANT_BOLT, SOUL_ROUND,
+		# --- Act III: the Iron Citadel --- (Scrap Swarm / the Rust Prophet's bolts; the Iron Revenant's shells)
+		SCRAP_BOLT, IRON_SHELL }
 
 ## Current kind.
 var kind: Kind = Kind.SHADOW_BOLT
@@ -68,6 +70,12 @@ var chill_time: float = 0.0
 var curse_amp: float = 0.0
 ## Gravebow arrow: seconds the curse lasts on every enemy it hits (0 = none).
 var curse_time: float = 0.0
+# --- Act III: the Iron Citadel ---
+## Iron Revenant shell: fraction (0..1) of speed its hit removes
+## (CombatResolver.slow_enemy(); 0 = no slow; reset on every launch).
+var slow_frac: float = 0.0
+## Iron Revenant shell: seconds the slow lasts.
+var slow_time: float = 0.0
 
 
 func _draw() -> void:
@@ -121,3 +129,12 @@ func _draw() -> void:
 			# Act III: a Grave Gunner's rifle round, burning with soul fire.
 			draw_line(Vector2(-12, 0), Vector2.ZERO, Color(Palette.NECRO_GREEN, 0.4), 3.0)
 			draw_line(Vector2(-6, 0), Vector2(2, 0), Color(0.8, 1.0, 0.9), 1.5)
+		Kind.SCRAP_BOLT:
+			# Act III, the Iron Citadel: a scrap drone's bolt, a bone shard wrapped in violet.
+			draw_line(Vector2(-10, 0), Vector2.ZERO, Color(Palette.VIOLET, 0.45), 3.0)
+			draw_colored_polygon(PackedVector2Array([Vector2(5, 0), Vector2(0, -2.5), Vector2(-4, 0), Vector2(0, 2.5)]), Palette.BONE)
+		Kind.IRON_SHELL:
+			# Act III, the Iron Citadel: an Iron Revenant's cannon shell, bone-grey with a soul-teal trail.
+			draw_line(Vector2(-14, 0), Vector2(-2, 0), Color(Palette.NECRO_GREEN, 0.45), 4.0)
+			draw_circle(Vector2.ZERO, 3.5, Glyphs.OUTLINE)
+			draw_circle(Vector2.ZERO, 2.5, Palette.BONE)

@@ -617,8 +617,8 @@ func _laser_hit(k0: float, k1: float) -> void:
 
 ## HUD objective while a gate stands or turrets fire ("" = none).
 func objective_override() -> String:
-	for gt in gates:
-		return "Destroy the Shield Gate's generators before the zone falls (%d left)" % _gens_alive(gt)
+	if not gates.is_empty():
+		return "Destroy the Shield Gate's generators before the zone falls (%d left)" % _gens_alive(gates[0])
 	var n := _turrets_alive()
 	if n > 0 and game.enemies.boss == null:
 		return "Silence the sentry turrets (%d left)" % n

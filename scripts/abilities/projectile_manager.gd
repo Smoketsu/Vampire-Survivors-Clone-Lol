@@ -192,6 +192,7 @@ func _acquire() -> Projectile:
 	p.chill_slow = 0.0
 	p.curse_amp = 0.0
 	p.curse_time = 0.0
+	p.slow_frac = 0.0  # Act III: the Iron Revenant's slowing shells.
 	p.reserved = 0.0
 	p.reserve_target = null
 	p.undead_mult = 1.0
@@ -295,6 +296,8 @@ func _friendly_hits(p: Projectile) -> bool:
 			game.effects.burst(p.position, AnimData.BOLT_IMPACT_RADIUS, "bolt_impact")
 		if p.chill_slow > 0.0:
 			game.combat.chill_enemy(e, p.chill_slow, p.chill_time)  # Frost Wraith bolt.
+		if p.slow_frac > 0.0:
+			game.combat.slow_enemy(e, p.slow_frac, p.slow_time)  # Act III: an Iron Revenant shell (suppressive fire).
 		if p.curse_time > 0.0:
 			game.combat.curse_enemy(e, p.curse_amp, p.curse_time)  # Gravebow arrow.
 			if p.hit_ids.size() > 1:

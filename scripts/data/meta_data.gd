@@ -244,7 +244,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"the_dead_god_serves",
 	# --- Content wave 2: B. Achievement rewards ---
-	"mass_grave", "untouchable", "full_ossuary", "deathlords_due", "swift_judgment"]
+	"mass_grave", "untouchable", "full_ossuary", "deathlords_due", "swift_judgment",
+	# --- Act III: the Iron Citadel ---
+	"nothing_is_deathless"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -312,6 +314,14 @@ const ACHIEVEMENTS := {
 		"stat": "deathlord_victories", "goal": 1, "run": true, "unlock": "The Deathlord skin (any character)", "bounty": 250},  # owner-approved goal; bounty TUNING (not in GDD)
 	"swift_judgment": {"display_name": "Swift Judgment", "description": "Slay a stage boss within 45 s of its arrival",
 		"stat": "swift_boss_kills", "goal": 1, "run": true, "unlock": "Title Executioner", "bounty": 150},  # owner-approved goal; bounty TUNING (not in GDD)
+	# --- Act III: the Iron Citadel ---
+	# The finale of Act III and of the campaign (owner-approved proposal:
+	# "Nothing Is Deathless: defeat Deus Ex Machina; reward: the Act III epilogue
+	# + title Breaker of Engines"): the stage boss slain in the Iron Citadel,
+	# counted from the stage record. Its title is an UnlockData row; its epilogue
+	# part is EpilogueData.ACT3_PART (built by the lead at integration).
+	"nothing_is_deathless": {"display_name": "Nothing Is Deathless", "description": "Defeat Deus Ex Machina in the Iron Citadel",
+		"stat": "boss_kills", "stage": "citadel", "goal": 1, "unlock": "Title Breaker of Engines, the Act III epilogue", "bounty": 350},  # Owner-approved proposal; bounty TUNING (not in GDD) the campaign's last (The Dead God Serves 300)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

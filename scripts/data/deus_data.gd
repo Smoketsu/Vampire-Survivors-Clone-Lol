@@ -50,7 +50,7 @@ const LEGS := [Vector2(-50.0, -6.0), Vector2(50.0, -6.0), Vector2(-42.0, 30.0), 
 ## Boss row: Enemy row keys plus its ability numbers (see the header).
 const BOSS := {
 	"display_name": "Deus Ex Machina",
-	"max_hp": 20000.0,  # TUNING (not in GDD) x the stage HP multiplier (27,000 in the Citadel; Vhal'Neth 24,000 on Ul-Thalos), a 1-2 min fight for a strong army (proposal)
+	"max_hp": 16000.0,  # TUNING (not in GDD) x the stage HP multiplier (21,600 in the Citadel; Vhal'Neth 24,000 on Ul-Thalos), a 1-2 min fight for a strong army (proposal); first pass 20,000: the army bot left it at half
 	"move_speed": 30.0,  # TUNING (not in GDD) px/s: a slow, heavy stride (the Walker)
 	"damage": 14.0,  # TUNING (not in GDD) a kick of a leg in melee reach
 	"attack_interval": 1.6,  # TUNING (not in GDD)
@@ -112,11 +112,11 @@ const BOSS := {
 	"stomp_cooldown": 8.0,  # TUNING (not in GDD) s
 	# The Siege Core: shield drones.
 	"drones": 6,  # TUNING (not in GDD)
-	"drone_hp": 0.022,  # TUNING (not in GDD) fraction of its max HP per drone
+	"drone_hp": 0.015,  # (first pass 0.022: the army downed 6 of 12 drones in 2 min)  # TUNING (not in GDD) fraction of its max HP per drone
 	"drone_orbit": 120.0,  # TUNING (not in GDD) px from the core
 	"drone_speed": 0.8,  # TUNING (not in GDD) rad/s around the core
-	"exposed_time": 14.0,  # TUNING (not in GDD) s the core stays open once every drone is down
-	"exposed_damage_taken": 1.25,  # TUNING (not in GDD) the open core is the weak point
+	"exposed_time": 16.0,  # TUNING (not in GDD) s the core stays open once every drone is down
+	"exposed_damage_taken": 1.4,  # TUNING (not in GDD) the open core is the weak point
 	"redeploy_time": 1.5,  # TUNING (not in GDD) s the new drones take to launch (the core is still open)
 	# The Siege Core: Judgment Lance.
 	"lance_first": 3.0,  # TUNING (not in GDD) s into the phase

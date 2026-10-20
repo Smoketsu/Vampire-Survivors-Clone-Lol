@@ -44,6 +44,14 @@
 ##                    wither_rot_linger s through CombatResolver.rot_enemy
 ##                    (creeping_rot_applied)
 ## The Grave Herald's Restless counts restless_extra_seconds.
+## Act III, the Iron Citadel:
+##   Rust Prophet     Scrap Prophecy  on_temporary_spawned() (HordeDirector
+##                    .spawn_temporary, the one temporary-summon path: every
+##                    temporary Risen is armed) and step(): each armed Risen
+##                    fires a scrap bolt (Projectile.Kind.SCRAP_BOLT, source
+##                    "scrap_bolt", a minion special source) every
+##                    risen_bolt_interval s at the nearest foe within
+##                    ScrapSwarmData.PROPHET_RANGE px; stat prophet_scrap_bolts.
 class_name CharacterInnates
 extends Node2D
 
@@ -62,6 +70,10 @@ var _shard_angle: float = 0.0
 var _tmp: Array = []
 ## Innate id of the run's character ("" = none: every hook is a no-op).
 var _innate: String = ""
+# --- Act III: the Iron Citadel ---
+## Scrap Prophecy: armed temporary Risen, each [SummonedUnit, generation,
+## seconds until its next scrap bolt].
+var _armed: Array = []
 
 
 func _ready() -> void:
@@ -83,11 +95,55 @@ func step(delta: float) -> void:
 		queue_redraw()
 	elif _innate == "echoing_dark":
 		queue_redraw()
+	elif _innate == "scrap_prophecy":
+		_step_scrap(delta)  # Act III: the Rust Prophet's armed Risen.
 
 
 # =====================================================================================
 # Hooks called by the existing systems
 # =====================================================================================
+
+## Scrap Prophecy (Rust Prophet; Act III): every temporary Risen
+## (HordeDirector.spawn_temporary()) is armed with a scrap launcher.
+func on_temporary_spawned(u: SummonedUnit) -> void:
+	if _innate != "scrap_prophecy":
+		return
+	_armed.append([u, u.generation, game.character.innate_value("risen_bolt_interval") * 0.5])
+
+
+## Scrap Prophecy: each armed Risen still standing fires on its interval at the
+## nearest foe in range; crumbled or fallen ones are dropped.
+func _step_scrap(delta: float) -> void:
+	var interval := game.character.innate_value("risen_bolt_interval")  # s between two bolts.
+	var dmg := game.character.innate_value("risen_bolt_damage")  # Damage per bolt.
+	var i := _armed.size() - 1
+	while i >= 0:
+		var rec: Array = _armed[i]
+		var u: SummonedUnit = rec[0]
+		if not u.active or u.generation != int(rec[1]):
+			_armed.remove_at(i)
+			i -= 1
+			continue
+		rec[2] = float(rec[2]) - delta
+		if float(rec[2]) <= 0.0:
+			var best: Enemy = null
+			var best_d := ScrapSwarmData.PROPHET_RANGE
+			game.enemy_grid.query(u.position, best_d, _tmp)
+			for e: Enemy in _tmp:
+				if not e.active or e.untargetable:
+					continue
+				var d := u.position.distance_to(e.position)
+				if d < best_d:
+					best_d = d
+					best = e
+			if best == null:
+				rec[2] = 0.3
+			else:
+				rec[2] = interval
+				game.projectiles.fire_friendly(Projectile.Kind.SCRAP_BOLT, u.position, best, dmg, ScrapSwarmData.PROPHET_BOLT_SPEED, 0, ScrapSwarmData.PROPHET_SOURCE)
+				game.stat_add("prophet_scrap_bolts", 1.0)
+		i -= 1
+
 
 ## Echoing Dark (Voidcaller): a Shadow Blast (or Abyssal Detonation) of
 ## `damage` at `pos` with radius `r` queues an echo burst.
@@ -298,6 +354,10 @@ func summary_line() -> String:
 		# --- Act II: the Hollow Archive ---
 		"illuminated_margins":
 			counters = "ink bursts %d (burst dmg %d)" % [int(st.get("verse_bursts", 0.0)), int(st.get("dmg_ink_burst", 0.0))]
+		# --- Act III: the Iron Citadel ---
+		"scrap_prophecy":
+			counters = "scrap bolts %d, bolt dmg %d, kills %d (temporary summons %d)" % [int(st.get("prophet_scrap_bolts", 0.0)), int(st.get("dmg_" + ScrapSwarmData.PROPHET_SOURCE, 0.0)),
+				int(st.get("kills_by_" + ScrapSwarmData.PROPHET_SOURCE, 0.0)), game.horde.temp_spawned]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

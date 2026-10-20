@@ -44,7 +44,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act II: Ul-Thalos, the Risen Spire ---
 		"spawn_of_the_deep",
 		# --- Content wave 2: Bone Golem --- (a silhouette naming Bone Legion until met)
-		"bone_golem"]
+		"bone_golem",
+		# --- Act III: the Iron Citadel --- (a silhouette naming its unlock until met)
+		"iron_revenant"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -94,9 +96,13 @@ const EYE_BOSSES: Array[String] = [
 ## champions (minibosses and the Purge Protocol's kill-drone) and its stage
 ## bosses (StageRegistry.BOSS_ARRIVALS ids). Each Act III stage adds its own as
 ## it is built (phase 2).
-const EMPIRE_SOLDIERS: Array[String] = ["scout_drone", "line_trooper", "spotter"]
+const EMPIRE_SOLDIERS: Array[String] = ["scout_drone", "line_trooper", "spotter",
+	# --- Act III: the Iron Citadel ---
+	"valkyrie_duelist", "sentry_turret", "shield_generator"]
 ## Electronic Empire champions (minibosses) and the Act III Reckoning kinds.
-const EMPIRE_CHAMPIONS: Array[String] = ["kill_drone"]
+const EMPIRE_CHAMPIONS: Array[String] = ["kill_drone",
+	# --- Act III: the Iron Citadel ---
+	"valkyrie_prime"]
 ## Electronic Empire stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const EMPIRE_BOSSES: Array[String] = ["kestrel", "motherboard", "deus_ex_machina"]
 
@@ -170,6 +176,11 @@ const DESCRIPTIONS: Dictionary = {
 	"kestrel": "The Dead Pixel, hunter of the Scrap Wastes.",  # Owner-approved Act III proposal
 	"motherboard": "The mind that runs every machine of the Assembly Halls at once.",  # Owner-approved Act III proposal
 	"deus_ex_machina": "The god the Empire built, with Varn, the Root User, at its controls.",  # Owner-approved Act III proposal
+	# --- Act III: the Iron Citadel ---
+	"valkyrie_duelist": "Jet-armoured duellists who lunge through your ring with an arm blade; a blocker stops them.",  # Owner-approved Act III proposal
+	"sentry_turret": "Fixed gun emplacements behind the shield walls; siege them for a Soul Ash bounty.",  # Owner-approved Act III proposal
+	"shield_generator": "Two hold up each Shield Gate; while they stand the wall bars your way.",  # Owner-approved Act III proposal
+	"valkyrie_prime": "The Duelists' upgraded leader: a jet dash, a shield bash and a storm of blades.",  # Owner-approved Act III proposal (Valkyrie 2.0)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -330,6 +341,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"full_ossuary": "ach_full_ossuary",  # TUNING (not in GDD)
 	"deathlords_due": "ach_deathlords_due",  # TUNING (not in GDD)
 	"swift_judgment": "ach_swift_judgment",  # TUNING (not in GDD)
+	# --- Act III: the Iron Citadel ---
+	"nothing_is_deathless": "ach_nothing_is_deathless",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -349,6 +362,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"full_ossuary": "forbidden_knowledge",
 	"deathlords_due": "dread_rally",
 	"swift_judgment": "death_mark",
+	# --- Act III: the Iron Citadel ---
+	"nothing_is_deathless": "scrap_swarm",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

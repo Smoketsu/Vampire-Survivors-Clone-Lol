@@ -80,6 +80,17 @@ const UNLOCKS := {
 	# wave 2"): the Bone Golem and its paired passive, offered on every stage.
 	"bone_golem": {"type": "class", "achievement": "bone_legion", "text": "Earn Bone Legion: Skeleton Warriors slay 1,000 foes."},  # Owner-approved proposal 5
 	"grave_masonry": {"type": "passive", "achievement": "bone_legion", "text": "Earn Bone Legion: Skeleton Warriors slay 1,000 foes."},  # Its paired passive, unlocked with it
+	# --- Act III: the Iron Citadel ---
+	# Deus Ex Machina's fall (owner-approved Act III proposal): the spell Scrap
+	# Swarm with its paired passive, and the finale's summon class with its
+	# paired passive, offered on every stage (no card-row "act" key). The title
+	# Breaker of Engines is the Nothing Is Deathless achievement's reward.
+	"scrap_swarm": {"type": "spell", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Owner-approved proposal
+	"machine_soul": {"type": "passive", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Scrap Swarm's paired passive, unlocked with it
+	"iron_revenant": {"type": "class", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Owner-approved proposal: the finale's reward
+	"recoil_frame": {"type": "passive", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Its paired passive, unlocked with it
+	"breaker_of_engines": {"type": "title", "achievement": "nothing_is_deathless",
+		"text": "Earn Nothing Is Deathless: defeat Deus Ex Machina in the Iron Citadel."},  # Owner-approved proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.
