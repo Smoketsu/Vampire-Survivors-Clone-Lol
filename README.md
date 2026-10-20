@@ -2630,6 +2630,9 @@ support).
 
 ## Known limitations
 
+- **Browsers with the JavaScript JIT off** (GrapheneOS's Vanadium by default) run the Web build's WebAssembly in an
+  interpreter or not at all: the game cannot run at a playable speed. The page detects it (a WebAssembly speed check
+  at start) and says how to turn the JIT on for the site (GDD §15.0 "Slow browser hint").
 - **Balance is checked only against the autotest bots.** The v0.3 pass, before
   the priest split and the newer content (`--mortal`; after the
   power-up / chest merge: 16 seeds for naive / army at meta none, 8 for evolve
