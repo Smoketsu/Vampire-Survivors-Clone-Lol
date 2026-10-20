@@ -35,9 +35,7 @@ then `CLAUDE.md` (the project rules; they override everything here if they confl
 ## Phase 1: what is left before merging
 
 1. Check the foundation against the checklist in `BRIEF_FOUNDATION.md` and finish anything missing.
-2. **GDD §15.0 rows are not in `docs/GDD.md` yet.** A draft is in `docs/act3/foundation_gdd_rows_draft.md`. Insert
-   it at the end of the §15.0 table, just before `### 15.1 Core Rules and Run Structure`, after checking it matches
-   the code.
+2. GDD §15.0 rows: done (inserted by the new lead).
 3. Full verification:
    - `--import` clean;
    - the gate (`docs/act3/tools/gate.sh TREE OUTDIR` runs the four seed-7 runs; diff the summaries with
