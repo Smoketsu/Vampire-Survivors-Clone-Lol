@@ -118,15 +118,20 @@ static func draw_jets(ci: CanvasItem, at: Vector2, dir: Vector2, r: float, burni
 
 ## A Sentry Turret's barrel at `angle` (rad, world) over its base (radius `r`);
 ## while `aiming` its sensor flares as `k` (0..1) rises.
+## With the sprite (empire/sentry_turret, its dome) only a slim gun on the dome's
+## top turns to the aim; without it the code turret's hub and eye are drawn too.
 static func draw_turret_barrel(ci: CanvasItem, r: float, angle: float, aiming: bool, k: float) -> void:
 	var dir := Vector2.from_angle(angle)
-	var tip := dir * r * 1.55
-	ci.draw_line(Vector2.ZERO, tip, INK, 5.0)
-	ci.draw_line(Vector2.ZERO, tip, Palette.EMPIRE_CHROME_LIGHT, 2.5)
-	ci.draw_circle(Vector2.ZERO, r * 0.38, INK)
-	ci.draw_circle(Vector2.ZERO, r * 0.3, Palette.EMPIRE_CHROME_DARK)
-	var eye := Palette.EMPIRE_SIGNAL_GLOW if aiming else Palette.EMPIRE_SIGNAL_AMBER
-	ci.draw_circle(dir * r * 0.15, r * 0.16, eye)
+	var art := SpriteBank.has("empire/sentry_turret")  # The sprite carries the dome and body.
+	var hub := Vector2(0.0, -r * 0.55) if art else Vector2.ZERO  # The gun's pivot: the dome's top with art.
+	var tip := hub + dir * r * (1.2 if art else 1.55)
+	ci.draw_line(hub, tip, INK, 4.0 if art else 5.0)
+	ci.draw_line(hub, tip, Palette.EMPIRE_CHROME_LIGHT, 2.0 if art else 2.5)
+	if not art:
+		ci.draw_circle(Vector2.ZERO, r * 0.38, INK)
+		ci.draw_circle(Vector2.ZERO, r * 0.3, Palette.EMPIRE_CHROME_DARK)
+		var eye := Palette.EMPIRE_SIGNAL_GLOW if aiming else Palette.EMPIRE_SIGNAL_AMBER
+		ci.draw_circle(dir * r * 0.15, r * 0.16, eye)
 	if aiming:
 		ci.draw_circle(tip, 2.0 + 4.0 * k, Color(Palette.EMPIRE_SIGNAL_RED, 0.25 + 0.5 * k))
 		ci.draw_line(tip, tip + dir * 60.0 * k, Color(Palette.EMPIRE_SIGNAL_RED, 0.35 * k), 1.0)
@@ -215,12 +220,13 @@ static func draw_laser_band(ci: CanvasItem, c0: Vector2, n: Vector2, along: Vect
 ## Deus Ex Machina without art (`look`: 0 the Walker, 1 the Siege Core, 2 the
 ## Founder; `arrive` 0..1 while it descends; `exposed`: the Siege Core open).
 ## Draws its sprite (bosses/deus_ex_machina, _siege, _founder) when it exists.
-static func draw_deus(ci: CanvasItem, o: Vector2, r: float, flash: bool, look: int, arrive: float, t: float, exposed: bool) -> void:
+static func draw_deus(ci: CanvasItem, o: Vector2, r: float, flash: bool, look: int, arrive: float, t: float, exposed: bool, pose: int = 0) -> void:
 	var key := "bosses/deus_ex_machina" + String(["", "_siege", "_founder"][clampi(look, 0, 2)])  # This phase's art.
 	var drop := (1.0 - arrive) * -120.0  # It descends from above.
 	if arrive < 1.0:
 		ci.draw_circle(o, r * (0.6 + 0.6 * arrive), Color(0, 0, 0, 0.25 * arrive))
-	if SpriteBank.draw(ci, key, o + Vector2(0, drop), flash) or (look != 0 and SpriteBank.draw(ci, "bosses/deus_ex_machina", o + Vector2(0, drop), flash)):
+	var drawn := SpriteBank.draw_pose(ci, key, pose, o + Vector2(0, drop), flash) if look == 0 else SpriteBank.draw(ci, key, o + Vector2(0, drop), flash)  # The Walker has its firing pose (BossPoseData).
+	if drawn or (look != 0 and SpriteBank.draw(ci, "bosses/deus_ex_machina", o + Vector2(0, drop), flash)):
 		if look == 1 and exposed:
 			ci.draw_circle(o + Vector2(0, drop - r * 0.6), r * 0.35, Color(Palette.EMPIRE_SIGNAL_GLOW, 0.35 + 0.15 * sin(t * 8.0)))
 		elif look == 2:

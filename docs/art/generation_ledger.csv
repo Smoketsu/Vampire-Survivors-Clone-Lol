@@ -656,3 +656,9 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-20 06:22,player/rust_prophet_hyper,gpt-image-2.5-flare,medium,1024x1024,1,611,1024,439,0.0244,rust_prophet_hyper.png
 2026-10-20 06:22,bosses/deus_ex_machina_fire,gpt-image-2.5-flare,medium,1024x1024,1,533,1024,439,0.0240,deus_fire.png
 2026-10-20 06:22,player/rust_prophet_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,659,1024,439,0.0247,rust_prophet_deathlord.png
+2026-10-20 06:28,tiles/citadel_plates,gpt-image-2.5-flare,medium,1024x1024,0,202,0,439,0.0142,citadel_plates.png
+2026-10-20 06:28,obstacles/citadel_round,gpt-image-2.5-flare,medium,1536x1024,2,397,10,343,0.0124,props_round.png
+2026-10-20 06:28,icons/citadel_b,gpt-image-2.5-flare,medium,1024x1024,1,395,4,439,0.0152,icons_b.png
+2026-10-20 06:28,obstacles/citadel_rect,gpt-image-2.5-flare,medium,1024x1024,2,444,18,439,0.0155,props_rect.png
+2026-10-20 06:28,tiles/citadel_core,gpt-image-2.5-flare,medium,1024x1024,0,213,0,439,0.0142,citadel_circuit.png
+2026-10-20 06:28,icons/citadel_a,gpt-image-2.5-flare,medium,1024x1024,1,366,4,439,0.0150,icons_a.png

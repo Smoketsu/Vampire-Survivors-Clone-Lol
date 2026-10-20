@@ -78,6 +78,8 @@ var _footfall_cd: float = 0.0
 var _gait: int = 0
 ## Seconds until the heavy stomp may come again.
 var _stomp_cd: float = 0.0
+## Game time (s) until which the Walker shows its firing pose after a salvo (visual only).
+var _salvo_pose_until: float = 0.0
 ## Living leg plates: each [Enemy, generation].
 var _plates: Array = []
 ## Plates broken this fight.
@@ -392,11 +394,17 @@ func _fire_round(dir: Vector2) -> void:
 			undead_damage_mult, "chaingun", "deus_chaingun", float(boss_def["chaingun_range"]))
 
 
+## True while the Walker holds its firing pose after a salvo (drawing only).
+func _salvo_posing() -> bool:
+	return game != null and game.elapsed < _salvo_pose_until
+
+
 ## The missile salvo: `lines` Lock-On lines at once (LockOn's boss override):
 ## one on the necromancer, the rest on the summons nearest him. It keeps walking.
 func _start_salvo(lines: int = -1) -> void:
 	var n := int(boss_def["salvo_lines"]) if lines < 0 else lines
 	var lock := game.empire_rules().lock_on
+	_salvo_pose_until = game.elapsed + DeusData.SALVO_POSE_TIME
 	var dmg := float(boss_def["salvo_damage"]) * CovenantKit.hit_scale(self)
 	var painted := 0  # Lines started.
 	if not game.ultimates.player_untargetable():
@@ -801,7 +809,8 @@ func _draw_body(ci: CanvasItem) -> void:
 		Phase.CHANGING:
 			look = 1 if _next_phase == Phase.SIEGE else 2
 	var arrive := clampf(phase_time / maxf(0.1, float(boss_def["arrive_time"])), 0.0, 1.0) if phase == Phase.ARRIVING else 1.0
-	CitadelGlyphs.draw_deus(ci, Vector2.ZERO, radius, flash > 0.0, look, arrive, game.elapsed if game != null else 0.0, _exposed_until > 0.0)
+	CitadelGlyphs.draw_deus(ci, Vector2.ZERO, radius, flash > 0.0, look, arrive, game.elapsed if game != null else 0.0, _exposed_until > 0.0,
+			1 if act == Act.CHAINGUN or act == Act.CHAINGUN_WINDUP or _salvo_posing() else 0)
 
 
 ## Overlay layer on `ci`: the Stasis / Deep Freeze ice.

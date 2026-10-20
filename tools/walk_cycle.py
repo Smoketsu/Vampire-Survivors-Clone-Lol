@@ -226,6 +226,15 @@ RIGS = {
     "empire/spotter": dict(mode="legs", hip=41, back=(0, 28), front=(28, 62), rigid=[], spread=2, lift=2, dip=1),
     "empire/scout_drone": dict(mode="robe", hip=24, rigid=[], sway=1, dip=1),
     "summons/grave_gunner": dict(mode="legs", hip=27, back=(0, 23), front=(23, 48), rigid=[], spread=2, lift=2, dip=1),
+    # --- Act III: the Iron Citadel ---
+    # The two Valkyries are in the figure-redesign style (bust bounce + idle breathing); Valkyrie
+    # 2.0's blade arm (left) and tower shield (right) hang below the hip and move with the body.
+    # The Rust Prophet walks in his robe, the scrap staff rigid; the revenants stomp on two legs.
+    "empire/valkyrie_duelist": dict(mode="legs", hip=32, back=(0, 27), front=(27, 52), rigid=[], spread=2, lift=2, dip=1, bust=(22, 34, 13, 21, 2)),
+    "empire/valkyrie_prime": dict(mode="legs", hip=70, back=(14, 36), front=(36, 52), rigid=[(0, 14, 0, None), (52, 76, 0, None)], spread=2, lift=3, dip=1, bust=(28, 46, 30, 40, 3, 2)),
+    "player/rust_prophet": dict(mode="robe", hip=40, rigid=[(30, 42, 0, None)], sway=1, dip=1),
+    "summons/iron_revenant": dict(mode="legs", hip=34, back=(0, 26), front=(26, 58), rigid=[], spread=2, lift=2, dip=1),
+    "summons/deus_revenant": dict(mode="legs", hip=38, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -280,6 +289,10 @@ SKINS = {
     "player/heretic_scribe_deathlord": "player/heretic_scribe",
     "player/tide_widow_untouchable": "player/tide_widow",
     "player/tide_widow_deathlord": "player/tide_widow",
+    # --- Act III: the Iron Citadel ---
+    "player/rust_prophet_hyper": "player/rust_prophet",
+    "player/rust_prophet_untouchable": "player/rust_prophet",
+    "player/rust_prophet_deathlord": "player/rust_prophet",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

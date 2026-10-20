@@ -85,6 +85,13 @@ func start_finale(pos: Vector2) -> void:
 	_finale_pos = pos
 
 
+## Keeps the soul binding animating after the boss (which drives step()) is gone;
+## stops redrawing once it has played. Drawing only.
+func _process(_delta: float) -> void:
+	if _finale_at >= 0.0 and game != null and game.elapsed - _finale_at <= float(DeusData.BOSS["finale_time"]) + 0.1:
+		queue_redraw()
+
+
 ## Per-tick update (the boss calls it): lands due rings, releases and rolls pulses.
 func step(_delta: float) -> void:
 	var t := game.elapsed

@@ -325,6 +325,33 @@ RECIPES = {
         "shares": {"ink_drowned": 0.30, "drowned_dark": 0.66, "drowned": 0.04},
         "keep": ["drowned"],
     },
+    # --- Act III: the Iron Citadel ---
+    # The four zone floors of THE IRON CITADEL (CitadelGround, tiles/citadel_<style>): riveted
+    # steel deck plates (one API texture, laid out three ways) and the Core's circuit-etched
+    # plating. The API sources came back with alpha, flattened to RGB over floor_soil.
+    "citadel_gates": {
+        "source": "citadel_plates.png", "method": "layout",  # The Shield Gates: big 32 px deck plates.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["floor_slate", "floor_marble"], "joint": ["ink_chrome"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "citadel_courts": {
+        "source": "citadel_plates.png", "method": "layout",  # The Laser Courts: a fine 16 px grid of panels.
+        "layout": {"type": "grid", "step": 16, "joint": 1},
+        "regions": {"stone": ["floor_soil", "floor_slate"], "joint": ["ink_chrome"]},
+        "cell_shift": True, "cell_l": 0.008, "bevel": 0.008,
+    },
+    "citadel_lifts": {
+        "source": "citadel_plates.png", "method": "layout",  # The Spire Lifts: long grating slats.
+        "layout": {"type": "courses", "rows": [8] * 16, "joint": 1, "slabs": [[128]] * 16, "offsets": [0] * 16},
+        "regions": {"stone": ["floor_soil", "floor_marble"], "joint": ["ink_chrome"]},
+        "cell_shift": True, "cell_l": 0.008, "bevel": 0.006,
+    },
+    "citadel_core": {
+        "source": "citadel_core.png", "method": "quilt",  # The Core: circuit-etched plating, dim red traces.
+        "colors": ["ink_chrome", "floor_soil", "floor_slate", "chrome_dark", "signal_dark"],
+        "bias": {"chrome_dark": 0.02, "signal_dark": 0.03}, "keep": ["chrome_dark", "signal_dark"],
+    },
 }
 
 

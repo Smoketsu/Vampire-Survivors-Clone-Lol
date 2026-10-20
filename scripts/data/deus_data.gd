@@ -45,7 +45,7 @@ const SPECIALS := ["chaingun", "salvo", "footfall", "stomp", "lance", "hangar", 
 ## Offsets (px, world axes, from the body centre) of the four legs: front left,
 ## front right, rear left, rear right. Each carries a plate in the Walker phase;
 ## footfalls land here.
-const LEGS := [Vector2(-50.0, -6.0), Vector2(50.0, -6.0), Vector2(-42.0, 30.0), Vector2(42.0, 30.0)]  # TUNING (not in GDD) art-matched
+const LEGS := [Vector2(-34.0, 2.0), Vector2(38.0, 2.0), Vector2(-50.0, 30.0), Vector2(54.0, 32.0)]  # TUNING (not in GDD) art-matched: the four knees of bosses/deus_ex_machina (sprite px - (101, 97))
 
 ## Boss row: Enemy row keys plus its ability numbers (see the header).
 const BOSS := {
@@ -185,3 +185,6 @@ const ENDING_ANNOUNCE := ["NOTHING IS DEATHLESS", "Everything is mine.", "You re
 const LATE_ANNOUNCE := ["THE GOD OF STEEL FALLS", "Everything is mine.", "Even under the Purge, Varn's soul is yours."]  # TUNING (not in GDD)
 ## Radius (px) of the soul-binding rings of the finale (drawing only).
 const BINDING_RADIUS: float = 220.0  # TUNING (not in GDD)
+## Seconds the Walker holds its firing pose (BossPoseData "fire") after a
+## missile salvo is painted (visual only; the chaingun holds it while it fires).
+const SALVO_POSE_TIME: float = 1.2  # TUNING (not in GDD)
