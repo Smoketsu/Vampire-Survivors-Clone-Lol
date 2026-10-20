@@ -53,7 +53,8 @@ function startRelay() {
 
 // Flags both sides share (the run), then the role's own.
 function runFlags() {
-  return [`--seed=${seed}`, '--speed=8', '--stage=graveyard', '--policy=army', `--timeout=${gameSec}`];
+  // --coop-mixed: the lobby lets the other platform in (the game itself refuses it, CoopNetData.ALLOW_MIXED_PLATFORMS).
+  return [`--seed=${seed}`, '--speed=8', '--stage=graveyard', '--policy=army', `--timeout=${gameSec}`, '--coop-mixed'];
 }
 
 async function openPage(browser, port, relay, flags, lines, tag) {
@@ -120,7 +121,11 @@ function pick(lines, prefix) { return lines.filter((l) => l.startsWith(prefix));
   const lsJ = pick(joinLines, '[autotest] coop lockstep:');
   const chain = (l) => { const m = (l || '').match(/ticks (\d+) .*chain ([0-9a-f]+)/); return m ? m[1] + ':' + m[2] : null; };
   const desync = hostLines.concat(joinLines).filter((l) => l.includes('DESYNC'));
-  const bad = hostLines.concat(joinLines).filter((l) => /SCRIPT ERROR|^ERROR:|PAGEERROR/.test(l));
+  // Errors before the run ended (a page error after it, e.g. the audio context gone after the engine quit, is not the test's).
+  const beforeEnd = (ls) => { const i = ls.findIndex((l) => l.startsWith('[coop] run ended')); return i < 0 ? ls : ls.slice(0, i); };
+  const bad = beforeEnd(hostLines).concat(beforeEnd(joinLines)).filter((l) => /SCRIPT ERROR|^ERROR:|PAGEERROR/.test(l));
+  const late = hostLines.concat(joinLines).filter((l) => /PAGEERROR/.test(l)).length - bad.filter((l) => /PAGEERROR/.test(l)).length;
+  if (late > 0) console.log(`(${late} page error(s) after the run ended, ignored)`);
   console.log(`--- result (wall ${((Date.now() - t0) / 1000).toFixed(0)} s) ---`);
   for (const l of endH.concat(endJ, lsH, lsJ, desync, bad.slice(0, 5))) console.log(l);
   const ok = endH.length > 0 && endH[0] === endJ[0] && chain(lsH[0]) === chain(lsJ[0]) && desync.length === 0 && bad.length === 0;

@@ -149,6 +149,9 @@
 ##                         the summary adds a "coop lockstep" line (ticks,
 ##                         frames sent / received, checksums, the chain).
 ##   --coop-code=CODE      --coop-net=join: the lobby code to join.
+##   --coop-mixed          --coop-net test: let a partner on another platform in
+##                         (CoopNetData.ALLOW_MIXED_PLATFORMS is off; the Web-vs-native
+##                         checksum test, tools/coop_web_lockstep.js).
 ##   --view=WxH            Test: Game.view_size() reports a W x H window (layout px)
 ##                         instead of the real one (headless has a fixed 1280 x 720), to
 ##                         check that co-op gameplay ignores the window (one fixed size).
@@ -252,6 +255,9 @@ var autotest_coop_down: float = -1.0
 var autotest_coop_net: String = ""
 ## Autotest (--coop-net=join): the lobby code of --coop-code= ("" = none).
 var autotest_coop_code: String = ""
+## Autotest (--coop-mixed): accept a lobby partner on another platform (the
+## Web-vs-native desync test); off = the game's own rule.
+var autotest_coop_mixed: bool = false
 ## Autotest (--view=WxH): the window size Game.view_size() reports (layout px;
 ## zero = the real viewport).
 var autotest_view: Vector2 = Vector2.ZERO
@@ -347,6 +353,8 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_coop_net = arg.get_slice("=", 1).to_lower()  # Online co-op through the lockstep (CoopNetBot).
 		elif arg.begins_with("--coop-code="):
 			autotest_coop_code = arg.get_slice("=", 1).to_upper()
+		elif arg == "--coop-mixed":
+			autotest_coop_mixed = true  # Test: a partner on another platform is let in.
 		elif arg.begins_with("--view="):
 			var wh := arg.get_slice("=", 1).split("x")  # "W" and "H".
 			if wh.size() == 2:

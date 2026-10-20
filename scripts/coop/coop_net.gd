@@ -608,7 +608,7 @@ func _on_peer(p: Dictionary) -> void:
 	if local_slot < 0:
 		return
 	var other := 1 - local_slot
-	if not CoopNetData.ALLOW_MIXED_PLATFORMS and String(p.get("platform", "")) != platform():
+	if not CoopNetData.ALLOW_MIXED_PLATFORMS and not GameState.autotest_coop_mixed and String(p.get("platform", "")) != platform():
 		_fail("platform", String(p.get("platform", "")))
 		return
 	peers[other] = p.duplicate()

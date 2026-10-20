@@ -196,6 +196,12 @@ and edge arrow come with the co-op HUD branch.
 - **Tests:** `python3 tools/coop_relay_check.py http://127.0.0.1:8765` (relay protocol), `python3
   tools/coop_net_test.py` (two headless games: lobby, join by code, start, 10,000 frames each way) and
   `node tools/coop_lobby_shots.mjs` (the lobby screens in the Web build in headless Chromium, desktop and phone).
+  The **determinism gate**: `python3 tools/coop_lockstep_gate.py` (two headless games play one whole co-op run
+  through the lockstep, each with its own army bot, and must agree on every checksum; `--delay-ms 40 --jitter-ms 25
+  --real-time --speed 1` adds latency, `--kill-join-at 300` is the drop test) and `node tools/coop_web_lockstep.js
+  build/web web-web OUT` (two Web pages). Both players must be on the **same platform** (both in a browser, or both
+  on the same desktop system): the Web build and a desktop build do not compute exactly alike, so the lobby refuses
+  the mix.
 - **In the run** (as it lands): your partner's plate (name, HP, bust) sits under the kill count; an edge arrow with
   his face points at him when he is off screen, and his name floats over him when he is on it. A downed
   necromancer gets a crimson marker, a faint circle showing how close to stand and a green ring that fills while
