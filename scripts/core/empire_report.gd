@@ -12,10 +12,12 @@
 ##   purge protocol:  the orbital strikes after 0:00 (when the stage has them)
 ##   empire kinds:    spawns / kills of every Empire kind that spawned
 ##   empire stage:    the Act III stage itself (stub status, boss, Soul Ash)
+##   ranged share:    the share of Empire spawns that attack from range (the
+##                    proposal's ~60% target; every Act III stage)
 ## Phase 2 adds one line per stage system here (the Scrap Wastes: WastesReport).
 ## Phase 2 adds one line per stage system here (each stage in its own block):
 ##   the Iron Citadel: CitadelReport.stage_lines() (the director, its events,
-##                     its kinds, the ranged share, Deus Ex Machina).
+##                     its kinds, Deus Ex Machina).
 ## Read-only: it never changes the run.
 class_name EmpireReport
 extends RefCounted
@@ -51,6 +53,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			String(sd["id"]), String(sd["display_name"]), str(StageRegistry.is_playable(String(sd["id"]))),
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
 			_clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]), String((sd["reckoning"] as Dictionary).get("kind", "inquisitor"))])
+		# The proposal's ~60% target, on every Act III stage (the balance pass).
+		print("[autotest] ranged share: %s" % CitadelReport.ranged_share(st))
 	# --- Act III: the Assembly Halls ---
 	_assembly_lines(game, st)
 	# --- Act III: the Scrap Wastes ---

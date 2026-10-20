@@ -64,8 +64,8 @@ const ENEMIES := {
 		"display_name": "Scout Drone",
 		"max_hp": 10.0,  # TUNING (not in GDD) frail fodder (Recruit 14)
 		"move_speed": 88.0,  # TUNING (not in GDD) px/s; fast (Recruit 58)
-		"damage": 1.5,  # TUNING (not in GDD) per zap, before the time scaling (first pass 2.5 every 1.1 s shredded the early army; 2.0 still bled a weak army's necromancer to death by 3:30)
-		"attack_interval": 1.4,  # TUNING (not in GDD) s between zaps
+		"damage": 1.0,  # TUNING (not in GDD) per zap, before the time scaling (Act III balance: 1.5 -> 1.0, the naive bot bled to death by 5:30 on all three stages; first pass 2.5 every 1.1 s shredded the early army; 2.0 still bled a weak army's necromancer to death by 3:30)
+		"attack_interval": 1.6,  # TUNING (not in GDD) s between zaps (Act III balance: 1.4 -> 1.6)
 		"attack_range": 110.0,  # TUNING (not in GDD) px; "short range"
 		"radius": 8.0,  # TUNING (not in GDD) px
 		"armor": 0.0,  # TUNING (not in GDD)
@@ -92,7 +92,7 @@ const ENEMIES := {
 		"max_hp": 28.0,  # TUNING (not in GDD) a soldier (Footman 36, Archer 22)
 		"move_speed": 44.0,  # TUNING (not in GDD) px/s; a steady march
 		"damage": 4.0,  # Owner-approved proposal: rifle shots 4-6 damage (before the time scaling)
-		"attack_interval": 4.0,  # TUNING (not in GDD) s between bursts (first pass 2.8 s: 3x an Act I archer's fire, the army bot's army fell to 2 by 2:00)
+		"attack_interval": 6.0,  # TUNING (not in GDD) s between bursts (Act III balance: 4.0 -> 6.0, the top killer of every early death on all three stages; first pass 2.8 s: 3x an Act I archer's fire, the army bot's army fell to 2 by 2:00)
 		"attack_range": 400.0,  # Owner-approved proposal: "Long (400 px)"
 		"radius": 10.0,  # TUNING (not in GDD) px
 		"armor": 0.15,  # TUNING (not in GDD) chrome plate
@@ -120,7 +120,7 @@ const ENEMIES := {
 		"max_hp": 110.0,  # TUNING (not in GDD) an elite (Siren 120)
 		"move_speed": 40.0,  # TUNING (not in GDD) px/s
 		"damage": 16.0,  # TUNING (not in GDD) the heavy rail shot (before the time scaling)
-		"attack_interval": 6.5,  # TUNING (not in GDD) s between two Lock-On paints
+		"attack_interval": 8.0,  # TUNING (not in GDD) s between two Lock-On paints (Act III balance: 6.5 -> 8.0, rails were the second killer of the necromancer)
 		"attack_range": 520.0,  # Owner-approved proposal: "Very long" (380-520 px)
 		"radius": 11.0,  # TUNING (not in GDD) px
 		"armor": 0.2,  # TUNING (not in GDD)
