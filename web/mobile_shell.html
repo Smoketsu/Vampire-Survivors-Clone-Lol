@@ -172,6 +172,37 @@ body {
 	text-align: center;
 	z-index: 1;
 }
+/* Slow-browser hint (GDD 15.0 "Slow browser hint"): a banner over the loading screen and the game,
+   shown only when the page's WebAssembly speed check runs far too slowly (a browser with its
+   JavaScript JIT off interprets the game's WebAssembly, e.g. GrapheneOS Vanadium by default). */
+#slow-hint {
+	display: none;
+	position: fixed;
+	top: max(0.5rem, env(safe-area-inset-top, 0px));
+	left: 50%;
+	transform: translateX(-50%);
+	width: min(92vw, 40rem);
+	box-sizing: border-box;
+	padding: 0.7rem 1rem;
+	background-color: #2a2140;
+	border: 2px solid #c9a227;
+	color: #f2ecff;
+	font: 1rem/1.35 'Trebuchet MS', 'Segoe UI', sans-serif;
+	text-align: center;
+	z-index: 2;
+	/* Cut corners, like every UI element in the game. */
+	clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+}
+
+#slow-hint button {
+	margin-top: 0.5rem;
+	padding: 0.3rem 1.6rem;
+	border: 0;
+	background-color: #6b4fa8;
+	color: #f2ecff;
+	font: 700 1rem/1 'Trebuchet MS', 'Segoe UI', sans-serif;
+	cursor: pointer;
+}
 		</style>
 		<script>
 // Phone and tablet helpers (see the comment at the top of this file).
@@ -290,6 +321,11 @@ body {
 			<div id="status-notice"></div>
 		</div>
 
+		<div id="slow-hint" role="alert">
+			<div id="slow-hint-text"></div>
+			<button id="slow-hint-close" type="button">OK</button>
+		</div>
+
 		<script src="$GODOT_URL"></script>
 		<script>
 const GODOT_CONFIG = $GODOT_CONFIG;
@@ -389,9 +425,53 @@ const engine = new Engine(GODOT_CONFIG);
 		initializing = false;
 	}
 
+	// Slow-browser hint (GDD 15.0 "Slow browser hint"). A browser with its JavaScript JIT turned
+	// off either has no WebAssembly at all (the start notice says so) or runs it in an interpreter,
+	// many times slower: the game crawls or never finishes loading (GrapheneOS's Vanadium turns the
+	// JIT off by default). At start the page times a tiny WebAssembly loop; when it runs far slower
+	// than any JIT does, a banner says how to turn the JIT back on for this site. It measures only
+	// the CPU-side WebAssembly speed, so a slow graphics chip never shows it.
+	const JIT_OFF_TEXT = 'This browser has its JavaScript JIT turned off, so the game cannot run here, '
+		+ 'or runs far too slowly.\nOn GrapheneOS (Vanadium): open the browser menu next to the '
+		+ 'address bar, turn on JavaScript JIT for this site, then reload the page.\nIn other '
+		+ 'browsers: allow JavaScript optimization (JIT) for this site in its site settings.';
+	// The timed module: f(n) loops n times over a multiply-add (62 bytes, hand-assembled).
+	const SPEED_MODULE = new Uint8Array([0,97,115,109,1,0,0,0,1,6,1,96,1,127,1,127,3,2,1,0,7,5,1,1,102,0,0,10,33,1,31,1,2,127,3,64,32,2,32,1,32,1,108,106,33,2,32,1,65,1,106,34,1,32,0,72,13,0,11,32,2,11]);
+	const SPEED_LOOPS = 5000000;  // Loop count of the check (~3-15 ms compiled on a desktop, ~10-50 ms on a phone).
+	const SPEED_SLOW_MS = 150;  // Check time (ms) above which the WebAssembly counts as interpreted.
+	const slowHint = document.getElementById('slow-hint');  // The hint banner.
+
+	// Shows the hint banner: JIT_OFF_TEXT and the line `extra` under it.
+	function showSlowHint(extra) {
+		document.getElementById('slow-hint-text').innerText = JIT_OFF_TEXT + '\n' + extra;
+		slowHint.style.display = 'block';
+	}
+
+	// Times SPEED_LOOPS loops of SPEED_MODULE (compile included) and shows the hint when slow.
+	function checkWasmSpeed() {
+		try {
+			const t0 = performance.now();  // Start (ms, page clock).
+			const f = new WebAssembly.Instance(new WebAssembly.Module(SPEED_MODULE)).exports.f;
+			f(SPEED_LOOPS);
+			const ms = performance.now() - t0;  // Time the check took (ms).
+			console.log('Necropathy WebAssembly speed check: ' + ms.toFixed(1) + ' ms');
+			if (ms > SPEED_SLOW_MS) {
+				showSlowHint('(If your browser already allows it, this device may just be too slow.)');
+			}
+		} catch (e) {
+			console.error('WebAssembly speed check failed:', e);
+		}
+	}
+	document.getElementById('slow-hint-close').addEventListener('click', () => {
+		slowHint.style.display = 'none';
+	});
+
 	const missing = Engine.getMissingFeatures({
 		threads: GODOT_THREADS_ENABLED,
 	});
+	if (typeof WebAssembly !== 'object') {
+		missing.push('WebAssembly');  // Godot 4.3 does not check it (a browser with the JIT off may have none).
+	}
 
 	if (missing.length !== 0) {
 		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
@@ -415,7 +495,11 @@ const engine = new Engine(GODOT_CONFIG);
 		} else {
 			// Display the message as usual
 			const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
-			displayFailureNotice(missingMsg + missing.join('\n'));
+			if (missing.some((f) => f.indexOf('WebAssembly') >= 0)) {
+				displayFailureNotice(JIT_OFF_TEXT + '\n\n(' + missing.join(', ') + ')');
+			} else {
+				displayFailureNotice(missingMsg + missing.join('\n'));
+			}
 		}
 	} else {
 		setStatusMode('progress');
@@ -446,6 +530,7 @@ const engine = new Engine(GODOT_CONFIG);
 				setStatusMode('hidden');
 			}, displayFailureNotice);
 		}
+		setTimeout(checkWasmSpeed, 50);  // After the first paint of the loading screen.
 		Promise.all([engine.init(exe), engine.preloadFile(pack, pack)]).then(() => {
 			setStatusMode('play');
 			statusPlay.focus();
