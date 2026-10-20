@@ -14,7 +14,11 @@
 ##      run, then an end marker; each checks every received frame's sequence
 ##      number (order) and payload checksum (integrity);
 ##   4. each prints one `COOP_NET_RESULT ...` line (frames, errors, round-trip
-##      min / mean / p95 / max) and quits with 0 when everything passed.
+##      min / mean / p95 / max) and quits with 0 when everything passed; the
+##      guest quits first and the host must then see `partner_left`.
+## `--coop-net-test=errors` instead checks the client's error paths one after
+## another: a short code (bad_code, no connection), a code with no lobby
+## (no_lobby, from the relay) and a relay nobody listens on (unreachable).
 ## A frame is [seq u32][len u16][len payload bytes][checksum u32], little
 ## endian; the payload is a pseudo-random function of seq, so the receiver can
 ## rebuild it. Network timing (Time) only: nothing here is gameplay.
@@ -34,6 +38,16 @@ const PAYLOAD_MIN: int = 8
 const PAYLOAD_SPREAD: int = 57
 ## Seconds to linger after finishing so the partner's last frames arrive.
 const LINGER_S: float = 1.0
+## Seconds the host waits for `partner_left` once the guest has finished.
+const LEFT_WAIT_S: float = 15.0
+## Seconds one error case may take.
+const ERROR_CASE_S: float = 12.0
+## The error cases: [code to join, relay override ("" = the test relay), expected error].
+const ERROR_CASES: Array = [
+	["BC", "", "bad_code"],
+	["BBBBB", "", "no_lobby"],
+	["BCDFG", "ws://127.0.0.1:9", "unreachable"],
+]
 
 ## "host" or "join".
 var _role: String = ""
@@ -68,6 +82,12 @@ var _fails: PackedStringArray = PackedStringArray()
 var _linger: float = -1.0
 ## True once the result was printed.
 var _reported: bool = false
+## True once CoopNet emitted partner_left.
+var _partner_left: bool = false
+## Seconds the host has waited for partner_left (-1 = not waiting).
+var _left_wait: float = -1.0
+## Errors role: the last error code raised ("" = none yet).
+var _last_error: String = ""
 
 
 func _ready() -> void:
@@ -76,13 +96,16 @@ func _ready() -> void:
 	_total = maxi(1, int(_arg("--coop-frames=", "10000")))
 	_rate = maxf(1.0, float(_arg("--coop-rate=", "240")))
 	_begin_ms = Time.get_ticks_msec()
-	CoopNet.error_raised.connect(func(c: String, t: String) -> void: _fail("error %s: %s" % [c, t]))
+	CoopNet.error_raised.connect(_on_error)
 	CoopNet.lobby_changed.connect(_on_lobby)
 	CoopNet.run_started.connect(_on_started)
 	CoopNet.frame_received.connect(_on_frame)
+	CoopNet.partner_left.connect(func() -> void: _partner_left = true)
 	CoopNet.latency_measured.connect(func(ms: float) -> void: _rtts.append(ms))
 	var cfg := RunConfig.for_stage(TEST_STAGE)
-	if _role == "host":
+	if _role == "errors":
+		_run_errors()
+	elif _role == "host":
 		cfg.set_character("bone_oracle")
 		CoopNet.host(CoopNet.make_loadout(cfg, "TestHost"))
 	elif _role == "join":
@@ -104,6 +127,35 @@ static func _arg(prefix: String, fallback: String) -> String:
 func _fail(why: String) -> void:
 	_fails.append(why)
 	_report()
+
+
+## An error from CoopNet: expected in the errors role, a failure otherwise.
+func _on_error(c: String, t: String) -> void:
+	if _role == "errors":
+		_last_error = c
+	else:
+		_fail("error %s: %s" % [c, t])
+
+
+## The errors role: every ERROR_CASES entry must raise its error.
+func _run_errors() -> void:
+	var lo := CoopNet.make_loadout(RunConfig.new(), "TestErrors")
+	for c: Array in ERROR_CASES:
+		_last_error = ""
+		CoopNet.relay_override = String(c[1])
+		CoopNet.join(String(c[0]), lo)
+		var t0 := Time.get_ticks_msec()
+		while _last_error == "" and float(Time.get_ticks_msec() - t0) / 1000.0 < ERROR_CASE_S:
+			await get_tree().process_frame
+		print("COOP_ERROR_CASE code=%s expected=%s got=%s state=%d" % [c[0], c[2], _last_error, CoopNet.state])
+		if _last_error != String(c[2]):
+			_fails.append("%s: expected %s, got '%s'" % [c[0], c[2], _last_error])
+		CoopNet.leave()
+	CoopNet.relay_override = ""
+	_reported = true
+	var ok := _fails.is_empty()
+	print("COOP_NET_RESULT role=errors ok=%s cases=%d%s" % [str(ok), ERROR_CASES.size(), "" if ok else " fails=" + "; ".join(_fails)])
+	get_tree().quit(0 if ok else 1)
 
 
 ## Lobby progress: the host prints the code, sends settings and starts once
@@ -165,9 +217,18 @@ func _process(delta: float) -> void:
 		_end_sent = CoopNet.send_frame(_frame(END_SEQ))
 	if _end_sent and _partner_done and _linger < 0.0:
 		_linger = LINGER_S
-	if _linger >= 0.0:
+	if _linger >= 0.0 and _left_wait < 0.0:
 		_linger -= delta
 		if _linger <= 0.0:
+			if _role == "host":
+				_left_wait = 0.0  # The guest quits first: wait for partner_left.
+			else:
+				_report()
+	if _left_wait >= 0.0:
+		_left_wait += delta
+		if _partner_left or _left_wait > LEFT_WAIT_S:
+			if not _partner_left:
+				_fails.append("no partner_left after the guest quit")
 			_report()
 
 

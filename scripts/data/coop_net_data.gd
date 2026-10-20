@@ -21,6 +21,12 @@ const PROTOCOL: int = 1  # TUNING (not in GDD)
 const CODE_ALPHABET: String = "BCDFGHJKMNPQRSTVWXYZ"  # TUNING (not in GDD) must match the relay's ALPHABET
 ## Letters in a lobby code.
 const CODE_LENGTH: int = 5  # TUNING (not in GDD) must match the relay's CODE_LENGTH
+## Relay error code -> its WebSocket close code (PROTOCOL.md), so a refusal whose error message
+## was lost still reads plainly.
+const CLOSE_CODES: Dictionary = {
+	"no_lobby": 4001, "full": 4002, "version": 4003, "started": 4004, "bad_hello": 4005,  # TUNING (not in GDD) must match the relay
+	"host_left": 4006, "expired": 4007, "rate": 4008, "too_big": 4009, "protocol": 4010,  # TUNING (not in GDD) must match the relay
+}
 ## Largest message the relay accepts (bytes); send_frame() refuses bigger frames.
 const MAX_MESSAGE_BYTES: int = 16384  # TUNING (not in GDD) must match the relay's MAX_MESSAGE_BYTES
 

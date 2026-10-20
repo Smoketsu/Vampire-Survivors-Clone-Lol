@@ -4,8 +4,9 @@
 Starts tools/coop_relay.py on a free port, then two headless Godot processes (CoopNetTest,
 scripts/coop/coop_net_test.gd): the host opens a lobby and prints its code, the join process joins by that
 code; they exchange loadouts, start, then send N numbered frames each way, checking order, integrity and the
-round-trip times. Passes when both processes report ok, both got the same start info (hash), and neither printed
-a SCRIPT ERROR / ERROR / WARNING line.
+round-trip times; the guest quits first and the host must see partner_left. A third process then checks the
+client's error paths (bad code, no lobby, unreachable relay). Passes when every process reports ok, both got the
+same start info (hash), and none printed a SCRIPT ERROR / ERROR / WARNING line.
 
     python3 tools/coop_net_test.py [--godot PATH] [--frames 10000] [--rate 240] [--relay ws://...]
 
@@ -93,12 +94,23 @@ def main():
             codes.append(-1)
     th.join(5)
     tj.join(5)
+    # The client's error paths (bad code, no lobby, unreachable relay), against the same relay.
+    out_e = []
+    errs = godot(["--coop-net-test=errors"] + common, args.godot)
+    te = threading.Thread(target=pump, args=(errs, out_e, "errors", found), daemon=True)
+    te.start()
+    try:
+        codes.append(errs.wait(timeout=90))
+    except subprocess.TimeoutExpired:
+        errs.kill()
+        codes.append(-1)
+    te.join(5)
     if relay_proc:
         relay_proc.kill()
 
     fails = []
     hashes = []
-    for name, out, code in (("host", out_h, codes[0]), ("join", out_j, codes[1])):
+    for name, out, code in (("host", out_h, codes[0]), ("join", out_j, codes[1]), ("errors", out_e, codes[2])):
         if code != 0:
             fails.append("%s exit %s" % (name, code))
         if not any(l.startswith("COOP_NET_RESULT") and "ok=true" in l for l in out):
@@ -110,8 +122,8 @@ def main():
     if len(hashes) != 2 or hashes[0] != hashes[1]:
         fails.append("start info differs between the machines: %s" % hashes)
     print("start info identical: %s" % (len(hashes) == 2 and hashes[0] == hashes[1]))
-    for l in out_h + out_j:
-        if l.startswith("COOP_NET_RESULT"):
+    for l in out_h + out_j + out_e:
+        if l.startswith("COOP_NET_RESULT") or l.startswith("COOP_ERROR_CASE"):
             print(l)
     print("PASS" if not fails else "FAIL: " + "; ".join(fails))
     return 0 if not fails else 1

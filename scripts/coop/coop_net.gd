@@ -89,6 +89,8 @@ var partner_rtt_ms: float = -1.0
 var last_error: String = ""
 ## Relay address in use (relay_address()).
 var relay_url: String = ""
+## Relay address that wins over relay_address() when set ("" = none; the network test's unreachable case).
+var relay_override: String = ""
 ## Frames sent / received since the last host() / join() (counts, for reports).
 var frames_sent: int = 0
 var frames_received: int = 0
@@ -168,18 +170,22 @@ func poll() -> void:
 	if _ws == null:
 		return
 	_ws.poll()
+	# Everything received is read first, whatever the state: a relay that refuses at once (no lobby, full...)
+	# sends its error and closes within one poll, and the error must not be lost to the close.
+	while _ws != null and _ws.get_available_packet_count() > 0:
+		var pkt := _ws.get_packet()  # One whole message.
+		if _ws.was_string_packet():
+			_on_text(pkt.get_string_from_utf8())
+		else:
+			frames_received += 1
+			_partner_heard_ms = Time.get_ticks_msec()
+			frame_received.emit(pkt)
+	if _ws == null:
+		return
 	match _ws.get_ready_state():
 		WebSocketPeer.STATE_OPEN:
 			if not _hello_sent:
 				_send_hello()
-			while _ws != null and _ws.get_available_packet_count() > 0:
-				var pkt := _ws.get_packet()  # One whole message.
-				if _ws.was_string_packet():
-					_on_text(pkt.get_string_from_utf8())
-				else:
-					frames_received += 1
-					_partner_heard_ms = Time.get_ticks_msec()
-					frame_received.emit(pkt)
 			if state == State.CONNECTING and Time.get_ticks_msec() - _connect_ms > int(CoopNetData.CONNECT_TIMEOUT * 1000.0):
 				_fail("unreachable")
 		WebSocketPeer.STATE_CONNECTING:
@@ -411,7 +417,7 @@ func _open(path_code: String, loadout: Dictionary) -> void:
 	if _ws != null:
 		leave()
 	_reset_session()
-	relay_url = relay_address()
+	relay_url = relay_override if relay_override != "" else relay_address()
 	if relay_url == "":
 		_raise("no_relay")
 		return
@@ -482,15 +488,24 @@ func _fail(err: String, detail: String = "") -> void:
 ## relay (while connecting), unless the relay already said why.
 func _on_closed() -> void:
 	var was := state
+	var close_err := _close_code_error(_ws.get_close_code())  # The relay's refusal by close code ("" = none).
 	_ws = null
 	set_process(false)
 	_set_state(State.CLOSED)
 	if was == State.LOBBY or was == State.STARTED:
 		if not _got_error:
-			_raise("lost")
+			_raise(close_err if close_err != "" else "lost")
 		connection_lost.emit()
 	elif was == State.CONNECTING and not _got_error:
-		_raise("unreachable")
+		_raise(close_err if close_err != "" else "unreachable")
+
+
+## The relay error code of WebSocket close code `c` (PROTOCOL.md: 4001-4010), "" for any other.
+static func _close_code_error(c: int) -> String:
+	for err: String in CoopNetData.CLOSE_CODES:
+		if int(CoopNetData.CLOSE_CODES[err]) == c:
+			return err
+	return ""
 
 
 ## Sends `obj` as one JSON text message.
