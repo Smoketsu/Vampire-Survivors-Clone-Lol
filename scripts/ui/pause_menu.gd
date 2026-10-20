@@ -14,9 +14,13 @@
 ##     its colour, a locked one dimmed with a padlock; the full description
 ##     is the tile's tooltip);
 ##   * right, an ornate panel (bone filigree, skull keystone) with the
-##     "Paused" title and the buttons Resume, Recipes, Settings, Restart,
-##     Main Menu. Recipes opens the RecipesPanel view of the discovered
+##     "Paused" title and the buttons Resume, Recipes, Settings, Feedback,
+##     Restart, Main Menu. Recipes opens the RecipesPanel view of the discovered
 ##     evolution recipes (owner decision "Evolution recipe book", GDD §15.0).
+##     Feedback (only while a form link is set, FeedbackReport.enabled()) opens
+##     the feedback form in the browser with this run's facts (FeedbackButton;
+##     GDD §15.0 "Feedback button (owner request, Oct 2026)"); the run stays
+##     paused and the menu open.
 ## Under the two columns an InputHints strip shows the run controls
 ## (move, Grave Step, Dread Rally, Shadow Bolt aim, resume) as chips of the
 ## current device and bindings. Restart and Main Menu go through
@@ -82,6 +86,10 @@ func _ready() -> void:
 	_resume = _button(vb, "Resume", func() -> void: resume_pressed.emit())
 	_recipes_btn = _button(vb, "Recipes", _open_recipes)
 	_button(vb, "Settings", func() -> void: SettingsMenu.open_over(self, get_viewport().gui_get_focus_owner()))
+	if FeedbackReport.enabled():
+		var fb := FeedbackButton.make(func() -> Dictionary: return FeedbackReport.pause_context(game))  # Stays paused.
+		fb.custom_minimum_size = Vector2(0, InRunUiData.PAUSE_BUTTON_HEIGHT)
+		vb.add_child(fb)
 	_button(vb, "Restart", _on_restart)
 	_button(vb, "Main Menu", _on_main_menu)
 	var ult_word := String(game.ultimates.row()["short"]) if game != null and game.ultimates != null else "Rally"  # The run's ultimate, one word.

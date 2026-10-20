@@ -27,6 +27,11 @@
 ## skin, Hyper mode or Hyper clear badge, achievements) as small gold plates.
 ## Restart (R / pad X) and Main Menu (Esc / pad B) carry their InputHints
 ## chips. Every motion is instant under the autotest and "Reduce motion".
+## While a feedback form link is set (FeedbackReport.enabled()) a small dim
+## Feedback button closes both button rows (defeat and victory; no key of its
+## own, reached by focus or a tap): it opens the feedback form in the browser
+## with this run's result (FeedbackButton; GDD §15.0 "Feedback button (owner
+## request, Oct 2026)") and leaves the card as it is.
 ##
 ## Victory path (content wave 2, GDD §15.0 "Victory screen (content wave 2)";
 ## texts and sizes in VictoryData, numbers from VictoryResults, widgets from
@@ -117,6 +122,16 @@ var _again: Button
 var _vmenu: Button
 ## The Soul Ash column frame (narrower on the victory card).
 var _ash_frame: Control
+
+# --- Feedback button (owner request, Oct 2026) ------------------------------------------
+
+## The finished run's summary on show (Game.build_summary(); read by the
+## Feedback buttons' report, {} before the first open).
+var _summary: Dictionary = {}
+## Feedback button closing the defeat row (null while no form link is set).
+var feedback_button: Button = null
+## Feedback button closing the victory row (null while no form link is set).
+var victory_feedback_button: Button = null
 
 
 ## The character portrait: the stage's floor tile (darkened) in the kit's
@@ -237,6 +252,32 @@ func _ready() -> void:
 	_vmenu.set_meta(&"ui_back", true)  # Plays the back sound (UiMotion / Sfx).
 	for b: Button in [_next, _again, _vmenu]:
 		b.custom_minimum_size = Vector2(VictoryData.BUTTON_WIDTH, VictoryData.BUTTON_HEIGHT)
+	if FeedbackReport.enabled():
+		feedback_button = _feedback_button(buttons)
+		victory_feedback_button = _feedback_button(_victory_buttons)
+
+
+## The small Feedback button at the end of `row`, after a gap: dim kit style,
+## BODY text, no key chip (FeedbackData.RESULTS_BUTTON_*). An empty spacer as
+## wide at the row's start keeps the run's own buttons centred.
+func _feedback_button(row: HBoxContainer) -> Button:
+	var balance := Control.new()  # Mirrors the gap + Feedback button on the left.
+	balance.custom_minimum_size = Vector2(FeedbackData.RESULTS_BUTTON_GAP + float(row.get_theme_constant("separation"))
+		+ FeedbackData.RESULTS_BUTTON_SIZE.x, 0)
+	balance.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(balance)
+	row.move_child(balance, 0)
+	var gap := Control.new()  # Sets it apart from the run's own buttons.
+	gap.custom_minimum_size = Vector2(FeedbackData.RESULTS_BUTTON_GAP, 0)
+	gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(gap)
+	var b := FeedbackButton.make(func() -> Dictionary: return FeedbackReport.results_context(_summary))
+	b.custom_minimum_size = FeedbackData.RESULTS_BUTTON_SIZE
+	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	UiTheme.set_tier(b, UiTheme.Tier.BODY)
+	UiTheme.style_button(b, "button", FeedbackData.RESULTS_BUTTON_ACCENT)
+	row.add_child(b)
+	return b
 
 
 ## A results button with the key chip of `spec` inside its left edge.
@@ -490,6 +531,7 @@ func _show_toasts(texts: PackedStringArray) -> void:
 
 ## Shows the screen for a finished run (see Game.build_summary()).
 func open(summary: Dictionary) -> void:
+	_summary = summary  # For the Feedback report (read only).
 	var won: bool = summary["victory"]
 	var accent := "gold" if won else "crimson"  # Gold = victory, crimson = defeat.
 	_panel.add_theme_stylebox_override("panel", UiTheme.style("ornate", accent))

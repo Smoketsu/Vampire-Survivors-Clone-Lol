@@ -12,13 +12,15 @@ extends RefCounted
 ## Main-menu entries top to bottom: [id, one-word caption]. "codex" and
 ## "credits" open screens added by another branch (MainMenu loads them at
 ## runtime and plays `denied` while they are missing); "quit" asks first when
-## the confirm dialog exists.
+## the confirm dialog exists; "feedback" opens the feedback form in the browser
+## and is left out while no form link is set (FeedbackReport.enabled()).
 const MENU_ITEMS: Array = [
 	["play", "Play"],  # TUNING (not in GDD) owner: one-word buttons
 	["codex", "Codex"],  # TUNING (not in GDD)
 	["ossuary", "Ossuary"],  # TUNING (not in GDD)
 	["settings", "Settings"],  # TUNING (not in GDD)
 	["credits", "Credits"],  # TUNING (not in GDD)
+	["feedback", "Feedback"],  # TUNING (not in GDD) owner request: opens the feedback form (FeedbackData); shown only while a form link is set
 	["quit", "Quit"],  # TUNING (not in GDD)
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	["epilogue", "Epilogue"],  # TUNING (not in GDD) the campaign epilogue (EpilogueData); shown once a part is open, above Credits
@@ -55,6 +57,15 @@ const VERSION_INSET: Vector2 = Vector2(14.0, 12.0)  # TUNING (not in GDD)
 const VERSION_ALPHA: float = 0.55  # TUNING (not in GDD)
 ## Menu entrance: delay (s) before the buttons' staggered rise.
 const MENU_STAGGER_DELAY: float = 0.12  # TUNING (not in GDD)
+## A longer column (Feedback, the Epilogue) must still clear the bottom hint
+## strip: with more than MENU_ROOMY_ITEMS buttons the column starts higher
+## (MENU_COMPACT_TOP px) and its gaps shrink (MENU_COMPACT_BUTTON_GAP px between
+## buttons, MENU_COMPACT_BLOCK_GAP px between blocks); with more than
+## MENU_ROOMY_ITEMS + 1 the tagline is left out too.
+const MENU_ROOMY_ITEMS: int = 6  # TUNING (not in GDD) Play, Codex, Ossuary, Settings, Credits, Quit
+const MENU_COMPACT_TOP: float = 16.0  # TUNING (not in GDD)
+const MENU_COMPACT_BUTTON_GAP: int = 3  # TUNING (not in GDD)
+const MENU_COMPACT_BLOCK_GAP: int = 6  # TUNING (not in GDD)
 
 # ------------------------------------------------------------------ logo
 
