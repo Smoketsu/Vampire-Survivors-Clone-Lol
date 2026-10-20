@@ -107,7 +107,8 @@ The stages turn playable only after the multi-seed check and the owner's playtes
 - **Feedback:** players send reports through the in-game Feedback button to the owner's Google Form. The owner may
   forward them.
 - **Image generation:**
-  - ALWAYS run `GEN_LEDGER=/home/user/vampire-survivors-clone-lol/docs/art/generation_ledger.csv python3 tools/gen_image.py ...`.
+  - ALWAYS run `GEN_LEDGER=<repo or worktree root>/docs/art/generation_ledger.csv python3 tools/gen_image.py ...` (absolute path; the clone's
+    folder name differs between containers, e.g. `/home/user/Vampire-Survivors-Clone-Lol`).
   - **Never read, print, echo, search for or set any API key** (the proxy injects it).
   - Commit the ledger when it changes.
   - `docs/act3/ART_PIPELINE_NOTES.md` is the art brief the wave 2 agents used.

@@ -79,8 +79,8 @@ autotest ignores stage locks, so `--stage=<id>` runs it.
 `--policy=army` should usually reach 0:00 and kill your boss. Don't spend long tuning.
 
 ## Art rules
-- ALWAYS: `GEN_LEDGER=/home/user/vampire-survivors-clone-lol/docs/art/generation_ledger.csv python3 tools/gen_image.py ...`
-  (keep the path exactly as written). **Never read, print, echo, search for or set any API key** (the proxy injects
+- ALWAYS run `GEN_LEDGER=<your worktree>/docs/art/generation_ledger.csv python3 tools/gen_image.py ...` (an absolute
+  path; your worktree's own ledger, append only, so the lead's merge keeps every agent's rows). **Never read, print, echo, search for or set any API key** (the proxy injects
   it). Commit the ledger lines you add. Budget about $1.20 of generation for your stage; say if you need more.
 - True pixel art at 1 art px = 1 screen px; `prepare_sprite.py`, `art_check.py`, `walk_cycle.py`, `make_tile.py`,
   `pixelate_source.py` (small detailed figures first), `mesh_props.py` for thin meshes, grids and lattices (they do not
