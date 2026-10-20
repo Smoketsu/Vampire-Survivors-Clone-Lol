@@ -83,6 +83,15 @@ tablets in landscape (the `Web` export preset; touch controls, mobile UI scale, 
   create any of it (`game.dread` / `game.claims` stay null): stages 1–3 must keep their same-seed
   summaries. Every female character is in the figure-redesign style; the finale (and Seraphine) grant
   new summon classes; each new spell comes with its playable character.
+- **Act III, the Electronic Empire** (owner-approved proposal `docs/act3/PROPOSAL.md`, GDD §15.0 "Act III
+  foundation (phase 1)"): a machine power that saw the Act II beacons and came; about 60% of its kinds shoot from
+  range, and its three shared rules each have one path, all switched on by the STAGE key `empire` (`game.empire`,
+  `EmpireRules`): **Line of Fire** (`EmpireShots`: every Empire shot stops on the first summon, Bone Wall segment
+  or Orb Shield; barriers absorb; arcing shots ignore it; never through `ProjectileManager`), **Lock-On**
+  (`LockOn.paint()`: 1.5 s painted lines, at most 3, a boss override; Signal Ghost through `paint_time()`) and
+  **Steel has no soul** (`Enemy.leaves_corpse()` gates every corpse and raise; cyborgs rise as Grave Gunners
+  through `HordeDirector.raise_corpse()` → `spawn_temporary()`). Act I and II runs never create any of it
+  (`game.empire` stays null): stages 1–6 keep their same-seed summaries. Summons never get act-only rules.
 - **The Bone Ring is the only formation** (owner decision Oct 2026, GDD §15.0 "Bone Ring is the only
   formation"; it replaced the four switchable stances): the army always rings the necromancer
   (blockers, flankers and ranged interleaved on the ring, priests and catapults inside) and its
@@ -509,6 +518,18 @@ tiny tweaks.
   (<https://claude.ai/artifact/6DzAFbmX7Wat8h6nbcatN7>).
 - **parallel CI** (owner request, GDD §15.0 "Parallel CI and lean testing"): ~30 → ~4 min from a push to the live
   build.
+- the **Act III foundation** (phase 1 of the owner-approved Act III, GDD §15.0 "Act III foundation (phase 1)" and
+  the three rule rows after it; handoff and briefs in `docs/act3/`): three registered stub stages (`wastes_stage.gd`,
+  `assembly_stage.gd`, `citadel_stage.gd`: "playable": false, act 3, `empire`, music `iron`, unlock chain from
+  Vhal'Neth, own boss ids `kestrel` / `motherboard` / `deus_ex_machina` with placeholder scripts, `EmpireGround`
+  floors), the Act III tab, `EmpireShots` (Line of Fire), `LockOn`, Steel has no soul and Grave Gunners, the Purge
+  Protocol Reckoning (`EmpireRules`: kill-drones and orbital strikes), `EmpireEnemyData` (Scout Drone, Line Trooper,
+  Spotter, Kill-Drone; per-stage tables `WastesEnemyData` / `AssemblyEnemyData` / `CitadelEnemyData`, looked up by
+  `EnemyDirector.empire_def()`; row key `body` machine / cyborg), `EmpireKit` kits loaded by name from
+  `scripts/enemies/empire/`, the Codex Empire tab, ramps `chrome` / `signal`, the `empire/` sprite folder
+  (`EmpireGlyphs` fallbacks), "Iron Requiem" (`SoundData.IRON_SCORE`) and the lazy Empire sound pack, autotest
+  `--stage=wastes|assembly|citadel` and the `line of fire` / `lock-on` / `steel` / `purge protocol` / `empire kinds` /
+  `empire stage` lines (`EmpireReport`). Gate passed: stages 1–6 same-seed summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -537,9 +558,9 @@ tiny tweaks.
    support"). Left: measure it on real phones (iOS Safari audio unlock and frame rate first, on the
    GitHub Pages build); native Android / iOS apps stay deferred.
 5. **Content wave 2 art review** (owner): the marks on the wave 2 review page; then any redo.
-6. **Act III, the Electronic Empire** (owner-approved proposal doc, Oct 2026: all eleven decisions answered;
-   Kestrel the Dead Pixel, the Motherboard, Deus Ex Machina; Death Ray, Hollow Puppet, Scrap Swarm). Starts after
-   the wave 2 review, built like Act II: foundation first, then the three stages in parallel.
+6. **Act III, the Electronic Empire** (owner-approved proposal `docs/act3/PROPOSAL.md`: Kestrel the Dead Pixel, the
+   Motherboard, Deus Ex Machina; Death Ray, Hollow Puppet, Scrap Swarm). Foundation done (see the Done list); phase 2
+   is the three stages in parallel (`docs/act3/BRIEF_PHASE2.md`), then integration, balance and the art review.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
