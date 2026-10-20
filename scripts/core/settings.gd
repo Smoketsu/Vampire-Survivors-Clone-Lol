@@ -199,10 +199,12 @@ func set_effects(value: String) -> void:
 		changed.emit()
 
 
-## True while effects are Reduced (never in the autotest, whose runs must not
-## depend on a player's settings; purely visual either way).
+## True while effects are Reduced (in the autotest only with --effects=reduced,
+## whose runs must not depend on a player's settings; purely visual either way).
 func reduced_effects() -> bool:
-	return effects == "reduced" and not GameState.autotest
+	if GameState.autotest:
+		return GameState.autotest_effects == "reduced"  # Full unless --effects=reduced (the Web perf measurement).
+	return effects == "reduced"
 
 
 ## The effects quality used when none is saved: Reduced on a phone or tablet.

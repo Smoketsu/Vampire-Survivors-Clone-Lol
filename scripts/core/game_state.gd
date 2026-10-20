@@ -127,6 +127,9 @@
 ##   --character2=ID       --coop-bot: slot 1's character (default gravecaller).
 ##   --classes2=a,b        --coop-bot: slot 1's forced summon classes.
 ##   --spells2=a,b         --coop-bot: slot 1's forced spells (+ evolution passives).
+##   --effects=reduced     Draws with Effects = Reduced (default Full; drawing only).
+##   --perf-real=A-B,...   --perf, and those game-second windows run at real
+##                         time (1x) so the rendered-frame times there are real.
 ##   --perf                Prints a table of the simulation's milliseconds per
 ##                         tick (mean / p95 / max per minute, and at the busy
 ##                         moments: boss fight, Reckoning, Rally Barrages) at the
@@ -218,6 +221,9 @@ var autotest_classes2: PackedStringArray = PackedStringArray()
 var autotest_spells2: PackedStringArray = PackedStringArray()
 ## Autotest: true when --perf prints the per-tick timing table (PerfProbe).
 var autotest_perf: bool = false
+## Autotest: "reduced" when --effects=reduced draws with Effects = Reduced
+## (drawing only; "" = Full, the autotest default).
+var autotest_effects: String = ""
 ## Autotest: --perf-real=A-B,C-D game-second windows run at real time (1x) so
 ## the rendered-frame times there are real ("" = none; PerfProbe).
 var autotest_perf_real: String = ""
@@ -285,6 +291,8 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_coop = true  # Co-op in one process, both slots by the bots (CoopSession).
 		elif arg == "--perf":
 			autotest_perf = true  # Per-tick timing table (PerfProbe).
+		elif arg.begins_with("--effects="):
+			autotest_effects = arg.get_slice("=", 1).to_lower()  # "reduced" or "full" (drawing only).
 		elif arg.begins_with("--perf-real="):
 			autotest_perf = true
 			autotest_perf_real = arg.get_slice("=", 1)  # Real-time windows (game seconds).
