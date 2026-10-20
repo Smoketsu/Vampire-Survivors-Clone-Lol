@@ -13,6 +13,9 @@
 ##   empire kinds:    spawns / kills of every Empire kind that spawned
 ##   empire stage:    the Act III stage itself (stub status, boss, Soul Ash)
 ## Phase 2 adds one line per stage system here (the Scrap Wastes: WastesReport).
+## Phase 2 adds one line per stage system here (each stage in its own block):
+##   the Iron Citadel: CitadelReport.stage_lines() (the director, its events,
+##                     its kinds, the ranged share, Deus Ex Machina).
 ## Read-only: it never changes the run.
 class_name EmpireReport
 extends RefCounted
@@ -52,6 +55,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	_assembly_lines(game, st)
 	# --- Act III: the Scrap Wastes ---
 	WastesReport.print_lines(game, st)  # Pylons, storms, its kinds, the Trojan Horse, Kestrel.
+	# --- Act III: the Iron Citadel ---
+	CitadelReport.stage_lines(game, st)
 
 
 # --- Act III: the Assembly Halls ---

@@ -86,6 +86,11 @@
 ##                        III the Assembly Halls: fabricators, the furnace
 ##                        rhythm, guest aliases; its zones' "belts" /
 ##                        "channels"); with ground "assembly" (AssemblyGround).
+##   citadel            — CitadelDirector config (CitadelStage.CITADEL, Act
+##                        III, the Iron Citadel: Shield Gates, laser grids, the
+##                        Citadel's guns, Sentry Turrets, Valkyrie 2.0, guest
+##                        squads of the earlier Act III kinds); ground
+##                        "citadel" is its CitadelGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 
@@ -155,5 +160,6 @@ const BOSS_ARRIVALS := {
 	# gives the boss its own data file) ---
 	"kestrel": WastesStage.BOSS,
 	"motherboard": MotherboardData.ARRIVAL,  # Act III: the Assembly Halls (its own data file)
-	"deus_ex_machina": CitadelStage.BOSS,
+	# --- Act III: the Iron Citadel --- (its own data file, Act III phase 2)
+	"deus_ex_machina": DeusData.ARRIVAL,
 }

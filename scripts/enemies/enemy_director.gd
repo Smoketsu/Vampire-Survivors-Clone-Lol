@@ -157,6 +157,11 @@ var archive: ArchiveDirector = null
 ## splits; ArchiveHazards): created on first use on ANY stage (an Archive kind
 ## can be spawned anywhere), null until then; archive_hazards() creates it.
 var archive_haz: ArchiveHazards = null
+# --- Act III: the Iron Citadel ---
+## The Iron Citadel's mechanics (Act III: Shield Gates, laser grids, the
+## Citadel's guns, Sentry Turrets, Valkyrie 2.0, guest squads; StageRegistry
+## "citadel"; null on every other stage).
+var citadel: CitadelDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -237,6 +242,12 @@ func _ready() -> void:
 		wastes.game = game
 		wastes.config = stage_def["wastes"]
 		add_child(wastes)
+	# --- Act III: the Iron Citadel ---
+	if not (stage_def.get("citadel", {}) as Dictionary).is_empty():
+		citadel = CitadelDirector.new()
+		citadel.game = game
+		citadel.config = stage_def["citadel"]
+		add_child(citadel)
 
 
 # =====================================================================================
@@ -328,6 +339,9 @@ func step(delta: float) -> void:
 	# --- Act III: the Scrap Wastes ---
 	if wastes != null:
 		wastes.step(delta)
+	# --- Act III: the Iron Citadel ---
+	if citadel != null:
+		citadel.step(delta)
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -396,6 +410,9 @@ func objective_text() -> String:
 	# --- Act III: the Scrap Wastes ---
 	if wastes != null and wastes.objective_override() != "":
 		return wastes.objective_override()  # The Trojan Horse, a storm, Signal Pylons.
+	# --- Act III: the Iron Citadel ---
+	if citadel != null and citadel.objective_override() != "":
+		return citadel.objective_override()  # Shield Gates, sentry turrets.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -524,6 +541,12 @@ func _run_event(ev: Dictionary) -> void:
 		"pylons", "storm", "trojan":
 			if wastes != null:
 				wastes.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act III: the Iron Citadel ---
+		"gate", "turrets", "valkyrie":
+			if citadel != null:
+				citadel.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
 	show_banner(ev["banner"])

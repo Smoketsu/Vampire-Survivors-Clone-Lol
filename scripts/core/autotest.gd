@@ -195,6 +195,10 @@ const RECKONING_GRACE: float = 20.0
 const OBJECTIVE_SEEK_RADIUS: float = 420.0
 ## Policies whose autopilot walks to the Sanctum's ward crystals and altars.
 const SANCTUM_SEEK_POLICIES := ["army", "summon", "evolve"]
+# --- Act III: the Iron Citadel ---
+## Summons the bot needs before it walks to the Citadel's gate generators and
+## turrets (a starting army of four walked into a gate's guns and died).
+const CITADEL_SEEK_ARMY: int = 12
 ## Distance (px) at which the autopilot starts steering off obstacles.
 const OBSTACLE_LOOK: float = 22.0
 ## Game seconds between stuck-unit samples.
@@ -1017,6 +1021,9 @@ func _dash_reason() -> String:
 		return "crowd"
 	if p.time_since_hit < PlayerAbilityData.BOT_DASH_HIT_WINDOW and game.horde.player_in_danger:
 		return "hit"
+	# --- Act III: the Iron Citadel --- (Grave Step through an overload pulse's front)
+	if game.enemies.boss is BossDeusExMachina and game.enemies.boss.active and (game.enemies.boss as BossDeusExMachina).pulse_near(p.position):
+		return "pulse"
 	return ""
 
 
@@ -1032,6 +1039,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.empire.danger_push(pos)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
 	if game.enemies.assembly != null:
 		danger += game.enemies.assembly.danger_push(pos)  # Act III, the Assembly Halls: glowing / burning furnace channels.
+	if game.enemies.citadel != null:
+		danger += game.enemies.citadel.danger_push(pos)  # Act III, the Iron Citadel: laser grids (null elsewhere).
 	return danger
 
 
@@ -1122,6 +1131,8 @@ func get_move_vector() -> Vector2:
 		danger += game.empire.danger_push(p)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
 	if game.enemies.assembly != null:
 		danger += game.enemies.assembly.danger_push(p)  # Act III, the Assembly Halls: glowing / burning furnace channels.
+	if game.enemies.citadel != null:
+		danger += game.enemies.citadel.danger_push(p)  # Act III, the Iron Citadel: laser grids (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1146,10 +1157,20 @@ func get_move_vector() -> Vector2:
 	# --- Act III: the Scrap Wastes ---
 	if goal == Vector2.INF and game.enemies.wastes != null and away.length() < 0.2 and policy() in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.wastes.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Scrap Wastes: tear down the Signal Pylons when calm.
+	# --- Act III: the Iron Citadel ---
+	if goal == Vector2.INF and game.enemies.citadel != null and away.length() < 0.3 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES \
+			and game.horde.units.size() >= CITADEL_SEEK_ARMY:
+		goal = game.enemies.citadel.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Iron Citadel: gate generators, then turrets, when calm and the army can take them.
 	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
 		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
 		var at := (game.enemies.boss as BossVhalneth).approach_point(p)
 		if at != Vector2.INF and p.distance_to(at) > 150.0 and away.length() < 0.6:
+			goal = at
+	# --- Act III: the Iron Citadel ---
+	if game.enemies.boss is BossDeusExMachina and game.enemies.boss.active:
+		# The Siege Core is planted: go and bring the army to its shield drones (every policy).
+		var at := (game.enemies.boss as BossDeusExMachina).approach_point(p)
+		if at != Vector2.INF and p.distance_to(at) > 200.0 and away.length() < 0.6:
 			goal = at
 	if game.enemies.sinking != null:
 		danger += game.enemies.sinking.danger_push(p) * 0.5  # Ul-Thalos: keep off the shore the sea is about to take.
@@ -1305,6 +1326,7 @@ func finish(summary: Dictionary) -> void:
 	_print_archive(st)  # Act II: the Hollow Archive (only when its stage or kinds ran).
 	SpireReport.print_all(game, st)  # Act II, Ul-Thalos: the sinking, pillars, kinds, Vhal'Neth, the Waking, its items (only when they ran).
 	AssemblyReport.print_items(game, st)  # Act III, the Assembly Halls: Hollow Puppet, the Grave Drone, their passives, Signal Ghost (only when owned).
+	CitadelReport.item_lines(game, st)  # Act III, the Iron Citadel: Scrap Swarm, the Iron Revenant (only when used; the stage's own lines are EmpireReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired
