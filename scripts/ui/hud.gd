@@ -110,6 +110,9 @@ var _top_right: BoxContainer
 ## The top-right block's left / right offsets from the right edge (layout
 ## px, before any inset).
 var _top_right_offsets := Vector2(-300.0, -16.0)
+## Top-centre block (timer, zone, objective, boss and miniboss bars); the
+## chest beacon's edge arrows stay below it (top_centre_bottom()).
+var _top_centre: BoxContainer = null
 
 
 func _ready() -> void:
@@ -185,6 +188,7 @@ func _build() -> void:
 	# Top center: timer, zone, objective, boss (the banner slot sits under it).
 	var tc := _box(true, 0.5, 0.0, -260, 20, 260, 160, BoxContainer.ALIGNMENT_BEGIN)
 	tc.grow_horizontal = Control.GROW_DIRECTION_BOTH  # Stays centred when the banner widens it.
+	_top_centre = tc
 	_timer_label = UiTheme.tier_label("00:00", UiTheme.Tier.HEADER)
 	_timer_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tc.add_child(_timer_label)
@@ -434,6 +438,21 @@ func _refresh_modifiers() -> void:
 ## panel pauses the game is seen after resuming (HudBanners).
 func announce(title: String, item_name: String, desc: String, color: Color) -> void:
 	_banners.push_announce(title, item_name, desc, color)
+
+
+## Bottom edge (layout px from the top of the screen) of the top-centre
+## block's visible lines as laid out now: it grows while the boss and
+## miniboss bars show. The chest beacon's edge arrows stay below it
+## (ChestBeacon). 0 before the HUD is built.
+func top_centre_bottom() -> float:
+	var bottom := 0.0  # Lowest visible line (px).
+	if _top_centre == null:
+		return bottom
+	for c: Node in _top_centre.get_children():
+		var ctl := c as Control
+		if ctl != null and ctl.visible:
+			bottom = maxf(bottom, ctl.get_global_rect().end.y)
+	return bottom
 
 
 ## Moves the top-right block (kills, modifiers) `px` layout px to the left,

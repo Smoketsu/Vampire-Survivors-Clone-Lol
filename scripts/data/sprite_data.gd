@@ -294,6 +294,9 @@ const FLAT_SIZES: Dictionary = {
 	"projectiles/archive_page": 12.0,  # TUNING (not in GDD) a Recitation page, 12 x 9
 	"projectiles/verse_page": 13.0,  # TUNING (not in GDD) a Forbidden Verse page, 12 x 13
 	"projectiles/unwritten_page": 14.0,  # TUNING (not in GDD) a The Unwritten Word page, 14 x 14 (gilded)
+	# --- Chest beacon (ChestBeaconData) ---
+	"markers/chest_beacon": 19.0,  # TUNING (not in GDD) gold down-chevron over a chest, 19 x 15
+	"markers/chest_badge": 21.0,  # TUNING (not in GDD) off-screen chest badge, 21 x 21 (edge arrows)
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)
