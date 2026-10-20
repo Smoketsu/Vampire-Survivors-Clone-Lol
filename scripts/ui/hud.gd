@@ -17,6 +17,11 @@
 ##                   the controls as InputHints chips). It moves left while
 ##                   the touch controls' pause button holds the corner
 ##                   (set_top_right_inset(); phones and tablets).
+##   Top right, co-op only: the partner's plate (bust, name, HP; downed in
+##                   crimson with the revive progress) under the kill count;
+##                   `coop_ui` (CoopUi) also owns the edge arrow toward an
+##                   off-screen partner, the downed markers, the waiting panel
+##                   and the notices (the lockstep driver's API). Null in solo.
 ##   Left, under HP: timed power-up buffs (Hyper, Stasis, Dark Frenzy) with
 ##                   their remaining time (game.powerups).
 ##   Bottom center : active ability slots (6) and passive slots (6) with levels,

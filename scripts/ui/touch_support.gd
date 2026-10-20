@@ -40,16 +40,24 @@ var _portrait: bool = false
 
 ## True on a phone or tablet (never under the autotest or headless): the Web
 ## build asks the browser (TouchData.MOBILE_QUERY), a native mobile export
-## would answer by its OS. Cached after the first call.
+## would answer by its OS. Cached after the first call. The co-op screenshot
+## walk (--coop-shots=, debug) asks like a player's run, so its phone shots
+## show the phone layout.
 static func is_mobile() -> bool:
 	if _mobile < 0:
 		_mobile = 1 if _detect() else 0
 	return _mobile == 1
 
 
+## True under an autotest that keeps the device's own look (the co-op
+## screenshot walk, --coop-shots=; debug).
+static func _autotest_blind() -> bool:
+	return GameState.autotest and GameState.autotest_coop_shots == ""
+
+
 ## The detection itself (see is_mobile()).
 static func _detect() -> bool:
-	if GameState.autotest or DisplayServer.get_name() == "headless":
+	if _autotest_blind() or DisplayServer.get_name() == "headless":
 		return false
 	if OS.has_feature("web"):
 		# A JS boolean comes back as a bool or a number depending on the
@@ -61,9 +69,10 @@ static func _detect() -> bool:
 
 ## Installs the one TouchSupport node under `parent` (Main): the starting
 ## input device, the UI scale and the portrait overlay. Returns the node
-## (its portrait_changed signal); null under the autotest.
+## (its portrait_changed signal); null under the autotest (but the
+## --coop-shots walk's).
 static func install(parent: Node) -> TouchSupport:
-	if GameState.autotest:
+	if _autotest_blind():
 		return null
 	if _instance != null and is_instance_valid(_instance):
 		return _instance

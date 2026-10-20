@@ -13,13 +13,14 @@
 ##                    screenshot during the hold (TEST_WEB_HOLD s). At the end it
 ##                    ends the run as a victory or a defeat (results card shot
 ##                    "results"), then quits a native window.
-## States, in order: "hud" (the partner plate, partner on screen), "arrow" (the
-## camera at the Close zoom, a player setting and drawing only, until the
-## partner is off screen: the edge arrow), "waiting" (each lockstep waiting
-## text in turn, then cleared), "notice" (a notice banner), "downed" (the run's
-## --coop-down= knocks a necromancer down; the shot waits until his revive ring
-## is TEST_RING_SHARE filled; named "self_downed" when it is this machine's own
-## necromancer, --coop-down-slot=0), then "results". Debug only: the walk
+## States, in order: "hud" (the partner plate, partner on screen), "waiting"
+## (each lockstep waiting text in turn, then cleared), "notice" (a notice
+## banner), "downed" (the run's --coop-down= knocks a necromancer down; the
+## shot waits until his revive ring is TEST_RING_SHARE filled; named
+## "self_downed" when it is this machine's own necromancer,
+## --coop-down-slot=0), "arrow" (once nobody is down, the camera at the Close
+## zoom, a player setting and drawing only, until the partner is off screen:
+## the edge arrow), then "results". Debug only: the walk
 ## changes no gameplay rule (the zoom is a view setting, the hold only stops
 ## time); ending the run early is what the shots flag is for.
 class_name CoopUiTest
@@ -43,6 +44,12 @@ var results: Dictionary = {}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS  # The results shot is taken on the paused end screen.
+	if shooting() and TouchSupport.is_mobile() and ui != null and ui.game != null and ui.game.hud != null:
+		# A test run has no touch controls (Game skips them under the autotest); the
+		# phone screenshots show them, under the run's panels like Game places them.
+		var touch := TouchControls.new()
+		touch.game = ui.game
+		ui.game.hud.add_sibling.call_deferred(touch)
 
 
 ## True for the screenshot mode (--coop-shots=).
@@ -61,18 +68,7 @@ func _physics_process(_delta: float) -> void:
 		0:  # The HUD with the partner plate (partner on screen).
 			if t >= CoopHudData.TEST_HUD_AT:
 				_state("hud", "partner plate, partner on screen", 1)
-		1:  # The off-screen arrow at the Close zoom.
-			if t < CoopHudData.TEST_ARROW_FROM:
-				return
-			if _due < 0.0:
-				_due = t
-				_zoom_before = game.camera.zoom.x
-				game.camera.zoom = Vector2.ONE * float(ViewData.ZOOM_LEVELS["close"]["zoom"])
-			var off := ui.arrows.drawn > 0 if ui.arrows != null else _partner_off_logical()
-			if off or t >= CoopHudData.TEST_ARROW_UNTIL:
-				results["arrow_found"] = off
-				_state("arrow", "partner off screen" if off else "partner never left the screen (timeout)", 2, _restore_zoom)
-		2:  # The waiting panel, each text in turn.
+		1:  # The waiting panel, each text in turn.
 			if t < CoopHudData.TEST_WAITING_AT:
 				return
 			if _wait_i < CoopHudData.TEST_WAITING_TEXTS.size():
@@ -81,30 +77,41 @@ func _physics_process(_delta: float) -> void:
 					ui.show_waiting(text)
 					_wait_i += 1
 					if _wait_i == 1:
-						_state("waiting", "show_waiting('%s') -> '%s'" % [text, ui.waiting_text()], 2)  # Returns at its hold.
+						_state("waiting", "show_waiting('%s') -> '%s'" % [text, ui.waiting_text()], 1)  # Returns at its hold.
 					else:
 						print("[autotest] coop ui: show_waiting('%s') -> '%s'" % [text, ui.waiting_text()])
 					_due = t + CoopHudData.TEST_WAITING_STEP
 			elif t >= _due:
 				ui.clear_waiting()
 				print("[autotest] coop ui: clear_waiting() -> '%s'" % ui.waiting_text())
-				_step = 3
+				_step = 2
 				_due = -1.0
-		3:  # A notice banner.
+		2:  # A notice banner.
 			if t < CoopHudData.TEST_NOTICE_AT:
 				return
 			if _due < 0.0:
 				ui.notice(CoopHudData.TEST_NOTICE_TEXT)
 				_due = t + 1.0  # Past the banner's fade-in (game time).
 			elif t >= _due:
-				_state("notice", "notice('%s')" % CoopHudData.TEST_NOTICE_TEXT, 4)
-		4:  # A downed necromancer with his revive ring part-filled.
+				_state("notice", "notice('%s')" % CoopHudData.TEST_NOTICE_TEXT, 3)
+		3:  # A downed necromancer with his revive ring part-filled.
 			var s := _downed_slot()
 			if s != null and s.revive_progress >= CoopHudData.TEST_RING_SHARE * CoopData.REVIVE_TIME:
 				var own := s.index == game.coop.view_slot
-				_state("self_downed" if own else "downed", "slot %d downed, revive ring %d%%" % [s.index, roundi(100.0 * s.revive_progress / CoopData.REVIVE_TIME)], 5)
+				_state("self_downed" if own else "downed", "slot %d downed, revive ring %d%%" % [s.index, roundi(100.0 * s.revive_progress / CoopData.REVIVE_TIME)], 4)
 			elif t >= CoopHudData.TEST_DOWNED_UNTIL:
-				_state("downed", "no downed necromancer with a filling ring by %s (timeout)" % Autotest._clock(t), 5)
+				_state("downed", "no downed necromancer with a filling ring by %s (timeout)" % Autotest._clock(t), 4)
+		4:  # The off-screen arrow at the Close zoom, once nobody is down.
+			if _downed_slot() != null and t < CoopHudData.TEST_ARROW_UNTIL:
+				return
+			if _due < 0.0:
+				_due = t
+				_zoom_before = game.camera.zoom.x
+				game.camera.zoom = Vector2.ONE * float(ViewData.ZOOM_LEVELS["close"]["zoom"])
+			var off := ui.arrows.max_past >= CoopHudData.TEST_ARROW_MIN_PAST if ui.arrows != null else _partner_off_logical()
+			if off or t >= CoopHudData.TEST_ARROW_UNTIL:
+				results["arrow_found"] = off
+				_state("arrow", "partner off screen" if off else "partner never left the screen (timeout)", 5, _restore_zoom)
 		5:  # The end of the run (shots only): the results card.
 			if not shooting():
 				_step = 6

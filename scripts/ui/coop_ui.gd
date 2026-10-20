@@ -32,8 +32,8 @@
 ##   * the downed marker, revive ring and revive-radius circle over every
 ##     downed necromancer in the world (CoopMarkers, a child of Game; not
 ##     headless);
-##   * while this machine's own necromancer lies downed, a crimson plate over
-##     the middle of the screen: "Downed" / "Your partner can raise you" with
+##   * while this machine's own necromancer lies downed, a plate just under
+##     him (mid-screen): a crimson "Downed" / "Your partner can raise you" with
 ##     the revive progress bar ("Your partner is raising you" while he stands
 ##     in reach);
 ##   * the waiting panel (CoopWaiting, its own CanvasLayer over the panels).
@@ -124,7 +124,7 @@ func _ready() -> void:
 
 ## The centred plate shown while this machine's necromancer lies downed.
 func _build_self_plate() -> void:
-	var holder := VBoxContainer.new()  # Centred over the middle of the screen.
+	var holder := VBoxContainer.new()  # Centred just under the middle of the screen (the necromancer).
 	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	holder.anchor_left = 0.5
 	holder.anchor_right = 0.5
@@ -132,8 +132,8 @@ func _build_self_plate() -> void:
 	holder.anchor_bottom = 0.5
 	holder.offset_left = -CoopHudData.SELF_BAR_WIDTH
 	holder.offset_right = CoopHudData.SELF_BAR_WIDTH
-	holder.offset_top = -CoopHudData.SELF_PLATE_RISE
-	holder.offset_bottom = -CoopHudData.SELF_PLATE_RISE
+	holder.offset_top = CoopHudData.SELF_PLATE_DROP
+	holder.offset_bottom = CoopHudData.SELF_PLATE_DROP
 	holder.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	holder.grow_vertical = Control.GROW_DIRECTION_BOTH
 	add_child(holder)

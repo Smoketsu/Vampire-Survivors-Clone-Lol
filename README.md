@@ -186,6 +186,13 @@ each machine with the host's stage and settings).
 - **Tests:** `python3 tools/coop_relay_check.py http://127.0.0.1:8765` (relay protocol), `python3
   tools/coop_net_test.py` (two headless games: lobby, join by code, start, 10,000 frames each way) and
   `node tools/coop_lobby_shots.mjs` (the lobby screens in the Web build in headless Chromium, desktop and phone).
+- **In the run** (as it lands): your partner's plate (name, HP, bust) sits under the kill count; an edge arrow with
+  his face points at him when he is off screen, and his name floats over him when he is on it. A downed
+  necromancer gets a crimson marker, a faint circle showing how close to stand and a green ring that fills while
+  the partner stands inside it (about 3 s); the downed player sees "Your partner can raise you". A small "Waiting for
+  partner" panel shows while the game waits for your friend, and the results card shows both players, yours
+  first. Screenshots: `node tools/coop_hud_shots.mjs phone defeat` (Web build) or `--coop-shots=` (see the autotest
+  table).
 - **The relay** is a Cloudflare Worker (`server/relay`, protocol in `server/relay/PROTOCOL.md`) deployed by CI's
   `deploy-relay` job; one-time owner setup in `docs/coop/RELAY_SETUP.md`.
 
@@ -2272,6 +2279,13 @@ scripts/
                             meta_glyphs (fallback drawings of the Soul Ash / tree / upgrade icons),
                             chest_panel (chest reveal), chest_arrows (the chest beacon's edge badges
                             for chests off screen), powerup_glyphs (power-up, chest, Pact / Oath icons),
+                            coop_ui (co-op only, game.hud.coop_ui: the lockstep driver's
+                            show_waiting / clear_waiting / notice API and the co-op visuals),
+                            coop_partner_bar (the partner's HUD plate), coop_bust (a player's
+                            head-and-shoulders portrait), coop_arrows (edge arrow and name tag of the
+                            partner), coop_markers (downed marker, revive ring and radius circle in the
+                            world), coop_waiting (the non-blocking waiting panel), coop_results (the
+                            results card's co-op column), coop_ui_test (--coop-ui-test / --coop-shots),
                             stage_select (vignette stage cards, locks, best times, Hyper badges),
                             stage_vignette (a stage card's composed pixel scene), pre_run_setup
                             (character, difficulty level, run modifiers, total Soul Ash plaque),
@@ -2434,6 +2448,8 @@ scripts/
     meta_data.gd            Soul Ash formula, upgrade trees / tiers / costs, achievements, autotest profiles
     powerup_data.gd         Power-up types, weights, durations, drop chances, pity, cap, lifetime
     coop_data.gd            Online co-op numbers: enemy / cap / XP / boss scaling, revive, start spots
+    coop_hud_data.gd        Co-op visuals: partner plate, edge arrow, downed marker, waiting panel, notice,
+                            results column, the debug walk's times (all cosmetic)
     chest_data.gd           Chest drop chances, pity, contents (1 / 3 / 5) weights, reveal timing
     chest_beacon_data.gd    Chest beacon: chevron bob, ground glow and pulse, edge-arrow insets, kept-free
                             corners (HUD, touch controls), cap, merge, fade (all cosmetic)
@@ -2535,6 +2551,10 @@ Options (after `--`):
 | `--volleys=on\|off` | The bullet heaven pass (default on, like the setting): `off` runs none of the pass (no volleys, the usual fodder; the army still holds the Bone Ring). Every summary has a `volleys` line: shots fired, hits, volley damage, peak shots in flight against the cap, volleys thinned by the cap, boss hits refused by the per-volley cap, Rally Barrages, and the volley damage by class / spell. |
 | `--coop-bot` | Online co-op without the network (`docs/coop/DESIGN.md`): a two-player run in one process, both slots driven by the bots (the army policy for both unless `--policy=` / `--policy2=` say otherwise), the camera on slot 0. The summary adds a `coop slot N` line and a `coop slot N build` line per slot (level, kills, lowest HP before 0:00, downs, revives given, army, chests, evolutions, picks, actives, passives, that army's volleys) and a `coop` line (shared level, kills, revives, downs, the wipe, peak enemies against the doubled hard cap, the co-op multipliers). |
 | `--policy2=`, `--character2=`, `--classes2=`, `--spells2=` | `--coop-bot`: slot 1's card policy (default army), character, forced summon classes and forced spells. |
+| (coop hud) | A `--coop-bot` summary has a `coop hud` line (`CoopUi`, read only): physics ticks the partner was off the logical view (an edge arrow), ticks a downed marker showed and its revive ring filled, ticks the viewed player lay downed, waiting-panel texts and clears, notices. |
+| `--coop-down-slot=N` | `--coop-down=T` knocks slot N down instead of the last slot (0 = the viewed slot: its "Your partner can raise you" plate shows). |
+| `--coop-ui-test` | `--coop-bot` debug: walks every co-op visual state during the run (the partner plate, each waiting text, a notice, the downed marker, then the off-screen arrow at the Close zoom) with a `coop ui:` line per state (`CoopUiTest`). |
+| `--coop-shots=victory\|defeat`, `--shot-dir=DIR` | The same walk for screenshots: the world holds still at each state (`[coop-shot] NAME`), then the run ends with that result for the results card. In a native window (e.g. under Xvfb) `--shot-dir=` saves `DIR/coop_NAME.png`; `node tools/coop_hud_shots.mjs <phone\|desktop> <victory\|defeat>` takes the Web build's (the walk lets `TouchSupport` detect the phone, so the phone layout and touch controls show). |
 | `--perf` | Prints a `[perf]` table at the end: milliseconds per simulation tick (mean / p95 / max) per game minute and at the busy moments (boss alive, the Reckoning, a Rally Barrage, both armies' barrages at once, 15:00-0:00), the time per tick section (army + spells, enemies, obstacles, projectiles, volleys, pickups + effects), the volley shot peaks and the rendered-frame times (`PerfProbe`; reads the clock only). `--perf-real=A-B,C-D` also runs those game-second windows at real time so the frame times there are real frames; `--effects=reduced` draws with Effects = Reduced. On the Web build the flags come from the page URL: `index.html?necro_autotest=--coop-bot,--perf` (`tools/coop_web_perf.js` drives it in headless Chromium). |
 | `--synergies=off` | A/B switch: no army synergy ever activates (the four original ones and the newer classes' nine). Every summary has a `synergy bonus` line (per newer synergy: the hits its mark bonus raised and the damage it added; the Baying frenzies; staggered / swooped marks; Death from Above dash resets; the seconds Requiem stretched), marked "(synergies off)" with this switch. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |

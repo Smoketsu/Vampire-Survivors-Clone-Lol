@@ -11,8 +11,10 @@
 ## crimson and a crimson ring pulses out of the badge (no ring with Reduce
 ## motion or Effects: Reduced). No distance number: the arrow fades a little
 ## with distance instead, never below ARROW_ALPHA_FAR. The badge nudges toward
-## the partner on real time (still with Reduce motion). Hidden while the run is
-## not PLAYING. Purely visual: it reads the partner's position only.
+## the partner on real time (still with Reduce motion). While the partner is on
+## screen (and standing) it draws his name in soul-teal over his head instead,
+## so he stands out from a crowd of undead. Hidden while the run is not
+## PLAYING. Purely visual: it reads the partner's position only.
 class_name CoopArrows
 extends Control
 
@@ -24,6 +26,11 @@ var _bust: CoopBust = null
 var drawn: int = 0
 ## This frame's arrows: ChestBeacon.layout_arrows() entries plus "slot" (CoopSlot).
 var _arrows: Array[Dictionary] = []
+## This frame's name tags over on-screen partners: [{at: Vector2 (px), slot: CoopSlot}].
+var _tags: Array[Dictionary] = []
+## World px past the view edge of the farthest arrow this frame (0 = none; the
+## debug walk waits for a clearly off-screen partner).
+var max_past: float = 0.0
 
 
 func _ready() -> void:
@@ -37,6 +44,12 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	visible = game != null and game.run_state == Game.RunState.PLAYING and not get_tree().paused  # Only while the run plays.
+	if not visible:
+		_arrows.clear()
+		_tags.clear()
+		drawn = 0
+		return
 	_layout()
 	queue_redraw()
 
@@ -53,6 +66,8 @@ func _partners() -> Array[CoopSlot]:
 ## Lays out this frame's arrows (_arrows) and puts the bust on the first badge.
 func _layout() -> void:
 	_arrows.clear()
+	_tags.clear()
+	max_past = 0.0
 	if game == null or game.coop == null:
 		_bust.visible = false
 		return
@@ -66,9 +81,12 @@ func _layout() -> void:
 	for s in _partners():
 		var at := s.player.get_global_transform_with_canvas().origin  # Where the camera puts him (px).
 		if ChestBeacon.on_screen(at, view):
+			if not s.downed:  # A downed partner has his marker instead.
+				_tags.append({"at": (at + Vector2(0.0, -CoopHudData.TAG_LIFT * zoom)).round(), "slot": s})
 			continue
 		var pts: Array[Vector2] = [at]
 		var ds: Array[float] = [ChestBeacon.past_edge((at - view * 0.5) / zoom, view / zoom)]  # World px past the edge.
+		max_past = maxf(max_past, ds[0])
 		for a: Dictionary in ChestBeacon.layout_arrows(view, pts, ds, ChestBeacon.keep_outs(view, k, touch), top):
 			a["slot"] = s
 			_arrows.append(a)
@@ -101,6 +119,19 @@ static func _badge_centre(a: Dictionary) -> Vector2:
 func _draw() -> void:
 	for a: Dictionary in _arrows:
 		_draw_arrow(a["slot"] as CoopSlot, a)
+	for t: Dictionary in _tags:
+		_draw_tag(t["slot"] as CoopSlot, t["at"] as Vector2)
+
+
+## The partner's name in soul-teal (BODY size, a dark shadow) centred on `at`
+## (px): over his head while he is on screen, so he stands out in a crowd.
+func _draw_tag(s: CoopSlot, at: Vector2) -> void:
+	var font := UiTheme.font_for() if UiTheme.font_for() != null else get_theme_default_font()  # Jersey 10.
+	var fs := UiTheme.tier_px(UiTheme.Tier.BODY)  # 19 px.
+	var w := font.get_string_size(s.display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x  # Text width (px).
+	var p := Vector2(roundf(at.x - w * 0.5), at.y)  # Baseline start (px).
+	draw_string(font, p + Vector2(1, 1), s.display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(CoopHudData.INK, 0.9))
+	draw_string(font, p, s.display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, CoopHudData.PARTNER)
 
 
 ## The arrow `a` (ChestBeacon.layout_arrows() entry) toward slot `s`: the
@@ -128,7 +159,9 @@ func _draw_arrow(s: CoopSlot, a: Dictionary) -> void:
 	draw_colored_polygon(PackedVector2Array([tip + dir * rim * 1.6, base + side * (hw + rim) - dir * rim, base - side * (hw + rim) - dir * rim]), Color(CoopHudData.INK, alpha))
 	draw_colored_polygon(PackedVector2Array([tip, base + side * hw, base - side * hw]), Color(col, alpha))
 	draw_line(base + side * hw, tip, Color(lit, alpha), 1.0)
-	# Badge: dark rim, coloured ring, dark plate; the bust goes on top (child).
+	# Badge: a soft dark halo (it reads over a crowd), dark rim, coloured ring,
+	# dark plate; the bust goes on top (child).
+	draw_circle(c, r + CoopHudData.ARROW_HALO, Color(CoopHudData.INK, CoopHudData.ARROW_HALO_ALPHA * alpha))
 	draw_circle(c, r + 1.0, Color(CoopHudData.INK, alpha))
 	draw_circle(c, r, Color(col, alpha))
 	draw_circle(c, r - CoopHudData.ARROW_RIM, Color(CoopHudData.PLATE, alpha))

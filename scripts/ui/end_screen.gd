@@ -47,6 +47,12 @@
 ## choices, shown only when that stage is unlocked and playable; N / pad Y),
 ## Again (R / pad X) and Menu (Esc / pad B). `victory_info` keeps the last
 ## VictoryResults.build() result (the autotest prints it).
+##
+## Online co-op (GDD §15.0 "Co-op HUD and visuals"): the portrait / seal column
+## gives way to the co-op column (CoopResults: both players, this machine's
+## first, with character, kills, the shared level, downs, revives and build),
+## and the defeat card's own build rows to two team tiles (revives, downs).
+## Solo cards are unchanged.
 class_name EndScreen
 extends Control
 
@@ -620,8 +626,12 @@ func _show_victory(summary: Dictionary) -> void:
 
 ## Co-op: the co-op column (both players, this machine's first; CoopResults)
 ## takes the portrait / seal column's place, and the defeat card's own build
-## rows give way to the players' build rows on their cards.
+## rows give way to the players' build rows on their cards and two team tiles
+## (revives, downs).
 func _show_coop(summary: Dictionary) -> void:
+	if not bool(summary["victory"]):
+		_stats_grid.add_child(_tile("Raised", "%d" % game.coop.revives, CoopHudData.REVIVE))
+		_stats_grid.add_child(_tile("Downs", "%d" % int(game.stats.get("coop_downs", 0.0)), Palette.CRIMSON.lightened(0.4)))
 	if _coop_col != null:
 		_coop_col.get_parent().remove_child(_coop_col)
 		_coop_col.queue_free()

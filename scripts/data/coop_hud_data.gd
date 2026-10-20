@@ -56,17 +56,21 @@ const PLATE_PULSE_MIN: float = 0.55  # TUNING (not in GDD)
 # --- Off-screen partner arrow (layout px; laid out like the chest arrows, ChestBeacon) ---
 
 ## Radius (px) of the round arrow badge (the partner's bust inside it).
-const ARROW_BADGE_RADIUS: float = 14.0  # TUNING (not in GDD) a little larger than the 10 px chest badge
+const ARROW_BADGE_RADIUS: float = 16.0  # TUNING (not in GDD) larger than the 10 px chest badge: a face must read on a phone
 ## Width (px) of the badge's soul-teal (crimson when downed) rim.
 const ARROW_RIM: float = 2.0  # TUNING (not in GDD)
+## Width (px) and opacity (0-1) of the soft dark halo round the badge, so it
+## reads over a crowd of units.
+const ARROW_HALO: float = 5.0  # TUNING (not in GDD)
+const ARROW_HALO_ALPHA: float = 0.5  # TUNING (not in GDD)
 ## Distance (px) from the badge centre to the pointer's base.
-const ARROW_POINTER_GAP: float = 15.0  # TUNING (not in GDD) just outside the badge
+const ARROW_POINTER_GAP: float = 17.0  # TUNING (not in GDD) just outside the badge
 ## Length (px) of the pointer triangle, base to tip.
-const ARROW_POINTER_LENGTH: float = 12.0  # TUNING (not in GDD)
+const ARROW_POINTER_LENGTH: float = 13.0  # TUNING (not in GDD)
 ## Half-width (px) of the pointer's base.
-const ARROW_POINTER_HALF_WIDTH: float = 8.0  # TUNING (not in GDD)
-## Drop (px) of the bust inside the badge (as PORTRAIT_DROP, for the 28 px badge).
-const ARROW_BUST_DROP: float = 18.0  # TUNING (not in GDD)
+const ARROW_POINTER_HALF_WIDTH: float = 9.0  # TUNING (not in GDD)
+## Drop (px) of the bust inside the badge (as PORTRAIT_DROP, for the 32 px badge).
+const ARROW_BUST_DROP: float = 20.0  # TUNING (not in GDD)
 ## World px past the view edge at which the arrow is at its faintest.
 const ARROW_FAR_DISTANCE: float = 1200.0  # TUNING (not in GDD)
 ## Opacity (0-1) of the arrow just off screen and at ARROW_FAR_DISTANCE or beyond
@@ -77,13 +81,16 @@ const ARROW_ALPHA_FAR: float = 0.7  # TUNING (not in GDD) the faintest the arrow
 ## downed (no ring with Reduce motion or Effects: Reduced).
 const ARROW_PULSE_PERIOD: float = 1.0  # TUNING (not in GDD)
 ## Radius (px) of that pulse ring as it starts and as it has faded out.
-const ARROW_PULSE_START: float = 15.0  # TUNING (not in GDD)
-const ARROW_PULSE_END: float = 30.0  # TUNING (not in GDD) radius when the ring has faded out
+const ARROW_PULSE_START: float = 17.0  # TUNING (not in GDD)
+const ARROW_PULSE_END: float = 34.0  # TUNING (not in GDD) radius when the ring has faded out
 ## Push (px) of the badge toward the partner at the top of its nudge (real
 ## time, still with Reduce motion).
 const ARROW_NUDGE: float = 3.0  # TUNING (not in GDD)
 ## Seconds (real time) of one nudge out and back.
 const ARROW_NUDGE_PERIOD: float = 0.9  # TUNING (not in GDD)
+## Height (world px) of the partner's name tag baseline above his centre while
+## he is on screen (over his 56 px figure's head; scaled by the camera zoom).
+const TAG_LIFT: float = 34.0  # TUNING (not in GDD)
 
 # --- Downed marker in the world (world px; CoopMarkers) ----------------------------------
 
@@ -123,9 +130,10 @@ const SELF_DOWNED_TEXT: String = "Your partner can raise you"  # TUNING (not in 
 const SELF_RAISING_TEXT: String = "Your partner is raising you"  # TUNING (not in GDD)
 ## Line when both are down (the run is ending).
 const SELF_ALONE_TEXT: String = "Both fallen"  # TUNING (not in GDD)
-## Distance (px) of the plate's centre above the screen's middle: above the
-## necromancer (the camera centre) and his marker, clear of the banner slot.
-const SELF_PLATE_RISE: float = 110.0  # TUNING (not in GDD)
+## Distance (px) of the plate's centre below the screen's middle: under the
+## necromancer (the camera centre) and his revive circle, clear of the banner
+## slot above him (the "has fallen" banner) and of the ability bar below.
+const SELF_PLATE_DROP: float = 112.0  # TUNING (not in GDD)
 ## Width (px) of the plate's progress bar.
 const SELF_BAR_WIDTH: float = 220.0  # TUNING (not in GDD)
 
@@ -179,18 +187,21 @@ const TEXT_YOU: String = "You"  # TUNING (not in GDD)
 # --- Debug sequence (--coop-ui-test / --coop-shots; CoopUiTest) --------------------------
 
 ## Game second of each step of the debug sequence (shots in this order): the
-## HUD with the partner on screen; then the off-screen arrow (searched from
-## ARROW_FROM at the Close zoom until ARROW_UNTIL); the waiting panel and its
-## texts; a notice banner; the downed partner (the run's --coop-down= decides
-## when; the shot waits until the ring is part-filled, up to DOWNED_UNTIL); the
-## end of the run (the results card).
+## HUD with the partner on screen; the waiting panel and its texts; a notice
+## banner; the downed partner (the run's --coop-down= decides when; the shot
+## waits until the ring is part-filled, up to DOWNED_UNTIL); then the
+## off-screen arrow (searched at the Close zoom once nobody is down, until
+## ARROW_UNTIL: the bots often walk together, so the search is long); the end
+## of the run (the results card).
 const TEST_HUD_AT: float = 22.0  # TUNING (not in GDD) debug only
-const TEST_ARROW_FROM: float = 26.0  # TUNING (not in GDD) debug only
-const TEST_ARROW_UNTIL: float = 44.0  # TUNING (not in GDD) debug only
-const TEST_WAITING_AT: float = 46.0  # TUNING (not in GDD) debug only
-const TEST_NOTICE_AT: float = 52.0  # TUNING (not in GDD) debug only
+const TEST_WAITING_AT: float = 26.0  # TUNING (not in GDD) debug only
+const TEST_NOTICE_AT: float = 33.0  # TUNING (not in GDD) debug only
 const TEST_DOWNED_UNTIL: float = 90.0  # TUNING (not in GDD) debug only
-const TEST_END_DELAY: float = 2.0  # TUNING (not in GDD) debug only: s after the downed shot
+const TEST_ARROW_UNTIL: float = 420.0  # TUNING (not in GDD) debug only
+## World px past the view edge the partner must be for the arrow shot (off
+## screen, not a figure cut through the middle by the edge).
+const TEST_ARROW_MIN_PAST: float = 24.0  # TUNING (not in GDD) debug only
+const TEST_END_DELAY: float = 2.0  # TUNING (not in GDD) debug only: s after the arrow shot
 ## Seconds (game time) each waiting text stays before the next one.
 const TEST_WAITING_STEP: float = 1.5  # TUNING (not in GDD) debug only
 ## The waiting texts the sequence cycles through (the lockstep driver's states).
