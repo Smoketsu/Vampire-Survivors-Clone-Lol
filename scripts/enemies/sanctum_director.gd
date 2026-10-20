@@ -214,7 +214,7 @@ func _raise_altars(ev: Dictionary) -> void:
 		altars.append(al)
 		for grp: Dictionary in ev["guards"]:
 			for _k in int(grp["count"]):
-				if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+				if game.enemies.regular_alive() >= game.enemies.hard_cap():
 					break
 				var at := al.pos + Vector2.from_angle(randf() * TAU) * (e.radius + 26.0)
 				game.enemies.spawn_at(String(grp["kind"]), at, bool(grp["elite"]))

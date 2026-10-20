@@ -178,7 +178,7 @@ func step(delta: float) -> void:
 ## The soldier of revival `r` rises (unless the enemy hard cap is full).
 func _raise(r: Revive) -> void:
 	var ed := game.enemies
-	if ed.regular_alive() >= WaveData.HARD_CAP:
+	if ed.regular_alive() >= ed.hard_cap():
 		game.stat_add("confessor_revives_capped", 1.0)
 		return
 	var e := ed.spawn_at(r.kind, r.pos, false)

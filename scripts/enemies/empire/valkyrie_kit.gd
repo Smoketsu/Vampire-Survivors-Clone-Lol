@@ -233,10 +233,10 @@ func _bash(e: Enemy) -> void:
 	g.effects.impact(e.position + dir * reach * 0.5, reach * 0.6, Palette.EMPIRE_CHROME_LIGHT)
 	g.shake(5.0)
 	Sfx.play("shield_bash", e.position)
-	var pl := g.player
-	if in_sector(e.position, dir, reach, half, e.radius, pl.position, pl.radius):
-		g.combat.damage_player(float(d["bash_damage_player"]) * mult, "valkyrie_bash")
-		g.stat_add("valkyrie_bash_player_hits", 1.0)
+	for pl in g.all_players:  # (Co-op: every necromancer inside.)
+		if in_sector(e.position, dir, reach, half, e.radius, pl.position, pl.radius):
+			g.combat.damage_player(float(d["bash_damage_player"]) * mult, "valkyrie_bash", pl)
+			g.stat_add("valkyrie_bash_player_hits", 1.0)
 	g.ally_grid.query(e.position, reach + UnitData.MAX_BLOCK_RADIUS, _buf)
 	for u: SummonedUnit in _buf:
 		if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:
@@ -263,10 +263,10 @@ func _storm(e: Enemy, delta: float) -> void:
 	_storm_tick += float(d["storm_tick"])
 	var r := float(d["storm_radius"])
 	var mult := hit_scale(e)
-	var pl := g.player
-	if pl.position.distance_to(e.position) <= r + pl.radius:
-		g.combat.damage_player(float(d["storm_damage_player"]) * mult, "valkyrie_storm")
-		g.stat_add("valkyrie_storm_player_hits", 1.0)
+	for pl in g.all_players:  # (Co-op: every necromancer inside.)
+		if pl.position.distance_to(e.position) <= r + pl.radius:
+			g.combat.damage_player(float(d["storm_damage_player"]) * mult, "valkyrie_storm", pl)
+			g.stat_add("valkyrie_storm_player_hits", 1.0)
 	g.ally_grid.query(e.position, r + UnitData.MAX_BLOCK_RADIUS, _buf)
 	for u: SummonedUnit in _buf:
 		if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:

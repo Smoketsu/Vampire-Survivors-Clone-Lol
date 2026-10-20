@@ -254,19 +254,20 @@ func _splash(p: Vector2) -> void:
 ## every walking summon and every enemy but Vhal'Neth's face are kept inside
 ## the shore.
 func contain_all() -> void:
-	var p := game.player
-	var q := clamp_point(p.position, p.radius)
-	if q != p.position:
-		p.position = q
-		game.stat_add("sinking_pushes_player", 1.0)
+	for p in game.all_players:  # (Co-op: each necromancer.)
+		var q := clamp_point(p.position, p.radius)
+		if q != p.position:
+			p.position = q
+			game.stat_add("sinking_pushes_player", 1.0)
 	var n := 0  # Summons the sea moved this tick.
-	for u in game.horde.units:
-		if not u.active or u.airborne:
-			continue  # A flying Gargoyle passes over the sea (it lands on a free point).
-		var uq := clamp_point(u.position, u.radius)
-		if uq != u.position:
-			u.position = uq
-			n += 1
+	for h in game.all_hordes:  # (Co-op: every army.)
+		for u in h.units:
+			if not u.active or u.airborne:
+				continue  # A flying Gargoyle passes over the sea (it lands on a free point).
+			var uq := clamp_point(u.position, u.radius)
+			if uq != u.position:
+				u.position = uq
+				n += 1
 	if n > 0:
 		game.stat_add("sinking_pushes_summons", float(n))
 	var m := 0  # Enemies the sea moved this tick.

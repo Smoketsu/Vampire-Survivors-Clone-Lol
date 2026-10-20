@@ -156,7 +156,7 @@ func _special_usable(id: String, d: float) -> bool:
 
 ## Crusader's Command needs room under the enemy hard cap.
 func _can_command() -> bool:
-	return game.enemies.regular_alive() < WaveData.HARD_CAP - 12
+	return game.enemies.regular_alive() < game.enemies.hard_cap() - 12
 
 
 ## True while his Holy Standard still stands.
@@ -300,12 +300,12 @@ func _resolve_cleave() -> void:
 		soakers += 1
 		game.combat.damage_unit(u, float(boss_def["cleave_damage_summon"]) * hit_mult(), "boss_cleave")
 	game.stat_add("boss_cleave_summon_hits", float(soakers))
-	var player := game.player
-	if _in_cleave(player.position, player.radius):
-		var soak := minf(float(boss_def["cleave_soak_max"]), float(soakers) * float(boss_def["cleave_soak_per_unit"]))
-		if soak > 0.0:
-			game.stat_add("boss_cleave_soaked", 1.0)
-		game.combat.damage_player(float(boss_def["cleave_damage_player"]) * game.enemies.damage_mult * hit_mult() * (1.0 - soak), "boss_cleave")
+	for player in game.all_players:  # (Co-op: every necromancer inside.)
+		if _in_cleave(player.position, player.radius):
+			var soak := minf(float(boss_def["cleave_soak_max"]), float(soakers) * float(boss_def["cleave_soak_per_unit"]))
+			if soak > 0.0:
+				game.stat_add("boss_cleave_soaked", 1.0)
+			game.combat.damage_player(float(boss_def["cleave_damage_player"]) * game.enemies.damage_mult * hit_mult() * (1.0 - soak), "boss_cleave", player)
 
 
 # =====================================================================================
@@ -343,7 +343,7 @@ func _start_command() -> void:
 func _resolve_command() -> void:
 	var spawned := 0
 	for i in _command_points.size():
-		if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+		if game.enemies.regular_alive() >= game.enemies.hard_cap():
 			break
 		game.enemies.spawn_at(_command_kinds[i], _command_points[i], false)
 		game.effects.spawn_ring(_command_points[i], Palette.GOLD)

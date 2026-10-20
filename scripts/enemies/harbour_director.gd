@@ -144,7 +144,7 @@ func _place(ev: Dictionary, role: String) -> void:
 			_add_pier(e.position, p)
 			for grp: Dictionary in ev.get("guards", []):
 				for _k in int(grp["count"]):
-					if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+					if game.enemies.regular_alive() >= game.enemies.hard_cap():
 						break
 					game.enemies.spawn_at(String(grp["kind"]), e.position + Vector2.from_angle(randf() * TAU) * (e.radius + 28.0), bool(grp["elite"]))
 		else:
@@ -203,7 +203,7 @@ func _step_structures() -> void:
 func _toll(s: Structure) -> void:
 	if s.pos.distance_to(game.player.position) > float(config["toll_radius"]):
 		return
-	var cap := mini(game.enemies.soft_cap(), WaveData.HARD_CAP - 10)  # Room for the squad.
+	var cap := mini(game.enemies.soft_cap(), game.enemies.hard_cap() - 10)  # Room for the squad.
 	var spawned := 0  # Cultists called this time.
 	for grp: Dictionary in config["toll_groups"]:
 		for _k in int(grp["count"]):

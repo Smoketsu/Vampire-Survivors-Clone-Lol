@@ -169,12 +169,12 @@ func _resolve_sweep(e: Enemy) -> void:
 		u.position = _dragged(e, u.position, u.radius, float(d["sweep_drag"]), INF)
 		g.combat.damage_unit(u, float(d["sweep_damage_summon"]) * mult, SWEEP_SOURCE)
 	g.stat_add("harbourmaster_drags", float(dragged))
-	var p := g.player
-	if in_sector(e.position, dir, r, half, e.radius, p.position, p.radius):
-		g.combat.damage_player(float(d["sweep_damage_player"]) * mult, SWEEP_SOURCE)
-		if not g.grave_step.is_dashing():
-			p.position = _dragged(e, p.position, p.radius, float(d["sweep_drag"]), float(d["sweep_player_drag_max"]))
-			g.stat_add("harbourmaster_player_drags", 1.0)
+	for p in g.all_players:  # (Co-op: every necromancer inside, each by his own dash.)
+		if in_sector(e.position, dir, r, half, e.radius, p.position, p.radius):
+			g.combat.damage_player(float(d["sweep_damage_player"]) * mult, SWEEP_SOURCE, p)
+			if not p.dash.is_dashing():
+				p.position = _dragged(e, p.position, p.radius, float(d["sweep_drag"]), float(d["sweep_player_drag_max"]))
+				g.stat_add("harbourmaster_player_drags", 1.0)
 
 
 ## Where a body of radius `r` at `pos` ends after being dragged `share` of the
@@ -207,11 +207,13 @@ func _hurl_tick(e: Enemy, from: float, to: float) -> bool:
 		if along < best_along:
 			best_along = along
 			best = u
-	var p := g.player
-	var pa := _along_if_hit(e, p.position, p.radius, from, to, half_w)
-	if pa < best_along:
-		best_along = pa
-		best = p
+	var p := g.player  # The necromancer reeled (co-op: the first one the anchor touches).
+	for q in g.all_players:
+		var pa := _along_if_hit(e, q.position, q.radius, from, to, half_w)
+		if pa < best_along:
+			best_along = pa
+			best = q
+			p = q
 	if best == null:
 		return false
 	var mult := hit_scale(e)  # Time scaling x aura buff x Dirge.
@@ -223,8 +225,8 @@ func _hurl_tick(e: Enemy, from: float, to: float) -> bool:
 		u.position = beside + dir * u.radius
 		g.combat.damage_unit(u, float(d["hurl_damage_summon"]) * mult, HURL_SOURCE)
 	else:
-		g.combat.damage_player(float(d["hurl_damage_player"]) * mult, HURL_SOURCE)
-		if not g.grave_step.is_dashing():
+		g.combat.damage_player(float(d["hurl_damage_player"]) * mult, HURL_SOURCE, p)
+		if not p.dash.is_dashing():
 			p.position += (beside + dir * p.radius - p.position).limit_length(float(d["hurl_player_drag_max"]))
 			g.stat_add("harbourmaster_player_drags", 1.0)
 	g.stat_add("harbourmaster_reels", 1.0)

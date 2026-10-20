@@ -885,7 +885,7 @@ func try_bash(e: Enemy, normal: Vector2) -> void:
 	e.knockback += normal * bash_knockback / maxf(e.mass, 0.1)
 	game.effects.slash(position + normal * radius, normal, Palette.COLD_BLUE if evolution == "" else Palette.VIOLET, radius * 1.6)
 	game.stat_add("warrior_bashes", 1.0)
-	game.combat.damage_enemy(e, bash_damage, "bash" if evolution == "" else evolution + "_bash")
+	game.combat.damage_enemy(e, bash_damage, "bash" if evolution == "" else evolution + "_bash", director.slot)  # Co-op: called from the enemy's step, so the bash names its army.
 
 
 # =====================================================================================

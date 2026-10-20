@@ -325,9 +325,9 @@ func _resolve_wave() -> void:
 		u.position += (away.normalized() if away.length() > 0.5 else aim) * float(boss_def["wave_push"])
 		game.combat.damage_unit(u, float(boss_def["wave_damage_summon"]) * mult, "merrow_wave")
 	game.stat_add("merrow_wave_hits", float(hits))
-	var p := game.player
-	if CovenantKit.in_sector(position, aim, r, half, radius, p.position, p.radius):
-		game.combat.damage_player(float(boss_def["wave_damage_player"]) * mult, "merrow_wave")
+	for p in game.all_players:  # (Co-op: every necromancer inside.)
+		if CovenantKit.in_sector(position, aim, r, half, radius, p.position, p.radius):
+			game.combat.damage_player(float(boss_def["wave_damage_player"]) * mult, "merrow_wave", p)
 
 
 # =====================================================================================
@@ -441,9 +441,9 @@ func _resolve_whirl() -> void:
 		u.position += (away.normalized() if away.length() > 0.5 else Vector2.UP) * float(boss_def["whirl_knockback"])
 		game.combat.damage_unit(u, float(boss_def["whirl_damage_summon"]) * mult, "merrow_whirl")
 	game.stat_add("merrow_whirl_hits", float(hits))
-	var p := game.player
-	if p.position.distance_to(position) <= r + p.radius:
-		game.combat.damage_player(float(boss_def["whirl_damage_player"]) * mult, "merrow_whirl")
+	for p in game.all_players:  # (Co-op: every necromancer inside.)
+		if p.position.distance_to(position) <= r + p.radius:
+			game.combat.damage_player(float(boss_def["whirl_damage_player"]) * mult, "merrow_whirl", p)
 
 
 # =====================================================================================

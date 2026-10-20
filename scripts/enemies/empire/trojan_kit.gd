@@ -169,7 +169,7 @@ func _fire_volley(e: Enemy) -> void:
 	var spread := float(d["volley_spread"])  # Fan width (rad).
 	var launched := 0
 	for i in n:
-		if g.enemies.regular_alive() >= WaveData.HARD_CAP:
+		if g.enemies.regular_alive() >= g.enemies.hard_cap():
 			break
 		var a := base + (float(i) / maxf(1.0, float(n - 1)) - 0.5) * spread  # This rocket's launch heading.
 		var dir := Vector2.from_angle(a)
@@ -200,9 +200,9 @@ func _resolve_stomp(e: Enemy) -> void:
 		u.position += (away.normalized() if away.length() > 0.5 else Vector2.UP) * float(d["stomp_push"])
 		g.combat.damage_unit(u, float(d["stomp_damage_summon"]) * mult, STOMP_SOURCE)
 	g.stat_add("trojan_stomp_hits", float(hits))
-	var p := g.player
-	if p.position.distance_to(e.position) <= r + p.radius:
-		g.combat.damage_player(float(d["stomp_damage_player"]) * mult, STOMP_SOURCE)
+	for p in g.all_players:  # (Co-op: every necromancer inside.)
+		if p.position.distance_to(e.position) <= r + p.radius:
+			g.combat.damage_player(float(d["stomp_damage_player"]) * mult, STOMP_SOURCE, p)
 
 
 ## The hull starts to split (it stands for SPLIT_TIME s).
@@ -220,7 +220,7 @@ func _finish_split(e: Enemy) -> void:
 	split = true
 	var n := int(d["split_drones"])  # Drones released.
 	for i in n:
-		if g.enemies.regular_alive() >= WaveData.HARD_CAP:
+		if g.enemies.regular_alive() >= g.enemies.hard_cap():
 			break
 		var at := e.position + Vector2.from_angle(TAU * float(i) / float(n)) * (e.radius + 18.0)
 		g.enemies.spawn_at("scout_drone", at, false)

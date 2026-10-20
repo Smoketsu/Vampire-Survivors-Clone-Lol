@@ -33,8 +33,8 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 func _ready() -> void:
 	z_index = -1
-	if GameState.autotest:
-		_rng.seed = hash("chests:%d" % GameState.autotest_seed)
+	if game.seeded():
+		_rng.seed = hash("chests:%d" % game.run_seed())
 	else:
 		_rng.randomize()
 
@@ -42,6 +42,9 @@ func _ready() -> void:
 ## Ages the pity timer, animates chests and opens the first one the
 ## necromancer walks over (only while the run is playing).
 func step(delta: float) -> void:
+	if game.coop != null:
+		_step_coop(delta)
+		return
 	since_chest += delta
 	var p := game.player.position  # Necromancer position.
 	var reach := game.player.radius + ChestData.PICKUP_RADIUS  # Collection distance (px).
@@ -57,11 +60,47 @@ func step(delta: float) -> void:
 			return
 
 
+## Co-op: as step(), but any standing necromancer opens a chest he walks over
+## (the first in slot order), with his slot bound, so its rewards follow his
+## build (Game.open_chest() -> CoopSession.open_chest(); no pause).
+func _step_coop(delta: float) -> void:
+	since_chest += delta
+	var co := game.coop
+	for i in active.size():
+		var c := active[i]  # Chest being checked.
+		c.tick(delta)
+		if game.run_state != Game.RunState.PLAYING:
+			continue
+		for s in co.slots:
+			if s.alive() and c.position.distance_to(s.player.position) <= s.player.radius + ChestData.PICKUP_RADIUS + ChestData.SIZE * 0.5:
+				var pos := c.position  # Where it was opened.
+				active.remove_at(i)
+				c.deactivate()
+				_pool.append(c)
+				var prev := co.bound
+				co.bind(s.index)
+				game.open_chest(pos)
+				co.bind(prev)
+				return
+
+
+## Co-op: the stage boss drops CoopData.BOSS_CHESTS_PER_PLAYER chests for each
+## standing player (at least one), side by side at `pos`.
+func _coop_boss_chests(pos: Vector2) -> void:
+	var n := maxi(1, game.coop.alive_slots().size() * CoopData.BOSS_CHESTS_PER_PLAYER)  # Chests dropped.
+	for k in n:
+		var off := (float(k) - float(n - 1) * 0.5) * CoopData.BOSS_CHEST_SPACING  # Side offset (px).
+		spawn_chest(pos + Vector2(off, 0.0), true)
+
+
 ## Kill hook: drops a chest per the ChestData rules.
 func on_enemy_killed(e: Enemy) -> void:
 	if e.is_reckoning or game.countdown_finished():
 		return
 	if e.is_boss:
+		if game.coop != null:
+			_coop_boss_chests(e.position)  # Co-op: one per standing player (CoopData).
+			return
 		spawn_chest(e.position, true)
 		return
 	if e.is_miniboss:

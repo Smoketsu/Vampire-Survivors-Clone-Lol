@@ -6,6 +6,10 @@
 ## necromancer to the drop point, so XP left behind in a 20-minute run keeps
 ## coming back into play instead of every later drop vanishing into it.
 ## magnetize_all() is the Soul Magnet power-up (PowerupManager).
+## Co-op (CoopSession): either standing necromancer's pickup radius catches a
+## crystal (slot order); it then flies to that one (XpCrystal.slot; to the
+## nearest standing one if he goes down) and its XP goes into the ONE shared bar
+## with that slot bound (Game.add_xp(): his Grave Tithe, the co-op x0.5).
 class_name XpManager
 extends Node2D
 
@@ -69,6 +73,9 @@ func spawn(pos: Vector2, value: int) -> void:
 
 ## Magnet + collection update.
 func step(delta: float) -> void:
+	if game.coop != null:
+		_step_coop(delta)
+		return
 	var player := game.player
 	var p := player.position
 	var pick2 := player.pickup_radius * player.pickup_radius
@@ -94,9 +101,45 @@ func step(delta: float) -> void:
 		i += 1
 
 
+## Co-op magnet + collection (see the header).
+func _step_coop(delta: float) -> void:
+	var co := game.coop
+	var i := 0
+	while i < active.size():
+		var c := active[i]
+		if not c.magnet:
+			for s in co.slots:
+				if s.alive() and c.position.distance_squared_to(s.player.position) <= s.player.pickup_radius * s.player.pickup_radius:
+					c.magnet = true
+					c.slot = s.index
+					break
+		if c.magnet:
+			if not co.slots[c.slot].alive():
+				c.slot = co.nearest_slot(c.position)  # Its necromancer went down: the nearest standing one.
+			var to_p := co.slots[c.slot].player.position - c.position
+			var d := to_p.length()
+			if d <= PlayerData.COLLECT_RADIUS:
+				var prev := co.bound
+				co.bind(c.slot)
+				game.add_xp(c.value)
+				co.bind(prev)
+				c.active = false
+				c.visible = false
+				active[i] = active[active.size() - 1]
+				active.pop_back()
+				_pool.append(c)
+				continue
+			c.speed = minf(c.speed + PlayerData.MAGNET_ACCEL * delta, PlayerData.MAGNET_MAX_SPEED)
+			c.position += to_p / d * minf(c.speed * delta, d)
+		i += 1
+
+
 ## Soul Magnet power-up (PowerupManager): every crystal on the stage starts
-## flying to the necromancer. Returns how many were pulled.
+## flying to the necromancer (co-op: to the one who took it). Returns how many
+## were pulled.
 func magnetize_all() -> int:
+	var to_slot := game.coop.bound if game.coop != null else 0  # Co-op: the collector's slot.
 	for c in active:
 		c.magnet = true
+		c.slot = to_slot
 	return active.size()

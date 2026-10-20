@@ -211,7 +211,7 @@ func camera_offset() -> Vector2:
 
 ## Freezes the simulation for `ms` real-time milliseconds (see header).
 func hitstop(ms: int) -> void:
-	if ms <= 0 or GameState.autotest or get_tree().paused:
+	if ms <= 0 or GameState.autotest or get_tree().paused or (_game != null and _game.coop != null):  # Co-op: off (it would freeze one machine only).
 		return
 	var now := Time.get_ticks_usec()
 	if not _hitstopping:

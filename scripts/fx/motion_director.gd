@@ -38,15 +38,16 @@ func _process(_delta: float) -> void:
 	var dt := maxf(0.0, now - _last_elapsed)  # Game seconds since the last frame (0 while paused).
 	_last_elapsed = now
 	_update_view()
-	var p := game.player
-	if p.motion != null:
-		p.motion.update(now, dt, p.dead, false, game.grave_step != null and game.grave_step.is_dashing())
+	for p in game.all_players:  # Co-op: each necromancer, with his own dash.
+		if p.motion != null:
+			p.motion.update(now, dt, p.dead, false, p.dash != null and p.dash.is_dashing())
 	for e: Enemy in game.enemies.active:
 		if e.active and e.motion != null and _view.has_point(e.position):
 			e.motion.update(now, dt, e.frozen, false)
-	for u: SummonedUnit in game.horde.units:
-		if u.active and u.motion != null and _view.has_point(u.position):
-			u.update_motion(now, dt)
+	for h in game.all_hordes:
+		for u: SummonedUnit in h.units:
+			if u.active and u.motion != null and _view.has_point(u.position):
+				u.update_motion(now, dt)
 	if not _active.is_empty():
 		_step_dissolves(dt)
 

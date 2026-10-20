@@ -92,10 +92,10 @@ func _land_stamp(at: Vector2) -> void:
 	game.effects.impact(at, h * 1.2, Palette.EMPIRE_SIGNAL_AMBER)
 	Sfx.play("press_stamp", at)
 	game.shake(5.0)
-	var p := game.player
-	if absf(p.position.x - at.x) <= h + p.radius * 0.5 and absf(p.position.y - at.y) <= h + p.radius * 0.5:
-		game.combat.damage_player(float(def["stamp_damage_player"]) * mult, MotherboardData.STAMP_SOURCE)
-		game.stat_add("motherboard_stamp_player_hits", 1.0)
+	for p in game.all_players:  # (Co-op: either necromancer.)
+		if absf(p.position.x - at.x) <= h + p.radius * 0.5 and absf(p.position.y - at.y) <= h + p.radius * 0.5:
+			game.combat.damage_player(float(def["stamp_damage_player"]) * mult, MotherboardData.STAMP_SOURCE, p)
+			game.stat_add("motherboard_stamp_player_hits", 1.0)
 	game.ally_grid.query(at, h * 1.5 + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	var hits := 0
 	for u: SummonedUnit in _tmp:

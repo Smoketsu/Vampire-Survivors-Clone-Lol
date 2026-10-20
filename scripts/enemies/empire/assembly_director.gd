@@ -162,13 +162,17 @@ func belt_velocity(p: Vector2, _r: float = 0.0) -> Vector2:
 func _step_belts(delta: float) -> void:
 	if (zone().get("belts", {}) as Dictionary).is_empty():
 		return
-	var v := belt_velocity(game.player.position)
-	if v != Vector2.ZERO and TerrainSlow.push_player(game, v, delta):
-		game.stat_add("assembly_belt_player_s", delta)
-	for u in game.horde.units:
-		v = belt_velocity(u.position)
-		if v != Vector2.ZERO and TerrainSlow.push_summon(game, u, v, delta):
-			game.stat_add("assembly_belt_summon_s", delta)
+	var v := Vector2.ZERO  # Belt velocity under the body being moved (px/s).
+	for k in game.all_players.size():  # Each necromancer and his army (co-op: bound in turn).
+		var prev := game.bind_index(k)
+		v = belt_velocity(game.player.position)
+		if v != Vector2.ZERO and TerrainSlow.push_player(game, v, delta):
+			game.stat_add("assembly_belt_player_s", delta)
+		for u in game.horde.units:
+			v = belt_velocity(u.position)
+			if v != Vector2.ZERO and TerrainSlow.push_summon(game, u, v, delta):
+				game.stat_add("assembly_belt_summon_s", delta)
+		game.unbind(prev)
 	for e in game.enemies.active:
 		v = belt_velocity(e.position)
 		if v != Vector2.ZERO and TerrainSlow.push_enemy(game, e, v, delta):
@@ -220,14 +224,15 @@ func _step_furnace(delta: float) -> void:
 	var f: Dictionary = config["furnace"]
 	_furnace_cd += float(f["tick"])
 	var dm := game.enemies.damage_mult  # Time scaling of enemy hits.
-	var p := game.player
-	if not p.dead and burning_at(p.position, p.radius):
-		game.combat.damage_player(float(f["damage_player"]) * dm, FURNACE_SOURCE)
-		game.stat_add("assembly_furnace_player_hits", 1.0)
-	for u in game.horde.units:
-		if u.active and not u.airborne and not u.flies and u.state != SummonedUnit.State.SPAWNING and burning_at(u.position, u.radius):
-			game.combat.damage_unit(u, float(f["damage_summon"]) * dm, FURNACE_SOURCE)
-			game.stat_add("assembly_furnace_summon_hits", 1.0)
+	for p in game.all_players:  # (Co-op: either necromancer.)
+		if not p.dead and burning_at(p.position, p.radius):
+			game.combat.damage_player(float(f["damage_player"]) * dm, FURNACE_SOURCE, p)
+			game.stat_add("assembly_furnace_player_hits", 1.0)
+	for h in game.all_hordes:  # (Co-op: every army.)
+		for u in h.units:
+			if u.active and not u.airborne and not u.flies and u.state != SummonedUnit.State.SPAWNING and burning_at(u.position, u.radius):
+				game.combat.damage_unit(u, float(f["damage_summon"]) * dm, FURNACE_SOURCE)
+				game.stat_add("assembly_furnace_summon_hits", 1.0)
 	var hits: Array = []  # Own buffer: a kill may change the active list's bodies.
 	for e in game.enemies.active:
 		if e.active and not e.is_structure and not e.floating and not e.untargetable and burning_at(e.position, e.radius):
@@ -313,7 +318,7 @@ func _place_fabs(ev: Dictionary) -> void:
 		game.effects.spawn_ring(e.position, Palette.EMPIRE_SIGNAL_AMBER)
 		for grp: Dictionary in ev.get("guards", []):
 			for _k in int(grp["count"]):
-				if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+				if game.enemies.regular_alive() >= game.enemies.hard_cap():
 					break
 				game.enemies.spawn_at(String(grp["kind"]), e.position + Vector2.from_angle(randf() * TAU) * (e.radius + 30.0), bool(grp["elite"]))
 	game.stat_add("assembly_fabricators_placed", float(n))

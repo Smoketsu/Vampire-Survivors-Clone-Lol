@@ -284,8 +284,8 @@ func _orr_push(delta: float) -> void:
 	var o: Dictionary = config["orrery"]
 	var reach := float(o["arm_length"]) + 30.0
 	var slide := float(o["slide_speed"]) * delta  # px a held body slides along the arm this tick.
-	var pl := game.player
-	pl.position = _push_body(pl.position, pl.radius, 0.0)
+	for pl in game.all_players:  # (Co-op: each necromancer.)
+		pl.position = _push_body(pl.position, pl.radius, 0.0)
 	game.ally_grid.query(orr_hub, reach + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.state != SummonedUnit.State.SPAWNING and not u.airborne:
@@ -384,7 +384,7 @@ func _place_tomes(ev: Dictionary) -> void:
 		var k := 0
 		for grp: Dictionary in config["tome_guards"]:
 			for _g in int(grp["count"]):
-				if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+				if game.enemies.regular_alive() >= game.enemies.hard_cap():
 					break
 				var at := pos + Vector2.from_angle(TAU * float(k) / 4.0 + offset) * 34.0
 				game.enemies.spawn_at(String(grp["kind"]), at, bool(grp["elite"]))
@@ -393,14 +393,21 @@ func _place_tomes(ev: Dictionary) -> void:
 	_log("tomes_%d" % n)
 
 
+## True when a necromancer (co-op: either) stands on tome `t` (it burns).
+func _on_tome(t: Tome) -> bool:
+	for pl in game.all_players:
+		if pl.position.distance_to(t.pos) <= float(config["burn_radius"]) + pl.radius:
+			return true
+	return false
+
+
 ## Tomes age; the necromancer standing on one burns it.
 func _step_tomes(delta: float) -> void:
 	var i := tomes.size() - 1
-	var pl := game.player
 	while i >= 0:
 		var t := tomes[i]
 		t.life -= delta
-		if pl.position.distance_to(t.pos) <= float(config["burn_radius"]) + pl.radius:
+		if _on_tome(t):
 			t.burn += delta
 			if t.burn >= float(config["burn_time"]):
 				_burn(t)

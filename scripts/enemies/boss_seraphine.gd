@@ -205,7 +205,7 @@ func _special_usable(id: String, d: float) -> bool:
 		"circles":
 			return d <= float(boss_def["circles_max_range"])
 		"templars":
-			return game.enemies.regular_alive() < WaveData.HARD_CAP - 12
+			return game.enemies.regular_alive() < game.enemies.hard_cap() - 12
 		"teleport":
 			return d >= float(boss_def["teleport_min_range"])
 		"beams":
@@ -213,7 +213,7 @@ func _special_usable(id: String, d: float) -> bool:
 		"barrage":
 			return d <= float(boss_def["barrage_max_range"])
 		"constructs":
-			return game.enemies.regular_alive() < WaveData.HARD_CAP - 6
+			return game.enemies.regular_alive() < game.enemies.hard_cap() - 6
 		"suppression":
 			return not game.horde.suppression.has_source(SUPPRESSION_SOURCE) and game.horde.units.size() >= int(boss_def["suppression_min_summons"])
 	return true
@@ -562,7 +562,7 @@ func _add_call_point(p: Vector2, kind: String, kind_radius: float, telegraph: fl
 func _resolve_call(constructs: bool) -> void:
 	var spawned := 0
 	for i in _call_points.size():
-		if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+		if game.enemies.regular_alive() >= game.enemies.hard_cap():
 			break
 		var e := game.enemies.spawn_at(_call_kinds[i], _call_points[i], false)
 		if constructs:
@@ -605,7 +605,7 @@ func _step_guard(delta: float) -> void:
 		return
 	var spawned := 0
 	for i in _guard_points.size():
-		if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+		if game.enemies.regular_alive() >= game.enemies.hard_cap():
 			break
 		game.enemies.spawn_at(_guard_kinds[i], _guard_points[i], false)
 		game.effects.spawn_ring(_guard_points[i], Palette.GOLD)

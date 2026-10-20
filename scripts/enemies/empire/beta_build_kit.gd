@@ -184,9 +184,9 @@ func _resolve_swipe(e: Enemy) -> void:
 		u.position += (away.normalized() if away.length() > 0.5 else dir) * float(d["swipe_knockback"])
 		g.combat.damage_unit(u, float(d["swipe_damage_summon"]) * mult, SWIPE_SOURCE)
 	g.stat_add("beta_swipe_hits", float(hits))
-	var p := g.player
-	if in_sector(e.position, dir, r, half, e.radius, p.position, p.radius):
-		g.combat.damage_player(float(d["swipe_damage_player"]) * mult, SWIPE_SOURCE)
+	for p in g.all_players:  # (Co-op: every necromancer inside.)
+		if in_sector(e.position, dir, r, half, e.radius, p.position, p.radius):
+			g.combat.damage_player(float(d["swipe_damage_player"]) * mult, SWIPE_SOURCE, p)
 
 
 ## The rivet fan through EmpireShots (Line of Fire), aimed along `dir`.

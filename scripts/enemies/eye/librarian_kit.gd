@@ -47,6 +47,9 @@ var lash_cd: float = 0.0
 var beam_dir: Vector2 = Vector2.RIGHT
 ## True once the current beam hit the necromancer.
 var _beam_hit_player: bool = false
+## Co-op: the other necromancers this beam already hit (Necromancer -> true;
+## the first in Game.all_players keeps the flag).
+var _beam_hit_more: Dictionary = {}
 ## SummonedUnit -> generation of every summon the current beam turned.
 var _beam_hits: Dictionary = {}
 ## Floating speed before the forced drift (px/s; -1 = not read yet).
@@ -109,6 +112,7 @@ func physics(e: Enemy, delta: float) -> bool:
 		BEAM_WINDUP:
 			if phase_time >= float(d["beam_telegraph"]):
 				_beam_hit_player = false
+				_beam_hit_more.clear()
 				_beam_hits.clear()
 				Sfx.play("lance_cast", e.position, 0.6)
 				set_phase(e, BEAM_FIRE)
@@ -150,13 +154,20 @@ func _beam_tick(e: Enemy) -> void:
 	var length := float(d["beam_length"])
 	var half_w := float(d["beam_width"]) * 0.5
 	var mult := hit_scale(e)  # Time scaling x aura buff.
-	var p := g.player
-	if not _beam_hit_player and GuardianKit._on_beam(e.position, beam_dir, length, half_w, p.position, p.radius):
-		_beam_hit_player = true
-		g.stat_add("librarian_beam_player_hits", 1.0)
-		g.combat.damage_player(float(d["beam_damage_player"]) * mult, "librarian_beam")
-		if g.dread != null:
-			g.dread.add(float(d["beam_dread"]), "gaze")
+	for k in g.all_players.size():  # (Co-op: every necromancer on the beam, once a beam; his own Dread.)
+		var p := g.all_players[k]
+		var done := _beam_hit_player if k == 0 else _beam_hit_more.has(p)  # Already hit by this beam.
+		if not done and GuardianKit._on_beam(e.position, beam_dir, length, half_w, p.position, p.radius):
+			if k == 0:
+				_beam_hit_player = true
+			else:
+				_beam_hit_more[p] = true
+			g.stat_add("librarian_beam_player_hits", 1.0)
+			g.combat.damage_player(float(d["beam_damage_player"]) * mult, "librarian_beam", p)
+			var prev := g.bind_index(k)
+			if g.dread != null:
+				g.dread.add(float(d["beam_dread"]), "gaze")
+			g.unbind(prev)
 	var mid := e.position + beam_dir * length * 0.5  # Query centre.
 	g.ally_grid.query(mid, length * 0.5 + half_w + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	for u: SummonedUnit in _tmp:
@@ -203,9 +214,9 @@ func _resolve_lash(e: Enemy) -> void:
 		u.position = g.arena.free_point(to, u.radius)
 		g.combat.damage_unit(u, float(d["lash_damage_summon"]) * mult, "librarian_lash")
 	g.stat_add("librarian_lash_summon_hits", float(hits))
-	var p := g.player
-	if p.position.distance_to(e.position) <= r + p.radius:
-		g.combat.damage_player(float(d["lash_damage_player"]) * mult, "librarian_lash")
+	for p in g.all_players:  # (Co-op: every necromancer inside.)
+		if p.position.distance_to(e.position) <= r + p.radius:
+			g.combat.damage_player(float(d["lash_damage_player"]) * mult, "librarian_lash", p)
 
 
 # =====================================================================================

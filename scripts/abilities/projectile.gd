@@ -52,6 +52,9 @@ var reserve_gen: int = 0
 var undead_mult: float = 1.0
 ## Statistics tag of whoever fired it ("bolt", "archer", "mage"...).
 var source: String = ""
+## Co-op: slot of the player whose spell or summon fired it (0 in solo);
+## ProjectileManager binds it before the projectile's hits resolve.
+var owner_slot: int = 0
 ## Instance ids of enemies already hit (piercing projectiles).
 var hit_ids: Array[int] = []
 ## Void Barrage: shards released on the first enemy hit (0 = no split).

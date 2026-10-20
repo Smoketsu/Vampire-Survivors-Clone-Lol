@@ -91,10 +91,10 @@ func _sweep(e: Enemy) -> void:
 		u.position += (away.normalized() if away.length() > 0.5 else dir) * float(d["sweep_knockback"])
 		g.combat.damage_unit(u, float(d["sweep_damage_summon"]) * mult * e.undead_damage_mult, "sentinel_sweep")
 	g.stat_add("sentinel_sweep_summon_hits", float(hits))
-	var p := g.player
-	if in_sector(e.position, dir, reach, half, e.radius, p.position, p.radius):
-		g.stat_add("sentinel_sweep_player_hits", 1.0)
-		g.combat.damage_player(float(d["sweep_damage_player"]) * mult, "sentinel_sweep")
+	for p in g.all_players:  # (Co-op: every necromancer inside.)
+		if in_sector(e.position, dir, reach, half, e.radius, p.position, p.radius):
+			g.stat_add("sentinel_sweep_player_hits", 1.0)
+			g.combat.damage_player(float(d["sweep_damage_player"]) * mult, "sentinel_sweep", p)
 
 
 ## Autopilot hint: out of the telegraphed cone.

@@ -176,7 +176,7 @@ func _place_pylons(ev: Dictionary) -> void:
 		game.effects.spawn_ring(e.position, Palette.EMPIRE_SIGNAL_AMBER)
 		for grp: Dictionary in ev.get("guards", []):
 			for _k in int(grp["count"]):
-				if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+				if game.enemies.regular_alive() >= game.enemies.hard_cap():
 					break
 				game.enemies.spawn_at(String(grp["kind"]), e.position + Vector2.from_angle(randf() * TAU) * (e.radius + 30.0), bool(grp["elite"]))
 	game.stat_add("wastes_pylons_raised", float(n))

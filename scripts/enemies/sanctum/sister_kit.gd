@@ -151,10 +151,10 @@ func _crack(e: Enemy) -> void:
 		var t := _along(e, u.position, u.radius, reach, half)
 		if t >= 0.0:
 			_insert(picked, picked_t, u, t, n)
-	var p := g.player
-	var tp := _along(e, p.position, p.radius, reach, half)
-	if tp >= 0.0:
-		_insert(picked, picked_t, p, tp, n)
+	for p in g.all_players:  # (Co-op: either necromancer can be in the line.)
+		var tp := _along(e, p.position, p.radius, reach, half)
+		if tp >= 0.0:
+			_insert(picked, picked_t, p, tp, n)
 	var summons := 0  # Summons struck (stat).
 	for b: Node2D in picked:
 		if b is SummonedUnit:
@@ -162,7 +162,7 @@ func _crack(e: Enemy) -> void:
 			g.combat.damage_unit(b as SummonedUnit, float(d["lash_damage_summon"]) * mult * e.undead_damage_mult, SOURCE)
 		else:
 			g.stat_add("sister_lash_player_hits", 1.0)
-			g.combat.damage_player(float(d["lash_damage_player"]) * mult, SOURCE)
+			g.combat.damage_player(float(d["lash_damage_player"]) * mult, SOURCE, b as Necromancer)
 	g.stat_add("sister_lash_summon_hits", float(summons))
 
 

@@ -53,6 +53,12 @@
 ## With the Necromancer level, no run modifier, Hyper off, no Pact level and
 ## Oath tier 0 every multiplier is exactly 1 (and the extra elite roll is
 ## skipped), so the run plays bit-for-bit as before.
+## ONLINE CO-OP (CoopData.SCALING; docs/coop/DESIGN.md) is one more category,
+## applied once: coop_mult(key) on the trickle and soft cap (enemy_spawn_mult()),
+## the stage boss's HP (boss_hp_mult()), and read by Game.add_xp (xp),
+## EnemyDirector.hard_cap() (alive_cap) and EnemyDirector.set_miniboss()
+## (miniboss_hp). Exactly 1 outside co-op. In co-op the Profane Pact and Oath
+## are the host's (slot 0's), whichever slot is bound.
 class_name DifficultyModifiers
 extends RefCounted
 
@@ -198,11 +204,15 @@ func has_run_setup() -> bool:
 
 ## Current Profane Pact level (0 = not taken).
 func pact_level() -> int:
+	if game != null and game.coop != null and game.coop.slots[0].abilities != null:
+		return game.coop.slots[0].abilities.passive_level(PactData.ID)  # Co-op: the host's Pact sets the run's.
 	return game.abilities.passive_level(PactData.ID) if game.abilities != null else 0
 
 
 ## Active Profane Oath tier for this run (0 = off).
 func oath_tier() -> int:
+	if game != null and game.coop != null and game.coop.slots[0].meta != null:
+		return game.coop.slots[0].meta.int_value("oath_tier")  # Co-op: the host's Oath sets the run's.
 	return game.meta.int_value("oath_tier")
 
 
@@ -237,12 +247,20 @@ func optional_value(key: String) -> float:
 
 ## Multiplier on the trickle spawn rate and the segment soft cap.
 func enemy_spawn_mult() -> float:
-	return float(_level["enemy_spawn"]) * (1.0 + optional_value("enemy_spawn")) * _fodder_spawn()
+	return float(_level["enemy_spawn"]) * (1.0 + optional_value("enemy_spawn")) * _fodder_spawn() * coop_mult("enemy_spawn")
 
 
 ## Multiplier on enemy max HP (time-scaled enemies and the Reckoning).
 func enemy_hp_mult() -> float:
 	return float(_level["enemy_hp"]) * (1.0 + optional_value("enemy_hp")) * _fodder_hp()
+
+
+## Co-op multiplier `key` of CoopData.SCALING (enemy_spawn, alive_cap, xp,
+## boss_hp, miniboss_hp): its own category, applied once; exactly 1 in solo.
+func coop_mult(key: String) -> float:
+	if game == null or game.coop == null:
+		return 1.0
+	return float(CoopData.SCALING.get(key, 1.0))
 
 
 ## Bullet heaven pass (Game.volleys_on; VolleyData): denser fodder waves (spawn rate and
@@ -268,6 +286,8 @@ func hp_scaling() -> float:
 ## HyperData.BOSS_HP_MULT when Hyper is on.
 func boss_hp_mult() -> float:
 	var m := float(_level["boss_hp"]) * (1.0 + optional_value("enemy_hp") * PactData.BOSS_HP_SHARE)  # Without Hyper.
+	if game != null and game.coop != null:
+		m *= coop_mult("boss_hp")  # Co-op: one boss for two armies (CoopData).
 	return m * HyperData.BOSS_HP_MULT if _hyper else m
 
 

@@ -168,17 +168,22 @@ func _past_minutes() -> float:
 func _salvo(t: float) -> void:
 	var m := _past_minutes()  # Minutes past 0:00.
 	var n := int(purge["count"]) + int(floorf(m)) * int(purge["count_growth"])  # Strikes this salvo.
-	var p := game.player.position  # Necromancer.
 	var tele := float(purge["telegraph"])  # Telegraph (s): the landing time is t + this.
 	var r := float(purge["radius"])  # Circle radius (px).
-	for k in n:
-		var at := p
-		if k > 0:
-			at = p + Vector2.from_angle(randf() * TAU) * randf_range(r, float(purge["scatter"]))
-		strike(at, tele, r, float(purge["damage"]), float(purge["summon_damage"]))
+	var centres: Array[Vector2] = [game.player.position]  # Necromancer (co-op: each standing one gets a salvo).
+	if game.coop != null:
+		centres.clear()
+		for k in game.coop.alive_slots():
+			centres.append(game.coop.slots[k].player.position)
+	for p in centres:
+		for k in n:
+			var at := p
+			if k > 0:
+				at = p + Vector2.from_angle(randf() * TAU) * randf_range(r, float(purge["scatter"]))
+			strike(at, tele, r, float(purge["damage"]), float(purge["summon_damage"]))
 	salvos += 1
 	game.stat_add("purge_salvos", 1.0)
-	game.stat_add("purge_strikes", float(n))
+	game.stat_add("purge_strikes", float(n * centres.size()))
 	var gap := maxf(float(purge["interval_min"]), float(purge["interval"]) * pow(float(purge["speedup"]), m))  # s to the next salvo.
 	_next_salvo = t + gap
 
@@ -189,10 +194,10 @@ func _salvo(t: float) -> void:
 func _land(at: Vector2, r: float, dmg: float, summon_dmg: float, source: String, stat: String) -> void:
 	game.effects.impact(at, r, Palette.EMPIRE_SIGNAL_AMBER)
 	Sfx.play("orbital_strike", at)
-	var pl := game.player  # Necromancer.
-	if pl.position.distance_to(at) <= r + pl.radius:
-		game.combat.damage_player(dmg * game.enemies.damage_mult, source)
-		game.stat_add(stat + "_player_hits", 1.0)
+	for pl in game.all_players:  # Necromancer (co-op: either).
+		if pl.position.distance_to(at) <= r + pl.radius:
+			game.combat.damage_player(dmg * game.enemies.damage_mult, source, pl)
+			game.stat_add(stat + "_player_hits", 1.0)
 	game.ally_grid.query(at, r + EmpireRulesData.LINE_OF_FIRE["summon_slack"], _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.position.distance_to(at) <= r + u.radius:

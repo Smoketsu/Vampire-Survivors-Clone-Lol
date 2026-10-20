@@ -668,7 +668,7 @@ func think() -> void:
 		_:
 			_pick_target(EnemyData.MELEE_DIVERT_RADIUS, false)
 	var d := position.distance_to(target.position)
-	targeting_player = target == game.player and d < EnemyData.ATTACKING_PLAYER_RADIUS
+	targeting_player = target is Necromancer and d < EnemyData.ATTACKING_PLAYER_RADIUS  # (Co-op: either necromancer.)
 	targeting_summon = target is SummonedUnit and d < radius * 2.0 + 40.0
 
 
@@ -686,6 +686,8 @@ func _pick_target(search: float, prefer_undead: bool) -> void:
 		_set_target(decreed)
 		return
 	var taunter := game.horde.colossi.taunt_target(self)  # null = no taunt applies.
+	if taunter == null and game.coop != null:
+		taunter = game.coop.taunt_target(self)  # Co-op: the other army's Decree / Colossus taunts too.
 	if taunter != null:
 		if target != taunter:
 			game.stat_add(ColossusKit.taunt_stat(taunter), 1.0)
@@ -722,6 +724,8 @@ func _target_valid() -> bool:
 	if target is SummonedUnit:
 		var u := target as SummonedUnit
 		return u.active and u.generation == target_gen
+	if game.coop != null:
+		return not (target as Necromancer).dead  # Co-op: a downed necromancer is no target.
 	return true
 
 
@@ -988,7 +992,8 @@ func _rush_move(delta: float) -> void:
 ## the spatial hash returns blockers in no longer matters. Called by
 ## EnemyDirector right after physics_step().
 func resolve_blocking() -> void:
-	game.ally_grid.query(position, radius + game.horde.block_query_radius, _tmp)
+	var reach := game.horde.block_query_radius if game.coop == null else game.coop.block_query_radius()  # Widest blocker (co-op: of every army).
+	game.ally_grid.query(position, radius + reach, _tmp)
 	var touched := false  # A blocker already engaged this enemy this tick.
 	for u: SummonedUnit in _tmp:
 		if not active:
@@ -1101,7 +1106,7 @@ func _melee_hit(t: Node2D, dir: Vector2) -> void:
 		if cleave_radius > 0.0:
 			_cleave(t as SummonedUnit, dmg * undead_damage_mult * cleave_mult)
 	else:
-		game.combat.damage_player(dmg, kind)
+		game.combat.damage_player(dmg, kind, t as Necromancer)  # (Co-op: that necromancer.)
 
 
 ## Halberd sweep (MarchEnemyData cleave_*): up to cleave_targets OTHER

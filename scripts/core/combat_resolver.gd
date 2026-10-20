@@ -118,6 +118,14 @@
 ## tagged with its kind id, or WastesEnemyData.RANGED_EXTRA_SOURCES) is cut by
 ## ranged_reduction (stat lead_lined_dmg_prevented); exactly 1 while the
 ## passive is not owned.
+## Online co-op (CoopSession): every rule above reads the BOUND player's
+## passives, synergies, meter and innate, so each entry point first binds the
+## player the hit belongs to (the one path for "whose hit"), then restores the
+## binding: damage_unit() the hit summon's army (HordeDirector.slot),
+## damage_player() / heal_player() the target necromancer, damage_enemy() an
+## explicit owner slot (`as_slot`) when the caller acts outside its owner's step
+## (a shield bash resolved in an enemy's step, a friendly projectile). A kill is
+## credited to the bound slot (CoopSession.on_kill()). In solo nothing is rebound.
 class_name CombatResolver
 extends RefCounted
 
@@ -136,8 +144,8 @@ var _ranged_sources: Dictionary = {}
 
 func _init(p_game: Game) -> void:
 	game = p_game
-	if GameState.autotest:
-		_crit_rng.seed = hash("crits:%d" % GameState.autotest_seed)
+	if game.seeded():
+		_crit_rng.seed = hash("crits:%d" % game.run_seed())
 	else:
 		_crit_rng.randomize()
 	var tags: Array = []  # Every summon damage tag (class, evolution, extras).
@@ -166,7 +174,13 @@ func is_minion_source(source: String) -> bool:
 ## A cursed enemy (Gravebow curse, Enemy.curse_until, curse_enemy()) takes
 ## curse_amp more from every undead source; the extra is counted in the
 ## curse_bonus_dmg stat.
-func damage_enemy(e: Enemy, amount: float, source: String) -> float:
+func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1) -> float:
+	if as_slot >= 0 and game.coop != null and as_slot != game.coop.bound:
+		var prev := game.coop.bound  # Co-op: resolve the hit as its owner slot's (see the header).
+		game.coop.bind(as_slot)
+		var dealt_as := damage_enemy(e, amount, source)
+		game.coop.bind(prev)
+		return dealt_as
 	if not e.active or amount <= 0.0:
 		return 0.0
 	var crit_mult := 1.0  # Unholy Precision multiplier of this hit.
@@ -342,6 +356,12 @@ func _sanctum_mitigation(e: Enemy, raw: float, source: String, shred: float = 0.
 func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	if not u.active or u.state == SummonedUnit.State.DEAD or amount <= 0.0:
 		return
+	if game.coop != null and u.director != null and u.director.slot != game.coop.bound:
+		var prev := game.coop.bound  # Co-op: the summon's own army's rules (see the header).
+		game.coop.bind(u.director.slot)
+		damage_unit(u, amount, source)
+		game.coop.bind(prev)
+		return
 	if u.airborne:
 		return  # A flying Gargoyle cannot be hit (GargoyleBehavior).
 	if u.stone_form:
@@ -432,7 +452,13 @@ func is_ranged_source(source: String) -> bool:
 ## (evolution passive) and the meta Bone Mail armor (own category) reduce the
 ## damage first. While Sovereign's Decree runs (UltimateSystem
 ## .player_untargetable()) every hit is ignored before anything else.
-func damage_player(amount: float, source: String) -> void:
+func damage_player(amount: float, source: String, target: Necromancer = null) -> void:
+	if target != null and game.coop != null and target != game.player:
+		var prev := game.coop.bound  # Co-op: that necromancer's own rules (see the header).
+		game.coop.bind(game.coop.slot_of(target))
+		damage_player(amount, source)
+		game.coop.bind(prev)
+		return
 	if game.ultimates.player_untargetable():
 		game.ultimates.on_player_hit_ignored(amount)
 		return  # Sovereign's Decree: the necromancer cannot be targeted (every hit ignored).
@@ -465,7 +491,13 @@ func heal_unit(u: SummonedUnit, amount: float) -> float:
 
 
 ## Heals the necromancer, capped at max HP. Returns HP restored.
-func heal_player(amount: float) -> float:
+func heal_player(amount: float, target: Necromancer = null) -> float:
+	if target != null and game.coop != null and target != game.player:
+		var prev := game.coop.bound  # Co-op: heal that necromancer (his own innate hears it).
+		game.coop.bind(game.coop.slot_of(target))
+		var healed_as := heal_player(amount)
+		game.coop.bind(prev)
+		return healed_as
 	var healed := game.player.heal(amount)
 	game.stat_add("player_healing", healed)
 	if healed > 0.0:
@@ -699,6 +731,8 @@ func _kill_enemy(e: Enemy) -> void:
 	if e.is_elite:
 		game.stat_add("elite_kills", 1.0)  # Soul Ash elite bonus (MetaData)
 	game.kills += 1
+	if game.coop != null:
+		game.coop.on_kill()  # Co-op: credited to the slot whose hit it was.
 	game.abilities.on_enemy_killed(e)  # Corpse Explosion corpses, Soul Rapture bursts.
 	game.powerups.on_enemy_killed(e)  # Power-up drop roll (PowerupData rules).
 	game.chests.on_enemy_killed(e)  # Treasure chest roll (ChestData rules).

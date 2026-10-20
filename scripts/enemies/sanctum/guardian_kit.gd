@@ -54,6 +54,9 @@ var beam_to: float = 0.0
 var beam_angle: float = 0.0
 ## True once the current sweep hit the necromancer.
 var _beam_hit_player: bool = false
+## Co-op: the other necromancers this sweep already hit (Necromancer -> true;
+## the first in Game.all_players keeps the flag).
+var _beam_hit_more: Dictionary = {}
 ## SummonedUnit -> generation of every summon the current sweep hit.
 var _beam_hits: Dictionary = {}
 ## Walking speed before the forced march (px/s; read on the first tick so
@@ -118,6 +121,7 @@ func physics(e: Enemy, delta: float) -> bool:
 			if phase_time >= float(d["beam_telegraph"]):
 				beam_angle = beam_from
 				_beam_hit_player = false
+				_beam_hit_more.clear()
 				_beam_hits.clear()
 				Sfx.play("lance_cast", e.position, 0.7)
 				set_phase(e, BEAM_SWEEP)
@@ -174,13 +178,13 @@ func _resolve_slam(e: Enemy) -> void:
 		u.position += (away.normalized() if away.length() > 0.5 else Vector2.UP) * float(d["slam_knockback"])
 		g.combat.damage_unit(u, float(d["slam_damage_summon"]) * mult, "guardian_slam")
 	g.stat_add("guardian_slam_summon_hits", float(soakers))
-	var p := g.player
-	if p.position.distance_to(slam_pos) <= r + p.radius:
-		var soak := minf(float(d["slam_soak_max"]), float(soakers) * float(d["slam_soak_per_unit"]))  # Body-blocked share.
-		if soak > 0.0:
-			g.stat_add("guardian_slam_soaked", 1.0)
-		g.stat_add("guardian_slam_player_hits", 1.0)
-		g.combat.damage_player(float(d["slam_damage_player"]) * mult * (1.0 - soak), "guardian_slam")
+	for p in g.all_players:  # (Co-op: every necromancer inside.)
+		if p.position.distance_to(slam_pos) <= r + p.radius:
+			var soak := minf(float(d["slam_soak_max"]), float(soakers) * float(d["slam_soak_per_unit"]))  # Body-blocked share.
+			if soak > 0.0:
+				g.stat_add("guardian_slam_soaked", 1.0)
+			g.stat_add("guardian_slam_player_hits", 1.0)
+			g.combat.damage_player(float(d["slam_damage_player"]) * mult * (1.0 - soak), "guardian_slam", p)
 
 
 # =====================================================================================
@@ -210,11 +214,16 @@ func _beam_tick(e: Enemy) -> void:
 	var length := float(d["beam_length"])  # Beam reach (px).
 	var half_w := float(d["beam_width"]) * 0.5  # Half the beam width (px).
 	var mult := hit_scale(e)  # Time scaling x aura buff.
-	var p := g.player
-	if not _beam_hit_player and _on_beam(e.position, dir, length, half_w, p.position, p.radius):
-		_beam_hit_player = true
-		g.stat_add("guardian_beam_player_hits", 1.0)
-		g.combat.damage_player(float(d["beam_damage_player"]) * mult, "guardian_beam")
+	for k in g.all_players.size():  # (Co-op: every necromancer on the beam, once a sweep.)
+		var p := g.all_players[k]
+		var done := _beam_hit_player if k == 0 else _beam_hit_more.has(p)  # Already hit by this sweep.
+		if not done and _on_beam(e.position, dir, length, half_w, p.position, p.radius):
+			if k == 0:
+				_beam_hit_player = true
+			else:
+				_beam_hit_more[p] = true
+			g.stat_add("guardian_beam_player_hits", 1.0)
+			g.combat.damage_player(float(d["beam_damage_player"]) * mult, "guardian_beam", p)
 	var mid := e.position + dir * length * 0.5  # Query centre.
 	g.ally_grid.query(mid, length * 0.5 + half_w + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	for u: SummonedUnit in _tmp:

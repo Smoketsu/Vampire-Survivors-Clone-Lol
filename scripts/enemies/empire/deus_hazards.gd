@@ -123,10 +123,10 @@ func _land(rg: Array) -> void:
 	var r := float(rg[1])
 	var mult := game.enemies.damage_mult  # Time scaling.
 	var src := String(rg[7])
-	var pl := game.player
-	if pl.position.distance_to(at) <= r + pl.radius:
-		game.combat.damage_player(float(rg[4]) * mult, src)
-		game.stat_add(String(rg[8]) + "_player_hits", 1.0)
+	for pl in game.all_players:  # (Co-op: every necromancer inside.)
+		if pl.position.distance_to(at) <= r + pl.radius:
+			game.combat.damage_player(float(rg[4]) * mult, src, pl)
+			game.stat_add(String(rg[8]) + "_player_hits", 1.0)
 	game.ally_grid.query(at, r + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	var hits := 0  # Summons struck.
 	for u: SummonedUnit in _tmp:
@@ -161,12 +161,12 @@ func _step_pulses(t: float) -> void:
 			continue
 		var o: Vector2 = pu[0]
 		var hit: Dictionary = pu[4]
-		var pl := game.player
-		var dp := pl.position.distance_to(o)
-		if not hit.has(pl) and absf(dp - r) <= half + pl.radius:
-			hit[pl] = 0
-			game.combat.damage_player(float(pu[2]) * mult, "deus_pulse")
-			game.stat_add("deus_pulse_player_hits", 1.0)
+		for pl in game.all_players:  # (Co-op: every necromancer the front passes, once.)
+			var dp := pl.position.distance_to(o)
+			if not hit.has(pl) and absf(dp - r) <= half + pl.radius:
+				hit[pl] = 0
+				game.combat.damage_player(float(pu[2]) * mult, "deus_pulse", pl)
+				game.stat_add("deus_pulse_player_hits", 1.0)
 		game.ally_grid.query(o, r + half + UnitData.MAX_BLOCK_RADIUS, _tmp)
 		for u: SummonedUnit in _tmp:
 			if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:

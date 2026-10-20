@@ -189,7 +189,7 @@ func _start_cart(ev: Dictionary) -> void:
 	s.life = float(ev["lifetime"])
 	for grp: Dictionary in ev["escort"]:
 		for _k in int(grp["count"]):
-			if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+			if game.enemies.regular_alive() >= game.enemies.hard_cap():
 				break
 			game.enemies.spawn_at(String(grp["kind"]), e.position + Vector2(randf_range(-36.0, 36.0), randf_range(-36.0, 36.0)), bool(grp["elite"]))
 	game.stat_add("march_carts_placed", 1.0)
@@ -252,7 +252,7 @@ func _send_squad(s: Structure) -> void:
 	var p := game.player.position
 	if s.pos.distance_to(p) > float(config["active_radius"]):
 		return
-	var cap := mini(game.enemies.soft_cap(), WaveData.HARD_CAP - 10)  # Room for the squad.
+	var cap := mini(game.enemies.soft_cap(), game.enemies.hard_cap() - 10)  # Room for the squad.
 	var spawned := 0  # Soldiers sent this time.
 	for grp: Dictionary in s.ev["groups"]:
 		for _k in int(grp["count"]):

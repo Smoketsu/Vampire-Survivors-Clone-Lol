@@ -124,10 +124,10 @@ func _land(e: Enemy) -> void:
 		u.position += (away.normalized() if away.length() > 0.5 else Vector2.UP) * float(d["leap_knockback"])
 		g.combat.damage_unit(u, float(d["leap_damage_summon"]) * mult, SOURCE)
 	g.stat_add("deep_kin_leap_summon_hits", float(hits))
-	var p := g.player
-	if p.position.distance_to(to) <= r + p.radius:
-		g.stat_add("deep_kin_leap_player_hits", 1.0)
-		g.combat.damage_player(float(d["leap_damage_player"]) * mult, SOURCE)
+	for p in g.all_players:  # (Co-op: every necromancer inside.)
+		if p.position.distance_to(to) <= r + p.radius:
+			g.stat_add("deep_kin_leap_player_hits", 1.0)
+			g.combat.damage_player(float(d["leap_damage_player"]) * mult, SOURCE, p)
 
 
 ## True while crouching or in the air (the stuck check skips it).

@@ -88,7 +88,7 @@ func _physics_process(delta: float) -> void:
 
 ## Opens her eye over the necromancer's path (`r` px).
 func start_gaze(r: float) -> void:
-	var pl := game.player
+	var pl := game.player  # (Co-op: the boss's nearest necromancer, bound in its step.)
 	var p := pl.position + pl.velocity * float(def["gaze_lead"])
 	gaze_pos = game.arena.free_point(p, 0.0)
 	gaze_radius = r
@@ -119,25 +119,34 @@ func _step_gaze(delta: float) -> void:
 	if gaze_t >= float(def["gaze_rest"]):
 		gaze_phase = GAZE_NONE
 		return
-	var pl := game.player
+	var pl := game.nearest_player(gaze_pos)  # The necromancer it drifts after (co-op: the nearest).
 	gaze_pos = gaze_pos.move_toward(pl.position, float(def["gaze_drift"]) * delta)
-	var inside := pl.position.distance_to(gaze_pos) <= gaze_radius + pl.radius
-	if inside:
-		game.stat_add("vhalneth_gaze_player_seconds", delta)
-		if game.dread != null:
-			game.dread.add(float(def["gaze_dread"]) * delta, "gaze")
+	var inside: Array[bool] = []  # Per necromancer (co-op: each slot): inside the gaze.
+	for k in game.all_players.size():
+		var prev := game.bind_index(k)
+		var q := game.player
+		inside.append(q.position.distance_to(gaze_pos) <= gaze_radius + q.radius)
+		if inside[k]:
+			game.stat_add("vhalneth_gaze_player_seconds", delta)
+			if game.dread != null:
+				game.dread.add(float(def["gaze_dread"]) * delta, "gaze")
+		game.unbind(prev)
 	_gaze_tick -= delta
 	if _gaze_tick > 0.0:
 		return
 	_gaze_tick += float(def["gaze_tick"])
 	var scale := game.enemies.damage_mult
-	if inside and game.dread == null:
-		game.combat.damage_player(float(def["gaze_player_damage"]) * scale, GAZE_SOURCE)
+	for k in game.all_players.size():
+		var prev := game.bind_index(k)
+		if inside[k] and game.dread == null:
+			game.combat.damage_player(float(def["gaze_player_damage"]) * scale, GAZE_SOURCE)
+		game.unbind(prev)
 	var n := 0  # Summons withering in the gaze this tick.
-	for u in game.horde.units:
-		if u.active and not u.airborne and u.state != SummonedUnit.State.SPAWNING and u.position.distance_to(gaze_pos) <= gaze_radius + u.radius:
-			game.combat.damage_unit(u, float(def["gaze_summon_damage"]) * scale, GAZE_SOURCE)
-			n += 1
+	for h in game.all_hordes:  # (Co-op: every army.)
+		for u in h.units:
+			if u.active and not u.airborne and u.state != SummonedUnit.State.SPAWNING and u.position.distance_to(gaze_pos) <= gaze_radius + u.radius:
+				game.combat.damage_unit(u, float(def["gaze_summon_damage"]) * scale, GAZE_SOURCE)
+				n += 1
 	game.stat_add("vhalneth_gaze_summon_ticks", float(n))
 
 
@@ -163,20 +172,21 @@ func _step_roar(delta: float) -> void:
 	var c := boss.position
 	var r := float(def["roar_radius"])
 	var scale := game.enemies.damage_mult
-	var pl := game.player
-	if pl.position.distance_to(c) <= r + pl.radius:
-		game.combat.damage_player(float(def["roar_damage_player"]) * scale, ROAR_SOURCE)
-		game.stat_add("vhalneth_roar_player_hits", 1.0)
+	for pl in game.all_players:  # (Co-op: either necromancer.)
+		if pl.position.distance_to(c) <= r + pl.radius:
+			game.combat.damage_player(float(def["roar_damage_player"]) * scale, ROAR_SOURCE, pl)
+			game.stat_add("vhalneth_roar_player_hits", 1.0)
 	var n := 0  # Summons struck.
-	for u in game.horde.units:
-		if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:
-			continue
-		var off := u.position - c
-		if off.length() > r + u.radius:
-			continue
-		u.position += (off.normalized() if off.length() > 0.1 else Vector2.RIGHT) * float(def["roar_knockback"])
-		game.combat.damage_unit(u, float(def["roar_damage_summon"]) * scale, ROAR_SOURCE)
-		n += 1
+	for h in game.all_hordes:  # (Co-op: every army.)
+		for u in h.units:
+			if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:
+				continue
+			var off := u.position - c
+			if off.length() > r + u.radius:
+				continue
+			u.position += (off.normalized() if off.length() > 0.1 else Vector2.RIGHT) * float(def["roar_knockback"])
+			game.combat.damage_unit(u, float(def["roar_damage_summon"]) * scale, ROAR_SOURCE)
+			n += 1
 	game.stat_add("vhalneth_roar_summon_hits", float(n))
 	game.effects.ring(c, r, Palette.EYE_BIOLUME, 0.45)
 	game.effects.impact(c, r * 0.5, Palette.EYE_DROWNED)

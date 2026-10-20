@@ -75,6 +75,9 @@ var _charge_left: float = 0.0
 var _charge_hits: Array[SummonedUnit] = []
 ## True once the current charge struck the necromancer.
 var _charge_hit_player: bool = false
+## Co-op: the other necromancers the current charge already hit (Necromancer
+## -> true; the first in Game.all_players keeps the flag).
+var _charge_hit_more: Dictionary = {}
 ## Seconds the RECOVER phase lasts this time (a blocked charge staggers longer).
 var _recover_for: float = 0.0
 ## Move speed of her current form (px/s).
@@ -168,6 +171,7 @@ func physics_step(delta: float) -> void:
 			if phase_time >= float(boss_def["charge_telegraph"]):
 				_charge_hits.clear()
 				_charge_hit_player = false
+				_charge_hit_more.clear()
 				Sfx.play("rogue_dash", position, 0.7)
 				_set_phase(Phase.CHARGE)
 		Phase.CHARGE:
@@ -320,7 +324,7 @@ func _release_decoys() -> void:
 	var to := game.player.position - position
 	var base := to.angle() if to.length() > 1.0 else 0.0
 	for i in n:
-		if game.enemies.regular_alive() >= WaveData.HARD_CAP:
+		if game.enemies.regular_alive() >= game.enemies.hard_cap():
 			break
 		var at := position + Vector2.from_angle(base + TAU * (float(i) + 0.5) / float(n)) * (radius + 46.0)
 		game.enemies.spawn_at(WastesEnemyData.DECOY, at, false)
@@ -372,10 +376,15 @@ func _step_charge(delta: float) -> void:
 	velocity = _charge_dir * spd
 	var hit_r := float(boss_def["charge_width"]) * 0.5  # Lane half-width (px).
 	var mult := game.enemies.damage_mult * hit_mult()  # Time scaling x buffs.
-	var pl := game.player
-	if not _charge_hit_player and pl.position.distance_to(position) <= hit_r + pl.radius:
-		_charge_hit_player = true
-		game.combat.damage_player(float(boss_def["charge_damage_player"]) * mult, "kestrel_charge")
+	for k in game.all_players.size():  # (Co-op: every necromancer in the lane, once.)
+		var pl := game.all_players[k]
+		var done := _charge_hit_player if k == 0 else _charge_hit_more.has(pl)  # Already hit by this charge.
+		if not done and pl.position.distance_to(position) <= hit_r + pl.radius:
+			if k == 0:
+				_charge_hit_player = true
+			else:
+				_charge_hit_more[pl] = true
+			game.combat.damage_player(float(boss_def["charge_damage_player"]) * mult, "kestrel_charge", pl)
 	game.ally_grid.query(position, hit_r + UnitData.MAX_BLOCK_RADIUS, _tmp)
 	for u: SummonedUnit in _tmp:
 		if not u.active or u.state == SummonedUnit.State.SPAWNING or _charge_hits.has(u):

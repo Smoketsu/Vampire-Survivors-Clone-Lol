@@ -10,6 +10,11 @@
 ## marked ones (GDD §6.3); Gravebow arrows curse what they hit
 ## (CombatResolver.curse_enemy) and its split arrows fly straight
 ## (fire_friendly_dir()).
+## Co-op (CoopSession): a friendly projectile remembers the slot it was fired
+## for (Projectile.owner_slot, the bound slot at launch) and its hits resolve
+## with that slot bound (its owner's passives, synergies and kill credit); a
+## hostile one tests every standing necromancer's orb shield, innate guard and
+## body, slot by slot, before the summons.
 class_name ProjectileManager
 extends Node2D
 
@@ -188,6 +193,7 @@ func _acquire() -> Projectile:
 	else:
 		p = _pool.pop_back()
 	p.hit_ids.clear()
+	p.owner_slot = game.coop.bound if game.coop != null else 0  # Co-op: who fired it.
 	p.split_count = 0
 	p.chill_slow = 0.0
 	p.curse_amp = 0.0
@@ -251,6 +257,8 @@ func _step_one(p: Projectile, delta: float) -> bool:
 	p.life -= delta
 	if p.life <= 0.0:
 		return false
+	if game.coop != null and not p.hostile:
+		game.coop.bind(p.owner_slot)  # Co-op: its hits are its owner's.
 	if p.homing > 0.0 and p.target != null and p.target.active and p.target.generation == p.target_gen:
 		var cur := p.velocity.angle()
 		var want := (p.target.position - p.position).angle()
@@ -317,6 +325,8 @@ func _friendly_hits(p: Projectile) -> bool:
 ## orb destroys what it touches), then the necromancer, then any summon.
 ## Returns false when spent.
 func _hostile_hits(p: Projectile) -> bool:
+	if game.coop != null:
+		return _hostile_hits_coop(p)
 	if game.innates.eclipsed_guard(p.position, p.radius):
 		game.effects.pop(p.position, Palette.VIOLET, 6.0)
 		return false
@@ -328,6 +338,33 @@ func _hostile_hits(p: Projectile) -> bool:
 	if pl.position.distance_to(p.position) <= pl.radius + p.radius:
 		game.combat.damage_player(p.damage, p.source)
 		return false
+	game.ally_grid.query(p.position, p.radius + 14.0, _tmp)
+	for u: SummonedUnit in _tmp:
+		if u.active and u.position.distance_to(p.position) <= u.radius + p.radius:
+			game.combat.damage_unit(u, p.damage * p.undead_mult, p.source)
+			return false
+	return true
+
+
+## Co-op hostile hits: each standing necromancer in slot order (his innate
+## guard, his orb shield, his body, with his slot bound), then any summon.
+func _hostile_hits_coop(p: Projectile) -> bool:
+	var co := game.coop
+	for s in co.slots:
+		if not s.alive():
+			continue
+		co.bind(s.index)
+		if game.innates.eclipsed_guard(p.position, p.radius):
+			game.effects.pop(p.position, Palette.VIOLET, 6.0)
+			return false
+		if game.abilities.try_intercept(p.position, p.radius):
+			game.effects.pop(p.position, Palette.VIOLET, 6.0)
+			game.stat_add("orb_intercepts", 1.0)
+			return false
+		var pl := game.player
+		if pl.position.distance_to(p.position) <= pl.radius + p.radius:
+			game.combat.damage_player(p.damage, p.source)
+			return false
 	game.ally_grid.query(p.position, p.radius + 14.0, _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.position.distance_to(p.position) <= u.radius + p.radius:

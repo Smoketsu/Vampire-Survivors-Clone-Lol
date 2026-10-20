@@ -12,6 +12,8 @@ var value: int = 1
 var magnet: bool = false
 ## Current fly speed in px/s while magnetised.
 var speed: float = 0.0
+## Co-op: slot of the necromancer it flies to once magnetised (0 in solo).
+var slot: int = 0
 
 
 ## Activates the crystal at `pos` worth `p_value` XP.
@@ -20,6 +22,7 @@ func setup(pos: Vector2, p_value: int) -> void:
 	value = p_value
 	magnet = false
 	speed = 0.0
+	slot = 0
 	active = true
 	visible = true
 	queue_redraw()

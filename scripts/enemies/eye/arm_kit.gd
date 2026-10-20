@@ -128,21 +128,22 @@ func _slam(e: Enemy) -> void:
 	var g := e.game
 	var half := float(d["slam_width"]) * 0.5
 	var scale := hit_scale(e)
-	var pl := g.player
-	if _in_lane(e.position, pl.position, half + pl.radius):
-		g.combat.damage_player(float(d["slam_damage_player"]) * scale, SOURCE)
-		g.stat_add("vhalneth_slam_player_hits", 1.0)
+	for pl in g.all_players:  # (Co-op: every necromancer in the lane.)
+		if _in_lane(e.position, pl.position, half + pl.radius):
+			g.combat.damage_player(float(d["slam_damage_player"]) * scale, SOURCE, pl)
+			g.stat_add("vhalneth_slam_player_hits", 1.0)
 	var hits := 0  # Summons struck.
 	var perp := Vector2(-dir.y, dir.x)
-	for u in g.horde.units:
-		if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:
-			continue
-		if not _in_lane(e.position, u.position, half + u.radius):
-			continue
-		var side := (u.position - e.position).dot(perp)
-		u.position += perp * (signf(side) if side != 0.0 else 1.0) * float(d["slam_knockback"])
-		g.combat.damage_unit(u, float(d["slam_damage_summon"]) * scale, SOURCE)
-		hits += 1
+	for h in g.all_hordes:  # (Co-op: every army.)
+		for u in h.units:
+			if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:
+				continue
+			if not _in_lane(e.position, u.position, half + u.radius):
+				continue
+			var side := (u.position - e.position).dot(perp)
+			u.position += perp * (signf(side) if side != 0.0 else 1.0) * float(d["slam_knockback"])
+			g.combat.damage_unit(u, float(d["slam_damage_summon"]) * scale, SOURCE)
+			hits += 1
 	g.stat_add("vhalneth_slam_summon_hits", float(hits))
 	var steps := maxi(1, int(length / 90.0))
 	for i in steps:
