@@ -107,16 +107,33 @@ Graveyard, co-op (both army bots), phone viewport 844x390 @3x with touch. Tick =
 | sections, 15:00-0:00 | army 3.31, **enemies 4.72**, obstacles 0.87, projectiles 0.78, volleys 0.74, pickups 0.71 | the same within 0.15 | |
 | rendered frames (real-time windows) | 488 / 655 / 850 ms | 488 / 679 / 918 ms | |
 
-WASM ticks cost about 1.4x native ones (whole run 7.8 vs 5.4 ms). Effects Reduced changes the tick by nothing
-(drawing only) and did not change the SwiftShader frame either: at 2532x1170 device pixels the CPU rasteriser,
-not the shot count, sets the frame time (a phone GPU would not be in that regime); a real-phone measurement on
-the GitHub Pages build is the next step. Desktop 1280x720 and the solo phone comparison: PENDING (running when
-this file was written; the next session adds them).
+Desktop viewport 1280x720 (co-op, Effects Full) and the solo phone run (army bot, Effects Reduced):
 
-**Determinism note:** the same seed played out slightly differently in WASM than natively from the first minutes
-(79 vs 82 enemies alive at 5:00): the Web and desktop simulations are not bit-identical, so as the design doc
-feared, lockstep across web and desktop would desync. Mixed platforms must be refused unless a checksum test
-proves otherwise (two Web peers, or two desktop peers, are fine).
+| Minute / moment | Co-op, desktop 1280x720 | Solo, phone, Reduced |
+| --- | --- | --- |
+| 15 | 12.42 / 19.30 / 60.3 (11.7% over; 242 enemies) | 4.87 / 7.50 / 46.6 (122 enemies) |
+| 16 | 11.05 / 17.00 / 88.1 (5.4% over) | 4.28 / 6.30 / 15.3 |
+| boss alive | 7.70 / 11.60 / 44.5 | 3.83 / 6.00 / 62.8 |
+| Reckoning | 8.51 / 12.80 / 84.6 | 4.29 / 6.20 / 29.5 |
+| both Rally Barrages | 8.56 / 13.20 / 24.8 | (n/a) |
+| 15:00 to 0:00 | 9.36 / 15.80 / 88.1 (3.6% over) | 4.01 / 6.40 / 62.8 (0.1% over) |
+| **whole run** | **6.57 / 12.60 / 104.5 (1.1% over)** | **3.00 / 5.70 / 62.8 (0.1% over)** |
+| sections, 15:00-0:00 | army 2.95, enemies 3.52, volleys 0.68 | army 1.53, enemies 1.31, volleys 0.28 |
+| rendered frames (real-time windows) | 278 / 349 / 401 ms | 368 / 447 / 517 ms |
+
+WASM ticks cost about 1.4x native ones (co-op whole run 7.8 vs 5.4 ms; solo 3.0 vs 2.2). Effects Reduced changes
+the tick by nothing (drawing only) and did not change the SwiftShader frame either; the solo frame is as slow as the
+co-op one (368 vs 488 ms on the phone viewport, 278 ms at 1280x720): the CPU rasteriser at 2532x1170 device pixels,
+not the shot count, sets those frame times, so they say nothing about a phone GPU. A real-phone measurement on the
+GitHub Pages build is the next step.
+
+**Determinism finding (important for the lockstep milestone):** the same seed plays out differently on the Web and
+natively, and between viewports, from the first minute, **solo too** (solo kills at 1:00: 88 native, 91 Web phone).
+The cause to fix first: gameplay reads the screen size (`Game.view_size()` sets the spawn ring and the
+recycle distance, Soul Nova's area, off-screen checks), so two machines with different windows simulate
+different games. Co-op must use one fixed gameplay view size for both machines (e.g. ViewData's 1280x720 at
+GAMEPLAY_ZOOM) before the checksum test; then check WASM vs native maths with that test (the design's
+mixed-platform rule).
 
 ## Conclusion
 
@@ -128,8 +145,8 @@ proves otherwise (two Web peers, or two desktop peers, are fine).
   cost 8.5 ms natively, 12.7 ms in WASM.
 - **The cost is the doubled enemies** (enemies section 3.4 ms native / 4.7 ms WASM late in the run, superlinear
   with the alive count) and the two armies (2.4 / 3.3 ms).
-- **Web: over budget at the late-game peaks.** WASM averages 7.8 ms over the run, but 14-15 ms at 15:00-16:00 with
-  15-21% of ticks over 16.7 ms (the run then slows a little: a tick is not dropped, the game time stretches).
+- **Web: over budget at the late-game peaks.** WASM averages 6.6-7.8 ms over the run (solo 3.0), but 12-15 ms at
+  15:00-16:00 with 12-21% of ticks over 16.7 ms (the run then slows a little: a tick is not dropped, the game time stretches).
   On a phone CPU (slower than this container) it will be worse.
 
 **Recommendation (not applied yet):**
