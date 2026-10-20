@@ -503,6 +503,8 @@ func _run_event(ev: Dictionary) -> void:
 		"fabricators", "beta_build":
 			if assembly != null:
 				assembly.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
 		# --- Act III: the Scrap Wastes ---
 		"pylons", "storm", "trojan":
 			if wastes != null:
