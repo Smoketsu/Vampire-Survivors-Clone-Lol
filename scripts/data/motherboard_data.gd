@@ -46,7 +46,7 @@ const HURL_SOURCE: String = "motherboard_hurl"
 ## The Motherboard's design row.
 const BOSS := {
 	"display_name": "The Motherboard",
-	"max_hp": 24000.0,  # TUNING (not in GDD) x the stage HP multiplier (31,200 in the Assembly Halls); Vhal'Neth 20,000 x 1.2
+	"max_hp": 20000.0,  # TUNING (not in GDD) x the stage HP multiplier (27,000 in the Assembly Halls); Vhal'Neth 20,000 x 1.2. Act III balance: 24,000 -> 20,000 (the army bot left it alive in 3 of 8 runs at 32,400 with the stage's HP x1.35; Kestrel 17,000, Deus Ex Machina 16,000)
 	"move_speed": 24.0,  # TUNING (not in GDD) px/s; a titan on treads
 	"damage": 16.0,  # TUNING (not in GDD) its chassis in reach
 	"attack_interval": 1.4,  # TUNING (not in GDD) s

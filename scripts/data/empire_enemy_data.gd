@@ -91,7 +91,7 @@ const ENEMIES := {
 		"display_name": "Line Trooper",
 		"max_hp": 28.0,  # TUNING (not in GDD) a soldier (Footman 36, Archer 22)
 		"move_speed": 44.0,  # TUNING (not in GDD) px/s; a steady march
-		"damage": 4.0,  # Owner-approved proposal: rifle shots 4-6 damage (before the time scaling)
+		"damage": 2.5,  # Owner decision (Oct 20, 2026, "middle ground": weaker builds survive about half the time): 4.0 -> 2.5, below the proposal's 4-6 band; the Line Troopers' rounds were the top killer of the naive bot on all three stages (before the time scaling)
 		"attack_interval": 6.0,  # TUNING (not in GDD) s between bursts (Act III balance: 4.0 -> 6.0, the top killer of every early death on all three stages; first pass 2.8 s: 3x an Act I archer's fire, the army bot's army fell to 2 by 2:00)
 		"attack_range": 380.0,  # Owner-approved proposal: "Long (400 px)", rifle range 380-520 px; Act III balance: 400 -> 380 (the band's short end)
 		"radius": 10.0,  # TUNING (not in GDD) px
