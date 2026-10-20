@@ -69,8 +69,9 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Shadow Bolt aim: Nearest / Strongest | **T** | **Y** |
 | Grave Step (dash) | **Shift** | **RB** |
 | Ultimate (Dread Rally or the one chosen before the run, when its soul meter is full) | **Space** | **LB** |
-| Pause (Resume / Recipes / Settings / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
+| Pause (Resume / Recipes / Settings / Feedback / Restart / Main Menu) | **Esc** (Esc again resumes) | **Start** (**B** or Start resumes) |
 | Results card (end of a run): Restart / Main Menu | **R** / **Esc**, or the buttons | **X** / **B**, or focus + **A** |
+| Feedback (main menu, pause menu, results card; shown once the owner's form link is set) | Click it, or move the focus to it and press Enter: the feedback form opens in your browser (a new tab on the Web build) with a short report filled in; the game stays where it was (a paused run stays paused) | Focus + **A** (in a browser a controller press may be stopped by the pop-up blocker) |
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move over the grid, Esc / Back closes | D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
 | Ossuary (Soul Ash upgrades) | **Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
@@ -166,6 +167,22 @@ rewards; until then they are open). Numbers in `scripts/data/ultimate_data.gd`.
 | **Sovereign's Decree** | For 8 s every summon **taunts** the foes within 150 px and takes **50% less damage**; you **cannot be targeted** (foes turn on your summons, and any hit that still reaches you, a projectile already flying, a boss attack, a hazard, does nothing) | Bosses and swarms that dive you |
 | **Eclipse** | **Darkness for 4 s**: every foe on screen **freezes** (bosses and minibosses are only slowed 60%, never frozen; the Reckoning and structures are immune), and every foe it caught takes **+30% damage** from the cast until 6 s after the darkness (bosses too) | An emergency brake when surrounded |
 | **Grave Tide** | For **10 s** every foe that dies **rises as a Risen** fighting for you for 12 s (Restless Dead and the Grave Herald make them last longer); never a boss, miniboss, Reckoning foe or structure; at most 24 at once | Snowballing a big wave into an army |
+
+### Feedback
+
+A **Feedback** button sits in three places: the main menu (with a quill icon, above Quit), the pause menu
+(between Settings and Restart; the run stays paused) and the results card (a small dim button at the end
+of the Restart / Main Menu and Next / Again / Menu rows). It opens the owner's Google Form in the browser
+(a new tab on the Web build; the game keeps its state) with its "Details (filled in by the game)" question
+filled in by a short plain report: the game version, the platform, the browser (Web), the screen size and
+touch; where the button was pressed (on the pause menu and the results card also the stage, the time, the
+character, the difficulty, Hyper and the modifiers; the results card adds victory / defeat, kills, level and
+the boss); and the Effects / Reduce motion / Volleys settings. Nothing personal and nothing from the save.
+The form's link and its field id are `FORM_URL` and `DETAILS_ENTRY` in `scripts/data/feedback_data.gd`;
+while `FORM_URL` is empty the buttons are not shown at all (and the menu is exactly as before). On the Web
+build the tab is opened inside the browser's own release of the click, tap or key, so pop-up blockers let
+it through (a press that drags off the button opens nothing); a controller press cannot count as a gesture
+for the browser, so there the tab may be blocked.
 
 ### Audio, Feel & Settings
 
@@ -1697,7 +1714,7 @@ content (logo, buttons, plaque, version, hint strip) fades out and the diorama d
 
 **Title screen.** Over the diorama sits a composed column: the NECROPATHY logo, alive (its soul
 flames sway as pixel art, glow and shed embers; `MenuLogo`), the tagline, a narrow column of one-word
-buttons (Play, Codex, Ossuary, Settings, Credits, Quit) with a soul wisp flanking the focused one
+buttons (Play, Codex, Ossuary, Settings, Credits, Feedback, Quit) with a soul wisp flanking the focused one
 (`SoulMarker`), the gold Soul Ash plaque and the lifetime stats as small pixel icons (`MaskIcon`,
 drawn from character masks in `mask_icon_data.gd`). Codex and Credits open their screens and Quit
 asks first through the confirm dialog (the menu loads those three scripts by path, so a build
@@ -1836,6 +1853,10 @@ scripts/
     victory_results.gd      The victory card's numbers from a run summary (title, boss line, time past
                             0:00 and the stage Best, New record, highlights, the Next stage); read-only
     victory_preview.gd      --victory-preview: a short debug run that ends as a scripted victory
+    feedback_report.gd      The Feedback buttons' report (version, platform, browser, screen, touch;
+                            where: menu / pause / results with the run's facts; settings) and the
+                            form link (FORM_URL + prefill + URL-encoded report); opens it in the
+                            browser (never under the autotest); the Web build's pop-up-safe arming
     autotest.gd             Headless self-test driver
   player/necromancer.gd
   player/grave_step.gd      Grave Step dash: charges, obstacle-clamped step, i-frames, shadow trail
@@ -2037,6 +2058,8 @@ scripts/
                             epilogue_screen (the illustrated epilogue: panning picture slides,
                             autoplay once after a run, Skip),
                             confirm_dialog (the shared confirm dialog: ConfirmDialog.ask()),
+                            feedback_button (the one wiring of the Feedback buttons in the main
+                            menu, pause menu and results card: press-down arms, press opens),
                             menu_backdrop (the animated pixel-art graveyard behind the main menu),
                             hud_banners (the HUD's one banner slot: queue, ribbon accent by
                             meaning, one-line fit, hidden under panels), ui_fx (effect strips
@@ -2108,6 +2131,8 @@ scripts/
     epilogue_data.gd        The epilogue's parts, paragraphs, picture panels and pans, closing card,
                             layout and slide timings
     confirm_data.gd         The confirm dialogs' texts and sizes
+    feedback_data.gd        The feedback form: FORM_URL and DETAILS_ENTRY (empty = no Feedback
+                            buttons), the report's words and length cap, the button sizes and icon
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
                             Winter Revenant, Shadow Reaper, Cathedral Horror, Gravebow,
                             Bone Colossus, Hellhound, Keening Lady, Ossuary Engine) and stats
@@ -2243,6 +2268,7 @@ Options (after `--`):
 | `--ultimate=ID` | The ultimate (`ultimate_data.gd`): `dread_rally` (default, today's game), `sovereigns_decree`, `eclipse` or `grave_tide`; locks are bypassed. The bots cast it with the Dread Rally rule; the header names it and an `ultimate` line follows the unchanged `dread rally` line: casts, Decree time, enemies taunted, summon damage prevented, hits on the necromancer ignored (and their damage); Eclipse foes frozen, bosses slowed, foes exposed and the exposure's bonus damage; Grave Tide Risen raised, capped, their damage and kills. |
 | `--hyper` | Hyper mode (`HyperData`: enemy HP / damage growth ×2, stage boss HP ×1.5, Soul Ash +100%), bypassing the Seraphine unlock. Every summary has a `hyper` line (on / off, the effective growth and boss HP, the 0:00 multipliers vs the standard game, the Hyper Soul Ash line, seconds survived past 0:00, the unlock and Hyper-clear state, in memory only without `--meta-save`). |
 | `--victory-preview` | Debug (with or without `--autotest`): skips the menu, raises a small army and after 6 game seconds ends the run as a scripted victory (83 s past 0:00, the boss slain, four evolutions, seven chests; `VictoryData.PREVIEW_*`), so the last stand and the victory card can be seen and screenshot at once; `--stage=`, `--difficulty=`, `--character=`, `--hyper` and `--skin=` apply. Nothing is saved. Every victory's summary has a `victory screen` line: `title=<stage title> best_overtime=<s> new_record=<bool> highlights=<n>` (the card's logic runs headless; under the autotest the Best starts from an empty in-memory record). |
+| `--feedback-url=URL`, `--feedback-entry=ID` | Debug: use `URL` as the feedback form's link (and `ID`, e.g. `entry.123456789`, as its prefilled field) instead of `FeedbackData.FORM_URL` / `DETAILS_ENTRY`, so the Feedback buttons show and their open path can be tried with a dummy link before the owner's form exists. Never opens anything under the autotest. Every summary ends with a `feedback` line: `url_set=<bool> \| report_chars=<menu>/<pause>/<results>` (three sample reports built headless, at most 1500 characters each) `\| url_chars=<n> \| opened=never (autotest)`. |
 | `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`, or a universal one such as `gravecaller_untouchable` / `brine_widow_deathlord`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 

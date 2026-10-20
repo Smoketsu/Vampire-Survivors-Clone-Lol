@@ -4,13 +4,16 @@
 ## centre: the living NECROPATHY logo (MenuLogo: swaying soul flames, a
 ## breathing glow, rising embers; crisp at its whole-number scale), the
 ## tagline (BODY), a skull divider, a narrow column of one-word buttons (Play,
-## Codex, Ossuary, Settings, Credits, Quit; FrontDoorData.MENU_ITEMS) flanked
+## Codex, Ossuary, Settings, Credits, Feedback, Quit; FrontDoorData.MENU_ITEMS) flanked
 ## by a soul-wisp marker on the focused one (SoulMarker), a second divider,
 ## the gold Soul Ash plaque (SoulAshIcon + the balance, rolling up on open)
 ## and the lifetime stats as small pixel icons with numbers (runs, best time,
 ## bosses slain, achievements; MaskIcon, names in tooltips). The version sits
 ## small in the bottom-right corner and the input hint strip at the bottom.
-## The diorama's dark band is fitted to the column (set_band()).
+## The diorama's dark band is fitted to the column (set_band()). A column
+## longer than FrontDoorData.MENU_ROOMY_ITEMS buttons (Feedback, the Epilogue)
+## starts higher with smaller gaps, and two or more past it drop the tagline,
+## so the stats row still clears the hint strip.
 ##
 ## Every sub-screen opened over the menu (any child added later: stage
 ## select, Ossuary, settings, codex, credits, a confirm dialog...) fades ALL
@@ -20,7 +23,11 @@
 ## closing the last overlay restores both and the focus.
 ##
 ## Codex and Credits open CodexScreen / CreditsScreen over the menu; Quit asks
-## first through the shared ConfirmDialog (texts in ConfirmData.QUIT). The Web
+## first through the shared ConfirmDialog (texts in ConfirmData.QUIT).
+## Feedback (with a quill icon: it leaves the game) opens the feedback form in
+## the browser (FeedbackButton, FeedbackReport; GDD §15.0 "Feedback button
+## (owner request, Oct 2026)"); it is left out of the column while no form link
+## is set (FeedbackReport.enabled()), so the menu is then exactly as before. The Web
 ## build has no Quit (FrontDoorData.WEB_HIDDEN_ITEMS, see menu_items()): the
 ## column and its wrap-around focus links are built from the shown items only.
 ## Play opens the stage select (StageSelect, GDD §10.2), which opens the
@@ -71,22 +78,24 @@ func _ready() -> void:
 	add_child(_content)
 	child_entered_tree.connect(_on_child_entered)
 	child_exiting_tree.connect(_on_child_exiting)
+	var extra := menu_items().size() - FrontDoorData.MENU_ROOMY_ITEMS  # Buttons past the roomy column (Feedback, Epilogue).
 	var col := VBoxContainer.new()  # The centre column.
 	col.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 	col.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	col.offset_top = FrontDoorData.MENU_TOP
-	col.add_theme_constant_override("separation", FrontDoorData.MENU_BLOCK_GAP)
+	col.offset_top = FrontDoorData.MENU_TOP if extra <= 0 else FrontDoorData.MENU_COMPACT_TOP
+	col.add_theme_constant_override("separation", FrontDoorData.MENU_BLOCK_GAP if extra <= 0 else FrontDoorData.MENU_COMPACT_BLOCK_GAP)
 	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_content.add_child(col)
 	TouchSupport.fit_to_screen(_content, col, true)  # A short phone layout: the column shrinks to fit (no-op at 720 px).
 	var blocks: Array = []  # Staggered in on open, top to bottom.
 	blocks.append(_title())
-	var tagline := UiTheme.tier_label(FrontDoorData.MENU_TAGLINE, UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
-	tagline.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	blocks.append(tagline)
+	if extra <= 1:  # A column two or more buttons longer drops the tagline (it must clear the hint strip).
+		var tagline := UiTheme.tier_label(FrontDoorData.MENU_TAGLINE, UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
+		tagline.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		blocks.append(tagline)
 	blocks.append(_divider())
 	var list := VBoxContainer.new()  # The button column.
-	list.add_theme_constant_override("separation", FrontDoorData.MENU_BUTTON_GAP)
+	list.add_theme_constant_override("separation", FrontDoorData.MENU_BUTTON_GAP if extra <= 0 else FrontDoorData.MENU_COMPACT_BUTTON_GAP)
 	list.custom_minimum_size = Vector2(FrontDoorData.MENU_COLUMN_WIDTH, 0)
 	list.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	for item: Array in menu_items():
@@ -141,11 +150,23 @@ func _menu_button(id: String, caption: String) -> Button:
 		if not UiMotion.is_closing(self) and _overlays == 0:
 			b.grab_focus())
 	_buttons[id] = b
+	if id == "feedback":
+		FeedbackButton.wire(b, FeedbackReport.menu_context)  # Opens the form; the menu stays as it is.
+		var icon := MaskIcon.new(FeedbackData.MENU_ICON, FeedbackData.MENU_ICON_SCALE)  # Quill: it leaves the game.
+		var h := icon.custom_minimum_size.y  # Icon height (px).
+		icon.anchor_top = 0.5
+		icon.anchor_bottom = 0.5
+		icon.offset_top = -h * 0.5
+		icon.offset_bottom = h * 0.5
+		icon.offset_left = FeedbackData.MENU_ICON_INSET
+		icon.offset_right = FeedbackData.MENU_ICON_INSET + icon.custom_minimum_size.x
+		b.add_child(icon)
 	return b
 
 
 ## The [id, caption] items of the button column: FrontDoorData.MENU_ITEMS,
-## minus WEB_HIDDEN_ITEMS on the Web build (no Quit in a browser tab). The
+## minus WEB_HIDDEN_ITEMS on the Web build (no Quit in a browser tab) and
+## minus Feedback while no form link is set (FeedbackReport.enabled()). The
 ## Epilogue (Act II, EpilogueData) is shown only once one of its parts is
 ## open, placed just above Credits.
 static func menu_items() -> Array:
@@ -162,6 +183,8 @@ static func menu_items() -> Array:
 			items.append(epilogue)
 		if OS.has_feature("web") and FrontDoorData.WEB_HIDDEN_ITEMS.has(id):
 			continue
+		if id == "feedback" and not FeedbackReport.enabled():
+			continue  # No form link yet: no Feedback button.
 		items.append(item)
 	return items
 
@@ -202,6 +225,8 @@ func _on_item(id: String, b: Button) -> void:
 			CreditsScreen.open_over(self)
 		"epilogue":
 			EpilogueScreen.open_over(self)  # Act II: the campaign epilogue.
+		"feedback":
+			pass  # FeedbackButton.wire() opens the form (press-down arms it on the Web).
 		"quit":
 			_quit()
 

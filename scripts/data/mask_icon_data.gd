@@ -40,6 +40,8 @@ const PALETTE: Dictionary = {
 ##   deathlord  : the Deathlord difficulty (a horned skull with crimson eyes).
 ##   rune_on / rune_off: a run modifier's toggle pip (lit crimson / dark iron).
 ##   ember      : the Soul Ash bonus mark of a stage card.
+##   quill      : the main menu's Feedback button (a bone quill over a pool
+##                of violet ink: it leaves the game for the feedback form).
 const ICONS: Dictionary = {
 	"padlock": [
 		"...kkkkk...",
@@ -187,5 +189,20 @@ const ICONS: Dictionary = {
 		"kgwgk",
 		".kgk.",
 		"..k..",
+	],
+	"quill": [
+		"........kkk",
+		".......kbwk",
+		"......kbbBk",
+		".....kbbBbk",
+		"....kbbBbk.",
+		"...kbbBbk..",
+		"..kbbBbk...",
+		"..kbBbk....",
+		".kbBkk.....",
+		".kGk.......",
+		"kgk..kvvk..",
+		"kk..kvVVvk.",
+		"....kkkkkk.",
 	],
 }

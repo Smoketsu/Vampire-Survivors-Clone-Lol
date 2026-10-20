@@ -109,6 +109,14 @@
 ##                         (default, today's game), sovereigns_decree,
 ##                         eclipse, grave_tide); locks are bypassed. The bots
 ##                         cast it with the Dread Rally rule (_rally_wanted()).
+##   --feedback-url=URL    Debug (the Feedback buttons, FeedbackData): uses URL
+##                         as the feedback form's link instead of
+##                         FeedbackData.FORM_URL, so the buttons show and their
+##                         open path can be tried with a dummy link before the
+##                         owner's form exists. Never opens anything under the
+##                         autotest (its summary only reports url_set=true).
+##   --feedback-entry=ID   Debug: the form's prefill field id (e.g.
+##                         entry.123456789) instead of FeedbackData.DETAILS_ENTRY.
 ## The environment variable NECROPATHY_AUTOTEST=1 (or the pre-rename GRAVEBOUND_AUTOTEST=1) is equivalent to --autotest.
 extends Node
 
@@ -178,6 +186,11 @@ var autotest_character: String = CharacterData.DEFAULT_ID
 var victory_preview: bool = false
 ## Autotest: UltimateData id of the ultimate (--ultimate=; locks bypassed).
 var autotest_ultimate: String = UltimateData.DEFAULT_ID
+## Debug: the feedback form link from --feedback-url= ("" = FeedbackData.FORM_URL).
+var feedback_url: String = ""
+## Debug: the form's prefill field id from --feedback-entry= ("" =
+## FeedbackData.DETAILS_ENTRY).
+var feedback_entry: String = ""
 ## Stage chosen last in the stage select this session (focused next time).
 var last_stage_id: String = StageRegistry.DEFAULT_ID
 ## Whether the F3 debug overlay is shown; persists across restarts.
@@ -203,6 +216,10 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_mortal = true
 		elif arg == "--victory-preview":
 			victory_preview = true  # Content wave 2: debug preview of the victory screen.
+		elif arg.begins_with("--feedback-url="):
+			feedback_url = arg.substr("--feedback-url=".length()).strip_edges()  # Whole rest: a URL may hold "=".
+		elif arg.begins_with("--feedback-entry="):
+			feedback_entry = arg.substr("--feedback-entry=".length()).strip_edges()
 		elif arg.begins_with("--speed="):
 			autotest_speed = clampf(arg.get_slice("=", 1).to_float(), 0.25, 32.0)
 		elif arg.begins_with("--seed="):

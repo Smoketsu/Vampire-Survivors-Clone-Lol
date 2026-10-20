@@ -57,6 +57,10 @@
 ##     category (spells learned, summon classes raised, Covenant kinds slain,
 ##     bosses faced; CodexLog), how many were new to the save, and the save's
 ##     codex totals (Meta [codex]; in memory only unless --meta-save),
+##   * the Feedback buttons: a last "feedback" line says whether a form link is
+##     set (FeedbackData.FORM_URL or --feedback-url=) and the length of three
+##     sample reports (main menu, pause, results) built headless; nothing is
+##     ever opened under the autotest (FeedbackReport.can_open()),
 ##   * the epilogue: an "epilogue" line counts its parts, how many the save has
 ##     opened and seen, the panels and whether one would autoplay on the
 ##     return to the menu (read only; the screen never opens headless),
@@ -1212,6 +1216,7 @@ func finish(summary: Dictionary) -> void:
 	_print_soul_ash(summary)
 	_print_hyper_skins(summary)
 	RewardsReport.print_line(self, summary)  # Content wave 2: achievement rewards.
+	print("[autotest] feedback: %s" % FeedbackReport.summary_line(game, summary))  # Feedback buttons: three sample reports built, nothing opened.
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	get_tree().quit(0 if summary["victory"] else 1)
