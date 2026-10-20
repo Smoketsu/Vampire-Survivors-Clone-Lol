@@ -395,7 +395,7 @@ SKIN_FIX = {
     # The Gilded Stormbride was redrawn simpler (round 1 redo, "too much detail"): her bust is
     # cols 13-22, rows 17-23, the box ending above the gold sash (row 26) and left of the staff.
     "player/lightning_abbess_hyper": {"bust": (13, 23, 17, 24, 2)},
-    "player/lightning_abbess_deathlord": {"bust": (15, 25, 17, 24, 2)},  # Round 2 redo: 1 px right (was cols 14-23).
+    "player/lightning_abbess_deathlord": {"bust": (15, 27, 17, 24, 2)},  # Round 3 redo: 2 px wider to the right (was cols 15-24; round 2: 14-23).
 }
 
 
