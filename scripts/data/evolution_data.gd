@@ -331,7 +331,7 @@ const EVOLUTIONS := {
 		"description": "The drowned rise as Spawns of the Deep that seize your foes and hold them fast.",
 		"labels": {"damage": "Tendril damage", "targets": "Tendrils", "cooldown": "Cooldown (s)", "life": "Spawn life (s)", "thrall_damage": "Spawn damage"},
 		"stats": {
-			"damage": 80.0, "targets": 3, "radius": 50.0, "cooldown": 4.5, "range": 340.0, "life": 14.0, "thrall_hp": 0.9, "thrall_damage": 1.0,  # TUNING (not in GDD)
+			"damage": 80.0, "targets": 3, "radius": 50.0, "cooldown": 2.25, "range": 340.0, "life": 14.0, "thrall_hp": 0.9, "thrall_damage": 1.0,  # TUNING (not in GDD)
 			"host": 1,  # The evolution flag: the drowned rise as Spawns of the Deep.
 		},
 	},
