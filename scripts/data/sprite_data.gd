@@ -180,7 +180,7 @@ const HEIGHTS: Dictionary = {
 	"summons/leviathan": 76.0,  # TUNING (not in GDD) its evolution, bigger
 	"summons/drowned_thrall_ally": 44.0,  # TUNING (not in GDD) Call of the Drowned's Thrall (soldier tier)
 	# --- Act III: the Electronic Empire (the shared kinds; assets/sprites/empire/) ---
-	"empire/scout_drone": 30.0,  # TUNING (not in GDD) fodder: a small flying drone, about 40 px wide with its rotors
+	"empire/scout_drone": 32.0,  # TUNING (not in GDD) fodder: a small flying drone, about 40 px wide with its rotors; art review round 1: 30 + two empty rows on top for the hover bob (walk_cycle.py "hover")
 	"empire/line_trooper": 50.0,  # TUNING (not in GDD) soldier tier: body ~46, the helmet dome on top
 	"empire/spotter": 56.0,  # TUNING (not in GDD) elite tier: a tall coated marksman, the antenna above
 	"summons/grave_gunner": 50.0,  # TUNING (not in GDD) a raised Line Trooper (Steel has no soul), drawn from its sprite
@@ -231,8 +231,8 @@ const HEIGHTS: Dictionary = {
 	"bosses/motherboard": 150.0,  # TUNING (not in GDD) boss tier: the titan on its treads, both crane arms raised
 	"bosses/motherboard_windup": 150.0,  # TUNING (not in GDD) attack pose: both crane arms raised high (BossPoseData 1)
 	"bosses/motherboard_strike": 150.0,  # TUNING (not in GDD) attack pose: both claws slammed down in front (BossPoseData 3)
-	"summons/grave_drone": 26.0,  # TUNING (not in GDD) a small flying skull drone (drawn hovering)
-	"summons/wraith_drone": 30.0,  # TUNING (not in GDD) its evolution, wreathed in ghost flame
+	"summons/grave_drone": 28.0,  # TUNING (not in GDD) a small flying skull drone (drawn hovering); art review round 1: 26 + two empty rows on top for the hover bob and wingbeat
+	"summons/wraith_drone": 32.0,  # TUNING (not in GDD) its evolution, wreathed in ghost flame; art review round 1: 30 + two empty rows on top for the hover bob
 	"player/marionette": 56.0,  # TUNING (not in GDD) character tier: body ~50, the jester bun above
 	"player/marionette_hyper": 58.0,  # TUNING (not in GDD) skin art: the Marionette's body, the tall gold jester crown above
 	"player/marionette_untouchable": 56.0,  # TUNING (not in GDD) skin art: body like the Marionette's
@@ -243,7 +243,7 @@ const HEIGHTS: Dictionary = {
 	"empire/signal_pylon": 96.0,  # TUNING (not in GDD) structure tier: a tall mast on a tripod, the red beacon on top
 	"empire/trojan_horse": 104.0,  # TUNING (not in GDD) miniboss: a horse-shaped drone tank (about 120 wide)
 	"empire/trojan_horse_split": 104.0,  # TUNING (not in GDD) its split hull (the same body, hull halves bent out)
-	"bosses/kestrel": 124.0,  # TUNING (not in GDD) boss tier: a tall slender markswoman, the long rifle across her
+	"bosses/kestrel": 124.0,  # TUNING (not in GDD) boss tier: a tall pear-shaped markswoman (round 1 redo), the long rifle across her
 	"bosses/kestrel_aim": 108.0,  # TUNING (not in GDD) attack pose: kneeling, rifle raised (her body is lower)
 	"bosses/kestrel_blades": 124.0,  # TUNING (not in GDD) her last phase: the arm blade raised high above her head
 	"player/lightning_abbess": 56.0,  # TUNING (not in GDD) character tier: body ~48, the crescent staff above

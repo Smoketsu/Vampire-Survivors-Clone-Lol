@@ -122,8 +122,8 @@ func step(delta: float) -> void:
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))
 	for id: String in ACT2_IDS:
-		if ab.spell_level(id) <= 0:
-			continue
+		if id in IDS or ab.spell_level(id) <= 0:
+			continue  # Forbidden Verse and Call of the Drowned are also in IDS: stepped once, above.
 		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
 		if node == null:
 			node = _create(id)

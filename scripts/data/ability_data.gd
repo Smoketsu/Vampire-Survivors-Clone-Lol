@@ -373,11 +373,11 @@ const SPELLS := {
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Tendril damage", "targets": "Tendrils", "cooldown": "Cooldown (s)", "life": "Thrall life (s)", "thrall_damage": "Thrall damage"},
 		"levels": [
-			{"damage": 26.0, "targets": 1, "radius": 34.0, "cooldown": 6.0, "range": 280.0, "life": 12.0, "thrall_hp": 0.5, "thrall_damage": 0.6},  # TUNING (not in GDD) proposal "every 6 s", "for 12 s"
-			{"damage": 32.0, "targets": 1, "radius": 36.0, "cooldown": 6.0, "range": 290.0, "life": 12.0, "thrall_hp": 0.55, "thrall_damage": 0.7},  # TUNING (not in GDD)
-			{"damage": 40.0, "targets": 2, "radius": 38.0, "cooldown": 6.0, "range": 300.0, "life": 12.0, "thrall_hp": 0.6, "thrall_damage": 0.8},  # TUNING (not in GDD)
-			{"damage": 48.0, "targets": 2, "radius": 40.0, "cooldown": 5.5, "range": 310.0, "life": 12.0, "thrall_hp": 0.65, "thrall_damage": 0.9},  # TUNING (not in GDD)
-			{"damage": 58.0, "targets": 3, "radius": 44.0, "cooldown": 5.0, "range": 320.0, "life": 12.0, "thrall_hp": 0.7, "thrall_damage": 1.0},  # TUNING (not in GDD)
+			{"damage": 26.0, "targets": 1, "radius": 34.0, "cooldown": 3.0, "range": 280.0, "life": 12.0, "thrall_hp": 0.5, "thrall_damage": 0.6},  # TUNING (not in GDD) proposal "every 6 s" was effectively 3 s live (a double step, fixed Oct 2026, GDD §15.0 "Double-stepped Act II spells"): halved to keep it as played; "for 12 s"
+			{"damage": 32.0, "targets": 1, "radius": 36.0, "cooldown": 3.0, "range": 290.0, "life": 12.0, "thrall_hp": 0.55, "thrall_damage": 0.7},  # TUNING (not in GDD) halved with the double-step fix
+			{"damage": 40.0, "targets": 2, "radius": 38.0, "cooldown": 3.0, "range": 300.0, "life": 12.0, "thrall_hp": 0.6, "thrall_damage": 0.8},  # TUNING (not in GDD) halved with the double-step fix
+			{"damage": 48.0, "targets": 2, "radius": 40.0, "cooldown": 2.75, "range": 310.0, "life": 12.0, "thrall_hp": 0.65, "thrall_damage": 0.9},  # TUNING (not in GDD) halved with the double-step fix
+			{"damage": 58.0, "targets": 3, "radius": 44.0, "cooldown": 2.5, "range": 320.0, "life": 12.0, "thrall_hp": 0.7, "thrall_damage": 1.0},  # TUNING (not in GDD) halved with the double-step fix
 		],
 	},
 	# --- Act III: the Assembly Halls ---

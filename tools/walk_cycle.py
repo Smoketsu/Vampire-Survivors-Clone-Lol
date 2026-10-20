@@ -36,6 +36,9 @@ keeps EVERY approved pixel and only moves parts of the still:
      column range, the `front` leg's range, and everything else (a spear butt,
      a staff foot, a shield rim) to the rigid layer, which moves with the body.
      In "robe" mode the whole lower part (the hem) is one layer instead.
+     In "hover" mode (flyers) nothing is cut at a hip: the whole sprite bobs
+     (HOVER_BOB) and only the rig's `parts` move: wings flap (FLAP), rotors
+     spin (SPIN); see the RIGS key list.
   3. Each leg is re-laid row by row from its hip to its foot: shortened by
      whole rows taken out near its middle (the knee bends when the body dips,
      the swinging foot lifts) and sheared sideways, 0 px at the hip growing to
@@ -106,10 +109,31 @@ BUST_BOUNCE = (0.0, -0.5, 1.0, -0.5, 0.0, -0.5, 1.0, -0.5)
 # Rows below the bust box over which the warp fades back to zero, per bounce px (the
 # belly takes up the motion instead of tearing at the box edge).
 BUST_TAIL_PER_PX = 1
+# Hover mode (flyers; owner's Act III art review, round 1: "it flies, its walk should just
+# be a bob"): per frame, the whole sprite's rise as a share of the rig's `bob` px (+ = up).
+# One slow bob per cycle; frame 0 is the still (the lowest point). The still keeps `bob`
+# empty rows on top for it (the feet rule keeps its lowest part on the bottom row).
+HOVER_BOB = (0.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, 0.0)
+# Per frame: a "flap" part's tip drop as a share of its `amp` px (+ = down): two wingbeats
+# per cycle, from the still's raised wings down and back.
+FLAP = (0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5)
+# Per frame: a "spin" part's width as a share of its full span from the hub (a rotor blade
+# seen edge-on foreshortens as it turns: full, shorter, almost gone, shorter): two turns
+# per cycle.
+SPIN = (1.0, 0.6, 0.3, 0.6, 1.0, 0.6, 0.3, 0.6)
 
 # Rigs: how each still is cut. Columns and rows are art px in the still (x from
 # the left, y from the top; ranges are [start, end) ). Keys:
-#   mode    "legs" (two legs) or "robe" (one hem layer).
+#   mode    "legs" (two legs), "robe" (one hem layer) or "hover" (a flyer: the whole
+#           sprite bobs, HOVER_BOB, and only its `parts` move: wings flap, rotors spin).
+#   bob     px the sprite rises at the top of the bob ("hover").
+#   parts   "hover": list of moving parts, each a dict: `box` (x0, x1, y0, y1) of the still
+#           holding it, optional `colors` (palette names: only those pixels of the box are
+#           the part, so a rotor can be lifted off the flame behind it), `kind` "flap" (each
+#           column drops FLAP * `amp` px times its distance from the `root` column over the
+#           box's farthest column: a wing hinged at `root`) or "spin" (the part squeezed
+#           toward the `root` column, the hub, to SPIN of its width). Parts are taken out of
+#           the body, moved and laid back on top; pixels are only moved, never recoloured.
 #   hip     first row of the lower part (legs / hem); rows above are the upper body.
 #   back    column range of the back (left, trailing) leg below the hip ("legs").
 #   front   column range of the front (right, leading) leg below the hip ("legs").
@@ -220,49 +244,63 @@ RIGS = {
     # --- Act III: the Electronic Empire (the shared kinds) ---
     # The Line Trooper marches (its levelled rifle ends above the hip, so it rides with the
     # body); the Spotter walks under its long coat (the hem ends above the hip, only the
-    # chrome legs step); the Scout Drone hovers: a glide whose body bobs 1 px over its
-    # zapper prongs (the hem layer). The Grave Gunner is the Trooper recoloured: same rig.
+    # chrome legs step); the Scout Drone hovers (owner's art review, round 1: "it flies, its
+    # walk should just be a bob": the whole drone bobs 2 px, nothing else moves). The Grave
+    # Gunner (round 1 redo: its own drawing, a skull-faced iron trooper) marches like the Trooper.
     "empire/line_trooper": dict(mode="legs", hip=27, back=(0, 23), front=(23, 48), rigid=[], spread=2, lift=2, dip=1),
     "empire/spotter": dict(mode="legs", hip=41, back=(0, 28), front=(28, 62), rigid=[], spread=2, lift=2, dip=1),
-    "empire/scout_drone": dict(mode="robe", hip=24, rigid=[], sway=1, dip=1),
-    "summons/grave_gunner": dict(mode="legs", hip=27, back=(0, 23), front=(23, 48), rigid=[], spread=2, lift=2, dip=1),
+    "empire/scout_drone": dict(mode="hover", bob=2, parts=[]),
+    "summons/grave_gunner": dict(mode="legs", hip=27, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
     # --- Act III: the Assembly Halls ---
     # The Arc Engineer and the Juggernaut march on their legs (the emitter / flamethrower ride
-    # with the body); the Beta Build stalks on its long frame legs; the two drone summons hover
-    # (a glide: the body bobs over its lowest part). The Marionette and her three skins glide
-    # in their long gowns (figure redesign: bust bounce, idle breathing), the puppet strings
+    # with the body); the Beta Build stalks on its long frame legs (its low left hand ends above
+    # the hip). The two drone summons hover (owner's art review, round 1): the Grave Drone bobs
+    # and beats its two crossed-bone wings (hinged at the skull), the Wraith Drone bobs and
+    # spins its three bone rotors (only the bone pixels, lifted off the flame). The Marionette
+    # and her three skins glide in their long gowns (figure redesign: bust bounce, idle breathing), the puppet strings
     # above the hip ride with the body.
-    "empire/arc_engineer": dict(mode="legs", hip=31, back=(0, 24), front=(24, 54), rigid=[], spread=2, lift=2, dip=1),
-    "empire/juggernaut": dict(mode="legs", hip=40, back=(0, 31), front=(31, 68), rigid=[], spread=2, lift=2, dip=1),
-    "empire/beta_build": dict(mode="legs", hip=64, back=(0, 53), front=(53, 102), rigid=[], spread=3, lift=3, dip=1),
-    "summons/grave_drone": dict(mode="robe", hip=20, rigid=[], sway=1, dip=1),
-    "summons/wraith_drone": dict(mode="robe", hip=23, rigid=[], sway=1, dip=1),
-    "player/marionette": dict(mode="robe", hip=31, rigid=[], sway=2, dip=1, bust=(17, 28, 17, 24, 2)),
+    "empire/arc_engineer": dict(mode="legs", hip=30, back=(0, 25), front=(25, 52), rigid=[], spread=2, lift=2, dip=1),
+    "empire/juggernaut": dict(mode="legs", hip=31, back=(0, 31), front=(31, 66), rigid=[], spread=2, lift=2, dip=1),
+    "empire/beta_build": dict(mode="legs", hip=69, back=(0, 55), front=(55, 102), rigid=[], spread=3, lift=3, dip=1),
+    "summons/grave_drone": dict(mode="hover", bob=2, parts=[
+        dict(kind="flap", box=(0, 13, 0, 20), root=13, amp=4),
+        dict(kind="flap", box=(28, 38, 0, 18), root=27, amp=4)]),
+    "summons/wraith_drone": dict(mode="hover", bob=2, parts=[
+        dict(kind="spin", box=(13, 25, 2, 12), root=18, colors=["ink_warm", "bone_shade", "bone_mid", "bone", "brown", "brown_light", "ink_cold", "grey_light"]),
+        dict(kind="spin", box=(3, 18, 12, 23), root=12, colors=["ink_warm", "bone_shade", "bone_mid", "bone", "brown", "brown_light", "ink_cold", "grey_light"]),
+        dict(kind="spin", box=(26, 38, 8, 18), root=31, colors=["ink_warm", "bone_shade", "bone_mid", "bone", "brown", "brown_light", "ink_cold", "grey_light"])]),
+    "player/marionette": dict(mode="robe", hip=31, rigid=[], sway=2, dip=1, bust=(18, 30, 14, 21, 2, 2)),  # Round 1 redo: redrawn with a larger bust and a plunging neckline; box on it (two lobes).
     "player/marionette_hyper": dict(mode="robe", hip=33, rigid=[], sway=2, dip=1, bust=(12, 26, 17, 24, 2)),
-    "player/marionette_untouchable": dict(mode="robe", hip=31, rigid=[], sway=2, dip=1, bust=(10, 24, 15, 22, 2)),
-    "player/marionette_deathlord": dict(mode="robe", hip=35, rigid=[], sway=2, dip=1, bust=(18, 31, 17, 25, 2)),
+    "player/marionette_untouchable": dict(mode="robe", hip=31, rigid=[], sway=2, dip=1, bust=(14, 24, 14, 20, 2, 2)),  # Round 1 redo: bust repainted larger; box raised onto it (was rows 15-21, "too low").
+    "player/marionette_deathlord": dict(mode="robe", hip=35, rigid=[], sway=2, dip=1, bust=(19, 30, 16, 21, 2, 2)),  # Round 1 redo: box raised off the belt (rows 23-26) onto the bust (was rows 17-24).
     # --- Act III: the Scrap Wastes ---
     # The Aegis Bot walks behind its shield (the shield's columns ride with the body); the
     # Mortar Walker and the Trojan Horse step their four legs as two pairs (left and right
-    # halves); Kestrel walks under her coat (it ends above the hip), the rifle and the near
-    # blade above the hip ride with the body, the bust bounces (figure redesign); the
+    # halves); Kestrel walks on her legs, the rifle and the raised blade above the hip ride with
+    # the body (the low blade is rigid), the bust bounces (figure redesign); the
     # Lightning Abbess glides on her habit like the Tide Widow, her crescent staff rigid.
     "empire/aegis_bot": dict(mode="legs", hip=30, back=(0, 16), front=(16, 30), rigid=[(30, 40, 0, None)], spread=2, lift=1, dip=1),
     "empire/mortar_walker": dict(mode="legs", hip=28, back=(0, 32), front=(32, 60), rigid=[], spread=2, lift=1, dip=1),
-    "empire/trojan_horse": dict(mode="legs", hip=64, back=(0, 66), front=(66, 132), rigid=[], spread=2, lift=2, dip=1),
-    "empire/trojan_horse_split": dict(mode="legs", hip=64, back=(0, 64), front=(64, 128), rigid=[], spread=2, lift=2, dip=1),
-    "bosses/kestrel": dict(mode="legs", hip=88, back=(0, 72), front=(72, 142), rigid=[], spread=2, lift=2, dip=1, bust=(62, 82, 24, 36, 2)),
-    "bosses/kestrel_blades": dict(mode="legs", hip=90, back=(0, 64), front=(64, 98), rigid=[(98, 118, 0, None)], spread=2, lift=2, dip=1, bust=(48, 74, 34, 48, 2)),
-    "player/lightning_abbess": dict(mode="robe", hip=38, rigid=[(29, 44, 0, None)], sway=2, dip=1, bust=(18, 29, 18, 25, 2)),
+    # Round 1 redo (three-quarter front view): the hind pair at the left, the front pair at the
+    # right; the red chest plate hanging over the near foreleg rides with the body.
+    "empire/trojan_horse": dict(mode="legs", hip=64, back=(0, 47), front=(47, 108), rigid=[(62, 84, 64, 71)], spread=2, lift=2, dip=1),
+    "empire/trojan_horse_split": dict(mode="legs", hip=64, back=(0, 47), front=(47, 108), rigid=[(62, 84, 64, 71)], spread=2, lift=2, dip=1),
+    # Round 1 redo (owner's Act III art review): Kestrel redrawn pear-shaped (wide hips, full rear,
+    # the cape ends at the waist); the crotch tab between her legs rides with the body; both bust
+    # boxes span the two lobes (two bells), the still's further right and the blades pose's further
+    # left than before ("the jiggle needs to extend").
+    "bosses/kestrel": dict(mode="legs", hip=88, back=(0, 68), front=(79, 144), rigid=[(68, 79, 88, 94)], spread=2, lift=2, dip=1, bust=(64, 88, 24, 38, 2, 2)),
+    "bosses/kestrel_blades": dict(mode="legs", hip=82, back=(0, 60), front=(60, 120), rigid=[(94, 120, 0, 100)], spread=2, lift=2, dip=1, bust=(44, 72, 38, 51, 2, 2)),
+    "player/lightning_abbess": dict(mode="robe", hip=38, rigid=[(29, 44, 0, None)], sway=2, dip=1, bust=(20, 31, 18, 25, 2)),  # Round 1 redo: box 2 px right (was cols 18-28).
     # --- Act III: the Iron Citadel ---
     # The two Valkyries are in the figure-redesign style (bust bounce + idle breathing); Valkyrie
     # 2.0's blade arm (left) and tower shield (right) hang below the hip and move with the body.
     # The Rust Prophet walks in his robe, the scrap staff rigid; the revenants stomp on two legs.
     "empire/valkyrie_duelist": dict(mode="legs", hip=32, back=(0, 27), front=(27, 52), rigid=[], spread=2, lift=2, dip=1, bust=(22, 34, 13, 21, 2)),
-    "empire/valkyrie_prime": dict(mode="legs", hip=70, back=(14, 36), front=(36, 52), rigid=[(0, 14, 0, None), (52, 76, 0, None)], spread=2, lift=3, dip=1, bust=(28, 46, 30, 40, 3, 2)),
+    "empire/valkyrie_prime": dict(mode="legs", hip=70, back=(14, 36), front=(36, 52), rigid=[(0, 14, 0, None), (52, 76, 0, None)], spread=2, lift=3, dip=1, bust=(28, 44, 27, 39, 3, 2)),  # Round 1 redo: box raised onto the whole breastplate (was rows 30-39, cols 28-45: "extend upward").
     "player/rust_prophet": dict(mode="robe", hip=40, rigid=[(30, 42, 0, None)], sway=1, dip=1),
     "summons/iron_revenant": dict(mode="legs", hip=34, back=(0, 26), front=(26, 58), rigid=[], spread=2, lift=2, dip=1),
-    "summons/deus_revenant": dict(mode="legs", hip=38, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1),
+    "summons/deus_revenant": dict(mode="legs", hip=44, back=(0, 27), front=(27, 66), rigid=[], spread=2, lift=2, dip=1),  # Round 1 redo (simpler drawing).
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -346,6 +384,14 @@ SKIN_FIX = {
     # sides bounce (like the Tide Widow's Hyper skin), and idle strips.
     "player/voidcaller_untouchable": {"bust": (14, 25, 13, 20, 2, 2)},
     "player/voidcaller_deathlord": {"bust": (17, 29, 16, 22, 2, 2)},
+    # Act III art review, round 1 redo: the ghost Abbess's derived box stopped short of the right
+    # of her bust (cols 20-29, rows 18-24); the crowned Abbess's (cols 12-22, rows 20-26) sat low
+    # and left, on the gold belt (row 26): her bust is cols 14-23, rows 17-23, the box ending above the belt ("up and to the right").
+    "player/lightning_abbess_untouchable": {"bust": (19, 31, 18, 25, 2)},
+    # The Gilded Stormbride was redrawn simpler (round 1 redo, "too much detail"): her bust is
+    # cols 13-22, rows 17-23, the box ending above the gold sash (row 26) and left of the staff.
+    "player/lightning_abbess_hyper": {"bust": (13, 23, 17, 24, 2)},
+    "player/lightning_abbess_deathlord": {"bust": (14, 24, 17, 24, 2)},
 }
 
 
@@ -468,10 +514,112 @@ def split(still: np.ndarray, rig: dict) -> dict:
     return parts
 
 
+PALETTE_JSON = ROOT / "tools" / "palette.json"  # The locked palette (hover parts name their colours).
+
+
+def _palette_rgb(names: list) -> list:
+    """RGB tuples of palette colours `names` (tools/palette.json)."""
+    import json
+    hexes = {c["name"]: c["hex"] for c in json.loads(PALETTE_JSON.read_text())["colors"]}
+    return [tuple(int(hexes[n][i:i + 2], 16) for i in (1, 3, 5)) for n in names]
+
+
+def _part_mask(still: np.ndarray, part: dict) -> np.ndarray:
+    """Pixels of hover part `part`: opaque pixels in its box (of its `colors` only, if set)."""
+    h, w = still.shape[:2]
+    x0, x1, y0, y1 = part["box"]
+    m = np.zeros((h, w), dtype=bool)
+    m[y0:y1, x0:x1] = still[y0:y1, x0:x1, 3] > 0
+    if part.get("colors"):
+        ok = np.zeros((h, w), dtype=bool)
+        for c in _palette_rgb(part["colors"]):
+            ok |= (still[:, :, :3] == np.array(c, dtype=np.uint8)).all(-1)
+        m &= ok
+    return m
+
+
+def _move_part(layer: np.ndarray, part: dict, f: int) -> np.ndarray:
+    """Hover part `layer` (only the part's pixels) posed for frame `f` (FLAP / SPIN), nearest
+    inverse mapping so pixels are only moved, never blended or recoloured."""
+    h, w = layer.shape[:2]
+    out = np.zeros_like(layer)
+    x0, x1 = part["box"][0], part["box"][1]
+    root = part["root"]
+    far = float(max(abs(x0 - root), abs(x1 - 1 - root), 1))  # Farthest column from the root.
+    for x in range(w):
+        if part["kind"] == "flap":
+            d = int(round(FLAP[f] * part["amp"] * abs(x - root) / far))  # Rows this column drops.
+            if d == 0:
+                out[:, x] = layer[:, x]
+            else:
+                out[d:, x] = layer[:-d, x]
+        else:  # "spin": column x shows the source column at its unsqueezed distance from the hub.
+            k = SPIN[f]
+            sx = int(np.floor(root + (x - root) / k + 0.5)) if k > 0 else root
+            if 0 <= sx < w:
+                out[:, x] = layer[:, sx]
+    return out
+
+
+def _shift_v(img: np.ndarray, dy: int, key: str) -> np.ndarray:
+    """`img` moved `dy` rows (+ = down); an opaque pixel pushed off the canvas is a rig error."""
+    if dy == 0:
+        return img.copy()
+    out = np.zeros_like(img)
+    if dy > 0:
+        lost, out[dy:] = img[-dy:], img[:-dy]
+    else:
+        lost, out[:dy] = img[:-dy], img[-dy:]
+    if lost[:, :, 3].any():
+        sys.exit(f"{key}: the hover bob pushes pixels off the canvas (the still needs empty rows on top)")
+    return out
+
+
+def _drop_strays(frame: np.ndarray, parts: list) -> np.ndarray:
+    """Removes pixels left alone (no opaque 8-neighbour) inside the parts' boxes: outline
+    bits of a moved part that were not in its colour mask (ART_BIBLE: no lone specks)."""
+    a = frame[:, :, 3] > 0
+    p = np.pad(a, 1)
+    n = sum(np.roll(np.roll(p, dy, 0), dx, 1) for dy in (-1, 0, 1) for dx in (-1, 0, 1) if dy or dx)[1:-1, 1:-1]
+    inbox = np.zeros_like(a)
+    for part in parts:
+        x0, x1, y0, y1 = part["box"]
+        inbox[max(0, y0 - 1):y1 + 1, max(0, x0 - 1):x1 + 1] = True
+    out = frame.copy()
+    out[a & (n == 0) & inbox] = 0
+    return out
+
+
+def hover_frames(key: str, still: np.ndarray, rig: dict) -> list:
+    """The FRAMES frames of a "hover" rig: the parts taken out, posed (flap / spin) and laid
+    back over the body, then the whole frame raised by HOVER_BOB * bob px."""
+    masks = [_part_mask(still, p) for p in rig.get("parts", [])]
+    body = still.copy()
+    for m in masks:
+        body[m] = 0
+    out = []
+    for f in range(FRAMES):
+        layers = [body]
+        for p, m in zip(rig.get("parts", []), masks):
+            lay = np.zeros_like(still)
+            lay[m] = still[m]
+            layers.append(_move_part(lay, p, f))
+        frame = _stack(layers)
+        if f:
+            frame = _drop_strays(frame, rig.get("parts", []))
+        out.append(_shift_v(frame, -int(round(HOVER_BOB[f] * rig.get("bob", 1))), key))
+    return out
+
+
 def frames_of(key: str) -> list:
     """The FRAMES walk frames of `key` (RGBA arrays the still's size); frame 0 is the still."""
     still = load(key)
     rig = RIGS[key]
+    if rig["mode"] == "hover":
+        out = hover_frames(key, still, rig)
+        if not np.array_equal(out[0], still):
+            sys.exit(f"{key}: frame 0 differs from the still (rig error)")
+        return out
     parts = split(still, rig)
     hip = rig["hip"]
     out = []

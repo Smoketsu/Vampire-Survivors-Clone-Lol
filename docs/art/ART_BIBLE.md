@@ -424,6 +424,17 @@ the still does not. One cycle is **8 frames** (`WalkData.FRAMES`), two steps of 
 back leg, the second the front one. Typical rigs: `spread` 2-3 and `lift` 2 for legged soldiers and
 skeletons, 1 and 1 for the long robes, `dip` 1 everywhere.
 
+**Hover rigs (flyers; Act III art review, round 1).** The owner: a flying unit's "walk" is a hover,
+not a stepping hem. A rig with `mode="hover"` cuts nothing at a hip: the whole sprite rises and sinks
+`bob` px once per cycle (`HOVER_BOB`), so the still keeps `bob` empty rows on top (its lowest part
+stays on the bottom row, the feet rule; `SpriteData.HEIGHTS` counts the empty rows). Only the rig's
+`parts` move: a `flap` part (a wing) drops `FLAP` x `amp` px at its tip, sheared from its `root`
+column (the hinge), two beats a cycle; a `spin` part (a rotor seen side-on) is squeezed toward its hub
+column to `SPIN` of its width, two turns a cycle. A part is a box of the still, optionally only the
+pixels of its `colors` (a bone rotor lifted off the flame behind it); lone pixels left in a part's
+box are dropped. Pixels are only moved, never recoloured. Used by the Scout Drone (bob only), the
+Grave Drone (wingbeat) and the Wraith Drone (three spinning rotors).
+
 **Bust bounce (figure redesign, Oct 2026; owner request).** A rig may carry `bust = (x0, x1, y0, y1,
 px)`: the box holding the bust (y0 the neckline, y1 - 1 the underside) and the bounce in art px. Each
 frame warps that box vertically (`_bounce()`): the neckline stays, the underside moves `BUST_BOUNCE`
@@ -1684,10 +1695,10 @@ the Trooper's interior `chrome_dark` lifted to `chrome` and the Spotter's chrome
 
 | Key | What it is | Art px | Notes |
 |---|---|---|---|
-| `empire/scout_drone` | Scout Drone (fodder, a machine): a round chrome disc body, one big amber camera eye, two flat rotor discs on stubby arms, an antenna with a red light, a two-pronged zapper | 50x30 | glide (`_walk`: robe rig, the body bobs 1 px over the zapper) |
+| `empire/scout_drone` | Scout Drone (fodder, a machine): a round chrome disc body, one big amber camera eye, two flat rotor discs on stubby arms, an antenna with a red light, a two-pronged zapper | 50x32 | hover (`_walk`: the whole drone bobs 2 px). **Round 1 redo** (owner: "it flies, its walk should just be a bob"): the still gained 2 empty rows on top (HEIGHTS 30 -> 32), the hem sway is gone |
 | `empire/line_trooper` | Line Trooper (soldier, a cyborg): rounded chrome helmet with one wide amber visor band, the pale chin under it, big chrome shoulder pads, a red shoulder light, a boxy rifle levelled forward with an amber side light | 48x50 | legs walk (`_walk`, hip 27; the rifle rides with the body) |
 | `empire/spotter` | Spotter (elite, a cyborg): a tall coated marksman, round chrome dome with one big red sensor eye and an antenna, chrome forearms and shins, a very long rail rifle with two amber coils | 62x56 | legs walk (`_walk`, hip 41: only the chrome legs step under the coat) |
-| `summons/grave_gunner` | Grave Gunner (a raised Line Trooper, the undead's now): the Trooper's still recoloured colour for colour: the chrome plate to bone (bone_shade / bone_mid / bone, the deepest shade undead grey_dark), the lights to soul teal, the face to bone. A first pass mapped chrome to the undead grey and read as a Line Trooper inside the army, so the plate went to bone | 48x50 | derived by a script from `empire/line_trooper` (no generation); legs walk (the Trooper's rig) |
+| `summons/grave_gunner` | Grave Gunner (a raised Line Trooper, the undead's now). **Round 1 redo** (owner: "muddy; I don't like the colours, they stop the parts from looking good"; it was the Trooper recoloured to bone and soul teal): its own drawing, a skull-faced iron trooper in the undead's grey with bone-white parts that separate the shapes (skull, ribcage plate, knee pads, rifle bands), a brown belt, soul-teal eyes and muzzle; no chrome, amber or violet, so it never reads as an Empire soldier. Generated (`--ref` the Line Trooper and the Iron Revenant), then a "simplify" pass on its own image (big flat areas); converted with levels on | 48x50 | legs walk (hip 27) |
 
 Code-drawn on purpose: the Empire's shots (amber tracers, the warning-red rail slug, arcing shells),
 the Lock-On lines and reticles, the orbital strike circles, the Spotter's red glow, the Kill-Drone
@@ -1732,23 +1743,23 @@ can read as a second head at game size.
 
 | Key | What it is | Art px | Cost | Notes |
 |---|---|---|---|---|
-| `empire/arc_engineer` | Arc Engineer (support, a cyborg): chrome suit, amber visor, an arc tool levelled forward | 54x50 | $0.032 | legs walk (hip 31) |
-| `empire/juggernaut` | Juggernaut (heavy elite, a machine): bulky chrome walker with a flamethrower and a fuel pack | 68x62 | $0.032 | legs walk (hip 40) |
+| `empire/arc_engineer` | Arc Engineer (support, a cyborg): chrome suit, amber visor, an arc tool levelled forward. **Round 1 redo** (owner: "monochromatic, it looks like a blob when it's all silver"): electric-blue (`arcane`) chest, shoulder and knee plates, dark gunmetal joints, a hazard-gold band on the tool, blue-white arc tip; chrome stays the base | 52x50 | $0.024 | legs walk (hip 30) |
+| `empire/juggernaut` | Juggernaut (heavy elite, a machine): bulky chrome walker with a flamethrower and a fuel pack. **Round 1 redo** (same note as the Arc Engineer): warning-red (`crimson`) chest and shoulder armour, hazard-yellow striped fuel tanks (no longer read as a second head), dark joints, a red band on the barrel; chrome limbs. The interior `chrome_dark` of the legs below row 33 lifted one shade (it failed the Sanctum IV floor check by 0.02) | 66x62 | $0.024 | legs walk (hip 31) |
 | `empire/fabricator` | Fabricator (structure): a chrome bay with an amber-lit hatch, hazard lights and a small build arm | 50x54 | $0.032 | still |
 | `empire/motherboard_turret` | Motherboard turret (structure the boss builds): a small chrome gun post | 24x32 | $0.032 | still |
-| `empire/beta_build` | The Beta Build (miniboss): a tall, half-finished chrome war machine with an amber visor slot and an arm cannon | 102x104 | $0.032 | legs walk (hip 64, spread 3) |
+| `empire/beta_build` | The Beta Build (miniboss): a tall, half-finished chrome war machine with an amber visor slot and an arm cannon. **Round 1 redo** (same note): hazard-yellow test plating with dark stripes on the chest and thighs (the unfinished parts), dark frame joints, a red status light, a red muzzle band; converted with levels on (without them it failed the floor check) | 102x104 | $0.024 | legs walk (hip 69, spread 3) |
 | `bosses/motherboard` | The Motherboard (boss): a walking factory on two tracks, a circuit board chest, red eyes, two raised crane arms | 120x150 | $0.032 | still |
 | `bosses/motherboard_windup` | its windup pose (arms up, claws open) | 124x150 | $0.024 | BossPoseData index 1 |
 | `bosses/motherboard_strike` | its strike pose (both cranes slammed down) | 190x150 | $0.024 | BossPoseData index 3 |
-| `summons/grave_drone` | Grave Drone (summon): a bone skull on crossed-bone rotors, soul-teal eyes | 44x26 | $0.036 | glide (robe rig, hip 20) |
-| `summons/wraith_drone` | Wraith Drone (its evolution): the skull wreathed in soul-teal wraith flame | 38x30 | $0.036 | glide (hip 23) |
-| `player/marionette` | The Marionette (character): violet gown, a dark crown, a puppeteer's control bar with soul-teal strings | 40x56 | $0.037 | walk + idle (bust 17–28, 17–24) |
+| `summons/grave_drone` | Grave Drone (summon): a bone skull on crossed-bone rotors, soul-teal eyes | 44x28 | $0.036 | hover: bob + wingbeat. **Round 1 redo** (owner: "it flies, make the wings move, not the mouth"): the two crossed-bone wings flap from the skull (4 px at the tip), the jaw stays; 2 empty rows on top (HEIGHTS 26 -> 28) |
+| `summons/wraith_drone` | Wraith Drone (its evolution): the skull wreathed in soul-teal wraith flame | 38x32 | $0.036 | hover: bob + rotors. **Round 1 redo** (owner: "spin the propellers, not the bottom"): its three bone propellers spin (squeezed toward their hubs), the flame stays; 2 empty rows on top (HEIGHTS 30 -> 32) |
+| `player/marionette` | The Marionette (character): violet harlequin gown, a black corset bodice with a deep plunging V neckline (fully clothed), a simple swept-back bun, a puppeteer's control bar with soul-teal strings | 40x56 | $0.037 + $0.033 | walk + idle (bust 18–29, 14–20, two lobes). **Round 1 redo** ("a bit too much detail on the head, give her some more chest and plunging neckline"; idle "one pixel to the right"): new source (no jester baubles or ruffled collar, a much larger bust), `--ink-l 0.20 --ramps violet,bone,soul,brown,crimson,skin` (levels on); the face (one dark eye, crimson lips) and the neckline (two skin mounds, a shadow cleavage line, violet cups) hand-painted on the grid, the face being 4 px wide |
 | `player/marionette_hyper` | Hyper skin: a gold gown and crown | 36x58 | $0.032 | walk + idle |
-| `player/marionette_untouchable` | Untouchable skin: white and ice, pale hair | 36x56 | $0.032 | walk + idle |
-| `player/marionette_deathlord` | Deathlord skin: violet and crimson, a crimson cape and a gold crown | 44x60 | $0.032 | walk + idle |
+| `player/marionette_untouchable` | Untouchable skin: white and ice, long lavender hair, a small bone tiara | 36x56 | $0.032 | walk + idle (bust 14–23, 14–19, two lobes). **Round 1 redo** ("she looks bald and chest isn't big enough"; strips "too low"): image generation was unavailable (the API key was invalidated mid-batch), so the still was fixed by hand on the grid (deterministic script): the hair round the head and down her back recoloured `violet_flare` / `violet_glow` (it was ice-white like her bone dome, so she read bald), the tall bone dome cut to a three-point tiara on the hair, the face repainted (teal eye), and a larger bust with the base Marionette's plunging V; bust box raised (was rows 15-21) |
+| `player/marionette_deathlord` | Deathlord skin: violet and crimson, a crimson cape and a gold crown | 44x60 | $0.032 | walk + idle. **Round 1 redo** ("the jiggle is on her belt, not her chest"): bust box cols 19-29, rows 16-20, two lobes (was cols 18-30, rows 17-24, over the belt at rows 23-26) |
 | `icons/hollow_puppet`, `icons/puppet_king`, `icons/strings_of_the_dead`, `icons/overclock` | spell, evolution, two passives | 32x32 | $0.031 (sheet) | one 4-up sheet |
 | `icons/grave_drone`, `icons/wraith_drone`, `icons/signal_ghost`, `icons/ach_cold_assembly` | class, evolution, passive, achievement | 32x32 | $0.031 (sheet) | one 4-up sheet |
-| `tiles/assembly_docks`, `_conveyor`, `_fabricator`, `_furnace` | the four zone floors | 128x128 | $0 | `make_tile.py` |
+| `tiles/assembly_docks`, `_conveyor`, `_fabricator`, `_furnace` | the four zone floors | 128x128 | $0 | `make_tile.py`. **`assembly_conveyor` round 1 redo** (owner: "conveyor belts don't look like this"; it was a 16 px slate grid): the new `belts` layout, two long rubber belts per tile running along x like the zone's live belts, ridged slats every 8 px, steel side rails (lit top edge, shaded bottom edge) with a roller hub every 16 px, a dark floor gap between belts; mean L 0.27. The live belts (`AssemblyGlyphs`: near-black rubber, scrolling amber chevrons, 80 px wide) still stand out on it |
 | `obstacles/cargo_crate`, `press_machine`, `servo_cabinet`, `ingot_stack` (`_s`, `_l`, `_s_v`, `_l_v`); `fuel_drum`, `parts_bin`, `robot_arm`, `crucible` (`_s`, `_l`) | the four zones' obstacles | 22x27–64x47 | $0 | `tools/assembly_props.py` |
 ### Act III: the Scrap Wastes (Stage 7; Act III phase 2, Oct 2026)
 
@@ -1773,15 +1784,15 @@ bust boxes and idle breathing strips). 28 API images, about $0.75 (ledger estima
 | `empire/aegis_bot` | Aegis Bot: a squat chrome walker behind a big round amber-rimmed shield plate | 40x48 | legs walk, the shield rigid; the energy arc in front is code-drawn (AegisKit) |
 | `empire/mortar_walker` | Mortar Walker: a low four-legged chrome walker, a stubby mortar tube on its back, a red eye | 60x48 | legs walk (the two leg pairs) |
 | `empire/signal_pylon` | Signal Pylon: a chrome mast on a tripod, two amber dishes, a red beacon on top | 96 tall | structure; the beacon blink and the reach ring are code-drawn (PylonKit) |
-| `empire/trojan_horse` | The Trojan Horse: a horse-shaped four-legged drone tank, two missile pods, a red eye | 132x104 | legs walk |
-| `empire/trojan_horse_split` | The same with its flank hull split open, glowing amber drone bays inside | 128x104 | legs walk; drawn once the hull splits |
-| `bosses/kestrel` | Kestrel, the Dead Pixel (figure redesign, fully clothed): a chrome-plated bodysuit, tall collar, short cape, silver hair, a red cyber eye, a very long sniper rifle | 142x124 | legs walk + bust bounce, idle breathing |
-| `bosses/kestrel_aim` | Her perch pose: kneeling, the rifle raised to the shoulder | 154x108 | pose 1 (BossPoseData) |
-| `bosses/kestrel_blades` | Her last phase: two amber energy arm blades, one raised high | 118x124 | the blades still (legs walk + bust, idle); its strike pose falls back on it |
-| `player/lightning_abbess` | The Lightning Abbess (figure redesign, fully clothed): a long violet habit with a slit, veil and wimple, a bone rib collar, a crescent staff crackling with violet lightning | 44x56 | robe glide + bust, idle breathing |
-| `player/lightning_abbess_hyper` | Gilded Stormbride (Hyper): gold trim, a gold storm crown, a gold staff | 42x58 | through `SKINS` |
-| `player/lightning_abbess_untouchable` | Untouchable: a ghost-white phantom, wisp tails, soul-teal eyes and staff | 44x56 | through `SKINS` |
-| `player/lightning_abbess_deathlord` | Deathlord: a spiked gold crown, iron pauldrons, crimson mantle, mid-violet gown | 38x58 | through `SKINS` |
+| `empire/trojan_horse` | The Trojan Horse: a horse-shaped four-legged drone tank, two missile pods, a red eye. **Round 1 redo** (owner: "the pods should face the front of the horse; too much side, closer to 3/4"): a three-quarter front view (chest and head toward the lower right), both pods turned forward with their 2x2 amber tube grids facing the way the head looks, a warning-red chest plate and pod sides | 108x104 | legs walk (hind pair left, front pair right; the chest plate rides with the body) |
+| `empire/trojan_horse_split` | The same with its flank hull split open, glowing amber drone bays inside. **Round 1 redo**: redrawn from the new three-quarter Horse (`--ref` it) | 108x104 | legs walk (the Horse's rig); drawn once the hull splits |
+| `bosses/kestrel` | Kestrel, the Dead Pixel (figure redesign, fully clothed): a chrome-plated bodysuit, tall collar, a short cape ending at the waist, silver hair, a red cyber eye, a very long sniper rifle; **pear-shaped** (very wide hips, a full round rear, thick thighs) | 144x124 | legs walk + bust bounce (two lobes, cols 64-87, rows 24-37), idle breathing. **Round 1 redo** (owner: "make her butt bigger, more of a pear shape"; idle jiggle "about 2 px to the right"): new source with the old sprite and the Sister of the Scourge attached, converted **with levels on** (`--no-prune --ink-l 0.15 --no-cleanup --ramps chrome,signal,skin`; with `--no-levels` the dark chrome failed every floor at L 0.35, now L 0.55, passes all) |
+| `bosses/kestrel_aim` | Her perch pose: kneeling, the rifle raised to the shoulder, the wide hips and rear prominent | 144x108 | pose 1 (BossPoseData). **Round 1 redo** ("see above"): regenerated from the new still and the old pose, converted like the still |
+| `bosses/kestrel_blades` | Her last phase: two amber energy arm blades, one raised high, one low; the pear-shaped figure in a wide lunge | 120x124 | the blades still (legs walk, the low blade rigid, + bust, idle); its strike pose falls back on it. **Round 1 redo** ("love the arm blades, but redesign with what's above"; jiggle "extend more to the left"): regenerated from the new still and the old blades pose; converted with levels on, then the `signal` (blades, eye) and `skin` pixels taken from a `--no-levels` conversion of the same grid (levels turned the amber blades red and the face brown); bust box two lobes, cols 44-71, rows 38-50 (was 48-73, 34-47) |
+| `player/lightning_abbess` | The Lightning Abbess (figure redesign, fully clothed): a long violet habit with a slit, veil and wimple, a bone rib collar, a crescent staff crackling with violet lightning | 44x56 | robe glide + bust, idle breathing. **Round 1 redo**: bust box 2 px right (cols 20-30, was 18-28), strips rebuilt |
+| `player/lightning_abbess_hyper` | Gilded Stormbride (Hyper): a plain violet habit and veil, gold on three big pieces only (a three-spike crown, one waist sash, a plain staff with a crescent and violet orb) | 32x58 | through `SKINS`. **Round 1 redo** ("a bit unclear with all the detail, make it clearer"): new source asking for big flat shapes and no scattered gold; `--ink-l 0.20 --no-prune --ramps violet,bone,gold`; hand fixes (deterministic): the gold's dark shade (`brown_light`, the 2 px pole) set to gold, the crown spikes and the face (bone, the near eye dark, the far one a shade, violet lips) painted on the grid; `SKIN_FIX` bust box cols 13-22, rows 17-23 (ends above the sash). Fails only Sanctum I / IV lightness, like the necromancer and every violet character (the old one failed all 13 floors) |
+| `player/lightning_abbess_untouchable` | Untouchable: a ghost-white phantom, wisp tails, soul-teal eyes and staff | 44x56 | through `SKINS`. **Round 1 redo** ("jiggle needs extending to the right"): `SKIN_FIX` bust box cols 19-30, rows 18-24 (the derived box stopped at col 28) |
+| `player/lightning_abbess_deathlord` | Deathlord: a spiked gold crown, iron pauldrons, crimson mantle, mid-violet gown | 38x58 | through `SKINS`. **Round 1 redo** ("jiggle is too far down, needs to be up and to the right"): `SKIN_FIX` bust box cols 14-23, rows 17-23 (the derived box, cols 12-22 rows 20-26, ended on the gold belt) |
 | `tiles/wastes_slag`, `wastes_gullies`, `wastes_ridge`, `wastes_wall` | The four zone floors: slag crust, rust grit, cracked ash rock, concrete slabs | 128 | quilt; mean L 0.23 / 0.24 / 0.25 / 0.26 |
 | `obstacles/slag_mound_{s,m,l}` | A heap of slag and scrap with a red seam | 28 / 36 / 44 wide | circle |
 | `obstacles/ridge_boulder_{s,m,l}` | A cracked ash boulder under a snapped cable | 32 / 40 / 52 wide | circle |
@@ -1789,8 +1800,8 @@ bust boxes and idle breathing strips). 28 API images, about $0.75 (ledger estima
 | `obstacles/wreck_plate_{s,l}` (+ `_v`) | A rusted armour slab half sunk in the ground | 48 / 64; `_v` 28 wide | H + V pair |
 | `obstacles/titan_hull_{s,l}` (+ `_v`) | A fallen war titan's chrome limb segment | 84 / 104; `_v` 36 wide | H + V pair |
 | `obstacles/wall_segment_{s,l}` (+ `_v`) | A broken concrete wall length with rebar and hazard stripes | 88 / 104; `_v` 32 wide | H + V pair (a little wider than the footprint: the rebar) |
-| `icons/death_ray`, `conductive_marrow`, `lead_lined_bones` | Badges (violet border): a skull firing a soul laser; a bone with lightning in its marrow; a lead-plated ribcage stopping a bullet | 32 | |
-| `icons/event_horizon`, `ach_static_in_the_wastes` | Gold-border badges: two opposite beams round a skull; a toppled red pylon in static over a skull | 32 | |
+| `icons/death_ray`, `conductive_marrow`, `lead_lined_bones` | Badges (violet border): a skull firing a soul laser; **round 1 redo** a plain bone with violet lightning bolts shooting off it (owner: "lightning shooting off the bone"); **round 1 redo** a heavy lead-grey shield plate over crossed bones, a flattened amber bullet and spark on it (owner: "no visual identity") | 32 | |
+| `icons/event_horizon`, `ach_static_in_the_wastes` | Gold-border badges: two opposite beams round a skull; **round 1 redo** (owner: "doesn't look like anything") a cracked boxy CRT monitor showing a big bone-white skull, one red glitch bar across its jaw | 32 | |
 | `effects/wastes_blast` | A rocket / shell blast: amber flash, fire and chrome shards, a smoke ring | 10 x 128 | `AnimData` (rockets, the stomp, pylons falling, the Trojan Horse) |
 
 Code-drawn on purpose: the Swarm Rocket (turned along its heading, `WastesGlyphs.draw_rocket()`), the
@@ -1836,7 +1847,7 @@ copied from an approved badge (violet `abyssal_pact`, gold `tidecallers_host`). 
 | Key | What it is | Art px | Notes |
 |---|---|---|---|
 | `empire/valkyrie_duelist` | Valkyrie Duelist (elite cyborg, female): signal-red bodysuit under a chrome breastplate, winged helmet with an amber visor band, twin jet pods, a long forearm blade pointing forward | 52x52 | legs walk + bust (box 22-34 x 13-21), idle breathing |
-| `empire/valkyrie_prime` | Valkyrie 2.0 (miniboss): heavy chrome armour over red, crested helmet, big jet pack, tower shield with an amber stripe, arm blade | 76x104 | legs walk (blade arm and shield rigid) + bust (two lobes), idle breathing |
+| `empire/valkyrie_prime` | Valkyrie 2.0 (miniboss): heavy chrome armour over red, crested helmet, big jet pack, tower shield with an amber stripe, arm blade | 76x104 | legs walk (blade arm and shield rigid) + bust (two lobes), idle breathing. **Round 1 redo** ("jiggle needs to be extended upward a few pixels"): bust box rows 27-38, cols 28-43 (was rows 30-39, cols 28-45: it began below the top of the breastplate and its right edge held the amber shoulder light), strips rebuilt |
 | `empire/sentry_turret` | Sentry Turret (structure): a chrome dome on a tripod base with an amber eye; the turning gun is code-drawn on its top (`CitadelGlyphs.draw_turret_barrel()`) | 44 | still |
 | `empire/shield_generator` | Shield Generator (structure): a squat chrome pylon with an amber energy coil | 64 | still |
 | `empire/deus_leg_plate`, `empire/deus_shield_drone` | Deus's armour plate (rides a knee) and Siege Core shield drone (one sheet split at x 537) | 32 / 24 | stills |
@@ -1846,7 +1857,7 @@ copied from an approved badge (violet `abyssal_pact`, gold `tidecallers_host`). 
 | `player/rust_prophet` | The Rust Prophet: hooded violet robe, rusted chrome arm, visor lens, a staff of scrap and bone topped by a gear and a violet flame | 42x58 | robe walk (staff rigid) |
 | `player/rust_prophet_hyper` / `_untouchable` / `_deathlord` | Gilded Prophet (Hyper skin, gold trim and cog crown), Untouchable (white phantom), Deathlord (spiked crown, black iron) | 58 / 58 / 60 | walk through `SKINS` |
 | `summons/iron_revenant` | Iron Revenant: a squat iron walker bound with bones, a horned skull cockpit with soul-fire eyes, one cannon arm | 58x58 | legs walk |
-| `summons/deus_revenant` | Deus Revenant: crowned skull cockpit, twin cannons, a bone missile rack | 76x70 | legs walk |
+| `summons/deus_revenant` | Deus Revenant: horned skull cockpit, twin cannons, a bone missile rack. **Round 1 redo** (owner: "too much detail; I can't see the missile racks, the cannons don't look right"): simplified to big flat parts, a box missile rack above the back shoulder with a 2x3 grid of bone tips, one thick twin cannon with bone bands and teal muzzles, bone knee plates; converted with levels on (`--ramps grey,bone,soul,brown`), the two eye pixels set to `soul` | 62x70 | legs walk (hip 44) |
 | `tiles/citadel_gates`, `_courts`, `_lifts`, `_core` | The four zone floors: deck plates, a panel grid, grating slats, circuit-etched plating with dim red traces | 128 | `make_tile.py`; the decals stay code-drawn |
 | `obstacles/signal_bollard_{s,m,l}`, `emitter_pylon_{s,m,l}`, `lift_winch_{s,m,l}`, `core_conduit_{s,l}` | A hazard-striped bollard, a pylon with a red lens, a cable winch, a pipe junction with red seams | footprint + 2 wide | circles |
 | `obstacles/iron_barricade_{s,m,l}` (+ `_v`) | A low barricade of steel plates with a hazard-striped top | 54 / 68 / 84 x 32; `_v` 28 wide | rects |
@@ -1858,3 +1869,19 @@ Code-drawn on purpose: the shield wall and its cables, the laser bands and beams
 circles (the shared strike code's), the Judgment Lance, the overload pulses, the teleport glow, the
 blade storm and jets, the shield drones' tethers, the scrap drones and bolts, the iron shells, the
 soul-binding finale and the floor decals: telegraphs and effects that must read at a glance.
+
+### Act III art review, round 1: machines, summons, icons, the conveyor floor (Oct 2026)
+
+The owner's first Act III review asked for redos; this batch is every key except the female figures
+(Kestrel, Valkyrie 2.0, the Lightning Abbess, the Marionette: their own batch). The rows above carry
+a "Round 1 redo" note per key. Pipeline as in the Act III sections: `tools/gen_image.py` (each
+machine with its own old source as `--ref` and a "redraw with colour blocking" prompt; the Trojan Horse
+from its first redo with a "turn it 45 degrees" prompt), alpha below 230 dropped, `pixelate_source.py`,
+`prepare_sprite.py --no-prune --ink-l 0.15 --no-cleanup` (levels on for the Beta Build and the two
+summons, off for the rest). Colour rule for the machines: chrome stays the base, one accent hue per
+kind (Arc Engineer electric blue, Juggernaut warning red, Beta Build hazard yellow, Trojan Horse
+warning red), dark gunmetal joints; never bone, soul teal or violet on an enemy. Summons stay in the
+undead's grey + bone + soul teal (no violet, like every other summon). Badges: symbol at 26 px on
+the frame of an approved badge, as before. Walk strips: `walk_cycle.py` (new `hover` mode for the
+three flyers). Floor: `make_tile.py` (new `belts` layout), no API image. 15 API images, $0.37 at the
+tool's estimate (ledger rows 2026-10-20 15:04-15:11). **For the owner's review.**
