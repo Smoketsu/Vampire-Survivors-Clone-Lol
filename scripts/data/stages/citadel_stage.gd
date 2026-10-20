@@ -108,20 +108,20 @@ const RECKONING_OBJECTIVE: String = "PURGE PROTOCOL: the Citadel deletes you. En
 ## lesson: early fire starves the starting army).
 const SEGMENTS := [
 	# Zone I, the Shield Gates.
-	{"start": 0.0, "rate": 1.3, "max_alive": 28,  # TUNING (not in GDD)
+	{"start": 0.0, "rate": 1.1, "max_alive": 24,  # TUNING (not in GDD) balance pass 3: 1.3 / 28 -> 1.1 / 24 (drone fire through a two-unit army killed the bot by 2:20)
 		"weights": {"drone": 1.0},
 		"objective": "The Iron Citadel's drones rise: hold your ground"},
-	{"start": 60.0, "rate": 1.6, "max_alive": 38,  # TUNING (not in GDD)
-		"weights": {"drone": 0.88, "trooper": 0.12},
+	{"start": 60.0, "rate": 1.3, "max_alive": 30,  # TUNING (not in GDD) balance pass 3: 1.6 / 38 -> 1.3 / 30
+		"weights": {"drone": 0.92, "trooper": 0.08},  # TUNING (not in GDD) balance pass 3: troopers 0.12 -> 0.08 (the naive bot died at 2:50 to rifle fire)
 		"objective": "Line Troopers march in firing: your dead are cover"},
-	{"start": 120.0, "rate": 1.9, "max_alive": 46,  # TUNING (not in GDD)
-		"weights": {"drone": 0.8, "trooper": 0.2},
+	{"start": 120.0, "rate": 1.6, "max_alive": 40,  # TUNING (not in GDD) balance pass 3: 1.9 / 46 -> 1.6 / 40
+		"weights": {"drone": 0.86, "trooper": 0.14},  # TUNING (not in GDD) balance pass 3: 0.2 -> 0.14
 		"objective": "Keep your dead between you and the guns"},
-	{"start": 180.0, "rate": 2.2, "max_alive": 54,  # TUNING (not in GDD)
-		"weights": {"drone": 0.72, "trooper": 0.24, "duelist": 0.04},
-		"objective": "Valkyrie Duelists dive the ring: keep a blocker between you"},
-	{"start": 240.0, "rate": 2.5, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"drone": 0.68, "trooper": 0.26, "duelist": 0.06},
+	{"start": 180.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD) balance pass 3: 2.2 / 54 -> 2.0 / 50
+		"weights": {"drone": 0.8, "trooper": 0.2},  # TUNING (not in GDD) balance pass 3: troopers 0.24 -> 0.2, no Duelist before 4:00 (the army bot died at 3:30)
+		"objective": "The Citadel's guns wake: step out of the red circles"},
+	{"start": 240.0, "rate": 2.3, "max_alive": 56,  # TUNING (not in GDD) balance pass 3: 2.5 / 60 -> 2.3 / 56
+		"weights": {"drone": 0.74, "trooper": 0.2, "duelist": 0.06},  # TUNING (not in GDD) balance pass 3: troopers 0.26 -> 0.2
 		"objective": "The Laser Courts lie beyond the gates"},
 	# Zone II, the Laser Courts: laser grids, emplacements.
 	{"start": 300.0, "rate": 2.7, "max_alive": 66,  # TUNING (not in GDD)
@@ -170,16 +170,16 @@ const SEGMENTS := [
 ##   "valkyrie" — the miniboss (`kind`) arrives with her `escort` groups.
 const EVENTS := [
 	# Zone I: the Shield Gates.
-	{"time": 20.0, "type": "wave", "banner": "A drone swarm sweeps off the walls!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "drone", "count": 10, "elite": false}]},
-	{"time": 50.0, "type": "gate", "banner": "A SHIELD GATE seals the way: destroy its two generators!",  # Owner-approved proposal: shield gates
-		"garrison": [{"kind": "drone", "count": 3, "elite": false}, {"kind": "trooper", "count": 1, "elite": false}]},  # TUNING (not in GDD)
-	{"time": 120.0, "type": "wave", "banner": "A firing line marches out of the gate!", "formation": "line",  # TUNING (not in GDD)
-		"groups": [{"kind": "trooper", "count": 4, "elite": false}, {"kind": "drone", "count": 6, "elite": false}]},
-	{"time": 170.0, "type": "wave", "banner": "Valkyrie Duelists lunge through your ring: keep a blocker between you!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "duelist", "count": 2, "elite": false}, {"kind": "drone", "count": 6, "elite": false}]},
+	{"time": 40.0, "type": "wave", "banner": "A drone swarm sweeps off the walls!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "drone", "count": 6, "elite": false}]},  # TUNING (not in GDD) balance pass 3: 10 -> 6
+	{"time": 120.0, "type": "wave", "banner": "A firing line marches down from the walls!", "formation": "line",  # TUNING (not in GDD)
+		"groups": [{"kind": "trooper", "count": 3, "elite": false}, {"kind": "drone", "count": 6, "elite": false}]},  # TUNING (not in GDD) balance pass 3: 4 -> 3 Troopers
+	{"time": 200.0, "type": "gate", "banner": "A SHIELD GATE seals the way: destroy its two generators!",  # Owner-approved proposal: shield gates
+		"garrison": [{"kind": "drone", "count": 3, "elite": false}]},  # TUNING (not in GDD) balance pass 3: 0:50 -> 3:20, drones only at the first gate (was 3 drones + a Trooper every 8 s)
 	{"time": 215.0, "type": "wave", "banner": "A Spotter paints you from the battlements!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "spotter", "count": 1, "elite": false}, {"kind": "trooper", "count": 6, "elite": false}]},
+		"groups": [{"kind": "spotter", "count": 1, "elite": false}, {"kind": "trooper", "count": 4, "elite": false}]},  # TUNING (not in GDD) balance pass 3: 6 -> 4 Troopers
+	{"time": 245.0, "type": "wave", "banner": "Valkyrie Duelists lunge through your ring: keep a blocker between you!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "duelist", "count": 2, "elite": false}, {"kind": "drone", "count": 6, "elite": false}]},
 	{"time": 265.0, "type": "wave", "banner": "The gate's guard closes in!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "trooper", "count": 8, "elite": false}, {"kind": "drone", "count": 10, "elite": false}, {"kind": "duelist", "count": 1, "elite": false}]},
 	# Zone II (5:00): the Laser Courts.
@@ -253,7 +253,7 @@ const ZONES := [
 				"iron_barricade": {"weight": 0.5, "shape": "rect", "sizes": [52.0, 68.0, 84.0], "short": 26.0},  # TUNING (not in GDD)
 				"signal_bollard": {"weight": 0.5, "shape": "circle", "sizes": [11.0, 14.0, 17.0]},  # TUNING (not in GDD)
 			}},
-		"guns": {"first": 30.0, "interval": 16.0, "count": 1, "scatter": 220.0, "radius": 48.0, "telegraph": 1.5,  # TUNING (not in GDD) the guns wake
+		"guns": {"first": 180.0, "interval": 16.0, "count": 1, "scatter": 220.0, "radius": 48.0, "telegraph": 1.5,  # TUNING (not in GDD) the guns wake after the first gate (balance pass 3: first 30 -> 180 s)
 			"damage": 9.0, "summon_damage": 4.0, "boss_mult": 1.5},  # TUNING (not in GDD) passes 1-2: 16 -> 7 -> 4 on summons (undead do not dodge: the guns ate the ring, 22k summon damage a run)
 		"lasers": {}},
 	{"start": 300.0, "numeral": "II", "name": "The Laser Courts",  # Owner-approved proposal zone II
@@ -340,11 +340,11 @@ const CITADEL := {
 		"wall_length": 460.0,  # TUNING (not in GDD) px: going round is a real detour
 		"wall_thickness": 18.0,  # TUNING (not in GDD) px
 		"generator_back": 18.0,  # TUNING (not in GDD) px
-		"turrets": 2,  # Owner-approved proposal: "fixed emplacements behind shield walls"
+		"turrets": 1,  # Owner-approved proposal: "fixed emplacements behind shield walls"; TUNING (not in GDD) balance pass 3: 2 -> 1 (the first gate's pair shot the naive bot down in its second minute)
 		"turret_spread": 170.0,  # TUNING (not in GDD) px
 		"turret_back": 90.0,  # TUNING (not in GDD) px
 		"garrison_first": 4.0,  # TUNING (not in GDD) s
-		"garrison_interval": 8.0,  # TUNING (not in GDD) s ("enemies pour out of the gate while it holds")
+		"garrison_interval": 14.0,  # TUNING (not in GDD) s ("enemies pour out of the gate while it holds"); balance pass 3: 8 -> 14 (the first gate's drones shot the starting army's necromancer down by 2:20)
 		"active_radius": 900.0,  # TUNING (not in GDD) px
 		"despawn_distance": 1800.0,  # TUNING (not in GDD) px
 		"reward_xp": 40,  # TUNING (not in GDD)

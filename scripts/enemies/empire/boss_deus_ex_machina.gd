@@ -394,6 +394,12 @@ func _fire_round(dir: Vector2) -> void:
 			undead_damage_mult, "chaingun", "deus_chaingun", float(boss_def["chaingun_range"]))
 
 
+## Autopilot hint (the autotest bot): where to walk to bring the army to the
+## planted Siege Core and its shield drones; INF in every other phase.
+func approach_point(_p: Vector2) -> Vector2:
+	return position if phase == Phase.SIEGE else Vector2.INF
+
+
 ## True while the Walker holds its firing pose after a salvo (drawing only).
 func _salvo_posing() -> bool:
 	return game != null and game.elapsed < _salvo_pose_until

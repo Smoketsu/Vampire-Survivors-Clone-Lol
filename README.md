@@ -1395,8 +1395,8 @@ shutting down the Motherboard; Soul Ash ×3.0 (placeholder).
   (15:00), the Spire Lifts (10:00) and the Core (5:00), each with its own pixel-art floor
   (`CitadelGround`) and obstacles (barricades, cargo crates, bollards, emitter pylons, lift winches,
   core conduits).
-- **Shield gates** (0:50, 5:30, 10:15; `CitadelDirector`): an energy wall ahead of you, held up by
-  two generators behind it and guarded by two Sentry Turrets; soldiers pour out every 8 s while it
+- **Shield gates** (3:20, 5:30, 10:15; `CitadelDirector`): an energy wall ahead of you, held up by
+  two generators behind it and guarded by a Sentry Turret; soldiers pour out every 14 s while it
   stands. The wall stops only you (go round it, or break both generators: XP and 10 Soul Ash). A
   gate left standing when its zone ends goes into lockdown: a squad, and the next zone's guns fire
   more often.
