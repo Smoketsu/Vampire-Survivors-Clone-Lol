@@ -140,6 +140,9 @@
 ##                         the summary adds a "coop lockstep" line (ticks,
 ##                         frames sent / received, checksums, the chain).
 ##   --coop-code=CODE      --coop-net=join: the lobby code to join.
+##   --view=WxH            Test: Game.view_size() reports a W x H window (layout px)
+##                         instead of the real one (headless has a fixed 1280 x 720), to
+##                         check that co-op gameplay ignores the window (one fixed size).
 ##   --effects=reduced     Draws with Effects = Reduced (default Full; drawing only).
 ##   --perf-real=A-B,...   --perf, and those game-second windows run at real
 ##                         time (1x) so the rendered-frame times there are real.
@@ -240,6 +243,9 @@ var autotest_coop_down: float = -1.0
 var autotest_coop_net: String = ""
 ## Autotest (--coop-net=join): the lobby code of --coop-code= ("" = none).
 var autotest_coop_code: String = ""
+## Autotest (--view=WxH): the window size Game.view_size() reports (layout px;
+## zero = the real viewport).
+var autotest_view: Vector2 = Vector2.ZERO
 ## Autotest: true when --perf prints the per-tick timing table (PerfProbe).
 var autotest_perf: bool = false
 ## Autotest: "reduced" when --effects=reduced draws with Effects = Reduced
@@ -321,6 +327,10 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_coop_net = arg.get_slice("=", 1).to_lower()  # Online co-op through the lockstep (CoopNetBot).
 		elif arg.begins_with("--coop-code="):
 			autotest_coop_code = arg.get_slice("=", 1).to_upper()
+		elif arg.begins_with("--view="):
+			var wh := arg.get_slice("=", 1).split("x")  # "W" and "H".
+			if wh.size() == 2:
+				autotest_view = Vector2(wh[0].to_float(), wh[1].to_float())
 		elif arg.begins_with("--coop-down="):
 			autotest_coop_down = arg.get_slice("=", 1).to_float()  # Test: slot 1 downed at T s.
 		elif arg.begins_with("--policy2="):

@@ -750,7 +750,10 @@ func shake(amount: float) -> void:
 ## gameplay_view_size(), and drawing): the real visible area, but never smaller
 ## than at ViewData.GAMEPLAY_ZOOM, so zooming in (Close) does not change gameplay.
 func view_size() -> Vector2:
-	return get_viewport_rect().size / minf(camera.zoom.x, ViewData.GAMEPLAY_ZOOM)
+	var size := get_viewport_rect().size  # Visible layout area (px).
+	if GameState.autotest and GameState.autotest_view != Vector2.ZERO:
+		size = GameState.autotest_view  # --view=WxH: a test window size (headless is always 1280 x 720).
+	return size / minf(camera.zoom.x, ViewData.GAMEPLAY_ZOOM)
 
 
 ## World size in px that GAMEPLAY treats as "on screen" (the enemy spawn ring,
