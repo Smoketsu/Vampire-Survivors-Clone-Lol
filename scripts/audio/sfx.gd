@@ -16,7 +16,10 @@
 ##     from it, the in-run loop during a run, and on an Act II stage the
 ##     second run loop "Below the Tide" (RunLoopSynth with
 ##     SoundData.TIDE_SCORE; rendered lazily the first time an Act II run
-##     asks for it, like the menu theme, and never headless), and while the
+##     asks for it, like the menu theme, and never headless), on an Act III
+##     stage "Iron Requiem" (SoundData.IRON_SCORE, the same way: every
+##     SoundData.SCORES entry is a ScoreLoop with its own player and fixed
+##     seed, SCORE_SEEDS), and while the
 ##     epilogue plays its slow "Grave Lullaby" cue (MUSIC_EPILOGUE:
 ##     MenuThemeSynth with MenuThemeData.EPILOGUE_VARIANT, rendered the first
 ##     time an epilogue asks for it, never headless). The menu theme is rendered
@@ -33,6 +36,11 @@
 ##     voice of the lowest priority is stolen only if it is not more
 ##     important than the new sound, otherwise the new sound is dropped. So
 ##     150 enemies dying in one frame cost at most a handful of voices;
+##   * renders a lazily loaded sound PACK (Act III: SoundData.EMPIRE_SOUNDS,
+##     SoundData.SCORE_PACKS) the first time its score is asked for, on a
+##     worker thread on desktop and one sound per frame on the Web, with its own
+##     seeds (PACK_SEED + i), so the startup bank, its order and its seeds stay
+##     exactly as they were; play() finds a pack sound once it exists;
 ##   * gives every Button / Slider in the UI hover and confirm sounds by
 ##     watching SceneTree.node_added (no UI script needs to know about audio);
 ##     a Back / Cancel button (BACK_LABELS, or meta "ui_back" true) plays the
@@ -72,6 +80,9 @@ const MUSIC_RUN: StringName = &"run"
 ## play_music() mode: the Act II in-run loop "Below the Tide" (SoundData.TIDE_SCORE;
 ## a stage whose STAGE has "music": "tide").
 const MUSIC_TIDE: StringName = &"tide"
+## play_music() mode: the Act III in-run loop "Iron Requiem" (SoundData.IRON_SCORE;
+## a stage whose STAGE has "music": "iron").
+const MUSIC_IRON: StringName = &"iron"
 ## play_music() mode: the epilogue's slow "Grave Lullaby" cue (content wave 2;
 ## MenuThemeData.EPILOGUE_VARIANT, rendered the first time the epilogue plays).
 const MUSIC_EPILOGUE: StringName = &"epilogue"
@@ -81,6 +92,11 @@ const BUS_MUSIC: StringName = &"Music"
 const BUS_SFX: StringName = &"SFX"
 ## Seed base for the synth RNGs (sound i uses SYNTH_SEED + i).
 const SYNTH_SEED: int = 9001
+## Fixed synth seed of each score loop (SoundData.SCORES id -> seed); the tide
+## keeps the SYNTH_SEED - 2 it always had.
+const SCORE_SEEDS := {"tide": SYNTH_SEED - 2, "iron": SYNTH_SEED - 3}
+## Seed base of the lazily rendered sound packs (pack sound i uses PACK_SEED + i).
+const PACK_SEED: int = SYNTH_SEED + 5000
 ## A card_select within this many ms replaces the generic ui_confirm click.
 const CONFIRM_SUPPRESS_MSEC: int = 120  # TUNING (not in GDD)
 ## Sounds that replace the generic ui_confirm click of the same press when
@@ -156,22 +172,42 @@ var _run_gain: float = 0.0
 var _run_target: float = 0.0
 ## Gain change per real second of the in-run player's current fade.
 var _run_rate: float = 1.0
-## Looping Act II run-loop player ("Below the Tide") on the Music bus.
-var _tide_music: AudioStreamPlayer
-## Linear fade gain (0..1) of the tide player (on top of MUSIC_DB).
-var _tide_gain: float = 0.0
-## Gain the tide player is fading toward (0 or 1).
-var _tide_target: float = 0.0
-## Gain change per real second of the tide player's current fade.
-var _tide_rate: float = 1.0
-## The tide loop's renderer while it works (null before the first Act II run
-## asks for it and once its stream is on the player).
-var _tide_synth: RunLoopSynth = null
-## WorkerThreadPool task id of the tide loop's synthesis (-1 = none; the Web
-## build steps it on the main thread instead).
-var _tide_task: int = -1
-## True when the tide loop renders in per-frame steps (Web).
-var _tide_incremental: bool = false
+## Score loops (the Act II and Act III run loops): SoundData.SCORES id ->
+## ScoreLoop, one per score, built in _ready().
+var _scores: Dictionary = {}
+## Lazily rendered pack sounds: id -> recipe (SoundData.EMPIRE_SOUNDS rows),
+## filled when a pack is asked for; play() looks a missing SOUNDS id up here.
+var _pack_defs: Dictionary = {}
+## Packs asked for so far (SoundData.SCORE_PACKS values -> true).
+var _packs: Dictionary = {}
+## Pack sound ids still to render (oldest first) and their seeds.
+var _pack_queue: Array[String] = []
+## Seed of each _pack_queue entry.
+var _pack_seeds: Array[int] = []
+## Desktop: pack renders finished by the worker (id -> stream; guarded by _mutex).
+var _pack_done: Dictionary = {}
+## Desktop: WorkerThreadPool task id of the pack render (-1 = none).
+var _pack_task: int = -1
+
+
+## One lazily rendered run loop (a SoundData.SCORES entry) and its player.
+class ScoreLoop:
+	extends RefCounted
+	## Looping player on the Music bus.
+	var player: AudioStreamPlayer
+	## Linear fade gain (0..1, on top of MUSIC_DB).
+	var gain: float = 0.0
+	## Gain it is fading toward (0 or 1).
+	var target: float = 0.0
+	## Gain change per real second of its current fade.
+	var rate: float = 1.0
+	## The renderer while it works (null before the first run asks for it and
+	## once its stream is on the player).
+	var synth: RunLoopSynth = null
+	## WorkerThreadPool task id of its synthesis (-1 = none; Web: per-frame steps).
+	var task: int = -1
+	## True when it renders in per-frame steps (Web).
+	var incremental: bool = false
 ## Linear fade gain (0..1) of the menu-theme player (on top of its MUSIC_DB).
 var _menu_gain: float = 0.0
 ## Gain the menu-theme player is fading toward (0 or 1).
@@ -234,10 +270,13 @@ func _ready() -> void:
 	_menu_music.bus = BUS_MUSIC
 	_menu_music.volume_db = MenuThemeData.MUSIC_DB
 	add_child(_menu_music)
-	_tide_music = AudioStreamPlayer.new()
-	_tide_music.bus = BUS_MUSIC
-	_tide_music.volume_db = MUSIC_DB
-	add_child(_tide_music)
+	for sid: String in SoundData.SCORES:
+		var sl := ScoreLoop.new()  # Act II / III run loop (rendered on first use).
+		sl.player = AudioStreamPlayer.new()
+		sl.player.bus = BUS_MUSIC
+		sl.player.volume_db = MUSIC_DB
+		add_child(sl.player)
+		_scores[sid] = sl
 	_epi_music = AudioStreamPlayer.new()  # Content wave 2: the epilogue cue (no new bus: GDD §15.0 "Web sound fix").
 	_epi_music.bus = BUS_MUSIC
 	_epi_music.volume_db = MenuThemeData.EPILOGUE_MUSIC_DB
@@ -279,12 +318,17 @@ func _exit_tree() -> void:
 		WorkerThreadPool.wait_for_task_completion(_menu_task)
 		_menu_task = -1
 	_menu_synth = null
-	if _tide_task >= 0:
-		WorkerThreadPool.wait_for_task_completion(_tide_task)
-		_tide_task = -1
-	_tide_synth = null
-	_tide_music.stop()
-	_tide_music.stream = null
+	for sid: String in _scores:
+		var sl: ScoreLoop = _scores[sid]
+		if sl.task >= 0:
+			WorkerThreadPool.wait_for_task_completion(sl.task)
+			sl.task = -1
+		sl.synth = null
+		sl.player.stop()
+		sl.player.stream = null
+	if _pack_task >= 0:
+		WorkerThreadPool.wait_for_task_completion(_pack_task)
+		_pack_task = -1
 	if _epi_task >= 0:
 		WorkerThreadPool.wait_for_task_completion(_epi_task)
 		_epi_task = -1
@@ -325,7 +369,8 @@ func _process(_delta: float) -> void:
 	if _startup_synth != null:
 		_step_startup_synth()
 	_update_menu_theme()
-	_update_tide()
+	_update_scores()
+	_update_packs()
 	_update_epilogue_cue()
 	# Music fades run on real time (delta follows Engine.time_scale).
 	var now := Time.get_ticks_usec()
@@ -333,7 +378,9 @@ func _process(_delta: float) -> void:
 	_last_usec = now
 	_run_gain = _fade_player(_music, MUSIC_DB, _run_gain, _run_target, _run_rate, real_dt)
 	_menu_gain = _fade_player(_menu_music, MenuThemeData.MUSIC_DB, _menu_gain, _menu_target, _menu_rate, real_dt)
-	_tide_gain = _fade_player(_tide_music, MUSIC_DB, _tide_gain, _tide_target, _tide_rate, real_dt)
+	for sid: String in _scores:
+		var sl: ScoreLoop = _scores[sid]
+		sl.gain = _fade_player(sl.player, MUSIC_DB, sl.gain, sl.target, sl.rate, real_dt)
 	_epi_gain = _fade_player(_epi_music, MenuThemeData.EPILOGUE_MUSIC_DB, _epi_gain, _epi_target, _epi_rate, real_dt)
 
 
@@ -359,8 +406,9 @@ func _step_startup_synth() -> void:
 
 
 ## Switches the music to `mode`: MUSIC_MENU (the main menu theme, rendered
-## on first use), MUSIC_RUN (the in-run loop) or MUSIC_TIDE (the Act II loop,
-## rendered on first use; it fades in once it exists). The other tracks fade
+## on first use), MUSIC_RUN (the in-run loop) or a score loop (MUSIC_TIDE,
+## the Act II loop, or MUSIC_IRON, the Act III one: rendered on first use; it
+## fades in once it exists; a score's sound pack is asked for with it). The other tracks fade
 ## out and stop; the asked one starts from its beginning (unless it was still
 ## fading out, then it just fades back in). Called by Main when the menu is
 ## shown and when a run starts (run_mode_for() picks the run's loop); asking
@@ -380,7 +428,8 @@ func play_music(mode: StringName) -> void:
 		_menu_target = 0.0
 		_menu_rate = 1.0 / MenuThemeData.EPILOGUE_FADE_IN
 		_run_target = 0.0
-		_tide_target = 0.0
+		for sid: String in _scores:
+			(_scores[sid] as ScoreLoop).target = 0.0
 		return
 	if mode == MUSIC_MENU:
 		_start_menu_theme()
@@ -388,58 +437,123 @@ func play_music(mode: StringName) -> void:
 		_menu_rate = 1.0 / MenuThemeData.FADE_IN
 		_run_target = 0.0
 		_run_rate = 1.0 / MenuThemeData.RUN_FADE_OUT
-		_tide_target = 0.0
-		_tide_rate = 1.0 / MenuThemeData.RUN_FADE_OUT
+		for sid: String in _scores:
+			var sl: ScoreLoop = _scores[sid]
+			sl.target = 0.0
+			sl.rate = 1.0 / MenuThemeData.RUN_FADE_OUT
 	else:
-		var tide := mode == MUSIC_TIDE  # The Act II loop instead of Act I's.
-		if tide:
-			_start_tide()
-		_run_target = 0.0 if tide else 1.0
-		_run_rate = 1.0 / (MenuThemeData.RUN_FADE_OUT if tide else MUSIC_FADE_IN)
-		_tide_target = 1.0 if tide else 0.0
-		_tide_rate = 1.0 / (MUSIC_FADE_IN if tide else MenuThemeData.RUN_FADE_OUT)
+		var score := String(mode) if _scores.has(String(mode)) else ""  # A score loop instead of Act I's ("" = none).
+		if score != "":
+			_start_score(score)
+			prepare_pack(String(SoundData.SCORE_PACKS.get(score, "")))
+		_run_target = 0.0 if score != "" else 1.0
+		_run_rate = 1.0 / (MenuThemeData.RUN_FADE_OUT if score != "" else MUSIC_FADE_IN)
+		for sid: String in _scores:
+			var sl: ScoreLoop = _scores[sid]
+			var on := sid == score  # This score is the run's loop.
+			sl.target = 1.0 if on else 0.0
+			sl.rate = 1.0 / (MUSIC_FADE_IN if on else MenuThemeData.RUN_FADE_OUT)
 		_menu_target = 0.0
 		_menu_rate = 1.0 / MenuThemeData.FADE_OUT
 
 
-## The run-loop mode of stage `stage_id`: MUSIC_TIDE for a stage whose STAGE
-## has "music": "tide" (Act II), MUSIC_RUN otherwise.
+## The run-loop mode of stage `stage_id`: its STAGE "music" id when that is a
+## SoundData.SCORES entry (MUSIC_TIDE on Act II, MUSIC_IRON on Act III),
+## MUSIC_RUN otherwise.
 static func run_mode_for(stage_id: String) -> StringName:
-	if StageRegistry.STAGES.has(stage_id) and String((StageRegistry.STAGES[stage_id] as Dictionary).get("music", "")) == "tide":
-		return MUSIC_TIDE
+	if StageRegistry.STAGES.has(stage_id):
+		var music := String((StageRegistry.STAGES[stage_id] as Dictionary).get("music", ""))  # Its run loop id.
+		if SoundData.SCORES.has(music):
+			return StringName(music)
 	return MUSIC_RUN
 
 
-## Creates the tide loop's renderer (first call only; never headless): a
+## Creates score loop `sid`'s renderer (first call only; never headless): a
 ## worker task on desktop, per-frame steps on the Web.
-func _start_tide() -> void:
-	if _silent or _tide_synth != null or _tide_music.stream != null:
+func _start_score(sid: String) -> void:
+	var sl: ScoreLoop = _scores[sid]
+	if _silent or sl.synth != null or sl.player.stream != null:
 		return
-	_tide_synth = RunLoopSynth.new(SYNTH_SEED - 2, SoundData.TIDE_SCORE)
-	_tide_incremental = OS.has_feature("web")
-	if not _tide_incremental:
-		_tide_task = WorkerThreadPool.add_task(_tide_synth.render_all, true, "Necropathy tide loop synth")
+	sl.synth = RunLoopSynth.new(int(SCORE_SEEDS[sid]), SoundData.SCORES[sid])
+	sl.incremental = OS.has_feature("web")
+	if not sl.incremental:
+		sl.task = WorkerThreadPool.add_task(sl.synth.render_all, true, "Necropathy %s loop synth" % sid)
 
 
-## Advances the tide loop's synthesis (Web: one frame's budget, after the
-## startup synthesis is done) and hands the finished loop to its player.
-func _update_tide() -> void:
-	if _tide_synth == null:
+## Advances every score loop's synthesis (Web: one frame's budget, after the
+## startup synthesis is done) and hands a finished loop to its player.
+func _update_scores() -> void:
+	for sid: String in _scores:
+		var sl: ScoreLoop = _scores[sid]
+		if sl.synth == null:
+			continue
+		if sl.incremental:
+			if _startup_synth != null:
+				continue  # The sounds and the Act I loop first.
+			if not sl.synth.step(int(SoundData.WEB_SYNTH_BUDGET_MS * 1000.0)):
+				continue
+		else:
+			if not WorkerThreadPool.is_task_completed(sl.task):
+				continue
+			WorkerThreadPool.wait_for_task_completion(sl.task)
+			sl.task = -1
+		sl.player.stream = sl.synth.stream
+		print("[audio] %s loop: %.0f ms compute (%s)" % [sid, float(sl.synth.compute_usec) / 1000.0,
+			"per-frame steps" if sl.incremental else "worker thread"])
+		sl.synth = null
+
+
+## Asks for sound pack `pack` (SoundData.SCORE_PACKS value; "" = none; first
+## call only): its sounds render on a worker thread on desktop, one per frame on
+## the Web (after the startup synthesis), with seeds PACK_SEED + i. Each becomes
+## playable as soon as it exists (play() skips it until then).
+func prepare_pack(pack: String) -> void:
+	if pack == "" or _packs.has(pack):
 		return
-	if _tide_incremental:
-		if _startup_synth != null:
-			return  # The sounds and the Act I loop first.
-		if not _tide_synth.step(int(SoundData.WEB_SYNTH_BUDGET_MS * 1000.0)):
+	_packs[pack] = true
+	var defs: Dictionary = SoundData.EMPIRE_SOUNDS if pack == "empire" else {}  # The pack's recipes.
+	for id: String in defs:
+		_pack_defs[id] = defs[id]
+		_pack_queue.append(id)
+		_pack_seeds.append(PACK_SEED + _pack_queue.size() - 1)
+	if not OS.has_feature("web") and not _pack_queue.is_empty() and _pack_task < 0:
+		_pack_task = WorkerThreadPool.add_task(_render_pack, true, "Necropathy sound pack synth")
+
+
+## Worker thread (desktop): renders every queued pack sound into _pack_done.
+func _render_pack() -> void:
+	_mutex.lock()
+	var ids := _pack_queue.duplicate()  # What to render.
+	var seeds := _pack_seeds.duplicate()  # Their seeds.
+	_mutex.unlock()
+	for k in ids.size():
+		var stream := Synth.render_sound(_pack_defs[ids[k]], seeds[k])
+		_mutex.lock()
+		_pack_done[ids[k]] = stream
+		_mutex.unlock()
+
+
+## Takes the finished pack sounds (desktop: from the worker; Web: renders one
+## queued sound this frame once the startup synthesis is done).
+func _update_packs() -> void:
+	if _pack_task >= 0:
+		if not WorkerThreadPool.is_task_completed(_pack_task):
 			return
-	else:
-		if not WorkerThreadPool.is_task_completed(_tide_task):
-			return
-		WorkerThreadPool.wait_for_task_completion(_tide_task)
-		_tide_task = -1
-	_tide_music.stream = _tide_synth.stream
-	print("[audio] tide loop: %.0f ms compute (%s)" % [float(_tide_synth.compute_usec) / 1000.0,
-		"per-frame steps" if _tide_incremental else "worker thread"])
-	_tide_synth = null
+		WorkerThreadPool.wait_for_task_completion(_pack_task)
+		_pack_task = -1
+		_mutex.lock()
+		for id: String in _pack_done:
+			_streams[id] = _pack_done[id]
+		_pack_done.clear()
+		_pack_queue.clear()
+		_pack_seeds.clear()
+		_mutex.unlock()
+		return
+	if _pack_queue.is_empty() or _startup_synth != null:
+		return
+	var id: String = _pack_queue.pop_front()  # Web: one sound per frame.
+	var sd: int = _pack_seeds.pop_front()
+	_streams[id] = Synth.render_sound(_pack_defs[id], sd)
 
 
 ## Creates the epilogue cue's renderer (first call only; never headless): a
@@ -591,7 +705,7 @@ func _setup_buses() -> void:
 func play(id: String, pos: Vector2 = Vector2.INF, pitch: float = 1.0) -> void:
 	if not _streams.has(id):
 		return  # Not rendered yet (or not a sound).
-	var def: Dictionary = SoundData.SOUNDS[id]
+	var def: Dictionary = SoundData.SOUNDS[id] if SoundData.SOUNDS.has(id) else _pack_defs[id]  # Bank or pack recipe.
 	var now := Time.get_ticks_msec()
 	if now - int(_last_play.get(id, -100000)) < int(def["min_interval"]):
 		plays_dropped += 1

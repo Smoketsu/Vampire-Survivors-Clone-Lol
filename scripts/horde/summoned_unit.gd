@@ -1173,7 +1173,9 @@ func _release_attack() -> void:
 				if GravebowKit.is_gravebow(self):
 					GravebowKit.release_volley(self)  # Piercing, splitting, cursing arrows.
 				else:
-					game.projectiles.fire_friendly(Projectile.Kind.ARROW, position, target, damage, projectile_speed, pierce, dmg_source)
+					# Act III: a Grave Gunner fires soul-fire rifle rounds (EmpireRulesData.STEEL).
+					var pk := Projectile.Kind.SOUL_ROUND if dmg_source == EmpireRulesData.STEEL["tag"] else Projectile.Kind.ARROW
+					game.projectiles.fire_friendly(pk, position, target, damage, projectile_speed, pierce, dmg_source)
 		"aoe":
 			game.projectiles.fire_aoe(position, cast_point, damage, projectile_speed, splash_radius, target if _target_valid() else null, dmg_source)
 		"heal":

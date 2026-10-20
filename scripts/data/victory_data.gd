@@ -27,6 +27,10 @@ const STAGES := {
 	"harbour": {"title": "The Tide Turns", "boss_line": "Abbot Merrow sinks with his sermon."},  # GDD §15.0 (content wave 2)
 	"archive": {"title": "The Last Page Burns", "boss_line": "The Archivist's book is closed."},  # GDD §15.0 (content wave 2)
 	"spire": {"title": "The Dead God Serves", "boss_line": "Vhal'Neth kneels."},  # GDD §15.0 (content wave 2)
+	# --- Act III: the Electronic Empire (placeholders until each stage is built) ---
+	"wastes": {"title": "Signal Lost", "boss_line": "Kestrel's last pixel goes dark."},  # TUNING (not in GDD) Act III placeholder
+	"assembly": {"title": "The Line Stops", "boss_line": "The Motherboard crashes for good."},  # TUNING (not in GDD) Act III placeholder
+	"citadel": {"title": "Steel Bows to Bone", "boss_line": "Deus Ex Machina falls, and Varn with it."},  # TUNING (not in GDD) Act III placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -35,6 +39,7 @@ const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
 const ACT_LINES := {
 	1: "You outlasted the Covenant. The Reckoning claimed you at last.",  # TUNING (not in GDD; the old shared subtitle)
 	2: "You outlasted the Eye. The Reckoning claimed you at last.",  # TUNING (not in GDD)
+	3: "You outlasted the Empire. The Purge Protocol deleted you at last.",  # TUNING (not in GDD) Act III
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

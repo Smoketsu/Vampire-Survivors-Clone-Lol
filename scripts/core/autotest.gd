@@ -952,6 +952,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.enemies.boss.danger_push(pos)
 	if game.enemies.archive_haz != null:
 		danger += game.enemies.archive_haz.danger_push(pos)  # Act II: pages, spore clouds, ink (null elsewhere).
+	if game.empire != null:
+		danger += game.empire.danger_push(pos)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
 	return danger
 
 
@@ -1038,6 +1040,8 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.boss.danger_push(p)
 	if game.enemies.archive_haz != null:
 		danger += game.enemies.archive_haz.danger_push(p)  # Act II: pages, spore clouds, ink (null elsewhere).
+	if game.empire != null:
+		danger += game.empire.danger_push(p)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1148,6 +1152,7 @@ func finish(summary: Dictionary) -> void:
 		print("[autotest] dread: %s" % game.dread.summary_line())  # Act II Dread (DreadMeter; Act II stages only).
 	if game.claims != null:
 		print("[autotest] claims: %s" % game.claims.summary_line())  # Act II Claims (EyeClaims; Act II stages only).
+	EmpireReport.print_lines(game, st_all)  # Act III: line of fire, lock-on, steel, purge protocol, kinds, the stage (only when the Empire ran).
 	print("[autotest] gravebow / bone colossus: %s | %s" % [GravebowKit.summary_line(st_all), ColossusKit.summary_line(st_all)])
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())
 	print("[autotest] later spells: %s" % ab.spells.later_summary_line())

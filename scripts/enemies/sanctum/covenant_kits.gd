@@ -10,15 +10,19 @@
 ## Any other id is an ANCIENT EYE kit (Act II): its script is
 ## EYE_KIT_DIR + "<id>_kit.gd" (e.g. "thrall" -> EyeThrallKit), loaded by
 ## name so each Act II stage adds its kits as new files without touching
-## this registry. Loading is cached per id.
+## this registry. Loading is cached per id. An id with no Eye kit is an
+## ELECTRONIC EMPIRE kit (Act III): EMPIRE_KIT_DIR + "<id>_kit.gd" (e.g.
+## "trooper" -> TrooperKit), loaded the same way.
 ## Enemy only ever talks to this file and the CovenantKit base class.
 class_name CovenantKits
 extends RefCounted
 
 ## Folder of the Ancient Eye's kit scripts ("<id>_kit.gd", each a CovenantKit).
 const EYE_KIT_DIR: String = "res://scripts/enemies/eye/"
+## Folder of the Electronic Empire's kit scripts ("<id>_kit.gd", each a CovenantKit; Act III).
+const EMPIRE_KIT_DIR: String = "res://scripts/enemies/empire/"
 
-## Eye kit id -> its loaded Script (null when the file is missing), filled on first use.
+## Eye / Empire kit id -> its loaded Script (null when no file exists), filled on first use.
 static var _eye_scripts: Dictionary = {}
 
 
@@ -53,11 +57,14 @@ static func for_enemy(current: CovenantKit, id: String) -> CovenantKit:
 	return k
 
 
-## A new instance of Ancient Eye kit `id` (EYE_KIT_DIR + "<id>_kit.gd"), or
+## A new instance of Ancient Eye kit `id` (EYE_KIT_DIR + "<id>_kit.gd"), else
+## of Electronic Empire kit `id` (EMPIRE_KIT_DIR + "<id>_kit.gd", Act III), or
 ## null when no such script exists.
 static func _eye_kit(id: String) -> CovenantKit:
 	if not _eye_scripts.has(id):
 		var path := EYE_KIT_DIR + id + "_kit.gd"  # Expected script location.
+		if not ResourceLoader.exists(path):
+			path = EMPIRE_KIT_DIR + id + "_kit.gd"  # Act III: an Empire kit.
 		_eye_scripts[id] = load(path) if ResourceLoader.exists(path) else null
 	var scr: Script = _eye_scripts[id]
 	if scr == null:

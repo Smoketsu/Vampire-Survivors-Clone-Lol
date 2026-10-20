@@ -11,7 +11,9 @@
 ## When a branded enemy dies (to anything), a temporary Risen skeleton
 ## climbs out where it fell (HordeDirector.spawn_temporary(), the Lich
 ## raise path: outside the army cap, never replaced; its own cap is the
-## `risen_cap` stat; Crimson March structures have no body to raise).
+## `risen_cap` stat; Crimson March structures have no body to raise, nor do
+## Act III machines: Enemy.leaves_corpse(); a branded cyborg rises as a Grave
+## Gunner through HordeDirector.raise_corpse()).
 ## Evolved into Doom Brand (EvolutionData "doom_brand", detected by the
 ## "detonation" key): three brands per cast, and a branded death also
 ## detonates for `detonation` x the tick damage within `radius` px.
@@ -47,6 +49,9 @@ var _timer: float = 0.5
 var _risen: Array = []
 ## World positions of branded deaths waiting for their Risen (next step).
 var _pending_risen: PackedVector2Array = PackedVector2Array()
+## Act III: for each of _pending_risen, true when that foe was a cyborg (it
+## rises as a Grave Gunner, HordeDirector.raise_corpse()); a machine is never queued.
+var _pending_gunner: Array[bool] = []
 ## Pending Doom Brand detonations: Vector3(x, y, damage), released next step.
 var _pending_bursts: Array[Vector3] = []
 ## Candidate [score, enemy] pairs of a cast.
@@ -177,8 +182,9 @@ func on_enemy_killed(e: Enemy) -> void:
 		return
 	b.time_left = 0.0  # Burned out with its bearer.
 	game.stat_add("death_mark_branded_deaths", 1.0)
-	if not e.is_structure:
+	if e.leaves_corpse():  # Not a structure, nor an Act III machine (Steel has no soul).
 		_pending_risen.append(e.position)
+		_pending_gunner.append(e.rises_as_gunner())  # Act III: a cyborg rises as a Grave Gunner.
 	if b.doom:
 		var stats := game.abilities.spell_stats("death_mark")  # Effective Doom Brand stats.
 		_pending_bursts.append(Vector3(e.position.x, e.position.y, b.damage * float(stats.get("detonation", 0.0))))
@@ -187,16 +193,16 @@ func on_enemy_killed(e: Enemy) -> void:
 ## Raises the queued Risen, up to `cap` alive at once (the rest are skipped).
 func _raise_pending(cap: int) -> void:
 	var pts := _pending_risen.duplicate()  # Raising never queues more, but stay safe.
+	var gunners := _pending_gunner.duplicate()  # Act III: which of them were cyborgs.
 	_pending_risen.clear()
-	for pos: Vector2 in pts:
+	_pending_gunner.clear()
+	for k in pts.size():
+		var pos: Vector2 = pts[k]
 		if _risen_alive() >= cap:
 			game.stat_add("death_mark_risen_capped", 1.0)
 			continue
-		var u := game.horde.spawn_temporary(GraveSpellData.DEATH_MARK_RISEN_CLASS, pos, GraveSpellData.DEATH_MARK_RISEN_LIFE,
-				GraveSpellData.DEATH_MARK_RISEN_HP, GraveSpellData.DEATH_MARK_RISEN_DAMAGE)
-		u.dmg_source = "death_mark_risen"
-		u.glyph_kind = "risen"
-		u.queue_redraw()
+		var u := game.horde.raise_corpse(GraveSpellData.DEATH_MARK_RISEN_CLASS, pos, GraveSpellData.DEATH_MARK_RISEN_LIFE,
+				GraveSpellData.DEATH_MARK_RISEN_HP, GraveSpellData.DEATH_MARK_RISEN_DAMAGE, "death_mark_risen", "risen", bool(gunners[k]))
 		_risen.append([u, u.generation])
 		game.effects.ring(u.position, 22.0, Palette.VIOLET, 0.5)
 		game.stat_add("death_mark_risen", 1.0)

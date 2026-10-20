@@ -68,6 +68,24 @@ const EYE_BIOLUME := Color(0.690, 0.298, 0.753)
 ## Bioluminescent glow core ("biolume_glow").
 const EYE_BIOLUME_GLOW := Color(0.941, 0.612, 0.949)
 
+# --- Hostile (the Electronic Empire, Act III) -------------------------------------------
+
+## Empire chrome in shadow (tools/palette.json "chrome_dark"): joints, gun metal.
+const EMPIRE_CHROME_DARK := Color(0.173, 0.227, 0.314)
+## Empire chrome ("chrome"): machine bodies, helmets, plates; bluer than the undead grey.
+const EMPIRE_CHROME := Color(0.357, 0.451, 0.592)
+## Lit chrome ("chrome_light"): top faces and visors.
+const EMPIRE_CHROME_LIGHT := Color(0.616, 0.714, 0.839)
+## Signal light housings in shadow ("signal_dark").
+const EMPIRE_SIGNAL_DARK := Color(0.588, 0.141, 0.063)
+## Warning red ("signal_red"): Lock-On lasers, sensor eyes, alarms (more orange than
+## the Covenant crimson).
+const EMPIRE_SIGNAL_RED := Color(0.878, 0.224, 0.118)
+## Hard amber ("signal_amber"): running lights, screens, tracer rounds.
+const EMPIRE_SIGNAL_AMBER := Color(1.0, 0.682, 0.102)
+## White-hot core of the Empire's lights and lasers ("signal_glow").
+const EMPIRE_SIGNAL_GLOW := Color(1.0, 0.922, 0.659)
+
 # --- World / UI ---------------------------------------------------------------
 
 ## Graveyard soil base colour.

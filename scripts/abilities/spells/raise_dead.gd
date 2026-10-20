@@ -47,8 +47,8 @@ func _cast(stats: Dictionary) -> bool:
 	game.enemy_grid.query(p, reach, _tmp)
 	_cands.clear()
 	for e: Enemy in _tmp:
-		if not e.active or e.is_structure:
-			continue
+		if not e.active or not e.leaves_corpse():
+			continue  # No grave to claw out of beside a structure or an Act III machine (Steel has no soul).
 		var d := p.distance_to(e.position)
 		if d <= reach:
 			_cands.append([d, e])

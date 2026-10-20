@@ -106,6 +106,8 @@ marked * are borrowed from another ramp. Numbers are OKLab lightness (0-1). A la
 | **gold** | ink_warm* `#1C110B` 0.19 · brown_light* `#8C6040` 0.53 · gold `#E0A92E` 0.77 · gold_light `#FFDC66` 0.90 · holy_white `#FFFAE8` 0.98 | Covenant gold (elites, Sanctum kinds, bosses), halos, holy white glow |
 | **skin** | ink_warm* `#1C110B` 0.19 · brown_light* `#8C6040` 0.53 · skin `#E0A882` 0.77 · bone* `#E8E1C8` 0.91 | Covenant faces and hands |
 | **flame** | ink_red* `#26070C` 0.19 · crimson* `#C71A29` 0.53 · flame `#FF8C26` 0.75 · gold_light* `#FFDC66` 0.90 | fire and embers |
+| **chrome** (Act III) | ink_chrome `#0B1220` 0.18 · chrome_dark `#2C3A50` 0.35 · chrome `#5B7397` 0.55 · chrome_light `#9DB6D6` 0.77 · chrome_glint `#E2EEFF` 0.95 | the Electronic Empire's machines and cyborg plating (bluer, more polished than the undead grey) |
+| **signal** (Act III) | ink_signal `#240A04` 0.19 · signal_dark `#962410` 0.44 · signal_red `#E0391E` 0.60 · signal_amber `#FFAE1A` 0.81 · signal_glow `#FFEBA8` 0.94 | the Empire's lights, lasers, visors, screens and tracers (more orange than the Covenant crimson) |
 | **floor** | floor_soil `#161A1C` 0.21 · floor_earth `#221C17` 0.23 · floor_grass `#1A2218` 0.24 · floor_ochre `#2E2615` 0.27 · floor_slate `#26272A` 0.27 · floor_ash `#2A2724` 0.28 · floor_dirt `#30261B` 0.28 · floor_moss `#26301F` 0.29 · floor_marble `#2D2E33` 0.30 · floor_stone `#312E2B` 0.30 | ground colours of the three stages (tiles only, never sprites); the seven middle shades came with the zone floor tiles |
 
 `prepare_sprite.py` limits each folder to its faction's ramps (player: everything but skin and warm
@@ -1658,6 +1660,39 @@ then hand-pixelled on the palette. 3 images, about $0.10.
 Code-drawn on purpose: the Bulwark's ring of bone stakes around a planted Golem and its faint taunt
 reach (`GolemGlyphs.draw_bulwark_stakes()`), the absorb beam and the Titan's collapse wall (the Bone
 Wall spell's own segments).
+
+### Act III: the Electronic Empire, the shared kinds (foundation, Oct 2026)
+
+The Empire's style for the stage agents (GDD §15.0 "Act III foundation (phase 1)"): **chrome bodies**
+(the new `chrome` ramp: cold steel greys with a blue cast, bluer and more polished than the undead's
+`grey`), **signal lights** (the new `signal` ramp: hard amber to warning red, for visors, sensor eyes,
+lasers and screens), hard clean machine-made silhouettes with big flat panels and no wires or bolts;
+a cyborg keeps a little `skin` so its face reads. Never the player's violet, the undead's bone or
+soul teal. `prepare_sprite.py` folder `empire/`: ramps chrome, signal, skin, brown.
+
+Generated with `tools/gen_image.py` (the template above; `--ref` the Covenant Recruit's source and the
+Deep Kin's, then the Line Trooper's own source for the other two). Pipeline that worked: drop every
+alpha below 230 (the API's dark glow), `tools/pixelate_source.py` onto the art grid, then
+`prepare_sprite.py --no-levels --no-prune --ink-l 0.15 --no-cleanup` (with levels the signal ramp's
+amber visor snapped to warning red; with the default ink cut the gun metal sank into outline ink).
+Hand touch-ups on the palette (scripted, deterministic): the AI's orange-brown glow edges set to the
+signal ramp (the Trooper's visor, shoulder and rifle lights; the Drone's eye ring, antenna and zapper);
+the Trooper's interior `chrome_dark` lifted to `chrome` and the Spotter's chrome shifted one shade up
+(both failed the floor-lightness check at L 0.35). Walk / glide strips by `walk_cycle.py` (rigs under
+`# --- Act III ---`). 4 API images (one Spotter redo for a lighter coat and a bigger eye), about $0.16.
+**For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `empire/scout_drone` | Scout Drone (fodder, a machine): a round chrome disc body, one big amber camera eye, two flat rotor discs on stubby arms, an antenna with a red light, a two-pronged zapper | 50x30 | glide (`_walk`: robe rig, the body bobs 1 px over the zapper) |
+| `empire/line_trooper` | Line Trooper (soldier, a cyborg): rounded chrome helmet with one wide amber visor band, the pale chin under it, big chrome shoulder pads, a red shoulder light, a boxy rifle levelled forward with an amber side light | 48x50 | legs walk (`_walk`, hip 27; the rifle rides with the body) |
+| `empire/spotter` | Spotter (elite, a cyborg): a tall coated marksman, round chrome dome with one big red sensor eye and an antenna, chrome forearms and shins, a very long rail rifle with two amber coils | 62x56 | legs walk (`_walk`, hip 41: only the chrome legs step under the coat) |
+| `summons/grave_gunner` | Grave Gunner (a raised Line Trooper, the undead's now): the Trooper's still recoloured colour for colour: the chrome plate to bone (bone_shade / bone_mid / bone, the deepest shade undead grey_dark), the lights to soul teal, the face to bone. A first pass mapped chrome to the undead grey and read as a Line Trooper inside the army, so the plate went to bone | 48x50 | derived by a script from `empire/line_trooper` (no generation); legs walk (the Trooper's rig) |
+
+Code-drawn on purpose: the Empire's shots (amber tracers, the warning-red rail slug, arcing shells),
+the Lock-On lines and reticles, the orbital strike circles, the Spotter's red glow, the Kill-Drone
+(`EmpireGlyphs`, red-eyed) and the stubs' placeholder floors and obstacles; phase 2 brings the
+stages' own art.
 
 ### Chest beacon (owner request, Oct 2026)
 

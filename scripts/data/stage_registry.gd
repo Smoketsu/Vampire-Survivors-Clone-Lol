@@ -1,7 +1,9 @@
 ## StageRegistry — the campaign's stages (GDD §8 "Stages and Wave Timelines",
 ## §9.3 "Graveyard -> Crimson March -> Sanctum"; Act II, GDD §15.0 "Act II: the
 ## Ancient Eye": Gullhaven Harbour -> the Hollow Archive -> Ul-Thalos, opened
-## by slaying Seraphine). One entry per stage, each
+## by slaying Seraphine; Act III, GDD §15.0 "Act III foundation (phase 1)": the
+## Scrap Wastes -> the Assembly Halls -> the Iron Citadel, opened by slaying
+## Vhal'Neth). One entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
 ## in the game hard-codes a stage.
@@ -31,8 +33,11 @@
 ##   consecration       — StageDirector desecration events ({} = none).
 ##   crypt_defender     — StageDirector Crypt Defender ({} = none).
 ##   arena              — obstacle layout at run start (Arena).
-##   ground             — "graveyard" (Ground), "march" (MarchGround) or
-##                        "sanctum" (SanctumGround).
+##   ground             — "graveyard" (Ground), "march" (MarchGround),
+##                        "sanctum" (SanctumGround), the Act II floors
+##                        ("harbour", "archive", "spire") or "empire"
+##                        (EmpireGround, the Act III placeholder floor drawn
+##                        from the STAGE's "floor" dictionary).
 ##   enemy_hp_mult / enemy_damage_mult — stage multipliers on the shared
 ##                        enemy time scaling (1.0 = Graveyard baseline).
 ##   enemy_mult_from    — elapsed game seconds from which those two
@@ -44,7 +49,7 @@
 ##                        Sanctum uses it for its battle zones only).
 ## Optional keys (absent = off):
 ##   act                — campaign act (1 = the Crimson Covenant, 2 = the
-##                        Ancient Eye; absent = 1). The stage select shows one
+##                        Ancient Eye, 3 = the Electronic Empire; absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
 ##   playable           — false hides a registered stage from the stage select
@@ -54,7 +59,14 @@
 ##   claims             — true: the Ancient Eye claims fallen summons as
 ##                        Drowned Thralls (EyeClaims, Act II).
 ##   music              — run loop id ("" / absent = the Act I loop; "tide" =
-##                        "Below the Tide", RunLoopSynth).
+##                        "Below the Tide", "iron" = "Iron Requiem" (Act III);
+##                        SoundData.SCORES, RunLoopSynth).
+##   empire             — true: the Electronic Empire's shared rules (Act III,
+##                        EmpireRules as Game.empire: Line of Fire, Lock-On,
+##                        Steel has no soul, the Purge Protocol's orbital
+##                        strikes when the RECKONING has an "orbital" key).
+##   floor              — EmpireGround look of the "empire" ground (style,
+##                        base, line, accent, trim; Act III placeholder).
 ##   sanctum            — SanctumDirector config (SanctumStage.SANCTUM:
 ##                        chambers, altars, corruption).
 ##   kind_aliases       — {alias: real kind}: short kind names the stage's
@@ -74,7 +86,9 @@ class_name StageRegistry
 extends RefCounted
 
 ## Stages in campaign order (stage select order, unlock chain).
-const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "spire"]
+const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "spire",
+	# --- Act III: the Electronic Empire ---
+	"wastes", "assembly", "citadel"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -85,12 +99,17 @@ const STAGES := {
 	"harbour": HarbourStage.STAGE,
 	"archive": ArchiveStage.STAGE,
 	"spire": SpireStage.STAGE,
+	# --- Act III: the Electronic Empire ---
+	"wastes": WastesStage.STAGE,
+	"assembly": AssemblyStage.STAGE,
+	"citadel": CitadelStage.STAGE,
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
 const ACTS := {
 	1: {"name": "Act I", "subtitle": "The Crimson Covenant"},
 	2: {"name": "Act II", "subtitle": "The Ancient Eye"},
+	3: {"name": "Act III", "subtitle": "The Electronic Empire"},
 }
 
 
@@ -128,4 +147,9 @@ const BOSS_ARRIVALS := {
 	"archivist": ArchivistData.ARRIVAL,
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"vhalneth": VhalnethData.ARRIVAL,
+	# --- Act III: the Electronic Empire (stubs: each stage's BOSS until phase 2
+	# gives the boss its own data file) ---
+	"kestrel": WastesStage.BOSS,
+	"motherboard": AssemblyStage.BOSS,
+	"deus_ex_machina": CitadelStage.BOSS,
 }

@@ -81,6 +81,8 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 			return SeraphGlyphs.draw_summon(ci, kind, o, r, flash)  # Act II: the Fallen Seraph.
 		"bone_golem", "ossuary_titan":
 			return GolemGlyphs.draw_summon(ci, kind, o, r, flash)  # Content wave 2: the Bone Golem.
+		"grave_gunner":
+			EmpireGlyphs.draw_gunner(ci, o, r, flash)  # Act III: a cyborg raised with its rifle.
 		_:
 			return SpireGlyphs.draw_summon(ci, kind, o, r, flash)  # Act II: Ul-Thalos summons (false when unknown).
 	return true

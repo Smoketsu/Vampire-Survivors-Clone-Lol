@@ -179,6 +179,10 @@ FACTION_RAMPS = {
     # bioluminescence, plus cloth, wet stone, skin and rot; never the player's
     # violet or the Covenant's crimson and gold.
     "eye": ["bone", "drowned", "biolume", "grey", "brown", "skin", "moss"],
+    # The Electronic Empire (Act III, assets/sprites/empire/): chrome bodies and
+    # signal-amber / warning-red lights, plus the cyborgs' faces (skin) and
+    # webbing (brown); never the player's violet, the undead's bone or soul teal.
+    "empire": ["chrome", "signal", "skin", "brown"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
 # blue of the Mage and Lich and the icy cyan of the frost summons never mix (GDD 15.0 art

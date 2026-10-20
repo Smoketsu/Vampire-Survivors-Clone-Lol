@@ -273,11 +273,13 @@ func _transform_fx(u: SummonedUnit) -> void:
 ## Kill hook (CombatResolver.damage_enemy, before the enemy is removed): a
 ## kill by a Lich ("lich" damage) adds the raise chance to the accumulator;
 ## at 1.0 a temporary skeleton rises where the enemy fell (base class kit,
-## tagged "lich_risen"), unless max_alive of them already stand.
+## tagged "lich_risen"), unless max_alive of them already stand. Act III: a
+## machine leaves no corpse (Enemy.leaves_corpse(), also false for a
+## structure) and a cyborg rises as a Grave Gunner (HordeDirector.raise_corpse()).
 func on_enemy_killed(e: Enemy, source: String) -> void:
 	winter.on_enemy_killed(e, source)  # Winter Revenant shatter (no-op unless evolved).
-	if source != "lich" or e.is_structure:
-		return  # Not a Lich kill, or a Crimson March structure (no body to raise).
+	if source != "lich" or not e.leaves_corpse():
+		return  # Not a Lich kill, or no body to raise (a structure, an Act III machine).
 	var raise: Dictionary = SummonEvolutionData.EVOLUTIONS["lich"]["raise"]
 	_raise_accum += float(raise["chance"])
 	if _raise_accum < 1.0:
@@ -287,11 +289,8 @@ func on_enemy_killed(e: Enemy, source: String) -> void:
 	if risen_alive() >= int(raise["max_alive"]):
 		game.stat_add("lich_raise_capped", 1.0)
 		return
-	var u := director.spawn_temporary(String(raise["class"]), e.position, float(raise["duration"]),
-			float(raise["hp_mult"]), float(raise["damage_mult"]))
-	u.dmg_source = "lich_risen"
-	u.glyph_kind = "risen"
-	u.queue_redraw()
+	var u := director.raise_corpse(String(raise["class"]), e.position, float(raise["duration"]),
+			float(raise["hp_mult"]), float(raise["damage_mult"]), "lich_risen", "risen", e.rises_as_gunner())
 	_risen.append([u, u.generation])
 	risen_total += 1
 	game.effects.ring(u.position, 22.0, Palette.VIOLET, 0.5)

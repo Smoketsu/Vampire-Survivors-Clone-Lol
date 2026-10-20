@@ -23,6 +23,16 @@
 ## wind_lp_hz, wind_swells, vibrato_hz, vibrato_depth, beat_seconds, and
 ## "toll" (a tolling bell instead of the heartbeat: {every, partials [[ratio,
 ## amp], ...], root_hz, dur, decay}).
+## Act III (SoundData.IRON_SCORE, "Iron Requiem") adds three optional keys, each
+## its own job, scheduled only when present (so every other score's job list,
+## and its samples, are unchanged):
+##   "pulse" — a filtered saw note every `step` s instead of the heartbeat
+##             ({step, hz, dur, amp, decay, lp0, lp1, accent_every, accent_amp}),
+##   "hits"  — a struck-metal clang every `every` s from `offset` (inharmonic
+##             `partials` [[ratio, amp], ...] over root_hz, plus a noise click),
+##   "arp"   — an arpeggio: one note every `step` s cycling up the current
+##             loop segment's `chords` entry ({step, dur, amp, decay, lp0, wave}).
+## Every note ends before the loop end, so the loop stays seamless.
 class_name RunLoopSynth
 extends RefCounted
 
@@ -150,7 +160,16 @@ func _init(rng_seed: int, score: Dictionary = {}) -> void:
 	# A chord job does about 3 voices' work per sample: a third of a chunk.
 	for c in chords.size():
 		_schedule(_job_chord.bind(c), 0, _win, maxi(1, chunk / 3))
-	_jobs.append(_job_toll if score.has("toll") else _job_heartbeat)
+	if score.has("toll"):
+		_jobs.append(_job_toll)
+	elif score.has("pulse"):
+		_jobs.append(_job_pulse)  # Act III: the pulsing low synth replaces the heartbeat.
+	else:
+		_jobs.append(_job_heartbeat)
+	if score.has("hits"):
+		_jobs.append(_job_hits)  # Act III: metallic hits.
+	if score.has("arp"):
+		_jobs.append(_job_arp)  # Act III: the cold arpeggio.
 	_schedule(_job_peak, 0, _n, chunk)
 	_jobs.append(_job_alloc)
 	_schedule(_job_encode, 0, _n, chunk)
@@ -260,6 +279,53 @@ func _job_toll() -> void:
 		for p: Array in t["partials"]:
 			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": root * float(p[0]), "start": float(b) * every,
 				"dur": minf(float(t["dur"]), every - 0.05), "amp": float(p[1]), "attack": 0.006, "decay": float(t["decay"])}, _rng)
+
+
+## Pulsing low synth (a score's "pulse", Act III): a filtered saw note every
+## `step` s, every `accent_every`-th one louder; the last ends before the loop end.
+func _job_pulse() -> void:
+	var p: Dictionary = _score["pulse"]
+	var step := float(p["step"])  # s between notes.
+	var dur := float(p["dur"])  # Note length (s).
+	var n := int((_loop_s - dur) / step) + 1  # Notes that fit in the loop.
+	var every := int(p.get("accent_every", 0))  # Notes per accent (0 = none).
+	for k in n:
+		var accent := every > 0 and k % every == 0  # A beat note.
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "saw", "f0": float(p["hz"]), "start": float(k) * step, "dur": dur,
+			"amp": float(p["accent_amp"]) if accent else float(p["amp"]), "attack": 0.004, "decay": float(p["decay"]),
+			"lp0": float(p["lp0"]), "lp1": float(p["lp1"])}, _rng)
+
+
+## Metallic hits (a score's "hits", Act III): an inharmonic clang of struck
+## steel every `every` s from `offset`, with a short noise click.
+func _job_hits() -> void:
+	var h: Dictionary = _score["hits"]
+	var every := float(h["every"])  # s between clangs.
+	var dur := float(h["dur"])  # Clang length (s).
+	var t := float(h["offset"])  # Next clang (s).
+	while t + dur < _loop_s:
+		for pr: Array in h["partials"]:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": float(h["root_hz"]) * float(pr[0]), "start": t,
+				"dur": dur, "amp": float(pr[1]), "attack": 0.002, "decay": float(h["decay"])}, _rng)
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": t, "dur": 0.03, "amp": float(h["click"]),
+			"decay": 0.008, "lp0": 7000.0}, _rng)
+		t += every
+
+
+## Cold arpeggio (a score's "arp", Act III): one note every `step` s, cycling
+## up the tones of the chord of the loop segment it falls in.
+func _job_arp() -> void:
+	var a: Dictionary = _score["arp"]
+	var step := float(a["step"])  # s between notes.
+	var dur := float(a["dur"])  # Note length (s).
+	var chords: Array = a["chords"]  # One tone list per loop segment.
+	var seg_s := _loop_s / float(chords.size())  # Segment length (s).
+	var n := int((_loop_s - dur) / step) + 1  # Notes that fit in the loop.
+	for k in n:
+		var t := float(k) * step  # Note start (s).
+		var tones: Array = chords[mini(chords.size() - 1, int(t / seg_s))]  # This segment's tones.
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": String(a["wave"]), "f0": float(tones[k % tones.size()]), "start": t,
+			"dur": dur, "amp": float(a["amp"]), "attack": 0.003, "decay": float(a["decay"]), "lp0": float(a["lp0"])}, _rng)
 
 
 ## Peak search over samples [a, b) of the finished mix.

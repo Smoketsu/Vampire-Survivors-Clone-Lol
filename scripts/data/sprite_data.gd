@@ -179,6 +179,11 @@ const HEIGHTS: Dictionary = {
 	"summons/spawn_of_the_deep": 60.0,  # TUNING (not in GDD) a heavy summon (Abomination 88, Corpse Catapult 56)
 	"summons/leviathan": 76.0,  # TUNING (not in GDD) its evolution, bigger
 	"summons/drowned_thrall_ally": 44.0,  # TUNING (not in GDD) Call of the Drowned's Thrall (soldier tier)
+	# --- Act III: the Electronic Empire (the shared kinds; assets/sprites/empire/) ---
+	"empire/scout_drone": 30.0,  # TUNING (not in GDD) fodder: a small flying drone, about 40 px wide with its rotors
+	"empire/line_trooper": 50.0,  # TUNING (not in GDD) soldier tier: body ~46, the helmet dome on top
+	"empire/spotter": 56.0,  # TUNING (not in GDD) elite tier: a tall coated marksman, the antenna above
+	"summons/grave_gunner": 50.0,  # TUNING (not in GDD) a raised Line Trooper (Steel has no soul), drawn from its sprite
 	"player/tide_widow": 56.0,  # TUNING (not in GDD) character tier: body ~48 like the necromancer, the coral crown above
 	"player/tide_widow_hyper": 58.0,  # TUNING (not in GDD) skin art: the Tide Widow's body, the taller gold coral crown above
 	# --- Content wave 2: Bone Golem ---

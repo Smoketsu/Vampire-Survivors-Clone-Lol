@@ -16,6 +16,11 @@
 ##                       true while a special owns the tick (windup / cast /
 ##                       recovery): the enemy then stands still; Enemy only
 ##                       resolves warrior blocking afterwards.
+##   fire_ranged(e, t, dir, dmg)  a "ranged" enemy's attack is due at target
+##                       `t` (unit direction `dir`, `dmg` already time-scaled):
+##                       return true when the kit fired it itself (the Act III
+##                       Empire kits, into EmpireShots); false (the default)
+##                       fires the usual arrow / radiant bolt.
 ##   danger_push(e, p)   autotest autopilot hint: a push away from this
 ##                       kit's live telegraph at `p` (zero when none).
 ##   draw_under(e) / draw_over(e, ci)  drawn before / after the body
@@ -68,6 +73,11 @@ func think(_e: Enemy) -> void:
 
 ## Per-tick hook; true while a special owns the tick.
 func physics(_e: Enemy, _delta: float) -> bool:
+	return false
+
+
+## Ranged attack hook (see the header): true when the kit fired the shot.
+func fire_ranged(_e: Enemy, _t: Node2D, _dir: Vector2, _dmg: float) -> bool:
 	return false
 
 

@@ -110,6 +110,9 @@
 ##                        slow slow_enemy(), the existing paths.
 ##   Grave Tide         — _kill_enemy() reports every kill to
 ##                        game.ultimates.on_enemy_killed() (the Tide's raises).
+## Act III (the Electronic Empire): _kill_enemy() counts machine / cyborg kills
+## (Enemy.body; steel_kills_<body>); Empire shots reach damage_unit() /
+## damage_player() through EmpireShots like every hit.
 class_name CombatResolver
 extends RefCounted
 
@@ -649,6 +652,8 @@ func _kill_enemy(e: Enemy) -> void:
 		game.pickups.spawn(e.position, e.xp_value)
 		game.stat_add("xp_dropped", e.xp_value)
 	game.stat_add("kill_" + e.kind, 1.0)
+	if e.body != "":
+		game.stat_add("steel_kills_" + e.body, 1.0)  # Act III: machine / cyborg kills (the autotest's "steel" line).
 	game.codex.meet(CodexData.ENEMY, e.kind)  # Codex: a Covenant kind slain (records only).
 	if e.rot_until > game.elapsed:
 		game.stat_add("rot_kills", 1.0)  # Slain while Rotting (Plague Doctor skin, SkinData)

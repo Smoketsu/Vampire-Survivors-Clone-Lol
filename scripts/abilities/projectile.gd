@@ -8,7 +8,7 @@ extends Node2D
 ## Projectile kinds (drawing + hit rules). VOID_BOLT / VOID_SHARD belong to
 ## the Void Barrage evolution (GDD §6.1); FROST_BOLT is the Frost Wraith's;
 ## RADIANT_BOLT is the hostile burst of the Holy Retribution run modifier.
-enum Kind { SHADOW_BOLT, ARROW, MAGE_ORB, PRIEST_BOLT, ENEMY_ARROW, VOID_BOLT, VOID_SHARD, FROST_BOLT, RADIANT_BOLT }
+enum Kind { SHADOW_BOLT, ARROW, MAGE_ORB, PRIEST_BOLT, ENEMY_ARROW, VOID_BOLT, VOID_SHARD, FROST_BOLT, RADIANT_BOLT, SOUL_ROUND }
 
 ## Current kind.
 var kind: Kind = Kind.SHADOW_BOLT
@@ -117,3 +117,7 @@ func _draw() -> void:
 			draw_line(Vector2(-12, 0), Vector2.ZERO, Color(Palette.GOLD, 0.4), 4.0)
 			draw_circle(Vector2.ZERO, 6.0, Color(Palette.GOLD, 0.35))
 			draw_circle(Vector2.ZERO, 3.5, Palette.IVORY)
+		Kind.SOUL_ROUND:
+			# Act III: a Grave Gunner's rifle round, burning with soul fire.
+			draw_line(Vector2(-12, 0), Vector2.ZERO, Color(Palette.NECRO_GREEN, 0.4), 3.0)
+			draw_line(Vector2(-6, 0), Vector2(2, 0), Color(0.8, 1.0, 0.9), 1.5)
