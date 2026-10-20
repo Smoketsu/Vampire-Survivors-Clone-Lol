@@ -402,6 +402,7 @@ func _ready() -> void:
 func _exit_tree() -> void:
 	if coop != null and coop.lockstep != null:
 		coop.lockstep.stop()  # CoopNet outlives the run.
+		coop.lockstep = null  # Breaks the session <-> lockstep reference cycle (both RefCounted).
 
 
 ## Online co-op: the window lost focus or the page went to the background

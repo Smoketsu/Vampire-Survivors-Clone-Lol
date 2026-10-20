@@ -30,13 +30,14 @@ var _code_printed: bool = false
 var _settings_sent: bool = false
 ## True once the run started.
 var _started: bool = false
-## Real seconds spent in the lobby.
-var _waited: float = 0.0
+## When the lobby began (real ms, Time.get_ticks_msec(): --fixed-fps frames are not real time).
+var _begin_ms: int = 0
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_role = GameState.autotest_coop_net
+	_begin_ms = Time.get_ticks_msec()
 	GameState.autotest_classes = PackedStringArray()  # Per-slot forcing would desync (see the header).
 	GameState.autotest_spells = PackedStringArray()
 	GameState.autotest_passives = PackedStringArray()
@@ -54,11 +55,10 @@ func _ready() -> void:
 		get_tree().quit(EXIT_LOBBY_FAILED)
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if _started:
 		return
-	_waited += delta
-	if _waited > LOBBY_TIMEOUT_S:
+	if float(Time.get_ticks_msec() - _begin_ms) / 1000.0 > LOBBY_TIMEOUT_S:
 		print("[coop] lobby timed out after %d s" % int(LOBBY_TIMEOUT_S))
 		get_tree().quit(EXIT_LOBBY_FAILED)
 
