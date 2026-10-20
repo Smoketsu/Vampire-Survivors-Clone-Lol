@@ -187,9 +187,10 @@ static func _open_ids(all: bool) -> PackedStringArray:
 	return ids
 
 
-## The part the closing card follows (the last part: Act II).
+## The part the closing card follows (EpilogueData.CLOSING "after": Act II,
+## also now that the Act III part comes after it).
 static func _closing_part_id() -> String:
-	return String((EpilogueData.PARTS[EpilogueData.PARTS.size() - 1] as Dictionary)["id"])
+	return String(EpilogueData.CLOSING["after"])
 
 
 ## One slide per paragraph of `part`, each with its panel and pan.

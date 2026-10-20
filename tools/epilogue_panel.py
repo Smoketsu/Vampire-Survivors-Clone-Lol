@@ -61,7 +61,14 @@ PANEL_OPTS = {
     # Wave 2 art review redo (undead Vhal'Neth): fewer clusters keep her dead-grey gown and skin two
     # or three flat shades instead of blotches; flame / crimson dropped (rust specks in the kelp).
     "act2_4": {"drop": ["skin", "ice", "flame", "crimson"], "clusters": 64},
-    "close": {"drop": ["skin", "ice", "violet", "biolume"]},  # The holy orders: no necromancer violet.
+    # Act III ("The Machines Go Dark"): the default drops; the chrome and signal ramps stay in.
+    "act3_1": {"drop": ["skin", "ice"]},
+    "act3_2": {"drop": ["skin", "ice"]},
+    "act3_3": {"drop": ["skin", "ice"]},
+    "act3_4": {"drop": ["skin", "ice"]},
+    # The closing card, redone for the Electronic Empire (wave 2 art review): no figures, so no
+    # necromancer violet or biolume (stray hues in the night sky).
+    "close": {"drop": ["skin", "ice", "violet", "biolume"]},
 }
 
 

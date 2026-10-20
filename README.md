@@ -1508,11 +1508,15 @@ shutting down the Motherboard; Soul Ash ×3.0 (placeholder).
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
-cutscene of eight slides over a black backdrop: one pixel-art picture panel per paragraph (Act I
+cutscene of twelve slides over a black backdrop: one pixel-art picture panel per paragraph (Act I
 "When the Dawn Went Out": the Sanctum burning, the dawn going out over the pilgrim roads, the dead
 drifting to the coast; Act II "The Dead God Serves": the tide pulled back from Gullhaven, the
-Archive's last page burning, Ul-Thalos sinking, Vhal'Neth kneeling to the necromancer) and a closing
-card after Act II, "The Beacons Burn", where the other holy orders march out (the sequel's set-up).
+Archive's last page burning, Ul-Thalos sinking, Vhal'Neth kneeling to the necromancer; Act III "The
+Machines Go Dark", opened by *Nothing Is Deathless*: the Empire's chrome city of rebuilt citizens,
+Deus Ex Machina on its knees as the necromancer reaches into its core for Varn's soul, the machines
+gone dark and Varn bowing, the risen dead over the ruins of all three acts) and a closing card after
+Act II, "The Beacons Burn", where the Electronic Empire watches the beacons from beyond the mountains
+(Act III's set-up; it stays after Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
 
 - Each panel (1024×576 art px, `assets/sprites/epilogue/`) pans slowly in a framed window
   (944×424, 1 art px = 1 layout px through the sharp-pixel shader); the paragraph fades in under it.
@@ -1522,7 +1526,7 @@ card after Act II, "The Beacons Burn", where the other holy orders march out (th
   first picture as a dark silhouette.
 - **It plays once on its own**: when you return to the main menu after a run, every epilogue part
   that is open and not seen yet plays before you get the menu (Meta `[epilogue] seen_act1` /
-  `seen_act2`; an older save that already earned a part sees it after its next run). The
+  `seen_act2` / `seen_act3`; an older save that already earned a part sees it after its next run). The
   **Epilogue** menu item (above Credits, once a part is open) replays everything.
 - **Music:** a slow, sparse "Grave Lullaby" cue (section A only at 3/4 tempo, no timpani, harp or
   crackle; `MenuThemeData.EPILOGUE_VARIANT`, 34.1 s loop) rendered by `MenuThemeSynth` the first
