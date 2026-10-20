@@ -66,9 +66,7 @@ PANEL_OPTS = {
     "act3_2": {"drop": ["skin", "ice"]},
     "act3_3": {"drop": ["skin", "ice"]},
     "act3_4": {"drop": ["skin", "ice"]},
-    # The closing card, redone for the Electronic Empire (wave 2 art review): no figures, so no
-    # necromancer violet or biolume (stray hues in the night sky).
-    "close": {"drop": ["skin", "ice", "violet", "biolume"]},
+    "close": {"drop": ["skin", "ice", "violet", "biolume"]},  # The holy orders: no necromancer violet (the knights card; owner kept it, Act III art review round 4).
 }
 
 

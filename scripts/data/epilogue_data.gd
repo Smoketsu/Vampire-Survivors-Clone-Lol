@@ -97,9 +97,9 @@ const CLOSING := {
 	"after": "act2",  # TUNING (not in GDD) id of the PARTS row the card follows (Act II, also once Act III is open)
 	"act": "Beyond the realm",  # TUNING (not in GDD)
 	"heading": "The Beacons Burn",  # TUNING (not in GDD)
-	"line": "The beacons were lit for the dead, and something far beyond the mountains saw them. Nobody called it, but it is coming.",  # TUNING (not in GDD) two lines; the Empire saw the beacons and came (Act III proposal)
+	"line": "Far beyond the mountains, the holy orders the Covenant once led are lighting their beacons. They remember how to march, and they are marching on the dead.",  # TUNING (not in GDD) two lines; the banners name the orders. Owner decision (Act III art review round 4): the knights card stays, its blue star repainted gold; the Empire version is kept only as art_source/epilogue/close_empire.png
 	"tag": "To be continued.",  # TUNING (not in GDD) small dim line under the closing text
-	"panel": ["epilogue/close", Vector2(0.0, 0.6), Vector2(1.0, 0.1)],  # TUNING (not in GDD) from the nearest beacon tower across the burning peaks to the Empire's towers and wall
+	"panel": ["epilogue/close", Vector2(0.0, 0.0), Vector2(1.0, 0.85)],  # TUNING (not in GDD) the beacons, down to the knights at the gate
 }
 ## Line shown in place of a part that is still sealed.
 const SEALED: String = "Sealed. %s to read on."  # TUNING (not in GDD) %s = the achievement's goal

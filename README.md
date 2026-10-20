@@ -1515,8 +1515,8 @@ Archive's last page burning, Ul-Thalos sinking, Vhal'Neth kneeling to the necrom
 Machines Go Dark", opened by *Nothing Is Deathless*: the Empire's chrome city of rebuilt citizens,
 Deus Ex Machina on its knees as the necromancer reaches into its core for Varn's soul, the machines
 gone dark and Varn bowing, the risen dead over the ruins of all three acts) and a closing card after
-Act II, "The Beacons Burn", where the Electronic Empire watches the beacons from beyond the mountains
-(Act III's set-up; it stays after Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
+Act II, "The Beacons Burn", where the holy orders' knights march out under the beacons (it stays after
+Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
 
 - Each panel (1024×576 art px, `assets/sprites/epilogue/`) pans slowly in a framed window
   (944×424, 1 art px = 1 layout px through the sharp-pixel shader); the paragraph fades in under it.
