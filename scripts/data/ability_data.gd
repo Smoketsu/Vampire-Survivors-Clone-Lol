@@ -56,7 +56,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act II: the Hollow Archive ---
 	"forbidden_verse",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	"call_of_the_drowned"]
+	"call_of_the_drowned",
+	# --- Act III: the Assembly Halls ---
+	"hollow_puppet"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -367,13 +369,40 @@ const SPELLS := {
 			{"damage": 58.0, "targets": 3, "radius": 44.0, "cooldown": 5.0, "range": 320.0, "life": 12.0, "thrall_hp": 0.7, "thrall_damage": 1.0},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act III: the Assembly Halls ---
+	# Hollow Puppet (GDD §15.0 "The Assembly Halls (Act III phase 2)"; owner-
+	# approved proposal: "curses the strongest nearby non-boss enemy: for 8 s it
+	# fights for you, then dies"; unlocked by slaying the Motherboard,
+	# UnlockData). Every `cooldown` s the strongest foe (the most HP) within
+	# `range` px of the necromancer that is not a boss, miniboss, structure or
+	# Reckoning foe is cut loose from its side: it leaves the field and rises
+	# as YOUR puppet, a temporary summon (HordeDirector.spawn_temporary(), so
+	# Restless Dead, the Grave Herald and Strings of the Dead apply) with
+	# `puppet_hp` of the foe's HP, hitting for `damage`, for `puppet_life` s;
+	# then it dies (its XP drops). Logic: HollowPuppet; fixed rules: PuppetData.
+	"hollow_puppet": {
+		"display_name": "Hollow Puppet",
+		"icon": "hollow_puppet",
+		"description": "Strings of soul seize the strongest foe nearby: it fights for you, then dies.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act III spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER (as Act II's)
+		"labels": {"damage": "Puppet damage", "puppets": "Puppets", "puppet_life": "Puppet life (s)", "puppet_hp": "Puppet HP (of the foe's)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 16.0, "puppets": 1, "puppet_life": 8.0, "puppet_hp": 0.8, "cooldown": 11.0, "range": 260.0},  # Owner-approved proposal "for 8 s"; the rest TUNING (not in GDD)
+			{"damage": 20.0, "puppets": 1, "puppet_life": 8.0, "puppet_hp": 0.8, "cooldown": 10.5, "range": 275.0},  # TUNING (not in GDD)
+			{"damage": 25.0, "puppets": 1, "puppet_life": 8.0, "puppet_hp": 0.9, "cooldown": 10.0, "range": 290.0},  # TUNING (not in GDD)
+			{"damage": 30.0, "puppets": 1, "puppet_life": 8.0, "puppet_hp": 0.9, "cooldown": 9.0, "range": 305.0},  # TUNING (not in GDD)
+			{"damage": 36.0, "puppets": 1, "puppet_life": 8.0, "puppet_hp": 1.0, "cooldown": 8.0, "range": 320.0},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
 const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", "nova", "nova_rot_bonus",
 	"falloff", "shred", "skeleton_hp", "skeleton_damage",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	"thrall_hp", "thrall_damage"]
+	"thrall_hp", "thrall_damage",
+	# --- Act III: the Assembly Halls ---
+	"puppet_hp"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

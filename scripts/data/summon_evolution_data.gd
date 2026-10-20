@@ -63,7 +63,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"leviathan",
 	# --- Content wave 2: Bone Golem ---
-	"ossuary_titan"]
+	"ossuary_titan",
+	# --- Act III: the Assembly Halls ---
+	"wraith_drone"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -668,6 +670,33 @@ const EVOLUTIONS := {
 			"wall_segments": 7,  # TUNING (not in GDD) about 100 px of wall (GraveSpellData.BONE_WALL_SPACING 16)
 			"wall_duration": 6.0,  # Owner-approved proposal: a bone wall for 6 s
 			"wall_damage": 0.3,  # TUNING (not in GDD) spike damage per tick, x its slam damage
+		},
+	},
+	# --- Act III: the Assembly Halls ---
+	# Wraith Drone (owner-approved Act III proposal): Grave Drone Lv 5 +
+	# Overclock Lv 5 (a NEW passive, owner rule). The drones turn spectral:
+	# sturdier and harder-hitting, each attack a fan of dart_count piercing
+	# darts (GraveDroneBehavior reads the special_set keys).
+	"wraith_drone": {
+		"mode": "transform",
+		"bases": ["grave_drone"],
+		"passive": "overclock",
+		"passive_level": 5,  # TUNING (not in GDD) owner rule: every evolution needs its passive maxed
+		"display_name": "Wraith Drone",  # Owner-approved proposal
+		"plural": "Wraith Drones",
+		"icon": "wraith_drone",
+		"description": "Spectral drones that fire fans of piercing bone darts.",
+		"mult": {
+			"max_hp": 1.35,  # TUNING (not in GDD)
+			"damage": 1.2,  # TUNING (not in GDD) per dart (three darts an attack)
+		},
+		"set": {
+			"radius": 8.0,  # TUNING (not in GDD) drones are 7
+		},
+		"special_set": {
+			"dart_count": 3,  # TUNING (not in GDD) a fan of three darts
+			"dart_spread": 0.2,  # TUNING (not in GDD) rad between two darts
+			"dart_pierce": 1,  # TUNING (not in GDD) each passes through one more foe
 		},
 	},
 }

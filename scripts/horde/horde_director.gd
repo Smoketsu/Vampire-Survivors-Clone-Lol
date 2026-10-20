@@ -361,6 +361,13 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 	if float(base["move_speed"]) >= PassiveData.FAST_SUMMON_SPEED:
 		move_mult *= 1.0 + ab.passive_value("blood_scent", "fast_move_speed")
 		spd_mult *= 1.0 + ab.passive_value("blood_scent", "fast_attack_speed")
+	# Overclock (Act III, paired with the Grave Drone): the ranged classes
+	# (base attack range >= PassiveData.OVERCLOCK_MIN_RANGE) attack faster, its
+	# own category (exactly 1 while it is not owned, so every other run is unchanged).
+	if float(base["attack_range"]) >= PassiveData.OVERCLOCK_MIN_RANGE:
+		var oc := ab.passive_value("overclock", "ranged_attack_speed")  # 0 when not owned.
+		if oc > 0.0:
+			spd_mult *= 1.0 + oc
 	if rally != null:
 		move_mult *= 1.0 + rally.bonus("move_speed")  # Dread Rally surge.
 	# Baying of the Damned (synergy): the hounds' timed frenzy after a Dirge,
@@ -588,12 +595,24 @@ func _try_spawn(cls: String) -> bool:
 ## innate (CharacterData temp_summon_duration; 0 for every other character)
 ## lengthens `duration` as a separate category, so the two multiply:
 ## duration x (1 + temp_duration) x (1 + temp_summon_duration).
+## Strings of the Dead (Act III) adds temp_hp to its HP and its taunt_reach as
+## a taunt (ColossusKit), here too.
 func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float, dmg_mult: float) -> SummonedUnit:
 	duration *= 1.0 + game.abilities.passive_value("restless_dead", "temp_duration")
 	var herald := duration * game.character.innate_value("temp_summon_duration")  # Restless extra seconds (0 unless the Grave Herald).
 	duration += herald
 	dmg_mult *= 1.0 + game.abilities.passive_value("restless_dead", "temp_damage")
+	# Strings of the Dead (Act III passive, paired with Hollow Puppet): every
+	# temporary summon rises sturdier (its own category) and draws the foes
+	# around it (a taunt reach on its special, read by ColossusKit.refresh()).
+	# Both 0 while it is not owned, so every other run is unchanged.
+	var strings_hp := game.abilities.passive_value("strings_of_the_dead", "temp_hp")  # HP fraction (0 when not owned).
+	var strings_reach := game.abilities.passive_value("strings_of_the_dead", "taunt_reach")  # Taunt reach (px; 0 when not owned).
+	hp_mult *= 1.0 + strings_hp
 	var stats := compute_stats(cls, maxi(1, int(class_levels[cls])), true, false)
+	if strings_reach > 0.0:
+		var sp: Dictionary = stats["special"]  # This call's own special numbers (fresh per compute_stats()).
+		sp["taunt_radius"] = maxf(float(sp.get("taunt_radius", 0.0)), strings_reach)
 	stats["max_hp"] = float(stats["max_hp"]) * hp_mult
 	stats["damage"] = float(stats["damage"]) * dmg_mult
 	stats["bash_damage"] = float(stats["bash_damage"]) * dmg_mult

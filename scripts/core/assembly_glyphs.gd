@@ -281,3 +281,32 @@ static func draw_magnet(ci: CanvasItem, o: Vector2, r: float, k: float, pulling:
 	for i in 3:
 		var t := fposmod(1.0 - k + float(i) / 3.0, 1.0)
 		ci.draw_arc(o, r * (0.2 + 0.8 * t), 0.0, TAU, 48, Color(col, 0.55 * (1.0 - t) + 0.1), 2.0)
+
+
+# =====================================================================================
+# Hollow Puppet (the spell's puppets; Glyphs.draw_summon() "puppet:<kind>")
+# =====================================================================================
+
+## A Hollow Puppet: foe `kind`'s own art (or glyph), tinted to a hollow violet
+## husk (PuppetData.TINT), hanging from three soul strings and a control bar
+## above its head. Drawn on the summon's body layer at `o` (radius `r`).
+static func draw_puppet(ci: CanvasItem, kind: String, o: Vector2, r: float, flash: bool) -> void:
+	var top := -r * 1.6  # The head's top (px), for a body without art.
+	var drawn := false
+	for folder: String in ["empire/", "eye/", "enemies/"]:
+		var key := folder + kind
+		if SpriteBank.has(key):
+			SpriteBank.draw(ci, key, o, flash, PuppetData.TINT)
+			top = -SpriteBank.drawn_height(key) * (0.5 - SpriteData.CENTER_OFFSET)
+			drawn = true
+			break
+	if not drawn:
+		Glyphs.draw_enemy(ci, kind, o, r, flash, false)
+	var bar_y := o.y + top - 12.0  # The control bar (px).
+	var bar := Rect2(Vector2(o.x - 9.0, bar_y - 1.0), Vector2(18.0, 2.0))
+	ci.draw_rect(bar.grow(1.0), INK)
+	ci.draw_rect(bar, Palette.VIOLET)
+	for j in 3:
+		var from := Vector2(o.x + float(j - 1) * 8.0, bar_y)
+		var to := Vector2(o.x + float(j - 1) * r * 0.7, o.y + top + (4.0 if j == 1 else r * 0.9))
+		ci.draw_line(from, to, PuppetData.STRING_COLOR, 1.0)

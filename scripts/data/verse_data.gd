@@ -35,7 +35,9 @@ const SOURCE_BURST: String = "ink_burst"
 ## Colossus's bone shrapnel, Doom Brand's detonation, Soul Rapture's burst
 ## and the Legion of Bones' bone burst.
 const MARGINALIA_SOURCES := ["ink_burst", "corpse", "eruption", "eruption_spikes", "winter_revenant_shatter",
-	"colossus_shrapnel", "doom_burst", "rapture_burst", "legion_burst"]
+	"colossus_shrapnel", "doom_burst", "rapture_burst", "legion_burst",
+	# --- Act III: the Assembly Halls --- (a Puppet King's puppet bursting, PuppetData.BURST_SOURCE)
+	"puppet_burst"]
 ## Passive id and level key of Marginalia.
 const MARGINALIA: String = "marginalia"
 const MARGINALIA_KEY: String = "on_death_damage"

@@ -127,7 +127,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"abyssal_pact", "crushing_depths",
 	# --- Content wave 2: Bone Golem ---
-	"grave_masonry"]
+	"grave_masonry",
+	# --- Act III: the Assembly Halls ---
+	"strings_of_the_dead", "overclock", "signal_ghost"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -139,7 +141,17 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"crushing_depths",
 	# --- Content wave 2: Bone Golem ---
-	"grave_masonry"]
+	"grave_masonry",
+	# --- Act III: the Assembly Halls ---
+	"overclock"]
+
+# --- Act III: the Assembly Halls ---
+## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
+## gets its attack speed) when its UnitData base attack_range is at least this
+## (px): Skeletal Archers 170, Undead Mages 145, Banshees 150, Grave Drones 190,
+## the priest orders' bolts... Warriors, Abominations, Rogues and the other
+## melee classes (edge-to-edge reach under 40 px) are not.
+const OVERCLOCK_MIN_RANGE: float = 100.0  # TUNING (not in GDD)
 
 ## Blood Scent: a summon class is "fast" (and gets the passive) when its
 ## UnitData base move_speed is at least this (px/s): Bone Hounds 122, Grave
@@ -175,7 +187,9 @@ const MINION_EXTRA_TAGS := ["lich_risen", "death_mark_risen", "raised_dead",
 	# --- Content wave 2: Ultimates --- (Grave Tide's Risen, UltimateSystem)
 	"grave_tide_risen",
 	# --- Act III: the Electronic Empire --- (a raised cyborg's Grave Gunner, EmpireRulesData.STEEL)
-	"grave_gunner"]
+	"grave_gunner",
+	# --- Act III: the Assembly Halls --- (a Hollow Puppet, PuppetData.SOURCE)
+	"hollow_puppet"]
 ## Unholy Precision: the other minion damage sources that can crit: the
 ## basic warrior shield bash and the later classes' specials (and the Bone
 ## Colossus's death shrapnel). The Rogue's
@@ -779,6 +793,68 @@ const PASSIVES := {
 			{"blocker_reduction": 0.11, "hold_bonus": 0.20},  # TUNING (not in GDD)
 			{"blocker_reduction": 0.14, "hold_bonus": 0.25},  # TUNING (not in GDD)
 			{"blocker_reduction": 0.18, "hold_bonus": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act III: the Assembly Halls ---
+	# Strings of the Dead (GDD §15.0 "The Assembly Halls (Act III phase 2)";
+	# unlocked with Hollow Puppet by slaying the Motherboard, UnlockData): every
+	# temporary summon you raise (a puppet, a Risen, a Thrall, a Grave Gunner, a
+	# Raise Dead skeleton...) pulls the foes within taunt_reach px onto itself
+	# (the taunt path the Bone Colossus uses, ColossusKit; bosses, Reckoning
+	# foes and structures ignore it) and rises with temp_hp more HP; both in
+	# HordeDirector.spawn_temporary(), the one path of every temporary summon.
+	# Pairs with Hollow Puppet -> Puppet King.
+	"strings_of_the_dead": {
+		"display_name": "Strings of the Dead",  # Owner-approved proposal
+		"icon": "strings_of_the_dead",
+		"description": "Your temporary dead draw the foes around them and rise sturdier.",
+		"labels": {"taunt_reach": ["Temporary summons draw foes within (px)", "int"], "temp_hp": ["Temporary summon HP", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"taunt_reach": 60.0, "temp_hp": 0.08},  # TUNING (not in GDD)
+			{"taunt_reach": 75.0, "temp_hp": 0.16},  # TUNING (not in GDD)
+			{"taunt_reach": 90.0, "temp_hp": 0.24},  # TUNING (not in GDD)
+			{"taunt_reach": 105.0, "temp_hp": 0.32},  # TUNING (not in GDD)
+			{"taunt_reach": 120.0, "temp_hp": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# Overclock (GDD §15.0; unlocked with the Grave Drone by slaying the
+	# Motherboard): every RANGED summon class (OVERCLOCK_MIN_RANGE) attacks
+	# faster: attack_interval / (1 + ranged_attack_speed), its own category in
+	# HordeDirector.compute_stats(). Pairs with the Grave Drone -> Wraith Drone.
+	"overclock": {
+		"display_name": "Overclock",  # Owner-approved proposal
+		"icon": "overclock",
+		"description": "Your ranged summons attack faster.",
+		"labels": {"ranged_attack_speed": ["Ranged summon attack speed", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"ranged_attack_speed": 0.05},  # TUNING (not in GDD)
+			{"ranged_attack_speed": 0.10},  # TUNING (not in GDD)
+			{"ranged_attack_speed": 0.15},  # TUNING (not in GDD)
+			{"ranged_attack_speed": 0.20},  # TUNING (not in GDD)
+			{"ranged_attack_speed": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# Signal Ghost (owner-approved proposal: an Act III counter-passive, "Lock-On
+	# lines take longer to paint on the necromancer"; unlocked by the
+	# achievement Cold Assembly, UnlockData; offered only on Act III stages,
+	# "act": 3). LockOn.paint_time() reads paint_time (EmpireRulesData
+	# SIGNAL_GHOST / SIGNAL_GHOST_KEY): a line on the necromancer paints
+	# (1 + paint_time) x as long. Evolves nothing.
+	"signal_ghost": {
+		"display_name": "Signal Ghost",  # Owner-approved proposal
+		"icon": "signal_ghost",
+		"description": "The Empire's Lock-On lines take longer to paint on you.",
+		"labels": {"paint_time": ["Lock-On paint time on you", "pct"]},
+		"shared_card_pool": true,  # owner-approved: Act III items weigh the later items' 0.5, as Act II's counter-passives
+		"act": 3,  # Owner-approved proposal: counter-passives are offered only in their act
+		"levels": [
+			{"paint_time": 0.15},  # TUNING (not in GDD) 1.5 s -> 1.73 s
+			{"paint_time": 0.30},  # TUNING (not in GDD)
+			{"paint_time": 0.45},  # TUNING (not in GDD)
+			{"paint_time": 0.60},  # TUNING (not in GDD)
+			{"paint_time": 0.80},  # TUNING (not in GDD) 1.5 s -> 2.7 s
 		],
 	},
 }

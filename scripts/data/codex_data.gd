@@ -44,7 +44,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act II: Ul-Thalos, the Risen Spire ---
 		"spawn_of_the_deep",
 		# --- Content wave 2: Bone Golem --- (a silhouette naming Bone Legion until met)
-		"bone_golem"]
+		"bone_golem",
+		# --- Act III: the Assembly Halls --- (a silhouette naming the Motherboard until met)
+		"grave_drone"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -94,9 +96,13 @@ const EYE_BOSSES: Array[String] = [
 ## champions (minibosses and the Purge Protocol's kill-drone) and its stage
 ## bosses (StageRegistry.BOSS_ARRIVALS ids). Each Act III stage adds its own as
 ## it is built (phase 2).
-const EMPIRE_SOLDIERS: Array[String] = ["scout_drone", "line_trooper", "spotter"]
+const EMPIRE_SOLDIERS: Array[String] = ["scout_drone", "line_trooper", "spotter",
+	# --- Act III: the Assembly Halls ---
+	"arc_engineer", "juggernaut"]
 ## Electronic Empire champions (minibosses) and the Act III Reckoning kinds.
-const EMPIRE_CHAMPIONS: Array[String] = ["kill_drone"]
+const EMPIRE_CHAMPIONS: Array[String] = ["kill_drone",
+	# --- Act III: the Assembly Halls ---
+	"beta_build"]
 ## Electronic Empire stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const EMPIRE_BOSSES: Array[String] = ["kestrel", "motherboard", "deus_ex_machina"]
 
@@ -170,6 +176,10 @@ const DESCRIPTIONS: Dictionary = {
 	"kestrel": "The Dead Pixel, hunter of the Scrap Wastes.",  # Owner-approved Act III proposal
 	"motherboard": "The mind that runs every machine of the Assembly Halls at once.",  # Owner-approved Act III proposal
 	"deus_ex_machina": "The god the Empire built, with Varn, the Root User, at its controls.",  # Owner-approved Act III proposal
+	# --- Act III: the Assembly Halls ---
+	"arc_engineer": "Cyborg engineers who repair the machines around them and jam your dead with static.",  # Owner-approved Act III proposal
+	"juggernaut": "Armoured flamethrower walkers whose plating shrugs off light blows.",  # Owner-approved Act III proposal
+	"beta_build": "An unfinished mech that patches itself from every fabricator still standing.",  # Owner-approved Act III proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -330,6 +340,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"full_ossuary": "ach_full_ossuary",  # TUNING (not in GDD)
 	"deathlords_due": "ach_deathlords_due",  # TUNING (not in GDD)
 	"swift_judgment": "ach_swift_judgment",  # TUNING (not in GDD)
+	# --- Act III: the Assembly Halls ---
+	"cold_assembly": "ach_cold_assembly",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -349,6 +361,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"full_ossuary": "forbidden_knowledge",
 	"deathlords_due": "dread_rally",
 	"swift_judgment": "death_mark",
+	# --- Act III: the Assembly Halls ---
+	"cold_assembly": "signal_ghost",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)
@@ -434,4 +448,7 @@ static func enemy_row(id: String) -> Dictionary:
 		# --- Act II: Ul-Thalos, the Risen Spire ---
 		"vhalneth":
 			return VhalnethData.BOSS
+		# --- Act III: the Assembly Halls ---
+		"motherboard":
+			return MotherboardData.BOSS
 	return {}

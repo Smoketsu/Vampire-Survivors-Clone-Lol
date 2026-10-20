@@ -244,7 +244,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"the_dead_god_serves",
 	# --- Content wave 2: B. Achievement rewards ---
-	"mass_grave", "untouchable", "full_ossuary", "deathlords_due", "swift_judgment"]
+	"mass_grave", "untouchable", "full_ossuary", "deathlords_due", "swift_judgment",
+	# --- Act III: the Assembly Halls ---
+	"cold_assembly"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -312,6 +314,13 @@ const ACHIEVEMENTS := {
 		"stat": "deathlord_victories", "goal": 1, "run": true, "unlock": "The Deathlord skin (any character)", "bounty": 250},  # owner-approved goal; bounty TUNING (not in GDD)
 	"swift_judgment": {"display_name": "Swift Judgment", "description": "Slay a stage boss within 45 s of its arrival",
 		"stat": "swift_boss_kills", "goal": 1, "run": true, "unlock": "Title Executioner", "bounty": 150},  # owner-approved goal; bounty TUNING (not in GDD)
+	# --- Act III: the Assembly Halls ---
+	# Owner-approved Act III proposal: destroy every fabricator in one Assembly
+	# Halls run (AssemblyDirector sets the run stat assembly_all_fabricators;
+	# MetaProgress counts such runs in the lifetime counter assembly_cold_runs).
+	# It unlocks the counter-passive Signal Ghost (UnlockData).
+	"cold_assembly": {"display_name": "Cold Assembly", "description": "Destroy every fabricator in one Assembly Halls run",
+		"stat": "assembly_cold_runs", "goal": 1, "unlock": "The Signal Ghost passive", "bounty": 200},  # Owner-approved proposal; bounty TUNING (not in GDD)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

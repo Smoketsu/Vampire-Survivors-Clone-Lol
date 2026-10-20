@@ -179,6 +179,9 @@ const CLASSES := {
 	# --- Content wave 2: Bone Golem ---
 	"bone_golem": {"trigger": "attack", "every": 1, "pattern": "ring", "counts": [8, 12], "speed": 230.0,
 		"life": 0.5, "share": 0.25, "pierce": 0, "radius": 4.5, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) owner-approved: every slam throws a ring of bone shards outward
+	# --- Act III: the Assembly Halls ---
+	"grave_drone": {"trigger": "attack", "every": 4, "pattern": "seek", "counts": [2, 3], "speed": 360.0,
+		"life": 0.6, "share": 0.4, "pierce": 0, "radius": 3.0, "style": "shard", "color": Color(0.87, 0.85, 0.76), "homing": 9.0},  # TUNING (not in GDD) seeking bone splinters
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -215,6 +218,9 @@ const EVOLVED := {
 	# --- Content wave 2: Bone Golem ---
 	"ossuary_titan": {"trigger": "attack", "every": 1, "pattern": "spiral", "counts": [16], "speed": 220.0,
 		"life": 0.6, "share": 0.22, "pierce": 1, "radius": 5.0, "style": "shard", "color": Color(0.80, 0.92, 0.84), "curve": 2.2},  # TUNING (not in GDD) a whirl of bone and soul-lit shards with every slam
+	# --- Act III: the Assembly Halls ---
+	"wraith_drone": {"trigger": "attack", "every": 3, "pattern": "seek", "counts": [5], "speed": 380.0,
+		"life": 0.7, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "spark", "color": Color(0.66, 1.0, 0.82), "homing": 10.0},  # TUNING (not in GDD) a flight of soul-lit wraith darts
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -259,6 +265,9 @@ const SPELLS := {
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"call_of_the_drowned": {"every": 1, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [3, 5, 8], "speed": 240.0,
 		"life": 1.0, "share": 0.3, "pierce": 0, "radius": 4.0, "style": "spark", "color": Color(0.45, 0.80, 0.74), "homing": 7.0},  # TUNING (not in GDD) drowned souls that seek the strongest foe
+	# --- Act III: the Assembly Halls ---
+	"hollow_puppet": {"every": 1, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [3, 4, 6], "speed": 260.0,
+		"life": 1.0, "share": 0.4, "pierce": 0, "radius": 4.0, "style": "spark", "color": Color(0.64, 0.36, 0.98), "homing": 8.0},  # TUNING (not in GDD) loose soul strings lashing out (share of a puppet hit)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

@@ -1207,6 +1207,7 @@ func finish(summary: Dictionary) -> void:
 	_print_battle_sister(st)
 	_print_archive(st)  # Act II: the Hollow Archive (only when its stage or kinds ran).
 	SpireReport.print_all(game, st)  # Act II, Ul-Thalos: the sinking, pillars, kinds, Vhal'Neth, the Waking, its items (only when they ran).
+	AssemblyReport.print_items(game, st)  # Act III, the Assembly Halls: Hollow Puppet, the Grave Drone, their passives, Signal Ghost (only when owned).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

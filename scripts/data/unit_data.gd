@@ -35,7 +35,11 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		# --- Content wave 2: Bone Golem ---
 		# Unlockable (UnlockData: the Bone Legion achievement), so a fresh save
 		# never offers it (Unlocks.offerable()).
-		"bone_golem"]
+		"bone_golem",
+		# --- Act III: the Assembly Halls ---
+		# Unlockable (UnlockData: slaying the Motherboard), so a fresh save never
+		# offers it (Unlocks.offerable()).
+		"grave_drone"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -107,6 +111,10 @@ const CORE_CLASSES := ["warrior", "archer", "mage", ["mender", "warder"]]
 ##                             support classes (Mender, Warder, Bishop) always
 ##                             take the support ring (HordeDirector
 ##                             _calculate_formation_anchors()).
+##   flies                   — Act III (the Grave Drone): true for a class that
+##                             always hovers (SummonedUnit.flies): it passes over
+##                             obstacles and rides no conveyor belt, but enemies
+##                             still target and hit it; false when absent.
 ##   rejoin_speed_mult       — content wave 2 (the Bone Golem): multiplier on its
 ##                             catch-up (FOLLOWING far from its post) and
 ##                             RETURNING speeds; 1 when absent.
@@ -875,6 +883,53 @@ const UNITS := {
 			"planted_far_penalty": 1.0,  # TUNING (not in GDD) target-score penalty while planted for a foe out of reach (it cannot walk)
 		},
 	},
+	# --- Act III: the Assembly Halls ---
+	# Grave Drone (owner-approved Act III proposal: "a flying swarm of skull
+	# drones, three to a card, that hover over the army and fire bone darts. A
+	# ranged class that cannot be body-blocked"; unlocked by slaying the
+	# Motherboard). A cheap ranged swarm that HOVERS (flies: no obstacle
+	# collision, no conveyor) inside the Bone Ring with the support classes
+	# (formation "back"), firing bone darts (GraveDroneBehavior "hover"
+	# releases its "dart" profile). Enemies can target and hit it; its body is
+	# drawn floating over a shadow. Works the same on every stage.
+	"grave_drone": {
+		"display_name": "Grave Drone",  # Owner-approved proposal
+		"plural": "Grave Drones",
+		"description": "A swarm of skull drones that hovers over your army and fires bone darts.",  # Card text: one short sentence (owner rule; numbers stay on the stat lines).
+		"max_hp": 30.0,  # TUNING (not in GDD) frail like an archer (first pass 22: 253 deaths in a forced run, Empire rounds stop on it)
+		"damage": 6.0,  # TUNING (not in GDD) per dart (an archer's arrow is 8; first pass 5)
+		"attack_interval": 1.2,  # TUNING (not in GDD) s
+		"attack_range": 190.0,  # TUNING (not in GDD) centre-to-edge (px); a little past the archers
+		"move_speed": 100.0,  # TUNING (not in GDD) px/s; quick hover (Blood Scent counts it as fast)
+		"radius": 7.0,  # TUNING (not in GDD) small body (px)
+		"acquisition_range": 270.0,  # TUNING (not in GDD)
+		"replenish_interval": 7.0,  # TUNING (not in GDD) s; cheap to rebuild
+		"band_min": 26.0,  # TUNING (not in GDD) over the army, inside the ring (px)
+		"band_max": 64.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.35,  # TUNING (not in GDD) it fires from where it hovers
+		"w_formation": 0.9,  # TUNING (not in GDD) keeps over the army
+		"w_separation": 0.9,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) hovers; never shies away
+		"attack_profile": "dart",  # Released by GraveDroneBehavior (one or more darts).
+		"target_profile": "ranged",
+		"windup": 0.12,  # TUNING (not in GDD) s
+		"projectile_speed": 460.0,  # TUNING (not in GDD) px/s
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.3,  # TUNING (not in GDD) healers value the cheap drones little
+		"formation": "back",  # Over the army: inside the Bone Ring with the support classes.
+		"capacity_bonus_mult": 0.6,  # TUNING (not in GDD) a swarm (like the Bone Hounds)
+		"flies": true,  # Owner-approved proposal: "cannot be body-blocked" (SummonedUnit.flies)
+		"behavior": "hover",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"dart_count": 1,  # Darts per attack (the Wraith Drone fires 3).
+			"dart_spread": 0.0,  # Rad between two darts of one attack.
+			"dart_pierce": 0,  # Extra foes a dart passes through (beyond the level rows' pierce).
+			"hover_lift": 15.0,  # TUNING (not in GDD) px the body hovers above its shadow (drawing only)
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1034,6 +1089,16 @@ const LEVELS := {
 		{"count": 1, "hp_bonus": 0.15, "damage_bonus": 0.20, "special_area": 0.15},
 		{"count": 1, "hp_bonus": 0.30, "damage_bonus": 0.20, "special_area": 0.15, "special_duration": 0.15},
 		{"count": 2, "hp_bonus": 0.30, "damage_bonus": 0.30, "special_area": 0.25, "special_duration": 0.15, "special_haste": 0.2},
+	],
+	# --- Act III: the Assembly Halls ---
+	# TUNING (not in GDD): three to a card (owner-approved proposal), 3 -> 6
+	# drones, harder darts, then faster and piercing at Lv 5.
+	"grave_drone": [
+		{"count": 3},
+		{"count": 4, "damage_bonus": 0.10},
+		{"count": 4, "damage_bonus": 0.20, "hp_bonus": 0.15},
+		{"count": 5, "damage_bonus": 0.25, "hp_bonus": 0.15, "speed_bonus": 0.10},
+		{"count": 6, "damage_bonus": 0.35, "hp_bonus": 0.25, "speed_bonus": 0.15, "pierce": 1},
 	],
 }
 

@@ -54,7 +54,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act II: the Hollow Archive ---
 	"heretic_scribe",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	"tide_widow"]
+	"tide_widow",
+	# --- Act III: the Assembly Halls ---
+	"marionette"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -93,6 +95,8 @@ const STAT_LABELS := {
 ##   verse_burst_radius      ForbiddenVerse._release_bursts (extra ink burst radius fraction)
 ##   thrall_hp_bonus         CallOfTheDrowned._raise (extra Thrall HP fraction)
 ##   thrall_cap_bonus        CallOfTheDrowned._raise (extra Thralls at once)
+##   puppet_duration         HollowPuppet._raise (extra puppet life fraction)
+##   puppet_damage           HollowPuppet._raise (extra puppet damage fraction)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -102,7 +106,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act II: the Hollow Archive ---
 	"verse_burst_radius",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	"thrall_hp_bonus", "thrall_cap_bonus"]
+	"thrall_hp_bonus", "thrall_cap_bonus",
+	# --- Act III: the Assembly Halls ---
+	"puppet_duration", "puppet_damage"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -335,6 +341,27 @@ const CHARACTERS := {
 		"stats": {"max_hp": 10.0, "move_speed": -0.05},  # TUNING (not in GDD) sturdier, slower: the sea's weight
 		"sprite": "player/tide_widow",
 		"tint": Color(0.36, 0.78, 0.72),  # TUNING (not in GDD) drowned teal
+		"starts_unlocked": false,
+	},
+	# --- Act III: the Assembly Halls ---
+	# The Marionette (Hollow Puppet's character; owner-approved Act III proposal,
+	# female, in the figure-redesign style: an hourglass figure, fully clothed in
+	# a violet harlequin gown and corset, a porcelain doll's mask face, soul
+	# strings running from her fingers; the bust rig and idle breathing). Hollow
+	# Puppet must be unlocked (the Motherboard) before she can be earned, by the
+	# usual Lv 5 rule.
+	"marionette": {
+		"display_name": "The Marionette",  # Owner-approved proposal
+		"title": "Every soul is a string; she has learned to pull them.",
+		"spell": "hollow_puppet",
+		"innate": {
+			"id": "puppeteer", "name": "Puppeteer",
+			"description": "Your puppets last 25% longer and hit 25% harder.",
+			"values": {"puppet_duration": 0.25, "puppet_damage": 0.25},  # Owner-approved proposal "puppets last 25% longer and hit harder"; the damage share TUNING (not in GDD)
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a light dancer's body
+		"sprite": "player/marionette",
+		"tint": Color(0.74, 0.46, 0.96),  # TUNING (not in GDD) soul-string violet
 		"starts_unlocked": false,
 	},
 }

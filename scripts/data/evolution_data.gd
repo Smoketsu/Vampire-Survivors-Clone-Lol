@@ -58,7 +58,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act II: the Hollow Archive ---
 	"unwritten_word",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
-	"tidecallers_host"]
+	"tidecallers_host",
+	# --- Act III: the Assembly Halls ---
+	"puppet_king"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -324,6 +326,26 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 80.0, "targets": 3, "radius": 50.0, "cooldown": 4.5, "range": 340.0, "life": 14.0, "thrall_hp": 0.9, "thrall_damage": 1.0,  # TUNING (not in GDD)
 			"host": 1,  # The evolution flag: the drowned rise as Spawns of the Deep.
+		},
+	},
+	# --- Act III: the Assembly Halls ---
+	# Puppet King (GDD §15.0 "The Assembly Halls (Act III phase 2)"; owner-
+	# approved proposal: "two puppets, and a puppet that dies explodes"): Hollow
+	# Puppet + Strings of the Dead (a NEW passive, owner rule: at Lv 5). A
+	# puppet that dies (its life ran out or it was killed) bursts: `burst` x its
+	# damage to every foe within `burst_radius` px (source "puppet_burst", an
+	# on-death effect for Marginalia). Detected by the "king" key.
+	"puppet_king": {
+		"base": "hollow_puppet",
+		"passive": "strings_of_the_dead",
+		"display_name": "Puppet King",
+		"icon": "puppet_king",
+		"description": "Two puppets dance on your strings, and each one bursts when it dies.",
+		"labels": {"damage": "Puppet damage", "puppets": "Puppets", "puppet_life": "Puppet life (s)", "burst": "Death burst (x damage)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 42.0, "puppets": 2, "puppet_life": 8.0, "puppet_hp": 1.0, "cooldown": 7.0, "range": 340.0,  # Owner-approved proposal "two puppets"; numbers TUNING (not in GDD)
+			"burst": 2.5, "burst_radius": 72.0,  # TUNING (not in GDD) owner-approved "a puppet that dies explodes"
+			"king": 1,  # The evolution flag: puppets burst when they die.
 		},
 	},
 }
