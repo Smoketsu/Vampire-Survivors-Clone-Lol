@@ -57,17 +57,17 @@ const PARTS := [
 			["epilogue/act2_4", Vector2(0.0, 0.8), Vector2(1.0, 0.3)],  # TUNING (not in GDD) from the necromancer across to Vhal'Neth kneeling
 		],
 	},
+	ACT3_PART,  # Act III, "The Machines Go Dark" (its row and panels below).
 ]
 # --- Act III: the Iron Citadel ---
 ## HOOK for the Act III part of the epilogue (owner-approved proposal: "a third
 ## epilogue part, 'The Machines Go Dark' (illustrated like Acts I and II), opened
-## by the Act III achievement"). The Iron Citadel's agent leaves it OUT of PARTS:
-## the lead builds its four panels at integration (tools/epilogue_panel.py,
-## art_source/epilogue/) and then appends this row to PARTS (with its
-## `panels` filled, one per line), so the epilogue screen, the main menu's
-## Epilogue button (any_open()) and the autoplay-once flow pick it up with no
-## other change. `achievement` is MetaData "nothing_is_deathless" (Deus Ex
-## Machina slain in the Iron Citadel); its Meta flag will be [epilogue] seen_act3.
+## by the Act III achievement"). The last row of PARTS (GDD §15.0 "Act III
+## epilogue and the new closing card"): its four panels (tools/epilogue_panel.py,
+## art_source/epilogue/act3_<n>) are filled, one per line, so the epilogue
+## screen, the main menu's Epilogue button (any_open()) and the autoplay-once
+## flow pick it up with no other change. `achievement` is MetaData "nothing_is_deathless" (Deus Ex
+## Machina slain in the Iron Citadel); its Meta flag is [epilogue] seen_act3.
 ## The text follows the proposal's ending ("Nothing is deathless. Everything is
 ## mine."; Varn's soul taken from the broken core; the machines go dark).
 const ACT3_PART := {
@@ -81,14 +81,23 @@ const ACT3_PART := {
 		"Nothing is deathless. Everything is mine. Across the realm the machines went dark, rank after rank, and their founder rose to serve a new master.",  # Owner-approved proposal ending
 		"Covenant, Eye and Empire are ash, blind and silent. The dead are the only empire left.",  # TUNING (not in GDD)
 	],
-	"panels": [],  # The lead fills the four panels at integration (see above).
+	"panels": [
+		["epilogue/act3_1", Vector2(0.0, 0.1), Vector2(1.0, 0.9)],  # TUNING (not in GDD) the chrome towers, down the avenue of steel citizens to the rebuilding cradle
+		["epilogue/act3_2", Vector2(1.0, 0.2), Vector2(0.2, 0.6)],  # TUNING (not in GDD) from the kneeling mech across to the necromancer reaching for Varn's soul
+		["epilogue/act3_3", Vector2(1.0, 0.3), Vector2(0.0, 0.8)],  # TUNING (not in GDD) along the dead ranks to Varn bowing to the necromancer
+		["epilogue/act3_4", Vector2(0.5, 0.0), Vector2(0.5, 0.9)],  # TUNING (not in GDD) the three acts' ruins, down to the army of the dead
+	],
 }
 ## The closing card after Act II (shown only once the Act II part is open):
-## the sequel set-up of the original spec ("other religious orders mobilize").
+## the set-up of Act III (owner, wave 2 art review: "redo with electronic empire
+## vibes"; GDD §15.0 "Act III epilogue and the new closing card"): the beacons
+## lit for the dead are seen by the Electronic Empire, which nobody called. It
+## still closes Act II once Act III is open.
 const CLOSING := {
+	"after": "act2",  # TUNING (not in GDD) id of the PARTS row the card follows (Act II, also once Act III is open)
 	"act": "Beyond the realm",  # TUNING (not in GDD)
 	"heading": "The Beacons Burn",  # TUNING (not in GDD)
-	"line": "Far beyond the mountains, the holy orders the Covenant once led are lighting their beacons. They remember how to march, and they are marching on the dead.",  # TUNING (not in GDD) two lines; the banners name the orders
+	"line": "Far beyond the mountains, the holy orders the Covenant once led are lighting their beacons. They remember how to march, and they are marching on the dead.",  # TUNING (not in GDD) two lines; the banners name the orders. Owner decision (Act III art review round 4): the knights card stays, its blue star repainted gold; the Empire version is kept only as art_source/epilogue/close_empire.png
 	"tag": "To be continued.",  # TUNING (not in GDD) small dim line under the closing text
 	"panel": ["epilogue/close", Vector2(0.0, 0.0), Vector2(1.0, 0.85)],  # TUNING (not in GDD) the beacons, down to the knights at the gate
 }

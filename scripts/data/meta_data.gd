@@ -336,7 +336,7 @@ const ACHIEVEMENTS := {
 	# "Nothing Is Deathless: defeat Deus Ex Machina; reward: the Act III epilogue
 	# + title Breaker of Engines"): the stage boss slain in the Iron Citadel,
 	# counted from the stage record. Its title is an UnlockData row; its epilogue
-	# part is EpilogueData.ACT3_PART (built by the lead at integration).
+	# part is EpilogueData.ACT3_PART (the last row of EpilogueData.PARTS).
 	"nothing_is_deathless": {"display_name": "Nothing Is Deathless", "description": "Defeat Deus Ex Machina in the Iron Citadel",
 		"stat": "boss_kills", "stage": "citadel", "goal": 1, "unlock": "Title Breaker of Engines, the Act III epilogue", "bounty": 350},  # Owner-approved proposal; bounty TUNING (not in GDD) the campaign's last (The Dead God Serves 300)
 }
