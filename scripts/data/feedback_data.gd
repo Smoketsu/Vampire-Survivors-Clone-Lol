@@ -14,12 +14,12 @@ extends RefCounted
 ## The Google Form's public link, ending in ".../viewform" (no "?" part).
 ## "" = not set up yet: every Feedback button is hidden. A debug run can set
 ## one with --feedback-url= (GameState) without changing this file.
-const FORM_URL: String = ""  # TUNING (not in GDD) owner: fill in with the form's link
+const FORM_URL: String = "https://docs.google.com/forms/d/e/1FAIpQLSclf76qjx7-CUY4vb8zZXBaQDQP_5lE8oG08LA3k1nhFpvtCQ/viewform"  # TUNING (not in GDD) owner's "Necropathy Feedback" Google Form (Oct 2026)
 ## The prefill field id of the form's "Details (filled in by the game)"
 ## question, e.g. "entry.123456789" (Google Forms: ⋮ > Get pre-filled link).
 ## "" = the form opens without the report filled in. --feedback-entry= sets
 ## one for a debug run.
-const DETAILS_ENTRY: String = ""  # TUNING (not in GDD) owner: fill in with the question's entry id
+const DETAILS_ENTRY: String = "entry.190257876"  # TUNING (not in GDD) the form's "Details (filled in by the game)" question
 ## Query text put between FORM_URL and the prefilled field: Google Forms'
 ## "pre-filled link" marker, then the field separator.
 const PREFILL_QUERY: String = "?usp=pp_url&"  # TUNING (not in GDD) Google Forms' prefill format
