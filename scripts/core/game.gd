@@ -261,11 +261,13 @@ func _ready() -> void:
 	enemy_grid = SpatialHash.new(GRID_CELL)
 	ally_grid = SpatialHash.new(GRID_CELL)
 	volleys_on = GameState.autotest_volleys if GameState.autotest else Settings.volleys  # Before DifficultyModifiers (denser fodder).
+	if coop != null and coop.lockstep != null and not GameState.autotest:
+		volleys_on = bool((coop_start.get("config", {}) as Dictionary).get("volleys", true))  # Online co-op: the host's setting on both machines.
 	combat = CombatResolver.new(self)
 	codex = CodexLog.new(self)  # Codex records (first, so every hook below can reach it).
 	difficulty = DifficultyModifiers.new(self)
 	dread_rally = DreadRally.new(self)
-	ultimates = UltimateSystem.new(self, _resolve_ultimate())
+	ultimates = UltimateSystem.new(self, _resolve_ultimate() if coop == null else coop.ultimate_for(0))  # Co-op: slot 0's own (the host's) choice.
 	stance = ArmyStance.new(self)
 	if bool(stage_def.get("dread", false)):
 		dread = DreadMeter.new(self)  # Act II only.
@@ -389,7 +391,27 @@ func _ready() -> void:
 	if GameState.victory_preview:
 		VictoryPreview.setup(self)  # Debug: a small army for the scripted victory.
 	_build_ui()
+	if coop != null and coop.lockstep != null:
+		level_up_panel.coop_net = true  # Its choices become lockstep commands.
+		level_up_panel.coop_action.connect(coop.lockstep.on_panel_action)
+		pause_menu.set_coop(true)  # Leave instead of Restart / Main Menu.
+		coop.lockstep.start()
 	ground.update_view(player.position)
+
+
+func _exit_tree() -> void:
+	if coop != null and coop.lockstep != null:
+		coop.lockstep.stop()  # CoopNet outlives the run.
+		coop.lockstep = null  # Breaks the session <-> lockstep reference cycle (both RefCounted).
+
+
+## Online co-op: the window lost focus or the page went to the background
+## (a phone tab, a turned screen): pause both machines at once, since this one
+## may stop running (never under the autotest).
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
+		if coop != null and coop.lockstep != null and not GameState.autotest:
+			coop.lockstep.request_pause_now()
 
 
 ## The skin the necromancer wears this run (purely cosmetic, SkinData): the
@@ -428,6 +450,10 @@ func _make_coop() -> void:
 		if los.size() >= CoopData.SLOTS:
 			coop = CoopSession.new(self, los, int(coop_start.get("local_slot", 0)), false, int(coop_start.get("seed", 0)))
 			seed(coop.run_seed)  # Both machines run the same global stream.
+			coop.lockstep = CoopLockstep.new(self, coop, coop.view_slot)  # Only inputs travel (CoopLockstep).
+			if autotest != null:
+				autotest.slot = coop.view_slot  # --coop-net: the run's bot plays this machine's slot,
+				autotest.net = true  # through the lockstep.
 
 
 ## Co-op: takes the solo-built objects as slot 0's, builds slot 1's beside them,
@@ -533,7 +559,7 @@ func _build_ui() -> void:
 	pause_menu.game = self
 	pause_menu.resume_pressed.connect(toggle_pause)
 	pause_menu.restart_pressed.connect(func() -> void: restart_requested.emit())
-	pause_menu.main_menu_pressed.connect(func() -> void: main_menu_requested.emit())
+	pause_menu.main_menu_pressed.connect(_on_pause_main_menu)
 	root.add_child(pause_menu)
 	last_stand = LastStand.new()  # Over the frozen world and the HUD, under the results card.
 	last_stand.game = self
@@ -552,6 +578,9 @@ func _build_ui() -> void:
 
 ## In-run hotkeys. Only reached while playing (Game pauses with the tree).
 func _unhandled_input(event: InputEvent) -> void:
+	if coop != null and coop.lockstep != null:
+		_unhandled_input_net(event)  # Online co-op: the presses travel as lockstep inputs.
+		return
 	if event.is_action_pressed("toggle_aim") and run_state == RunState.PLAYING:
 		abilities.toggle_bolt_aim()
 		get_viewport().set_input_as_handled()
@@ -563,7 +592,27 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+## Online co-op: the in-run hotkeys become the local slot's next input
+## (CoopLockstep.press()); both machines apply them at the same tick.
+func _unhandled_input_net(event: InputEvent) -> void:
+	if run_state != RunState.PLAYING:
+		return
+	var bit := 0
+	if event.is_action_pressed("toggle_aim"):
+		bit = CoopLockstep.BTN_AIM
+	elif event.is_action_pressed("dash"):
+		bit = CoopLockstep.BTN_DASH
+	elif event.is_action_pressed("ultimate"):
+		bit = CoopLockstep.BTN_ULT
+	if bit != 0:
+		coop.lockstep.press(bit)
+		get_viewport().set_input_as_handled()
+
+
 func _physics_process(delta: float) -> void:
+	if coop != null and coop.lockstep != null:
+		coop.lockstep.frame(delta)  # Online co-op: the lockstep runs the ticks (frozen ones too).
+		return
 	if run_state != RunState.PLAYING:
 		return
 	if coop != null:
@@ -639,6 +688,23 @@ func _physics_coop(delta: float) -> void:
 		coop.resolve_level_ups()
 
 
+## Online co-op: one simulation tick, run by CoopLockstep when both players'
+## inputs for it are known and the run is not frozen: both slots and the
+## shared systems (CoopSession.step()), the step timing, the autotest's run
+## checks. The level-up rounds and chest reveals are the lockstep's.
+func coop_sim_tick(delta: float) -> void:
+	var t0 := Time.get_ticks_usec()
+	coop.step(delta)
+	last_step_usec = Time.get_ticks_usec() - t0
+	worst_step_usec = maxi(worst_step_usec, last_step_usec)
+	_step_usec_total += last_step_usec
+	_step_count += 1
+	if perf != null:
+		perf.record(last_step_usec)
+	if autotest != null and run_state != RunState.ENDED:
+		autotest.step(delta)  # This machine's bot (slot bound: this machine's) and the run-level checks.
+
+
 func _process(_delta: float) -> void:
 	# Camera follow + trauma-based screen shake (Juice autoload, cosmetic).
 	camera.position = player.position
@@ -680,11 +746,33 @@ func shake(amount: float) -> void:
 	Juice.shake(amount)
 
 
-## World size in px treated as "on screen" by gameplay (spawn ring, off-screen
-## checks): the real visible area, but never smaller than at
-## ViewData.GAMEPLAY_ZOOM, so zooming in (Close) does not change gameplay.
+## World size in px treated as "on screen" (solo gameplay through
+## gameplay_view_size(), and drawing): the real visible area, but never smaller
+## than at ViewData.GAMEPLAY_ZOOM, so zooming in (Close) does not change gameplay.
 func view_size() -> Vector2:
-	return get_viewport_rect().size / minf(camera.zoom.x, ViewData.GAMEPLAY_ZOOM)
+	var size := get_viewport_rect().size  # Visible layout area (px).
+	if GameState.autotest and GameState.autotest_view != Vector2.ZERO:
+		size = GameState.autotest_view  # --view=WxH: a test window size (headless is always 1280 x 1280).
+	return size / minf(camera.zoom.x, ViewData.GAMEPLAY_ZOOM)
+
+
+## World size in px that GAMEPLAY treats as "on screen" (the enemy spawn ring,
+## the recycle distance, the Soul Nova): view_size() in solo; in co-op one fixed
+## size (CoopLockstepData.GAMEPLAY_VIEW, the headless autotest's 1280 x 1280 at
+## GAMEPLAY_ZOOM) on every machine, so the same seed plays the same whatever
+## each player's window, browser or phone. Drawing keeps view_size().
+func gameplay_view_size() -> Vector2:
+	if coop != null:
+		return CoopLockstepData.GAMEPLAY_VIEW
+	return view_size()
+
+
+## The pause menu's Main Menu (Leave in co-op: the partner is told first, his
+## game hands this necromancer to the bot).
+func _on_pause_main_menu() -> void:
+	if coop != null and coop.lockstep != null:
+		coop.lockstep.leave()
+	main_menu_requested.emit()
 
 
 ## Applies a zoom change made in the Settings menu during a run.
@@ -780,6 +868,9 @@ func open_chest(pos: Vector2) -> void:
 
 ## The chest reveal was closed: resume (a pending level-up opens next tick).
 func _on_chest_closed() -> void:
+	if coop != null and coop.lockstep != null:
+		coop.lockstep.on_local_chest_closed()  # Online: the confirm travels; both resume at the same tick.
+		return
 	if run_state != RunState.CHEST:
 		return
 	run_state = RunState.PLAYING
@@ -797,6 +888,9 @@ func can_toggle_pause() -> bool:
 
 ## Esc pause menu toggle (GDD §4 "Esc: Pause/settings").
 func toggle_pause() -> void:
+	if coop != null and coop.lockstep != null:
+		coop.lockstep.request_toggle_pause()  # Online: a pause / resume command for both machines.
+		return
 	if run_state == RunState.PLAYING:
 		run_state = RunState.PAUSED
 		get_tree().paused = true
@@ -846,6 +940,8 @@ func end_run(won: bool, reason: String) -> void:
 		return
 	if coop != null:
 		coop.bind(coop.view_slot)  # The summary, the Soul Ash and the autotest report are this machine's player's.
+		if coop.lockstep != null:
+			coop.lockstep.on_run_end()  # Online: the last frames out, no more ticks.
 	run_state = RunState.ENDED
 	victory = won
 	end_reason = reason
@@ -894,7 +990,7 @@ func build_summary() -> Dictionary:
 		"boss_kill_time": boss_kill_time,  # Victory card highlight (s, -1 = not slain).
 		"peak_army": peak_army,  # Victory card highlight.
 		"evolution_log": abilities.evolution_history.duplicate(),  # "id@m:ss" (victory card).
-		"kills": kills,
+		"kills": kills if coop == null else coop.slots[coop.view_slot].kills,  # Co-op: this player's own kills (his Soul Ash).
 		"level": level,
 		"horde_total": horde.units.size(),
 		"horde_capacity": horde.total_capacity(),

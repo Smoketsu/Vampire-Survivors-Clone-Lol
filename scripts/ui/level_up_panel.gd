@@ -30,6 +30,10 @@
 ##                                B / LB again, Esc or controller B cancels)
 ##   Skip            N            controller RB
 ## Controller Y stays the Shadow Bolt aim toggle, so it is not used here.
+## Online co-op (`coop_net`, CoopLockstep): a pick, Reroll, Banish or Skip is
+## not applied here but emitted as `coop_action`; the lockstep applies it at
+## the same tick on both machines, then reopens the panel with the new cards
+## (reroll, banish) or closes it (pick, skip).
 ## These keys are shown as InputHints chips (the current device's: keyboard
 ## keys or pad buttons), never as text: a hint strip under the title, a
 ## "1" / "2" / "3" key chip on each card (keyboard only), a chip inside each
@@ -40,6 +44,8 @@ extends Control
 ## Emitted with the chosen offer Dictionary (see AbilityManager._offer()); a
 ## skip emits AbilityManager.skip_offer().
 signal card_chosen(offer: Dictionary)
+## Online co-op: the player's choice ("pick" / "reroll" / "banish" / "skip", card index or -1).
+signal coop_action(action: String, index: int)
 
 ## Clicks/keys within this many ms of opening are ignored, so a held key or
 ## an in-flight click doesn't pick a card by accident.
@@ -81,6 +87,8 @@ var _banish_mode: bool = false
 var _opened_msec: int = 0
 ## True while waiting for a choice.
 var _waiting: bool = false
+## Online co-op: choices are emitted as coop_action instead of applied (Game sets it).
+var coop_net: bool = false
 
 
 func _ready() -> void:
@@ -382,11 +390,20 @@ func _choose(idx: int, forced: bool) -> void:
 		_banish(idx)
 		return
 	_waiting = false
+	if coop_net:
+		coop_action.emit("pick", idx)  # Applied by the lockstep (both machines, one tick).
+		return
 	card_chosen.emit(_offers[idx])
 
 
 ## Spends a reroll and redraws every card.
 func _reroll() -> void:
+	if coop_net:
+		if game.abilities.rerolls_left > 0:
+			_banish_mode = false
+			_waiting = false  # The new cards come with the lockstep tick.
+			coop_action.emit("reroll", -1)
+		return
 	if game.abilities.use_reroll():
 		_banish_mode = false
 		_show(game.abilities.build_offers(PlayerData.CARDS_PER_LEVEL))
@@ -404,6 +421,10 @@ func _banish(idx: int) -> void:
 	if not game.abilities.can_banish(_offers[idx]):
 		return
 	_banish_mode = false
+	if coop_net:
+		_waiting = false  # The new card comes with the lockstep tick.
+		coop_action.emit("banish", idx)
+		return
 	_show(game.abilities.banish_offer(_offers, idx))
 	if idx < _buttons.size():
 		UiTheme.focus_deferred(_buttons[idx])
@@ -412,6 +433,9 @@ func _banish(idx: int) -> void:
 ## Skips this level-up (small heal, see LevelUpData).
 func _skip() -> void:
 	_waiting = false
+	if coop_net:
+		coop_action.emit("skip", -1)
+		return
 	card_chosen.emit(game.abilities.skip_offer())
 
 

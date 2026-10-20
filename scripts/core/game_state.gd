@@ -138,6 +138,23 @@
 ##   --character2=ID       --coop-bot: slot 1's character (default gravecaller).
 ##   --classes2=a,b        --coop-bot: slot 1's forced summon classes.
 ##   --spells2=a,b         --coop-bot: slot 1's forced spells (+ evolution passives).
+##   --coop-net=host|join  Online co-op through the lockstep (co-op milestone 2,
+##                         CoopNetBot): this process hosts a lobby (printing
+##                         COOP_CODE=<code>) or joins --coop-code=<code>, both
+##                         against --relay=ws://... (tools/coop_relay.py), the
+##                         host starts with --seed=, and each process's army bot
+##                         plays ITS slot through CoopLockstep (its own
+##                         --character= is its loadout). Run both with the same
+##                         run flags. tools/coop_lockstep_gate.py runs the pair;
+##                         the summary adds a "coop lockstep" line (ticks,
+##                         frames sent / received, checksums, the chain).
+##   --coop-code=CODE      --coop-net=join: the lobby code to join.
+##   --coop-mixed          --coop-net test: let a partner on another platform in
+##                         (CoopNetData.ALLOW_MIXED_PLATFORMS is off; the Web-vs-native
+##                         checksum test, tools/coop_web_lockstep.js).
+##   --view=WxH            Test: Game.view_size() reports a W x H window (layout px)
+##                         instead of the real one (headless has a fixed 1280 x 1280), to
+##                         check that co-op gameplay ignores the window (one fixed size).
 ##   --effects=reduced     Draws with Effects = Reduced (default Full; drawing only).
 ##   --perf-real=A-B,...   --perf, and those game-second windows run at real
 ##                         time (1x) so the rendered-frame times there are real.
@@ -233,6 +250,17 @@ var autotest_spells2: PackedStringArray = PackedStringArray()
 ## Autotest (--coop-bot): game second at which --coop-down=T knocks slot 1's
 ## necromancer down once (a test of the downed / revive rule; -1 = never).
 var autotest_coop_down: float = -1.0
+## Autotest: "host" or "join" for --coop-net= (online co-op through the
+## lockstep, CoopNetBot); "" = none.
+var autotest_coop_net: String = ""
+## Autotest (--coop-net=join): the lobby code of --coop-code= ("" = none).
+var autotest_coop_code: String = ""
+## Autotest (--coop-mixed): accept a lobby partner on another platform (the
+## Web-vs-native desync test); off = the game's own rule.
+var autotest_coop_mixed: bool = false
+## Autotest (--view=WxH): the window size Game.view_size() reports (layout px;
+## zero = the real viewport).
+var autotest_view: Vector2 = Vector2.ZERO
 ## Autotest (--coop-down-slot=N): the slot --coop-down knocks down (-1 = the
 ## last slot, the default; 0 = the viewed slot).
 var autotest_coop_down_slot: int = -1
@@ -321,6 +349,16 @@ func _parse_args(args: PackedStringArray) -> void:
 		elif arg.begins_with("--perf-real="):
 			autotest_perf = true
 			autotest_perf_real = arg.get_slice("=", 1)  # Real-time windows (game seconds).
+		elif arg.begins_with("--coop-net="):
+			autotest_coop_net = arg.get_slice("=", 1).to_lower()  # Online co-op through the lockstep (CoopNetBot).
+		elif arg.begins_with("--coop-code="):
+			autotest_coop_code = arg.get_slice("=", 1).to_upper()
+		elif arg == "--coop-mixed":
+			autotest_coop_mixed = true  # Test: a partner on another platform is let in.
+		elif arg.begins_with("--view="):
+			var wh := arg.get_slice("=", 1).split("x")  # "W" and "H".
+			if wh.size() == 2:
+				autotest_view = Vector2(wh[0].to_float(), wh[1].to_float())
 		elif arg.begins_with("--coop-down="):
 			autotest_coop_down = arg.get_slice("=", 1).to_float()  # Test: slot 1 downed at T s.
 		elif arg.begins_with("--coop-down-slot="):

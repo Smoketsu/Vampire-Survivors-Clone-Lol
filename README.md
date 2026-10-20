@@ -171,8 +171,8 @@ rewards; until then they are open). Numbers in `scripts/data/ultimate_data.gd`.
 ### Online co-op (in development)
 
 Two players, each on their own screen, browser or desktop, through a small relay server (`docs/coop/DESIGN.md`).
-The lobby and connection are in; the co-op run itself is being built (for now Start begins an ordinary solo run on
-each machine with the host's stage and settings).
+The lobby, the connection and the co-op run itself (deterministic lockstep, below) are in; the partner's HUD bar
+and edge arrow come with the co-op HUD branch.
 
 - **Host:** title screen → **Co-op** → **Host**. The lobby shows a 5-letter code: press **Copy** (or **Share** on a
   phone, which also sends a link that opens the game with the code filled in) and send it to your friend.
@@ -181,11 +181,27 @@ each machine with the host's stage and settings).
   unlocks; their Ossuary upgrades come along). The host also picks the stage (**Stage**), the difficulty, the
   modifiers and Hyper; the guest sees those read-only. The guest presses **Ready**, then the host **Start**.
   **Leave** asks first. Both players need the same game version.
+- **In the run** each machine runs the whole game of both players and only the inputs travel (`CoopLockstep`):
+  your moves and presses reach the game about 70-120 ms later on both screens (the input delay adapts to the
+  ping). A level-up opens your own cards while your partner picks theirs (the game waits for both: "Your
+  partner is choosing a card"); a treasure chest holds the game while its opener looks at it; either player's pause (Esc,
+  a turned phone, a tab in the background) pauses both, and either can resume. If the partner's game stops
+  answering for about 1.5 s a "Waiting for partner: Connection is slow" panel shows; after 10 s, or when they leave (the pause
+  menu's **Leave**), a bot takes over their necromancer and you play on. The run cannot be restarted (Again and
+  Next lead back to the menu). If the two games ever stop matching (a **desync**, checked every second) the run
+  ends for both and each keeps the Soul Ash earned. Each device saves only its own player's Soul Ash (from your
+  own kills, plus the run's time, boss and objectives), achievements, unlocks, recipes and Codex.
 - **Local testing** without Cloudflare: `python3 tools/coop_relay.py` runs the relay on port 8765; start the game
   with `-- --relay=ws://127.0.0.1:8765` (desktop) or add `?relay=ws://127.0.0.1:8765` to the Web build's address.
 - **Tests:** `python3 tools/coop_relay_check.py http://127.0.0.1:8765` (relay protocol), `python3
   tools/coop_net_test.py` (two headless games: lobby, join by code, start, 10,000 frames each way) and
   `node tools/coop_lobby_shots.mjs` (the lobby screens in the Web build in headless Chromium, desktop and phone).
+  The **determinism gate**: `python3 tools/coop_lockstep_gate.py` (two headless games play one whole co-op run
+  through the lockstep, each with its own army bot, and must agree on every checksum; `--delay-ms 40 --jitter-ms 25
+  --real-time --speed 1` adds latency, `--kill-join-at 300` is the drop test) and `node tools/coop_web_lockstep.js
+  build/web web-web OUT` (two Web pages). Both players must be on the **same platform** (both in a browser, or both
+  on the same desktop system): the Web build and a desktop build do not compute exactly alike, so the lobby refuses
+  the mix.
 - **In the run** (as it lands): your partner's plate (name, HP, bust) sits under the kill count; an edge arrow with
   his face points at him when he is off screen, and his name floats over him when he is on it. A downed
   necromancer gets a crimson marker, a faint circle showing how close to stand and a green ring that fills while
@@ -1996,6 +2012,10 @@ scripts/
     coop_net.gd             Autoload CoopNet: the WebSocket to the relay, lobby state, loadouts, start_info,
                             send_frame / frame_received, pings (idle unless co-op is used)
     coop_net_test.gd        --coop-net-test=host|join: the headless two-process network test
+    coop_lockstep.gd        Online co-op lockstep driver (co-op milestone 2): inputs per tick, bundled frames,
+                            the input delay, level-up / chest / pause freezes, the desync checksum, the
+                            partner drop (bot takeover)
+    coop_net_bot.gd         --autotest --coop-net=host|join: the lobby of the headless lockstep test
     coop_session.gd         Online co-op simulation (game.coop; null in solo): two player slots, the
                             binding of Game's per-player fields, the co-op tick, downed / revive, the
                             shared level-ups, chests, the --coop-bot report (docs/coop/DESIGN.md)
@@ -2448,6 +2468,8 @@ scripts/
     meta_data.gd            Soul Ash formula, upgrade trees / tiers / costs, achievements, autotest profiles
     powerup_data.gd         Power-up types, weights, durations, drop chances, pity, cap, lifetime
     coop_data.gd            Online co-op numbers: enemy / cap / XP / boss scaling, revive, start spots
+    coop_lockstep_data.gd   Online co-op lockstep numbers: tick, input delay, bundling, checksum, stall / drop
+                            times, the one co-op gameplay view size, the waiting lines
     coop_hud_data.gd        Co-op visuals: partner plate, edge arrow, downed marker, waiting panel, notice,
                             results column, the debug walk's times (all cosmetic)
     chest_data.gd           Chest drop chances, pity, contents (1 / 3 / 5) weights, reveal timing
@@ -2551,6 +2573,7 @@ Options (after `--`):
 | `--volleys=on\|off` | The bullet heaven pass (default on, like the setting): `off` runs none of the pass (no volleys, the usual fodder; the army still holds the Bone Ring). Every summary has a `volleys` line: shots fired, hits, volley damage, peak shots in flight against the cap, volleys thinned by the cap, boss hits refused by the per-volley cap, Rally Barrages, and the volley damage by class / spell. |
 | `--coop-bot` | Online co-op without the network (`docs/coop/DESIGN.md`): a two-player run in one process, both slots driven by the bots (the army policy for both unless `--policy=` / `--policy2=` say otherwise), the camera on slot 0. The summary adds a `coop slot N` line and a `coop slot N build` line per slot (level, kills, lowest HP before 0:00, downs, revives given, army, chests, evolutions, picks, actives, passives, that army's volleys) and a `coop` line (shared level, kills, revives, downs, the wipe, peak enemies against the doubled hard cap, the co-op multipliers). |
 | `--policy2=`, `--character2=`, `--classes2=`, `--spells2=` | `--coop-bot`: slot 1's card policy (default army), character, forced summon classes and forced spells. |
+| `--coop-net=host\|join`, `--coop-code=CODE` | Online co-op through the lockstep (co-op milestone 2): this process hosts a lobby on `--relay=` (printing `COOP_CODE=<code>`) or joins `--coop-code=`; the host starts with `--seed=` and each process's army bot plays its own slot (its `--character=` is its loadout; `--classes=` / `--spells=` / `--passives=` are ignored, they would change one machine only). Both need the same run flags. The summary adds a `coop lockstep` line (ticks, frames sent / received, checksums compared, the checksum chain, delay, stalls, the partner) and `[coop] run ended at tick N: final state ...`. `python3 tools/coop_lockstep_gate.py` runs the pair against a local relay and compares them (`--delay-ms` / `--jitter-ms` for latency, `--kill-join-at=T` for the drop test, `--timeout-game=T` for a short run); `node tools/coop_web_lockstep.js build/web native-web\|web-web OUT` mixes in the Web build. |
 | (coop hud) | A `--coop-bot` summary has a `coop hud` line (`CoopUi`, read only): physics ticks the partner was off the logical view (an edge arrow), ticks a downed marker showed and its revive ring filled, ticks the viewed player lay downed, waiting-panel texts and clears, notices. |
 | `--coop-down-slot=N` | `--coop-down=T` knocks slot N down instead of the last slot (0 = the viewed slot: its "Your partner can raise you" plate shows). |
 | `--coop-ui-test` | `--coop-bot` debug: walks every co-op visual state during the run (the partner plate, each waiting text, a notice, the downed marker, then the off-screen arrow at the Close zoom) with a `coop ui:` line per state (`CoopUiTest`). |

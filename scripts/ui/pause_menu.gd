@@ -25,6 +25,10 @@
 ## (move, Grave Step, Dread Rally, Shadow Bolt aim, resume) as chips of the
 ## current device and bindings. Restart and Main Menu go through
 ## _on_restart() / _on_main_menu() so a confirm step can wrap them.
+## Online co-op (set_coop(), CoopLockstep): Restart is hidden and Main Menu
+## reads Leave (the partner plays on with a bot); either player's pause opens
+## it on both machines, with "Paused by your partner" under the title on the
+## other one (set_partner_line()).
 class_name PauseMenu
 extends Control
 
@@ -46,6 +50,12 @@ var _recipes_btn: Button
 var _recipes: RecipesPanel = null
 ## The run summary column's content (rebuilt on open).
 var _info_box: VBoxContainer
+## Restart button (hidden in online co-op).
+var _restart_btn: Button
+## Main Menu button (reads Leave in online co-op).
+var _menu_btn: Button
+## Line under the title: who paused (online co-op; empty = hidden).
+var _partner_line: Label
 
 
 func _ready() -> void:
@@ -82,6 +92,10 @@ func _ready() -> void:
 	vb.custom_minimum_size = Vector2(InRunUiData.PAUSE_BUTTON_WIDTH, 0)
 	menu.add_child(vb)
 	vb.add_child(UiTheme.title("Paused"))
+	_partner_line = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
+	_partner_line.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_partner_line.visible = false
+	vb.add_child(_partner_line)
 	vb.add_child(UiTheme.divider("violet"))
 	_resume = _button(vb, "Resume", func() -> void: resume_pressed.emit())
 	_recipes_btn = _button(vb, "Recipes", _open_recipes)
@@ -90,8 +104,8 @@ func _ready() -> void:
 		var fb := FeedbackButton.make(func() -> Dictionary: return FeedbackReport.pause_context(game))  # Stays paused.
 		fb.custom_minimum_size = Vector2(0, InRunUiData.PAUSE_BUTTON_HEIGHT)
 		vb.add_child(fb)
-	_button(vb, "Restart", _on_restart)
-	_button(vb, "Main Menu", _on_main_menu)
+	_restart_btn = _button(vb, "Restart", _on_restart)
+	_menu_btn = _button(vb, "Main Menu", _on_main_menu)
 	var ult_word := String(game.ultimates.row()["short"]) if game != null and game.ultimates != null else "Rally"  # The run's ultimate, one word.
 	outer.add_child(InputHints.strip([[InputHints.MOVE, "Move"], ["dash", "Step"], ["ultimate", ult_word],
 		["toggle_aim", "Bolt aim"], ["ui_cancel", "Resume"]]))
@@ -107,6 +121,18 @@ func _on_restart() -> void:
 func _on_main_menu() -> void:
 	# asks first (the run in progress would be lost).
 	ConfirmDialog.ask(self, ConfirmData.MAIN_MENU[0], ConfirmData.MAIN_MENU[1], ConfirmData.MAIN_MENU[2], func() -> void: main_menu_pressed.emit())
+
+
+## Online co-op: hides Restart and turns Main Menu into Leave (`on`).
+func set_coop(on: bool) -> void:
+	_restart_btn.visible = not on
+	_menu_btn.text = CoopLockstepData.LEAVE_WORD if on else "Main Menu"
+
+
+## Online co-op: the line under the title ("" hides it), e.g. who paused.
+func set_partner_line(text: String) -> void:
+	_partner_line.text = text
+	_partner_line.visible = text != ""
 
 
 ## Rebuilds the run summary from the run's current state (read-only).

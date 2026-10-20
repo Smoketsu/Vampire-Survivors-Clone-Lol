@@ -46,9 +46,12 @@ const PING_INTERVAL: float = 1.0  # TUNING (not in GDD)
 const MAX_PENDING_PINGS: int = 16  # TUNING (not in GDD)
 ## Weight of a new round-trip sample in the smoothed RTT (0-1).
 const RTT_SMOOTHING: float = 0.25  # TUNING (not in GDD)
-## Allow a partner on another platform (web with desktop). DESIGN.md: allowed only if the lockstep
-## checksum test passes between them; set false if WASM and native builds desync.
-const ALLOW_MIXED_PLATFORMS: bool = true  # TUNING (not in GDD) pending the sim agent's cross-platform checksum test
+## Allow a partner on another platform (web with desktop, or two desktop systems). DESIGN.md: allowed
+## only if the lockstep checksum test passes between them. It does not: a native Linux host and the Web
+## build desync within the first 10 s (Shadow Bolt homing: atan2 / sin / cos differ in the last bit
+## between the native C library and the WASM one; GDD §15.0 "Co-op: Web and desktop mixing"), so the
+## lobby refuses another platform (`platform` error). Web with web (any browser, phones too) matches.
+const ALLOW_MIXED_PLATFORMS: bool = false  # TUNING (not in GDD) sim agent's checksum test, Oct 2026
 
 # ------------------------------------------------------------------ lobby
 
@@ -80,7 +83,7 @@ const ERROR_TEXT: Dictionary = {
 	"unreachable": "Cannot reach the co-op relay. Check your connection.",  # TUNING (not in GDD)
 	"lost": "Connection to the relay lost.",  # TUNING (not in GDD)
 	"no_relay": "Co-op is not set up in this build yet (no relay address).",  # TUNING (not in GDD)
-	"platform": "Your partner plays on another platform (%s); mixed platforms are off.",  # TUNING (not in GDD)
+	"platform": "Your partner plays on another platform (%s). Co-op needs the same one: both in a browser, or both on the same desktop system.",  # TUNING (not in GDD)
 	"partner_left": "Your partner left.",  # TUNING (not in GDD)
 }
 ## Line for an error code missing from ERROR_TEXT.

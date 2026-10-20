@@ -23,7 +23,11 @@
 ## Online co-op (GDD §15.0 "Online co-op: relay and lobby"): the title screen's
 ## Co-op lobby ends in MainMenu.coop_start, which calls start_coop_run() on both
 ## machines with the same CoopNet.start_info. `--coop-net-test=host|join`
-## replaces the menu with the headless network test (CoopNetTest).
+## replaces the menu with the headless network test (CoopNetTest), and
+## `--autotest --coop-net=host|join` with the lobby of the headless lockstep
+## test (CoopNetBot), which then starts the co-op run the same way.
+## A co-op run cannot restart or go on to the next stage (two machines): its
+## Restart / Again / Next lead back to the menu, which leaves the session.
 extends Node
 
 ## Current run (null while the menu is shown).
@@ -32,6 +36,8 @@ var _game: Game = null
 var _menu_layer: CanvasLayer = null
 ## Pre-run choices of the current / last run (reused by Restart).
 var _run_config: RunConfig = null
+## Start message of the current online co-op run (CoopNet.start_info; {} = solo).
+var _coop_info: Dictionary = {}
 
 
 func _ready() -> void:
@@ -42,6 +48,9 @@ func _ready() -> void:
 	var touch := TouchSupport.install(self)  # Phones / tablets: touch hints, UI scale, portrait overlay (null in the autotest).
 	if touch != null:
 		touch.portrait_changed.connect(_on_portrait_changed)
+	if GameState.autotest and GameState.autotest_coop_net != "":
+		add_child(CoopNetBot.new())  # Headless online co-op: the lobby, then start_coop_run() (tools/coop_lockstep_gate.py).
+		return
 	if GameState.autotest or GameState.victory_preview:
 		_run_config = RunConfig.for_stage(GameState.autotest_stage)
 		_run_config.set_difficulty(GameState.autotest_difficulty)
@@ -58,6 +67,10 @@ func _ready() -> void:
 func _show_menu() -> void:
 	var after_run := _game != null  # Back from a run (not the startup menu).
 	_clear()
+	if not _coop_info.is_empty():
+		_coop_info = {}
+		if CoopNet.active():
+			CoopNet.leave()  # A co-op run's session ends with it.
 	Sfx.play_music(Sfx.MUSIC_MENU)
 	_menu_layer = CanvasLayer.new()
 	add_child(_menu_layer)
@@ -84,17 +97,22 @@ func _on_stage_chosen(config: RunConfig) -> void:
 	UiMotion.transition(self, _start_game)
 
 
-## CO-OP SEAM (the one hook the lobby calls; agent "sim" replaces this body
-## with the co-op run). Both machines call it with the same `info`
-## (CoopNet.start_info: seed, the host's config, both loadouts, version), which
-## differs only in `local_slot`. STUB for now: an ordinary solo run with the
-## host's stage, difficulty, modifiers and Hyper and this machine's own
-## character, skin and ultimate, seeded with the shared seed, so the lobby flow
-## can be tested end to end. CoopNet stays connected for the run.
+## The online co-op run (the lobby's Start, MainMenu.coop_start, or the
+## headless CoopNetBot). Both machines call it with the same `info`
+## (CoopNet.start_info: seed, the host's config, both loadouts with their
+## Ossuary levels and unlocks, version), which differs only in `local_slot`.
+## The Game is built from the HOST's config (slot 0's objects are Game's own,
+## so the stage, difficulty, modifiers, Hyper and slot 0's character, skin and
+## ultimate are the same on both machines) with `coop_start` = info: it builds
+## both slots (CoopSession), the camera, HUD and input follow `local_slot`, and
+## CoopLockstep drives the partner's slot from the received inputs. CoopNet
+## stays connected for the run.
 func start_coop_run(info: Dictionary) -> void:
-	_run_config = CoopNet.run_config_for(info, int(info.get("local_slot", 0)))
+	_coop_info = info
+	_run_config = CoopNet.run_config_for(info, 0)
+	if GameState.autotest:
+		GameState.autotest_seed = int(info.get("seed", GameState.autotest_seed))  # The host's seed (Game.run_seed()).
 	GameState.last_stage_id = _run_config.stage_id
-	seed(int(info.get("seed", 0)))  # Stub only: the same seed on both machines.
 	Sfx.play_music(Sfx.run_mode_for(_run_config.stage_id))
 	UiMotion.transition(self, _start_game)
 
@@ -105,9 +123,14 @@ func _start_game() -> void:
 	Sfx.play_music(Sfx.run_mode_for(_run_config.stage_id if _run_config != null else StageRegistry.DEFAULT_ID))
 	_game = Game.new()
 	_game.run_config = _run_config.duplicate_config() if _run_config != null else RunConfig.new()
-	_game.restart_requested.connect(UiMotion.transition.bind(self, _start_game), CONNECT_DEFERRED)
 	_game.main_menu_requested.connect(UiMotion.transition.bind(self, _show_menu), CONNECT_DEFERRED)
-	_game.next_stage_requested.connect(_start_next_stage, CONNECT_DEFERRED)  # Victory card: Next.
+	if _coop_info.is_empty():
+		_game.restart_requested.connect(UiMotion.transition.bind(self, _start_game), CONNECT_DEFERRED)
+		_game.next_stage_requested.connect(_start_next_stage, CONNECT_DEFERRED)  # Victory card: Next.
+	else:
+		_game.coop_start = _coop_info  # Online co-op (Game._make_coop()).
+		_game.restart_requested.connect(UiMotion.transition.bind(self, _show_menu), CONNECT_DEFERRED)  # Two machines: back to the menu.
+		_game.next_stage_requested.connect(func(_id: String) -> void: UiMotion.transition(self, _show_menu), CONNECT_DEFERRED)
 	add_child(_game)
 
 

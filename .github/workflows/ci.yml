@@ -25,6 +25,9 @@
 #               publishing was dropped (owner decision, Oct 2026).
 #   coop-net - online co-op connectivity: the relay protocol check and the two-process network test
 #               against the local Python relay (tools/coop_relay*.py, tools/coop_net_test.py).
+#   coop-lockstep - the co-op determinism gate: two headless processes play one full co-op run through
+#               the lockstep (tools/coop_lockstep_gate.py); checksums must match the whole way. Beside
+#               the other jobs (about 8-10 minutes); the release and Pages jobs do not wait for it.
 #   deploy-relay - on pushes to main after coop-net: deploys the co-op relay Worker (server/relay) with
 #               wrangler when the secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID exist
 #               (skipped otherwise; docs/coop/RELAY_SETUP.md).
@@ -177,6 +180,54 @@ jobs:
 
       - name: Two-process network test
         run: python3 tools/coop_net_test.py --godot "$GODOT_BIN" 2>&1 | tee coop_net.log
+
+  coop-lockstep:
+    # The co-op determinism gate (GDD 15.0 "Co-op lockstep"): two headless Godot processes play ONE
+    # full co-op run (20:00 and the Reckoning) through the lockstep against the local relay, each
+    # driving its own slot with the army bot; a state checksum every 60 ticks must match the whole way
+    # and both must end with the same state (tools/coop_lockstep_gate.py). About 8-10 minutes, so it
+    # runs beside the other jobs and the release / Pages jobs do not wait for it.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/godot
+          key: godot-${{ env.GODOT_VERSION }}-linux
+
+      - name: Download Godot
+        run: |
+          if [ ! -x "$GODOT_BIN" ]; then
+            mkdir -p "$(dirname "$GODOT_BIN")"
+            curl -sSL -o /tmp/godot.zip "$GODOT_URL"
+            unzip -q /tmp/godot.zip -d "$(dirname "$GODOT_BIN")"
+          fi
+          "$GODOT_BIN" --headless --version
+
+      - name: Import project
+        run: |
+          "$GODOT_BIN" --headless --import 2>&1 | tee import.log
+          if grep -qE "SCRIPT ERROR|Parse Error|ERROR:" import.log; then
+            echo "::error::Script errors during import"; exit 1
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Two-process lockstep gate (full run)
+        run: python3 tools/coop_lockstep_gate.py --godot "$GODOT_BIN" --seed 7 --wall-timeout 1500 2>&1 | tee coop_lockstep.log
+
+      - name: Upload the gate log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coop-lockstep-log
+          path: coop_lockstep.log
+          retention-days: 3
 
   deploy-relay:
     # Deploys the co-op relay (server/relay, a Cloudflare Worker) on pushes to main, once the network

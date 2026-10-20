@@ -100,7 +100,9 @@ func step(delta: float) -> void:
 	if dead:
 		return
 	var input := Vector2.ZERO
-	if game.autotest != null:
+	if game.coop != null and game.coop.lockstep != null:
+		input = game.coop.move_input()  # Online co-op: this slot's lockstep input (bot or player alike).
+	elif game.autotest != null:
 		input = game.autotest.get_move_vector()
 	elif game.coop != null:
 		input = game.coop.move_input()  # Online co-op: this slot's lockstep input.

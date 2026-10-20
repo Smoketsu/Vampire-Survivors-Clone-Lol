@@ -414,11 +414,28 @@ func _draw() -> void:
 	var ext := ArenaData.DRAW_HALF_EXTENT
 	var c0 := Vector2i(floori((center.x - ext) * _inv_cell), floori((center.y - ext) * _inv_cell))
 	var c1 := Vector2i(floori((center.x + ext) * _inv_cell), floori((center.y + ext) * _inv_cell))
+	var coop := game != null and game.coop != null  # Co-op: drawing never fills the gameplay cache (see _peek()).
 	for cy in range(c0.y, c1.y + 1):
 		for cx in range(c0.x, c1.x + 1):
-			var o := obstacle_at(Vector2((float(cx) + 0.5) * ArenaData.CELL, (float(cy) + 0.5) * ArenaData.CELL))
+			var at := Vector2((float(cx) + 0.5) * ArenaData.CELL, (float(cy) + 0.5) * ArenaData.CELL)  # Cell centre (px).
+			var o := _peek(at) if coop else obstacle_at(at)
 			if o != null:
 				_draw_obstacle(o)
+
+
+## Co-op drawing: the obstacle of the cell containing `pos` WITHOUT caching a
+## newly generated one. A cell is generated (and cached) the first time
+## anything asks for it, and the stage objectives / the sinking shore that clear
+## cells change over time, so a cell first drawn on one machine (each draws
+## around its own necromancer, at its own frame rate) would be cached earlier
+## there than on the partner's machine and could differ: the gameplay cache is
+## filled only by the simulation, the same way on both.
+func _peek(pos: Vector2) -> Obstacle:
+	var key := Vector2i(floori(pos.x * _inv_cell), floori(pos.y * _inv_cell))
+	var o: Obstacle = _cells.get(key)
+	if o == null:
+		o = _generate(key)  # Reseeds the arena's own per-cell RNG: no other state changes.
+	return null if o == _empty else o
 
 
 ## Draws one obstacle; the solid outline matches its collision shape.

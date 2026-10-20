@@ -553,6 +553,9 @@ func open(summary: Dictionary) -> void:
 		_title.text = "Defeat" if summary["reason"] != "timeout" else "Time's Up"
 		_title.add_theme_color_override("font_color", UiTheme.HEADER_TEXT["crimson"])
 		_subtitle.text = "The Covenant purges the necromancer... for now."
+		if summary["reason"] == "desync":
+			_title.text = "Desync"  # Online co-op: the two games stopped matching (CoopLockstep).
+			_subtitle.text = CoopLockstepData.DESYNC_TEXT
 	var stage_id := String(summary.get("stage_id", "graveyard"))
 	_portrait.character_id = String(summary.get("character_id", CharacterData.DEFAULT_ID))
 	_portrait.skin_id = String(summary.get("skin_id", ""))
