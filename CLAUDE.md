@@ -424,7 +424,7 @@ tiny tweaks.
   `index.js` (`tools/patch_web_audio.py`; it got phone tabs killed for memory mid-run); CI exports it (artifact `Necropathy-web`, release zip) and
   publishes it to GitHub Pages; the page starts the game from a **Play** button so the audio is created inside a
   gesture. **Never call `AudioServer.add_bus()`**: Godot 4.3's Web player inserts the bus before Master, which muted
-  the whole Web build (GDD §15.0 "Web sound fix"); `Sfx._setup_buses()` uses `set_bus_count()`. Tested in headless Chromium (title, a run, reload).
+  the whole Web build (GDD §15.0 "Web sound fix"); `Sfx._setup_buses()` uses `set_bus_count()`. **No shader may read the screen** (`hint_screen_texture`, `SCREEN_TEXTURE`, `BackBufferCopy`): the last stand's one did and crashed the owner's phone browser on a Reckoning death (GDD §15.0 "Web death crash: no screen-reading shaders"); use blend-mode rects instead. Tested in headless Chromium (title, a run, reload).
 - **phones and tablets in the browser** (owner request "make it mobile friendly", GDD §15.0 "Mobile
   browser support"; native apps still deferred): `TouchSupport` (detection by a coarse pointer, the
   mobile UI scale `content_scale_factor` up to ×1.2 on short phone screens, `fit_to_screen()` on every

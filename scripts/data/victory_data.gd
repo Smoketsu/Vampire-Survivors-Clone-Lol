@@ -44,7 +44,7 @@ const LAST_STAND_TIME: float = 3.0  # TUNING (not in GDD; Proposal 1: "about 3 s
 ## Seconds the world takes to drain to DESATURATE (the freeze; eases out, so the
 ## change slows to a stop).
 const FREEZE_TIME: float = 0.7  # TUNING (not in GDD)
-## How far the world drains of colour (0 = none, 1 = grey).
+## How far the world drains toward DRAIN_COLOR (0 = none, 1 = all the way).
 const DESATURATE: float = 0.8  # TUNING (not in GDD)
 ## Start of the first summon's kneel (s).
 const KNEEL_START: float = 0.3  # TUNING (not in GDD)
@@ -67,6 +67,15 @@ const WASH_TIME: float = 1.1  # TUNING (not in GDD)
 const WASH_STRENGTH: float = 0.7  # TUNING (not in GDD)
 ## Colour of the gold wash (the UI's victory gold, a little warmer).
 const WASH_COLOR: Color = Color(1.0, 0.78, 0.36)  # TUNING (not in GDD)
+## Warm grey the frozen world is multiplied toward as it drains (DESATURATE of
+## the way): a multiply cannot desaturate, so the drain dims and warms instead
+## (no screen-reading shader: GDD §15.0 "Web death crash: no screen-reading shaders").
+const DRAIN_COLOR: Color = Color(0.8, 0.76, 0.7)  # TUNING (not in GDD)
+## Gain on WASH_COLOR in the gold multiply (1.3 = the old shader's tint; each
+## channel clamps at 1, so red stays and blue drops).
+const WASH_TINT_GAIN: float = 1.3  # TUNING (not in GDD)
+## Share of WASH_COLOR added over the screen at the full wash (lifts the darks).
+const WASH_LIFT: float = 0.22  # TUNING (not in GDD)
 ## Seconds the HUD takes to fade out at the start.
 const HUD_FADE: float = 0.4  # TUNING (not in GDD)
 ## Start of the title card's fade-in (s).

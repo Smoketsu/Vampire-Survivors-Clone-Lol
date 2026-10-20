@@ -3,9 +3,10 @@
 ## 2)"; numbers in VictoryData). Game.end_run() has already counted the death,
 ## built the summary, paid the Soul Ash and frozen the world (the tree is paused,
 ## so nothing in the run moves again) when play() starts it; then, on real time:
-##   * the frozen world drains of colour, easing out so the change slows to a
-##     stop (a full-screen pass over what is on screen, victory_wash.gdshader),
-##     and the HUD fades away;
+##   * the frozen world dims toward a warm grey, easing out so the change slows
+##     to a stop (a full-screen rect multiplied over the screen: CanvasItemMaterial
+##     BLEND_MODE_MUL, never a shader that reads the screen back; GDD §15.0
+##     "Web death crash: no screen-reading shaders"), and the HUD fades away;
 ##   * the surviving summons turn outward and kneel in the Bone Ring, nearest
 ##     first, the kneel rippling out through the ring (each body layer is
 ##     crouched about its feet and mirrored to face away from the necromancer;
@@ -18,7 +19,7 @@
 ## Any key, pad button, click or tap skips to the end at once. It never runs
 ## under the autotest or with Reduce motion (wanted() is false: the card opens
 ## at once). Purely visual: it writes only canvas transforms, modulates and its
-## own shader parameters, reads the run, and uses no RNG.
+## own wash colours, reads the run, and uses no RNG.
 class_name LastStand
 extends Control
 
@@ -27,10 +28,10 @@ signal finished
 
 ## Owning run (read for the summons and the necromancer's position).
 var game: Game
-## Full-screen rect running the wash shader.
+## Full-screen rect multiplied over the screen (the drain and the gold tint).
 var _wash: ColorRect
-## The wash's material (desaturate / gold parameters).
-var _mat: ShaderMaterial
+## Full-screen rect added over the screen (the gold wash's lift of the darks).
+var _lift: ColorRect
 ## The title card (ribbon, title and boss line), centred across the screen at
 ## VictoryData.CARD_Y of its height (above the army ring at the centre).
 var _card: VBoxContainer
@@ -60,10 +61,8 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
-	_wash = ColorRect.new()
-	_wash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_wash.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_wash)
+	_wash = _blend_rect(CanvasItemMaterial.BLEND_MODE_MUL, Color.WHITE)
+	_lift = _blend_rect(CanvasItemMaterial.BLEND_MODE_ADD, Color.BLACK)
 	_card = VBoxContainer.new()  # Placed by hand in _apply() (above the ring, never over it).
 	_card.add_theme_constant_override("separation", 8)
 	_card.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -86,15 +85,6 @@ func play(summary: Dictionary) -> void:
 	_title.text = String(info["title"])
 	_boss_line.text = String(info["boss_line"])
 	_boss_line.visible = _boss_line.text != ""
-	if _mat == null:
-		var sh := load("res://scripts/fx/victory_wash.gdshader") as Shader
-		if sh != null:
-			_mat = ShaderMaterial.new()
-			_mat.shader = sh
-			_mat.set_shader_parameter("gold_color", VictoryData.WASH_COLOR)
-			_wash.material = _mat
-	if _mat == null:
-		_wash.color = Color(VictoryData.WASH_COLOR, 0.0)  # No shader: a plain gold veil.
 	_collect_kneelers()
 	_card.modulate.a = 0.0
 	_done = false
@@ -140,11 +130,12 @@ func _process(_delta: float) -> void:
 func _apply(t: float) -> void:
 	var freeze := _ease_out(t / VictoryData.FREEZE_TIME)  # 0..1, slowing to a stop.
 	var wash := _smooth((t - VictoryData.WASH_START) / VictoryData.WASH_TIME)  # 0..1.
-	if _mat != null:
-		_mat.set_shader_parameter("desaturate", VictoryData.DESATURATE * freeze)
-		_mat.set_shader_parameter("gold", VictoryData.WASH_STRENGTH * wash)
-	else:
-		_wash.color = Color(VictoryData.WASH_COLOR, 0.35 * VictoryData.WASH_STRENGTH * wash)
+	var gold := VictoryData.WASH_STRENGTH * wash  # 0..WASH_STRENGTH, the gold wash's share.
+	var drain := Color.WHITE.lerp(VictoryData.DRAIN_COLOR, VictoryData.DESATURATE * freeze)  # Dims toward a warm grey.
+	var tint := Color.WHITE.lerp(VictoryData.WASH_COLOR * VictoryData.WASH_TINT_GAIN, gold)  # The gold multiply (clamped at 1 per channel).
+	_wash.color = Color(drain.r * tint.r, drain.g * tint.g, drain.b * tint.b, 1.0)
+	var lift := VictoryData.WASH_COLOR * gold * VictoryData.WASH_LIFT  # Lifts the darks a little, so it reads as light.
+	_lift.color = Color(lift.r, lift.g, lift.b, 1.0)
 	if game != null and game.hud != null:
 		game.hud.modulate.a = 1.0 - clampf(t / VictoryData.HUD_FADE, 0.0, 1.0)
 	for k: Array in _kneel:
@@ -198,6 +189,20 @@ func _input(event: InputEvent) -> void:
 
 
 ## Ease out (quadratic) of `x` clamped to 0..1.
+## A full-screen rect drawn with blend `mode` in `color` (no shader, nothing
+## read back from the screen).
+func _blend_rect(mode: CanvasItemMaterial.BlendMode, color: Color) -> ColorRect:
+	var r := ColorRect.new()
+	r.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var m := CanvasItemMaterial.new()
+	m.blend_mode = mode
+	r.material = m
+	r.color = color
+	add_child(r)
+	return r
+
+
 static func _ease_out(x: float) -> float:
 	var c := clampf(x, 0.0, 1.0)
 	return 1.0 - (1.0 - c) * (1.0 - c)
