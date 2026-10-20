@@ -100,6 +100,7 @@ static func _ring(d: HordeDirector, front: Array[SummonedUnit], flank: Array[Sum
 	var room := StanceData.RING_MIN + StanceData.RING_PER_INNER * float(inner.size())  # Radius that leaves room inside (px).
 	var r := clampf(maxf(fit, room), StanceData.RING_MIN, StanceData.RING_MAX)  # Ring radius (px).
 	var two_deep := fit > StanceData.RING_MAX  # Overfull: alternate posts step inward.
+	d.ring_radius = r  # Act III: read by the Scrap Swarm spell (its orbit is outside the ring).
 	for i in n:
 		var u := ring[i]
 		var angle := -PI * 0.5 + TAU * float(i) / float(n) + _jit(u, jitter)

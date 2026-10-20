@@ -58,6 +58,31 @@ const PARTS := [
 		],
 	},
 ]
+# --- Act III: the Iron Citadel ---
+## HOOK for the Act III part of the epilogue (owner-approved proposal: "a third
+## epilogue part, 'The Machines Go Dark' (illustrated like Acts I and II), opened
+## by the Act III achievement"). The Iron Citadel's agent leaves it OUT of PARTS:
+## the lead builds its four panels at integration (tools/epilogue_panel.py,
+## art_source/epilogue/) and then appends this row to PARTS (with its
+## `panels` filled, one per line), so the epilogue screen, the main menu's
+## Epilogue button (any_open()) and the autoplay-once flow pick it up with no
+## other change. `achievement` is MetaData "nothing_is_deathless" (Deus Ex
+## Machina slain in the Iron Citadel); its Meta flag will be [epilogue] seen_act3.
+## The text follows the proposal's ending ("Nothing is deathless. Everything is
+## mine."; Varn's soul taken from the broken core; the machines go dark).
+const ACT3_PART := {
+	"id": "act3",  # TUNING (not in GDD)
+	"achievement": "nothing_is_deathless",
+	"act": "Act III: The Electronic Empire",
+	"heading": "The Machines Go Dark",  # Owner-approved proposal
+	"lines": [
+		"The Empire had conquered death with steel. Its citizens were never buried; they were rebuilt, and rebuilt again, and called it forever.",  # TUNING (not in GDD)
+		"In the Core of the Iron Citadel the god they built fell to its knees, and the necromancer reached into the broken engine for the one thing the Empire forgot to delete: Varn's soul.",  # Owner-approved proposal ending
+		"Nothing is deathless. Everything is mine. Across the realm the machines went dark, rank after rank, and their founder rose to serve a new master.",  # Owner-approved proposal ending
+		"Covenant, Eye and Empire are ash, blind and silent. The dead are the only empire left.",  # TUNING (not in GDD)
+	],
+	"panels": [],  # The lead fills the four panels at integration (see above).
+}
 ## The closing card after Act II (shown only once the Act II part is open):
 ## the sequel set-up of the original spec ("other religious orders mobilize").
 const CLOSING := {

@@ -98,6 +98,17 @@ const UNLOCKS := {
 	"death_ray": {"type": "spell", "boss": "kestrel", "text": "Slay Kestrel, the Dead Pixel, in the Scrap Wastes to unlock."},  # Owner-approved Act III proposal
 	"conductive_marrow": {"type": "passive", "boss": "kestrel", "text": "Slay Kestrel, the Dead Pixel, in the Scrap Wastes to unlock."},  # Death Ray's paired passive, unlocked with it
 	"lead_lined_bones": {"type": "passive", "achievement": "static_in_the_wastes", "text": "Earn Static in the Wastes: clear the Scrap Wastes."},  # Owner-approved Act III proposal
+	# --- Act III: the Iron Citadel ---
+	# Deus Ex Machina's fall (owner-approved Act III proposal): the spell Scrap
+	# Swarm with its paired passive, and the finale's summon class with its
+	# paired passive, offered on every stage (no card-row "act" key). The title
+	# Breaker of Engines is the Nothing Is Deathless achievement's reward.
+	"scrap_swarm": {"type": "spell", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Owner-approved proposal
+	"machine_soul": {"type": "passive", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Scrap Swarm's paired passive, unlocked with it
+	"iron_revenant": {"type": "class", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Owner-approved proposal: the finale's reward
+	"recoil_frame": {"type": "passive", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Its paired passive, unlocked with it
+	"breaker_of_engines": {"type": "title", "achievement": "nothing_is_deathless",
+		"text": "Earn Nothing Is Deathless: defeat Deus Ex Machina in the Iron Citadel."},  # Owner-approved proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

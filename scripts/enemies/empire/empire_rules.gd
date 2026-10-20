@@ -17,6 +17,12 @@
 ##             0:00, on a stage whose RECKONING has an "orbital" dictionary,
 ##             orbital strikes land on telegraphed circles, faster each minute
 ##             (EmpireRulesData.PURGE; kill-drones are the RECKONING "kind").
+##   strikes — THE one orbital strike path (strike()): a telegraphed circle
+##             that lands after its telegraph and hits the necromancer and
+##             every summon inside. The Purge Protocol's salvos use it, and so
+##             do the Iron Citadel's guns (CitadelDirector, Act III phase 2),
+##             each strike carrying its own radius, telegraph, damage and
+##             stat tag (Purge Protocol behaviour and same-seed results unchanged).
 ## Stepped by Game right after the ProjectileManager. Determinism: no RNG but the
 ## seeded gameplay one, and only on Act III (Acts I and II never create it).
 class_name EmpireRules
@@ -34,8 +40,18 @@ var purge: Dictionary = {}
 ## Game time (s) of the next orbital salvo (INF until the Reckoning starts).
 var _next_salvo: float = INF
 ## Pending orbital strikes: x, y = the circle's centre (world px), z = the game
-## time (s) it lands.
+## time (s) it lands. Parallel to _strike_shape / _strike_dmg / _strike_src.
 var _strikes: Array[Vector3] = []
+## Per pending strike: x = circle radius (px), y = telegraph length (s).
+var _strike_shape: PackedVector2Array = PackedVector2Array()
+## Per pending strike: x = damage to the necromancer, y = damage to each summon
+## inside (both before the time scaling, applied when it lands).
+var _strike_dmg: PackedVector2Array = PackedVector2Array()
+## Per pending strike: its damage source tag (CombatResolver stats).
+var _strike_src: PackedStringArray = PackedStringArray()
+## Per pending strike: its stat prefix ("purge": purge_player_hits; the
+## Citadel's guns "citadel_gun": citadel_gun_player_hits).
+var _strike_stat: PackedStringArray = PackedStringArray()
 ## Orbital salvos fired so far (stats, the deterministic scatter).
 var salvos: int = 0
 ## Reusable spatial-hash query buffer.
@@ -74,30 +90,72 @@ func step(delta: float) -> void:
 	lock_on.step(delta)
 	if not purge.is_empty():
 		_step_purge()
+	_step_strikes()
 
 
 # =====================================================================================
 # Purge Protocol (orbital strikes after 0:00)
 # =====================================================================================
 
-## Fires the salvos on their clock and lands the strikes whose time has come.
+## Fires the salvos on their clock (the strikes land in _step_strikes()).
 func _step_purge() -> void:
 	var t := game.elapsed  # Game time (s).
 	if _next_salvo == INF and game.countdown_finished():
 		_next_salvo = t
 	if t >= _next_salvo:
 		_salvo(t)
+
+
+## Lands every pending strike whose time has come (in the order they were
+## queued) and redraws the circles.
+func _step_strikes() -> void:
+	if _strikes.is_empty() and not _drawn:
+		return
+	var t := game.elapsed  # Game time (s).
 	var i := 0
 	while i < _strikes.size():
 		var s := _strikes[i]
 		if t >= s.z:
+			var shape := _strike_shape[i]
+			var dmg := _strike_dmg[i]
+			var src := _strike_src[i]
+			var stat := _strike_stat[i]
 			_strikes.remove_at(i)
-			_land(Vector2(s.x, s.y))
+			_strike_shape.remove_at(i)
+			_strike_dmg.remove_at(i)
+			_strike_src.remove_at(i)
+			_strike_stat.remove_at(i)
+			_land(Vector2(s.x, s.y), shape.x, dmg.x, dmg.y, src, stat)
 		else:
 			i += 1
 	if not _strikes.is_empty() or _drawn:
 		queue_redraw()
 	_drawn = not _strikes.is_empty()
+
+
+## THE one orbital strike path: queues a strike on a telegraphed circle of
+## `radius` px at `at`, landing `telegraph` s from now; it then deals `damage`
+## to the necromancer and `summon_damage` to each summon inside (both times the
+## enemies' damage scaling when it lands), tagged `source`, its hits counted
+## under `stat` ("<stat>_player_hits"). Used by the Purge Protocol's salvos and
+## the Iron Citadel's guns.
+func strike(at: Vector2, telegraph: float, radius: float, damage: float, summon_damage: float,
+		source: String = "orbital_strike", stat: String = "purge") -> void:
+	_strikes.append(Vector3(at.x, at.y, game.elapsed + telegraph))
+	_strike_shape.append(Vector2(radius, telegraph))
+	_strike_dmg.append(Vector2(damage, summon_damage))
+	_strike_src.append(source)
+	_strike_stat.append(stat)
+
+
+## Pending strikes queued with stat prefix `stat` (CitadelDirector paces its
+## guns by it).
+func pending_strikes(stat: String) -> int:
+	var n := 0
+	for k in _strike_stat:
+		if k == stat:
+			n += 1
+	return n
 
 
 ## Minutes past 0:00 (0 at the start of the Reckoning).
@@ -111,13 +169,13 @@ func _salvo(t: float) -> void:
 	var m := _past_minutes()  # Minutes past 0:00.
 	var n := int(purge["count"]) + int(floorf(m)) * int(purge["count_growth"])  # Strikes this salvo.
 	var p := game.player.position  # Necromancer.
-	var land := t + float(purge["telegraph"])  # Landing time.
+	var tele := float(purge["telegraph"])  # Telegraph (s): the landing time is t + this.
 	var r := float(purge["radius"])  # Circle radius (px).
 	for k in n:
 		var at := p
 		if k > 0:
 			at = p + Vector2.from_angle(randf() * TAU) * randf_range(r, float(purge["scatter"]))
-		_strikes.append(Vector3(at.x, at.y, land))
+		strike(at, tele, r, float(purge["damage"]), float(purge["summon_damage"]))
 	salvos += 1
 	game.stat_add("purge_salvos", 1.0)
 	game.stat_add("purge_strikes", float(n))
@@ -125,31 +183,32 @@ func _salvo(t: float) -> void:
 	_next_salvo = t + gap
 
 
-## A strike lands at `at`: the necromancer and every summon inside take its damage.
-func _land(at: Vector2) -> void:
-	var r := float(purge["radius"])  # Circle radius (px).
+## A strike of `r` px lands at `at`: the necromancer and every summon inside
+## take its damage (`dmg` / `summon_dmg`, times the damage scaling), tagged
+## `source`; a hit on him counts as "<stat>_player_hits".
+func _land(at: Vector2, r: float, dmg: float, summon_dmg: float, source: String, stat: String) -> void:
 	game.effects.impact(at, r, Palette.EMPIRE_SIGNAL_AMBER)
 	Sfx.play("orbital_strike", at)
 	var pl := game.player  # Necromancer.
 	if pl.position.distance_to(at) <= r + pl.radius:
-		game.combat.damage_player(float(purge["damage"]) * game.enemies.damage_mult, "orbital_strike")
-		game.stat_add("purge_player_hits", 1.0)
+		game.combat.damage_player(dmg * game.enemies.damage_mult, source)
+		game.stat_add(stat + "_player_hits", 1.0)
 	game.ally_grid.query(at, r + EmpireRulesData.LINE_OF_FIRE["summon_slack"], _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.position.distance_to(at) <= r + u.radius:
-			game.combat.damage_unit(u, float(purge["summon_damage"]) * game.enemies.damage_mult, "orbital_strike")
+			game.combat.damage_unit(u, summon_dmg * game.enemies.damage_mult, source)
 	game.shake(3.0)
 
 
-## Draws every pending orbital strike: a warning-red circle (signal ramp,
+## Draws every pending orbital strike (the Purge Protocol's and the Citadel's
+## guns', each with its own radius and telegraph): a warning-red circle (signal ramp,
 ## never the Covenant's telegraph gold) that fills as the strike nears, and a
 ## targeting cross at its centre. Visual only.
 func _draw() -> void:
-	if purge.is_empty():
-		return
-	var r := float(purge["radius"])  # Circle radius (px).
-	var tele := maxf(0.01, float(purge["telegraph"]))  # Telegraph length (s).
-	for s: Vector3 in _strikes:
+	for i in _strikes.size():
+		var s := _strikes[i]
+		var r := _strike_shape[i].x  # Circle radius (px).
+		var tele := maxf(0.01, _strike_shape[i].y)  # Telegraph length (s).
 		var c := Vector2(s.x, s.y)  # Circle centre.
 		var k := clampf(1.0 - (s.z - game.elapsed) / tele, 0.0, 1.0)  # 0 -> 1 as it nears.
 		draw_circle(c, r * k, Color(Palette.EMPIRE_SIGNAL_RED, 0.18 + 0.12 * k))
@@ -183,17 +242,18 @@ func reach_mult(pos: Vector2) -> float:
 # =====================================================================================
 
 ## Autopilot hint (the autotest bot): a push off every painted Lock-On line and
-## out of every orbital strike circle about to land at `p`.
+## out of every orbital strike circle about to land at `p` (the Purge Protocol's
+## and the Citadel's guns').
 func danger_push(p: Vector2) -> Vector2:
 	var push := lock_on.danger_push(p)
 	push += shots.arc_danger_push(p)  # Act III, the Scrap Wastes: off the mortar landing circles.
-	if not purge.is_empty():
-		var reach := float(purge["radius"]) + game.player.radius + 10.0  # Circle reach (px).
-		for s: Vector3 in _strikes:
-			var off := p - Vector2(s.x, s.y)  # Circle centre -> point.
-			var d := off.length()
-			if d < reach:
-				push += (off / d if d > 0.01 else Vector2.RIGHT) * (1.0 - d / reach) * 1.5
+	for i in _strikes.size():
+		var s := _strikes[i]
+		var reach := _strike_shape[i].x + game.player.radius + 10.0  # Circle reach (px).
+		var off := p - Vector2(s.x, s.y)  # Circle centre -> point.
+		var d := off.length()
+		if d < reach:
+			push += (off / d if d > 0.01 else Vector2.RIGHT) * (1.0 - d / reach) * 1.5
 	return push
 
 

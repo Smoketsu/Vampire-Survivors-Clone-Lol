@@ -57,6 +57,13 @@ const SHOT_STYLES := {
 	"arc_bolt": {"radius": 3.5, "length": 12.0, "width": 2.0, "color": Color(1.0, 0.922, 0.659), "arc": false, "splash": 0.0, "heavy": false},  # TUNING (not in GDD) the Arc Engineer's crackling bolt (signal_glow)
 	"rivet": {"radius": 3.5, "length": 9.0, "width": 3.0, "color": Color(1.0, 0.682, 0.102), "arc": false, "splash": 0.0, "heavy": false},  # TUNING (not in GDD) the Beta Build's rivet spray (signal_amber)
 	"turret_bolt": {"radius": 3.5, "length": 14.0, "width": 3.0, "color": Color(0.878, 0.224, 0.118), "arc": false, "splash": 0.0, "heavy": false},  # TUNING (not in GDD) the Motherboard Turret's bolt (signal_red)
+	# --- Act III: the Iron Citadel ---
+	# Deus Ex Machina's missile (its four-line Lock-On salvo, LockOn.paint(...,
+	# style)): a heavy, slower warhead with a long amber exhaust trail.
+	"missile": {"radius": 6.0, "length": 26.0, "width": 5.0, "color": Color(1.0, 0.682, 0.102), "arc": false, "splash": 0.0, "heavy": true},  # TUNING (not in GDD)
+	# Deus Ex Machina's chaingun rounds (its sweeps and the Founder's ring of fire):
+	# short warning-red tracers, lighter than a rifle round.
+	"chaingun": {"radius": 2.5, "length": 9.0, "width": 2.0, "color": Color(0.878, 0.224, 0.118), "arc": false, "splash": 0.0, "heavy": false},  # TUNING (not in GDD)
 }
 ## Arcing shots: peak height (px) of the drawn lob at mid-flight, per px of range.
 const ARC_HEIGHT_PER_PX: float = 0.18  # TUNING (not in GDD)

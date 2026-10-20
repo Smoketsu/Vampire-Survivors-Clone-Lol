@@ -1812,3 +1812,49 @@ the chest, the badge's pulse ring and the pointer that turns toward the chest st
 |---|---|---|---|---|
 | `markers/chest_beacon` | A thick gold down-chevron (a V with a notch cut from its top) | 19 × 15 | `ChestBeacon._draw()`: over every chest lying in the world, 26 px above its centre, bobbing 3 px on real time (still with Reduce motion), z 18 above the units | done |
 | `markers/chest_badge` | A round gold ring on a dark brown plate holding a little gold chest (lid, band, keyhole, a glint) | 21 × 21 | `ChestArrows._draw_arrow()`: upright on the screen edge for a chest off screen, a code pointer beside it, fading with distance (never below 55%) | done |
+
+### Act III: the Iron Citadel (Stage 9; Oct 2026)
+
+The campaign finale's art (GDD §15.0 "The Iron Citadel (Act III phase 2)" and the rows after it), in
+the Empire's style above (chrome + signal; the cyborgs keep a little skin). The two Valkyries are in
+the **figure-redesign style** (exaggerated hourglass figures, fully clothed, bust bounce in the walk
+and a 24-frame idle breathing strip). Units, characters and the boss: `tools/gen_image.py` (the unit
+template, `--ref` the approved Act III sprites), alpha below 230 dropped, then for the small detailed
+figures `tools/pixelate_source.py` first, then `prepare_sprite.py --no-levels --no-prune --ink-l 0.15
+--no-cleanup` (0.20 for the Rust Prophet and his skins; `--ramps chrome,signal` for Deus, plus skin
+for the Founder's Varn); the revenants went straight through `prepare_sprite.py` (cleaner than
+pixelated). Floors: two API textures through `make_tile.py` recipes (`# --- Act III: the Iron
+Citadel ---`): one riveted deck-plate texture laid out three ways (32 px staggered plates, a 16 px
+panel grid, 8 px grating slats) and a circuit-etched plate quilted for the Core. Obstacles: two prop
+sheets (four round props in a row; the two rects, horizontal and end-on) split by empty gaps, each
+drawing scaled to its sizes (rects: the middle cut out to each length so a short barricade keeps its
+end caps). Badges: two symbol sheets, each symbol pixelated to 24 px and set on the cut-corner frame
+copied from an approved badge (violet `abyssal_pact`, gold `tidecallers_host`). Walk / idle strips:
+`walk_cycle.py` rigs and skins under `# --- Act III: the Iron Citadel ---`. 21 API images, about
+**$0.50** at the tool's estimate (rows in the ledger). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `empire/valkyrie_duelist` | Valkyrie Duelist (elite cyborg, female): signal-red bodysuit under a chrome breastplate, winged helmet with an amber visor band, twin jet pods, a long forearm blade pointing forward | 52x52 | legs walk + bust (box 22-34 x 13-21), idle breathing |
+| `empire/valkyrie_prime` | Valkyrie 2.0 (miniboss): heavy chrome armour over red, crested helmet, big jet pack, tower shield with an amber stripe, arm blade | 76x104 | legs walk (blade arm and shield rigid) + bust (two lobes), idle breathing |
+| `empire/sentry_turret` | Sentry Turret (structure): a chrome dome on a tripod base with an amber eye; the turning gun is code-drawn on its top (`CitadelGlyphs.draw_turret_barrel()`) | 44 | still |
+| `empire/shield_generator` | Shield Generator (structure): a squat chrome pylon with an amber energy coil | 64 | still |
+| `empire/deus_leg_plate`, `empire/deus_shield_drone` | Deus's armour plate (rides a knee) and Siege Core shield drone (one sheet split at x 537) | 32 / 24 | stills |
+| `bosses/deus_ex_machina` (+ `_fire`) | Deus Ex Machina, the Walker: a four-legged chrome war engine with a missile pod and a cannon arm, an amber reactor core; `_fire` the attack pose (BossPoseData 1: chaingun and salvo) | 202x156 | the knees set `DeusData.LEGS` (the plates ride them) |
+| `bosses/deus_ex_machina_siege` | The Siege Core: the engine kneeling, planted, its core shielded | 140 | phase look 1 |
+| `bosses/deus_ex_machina_founder` | The Founder: the cracked frame with Varn, the Root User, in its open core | 156 | phase look 2 |
+| `player/rust_prophet` | The Rust Prophet: hooded violet robe, rusted chrome arm, visor lens, a staff of scrap and bone topped by a gear and a violet flame | 42x58 | robe walk (staff rigid) |
+| `player/rust_prophet_hyper` / `_untouchable` / `_deathlord` | Gilded Prophet (Hyper skin, gold trim and cog crown), Untouchable (white phantom), Deathlord (spiked crown, black iron) | 58 / 58 / 60 | walk through `SKINS` |
+| `summons/iron_revenant` | Iron Revenant: a squat iron walker bound with bones, a horned skull cockpit with soul-fire eyes, one cannon arm | 58x58 | legs walk |
+| `summons/deus_revenant` | Deus Revenant: crowned skull cockpit, twin cannons, a bone missile rack | 76x70 | legs walk |
+| `tiles/citadel_gates`, `_courts`, `_lifts`, `_core` | The four zone floors: deck plates, a panel grid, grating slats, circuit-etched plating with dim red traces | 128 | `make_tile.py`; the decals stay code-drawn |
+| `obstacles/signal_bollard_{s,m,l}`, `emitter_pylon_{s,m,l}`, `lift_winch_{s,m,l}`, `core_conduit_{s,l}` | A hazard-striped bollard, a pylon with a red lens, a cable winch, a pipe junction with red seams | footprint + 2 wide | circles |
+| `obstacles/iron_barricade_{s,m,l}` (+ `_v`) | A low barricade of steel plates with a hazard-striped top | 54 / 68 / 84 x 32; `_v` 28 wide | rects |
+| `obstacles/citadel_crate_{s,m,l}` (+ `_v`) | A ribbed steel shipping crate with a red stripe | 50 / 66 / 78 x 36-39; `_v` 32 wide | rects |
+| `icons/scrap_swarm`, `machine_soul`, `recoil_frame`, `iron_revenant` | Violet badges: drones round a violet flame; a cracked gear with a soul flame; a bone cannon in a spring; the skull cockpit | 32 | |
+| `icons/deathless_swarm`, `deus_revenant`, `ach_nothing_is_deathless` | Gold badges: the gilded swarm; the crowned twin-cannon cockpit; a split machine mask with a violet flame | 32 | |
+
+Code-drawn on purpose: the shield wall and its cables, the laser bands and beams, the citadel gun
+circles (the shared strike code's), the Judgment Lance, the overload pulses, the teleport glow, the
+blade storm and jets, the shield drones' tethers, the scrap drones and bolts, the iron shells, the
+soul-binding finale and the floor decals: telegraphs and effects that must read at a glance.

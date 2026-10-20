@@ -254,6 +254,15 @@ func damage_enemy(e: Enemy, amount: float, source: String) -> float:
 	var armor := e.armor * (1.0 - shred)  # Effective percentage armour of this hit.
 	if shred > 0.0 and e.armor > 0.0:
 		game.stat_add("wither_shred_bonus_dmg", amount * (e.armor - armor))
+	# Machine Soul (Act III passive, the Iron Citadel; ScrapSwarmData): every hit
+	# pierces this share of the armour; the stronger of it and the Wither shred
+	# applies. 0 when not owned, so every other run is unchanged.
+	var pierce := game.abilities.passive_value(ScrapSwarmData.MACHINE_SOUL, ScrapSwarmData.MACHINE_SOUL_KEY)  # 0..1.
+	if pierce > shred:
+		if e.armor > 0.0:
+			game.stat_add("machine_soul_bonus_dmg", amount * e.armor * (pierce - shred))
+		shred = pierce
+		armor = e.armor * (1.0 - shred)
 	var raw := amount * (1.0 - armor)  # Damage after percentage armour.
 	if e.flat_armor > 0.0 or e.holy_shield > 0.0:
 		raw = _sanctum_mitigation(e, raw, source, shred)

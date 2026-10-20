@@ -274,12 +274,15 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "embers", "fx_color": Color8(255, 174, 26),
 	},  # TUNING (not in GDD) signal-amber sparks over the fabricator floor
+	# --- Act III: the Iron Citadel (its own floor, props, turret, Valkyrie and engine) ---
 	"citadel": {
-		"tile": "tiles/march_burned",
+		"tile": "tiles/citadel_gates",
 		"items": [
-			["empire/spotter", 240, 160, true], ["empire/spotter", 196, 226, true],
-			["empire/scout_drone", 150, 70, true],
-			["summons/warrior", 46, 214, false], ["summons/grave_gunner", 92, 226, false],
+			["obstacles/emitter_pylon_m", 30, 100, false], ["obstacles/iron_barricade_s", 244, 108, false],
+			["empire/sentry_turret", 140, 96, true],
+			["empire/valkyrie_duelist", 236, 184, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 92, 226, false],
+			["bosses/deus_ex_machina_fire", 178, 226, true],
 		],
 		"fx": "embers", "fx_color": Color8(224, 57, 30),
 	},  # TUNING (not in GDD) warning-red sparks
