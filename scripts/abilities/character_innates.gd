@@ -298,6 +298,9 @@ func summary_line() -> String:
 		# --- Act II: the Hollow Archive ---
 		"illuminated_margins":
 			counters = "ink bursts %d (burst dmg %d)" % [int(st.get("verse_bursts", 0.0)), int(st.get("dmg_ink_burst", 0.0))]
+		# --- Act III: the Scrap Wastes ---
+		"storm_litany":
+			counters = "extra sparks %d (beam kills %d)" % [int(st.get("abbess_extra_sparks", 0.0)), int(st.get("ray_kills", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

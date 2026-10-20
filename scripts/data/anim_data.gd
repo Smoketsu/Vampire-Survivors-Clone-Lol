@@ -62,6 +62,8 @@ const ANIMS: Dictionary = {
 	"sovereigns_decree": {"duration": 0.6, "fill": 1.15},  # TUNING (not in GDD) Sovereign's Decree: a gold crown-shaped flare over a ring of violet sigils spreading out (DECREE_RING_TIME)
 	"eclipse": {"duration": 0.7, "fill": 1.15},  # TUNING (not in GDD) Eclipse: a black sun swallowing its pale blue corona, a dark shock ring rolling outward (ECLIPSE_RING_TIME)
 	"grave_tide": {"duration": 0.65, "fill": 1.15},  # TUNING (not in GDD) Grave Tide: a soul-green wave rolling outward with skeletal hands breaking its surface (TIDE_RING_TIME)
+	# --- Act III: the Scrap Wastes ---
+	"wastes_blast": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) a rocket / pylon / Trojan Horse blast: amber flash, fire and chrome shards, a smoke ring (10 frames of 128 px; EffectManager.impact() 0.4 s)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).

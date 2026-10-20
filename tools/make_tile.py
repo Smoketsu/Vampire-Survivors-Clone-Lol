@@ -353,6 +353,23 @@ RECIPES = {
         "shares": {"ink_drowned": 0.30, "drowned_dark": 0.66, "drowned": 0.04},
         "keep": ["drowned"],
     },
+    # --- Act III: the Scrap Wastes --- (one source each, no variants)
+    "wastes_slag": {
+        "source": "wastes_slag.png", "method": "quilt",
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_ash", "floor_dirt"],
+    },
+    "wastes_gullies": {
+        "source": "wastes_gullies.png", "method": "quilt",
+        "colors": ["ink_warm", "floor_earth", "floor_dirt", "floor_ochre"],
+    },
+    "wastes_ridge": {
+        "source": "wastes_ridge.png", "method": "quilt",
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_ash"],
+    },
+    "wastes_wall": {
+        "source": "wastes_wall.png", "method": "quilt",
+        "colors": ["ink_cold", "floor_slate", "floor_marble", "floor_stone"],
+    },
 }
 
 

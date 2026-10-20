@@ -55,6 +55,10 @@
 ##     (`assembly`: conveyors, furnace channels, fabricators, the Beta Build;
 ##     its "fabricators" / "beta_build" events, its guest aliases, and each
 ##     smashed fabricator's cut of the waves and the trickle, applied once here).
+##   * Act III, the Scrap Wastes (GDD §15.0 "The Scrap Wastes (Act III phase
+##     2)"): on a stage with a "wastes" config it owns the WastesDirector (the
+##     Signal Pylons, the scrap storms, the Trojan Horse; `wastes`) and hands it
+##     the "pylons" / "storm" / "trojan" events. Null on every other stage.
 class_name EnemyDirector
 extends Node2D
 
@@ -156,6 +160,10 @@ var miniboss_gen: int = 0
 ## The Assembly Halls' systems: conveyors, furnace channels, fabricators, the
 ## Beta Build (StageRegistry "assembly"; null on every other stage).
 var assembly: AssemblyDirector = null
+# --- Act III: the Scrap Wastes ---
+## The Scrap Wastes' stage systems: Signal Pylons, scrap storms, the Trojan
+## Horse (StageRegistry "wastes"; null elsewhere).
+var wastes: WastesDirector = null
 
 
 func _ready() -> void:
@@ -214,6 +222,12 @@ func _ready() -> void:
 		assembly.config = stage_def["assembly"]
 		add_child(assembly)
 		_kind_aliases = AssemblyDirector.guest_aliases(_kind_aliases, assembly.config)  # Guest kinds of the other Act III stages.
+	# --- Act III: the Scrap Wastes ---
+	if not (stage_def.get("wastes", {}) as Dictionary).is_empty():
+		wastes = WastesDirector.new()
+		wastes.game = game
+		wastes.config = stage_def["wastes"]
+		add_child(wastes)
 
 
 # =====================================================================================
@@ -296,6 +310,9 @@ func step(delta: float) -> void:
 		spire.step(delta)
 	if assembly != null:
 		assembly.step(delta)  # Act III: belts, furnace channels, fabricators, the Beta Build.
+	# --- Act III: the Scrap Wastes ---
+	if wastes != null:
+		wastes.step(delta)
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -361,6 +378,9 @@ func objective_text() -> String:
 		return spire.objective_override()  # Dream pillars.
 	if assembly != null and assembly.objective_override() != "":
 		return assembly.objective_override()  # Act III: the Beta Build, fabricators.
+	# --- Act III: the Scrap Wastes ---
+	if wastes != null and wastes.objective_override() != "":
+		return wastes.objective_override()  # The Trojan Horse, a storm, Signal Pylons.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -483,6 +503,10 @@ func _run_event(ev: Dictionary) -> void:
 		"fabricators", "beta_build":
 			if assembly != null:
 				assembly.start_event(ev)
+		# --- Act III: the Scrap Wastes ---
+		"pylons", "storm", "trojan":
+			if wastes != null:
+				wastes.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
 	show_banner(ev["banner"])

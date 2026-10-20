@@ -15,6 +15,13 @@
 ##     from attack_range, its tag from the kind id.
 ## Phase 2 kinds extend this class (override fire_ranged() for a special shot,
 ## physics() for a windup) and call fire_shot() / fire_arc_at() for each shot.
+## Act III, the Scrap Wastes: the REACH path. A "ranged" Empire kind's firing
+## range (Enemy.attack_range, which the shared AI's "in range" check, its shots'
+## flight and a Spotter's Lock-On line all read) is its row's attack_range times
+## EmpireRules.reach_mult() at its position (the Signal Pylons and the scrap
+## storms, WastesDirector), refreshed in think() at 5 Hz. Exactly the row's range
+## while no stage registers a reach modifier. A kit that overrides think() calls
+## super.think(e).
 ## Determinism: no RNG; the burst fans by its round index.
 class_name EmpireKit
 extends CovenantKit
@@ -33,6 +40,9 @@ var burst_dir: Vector2 = Vector2.RIGHT
 var burst_target: Node2D = null
 ## Generation of a summon burst target (stale guard; 0 for the necromancer).
 var burst_target_gen: int = 0
+# --- Act III: the Scrap Wastes ---
+## The row's attack range (px) before any stage reach modifier (refresh_reach()).
+var base_range: float = 0.0
 
 
 func reset(e: Enemy, def: Dictionary) -> void:
@@ -41,6 +51,22 @@ func reset(e: Enemy, def: Dictionary) -> void:
 	burst_cd = 0.0
 	burst_index = 0
 	burst_target = null
+	base_range = float(def.get("attack_range", 0.0))  # Act III, the Scrap Wastes: the reach path.
+
+
+# --- Act III: the Scrap Wastes ---
+## 5 Hz: refreshes the reach (refresh_reach()).
+func think(e: Enemy) -> void:
+	refresh_reach(e)
+
+
+## THE reach path (see the header): a ranged Empire kind's attack_range = its
+## row's range x EmpireRules.reach_mult() at its position (1 without a stage
+## reach modifier, so exactly the row's range).
+func refresh_reach(e: Enemy) -> void:
+	if e.behavior != "ranged" or e.game.empire == null:
+		return
+	e.attack_range = base_range * e.game.empire.reach_mult(e.position)
 
 
 func on_deactivate(e: Enemy) -> void:

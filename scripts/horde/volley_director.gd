@@ -488,6 +488,9 @@ func _collide(i: int) -> void:
 			continue
 		if e.position.distance_to(p) > e.radius + r:
 			continue
+		if e.kit != null and e.shield_blocks(_vel[i], _dmg[i]):
+			_kill(i)  # Act III, the Scrap Wastes: an Aegis Bot's frontal shield stops it.
+			return
 		if e.is_boss or e.is_miniboss:
 			var vid := _vid[i]
 			if _boss_hits[vid] >= VolleyData.BOSS_HITS_PER_VOLLEY:

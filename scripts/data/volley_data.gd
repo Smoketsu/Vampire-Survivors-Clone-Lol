@@ -268,6 +268,9 @@ const SPELLS := {
 	# --- Act III: the Assembly Halls ---
 	"hollow_puppet": {"every": 1, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [3, 4, 6], "speed": 260.0,
 		"life": 1.0, "share": 0.4, "pierce": 0, "radius": 4.0, "style": "spark", "color": Color(0.64, 0.36, 0.98), "homing": 8.0},  # TUNING (not in GDD) loose soul strings lashing out (share of a puppet hit)
+	# --- Act III: the Scrap Wastes ---
+	"death_ray": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [8, 12, 16], "speed": 320.0,
+		"life": 0.5, "share": 0.2, "pierce": 1, "radius": 3.5, "style": "spark", "color": Color(0.80, 0.62, 1.0)},  # TUNING (not in GDD) a ring of violet sparks with each sweep
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

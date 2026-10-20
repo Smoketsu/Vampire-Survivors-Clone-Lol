@@ -94,11 +94,13 @@ func paint_time(target: Node2D) -> float:
 ## summon): after the paint its heavy shot deals `damage` (time-scaled) at
 ## `speed` px/s over `reach` px, tagged `source`. Refused (false) when the owner
 ## already paints or max_lines lines are painted; `boss_override` lifts
-## max_lines up to boss_max_lines; `paint_s` > 0 sets a boss's own paint time.
+## max_lines up to boss_max_lines and lets one owner paint several lines at
+## once (Kestrel's triple Lock-On, a missile salvo); `paint_s` > 0 sets a
+## boss's own paint time.
 func paint(owner: Enemy, target: Node2D, damage: float, speed: float, reach: float, source: String,
 		boss_override: bool = false, paint_s: float = -1.0) -> bool:
-	if owner == null or target == null or has_line(owner):
-		return false
+	if owner == null or target == null or (has_line(owner) and not boss_override):
+		return false  # One line per painter; a boss override may paint several at once (Act III, the Scrap Wastes: Kestrel's triple Lock-On).
 	var limit := _cap if boss_override else mini(_cap, int(EmpireRulesData.LOCK_ON["max_lines"]))  # Lines allowed now.
 	if count >= limit:
 		game.stat_add("lockon_refused", 1.0)

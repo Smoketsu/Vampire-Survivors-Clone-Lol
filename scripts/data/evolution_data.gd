@@ -20,6 +20,9 @@
 ## plus Act II's abyssal spells (owner-approved, GDD §15.0; each with a NEW
 ## paired passive, unlocked with its spell):
 ##   Undertow          + Salt of the Deep      = Maelstrom
+## plus Act III's unlockable spells (owner-approved Act III proposal; each with a
+## NEW paired passive, unlocked with its spell):
+##   Death Ray         + Conductive Marrow     = Event Horizon
 ##
 ## Evolution condition (GDD open question 27; decisions recorded in GDD
 ## §15.0): the base spell is at its max level (5), the paired passive is at
@@ -60,7 +63,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"tidecallers_host",
 	# --- Act III: the Assembly Halls ---
-	"puppet_king"]
+	"puppet_king",
+	# --- Act III: the Scrap Wastes ---
+	"event_horizon"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -346,6 +351,27 @@ const EVOLUTIONS := {
 			"damage": 42.0, "puppets": 2, "puppet_life": 8.0, "puppet_hp": 1.0, "cooldown": 7.0, "range": 340.0,  # Owner-approved proposal "two puppets"; numbers TUNING (not in GDD)
 			"burst": 2.5, "burst_radius": 72.0,  # TUNING (not in GDD) owner-approved "a puppet that dies explodes"
 			"king": 1,  # The evolution flag: puppets burst when they die.
+		},
+	},
+	# --- Act III: the Scrap Wastes ---
+	# Event Horizon (owner-approved Act III proposal): Death Ray + Conductive
+	# Marrow (a NEW passive, owner rule: at Lv 5). "Two beams sweeping opposite
+	# each other; each kill sets off wild chain lightning through up to 4
+	# enemies." Detected by the "chain" key: a beam kill's lightning arcs from
+	# foe to foe through up to `chain` enemies (each within spark_range px of
+	# the last), losing `chain_falloff` of its damage per jump.
+	"event_horizon": {
+		"base": "death_ray",
+		"passive": "conductive_marrow",
+		"display_name": "Event Horizon",
+		"icon": "event_horizon",
+		"description": "Two soul lasers sweep opposite each other; every kill sets off wild chain lightning.",
+		"labels": {"damage": "Beam damage", "beams": "Beams", "beam_length": "Beam length", "cooldown": "Sweep every (s)", "chain": "Chain lightning jumps", "spark": "Lightning damage"},
+		"stats": {
+			"damage": 30.0, "cooldown": 3.0, "sweep_time": 1.3, "beam_length": 440.0, "beam_width": 16.0, "spark": 0.3, "spark_range": 150.0,  # TUNING (not in GDD) first pass 64 dmg / 2.6 s / spark 0.6 / falloff 0.15: cut with the base spell; pass 2: 48 dmg / spark 0.4 -> 30 / 0.3 (each enemy meets both beams every sweep)
+			"beams": 2,  # Owner-approved proposal: "two beams sweeping opposite each other"
+			"chain": 4,  # Owner-approved proposal: "chain lightning through up to 4 enemies"
+			"chain_falloff": 0.25,  # TUNING (not in GDD) damage lost per jump
 		},
 	},
 }

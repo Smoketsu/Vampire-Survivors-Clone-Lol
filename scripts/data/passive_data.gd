@@ -98,6 +98,18 @@
 ##                   (CombatResolver.damage_unit()) and hold their ground
 ##                   longer: more block mass and a longer Bulwark
 ##                   (HordeDirector.compute_stats(); Golems -> Ossuary Titans).
+## plus the Scrap Wastes' two (Act III, GDD §15.0 "The Scrap Wastes (Act III
+## phase 2)"; both locked until earned, UnlockData):
+##   Conductive Marrow — a longer, wider Death Ray beam (beam_length and
+##                       beam_width in AbilityManager.apply_spell_mods(), the one
+##                       spell modifier path; evolves Death Ray into Event
+##                       Horizon). Unlocked with the spell by slaying Kestrel.
+##   Lead-Lined Bones  — an Act III counter-passive ("act": 3, offered only on
+##                       Act III stages; unlocked by the achievement Static in the
+##                       Wastes): RANGED hits on your summons deal less (one
+##                       multiplier in CombatResolver.damage_unit() for ranged
+##                       sources, CombatResolver.is_ranged_source()). Evolves
+##                       nothing.
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -129,7 +141,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Content wave 2: Bone Golem ---
 	"grave_masonry",
 	# --- Act III: the Assembly Halls ---
-	"strings_of_the_dead", "overclock", "signal_ghost"]
+	"strings_of_the_dead", "overclock", "signal_ghost",
+	# --- Act III: the Scrap Wastes ---
+	"conductive_marrow", "lead_lined_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -143,7 +157,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Content wave 2: Bone Golem ---
 	"grave_masonry",
 	# --- Act III: the Assembly Halls ---
-	"overclock"]
+	"overclock",
+	# --- Act III: the Scrap Wastes ---
+	"lead_lined_bones"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -855,6 +871,41 @@ const PASSIVES := {
 			{"paint_time": 0.45},  # TUNING (not in GDD)
 			{"paint_time": 0.60},  # TUNING (not in GDD)
 			{"paint_time": 0.80},  # TUNING (not in GDD) 1.5 s -> 2.7 s
+		],
+	},
+	# --- Act III: the Scrap Wastes ---
+	# Death Ray's paired passive (owner-approved Act III proposal: "Conductive
+	# Marrow (a longer, wider beam)"); unlocked with the spell by Kestrel.
+	"conductive_marrow": {
+		"display_name": "Conductive Marrow",
+		"icon": "conductive_marrow",
+		"description": "Your Death Ray reaches farther and cuts a wider line.",
+		"labels": {"beam_length": ["Death Ray length", "pct"], "beam_width": ["Death Ray width", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"beam_length": 0.05, "beam_width": 0.12},  # TUNING (not in GDD)
+			{"beam_length": 0.10, "beam_width": 0.24},  # TUNING (not in GDD)
+			{"beam_length": 0.15, "beam_width": 0.36},  # TUNING (not in GDD)
+			{"beam_length": 0.20, "beam_width": 0.48},  # TUNING (not in GDD)
+			{"beam_length": 0.25, "beam_width": 0.60},  # TUNING (not in GDD)
+		],
+	},
+	# Act III's first counter-passive (owner-approved Act III proposal:
+	# "Lead-Lined Bones: ranged hits on your summons deal less damage"; offered
+	# only in Act III, unlocked by Static in the Wastes).
+	"lead_lined_bones": {
+		"display_name": "Lead-Lined Bones",
+		"icon": "lead_lined_bones",
+		"description": "Bullets and shells hurt your summons less.",
+		"labels": {"ranged_reduction": ["Ranged damage to summons", "neg_pct"]},
+		"act": 3,  # Owner-approved: the act's counter-passives are offered only in Act III (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"ranged_reduction": 0.06},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.12},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.18},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.24},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.30},  # TUNING (not in GDD)
 		],
 	},
 }

@@ -266,6 +266,9 @@ func _ready() -> void:
 		# --- Act III: the Assembly Halls ---
 		"assembly":
 			ground = AssemblyGround.new()  # The four zone floors (AssemblyStage.ZONES).
+		# --- Act III: the Scrap Wastes ---
+		"wastes":
+			ground = WastesGround.new()  # Act III: the Scrap Wastes' four zone floors.
 		_:
 			ground = Ground.new()
 	add_child(ground)

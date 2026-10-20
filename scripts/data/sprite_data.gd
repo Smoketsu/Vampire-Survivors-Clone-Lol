@@ -237,6 +237,19 @@ const HEIGHTS: Dictionary = {
 	"player/marionette_hyper": 58.0,  # TUNING (not in GDD) skin art: the Marionette's body, the tall gold jester crown above
 	"player/marionette_untouchable": 56.0,  # TUNING (not in GDD) skin art: body like the Marionette's
 	"player/marionette_deathlord": 60.0,  # TUNING (not in GDD) skin art: body like the Marionette's, the spiked crown above
+	# --- Act III: the Scrap Wastes (assets/sprites/empire/, bosses/, player/) ---
+	"empire/aegis_bot": 48.0,  # TUNING (not in GDD) soldier tier: a squat walker behind its shield (40 wide)
+	"empire/mortar_walker": 48.0,  # TUNING (not in GDD) heavy: a low four-legged walker, wider than tall (the tube on top)
+	"empire/signal_pylon": 96.0,  # TUNING (not in GDD) structure tier: a tall mast on a tripod, the red beacon on top
+	"empire/trojan_horse": 104.0,  # TUNING (not in GDD) miniboss: a horse-shaped drone tank (about 120 wide)
+	"empire/trojan_horse_split": 104.0,  # TUNING (not in GDD) its split hull (the same body, hull halves bent out)
+	"bosses/kestrel": 124.0,  # TUNING (not in GDD) boss tier: a tall slender markswoman, the long rifle across her
+	"bosses/kestrel_aim": 108.0,  # TUNING (not in GDD) attack pose: kneeling, rifle raised (her body is lower)
+	"bosses/kestrel_blades": 124.0,  # TUNING (not in GDD) her last phase: the arm blade raised high above her head
+	"player/lightning_abbess": 56.0,  # TUNING (not in GDD) character tier: body ~48, the crescent staff above
+	"player/lightning_abbess_hyper": 58.0,  # TUNING (not in GDD) skin art: her body, the gold storm crown above
+	"player/lightning_abbess_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the soul-teal staff above
+	"player/lightning_abbess_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

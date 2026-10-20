@@ -38,6 +38,13 @@
 ##   Undertow    — a wave rolls out in the aim direction over a 120° cone and
 ##                 shoves enemies back; every third wave leaves slowing
 ##                 shallow water (Gullhaven Harbour, Abbot Merrow).
+## Act III's unlockable spells (owner-approved Act III proposal "Rewards"; each
+## unlocked by slaying one of the act's bosses, UnlockData, then offered on
+## every stage at the later items' weight):
+##   Death Ray   — a soul laser sweeps a full circle around the necromancer
+##                 every few seconds, cutting everything along it out to about
+##                 420 px; a beam kill sparks lightning to a nearby enemy (the
+##                 Scrap Wastes, Kestrel; logic DeathRay, rules DeathRayData).
 class_name AbilityData
 extends RefCounted
 
@@ -58,7 +65,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"call_of_the_drowned",
 	# --- Act III: the Assembly Halls ---
-	"hollow_puppet"]
+	"hollow_puppet",
+	# --- Act III: the Scrap Wastes ---
+	"death_ray"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -394,6 +403,35 @@ const SPELLS := {
 			{"damage": 36.0, "puppets": 1, "puppet_life": 8.0, "puppet_hp": 1.0, "cooldown": 8.0, "range": 320.0},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act III: the Scrap Wastes ---
+	# Death Ray (owner-approved Act III proposal; unlocked by slaying Kestrel,
+	# UnlockData): "A soul laser fires from the necromancer and sweeps a full
+	# circle around you every few seconds, cutting everything in its line out
+	# to about 420 px ... It moves with you: nothing to stand in. Each kill on
+	# the beam sparks lightning to one nearby enemy." Every `cooldown` s (start
+	# to start) a beam `beam_length` px long and `beam_width` px wide turns one
+	# full circle around the necromancer in `sweep_time` s, dealing `damage` to
+	# every enemy it crosses (once per sweep); a foe it kills sparks lightning
+	# to the nearest other foe within `spark_range` px for `spark` x the beam's
+	# damage. Stat keys: damage, cooldown (s), sweep_time (s), beam_length (px),
+	# beam_width (px), spark (fraction of the beam damage), spark_range (px),
+	# beams (beams 360/beams degrees apart). Logic: DeathRay; fixed rules:
+	# DeathRayData; Conductive Marrow lengthens and widens the beam
+	# (AbilityManager.apply_spell_mods(): beam_length, beam_width).
+	"death_ray": {
+		"display_name": "Death Ray",
+		"icon": "death_ray",
+		"description": "A soul laser sweeps a full circle around you; its kills spark lightning.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act III spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Beam damage", "beam_length": "Beam length", "cooldown": "Sweep every (s)", "spark": "Spark damage", "beam_width": "Beam width"},
+		"levels": [
+			{"damage": 16.0, "cooldown": 4.0, "sweep_time": 1.5, "beam_length": 300.0, "beam_width": 10.0, "spark": 0.4, "spark_range": 120.0, "beams": 1},  # TUNING (not in GDD)
+			{"damage": 19.0, "cooldown": 4.0, "sweep_time": 1.5, "beam_length": 330.0, "beam_width": 10.0, "spark": 0.4, "spark_range": 120.0, "beams": 1},  # TUNING (not in GDD)
+			{"damage": 23.0, "cooldown": 3.8, "sweep_time": 1.4, "beam_length": 360.0, "beam_width": 12.0, "spark": 0.4, "spark_range": 130.0, "beams": 1},  # TUNING (not in GDD)
+			{"damage": 27.0, "cooldown": 3.6, "sweep_time": 1.4, "beam_length": 390.0, "beam_width": 12.0, "spark": 0.4, "spark_range": 130.0, "beams": 1},  # TUNING (not in GDD)
+			{"damage": 32.0, "cooldown": 3.4, "sweep_time": 1.3, "beam_length": 420.0, "beam_width": 14.0, "spark": 0.4, "spark_range": 140.0, "beams": 1},  # Owner-approved proposal "out to about 420 px"; TUNING (not in GDD) the rest (first pass 52 dmg / 3.0 s / spark 0.6 + Event Horizon dealt 456k, 5,500 kills in a Graveyard evolve run: cut; pass 2: 40 dmg / spark 0.45 still dealt 435k, 91% of the run, against 125k for Bone Spear on the same seed: damage -20% on every level)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -402,7 +440,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"thrall_hp", "thrall_damage",
 	# --- Act III: the Assembly Halls ---
-	"puppet_hp"]
+	"puppet_hp",
+	# --- Act III: the Scrap Wastes ---
+	"spark"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

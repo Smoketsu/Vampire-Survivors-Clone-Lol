@@ -556,6 +556,40 @@ const EMPIRE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 		"layers": [
 			{"wave": "square", "f0": 60.0, "f1": 90.0, "dur": 1.4, "amp": 0.22, "attack": 0.2, "decay": 0.5, "lp0": 500.0},
 			{"wave": "sine", "f0": 120.0, "f1": 180.0, "dur": 1.3, "amp": 0.18, "attack": 0.2, "decay": 0.5}]},
+	# --- Act III: the Scrap Wastes --- (appended last: the pack's earlier seeds stay as they were)
+	# Aegis Bot shield breaking (also the Trojan Horse's hull splitting): a
+	# glassy electric crackle falling away.
+	"shield_break": {"dur": 0.4, "volume_db": -15.0, "max_voices": 2, "min_interval": 120, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.3, "amp": 0.45, "decay": 0.08, "lp0": 9000.0, "lp1": 2500.0},
+			{"wave": "square", "f0": 2200.0, "f1": 400.0, "dur": 0.35, "amp": 0.15, "decay": 0.1, "lp0": 5000.0}]},
+	# Mortar Walker launch: a hollow tube thump and a rising whistle.
+	"mortar_launch": {"dur": 0.5, "volume_db": -17.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 120.0, "f1": 60.0, "dur": 0.18, "amp": 0.6, "decay": 0.06},
+			{"wave": "noise", "dur": 0.1, "amp": 0.35, "decay": 0.03, "lp0": 1800.0},
+			{"wave": "sine", "f0": 700.0, "f1": 1400.0, "start": 0.12, "dur": 0.35, "amp": 0.08, "decay": 0.15}]},
+	# Trojan Horse rocket volley: a ripple of hissing launches.
+	"rocket_launch": {"dur": 0.6, "volume_db": -14.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.5, "attack": 0.02, "decay": 0.2, "lp0": 3000.0, "lp1": 7000.0},
+			{"wave": "saw", "f0": 200.0, "f1": 500.0, "dur": 0.4, "amp": 0.12, "decay": 0.15, "lp0": 2500.0}]},
+	# Swarm Rocket / blast burst: a short crackling explosion.
+	"rocket_burst": {"dur": 0.45, "volume_db": -15.0, "max_voices": 3, "min_interval": 80, "pitch_var": 0.12, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.4, "amp": 0.6, "decay": 0.1, "lp0": 4000.0, "lp1": 400.0},
+			{"wave": "sine", "f0": 90.0, "f1": 40.0, "dur": 0.35, "amp": 0.5, "decay": 0.1}]},
+	# Signal Pylon toppled: a dying electric whine and a metal crash.
+	"pylon_down": {"dur": 1.0, "volume_db": -11.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 900.0, "f1": 80.0, "dur": 0.8, "amp": 0.18, "decay": 0.3, "lp0": 3000.0, "lp1": 600.0},
+			{"wave": "noise", "start": 0.35, "dur": 0.55, "amp": 0.55, "decay": 0.15, "lp0": 2500.0, "lp1": 300.0},
+			{"wave": "sine", "f0": 70.0, "f1": 35.0, "start": 0.35, "dur": 0.5, "amp": 0.5, "decay": 0.15}]},
+	# Scrap storm rolling in: a long gust of gritty wind.
+	"storm_wind": {"dur": 2.4, "volume_db": -12.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 2.3, "amp": 0.45, "attack": 0.6, "decay": 0.9, "lp0": 600.0, "lp1": 1500.0},
+			{"wave": "noise", "start": 0.4, "dur": 1.6, "amp": 0.2, "attack": 0.3, "decay": 0.6, "lp0": 3500.0, "lp1": 2000.0}]},
 }
 
 ## Web build (no worker threads, GDD §15.0 "Web build"): main-thread time

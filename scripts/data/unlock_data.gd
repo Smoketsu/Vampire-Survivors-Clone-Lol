@@ -90,6 +90,14 @@ const UNLOCKS := {
 	"grave_drone": {"type": "class", "boss": "motherboard", "text": "Shut down the Motherboard in the Assembly Halls to unlock."},  # Owner-approved proposal
 	"overclock": {"type": "passive", "boss": "motherboard", "text": "Shut down the Motherboard in the Assembly Halls to unlock."},  # The Grave Drone's paired passive, unlocked with it
 	"signal_ghost": {"type": "passive", "achievement": "cold_assembly", "text": "Earn Cold Assembly: destroy every fabricator in one Assembly Halls run."},  # Owner-approved proposal
+	# --- Act III: the Scrap Wastes ---
+	# Kestrel's gift (owner-approved Act III proposal "Rewards": Death Ray is
+	# unlocked by Kestrel, the Dead Pixel) with its paired passive, offered on
+	# every stage; the stage's achievement earns Act III's first
+	# counter-passive (offered only in Act III through its card row's "act").
+	"death_ray": {"type": "spell", "boss": "kestrel", "text": "Slay Kestrel, the Dead Pixel, in the Scrap Wastes to unlock."},  # Owner-approved Act III proposal
+	"conductive_marrow": {"type": "passive", "boss": "kestrel", "text": "Slay Kestrel, the Dead Pixel, in the Scrap Wastes to unlock."},  # Death Ray's paired passive, unlocked with it
+	"lead_lined_bones": {"type": "passive", "achievement": "static_in_the_wastes", "text": "Earn Static in the Wastes: clear the Scrap Wastes."},  # Owner-approved Act III proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

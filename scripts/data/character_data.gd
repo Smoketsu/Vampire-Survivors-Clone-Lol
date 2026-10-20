@@ -56,7 +56,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"tide_widow",
 	# --- Act III: the Assembly Halls ---
-	"marionette"]
+	"marionette",
+	# --- Act III: the Scrap Wastes ---
+	"lightning_abbess"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -97,6 +99,7 @@ const STAT_LABELS := {
 ##   thrall_cap_bonus        CallOfTheDrowned._raise (extra Thralls at once)
 ##   puppet_duration         HollowPuppet._raise (extra puppet life fraction)
 ##   puppet_damage           HollowPuppet._raise (extra puppet damage fraction)
+##   ray_extra_sparks        DeathRay._spark_from (extra sparks per beam kill)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -108,7 +111,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	"thrall_hp_bonus", "thrall_cap_bonus",
 	# --- Act III: the Assembly Halls ---
-	"puppet_duration", "puppet_damage"]
+	"puppet_duration", "puppet_damage",
+	# --- Act III: the Scrap Wastes ---
+	"ray_extra_sparks"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -362,6 +367,26 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a light dancer's body
 		"sprite": "player/marionette",
 		"tint": Color(0.74, 0.46, 0.96),  # TUNING (not in GDD) soul-string violet
+		"starts_unlocked": false,
+	},
+	# --- Act III: the Scrap Wastes ---
+	# The Lightning Abbess (Death Ray's character; owner-approved Act III
+	# proposal; female, in the figure-redesign style: fully clothed, the bust
+	# rig and idle breathing). The abbess of a storm-chapel the Empire razed; she
+	# drew the lightning into her own bones. Her spell must be unlocked first
+	# (by Kestrel), then she unlocks the usual way (Death Ray to Lv 5).
+	"lightning_abbess": {
+		"display_name": "The Lightning Abbess",
+		"title": "She prayed for a storm; now she is one.",
+		"spell": "death_ray",
+		"innate": {
+			"id": "storm_litany", "name": "Storm Litany",
+			"description": "Every kill of your beam sparks lightning to one more foe.",
+			"values": {"ray_extra_sparks": 1.0},  # Owner-approved Act III proposal: "Beam kills spark lightning to one more enemy"
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a light, quick abbess
+		"sprite": "player/lightning_abbess",
+		"tint": Color(0.70, 0.55, 1.0),  # TUNING (not in GDD) storm violet
 		"starts_unlocked": false,
 	},
 }

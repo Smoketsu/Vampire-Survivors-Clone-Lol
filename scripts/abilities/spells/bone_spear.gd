@@ -158,6 +158,8 @@ func _step_spear(s: Spear, delta: float) -> bool:
 		else:
 			s.hits.append(e)
 			s.hit_gens.append(e.generation)
+		if e.kit != null and e.shield_blocks(s.vel, s.damage):
+			return false  # Act III, the Scrap Wastes: an Aegis Bot's frontal shield stops the spear.
 		if s.knockback > 0.0:
 			e.knockback += s.vel.normalized() * s.knockback / maxf(e.mass, 0.1)
 		game.combat.damage_enemy(e, s.damage, "lance" if s.lance else "spear")

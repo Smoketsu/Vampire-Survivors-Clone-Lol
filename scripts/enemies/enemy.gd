@@ -591,6 +591,17 @@ func rises_as_gunner() -> bool:
 	return body == EmpireEnemyData.CYBORG
 
 
+# --- Act III: the Scrap Wastes ---
+## True when this enemy's kit shield stops a friendly PROJECTILE moving with
+## velocity `shot_vel` that would deal `dmg` (the Aegis Bot's frontal shield,
+## AegisKit.blocks_shot()). The ONE projectile-shield check, asked by the
+## friendly projectiles (ProjectileManager), the volley shots (VolleyDirector)
+## and Bone Spear before they deal damage; false for every kind without such a
+## kit (every Act I and II kind), so nothing changes there.
+func shield_blocks(shot_vel: Vector2, dmg: float) -> bool:
+	return kit != null and kit.blocks_shot(self, shot_vel, dmg)
+
+
 ## Local y (px, negative = up) of an over-the-head marker's centre: just
 ## above the top of this enemy's drawn sprite (MarkerArtData.MARKER_LIFT), or
 ## `fallback` (the old body-radius placement) when that is higher or the
@@ -1158,6 +1169,9 @@ func _draw_body(ci: CanvasItem) -> void:
 		if not SpriteBank.draw(ci, wears, Vector2.ZERO, flash > 0.0, wear_tint):
 			Glyphs.draw_summon(ci, wears_class, Vector2.ZERO, radius, flash > 0.0)
 			ci.draw_circle(Vector2.ZERO, radius * 1.05, Color(wear_tint, 0.35))
+		return
+	if kit != null and kit.draws_body(self):
+		kit.draw_body(self, ci)  # Act III, the Scrap Wastes: a kit that draws its own body (rockets, decoys).
 		return
 	Glyphs.draw_enemy(ci, kind, Vector2.ZERO, radius, flash > 0.0, is_elite)
 
