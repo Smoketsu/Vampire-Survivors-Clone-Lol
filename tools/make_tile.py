@@ -319,6 +319,34 @@ RECIPES = {
         "source": "spire_spire.png", "method": "quilt",
         "colors": ["ink_drowned", "floor_soil", "floor_slate", "floor_marble"],
     },
+    # --- Act III: the Assembly Halls (AssemblyGround, tiles/assembly_<style>) ---
+    # The factory's four floors are regular steel joints over existing grit sources (no new API
+    # image): the layout builds the plates, the source only gives each plate its wear.
+    "assembly_docks": {
+        "source": "sanctum_courtyard.png", "method": "layout",  # Scuffed steel deck plates, staggered.
+        "layout": {"type": "grid", "step": 64, "joint": 1, "stagger": 32},
+        "regions": {"stone": ["floor_soil", "floor_slate"], "joint": ["ink_cold"]},
+        "l_ranges": {"stone": (0.21, 0.30)}, "cell_shift": True, "cell_l": 0.008, "bevel": 0.008,
+    },
+    "assembly_conveyor": {
+        "source": "march_fortress.png", "method": "layout",  # Grated walkway: a fine square grid.
+        "layout": {"type": "grid", "step": 16, "joint": 1},
+        "regions": {"stone": ["floor_slate"], "joint": ["ink_cold"]},
+        "flat": True, "cell_l": 0.0,
+    },
+    "assembly_fabricator": {
+        "source": "sanctum_courtyard.png", "method": "layout",  # Polished square panels, blue-steel.
+        "layout": {"type": "grid", "step": 32, "joint": 1},
+        "regions": {"stone": ["floor_slate", "floor_marble", "chrome_dark"], "joint": ["ink_chrome"]},
+        "l_ranges": {"stone": (0.24, 0.32)}, "bias": {"chrome_dark": 0.01}, "cell_shift": True, "cell_l": 0.006, "bevel": 0.01,
+    },
+    "assembly_furnace": {
+        "source": "march_burned.png", "method": "layout",  # Soot-black cast-iron slabs, embers in the joints.
+        "layout": {"type": "courses", "rows": [32, 32, 32, 32], "joint": 2,
+                   "slabs": [[48, 80], [64, 64], [80, 48], [56, 72]], "offsets": [0, 24, 12, 40]},
+        "regions": {"stone": ["floor_soil", "floor_ash", "floor_earth"], "joint": ["ink_warm", "ink_red"]},
+        "l_ranges": {"stone": (0.19, 0.27)}, "bias": {"ink_red": 0.02}, "cell_shift": True, "cell_l": 0.01, "bevel": 0.008,
+    },
     "spire_water": {
         "source": "spire_water.png", "method": "quilt",
         "colors": ["ink_drowned", "drowned_dark", "drowned"],
