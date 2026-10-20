@@ -54,7 +54,7 @@ const ENEMIES := {
 	# advance) and soaks your arrows and bolts from the front.
 	"aegis_bot": {
 		"display_name": "Aegis Bot",
-		"max_hp": 38.0,  # TUNING (not in GDD) a soldier behind its shield (Footman 36; first pass 44 piled up 45 alive by 5:00)
+		"max_hp": 28.0,  # TUNING (not in GDD) a soldier behind its shield (Footman 36; first pass 44 piled up 45 alive by 5:00; Act III balance: 38 -> 28, a Line Trooper's: with the shield an Aegis Bot had three Initiates' HP, so weak armies could not keep up and 50 piled up behind the riflemen)
 		"move_speed": 48.0,  # TUNING (not in GDD) px/s; it keeps pace with the Line Troopers it screens
 		"damage": 5.0,  # TUNING (not in GDD) a shield bash in contact, before the time scaling
 		"attack_interval": 1.3,  # TUNING (not in GDD) s
@@ -78,7 +78,7 @@ const ENEMIES := {
 		# (toward the necromancer) is stopped by the shield, which loses the
 		# shot's damage from its shield HP; at 0 it breaks for shield_recharge s.
 		# Melee, area spells, beams and stomps ignore it.
-		"shield_hp": 16.0,  # TUNING (not in GDD) shield HP at 0:00, scaled with the bot's own HP (time scaling, elites); first pass 34 left the early army unable to break a line, 22 absorbed 150k damage in an army run
+		"shield_hp": 12.0,  # TUNING (not in GDD) Act III balance: 16 -> 12; shield HP at 0:00, scaled with the bot's own HP (time scaling, elites); first pass 34 left the early army unable to break a line, 22 absorbed 150k damage in an army run
 		"shield_half_angle": 1.05,  # TUNING (not in GDD) rad each side of its facing (about 120 degrees in all): "frontal"
 		"shield_recharge": 6.0,  # TUNING (not in GDD) s a broken shield stays down
 		"shield_turn": 3.0,  # TUNING (not in GDD) rad/s the shield turns toward the necromancer
@@ -90,7 +90,7 @@ const ENEMIES := {
 		"display_name": "Mortar Walker",
 		"max_hp": 150.0,  # TUNING (not in GDD) a heavy (Spawn of the Deep 260 is a melee bruiser)
 		"move_speed": 30.0,  # TUNING (not in GDD) px/s; a slow walker
-		"damage": 7.0,  # TUNING (not in GDD) per shell burst, before the time scaling (first pass 9 x 0.9: shells dealt the army as much as all the Line Troopers)
+		"damage": 5.0,  # TUNING (not in GDD) per shell burst, before the time scaling (Act III balance: 7 -> 5, shells ignore Line of Fire and were a top-three killer of the naive bot; first pass 9 x 0.9: shells dealt the army as much as all the Line Troopers)
 		"attack_interval": 5.5,  # TUNING (not in GDD) s between shells
 		"attack_range": 470.0,  # TUNING (not in GDD) px; "long, arcing" (the riflemen fire from 400)
 		"radius": 15.0,  # TUNING (not in GDD) px

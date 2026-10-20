@@ -7,8 +7,6 @@
 ##     citadel events   the director's event log
 ##     citadel kinds    the Valkyrie Duelists' lunges, the Sentry Turrets, the
 ##                      generators, Valkyrie 2.0 (when any spawned)
-##     ranged share     the share of Empire spawns that attack from range (the
-##                      proposal's ~60% target)
 ##     deus ex machina  BossDeusExMachina.summary_line() (when it fought)
 ##   item_lines(): called from Autotest.finish() on EVERY stage, each line only
 ##     when its item was used, so every other summary keeps its exact text:
@@ -34,15 +32,13 @@ static func stage_lines(game: Game, st: Dictionary) -> void:
 			int(st.get("valkyrie_dashes", 0.0)), int(st.get("valkyrie_dashes_blocked", 0.0)), int(st.get("valkyrie_dash_player_hits", 0.0)),
 			int(st.get("valkyrie_bashes", 0.0)), int(st.get("valkyrie_bash_player_hits", 0.0)),
 			int(st.get("valkyrie_storms", 0.0)), int(st.get("valkyrie_storm_player_hits", 0.0)), int(st.get("valkyrie_summon_hits", 0.0))])
-	if cd != null:
-		print("[autotest] ranged share: %s" % _ranged_share(st))
 	if game.enemies.boss is BossDeusExMachina:
 		print("[autotest] deus ex machina: %s" % BossDeusExMachina.summary_line(st))
 
 
 ## "R% ranged (r of n spawns; melee m)": the Empire kinds that spawned, split by
 ## whether they attack from range (behaviour "ranged", or a turret's kit).
-static func _ranged_share(st: Dictionary) -> String:
+static func ranged_share(st: Dictionary) -> String:
 	var ranged := 0
 	var melee := 0
 	for table: Dictionary in [EmpireEnemyData.ENEMIES, WastesEnemyData.ENEMIES, AssemblyEnemyData.ENEMIES, CitadelEnemyData.ENEMIES]:
