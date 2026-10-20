@@ -1658,3 +1658,18 @@ then hand-pixelled on the palette. 3 images, about $0.10.
 Code-drawn on purpose: the Bulwark's ring of bone stakes around a planted Golem and its faint taunt
 reach (`GolemGlyphs.draw_bulwark_stakes()`), the absorb beam and the Titan's collapse wall (the Bone
 Wall spell's own segments).
+
+### Chest beacon (owner request, Oct 2026)
+
+The chest beacon's two markers (GDD §15.0 "Chest beacon"; keys in `scripts/data/chest_beacon_data.gd`). Shapes this
+small read best with every edge on a whole art pixel, so they are **drawn on the grid** by `python3 tools/chest_beacon_art.py`
+(deterministic, like `tools/mesh_props.py`), not generated: gold (the chest's colour in the UI colour language) with a
+gold_light rim on the top-left, a brown_light shade on the bottom-right, one holy_white glint and a solid 8-neighbour
+ink_warm outline, so they read on the light Sanctum floors as well as on the Graveyard soil. Flat sprites
+(`SpriteData.FLAT_SIZES`), drawn 1:1; each site keeps a code drawing as its fallback. The ground glow and pulse ring under
+the chest, the badge's pulse ring and the pointer that turns toward the chest stay code-drawn. No image generation ($0).
+
+| Key | Subject | Art px (w × h) | Drawn by | Status |
+|---|---|---|---|---|
+| `markers/chest_beacon` | A thick gold down-chevron (a V with a notch cut from its top) | 19 × 15 | `ChestBeacon._draw()`: over every chest lying in the world, 26 px above its centre, bobbing 3 px on real time (still with Reduce motion), z 18 above the units | done |
+| `markers/chest_badge` | A round gold ring on a dark brown plate holding a little gold chest (lid, band, keyhole, a glint) | 21 × 21 | `ChestArrows._draw_arrow()`: upright on the screen edge for a chest off screen, a code pointer beside it, fading with distance (never below 55%) | done |

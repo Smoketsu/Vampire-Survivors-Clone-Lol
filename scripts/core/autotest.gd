@@ -49,7 +49,10 @@
 ##     autopilot walks to a chest within ChestData.AUTOTEST_SEEK_RADIUS unless
 ##     enemies press it hard, and the summary lists chests spawned / opened,
 ##     their sizes, every item granted and the evolution times (evolutions
-##     come only from chests),
+##     come only from chests); a "chest beacon" line counts what the chest
+##     beacon showed (ChestBeacon, from the logical view, never drawn
+##     headless): chests marked and seen on screen, the most off-screen
+##     arrows at once and the ticks with an arrow,
 ##   * the recipe book: a "recipe book" line lists the evolutions discovered
 ##     so far (Meta [recipes]; in memory only unless --meta-save) and the
 ##     pause menu's Recipes rows are built once, headless,
@@ -1506,6 +1509,7 @@ func _print_powerups(summary: Dictionary) -> void:
 		int(st.get("chests_lost_at_cap", 0.0)), game.chests.active.size()])
 	for line: String in game.chests.open_log:
 		print("[autotest]    chest %s" % line)
+	print("[autotest] chest beacon: %s" % game.chest_beacon.summary_line())  # Chest beacon (ChestBeacon; counted headless, never drawn).
 	var ash: Dictionary = summary.get("soul_ash", {})  # Meta.award_run() breakdown.
 	print("[autotest] profane pact: taken %s (final Lv %d; %s) | oath tier %d | extra XP from pact %d, from oath %d | extra soul ash from pact %d, from oath %d" % [
 		"yes" if _pact_seen > 0 else "no", _pact_seen, " ".join(_pact_log) if not _pact_log.is_empty() else "never offered or never picked",

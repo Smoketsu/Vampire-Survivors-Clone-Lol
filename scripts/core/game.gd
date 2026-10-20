@@ -147,6 +147,9 @@ var powerups: PowerupManager
 var difficulty: DifficultyModifiers
 ## Treasure chests (ChestManager).
 var chests: ChestManager
+## The chest beacon: chevrons over the chests, edge arrows to the ones off
+## screen, the autotest's "chest beacon" counts (ChestBeacon; visual only).
+var chest_beacon: ChestBeacon
 ## Cosmetic effects and telegraphs.
 var effects: EffectManager
 ## Engine motion of every unit and the pooled death dissolves (visual only).
@@ -313,6 +316,9 @@ func _ready() -> void:
 	camera.position_smoothing_speed = 8.0
 	add_child(camera)
 	camera.make_current()
+	chest_beacon = ChestBeacon.new()  # Over the units (its own z) with its edge-arrow layer; read only.
+	chest_beacon.game = self
+	add_child(chest_beacon)
 	if not ultimates.is_default():
 		add_child(UltimateOverlay.new(self))  # The new ultimates' screen overlays (visual only).
 

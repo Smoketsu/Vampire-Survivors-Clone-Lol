@@ -271,6 +271,18 @@ for the browser, so there the tab may be blocked.
     hide while a level-up, chest, pause or end screen is open and carry on
     afterwards. The XP bar sits in its frame with room for its numbers; the HP
     bar has quarter notches and a pale trail where HP was just lost.
+  - **Chest beacon** (owner request): a gold chevron bobs over every chest
+    lying in the world, above the crowd, and a gold glow with a pulse ring
+    marks the ground under it. A chest off screen (one you walked past, or one
+    just beyond the edge) gets a gold badge with a pointer on the screen edge,
+    turned toward it; it fades and shrinks a little with distance but never
+    disappears. The badges keep below the top bars (lower while a boss or
+    miniboss bar shows), above the ability bar, out of the army list's corner
+    and, on a phone or tablet, out of the joystick's and buttons' corners; at
+    most four show (nearest first, close ones merge into one with a pip per
+    extra chest). They hide while a level-up, chest, pause or end screen is
+    open. Motion holds still with Reduce motion; Effects: Reduced drops the
+    pulse rings. Always on (no setting: the Video tab has no marker toggles).
 - **Settings (`Settings` autoload, `SettingsMenu`).** Four tabs (Q / E or
   LB / RB): **Audio** (Master / Music / Effects sliders), **Video**
   (fullscreen, **Volleys** = the bullet heaven pass, the camera zoom Normal / Close,
@@ -1573,7 +1585,9 @@ card after Act II, "The Beacons Burn", where the other holy orders march out (th
   own level-up choices. **Every ready evolution comes first: evolutions are delivered only
   by chests.** A chest never grants the Profane Pact, and when nothing can be
   upgraded it heals (Dark Restoration). Confirm (Enter / Space / click / pad
-  A) skips the reveal, then closes it.
+  A) skips the reveal, then closes it. The **chest beacon** (`chest_beacon_data.gd`)
+  marks every chest: a gold chevron over it, a ground glow under it and an edge
+  badge pointing at it while it is off screen (see *In-run screens*, HUD).
 - **Profane Pact** (in-run difficulty passive, `scripts/data/pact_data.gd`).
   Offered on level-up cards (crimson **PACT** tag, a modest 0.4× card
   weight), it takes a passive slot, has 5 levels and can be banished. Per
@@ -1984,6 +1998,7 @@ scripts/
   pickups/xp_crystal.gd, xp_manager.gd     Pooled XP crystals with magnet
   pickups/powerup.gd, powerup_manager.gd   Pooled power-up drops, drop rules, timed buffs, Soul Nova
   pickups/chest.gd, chest_manager.gd       Pooled treasure chests and their drop rules
+  pickups/chest_beacon.gd   Chest beacon: chevrons over the chests, ground glow, edge-arrow layout, autotest counts
   audio/sfx.gd              Autoload: audio buses, pooled voices with per-sound and global voice limits
   audio/synth.gd            Procedural sound and music synthesis (no audio files)
   audio/run_loop_synth.gd   The in-run music loop's recipe as a list of small jobs (run at once, or over frames)
@@ -2026,7 +2041,8 @@ scripts/
                             ossuary_tile (one upgrade tile: icon, name, pips, cost, buy flash / shake),
                             pixel_marks (code-drawn pixel pips, arrow, padlock, recipe socket),
                             meta_glyphs (fallback drawings of the Soul Ash / tree / upgrade icons),
-                            chest_panel (chest reveal), powerup_glyphs (power-up, chest, Pact / Oath icons),
+                            chest_panel (chest reveal), chest_arrows (the chest beacon's edge badges
+                            for chests off screen), powerup_glyphs (power-up, chest, Pact / Oath icons),
                             stage_select (vignette stage cards, locks, best times, Hyper badges),
                             stage_vignette (a stage card's composed pixel scene), pre_run_setup
                             (character, difficulty level, run modifiers, total Soul Ash plaque),
@@ -2170,6 +2186,8 @@ scripts/
     meta_data.gd            Soul Ash formula, upgrade trees / tiers / costs, achievements, autotest profiles
     powerup_data.gd         Power-up types, weights, durations, drop chances, pity, cap, lifetime
     chest_data.gd           Chest drop chances, pity, contents (1 / 3 / 5) weights, reveal timing
+    chest_beacon_data.gd    Chest beacon: chevron bob, ground glow and pulse, edge-arrow insets, kept-free
+                            corners (HUD, touch controls), cap, merge, fade (all cosmetic)
     pact_data.gd            Profane Pact levels and Profane Oath per-tier values
     difficulty_data.gd      GDD §8.4 difficulty levels (Initiate, Necromancer, Lich, Deathlord)
     run_modifier_data.gd    GDD §8.5 run modifiers: effects and Soul Ash rewards
@@ -2261,6 +2279,7 @@ Options (after `--`):
 | `--rewards=on\|off` | Content wave 2: `on` checks the five one-run achievements (Mass Grave, Untouchable, Full Ossuary, Deathlord's Due, Swift Judgment) in memory, as the game does; by default (`off`) the autotest leaves them unchecked (unless `--meta-save`), so the default summaries' bounty and Soul Ash are unchanged. Every summary ends with a `rewards` line: achievements earned this run, titles open, reward items unlocked (`ultimate:` / `title:` / `skin:`), the run counters (temporary undead raised, lowest HP before 0:00, evolutions, the boss's lifetime after arrival), the one-run achievements this run met and whether they were checked, the worn title, and the setup screen's title row built once headless. |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
+| (chest beacon) | Every summary has a `chest beacon` line: chests marked (lying in the world while the run plays; a chest opened the tick it dropped is never marked), chests seen on screen, the most off-screen arrows at once (after merging and the cap of 4) and the physics ticks (and game seconds) with an arrow. It is counted headless from the logical view (the necromancer at the centre, the visible area at the camera zoom, the desktop layout) and never drawn. |
 | `--volleys=on\|off` | The bullet heaven pass (default on, like the setting): `off` runs none of the pass (no volleys, the usual fodder; the army still holds the Bone Ring). Every summary has a `volleys` line: shots fired, hits, volley damage, peak shots in flight against the cap, volleys thinned by the cap, boss hits refused by the per-volley cap, Rally Barrages, and the volley damage by class / spell. |
 | `--synergies=off` | A/B switch: no army synergy ever activates (the four original ones and the newer classes' nine). Every summary has a `synergy bonus` line (per newer synergy: the hits its mark bonus raised and the damage it added; the Baying frenzies; staggered / swooped marks; Death from Above dash resets; the seconds Requiem stretched), marked "(synergies off)" with this switch. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
