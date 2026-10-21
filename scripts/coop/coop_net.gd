@@ -356,10 +356,24 @@ static func is_valid_code(p_code: String) -> bool:
 	return true
 
 
-## This build's game version (project.godot application/config/version): the
-## relay refuses a partner whose version differs.
+## This build's game version: project.godot application/config/version plus the
+## build id ("0.7.0+3f9c2a1b7d0e"), so two builds that share a version number but
+## simulate differently never pair (lockstep needs the same simulation on both
+## machines). The relay refuses a partner whose string differs. The build id is
+## the commit CI exported (CoopNetData.BUILD_ID_PATH, written before the export),
+## or CoopNetData.DEV_BUILD_ID when running from source (local tests and the CI
+## co-op gates, where both processes share one tree).
 static func game_version() -> String:
-	return str(ProjectSettings.get_setting("application/config/version", "dev"))
+	var version := str(ProjectSettings.get_setting("application/config/version", "dev"))  # Version number.
+	return "%s+%s" % [version, build_id()]
+
+
+## The exported build's id (the commit CI built it from), else DEV_BUILD_ID.
+static func build_id() -> String:
+	if not FileAccess.file_exists(CoopNetData.BUILD_ID_PATH):
+		return CoopNetData.DEV_BUILD_ID
+	var id := FileAccess.get_file_as_string(CoopNetData.BUILD_ID_PATH).strip_edges()  # File contents.
+	return id if id != "" else CoopNetData.DEV_BUILD_ID
 
 
 ## This machine's platform: "web" in a browser, else the OS name in lower case.

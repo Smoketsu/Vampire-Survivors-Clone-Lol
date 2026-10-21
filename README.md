@@ -180,7 +180,8 @@ and edge arrow come with the co-op HUD branch.
 - **In the lobby** each player picks their own character, skin, ultimate and title with **Setup** (from their own
   unlocks; their Ossuary upgrades come along). The host also picks the stage (**Stage**), the difficulty, the
   modifiers and Hyper; the guest sees those read-only. The guest presses **Ready**, then the host **Start**.
-  **Leave** asks first. Both players need the same game version.
+  **Leave** asks first. Both players need the same build: the lobby compares the version number plus the
+  commit CI exported (`CoopNet.game_version()`, `build_id.txt`), so after an update both reload the page.
 - **In the run** each machine runs the whole game of both players and only the inputs travel (`CoopLockstep`):
   your moves and presses reach the game about 70-120 ms later on both screens (the input delay adapts to the
   ping). A level-up opens your own cards while your partner picks theirs (the game waits for both: "Your

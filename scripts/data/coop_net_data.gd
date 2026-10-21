@@ -15,6 +15,11 @@ extends RefCounted
 ## "" would mean not deployed: Host / Join then say co-op is not set up.
 ## Tests override it: `--relay=ws://...` on desktop, `?relay=ws://...` in the Web build's page address.
 const RELAY_URL: String = "wss://necropathy-relay.smoketsu.workers.dev"  # TUNING (not in GDD) owner's Cloudflare account (Oct 2026)
+## The build id file CI writes before exporting (the commit's first 12 hex digits), packed by the
+## export presets' include_filter; CoopNet.game_version() appends it so only identical builds pair.
+const BUILD_ID_PATH: String = "res://build_id.txt"  # TUNING (not in GDD) must match ci.yml and export_presets.cfg
+## Build id when that file is missing (running from source: local tests, the CI co-op gates).
+const DEV_BUILD_ID: String = "dev"  # TUNING (not in GDD)
 ## Relay protocol version sent in the hello (PROTOCOL.md; the relay refuses any other). Range 1+.
 const PROTOCOL: int = 1  # TUNING (not in GDD)
 ## Letters a lobby code is made of: 20 consonants (no vowels, so no words; no O / I / L to misread).
@@ -71,7 +76,7 @@ const RELAY_QUERY_KEY: String = "relay"  # TUNING (not in GDD)
 const ERROR_TEXT: Dictionary = {
 	"no_lobby": "No lobby has that code. Check the letters.",  # TUNING (not in GDD)
 	"full": "That lobby is full.",  # TUNING (not in GDD)
-	"version": "Your partner runs another version of the game (%s). Update both to the same build.",  # TUNING (not in GDD)
+	"version": "Your partner has a different build of the game. Reload the page (or update the app) on both devices.",  # TUNING (not in GDD)
 	"started": "That lobby's run has already begun.",  # TUNING (not in GDD)
 	"bad_hello": "The relay did not accept the connection.",  # TUNING (not in GDD)
 	"host_left": "The host closed the lobby.",  # TUNING (not in GDD)

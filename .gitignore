@@ -3,6 +3,7 @@
 /android/
 
 # Godot export artifacts
+/build_id.txt
 /build/
 /export/
 *.pck
