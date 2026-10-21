@@ -2513,6 +2513,22 @@ The whole step is timed and the cost is shown in the F3 overlay.
 **Pooling and stale references.** All pooled entities have a `generation`
 counter. A unit, enemy, projectile or healer that holds a reference checks the
 generation, so it never acts on a recycled node.
+Killed and despawned enemies also wait for two cleanup boundaries before reuse:
+the enemy director removes their old active-list entries, then the next solo or
+co-op tick clears the old enemy spatial grid. This prevents a same-tick spawn
+from reactivating an enemy that an old list or collision bucket still references.
+The normal combat update and active-list compaction order stay unchanged.
+Run the focused regression with Godot 4.3:
+
+```bash
+godot --headless res://tools/enemy_pool_check.tscn -- --autotest
+godot --headless res://tools/enemy_pool_check.tscn -- --autotest --coop-bot
+```
+
+It checks reuse around both boundaries, stale collision entries, generation
+changes, repeated despawns, and 100 mixed kill/despawn cycles with a bounded pool.
+CI runs both checks in the Graveyard naive job; the test is excluded from
+exports by `tools/.gdignore`.
 
 **Overkill reservation.** Ranged damage that is already in flight is recorded on
 the target (`Enemy.incoming_damage`). Archers, mages and Shadow Bolt pass over
@@ -2820,13 +2836,17 @@ support).
     switch no longer mutes the game (it pauses other apps' music, as a video does); older iOS (before 16.4) gets
     the same from a looping silent `<audio>`. Every tap resumes a context iOS left "suspended" or "interrupted"
     (after a call, Siri or another app), and Godot's AudioContext keeps the device's own sample rate there.
-  - **Sound memory (patched engine script):** Godot 4.3's Web player copies a sound's whole buffer every time it
+  - **Sound memory (buffer sharing):** Godot 4.3's Web player copies a sound's whole buffer every time it
     plays. That is about 1-2 MB of garbage a second in a run, enough to get a phone tab killed for memory and
     reloaded mid-run (the "game resets after a while" bug). `tools/patch_web_audio.py` makes every play share the
     sample's one buffer. CI runs it after the Web export and fails if the engine script no longer matches, and a
     local export needs it too (GDD §15.0 "Web audio buffer patch").
-  - **The master-bus hard limiter is not applied** (Godot's Web sample playback skips bus effects), so a very
-    dense burst of sounds can be a little louder than on desktop; the per-sound voice limits still apply.
+  - **Sound playback lifetime:** the Web build uses **Stream** playback
+    (`audio/general/default_playback_type.web=0`). Godot 4.3's default Web Sample path retains mixer
+    playback objects after each sound; the buffer-sharing patch alone does not fix this. Streaming
+    reclaims finished playbacks and applies the master-bus hard limiter, with the existing 24-voice
+    pool and sound limits. It moves mixing into Godot, so real-phone audio smoothness and late-run
+    frame time still need verification (GDD §15.0 "Web audio playback retention").
   - **Audio synthesis is spread over frames:** with no worker threads, the sound effects and the in-run loop are
     rendered in 6 ms per-frame steps after the title screen appears (the same samples as on desktop; about 0.8 s of
     compute in Chromium, so at 60 fps all sounds exist about 1.6 s after the title and the run music about 2.2 s,
