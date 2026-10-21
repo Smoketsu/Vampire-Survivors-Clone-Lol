@@ -727,6 +727,7 @@ func empire_rules() -> EmpireRules:
 ## Re-inserts every living enemy and summon into the spatial hashes.
 func _rebuild_grids() -> void:
 	enemy_grid.clear()
+	enemies.release_retired()  # Reuse only after active-list compaction AND clearing old grid references.
 	for e in enemies.active:
 		if e.active and not e.untargetable:  # Act II: Vhal'Neth's submerged face is out of reach.
 			enemy_grid.insert(e, e.position)

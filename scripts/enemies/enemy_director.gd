@@ -5,8 +5,8 @@
 ##     one-shot formation events + the stage boss at 17:00 (Sir Alaric or
 ##     Marshal Vael), with the shared enemy HP / damage scaling over time
 ##     (WaveData) times the stage's own multipliers.
-##   * Pools Enemy nodes; dead enemies are compacted out of `active` at the
-##     start of the next step and reused.
+##   * Pools Enemy nodes; dead enemies leave `active` at compaction and can
+##     be reused only after the next spatial-grid clear (solo and co-op).
 ##   * Staggers enemy AI: think() at 5 Hz, separation at 10 Hz, movement at
 ##     60 Hz.
 ##   * Recycles enemies left far behind to the spawn ring ahead of the player.
@@ -89,9 +89,11 @@ var game: Game
 var active: Array[Enemy] = []
 ## Inactive enemies ready for reuse.
 var _pool: Array[Enemy] = []
-## Enemies taken off the field without a kill this step (pooled at the
-## next compaction, see despawn()).
-var _despawned: Array[Enemy] = []
+## Killed or despawned enemies awaiting removal from `active` at compaction.
+var _retired: Array[Enemy] = []
+## Compacted enemies still referenced by this tick's spatial grid; reusable
+## only after the next grid clear, through release_retired().
+var _awaiting_grid_clear: Array[Enemy] = []
 ## The run's stage (Game.stage_def, StageRegistry keys).
 var stage_def: Dictionary = {}
 ## The stage's trickle segments (stage_def "segments").
@@ -353,12 +355,9 @@ func archive_hazards() -> ArchiveHazards:
 	return archive_haz
 
 
-## Removes enemies killed since the last step from `active` (and pools the
-## ones despawned without a kill).
+## Removes inactive enemies from `active`, preserving the existing swap-pop
+## order. They must remain inert while this tick's spatial grid can list them.
 func _compact() -> void:
-	if not _despawned.is_empty():
-		_pool.append_array(_despawned)
-		_despawned.clear()
 	var i := 0
 	while i < active.size():
 		if active[i].active:
@@ -366,6 +365,16 @@ func _compact() -> void:
 		else:
 			active[i] = active[active.size() - 1]
 			active.pop_back()
+	_awaiting_grid_clear.append_array(_retired)
+	_retired.clear()
+
+
+## Called immediately AFTER the enemy spatial grid is cleared, before it is
+## rebuilt (Game / CoopSession). Only already-compacted nodes are reusable:
+## no node can be reactivated while either `active` or an old bucket lists it.
+func release_retired() -> void:
+	_pool.append_array(_awaiting_grid_clear)
+	_awaiting_grid_clear.clear()
 
 
 ## Number of living regular (non-boss) enemies.
@@ -851,13 +860,13 @@ func _spawn_enemy(kind: String, pos: Vector2, elite: bool) -> Enemy:
 
 ## Takes a living enemy off the field WITHOUT a kill (no XP, no drops, no
 ## kill count): a supply cart that escaped, a Holy Standard whose time ran
-## out. It returns to the pool at the next compaction (never in the same
-## step, so it cannot be reused while `active` still lists it).
+## out. Like a kill, it waits for compaction AND the following spatial-grid
+## clear before reuse, so no old active-list or bucket reference sees it alive.
 func despawn(e: Enemy) -> void:
 	if not e.active or e.is_boss:
 		return
 	e.deactivate()
-	_despawned.append(e)
+	_retired.append(e)
 
 
 ## As _spawn_enemy() but with an explicit definition and HP multiplier.
@@ -911,4 +920,4 @@ func on_enemy_killed(e: Enemy) -> void:
 		show_banner(String(boss_info["defeat_banner"]))
 		boss_defeated.emit()
 	else:
-		_pool.append(e)
+		_retired.append(e)

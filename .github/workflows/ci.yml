@@ -108,6 +108,18 @@ jobs:
             echo "::error::Script errors during import"; exit 1
           fi
 
+      - name: Enemy pool regression (solo and co-op)
+        if: matrix.id == 'graveyard'
+        run: |
+          set -euo pipefail
+          timeout 60 "$GODOT_BIN" --headless res://tools/enemy_pool_check.tscn -- --autotest 2>&1 | tee enemy_pool_solo.log
+          timeout 60 "$GODOT_BIN" --headless res://tools/enemy_pool_check.tscn -- --autotest --coop-bot 2>&1 | tee enemy_pool_coop.log
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" enemy_pool_solo.log enemy_pool_coop.log; then
+            echo "::error::Errors/warnings during enemy pool regression"; exit 1
+          fi
+          grep -qF "[enemy_pool_check] PASS mode=solo" enemy_pool_solo.log
+          grep -qF "[enemy_pool_check] PASS mode=co-op" enemy_pool_coop.log
+
       - name: Autotest (${{ matrix.name }})
         run: |
           # Exit code is 0 only when the run completes (reaches 0:00).

@@ -456,6 +456,7 @@ func step_bots(delta: float) -> void:
 ## hashes (Game._rebuild_grids() for both armies: enemies target any summon).
 func _rebuild_grids() -> void:
 	game.enemy_grid.clear()
+	game.enemies.release_retired()  # Same retirement boundary as solo; neither army can see a recycled old entry.
 	for e in game.enemies.active:
 		if e.active and not e.untargetable:
 			game.enemy_grid.insert(e, e.position)
