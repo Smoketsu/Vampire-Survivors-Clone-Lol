@@ -59,6 +59,33 @@ change it per frame but slows everything else. This is also the "JS heap grows t
 the Act III Web check (GDD §15.0), which was blamed on sounds. **Fix:** `tools/patch_web_gl.py` (GDD §15.0 "Web GL
 id leak patch").
 
+### 1b. The Hellhounds (the owner's reproduction)
+
+The owner reproduced the crash and pointed at the **Hellhounds** (Bone Hounds + Blood Scent Lv 5). Run H: Sanctum,
+seed 7, `--policy=summon --classes=bone_hound --passives=blood_scent`, DPR 1, CPU ×1, `--speed=2`, to 12:00; the
+Hellhound evolution arrives at **8:00** (the evolution gate), 12 hounds.
+
+- Their **fire trail is bounded and pooled**: a patch every 0.3 s per running hound that has moved 26 px, 1.6 s
+  life, one pooled `HordeHazards.Patch` list with a safety cap of 160 (never reached: 40-62 live, 0 dropped);
+  burns are capped at 24 per hound and end with the hound; no effect nodes, no growth in Godot's object count.
+- But the hazards node **redraws every patch every frame**, and each patch was 2 `draw_circle` + 3
+  `draw_colored_polygon`: with the GL id leak above, the evolution multiplied the leak.
+
+| Run H (before), game time | GL ids created per frame | retained JS heap |
+| --- | --- | --- |
+| 7:20 (bone hounds) | 2,467 | 46.4 MB |
+| 8:05 (Hellhounds arrive) | 6,847 | 121.3 MB |
+| 8:51 | 14,710 | 127.2 MB |
+| 10:07 | 15,072 | 198.6 MB |
+| 10:37 | 18,170 | **293.1 MB** (peak sample 434.9 MB) |
+
+About **0.25 MB of JS heap per frame** after the evolution: at a phone's 30 fps, some 400 MB a minute, which iOS
+cannot survive for long. That is the reload a minute or so after the Hellhounds appear. **After** (the GL patch, and
+the fire patch drawn as two discs and three `draw_primitive` triangles, which batch): 290-1,340 GL ids a frame and
+a retained JS heap of **8.2 → 8.8 MB** over the whole run (peak sample 8.8 MB); the same evolutions at the same
+times (gameplay identical, natively too: the Hellhound run's same-seed summary is unchanged); primitives at 10:07
+28,510 → 12,277, draw calls 1,468 → 1,171; 576 s instead of 665 s of wall time.
+
 ### 2. Where the polygons came from
 
 `--draw-probe=380` (after the volley fix, before the shadow fix; each layer hidden for 30 frames between unhidden
@@ -92,7 +119,8 @@ with Godot's own render buffers at the same size (`buf` = 21 MB in the monitor a
 1. **`tools/patch_web_gl.py`** (run by `tools/patch_web_audio.py`, so CI and the one documented export step apply
    it): each GL table keeps a free list; deletes put the id on it, `getNewId` takes a free id first (as native GL
    drivers reuse names). GDD §15.0 "Web GL id leak patch".
-2. **One disc texture for shadows and glows** (`SpriteBank.disc()` / `draw_disc()`): drop shadows and volley glows
+2. **One disc texture for shadows and glows** (`SpriteBank.disc()` / `draw_disc()`): drop shadows, volley glows,
+   the Hellhound fire patches (plus three `draw_primitive` triangles each), shard fields and boulder telegraphs
    are tinted textured rects (they batch, no GPU buffers rebuilt per redraw). Volleys draw all glows, then the
    masks grouped by style (additive blending: same picture), impacts before flashes, and skip what is more than
    48 px off screen; damage numbers draw outlines then fills and cache their text. GDD §15.0 "Disc texture for
@@ -144,6 +172,15 @@ Graveyard card, Begin, a joystick drag (the necromancer walked right), the pause
 CSS px (menus, the joystick ring, the four buttons), the canvas buffer is 2532 × 1170 before and 1688 × 780 after,
 `window.necroCanvasScale` 2.
 
+### Hellhound run at the iPhone page (H3: DPR 3 capped, CPU ×4, adaptive on)
+
+Peak JS heap 9.1 MB, peak WebAssembly heap 198.8 MB, rendered frames 618 / 790 ms (mean / p95, software GL), the
+same evolutions at the same times (Hellhound 8:00, Lich 9:44, Profane Bishop 10:25), 45-60 live fire patches. Its
+adaptive quality never stepped: every software-rendered frame was longer than the first hitch filter (250 ms, "a
+load, not the frame rate") and the window wanted 20 frames. Both were loosened (`ADAPT_HITCH_MS` 1000 ms,
+`ADAPT_MIN_FRAMES` 5) so a device that only draws a few frames a second still steps down; run G (the same page, army
+policy) then went Full → Minimal within its first 15 s of play.
+
 ### Adaptive quality on the Web build (run F, DPR 1, CPU ×1, default `--adaptive`)
 
 Under the software renderer's ~90-140 ms frames it stepped down three times within the first 30 s (Full → Reduced
@@ -164,7 +201,8 @@ same-seed summary stayed identical, which shows it touches drawing only.
 The minute-7 crash is, with high confidence, **memory growth from Emscripten never reusing WebGL ids**: every
 polygon Godot redrew left table slots behind, thousands a frame in a busy Sanctum fight, so the page grew by tens
 of MB a minute until iOS killed it. More projectiles meant more polygons a frame, which is why it felt tied to the
-projectiles; Low Power Mode made each frame slower but did not cause the growth. The patch stops the growth (the
+projectiles, and the Hellhounds' fire trail (about 50 patches redrawn as five polygons each, every frame) multiplied
+it about sixfold the moment they evolved; Low Power Mode made each frame slower but did not cause the growth. The patch stops the growth (the
 retained JS heap stays at 8-9 MB through the same fight instead of climbing past 85 MB), and the disc texture cuts
 the per-frame GL objects by about 90%, which also lowers the CPU cost of each frame. The resolution cap, the adaptive
 quality and the physics cap lower the per-frame load further on slow phones.

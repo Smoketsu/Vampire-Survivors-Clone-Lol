@@ -69,7 +69,7 @@ const ADAPT_EVAL_S: float = 0.5  # TUNING (not in GDD) mobile
 ## Ring-buffer size of the frame samples (>= 2 s at 60 fps, with room).
 const ADAPT_SAMPLES: int = 160  # TUNING (not in GDD) mobile
 ## Fewest samples in the window before it is judged (a just-resumed run waits).
-const ADAPT_MIN_FRAMES: int = 20  # TUNING (not in GDD) mobile
+const ADAPT_MIN_FRAMES: int = 5  # TUNING (not in GDD) mobile; low, so a device at a few fps is still judged
 ## Median frame interval (ms) above which the tier steps down one: slower than
 ## ~24 fps. iOS Low Power Mode caps the page at 30 fps (33.3 ms), which stays under it.
 const ADAPT_DOWN_MS: float = 42.0  # TUNING (not in GDD) mobile
@@ -82,6 +82,8 @@ const ADAPT_RECOVER_S: float = 8.0  # TUNING (not in GDD) mobile
 const ADAPT_RECOVER_MAX_S: float = 64.0  # TUNING (not in GDD) mobile
 ## A step down within this many seconds (real time) after a step up doubles the wait.
 const ADAPT_BOUNCE_S: float = 6.0  # TUNING (not in GDD) mobile
-## A frame interval longer than this (ms) is a pause, a load or a trip to another app,
-## not the steady frame rate: it is left out of the window.
-const ADAPT_HITCH_MS: float = 250.0  # TUNING (not in GDD) mobile
+## A frame interval longer than this (ms) is a load or a trip to another app, not the
+## steady frame rate: it is left out of the window (pauses and focus changes reset the
+## clock anyway). Kept high so a device that only manages a few frames a second still
+## steps down (the measurement's software renderer drew 0.5-2 s frames).
+const ADAPT_HITCH_MS: float = 1000.0  # TUNING (not in GDD) mobile
