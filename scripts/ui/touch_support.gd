@@ -83,6 +83,8 @@ static func _detect() -> bool:
 ## (its portrait_changed signal); null under the autotest (but the
 ## --coop-shots walk's).
 static func install(parent: Node) -> TouchSupport:
+	if OS.has_feature("web") and DisplayServer.get_name() != "headless" and _phone_browser():
+		_cap_canvas()  # Drawing resolution only: also under the autotest (the Web perf measurement).
 	if _autotest_blind():
 		return null
 	if _instance != null and is_instance_valid(_instance):
@@ -97,11 +99,19 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if is_mobile():
 		InputHints.set_device(InputHints.Device.TOUCH)
-		_cap_canvas()
 	_overlay = RotateOverlay.new()
 	add_child(_overlay)
 	get_tree().root.size_changed.connect(_on_resize)
 	_on_resize()
+
+
+## True when the browser's main pointer is a finger (TouchData.MOBILE_QUERY), asked
+## directly: unlike is_mobile() also under the autotest, whose runs keep the
+## desktop layout and hints but may still be measured at a phone's resolution
+## (the canvas cap changes only how many device px are drawn, never the layout).
+static func _phone_browser() -> bool:
+	var answer: Variant = JavaScriptBridge.eval("(%s) ? 1 : 0" % TouchData.MOBILE_QUERY, true)
+	return (typeof(answer) == TYPE_INT or typeof(answer) == TYPE_FLOAT or typeof(answer) == TYPE_BOOL) and int(answer) == 1
 
 
 ## Web build on a phone: asks the page (web/mobile_shell.html) to draw at most

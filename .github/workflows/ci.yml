@@ -334,7 +334,9 @@ jobs:
           # Godot 4.3 copies a sound's whole buffer on every Web play; the garbage
           # got phone tabs killed (page reload) mid-run. The patch shares the buffer
           # and fails the build if the engine's script no longer matches (GDD §15.0
-          # "Web audio buffer patch").
+          # "Web audio buffer patch"). It also runs tools/patch_web_gl.py: Emscripten
+          # never reused WebGL ids, so its object tables grew with every polygon Godot
+          # redraws until phone tabs ran out of memory (GDD §15.0 "Web GL id leak patch").
           python3 tools/patch_web_audio.py build/web/index.js
           (cd build/windows && zip -q ../Necropathy-windows.zip Necropathy.exe)
           (cd build/linux && chmod +x Necropathy.x86_64 && zip -q ../Necropathy-linux.zip Necropathy.x86_64)
