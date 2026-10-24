@@ -67,6 +67,8 @@ PANEL_OPTS = {
     "act3_3": {"drop": ["skin", "ice"]},
     "act3_4": {"drop": ["skin", "ice"]},
     "close": {"drop": ["skin", "ice", "violet", "biolume"]},  # The holy orders: no necromancer violet (the knights card; owner kept it, Act III art review round 4).
+    # --- Act IV: the closing card after Act III, "The River Runs Dry" ---
+    "close_act3": {"y_bias": 0.12, "drop": ["skin", "ice"]},  # Grey underworld, gold sky, marble: the default drops; the band keeps the gods on the peak.
 }
 
 
