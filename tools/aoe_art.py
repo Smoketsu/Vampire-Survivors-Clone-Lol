@@ -70,7 +70,7 @@ CREST_CELL = (14, 16)
 # Frames in every burst crest strip (fresh -> broken up).
 CREST_FRAMES = 4
 # Telegraph rim piece cell (art px): radial x tangent.
-MARK_CELL = (7, 14)
+MARK_CELL = (8, 14)
 # Cloud puff diameters (art px): small, medium, large.
 PUFF_SIZES = (18, 26, 34)
 # Wither rune-rim cell (art px): radial x tangent; 2 frames = 2 variants (thorn + rune, thorn).
@@ -457,18 +457,20 @@ CRESTS = {
 # --------------------------------------------------------------------------------------
 
 def mark(f: int) -> Grid:
-    """A dial-like rim mark: a 2 px arc segment along the tangent with an inward tick in the
-    middle and bright end caps; frame 1 is the same, lit (the last moment before the strike)."""
+    """A dial-like rim mark: a 3 px arc segment along the tangent (bright outer edge) with an
+    inward tick in the middle and bright end caps; frame 1 is the same, lit (marks light up round
+    the rim as the wind-up runs)."""
     w, h = MARK_CELL
     g = Grid(w, h)
     for y in range(2, h - 2):
-        g.put(5, y, 2 + f)
-        g.put(4, y, 1 + f)
+        g.put(6, y, 2 + f)
+        g.put(5, y, 1 + f)
+        g.put(4, y, 1)
     for x in range(2, 4):
         g.put(x, h // 2 - 1, 2 + f)
         g.put(x, h // 2, 1 + f)
-    g.put(5, 2, 3)
-    g.put(5, h - 3, 3)
+    g.put(6, 2, 3)
+    g.put(6, h - 3, 3)
     g.outline(0, "br")
     return g
 
@@ -742,8 +744,9 @@ def flame(f: int, variant: int) -> Grid:
 
 
 def scorch(d: int, seed: int) -> Grid:
-    """A scorched patch of ground (diameter `d`): a ragged dark burn with a few glowing embers.
-    Levels: 0 deep char, 1 ink red char, 2 crimson-dark embers' halo, 3 flame ember."""
+    """A scorched patch of ground (diameter `d`): a ragged burn with a smouldering rim and a few
+    glowing embers. Levels: 0 deep char, 1 ink red char, 2 crimson-dark rim and ember halo,
+    3 flame ember."""
     g = Grid(d, d)
     c = (d - 1) / 2.0
     for y in range(d):
@@ -752,7 +755,13 @@ def scorch(d: int, seed: int) -> Grid:
             edge = d * 0.5 - 1.0 - 2.5 * (0.5 + 0.5 * math.sin(ang * 5.0 + seed)) * hsh(int(ang * 3), seed)
             dd = math.hypot(x - c, y - c)
             if dd <= edge:
-                g.a[y, x] = 1 if dd > edge - 2.0 or hsh(x // 3, y // 3, seed) > 0.7 else 0
+                # A smouldering crimson-dark rim (the field's edge reads on the dark floors), ink char inside.
+                if dd > edge - 1.6:
+                    g.a[y, x] = 2
+                elif dd > edge - 3.2 or hsh(x // 3, y // 3, seed) > 0.72:
+                    g.a[y, x] = 1
+                else:
+                    g.a[y, x] = 0
     n = max(3, d // 9)
     for i in range(n):
         a = math.tau * hsh(i, seed, 5.0)

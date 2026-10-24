@@ -43,7 +43,7 @@ const BURSTS: Dictionary = {
 	"freeze": {"crest": "crest_frost", "from": 0.3, "step": 11.0, "alpha": 0.95, "fade": 0.3, "fill": 0.14, "centre": "frost_star", "centre_frames": 3, "centre_alpha": 0.9, "under": true},  # TUNING (not in GDD) Frost Wraith Deep Freeze
 	"dive": {"crest": "crest_stone", "from": 0.3, "step": 14.0, "alpha": 0.95, "fade": 0.35, "fill": 0.1, "centre": "flash_violet", "centre_frames": 3, "centre_alpha": 0.8, "under": true},  # TUNING (not in GDD) Gargoyle / Cathedral Horror dive impact
 	"stun": {"crest": "crest_ivory", "from": 0.4, "step": 14.0, "alpha": 0.85, "fade": 0.4, "fill": 0.0, "centre": "", "centre_frames": 1, "centre_alpha": 0.0, "under": false},  # TUNING (not in GDD) Cathedral Horror stun shock
-	"wail": {"crest": "crest_wail", "from": 0.25, "step": 14.0, "alpha": 0.9, "fade": 0.4, "fill": 0.1, "centre": "flash_wail", "centre_frames": 3, "centre_alpha": 0.8, "under": false},  # TUNING (not in GDD) Banshee / Keening Lady Dirge wave
+	"wail": {"crest": "crest_wail", "from": 0.25, "step": 14.0, "alpha": 0.9, "fade": 0.4, "fill": 0.1, "centre": "flash_wail", "centre_frames": 3, "centre_alpha": 0.45, "under": false},  # TUNING (not in GDD) Banshee / Keening Lady Dirge wave
 	"silence": {"crest": "crest_wail_violet", "from": 0.3, "step": 14.0, "alpha": 0.85, "fade": 0.4, "fill": 0.0, "centre": "", "centre_frames": 1, "centre_alpha": 0.0, "under": false},  # TUNING (not in GDD) Keening Lady silence ring
 	"splash": {"crest": "crest_arcane", "from": 0.3, "step": 11.0, "alpha": 0.95, "fade": 0.35, "fill": 0.12, "centre": "flash_arcane", "centre_frames": 3, "centre_alpha": 0.85, "under": false, "fill_color": Color(0.31, 0.47, 0.92)},  # TUNING (not in GDD) Mage / Lich orb splash
 	"spore_nova": {"crest": "crest_spore", "from": 0.3, "step": 13.0, "alpha": 0.9, "fade": 0.35, "fill": 0.1, "centre": "", "centre_frames": 1, "centre_alpha": 0.0, "under": false},  # TUNING (not in GDD) Pestilence death nova
@@ -66,12 +66,12 @@ const MARK_FRAMES: int = 2  # TUNING (not in GDD)
 ## Rim px between two telegraph marks.
 const MARK_STEP: float = 12.0  # TUNING (not in GDD)
 ## Opacity (0-1) of the rim marks.
-const MARK_ALPHA: float = 0.85  # TUNING (not in GDD)
+const MARK_ALPHA: float = 0.95  # TUNING (not in GDD)
 ## Opacity (0-1) of the whole-area disc under a telegraph (the code's 0.10).
-const TELEGRAPH_FILL: float = 0.08  # TUNING (not in GDD)
+const TELEGRAPH_FILL: float = 0.045  # TUNING (not in GDD)
 ## Opacity (0-1) the area disc gains over the wind-up, doubled (it reaches
 ## TELEGRAPH_FILL + half of this at the strike; the code grew a 0.22 disc).
-const TELEGRAPH_GROW: float = 0.12  # TUNING (not in GDD)
+const TELEGRAPH_GROW: float = 0.07  # TUNING (not in GDD)
 
 # --- Plague Cloud / Pestilence (AoeArt.cloud()) ------------------------------------------
 
@@ -132,11 +132,13 @@ const RUNE_BUSY_ALPHA: float = 0.1  # TUNING (not in GDD)
 ## Bone spike sprite ids (two variants; base on the bottom row).
 const SPIKES: Array[String] = ["spike_0", "spike_1"]  # TUNING (not in GDD)
 ## Rim px between two outer spikes of a Grave Eruption field (at SPIKE_RING x radius).
-const SPIKE_STEP: float = 15.0  # TUNING (not in GDD)
+const SPIKE_STEP: float = 22.0  # TUNING (not in GDD)
 ## Outer spike ring radius, as a fraction of the field radius (the code's 0.75).
 const SPIKE_RING: float = 0.78  # TUNING (not in GDD)
 ## Inner spike ring radius fraction (the code's 0.35) and its spike count.
 const SPIKE_INNER: float = 0.38  # TUNING (not in GDD)
+## Opacity (0-1) of the Grave Eruption spikes (several fields overlap late in a run).
+const SPIKE_ALPHA: float = 0.8  # TUNING (not in GDD)
 ## Spikes on the inner ring.
 const SPIKE_INNER_COUNT: int = 6  # TUNING (not in GDD)
 ## Rim mark strip of the eruption field (soul dial marks on its edge).
@@ -154,7 +156,7 @@ const SCORCH_LARGE: String = "scorch_1"  # TUNING (not in GDD)
 ## Diameters (art px) of SCORCH_SMALL and SCORCH_LARGE (scaled to the patch radius).
 const SCORCH_SIZES: Array[float] = [28.0, 60.0]  # TUNING (not in GDD)
 ## Opacity (0-1) of a scorch mark at full life.
-const SCORCH_ALPHA: float = 0.6  # TUNING (not in GDD)
+const SCORCH_ALPHA: float = 0.8  # TUNING (not in GDD)
 
 # --- Rogue dash lane (AoeArt.lane()) -----------------------------------------------------
 

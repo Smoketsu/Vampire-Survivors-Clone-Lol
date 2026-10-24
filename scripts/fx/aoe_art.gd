@@ -310,7 +310,7 @@ static func spike_field(ci: CanvasItem, p: Vector2, r: float, life: float, now: 
 	var grow := clampf((1.0 - life) * 8.0, 0.0, 1.0)  # Spikes rising.
 	var a := clampf(life * 4.0, 0.0, 1.0)  # Fade at the end.
 	fill(ci, p, r, Color(0.08, 0.04, 0.1, 0.35 * a))
-	piece(ci, AoeArtData.SOUL_CRACKS[bucket(AoeArtData.CRACK_SIZES, r * 2.0 * 0.6)], 1, 0, p, 0.0, 0.85 * a)
+	piece(ci, AoeArtData.SOUL_CRACKS[bucket(AoeArtData.CRACK_SIZES, r * 2.0 * 0.6)], 1, 0, p, 0.0, 0.5 * a)
 	ring(ci, AoeArtData.FIELD_MARK, AoeArtData.MARK_FRAMES, 0, p, r, AoeArtData.MARK_STEP * 1.5, 0.7 * a, now * 0.2)
 	var n := maxi(AoeArtData.MIN_RING_PIECES, ceili(TAU * r * AoeArtData.SPIKE_RING / AoeArtData.SPIKE_STEP * density()))  # Outer spikes.
 	# Back to front (top of the screen first), so a lower spike overlaps the one above it.
@@ -320,10 +320,10 @@ static func spike_field(ci: CanvasItem, p: Vector2, r: float, life: float, now: 
 			var q := p + Vector2.from_angle(ang) * r * AoeArtData.SPIKE_RING
 			if (q.y < p.y) != (pass_i == 0):
 				continue
-			rising(ci, AoeArtData.SPIKES[i % 2], q + Vector2(0, 4), grow * (0.75 + 0.25 * hash01(i, 5)), a, i % 3 == 0)
+			rising(ci, AoeArtData.SPIKES[i % 2], q + Vector2(0, 4), grow * (0.75 + 0.25 * hash01(i, 5)), a * AoeArtData.SPIKE_ALPHA, i % 3 == 0)
 	for i in AoeArtData.SPIKE_INNER_COUNT:
 		var q := p + Vector2.from_angle(TAU * float(i) / float(AoeArtData.SPIKE_INNER_COUNT) + 0.6) * r * AoeArtData.SPIKE_INNER
-		rising(ci, AoeArtData.SPIKES[1], q + Vector2(0, 5), grow, a, i % 2 == 0)
+		rising(ci, AoeArtData.SPIKES[1], q + Vector2(0, 5), grow, a * AoeArtData.SPIKE_ALPHA, i % 2 == 0)
 	return true
 
 
