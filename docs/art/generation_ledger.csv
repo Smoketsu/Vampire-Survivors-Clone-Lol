@@ -740,3 +740,8 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-24 19:34,eye/eye_chanter,gpt-image-2.5-flare,medium,1024x1024,2,358,2048,439,0.0313,chanter2.png
 2026-10-24 19:38,decals/harbour_shore,gpt-image-2.5-flare,medium,1536x1024,2,676,2048,343,0.0301,harbour_shore.png
 2026-10-24 19:38,decals/harbour_chapel,gpt-image-2.5-flare,medium,1536x1024,2,716,2048,343,0.0303,harbour_chapel.png
+2026-10-24 19:43,structures/merrow_pulpit,gpt-image-2.5-flare,medium,1024x1024,2,268,2048,439,0.0309,pulpit.png
+2026-10-24 19:43,projectiles/harbour_anchor,gpt-image-2.5-flare,medium,1024x1024,2,219,2048,439,0.0306,anchor.png
+2026-10-24 19:43,effects/maelstrom_whirl,gpt-image-2.5-flare,medium,1024x1024,1,257,1024,439,0.0226,whirl.png
+2026-10-24 19:43,markers/tide_wall,gpt-image-2.5-flare,medium,1536x1024,1,268,1024,343,0.0198,tidewall.png
+2026-10-24 19:43,effects/undertow_shallows,gpt-image-2.5-flare,medium,1024x1024,1,221,1024,439,0.0225,shallows.png

@@ -105,6 +105,44 @@ const ECLIPSE_ORB: String = "projectiles/eclipse_orb"  # TUNING (not in GDD)
 ## Opacity of an Eclipse Ward orb while it recharges.
 const ECLIPSE_ORB_DIM_ALPHA: float = 0.45  # TUNING (not in GDD) same as the Orb Shield's dim orb
 
+# --- Gullhaven Harbour (harbour placeholder art pass, GDD §15.0) -------------------------
+
+## A smugglers' dry pier (HarbourGlyphs.draw_pier()), drawn along the pier and
+## stretched to its length / width (tools/harbour_props.py).
+const HARBOUR_PIER: String = "structures/harbour_pier"  # TUNING (not in GDD)
+## Abbot Merrow's pulpit in front of him while he preaches (BossMerrow._draw_under()).
+const MERROW_PULPIT: String = "structures/merrow_pulpit"  # TUNING (not in GDD)
+## Where the pulpit stands, in body radii below his feet (the code pulpit's
+## centre was 0.6 radii below them).
+const MERROW_PULPIT_DROP: float = 0.6  # TUNING (not in GDD)
+## The Harbourmaster's anchor, raised in the sweep wind-up or flying in the hurl
+## (HarbourmasterKit.draw_over(); the code anchor HarbourGlyphs.draw_anchor() is the fallback).
+const HARBOUR_ANCHOR: String = "projectiles/harbour_anchor"  # TUNING (not in GDD)
+## One link of the anchor chain (HarbourGlyphs.draw_chain()), repeated along it.
+const CHAIN_LINK: String = "projectiles/anchor_chain_link"  # TUNING (not in GDD)
+## Distance (px) between two chain links' centres (the 7 px links overlap 1 px).
+const CHAIN_LINK_STEP: float = 6.0  # TUNING (not in GDD)
+## The Netcaster's net over a pinned body (HarbourGlyphs.draw_net()), 33 px across.
+const HARBOUR_NET: String = "overlays/harbour_net"  # TUNING (not in GDD)
+## The Tide Caller's rising water line (HarbourGlyphs.draw_water_line()),
+## stretched to the line's length; it rises row by row with the crest.
+const TIDE_WALL: String = "overlays/tide_wall"  # TUNING (not in GDD)
+## Height (0-1) of the water line shown during the wind-up (it rises to 1 as
+## the water breaks; the code line grew the same way).
+const TIDE_WALL_MIN_RISE: float = 0.15  # TUNING (not in GDD)
+## One foam crest of the Undertow wave (Undertow._draw()), repeated along its arc.
+const UNDERTOW_CREST: String = "overlays/undertow_crest"  # TUNING (not in GDD)
+## Arc length (px) between two crests along the wave (the 14 px crests overlap).
+const UNDERTOW_CREST_STEP: float = 11.0  # TUNING (not in GDD)
+## A Maelstrom whirlpool, turned as it spins (Undertow._draw()).
+const MAELSTROM_WHIRL: String = "overlays/maelstrom_whirl"  # TUNING (not in GDD)
+## Drawn diameter of the whirlpool as a share of its grind diameter (2 x whirl_radius).
+const MAELSTROM_WHIRL_FILL: float = 0.9  # TUNING (not in GDD)
+## An Undertow shallows patch, scaled to the patch's radius (Undertow._draw()).
+const UNDERTOW_SHALLOWS: String = "overlays/undertow_shallows"  # TUNING (not in GDD)
+## Opacity (0-1) of the shallows sprite at its freshest (it fades as it dries).
+const UNDERTOW_SHALLOWS_ALPHA: float = 0.55  # TUNING (not in GDD)
+
 # --- UI ---------------------------------------------------------------------------------
 
 ## The phone of the "turn your device" overlay (RotateOverlay), drawn at
