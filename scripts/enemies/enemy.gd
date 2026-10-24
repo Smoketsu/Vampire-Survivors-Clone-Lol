@@ -1144,7 +1144,7 @@ func _cleave(struck: SummonedUnit, dmg: float) -> void:
 			continue
 		if u.position.distance_to(struck.position) > cleave_radius + u.radius:
 			continue
-		game.combat.damage_unit(u, dmg, kind + "_cleave")
+		game.combat.damage_unit(u, dmg, kind + "_cleave", self)  # self: a hero's cleave kill is Glory too (Act IV)
 		hits += 1
 	if hits > 0:
 		game.stat_add("march_cleave_hits", float(hits))

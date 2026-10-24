@@ -92,6 +92,15 @@ tablets in landscape (the `Web` export preset; touch controls, mobile UI scale, 
   **Steel has no soul** (`Enemy.leaves_corpse()` gates every corpse and raise; cyborgs rise as Grave Gunners
   through `HordeDirector.raise_corpse()` → `spawn_temporary()`). Act I and II runs never create any of it
   (`game.empire` stays null): stages 1–6 keep their same-seed summaries. Summons never get act-only rules.
+- **Act IV, the Olympian Republic** (owner-answered proposal `docs/act4/PROPOSAL.md`, Acts IV–VI planned, built one
+  act at a time; GDD §15.0 from "Act IV proposal (owner answers)" on): Greek gods commanding Roman legions, stages
+  `ilion` / `olympus` / `underworld` (Hades is the act's final boss, the Pantheon Trial is stage 11). Its three shared
+  rules each have one path, all switched on by the STAGE key `pantheon` (`game.pantheon`, `PantheonRules`): **Wrath
+  of the Gods** (`DivineWrath`: waves / lightning / fissures, telegraphed, hitting both armies), **Phalanx** (locked
+  shield fronts; the one facing test `PantheonRules.hit_from_front()`, applied once in
+  `CombatResolver.damage_enemy()` from the hit's `origin`) and **Glory** (Heroes grow with every summon they kill).
+  Act I–III runs never create any of it: stages 1–9 keep their same-seed summaries. A closing card after each act's
+  epilogue part ties the acts together (`EpilogueData.CLOSINGS`).
 - **Online co-op** (owner decisions Oct 2026, `docs/coop/DESIGN.md`, GDD §15.0 from "Online co-op: relay and
   lobby" on): 2 players, lobby codes through the Cloudflare relay (`server/relay/`, `CoopNet`), each with their own
   necromancer, army and build, in ONE deterministic simulation run on both machines (**lockstep**: only inputs travel,
@@ -161,7 +170,7 @@ Autotest options (full table in the README):
 - `--spells=a,b` (force spells and their evolution passives, e.g.
   `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or `death_mark,bone_wall,soul_chains`)
 - `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
-- `--stage=graveyard|crimson_march|sanctum|harbour|archive|spire` (default graveyard; stage locks are
+- `--stage=graveyard|crimson_march|sanctum|harbour|archive|spire|wastes|assembly|citadel|ilion|olympus|underworld` (default graveyard; stage locks are
   ignored)
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
@@ -569,6 +578,19 @@ tiny tweaks.
   saves, the full-run two-process gate; Web vs native desync, so mixed platforms are refused; Web vs Web passes).
   Solo same-seed summaries unchanged. Waits on the owner's real-phone test (input lag ~100-180 ms, late-game frame
   rate).
+- the **Act IV foundation** (phase 1 of the Olympian Republic, GDD §15.0 "Act IV foundation (phase 1)" through "Act IV
+  foundation review fixes"; three parallel branches, art / audio / code, merged on the lead's branch; phase 2 brief
+  `docs/act4/BRIEF_PHASE2.md`, handoff `docs/act4/HANDOFF.md`): three stub stages (`ilion_stage.gd`, `olympus_stage.gd`,
+  `underworld_stage.gd`: "playable": false, act 4, `pantheon`, their `wrath` kind, music `bronze`, unlock chain from Deus
+  Ex Machina, boss ids `achilles` / `zeus` / `hades` with placeholder scripts, `PantheonGround` floors), the Act IV tab
+  (compact tabs beyond three acts), `PantheonRules` with `DivineWrath`, `Phalanx` and `Glory`, the Twilight of the Gods
+  Reckoning (`bronze_titan`), `PantheonEnemyData` (Shade of the Dead, Hoplite, Hero, Bronze Titan; per-stage tables
+  `IlionEnemyData` / `OlympusEnemyData` / `UnderworldEnemyData`, `EnemyDirector.pantheon_def()`), kits by name from
+  `scripts/enemies/pantheon/`, hit origins on `damage_enemy()`, the Codex Republic tab, ramps `bronze` / `marble` /
+  `aegean` and the `pantheon/` sprites, "Hymn of Bronze" (`SoundData.BRONZE_SCORE`) and the lazy Pantheon sound pack,
+  closing cards per act (`EpilogueData.CLOSINGS`; "The River Runs Dry" after Act III), autotest `--stage=ilion|olympus|
+  underworld` and the `divine wrath` / `phalanx` / `glory` / `pantheon kinds` / `pantheon stage` lines (`PantheonReport`).
+  Gate passed: stages 1–9 same-seed summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -600,6 +622,9 @@ tiny tweaks.
 6. **Act III, the Electronic Empire: live (Oct 2026).** The three stages are playable (GDD §15.0 "Act III goes
    live"); the owner balances by hand from playtests (their notes outrank the bots). Open: the naive survival rate,
    the placeholder Soul Ash multipliers, a real-iPhone check; CI has no Act III job yet. Handoff: `docs/act3/HANDOFF.md`.
+6b. **Act IV, the Olympian Republic: foundation done, phase 2 next.** Three stage agents in parallel from
+   `docs/act4/BRIEF_PHASE2.md` (Ilion, Olympus, the Underworld), then integration, the art review and the balance pass.
+   Open for the owner: the soldiers' sex (all-female `_v1` lineups vs the mixed one). Handoff: `docs/act4/HANDOFF.md`.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

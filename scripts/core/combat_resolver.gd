@@ -383,8 +383,8 @@ func _sanctum_mitigation(e: Enemy, raw: float, source: String, shred: float = 0.
 ## barrier) absorbs what it can before HP is lost. Stats:
 ## host_dmg_prevented, resilience_dmg_prevented (+ _area / _holy),
 ## plating_dmg_prevented.
-## Act IV: `by` is the enemy whose own blow this is (Enemy._melee_hit(); null
-## for every other hit): a summon it kills is Glory for a hero.
+## Act IV: `by` is the enemy whose own blow this is (Enemy._melee_hit() and
+## its cleave; null for every other hit): a summon it kills is Glory for a hero.
 func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = null) -> void:
 	if not u.active or u.state == SummonedUnit.State.DEAD or amount <= 0.0:
 		return

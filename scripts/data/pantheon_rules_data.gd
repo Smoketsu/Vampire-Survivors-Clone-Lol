@@ -47,6 +47,7 @@ const WRATH_KINDS: Array[String] = ["waves", "lightning", "fissures"]
 ##                  worth luring them in all run long).
 ## "waves" (Poseidon, Ilion): a wall of water rolls across the arena from one
 ## edge; it pushes everyone it crosses and drowns fodder.
+##   drown_hp_mult — a drowned fodder takes this many times its max HP.
 ##   start_dist   — px from the necromancer (against the wave's heading) where
 ##                  the wall starts; it rolls 2 x this.
 ##   half_len     — px each side of the necromancer's line the wall reaches.
@@ -77,6 +78,10 @@ const WRATH_KINDS: Array[String] = ["waves", "lightning", "fissures"]
 ##   spit_time    — s at the start of the opening during which it spits shades.
 ##   spit_every   — s between two shades.
 ##   spit_kind    — the kind it spits (the shared fodder).
+##   first_scatter / min_scatter — px: the first crack opens within first_scatter
+##                  of the necromancer, the others from min_scatter out to scatter.
+##   swallow_body — share (0-1) of a body's radius that must lie on an open
+##                  crack for its corpse to be swallowed.
 const WRATH := {
 	"waves": {
 		"first": 60.0,  # TUNING (not in GDD) the first wave at 19:00 left
@@ -90,6 +95,7 @@ const WRATH := {
 		"dmg_player": 4.0,  # TUNING (not in GDD) the push is the point, not the damage
 		"dmg_summon": 5.0,  # TUNING (not in GDD) first pass 10: a quarter of the army bot's summon deaths on Ilion were waves
 		"dmg_enemy": 18.0,  # TUNING (not in GDD)
+		"drown_hp_mult": 10.0,  # TUNING (not in GDD) a drowned fodder takes this many times its max HP (killed outright)
 	},
 	"lightning": {
 		"first": 30.0,  # TUNING (not in GDD)
@@ -123,6 +129,9 @@ const WRATH := {
 		"dmg_player": 3.0,  # TUNING (not in GDD) per burn tick
 		"dmg_summon": 3.0,  # TUNING (not in GDD) per burn tick (first pass 5: the undead never step off, fissures were the army bot's top summon killer)
 		"dmg_enemy": 10.0,  # TUNING (not in GDD) per burn tick
+		"first_scatter": 30.0,  # TUNING (not in GDD) px: the salvo's first crack opens within this of the necromancer (across him)
+		"min_scatter": 60.0,  # TUNING (not in GDD) px: the others open at least this far from him (up to "scatter")
+		"swallow_body": 0.5,  # TUNING (not in GDD) share (0-1) of a body's radius that must lie on an open crack for its corpse to be swallowed
 	},
 }
 
@@ -241,6 +250,6 @@ const SOUNDS := {
 	"shield_lock": "shield_lock",  # SoundData.PANTHEON_SOUNDS (lazy pack, loaded with the "bronze" music)
 	"shield_break": "shield_break",  # SoundData.PANTHEON_SOUNDS (lazy pack, loaded with the "bronze" music)
 	"glory": "glory_gain",  # SoundData.PANTHEON_SOUNDS (lazy pack, loaded with the "bronze" music)
-	"hoplite_step": "hoplite_step",  # SoundData.PANTHEON_SOUNDS (lazy pack, loaded with the "bronze" music)
+	"hoplite_step": "hoplite_step",  # SoundData.PANTHEON_SOUNDS; reserved: nothing plays it yet (phase 2: a throttled march step for a locked wall)
 	"titan_rise": "titan_rise",  # SoundData.PANTHEON_SOUNDS (lazy pack, loaded with the "bronze" music)
 }

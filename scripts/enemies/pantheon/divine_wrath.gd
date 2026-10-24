@@ -158,7 +158,7 @@ func grounded_mult() -> float:
 func _strike(k: String, t: float) -> void:
 	var c: Dictionary = cfg[k]
 	var cap := int(PantheonRulesData.WRATH_CAPS[k])  # Most pending of this kind.
-	var p := game.player.position  # The (bound) necromancer.
+	var p := _aim_player().position  # The necromancer it strikes around.
 	match k:
 		"waves":
 			if waves.size() >= cap:
@@ -185,14 +185,31 @@ func _strike(k: String, t: float) -> void:
 				if fissures.size() >= cap:
 					game.stat_add("wrath_capped", 1.0)
 					break
-				var centre := p + Vector2.from_angle(randf() * TAU) * randf_range(0.0, 30.0)  # The first: across him.
+				var centre := p + Vector2.from_angle(randf() * TAU) * randf_range(0.0, float(c["first_scatter"]))  # The first: across him.
 				if i > 0:
-					centre = p + Vector2.from_angle(randf() * TAU) * randf_range(60.0, float(c["scatter"]))
+					centre = p + Vector2.from_angle(randf() * TAU) * randf_range(float(c["min_scatter"]), float(c["scatter"]))
 				var half := Vector2.from_angle(randf() * TAU) * float(c["length"]) * 0.5  # Half the crack.
 				var open_t := t + float(c["telegraph"])  # Game time it opens.
 				fissures.append({"a": centre - half, "b": centre + half, "open_t": open_t, "close_t": open_t + float(c["open"]),
 					"next_tick": open_t, "next_spit": open_t, "spit_until": open_t + float(c["spit_time"]), "opened": false, "c": c})
 	game.stat_add("wrath_salvos_" + k, 1.0)
+
+
+## The necromancer a salvo strikes around: solo, the player; co-op, one of the
+## standing necromancers picked with the run's seeded RNG (a downed one is
+## skipped; with both down, the bound one).
+func _aim_player() -> Necromancer:
+	if game.coop == null:
+		return game.player
+	var standing: Array[Necromancer] = []  # Necromancers still on their feet.
+	for s in game.coop.slots:
+		if not s.downed:
+			standing.append(s.player)
+	if standing.is_empty():
+		return game.player
+	if standing.size() == 1:
+		return standing[0]
+	return standing[randi() % standing.size()]
 
 
 ## Active bronze enemies within `reach` px of `p` (the lightning's lure).
@@ -281,7 +298,7 @@ func _wave_bodies(w: Dictionary, f_prev: float, f: float, delta: float) -> void:
 		if proj > f_prev and proj <= f:
 			var fodder := e.kit is PantheonKit and (e.kit as PantheonKit).is_fodder() and not e.is_boss and not e.is_miniboss
 			if fodder:
-				game.combat.damage_enemy(e, e.max_hp * 10.0, SRC_WAVE)  # Drowned outright.
+				game.combat.damage_enemy(e, e.max_hp * float(c["drown_hp_mult"]), SRC_WAVE)  # Drowned outright.
 				game.stat_add("wrath_drowned", 1.0)
 			else:
 				game.stat_add("wrath_enemy_dmg_waves", game.combat.damage_enemy(e, dmg_e, SRC_WAVE))
@@ -436,7 +453,7 @@ func _spit(fz: Dictionary) -> void:
 func swallows(pos: Vector2, r: float) -> bool:
 	var t := game.elapsed
 	for fz in fissures:
-		if t >= float(fz["open_t"]) and _seg_dist(pos, fz["a"], fz["b"]) <= float((fz["c"] as Dictionary)["width"]) * 0.5 + r * 0.5:
+		if t >= float(fz["open_t"]) and _seg_dist(pos, fz["a"], fz["b"]) <= float((fz["c"] as Dictionary)["width"]) * 0.5 + r * float((fz["c"] as Dictionary)["swallow_body"]):
 			return true
 	return false
 

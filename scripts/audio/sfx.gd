@@ -197,6 +197,9 @@ var _pack_seeds: Array[int] = []
 var _pack_done: Dictionary = {}
 ## Desktop: WorkerThreadPool task id of the pack render (-1 = none).
 var _pack_task: int = -1
+## Desktop: how many entries at the head of _pack_queue the running task
+## renders (0..queue size; a pack asked for while it runs waits for the next task).
+var _pack_task_count: int = 0
 
 
 ## One lazily rendered run loop (a SoundData.SCORES entry) and its player.
@@ -526,23 +529,36 @@ func prepare_pack(pack: String) -> void:
 	elif pack == "pantheon":
 		defs = SoundData.PANTHEON_SOUNDS
 	var k := 0  # Index of the sound within its pack (its seed).
+	_mutex.lock()  # The worker reads the queue and recipes.
 	for id: String in defs:
 		_pack_defs[id] = defs[id]
 		_pack_queue.append(id)
 		_pack_seeds.append(PACK_SEED + int(PACK_SEED_OFFSETS.get(pack, 0)) + k)
 		k += 1
-	if not OS.has_feature("web") and not _pack_queue.is_empty() and _pack_task < 0:
-		_pack_task = WorkerThreadPool.add_task(_render_pack, true, "Necropathy sound pack synth")
+	_mutex.unlock()
+	_start_pack_task()
+
+
+## Desktop: starts a worker task for the queued pack sounds unless one runs.
+## A pack asked for while a task runs is picked up by _update_packs() when it ends.
+func _start_pack_task() -> void:
+	if OS.has_feature("web") or _pack_queue.is_empty() or _pack_task >= 0:
+		return
+	_pack_task_count = _pack_queue.size()
+	_pack_task = WorkerThreadPool.add_task(_render_pack, true, "Necropathy sound pack synth")
 
 
 ## Worker thread (desktop): renders every queued pack sound into _pack_done.
 func _render_pack() -> void:
 	_mutex.lock()
-	var ids := _pack_queue.duplicate()  # What to render.
-	var seeds := _pack_seeds.duplicate()  # Their seeds.
+	var ids := _pack_queue.slice(0, _pack_task_count)  # What to render (this task's share).
+	var seeds := _pack_seeds.slice(0, _pack_task_count)  # Their seeds.
+	var recipes: Array = []  # Their recipes, copied under the lock.
+	for id: String in ids:
+		recipes.append(_pack_defs[id])
 	_mutex.unlock()
 	for k in ids.size():
-		var stream := Synth.render_sound(_pack_defs[ids[k]], seeds[k])
+		var stream := Synth.render_sound(recipes[k], seeds[k])
 		_mutex.lock()
 		_pack_done[ids[k]] = stream
 		_mutex.unlock()
@@ -560,9 +576,11 @@ func _update_packs() -> void:
 		for id: String in _pack_done:
 			_streams[id] = _pack_done[id]
 		_pack_done.clear()
-		_pack_queue.clear()
-		_pack_seeds.clear()
+		_pack_queue = _pack_queue.slice(_pack_task_count)  # Keep what was queued while it ran.
+		_pack_seeds = _pack_seeds.slice(_pack_task_count)
+		_pack_task_count = 0
 		_mutex.unlock()
+		_start_pack_task()
 		return
 	if _pack_queue.is_empty() or _startup_synth != null:
 		return
