@@ -164,6 +164,13 @@
 ##   --adaptive=off|N      AdaptiveQuality (drawing only): off keeps the adaptive level
 ##                         at 0, N (0-3) pins it at N; default: it adapts as in a
 ##                         player's run (measurements, docs/perf/MOBILE.md).
+##   --art-misses          Debug (art audit): records every sprite key the run looks up
+##                         and finds no PNG for (SpriteBank / EnvironmentArt: stills,
+##                         walk / idle strips, icons, effect strips, markers, decals) and
+##                         prints them sorted with counts at the end ("[art-miss]" lines).
+##                         Only meaningful in a window (headless skips _draw). Drawing only.
+##   --art-shots=T,...     Debug (art audit): at each game second T saves the window as
+##                         <--shot-dir>/art_<T>.png (a window only; drawing only).
 ##   --draw-probe=T        With --monitor on the Web build: from game second T, hides one
 ##                         world layer at a time and prints the WebGL objects created
 ##                         per frame without it ("[draw]" lines; drawing only).
@@ -288,6 +295,12 @@ var autotest_perf: bool = false
 var autotest_adaptive: String = ""
 ## Autotest: game time (s) of the MonitorProbe draw probe (--draw-probe=T; < 0 = off).
 var autotest_draw_probe: float = -1.0
+## Debug (--art-misses): true when SpriteBank records the sprite keys looked up
+## without a PNG and the autotest prints them at the end (drawing only).
+var autotest_art_misses: bool = false
+## Debug (--art-shots=T,...): game seconds (ascending) at which the window is saved
+## to autotest_shot_dir as art_<T>.png (empty = none; drawing only).
+var autotest_art_shots: PackedFloat32Array = PackedFloat32Array()
 ## Autotest: game seconds between two MonitorProbe lines (--monitor=N; 0 = off).
 var autotest_monitor: float = 0.0
 ## Autotest: "reduced" when --effects=reduced draws with Effects = Reduced
@@ -362,6 +375,12 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_perf = true  # Per-tick timing table (PerfProbe).
 		elif arg.begins_with("--adaptive="):
 			autotest_adaptive = arg.get_slice("=", 1).to_lower()  # AdaptiveQuality: off or a pinned level.
+		elif arg == "--art-misses":
+			autotest_art_misses = true  # Debug: the art audit's missing-sprite list (SpriteBank).
+		elif arg.begins_with("--art-shots="):
+			for t: String in arg.get_slice("=", 1).split(",", false):
+				autotest_art_shots.append(t.to_float())  # Debug: art audit screenshots (game seconds).
+			autotest_art_shots.sort()
 		elif arg.begins_with("--draw-probe="):
 			autotest_draw_probe = arg.get_slice("=", 1).to_float()  # MonitorProbe: which layer draws the polygons.
 		elif arg.begins_with("--monitor="):

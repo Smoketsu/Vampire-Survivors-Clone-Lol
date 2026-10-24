@@ -72,6 +72,9 @@ SHEETS = {
     "graves": (2, 1),
     "courtyard": (3, 2),
     "halls_cloisters": (3, 2),
+    # Gullhaven Harbour (Act II; the harbour placeholder art pass).
+    "harbour_shore": (3, 2),
+    "harbour_chapel": (3, 2),
 }
 
 # Decal key (assets/sprites/decals/<key>.png) -> recipe:
@@ -176,6 +179,50 @@ RECIPES = {
     # Sanctum IV, the Final Sanctuary.
     "sanctum_sanctuary_inlay": {"sheet": "halls_cloisters", "cell": 3, "h": 18, "shift": -0.06,
                                 "base": ["ink_warm", "floor_slate", "floor_marble", "brown", "brown_light"], "accent": ["gold"]},
+    # Gullhaven Harbour (Act II), the Mudflats: shells and stranded kelp.
+    "harbour_mudflats_shells": {"sheet": "harbour_shore", "cell": 0, "h": 8, "shift": -0.06,
+                                "base": ["ink_warm", "steel_dark", "bone_shade"]},
+    "harbour_mudflats_shells_2": {"sheet": "harbour_shore", "cell": 1, "h": 7, "shift": -0.06,
+                                  "base": ["ink_warm", "steel_dark", "bone_shade"]},
+    "harbour_mudflats_kelp": {"sheet": "harbour_shore", "cell": 2, "h": 8, "cover": 0.3, "shift": -0.03,
+                              "base": ["ink_green", "floor_moss", "moss_dark"]},
+    "harbour_mudflats_kelp_2": {"sheet": "harbour_shore", "cell": 2, "h": 7, "cover": 0.3, "shift": -0.03, "flip": "h",
+                                "base": ["ink_green", "floor_moss", "moss_dark"]},
+    # The Fish Market: fish scales, rope coils, a dropped fish.
+    "harbour_market_fish": {"sheet": "harbour_shore", "cell": 3, "h": 7, "shift": -0.1,
+                            "base": ["ink_drowned", "drowned_dark", "drowned"], "accent": ["bone_shade"]},
+    "harbour_market_fish_2": {"sheet": "harbour_shore", "cell": 3, "h": 6, "shift": -0.1, "flip": "h",
+                              "base": ["ink_drowned", "drowned_dark", "drowned"], "accent": ["bone_shade"]},
+    "harbour_market_scales": {"sheet": "harbour_shore", "cell": 4, "h": 10, "cover": 0.4, "shift": -0.1,
+                              "base": ["grey_dark", "grey"]},
+    "harbour_market_scales_2": {"sheet": "harbour_shore", "cell": 4, "h": 8, "cover": 0.4, "shift": -0.1, "flip": "h",
+                                "base": ["grey_dark", "grey"]},
+    "harbour_market_rope": {"sheet": "harbour_shore", "cell": 5, "h": 16, "cover": 0.3, "shift": -0.08,
+                            "base": ["ink_warm", "brown", "brown_light"]},
+    "harbour_market_rope_2": {"sheet": "harbour_shore", "cell": 5, "h": 13, "cover": 0.3, "shift": -0.08, "flip": "h",
+                              "base": ["ink_warm", "brown", "brown_light"]},
+    # The Chapel of the Deep: coral crust, barnacles, the Eye's carved sigil.
+    "harbour_chapel_coral": {"sheet": "harbour_chapel", "cell": 0, "h": 15, "levels": True, "shift": -0.04,
+                             "base": ["ink_biolume", "biolume_dark"]},
+    "harbour_chapel_coral_2": {"sheet": "harbour_chapel", "cell": 0, "h": 11, "levels": True, "shift": -0.04, "flip": "h",
+                               "base": ["ink_biolume", "biolume_dark"]},
+    "harbour_chapel_barnacles": {"sheet": "harbour_chapel", "cell": 1, "h": 11, "shift": -0.08,
+                                 "base": ["ink_cold", "grey_dark", "grey"]},
+    "harbour_chapel_barnacles_2": {"sheet": "harbour_chapel", "cell": 1, "h": 9, "shift": -0.08, "flip": "h",
+                                   "base": ["ink_cold", "grey_dark", "grey"]},
+    "harbour_chapel_sigil": {"sheet": "harbour_chapel", "cell": 2, "h": 24, "cover": 0.3,
+                             "base": ["ink_cold", "grey_dark"], "accent": ["biolume"]},
+    # The Seawall: mooring rings, rusted chain, gull feathers.
+    "harbour_seawall_ring": {"sheet": "harbour_chapel", "cell": 3, "h": 12, "cover": 0.3, "shift": -0.06,
+                             "base": ["ink_warm", "brown", "brown_light"]},
+    "harbour_seawall_chain": {"sheet": "harbour_chapel", "cell": 4, "h": 11, "cover": 0.4, "shift": -0.06,
+                              "base": ["ink_warm", "brown", "brown_light"]},
+    "harbour_seawall_chain_2": {"sheet": "harbour_chapel", "cell": 4, "h": 10, "cover": 0.4, "shift": -0.06, "flip": "h",
+                                "base": ["ink_warm", "brown", "brown_light"]},
+    "harbour_seawall_feather": {"sheet": "harbour_chapel", "cell": 5, "h": 5, "cover": 0.3, "shift": -0.1,
+                                "base": ["grey_dark", "grey", "grey_light"]},
+    "harbour_seawall_feather_2": {"sheet": "harbour_chapel", "cell": 5, "h": 5, "cover": 0.3, "shift": -0.1, "flip": "h",
+                                  "base": ["grey_dark", "grey", "grey_light"]},
 }
 
 

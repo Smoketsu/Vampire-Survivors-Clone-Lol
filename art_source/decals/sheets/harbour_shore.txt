@@ -1,0 +1,25 @@
+A sprite sheet of 6 small FLOOR DECALS for a top-down 2D pixel-art game, on a fully TRANSPARENT background.
+Layout: a grid of 3 columns x 2 rows; each decal sits alone in the centre of its own cell, with wide empty
+transparent gaps between them (nothing touches, nothing overlaps a cell border).
+
+Every decal is a flat detail LYING ON THE GROUND, seen STRAIGHT FROM ABOVE (orthographic top-down view, like a map:
+no perspective, no 3/4 view, no side view, no visible height or thickness). NO cast shadow, no drop shadow, no
+shading under it, no glow halo, no outline frame. Nothing may look like a standing object or an obstacle: everything
+is flattened into the ground, like a stain, a scatter or a thing that fell over and lies flat.
+
+LOW-RESOLUTION pixel art: each decal is only about 10 to 22 pixels across, shown enlarged so every pixel is a big crisp
+square block (nearest-neighbour), with chunky 2-3 pixel details. No gradients, no dithering, no soft blur, no
+anti-aliasing, no texture noise. DARK, LOW CONTRAST and QUIET colours, close to the dark wet sand / wet cobble floor they
+lie on (the attached images are those floors: match their darkness and pixel size, but do NOT draw the floor itself, the
+background must stay transparent). This is a fishing town at low tide, at night.
+
+The decals, left to right, top to bottom:
+1. Three small sea shells scattered flat on wet sand (about 18 x 8 pixels): two scallop shells and one spiral whelk, dull bone-grey.
+2. Two small shells (about 12 x 7 pixels), dull bone-grey.
+3. A stranded strand of dark kelp lying flat in a wavy S line with two broad leaves (about 22 x 8 pixels), very dark green.
+4. A dead fish lying flat on its side (about 15 x 7 pixels): a grey-teal fish with a forked tail and one pale eye.
+5. A scatter of a few loose fish scales on the cobbles (about 16 x 10 pixels): six or seven 2-pixel pale silvery flecks.
+6. A coil of old rope lying flat on the ground (about 16 x 16 pixels): a flat spiral of brown rope seen from above, the loose end trailing out.
+
+Colours: ONLY flat fills from this list: #1C110B very dark brown, #4F3320 brown, #8C6040 light brown (rope), #7F785F dull bone (shells), #B4AA8A pale bone (shell highlights), #081814 very dark green, #3B5529 muted green (kelp), #1B4650 dark teal, #3A7C80 teal (the fish), #6B7A94 grey, #A7B3C6 pale silver (scales).
+No text, no labels, no numbers, no border, no watermark.

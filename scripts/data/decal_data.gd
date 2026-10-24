@@ -53,6 +53,14 @@
 ##   Sanctum IV, Final Sanctuary: stained-glass light pools = code; marble vein
 ##     dropped (the marble tile has its veins); inlaid square =
 ##     sanctum_sanctuary_inlay.
+##   Gullhaven Harbour (harbour placeholder art pass): tide puddles = code (soft
+##     translucent pools, on every zone); shells = harbour_mudflats_shells (2),
+##     kelp = harbour_mudflats_kelp (2); scales = harbour_market_scales (2), rope
+##     coil = harbour_market_rope (2), dropped fish = harbour_market_fish (2);
+##     coral crust = harbour_chapel_coral (2), barnacles =
+##     harbour_chapel_barnacles (2), the Eye's sigil = harbour_chapel_sigil;
+##     mooring ring = harbour_seawall_ring, rusted chain = harbour_seawall_chain
+##     (2), gull feather = harbour_seawall_feather (2).
 ## The Sanctum corruption overlay is drawn over the decals as over the tiles
 ## (SanctumGround._draw()).
 class_name DecalData
@@ -84,6 +92,15 @@ const OFFSETS: Dictionary = {
 	"sanctum_cloisters_flowers": Vector2(14.0, 4.0),  # TUNING (not in GDD) code flowers x 0..28
 	"sanctum_cloisters_leaves": Vector2(9.0, 3.0),  # TUNING (not in GDD) code leaves x 0..18
 	"sanctum_sanctuary_inlay": Vector2(9.0, 9.0),  # TUNING (not in GDD) code inlay Rect2(p, 18 x 18)
+	# Gullhaven Harbour (harbour placeholder art pass): the centre of each code decoration.
+	"harbour_mudflats_shells": Vector2(6.0, 2.0),  # TUNING (not in GDD) code shells x 0..12, y 0..5
+	"harbour_mudflats_kelp": Vector2(11.0, -1.0),  # TUNING (not in GDD) code kelp p -> p + (22, -3)
+	"harbour_market_scales": Vector2(12.0, 8.0),  # TUNING (not in GDD) code scales x 0..24, y 0..16
+	"harbour_market_fish": Vector2(7.0, 0.0),  # TUNING (not in GDD) code fish p -> p + (14, 0)
+	"harbour_chapel_coral": Vector2(3.0, -2.0),  # TUNING (not in GDD) code crust at p and p + (6, -4)
+	"harbour_chapel_barnacles": Vector2(8.0, 2.0),  # TUNING (not in GDD) code barnacles x 0..15, y 0..5
+	"harbour_seawall_chain": Vector2(10.0, 0.0),  # TUNING (not in GDD) code links x 0..21
+	"harbour_seawall_feather": Vector2(5.0, -1.0),  # TUNING (not in GDD) code feather p -> p + (10, -3)
 }
 
 ## Decal key -> grid (layout px) its top-left corner snaps to (floored), so an

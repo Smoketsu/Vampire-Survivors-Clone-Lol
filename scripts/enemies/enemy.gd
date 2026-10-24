@@ -566,6 +566,8 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 ## kind's in empire/ (Act III): used when it has no enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
+	if wears != "":
+		return wears  # A Drowned Thrall wears its summon's art (its markers sit over that head).
 	var key := "enemies/" + kind  # Covenant soldier art.
 	if not SpriteBank.has(key):
 		if SpriteBank.has("eye/" + kind):

@@ -137,6 +137,9 @@ const HEIGHTS: Dictionary = {
 	# --- Act II: Fallen Seraph ---
 	"summons/fallen_seraph": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size (body ~46, the halo above)
 	"summons/ruin_seraph": 60.0,  # TUNING (not in GDD) ART_BIBLE manifest size (body ~52, the thorn halo above)
+	# --- Act II: the Ancient Eye's shared kinds (harbour placeholder art pass) ---
+	"eye/eye_initiate": 46.0,  # TUNING (not in GDD) Initiate of the Eye: fodder, a hunched cultist a little smaller than the Recruit (50)
+	"eye/eye_chanter": 64.0,  # TUNING (not in GDD) Chanter of the Eye: squad leader, body ~44, the tall eye staff above (the Hierophant is 64)
 	# --- Act II: Gullhaven Harbour ---
 	"eye/deep_kin": 56.0,  # TUNING (not in GDD) Deep Kin: a bruiser, between soldier and heavy (the fin ridge rises above the hunched head)
 	"eye/tide_caller": 54.0,  # TUNING (not in GDD) Tide Caller: soldier tier (body ~48, the conch staff above)

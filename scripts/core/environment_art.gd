@@ -56,6 +56,8 @@ static var _decal_sets: Dictionary = {}
 ## there is no PNG for it. One key is always loaded with the same `repeat`.
 static func texture(key: String, repeat: bool = false) -> Texture2D:
 	if _cache.has(key):
+		if ArtMissLog.on and _cache[key] == null:
+			ArtMissLog.miss(key)  # --art-misses: a code fallback drawn (or a variant probe).
 		return _cache[key]
 	var path := SpriteData.ROOT + key + ".png"  # Expected file location.
 	var tex: Texture2D = null  # Wrapped texture (null = no art yet).
@@ -68,6 +70,11 @@ static func texture(key: String, repeat: bool = false) -> Texture2D:
 			sharp.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED if repeat else CanvasItem.TEXTURE_REPEAT_DISABLED
 			tex = sharp
 	_cache[key] = tex
+	if ArtMissLog.on:
+		if tex == null:
+			ArtMissLog.miss(key)  # --art-misses: the art audit's record.
+		else:
+			ArtMissLog.hit(key)
 	return tex
 
 
@@ -186,6 +193,8 @@ static func draw_decal(ci: CanvasItem, key: String, p: Vector2, h: int) -> bool:
 		return true
 	var decals := decal_set(key)  # Base decal, then variants ([] = no art).
 	if decals.is_empty():
+		if ArtMissLog.on:
+			ArtMissLog.miss(DecalData.PREFIX + key)  # --art-misses: the code decoration is drawn.
 		return false
 	SpriteBank.apply_sharp(ci)
 	var tex: Texture2D = decals[(h >> DecalData.VARIANT_HASH_SHIFT) % decals.size()]  # This cell's variant.

@@ -1403,6 +1403,8 @@ func finish(summary: Dictionary) -> void:
 		game.perf.print_table()  # --perf: the per-tick timing table (PerfProbe).
 	if game.monitor != null:
 		game.monitor.print_peaks()  # --monitor=N: the last sample and the peaks (MonitorProbe).
+	if ArtMissLog.on:
+		ArtMissLog.print_report()  # --art-misses: the sprite keys drawn without art ("[art-miss]" lines).
 	if game.coop != null and game.coop.lockstep != null:
 		print("[autotest] coop %s" % game.coop.lockstep.report_line())  # Online co-op: ticks, frames, checksums.
 		await get_tree().create_timer(CoopLockstepData.LINGER_S, true, false, true).timeout  # The last frames reach the partner.

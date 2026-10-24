@@ -207,6 +207,11 @@ RIGS = {
     # The near wing hangs below the hip, so its columns ride with the body (rigid).
     "summons/fallen_seraph": dict(mode="robe", hip=25, rigid=[(24, 36, 0, 40)], sway=2, dip=1, bust=(13, 23, 15, 22, 2)),
     "summons/ruin_seraph": dict(mode="robe", hip=29, rigid=[(30, 44, 0, 40), (0, 10, 0, 32)], sway=2, dip=1, bust=(18, 28, 18, 25, 2)),
+    # --- Act II: the Ancient Eye's shared kinds (harbour placeholder art pass) ---
+    # The Initiate shuffles on two bare feet under its ragged hem; the Chanter's robe sways,
+    # its tall eye staff rigid.
+    "eye/eye_initiate": dict(mode="legs", hip=37, back=(8, 19), front=(19, 30), rigid=[], spread=1, lift=1, dip=1),
+    "eye/eye_chanter": dict(mode="robe", hip=47, rigid=[(0, 13, 0, None)], sway=1, dip=1),
     # --- Act II: Gullhaven Harbour ---
     # The Deep Kin's long arms hang below the hip: rigid, so the claws ride with the body.
     "eye/deep_kin": dict(mode="legs", hip=44, back=(4, 18), front=(18, 30), rigid=[(0, 6, 0, None), (30, 38, 0, None)], spread=2, lift=1, dip=1),
