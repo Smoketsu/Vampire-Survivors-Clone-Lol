@@ -138,10 +138,13 @@ const UNDERTOW_CREST_STEP: float = 11.0  # TUNING (not in GDD)
 const MAELSTROM_WHIRL: String = "overlays/maelstrom_whirl"  # TUNING (not in GDD)
 ## Drawn diameter of the whirlpool as a share of its grind diameter (2 x whirl_radius).
 const MAELSTROM_WHIRL_FILL: float = 0.9  # TUNING (not in GDD)
-## An Undertow shallows patch, scaled to the patch's radius (Undertow._draw()).
-const UNDERTOW_SHALLOWS: String = "overlays/undertow_shallows"  # TUNING (not in GDD)
-## Opacity (0-1) of the shallows sprite at its freshest (it fades as it dries).
-const UNDERTOW_SHALLOWS_ALPHA: float = 0.55  # TUNING (not in GDD)
+## An Undertow shallows patch is the code's soft pool (drawn from the shared
+## disc texture) inside a rim of UNDERTOW_CREST foam crests facing outward
+## (a scaled pool sprite read as coarse grey blocks in play): rim arc length
+## (px) between two crests.
+const UNDERTOW_SHALLOWS_RIM_STEP: float = 14.0  # TUNING (not in GDD)
+## Opacity (0-1) of the shallows' rim crests at their freshest (they fade as it dries).
+const UNDERTOW_SHALLOWS_RIM_ALPHA: float = 0.6  # TUNING (not in GDD)
 
 # --- UI ---------------------------------------------------------------------------------
 

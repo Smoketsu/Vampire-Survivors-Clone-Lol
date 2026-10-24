@@ -1160,6 +1160,7 @@ covers the decals exactly like the tiles.
 | Sanctum II | gold tesserae, diamond inlay → dropped (mosaic tile with a diamond lattice); rosette → `sanctum_halls_rosette` (32x32, 24x24, snapped to the tile's 8 px tesserae, `DecalData.SNAP`); carpet runner → `sanctum_halls_carpet` (a 128x36 strip, one piece per cell along every fourth cell row) |
 | Sanctum III | turf → dropped (turf tile inside stone walks); flowers → `sanctum_cloisters_flowers` (26x12, 21x10); sundial ring → `sanctum_cloisters_sundial` (28x28, 24x24); leaves → `sanctum_cloisters_leaves` (16x8, 15x7) |
 | Sanctum IV | stained-glass light pool → code; marble vein → dropped (veined marble tile); inlaid square → `sanctum_sanctuary_inlay` (18x18) |
+| Gullhaven (Act II) | tide puddle → code (every zone); shells → `harbour_mudflats_shells` (8x8, 8x7), kelp → `harbour_mudflats_kelp` (14x8, mirrored); fish scales → `harbour_market_scales` (14x10, 11x7), rope coil → `harbour_market_rope` (20x16, 16x13), dropped fish → `harbour_market_fish` (19x7, 16x6); coral crust → `harbour_chapel_coral` (16x15, 13x11), barnacles → `harbour_chapel_barnacles` (17x11, 14x9), the Eye's sigil → `harbour_chapel_sigil` (25x24); mooring ring → `harbour_seawall_ring` (10x12), rusted chain → `harbour_seawall_chain` (22x11, 20x10), gull feather → `harbour_seawall_feather` (6x5, mirrored) |
 
 *Process* (`art_source/decals/make_decals.py`, deterministic: `python3 art_source/decals/make_decals.py`
 rebuilds every decal). Eight AI sheets (`art_source/decals/sheets/<sheet>.png`, 1536x1024, prompt in
@@ -1357,9 +1358,28 @@ kept outside the repository; the sources are in `art_source/`.
 | `effects/tide_splash.png` | a splash of sea water spreading into a foam ring (6 frames) | 128 frames | `--anim --grid 3x2`; `AnimData` "tide_splash" (0.4 s, the `impact()` duration): Deep Kin landings, the Harbourmaster's anchor, Merrow's wave and whirl, a buoy sinking |
 
 The water itself is not art: `scripts/fx/tide_water.gdshader` draws it (flat teal bands on a 2 px
-grid, the foam line, sparse glints, the seawall lip and the surge telegraph). The Undertow wave,
-shallows and whirlpools are code-drawn (an optional `effects/undertow_wave` strip is read when it
-exists). Floor decals (`decals/harbour_<style>_<name>`) are not made yet: the code decorations stay.
+grid, the foam line, sparse glints, the seawall lip and the surge telegraph).
+
+**Harbour placeholder art pass** (Oct 2026, owner report "quite a bit of placeholder art" on
+Gullhaven; GDD §15.0 "Harbour placeholder art pass"). Found with the art audit (`--art-misses`
+in a window, `ArtMissLog`) and by reading the harbour's `_draw()` code; keys and placement in
+`MarkerArtData` "Gullhaven Harbour", sizes in `SpriteData`; every code drawing stays the fallback.
+
+| File | Subject | Art px | Notes |
+|---|---|---|---|
+| `eye/eye_initiate.png` (+ `_walk`) | Initiate of the Eye (Act II fodder, every Act II stage): a hunched cultist in a ragged drowned-teal hood with the Eye's magenta sigil, a pale gaunt face, a rusty gutting knife | 46 | the most drawn sprite of every Act II run, was the code cultist; AI source with a big head (faces must read), `pixelate_source.py`, face and sigil pupil hand-placed; walk rig: legs |
+| `eye/eye_chanter.png` (+ `_walk`) | Chanter of the Eye (squad leader, claims the dead): a bone-white stole with the Eye, a shell necklace, the mouth open in a chant, a tall driftwood staff topped by a bone ring holding a glowing eye | 64 | was the code cultist with a staff; face and staff eye hand-placed; walk rig: robe, staff rigid |
+| `eye/deep_herald_walk.png`, `eye/harbourmaster_walk.png` | walk strips of the two stills (legs step, the claws / the anchor ride with the body) | 64 / 124 | `walk_cycle.py` rigs |
+| `structures/merrow_pulpit.png` | Abbot Merrow's driftwood pulpit (drowned book, shell string, the Eye carved and glowing), in front of him while he preaches | 42 × 40 | AI source, `--ramps brown,bone,drowned,biolume`; eye recoloured to `biolume` |
+| `structures/harbour_pier.png` | a smugglers' dry pier: cross planks between side beams, nails, two worn gaps, wet boards at the sea end, pilings | 152 × 40 | drawn on the grid by `tools/harbour_props.py`; turned along the pier |
+| `projectiles/harbour_anchor.png` | the Harbourmaster's anchor, raised in the wind-ups and hurled on its chain | 24 × 28 | AI source |
+| `projectiles/anchor_chain_link.png` | one rusted link of the anchor chain | 7 × 5 | `harbour_props.py`; every other link tilted |
+| `overlays/harbour_net.png` | the Netcaster's weighted net (diamond rope mesh, rim rope, lead weights) | 33 × 33 | `harbour_props.py` (a mesh is drawn on the grid); `art_check` flags its 1 px ropes by design |
+| `overlays/tide_wall.png` | the Tide Caller's line of rising sea water, foam crest and spray | 152 × 28 | AI source, no outline; rises row by row with the crest |
+| `overlays/undertow_crest.png` | one foam crest of the Undertow wave, repeated along its 120° arc | 10 × 14 | `harbour_props.py` |
+| `overlays/maelstrom_whirl.png` | a Maelstrom whirlpool from above: foam arms spiralling into a violet heart | 92 × 96 | AI source, no outline; turns as it spins, sized to the grind radius |
+| (shallows) | the Undertow shallows: the code's soft pool (now the shared disc texture) inside a rim of `undertow_crest` foam crests | — | an AI pool sprite (`overlays/undertow_shallows`, 124 × 128) was tried and dropped: scaled up at 55% it read as coarse grey blocks in play |
+| `decals/harbour_*` (20) | the floor decorations: shells, kelp (Mudflats); fish scales, rope coils, a dropped fish (Market); coral crust, barnacles, the Eye's carved sigil (Chapel); mooring ring, rusted chain, gull feather (Seawall); most with a variant | 5-25 | two AI sheets (`art_source/decals/sheets/harbour_shore`, `harbour_chapel`) through `make_decals.py` recipes; the tide puddles stay code (soft translucent pools) |
 ### Act II: the Hollow Archive (Stage 5; Oct 2026)
 
 Made in one pass through the usual pipeline (`gen_image.py` with enlarged anchors attached,

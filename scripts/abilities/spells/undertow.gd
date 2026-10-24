@@ -279,15 +279,19 @@ func summary_extra() -> String:
 
 
 func _draw() -> void:
-	# Pixel art (MarkerArtData "Gullhaven Harbour": the shallows, the whirlpool and
-	# the wave's foam crests); the code shapes below are the fallback without it.
-	var shallows_art := SpriteBank.has(MarkerArtData.UNDERTOW_SHALLOWS)  # Shallows sprite present.
-	var shallows_px := float(SpriteData.FLAT_SIZES.get(MarkerArtData.UNDERTOW_SHALLOWS, 128.0))  # Its drawn size at scale 1 (px).
+	# Pixel art (MarkerArtData "Gullhaven Harbour": the foam crests of the wave and
+	# of the shallows' rim, the whirlpool); the code shapes below are the fallback.
+	var crest_art := SpriteBank.has(MarkerArtData.UNDERTOW_CREST)  # Foam crest sprite present.
 	for s in _shallows:
 		var a := clampf(s.life / 0.8, 0.0, 1.0)  # Fades as it dries.
-		if shallows_art:
-			SpriteBank.draw_flat(self, MarkerArtData.UNDERTOW_SHALLOWS, s.pos, 0.0,
-					Color(1.0, 1.0, 1.0, MarkerArtData.UNDERTOW_SHALLOWS_ALPHA * a), s.radius * 2.0 / shallows_px)
+		if crest_art:
+			# A soft pool (the shared disc texture, no per-frame polygon) inside a rim of foam crests.
+			SpriteBank.draw_disc(self, s.pos, s.radius, Color(UndertowData.SHALLOWS_COLOR, UndertowData.SHALLOWS_COLOR.a * a))
+			var rim := maxi(6, ceili(TAU * s.radius / MarkerArtData.UNDERTOW_SHALLOWS_RIM_STEP))  # Crests on the rim.
+			for i in rim:
+				var ang := TAU * float(i) / float(rim)  # This crest's angle (rad), facing outward.
+				SpriteBank.draw_flat(self, MarkerArtData.UNDERTOW_CREST, s.pos + Vector2.from_angle(ang) * s.radius, ang,
+						Color(1.0, 1.0, 1.0, MarkerArtData.UNDERTOW_SHALLOWS_RIM_ALPHA * a))
 			continue
 		draw_circle(s.pos, s.radius, Color(UndertowData.SHALLOWS_COLOR, UndertowData.SHALLOWS_COLOR.a * a))
 		draw_arc(s.pos, s.radius, 0.0, TAU, 28, Color(UndertowData.FOAM_COLOR, 0.25 * a), 1.0)
@@ -305,7 +309,6 @@ func _draw() -> void:
 			var a0 := spin + TAU * float(k) / 3.0
 			draw_arc(w.pos, r + float(k) * 9.0, a0, a0 + 2.2, 12, Color(UndertowData.WHIRL_COLOR, 0.7 - 0.15 * float(k)), 2.0)
 		draw_circle(w.pos, 5.0, Color(UndertowData.WHIRL_COLOR.darkened(0.4), 0.8))
-	var crest_art := SpriteBank.has(MarkerArtData.UNDERTOW_CREST)  # Foam crest sprite present.
 	for w in _drawn_waves:
 		var k := clampf(w.t / UndertowData.WAVE_TIME, 0.0, 1.0)  # 0 -> 1 as it rolls out.
 		var r := lerpf(16.0, w.reach, k)

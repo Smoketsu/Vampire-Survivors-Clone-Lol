@@ -215,6 +215,10 @@ RIGS = {
     # --- Act II: Gullhaven Harbour ---
     # The Deep Kin's long arms hang below the hip: rigid, so the claws ride with the body.
     "eye/deep_kin": dict(mode="legs", hip=44, back=(4, 18), front=(18, 30), rigid=[(0, 6, 0, None), (30, 38, 0, None)], spread=2, lift=1, dip=1),
+    # Harbour placeholder art pass: the Herald's hanging claws and the Harbourmaster's anchor
+    # (and his far coat tail) ride with the body; only the legs step.
+    "eye/deep_herald": dict(mode="legs", hip=48, back=(8, 26), front=(26, 46), rigid=[(0, 8, 0, None), (46, 54, 0, None)], spread=2, lift=1, dip=1),
+    "eye/harbourmaster": dict(mode="legs", hip=100, back=(50, 82), front=(82, 120), rigid=[(0, 50, 0, None), (120, 132, 0, None)], spread=2, lift=2, dip=1),
     "eye/netcaster": dict(mode="legs", hip=43, back=(8, 21), front=(21, 33), rigid=[(33, 44, 0, None)], spread=2, lift=1, dip=1),
     # Figure redesign: the Tide Caller and the Brine Widow glide on their gowns (hem sway),
     # the staff rigid, with the bust bounce and (bust rigs) an idle breathing strip.

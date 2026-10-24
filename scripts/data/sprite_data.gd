@@ -359,7 +359,6 @@ const FLAT_SIZES: Dictionary = {
 	"overlays/tide_wall": 152.0,  # TUNING (not in GDD) the Tide Caller's rising water line, 152 x 28, along +x (wall_length 150)
 	"overlays/undertow_crest": 14.0,  # TUNING (not in GDD) one foam crest of the Undertow wave, 10 x 14, facing +x
 	"overlays/maelstrom_whirl": 96.0,  # TUNING (not in GDD) a Maelstrom whirlpool from above, 92 x 96
-	"overlays/undertow_shallows": 128.0,  # TUNING (not in GDD) an Undertow shallows patch from above, 124 x 128, scaled to its radius
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

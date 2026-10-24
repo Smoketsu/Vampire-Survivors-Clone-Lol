@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://icnmtexrlmep"
-path="res://.godot/imported/undertow_shallows.png-9ce33082dfcff31b02ef81ad0448b56c.ctex"
+uid="uid://5qel4a3yxs03"
+path="res://.godot/imported/harbourmaster_walk.png-1cfbb164d02f3e2eb5f5ca1266899f70.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/overlays/undertow_shallows.png"
-dest_files=["res://.godot/imported/undertow_shallows.png-9ce33082dfcff31b02ef81ad0448b56c.ctex"]
+source_file="res://assets/sprites/eye/harbourmaster_walk.png"
+dest_files=["res://.godot/imported/harbourmaster_walk.png-1cfbb164d02f3e2eb5f5ca1266899f70.ctex"]
 
 [params]
 
