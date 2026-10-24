@@ -109,6 +109,11 @@ BUST_BOUNCE = (0.0, -0.5, 1.0, -0.5, 0.0, -0.5, 1.0, -0.5)
 # Rows below the bust box over which the warp fades back to zero, per bounce px (the
 # belly takes up the motion instead of tearing at the box edge).
 BUST_TAIL_PER_PX = 1
+# Swing: the pendulum profile of a `swing` part per frame (1 = its full swing one way, -1 the
+# other): one swing forward and back over the two steps, 0 on frame 0 (the still).
+SWING = (0.0, 0.7, 1.0, 0.7, 0.0, -0.7, -1.0, -0.7)
+# Swing: an outline pixel is one whose R + G + B (0-765) is below this (the palette's inks).
+SWING_INK_SUM = 120
 # Hover mode (flyers; owner's Act III art review, round 1: "it flies, its walk should just
 # be a bob"): per frame, the whole sprite's rise as a share of the rig's `bob` px (+ = up).
 # One slow bob per cycle; frame 0 is the still (the lowest point). The still keeps `bob`
@@ -144,6 +149,11 @@ SPIN = (1.0, 0.6, 0.3, 0.6, 1.0, 0.6, 0.3, 0.6)
 #   lift    px the swinging foot rises at passing ("legs").
 #   sway    px the hem bottom swings at most ("robe").
 #   dip     px the body dips on the "down" pose (0 or 1; 1 for every unit so far).
+#   swing   optional (x0, x1, y0, y1, pivot_y, px): a hanging part (the Harbourmaster's
+#           anchor) in the still's box [x0, x1) x [y0, y1) that swings like a pendulum from
+#           row `pivot_y` (where it is held): each frame its rows slide sideways SWING * px at
+#           its bottom row, proportionally less toward the pivot (a shear, so rows move intact
+#           and every pixel stays an approved one), and it is laid back on top (_swing()).
 #   bust    optional (x0, x1, y0, y1, px): the box of the still holding the bust (art px,
 #           [start, end) ; y0 = the neckline, y1 - 1 = the underside) and the bounce in
 #           px at its strongest point. Each frame warps that box vertically (_bounce): the
@@ -207,9 +217,20 @@ RIGS = {
     # The near wing hangs below the hip, so its columns ride with the body (rigid).
     "summons/fallen_seraph": dict(mode="robe", hip=25, rigid=[(24, 36, 0, 40)], sway=2, dip=1, bust=(13, 23, 15, 22, 2)),
     "summons/ruin_seraph": dict(mode="robe", hip=29, rigid=[(30, 44, 0, 40), (0, 10, 0, 32)], sway=2, dip=1, bust=(18, 28, 18, 25, 2)),
+    # --- Act II: the Ancient Eye's shared kinds (harbour placeholder art pass) ---
+    # The Initiate shuffles on two bare feet under its ragged hem; the Chanter's robe sways,
+    # its tall eye staff rigid.
+    "eye/eye_initiate": dict(mode="legs", hip=37, back=(8, 19), front=(19, 30), rigid=[], spread=1, lift=1, dip=1),
+    "eye/eye_chanter": dict(mode="robe", hip=47, rigid=[(0, 13, 0, None)], sway=1, dip=1),
     # --- Act II: Gullhaven Harbour ---
     # The Deep Kin's long arms hang below the hip: rigid, so the claws ride with the body.
     "eye/deep_kin": dict(mode="legs", hip=44, back=(4, 18), front=(18, 30), rigid=[(0, 6, 0, None), (30, 38, 0, None)], spread=2, lift=1, dip=1),
+    # Harbour placeholder art pass: the Herald's hanging claws and the Harbourmaster's anchor
+    # (and his far coat tail) ride with the body; only the legs step.
+    "eye/deep_herald": dict(mode="legs", hip=48, back=(8, 26), front=(26, 46), rigid=[(0, 8, 0, None), (46, 54, 0, None)], spread=2, lift=1, dip=1),
+    # Owner's review (round 2): the anchor swings back and forth from his fist (row 76).
+    "eye/harbourmaster": dict(mode="legs", hip=100, back=(50, 82), front=(82, 120), rigid=[(0, 50, 0, None), (120, 132, 0, None)], spread=2, lift=2, dip=1,
+                              swing=(0, 46, 75, 124, 76, 5)),
     "eye/netcaster": dict(mode="legs", hip=43, back=(8, 21), front=(21, 33), rigid=[(33, 44, 0, None)], spread=2, lift=1, dip=1),
     # Figure redesign: the Tide Caller and the Brine Widow glide on their gowns (hem sway),
     # the staff rigid, with the bust bounce and (bust rigs) an idle breathing strip.
@@ -640,11 +661,48 @@ def frames_of(key: str) -> list:
         else:
             hem = _shift_rows(parts["hem"], hip, dy, 0, ROBE_SWAY[f] * rig["sway"])
             frame = _stack([hem] + body)
+        if "swing" in rig:
+            frame = _swing(frame, rig["swing"], dy, SWING[f])
         if "bust" in rig:
             frame = _bounce(frame, rig["bust"], dy, BUST_BOUNCE[f] * rig["bust"][4])
         out.append(frame)
     if not np.array_equal(out[0], still):
         sys.exit(f"{key}: frame 0 differs from the still (rig error)")
+    return out
+
+
+def _swing(frame: np.ndarray, swing: tuple, dy: int, k: float) -> np.ndarray:
+    """Swings the hanging part of `frame` (the still's box `swing` lowered by the body dip
+    `dy`): its opaque pixels are lifted out and laid back on top with each row slid
+    round(k * px * (row - pivot) / (bottom - pivot)) px sideways (+ = right). k = 0 returns
+    the frame unchanged."""
+    if k == 0:
+        return frame
+    x0, x1, y0, y1, pivot, px = swing
+    y0, y1, pivot = y0 + dy, y1 + dy, pivot + dy  # This frame's rows.
+    h, w = frame.shape[:2]
+    out = frame.copy()
+    part = np.zeros_like(frame)  # The lifted part.
+    rows = slice(max(0, y0), min(h, y1))
+    part[rows, x0:x1] = frame[rows, x0:x1]
+    out[rows, x0:x1][frame[rows, x0:x1, 3] > 0] = 0  # Taken out of the body.
+    span = float(max(1, y1 - 1 - pivot))  # Rows from the pivot to the bottom.
+    for y in range(max(0, y0), min(h, y1)):
+        d = int(round(k * px * max(0, y - pivot) / span))  # Sideways slide of this row (px).
+        src = part[y]
+        mask = src[:, 3] > 0
+        xs = np.nonzero(mask)[0]
+        for x in xs:
+            nx = x + d
+            if 0 <= nx < w:
+                out[y, nx] = src[x]
+        # The box's last columns also hold the body's own outline where the part touched it:
+        # an outline (ink) pixel left empty there next to the body keeps its still colour (no
+        # hole in the coat; the part's lit pixels are never left behind).
+        if x1 < w and frame[y, x1, 3] > 0:
+            for x in range(max(x0, x1 - 2), x1):
+                if out[y, x, 3] == 0 and frame[y, x, 3] > 0 and int(frame[y, x, :3].sum()) < SWING_INK_SUM:
+                    out[y, x] = frame[y, x]
     return out
 
 

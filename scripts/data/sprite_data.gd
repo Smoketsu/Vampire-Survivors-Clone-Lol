@@ -137,6 +137,9 @@ const HEIGHTS: Dictionary = {
 	# --- Act II: Fallen Seraph ---
 	"summons/fallen_seraph": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size (body ~46, the halo above)
 	"summons/ruin_seraph": 60.0,  # TUNING (not in GDD) ART_BIBLE manifest size (body ~52, the thorn halo above)
+	# --- Act II: the Ancient Eye's shared kinds (harbour placeholder art pass) ---
+	"eye/eye_initiate": 46.0,  # TUNING (not in GDD) Initiate of the Eye: fodder, a hunched cultist a little smaller than the Recruit (50)
+	"eye/eye_chanter": 64.0,  # TUNING (not in GDD) Chanter of the Eye: squad leader, body ~44, the tall eye staff above (the Hierophant is 64)
 	# --- Act II: Gullhaven Harbour ---
 	"eye/deep_kin": 56.0,  # TUNING (not in GDD) Deep Kin: a bruiser, between soldier and heavy (the fin ridge rises above the hunched head)
 	"eye/tide_caller": 54.0,  # TUNING (not in GDD) Tide Caller: soldier tier (body ~48, the conch staff above)
@@ -148,6 +151,7 @@ const HEIGHTS: Dictionary = {
 	"bosses/merrow_changed": 136.0,  # TUNING (not in GDD) Abbot Merrow after The Change (the frill crown the top, limbs spread wide)
 	"bosses/merrow_changed_strike": 120.0,  # TUNING (not in GDD) boss attack pose (lunging lash; BossPoseData)
 	"structures/bell_buoy": 64.0,  # TUNING (not in GDD) a bell buoy: the float and its bell cage
+	"structures/merrow_pulpit": 40.0,  # TUNING (not in GDD) Abbot Merrow's driftwood pulpit before him while he preaches, 42 x 40 (harbour placeholder art pass)
 	"structures/smuggler_cache": 40.0,  # TUNING (not in GDD) a smugglers' cache: an iron-bound crate, ~34 px wide for its 15 px radius
 	"player/brine_widow": 58.0,  # TUNING (not in GDD) the Brine Widow: body ~48 like the necromancer, the hooked staff above
 	# --- Act II: the Hollow Archive ---
@@ -347,6 +351,14 @@ const FLAT_SIZES: Dictionary = {
 	# --- Chest beacon (ChestBeaconData) ---
 	"markers/chest_beacon": 19.0,  # TUNING (not in GDD) gold down-chevron over a chest, 19 x 15
 	"markers/chest_badge": 21.0,  # TUNING (not in GDD) off-screen chest badge, 21 x 21 (edge arrows)
+	# --- Gullhaven Harbour (harbour placeholder art pass; MarkerArtData "Gullhaven Harbour") ---
+	"structures/harbour_pier": 152.0,  # TUNING (not in GDD) a smugglers' dry pier, 152 x 40, along +x (pier_length 150 x pier_width 40)
+	"projectiles/harbour_anchor": 28.0,  # TUNING (not in GDD) the Harbourmaster's anchor raised or hurled, 24 x 28
+	"projectiles/anchor_chain_link": 7.0,  # TUNING (not in GDD) one link of the anchor chain, 7 x 5, along +x
+	"overlays/harbour_net": 33.0,  # TUNING (not in GDD) the Netcaster's net, 33 x 33, scaled to the pinned body
+	"overlays/tide_wall": 152.0,  # TUNING (not in GDD) the Tide Caller's rising water line, 152 x 28, along +x (wall_length 150)
+	"overlays/undertow_crest": 14.0,  # TUNING (not in GDD) one foam crest of the Undertow wave, 10 x 14, facing +x
+	"overlays/maelstrom_whirl": 96.0,  # TUNING (not in GDD) a Maelstrom whirlpool from above, 92 x 96
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

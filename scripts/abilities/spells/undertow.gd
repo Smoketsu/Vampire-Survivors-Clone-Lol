@@ -66,6 +66,8 @@ class Whirl:
 	var life: float = 0.0
 	## Seconds until its next grind tick.
 	var tick: float = 0.0
+	## Grind radius (px) when it formed (drawing only: the sprite's size).
+	var radius: float = 60.0
 
 ## Seconds until the next wave.
 var _timer: float = 0.6
@@ -210,6 +212,7 @@ func _add_whirl(pos: Vector2, stats: Dictionary) -> void:
 	w.pos = pos
 	w.life = float(stats["whirl_life"])
 	w.tick = 0.0
+	w.radius = float(stats.get("whirl_radius", 60.0))
 	_whirls.append(w)
 	game.stat_add("maelstrom_whirls", 1.0)
 
@@ -276,12 +279,31 @@ func summary_extra() -> String:
 
 
 func _draw() -> void:
+	# Pixel art (MarkerArtData "Gullhaven Harbour": the foam crests of the wave and
+	# of the shallows' rim, the whirlpool); the code shapes below are the fallback.
+	var crest_art := SpriteBank.has(MarkerArtData.UNDERTOW_CREST)  # Foam crest sprite present.
 	for s in _shallows:
 		var a := clampf(s.life / 0.8, 0.0, 1.0)  # Fades as it dries.
+		if crest_art:
+			# A soft pool (the shared disc texture, no per-frame polygon) inside a rim of foam crests.
+			SpriteBank.draw_disc(self, s.pos, s.radius, Color(UndertowData.SHALLOWS_COLOR, UndertowData.SHALLOWS_COLOR.a * a))
+			var rim := maxi(6, ceili(TAU * s.radius / MarkerArtData.UNDERTOW_SHALLOWS_RIM_STEP))  # Crests on the rim.
+			for i in rim:
+				var ang := TAU * float(i) / float(rim)  # This crest's angle (rad), facing outward.
+				SpriteBank.draw_flat(self, MarkerArtData.UNDERTOW_CREST, s.pos + Vector2.from_angle(ang) * s.radius, ang,
+						Color(1.0, 1.0, 1.0, MarkerArtData.UNDERTOW_SHALLOWS_RIM_ALPHA * a))
+			continue
 		draw_circle(s.pos, s.radius, Color(UndertowData.SHALLOWS_COLOR, UndertowData.SHALLOWS_COLOR.a * a))
 		draw_arc(s.pos, s.radius, 0.0, TAU, 28, Color(UndertowData.FOAM_COLOR, 0.25 * a), 1.0)
+	var whirl_art := SpriteBank.has(MarkerArtData.MAELSTROM_WHIRL)  # Whirlpool sprite present.
+	var whirl_px := float(SpriteData.FLAT_SIZES.get(MarkerArtData.MAELSTROM_WHIRL, 96.0))  # Its drawn size at scale 1 (px).
 	for w in _whirls:
 		var spin := w.life * 6.0  # Turning arms (visual).
+		if whirl_art:
+			var fade := clampf(w.life / 0.4, 0.0, 1.0)  # Fades out in its last 0.4 s.
+			SpriteBank.draw_flat(self, MarkerArtData.MAELSTROM_WHIRL, w.pos, -spin, Color(1.0, 1.0, 1.0, 0.9 * fade),
+					w.radius * 2.0 * MarkerArtData.MAELSTROM_WHIRL_FILL / whirl_px)
+			continue
 		var r := 18.0 + 10.0 * sin(w.life * 3.0)
 		for k in 3:
 			var a0 := spin + TAU * float(k) / 3.0
@@ -292,6 +314,14 @@ func _draw() -> void:
 		var r := lerpf(16.0, w.reach, k)
 		var a0 := w.dir.angle() - UndertowData.CONE_HALF_ANGLE
 		var a1 := w.dir.angle() + UndertowData.CONE_HALF_ANGLE
+		if crest_art:
+			# A rolling line of foam crests along the arc, each facing outward.
+			var n := maxi(2, ceili(r * (a1 - a0) / MarkerArtData.UNDERTOW_CREST_STEP))  # Crests on this arc.
+			var tint := Color(1.0, 1.0, 1.0, 1.0 - k * 0.6)  # Fades as it spends itself.
+			for i in n:
+				var ang := a0 + (a1 - a0) * (float(i) + 0.5) / float(n)  # This crest's angle (rad).
+				SpriteBank.draw_flat(self, MarkerArtData.UNDERTOW_CREST, w.at + Vector2.from_angle(ang) * r, ang, tint)
+			continue
 		if SpriteBank.has_anim("undertow_wave"):
 			SpriteBank.draw_anim(self, "undertow_wave", w.at + w.dir * r * 0.55, r * 1.2, k, 1.0 - k * 0.5)
 		draw_arc(w.at, r, a0, a1, 18, Color(UndertowData.WAVE_COLOR, 0.85 * (1.0 - k * 0.6)), 6.0)

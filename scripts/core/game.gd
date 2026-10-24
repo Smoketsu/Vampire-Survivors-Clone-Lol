@@ -220,6 +220,9 @@ var perf: PerfProbe = null
 var quality: AdaptiveQuality
 ## Opt-in memory / draw / entity sampling (--monitor=N; MonitorProbe), null otherwise.
 var monitor: MonitorProbe = null
+## Debug (--art-shots=T,...): index of the next GameState.autotest_art_shots
+## time to save a screenshot at (drawing only).
+var _art_shot_next: int = 0
 ## Co-op start message (CoopNet.start_info: seed, config, loadouts, local_slot,
 ## version), set by Main before add_child for an online co-op run; empty = no
 ## network co-op (the --coop-bot autotest builds its own loadouts).
@@ -264,6 +267,7 @@ func _ready() -> void:
 		perf = PerfProbe.new(self)  # --perf: per-tick timing (reads the clock only).
 	if GameState.autotest and GameState.autotest_monitor > 0.0:
 		monitor = MonitorProbe.new(self, GameState.autotest_monitor)  # --monitor=N: memory / draw sampling (reads only).
+	ArtMissLog.on = GameState.autotest and GameState.autotest_art_misses  # --art-misses: the art audit (drawing only).
 	meta = Meta.run_modifiers() if coop == null else coop.meta_for(0)
 	character = CharacterModifiers.for_id(run_config.character_id) if coop == null else coop.character_for(0)
 	enemy_grid = SpatialHash.new(GRID_CELL)
@@ -741,6 +745,22 @@ func _process(_delta: float) -> void:
 		perf.frame()  # --perf: rendered-frame times (the Web measurement).
 	if monitor != null:
 		monitor.frame()  # --monitor=N: memory / draw / entity lines (reads only).
+	if GameState.autotest and _art_shot_next < GameState.autotest_art_shots.size() \
+			and elapsed >= GameState.autotest_art_shots[_art_shot_next]:
+		_save_art_shot()
+
+
+## Debug (--art-shots=T,...): saves the window as <--shot-dir>/art_<T>.png at the
+## next listed game second (no-op headless or without a shot dir; drawing only).
+func _save_art_shot() -> void:
+	var t := GameState.autotest_art_shots[_art_shot_next]  # The listed game second.
+	_art_shot_next += 1
+	if DisplayServer.get_name() == "headless" or GameState.autotest_shot_dir == "":
+		return
+	var img := get_viewport().get_texture().get_image()  # Last rendered frame.
+	var path := GameState.autotest_shot_dir.path_join("art_%04d.png" % int(t))
+	img.save_png(path)
+	print("[art-shot] %s at %.1f s" % [path, elapsed])
 
 
 ## The Electronic Empire's shared rules (Act III), created on first use: at

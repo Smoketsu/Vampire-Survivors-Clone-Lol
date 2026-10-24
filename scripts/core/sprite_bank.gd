@@ -99,6 +99,8 @@ static var icon_cap: float = 0.0
 ## its node so it draws sharp.
 static func texture(key: String) -> Texture2D:
 	if _cache.has(key):
+		if ArtMissLog.on and _cache[key] == null:
+			ArtMissLog.miss(key)  # --art-misses: a fallback drawn (or a probe).
 		return _cache[key]
 	var path := SpriteData.ROOT + key + ".png"  # Expected file location.
 	var tex: Texture2D = null  # Loaded texture (null = no art yet).
@@ -116,6 +118,11 @@ static func texture(key: String) -> Texture2D:
 		tex = sharp
 	_cache[key] = tex
 	_grid[key] = grid
+	if ArtMissLog.on:
+		if tex == null:
+			ArtMissLog.miss(key)  # --art-misses: the art audit's record.
+		else:
+			ArtMissLog.hit(key)
 	return tex
 
 
@@ -282,6 +289,8 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Col
 			layer.walk_count = n
 			var m := idle_frames(key)  # Frames in this sprite's idle strip (0 = none).
 			layer.idle_count = m
+			if ArtMissLog.on and n == 0:
+				ArtMissLog.strip_miss(key)  # --art-misses: a body without a walk strip.
 			var fw := float(tex.get_width())  # Frame width (texels) = the still's width.
 			if layer.walk_frame > 0 and layer.walk_frame < n:
 				var src := Rect2(fw * float(layer.walk_frame), 0.0, fw, float(tex.get_height()))  # Frame in the strip.

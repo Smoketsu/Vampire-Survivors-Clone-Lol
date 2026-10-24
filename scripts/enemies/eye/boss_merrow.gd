@@ -467,13 +467,15 @@ func danger_push(p: Vector2) -> Vector2:
 	return Vector2.ZERO
 
 
-## Ground layer: the pulpit and the sermon's rings while he preaches.
+## Ground layer: the sermon's rings while he preaches, and the code pulpit
+## when its pixel art is missing (the art stands in front of him, _draw_body()).
 func _draw_under() -> void:
 	if phase == Phase.SERMON:
 		var k := fmod(phase_time, 1.0)
 		draw_arc(Vector2.ZERO, radius * (1.5 + 3.0 * k), 0.0, TAU, 32, Color(Palette.EYE_BIOLUME, 0.5 * (1.0 - k)), 2.0)
-		draw_rect(Rect2(Vector2(-radius * 0.9, radius * 0.2), Vector2(radius * 1.8, radius * 0.8)), HarbourGlyphs.WOOD_DARK)  # The pulpit.
-		draw_rect(Rect2(Vector2(-radius * 0.8, radius * 0.25), Vector2(radius * 1.6, radius * 0.25)), HarbourGlyphs.WOOD)
+		if not SpriteBank.has(MarkerArtData.MERROW_PULPIT):
+			draw_rect(Rect2(Vector2(-radius * 0.9, radius * 0.2), Vector2(radius * 1.8, radius * 0.8)), HarbourGlyphs.WOOD_DARK)  # The pulpit.
+			draw_rect(Rect2(Vector2(-radius * 0.8, radius * 0.25), Vector2(radius * 1.6, radius * 0.25)), HarbourGlyphs.WOOD)
 
 
 ## Body layer on `ci`: robed or changed, in the pose of his phase
@@ -490,9 +492,11 @@ func _draw_body(ci: CanvasItem) -> void:
 	var key := "bosses/merrow_changed" if changed else "bosses/merrow"
 	if phase == Phase.CHANGE:
 		ci.draw_circle(Vector2.ZERO, radius * 1.8, Color(Palette.EYE_BIOLUME, 0.18))
-	if SpriteBank.draw_pose(ci, key, pose, Vector2.ZERO, flash > 0.0):
-		return
-	HarbourGlyphs.draw_merrow(ci, Vector2.ZERO, radius, flash > 0.0, pose, changed)
+	if not SpriteBank.draw_pose(ci, key, pose, Vector2.ZERO, flash > 0.0):
+		HarbourGlyphs.draw_merrow(ci, Vector2.ZERO, radius, flash > 0.0, pose, changed)
+	if phase == Phase.SERMON:
+		# His driftwood pulpit, in front of him (pixel art; the code one is on the ground layer).
+		SpriteBank.draw_flat(ci, MarkerArtData.MERROW_PULPIT, Vector2(0.0, radius * MarkerArtData.MERROW_PULPIT_DROP), 0.0)
 
 
 ## Overlay layer on `ci`: the aura chevron and the Stasis ice.
