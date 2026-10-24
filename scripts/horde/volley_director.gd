@@ -99,7 +99,7 @@ var _fx_col := PackedColorArray()
 var _fx_kind := PackedInt32Array()
 ## Next burst slot to write (the oldest is replaced).
 var _fx_next: int = 0
-## Glow disc texture of the art shots (_make_disc(); null headless / without art).
+## Glow disc texture of the art shots (SpriteBank.disc(); null headless / without art).
 var _disc: Texture2D = null
 ## Scratch, reused every frame: sort keys (style index << 16 | slot) of the art
 ## shots drawn this frame (no per-frame allocation once grown).
@@ -173,7 +173,7 @@ func setup(p_game: Game) -> void:
 	for st: String in STYLES:
 		_art.append(SpriteBank.texture(VolleyData.ART_DIR + st))
 		_art_len.append(float(VolleyData.ART_LEN.get(st, 5.0)))
-	_disc = _make_disc()
+	_disc = SpriteBank.disc()
 	_has_hit_art = SpriteBank.has_anim(VolleyData.HIT_ANIM)
 	_has_flash_art = SpriteBank.has_anim(VolleyData.FLASH_ANIM)
 
@@ -667,20 +667,6 @@ func _draw_art_shots(glows: bool) -> void:
 func _view_rect() -> Rect2:
 	var inv := get_global_transform_with_canvas().affine_inverse()  # Screen -> local.
 	return (inv * get_viewport_rect()).grow(VolleyData.DRAW_MARGIN)
-
-
-## The glow disc: a white circle (alpha 1 inside, a one-texel soft rim) on a clear
-## VolleyData.DISC_PX square, drawn tinted. Made once per director (drawing only).
-static func _make_disc() -> Texture2D:
-	var n := VolleyData.DISC_PX  # Texture size (px).
-	var img := Image.create(n, n, false, Image.FORMAT_RGBA8)
-	var c := (float(n) - 1.0) * 0.5  # Centre (texel).
-	var rad := float(n) * 0.5 - 0.5  # Radius (texels).
-	for y in n:
-		for x in n:
-			var d := Vector2(float(x) - c, float(y) - c).length()
-			img.set_pixel(x, y, Color(1.0, 1.0, 1.0, clampf(rad - d + 0.5, 0.0, 1.0)))
-	return ImageTexture.create_from_image(img)
 
 
 ## Draws the impact bursts and launch flashes still playing on screen, at most

@@ -33,7 +33,7 @@ var peak_heap: int = 0
 ## Highest object count seen.
 var peak_objects: int = 0
 ## Rendered frames per --draw-probe phase.
-const DRAW_PROBE_FRAMES: int = 60  # Measurement only (not in GDD).
+const DRAW_PROBE_FRAMES: int = 30  # Measurement only (not in GDD).
 ## Game time (s) the draw probe starts (< 0 = off; --draw-probe=T).
 var _probe_at: float = -1.0
 ## Current draw-probe phase (index into _probe_layers(); -1 = not started, -2 = done).
@@ -65,12 +65,18 @@ func frame() -> void:
 		_step_probe()
 
 
-## The draw-probe phases: [name, node or null (nothing hidden)].
+## The draw-probe phases: [name, node or null (nothing hidden)], each layer between
+## two "none" phases so its count compares with the moment around it.
 func _probe_layers() -> Array:
-	return [["none", null], ["volleys", game.volleys], ["effects", game.effects], ["enemies", game.enemies],
+	var layers := [["volleys", game.volleys], ["effects", game.effects], ["enemies", game.enemies],
 		["army", game.horde], ["projectiles", game.projectiles], ["pickups", game.pickups], ["fx", Juice.fx],
 		["hud", game.hud], ["ground", game.ground], ["player", game.player], ["motion", game.motion],
-		["chests", game.chests], ["powerups", game.powerups], ["arena", game.arena], ["none", null]]
+		["chests", game.chests], ["powerups", game.powerups], ["arena", game.arena]]
+	var out := [["none", null]]
+	for l: Array in layers:
+		out.append(l)
+		out.append(["none", null])
+	return out
 
 
 ## WebGL buffers + vertex arrays the page created so far (window.__gl; -1 = unknown).
@@ -93,9 +99,14 @@ func _step_probe() -> void:
 		print("[draw] t=%d hidden=%s gl objects per frame=%.1f" % [int(game.elapsed), l[0], float(n - _probe_gl0) / float(DRAW_PROBE_FRAMES)])
 		if l[1] != null and is_instance_valid(l[1]):
 			(l[1] as CanvasItem).visible = true
+	if _probe_phase < 0:
+		Engine.time_scale = 1.0  # Real time while probing: the moment changes slowly between phases.
+		Engine.physics_ticks_per_second = 60
 	_probe_phase += 1
 	if _probe_phase >= layers.size():
 		_probe_phase = -2
+		Engine.time_scale = GameState.autotest_speed
+		Engine.physics_ticks_per_second = int(roundf(60.0 * GameState.autotest_speed))
 		return
 	var nl: Array = layers[_probe_phase]
 	if nl[1] != null and is_instance_valid(nl[1]):

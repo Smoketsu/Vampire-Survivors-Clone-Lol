@@ -142,9 +142,6 @@ const FX_DRAW_REDUCED: int = 24  # TUNING (not in GDD) mobile
 ## Shots and bursts farther than this outside the screen (px) are not drawn (they still
 ## fly and hit; drawing only; GDD §15.0 "Adaptive quality").
 const DRAW_MARGIN: float = 48.0  # TUNING (not in GDD) mobile; > the largest burst radius (HIT_MAX / 2)
-## Size (texels) of the glow disc texture drawn under every art shot (one batched rect
-## instead of a 64-point circle polygon per shot).
-const DISC_PX: int = 32  # TUNING (not in GDD) mobile
 
 # --- Summon classes (switch on at LEVEL_ON, grow at LEVEL_GROW) -----------------------
 
