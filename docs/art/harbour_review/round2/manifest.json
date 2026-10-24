@@ -1,0 +1,37 @@
+{
+  "title": "Gullhaven Harbour placeholder art pass, round 2 (owner's review redos)",
+  "note": "Old and new at 1x and 4x nearest-neighbour; the walk strips also as preview GIFs (walking in place, 4x). No image generation this round.",
+  "images": [
+    {
+      "id": "eye_initiate",
+      "key": "eye/eye_initiate",
+      "old": "docs/art/harbour_review/round2/eye_initiate_old.png",
+      "new": "docs/art/harbour_review/round2/eye_initiate_new.png",
+      "old_x4": "docs/art/harbour_review/round2/eye_initiate_old_x4.png",
+      "new_x4": "docs/art/harbour_review/round2/eye_initiate_new_x4.png",
+      "owner_note": "My only issue is with the silly little face he has. Maybe just show his mouth to imply his hood is pulled over his eyes.",
+      "changed": "The hood's brim now comes down over the eyes (a teal brim over a band of deep shadow); only the lower face shows, half-shaded, with a dark open mouth. Rest of the sprite unchanged; the Chanter (full face, bone stole, eye staff) is untouched and still reads distinct."
+    },
+    {
+      "id": "eye_initiate_walk",
+      "key": "eye/eye_initiate_walk",
+      "old": "docs/art/harbour_review/round2/eye_initiate_walk_old.png",
+      "new": "docs/art/harbour_review/round2/eye_initiate_walk_new.png",
+      "old_x4": "docs/art/harbour_review/round2/eye_initiate_walk_old_x4.png",
+      "new_x4": "docs/art/harbour_review/round2/eye_initiate_walk_new_x4.png",
+      "preview": "docs/art/harbour_review/round2/eye_initiate_walk_new.gif",
+      "changed": "Rebuilt by tools/walk_cycle.py from the new still (same rig)."
+    },
+    {
+      "id": "harbourmaster_walk",
+      "key": "eye/harbourmaster_walk",
+      "old": "docs/art/harbour_review/round2/harbourmaster_walk_old.png",
+      "new": "docs/art/harbour_review/round2/harbourmaster_walk_new.png",
+      "old_x4": "docs/art/harbour_review/round2/harbourmaster_walk_old_x4.png",
+      "new_x4": "docs/art/harbour_review/round2/harbourmaster_walk_new_x4.png",
+      "preview": "docs/art/harbour_review/round2/harbourmaster_walk_new.gif",
+      "owner_note": "Can the anchor swing back and forth?",
+      "changed": "The anchor swings like a pendulum from his fist, one swing forward and back over the two steps (up to 5 px at the flukes), a row-by-row shear so every pixel stays an approved one (new walk_cycle.py rig key `swing`). The still is unchanged."
+    }
+  ]
+}
