@@ -2026,6 +2026,7 @@ scripts/
                             shared level-ups, chests, the --coop-bot report (docs/coop/DESIGN.md)
     coop_slot.gd            One co-op player's own objects (necromancer, army, spells...) and counters
     perf_probe.gd           --perf: per-tick timing by minute, moment and section (docs/coop/PERF.md)
+  core/monitor_probe.gd     --monitor=N / --draw-probe=T: memory, draw-call and transient counts (docs/perf/MOBILE.md)
   ui/ (co-op)
     coop_screen.gd          Title screen Co-op: Host / Join, the status line; opens the lobby
     coop_join_pad.gd        Join page: five code slots, the on-screen letter pad, Delete / Paste / Join
@@ -2274,6 +2275,7 @@ scripts/
   fx/unit_layer.gd          A unit's body / overlay drawing layer (child node calling back into the unit)
   fx/unit_dissolve.gd       Pooled death dissolve: the dead unit's look collapsing into bone dust / holy ash
   fx/anim_bursts.gd         Art-only one-shot effect strips (Shadow Bolt hit splash, level-up column, evolution flash)
+  fx/adaptive_quality.gd    The drawn visual tier: the Effects setting or a level set from the real frame rate
   fx/hurt_vignette.gd       The red screen-edge flash when the necromancer is hurt
   fx/dread_vignette.gd      Act II: the screen edges darkening with Dread (visual only)
   fx/tide_water.gdshader    Gullhaven: the water, foam, seawall lip and surge drawn from the same test as TideDirector
@@ -2366,7 +2368,9 @@ scripts/
     input_hint_data.gd      Input hint chips: sizes, colours, pad glyph names, device thresholds
     touch_data.gd           Phones / tablets: touch control sizes (CSS px), places, colours, stick dead
                             zone, mobile UI scale limits, fit margin, portrait overlay words and sizes
-    effects_data.gd         The Effects setting (Full / Reduced): defaults and what Reduced draws less of
+    effects_data.gd         The Effects setting (Full / Reduced): defaults and what Reduced draws less of;
+                            the visual tiers and the adaptive quality thresholds
+    frame_data.gd           Web solo physics catch-up cap (ticks per rendered frame)
     stage_registry.gd       The stages in campaign order (id -> STAGE dictionary; every key documented)
     stages/graveyard_stage.gd      Stage 1: segments, events, Reckoning flavour, graves, desecration,
                                    Crypt Defender, obstacle layout, boss arrival
@@ -2600,6 +2604,9 @@ Options (after `--`):
 | `--coop-ui-test` | `--coop-bot` debug: walks every co-op visual state during the run (the partner plate, each waiting text, a notice, the downed marker, then the off-screen arrow at the Close zoom) with a `coop ui:` line per state (`CoopUiTest`). |
 | `--coop-shots=victory\|defeat`, `--shot-dir=DIR` | The same walk for screenshots: the world holds still at each state (`[coop-shot] NAME`), then the run ends with that result for the results card. In a native window (e.g. under Xvfb) `--shot-dir=` saves `DIR/coop_NAME.png`; `node tools/coop_hud_shots.mjs <phone\|desktop> <victory\|defeat>` takes the Web build's (the walk lets `TouchSupport` detect the phone, so the phone layout and touch controls show). |
 | `--perf` | Prints a `[perf]` table at the end: milliseconds per simulation tick (mean / p95 / max) per game minute and at the busy moments (boss alive, the Reckoning, a Rally Barrage, both armies' barrages at once, 15:00-0:00), the time per tick section (army + spells, enemies, obstacles, projectiles, volleys, pickups + effects), the volley shot peaks and the rendered-frame times (`PerfProbe`; reads the clock only). `--perf-real=A-B,C-D` also runs those game-second windows at real time so the frame times there are real frames; `--effects=reduced` draws with Effects = Reduced. On the Web build the flags come from the page URL: `index.html?necro_autotest=--coop-bot,--perf` (`tools/coop_web_perf.js` drives it in headless Chromium). |
+| `--monitor=N` | Every N game seconds a `[mon]` line (`MonitorProbe`, reads only): the WebAssembly heap (Web build), Godot's object / node / resource / orphan counts, static, video, texture and buffer memory, canvas items, draw calls and primitives of the last frame, the live enemies, summons, projectiles, volley shots and bursts, effects, particles, damage numbers and crystals, the rendered-frame times and the visual tier; a `[mon] peak` line at the end (`docs/perf/MOBILE.md`). |
+| `--draw-probe=T` | With `--monitor` on the Web build driven by `tools/mobile_web_perf.js`: from game second T (at real time) hides one world layer at a time between unhidden phases and prints `[draw]` lines with the WebGL objects created per frame (what rebuilds its polygons every frame). Drawing only. |
+| `--adaptive=off\|N` | Adaptive quality (`AdaptiveQuality`, drawing only): `off` keeps the adaptive level at 0, `N` (0-3) pins it; by default it adapts as in a player's run and prints a `[visual] adaptive quality:` line (not an `[autotest]` line: it follows wall-clock frame times). |
 | `--synergies=off` | A/B switch: no army synergy ever activates (the four original ones and the newer classes' nine). Every summary has a `synergy bonus` line (per newer synergy: the hits its mark bonus raised and the damage it added; the Baying frenzies; staggered / swooped marks; Death from Above dash resets; the seconds Requiem stretched), marked "(synergies off)" with this switch. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
 | `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |
@@ -2798,7 +2805,7 @@ support).
   ```bash
   mkdir -p build/web && touch build/.gdignore   # .gdignore: Godot must not import the exported PNGs
   godot --headless --export-release "Web" build/web/index.html
-  python3 tools/patch_web_audio.py build/web/index.js   # required: see "Sound memory" below
+  python3 tools/patch_web_audio.py build/web/index.js   # required: see "Sound memory" and "GL id memory" below
   ```
 - **Size and load:** `index.wasm` is 35.4 MB (8.0 MB gzipped) and `index.pck` 7.8 MB (7.5 MB gzipped); most hosts
   serve them compressed. Godot's loading bar shows while they download and the engine starts.
@@ -2842,6 +2849,12 @@ support).
     reloaded mid-run (the "game resets after a while" bug). `tools/patch_web_audio.py` makes every play share the
     sample's one buffer. CI runs it after the Web export and fails if the engine script no longer matches, and a
     local export needs it too (GDD §15.0 "Web audio buffer patch").
+  - **GL id memory** (GDD §15.0 "Web GL id leak patch", `docs/perf/MOBILE.md`): Godot 4.3's Web export never
+    reused WebGL object ids, and its tables kept one slot for every buffer and vertex array ever made. Godot rebuilds
+    those for every circle, arc, thick line and polygon of a redrawn canvas item, thousands a frame in a busy fight,
+    so the page's memory grew by about 100 MB a minute on a phone until iOS killed the tab (the page reloading to its
+    Play screen). `tools/patch_web_gl.py` makes deleted ids reusable; `tools/patch_web_audio.py` runs it too, so the
+    one export step above (and CI) applies both, and it fails the build if the engine script no longer matches.
   - **Sound playback lifetime:** the Web build uses **Stream** playback
     (`audio/general/default_playback_type.web=0`). Godot 4.3's default Web Sample path retains mixer
     playback objects after each sound; the buffer-sharing patch alone does not fix this. Streaming
@@ -2868,7 +2881,14 @@ support).
     1280 × 600 layout px stay visible): on a Pixel 7 (863 × 360 CSS px) body text grows from about 9.5 to 11.4 CSS
     px. A screen taller than what is left (a long level-up card, the Codex, the title column) shrinks just enough
     to fit. Tablets keep the desktop layout (an iPad already shows it at 0.8×).
-  - **Performance:** phones and tablets start on **Effects: Reduced** (Settings → Video).
+  - **Performance:** phones and tablets start on **Effects: Reduced** (Settings → Video). On a phone the page draws
+    at most **2 device px per CSS px** (an iPhone reports 3; GDD §15.0 "Phone resolution cap"): 44% of the pixels
+    to fill, the same layout, touch zones and art pixels. **Adaptive quality** (every platform, no setting; GDD
+    §15.0 "Adaptive quality"): while the frame rate stays under ~24 fps for 2 s the game draws less (fewer volley
+    shots and bursts, effects, particles and damage numbers, in up to three steps below Full) and steps back up
+    once it has run smoothly for 8 s; iOS Low Power Mode's 30 fps cap alone does not trigger it, and it never
+    changes gameplay. A solo run in the browser runs at most 3 simulation ticks per frame (GDD §15.0 "Web physics
+    catch-up cap"), so a phone that cannot keep up plays a little slower instead of stuttering.
   - **Page:** no pinch or double-tap zoom, no scroll bounce or pull-to-refresh, no long-press callout; sound starts
     with the first tap (the page resumes the audio on the first touchend as well, which iOS Safari requires).
   - **Limits:** measured only in Chromium's phone and tablet emulation (Pixel 7, iPad landscape) with software

@@ -82,6 +82,8 @@ static var _idle_frames: Dictionary = {}
 ## The shared sharp-pixel ShaderMaterial (SpriteData.SHARP_SHADER), built on
 ## first use by apply_sharp(); null until then.
 static var _sharp_material: ShaderMaterial = null
+## The shared white disc texture (disc(); null until first asked for).
+static var _disc: Texture2D = null
 
 ## Icon mode: when > 0, sprites are drawn this tall (px; grid art at the largest
 ## whole-number scale that fits, or scaled down to fit when even 1x is too big) with no drop shadow, so
@@ -218,6 +220,30 @@ static func has(key: String) -> bool:
 	return texture(key) != null
 
 
+## A white disc (alpha 1 inside its circle, a one-texel soft rim) on a clear
+## SpriteData.DISC_PX square, made once: drop shadows and volley glows draw it as
+## a tinted rect, which batches, instead of a draw_circle polygon whose buffers the
+## renderer rebuilds on every redraw (drawing only).
+static func disc() -> Texture2D:
+	if _disc == null:
+		var n := SpriteData.DISC_PX  # Texture size (px).
+		var img := Image.create(n, n, false, Image.FORMAT_RGBA8)
+		var c := (float(n) - 1.0) * 0.5  # Centre (texel).
+		var rad := float(n) * 0.5 - 0.5  # Radius (texels).
+		for y in n:
+			for x in n:
+				var d := Vector2(float(x) - c, float(y) - c).length()
+				img.set_pixel(x, y, Color(1.0, 1.0, 1.0, clampf(rad - d + 0.5, 0.0, 1.0)))
+		_disc = ImageTexture.create_from_image(img)
+	return _disc
+
+
+## Draws a filled disc of radius `r` (px) at `o` on `ci` from disc(): the look of
+## ci.draw_circle(o, r, color) without the per-redraw polygon.
+static func draw_disc(ci: CanvasItem, o: Vector2, r: float, color: Color) -> void:
+	ci.draw_texture_rect(disc(), Rect2(o - Vector2(r, r), Vector2(r, r) * 2.0), false, color)
+
+
 ## Draws sprite `key` centred near `o` on `ci` (scaled to its SpriteData
 ## height, with a drop shadow; brightened while `flash`). `tint` multiplies
 ## the colours when not flashing (components above 1 brighten): a playable
@@ -238,7 +264,7 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Col
 		# Drop shadow at the feet: a flattened circle via a scaled transform.
 		var sw := h * SpriteData.SHADOW_WIDTH  # Shadow width (px).
 		ci.draw_set_transform(centre + Vector2(0.0, h * 0.46), 0.0, Vector2(1.0, SpriteData.SHADOW_SQUASH))
-		ci.draw_circle(Vector2.ZERO, sw * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA))
+		draw_disc(ci, Vector2.ZERO, sw * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA))
 		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	var mod := SpriteData.FLASH_MODULATE if flash else tint  # Hit flash, or the caller's (character / skin) tint.
 	var top_left := centre - size * 0.5  # Rect corner (px).

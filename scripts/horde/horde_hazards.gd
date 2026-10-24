@@ -243,6 +243,11 @@ func step(delta: float) -> void:
 		_air.queue_redraw()
 
 
+## Patches burning and boulders flying right now (MonitorProbe; statistics only).
+func live_counts() -> Vector2i:
+	return Vector2i(_burning, _flying)
+
+
 ## Fills `_victims` with the living enemies whose body is within `r` px of
 ## `pos` (body edges count half).
 func _collect(pos: Vector2, r: float) -> void:
@@ -313,12 +318,12 @@ func _draw() -> void:
 		for b in _boulders:
 			if b.active:
 				var k := clampf(b.t / b.flight, 0.0, 1.0)  # Flight progress.
-				draw_circle(b.to, b.radius, Color(Palette.BONE, 0.08))
-				draw_circle(b.to, b.radius * k, Color(Palette.CORPSE_FLESH, 0.16))
+				SpriteBank.draw_disc(self, b.to, b.radius, Color(Palette.BONE, 0.08))  # Discs batch (no per-redraw polygon).
+				SpriteBank.draw_disc(self, b.to, b.radius * k, Color(Palette.CORPSE_FLESH, 0.16))
 				draw_arc(b.to, b.radius, 0.0, TAU, 32, Color(Palette.BONE, 0.7), 1.5)
 				var ground := b.from.lerp(b.to, k)  # Shadow under the boulder.
 				var h := 4.0 * b.arc * k * (1.0 - k)  # Height above the ground (px).
-				draw_circle(ground, 6.0 - h * 0.04, Color(0, 0, 0, 0.35 - h * 0.003))
+				SpriteBank.draw_disc(self, ground, 6.0 - h * 0.04, Color(0, 0, 0, 0.35 - h * 0.003))
 
 
 ## Air layer (`_air`): the boulders on their arcs.

@@ -2,9 +2,10 @@
 ## §38 "Pool common ... effects"). Cosmetic effects are dropped when the
 ## active count hits MAX_COSMETIC so huge fights never spike; telegraphs are
 ## gameplay-critical and are always shown.
-## Reduced effects (Settings, EffectsData): a cosmetic effect spawned while
-## EffectsData.REDUCED_VISIBLE_EFFECTS or more are live is still pooled,
-## stepped and counted exactly as on Full, but not drawn (purely visual).
+## Reduced effects and the adaptive quality (AdaptiveQuality.tier(), EffectsData):
+## a cosmetic effect spawned while EffectsData.TIER_VISIBLE_EFFECTS of the tier
+## or more are live is still pooled, stepped and counted exactly as on Full, but
+## not drawn (purely visual).
 class_name EffectManager
 extends Node2D
 
@@ -54,8 +55,9 @@ func _spawn(kind: Effect.Kind, pos: Vector2, color: Color, size: float, duration
 	else:
 		e = _pool.pop_back()
 	e.start(kind, pos, color, size, duration, vec, width)
-	if not critical and active.size() >= EffectsData.REDUCED_VISIBLE_EFFECTS and Settings.reduced_effects():
-		e.visible = false  # Reduced effects: lives and counts as usual, just not drawn.
+	var tier := AdaptiveQuality.tier()  # Visual tier (Reduced effects or the adaptive quality).
+	if not critical and tier > 0 and active.size() >= int(EffectsData.TIER_VISIBLE_EFFECTS[tier]):
+		e.visible = false  # Lower visual tier: lives and counts as usual, just not drawn.
 	active.append(e)
 	return e
 

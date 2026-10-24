@@ -1310,6 +1310,9 @@ func finish(summary: Dictionary) -> void:
 	print("[autotest] codex: %s" % game.codex.summary_line())  # Codex records (CodexLog).
 	print("[autotest] epilogue: %s" % _epilogue_line())  # Illustrated epilogue (EpilogueData; read only).
 	print("[autotest] volleys: %s" % game.volleys.summary_line())  # Bullet heaven pass (VolleyDirector).
+	# Adaptive quality: depends on real frame times, so it is not an [autotest] line (the same-seed gates
+	# compare those); drawing only.
+	print("[visual] adaptive quality: %s" % AdaptiveQuality.summary_line())
 	if bool(summary["victory"]) and not game.end_screen.victory_info.is_empty():
 		print("[autotest] victory screen: %s" % VictoryResults.summary_line(game.end_screen.victory_info))  # Content wave 2 (victories only).
 	if game.dread != null:
@@ -1398,6 +1401,8 @@ func finish(summary: Dictionary) -> void:
 			print("[autotest] %s" % game.hud.coop_ui.summary_line())  # The co-op visuals (CoopUi; read only).
 	if game.perf != null:
 		game.perf.print_table()  # --perf: the per-tick timing table (PerfProbe).
+	if game.monitor != null:
+		game.monitor.print_peaks()  # --monitor=N: the last sample and the peaks (MonitorProbe).
 	if game.coop != null and game.coop.lockstep != null:
 		print("[autotest] coop %s" % game.coop.lockstep.report_line())  # Online co-op: ticks, frames, checksums.
 		await get_tree().create_timer(CoopLockstepData.LINGER_S, true, false, true).timeout  # The last frames reach the partner.

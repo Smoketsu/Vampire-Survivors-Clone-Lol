@@ -15,13 +15,21 @@ at once (Web Audio spec), and Godot never writes to a sample's buffer after it r
 reversed playback, no `copyToChannel` outside the copy itself), so the patch returns the shared
 buffer instead. Sound is unchanged; only the copy goes.
 
+This script also applies tools/patch_web_gl.py (the WebGL id leak patch, GDD §15.0 "Web GL id
+leak patch"), so the one documented step after a Web export covers both; its exit code is the
+worse of the two.
+
 The patch is a plain text replacement in the exported `index.js`, run by CI after the Web export
 and by hand after a local one. It is idempotent: a file that is already patched is left as it is
 (exit 0). If neither the original nor the patched text is found (a different engine version),
 it exits 1 so the build fails loudly instead of shipping the leak unnoticed.
 """
 
+import os
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import patch_web_gl  # noqa: E402  (the second patch, same file)
 
 ORIGINAL = "getAudioBuffer(){return this._duplicateAudioBuffer()}"  # Godot 4.3's minified accessor: a full copy per play.
 PATCHED = "getAudioBuffer(){return this._audioBuffer}"  # The shared, never-written buffer instead.
@@ -39,7 +47,7 @@ def main() -> int:
     if count == 0:
         if PATCHED in text:
             print("patch_web_audio: %s is already patched" % path)
-            return 0
+            return patch_web_gl.patch_file(path)
         print("patch_web_audio: ERROR: the sample buffer accessor was not found in %s "
               "(engine version changed?); check GodotAudio.Sample.getAudioBuffer by hand" % path)
         return 1
@@ -49,7 +57,7 @@ def main() -> int:
     with open(path, "w", encoding="utf-8") as f:
         f.write(text.replace(ORIGINAL, PATCHED))
     print("patch_web_audio: %s patched (sounds share one buffer per sample)" % path)
-    return 0
+    return patch_web_gl.patch_file(path)
 
 
 if __name__ == "__main__":

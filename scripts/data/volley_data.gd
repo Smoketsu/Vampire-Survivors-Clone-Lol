@@ -139,6 +139,9 @@ const FLASH_MAX: float = 64.0  # TUNING (not in GDD) visual
 const FX_CAP: int = 96  # TUNING (not in GDD) visual
 ## Most bursts drawn with Effects = Reduced (phones).
 const FX_DRAW_REDUCED: int = 24  # TUNING (not in GDD) mobile
+## Shots and bursts farther than this outside the screen (px) are not drawn (they still
+## fly and hit; drawing only; GDD §15.0 "Adaptive quality").
+const DRAW_MARGIN: float = 48.0  # TUNING (not in GDD) mobile; > the largest burst radius (HIT_MAX / 2)
 
 # --- Summon classes (switch on at LEVEL_ON, grow at LEVEL_GROW) -----------------------
 

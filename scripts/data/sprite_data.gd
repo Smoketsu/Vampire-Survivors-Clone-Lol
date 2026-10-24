@@ -366,3 +366,8 @@ const SHADOW_WIDTH: float = 0.55  # TUNING (not in GDD)
 const SHADOW_SQUASH: float = 0.35  # TUNING (not in GDD)
 ## Drop-shadow opacity (0-1).
 const SHADOW_ALPHA: float = 0.35  # TUNING (not in GDD)
+## Size (texels) of the shared white disc texture (SpriteBank.disc()) that drop
+## shadows and volley glows are drawn with: one textured rect each, which the 2D
+## renderer batches, where a draw_circle is a 64-point polygon whose GPU buffers
+## Godot rebuilds on every redraw (GDD §15.0 "Disc texture for shadows and glows").
+const DISC_PX: int = 64  # TUNING (not in GDD) mobile

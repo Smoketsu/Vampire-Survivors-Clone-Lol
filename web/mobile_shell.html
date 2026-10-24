@@ -12,7 +12,9 @@
       Screen web app in landscape, the page drawn under a reserved status-bar strip
       while touches were measured without it put every tap a fixed distance above the
       finger (owner report, GDD 15.0 "Home Screen touch offset"); one rectangle that
-      the page sets itself keeps drawing and touches in the same coordinates;
+      the page sets itself keeps drawing and touches in the same coordinates; on a
+      phone the game caps the drawing buffer's device px per CSS px (GDD 15.0 "Phone
+      resolution cap", window.necroSetCanvasCap below);
       no scroll bounce or pull-to-refresh (fixed body,
       overscroll-behavior: none); no text selection, callout or tap highlight on
       the canvas; touch-action: none on the canvas (Godot reads every finger);
@@ -337,9 +339,20 @@ const engine = new Engine(GODOT_CONFIG);
 // minus the notch, status-bar and home-bar insets (all 0 on a desktop). Godot reads the new
 // canvas.width / height every frame and resizes its window to match, and its touch maths
 // measures the canvas rectangle on every event, so drawing and touches always agree.
+//
+// Resolution cap (GDD 15.0 "Phone resolution cap"): the drawing buffer is normally
+// css x devicePixelRatio (3 on iPhones: 2532 x 1170 px for an 844 x 390 page). On a phone
+// the game asks for a lower ceiling through window.necroSetCanvasCap(TouchData.CANVAS_DPR_CAP)
+// as it starts (TouchSupport); the page then fits the buffer at css x min(dpr, cap), which
+// the browser stretches to the same CSS rectangle. window.necroCanvasScale is the device
+// px per CSS px actually used (the game's CSS-size maths reads it instead of
+// devicePixelRatio); touches keep working because Godot maps every event through
+// canvas.width / the canvas's CSS rect.
 (function () {
 	const canvas = document.getElementById('canvas');
 	const probe = document.getElementById('safe-probe');  // Holds the env(safe-area-inset-*) padding.
+	let canvasCap = Infinity;  // Highest device px per CSS px for the buffer (set by the game on phones).
+	window.necroCanvasScale = window.devicePixelRatio || 1;  // Device px per CSS px of the buffer now.
 	function px(v) { return parseFloat(v) || 0; }  // CSS length -> px (0 when unset).
 	function fitCanvas() {
 		const fs = document.fullscreenElement || document.webkitFullscreenElement;  // Canvas fullscreen: the whole screen.
@@ -350,7 +363,7 @@ const engine = new Engine(GODOT_CONFIG);
 		const left = fs ? 0 : px(cs.paddingLeft);
 		const w = Math.max(1, Math.round(window.innerWidth - left - right));  // Safe area (CSS px).
 		const h = Math.max(1, Math.round(window.innerHeight - top - bottom));
-		const dpr = window.devicePixelRatio || 1;  // Device px per CSS px (Godot's hidpi ratio).
+		const dpr = Math.min(window.devicePixelRatio || 1, canvasCap);  // Device px per CSS px of the buffer (capped on phones).
 		canvas.style.left = `${left}px`;
 		canvas.style.top = `${top}px`;
 		canvas.style.width = `${w}px`;
@@ -361,11 +374,18 @@ const engine = new Engine(GODOT_CONFIG);
 			canvas.width = bw;
 			canvas.height = bh;
 		}
+		window.necroCanvasScale = bh / h;  // As drawn (rounding included).
 		// A fixed page never scrolls on purpose; undo any scroll iOS left after a rotation.
 		if (window.scrollX !== 0 || window.scrollY !== 0) {
 			window.scrollTo(0, 0);
 		}
 	}
+	// Called by the game (TouchSupport, phones only) with its resolution cap.
+	window.necroSetCanvasCap = function (cap) {
+		canvasCap = cap > 0 ? cap : Infinity;
+		fitCanvas();
+		return window.necroCanvasScale;
+	};
 	fitCanvas();
 	window.addEventListener('resize', fitCanvas);
 	window.addEventListener('orientationchange', () => { fitCanvas(); setTimeout(fitCanvas, 300); });
