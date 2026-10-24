@@ -394,10 +394,11 @@ Oct 2026); the summons
 Warrior, Archer, Mage, Mender, Warder, Rogue, Risen and Bone Hound and the walking evolutions Death
 Knight, Gravebow, Shadow Reaper and Hellhound; the Covenant Recruit, Footman, Archer, Chaplain,
 Purifier, Shieldbearer, Halberdier, Templar and Banner Bearer, and the Sister of the Scourge (legs, 2 px
-bust bounce). Every other unit (the other bosses, structures,
-the floating Frost Wraith, Winter Revenant and Lich, the airborne Gargoyle and
-Cathedral Horror, the Bishop, the giant summons, the Corpse Catapult and Ossuary Engine, the Inquisitor
-and the Sanctum kinds) keeps its still plus the engine motion. A skin's rig is derived from its character's
+bust bounce). **Act I walk strips (Oct 2026, art audit U01 - U03): 18 more**, the summons Corpse Abomination, Bone Colossus,
+Corpse Catapult, Ossuary Engine, Crypt Gargoyle, Cathedral Horror, Frost Wraith, Winter Revenant, Profane Bishop and Lich,
+the Covenant Sanctified Sentinel, Radiant Inquisitor, High Confessor, Sun Paladin, Cathedral Guardian and the Reckoning
+Inquisitor, and the bosses Sir Alaric and Marshal Vael (see "Act I walk strips" below). Every other unit (the other
+bosses, structures, the Cathedral Horror's stone form) keeps its still plus the engine motion. A skin's rig is derived from its character's
 (`SKINS` / `skin_rig()`: the same hip height above the feet, the columns moved by the offset between
 the two lower bodies; `SKIN_FIX` for per-skin corrections), since a skin keeps its character's body
 and pose.
@@ -434,6 +435,33 @@ column to `SPIN` of its width, two turns a cycle. A part is a box of the still, 
 pixels of its `colors` (a bone rotor lifted off the flame behind it); lone pixels left in a part's
 box are dropped. Pixels are only moved, never recoloured. Used by the Scout Drone (bob only), the
 Grave Drone (wingbeat) and the Wraith Drone (three spinning rotors).
+
+**Act I walk strips (Oct 2026, art audit follow-up; GDD §15.0 "Act I walk strips").** The audit's
+"walk strips" findings (U01 - U03) were a `walk_cycle.py` job, no generation: 18 rigs added to `RIGS`,
+strips built with `python3 tools/walk_cycle.py build <key>`, no code or data changed (a strip is found
+by its file name). Review folder `docs/art/act1_walks_review/` (per strip: the still, the strip at 1x
+and 4x, a 4x GIF walking in place, `manifest.json`).
+
+| key | rig | notes |
+|---|---|---|
+| `summons/abomination` | legs, hip 66, spread 3, lift 2 | both huge fists (cols 0-35 and 66-88, rows 66-80) are rigid so they ride with the body; only the two short legs step |
+| `summons/bone_colossus` | legs, hip 70, spread 2, lift 2 | club arm (cols 76-98) rigid; the teal loincloth streak (cols 41-49, rows 70-86) rigid, or the back leg's lift cut it |
+| `summons/corpse_catapult`, `summons/ossuary_engine` | legs, **spread 0**, lift 1 | **rocking cart**: a wheel cannot turn without being redrawn, so the body dips and each side's wheels take turns riding up a 1 px bump (the Engine's hip 48, the Catapult's 38) |
+| `summons/gargoyle`, `summons/cathedral_horror` | hover, **bob 0**, `flap` parts | the wing tips touch row 0, so there is no room to bob; the Gargoyle's big left wing (cols 0-18, root 18, 4 px) and the Horror's two wings (roots 30 and 54, 5 px) drop and rise twice a cycle |
+| `summons/frost_wraith`, `summons/winter_revenant` | robe, sway 2 | glides like the Banshee; the Revenant's lightning staff above the hip rides with the body |
+| `summons/bishop`, `summons/lich` | legs on the hem lobes, 1 / 1 | the crook / staff and orb rigid (cols 34+ / 34+) |
+| `enemies/sanctified_sentinel` | legs, hip 48, 2 / 2 | the groin tassel (cols 34-42) is rigid; the sword arm is above the hip |
+| `enemies/radiant_inquisitor`, `enemies/high_confessor`, `enemies/inquisitor` | legs on the hem lobes, 1 / 1 | the Confessor's crook rigid; the Inquisitor's wide sleeves end above the hip |
+| `enemies/sun_paladin` | legs, hip 52, 1 / 1 | the lance (cols 0-9) and the shield's lower edge (rows 52-57) rigid |
+| `enemies/cathedral_guardian` | legs, hip 106, spread 3, lift 2 | both fists end above the hip |
+| `bosses/alaric` | legs, hip 78, 2 / 2 | the cape (cols 0-54, rows 78-102, rigid only down to the boot top: the left boot's toe reaches col 51, and a first version tore it off) and the tabard (cols 86-110) rigid |
+| `bosses/vael` | legs, hip 70, 2 / 2 | the tower shield and tabard (cols 46-94, rows 70-106) rigid; the right boot under the shield steps |
+
+Left as stills on purpose: the Cathedral Horror's stone form (it never moves), the Act II / III bosses
+(own audits) and structures. Checks: every frame is one connected body (except the specks the still
+already has), frame 0 is the still, no new colour, `art_check.py <key>_walk --no-render` (alpha, palette,
+feet, lightness all pass; the only FAIL is the Corpse Catapult's Sanctum IV lightness, which its approved
+still has too; the height warning is expected for a strip).
 
 **Bust bounce (figure redesign, Oct 2026; owner request).** A rig may carry `bust = (x0, x1, y0, y1,
 px)`: the box holding the bust (y0 the neckline, y1 - 1 the underside) and the bounce in art px. Each
