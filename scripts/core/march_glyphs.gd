@@ -190,7 +190,7 @@ static func _draw_standard(ci: CanvasItem, o: Vector2, r: float, flash: bool) ->
 ## over the faint disc, or the code ring without the art.
 static func draw_aura(ci: CanvasItem, radius: float) -> void:
 	if CovenantFx.has(CovenantFxData.AURA_DASH):
-		SpriteBank.draw_disc(ci, Vector2.ZERO, radius, Color(Palette.GOLD, 0.035))
+		CovenantFx.soft_disc(ci, Vector2.ZERO, radius, Color(Palette.GOLD, 0.035))
 		CovenantFx.ring(ci, Vector2.ZERO, radius, CovenantFxData.AURA_DASH, Color(1.0, 1.0, 1.0, CovenantFxData.AURA_ALPHA), 1.0)
 		return
 	ci.draw_circle(Vector2.ZERO, radius, Color(Palette.GOLD, 0.035))

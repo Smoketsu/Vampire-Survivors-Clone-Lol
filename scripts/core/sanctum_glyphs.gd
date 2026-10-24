@@ -194,7 +194,7 @@ static func draw_ward(ci: CanvasItem, c: Vector2, s: float) -> void:
 ## ring of gold pieces and twelve small rays, CovenantFx, when present).
 static func draw_sun_aura(ci: CanvasItem, radius: float) -> void:
 	if CovenantFx.has(CovenantFxData.AURA_DASH) and CovenantFx.has(CovenantFxData.RAY):
-		SpriteBank.draw_disc(ci, Vector2.ZERO, radius, Color(Palette.GOLD, 0.03))
+		CovenantFx.soft_disc(ci, Vector2.ZERO, radius, Color(Palette.GOLD, 0.03))
 		CovenantFx.ring(ci, Vector2.ZERO, radius, CovenantFxData.AURA_DASH, Color(1.0, 1.0, 1.0, CovenantFxData.AURA_ALPHA), 1.0)
 		CovenantFx.orbit(ci, Vector2.ZERO, radius - 4.0, CovenantFxData.RAY, 12, 0.0, Color(1.0, 1.0, 1.0, 0.55), true)
 		return
@@ -272,7 +272,7 @@ static func draw_revive_pillar(ci: CanvasItem, p: Vector2, k: float, now: float)
 	if CovenantFx.has(CovenantFxData.LIGHT_COLUMN) and CovenantFx.has(CovenantFxData.T_FRONT):
 		# Pixel art (CovenantFx): a gold ground ring filling as a timing front,
 		# the light column rising, a glint on its crown.
-		SpriteBank.draw_disc(ci, p, 18.0, Color(Palette.GOLD, 0.12 + 0.1 * kk))
+		CovenantFx.soft_disc(ci, p, 18.0, Color(Palette.GOLD, 0.12 + 0.1 * kk))
 		CovenantFx.ring(ci, p, 18.0, CovenantFxData.T_FRONT, Color(1.0, 1.0, 1.0, 0.95), 1.5, -PI * 0.5, -PI * 0.5 + TAU * kk)
 		var ph := 30.0 + 50.0 * kk  # Pillar height (px).
 		CovenantFx.light_column(ci, p, 8.0 + 2.0 * pulse, ph, Color(1.0, 1.0, 1.0, 0.7 + 0.3 * kk))
@@ -303,7 +303,7 @@ static func draw_suppression(ci: CanvasItem, p: Vector2, radius: float, arm_k: f
 		return
 	var fade := clampf(life_k * 4.0, 0.0, 1.0)  # Fades in the last quarter.
 	if CovenantFx.has(CovenantFx.disc_key(CovenantFxData.SEAL_DISCS, radius)):
-		SpriteBank.draw_disc(ci, p, radius, Color(SEAL, 0.10 * fade))
+		CovenantFx.soft_disc(ci, p, radius, Color(SEAL, 0.10 * fade))
 		CovenantFx.disc(ci, p, radius, CovenantFxData.SEAL_DISCS, Color(1.0, 1.0, 1.0, 0.9 * fade))
 		CovenantFx.orbit(ci, p, radius - CovenantFxData.SEAL_CROSS_INSET, CovenantFxData.SEAL_CROSS, 10, now * 0.5, Color(1.0, 1.0, 1.0, fade))
 		return

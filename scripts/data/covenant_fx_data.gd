@@ -61,6 +61,12 @@ const T_TARGET_ALPHA: float = 0.85  # TUNING (not in GDD)
 ## Smallest warning circle (px) that gets the impact point mark.
 const T_TARGET_MIN_RADIUS: float = 30.0  # TUNING (not in GDD)
 
+## CovenantFx's soft white disc mask (512 px, a 3 px soft rim): every
+## translucent fill of this art, smooth up to the 640 px nova.
+const SOFT_DISC: String = "holy/soft_disc"  # TUNING (not in GDD)
+## Radius (px) below which a fill uses the 64 px shared disc instead.
+const SOFT_DISC_MIN_R: float = 64.0  # TUNING (not in GDD)
+
 # --- Sanctified ground (holy zones, chambers, seals, altars) -----------------------
 
 ## Holy zone discs by baked radius (px): StageDirector draws the one nearest

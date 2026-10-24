@@ -460,7 +460,7 @@ func _draw() -> void:
 		var kk := 1.0 - clampf(nova_left / nova_total, 0.0, 1.0)  # Telegraph progress 0..1.
 		var rr := float(def["nova_radius"])
 		var view := _view_cull()  # Pieces off the view are skipped.
-		SpriteBank.draw_disc(self, nova_center, rr, Color(Palette.GOLD, 0.07 + 0.2 * kk))
+		CovenantFx.soft_disc(self, nova_center, rr, Color(Palette.GOLD, 0.07 + 0.2 * kk))
 		for j in 3:
 			var f := fposmod(now * 0.9 + float(j) / 3.0, 1.0)
 			CovenantFx.ring(self, nova_center, rr * f, CovenantFxData.NOVA_WAVE, Color(1.0, 1.0, 1.0, 0.5 * (1.0 - f) + 0.15 * kk), 1.0,
@@ -471,7 +471,7 @@ func _draw() -> void:
 		for s in nova_safe:
 			if not CovenantFx.disc(self, s, ssr, CovenantFxData.SAFE_DISCS):
 				draw_circle(s, ssr, Color(0.02, 0.05, 0.1, 0.82))
-			SpriteBank.draw_disc(self, s, ssr * 0.6, Color(Palette.COLD_BLUE, 0.12 + 0.08 * sin(now * 8.0)))
+			CovenantFx.soft_disc(self, s, ssr * 0.6, Color(Palette.COLD_BLUE, 0.12 + 0.08 * sin(now * 8.0)))
 		if collapse_on:
 			_draw_collapse_band(collapse_radius(), now)
 		return
@@ -492,7 +492,7 @@ func _draw() -> void:
 	elif nova_glow_left > 0.0:
 		var g := nova_glow_left / NOVA_AFTERGLOW  # Afterglow 1..0.
 		for s in nova_safe:
-			SpriteBank.draw_disc(self, s, float(def["nova_safe_radius"]), Color(Palette.COLD_BLUE, 0.25 * g))  # Shared disc texture.
+			CovenantFx.soft_disc(self, s, float(def["nova_safe_radius"]), Color(Palette.COLD_BLUE, 0.25 * g))  # Shared disc texture.
 	if collapse_on:
 		_draw_collapse_band(collapse_radius(), now)
 
@@ -539,7 +539,7 @@ func _draw_teleport_mark(now: float) -> void:
 	if CovenantFx.has(CovenantFxData.LIGHT_COLUMN) and CovenantFx.has(CovenantFxData.T_FRONT):
 		# Pixel art (CovenantFx): a disc of light filling in, a white-gold ring
 		# closing on the spot, a dashed gold landing ring, a column rising.
-		SpriteBank.draw_disc(overlay, c, rr * (0.4 + 0.6 * k), Color(Palette.IVORY, 0.15 + 0.3 * k))
+		CovenantFx.soft_disc(overlay, c, rr * (0.4 + 0.6 * k), Color(Palette.IVORY, 0.15 + 0.3 * k))
 		CovenantFx.ring(overlay, c, rr * (2.6 - 1.6 * k), CovenantFxData.T_FRONT, Color(1.0, 1.0, 1.0, 0.5 + 0.4 * k), 1.5)
 		CovenantFx.ring(overlay, c, rr, CovenantFxData.AURA_DASH, Color(1.0, 1.0, 1.0, 0.85), 1.0)
 		var cw := rr * (0.5 + 0.3 * sin(now * 18.0) * k)  # Column half-width (px).

@@ -581,7 +581,7 @@ func _draw_zone(z: HolyZone, now: float) -> void:
 	var pulse := 0.5 + 0.5 * sin(now * 4.0 + z.pos.x * 0.01)
 	var sigil := CovenantFx.disc_key(CovenantFxData.ZONE_DISCS, z.radius)  # Baked zone art.
 	if CovenantFx.has(sigil):
-		SpriteBank.draw_disc(self, z.pos, z.radius, Color(Palette.GOLD, (0.14 + 0.06 * pulse) * fade))
+		CovenantFx.soft_disc(self, z.pos, z.radius, Color(Palette.GOLD, (0.14 + 0.06 * pulse) * fade))
 		CovenantFx.disc(self, z.pos, z.radius, CovenantFxData.ZONE_DISCS, Color(1.0, 1.0, 1.0, CovenantFxData.ZONE_ALPHA * fade))
 		CovenantFx.orbit(self, z.pos, z.radius - CovenantFxData.ZONE_GLINT_INSET, CovenantFxData.GLINT, CovenantFxData.ZONE_GLINTS,
 			now * 0.4, Color(1.0, 1.0, 1.0, (0.6 + 0.4 * pulse) * fade))

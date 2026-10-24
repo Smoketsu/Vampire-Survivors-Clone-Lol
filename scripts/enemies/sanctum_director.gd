@@ -475,7 +475,7 @@ func _draw() -> void:
 func _draw_chamber(c: Chamber, now: float) -> void:
 	var pulse := 0.5 + 0.5 * sin(now * 3.0 + c.pos.x * 0.01)
 	if CovenantFx.has(CovenantFx.disc_key(CovenantFxData.CHAMBER_DISCS, c.radius)):
-		SpriteBank.draw_disc(self, c.pos, c.radius, Color(Palette.GOLD, 0.07 + 0.03 * pulse))
+		CovenantFx.soft_disc(self, c.pos, c.radius, Color(Palette.GOLD, 0.07 + 0.03 * pulse))
 		CovenantFx.disc(self, c.pos, c.radius, CovenantFxData.CHAMBER_DISCS, Color(1.0, 1.0, 1.0, CovenantFxData.CHAMBER_ALPHA))
 		CovenantFx.orbit(self, c.pos, c.radius - CovenantFxData.CHAMBER_RUNE_INSET, CovenantFxData.RUNE, 12, now * 0.25,
 			Color(1.0, 1.0, 1.0, 0.75 + 0.25 * pulse))
@@ -483,7 +483,7 @@ func _draw_chamber(c: Chamber, now: float) -> void:
 			if not c.down[i]:
 				CovenantFx.ray_strip(self, c.crystal_pos[i], c.pos, CovenantFxData.LIGHT_BEAM, 5.0,
 					now * CovenantFxData.LIGHT_BEAM_SCROLL, Color(1.0, 1.0, 1.0, 0.45 + 0.3 * pulse))
-		SpriteBank.draw_disc(self, c.pos, 10.0 + 3.0 * pulse, Color(Palette.IVORY, 0.3))
+		CovenantFx.soft_disc(self, c.pos, 10.0 + 3.0 * pulse, Color(Palette.IVORY, 0.3))
 		return
 	draw_circle(c.pos, c.radius, Color(Palette.GOLD, 0.07 + 0.03 * pulse))
 	draw_arc(c.pos, c.radius, 0.0, TAU, 64, Color(Palette.IVORY, 0.7), 2.0)
@@ -520,7 +520,7 @@ func _draw_altar_sigil(al: Altar, now: float) -> void:
 	var r := al.enemy.radius * 2.4
 	var pulse := 0.5 + 0.5 * sin(now * 2.5 + al.pos.y * 0.02)
 	if CovenantFx.has(CovenantFx.disc_key(CovenantFxData.ALTAR_DISCS, r)):
-		SpriteBank.draw_disc(self, al.pos, r, Color(Palette.GOLD, 0.06 + 0.04 * pulse))
+		CovenantFx.soft_disc(self, al.pos, r, Color(Palette.GOLD, 0.06 + 0.04 * pulse))
 		CovenantFx.disc(self, al.pos, r, CovenantFxData.ALTAR_DISCS, Color(1.0, 1.0, 1.0, 0.85))
 		CovenantFx.orbit(self, al.pos, r * 0.8, CovenantFxData.RAY, 4, now * 0.5, Color(1.0, 1.0, 1.0, 0.7), true)
 		return
@@ -539,7 +539,7 @@ func _draw_dawn(now: float) -> void:
 	var c := game.player.position
 	var pulse := 0.5 + 0.5 * sin(now * 1.5)
 	for i in 4:
-		SpriteBank.draw_disc(self, c, 520.0 - 110.0 * float(i), Color(light, 0.035 + 0.01 * pulse))  # Shared disc texture: no per-frame polygon.
+		CovenantFx.soft_disc(self, c, 520.0 - 110.0 * float(i), Color(light, 0.035 + 0.01 * pulse))  # Shared disc texture: no per-frame polygon.
 	if CovenantFx.has(CovenantFxData.DAWN_SHAFT):
 		# Pixel-art light shafts (CovenantFx), each turned to its angle: root
 		# 80 px out, 480 px long, as wide as the code's polygon at its far end.

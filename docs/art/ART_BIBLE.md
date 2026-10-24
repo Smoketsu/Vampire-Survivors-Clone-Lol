@@ -984,7 +984,7 @@ got pixel art, exactly like the empowered graves: each drawing site names its ke
 `scripts/data/marker_art_data.gd` (`MarkerArtData`, with the placement numbers), draws it through
 `SpriteBank.draw()` / `draw_flat()` / `draw_rising()` / the icon path, and **keeps its code drawing as
 the fallback** when the PNG is missing. Rings, telegraphs, zones, glows and progress arcs stay in code
-(the rally's closing ring, the brand's turning sigil, the stun ring, the nova's safe rings, the cold
+(retired for the Covenant's area effects: see "Act I enemy AoE art" below) (the rally's closing ring, the brand's turning sigil, the stun ring, the nova's safe rings, the cold
 disc under the ice shell, the ember glow under a burning boulder). Flat sprites are drawn 1:1 without
 a shadow (`SpriteData.FLAT_SIZES` = the longest side); the two wall segments and the stone still are
 world sprites (`SpriteData.HEIGHTS`). Purely visual: no gameplay state, no RNG (the corpse variant is
@@ -1308,6 +1308,58 @@ Tips:
   the AI drifts, ask it to "redraw the same effect with identical centre and design in every frame,
   only the expansion changes", or send the sheet to Claude.
 - A short GIF works as well as a sheet; send whichever comes out cleaner.
+
+
+### Act I enemy AoE art (Covenant telegraphs, holy ground, Seraphine's hazards; Oct 2026)
+
+GDD §15.0 "Act I enemy AoE art". The old rule "rings, telegraphs, zones and glows stay in code" is
+**retired for these effects**. Every piece is **procedural pixel art** in the locked palette, made by
+`python3 tools/covenant_aoe_art.py` (deterministic; `--review DIR` writes the 1× / ×4 / GIF review
+images) and drawn by `CovenantFx` (`scripts/fx/covenant_fx.gd`; keys and numbers in
+`scripts/data/covenant_fx_data.gd`), always with the code shape as the fallback. Rules of this family:
+
+- **Crisp at any size:** nothing big is stretched. Band pieces are tiled at 1:1 along the exact danger
+  edge (row 0 outside, turned along the edge); the hatch is a seamless 8 px tile laid as 2 px rows clipped
+  to the shape (circle, cone) or one turned rect (lane); discs are baked at the radii the game uses and
+  drawn at radius / baked radius (×1 for the shipped radii).
+- **Readability:** the danger shape is the exact hit shape: a gold band with crimson teeth pointing into
+  the danger on the edge, the hatch over the whole area, denser (with a tint) inside the part the timing
+  has filled, a holy-white timing front, chevrons along a lane lit as the timing passes them.
+- **Alpha:** telegraph pieces, stills and strips are fully opaque or transparent; translucent ground
+  pieces (zones, chambers, seals, the scorch, smoke, fog, glow, columns) use 2-4 stepped alpha levels
+  (`art_check.py` flags them on purpose). Grey masks (`structure_break`, the smoke banks, the soft disc)
+  are tinted in the game.
+- **Colour:** Covenant gold, light gold, holy white and crimson with warm ink; the cleansed chamber is the
+  player's violet and soul green (his corruption); Seraphine's safe circles cold blue and ice.
+
+| Key | Subject | Art px | Drawn by |
+|---|---|---|---|
+| `telegraphs/edge`, `edge_tooth` | Warning band piece (ink rim, 4 px gold band with a holy-white heart, dark crimson inner row) and the same with a crimson tooth into the danger (every other piece) | 10 × 6 / 10 × 10 | `CovenantFx.ring()` / `edge_run()` in every shared telegraph, the nova edge |
+| `telegraphs/front` | Timing front (holy white in gold) | 8 × 3 | circle / cone at r × progress, across a lane; pillar and teleport rings |
+| `telegraphs/hatch` | Seamless diagonal warning stripes | 8 × 8 | `hatch_disc()`, `hatch_sector()`, lanes |
+| `telegraphs/chevron`, `target` | Lane direction chevron; impact point mark | 11 × 13, 13 × 13 | lanes, Seraphine's sweep arrows; warning circles ≥ 30 px |
+| `holy/zone_62`, `_85`, `_105` | Holy zone rune circle: script ribbon, eight-point star, inner ring, ivory cross | 130-216 | `StageDirector._draw_zone()` (+ 8 turning `holy/glint`) |
+| `holy/chamber_220` | Sanctified chamber: grouted gold / ivory mosaic rim with crimson tesserae, inlay star, diamond inlays, sun mosaic | 446 | `SanctumDirector._draw_chamber()` (+ 12 turning `holy/rune`, `holy/light_beam` rays) |
+| `holy/cleansed_220` | Cleansed chamber: ragged violet rot stain, blotches, soul-green cracks | 446 | `_draw_cleansed()` |
+| `holy/seal_160`, `_220` | Suppression seal: ivory script ribbon, dashed ring, studs, twelve-point star | 326 / 446 | `SanctumGlyphs.draw_suppression()` (+ 10 turning `holy/seal_cross`) |
+| `holy/altar_48` | Altar sigil ribbon, dashed ring, four diamonds | 102 | `_draw_altar_sigil()` (+ 4 turning `holy/ray`) |
+| `holy/glint`, `rune`, `seal_cross`, `ray` | Four-point star, mosaic diamond, gold cross, short ray | 7-10 | orbiting pieces, lash tip, pillar crown, sun ticks, Seraphine's halo |
+| `holy/aura_dash`, `rally_edge`, `warn_line` | Dashed aura ring piece, crimson ring piece, dashed beam warning | 12 × 2, 8 × 3, 8 × 3 | Banner / Standard / Paladin reach, beam range; Call to Arms ring, zeal ring; beam warnings |
+| `holy/light_beam`, `beam_core`, `beam_glow`, `beam_cap` | Thin light ray; great beam body (24 px), its stepped glow, its blazing head | 8 × 5, 16 × 24, 8 × 16, 32 × 32 | crystal rays, Sentinel blade; `CovenantFx.great_beam()` (Guardian, Seraphine) |
+| `holy/light_column`, `sunburst`, `guardian_fist` | Light column (stretched), casting sunburst, the Guardian's raised stone fist | 24 × 64, 18, 16 × 15 | revival pillar, teleport mark; casters; slam windup |
+| `overlays/holy_shield` | High Confessor's shield bubble | 40 | `SanctumGlyphs.draw_holy_shield()` scaled to r × 1.35 |
+| `holy/wrath_halo` | Alaric's Wrath flame ring (r 35 = 1.6 × his radius) | 86 | `BossAlaric._draw_under()` |
+| `holy/lash` | Sister's lash cord piece | 6 × 4 | `SisterGlyphs.draw_lash_windup()` |
+| `holy/nova_wave`, `safe_62`, `safe_rim_62`, `safe_tick` | Nova pulse dash; safe circle ground (cold hole, pool, ice crosses), its icy rim, countdown piece | 12 × 3, 130, 142, 6 × 4 | `SeraphineHazards._draw()` / `_draw_overlay()` |
+| `holy/collapse_edge`, `collapse_flame`, `collapse_scorch` | Burning edge piece; 6-frame flame tongue strip; burning ground with a 128 px hole | 12 × 6, 6 × (12 × 30), 512 | collapsing arena; Last Light aura |
+| `holy/smoke_bank` (+ `_2`, `_3`) | Zone-change smoke (grey masks) | 120-176 | `MarchDirector._draw()` |
+| `holy/dawn_shaft`, `holy/soft_disc` | Dawn's Wrath shaft; 512 px soft disc mask (smooth alpha, not pixel art) | 64 × 240, 512 | `_draw_dawn()`; `CovenantFx.soft_disc()` (every big translucent fill) |
+| `decals/graveyard_fog` (+ `_2`, `_3`) | Wispy fog patch, stepped faint soul-green alphas | 112-144 wide | `Ground._draw_cell()` on the tile floor |
+| `effects/boss_death` | Boss falls: holy flash, cross of rays, gold ring breaking into motes | 10 × 256 | `EnemyDirector.on_enemy_killed()` impact |
+| `effects/vael_cleave`, `sentinel_sweep` | Crescent swing (holy flame; ivory gold), turned toward the swing | 6 × 128 | `EffectManager.slash(..., anim)` |
+| `effects/structure_break` | Flash, splinters, dust ring (grey mask, tinted) | 8 × 128 | March structures, ward crystals, altars |
+
+Review folder for the owner: `docs/art/act1_enemy_review/` (`manifest.json`).
 
 ### Gullhaven Harbour (Act II, Stage 4; Oct 2026)
 

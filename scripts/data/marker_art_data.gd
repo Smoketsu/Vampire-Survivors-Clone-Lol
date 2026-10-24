@@ -3,7 +3,8 @@
 ## batch"): the small world markers, overlays and spell props that were still
 ## drawn in code. Each drawing site asks SpriteBank for its key first and keeps
 ## its code drawing as the fallback when the PNG is missing; rings, telegraphs,
-## zones, glows and progress arcs stay in code. Sizes of the flat sprites are in
+## zones, glows and progress arcs stay in code (retired for the Covenant's area
+## effects: CovenantFxData, GDD §15.0 "Act I enemy AoE art"). Sizes of the flat sprites are in
 ## SpriteData.FLAT_SIZES, of the world sprites in SpriteData.HEIGHTS. Purely
 ## visual: nothing here touches gameplay state or RNG. Data only, no logic.
 class_name MarkerArtData

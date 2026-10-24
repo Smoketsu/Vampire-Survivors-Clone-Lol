@@ -1013,6 +1013,23 @@ def h_fog(i: int) -> Canvas:
     return cv
 
 
+def h_soft_disc() -> Canvas:
+    """holy/soft_disc: a 512 px white disc with a 3 px soft rim (a smooth alpha mask, not pixel art):
+    CovenantFx.soft_disc() tints it for every translucent fill (holy zones, chambers, seals, the
+    640 px nova glow), large enough that the sharp-pixel shader shows no stair steps."""
+    n = 512
+    cv = Canvas(n, n)
+    mid = (n - 1) / 2.0
+    rad = n / 2.0 - 1.0
+    for y in range(n):
+        for x in range(n):
+            d = math.hypot(x - mid, y - mid)
+            a = max(0.0, min(1.0, (rad - d) / 3.0 + 0.5))
+            if a > 0:
+                cv.put(x, y, (255, 255, 255), int(round(a * 255)))
+    return cv
+
+
 def h_dawn_shaft() -> Canvas:
     """holy/dawn_shaft: one shaft of Dawn's Wrath light (the Sanctum's Reckoning), 64 x 240 from
     its narrow root (bottom) to its wide end (top), three faint stepped alphas of light gold."""
@@ -1209,6 +1226,7 @@ ASSETS = {
     "holy/smoke_bank": (lambda: h_smoke(0), "still", 1, "Zone-change smoke bank (grey mask tinted with the stage's bank colour), variant 1"),
     "holy/smoke_bank_2": (lambda: h_smoke(1), "still", 1, "Zone-change smoke bank, variant 2"),
     "holy/smoke_bank_3": (lambda: h_smoke(2), "still", 1, "Zone-change smoke bank, variant 3"),
+    "holy/soft_disc": (h_soft_disc, "disc", 1, "Soft disc mask (512 px, smooth alpha): the tinted translucent fill under the holy circles and the nova"),
     "holy/dawn_shaft": (h_dawn_shaft, "still", 1, "Dawn's Wrath light shaft (64 x 240, root at the bottom): faint stepped light gold"),
     "overlays/holy_shield": (h_shield, "disc", 1, "High Confessor's holy shield (40 px bubble): gold ring, ink rim, a pale holy film and a top-left highlight arc"),
     "decals/graveyard_fog": (lambda: h_fog(0), "still", 1, "Graveyard fog patch (112 px): wispy, three faint stepped soul-green alphas (was a hard flat teal disc)"),

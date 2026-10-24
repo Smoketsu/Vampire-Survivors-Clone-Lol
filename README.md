@@ -1904,6 +1904,12 @@ departure puff (`grave_step_trail`) are wired so far.
 The bullet heaven volleys use **grey tint masks** instead (`assets/sprites/volleys/<style>.png` and the
 `volley_hit` / `volley_flash` strips, made with `python3 tools/volley_art.py shot|strip ...`): the game
 tints them with each class's colour and draws them additively.
+The Covenant's **area effects** (every boss / elite warning circle, lane and cone in every act, holy
+zones, sanctified and cleansed chambers, suppression seals, aura rings, Seraphine's nova, beams and
+collapsing arena, the Cathedral Guardian's beam, the Confessor's pillar and shield, the Graveyard fog)
+are procedural pixel art made by `python3 tools/covenant_aoe_art.py` and drawn by `CovenantFx`: band
+pieces tiled at 1:1 along the exact danger edge, a hatch tile clipped to the shape row by row, discs baked
+at the radii the game uses, so they stay crisp at any size (GDD §15.0 "Act I enemy AoE art").
 
 **Engine motion (tier 0, art pass).** Every unit is still one image, so the engine animates it
 procedurally: a **step bob** matched to its real speed, a small **lean** into the movement, a
@@ -2282,6 +2288,7 @@ scripts/
   fx/dread_vignette.gd      Act II: the screen edges darkening with Dread (visual only)
   fx/tide_water.gdshader    Gullhaven: the water, foam, seawall lip and surge drawn from the same test as TideDirector
   fx/sharp_pixel.gdshader   The sharp-pixel filter: grid pixel art (and the pixel fonts) crisp at any window scale
+  fx/covenant_fx.gd         CovenantFx: the Covenant's area-effect pixel art (shared telegraphs, holy ground, Seraphine's hazards): tiles along edges, clipped hatch rows, baked discs
   fx/flat_silhouette.gdshader  Pixel art as one flat colour (the Codex's unmet entries), sharp-pixel sampling
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
@@ -2459,6 +2466,7 @@ scripts/
     anim_data.gd            One-shot effect animations: strip ids, frame timing and fill
     decal_data.gd           Floor decal keys and drawing numbers (Ground, MarchGround, SanctumGround)
     marker_art_data.gd      Pixel-art keys and placement of the world markers, overlays and spell props (rally pennant, ice shell, brands, corpses, bone walls, boulders)
+    covenant_fx_data.gd     Keys and drawing numbers of the Covenant's area-effect art (CovenantFx)
     boss_pose_data.gd       Which attack-pose sprite each stage boss shows per attack phase
     view_data.gd            Camera zoom levels (Normal / Close) and the player's ground marker
     ui_art_data.gd          The UI kit and logo (9-slice margins, crests), pixel font sizes, the type tiers

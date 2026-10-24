@@ -78,6 +78,22 @@ static func _reset(ci: CanvasItem) -> void:
 	ci.draw_set_transform_matrix(base)
 
 
+## Draws a filled translucent disc of radius `r` (px) at `c`: the look of
+## draw_circle() without its per-redraw polygon. It uses the 512 px soft disc
+## mask CovenantFxData.SOFT_DISC rather than SpriteBank.disc() (64 px): the
+## nodes that draw this art carry the sharp-pixel shader, which draws a
+## magnified texture as crisp texels, so a 640 px nova glow from the small
+## shared disc would show 10 px stair steps. Small discs (radius under
+## CovenantFxData.SOFT_DISC_MIN_R, where the big mask would be minified without
+## mipmaps) and a missing mask use SpriteBank.draw_disc().
+static func soft_disc(ci: CanvasItem, c: Vector2, r: float, color: Color) -> void:
+	var t := tex(CovenantFxData.SOFT_DISC)  # Soft disc mask, or null.
+	if t == null or r < CovenantFxData.SOFT_DISC_MIN_R:
+		SpriteBank.draw_disc(ci, c, r, color)
+		return
+	ci.draw_texture_rect(t, Rect2(c - Vector2(r, r), Vector2(r, r) * 2.0), false, color)
+
+
 ## The key in `discs` (baked radius -> key) whose radius is nearest `r` (px);
 ## "" when `discs` is empty.
 static func disc_key(discs: Dictionary, r: float) -> String:
@@ -315,10 +331,10 @@ static func telegraph_circle(ci: CanvasItem, c: Vector2, r: float, k: float, col
 		return false
 	k = clampf(k, 0.0, 1.0)
 	_reset(ci)
-	SpriteBank.draw_disc(ci, c, r, Color(color, CovenantFxData.T_BASE_ALPHA))
+	CovenantFx.soft_disc(ci, c, r, Color(color, CovenantFxData.T_BASE_ALPHA))
 	hatch_disc(ci, c, r, Color(1.0, 1.0, 1.0, CovenantFxData.T_HATCH_ALPHA))
 	if k > 0.02:
-		SpriteBank.draw_disc(ci, c, r * k, Color(color, CovenantFxData.T_FILL_TINT))
+		CovenantFx.soft_disc(ci, c, r * k, Color(color, CovenantFxData.T_FILL_TINT))
 		hatch_disc(ci, c, r * k, Color(1.0, 1.0, 1.0, CovenantFxData.T_FILL_ALPHA))
 		ring(ci, c, r * k, CovenantFxData.T_FRONT, Color(1.0, 1.0, 1.0, CovenantFxData.T_FRONT_ALPHA), 1.5)
 	if r >= CovenantFxData.T_TARGET_MIN_RADIUS:

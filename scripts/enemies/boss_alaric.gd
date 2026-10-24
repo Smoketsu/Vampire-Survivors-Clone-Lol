@@ -235,6 +235,7 @@ func _begin_special(id: String, next_phase: Phase) -> void:
 func _enter_wrath() -> void:
 	enraged = true
 	_force_call = true
+	queue_redraw()  # The Wrath halo appears under him (his ground layer redraws only on a change; visual only).
 	game.enemies.show_banner(String(boss_def["phase2_banner"]))
 	game.effects.impact(position, radius * 3.0, Palette.GOLD)
 	game.stat_add("boss_phase2", 1.0)
