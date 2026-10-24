@@ -304,6 +304,15 @@ RIGS = {
     "player/rust_prophet": dict(mode="robe", hip=40, rigid=[(30, 42, 0, None)], sway=1, dip=1),
     "summons/iron_revenant": dict(mode="legs", hip=34, back=(0, 26), front=(26, 58), rigid=[], spread=2, lift=2, dip=1),
     "summons/deus_revenant": dict(mode="legs", hip=44, back=(0, 27), front=(27, 66), rigid=[], spread=2, lift=2, dip=1),  # Round 1 redo (simpler drawing).
+    # --- Act IV: the Olympian Republic (the shared kinds) ---
+    # The Shade of the Dead hovers (a ghost: the whole sprite bobs 2 px, nothing steps; the
+    # still keeps two empty rows on top). The Hoplite marches, his upright spear (cols 2-5)
+    # rigid; the Hero strides, the low hem of his blue cloak (left of his back leg) rigid; the
+    # Bronze Titan stomps, both huge low fists hanging below the hip ride with the body.
+    "pantheon/shade_of_dead": dict(mode="hover", bob=2, parts=[]),
+    "pantheon/hoplite": dict(mode="legs", hip=42, back=(0, 17), front=(17, 30), rigid=[(2, 6, 0, None)], spread=2, lift=2, dip=1),
+    "pantheon/hero": dict(mode="legs", hip=41, back=(0, 31), front=(31, 58), rigid=[(0, 17, 41, 48)], spread=2, lift=2, dip=1),
+    "pantheon/bronze_titan": dict(mode="legs", hip=66, back=(0, 35), front=(35, 72), rigid=[(0, 18, 66, 73), (52, 72, 66, 72)], spread=2, lift=3, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

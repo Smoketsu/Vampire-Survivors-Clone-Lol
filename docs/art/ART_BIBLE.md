@@ -108,6 +108,9 @@ marked * are borrowed from another ramp. Numbers are OKLab lightness (0-1). A la
 | **flame** | ink_red* `#26070C` 0.19 · crimson* `#C71A29` 0.53 · flame `#FF8C26` 0.75 · gold_light* `#FFDC66` 0.90 | fire and embers |
 | **chrome** (Act III) | ink_chrome `#0B1220` 0.18 · chrome_dark `#2C3A50` 0.35 · chrome `#5B7397` 0.55 · chrome_light `#9DB6D6` 0.77 · chrome_glint `#E2EEFF` 0.95 | the Electronic Empire's machines and cyborg plating (bluer, more polished than the undead grey) |
 | **signal** (Act III) | ink_signal `#240A04` 0.19 · signal_dark `#962410` 0.44 · signal_red `#E0391E` 0.60 · signal_amber `#FFAE1A` 0.81 · signal_glow `#FFEBA8` 0.94 | the Empire's lights, lasers, visors, screens and tracers (more orange than the Covenant crimson) |
+| **bronze** (Act IV) | bronze_ink `#1E1408` 0.20 · bronze_dark `#6B4423` 0.42 · bronze `#A8702E` 0.59 · bronze_light `#E0A955` 0.77 | the Olympian Republic's bronze: helmets, cuirasses, round shields, the Titans (warmer and duller than the gold, which keeps its meaning) |
+| **marble** (Act IV) | bronze_ink* `#1E1408` 0.20 · marble_dark `#8E8A86` 0.64 · marble `#CFCBC4` 0.84 · marble_light `#F4F1EA` 0.96 | the Republic's marble white: linen, crests, statues, the pale shades of the dead (cooler and greyer than the bone ivory) |
+| **aegean** (Act IV) | ink_cold* `#0F141C` 0.19 · aegean_dark `#123E66` 0.36 · aegean `#2C77B8` 0.56 · aegean_light `#6FB6E8` 0.75 | the Republic's Aegean blue: cloaks, crests, emblems, the gods' pale glow (eyes); apart from the arcane blue and the ice |
 | **floor** | floor_soil `#161A1C` 0.21 · floor_earth `#221C17` 0.23 · floor_grass `#1A2218` 0.24 · floor_ochre `#2E2615` 0.27 · floor_slate `#26272A` 0.27 · floor_ash `#2A2724` 0.28 · floor_dirt `#30261B` 0.28 · floor_moss `#26301F` 0.29 · floor_marble `#2D2E33` 0.30 · floor_stone `#312E2B` 0.30 | ground colours of the three stages (tiles only, never sprites); the seven middle shades came with the zone floor tiles |
 
 `prepare_sprite.py` limits each folder to its faction's ramps (player: everything but skin and warm
@@ -1898,3 +1901,43 @@ blades poses without the crease between rear and thigh and with thicker thighs, 
 fixed so the feet stay whole, the Deathlord Abbess's bounce box 1 px right. All by hand on the existing
 PNGs (deterministic scripts, no image generation, $0); strips rebuilt with `walk_cycle.py`. Each key's
 row above carries a "Round 2 redo" note. **For the owner's review.**
+
+### Act IV: the Olympian Republic, the shared kinds (foundation, Oct 2026)
+
+<!-- --- Act IV: the Olympian Republic --- -->
+The Republic's style for the stage agents (GDD §15.0 "Act IV art: the shared kinds"; `docs/act4/PROPOSAL.md`):
+**bronze** armour (the new `bronze` ramp, warm and dull, so the existing `gold` keeps its meaning: evolution, chest,
+victory and Glory, worn only by heroes and gods), **marble** white for linen, crests, statues and the dead (the new
+`marble` ramp, cooler and greyer than the undead's bone ivory), **Aegean blue** for cloaks, crests and emblems and as
+the gods' pale glow (the new `aegean` ramp; eyes and cracks of light, never the undead's soul teal or arcane blue),
+skin on faces and arms, brown wood for spear shafts. Hard, clean silhouettes with one big signature shape each (the
+hoplite's round aspis, the hero's plume and cloak, the Titan's shoulders and fists, the shade's hood and tail). Never
+the player's violet, the undead's bone or teal, or the Covenant's crimson and warm steel. `prepare_sprite.py` folder
+`pantheon/`: ramps bronze, marble, aegean, gold, skin, brown. Concept references: `art_source/concepts/act4_lineup.png`
+(costumes), prompts beside each source in `art_source/pantheon/<id>.txt` (the template above, the sex named).
+
+Generated with `tools/gen_image.py` (`--ref` the Line Trooper's source for the pixel look, plus a crop of the concept
+lineup for the hoplite and the hero, the hoplite's own source for the shade and the Titan). The sources come back on
+the grid at ~12 source px per art px (~78 art px figures) with a dark glow. Pipeline that worked (better than
+`pixelate_source.py` here, which blurred the bronze into mud): a **pre-snap** (alpha cut 230; skin found by
+`skin_cap.skin_mask()` set to exactly `skin` / `brown_light`; near-white, low-saturation pixels set to the nearest
+marble shade, so plumes, linen and the shade never snap to the bone ivory), then `prepare_sprite.py` straight on the
+source with `--ink-l 0.15` and an explicit `--ramps` (levels on for the hoplite, shade and Titan; `--no-levels` for
+the hero, whose gold sank to bronze with levels). Scripted hand touch-ups (palette colours only): the hoplite's aspis
+repainted as a clean disc (ink ring, dark rim, bronze face lit top-left, a big Aegean boss: the Phalanx's front must
+read) and a face in his helmet (eye slit, cheek, beard); the shade's fold noise flattened by a 3x3 majority filter, a
+dark hood opening with two Aegean eyes painted, two empty rows added on top for the hover bob. Walk / hover strips by
+`walk_cycle.py` (rigs under `# --- Act IV ---`). 4 API images, about $0.12. All four pass `art_check.py` (0 fail, 0
+warning). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `pantheon/shade_of_dead` | Shade of the Dead (fodder, male): a pale ghost in a marble-grey burial shroud pulled up as a hood, a dark face opening with two pale Aegean eyes, both arms reaching forward, no legs: the shroud tapers into a curling wisp tail | 40x36 | hover (`_walk`: the whole ghost bobs 2 px; the still keeps two empty rows on top, body 34) |
+| `pantheon/hoplite` | Hoplite (soldier, male): bronze Corinthian helmet with a tall Aegean crest, the face in its opening, bronze cuirass over a marble linen tunic, a big round bronze aspis held forward (Aegean boss), an upright spear | 30x56 | legs walk (`_walk`, hip 42; the spear rigid). Body ~50 under the spear head |
+| `pantheon/hero` | Hero (elite, male demigod, Hector-like): a gold open-faced helmet with a tall white plume, face and arms in skin, a gold cuirass, bronze greaves, a billowing Aegean-blue cloak, a bronze sword held forward | 58x58 | legs walk (`_walk`, hip 41; the cloak's low hem rigid). Grander than the hoplite: the gold is the hero's (Glory) |
+| `pantheon/bronze_titan` | Bronze Titan (the Reckoning's heavy, male colossus): a walking bronze statue, huge shoulders and low fists, a small crested head with glowing Aegean eyes, Aegean cracks of light on the chest, a marble kilt and marble plinth chunks on his shins and feet | 72x96 | legs walk (`_walk`, hip 66; the low fists ride with the body), lift 3. Stepping out of the ground is drawn by code |
+
+Code-drawn on purpose (phase 1): the wrath telegraphs and strikes, the phalanx's locked shield line, the Glory aura
+and the stubs' placeholder floors and obstacles (`PantheonGlyphs`, `PantheonGround`); phase 2 brings the stages' own
+art (the legionary, wolf, centaur, Amazon, Gorgon and Cyclops from the concept lineup, the female kinds in the
+figure-redesign style with a `bust` box and idle strip).

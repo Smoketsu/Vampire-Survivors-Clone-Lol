@@ -267,6 +267,11 @@ const HEIGHTS: Dictionary = {
 	"player/rust_prophet_deathlord": 60.0,  # TUNING (not in GDD) skin art: his body, the crowned hood and staff above
 	"summons/iron_revenant": 58.0,  # TUNING (not in GDD) a heavy summon (Corpse Catapult 56, Spawn of the Deep 60)
 	"summons/deus_revenant": 70.0,  # TUNING (not in GDD) its evolution, bigger
+	# --- Act IV: the Olympian Republic (the shared kinds; assets/sprites/pantheon/) ---
+	"pantheon/shade_of_dead": 36.0,  # TUNING (not in GDD) fodder: a hooded ghost with a long wisp tail (34) + two empty rows on top for the hover bob (walk_cycle.py "hover")
+	"pantheon/hoplite": 56.0,  # TUNING (not in GDD) soldier tier: body ~50 (crest to sandals), the upright spear head above
+	"pantheon/hero": 58.0,  # TUNING (not in GDD) elite tier: a demigod, the tall plume on top (elites are also drawn larger by the game)
+	"pantheon/bronze_titan": 96.0,  # TUNING (not in GDD) the Reckoning's heavy, bigger than the heavy tier (60-72) and below the minibosses (104+)
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
