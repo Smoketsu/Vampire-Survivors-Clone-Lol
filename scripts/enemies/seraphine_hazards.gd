@@ -441,9 +441,40 @@ func danger_push(p: Vector2) -> Vector2:
 # Drawing
 # =====================================================================================
 
+## The camera's view in world space, grown by a margin (px): the huge rings of
+## the nova and the collapse draw only their pieces inside it (visual only).
+func _view_cull() -> Rect2:
+	if game == null or game.camera == null:
+		return Rect2()
+	var vs := game.view_size()  # Visible world size (px).
+	return Rect2(game.camera.get_screen_center_position() - vs * 0.5, vs).grow(48.0)
+
+
 ## Ground parts: the nova glow and safe circles and the collapse fire band.
+## With the Covenant pixel art (CovenantFx, GDD §15.0 "Act I enemy AoE art"):
+## the nova's glow is the shared disc texture rippled by dashed pulse rings
+## and edged by the telegraph band, each safe circle a baked cold sanctuary.
 func _draw() -> void:
 	var now := game.elapsed if game != null else 0.0  # Animation clock (visual only).
+	if nova_pending and CovenantFx.has(CovenantFxData.NOVA_WAVE) and CovenantFx.has(CovenantFxData.T_EDGE):
+		var kk := 1.0 - clampf(nova_left / nova_total, 0.0, 1.0)  # Telegraph progress 0..1.
+		var rr := float(def["nova_radius"])
+		var view := _view_cull()  # Pieces off the view are skipped.
+		SpriteBank.draw_disc(self, nova_center, rr, Color(Palette.GOLD, 0.07 + 0.2 * kk))
+		for j in 3:
+			var f := fposmod(now * 0.9 + float(j) / 3.0, 1.0)
+			CovenantFx.ring(self, nova_center, rr * f, CovenantFxData.NOVA_WAVE, Color(1.0, 1.0, 1.0, 0.5 * (1.0 - f) + 0.15 * kk), 1.0,
+				0.0, TAU, 0.0, "", 0, view)
+		CovenantFx.ring(self, nova_center, rr, CovenantFxData.T_EDGE, Color(1.0, 1.0, 1.0, 0.7 + 0.3 * kk), CovenantFxData.T_EDGE_ROW,
+			0.0, TAU, 0.0, CovenantFxData.T_EDGE_TOOTH, CovenantFxData.T_TOOTH_EVERY, view)
+		var ssr := float(def["nova_safe_radius"])
+		for s in nova_safe:
+			if not CovenantFx.disc(self, s, ssr, CovenantFxData.SAFE_DISCS):
+				draw_circle(s, ssr, Color(0.02, 0.05, 0.1, 0.82))
+			SpriteBank.draw_disc(self, s, ssr * 0.6, Color(Palette.COLD_BLUE, 0.12 + 0.08 * sin(now * 8.0)))
+		if collapse_on:
+			_draw_collapse_band(collapse_radius(), now)
+		return
 	if nova_pending:
 		var k := 1.0 - clampf(nova_left / nova_total, 0.0, 1.0)  # Telegraph progress 0..1.
 		var r := float(def["nova_radius"])
@@ -461,7 +492,7 @@ func _draw() -> void:
 	elif nova_glow_left > 0.0:
 		var g := nova_glow_left / NOVA_AFTERGLOW  # Afterglow 1..0.
 		for s in nova_safe:
-			draw_circle(s, float(def["nova_safe_radius"]), Color(Palette.COLD_BLUE, 0.25 * g))
+			SpriteBank.draw_disc(self, s, float(def["nova_safe_radius"]), Color(Palette.COLD_BLUE, 0.25 * g))  # Shared disc texture.
 	if collapse_on:
 		_draw_collapse_band(collapse_radius(), now)
 
@@ -477,6 +508,12 @@ func _draw_overlay() -> void:
 		var sr := float(def["nova_safe_radius"])
 		for s in nova_safe:
 			var pulse := 0.5 + 0.5 * sin(now * 10.0)
+			if CovenantFx.disc(overlay, s, sr, CovenantFxData.SAFE_RIMS, Color(1.0, 1.0, 1.0, 0.75 + 0.25 * pulse)):
+				# Pixel art: the baked icy rim, the countdown draining as ice pieces.
+				CovenantFx.ring(overlay, s, sr - 7.0, CovenantFxData.SAFE_TICK, Color(1.0, 1.0, 1.0, 0.9), 2.0, -PI * 0.5, -PI * 0.5 + TAU * (1.0 - k))
+				if not SpriteBank.draw_flat(overlay, MarkerArtData.SANCTUARY_CROSS, s, 0.0, Color(1.0, 1.0, 1.0, MarkerArtData.SANCTUARY_CROSS_ALPHA)):
+					CovenantFx.still(overlay, CovenantFxData.GLINT, s)
+				continue
 			overlay.draw_arc(s, sr, 0.0, TAU, 40, Color(Palette.IVORY, 0.85), 3.0)
 			overlay.draw_arc(s, sr + 4.0 + 3.0 * pulse, 0.0, TAU, 40, Color(Palette.COLD_BLUE, 0.6), 2.0)
 			# Countdown: the inner arc drains as the blast nears.
@@ -499,6 +536,15 @@ func _draw_teleport_mark(now: float) -> void:
 	var k := 1.0 - clampf(tele_left / tele_total, 0.0, 1.0)  # Glow progress 0..1.
 	var c := tele_dest
 	var rr := boss.radius * 1.3  # Landing body size (px).
+	if CovenantFx.has(CovenantFxData.LIGHT_COLUMN) and CovenantFx.has(CovenantFxData.T_FRONT):
+		# Pixel art (CovenantFx): a disc of light filling in, a white-gold ring
+		# closing on the spot, a dashed gold landing ring, a column rising.
+		SpriteBank.draw_disc(overlay, c, rr * (0.4 + 0.6 * k), Color(Palette.IVORY, 0.15 + 0.3 * k))
+		CovenantFx.ring(overlay, c, rr * (2.6 - 1.6 * k), CovenantFxData.T_FRONT, Color(1.0, 1.0, 1.0, 0.5 + 0.4 * k), 1.5)
+		CovenantFx.ring(overlay, c, rr, CovenantFxData.AURA_DASH, Color(1.0, 1.0, 1.0, 0.85), 1.0)
+		var cw := rr * (0.5 + 0.3 * sin(now * 18.0) * k)  # Column half-width (px).
+		CovenantFx.light_column(overlay, c, cw, 70.0 + 50.0 * k, Color(1.0, 1.0, 1.0, 0.35 + 0.55 * k))
+		return
 	overlay.draw_circle(c, rr * (0.4 + 0.6 * k), Color(Palette.IVORY, 0.15 + 0.3 * k))
 	overlay.draw_arc(c, rr * (2.6 - 1.6 * k), 0.0, TAU, 32, Color(Palette.IVORY, 0.5 + 0.4 * k), 2.5)
 	overlay.draw_arc(c, rr, 0.0, TAU, 32, Color(Palette.GOLD, 0.8), 1.5)
@@ -519,6 +565,15 @@ func _draw_beams(now: float) -> void:
 		var o := boss.position + v * boss.radius * 0.8  # Rays leave her body edge (drawn only).
 		if beam_state == 1:
 			var a := 0.45 + 0.35 * sin(now * 14.0)
+			if CovenantFx.ray_strip(overlay, o, o + v * length, CovenantFxData.WARN_LINE, 3.0, now * 40.0, Color(1.0, 1.0, 1.0, a)):
+				# Pixel art (CovenantFx): a dashed warning ray, dashed sides and
+				# chevrons pointing the way it will sweep.
+				CovenantFx.ray_strip(overlay, o + perp * w * 0.5, o + v * length + perp * w * 0.5, CovenantFxData.AURA_DASH, 2.0, 0.0, Color(1.0, 1.0, 1.0, 0.55))
+				CovenantFx.ray_strip(overlay, o - perp * w * 0.5, o + v * length - perp * w * 0.5, CovenantFxData.AURA_DASH, 2.0, 0.0, Color(1.0, 1.0, 1.0, 0.55))
+				for j in 3:
+					var side := perp * beam_dir  # The sweep direction here.
+					CovenantFx.still(overlay, CovenantFxData.T_CHEVRON, o + v * length * (0.4 + 0.25 * float(j)) + side * 8.0, Color(1.0, 1.0, 1.0, a), side.angle())
+				continue
 			overlay.draw_line(o, o + v * length, Color(Palette.GOLD, a), 3.0)
 			overlay.draw_line(o + perp * w * 0.5, o + v * length + perp * w * 0.5, Color(Palette.GOLD, 0.3), 1.0)
 			overlay.draw_line(o - perp * w * 0.5, o + v * length - perp * w * 0.5, Color(Palette.GOLD, 0.3), 1.0)
@@ -530,6 +585,8 @@ func _draw_beams(now: float) -> void:
 				overlay.draw_line(c + side * 14.0, c + side * 2.0 - v * 8.0, Color(Palette.IVORY, a), 2.0)
 		else:
 			var flick := 0.85 + 0.15 * sin(now * 30.0 + float(i))
+			if CovenantFx.great_beam(overlay, o, o + v * length, w, now * CovenantFxData.BEAM_SCROLL, flick):
+				continue  # Pixel art: the great holy beam (CovenantFx).
 			var glow := PackedVector2Array([o + perp * w, o + v * length + perp * w * 1.2, o + v * length - perp * w * 1.2, o - perp * w])
 			overlay.draw_colored_polygon(glow, Color(Palette.GOLD, 0.18 * flick))
 			var body := PackedVector2Array([o + perp * w * 0.5, o + v * length + perp * w * 0.6, o + v * length - perp * w * 0.6, o - perp * w * 0.5])
@@ -537,13 +594,31 @@ func _draw_beams(now: float) -> void:
 			overlay.draw_line(o, o + v * length, Color(Palette.IVORY, 0.95), w * 0.3)
 			overlay.draw_circle(o + v * length, w * 0.6, Color(Palette.IVORY, 0.5 * flick))
 	if beam_state == 1:
-		overlay.draw_arc(boss.position, float(def["beams_length"]), 0.0, TAU, RING_SEGMENTS, Color(Palette.GOLD, 0.25), 1.5)
+		if not CovenantFx.ring(overlay, boss.position, float(def["beams_length"]), CovenantFxData.AURA_DASH, Color(1.0, 1.0, 1.0, 0.45), 1.0):
+			overlay.draw_arc(boss.position, float(def["beams_length"]), 0.0, TAU, RING_SEGMENTS, Color(Palette.GOLD, 0.25), 1.5)
 
 
 ## Ground fire band of the collapse: hot at the edge, a steady burn beyond,
 ## and a faint ring where the circle will stop shrinking.
 func _draw_collapse_band(r: float, now: float) -> void:
 	var c := collapse_center
+	var scorch := CovenantFx.tex(CovenantFxData.COLLAPSE_SCORCH)  # Pixel-art burning ground, or null.
+	if scorch != null:
+		# The scorch square scaled so its hole is the arena, then the far burn
+		# as four plain rects out to FIRE_BAND past the edge (no polygons).
+		var half := float(scorch.get_width()) * 0.5 * r / CovenantFxData.COLLAPSE_SCORCH_HOLE  # Square half-size (px).
+		SpriteBank.apply_sharp(self)
+		draw_texture_rect(scorch, Rect2(c - Vector2(half, half), Vector2(half, half) * 2.0), false)
+		var outer := r + FIRE_BAND  # Far edge of the burn (px).
+		if outer > half:
+			var far := CovenantFxData.COLLAPSE_FAR
+			draw_rect(Rect2(c.x - outer, c.y - outer, outer * 2.0, outer - half), far)
+			draw_rect(Rect2(c.x - outer, c.y + half, outer * 2.0, outer - half), far)
+			draw_rect(Rect2(c.x - outer, c.y - half, outer - half, half * 2.0), far)
+			draw_rect(Rect2(c.x + half, c.y - half, outer - half, half * 2.0), far)
+		CovenantFx.ring(self, c, float(def["collapse_end_radius"]), CovenantFxData.AURA_DASH, Color(1.0, 1.0, 1.0, 0.35 + 0.1 * sin(now * 3.0)), 1.0,
+			0.0, TAU, 0.0, "", 0, _view_cull())
+		return
 	var hot := Color(1.0, 0.62, 0.2, 0.55)
 	var warm := Color(1.0, 0.45, 0.1, 0.28)
 	_annulus(c, r, r + 70.0, hot, warm)
@@ -554,6 +629,19 @@ func _draw_collapse_band(r: float, now: float) -> void:
 ## Bright flames along the collapse edge (over the bodies).
 func _draw_collapse_flames(r: float, now: float) -> void:
 	var c := collapse_center
+	if CovenantFx.has(CovenantFxData.COLLAPSE_FLAME) and CovenantFx.has(CovenantFxData.COLLAPSE_EDGE):
+		# Pixel art (CovenantFx): the burning edge band and flame tongues
+		# licking inward, each on its own frame offset; off-view pieces skipped.
+		var view := _view_cull()
+		CovenantFx.ring(overlay, c, r, CovenantFxData.COLLAPSE_EDGE, Color.WHITE, 3.0, 0.0, TAU, 0.0, "", 0, view)
+		var n := maxi(12, int(TAU * r / CovenantFxData.COLLAPSE_FLAME_PITCH))  # Tongues round the edge.
+		for j in n:
+			var a := TAU * float(j) / float(n) + now * 0.05
+			var foot := c + Vector2.from_angle(a) * (r + 3.0)
+			if view.size != Vector2.ZERO and not view.has_point(foot):
+				continue
+			CovenantFx.flame_tongue(overlay, foot, a + PI, now, (j * 7) % CovenantFxData.COLLAPSE_FLAME_FRAMES)
+		return
 	overlay.draw_arc(c, r, 0.0, TAU, RING_SEGMENTS * 2, Color(Palette.IVORY, 0.9), 3.0)
 	overlay.draw_arc(c, r + 5.0, 0.0, TAU, RING_SEGMENTS * 2, Color(Palette.FLAME, 0.8), 4.0)
 	for j in FLAME_TONGUES:

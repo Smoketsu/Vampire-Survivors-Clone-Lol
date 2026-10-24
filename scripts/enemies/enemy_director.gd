@@ -911,7 +911,7 @@ func on_enemy_killed(e: Enemy) -> void:
 	e.deactivate()
 	if e.is_boss:
 		# Big reward burst (user brief: no longer the win condition).
-		game.effects.impact(e.position, 120.0, Palette.GOLD)
+		game.effects.impact(e.position, 120.0, Palette.GOLD, "boss_death")  # Its strip when the art exists (visual only).
 		var bdef: Dictionary = (e as Boss).boss_def  # The fallen boss's data (reward burst).
 		var n: int = bdef["reward_crystals"]
 		var each: int = maxi(1, floori(float(bdef["reward_xp"]) / float(n)))

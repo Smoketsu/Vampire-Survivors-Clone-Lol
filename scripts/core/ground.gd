@@ -147,7 +147,10 @@ func _draw_cell(cx: int, cy: int) -> void:
 		draw_rect(Rect2(p + Vector2(-9, -5), Vector2(18, 10)), Color(0.05, 0.05, 0.06))
 		draw_rect(Rect2(p + Vector2(-9, -5), Vector2(18, 10)), Palette.STONE, false, 1.5)
 	elif roll < 0.36:
-		# Spectral fog patch (soft and translucent: code-drawn on the tile floor too).
+		# Spectral fog patch: its pixel-art decal on the tile floor (soft stepped
+		# alphas, GDD §15.0 "Act I enemy AoE art"), else the code's soft disc.
+		if _decal(_decal_prefix() + "fog", p, h):
+			return
 		draw_circle(p, 40.0 + float(h % 30), Palette.FOG)
 	elif roll < 0.42:
 		# Grass tufts.

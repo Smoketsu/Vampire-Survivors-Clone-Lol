@@ -205,8 +205,10 @@ func draw_over(e: Enemy, ci: CanvasItem) -> void:
 	if phase != WINDUP and zeal_left <= 0.0:
 		return
 	unmirror(e, ci)
+	CovenantFx.base = Transform2D(0.0, Vector2(e.scale.x, 1.0), 0.0, Vector2.ZERO)  # The lash art in world axes too.
 	if phase == WINDUP:
 		SisterGlyphs.draw_lash_windup(ci, dir, e.radius, float(d["lash_reach"]), phase_time / maxf(0.01, float(d["lash_telegraph"])))
 	if zeal_left > 0.0:
 		SisterGlyphs.draw_zeal(ci, e.radius)
+	CovenantFx.base = Transform2D.IDENTITY
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

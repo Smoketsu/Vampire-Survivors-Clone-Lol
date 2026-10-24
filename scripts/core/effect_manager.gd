@@ -88,9 +88,11 @@ func pop(pos: Vector2, color: Color, size: float, anim: String = "") -> void:
 	_tag(_spawn(Effect.Kind.POP, pos, color, size, _anim_time(anim, 0.35)), anim)
 
 
-## Melee swing arc facing `dir`.
-func slash(pos: Vector2, dir: Vector2, color: Color, size: float) -> void:
-	_spawn(Effect.Kind.SLASH, pos, color, size, 0.15, dir)
+## Melee swing arc facing `dir`. With `anim` (an AnimData id: "vael_cleave",
+## "sentinel_sweep") and its art present, the strip plays instead, turned
+## toward `dir`, for its AnimData duration (= the arc's 0.15 s).
+func slash(pos: Vector2, dir: Vector2, color: Color, size: float, anim: String = "") -> void:
+	_tag(_spawn(Effect.Kind.SLASH, pos, color, size, _anim_time(anim, 0.15), dir), anim)
 
 
 ## Expanding filled ring (Shadow Blast, mage explosions). With `anim` (an

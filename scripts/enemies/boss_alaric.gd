@@ -487,7 +487,10 @@ func motion_sprite_key() -> String:
 ## Ground layer (Enemy._draw()): the Wrath halo.
 func _draw_under() -> void:
 	if enraged:
-		# Wrath: a burning crimson-gold halo around him.
+		# Wrath: a burning crimson-gold halo around him (its pixel art, a ring
+		# of flame tongues baked for his body, CovenantFx, when present).
+		if CovenantFx.disc(self, Vector2.ZERO, radius * 1.6, CovenantFxData.WRATH_DISCS):
+			return
 		draw_circle(Vector2.ZERO, radius * 1.6, Color(Palette.FLAME, 0.14))
 		draw_arc(Vector2.ZERO, radius * 1.6, 0.0, TAU, 32, Color(Palette.GOLD, 0.7), 2.0)
 

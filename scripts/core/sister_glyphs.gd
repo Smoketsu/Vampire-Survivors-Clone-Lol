@@ -54,6 +54,13 @@ static func draw_lash_windup(ci: CanvasItem, dir: Vector2, r: float, reach: floa
 	k = clampf(k, 0.0, 1.0)
 	var from := dir * r  # Line start at her body's edge.
 	var tip := dir * reach  # Lash tip.
+	if CovenantFx.ray_strip(ci, from, tip, CovenantFxData.LASH, 4.0, 0.0, Color(1.0, 1.0, 1.0, 0.35 + 0.65 * k)):
+		# Pixel art (CovenantFx, GDD §15.0 "Act I enemy AoE art"): the barbed
+		# crimson cord along the lash line, a gold glint at its tip.
+		CovenantFx.still(ci, CovenantFxData.GLINT, tip, Color(1.0, 1.0, 1.0, 0.5 + 0.5 * k))
+		var back_a := -dir * r * 0.9 + Vector2(0, -r * 1.1)  # The scourge drawn back over her shoulder.
+		CovenantFx.ray_strip(ci, Vector2(0, -r * 0.4), back_a, CovenantFxData.LASH, 4.0, 0.0, Color(1.0, 1.0, 1.0, 0.6 + 0.4 * k))
+		return
 	ci.draw_line(from, tip, Color(Palette.CRIMSON, 0.25 + 0.5 * k), 2.0 + 2.0 * k)
 	ci.draw_line(from, tip, Color(Palette.GOLD, 0.15 + 0.45 * k), 1.0)
 	ci.draw_circle(tip, 2.0 + 1.5 * k, Color(Palette.GOLD, 0.5 + 0.5 * k))
@@ -61,8 +68,10 @@ static func draw_lash_windup(ci: CanvasItem, dir: Vector2, r: float, reach: floa
 	ci.draw_line(Vector2(0, -r * 0.4), back, Color(Palette.CRIMSON, 0.6 + 0.4 * k), 2.0)
 
 
-## Zeal surge: a crimson flame ring at her feet and a gold chevron overhead.
+## Zeal surge: a crimson flame ring at her feet and a gold chevron overhead
+## (the ring as crimson pieces, CovenantFx, when present).
 static func draw_zeal(ci: CanvasItem, r: float) -> void:
-	ci.draw_arc(Vector2(0, r * 0.7), r * 0.95, 0.0, TAU, 20, Color(Palette.CRIMSON, 0.7), 2.0)
+	if not CovenantFx.ring(ci, Vector2(0, r * 0.7), r * 0.95, CovenantFxData.RALLY_EDGE, Color(1.0, 1.0, 1.0, 0.8), 1.5):
+		ci.draw_arc(Vector2(0, r * 0.7), r * 0.95, 0.0, TAU, 20, Color(Palette.CRIMSON, 0.7), 2.0)
 	var c := Vector2(0, -r * 2.25)  # Chevron centre.
 	ci.draw_polyline(PackedVector2Array([c + Vector2(-3.5, 1.5), c + Vector2(0, -2.0), c + Vector2(3.5, 1.5)]), Palette.CRIMSON, 2.0)
