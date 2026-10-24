@@ -118,6 +118,21 @@
 ## tagged with its kind id, or WastesEnemyData.RANGED_EXTRA_SOURCES) is cut by
 ## ranged_reduction (stat lead_lined_dmg_prevented); exactly 1 while the
 ## passive is not owned.
+## Act IV (the Olympian Republic; Game.pantheon is null on every other act, so
+## none of this runs there):
+##   Phalanx — damage_enemy() takes the hit's ORIGIN (`origin`, the world point
+##             it came from: a projectile's point of departure along its path,
+##             a melee attacker's position; NO_ORIGIN = no direction, every
+##             area / stomp / arcing / damage-over-time hit) and `shot` (true
+##             for a projectile). A directed hit is multiplied once by
+##             PantheonRules.directed_hit_mult(), right after the synergies: a
+##             locked shield's front stops most of a shot and all knockback; a
+##             hit from the side or behind breaks the wall.
+##   Glory   — damage_unit() takes the enemy whose blow it is (`by`, null when
+##             none); a summon it kills reports to PantheonRules
+##             .on_summon_killed() (a hero's Glory stack).
+##   kills   — _kill_enemy() reports to PantheonRules.on_enemy_killed() (a
+##             corpse swallowed by a fissure, a hero's Glory payout).
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -128,6 +143,10 @@
 ## credited to the bound slot (CoopSession.on_kill()). In solo nothing is rebound.
 class_name CombatResolver
 extends RefCounted
+
+# --- Act IV: the Olympian Republic ---
+## damage_enemy() origin meaning "no direction" (full damage, the front ignored).
+const NO_ORIGIN: Vector2 = Vector2.INF
 
 ## Owning run.
 var game: Game
@@ -174,11 +193,13 @@ func is_minion_source(source: String) -> bool:
 ## A cursed enemy (Gravebow curse, Enemy.curse_until, curse_enemy()) takes
 ## curse_amp more from every undead source; the extra is counted in the
 ## curse_bonus_dmg stat.
-func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1) -> float:
+## Act IV: `origin` (the world point the hit came from; NO_ORIGIN = none) and
+## `shot` (a projectile) feed the Phalanx's front test (see the header).
+func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, origin: Vector2 = NO_ORIGIN, shot: bool = false) -> float:
 	if as_slot >= 0 and game.coop != null and as_slot != game.coop.bound:
 		var prev := game.coop.bound  # Co-op: resolve the hit as its owner slot's (see the header).
 		game.coop.bind(as_slot)
-		var dealt_as := damage_enemy(e, amount, source)
+		var dealt_as := damage_enemy(e, amount, source, -1, origin, shot)
 		game.coop.bind(prev)
 		return dealt_as
 	if not e.active or amount <= 0.0:
@@ -205,6 +226,15 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1) ->
 	var syn := game.horde.synergies  # Army synergies.
 	var syn_mult := syn.hit_mult(source, e)  # Synergy multiplier of this hit.
 	amount *= syn_mult
+	# Act IV, the Phalanx (the one front test): a directed hit on a Pantheon
+	# enemy. Skipped entirely off Act IV (Game.pantheon null) and for hits with
+	# no direction.
+	if game.pantheon != null and origin != NO_ORIGIN:
+		var front := game.pantheon.directed_hit_mult(e, origin, shot, source)  # 1 = the front did nothing.
+		if front != 1.0:
+			if front < 1.0:
+				game.stat_add("phalanx_front_dmg_prevented", amount * (1.0 - front) * (1.0 - e.armor))
+			amount *= front
 	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
 	# undead fighting on it hit weaker.
 	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).
@@ -353,13 +383,15 @@ func _sanctum_mitigation(e: Enemy, raw: float, source: String, shred: float = 0.
 ## barrier) absorbs what it can before HP is lost. Stats:
 ## host_dmg_prevented, resilience_dmg_prevented (+ _area / _holy),
 ## plating_dmg_prevented.
-func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
+## Act IV: `by` is the enemy whose own blow this is (Enemy._melee_hit(); null
+## for every other hit): a summon it kills is Glory for a hero.
+func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = null) -> void:
 	if not u.active or u.state == SummonedUnit.State.DEAD or amount <= 0.0:
 		return
 	if game.coop != null and u.director != null and u.director.slot != game.coop.bound:
 		var prev := game.coop.bound  # Co-op: the summon's own army's rules (see the header).
 		game.coop.bind(u.director.slot)
-		damage_unit(u, amount, source)
+		damage_unit(u, amount, source, by)
 		game.coop.bind(prev)
 		return
 	if u.airborne:
@@ -428,6 +460,8 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	if u.hp <= 0.0:
 		game.stat_add("death_" + u.unit_class + "_by_" + source, 1.0)
 		game.horde.colossi.on_unit_killed(u)  # Bone Colossus shrapnel burst.
+		if by != null and game.pantheon != null:
+			game.pantheon.on_summon_killed(u, by)  # Act IV: a hero's Glory stack.
 		game.horde.on_unit_died(u)
 
 
@@ -742,6 +776,8 @@ func _kill_enemy(e: Enemy) -> void:
 		game.dread.on_kill()  # Act II: a kill steadies the mind.
 	if e.is_elite and not e.is_boss and not e.is_structure:
 		_holy_retribution(e)
+	if game.pantheon != null:
+		game.pantheon.on_enemy_killed(e)  # Act IV: a swallowed corpse, a hero's Glory payout.
 	game.enemies.on_enemy_killed(e)
 
 

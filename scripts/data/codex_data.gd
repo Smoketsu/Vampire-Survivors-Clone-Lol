@@ -33,7 +33,9 @@ const CATEGORIES: Array[String] = [SPELL, SUMMON, ENEMY, BOSS]
 ## Screen tabs, left to right: [tab id, button text]. "feats" is the
 ## achievements list; the others are codex pages.
 const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons", "Summons"], ["covenant", "Covenant"], ["eye", "Ancient Eye"],
-		["empire", "Empire"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's
+		["empire", "Empire"],
+		# --- Act IV: the Olympian Republic ---
+		["pantheon", "Republic"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -116,6 +118,18 @@ const EMPIRE_CHAMPIONS: Array[String] = ["kill_drone",
 ## Electronic Empire stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const EMPIRE_BOSSES: Array[String] = ["kestrel", "motherboard", "deus_ex_machina"]
 
+# --- Act IV: the Olympian Republic ---
+## Act IV, the Olympian Republic (GDD §15.0 "Act IV foundation (phase 1)"; the
+## Republic tab): its soldiers in the order the stages bring them, its
+## champions (minibosses and the Twilight's Bronze Titan) and its stage bosses
+## (StageRegistry.BOSS_ARRIVALS ids). Each Act IV stage adds its own as it is
+## built (phase 2).
+const PANTHEON_SOLDIERS: Array[String] = ["shade_of_dead", "hoplite", "hero"]
+## Olympian Republic champions (minibosses) and the Act IV Reckoning kinds.
+const PANTHEON_CHAMPIONS: Array[String] = ["bronze_titan"]
+## Olympian Republic stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const PANTHEON_BOSSES: Array[String] = ["achilles", "zeus", "hades"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
@@ -123,6 +137,8 @@ const SECTIONS: Dictionary = {
 	"covenant": [["soldiers", "Soldiers"], ["structures", "Structures"], ["champions", "Champions"], ["bosses", "Bosses"]],  # TUNING (not in GDD)
 	"eye": [["eye_soldiers", "Soldiers"], ["eye_champions", "Champions"], ["eye_bosses", "Bosses"]],  # TUNING (not in GDD) Act II
 	"empire": [["empire_soldiers", "Soldiers"], ["empire_champions", "Champions"], ["empire_bosses", "Bosses"]],  # TUNING (not in GDD) Act III
+	# --- Act IV: the Olympian Republic ---
+	"pantheon": [["pantheon_soldiers", "Soldiers"], ["pantheon_champions", "Champions"], ["pantheon_bosses", "Bosses"]],  # TUNING (not in GDD) Act IV
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -199,6 +215,14 @@ const DESCRIPTIONS: Dictionary = {
 	"sentry_turret": "Fixed gun emplacements behind the shield walls; siege them for a Soul Ash bounty.",  # Owner-approved Act III proposal
 	"shield_generator": "Two hold up each Shield Gate; while they stand the wall bars your way.",  # Owner-approved Act III proposal
 	"valkyrie_prime": "The Duelists' upgraded leader: a jet dash, a shield bash and a storm of blades.",  # Owner-approved Act III proposal (Valkyrie 2.0)
+	# --- Act IV: the Olympian Republic ---
+	"shade_of_dead": "Pale ghosts fleeing the Underworld: weak and fast, they come in swarms.",  # Owner-approved Act IV proposal
+	"hoplite": "Spear and round shield. Three side by side lock shields: break the wall from the flanks.",  # Owner-approved Act IV proposal (Phalanx)
+	"hero": "Named demigods who grow in Glory with every one of your dead they kill. Kill them early.",  # Owner-approved Act IV proposal (Glory)
+	"bronze_titan": "Bronze colossi that step out of the ground when the gods' twilight falls.",  # Owner-approved Act IV proposal (Twilight of the Gods)
+	"achilles": "The Unkillable: his front shrugs off nearly every blow. Strike his heel.",  # Owner-approved Act IV proposal
+	"zeus": "King of the Gods, waiting at the summit of the Pantheon Trial with his thunderbolts.",  # Owner-approved Act IV proposal
+	"hades": "Lord of the Dead, who sent the gods to take the dead back. The first rival necromancer.",  # Owner-approved Act IV proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -244,6 +268,9 @@ const LOCKED_HINT: Dictionary = {
 	"empire_soldiers": "Destroy one to record it.",  # TUNING (not in GDD)
 	"empire_champions": "Destroy one to record it.",  # TUNING (not in GDD)
 	"empire_bosses": "Face it to record it.",  # TUNING (not in GDD)
+	"pantheon_soldiers": "Slay one to record it.",  # TUNING (not in GDD) Act IV
+	"pantheon_champions": "Slay one to record it.",  # TUNING (not in GDD) Act IV
+	"pantheon_bosses": "Face it to record it.",  # TUNING (not in GDD) Act IV
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -266,6 +293,9 @@ const TAGS: Dictionary = {
 	"empire_soldiers": "Electronic Empire",  # TUNING (not in GDD)
 	"empire_champions": "Champion of the Empire",  # TUNING (not in GDD)
 	"empire_bosses": "Stage boss",  # TUNING (not in GDD)
+	"pantheon_soldiers": "Olympian Republic",  # TUNING (not in GDD) Act IV
+	"pantheon_champions": "Champion of the Republic",  # TUNING (not in GDD) Act IV
+	"pantheon_bosses": "Stage boss",  # TUNING (not in GDD) Act IV
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -425,9 +455,10 @@ static func is_known(cat: String, id: String) -> bool:
 		ENEMY:
 			return SOLDIERS.has(id) or STRUCTURES.has(id) or CHAMPIONS.has(id) \
 					or EYE_SOLDIERS.has(id) or EYE_CHAMPIONS.has(id) \
-					or EMPIRE_SOLDIERS.has(id) or EMPIRE_CHAMPIONS.has(id)
+					or EMPIRE_SOLDIERS.has(id) or EMPIRE_CHAMPIONS.has(id) \
+					or PANTHEON_SOLDIERS.has(id) or PANTHEON_CHAMPIONS.has(id)  # Act IV
 		BOSS:
-			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id)
+			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id)  # (Act IV last)
 	return false
 
 
@@ -440,9 +471,10 @@ static func total(cat: String) -> int:
 			return SUMMON_ORDER.size()
 		ENEMY:
 			return SOLDIERS.size() + STRUCTURES.size() + CHAMPIONS.size() + EYE_SOLDIERS.size() + EYE_CHAMPIONS.size() \
-					+ EMPIRE_SOLDIERS.size() + EMPIRE_CHAMPIONS.size()
+					+ EMPIRE_SOLDIERS.size() + EMPIRE_CHAMPIONS.size() \
+					+ PANTHEON_SOLDIERS.size() + PANTHEON_CHAMPIONS.size()  # Act IV
 		BOSS:
-			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size()
+			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size()  # (Act IV last)
 	return 0
 
 
@@ -460,6 +492,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var empire := EnemyDirector.empire_def(id)  # Act III kinds ({} when none).
 	if not empire.is_empty():
 		return empire
+	var pantheon := EnemyDirector.pantheon_def(id)  # Act IV kinds ({} when none).
+	if not pantheon.is_empty():
+		return pantheon
 	match id:
 		"alaric":
 			return EnemyData.BOSS

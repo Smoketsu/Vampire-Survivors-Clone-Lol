@@ -3,7 +3,9 @@
 ## Ancient Eye": Gullhaven Harbour -> the Hollow Archive -> Ul-Thalos, opened
 ## by slaying Seraphine; Act III, GDD §15.0 "Act III foundation (phase 1)": the
 ## Scrap Wastes -> the Assembly Halls -> the Iron Citadel, opened by slaying
-## Vhal'Neth). One entry per stage, each
+## Vhal'Neth; Act IV, GDD §15.0 "Act IV foundation (phase 1)": the Shores of
+## Ilion -> Mount Olympus -> the Asphodel Underworld, opened by slaying Deus Ex
+## Machina). One entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
 ## in the game hard-codes a stage.
@@ -37,7 +39,9 @@
 ##                        "sanctum" (SanctumGround), the Act II floors
 ##                        ("harbour", "archive", "spire") or "empire"
 ##                        (EmpireGround, the Act III placeholder floor drawn
-##                        from the STAGE's "floor" dictionary).
+##                        from the STAGE's "floor" dictionary) or "pantheon"
+##                        (PantheonGround, the Act IV placeholder floor, from
+##                        the same "floor" dictionary).
 ##   enemy_hp_mult / enemy_damage_mult — stage multipliers on the shared
 ##                        enemy time scaling (1.0 = Graveyard baseline).
 ##   enemy_mult_from    — elapsed game seconds from which those two
@@ -49,7 +53,8 @@
 ##                        Sanctum uses it for its battle zones only).
 ## Optional keys (absent = off):
 ##   act                — campaign act (1 = the Crimson Covenant, 2 = the
-##                        Ancient Eye, 3 = the Electronic Empire; absent = 1). The stage select shows one
+##                        Ancient Eye, 3 = the Electronic Empire, 4 = the
+##                        Olympian Republic; absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
 ##   playable           — false hides a registered stage from the stage select
@@ -91,13 +96,25 @@
 ##                        Citadel's guns, Sentry Turrets, Valkyrie 2.0, guest
 ##                        squads of the earlier Act III kinds); ground
 ##                        "citadel" is its CitadelGround (four zone floors).
+## --- Act IV: the Olympian Republic ---
+##   pantheon           — true: the Olympian Republic's shared rules (Act IV,
+##                        PantheonRules as Game.pantheon: Wrath of the Gods,
+##                        Phalanx, Glory, and the Twilight of the Gods when the
+##                        RECKONING has a "twilight" key).
+##   wrath              — the stage's Wrath of the Gods (DivineWrath): {"kind":
+##                        "waves" | "lightning" | "fissures", plus any key of
+##                        PantheonRulesData.WRATH[kind] to override it}.
+##   zones              — Act IV stubs: the planned zones ([{id, name, start}],
+##                        names only until phase 2 builds them).
 class_name StageRegistry
 extends RefCounted
 
 ## Stages in campaign order (stage select order, unlock chain).
 const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "spire",
 	# --- Act III: the Electronic Empire ---
-	"wastes", "assembly", "citadel"]
+	"wastes", "assembly", "citadel",
+	# --- Act IV: the Olympian Republic ---
+	"ilion", "olympus", "underworld"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -112,6 +129,10 @@ const STAGES := {
 	"wastes": WastesStage.STAGE,
 	"assembly": AssemblyStage.STAGE,
 	"citadel": CitadelStage.STAGE,
+	# --- Act IV: the Olympian Republic ---
+	"ilion": IlionStage.STAGE,
+	"olympus": OlympusStage.STAGE,
+	"underworld": UnderworldStage.STAGE,
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -119,6 +140,8 @@ const ACTS := {
 	1: {"name": "Act I", "subtitle": "The Crimson Covenant"},
 	2: {"name": "Act II", "subtitle": "The Ancient Eye"},
 	3: {"name": "Act III", "subtitle": "The Electronic Empire"},
+	# --- Act IV: the Olympian Republic ---
+	4: {"name": "Act IV", "subtitle": "The Olympian Republic"},
 }
 
 
@@ -162,4 +185,9 @@ const BOSS_ARRIVALS := {
 	"motherboard": MotherboardData.ARRIVAL,  # Act III: the Assembly Halls (its own data file)
 	# --- Act III: the Iron Citadel --- (its own data file, Act III phase 2)
 	"deus_ex_machina": DeusData.ARRIVAL,
+	# --- Act IV: the Olympian Republic (stubs: each stage's BOSS until phase 2
+	# gives the boss its own data file) ---
+	"achilles": IlionStage.BOSS,
+	"zeus": OlympusStage.BOSS,
+	"hades": UnderworldStage.BOSS,
 }

@@ -106,3 +106,29 @@ const HP_BACK := Color(0.0, 0.0, 0.0, 0.6)
 const FLASH := Color(1.0, 1.0, 1.0)
 ## Experience bar fill.
 const XP := Color(0.45, 0.85, 1.0)
+
+# --- Hostile (the Olympian Republic, Act IV) ----------------------------------------
+# GDD §15.0 "Act IV foundation (phase 1)": the fixed values of docs/act4/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps bronze, marble, aegean, owned by the art pass). Gold stays
+# Palette.GOLD (evolution / chest / victory, and Glory).
+
+## Bronze outline ink (tools/palette.json "bronze" ramp, darkest): every Pantheon sprite's outline.
+const PANTHEON_BRONZE_INK := Color(0.118, 0.078, 0.031)  # #1E1408
+## Bronze in shadow ("bronze_dark"): shield rims, greaves, the underside of helmets.
+const PANTHEON_BRONZE_DARK := Color(0.420, 0.267, 0.137)  # #6B4423
+## Bronze ("bronze"): hoplite shields and helmets, the Titans' plates; the Phalanx's locked shield line.
+const PANTHEON_BRONZE := Color(0.659, 0.439, 0.180)  # #A8702E
+## Lit bronze ("bronze_light"): highlights, crests, the locked wall's top edge.
+const PANTHEON_BRONZE_LIGHT := Color(0.878, 0.663, 0.333)  # #E0A955
+## Marble in shadow ("marble_dark"): column flutes, the Titans' joints, shades' cores.
+const PANTHEON_MARBLE_DARK := Color(0.557, 0.541, 0.525)  # #8E8A86
+## Marble ("marble"): columns, statues, the pale Shades of the Dead.
+const PANTHEON_MARBLE := Color(0.812, 0.796, 0.769)  # #CFCBC4
+## Lit marble ("marble_light"): highlights; the lightning's white core.
+const PANTHEON_MARBLE_LIGHT := Color(0.957, 0.945, 0.918)  # #F4F1EA
+## Aegean blue in shadow ("aegean_dark"): deep water, the wave's body, cloaks in shadow.
+const PANTHEON_AEGEAN_DARK := Color(0.071, 0.243, 0.400)  # #123E66
+## Aegean blue ("aegean"): heroes' cloaks, Poseidon's waves, Zeus's lightning glow.
+const PANTHEON_AEGEAN := Color(0.173, 0.467, 0.722)  # #2C77B8
+## Lit Aegean ("aegean_light"): foam lines, lightning halos, wave crests.
+const PANTHEON_AEGEAN_LIGHT := Color(0.435, 0.714, 0.910)  # #6FB6E8

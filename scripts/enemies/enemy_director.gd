@@ -59,6 +59,12 @@
 ##     2)"): on a stage with a "wastes" config it owns the WastesDirector (the
 ##     Signal Pylons, the scrap storms, the Trojan Horse; `wastes`) and hands it
 ##     the "pylons" / "storm" / "trojan" events. Null on every other stage.
+##   * Act IV, the Olympian Republic (GDD §15.0 "Act IV foundation (phase
+##     1)"): its kinds are looked up through pantheon_def() (PantheonEnemyData,
+##     then each Act IV stage's table) after the Empire's, and its bosses load
+##     by name from PANTHEON_BOSS_DIR after the Empire's folder. Its shared
+##     rules (Wrath of the Gods, Phalanx, Glory, the Twilight of the Gods) live
+##     in PantheonRules (Game.pantheon), not here.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -75,6 +81,9 @@ extends Node2D
 const EYE_BOSS_DIR: String = "res://scripts/enemies/eye/"
 ## Folder of the Electronic Empire's boss scripts ("boss_<id>.gd", each a Boss; Act III).
 const EMPIRE_BOSS_DIR: String = "res://scripts/enemies/empire/"
+# --- Act IV: the Olympian Republic ---
+## Folder of the Olympian Republic's boss scripts ("boss_<id>.gd", each a Boss; Act IV).
+const PANTHEON_BOSS_DIR: String = "res://scripts/enemies/pantheon/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -654,7 +663,8 @@ func _spawn_boss() -> void:
 	# placeholder), else its id. Act I bosses by name; any other id is an
 	# Ancient Eye boss loaded from EYE_BOSS_DIR + "boss_<id>.gd" (each Act II
 	# stage adds its boss as a new file), else an Electronic Empire boss from
-	# EMPIRE_BOSS_DIR (Act III, the same way); Sir Alaric when none exists.
+	# EMPIRE_BOSS_DIR (Act III, the same way), else an Olympian Republic boss
+	# from PANTHEON_BOSS_DIR (Act IV); Sir Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -667,6 +677,8 @@ func _spawn_boss() -> void:
 			var path := EYE_BOSS_DIR + "boss_" + sid + ".gd"  # An Ancient Eye boss script.
 			if not ResourceLoader.exists(path):
 				path = EMPIRE_BOSS_DIR + "boss_" + sid + ".gd"  # Act III: an Electronic Empire boss script.
+			if not ResourceLoader.exists(path):
+				path = PANTHEON_BOSS_DIR + "boss_" + sid + ".gd"  # Act IV: an Olympian Republic boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -761,8 +773,8 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## BattleSisterData.ENEMIES (the Sister of the Scourge, March and Sanctum),
 ## then the Ancient Eye's tables (Act II: EyeEnemyData, then each stage's own
 ## HarbourEnemyData / ArchiveEnemyData / SpireEnemyData), then the
-## Electronic Empire's (Act III: empire_def()), then
-## SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
+## Electronic Empire's (Act III: empire_def()), then the Olympian Republic's
+## (Act IV: pantheon_def()), then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
 	kind = resolve_kind(kind)
@@ -780,6 +792,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var empire := empire_def(kind)  # Act III kinds ({} when not an Empire kind).
 	if not empire.is_empty():
 		return empire
+	var pantheon := pantheon_def(kind)  # Act IV kinds ({} when not a Pantheon kind).
+	if not pantheon.is_empty():
+		return pantheon
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -813,13 +828,29 @@ static func empire_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act IV: the Olympian Republic ---
+## Design row of Olympian Republic kind `kind` (real id), or {} when it is
+## none: PantheonEnemyData (the shared kinds and the Twilight's Bronze Titan)
+## first, then each Act IV stage's own table (phase 2 fills them).
+static func pantheon_def(kind: String) -> Dictionary:
+	if PantheonEnemyData.ENEMIES.has(kind):
+		return PantheonEnemyData.ENEMIES[kind]
+	if IlionEnemyData.ENEMIES.has(kind):
+		return IlionEnemyData.ENEMIES[kind]
+	if OlympusEnemyData.ENEMIES.has(kind):
+		return OlympusEnemyData.ENEMIES[kind]
+	if UnderworldEnemyData.ENEMIES.has(kind):
+		return UnderworldEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
 	return EnemyData.ENEMIES.has(kind) or SanctumObjectiveData.STRUCTURES.has(kind) \
 			or MarchEnemyData.ENEMIES.has(kind) or BattleSisterData.ENEMIES.has(kind) \
 			or SanctumEnemyData.ENEMIES.has(kind) or not eye_def(kind).is_empty() \
-			or not empire_def(kind).is_empty()
+			or not empire_def(kind).is_empty() or not pantheon_def(kind).is_empty()
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar
