@@ -538,6 +538,18 @@ func _burst(kind: int, at: Vector2, size: float, col: Color) -> void:
 	_fx_until = maxf(_fx_until, game.elapsed + maxf(VolleyData.HIT_TIME, VolleyData.FLASH_TIME))
 
 
+## Bursts still playing now (MonitorProbe; drawing statistics only).
+func burst_count() -> int:
+	if game == null or game.elapsed >= _fx_until:
+		return 0
+	var n := 0
+	for j in VolleyData.FX_CAP:
+		var t0 := _fx_t0[j]
+		if t0 >= 0.0 and game.elapsed - t0 < maxf(VolleyData.HIT_TIME, VolleyData.FLASH_TIME):
+			n += 1
+	return n
+
+
 ## Clears every shot and burst (run end).
 func clear() -> void:
 	for i in VolleyData.SHOT_CAP:

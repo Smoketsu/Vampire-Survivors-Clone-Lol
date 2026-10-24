@@ -215,6 +215,11 @@ var all_players: Array[Necromancer] = []
 var all_hordes: Array[HordeDirector] = []
 ## Opt-in per-tick timing of the simulation (--perf; PerfProbe), null otherwise.
 var perf: PerfProbe = null
+## The adaptive quality controller (AdaptiveQuality: the drawn visual tier from the
+## real frame rate; drawing only, never read by gameplay).
+var quality: AdaptiveQuality
+## Opt-in memory / draw / entity sampling (--monitor=N; MonitorProbe), null otherwise.
+var monitor: MonitorProbe = null
 ## Co-op start message (CoopNet.start_info: seed, config, loadouts, local_slot,
 ## version), set by Main before add_child for an online co-op run; empty = no
 ## network co-op (the --coop-bot autotest builds its own loadouts).
@@ -256,6 +261,8 @@ func _ready() -> void:
 	_make_coop()  # Online co-op / --coop-bot only (coop stays null in solo).
 	if GameState.autotest and GameState.autotest_perf:
 		perf = PerfProbe.new(self)  # --perf: per-tick timing (reads the clock only).
+	if GameState.autotest and GameState.autotest_monitor > 0.0:
+		monitor = MonitorProbe.new(self, GameState.autotest_monitor)  # --monitor=N: memory / draw sampling (reads only).
 	meta = Meta.run_modifiers() if coop == null else coop.meta_for(0)
 	character = CharacterModifiers.for_id(run_config.character_id) if coop == null else coop.character_for(0)
 	enemy_grid = SpatialHash.new(GRID_CELL)
@@ -315,6 +322,8 @@ func _ready() -> void:
 	add_child(chests)
 	effects = EffectManager.new()
 	add_child(effects)
+	quality = AdaptiveQuality.new()  # Drawing load from the frame rate (visual only; resets its level).
+	add_child(quality)
 	motion = MotionDirector.new()  # Before the horde and enemies: dissolving bodies sit under the living.
 	motion.game = self
 	add_child(motion)
@@ -712,6 +721,8 @@ func _process(_delta: float) -> void:
 	ground.update_view(player.position)
 	if perf != null:
 		perf.frame()  # --perf: rendered-frame times (the Web measurement).
+	if monitor != null:
+		monitor.frame()  # --monitor=N: memory / draw / entity lines (reads only).
 
 
 ## The Electronic Empire's shared rules (Act III), created on first use: at

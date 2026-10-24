@@ -158,6 +158,12 @@
 ##   --effects=reduced     Draws with Effects = Reduced (default Full; drawing only).
 ##   --perf-real=A-B,...   --perf, and those game-second windows run at real
 ##                         time (1x) so the rendered-frame times there are real.
+##   --monitor=N           Every N game seconds prints a "[mon]" line: memory, objects,
+##                         draw calls, live shots / effects / numbers and frame times
+##                         (MonitorProbe; reads only; docs/perf/MOBILE.md).
+##   --adaptive=off|N      AdaptiveQuality (drawing only): off keeps the adaptive level
+##                         at 0, N (0-3) pins it at N; default: it adapts as in a
+##                         player's run (measurements, docs/perf/MOBILE.md).
 ##   --perf                Prints a table of the simulation's milliseconds per
 ##                         tick (mean / p95 / max per minute, and at the busy
 ##                         moments: boss fight, Reckoning, Rally Barrages) at the
@@ -274,6 +280,11 @@ var autotest_coop_shots: String = ""
 var autotest_shot_dir: String = ""
 ## Autotest: true when --perf prints the per-tick timing table (PerfProbe).
 var autotest_perf: bool = false
+## Autotest: --adaptive= value ("" = adapt as in a player's run, "off", or a pinned
+## level "0".."3"; AdaptiveQuality, drawing only).
+var autotest_adaptive: String = ""
+## Autotest: game seconds between two MonitorProbe lines (--monitor=N; 0 = off).
+var autotest_monitor: float = 0.0
 ## Autotest: "reduced" when --effects=reduced draws with Effects = Reduced
 ## (drawing only; "" = Full, the autotest default).
 var autotest_effects: String = ""
@@ -344,6 +355,10 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_coop = true  # Co-op in one process, both slots by the bots (CoopSession).
 		elif arg == "--perf":
 			autotest_perf = true  # Per-tick timing table (PerfProbe).
+		elif arg.begins_with("--adaptive="):
+			autotest_adaptive = arg.get_slice("=", 1).to_lower()  # AdaptiveQuality: off or a pinned level.
+		elif arg.begins_with("--monitor="):
+			autotest_monitor = maxf(1.0, arg.get_slice("=", 1).to_float())  # Memory / draw sampling (MonitorProbe).
 		elif arg.begins_with("--effects="):
 			autotest_effects = arg.get_slice("=", 1).to_lower()  # "reduced" or "full" (drawing only).
 		elif arg.begins_with("--perf-real="):

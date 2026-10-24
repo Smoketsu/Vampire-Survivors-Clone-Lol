@@ -179,6 +179,16 @@ func number(key: int, pos: Vector2, value: float, color: Color, big: bool) -> vo
 	_n_alive = mini(MAX_NUMBERS, _n_alive + 1)
 
 
+## Particles alive now (MonitorProbe; drawing statistics only).
+func particle_count() -> int:
+	return _p_alive
+
+
+## Damage numbers alive now (MonitorProbe; drawing statistics only).
+func number_count() -> int:
+	return _n_alive
+
+
 ## Removes every particle and number (run ended / restarted).
 func clear() -> void:
 	_p_life.fill(0.0)
