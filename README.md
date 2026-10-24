@@ -428,7 +428,9 @@ all three show "Coming soon" until their stages are built (phase 2). The act's s
   rifle and fires for you as a **Grave Gunner**. Dread Rally still charges from every kill.
 - **The Purge Protocol.** At 0:00 kill-drones pour in from every edge while orbital strikes land
   on red circles, faster each minute.
-- **Music.** Act III runs play their own loop, "Iron Requiem" (a pulsing low synth, metallic hits
+- **Music.** (Act IV's "Hymn of Bronze", a war drum under a Dorian pad with a plucked lyre and brass
+  swells, and its eight Pantheon sounds are rendered lazily the same way: `SoundData.BRONZE_SCORE`,
+  `PANTHEON_SOUNDS`; the stages switch to it with `"music": "bronze"`.) Act III runs play their own loop, "Iron Requiem" (a pulsing low synth, metallic hits
   and a cold arpeggio), and the Empire's weapons have their own synthesized sounds.
 
 The shared kinds so far: the **Scout Drone** (fast flying fodder with short zaps), the **Line
@@ -1561,7 +1563,10 @@ Machines Go Dark", opened by *Nothing Is Deathless*: the Empire's chrome city of
 Deus Ex Machina on its knees as the necromancer reaches into its core for Varn's soul, the machines
 gone dark and Varn bowing, the risen dead over the ruins of all three acts) and a closing card after
 Act II, "The Beacons Burn", where the holy orders' knights march out under the beacons (it stays after
-Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
+Act II once Act III is open). Closing cards are one per act (`EpilogueData.CLOSINGS`, each with an `after`
+key naming its part); the second, "The River Runs Dry", follows the Act III part: a dried riverbed of the
+dead with an empty ferry and a lone lantern far below, gods silhouetted on a marble mountain in golden
+light above, the set-up of Act IV.
 
 - Each panel (1024×576 art px, `assets/sprites/epilogue/`) pans slowly in a framed window
   (944×424, 1 art px = 1 layout px through the sharp-pixel shader); the paragraph fades in under it.
@@ -2259,9 +2264,11 @@ scripts/
   pickups/chest.gd, chest_manager.gd       Pooled treasure chests and their drop rules
   pickups/chest_beacon.gd   Chest beacon: chevrons over the chests, ground glow, edge-arrow layout, autotest counts
   audio/sfx.gd              Autoload: audio buses, pooled voices with per-sound and global voice limits
-                            (score loops: "Below the Tide", "Iron Requiem"; the Act III sound pack, lazy)
+                            (score loops: "Below the Tide", "Iron Requiem", "Hymn of Bronze"; the Act III
+                            and Act IV (`PANTHEON_SOUNDS`) sound packs, lazy, seeds per pack)
   audio/synth.gd            Procedural sound and music synthesis (no audio files)
-  audio/run_loop_synth.gd   The in-run music loop's recipe as a list of small jobs (run at once, or over frames)
+  audio/run_loop_synth.gd   The in-run music loop's recipe as a list of small jobs (run at once, or over frames;
+                            scores add pulse / hits / arp (Act III) and drums / horn (Act IV) jobs)
                             (a score adds a tolling bell, or Act III's pulse, metallic hits and arpeggio)
   audio/startup_synth.gd    Web build: renders the sound bank and the run loop in per-frame steps (no threads)
   audio/menu_theme_synth.gd Main menu theme renderer: wavetable choir, music box, bell, harp, reverb (chunked);

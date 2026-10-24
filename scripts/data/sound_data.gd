@@ -443,17 +443,59 @@ const IRON_SCORE := {
 		]},  # TUNING (not in GDD) two octaves over the pad
 }
 
+## "Hymn of Bronze", the Act IV run loop (GDD §15.0 "Hymn of Bronze and the
+## Pantheon sounds", owner-approved proposal: "a martial, ancient feel"): the
+## RunLoopSynth score of every stage whose STAGE has "music": "bronze" (keys in
+## RunLoopSynth's header). A low D drone and sea-wind bed under a Dorian choir
+## pad (Dm - C - G - Dm), a war drum on every beat with a ghost note after the
+## off-beats, a plucked lyre arpeggio and a brassy horn swell twice a loop.
+## Rendered lazily (Sfx), never under the autotest. 90 bpm: 24 beats per 16 s.
+const BRONZE_SCORE := {
+	"loop_seconds": 16.0,  # TUNING (not in GDD) 24 beats at 90 bpm
+	"root_hz": 36.71,  # TUNING (not in GDD) D1, the drone under a Dorian D
+	# Dm -> C -> G -> Dm/A (D Dorian: the raised sixth shows in the lyre), voiced low.
+	"chords": [
+		[146.83, 174.61, 220.0],
+		[130.81, 164.81, 196.0],
+		[98.0, 123.47, 146.83],
+		[110.0, 146.83, 174.61],
+	],  # TUNING (not in GDD)
+	"drone_lp_hz": 70.0,  # TUNING (not in GDD) a little brighter than Act I's 60: a brass-bowl hum
+	"wind_lp_hz": 110.0,  # TUNING (not in GDD) a low sea wind off the Aegean
+	"wind_swells": 2.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.5,  # TUNING (not in GDD)
+	"vibrato_depth": 0.006,  # TUNING (not in GDD)
+	# The war drum: a skin thump (falling sine plus a noise slap) on every beat,
+	# the 4th beat of each bar accented, and a soft ghost hit `ghost_at` of a beat later.
+	"drums": {"step": 0.6667, "hz0": 105.0, "hz1": 52.0, "dur": 0.32, "amp": 0.4, "decay": 0.1,
+		"accent_every": 4, "accent_amp": 0.62, "slap": 0.12, "ghost_at": 0.75, "ghost_amp": 0.16},  # TUNING (not in GDD)
+	# The lyre: plucked triangle notes, one per eighth, up each chord's tones (D Dorian).
+	"arp": {"step": 0.3333, "dur": 0.3, "amp": 0.09, "decay": 0.09, "lp0": 3600.0, "wave": "tri",
+		"chords": [
+			[293.66, 349.23, 440.0, 587.33],
+			[261.63, 329.63, 392.0, 523.25],
+			[196.0, 246.94, 293.66, 392.0],
+			[220.0, 293.66, 349.23, 440.0],
+		]},  # TUNING (not in GDD) an octave and a half above the pad
+	# The horn: two slow brass swells a loop (a saw and its fifth through a rising low-pass).
+	"horn": {"starts": [0.0, 8.0], "dur": 6.5, "attack": 2.0, "decay": 3.0, "amp": 0.07, "lp0": 450.0, "lp1": 1700.0,
+		"notes": [[146.83, 220.0], [130.81, 196.0]]},  # TUNING (not in GDD) [root, fifth] (Hz) per swell
+}
+
 ## Run-loop scores by STAGE "music" id (Sfx.play_music() modes; "" / absent =
 ## the Act I loop): "tide" = "Below the Tide" (Act II), "iron" = "Iron Requiem"
-## (Act III). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
+## (Act III), "bronze" = "Hymn of Bronze" (Act IV). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
 const SCORES := {
 	"tide": TIDE_SCORE,
 	"iron": IRON_SCORE,
+	"bronze": BRONZE_SCORE,
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
-## "empire" = EMPIRE_SOUNDS, the Act III effects); absent = none.
+## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
+## the Act IV ones); absent = none.
 const SCORE_PACKS := {
 	"iron": "empire",
+	"bronze": "pantheon",
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -704,3 +746,68 @@ const WEB_SYNTH_BUDGET_MS: float = 6.0  # TUNING (not in GDD)
 ## encoding; RunLoopSynth). Only sets how finely the work is split; the
 ## rendered loop is the same for any value (>= 1).
 const WEB_SYNTH_CHUNK_SAMPLES: int = 8192  # TUNING (not in GDD)
+
+## Act IV sound effects (the Olympian Republic; recipe keys as SOUNDS). Like
+## EMPIRE_SOUNDS, kept OUT of SOUNDS so the startup bank and its seeds stay
+## exactly as before: Sfx renders this pack lazily the first time an Act IV
+## run's music ("bronze") is asked for (Sfx.prepare_pack("pantheon"); seeds
+## Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["pantheon"] + i). Mapped to game
+## events by the foundation's PantheonRulesData sound map.
+const PANTHEON_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# Wrath of the Gods, Poseidon's wave: a rolling surf crash, a long hushed roar that swells and drains.
+	"wrath_wave": {"dur": 1.4, "volume_db": -12.0, "max_voices": 2, "min_interval": 500, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 1.35, "amp": 0.55, "attack": 0.35, "decay": 0.55, "lp0": 1800.0, "lp1": 500.0},
+			{"wave": "noise", "start": 0.1, "dur": 1.2, "amp": 0.18, "attack": 0.5, "decay": 0.4, "lp0": 6000.0, "lp1": 2500.0},
+			{"wave": "sine", "f0": 62.0, "f1": 40.0, "dur": 1.1, "amp": 0.38, "attack": 0.3, "decay": 0.4}]},
+	# Zeus' lightning: a sharp crack, a falling sizzle and a rolling boom behind it.
+	"wrath_thunder": {"dur": 1.2, "volume_db": -10.0, "max_voices": 3, "min_interval": 90, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.07, "amp": 0.8, "attack": 0.001, "decay": 0.015, "lp0": 12000.0, "lp1": 4000.0},
+			{"wave": "noise", "start": 0.04, "dur": 0.5, "amp": 0.3, "decay": 0.16, "lp0": 7000.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 80.0, "f1": 32.0, "start": 0.06, "dur": 1.1, "amp": 0.6, "attack": 0.01, "decay": 0.4},
+			{"wave": "noise", "start": 0.2, "dur": 0.95, "amp": 0.22, "attack": 0.1, "decay": 0.4, "lp0": 500.0, "lp1": 160.0}]},
+	# Hades' fissure: grinding rock splitting, a low sub-drop and a thin hiss.
+	"wrath_fissure": {"dur": 1.0, "volume_db": -12.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.9, "amp": 0.5, "attack": 0.04, "decay": 0.35, "lp0": 1100.0, "lp1": 300.0},
+			{"wave": "saw", "f0": 70.0, "f1": 38.0, "dur": 0.8, "amp": 0.2, "attack": 0.03, "decay": 0.3, "lp0": 400.0},
+			{"wave": "noise", "start": 0.3, "dur": 0.65, "amp": 0.16, "attack": 0.1, "decay": 0.25, "lp0": 9000.0, "lp1": 6000.0}]},
+	# Phalanx lock: bronze shields clanging into place, three staggered rims.
+	"shield_lock": {"dur": 0.55, "volume_db": -15.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.03, "amp": 0.4, "decay": 0.008, "lp0": 6000.0},
+			{"wave": "sine", "f0": 430.0, "dur": 0.4, "amp": 0.2, "decay": 0.12},
+			{"wave": "sine", "f0": 990.0, "dur": 0.3, "amp": 0.12, "decay": 0.08},
+			{"wave": "noise", "start": 0.07, "dur": 0.03, "amp": 0.3, "decay": 0.008, "lp0": 6000.0},
+			{"wave": "sine", "f0": 520.0, "start": 0.07, "dur": 0.35, "amp": 0.16, "decay": 0.1},
+			{"wave": "noise", "start": 0.14, "dur": 0.03, "amp": 0.3, "decay": 0.008, "lp0": 6000.0},
+			{"wave": "sine", "f0": 380.0, "start": 0.14, "dur": 0.4, "amp": 0.18, "decay": 0.14}]},
+	# Phalanx break: a bronze clang with a scraping slide.
+	"shield_break": {"dur": 0.5, "volume_db": -14.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.04, "amp": 0.5, "decay": 0.01, "lp0": 8000.0},
+			{"wave": "sine", "f0": 610.0, "dur": 0.4, "amp": 0.22, "decay": 0.1},
+			{"wave": "sine", "f0": 1410.0, "dur": 0.25, "amp": 0.1, "decay": 0.06},
+			{"wave": "saw", "f0": 900.0, "f1": 240.0, "start": 0.03, "dur": 0.4, "amp": 0.1, "decay": 0.12, "lp0": 2400.0, "lp1": 700.0},
+			{"wave": "noise", "start": 0.05, "dur": 0.35, "amp": 0.2, "decay": 0.1, "lp0": 4000.0, "lp1": 1500.0}]},
+	# Glory gained: a short bright brass chime, a fifth over its root.
+	"glory_gain": {"dur": 0.45, "volume_db": -17.0, "max_voices": 2, "min_interval": 120, "pitch_var": 0.03, "priority": 1,
+		"layers": [
+			{"wave": "square", "f0": 587.33, "dur": 0.28, "amp": 0.1, "attack": 0.01, "decay": 0.12, "lp0": 3500.0},
+			{"wave": "square", "f0": 880.0, "start": 0.07, "dur": 0.34, "amp": 0.1, "attack": 0.01, "decay": 0.14, "lp0": 4500.0},
+			{"wave": "sine", "f0": 1760.0, "start": 0.07, "dur": 0.3, "amp": 0.1, "decay": 0.12}]},
+	# Hoplite step: a heavy armoured tread, a dull thud and a rattle of bronze plates.
+	"hoplite_step": {"dur": 0.2, "volume_db": -22.0, "max_voices": 3, "min_interval": 130, "pitch_var": 0.12, "priority": 0,
+		"layers": [
+			{"wave": "sine", "f0": 95.0, "f1": 55.0, "dur": 0.14, "amp": 0.5, "decay": 0.04},
+			{"wave": "noise", "dur": 0.06, "amp": 0.25, "decay": 0.02, "lp0": 1800.0, "lp1": 700.0},
+			{"wave": "sine", "f0": 1250.0, "start": 0.03, "dur": 0.12, "amp": 0.05, "decay": 0.04}]},
+	# Bronze Titan rising: a deep bronze groan, a grinding sweep and a heavy boom under it.
+	"titan_rise": {"dur": 1.6, "volume_db": -11.0, "max_voices": 2, "min_interval": 600, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 48.0, "f1": 70.0, "dur": 1.5, "amp": 0.3, "attack": 0.4, "decay": 0.7, "lp0": 300.0, "lp1": 600.0},
+			{"wave": "sine", "f0": 32.0, "f1": 24.0, "dur": 1.5, "amp": 0.6, "attack": 0.1, "decay": 0.7},
+			{"wave": "noise", "dur": 1.3, "amp": 0.3, "attack": 0.3, "decay": 0.5, "lp0": 700.0, "lp1": 200.0},
+			{"wave": "sine", "f0": 232.0, "f1": 190.0, "start": 0.2, "dur": 1.2, "amp": 0.08, "attack": 0.3, "decay": 0.5, "vib_hz": 5.0, "vib_depth": 0.02}]},
+}

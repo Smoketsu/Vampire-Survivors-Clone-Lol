@@ -753,3 +753,5 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-24 02:29,pantheon/hero,gpt-image-2.5-flare,medium,1024x1024,2,646,1430,439,0.0278,src_hero.png
 2026-10-24 02:31,pantheon/shade,gpt-image-2.5-flare,medium,1024x1024,2,594,2048,439,0.0325,src_shade.png
 2026-10-24 02:31,pantheon/bronze_titan,gpt-image-2.5-flare,medium,1024x1024,2,585,2048,439,0.0325,src_bronze_titan.png
+2026-10-24 02:25,,gpt-image-2.5-flare,medium,1024x1024,1,930,576,439,0.0224,close_act3.png
+2026-10-24 02:25,,gpt-image-2.5-flare,medium,1536x1024,1,930,576,343,0.0195,close_act3.png

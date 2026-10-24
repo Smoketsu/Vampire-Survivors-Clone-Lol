@@ -8,7 +8,7 @@
 ## God Serves (Vhal'Neth slain and raised). Every paragraph has its own
 ## pixel-art picture panel (`panels`, assets/sprites/epilogue/<id>.png, made by
 ## tools/epilogue_panel.py; docs/art/ART_BIBLE.md "Epilogue panels") with a
-## slow pan; a closing card (CLOSING) after Act II hints at the sequel. The
+## slow pan; a closing card per act (CLOSINGS) hints at the sequel. The
 ## main menu shows its Epilogue button once either part is open
 ## (FrontDoorData.MENU_ITEMS); EpilogueScreen plays the slides, and plays the
 ## parts the player has not seen yet once on their own after a run (Meta
@@ -88,19 +88,38 @@ const ACT3_PART := {
 		["epilogue/act3_4", Vector2(0.5, 0.0), Vector2(0.5, 0.9)],  # TUNING (not in GDD) the three acts' ruins, down to the army of the dead
 	],
 }
-## The closing card after Act II (shown only once the Act II part is open):
-## the set-up of Act III (owner, wave 2 art review: "redo with electronic empire
-## vibes"; GDD §15.0 "Act III epilogue and the new closing card"): the beacons
-## lit for the dead are seen by the Electronic Empire, which nobody called. It
-## still closes Act II once Act III is open.
-const CLOSING := {
-	"after": "act2",  # TUNING (not in GDD) id of the PARTS row the card follows (Act II, also once Act III is open)
-	"act": "Beyond the realm",  # TUNING (not in GDD)
-	"heading": "The Beacons Burn",  # TUNING (not in GDD)
-	"line": "Far beyond the mountains, the holy orders the Covenant once led are lighting their beacons. They remember how to march, and they are marching on the dead.",  # TUNING (not in GDD) two lines; the banners name the orders. Owner decision (Act III art review round 4): the knights card stays, its blue star repainted gold; the Empire version is kept only as art_source/epilogue/close_empire.png
-	"tag": "To be continued.",  # TUNING (not in GDD) small dim line under the closing text
-	"panel": ["epilogue/close", Vector2(0.0, 0.0), Vector2(1.0, 0.85)],  # TUNING (not in GDD) the beacons, down to the knights at the gate
-}
+## The closing cards, one per act, in reading order (owner: "tie everything
+## together nicely"; docs/act4/PROPOSAL.md "Closing cards"; GDD §15.0 "Closing
+## cards, one per act"). Each names the next enemy without showing it, and
+## follows the PARTS row its `after` key names: it is shown right after that
+## part's slides, once that part is open (and in the main menu's Epilogue
+## button and the autoplay-once flow alike). Keys: after (PARTS id), act (the
+## small label), heading, line (the closing text), tag (small dim line under
+## it), panel ([SpriteData key, pan start, pan end] as PARTS panels).
+## The card after Act II is the set-up of Act III (owner, wave 2 art review:
+## "redo with electronic empire vibes"; GDD §15.0 "Act III epilogue and the new
+## closing card"): the beacons lit for the dead are seen by the Electronic
+## Empire, which nobody called. It still closes Act II once Act III is open.
+## The card after Act III sets up Act IV, the Olympian Republic.
+const CLOSINGS := [
+	{
+		"after": "act2",  # TUNING (not in GDD) id of the PARTS row the card follows (Act II, also once Act III is open)
+		"act": "Beyond the realm",  # TUNING (not in GDD)
+		"heading": "The Beacons Burn",  # TUNING (not in GDD)
+		"line": "Far beyond the mountains, the holy orders the Covenant once led are lighting their beacons. They remember how to march, and they are marching on the dead.",  # TUNING (not in GDD) two lines; the banners name the orders. Owner decision (Act III art review round 4): the knights card stays, its blue star repainted gold; the Empire version is kept only as art_source/epilogue/close_empire.png
+		"tag": "To be continued.",  # TUNING (not in GDD) small dim line under the closing text
+		"panel": ["epilogue/close", Vector2(0.0, 0.0), Vector2(1.0, 0.85)],  # TUNING (not in GDD) the beacons, down to the knights at the gate
+	},
+	# --- Act IV: the Olympian Republic ---
+	{
+		"after": "act3",  # TUNING (not in GDD) follows the Act III part ("The Machines Go Dark")
+		"act": "Beneath the world",  # TUNING (not in GDD)
+		"heading": "The River Runs Dry",  # Owner-approved proposal (docs/act4/PROPOSAL.md "Closing cards")
+		"line": "Far below the world, the river of the dead has run dry, and its ferryman has no one left to carry. On a mountain of marble, the gods have noticed.",  # Owner-approved proposal
+		"tag": "To be continued.",  # TUNING (not in GDD)
+		"panel": ["epilogue/close_act3", Vector2(0.5, 0.0), Vector2(0.4, 1.0)],  # TUNING (not in GDD) the gods on the marble mountain, down to the empty ferry and the lantern
+	},
+]
 ## Line shown in place of a part that is still sealed.
 const SEALED: String = "Sealed. %s to read on."  # TUNING (not in GDD) %s = the achievement's goal
 ## Heading of a sealed part's slide.
@@ -175,3 +194,12 @@ static func any_open() -> bool:
 ## Seconds slide text `text` stays before the next slide (SLIDE_BASE + reading time).
 static func slide_time(text: String) -> float:
 	return SLIDE_BASE + SLIDE_PER_CHAR * float(text.length())
+
+
+## The closing card that follows part `part_id` (a PARTS id), or an empty
+## Dictionary when that part has none.
+static func closing_after(part_id: String) -> Dictionary:
+	for c: Dictionary in CLOSINGS:
+		if String(c["after"]) == part_id:
+			return c
+	return {}
