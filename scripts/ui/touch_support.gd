@@ -16,9 +16,17 @@
 ##     pauses a running game. A browser can only lock the orientation in
 ##     fullscreen: the Web shell (web/mobile_shell.html) asks for landscape
 ##     when the page enters fullscreen; the overlay covers every other case.
+##   * on a phone's Web build, caps the canvas resolution (GDD §15.0 "Phone
+##     resolution cap"): the page's drawing buffer is css px x devicePixelRatio
+##     (3 on an iPhone), which the GPU fills every frame; the shell's
+##     necroSetCanvasCap() lowers it to TouchData.CANVAS_DPR_CAP device px per
+##     CSS px. Every CSS-size calculation then reads css_scale() (the scale the
+##     buffer really has) instead of DisplayServer.screen_get_scale() (which
+##     stays the browser's devicePixelRatio), so the UI scale and the thumb-sized
+##     controls stay the same size under the finger;
 ## Static helpers used by the screens: layout_per_css() (layout px per CSS
-## px, for thumb-sized controls) and pass_drags() (lets a finger drag a
-## ScrollContainer that is full of buttons).
+## px, for thumb-sized controls), css_scale() and pass_drags() (lets a finger
+## drag a ScrollContainer that is full of buttons).
 ## Purely presentation: it never reads or changes gameplay state or RNG.
 class_name TouchSupport
 extends Node
@@ -31,6 +39,9 @@ signal portrait_changed(portrait: bool)
 static var _mobile: int = -1
 ## The installed node (null until install(); at most one per session).
 static var _instance: TouchSupport = null
+
+## Device px per CSS px of the window as last read (css_scale(); 0 = not read yet).
+static var _css_scale: float = 0.0
 
 ## The portrait overlay (hidden in landscape).
 var _overlay: RotateOverlay = null
@@ -86,17 +97,43 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if is_mobile():
 		InputHints.set_device(InputHints.Device.TOUCH)
+		_cap_canvas()
 	_overlay = RotateOverlay.new()
 	add_child(_overlay)
 	get_tree().root.size_changed.connect(_on_resize)
 	_on_resize()
 
 
+## Web build on a phone: asks the page (web/mobile_shell.html) to draw at most
+## TouchData.CANVAS_DPR_CAP device px per CSS px. An older page without the hook
+## is left as it is.
+static func _cap_canvas() -> void:
+	if not OS.has_feature("web") or TouchData.CANVAS_DPR_CAP <= 0.0:
+		return
+	JavaScriptBridge.eval("window.necroSetCanvasCap && window.necroSetCanvasCap(%s)" % str(TouchData.CANVAS_DPR_CAP), true)
+	_css_scale = 0.0  # Read again.
+
+
+## Device px per CSS px of the window: on the Web build the scale the page really
+## drew the canvas at (window.necroCanvasScale, which the phone resolution cap
+## lowers below devicePixelRatio), elsewhere DisplayServer.screen_get_scale().
+## Cached; re-read on every window resize.
+static func css_scale() -> float:
+	if _css_scale <= 0.0:
+		_css_scale = DisplayServer.screen_get_scale()
+		if OS.has_feature("web"):
+			var v: Variant = JavaScriptBridge.eval("window.necroCanvasScale || window.devicePixelRatio || 1", true)
+			if (typeof(v) == TYPE_INT or typeof(v) == TYPE_FLOAT) and float(v) > 0.0:
+				_css_scale = float(v)
+	return maxf(_css_scale, 0.01)
+
+
 ## Window size changed: re-apply the UI scale and the portrait overlay.
 func _on_resize() -> void:
 	var root := get_tree().root
+	_css_scale = 0.0  # The page may have refitted the canvas (rotation, browser bars).
 	if is_mobile():  # A desktop keeps its factor untouched.
-		root.content_scale_factor = ui_scale(Vector2(root.size), DisplayServer.screen_get_scale())
+		root.content_scale_factor = ui_scale(Vector2(root.size), css_scale())
 	var portrait := is_mobile() and root.size.y > root.size.x
 	_overlay.visible = portrait
 	if portrait != _portrait:
@@ -126,7 +163,7 @@ static func ui_scale(win: Vector2, dpr: float) -> float:
 ## px times this give thumb-sized layout px on any screen.
 static func layout_per_css(vp: Viewport) -> float:
 	var win := DisplayServer.window_get_size()  # Device px.
-	var css_h := float(win.y) / maxf(DisplayServer.screen_get_scale(), 0.01)  # Window height in CSS px.
+	var css_h := float(win.y) / css_scale()  # Window height in CSS px.
 	if css_h <= 0.0:
 		return TouchData.MIN_LAYOUT_PER_CSS
 	return maxf(vp.get_visible_rect().size.y / css_h, TouchData.MIN_LAYOUT_PER_CSS)

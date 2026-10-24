@@ -48,11 +48,21 @@ const server = http.createServer((req, res) => {
   page.on('pageerror', (e) => lines.push('PAGEERROR ' + e.message));
   page.on('crash', () => lines.push('PAGECRASH'));
   // Frame intervals as the browser's own animation frames see them (same main thread as Godot).
+  // Also counts the WebGL objects the engine creates (each one takes a new id in the engine's GL tables).
   await page.addInitScript(() => {
     window.__frames = [];
+    window.__gl = { buffers: 0, vaos: 0, textures: 0, delBuffers: 0 };
     let last = 0;
     const tick = (t) => { if (last > 0) { window.__frames.push(t - last); } last = t; requestAnimationFrame(tick); };
     requestAnimationFrame(tick);
+    const P = window.WebGL2RenderingContext && WebGL2RenderingContext.prototype;
+    if (P) {
+      const wrap = (name, key) => { const f = P[name]; P[name] = function () { window.__gl[key]++; return f.apply(this, arguments); }; };
+      wrap('createBuffer', 'buffers');
+      wrap('createVertexArray', 'vaos');
+      wrap('createTexture', 'textures');
+      wrap('deleteBuffer', 'delBuffers');
+    }
   });
   const t0 = Date.now();
   await page.goto(`http://127.0.0.1:${port}/index.html?necro_autotest=${encodeURIComponent(flags)}`);
@@ -73,19 +83,21 @@ const server = http.createServer((req, res) => {
         const f = window.__frames.splice(0).sort((a, b) => a - b);
         const c = document.getElementById('canvas');
         const heap = (typeof engine !== 'undefined' && engine.rtenv && engine.rtenv.HEAPU8) ? engine.rtenv.HEAPU8.length : 0;
-        return { heap, n: f.length, med: f.length ? f[f.length >> 1] : 0, p95: f.length ? f[Math.min(f.length - 1, Math.floor(f.length * 0.95))] : 0,
+        const gl = Object.assign({}, window.__gl);
+        return { heap, gl, n: f.length, med: f.length ? f[f.length >> 1] : 0, p95: f.length ? f[Math.min(f.length - 1, Math.floor(f.length * 0.95))] : 0,
           max: f.length ? f[f.length - 1] : 0, cw: c.width, ch: c.height, css: `${c.style.width}x${c.style.height}` };
       });
     } catch (e) {
       lines.push('[web] sample failed: ' + e.message);
       break;
     }
+    await cdp.send('HeapProfiler.collectGarbage').catch(() => {});  // Retained JS heap, not garbage.
     const hu = await cdp.send('Runtime.getHeapUsage').catch(() => ({ usedSize: 0, totalSize: 0 }));
     peakHeap = Math.max(peakHeap, s.heap);
     peakJs = Math.max(peakJs, hu.usedSize);
     const mon = lines.filter((l) => l.startsWith('[mon] t=')).pop() || '';
     const at = ((Date.now() - t0) / 1000).toFixed(0);
-    const row = `[web] ${at} s heap=${(s.heap / 1048576).toFixed(1)}MB js=${(hu.usedSize / 1048576).toFixed(1)}/${(hu.totalSize / 1048576).toFixed(1)}MB canvas=${s.cw}x${s.ch} (${s.css}) raf n=${s.n} med=${s.med.toFixed(1)} p95=${s.p95.toFixed(1)} max=${s.max.toFixed(1)} ms | ${mon.slice(0, 60)}`;
+    const row = `[web] ${at} s heap=${(s.heap / 1048576).toFixed(1)}MB js=${(hu.usedSize / 1048576).toFixed(1)}/${(hu.totalSize / 1048576).toFixed(1)}MB canvas=${s.cw}x${s.ch} gl buf=${s.gl.buffers} vao=${s.gl.vaos} tex=${s.gl.textures} del=${s.gl.delBuffers} raf n=${s.n} med=${s.med.toFixed(1)} p95=${s.p95.toFixed(1)} max=${s.max.toFixed(1)} ms | ${mon.slice(0, 60)}`;
     lines.push(row);
     console.log(row);
     if (lines.some((l) => l.startsWith('[mon] peak') || l.startsWith('PAGECRASH'))) {

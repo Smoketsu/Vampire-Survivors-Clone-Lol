@@ -63,6 +63,9 @@ var _n_col: PackedColorArray = PackedColorArray()
 var _n_big: PackedByteArray = PackedByteArray()
 ## Damage-number owner key (enemy instance id) for merging.
 var _n_key: PackedInt64Array = PackedInt64Array()
+## Damage-number slot -> its text (the rounded value), made when the value changes
+## instead of on every drawn frame.
+var _n_text: PackedStringArray = PackedStringArray()
 ## Enemy instance id -> number slot, for merging.
 var _n_slot_of: Dictionary = {}
 ## Next number slot to write (ring cursor).
@@ -95,6 +98,7 @@ func _ready() -> void:
 	_n_col.resize(MAX_NUMBERS)
 	_n_big.resize(MAX_NUMBERS)
 	_n_key.resize(MAX_NUMBERS)
+	_n_text.resize(MAX_NUMBERS)
 
 
 ## Spawns `count` particles at `pos` flying outward at up to `speed` px/s.
@@ -149,12 +153,14 @@ func dust(pos: Vector2, color: Color, alt: Color, count: int, r: float) -> void:
 	_p_alive = mini(MAX_PARTICLES, _p_alive + count)
 
 
-## Particles to spawn for a request of `count`: all of them on Full effects,
-## EffectsData.REDUCED_PARTICLES of them (at least one) on Reduced.
+## Particles to spawn for a request of `count`: all of them at the Full visual tier,
+## EffectsData.TIER_PARTICLES of them (at least one) at the lower tiers (Reduced
+## effects or the adaptive quality; AdaptiveQuality.tier()).
 func _quality_count(count: int) -> int:
-	if count <= 0 or not Settings.reduced_effects():
+	var tier := AdaptiveQuality.tier()
+	if count <= 0 or tier == 0:
 		return count
-	return maxi(1, int(ceilf(float(count) * EffectsData.REDUCED_PARTICLES)))
+	return maxi(1, int(ceilf(float(count) * float(EffectsData.TIER_PARTICLES[tier]))))
 
 
 ## Shows (or merges) a damage number for the enemy with instance id `key`.
@@ -162,6 +168,7 @@ func number(key: int, pos: Vector2, value: float, color: Color, big: bool) -> vo
 	var s: int = _n_slot_of.get(key, -1)
 	if s >= 0 and _n_key[s] == key and _n_age[s] < MERGE_WINDOW:
 		_n_val[s] += value
+		_n_text[s] = str(int(ceilf(_n_val[s])))
 		if big or _n_val[s] >= BIG_HIT:
 			_n_big[s] = 1
 		return
@@ -171,6 +178,7 @@ func number(key: int, pos: Vector2, value: float, color: Color, big: bool) -> vo
 		_n_slot_of.erase(_n_key[s])
 	_n_pos[s] = pos + Vector2(_rng.randf_range(-5.0, 5.0), -8.0)
 	_n_val[s] = value
+	_n_text[s] = str(int(ceilf(value)))
 	_n_age[s] = 0.0
 	_n_col[s] = color
 	_n_big[s] = 1 if (big or value >= BIG_HIT) else 0
@@ -239,19 +247,31 @@ func _draw() -> void:
 			continue
 		var sz := _p_size[i]
 		draw_rect(Rect2(_p_pos[i] - Vector2(sz, sz) * 0.5, Vector2(sz, sz)), Color(_p_col[i], l / _p_max[i]))
-	var only_big := Settings.reduced_effects()  # Reduced effects: the big numbers only.
-	for i in MAX_NUMBERS:
-		var a := _n_age[i]
-		if a >= NUMBER_LIFE:
-			continue
-		if only_big and _n_big[i] == 0 and _n_val[i] < EffectsData.REDUCED_NUMBER_MIN:
-			continue
-		var k := a / NUMBER_LIFE
-		var alpha := 1.0 if k < 0.6 else (1.0 - k) / 0.4
-		var fs := NUMBER_FONT_SIZE_BIG if _n_big[i] == 1 else NUMBER_FONT_SIZE
-		if UiTheme.font_for() != null:
-			fs = UiTheme.font_px(fs)  # A clean pixel-font size.
-		var p := _n_pos[i] + Vector2(-20.0, -NUMBER_RISE * (1.0 - (1.0 - k) * (1.0 - k)))
-		var text := str(int(ceilf(_n_val[i])))
-		draw_string_outline(_font, p, text, HORIZONTAL_ALIGNMENT_CENTER, 40.0, fs, 3, Color(0.0, 0.0, 0.0, 0.75 * alpha))
-		draw_string(_font, p, text, HORIZONTAL_ALIGNMENT_CENTER, 40.0, fs, Color(_n_col[i], alpha))
+	if _n_alive == 0:
+		return
+	# Damage numbers, by the visual tier (AdaptiveQuality: the Effects setting or the
+	# adaptive level; Reduced shows the big numbers only). All outlines first, then
+	# all fills: each pass uses one glyph texture, so it batches (outline and fill
+	# alternating per number broke the batch twice a number).
+	var tier := AdaptiveQuality.tier()
+	var nmin: float = EffectsData.TIER_NUMBER_MIN[tier]  # Smaller (not big) numbers are hidden.
+	var big_ok: bool = EffectsData.TIER_BIG_NUMBERS[tier]  # Big numbers drawn at all.
+	var pixel_font := UiTheme.font_for() != null  # A clean pixel-font size.
+	for pass_i in 2:
+		for i in MAX_NUMBERS:
+			var a := _n_age[i]
+			if a >= NUMBER_LIFE:
+				continue
+			var big := _n_big[i] == 1
+			if (big and not big_ok) or (not big and _n_val[i] < nmin):
+				continue
+			var k := a / NUMBER_LIFE
+			var alpha := 1.0 if k < 0.6 else (1.0 - k) / 0.4
+			var fs := NUMBER_FONT_SIZE_BIG if big else NUMBER_FONT_SIZE
+			if pixel_font:
+				fs = UiTheme.font_px(fs)
+			var p := _n_pos[i] + Vector2(-20.0, -NUMBER_RISE * (1.0 - (1.0 - k) * (1.0 - k)))
+			if pass_i == 0:
+				draw_string_outline(_font, p, _n_text[i], HORIZONTAL_ALIGNMENT_CENTER, 40.0, fs, 3, Color(0.0, 0.0, 0.0, 0.75 * alpha))
+			else:
+				draw_string(_font, p, _n_text[i], HORIZONTAL_ALIGNMENT_CENTER, 40.0, fs, Color(_n_col[i], alpha))

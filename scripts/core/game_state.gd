@@ -164,6 +164,9 @@
 ##   --adaptive=off|N      AdaptiveQuality (drawing only): off keeps the adaptive level
 ##                         at 0, N (0-3) pins it at N; default: it adapts as in a
 ##                         player's run (measurements, docs/perf/MOBILE.md).
+##   --draw-probe=T        With --monitor on the Web build: from game second T, hides one
+##                         world layer at a time and prints the WebGL objects created
+##                         per frame without it ("[draw]" lines; drawing only).
 ##   --perf                Prints a table of the simulation's milliseconds per
 ##                         tick (mean / p95 / max per minute, and at the busy
 ##                         moments: boss fight, Reckoning, Rally Barrages) at the
@@ -283,6 +286,8 @@ var autotest_perf: bool = false
 ## Autotest: --adaptive= value ("" = adapt as in a player's run, "off", or a pinned
 ## level "0".."3"; AdaptiveQuality, drawing only).
 var autotest_adaptive: String = ""
+## Autotest: game time (s) of the MonitorProbe draw probe (--draw-probe=T; < 0 = off).
+var autotest_draw_probe: float = -1.0
 ## Autotest: game seconds between two MonitorProbe lines (--monitor=N; 0 = off).
 var autotest_monitor: float = 0.0
 ## Autotest: "reduced" when --effects=reduced draws with Effects = Reduced
@@ -357,6 +362,8 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_perf = true  # Per-tick timing table (PerfProbe).
 		elif arg.begins_with("--adaptive="):
 			autotest_adaptive = arg.get_slice("=", 1).to_lower()  # AdaptiveQuality: off or a pinned level.
+		elif arg.begins_with("--draw-probe="):
+			autotest_draw_probe = arg.get_slice("=", 1).to_float()  # MonitorProbe: which layer draws the polygons.
 		elif arg.begins_with("--monitor="):
 			autotest_monitor = maxf(1.0, arg.get_slice("=", 1).to_float())  # Memory / draw sampling (MonitorProbe).
 		elif arg.begins_with("--effects="):

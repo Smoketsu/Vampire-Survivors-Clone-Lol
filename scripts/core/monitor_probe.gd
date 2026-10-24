@@ -7,6 +7,12 @@
 ## things (enemies, summons, projectiles, volley shots, volley bursts, effects,
 ## particles, damage numbers, XP crystals) and the rendered-frame times since the
 ## previous line (median / p95 / max real ms), plus the AdaptiveQuality level.
+## --draw-probe=T (with --monitor, the Web build driven by tools/mobile_web_perf.js,
+## which counts the WebGL objects the page creates in window.__gl): from game time T
+## it hides one world layer at a time for DRAW_PROBE_FRAMES rendered frames
+## (volleys, effects, enemies, army, ...) and prints "[draw]" lines with the WebGL
+## buffers + vertex arrays created per frame in each phase: what draws the polygons
+## Godot rebuilds every frame. Hiding a node only stops its drawing.
 ## It reads the clock, the monitors and the run's counters only: never gameplay
 ## state or RNG, so a run with it plays out exactly as one without.
 class_name MonitorProbe
@@ -26,12 +32,23 @@ var _last_usec: int = 0
 var peak_heap: int = 0
 ## Highest object count seen.
 var peak_objects: int = 0
+## Rendered frames per --draw-probe phase.
+const DRAW_PROBE_FRAMES: int = 60  # Measurement only (not in GDD).
+## Game time (s) the draw probe starts (< 0 = off; --draw-probe=T).
+var _probe_at: float = -1.0
+## Current draw-probe phase (index into _probe_layers(); -1 = not started, -2 = done).
+var _probe_phase: int = -1
+## Rendered frames left in the current phase.
+var _probe_left: int = 0
+## WebGL object count (window.__gl buffers + vaos) at the phase start.
+var _probe_gl0: int = 0
 
 
 func _init(p_game: Game, p_interval: float) -> void:
 	game = p_game
 	interval = maxf(1.0, p_interval)
 	_next = 0.0
+	_probe_at = GameState.autotest_draw_probe
 
 
 ## One rendered frame (Game._process()): files the real time since the last
@@ -44,6 +61,47 @@ func frame() -> void:
 	if game.elapsed >= _next:
 		_next = game.elapsed + interval
 		print_line()
+	if _probe_at >= 0.0 and game.elapsed >= _probe_at and _probe_phase != -2:
+		_step_probe()
+
+
+## The draw-probe phases: [name, node or null (nothing hidden)].
+func _probe_layers() -> Array:
+	return [["none", null], ["volleys", game.volleys], ["effects", game.effects], ["enemies", game.enemies],
+		["army", game.horde], ["projectiles", game.projectiles], ["pickups", game.pickups], ["fx", Juice.fx],
+		["hud", game.hud], ["ground", game.ground], ["player", game.player], ["motion", game.motion],
+		["chests", game.chests], ["powerups", game.powerups], ["arena", game.arena], ["none", null]]
+
+
+## WebGL buffers + vertex arrays the page created so far (window.__gl; -1 = unknown).
+static func gl_objects() -> int:
+	if not OS.has_feature("web"):
+		return -1
+	var v: Variant = JavaScriptBridge.eval("window.__gl ? window.__gl.buffers + window.__gl.vaos : -1", true)
+	return int(v) if (typeof(v) == TYPE_INT or typeof(v) == TYPE_FLOAT) else -1
+
+
+## Advances the draw probe by one rendered frame.
+func _step_probe() -> void:
+	var layers := _probe_layers()
+	if _probe_phase >= 0:
+		_probe_left -= 1
+		if _probe_left > 0:
+			return
+		var l: Array = layers[_probe_phase]
+		var n := gl_objects()
+		print("[draw] t=%d hidden=%s gl objects per frame=%.1f" % [int(game.elapsed), l[0], float(n - _probe_gl0) / float(DRAW_PROBE_FRAMES)])
+		if l[1] != null and is_instance_valid(l[1]):
+			(l[1] as CanvasItem).visible = true
+	_probe_phase += 1
+	if _probe_phase >= layers.size():
+		_probe_phase = -2
+		return
+	var nl: Array = layers[_probe_phase]
+	if nl[1] != null and is_instance_valid(nl[1]):
+		(nl[1] as CanvasItem).visible = false
+	_probe_left = DRAW_PROBE_FRAMES
+	_probe_gl0 = gl_objects()
 
 
 ## The WebAssembly heap size in bytes (the Web build; 0 elsewhere or when the

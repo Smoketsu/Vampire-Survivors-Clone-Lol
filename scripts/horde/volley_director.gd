@@ -99,6 +99,14 @@ var _fx_col := PackedColorArray()
 var _fx_kind := PackedInt32Array()
 ## Next burst slot to write (the oldest is replaced).
 var _fx_next: int = 0
+## Glow disc texture of the art shots (_make_disc(); null headless / without art).
+var _disc: Texture2D = null
+## Scratch, reused every frame: sort keys (style index << 16 | slot) of the art
+## shots drawn this frame (no per-frame allocation once grown).
+var _order := PackedInt32Array()
+## Per style index: drawn length of its mask as a multiple of the shot's drawn
+## radius (VolleyData.ART_LEN, read once at setup).
+var _art_len := PackedFloat32Array()
 ## Game time (s) until which some burst is still playing (keeps redrawing).
 var _fx_until: float = 0.0
 
@@ -164,6 +172,8 @@ func setup(p_game: Game) -> void:
 		return  # Nothing is drawn: no art to load.
 	for st: String in STYLES:
 		_art.append(SpriteBank.texture(VolleyData.ART_DIR + st))
+		_art_len.append(float(VolleyData.ART_LEN.get(st, 5.0)))
+	_disc = _make_disc()
 	_has_hit_art = SpriteBank.has_anim(VolleyData.HIT_ANIM)
 	_has_flash_art = SpriteBank.has_anim(VolleyData.FLASH_ANIM)
 
@@ -567,28 +577,33 @@ func clear() -> void:
 func _draw() -> void:
 	if not on:
 		return
-	var reduced := Settings.reduced_effects()  # Phones: draw fewer shots and bursts.
-	_draw_bursts(reduced)
+	var tier := AdaptiveQuality.tier()  # Visual tier (Effects setting / adaptive quality; drawing only).
+	var view := _view_rect()  # Local rect on screen (+ margin): shots and bursts outside it are not drawn.
+	_draw_bursts(tier, view)
 	if alive == 0:
 		return
+	var cap: int = EffectsData.TIER_SHOTS[tier]  # Most shots drawn this frame.
 	var drawn := 0
+	_order.resize(0)
 	for i in VolleyData.SHOT_CAP:
 		if _life[i] <= 0.0:
 			continue
-		if reduced:
-			drawn += 1
-			if drawn > VolleyData.DRAW_CAP_REDUCED:
-				break
 		var p := _pos[i]
+		if not view.has_point(p):
+			continue  # Off screen: nothing to see (it still flies and hits).
+		drawn += 1
+		if drawn > cap:
+			break
+		var st := _style[i]  # Style index.
+		var tex: Texture2D = _art[st] if st < _art.size() else null  # Its mask, or null.
+		if tex != null:
+			_order.append((st << 16) | i)  # Drawn below, grouped by mask (one batch each).
+			continue
 		var v := _vel[i]
 		var c := _col[i]
 		var r := _rad[i] * VolleyData.DRAW_SCALE  # Drawn size (px).
 		var dir := v.normalized() if v.length() > 0.01 else Vector2.RIGHT
-		var style := STYLES[_style[i]]  # Look of this shot.
-		var tex: Texture2D = _art[_style[i]] if _style[i] < _art.size() else null  # Its mask, or null.
-		if tex != null:
-			_draw_art(tex, style, p, dir, r, c)
-			continue
+		var style := STYLES[st]  # Look of this shot.
 		var tail := p - v * (VolleyData.TRAIL / 60.0)  # Trail start.
 		var glow := Color(c, VolleyData.GLOW_ALPHA)
 		var core := Color(c, VolleyData.CORE_ALPHA)
@@ -613,45 +628,87 @@ func _draw() -> void:
 				draw_circle(p, r * 0.8, core)
 				if style == "spark":
 					draw_circle(p, r * 0.35, Color(1, 1, 1, 0.8))
+	if not _order.is_empty():
+		_draw_art_shots(bool(EffectsData.TIER_SHOT_GLOW[tier]))
 
 
-## Draws one shot from its tint mask: a soft glow, then the mask rotated along the
-## flight path (pointing right in the file), its head on the shot, tinted with the
-## shot's colour lightened toward white.
-func _draw_art(tex: Texture2D, style: String, p: Vector2, dir: Vector2, r: float, c: Color) -> void:
-	var w := float(tex.get_width())  # Mask width (px).
-	var h := float(tex.get_height())  # Mask height (px).
-	var length := r * float(VolleyData.ART_LEN.get(style, 5.0))  # Drawn longest side (px).
-	var k := length / maxf(w, h)  # Mask px -> world px.
-	var size := Vector2(w, h) * k  # Drawn size (px).
-	draw_circle(p, minf(r * VolleyData.ART_GLOW, VolleyData.ART_GLOW_MAX), Color(c, VolleyData.ART_GLOW_ALPHA))
-	draw_set_transform(p - dir * size.x * VolleyData.ART_LEAD, dir.angle(), Vector2.ONE)
-	draw_texture_rect(tex, Rect2(-size * 0.5, size), false, Color(c.lerp(Color.WHITE, VolleyData.ART_WHITEN), VolleyData.ART_ALPHA))
+## Draws the shots listed in _order from their tint masks: first every soft glow
+## (one disc texture, so all of them batch into one draw call; a draw_circle is a
+## polygon and a draw call of its own), then the masks grouped by style (one batch
+## per mask texture), each rotated along its flight path (pointing right in the
+## file), its head on the shot, tinted with the shot's colour lightened toward
+## white. The node blends additively, so drawing all glows before all masks gives
+## the same picture as glow-then-mask per shot.
+func _draw_art_shots(glows: bool) -> void:
+	_order.sort()  # By style, then slot.
+	if glows and _disc != null:
+		for key in _order:
+			var i := key & 0xFFFF  # Slot.
+			var gr := minf(_rad[i] * VolleyData.DRAW_SCALE * VolleyData.ART_GLOW, VolleyData.ART_GLOW_MAX)  # Glow radius (px).
+			draw_texture_rect(_disc, Rect2(_pos[i] - Vector2(gr, gr), Vector2(gr, gr) * 2.0), false, Color(_col[i], VolleyData.ART_GLOW_ALPHA))
+	for key in _order:
+		var i := key & 0xFFFF
+		var st := key >> 16
+		var tex: Texture2D = _art[st]
+		var v := _vel[i]
+		var dir := v.normalized() if v.length() > 0.01 else Vector2.RIGHT
+		var r := _rad[i] * VolleyData.DRAW_SCALE  # Drawn size (px).
+		var w := float(tex.get_width())  # Mask width (px).
+		var h := float(tex.get_height())  # Mask height (px).
+		var k := r * _art_len[st] / maxf(w, h)  # Mask px -> world px.
+		var size := Vector2(w, h) * k  # Drawn size (px).
+		var c := _col[i]
+		draw_set_transform(_pos[i] - dir * size.x * VolleyData.ART_LEAD, dir.angle(), Vector2.ONE)
+		draw_texture_rect(tex, Rect2(-size * 0.5, size), false, Color(c.lerp(Color.WHITE, VolleyData.ART_WHITEN), VolleyData.ART_ALPHA))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
-## Draws the impact bursts and launch flashes still playing (newest last).
-func _draw_bursts(reduced: bool) -> void:
+## This node's rect on screen (local px, = world px), grown by VolleyData.DRAW_MARGIN.
+func _view_rect() -> Rect2:
+	var inv := get_global_transform_with_canvas().affine_inverse()  # Screen -> local.
+	return (inv * get_viewport_rect()).grow(VolleyData.DRAW_MARGIN)
+
+
+## The glow disc: a white circle (alpha 1 inside, a one-texel soft rim) on a clear
+## VolleyData.DISC_PX square, drawn tinted. Made once per director (drawing only).
+static func _make_disc() -> Texture2D:
+	var n := VolleyData.DISC_PX  # Texture size (px).
+	var img := Image.create(n, n, false, Image.FORMAT_RGBA8)
+	var c := (float(n) - 1.0) * 0.5  # Centre (texel).
+	var rad := float(n) * 0.5 - 0.5  # Radius (texels).
+	for y in n:
+		for x in n:
+			var d := Vector2(float(x) - c, float(y) - c).length()
+			img.set_pixel(x, y, Color(1.0, 1.0, 1.0, clampf(rad - d + 0.5, 0.0, 1.0)))
+	return ImageTexture.create_from_image(img)
+
+
+## Draws the impact bursts and launch flashes still playing on screen, at most
+## EffectsData.TIER_BURSTS of the visual tier: all impacts first, then all flashes
+## (one strip texture each, so each pass batches; additive, so the order does not
+## change the picture), oldest first within each.
+func _draw_bursts(tier: int, view: Rect2) -> void:
 	if game.elapsed >= _fx_until:
 		return
-	var drawn := 0  # Bursts drawn (Reduced effects cap).
-	for n in VolleyData.FX_CAP:
-		var j := (_fx_next + n) % VolleyData.FX_CAP  # Oldest first.
-		var t0 := _fx_t0[j]
-		if t0 < 0.0:
-			continue
-		var dur := VolleyData.HIT_TIME if _fx_kind[j] == 0 else VolleyData.FLASH_TIME  # Burst length (s).
-		var prog := (game.elapsed - t0) / dur  # 0..1 through the strip.
-		if prog >= 1.0 or prog < 0.0:
-			continue
-		if reduced:
+	var cap: int = EffectsData.TIER_BURSTS[tier]  # Most bursts drawn.
+	var drawn := 0
+	for kind in 2:  # 0 = impacts (HIT_ANIM), 1 = launch flashes (FLASH_ANIM).
+		var hit := kind == 0
+		var dur := VolleyData.HIT_TIME if hit else VolleyData.FLASH_TIME  # Burst length (s).
+		for n in VolleyData.FX_CAP:
+			var j := (_fx_next + n) % VolleyData.FX_CAP  # Oldest first.
+			var t0 := _fx_t0[j]
+			if t0 < 0.0 or _fx_kind[j] != kind:
+				continue
+			var prog := (game.elapsed - t0) / dur  # 0..1 through the strip.
+			if prog >= 1.0 or prog < 0.0 or not view.has_point(_fx_pos[j]):
+				continue
 			drawn += 1
-			if drawn > VolleyData.FX_DRAW_REDUCED:
+			if drawn > cap:
 				return
-		var hit := _fx_kind[j] == 0  # An impact (else a launch flash).
-		var c := _fx_col[j].lerp(Color.WHITE, VolleyData.ART_WHITEN) if hit else _fx_col[j]  # Impacts burn hot, flashes keep the class colour.
-		SpriteBank.draw_anim(self, VolleyData.HIT_ANIM if hit else VolleyData.FLASH_ANIM, _fx_pos[j], _fx_size[j], prog,
-				VolleyData.HIT_ALPHA if hit else VolleyData.FLASH_ALPHA, c)
+			var c := _fx_col[j].lerp(Color.WHITE, VolleyData.ART_WHITEN) if hit else _fx_col[j]  # Impacts burn hot, flashes keep the class colour.
+			SpriteBank.draw_anim(self, VolleyData.HIT_ANIM if hit else VolleyData.FLASH_ANIM, _fx_pos[j], _fx_size[j], prog,
+					VolleyData.HIT_ALPHA if hit else VolleyData.FLASH_ALPHA, c)
 
 
 # =====================================================================================

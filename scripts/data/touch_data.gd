@@ -48,6 +48,16 @@ const UI_SCALE_MAX_CSS_HEIGHT: float = 540.0  # TUNING (not in GDD) mobile
 ## each edge. Never needed at the desktop's 720 px layout.
 const FIT_MARGIN: float = 6.0  # TUNING (not in GDD) mobile
 
+# --- Phone resolution cap (GDD §15.0 "Phone resolution cap") ---------------------------
+
+## Highest device px per CSS px the Web page draws the canvas at on a phone or
+## tablet (TouchSupport asks web/mobile_shell.html for it; 0 = no cap). iPhones
+## report 3, so an 844 x 390 CSS px landscape page was a 2532 x 1170 px buffer that
+## the GPU filled every frame; at 2 it is 1688 x 780 px (44% of the pixels) and every
+## art pixel still covers at least one device px (the layout is about 600 px tall on
+## a phone with the mobile UI scale). Desktops are never capped.
+const CANVAS_DPR_CAP: float = 2.0  # TUNING (not in GDD) mobile
+
 # --- Portrait overlay --------------------------------------------------------------------
 
 ## Title of the "rotate your device" overlay (TITLE tier).

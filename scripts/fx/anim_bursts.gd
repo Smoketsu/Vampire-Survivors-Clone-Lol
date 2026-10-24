@@ -74,8 +74,21 @@ func step(delta: float) -> void:
 
 
 func _draw() -> void:
-	for i in _dur.size():
+	var cap: int = EffectsData.TIER_ANIM_BURSTS[AdaptiveQuality.tier()]  # Most drawn (visual tier).
+	var n := _dur.size()
+	var skip := 0  # Oldest live bursts left out, so the newest `cap` are drawn.
+	if cap < n:
+		var live := 0
+		for i in n:
+			if _t[i] < _dur[i]:
+				live += 1
+		skip = maxi(0, live - cap)
+	for k in n:
+		var i := (_next + k) % n  # Oldest first (the slot order of a full ring).
 		if _t[i] >= _dur[i]:
+			continue
+		if skip > 0:
+			skip -= 1
 			continue
 		var at := _pos[i]  # Draw centre (px).
 		var f := _follow[i]  # Followed node, or null.
