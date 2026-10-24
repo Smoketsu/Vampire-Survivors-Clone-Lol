@@ -181,19 +181,28 @@ static func burst_under(id: String) -> bool:
 # =====================================================================================
 
 ## A wind-up telegraph of radius `r` at `at`, `k` (0..1) of the wind-up done:
-## the soft area disc, the wind-up disc growing to the rim, and a ring of rim
-## marks (`mark`, AoeArtData.MARK_FRAMES frames; lit near the end). `color` is
-## the caller's code colour. `centre` (optional) is a piece faded in with k
-## (ground cracks under a stomp, the frost star under a Deep Freeze). Returns
-## false without the mark art.
+## the soft area disc and a ring of rim marks (`mark`, AoeArtData.MARK_FRAMES
+## frames) whose outer edge is the hit radius; the marks light up one after
+## another round the rim as the wind-up runs (a clock sweep from the top, all
+## lit at the strike), which replaces the code's growing disc. `color` is the
+## caller's code colour. `centre` (optional) is a piece faded in with k (ground
+## cracks under a stomp, the frost star under a Deep Freeze). Returns false
+## without the mark art.
 static func telegraph(ci: CanvasItem, mark: String, at: Vector2, r: float, k: float, color: Color, centre: String = "", centre_frames: int = 1) -> bool:
-	if not has(mark):
+	var t := tex(mark)  # Mark strip.
+	if t == null:
 		return false
-	fill(ci, at, r, Color(color, AoeArtData.TELEGRAPH_FILL))
-	fill(ci, at, r * clampf(k, 0.0, 1.0), Color(color, AoeArtData.TELEGRAPH_GROW))
+	var kk := clampf(k, 0.0, 1.0)  # Wind-up progress.
+	fill(ci, at, r, Color(color, AoeArtData.TELEGRAPH_FILL + AoeArtData.TELEGRAPH_GROW * kk * 0.5))
 	if centre != "":
-		piece(ci, centre, centre_frames, 0, at, 0.0, 0.7 * clampf(k, 0.0, 1.0))
-	ring(ci, mark, AoeArtData.MARK_FRAMES, 1 if k >= AoeArtData.MARK_LIT_FROM else 0, at, r, AoeArtData.MARK_STEP, AoeArtData.MARK_ALPHA)
+		piece(ci, centre, centre_frames, 0, at, 0.0, 0.7 * kk)
+	var fw := float(t.get_width()) / float(AoeArtData.MARK_FRAMES)  # Mark depth (px).
+	var n := maxi(AoeArtData.MIN_RING_PIECES, ceili(TAU * r / AoeArtData.MARK_STEP * density()))  # Marks.
+	var d := maxf(r - (fw * 0.5 - 1.0), 0.0)  # Mark centre distance (outer edge on r).
+	var lit := int(ceilf(kk * float(n)))  # Marks lit so far.
+	for i in n:
+		var ang := -PI * 0.5 + TAU * float(i) / float(n)  # From the top, clockwise.
+		piece(ci, mark, AoeArtData.MARK_FRAMES, 1 if i < lit else 0, at + Vector2.from_angle(ang) * d, ang, AoeArtData.MARK_ALPHA, i % 2 == 1)
 	return true
 
 
@@ -452,3 +461,63 @@ static func tide_edges(ci: CanvasItem, view: Rect2, a: float, now: float) -> voi
 		var y := view.position.y + tw * (float(i) + 0.5)
 		piece(ci, AoeArtData.TIDE_EDGE, 2, (f + i) % 2, Vector2(view.position.x + td * 0.5, y), -PI * 0.5, a)
 		piece(ci, AoeArtData.TIDE_EDGE, 2, (f + i + 1) % 2, Vector2(view.end.x - td * 0.5, y), PI * 0.5, a)
+
+
+# =====================================================================================
+# Soul Chains bolts, Eclipse Ward band, chill film, Dirge veil
+# =====================================================================================
+
+## A soul-lightning arc along the jagged points `pts` (GraveSpellGlyphs._jagged),
+## opacity `al`: one bolt segment sprite per hop, turned along it and stretched
+## to its length (2 frames, flickering by hop); `damned` lays the wide soul-green
+## under-glow first. False without the art.
+static func bolt_arc(ci: CanvasItem, pts: PackedVector2Array, al: float, damned: bool) -> bool:
+	if not has(AoeArtData.BOLT) or pts.size() < 2:
+		return false
+	var t := tex(AoeArtData.BOLT)  # Bolt strip.
+	var seg_len := float(t.get_width()) / 2.0 - 2.0  # Drawn length of one segment at scale 1 (px, inside its border).
+	for pass_i in (2 if damned else 1):
+		var id := AoeArtData.BOLT_GLOW if pass_i == 0 and damned else AoeArtData.BOLT  # Under-glow, then the bolt.
+		var a := (0.55 if id == AoeArtData.BOLT_GLOW else 1.0) * al  # Its opacity.
+		for i in pts.size() - 1:
+			var d := pts[i + 1] - pts[i]  # This hop.
+			var l := d.length()  # Its length (px).
+			if l < 0.5:
+				continue
+			piece(ci, id, 2, i % 2, (pts[i] + pts[i + 1]) * 0.5, d.angle(), a, false, Vector2(l / seg_len, 1.0))
+	return true
+
+
+## The Eclipse Ward barrier band on its orbit of radius `r` round `c`, turned by
+## `angle` (rad): band pieces with soul runes along the whole orbit. False
+## without the art.
+static func eclipse_band(ci: CanvasItem, c: Vector2, r: float, angle: float) -> bool:
+	if not has(AoeArtData.ECLIPSE_BAND):
+		return false
+	ring(ci, AoeArtData.ECLIPSE_BAND, 2, 0, c, r + AoeArtData.ECLIPSE_BAND_OUT, AoeArtData.ECLIPSE_BAND_STEP, AoeArtData.ECLIPSE_BAND_ALPHA, angle, -1.0, 2)
+	return true
+
+
+## The frost film over a chilled body of radius `r` at `c` (Frost Wraith chill):
+## a faint frost tint and the ice-crust sprite scaled to the body. False without the art.
+static func chill(ci: CanvasItem, c: Vector2, r: float) -> bool:
+	if not has(AoeArtData.CHILL):
+		return false
+	fill(ci, c, r * 1.05, Color(Palette.FROST, 0.16))
+	var s := r / AoeArtData.OVERLAY_RADIUS  # Scale to this body.
+	piece(ci, AoeArtData.CHILL, 1, 0, c, 0.0, 0.9, false, Vector2(s, s))
+	return true
+
+
+## The Dirge mark over a weakened body of radius `r` at `c` (Banshee): the veil
+## and tears, with the crossed silence halo while `silenced`. False without the art.
+static func dirge(ci: CanvasItem, c: Vector2, r: float, silenced: bool) -> bool:
+	var t := tex(AoeArtData.DIRGE)  # Veil strip (2 frames).
+	if t == null:
+		return false
+	var s := r / AoeArtData.OVERLAY_RADIUS  # Scale to this body.
+	var h := float(t.get_height())  # Frame height (px).
+	# The sprite's body centre sits AoeArtData.DIRGE_CENTRE_Y rows from its top: shift the frame so it lands on `c`.
+	var off := Vector2(0.0, (h * 0.5 - AoeArtData.DIRGE_CENTRE_Y) * s)
+	piece(ci, AoeArtData.DIRGE, 2, 1 if silenced else 0, c + off, 0.0, 0.85, false, Vector2(s, s))
+	return true

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cle7u8epydfa0"
-path="res://.godot/imported/wisp_pest.png-2457985d94639f8c2dfbd83a951e964f.ctex"
+uid="uid://ueqogmip1qws"
+path="res://.godot/imported/bolt_violet.png-56849b9cdec2c2e96b3bdc8218253bf8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/aoe/wisp_pest.png"
-dest_files=["res://.godot/imported/wisp_pest.png-2457985d94639f8c2dfbd83a951e964f.ctex"]
+source_file="res://assets/sprites/aoe/bolt_violet.png"
+dest_files=["res://.godot/imported/bolt_violet.png-56849b9cdec2c2e96b3bdc8218253bf8.ctex"]
 
 [params]
 

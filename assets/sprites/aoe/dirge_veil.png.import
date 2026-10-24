@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://blah6ie28afo1"
-path="res://.godot/imported/mote_violet.png-9d0c91c77d1d0502280ba282e16460bd.ctex"
+uid="uid://c2qof60xskl08"
+path="res://.godot/imported/dirge_veil.png-8f92a9653bd20182941fb013eb4b7e7a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/aoe/mote_violet.png"
-dest_files=["res://.godot/imported/mote_violet.png-9d0c91c77d1d0502280ba282e16460bd.ctex"]
+source_file="res://assets/sprites/aoe/dirge_veil.png"
+dest_files=["res://.godot/imported/dirge_veil.png-8f92a9653bd20182941fb013eb4b7e7a.ctex"]
 
 [params]
 

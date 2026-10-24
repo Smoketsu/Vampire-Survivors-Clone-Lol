@@ -241,6 +241,8 @@ static func _shadow(ci: CanvasItem, c: Vector2, w: float) -> void:
 ## its _draw()): a pale veil arc drooping over the head and two falling
 ## tear streaks; while `silenced` (Keening Lady) a crossed lilac halo too.
 static func draw_dirge(ci: CanvasItem, c: Vector2, r: float, silenced: bool) -> void:
+	if AoeArt.dirge(ci, c, r, silenced):
+		return  # Pixel-art veil and tears (GDD §15.0 "Player AoE art").
 	ci.draw_arc(c + Vector2(0, -r * 0.2), r * 1.15, PI * 1.15, PI * 1.85, 10, Color(WAIL, 0.7), 1.5)
 	ci.draw_line(c + Vector2(-r * 0.75, -r * 0.6), c + Vector2(-r * 0.85, r * 0.1), Color(WAIL, 0.45), 1.0)
 	ci.draw_line(c + Vector2(r * 0.75, -r * 0.6), c + Vector2(r * 0.85, r * 0.1), Color(WAIL, 0.45), 1.0)

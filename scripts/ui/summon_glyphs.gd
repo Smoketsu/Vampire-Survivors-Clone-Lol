@@ -475,6 +475,8 @@ static func draw_winter_revenant(ci: CanvasItem, o: Vector2, r: float, flash: bo
 ## Frost Wraith chill on an enemy (drawn in its _draw()): a pale frost film
 ## and two ice ticks. The full Deep Freeze uses PowerupGlyphs.draw_frozen().
 static func draw_chill(ci: CanvasItem, c: Vector2, r: float) -> void:
+	if AoeArt.chill(ci, c, r):
+		return  # Pixel-art ice crust (GDD §15.0 "Player AoE art").
 	ci.draw_circle(c, r * 1.05, Color(Palette.FROST, 0.22))
 	ci.draw_arc(c, r * 1.05, -2.4, -0.7, 10, Color(PowerupGlyphs.ICE, 0.7), 1.0)
 	ci.draw_line(c + Vector2(-r * 0.9, r * 0.6), c + Vector2(-r * 1.25, r * 0.85), PowerupGlyphs.ICE, 1.0)

@@ -218,6 +218,8 @@ static func draw_wall_segment(ci: CanvasItem, p: Vector2, r: float, grow: float,
 static func draw_lightning(ci: CanvasItem, a: Vector2, b: Vector2, jag: int, life: float, damned: bool, w: float = 2.0) -> void:
 	var pts := _jagged(a, b, jag)
 	var al := clampf(life, 0.0, 1.0)  # Alpha.
+	if AoeArt.bolt_arc(ci, pts, al, damned):
+		return  # Pixel-art bolt segments (GDD §15.0 "Player AoE art").
 	if damned:
 		ci.draw_polyline(pts, Color(Palette.NECRO_GREEN, 0.35 * al), w * 3.5)
 	ci.draw_polyline(pts, Color(Palette.VIOLET, 0.75 * al), w * 2.2)

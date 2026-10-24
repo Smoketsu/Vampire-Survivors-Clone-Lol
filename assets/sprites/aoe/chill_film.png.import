@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://biwrrp3rcql8k"
-path="res://.godot/imported/crest_dust.png-6780fa8437d2dcc39aa790f3678a17ca.ctex"
+uid="uid://bh17d8mx8vdl2"
+path="res://.godot/imported/chill_film.png-beff6968aff1948cece2ae3b3f6015e8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/aoe/crest_dust.png"
-dest_files=["res://.godot/imported/crest_dust.png-6780fa8437d2dcc39aa790f3678a17ca.ctex"]
+source_file="res://assets/sprites/aoe/chill_film.png"
+dest_files=["res://.godot/imported/chill_film.png-beff6968aff1948cece2ae3b3f6015e8.ctex"]
 
 [params]
 

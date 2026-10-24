@@ -54,7 +54,9 @@ RAMPS = {
     "violet": ["ink_violet", "violet_deep", "violet", "violet_glow", "violet_flare"],
     "soul": ["ink_green", "soul_dark", "soul", "soul_glow"],
     "plague": ["ink_green", "moss_dark", "moss", "gold_light"],
-    "plague_gas": ["moss_dark", "moss_dark", "moss", "gold_light"],
+    "plague_gas": ["moss_dark", "moss_dark", "moss", "bone_mid"],
+    # Gas puffs: level 1 shade, 2 body, 3 light.
+    "spore": ["ink_green", "moss_dark", "moss", "soul"],
     "pest_gas": ["ink_violet", "ink_violet", "violet_deep", "moss_dark"],
     "pest": ["ink_violet", "violet_deep", "moss_dark", "moss"],
     "stone": ["ink_cold", "grey_dark", "grey", "grey_light"],
@@ -71,8 +73,6 @@ CREST_FRAMES = 4
 MARK_CELL = (7, 14)
 # Cloud puff diameters (art px): small, medium, large.
 PUFF_SIZES = (18, 26, 34)
-# Cloud rim wisp cell (art px): radial x tangent.
-WISP_CELL = (11, 12)
 # Wither rune-rim cell (art px): radial x tangent; 2 frames = 2 variants (thorn + rune, thorn).
 RUNE_CELL = (10, 16)
 # Ground-crack centre piece diameters (art px): small, medium, large.
@@ -84,13 +84,13 @@ FLAME_FRAMES = 4
 # Scorch mark diameters (art px) under a fire patch / shard field.
 SCORCH_SIZES = (28, 60)
 # Bone spike cells (art px, w x h): two variants (Grave Eruption field, Ossuary shard field).
-SPIKE_CELLS = ((9, 15), (11, 19))
+SPIKE_CELLS = ((11, 18), (13, 23))
 # Rogue dash lane: body tile (along x) and head cap, both lane-wide (24 px across = UnitData dash_width).
 LANE_CELL = (8, 24)
 # Dash streak sprite (art px), pointing +x (the dash direction).
 STREAK_CELL = (30, 12)
 # Summon evolution light column (art px) and its frames.
-COLUMN_CELL = (22, 64)
+COLUMN_CELL = (26, 64)
 # Frames of the light column loop.
 COLUMN_FRAMES = 4
 # Eclipse black sun sprite diameter (art px).
@@ -446,8 +446,7 @@ CRESTS = {
     "crest_wail_violet": ("ripple", "violet"),
     "crest_ivory": ("ripple", "bone"),
     "crest_arcane": ("sparks", "arcane"),
-    "crest_spore": ("puffs", "plague"),
-    "crest_dust": ("puffs", "bone"),
+    "crest_spore": ("puffs", "spore"),
     "crest_soul": ("wisps", "soul"),
     "crest_violet": ("wisps", "violet"),
 }
@@ -489,40 +488,41 @@ MARKS = {
 # --------------------------------------------------------------------------------------
 
 def puff(d: int, seed: int) -> Grid:
-    """A lumpy cloud puff of diameter `d`: three or four lumps along the bottom and one or two
-    on top, painted back to front (top lumps first) so each front lump's shaded rim shows over
-    the one behind it; a small highlight on the upper-left of each lump."""
+    """A gas puff of diameter `d`: the union of a few round lumps (a soft lumpy outline), shaded
+    as ONE mass, so overlapping puffs in the game never stack hard inner rims (which read as
+    foliage): a 1-2 px shade band along its bottom-right edge (level 1), the body (level 2) and
+    a light crescent along its top-left edge (level 3). No outline: gas has no hard edge."""
     g = Grid(d + 2, d + 2)
     c = (d + 1) / 2.0
-    lumps = []
-    for i in range(2):
-        lumps.append((c - d * 0.12 + i * d * 0.22, c - d * 0.16 - i * d * 0.04, d * (0.24 - 0.05 * i)))
-    n = 3 if d < 24 else 4
+    lumps = [(c, c + d * 0.04, d * 0.3)]
+    n = 5 if d < 24 else 6
     for i in range(n):
-        x = c - d * 0.3 + i * (d * 0.6) / (n - 1)
-        y = c + d * 0.1 + (hsh(seed, i) - 0.5) * d * 0.08
-        lumps.append((x, y, d * (0.2 + 0.05 * hsh(i, seed, 3.0))))
-    lumps.append((c, c + d * 0.02, d * 0.27))  # The main body, in front.
-    for (x, y, r) in lumps:
-        g.shaded_blob(x, y, r, (1, 2, 3), light=0.12)
-    g.despeck()
-    g.outline(0, "br")
-    return g
+        ang = math.tau * (i + 0.3 * hsh(seed, i)) / n
+        rr = d * (0.17 + 0.07 * hsh(i, seed, 3.0))
+        dist = d * 0.5 - rr - 0.5
+        lumps.append((c + math.cos(ang) * dist, c + math.sin(ang) * dist * 0.85, rr))
+    mask = np.zeros((g.h, g.w), dtype=bool)
+    for y in range(g.h):
+        for x in range(g.w):
+            for (lx, ly, r) in lumps:
+                if (x - lx) ** 2 + (y - ly) ** 2 <= r * r:
+                    mask[y, x] = True
+                    break
 
+    def inside(x: int, y: int) -> bool:
+        return 0 <= x < g.w and 0 <= y < g.h and bool(mask[y, x])
 
-def wisp(f: int) -> Grid:
-    """A cloud rim tongue: a thick curl rooted at the inner side, its tip curling outward;
-    frame 1 is the curl swayed the other way (the rim breathes)."""
-    w, h = WISP_CELL
-    g = Grid(w, h)
-    for k in range(9):
-        t = k / 8.0
-        x = 1.5 + t * 7.5
-        y = h / 2.0 + math.sin(t * 2.6 + f * 1.2) * 2.2 * t - (1.0 if f else 0.0) * t
-        r = 3.2 * (1.0 - t) + 0.7
-        g.shaded_blob(x, y, r, (1, 2, 3), light=0.15)
+    for y in range(g.h):
+        for x in range(g.w):
+            if not mask[y, x]:
+                continue
+            if not inside(x + 2, y + 2) or not inside(x + 1, y + 1):
+                g.a[y, x] = 1
+            elif not inside(x - 2, y - 2) and inside(x + 2, y + 2):
+                g.a[y, x] = 3
+            else:
+                g.a[y, x] = 2
     g.despeck()
-    g.outline(0, "br")
     return g
 
 
@@ -595,45 +595,48 @@ def rune(f: int) -> Grid:
 # --------------------------------------------------------------------------------------
 
 def crack(d: int, seed: int, glow: bool) -> Grid:
-    """Ground cracks radiating from a small crater, diameter `d`. Plain: dark ink cracks with
-    a lit lip (level 2) on the side facing the light. `glow`: the crack's core is level 3 (a
-    glowing seam, Grave Eruption)."""
+    """Ground fissures (diameter `d`): five to seven zig-zag cracks radiating from the middle,
+    2 px wide over their first half, each with one branch. Plain: an ink core with a lit lower
+    lip (levels 0 / 2, the earth ramp's brown-light). `glow`: a glowing seam (level 3 core,
+    level 2 edge: Grave Eruption, in the soul ramp)."""
     g = Grid(d, d)
     c = (d - 1) / 2.0
-    rays = 7 if d < 40 else 9
+    rays = 5 if d < 40 else (6 if d < 56 else 7)
+    core, edge = (3, 2) if glow else (0, 2)
     for i in range(rays):
-        ang = math.tau * (i + hsh(seed, i) * 0.6) / rays
-        length = d * 0.5 * (0.55 + 0.4 * hsh(i, seed, 1.0)) - 1.5
-        x, y = c, c
-        steps = int(length)
-        a = ang
-        for s in range(steps):
-            a += (hsh(i, s, seed) - 0.5) * 0.7
-            x += math.cos(a)
-            y += math.sin(a)
-            core = 3 if glow and s < steps * 0.7 else 0
-            g.put(x, y, core)
-            if s < steps * 0.55:
-                # 2 px wide near the crater: the second px beside it, across the crack.
-                g.put(x - math.sin(a), y + math.cos(a), 2 if glow else 0)
-            # The lit lip: one px toward the top-left on the first part of the crack.
-            if s < steps * 0.8:
-                g.put(x - 1 if math.sin(a) > 0 else x, y - 1 if math.cos(a) < 0 else y, 2, over=False)
-            # A fork halfway.
-            if s == steps // 2 and i % 2 == 0:
-                fx, fy, fa = x, y, a + 0.9
-                for _ in range(max(2, steps // 3)):
-                    fx += math.cos(fa)
-                    fy += math.sin(fa)
-                    g.put(fx, fy, 3 if glow else 0)
-    # The crater.
-    for y in range(d):
-        for x in range(d):
-            dd = math.hypot(x - c, y - c)
-            if dd <= 2.6:
-                g.a[y, x] = 0 if not glow else 3
-            elif dd <= 3.6:
-                g.a[y, x] = 2 if (x - c) + (y - c) > 0 else 1
+        a = math.tau * (i + 0.35 * hsh(seed, i)) / rays
+        reach = (d * 0.5 - 2.0) * (0.7 + 0.3 * hsh(i, seed, 1.0))
+        x, y = c + math.cos(a) * 2.0, c + math.sin(a) * 2.0
+        dist, seg, turn = 2.0, 0, 1.0
+        while dist < reach:
+            seglen = 3 + int(hsh(i, seg, seed) * 3)
+            heading = a + turn * 0.45 * (0.5 + hsh(seg, i, seed))
+            for _ in range(seglen):
+                x += math.cos(heading)
+                y += math.sin(heading)
+                dist = math.hypot(x - c, y - c)
+                if dist >= reach:
+                    break
+                wide = dist < reach * 0.5
+                g.put(x, y, core)
+                if wide:
+                    g.put(x - math.sin(heading) * 0.9, y + math.cos(heading) * 0.9, core)
+                # The lit lower lip (the light comes from the top-left).
+                g.put(x + 0.6, y + 1.2, edge, over=False)
+            if seg == 1:
+                # One branch off the second bend.
+                bx, by, bh = x, y, heading - turn * 0.9
+                for _ in range(max(2, int(reach * 0.3))):
+                    bx += math.cos(bh)
+                    by += math.sin(bh)
+                    g.put(bx, by, core)
+                    g.put(bx + 0.6, by + 1.2, edge, over=False)
+            seg += 1
+            turn = -turn
+    for dx in range(-1, 2):
+        for dy in range(-1, 2):
+            if abs(dx) + abs(dy) < 2:
+                g.put(c + dx, c + dy, core)
     return g
 
 
@@ -675,17 +678,17 @@ def flash(f: int) -> Grid:
         for dx, dy in ((1, 1), (-1, -1), (1, -1), (-1, 1)):
             g.put(c + dx, c + dy, 2)
     else:
-        r = 6 if f == 1 else 9
-        n = 28
-        for i in range(n):
-            a = math.tau * i / n
-            if f == 2 and i % 4 == 0:
-                continue
-            g.put(c + math.cos(a) * r, c + math.sin(a) * r, 3 if f == 1 else 2)
+        r = 5.0 if f == 1 else 8.5
+        for y in range(d):
+            for x in range(d):
+                dd = math.hypot(x - c, y - c)
+                ang = math.atan2(y - c, x - c)
+                if abs(dd - r) <= 0.6 and not (f == 2 and int((ang + math.pi) / math.tau * 12) % 3 == 0):
+                    g.a[y, x] = 3 if f == 1 else 2
         if f == 1:
-            for i in range(4):
-                a = math.tau * i / 4.0 + math.pi / 4.0
-                for k in range(r + 2, r + 5):
+            for i in range(8):
+                a = math.tau * i / 8.0
+                for k in range(7, 10 if i % 2 == 0 else 9):
                     g.put(c + math.cos(a) * k, c + math.sin(a) * k, 2)
             g.put(c, c, 3)
     g.outline(1, "all")
@@ -697,32 +700,43 @@ def flash(f: int) -> Grid:
 # --------------------------------------------------------------------------------------
 
 def flame(f: int, variant: int) -> Grid:
-    """A flame tongue loop frame: a teardrop of fire whose tip sways (4 frames loop). Levels:
-    0 ink outline, 1 crimson rim, 2 flame body, 3 gold core."""
+    """A flame loop frame (4 frames): a main tongue and two small side tongues, each swaying
+    and stretching on its own phase, summed into one heat field and cut into bands: a gold core
+    low in the middle, the flame body, a crimson rim and an ink outline (levels 3 / 2 / 1 / 0)."""
     w, h = FLAME_CELL
     g = Grid(w, h)
-    base_y = h - 2
-    height = 13 + (f % 2) + variant
-    for yy in range(height):
-        t = yy / float(height)  # 0 at the base, 1 at the tip.
-        half = 4.4 * math.sqrt(max(0.0, 1.0 - t)) * (1.0 - 0.15 * t)
-        sway = math.sin(f * math.pi / 2.0 + t * 2.2 + variant) * 1.6 * t
-        cx = w / 2.0 - 0.5 + sway
-        y = base_y - yy
+    base = h - 2.5
+    ph = f * math.pi / 2.0
+    tongues = (
+        (w / 2.0 - 0.5, 11.5 + 2.0 * math.sin(ph + variant) + variant, 4.2, ph + variant),
+        (w / 2.0 - 3.5, 6.5 + 1.5 * math.sin(ph + 1.9 + variant), 2.4, ph + 1.3),
+        (w / 2.0 + 2.5, 7.0 + 1.5 * math.sin(ph + 3.7 + variant), 2.4, ph + 2.6),
+    )
+    for y in range(h):
         for x in range(w):
-            d = abs(x - cx)
-            if d <= half:
-                rel = d / max(half, 0.01)
-                if rel < 0.45 and t < 0.55:
-                    v = 3
-                elif rel < 0.8:
-                    v = 2
-                else:
-                    v = 1
-                g.put(x, y, v)
-    # A detached ember above the tip on odd frames.
-    if f % 2 == 1:
-        g.put(w / 2.0 + math.sin(f + variant) * 2.0, base_y - height - 2, 3)
+            heat = 0.0
+            for (cx, height, wide, phase) in tongues:
+                up = base - y  # px above the base
+                if up < -1.5 or up > height:
+                    continue
+                t = max(0.0, up) / height
+                sway = math.sin(phase + t * 2.4) * 1.4 * t
+                half = wide * (1.0 - t) ** 0.65 + 0.4
+                dx = abs(x - (cx + sway))
+                v = (1.0 - dx / half) * (1.0 - 0.55 * t)
+                if up < 0:
+                    v *= 1.0 + up / 1.5
+                heat = max(heat, v)
+            if heat > 0.62:
+                g.a[y, x] = 3
+            elif heat > 0.32:
+                g.a[y, x] = 2
+            elif heat > 0.05:
+                g.a[y, x] = 1
+    # A spark breaking off above the main tongue on two of the frames.
+    if f in (1, 3):
+        g.put(w / 2.0 + (1.5 if f == 1 else -2.0) + variant * 0.5, base - 15 - variant, 3)
+    g.despeck()
     g.outline(0, "all")
     return g
 
@@ -843,7 +857,7 @@ def column(f: int) -> Grid:
     cx = (w - 1) / 2.0
     for y in range(1, h - 1):
         t = 1.0 - y / float(h - 1)  # 0 at the bottom.
-        half = 6.5 - 3.0 * t + 0.8 * math.sin(y * 0.5 + f * 1.57) * t
+        half = 9.5 - 3.5 * t + 0.9 * math.sin(y * 0.5 + f * 1.57) * t
         for x in range(w):
             d = abs(x - cx)
             if d <= half:
@@ -857,7 +871,7 @@ def column(f: int) -> Grid:
     # Base ellipse.
     for x in range(w):
         for y in range(h - 7, h - 1):
-            ex, ey = (x - cx) / 10.0, (y - (h - 4)) / 2.5
+            ex, ey = (x - cx) / 12.0, (y - (h - 4)) / 2.5
             if 0.62 <= ex * ex + ey * ey <= 1.0:
                 g.put(x, y, 3 if ey < 0 else 2)
     return g
@@ -935,6 +949,126 @@ def tide_edge(f: int) -> Grid:
 
 
 # --------------------------------------------------------------------------------------
+# Soul Chains bolts, Eclipse Ward band, chill film, Dirge veil
+# --------------------------------------------------------------------------------------
+
+# Bolt segment cell (art px): along the bolt x across it; 2 frames (flicker).
+BOLT_CELL = (16, 9)
+# Eclipse Ward band piece cell (art px): radial x tangent; 2 frames = 2 rune variants.
+BAND_CELL = (12, 14)
+# Chill film / Dirge veil sprites: drawn for a body radius of OVERLAY_R px (scaled to others).
+OVERLAY_R = 12
+# Chill film cell (art px, square) round a body of radius OVERLAY_R.
+CHILL_CELL = 32
+# Dirge veil cell (art px): w x h, the body centre at (w / 2, VEIL_CY); 2 frames (plain, silenced).
+VEIL_CELL = (32, 42)
+# Dirge veil: the body centre's row in the cell (room above for the silence halo).
+VEIL_CY = 26
+
+
+def bolt(f: int, glow: bool) -> Grid:
+    """One soul-lightning segment along +x (scaled to each hop of the jagged arc): a 1 px
+    violet-flare core that steps up or down once mid-way, violet-glow either side and a deep
+    violet fringe; `glow` makes the wide soft soul-green under-glow of Chains of the Damned
+    (13 px tall: soul in the middle, soul-dark outside)."""
+    w, h = (BOLT_CELL[0], BOLT_CELL[1] + 4) if glow else BOLT_CELL
+    g = Grid(w, h)
+    mid = h // 2
+    step_x = 6 + 3 * f
+    off = 1 if f == 0 else -1
+    for x in range(1, w - 1):
+        y = mid + (off if x >= step_x else 0)
+        if glow:
+            for dy in range(-4, 5):
+                g.put(x, y + dy, 2 if abs(dy) <= 1 else 1)
+        else:
+            g.put(x, y, 4)
+            g.put(x, y - 1, 3)
+            g.put(x, y + 1, 3)
+            if (x + f) % 2 == 0:
+                g.put(x, y - 2, 1)
+                g.put(x, y + 2, 1)
+    if not glow:
+        g.put(step_x, mid, 4)
+        g.put(step_x, mid + off, 4)
+    return g
+
+
+def eclipse_band(f: int) -> Grid:
+    """One Eclipse Ward barrier piece (+x outward, y along the orbit): a dark eclipse band with
+    violet edges and a soul-green rune segment in its middle (two rune variants)."""
+    w, h = BAND_CELL
+    g = Grid(w, h)
+    for y in range(1, h - 1):
+        for x in range(2, w - 2):
+            g.put(x, y, 1 if x in (2, w - 3) else 0)
+    runes = ((5, 3), (6, 3), (5, 4), (5, 5), (6, 5), (6, 6), (5, 7), (5, 8), (6, 8), (6, 9), (6, 10)) if f == 0 else \
+        ((5, 3), (5, 4), (6, 4), (6, 5), (6, 6), (5, 7), (5, 8), (6, 9), (5, 10), (6, 10))
+    for (x, y) in runes:
+        g.put(x, y, 3)
+    g.put(5, 6, 4 if f == 0 else 3)
+    g.put(6, 7, 2)
+    return g
+
+
+def chill() -> Grid:
+    """Frost film round a chilled body of radius OVERLAY_R: a crescent of ice crust over its
+    top-left with three small crystals, and two icicles hanging at its lower sides."""
+    d = CHILL_CELL
+    g = Grid(d, d)
+    c = (d - 1) / 2.0
+    r = OVERLAY_R + 1.0
+    for y in range(d):
+        for x in range(d):
+            dd = math.hypot(x - c, y - c)
+            ang = math.atan2(y - c, x - c)
+            if -2.6 <= ang <= -0.6 and r - 1.0 <= dd <= r + 0.8:
+                g.a[y, x] = 3 if dd < r else 2
+    for ang in (-2.2, -1.6, -1.0):
+        for k in range(2, 5):
+            g.put(c + math.cos(ang) * (r + k), c + math.sin(ang) * (r + k), 3 if k == 4 else 2)
+    for sx in (-1, 1):
+        x0 = c + sx * (r - 2.0)
+        for k in range(6):
+            g.put(x0, c + 4 + k, 3 if k < 3 else 2)
+            if k < 3:
+                g.put(x0 - sx, c + 4 + k, 2)
+    g.outline(0, "br")
+    return g
+
+
+def veil(f: int) -> Grid:
+    """The Dirge mark over a weakened body of radius OVERLAY_R: a pale veil arc drooping over its
+    head and two falling tear streaks; frame 1 adds the Keening Lady's crossed silence halo."""
+    w, h = VEIL_CELL
+    g = Grid(w, h)
+    cx, cy = (w - 1) / 2.0, VEIL_CY
+    r = OVERLAY_R * 1.15
+    vy = cy - OVERLAY_R * 0.2
+    for y in range(h):
+        for x in range(w):
+            dd = math.hypot(x - cx, y - vy)
+            ang = math.atan2(y - vy, x - cx)
+            if -math.pi * 0.85 <= ang <= -math.pi * 0.15 and r - 0.6 <= dd <= r + 1.0:
+                g.a[y, x] = 3 if dd < r + 0.3 else 2
+    for sx in (-1, 1):
+        x0 = cx + sx * OVERLAY_R * 0.8
+        for k in range(8):
+            g.put(x0 + sx * 0.12 * k, cy - OVERLAY_R * 0.6 + k, 2 if k < 6 else 3)
+    if f == 1:
+        hy = cy - OVERLAY_R * 1.6
+        hr = OVERLAY_R * 0.45 + 1.5
+        for y in range(h):
+            for x in range(w):
+                if abs(math.hypot(x - cx, y - hy) - hr) <= 0.6:
+                    g.a[y, x] = 4
+        for k in range(-6, 7):
+            g.put(cx + k, hy + k * 0.6, 5)
+    g.outline(0, "br")
+    return g
+
+
+# --------------------------------------------------------------------------------------
 # Output
 # --------------------------------------------------------------------------------------
 
@@ -950,11 +1084,9 @@ def build(pal: dict) -> dict:
             g = puff(d, 7 + i * 3)
             g.clear_border()
             out["puff_%s_%d" % (variant, i)] = g.image(RAMPS[ramp], pal)
-        out["wisp_%s" % variant] = strip([wisp(0), wisp(1)], RAMPS[ramp], pal)
     out["bubble_plague"] = strip([bubble(f) for f in range(MOTE_FRAMES)], RAMPS["plague"], pal)
     out["mote_soul"] = strip([mote(f) for f in range(MOTE_FRAMES)], RAMPS["soul"], pal)
     out["mote_plague"] = strip([mote(f) for f in range(MOTE_FRAMES)], RAMPS["plague"], pal)
-    out["mote_violet"] = strip([mote(f) for f in range(MOTE_FRAMES)], RAMPS["violet"][1:], pal)
     out["rune_plague"] = strip([rune(0), rune(1)], RAMPS["plague"], pal)
     out["rune_soul"] = strip([rune(0), rune(1)], RAMPS["soul"], pal)
     for i, d in enumerate(CRACK_SIZES):
@@ -965,7 +1097,7 @@ def build(pal: dict) -> dict:
         g.clear_border()
         out["crack_soul_%d" % i] = g.image(RAMPS["soul"], pal)
     out["frost_star"] = strip([frost_star(f) for f in range(FLASH_FRAMES)], RAMPS["ice"], pal)
-    for ramp in ("arcane", "wail", "violet", "soul"):
+    for ramp in ("arcane", "wail", "violet"):
         out["flash_%s" % ramp] = strip([flash(f) for f in range(FLASH_FRAMES)], RAMPS[ramp], pal)
     for v in range(3):
         out["flame_%d" % v] = strip([flame(f, v) for f in range(FLAME_FRAMES)], RAMPS["flame"], pal)
@@ -998,6 +1130,25 @@ def build(pal: dict) -> dict:
         g.clear_border()
         out["halo_%d" % i] = g.image(RAMPS["violet"], pal)
     out["tide_edge"] = strip([tide_edge(0), tide_edge(1)], RAMPS["soul"], pal)
+    out["bolt_violet"] = strip([bolt(0, False), bolt(1, False)], RAMPS["violet"], pal)
+    out["bolt_soul_glow"] = strip([bolt(0, True), bolt(1, True)], RAMPS["soul"], pal)
+    col = {0: "ink_violet", 1: "violet_deep", 2: "soul_dark", 3: "soul", 4: "soul_glow"}
+    img = Image.new("RGBA", (BAND_CELL[0] * 2, BAND_CELL[1]), (0, 0, 0, 0))
+    for i in range(2):
+        g = eclipse_band(i)
+        g.clear_border()
+        img.paste(multi(g, col, pal), (i * BAND_CELL[0], 0))
+    out["eclipse_band"] = img
+    g = chill()
+    g.clear_border()
+    out["chill_film"] = g.image(RAMPS["ice"], pal)
+    col = {0: "ink_cold", 1: "arcane", 2: "arcane_light", 3: "ice_light", 4: "violet_glow", 5: "violet_flare"}
+    img = Image.new("RGBA", (VEIL_CELL[0] * 2, VEIL_CELL[1]), (0, 0, 0, 0))
+    for i in range(2):
+        g = veil(i)
+        g.clear_border()
+        img.paste(multi(g, col, pal), (i * VEIL_CELL[0], 0))
+    out["dirge_veil"] = img
     return out
 
 

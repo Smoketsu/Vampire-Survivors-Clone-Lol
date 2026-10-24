@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://k5rs7gl7p5bs"
-path="res://.godot/imported/flash_soul.png-fcfa901a9dba6921be64ad7f6666a3e4.ctex"
+uid="uid://btn7863vhpg6t"
+path="res://.godot/imported/eclipse_band.png-57636f82d08afbe1cbfc4620505ed7e2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/aoe/flash_soul.png"
-dest_files=["res://.godot/imported/flash_soul.png-fcfa901a9dba6921be64ad7f6666a3e4.ctex"]
+source_file="res://assets/sprites/aoe/eclipse_band.png"
+dest_files=["res://.godot/imported/eclipse_band.png-57636f82d08afbe1cbfc4620505ed7e2.ctex"]
 
 [params]
 

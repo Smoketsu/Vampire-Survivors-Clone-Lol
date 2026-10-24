@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jvyoh5qtuhc6"
-path="res://.godot/imported/wisp_plague.png-29c96e95bf8750a11eca2668c91787a5.ctex"
+uid="uid://b264iq5hy0uan"
+path="res://.godot/imported/bolt_soul_glow.png-772fc2b9753342c73a7b66e5a58ac74f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/aoe/wisp_plague.png"
-dest_files=["res://.godot/imported/wisp_plague.png-29c96e95bf8750a11eca2668c91787a5.ctex"]
+source_file="res://assets/sprites/aoe/bolt_soul_glow.png"
+dest_files=["res://.godot/imported/bolt_soul_glow.png-772fc2b9753342c73a7b66e5a58ac74f.ctex"]
 
 [params]
 

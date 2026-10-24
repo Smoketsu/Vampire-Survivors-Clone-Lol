@@ -67,12 +67,11 @@ const MARK_FRAMES: int = 2  # TUNING (not in GDD)
 const MARK_STEP: float = 12.0  # TUNING (not in GDD)
 ## Opacity (0-1) of the rim marks.
 const MARK_ALPHA: float = 0.85  # TUNING (not in GDD)
-## Wind-up progress (0-1) from which the marks show their lit frame.
-const MARK_LIT_FROM: float = 0.8  # TUNING (not in GDD)
 ## Opacity (0-1) of the whole-area disc under a telegraph (the code's 0.10).
 const TELEGRAPH_FILL: float = 0.08  # TUNING (not in GDD)
-## Opacity (0-1) of the growing wind-up disc (the code's 0.22).
-const TELEGRAPH_GROW: float = 0.16  # TUNING (not in GDD)
+## Opacity (0-1) the area disc gains over the wind-up, doubled (it reaches
+## TELEGRAPH_FILL + half of this at the strike; the code grew a 0.22 disc).
+const TELEGRAPH_GROW: float = 0.12  # TUNING (not in GDD)
 
 # --- Plague Cloud / Pestilence (AoeArt.cloud()) ------------------------------------------
 
@@ -83,13 +82,13 @@ const PEST_PUFFS: Array[String] = ["puff_pest_0", "puff_pest_1", "puff_pest_2"] 
 ## Puff diameters (art px), same order (tools/aoe_art.py PUFF_SIZES + 2 px border).
 const PUFF_SIZES: Array[float] = [20.0, 28.0, 36.0]  # TUNING (not in GDD)
 ## Rim px between two rim puffs (their outer edge sits on the cloud radius).
-const PUFF_RIM_STEP: float = 13.0  # TUNING (not in GDD)
+const PUFF_RIM_STEP: float = 16.0  # TUNING (not in GDD)
 ## Cloud area (px^2) per inner puff.
-const PUFF_INNER_AREA: float = 480.0  # TUNING (not in GDD) ~ one inner puff per 22 x 22 px
+const PUFF_INNER_AREA: float = 300.0  # TUNING (not in GDD) ~ one inner puff per 17 x 17 px
 ## Opacity (0-1) of the Plague Cloud puffs at full strength.
-const PLAGUE_ALPHA: float = 0.5  # TUNING (not in GDD)
+const PLAGUE_ALPHA: float = 0.42  # TUNING (not in GDD)
 ## Opacity (0-1) of the Pestilence puffs at full strength.
-const PEST_ALPHA: float = 0.62  # TUNING (not in GDD)
+const PEST_ALPHA: float = 0.55  # TUNING (not in GDD)
 ## Opacity (0-1) of the Plague Cloud's soft disc (the code's 0.08).
 const PLAGUE_FILL: float = 0.07  # TUNING (not in GDD)
 ## Opacity (0-1) of the Pestilence cloud's dark disc (the code's 0.42).
@@ -179,7 +178,7 @@ const COLUMN: String = "transform_column"  # TUNING (not in GDD)
 ## Frames in the light column strip.
 const COLUMN_FRAMES: int = 4  # TUNING (not in GDD)
 ## Opacity (0-1) of the column at its brightest.
-const COLUMN_ALPHA: float = 0.75  # TUNING (not in GDD)
+const COLUMN_ALPHA: float = 0.6  # TUNING (not in GDD)
 ## How far (px) below the unit's centre the column's base sits, per px of body radius.
 const COLUMN_FOOT: float = 0.9  # TUNING (not in GDD)
 
@@ -199,3 +198,26 @@ const TIDE_TILE: Vector2 = Vector2(24.0, 40.0)  # TUNING (not in GDD)
 const TIDE_ALPHA: float = 0.5  # TUNING (not in GDD)
 ## Grave Tide mist frames per second (the tiles roll between their two frames).
 const TIDE_FPS: float = 3.0  # TUNING (not in GDD)
+
+# --- Soul Chains, Eclipse Ward, chill film, Dirge mark -----------------------------------
+
+## Soul Chains bolt segment strip (2 frames), stretched along each hop of the arc.
+const BOLT: String = "bolt_violet"  # TUNING (not in GDD)
+## Chains of the Damned's wide soul-green under-glow segment strip.
+const BOLT_GLOW: String = "bolt_soul_glow"  # TUNING (not in GDD)
+## Eclipse Ward band piece strip (2 rune variants), repeated along the orbit.
+const ECLIPSE_BAND: String = "eclipse_band"  # TUNING (not in GDD)
+## How far (px) the band's outer edge sits outside the orbit radius (the code's 9 px band, centred).
+const ECLIPSE_BAND_OUT: float = 5.0  # TUNING (not in GDD)
+## Orbit px between two band pieces (the 14 px pieces overlap a little).
+const ECLIPSE_BAND_STEP: float = 12.0  # TUNING (not in GDD)
+## Opacity (0-1) of the band.
+const ECLIPSE_BAND_ALPHA: float = 0.8  # TUNING (not in GDD)
+## Chill film sprite (ice crust for a body of OVERLAY_RADIUS, scaled to others).
+const CHILL: String = "chill_film"  # TUNING (not in GDD)
+## Dirge veil strip (frame 0 plain, frame 1 silenced), drawn for a body of OVERLAY_RADIUS.
+const DIRGE: String = "dirge_veil"  # TUNING (not in GDD)
+## Body radius (px) the chill film and the Dirge veil are drawn for (tools/aoe_art.py OVERLAY_R).
+const OVERLAY_RADIUS: float = 12.0  # TUNING (not in GDD)
+## Row (art px from the top) of the body centre in the Dirge veil frame (tools/aoe_art.py VEIL_CY).
+const DIRGE_CENTRE_Y: float = 26.0  # TUNING (not in GDD)
