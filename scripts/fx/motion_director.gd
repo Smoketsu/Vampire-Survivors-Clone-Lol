@@ -76,7 +76,11 @@ func on_enemy_killed(e: Enemy) -> void:
 	if d == null:
 		return
 	var f := 1.0 if e.scale.x >= 0.0 else -1.0  # Facing at death.
-	d.start(e.position, f, UnitDissolve.Look.ENEMY, e.kind, e.radius, e.is_elite, 0.0, e.motion.feet, false)
+	if e.wears.begins_with("summons/"):
+		# A Drowned Thrall collapses in the summon's look it wore, not the Eye's code cultist.
+		d.start(e.position, f, UnitDissolve.Look.SUMMON, e.wears.substr("summons/".length()), e.radius, false, 0.0, e.motion.feet, false)
+	else:
+		d.start(e.position, f, UnitDissolve.Look.ENEMY, e.kind, e.radius, e.is_elite, 0.0, e.motion.feet, false)
 	_dust(e.position + Vector2(0.0, e.motion.feet * 0.5), MotionData.HOLY_ASH, MotionData.HOLY_EMBER, MotionData.DISSOLVE_DUST, e.radius)
 
 
