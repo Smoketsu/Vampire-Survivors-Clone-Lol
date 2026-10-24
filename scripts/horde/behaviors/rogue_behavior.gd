@@ -335,11 +335,14 @@ func draw_under(u: SummonedUnit) -> void:
 	var perp := Vector2(-dash_dir.y, dash_dir.x) * half  # Lane side offset.
 	if phase == AIM:
 		var k := clampf(phase_time / maxf(_aim_time, 0.01), 0.0, 1.0)  # Fill.
+		if AoeArt.lane(u, dash_dir, lane_len, half, k):  # Pixel-art lane tiles (GDD §15.0 "Player AoE art").
+			body_space(u)
+			return
 		var v := dash_dir * lane_len  # Lane vector.
 		u.draw_colored_polygon(PackedVector2Array([perp, v + perp, v - perp, -perp]), Color(Palette.VIOLET, 0.12))
 		u.draw_colored_polygon(PackedVector2Array([perp, v * k + perp, v * k - perp, -perp]), Color(Palette.VIOLET, 0.28))
 		u.draw_polyline(PackedVector2Array([perp, v + perp, v - perp, -perp, perp]), Color(Palette.VIOLET, 0.8), 1.5)
-	else:
+	elif not AoeArt.streak(u, dash_dir):  # Pixel-art streak (AoeArt), else the drawn one.
 		u.draw_line(-dash_dir * 28.0, Vector2.ZERO, Color(Palette.VIOLET, 0.5), half)
 		u.draw_line(-dash_dir * 16.0, Vector2.ZERO, Color(Palette.BONE, 0.6), 2.0)
 	body_space(u)

@@ -641,8 +641,8 @@ func _apply_evolution(evo: String) -> void:
 	evolution_history.append("%s@%s" % [evo, _clock(game.elapsed)])
 	game.stat_add("evolutions", 1.0)
 	var p := game.player.position
-	game.effects.ring(p, 120.0, Palette.NECRO_GREEN, 0.7)
-	game.effects.ring(p, 80.0, Palette.VIOLET, 0.9)
+	game.effects.art_ring(p, 120.0, Palette.NECRO_GREEN, 0.7, "soul_ring")  # Pixel-art soul rings when their art exists (AoeArt).
+	game.effects.art_ring(p, 80.0, Palette.VIOLET, 0.9, "violet_ring")
 	if game.hud != null:
 		game.hud.announce("EVOLUTION", String(def["display_name"]), String(def["description"]), Palette.GOLD)
 

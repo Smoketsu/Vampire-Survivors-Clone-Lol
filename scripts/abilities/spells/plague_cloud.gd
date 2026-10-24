@@ -198,8 +198,8 @@ func _nova(c: Cloud) -> void:
 			continue
 		var rotting := e.rot_until > game.elapsed  # Cursed by the plague.
 		game.combat.damage_enemy(e, c.nova * (1.0 + (c.nova_rot_bonus if rotting else 0.0)), "death_nova")
-	game.effects.ring(c.pos, r, Palette.NECRO_GREEN, 0.45)
-	game.effects.ring(c.pos, r * 0.6, Palette.VIOLET, 0.55)
+	game.effects.art_ring(c.pos, r, Palette.NECRO_GREEN, 0.45, "spore_nova")  # Pixel-art spore burst when its art exists (AoeArt).
+	game.effects.art_ring(c.pos, r * 0.6, Palette.VIOLET, 0.55, "violet_ring")
 	game.stat_add("death_novas", 1.0)
 	Sfx.play("death_nova", c.pos)
 

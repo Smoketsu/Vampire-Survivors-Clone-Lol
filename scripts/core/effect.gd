@@ -19,6 +19,14 @@ var anim_id: String = ""
 ## effect draws nothing (it still lives its full time); "" = always drawn.
 ## Set by EffectManager.ring_under().
 var hide_with: String = ""
+## Player AoE art (GDD §15.0 "Player AoE art"): burst recipe (AoeArtData.BURSTS)
+## drawn from pixel-art pieces instead of the shape while its art exists; ""
+## = none. Set by EffectManager.art_ring().
+var art_id: String = ""
+## Burst recipe whose art replaces this effect: while it exists the effect draws
+## nothing (it still lives its full time); "" = always drawn. Set by
+## EffectManager.art_ring_under() (the inner rings under an art burst).
+var art_hide: String = ""
 ## True while the effect is playing (false = sitting in the pool).
 var active: bool = false
 ## Seconds since the effect started.
@@ -54,6 +62,8 @@ func start(p_kind: Kind, pos: Vector2, p_color: Color, p_size: float, p_duration
 	owner_gen = 0
 	anim_id = ""
 	hide_with = ""
+	art_id = ""
+	art_hide = ""
 	t = 0.0
 	active = true
 	visible = true
@@ -81,6 +91,10 @@ func _draw() -> void:
 	var fade := 1.0 - k
 	if hide_with != "" and SpriteBank.has_anim(hide_with):
 		return  # Its animation draws this part (EffectManager.ring_under()).
+	if art_hide != "" and AoeArt.has_burst(art_hide):
+		return  # The art burst draws this part (EffectManager.art_ring_under()).
+	if art_id != "" and AoeArt.burst(self, art_id, Vector2.ZERO, size, k, color):
+		return  # Pixel-art pieces (AoeArt), sized to the gameplay radius.
 	if anim_id != "":
 		# Sprite-sheet animation scaled to the gameplay radius (size).
 		var fill: float = AnimData.ANIMS.get(anim_id, {}).get("fill", AnimData.DEFAULT_FILL)  # Diameter multiple.

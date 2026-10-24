@@ -191,8 +191,8 @@ func apply(evo: String) -> void:
 		_transform(evo, def)
 	director.synergies.evaluate()
 	var p := game.player.position
-	game.effects.ring(p, 120.0, Palette.NECRO_GREEN, 0.7)
-	game.effects.ring(p, 80.0, Palette.VIOLET, 0.9)
+	game.effects.art_ring(p, 120.0, Palette.NECRO_GREEN, 0.7, "soul_ring")  # Pixel-art soul rings when their art exists (AoeArt).
+	game.effects.art_ring(p, 80.0, Palette.VIOLET, 0.9, "violet_ring")
 	Sfx.play("summon_rise", p)
 	if game.hud != null:
 		game.hud.announce("SUMMON EVOLUTION", String(def["display_name"]), String(def["description"]), Palette.GOLD)
@@ -248,7 +248,7 @@ func _merge(evo: String, def: Dictionary) -> void:
 		converted += 1
 		_transform_fx(u)
 	for u in leftovers:
-		director.game.effects.ring(u.position, u.radius * 2.5, Palette.NECRO_GREEN, 0.5)
+		director.game.effects.art_ring(u.position, u.radius * 2.5, Palette.NECRO_GREEN, 0.5, "soul_ring")
 		director.on_unit_died(u, false)
 	director.immediate_spawns[result] = maxi(0, cap - converted)
 	director.replenish_timer[result] = 0.0
@@ -262,8 +262,8 @@ func _merge(evo: String, def: Dictionary) -> void:
 func _transform_fx(u: SummonedUnit) -> void:
 	u.transform_time = SummonEvolutionData.TRANSFORM_FX_TIME
 	u.queue_redraw()
-	director.game.effects.spawn_ring(u.position, Palette.VIOLET)
-	director.game.effects.ring(u.position, u.radius * 3.0, Palette.NECRO_GREEN, 0.6)
+	director.game.effects.spawn_ring(u.position, Palette.VIOLET, "summon_rise")  # The rising strip when its art exists.
+	director.game.effects.art_ring(u.position, u.radius * 3.0, Palette.NECRO_GREEN, 0.6, "soul_ring")
 
 
 # =====================================================================================

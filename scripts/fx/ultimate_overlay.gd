@@ -65,9 +65,21 @@ func _draw() -> void:
 
 
 ## Decree: gold taunt rings under the summons, a gold veil on the necromancer.
+## With the art (AoeArt, GDD §15.0 "Player AoE art"): a crown-point halo sprite
+## sized to each summon and a larger one on the necromancer.
 func _draw_decree(k: float) -> void:
 	var gold: Color = UltimateData.ULTIMATES["sovereigns_decree"]["color"]
 	var pulse := 0.6 + 0.4 * sin(game.elapsed * 6.0)  # Ring brightness.
+	if AoeArt.has_ultimates():
+		if not Settings.reduced_effects():
+			for u in game.horde.units:
+				if not u.active or u.airborne or u.state == SummonedUnit.State.DEAD:
+					continue
+				AoeArt.piece(self, AoeArt.halo_for((u.radius + 5.0) * 2.0), 1, 0, u.position, 0.0, 0.7 * k * pulse)
+		var pl := game.player.position  # The veiled necromancer.
+		SpriteBank.draw_disc(self, pl, 26.0, Color(gold, 0.12 * k))
+		AoeArt.piece(self, AoeArtData.HALOS[AoeArtData.HALOS.size() - 1], 1, 0, pl, 0.0, 0.85 * k * pulse)
+		return
 	if not Settings.reduced_effects():
 		for u in game.horde.units:
 			if not u.active or u.airborne or u.state == SummonedUnit.State.DEAD:
@@ -85,6 +97,9 @@ func _draw_eclipse(k: float) -> void:
 	draw_rect(view, Color(0.02, 0.02, 0.07, UltimateData.ECLIPSE_OVERLAY_ALPHA * k))
 	var blue: Color = UltimateData.ULTIMATES["eclipse"]["color"]
 	var c := game.player.position + Vector2(0.0, -70.0)  # The black sun above him.
+	if AoeArt.has_ultimates():
+		AoeArt.piece(self, AoeArtData.BLACK_SUN, 1, 0, c, 0.0, k)  # Pixel-art black sun (AoeArt).
+		return
 	draw_circle(c, 20.0, Color(blue.lightened(0.5), 0.35 * k))
 	draw_circle(c, 17.0, Color(0.01, 0.01, 0.03, 0.95 * k))
 	draw_arc(c, 21.0, 0.0, TAU, 32, Color(blue.lightened(0.6), 0.8 * k), 2.0)
@@ -94,6 +109,9 @@ func _draw_eclipse(k: float) -> void:
 func _draw_tide(k: float) -> void:
 	var view := _view()
 	var green: Color = UltimateData.ULTIMATES["grave_tide"]["color"]
+	if AoeArt.has_ultimates():
+		AoeArt.tide_edges(self, view, AoeArtData.TIDE_ALPHA * k, game.elapsed)  # Pixel-art edge mist (AoeArt).
+		return
 	var w := minf(view.size.x, view.size.y) * MIST_WIDTH  # Mist depth (px).
 	var band := w / float(MIST_BANDS)  # One step (px).
 	for i in MIST_BANDS:

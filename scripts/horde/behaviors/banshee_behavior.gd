@@ -120,10 +120,10 @@ func _wail(u: SummonedUnit, i: int) -> void:
 	_waves_done = i + 1
 	game.volleys.on_special(u, wail_point, wail_point + Vector2.RIGHT, u.damage)  # Bullet heaven: the Dirge's rings.
 	game.stat_add("banshee_dirge_hits", float(hits))
-	game.effects.ring(wail_point, r, WarbandGlyphs.WAIL, 0.45)
-	game.effects.ring(wail_point, r * 0.65, Palette.VIOLET, 0.35)
+	game.effects.art_ring(wail_point, r, WarbandGlyphs.WAIL, 0.45, "wail")  # Pixel-art sound rings when their art exists (AoeArt).
+	game.effects.art_ring_under(wail_point, r * 0.65, Palette.VIOLET, 0.35, "wail")
 	if silence:
-		game.effects.ring(wail_point, r * 0.85, WarbandGlyphs.SILENCE, 0.4)
+		game.effects.art_ring(wail_point, r * 0.85, WarbandGlyphs.SILENCE, 0.4, "silence")
 	Juice.fx.burst(wail_point, WarbandGlyphs.WAIL, Palette.VIOLET, 8, r * 1.4, 0.5, 2.0)
 	Sfx.play("banshee_wail", wail_point, 1.0 + 0.12 * float(i))
 
@@ -161,8 +161,9 @@ func draw_under(u: SummonedUnit) -> void:
 	var at := wail_point - u.position  # Circle centre in world-aligned local space.
 	var r := float(u.special["dirge_radius"])  # Dirge radius (px).
 	var k := clampf(phase_time / maxf(float(u.special["dirge_windup"]), 0.01), 0.0, 1.0)  # Windup progress.
-	u.draw_circle(at, r, Color(WarbandGlyphs.WAIL, 0.08))
-	u.draw_circle(at, r * k, Color(Palette.VIOLET, 0.16))
-	u.draw_arc(at, r, 0.0, TAU, 36, Color(WarbandGlyphs.WAIL, 0.75), 1.5)
+	if not AoeArt.telegraph(u, "mark_wail", at, r, k, WarbandGlyphs.WAIL):  # Pixel-art rim marks (AoeArt).
+		u.draw_circle(at, r, Color(WarbandGlyphs.WAIL, 0.08))
+		u.draw_circle(at, r * k, Color(Palette.VIOLET, 0.16))
+		u.draw_arc(at, r, 0.0, TAU, 36, Color(WarbandGlyphs.WAIL, 0.75), 1.5)
 	u.draw_line(Vector2(0, -FLOAT_LIFT), at, Color(WarbandGlyphs.WAIL, 0.3), 1.5)
 	body_space(u)

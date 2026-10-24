@@ -77,7 +77,7 @@ func _pulse(stats: Dictionary) -> bool:
 			e.knockback += away.normalized() * float(stats["pulse_knockback"]) / maxf(e.mass, 0.1)
 		game.combat.damage_enemy(e, float(stats["pulse_damage"]), "eclipse")
 	if hit:
-		game.effects.ring(position, r, Palette.NECRO_GREEN, 0.35)
+		game.effects.art_ring(position, r, Palette.NECRO_GREEN, 0.35, "soul_ring")  # Pixel-art soul ring when its art exists (AoeArt).
 		game.stat_add("eclipse_pulses", 1.0)
 	return hit
 

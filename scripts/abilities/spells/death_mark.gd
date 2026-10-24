@@ -229,7 +229,7 @@ func _release_bursts(r: float) -> void:
 		var pos := Vector2(v.x, v.y)  # Detonation centre.
 		damage_area(pos, r, v.z, "doom_burst")
 		game.effects.ring(pos, r, GraveSpellGlyphs.DOOM, 0.35, "doom_burst")
-		game.effects.ring(pos, r * 0.6, Palette.VIOLET, 0.45)
+		game.effects.ring_under(pos, r * 0.6, Palette.VIOLET, 0.45, "doom_burst")  # Only without the strip (GDD §15.0 "Player AoE art").
 		game.stat_add("doom_detonations", 1.0)
 		Sfx.play("corpse_burst", pos)
 

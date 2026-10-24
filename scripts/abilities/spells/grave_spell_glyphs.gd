@@ -248,6 +248,8 @@ static func _jagged(a: Vector2, b: Vector2, jag: int) -> PackedVector2Array:
 static func draw_wither(ci: CanvasItem, p: Vector2, r: float, phase: float, flash: float, blight: bool, busy: bool) -> void:
 	if r <= 1.0:
 		return
+	if AoeArt.wither(ci, p, r, phase, flash, blight, busy):
+		return  # Pixel-art rune rim (GDD §15.0 "Player AoE art").
 	var col := Palette.NECRO_GREEN if blight else SpellGlyphs.PLAGUE  # Aura colour.
 	ci.draw_circle(p, r, Color(col, 0.05 + 0.05 * flash))
 	var dashes := 16  # Rim dashes.

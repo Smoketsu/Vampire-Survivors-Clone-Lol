@@ -324,6 +324,8 @@ static func draw_risen(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> voi
 ## Transformation glow on a summon evolving in place: a rising light column
 ## and an expanding ring that fade as `frac` goes 1 -> 0.
 static func draw_transform_glow(ci: CanvasItem, r: float, frac: float) -> void:
+	if AoeArt.transform_glow(ci, r, frac):
+		return  # Pixel-art light column (GDD §15.0 "Player AoE art"); the ring is the effect's.
 	var k := clampf(frac, 0.0, 1.0)
 	ci.draw_rect(Rect2(Vector2(-r * 0.35, -r * 3.2), Vector2(r * 0.7, r * 4.0)), Color(Palette.NECRO_GREEN, 0.3 * k))
 	ci.draw_circle(Vector2.ZERO, r * (1.5 + (1.0 - k) * 1.2), Color(Palette.VIOLET, 0.22 * k))

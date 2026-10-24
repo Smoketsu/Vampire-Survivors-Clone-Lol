@@ -102,8 +102,8 @@ func on_unit_killed(u: SummonedUnit) -> void:
 			e.knockback += dir * kb / maxf(e.mass, 0.1)
 		hits += 1
 		game.combat.damage_enemy(e, dmg, "colossus_shrapnel")
-	game.effects.ring(pos, r, Palette.BONE, 0.4)
-	game.effects.ring(pos, r * 0.55, Palette.IVORY, 0.3)
+	game.effects.art_ring(pos, r, Palette.BONE, 0.4, "shrapnel")  # Pixel-art burst when its art exists (AoeArt).
+	game.effects.art_ring_under(pos, r * 0.55, Palette.IVORY, 0.3, "shrapnel")
 	Juice.fx.burst(pos, Palette.BONE, Palette.IVORY, 22, r * 2.2, 0.6, 3.0)
 	game.shake(float(u.special["shrapnel_shake"]))
 	Sfx.play("abom_stomp", pos)

@@ -731,10 +731,10 @@ func _check_stall(player_pos: Vector2) -> bool:
 ## Teleports a stranded unit next to the player (GDD §24 hard recall).
 func _safe_recall() -> void:
 	_drop_target()
-	game.effects.spawn_ring(position, Palette.NECRO_GREEN)
+	game.effects.spawn_ring(position, Palette.NECRO_GREEN, "summon_rise")  # The rising strip when its art exists.
 	position = game.arena.free_point(game.player.position + anchor_offset, radius)
 	velocity = Vector2.ZERO
-	game.effects.spawn_ring(position, Palette.NECRO_GREEN)
+	game.effects.spawn_ring(position, Palette.NECRO_GREEN, "summon_rise")  # The rising strip when its art exists.
 	director.hard_recalls += 1
 	_enter(State.FOLLOWING)
 

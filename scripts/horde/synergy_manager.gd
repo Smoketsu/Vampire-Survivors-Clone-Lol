@@ -226,7 +226,7 @@ func _on_activated(id: String) -> void:
 	if id == "shieldwall":
 		_barrier_timer = 0.0
 	if game.player != null:
-		game.effects.ring(game.player.position, 100.0, Palette.NECRO_GREEN, 0.6)
+		game.effects.art_ring(game.player.position, 100.0, Palette.NECRO_GREEN, 0.6, "soul_ring")  # Pixel-art soul ring when its art exists (AoeArt).
 	if game.hud != null:
 		game.hud.announce("SYNERGY AWAKENED", String(def["display_name"]), String(def["description"]), Palette.NECRO_GREEN)
 

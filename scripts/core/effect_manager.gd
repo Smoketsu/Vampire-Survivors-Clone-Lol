@@ -110,6 +110,27 @@ func ring_under(pos: Vector2, radius: float, color: Color, duration: float, cove
 		e.hide_with = cover
 
 
+## An expanding ring like ring() (same pool slot, lifetime and counts) drawn as
+## the pixel-art burst recipe `art` (AoeArtData.BURSTS: crest pieces rolling out
+## to `radius`; GDD §15.0 "Player AoE art") while its art exists, else as the
+## ring. A recipe marked "under" draws below the bodies, like a telegraph.
+func art_ring(pos: Vector2, radius: float, color: Color, duration: float, art: String) -> void:
+	var e := _spawn(Effect.Kind.RING, pos, color, radius, duration)
+	if e != null:
+		e.art_id = art
+		if AoeArt.burst_under(art) and AoeArt.has_burst(art):
+			e.z_index = -5
+
+
+## A drawn ring that shows only while burst recipe `cover`'s art is missing
+## (the second, inner ring of an effect whose art_ring() burst replaces both).
+## Spawned and lived exactly like ring() either way (counts do not change).
+func art_ring_under(pos: Vector2, radius: float, color: Color, duration: float, cover: String) -> void:
+	var e := _spawn(Effect.Kind.RING, pos, color, radius, duration)
+	if e != null:
+		e.art_hide = cover
+
+
 ## Plays art-only animation `anim` once at `pos` (or on `follow` + `pos`),
 ## for a gameplay radius of `radius` px (AnimBursts; nothing without the art).
 func burst(pos: Vector2, radius: float, anim: String, follow: Node2D = null) -> void:
@@ -159,8 +180,13 @@ func _set_owner(e: Effect, owner: Enemy) -> void:
 
 ## Abyssal Detonation first hit: a dark vortex collapsing toward `pos`. With
 ## `anim` ("abyssal_detonation") and its art present, the animation plays instead.
-func abyss(pos: Vector2, radius: float, anim: String = "") -> void:
-	_tag(_spawn(Effect.Kind.ABYSS, pos, Palette.VIOLET, radius, _anim_time(anim, 0.4)), anim)
+## `cover` (an AnimData id) hides it while that strip's art exists (Dread
+## Rally's vortex, which its own strip carries; GDD §15.0 "Player AoE art").
+func abyss(pos: Vector2, radius: float, anim: String = "", cover: String = "") -> void:
+	var e := _spawn(Effect.Kind.ABYSS, pos, Palette.VIOLET, radius, _anim_time(anim, 0.4))
+	_tag(e, anim)
+	if e != null:
+		e.hide_with = cover
 
 
 ## Big holy impact burst (Hammerfall landing, boss death). With `anim`
