@@ -250,9 +250,9 @@ func _draw() -> void:
 		if not k.locked:
 			continue
 		var f := k.facing  # Facing (unit).
-		var side := Vector2(-f.y, f.x) * (e.radius + 4.0)  # Half the bar.
-		var c := e.position + f * (e.radius + 3.0)  # Bar centre.
-		draw_line(c - side, c + side, Palette.PANTHEON_BRONZE_INK, 6.0)
-		draw_line(c - side, c + side, Palette.PANTHEON_BRONZE, 4.0)
-		draw_line(c - side + f, c + side + f, Palette.PANTHEON_BRONZE_LIGHT, 1.5)
-		draw_circle(c, 2.5, Palette.GOLD)  # The shield boss.
+		var side := Vector2(-f.y, f.x) * (e.radius + 5.0)  # Half the bar.
+		var c := e.position + f * (e.radius + 3.0) + Vector2(0.0, -e.radius * 0.9)  # Bar centre (lifted to the body's middle: sprites stand above their origin).
+		draw_line(c - side, c + side, Palette.PANTHEON_BRONZE_INK, 8.0)
+		draw_line(c - side, c + side, Palette.PANTHEON_BRONZE, 5.0)
+		draw_line(c - side + f * 1.5, c + side + f * 1.5, Palette.PANTHEON_BRONZE_LIGHT, 2.0)
+		draw_circle(c, 3.0, Palette.GOLD)  # The shield boss.

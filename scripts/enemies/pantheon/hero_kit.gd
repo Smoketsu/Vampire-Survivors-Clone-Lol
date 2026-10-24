@@ -39,7 +39,7 @@ func draw_over(e: Enemy, ci: CanvasItem) -> void:
 	for i in e.glory:
 		var row := floori(float(i) / 5.0)  # 0 or 1.
 		var col := i % 5
-		var p := Vector2((float(col) - 2.0) * 5.0, y - float(row) * 5.0)
-		ci.draw_rect(Rect2(p - Vector2(2, 2), Vector2(4, 4)), PantheonGlyphs.INK)
-		ci.draw_rect(Rect2(p - Vector2(1, 1), Vector2(2, 2)), Palette.GOLD)
+		var p := Vector2((float(col) - 2.0) * 7.0, y - float(row) * 7.0)
+		ci.draw_rect(Rect2(p - Vector2(3, 3), Vector2(6, 6)), PantheonGlyphs.INK)
+		ci.draw_rect(Rect2(p - Vector2(2, 2), Vector2(4, 4)), Palette.GOLD)
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
