@@ -12,7 +12,9 @@
 ## name so each Act II stage adds its kits as new files without touching
 ## this registry. Loading is cached per id. An id with no Eye kit is an
 ## ELECTRONIC EMPIRE kit (Act III): EMPIRE_KIT_DIR + "<id>_kit.gd" (e.g.
-## "trooper" -> TrooperKit), loaded the same way.
+## "trooper" -> TrooperKit), loaded the same way, and an id with neither is
+## an OLYMPIAN REPUBLIC kit (Act IV): PANTHEON_KIT_DIR + "<id>_kit.gd" (e.g.
+## "hoplite" -> HopliteKit). Kit ids must be unique across the three folders.
 ## Enemy only ever talks to this file and the CovenantKit base class.
 class_name CovenantKits
 extends RefCounted
@@ -21,6 +23,9 @@ extends RefCounted
 const EYE_KIT_DIR: String = "res://scripts/enemies/eye/"
 ## Folder of the Electronic Empire's kit scripts ("<id>_kit.gd", each a CovenantKit; Act III).
 const EMPIRE_KIT_DIR: String = "res://scripts/enemies/empire/"
+# --- Act IV: the Olympian Republic ---
+## Folder of the Olympian Republic's kit scripts ("<id>_kit.gd", each a PantheonKit; Act IV).
+const PANTHEON_KIT_DIR: String = "res://scripts/enemies/pantheon/"
 
 ## Eye / Empire kit id -> its loaded Script (null when no file exists), filled on first use.
 static var _eye_scripts: Dictionary = {}
@@ -58,13 +63,16 @@ static func for_enemy(current: CovenantKit, id: String) -> CovenantKit:
 
 
 ## A new instance of Ancient Eye kit `id` (EYE_KIT_DIR + "<id>_kit.gd"), else
-## of Electronic Empire kit `id` (EMPIRE_KIT_DIR + "<id>_kit.gd", Act III), or
+## of Electronic Empire kit `id` (EMPIRE_KIT_DIR + "<id>_kit.gd", Act III), else
+## of Olympian Republic kit `id` (PANTHEON_KIT_DIR + "<id>_kit.gd", Act IV), or
 ## null when no such script exists.
 static func _eye_kit(id: String) -> CovenantKit:
 	if not _eye_scripts.has(id):
 		var path := EYE_KIT_DIR + id + "_kit.gd"  # Expected script location.
 		if not ResourceLoader.exists(path):
 			path = EMPIRE_KIT_DIR + id + "_kit.gd"  # Act III: an Empire kit.
+		if not ResourceLoader.exists(path):
+			path = PANTHEON_KIT_DIR + id + "_kit.gd"  # Act IV: a Pantheon kit.
 		_eye_scripts[id] = load(path) if ResourceLoader.exists(path) else null
 	var scr: Script = _eye_scripts[id]
 	if scr == null:

@@ -504,7 +504,7 @@ func _collide(i: int) -> void:
 				return
 			_boss_hits[vid] += 1
 		var key := _src[i]
-		var dealt := game.combat.damage_enemy(e, _dmg[i], key)
+		var dealt := game.combat.damage_enemy(e, _dmg[i], key, -1, p - _vel[i], true)  # Act IV: a shot from where it flew in (the Phalanx's front).
 		hits += 1
 		if _has_hit_art:
 			_burst(0, p.lerp(e.position, 0.35), clampf(r * VolleyData.DRAW_SCALE * VolleyData.HIT_SIZE, VolleyData.HIT_MIN, VolleyData.HIT_MAX), _col[i])

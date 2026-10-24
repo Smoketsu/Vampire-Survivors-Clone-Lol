@@ -41,6 +41,10 @@
 ## `body` ("machine" / "cyborg": leaves_corpse(), rises_as_gunner(); Steel has
 ## no soul) and fire their ranged attacks through their kit's fire_ranged()
 ## hook into EmpireShots (Line of Fire) instead of ProjectileManager.
+## Olympian Republic kinds (PantheonEnemyData, Act IV) carry a PantheonKit (the
+## facing the Phalanx reads) and, for a hero, `glory` stacks (Glory: more damage
+## through hit_mult(), a bigger body); an open Hades fissure under a dying foe
+## swallows its corpse (leaves_corpse()).
 ## Survivor convention (user brief): enemies ALWAYS advance on the player;
 ## nobody kites or holds at range. Ranged units only slow down briefly after
 ## each shot (EnemyData.SHOOT_SLOW_*).
@@ -187,6 +191,12 @@ var body: String = ""
 ## ForbiddenVerse spell node, i.e. only while someone owns the spell; timed on
 ## Game.elapsed like Rot. 0 = never inscribed / expired.
 var inscribed_until: float = 0.0
+# --- Act IV: the Olympian Republic ---
+## Glory stacks of a hero (Glory, PantheonRulesData.GLORY: 0..max_stacks); 0
+## for every other enemy, so hit_mult() is unchanged for them.
+var glory: int = 0
+## Body radius (px) before Glory grows it (set on activation).
+var glory_base_radius: float = 0.0
 ## True for animated stone (Sentinel, Guardian): never healed, shielded or
 ## raised by Covenant priests.
 var is_construct: bool = false
@@ -446,6 +456,8 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 		heal_amount *= EnemyData.ELITE_HEAL_MULT
 		target_priority = minf(1.0, target_priority + 0.2)
 	hp = max_hp
+	glory = 0  # Act IV: Glory stacks (heroes only gain any).
+	glory_base_radius = radius
 	incoming_damage = 0.0
 	attack_cd = randf() * attack_interval
 	heal_cd = randf() * maxf(heal_interval, 0.1)
@@ -563,7 +575,8 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 
 ## Sprite key of this enemy's art (the engine-motion pivot); bosses override.
 ## An Ancient Eye kind's art lives in eye/ (Act II) and an Electronic Empire
-## kind's in empire/ (Act III): used when it has no enemies/ art (visual only;
+## kind's in empire/ (Act III), an Olympian Republic kind's in pantheon/ (Act
+## IV): used when it has no enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
 	var key := "enemies/" + kind  # Covenant soldier art.
@@ -572,6 +585,8 @@ func motion_sprite_key() -> String:
 			return "eye/" + kind
 		if SpriteBank.has("empire/" + kind):
 			return "empire/" + kind
+		if SpriteBank.has("pantheon/" + kind):
+			return "pantheon/" + kind  # Act IV: an Olympian Republic kind's art.
 	return key
 
 
@@ -580,8 +595,12 @@ func motion_sprite_key() -> String:
 ## for every other foe. THE one gate of every corpse and raise path: Corpse
 ## Explosion's corpses, Raise Dead's anchors, Death Mark's Risen, the Lich's
 ## raise, Grave Tide and Call of the Drowned. Exactly `not is_structure` on
-## Acts I and II (no machines there).
+## Acts I and II (no machines there). Act IV: a foe lying on an open Hades
+## fissure leaves no corpse either (DivineWrath.swallows(); Game.pantheon is
+## null on every other act, so nothing changes there).
 func leaves_corpse() -> bool:
+	if game.pantheon != null and game.pantheon.swallows_corpse(position, radius):
+		return false  # Act IV: swallowed by an open fissure.
 	return not is_structure and body != EmpireEnemyData.MACHINE
 
 
@@ -779,11 +798,15 @@ func _pulse_aura() -> void:
 
 
 ## Damage-dealt multiplier from an aura buff (1 when not buffed), times the
-## Banshee Dirge's damage cut while weakened (CombatResolver.weaken_enemy()).
+## Banshee Dirge's damage cut while weakened (CombatResolver.weaken_enemy()),
+## times a hero's Glory (Act IV: 1 + damage_per_stack x stacks; 0 stacks for
+## every other enemy).
 func hit_mult() -> float:
 	var m := buff_damage if buff_time > 0.0 else 1.0  # Aura buff.
 	if weaken_until > game.elapsed:
 		m *= 1.0 - weaken_cut  # Dirge: weakened hits.
+	if glory > 0:
+		m *= 1.0 + float(PantheonRulesData.GLORY["damage_per_stack"]) * float(glory)  # Act IV: Glory.
 	return m
 
 
@@ -1102,7 +1125,7 @@ func _melee_hit(t: Node2D, dir: Vector2) -> void:
 	game.effects.slash(position + dir * radius, dir, Palette.SILVER, radius * 1.2)
 	motion_lunge(dir, MotionData.POWER_MELEE)
 	if t is SummonedUnit:
-		game.combat.damage_unit(t as SummonedUnit, dmg * undead_damage_mult, kind)
+		game.combat.damage_unit(t as SummonedUnit, dmg * undead_damage_mult, kind, self)  # Names the killer (Act IV: Glory).
 		if cleave_radius > 0.0:
 			_cleave(t as SummonedUnit, dmg * undead_damage_mult * cleave_mult)
 	else:

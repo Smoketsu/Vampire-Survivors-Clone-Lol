@@ -885,7 +885,7 @@ func try_bash(e: Enemy, normal: Vector2) -> void:
 	e.knockback += normal * bash_knockback / maxf(e.mass, 0.1)
 	game.effects.slash(position + normal * radius, normal, Palette.COLD_BLUE if evolution == "" else Palette.VIOLET, radius * 1.6)
 	game.stat_add("warrior_bashes", 1.0)
-	game.combat.damage_enemy(e, bash_damage, "bash" if evolution == "" else evolution + "_bash", director.slot)  # Co-op: called from the enemy's step, so the bash names its army.
+	game.combat.damage_enemy(e, bash_damage, "bash" if evolution == "" else evolution + "_bash", director.slot, position)  # Co-op: called from the enemy's step, so the bash names its army. Act IV: from where it stands.
 
 
 # =====================================================================================
@@ -1169,7 +1169,7 @@ func _release_attack() -> void:
 					var struck := target  # The struck enemy (the target may die).
 					game.effects.slash(position + dir * radius, dir, Palette.BONE, radius * 1.4)
 					var mult := behavior.melee_bonus(self, struck) if behavior != null else 1.0  # Class bonus (Pack Hunt).
-					var dealt := game.combat.damage_enemy(struck, damage * mult, dmg_source)
+					var dealt := game.combat.damage_enemy(struck, damage * mult, dmg_source, -1, position)  # Act IV: a blow from where it stands (the Phalanx's flank test).
 					if behavior != null:
 						behavior.on_melee_hit(self, struck, dealt)  # Hellhound burn.
 					if cleave_radius > 0.0 or lifesteal > 0.0:

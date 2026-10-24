@@ -163,10 +163,22 @@ const STAGE_LINES: Dictionary = {
 	"wastes": "Your beacons drew the Empire. Meet it.",  # TUNING (not in GDD) Act III
 	"assembly": "Break the line that rebuilds the dead.",  # TUNING (not in GDD) Act III
 	"citadel": "Death was conquered with steel. Take it back.",  # TUNING (not in GDD) Act III
+	# --- Act IV: the Olympian Republic ---
+	"ilion": "The gods want the dead back. Meet them on the beach.",  # TUNING (not in GDD) Act IV
+	"olympus": "Climb the mountain. Face the Pantheon.",  # TUNING (not in GDD) Act IV
+	"underworld": "Go down to the god who started it.",  # TUNING (not in GDD) Act IV
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
 const ACT_TAB_SIZE: Vector2 = Vector2(300.0, 40.0)  # TUNING (not in GDD)
+# --- Act IV: the Olympian Republic ---
+## Most act tabs shown at full size ("Act I · The Crimson Covenant"); with more
+## acts than this, only the shown act's tab keeps its full text and size and the
+## others shrink to ACT_TAB_COMPACT_SIZE showing the act name only, so the row
+## fits six acts at 1280 x 600 layout px (GDD §15.0 "Act IV foundation (phase 1)").
+const ACT_TABS_FULL_MAX: int = 3  # TUNING (not in GDD)
+## Size (px) of a compact act tab ("Act IV").
+const ACT_TAB_COMPACT_SIZE: Vector2 = Vector2(104.0, 40.0)  # TUNING (not in GDD)
 ## Lock line of a registered stage that is not yet playable (StageRegistry "playable").
 const COMING_SOON: String = "Coming soon"  # TUNING (not in GDD)
 
@@ -286,6 +298,35 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "embers", "fx_color": Color8(224, 57, 30),
 	},  # TUNING (not in GDD) warning-red sparks
+	# --- Act IV: the Olympian Republic (placeholder scenes from the shared kinds' art
+	# until each stage brings its own floor, props and boss; a missing sprite is skipped) ---
+	"ilion": {
+		"tile": "tiles/harbour_mudflats",
+		"items": [
+			["pantheon/shade_of_dead", 210, 80, true], ["pantheon/hoplite", 200, 176, true],
+			["pantheon/hoplite", 236, 196, true], ["pantheon/hero", 172, 224, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(111, 182, 232),
+	},  # TUNING (not in GDD) aegean_light spray
+	"olympus": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["obstacles/marble_column_m", 26, 94, false], ["obstacles/marble_column_m", 250, 94, false],
+			["pantheon/hoplite", 214, 180, true], ["pantheon/hero", 176, 224, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "embers", "fx_color": Color8(224, 169, 85),
+	},  # TUNING (not in GDD) bronze_light sparks of the storm
+	"underworld": {
+		"tile": "tiles/graveyard",
+		"items": [
+			["pantheon/shade_of_dead", 200, 90, true], ["pantheon/shade_of_dead", 240, 130, true],
+			["pantheon/bronze_titan", 186, 226, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "wisps", "fx_color": Color8(207, 203, 196),
+	},  # TUNING (not in GDD) pale marble wisps of the dead
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

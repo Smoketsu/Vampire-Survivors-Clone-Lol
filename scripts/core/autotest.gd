@@ -176,6 +176,14 @@
 ##     (_character_list()). The summary adds a "character" line (starting
 ##     spell level, stats, the innate's counters, characters unlocked this
 ##     run; CharacterInnates.summary_line()).
+##   * Act IV, the Olympian Republic (GDD §15.0 "Act IV foundation (phase
+##     1)"): --stage=ilion|olympus|underworld, --spawn= with its kinds
+##     (shade_of_dead, hoplite, hero, bronze_titan), --boss=achilles|zeus|
+##     hades. The bot steps off telegraphed bolt circles and fissures
+##     (PantheonRules.danger_push(); the waves cannot be dodged). When the
+##     Pantheon ran, the summary adds the "divine wrath", "phalanx", "glory",
+##     "pantheon kinds" and (on an Act IV stage) "pantheon stage" lines
+##     (PantheonReport).
 class_name Autotest
 extends Node
 
@@ -1077,6 +1085,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.enemies.archive_haz.danger_push(pos)  # Act II: pages, spore clouds, ink (null elsewhere).
 	if game.empire != null:
 		danger += game.empire.danger_push(pos)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
+	if game.pantheon != null:
+		danger += game.pantheon.danger_push(pos)  # Act IV: bolt circles, fissures (null elsewhere).
 	if game.enemies.assembly != null:
 		danger += game.enemies.assembly.danger_push(pos)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	if game.enemies.citadel != null:
@@ -1169,6 +1179,8 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.archive_haz.danger_push(p)  # Act II: pages, spore clouds, ink (null elsewhere).
 	if game.empire != null:
 		danger += game.empire.danger_push(p)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
+	if game.pantheon != null:
+		danger += game.pantheon.danger_push(p)  # Act IV: bolt circles, fissures (null elsewhere).
 	if game.enemies.assembly != null:
 		danger += game.enemies.assembly.danger_push(p)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	if game.enemies.citadel != null:
@@ -1317,6 +1329,7 @@ func finish(summary: Dictionary) -> void:
 	if game.claims != null:
 		print("[autotest] claims: %s" % game.claims.summary_line())  # Act II Claims (EyeClaims; Act II stages only).
 	EmpireReport.print_lines(game, st_all)  # Act III: line of fire, lock-on, steel, purge protocol, kinds, the stage (only when the Empire ran).
+	PantheonReport.print_lines(game, st_all)  # Act IV: divine wrath, phalanx, glory, kinds, the stage (only when the Pantheon ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	print("[autotest] gravebow / bone colossus: %s | %s" % [GravebowKit.summary_line(st_all), ColossusKit.summary_line(st_all)])
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())

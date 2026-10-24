@@ -162,7 +162,7 @@ func _step_spear(s: Spear, delta: float) -> bool:
 			return false  # Act III, the Scrap Wastes: an Aegis Bot's frontal shield stops the spear.
 		if s.knockback > 0.0:
 			e.knockback += s.vel.normalized() * s.knockback / maxf(e.mass, 0.1)
-		game.combat.damage_enemy(e, s.damage, "lance" if s.lance else "spear")
+		game.combat.damage_enemy(e, s.damage, "lance" if s.lance else "spear", -1, s.pos - s.vel, true)  # Act IV: a shot from where it flew in (the Phalanx's front).
 		s.pierce_left -= 1
 		if s.pierce_left < 0:
 			return false
