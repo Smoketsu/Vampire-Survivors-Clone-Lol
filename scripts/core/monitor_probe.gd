@@ -153,8 +153,12 @@ func print_line() -> void:
 			shots += s.volleys.alive
 			bursts += s.volleys.burst_count()
 	var fx := Juice.fx
+	var hz := Vector2i.ZERO  # Army ground patches (fire trails, shard fields) / boulders, every army.
+	for h in game.all_hordes:
+		if h.hazards != null:
+			hz += h.hazards.live_counts()
 	var aq := AdaptiveQuality.level_name()
-	print("[mon] t=%02d:%02d heap=%.1fMB obj=%d nodes=%d res=%d orphans=%d static=%.1fMB vmem=%.1fMB tex=%.1fMB buf=%.1fMB items=%d draws=%d prims=%d | enemies=%d summons=%d proj=%d shots=%d bursts=%d effects=%d parts=%d nums=%d xp=%d | frames n=%d med=%.1f p95=%.1f max=%.1f ms fps=%d aq=%s" % [
+	print("[mon] t=%02d:%02d heap=%.1fMB obj=%d nodes=%d res=%d orphans=%d static=%.1fMB vmem=%.1fMB tex=%.1fMB buf=%.1fMB items=%d draws=%d prims=%d | enemies=%d summons=%d proj=%d shots=%d bursts=%d effects=%d parts=%d nums=%d xp=%d patches=%d boulders=%d | frames n=%d med=%.1f p95=%.1f max=%.1f ms fps=%d aq=%s" % [
 		int(game.elapsed) / 60, int(game.elapsed) % 60, float(heap) * mb, objs,
 		int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)),
 		int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)),
@@ -168,7 +172,7 @@ func print_line() -> void:
 		int(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)),
 		game.enemies.active.size(), summons, game.projectiles.active.size(), shots, bursts,
 		game.effects.active.size(), fx.particle_count() if fx != null else 0, fx.number_count() if fx != null else 0,
-		game.pickups.active.size(), n, med, p95, mx, int(Engine.get_frames_per_second()), aq])
+		game.pickups.active.size(), hz.x, hz.y, n, med, p95, mx, int(Engine.get_frames_per_second()), aq])
 
 
 ## Prints the run's peaks ("[mon] peak" line; Autotest.finish()).
