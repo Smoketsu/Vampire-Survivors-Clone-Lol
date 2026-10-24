@@ -749,3 +749,7 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-20 17:50,concepts/act6_units,gpt-image-2.5-flare,medium,1536x1024,1,723,480,343,0.0177,act6_units.png
 2026-10-20 17:53,concepts/act6_units,gpt-image-2.5-flare,medium,1536x1024,1,213,1536,343,0.0236,curvy.png
 2026-10-20 17:54,concepts/act6_units,gpt-image-2.5-flare,medium,1536x1024,1,180,1536,343,0.0235,tone.png
+2026-10-24 02:27,pantheon/hoplite,gpt-image-2.5-flare,medium,1024x1024,2,667,1458,439,0.0282,src_hoplite.png
+2026-10-24 02:29,pantheon/hero,gpt-image-2.5-flare,medium,1024x1024,2,646,1430,439,0.0278,src_hero.png
+2026-10-24 02:31,pantheon/shade,gpt-image-2.5-flare,medium,1024x1024,2,594,2048,439,0.0325,src_shade.png
+2026-10-24 02:31,pantheon/bronze_titan,gpt-image-2.5-flare,medium,1024x1024,2,585,2048,439,0.0325,src_bronze_titan.png
