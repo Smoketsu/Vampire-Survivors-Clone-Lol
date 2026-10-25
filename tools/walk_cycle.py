@@ -325,6 +325,40 @@ RIGS = {
     "player/rust_prophet": dict(mode="robe", hip=40, rigid=[(30, 42, 0, None)], sway=1, dip=1),
     "summons/iron_revenant": dict(mode="legs", hip=34, back=(0, 26), front=(26, 58), rigid=[], spread=2, lift=2, dip=1),
     "summons/deus_revenant": dict(mode="legs", hip=44, back=(0, 27), front=(27, 66), rigid=[], spread=2, lift=2, dip=1),  # Round 1 redo (simpler drawing).
+    # --- Act I walk strips (audit "walk strips" findings U01 - U03; GDD §15.0 "Act I walk strips") ---
+    # The heavy summon bodies. The Abomination's two huge fists hang over the tops of its short
+    # legs (rigid, down to where the feet start); the Colossus carries its club (right, rigid) and
+    # steps on two bone legs.
+    "summons/abomination": dict(mode="legs", hip=66, back=(0, 45), front=(45, 88), rigid=[(0, 35, 66, 78), (66, 88, 66, 80)], spread=3, lift=2, dip=1),
+    "summons/bone_colossus": dict(mode="legs", hip=70, back=(0, 46), front=(46, 76), rigid=[(76, 98, 70, None), (41, 49, 70, 86)], spread=2, lift=2, dip=1),
+    # The two siege carts roll: no wheel can turn without being redrawn, so the cart rocks over
+    # the ground instead (spread 0: the wheels stay put; the body dips and each side's wheels
+    # take turns riding up a bump, lift 1).
+    "summons/corpse_catapult": dict(mode="legs", hip=38, back=(0, 24), front=(24, 68), rigid=[], spread=0, lift=1, dip=1),
+    "summons/ossuary_engine": dict(mode="legs", hip=48, back=(0, 32), front=(32, 78), rigid=[], spread=0, lift=1, dip=1),
+    # The winged stone summons flap (hover mode with no body bob: the stills' wing tips touch the
+    # top row, so there is no room to rise; the wing tips drop and rise instead).
+    "summons/gargoyle": dict(mode="hover", bob=0, parts=[
+        dict(kind="flap", box=(0, 18, 0, 31), root=18, amp=4)]),
+    "summons/cathedral_horror": dict(mode="hover", bob=0, parts=[
+        dict(kind="flap", box=(0, 30, 0, 36), root=30, amp=5),
+        dict(kind="flap", box=(54, 72, 0, 38), root=54, amp=5)]),
+    # The two ghosts glide on their ragged hems (like the Banshee).
+    "summons/frost_wraith": dict(mode="robe", hip=30, rigid=[], sway=2, dip=1),
+    "summons/winter_revenant": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1),
+    # The robed priests walk on their hem lobes like the Mender and Warder, staff rigid.
+    "summons/bishop": dict(mode="legs", hip=44, back=(0, 24), front=(24, 34), rigid=[(34, 46, 0, None)], spread=1, lift=1, dip=1),
+    "summons/lich": dict(mode="legs", hip=36, back=(0, 23), front=(23, 34), rigid=[(34, 42, 0, None)], spread=1, lift=1, dip=1),
+    # Sanctum Covenant kinds.
+    "enemies/sanctified_sentinel": dict(mode="legs", hip=48, back=(0, 36), front=(36, 78), rigid=[(34, 42, 48, None)], spread=2, lift=2, dip=1),
+    "enemies/radiant_inquisitor": dict(mode="legs", hip=48, back=(0, 26), front=(26, 50), rigid=[], spread=1, lift=1, dip=1),
+    "enemies/high_confessor": dict(mode="legs", hip=48, back=(0, 24), front=(24, 34), rigid=[(34, 48, 0, None)], spread=1, lift=1, dip=1),
+    "enemies/sun_paladin": dict(mode="legs", hip=52, back=(9, 21), front=(21, 34), rigid=[(0, 9, 0, None), (22, 33, 52, 57)], spread=1, lift=1, dip=1),
+    "enemies/cathedral_guardian": dict(mode="legs", hip=106, back=(0, 56), front=(56, 112), rigid=[], spread=3, lift=2, dip=1),
+    # The Reckoning Inquisitor and the first two stage bosses.
+    "enemies/inquisitor": dict(mode="legs", hip=46, back=(0, 24), front=(24, 48), rigid=[], spread=1, lift=1, dip=1),
+    "bosses/alaric": dict(mode="legs", hip=78, back=(0, 86), front=(110, 174), rigid=[(0, 54, 78, 102), (86, 110, 78, None)], spread=2, lift=2, dip=1),
+    "bosses/vael": dict(mode="legs", hip=70, back=(0, 50), front=(50, 120), rigid=[(46, 94, 70, 106)], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
