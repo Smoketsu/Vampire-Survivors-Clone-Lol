@@ -1711,7 +1711,7 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
 
   | Tree | New upgrades (per level, levels, cost) |
   |---|---|
-  | Necromancy | **Bone Reserve**: a summon replaced after falling rises with a barrier of 10% of its max HP (3, 120→380) · **Commander's Presence**: +1% minion damage per distinct summon class you command (3, 130→410; needs Sharpened Bones II) |
+  | Necromancy | **Bone Reserve**: a summon replaced after falling rises with a barrier of 3% of its max HP per level (10% before the balance batch) (3, 120→380) · **Commander's Presence**: +1% minion damage per distinct summon class you command (3, 130→410; needs Sharpened Bones II) |
   | Shadowcraft | **Echo Weaving**: spell echoes (Volleys) start at spell Lv 2 instead of 3 (1, 600; needs Umbral Potency II) · **Dark Tithe**: a kill not dealt by a summon charges the ultimate meter +25% more (3, 120→380) |
   | Survival | **Last Rites**: the first time a hit leaves you under 25% HP, 1 s of invulnerability per level (3, 150→450) · **Grave Ward**: start every run with a ward that blocks one whole hit per level (2, 250→500; needs Bone Mail I) |
   | Fortune | **Gilded Chests**: 15% per level that a chest draw is weighed against a second draw and the one nearer its peak (the higher level) is kept (3, 140→430) · **Elite Bounty**: +1 Soul Ash per elite (3, 100→320) · Fate's Thread and Banishing Rite get a **third level** (450 / 520) |
@@ -1734,7 +1734,7 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   `refresh()` and a `changed` signal), loaded by path, so a tab whose panel does not
   exist yet is simply not shown.
 - **Masteries** (Ossuary expansion step 4, GDD §15.0 "Ossuary Masteries"; the Masteries tab): each of the 17 offerable summon classes has a
-  mastery of 3 levels, **+4% max HP and +4% damage per level** for that class only (190 / 250 / 320 Soul Ash a class,
+  mastery of 3 levels, **+2% max HP and +2% damage per level** (+4% each before the balance batch, docs/ossuary/BALANCE.md) for that class only (190 / 250 / 320 Soul Ash a class,
   12,920 in all). It opens once you have taken that class to level 5 in any run (older saves open the classes of the
   summon evolutions they already found); until then its tile is dimmed ("Lv 5") and the detail strip says "Take <class>
   to level 5 in a run". An evolved form counts as its base class, the Profane Bishop as the better of Mender and Warder.

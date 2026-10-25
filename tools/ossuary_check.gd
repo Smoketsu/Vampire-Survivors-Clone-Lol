@@ -327,7 +327,7 @@ func _check_purchase_and_refund() -> void:
 	_check(Meta.purchase("necrotic_marrow") and Meta.soul_ash == before - price, "level 6 buys after a Lich clear")
 	_check(Meta.purchase("necrotic_marrow") and Meta.purchase_block("necrotic_marrow") == "gated", "level 7 buys, level 8 waits on Deathlord")
 	var mods := MetaModifiers.from_tiers(Meta.tiers)
-	_check(is_equal_approx(mods.value("minion_hp"), 0.30 + 0.06), "levels 6-7 add half steps (+3% each)")
+	_check(is_equal_approx(mods.value("minion_hp"), 0.30 + 2.0 * MetaData.deep_per_tier("necrotic_marrow")), "levels 6-7 add deep steps (DEEP_VALUE_SHARE of a level each)")
 	var spent := Meta.spent_total()
 	_check(spent == MetaData.cost_up_to("necrotic_marrow", 7), "spent_total counts the deep levels")
 	var ash_before := Meta.soul_ash
@@ -344,7 +344,7 @@ func _check_coop_loadout() -> void:
 	_check(int(lv.get("necrotic_marrow", 0)) == 10 and int(lv.get("bone_mail", 0)) == 8, "the co-op loadout keeps levels 6-10")
 	var m := MetaModifiers.from_tiers(lv)
 	_check(int(m.tiers.get("necrotic_marrow", 0)) == 10 and is_equal_approx(m.value("minion_hp"), MetaData.value_at("necrotic_marrow", 10)), "the partner's level 10 applies")
-	_check(is_equal_approx(m.value("damage_reduction"), 0.12 + 4.0 * 0.015), "the partner's Bone Mail 8 applies")
+	_check(is_equal_approx(m.value("damage_reduction"), 0.12 + 4.0 * MetaData.deep_per_tier("bone_mail")), "the partner's Bone Mail 8 applies")
 	var lo2 := {"meta_levels": {"commanders_presence": 3, "head_start": 1}}
 	var m2 := MetaModifiers.from_tiers(CoopNet._clean_loadout(lo2, 1)["meta_levels"])
 	_check(is_equal_approx(m2.value("presence_damage"), 0.03) and m2.int_value("head_start") == 1, "the co-op loadout carries the new options")
@@ -381,7 +381,7 @@ func _check_masteries() -> void:
 	_check(Meta.mastery_block("archer") == "cost" and not Meta.buy_mastery("archer"), "too little Soul Ash blocks a purchase")
 	# The one stat path: MetaModifiers -> compute_stats reads mastery_value().
 	var m := MetaModifiers.from_tiers({}, {"warrior": 3, "mender": 2, "archer": 9, "bishop": 3, "nonsense": 3})
-	_check(is_equal_approx(m.mastery_value("warrior", "hp"), 0.12) and is_equal_approx(m.mastery_value("warrior", "damage"), 0.12), "level 3 = +12% HP and damage")
+	_check(is_equal_approx(m.mastery_value("warrior", "hp"), 3.0 * MasteryData.HP_PER_LEVEL) and is_equal_approx(m.mastery_value("warrior", "damage"), 3.0 * MasteryData.DAMAGE_PER_LEVEL), "level 3 = three steps of HP and damage")
 	_check(m.mastery_level("archer") == 3 and m.mastery_value("mage", "hp") == 0.0, "levels clamp to 3; other classes get nothing")
 	_check(m.mastery_level("bishop") == 2, "the Bishop takes the better of Mender / Warder (got %d)" % m.mastery_level("bishop"))
 	_check(not m.masteries.has("nonsense") and not m.masteries.has("bishop"), "unknown ids and the Bishop are not stored")
