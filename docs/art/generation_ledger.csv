@@ -746,3 +746,15 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-24 19:43,markers/tide_wall,gpt-image-2.5-flare,medium,1536x1024,1,268,1024,343,0.0198,tidewall.png
 2026-10-24 19:43,effects/undertow_shallows,gpt-image-2.5-flare,medium,1024x1024,1,221,1024,439,0.0225,shallows.png
 2026-10-25 01:19,empire/kill_drone,gpt-image-2.5-flare,medium,1024x1024,1,542,1024,439,0.0241,kill_drone_src.png
+2026-10-25 16:19,icons/bone_reserve,gpt-image-2.5-flare,medium,1024x1024,2,367,8,439,0.0151,bone_reserve.png
+2026-10-25 16:20,icons/commanders_presence,gpt-image-2.5-flare,medium,1024x1024,2,380,8,439,0.0151,commanders_presence.png
+2026-10-25 16:20,icons/head_start,gpt-image-2.5-flare,medium,1024x1024,2,354,8,439,0.0150,head_start.png
+2026-10-25 16:20,icons/elite_bounty,gpt-image-2.5-flare,medium,1024x1024,2,368,8,439,0.0151,elite_bounty.png
+2026-10-25 16:20,icons/gilded_chests,gpt-image-2.5-flare,medium,1024x1024,2,376,8,439,0.0151,gilded_chests.png
+2026-10-25 16:21,icons/chosen_vanguard,gpt-image-2.5-flare,medium,1024x1024,2,354,8,439,0.0150,chosen_vanguard.png
+2026-10-25 16:21,icons/patient_grave,gpt-image-2.5-flare,medium,1024x1024,2,355,8,439,0.0150,patient_grave.png
+2026-10-25 16:21,icons/last_rites,gpt-image-2.5-flare,medium,1024x1024,2,373,8,439,0.0151,last_rites.png
+2026-10-25 16:21,icons/grave_ward,gpt-image-2.5-flare,medium,1024x1024,2,376,8,439,0.0151,grave_ward.png
+2026-10-25 16:21,icons/echo_weaving,gpt-image-2.5-flare,medium,1024x1024,2,370,8,439,0.0151,echo_weaving.png
+2026-10-25 16:21,icons/tree_dominion,gpt-image-2.5-flare,medium,1024x1024,2,364,8,439,0.0151,tree_dominion.png
+2026-10-25 16:22,icons/dark_tithe,gpt-image-2.5-flare,medium,1024x1024,2,375,8,439,0.0151,dark_tithe.png
