@@ -173,6 +173,10 @@ var archive_haz: ArchiveHazards = null
 ## Citadel's guns, Sentry Turrets, Valkyrie 2.0, guest squads; StageRegistry
 ## "citadel"; null on every other stage).
 var citadel: CitadelDirector = null
+# --- Act IV: the Asphodel Underworld ---
+## The Asphodel Underworld's mechanics (Act IV: the River Styx, Cerberus, guest
+## squads; StageRegistry "underworld"; null on every other stage).
+var underworld: UnderworldDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -259,6 +263,12 @@ func _ready() -> void:
 		citadel.game = game
 		citadel.config = stage_def["citadel"]
 		add_child(citadel)
+	# --- Act IV: the Asphodel Underworld ---
+	if not (stage_def.get("underworld", {}) as Dictionary).is_empty():
+		underworld = UnderworldDirector.new()
+		underworld.game = game
+		underworld.config = stage_def["underworld"]
+		add_child(underworld)
 
 
 # =====================================================================================
@@ -353,6 +363,9 @@ func step(delta: float) -> void:
 	# --- Act III: the Iron Citadel ---
 	if citadel != null:
 		citadel.step(delta)
+	# --- Act IV: the Asphodel Underworld ---
+	if underworld != null:
+		underworld.step(delta)
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -431,6 +444,9 @@ func objective_text() -> String:
 	# --- Act III: the Iron Citadel ---
 	if citadel != null and citadel.objective_override() != "":
 		return citadel.objective_override()  # Shield Gates, sentry turrets.
+	# --- Act IV: the Asphodel Underworld ---
+	if underworld != null and underworld.objective_override() != "":
+		return underworld.objective_override()  # Cerberus's heads.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -565,6 +581,12 @@ func _run_event(ev: Dictionary) -> void:
 		"gate", "turrets", "valkyrie":
 			if citadel != null:
 				citadel.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act IV: the Asphodel Underworld ---
+		"cerberus":
+			if underworld != null:
+				underworld.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
 	show_banner(ev["banner"])

@@ -88,6 +88,33 @@ const ACT3_PART := {
 		["epilogue/act3_4", Vector2(0.5, 0.0), Vector2(0.5, 0.9)],  # TUNING (not in GDD) the three acts' ruins, down to the army of the dead
 	],
 }
+# --- Act IV: the Asphodel Underworld ---
+## HOOK for the Act IV part of the epilogue (owner-approved proposal: "Epilogue
+## parts: The Gods Are Silent (Act IV)"; "Empty Throne (beat Hades; opens the Act
+## IV epilogue)"). The Asphodel Underworld's agent leaves it OUT of PARTS: the
+## lead makes its panels at integration (tools/epilogue_panel.py,
+## art_source/epilogue/act4_<n>), fills `panels` (one per line), then appends
+## this row to PARTS after ACT3_PART, so the epilogue screen, the main menu's
+## Epilogue button (any_open()) and the autoplay-once flow pick it up with no
+## other change; the closing card "The Sun Still Rises" (CLOSINGS, after
+## "act4") then follows it. `achievement` is MetaData "empty_throne" (Hades
+## beaten in the Asphodel Underworld); its Meta flag will be [epilogue]
+## seen_act4. The text follows the proposal's story (the necromancer's army
+## emptied the Underworld; the gods came for the dead; Olympus fell; Hades
+## kneels and gives up his crown).
+const ACT4_PART := {
+	"id": "act4",  # TUNING (not in GDD)
+	"achievement": "empty_throne",
+	"act": "Act IV: The Olympian Republic",
+	"heading": "The Gods Are Silent",  # Owner-approved proposal
+	"lines": [
+		"The army of the dead had grown so vast that the Underworld stood empty. Hades complained to Olympus that his kingdom was a desert, and the gods came down to take the dead back.",  # Owner-approved proposal story
+		"Their legions broke on the shore of Ilion, and one by one the gods of the mountain fell silent: Ares, Artemis, Poseidon, and at last Zeus himself.",  # Owner-approved proposal story
+		"Below the world, in the grey fields of asphodel, the Lord of the Dead rose from his throne to fight for what was his. Beaten, he did not die. He knelt, and laid his crown at the necromancer's feet.",  # Owner-approved proposal ending
+		"The Styx runs again, and every soul it carries answers to one master. The gods are silent. The throne below is empty.",  # TUNING (not in GDD)
+	],
+	"panels": [],  # The lead fills the four panels at integration (see above).
+}
 ## The closing cards, one per act, in reading order (owner: "tie everything
 ## together nicely"; docs/act4/PROPOSAL.md "Closing cards"; GDD §15.0 "Closing
 ## cards, one per act"). Each names the next enemy without showing it, and
@@ -118,6 +145,18 @@ const CLOSINGS := [
 		"line": "Far below the world, the river of the dead has run dry, and its ferryman has no one left to carry. On a mountain of marble, the gods have noticed.",  # Owner-approved proposal
 		"tag": "To be continued.",  # TUNING (not in GDD)
 		"panel": ["epilogue/close_act3", Vector2(0.5, 0.0), Vector2(0.4, 1.0)],  # TUNING (not in GDD) the gods on the marble mountain, down to the empty ferry and the lantern
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# The card after Act IV sets up Act V, the Shogunate of the Rising Sun. It
+	# shows once the Act IV part (ACT4_PART, appended to PARTS by the lead) is
+	# open; its panel "epilogue/close_act4" is made by the lead at integration.
+	{
+		"after": "act4",  # TUNING (not in GDD) follows the Act IV part ("The Gods Are Silent")
+		"act": "Across the eastern sea",  # TUNING (not in GDD)
+		"heading": "The Sun Still Rises",  # Owner-approved proposal (docs/act4/PROPOSAL.md "Closing cards")
+		"line": "Olympus is silent and Hades kneels. Only one light still burns against the dead: across the eastern sea, a goddess opens her eyes.",  # Owner-approved proposal
+		"tag": "To be continued.",  # TUNING (not in GDD)
+		"panel": ["epilogue/close_act4", Vector2(0.0, 0.5), Vector2(1.0, 0.3)],  # TUNING (not in GDD) the lead's panel: across the dark sea to the rising sun (pan to adjust with the art)
 	},
 ]
 ## Line shown in place of a part that is still sealed.

@@ -159,6 +159,12 @@ var _crit_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 ## Damage-source tag -> true / false: is it a ranged hit (is_ranged_source(),
 ## filled lazily, only while Lead-Lined Bones is owned).
 var _ranged_sources: Dictionary = {}
+# --- Act IV: the Asphodel Underworld ---
+## Ferryman's Toll: game time its current one-second heal window started.
+var _toll_window_t: float = -1.0
+## Ferryman's Toll: HP healed in the current one-second window (capped at
+## RiverStyxData.TOLL_HEAL_CAP_PER_S).
+var _toll_window: float = 0.0
 
 
 func _init(p_game: Game) -> void:
@@ -434,6 +440,13 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 		if bastion > 0.0:
 			game.stat_add("syn_bastion_prevented", prevented - by_mason)
 		amount *= mult
+	# --- Act IV: the Asphodel Underworld --- a summon behaviour's own cut (the
+	# Myrmidon Shades' locked shield wall; exactly 1 for every other class).
+	if u.behavior != null:
+		var bm := u.behavior.damage_taken_mult(u, source)  # Share of the hit kept.
+		if bm < 1.0:
+			game.stat_add("behavior_dmg_prevented_" + u.unit_class, amount * (1.0 - bm))
+			amount *= bm
 	# --- Act III: the Scrap Wastes --- Lead-Lined Bones: ranged hits deal less.
 	var lead := ab.passive_value("lead_lined_bones", "ranged_reduction")  # 0..1, 0 when not owned.
 	if lead > 0.0 and is_ranged_source(source):
@@ -771,6 +784,7 @@ func _kill_enemy(e: Enemy) -> void:
 	game.powerups.on_enemy_killed(e)  # Power-up drop roll (PowerupData rules).
 	game.chests.on_enemy_killed(e)  # Treasure chest roll (ChestData rules).
 	game.dread_rally.on_enemy_killed(e)  # Dread Rally soul meter.
+	_ferrymans_toll(e)  # Act IV, the Asphodel Underworld: a slowed foe pays the ferryman (no-op unless owned).
 	game.ultimates.on_enemy_killed(e)  # Grave Tide raises (no-op unless it runs).
 	if game.dread != null:
 		game.dread.on_kill()  # Act II: a kill steadies the mind.
@@ -779,6 +793,26 @@ func _kill_enemy(e: Enemy) -> void:
 	if game.pantheon != null:
 		game.pantheon.on_enemy_killed(e)  # Act IV: a swallowed corpse, a hero's Glory payout.
 	game.enemies.on_enemy_killed(e)
+
+
+# --- Act IV: the Asphodel Underworld ---
+## Ferryman's Toll (PassiveData "ferrymans_toll", RiverStyxData): foe `e`, slain
+## while slowed, pays the ferryman: the necromancer heals toll_heal HP (at most
+## TOLL_HEAL_CAP_PER_S a second) and the Dread Rally gains toll_rally soul
+## points. Its value is 0 while the passive is not owned: nothing happens then.
+func _ferrymans_toll(e: Enemy) -> void:
+	var heal := game.abilities.passive_value(RiverStyxData.TOLL, RiverStyxData.TOLL_HEAL_KEY)  # HP per slowed kill.
+	if heal <= 0.0 or e.slow_timer <= 0.0:
+		return
+	game.stat_add("toll_kills", 1.0)
+	game.dread_rally.add_points(game.abilities.passive_value(RiverStyxData.TOLL, RiverStyxData.TOLL_RALLY_KEY))
+	if game.elapsed - _toll_window_t >= 1.0:
+		_toll_window_t = game.elapsed
+		_toll_window = 0.0
+	var h := minf(heal, RiverStyxData.TOLL_HEAL_CAP_PER_S - _toll_window)
+	if h > 0.0:
+		_toll_window += h
+		game.stat_add("toll_healed", heal_player(h))
 
 
 ## Holy Retribution (GDD §8.5 run modifier, game.difficulty): a slain elite

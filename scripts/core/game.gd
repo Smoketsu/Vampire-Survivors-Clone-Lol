@@ -313,6 +313,9 @@ func _ready() -> void:
 			var pg := PantheonGround.new()  # Act IV placeholder floor (the STAGE's "floor").
 			pg.look = stage_def.get("floor", {})
 			ground = pg
+		# --- Act IV: the Asphodel Underworld ---
+		"underworld":
+			ground = UnderworldGround.new()  # The four zone floors and the River Styx (UnderworldStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -752,6 +755,20 @@ func pantheon_rules() -> PantheonRules:
 		pantheon = PantheonRules.new(self)
 		add_child(pantheon)
 	return pantheon
+
+
+# --- Act IV: the Asphodel Underworld ---
+## THE ONE SWITCH that creates the Claims path (EyeClaims, Act II's "the fight
+## over the dead") outside Act II: Hades, Lord of the Dead (BossHades), calls it
+## when he arrives, so his Reclaiming turns the summons he marks into his shades
+## through the same HordeDirector.claim_fallen() path (GDD §15.0 "The Asphodel
+## Underworld (Act IV phase 2)"). An Act II stage still creates `claims` from
+## its STAGE key in _ready() exactly as before (this returns that one); no other
+## caller exists, so Acts I and III never create it.
+func claims_rules() -> EyeClaims:
+	if claims == null:
+		claims = EyeClaims.new(self)
+	return claims
 
 
 ## Re-inserts every living enemy and summon into the spatial hashes.

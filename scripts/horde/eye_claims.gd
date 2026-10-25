@@ -13,6 +13,12 @@
 ## has "claims": true (null elsewhere, so Act I never runs any of this).
 ## Determinism: no RNG of its own; the claimer search is the enemy spatial hash
 ## in a fixed order (the nearest claimer wins).
+## Act IV, the Asphodel Underworld (GDD §15.0 "The Asphodel Underworld (Act IV
+## phase 2)"): Hades' RECLAIMING reuses this path. Game.claims_rules() (the one
+## switch) creates the object when he arrives; he MARKS summons (mark()) and a
+## marked summon that dies while its mark holds is claimed with no claimer near,
+## risen for the mark's own life, tint and name (his shade). With no mark set
+## (every Act II run) nothing below changes.
 class_name EyeClaims
 extends RefCounted
 
@@ -33,6 +39,12 @@ var refused_cap: int = 0
 var by_class: Dictionary = {}
 ## Reusable enemy query buffer.
 var _tmp: Array = []
+# --- Act IV: the Asphodel Underworld ---
+## Hades' marks: SummonedUnit -> [generation, until (game time), life (s),
+## tint, display name]. Empty on every Act II run.
+var _marks: Dictionary = {}
+## Summons claimed through a mark (Hades' shades) this run.
+var marked_claims: int = 0
 
 
 func _init(p_game: Game) -> void:
@@ -43,10 +55,12 @@ func _init(p_game: Game) -> void:
 ## claimer stands close enough. Returns true when it was claimed.
 func claim_fallen(u: SummonedUnit) -> bool:
 	var c: Dictionary = EyeEnemyData.CLAIM
-	if u.is_temporary and not bool(c["temporary_claimable"]):
-		return false
-	if _claimer_near(u.position) == null:
-		return false
+	var m := _take_mark(u)  # Act IV: Hades' mark on it ([] = none, always on Act II).
+	if m.is_empty():
+		if u.is_temporary and not bool(c["temporary_claimable"]):
+			return false
+		if _claimer_near(u.position) == null:
+			return false
 	if thralls_alive >= int(c["max_thralls"]):
 		refused_cap += 1
 		return false
@@ -61,9 +75,13 @@ func claim_fallen(u: SummonedUnit) -> bool:
 	var look := u.glyph_kind if u.glyph_kind != "" else u.unit_class  # The summon's art key (an evolved form has its own).
 	e.wears = "summons/" + look
 	e.wears_class = look
-	e.wear_tint = c["tint"]
+	e.wear_tint = c["tint"] if m.is_empty() else m[3]
+	if not m.is_empty():
+		e.display_name = String(m[4])  # Act IV: Hades' shade.
+		marked_claims += 1
+		game.stat_add("hades_shades_risen", 1.0)
 	if e.kit is EyeThrallKit:
-		(e.kit as EyeThrallKit).start(float(c["thrall_life"]), u.unit_class)
+		(e.kit as EyeThrallKit).start(float(c["thrall_life"]) if m.is_empty() else float(m[2]), u.unit_class)
 	e.queue_redraw()
 	thralls_alive += 1
 	claims += 1
@@ -71,6 +89,25 @@ func claim_fallen(u: SummonedUnit) -> bool:
 	game.stat_add("claims", 1.0)
 	game.effects.spawn_ring(u.position, c["rise_color"], "summon_rise")  # Visual only.
 	return true
+
+
+# --- Act IV: the Asphodel Underworld ---
+## Hades' Reclaiming: marks summon `u` until game time `until`; if it dies
+## while marked it is claimed with no claimer near, risen for `life` s with
+## `tint` under the name `shade_name`.
+func mark(u: SummonedUnit, until: float, life: float, tint: Color, shade_name: String) -> void:
+	_marks[u] = [u.generation, until, life, tint, shade_name]
+
+
+## The mark on `u` if it still holds (removed either way), else [].
+func _take_mark(u: SummonedUnit) -> Array:
+	if _marks.is_empty() or not _marks.has(u):
+		return []
+	var m: Array = _marks[u]
+	_marks.erase(u)
+	if int(m[0]) != u.generation or game.elapsed > float(m[1]):
+		return []
+	return m
 
 
 ## The nearest enemy within its claim reach of `p`, or null.

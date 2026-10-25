@@ -69,7 +69,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act III: the Scrap Wastes ---
 	"death_ray",
 	# --- Act III: the Iron Citadel ---
-	"scrap_swarm"]
+	"scrap_swarm",
+	# --- Act IV: the Asphodel Underworld ---
+	"river_styx"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -456,6 +458,29 @@ const SPELLS := {
 			{"drones": 5, "damage": 15.0, "cooldown": 0.85, "range": 240.0, "orbit_speed": 1.2},  # TUNING (not in GDD) first pass 19 (with the evolution 296k damage in a forced army run)
 		],
 	},
+	# --- Act IV: the Asphodel Underworld ---
+	# River Styx (GDD §15.0 "River Styx, Lethe's Flood, Ferryman's Toll and the
+	# Ferrywoman"; owner-approved proposal: "a black river line that drains and
+	# slows whatever crosses it"; unlocked by defeating Hades, UnlockData): every
+	# `cooldown` s, `rivers` river line(s) `length` px long and 2 x `radius` px
+	# wide across the nearest foe's way, flowing `duration` s; every `tick` s each
+	# foe in the water takes `damage` and is slowed by `river_slow` for
+	# `slow_duration` s; the necromancer heals `drain_share` of it (at most
+	# `drain_cap` HP a second). Logic: RiverStyx; fixed rules: RiverStyxData.
+	"river_styx": {
+		"display_name": "River Styx",
+		"icon": "river_styx",
+		"description": "A black river opens across your foes' path: it drains and slows whatever crosses it.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Drain per tick", "river_slow": "Slow", "length": "River length", "duration": "Duration (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"rivers": 1, "damage": 6.0, "tick": 0.5, "river_slow": 0.30, "slow_duration": 0.8, "length": 170.0, "radius": 16.0, "duration": 4.0, "cooldown": 5.0, "drain_share": 0.04, "drain_cap": 3.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 8.0, "tick": 0.5, "river_slow": 0.32, "slow_duration": 0.8, "length": 190.0, "radius": 17.0, "duration": 4.5, "cooldown": 4.8, "drain_share": 0.04, "drain_cap": 3.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 9.0, "tick": 0.5, "river_slow": 0.35, "slow_duration": 0.8, "length": 210.0, "radius": 18.0, "duration": 5.0, "cooldown": 4.5, "drain_share": 0.05, "drain_cap": 4.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 11.0, "tick": 0.5, "river_slow": 0.38, "slow_duration": 0.8, "length": 230.0, "radius": 19.0, "duration": 5.5, "cooldown": 4.2, "drain_share": 0.05, "drain_cap": 4.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 13.0, "tick": 0.5, "river_slow": 0.40, "slow_duration": 0.8, "length": 250.0, "radius": 20.0, "duration": 6.0, "cooldown": 4.0, "drain_share": 0.06, "drain_cap": 5.0},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -466,7 +491,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act III: the Assembly Halls ---
 	"puppet_hp",
 	# --- Act III: the Scrap Wastes ---
-	"spark"]
+	"spark",
+	# --- Act IV: the Asphodel Underworld ---
+	"river_slow", "drain_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

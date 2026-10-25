@@ -250,7 +250,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act III: the Scrap Wastes ---
 	"static_in_the_wastes",
 	# --- Act III: the Iron Citadel ---
-	"nothing_is_deathless"]
+	"nothing_is_deathless",
+	# --- Act IV: the Asphodel Underworld ---
+	"empty_throne"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -339,6 +341,14 @@ const ACHIEVEMENTS := {
 	# part is EpilogueData.ACT3_PART (the last row of EpilogueData.PARTS).
 	"nothing_is_deathless": {"display_name": "Nothing Is Deathless", "description": "Defeat Deus Ex Machina in the Iron Citadel",
 		"stat": "boss_kills", "stage": "citadel", "goal": 1, "unlock": "Title Breaker of Engines, the Act III epilogue", "bounty": 350},  # Owner-approved proposal; bounty TUNING (not in GDD) the campaign's last (The Dead God Serves 300)
+	# --- Act IV: the Asphodel Underworld ---
+	# The finale of Act IV (owner-approved proposal: "Empty Throne (beat Hades;
+	# opens the Act IV epilogue)"): Hades beaten in the Asphodel Underworld,
+	# counted from the stage record. Its epilogue part is EpilogueData.ACT4_PART
+	# (the hook the lead appends to EpilogueData.PARTS at integration, with the
+	# closing card "The Sun Still Rises" after it).
+	"empty_throne": {"display_name": "Empty Throne", "description": "Make Hades kneel in the Asphodel Underworld",
+		"stat": "boss_kills", "stage": "underworld", "goal": 1, "unlock": "The Act IV epilogue", "bounty": 400},  # Owner-approved proposal; bounty TUNING (not in GDD) Act IV's last (Nothing Is Deathless 350)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

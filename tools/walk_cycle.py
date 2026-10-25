@@ -313,6 +313,17 @@ RIGS = {
     "pantheon/hoplite": dict(mode="legs", hip=42, back=(0, 17), front=(17, 30), rigid=[(2, 6, 0, None)], spread=2, lift=2, dip=1),
     "pantheon/hero": dict(mode="legs", hip=41, back=(0, 31), front=(31, 58), rigid=[(0, 17, 41, 48)], spread=2, lift=2, dip=1),
     "pantheon/bronze_titan": dict(mode="legs", hip=66, back=(0, 35), front=(35, 72), rigid=[(0, 18, 66, 73), (52, 72, 66, 72)], spread=2, lift=3, dip=1),
+    # --- Act IV: the Asphodel Underworld ---
+    # Cerberus lopes on four legs (the hind pair left, the forelegs right; the flame tail and
+    # the three heads above the hip ride with the body). Hades glides in his long robe, the
+    # upright bident rigid. The Ferrywoman (figure redesign: bust bounce, idle breathing) glides
+    # in her cloak, the oar and its lantern rigid. The Myrmidons march, the upright spear rigid,
+    # the round shield (low on the front side) riding with the body.
+    "pantheon/cerberus": dict(mode="legs", hip=66, back=(0, 48), front=(48, 94), rigid=[], spread=2, lift=2, dip=1),
+    "bosses/hades": dict(mode="robe", hip=78, rigid=[(56, 70, 0, None)], sway=1, dip=1),
+    "player/ferrywoman": dict(mode="robe", hip=34, rigid=[(32, 39, 0, None)], sway=2, dip=1, bust=(19, 29, 18, 25, 2)),
+    "summons/myrmidon_shade": dict(mode="legs", hip=34, back=(0, 13), front=(13, 26), rigid=[(1, 5, 0, None), (14, 26, 20, 41)], spread=2, lift=2, dip=1),
+    "summons/legion_of_tartarus": dict(mode="legs", hip=40, back=(0, 15), front=(15, 32), rigid=[(2, 7, 0, None), (17, 32, 23, 47)], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -375,9 +386,17 @@ SKINS = {
     "player/rust_prophet_hyper": "player/rust_prophet",
     "player/rust_prophet_untouchable": "player/rust_prophet",
     "player/rust_prophet_deathlord": "player/rust_prophet",
+    # --- Act IV: the Asphodel Underworld ---
+    "player/ferrywoman_hyper": "player/ferrywoman",
+    "player/ferrywoman_untouchable": "player/ferrywoman",
+    "player/ferrywoman_deathlord": "player/ferrywoman",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
+    # --- Act IV: the Asphodel Underworld --- (the Ferrywoman's skins: their own oar column and bust box)
+    "player/ferrywoman_hyper": {"rigid": [(28, 35, 0, None)], "bust": (17, 26, 17, 24, 2)},
+    "player/ferrywoman_untouchable": {"rigid": [(28, 34, 0, None)], "bust": (17, 27, 17, 24, 2)},
+    "player/ferrywoman_deathlord": {"rigid": [(29, 35, 0, None)], "bust": (18, 27, 19, 26, 2)},
     # The Hyper gown's crown adds 2 rows on top but her bust sits no lower than the base
     # Tide Widow's, so the derived box (rows 20-28) landed on the waist (owner's art review).
     # Round 2: 2 px wider to the right and two lobes, so both sides bounce ("just one is bouncing").

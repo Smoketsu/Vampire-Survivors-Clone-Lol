@@ -14,7 +14,9 @@
 ##                    which stacks, chests and Soul Ash bounty paid)
 ##   pantheon kinds:  spawns / kills of every Pantheon kind that spawned
 ##   pantheon stage:  the Act IV stage itself (stub status, wrath, boss, Soul Ash)
-## Phase 2 adds one line per stage system here (each stage in its own block).
+## Phase 2 adds one line per stage system here (each stage in its own block):
+##   the Asphodel Underworld: UnderworldReport.stage_lines() (the director, its
+##                    events, its kinds, Hades).
 ## Read-only: it never changes the run.
 class_name PantheonReport
 extends RefCounted
@@ -48,6 +50,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
 			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not pan.wrath.twilight.is_empty())])
+	# --- Act IV: the Asphodel Underworld ---
+	UnderworldReport.stage_lines(game, st)
 
 
 ## The "divine wrath" line (DivineWrath counters; the damage to summons and to

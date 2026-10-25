@@ -1091,6 +1091,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.enemies.assembly.danger_push(pos)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	if game.enemies.citadel != null:
 		danger += game.enemies.citadel.danger_push(pos)  # Act III, the Iron Citadel: laser grids (null elsewhere).
+	if game.enemies.underworld != null:
+		danger += game.enemies.underworld.danger_push(pos)  # Act IV, the Asphodel Underworld: out of the Styx (null elsewhere).
 	return danger
 
 
@@ -1185,6 +1187,8 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.assembly.danger_push(p)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	if game.enemies.citadel != null:
 		danger += game.enemies.citadel.danger_push(p)  # Act III, the Iron Citadel: laser grids (null elsewhere).
+	if game.enemies.underworld != null:
+		danger += game.enemies.underworld.danger_push(p)  # Act IV, the Asphodel Underworld: out of the Styx (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1380,6 +1384,7 @@ func finish(summary: Dictionary) -> void:
 	SpireReport.print_all(game, st)  # Act II, Ul-Thalos: the sinking, pillars, kinds, Vhal'Neth, the Waking, its items (only when they ran).
 	AssemblyReport.print_items(game, st)  # Act III, the Assembly Halls: Hollow Puppet, the Grave Drone, their passives, Signal Ghost (only when owned).
 	CitadelReport.item_lines(game, st)  # Act III, the Iron Citadel: Scrap Swarm, the Iron Revenant (only when used; the stage's own lines are EmpireReport's).
+	UnderworldReport.item_lines(game, st)  # Act IV, the Asphodel Underworld: River Styx, the Myrmidon Shades (only when used; the stage's own lines are PantheonReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

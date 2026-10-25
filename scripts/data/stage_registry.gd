@@ -106,6 +106,13 @@
 ##                        PantheonRulesData.WRATH[kind] to override it}.
 ##   zones              — Act IV stubs: the planned zones ([{id, name, start}],
 ##                        names only until phase 2 builds them).
+## --- Act IV: the Asphodel Underworld ---
+##   underworld         — UnderworldDirector config (UnderworldStage.UNDERWORLD,
+##                        Act IV, the Asphodel Underworld: the River Styx in the
+##                        zones whose ZONES row has "styx": true, Cerberus, guest
+##                        squads of the earlier Act IV kinds); ground
+##                        "underworld" is its UnderworldGround (four zone floors
+##                        and the Styx).
 class_name StageRegistry
 extends RefCounted
 

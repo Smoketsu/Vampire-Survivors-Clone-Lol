@@ -43,7 +43,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		# --- Act III: the Iron Citadel ---
 		# Unlockable (UnlockData: defeating Deus Ex Machina), so a fresh save
 		# never offers it.
-		"iron_revenant"]
+		"iron_revenant",
+		# --- Act IV: the Asphodel Underworld ---
+		# Unlockable (UnlockData: defeating Hades), so a fresh save never offers it.
+		"myrmidon_shade"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -979,6 +982,59 @@ const UNITS := {
 			"slow_duration": 1.2,  # TUNING (not in GDD) s (special_duration lengthens it)
 		},
 	},
+	# --- Act IV: the Asphodel Underworld ---
+	# Myrmidon Shade (owner-approved proposal: "the finale's reward: undead
+	# hoplites that fight as a three-shield phalanx on the ring"; GDD §15.0
+	# "Myrmidon Shades, Legion of Tartarus and Myrmidon Oath"): Achilles' own
+	# Myrmidons, dead and bound to the necromancer, in bone-grey bronze with
+	# soul-teal eyes. Three to a card, they hold the Bone Ring's outer posts like
+	# Warriors (formation "front", they block) and LOCK SHIELDS: a Myrmidon with
+	# two more in one chain (each within wall_range px of the next) is in the wall and takes wall_cut less from
+	# every hit (MyrmidonBehavior, "shieldwall"); their spear reaches far and
+	# runs through a second foe behind the first. No act rule (owner rule:
+	# summons work the same everywhere). Unlockable (UnlockData), then offered
+	# on every stage.
+	"myrmidon_shade": {
+		"display_name": "Myrmidon Shade",  # Owner-approved proposal ("the Myrmidon Shades")
+		"plural": "Myrmidon Shades",
+		"description": "Undead hoplites that hold the ring three shields wide and spear through the foes behind.",  # Card text: one short sentence (owner rule).
+		"max_hp": 70.0,  # TUNING (not in GDD) a little sturdier than a Warrior (60): bronze and a big shield
+		"damage": 9.0,  # TUNING (not in GDD) per spear thrust (Warrior 10)
+		"attack_interval": 1.25,  # TUNING (not in GDD) s
+		"attack_range": 30.0,  # TUNING (not in GDD) edge-to-edge reach (px): the spear outreaches a sword (Warrior 22)
+		"move_speed": 80.0,  # TUNING (not in GDD) px/s; a steady march (Warrior 85)
+		"radius": 10.0,  # TUNING (not in GDD)
+		"acquisition_range": 150.0,  # TUNING (not in GDD) px
+		"replenish_interval": 7.0,  # TUNING (not in GDD) s (Warrior 5): three come back one by one
+		"band_min": 35.0,  # TUNING (not in GDD) px, with the frontline
+		"band_max": 85.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.8,  # TUNING (not in GDD) a wall pursues less than a Warrior
+		"w_formation": 0.5,  # TUNING (not in GDD) and keeps its place more
+		"w_separation": 0.6,  # TUNING (not in GDD) shoulder to shoulder
+		"w_threat": 0.1,  # TUNING (not in GDD)
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.22,  # TUNING (not in GDD) s; the spear drawn back
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) healers value the wall
+		"block_radius": 12.0,  # TUNING (not in GDD) blocks like a Warrior (px)
+		"block_mass": 3.5,  # TUNING (not in GDD) a braced shield (Warrior 3)
+		"engaged_speed_mult": 0.6,  # TUNING (not in GDD) touching enemies move at 60%, like a Warrior
+		"formation": "front",  # Owner-approved proposal: "a phalanx on the ring"
+		"capacity_bonus_mult": 1.0,  # TUNING (not in GDD) Grave Dominion V: +5, like the Warriors
+		"behavior": "shieldwall",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"wall_range": 56.0,  # TUNING (not in GDD) px between two Myrmidons' centres to stand in one chain (about two Bone Ring posts; not area-scaled: no _radius suffix)
+			"wall_size": 3,  # Owner-approved proposal "a three-shield phalanx": Myrmidons that make a wall
+			"wall_cut": 0.3,  # TUNING (not in GDD) share of every hit a Myrmidon in the wall no longer takes
+			"pierce_reach": 26.0,  # TUNING (not in GDD) px behind the struck foe the spear runs on (not area-scaled)
+			"pierce_fraction": 0.6,  # TUNING (not in GDD) the second foe takes this x the thrust
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1158,6 +1214,16 @@ const LEVELS := {
 		{"count": 2, "damage_bonus": 0.2, "hp_bonus": 0.2},
 		{"count": 2, "damage_bonus": 0.35, "hp_bonus": 0.2, "special_duration": 0.3},
 		{"count": 3, "damage_bonus": 0.35, "hp_bonus": 0.2, "special_duration": 0.3, "speed_bonus": 0.15},
+	],
+	# --- Act IV: the Asphodel Underworld ---
+	# TUNING (not in GDD): three to a card (owner-approved "a three-shield
+	# phalanx"), 3 -> 6 Myrmidons; then sturdier walls and harder spears.
+	"myrmidon_shade": [
+		{"count": 3},
+		{"count": 3, "damage_bonus": 0.15, "hp_bonus": 0.1},
+		{"count": 4, "damage_bonus": 0.2, "hp_bonus": 0.2},
+		{"count": 5, "damage_bonus": 0.3, "hp_bonus": 0.25},
+		{"count": 6, "damage_bonus": 0.4, "hp_bonus": 0.3, "speed_bonus": 0.1},
 	],
 }
 
