@@ -839,3 +839,5 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-25 18:20,bosses/hades,gpt-image-2.5-flare,medium,1024x1024,1,352,1024,439,0.0231,hades.png
 2026-10-25 18:20,bosses/hades_bident,gpt-image-2.5-flare,medium,1024x1024,1,356,1024,439,0.0231,hades_bident.png
 2026-10-25 18:20,bosses/hades_kneel,gpt-image-2.5-flare,medium,1024x1024,1,359,1024,439,0.0232,hades_kneel.png
+2026-10-25 18:27,pantheon/amazon,gpt-image-2.5-flare,medium,1024x1024,2,773,2048,439,0.0334,amazon_a.png
+2026-10-25 18:27,pantheon/amazon,gpt-image-2.5-flare,medium,1024x1024,2,773,2048,439,0.0334,amazon_b.png
