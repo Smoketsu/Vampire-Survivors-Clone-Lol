@@ -629,10 +629,14 @@ func _run_event(ev: Dictionary) -> void:
 		"siege_towers", "polyphemus":
 			if ilion != null:
 				ilion.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
 		# --- Act IV: Mount Olympus ---
 		"god":
 			if olympus != null:
 				olympus.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
 		# --- Act IV: the Asphodel Underworld ---
 		"cerberus":
 			if underworld != null:

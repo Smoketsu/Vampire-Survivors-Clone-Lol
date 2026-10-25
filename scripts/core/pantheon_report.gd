@@ -15,10 +15,10 @@
 ##   pantheon kinds:  spawns / kills of every Pantheon kind that spawned
 ##   pantheon stage:  the Act IV stage itself (stub status, wrath, boss, Soul Ash)
 ## Phase 2 adds one line per stage system here (each stage in its own block):
-##   Act IV, the Shores of Ilion: IlionReport.print_lines() (ilion, ilion
-##   kinds, polyphemus, achilles).
-## Phase 2 adds one line per stage system here (each stage in its own block;
-## Mount Olympus: OlympusReport.stage_lines()).
+##   the Shores of Ilion: IlionReport.print_lines() (ilion, ilion kinds,
+##                    polyphemus, achilles);
+##   Mount Olympus: OlympusReport.stage_lines() (the trial, its gods and kinds,
+##                    Zeus);
 ##   the Asphodel Underworld: UnderworldReport.stage_lines() (the director, its
 ##                    events, its kinds, Hades).
 ## Read-only: it never changes the run.

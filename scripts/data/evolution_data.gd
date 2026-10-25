@@ -25,7 +25,9 @@
 ##   Death Ray         + Conductive Marrow     = Event Horizon
 ## plus Act IV's unlockable spells (owner-approved Act IV proposal "Rewards";
 ## each with a NEW paired passive, unlocked with its spell):
+##   Paris's Arrow     + Mortal Heel           = Arrow of Fate
 ##   Stolen Thunder    + Titan's Blood         = Gigantomachy
+##   River Styx        + Ferryman's Toll       = Lethe's Flood
 ##
 ## Evolution condition (GDD open question 27; decisions recorded in GDD
 ## §15.0): the base spell is at its max level (5), the paired passive is at
@@ -71,6 +73,8 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	"event_horizon",
 	# --- Act III: the Iron Citadel ---
 	"deathless_swarm",
+	# --- Act IV: the Shores of Ilion ---
+	"arrow_of_fate",
 	# --- Act IV: Mount Olympus ---
 	"gigantomachy",
 	# --- Act IV: the Asphodel Underworld ---

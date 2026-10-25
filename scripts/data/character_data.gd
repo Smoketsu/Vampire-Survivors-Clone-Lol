@@ -456,6 +456,7 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail seer with a wide sight
 		"sprite": "player/doomed_prophetess",
 		"tint": Color(0.62, 0.48, 0.92),  # TUNING (not in GDD) twilight violet
+		"starts_unlocked": false,
 	},
 	# --- Act IV: Mount Olympus ---
 	# The Oathbreaker (Stolen Thunder's character; owner-approved Act IV
@@ -475,6 +476,7 @@ const CHARACTERS := {
 		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) a demigod's body, heavy bronze
 		"sprite": "player/oathbreaker",
 		"tint": Color(0.85, 0.72, 0.45),  # TUNING (not in GDD) tarnished bronze over the violet
+		"starts_unlocked": false,
 	},
 	# --- Act IV: the Asphodel Underworld ---
 	# The Ferrywoman (River Styx's character; owner-approved Act IV proposal:
