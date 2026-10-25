@@ -1,0 +1,805 @@
+{
+ "title": "Act I enemy AoE art (Covenant telegraphs, holy ground, Seraphine's hazards)",
+ "note": "All pieces are procedural pixel art made by tools/covenant_aoe_art.py (no image generation) and drawn by scripts/fx/covenant_fx.gd: band and hatch tiles at 1:1 along the exact danger edge (any radius, length or angle), discs baked at the radii the game uses. Images are at 1x and x4 (x2 for the big discs) nearest-neighbour on the Graveyard soil colour; strips also as GIFs. Before / after crops are 1:1 game-size (1280x720 layout) frames of the same seeded autotest moments under xvfb (before = integration 3227eea, after = this branch). Not caught in a shot window and left for the owner's playtest: the boss death flash, the Vael and Sentinel crescent strips, the structure break strip, the zone-change smoke, the High Confessor pillar, the Sister's lash, the Guardian's raised fists, Seraphine's beams, teleport mark and Avatar / Last Light aura.",
+ "runs": {
+  "R1": "--seed=1337 --stage=graveyard --policy=army",
+  "R2": "--seed=1337 --stage=crimson_march --policy=naive",
+  "R3": "--seed=1337 --stage=sanctum --policy=naive --spawn=high_confessor@200x2,radiant_inquisitor@260x2,sun_paladin@330x2,sanctified_sentinel@230x3,battle_sister@240x4",
+  "R4": "--seed=7 --stage=sanctum --policy=naive --spawn=high_confessor@40x3,battle_sister@42x4,sanctified_sentinel@44x3,sun_paladin@46x2,radiant_inquisitor@48x2",
+  "R5": "--seed=1337 --stage=sanctum --policy=army --meta=max",
+  "R6": "R1 again after the Wrath halo redraw fix",
+  "all": "xvfb-run ... --rendering-driver opengl3 --resolution 1280x720 --fixed-fps 60 -- --autotest --speed=16 --art-shots=T,... --shot-dir=DIR"
+ },
+ "images": [
+  {
+   "id": "telegraphs_edge",
+   "key": "telegraphs/edge",
+   "path": "docs/art/act1_enemy_review/images/telegraphs_edge.png",
+   "path_x4": "docs/art/act1_enemy_review/images/telegraphs_edge_x4.png",
+   "size": [
+    10,
+    6
+   ],
+   "description": "Telegraph warning band piece (10 x 6): ink rim, a 4 px gold band with a holy-white heart, a dark crimson inner row; tiled at 1:1 along every warning circle, lane side and cone edge",
+   "before": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_after.png"
+  },
+  {
+   "id": "telegraphs_edge_tooth",
+   "key": "telegraphs/edge_tooth",
+   "path": "docs/art/act1_enemy_review/images/telegraphs_edge_tooth.png",
+   "path_x4": "docs/art/act1_enemy_review/images/telegraphs_edge_tooth_x4.png",
+   "size": [
+    10,
+    10
+   ],
+   "description": "The band piece with a crimson tooth pointing into the danger (every other piece): the Covenant's serrated warning edge",
+   "before": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_after.png"
+  },
+  {
+   "id": "telegraphs_front",
+   "key": "telegraphs/front",
+   "path": "docs/art/act1_enemy_review/images/telegraphs_front.png",
+   "path_x4": "docs/art/act1_enemy_review/images/telegraphs_front_x4.png",
+   "size": [
+    8,
+    3
+   ],
+   "description": "Timing front (8 x 3): a holy-white line in gold, at radius x progress (circle, cone) or across the lane",
+   "before": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_after.png"
+  },
+  {
+   "id": "telegraphs_hatch",
+   "key": "telegraphs/hatch",
+   "path": "docs/art/act1_enemy_review/images/telegraphs_hatch.png",
+   "path_x4": "docs/art/act1_enemy_review/images/telegraphs_hatch_x4.png",
+   "size": [
+    8,
+    8
+   ],
+   "description": "Warning hatch (8 x 8 seamless): diagonal light-gold stripes, laid row by row inside the exact danger shape, denser where the timing has filled",
+   "before": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_after.png"
+  },
+  {
+   "id": "telegraphs_chevron",
+   "key": "telegraphs/chevron",
+   "path": "docs/art/act1_enemy_review/images/telegraphs_chevron.png",
+   "path_x4": "docs/art/act1_enemy_review/images/telegraphs_chevron_x4.png",
+   "size": [
+    11,
+    13
+   ],
+   "description": "Direction chevron (11 x 13): gold with an ink-red outline; along a charge lane (lit as the timing passes) and on Seraphine's beam-sweep warnings",
+   "before": "docs/art/act1_enemy_review/shots/alaric_charge_lane_zones_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_charge_lane_zones_after.png"
+  },
+  {
+   "id": "telegraphs_target",
+   "key": "telegraphs/target",
+   "path": "docs/art/act1_enemy_review/images/telegraphs_target.png",
+   "path_x4": "docs/art/act1_enemy_review/images/telegraphs_target_x4.png",
+   "size": [
+    13,
+    13
+   ],
+   "description": "Impact point (13 x 13): a gold diamond with a crimson heart at the centre of a warning circle",
+   "before": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_after.png"
+  },
+  {
+   "id": "holy_zone_62",
+   "key": "holy/zone_62",
+   "path": "docs/art/act1_enemy_review/images/holy_zone_62.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_zone_62_x4.png",
+   "size": [
+    130,
+    130
+   ],
+   "description": "Holy zone, r 62 (Alaric's Consecrated Ground): ivory rim in gold, a ring of crosses, dashed inner ring, eight spokes, an ivory centre cross",
+   "before": "docs/art/act1_enemy_review/shots/alaric_charge_lane_zones_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_charge_lane_zones_after.png"
+  },
+  {
+   "id": "holy_zone_85",
+   "key": "holy/zone_85",
+   "path": "docs/art/act1_enemy_review/images/holy_zone_85.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_zone_85_x4.png",
+   "size": [
+    176,
+    176
+   ],
+   "description": "Holy zone, r 85 (a Chaplain's consecration on the Graveyard): the same sigil at its size",
+   "before": "docs/art/act1_enemy_review/shots/suppression_arming_before.png",
+   "after": "docs/art/act1_enemy_review/shots/suppression_arming_after.png"
+  },
+  {
+   "id": "holy_zone_105",
+   "key": "holy/zone_105",
+   "path": "docs/art/act1_enemy_review/images/holy_zone_105.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_zone_105_x4.png",
+   "size": [
+    216,
+    216
+   ],
+   "description": "Holy zone, r 105 (the Crimson March's consecrations): the same sigil at its size",
+   "before": "docs/art/act1_enemy_review/shots/march_holy_zone_lane_before.png",
+   "after": "docs/art/act1_enemy_review/shots/march_holy_zone_lane_after.png"
+  },
+  {
+   "id": "holy_chamber_220",
+   "key": "holy/chamber_220",
+   "path": "docs/art/act1_enemy_review/images/holy_chamber_220.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_chamber_220_x4.png",
+   "size": [
+    446,
+    446
+   ],
+   "description": "Sanctified chamber floor circle (r 220): ivory rim, a band of grouted gold and ivory mosaic tesserae with crimson accents, an inner ring, a small sun mosaic in the centre",
+   "before": "docs/art/act1_enemy_review/shots/chamber_altar_before.png",
+   "after": "docs/art/act1_enemy_review/shots/chamber_altar_after.png"
+  },
+  {
+   "id": "holy_cleansed_220",
+   "key": "holy/cleansed_220",
+   "path": "docs/art/act1_enemy_review/images/holy_cleansed_220.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_cleansed_220_x4.png",
+   "size": [
+    446,
+    446
+   ],
+   "description": "Cleansed chamber (r 220): a ragged deep-violet rot stain on the marble with darker blotches, a violet rim and soul-green cracks (stepped alphas)",
+   "before": "",
+   "after": ""
+  },
+  {
+   "id": "holy_seal_160",
+   "key": "holy/seal_160",
+   "path": "docs/art/act1_enemy_review/images/holy_seal_160.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_seal_160_x4.png",
+   "size": [
+    326,
+    326
+   ],
+   "description": "Suppression seal, r 160 (Radiant Inquisitor): broad ivory rim in gold, dashed inner ring, a ring of gold studs, a small ivory ring and cross at the centre",
+   "before": "docs/art/act1_enemy_review/shots/suppression_seal_before.png",
+   "after": "docs/art/act1_enemy_review/shots/suppression_seal_after.png"
+  },
+  {
+   "id": "holy_seal_220",
+   "key": "holy/seal_220",
+   "path": "docs/art/act1_enemy_review/images/holy_seal_220.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_seal_220_x4.png",
+   "size": [
+    446,
+    446
+   ],
+   "description": "Suppression seal, r 220 (Seraphine): the same seal at her size",
+   "before": "docs/art/act1_enemy_review/shots/suppression_seal_before.png",
+   "after": "docs/art/act1_enemy_review/shots/suppression_seal_after.png"
+  },
+  {
+   "id": "holy_altar_48",
+   "key": "holy/altar_48",
+   "path": "docs/art/act1_enemy_review/images/holy_altar_48.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_altar_48_x4.png",
+   "size": [
+    102,
+    102
+   ],
+   "description": "Sacred altar sigil (r 48 = 2.4 x the altar): light-gold ring in gold, dashed inner ring, four gold diamonds",
+   "before": "docs/art/act1_enemy_review/shots/chamber_altar_before.png",
+   "after": "docs/art/act1_enemy_review/shots/chamber_altar_after.png"
+  },
+  {
+   "id": "holy_safe_62",
+   "key": "holy/safe_62",
+   "path": "docs/art/act1_enemy_review/images/holy_safe_62.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_safe_62_x4.png",
+   "size": [
+    130,
+    130
+   ],
+   "description": "Seraphine's nova safe circle, ground (r 62): a cool dark hole in her gold glow, a cold-blue pool, six small ice crosses (stepped alphas)",
+   "before": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_before.png",
+   "after": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_after.png"
+  },
+  {
+   "id": "holy_safe_rim_62",
+   "key": "holy/safe_rim_62",
+   "path": "docs/art/act1_enemy_review/images/holy_safe_rim_62.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_safe_rim_62_x4.png",
+   "size": [
+    142,
+    142
+   ],
+   "description": "Safe circle rim (over the bodies): a 3 px icy-white ring and a dashed cold-blue halo (its alpha pulses)",
+   "before": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_before.png",
+   "after": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_after.png"
+  },
+  {
+   "id": "holy_glint",
+   "key": "holy/glint",
+   "path": "docs/art/act1_enemy_review/images/holy_glint.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_glint_x4.png",
+   "size": [
+    7,
+    7
+   ],
+   "description": "Holy glint (7 x 7): a four-point star; eight orbit a holy zone's rim, one crowns a revival pillar and a lash tip",
+   "before": "docs/art/act1_enemy_review/shots/alaric_charge_lane_zones_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_charge_lane_zones_after.png"
+  },
+  {
+   "id": "holy_rune",
+   "key": "holy/rune",
+   "path": "docs/art/act1_enemy_review/images/holy_rune.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_rune_x4.png",
+   "size": [
+    9,
+    9
+   ],
+   "description": "Chamber rune (9 x 9): a gold mosaic diamond with a holy-white cross heart; twelve turn round a sanctified chamber",
+   "before": "docs/art/act1_enemy_review/shots/chamber_altar_before.png",
+   "after": "docs/art/act1_enemy_review/shots/chamber_altar_after.png"
+  },
+  {
+   "id": "holy_seal_cross",
+   "key": "holy/seal_cross",
+   "path": "docs/art/act1_enemy_review/images/holy_seal_cross.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_seal_cross_x4.png",
+   "size": [
+    7,
+    9
+   ],
+   "description": "Seal cross (7 x 9): a gold cross with a holy heart; ten turn round a suppression seal",
+   "before": "docs/art/act1_enemy_review/shots/suppression_seal_before.png",
+   "after": "docs/art/act1_enemy_review/shots/suppression_seal_after.png"
+  },
+  {
+   "id": "holy_ray",
+   "key": "holy/ray",
+   "path": "docs/art/act1_enemy_review/images/holy_ray.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_ray_x4.png",
+   "size": [
+    10,
+    4
+   ],
+   "description": "Holy ray (10 x 4): a short gold ray pointing outward; the turning rays of an altar sigil and a Judgment mark, a Paladin ward's sun ticks, Seraphine's Avatar halo",
+   "before": "docs/art/act1_enemy_review/shots/paladin_ward_aura_before.png",
+   "after": "docs/art/act1_enemy_review/shots/paladin_ward_aura_after.png"
+  },
+  {
+   "id": "holy_aura_dash",
+   "key": "holy/aura_dash",
+   "path": "docs/art/act1_enemy_review/images/holy_aura_dash.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_aura_dash_x4.png",
+   "size": [
+    12,
+    2
+   ],
+   "description": "Aura dash (12 x 2: a 6 px dash and its gap): tiled along a faint aura ring (Banner Bearer, Holy Standard, Paladin ward) and Seraphine's beam range",
+   "before": "docs/art/act1_enemy_review/shots/vael_holy_standard_aura_before.png",
+   "after": "docs/art/act1_enemy_review/shots/vael_holy_standard_aura_after.png"
+  },
+  {
+   "id": "holy_rally_edge",
+   "key": "holy/rally_edge",
+   "path": "docs/art/act1_enemy_review/images/holy_rally_edge.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_rally_edge_x4.png",
+   "size": [
+    8,
+    3
+   ],
+   "description": "Rally ring piece (8 x 3): crimson; the ring closing on a Call to Arms point, a Sister's zeal ring",
+   "before": "",
+   "after": ""
+  },
+  {
+   "id": "holy_warn_line",
+   "key": "holy/warn_line",
+   "path": "docs/art/act1_enemy_review/images/holy_warn_line.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_warn_line_x4.png",
+   "size": [
+    8,
+    3
+   ],
+   "description": "Beam warning dash (8 x 3): gold and holy white, along a beam's path before it ignites",
+   "before": "",
+   "after": ""
+  },
+  {
+   "id": "holy_light_beam",
+   "key": "holy/light_beam",
+   "path": "docs/art/act1_enemy_review/images/holy_light_beam.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_light_beam_x4.png",
+   "size": [
+    8,
+    5
+   ],
+   "description": "Thin light ray piece (8 x 5): scrolled along a ward crystal's beam to its chamber and a Sentinel's raised blade",
+   "before": "docs/art/act1_enemy_review/shots/chamber_altar_before.png",
+   "after": "docs/art/act1_enemy_review/shots/chamber_altar_after.png"
+  },
+  {
+   "id": "holy_beam_core",
+   "key": "holy/beam_core",
+   "path": "docs/art/act1_enemy_review/images/holy_beam_core.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_beam_core_x4.png",
+   "size": [
+    16,
+    24
+   ],
+   "description": "Great beam piece (16 x 24): gold sheath, holy-white core with flow streaks; scrolled along Seraphine's beams and the Cathedral Guardian's beam",
+   "before": "docs/art/act1_enemy_review/shots/guardian_beam_before.png",
+   "after": "docs/art/act1_enemy_review/shots/guardian_beam_after.png"
+  },
+  {
+   "id": "holy_beam_glow",
+   "key": "holy/beam_glow",
+   "path": "docs/art/act1_enemy_review/images/holy_beam_glow.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_beam_glow_x4.png",
+   "size": [
+    8,
+    16
+   ],
+   "description": "Great beam glow piece (8 x 16): three stepped gold alphas, stretched to twice the beam's width under it",
+   "before": "docs/art/act1_enemy_review/shots/guardian_beam_before.png",
+   "after": "docs/art/act1_enemy_review/shots/guardian_beam_after.png"
+  },
+  {
+   "id": "holy_beam_cap",
+   "key": "holy/beam_cap",
+   "path": "docs/art/act1_enemy_review/images/holy_beam_cap.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_beam_cap_x4.png",
+   "size": [
+    32,
+    32
+   ],
+   "description": "Great beam head (32 x 32): holy heart in a light-gold ring, eight gold rays; the beam's tip and its origin flare",
+   "before": "docs/art/act1_enemy_review/shots/guardian_beam_before.png",
+   "after": "docs/art/act1_enemy_review/shots/guardian_beam_after.png"
+  },
+  {
+   "id": "holy_light_column",
+   "key": "holy/light_column",
+   "path": "docs/art/act1_enemy_review/images/holy_light_column.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_light_column_x4.png",
+   "size": [
+    24,
+    64
+   ],
+   "description": "Light column (24 x 64, base on the bottom row): a High Confessor's revival pillar and Seraphine's teleport landing, stretched to height",
+   "before": "",
+   "after": ""
+  },
+  {
+   "id": "holy_sunburst",
+   "key": "holy/sunburst",
+   "path": "docs/art/act1_enemy_review/images/holy_sunburst.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_sunburst_x4.png",
+   "size": [
+    18,
+    18
+   ],
+   "description": "Casting sunburst (18 x 18): eight light-gold rays round a holy heart; Inquisitor / Confessor casting, the Guardian's charging eye and fists",
+   "before": "",
+   "after": ""
+  },
+  {
+   "id": "holy_guardian_fist",
+   "key": "holy/guardian_fist",
+   "path": "docs/art/act1_enemy_review/images/holy_guardian_fist.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_guardian_fist_x4.png",
+   "size": [
+    16,
+    15
+   ],
+   "description": "Cathedral Guardian's raised stone fist (16 x 15): warm stone knuckles over a gold-banded wrist",
+   "before": "",
+   "after": ""
+  },
+  {
+   "id": "holy_wrath_halo",
+   "key": "holy/wrath_halo",
+   "path": "docs/art/act1_enemy_review/images/holy_wrath_halo.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_wrath_halo_x4.png",
+   "size": [
+    86,
+    86
+   ],
+   "description": "Sir Alaric's Wrath halo (under him below half HP): flame tongues round a gold and crimson ring, a faint flame glow inside",
+   "before": "docs/art/act1_enemy_review/shots/alaric_wrath_halo_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_wrath_halo_after.png"
+  },
+  {
+   "id": "holy_lash",
+   "key": "holy/lash",
+   "path": "docs/art/act1_enemy_review/images/holy_lash.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_lash_x4.png",
+   "size": [
+    6,
+    4
+   ],
+   "description": "Scourge lash piece (6 x 4): crimson cord with a gold barb, along the Sister's lash while it winds up",
+   "before": "",
+   "after": ""
+  },
+  {
+   "id": "holy_nova_wave",
+   "key": "holy/nova_wave",
+   "path": "docs/art/act1_enemy_review/images/holy_nova_wave.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_nova_wave_x4.png",
+   "size": [
+    12,
+    3
+   ],
+   "description": "Nova pulse dash (12 x 3): the radiant rings rolling out from Seraphine while her Judgment charges",
+   "before": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_before.png",
+   "after": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_after.png"
+  },
+  {
+   "id": "holy_safe_tick",
+   "key": "holy/safe_tick",
+   "path": "docs/art/act1_enemy_review/images/holy_safe_tick.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_safe_tick_x4.png",
+   "size": [
+    6,
+    4
+   ],
+   "description": "Safe-circle countdown piece (6 x 4): icy white in cold blue, the ring draining as the nova nears",
+   "before": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_before.png",
+   "after": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_after.png"
+  },
+  {
+   "id": "holy_collapse_edge",
+   "key": "holy/collapse_edge",
+   "path": "docs/art/act1_enemy_review/images/holy_collapse_edge.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_collapse_edge_x4.png",
+   "size": [
+    12,
+    6
+   ],
+   "description": "Collapsing-arena edge piece (12 x 6): crimson, flame, light gold and a holy-white inner line",
+   "before": "docs/art/act1_enemy_review/shots/seraphine_collapse_fan_before.png",
+   "after": "docs/art/act1_enemy_review/shots/seraphine_collapse_fan_after.png"
+  },
+  {
+   "id": "holy_collapse_flame",
+   "key": "holy/collapse_flame",
+   "path": "docs/art/act1_enemy_review/images/holy_collapse_flame.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_collapse_flame_x4.png",
+   "size": [
+    72,
+    30
+   ],
+   "description": "Flame tongue (6 frames of 12 x 30, base at the bottom): licks up along the collapsing arena's edge and round Seraphine in the Last Light, each from its own frame offset",
+   "before": "docs/art/act1_enemy_review/shots/seraphine_collapse_fan_before.png",
+   "after": "docs/art/act1_enemy_review/shots/seraphine_collapse_fan_after.png",
+   "gif": "docs/art/act1_enemy_review/images/holy_collapse_flame.gif"
+  },
+  {
+   "id": "holy_collapse_scorch",
+   "key": "holy/collapse_scorch",
+   "path": "docs/art/act1_enemy_review/images/holy_collapse_scorch.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_collapse_scorch_x4.png",
+   "size": [
+    512,
+    512
+   ],
+   "description": "Burning ground beyond the collapsing arena (512 px, a 128 px hole scaled to the arena): a hot band stepping down to a dim crimson burn with embers",
+   "before": "docs/art/act1_enemy_review/shots/seraphine_collapse_fan_before.png",
+   "after": "docs/art/act1_enemy_review/shots/seraphine_collapse_fan_after.png"
+  },
+  {
+   "id": "holy_smoke_bank",
+   "key": "holy/smoke_bank",
+   "path": "docs/art/act1_enemy_review/images/holy_smoke_bank.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_smoke_bank_x4.png",
+   "size": [
+    176,
+    112
+   ],
+   "description": "Zone-change smoke bank (grey mask tinted with the stage's bank colour), variant 1",
+   "before": "",
+   "after": ""
+  },
+  {
+   "id": "holy_smoke_bank_2",
+   "key": "holy/smoke_bank_2",
+   "path": "docs/art/act1_enemy_review/images/holy_smoke_bank_2.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_smoke_bank_2_x4.png",
+   "size": [
+    120,
+    84
+   ],
+   "description": "Zone-change smoke bank, variant 2",
+   "before": "",
+   "after": ""
+  },
+  {
+   "id": "holy_smoke_bank_3",
+   "key": "holy/smoke_bank_3",
+   "path": "docs/art/act1_enemy_review/images/holy_smoke_bank_3.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_smoke_bank_3_x4.png",
+   "size": [
+    156,
+    100
+   ],
+   "description": "Zone-change smoke bank, variant 3",
+   "before": "",
+   "after": ""
+  },
+  {
+   "id": "holy_soft_disc",
+   "key": "holy/soft_disc",
+   "path": "docs/art/act1_enemy_review/images/holy_soft_disc.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_soft_disc_x4.png",
+   "size": [
+    512,
+    512
+   ],
+   "description": "Soft disc mask (512 px, smooth alpha): the tinted translucent fill under the holy circles and the nova",
+   "before": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_before.png",
+   "after": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_after.png"
+  },
+  {
+   "id": "holy_dawn_shaft",
+   "key": "holy/dawn_shaft",
+   "path": "docs/art/act1_enemy_review/images/holy_dawn_shaft.png",
+   "path_x4": "docs/art/act1_enemy_review/images/holy_dawn_shaft_x4.png",
+   "size": [
+    64,
+    240
+   ],
+   "description": "Dawn's Wrath light shaft (64 x 240, root at the bottom): faint stepped light gold",
+   "before": "docs/art/act1_enemy_review/shots/dawns_wrath_before.png",
+   "after": "docs/art/act1_enemy_review/shots/dawns_wrath_after.png"
+  },
+  {
+   "id": "overlays_holy_shield",
+   "key": "overlays/holy_shield",
+   "path": "docs/art/act1_enemy_review/images/overlays_holy_shield.png",
+   "path_x4": "docs/art/act1_enemy_review/images/overlays_holy_shield_x4.png",
+   "size": [
+    40,
+    40
+   ],
+   "description": "High Confessor's holy shield (40 px bubble): gold ring, ink rim, a pale holy film and a top-left highlight arc",
+   "before": "",
+   "after": ""
+  },
+  {
+   "id": "decals_graveyard_fog",
+   "key": "decals/graveyard_fog",
+   "path": "docs/art/act1_enemy_review/images/decals_graveyard_fog.png",
+   "path_x4": "docs/art/act1_enemy_review/images/decals_graveyard_fog_x4.png",
+   "size": [
+    112,
+    69
+   ],
+   "description": "Graveyard fog patch (112 px): wispy, three faint stepped soul-green alphas (was a hard flat teal disc)",
+   "before": "docs/art/act1_enemy_review/shots/graveyard_fog_before.png",
+   "after": "docs/art/act1_enemy_review/shots/graveyard_fog_after.png"
+  },
+  {
+   "id": "decals_graveyard_fog_2",
+   "key": "decals/graveyard_fog_2",
+   "path": "docs/art/act1_enemy_review/images/decals_graveyard_fog_2.png",
+   "path_x4": "docs/art/act1_enemy_review/images/decals_graveyard_fog_2_x4.png",
+   "size": [
+    128,
+    79
+   ],
+   "description": "Graveyard fog patch, 128 px",
+   "before": "docs/art/act1_enemy_review/shots/graveyard_fog_before.png",
+   "after": "docs/art/act1_enemy_review/shots/graveyard_fog_after.png"
+  },
+  {
+   "id": "decals_graveyard_fog_3",
+   "key": "decals/graveyard_fog_3",
+   "path": "docs/art/act1_enemy_review/images/decals_graveyard_fog_3.png",
+   "path_x4": "docs/art/act1_enemy_review/images/decals_graveyard_fog_3_x4.png",
+   "size": [
+    144,
+    89
+   ],
+   "description": "Graveyard fog patch, 144 px",
+   "before": "docs/art/act1_enemy_review/shots/graveyard_fog_before.png",
+   "after": "docs/art/act1_enemy_review/shots/graveyard_fog_after.png"
+  },
+  {
+   "id": "effects_boss_death",
+   "key": "effects/boss_death",
+   "path": "docs/art/act1_enemy_review/images/effects_boss_death.png",
+   "path_x4": "docs/art/act1_enemy_review/images/effects_boss_death_x4.png",
+   "size": [
+    2560,
+    256
+   ],
+   "description": "A stage boss falls (10 frames of 256 px): holy-white flash with a cross of rays, a gold ring racing out and breaking into motes",
+   "before": "",
+   "after": "",
+   "gif": "docs/art/act1_enemy_review/images/effects_boss_death.gif"
+  },
+  {
+   "id": "effects_vael_cleave",
+   "key": "effects/vael_cleave",
+   "path": "docs/art/act1_enemy_review/images/effects_vael_cleave.png",
+   "path_x4": "docs/art/act1_enemy_review/images/effects_vael_cleave_x4.png",
+   "size": [
+    768,
+    128
+   ],
+   "description": "Marshal Vael's Radiant Cleave (6 frames of 128 px): a crescent of holy flame sweeping the arc, turned toward the strike",
+   "before": "",
+   "after": "",
+   "gif": "docs/art/act1_enemy_review/images/effects_vael_cleave.gif"
+  },
+  {
+   "id": "effects_sentinel_sweep",
+   "key": "effects/sentinel_sweep",
+   "path": "docs/art/act1_enemy_review/images/effects_sentinel_sweep.png",
+   "path_x4": "docs/art/act1_enemy_review/images/effects_sentinel_sweep_x4.png",
+   "size": [
+    768,
+    128
+   ],
+   "description": "Sanctified Sentinel's sweep (6 frames of 128 px): the crescent in ivory and gold",
+   "before": "",
+   "after": "",
+   "gif": "docs/art/act1_enemy_review/images/effects_sentinel_sweep.gif"
+  },
+  {
+   "id": "effects_structure_break",
+   "key": "effects/structure_break",
+   "path": "docs/art/act1_enemy_review/images/effects_structure_break.png",
+   "path_x4": "docs/art/act1_enemy_review/images/effects_structure_break_x4.png",
+   "size": [
+    1024,
+    128
+   ],
+   "description": "Structure destroyed (8 frames of 128 px, grey mask tinted per stage): a flash, splinters and a dust ring",
+   "before": "",
+   "after": "",
+   "gif": "docs/art/act1_enemy_review/images/effects_structure_break.gif"
+  }
+ ],
+ "shots": [
+  {
+   "id": "alaric_consecrate_arming",
+   "before": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_consecrate_arming_after.png",
+   "source": "R1 (art_1029)",
+   "description": "Sir Alaric's Consecrate arming two holy zones: the shared warning circle (hatch, serrated gold-and-crimson band, timing front, impact mark) instead of flat gold discs"
+  },
+  {
+   "id": "alaric_charge_lane_zones",
+   "before": "docs/art/act1_enemy_review/shots/alaric_charge_lane_zones_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_charge_lane_zones_after.png",
+   "source": "R1 (art_1033)",
+   "description": "Alaric's charge lane (hatch, chevrons lit by the timing, banded sides) and two armed Consecrated Ground zones as gold rune circles"
+  },
+  {
+   "id": "alaric_hammer_circles",
+   "before": "docs/art/act1_enemy_review/shots/alaric_hammer_circles_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_hammer_circles_after.png",
+   "source": "R1 (art_1103)",
+   "description": "Hammerfall / Consecrate warning circles late in the Alaric fight"
+  },
+  {
+   "id": "alaric_wrath_halo",
+   "before": "docs/art/act1_enemy_review/shots/alaric_wrath_halo_before.png",
+   "after": "docs/art/act1_enemy_review/shots/alaric_wrath_halo_after.png",
+   "source": "R6 (art_1103)",
+   "description": "Alaric's Wrath halo (below half HP): the baked flame ring (it now appears as Wrath begins: the ground layer redraws only on a change); at 1.6 x his 22 px radius it sits mostly under his 156 px sprite"
+  },
+  {
+   "id": "graveyard_fog",
+   "before": "docs/art/act1_enemy_review/shots/graveyard_fog_before.png",
+   "after": "docs/art/act1_enemy_review/shots/graveyard_fog_after.png",
+   "source": "R1 (art_0675)",
+   "description": "Graveyard fog patches: wispy stepped-alpha decals instead of hard flat teal discs"
+  },
+  {
+   "id": "march_holy_zone_lane",
+   "before": "docs/art/act1_enemy_review/shots/march_holy_zone_lane_before.png",
+   "after": "docs/art/act1_enemy_review/shots/march_holy_zone_lane_after.png",
+   "source": "R2 (art_0910)",
+   "description": "Crimson March: armed r 105 consecration zones and a Templar charge lane"
+  },
+  {
+   "id": "vael_cleave_cone",
+   "before": "docs/art/act1_enemy_review/shots/vael_cleave_cone_before.png",
+   "after": "docs/art/act1_enemy_review/shots/vael_cleave_cone_after.png",
+   "source": "R2 (art_1076)",
+   "description": "Marshal Vael's Radiant Cleave cone telegraph (the shared cone: hatch rows clipped to the sector, banded sides and arc, timing front)"
+  },
+  {
+   "id": "vael_holy_standard_aura",
+   "before": "docs/art/act1_enemy_review/shots/vael_holy_standard_aura_before.png",
+   "after": "docs/art/act1_enemy_review/shots/vael_holy_standard_aura_after.png",
+   "source": "R2 (art_1034)",
+   "description": "The Holy Standard's aura reach: a dashed gold ring instead of a 1 px arc"
+  },
+  {
+   "id": "suppression_arming",
+   "before": "docs/art/act1_enemy_review/shots/suppression_arming_before.png",
+   "after": "docs/art/act1_enemy_review/shots/suppression_arming_after.png",
+   "source": "R3 (art_0305)",
+   "description": "A Radiant Inquisitor's suppression arming (shared warning circle, r 160) beside an armed holy zone"
+  },
+  {
+   "id": "suppression_seal",
+   "before": "docs/art/act1_enemy_review/shots/suppression_seal_before.png",
+   "after": "docs/art/act1_enemy_review/shots/suppression_seal_after.png",
+   "source": "R3 (art_0420)",
+   "description": "A sealed suppression circle (ivory rune ribbon, twelve-point star, turning crosses) and a second one arming"
+  },
+  {
+   "id": "guardian_beam_cone",
+   "before": "docs/art/act1_enemy_review/shots/guardian_beam_cone_before.png",
+   "after": "docs/art/act1_enemy_review/shots/guardian_beam_cone_after.png",
+   "source": "R3 (art_0575)",
+   "description": "The Cathedral Guardian's beam sweep telegraph (cone, r 340)"
+  },
+  {
+   "id": "guardian_beam",
+   "before": "docs/art/act1_enemy_review/shots/guardian_beam_before.png",
+   "after": "docs/art/act1_enemy_review/shots/guardian_beam_after.png",
+   "source": "R3 (art_0590)",
+   "description": "The Cathedral Guardian's beam: scrolling holy-white core in a gold sheath, stepped glow, blazing head (was three stacked lines and a disc)"
+  },
+  {
+   "id": "chamber_altar",
+   "before": "docs/art/act1_enemy_review/shots/chamber_altar_before.png",
+   "after": "docs/art/act1_enemy_review/shots/chamber_altar_after.png",
+   "source": "R3 (art_0635)",
+   "description": "A sanctified chamber (mosaic rim, inlay star, sun mosaic, crystal light ray) and a sacred altar's rune sigil"
+  },
+  {
+   "id": "paladin_ward_aura",
+   "before": "docs/art/act1_enemy_review/shots/paladin_ward_aura_before.png",
+   "after": "docs/art/act1_enemy_review/shots/paladin_ward_aura_after.png",
+   "source": "R4 (art_0053)",
+   "description": "A Sun Paladin's ward reach: dashed gold ring with outward sun rays"
+  },
+  {
+   "id": "sentinel_cone_holy_zones",
+   "before": "docs/art/act1_enemy_review/shots/sentinel_cone_holy_zones_before.png",
+   "after": "docs/art/act1_enemy_review/shots/sentinel_cone_holy_zones_after.png",
+   "source": "R4 (art_0063)",
+   "description": "A Sanctified Sentinel's sweep cone, a holy zone and a suppression seal over the courtyard"
+  },
+  {
+   "id": "inquisitor_seals",
+   "before": "docs/art/act1_enemy_review/shots/inquisitor_seals_before.png",
+   "after": "docs/art/act1_enemy_review/shots/inquisitor_seals_after.png",
+   "source": "R4 (art_0077)",
+   "description": "Overlapping Inquisitor suppression seals"
+  },
+  {
+   "id": "seraphine_nova_safe_circles",
+   "before": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_before.png",
+   "after": "docs/art/act1_enemy_review/shots/seraphine_nova_safe_circles_after.png",
+   "source": "R5 (art_1048)",
+   "description": "Seraphine's Judgment nova: soft gold glow edged by the warning band, dashed pulse rings, safe circles as baked cold sanctuaries with an ice countdown"
+  },
+  {
+   "id": "seraphine_collapse_fan",
+   "before": "docs/art/act1_enemy_review/shots/seraphine_collapse_fan_before.png",
+   "after": "docs/art/act1_enemy_review/shots/seraphine_collapse_fan_after.png",
+   "source": "R5 (art_1060)",
+   "description": "The collapsing arena (stepped scorch beyond a burning edge band and flame tongues) and her fan cone"
+  },
+  {
+   "id": "dawns_wrath",
+   "before": "docs/art/act1_enemy_review/shots/dawns_wrath_before.png",
+   "after": "docs/art/act1_enemy_review/shots/dawns_wrath_after.png",
+   "source": "R5 (art_1210)",
+   "description": "Dawn's Wrath (the Sanctum Reckoning): pixel light shafts over the dawn pools"
+  }
+ ]
+}

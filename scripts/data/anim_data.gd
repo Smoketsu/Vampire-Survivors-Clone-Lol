@@ -10,7 +10,9 @@ extends RefCounted
 
 ## Animation id -> {duration: seconds for one play-through,
 ##                  fill: drawn diameter as a multiple of the effect's
-##                        gameplay diameter (art often has empty margins)}.
+##                        gameplay diameter (art often has empty margins),
+##                  tint (optional, default false): the strip is a grey mask
+##                        that Effect multiplies by its colour}.
 ## Each duration equals the code duration of the call that plays it (named in
 ## the comment), so an effect lives exactly as long with or without its art
 ## and the autotest's effect counts do not change (Shadow Blast's 0.4 s
@@ -64,6 +66,11 @@ const ANIMS: Dictionary = {
 	"grave_tide": {"duration": 0.65, "fill": 1.15},  # TUNING (not in GDD) Grave Tide: a soul-green wave rolling outward with skeletal hands breaking its surface (TIDE_RING_TIME)
 	# --- Act III: the Scrap Wastes ---
 	"wastes_blast": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) a rocket / pylon / Trojan Horse blast: amber flash, fire and chrome shards, a smoke ring (10 frames of 128 px; EffectManager.impact() 0.4 s)
+	# --- Act I enemy AoE art (tools/covenant_aoe_art.py; GDD §15.0 "Act I enemy AoE art") ---
+	"boss_death": {"duration": 0.4, "fill": 1.1},  # TUNING (not in GDD) a stage boss falls: holy flash, a cross of rays, a gold ring breaking into motes (10 frames of 256 px; EnemyDirector impact() 0.4 s; the ring ends at 0.91 of the frame half)
+	"vael_cleave": {"duration": 0.15, "fill": 1.2},  # TUNING (not in GDD) Marshal Vael's Radiant Cleave, a crescent of holy flame (6 frames of 128 px; EffectManager.slash() 0.15 s; the crescent's outer edge at 0.84 of the frame half = the slash radius)
+	"sentinel_sweep": {"duration": 0.15, "fill": 1.2},  # TUNING (not in GDD) a Sanctified Sentinel's ivory-gold blade sweep (6 frames of 128 px; slash() 0.15 s)
+	"structure_break": {"duration": 0.4, "fill": 1.2, "tint": true},  # TUNING (not in GDD) a Covenant structure destroyed: flash, splinters, a dust ring (8 frames of 128 px, a grey mask tinted with the impact colour; impact() 0.4 s)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).

@@ -13,16 +13,18 @@
 ##       same hashed point and roll as the code decoration, so the layout and
 ##       determinism are unchanged;
 ##   (b) dropped (DROPPED) when the tile already shows it; or
-##   (c) still code-drawn: a soft translucent effect pixel art cannot do
-##       better (the Graveyard fog patches, the Fortress Approach tower
-##       shadows, the Final Sanctuary's stained-glass light pools), or any
-##       decal whose PNG is missing (the fallback).
+##   (c) still code-drawn: a soft translucent effect (the Fortress Approach
+##       tower shadows, the Final Sanctuary's stained-glass light pools), or
+##       any decal whose PNG is missing (the fallback). The Graveyard fog
+##       patches became decals with stepped faint alphas (GDD §15.0 "Act I
+##       enemy AoE art").
 ## Without the zone's tile PNG every decoration is code-drawn exactly as before.
 ## The Graveyard's solid-looking tombstone, stone cross and dead tree stay
 ## skipped on the tile floor (Ground.SOLID_DECOR_ROLL).
 ##
 ## Decisions per zone (decoration: decal key or decision):
-##   Graveyard: fog = code; grass tufts = graveyard_grass (3 variants); open
+##   Graveyard: fog = graveyard_fog (3 sizes, stepped faint alphas; was code);
+##     grass tufts = graveyard_grass (3 variants); open
 ##     grave = graveyard_grave (2).
 ##   March I, Burned Road: ash drift = march_burned_ash (2); charred stump =
 ##     march_burned_stump (2, cut flush with the ground); embers =

@@ -170,8 +170,11 @@ static func _draw_guardian(ci: CanvasItem, o: Vector2, r: float, flash: bool) ->
 
 # --- Overlays on enemies --------------------------------------------------------------
 
-## Holy shield (High Confessor): an ivory-gold bubble around the body.
+## Holy shield (High Confessor): an ivory-gold bubble around the body (its
+## pixel art, CovenantFxData.HOLY_SHIELD, scaled to the body, when present).
 static func draw_holy_shield(ci: CanvasItem, r: float) -> void:
+	if CovenantFx.still(ci, CovenantFxData.HOLY_SHIELD, Vector2.ZERO, Color.WHITE, 0.0, r * 1.35 / CovenantFxData.HOLY_SHIELD_RING):
+		return
 	ci.draw_circle(Vector2.ZERO, r * 1.35, Color(Palette.IVORY, 0.12))
 	ci.draw_arc(Vector2.ZERO, r * 1.35, 0.0, TAU, 24, Color(Palette.GOLD, 0.85), 1.5)
 	ci.draw_arc(Vector2.ZERO, r * 1.2, -2.4, -1.4, 8, Color(Palette.IVORY, 0.9), 1.5)
@@ -187,8 +190,14 @@ static func draw_ward(ci: CanvasItem, c: Vector2, s: float) -> void:
 	ci.draw_circle(c + Vector2(0, -s * 0.1), s * 0.35, Palette.CRIMSON)
 
 
-## The Sun Paladin's aura reach: a faint gold ring with sun rays.
+## The Sun Paladin's aura reach: a faint gold ring with sun rays (a dashed
+## ring of gold pieces and twelve small rays, CovenantFx, when present).
 static func draw_sun_aura(ci: CanvasItem, radius: float) -> void:
+	if CovenantFx.has(CovenantFxData.AURA_DASH) and CovenantFx.has(CovenantFxData.RAY):
+		CovenantFx.soft_disc(ci, Vector2.ZERO, radius, Color(Palette.GOLD, 0.03))
+		CovenantFx.ring(ci, Vector2.ZERO, radius, CovenantFxData.AURA_DASH, Color(1.0, 1.0, 1.0, CovenantFxData.AURA_ALPHA), 1.0)
+		CovenantFx.orbit(ci, Vector2.ZERO, radius - 4.0, CovenantFxData.RAY, 12, 0.0, Color(1.0, 1.0, 1.0, 0.55), true)
+		return
 	ci.draw_circle(Vector2.ZERO, radius, Color(Palette.GOLD, 0.03))
 	ci.draw_arc(Vector2.ZERO, radius, 0.0, TAU, 40, Color(Palette.GOLD, 0.3), 1.0)
 	for i in 12:
@@ -197,18 +206,26 @@ static func draw_sun_aura(ci: CanvasItem, radius: float) -> void:
 
 
 ## Sentinel sweep windup: the blade arm raised toward `dir` (world axes,
-## CovenantKit.unmirror() active), glowing brighter as `k` (0..1) fills.
+## CovenantKit.unmirror() active), glowing brighter as `k` (0..1) fills (a
+## scrolling ray of light tipped by a glint, CovenantFx, when present).
 static func draw_sweep_windup(ci: CanvasItem, dir: Vector2, r: float, k: float) -> void:
 	var perp := Vector2(-dir.y, dir.x)
 	var base := dir * r * 0.6
 	var tip := dir * r * 1.4 + perp * r * 1.2
+	var kk := clampf(k, 0.0, 1.0)  # Glow 0..1.
+	if CovenantFx.ray_strip(ci, base, tip, CovenantFxData.LIGHT_BEAM, 3.0 + 2.0 * kk, kk * 30.0, Color(1.0, 1.0, 1.0, 0.45 + 0.55 * kk)):
+		CovenantFx.still(ci, CovenantFxData.GLINT, tip, Color(1.0, 1.0, 1.0, 0.5 + 0.5 * kk), 0.0, 1.0 + kk)
+		return
 	ci.draw_line(base, tip, Color(Palette.GOLD, 0.4 + 0.5 * clampf(k, 0.0, 1.0)), 3.0 + 2.0 * k)
 	ci.draw_circle(tip, r * 0.2, Color(Palette.IVORY, 0.5 + 0.5 * k))
 
 
 ## A gold casting sunburst at `c` (`r` px): Inquisitor casts, a Confessor
-## raising the dead, the Guardian's charging eye.
+## raising the dead, the Guardian's charging eye (its pixel art,
+## CovenantFxData.SUNBURST, scaled to the code burst's 1.6 r, when present).
 static func draw_casting(ci: CanvasItem, c: Vector2, r: float) -> void:
+	if CovenantFx.still(ci, CovenantFxData.SUNBURST, c, Color.WHITE, 0.0, maxf(1.0, roundf(r * 1.6 / 18.0))):
+		return
 	ci.draw_circle(c, r * 0.5, Color(Palette.GOLD, 0.35))
 	for i in 8:
 		var dir := Vector2.from_angle(TAU * float(i) / 8.0)
@@ -216,8 +233,15 @@ static func draw_casting(ci: CanvasItem, c: Vector2, r: float) -> void:
 	ci.draw_circle(c, r * 0.22, Palette.IVORY)
 
 
-## Cathedral Guardian slam windup: both fists raised overhead, glowing.
+## Cathedral Guardian slam windup: both fists raised overhead, glowing (its
+## pixel-art stone fists in a sunburst glow, CovenantFx, when present).
 static func draw_guardian_fists(ci: CanvasItem, r: float) -> void:
+	if CovenantFx.has(CovenantFxData.GUARDIAN_FIST) and CovenantFx.has(CovenantFxData.SUNBURST):
+		for sx: float in [-1.0, 1.0]:
+			var fp := Vector2(sx * r * 0.7, -r * 1.45)  # Fist centre (px).
+			CovenantFx.still(ci, CovenantFxData.SUNBURST, fp, Color(1.0, 1.0, 1.0, 0.8), 0.0, 2.0)
+			CovenantFx.still(ci, CovenantFxData.GUARDIAN_FIST, fp)
+		return
 	for sx: float in [-1.0, 1.0]:
 		var f := Vector2(sx * r * 0.7, -r * 1.45)
 		ci.draw_circle(f, r * 0.42, Color(Palette.GOLD, 0.3))
@@ -226,8 +250,11 @@ static func draw_guardian_fists(ci: CanvasItem, r: float) -> void:
 
 
 ## Cathedral Guardian beam from the body to `end` (world axes,
-## CovenantKit.unmirror() active), `width` px wide.
-static func draw_beam(ci: CanvasItem, end: Vector2, width: float) -> void:
+## CovenantKit.unmirror() active), `width` px wide (the great holy beam art,
+## CovenantFx.great_beam(), flowing outward on `now` s, when present).
+static func draw_beam(ci: CanvasItem, end: Vector2, width: float, now: float = 0.0) -> void:
+	if CovenantFx.great_beam(ci, Vector2.ZERO, end, width, now * CovenantFxData.BEAM_SCROLL, 0.85 + 0.15 * sin(now * 30.0)):
+		return
 	ci.draw_line(Vector2.ZERO, end, Color(Palette.GOLD, 0.35), width * 1.6)
 	ci.draw_line(Vector2.ZERO, end, Color(Palette.GOLD, 0.85), width * 0.7)
 	ci.draw_line(Vector2.ZERO, end, Palette.IVORY, width * 0.25)
@@ -242,6 +269,15 @@ static func draw_beam(ci: CanvasItem, end: Vector2, width: float) -> void:
 static func draw_revive_pillar(ci: CanvasItem, p: Vector2, k: float, now: float) -> void:
 	var kk := clampf(k, 0.0, 1.0)
 	var pulse := 0.5 + 0.5 * sin(now * 10.0)
+	if CovenantFx.has(CovenantFxData.LIGHT_COLUMN) and CovenantFx.has(CovenantFxData.T_FRONT):
+		# Pixel art (CovenantFx): a gold ground ring filling as a timing front,
+		# the light column rising, a glint on its crown.
+		CovenantFx.soft_disc(ci, p, 18.0, Color(Palette.GOLD, 0.12 + 0.1 * kk))
+		CovenantFx.ring(ci, p, 18.0, CovenantFxData.T_FRONT, Color(1.0, 1.0, 1.0, 0.95), 1.5, -PI * 0.5, -PI * 0.5 + TAU * kk)
+		var ph := 30.0 + 50.0 * kk  # Pillar height (px).
+		CovenantFx.light_column(ci, p, 8.0 + 2.0 * pulse, ph, Color(1.0, 1.0, 1.0, 0.7 + 0.3 * kk))
+		CovenantFx.still(ci, CovenantFxData.GLINT, p + Vector2(0, -ph), Color(1.0, 1.0, 1.0, 0.8), 0.0, 2.0)
+		return
 	ci.draw_circle(p, 18.0, Color(Palette.GOLD, 0.12 + 0.1 * kk))
 	ci.draw_arc(p, 18.0, -PI / 2.0, -PI / 2.0 + TAU * kk, 24, Palette.GOLD, 2.5)
 	var h := 30.0 + 50.0 * kk  # Pillar height (px).
@@ -255,12 +291,22 @@ static func draw_revive_pillar(ci: CanvasItem, p: Vector2, k: float, now: float)
 ## sealed ivory-gold circle with a slowly turning ring of crosses, fading as
 ## `life_k` (1..0) runs out (`now` = game time).
 static func draw_suppression(ci: CanvasItem, p: Vector2, radius: float, arm_k: float, life_k: float, now: float) -> void:
+	# Pixel art (CovenantFx, GDD §15.0 "Act I enemy AoE art"): arming is the
+	# shared warning circle; sealed, the baked seal over its pale disc with
+	# ten gold crosses turning inside the rune ribbon.
 	if life_k < 0.0:
+		if CovenantFx.telegraph_circle(ci, p, radius, arm_k, Palette.GOLD):
+			return
 		ci.draw_circle(p, radius, Color(Palette.GOLD, 0.08))
 		ci.draw_circle(p, radius * clampf(arm_k, 0.0, 1.0), Color(Palette.GOLD, 0.18))
 		ci.draw_arc(p, radius, 0.0, TAU, 56, Color(Palette.GOLD, 0.9), 2.0)
 		return
 	var fade := clampf(life_k * 4.0, 0.0, 1.0)  # Fades in the last quarter.
+	if CovenantFx.has(CovenantFx.disc_key(CovenantFxData.SEAL_DISCS, radius)):
+		CovenantFx.soft_disc(ci, p, radius, Color(SEAL, 0.10 * fade))
+		CovenantFx.disc(ci, p, radius, CovenantFxData.SEAL_DISCS, Color(1.0, 1.0, 1.0, 0.9 * fade))
+		CovenantFx.orbit(ci, p, radius - CovenantFxData.SEAL_CROSS_INSET, CovenantFxData.SEAL_CROSS, 10, now * 0.5, Color(1.0, 1.0, 1.0, fade))
+		return
 	ci.draw_circle(p, radius, Color(SEAL, 0.10 * fade))
 	ci.draw_arc(p, radius, 0.0, TAU, 56, Color(Palette.IVORY, 0.85 * fade), 2.5)
 	ci.draw_arc(p, radius * 0.92, 0.0, TAU, 56, Color(Palette.GOLD, 0.45 * fade), 1.0)

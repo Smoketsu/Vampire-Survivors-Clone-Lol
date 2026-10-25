@@ -75,7 +75,7 @@ func _sweep(e: Enemy) -> void:
 	var reach := float(d["sweep_radius"])  # Cone reach (px).
 	var half := float(d["sweep_half_angle"])  # Cone half-angle (rad).
 	var mult := hit_scale(e)  # Time scaling x aura buff.
-	g.effects.slash(e.position + dir * e.radius, dir, Palette.GOLD, reach * 0.8)
+	g.effects.slash(e.position + dir * e.radius, dir, Palette.GOLD, reach * 0.8, "sentinel_sweep")  # Its crescent strip when the art exists (visual only).
 	e.motion_lunge(dir, MotionData.POWER_MELEE)  # Engine motion: the sweep (visual only).
 	g.effects.ring(e.position + dir * reach * 0.5, reach * 0.45, Palette.IVORY, 0.25)
 	Sfx.play("abom_stomp", e.position, 1.25)
@@ -109,5 +109,7 @@ func danger_push(e: Enemy, p: Vector2) -> Vector2:
 func draw_over(e: Enemy, ci: CanvasItem) -> void:
 	if phase == WINDUP:
 		unmirror(e, ci)
+		CovenantFx.base = Transform2D(0.0, Vector2(e.scale.x, 1.0), 0.0, Vector2.ZERO)  # The arm's art in world axes too.
 		SanctumGlyphs.draw_sweep_windup(ci, dir, e.radius, phase_time / maxf(0.01, float(d["sweep_telegraph"])))
+		CovenantFx.base = Transform2D.IDENTITY
 		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

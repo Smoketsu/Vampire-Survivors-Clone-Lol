@@ -564,16 +564,28 @@ func _draw() -> void:
 
 
 ## Holy zone: while arming, a gold warning ring with a growing disc; once
-## armed, a pulsing radiant disc with spokes, fading out at the end.
+## armed, a pulsing radiant disc with spokes, fading out at the end. With its
+## pixel art (CovenantFx, GDD §15.0 "Act I enemy AoE art"): arming is the
+## shared warning circle, armed a gold magic circle (the baked zone disc over
+## the pulsing disc) with glints running round its rune ribbon.
 func _draw_zone(z: HolyZone, now: float) -> void:
 	if z.arm_left > 0.0:
 		var k := 1.0 - z.arm_left / z.arm_total
+		if CovenantFx.telegraph_circle(self, z.pos, z.radius, k, Palette.GOLD):
+			return
 		draw_circle(z.pos, z.radius, Color(Palette.GOLD, 0.10))
 		draw_circle(z.pos, z.radius * k, Color(Palette.GOLD, 0.22))
 		draw_arc(z.pos, z.radius, 0.0, TAU, 48, Color(Palette.GOLD, 0.9), 2.0)
 		return
 	var fade := clampf(z.life, 0.0, 1.0)
 	var pulse := 0.5 + 0.5 * sin(now * 4.0 + z.pos.x * 0.01)
+	var sigil := CovenantFx.disc_key(CovenantFxData.ZONE_DISCS, z.radius)  # Baked zone art.
+	if CovenantFx.has(sigil):
+		CovenantFx.soft_disc(self, z.pos, z.radius, Color(Palette.GOLD, (0.14 + 0.06 * pulse) * fade))
+		CovenantFx.disc(self, z.pos, z.radius, CovenantFxData.ZONE_DISCS, Color(1.0, 1.0, 1.0, CovenantFxData.ZONE_ALPHA * fade))
+		CovenantFx.orbit(self, z.pos, z.radius - CovenantFxData.ZONE_GLINT_INSET, CovenantFxData.GLINT, CovenantFxData.ZONE_GLINTS,
+			now * 0.4, Color(1.0, 1.0, 1.0, (0.6 + 0.4 * pulse) * fade))
+		return
 	draw_circle(z.pos, z.radius, Color(Palette.GOLD, (0.14 + 0.06 * pulse) * fade))
 	draw_arc(z.pos, z.radius, 0.0, TAU, 48, Color(Palette.IVORY, 0.75 * fade), 2.0)
 	draw_arc(z.pos, z.radius * 0.6, 0.0, TAU, 32, Color(Palette.GOLD, 0.35 * fade), 1.0)
@@ -638,15 +650,21 @@ func _draw_shrine(s: Shrine, now: float) -> void:
 
 ## Boss marks: a crimson rally banner (Call to Arms; its pixel-art pennant
 ## MarkerArtData.RALLY_PENNANT when present) or an ivory judgment sigil
-## filling up until the light falls (Judgment of the Dead).
+## filling up until the light falls (Judgment of the Dead). With the Covenant
+## art (CovenantFx): the rally's closing ring is a ring of crimson pieces and
+## the judgment sigil is the shared warning circle with four turning rays.
 func _draw_mark(m: Mark, now: float) -> void:
 	var k := clampf(m.t / m.duration, 0.0, 1.0)
 	if m.style == MarkStyle.RALLY:
-		draw_arc(m.pos, m.radius * (1.6 - 0.6 * k), 0.0, TAU, 20, Color(Palette.CRIMSON, 0.9), 2.0)
+		if not CovenantFx.ring(self, m.pos, m.radius * (1.6 - 0.6 * k), CovenantFxData.RALLY_EDGE, Color(1.0, 1.0, 1.0, 0.9), 1.5):
+			draw_arc(m.pos, m.radius * (1.6 - 0.6 * k), 0.0, TAU, 20, Color(Palette.CRIMSON, 0.9), 2.0)
 		if SpriteBank.draw_flat(self, MarkerArtData.RALLY_PENNANT, m.pos + MarkerArtData.RALLY_PENNANT_OFFSET, 0.0):
 			return  # Pixel-art pennant (the closing ring above stays drawn).
 		draw_line(m.pos + Vector2(0, 6), m.pos + Vector2(0, -22), Palette.SILVER, 2.0)
 		draw_colored_polygon(PackedVector2Array([m.pos + Vector2(1, -22), m.pos + Vector2(13, -18), m.pos + Vector2(1, -13)]), Palette.CRIMSON)
+		return
+	if CovenantFx.telegraph_circle(self, m.pos, m.radius, k, Palette.IVORY):
+		CovenantFx.orbit(self, m.pos, m.radius * 0.58, CovenantFxData.RAY, 4, now * 1.5, Color(1.0, 1.0, 1.0, 0.85), true)
 		return
 	draw_circle(m.pos, m.radius, Color(Palette.IVORY, 0.08))
 	draw_circle(m.pos, m.radius * k, Color(Palette.IVORY, 0.22))

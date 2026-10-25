@@ -185,8 +185,14 @@ static func _draw_standard(ci: CanvasItem, o: Vector2, r: float, flash: bool) ->
 	ci.draw_rect(flag, _c(Palette.IVORY, flash), false, 1.5)
 
 
-## Faint gold ring showing an aura's reach (Banner Bearer, Holy Standard).
+## Faint gold ring showing an aura's reach (Banner Bearer, Holy Standard): a
+## dashed ring of gold pieces (CovenantFx, GDD §15.0 "Act I enemy AoE art")
+## over the faint disc, or the code ring without the art.
 static func draw_aura(ci: CanvasItem, radius: float) -> void:
+	if CovenantFx.has(CovenantFxData.AURA_DASH):
+		CovenantFx.soft_disc(ci, Vector2.ZERO, radius, Color(Palette.GOLD, 0.035))
+		CovenantFx.ring(ci, Vector2.ZERO, radius, CovenantFxData.AURA_DASH, Color(1.0, 1.0, 1.0, CovenantFxData.AURA_ALPHA), 1.0)
+		return
 	ci.draw_circle(Vector2.ZERO, radius, Color(Palette.GOLD, 0.035))
 	ci.draw_arc(Vector2.ZERO, radius, 0.0, TAU, 40, Color(Palette.GOLD, 0.28), 1.0)
 

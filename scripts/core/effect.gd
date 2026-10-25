@@ -41,6 +41,11 @@ var owner_enemy: Enemy = null
 var owner_gen: int = 0
 
 
+## True for the boss / elite warning kinds (drawn by CovenantFx when its art exists).
+func is_telegraph() -> bool:
+	return kind == Kind.TELEGRAPH_CIRCLE or kind == Kind.TELEGRAPH_LINE or kind == Kind.TELEGRAPH_CONE
+
+
 ## Starts the effect. Called by EffectManager after taking it from the pool.
 func start(p_kind: Kind, pos: Vector2, p_color: Color, p_size: float, p_duration: float, p_vec: Vector2 = Vector2.RIGHT, p_width: float = 2.0) -> void:
 	kind = p_kind
@@ -58,7 +63,12 @@ func start(p_kind: Kind, pos: Vector2, p_color: Color, p_size: float, p_duration
 	active = true
 	visible = true
 	# Telegraphs sit under bodies, everything else above.
-	z_index = -5 if (kind == Kind.TELEGRAPH_CIRCLE or kind == Kind.TELEGRAPH_LINE or kind == Kind.TELEGRAPH_CONE) else 5
+	z_index = -5 if is_telegraph() else 5
+	# Telegraph art is grid pixel art (sharp-pixel shader); every other kind
+	# keeps plain smooth drawing (a pooled node may have been a telegraph).
+	material = null
+	if is_telegraph():
+		SpriteBank.apply_sharp(self)
 	queue_redraw()
 
 
@@ -82,10 +92,30 @@ func _draw() -> void:
 	if hide_with != "" and SpriteBank.has_anim(hide_with):
 		return  # Its animation draws this part (EffectManager.ring_under()).
 	if anim_id != "":
-		# Sprite-sheet animation scaled to the gameplay radius (size).
-		var fill: float = AnimData.ANIMS.get(anim_id, {}).get("fill", AnimData.DEFAULT_FILL)  # Diameter multiple.
-		if SpriteBank.draw_anim(self, anim_id, Vector2.ZERO, size * 2.0 * fill, k):
+		# Sprite-sheet animation scaled to the gameplay radius (size); a slash's
+		# strip (drawn swinging toward +x) is turned toward its swing. AnimData
+		# "tint" strips are grey masks multiplied by the effect colour.
+		var info: Dictionary = AnimData.ANIMS.get(anim_id, {})  # This strip's timing and fill.
+		var fill: float = info.get("fill", AnimData.DEFAULT_FILL)  # Diameter multiple.
+		var tint := color if bool(info.get("tint", false)) else Color.WHITE  # Strip modulate.
+		if kind == Kind.SLASH:
+			draw_set_transform(Vector2.ZERO, vec.angle(), Vector2.ONE)
+		var drawn := SpriteBank.draw_anim(self, anim_id, Vector2.ZERO, size * 2.0 * fill, k, 1.0, tint)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		if drawn:
 			return
+	# The shared boss / elite telegraphs: Covenant pixel art (CovenantFx) when
+	# it exists, the code shapes below otherwise (GDD §15.0 "Act I enemy AoE art").
+	match kind:
+		Kind.TELEGRAPH_CIRCLE:
+			if CovenantFx.telegraph_circle(self, Vector2.ZERO, size, k, color):
+				return
+		Kind.TELEGRAPH_LINE:
+			if CovenantFx.telegraph_line(self, vec, width, k, color):
+				return
+		Kind.TELEGRAPH_CONE:
+			if CovenantFx.telegraph_cone(self, Vector2.ZERO, size, vec, width, k, color):
+				return
 	match kind:
 		Kind.POP:
 			# Expanding ring + four bone shards flying outward (cosmetic corpse).
