@@ -7,8 +7,9 @@ owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages wer
 
 ## Where things stand
 
-- **Branch `claude/charming-lamport-upfhlz`** (pushed) holds all of Act IV on top of `main` (`3cbe21f`). Nothing of Act
-  IV is on `main` or live: the three stages are still `"playable": false` ("Coming soon").
+- **Act IV is live** (owner: "Ship it!", Oct 25, 2026; GDD §15.0 "Act IV goes live"): the three stages are playable,
+  CI runs one army job per stage, and `main` carries it (branch `claude/charming-lamport-upfhlz` merged with `main` and
+  fast-forwarded). Balance after three bot playtest passes in `docs/act4/playtest/`.
   - **Phase 1, the foundation:** the stubs, `PantheonRules` (`DivineWrath`, `Phalanx`, `Glory`), the shared kinds, the
     Twilight of the Gods, the Act IV and Codex tabs, the `bronze` music and Pantheon sound pack, the closing cards per
     act ("The River Runs Dry" after Act III).
@@ -32,10 +33,10 @@ owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages wer
 1. ~~The owner's art review~~ **Done** (eight rounds on https://claude.ai/artifact/7BnCJnbvumT9an6eeB47Km, collections
    `act4_art_r1`–`r8`; every round in its GDD §15.0 row). After it, every bounce animation in the game was slowed
    (GDD row "Slower bounce animations": IdleData.FPS 6, one smooth swell a step), approved by the owner.
-2. **The owner's playtest**, then the balance pass (open items in the GDD integration row: the naive Olympus opening,
+2. ~~Bot playtest passes~~ **Done** (three passes, `docs/act4/playtest/`). Next: **the owner's own playtest**, then a balance pass (open items in the GDD integration row: the naive Olympus opening,
    the Underworld is the easiest, siege towers rarely destroyed, strong Gigantomachy / Lethe's Flood / Myrmidons, the
    placeholder Soul Ash multipliers ×3.25 / ×3.5 / ×3.75).
-3. Turn the stages `"playable": true`, add an Act IV army job to CI, fast-forward `main` (tell any co-op session first).
+3. ~~Turn the stages `"playable": true`, add an Act IV army job to CI, fast-forward `main`~~ **Done.**
 4. The Web performance check at phone size on the busiest stage (Olympus late game), as Act III had.
 
 ## Notes for the next lead

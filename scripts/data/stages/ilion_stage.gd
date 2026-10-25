@@ -319,7 +319,7 @@ const STAGE := {
 	"short_name": "Ilion",
 	"chapter": "Chapter X",
 	"act": 4,  # Act IV, the Olympian Republic.
-	"playable": false,  # Act IV phase 2: kept hidden until the lead's verification and the owner's playtest.
+	"playable": true,  # Owner decision (Oct 25, 2026): "Ship it!" after the art review and three playtest passes (GDD §15.0 "Act IV goes live").
 	"description": "The beach below a besieged city: beached warships, a siege camp and the great walls of Troy. The gods have come down to take the dead back, and Achilles leads their host.",
 	"unlock": {"stage": "citadel", "boss_kills": 1},  # Owner-approved: Deus Ex Machina's fall opens Act IV
 	"unlock_text": "Bring down Deus Ex Machina in the Iron Citadel to unlock.",

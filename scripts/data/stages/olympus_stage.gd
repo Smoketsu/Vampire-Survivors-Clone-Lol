@@ -296,7 +296,7 @@ const STAGE := {
 	"short_name": "Olympus",
 	"chapter": "Chapter XI",
 	"act": 4,  # Act IV, the Olympian Republic.
-	"playable": false,  # Hidden from the stage select until the lead's Act IV pass and the owner's playtest.
+	"playable": true,  # Owner decision (Oct 25, 2026): "Ship it!" after the art review and three playtest passes (GDD §15.0 "Act IV goes live").
 	"description": "The Pantheon Trial: climb the mountain under Zeus's storm while Ares, Artemis and Poseidon come down one by one, and Zeus waits at the summit.",
 	"unlock": {"stage": "ilion", "boss_kills": 1},  # Owner-approved: each boss unlocks the next stage
 	"unlock_text": "Slay Achilles on the Shores of Ilion to unlock.",

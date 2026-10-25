@@ -316,7 +316,7 @@ const STAGE := {
 	"short_name": "Underworld",
 	"chapter": "Chapter XII",
 	"act": 4,  # Act IV, the Olympian Republic.
-	"playable": false,  # Phase 2 built; the lead turns it on after the merge, the review and the owner's playtest.
+	"playable": true,  # Owner decision (Oct 25, 2026): "Ship it!" after the art review and three playtest passes (GDD §15.0 "Act IV goes live").
 	"description": "With Olympus silent, go down to the god who started it all: grey fields of asphodel, the River Styx, Charon's ferry and the gates of Tartarus. Hades waits on his throne.",
 	"unlock": {"stage": "olympus", "boss_kills": 1},  # Owner-approved: each boss unlocks the next stage
 	"unlock_text": "Topple Zeus on Mount Olympus to unlock.",

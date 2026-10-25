@@ -1552,7 +1552,7 @@ shutting down the Motherboard; Soul Ash ×3.0 (placeholder).
   `citadel events`, `citadel kinds`, `ranged share`, `deus ex machina`, `scrap swarm` and
   `iron revenant` lines (`CitadelReport`).
 
-### Act IV: the Olympian Republic (foundation, not yet playable)
+### Act IV: the Olympian Republic (live)
 
 <!-- --- Act IV: the Olympian Republic --- -->
 The necromancer's endless army has emptied the Underworld, and the gods come down to take the dead back:
@@ -1560,8 +1560,8 @@ The necromancer's endless army has emptied the Underworld, and the gods come dow
 owner-approved proposal `docs/act4/PROPOSAL.md`). The stage select has an **Act IV** tab (with more than
 three acts only the shown act's tab keeps its full name) with its three stages, **the Shores of Ilion**,
 **Mount Olympus** (the Pantheon Trial) and **the Asphodel Underworld** (bosses Achilles, the Unkillable;
-Zeus; Hades, Lord of the Dead); Deus Ex Machina's fall opens Ilion, each boss opens the next stage, and all
-three show "Coming soon" until their stages are built (phase 2). The act's shared rules:
+Zeus; Hades, Lord of the Dead); Deus Ex Machina's fall opens Ilion and each boss opens the next stage. All
+three are playable (owner decision Oct 25, 2026, GDD §15.0 "Act IV goes live"). The act's shared rules:
 
 - **Wrath of the Gods: the arena is the enemy.** Each stage's patron god strikes on a telegraphed rhythm,
   and the strike hits **both armies**: **Poseidon's waves** (Ilion; a wall of water rolls across from one
@@ -1580,13 +1580,13 @@ three show "Coming soon" until their stages are built (phase 2). The act's share
   Hero slain with Glory pays a Soul Ash bounty (2 per stack) and, at 5+ stacks, a chest.
 - **The Twilight of the Gods.** At 0:00 waves, lightning and fissures fire together, faster each minute,
   while Bronze Titans step out of the ground.
-- **Music.** For now Act IV runs play the Act III loop; "Hymn of Bronze" comes with the audio pass.
+- **Music.** "Hymn of Bronze" (`SoundData.BRONZE_SCORE`) and the lazy Pantheon sound pack.
 
 The shared kinds so far: the **Shade of the Dead** (pale, fast fodder in swarms), the **Hoplite** (spear
 and round shield, forms the Phalanx) and the **Hero** (an elite demigod who carries Glory); the
 **Bronze Titan** is the Twilight's heavy. The Codex has a **Republic** tab.
 
-### Stage 10: the Shores of Ilion (Act IV, built, not yet playable)
+### Stage 10: the Shores of Ilion (Act IV)
 
 <!-- --- Act IV: the Shores of Ilion --- -->
 The beach below besieged Troy (GDD §15.0 "The Shores of Ilion (Act IV phase 2)"). Four zones on the
@@ -1623,13 +1623,12 @@ wrath is **Poseidon's waves** (every 90 s; lure the shield walls into them).
   stage. Its character is **the Doomed Prophetess**, a dead seer of Troy (innate *Foretold Fall*: her
   arrows strike elites, champions and bosses 30% harder; Hyper skin *Gilded Sibyl*, and the Untouchable
   and Deathlord skins).
-### Stage 11: Mount Olympus, the Pantheon Trial (Act IV, built, not yet playable)
+### Stage 11: Mount Olympus, the Pantheon Trial (Act IV)
 
 <!-- --- Act IV: Mount Olympus --- -->
 The owner's boss rush (GDD §15.0 "Mount Olympus (Act IV phase 2)" and the rows after it): the stage climbs
 the mountain under **Zeus's lightning** (bronze draws it, so lure the hoplites, centaurs, Amazons and even
-Ares under the storm), and each zone has its god. Unlocked by slaying Achilles; still "Coming soon" until
-the lead's Act IV pass. `--stage=olympus` runs it.
+Ares under the storm), and each zone has its god. Unlocked by slaying Achilles. `--stage=olympus` runs it.
 
 - **Zones (clock-driven):** the **Field of Ares** (20:00, war-trampled earth, trophies of captured shields,
   wrecked chariots), the **Groves of Artemis** (9:30, moonlit cypress and moss, small moon shrines), the
@@ -1664,7 +1663,7 @@ the lead's Act IV pass. `--stage=olympus` runs it.
   achievement **Twilight of the Gods** (clear the Pantheon Trial: a victory on Mount Olympus) unlocks the
   Act IV counter-passive **Grounded Bones** (less lightning and wave damage to you and your army; offered
   only in Act IV).
-### Stage 12: the Asphodel Underworld (Act IV finale, not yet playable)
+### Stage 12: the Asphodel Underworld (Act IV finale)
 
 <!-- --- Act IV: the Asphodel Underworld --- -->
 The finale of Act IV (GDD §15.0 "The Asphodel Underworld (Act IV phase 2)" and the rows after it; data in
@@ -1680,7 +1679,9 @@ the Gods.
   water cross the land. Wading it slows you (35%) and the living foes (40%; floating shades, the boss and
   minibosses do not wade), and a summon in the water forgets: a 2 s suppression zone on its stretch of
   river (its hits there deal 60%, and nothing replaces a summon that falls in it until the zone ends).
-- **Kinds:** the **Shade Hoplite** (the dead still in their ranks: they lock shields like the living)
+- **Kinds:** the **Shade Hoplite** (the dead still in their ranks: they lock shields like the living),
+  the **Shade Archer** (Troy's dead archers: a floating ranged soldier from 3:00 that shoots over your army's
+  ring; Centaur Archers join from 5:00, owner decision after playtest pass 2)
   and the miniboss **Cerberus** at 8:30 left: his body cannot be struck; kill his three heads one by
   one (fire breath, a pouncing bite on your spot, a howl that raises shades and slows your summons);
   the last head kills him (his chest and 14 Soul Ash). Ilion's and Olympus's kinds join as guests once

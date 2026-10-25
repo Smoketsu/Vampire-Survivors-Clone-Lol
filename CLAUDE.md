@@ -204,9 +204,9 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as seven **parallel** matrix jobs, the Graveyard
+CI (`.github/workflows/ci.yml`) runs the import and, as ten **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
-policy) and one army autotest per Act II stage; beside them, the Windows/Linux/Web exports (artifacts
+policy) and one army autotest per Act II and Act IV stage; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -644,10 +644,11 @@ tiny tweaks.
 6. **Act III, the Electronic Empire: live (Oct 2026).** The three stages are playable (GDD §15.0 "Act III goes
    live"); the owner balances by hand from playtests (their notes outrank the bots). Open: the naive survival rate,
    the placeholder Soul Ash multipliers, a real-iPhone check; CI has no Act III job yet. Handoff: `docs/act3/HANDOFF.md`.
-6b. **Act IV, the Olympian Republic: built, not live (Oct 2026).** All three stages are in on the lead's branch behind
-   `"playable": false` (GDD §15.0 "Act IV integration (phase 2)"). The art review is done (eight rounds; the mixed
-   lineup kept). Next: the owner's playtest and balance pass, then playable, a CI job and `main`.
-   Handoff: `docs/act4/HANDOFF.md`.
+6b. **Act IV, the Olympian Republic: live (Oct 25, 2026).** The three stages are playable (GDD §15.0 "Act IV goes
+   live"), with one CI army job each. Shipped after the art review (eight rounds) and three bot playtest passes at meta
+   none (`docs/act4/playtest/`; the Underworld got damage ×1.5, Centaur Archers and the new Shade Archer). Open: the
+   owner's own playtest notes, the placeholder Soul Ash multipliers (×3.25 / ×3.5 / ×3.75), the Web performance check
+   on Olympus late game. Handoff: `docs/act4/HANDOFF.md`.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
