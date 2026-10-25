@@ -59,6 +59,10 @@
 ##     2)"): on a stage with a "wastes" config it owns the WastesDirector (the
 ##     Signal Pylons, the scrap storms, the Trojan Horse; `wastes`) and hands it
 ##     the "pylons" / "storm" / "trojan" events. Null on every other stage.
+##   * Act IV, the Shores of Ilion (GDD §15.0 "The Shores of Ilion (Act IV
+##     phase 2)"): on a stage with an "ilion" config it owns the IlionDirector
+##     (the siege towers, Polyphemus the Cyclops; `ilion`) and hands it the
+##     "siege_towers" / "polyphemus" events. Null on every other stage.
 ##   * Act IV, the Olympian Republic (GDD §15.0 "Act IV foundation (phase
 ##     1)"): its kinds are looked up through pantheon_def() (PantheonEnemyData,
 ##     then each Act IV stage's table) after the Empire's, and its bosses load
@@ -191,6 +195,12 @@ var assembly: AssemblyDirector = null
 var wastes: WastesDirector = null
 
 
+# --- Act IV: the Shores of Ilion ---
+## The Shores of Ilion's stage systems: siege towers, Polyphemus the Cyclops
+## (StageRegistry "ilion"; null elsewhere).
+var ilion: IlionDirector = null
+
+
 func _ready() -> void:
 	stage_def = game.stage_def
 	segments = stage_def["segments"]
@@ -259,6 +269,12 @@ func _ready() -> void:
 		citadel.game = game
 		citadel.config = stage_def["citadel"]
 		add_child(citadel)
+	# --- Act IV: the Shores of Ilion ---
+	if not (stage_def.get("ilion", {}) as Dictionary).is_empty():
+		ilion = IlionDirector.new()
+		ilion.game = game
+		ilion.config = stage_def["ilion"]
+		add_child(ilion)
 
 
 # =====================================================================================
@@ -353,6 +369,9 @@ func step(delta: float) -> void:
 	# --- Act III: the Iron Citadel ---
 	if citadel != null:
 		citadel.step(delta)
+	# --- Act IV: the Shores of Ilion ---
+	if ilion != null:
+		ilion.step(delta)  # Siege towers, Polyphemus.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -431,6 +450,9 @@ func objective_text() -> String:
 	# --- Act III: the Iron Citadel ---
 	if citadel != null and citadel.objective_override() != "":
 		return citadel.objective_override()  # Shield Gates, sentry turrets.
+	# --- Act IV: the Shores of Ilion ---
+	if ilion != null and ilion.objective_override() != "":
+		return ilion.objective_override()  # Polyphemus, the siege towers.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -565,6 +587,12 @@ func _run_event(ev: Dictionary) -> void:
 		"gate", "turrets", "valkyrie":
 			if citadel != null:
 				citadel.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act IV: the Shores of Ilion ---
+		"siege_towers", "polyphemus":
+			if ilion != null:
+				ilion.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
 	show_banner(ev["banner"])

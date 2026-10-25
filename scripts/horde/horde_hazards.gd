@@ -264,7 +264,7 @@ func _land(b: Boulder) -> void:
 		if not e.is_structure:
 			e.knockback += (away / away.length() if away.length() > 0.01 else Vector2.UP) * b.knockback / maxf(e.mass, 0.1)
 		var structure := e.is_structure  # Read before the hit (the enemy may be pooled by it).
-		var dealt := game.combat.damage_enemy(e, b.damage, b.source)
+		var dealt := game.combat.damage_enemy(e, b.damage, b.source, -1, CombatResolver.FROM_ABOVE)  # Act IV, the Shores of Ilion: an arcing hit from above (the Legionary's testudo; nothing changes off Act IV).
 		if structure:
 			game.stat_add("catapult_structure_dmg", dealt)
 		hits += 1

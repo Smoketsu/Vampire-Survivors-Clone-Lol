@@ -376,6 +376,24 @@ RECIPES = {
         "source": "wastes_wall.png", "method": "quilt",
         "colors": ["ink_cold", "floor_slate", "floor_marble", "floor_stone"],
     },
+    # --- Act IV: the Shores of Ilion --- (one source each, no variants; the API sources came back
+    # nearly transparent and are stored with their alpha set opaque)
+    "ilion_beach": {
+        "source": "ilion_beach.png", "method": "quilt",
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_ochre"],
+    },
+    "ilion_camp": {
+        "source": "ilion_camp.png", "method": "quilt",
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_dirt"],
+    },
+    "ilion_gate": {
+        "source": "ilion_gate.png", "method": "quilt",
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_stone"],
+    },
+    "ilion_walls": {
+        "source": "ilion_walls.png", "method": "quilt",
+        "colors": ["ink_cold", "floor_slate", "floor_marble", "floor_stone"],
+    },
     # --- Act III: the Iron Citadel ---
     # The four zone floors of THE IRON CITADEL (CitadelGround, tiles/citadel_<style>): riveted
     # steel deck plates (one API texture, laid out three ways) and the Core's circuit-etched

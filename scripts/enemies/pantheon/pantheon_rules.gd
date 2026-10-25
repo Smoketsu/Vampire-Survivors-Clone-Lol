@@ -82,6 +82,22 @@ static func hit_from_front(e: Enemy, origin: Vector2, half_angle: float = -1.0) 
 	return to.normalized().dot(facing_of(e)) >= cos(h)
 
 
+# --- Act IV: the Shores of Ilion ---
+## True when a hit coming from world point `origin` strikes enemy `e` from
+## BEHIND: within `half_angle` rad of straight behind it (the same facing as
+## hit_from_front(), the rear cone; PantheonRulesData.PHALANX front_half_angle
+## by default). False for a hit from the body's own centre and for an arcing
+## hit (CombatResolver.FROM_ABOVE). Mortal Heel and Achilles' back read it.
+static func hit_from_behind(e: Enemy, origin: Vector2, half_angle: float = -1.0) -> bool:
+	if origin == CombatResolver.FROM_ABOVE:
+		return false
+	var to := origin - e.position  # From the body toward where the hit came from.
+	if to.length_squared() < 0.0001:
+		return false
+	var h := half_angle if half_angle >= 0.0 else float(PantheonRulesData.PHALANX["front_half_angle"])
+	return to.normalized().dot(-facing_of(e)) >= cos(h)
+
+
 ## Multiplier on a DIRECTED hit (CombatResolver.damage_enemy() with an origin)
 ## of `amount` on `e` from `origin`, `shot` true for a projectile, tagged
 ## `source`: the Phalanx's locked fronts (Phalanx.directed_hit_mult()), else a
@@ -90,6 +106,11 @@ static func hit_from_front(e: Enemy, origin: Vector2, half_angle: float = -1.0) 
 func directed_hit_mult(e: Enemy, origin: Vector2, shot: bool, source: String) -> float:
 	if e.kit is PantheonKit:
 		return phalanx.directed_hit_mult(e, origin, shot, source)
+	# --- Act IV: the Shores of Ilion --- an arcing hit from above
+	# (CombatResolver.FROM_ABOVE) reaches a boss only through its own
+	# above_hit_mult(source) (Achilles); every other boss ignores it.
+	if origin == CombatResolver.FROM_ABOVE:
+		return float(e.call("above_hit_mult", source)) if e.has_method("above_hit_mult") else 1.0
 	if e.has_method("directed_hit_mult"):
 		return float(e.call("directed_hit_mult", origin, shot, source))
 	return 1.0

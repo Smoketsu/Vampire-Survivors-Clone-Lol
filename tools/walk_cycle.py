@@ -313,6 +313,19 @@ RIGS = {
     "pantheon/hoplite": dict(mode="legs", hip=42, back=(0, 17), front=(17, 30), rigid=[(2, 6, 0, None)], spread=2, lift=2, dip=1),
     "pantheon/hero": dict(mode="legs", hip=41, back=(0, 31), front=(31, 58), rigid=[(0, 17, 41, 48)], spread=2, lift=2, dip=1),
     "pantheon/bronze_titan": dict(mode="legs", hip=66, back=(0, 35), front=(35, 72), rigid=[(0, 18, 66, 73), (52, 72, 66, 72)], spread=2, lift=3, dip=1),
+    # --- Act IV: the Shores of Ilion ---
+    # The Legionary marches behind his scutum (it ends above the hip); the Wolf of Rome lopes
+    # (hind legs left, forelegs right: the bounding lope of the Bone Hound's rig); the Cyclops and
+    # Polyphemus stomp (short spread, a big lift); Achilles strides with his spear rigid (cols 0-13)
+    # and his rage form strides wide. The Doomed Prophetess glides in her long peplos (robe: hem
+    # sway, the tall bone bow rigid, bust bounce and idle breathing). The siege tower rolls (no strip).
+    "pantheon/legionary": dict(mode="legs", hip=41, back=(0, 15), front=(15, 32), rigid=[], spread=2, lift=2, dip=1),
+    "pantheon/wolf_of_rome": dict(mode="legs", hip=19, back=(0, 30), front=(30, 68), rigid=[], spread=3, lift=2, dip=1),
+    "pantheon/cyclops": dict(mode="legs", hip=53, back=(0, 25), front=(25, 56), rigid=[], spread=2, lift=3, dip=1),
+    "pantheon/polyphemus": dict(mode="legs", hip=88, back=(0, 30), front=(30, 60), rigid=[], spread=2, lift=3, dip=1),
+    "bosses/achilles": dict(mode="legs", hip=91, back=(14, 33), front=(33, 64), rigid=[(0, 14, 0, None)], spread=2, lift=2, dip=1),
+    "bosses/achilles_rage": dict(mode="legs", hip=90, back=(0, 46), front=(46, 92), rigid=[], spread=2, lift=2, dip=1),
+    "player/doomed_prophetess": dict(mode="robe", hip=36, rigid=[(27, 36, 0, None)], sway=2, dip=1, bust=(16, 26, 15, 22, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -375,6 +388,10 @@ SKINS = {
     "player/rust_prophet_hyper": "player/rust_prophet",
     "player/rust_prophet_untouchable": "player/rust_prophet",
     "player/rust_prophet_deathlord": "player/rust_prophet",
+    # --- Act IV: the Shores of Ilion ---
+    "player/doomed_prophetess_hyper": "player/doomed_prophetess",
+    "player/doomed_prophetess_untouchable": "player/doomed_prophetess",
+    "player/doomed_prophetess_deathlord": "player/doomed_prophetess",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

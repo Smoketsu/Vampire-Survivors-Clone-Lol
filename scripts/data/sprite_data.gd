@@ -272,6 +272,19 @@ const HEIGHTS: Dictionary = {
 	"pantheon/hoplite": 56.0,  # TUNING (not in GDD) soldier tier: body ~50 (crest to sandals), the upright spear head above
 	"pantheon/hero": 58.0,  # TUNING (not in GDD) elite tier: a demigod, the tall plume on top (elites are also drawn larger by the game)
 	"pantheon/bronze_titan": 96.0,  # TUNING (not in GDD) the Reckoning's heavy, bigger than the heavy tier (60-72) and below the minibosses (104+)
+	# --- Act IV: the Shores of Ilion (assets/sprites/pantheon/, bosses/, player/) ---
+	"pantheon/legionary": 56.0,  # TUNING (not in GDD) soldier tier like the Hoplite: body ~50, the crest above
+	"pantheon/wolf_of_rome": 36.0,  # TUNING (not in GDD) fodder pack: a low bronze wolf, about 1.6 x as long as tall
+	"pantheon/cyclops": 70.0,  # TUNING (not in GDD) heavy tier (60-72): a hulking giant, the boulder beside his head
+	"pantheon/polyphemus": 112.0,  # TUNING (not in GDD) miniboss tier (104+): the giant with a boulder over his head
+	"pantheon/siege_tower": 104.0,  # TUNING (not in GDD) a structure: a tall tower on wheels (the Signal Pylon 96)
+	"bosses/achilles": 120.0,  # TUNING (not in GDD) boss tier: the hero with his crest and long spear (Kestrel 124)
+	"bosses/achilles_strike": 80.0,  # TUNING (not in GDD) attack pose: the low lunge, the spear thrust far ahead (BossPoseData 3)
+	"bosses/achilles_rage": 120.0,  # TUNING (not in GDD) his rage: helmet and shield gone, the spear raised high
+	"player/doomed_prophetess": 56.0,  # TUNING (not in GDD) character tier: body ~50, the bone circlet and bow tip above
+	"player/doomed_prophetess_hyper": 58.0,  # TUNING (not in GDD) skin art: her body, the gold laurel crown above
+	"player/doomed_prophetess_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body
+	"player/doomed_prophetess_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

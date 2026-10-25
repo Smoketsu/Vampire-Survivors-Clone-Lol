@@ -394,6 +394,26 @@ const EVOLUTIONS := {
 			"kill_drones": 4,  # TUNING (not in GDD) the evolution flag: extra drones from kills, at most this many (first pass 6)
 		},
 	},
+	# --- Act IV: the Shores of Ilion ---
+	# Arrow of Fate (owner-approved Act IV proposal: "Paris's Arrow ... -> Arrow
+	# of Fate (+ Mortal Heel)"): Paris's Arrow + Mortal Heel (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: more arrows, and fate cannot
+	# be escaped: an arrow that kills its target flies on from the body to the
+	# next strongest foe within `fate_range` px it has not struck, up to
+	# `fate_jumps` times, each time from behind. Detected by the "fate_jumps" key.
+	"arrow_of_fate": {
+		"base": "paris_arrow",
+		"passive": "mortal_heel",
+		"display_name": "Arrow of Fate",
+		"icon": "arrow_of_fate",
+		"description": "More ghost arrows, and one that kills flies on to the next foe's back.",
+		"labels": {"damage": "Arrow damage", "arrows": "Arrows", "fate_jumps": "Fated jumps", "cooldown": "Cooldown (s)", "range": "Range"},
+		"stats": {
+			"damage": 64.0, "arrows": 4, "cooldown": 1.9, "range": 420.0, "flight": 0.45,  # TUNING (not in GDD)
+			"fate_jumps": 3,  # TUNING (not in GDD) the evolution flag: a killing arrow flies on, at most this many times
+			"fate_range": 220.0,  # TUNING (not in GDD) px from the body to its next target
+		},
+	},
 }
 
 

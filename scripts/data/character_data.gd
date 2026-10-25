@@ -60,7 +60,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act III: the Scrap Wastes ---
 	"lightning_abbess",
 	# --- Act III: the Iron Citadel ---
-	"rust_prophet"]
+	"rust_prophet",
+	# --- Act IV: the Shores of Ilion ---
+	"doomed_prophetess"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -121,7 +123,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act III: the Scrap Wastes ---
 	"ray_extra_sparks",
 	# --- Act III: the Iron Citadel ---
-	"risen_bolt_interval", "risen_bolt_damage"]
+	"risen_bolt_interval", "risen_bolt_damage",
+	# --- Act IV: the Shores of Ilion ---
+	"arrow_elite_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -416,6 +420,29 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "spell_area": 0.05},  # TUNING (not in GDD) an engineer's plating and a wider reach
 		"sprite": "player/rust_prophet",
 		"tint": Color(0.86, 0.58, 0.34),  # TUNING (not in GDD) rust orange over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act IV: the Shores of Ilion ---
+	# The Doomed Prophetess (Paris's Arrow's character; owner-approved Act IV
+	# proposal: "a dead seer of Troy (figure style)"; female, in the
+	# figure-redesign style: fully clothed, the bust rig and idle breathing). She
+	# foresaw the fall of Troy and the death of Achilles at the heel, and no one
+	# believed her; dead, she still sees where every champion will fall. Her
+	# spell must be unlocked first (by Achilles), then she unlocks the usual way
+	# (Paris's Arrow to Lv 5). Own decision on her innate (the proposal names
+	# none): her arrows strike champions harder (ParisArrow reads it).
+	"doomed_prophetess": {
+		"display_name": "The Doomed Prophetess",
+		"title": "She saw the heel. No one believed her.",
+		"spell": "paris_arrow",
+		"innate": {
+			"id": "foretold_fall", "name": "Foretold Fall",
+			"description": "Your ghost arrows strike elites, champions and bosses harder.",
+			"values": {"arrow_elite_bonus": 0.3},  # TUNING (not in GDD) +30% Paris's Arrow damage to elites, minibosses and bosses
+		},
+		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail seer with a wide sight
+		"sprite": "player/doomed_prophetess",
+		"tint": Color(0.62, 0.48, 0.92),  # TUNING (not in GDD) twilight violet
 		"starts_unlocked": false,
 	},
 }

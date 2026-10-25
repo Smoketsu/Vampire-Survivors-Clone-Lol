@@ -69,7 +69,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act III: the Scrap Wastes ---
 	"death_ray",
 	# --- Act III: the Iron Citadel ---
-	"scrap_swarm"]
+	"scrap_swarm",
+	# --- Act IV: the Shores of Ilion ---
+	"paris_arrow"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -454,6 +456,33 @@ const SPELLS := {
 			{"drones": 4, "damage": 11.0, "cooldown": 1.05, "range": 220.0, "orbit_speed": 1.1},  # TUNING (not in GDD)
 			{"drones": 4, "damage": 13.0, "cooldown": 0.95, "range": 230.0, "orbit_speed": 1.15},  # TUNING (not in GDD)
 			{"drones": 5, "damage": 15.0, "cooldown": 0.85, "range": 240.0, "orbit_speed": 1.2},  # TUNING (not in GDD) first pass 19 (with the evolution 296k damage in a forced army run)
+		],
+	},
+	# --- Act IV: the Shores of Ilion ---
+	# Paris's Arrow (owner-approved Act IV proposal "Rewards": "a spectral arrow
+	# that always strikes its target from behind (full damage through phalanx
+	# fronts)"; unlocked by slaying Achilles, UnlockData). Every `cooldown` s
+	# (start to start) it looses `arrows` violet ghost arrows at the strongest
+	# foes (most max HP first: it hunts champions) within `range` px; each
+	# swings around its target in `flight` s and strikes it FROM BEHIND (its
+	# origin behind the target's facing: CombatResolver.damage_enemy() with
+	# that origin, a shot), dealing `damage`: full damage through a locked
+	# shield front or a testudo, it breaks the wall it strikes and finds
+	# Achilles' back. Stat keys: damage, cooldown (s), arrows, range (px),
+	# flight (s). Logic: ParisArrow; fixed rules: ParisArrowData; Mortal Heel
+	# (its paired passive) raises every hit from behind, these included.
+	"paris_arrow": {
+		"display_name": "Paris's Arrow",
+		"icon": "paris_arrow",
+		"description": "Ghost arrows swing around the strongest foes and strike them from behind.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act IV spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Arrow damage", "arrows": "Arrows", "cooldown": "Cooldown (s)", "range": "Range"},
+		"levels": [
+			{"damage": 30.0, "arrows": 1, "cooldown": 2.6, "range": 360.0, "flight": 0.55},  # TUNING (not in GDD) a single-target hunter (the act's champions and fronts)
+			{"damage": 36.0, "arrows": 2, "cooldown": 2.6, "range": 370.0, "flight": 0.55},  # TUNING (not in GDD)
+			{"damage": 42.0, "arrows": 2, "cooldown": 2.4, "range": 380.0, "flight": 0.5},  # TUNING (not in GDD)
+			{"damage": 50.0, "arrows": 3, "cooldown": 2.3, "range": 390.0, "flight": 0.5},  # TUNING (not in GDD)
+			{"damage": 58.0, "arrows": 3, "cooldown": 2.1, "range": 400.0, "flight": 0.45},  # TUNING (not in GDD)
 		],
 	},
 }

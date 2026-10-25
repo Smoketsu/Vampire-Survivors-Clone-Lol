@@ -145,7 +145,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act III: the Scrap Wastes ---
 	"conductive_marrow", "lead_lined_bones",
 	# --- Act III: the Iron Citadel ---
-	"machine_soul", "recoil_frame"]
+	"machine_soul", "recoil_frame",
+	# --- Act IV: the Shores of Ilion ---
+	"mortal_heel", "bronze_breaker"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -163,7 +165,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act III: the Scrap Wastes ---
 	"lead_lined_bones",
 	# --- Act III: the Iron Citadel ---
-	"recoil_frame"]
+	"recoil_frame",
+	# --- Act IV: the Shores of Ilion ---
+	"bronze_breaker"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -960,6 +964,50 @@ const PASSIVES := {
 			{"ranged_haste": 0.18, "ranged_reach": 0.12},  # TUNING (not in GDD)
 			{"ranged_haste": 0.24, "ranged_reach": 0.16},  # TUNING (not in GDD)
 			{"ranged_haste": 0.30, "ranged_reach": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IV: the Shores of Ilion ---
+	# Paris's Arrow's paired passive (owner-approved Act IV proposal: "Arrow of
+	# Fate (+ Mortal Heel)"); unlocked with the spell by Achilles and offered on
+	# every stage. Own decision on its effect: every DIRECTED hit (a shot or a
+	# blow with an origin) that strikes a foe from BEHIND deals back_damage more
+	# (CombatResolver.damage_enemy(), PantheonRules.hit_from_behind(): the one
+	# direction test, any enemy's facing), Paris's Arrow's hits included; it
+	# rewards the ring that surrounds, the Rogue's dash and the Gargoyle's dive.
+	"mortal_heel": {
+		"display_name": "Mortal Heel",
+		"icon": "mortal_heel",
+		"description": "Every hit that strikes a foe from behind deals more.",
+		"labels": {"back_damage": ["Damage from behind", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"back_damage": 0.08},  # TUNING (not in GDD)
+			{"back_damage": 0.16},  # TUNING (not in GDD)
+			{"back_damage": 0.24},  # TUNING (not in GDD)
+			{"back_damage": 0.32},  # TUNING (not in GDD)
+			{"back_damage": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# Act IV's counter-passive Bronze Breaker (owner-approved Act IV proposal:
+	# "summon hits on shielded fronts deal more"; unlocked by the achievement
+	# Heel Found and offered only in Act IV through its card row's "act").
+	# Phalanx.breaker_mult() (the foundation's one read,
+	# PantheonRulesData.BRONZE_BREAKER / BRONZE_BREAKER_KEY): a summon hit on a
+	# locked shield's front (or a Legionary's testudo) deals 1 + front_damage
+	# times its share.
+	"bronze_breaker": {
+		"display_name": "Bronze Breaker",  # Owner-approved proposal
+		"icon": "bronze_breaker",
+		"description": "Your summons' blows on a locked shield wall's front hit harder.",
+		"labels": {"front_damage": ["Summon damage to shield fronts", "pct"]},
+		"act": 4,  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"front_damage": 0.2},  # TUNING (not in GDD) a front shot 10% -> 12%, a front blow x1.2
+			{"front_damage": 0.4},  # TUNING (not in GDD)
+			{"front_damage": 0.6},  # TUNING (not in GDD)
+			{"front_damage": 0.8},  # TUNING (not in GDD)
+			{"front_damage": 1.0},  # TUNING (not in GDD) a front shot 10% -> 20%, a front blow x2
 		],
 	},
 }
