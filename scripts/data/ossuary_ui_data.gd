@@ -9,13 +9,14 @@ extends RefCounted
 
 # --- Layout ---------------------------------------------------------------------------
 
-## Size (layout px) of one upgrade tile: icon, name, level pips and cost. Four
-## columns of 282 + three 24 px gaps fill 1200 of the 1280 px layout.
-const TILE_SIZE := Vector2(282, 56)  # TUNING (not in GDD) layout fit
+## Size (layout px) of one upgrade tile: icon, name, level pips and cost. Five
+## columns of 230 + four 12 px gaps fill 1198 of the 1280 px layout (Ossuary
+## expansion step 3: Dominion is the fifth column, seven rows per tree).
+const TILE_SIZE := Vector2(230, 50)  # TUNING (not in GDD) layout fit
 ## Gap (layout px) between two tree columns.
-const COLUMN_GAP: int = 24  # TUNING (not in GDD) layout fit
-## Gap (layout px) between two tiles of one column (six Necromancy tiles fit).
-const ROW_GAP: int = 5  # TUNING (not in GDD) layout fit
+const COLUMN_GAP: int = 12  # TUNING (not in GDD) layout fit
+## Gap (layout px) between two tiles of one column (seven tiles a tree fit).
+const ROW_GAP: int = 4  # TUNING (not in GDD) layout fit
 ## Side (layout px) of the upgrade icon on a tile: the 32 art px badge, 1:1.
 const TILE_ICON: float = 32.0  # TUNING (not in GDD) art pass badges are 32 art px
 ## Side (layout px) of the icon in the detail panel: the badge at x2.
@@ -27,20 +28,53 @@ const BALANCE_ICON: float = 32.0  # TUNING (not in GDD)
 ## Side (layout px) of the small bare Soul Ash symbol next to a cost.
 const COST_ICON: float = 16.0  # TUNING (not in GDD) icons/soul_ash_small is 16 art px
 ## Inner padding (layout px) of a tile: left / right and top / bottom.
-const TILE_PAD := Vector2(10, 6)  # TUNING (not in GDD)
+const TILE_PAD := Vector2(8, 4)  # TUNING (not in GDD)
 ## Gap (layout px) between a tile's icon and its texts.
-const TILE_ICON_GAP: int = 10  # TUNING (not in GDD)
+const TILE_ICON_GAP: int = 8  # TUNING (not in GDD)
 ## Height (layout px) of the bottom-row buttons (Lower Oath, Refund all, Back).
 const BUTTON_HEIGHT: float = 40.0  # TUNING (not in GDD) holds one NAME-tier line
 ## Gap (layout px) between the screen's main blocks (title, trees, bottom).
 const BLOCK_GAP: int = 12  # TUNING (not in GDD)
 ## Top margin (layout px) of the screen's content.
 const TOP_MARGIN: float = 14.0  # TUNING (not in GDD)
+## Size (layout px) of the page area under the tab bar: the Trees page (five
+## columns of seven tiles over the detail panel) and every other tab's panel fill
+## it, so switching tabs never moves the title or the tab bar.
+const PAGE_SIZE := Vector2(1198, 548)  # TUNING (not in GDD) layout fit
+
+# --- Tabs (Ossuary expansion step 3) ---------------------------------------------------
+
+## Tab ids in tab-bar order (owner plan: Trees, Masteries, Relics, Offerings).
+const TABS := ["trees", "masteries", "relics", "offerings"]  # GDD §15.0 "Ossuary new options and Dominion"
+## Tab id -> its one-word button text.
+const TAB_NAMES := {"trees": "Trees", "masteries": "Masteries", "relics": "Relics", "offerings": "Offerings"}  # TUNING (not in GDD)
+## Tab id -> the script of its panel (the tab contract: a Control with
+## `func refresh() -> void` and `signal changed`, emitted after a purchase). A tab
+## whose script does not exist is hidden. "trees" is built by OssuaryMenu itself.
+const TAB_PANELS := {
+	"masteries": "res://scripts/ui/ossuary_masteries_panel.gd",
+	"relics": "res://scripts/ui/ossuary_relics_panel.gd",
+	"offerings": "res://scripts/ui/ossuary_offerings_panel.gd",
+}  # TUNING (not in GDD) contract shared by the Ossuary expansion agents
+## Size (layout px) of one tab button.
+const TAB_SIZE := Vector2(150, 40)  # TUNING (not in GDD)
+## Gap (layout px) between two tab-bar items.
+const TAB_GAP: int = 8  # TUNING (not in GDD)
+## Width (layout px) of the Back button at the tab bar's right end.
+const BACK_WIDTH: float = 150.0  # TUNING (not in GDD)
+## Previous / next tab keys and pad buttons (as in Settings).
+const TAB_PREV_KEY: int = KEY_Q  # TUNING (not in GDD)
+## Next-tab key.
+const TAB_NEXT_KEY: int = KEY_E  # TUNING (not in GDD)
+## Previous-tab pad button.
+const TAB_PREV_PAD: int = JOY_BUTTON_LEFT_SHOULDER  # TUNING (not in GDD)
+## Next-tab pad button.
+const TAB_NEXT_PAD: int = JOY_BUTTON_RIGHT_SHOULDER  # TUNING (not in GDD)
 
 # --- Level pips -------------------------------------------------------------------------
 
 ## Size (layout px) of one level pip on a tile (cut corners, 1 px).
-const PIP_SIZE := Vector2i(10, 5)  # TUNING (not in GDD)
+const PIP_SIZE := Vector2i(8, 5)  # TUNING (not in GDD) ten pips + a 4-digit cost fit the 230 px tile
 ## Size (layout px) of one level pip in the detail panel.
 const PIP_SIZE_BIG := Vector2i(16, 7)  # TUNING (not in GDD)
 ## Gap (layout px) between two pips.
@@ -132,6 +166,11 @@ const GATE_LINES := [
 	"Clear a stage on Deathlord to open levels 8-9",
 	"Clear a stage on Deathlord + Hyper to open level 10",
 ]  # TUNING (not in GDD) owner brief wording
+## Detail-panel line of an upgrade whose tree waits on a boss (MetaData.TREE_GATES):
+## tree id -> line (no boss name: the Codex keeps bosses dark until they are met).
+const SEALED_LINES := {"dominion": "Slay the boss of the Sanctum to open Dominion"}  # TUNING (not in GDD)
+## Tile word of such an upgrade (in place of the cost).
+const SEALED_WORD: String = "Sealed"  # TUNING (not in GDD)
 ## Colour of a tile's gate word (dim bone: locked, not unaffordable).
 const GATE_WORD := Color(0.62, 0.58, 0.68)  # TUNING (not in GDD)
 ## Buy hint word (next to the accept chip) in the detail panel.

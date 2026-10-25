@@ -4,7 +4,9 @@
 ##     passive bonuses x meta upgrades, GDD §34 stacking rule; meta values
 ##     come from game.meta, see MetaModifiers), including the numbers of the
 ##     later classes' specials (_special_stats(), SummonBehavior),
-##   * per-ability sequential replenishment queues (GDD §24),
+##   * per-ability sequential replenishment queues (GDD §24; a replaced unit
+##     rises with a Bone Reserve barrier when that Ossuary upgrade is owned, and
+##     Commander's Presence adds minion damage per distinct class owned),
 ##   * soft formation anchors at 4 Hz (GDD §26),
 ##   * player threat evaluation at 5 Hz (GDD §32),
 ##   * staggered 5 Hz AI ticks: each unit thinks on 1 of 12 physics ticks,
@@ -213,11 +215,17 @@ func step(delta: float) -> void:
 ## the new capacity allows ("Buy Warrior -> exactly two spawn", GDD §40).
 func set_class_level(cls: String, level: int) -> void:
 	var old_cap := capacity(cls)
+	# Commander's Presence (Ossuary): a new class raises every class's damage, so
+	# all of them are recomputed (capacities taken before the change).
+	var presence_caps: Dictionary = capacity_snapshot() if int(class_levels[cls]) <= 0 and level > 0 and game.meta.value("presence_damage") > 0.0 else {}
 	class_levels[cls] = level
 	if level > 0:
 		if game.records_here():
 			game.codex.meet(CodexData.SUMMON, cls)  # Codex: a summon class raised (records only).
-	_refresh_class(cls, old_cap)
+	if not presence_caps.is_empty():
+		recompute_all(presence_caps)
+	else:
+		_refresh_class(cls, old_cap)
 	synergies.evaluate()
 
 
@@ -336,6 +344,11 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 			* (1.0 + game.meta.value("minion_hp"))
 	var dmg_mult := (1.0 + float(row.get("damage_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_damage")) \
 			* (1.0 + game.meta.value("minion_damage"))
+	# Commander's Presence (Ossuary expansion step 3): its own category, per distinct
+	# summon class owned (exactly 1 without the upgrade).
+	var presence := game.meta.value("presence_damage")  # Minion damage per class (0 = not owned).
+	if presence > 0.0:
+		dmg_mult *= 1.0 + presence * float(distinct_classes())
 	var spd_mult := (1.0 + float(row.get("speed_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_speed")) \
 			* (1.0 + synergies.value("unholy_host", "attack_speed"))
 	# Run modifiers (Vengeful Dead, DifficultyModifiers): own category, 1 when off.
@@ -547,6 +560,31 @@ func _update_replenishment(delta: float) -> void:
 			if _try_spawn(cls):
 				replenish_timer[cls] = 0.0
 				game.stat_add("replacements", 1.0)
+				_bone_reserve(units[units.size() - 1])
+
+
+## Bone Reserve (Ossuary expansion step 3, MetaModifiers "reserve_barrier"): a
+## summon replaced after falling (the replacement timer above) rises with a barrier
+## of that share of its max HP (SummonedUnit.barrier_hp, absorbed before HP like
+## the Shieldwall's). No-op without the upgrade.
+func _bone_reserve(u: SummonedUnit) -> void:
+	var share := game.meta.value("reserve_barrier")  # Barrier share of max HP (0 = not owned).
+	if share <= 0.0:
+		return
+	var amount := u.max_hp * share  # Barrier HP.
+	if amount > u.barrier_hp:
+		game.stat_add("bone_reserve_barrier", amount - u.barrier_hp)
+		u.barrier_hp = amount
+		u.queue_redraw()
+
+
+## Number of summon classes owned (level 1+): Commander's Presence.
+func distinct_classes() -> int:
+	var n := 0
+	for cls: String in UnitData.CLASS_ORDER:
+		if int(class_levels[cls]) > 0:
+			n += 1
+	return n
 
 
 ## Number of missing units across all owned classes (capacity - alive).

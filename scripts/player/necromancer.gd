@@ -59,6 +59,11 @@ var incoming_heal: float = 0.0
 var time_since_hit: float = 999.0
 ## Revivals left this run (set at run start by MetaModifiers.apply_to_player).
 var revives_left: int = 0
+## Grave Ward (Ossuary): whole hits still blocked this run (0..2; set at run start
+## by MetaModifiers.apply_to_player, spent by CombatResolver.damage_player()).
+var ward_hits_left: int = 0
+## Last Rites (Ossuary): true once its invulnerability fired this run (once a run).
+var last_rites_used: bool = false
 ## Fraction (0..1) of walking speed lost on slowing ground (TerrainSlow;
 ## the Harbour's water). Applies while terrain_slow_timer > 0.
 var terrain_slow: float = 0.0

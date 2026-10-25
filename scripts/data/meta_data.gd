@@ -26,6 +26,10 @@
 ## tiers in all, the Oath excluded (tools/ossuary_check.gd prints the table).
 ## Levels 6-7 open after a clear on Lich or harder, 8-9 after a Deathlord clear and 10
 ## after a Deathlord clear with Hyper (LEVEL_GATES; Meta.max_open_tier()).
+## New options (Ossuary expansion step 3, GDD §15.0 "Ossuary new options and
+## Dominion"): two sideways upgrades per tree, a third level for Fate's Thread and
+## Banishing Rite, and the fifth tree, Dominion (run-start privileges, opened by
+## Seraphine's first defeat: TREE_GATES); 9,060 Soul Ash in all (OPTIONS_UPGRADES).
 ##
 ## Four upgrade trees (GDD §9.2 table):
 ##   Necromancy  — minion cap, health and damage (+ replacement speed)
@@ -35,6 +39,8 @@
 ##                 second Grave Step charge)
 ##   Fortune     — pickup radius, reward luck (XP / Soul Ash gain), rerolls
 ##                 and banishes (GDD open question 7)
+##   Dominion    — (expansion step 3) run-start privileges: a head start,
+##                 a stronger first summon class, skips that return a reroll
 ## plus one standalone entry outside the four trees (user request, the
 ## Vampire Survivors "Curse" idea):
 ##   Oath        — Profane Oath: 5 cheap tiers of opt-in DIFFICULTY (more,
@@ -89,8 +95,14 @@ const REVIVE_PUSH_FORCE: float = 420.0  # TUNING (not in GDD)
 
 # --- Trees -------------------------------------------------------------------------
 
-## Display order of the trees (Ossuary columns, left to right).
-const TREE_ORDER := ["necromancy", "shadowcraft", "survival", "fortune"]
+## Display order of the trees (Ossuary columns, left to right). Dominion (Ossuary
+## expansion step 3) is the fifth column and opens after a Seraphine kill
+## (TREE_GATES, Meta.tree_open()).
+const TREE_ORDER := ["necromancy", "shadowcraft", "survival", "fortune", "dominion"]
+## Tree id -> the boss id (StageRegistry boss slot) whose first defeat opens that
+## tree for buying (Meta.tree_open()); a tree not listed is open from the start.
+## Owned levels always apply (a co-op partner's included).
+const TREE_GATES := {"dominion": "seraphine"}  # GDD §15.0 "Ossuary new options and Dominion" (proposal: Dominion opens after Seraphine)
 
 ## Tree definitions (GDD §9.2): display_name, "improves" line from the GDD
 ## table, icon (MetaGlyphs kind) and accent colour.
@@ -101,6 +113,8 @@ const TREES := {
 	"shadowcraft": {"display_name": "Shadowcraft", "improves": "Spell damage, cooldowns, AoE", "icon": "tree_shadowcraft", "color": Palette.VIOLET},  # GDD §9.2
 	"survival": {"display_name": "Survival", "improves": "Health, armor and movement", "icon": "tree_survival", "color": Palette.COLD_BLUE},  # GDD §9.2
 	"fortune": {"display_name": "Fortune", "improves": "Pickup radius, luck and rerolls", "icon": "tree_fortune", "color": Palette.GOLD},  # GDD §9.2
+	# Ossuary expansion step 3: run-start privileges, opened by Seraphine's first defeat.
+	"dominion": {"display_name": "Dominion", "improves": "Run-start privileges", "icon": "tree_dominion", "color": Palette.IVORY},  # TUNING (not in GDD)
 }
 
 # --- Modifier stats ----------------------------------------------------------------
@@ -119,6 +133,19 @@ const TREES := {
 ##   rerolls, banishes            AbilityManager.setup (added to LevelUpData)
 ##   oath_tier                    DifficultyModifiers.oath_tier (Profane Oath)
 ##   dash_charges, dash_cooldown  GraveStep._ready (Grave Step dash)
+## Ossuary expansion step 3 (GDD §15.0 "Ossuary new options and Dominion"):
+##   reserve_barrier   HordeDirector._update_replenishment (barrier on a replaced summon)
+##   presence_damage   HordeDirector.compute_stats (minion damage per distinct class)
+##   echo_levels       VolleyDirector._step_spells (spell echoes start earlier)
+##   tithe_charge      DreadRally.on_enemy_killed (kills not dealt by a summon)
+##   last_rites        CombatResolver.damage_player (i-frames under 25% HP, once)
+##   ward_hits         CombatResolver.damage_player (set by apply_to_player)
+##   gilded_chance     AbilityManager.chest_rewards (a second draw, the better kept)
+##   elite_ash         Meta.compute_ash (Soul Ash per elite)
+##   head_start        Game._ready (levels gained at 0:00)
+##   vanguard          AbilityManager.apply_offer (new summon classes one level higher)
+##   skip_rerolls      AbilityManager.apply_offer (a skip returns a reroll)
+## Extra formats for them: "sec" (N.N s) and "level" (Lv N: 1 + the value).
 const STATS := {
 	"oath_tier": ["Oath tier", "int"],
 	"minion_hp": ["Minion HP", "pct"],
@@ -140,6 +167,18 @@ const STATS := {
 	"banishes": ["Banishes per run", "int"],
 	"dash_charges": ["Grave Step charges", "int"],
 	"dash_cooldown": ["Grave Step cooldown", "neg_pct"],
+	# --- Ossuary expansion step 3: new options and Dominion ---
+	"reserve_barrier": ["Barrier on return", "pct"],
+	"presence_damage": ["Damage per class", "pct"],
+	"echo_levels": ["Echoes sooner", "int"],
+	"tithe_charge": ["Meter per kill", "pct"],
+	"last_rites": ["Invulnerable", "sec"],
+	"ward_hits": ["Hits warded", "int"],
+	"gilded_chance": ["Gilded draws", "pct"],
+	"elite_ash": ["Ash per elite", "int"],
+	"head_start": ["Start at", "level"],
+	"vanguard": ["Classes raised", "int"],
+	"skip_rerolls": ["Skips refunded", "int"],
 }
 
 # --- Upgrades ----------------------------------------------------------------------
@@ -151,7 +190,23 @@ const UPGRADE_ORDER := [
 	"grave_flesh", "bone_mail", "fleet_shade", "undying_will", "twin_shadow",
 	"soul_magnet", "grave_tithe", "ash_harvest", "fates_thread", "banishing_rite",
 	"profane_oath",
+	# --- Ossuary expansion step 3 (OPTIONS_UPGRADES; each tree lists them after its old ones) ---
+	"bone_reserve", "commanders_presence",
+	"echo_weaving", "dark_tithe",
+	"last_rites", "grave_ward",
+	"gilded_chests", "elite_bounty",
+	"head_start", "chosen_vanguard", "patient_grave",
 ]
+## The upgrades added by the Ossuary expansion's new options (step 3). The --meta=mid
+## profile leaves them out (it stays the profile it was) and tools/ossuary_check.gd
+## prices them apart from the original levels.
+const OPTIONS_UPGRADES := ["bone_reserve", "commanders_presence", "echo_weaving", "dark_tithe",
+	"last_rites", "grave_ward", "gilded_chests", "elite_bounty",
+	"head_start", "chosen_vanguard", "patient_grave"]  # GDD §15.0 "Ossuary new options and Dominion"
+## Upgrade id -> its number of listed levels before step 3 gave it one more (Fate's
+## Thread and Banishing Rite got a third level): the mid profile and the original-price
+## check read this old count.
+const OPTIONS_EXTRA_LEVELS := {"fates_thread": 2, "banishing_rite": 2}  # GDD §15.0 "Ossuary new options and Dominion"
 ## Retired upgrades (no longer sold) -> the Soul Ash a save that owns one gets back on its
 ## next load (MetaProgress.load_save(); the key is not written again, so it is paid once).
 ##   spearhead_doctrine: unlocked the Spearhead army stance, gone since the Bone Ring became
@@ -169,6 +224,8 @@ const RETIRED_REFUNDS := {"spearhead_doctrine": 200}  # TUNING (not in GDD) = it
 ##   costs        — Soul Ash price of each listed tier (levels 1-5 at most; the
 ##                  later levels of DEEP_UPGRADES are priced by deep_cost()).
 ##   requires     — {"id": upgrade, "tier": N} needed before tier 1 ({} = none).
+## The expansion's new options (OPTIONS_UPGRADES) have only their listed levels (no
+## deep levels, no difficulty gates); the Dominion ones also wait on TREE_GATES.
 const UPGRADES := {
 	# Oath (standalone, user request): opt-in difficulty, cheap on purpose
 	# since it is a risk / reward choice rather than pure power.
@@ -241,11 +298,56 @@ const UPGRADES := {
 		"stat": "ash_gain", "per_tier": 0.05, "costs": [80, 165, 270], "requires": {}},  # TUNING (not in GDD)
 	"fates_thread": {"tree": "fortune", "display_name": "Fate's Thread", "icon": "fates_thread",
 		"description": "Pull one more thread of fate: +1 level-up reroll per run.",
-		"stat": "rerolls", "per_tier": 1.0, "costs": [120, 250], "requires": {}},  # TUNING (not in GDD)
+		"stat": "rerolls", "per_tier": 1.0, "costs": [120, 250, 450], "requires": {}},  # TUNING (not in GDD) third level: Ossuary expansion step 3
 	"banishing_rite": {"tree": "fortune", "display_name": "Banishing Rite", "icon": "banishing_rite",
 		"description": "Cast one more offer into the void: +1 level-up banish per run.",
-		"stat": "banishes", "per_tier": 1.0, "costs": [150, 310], "requires": {"id": "fates_thread", "tier": 1}},  # TUNING (not in GDD)
+		"stat": "banishes", "per_tier": 1.0, "costs": [150, 310, 520], "requires": {"id": "fates_thread", "tier": 1}},  # TUNING (not in GDD) third level: Ossuary expansion step 3
+	# --- Ossuary expansion step 3: new options (sideways, small values; GDD §15.0
+	# "Ossuary new options and Dominion"; 9,060 Soul Ash with the two third levels) ---
+	# Necromancy.
+	"bone_reserve": {"tree": "necromancy", "display_name": "Bone Reserve", "icon": "bone_reserve",
+		"description": "A fallen summon that rises again returns behind a barrier of bone.",
+		"stat": "reserve_barrier", "per_tier": 0.10, "costs": [120, 240, 380], "requires": {}},  # TUNING (not in GDD) barrier = share of the unit's max HP
+	"commanders_presence": {"tree": "necromancy", "display_name": "Commander's Presence", "icon": "commanders_presence",
+		"description": "Every summon class you command makes all of them strike harder.",
+		"stat": "presence_damage", "per_tier": 0.01, "costs": [130, 260, 410], "requires": {"id": "sharpened_bones", "tier": 2}},  # TUNING (not in GDD) minion damage per distinct class (6 classes at level 3 = +18%)
+	# Shadowcraft.
+	"echo_weaving": {"tree": "shadowcraft", "display_name": "Echo Weaving", "icon": "echo_weaving",
+		"description": "Your spells start echoing one level sooner.",
+		"stat": "echo_levels", "per_tier": 1.0, "costs": [600], "requires": {"id": "umbral_potency", "tier": 2}},  # TUNING (not in GDD) echoes from spell Lv 2 (VolleyData.LEVEL_ON is 3)
+	"dark_tithe": {"tree": "shadowcraft", "display_name": "Dark Tithe", "icon": "dark_tithe",
+		"description": "Foes you slay yourself feed your ultimate's meter more.",
+		"stat": "tithe_charge", "per_tier": 0.25, "costs": [120, 240, 380], "requires": {}},  # TUNING (not in GDD) extra meter points on a kill not dealt by a summon
+	# Survival.
+	"last_rites": {"tree": "survival", "display_name": "Last Rites", "icon": "last_rites",
+		"description": "The first time you fall below a quarter of your health, death looks away.",
+		"stat": "last_rites", "per_tier": 1.0, "costs": [150, 290, 450], "requires": {}},  # TUNING (not in GDD) seconds of invulnerability, once a run (LAST_RITES_HP_FRACTION)
+	"grave_ward": {"tree": "survival", "display_name": "Grave Ward", "icon": "grave_ward",
+		"description": "Begin every run behind a ward that swallows a whole blow.",
+		"stat": "ward_hits", "per_tier": 1.0, "costs": [250, 500], "requires": {"id": "bone_mail", "tier": 1}},  # TUNING (not in GDD) whole hits blocked at the start of a run
+	# Fortune.
+	"gilded_chests": {"tree": "fortune", "display_name": "Gilded Chests", "icon": "gilded_chests",
+		"description": "A chest may weigh two rewards and keep the one nearest its peak.",
+		"stat": "gilded_chance", "per_tier": 0.15, "costs": [140, 280, 430], "requires": {}},  # TUNING (not in GDD) chance per chest draw (AbilityManager._gilded_pick())
+	"elite_bounty": {"tree": "fortune", "display_name": "Elite Bounty", "icon": "elite_bounty",
+		"description": "Every elite you slay pays more Soul Ash.",
+		"stat": "elite_ash", "per_tier": 1.0, "costs": [100, 200, 320], "requires": {}},  # TUNING (not in GDD) Soul Ash per elite on top of ASH_PER_ELITE (4)
+	# Dominion (opens after Seraphine's first defeat, TREE_GATES).
+	"head_start": {"tree": "dominion", "display_name": "Head Start", "icon": "head_start",
+		"description": "Begin every run a level ahead, your first picks waiting.",
+		"stat": "head_start", "per_tier": 1.0, "costs": [400, 700], "requires": {}},  # TUNING (not in GDD) levels gained at 0:00 (co-op: the host's, like the Oath)
+	"chosen_vanguard": {"tree": "dominion", "display_name": "Chosen Vanguard", "icon": "chosen_vanguard",
+		"description": "The first summon class you raise in a run rises one level higher.",
+		"stat": "vanguard", "per_tier": 1.0, "costs": [450], "requires": {}},  # TUNING (not in GDD) new summon classes learned one level higher
+	"patient_grave": {"tree": "dominion", "display_name": "Patient Grave", "icon": "patient_grave",
+		"description": "Skipping a level-up hands you back a reroll.",
+		"stat": "skip_rerolls", "per_tier": 1.0, "costs": [200, 350], "requires": {}},  # TUNING (not in GDD) skips per run that return a reroll (skips were already free)
 }
+
+# --- Ossuary expansion step 3: rules of the new options ------------------------------
+
+## Last Rites: the share of max HP (0..1) under which its once-a-run invulnerability starts.
+const LAST_RITES_HP_FRACTION: float = 0.25  # TUNING (not in GDD) proposal "under 25%"
 
 # --- Deep levels (Ossuary expansion step 2, owner decisions Oct 2026) ------------------
 
@@ -523,6 +625,8 @@ static func upgrades_in(tree_id: String) -> Array[String]:
 ## gates); "mid" takes half of every upgrade's LISTED tiers (rounded up: the
 ## same tiers as before the deep levels) and drops tiers whose prerequisite the
 ## profile does not meet.
+## The new options (OPTIONS_UPGRADES) are not in "mid", and Fate's Thread / Banishing
+## Rite count their old two levels there (OPTIONS_EXTRA_LEVELS): mid is unchanged.
 static func autotest_tiers(profile: String) -> Dictionary:
 	var out := {}
 	if profile == "max":
@@ -530,7 +634,9 @@ static func autotest_tiers(profile: String) -> Dictionary:
 			out[id] = max_tier(id)
 	elif profile == "mid":
 		for id: String in UPGRADE_ORDER:
-			out[id] = ceili(float(listed_tiers(id)) / 2.0)
+			if OPTIONS_UPGRADES.has(id):
+				continue
+			out[id] = ceili(float(int(OPTIONS_EXTRA_LEVELS.get(id, listed_tiers(id)))) / 2.0)
 		for id: String in UPGRADE_ORDER:
 			var req: Dictionary = UPGRADES[id]["requires"]
 			if not req.is_empty() and int(out.get(String(req["id"]), 0)) < int(req["tier"]):

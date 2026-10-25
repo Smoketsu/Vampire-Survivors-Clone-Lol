@@ -403,6 +403,7 @@ func _ready() -> void:
 	horde.set_class_level("warrior", 1)
 	if coop != null:
 		_build_coop_slots()
+	_head_start()  # Dominion (Ossuary): levels gained at 0:00; no-op without the upgrade.
 	if GameState.victory_preview:
 		VictoryPreview.setup(self)  # Debug: a small army for the scripted victory.
 	_build_ui()
@@ -874,6 +875,21 @@ func add_xp(amount: int) -> void:
 	if level > level_before:
 		# Column of violet light on the necromancer (art-only, visual).
 		effects.burst(AnimData.LEVEL_UP_OFFSET, AnimData.LEVEL_UP_RADIUS, "level_up", player)
+
+
+## Head Start (Ossuary Dominion tree, MetaModifiers "head_start", expansion step 3):
+## the run begins that many levels up with their picks waiting (the first opens
+## on the first tick, like any level-up). Co-op: the host's tier sets the shared
+## level, like the host's Profane Oath. No-op without the upgrade.
+func _head_start() -> void:
+	var m: MetaModifiers = coop.slots[0].meta if coop != null else meta  # Whose Head Start counts.
+	var n := m.int_value("head_start")  # Levels gained.
+	if n <= 0:
+		return
+	level += n
+	pending_level_ups += n
+	xp_to_next = PlayerData.xp_to_next(level)
+	stat_add("head_start_levels", float(n))
 
 
 ## Pauses combat and shows three cards (GDD §16 "Level-up panel: Pause combat").

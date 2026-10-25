@@ -1726,12 +1726,26 @@ func _print_ossuary_totals() -> void:
 		owned, MetaData.total_tiers(), deep, deep_total, cost, all_cost])
 
 
+## Ossuary new options (expansion step 3): what each one did this run (only with
+## upgrades, like the line above).
+func _print_ossuary_options() -> void:
+	var st := game.stats
+	print("[autotest] ossuary options: bone reserve %d barrier HP | presence +%d%% (%d classes) | echoes from Lv %d | dark tithe +%.0f meter | last rites %d | grave ward %d blocked | gilded %d draws, %d swaps | elite bounty +%d ash | head start %d | vanguard %d | patient grave %d rerolls" % [
+		int(st.get("bone_reserve_barrier", 0.0)), int(roundf(game.meta.value("presence_damage") * float(game.horde.distinct_classes()) * 100.0)),
+		game.horde.distinct_classes(), maxi(1, VolleyData.LEVEL_ON - game.meta.int_value("echo_levels")),
+		float(st.get("dark_tithe_points", 0.0)), int(st.get("last_rites_fired", 0.0)), int(st.get("grave_ward_blocks", 0.0)),
+		int(st.get("gilded_draws", 0.0)), int(st.get("gilded_swaps", 0.0)),
+		floori(float(st.get("elite_kills", 0.0)) * game.meta.value("elite_ash")), int(st.get("head_start_levels", 0.0)),
+		int(st.get("vanguard_raises", 0.0)), int(st.get("patient_grave_rerolls", 0.0))])
+
+
 ## Prints the meta profile and the run's Soul Ash award (Meta.award_run()).
 func _print_soul_ash(summary: Dictionary) -> void:
 	print("[autotest] meta upgrades (--meta=%s): %s | revivals used: %d" % [
 		GameState.autotest_meta, game.meta.describe(), int(game.stats.get("revivals", 0.0))])
 	if not game.meta.is_empty():
 		_print_ossuary_totals()  # Only with upgrades: the default (--meta=none) summary keeps its lines.
+		_print_ossuary_options()
 	var ash: Dictionary = summary.get("soul_ash", {})
 	if ash.is_empty():
 		return

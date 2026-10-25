@@ -113,6 +113,11 @@
 ## above it. award_run() reports a newly opened level as "opened_tier". A save
 ## from before version 2 gets a Deathlord clear from its Deathlord's Due
 ## records (_load_clears()); its owned tiers are kept and nothing is refunded.
+## Ossuary new options (expansion step 3): the new upgrades are ordinary
+## [upgrades] keys (a missing key = level 0, so no save version bump); the
+## Dominion tree opens for buying once its boss was slain (tree_open(), read from
+## the stage records / the Hyper unlock), and purchase_block() answers "sealed"
+## before that; Elite Bounty raises the elites part of compute_ash().
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -264,7 +269,9 @@ func set_oath_active(t: int) -> bool:
 ## Stage objectives (the Sanctum's cleansed chambers and destroyed altars,
 ## the run stat "objective_ash") are one more part, "objectives", of the
 ## subtotal (0 on stages without them).
-static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
+## `elite_bonus` is the Elite Bounty upgrade's extra Soul Ash per elite (Ossuary
+## expansion step 3, MetaModifiers "elite_ash"): it raises the elites part itself.
+static func compute_ash(summary: Dictionary, ash_gain: float, elite_bonus: float = 0.0) -> Dictionary:
 	var st: Dictionary = summary.get("stats", {})
 	var countdown := float(summary.get("countdown", WaveData.RUN_DURATION))
 	var survived := minf(float(summary.get("time", 0.0)), countdown)
@@ -275,7 +282,7 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 	var parts := {
 		"time": floori(survived / 60.0 * MetaData.ASH_PER_MINUTE),
 		"kills": floori(float(kills) * MetaData.ASH_PER_KILL),
-		"elites": floori(float(elites) * MetaData.ASH_PER_ELITE),
+		"elites": floori(float(elites) * (MetaData.ASH_PER_ELITE + maxf(0.0, elite_bonus))),
 		"boss": floori(MetaData.ASH_BOSS_KILL) if boss else 0,
 		"reckoning": floori(past_zero * MetaData.ASH_PER_RECKONING_SECOND),
 		"objectives": floori(float(st.get("objective_ash", 0.0))),
@@ -332,7 +339,7 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 ## "achievements" (newly unlocked ids), "unlocked_stages" (stage ids opened
 ## by this run), "bounty" and "new_total" for the end screen / autotest.
 func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
-	var award := compute_ash(summary, mods.value("ash_gain") if mods != null else 0.0)
+	var award := compute_ash(summary, mods.value("ash_gain") if mods != null else 0.0, mods.value("elite_ash") if mods != null else 0.0)
 	var st: Dictionary = summary.get("stats", {})
 	var skins_before := unlocked_skin_ids()  # Skins owned before this run.
 	var was_locked := PackedStringArray()  # Stages still locked before this run.
@@ -932,12 +939,26 @@ func next_cost(id: String) -> int:
 	return -1 if is_maxed(id) else MetaData.tier_cost(id, tier(id) + 1)
 
 
+## True when tree `tree_id` may be bought from: it has no MetaData.TREE_GATES row,
+## or its boss was slain once (a kill in the record of a stage whose boss slot is
+## that boss, or the Hyper unlock when that boss is HyperData.UNLOCK_BOSS_ID: both
+## are already in every save, so no save change was needed). Ossuary expansion step 3.
+func tree_open(tree_id: String) -> bool:
+	if not MetaData.TREE_GATES.has(tree_id):
+		return true
+	var boss := String(MetaData.TREE_GATES[tree_id])  # The boss that opens it.
+	return _boss_slain_on_record(boss) or (boss == HyperData.UNLOCK_BOSS_ID and hyper_unlocked)
+
+
 ## Why `id` cannot be bought right now: "" (it can), "maxed", "locked"
-## (prerequisite missing), "gated" (its next level waits on a difficulty clear,
-## max_open_tier()) or "cost" (not enough Soul Ash).
+## (prerequisite missing), "sealed" (its tree waits on a boss, tree_open()),
+## "gated" (its next level waits on a difficulty clear, max_open_tier()) or
+## "cost" (not enough Soul Ash).
 func purchase_block(id: String) -> String:
 	if is_maxed(id):
 		return "maxed"
+	if not tree_open(String(MetaData.UPGRADES[id]["tree"])):
+		return "sealed"
 	if not prerequisite_met(id):
 		return "locked"
 	if tier(id) + 1 > max_open_tier():

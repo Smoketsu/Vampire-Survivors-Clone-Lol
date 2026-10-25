@@ -13,7 +13,11 @@
 ## opens the Ossuary over a sample save in memory (some upgrades bought, the
 ## Lich gate open with --open=7 (default), 5 / 9 / 10 likewise) and saves the
 ## window to PATH; --phone uses an 844 x 390 CSS px landscape phone at 2x with
-## the mobile UI scale (TouchData.UI_SCALE_MAX). tools/.gdignore keeps it out of exports.
+## the mobile UI scale (TouchData.UI_SCALE_MAX); --sealed keeps Dominion sealed (no
+## Seraphine kill) and --detail=ID shows that upgrade in the detail panel.
+## Step 3 (new options and Dominion) adds the option prices / gates, the mid / max
+## profiles, Elite Bounty's Soul Ash and the loadout checks.
+## tools/.gdignore keeps it out of exports.
 extends Node
 
 ## Failed checks (any failure exits 1).
@@ -26,6 +30,10 @@ var _shot: String = ""
 var _phone: bool = false
 ## Screenshot mode: the sample save's open level (5, 7, 9 or 10).
 var _open: int = 7
+## Screenshot mode: Dominion still sealed (--sealed: no Seraphine kill).
+var _sealed: bool = false
+## Screenshot mode: the upgrade shown in the detail panel (--detail=ID; "" = the default).
+var _detail: String = ""
 
 
 func _ready() -> void:
@@ -38,6 +46,10 @@ func _ready() -> void:
 			_phone = true
 		elif arg.begins_with("--open="):
 			_open = arg.get_slice("=", 1).to_int()
+		elif arg == "--sealed":
+			_sealed = true
+		elif arg.begins_with("--detail="):
+			_detail = arg.get_slice("=", 1)
 	call_deferred("_run")
 
 
@@ -51,6 +63,7 @@ func _run() -> void:
 		return
 	_check_data()
 	_check_gates()
+	_check_dominion()
 	_check_migration()
 	_check_purchase_and_refund()
 	_check_coop_loadout()
@@ -75,6 +88,7 @@ func _check(ok: bool, what: String) -> void:
 ## Levels 1-5 keep their prices and values; the deep levels follow the rule.
 func _check_data() -> void:
 	var listed_total := 0  # Price of every listed tier (the Ossuary before the expansion).
+	var options_total := 0  # Price of step 3's new options and third levels.
 	var new_total := 0  # Price of every new level.
 	var rows := PackedStringArray()  # The level table, one line per deep upgrade.
 	for id: String in MetaData.UPGRADE_ORDER:
@@ -82,10 +96,14 @@ func _check_data() -> void:
 			continue
 		var def: Dictionary = MetaData.UPGRADES[id]
 		var costs: Array = def["costs"]
+		var old_levels := 0 if MetaData.OPTIONS_UPGRADES.has(id) else int(MetaData.OPTIONS_EXTRA_LEVELS.get(id, costs.size()))  # Levels from before step 3.
 		for t in range(1, costs.size() + 1):
 			_check(MetaData.tier_cost(id, t) == int(costs[t - 1]), "%s level %d keeps its price" % [id, t])
 			_check(is_equal_approx(MetaData.value_at(id, t), float(def["per_tier"]) * float(t)), "%s level %d keeps its value" % [id, t])
-			listed_total += int(costs[t - 1])
+			if t <= old_levels:
+				listed_total += int(costs[t - 1])
+			else:
+				options_total += int(costs[t - 1])
 		if not MetaData.DEEP_UPGRADES.has(id):
 			_check(MetaData.max_tier(id) == costs.size(), "%s keeps %d levels" % [id, costs.size()])
 			continue
@@ -108,11 +126,28 @@ func _check_data() -> void:
 		print("[ossuary_check] " + r)
 	print("[ossuary_check] totals: levels 1-5 %d, new levels %d, all %d (Oath excluded), %d tiers" % [
 		listed_total, new_total, listed_total + new_total, MetaData.total_tiers()])
-	_check(MetaData.max_total_cost() == listed_total + new_total + 375, "max_total_cost() = all + the Oath's 375")
+	print("[ossuary_check] new options (step 3): %d upgrades + 2 third levels, %d Soul Ash; everything %d (Oath excluded)" % [
+		MetaData.OPTIONS_UPGRADES.size(), options_total, listed_total + new_total + options_total])
+	_check(options_total == 9060, "the new options cost 9,060 in all (got %d)" % options_total)
+	for id: String in MetaData.OPTIONS_UPGRADES:
+		_check(MetaData.UPGRADES.has(id) and MetaData.UPGRADE_ORDER.has(id), "%s is an upgrade" % id)
+		_check(not MetaData.DEEP_UPGRADES.has(id) and MetaData.max_tier(id) <= 5, "%s has 1-5 levels, no deep ones" % id)
+		_check(MetaData.STATS.has(String(MetaData.UPGRADES[id]["stat"])), "%s raises a known stat" % id)
+		_check(MetaData.TREE_ORDER.has(String(MetaData.UPGRADES[id]["tree"])), "%s is in a tree" % id)
+	_check(MetaData.upgrades_in("dominion").size() == 3, "Dominion has three upgrades")
+	_check(MetaData.max_total_cost() == listed_total + new_total + options_total + 375, "max_total_cost() = all + the Oath's 375")
 	var mid := MetaData.autotest_tiers("mid")  # The mid profile must not change.
 	_check(int(mid.get("necrotic_marrow", 0)) == 3 and int(mid.get("grave_call", 0)) == 2 and int(mid.get("quickened_rites", 0)) == 2, "--meta=mid unchanged")
+	_check(int(mid.get("fates_thread", 0)) == 1 and int(mid.get("banishing_rite", 0)) == 1, "--meta=mid keeps Fate's Thread / Banishing Rite at 1")
+	for id: String in MetaData.OPTIONS_UPGRADES:
+		_check(int(mid.get(id, 0)) == 0, "--meta=mid leaves out %s" % id)
 	var mx := MetaData.autotest_tiers("max")
 	_check(int(mx.get("necrotic_marrow", 0)) == 10 and int(mx.get("legion_of_bone", 0)) == 1 and not mx.has(PactData.OATH_ID), "--meta=max = every level")
+	_check(int(mx.get("head_start", 0)) == 2 and int(mx.get("fates_thread", 0)) == 3, "--meta=max includes the new options")
+	# Elite Bounty raises the elites part of the Soul Ash formula (ash per elite).
+	var summary := {"stats": {"elite_kills": 10.0}, "time": 60.0}
+	_check(int(Meta.compute_ash(summary, 0.0)["parts"]["elites"]) == 40, "elites pay 4 each")
+	_check(int(Meta.compute_ash(summary, 0.0, 3.0)["parts"]["elites"]) == 70, "Elite Bounty III: 7 each")
 
 
 # --- Gates --------------------------------------------------------------------------
@@ -142,6 +177,25 @@ func _check_gates() -> void:
 	Meta._reset()
 	Meta._record_clear(_win("deathlord", true))
 	_check(Meta.max_open_tier() == 10, "a Deathlord + Hyper clear alone opens everything")
+
+
+# --- Dominion (new options, step 3) -------------------------------------------------
+
+func _check_dominion() -> void:
+	Meta._reset()
+	Meta.soul_ash = 100000
+	_check(not Meta.tree_open("dominion") and Meta.tree_open("necromancy"), "fresh save: Dominion sealed, the four trees open")
+	_check(Meta.purchase_block("head_start") == "sealed" and not Meta.purchase("head_start"), "a sealed Dominion upgrade is refused")
+	_check(Meta.purchase("bone_reserve") and Meta.purchase("elite_bounty"), "the new tree options buy")
+	_check(Meta.purchase_block("echo_weaving") == "locked", "Echo Weaving needs Umbral Potency II")
+	(Meta.stage_records["sanctum"] as Dictionary)["boss_kills"] = 1.0  # Seraphine slain once.
+	_check(Meta.tree_open("dominion") and Meta.purchase("head_start"), "a Seraphine kill opens Dominion")
+	Meta._reset()
+	Meta.hyper_unlocked = true  # The same boss through the Hyper unlock.
+	_check(Meta.tree_open("dominion"), "the Hyper unlock opens Dominion too")
+	var mods := MetaModifiers.from_tiers({"head_start": 2, "last_rites": 3, "grave_ward": 2, "gilded_chests": 1})
+	_check(mods.int_value("head_start") == 2 and is_equal_approx(mods.value("last_rites"), 3.0) and mods.int_value("ward_hits") == 2 and is_equal_approx(mods.value("gilded_chance"), 0.15), "the new stats sum")
+	Meta._reset()
 
 
 # --- Migration ----------------------------------------------------------------------
@@ -247,6 +301,9 @@ func _check_coop_loadout() -> void:
 	var m := MetaModifiers.from_tiers(lv)
 	_check(int(m.tiers.get("necrotic_marrow", 0)) == 10 and is_equal_approx(m.value("minion_hp"), MetaData.value_at("necrotic_marrow", 10)), "the partner's level 10 applies")
 	_check(is_equal_approx(m.value("damage_reduction"), 0.12 + 4.0 * 0.015), "the partner's Bone Mail 8 applies")
+	var lo2 := {"meta_levels": {"commanders_presence": 3, "head_start": 1}}
+	var m2 := MetaModifiers.from_tiers(CoopNet._clean_loadout(lo2, 1)["meta_levels"])
+	_check(is_equal_approx(m2.value("presence_damage"), 0.03) and m2.int_value("head_start") == 1, "the co-op loadout carries the new options")
 
 
 # --- Screenshot mode ---------------------------------------------------------------------
@@ -263,10 +320,15 @@ func _screenshot() -> void:
 	var sample := {"necrotic_marrow": 7, "sharpened_bones": 5, "grave_call": 3, "risen_vanguard": 2,
 		"umbral_potency": 6, "quickened_rites": 4, "widening_dark": 2, "restless_shade": 3,
 		"grave_flesh": 5, "bone_mail": 4, "fleet_shade": 3, "undying_will": 1,
-		"soul_magnet": 4, "grave_tithe": 3, "ash_harvest": 2, "fates_thread": 1, "profane_oath": 2}
+		"soul_magnet": 4, "grave_tithe": 3, "ash_harvest": 2, "fates_thread": 1, "profane_oath": 2,
+		"bone_reserve": 2, "dark_tithe": 1, "last_rites": 3, "elite_bounty": 1, "head_start": 1}
 	for id: String in sample:
 		Meta.tiers[id] = mini(int(sample[id]), maxi(_open, MetaData.UNGATED_MAX_TIER))  # Never above the sample's open level.
 	Meta.oath_active = 2
+	if _sealed:
+		Meta.tiers["head_start"] = 0  # Dominion still sealed (no Seraphine kill).
+	else:
+		(Meta.stage_records["sanctum"] as Dictionary)["boss_kills"] = 1.0  # Seraphine slain: Dominion open.
 	match _open:
 		7:
 			Meta._record_clear(_win("lich", false))
@@ -287,6 +349,8 @@ func _screenshot() -> void:
 	menu._show_detail("necrotic_marrow")  # A gated tile in the detail panel (Lich open: level 8 waits on Deathlord).
 	if _open == 5:
 		menu._show_detail("sharpened_bones")
+	if _detail != "" and MetaData.UPGRADES.has(_detail):
+		menu._show_detail(_detail)
 	for i in 10:
 		await get_tree().process_frame
 	await RenderingServer.frame_post_draw

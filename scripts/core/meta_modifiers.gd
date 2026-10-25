@@ -69,13 +69,15 @@ func capacity_bonus(cls: String) -> int:
 
 
 ## Sets the necromancer's run-start stats: max HP (+flat), move speed and
-## pickup radius (+%), and the number of revivals.
+## pickup radius (+%), the number of revivals and the Grave Ward hits (Ossuary
+## expansion step 3; CombatResolver.damage_player() spends them).
 func apply_to_player(p: Necromancer) -> void:
 	p.max_hp = PlayerData.MAX_HP + value("max_hp")
 	p.hp = p.max_hp
 	p.move_speed = PlayerData.MOVE_SPEED * (1.0 + value("move_speed"))
 	p.pickup_radius = PlayerData.PICKUP_RADIUS * (1.0 + value("pickup_radius"))
 	p.revives_left = int_value("revives")
+	p.ward_hits_left = int_value("ward_hits")
 
 
 ## "id:tier" list of the active upgrades (autotest summary).
