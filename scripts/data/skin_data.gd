@@ -82,6 +82,8 @@ const HYPER_NAMES := {
 	"rust_prophet": "Gilded Prophet",  # TUNING (not in GDD)
 	# --- Act IV: the Shores of Ilion ---
 	"doomed_prophetess": "Gilded Sibyl",  # TUNING (not in GDD)
+	# --- Act IV: Mount Olympus ---
+	"oathbreaker": "Gilded Oathbreaker",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -112,6 +114,8 @@ const HYPER_TINTS := {
 	"rust_prophet": Color(1.2, 1.05, 0.6),  # TUNING (not in GDD) gilded brass (the drawn skin replaces the tint)
 	# --- Act IV: the Shores of Ilion ---
 	"doomed_prophetess": Color(1.2, 1.05, 0.65),  # TUNING (not in GDD) gilded (the fallback tint; her Hyper skin has its own art)
+	# --- Act IV: Mount Olympus ---
+	"oathbreaker": Color(1.2, 1.05, 0.6),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD

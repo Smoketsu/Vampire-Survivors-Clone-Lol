@@ -316,6 +316,9 @@ func _ready() -> void:
 		# --- Act IV: the Shores of Ilion ---
 		"ilion":
 			ground = IlionGround.new()  # Act IV: the Shores of Ilion's four zone floors (IlionStage.ZONES).
+		# --- Act IV: Mount Olympus ---
+		"olympus":
+			ground = OlympusGround.new()  # Act IV: Mount Olympus's four zone floors.
 		_:
 			ground = Ground.new()
 	add_child(ground)

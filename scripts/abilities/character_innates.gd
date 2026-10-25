@@ -52,6 +52,10 @@
 ##                    "scrap_bolt", a minion special source) every
 ##                    risen_bolt_interval s at the nearest foe within
 ##                    ScrapSwarmData.PROPHET_RANGE px; stat prophet_scrap_bolts.
+## Act IV, Mount Olympus:
+##   Oathbreaker      Kinslayer       StolenThunder._hit(): thunder_divine_bonus
+##                    more Stolen Thunder damage on bosses, minibosses (the
+##                    gods) and Heroes (kinslayer_hits).
 class_name CharacterInnates
 extends Node2D
 
@@ -364,6 +368,9 @@ func summary_line() -> String:
 		# --- Act IV: the Shores of Ilion ---
 		"foretold_fall":
 			counters = "champion bonus dmg %d (arrow hits %d)" % [int(st.get("prophetess_bonus_dmg", 0.0)), int(st.get("paris_hits", 0.0))]
+		# --- Act IV: Mount Olympus ---
+		"kinslayer":
+			counters = "kinslayer hits %d (thunder strikes %d)" % [int(st.get("kinslayer_hits", 0.0)), int(st.get("thunder_strikes", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

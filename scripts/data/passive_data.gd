@@ -110,6 +110,20 @@
 ##                       multiplier in CombatResolver.damage_unit() for ranged
 ##                       sources, CombatResolver.is_ranged_source()). Evolves
 ##                       nothing.
+## plus Mount Olympus's two (Act IV, GDD §15.0 "Stolen Thunder, Titan's Blood and
+## the Oathbreaker" and "Twilight of the Gods and Grounded Bones"; both locked
+## until earned, UnlockData):
+##   Titan's Blood     — Stolen Thunder chains more hops and charges faster
+##                       (thunder_chains / thunder_charge in
+##                       AbilityManager.apply_spell_mods(); evolves Stolen
+##                       Thunder into Gigantomachy). Unlocked with the spell by
+##                       slaying Zeus.
+##   Grounded Bones    — an Act IV counter-passive ("act": 4, offered only on
+##                       Act IV stages; unlocked by the achievement Twilight of
+##                       the Gods): less lightning and wave damage (the Wrath of
+##                       the Gods) to the army and the necromancer
+##                       (DivineWrath.grounded_mult(), the one read, per target
+##                       slot). Evolves nothing.
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -147,7 +161,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act III: the Iron Citadel ---
 	"machine_soul", "recoil_frame",
 	# --- Act IV: the Shores of Ilion ---
-	"mortal_heel", "bronze_breaker"]
+	"mortal_heel", "bronze_breaker",
+	# --- Act IV: Mount Olympus ---
+	"titans_blood", "grounded_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -1008,6 +1024,47 @@ const PASSIVES := {
 			{"front_damage": 0.6},  # TUNING (not in GDD)
 			{"front_damage": 0.8},  # TUNING (not in GDD)
 			{"front_damage": 1.0},  # TUNING (not in GDD) a front shot 10% -> 20%, a front blow x2
+		],
+	},
+	# --- Act IV: Mount Olympus ---
+	# Titan's Blood (owner-approved Act IV proposal: Stolen Thunder's paired
+	# passive; unlocked with the spell by slaying Zeus): the blood of the giants
+	# the gods buried: Stolen Thunder chains `chain_bonus` more hops and its
+	# charge is `charge_cut` shorter (AbilityManager.apply_spell_mods()). Pairs
+	# with Stolen Thunder -> Gigantomachy.
+	"titans_blood": {
+		"display_name": "Titan's Blood",
+		"icon": "titans_blood",
+		"description": "Your Stolen Thunder charges faster and leaps to more armoured foes.",
+		"labels": {"chain_bonus": ["Extra chain hops", "int"], "charge_cut": ["Charge time", "neg_pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"chain_bonus": 0.0, "charge_cut": 0.08},  # TUNING (not in GDD)
+			{"chain_bonus": 1.0, "charge_cut": 0.14},  # TUNING (not in GDD)
+			{"chain_bonus": 1.0, "charge_cut": 0.2},  # TUNING (not in GDD)
+			{"chain_bonus": 2.0, "charge_cut": 0.26},  # TUNING (not in GDD)
+			{"chain_bonus": 2.0, "charge_cut": 0.32},  # TUNING (not in GDD)
+		],
+	},
+	# Grounded Bones (owner-approved Act IV proposal: "less lightning and wave
+	# damage to the army"; Act IV's counter-passive, offered only in Act IV,
+	# unlocked by the achievement Twilight of the Gods): the share of the
+	# Wrath of the Gods' lightning and wave damage the necromancer and his army
+	# no longer take (DivineWrath.grounded_mult(), the one read, per target
+	# slot; PantheonRulesData.GROUNDED_BONES_KEY). The fissures are not cut.
+	"grounded_bones": {
+		"display_name": "Grounded Bones",
+		"icon": "grounded_bones",
+		"description": "The gods' lightning and waves hurt you and your dead less.",
+		"labels": {"wrath_reduction": ["Lightning and wave damage", "neg_pct"]},
+		"act": 4,  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"wrath_reduction": 0.1},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.2},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.3},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.4},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.5},  # TUNING (not in GDD)
 		],
 	},
 }

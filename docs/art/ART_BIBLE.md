@@ -1996,3 +1996,43 @@ stand; the violet characters fail the same floors), Achilles' strike pose and th
 
 Code-drawn on purpose: the boulders (held and in flight), the landing circles and stomps, the testudo's raised
 roof, the siege tower's dust and ruts, Achilles' heel mark and front arc, Paris's Arrow's ghost arrows and trails.
+### Act IV: Mount Olympus (Stage 11; Act IV phase 2, Oct 2026)
+
+<!-- --- Act IV: Mount Olympus --- -->
+The Pantheon Trial's art (GDD §15.0 "Mount Olympus art (Act IV phase 2)"), in the Republic's style above. The
+gods and Zeus are bigger than any soldier (92–124 px; the colossal form 176) and wear the act's gold; Artemis, the
+Amazon and the Gorgon are in the **figure-redesign style** (bust bounce in the walk, a 24-frame idle breathing
+strip). Units and characters: `tools/gen_image.py` with `--ref art_source/pantheon/hero.png` (the pixel look) and a
+crop of the concept lineup or the concept boss scene for the costume (prompts beside each source); Zeus's cast pose
+and colossal form and the Oathbreaker's three skins are edits with the approved source attached. Conversion: a
+pre-snap (alpha cut 230; lit skin to `skin` / `brown_light`; near-white, low-saturation pixels to the nearest marble
+shade), then `prepare_sprite.py --ink-l 0.15` with explicit `--ramps`, `--no-levels` for Artemis, Poseidon, Zeus, the
+Amazon and the Gorgon (their gold and skin). Fixes: Ares's dark red cloak re-snapped to the `grey` ramp before
+conversion (never the Covenant's crimson; it also parts him from his bronze); the AI's navy rim around Zeus's three
+sprites stripped and re-outlined in bronze ink, the stills dropped onto the bottom row. Obstacles are drawn on the
+grid by `tools/olympus_props.py` (deterministic, no API image). 19 API images, about **$0.53**. **For the owner's
+review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `pantheon/ares` | Ares, God of War (god, male): crested bronze Corinthian helmet with gold crest and eye slits, bronze armour, iron-grey cloak, a long spear held low for the charge, a round shield | 94x96 | legs walk (the spear tip rigid) |
+| `pantheon/artemis` | Artemis, the Huntress (goddess, female, figure redesign): ponytail, silver crescent circlet, short white chiton with a gold belt, laced sandals, drawing a tall silver bow | 58x92 | legs walk + bust (rows 27-36), idle breathing |
+| `pantheon/poseidon` | Poseidon, Lord of the Sea (god, male): sea-green hair and beard, gold crown, Aegean and sea-green robe, a gold trident | 68x100 | robe walk (the trident rigid) |
+| `bosses/zeus` (+ `_cast`) | Zeus, King of the Gods: white hair and beard, gold laurel crown, glowing blue eyes, white toga with gold belt and hem, a thunderbolt at his side; `_cast` the bolt raised above his head (BossPoseData 1) | 88x124 / 100x128 | robe walk (the bolt rigid) |
+| `bosses/zeus_colossus` | Zeus's true form: a marble giant veined with blue lightning, a cloud beard, gold crown and bands, lightning around one fist | 164x176 | legs walk |
+| `pantheon/centaur_archer` | Centaur Archer (male): bronze cuirass and crested helmet, a bow drawn forward, a brown horse body mid-gallop | 54x60 | legs walk (front and back leg pairs) |
+| `pantheon/amazon` | Amazon (female, figure redesign): Aegean-crested bronze helmet over long hair, bronze breastplate, Aegean war skirt, a double axe and a crescent shield | 50x54 | legs walk + bust (rows 17-24), idle breathing |
+| `pantheon/gorgon` | Gorgon (female, figure redesign): living snakes for hair, pale green skin, gold eyes, white chiton with gold, a coiled serpent tail | 40x54 | robe (tail) sway + bust (rows 22-30), idle breathing |
+| `pantheon/moon_hound` | Hound of Artemis: a lean silver greyhound with pale-blue eyes and a crescent collar | 28x30 | legs walk |
+| `pantheon/sea_serpent` | Sea Serpent: Aegean scales, a pale belly, a finned head, reared over its coil | 46x64 | robe sway |
+| `player/oathbreaker` | The Oathbreaker (male, a fallen demigod): cracked bronze laurel, violet hooded cloak over tarnished bronze, a staff with a stolen thunderbolt bound in violet cords | 52x58 | robe walk |
+| `player/oathbreaker_hyper` / `_untouchable` / `_deathlord` | Gilded Oathbreaker (gold armour and laurel, sun emblem), Untouchable (white phantom with pale-blue trims), Deathlord (black iron and crimson, spiked crown) | 58 / 58 / 60 | walk through `SKINS` |
+| `tiles/olympus_field`, `_grove`, `_terrace`, `_summit` | The four zone floors: trampled earth and dry grass; moss and cypress needles; marble courses; square marble slabs with dark gold joints | 128 | `make_tile.py` (`# --- Act IV: Mount Olympus ---`); the decals stay code-drawn |
+| `obstacles/war_trophy_{s,m,l}`, `cypress_{s,m,l}`, `moon_shrine_{s,l}`, `fountain_{s,l}`, `broken_column_{s,m,l}`, `bronze_brazier_{s,l}` | A trophy post with a shield, crossed spears and a crested helmet; a dark cypress; a marble shrine with a silver crescent; a marble fountain basin; a broken fluted column; a bronze brazier with fire | footprint + 2 wide | circles, `tools/olympus_props.py` |
+| `obstacles/chariot_wreck_{s,l}`, `balustrade_{s,m,l}`, `marble_block_{s,m,l}` (+ `_v`) | A bronze war chariot on its side with a broken wheel; a marble terrace balustrade; a fallen marble block with a gold band and a crack | long side + 4 x short; `_v` short + 2 wide | rects, `tools/olympus_props.py` |
+| `icons/stolen_thunder`, `titans_blood`, `grounded_bones` | Violet badges: a bolt in a violet hand; a violet drop of blood with a spark; a ribcage under a lightning rod | 32 | symbol sheet split, each pixelated to 24 px on the frame of `machine_soul` |
+| `icons/gigantomachy`, `ach_twilight_of_the_gods` | Gold badges: a titan's fist among bolts; a cracked laurel over a setting sun | 32 | on the frame of `ach_nothing_is_deathless` |
+
+Code-drawn on purpose: the lightning storms' circles (the wrath's), the thunderbolt beam and its lanes, the
+trident in flight, the war-cry ring, the volley's aim fan, the gaze cone, the leap arc and landing circle, the
+moonlit groves, Stolen Thunder's charging orb and its arcs.

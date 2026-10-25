@@ -117,6 +117,14 @@ const UNLOCKS := {
 	"paris_arrow": {"type": "spell", "boss": "achilles", "text": "Slay Achilles on the Shores of Ilion to unlock."},  # Owner-approved Act IV proposal
 	"mortal_heel": {"type": "passive", "boss": "achilles", "text": "Slay Achilles on the Shores of Ilion to unlock."},  # Paris's Arrow's paired passive, unlocked with it
 	"bronze_breaker": {"type": "passive", "achievement": "heel_found", "text": "Earn Heel Found: slay Achilles with a blow to his back or heel."},  # Owner-approved Act IV proposal
+	# --- Act IV: Mount Olympus ---
+	# Zeus's fall (owner-approved Act IV proposal "Rewards": Stolen Thunder is
+	# unlocked by Zeus) with its paired passive, offered on every stage; the
+	# stage's achievement Twilight of the Gods earns Act IV's counter-passive
+	# Grounded Bones (offered only in Act IV through its card row's "act").
+	"stolen_thunder": {"type": "spell", "boss": "zeus", "text": "Slay Zeus on Mount Olympus to unlock."},  # Owner-approved Act IV proposal
+	"titans_blood": {"type": "passive", "boss": "zeus", "text": "Slay Zeus on Mount Olympus to unlock."},  # Stolen Thunder's paired passive, unlocked with it
+	"grounded_bones": {"type": "passive", "achievement": "twilight_of_the_gods", "text": "Earn Twilight of the Gods: clear the Pantheon Trial on Mount Olympus."},  # Owner-approved Act IV proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

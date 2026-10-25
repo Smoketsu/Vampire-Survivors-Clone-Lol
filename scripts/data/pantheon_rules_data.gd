@@ -259,4 +259,18 @@ const SOUNDS := {
 	"siege_collapse": "siege_collapse",  # SoundData.PANTHEON_SOUNDS: a siege tower crashes down (IlionDirector)
 	"heel_struck": "heel_struck",  # SoundData.PANTHEON_SOUNDS: a blow to Achilles' back or heel staggers him
 	"achilles_rage": "achilles_rage",  # SoundData.PANTHEON_SOUNDS: Achilles' war cry as his rage begins
+	# --- Act IV: Mount Olympus --- (the Pantheon Trial's gods and kinds; SoundData.PANTHEON_SOUNDS)
+	"ares_warcry": "ares_warcry",  # AresKit: the war-cry
+	"ares_charge": "ares_charge",  # AresKit: the spear charge
+	"artemis_horn": "artemis_horn",  # ArtemisKit: her arrival, the hounds
+	"artemis_blink": "artemis_blink",  # ArtemisKit: the teleport
+	"artemis_volley": "artemis_volley",  # ArtemisKit: the moonlit volley
+	"poseidon_trident": "poseidon_trident",  # PoseidonKit: the trident throw
+	"serpent_rise": "serpent_rise",  # PoseidonKit: the sea serpent
+	"gorgon_gaze": "gorgon_gaze",  # GorgonKit: the gaze winds up
+	"petrify": "petrify",  # GorgonKit: summons turned to stone
+	"amazon_leap": "amazon_leap",  # AmazonKit: the leap
+	"zeus_cast": "zeus_cast",  # BossZeus: a storm or the beam winds up
+	"zeus_beam": "zeus_beam",  # BossZeus: the thunderbolt beam
+	"zeus_transform": "zeus_transform",  # BossZeus: the true form
 }

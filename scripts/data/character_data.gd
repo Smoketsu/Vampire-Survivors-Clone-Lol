@@ -62,7 +62,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act III: the Iron Citadel ---
 	"rust_prophet",
 	# --- Act IV: the Shores of Ilion ---
-	"doomed_prophetess"]
+	"doomed_prophetess",
+	# --- Act IV: Mount Olympus ---
+	"oathbreaker"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -108,6 +110,8 @@ const STAT_LABELS := {
 ##                           between a temporary Risen's scrap bolts; Act III)
 ##   risen_bolt_damage       CharacterInnates (damage of each scrap bolt, before
 ##                           the Risen's own summon bonuses)
+##   thunder_divine_bonus    StolenThunder._hit (extra damage fraction on bosses,
+##                           minibosses and Heroes; Act IV)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -125,7 +129,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act III: the Iron Citadel ---
 	"risen_bolt_interval", "risen_bolt_damage",
 	# --- Act IV: the Shores of Ilion ---
-	"arrow_elite_bonus"]
+	"arrow_elite_bonus",
+	# --- Act IV: Mount Olympus ---
+	"thunder_divine_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -443,6 +449,25 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail seer with a wide sight
 		"sprite": "player/doomed_prophetess",
 		"tint": Color(0.62, 0.48, 0.92),  # TUNING (not in GDD) twilight violet
+	},
+	# --- Act IV: Mount Olympus ---
+	# The Oathbreaker (Stolen Thunder's character; owner-approved Act IV
+	# proposal: "a fallen demigod", male; his spell must be unlocked first, by
+	# Zeus). A son of Zeus who swore to guard the dead and broke the oath to
+	# raise them: he stole a bolt from his father's hand on the way down, and
+	# it strikes hardest at his own kin (StolenThunder reads the innate).
+	"oathbreaker": {
+		"display_name": "The Oathbreaker",
+		"title": "He swore to guard the dead. Now he leads them against his father.",
+		"spell": "stolen_thunder",
+		"innate": {
+			"id": "kinslayer", "name": "Kinslayer",
+			"description": "Your Stolen Thunder strikes bosses, gods and Heroes harder.",
+			"values": {"thunder_divine_bonus": 0.35},  # TUNING (not in GDD) +35% Stolen Thunder damage on bosses, minibosses and Heroes
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) a demigod's body, heavy bronze
+		"sprite": "player/oathbreaker",
+		"tint": Color(0.85, 0.72, 0.45),  # TUNING (not in GDD) tarnished bronze over the violet
 		"starts_unlocked": false,
 	},
 }

@@ -31,4 +31,6 @@ const POSES: Dictionary = {
 	"bosses/deus_ex_machina": {1: "fire"},  # TUNING (not in GDD) the Walker firing: chaingun spun up, missile pods open (BossDeusExMachina)
 	# --- Act IV: the Shores of Ilion ---
 	"bosses/achilles": {3: "strike"},  # TUNING (not in GDD) the low spear lunge (BossAchilles: the lunge's windup, run and recovery; his rage form is its own still, bosses/achilles_rage)
+	# --- Act IV: Mount Olympus ---
+	"bosses/zeus": {1: "cast"},  # TUNING (not in GDD) the thunderbolt raised to call a storm or the beam (BossZeus; his true form is its own still, bosses/zeus_colossus)
 }

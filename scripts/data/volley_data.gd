@@ -283,6 +283,9 @@ const SPELLS := {
 	# --- Act IV: the Shores of Ilion ---
 	"paris_arrow": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [2, 3, 5], "speed": 300.0,
 		"life": 1.2, "share": 0.35, "pierce": 0, "radius": 3.5, "style": "spark", "color": Color(0.80, 0.62, 1.0), "homing": 6.0},  # TUNING (not in GDD) a few small violet ghost darts seeking the strongest foe
+	# --- Act IV: Mount Olympus ---
+	"stolen_thunder": {"every": 1, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [3, 5, 7], "speed": 300.0,
+		"life": 0.9, "share": 0.2, "pierce": 0, "radius": 3.5, "style": "spark", "color": Color(0.435, 0.714, 0.910), "homing": 8.0},  # TUNING (not in GDD) Aegean sparks that seek the strongest foe with each bolt
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

@@ -23,6 +23,9 @@
 ## plus Act III's unlockable spells (owner-approved Act III proposal; each with a
 ## NEW paired passive, unlocked with its spell):
 ##   Death Ray         + Conductive Marrow     = Event Horizon
+## plus Act IV's unlockable spells (owner-approved Act IV proposal "Rewards";
+## each with a NEW paired passive, unlocked with its spell):
+##   Stolen Thunder    + Titan's Blood         = Gigantomachy
 ##
 ## Evolution condition (GDD open question 27; decisions recorded in GDD
 ## §15.0): the base spell is at its max level (5), the paired passive is at
@@ -67,7 +70,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act III: the Scrap Wastes ---
 	"event_horizon",
 	# --- Act III: the Iron Citadel ---
-	"deathless_swarm"]
+	"deathless_swarm",
+	# --- Act IV: Mount Olympus ---
+	"gigantomachy"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -412,6 +417,26 @@ const EVOLUTIONS := {
 			"damage": 64.0, "arrows": 4, "cooldown": 1.9, "range": 420.0, "flight": 0.45,  # TUNING (not in GDD)
 			"fate_jumps": 3,  # TUNING (not in GDD) the evolution flag: a killing arrow flies on, at most this many times
 			"fate_range": 220.0,  # TUNING (not in GDD) px from the body to its next target
+		},
+	},
+	# --- Act IV: Mount Olympus ---
+	# Gigantomachy (owner-approved Act IV proposal: Stolen Thunder + Titan's
+	# Blood, a NEW passive, owner rule: at Lv 5): the war of the giants. Each
+	# strike also hurls `giants` more bolts at the next strongest foes (each
+	# chaining the same way), and every hop cracks a thunderclap of `clap_share`
+	# of the hop's damage within `clap_radius` px. Detected by the "giants" key.
+	"gigantomachy": {
+		"base": "stolen_thunder",
+		"passive": "titans_blood",
+		"display_name": "Gigantomachy",
+		"icon": "gigantomachy",
+		"description": "Three stolen bolts fall at once, and every leap of the lightning cracks a thunderclap.",
+		"labels": {"damage": "Bolt damage", "giants": "Extra bolts", "thunder_chains": "Chain hops", "cooldown": "Bolts every (s)", "clap_share": "Thunderclap damage"},
+		"stats": {
+			"damage": 150.0, "cooldown": 2.6, "thunder_charge": 0.6, "range": 480.0, "thunder_chains": 5, "chain_range": 190.0, "chain_falloff": 0.1, "armour_bonus": 0.4,  # TUNING (not in GDD)
+			"giants": 2,  # TUNING (not in GDD) the evolution flag: extra bolts per strike
+			"clap_share": 0.4,  # TUNING (not in GDD) share of the hop's damage
+			"clap_radius": 46.0,  # TUNING (not in GDD) px
 		},
 	},
 }

@@ -112,6 +112,10 @@
 ##                        walls, Polyphemus the Cyclops; its "siege_towers" /
 ##                        "polyphemus" events); ground "ilion" is its
 ##                        IlionGround (four zone floors).
+## --- Act IV: Mount Olympus ---
+##   olympus            — OlympusDirector config (OlympusStage.OLYMPUS: the
+##                        Pantheon Trial's gods, Artemis's groves); ground
+##                        "olympus" is its OlympusGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

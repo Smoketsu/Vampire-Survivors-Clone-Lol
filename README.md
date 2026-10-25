@@ -1623,6 +1623,47 @@ wrath is **Poseidon's waves** (every 90 s; lure the shield walls into them).
   stage. Its character is **the Doomed Prophetess**, a dead seer of Troy (innate *Foretold Fall*: her
   arrows strike elites, champions and bosses 30% harder; Hyper skin *Gilded Sibyl*, and the Untouchable
   and Deathlord skins).
+### Stage 11: Mount Olympus, the Pantheon Trial (Act IV, built, not yet playable)
+
+<!-- --- Act IV: Mount Olympus --- -->
+The owner's boss rush (GDD §15.0 "Mount Olympus (Act IV phase 2)" and the rows after it): the stage climbs
+the mountain under **Zeus's lightning** (bronze draws it, so lure the hoplites, centaurs, Amazons and even
+Ares under the storm), and each zone has its god. Unlocked by slaying Achilles; still "Coming soon" until
+the lead's Act IV pass. `--stage=olympus` runs it.
+
+- **Zones (clock-driven):** the **Field of Ares** (20:00, war-trampled earth, trophies of captured shields,
+  wrecked chariots), the **Groves of Artemis** (9:30, moonlit cypress and moss, small moon shrines), the
+  **Terraces of Poseidon** (6:00, wet marble terraces, fountains and balustrades) and the **Summit** (3:00,
+  storm-dark marble with gold joints, broken columns, braziers).
+- **The Pantheon Trial.** Three gods come down one at a time, each with **a third of Zeus's HP** (with the
+  boss's HP scaling, so it holds whenever they arrive), the HUD's miniboss bar (handed back to an older god
+  still alive) and **a chest**: **Ares, God of War** (14:00 left) cries war (every soldier on screen hits
+  harder and runs faster for 8 s) and charges with his spear down a marked lane; a heavy blocker (Warriors,
+  Abominations, the Golem) **impales** him: the charge stops, he is hurt and stunned. **Artemis, the
+  Huntress** (9:30; figure-redesign style) looses fans of moonlit arrows, calls her hounds and **steps from
+  grove to grove** (four moonlit rings are laid around you; crowd her with summons and she vanishes sooner).
+  **Poseidon, Lord of the Sea** (6:00) **floods half the arena** (a wall of water through the Wrath of the
+  Gods' own wave, from his side across you), throws his **trident** down a marked lane and raises a **sea
+  serpent** at two thirds and one third of his HP. Slay all three gods and Zeus in one run and the trial is
+  cleared.
+- **Zeus, King of the Gods** (3:00): **lightning storms** (marked circles around you, through the wrath:
+  they also chain through his own bronze host), the **thunderbolt beam** (a marked lane, then a white beam;
+  three lanes from the Storm Throne, below two thirds), and below a third he takes his **true colossal
+  form** (a marble giant veined with lightning: slower, heavier, a **Thunder Stomp** around him, bolts
+  raining faster).
+- **Kinds:** the **Centaur Archer** (fires while galloping straight at you; never slows to shoot), the
+  **Amazon** (elite, figure-redesign style: leaps over your front row onto a marked circle; a heavy
+  blocker under her landing catches her, stunned) and the **Gorgon** (elite, figure-redesign style: a
+  marked gaze cone turns every summon in it to **stone for 3 s**, and hurts you: kill her first or Grave
+  Step out of the cone); plus Artemis's **Hounds** and Poseidon's **Sea Serpent** (it lunges down a lane).
+- **Rewards.** Zeus unlocks **Stolen Thunder** (a charged bolt strikes the strongest foe and leaps on to
+  armoured ones, who take more; offered on every stage) with its paired passive **Titan's Blood** (more
+  hops, a faster charge); both at Lv 5 evolve it into **Gigantomachy** (three bolts at once, each hop
+  cracks a thunderclap). Its character, **the Oathbreaker** (a fallen demigod; innate **Kinslayer**: the
+  bolt strikes bosses, gods and Heroes 35% harder), with his Gilded, Untouchable and Deathlord skins. The
+  achievement **Twilight of the Gods** (clear the Pantheon Trial: a victory on Mount Olympus) unlocks the
+  Act IV counter-passive **Grounded Bones** (less lightning and wave damage to you and your army; offered
+  only in Act IV).
 
 ### The illustrated epilogue
 
@@ -2131,6 +2172,10 @@ scripts/
                             act IV spell / passives)
     ilion_ground.gd         The Shores of Ilion's zone floors (beach, camp, gate, walls)
     ilion_glyphs.gd         The Shores of Ilion's code shapes: boulders, Achilles' fallback, obstacles
+    olympus_ground.gd       Mount Olympus's four zone floors (field, grove, terrace, summit)
+    olympus_glyphs.gd       Code fallbacks of Mount Olympus's obstacles and of Zeus
+    olympus_report.gd       The autotest's Mount Olympus lines (olympus, pantheon trial, olympus kinds,
+                            wrath called, zeus) and the stolen thunder / grounded bones lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
     assembly_glyphs.gd      The Assembly Halls' code drawings: belts, furnace channels, jam fields, arcs, flames,
                             build frames, stamps, claws, the magnet, puppets on soul strings, fallback obstacles
@@ -2295,7 +2340,15 @@ scripts/
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
                             hit_from_front(), the bot's danger hint (null on Acts I to III)
       divine_wrath.gd       WRATH OF THE GODS: one scheduler (waves / lightning / fissures) hitting both armies,
-                            the Twilight of the Gods after 0:00, the Grounded Bones hook
+                            the Twilight of the Gods after 0:00, Grounded Bones (per target slot), and the
+                            gods' public strike(kind, at, overrides) entry (Act IV, Mount Olympus)
+      olympus_director.gd   Mount Olympus: the Pantheon Trial (the gods' arrivals, the miniboss bar, the
+                            trial cleared) and Artemis's moonlit groves
+      god_kit.gd            Base of the trial's gods: a third of Zeus's HP (boss scaling), the miniboss bar,
+                            a boss's walk, the XP burst; ares_kit.gd, artemis_kit.gd, poseidon_kit.gd
+      boss_zeus.gd          Zeus: storms (through DivineWrath.strike()), the thunderbolt beam, the colossal form
+      olympus_hits.gd       The gods' lane and circle hits (Ares's charge, the trident, the beam, the stomp)
+      centaur_kit.gd, amazon_kit.gd, gorgon_kit.gd, moon_hound_kit.gd, sea_serpent_kit.gd   Mount Olympus's kinds
       phalanx.gd            PHALANX: shield walls lock (3+ within 28 px), one pace, front / flank hits, the
                             bronze shield line, the Bronze Breaker hook
       glory.gd              GLORY: heroes' stacks on summon kills, the chest and Soul Ash payout
@@ -2506,6 +2559,12 @@ scripts/
                             Polyphemus, the Siege Tower (olympus_ / underworld_enemy_data.gd: the other stages')
     achilles_data.gd        Act IV: Achilles, the Unkillable (arrival, the heel table, lunges, the Myrmidons, the rage)
     paris_arrow_data.gd     Act IV: Paris's Arrow / Arrow of Fate fixed rules (first volley, the strike from behind, drawing)
+    ilion_enemy_data.gd     Each Act IV stage's own kinds (olympus_ / underworld_enemy_data.gd likewise; empty
+                            until phase 2)
+    olympus_enemy_data.gd   Mount Olympus's kinds: the Centaur Archer, Amazon, Gorgon, the hounds, the sea
+                            serpent and the trial's gods (Ares, Artemis, Poseidon)
+    zeus_data.gd            Zeus's arrival, phases and numbers; the gods' HP share
+    stolen_thunder_data.gd  Stolen Thunder's fixed rules, Titan's Blood's and the Oathbreaker's keys
     pantheon_rules_data.gd  Act IV's shared rules: WRATH (waves, lightning, fissures + Grounded Bones hook),
                             TWILIGHT, PHALANX (+ Bronze Breaker hook), GLORY, the SOUNDS map
     stages/ilion_stage.gd          Act IV stubs: the Shores of Ilion, Mount Olympus and the Asphodel Underworld;
@@ -2701,6 +2760,7 @@ Options (after `--`):
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |
 | (the Shores of Ilion) | `--stage=ilion` adds `ilion` (siege towers rolled / destroyed and when / reached the walls / rolling, garrison spilled and marched out, Polyphemus, objective Soul Ash), `ilion kinds` (testudo shots and boulders cut, wolf packs, packmates, lunges and hits, cyclops throws, boulders and hits; also wherever an Ilion kind was forced, e.g. `--spawn=legionary@60x6,wolf_of_rome@90,cyclops@120x2,siege_tower@150,polyphemus@180`), `polyphemus` and `achilles` (front / flank / back / heel / undirected hits, staggers, lunges, the Myrmidon guard, the rage, killed from behind; also `--boss=achilles`). On any stage, `act IV spell` (Paris's Arrow when learned, e.g. `--spells=paris_arrow`) and `act IV passives` (Mortal Heel, Bronze Breaker, e.g. `--passives=bronze_breaker`). |
+| (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). Mount Olympus (built) adds `olympus` and `olympus events` (each god's arrival and fall, the groves, the trial), `pantheon trial` (Ares's war-cries, enemies buffed, charges, impalings; Artemis's volleys, hounds, teleports; Poseidon's floods, tridents, serpents), `olympus kinds` (centaurs, Amazon leaps and catches, Gorgon gazes and summons petrified, sea serpent lunges), `wrath called` (the gods' DivineWrath.strike() calls) and `zeus` (storms, beams, the Storm Throne and true form times, stomps); the gods and kinds can be forced anywhere (`--spawn=ares@60,artemis@90,poseidon@120,gorgon@30x2`), and on every stage `stolen thunder` / `grounded bones` print when used (`--character=oathbreaker`, `--passives=grounded_bones`). |
 | (Assembly Halls) | `--stage=assembly` adds `assembly` (fabricators destroyed / placed / planned and when, soldiers built and capped, the wave and trickle thinning, Cold Assembly, the Beta Build, objective Soul Ash), `assembly floor` (seconds carried by belts for you / summons / enemies, furnace flares, furnace hits and damage per side), `assembly events`, `assembly kinds` (Arc Engineer repairs and jams, Juggernaut flames and flat armour, the Beta Build's swipes, rivets, patching and kill time) and `motherboard` (grabs, hurls, stamps, magnet pulls, turret builds, turrets and their shots, when Full Load and Overclock began, its damage). Reward lines print when owned: `hollow puppet` (`--spells=hollow_puppet`), `class grave_drone` (`--classes=grave_drone`), `signal ghost` (`--passives=signal_ghost`) and `marionette` (`--character=marionette`). `--spawn=arc_engineer@60x4,juggernaut@120x2,beta_build@180` works on any stage. |
 | (the Iron Citadel) | `--stage=citadel` adds `citadel` (gates raised / broken / locked down, garrison spawns, wall pushes, laser cycles and their hits on you, summons and enemies, citadel gun salvos, strikes and hits, turrets placed / destroyed / left behind, guests, objective Soul Ash), `citadel events`, `citadel kinds` (Duelist lunges: blocked / reached you / summons sliced; turret bursts; Valkyrie 2.0: spawned, killed and time to kill, dashes (blocked, hit you), bashes, storms, summon hits) and, when it fought, `deus ex machina` (phase times, plates broken, chaingun / salvo / footfall / stomp counts and hits, drones launched and downed, exposures, lances and their blocked ticks, hangars, pulses, teleports, machines gone dark, damage to you by attack). On every stage, `scrap swarm` (level, damage, kills, bolts, kill drones, peak drones, orbit radius; Machine Soul's bonus damage) and `iron revenant` (level, damage by source, bursts, shells, salvos, missiles; Recoil Frame) print only when used. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |

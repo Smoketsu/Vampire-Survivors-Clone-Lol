@@ -45,6 +45,11 @@
 ##                 every few seconds, cutting everything along it out to about
 ##                 420 px; a beam kill sparks lightning to a nearby enemy (the
 ##                 Scrap Wastes, Kestrel; logic DeathRay, rules DeathRayData).
+## Act IV's unlockable spells (owner-approved Act IV proposal "Rewards"; the
+## same rule):
+##   Stolen Thunder — a charged bolt strikes the strongest enemy and chains to
+##                 armoured foes (Mount Olympus, Zeus; logic StolenThunder,
+##                 rules StolenThunderData).
 class_name AbilityData
 extends RefCounted
 
@@ -71,7 +76,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act III: the Iron Citadel ---
 	"scrap_swarm",
 	# --- Act IV: the Shores of Ilion ---
-	"paris_arrow"]
+	"paris_arrow",
+	# --- Act IV: Mount Olympus ---
+	"stolen_thunder"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -485,6 +492,30 @@ const SPELLS := {
 			{"damage": 58.0, "arrows": 3, "cooldown": 2.1, "range": 400.0, "flight": 0.45},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act IV: Mount Olympus ---
+	# Stolen Thunder (owner-approved Act IV proposal "Rewards": "a charged bolt
+	# on the strongest enemy that chains to armoured foes"; unlocked by slaying
+	# Zeus, UnlockData). Every `cooldown` s the bolt charges `thunder_charge` s
+	# over the necromancer, then strikes the foe with the most HP left within
+	# `range` px for `damage`, and chains up to `thunder_chains` hops to the
+	# nearest ARMOURED foe within `chain_range` px (each hop `chain_falloff`
+	# weaker); armoured foes take `armour_bonus` more. Logic: StolenThunder;
+	# fixed rules: StolenThunderData; Titan's Blood adds hops and cuts the
+	# charge (AbilityManager.apply_spell_mods(): thunder_chains, thunder_charge).
+	"stolen_thunder": {
+		"display_name": "Stolen Thunder",
+		"icon": "stolen_thunder",
+		"description": "A charged bolt strikes the strongest foe and leaps on to armoured ones.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act IV spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bolt damage", "thunder_chains": "Chain hops", "cooldown": "Bolt every (s)", "armour_bonus": "Bonus vs armour", "range": "Range"},
+		"levels": [
+			{"damage": 60.0, "cooldown": 3.6, "thunder_charge": 0.8, "range": 420.0, "thunder_chains": 2, "chain_range": 150.0, "chain_falloff": 0.15, "armour_bonus": 0.25},  # TUNING (not in GDD)
+			{"damage": 76.0, "cooldown": 3.4, "thunder_charge": 0.8, "range": 430.0, "thunder_chains": 3, "chain_range": 155.0, "chain_falloff": 0.15, "armour_bonus": 0.25},  # TUNING (not in GDD)
+			{"damage": 92.0, "cooldown": 3.2, "thunder_charge": 0.75, "range": 440.0, "thunder_chains": 3, "chain_range": 160.0, "chain_falloff": 0.12, "armour_bonus": 0.3},  # TUNING (not in GDD)
+			{"damage": 112.0, "cooldown": 3.0, "thunder_charge": 0.7, "range": 450.0, "thunder_chains": 4, "chain_range": 170.0, "chain_falloff": 0.12, "armour_bonus": 0.3},  # TUNING (not in GDD)
+			{"damage": 136.0, "cooldown": 2.8, "thunder_charge": 0.65, "range": 460.0, "thunder_chains": 5, "chain_range": 180.0, "chain_falloff": 0.1, "armour_bonus": 0.35},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -495,7 +526,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act III: the Assembly Halls ---
 	"puppet_hp",
 	# --- Act III: the Scrap Wastes ---
-	"spark"]
+	"spark",
+	# --- Act IV: Mount Olympus ---
+	"armour_bonus", "chain_falloff", "clap_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

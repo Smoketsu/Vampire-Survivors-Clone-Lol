@@ -138,6 +138,11 @@
 ## Legionary's testudo cuts it; nothing else does) but never Mortal Heel.
 ## Mortal Heel — damage_enemy(): a directed hit from behind its target deals
 ## more (stat mortal_heel_bonus_dmg); exactly 1 while the passive is not owned.
+##   Mount Olympus (Act IV phase 2) — stun_unit(): THE one stun path for
+##             summons (a Gorgon's petrifying gaze): SummonedUnit.stun()
+##             holds the unit (no thinking, moving, attacking or casting,
+##             drawn stone-grey); stats summon_stuns, summon_stunned_seconds,
+##             summon_stuns_<source>.
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -764,6 +769,22 @@ func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) 
 	e.stun_timer = maxf(e.stun_timer, d)
 	game.stat_add("enemy_stuns", 1.0)
 	return d
+
+
+# --- Act IV: Mount Olympus ---
+## THE one stun path for summons (Act IV: a Gorgon's gaze turns them to
+## stone): holds summon `u` for `duration` s (SummonedUnit.stun(): no
+## thinking, moving, attacking or casting; drawn stone-grey). A longer stun
+## already running is kept; airborne, spawning and dead units are immune.
+## `source` tags the stats. Returns the seconds applied (0 = immune). Stats:
+## summon_stuns, summon_stunned_seconds, summon_stuns_<source>.
+func stun_unit(u: SummonedUnit, duration: float, source: String) -> float:
+	if duration <= 0.0 or not u.stun(game.elapsed + duration):
+		return 0.0
+	game.stat_add("summon_stuns", 1.0)
+	game.stat_add("summon_stunned_seconds", duration)
+	game.stat_add("summon_stuns_" + source, 1.0)
+	return duration
 
 
 ## Death of an enemy: cosmetic pop, XP crystal, kill counter, power-up drop
