@@ -297,11 +297,11 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Col
 			var fw := float(tex.get_width())  # Frame width (texels) = the still's width.
 			if layer.walk_frame > 0 and layer.walk_frame < n:
 				var src := Rect2(fw * float(layer.walk_frame), 0.0, fw, float(tex.get_height()))  # Frame in the strip.
-				ci.draw_texture_rect_region(_walk[key], Rect2(top_left, size), src, mod)
+				ci.draw_texture_rect_region(Recolour.texture(_walk[key], key + WalkData.SUFFIX, recolour) if recolour != "" else _walk[key], Rect2(top_left, size), src, mod)
 				return true
 			if layer.idle_frame > 0 and layer.idle_frame < m:
 				var isrc := Rect2(fw * float(layer.idle_frame), 0.0, fw, float(tex.get_height()))  # Frame in the idle strip.
-				ci.draw_texture_rect_region(_idle[key], Rect2(top_left, size), isrc, mod)
+				ci.draw_texture_rect_region(Recolour.texture(_idle[key], key + IdleData.SUFFIX, recolour) if recolour != "" else _idle[key], Rect2(top_left, size), isrc, mod)
 				return true
 	ci.draw_texture_rect(still, Rect2(top_left, size), false, mod)
 	return true
