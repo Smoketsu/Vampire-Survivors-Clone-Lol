@@ -745,3 +745,4 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-24 19:43,effects/maelstrom_whirl,gpt-image-2.5-flare,medium,1024x1024,1,257,1024,439,0.0226,whirl.png
 2026-10-24 19:43,markers/tide_wall,gpt-image-2.5-flare,medium,1536x1024,1,268,1024,343,0.0198,tidewall.png
 2026-10-24 19:43,effects/undertow_shallows,gpt-image-2.5-flare,medium,1024x1024,1,221,1024,439,0.0225,shallows.png
+2026-10-25 01:19,empire/kill_drone,gpt-image-2.5-flare,medium,1024x1024,1,542,1024,439,0.0241,kill_drone_src.png
