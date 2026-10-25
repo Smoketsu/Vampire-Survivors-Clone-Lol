@@ -842,3 +842,5 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-25 18:27,pantheon/amazon,gpt-image-2.5-flare,medium,1024x1024,2,773,2048,439,0.0334,amazon_a.png
 2026-10-25 18:27,pantheon/amazon,gpt-image-2.5-flare,medium,1024x1024,2,773,2048,439,0.0334,amazon_b.png
 2026-10-25 18:45,pantheon/amazon,gpt-image-2.5-flare,medium,1024x1024,1,254,1024,439,0.0226,gen_skirt.png
+2026-10-25 18:57,pantheon/amazon,gpt-image-2.5-flare,medium,1024x1024,2,840,2048,439,0.0338,amazon_r7_a.png
+2026-10-25 18:57,pantheon/amazon,gpt-image-2.5-flare,medium,1024x1024,2,840,2048,439,0.0338,amazon_r7_b.png
