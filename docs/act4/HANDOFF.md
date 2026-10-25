@@ -30,25 +30,14 @@ owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages wer
 ## What is left for Act IV, in order
 
 1. **The owner's art review** (one page, https://claude.ai/artifact/7BnCJnbvumT9an6eeB47Km; marks in db collections
-   `act4_art_r1`, `act4_art_r2`; GDD rows "Act IV art review, round 1" / "round 2"). Round 1: 154 OK / 41 Redo (mixed
-   lineup kept). Round 2: 25 OK / 16 Redo. **Round 3 was IN FLIGHT when this session hit its usage limit**: two agents
-   on LOCAL branches (not pushed, lost if the container is gone) `act4-r3-underworld` and `act4-r3-olympus`, worktrees
-   `/home/user/wt/act4-r3-*`, from `6cc2c91`. **Status:** both agents stopped at the usage limit (resets 5:20 pm UTC) with partial work, saved as
-   one unreviewed WIP commit on each branch: Underworld had the Ferrywoman boxes, the Legion of Tartarus and two Hades
-   sources changed (the Myrmidon Shade and the Hades sprites not yet); Olympus had the Amazon's sideways sway and a new
-   Titan pose in progress (the Gorgon's face not yet). Resume them (SendMessage to the same agents) or finish by hand,
-   then check every change against the owner's notes before merging. If those branches still exist with commits, check their contact sheets in
-   the scratchpad (`.../scratchpad/act4/r3-*/`), merge them (the ledger CSV conflicts: keep both sides), `--import`.
-   Otherwise redo the round 3 list (the GDD "round 2" row has it): **Hades** regenerated as a consistent set (still,
-   bident pose with TWO prongs, kneeling; robe and cloak in clearly different colours); the **Myrmidon Shade** and
-   **Legion of Tartarus** restarted from the round 1 originals (commit `16ea7aa`) with only a gentle speck cleanup
-   (the owner rejected the flat simplification); the **Ferrywoman**'s bust box widened 2 px left, her Deathlord skin's
-   3–4 px left; the **Amazon**'s hip box swaying SIDEWAYS instead of up and down (a new axis option in
-   `tools/walk_cycle.py`, other rigs unchanged); a **Bronze Titan** walk that reads (likely a new walk-friendly source
-   pose of the same titan with the legs apart, then the normal `legs` rig; the round 2 mirrored "stride" was rejected);
-   the **Gorgon**'s face ("so silly"). Opus agents for these (judgment-heavy art). Then publish round 3 on the same
-   page: `python3 docs/act4/tools/make_act4_review_r2.py <act4_art_r2 marks dir> <out.html> 6cc2c91 3` (read the r2
-   marks with ArtifactData `list` + `out_dir` first), Artifact publish with `url` = the page above (keeps capabilities).
+   `act4_art_r1`, `act4_art_r2`, `act4_art_r3`; GDD rows "Act IV art review, round 1" / "round 2"). Round 1: 154 OK /
+   41 Redo (mixed lineup kept). Round 2: 25 OK / 16 Redo. **Round 3 is published** (16 redone + 3 changed with them:
+   the Hades set regenerated, the Myrmidon Shade and Legion of Tartarus from the round 1 originals with a speck
+   cleanup, the Ferrywoman boxes widened left, the Amazon's sideways sway (`walk_cycle.py` rig key `bust_axis="x"`), the
+   Bronze Titan in a new legs-apart pose with a `legs` walk, the Gorgon's face repainted). Open question on the page:
+   Hades' cloak uses the player's violet. Next: read `act4_art_r3` with ArtifactData `list` + `out_dir`; a round 4 is
+   `python3 docs/act4/tools/make_act4_review_r2.py <act4_art_r3 marks dir> <out.html> <commit before the round 3 redos:
+   1be2098> 4`.
 2. **The owner's playtest**, then the balance pass (open items in the GDD integration row: the naive Olympus opening,
    the Underworld is the easiest, siege towers rarely destroyed, strong Gigantomachy / Lethe's Flood / Myrmidons, the
    placeholder Soul Ash multipliers ×3.25 / ×3.5 / ×3.75).
