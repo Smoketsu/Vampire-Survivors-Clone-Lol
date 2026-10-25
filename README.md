@@ -1914,6 +1914,12 @@ collapsing arena, the Cathedral Guardian's beam, the Confessor's pillar and shie
 are procedural pixel art made by `python3 tools/covenant_aoe_art.py` and drawn by `CovenantFx`: band
 pieces tiled at 1:1 along the exact danger edge, a hatch tile clipped to the shape row by row, discs baked
 at the radii the game uses, so they stay crisp at any size (GDD §15.0 "Act I enemy AoE art").
+Act III's **ground effects, beams and zones** (orbital strikes, every Empire warning and the shared
+telegraphs on an Act III stage, impact strips, the Death Ray, the laser grid, Shield Gates, furnace
+channels, conveyor belts, the scrap storm veil, Deus's and the Motherboard's hazards) are procedural
+pixel art made by `python3 tools/empire_aoe_art.py` and drawn by `EmpireFx` on the same principles, in
+the Empire's own look: a hex-grid fill, a hazard-striped band with cyan-white ticks, a scan-line timing
+front and targeting brackets (GDD §15.0 "Act III AoE art").
 
 **Engine motion (tier 0, art pass).** Every unit is still one image, so the engine animates it
 procedurally: a **step bob** matched to its real speed, a small **lean** into the movement, a
@@ -2294,6 +2300,7 @@ scripts/
   fx/tide_water.gdshader    Gullhaven: the water, foam, seawall lip and surge drawn from the same test as TideDirector
   fx/sharp_pixel.gdshader   The sharp-pixel filter: grid pixel art (and the pixel fonts) crisp at any window scale
   fx/covenant_fx.gd         CovenantFx: the Covenant's area-effect pixel art (shared telegraphs, holy ground, Seraphine's hazards): tiles along edges, clipped hatch rows, baked discs
+  fx/empire_fx.gd           EmpireFx: Act III's ground effects, beams and zones as pixel art in the Empire's look (hex fill, hazard band, scan line, targeting brackets; code fallback)
   fx/flat_silhouette.gdshader  Pixel art as one flat colour (the Codex's unmet entries), sharp-pixel sampling
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
@@ -2473,6 +2480,7 @@ scripts/
     aoe_art_data.gd         Player AoE art pieces, burst recipes, spacing, opacity and tier densities (AoeArt)
     marker_art_data.gd      Pixel-art keys and placement of the world markers, overlays and spell props (rally pennant, ice shell, brands, corpses, bone walls, boulders)
     covenant_fx_data.gd     Keys and drawing numbers of the Covenant's area-effect art (CovenantFx)
+    empire_fx_data.gd       Keys and drawing numbers of Act III's ground-effect, beam and zone art (EmpireFx)
     boss_pose_data.gd       Which attack-pose sprite each stage boss shows per attack phase
     view_data.gd            Camera zoom levels (Normal / Close) and the player's ground marker
     ui_art_data.gd          The UI kit and logo (9-slice margins, crests), pixel font sizes, the type tiers

@@ -199,6 +199,16 @@ func damage_mult_at(pos: Vector2) -> float:
 func _draw() -> void:
 	var now := game.elapsed
 	for z in zones:
+		# The Arc Engineer's static field is the Empire's (EmpireFx, GDD §15.0
+		# "Act III AoE art"): its warning circle while arming, then the crackling field.
+		if z.source == ArcEngineerKit.JAM_SOURCE:
+			var drawn := false
+			if z.arm_left > 0.0:
+				drawn = EmpireFx.telegraph_circle(self, z.pos, z.radius, 1.0 - z.arm_left / maxf(0.01, z.arm_total), false)
+			else:
+				drawn = EmpireFx.static_field(self, z.pos, z.radius, clampf(z.life / maxf(0.01, z.life_total), 0.0, 1.0), now)
+			if drawn:
+				continue
 		if z.arm_left > 0.0:
 			SanctumGlyphs.draw_suppression(self, z.pos, z.radius, 1.0 - z.arm_left / maxf(0.01, z.arm_total), -1.0, now)
 		else:

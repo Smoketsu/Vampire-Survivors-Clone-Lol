@@ -120,5 +120,7 @@ func danger_push(e: Enemy, p: Vector2) -> Vector2:
 func draw_over(e: Enemy, ci: CanvasItem) -> void:
 	if phase == FLAME:
 		unmirror(e, ci)
+		CovenantFx.base = Transform2D(0.0, Vector2(e.scale.x, 1.0), 0.0, Vector2.ZERO)  # The flame art in world axes too.
 		AssemblyGlyphs.draw_flame(ci, dir, float(d["flame_range"]), float(d["flame_half_angle"]), e.game.elapsed)
+		CovenantFx.base = Transform2D.IDENTITY
 		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

@@ -225,9 +225,10 @@ static func edge_run(ci: CanvasItem, a: Vector2, b: Vector2, key: String, modula
 
 
 ## Fills the circle (c, r) with the warning hatch as 2 px rows clipped to the
-## circle (the pattern anchored to the node's own space). False when missing.
-static func hatch_disc(ci: CanvasItem, c: Vector2, r: float, modulate: Color) -> bool:
-	var t := tex(CovenantFxData.T_HATCH, true)  # Seamless hatch tile.
+## circle (the pattern anchored to the node's own space). `key` picks another
+## seamless fill tile (the Empire's hex grid, EmpireFx). False when missing.
+static func hatch_disc(ci: CanvasItem, c: Vector2, r: float, modulate: Color, key: String = CovenantFxData.T_HATCH) -> bool:
+	var t := tex(key, true)  # Seamless hatch tile.
 	if t == null:
 		return false
 	SpriteBank.apply_sharp(ci)
@@ -247,9 +248,9 @@ static func hatch_disc(ci: CanvasItem, c: Vector2, r: float, modulate: Color) ->
 ## Fills the sector at `c` (radius `r`, facing angle `face`, `half` rad each
 ## side) with the warning hatch as 2 px rows clipped to it: each half of the
 ## sector (at most 180 degrees, so convex) cuts every row to one interval.
-## False when the art is missing.
-static func hatch_sector(ci: CanvasItem, c: Vector2, r: float, face: float, half: float, modulate: Color) -> bool:
-	var t := tex(CovenantFxData.T_HATCH, true)  # Seamless hatch tile.
+## `key` picks another seamless fill tile. False when the art is missing.
+static func hatch_sector(ci: CanvasItem, c: Vector2, r: float, face: float, half: float, modulate: Color, key: String = CovenantFxData.T_HATCH) -> bool:
+	var t := tex(key, true)  # Seamless hatch tile.
 	if t == null:
 		return false
 	SpriteBank.apply_sharp(ci)

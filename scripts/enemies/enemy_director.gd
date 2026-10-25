@@ -911,7 +911,8 @@ func on_enemy_killed(e: Enemy) -> void:
 	e.deactivate()
 	if e.is_boss:
 		# Big reward burst (user brief: no longer the win condition).
-		game.effects.impact(e.position, 120.0, Palette.GOLD, "boss_death")  # Its strip when the art exists (visual only).
+		# Its strip when the art exists (visual only): an Empire boss falls as a machine (GDD §15.0 "Act III AoE art").
+		game.effects.impact(e.position, 120.0, Palette.GOLD, EmpireFxData.BOSS_DEATH if game.effects.empire_look else "boss_death")
 		var bdef: Dictionary = (e as Boss).boss_def  # The fallen boss's data (reward burst).
 		var n: int = bdef["reward_crystals"]
 		var each: int = maxi(1, floori(float(bdef["reward_xp"]) / float(n)))

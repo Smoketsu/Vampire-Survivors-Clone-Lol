@@ -49,6 +49,8 @@ const FLICKER: float = 0.1
 ## (else y) in direction `dir` (+1 / -1); `scroll` px it has moved so far
 ## (game time x speed), which slides the chevrons and rollers.
 static func draw_belt(ci: CanvasItem, rect: Rect2, along_x: bool, dir: float, scroll: float) -> void:
+	if EmpireFx.belt(ci, rect, along_x, dir, scroll):
+		return  # One scrolled pixel-art tile (GDD §15.0 "Act III AoE art"); the code below is the fallback.
 	ci.draw_rect(rect, BELT)
 	var length := rect.size.x if along_x else rect.size.y  # Along the belt (px).
 	var width := rect.size.y if along_x else rect.size.x  # Across it (px).
@@ -85,6 +87,8 @@ static func draw_belt(ci: CanvasItem, rect: Rect2, along_x: bool, dir: float, sc
 ## DORMANT / WARNING / BURNING) at `progress` 0..1 through it; `now` (game s)
 ## drives the glow pulse and the flame flicker.
 static func draw_channel(ci: CanvasItem, rect: Rect2, along_x: bool, state: int, progress: float, now: float) -> void:
+	if EmpireFx.channel(ci, rect, along_x, state, progress, now):
+		return
 	var length := rect.size.x if along_x else rect.size.y  # Along the channel (px).
 	var width := rect.size.y if along_x else rect.size.x  # Across it (px).
 	ci.draw_rect(rect, RIM)
@@ -199,6 +203,8 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 ## The Arc Engineer's static field arming at local `at` (radius `r`, `k` 0..1
 ## as it arms): a ring of amber sparks closing in, then a warning-red edge.
 static func draw_jam_field(ci: CanvasItem, at: Vector2, r: float, k: float) -> void:
+	if EmpireFx.jam_field(ci, at, r, k):
+		return
 	ci.draw_circle(at, r, Color(Palette.EMPIRE_SIGNAL_AMBER, 0.08 + 0.12 * k))
 	ci.draw_arc(at, r, 0.0, TAU, 32, Color(Palette.EMPIRE_SIGNAL_RED, 0.5 + 0.4 * k), 2.0)
 	for i in 8:
@@ -222,6 +228,8 @@ static func draw_arc_beam(ci: CanvasItem, a: Vector2, b: Vector2, k: float) -> v
 ## The Juggernaut's flame stream along `dir` (unit, local space): a cone of
 ## `reach` px and `half` rad, `k` 0..1 through the stream (flicker by `now`).
 static func draw_flame(ci: CanvasItem, dir: Vector2, reach: float, half: float, now: float) -> void:
+	if EmpireFx.jug_flame(ci, dir, reach, half, now):
+		return
 	var frame := int(floorf(now / FLICKER))
 	for i in 7:
 		var h := absi(hash(Vector2i(i, frame)))
@@ -246,6 +254,8 @@ static func draw_build_frame(ci: CanvasItem, o: Vector2, r: float, k: float) -> 
 ## A press-stamp square telegraph centred on `c` (world px, side `side`),
 ## `k` 0..1 as the stamp falls: the square fills and its corner brackets close.
 static func draw_stamp(ci: CanvasItem, c: Vector2, side: float, k: float) -> void:
+	if EmpireFx.square(ci, c, side, k):
+		return
 	var h := side * 0.5
 	var sq := Rect2(c - Vector2(h, h), Vector2(side, side))
 	ci.draw_rect(sq, Color(Palette.EMPIRE_SIGNAL_RED, 0.12 + 0.2 * k))
@@ -265,6 +275,8 @@ static func draw_stamp(ci: CanvasItem, c: Vector2, side: float, k: float) -> voi
 static func draw_claw(ci: CanvasItem, root: Vector2, p: Vector2, open: bool) -> void:
 	ci.draw_line(root, p, INK, 4.0)
 	ci.draw_line(root, p, Palette.EMPIRE_CHROME_DARK, 2.0)
+	if EmpireFx.claw(ci, p, open):
+		return  # The claw's pixel art under the cable (GDD §15.0 "Act III AoE art").
 	var spread := 7.0 if open else 3.0
 	ci.draw_rect(Rect2(p + Vector2(-5, -4), Vector2(10, 6)), INK)
 	ci.draw_rect(Rect2(p + Vector2(-4, -3), Vector2(8, 4)), Palette.EMPIRE_CHROME_LIGHT)
@@ -277,6 +289,8 @@ static func draw_claw(ci: CanvasItem, root: Vector2, p: Vector2, open: bool) -> 
 ## The Motherboard's magnet coils charging / pulling around local `o`: rings
 ## that run inward (`k` 0..1 phase), warning red while charging.
 static func draw_magnet(ci: CanvasItem, o: Vector2, r: float, k: float, pulling: bool) -> void:
+	if EmpireFx.magnet(ci, o, r, k, pulling):
+		return
 	var col := Palette.EMPIRE_SIGNAL_AMBER if pulling else Palette.EMPIRE_SIGNAL_RED
 	for i in 3:
 		var t := fposmod(1.0 - k + float(i) / 3.0, 1.0)
