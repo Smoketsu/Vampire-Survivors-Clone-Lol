@@ -84,3 +84,37 @@ Then read `CLAUDE.md` (rules; it overrides this file).
   cosmetic recolours of owned skins).
 - After they merge: ONE multi-seed power-curve batch by a Sonnet agent (`--meta=max` = everything bought / equipped;
   8 seeds, army and naive, a stage per act; targets in CLAUDE.md), then the full "Done" set, CI on integration, ship.
+
+
+## Status for the next session (Oct 25, lead about to hit usage)
+
+| Branch | State |
+| --- | --- |
+| `integration` | Steps 1-2 merged (economy, deep levels at ×1.10 = 24,950), the owner's decisions, this file. Not on `main` yet. |
+| `ossuary/masteries` | **Done** (Sonnet), c9ece0e: 17 summon classes × 3 levels (+4% HP and damage per level, 190 / 250 / 320, 12,920 total), unlock on class Lv 5 (`[class_lv5]`, `[masteries]`), `MetaModifiers.mastery_value()` → `HordeDirector.compute_stats()`, co-op `mastery_levels`, panel `ossuary_masteries_panel.gd` (not yet seen inside A's tab bar). Gates passed; `--meta=max` victory 36 s past 0:00. |
+| `ossuary/recolours` | **Done** (Sonnet), b1b49c7: Bone 300 / Blood 400 / Abyss 500 / Gilded 600 (Hyper skins: Verdant), CPU palette remap cached (`Recolour`), `SpriteBank.draw()` `recolour` param, pre-run hero Recolour button, `[recolours]` / `[recolour_pick]`, co-op `recolour_id`. Gates passed. |
+| `ossuary/options` | Agent A (Opus) was finishing: 3e5d9e5 "ten upgrades, the Dominion tree, the tab bar" pushed; check for a final report / later commits. |
+| `ossuary/relics` | Agent C (Opus): Relics (1 → 3 slots) + Grave Offerings + the pre-run "Rites" strip. **Not pushed when this was written**; it was told to push WIP. If the branch is missing, re-brief an Opus agent from `docs/ossuary/AGENT_RULES.md` + the agent C brief below. |
+
+**Next steps:**
+1. Wait for / check A and C. Then merge on `integration` in this order: options (it owns the tab bar), masteries, relics,
+   recolours. Expect conflicts in `meta_progress.gd`, `meta_modifiers.gd`, `coop_net.gd` / `coop_session.gd` (loadout
+   keys), `autotest.gd`, `tools/ossuary_check.gd`, `pre_run_setup.gd` (C's right-column strip vs D's left-column button),
+   `README.md`, `docs/GDD.md` (keep both sides). `--import`, `tools/ossuary_check.tscn` PASS, check the Masteries / Relics /
+   Offerings panels load inside A's tab bar, and that the pre-run screen still fits 1280×720 and 844×390.
+2. **One balance batch (Sonnet agent, at most 4 Godot processes):** `--meta=max` (everything bought / equipped) and
+   `--meta=none`, `--policy=army` and `naive`, `--mortal`, 8 seeds, on one stage per act (graveyard, harbour, citadel) and
+   Deathlord on the Citadel. Targets (CLAUDE.md): meta max clearly easier but the Reckoning still ends every run 30-90 s
+   past 0:00; builds complete ~16-18 min; meta none unchanged. Retune with a few data changes if needed.
+3. Full "Done" set, CI on `integration` (`gh workflow run ci.yml --ref integration`), then fast-forward `main`
+   (no need to notify the Act III session any more: owner, Oct 25). Then tell the owner with screenshots of the new tabs
+   and the pre-run strip. Remaining from the proposal: prestige noted for later (owner).
+
+**Agent C's brief (to re-brief if needed):** Relics, ~8,000 Soul Ash incl. slots: ~15 run-shaping perks bought once,
+equipped before a run, 1 slot from the start + 2 buyable (max 3); examples Grave Lantern (chests reveal two choices),
+Black Banner (ultimate meter starts half charged), Bone Abacus (free reroll every five levels), Hollow Crown (+1 active
+slot, −10% max HP), Mourner's Bell (elites drop a heart); some sold only after feats (`[clears]`, Hyper / boss records);
+`relic_data.gd`, one effects path, Meta section, `[prerun]`. Grave Offerings (expensive, 40-70% of an 877 run): ~5-6
+single-run boons, one per run, paid at run start; `offering_data.gd`. Panels `ossuary_relics_panel.gd` /
+`ossuary_offerings_panel.gd` (tab contract in AGENT_RULES.md); a compact pre-run "Rites" strip in the right column;
+co-op loadout; `--relics=` / `--offering=` flags; `--meta=max` equips a fixed set.
