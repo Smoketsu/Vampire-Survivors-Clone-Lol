@@ -106,6 +106,12 @@
 ##                        PantheonRulesData.WRATH[kind] to override it}.
 ##   zones              — Act IV stubs: the planned zones ([{id, name, start}],
 ##                        names only until phase 2 builds them).
+## --- Act IV: the Shores of Ilion ---
+##   ilion              — IlionDirector config (IlionStage.ILION, Act IV, the
+##                        Shores of Ilion: the siege towers rolling for the
+##                        walls, Polyphemus the Cyclops; its "siege_towers" /
+##                        "polyphemus" events); ground "ilion" is its
+##                        IlionGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

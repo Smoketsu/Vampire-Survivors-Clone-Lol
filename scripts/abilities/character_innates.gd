@@ -361,6 +361,9 @@ func summary_line() -> String:
 		"scrap_prophecy":
 			counters = "scrap bolts %d, bolt dmg %d, kills %d (temporary summons %d)" % [int(st.get("prophet_scrap_bolts", 0.0)), int(st.get("dmg_" + ScrapSwarmData.PROPHET_SOURCE, 0.0)),
 				int(st.get("kills_by_" + ScrapSwarmData.PROPHET_SOURCE, 0.0)), game.horde.temp_spawned]
+		# --- Act IV: the Shores of Ilion ---
+		"foretold_fall":
+			counters = "champion bonus dmg %d (arrow hits %d)" % [int(st.get("prophetess_bonus_dmg", 0.0)), int(st.get("paris_hits", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

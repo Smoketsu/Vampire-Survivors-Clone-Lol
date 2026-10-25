@@ -22,6 +22,11 @@
 ##   * THE FLANK: a directed hit from the side or behind deals full damage and
 ##     BREAKS the wall: every member unlocks and cannot lock again for
 ##     break_time s.
+##   * THE TESTUDO (Act IV, the Shores of Ilion: a locked Legionary, row
+##     "testudo"): shots from anywhere but its rear cone are cut like front
+##     shots and break nothing; an arcing hit from above
+##     (CombatResolver.FROM_ABOVE, a catapult boulder) is cut too. Stats
+##     testudo_shots, testudo_above_hits.
 ##   * Hits with no origin (area spells, stomps, dives, arcing boulders, mage
 ##     orbs bursting where they land, beams, damage over time) ignore the front.
 ##   * DRAWING: a bronze shield line across the front of every locked member,
@@ -194,6 +199,23 @@ func directed_hit_mult(e: Enemy, origin: Vector2, shot: bool, source: String) ->
 	var k := e.kit as PantheonKit
 	if not k.locked:
 		return 1.0
+	# --- Act IV: the Shores of Ilion --- the Legionary's TESTUDO (row
+	# "testudo", IlionEnemyData): a locked testudo roofs and walls the line, so
+	# an arcing hit from above deals testudo_above_mult and a SHOT from anywhere
+	# but its rear cone counts as a front shot (no break). Any other locked body
+	# ignores an arcing hit (it neither cuts it nor breaks the wall).
+	if origin == CombatResolver.FROM_ABOVE:
+		if bool(k.d.get("testudo", false)):
+			game.stat_add("testudo_above_hits", 1.0)
+			return float(k.d["testudo_above_mult"])
+		return 1.0
+	if shot and bool(k.d.get("testudo", false)) and not PantheonRules.hit_from_behind(e, origin, float(k.d["testudo_rear_half_angle"])):
+		e.knockback = Vector2.ZERO
+		game.stat_add("testudo_shots", 1.0)
+		var tm := float(k.d["testudo_shot_mult"])  # Share of the shot dealt.
+		if game.combat.is_minion_source(source):
+			tm *= breaker_mult()  # Bronze Breaker.
+		return tm
 	var cfg := PantheonRulesData.PHALANX
 	if PantheonRules.hit_from_front(e, origin):
 		e.knockback = Vector2.ZERO  # A locked shield takes no knockback from the front.

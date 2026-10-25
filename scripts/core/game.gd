@@ -313,6 +313,9 @@ func _ready() -> void:
 			var pg := PantheonGround.new()  # Act IV placeholder floor (the STAGE's "floor").
 			pg.look = stage_def.get("floor", {})
 			ground = pg
+		# --- Act IV: the Shores of Ilion ---
+		"ilion":
+			ground = IlionGround.new()  # Act IV: the Shores of Ilion's four zone floors (IlionStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

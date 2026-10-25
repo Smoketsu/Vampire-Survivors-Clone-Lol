@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, roaring, a huge boulder lifted over his head.
+
+LOW-RESOLUTION pixel art: the whole figure is only 108 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings, no muscle lines.
+
+Subject: POLYPHEMUS, a MALE giant CYCLOPS chieftain, older and far bigger than a common cyclops: ONE SINGLE HUGE EYE in the middle of his forehead (a white eyeball, a pale Aegean-blue iris, clearly readable), a wild mane of dark brown hair and a long shaggy brown beard, pale grey-white stony skin like weathered marble, enormous shoulders and arms, a cloak of shaggy marble-white RAM FLEECE over his shoulders and back, a brown leather loincloth with a big bronze belt buckle, bronze bands on his wrists, bare feet. He holds a HUGE ROUND GREY BOULDER above his head in both hands, about as wide as his chest, his mouth open in a roar.
+Signature shape: the giant body with the boulder held high over the single-eyed head.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: bronze #1E1408 (outline) #6B4423 #A8702E #E0A955; marble white #8E8A86 #CFCBC4 #F4F1EA; Aegean blue #123E66 #2C77B8 #6FB6E8; skin #8C6040 #E0A882; wood and leather #4F3320 #8C6040; boulder stone #3B4352 #6B7A94 #A7B3C6.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a sprite of this game: match its pixel size, outline weight and flat look exactly; (2) concept art of this army for the costume only (do NOT copy its detail level, its painted shading or its colours where they differ from the list above).

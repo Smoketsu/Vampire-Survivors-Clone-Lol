@@ -1,0 +1,10 @@
+Pixel-art game sprite for a top-down 2D horde-survival game. Three-quarter top-down view (camera above and slightly in front), on a transparent background. ONE object about 48 pixels wide.
+LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block. Chunky simple shapes, no detail under 2 pixels, no anti-aliasing, no gradients, no dithering, no texture noise. A clean 1-pixel dark outline.
+
+Subject: a round GREEK ARMY TENT of the siege camp seen from above-front: a cone of marble-white canvas with Aegean-blue stripes on a central pole, its door flap tied open (dark inside), guy ropes pegged around it, a small bronze shield leaning on it.
+
+Colours: ONLY flat fills: canvas #4F4842 (outline) #8E8A86 #CFCBC4 #F4F1EA; Aegean blue #123E66 #2C77B8; wood #4F3320 #8C6040; bronze #6B4423 #A8702E.
+Light from the top-left. Keep it a little darker and calmer than the characters (it is scenery), but clearly brighter than a near-black ground.
+
+Output: a PNG with a FULLY TRANSPARENT background, no ground, no cast shadow, no water, no text, no watermark.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

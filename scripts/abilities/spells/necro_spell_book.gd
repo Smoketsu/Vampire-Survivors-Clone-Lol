@@ -26,6 +26,9 @@
 ## (WastesReport.print_items(), only when one was taken; ACT3_IDS, so the Act I
 ## and Act II lines keep their text):
 ##   Death Ray        -> DeathRay         (evolves into Event Horizon)
+## and Act IV's (owner-approved Act IV proposal; locked until earned), the
+## same way (ACT4_IDS; each stage's own report line):
+##   Paris's Arrow    -> ParisArrow       (evolves into Arrow of Fate)
 ## earned, UnlockData), each stage's in its own list with the generic NecroSpell
 ## hooks and its own autotest line (CitadelReport):
 ##   Scrap Swarm      -> ScrapSwarm       (evolves into Deathless Swarm; the Iron Citadel)
@@ -74,6 +77,11 @@ const ACT3_IDS := [
 ## The Iron Citadel's unlockable spell (Deus Ex Machina's reward): stepped, kill
 ## hooked and after-physics hooked like ACT2_IDS, reported by CitadelReport.
 const CITADEL_IDS := ["scrap_swarm"]
+# --- Act IV: the Shores of Ilion ---
+## Act IV's unlockable spells (the generic NecroSpell hooks: stepped, kill
+## hooked and after-physics hooked like ACT3_IDS; each Act IV stage adds its
+## own here; reported by the stage's own report, IlionReport.print_items()).
+const ACT4_IDS := ["paris_arrow"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -98,6 +106,8 @@ const SOURCES := {
 	"death_ray": ["death_ray", "event_horizon", "ray_spark"],
 	# --- Act III: the Iron Citadel ---
 	"scrap_swarm": ["scrap_swarm", "deathless_swarm"],
+	# --- Act IV: the Shores of Ilion ---
+	"paris_arrow": ["paris_arrow", "arrow_of_fate"],
 }
 
 ## Owning run.
@@ -129,7 +139,7 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))
-	for id: String in ACT3_IDS + CITADEL_IDS:
+	for id: String in ACT3_IDS + CITADEL_IDS + ACT4_IDS:
 		if ab.spell_level(id) <= 0:
 			continue
 		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
@@ -185,6 +195,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act III: the Iron Citadel ---
 		"scrap_swarm":
 			node = ScrapSwarm.new()
+		# --- Act IV: the Shores of Ilion ---
+		"paris_arrow":
+			node = ParisArrow.new()
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -211,7 +224,7 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
 		if node != null:
 			node.on_enemy_killed(e)
-	for id: String in ACT3_IDS + CITADEL_IDS:
+	for id: String in ACT3_IDS + CITADEL_IDS + ACT4_IDS:
 		var node: NecroSpell = nodes.get(id)  # An Act III spell's node, if learned.
 		if node != null:
 			node.on_enemy_killed(e)
@@ -228,7 +241,7 @@ func after_physics(delta: float) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
 		if node != null:
 			node.after_physics(delta)
-	for id: String in ACT3_IDS + CITADEL_IDS:
+	for id: String in ACT3_IDS + CITADEL_IDS + ACT4_IDS:
 		var node: NecroSpell = nodes.get(id)  # An Act III spell's node, if learned.
 		if node != null:
 			node.after_physics(delta)

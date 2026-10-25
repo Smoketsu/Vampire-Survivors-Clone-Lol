@@ -1942,3 +1942,57 @@ Code-drawn on purpose (phase 1): the wrath telegraphs and strikes, the phalanx's
 and the stubs' placeholder floors and obstacles (`PantheonGlyphs`, `PantheonGround`); phase 2 brings the stages' own
 art (the legionary, wolf, centaur, Amazon, Gorgon and Cyclops from the concept lineup, the female kinds in the
 figure-redesign style with a `bust` box and idle strip).
+
+### Act IV: the Shores of Ilion (Stage 10; Act IV phase 2, Oct 2026)
+
+<!-- --- Act IV: the Shores of Ilion --- -->
+Generated with `tools/gen_image.py` (prompts beside each source, `art_source/<key>.txt`, the sex named in every
+figure prompt; `--ref` the Hoplite's source for the pixel look plus a crop of `act4_lineup.png` for the legionary,
+wolf, cyclops and Achilles; Achilles' own source for his two poses; the Tide Widow's and the necromancer's sources
+for the Doomed Prophetess, then her source for her three skins; the Scrap Wastes' obstacle sources and `wastes_slag`
+for the obstacles and tiles; `death_ray` for the icon symbols). The Republic's pipeline (foundation section above):
+a **pre-snap** (alpha cut 230; skin by `skin_cap.skin_mask()` set to exactly `skin` / `brown_light`; near-white,
+low-saturation pixels to the nearest marble shade), then `prepare_sprite.py` straight on the source with
+`--ink-l 0.15` and explicit ramps (`bronze,marble,aegean,gold,skin,brown`, `+grey` for the boulders); Achilles and his
+poses `--no-levels` (his gold, like the Hero's). The wolf went through `pixelate_source.py` (36 rows, `--ink-l 0.22`).
+The Doomed Prophetess and her skins: `prepare_sprite.py` straight on the source, `--ink-l 0.20` (levels on for the base
+and the ghost and Deathlord skins, `--no-levels` for the gold Hyper skin): the `pixelate_source.py` route came out
+noisier on her. Scripted hand touch-ups (palette colours only): the wolf's Aegean eye and two marble fangs, a single
+cyclopean eye (marble white, an Aegean iris) painted on the Cyclops and on Polyphemus (the conversion lost both).
+Obstacles: one source per kind, the rect kinds as an H + V pair (split at the widest transparent gap), each size
+converted to its footprint width with `--no-center` (V: the long side x 1.12 tall). Tiles: `make_tile.py` quilt
+recipes `ilion_*` (the API returned them nearly transparent; stored opaque). Icons: the symbol at 26 px on a
+cut-corner badge cleared from an approved one (violet border; gold for the evolution and the achievement). Walk /
+idle strips by `walk_cycle.py` (rigs under `# --- Act IV: the Shores of Ilion ---`; the Prophetess and her skins
+have bust boxes and idle breathing strips; the siege tower has no strip: it rolls). 28 API images (one icon redone: Paris's Arrow's first symbol read as a ghost), about $0.62
+(ledger estimate). `art_check.py`: every unit passes on every floor except the siege tower, Achilles' rage form and
+the Prophetess's Hyper skin (lightness fails on the March road and the Sanctum floors, where they never or rarely
+stand; the violet characters fail the same floors), Achilles' strike pose and the Deathlord skin on Sanctum IV only.
+**For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `pantheon/legionary` | Legionary (soldier, male): bronze helmet with a white transverse crest, bronze bands, a tall Aegean scutum with a bronze boss and wings, a gladius | 32x56 | legs walk (hip 41); the testudo's raised roof and the shield line are code-drawn (LegionaryKit, Phalanx) |
+| `pantheon/wolf_of_rome` | Wolf of Rome (fodder pack): a bronze statue wolf loping, Aegean eye, marble fangs | 68x36 | legs walk (hind / fore split at col 30) |
+| `pantheon/cyclops` | Cyclops (heavy, male): a hulking marble-pale giant, a single eye, a boulder held up beside his head, leather loincloth | 56x70 | legs walk; the thrown boulders are code-drawn (IlionGlyphs) |
+| `pantheon/polyphemus` | Polyphemus the Cyclops (miniboss, male): a bigger giant in a ram fleece, a huge boulder over his head, one eye with an Aegean iris | 60x112 | legs walk |
+| `pantheon/siege_tower` | Siege Tower (structure): a timber tower on four wheels, bronze-plated front, folded drawbridge, an Aegean banner | 50x104 | no strip (it rolls; the dust and ruts are code-drawn, SiegeTowerKit) |
+| `bosses/achilles` | Achilles, the Unkillable (male): a gold lion helmet with a tall Aegean crest, gold cuirass, white skirt, bronze greaves, bare heels, a round gold shield, a long spear | 64x120 | legs walk (the spear rigid); the gold heel mark, the front arc, the rage's gold fire are code-drawn |
+| `bosses/achilles_strike` | His lunge: low, the spear thrust far ahead, the shield slung | 80 tall | pose 3 (BossPoseData), converted at 80 art px so his scale matches the still |
+| `bosses/achilles_rage` | His rage: helmet and shield gone, long wild hair, war cry, the spear raised high, torn cloak | 92x120 | its own still (motion key in the rage), legs walk |
+| `player/doomed_prophetess` | The Doomed Prophetess (female, figure redesign, fully clothed): long violet hair, a bone laurel circlet, a deep violet peplos with a slit, a tall bone bow with a violet string | 36x56 | robe glide (bow rigid) + bust (cols 16-25, rows 15-21), idle breathing |
+| `player/doomed_prophetess_hyper` | Gilded Sibyl (Hyper): plain violet gown, gold laurel crown, gold sash, gold bow | 34x58 | through `SKINS` (derived rig) |
+| `player/doomed_prophetess_untouchable` | Untouchable: a ghost-white phantom, wisp hem, soul-teal bow | 32x56 | through `SKINS` |
+| `player/doomed_prophetess_deathlord` | Deathlord: a gold crown, iron pauldrons, crimson mantle, mid-violet gown, an iron bow with a crimson string | 36x58 | through `SKINS` |
+| `tiles/ilion_beach`, `ilion_camp`, `ilion_gate`, `ilion_walls` | The four zone floors: wet sand, trampled camp earth, worn flagstones, limestone slabs | 128 | quilt; mean L 0.23 / 0.23 / 0.24 / 0.24 |
+| `obstacles/beached_warship_{s,l}` (+ `_v`) | A beached trireme: a dark hull with oar ports, a bronze ram, a painted eye, the furled sail | 80 / 96; `_v` 32 / 38 wide | H + V pair |
+| `obstacles/sea_rock_{s,l}` | A wet sea rock with weed and a bronze anchor | 30 / 36 wide | circle |
+| `obstacles/siege_tent_{s,l}` | A round white army tent with blue stripes | 38 / 44 wide | circle |
+| `obstacles/palisade_{s,l}` (+ `_v`) | A row of sharpened stakes lashed with rope | 56 / 76; `_v` 22 / 30 | H + V pair |
+| `obstacles/troy_wall_{s,l}` (+ `_v`) | A broken length of the walls of Troy, limestone courses with a blue band | 76 / 92; `_v` 30 / 36 | H + V pair |
+| `obstacles/fallen_column_{s,l}` | A fallen fluted column on cut blocks | 28 / 36 wide | circle |
+| `icons/paris_arrow`, `mortal_heel`, `bronze_breaker` | Badges (violet border): a violet arrow with a bone head and a looping trail; a bare heel struck by a ghost arrow; a bronze shield cracked by a bone club | 32 | |
+| `icons/arrow_of_fate`, `ach_heel_found` | Gold-border badges: three ghost arrows around a skull; a gold lion helmet knocked over, pierced by a ghost arrow | 32 | |
+
+Code-drawn on purpose: the boulders (held and in flight), the landing circles and stomps, the testudo's raised
+roof, the siege tower's dust and ruts, Achilles' heel mark and front arc, Paris's Arrow's ghost arrows and trails.

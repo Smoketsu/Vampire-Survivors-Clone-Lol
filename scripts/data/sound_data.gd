@@ -810,4 +810,41 @@ const PANTHEON_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 32.0, "f1": 24.0, "dur": 1.5, "amp": 0.6, "attack": 0.1, "decay": 0.7},
 			{"wave": "noise", "dur": 1.3, "amp": 0.3, "attack": 0.3, "decay": 0.5, "lp0": 700.0, "lp1": 200.0},
 			{"wave": "sine", "f0": 232.0, "f1": 190.0, "start": 0.2, "dur": 1.2, "amp": 0.08, "attack": 0.3, "decay": 0.5, "vib_hz": 5.0, "vib_depth": 0.02}]},
+	# --- Act IV: the Shores of Ilion ---
+	# A cyclops hurls a boulder: a heavy grunt and the whoosh of a rock thrown high.
+	"boulder_throw": {"dur": 0.6, "volume_db": -15.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "saw", "f0": 110.0, "f1": 80.0, "dur": 0.18, "amp": 0.18, "attack": 0.01, "decay": 0.08, "lp0": 600.0},
+			{"wave": "noise", "start": 0.08, "dur": 0.5, "amp": 0.3, "attack": 0.15, "decay": 0.2, "lp0": 900.0, "lp1": 2800.0}]},
+	# A boulder lands (and Polyphemus's stomp): a deep thud, a crack of stone and grit.
+	"boulder_land": {"dur": 0.7, "volume_db": -12.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 70.0, "f1": 34.0, "dur": 0.5, "amp": 0.7, "attack": 0.002, "decay": 0.18},
+			{"wave": "noise", "dur": 0.08, "amp": 0.6, "decay": 0.02, "lp0": 5000.0, "lp1": 1500.0},
+			{"wave": "noise", "start": 0.05, "dur": 0.55, "amp": 0.22, "decay": 0.2, "lp0": 1400.0, "lp1": 400.0}]},
+	# A siege tower's timbers: a slow wooden groan and the rumble of wheels.
+	"siege_creak": {"dur": 0.9, "volume_db": -20.0, "max_voices": 2, "min_interval": 900, "pitch_var": 0.1, "priority": 0,
+		"layers": [
+			{"wave": "saw", "f0": 180.0, "f1": 140.0, "dur": 0.7, "amp": 0.12, "attack": 0.12, "decay": 0.3, "lp0": 900.0, "lp1": 500.0, "vib_hz": 9.0, "vib_depth": 0.04},
+			{"wave": "noise", "dur": 0.85, "amp": 0.18, "attack": 0.2, "decay": 0.35, "lp0": 300.0, "lp1": 180.0}]},
+	# A siege tower crashes down: splintering timbers and a long collapsing rumble.
+	"siege_collapse": {"dur": 1.3, "volume_db": -11.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.12, "amp": 0.7, "decay": 0.04, "lp0": 6000.0, "lp1": 2000.0},
+			{"wave": "noise", "start": 0.05, "dur": 1.2, "amp": 0.4, "attack": 0.05, "decay": 0.5, "lp0": 1200.0, "lp1": 200.0},
+			{"wave": "sine", "f0": 55.0, "f1": 30.0, "start": 0.1, "dur": 1.0, "amp": 0.5, "attack": 0.02, "decay": 0.4},
+			{"wave": "saw", "f0": 300.0, "f1": 90.0, "start": 0.02, "dur": 0.4, "amp": 0.1, "decay": 0.15, "lp0": 1500.0}]},
+	# A blow to Achilles' heel: a bright bronze ring and a short gasp of air.
+	"heel_struck": {"dur": 0.5, "volume_db": -14.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 1320.0, "dur": 0.4, "amp": 0.16, "decay": 0.12},
+			{"wave": "sine", "f0": 660.0, "dur": 0.45, "amp": 0.14, "decay": 0.15},
+			{"wave": "noise", "dur": 0.2, "amp": 0.2, "attack": 0.02, "decay": 0.07, "lp0": 3000.0, "lp1": 900.0}]},
+	# Achilles' war cry: a rising brassy roar over a drum-like boom.
+	"achilles_rage": {"dur": 1.4, "volume_db": -10.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.02, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 140.0, "f1": 220.0, "dur": 1.2, "amp": 0.22, "attack": 0.15, "decay": 0.5, "lp0": 1200.0, "lp1": 2200.0, "vib_hz": 6.0, "vib_depth": 0.03},
+			{"wave": "square", "f0": 210.0, "f1": 330.0, "start": 0.1, "dur": 1.1, "amp": 0.08, "attack": 0.2, "decay": 0.5, "lp0": 2400.0},
+			{"wave": "sine", "f0": 60.0, "f1": 38.0, "dur": 0.8, "amp": 0.55, "attack": 0.005, "decay": 0.3},
+			{"wave": "noise", "start": 0.05, "dur": 1.1, "amp": 0.15, "attack": 0.3, "decay": 0.4, "lp0": 2000.0, "lp1": 800.0}]},
 }

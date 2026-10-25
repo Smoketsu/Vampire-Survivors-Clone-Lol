@@ -133,6 +133,11 @@
 ##             .on_summon_killed() (a hero's Glory stack).
 ##   kills   — _kill_enemy() reports to PantheonRules.on_enemy_killed() (a
 ##             corpse swallowed by a fissure, a hero's Glory payout).
+## Act IV, the Shores of Ilion: FROM_ABOVE is the origin of an arcing hit (a
+## catapult boulder): it reaches PantheonRules.directed_hit_mult() (the
+## Legionary's testudo cuts it; nothing else does) but never Mortal Heel.
+## Mortal Heel — damage_enemy(): a directed hit from behind its target deals
+## more (stat mortal_heel_bonus_dmg); exactly 1 while the passive is not owned.
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -147,6 +152,11 @@ extends RefCounted
 # --- Act IV: the Olympian Republic ---
 ## damage_enemy() origin meaning "no direction" (full damage, the front ignored).
 const NO_ORIGIN: Vector2 = Vector2.INF
+# --- Act IV: the Shores of Ilion ---
+## damage_enemy() origin of an ARCING hit that falls from above (a catapult
+## boulder): no front, no flank, no back (a shield wall is not broken by it),
+## but a locked Legionary's testudo roofs against it (Phalanx.directed_hit_mult()).
+const FROM_ABOVE: Vector2 = Vector2(INF, -INF)
 
 ## Owning run.
 var game: Game
@@ -235,6 +245,16 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 			if front < 1.0:
 				game.stat_add("phalanx_front_dmg_prevented", amount * (1.0 - front) * (1.0 - e.armor))
 			amount *= front
+	# --- Act IV: the Shores of Ilion --- Mortal Heel (the paired passive of
+	# Paris's Arrow, offered on every stage once Achilles fell): a directed hit
+	# from BEHIND its target (PantheonRules.hit_from_behind(), the one direction
+	# test, which reads any enemy's facing) deals back_damage more. Exactly 1
+	# while the passive is not owned; never for an undirected or arcing hit.
+	if origin != NO_ORIGIN and origin != FROM_ABOVE:
+		var heel := game.abilities.passive_value("mortal_heel", "back_damage")  # 0 when not owned.
+		if heel > 0.0 and PantheonRules.hit_from_behind(e, origin):
+			game.stat_add("mortal_heel_bonus_dmg", amount * heel)
+			amount *= 1.0 + heel
 	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
 	# undead fighting on it hit weaker.
 	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).

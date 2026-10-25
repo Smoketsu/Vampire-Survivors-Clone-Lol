@@ -458,6 +458,8 @@ func _draw_obstacle(o: Obstacle) -> void:
 		return  # A Scrap Wastes obstacle kind (Act III).
 	if CitadelGlyphs.draw_obstacle(self, o):
 		return  # An Iron Citadel obstacle kind (Act III).
+	if IlionGlyphs.draw_obstacle(self, o):
+		return  # A Shores of Ilion obstacle kind (Act IV).
 	if PantheonGlyphs.draw_obstacle(self, o):
 		return  # An Act IV stub's placeholder obstacle kind.
 	var c := o.center

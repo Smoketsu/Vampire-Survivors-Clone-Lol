@@ -250,7 +250,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act III: the Scrap Wastes ---
 	"static_in_the_wastes",
 	# --- Act III: the Iron Citadel ---
-	"nothing_is_deathless"]
+	"nothing_is_deathless",
+	# --- Act IV: the Shores of Ilion ---
+	"heel_found"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -339,6 +341,14 @@ const ACHIEVEMENTS := {
 	# part is EpilogueData.ACT3_PART (the last row of EpilogueData.PARTS).
 	"nothing_is_deathless": {"display_name": "Nothing Is Deathless", "description": "Defeat Deus Ex Machina in the Iron Citadel",
 		"stat": "boss_kills", "stage": "citadel", "goal": 1, "unlock": "Title Breaker of Engines, the Act III epilogue", "bounty": 350},  # Owner-approved proposal; bounty TUNING (not in GDD) the campaign's last (The Dead God Serves 300)
+	# --- Act IV: the Shores of Ilion ---
+	# Owner-approved Act IV achievement "Heel Found (kill Achilles from behind
+	# only)". Own decision on "from behind only": the KILLING BLOW must strike his
+	# back or his gold heel mark (BossAchilles counts it as the run stat
+	# achilles_heel_kills; MetaProgress keeps the lifetime count). It unlocks
+	# the counter-passive Bronze Breaker.
+	"heel_found": {"display_name": "Heel Found", "description": "Slay Achilles with a blow to his back or heel",
+		"stat": "achilles_heel_kills", "goal": 1, "unlock": "The Bronze Breaker passive", "bounty": 250},  # Owner-approved Act IV proposal; bounty TUNING (not in GDD) (Static in the Wastes 250)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

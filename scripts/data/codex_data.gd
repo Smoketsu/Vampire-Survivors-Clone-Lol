@@ -124,9 +124,13 @@ const EMPIRE_BOSSES: Array[String] = ["kestrel", "motherboard", "deus_ex_machina
 ## champions (minibosses and the Twilight's Bronze Titan) and its stage bosses
 ## (StageRegistry.BOSS_ARRIVALS ids). Each Act IV stage adds its own as it is
 ## built (phase 2).
-const PANTHEON_SOLDIERS: Array[String] = ["shade_of_dead", "hoplite", "hero"]
+const PANTHEON_SOLDIERS: Array[String] = ["shade_of_dead", "hoplite", "hero",
+	# --- Act IV: the Shores of Ilion ---
+	"legionary", "wolf_of_rome", "cyclops", "siege_tower"]
 ## Olympian Republic champions (minibosses) and the Act IV Reckoning kinds.
-const PANTHEON_CHAMPIONS: Array[String] = ["bronze_titan"]
+const PANTHEON_CHAMPIONS: Array[String] = ["bronze_titan",
+	# --- Act IV: the Shores of Ilion ---
+	"polyphemus"]
 ## Olympian Republic stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const PANTHEON_BOSSES: Array[String] = ["achilles", "zeus", "hades"]
 
@@ -223,6 +227,12 @@ const DESCRIPTIONS: Dictionary = {
 	"achilles": "The Unkillable: his front shrugs off nearly every blow. Strike his heel.",  # Owner-approved Act IV proposal
 	"zeus": "King of the Gods, waiting at the summit of the Pantheon Trial with his thunderbolts.",  # Owner-approved Act IV proposal
 	"hades": "Lord of the Dead, who sent the gods to take the dead back. The first rival necromancer.",  # Owner-approved Act IV proposal
+	# --- Act IV: the Shores of Ilion ---
+	"legionary": "Scutum and gladius. Locked together they raise the testudo: arrows glance off, blades and stomps do not.",  # Owner-approved Act IV proposal
+	"wolf_of_rome": "Bronze wolves come alive, hunting in packs of five with fast lunges. Hold them on your blockers.",  # Owner-approved Act IV proposal
+	"cyclops": "One-eyed giants who hurl boulders onto red circles. Their stony hide shrugs off small blows.",  # Owner-approved Act IV proposal
+	"siege_tower": "Towers rolling for the walls of Troy. Burn one for its bounty; let it arrive and its garrison marches out.",  # Owner-approved Act IV proposal
+	"polyphemus": "Chieftain of the cyclopes: boulders rain on red circles and his stomp shakes the shore.",  # Owner-approved Act IV proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -395,6 +405,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"static_in_the_wastes": "ach_static_in_the_wastes",  # TUNING (not in GDD)
 	# --- Act III: the Iron Citadel ---
 	"nothing_is_deathless": "ach_nothing_is_deathless",  # TUNING (not in GDD)
+	# --- Act IV: the Shores of Ilion ---
+	"heel_found": "ach_heel_found",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -420,6 +432,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"static_in_the_wastes": "lead_lined_bones",
 	# --- Act III: the Iron Citadel ---
 	"nothing_is_deathless": "scrap_swarm",
+	# --- Act IV: the Shores of Ilion ---
+	"heel_found": "bronze_breaker",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

@@ -109,6 +109,14 @@ const UNLOCKS := {
 	"recoil_frame": {"type": "passive", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Its paired passive, unlocked with it
 	"breaker_of_engines": {"type": "title", "achievement": "nothing_is_deathless",
 		"text": "Earn Nothing Is Deathless: defeat Deus Ex Machina in the Iron Citadel."},  # Owner-approved proposal
+	# --- Act IV: the Shores of Ilion ---
+	# Achilles' fall (owner-approved Act IV proposal "Rewards": Paris's Arrow is
+	# unlocked by Achilles) with its paired passive, offered on every stage; the
+	# stage's achievement Heel Found earns the counter-passive Bronze Breaker
+	# (offered only in Act IV through its card row's "act").
+	"paris_arrow": {"type": "spell", "boss": "achilles", "text": "Slay Achilles on the Shores of Ilion to unlock."},  # Owner-approved Act IV proposal
+	"mortal_heel": {"type": "passive", "boss": "achilles", "text": "Slay Achilles on the Shores of Ilion to unlock."},  # Paris's Arrow's paired passive, unlocked with it
+	"bronze_breaker": {"type": "passive", "achievement": "heel_found", "text": "Earn Heel Found: slay Achilles with a blow to his back or heel."},  # Owner-approved Act IV proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

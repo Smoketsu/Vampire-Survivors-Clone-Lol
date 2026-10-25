@@ -252,4 +252,11 @@ const SOUNDS := {
 	"glory": "glory_gain",  # SoundData.PANTHEON_SOUNDS (lazy pack, loaded with the "bronze" music)
 	"hoplite_step": "hoplite_step",  # SoundData.PANTHEON_SOUNDS; reserved: nothing plays it yet (phase 2: a throttled march step for a locked wall)
 	"titan_rise": "titan_rise",  # SoundData.PANTHEON_SOUNDS (lazy pack, loaded with the "bronze" music)
+	# --- Act IV: the Shores of Ilion ---
+	"boulder_throw": "boulder_throw",  # SoundData.PANTHEON_SOUNDS: a cyclops hurls a boulder (CyclopsKit)
+	"boulder_land": "boulder_land",  # SoundData.PANTHEON_SOUNDS: a boulder lands / Polyphemus stomps
+	"siege_creak": "siege_creak",  # SoundData.PANTHEON_SOUNDS: a siege tower's timbers (SiegeTowerKit, IlionDirector)
+	"siege_collapse": "siege_collapse",  # SoundData.PANTHEON_SOUNDS: a siege tower crashes down (IlionDirector)
+	"heel_struck": "heel_struck",  # SoundData.PANTHEON_SOUNDS: a blow to Achilles' back or heel staggers him
+	"achilles_rage": "achilles_rage",  # SoundData.PANTHEON_SOUNDS: Achilles' war cry as his rage begins
 }

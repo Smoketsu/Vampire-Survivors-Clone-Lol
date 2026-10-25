@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), the whole object, its front facing RIGHT, rolling forward.
+
+LOW-RESOLUTION pixel art: the whole tower is only 104 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings, no muscle lines.
+
+Subject: a Greek SIEGE TOWER: a tall narrow wooden tower of dark brown timber beams on four big solid wooden wheels, three storeys high, its FRONT (right) face armoured with big riveted BRONZE plates, a raised wooden drawbridge folded up against the top storey, an Aegean-blue banner with a plain white stripe hanging from a pole on its roof, two small dark arrow slits on its side. Seen three-quarter from the front-right so both the bronze front and the wooden side show. It is a machine: no people.
+Signature shape: the tall narrow tower on wheels with the bronze front and the folded drawbridge.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: bronze #1E1408 (outline) #6B4423 #A8702E #E0A955; marble white #8E8A86 #CFCBC4 #F4F1EA; Aegean blue #123E66 #2C77B8 #6FB6E8; skin #8C6040 #E0A882; wood and leather #4F3320 #8C6040.
+Outline: a clean 1-pixel dark outline around the whole tower in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a sprite of this game: match its pixel size, outline weight and flat look exactly.

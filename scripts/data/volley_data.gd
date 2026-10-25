@@ -280,6 +280,9 @@ const SPELLS := {
 	# --- Act III: the Iron Citadel ---
 	"scrap_swarm": {"every": 5, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 14], "speed": 280.0,
 		"life": 0.6, "share": 0.5, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) a ring of scrap shards (every 5 drone intervals)
+	# --- Act IV: the Shores of Ilion ---
+	"paris_arrow": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [2, 3, 5], "speed": 300.0,
+		"life": 1.2, "share": 0.35, "pierce": 0, "radius": 3.5, "style": "spark", "color": Color(0.80, 0.62, 1.0), "homing": 6.0},  # TUNING (not in GDD) a few small violet ghost darts seeking the strongest foe
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)
