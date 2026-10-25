@@ -997,6 +997,8 @@ structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
 | Chapter II, **The Crimson March** | slay Sir Alaric once (GDD §9.3) | Marshal Vael, the Crimson Bulwark | ×1.25 |
 | Chapter III, **The Sanctum of Judgment** | slay Marshal Vael once (GDD §9.3) | Grand Inquisitor Seraphine, Voice of the Dawn | ×1.5 |
 
+**The stage Soul Ash bonus restarts in every act** (owner decision Oct 2026, GDD §15.0 "Soul Ash per act and difficulty"): stage 1 of an act ×1, stage 2 ×1.25, stage 3 ×1.5. Graveyard / Gullhaven Harbour / Scrap Wastes ×1.0; Crimson March / Hollow Archive / Assembly Halls ×1.25; Sanctum / Ul-Thalos / Iron Citadel ×1.5. Difficulty is the bigger lever (Initiate ×0.8, Necromancer ×1, Lich ×1.5, Deathlord ×2). The bonuses add on the run subtotal rather than multiply (see Difficulty & run modifiers). Measured payouts: `docs/ossuary/ECONOMY.md`, tool `tools/ash_measure.py`.
+
 ### Characters
 
 The **pre-run setup** screen (after the stage select) picks your
@@ -1064,8 +1066,8 @@ the difficulty and the active modifiers.
 |---|---|---|
 | **Initiate** ("easier scaling") | HP ×0.9 and damage ×0.8, and both grow 25% slower over time (×0.70 HP and ×0.66 damage by 0:00); boss HP ×0.8 | ×0.8 |
 | **Necromancer** (standard) | today's game, every value ×1 | ×1 |
-| **Lich** ("increased HP / aggression") | HP and damage ×1.05, growing faster over time (×1.28 HP and ×1.20 damage by 0:00); move speed ×1.05; boss HP ×1.15 | ×1.25 |
-| **Deathlord** ("hardest, with more elites") | HP and damage ×1.05, growing 40% faster (×1.42 HP and ×1.35 damage by 0:00); move speed ×1.06; 0.8% of trickle soldiers are promoted to elites (elite HP and size, but plain XP and no elite chest or power-up chance); boss HP ×1.3 | ×1.5 |
+| **Lich** ("increased HP / aggression") | HP and damage ×1.05, growing faster over time (×1.28 HP and ×1.20 damage by 0:00); move speed ×1.05; boss HP ×1.15 | ×1.5 |
+| **Deathlord** ("hardest, with more elites") | HP and damage ×1.05, growing 40% faster (×1.42 HP and ×1.35 damage by 0:00); move speed ×1.06; 0.8% of trickle soldiers are promoted to elites (elite HP and size, but plain XP and no elite chest or power-up chance); boss HP ×1.3 | ×2 |
 
 The levels mostly bite later in the run: an army that falls behind in the
 first minutes never recovers, so a harsh opening would make Deathlord a coin
@@ -1090,10 +1092,10 @@ Pact and the Profane Oath are one opt-in category whose bonuses **add**. So
 enemy HP = time scaling × stage × level HP × (1 + Pact + Oath + modifiers),
 and the same for damage and spawns. Soul Ash: every source pays its own line
 on the run subtotal, and the lines add: Ash Harvest, Pact, Oath, the stage
-bonus, **Difficulty** (−20% on Initiate up to +50% on Deathlord) and **Run
+bonus, **Difficulty** (−20% on Initiate up to +100% on Deathlord) and **Run
 modifiers** (the sum of the active modifiers' rewards, +125% with all eight).
 The setup screen's total is level ×ash + modifier rewards (Deathlord with
-every modifier: ×2.75).
+every modifier: ×3.25; owner decision Oct 2026, GDD §15.0 "Soul Ash per act and difficulty").
 
 ### Hyper mode & skins
 
@@ -1269,7 +1271,7 @@ open). The zone is shown under the timer.
   tethers them only when no soldier is in range.
 - **Harder than the Graveyard**: from Zone II (4:00) enemies have ×1.1 HP and
   ×1.05 damage on top of the usual time scaling (Marshal Vael always), tougher
-  kinds arrive earlier, and Soul Ash is ×1.25 (its own end-screen line). The
+  kinds arrive earlier, and Soul Ash is ×1.25 (its own end-screen line; stage 2 of Act I). The
   first two minutes are recruit patrols only, like the Graveyard's opening:
   every build starts with Shadow Bolt and two warriors, and a harder opening
   snowballed into starved runs.
@@ -1312,7 +1314,7 @@ countdown with the boss at 17:00 like the other stages.
 - **The crypts beneath**: open crypts work like the Graveyard's empowered graves.
 - **Hardest stage**: its own kinds arrive from Zone II, and from Zone III
   (8:30) enemies also have ×1.1 HP and ×1.1 damage (the boss always), and
-  Soul Ash is ×1.5. The opening minute is recruits only, and the first four
+  Soul Ash is ×1.5 (stage 3 of Act I). The opening minute is recruits only, and the first four
   minutes use the March's opening numbers. The elite kinds (Radiant
   Inquisitors, High Confessors, Sun Paladins) come in scripted waves, never
   in the trickle.
@@ -1439,7 +1441,7 @@ integration").
 The last stage of Act II (GDD §15.0 "Ul-Thalos, the Risen Spire"; data in
 `scripts/data/stages/spire_stage.gd`).
 The god's city surfaces mid-ocean: wet green cyclopean stone and wrong angles around the spire
-where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.25.
+where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×1.5 (stage 3 of Act II).
 
 - **Four zones on the clock** (run by `MarchDirector`, as on the March and in the Sanctum): the
   Breakwater (20:00), the Sunken Steps (15:00), the Dream Gate (10:00) and the Spire (5:00),
@@ -1509,7 +1511,7 @@ where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.2
 The last stage of the campaign (GDD §15.0 "The Iron Citadel (Act III phase 2)" and the rows after
 it; data in `scripts/data/stages/citadel_stage.gd`). The Empire's throne of iron, where death was
 conquered with steel; Varn, the Root User, waits at its summit inside Deus Ex Machina. Unlocked by
-shutting down the Motherboard; Soul Ash ×3.0 (placeholder).
+shutting down the Motherboard; Soul Ash ×1.5 (stage 3 of Act III).
 
 - **Four zones on the clock** (`MarchDirector`): the Shield Gates (20:00), the Laser Courts
   (15:00), the Spire Lifts (10:00) and the Core (5:00), each with its own pixel-art floor
