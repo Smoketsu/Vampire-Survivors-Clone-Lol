@@ -629,6 +629,23 @@ static func jam_field(ci: CanvasItem, at: Vector2, r: float, k: float) -> bool:
 	return true
 
 
+## The Arc Engineer's armed static field at `at` (radius `r`, the suppression
+## zone's exact radius), `life` 1 -> 0 as it runs out: a faint amber tint, the
+## hex grid, the crackling red rim turning on the exact edge and eight sparks
+## circling inside it, all fading with life. False when the art is missing.
+static func static_field(ci: CanvasItem, at: Vector2, r: float, life: float, now: float) -> bool:
+	if not has(EmpireFxData.STATIC_EDGE):
+		return false
+	var a := clampf(life * 4.0, 0.0, 1.0)  # Fade over its last quarter.
+	CovenantFx.soft_disc(ci, at, r, Color(AMBER, 0.12 * a))
+	CovenantFx.hatch_disc(ci, at, r, Color(1.0, 1.0, 1.0, 0.3 * a), EmpireFxData.HEX)
+	CovenantFx.ring(ci, at, r, EmpireFxData.STATIC_EDGE, Color(1.0, 1.0, 1.0, 0.95 * a), 1.0, 0.0, TAU, now * 1.2)
+	for i in 8:
+		var ang := TAU * float(i) / 8.0 - now * 0.9  # Circling sparks.
+		frame(ci, EmpireFxData.SPARK, 2, i + int(now * 10.0), at + Vector2.from_angle(ang) * r * 0.72, 0.0, 1.0, Color(1.0, 1.0, 1.0, a))
+	return true
+
+
 ## A mortar shell in flight at `at` (already lifted by the code's arc height),
 ## turning by `now`. False when the art is missing.
 static func mortar_shell(ci: CanvasItem, at: Vector2, now: float, index: int) -> bool:

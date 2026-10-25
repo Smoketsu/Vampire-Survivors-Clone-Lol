@@ -2091,7 +2091,7 @@ Covenant's:
 | `empire_fx/furnace_slag`, `furnace_embers`, `furnace_molten_0..2`, `furnace_rim`, `furnace_warn`, `furnace_haze`, `furnace_flame` | Channel slag, glowing seams, molten metal (3 flicker frames), iron rim, hazard stripes, heat haze, flame tongue | 64 seamless; 12 × 3, 10 × 2, 8 × 6, 4 × 9 × 14 | `EmpireFx.channel()` (world-anchored) |
 | `empire_fx/storm_veil`, `storm_grit` | Scrap storm veil (hole at 0.2393 of the half = the 230 px clear radius) and drifting grit | 256, 256 | `EmpireFx.storm()` |
 | `empire_fx/jug_flame_0..2` | Juggernaut flame billows | 4 × 10 / 16 / 22 | `EmpireFx.jug_flame()` |
-| `empire_fx/static_edge`, `spark` | Arc Engineer field rim; static spark | 10 × 5, 2 × 7 | `EmpireFx.jam_field()` |
+| `empire_fx/static_edge`, `spark` | Arc Engineer field rim; static spark | 10 × 5, 2 × 7 | `EmpireFx.jam_field()` (arming), `static_field()` (its armed suppression zone, `SuppressionField`) |
 | `empire_fx/mortar_shell`, `lock_open`, `lock_locked`, `pylon_stump` | Mortar shell; Lock-On reticles (red / white-hot blink); fallen pylon decal | 2 × 10, 2 × 35, 2 × 29, 30 × 14 | `EmpireShots`, `LockOn`, `WastesDirector` |
 | `empire_fx/shock_edge`, `pulse_front`, `pulse_charge`, `binding_edge`, `hangar_door` | Deus footfall shock; overload pulse front (= its 26 px, middle row on the radius); charge ring; soul-binding chain; hangar door (shut / opening / open) | 10 × 4, 12 × 26, 8 × 3, 10 × 5, 3 × 36 × 24 | `DeusHazards`, `CitadelGlyphs` hooks |
 | `empire_fx/magnet_edge`, `claw` | Motherboard magnet ring piece; crane claw (open / clamped) | 10 × 3, 2 × 16 | `AssemblyGlyphs` hooks |
