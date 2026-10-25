@@ -102,7 +102,7 @@ func meta_for(i: int) -> MetaModifiers:
 		return Meta.run_modifiers()
 	var t: Dictionary = (lo["meta_levels"] as Dictionary).duplicate()
 	t[PactData.OATH_ID] = int(slots[0].loadout.get("meta_levels", {}).get(PactData.OATH_ID, 0)) if i == 0 else 0  # Only the host's Oath sets the run's.
-	return MetaModifiers.from_tiers(t)
+	return MetaModifiers.from_tiers(t, lo.get("mastery_levels", {}) as Dictionary)  # Each player's own Masteries.
 
 
 ## The character of slot `i` (its loadout's character_id).
