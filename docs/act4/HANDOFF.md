@@ -1,59 +1,50 @@
-# Act IV handoff (lead session, Oct 24, 2026)
+# Act IV handoff (lead session, updated Oct 25, 2026)
 
 Read this first, then `CLAUDE.md` (the project rules; they win any conflict), `docs/act4/PROPOSAL.md` (the
-owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (the brief for the three stage agents). GDD §15.0 rows from
-"Act IV proposal (owner answers)" to the end of the table record every Act IV decision.
+owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages were briefed). GDD §15.0 rows from
+"Act IV proposal (owner answers)" to the end of the table record every Act IV decision; "Act IV integration (phase
+2)" has the final test numbers.
 
 ## Where things stand
 
-- **Branch `claude/charming-lamport-upfhlz`** (pushed) holds the whole Act IV foundation on top of `main` (`3cbe21f`):
-  - the Acts IV–VI concept art (merged from `act3-epilogue`, the only unmerged work there);
-  - the proposal copy and the foundation briefs (`docs/act4/`);
-  - three merged agent branches (local only, lost with the container; everything is in the merges):
-    - `act4-art`: the `bronze` / `marble` / `aegean` ramps (`tools/palette.json`), `assets/sprites/pantheon/`
-      (`shade_of_dead`, `hoplite`, `hero`, `bronze_titan`, stills and walk / hover strips, about $0.12), the rigs in
-      `walk_cycle.py` and the `"pantheon"` faction ramps in `prepare_sprite.py`;
-    - `act4-audio`: "Hymn of Bronze" (`SoundData.BRONZE_SCORE`), the lazy Pantheon pack (`SoundData.PANTHEON_SOUNDS`,
-      `Sfx.PACK_SEED_OFFSETS`), closing cards per act (`EpilogueData.CLOSINGS`, "The River Runs Dry" after Act III,
-      panel `epilogue/close_act3`, about $0.04);
-    - `act4-foundation`: the stubs, `PantheonRules` (`DivineWrath`, `Phalanx`, `Glory`), the kinds and kits, the
-      Twilight of the Gods, the Act IV and Codex tabs, hit origins on `CombatResolver.damage_enemy()`, `PantheonReport`,
-      `docs/act4/tools/gate.sh`;
-  - the lead's merge wiring (the `bronze` music on the stubs, the Pantheon sound ids) and the review fixes (GDD row
-    "Act IV foundation review fixes").
-- **Verified on the merged branch** (seed 7):
-  - `--import` clean;
-  - the gate (Graveyard default and army, Gullhaven, Ul-Thalos, the Iron Citadel army) against `7ab1c74`: every
-    gameplay line identical; only the Codex totals (enemy 55 → 59, boss 9 → 12) and the Citadel's "stages unlocked by
-    this run: ilion" differ;
-  - `--stage=ilion|olympus|underworld --policy=army`: VICTORY, 0 errors, `stuck_units=0`, every wrath kind striking,
-    walls locking and breaking, Glory paid out; Graveyard `--mortal` clean; `--coop-bot --stage=ilion` clean.
-- **Not on `main`.** Nothing of Act IV is on `main` or live. The stubs are "Coming soon" behind `"playable": false`,
-  so the foundation could go to `main` the way the Act III foundation did, once the owner agrees. Tell the co-op work
-  (if a session is running it) before any fast-forward of `main`.
+- **Branch `claude/charming-lamport-upfhlz`** (pushed) holds all of Act IV on top of `main` (`3cbe21f`). Nothing of Act
+  IV is on `main` or live: the three stages are still `"playable": false` ("Coming soon").
+  - **Phase 1, the foundation:** the stubs, `PantheonRules` (`DivineWrath`, `Phalanx`, `Glory`), the shared kinds, the
+    Twilight of the Gods, the Act IV and Codex tabs, the `bronze` music and Pantheon sound pack, the closing cards per
+    act ("The River Runs Dry" after Act III).
+  - **Phase 2, the three stages** (three parallel agents, merged): **the Shores of Ilion** (siege towers, Polyphemus,
+    Achilles with his heel and three phases; Legionary / testudo, Wolf of Rome, Cyclops; Paris's Arrow / Arrow of Fate
+    + Mortal Heel; the Doomed Prophetess; Heel Found → Bronze Breaker), **Mount Olympus** (the Pantheon Trial: Ares,
+    Artemis, Poseidon, then Zeus in three phases; Centaur Archer, Amazon, Gorgon, Hound of Artemis, Sea Serpent; Stolen
+    Thunder / Gigantomachy + Titan's Blood; the Oathbreaker; Twilight of the Gods → Grounded Bones; the public
+    `DivineWrath.strike()`, the one summon stun path `CombatResolver.stun_unit()`), **the Asphodel Underworld** (the
+    Styx, Cerberus with three heads, Hades in three phases on the Claims path, kneeling at the end; Shade Hoplite,
+    Tartarus Warden; River Styx / Lethe's Flood + Ferryman's Toll; the Ferrywoman; the Myrmidon Shades / Legion of
+    Tartarus + Myrmidon Oath; Empty Throne); the Act IV epilogue part "The Gods Are Silent" (4 panels) and the card
+    "The Sun Still Rises".
+  - Art: about 75 API images in all (≈$1.8), every sprite with walk / idle strips as the rules ask. **None reviewed
+    by the owner yet.**
+- **Verified** (the big pass, see the GDD row): import clean, zero errors and `stuck_units=0` everywhere, the stages 1–9
+  same-seed gate passes, co-op bot runs clean, the army bot wins every Act IV seed it ran after the Olympus tuning.
 
 ## What is left for Act IV, in order
 
-1. **The owner's open question:** the soldiers' sex (they asked to see the all-female `_v1` lineups again:
-   `art_source/concepts/act4_lineup_v1.png` vs `act4_lineup.png`). Show both before the stage agents make their art.
-2. **Phase 2:** three stage agents in parallel from `docs/act4/BRIEF_PHASE2.md` (Ilion, Olympus, the Underworld), each
-   in a worktree from this branch, one Godot process each. Then merge (most conflicts are both sides appending to the
-   same list: keep both; watch a list's closing `]`, a dict entry cut mid-way and a `match` arm that loses its
-   `return`), `--import` and one run per stage after every merge, the gate, the balance pass (a step harder than the
-   Iron Citadel; the army bot reaches 0:00 and kills the boss), the art review page (round after round until all OK),
-   the Act IV epilogue part "The Gods Are Silent" and the closing card "The Sun Still Rises" (image key needed), then
-   the owner's playtest and `"playable": true`.
-3. **CI:** add an Act IV army job when the stages turn playable (CI runs no Act III job yet either).
+1. **The owner's art review:** a review page (db + user capabilities; OK / Redo and a note per image), like the Act III
+   ones (`docs/act3/tools/make_act3_review_r2.py` is the template). Agents flagged: Hades' bident has three prongs (reads
+   as a trident), the Styx forget zones use the Covenant's gold suppression rings, the Stolen Thunder and Gigantomachy
+   badges are weak, a faint blue edge by Zeus's beard. Also still open: the soldiers' sex (the owner wanted to see the
+   all-female `_v1` lineups again; the mixed lineup was used).
+2. **The owner's playtest**, then the balance pass (open items in the GDD integration row: the naive Olympus opening,
+   the Underworld is the easiest, siege towers rarely destroyed, strong Gigantomachy / Lethe's Flood / Myrmidons, the
+   placeholder Soul Ash multipliers ×3.25 / ×3.5 / ×3.75).
+3. Turn the stages `"playable": true`, add an Act IV army job to CI, fast-forward `main` (tell any co-op session first).
+4. The Web performance check at phone size on the busiest stage (Olympus late game), as Act III had.
 
 ## Notes for the next lead
 
-- The foundation's own decisions are in its GDD rows: Olympus zone names, wrath damage to summons softened (5 per
-  wave, 3 per fissure tick), front melee on a locked wall deals full damage (only shots are cut, to 10%), any flank
-  hit breaks the whole wall for 1.6 s, Glory bounty 2 Soul Ash per stack, no Glory chest after 0:00, the Codex tab
-  "Republic", compact act tabs beyond three acts, the closing card's label "Beneath the world".
-- The art agent's pipeline notes (the bronze muddies through `pixelate_source.py`) are in the ART_BIBLE's Act IV
-  section; the Hoplite's crest is Aegean blue, not the concept's crimson (crimson is the Covenant's).
-- Image generation works in this environment (`api.openai.com` is injected by the proxy; a free
-  `curl -sS -o /dev/null -w "%{http_code}" https://api.openai.com/v1/models` prints 200). Never read or print a key.
-- Regenerate gate bases with `docs/act4/tools/gate.sh <tree> <outdir>` from a clean `git worktree add` of the base;
-  scratchpad logs die with the container.
+- **Merging parallel branches:** most conflicts are both sides appending, but git keeps identical trailing lines ONCE,
+  so a dict entry or `match` arm can lose its last lines (`"starts_unlocked": false`, a `return`). After resolving, run
+  the block check (every block a branch added must appear intact in the merged file: see the GDD integration row) and
+  `--import`, then one run per stage.
+- Image generation works here (`api.openai.com` is injected by the proxy). Never read or print a key.
+- Regenerate gate bases with `docs/act4/tools/gate.sh <tree> <outdir>` from a clean `git worktree add` of the base.

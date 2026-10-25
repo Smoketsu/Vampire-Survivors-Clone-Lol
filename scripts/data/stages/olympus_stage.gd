@@ -60,6 +60,7 @@ const ASH_MULT: float = 3.5  # TUNING (not in GDD) placeholder (Ilion x3.25)
 const WRATH := {
 	"kind": "lightning",  # Owner-approved proposal: Zeus's lightning (Olympus)
 	"dmg_player": 6.0,  # TUNING (not in GDD) lead's integration pass: 9 -> 6 on this stage only (a salvo every 6 s all run; the shared default stays for the Twilight)
+	"dmg_summon": 9.0,  # TUNING (not in GDD) lead's integration pass: 16 -> 9 on this stage only (the storm and Zeus's storms, which share these settings, dealt ~5,000 a minute to the packed Bone Ring late in the run and broke it during the Zeus fight)
 }
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): the Twilight

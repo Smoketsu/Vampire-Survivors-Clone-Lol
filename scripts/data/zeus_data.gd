@@ -114,7 +114,7 @@ const BOSS := {
 	"colossus_time": 2.0,  # TUNING (not in GDD) s he stands growing (a window for the army)
 	"colossus_size": 1.55,  # TUNING (not in GDD) x his body radius
 	"colossus_speed": 40.0,  # TUNING (not in GDD) px/s, heavier
-	"colossus_damage": 22.0,  # TUNING (not in GDD) per blow
+	"colossus_damage": 15.0,  # TUNING (not in GDD) per blow; lead's integration pass 22 -> 15 (his fist was most of the army bot's death on 1 of 5 seeds)
 	"colossus_mass": 16.0,  # TUNING (not in GDD)
 	# The Thunder Stomp (True Form only).
 	"stomp_cooldown": 6.0,  # TUNING (not in GDD) s
@@ -122,7 +122,7 @@ const BOSS := {
 	"stomp_min_summons": 3,  # TUNING (not in GDD)
 	"stomp_telegraph": 1.0,  # TUNING (not in GDD) s
 	"stomp_radius": 130.0,  # TUNING (not in GDD) px
-	"stomp_damage_player": 16.0,  # TUNING (not in GDD) before the time scaling
+	"stomp_damage_player": 12.0,  # TUNING (not in GDD) before the time scaling; lead's integration pass 16 -> 12
 	"stomp_damage_summon": 24.0,  # TUNING (not in GDD) before the time scaling
 	"stomp_push": 50.0,  # TUNING (not in GDD) px summons are thrown out
 }

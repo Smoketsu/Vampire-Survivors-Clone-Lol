@@ -591,6 +591,16 @@ tiny tweaks.
   closing cards per act (`EpilogueData.CLOSINGS`; "The River Runs Dry" after Act III), autotest `--stage=ilion|olympus|
   underworld` and the `divine wrath` / `phalanx` / `glory` / `pantheon kinds` / `pantheon stage` lines (`PantheonReport`).
   Gate passed: stages 1–9 same-seed summaries unchanged.
+- **Act IV phase 2** (GDD §15.0 rows from "The Shores of Ilion (Act IV phase 2)" to "Act IV integration (phase 2)";
+  three parallel stage branches and the epilogue art merged on the lead's branch, one big test pass at the end, owner
+  request): **the Shores of Ilion** (siege towers, Polyphemus, Achilles and his heel; Legionary / testudo, Wolf of
+  Rome, Cyclops; Paris's Arrow / Arrow of Fate + Mortal Heel; the Doomed Prophetess; Heel Found → Bronze Breaker),
+  **Mount Olympus** (the Pantheon Trial: Ares, Artemis, Poseidon, Zeus; Centaur Archer, Amazon, Gorgon; Stolen Thunder /
+  Gigantomachy + Titan's Blood; the Oathbreaker; Twilight of the Gods → Grounded Bones; `DivineWrath.strike()` /
+  `open_fissure()`, the one summon stun path `CombatResolver.stun_unit()`), **the Asphodel Underworld** (the Styx,
+  Cerberus, Hades on the Claims path; River Styx / Lethe's Flood + Ferryman's Toll; the Ferrywoman; the Myrmidon Shades
+  / Legion of Tartarus + Myrmidon Oath; Empty Throne), the Act IV epilogue "The Gods Are Silent" and the card "The Sun
+  Still Rises". Stages 1–9 same-seed summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -622,9 +632,10 @@ tiny tweaks.
 6. **Act III, the Electronic Empire: live (Oct 2026).** The three stages are playable (GDD §15.0 "Act III goes
    live"); the owner balances by hand from playtests (their notes outrank the bots). Open: the naive survival rate,
    the placeholder Soul Ash multipliers, a real-iPhone check; CI has no Act III job yet. Handoff: `docs/act3/HANDOFF.md`.
-6b. **Act IV, the Olympian Republic: foundation done, phase 2 next.** Three stage agents in parallel from
-   `docs/act4/BRIEF_PHASE2.md` (Ilion, Olympus, the Underworld), then integration, the art review and the balance pass.
-   Open for the owner: the soldiers' sex (all-female `_v1` lineups vs the mixed one). Handoff: `docs/act4/HANDOFF.md`.
+6b. **Act IV, the Olympian Republic: built, not live (Oct 2026).** All three stages are in on the lead's branch behind
+   `"playable": false` (GDD §15.0 "Act IV integration (phase 2)"). Next: the owner's art review (none of it reviewed
+   yet; also the open soldiers' sex question), the owner's playtest and balance pass, then playable, a CI job and `main`.
+   Handoff: `docs/act4/HANDOFF.md`.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
