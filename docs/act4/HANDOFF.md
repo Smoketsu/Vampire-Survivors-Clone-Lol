@@ -35,9 +35,13 @@ owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages wer
    the Hades set regenerated, the Myrmidon Shade and Legion of Tartarus from the round 1 originals with a speck
    cleanup, the Ferrywoman boxes widened left, the Amazon's sideways sway (`walk_cycle.py` rig key `bust_axis="x"`), the
    Bronze Titan in a new legs-apart pose with a `legs` walk, the Gorgon's face repainted). Open question on the page:
-   Hades' cloak uses the player's violet. Next: read `act4_art_r3` with ArtifactData `list` + `out_dir`; a round 4 is
-   `python3 docs/act4/tools/make_act4_review_r2.py <act4_art_r3 marks dir> <out.html> <commit holding the round 3 images:
-   b1ae374> 4`.
+   Hades' cloak uses the player's violet. Round 3: 9 OK / 9 Redo (GDD row "round 3"). **Round 4 is published** (`act4_art_r4`): Hades back to his
+   round 1 sprites recoloured (bone robe under a midnight-Aegean cloak, `art_source/underworld/r4/hades_recolour.py`;
+   the alternative scheme E, charcoal robe, is a "choice" card: if the owner marks it OK, switch the script's scheme
+   letter and rerun it), the Myrmidon Shade and Legion of Tartarus regenerated from their original prompts, the
+   Amazon's skirt (her front flap read as genitalia: now a full pleated war skirt; still, walk and idle rebuilt). Next:
+   read `act4_art_r4`; a round 5 is `python3 docs/act4/tools/make_act4_review_r2.py <act4_art_r4 marks dir> <out.html>
+   d9abd9d 5`.
 2. **The owner's playtest**, then the balance pass (open items in the GDD integration row: the naive Olympus opening,
    the Underworld is the easiest, siege towers rarely destroyed, strong Gigantomachy / Lethe's Flood / Myrmidons, the
    placeholder Soul Ash multipliers ×3.25 / ×3.5 / ×3.75).
