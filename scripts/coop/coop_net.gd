@@ -302,8 +302,12 @@ static func error_text(err: String, detail: String = "") -> String:
 # Loadouts, settings, start info (static helpers; also used by the sim's hook)
 # =====================================================================================
 
-## Our loadout from `config` (character, skin, ultimate) and the Meta save
-## (worn title, Ossuary levels, Act II unlocks), named `player_name`.
+## Our loadout from `config` (character, skin, ultimate, relics, Grave Offering and
+## the relic it lends) and the Meta save (worn title, Ossuary levels, Act II
+## unlocks), named `player_name`. The relics and the offering are checked against
+## our own save (owned, slots, affordable: RelicLedger.prepare_run() ran on Done);
+## each player's apply to his own slot only (CoopSession.meta_for()), and each
+## pays his own offering from his own save when the run starts (Game._pay_offering()).
 static func make_loadout(config: RunConfig, player_name: String = "") -> Dictionary:
 	var levels := {}  # Upgrade id -> purchased tier.
 	for id: String in Meta.tiers:
@@ -316,8 +320,11 @@ static func make_loadout(config: RunConfig, player_name: String = "") -> Diction
 	for cls: String in MasteryData.CLASSES:
 		if Meta.mastery_level(cls) > 0:
 			masteries[cls] = Meta.mastery_level(cls)
+	var relics := Array(Meta.relics.valid_equip(config.relics))  # Equipped relics (owned, within our slots).
+	var offering := config.offering_id if Meta.relics.offering_block(config.offering_id, config.relics) == "" else ""  # Affordable or none.
 	return {"character_id": config.character_id, "skin_id": config.skin_id, "recolour_id": config.recolour_id, "ultimate_id": config.ultimate_id,
-		"title_id": Meta.selected_title(), "meta_levels": levels, "mastery_levels": masteries, "unlocks": unlocks, "name": player_name}
+		"title_id": Meta.selected_title(), "meta_levels": levels, "mastery_levels": masteries, "unlocks": unlocks, "name": player_name,
+		"relics": relics, "offering": offering, "borrowed": config.borrowed_relic if offering != "" else ""}
 
 
 ## The host's run settings from `config`: stage, difficulty, modifiers, Hyper,
@@ -695,7 +702,20 @@ static func _clean_loadout(lo: Dictionary, slot: int) -> Dictionary:
 	if u is Array:
 		for id: Variant in u:
 			unlocks.append(String(id))
+	var relics: Array = []  # Relics: known ids, no repeats, at most RelicData.MAX_SLOTS.
+	var r: Variant = lo.get("relics", [])
+	if r is Array:
+		for id: Variant in r:
+			if RelicData.has(String(id)) and not relics.has(String(id)) and relics.size() < RelicData.MAX_SLOTS:
+				relics.append(String(id))
+	var offering := String(lo.get("offering", ""))  # Grave Offering ("" = none).
+	if not OfferingData.has(offering):
+		offering = ""
+	var borrowed := String(lo.get("borrowed", ""))  # The relic it lends ("" = none).
+	if offering == "" or not RelicData.has(borrowed) or relics.has(borrowed):
+		borrowed = ""
 	return {"character_id": String(lo.get("character_id", CharacterData.DEFAULT_ID)),
 		"skin_id": String(lo.get("skin_id", "")), "recolour_id": String(lo.get("recolour_id", "")),
 		"ultimate_id": String(lo.get("ultimate_id", UltimateData.DEFAULT_ID)),
-		"title_id": String(lo.get("title_id", "")), "meta_levels": levels, "mastery_levels": masteries, "unlocks": unlocks, "name": player_name}
+		"title_id": String(lo.get("title_id", "")), "meta_levels": levels, "mastery_levels": masteries, "unlocks": unlocks, "name": player_name,
+		"relics": relics, "offering": offering, "borrowed": borrowed}

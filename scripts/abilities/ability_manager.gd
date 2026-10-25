@@ -82,6 +82,10 @@ var rerolls_max: int = LevelUpData.REROLLS
 var rerolls_left: int = LevelUpData.REROLLS
 ## Level-up banishes per run: LevelUpData.BANISHES + meta Banishing Rite.
 var banishes_max: int = LevelUpData.BANISHES
+## Relics (RelicData, through game.meta at setup): extra active slots (Hollow Crown; 0 = none).
+var extra_active_slots: int = 0
+## Relics: every this-many levels add one reroll (Bone Abacus; 0 = off).
+var reroll_every: int = 0
 ## Level-up banishes left this run.
 var banishes_left: int = LevelUpData.BANISHES
 ## Item id -> true for items banished from the card pool this run.
@@ -131,8 +135,10 @@ func setup(p_game: Game) -> void:
 	if start == "orb_shield":
 		_create_orb_shield()
 	# Fortune tree (GDD §9.2 "rerolls", open question 7): extra charges.
-	rerolls_max = LevelUpData.REROLLS + game.meta.int_value("rerolls")
-	banishes_max = LevelUpData.BANISHES + game.meta.int_value("banishes")
+	rerolls_max = maxi(0, LevelUpData.REROLLS + game.meta.int_value("rerolls"))  # Relics / offerings may add or take (never below 0).
+	banishes_max = maxi(0, LevelUpData.BANISHES + game.meta.int_value("banishes"))
+	extra_active_slots = maxi(0, game.meta.relic_int("active_slots"))  # Relics (this player's game.meta).
+	reroll_every = maxi(0, game.meta.relic_int("reroll_every"))
 	rerolls_left = rerolls_max
 	banishes_left = banishes_max
 	vanguard_left = game.meta.int_value("vanguard")  # Dominion (Ossuary): Chosen Vanguard charges.
@@ -281,6 +287,22 @@ func ready_evolutions() -> PackedStringArray:
 ## True once the run is old enough for evolutions (EvolutionData.MIN_ELAPSED).
 func evolutions_unlocked() -> bool:
 	return game.elapsed >= EvolutionData.MIN_ELAPSED
+
+
+## Active slots of this player: PlayerData.ACTIVE_SLOTS plus the relics' extra
+## ones (Hollow Crown).
+func active_slots() -> int:
+	return PlayerData.ACTIVE_SLOTS + extra_active_slots
+
+
+## The shared level reached `lvl` (Game._on_level_reached()): the Bone Abacus relic
+## adds one reroll every reroll_every levels (to the run's total and to those left).
+func on_level(lvl: int) -> void:
+	if reroll_every <= 0 or lvl % reroll_every != 0:
+		return
+	rerolls_max += 1
+	rerolls_left += 1
+	game.stat_add("relic_rerolls", 1.0)
 
 
 ## Number of occupied active slots (learned spells + learned summon classes).
@@ -717,7 +739,7 @@ func _apply_fallback(id: String) -> void:
 ## LevelUpData.WEIGHT_NEW and a GDD summon role LevelUpData.WEIGHT_NEW_CORE_SUMMON.
 func _candidates(exclude: Dictionary) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
-	var can_new_active := active_count() < PlayerData.ACTIVE_SLOTS
+	var can_new_active := active_count() < active_slots()
 	var can_new_passive := passive_count() < PlayerData.PASSIVE_SLOTS
 	var owns_summon := false
 	for cls: String in UnitData.CLASS_ORDER:

@@ -18,7 +18,14 @@
 ## Step 3 (new options and Dominion) adds the option prices / gates, the mid / max
 ## profiles, Elite Bounty's Soul Ash and the loadout checks.
 ## tools/.gdignore keeps it out of exports.
+## Relics and Grave Offerings (expansion steps 5 and 6a): ossuary_relic_check.gd
+## adds its checks to the run; --shot-what=rites|picker|relics|offerings makes the
+## screenshot mode open the pre-run setup screen (its Rites strip, or the relic
+## picker open) or the Relics / Offerings tab panel instead of the Ossuary.
 extends Node
+
+## The relic and Grave Offering checks and screenshot helpers.
+const RelicCheck := preload("res://tools/ossuary_relic_check.gd")
 
 ## Failed checks (any failure exits 1).
 var _failures: int = 0
@@ -49,6 +56,8 @@ var _sealed: bool = false
 var _detail: String = ""
 ## Screenshot mode: "" = the Trees (the Ossuary screen), "masteries" = the Masteries panel.
 var _tab: String = ""
+## Screenshot mode: "" (the Ossuary) or a relic screen (--shot-what=, RelicCheck.open_shot()).
+var _shot_what: String = ""
 
 
 func _ready() -> void:
@@ -77,6 +86,8 @@ func _ready() -> void:
 			_sealed = true
 		elif arg.begins_with("--detail="):
 			_detail = arg.get_slice("=", 1)
+		elif arg.begins_with("--shot-what="):
+			_shot_what = arg.get_slice("=", 1)
 	call_deferred("_run")
 
 
@@ -99,6 +110,7 @@ func _run() -> void:
 	_check_coop_loadout()
 	_check_masteries()
 	_check_recolours()
+	RelicCheck.new(self).run()  # Relics and Grave Offerings.
 	Meta._reset()
 	Meta.save_path = Meta.DEFAULT_PATH
 	if _failures == 0:
@@ -606,6 +618,12 @@ func _screenshot() -> void:
 	if _tab == "masteries":
 		await _screenshot_masteries(holder)
 		return
+	if _shot_what != "":
+		await RelicCheck.open_shot(holder, _shot_what)
+		for i in 40:
+			await get_tree().process_frame
+		await _save_shot()
+		return
 	var menu := OssuaryMenu.open_over(holder, null)
 	for i in 30:
 		await get_tree().process_frame
@@ -616,6 +634,11 @@ func _screenshot() -> void:
 		menu._show_detail(_detail)
 	for i in 10:
 		await get_tree().process_frame
+	await _save_shot()
+
+
+## Saves the window to _shot and quits.
+func _save_shot() -> void:
 	await RenderingServer.frame_post_draw
 	var img := get_viewport().get_texture().get_image()
 	DirAccess.make_dir_recursive_absolute(_shot.get_base_dir())

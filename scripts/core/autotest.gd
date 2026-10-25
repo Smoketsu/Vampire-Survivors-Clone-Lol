@@ -546,7 +546,7 @@ func _apply_forced_classes() -> void:
 	for cls: String in _classes():
 		if int(game.horde.class_levels[cls]) > 0:
 			continue
-		if game.abilities.active_count() >= PlayerData.ACTIVE_SLOTS:
+		if game.abilities.active_count() >= game.abilities.active_slots():
 			print("[autotest] forced class %s skipped: no active slot left" % cls)
 			continue
 		game.horde.set_class_level(cls, 1)
@@ -1002,7 +1002,7 @@ func _forced_slots_short(kind: String) -> bool:
 			missing += 1
 	if missing == 0:
 		return false
-	var free := (PlayerData.PASSIVE_SLOTS - ab.passive_count()) if passive else (PlayerData.ACTIVE_SLOTS - ab.active_count())  # Free slots.
+	var free := (PlayerData.PASSIVE_SLOTS - ab.passive_count()) if passive else (ab.active_slots() - ab.active_count())  # Free slots (relics may add an active one).
 	return free <= missing + FORCED_SPARE_SLOTS
 
 
@@ -1749,6 +1749,18 @@ func _print_mastery_line() -> void:
 		levels, MasteryData.CLASSES.size() * MasteryData.MAX_LEVEL, cost, MasteryData.total_cost(), game.meta.describe_masteries()])
 
 
+## Relics and Grave Offerings (GDD §15.0 "Relics and Grave Offerings"): what the
+## run equipped and what the relic hooks did (rerolls from the Bone Abacus, Grave
+## Feasts from Mourner's Bell, Gilded Coffer chests, extra active slots, the
+## chest bonus, the meter's start and the max HP multiplier).
+func _print_rites() -> void:
+	var m := game.meta  # The bound (solo) player's modifiers.
+	print("[autotest] rites: %s | active slots %d | chest +%d | meter start %d%%, charge x%.2f | max HP x%.2f | relic rerolls %d | relic feasts %d | offering chests %d" % [
+		m.rites.describe(), game.abilities.active_slots(), m.relic_int("chest_bonus"),
+		roundi(clampf(m.relic("ult_start"), 0.0, 1.0) * 100.0), game.dread_rally.charge_mult, m.relic("max_hp_mult"),
+		int(game.stats.get("relic_rerolls", 0.0)), int(game.stats.get("relic_feasts", 0.0)), int(game.stats.get("offering_chests", 0.0))])
+
+
 ## Prints the meta profile and the run's Soul Ash award (Meta.award_run()).
 func _print_soul_ash(summary: Dictionary) -> void:
 	print("[autotest] meta upgrades (--meta=%s): %s | revivals used: %d" % [
@@ -1758,6 +1770,8 @@ func _print_soul_ash(summary: Dictionary) -> void:
 		_print_ossuary_options()
 	if not game.meta.masteries.is_empty():
 		_print_mastery_line()  # Only with Masteries (--meta=max): the other summaries keep their lines.
+	if not game.meta.rites.is_empty():
+		_print_rites()  # Relics / offering only (the default summary keeps its lines).
 	var ash: Dictionary = summary.get("soul_ash", {})
 	if ash.is_empty():
 		return

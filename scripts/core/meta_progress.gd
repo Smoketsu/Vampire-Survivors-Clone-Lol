@@ -132,6 +132,11 @@
 ## Dominion tree opens for buying once its boss was slain (tree_open(), read from
 ## the stage records / the Hyper unlock), and purchase_block() answers "sealed"
 ## before that; Elite Bounty raises the elites part of compute_ash().
+## Relics and Grave Offerings (Ossuary expansion steps 5 and 6a, GDD §15.0 "Relics
+## and Grave Offerings"): `relics` (RelicLedger) keeps the relics bought, the relic
+## slots and the relics last equipped ([relics] owned / slots, [prerun] relics; an
+## older save has none: no SAVE_VERSION step); it buys relics and slots and pays a
+## run's offering. run_modifiers(config) attaches the run's RelicEffects.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -232,6 +237,9 @@ var class_lv5: Dictionary = {}
 ## Ossuary Masteries: summon class id -> bought mastery level (0..MasteryData.MAX_LEVEL).
 ## Saved in [masteries].
 var mastery_levels: Dictionary = {}
+# --- Relics and Grave Offerings (expansion steps 5 and 6a) ---
+## Relics bought, relic slots and the relics last equipped (RelicLedger).
+var relics: RelicLedger = RelicLedger.new()
 
 ## Keys of every stage record (all floats, like the lifetime stats).
 const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills",
@@ -252,15 +260,21 @@ func _ready() -> void:
 ## Modifiers for a new run: the purchased tiers, or the --meta profile
 ## (MetaData.AUTOTEST_PROFILES) in the autotest. Nothing is written.
 ## The Profane Oath enters at its ACTIVE tier (the autotest: --oath=N).
-func run_modifiers() -> MetaModifiers:
+## The relics and offering of `config` (RelicEffects.for_run(); the autotest's
+## --relics / --offering / --meta=max) ride on the result (attach_rites()).
+func run_modifiers(config: RunConfig = null) -> MetaModifiers:
+	var m: MetaModifiers  # Upgrade tiers of this run.
 	if GameState.autotest:
 		var test_tiers: Dictionary = MetaData.autotest_tiers(GameState.autotest_meta)  # Profile tiers (never the Oath).
 		if GameState.autotest_oath > 0:
 			test_tiers[PactData.OATH_ID] = GameState.autotest_oath
-		return MetaModifiers.from_tiers(test_tiers, MasteryData.autotest_levels(GameState.autotest_meta))
-	var run_tiers := tiers.duplicate()  # Owned tiers with the Oath at its active tier.
-	run_tiers[PactData.OATH_ID] = oath_active_tier()
-	return MetaModifiers.from_tiers(run_tiers, mastery_levels)
+		m = MetaModifiers.from_tiers(test_tiers, MasteryData.autotest_levels(GameState.autotest_meta))
+	else:
+		var run_tiers := tiers.duplicate()  # Owned tiers with the Oath at its active tier.
+		run_tiers[PactData.OATH_ID] = oath_active_tier()
+		m = MetaModifiers.from_tiers(run_tiers, mastery_levels)
+	m.attach_rites(RelicEffects.for_run(config))
+	return m
 
 
 ## Profane Oath tier applied to runs (never above the owned tier).
@@ -503,6 +517,7 @@ func prerun_config(stage_id: String) -> RunConfig:
 	c.skin_id = chosen_skin(c.character_key())
 	c.recolour_id = chosen_recolour(c.skin_id)  # Ossuary recolours: the one worn on that skin ("" = none).
 	c.set_ultimate(prerun_ultimate if Unlocks.is_open(prerun_ultimate) else UltimateData.DEFAULT_ID)  # Content wave 2.
+	c.relics = relics.equipped.duplicate()  # Relics: the last equipped set (no offering: one run each).
 	return c
 
 
@@ -512,9 +527,10 @@ func prerun_config(stage_id: String) -> RunConfig:
 func remember_prerun(config: RunConfig) -> void:
 	var skin_changed := _remember_skin(config)  # The character's skin choice changed.
 	skin_changed = _remember_recolour(config) or skin_changed  # The skin's recolour choice changed.
+	var relics_changed := relics.remember(config.relics)  # The equipped relics changed.
 	if config.difficulty_id == prerun_difficulty and config.modifiers == prerun_modifiers \
 			and config.character_id == prerun_character and config.hyper == prerun_hyper and not skin_changed \
-			and config.ultimate_id == prerun_ultimate:
+			and config.ultimate_id == prerun_ultimate and not relics_changed:
 		return
 	prerun_difficulty = config.difficulty_id
 	prerun_modifiers = config.modifiers.duplicate()
@@ -1277,6 +1293,7 @@ func save() -> Error:
 			cfg.set_value("class_lv5", cls, true)
 		if mastery_level(cls) > 0:
 			cfg.set_value("masteries", cls, mastery_level(cls))
+	relics.write(cfg)  # Relics: [relics] owned / slots, [prerun] relics.
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -1335,6 +1352,7 @@ func load_save() -> void:
 	_load_epilogue(cfg)
 	_load_clears(cfg)
 	_load_masteries(cfg)
+	relics.read(cfg)  # Relics (after the clears: nothing there depends on them).
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -1576,6 +1594,7 @@ func _reset() -> void:
 	best_hyper_clear = -1
 	class_lv5 = {}
 	mastery_levels = {}
+	relics.reset()
 	load_status = "fresh"
 
 

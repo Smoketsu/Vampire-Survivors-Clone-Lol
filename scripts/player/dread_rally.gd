@@ -33,6 +33,10 @@
 ## meter and hands over to UltimateSystem.cast() instead (no surge, heal, raise,
 ## buff, knockback or Rally Barrage), and the meter does not charge while that
 ## ultimate runs (UltimateSystem.active(), the CHARGE_DURING_BUFF rule).
+## Relics and Grave Offerings (GDD §15.0 "Relics and Grave Offerings"; read once
+## from this player's game.meta when the meter is made): Black Banner / War Horn
+## start the meter part / fully charged (ult_start), Fallen Halo charges it faster
+## (ult_charge, every soul point x charge_mult).
 class_name DreadRally
 extends RefCounted
 
@@ -51,6 +55,8 @@ var rallies: int = 0
 var fill_times: PackedFloat32Array = PackedFloat32Array()
 ## Game time (s) the current fill started charging.
 var _fill_start: float = 0.0
+## Soul points x this per point added (1 + the relics' ult_charge; 1 = none).
+var charge_mult: float = 1.0
 ## True when a rally was requested and not processed yet.
 var _queued: bool = false
 ## Reusable spatial-query buffer.
@@ -59,6 +65,9 @@ var _tmp: Array = []
 
 func _init(p_game: Game) -> void:
 	game = p_game
+	if game.meta != null:  # Relics of this player (game.meta is bound to his slot while it is built).
+		meter = PlayerAbilityData.KILLS_TO_FILL * clampf(game.meta.relic("ult_start"), 0.0, 1.0)
+		charge_mult = maxf(0.0, 1.0 + game.meta.relic("ult_charge"))
 
 
 ## True when the meter is full (Space casts the rally).
@@ -120,7 +129,7 @@ func on_enemy_killed(e: Enemy, own_kill: bool = false) -> void:
 func add_points(pts: float) -> void:
 	if is_full() or ((buff_left > 0.0 or game.ultimates.active()) and not PlayerAbilityData.CHARGE_DURING_BUFF):
 		return
-	meter = minf(PlayerAbilityData.KILLS_TO_FILL, meter + pts)
+	meter = minf(PlayerAbilityData.KILLS_TO_FILL, meter + pts * charge_mult)
 	if is_full():
 		fill_times.append(game.elapsed - _fill_start)
 		game.stat_add("rally_meter_fills", 1.0)

@@ -1741,6 +1741,37 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   Masteries ride the one summon-stat path (`MetaModifiers.mastery_value()` → `HordeDirector.compute_stats()`), travel in
   the co-op loadout (`mastery_levels`) and are not touched by Refund all. Save sections `[class_lv5]` and `[masteries]`.
   `--meta=max` owns every mastery and prints a `masteries:` line; the other profiles own none.
+- **Relics** (Ossuary expansion step 5, GDD §15.0 "Relics and Grave Offerings";
+  data `relic_data.gd`): 15 run-shaping perks bought **once** in the Ossuary's
+  **Relics** tab and **equipped before a run** on the setup screen's **Rites**
+  strip (beside the ultimate picker): **1 slot** from the start, slots 2 and 3
+  cost 1,000 / 1,500. Grave Lantern 400 (chests +1 upgrade, power-ups half as
+  often), Black Banner 250 (soul meter starts half full), Bone Abacus 300 (a
+  free reroll every 5 levels), Hollow Crown 600 (+1 active slot, -10% max HP),
+  Mourner's Bell 300 (elites drop a Grave Feast), Bone Flute 300, Martyr's Nail
+  350, War Drum 350, Shade Cloak 300, Seer's Eye 250, Leaden Shroud 350, Tallow
+  Candle 300; sold only after a feat: Lich's Phylactery 450 (a Lich clear: +1
+  revival, -20% max HP), Deathlord's Seal 550 (a Deathlord clear: +1 of every
+  summon, -15% max HP), Fallen Halo 450 (an act's last stage cleared on Hyper:
+  the meter fills 35% faster). Everything: **8,000** Soul Ash. Relics are kept
+  by Refund all (upgrades only). Effects go through `RelicEffects`, attached to
+  the run's `game.meta` (stats add to the Ossuary stats; a few specials are read
+  where the game applies them). Save: `[relics] owned / slots`, `[prerun] relics`.
+- **Grave Offerings** (step 6a, `offering_data.gd`): one single-run boon per
+  run, chosen on the Rites strip and **paid when the run starts** (nothing is
+  paid if the run never starts; one the balance cannot pay is dropped; Restart /
+  Again / Next start without it): Tithe of Insight 450 (+10% XP), Gilded Coffer
+  500 (a chest beside you at 6:00), Borrowed Relic 550 (a random owned relic in
+  a 4th slot), Blood Vigil 400 (+2 rerolls, +2 banishes), Second Breath 600 (+1
+  revival), War Horn 350 (meter starts full): 40-68% of a good Necromancer run's
+  877. The **Offerings** tab only lists them.
+- In co-op each player's relics and offering travel in his loadout and apply to
+  his own slot; each pays his own offering from his own save. Autotest:
+  `--relics=a,b`, `--offering=ID`; `--meta=max` equips Bone Abacus, Black Banner
+  and Mourner's Bell (all slots); a `rites:` line prints when any is in effect.
+  Badges: `tools/relic_badges.py` (procedural); screenshots in
+  `docs/ossuary/shots/relics/`; `ossuary_check` also checks the relics
+  (`--shot-what=rites|picker|relics|offerings` for screenshots).
 - **One modifier path.** At run start `Meta.run_modifiers()` turns the
   purchased tiers into a `MetaModifiers` object (`game.meta`). The existing
   stat code reads it in a few places (horde `compute_stats` / `capacity` /
