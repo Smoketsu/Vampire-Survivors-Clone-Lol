@@ -320,7 +320,7 @@ func _break_gate(gt: Gate) -> void:
 	for k in n:
 		game.pickups.spawn(mid + Vector2.from_angle(TAU * float(k) / float(n)) * randf_range(16.0, 52.0), each)
 	for k in 5:
-		game.effects.impact(gt.a.lerp(gt.b, float(k) / 4.0), 34.0, Palette.EMPIRE_SIGNAL_AMBER)
+		game.effects.impact(gt.a.lerp(gt.b, float(k) / 4.0), 34.0, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 	game.shake(6.0)
 	Sfx.play("gate_fall", mid)
 	var zones: Array = config["zones"]
@@ -421,7 +421,7 @@ func _step_turrets() -> void:
 			turrets.remove_at(i)
 			game.stat_add("citadel_turrets_destroyed", 1.0)
 			game.stat_add("objective_ash", float(game.enemies.enemy_def(CitadelEnemyData.TURRET)["bounty_ash"]))
-			game.effects.impact(t.pos, 40.0, Palette.EMPIRE_SIGNAL_AMBER)
+			game.effects.impact(t.pos, 40.0, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 		elif t.pos.distance_to(game.player.position) > float(tc["despawn_distance"]):
 			turrets.remove_at(i)
 			game.enemies.despawn(e)

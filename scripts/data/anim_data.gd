@@ -71,6 +71,10 @@ const ANIMS: Dictionary = {
 	"vael_cleave": {"duration": 0.15, "fill": 1.2},  # TUNING (not in GDD) Marshal Vael's Radiant Cleave, a crescent of holy flame (6 frames of 128 px; EffectManager.slash() 0.15 s; the crescent's outer edge at 0.84 of the frame half = the slash radius)
 	"sentinel_sweep": {"duration": 0.15, "fill": 1.2},  # TUNING (not in GDD) a Sanctified Sentinel's ivory-gold blade sweep (6 frames of 128 px; slash() 0.15 s)
 	"structure_break": {"duration": 0.4, "fill": 1.2, "tint": true},  # TUNING (not in GDD) a Covenant structure destroyed: flash, splinters, a dust ring (8 frames of 128 px, a grey mask tinted with the impact colour; impact() 0.4 s)
+	# --- Act III AoE art (tools/empire_aoe_art.py; GDD §15.0 "Act III AoE art") ---
+	"empire_blast": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) an Empire strike / slam landing in amber: white-hot flash, a hex-segmented shock ring, sparks, chrome shards (8 frames of 128 px; impact() 0.4 s; the ring ends at 0.84 of the frame half = the radius)
+	"empire_blast_red": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) the same in warning red (overloads, heavy hits; impact() 0.4 s)
+	"empire_blast_chrome": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) the same in chrome and cyan-white (energy pops; impact() 0.4 s)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).

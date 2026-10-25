@@ -230,7 +230,7 @@ func _bash(e: Enemy) -> void:
 	var reach := float(d["bash_reach"])
 	var half := float(d["bash_half_arc"])
 	var mult := hit_scale(e)
-	g.effects.impact(e.position + dir * reach * 0.5, reach * 0.6, Palette.EMPIRE_CHROME_LIGHT)
+	g.effects.impact(e.position + dir * reach * 0.5, reach * 0.6, Palette.EMPIRE_CHROME_LIGHT, EmpireFxData.BLAST_CHROME)  # Its strip when the art exists (visual only).
 	g.shake(5.0)
 	Sfx.play("shield_bash", e.position)
 	for pl in g.all_players:  # (Co-op: every necromancer inside.)
@@ -300,7 +300,7 @@ func on_killed(e: Enemy) -> void:
 	var each := maxi(1, floori(float(d["reward_xp"]) / float(n)))  # XP per crystal.
 	for i in n:
 		g.pickups.spawn(e.position + Vector2.from_angle(TAU * float(i) / float(n)) * (24.0 + 6.0 * float(i % 3)), each)
-	g.effects.impact(e.position, e.radius * 3.0, Palette.EMPIRE_SIGNAL_AMBER)
+	g.effects.impact(e.position, e.radius * 3.0, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 	g.shake(10.0)
 	g.enemies.show_banner("%s goes offline!" % e.display_name)
 	g.stat_add("objective_ash", float(d["reward_ash"]))

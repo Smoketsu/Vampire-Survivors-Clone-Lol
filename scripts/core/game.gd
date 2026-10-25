@@ -387,6 +387,7 @@ func _ready() -> void:
 		add_child(UltimateOverlay.new(self))  # The new ultimates' screen overlays (visual only).
 	if bool(stage_def.get("empire", false)):
 		empire_rules()  # Act III: the Electronic Empire's shared rules.
+		effects.empire_look = true  # Its telegraphs in the Empire's warning set (visual only).
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal

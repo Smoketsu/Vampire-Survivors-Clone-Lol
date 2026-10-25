@@ -47,6 +47,10 @@ var width: float = 2.0
 var owner_enemy: Enemy = null
 ## Generation of `owner_enemy` when the telegraph started (stale guard).
 var owner_gen: int = 0
+## True on an Act III stage (EffectManager.empire_look): the telegraphs use the
+## Empire's warning set (EmpireFx, GDD §15.0 "Act III AoE art") instead of the
+## Covenant's gold one. Visual only.
+var empire_look: bool = false
 
 
 ## True for the boss / elite warning kinds (drawn by CovenantFx when its art exists).
@@ -118,6 +122,20 @@ func _draw() -> void:
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		if drawn:
 			return
+	# On an Act III stage the shared telegraphs are the Empire's warning set
+	# (EmpireFx: hex grid, hazard band, scan line, targeting brackets; GDD §15.0
+	# "Act III AoE art"), on any other the Covenant's (below).
+	if empire_look and is_telegraph():
+		match kind:
+			Kind.TELEGRAPH_CIRCLE:
+				if EmpireFx.telegraph_circle(self, Vector2.ZERO, size, k):
+					return
+			Kind.TELEGRAPH_LINE:
+				if EmpireFx.telegraph_line(self, vec, width, k):
+					return
+			Kind.TELEGRAPH_CONE:
+				if EmpireFx.telegraph_cone(self, Vector2.ZERO, size, vec, width, k):
+					return
 	# The shared boss / elite telegraphs: Covenant pixel art (CovenantFx) when
 	# it exists, the code shapes below otherwise (GDD §15.0 "Act I enemy AoE art").
 	match kind:

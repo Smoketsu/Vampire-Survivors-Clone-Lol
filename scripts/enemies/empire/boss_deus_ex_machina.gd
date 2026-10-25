@@ -147,7 +147,7 @@ func setup_boss(p_game: Game, pos: Vector2, hp_mult: float, slot: int) -> void:
 	game.enemies.add_child(hazards)
 	hazards.setup(game, self)
 	game.enemies.boss_defeated.connect(_on_defeated)
-	game.effects.impact(position, radius * 2.5, Palette.EMPIRE_SIGNAL_AMBER)
+	game.effects.impact(position, radius * 2.5, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 	game.shake(8.0)
 
 
@@ -249,7 +249,7 @@ func _change_to(p: Phase) -> void:
 		game.enemies.show_banner(String(boss_def["founder_banner"]))
 		game.stats["deus_founder_time"] = game.elapsed
 		game.stat_add("boss_phase3", 1.0)
-	game.effects.impact(position, radius * 2.5, Palette.EMPIRE_SIGNAL_RED)
+	game.effects.impact(position, radius * 2.5, Palette.EMPIRE_SIGNAL_RED, EmpireFxData.BLAST_RED)  # Its strip when the art exists (visual only).
 	game.effects.ring(position, radius * 4.0, Palette.EMPIRE_SIGNAL_AMBER, float(boss_def["phase_time"]))
 	Sfx.play("deus_transform", position)
 	game.shake(7.0)
@@ -466,7 +466,7 @@ func _step_plates() -> void:
 			on_hit()
 			game.stat_add("deus_plates_broken", 1.0)
 			game.stat_add("bossdmg_" + WOUND_SOURCE, wound)
-			game.effects.impact(e.position, 46.0, Palette.EMPIRE_SIGNAL_AMBER)
+			game.effects.impact(e.position, 46.0, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 			game.shake(4.0)
 			Sfx.play("plate_break", e.position)
 			game.enemies.show_banner("A leg plate shatters! (%d left)" % _plates_alive())
@@ -708,9 +708,9 @@ func _founder(delta: float) -> void:
 ## It lands at the glow and fires everything at once: a ring of chaingun fire,
 ## two missiles, a stomp.
 func _arrive() -> void:
-	game.effects.impact(position, radius * 1.5, Palette.EMPIRE_SIGNAL_RED)
+	game.effects.impact(position, radius * 1.5, Palette.EMPIRE_SIGNAL_RED, EmpireFxData.BLAST_RED)  # Its strip when the art exists (visual only).
 	position = _teleport_to
-	game.effects.impact(position, radius * 2.0, Palette.EMPIRE_SIGNAL_AMBER)
+	game.effects.impact(position, radius * 2.0, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 	Sfx.play("teleport_land", position)
 	var n := int(boss_def["volley_rounds"])
 	for i in n:
@@ -795,6 +795,7 @@ func pulse_near(p: Vector2) -> bool:
 ## doors and a teleport's destination glow (world axes).
 func _draw_under() -> void:
 	CovenantKit.unmirror(self)
+	CovenantFx.base = Transform2D(0.0, Vector2(scale.x, 1.0), 0.0, Vector2.ZERO)  # The Empire art in world axes too.
 	var t := game.elapsed if game != null else 0.0
 	match act:
 		Act.CHAINGUN_WINDUP:
@@ -810,6 +811,7 @@ func _draw_under() -> void:
 				CitadelGlyphs.draw_hangar(self, door - position, clampf(act_time / float(boss_def["hangar_telegraph"]), 0.0, 1.0))
 		Act.TELEPORT_GLOW:
 			CitadelGlyphs.draw_teleport_glow(self, _teleport_to - position, radius, clampf(act_time / float(boss_def["teleport_glow"]), 0.0, 1.0), t)
+	CovenantFx.base = Transform2D.IDENTITY
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
