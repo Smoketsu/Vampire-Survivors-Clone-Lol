@@ -1,0 +1,15 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance.
+
+LOW-RESOLUTION pixel art: the whole figure is only 50 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings.
+
+Subject: a LEGIONARY OF TARTARUS, the evolved form of the attached skeleton hoplite: a bigger MALE undead Greek warrior back from Tartarus, a tall dark grey crested Corinthian helmet with a black-and-bone crest, a skull face with burning soul-teal eyes, heavy dark grey armour with bone ribs showing, a LARGER round shield held forward (dark grey with a bone rim and a glowing soul-teal skull emblem), a long spear with a soul-teal glowing head held upright, chains of bone around the arms.
+Signature shape that must read in silhouette: the big round shield in front, the tall crest, the glowing spear head.
+
+Owner's note on the first version (keep it in mind): the BODY must be LESS detailed so the figure reads at a glance: the cuirass, arms and legs as a few big flat shapes (a simple rib-cage cuirass shape, plain bony limbs, no tiny bones, cracks or folds); keep the detail on the HEAD (the crested helmet and the skull face with its glowing eyes) and on the SHIELD.
+
+Colours: ONLY flat fills: bone #4A3E2E #A79A80 #CFC7AE #EDE6D0; dark grey metal #1A1F26 #3A4350 #5F6B7A #8E9AA8; soul teal #0F2E26 #1F7A5C #3FD39A #9CFFD8; wood #2A1C12 #5B3D26 #8C6040.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: the approved sprite of the base Myrmidon Shade: keep its pixel size, outline and look, make it the bigger, darker, grander evolved form (clearly the same soldier, promoted).
