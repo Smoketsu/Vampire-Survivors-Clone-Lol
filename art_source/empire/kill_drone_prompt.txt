@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, hovering ready pose.
+
+LOW-RESOLUTION pixel art: the whole drone is only 32 pixels tall and about 52 pixels wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eye and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, no wires, no bolts.
+
+Subject: a KILL-DRONE, the hostile military version of the attached Scout Drone (same family: a round chrome disc body, two flat rotor discs on stubby arms at the left and right). The Kill-Drone is heavier and meaner: thicker armour, a broad warning-red armour plate across the top of the body, dark red hazard stripes on the stubby arms, one big glowing warning-red camera lens in the middle of the body with a pale yellow-white hot centre, and two short gun barrels pointing forward under the body. No antenna. No amber lights, only red.
+Signature shape that must read in silhouette: a wide hovering disc with two big flat rotors, and two short barrels in front.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: chrome body steel #2C3A50, #5B7397, #9DB6D6 (light glints #E2EEFF); warning red #962410, #E0391E; hot lens centre #FFEBA8; darkest outline #0B1220 and #240A04.
+Outline: a clean 1-pixel dark outline around the whole drone in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white), one subject only, centred, filling about 85% of the image width. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: the approved Scout Drone of this game. Match its pixel size, outline weight and palette exactly, but make it the red, armoured kill version.

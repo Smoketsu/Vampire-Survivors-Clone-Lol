@@ -1920,6 +1920,11 @@ channels, conveyor belts, the scrap storm veil, Deus's and the Motherboard's haz
 pixel art made by `python3 tools/empire_aoe_art.py` and drawn by `EmpireFx` on the same principles, in
 the Empire's own look: a hex-grid fill, a hazard-striped band with cyan-white ticks, a scan-line timing
 front and targeting brackets (GDD §15.0 "Act III AoE art").
+Act III's missing sprites (the Kill-Drone, the Trojan Swarm Rocket and its exhaust, the Scrap Swarm drones with a
+2-frame rotor strip, the scrap bolt, iron shell, soul round, the Empire's rail slug, Deus missile and mortar shell, the
+Deus Revenant's missile) are hand-built on the grid by `python3 tools/act3_projectiles.py [id]` (the Kill-Drone is one
+AI image); `SpriteBank.draw_flat_frame()` draws a frame of a flat strip; the Scrap Wastes' stage card is data in
+`FrontDoorData.VIGNETTES` (GDD §15.0 "Act III missing sprites").
 
 **Engine motion (tier 0, art pass).** Every unit is still one image, so the engine animates it
 procedurally: a **step bob** matched to its real speed, a small **lean** into the movement, a

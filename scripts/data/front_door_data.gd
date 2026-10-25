@@ -251,14 +251,18 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(176, 76, 192),
 	},  # TUNING (not in GDD) the Eye's biolume motes
-	# --- Act III: the Electronic Empire (placeholder scenes from the shared kinds' art
-	# until each stage brings its own floor, props and boss) ---
+	# --- Act III: the Electronic Empire (the Scrap Wastes: its own slag floor, wreckage, a signal pylon,
+	# its Aegis Bot, Scout Drones and Kestrel in her aim pose; Act III missing sprites) ---
 	"wastes": {
-		"tile": "tiles/march_burned",
+		"tile": "tiles/wastes_slag",
 		"items": [
-			["empire/scout_drone", 196, 70, true], ["empire/scout_drone", 244, 100, true],
-			["empire/spotter", 236, 170, true], ["empire/line_trooper", 196, 226, true],
+			["obstacles/titan_hull_s", 70, 96, false], ["obstacles/wreck_plate_s", 204, 92, false],
+			["obstacles/slag_mound_m", 150, 64, false], ["obstacles/tank_trap_s", 24, 150, false],
+			["empire/signal_pylon", 252, 128, false],
+			["empire/scout_drone", 122, 44, true],
+			["empire/aegis_bot", 100, 164, true],
 			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+			["bosses/kestrel_aim", 196, 226, true],
 		],
 		"fx": "embers", "fx_color": Color8(255, 174, 26),
 	},  # TUNING (not in GDD) signal-amber sparks

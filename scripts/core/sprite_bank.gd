@@ -368,6 +368,29 @@ static func draw_flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tin
 	return true
 
 
+## Draws frame `frame` (0-based, wrapped) of the flat sprite strip `key`, a
+## PNG of `frames` equal frames side by side (a spinning rotor, a flickering
+## flame), like draw_flat(): centred on `o`, turned by `angle` (art pointing
+## right), whole art pixels. FLAT_SIZES[key] is the strip's longest side.
+## Returns false when there is no art, so the caller draws its glyph.
+static func draw_flat_frame(ci: CanvasItem, key: String, frames: int, frame: int, o: Vector2, angle: float, tint: Color = Color.WHITE) -> bool:
+	var tex := texture(key)  # Art for this key, or null.
+	if tex == null or frames < 1:
+		return false
+	var fw := float(tex.get_width()) / float(frames)  # One frame's width (texels).
+	var fh := float(tex.get_height())  # Frame height (texels).
+	var k := float(SpriteData.ART_SCALE)  # Texture px -> world px.
+	var size := Vector2(fw, fh) * k  # Drawn size of one frame (px).
+	var corner := -size * 0.5  # Rect corner in the rotated frame (px).
+	apply_sharp(ci)
+	if angle == 0.0:
+		corner = (o + corner).round() - o  # Whole screen px, so an unrotated strip stays crisp.
+	ci.draw_set_transform(o, angle, Vector2.ONE)
+	ci.draw_texture_rect_region(tex, Rect2(corner, size), Rect2(fw * float(posmod(frame, frames)), 0.0, fw, fh), tint)
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	return true
+
+
 ## Draws sprite `key` like draw() (centred near `o`, feet below it, a drop
 ## shadow), but only its top `rise` (0..1) of rows, their bottom on the
 ## sprite's feet line: the sprite grows up out of the ground as `rise` goes
