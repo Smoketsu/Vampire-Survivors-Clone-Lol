@@ -633,8 +633,8 @@ tiny tweaks.
    live"); the owner balances by hand from playtests (their notes outrank the bots). Open: the naive survival rate,
    the placeholder Soul Ash multipliers, a real-iPhone check; CI has no Act III job yet. Handoff: `docs/act3/HANDOFF.md`.
 6b. **Act IV, the Olympian Republic: built, not live (Oct 2026).** All three stages are in on the lead's branch behind
-   `"playable": false` (GDD §15.0 "Act IV integration (phase 2)"). Next: the owner's art review (none of it reviewed
-   yet; also the open soldiers' sex question), the owner's playtest and balance pass, then playable, a CI job and `main`.
+   `"playable": false` (GDD §15.0 "Act IV integration (phase 2)"). The art review is done (eight rounds; the mixed
+   lineup kept). Next: the owner's playtest and balance pass, then playable, a CI job and `main`.
    Handoff: `docs/act4/HANDOFF.md`.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
