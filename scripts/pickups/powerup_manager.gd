@@ -141,7 +141,10 @@ func _release(idx: int) -> void:
 # Drops
 # =====================================================================================
 
-## Kill hook (CombatResolver._kill_enemy): rolls and spawns a drop.
+## Kill hook (CombatResolver._kill_enemy): rolls and spawns a drop. The killer's
+## relics (game.meta, GDD §15.0 "Relics and Grave Offerings"): Mourner's Bell drops
+## a Grave Feast from every elite (no roll, so the RNG stream is unchanged), Grave
+## Lantern scales the drop chance (powerup_chance, -50%).
 func on_enemy_killed(e: Enemy) -> void:
 	if e.is_reckoning or game.countdown_finished():
 		return
@@ -149,9 +152,12 @@ func on_enemy_killed(e: Enemy) -> void:
 		for _n in PowerupData.BOSS_DROPS:
 			spawn_drop(_pick_kind(), e.position, true)
 		return
+	if e.is_elite and not e.is_promoted and game.meta.relic("elite_feast") > 0.0:
+		if spawn_drop("feast", e.position, false):
+			game.stat_add("relic_feasts", 1.0)
 	# Base drop chance (an elite promoted by the difficulty level drops like a soldier).
 	var chance := PowerupData.CHANCE_ELITE if e.is_elite and not e.is_promoted else PowerupData.CHANCE_NORMAL  # Base drop chance.
-	chance *= game.difficulty.drop_mult()
+	chance *= game.difficulty.drop_mult() * maxf(0.0, 1.0 + game.meta.relic("powerup_chance"))
 	var pity := since_drop >= PowerupData.PITY_TIME  # Pity timer ran out: guaranteed.
 	var rolled := _rng.randf() < chance  # Regular drop roll succeeded.
 	if not pity and not rolled:

@@ -268,7 +268,8 @@ func _ready() -> void:
 	if GameState.autotest and GameState.autotest_monitor > 0.0:
 		monitor = MonitorProbe.new(self, GameState.autotest_monitor)  # --monitor=N: memory / draw sampling (reads only).
 	ArtMissLog.on = GameState.autotest and GameState.autotest_art_misses  # --art-misses: the art audit (drawing only).
-	meta = Meta.run_modifiers() if coop == null else coop.meta_for(0)
+	_pay_offering()  # Relics and Grave Offerings: this machine's offering is paid as the run starts.
+	meta = Meta.run_modifiers(run_config) if coop == null else coop.meta_for(0)  # Upgrades + the relics / offering (RelicEffects).
 	character = CharacterModifiers.for_id(run_config.character_id) if coop == null else coop.character_for(0)
 	enemy_grid = SpatialHash.new(GRID_CELL)
 	ally_grid = SpatialHash.new(GRID_CELL)
@@ -871,9 +872,41 @@ func add_xp(amount: int) -> void:
 		level += 1
 		xp_to_next = PlayerData.xp_to_next(level)
 		pending_level_ups += 1
+		_on_level_reached()  # Relics: the Bone Abacus.
 	if level > level_before:
 		# Column of violet light on the necromancer (art-only, visual).
 		effects.burst(AnimData.LEVEL_UP_OFFSET, AnimData.LEVEL_UP_RADIUS, "level_up", player)
+
+
+## Level `level` was just reached: every player's AbilityManager hears it (the
+## Bone Abacus relic's reroll; co-op: the one shared level reaches both slots).
+func _on_level_reached() -> void:
+	if coop == null:
+		abilities.on_level(level)
+		return
+	for s in coop.slots:
+		if s.abilities != null:
+			s.abilities.on_level(level)
+
+
+## Relics and Grave Offerings (GDD §15.0 "Relics and Grave Offerings"): pays the
+## Soul Ash of this machine's Grave Offering as its run starts (never under the
+## autotest or a --victory-preview run). Solo: an offering the balance can no
+## longer pay is dropped from run_config before game.meta is built. Online co-op:
+## the local player's own offering from his own save; the run applies both
+## loadouts' offerings either way (both machines must build the same run).
+func _pay_offering() -> void:
+	if GameState.autotest or GameState.victory_preview:
+		return
+	if coop == null:
+		if run_config.offering_id != "" and not Meta.relics.pay_offering(run_config.offering_id):
+			run_config.offering_id = ""
+			run_config.borrowed_relic = ""
+		return
+	var los: Array = coop_start.get("loadouts", [])  # Both loadouts (CoopNet.start_info).
+	var me := int(coop_start.get("local_slot", -1))  # This machine's seat.
+	if me >= 0 and me < los.size():
+		Meta.relics.pay_offering(String((los[me] as Dictionary).get("offering", "")))
 
 
 ## Pauses combat and shows three cards (GDD §16 "Level-up panel: Pause combat").

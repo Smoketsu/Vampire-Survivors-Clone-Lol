@@ -32,6 +32,11 @@
 ##                         "none" (default, no upgrades), "mid" or "max"
 ##                         (MetaData.AUTOTEST_PROFILES; "max" = every level,
 ##                         the gated deep levels 6-10 included).
+##   --relics=a,b          Autotest relics equipped (RelicData ids, at most
+##                         RelicData.MAX_SLOTS; owning them is not needed;
+##                         default none, --meta=max equips
+##                         RelicData.AUTOTEST_MAX_RELICS).
+##   --offering=ID         Autotest Grave Offering (OfferingData id; nothing paid).
 ##   --meta-save           Test flag: lets the autotest read and write
 ##                         user://save.cfg (by default it never touches it).
 ##   --oath=N              Autotest active Profane Oath tier 0-5 (default 0;
@@ -198,6 +203,10 @@ var autotest_timeout: float = 1500.0
 var autotest_policy: String = "naive"
 ## Autotest: simulated meta-upgrade profile, "none", "mid" or "max" (see header).
 var autotest_meta: String = "none"
+## Autotest: RelicData ids equipped by --relics=a,b (empty = none / the profile's).
+var autotest_relics: Array = []
+## Autotest: OfferingData id of --offering=ID ("" = none).
+var autotest_offering: String = ""
 ## Autotest: true when --meta-save allows the run to use user://save.cfg.
 var autotest_meta_save: bool = false
 ## Autotest: active Profane Oath tier (--oath=N, 0 = off).
@@ -434,6 +443,18 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_meta = profile if profile in MetaData.AUTOTEST_PROFILES else "none"
 		elif arg == "--meta-save":
 			autotest_meta_save = true
+		elif arg.begins_with("--relics="):
+			for id: String in arg.get_slice("=", 1).split(",", false):
+				if RelicData.has(id) and not autotest_relics.has(id) and autotest_relics.size() < RelicData.MAX_SLOTS:
+					autotest_relics.append(id)
+				else:
+					push_error("--relics: '%s' is not a relic, repeated, or past %d slots (relics: %s)" % [id, RelicData.MAX_SLOTS, ", ".join(PackedStringArray(RelicData.ORDER))])
+		elif arg.begins_with("--offering="):
+			var oid := arg.get_slice("=", 1).to_lower()  # Requested offering id.
+			if OfferingData.has(oid):
+				autotest_offering = oid
+			else:
+				push_error("Unknown --offering=%s (expected one of %s)" % [oid, ", ".join(PackedStringArray(OfferingData.ORDER))])
 		elif arg == "--pact":
 			autotest_pact = true
 		elif arg.begins_with("--spells="):

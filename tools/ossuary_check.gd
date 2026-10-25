@@ -14,7 +14,14 @@
 ## Lich gate open with --open=7 (default), 5 / 9 / 10 likewise) and saves the
 ## window to PATH; --phone uses an 844 x 390 CSS px landscape phone at 2x with
 ## the mobile UI scale (TouchData.UI_SCALE_MAX). tools/.gdignore keeps it out of exports.
+## Relics and Grave Offerings (expansion steps 5 and 6a): ossuary_relic_check.gd
+## adds its checks to the run; --shot-what=rites|picker|relics|offerings makes the
+## screenshot mode open the pre-run setup screen (its Rites strip, or the relic
+## picker open) or the Relics / Offerings tab panel instead of the Ossuary.
 extends Node
+
+## The relic and Grave Offering checks and screenshot helpers.
+const RelicCheck := preload("res://tools/ossuary_relic_check.gd")
 
 ## Failed checks (any failure exits 1).
 var _failures: int = 0
@@ -26,6 +33,8 @@ var _shot: String = ""
 var _phone: bool = false
 ## Screenshot mode: the sample save's open level (5, 7, 9 or 10).
 var _open: int = 7
+## Screenshot mode: "" (the Ossuary) or a relic screen (--shot-what=, RelicCheck.open_shot()).
+var _shot_what: String = ""
 
 
 func _ready() -> void:
@@ -38,6 +47,8 @@ func _ready() -> void:
 			_phone = true
 		elif arg.begins_with("--open="):
 			_open = arg.get_slice("=", 1).to_int()
+		elif arg.begins_with("--shot-what="):
+			_shot_what = arg.get_slice("=", 1)
 	call_deferred("_run")
 
 
@@ -54,6 +65,7 @@ func _run() -> void:
 	_check_migration()
 	_check_purchase_and_refund()
 	_check_coop_loadout()
+	RelicCheck.new(self).run()  # Relics and Grave Offerings.
 	Meta._reset()
 	Meta.save_path = Meta.DEFAULT_PATH
 	if _failures == 0:
@@ -281,6 +293,12 @@ func _screenshot() -> void:
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	holder.add_child(bg)
 	add_child(holder)
+	if _shot_what != "":
+		await RelicCheck.open_shot(holder, _shot_what)
+		for i in 40:
+			await get_tree().process_frame
+		await _save_shot()
+		return
 	var menu := OssuaryMenu.open_over(holder, null)
 	for i in 30:
 		await get_tree().process_frame
@@ -289,6 +307,11 @@ func _screenshot() -> void:
 		menu._show_detail("sharpened_bones")
 	for i in 10:
 		await get_tree().process_frame
+	await _save_shot()
+
+
+## Saves the window to _shot and quits.
+func _save_shot() -> void:
 	await RenderingServer.frame_post_draw
 	var img := get_viewport().get_texture().get_image()
 	DirAccess.make_dir_recursive_absolute(_shot.get_base_dir())

@@ -15,6 +15,11 @@
 ## The ultimate (UltimateData id, content wave 2) is `ultimate_id`, chosen on
 ## the same screen under the character and skin; the run reads it only through
 ## UltimateSystem (game.ultimates).
+## Relics and Grave Offerings (Ossuary expansion, GDD §15.0 "Relics and Grave
+## Offerings"): the equipped relics (`relics`), the run's offering (`offering_id`)
+## and the relic it lends (`borrowed_relic`), chosen on the same screen's Rites
+## strip; the run reads them only through RelicEffects (in game.meta). Restart
+## keeps the relics; Main clears the offering once its run has started (one run).
 class_name RunConfig
 extends RefCounted
 
@@ -38,6 +43,14 @@ var skin_id: String = ""
 ## set through set_ultimate(), which validates; locks are checked by the
 ## picker, Meta.prerun_config() and Game, --ultimate= bypasses them).
 var ultimate_id: String = UltimateData.DEFAULT_ID
+## RelicData ids equipped for this run, in slot order (empty = none; checked
+## against the save by RelicEffects.for_run() / RelicLedger.valid_equip()).
+var relics: PackedStringArray = PackedStringArray()
+## OfferingData id of the run's Grave Offering ("" = none; paid when the run starts).
+var offering_id: String = ""
+## RelicData id lent by the Borrowed Relic offering ("" = none; drawn when the
+## setup screen confirms, RelicLedger.prepare_run()).
+var borrowed_relic: String = ""
 
 
 ## A config for stage `id` (unknown ids fall back to the default stage),
@@ -92,7 +105,8 @@ func character_key() -> String:
 
 
 ## A copy for a restart: the same stage, difficulty, modifiers, character,
-## Hyper, skin and ultimate.
+## Hyper, skin, ultimate, relics and offering (Main clears the offering of its
+## stored config once the run started, so a restart does not buy it again).
 func duplicate_config() -> RunConfig:
 	var c := RunConfig.for_stage(stage_id)
 	c.set_difficulty(difficulty_id)
@@ -101,4 +115,7 @@ func duplicate_config() -> RunConfig:
 	c.hyper = hyper
 	c.skin_id = skin_id
 	c.set_ultimate(ultimate_id)
+	c.relics = relics.duplicate()
+	c.offering_id = offering_id
+	c.borrowed_relic = borrowed_relic
 	return c

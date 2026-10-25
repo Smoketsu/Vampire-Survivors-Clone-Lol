@@ -40,6 +40,9 @@ var gap: int = UltimateData.PICKER_GAP
 var detail_width: float = FrontDoorData.HERO_TEXT_WIDTH
 ## Lines (>= 1) the detail text keeps, so the layout never jumps.
 var detail_lines: int = UltimateData.PICKER_DETAIL_LINES
+## True: the detail text is ONE clipped line (no wrap, an ellipsis; the full text
+## stays in the tooltips), for the setup screen's shared Ultimate / Rites row.
+var detail_clip: bool = false
 
 
 ## A dark veil and the pixel padlock over a locked tile's icon.
@@ -66,6 +69,10 @@ func _ready() -> void:
 		row.add_child(_build_tile(id))
 	_detail = UiTheme.para("", detail_width, UiTheme.TEXT_DIM)
 	_detail.custom_minimum_size.y = float(UiTheme.tier_px(UiTheme.Tier.BODY)) * float(maxi(1, detail_lines))  # Kept: no jump.
+	if detail_clip:
+		_detail.autowrap_mode = TextServer.AUTOWRAP_OFF
+		_detail.clip_text = true
+		_detail.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	add_child(_detail)
 	refresh()
 

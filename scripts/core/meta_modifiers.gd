@@ -8,6 +8,11 @@
 ##   capacity_bonus(cls)  extra summon capacity of class `cls`
 ##   apply_to_player(p)   one-time player stats at run start
 ##   unlocks(stat)        an "unlock" upgrade is owned (none on sale at present)
+##   relic(key)           a relic / Grave Offering special (RelicData.SPECIAL_RULES)
+## Relics and Grave Offerings (Ossuary expansion, GDD §15.0 "Relics and Grave
+## Offerings") ride on the same object: attach_rites() adds the RelicEffects'
+## stats to the modifier stats once and keeps it as `rites` for relic(); so a
+## co-op partner's relics follow his own slot like his upgrades.
 ## Each meta stat is its own stacking category (GDD §6.4): it multiplies the
 ## level / passive / synergy bonuses instead of adding to them. An empty
 ## instance (no upgrades) returns 0 everywhere, so a run without purchases
@@ -19,6 +24,8 @@ extends RefCounted
 var tiers: Dictionary = {}
 ## Modifier stat (MetaData.STATS key) -> summed bonus.
 var _values: Dictionary = {}
+## The run's relics and Grave Offering (empty = none; attach_rites()).
+var rites: RelicEffects = RelicEffects.new()
 
 
 ## Builds the modifiers for upgrade tiers `p_tiers` (id -> tier). Unknown ids
@@ -48,6 +55,27 @@ func int_value(stat: String) -> int:
 	return int(roundf(value(stat)))
 
 
+## Attaches the run's relics and offering `r`: their stats are added to the
+## modifier stats (once) and their specials answer relic(). An empty `r` changes
+## nothing.
+func attach_rites(r: RelicEffects) -> void:
+	rites = r
+	var st := r.stat_values()  # Stat -> value of every relic and the offering.
+	for stat: String in st:
+		_values[stat] = float(_values.get(stat, 0.0)) + float(st[stat])
+
+
+## Combined relic / offering special `key` (RelicEffects.special(): 0, or 1 for
+## a multiplier, when none has it).
+func relic(key: String) -> float:
+	return rites.special(key)
+
+
+## relic() rounded to an int.
+func relic_int(key: String) -> int:
+	return rites.special_int(key)
+
+
 ## True when no upgrade is active.
 func is_empty() -> bool:
 	return tiers.is_empty()
@@ -68,10 +96,10 @@ func capacity_bonus(cls: String) -> int:
 	return bonus
 
 
-## Sets the necromancer's run-start stats: max HP (+flat), move speed and
-## pickup radius (+%), and the number of revivals.
+## Sets the necromancer's run-start stats: max HP (+flat, then x the relics'
+## max_hp_mult), move speed and pickup radius (+%), and the number of revivals.
 func apply_to_player(p: Necromancer) -> void:
-	p.max_hp = PlayerData.MAX_HP + value("max_hp")
+	p.max_hp = (PlayerData.MAX_HP + value("max_hp")) * relic("max_hp_mult")
 	p.hp = p.max_hp
 	p.move_speed = PlayerData.MOVE_SPEED * (1.0 + value("move_speed"))
 	p.pickup_radius = PlayerData.PICKUP_RADIUS * (1.0 + value("pickup_radius"))
