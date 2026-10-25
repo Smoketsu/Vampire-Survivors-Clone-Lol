@@ -1,0 +1,15 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, body turned slightly to the RIGHT.
+
+This is a NEW POSE of the attached character, for a walk animation. Redraw the SAME BRONZE TITAN exactly: same design, same colours, same proportions, same helmet crest, same face and pale-blue eyes, same chest cracks, same marble kilt, same marble chunks on his shins and feet. Only the LEGS change.
+
+POSE (the only change): a wide, square, standing stance, seen nearly from the front. His TWO LEGS stand CLEARLY APART, side by side, like a sumo or a statue on a plinth: the left leg straight down on the left, the right leg straight down on the right, a clear gap of empty background between them from the kilt down to the ground, both knees facing the viewer, both feet flat on the SAME ground line and pointing slightly outward. The legs must NOT cross, overlap, or step forward or back; they are mirror images of each other. The huge fists hang low at his sides, OUTSIDE the legs, not overlapping them.
+
+Subject: a huge walking MALE colossus, a giant ancient Greek statue of bronze come alive. Massive broad bronze shoulders and chest, a SMALL bronze head in a crested Greek helmet (dark Aegean-blue crest) with two glowing pale-blue eyes, enormous bronze fists, thick bronze legs, a marble-white stone kilt, cracked marble plinth chunks stuck to his shins and feet. A few big glowing pale-blue cracks on the chest.
+
+LOW-RESOLUTION pixel art: the whole figure is only 96 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no muscle lines.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: bronze #1E1408 (outline) #6B4423 #A8702E #E0A955; marble white #8E8A86 #CFCBC4 #F4F1EA; Aegean blue #123E66 #2C77B8 #6FB6E8 (only the eyes, the crest and the cracks of light).
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour. Light from the top-left.
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow), one subject only, centred, filling about 85% of the image height. No ground, no shadow, no scenery, no text, no frame.
+Attached: (1) the approved source image of this exact character: copy it, only change the legs to the stance above; (2) the approved in-game sprite of him: keep its look.
