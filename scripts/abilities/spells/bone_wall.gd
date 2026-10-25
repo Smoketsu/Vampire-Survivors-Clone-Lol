@@ -284,7 +284,7 @@ func _shrapnel(w: Wall) -> void:
 	for k in w.segs.size():
 		if k % 2 == 0:
 			game.effects.ring(w.segs[k], r, Palette.BONE, 0.3, "bone_wall_burst")
-	game.effects.ring(w.center, (w.segs[0] - w.center).length() + r, Palette.NECRO_GREEN, 0.4)
+	game.effects.art_ring(w.center, (w.segs[0] - w.center).length() + r, Palette.NECRO_GREEN, 0.4, "soul_ring")  # Pixel-art soul ring when its art exists (AoeArt).
 	game.stat_add("bastion_bursts", 1.0)
 	game.shake(2.0)
 	Sfx.play("eruption", w.center)

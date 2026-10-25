@@ -74,8 +74,8 @@ func _release_freeze(u: SummonedUnit) -> void:
 	for e: Enemy in _buf:
 		if e.active and e.position.distance_to(freeze_point) <= r + e.radius * 0.5:
 			game.combat.freeze_enemy(e, dur, float(u.special["freeze_boss_mult"]), float(u.special["freeze_elite_mult"]))
-	game.effects.ring(freeze_point, r, Palette.COLD_BLUE, 0.4)
-	game.effects.ring(freeze_point, r * 0.6, PowerupGlyphs.ICE, 0.5)
+	game.effects.art_ring(freeze_point, r, Palette.COLD_BLUE, 0.4, "freeze")  # Pixel-art frost bloom when its art exists (AoeArt).
+	game.effects.art_ring_under(freeze_point, r * 0.6, PowerupGlyphs.ICE, 0.5, "freeze")
 	Juice.fx.burst(freeze_point, PowerupGlyphs.ICE, Palette.COLD_BLUE, 12, r * 1.6, 0.6, 2.5)
 	Sfx.play("deep_freeze", freeze_point)
 	game.stat_add("frost_deep_freezes", 1.0)
@@ -105,8 +105,9 @@ func draw_under(u: SummonedUnit) -> void:
 	var at := freeze_point - u.position  # Circle centre in world-aligned local space.
 	var r := float(u.special["freeze_radius"])  # Freeze radius (px).
 	var k := clampf(phase_time / maxf(float(u.special["freeze_windup"]), 0.01), 0.0, 1.0)  # Windup progress.
-	u.draw_circle(at, r, Color(Palette.COLD_BLUE, 0.10))
-	u.draw_circle(at, r * k, Color(PowerupGlyphs.ICE, 0.18))
-	u.draw_arc(at, r, 0.0, TAU, 36, Color(PowerupGlyphs.ICE, 0.8), 1.5)
+	if not AoeArt.telegraph(u, "mark_ice", at, r, k, Palette.COLD_BLUE, "frost_star", 3):  # Pixel-art rim marks (AoeArt).
+		u.draw_circle(at, r, Color(Palette.COLD_BLUE, 0.10))
+		u.draw_circle(at, r * k, Color(PowerupGlyphs.ICE, 0.18))
+		u.draw_arc(at, r, 0.0, TAU, 36, Color(PowerupGlyphs.ICE, 0.8), 1.5)
 	u.draw_line(Vector2.ZERO, at, Color(Palette.COLD_BLUE, 0.35), 1.5)
 	body_space(u)

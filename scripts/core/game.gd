@@ -758,7 +758,10 @@ func _save_art_shot() -> void:
 	if DisplayServer.get_name() == "headless" or GameState.autotest_shot_dir == "":
 		return
 	var img := get_viewport().get_texture().get_image()  # Last rendered frame.
-	var path := GameState.autotest_shot_dir.path_join("art_%04d.png" % int(t))
+	var file := "art_%04d.png" % int(t)  # Whole seconds: art_0300.png.
+	if t != floorf(t):
+		file = "art_%06.1f.png" % t  # A fractional second keeps its tenth (art_0300.4.png), so close shots do not overwrite.
+	var path := GameState.autotest_shot_dir.path_join(file)
 	img.save_png(path)
 	print("[art-shot] %s at %.1f s" % [path, elapsed])
 

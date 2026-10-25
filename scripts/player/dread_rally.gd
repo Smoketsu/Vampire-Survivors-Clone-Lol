@@ -189,8 +189,9 @@ func _cast() -> void:
 		e.knockback += dir * PlayerAbilityData.KNOCKBACK_FORCE / maxf(e.mass, 0.1)
 		game.stat_add("rally_knockbacks", 1.0)
 	game.effects.ring(pos, PlayerAbilityData.KNOCKBACK_RADIUS, Palette.VIOLET, PlayerAbilityData.RALLY_RING_TIME, "dread_rally")
-	game.effects.ring(pos, PlayerAbilityData.KNOCKBACK_RADIUS * 0.6, Palette.NECRO_GREEN, PlayerAbilityData.RALLY_RING_TIME * 0.75)
-	game.effects.abyss(pos, PlayerAbilityData.KNOCKBACK_RADIUS * 0.45)
+	# The inner ring and the vortex show only without the strip, which carries them (GDD §15.0 "Player AoE art").
+	game.effects.ring_under(pos, PlayerAbilityData.KNOCKBACK_RADIUS * 0.6, Palette.NECRO_GREEN, PlayerAbilityData.RALLY_RING_TIME * 0.75, "dread_rally")
+	game.effects.abyss(pos, PlayerAbilityData.KNOCKBACK_RADIUS * 0.45, "", "dread_rally")
 	game.shake(PlayerAbilityData.RALLY_SHAKE)
 	Sfx.play("death_nova", pos)
 	game.volleys.barrage(PlayerAbilityData.RALLY_DURATION)  # Bullet heaven: the Rally Barrage.

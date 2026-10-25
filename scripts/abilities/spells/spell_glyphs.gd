@@ -220,6 +220,8 @@ static func draw_corpse(ci: CanvasItem, p: Vector2, fresh: float, k: int) -> voi
 ## A corpse burst `t` (0..1) through its life: an expanding ring and bone
 ## shards flying out to radius `r`. `eruption` tints it Grave Eruption green.
 static func draw_bone_burst(ci: CanvasItem, p: Vector2, r: float, t: float, eruption: bool) -> void:
+	if AoeArt.bone_burst(ci, p, r, t, eruption):
+		return  # Pixel-art rubble / soul-fire crests (GDD §15.0 "Player AoE art").
 	var a := 1.0 - t  # Fade.
 	var rim := Palette.NECRO_GREEN if eruption else Palette.VIOLET
 	ci.draw_arc(p, r * (0.35 + 0.65 * t), 0.0, TAU, 28, Color(rim, 0.6 * a), 2.0)
@@ -231,6 +233,8 @@ static func draw_bone_burst(ci: CanvasItem, p: Vector2, r: float, t: float, erup
 ## A Grave Eruption bone-spike field of radius `r`; `life` runs 1 -> 0 (it
 ## grows in quickly and sinks away at the end), `now` sways the glint.
 static func draw_spike_field(ci: CanvasItem, p: Vector2, r: float, life: float, now: float) -> void:
+	if AoeArt.spike_field(ci, p, r, life, now):
+		return  # Pixel-art bone spikes, cracks and rim (GDD §15.0 "Player AoE art").
 	var grow := clampf((1.0 - life) * 8.0, 0.0, 1.0)  # Spikes rising.
 	var a := clampf(life * 4.0, 0.0, 1.0)  # Fade at the end.
 	ci.draw_circle(p, r, Color(0.08, 0.04, 0.1, 0.35 * a))
@@ -256,6 +260,8 @@ static func _spike(ci: CanvasItem, base: Vector2, h: float, w: float, a: float) 
 ## A Plague Cloud of radius `r`: slowly turning sickly puffs with a soft
 ## rim and rising bubbles. `life` runs 1 -> 0, `now` animates it.
 static func draw_plague(ci: CanvasItem, p: Vector2, r: float, life: float, now: float) -> void:
+	if AoeArt.cloud(ci, p, r, life, now, false):
+		return  # Pixel-art cloud puffs (GDD §15.0 "Player AoE art").
 	var a := clampf(life * 3.0, 0.0, 1.0) * clampf((1.0 - life) * 10.0 + 0.4, 0.0, 1.0)  # Fade in / out.
 	ci.draw_circle(p, r, Color(PLAGUE, 0.08 * a))
 	for i in 5:
@@ -271,6 +277,8 @@ static func draw_plague(ci: CanvasItem, p: Vector2, r: float, life: float, now: 
 ## A Pestilence cloud: a black, violet-rimmed plague with drifting soul
 ## motes; its rim thickens as the Death Nova nears (`life` -> 0).
 static func draw_pestilence(ci: CanvasItem, p: Vector2, r: float, life: float, now: float) -> void:
+	if AoeArt.cloud(ci, p, r, life, now, true):
+		return  # Pixel-art cloud puffs (GDD §15.0 "Player AoE art").
 	var a := clampf(life * 6.0, 0.0, 1.0) * clampf((1.0 - life) * 10.0 + 0.4, 0.0, 1.0)  # Fade in / out.
 	ci.draw_circle(p, r, Color(PLAGUE_DARK, 0.42 * a))
 	for i in 6:

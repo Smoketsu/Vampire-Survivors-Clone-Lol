@@ -175,10 +175,10 @@ func _impact(u: SummonedUnit, pos: Vector2) -> void:
 				game.stat_add("horror_stuns", 1.0)
 				if e.is_boss:
 					game.stat_add("horror_boss_stuns", 1.0)
-	game.effects.ring(pos, r, Palette.VIOLET, 0.3)
-	game.effects.ring(pos, r * 0.55, Palette.GARGOYLE_STONE, 0.35)
+	game.effects.art_ring(pos, r, Palette.VIOLET, 0.3, "dive")  # Pixel-art impact when its art exists (AoeArt).
+	game.effects.art_ring_under(pos, r * 0.55, Palette.GARGOYLE_STONE, 0.35, "dive")
 	if stun > 0.0:
-		game.effects.ring(pos, r * 0.8, Palette.IVORY, 0.25)  # Stun shock ring.
+		game.effects.art_ring(pos, r * 0.8, Palette.IVORY, 0.25, "stun")  # Stun shock ring.
 	Juice.fx.burst(pos, Palette.GARGOYLE_STONE, Palette.VIOLET, 10, r * 2.0, 0.45, 2.5)
 	game.shake(float(u.special["swoop_shake"]))
 	Sfx.play("gargoyle_dive", pos)
@@ -246,6 +246,7 @@ func draw_under(u: SummonedUnit) -> void:
 		world_space(u)
 		var at := dive_point - u.position  # Dive point in world-aligned local space.
 		var r := float(u.special["swoop_radius"])  # Impact radius (px).
-		u.draw_circle(at, r, Color(Palette.VIOLET, 0.10))
-		u.draw_arc(at, r, 0.0, TAU, 32, Color(Palette.VIOLET, 0.7), 1.5)
+		if not AoeArt.telegraph(u, "mark_violet", at, r, 0.0, Palette.VIOLET):  # Pixel-art rim marks (AoeArt).
+			u.draw_circle(at, r, Color(Palette.VIOLET, 0.10))
+			u.draw_arc(at, r, 0.0, TAU, 32, Color(Palette.VIOLET, 0.7), 1.5)
 		body_space(u)

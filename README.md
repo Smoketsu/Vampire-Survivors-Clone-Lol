@@ -1858,7 +1858,11 @@ its own Godot scene from `tools/art_check/` in a scratch copy of the project; `t
 Godot, so it never ships). `python3 tools/pixel_palette.py --preview <png>` draws the palette.
 `python3 tools/mesh_props.py` draws Gullhaven's lobster pots and net piles pixel by pixel (a rope mesh
 does not survive the reduction of an AI source to 20-29 px); `python3 tools/harbour_props.py` draws the
-harbour pier, the Netcaster's net, the anchor chain link and the Undertow foam crest the same way. The
+harbour pier, the Netcaster's net, the anchor chain link and the Undertow foam crest the same way.
+`python3 tools/aoe_art.py` draws the player side's ground-effect pieces (`assets/sprites/aoe/`: burst
+crests, telegraph rim marks, gas puffs, fissures, flames, lane tiles, the evolution column, the ultimates'
+pieces; GDD §15.0 "Player AoE art"), and `python3 tools/aoe_preview.py OUT [--code]` renders them composed
+at game size in the engine (under xvfb; `--code` draws the code fallbacks). The
 31 sprites made before the pixel-art pass (the necromancer, the first summons and evolutions, the
 Stage 1-2 soldiers and the Reckoning's Inquisitor, Sir Alaric, Marshal Vael and the five March
 structures) are placeholders to be redone; the anchors (necromancer, Skeleton Warrior, Covenant
@@ -2280,6 +2284,7 @@ scripts/
   fx/motion_director.gd     Engine motion: animates every unit's body once per frame, pools death dissolves
   fx/unit_motion.gd         One unit's procedural motion (bob, lean, squashes, lunge, rise) on its body layer
   fx/ultimate_overlay.gd    The new ultimates' screen overlays (taunt rings, darkness, edge mist; visual only)
+  fx/aoe_art.gd             Player AoE art: clouds, auras, bursts, telegraphs, patches, lanes built from 1:1 pixel pieces (code fallback)
   fx/unit_layer.gd          A unit's body / overlay drawing layer (child node calling back into the unit)
   fx/unit_dissolve.gd       Pooled death dissolve: the dead unit's look collapsing into bone dust / holy ash
   fx/anim_bursts.gd         Art-only one-shot effect strips (Shadow Bolt hit splash, level-up column, evolution flash)
@@ -2465,6 +2470,7 @@ scripts/
     idle_data.gd            Idle breathing loops: frame count and rate of the `<key>_idle` strips (bust rigs)
     anim_data.gd            One-shot effect animations: strip ids, frame timing and fill
     decal_data.gd           Floor decal keys and drawing numbers (Ground, MarchGround, SanctumGround)
+    aoe_art_data.gd         Player AoE art pieces, burst recipes, spacing, opacity and tier densities (AoeArt)
     marker_art_data.gd      Pixel-art keys and placement of the world markers, overlays and spell props (rally pennant, ice shell, brands, corpses, bone walls, boulders)
     covenant_fx_data.gd     Keys and drawing numbers of the Covenant's area-effect art (CovenantFx)
     boss_pose_data.gd       Which attack-pose sprite each stage boss shows per attack phase
@@ -2618,7 +2624,7 @@ Options (after `--`):
 | `--draw-probe=T` | With `--monitor` on the Web build driven by `tools/mobile_web_perf.js`: from game second T (at real time) hides one world layer at a time between unhidden phases and prints `[draw]` lines with the WebGL objects created per frame (what rebuilds its polygons every frame). Drawing only. |
 | `--adaptive=off\|N` | Adaptive quality (`AdaptiveQuality`, drawing only): `off` keeps the adaptive level at 0, `N` (0-3) pins it; by default it adapts as in a player's run and prints a `[visual] adaptive quality:` line (not an `[autotest]` line: it follows wall-clock frame times). |
 | `--art-misses` | Art audit (debug, drawing only): `ArtMissLog` records every sprite key `SpriteBank` / `EnvironmentArt` looks up without a PNG (stills, walk / idle strips, icons, effect strips, markers, decals, floor tiles), dropping the probes another key answered (`enemies/` / `structures/` / `eye/` / `empire/` for one kind, `_2` / `_3` variants), and the unit bodies drawn without a walk strip; prints them sorted by count as `[art-miss]` lines at the end (never `[autotest]` lines). Meaningful only in a window (headless skips `_draw()`), e.g. under `xvfb-run` with `--rendering-driver opengl3 --resolution 1280x720`. |
-| `--art-shots=T,...` | Art audit (debug, drawing only): in a window, saves the screen at each game second T as `<--shot-dir>/art_<T>.png` (needs `--shot-dir=DIR`). |
+| `--art-shots=T,...` | Art audit (debug, drawing only): in a window, saves the screen at each game second T as `<--shot-dir>/art_<T>.png` (needs `--shot-dir=DIR`; a fractional T keeps its tenth, `art_0300.4.png`). |
 | `--synergies=off` | A/B switch: no army synergy ever activates (the four original ones and the newer classes' nine). Every summary has a `synergy bonus` line (per newer synergy: the hits its mark bonus raised and the damage it added; the Baying frenzies; staggered / swooped marks; Death from Above dash resets; the seconds Requiem stretched), marked "(synergies off)" with this switch. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
 | `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |

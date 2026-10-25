@@ -241,6 +241,8 @@ static func _shadow(ci: CanvasItem, c: Vector2, w: float) -> void:
 ## its _draw()): a pale veil arc drooping over the head and two falling
 ## tear streaks; while `silenced` (Keening Lady) a crossed lilac halo too.
 static func draw_dirge(ci: CanvasItem, c: Vector2, r: float, silenced: bool) -> void:
+	if AoeArt.dirge(ci, c, r, silenced):
+		return  # Pixel-art veil and tears (GDD §15.0 "Player AoE art").
 	ci.draw_arc(c + Vector2(0, -r * 0.2), r * 1.15, PI * 1.15, PI * 1.85, 10, Color(WAIL, 0.7), 1.5)
 	ci.draw_line(c + Vector2(-r * 0.75, -r * 0.6), c + Vector2(-r * 0.85, r * 0.1), Color(WAIL, 0.45), 1.0)
 	ci.draw_line(c + Vector2(r * 0.75, -r * 0.6), c + Vector2(r * 0.85, r * 0.1), Color(WAIL, 0.45), 1.0)
@@ -265,6 +267,8 @@ static var _no_uv := PackedVector2Array()
 ## draw_colored_polygon rebuilds GPU buffers on every redraw, and a Hellhound
 ## pack keeps about 40-60 patches burning, redrawn every frame.
 static func draw_fire_patch(ci: CanvasItem, pos: Vector2, r: float, k: float) -> void:
+	if AoeArt.fire_patch(ci, pos, r, k):
+		return  # Pixel-art scorch and flames (GDD §15.0 "Player AoE art").
 	SpriteBank.draw_disc(ci, pos, r, Color(HordeHazards.EMBER, 0.22 * k))
 	SpriteBank.draw_disc(ci, pos, r * 0.6, Color(HordeHazards.HELLFIRE, 0.3 * k))
 	var c := Color(HordeHazards.EMBER, 0.7 * k)  # Tongue colour.
@@ -282,6 +286,8 @@ static func draw_fire_patch(ci: CanvasItem, pos: Vector2, r: float, k: float) ->
 ## Ossuary Engine shard field at `pos` (radius `r`), `k` = life left (1..0):
 ## scorched ground, ember glow and bone shards sticking out of it.
 static func draw_shard_field(ci: CanvasItem, pos: Vector2, r: float, k: float) -> void:
+	if AoeArt.shard_field(ci, pos, r, k):
+		return  # Pixel-art scorch, bone shards and flames (GDD §15.0 "Player AoE art").
 	SpriteBank.draw_disc(ci, pos, r, Color(0.05, 0.03, 0.03, 0.35 * k))  # Discs batch (no per-redraw polygon).
 	SpriteBank.draw_disc(ci, pos, r * 0.75, Color(HordeHazards.EMBER, 0.14 * k))
 	ci.draw_arc(pos, r, 0.0, TAU, 24, Color(HordeHazards.EMBER, 0.45 * k), 1.0)

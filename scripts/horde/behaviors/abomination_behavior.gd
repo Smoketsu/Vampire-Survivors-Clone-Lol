@@ -82,8 +82,8 @@ func _impact(u: SummonedUnit) -> void:
 		hits += 1
 		u.director.synergies.mark_staggered(e)  # Flesh Rampart / Killing Field (no-op without them).
 		game.combat.damage_enemy(e, dmg, "abom_stomp")
-	game.effects.ring(pos, r, Palette.BONE, 0.35)
-	game.effects.ring(pos, r * 0.6, Palette.CORPSE_FLESH, 0.3)
+	game.effects.art_ring(pos, r, Palette.BONE, 0.35, "stomp")  # Pixel-art shockwave when its art exists (AoeArt).
+	game.effects.art_ring_under(pos, r * 0.6, Palette.CORPSE_FLESH, 0.3, "stomp")
 	Juice.fx.burst(pos, Palette.CORPSE_FLESH, Palette.BONE, 14, r * 2.0, 0.5, 3.0)
 	game.shake(float(u.special["stomp_shake"]))
 	Sfx.play("abom_stomp", pos)
@@ -98,6 +98,8 @@ func draw_under(u: SummonedUnit) -> void:
 		return
 	var r := float(u.special["stomp_radius"])  # Stomp radius (px).
 	var k := clampf(phase_time / maxf(float(u.special["stomp_windup"]), 0.01), 0.0, 1.0)  # Windup progress.
+	if AoeArt.telegraph(u, "mark_bone", Vector2.ZERO, r, k, Palette.CORPSE_FLESH, AoeArt.crack_for(r)):
+		return  # Pixel-art rim marks and ground cracks (GDD §15.0 "Player AoE art").
 	u.draw_circle(Vector2.ZERO, r, Color(Palette.CORPSE_FLESH, 0.10))
 	u.draw_circle(Vector2.ZERO, r * k, Color(Palette.CORPSE_FLESH, 0.22))
 	u.draw_arc(Vector2.ZERO, r, 0.0, TAU, 40, Color(Palette.BONE, 0.75), 2.0)

@@ -1013,6 +1013,7 @@ got pixel art, exactly like the empowered graves: each drawing site names its ke
 `SpriteBank.draw()` / `draw_flat()` / `draw_rising()` / the icon path, and **keeps its code drawing as
 the fallback** when the PNG is missing. Rings, telegraphs, zones, glows and progress arcs stay in code
 (retired for the Covenant's area effects: see "Act I enemy AoE art" below) (the rally's closing ring, the brand's turning sigil, the stun ring, the nova's safe rings, the cold
+(retired for the necromancer side's ground effects by "Player AoE art" below; the rally's closing ring, the brand's turning sigil, the stun ring, the nova's safe rings, the cold
 disc under the ice shell, the ember glow under a burning boulder). Flat sprites are drawn 1:1 without
 a shadow (`SpriteData.FLAT_SIZES` = the longest side); the two wall segments and the stone still are
 world sprites (`SpriteData.HEIGHTS`). Purely visual: no gameplay state, no RNG (the corpse variant is
@@ -1388,6 +1389,59 @@ images) and drawn by `CovenantFx` (`scripts/fx/covenant_fx.gd`; keys and numbers
 | `effects/structure_break` | Flash, splinters, dust ring (grey mask, tinted) | 8 × 128 | March structures, ward crystals, altars |
 
 Review folder for the owner: `docs/art/act1_enemy_review/` (`manifest.json`).
+### Player AoE art (`assets/sprites/aoe/`; Oct 2026)
+
+Owner report: "quite a few placeholder graphics for some of the AoEs in act one" (audit:
+`docs/art/audit/act1_shared.md` on `audit/act1-art`; GDD §15.0 "Player AoE art"). The old rule above
+("rings, telegraphs, zones, glows stay in code") is **retired for the player side's ground effects**:
+the spells' clouds and auras, the summon specials' wind-ups and impacts, the fire and shard patches,
+the Rogue's lane, the evolution column, the ultimates' overlays. A ground area must show its real hit
+radius at every size (levels and area passives grow it), so these are **not** stretched strips: they
+are small **pieces drawn 1:1** on the art grid through the sharp-pixel shader and placed by
+`AoeArt` (`scripts/fx/aoe_art.gd`, numbers in `AoeArtData`): ring pieces repeated along the rim and
+turned outward (their +x points away from the centre, their outer edge on the radius, every other one
+mirrored; the Undertow crest pattern), gas puffs scattered over the area and round its rim, centre
+pieces in two or three sizes, lane tiles plus a head cap. Pieces are palette colours (each shape is
+drawn in ramp levels and written once per colour ramp) with binary alpha; the game only fades them.
+Each frame keeps a 1 px clear border (no neighbour-frame bleed under the shader). Lower visual tiers
+space the pieces wider (`AoeArtData.TIER_DENSITY`); the soft area tints are the shared disc texture
+(batched, no polygon). Every code drawing stays as the fallback. All drawn procedurally and
+deterministically by `python3 tools/aoe_art.py` (no image generation, no cost);
+`python3 tools/aoe_preview.py OUT [--code]` renders them composed at game size in the engine.
+`art_check.py`: palette and alpha pass for all 59; height / feet do not apply (flat pieces); the
+dark ones (scorch, Pestilence puffs, cracks, violet crests) are darker than the lightest Sanctum IV
+floor by design (they are ground marks, drawn under the bodies).
+
+| Piece(s) | Subject | Art px | Used by |
+|---|---|---|---|
+| `crest_stomp`, `crest_bone`, `crest_stone` | Heavy impact crest: big dust puffs rolling outward with flung rocks (earth / bone / gargoyle stone), 4 frames | 18 × 20 per frame | Abomination and Bone Colossus stomps; boulder landings, Colossus shrapnel; Gargoyle / Cathedral Horror dive |
+| `crest_rubble` | Earth band and chunks, 4 frames | 14 × 16 | Corpse Explosion accent |
+| `crest_frost` | Ice crystals growing outward, then shattering | 14 × 16 | Deep Freeze |
+| `crest_wail`, `crest_wail_violet`, `crest_ivory` | Two sound-wave arcs thinning and breaking | 14 × 16 | Dirge waves, Keening Lady silence, Cathedral Horror stun |
+| `crest_arcane` | Arcane band with four-point sparks | 14 × 16 | Mage / Lich splash |
+| `crest_spore` | Moss spore puffs with teal highlights | 14 × 16 | Pestilence death nova |
+| `crest_soul`, `crest_violet` | Flame wisps licking outward | 14 × 16 | soul / violet rings (summon transforms, evolutions, heals, Bastion, Echoing Dark, the Pestilence nova core and charge rim, the Grave Eruption accent) |
+| `mark_bone`, `mark_ice`, `mark_wail`, `mark_violet`, `mark_soul` | Telegraph rim mark: a 3 px dial segment with an inward tick; frame 1 lit. The marks light up round the rim over the wind-up (no growing disc) | 8 × 14 | stomp, freeze, wail, dive and boulder wind-ups; the Grave Eruption edge |
+| `puff_plague_0..2`, `puff_pest_0..2` | Gas puffs (one shaded mass, no outline: overlapping puffs never stack hard rims, which read as foliage) | 20 / 28 / 36 | Plague Cloud (42 %), Pestilence (55 %) |
+| `bubble_plague`, `mote_soul`, `mote_plague` | Rising bubble, soul and plague motes (3 frames) | 7 | clouds, Wither / Blight drips |
+| `rune_plague`, `rune_soul` | Thorny vine with an outward thorn and a rune mark / a drip (2 variants) | 10 × 16 | Wither, Necrotic Blight rim |
+| `crack_0..2`, `crack_soul_0..2` | Zig-zag ground fissures (ink with a lit lip / a glowing soul seam) | 32 / 48 / 64 | stomp and boulder centres; Grave Eruption field |
+| `frost_star`, `flash_arcane`, `flash_wail`, `flash_violet` | Centre flashes (3 frames) | 29 / 25 | Deep Freeze, splash, wail, dive |
+| `flame_0..2`, `scorch_0`, `scorch_1` | Flame loop from a heat field (4 frames); scorch marks with a smouldering rim | 14 × 20; 28 / 60 | Hellhound fire patches, Ossuary shard fields |
+| `spike_0`, `spike_1` | Bone spikes growing out of the ground row by row | 11 × 18, 13 × 23 | Grave Eruption, Ossuary shard fields |
+| `lane_body`, `lane_head`, `dash_streak` | Dashed lane tile with a chevron (frame 1 charged), arrowhead, dash smear | 8 × 24, 30 × 12 | Rogue / Shadow Reaper dash |
+| `transform_column` | Soul light column with rising violet runes (4 frames) | 26 × 64 | summon evolving in place |
+| `black_sun`, `halo_0..2`, `tide_edge` | Black sun; crown-point taunt halos; edge-mist tile (2 frames) | 50; 30 / 42 / 58; 24 × 40 | Eclipse, Sovereign's Decree, Grave Tide overlays |
+| `bolt_violet`, `bolt_soul_glow` | Soul lightning segment stretched along each hop; the Damned's green under-glow | 16 × 9, 16 × 13 | Soul Chains |
+| `eclipse_band` | Dark barrier band with soul runes (2 variants) | 12 × 14 | Eclipse Ward |
+| `chill_film`, `dirge_veil` | Ice crust over a chilled body; Dirge veil and tears (frame 1 with the silence halo), scaled to the body | 32; 32 × 42 | Frost Wraith chill, Banshee Dirge |
+
+Also in this pass (no new art): Dread Rally's second ring and vortex, the new ultimates' second ring,
+the Winter Revenant's and Doom Brand's second rings show only without their strips (`ring_under`);
+the hard-recall and Death Knight spawn rings play `summon_rise`. Left as they were: Shadow Blast,
+the Soul Nova, the Grave Step puff, the Bone Wall and Raise Dead strips (approved art); the Soul
+Siphon / Rapture tethers (a beam, its drained-life magenta has no palette ramp), the orbit and charge
+arcs (progress arcs), the temporary-summon aura. Review: `docs/art/act1_player_review/`.
 
 ### Gullhaven Harbour (Act II, Stage 4; Oct 2026)
 

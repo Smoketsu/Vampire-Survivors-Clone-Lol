@@ -77,7 +77,7 @@ func _pulse(stats: Dictionary) -> bool:
 			e.knockback += away.normalized() * float(stats["pulse_knockback"]) / maxf(e.mass, 0.1)
 		game.combat.damage_enemy(e, float(stats["pulse_damage"]), "eclipse")
 	if hit:
-		game.effects.ring(position, r, Palette.NECRO_GREEN, 0.35)
+		game.effects.art_ring(position, r, Palette.NECRO_GREEN, 0.35, "soul_ring")  # Pixel-art soul ring when its art exists (AoeArt).
 		game.stat_add("eclipse_pulses", 1.0)
 	return hit
 
@@ -136,16 +136,17 @@ func _draw() -> void:
 func _draw_eclipse() -> void:
 	var r: float = _stats["orbit_radius"]
 	var n := orb_positions.size()
-	draw_arc(Vector2.ZERO, r, 0.0, TAU, 64, Color(0.05, 0.0, 0.08, 0.45), 9.0)
-	for i in n:
-		var a0 := angle + TAU * float(i) / float(n)
-		draw_arc(Vector2.ZERO, r, a0 + 0.22, a0 + TAU / float(n) - 0.22, 10, Color(Palette.NECRO_GREEN, 0.55), 2.0)
+	if not AoeArt.eclipse_band(self, Vector2.ZERO, r, angle):  # Pixel-art band pieces (GDD §15.0 "Player AoE art").
+		draw_arc(Vector2.ZERO, r, 0.0, TAU, 64, Color(0.05, 0.0, 0.08, 0.45), 9.0)
+		for i in n:
+			var a0 := angle + TAU * float(i) / float(n)
+			draw_arc(Vector2.ZERO, r, a0 + 0.22, a0 + TAU / float(n) - 0.22, 10, Color(Palette.NECRO_GREEN, 0.55), 2.0)
 	var charge := 1.0 - clampf(_pulse_timer / maxf(float(_stats["pulse_interval"]), 0.01), 0.0, 1.0)
 	draw_arc(Vector2.ZERO, r * 0.45, -PI / 2.0, -PI / 2.0 + TAU * charge, 32, Color(Palette.VIOLET, 0.35), 2.0)
 	for i in n:
 		var local := orb_positions[i] - position
 		var charged := recharge[i] <= 0.0
-		draw_circle(local, AbilityData.ORB_RADIUS + 4.0, Color(Palette.VIOLET, 0.45 if charged else 0.12))
+		SpriteBank.draw_disc(self, local, AbilityData.ORB_RADIUS + 4.0, Color(Palette.VIOLET, 0.45 if charged else 0.12))  # Corona (batched disc).
 		var face := (local).angle()
 		# Pixel-art eclipsed orb, its green crescent turned outward (dim while recharging).
 		if SpriteBank.draw_flat(self, MarkerArtData.ECLIPSE_ORB, local, face, Color(1, 1, 1, 1.0 if charged else MarkerArtData.ECLIPSE_ORB_DIM_ALPHA)):
