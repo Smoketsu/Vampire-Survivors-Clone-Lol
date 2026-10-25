@@ -1737,6 +1737,16 @@ func _print_ossuary_options() -> void:
 		int(st.get("gilded_draws", 0.0)), int(st.get("gilded_swaps", 0.0)),
 		floori(float(st.get("elite_kills", 0.0)) * game.meta.value("elite_ash")), int(st.get("head_start_levels", 0.0)),
 		int(st.get("vanguard_raises", 0.0)), int(st.get("patient_grave_rerolls", 0.0))])
+## Ossuary Masteries (expansion step 4): the run's Mastery levels against all of them.
+func _print_mastery_line() -> void:
+	var levels := 0  # Mastery levels owned.
+	var cost := 0  # Soul Ash price of the owned levels.
+	for cls: String in MasteryData.CLASSES:
+		var lv := int(game.meta.masteries.get(cls, 0))  # This class's level.
+		levels += lv
+		cost += MasteryData.cost_up_to(lv)
+	print("[autotest] masteries: %d / %d levels owned | soul ash %d / %d | %s" % [
+		levels, MasteryData.CLASSES.size() * MasteryData.MAX_LEVEL, cost, MasteryData.total_cost(), game.meta.describe_masteries()])
 
 
 ## Prints the meta profile and the run's Soul Ash award (Meta.award_run()).
@@ -1746,6 +1756,8 @@ func _print_soul_ash(summary: Dictionary) -> void:
 	if not game.meta.is_empty():
 		_print_ossuary_totals()  # Only with upgrades: the default (--meta=none) summary keeps its lines.
 		_print_ossuary_options()
+	if not game.meta.masteries.is_empty():
+		_print_mastery_line()  # Only with Masteries (--meta=max): the other summaries keep their lines.
 	var ash: Dictionary = summary.get("soul_ash", {})
 	if ash.is_empty():
 		return

@@ -8,6 +8,8 @@
 ##   capacity_bonus(cls)  extra summon capacity of class `cls`
 ##   apply_to_player(p)   one-time player stats at run start
 ##   unlocks(stat)        an "unlock" upgrade is owned (none on sale at present)
+##   mastery_value(cls, stat)  a summon class's Mastery bonus (MasteryData; Ossuary
+##                        expansion step 4), read by HordeDirector.compute_stats()
 ## Each meta stat is its own stacking category (GDD §6.4): it multiplies the
 ## level / passive / synergy bonuses instead of adding to them. An empty
 ## instance (no upgrades) returns 0 everywhere, so a run without purchases
@@ -17,6 +19,8 @@ extends RefCounted
 
 ## Upgrade id -> purchased tier used for this run.
 var tiers: Dictionary = {}
+## Summon class id -> Mastery level used for this run (MasteryData, 0..MAX_LEVEL).
+var masteries: Dictionary = {}
 ## Modifier stat (MetaData.STATS key) -> summed bonus.
 var _values: Dictionary = {}
 
@@ -25,9 +29,15 @@ var _values: Dictionary = {}
 ## are ignored and tiers are clamped to each upgrade's range (levels 6-10 of the
 ## deep upgrades included: the difficulty gates only limit buying, Meta.purchase_block(),
 ## so a co-op partner's loadout and the --meta=max profile apply in full).
-## Each upgrade adds MetaData.value_at(id, tier).
-static func from_tiers(p_tiers: Dictionary) -> MetaModifiers:
+## Each upgrade adds MetaData.value_at(id, tier). `p_masteries` (class id ->
+## level, default none) are the summon Masteries, clamped to MasteryData's range;
+## classes without a mastery are ignored.
+static func from_tiers(p_tiers: Dictionary, p_masteries: Dictionary = {}) -> MetaModifiers:
 	var m := MetaModifiers.new()
+	for cls: String in MasteryData.CLASSES:
+		var lv := clampi(int(p_masteries.get(cls, 0)), 0, MasteryData.MAX_LEVEL)
+		if lv > 0:
+			m.masteries[cls] = lv
 	for id: String in MetaData.UPGRADE_ORDER:
 		var t := clampi(int(p_tiers.get(id, 0)), 0, MetaData.max_tier(id))
 		if t <= 0:
@@ -48,9 +58,33 @@ func int_value(stat: String) -> int:
 	return int(roundf(value(stat)))
 
 
-## True when no upgrade is active.
+## True when no upgrade and no mastery is active.
 func is_empty() -> bool:
-	return tiers.is_empty()
+	return tiers.is_empty() and masteries.is_empty()
+
+
+## Mastery level that applies to summon class `cls` (0 = none). An evolved form
+## is its base class (HordeDirector calls with the base id); the Profane Bishop
+## takes the better of its bases (MasteryData.BASES_OF).
+func mastery_level(cls: String) -> int:
+	if masteries.is_empty():
+		return 0
+	if MasteryData.BASES_OF.has(cls):
+		var best := 0
+		for base: String in MasteryData.BASES_OF[cls]:
+			best = maxi(best, int(masteries.get(base, 0)))
+		return best
+	return int(masteries.get(cls, 0))
+
+
+## Mastery bonus fraction for summon class `cls` on `stat` ("hp" or "damage"; 0
+## when the class has no mastery level). One multiplier category, applied once
+## in HordeDirector.compute_stats().
+func mastery_value(cls: String, stat: String) -> float:
+	var lv := mastery_level(cls)
+	if lv <= 0:
+		return 0.0
+	return MasteryData.hp_bonus(lv) if stat == "hp" else MasteryData.damage_bonus(lv)
 
 
 ## True when an "unlock" stat (MetaData.STATS format "unlock") is owned.
@@ -88,4 +122,15 @@ func describe() -> String:
 	for id: String in MetaData.UPGRADE_ORDER:
 		if tiers.has(id):
 			parts.append("%s:%d" % [id, int(tiers[id])])
+	return ", ".join(parts)  # Masteries have their own autotest line (describe_masteries()).
+
+
+## "class:level" list of the active Masteries (autotest summary), "none" when empty.
+func describe_masteries() -> String:
+	if masteries.is_empty():
+		return "none"
+	var parts := PackedStringArray()
+	for cls: String in MasteryData.CLASSES:
+		if masteries.has(cls):
+			parts.append("%s:%d" % [cls, int(masteries[cls])])
 	return ", ".join(parts)

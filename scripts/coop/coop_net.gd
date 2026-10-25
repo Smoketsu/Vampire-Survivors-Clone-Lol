@@ -312,8 +312,12 @@ static func make_loadout(config: RunConfig, player_name: String = "") -> Diction
 	for id: String in Meta.unlocked_items:
 		unlocks.append(id)
 	unlocks.sort()
+	var masteries := {}  # Summon class id -> Mastery level (Ossuary Masteries).
+	for cls: String in MasteryData.CLASSES:
+		if Meta.mastery_level(cls) > 0:
+			masteries[cls] = Meta.mastery_level(cls)
 	return {"character_id": config.character_id, "skin_id": config.skin_id, "ultimate_id": config.ultimate_id,
-		"title_id": Meta.selected_title(), "meta_levels": levels, "unlocks": unlocks, "name": player_name}
+		"title_id": Meta.selected_title(), "meta_levels": levels, "mastery_levels": masteries, "unlocks": unlocks, "name": player_name}
 
 
 ## The host's run settings from `config`: stage, difficulty, modifiers, Hyper,
@@ -678,6 +682,13 @@ static func _clean_loadout(lo: Dictionary, slot: int) -> Dictionary:
 	if src is Dictionary:
 		for k: Variant in src:
 			levels[String(k)] = int((src as Dictionary)[k])
+	var masteries := {}  # Mastery levels, clamped to MasteryData's classes and range.
+	var ms: Variant = lo.get("mastery_levels", {})
+	if ms is Dictionary:
+		for cls: String in MasteryData.CLASSES:
+			var lv := clampi(int((ms as Dictionary).get(cls, 0)), 0, MasteryData.MAX_LEVEL)
+			if lv > 0:
+				masteries[cls] = lv
 	var unlocks: Array = []
 	var u: Variant = lo.get("unlocks", [])
 	if u is Array:
@@ -685,4 +696,4 @@ static func _clean_loadout(lo: Dictionary, slot: int) -> Dictionary:
 			unlocks.append(String(id))
 	return {"character_id": String(lo.get("character_id", CharacterData.DEFAULT_ID)),
 		"skin_id": String(lo.get("skin_id", "")), "ultimate_id": String(lo.get("ultimate_id", UltimateData.DEFAULT_ID)),
-		"title_id": String(lo.get("title_id", "")), "meta_levels": levels, "unlocks": unlocks, "name": player_name}
+		"title_id": String(lo.get("title_id", "")), "meta_levels": levels, "mastery_levels": masteries, "unlocks": unlocks, "name": player_name}

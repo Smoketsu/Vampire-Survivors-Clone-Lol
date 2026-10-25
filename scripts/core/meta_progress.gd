@@ -54,6 +54,13 @@
 ## character last confirmed on the pre-run setup screen is remembered in
 ## `prerun_character` ([prerun] character). Older saves have neither and get
 ## nothing reached and the Gravecaller; unknown ids are ignored.
+## Masteries (Ossuary expansion step 4, MasteryData): a summon class's mastery
+## opens once a run took it to Lv 5 (`class_lv5`, saved [class_lv5] <class> = true,
+## recorded by HordeDirector.set_class_level() -> record_class_level(); filled from
+## the summon evolutions already found) and is bought level by level
+## (`mastery_levels`, saved [masteries] <class> = level). Additive sections: no
+## SAVE_VERSION bump, older saves load with nothing bought. The bonus reaches a
+## run through MetaModifiers (run_modifiers()); Refund all leaves masteries alone.
 ## Hyper mode and skins (owner-approved; HyperData, SkinData):
 ##   * `hyper_unlocked` turns true the first time HyperData.UNLOCK_BOSS_ID
 ##     (Grand Inquisitor Seraphine) is slain ([hyper] unlocked; an older save
@@ -207,6 +214,13 @@ var epilogue_seen: Dictionary = {}
 var best_clear: int = -1
 ## The same for victories with Hyper on ([clears] best_hyper; -1 = none).
 var best_hyper_clear: int = -1
+## Ossuary Masteries (expansion step 4): summon class id -> true once a run took
+## that class to MasteryData.UNLOCK_LEVEL (its mastery may be bought). Saved in
+## [class_lv5]; older saves are filled from the summon evolutions found so far.
+var class_lv5: Dictionary = {}
+## Ossuary Masteries: summon class id -> bought mastery level (0..MasteryData.MAX_LEVEL).
+## Saved in [masteries].
+var mastery_levels: Dictionary = {}
 
 ## Keys of every stage record (all floats, like the lifetime stats).
 const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills",
@@ -232,10 +246,10 @@ func run_modifiers() -> MetaModifiers:
 		var test_tiers: Dictionary = MetaData.autotest_tiers(GameState.autotest_meta)  # Profile tiers (never the Oath).
 		if GameState.autotest_oath > 0:
 			test_tiers[PactData.OATH_ID] = GameState.autotest_oath
-		return MetaModifiers.from_tiers(test_tiers)
+		return MetaModifiers.from_tiers(test_tiers, MasteryData.autotest_levels(GameState.autotest_meta))
 	var run_tiers := tiers.duplicate()  # Owned tiers with the Oath at its active tier.
 	run_tiers[PactData.OATH_ID] = oath_active_tier()
-	return MetaModifiers.from_tiers(run_tiers)
+	return MetaModifiers.from_tiers(run_tiers, mastery_levels)
 
 
 ## Profane Oath tier applied to runs (never above the owned tier).
@@ -1002,6 +1016,89 @@ func refund_all() -> int:
 
 
 # =====================================================================================
+# Masteries (Ossuary expansion step 4): a small permanent bonus per summon class
+# =====================================================================================
+
+## Records that summon class `cls` reached level `lvl` in a run (Game: the
+## HordeDirector's class-level hook). The first time that is MasteryData.UNLOCK_LEVEL
+## the class's mastery opens; saved at once. Returns true when it just opened.
+func record_class_level(cls: String, lvl: int) -> bool:
+	if lvl < MasteryData.UNLOCK_LEVEL or class_lv5.has(cls) or not MasteryData.is_masterable(cls):
+		return false
+	class_lv5[cls] = true
+	save()
+	changed.emit()
+	return true
+
+
+## True when the mastery of `cls` may be bought (the class reached Lv 5 in some run).
+func is_mastery_open(cls: String) -> bool:
+	return class_lv5.has(cls)
+
+
+## Bought mastery level of `cls` (0 = none).
+func mastery_level(cls: String) -> int:
+	return int(mastery_levels.get(cls, 0))
+
+
+## Price of the next mastery level of `cls` (-1 when maxed).
+func mastery_cost(cls: String) -> int:
+	return MasteryData.price(mastery_level(cls) + 1)
+
+
+## Why the next mastery level of `cls` cannot be bought now: "" (it can),
+## "maxed", "locked" (the class never reached Lv 5) or "cost" (not enough Soul Ash).
+func mastery_block(cls: String) -> String:
+	if not MasteryData.is_masterable(cls):
+		return "locked"
+	if mastery_level(cls) >= MasteryData.MAX_LEVEL:
+		return "maxed"
+	if not is_mastery_open(cls):
+		return "locked"
+	if soul_ash < mastery_cost(cls):
+		return "cost"
+	return ""
+
+
+## Buys the next mastery level of `cls` and saves. Returns false if it was blocked.
+func buy_mastery(cls: String) -> bool:
+	if mastery_block(cls) != "":
+		return false
+	soul_ash -= mastery_cost(cls)
+	mastery_levels[cls] = mastery_level(cls) + 1
+	save()
+	changed.emit()
+	return true
+
+
+## Soul Ash invested in masteries.
+func mastery_spent_total() -> int:
+	var total := 0
+	for cls: String in MasteryData.CLASSES:
+		total += MasteryData.cost_up_to(mastery_level(cls))
+	return total
+
+
+## Reads [class_lv5] and [masteries] (missing sections, unknown ids, wrong types
+## = none). Fills class_lv5 from older records every time (idempotent): each
+## summon evolution already found (Meta [recipes]) needed its base classes at Lv 5.
+## A bought mastery always counts as open, so a hand-edited save cannot lock it away.
+func _load_masteries(cfg: ConfigFile) -> void:
+	for cls: String in MasteryData.CLASSES:
+		var v: Variant = cfg.get_value("class_lv5", cls, false)
+		if typeof(v) == TYPE_BOOL and bool(v):
+			class_lv5[cls] = true
+		mastery_levels[cls] = clampi(_read_int(cfg, "masteries", cls, 0), 0, MasteryData.MAX_LEVEL)
+		if int(mastery_levels[cls]) > 0:
+			class_lv5[cls] = true
+	for evo: String in discovered_recipes:
+		if SummonEvolutionData.EVOLUTIONS.has(evo):
+			for cls: String in SummonEvolutionData.EVOLUTIONS[evo]["bases"]:
+				if MasteryData.is_masterable(cls):
+					class_lv5[cls] = true
+
+
+# =====================================================================================
 # Save / load
 # =====================================================================================
 
@@ -1057,6 +1154,11 @@ func save() -> Error:
 		cfg.set_value("epilogue", "seen_" + id, true)
 	cfg.set_value("clears", "best", _difficulty_key(best_clear))  # Ossuary deep levels: hardest difficulty cleared.
 	cfg.set_value("clears", "best_hyper", _difficulty_key(best_hyper_clear))
+	for cls: String in MasteryData.CLASSES:  # Ossuary Masteries (expansion step 4).
+		if class_lv5.has(cls):
+			cfg.set_value("class_lv5", cls, true)
+		if mastery_level(cls) > 0:
+			cfg.set_value("masteries", cls, mastery_level(cls))
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -1113,6 +1215,7 @@ func load_save() -> void:
 	_load_title(cfg)
 	_load_epilogue(cfg)
 	_load_clears(cfg)
+	_load_masteries(cfg)
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -1332,6 +1435,8 @@ func _reset() -> void:
 	epilogue_seen = {}
 	best_clear = -1
 	best_hyper_clear = -1
+	class_lv5 = {}
+	mastery_levels = {}
 	load_status = "fresh"
 
 

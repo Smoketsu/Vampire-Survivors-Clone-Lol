@@ -222,6 +222,7 @@ func set_class_level(cls: String, level: int) -> void:
 	if level > 0:
 		if game.records_here():
 			game.codex.meet(CodexData.SUMMON, cls)  # Codex: a summon class raised (records only).
+			Meta.record_class_level(cls, level)  # Ossuary Masteries: Lv 5 opens that class's mastery (Meta [class_lv5]).
 	if not presence_caps.is_empty():
 		recompute_all(presence_caps)
 	else:
@@ -351,6 +352,10 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		dmg_mult *= 1.0 + presence * float(distinct_classes())
 	var spd_mult := (1.0 + float(row.get("speed_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_speed")) \
 			* (1.0 + synergies.value("unholy_host", "attack_speed"))
+	# Ossuary Mastery of this class (MasteryData; an evolved form is its base class):
+	# its own category on HP and damage, exactly 1 while the class has none.
+	hp_mult *= 1.0 + game.meta.mastery_value(cls, "hp")
+	dmg_mult *= 1.0 + game.meta.mastery_value(cls, "damage")
 	# Run modifiers (Vengeful Dead, DifficultyModifiers): own category, 1 when off.
 	hp_mult *= game.difficulty.minion_hp_mult()
 	dmg_mult *= game.difficulty.minion_damage_mult()

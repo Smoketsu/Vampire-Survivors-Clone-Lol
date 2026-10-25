@@ -34,6 +34,8 @@ var _open: int = 7
 var _sealed: bool = false
 ## Screenshot mode: the upgrade shown in the detail panel (--detail=ID; "" = the default).
 var _detail: String = ""
+## Screenshot mode: "" = the Trees (the Ossuary screen), "masteries" = the Masteries panel.
+var _tab: String = ""
 
 
 func _ready() -> void:
@@ -44,6 +46,8 @@ func _ready() -> void:
 			_shot = arg.get_slice("=", 1)
 		elif arg == "--phone":
 			_phone = true
+		elif arg.begins_with("--tab="):
+			_tab = arg.get_slice("=", 1)
 		elif arg.begins_with("--open="):
 			_open = arg.get_slice("=", 1).to_int()
 		elif arg == "--sealed":
@@ -67,6 +71,7 @@ func _run() -> void:
 	_check_migration()
 	_check_purchase_and_refund()
 	_check_coop_loadout()
+	_check_masteries()
 	Meta._reset()
 	Meta.save_path = Meta.DEFAULT_PATH
 	if _failures == 0:
@@ -306,6 +311,84 @@ func _check_coop_loadout() -> void:
 	_check(is_equal_approx(m2.value("presence_damage"), 0.03) and m2.int_value("head_start") == 1, "the co-op loadout carries the new options")
 
 
+# --- Masteries (Ossuary expansion step 4) -----------------------------------------------
+
+func _check_masteries() -> void:
+	# Data: every offerable summon class (not the evolved-only Bishop) has a mastery.
+	var covered := 0
+	for cls: String in UnitData.CLASS_ORDER:
+		var evolved: bool = bool(UnitData.UNITS[cls].get("evolved_only", false))
+		_check(MasteryData.is_masterable(cls) == not evolved, "%s %s a mastery" % [cls, "has no" if evolved else "has"])
+		covered += 0 if evolved else 1
+	_check(covered == MasteryData.CLASSES.size(), "every offerable class is in MasteryData.CLASSES")
+	_check(MasteryData.cost_up_to(3) == 760 and MasteryData.total_cost() == 12920, "masteries cost 760 a class, 12,920 in all (got %d)" % MasteryData.total_cost())
+	print("[ossuary_check] masteries: %d classes x %d / %d / %d = %d" % [MasteryData.CLASSES.size(), MasteryData.PRICES[0], MasteryData.PRICES[1], MasteryData.PRICES[2], MasteryData.total_cost()])
+	# Unlock rule and purchases.
+	Meta._reset()
+	Meta.soul_ash = 10000
+	_check(Meta.mastery_block("warrior") == "locked" and not Meta.buy_mastery("warrior"), "a mastery is locked until the class reaches Lv 5")
+	_check(not Meta.record_class_level("warrior", 4) and Meta.mastery_block("warrior") == "locked", "Lv 4 opens nothing")
+	_check(not Meta.record_class_level("bishop", 5) and not Meta.is_mastery_open("bishop"), "the Bishop has no mastery of its own")
+	_check(Meta.record_class_level("warrior", 5) and Meta.is_mastery_open("warrior"), "Lv 5 opens the Warrior mastery")
+	_check(not Meta.record_class_level("warrior", 5), "opening is recorded once")
+	var ash := Meta.soul_ash
+	for lv in range(1, 4):
+		_check(Meta.mastery_cost("warrior") == MasteryData.price(lv), "mastery level %d price" % lv)
+		_check(Meta.buy_mastery("warrior") and Meta.mastery_level("warrior") == lv, "mastery level %d buys" % lv)
+	_check(Meta.soul_ash == ash - 760 and Meta.mastery_spent_total() == 760, "three levels cost 760")
+	_check(Meta.mastery_block("warrior") == "maxed" and not Meta.buy_mastery("warrior") and Meta.mastery_cost("warrior") == -1, "level 3 is the last")
+	Meta.record_class_level("archer", 5)
+	Meta.soul_ash = 100
+	_check(Meta.mastery_block("archer") == "cost" and not Meta.buy_mastery("archer"), "too little Soul Ash blocks a purchase")
+	# The one stat path: MetaModifiers -> compute_stats reads mastery_value().
+	var m := MetaModifiers.from_tiers({}, {"warrior": 3, "mender": 2, "archer": 9, "bishop": 3, "nonsense": 3})
+	_check(is_equal_approx(m.mastery_value("warrior", "hp"), 0.12) and is_equal_approx(m.mastery_value("warrior", "damage"), 0.12), "level 3 = +12% HP and damage")
+	_check(m.mastery_level("archer") == 3 and m.mastery_value("mage", "hp") == 0.0, "levels clamp to 3; other classes get nothing")
+	_check(m.mastery_level("bishop") == 2, "the Bishop takes the better of Mender / Warder (got %d)" % m.mastery_level("bishop"))
+	_check(not m.masteries.has("nonsense") and not m.masteries.has("bishop"), "unknown ids and the Bishop are not stored")
+	_check(MetaModifiers.from_tiers({}).is_empty() and not m.is_empty(), "masteries count as active")
+	_check(MasteryData.autotest_levels("none").is_empty() and MasteryData.autotest_levels("mid").is_empty() and MasteryData.autotest_levels("max").size() == MasteryData.CLASSES.size(), "--meta=max owns every mastery, none / mid none")
+	# Save round trip, and the retroactive fill from found summon evolutions.
+	DirAccess.make_dir_recursive_absolute(_dir)
+	var p := _path("masteries.cfg")
+	Meta.save_path = p
+	Meta.soul_ash = 500
+	GameState.autotest_meta_save = true
+	_check(Meta.save() == OK, "a save with masteries writes")
+	GameState.autotest_meta_save = false
+	Meta.load_save()
+	_check(Meta.mastery_level("warrior") == 3 and Meta.is_mastery_open("archer") and Meta.mastery_level("archer") == 0, "[masteries] / [class_lv5] round trip")
+	var cfg := ConfigFile.new()
+	cfg.set_value("meta", "save_version", MetaData.SAVE_VERSION)
+	cfg.set_value("recipes", "lich", true)
+	cfg.set_value("recipes", "profane_bishop", true)
+	cfg.set_value("masteries", "rogue", 2)
+	cfg.set_value("masteries", "banshee", 99)
+	cfg.save(p)
+	Meta.load_save()
+	_check(Meta.is_mastery_open("mage") and Meta.is_mastery_open("mender") and Meta.is_mastery_open("warder") and not Meta.is_mastery_open("warrior"), "found summon evolutions open their base classes")
+	_check(Meta.mastery_level("rogue") == 2 and Meta.is_mastery_open("rogue") and Meta.mastery_level("banshee") == 3, "a bought mastery stays open; levels clamp on load")
+	var old_p := _path("v2_nomasteries.cfg")
+	_write_old(old_p, 2, 70, {"necrotic_marrow": 5}, false)
+	Meta.save_path = old_p
+	Meta.load_save()
+	_check(Meta.load_status == "ok" and Meta.mastery_spent_total() == 0 and Meta.class_lv5.is_empty(), "a save without the sections loads with none")
+	for f: String in ["masteries.cfg", "v2_nomasteries.cfg"]:
+		DirAccess.remove_absolute(_path(f))
+	Meta.save_path = Meta.DEFAULT_PATH
+	# Co-op loadout: the partner's masteries travel and apply to their slot.
+	var clean: Dictionary = CoopNet._clean_loadout({"mastery_levels": {"warrior": 3, "mage": 7, "nonsense": 2, "rogue": 0}}, 1)
+	var ml: Dictionary = clean["mastery_levels"]
+	_check(int(ml.get("warrior", 0)) == 3 and int(ml.get("mage", 0)) == 3 and not ml.has("nonsense") and not ml.has("rogue"), "the co-op loadout cleans mastery_levels")
+	_check((CoopNet._clean_loadout({}, 0)["mastery_levels"] as Dictionary).is_empty(), "a loadout without masteries is clean")
+	Meta._reset()
+	Meta.record_class_level("gargoyle", 5)
+	Meta.soul_ash = 1000
+	Meta.buy_mastery("gargoyle")
+	_check(int((CoopNet.make_loadout(RunConfig.new())["mastery_levels"] as Dictionary).get("gargoyle", 0)) == 1, "make_loadout() sends the bought masteries")
+	Meta._reset()
+
+
 # --- Screenshot mode ---------------------------------------------------------------------
 
 func _screenshot() -> void:
@@ -343,6 +426,9 @@ func _screenshot() -> void:
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	holder.add_child(bg)
 	add_child(holder)
+	if _tab == "masteries":
+		await _screenshot_masteries(holder)
+		return
 	var menu := OssuaryMenu.open_over(holder, null)
 	for i in 30:
 		await get_tree().process_frame
@@ -351,6 +437,48 @@ func _screenshot() -> void:
 		menu._show_detail("sharpened_bones")
 	if _detail != "" and MetaData.UPGRADES.has(_detail):
 		menu._show_detail(_detail)
+	for i in 10:
+		await get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	var img := get_viewport().get_texture().get_image()
+	DirAccess.make_dir_recursive_absolute(_shot.get_base_dir())
+	var err := img.save_png(_shot)
+	print("[ossuary_check] shot %s (%dx%d): %s" % [_shot, img.get_width(), img.get_height(), error_string(err)])
+	Meta._reset()
+	get_tree().quit(0 if err == OK else 1)
+
+
+## Screenshot of the Masteries panel over a sample save (a stand-in header with the
+## balance: the tab bar is not part of this check). The sample has some classes
+## taken to Lv 5, a few masteries bought, one maxed and the rest locked.
+func _screenshot_masteries(holder: Control) -> void:
+	Meta._reset()
+	Meta.soul_ash = 640
+	for cls: String in ["warrior", "archer", "mage", "mender", "warder", "abomination", "rogue", "gargoyle", "frost_wraith", "bone_hound", "corpse_catapult", "bone_golem"]:
+		Meta.class_lv5[cls] = true
+	Meta.mastery_levels = {"warrior": 3, "archer": 2, "mage": 1, "mender": 1, "abomination": 2}
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	holder.add_child(center)
+	TouchSupport.fit_to_screen(center)
+	var root := VBoxContainer.new()
+	root.add_theme_constant_override("separation", OssuaryUiData.BLOCK_GAP)
+	center.add_child(root)
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 10)
+	var title := UiTheme.tier_label(MasteryUiData.TAB_TITLE, UiTheme.Tier.TITLE, UiTheme.TEXT_GOLD)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(title)
+	head.add_child(IconGlyph.new("soul_ash", Vector2(OssuaryUiData.BALANCE_ICON, OssuaryUiData.BALANCE_ICON)))
+	head.add_child(UiTheme.tier_label(str(Meta.soul_ash), UiTheme.Tier.HEADER, OssuaryUiData.ASH_COLOR))
+	root.add_child(head)
+	var panel := OssuaryMasteriesPanel.new()
+	root.add_child(panel)
+	for i in 30:
+		await get_tree().process_frame
+	(panel.tiles["mender"] as Control).grab_focus()
+	var pick := "mage" if _open == 7 else "spawn_of_the_deep"  # --open=5: a locked class in the detail strip.
+	panel._show_detail(pick)
 	for i in 10:
 		await get_tree().process_frame
 	await RenderingServer.frame_post_draw
