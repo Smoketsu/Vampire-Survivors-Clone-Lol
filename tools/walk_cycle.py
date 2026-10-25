@@ -380,8 +380,10 @@ RIGS = {
     # bust): the bounce box sits on her hips and skirt (cols 18-37, rows 27-37, two lobes); the
     # skirt's front flap hanging between her thighs rigid. Round 2 ("jiggling side to side rather
     # than up and down"): the box sways sideways (`bust_axis="x"`, BUST_SWAY / IDLE_BUST) as one
-    # mass (one bell: two lobes swaying the same way tore the skirt at the centre column).
-    "pantheon/amazon": dict(mode="legs", hip=41, back=(0, 28), front=(28, 54), rigid=[(24, 30, 41, 44)], spread=2, lift=2, dip=1, bust=(18, 38, 27, 38, 2, 1), bust_axis="x"),
+    # mass (one bell: two lobes swaying the same way tore the skirt at the centre column). Round 4
+    # (the narrow front flap between bare thighs read as a crotch): the still's skirt covers both
+    # thighs down to a flat hem (row 40), the flap is gone; only the hem's ink row (41) rides rigid.
+    "pantheon/amazon": dict(mode="legs", hip=41, back=(0, 28), front=(28, 54), rigid=[(24, 31, 41, 42)], spread=2, lift=2, dip=1, bust=(18, 38, 27, 38, 2, 1), bust_axis="x"),
     # Art review round 1 redo (slim-thick, a bit chubby; the old box sat too low): on her bust
     # (cols 21-31, rows 17-21, two lobes).
     "pantheon/gorgon": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(21, 32, 17, 22, 2, 2)),
