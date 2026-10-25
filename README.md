@@ -1608,8 +1608,8 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   9-11 min still keeps about 100-150. The Reckoning pays only about 8% of a
   good run. Levels 1-5 of everything cost **9,635** (8,965 before the two Grave
   Step upgrades), about 21 good runs (16–27 including weaker runs and Ash
-  Harvest); the **deep levels** (below) add **60,105**, so buying everything
-  costs **69,740**, plus 375 for the optional Profane Oath. The Profane Pact and Oath rewards add their own bonus
+  Harvest); the **deep levels** (below) add **24,950**, so buying everything
+  costs **34,585**, plus 375 for the optional Profane Oath. The Profane Pact and Oath rewards add their own bonus
   lines on top (below).
 - **The Ossuary** (main menu) holds the four GDD §9.2 trees. Each upgrade
   raises one stat per tier, costs rise per tier, and some need a prerequisite
@@ -1639,8 +1639,8 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   Flesh, Bone Mail, Fleet Shade, Soul Magnet, Grave Tithe, Ash Harvest) go up to
   **level 10**. Levels 1-5 keep their values and prices; every new level gives
   half of the upgrade's per-level value (Restless Shade 3%: level 10 = 2.45 s)
-  and costs ×1.35 the level before it (from the last old price, rounded to 5;
-  e.g. Necrotic Marrow 310 / 420 / 565 / 765 / 1,030 for +3% minion HP each, 45%
+  and costs ×1.10 the level before it (from the last old price, rounded to 5;
+  e.g. Necrotic Marrow 255 / 280 / 305 / 335 / 370 for +3% minion HP each, 45%
   at level 10). A 3- or 4-level upgrade's own levels 4-5 are open from the
   start. The one- and two-level upgrades (Risen Vanguard, Legion of Bone,
   Shadow Mastery, Undying Will, Twin Shadow, Fate's Thread, Banishing Rite) and

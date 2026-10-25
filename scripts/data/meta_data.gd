@@ -19,11 +19,10 @@
 ## Deep levels (Ossuary expansion step 2, GDD §15.0 "Ossuary deep levels"): the 13
 ## upgrades with 3+ levels go up to level 10 (DEEP_UPGRADES). Each new level gives
 ## half of the upgrade's per-level value (DEEP_VALUE_SHARE, one override) and costs
-## x1.35 the level before (DEEP_COST_GROWTH, from the upgrade's last old price,
+## x1.10 the level before (DEEP_COST_GROWTH, from the upgrade's last old price,
 ## rounded to 5; DEEP_COST_SCALE scales every new price). The 80 new levels cost
-## 60,105 in all (the six 3-level upgrades' seven new levels each are most of it:
-## 34,975; levels 6-10 alone, the gated ones, are 65 levels), so
-## everything maxed is 69,740 (Oath excluded; max_total_cost() adds its 375); 140
+## 24,950 in all (levels 6-10 alone, the gated ones, are 65 levels), so
+## everything maxed is 34,585 (Oath excluded; max_total_cost() adds its 375); 140
 ## tiers in all, the Oath excluded (tools/ossuary_check.gd prints the table).
 ## Levels 6-7 open after a clear on Lich or harder, 8-9 after a Deathlord clear and 10
 ## after a Deathlord clear with Hyper (LEVEL_GATES; Meta.max_open_tier()).
@@ -272,7 +271,7 @@ const DEEP_VALUE_SHARE: float = 0.5  # TUNING (not in GDD)
 const DEEP_PER_TIER_OVERRIDES := {"restless_shade": 0.03}  # TUNING (not in GDD)
 ## Price growth per new level: level N costs DEEP_COST_GROWTH x level N-1 (the first
 ## new level grows from the last listed price).
-const DEEP_COST_GROWTH: float = 1.35  # TUNING (not in GDD) owner brief "about x1.35"
+const DEEP_COST_GROWTH: float = 1.10  # TUNING (not in GDD) retuned from the measured economy (docs/ossuary/ECONOMY.md): x1.35 made the new levels 60,105, x1.10 makes them ~25,000 of the ~55,000 budget for all new content
 ## One scale over every new level's price (1.0 = the rule as is; the economy step's
 ## knob). Keep it at 0.75 or above, or a level 6 would cost less than its level 5.
 const DEEP_COST_SCALE: float = 1.0  # TUNING (not in GDD)
