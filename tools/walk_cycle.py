@@ -401,7 +401,7 @@ RIGS = {
     # in her cloak, the oar and its lantern rigid. The Myrmidons march, the upright spear rigid,
     # the round shield (low on the front side) riding with the body.
     "pantheon/cerberus": dict(mode="legs", hip=66, back=(0, 48), front=(48, 94), rigid=[], spread=2, lift=2, dip=1),
-    "bosses/hades": dict(mode="robe", hip=78, rigid=[(12, 18, 0, None)], sway=1, dip=1),  # Act IV art review round 3: regenerated still, the bident on the left (cols 12-18).
+    "bosses/hades": dict(mode="robe", hip=78, rigid=[(56, 70, 0, None)], sway=1, dip=1),  # Act IV art review round 4: back to the round 1 still (the bident on the right, cols 56-70), recoloured.
     "player/ferrywoman": dict(mode="robe", hip=34, rigid=[(32, 39, 0, None)], sway=2, dip=1, bust=(19, 31, 18, 25, 2)),  # Act IV art review round 1 redo: box 2 px right (was cols 19-29); round 2 redo: widened 2 px left (cols 19-31).
     "summons/myrmidon_shade": dict(mode="legs", hip=34, back=(0, 13), front=(13, 26), rigid=[(1, 5, 0, None), (14, 26, 20, 41)], spread=2, lift=2, dip=1),
     "summons/legion_of_tartarus": dict(mode="legs", hip=40, back=(0, 15), front=(15, 32), rigid=[(2, 7, 0, None), (17, 32, 23, 47)], spread=2, lift=2, dip=1),
