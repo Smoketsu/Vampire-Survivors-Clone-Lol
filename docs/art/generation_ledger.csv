@@ -823,3 +823,4 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-25 13:39,epilogue/act4_4,gpt-image-2.5-flare,medium,1536x1024,2,818,588,343,0.0191,act4_4.png
 2026-10-25 13:39,epilogue/act4_2,gpt-image-2.5-flare,medium,1536x1024,2,836,588,343,0.0192,act4_2.png
 2026-10-25 13:39,epilogue/close_act4,gpt-image-2.5-flare,medium,1536x1024,1,857,576,343,0.0192,close_act4.png
+2026-10-25 15:51,pantheon/wolf_of_rome,gpt-image-2.5-flare,medium,1024x1024,2,683,2048,439,0.0330,wolf_new.png

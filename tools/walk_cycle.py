@@ -350,7 +350,7 @@ RIGS = {
     # the round shield (low on the front side) riding with the body.
     "pantheon/cerberus": dict(mode="legs", hip=66, back=(0, 48), front=(48, 94), rigid=[], spread=2, lift=2, dip=1),
     "bosses/hades": dict(mode="robe", hip=78, rigid=[(56, 70, 0, None)], sway=1, dip=1),
-    "player/ferrywoman": dict(mode="robe", hip=34, rigid=[(32, 39, 0, None)], sway=2, dip=1, bust=(19, 29, 18, 25, 2)),
+    "player/ferrywoman": dict(mode="robe", hip=34, rigid=[(32, 39, 0, None)], sway=2, dip=1, bust=(21, 31, 18, 25, 2)),  # Act IV art review round 1 redo: box 2 px right (was cols 19-29).
     "summons/myrmidon_shade": dict(mode="legs", hip=34, back=(0, 13), front=(13, 26), rigid=[(1, 5, 0, None), (14, 26, 20, 41)], spread=2, lift=2, dip=1),
     "summons/legion_of_tartarus": dict(mode="legs", hip=40, back=(0, 15), front=(15, 32), rigid=[(2, 7, 0, None), (17, 32, 23, 47)], spread=2, lift=2, dip=1),
 }
@@ -433,7 +433,11 @@ SKIN_FIX = {
     # --- Act IV: the Asphodel Underworld --- (the Ferrywoman's skins: their own oar column and bust box)
     "player/ferrywoman_hyper": {"rigid": [(28, 35, 0, None)], "bust": (17, 26, 17, 24, 2)},
     "player/ferrywoman_untouchable": {"rigid": [(28, 34, 0, None)], "bust": (17, 27, 17, 24, 2)},
-    "player/ferrywoman_deathlord": {"rigid": [(29, 35, 0, None)], "bust": (18, 27, 19, 26, 2)},
+    "player/ferrywoman_deathlord": {"rigid": [(29, 35, 0, None)], "bust": (20, 29, 19, 26, 2)},  # Round 1 redo: box 2 px right (was cols 18-27).
+    # Act IV art review round 1 redo: the Doomed Prophetess's Hyper and Deathlord skins' boxes extend 2 px
+    # further left (derived boxes were cols 14-24 and 17-27, both starting right of the bust's left edge).
+    "player/doomed_prophetess_hyper": {"bust": (12, 24, 17, 24, 2)},
+    "player/doomed_prophetess_deathlord": {"bust": (15, 27, 17, 24, 2)},
     # The Hyper gown's crown adds 2 rows on top but her bust sits no lower than the base
     # Tide Widow's, so the derived box (rows 20-28) landed on the waist (owner's art review).
     # Round 2: 2 px wider to the right and two lobes, so both sides bounce ("just one is bouncing").
