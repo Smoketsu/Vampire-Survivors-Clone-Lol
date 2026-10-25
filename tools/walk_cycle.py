@@ -105,18 +105,26 @@ ROBE_SWAY = (0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
 # "jiggle"), timed like a damped spring driven by the step: the bust lags the body's dip
 # ("down": it stays up, -0.5), overshoots as the body rises ("passing": +1), rebounds
 # ("up": -0.5) and settles on the contact (0, so frame 0 stays the still).
-BUST_BOUNCE = (0.0, -0.5, 1.0, -0.5, 0.0, -0.5, 1.0, -0.5)
+# Owner, Oct 2026 (after the Act IV art review): "every bounce animation... just too fast, make
+# them a bit slower": the three reversals a step (lag, overshoot, rebound) became one smooth
+# swell a step (down to the passing pose and back), so the bust moves at half the rate.
+# Was (0.0, -0.5, 1.0, -0.5, 0.0, -0.5, 1.0, -0.5).
+BUST_BOUNCE = (0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5)
 # Per frame (both steps): the same spring for a bounce box with `bust_axis="x"` (a sideways
 # jiggle; owner's Act IV art review, round 2, on the Amazon's hips: "things should be jiggling
 # side to side rather than up and down"), as a share of the box's px (+ = toward the facing
 # side, right). The weight shifts to the other foot on each step, so the kick changes side
 # every step: the first step's lag, overshoot and rebound one way, the second's the other way.
-BUST_SWAY = (0.0, -0.5, 1.0, -0.5, 0.0, 0.5, -1.0, 0.5)
+# Slowed with BUST_BOUNCE (owner, Oct 2026): one smooth swing to each side per stride instead of a
+# kick and rebound every step. Was (0.0, -0.5, 1.0, -0.5, 0.0, 0.5, -1.0, 0.5).
+BUST_SWAY = (0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
 # Per frame (both steps): a rig's optional `swish` box (a skirt's front drape, owner's Act IV art
 # review round 5 on the Amazon: "it should swish in front of her") sways sideways like BUST_SWAY
 # one frame later (follow-through: the cloth lags the hips it hangs from), as a share of the
 # box's px (+ = right). Frame 0 stays 0 so frame 0 is the still.
-SWISH_SWAY = (0.0, 0.0, -0.5, 1.0, -0.5, 0.0, 0.5, -1.0)
+# Slowed with BUST_SWAY (owner, Oct 2026): BUST_SWAY one frame later, frame 0 kept at 0.
+# Was (0.0, 0.0, -0.5, 1.0, -0.5, 0.0, 0.5, -1.0).
+SWISH_SWAY = (0.0, 0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0)
 # Rows below the bust box over which the warp fades back to zero, per bounce px (the
 # belly takes up the motion instead of tearing at the box edge).
 BUST_TAIL_PER_PX = 1
