@@ -15,6 +15,10 @@
 ##     level-up card,
 ##   * the limited rerolls / banishes and unlimited skips of the level-up
 ##     panel (GDD §9.1, LevelUpData), plus fallback cards when nothing is left.
+##   * three Ossuary hooks (expansion step 3, game.meta): Gilded Chests weighs a
+##     chest draw against a second one (_gilded_pick()), Chosen Vanguard raises
+##     the first new summon class one level higher (_vanguard_level()) and
+##     Patient Grave returns a reroll on the first skips of a run,
 ##   * summon evolutions (Death Knight, Lich, Profane Bishop; recipes in
 ##     SummonEvolutionData, runtime in game.horde.evolutions) share the spell
 ##     evolutions' delivery: ready_evolutions() appends them, chest_rewards()
@@ -84,6 +88,9 @@ var banishes_left: int = LevelUpData.BANISHES
 var banished: Dictionary = {}
 ## Level-up skips used this run (unlimited).
 var skips_used: int = 0
+## Chosen Vanguard (Ossuary Dominion tree): new summon classes still to be raised
+## one level higher this run (0..1; set in setup(), spent by _vanguard_level()).
+var vanguard_left: int = 0
 ## Spell id -> cached effective stats (cleared whenever a card is applied).
 var _eff_cache: Dictionary = {}
 ## Pending Abyssal Detonation second hits: {"t": s left, "pos": centre, "stats": row}.
@@ -128,6 +135,7 @@ func setup(p_game: Game) -> void:
 	banishes_max = LevelUpData.BANISHES + game.meta.int_value("banishes")
 	rerolls_left = rerolls_max
 	banishes_left = banishes_max
+	vanguard_left = game.meta.int_value("vanguard")  # Dominion (Ossuary): Chosen Vanguard charges.
 
 
 # =====================================================================================
@@ -525,6 +533,7 @@ func chest_rewards(n: int) -> Array[Dictionary]:
 			if cands.is_empty():
 				break
 			o = _draw_weighted(cands)
+			o = _gilded_pick(o, cands)
 		apply_offer(o)
 		out.append(o)
 	if out.is_empty():
@@ -532,6 +541,31 @@ func chest_rewards(n: int) -> Array[Dictionary]:
 		apply_offer(heal)
 		out.append(heal)
 	return out
+
+
+## Gilded Chests (Ossuary expansion step 3, MetaModifiers "gilded_chance"): with
+## that chance a chest's draw `o` is weighed against a second weighted draw from
+## `cands` and the one nearer its peak is kept (the higher level it raises an item
+## to; a dead card always loses; a tie keeps `o`). The chance is rolled on the
+## draw stream only when the upgrade is owned, so every other run draws as before.
+func _gilded_pick(o: Dictionary, cands: Array[Dictionary]) -> Dictionary:
+	var chance := game.meta.value("gilded_chance")  # 0 = not owned.
+	if chance <= 0.0 or cands.is_empty():
+		return o
+	if (offer_rng.randf() if offer_rng != null else randf()) >= chance:
+		return o
+	var other := _draw_weighted(cands)  # The second reward weighed.
+	game.stat_add("gilded_draws", 1.0)
+	if _peak_score(other) > _peak_score(o):
+		game.stat_add("gilded_swaps", 1.0)
+		return other
+	return o
+
+
+## How near its peak offer `o` brings its item: the level it raises it to, far
+## below everything for a dead card (Gilded Chests' comparison).
+static func _peak_score(o: Dictionary) -> float:
+	return float(int(o.get("to", 0))) - (100.0 if bool(o.get("dead", false)) else 0.0)
 
 
 ## The entries of `cands` (_candidates() format) that upgrade an item the
@@ -600,6 +634,7 @@ func apply_offer(o: Dictionary) -> void:
 				game.character.on_spell_level(id, to)  # Character unlock rule (Meta save).
 				game.codex.meet(CodexData.SPELL, id)  # Codex: a spell learned (records only).
 		"summon":
+			to = _vanguard_level(o, id, to)
 			game.horde.set_class_level(id, to)
 		"passive":
 			var old_caps := game.horde.capacity_snapshot()
@@ -618,6 +653,10 @@ func apply_offer(o: Dictionary) -> void:
 			skips_used += 1
 			game.combat.heal_player(game.player.max_hp * LevelUpData.SKIP_HEAL_FRACTION)
 			game.stat_add("levelup_skips", 1.0)
+			if skips_used <= game.meta.int_value("skip_rerolls"):
+				rerolls_left += 1  # Patient Grave (Ossuary): this skip hands back a reroll.
+				rerolls_max += 1  # The run's total, so "used / total" stays true.
+				game.stat_add("patient_grave_rerolls", 1.0)
 	_eff_cache.clear()
 	if String(o["kind"]) == "evolution":
 		pick_history.append("EVOLVE %s" % id)
@@ -625,6 +664,18 @@ func apply_offer(o: Dictionary) -> void:
 		pick_history.append(id)
 	else:
 		pick_history.append("%s %d" % [id, to])
+
+
+## Chosen Vanguard (Ossuary expansion step 3, MetaModifiers "vanguard"): while a
+## charge is left, a summon offer `o` that raises a NEW class (from level 0) gives
+## it one level more than the card's `to` (capped at the class's top level) and
+## spends a charge; returns the level to set. Unchanged without the upgrade.
+func _vanguard_level(o: Dictionary, cls: String, to: int) -> int:
+	if vanguard_left <= 0 or int(o.get("from", 1)) != 0:
+		return to
+	vanguard_left -= 1
+	game.stat_add("vanguard_raises", 1.0)
+	return mini(to + 1, (UnitData.LEVELS[cls] as Array).size())
 
 
 ## Creates the Orb Shield node (the spell was just learned).

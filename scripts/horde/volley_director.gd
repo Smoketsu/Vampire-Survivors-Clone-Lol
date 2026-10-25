@@ -288,14 +288,17 @@ func step(delta: float) -> void:
 	queue_redraw()
 
 
-## Spell echoes: each owned spell at LEVEL_ON+ fires its echo every `every` cooldowns.
+## Spell echoes: each owned spell at LEVEL_ON+ fires its echo every `every` cooldowns
+## (Echo Weaving, an Ossuary upgrade, lowers that level by its echo_levels; the
+## Lv 3-4 count is used below LEVEL_ON too).
 func _step_spells(delta: float) -> void:
 	if not echoes_on:
 		return
 	var ab := game.abilities  # Spell owner.
+	var echo_on := maxi(1, VolleyData.LEVEL_ON - game.meta.int_value("echo_levels"))  # Echo Weaving (Ossuary): echoes start sooner.
 	for id: String in VolleyData.SPELLS:
 		var lvl := ab.spell_level(id)  # 0 = not owned.
-		if lvl < VolleyData.LEVEL_ON:
+		if lvl < echo_on:
 			continue
 		var s := ab.spell_stats(id)  # Effective stats (passives applied).
 		var v: Dictionary = VolleyData.SPELLS[id]

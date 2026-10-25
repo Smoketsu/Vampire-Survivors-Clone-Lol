@@ -74,7 +74,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Feedback (main menu, pause menu, results card; shown once the owner's form link is set) | Click it, or move the focus to it and press Enter: the feedback form opens in your browser (a new tab on the Web build) with a short report filled in; the game stays where it was (a paused run stays paused) | Focus + **A** (in a browser a controller press may be stopped by the pop-up blocker) |
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move over the grid, Esc / Back closes | D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
-| Ossuary (Soul Ash upgrades) | **Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
+| Ossuary (Soul Ash upgrades) | **Ossuary** in the main menu; **Q / E** switch tabs, arrows move, Enter buys; Esc closes | **LB / RB** switch tabs, D-pad / stick move, **A** buys, **B** closes |
 | Settings (Audio / Video / Controls tabs: volume, fullscreen, zoom Normal / Close, effects Full / Reduced, shake, damage numbers, reduce motion, keys) | **Settings** in the main or pause menu; **Q / E** switch tabs; Esc / Back closes | Focus + **A**; **LB / RB** switch tabs; **B** closes |
 | Codex (achievements, spells, summons, the Covenant) | **Codex** in the main menu; **Q / E** switch tabs, arrows move through the tiles, Esc / Back closes | **LB / RB** switch tabs; D-pad / stick move; **B** closes |
 | Credits (and the Godot / font licences) | **Credits** in the main menu; **Q / E** switch Credits / Licences, Up / Down scroll, Esc / Back closes | **LB / RB**, D-pad up / down, **B** closes |
@@ -1609,9 +1609,9 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   good run. Levels 1-5 of everything cost **9,635** (8,965 before the two Grave
   Step upgrades), about 21 good runs (16–27 including weaker runs and Ash
   Harvest); the **deep levels** (below) add **24,950**, so buying everything
-  costs **34,585**, plus 375 for the optional Profane Oath. The Profane Pact and Oath rewards add their own bonus
+  costs **34,585**, and the **new options** (below) **9,060** more (**43,645**), plus 375 for the optional Profane Oath. The Profane Pact and Oath rewards add their own bonus
   lines on top (below).
-- **The Ossuary** (main menu) holds the four GDD §9.2 trees. Each upgrade
+- **The Ossuary** (main menu) holds the four GDD §9.2 trees (and Dominion, below). Each upgrade
   raises one stat per tier, costs rise per tier, and some need a prerequisite
   in the same tree:
 
@@ -1660,6 +1660,35 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   check `godot --headless res://tools/ossuary_check.tscn -- --autotest` covers
   prices, gates, the migration, Refund all and the co-op loadout (temp files only;
   CI runs it in the Graveyard job; `--shot=PATH [--phone]` saves a screenshot).
+- **New options and Dominion** (Ossuary expansion step 3, GDD §15.0 "Ossuary new
+  options and Dominion"): sideways upgrades, small values, **9,060** Soul Ash in all
+  (everything in the trees is now **43,645**, plus 375 for the Oath). Each has its
+  own levels only (no deep levels, no difficulty gates):
+
+  | Tree | New upgrades (per level, levels, cost) |
+  |---|---|
+  | Necromancy | **Bone Reserve**: a summon replaced after falling rises with a barrier of 10% of its max HP (3, 120→380) · **Commander's Presence**: +1% minion damage per distinct summon class you command (3, 130→410; needs Sharpened Bones II) |
+  | Shadowcraft | **Echo Weaving**: spell echoes (Volleys) start at spell Lv 2 instead of 3 (1, 600; needs Umbral Potency II) · **Dark Tithe**: a kill not dealt by a summon charges the ultimate meter +25% more (3, 120→380) |
+  | Survival | **Last Rites**: the first time a hit leaves you under 25% HP, 1 s of invulnerability per level (3, 150→450) · **Grave Ward**: start every run with a ward that blocks one whole hit per level (2, 250→500; needs Bone Mail I) |
+  | Fortune | **Gilded Chests**: 15% per level that a chest draw is weighed against a second draw and the one nearer its peak (the higher level) is kept (3, 140→430) · **Elite Bounty**: +1 Soul Ash per elite (3, 100→320) · Fate's Thread and Banishing Rite get a **third level** (450 / 520) |
+  | Dominion | **Head Start**: begin the run a level ahead per level, the picks waiting (2, 400→700; co-op: the host's, like the Oath) · **Chosen Vanguard**: the first summon class you raise starts one level higher (1, 450) · **Patient Grave**: your first skip per level hands back a reroll (2, 200→350) |
+
+  **Dominion** is the fifth tree: it opens for buying the first time Grand
+  Inquisitor Seraphine falls (read from the stage records or the Hyper unlock, so
+  older saves that slew her have it at once); before that its tiles are sealed
+  ("Slay the boss of the Sanctum to open Dominion"). Skips were already free and
+  unlimited, so the proposal's "free skip" became Patient Grave. The new upgrades
+  are ordinary `[upgrades]` save keys (no save version bump) and travel in the
+  co-op loadout like every level. `--meta=max` buys them all; `--meta=mid` leaves
+  them out and keeps Fate's Thread / Banishing Rite at 1 (unchanged); with upgrades
+  the autotest adds an `ossuary options:` line.
+- **The Ossuary tabs**: a tab bar over the screen, **Trees · Masteries · Relics ·
+  Offerings** (Q / E or LB / RB switch; Back sits at its right end). Trees holds the
+  five tree columns (seven rows each; Dominion's column ends with the Profane Oath
+  tile, Lower Oath and Refund all) over the full-width detail panel. Each other tab
+  is a panel script (`scripts/ui/ossuary_<tab>_panel.gd`: a Control with
+  `refresh()` and a `changed` signal), loaded by path, so a tab whose panel does not
+  exist yet is simply not shown.
 - **One modifier path.** At run start `Meta.run_modifiers()` turns the
   purchased tiers into a `MetaModifiers` object (`game.meta`). The existing
   stat code reads it in a few places (horde `compute_stats` / `capacity` /
@@ -2014,7 +2043,7 @@ snapped to the locked palette, lone-pixel cleanup; `--all` rebuilds every panel 
 | Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
 | Stage 3 (§8.3, §7.2, §7.4) | The Sanctum of Judgment: four battle zones on the clock (courtyards, golden halls, cloisters, final sanctuary), two sanctified chambers with ward crystals, the Cathedral Guardian miniboss (slams, sweeping beam, its own HUD bar, chest), three optional sacred altars (−6% soldier HP each, one healer fewer for Seraphine), floor corruption, Dawn's Wrath with Sun Paladins, and four new Covenant kinds (Sanctified Sentinel, Radiant Inquisitor with suppression, High Confessor with holy shields and revivals, Sun Paladin). See *Stage 3* above. |
 | Stage 3 boss (§7.5) | Grand Inquisitor Seraphine with her three GDD phases (Divine Judgment, Avatar of the Dawn, The Last Light): radiant fans, delayed holy circles, Templar squads, teleports, healing attendants, rotating holy beams, barrages, constructs, undead suppression, the safe-zone Judgment nova, the collapsing arena and a final guard, the relic shatter and the ending text. She ends the Sanctum of Judgment; `--boss=seraphine` also puts her on any other stage. See *Stage 3 boss* above. |
-| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (20 upgrades, 13 of them to level 10 behind difficulty gates, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, the Codex (GDD §10.1 Collection / Codex and Achievements), and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
+| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with five trees (31 upgrades, 13 of them to level 10 behind difficulty gates, the Dominion tree opened by Seraphine, prerequisites, respec, a tab bar) plus the opt-in Profane Oath, 4 tracked achievements, the Codex (GDD §10.1 Collection / Codex and Achievements), and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Playable characters (§10.2, §11.4) | Twelve characters, one per spell, each with its starting spell, one innate passive and stat modifiers; chosen on the pre-run setup screen, unlocked by reaching Lv 5 with the character's spell, remembered in the save. The Gravecaller is the default and plays exactly like the game before characters. See *Characters* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |

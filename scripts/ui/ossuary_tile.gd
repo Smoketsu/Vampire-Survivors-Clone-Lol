@@ -102,17 +102,24 @@ func _init(id: String) -> void:
 func _ready() -> void:
 	SpriteBank.apply_sharp(_fx)
 	set_process(false)
+	# A name too long for the NAME tier on the narrow five-column tile (Grave-Hardened
+	# Flesh, Commander's Presence) drops to the BODY tier instead of being cut.
+	var room := OssuaryUiData.TILE_SIZE.x - OssuaryUiData.TILE_PAD.x * 2.0 - OssuaryUiData.TILE_ICON - float(OssuaryUiData.TILE_ICON_GAP)  # Name width (layout px).
+	var font := name_label.get_theme_font("font")
+	if font != null and font.get_string_size(name_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, name_label.get_theme_font_size("font_size")).x > room:
+		UiTheme.set_tier(name_label, UiTheme.Tier.BODY)
 
 
 ## Shows the tile's state. `state` is "buy" (affordable), "cost" (too
-## expensive), "maxed", "locked", "gated" (the next level waits on a
+## expensive), "maxed", "locked", "sealed" (its tree waits on a boss: drawn
+## locked with OssuaryUiData.SEALED_WORD), "gated" (the next level waits on a
 ## difficulty clear: `gate_word` replaces the cost) or "oath" (an owned Oath
 ## tier); `tier` / `max_tier` fill the pips; `cost` is the next tier's price
 ## (ignored when maxed / locked / gated); `idle` lights pips up to that index
 ## as owned-but-lowered (the Oath); `sealed` is the number of open levels
 ## (Meta.max_open_tier()): sockets past it are drawn sealed (-1 = none).
 func show_state(state: String, tier: int, max_tier: int, cost: int, idle: int = 0, sealed: int = -1, gate_word: String = "") -> void:
-	locked = state == "locked"
+	locked = state == "locked" or state == "sealed"
 	var accent := "violet"  # Kit frame accent (UiTheme.style()).
 	var name_col := UiTheme.TEXT  # Name colour.
 	var pip_col := OssuaryUiData.PIP_OWNED  # Lit pip colour.
@@ -136,6 +143,12 @@ func show_state(state: String, tier: int, max_tier: int, cost: int, idle: int = 
 			name_col = UiTheme.TEXT_DIM
 			cost_icon.visible = false
 			cost_label.text = ""
+		"sealed":
+			accent = "dim"
+			name_col = UiTheme.TEXT_DIM
+			cost_icon.visible = false
+			cost_label.text = OssuaryUiData.SEALED_WORD
+			cost_label.add_theme_color_override("font_color", OssuaryUiData.GATE_WORD)
 		"gated":
 			cost_icon.visible = false
 			cost_label.text = gate_word

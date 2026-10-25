@@ -96,13 +96,21 @@ func request() -> void:
 
 
 ## A kill charges the meter (CombatResolver._kill_enemy). Kills during the
-## buff do not count unless PlayerAbilityData.CHARGE_DURING_BUFF.
-func on_enemy_killed(e: Enemy) -> void:
+## buff do not count unless PlayerAbilityData.CHARGE_DURING_BUFF. `own_kill` is
+## true when no summon dealt the killing blow (the necromancer's spells and the
+## like): Dark Tithe (Ossuary, MetaModifiers "tithe_charge") then adds that share
+## of the kill's points (exactly the old points without the upgrade).
+func on_enemy_killed(e: Enemy, own_kill: bool = false) -> void:
 	var pts := PlayerAbilityData.POINTS_PER_KILL  # Soul points of this kill.
 	if e.is_boss:
 		pts = PlayerAbilityData.POINTS_PER_BOSS
 	elif e.is_elite or e.is_structure:
 		pts = PlayerAbilityData.POINTS_PER_ELITE
+	var tithe := game.meta.value("tithe_charge") if own_kill else 0.0  # Dark Tithe share (0 = none).
+	if tithe > 0.0:
+		if not is_full():
+			game.stat_add("dark_tithe_points", pts * tithe)
+		pts *= 1.0 + tithe
 	add_points(pts)
 
 

@@ -1,0 +1,11 @@
+A single pixel-art game icon SYMBOL for a dark-fantasy necromancer game, on a FULLY TRANSPARENT background (real alpha), with NO badge, NO frame, NO border and NO background square: just the symbol itself.
+
+LOW-RESOLUTION pixel art: the whole symbol is only 26 x 26 pixels, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). One bold, simple, readable shape; no detail smaller than 2 pixels except small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze.
+
+Symbol: "Patient Grave" (a skipped level-up hands back a reroll): a bone hourglass with violet sand, a small curved violet return arrow circling its lower half.
+
+Colours: ONLY flat fills from this list: bone #1C110B (outline), #7F785F, #B4AA8A, #E8E1C8; violet #160A21 (outline), #4A2569, #7A42AD, #A35CFA.
+Outline: a clean 1-pixel dark outline around the symbol in the darkest shade of each part's colour (never pure black). Light from the top-left.
+
+Output: a square PNG, the symbol centred, filling about 80% of the image. No text, no frame, no watermark.
+Attached: approved icons of this game (shown with their badge): match their pixel size, outline weight and palette exactly, but draw ONLY the symbol, without the badge.
