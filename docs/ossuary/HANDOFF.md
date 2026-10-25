@@ -70,3 +70,17 @@ Then read `CLAUDE.md` (rules; it overrides this file).
 - Rules that bit before: never `AudioServer.add_bus()`; no screen-reading shaders; Web export always through
   `tools/patch_web_audio.py` (which also runs `patch_web_gl.py`); prefer textures over per-frame polygons; at most 4 Godot
   processes; commits end with the session's attribution lines and never name a model.
+
+## Progress (Oct 25, later)
+
+- Merged on `integration`: step 1 (`ossuary/economy`: per-act stage multipliers ×1 / ×1.25 / ×1.5, Lich ×1.5, Deathlord ×2;
+  `tools/ash_measure.py`, `docs/ossuary/ECONOMY.md`: ~877 / 1,170 / 1,880 Soul Ash a good run) and step 2
+  (`ossuary/deep-tiers`: levels 6-10, `[clears]`, `Meta.max_open_tier()`, SAVE_VERSION 2, `tools/ossuary_check.tscn`),
+  then the deep-level prices retuned to ×1.10 a level (24,950). Budget for the rest: options + Dominion ~9,000, summon
+  Masteries ~13,000, Relics ~8,000 (Offerings are consumables). Not yet on `main`.
+- Running in parallel (shared brief `docs/ossuary/AGENT_RULES.md`): A `ossuary/options` (Opus: ~10 new upgrades, the
+  Dominion tree, the Ossuary tab bar), B `ossuary/masteries` (Sonnet: summon-class Masteries), C `ossuary/relics` (Opus:
+  Relics with 1 -> 3 slots + expensive Grave Offerings, the pre-run "Rites" strip), D `ossuary/recolours` (Sonnet:
+  cosmetic recolours of owned skins).
+- After they merge: ONE multi-seed power-curve batch by a Sonnet agent (`--meta=max` = everything bought / equipped;
+  8 seeds, army and naive, a stage per act; targets in CLAUDE.md), then the full "Done" set, CI on integration, ship.
