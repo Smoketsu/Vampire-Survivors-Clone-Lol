@@ -818,3 +818,8 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-25 13:22,tiles/underworld_marble,gpt-image-2.5-flare,medium,1024x1024,0,145,0,439,0.0139,tex_marble.png
 2026-10-25 13:22,obstacles/underworld_round,gpt-image-2.5-flare,medium,1536x1024,0,365,0,343,0.0121,props_round.png
 2026-10-25 13:22,obstacles/underworld_long,gpt-image-2.5-flare,medium,1536x1024,0,300,0,343,0.0118,props_long.png
+2026-10-25 13:39,epilogue/act4_3,gpt-image-2.5-flare,medium,1536x1024,2,830,588,343,0.0191,act4_3.png
+2026-10-25 13:39,epilogue/act4_1,gpt-image-2.5-flare,medium,1536x1024,2,834,588,343,0.0192,act4_1.png
+2026-10-25 13:39,epilogue/act4_4,gpt-image-2.5-flare,medium,1536x1024,2,818,588,343,0.0191,act4_4.png
+2026-10-25 13:39,epilogue/act4_2,gpt-image-2.5-flare,medium,1536x1024,2,836,588,343,0.0192,act4_2.png
+2026-10-25 13:39,epilogue/close_act4,gpt-image-2.5-flare,medium,1536x1024,1,857,576,343,0.0192,close_act4.png
