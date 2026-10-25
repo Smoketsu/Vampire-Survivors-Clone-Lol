@@ -745,3 +745,13 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-24 19:43,effects/maelstrom_whirl,gpt-image-2.5-flare,medium,1024x1024,1,257,1024,439,0.0226,whirl.png
 2026-10-24 19:43,markers/tide_wall,gpt-image-2.5-flare,medium,1536x1024,1,268,1024,343,0.0198,tidewall.png
 2026-10-24 19:43,effects/undertow_shallows,gpt-image-2.5-flare,medium,1024x1024,1,221,1024,439,0.0225,shallows.png
+2026-10-25 12:21,concepts/act7_bosses,gpt-image-2.5-flare,medium,1536x1024,2,346,952,343,0.0196,act7_bosses.png
+2026-10-25 12:21,concepts/act7_stage,gpt-image-2.5-flare,medium,1536x1024,2,312,952,343,0.0195,act7_stage.png
+2026-10-25 12:21,concepts/act7_lineup,gpt-image-2.5-flare,medium,1536x1024,2,438,952,343,0.0201,act7_lineup.png
+2026-10-25 12:22,concepts/act8_lineup,gpt-image-2.5-flare,medium,1536x1024,2,368,952,343,0.0197,act8_lineup.png
+2026-10-25 12:22,concepts/act8_supers,gpt-image-2.5-flare,medium,1536x1024,2,318,952,343,0.0195,act8_supers.png
+2026-10-25 12:22,concepts/act8_stage,gpt-image-2.5-flare,medium,1536x1024,2,292,952,343,0.0194,act8_stage.png
+2026-10-25 12:22,concepts/act9_lineup,gpt-image-2.5-flare,medium,1536x1024,2,400,952,343,0.0199,act9_lineup.png
+2026-10-25 12:22,concepts/act9_stage,gpt-image-2.5-flare,medium,1536x1024,2,305,952,343,0.0194,act9_stage.png
+2026-10-25 12:22,concepts/act9_bosses,gpt-image-2.5-flare,medium,1536x1024,2,294,952,343,0.0194,act9_bosses.png
+2026-10-25 12:23,concepts/act8_supers_v2,gpt-image-2.5-flare,medium,1536x1024,2,433,952,343,0.0201,act8_supers.png
