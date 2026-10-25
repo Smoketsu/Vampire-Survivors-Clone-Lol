@@ -103,7 +103,7 @@ func on_enemy_killed(e: Enemy, source: String) -> void:
 	_resolving = false
 	game.stat_add("wr_shatters", 1.0)
 	game.effects.ring(at, r, SummonGlyphs.REVENANT_GLOW, 0.3, "frost_shatter")
-	game.effects.ring(at, r * 0.45, PowerupGlyphs.ICE, 0.25)
+	game.effects.ring_under(at, r * 0.45, PowerupGlyphs.ICE, 0.25, "frost_shatter")  # Only without the strip (GDD §15.0 "Player AoE art").
 	Juice.fx.burst(at, PowerupGlyphs.ICE, SummonGlyphs.REVENANT_GLOW, 6, r * 2.2, 0.4, 2.0)
 	Sfx.play("frost_bolt", at)
 
@@ -135,7 +135,7 @@ func _on_summon_died(u: SummonedUnit) -> void:
 			game.stat_add("wr_nova_freezes", 1.0)
 	game.stat_add("wr_novas", 1.0)
 	game.effects.ring(at, r, SummonGlyphs.REVENANT_GLOW, 0.45, "frost_nova")
-	game.effects.ring(at, r * 0.6, Palette.COLD_BLUE, 0.55)
+	game.effects.ring_under(at, r * 0.6, Palette.COLD_BLUE, 0.55, "frost_nova")  # Only without the strip (GDD §15.0 "Player AoE art").
 	Juice.fx.burst(at, PowerupGlyphs.ICE, Palette.COLD_BLUE, 14, r * 1.8, 0.6, 2.5)
 	Sfx.play("deep_freeze", at)
 

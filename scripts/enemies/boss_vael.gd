@@ -289,7 +289,7 @@ func _in_cleave(p: Vector2, r: float) -> bool:
 ## of the necromancer's damage (body-blocking).
 func _resolve_cleave() -> void:
 	var r := float(boss_def["cleave_radius"])
-	game.effects.slash(position + cleave_dir * radius, cleave_dir, Palette.FLAME, r * 0.8)
+	game.effects.slash(position + cleave_dir * radius, cleave_dir, Palette.FLAME, r * 0.8, "vael_cleave")  # Its crescent strip when the art exists (visual only).
 	game.effects.impact(position + cleave_dir * r * 0.55, r * 0.5, Palette.FLAME)
 	game.shake(7.0)
 	var soakers := 0

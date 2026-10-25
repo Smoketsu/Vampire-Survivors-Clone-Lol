@@ -235,6 +235,7 @@ func _begin_special(id: String, next_phase: Phase) -> void:
 func _enter_wrath() -> void:
 	enraged = true
 	_force_call = true
+	queue_redraw()  # The Wrath halo appears under him (his ground layer redraws only on a change; visual only).
 	game.enemies.show_banner(String(boss_def["phase2_banner"]))
 	game.effects.impact(position, radius * 3.0, Palette.GOLD)
 	game.stat_add("boss_phase2", 1.0)
@@ -487,7 +488,10 @@ func motion_sprite_key() -> String:
 ## Ground layer (Enemy._draw()): the Wrath halo.
 func _draw_under() -> void:
 	if enraged:
-		# Wrath: a burning crimson-gold halo around him.
+		# Wrath: a burning crimson-gold halo around him (its pixel art, a ring
+		# of flame tongues baked for his body, CovenantFx, when present).
+		if CovenantFx.disc(self, Vector2.ZERO, radius * 1.6, CovenantFxData.WRATH_DISCS):
+			return
 		draw_circle(Vector2.ZERO, radius * 1.6, Color(Palette.FLAME, 0.14))
 		draw_arc(Vector2.ZERO, radius * 1.6, 0.0, TAU, 32, Color(Palette.GOLD, 0.7), 2.0)
 

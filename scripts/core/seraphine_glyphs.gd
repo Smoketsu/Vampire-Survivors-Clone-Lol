@@ -78,6 +78,20 @@ static func draw_seraphine(ci: CanvasItem, o: Vector2, r: float, flash: bool, po
 ## The radiant aura behind her: a soft glow in the Avatar form, a
 ## flickering flame ring in the Last Light.
 static func _draw_aura(ci: CanvasItem, o: Vector2, k: float, fight_phase: int, now: float) -> void:
+	if fight_phase >= 1 and CovenantFx.has(CovenantFxData.RAY):
+		# Pixel art (CovenantFx, GDD §15.0 "Act I enemy AoE art"): the soft glow
+		# as the shared disc texture, a slowly turning sunburst of gold rays,
+		# and in the Last Light a ring of flame tongues licking outward.
+		CovenantFx.soft_disc(ci, o, k * 2.0, Color(Palette.GOLD, 0.1))
+		CovenantFx.soft_disc(ci, o, k * 1.45, Color(Palette.IVORY, 0.1))
+		CovenantFx.orbit(ci, o, k * 1.78, CovenantFxData.RAY, 16, now * 0.25, Color(1.0, 1.0, 1.0, 0.5), true)
+		if fight_phase >= 2 and CovenantFx.has(CovenantFxData.COLLAPSE_FLAME):
+			for i in CovenantFxData.LAST_LIGHT_TONGUES:
+				var a := TAU * float(i) / float(CovenantFxData.LAST_LIGHT_TONGUES) + now * 0.7
+				CovenantFx.flame_tongue(ci, o + Vector2.from_angle(a) * k * 1.5, a, now, i % CovenantFxData.COLLAPSE_FLAME_FRAMES,
+					Color(1.0, 1.0, 1.0, 0.85))
+			CovenantFx.ring(ci, o, k * 1.55, CovenantFxData.COLLAPSE_EDGE, Color(1.0, 1.0, 1.0, 0.8), 3.0)
+		return
 	if fight_phase >= 1:
 		ci.draw_circle(o, k * 2.0, Color(Palette.GOLD, 0.1))
 		ci.draw_circle(o, k * 1.45, Color(Palette.IVORY, 0.1))
@@ -150,6 +164,11 @@ static func _draw_staff(ci: CanvasItem, o: Vector2, k: float, flash: bool, pose:
 ## that grows with `glow` (0..1).
 static func _draw_glow(ci: CanvasItem, o: Vector2, k: float, glow: float) -> void:
 	if glow <= 0.0:
+		return
+	if CovenantFx.has(CovenantFxData.T_FRONT):
+		# Pixel art: the bloom as the shared disc texture under a white-gold ring.
+		CovenantFx.soft_disc(ci, o, k * (0.9 + 0.8 * glow), Color(Palette.IVORY, 0.15 + 0.4 * glow))
+		CovenantFx.ring(ci, o, k * (1.2 + 1.0 * glow), CovenantFxData.T_FRONT, Color(1.0, 1.0, 1.0, 0.4 + 0.5 * glow), 1.5)
 		return
 	ci.draw_circle(o, k * (0.9 + 0.8 * glow), Color(Palette.IVORY, 0.15 + 0.4 * glow))
 	ci.draw_arc(o, k * (1.2 + 1.0 * glow), 0.0, TAU, 32, Color(Palette.GOLD, 0.4 + 0.5 * glow), 2.5)

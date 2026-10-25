@@ -137,6 +137,9 @@ const HEIGHTS: Dictionary = {
 	# --- Act II: Fallen Seraph ---
 	"summons/fallen_seraph": 52.0,  # TUNING (not in GDD) ART_BIBLE manifest size (body ~46, the halo above)
 	"summons/ruin_seraph": 60.0,  # TUNING (not in GDD) ART_BIBLE manifest size (body ~52, the thorn halo above)
+	# --- Act II: the Ancient Eye's shared kinds (harbour placeholder art pass) ---
+	"eye/eye_initiate": 46.0,  # TUNING (not in GDD) Initiate of the Eye: fodder, a hunched cultist a little smaller than the Recruit (50)
+	"eye/eye_chanter": 64.0,  # TUNING (not in GDD) Chanter of the Eye: squad leader, body ~44, the tall eye staff above (the Hierophant is 64)
 	# --- Act II: Gullhaven Harbour ---
 	"eye/deep_kin": 56.0,  # TUNING (not in GDD) Deep Kin: a bruiser, between soldier and heavy (the fin ridge rises above the hunched head)
 	"eye/tide_caller": 54.0,  # TUNING (not in GDD) Tide Caller: soldier tier (body ~48, the conch staff above)
@@ -148,6 +151,7 @@ const HEIGHTS: Dictionary = {
 	"bosses/merrow_changed": 136.0,  # TUNING (not in GDD) Abbot Merrow after The Change (the frill crown the top, limbs spread wide)
 	"bosses/merrow_changed_strike": 120.0,  # TUNING (not in GDD) boss attack pose (lunging lash; BossPoseData)
 	"structures/bell_buoy": 64.0,  # TUNING (not in GDD) a bell buoy: the float and its bell cage
+	"structures/merrow_pulpit": 40.0,  # TUNING (not in GDD) Abbot Merrow's driftwood pulpit before him while he preaches, 42 x 40 (harbour placeholder art pass)
 	"structures/smuggler_cache": 40.0,  # TUNING (not in GDD) a smugglers' cache: an iron-bound crate, ~34 px wide for its 15 px radius
 	"player/brine_widow": 58.0,  # TUNING (not in GDD) the Brine Widow: body ~48 like the necromancer, the hooked staff above
 	# --- Act II: the Hollow Archive ---
@@ -181,6 +185,7 @@ const HEIGHTS: Dictionary = {
 	"summons/drowned_thrall_ally": 44.0,  # TUNING (not in GDD) Call of the Drowned's Thrall (soldier tier)
 	# --- Act III: the Electronic Empire (the shared kinds; assets/sprites/empire/) ---
 	"empire/scout_drone": 32.0,  # TUNING (not in GDD) fodder: a small flying drone, about 40 px wide with its rotors; art review round 1: 30 + two empty rows on top for the hover bob (walk_cycle.py "hover")
+	"empire/kill_drone": 32.0,  # TUNING (not in GDD) the Purge Protocol's armoured drone, 70 px wide with its rotors; like the Scout Drone: 30 + two empty rows on top for the hover bob (Act III missing sprites)
 	"empire/line_trooper": 50.0,  # TUNING (not in GDD) soldier tier: body ~46, the helmet dome on top
 	"empire/spotter": 56.0,  # TUNING (not in GDD) elite tier: a tall coated marksman, the antenna above
 	"summons/grave_gunner": 50.0,  # TUNING (not in GDD) a raised Line Trooper (Steel has no soul), drawn from its sprite
@@ -393,6 +398,26 @@ const FLAT_SIZES: Dictionary = {
 	# --- Chest beacon (ChestBeaconData) ---
 	"markers/chest_beacon": 19.0,  # TUNING (not in GDD) gold down-chevron over a chest, 19 x 15
 	"markers/chest_badge": 21.0,  # TUNING (not in GDD) off-screen chest badge, 21 x 21 (edge arrows)
+	# --- Gullhaven Harbour (harbour placeholder art pass; MarkerArtData "Gullhaven Harbour") ---
+	"structures/harbour_pier": 152.0,  # TUNING (not in GDD) a smugglers' dry pier, 152 x 40, along +x (pier_length 150 x pier_width 40)
+	# --- Act III missing sprites (hand-built on the grid, tools/act3_projectiles.py) ---
+	"projectiles/soul_round": 12.0,  # TUNING (not in GDD) a Grave Gunner's rifle round, 12 x 5, soul-teal fire
+	"projectiles/scrap_bolt": 14.0,  # TUNING (not in GDD) a scrap drone's bolt, 14 x 6, a bone shard wrapped in violet
+	"projectiles/iron_shell": 20.0,  # TUNING (not in GDD) an Iron Revenant's cannon shell, 20 x 8, with a soul-teal trail
+	"projectiles/trojan_rocket": 24.0,  # TUNING (not in GDD) the Trojan Horse's Swarm Rocket, 24 x 12 (its hit circle is 6 px)
+	"projectiles/trojan_rocket_flame": 36.0,  # TUNING (not in GDD) its exhaust, a 3-frame strip of 12 x 8 (drawn by SpriteBank.draw_flat_frame)
+	"projectiles/empire_rail": 46.0,  # TUNING (not in GDD) the Lock-On rail slug, 46 x 7 (EmpireRulesData rail "art")
+	"projectiles/empire_missile": 26.0,  # TUNING (not in GDD) Deus Ex Machina's missile, 26 x 10 with its exhaust (missile "art")
+	"projectiles/mortar_shell": 12.0,  # TUNING (not in GDD) the Mortar Walker's lobbed shell, 12 x 12 (mortar "art")
+	"projectiles/deus_missile": 26.0,  # TUNING (not in GDD) the Deus Revenant's missile, 26 x 10 (HordeHazards draws it along its arc)
+	"projectiles/scrap_drone": 44.0,  # TUNING (not in GDD) a Scrap Swarm drone, a 2-frame rotor strip of 22 x 14
+	"projectiles/scrap_drone_bright": 44.0,  # TUNING (not in GDD) a Deathless Swarm kill drone (violet rotors), the same strip
+	"projectiles/harbour_anchor": 28.0,  # TUNING (not in GDD) the Harbourmaster's anchor raised or hurled, 24 x 28
+	"projectiles/anchor_chain_link": 7.0,  # TUNING (not in GDD) one link of the anchor chain, 7 x 5, along +x
+	"overlays/harbour_net": 33.0,  # TUNING (not in GDD) the Netcaster's net, 33 x 33, scaled to the pinned body
+	"overlays/tide_wall": 152.0,  # TUNING (not in GDD) the Tide Caller's rising water line, 152 x 28, along +x (wall_length 150)
+	"overlays/undertow_crest": 14.0,  # TUNING (not in GDD) one foam crest of the Undertow wave, 10 x 14, facing +x
+	"overlays/maelstrom_whirl": 96.0,  # TUNING (not in GDD) a Maelstrom whirlpool from above, 92 x 96
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)
@@ -412,3 +437,8 @@ const SHADOW_WIDTH: float = 0.55  # TUNING (not in GDD)
 const SHADOW_SQUASH: float = 0.35  # TUNING (not in GDD)
 ## Drop-shadow opacity (0-1).
 const SHADOW_ALPHA: float = 0.35  # TUNING (not in GDD)
+## Size (texels) of the shared white disc texture (SpriteBank.disc()) that drop
+## shadows and volley glows are drawn with: one textured rect each, which the 2D
+## renderer batches, where a draw_circle is a 64-point polygon whose GPU buffers
+## Godot rebuilds on every redraw (GDD §15.0 "Disc texture for shadows and glows").
+const DISC_PX: int = 64  # TUNING (not in GDD) mobile

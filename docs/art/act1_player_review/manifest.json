@@ -1,0 +1,937 @@
+{
+  "title": "Player AoE art pass (Act I and shared: spells, summons, abilities)",
+  "note": "Images are the pieces at 1x and 4x nearest-neighbour (strips also as 4x GIFs on the Graveyard soil). The game builds every ground effect from these pieces at 1:1 (rings of crests turned outward, puffs scattered over the area, lane tiles), so the drawn area matches the hit radius at any size; see sheet_* for the composed effects rendered in the engine at game size, and the before / after crops for the same seeded autotest moments in play (1280x720 windowed under xvfb; small camera-shake offsets between the two runs are the shake, not the art).",
+  "runs": {
+    "A": "--seed=3 --speed=16 --stage=graveyard --policy=summon --classes=abomination,frost_wraith,banshee,gargoyle --passives=bone_plating,unholy_resilience,soul_recycling,mournsong",
+    "B": "--seed=3 --speed=16 --stage=graveyard --policy=evolve --spells=plague_cloud,wither,corpse_explosion,soul_chains",
+    "C": "--seed=5 --speed=16 --stage=graveyard --policy=summon --classes=bone_hound,corpse_catapult,rogue --passives=blood_scent,siegecraft,bound_souls",
+    "sheets": "python3 tools/aoe_preview.py OUT (art) and --code (the code fallback = before), engine-rendered at game size"
+  },
+  "images": [
+    {
+      "id": "crest_stomp",
+      "key": "aoe/crest_stomp",
+      "path": "docs/art/act1_player_review/images/crest_stomp.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_stomp_x4.png",
+      "size": [
+        72,
+        20
+      ],
+      "description": "Abomination / Bone Colossus stomp crest: big earth dust puffs rolling out with flung rocks, repeated round the rim and turned outward (+x = outward)",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_stomp_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "crest_bone",
+      "key": "aoe/crest_bone",
+      "path": "docs/art/act1_player_review/images/crest_bone.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_bone_x4.png",
+      "size": [
+        72,
+        20
+      ],
+      "description": "The same dust crest in bone: Corpse Catapult / Ossuary Engine boulder landings, Bone Colossus death shrapnel",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_bone_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "crest_stone",
+      "key": "aoe/crest_stone",
+      "path": "docs/art/act1_player_review/images/crest_stone.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_stone_x4.png",
+      "size": [
+        72,
+        20
+      ],
+      "description": "The same dust crest in gargoyle stone: Gargoyle / Cathedral Horror dive impact",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_stone_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "crest_rubble",
+      "key": "aoe/crest_rubble",
+      "path": "docs/art/act1_player_review/images/crest_rubble.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_rubble_x4.png",
+      "size": [
+        56,
+        16
+      ],
+      "description": "Earth rubble crest (dust band and chunks): the Corpse Explosion burst accent",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_rubble_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "crest_frost",
+      "key": "aoe/crest_frost",
+      "path": "docs/art/act1_player_review/images/crest_frost.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_frost_x4.png",
+      "size": [
+        56,
+        16
+      ],
+      "description": "Deep Freeze crest: ice crystals growing outward, then shattering into glints",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_frost_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "crest_wail",
+      "key": "aoe/crest_wail",
+      "path": "docs/art/act1_player_review/images/crest_wail.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_wail_x4.png",
+      "size": [
+        56,
+        16
+      ],
+      "description": "Banshee / Keening Lady Dirge wave: two sound-wave arcs that thin and break",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_wail_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "crest_wail_violet",
+      "key": "aoe/crest_wail_violet",
+      "path": "docs/art/act1_player_review/images/crest_wail_violet.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_wail_violet_x4.png",
+      "size": [
+        56,
+        16
+      ],
+      "description": "Keening Lady silence ring (violet sound arcs)",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_wail_violet_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "crest_ivory",
+      "key": "aoe/crest_ivory",
+      "path": "docs/art/act1_player_review/images/crest_ivory.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_ivory_x4.png",
+      "size": [
+        56,
+        16
+      ],
+      "description": "Cathedral Horror stun shock (bone sound arcs)",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_ivory_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "crest_arcane",
+      "key": "aoe/crest_arcane",
+      "path": "docs/art/act1_player_review/images/crest_arcane.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_arcane_x4.png",
+      "size": [
+        56,
+        16
+      ],
+      "description": "Mage / Lich orb splash: an arcane-blue band with four-point sparks",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_arcane_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "crest_spore",
+      "key": "aoe/crest_spore",
+      "path": "docs/art/act1_player_review/images/crest_spore.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_spore_x4.png",
+      "size": [
+        56,
+        16
+      ],
+      "description": "Pestilence death nova: moss spore puffs with teal highlights",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_spore_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "crest_soul",
+      "key": "aoe/crest_soul",
+      "path": "docs/art/act1_player_review/images/crest_soul.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_soul_x4.png",
+      "size": [
+        56,
+        16
+      ],
+      "description": "Soul-teal flame wisps: summon transform / evolution / heal / Bastion rings, Grave Eruption accent; also the Pestilence charge rim",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_soul_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "crest_violet",
+      "key": "aoe/crest_violet",
+      "path": "docs/art/act1_player_review/images/crest_violet.png",
+      "path_x4": "docs/art/act1_player_review/images/crest_violet_x4.png",
+      "size": [
+        56,
+        16
+      ],
+      "description": "Violet flame wisps: the Pestilence nova core, evolution rings, Echoing Dark, the Pestilence charge rim",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/crest_violet_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "mark_bone",
+      "key": "aoe/mark_bone",
+      "path": "docs/art/act1_player_review/images/mark_bone.png",
+      "path_x4": "docs/art/act1_player_review/images/mark_bone_x4.png",
+      "size": [
+        16,
+        14
+      ],
+      "description": "Telegraph rim mark (dial segment with an inward tick; frame 1 lit). The marks light up one after another round the rim over the wind-up: stomp and boulder wind-ups",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/mark_bone_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "mark_ice",
+      "key": "aoe/mark_ice",
+      "path": "docs/art/act1_player_review/images/mark_ice.png",
+      "path_x4": "docs/art/act1_player_review/images/mark_ice_x4.png",
+      "size": [
+        16,
+        14
+      ],
+      "description": "Telegraph rim mark (dial segment with an inward tick; frame 1 lit). The marks light up one after another round the rim over the wind-up: Deep Freeze wind-up",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/mark_ice_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "mark_wail",
+      "key": "aoe/mark_wail",
+      "path": "docs/art/act1_player_review/images/mark_wail.png",
+      "path_x4": "docs/art/act1_player_review/images/mark_wail_x4.png",
+      "size": [
+        16,
+        14
+      ],
+      "description": "Telegraph rim mark (dial segment with an inward tick; frame 1 lit). The marks light up one after another round the rim over the wind-up: Dirge wind-up",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/mark_wail_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "mark_violet",
+      "key": "aoe/mark_violet",
+      "path": "docs/art/act1_player_review/images/mark_violet.png",
+      "path_x4": "docs/art/act1_player_review/images/mark_violet_x4.png",
+      "size": [
+        16,
+        14
+      ],
+      "description": "Telegraph rim mark (dial segment with an inward tick; frame 1 lit). The marks light up one after another round the rim over the wind-up: Gargoyle dive marker",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/mark_violet_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "mark_soul",
+      "key": "aoe/mark_soul",
+      "path": "docs/art/act1_player_review/images/mark_soul.png",
+      "path_x4": "docs/art/act1_player_review/images/mark_soul_x4.png",
+      "size": [
+        16,
+        14
+      ],
+      "description": "Telegraph rim mark (dial segment with an inward tick; frame 1 lit). The marks light up one after another round the rim over the wind-up: the Grave Eruption field's edge",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/mark_soul_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "puff_plague_0",
+      "key": "aoe/puff_plague_0",
+      "path": "docs/art/act1_player_review/images/puff_plague_0.png",
+      "path_x4": "docs/art/act1_player_review/images/puff_plague_0_x4.png",
+      "size": [
+        20,
+        20
+      ],
+      "description": "Plague Cloud gas puff 18 px, shaded as one mass, scattered over the cloud and round its rim (outer edge = the cloud radius), drawn at 42%",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png"
+    },
+    {
+      "id": "puff_pest_0",
+      "key": "aoe/puff_pest_0",
+      "path": "docs/art/act1_player_review/images/puff_pest_0.png",
+      "path_x4": "docs/art/act1_player_review/images/puff_pest_0_x4.png",
+      "size": [
+        20,
+        20
+      ],
+      "description": "Pestilence gas puff 18 px (dark violet with moss highlights), drawn at 55%",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png"
+    },
+    {
+      "id": "puff_plague_1",
+      "key": "aoe/puff_plague_1",
+      "path": "docs/art/act1_player_review/images/puff_plague_1.png",
+      "path_x4": "docs/art/act1_player_review/images/puff_plague_1_x4.png",
+      "size": [
+        28,
+        28
+      ],
+      "description": "Plague Cloud gas puff 26 px, shaded as one mass, scattered over the cloud and round its rim (outer edge = the cloud radius), drawn at 42%",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png"
+    },
+    {
+      "id": "puff_pest_1",
+      "key": "aoe/puff_pest_1",
+      "path": "docs/art/act1_player_review/images/puff_pest_1.png",
+      "path_x4": "docs/art/act1_player_review/images/puff_pest_1_x4.png",
+      "size": [
+        28,
+        28
+      ],
+      "description": "Pestilence gas puff 26 px (dark violet with moss highlights), drawn at 55%",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png"
+    },
+    {
+      "id": "puff_plague_2",
+      "key": "aoe/puff_plague_2",
+      "path": "docs/art/act1_player_review/images/puff_plague_2.png",
+      "path_x4": "docs/art/act1_player_review/images/puff_plague_2_x4.png",
+      "size": [
+        36,
+        36
+      ],
+      "description": "Plague Cloud gas puff 34 px, shaded as one mass, scattered over the cloud and round its rim (outer edge = the cloud radius), drawn at 42%",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png"
+    },
+    {
+      "id": "puff_pest_2",
+      "key": "aoe/puff_pest_2",
+      "path": "docs/art/act1_player_review/images/puff_pest_2.png",
+      "path_x4": "docs/art/act1_player_review/images/puff_pest_2_x4.png",
+      "size": [
+        36,
+        36
+      ],
+      "description": "Pestilence gas puff 34 px (dark violet with moss highlights), drawn at 55%",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png"
+    },
+    {
+      "id": "bubble_plague",
+      "key": "aoe/bubble_plague",
+      "path": "docs/art/act1_player_review/images/bubble_plague.png",
+      "path_x4": "docs/art/act1_player_review/images/bubble_plague_x4.png",
+      "size": [
+        21,
+        7
+      ],
+      "description": "Plague bubble rising and popping",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png",
+      "gif": "docs/art/act1_player_review/images/bubble_plague_x4.gif",
+      "frames": 3
+    },
+    {
+      "id": "mote_soul",
+      "key": "aoe/mote_soul",
+      "path": "docs/art/act1_player_review/images/mote_soul.png",
+      "path_x4": "docs/art/act1_player_review/images/mote_soul_x4.png",
+      "size": [
+        21,
+        7
+      ],
+      "description": "Soul mote (Pestilence motes, Blight drips)",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png",
+      "gif": "docs/art/act1_player_review/images/mote_soul_x4.gif",
+      "frames": 3
+    },
+    {
+      "id": "mote_plague",
+      "key": "aoe/mote_plague",
+      "path": "docs/art/act1_player_review/images/mote_plague.png",
+      "path_x4": "docs/art/act1_player_review/images/mote_plague_x4.png",
+      "size": [
+        21,
+        7
+      ],
+      "description": "Plague mote (Wither drips)",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png",
+      "gif": "docs/art/act1_player_review/images/mote_plague_x4.gif",
+      "frames": 3
+    },
+    {
+      "id": "rune_plague",
+      "key": "aoe/rune_plague",
+      "path": "docs/art/act1_player_review/images/rune_plague.png",
+      "path_x4": "docs/art/act1_player_review/images/rune_plague_x4.png",
+      "size": [
+        20,
+        16
+      ],
+      "description": "Wither rim: a thorny vine with an outward thorn and a rune mark / a drip (2 variants, alternated round the rim, the thorn tips on the aura radius)",
+      "before": "docs/art/act1_player_review/shots/wither_aura_before.png",
+      "after": "docs/art/act1_player_review/shots/wither_aura_after.png",
+      "gif": "docs/art/act1_player_review/images/rune_plague_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "rune_soul",
+      "key": "aoe/rune_soul",
+      "path": "docs/art/act1_player_review/images/rune_soul.png",
+      "path_x4": "docs/art/act1_player_review/images/rune_soul_x4.png",
+      "size": [
+        20,
+        16
+      ],
+      "description": "Necrotic Blight rim (soul green)",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png",
+      "gif": "docs/art/act1_player_review/images/rune_soul_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "crack_0",
+      "key": "aoe/crack_0",
+      "path": "docs/art/act1_player_review/images/crack_0.png",
+      "path_x4": "docs/art/act1_player_review/images/crack_0_x4.png",
+      "size": [
+        32,
+        32
+      ],
+      "description": "Ground fissures 32 px (stomp telegraph and impact centre, boulder impact), the largest that fits the radius",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png"
+    },
+    {
+      "id": "crack_soul_0",
+      "key": "aoe/crack_soul_0",
+      "path": "docs/art/act1_player_review/images/crack_soul_0.png",
+      "path_x4": "docs/art/act1_player_review/images/crack_soul_0_x4.png",
+      "size": [
+        32,
+        32
+      ],
+      "description": "Glowing grave fissures 32 px (Grave Eruption field centre)",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png"
+    },
+    {
+      "id": "crack_1",
+      "key": "aoe/crack_1",
+      "path": "docs/art/act1_player_review/images/crack_1.png",
+      "path_x4": "docs/art/act1_player_review/images/crack_1_x4.png",
+      "size": [
+        48,
+        48
+      ],
+      "description": "Ground fissures 48 px (stomp telegraph and impact centre, boulder impact), the largest that fits the radius",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png"
+    },
+    {
+      "id": "crack_soul_1",
+      "key": "aoe/crack_soul_1",
+      "path": "docs/art/act1_player_review/images/crack_soul_1.png",
+      "path_x4": "docs/art/act1_player_review/images/crack_soul_1_x4.png",
+      "size": [
+        48,
+        48
+      ],
+      "description": "Glowing grave fissures 48 px (Grave Eruption field centre)",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png"
+    },
+    {
+      "id": "crack_2",
+      "key": "aoe/crack_2",
+      "path": "docs/art/act1_player_review/images/crack_2.png",
+      "path_x4": "docs/art/act1_player_review/images/crack_2_x4.png",
+      "size": [
+        64,
+        64
+      ],
+      "description": "Ground fissures 64 px (stomp telegraph and impact centre, boulder impact), the largest that fits the radius",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png"
+    },
+    {
+      "id": "crack_soul_2",
+      "key": "aoe/crack_soul_2",
+      "path": "docs/art/act1_player_review/images/crack_soul_2.png",
+      "path_x4": "docs/art/act1_player_review/images/crack_soul_2_x4.png",
+      "size": [
+        64,
+        64
+      ],
+      "description": "Glowing grave fissures 64 px (Grave Eruption field centre)",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png"
+    },
+    {
+      "id": "frost_star",
+      "key": "aoe/frost_star",
+      "path": "docs/art/act1_player_review/images/frost_star.png",
+      "path_x4": "docs/art/act1_player_review/images/frost_star_x4.png",
+      "size": [
+        87,
+        29
+      ],
+      "description": "Deep Freeze centre: a six-armed frost star growing and cracking",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/frost_star_x4.gif",
+      "frames": 3
+    },
+    {
+      "id": "flash_arcane",
+      "key": "aoe/flash_arcane",
+      "path": "docs/art/act1_player_review/images/flash_arcane.png",
+      "path_x4": "docs/art/act1_player_review/images/flash_arcane_x4.png",
+      "size": [
+        75,
+        25
+      ],
+      "description": "Centre flash of the Mage splash (star, ring with rays, broken ring)",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/flash_arcane_x4.gif",
+      "frames": 3
+    },
+    {
+      "id": "flash_wail",
+      "key": "aoe/flash_wail",
+      "path": "docs/art/act1_player_review/images/flash_wail.png",
+      "path_x4": "docs/art/act1_player_review/images/flash_wail_x4.png",
+      "size": [
+        75,
+        25
+      ],
+      "description": "Centre flash of the Dirge wave (drawn at 45%)",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/flash_wail_x4.gif",
+      "frames": 3
+    },
+    {
+      "id": "flash_violet",
+      "key": "aoe/flash_violet",
+      "path": "docs/art/act1_player_review/images/flash_violet.png",
+      "path_x4": "docs/art/act1_player_review/images/flash_violet_x4.png",
+      "size": [
+        75,
+        25
+      ],
+      "description": "Centre flash of the Gargoyle dive",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "gif": "docs/art/act1_player_review/images/flash_violet_x4.gif",
+      "frames": 3
+    },
+    {
+      "id": "flame_0",
+      "key": "aoe/flame_0",
+      "path": "docs/art/act1_player_review/images/flame_0.png",
+      "path_x4": "docs/art/act1_player_review/images/flame_0_x4.png",
+      "size": [
+        56,
+        20
+      ],
+      "description": "Hellhound fire-patch flame loop, variant 0 (heat-field flame: gold core, flame body, crimson rim, ink outline)",
+      "before": "docs/art/act1_player_review/shots/hellhound_shard_fields_before.png",
+      "after": "docs/art/act1_player_review/shots/hellhound_shard_fields_after.png",
+      "gif": "docs/art/act1_player_review/images/flame_0_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "flame_1",
+      "key": "aoe/flame_1",
+      "path": "docs/art/act1_player_review/images/flame_1.png",
+      "path_x4": "docs/art/act1_player_review/images/flame_1_x4.png",
+      "size": [
+        56,
+        20
+      ],
+      "description": "Hellhound fire-patch flame loop, variant 1 (heat-field flame: gold core, flame body, crimson rim, ink outline)",
+      "before": "docs/art/act1_player_review/shots/hellhound_shard_fields_before.png",
+      "after": "docs/art/act1_player_review/shots/hellhound_shard_fields_after.png",
+      "gif": "docs/art/act1_player_review/images/flame_1_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "flame_2",
+      "key": "aoe/flame_2",
+      "path": "docs/art/act1_player_review/images/flame_2.png",
+      "path_x4": "docs/art/act1_player_review/images/flame_2_x4.png",
+      "size": [
+        56,
+        20
+      ],
+      "description": "Hellhound fire-patch flame loop, variant 2 (heat-field flame: gold core, flame body, crimson rim, ink outline)",
+      "before": "docs/art/act1_player_review/shots/hellhound_shard_fields_before.png",
+      "after": "docs/art/act1_player_review/shots/hellhound_shard_fields_after.png",
+      "gif": "docs/art/act1_player_review/images/flame_2_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "scorch_0",
+      "key": "aoe/scorch_0",
+      "path": "docs/art/act1_player_review/images/scorch_0.png",
+      "path_x4": "docs/art/act1_player_review/images/scorch_0_x4.png",
+      "size": [
+        28,
+        28
+      ],
+      "description": "Scorch mark under a Hellhound fire patch (scaled to the patch radius), smouldering crimson-dark rim",
+      "before": "docs/art/act1_player_review/shots/hellhound_shard_fields_before.png",
+      "after": "docs/art/act1_player_review/shots/hellhound_shard_fields_after.png"
+    },
+    {
+      "id": "scorch_1",
+      "key": "aoe/scorch_1",
+      "path": "docs/art/act1_player_review/images/scorch_1.png",
+      "path_x4": "docs/art/act1_player_review/images/scorch_1_x4.png",
+      "size": [
+        60,
+        60
+      ],
+      "description": "Scorch mark under an Ossuary Engine shard field",
+      "before": "docs/art/act1_player_review/shots/hellhound_shard_fields_before.png",
+      "after": "docs/art/act1_player_review/shots/hellhound_shard_fields_after.png"
+    },
+    {
+      "id": "spike_0",
+      "key": "aoe/spike_0",
+      "path": "docs/art/act1_player_review/images/spike_0.png",
+      "path_x4": "docs/art/act1_player_review/images/spike_0_x4.png",
+      "size": [
+        11,
+        18
+      ],
+      "description": "Bone spike (grows out of the ground row by row): Grave Eruption fields, Ossuary shard fields",
+      "before": "docs/art/act1_player_review/shots/eruption_pestilence_blight_before.png",
+      "after": "docs/art/act1_player_review/shots/eruption_pestilence_blight_after.png"
+    },
+    {
+      "id": "spike_1",
+      "key": "aoe/spike_1",
+      "path": "docs/art/act1_player_review/images/spike_1.png",
+      "path_x4": "docs/art/act1_player_review/images/spike_1_x4.png",
+      "size": [
+        13,
+        23
+      ],
+      "description": "Bone spike, larger variant",
+      "before": "docs/art/act1_player_review/shots/eruption_pestilence_blight_before.png",
+      "after": "docs/art/act1_player_review/shots/eruption_pestilence_blight_after.png"
+    },
+    {
+      "id": "lane_body",
+      "key": "aoe/lane_body",
+      "path": "docs/art/act1_player_review/images/lane_body.png",
+      "path_x4": "docs/art/act1_player_review/images/lane_body_x4.png",
+      "size": [
+        16,
+        24
+      ],
+      "description": "Rogue dash lane tile (dashed rails and a chevron; frame 1 = charged part), repeated along the lane",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/lane_body_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "lane_head",
+      "key": "aoe/lane_head",
+      "path": "docs/art/act1_player_review/images/lane_head.png",
+      "path_x4": "docs/art/act1_player_review/images/lane_head_x4.png",
+      "size": [
+        8,
+        24
+      ],
+      "description": "Rogue dash lane arrowhead cap",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png"
+    },
+    {
+      "id": "dash_streak",
+      "key": "aoe/dash_streak",
+      "path": "docs/art/act1_player_review/images/dash_streak.png",
+      "path_x4": "docs/art/act1_player_review/images/dash_streak_x4.png",
+      "size": [
+        30,
+        12
+      ],
+      "description": "Rogue dash streak behind the dashing Rogue",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png"
+    },
+    {
+      "id": "transform_column",
+      "key": "aoe/transform_column",
+      "path": "docs/art/act1_player_review/images/transform_column.png",
+      "path_x4": "docs/art/act1_player_review/images/transform_column_x4.png",
+      "size": [
+        104,
+        64
+      ],
+      "description": "Summon evolution light column with rising violet runes (its base at the unit's feet)",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/transform_column_x4.gif",
+      "frames": 4
+    },
+    {
+      "id": "black_sun",
+      "key": "aoe/black_sun",
+      "path": "docs/art/act1_player_review/images/black_sun.png",
+      "path_x4": "docs/art/act1_player_review/images/black_sun_x4.png",
+      "size": [
+        50,
+        50
+      ],
+      "description": "Eclipse ultimate: the black sun above the necromancer",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png"
+    },
+    {
+      "id": "halo_0",
+      "key": "aoe/halo_0",
+      "path": "docs/art/act1_player_review/images/halo_0.png",
+      "path_x4": "docs/art/act1_player_review/images/halo_0_x4.png",
+      "size": [
+        30,
+        30
+      ],
+      "description": "Sovereign's Decree taunt halo 30 px (crown points), the size that fits each summon; the largest is the necromancer's veil",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png"
+    },
+    {
+      "id": "halo_1",
+      "key": "aoe/halo_1",
+      "path": "docs/art/act1_player_review/images/halo_1.png",
+      "path_x4": "docs/art/act1_player_review/images/halo_1_x4.png",
+      "size": [
+        42,
+        42
+      ],
+      "description": "Sovereign's Decree taunt halo 42 px (crown points), the size that fits each summon; the largest is the necromancer's veil",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png"
+    },
+    {
+      "id": "halo_2",
+      "key": "aoe/halo_2",
+      "path": "docs/art/act1_player_review/images/halo_2.png",
+      "path_x4": "docs/art/act1_player_review/images/halo_2_x4.png",
+      "size": [
+        58,
+        58
+      ],
+      "description": "Sovereign's Decree taunt halo 58 px (crown points), the size that fits each summon; the largest is the necromancer's veil",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png"
+    },
+    {
+      "id": "tide_edge",
+      "key": "aoe/tide_edge",
+      "path": "docs/art/act1_player_review/images/tide_edge.png",
+      "path_x4": "docs/art/act1_player_review/images/tide_edge_x4.png",
+      "size": [
+        48,
+        40
+      ],
+      "description": "Grave Tide edge-mist tile, laid along the four edges of the view",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/tide_edge_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "bolt_violet",
+      "key": "aoe/bolt_violet",
+      "path": "docs/art/act1_player_review/images/bolt_violet.png",
+      "path_x4": "docs/art/act1_player_review/images/bolt_violet_x4.png",
+      "size": [
+        32,
+        9
+      ],
+      "description": "Soul Chains bolt segment, stretched along each hop of the jagged arc",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/bolt_violet_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "bolt_soul_glow",
+      "key": "aoe/bolt_soul_glow",
+      "path": "docs/art/act1_player_review/images/bolt_soul_glow.png",
+      "path_x4": "docs/art/act1_player_review/images/bolt_soul_glow_x4.png",
+      "size": [
+        32,
+        13
+      ],
+      "description": "Chains of the Damned soul-green under-glow segment",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/bolt_soul_glow_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "eclipse_band",
+      "key": "aoe/eclipse_band",
+      "path": "docs/art/act1_player_review/images/eclipse_band.png",
+      "path_x4": "docs/art/act1_player_review/images/eclipse_band_x4.png",
+      "size": [
+        24,
+        14
+      ],
+      "description": "Eclipse Ward barrier band piece with soul runes (2 variants), repeated round the orbit",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/eclipse_band_x4.gif",
+      "frames": 2
+    },
+    {
+      "id": "chill_film",
+      "key": "aoe/chill_film",
+      "path": "docs/art/act1_player_review/images/chill_film.png",
+      "path_x4": "docs/art/act1_player_review/images/chill_film_x4.png",
+      "size": [
+        32,
+        32
+      ],
+      "description": "Frost Wraith chill: ice crust over a chilled body (scaled to its radius)",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png"
+    },
+    {
+      "id": "dirge_veil",
+      "key": "aoe/dirge_veil",
+      "path": "docs/art/act1_player_review/images/dirge_veil.png",
+      "path_x4": "docs/art/act1_player_review/images/dirge_veil_x4.png",
+      "size": [
+        64,
+        42
+      ],
+      "description": "Banshee Dirge mark on a weakened body: veil and tears; frame 1 with the Keening Lady's silence halo",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "gif": "docs/art/act1_player_review/images/dirge_veil_x4.gif",
+      "frames": 2
+    }
+  ],
+  "shots": [
+    {
+      "id": "colossus_stomp_wail",
+      "before": "docs/art/act1_player_review/shots/colossus_stomp_wail_before.png",
+      "after": "docs/art/act1_player_review/shots/colossus_stomp_wail_after.png",
+      "source": "run A (art_0646.6.png), crop 480x400 at game size",
+      "description": "Bone Colossus stomp wind-up (was a flat green disc + bone ring: now rim marks that light up round the rim and a faint area tint), a Dirge wave and frost crests (run A, 10:46)"
+    },
+    {
+      "id": "abomination_stomp_wail",
+      "before": "docs/art/act1_player_review/shots/abomination_stomp_wail_before.png",
+      "after": "docs/art/act1_player_review/shots/abomination_stomp_wail_after.png",
+      "source": "run A (art_0300.png), crop 520x360 at game size",
+      "description": "Abomination stomp telegraph with ground cracks, a Dirge wail (run A, 5:00)"
+    },
+    {
+      "id": "dirge_telegraph",
+      "before": "docs/art/act1_player_review/shots/dirge_telegraph_before.png",
+      "after": "docs/art/act1_player_review/shots/dirge_telegraph_after.png",
+      "source": "run A (art_0306.6.png), crop 440x300 at game size",
+      "description": "Banshee Dirge telegraph on its target spot: dial marks instead of the lilac disc (run A, 5:06)"
+    },
+    {
+      "id": "wither_aura",
+      "before": "docs/art/act1_player_review/shots/wither_aura_before.png",
+      "after": "docs/art/act1_player_review/shots/wither_aura_after.png",
+      "source": "run B (art_0241.8.png), crop 440x300 at game size",
+      "description": "Wither aura on the necromancer all run: a thorn-and-rune rim instead of the dashed ring (run B, 4:01)"
+    },
+    {
+      "id": "wither_pulse",
+      "before": "docs/art/act1_player_review/shots/wither_pulse_before.png",
+      "after": "docs/art/act1_player_review/shots/wither_pulse_after.png",
+      "source": "run B (art_0243.6.png), crop 440x300 at game size",
+      "description": "Wither pulse (approved strip) inside the new rim (run B, 4:03)"
+    },
+    {
+      "id": "eruption_pestilence_blight",
+      "before": "docs/art/act1_player_review/shots/eruption_pestilence_blight_before.png",
+      "after": "docs/art/act1_player_review/shots/eruption_pestilence_blight_after.png",
+      "source": "run B (art_0782.4.png), crop 520x360 at game size",
+      "description": "Late build: Grave Eruption spike fields, Pestilence clouds, Necrotic Blight (run B, 13:02)"
+    },
+    {
+      "id": "eruption_pestilence_2",
+      "before": "docs/art/act1_player_review/shots/eruption_pestilence_2_before.png",
+      "after": "docs/art/act1_player_review/shots/eruption_pestilence_2_after.png",
+      "source": "run B (art_0784.8.png), crop 520x360 at game size",
+      "description": "Overlapping Grave Eruption fields and Pestilence (run B, 13:04)"
+    },
+    {
+      "id": "hellhound_shard_fields",
+      "before": "docs/art/act1_player_review/shots/hellhound_shard_fields_before.png",
+      "after": "docs/art/act1_player_review/shots/hellhound_shard_fields_after.png",
+      "source": "run C (art_0722.4.png), crop 560x350 at game size",
+      "description": "Hellhound fire patches (flame loops on scorch marks) and Ossuary Engine shard fields (run C, 12:02)"
+    },
+    {
+      "id": "catapult_landing",
+      "before": "docs/art/act1_player_review/shots/catapult_landing_before.png",
+      "after": "docs/art/act1_player_review/shots/catapult_landing_after.png",
+      "source": "run C (art_0720.png), crop 560x350 at game size",
+      "description": "Corpse Catapult landing telegraphs and the Hellhound trail (run C, 12:00)"
+    },
+    {
+      "id": "sheet_0",
+      "before": "docs/art/act1_player_review/shots/sheet_0_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_0_after.png",
+      "source": "tools/aoe_preview.py, 1280x720",
+      "description": "Engine sheet 0 (game size): Plague Cloud r60 / r75, Pestilence r95 (and charged), Grave Eruption r90, Wither r90, Necrotic Blight r105, Hellhound fire patches, an Ossuary shard field, the Corpse Explosion / Grave Eruption accent rings"
+    },
+    {
+      "id": "sheet_1",
+      "before": "docs/art/act1_player_review/shots/sheet_1_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_1_after.png",
+      "source": "tools/aoe_preview.py, 1280x720",
+      "description": "Engine sheet 1: every burst ring at three moments (stomp, Deep Freeze, Dirge wail, Mage splash, Gargoyle dive, boulder, Pestilence nova, soul / violet rings, Colossus shrapnel, silence, stun)"
+    },
+    {
+      "id": "sheet_2",
+      "before": "docs/art/act1_player_review/shots/sheet_2_before.png",
+      "after": "docs/art/act1_player_review/shots/sheet_2_after.png",
+      "source": "tools/aoe_preview.py, 1280x720",
+      "description": "Engine sheet 2: telegraphs (stomp with cracks, freeze with the frost star, wail, dive marker, boulder), the Rogue lane, the evolution column, Eclipse black sun / Decree halos / Grave Tide edge, Soul Chains bolts, chill film, Dirge veil, Eclipse Ward band"
+    }
+  ]
+}

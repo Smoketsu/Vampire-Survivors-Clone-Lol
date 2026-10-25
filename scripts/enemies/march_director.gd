@@ -278,7 +278,7 @@ func _on_destroyed(s: Structure) -> void:
 		var each := maxi(1, floori(float(xp) / float(n)))
 		for k in n:
 			game.pickups.spawn(s.pos + Vector2.from_angle(TAU * float(k) / float(n)) * randf_range(16.0, 46.0), each)
-	game.effects.impact(s.pos, 60.0, Palette.FLAME)
+	game.effects.impact(s.pos, 60.0, Palette.FLAME, "structure_break")  # Its strip when the art exists (visual only).
 	if bool(s.ev.get("reward_chest", false)) and not game.countdown_finished():
 		if game.chests.spawn_chest(s.pos, false):
 			game.stat_add("march_structure_chests", 1.0)
@@ -357,7 +357,19 @@ func _draw() -> void:
 	var veil: Color = config.get("fog_color", Color(0.05, 0.02, 0.03))  # Sweep veil colour.
 	var bank: Color = config.get("fog_bank_color", Color(0.12, 0.05, 0.06))  # Drifting bank colour.
 	draw_rect(Rect2(c - half, half * 2.0), Color(veil, 0.75 * k))
-	# Drifting smoke banks clearing outward from the necromancer.
+	# Drifting smoke banks clearing outward from the necromancer: pixel-art
+	# smoke (grey masks tinted with the bank colour, CovenantFx, GDD §15.0 "Act
+	# I enemy AoE art") when present, else soft code discs.
+	if CovenantFx.has(CovenantFxData.SMOKE_BANKS[0]):
+		for i in 10:
+			var a := TAU * float(i) / 10.0
+			var r := (1.0 - k) * half.length() * 0.9 + 60.0
+			var key := CovenantFxData.SMOKE_BANKS[i % CovenantFxData.SMOKE_BANKS.size()]  # This bank's variant.
+			var t := CovenantFx.tex(key)  # Its art, drawn 1:1.
+			var sz := Vector2(float(t.get_width()), float(t.get_height()))  # Drawn size (px).
+			SpriteBank.apply_sharp(self)
+			draw_texture_rect(t, Rect2((c + Vector2.from_angle(a) * r - sz * 0.5).round(), sz), false, Color(bank.lerp(Color.WHITE, 0.08), 0.85 * k))
+		return
 	for i in 10:
 		var a := TAU * float(i) / 10.0
 		var r := (1.0 - k) * half.length() * 0.9 + 60.0

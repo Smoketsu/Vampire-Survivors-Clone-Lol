@@ -219,7 +219,10 @@ from `main` pushes, `v*` tags and manual runs of `main` to that public build-onl
 Pages) stays optional and off. Artifacts are kept 7 days (test logs 3): a full artifact store blocks every publish. Local web export: `mkdir -p build/web && touch build/.gdignore`, then
 `godot --headless --export-release "Web" build/web/index.html` (templates `web_nothreads_*.zip`), then
 **always** `python3 tools/patch_web_audio.py build/web/index.js` (shares sample buffers; without it phone tabs
-run out of memory and reload mid-run; GDD §15.0 "Web audio buffer patch").
+run out of memory and reload mid-run; GDD §15.0 "Web audio buffer patch"; it also runs `tools/patch_web_gl.py`, which makes
+deleted WebGL ids reusable: without it every polygon Godot redraws leaks memory and iPhones reload the page mid-fight,
+GDD §15.0 "Web GL id leak patch"). Prefer textures over `draw_circle` / `draw_arc` / `draw_colored_polygon` in
+anything redrawn every frame (each polygon costs GL objects on the Web).
 
 ## Balance targets (check with multi-seed batches, `--mortal`)
 
@@ -568,6 +571,15 @@ tiny tweaks.
   Deus Revenant + Recoil Frame; Nothing Is Deathless → title Breaker of Engines and the Act III epilogue "The Machines Go
   Dark", 4 panels). Art approved by the owner in six review rounds; Web performance below Ul-Thalos. The double-stepped
   Act II spells fixed (GDD §15.0 "Double-stepped Act II spells").
+
+- the **mobile Web performance pass** (owner report: the page reloading at minute 7 on the Sanctum with Hellhounds,
+  Low Power Mode; GDD §15.0 "Web GL id leak patch" and the rows after it, `docs/perf/MOBILE.md`): the Emscripten
+  WebGL id leak patched (`tools/patch_web_gl.py`; retained JS heap 435 MB → 9 MB in the Hellhound run), shadows /
+  glows / fire patches / shard fields / telegraphs as batched textures, off-screen shots skipped, the phone canvas
+  capped at 2× (taps checked), adaptive draw tiers under ~24 fps, Web solo physics catch-up capped at 3 ticks a
+  frame (co-op unchanged); visual only, same-seed gates identical; tools `mobile_web_perf.js`, `mobile_tap_check.js`,
+  `--monitor` / `--draw-probe` / `--adaptive`. Owner's iPhone check: one full run, no reload, crisp, sound fine,
+  cooler phone.
 
 - **online co-op** (owner request "add co-op, a lobby and code system", Oct 2026; `docs/coop/`): the relay and lobby
   (`coop-net`: Worker + `tools/coop_relay.py`, `CoopNet`, Co-op on the title screen, Host / Join with a letter pad,

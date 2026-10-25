@@ -209,7 +209,7 @@ func on_killed(e: Enemy) -> void:
 	var each := maxi(1, floori(float(d["reward_xp"]) / float(n)))  # XP per crystal.
 	for i in n:
 		g.pickups.spawn(e.position + Vector2.from_angle(TAU * float(i) / float(n)) * (24.0 + 6.0 * float(i % 3)), each)
-	g.effects.impact(e.position, e.radius * 3.0, Palette.EMPIRE_SIGNAL_AMBER)
+	g.effects.impact(e.position, e.radius * 3.0, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 	g.shake(10.0)
 	g.enemies.show_banner("The Beta Build crashes to the floor: build cancelled!")
 	g.stat_add("beta_kills", 1.0)

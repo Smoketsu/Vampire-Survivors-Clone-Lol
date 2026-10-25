@@ -241,6 +241,8 @@ static func _shadow(ci: CanvasItem, c: Vector2, w: float) -> void:
 ## its _draw()): a pale veil arc drooping over the head and two falling
 ## tear streaks; while `silenced` (Keening Lady) a crossed lilac halo too.
 static func draw_dirge(ci: CanvasItem, c: Vector2, r: float, silenced: bool) -> void:
+	if AoeArt.dirge(ci, c, r, silenced):
+		return  # Pixel-art veil and tears (GDD §15.0 "Player AoE art").
 	ci.draw_arc(c + Vector2(0, -r * 0.2), r * 1.15, PI * 1.15, PI * 1.85, 10, Color(WAIL, 0.7), 1.5)
 	ci.draw_line(c + Vector2(-r * 0.75, -r * 0.6), c + Vector2(-r * 0.85, r * 0.1), Color(WAIL, 0.45), 1.0)
 	ci.draw_line(c + Vector2(r * 0.75, -r * 0.6), c + Vector2(r * 0.85, r * 0.1), Color(WAIL, 0.45), 1.0)
@@ -250,21 +252,44 @@ static func draw_dirge(ci: CanvasItem, c: Vector2, r: float, silenced: bool) -> 
 		ci.draw_line(h + Vector2(-r * 0.45, -r * 0.3), h + Vector2(r * 0.45, r * 0.3), SILENCE, 1.5)
 
 
+## Scratch triangle (3 points) for draw_fire_patch()'s flame tongues, reused.
+static var _tri := PackedVector2Array([Vector2.ZERO, Vector2.ZERO, Vector2.ZERO])
+## Scratch colours (one per point) for _tri, reused.
+static var _tri_col := PackedColorArray([Color.WHITE, Color.WHITE, Color.WHITE])
+## No texture coordinates (a plain coloured primitive).
+static var _no_uv := PackedVector2Array()
+
+
 ## Hellhound fire-trail patch at `pos` (radius `r`), `k` = life left (1..0).
+## Drawn without polygons (the mobile Web pass, GDD §15.0 "Disc texture for
+## shadows and glows"): the two glows are SpriteBank discs and the flame tongues
+## draw_primitive() triangles, which the 2D renderer batches; a draw_circle /
+## draw_colored_polygon rebuilds GPU buffers on every redraw, and a Hellhound
+## pack keeps about 40-60 patches burning, redrawn every frame.
 static func draw_fire_patch(ci: CanvasItem, pos: Vector2, r: float, k: float) -> void:
-	ci.draw_circle(pos, r, Color(HordeHazards.EMBER, 0.22 * k))
-	ci.draw_circle(pos, r * 0.6, Color(HordeHazards.HELLFIRE, 0.3 * k))
+	if AoeArt.fire_patch(ci, pos, r, k):
+		return  # Pixel-art scorch and flames (GDD §15.0 "Player AoE art").
+	SpriteBank.draw_disc(ci, pos, r, Color(HordeHazards.EMBER, 0.22 * k))
+	SpriteBank.draw_disc(ci, pos, r * 0.6, Color(HordeHazards.HELLFIRE, 0.3 * k))
+	var c := Color(HordeHazards.EMBER, 0.7 * k)  # Tongue colour.
+	_tri_col[0] = c
+	_tri_col[1] = c
+	_tri_col[2] = c
 	for i in 3:
 		var p := pos + Vector2.from_angle(TAU * float(i) / 3.0 + 0.5) * r * 0.45  # Flame tongue root.
-		ci.draw_colored_polygon(PackedVector2Array([p + Vector2(-r * 0.18, 0), p + Vector2(r * 0.18, 0),
-			p + Vector2(0, -r * (0.55 + 0.25 * k))]), Color(HordeHazards.EMBER, 0.7 * k))
+		_tri[0] = p + Vector2(-r * 0.18, 0)
+		_tri[1] = p + Vector2(r * 0.18, 0)
+		_tri[2] = p + Vector2(0, -r * (0.55 + 0.25 * k))
+		ci.draw_primitive(_tri, _tri_col, _no_uv)
 
 
 ## Ossuary Engine shard field at `pos` (radius `r`), `k` = life left (1..0):
 ## scorched ground, ember glow and bone shards sticking out of it.
 static func draw_shard_field(ci: CanvasItem, pos: Vector2, r: float, k: float) -> void:
-	ci.draw_circle(pos, r, Color(0.05, 0.03, 0.03, 0.35 * k))
-	ci.draw_circle(pos, r * 0.75, Color(HordeHazards.EMBER, 0.14 * k))
+	if AoeArt.shard_field(ci, pos, r, k):
+		return  # Pixel-art scorch, bone shards and flames (GDD §15.0 "Player AoE art").
+	SpriteBank.draw_disc(ci, pos, r, Color(0.05, 0.03, 0.03, 0.35 * k))  # Discs batch (no per-redraw polygon).
+	SpriteBank.draw_disc(ci, pos, r * 0.75, Color(HordeHazards.EMBER, 0.14 * k))
 	ci.draw_arc(pos, r, 0.0, TAU, 24, Color(HordeHazards.EMBER, 0.45 * k), 1.0)
 	for i in 6:
 		var a := TAU * float(i) / 6.0 + 0.3  # Shard angle.

@@ -98,6 +98,8 @@ const KIND_SHARD: int = 1
 const MAX_BOULDERS: int = 48
 ## Safety cap on burning patches (not a balance number).
 const MAX_PATCHES: int = 160
+## Flat sprite of the Deus Revenant's missile (a boulder with that damage source is drawn as it, nose along its arc).
+const MISSILE_ART: String = "projectiles/deus_missile"
 ## Ember colour of fire patches and shard glow.
 const EMBER := Color(1.0, 0.42, 0.12)
 ## Hellfire colour (the hot core of a fire patch).
@@ -243,6 +245,11 @@ func step(delta: float) -> void:
 		_air.queue_redraw()
 
 
+## Patches burning and boulders flying right now (MonitorProbe; statistics only).
+func live_counts() -> Vector2i:
+	return Vector2i(_burning, _flying)
+
+
 ## Fills `_victims` with the living enemies whose body is within `r` px of
 ## `pos` (body edges count half).
 func _collect(pos: Vector2, r: float) -> void:
@@ -271,8 +278,8 @@ func _land(b: Boulder) -> void:
 	game.stat_add("catapult_boulder_hits", float(hits))
 	# Bullet heaven pass: the boulder bursts into bone fragments (the Ossuary Engine's burn).
 	game.volleys.on_special(null, b.to, b.to + Vector2.RIGHT, b.damage, "corpse_catapult", "ossuary_engine" if b.source == "ossuary_engine" else "")
-	game.effects.ring(b.to, b.radius, Palette.BONE, 0.35)
-	game.effects.ring(b.to, b.radius * 0.55, Palette.CORPSE_FLESH, 0.3)
+	game.effects.art_ring(b.to, b.radius, Palette.BONE, 0.35, "boulder")  # Pixel-art impact when its art exists (AoeArt).
+	game.effects.art_ring_under(b.to, b.radius * 0.55, Palette.CORPSE_FLESH, 0.3, "boulder")
 	Juice.fx.burst(b.to, Palette.BONE, Palette.CORPSE_FLESH, 12, b.radius * 2.0, 0.5, 3.0)
 	if b.shake > 0.0:
 		game.shake(b.shake)
@@ -313,12 +320,13 @@ func _draw() -> void:
 		for b in _boulders:
 			if b.active:
 				var k := clampf(b.t / b.flight, 0.0, 1.0)  # Flight progress.
-				draw_circle(b.to, b.radius, Color(Palette.BONE, 0.08))
-				draw_circle(b.to, b.radius * k, Color(Palette.CORPSE_FLESH, 0.16))
-				draw_arc(b.to, b.radius, 0.0, TAU, 32, Color(Palette.BONE, 0.7), 1.5)
+				if not AoeArt.telegraph(self, "mark_bone", b.to, b.radius, k, Palette.BONE):  # Pixel-art rim marks (AoeArt).
+					SpriteBank.draw_disc(self, b.to, b.radius, Color(Palette.BONE, 0.08))  # Discs batch (no per-redraw polygon).
+					SpriteBank.draw_disc(self, b.to, b.radius * k, Color(Palette.CORPSE_FLESH, 0.16))
+					draw_arc(b.to, b.radius, 0.0, TAU, 32, Color(Palette.BONE, 0.7), 1.5)
 				var ground := b.from.lerp(b.to, k)  # Shadow under the boulder.
 				var h := 4.0 * b.arc * k * (1.0 - k)  # Height above the ground (px).
-				draw_circle(ground, 6.0 - h * 0.04, Color(0, 0, 0, 0.35 - h * 0.003))
+				SpriteBank.draw_disc(self, ground, 6.0 - h * 0.04, Color(0, 0, 0, 0.35 - h * 0.003))
 
 
 ## Air layer (`_air`): the boulders on their arcs.
@@ -330,4 +338,9 @@ func _draw_air() -> void:
 			var k := clampf(b.t / b.flight, 0.0, 1.0)  # Flight progress.
 			var ground := b.from.lerp(b.to, k)
 			var h := 4.0 * b.arc * k * (1.0 - k)  # Height above the ground (px).
+			if b.source == RevenantBehavior.MISSILE_SOURCE:
+				# The Deus Revenant's missile (Act III missing sprites): nose along its arc.
+				var vel := (b.to - b.from) - Vector2(0.0, 4.0 * b.arc * (1.0 - 2.0 * k))  # Screen velocity direction.
+				if SpriteBank.draw_flat(_air, MISSILE_ART, ground - Vector2(0, h), vel.angle()):
+					continue
 			WarbandGlyphs.draw_boulder(_air, ground - Vector2(0, h), 6.0 + h * 0.03, k * 9.0, b.shard_radius > 0.0)

@@ -376,7 +376,7 @@ func _hostile_hits_coop(p: Projectile) -> bool:
 ## Mage orb explosion at its destination.
 func _explode(p: Projectile) -> void:
 	_release(p)
-	game.effects.ring(p.dest, p.splash, Palette.VIOLET, 0.3)
+	game.effects.art_ring(p.dest, p.splash, Palette.VIOLET, 0.3, "splash")  # Pixel-art splash when its art exists (AoeArt).
 	game.enemy_grid.query(p.dest, p.splash + MAX_BODY_RADIUS, _tmp)
 	var mark := game.horde.synergies.value("volley", "mark_duration")
 	for e: Enemy in _tmp:

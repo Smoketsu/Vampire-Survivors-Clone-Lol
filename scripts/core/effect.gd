@@ -19,6 +19,14 @@ var anim_id: String = ""
 ## effect draws nothing (it still lives its full time); "" = always drawn.
 ## Set by EffectManager.ring_under().
 var hide_with: String = ""
+## Player AoE art (GDD §15.0 "Player AoE art"): burst recipe (AoeArtData.BURSTS)
+## drawn from pixel-art pieces instead of the shape while its art exists; ""
+## = none. Set by EffectManager.art_ring().
+var art_id: String = ""
+## Burst recipe whose art replaces this effect: while it exists the effect draws
+## nothing (it still lives its full time); "" = always drawn. Set by
+## EffectManager.art_ring_under() (the inner rings under an art burst).
+var art_hide: String = ""
 ## True while the effect is playing (false = sitting in the pool).
 var active: bool = false
 ## Seconds since the effect started.
@@ -39,6 +47,15 @@ var width: float = 2.0
 var owner_enemy: Enemy = null
 ## Generation of `owner_enemy` when the telegraph started (stale guard).
 var owner_gen: int = 0
+## True on an Act III stage (EffectManager.empire_look): the telegraphs use the
+## Empire's warning set (EmpireFx, GDD §15.0 "Act III AoE art") instead of the
+## Covenant's gold one. Visual only.
+var empire_look: bool = false
+
+
+## True for the boss / elite warning kinds (drawn by CovenantFx when its art exists).
+func is_telegraph() -> bool:
+	return kind == Kind.TELEGRAPH_CIRCLE or kind == Kind.TELEGRAPH_LINE or kind == Kind.TELEGRAPH_CONE
 
 
 ## Starts the effect. Called by EffectManager after taking it from the pool.
@@ -54,11 +71,18 @@ func start(p_kind: Kind, pos: Vector2, p_color: Color, p_size: float, p_duration
 	owner_gen = 0
 	anim_id = ""
 	hide_with = ""
+	art_id = ""
+	art_hide = ""
 	t = 0.0
 	active = true
 	visible = true
 	# Telegraphs sit under bodies, everything else above.
-	z_index = -5 if (kind == Kind.TELEGRAPH_CIRCLE or kind == Kind.TELEGRAPH_LINE or kind == Kind.TELEGRAPH_CONE) else 5
+	z_index = -5 if is_telegraph() else 5
+	# Telegraph art is grid pixel art (sharp-pixel shader); every other kind
+	# keeps plain smooth drawing (a pooled node may have been a telegraph).
+	material = null
+	if is_telegraph():
+		SpriteBank.apply_sharp(self)
 	queue_redraw()
 
 
@@ -81,11 +105,49 @@ func _draw() -> void:
 	var fade := 1.0 - k
 	if hide_with != "" and SpriteBank.has_anim(hide_with):
 		return  # Its animation draws this part (EffectManager.ring_under()).
+	if art_hide != "" and AoeArt.has_burst(art_hide):
+		return  # The art burst draws this part (EffectManager.art_ring_under()).
+	if art_id != "" and AoeArt.burst(self, art_id, Vector2.ZERO, size, k, color):
+		return  # Pixel-art pieces (AoeArt), sized to the gameplay radius.
 	if anim_id != "":
-		# Sprite-sheet animation scaled to the gameplay radius (size).
-		var fill: float = AnimData.ANIMS.get(anim_id, {}).get("fill", AnimData.DEFAULT_FILL)  # Diameter multiple.
-		if SpriteBank.draw_anim(self, anim_id, Vector2.ZERO, size * 2.0 * fill, k):
+		# Sprite-sheet animation scaled to the gameplay radius (size); a slash's
+		# strip (drawn swinging toward +x) is turned toward its swing. AnimData
+		# "tint" strips are grey masks multiplied by the effect colour.
+		var info: Dictionary = AnimData.ANIMS.get(anim_id, {})  # This strip's timing and fill.
+		var fill: float = info.get("fill", AnimData.DEFAULT_FILL)  # Diameter multiple.
+		var tint := color if bool(info.get("tint", false)) else Color.WHITE  # Strip modulate.
+		if kind == Kind.SLASH:
+			draw_set_transform(Vector2.ZERO, vec.angle(), Vector2.ONE)
+		var drawn := SpriteBank.draw_anim(self, anim_id, Vector2.ZERO, size * 2.0 * fill, k, 1.0, tint)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		if drawn:
 			return
+	# On an Act III stage the shared telegraphs are the Empire's warning set
+	# (EmpireFx: hex grid, hazard band, scan line, targeting brackets; GDD §15.0
+	# "Act III AoE art"), on any other the Covenant's (below).
+	if empire_look and is_telegraph():
+		match kind:
+			Kind.TELEGRAPH_CIRCLE:
+				if EmpireFx.telegraph_circle(self, Vector2.ZERO, size, k):
+					return
+			Kind.TELEGRAPH_LINE:
+				if EmpireFx.telegraph_line(self, vec, width, k):
+					return
+			Kind.TELEGRAPH_CONE:
+				if EmpireFx.telegraph_cone(self, Vector2.ZERO, size, vec, width, k):
+					return
+	# The shared boss / elite telegraphs: Covenant pixel art (CovenantFx) when
+	# it exists, the code shapes below otherwise (GDD §15.0 "Act I enemy AoE art").
+	match kind:
+		Kind.TELEGRAPH_CIRCLE:
+			if CovenantFx.telegraph_circle(self, Vector2.ZERO, size, k, color):
+				return
+		Kind.TELEGRAPH_LINE:
+			if CovenantFx.telegraph_line(self, vec, width, k, color):
+				return
+		Kind.TELEGRAPH_CONE:
+			if CovenantFx.telegraph_cone(self, Vector2.ZERO, size, vec, width, k, color):
+				return
 	match kind:
 		Kind.POP:
 			# Expanding ring + four bone shards flying outward (cosmetic corpse).

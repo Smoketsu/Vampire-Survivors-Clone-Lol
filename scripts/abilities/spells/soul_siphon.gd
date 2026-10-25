@@ -168,7 +168,7 @@ func _release_bursts(stats: Dictionary) -> void:
 	var dmg := float(stats["damage"]) * float(stats.get("burst", 0.0))  # Burst damage.
 	for p: Vector2 in pts:
 		damage_area(p, r, dmg, "rapture_burst")
-		game.effects.ring(p, r, Palette.NECRO_GREEN, 0.35)
+		game.effects.art_ring(p, r, Palette.NECRO_GREEN, 0.35, "soul_ring")  # Pixel-art soul ring when its art exists (AoeArt).
 		game.effects.pop(p, Palette.BONE, 9.0)
 		game.stat_add("rapture_bursts", 1.0)
 		Sfx.play("rapture_burst", p)

@@ -250,7 +250,7 @@ func _step_chambers(delta: float) -> void:
 			if not e.active or e.generation != c.gens[i]:
 				c.down[i] = true
 				_xp_burst(c.crystal_pos[i], c.ev)
-				game.effects.impact(c.crystal_pos[i], 50.0, Palette.GOLD)
+				game.effects.impact(c.crystal_pos[i], 50.0, Palette.GOLD, "structure_break")  # Its strip when the art exists (visual only).
 				game.stat_add("sanctum_crystals_destroyed", 1.0)
 				_log("crystal_destroyed")
 				if c.live_count() > 0:
@@ -308,7 +308,7 @@ func _step_altars() -> void:
 		game.stat_add("objective_ash", float(config["ash_per_altar"]))
 		game.stat_add("sanctum_altars_destroyed", 1.0)
 		_xp_burst(al.pos, al.ev)
-		game.effects.impact(al.pos, 70.0, Palette.VIOLET)
+		game.effects.impact(al.pos, 70.0, Palette.VIOLET, "structure_break")  # Its strip when the art exists (visual only).
 		game.enemies.show_banner("A sacred altar crumbles: the Covenant's soldiers weaken (-%d%% HP)!" % roundi((1.0 - objective_hp_mult()) * 100.0))
 		altar_times.append(_clock())
 		_log("altar_destroyed")
@@ -468,9 +468,23 @@ func _draw() -> void:
 
 
 ## Uncleansed chamber: a pulsing gold disc, an ivory rim, a slowly turning
-## rune ring and light beams from each standing crystal to the centre.
+## rune ring and light beams from each standing crystal to the centre. With
+## its pixel art (CovenantFx, GDD §15.0 "Act I enemy AoE art"): the baked
+## mosaic floor circle over the pulsing disc, gold mosaic runes turning on the
+## code ring's orbit, and scrolling rays of light from the crystals.
 func _draw_chamber(c: Chamber, now: float) -> void:
 	var pulse := 0.5 + 0.5 * sin(now * 3.0 + c.pos.x * 0.01)
+	if CovenantFx.has(CovenantFx.disc_key(CovenantFxData.CHAMBER_DISCS, c.radius)):
+		CovenantFx.soft_disc(self, c.pos, c.radius, Color(Palette.GOLD, 0.07 + 0.03 * pulse))
+		CovenantFx.disc(self, c.pos, c.radius, CovenantFxData.CHAMBER_DISCS, Color(1.0, 1.0, 1.0, CovenantFxData.CHAMBER_ALPHA))
+		CovenantFx.orbit(self, c.pos, c.radius - CovenantFxData.CHAMBER_RUNE_INSET, CovenantFxData.RUNE, 12, now * 0.25,
+			Color(1.0, 1.0, 1.0, 0.75 + 0.25 * pulse))
+		for i in c.crystals.size():
+			if not c.down[i]:
+				CovenantFx.ray_strip(self, c.crystal_pos[i], c.pos, CovenantFxData.LIGHT_BEAM, 5.0,
+					now * CovenantFxData.LIGHT_BEAM_SCROLL, Color(1.0, 1.0, 1.0, 0.45 + 0.3 * pulse))
+		CovenantFx.soft_disc(self, c.pos, 10.0 + 3.0 * pulse, Color(Palette.IVORY, 0.3))
+		return
 	draw_circle(c.pos, c.radius, Color(Palette.GOLD, 0.07 + 0.03 * pulse))
 	draw_arc(c.pos, c.radius, 0.0, TAU, 64, Color(Palette.IVORY, 0.7), 2.0)
 	draw_arc(c.pos, c.radius - 8.0, 0.0, TAU, 64, Color(Palette.GOLD, 0.35), 1.0)
@@ -485,9 +499,12 @@ func _draw_chamber(c: Chamber, now: float) -> void:
 	draw_circle(c.pos, 10.0 + 3.0 * pulse, Color(Palette.IVORY, 0.35))
 
 
-## Cleansed chamber: a purple rot stain (fading in over 2 s) with cracks.
+## Cleansed chamber: a purple rot stain (fading in over 2 s) with cracks
+## (its baked pixel art, CovenantFxData.CLEANSED_DISCS, when present).
 func _draw_cleansed(c: Chamber, now: float) -> void:
 	var k := clampf((now - c.cleansed_at) / 2.0, 0.0, 1.0)
+	if CovenantFx.disc(self, c.pos, c.radius, CovenantFxData.CLEANSED_DISCS, Color(1.0, 1.0, 1.0, k)):
+		return
 	draw_circle(c.pos, c.radius, Color(Palette.ROBE, 0.30 * k))
 	draw_arc(c.pos, c.radius, 0.0, TAU, 64, Color(Palette.VIOLET, 0.35 * k), 2.0)
 	for i in 7:
@@ -497,10 +514,16 @@ func _draw_cleansed(c: Chamber, now: float) -> void:
 				Color(Palette.NECRO_GREEN, 0.18 * k), 1.5)
 
 
-## A standing altar's gold sigil circle on the floor.
+## A standing altar's gold sigil circle on the floor (its baked rune circle,
+## CovenantFxData.ALTAR_DISCS, and four turning rays when present).
 func _draw_altar_sigil(al: Altar, now: float) -> void:
 	var r := al.enemy.radius * 2.4
 	var pulse := 0.5 + 0.5 * sin(now * 2.5 + al.pos.y * 0.02)
+	if CovenantFx.has(CovenantFx.disc_key(CovenantFxData.ALTAR_DISCS, r)):
+		CovenantFx.soft_disc(self, al.pos, r, Color(Palette.GOLD, 0.06 + 0.04 * pulse))
+		CovenantFx.disc(self, al.pos, r, CovenantFxData.ALTAR_DISCS, Color(1.0, 1.0, 1.0, 0.85))
+		CovenantFx.orbit(self, al.pos, r * 0.8, CovenantFxData.RAY, 4, now * 0.5, Color(1.0, 1.0, 1.0, 0.7), true)
+		return
 	draw_circle(al.pos, r, Color(Palette.GOLD, 0.06 + 0.04 * pulse))
 	draw_arc(al.pos, r, 0.0, TAU, 40, Color(Palette.GOLD, 0.6), 1.5)
 	for i in 4:
@@ -516,7 +539,17 @@ func _draw_dawn(now: float) -> void:
 	var c := game.player.position
 	var pulse := 0.5 + 0.5 * sin(now * 1.5)
 	for i in 4:
-		draw_circle(c, 520.0 - 110.0 * float(i), Color(light, 0.035 + 0.01 * pulse))
+		CovenantFx.soft_disc(self, c, 520.0 - 110.0 * float(i), Color(light, 0.035 + 0.01 * pulse))  # Shared disc texture: no per-frame polygon.
+	if CovenantFx.has(CovenantFxData.DAWN_SHAFT):
+		# Pixel-art light shafts (CovenantFx), each turned to its angle: root
+		# 80 px out, 480 px long, as wide as the code's polygon at its far end.
+		var t := CovenantFx.tex(CovenantFxData.DAWN_SHAFT)  # Shaft art (root at the bottom).
+		for i in 6:
+			var a := now * 0.12 + TAU * float(i) / 6.0
+			draw_set_transform(c, a + PI * 0.5, Vector2.ONE)
+			draw_texture_rect(t, Rect2(-78.0, -560.0, 156.0, 480.0), false, Color(light.lerp(Color.WHITE, 0.4), CovenantFxData.DAWN_SHAFT_ALPHA))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		return
 	for i in 6:
 		var a := now * 0.12 + TAU * float(i) / 6.0
 		var dir := Vector2.from_angle(a)

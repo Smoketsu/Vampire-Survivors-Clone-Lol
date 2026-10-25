@@ -82,6 +82,8 @@ static var _idle_frames: Dictionary = {}
 ## The shared sharp-pixel ShaderMaterial (SpriteData.SHARP_SHADER), built on
 ## first use by apply_sharp(); null until then.
 static var _sharp_material: ShaderMaterial = null
+## The shared white disc texture (disc(); null until first asked for).
+static var _disc: Texture2D = null
 
 ## Icon mode: when > 0, sprites are drawn this tall (px; grid art at the largest
 ## whole-number scale that fits, or scaled down to fit when even 1x is too big) with no drop shadow, so
@@ -97,6 +99,8 @@ static var icon_cap: float = 0.0
 ## its node so it draws sharp.
 static func texture(key: String) -> Texture2D:
 	if _cache.has(key):
+		if ArtMissLog.on and _cache[key] == null:
+			ArtMissLog.miss(key)  # --art-misses: a fallback drawn (or a probe).
 		return _cache[key]
 	var path := SpriteData.ROOT + key + ".png"  # Expected file location.
 	var tex: Texture2D = null  # Loaded texture (null = no art yet).
@@ -114,6 +118,11 @@ static func texture(key: String) -> Texture2D:
 		tex = sharp
 	_cache[key] = tex
 	_grid[key] = grid
+	if ArtMissLog.on:
+		if tex == null:
+			ArtMissLog.miss(key)  # --art-misses: the art audit's record.
+		else:
+			ArtMissLog.hit(key)
 	return tex
 
 
@@ -218,6 +227,30 @@ static func has(key: String) -> bool:
 	return texture(key) != null
 
 
+## A white disc (alpha 1 inside its circle, a one-texel soft rim) on a clear
+## SpriteData.DISC_PX square, made once: drop shadows and volley glows draw it as
+## a tinted rect, which batches, instead of a draw_circle polygon whose buffers the
+## renderer rebuilds on every redraw (drawing only).
+static func disc() -> Texture2D:
+	if _disc == null:
+		var n := SpriteData.DISC_PX  # Texture size (px).
+		var img := Image.create(n, n, false, Image.FORMAT_RGBA8)
+		var c := (float(n) - 1.0) * 0.5  # Centre (texel).
+		var rad := float(n) * 0.5 - 0.5  # Radius (texels).
+		for y in n:
+			for x in n:
+				var d := Vector2(float(x) - c, float(y) - c).length()
+				img.set_pixel(x, y, Color(1.0, 1.0, 1.0, clampf(rad - d + 0.5, 0.0, 1.0)))
+		_disc = ImageTexture.create_from_image(img)
+	return _disc
+
+
+## Draws a filled disc of radius `r` (px) at `o` on `ci` from disc(): the look of
+## ci.draw_circle(o, r, color) without the per-redraw polygon.
+static func draw_disc(ci: CanvasItem, o: Vector2, r: float, color: Color) -> void:
+	ci.draw_texture_rect(disc(), Rect2(o - Vector2(r, r), Vector2(r, r) * 2.0), false, color)
+
+
 ## Draws sprite `key` centred near `o` on `ci` (scaled to its SpriteData
 ## height, with a drop shadow; brightened while `flash`). `tint` multiplies
 ## the colours when not flashing (components above 1 brighten): a playable
@@ -238,7 +271,7 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Col
 		# Drop shadow at the feet: a flattened circle via a scaled transform.
 		var sw := h * SpriteData.SHADOW_WIDTH  # Shadow width (px).
 		ci.draw_set_transform(centre + Vector2(0.0, h * 0.46), 0.0, Vector2(1.0, SpriteData.SHADOW_SQUASH))
-		ci.draw_circle(Vector2.ZERO, sw * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA))
+		draw_disc(ci, Vector2.ZERO, sw * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA))
 		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	var mod := SpriteData.FLASH_MODULATE if flash else tint  # Hit flash, or the caller's (character / skin) tint.
 	var top_left := centre - size * 0.5  # Rect corner (px).
@@ -256,6 +289,8 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Col
 			layer.walk_count = n
 			var m := idle_frames(key)  # Frames in this sprite's idle strip (0 = none).
 			layer.idle_count = m
+			if ArtMissLog.on and n == 0:
+				ArtMissLog.strip_miss(key)  # --art-misses: a body without a walk strip.
 			var fw := float(tex.get_width())  # Frame width (texels) = the still's width.
 			if layer.walk_frame > 0 and layer.walk_frame < n:
 				var src := Rect2(fw * float(layer.walk_frame), 0.0, fw, float(tex.get_height()))  # Frame in the strip.
@@ -329,6 +364,29 @@ static func draw_flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tin
 			corner = (o + corner).round() - o  # Whole screen px, so unrotated pickups stay crisp.
 	ci.draw_set_transform(o, angle, Vector2.ONE)
 	ci.draw_texture_rect(tex, Rect2(corner, size), false, tint)
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	return true
+
+
+## Draws frame `frame` (0-based, wrapped) of the flat sprite strip `key`, a
+## PNG of `frames` equal frames side by side (a spinning rotor, a flickering
+## flame), like draw_flat(): centred on `o`, turned by `angle` (art pointing
+## right), whole art pixels. FLAT_SIZES[key] is the strip's longest side.
+## Returns false when there is no art, so the caller draws its glyph.
+static func draw_flat_frame(ci: CanvasItem, key: String, frames: int, frame: int, o: Vector2, angle: float, tint: Color = Color.WHITE) -> bool:
+	var tex := texture(key)  # Art for this key, or null.
+	if tex == null or frames < 1:
+		return false
+	var fw := float(tex.get_width()) / float(frames)  # One frame's width (texels).
+	var fh := float(tex.get_height())  # Frame height (texels).
+	var k := float(SpriteData.ART_SCALE)  # Texture px -> world px.
+	var size := Vector2(fw, fh) * k  # Drawn size of one frame (px).
+	var corner := -size * 0.5  # Rect corner in the rotated frame (px).
+	apply_sharp(ci)
+	if angle == 0.0:
+		corner = (o + corner).round() - o  # Whole screen px, so an unrotated strip stays crisp.
+	ci.draw_set_transform(o, angle, Vector2.ONE)
+	ci.draw_texture_rect_region(tex, Rect2(corner, size), Rect2(fw * float(posmod(frame, frames)), 0.0, fw, fh), tint)
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	return true
 

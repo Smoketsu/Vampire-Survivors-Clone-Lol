@@ -397,10 +397,11 @@ Oct 2026); the summons
 Warrior, Archer, Mage, Mender, Warder, Rogue, Risen and Bone Hound and the walking evolutions Death
 Knight, Gravebow, Shadow Reaper and Hellhound; the Covenant Recruit, Footman, Archer, Chaplain,
 Purifier, Shieldbearer, Halberdier, Templar and Banner Bearer, and the Sister of the Scourge (legs, 2 px
-bust bounce). Every other unit (the other bosses, structures,
-the floating Frost Wraith, Winter Revenant and Lich, the airborne Gargoyle and
-Cathedral Horror, the Bishop, the giant summons, the Corpse Catapult and Ossuary Engine, the Inquisitor
-and the Sanctum kinds) keeps its still plus the engine motion. A skin's rig is derived from its character's
+bust bounce). **Act I walk strips (Oct 2026, art audit U01 - U03): 18 more**, the summons Corpse Abomination, Bone Colossus,
+Corpse Catapult, Ossuary Engine, Crypt Gargoyle, Cathedral Horror, Frost Wraith, Winter Revenant, Profane Bishop and Lich,
+the Covenant Sanctified Sentinel, Radiant Inquisitor, High Confessor, Sun Paladin, Cathedral Guardian and the Reckoning
+Inquisitor, and the bosses Sir Alaric and Marshal Vael (see "Act I walk strips" below). Every other unit (the other
+bosses, structures, the Cathedral Horror's stone form) keeps its still plus the engine motion. A skin's rig is derived from its character's
 (`SKINS` / `skin_rig()`: the same hip height above the feet, the columns moved by the offset between
 the two lower bodies; `SKIN_FIX` for per-skin corrections), since a skin keeps its character's body
 and pose.
@@ -453,6 +454,32 @@ and down: the same field (the bell across the columns, the ramp down the rows, t
 pixel |d| columns aside in its own row (+ = right). The walk times it by `BUST_SWAY` (the step's spring, its kick on the
 other side every step, as the weight changes feet), the idle by `IDLE_BUST` (one way on the exhale, the other on the
 inhale). Used by the Amazon's hip box (one bell: two lobes swaying the same way tore her skirt at the centre column).
+**Act I walk strips (Oct 2026, art audit follow-up; GDD §15.0 "Act I walk strips").** The audit's
+"walk strips" findings (U01 - U03) were a `walk_cycle.py` job, no generation: 18 rigs added to `RIGS`,
+strips built with `python3 tools/walk_cycle.py build <key>`, no code or data changed (a strip is found
+by its file name). Review folder `docs/art/act1_walks_review/` (per strip: the still, the strip at 1x
+and 4x, a 4x GIF walking in place, `manifest.json`).
+
+| key | rig | notes |
+|---|---|---|
+| `summons/abomination` | legs, hip 66, spread 3, lift 2 | both huge fists (cols 0-35 and 66-88, rows 66-80) are rigid so they ride with the body; only the two short legs step |
+| `summons/bone_colossus` | legs, hip 70, spread 2, lift 2 | club arm (cols 76-98) rigid; the teal loincloth streak (cols 41-49, rows 70-86) rigid, or the back leg's lift cut it |
+| `summons/corpse_catapult`, `summons/ossuary_engine` | legs, **spread 0**, lift 1 | **rocking cart**: a wheel cannot turn without being redrawn, so the body dips and each side's wheels take turns riding up a 1 px bump (the Engine's hip 48, the Catapult's 38) |
+| `summons/gargoyle`, `summons/cathedral_horror` | hover, **bob 0**, `flap` parts | the wing tips touch row 0, so there is no room to bob; the Gargoyle's big left wing (cols 0-18, root 18, 4 px) and the Horror's two wings (roots 30 and 54, 5 px) drop and rise twice a cycle |
+| `summons/frost_wraith`, `summons/winter_revenant` | robe, sway 2 | glides like the Banshee; the Revenant's lightning staff above the hip rides with the body |
+| `summons/bishop`, `summons/lich` | legs on the hem lobes, 1 / 1 | the crook / staff and orb rigid (cols 34+ / 34+) |
+| `enemies/sanctified_sentinel` | legs, hip 48, 2 / 2 | the groin tassel (cols 34-42) is rigid; the sword arm is above the hip |
+| `enemies/radiant_inquisitor`, `enemies/high_confessor`, `enemies/inquisitor` | legs on the hem lobes, 1 / 1 | the Confessor's crook rigid; the Inquisitor's wide sleeves end above the hip |
+| `enemies/sun_paladin` | legs, hip 52, 1 / 1 | the lance (cols 0-9) and the shield's lower edge (rows 52-57) rigid |
+| `enemies/cathedral_guardian` | legs, hip 106, spread 3, lift 2 | both fists end above the hip |
+| `bosses/alaric` | legs, hip 78, 2 / 2 | the cape (cols 0-54, rows 78-102, rigid only down to the boot top: the left boot's toe reaches col 51, and a first version tore it off) and the tabard (cols 86-110) rigid |
+| `bosses/vael` | legs, hip 70, 2 / 2 | the tower shield and tabard (cols 46-94, rows 70-106) rigid; the right boot under the shield steps |
+
+Left as stills on purpose: the Cathedral Horror's stone form (it never moves), the Act II / III bosses
+(own audits) and structures. Checks: every frame is one connected body (except the specks the still
+already has), frame 0 is the still, no new colour, `art_check.py <key>_walk --no-render` (alpha, palette,
+feet, lightness all pass; the only FAIL is the Corpse Catapult's Sanctum IV lightness, which its approved
+still has too; the height warning is expected for a strip).
 
 **Bust bounce (figure redesign, Oct 2026; owner request).** A rig may carry `bust = (x0, x1, y0, y1,
 px)`: the box holding the bust (y0 the neckline, y1 - 1 the underside) and the bounce in art px. Each
@@ -1003,7 +1030,8 @@ got pixel art, exactly like the empowered graves: each drawing site names its ke
 `scripts/data/marker_art_data.gd` (`MarkerArtData`, with the placement numbers), draws it through
 `SpriteBank.draw()` / `draw_flat()` / `draw_rising()` / the icon path, and **keeps its code drawing as
 the fallback** when the PNG is missing. Rings, telegraphs, zones, glows and progress arcs stay in code
-(the rally's closing ring, the brand's turning sigil, the stun ring, the nova's safe rings, the cold
+(retired for the Covenant's area effects: see "Act I enemy AoE art" below) (the rally's closing ring, the brand's turning sigil, the stun ring, the nova's safe rings, the cold
+(retired for the necromancer side's ground effects by "Player AoE art" below; the rally's closing ring, the brand's turning sigil, the stun ring, the nova's safe rings, the cold
 disc under the ice shell, the ember glow under a burning boulder). Flat sprites are drawn 1:1 without
 a shadow (`SpriteData.FLAT_SIZES` = the longest side); the two wall segments and the stone still are
 world sprites (`SpriteData.HEIGHTS`). Purely visual: no gameplay state, no RNG (the corpse variant is
@@ -1179,6 +1207,7 @@ covers the decals exactly like the tiles.
 | Sanctum II | gold tesserae, diamond inlay → dropped (mosaic tile with a diamond lattice); rosette → `sanctum_halls_rosette` (32x32, 24x24, snapped to the tile's 8 px tesserae, `DecalData.SNAP`); carpet runner → `sanctum_halls_carpet` (a 128x36 strip, one piece per cell along every fourth cell row) |
 | Sanctum III | turf → dropped (turf tile inside stone walks); flowers → `sanctum_cloisters_flowers` (26x12, 21x10); sundial ring → `sanctum_cloisters_sundial` (28x28, 24x24); leaves → `sanctum_cloisters_leaves` (16x8, 15x7) |
 | Sanctum IV | stained-glass light pool → code; marble vein → dropped (veined marble tile); inlaid square → `sanctum_sanctuary_inlay` (18x18) |
+| Gullhaven (Act II) | tide puddle → code (every zone); shells → `harbour_mudflats_shells` (8x8, 8x7), kelp → `harbour_mudflats_kelp` (14x8, mirrored); fish scales → `harbour_market_scales` (14x10, 11x7), rope coil → `harbour_market_rope` (20x16, 16x13), dropped fish → `harbour_market_fish` (19x7, 16x6); coral crust → `harbour_chapel_coral` (16x15, 13x11), barnacles → `harbour_chapel_barnacles` (17x11, 14x9), the Eye's sigil → `harbour_chapel_sigil` (25x24); mooring ring → `harbour_seawall_ring` (10x12), rusted chain → `harbour_seawall_chain` (22x11, 20x10), gull feather → `harbour_seawall_feather` (6x5, mirrored) |
 
 *Process* (`art_source/decals/make_decals.py`, deterministic: `python3 art_source/decals/make_decals.py`
 rebuilds every decal). Eight AI sheets (`art_source/decals/sheets/<sheet>.png`, 1536x1024, prompt in
@@ -1327,6 +1356,111 @@ Tips:
   only the expansion changes", or send the sheet to Claude.
 - A short GIF works as well as a sheet; send whichever comes out cleaner.
 
+
+### Act I enemy AoE art (Covenant telegraphs, holy ground, Seraphine's hazards; Oct 2026)
+
+GDD §15.0 "Act I enemy AoE art". The old rule "rings, telegraphs, zones and glows stay in code" is
+**retired for these effects**. Every piece is **procedural pixel art** in the locked palette, made by
+`python3 tools/covenant_aoe_art.py` (deterministic; `--review DIR` writes the 1× / ×4 / GIF review
+images) and drawn by `CovenantFx` (`scripts/fx/covenant_fx.gd`; keys and numbers in
+`scripts/data/covenant_fx_data.gd`), always with the code shape as the fallback. Rules of this family:
+
+- **Crisp at any size:** nothing big is stretched. Band pieces are tiled at 1:1 along the exact danger
+  edge (row 0 outside, turned along the edge); the hatch is a seamless 8 px tile laid as 2 px rows clipped
+  to the shape (circle, cone) or one turned rect (lane); discs are baked at the radii the game uses and
+  drawn at radius / baked radius (×1 for the shipped radii).
+- **Readability:** the danger shape is the exact hit shape: a gold band with crimson teeth pointing into
+  the danger on the edge, the hatch over the whole area, denser (with a tint) inside the part the timing
+  has filled, a holy-white timing front, chevrons along a lane lit as the timing passes them.
+- **Alpha:** telegraph pieces, stills and strips are fully opaque or transparent; translucent ground
+  pieces (zones, chambers, seals, the scorch, smoke, fog, glow, columns) use 2-4 stepped alpha levels
+  (`art_check.py` flags them on purpose). Grey masks (`structure_break`, the smoke banks, the soft disc)
+  are tinted in the game.
+- **Colour:** Covenant gold, light gold, holy white and crimson with warm ink; the cleansed chamber is the
+  player's violet and soul green (his corruption); Seraphine's safe circles cold blue and ice.
+
+| Key | Subject | Art px | Drawn by |
+|---|---|---|---|
+| `telegraphs/edge`, `edge_tooth` | Warning band piece (ink rim, 4 px gold band with a holy-white heart, dark crimson inner row) and the same with a crimson tooth into the danger (every other piece) | 10 × 6 / 10 × 10 | `CovenantFx.ring()` / `edge_run()` in every shared telegraph, the nova edge |
+| `telegraphs/front` | Timing front (holy white in gold) | 8 × 3 | circle / cone at r × progress, across a lane; pillar and teleport rings |
+| `telegraphs/hatch` | Seamless diagonal warning stripes | 8 × 8 | `hatch_disc()`, `hatch_sector()`, lanes |
+| `telegraphs/chevron`, `target` | Lane direction chevron; impact point mark | 11 × 13, 13 × 13 | lanes, Seraphine's sweep arrows; warning circles ≥ 30 px |
+| `holy/zone_62`, `_85`, `_105` | Holy zone rune circle: script ribbon, eight-point star, inner ring, ivory cross | 130-216 | `StageDirector._draw_zone()` (+ 8 turning `holy/glint`) |
+| `holy/chamber_220` | Sanctified chamber: grouted gold / ivory mosaic rim with crimson tesserae, inlay star, diamond inlays, sun mosaic | 446 | `SanctumDirector._draw_chamber()` (+ 12 turning `holy/rune`, `holy/light_beam` rays) |
+| `holy/cleansed_220` | Cleansed chamber: ragged violet rot stain, blotches, soul-green cracks | 446 | `_draw_cleansed()` |
+| `holy/seal_160`, `_220` | Suppression seal: ivory script ribbon, dashed ring, studs, twelve-point star | 326 / 446 | `SanctumGlyphs.draw_suppression()` (+ 10 turning `holy/seal_cross`) |
+| `holy/altar_48` | Altar sigil ribbon, dashed ring, four diamonds | 102 | `_draw_altar_sigil()` (+ 4 turning `holy/ray`) |
+| `holy/glint`, `rune`, `seal_cross`, `ray` | Four-point star, mosaic diamond, gold cross, short ray | 7-10 | orbiting pieces, lash tip, pillar crown, sun ticks, Seraphine's halo |
+| `holy/aura_dash`, `rally_edge`, `warn_line` | Dashed aura ring piece, crimson ring piece, dashed beam warning | 12 × 2, 8 × 3, 8 × 3 | Banner / Standard / Paladin reach, beam range; Call to Arms ring, zeal ring; beam warnings |
+| `holy/light_beam`, `beam_core`, `beam_glow`, `beam_cap` | Thin light ray; great beam body (24 px), its stepped glow, its blazing head | 8 × 5, 16 × 24, 8 × 16, 32 × 32 | crystal rays, Sentinel blade; `CovenantFx.great_beam()` (Guardian, Seraphine) |
+| `holy/light_column`, `sunburst`, `guardian_fist` | Light column (stretched), casting sunburst, the Guardian's raised stone fist | 24 × 64, 18, 16 × 15 | revival pillar, teleport mark; casters; slam windup |
+| `overlays/holy_shield` | High Confessor's shield bubble | 40 | `SanctumGlyphs.draw_holy_shield()` scaled to r × 1.35 |
+| `holy/wrath_halo` | Alaric's Wrath flame ring (r 35 = 1.6 × his radius) | 86 | `BossAlaric._draw_under()` |
+| `holy/lash` | Sister's lash cord piece | 6 × 4 | `SisterGlyphs.draw_lash_windup()` |
+| `holy/nova_wave`, `safe_62`, `safe_rim_62`, `safe_tick` | Nova pulse dash; safe circle ground (cold hole, pool, ice crosses), its icy rim, countdown piece | 12 × 3, 130, 142, 6 × 4 | `SeraphineHazards._draw()` / `_draw_overlay()` |
+| `holy/collapse_edge`, `collapse_flame`, `collapse_scorch` | Burning edge piece; 6-frame flame tongue strip; burning ground with a 128 px hole | 12 × 6, 6 × (12 × 30), 512 | collapsing arena; Last Light aura |
+| `holy/smoke_bank` (+ `_2`, `_3`) | Zone-change smoke (grey masks) | 120-176 | `MarchDirector._draw()` |
+| `holy/dawn_shaft`, `holy/soft_disc` | Dawn's Wrath shaft; 512 px soft disc mask (smooth alpha, not pixel art) | 64 × 240, 512 | `_draw_dawn()`; `CovenantFx.soft_disc()` (every big translucent fill) |
+| `decals/graveyard_fog` (+ `_2`, `_3`) | Wispy fog patch, stepped faint soul-green alphas | 112-144 wide | `Ground._draw_cell()` on the tile floor |
+| `effects/boss_death` | Boss falls: holy flash, cross of rays, gold ring breaking into motes | 10 × 256 | `EnemyDirector.on_enemy_killed()` impact |
+| `effects/vael_cleave`, `sentinel_sweep` | Crescent swing (holy flame; ivory gold), turned toward the swing | 6 × 128 | `EffectManager.slash(..., anim)` |
+| `effects/structure_break` | Flash, splinters, dust ring (grey mask, tinted) | 8 × 128 | March structures, ward crystals, altars |
+
+Review folder for the owner: `docs/art/act1_enemy_review/` (`manifest.json`).
+### Player AoE art (`assets/sprites/aoe/`; Oct 2026)
+
+Owner report: "quite a few placeholder graphics for some of the AoEs in act one" (audit:
+`docs/art/audit/act1_shared.md` on `audit/act1-art`; GDD §15.0 "Player AoE art"). The old rule above
+("rings, telegraphs, zones, glows stay in code") is **retired for the player side's ground effects**:
+the spells' clouds and auras, the summon specials' wind-ups and impacts, the fire and shard patches,
+the Rogue's lane, the evolution column, the ultimates' overlays. A ground area must show its real hit
+radius at every size (levels and area passives grow it), so these are **not** stretched strips: they
+are small **pieces drawn 1:1** on the art grid through the sharp-pixel shader and placed by
+`AoeArt` (`scripts/fx/aoe_art.gd`, numbers in `AoeArtData`): ring pieces repeated along the rim and
+turned outward (their +x points away from the centre, their outer edge on the radius, every other one
+mirrored; the Undertow crest pattern), gas puffs scattered over the area and round its rim, centre
+pieces in two or three sizes, lane tiles plus a head cap. Pieces are palette colours (each shape is
+drawn in ramp levels and written once per colour ramp) with binary alpha; the game only fades them.
+Each frame keeps a 1 px clear border (no neighbour-frame bleed under the shader). Lower visual tiers
+space the pieces wider (`AoeArtData.TIER_DENSITY`); the soft area tints are the shared disc texture
+(batched, no polygon). Every code drawing stays as the fallback. All drawn procedurally and
+deterministically by `python3 tools/aoe_art.py` (no image generation, no cost);
+`python3 tools/aoe_preview.py OUT [--code]` renders them composed at game size in the engine.
+`art_check.py`: palette and alpha pass for all 59; height / feet do not apply (flat pieces); the
+dark ones (scorch, Pestilence puffs, cracks, violet crests) are darker than the lightest Sanctum IV
+floor by design (they are ground marks, drawn under the bodies).
+
+| Piece(s) | Subject | Art px | Used by |
+|---|---|---|---|
+| `crest_stomp`, `crest_bone`, `crest_stone` | Heavy impact crest: big dust puffs rolling outward with flung rocks (earth / bone / gargoyle stone), 4 frames | 18 × 20 per frame | Abomination and Bone Colossus stomps; boulder landings, Colossus shrapnel; Gargoyle / Cathedral Horror dive |
+| `crest_rubble` | Earth band and chunks, 4 frames | 14 × 16 | Corpse Explosion accent |
+| `crest_frost` | Ice crystals growing outward, then shattering | 14 × 16 | Deep Freeze |
+| `crest_wail`, `crest_wail_violet`, `crest_ivory` | Two sound-wave arcs thinning and breaking | 14 × 16 | Dirge waves, Keening Lady silence, Cathedral Horror stun |
+| `crest_arcane` | Arcane band with four-point sparks | 14 × 16 | Mage / Lich splash |
+| `crest_spore` | Moss spore puffs with teal highlights | 14 × 16 | Pestilence death nova |
+| `crest_soul`, `crest_violet` | Flame wisps licking outward | 14 × 16 | soul / violet rings (summon transforms, evolutions, heals, Bastion, Echoing Dark, the Pestilence nova core and charge rim, the Grave Eruption accent) |
+| `mark_bone`, `mark_ice`, `mark_wail`, `mark_violet`, `mark_soul` | Telegraph rim mark: a 3 px dial segment with an inward tick; frame 1 lit. The marks light up round the rim over the wind-up (no growing disc) | 8 × 14 | stomp, freeze, wail, dive and boulder wind-ups; the Grave Eruption edge |
+| `puff_plague_0..2`, `puff_pest_0..2` | Gas puffs (one shaded mass, no outline: overlapping puffs never stack hard rims, which read as foliage) | 20 / 28 / 36 | Plague Cloud (42 %), Pestilence (55 %) |
+| `bubble_plague`, `mote_soul`, `mote_plague` | Rising bubble, soul and plague motes (3 frames) | 7 | clouds, Wither / Blight drips |
+| `rune_plague`, `rune_soul` | Thorny vine with an outward thorn and a rune mark / a drip (2 variants) | 10 × 16 | Wither, Necrotic Blight rim |
+| `crack_0..2`, `crack_soul_0..2` | Zig-zag ground fissures (ink with a lit lip / a glowing soul seam) | 32 / 48 / 64 | stomp and boulder centres; Grave Eruption field |
+| `frost_star`, `flash_arcane`, `flash_wail`, `flash_violet` | Centre flashes (3 frames) | 29 / 25 | Deep Freeze, splash, wail, dive |
+| `flame_0..2`, `scorch_0`, `scorch_1` | Flame loop from a heat field (4 frames); scorch marks with a smouldering rim | 14 × 20; 28 / 60 | Hellhound fire patches, Ossuary shard fields |
+| `spike_0`, `spike_1` | Bone spikes growing out of the ground row by row | 11 × 18, 13 × 23 | Grave Eruption, Ossuary shard fields |
+| `lane_body`, `lane_head`, `dash_streak` | Dashed lane tile with a chevron (frame 1 charged), arrowhead, dash smear | 8 × 24, 30 × 12 | Rogue / Shadow Reaper dash |
+| `transform_column` | Soul light column with rising violet runes (4 frames) | 26 × 64 | summon evolving in place |
+| `black_sun`, `halo_0..2`, `tide_edge` | Black sun; crown-point taunt halos; edge-mist tile (2 frames) | 50; 30 / 42 / 58; 24 × 40 | Eclipse, Sovereign's Decree, Grave Tide overlays |
+| `bolt_violet`, `bolt_soul_glow` | Soul lightning segment stretched along each hop; the Damned's green under-glow | 16 × 9, 16 × 13 | Soul Chains |
+| `eclipse_band` | Dark barrier band with soul runes (2 variants) | 12 × 14 | Eclipse Ward |
+| `chill_film`, `dirge_veil` | Ice crust over a chilled body; Dirge veil and tears (frame 1 with the silence halo), scaled to the body | 32; 32 × 42 | Frost Wraith chill, Banshee Dirge |
+
+Also in this pass (no new art): Dread Rally's second ring and vortex, the new ultimates' second ring,
+the Winter Revenant's and Doom Brand's second rings show only without their strips (`ring_under`);
+the hard-recall and Death Knight spawn rings play `summon_rise`. Left as they were: Shadow Blast,
+the Soul Nova, the Grave Step puff, the Bone Wall and Raise Dead strips (approved art); the Soul
+Siphon / Rapture tethers (a beam, its drained-life magenta has no palette ramp), the orbit and charge
+arcs (progress arcs), the temporary-summon aura. Review: `docs/art/act1_player_review/`.
+
 ### Gullhaven Harbour (Act II, Stage 4; Oct 2026)
 
 Every Gullhaven asset (GDD §15.0 "Gullhaven Harbour (Act II phase 2)"), generated through
@@ -1376,9 +1510,28 @@ kept outside the repository; the sources are in `art_source/`.
 | `effects/tide_splash.png` | a splash of sea water spreading into a foam ring (6 frames) | 128 frames | `--anim --grid 3x2`; `AnimData` "tide_splash" (0.4 s, the `impact()` duration): Deep Kin landings, the Harbourmaster's anchor, Merrow's wave and whirl, a buoy sinking |
 
 The water itself is not art: `scripts/fx/tide_water.gdshader` draws it (flat teal bands on a 2 px
-grid, the foam line, sparse glints, the seawall lip and the surge telegraph). The Undertow wave,
-shallows and whirlpools are code-drawn (an optional `effects/undertow_wave` strip is read when it
-exists). Floor decals (`decals/harbour_<style>_<name>`) are not made yet: the code decorations stay.
+grid, the foam line, sparse glints, the seawall lip and the surge telegraph).
+
+**Harbour placeholder art pass** (Oct 2026, owner report "quite a bit of placeholder art" on
+Gullhaven; GDD §15.0 "Harbour placeholder art pass"). Found with the art audit (`--art-misses`
+in a window, `ArtMissLog`) and by reading the harbour's `_draw()` code; keys and placement in
+`MarkerArtData` "Gullhaven Harbour", sizes in `SpriteData`; every code drawing stays the fallback.
+
+| File | Subject | Art px | Notes |
+|---|---|---|---|
+| `eye/eye_initiate.png` (+ `_walk`) | Initiate of the Eye (Act II fodder, every Act II stage): a hunched cultist in a ragged drowned-teal hood with the Eye's magenta sigil, the hood pulled over the eyes (owner's review, round 2: "just show his mouth"), only the gaunt mouth showing, a rusty gutting knife | 46 | the most drawn sprite of every Act II run, was the code cultist; AI source, `pixelate_source.py`, the hood brim, mouth and sigil pupil hand-placed; walk rig: legs |
+| `eye/eye_chanter.png` (+ `_walk`) | Chanter of the Eye (squad leader, claims the dead): a bone-white stole with the Eye, a shell necklace, the mouth open in a chant, a tall driftwood staff topped by a bone ring holding a glowing eye | 64 | was the code cultist with a staff; face and staff eye hand-placed; walk rig: robe, staff rigid |
+| `eye/deep_herald_walk.png`, `eye/harbourmaster_walk.png` | walk strips of the two stills (legs step, the claws ride with the body; the anchor swings like a pendulum from his fist, owner's review round 2) | 64 / 124 | `walk_cycle.py` rigs (the new `swing` key: a row-by-row shear from the pivot row) |
+| `structures/merrow_pulpit.png` | Abbot Merrow's driftwood pulpit (drowned book, shell string, the Eye carved and glowing), in front of him while he preaches | 42 × 40 | AI source, `--ramps brown,bone,drowned,biolume`; eye recoloured to `biolume` |
+| `structures/harbour_pier.png` | a smugglers' dry pier: cross planks between side beams, nails, two worn gaps, wet boards at the sea end, pilings | 152 × 40 | drawn on the grid by `tools/harbour_props.py`; turned along the pier |
+| `projectiles/harbour_anchor.png` | the Harbourmaster's anchor, raised in the wind-ups and hurled on its chain | 24 × 28 | AI source |
+| `projectiles/anchor_chain_link.png` | one rusted link of the anchor chain | 7 × 5 | `harbour_props.py`; every other link tilted |
+| `overlays/harbour_net.png` | the Netcaster's weighted net (diamond rope mesh, rim rope, lead weights) | 33 × 33 | `harbour_props.py` (a mesh is drawn on the grid); `art_check` flags its 1 px ropes by design |
+| `overlays/tide_wall.png` | the Tide Caller's line of rising sea water, foam crest and spray | 152 × 28 | AI source, no outline; rises row by row with the crest |
+| `overlays/undertow_crest.png` | one foam crest of the Undertow wave, repeated along its 120° arc | 10 × 14 | `harbour_props.py` |
+| `overlays/maelstrom_whirl.png` | a Maelstrom whirlpool from above: foam arms spiralling into a violet heart | 92 × 96 | AI source, no outline; turns as it spins, sized to the grind radius |
+| (shallows) | the Undertow shallows: the code's soft pool (now the shared disc texture) inside a rim of `undertow_crest` foam crests | — | an AI pool sprite (`overlays/undertow_shallows`, 124 × 128) was tried and dropped: scaled up at 55% it read as coarse grey blocks in play |
+| `decals/harbour_*` (20) | the floor decorations: shells, kelp (Mudflats); fish scales, rope coils, a dropped fish (Market); coral crust, barnacles, the Eye's carved sigil (Chapel); mooring ring, rusted chain, gull feather (Seawall); most with a variant | 5-25 | two AI sheets (`art_source/decals/sheets/harbour_shore`, `harbour_chapel`) through `make_decals.py` recipes; the tide puddles stay code (soft translucent pools) |
 ### Act II: the Hollow Archive (Stage 5; Oct 2026)
 
 Made in one pass through the usual pipeline (`gen_image.py` with enlarged anchors attached,
@@ -1731,7 +1884,7 @@ the Trooper's interior `chrome_dark` lifted to `chrome` and the Spotter's chrome
 
 Code-drawn on purpose: the Empire's shots (amber tracers, the warning-red rail slug, arcing shells),
 the Lock-On lines and reticles, the orbital strike circles, the Spotter's red glow, the Kill-Drone
-(`EmpireGlyphs`, red-eyed) and the stubs' placeholder floors and obstacles; phase 2 brings the
+(`EmpireGlyphs`, red-eyed; it has its own sprite since "Act III missing sprites" below) and the stubs' placeholder floors and obstacles; phase 2 brings the
 stages' own art.
 
 ### Act III: the Assembly Halls (Stage 8; Oct 2026)
@@ -2111,3 +2264,86 @@ rivers, Hades' footprints, the Helm's shimmer, his sigils over marked summons, t
 art tinted pale when it exists, else the shade glyph scaled up), the crown at the finale, Cerberus's fire breath
 glow and smoking stumps, the Myrmidon wall's ring. The Shade Hoplite and the Tartarus Warden wear the Hoplite's
 art tinted pale / dark (no art of their own).
+### Act III AoE art (the Empire's warnings, beams and zones; Oct 2026)
+
+GDD §15.0 "Act III AoE art" (audit `docs/art/audit/act3.md` section A, branch `audit/act3-art`). Every
+piece is **procedural pixel art** in the locked palette, made by `python3 tools/empire_aoe_art.py`
+(deterministic; `--review DIR` writes the 1× / ×4 / GIF review images) and drawn by `EmpireFx`
+(`scripts/fx/empire_fx.gd`; keys and numbers in `scripts/data/empire_fx_data.gd`), always with the code
+shape as the fallback. It follows the Act I rules above (band pieces at 1:1 on the exact hit edge, fills
+as clipped 2 px rows, beam bodies scrolled at the beam's real width, no stretched big images, textured
+rects only) and adds the **Empire's own visual language**, so an Act III warning never reads as the
+Covenant's:
+
+- **Colour:** chrome and signal ramps; warning red and hard amber for danger, **cyan-white**
+  (`chrome_glint`) for targeting (ticks, scan line, brackets, crosshair, uplink); white-hot `signal_glow`
+  cores. The Death Ray stays the necromancer's violet; the finale's binding his soul green.
+- **Motifs:** hazard stripes in the band (period 5, seamless), a **hex grid** fill (14 × 24 seamless),
+  a scan-line timing front, **targeting brackets** closing from 1.45 × to the area's bounding box with
+  the timing, hex-segmented shock rings, sparks and chrome shards.
+- **Where:** every Act III circle / lane / cone warning, including the shared Effect telegraphs on an
+  Act III stage (`EffectManager.empire_look`).
+- **Alpha:** warning pieces, stills and strips are binary; glows, the gate field, the furnace haze and
+  the pulse wake use 2-4 stepped alphas; `storm_veil` / `storm_grit` are smooth grey masks tinted with
+  the dust colour (not pixel art, like `holy/soft_disc`).
+
+| Key | Subject | Art px | Drawn by |
+|---|---|---|---|
+| `empire_fx/edge`, `edge_tick` | Warning band piece (signal ink, red, two rows of amber hazard stripes, red, dark), and with a cyan-white tick into the danger (every other piece) | 10 × 6 / 10 × 10 | every Empire circle, lane, cone, square, sector |
+| `empire_fx/front`, `hex`, `chevron`, `target`, `bracket` | Scan-line front; seamless red hex grid with amber nodes; double chevron; crosshair; targeting box corner | 8 × 3, 14 × 24, 13 × 13, 15 × 15, 9 × 9 | `EmpireFx.telegraph_circle()` / `_line()` / `_cone()`, `square()`, `sweep()`, `build_frame()` |
+| `empire_fx/uplink` | Orbital uplink column (stepped alphas, base on the bottom row) | 16 × 96 | `EmpireFx.orbital()`: the last 28 % of a strike |
+| `effects/empire_blast`, `_red`, `_chrome` | Strike / slam landing: flash and lens glint, hex-segmented shock ring (ends at 0.84 of the half: fill 1.2), sparks, shards, smoke ring | 8 × 128 | `EffectManager.impact(..., anim)` at the Act III sites |
+| `effects/empire_boss_death` | An Empire boss falls: red blast, four amber secondary blasts, cyan-white shock (0.91 of the half: fill 1.1) | 10 × 256 | `EnemyDirector.on_enemy_killed()` on Act III stages |
+| `empire_fx/ray_body`, `ray_glow`, `ray_tip` | Death Ray soul laser body (scrolled, at the beam width), stepped glow and afterglow, tip burst | 16 × 10, 8 × 12, 4 × 24 | `EmpireFx.death_ray()` |
+| `empire_fx/laser_body`, `laser_glow`, `laser_warn`, `laser_cap` | Laser grid body (= its 10 px width), red glow, armed sight dash, emitter (armed / firing) | 16 × 10, 8 × 12, 8 × 3, 2 × 16 | `EmpireFx.laser()`, `laser_band()` |
+| `empire_fx/lance_body`, `lance_glow`, `lance_tip` | Judgment Lance body (= its 30 px width), amber glow, head | 16 × 30, 8 × 16, 4 × 32 | `EmpireFx.lance()` |
+| `empire_fx/gate_wall`, `gate_glow`, `gate_post`, `gate_cable` | Shield Gate hex energy wall (= its 18 px), outer glow, chrome end emitter, power cable | 22 × 18, 8 × 28, 22, 8 × 5 | `EmpireFx.gate_wall()`, `gate_cable()` |
+| `empire_fx/belt_68`, `_72`, `_80` | Conveyor belt repeat per belt width: rails and rollers, rubber, slats, dim amber chevrons (112 px holds 4 chevrons and 7 rollers) | 112 × W | `EmpireFx.belt()`: one scrolled rect per belt |
+| `empire_fx/furnace_slag`, `furnace_embers`, `furnace_molten_0..2`, `furnace_rim`, `furnace_warn`, `furnace_haze`, `furnace_flame` | Channel slag, glowing seams, molten metal (3 flicker frames), iron rim, hazard stripes, heat haze, flame tongue | 64 seamless; 12 × 3, 10 × 2, 8 × 6, 4 × 9 × 14 | `EmpireFx.channel()` (world-anchored) |
+| `empire_fx/storm_veil`, `storm_grit` | Scrap storm veil (hole at 0.2393 of the half = the 230 px clear radius) and drifting grit | 256, 256 | `EmpireFx.storm()` |
+| `empire_fx/jug_flame_0..2` | Juggernaut flame billows | 4 × 10 / 16 / 22 | `EmpireFx.jug_flame()` |
+| `empire_fx/static_edge`, `spark` | Arc Engineer field rim; static spark | 10 × 5, 2 × 7 | `EmpireFx.jam_field()` (arming), `static_field()` (its armed suppression zone, `SuppressionField`) |
+| `empire_fx/mortar_shell`, `lock_open`, `lock_locked`, `pylon_stump` | Mortar shell; Lock-On reticles (red / white-hot blink); fallen pylon decal | 2 × 10, 2 × 35, 2 × 29, 30 × 14 | `EmpireShots`, `LockOn`, `WastesDirector` |
+| `empire_fx/shock_edge`, `pulse_front`, `pulse_charge`, `binding_edge`, `hangar_door` | Deus footfall shock; overload pulse front (= its 26 px, middle row on the radius); charge ring; soul-binding chain; hangar door (shut / opening / open) | 10 × 4, 12 × 26, 8 × 3, 10 × 5, 3 × 36 × 24 | `DeusHazards`, `CitadelGlyphs` hooks |
+| `empire_fx/magnet_edge`, `claw` | Motherboard magnet ring piece; crane claw (open / clamped) | 10 × 3, 2 × 16 | `AssemblyGlyphs` hooks |
+
+Left as code (low in the audit, or the intended look): Lock-On laser lines, pylon reach ring, repair
+arcs, Aegis shield arc, Spotter glow, Valkyrie's jets and blade storm, pop / slash / spawn rings, shot
+tracers. Review folder for the owner: `docs/art/act3_aoe_review/` (`manifest.json`).
+### Act III missing sprites (owner report, Oct 2026)
+
+The Act III art audit (`docs/art/audit/act3.md`, branch `audit/act3-art`) found two kinds and four projectile
+keys without a PNG (`[art-miss]` totals in the audit), the Scrap Wastes' stage card on a borrowed floor, and
+a few optional shot looks. Everything below is wired through the keys the code already asked for
+(`SpriteBank` / `EnvironmentArt`); the code drawings stay as fallbacks. Visual only. **The Kill-Drone** is the one
+AI image (`tools/gen_image.py`, the template above, `--ref` the Scout Drone's source; one image, $0.024, ledger
+`empire/kill_drone`; prompt `art_source/empire/kill_drone_prompt.txt`, source `art_source/empire/kill_drone.png`):
+`pixelate_source.py` to 30 rows, `prepare_sprite.py --no-levels --no-prune --ink-l 0.15` (cleanup on), then by
+hand: the bone / skin / brown / amber specks the AI's red plate and arms left snapped to the `signal` ramp,
+a clean 7 x 7 lens ring (ink, dark red, red, a 2 x 2 hot core) drawn on the grid, two empty rows on top for the hover
+bob. Every other sprite is **hand-built on the grid** by `tools/act3_projectiles.py` (letter maps and small
+procedural shapes, exact palette colours, one-pixel ink outline in the part's own ramp; rebuild with
+`python3 tools/act3_projectiles.py [id]`): no generation, so each pixel is intentional. Flat sprites face +x;
+`SpriteBank.draw_flat_frame()` draws one frame of a strip. **For the owner's review**
+(`docs/art/act3_sprites_review/`).
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `empire/kill_drone` | Kill-Drone (the Purge Protocol Reckoning kind, a machine): the Scout Drone's chrome disc and two flat rotors made heavy: a broad warning-red armour plate across the top, one big red lens with a hot core, two gun barrels under the body | 70x32 | hover (`_walk`, rig `hover` bob 2); `HEIGHTS` 32 |
+| `projectiles/trojan_rocket` | Swarm Rocket: a chrome missile with swept warning-red fins and band, an amber warhead light | 24x12 | `FLAT_SIZES` 24; drawn turned along its heading by `RocketKit` |
+| `projectiles/trojan_rocket_flame` | its exhaust: a tapering amber / red flame, glow core | 3 x 12x8 | strip, `RocketKit` picks the frame from its age (50 ms) |
+| `projectiles/scrap_drone` | Scrap Swarm drone (also the Rust Prophet's): a bone skull-body with one violet eye and a scrap jaw, two grey rotor discs | 2 x 22x14 | rotor strip, `ScrapSwarm.ROTOR_FPS` 14 Hz from game time; the player's violet and bone, no Empire colour |
+| `projectiles/scrap_drone_bright` | the Deathless Swarm kill drone: the same with violet rotors and a flare eye | 2 x 22x14 | replaces the old violet ring |
+| `projectiles/scrap_bolt` | a bone shard wrapped in violet with a violet trail | 14x6 | `Projectile.Kind.SCRAP_BOLT` |
+| `projectiles/iron_shell` | an Iron Revenant cannon shell: an iron ogive shell with a driving band, a soul-teal fire trail | 20x8 | `Projectile.Kind.IRON_SHELL` |
+| `projectiles/soul_round` | a Grave Gunner's rifle round: a soul-teal fire slug with a bright core | 12x5 | `Projectile.Kind.SOUL_ROUND` |
+| `projectiles/empire_rail` | the Lock-On rail slug: a warning-red needle, amber sleeve, white-hot core | 46x7 | `SHOT_STYLES` rail `art`; its head on the shot |
+| `projectiles/empire_missile` | Deus Ex Machina's missile: chrome body, red fins and band, amber nose, a static exhaust | 26x10 | `SHOT_STYLES` missile `art` |
+| `projectiles/mortar_shell` | the Mortar Walker's lobbed shell: a chrome bomb, red band, amber fuse light | 12x12 | `SHOT_STYLES` mortar `art`, drawn at the lob's height |
+| `projectiles/deus_missile` | the Deus Revenant's missile (the undead's): iron body, bone nose, soul-teal exhaust | 26x10 | `HordeHazards` draws a boulder with source `deus_revenant_missile` as it, nose along its arc |
+
+The Scrap Wastes' stage-select card is data only (`FrontDoorData.VIGNETTES["wastes"]`, no new PNG): `tiles/wastes_slag`,
+`obstacles/titan_hull_s`, `wreck_plate_s`, `slag_mound_m`, `tank_trap_s`, `empire/signal_pylon`, `empire/aegis_bot`,
+`empire/scout_drone`, `summons/warrior` + `archer`, and `bosses/kestrel_aim` facing them. The small tracers (zap, round,
+arc bolt, rivet, turret bolt, chaingun), Kestrel's decoy projectors and the sentry / turret barrels stay code
+(audit: acceptable / low).

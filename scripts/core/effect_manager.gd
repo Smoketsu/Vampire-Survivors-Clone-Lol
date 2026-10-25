@@ -2,9 +2,10 @@
 ## §38 "Pool common ... effects"). Cosmetic effects are dropped when the
 ## active count hits MAX_COSMETIC so huge fights never spike; telegraphs are
 ## gameplay-critical and are always shown.
-## Reduced effects (Settings, EffectsData): a cosmetic effect spawned while
-## EffectsData.REDUCED_VISIBLE_EFFECTS or more are live is still pooled,
-## stepped and counted exactly as on Full, but not drawn (purely visual).
+## Reduced effects and the adaptive quality (AdaptiveQuality.tier(), EffectsData):
+## a cosmetic effect spawned while EffectsData.TIER_VISIBLE_EFFECTS of the tier
+## or more are live is still pooled, stepped and counted exactly as on Full, but
+## not drawn (purely visual).
 class_name EffectManager
 extends Node2D
 
@@ -20,6 +21,9 @@ var created: int = 0
 ## Art-only animations without a drawn shape (bolt hits, level-up,
 ## evolution): batched in one node, outside the pool and its counts (burst()).
 var bursts: AnimBursts = null
+## True on an Act III stage (set by Game): telegraphs draw the Empire's warning
+## set (Effect.empire_look; GDD §15.0 "Act III AoE art"). Visual only.
+var empire_look: bool = false
 
 
 func _ready() -> void:
@@ -54,8 +58,10 @@ func _spawn(kind: Effect.Kind, pos: Vector2, color: Color, size: float, duration
 	else:
 		e = _pool.pop_back()
 	e.start(kind, pos, color, size, duration, vec, width)
-	if not critical and active.size() >= EffectsData.REDUCED_VISIBLE_EFFECTS and Settings.reduced_effects():
-		e.visible = false  # Reduced effects: lives and counts as usual, just not drawn.
+	e.empire_look = empire_look
+	var tier := AdaptiveQuality.tier()  # Visual tier (Reduced effects or the adaptive quality).
+	if not critical and tier > 0 and active.size() >= int(EffectsData.TIER_VISIBLE_EFFECTS[tier]):
+		e.visible = false  # Lower visual tier: lives and counts as usual, just not drawn.
 	active.append(e)
 	return e
 
@@ -86,9 +92,11 @@ func pop(pos: Vector2, color: Color, size: float, anim: String = "") -> void:
 	_tag(_spawn(Effect.Kind.POP, pos, color, size, _anim_time(anim, 0.35)), anim)
 
 
-## Melee swing arc facing `dir`.
-func slash(pos: Vector2, dir: Vector2, color: Color, size: float) -> void:
-	_spawn(Effect.Kind.SLASH, pos, color, size, 0.15, dir)
+## Melee swing arc facing `dir`. With `anim` (an AnimData id: "vael_cleave",
+## "sentinel_sweep") and its art present, the strip plays instead, turned
+## toward `dir`, for its AnimData duration (= the arc's 0.15 s).
+func slash(pos: Vector2, dir: Vector2, color: Color, size: float, anim: String = "") -> void:
+	_tag(_spawn(Effect.Kind.SLASH, pos, color, size, _anim_time(anim, 0.15), dir), anim)
 
 
 ## Expanding filled ring (Shadow Blast, mage explosions). With `anim` (an
@@ -106,6 +114,27 @@ func ring_under(pos: Vector2, radius: float, color: Color, duration: float, cove
 	var e := _spawn(Effect.Kind.RING, pos, color, radius, duration)
 	if e != null:
 		e.hide_with = cover
+
+
+## An expanding ring like ring() (same pool slot, lifetime and counts) drawn as
+## the pixel-art burst recipe `art` (AoeArtData.BURSTS: crest pieces rolling out
+## to `radius`; GDD §15.0 "Player AoE art") while its art exists, else as the
+## ring. A recipe marked "under" draws below the bodies, like a telegraph.
+func art_ring(pos: Vector2, radius: float, color: Color, duration: float, art: String) -> void:
+	var e := _spawn(Effect.Kind.RING, pos, color, radius, duration)
+	if e != null:
+		e.art_id = art
+		if AoeArt.burst_under(art) and AoeArt.has_burst(art):
+			e.z_index = -5
+
+
+## A drawn ring that shows only while burst recipe `cover`'s art is missing
+## (the second, inner ring of an effect whose art_ring() burst replaces both).
+## Spawned and lived exactly like ring() either way (counts do not change).
+func art_ring_under(pos: Vector2, radius: float, color: Color, duration: float, cover: String) -> void:
+	var e := _spawn(Effect.Kind.RING, pos, color, radius, duration)
+	if e != null:
+		e.art_hide = cover
 
 
 ## Plays art-only animation `anim` once at `pos` (or on `follow` + `pos`),
@@ -157,8 +186,13 @@ func _set_owner(e: Effect, owner: Enemy) -> void:
 
 ## Abyssal Detonation first hit: a dark vortex collapsing toward `pos`. With
 ## `anim` ("abyssal_detonation") and its art present, the animation plays instead.
-func abyss(pos: Vector2, radius: float, anim: String = "") -> void:
-	_tag(_spawn(Effect.Kind.ABYSS, pos, Palette.VIOLET, radius, _anim_time(anim, 0.4)), anim)
+## `cover` (an AnimData id) hides it while that strip's art exists (Dread
+## Rally's vortex, which its own strip carries; GDD §15.0 "Player AoE art").
+func abyss(pos: Vector2, radius: float, anim: String = "", cover: String = "") -> void:
+	var e := _spawn(Effect.Kind.ABYSS, pos, Palette.VIOLET, radius, _anim_time(anim, 0.4))
+	_tag(e, anim)
+	if e != null:
+		e.hide_with = cover
 
 
 ## Big holy impact burst (Hammerfall landing, boss death). With `anim`

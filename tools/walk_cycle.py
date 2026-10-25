@@ -128,6 +128,11 @@ SWISH_SWAY = (0.0, 0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0)
 # Rows below the bust box over which the warp fades back to zero, per bounce px (the
 # belly takes up the motion instead of tearing at the box edge).
 BUST_TAIL_PER_PX = 1
+# Swing: the pendulum profile of a `swing` part per frame (1 = its full swing one way, -1 the
+# other): one swing forward and back over the two steps, 0 on frame 0 (the still).
+SWING = (0.0, 0.7, 1.0, 0.7, 0.0, -0.7, -1.0, -0.7)
+# Swing: an outline pixel is one whose R + G + B (0-765) is below this (the palette's inks).
+SWING_INK_SUM = 120
 # Hover mode (flyers; owner's Act III art review, round 1: "it flies, its walk should just
 # be a bob"): per frame, the whole sprite's rise as a share of the rig's `bob` px (+ = up).
 # One slow bob per cycle; frame 0 is the still (the lowest point). The still keeps `bob`
@@ -188,6 +193,11 @@ STRIDE_FAR_SHADE = {"bronze_light": "bronze", "bronze": "bronze_dark", "marble_l
 #           `lift` px; `reach` px pushes both poses' feet further apart (a longer stride); the
 #           body dips like the legs mode. Frame 0 is the stride, NOT the still (the
 #           still is approved as it stands; the strip plays only while the unit walks).
+#   swing   optional (x0, x1, y0, y1, pivot_y, px): a hanging part (the Harbourmaster's
+#           anchor) in the still's box [x0, x1) x [y0, y1) that swings like a pendulum from
+#           row `pivot_y` (where it is held): each frame its rows slide sideways SWING * px at
+#           its bottom row, proportionally less toward the pivot (a shear, so rows move intact
+#           and every pixel stays an approved one), and it is laid back on top (_swing()).
 #   bust    optional (x0, x1, y0, y1, px): the box of the still holding the bust (art px,
 #           [start, end) ; y0 = the neckline, y1 - 1 = the underside) and the bounce in
 #           px at its strongest point. Each frame warps that box vertically (_bounce): the
@@ -260,9 +270,20 @@ RIGS = {
     # The near wing hangs below the hip, so its columns ride with the body (rigid).
     "summons/fallen_seraph": dict(mode="robe", hip=25, rigid=[(24, 36, 0, 40)], sway=2, dip=1, bust=(13, 23, 15, 22, 2)),
     "summons/ruin_seraph": dict(mode="robe", hip=29, rigid=[(30, 44, 0, 40), (0, 10, 0, 32)], sway=2, dip=1, bust=(18, 28, 18, 25, 2)),
+    # --- Act II: the Ancient Eye's shared kinds (harbour placeholder art pass) ---
+    # The Initiate shuffles on two bare feet under its ragged hem; the Chanter's robe sways,
+    # its tall eye staff rigid.
+    "eye/eye_initiate": dict(mode="legs", hip=37, back=(8, 19), front=(19, 30), rigid=[], spread=1, lift=1, dip=1),
+    "eye/eye_chanter": dict(mode="robe", hip=47, rigid=[(0, 13, 0, None)], sway=1, dip=1),
     # --- Act II: Gullhaven Harbour ---
     # The Deep Kin's long arms hang below the hip: rigid, so the claws ride with the body.
     "eye/deep_kin": dict(mode="legs", hip=44, back=(4, 18), front=(18, 30), rigid=[(0, 6, 0, None), (30, 38, 0, None)], spread=2, lift=1, dip=1),
+    # Harbour placeholder art pass: the Herald's hanging claws and the Harbourmaster's anchor
+    # (and his far coat tail) ride with the body; only the legs step.
+    "eye/deep_herald": dict(mode="legs", hip=48, back=(8, 26), front=(26, 46), rigid=[(0, 8, 0, None), (46, 54, 0, None)], spread=2, lift=1, dip=1),
+    # Owner's review (round 2): the anchor swings back and forth from his fist (row 76).
+    "eye/harbourmaster": dict(mode="legs", hip=100, back=(50, 82), front=(82, 120), rigid=[(0, 50, 0, None), (120, 132, 0, None)], spread=2, lift=2, dip=1,
+                              swing=(0, 46, 75, 124, 76, 5)),
     "eye/netcaster": dict(mode="legs", hip=43, back=(8, 21), front=(21, 33), rigid=[(33, 44, 0, None)], spread=2, lift=1, dip=1),
     # Figure redesign: the Tide Caller and the Brine Widow glide on their gowns (hem sway),
     # the staff rigid, with the bust bounce and (bust rigs) an idle breathing strip.
@@ -303,6 +324,7 @@ RIGS = {
     "empire/line_trooper": dict(mode="legs", hip=27, back=(0, 23), front=(23, 48), rigid=[], spread=2, lift=2, dip=1),
     "empire/spotter": dict(mode="legs", hip=41, back=(0, 28), front=(28, 62), rigid=[], spread=2, lift=2, dip=1),
     "empire/scout_drone": dict(mode="hover", bob=2, parts=[]),
+    "empire/kill_drone": dict(mode="hover", bob=2, parts=[]),  # Act III missing sprites: the Purge Protocol's drone bobs like the Scout Drone
     "summons/grave_gunner": dict(mode="legs", hip=27, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
     # --- Act III: the Assembly Halls ---
     # The Arc Engineer and the Juggernaut march on their legs (the emitter / flamethrower ride
@@ -441,6 +463,40 @@ RIGS = {
     "summons/myrmidon_shade": dict(mode="legs", hip=34, back=(0, 10), front=(10, 24), rigid=[(0, 5, 0, 38), (12, 24, 20, 37)], spread=2, lift=2, dip=1),
     # Act IV art review round 4: regenerated (36 wide): the spear (cols 2-5, to the ground) and the shield rigid.
     "summons/legion_of_tartarus": dict(mode="legs", hip=41, back=(0, 15), front=(15, 36), rigid=[(2, 6, 0, None), (23, 36, 23, 46)], spread=2, lift=2, dip=1),
+    # --- Act I walk strips (audit "walk strips" findings U01 - U03; GDD §15.0 "Act I walk strips") ---
+    # The heavy summon bodies. The Abomination's two huge fists hang over the tops of its short
+    # legs (rigid, down to where the feet start); the Colossus carries its club (right, rigid) and
+    # steps on two bone legs.
+    "summons/abomination": dict(mode="legs", hip=66, back=(0, 45), front=(45, 88), rigid=[(0, 35, 66, 78), (66, 88, 66, 80)], spread=3, lift=2, dip=1),
+    "summons/bone_colossus": dict(mode="legs", hip=70, back=(0, 46), front=(46, 76), rigid=[(76, 98, 70, None), (41, 49, 70, 86)], spread=2, lift=2, dip=1),
+    # The two siege carts roll: no wheel can turn without being redrawn, so the cart rocks over
+    # the ground instead (spread 0: the wheels stay put; the body dips and each side's wheels
+    # take turns riding up a bump, lift 1).
+    "summons/corpse_catapult": dict(mode="legs", hip=38, back=(0, 24), front=(24, 68), rigid=[], spread=0, lift=1, dip=1),
+    "summons/ossuary_engine": dict(mode="legs", hip=48, back=(0, 32), front=(32, 78), rigid=[], spread=0, lift=1, dip=1),
+    # The winged stone summons flap (hover mode with no body bob: the stills' wing tips touch the
+    # top row, so there is no room to rise; the wing tips drop and rise instead).
+    "summons/gargoyle": dict(mode="hover", bob=0, parts=[
+        dict(kind="flap", box=(0, 18, 0, 31), root=18, amp=4)]),
+    "summons/cathedral_horror": dict(mode="hover", bob=0, parts=[
+        dict(kind="flap", box=(0, 30, 0, 36), root=30, amp=5),
+        dict(kind="flap", box=(54, 72, 0, 38), root=54, amp=5)]),
+    # The two ghosts glide on their ragged hems (like the Banshee).
+    "summons/frost_wraith": dict(mode="robe", hip=30, rigid=[], sway=2, dip=1),
+    "summons/winter_revenant": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1),
+    # The robed priests walk on their hem lobes like the Mender and Warder, staff rigid.
+    "summons/bishop": dict(mode="legs", hip=44, back=(0, 24), front=(24, 34), rigid=[(34, 46, 0, None)], spread=1, lift=1, dip=1),
+    "summons/lich": dict(mode="legs", hip=36, back=(0, 23), front=(23, 34), rigid=[(34, 42, 0, None)], spread=1, lift=1, dip=1),
+    # Sanctum Covenant kinds.
+    "enemies/sanctified_sentinel": dict(mode="legs", hip=48, back=(0, 36), front=(36, 78), rigid=[(34, 42, 48, None)], spread=2, lift=2, dip=1),
+    "enemies/radiant_inquisitor": dict(mode="legs", hip=48, back=(0, 26), front=(26, 50), rigid=[], spread=1, lift=1, dip=1),
+    "enemies/high_confessor": dict(mode="legs", hip=48, back=(0, 24), front=(24, 34), rigid=[(34, 48, 0, None)], spread=1, lift=1, dip=1),
+    "enemies/sun_paladin": dict(mode="legs", hip=52, back=(9, 21), front=(21, 34), rigid=[(0, 9, 0, None), (22, 33, 52, 57)], spread=1, lift=1, dip=1),
+    "enemies/cathedral_guardian": dict(mode="legs", hip=106, back=(0, 56), front=(56, 112), rigid=[], spread=3, lift=2, dip=1),
+    # The Reckoning Inquisitor and the first two stage bosses.
+    "enemies/inquisitor": dict(mode="legs", hip=46, back=(0, 24), front=(24, 48), rigid=[], spread=1, lift=1, dip=1),
+    "bosses/alaric": dict(mode="legs", hip=78, back=(0, 86), front=(110, 174), rigid=[(0, 54, 78, 102), (86, 110, 78, None)], spread=2, lift=2, dip=1),
+    "bosses/vael": dict(mode="legs", hip=70, back=(0, 50), front=(50, 120), rigid=[(46, 94, 70, 106)], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -910,6 +966,8 @@ def frames_of(key: str) -> list:
         else:
             hem = _shift_rows(parts["hem"], hip, dy, 0, ROBE_SWAY[f] * rig["sway"])
             frame = _stack([hem] + body)
+        if "swing" in rig:
+            frame = _swing(frame, rig["swing"], dy, SWING[f])
         if "bust" in rig:
             axis = rig.get("bust_axis", "y")  # "y" bounces, "x" sways (BUST_SWAY).
             share = (BUST_SWAY if axis == "x" else BUST_BOUNCE)[f]
@@ -919,6 +977,41 @@ def frames_of(key: str) -> list:
         out.append(frame)
     if not np.array_equal(out[0], still):
         sys.exit(f"{key}: frame 0 differs from the still (rig error)")
+    return out
+
+
+def _swing(frame: np.ndarray, swing: tuple, dy: int, k: float) -> np.ndarray:
+    """Swings the hanging part of `frame` (the still's box `swing` lowered by the body dip
+    `dy`): its opaque pixels are lifted out and laid back on top with each row slid
+    round(k * px * (row - pivot) / (bottom - pivot)) px sideways (+ = right). k = 0 returns
+    the frame unchanged."""
+    if k == 0:
+        return frame
+    x0, x1, y0, y1, pivot, px = swing
+    y0, y1, pivot = y0 + dy, y1 + dy, pivot + dy  # This frame's rows.
+    h, w = frame.shape[:2]
+    out = frame.copy()
+    part = np.zeros_like(frame)  # The lifted part.
+    rows = slice(max(0, y0), min(h, y1))
+    part[rows, x0:x1] = frame[rows, x0:x1]
+    out[rows, x0:x1][frame[rows, x0:x1, 3] > 0] = 0  # Taken out of the body.
+    span = float(max(1, y1 - 1 - pivot))  # Rows from the pivot to the bottom.
+    for y in range(max(0, y0), min(h, y1)):
+        d = int(round(k * px * max(0, y - pivot) / span))  # Sideways slide of this row (px).
+        src = part[y]
+        mask = src[:, 3] > 0
+        xs = np.nonzero(mask)[0]
+        for x in xs:
+            nx = x + d
+            if 0 <= nx < w:
+                out[y, nx] = src[x]
+        # The box's last columns also hold the body's own outline where the part touched it:
+        # an outline (ink) pixel left empty there next to the body keeps its still colour (no
+        # hole in the coat; the part's lit pixels are never left behind).
+        if x1 < w and frame[y, x1, 3] > 0:
+            for x in range(max(x0, x1 - 2), x1):
+                if out[y, x, 3] == 0 and frame[y, x, 3] > 0 and int(frame[y, x, :3].sum()) < SWING_INK_SUM:
+                    out[y, x] = frame[y, x]
     return out
 
 

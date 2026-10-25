@@ -1,0 +1,204 @@
+{
+  "title": "Act I walk strips",
+  "note": "Eighteen new 8-frame walk strips cut from the approved stills by tools/walk_cycle.py (frame 0 = the still, every pixel an approved one). Per strip: the still, the strip at 1x and 4x, and a GIF walking in place at 4x. Left as stills on purpose: the Cathedral Horror stone form (it never moves).",
+  "images": [
+    {
+      "id": "summons_abomination",
+      "key": "summons/abomination",
+      "title": "Corpse Abomination",
+      "still": "summons_abomination.png",
+      "path": "summons_abomination_walk.png",
+      "path_x4": "summons_abomination_walk_x4.png",
+      "preview": "summons_abomination_walk.gif",
+      "size": "88x88 px x 8 frames (704x88)",
+      "description": "Corpse Abomination. Heavy stomp: both huge fists ride with the body, only the two short legs step (3 px spread, 2 px lift)."
+    },
+    {
+      "id": "summons_bone_colossus",
+      "key": "summons/bone_colossus",
+      "title": "Bone Colossus",
+      "still": "summons_bone_colossus.png",
+      "path": "summons_bone_colossus_walk.png",
+      "path_x4": "summons_bone_colossus_walk_x4.png",
+      "preview": "summons_bone_colossus_walk.gif",
+      "size": "98x100 px x 8 frames (784x100)",
+      "description": "Bone Colossus. The club arm and the loincloth streak ride with the body; two bone legs step (2 / 2)."
+    },
+    {
+      "id": "summons_corpse_catapult",
+      "key": "summons/corpse_catapult",
+      "title": "Corpse Catapult",
+      "still": "summons_corpse_catapult.png",
+      "path": "summons_corpse_catapult_walk.png",
+      "path_x4": "summons_corpse_catapult_walk_x4.png",
+      "preview": "summons_corpse_catapult_walk.gif",
+      "size": "68x56 px x 8 frames (544x56)",
+      "description": "Corpse Catapult. A wheeled cart cannot turn its wheels without a redraw, so it rocks: the body dips and each side's wheels take turns riding up a 1 px bump."
+    },
+    {
+      "id": "summons_ossuary_engine",
+      "key": "summons/ossuary_engine",
+      "title": "Ossuary Engine",
+      "still": "summons_ossuary_engine.png",
+      "path": "summons_ossuary_engine_walk.png",
+      "path_x4": "summons_ossuary_engine_walk_x4.png",
+      "preview": "summons_ossuary_engine_walk.gif",
+      "size": "78x72 px x 8 frames (624x72)",
+      "description": "Ossuary Engine. Same rocking cart rig as the Catapult (rear wheel, then front wheel and hull)."
+    },
+    {
+      "id": "summons_gargoyle",
+      "key": "summons/gargoyle",
+      "title": "Crypt Gargoyle",
+      "still": "summons_gargoyle.png",
+      "path": "summons_gargoyle_walk.png",
+      "path_x4": "summons_gargoyle_walk_x4.png",
+      "preview": "summons_gargoyle_walk.gif",
+      "size": "56x56 px x 8 frames (448x56)",
+      "description": "Crypt Gargoyle. Wing flap only (the wing tips touch the top row, so the body cannot bob): the big left wing drops 4 px at its tip and rises, twice per cycle."
+    },
+    {
+      "id": "summons_cathedral_horror",
+      "key": "summons/cathedral_horror",
+      "title": "Cathedral Horror",
+      "still": "summons_cathedral_horror.png",
+      "path": "summons_cathedral_horror_walk.png",
+      "path_x4": "summons_cathedral_horror_walk_x4.png",
+      "preview": "summons_cathedral_horror_walk.gif",
+      "size": "72x64 px x 8 frames (576x64)",
+      "description": "Cathedral Horror. Both wings flap (5 px tip drop), hinged where they meet the body. The stone form stays a still (it never moves)."
+    },
+    {
+      "id": "summons_frost_wraith",
+      "key": "summons/frost_wraith",
+      "title": "Frost Wraith",
+      "still": "summons_frost_wraith.png",
+      "path": "summons_frost_wraith_walk.png",
+      "path_x4": "summons_frost_wraith_walk_x4.png",
+      "preview": "summons_frost_wraith_walk.gif",
+      "size": "34x48 px x 8 frames (272x48)",
+      "description": "Frost Wraith. Glide like the Banshee: the ragged hem sways 2 px forward and back, the body dips."
+    },
+    {
+      "id": "summons_winter_revenant",
+      "key": "summons/winter_revenant",
+      "title": "Winter Revenant",
+      "still": "summons_winter_revenant.png",
+      "path": "summons_winter_revenant_walk.png",
+      "path_x4": "summons_winter_revenant_walk_x4.png",
+      "preview": "summons_winter_revenant_walk.gif",
+      "size": "42x56 px x 8 frames (336x56)",
+      "description": "Winter Revenant. Glide: hem sway 2 px, the lightning staff above the hip rides with the body."
+    },
+    {
+      "id": "summons_bishop",
+      "key": "summons/bishop",
+      "title": "Profane Bishop",
+      "still": "summons_bishop.png",
+      "path": "summons_bishop_walk.png",
+      "path_x4": "summons_bishop_walk_x4.png",
+      "preview": "summons_bishop_walk.gif",
+      "size": "46x64 px x 8 frames (368x64)",
+      "description": "Profane Bishop. Walks on its two hem lobes like the Mender and Warder; the crook rides with the body."
+    },
+    {
+      "id": "summons_lich",
+      "key": "summons/lich",
+      "title": "Lich",
+      "still": "summons_lich.png",
+      "path": "summons_lich_walk.png",
+      "path_x4": "summons_lich_walk_x4.png",
+      "preview": "summons_lich_walk.gif",
+      "size": "42x52 px x 8 frames (336x52)",
+      "description": "Lich. Not in the audit list but the same gap: walks on its robe lobes like the Mage; the staff and orb ride with the body."
+    },
+    {
+      "id": "enemies_sanctified_sentinel",
+      "key": "enemies/sanctified_sentinel",
+      "title": "Sanctified Sentinel",
+      "still": "enemies_sanctified_sentinel.png",
+      "path": "enemies_sanctified_sentinel_walk.png",
+      "path_x4": "enemies_sanctified_sentinel_walk_x4.png",
+      "preview": "enemies_sanctified_sentinel_walk.gif",
+      "size": "78x72 px x 8 frames (624x72)",
+      "description": "Sanctified Sentinel. Armoured stride: sword arm above the hip rides with the body, the groin tassel is rigid, two legs step (2 / 2)."
+    },
+    {
+      "id": "enemies_radiant_inquisitor",
+      "key": "enemies/radiant_inquisitor",
+      "title": "Radiant Inquisitor",
+      "still": "enemies_radiant_inquisitor.png",
+      "path": "enemies_radiant_inquisitor_walk.png",
+      "path_x4": "enemies_radiant_inquisitor_walk_x4.png",
+      "preview": "enemies_radiant_inquisitor_walk.gif",
+      "size": "50x68 px x 8 frames (400x68)",
+      "description": "Radiant Inquisitor. Robed walk on the hem lobes (1 / 1), like the Chaplain."
+    },
+    {
+      "id": "enemies_high_confessor",
+      "key": "enemies/high_confessor",
+      "title": "High Confessor",
+      "still": "enemies_high_confessor.png",
+      "path": "enemies_high_confessor_walk.png",
+      "path_x4": "enemies_high_confessor_walk_x4.png",
+      "preview": "enemies_high_confessor_walk.gif",
+      "size": "48x64 px x 8 frames (384x64)",
+      "description": "High Confessor. Robed walk (1 / 1); the crook is rigid down to the hem."
+    },
+    {
+      "id": "enemies_sun_paladin",
+      "key": "enemies/sun_paladin",
+      "title": "Sun Paladin",
+      "still": "enemies_sun_paladin.png",
+      "path": "enemies_sun_paladin_walk.png",
+      "path_x4": "enemies_sun_paladin_walk_x4.png",
+      "preview": "enemies_sun_paladin_walk.gif",
+      "size": "34x70 px x 8 frames (272x70)",
+      "description": "Sun Paladin. Armoured stride (1 / 1); the lance on the left and the shield bottom are rigid."
+    },
+    {
+      "id": "enemies_cathedral_guardian",
+      "key": "enemies/cathedral_guardian",
+      "title": "Cathedral Guardian",
+      "still": "enemies_cathedral_guardian.png",
+      "path": "enemies_cathedral_guardian_walk.png",
+      "path_x4": "enemies_cathedral_guardian_walk_x4.png",
+      "preview": "enemies_cathedral_guardian_walk.gif",
+      "size": "112x140 px x 8 frames (896x140)",
+      "description": "Cathedral Guardian. Huge slow stride (3 px spread, 2 px lift); both fists hang above the hip and move only with the dip."
+    },
+    {
+      "id": "enemies_inquisitor",
+      "key": "enemies/inquisitor",
+      "title": "Reckoning Inquisitor",
+      "still": "enemies_inquisitor.png",
+      "path": "enemies_inquisitor_walk.png",
+      "path_x4": "enemies_inquisitor_walk_x4.png",
+      "preview": "enemies_inquisitor_walk.gif",
+      "size": "48x64 px x 8 frames (384x64)",
+      "description": "Reckoning Inquisitor. Robed walk (1 / 1) on the hem lobes; the wide sleeves ride with the body."
+    },
+    {
+      "id": "bosses_alaric",
+      "key": "bosses/alaric",
+      "title": "Sir Alaric",
+      "still": "bosses_alaric.png",
+      "path": "bosses_alaric_walk.png",
+      "path_x4": "bosses_alaric_walk_x4.png",
+      "preview": "bosses_alaric_walk.gif",
+      "size": "174x120 px x 8 frames (1392x120)",
+      "description": "Sir Alaric. Heavy boss stride (2 / 2): the hammer, tabard and cape ride with the body, the boots step."
+    },
+    {
+      "id": "bosses_vael",
+      "key": "bosses/vael",
+      "title": "Marshal Vael",
+      "still": "bosses_vael.png",
+      "path": "bosses_vael_walk.png",
+      "path_x4": "bosses_vael_walk_x4.png",
+      "preview": "bosses_vael_walk.gif",
+      "size": "120x120 px x 8 frames (960x120)",
+      "description": "Marshal Vael. Boss stride (2 / 2): the flaming sword, tower shield and tabard ride with the body, the left leg and the right boot under the shield step."
+    }
+  ]
+}

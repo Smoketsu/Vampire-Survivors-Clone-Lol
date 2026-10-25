@@ -558,9 +558,12 @@ func step_frozen(delta: float) -> void:
 			queue_redraw()
 
 
-## Visual hit reaction.
+## Visual hit reaction: the white flash (not on stage bosses and minibosses,
+## EnemyData.BIG_HIT_FLASH) and the hit squash.
 func on_hit() -> void:
-	flash = 0.08
+	var big := is_boss or is_miniboss or self is Boss  # Big art the flash would hide.
+	if EnemyData.BIG_HIT_FLASH or not big:
+		flash = EnemyData.HIT_FLASH_TIME
 	if motion != null:
 		motion.hit(game.elapsed)  # Engine motion: hit squash with the flash.
 	queue_redraw()
@@ -579,6 +582,8 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 ## IV): used when it has no enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
+	if wears != "":
+		return wears  # A Drowned Thrall wears its summon's art (its markers sit over that head).
 	var key := "enemies/" + kind  # Covenant soldier art.
 	if not SpriteBank.has(key):
 		if SpriteBank.has("eye/" + kind):

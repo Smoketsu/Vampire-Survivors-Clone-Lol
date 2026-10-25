@@ -324,6 +324,8 @@ static func draw_risen(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> voi
 ## Transformation glow on a summon evolving in place: a rising light column
 ## and an expanding ring that fade as `frac` goes 1 -> 0.
 static func draw_transform_glow(ci: CanvasItem, r: float, frac: float) -> void:
+	if AoeArt.transform_glow(ci, r, frac):
+		return  # Pixel-art light column (GDD §15.0 "Player AoE art"); the ring is the effect's.
 	var k := clampf(frac, 0.0, 1.0)
 	ci.draw_rect(Rect2(Vector2(-r * 0.35, -r * 3.2), Vector2(r * 0.7, r * 4.0)), Color(Palette.NECRO_GREEN, 0.3 * k))
 	ci.draw_circle(Vector2.ZERO, r * (1.5 + (1.0 - k) * 1.2), Color(Palette.VIOLET, 0.22 * k))
@@ -473,6 +475,8 @@ static func draw_winter_revenant(ci: CanvasItem, o: Vector2, r: float, flash: bo
 ## Frost Wraith chill on an enemy (drawn in its _draw()): a pale frost film
 ## and two ice ticks. The full Deep Freeze uses PowerupGlyphs.draw_frozen().
 static func draw_chill(ci: CanvasItem, c: Vector2, r: float) -> void:
+	if AoeArt.chill(ci, c, r):
+		return  # Pixel-art ice crust (GDD §15.0 "Player AoE art").
 	ci.draw_circle(c, r * 1.05, Color(Palette.FROST, 0.22))
 	ci.draw_arc(c, r * 1.05, -2.4, -0.7, 10, Color(PowerupGlyphs.ICE, 0.7), 1.0)
 	ci.draw_line(c + Vector2(-r * 0.9, r * 0.6), c + Vector2(-r * 1.25, r * 0.85), PowerupGlyphs.ICE, 1.0)

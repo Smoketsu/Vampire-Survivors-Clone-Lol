@@ -265,7 +265,7 @@ func _step_echoes(delta: float) -> void:
 		for e: Enemy in hits:
 			if e.active and e.position.distance_to(pos) <= r + e.radius:
 				game.combat.damage_enemy(e, float(ec["dmg"]), "echo")
-		game.effects.ring(pos, r, Color(Palette.VIOLET, 0.8), 0.3)
+		game.effects.art_ring(pos, r, Color(Palette.VIOLET, 0.8), 0.3, "violet_ring")  # Pixel-art violet ring when its art exists (AoeArt).
 		game.stat_add("echo_bursts", 1.0)
 
 

@@ -291,7 +291,7 @@ func _wall_block_t(a: Vector2, b: Vector2, r: float) -> float:
 func _arc_burst(i: int) -> void:
 	var at := _pos[i]  # Landing point.
 	var splash := float(_styles[_style[i]]["splash"])  # Burst radius (px).
-	game.effects.impact(at, splash, Color(_styles[_style[i]]["color"]))
+	game.effects.impact(at, splash, Color(_styles[_style[i]]["color"]), EmpireFx.blast_for(Color(_styles[_style[i]]["color"])))  # Its strip when the art exists (visual only).
 	game.stat_add("los_arc_bursts", 1.0)
 	for pl in game.all_players:  # The necromancer (co-op: either).
 		if not pl.dead and pl.position.distance_to(at) <= splash + pl.radius:
@@ -340,17 +340,26 @@ func _draw() -> void:
 		var v := _vel[i]
 		var dir := v.normalized() if v.length_squared() > 0.01 else Vector2.RIGHT
 		var w := float(row["width"])  # Tracer width (px).
+		var art := String(row.get("art", ""))  # Sprite drawn instead of the tracer ("" = the tracer).
 		if _arc[si]:
 			# A lob: the shell drawn above its ground point, its landing circle shown last.
 			var k := 1.0 - _life[i] / maxf(_flight[i], 0.01)  # 0 -> 1 through the flight.
 			var dest := p + v * _life[i]  # Landing point.
 			var h := 4.0 * k * (1.0 - k) * v.length() * _flight[i] * EmpireRulesData.ARC_HEIGHT_PER_PX  # Height (px).
 			if _life[i] <= EmpireRulesData.ARC_TELEGRAPH:
-				draw_arc(dest, float(row["splash"]), 0.0, TAU, 28, Color(Palette.EMPIRE_SIGNAL_RED, 0.7), 1.5)
-			draw_circle(p + Vector2(0, -h), w * 0.5 + 1.0, Color(col, 0.5))
-			draw_circle(p + Vector2(0, -h), w * 0.5, col.lerp(Color.WHITE, 0.3))
+				# The Empire's warning circle on the exact splash, timed to the landing (GDD §15.0 "Act III AoE art").
+				var kl := 1.0 - _life[i] / maxf(EmpireRulesData.ARC_TELEGRAPH, 0.01)  # 0 -> 1 as it lands.
+				if not EmpireFx.telegraph_circle(self, dest, float(row["splash"]), kl, false):
+					draw_arc(dest, float(row["splash"]), 0.0, TAU, 28, Color(Palette.EMPIRE_SIGNAL_RED, 0.7), 1.5)
+			if art != "" and SpriteBank.draw_flat(self, art, p + Vector2(0, -h), 0.0):
+				continue  # The shell sprite (Act III missing sprites).
+			if not EmpireFx.mortar_shell(self, p + Vector2(0, -h), game.elapsed, i):
+				draw_circle(p + Vector2(0, -h), w * 0.5 + 1.0, Color(col, 0.5))
+				draw_circle(p + Vector2(0, -h), w * 0.5, col.lerp(Color.WHITE, 0.3))
 			continue
 		var length := float(row["length"])  # Tracer length (px).
+		if art != "" and SpriteBank.draw_flat(self, art, p - dir * (length * 0.5 - 2.0), dir.angle()):
+			continue  # The rail slug / missile sprite, its head on the shot (Act III missing sprites).
 		var tail := p - dir * length
 		draw_line(tail, p, Color(col, 0.35), w + 2.0)
 		draw_line(p - dir * length * 0.6, p, col.lerp(Color.WHITE, 0.45), w)

@@ -297,5 +297,7 @@ func draw_over(e: Enemy, ci: CanvasItem) -> void:
 			SanctumGlyphs.draw_casting(ci, Vector2(0, -e.radius * 0.55), e.radius * 0.6)
 		BEAM_SWEEP:
 			unmirror(e, ci)
-			SanctumGlyphs.draw_beam(ci, Vector2.from_angle(beam_angle) * float(d["beam_length"]), float(d["beam_width"]))
+			CovenantFx.base = Transform2D(0.0, Vector2(e.scale.x, 1.0), 0.0, Vector2.ZERO)  # The beam art in world axes too.
+			SanctumGlyphs.draw_beam(ci, Vector2.from_angle(beam_angle) * float(d["beam_length"]), float(d["beam_width"]), e.game.elapsed)
+			CovenantFx.base = Transform2D.IDENTITY
 			ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

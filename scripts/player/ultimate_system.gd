@@ -218,7 +218,7 @@ func cast() -> void:
 func _burst(pos: Vector2, radius: float, time: float, shake: float) -> void:
 	var col: Color = row()["color"]
 	game.effects.ring(pos, radius, col, time, String(row()["anim"]))
-	game.effects.ring(pos, radius * 0.6, col.lightened(0.3), time * 0.75)
+	game.effects.ring_under(pos, radius * 0.6, col.lightened(0.3), time * 0.75, String(row()["anim"]))  # Only without the cast strip (GDD §15.0 "Player AoE art").
 	game.shake(shake)
 
 

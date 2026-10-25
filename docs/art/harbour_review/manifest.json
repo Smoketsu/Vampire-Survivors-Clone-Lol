@@ -1,0 +1,511 @@
+{
+  "title": "Gullhaven Harbour placeholder art pass",
+  "note": "Before / after crops are 1:1 game-size (1280x720 layout) screenshots of the same seeded autotest moments, rendered in a window under xvfb; images are the sprites at 1x and 4x nearest-neighbour.",
+  "runs": {
+    "1": "--seed=3 --stage=harbour --policy=army --character=brine_widow --spells=undertow --passives=salt_of_the_deep,brinewalker --unlocks=all --spawn=deep_herald@200x2,netcaster@120x3,tide_caller@100x3",
+    "2": "--seed=5 --speed=16 --stage=harbour --policy=army --unlocks=all --spawn=harbourmaster@50,eye_chanter@40x4,deep_herald@70x3,deep_kin@45x3,netcaster@55x3,tide_caller@55x2"
+  },
+  "images": [
+    {
+      "id": "eye_initiate",
+      "key": "eye/eye_initiate",
+      "path": "docs/art/harbour_review/images/eye_initiate.png",
+      "path_x4": "docs/art/harbour_review/images/eye_initiate_x4.png",
+      "size": [
+        36,
+        46
+      ],
+      "description": "Initiate of the Eye (Act II fodder): hooded cultist, pale face, the Eye sigil, gutting knife",
+      "before": "docs/art/harbour_review/shots/cultists_before.png",
+      "after": "docs/art/harbour_review/shots/cultists_after.png"
+    },
+    {
+      "id": "eye_initiate_walk",
+      "key": "eye/eye_initiate_walk",
+      "path": "docs/art/harbour_review/images/eye_initiate_walk.png",
+      "path_x4": "docs/art/harbour_review/images/eye_initiate_walk_x4.png",
+      "size": [
+        288,
+        46
+      ],
+      "description": "Initiate walk strip (8 frames, walk_cycle.py legs rig)",
+      "before": "docs/art/harbour_review/shots/cultists_before.png",
+      "after": "docs/art/harbour_review/shots/cultists_after.png"
+    },
+    {
+      "id": "eye_chanter",
+      "key": "eye/eye_chanter",
+      "path": "docs/art/harbour_review/images/eye_chanter.png",
+      "path_x4": "docs/art/harbour_review/images/eye_chanter_x4.png",
+      "size": [
+        44,
+        64
+      ],
+      "description": "Chanter of the Eye (squad leader): bone stole, chanting, eye staff",
+      "before": "docs/art/harbour_review/shots/cultists_before.png",
+      "after": "docs/art/harbour_review/shots/cultists_after.png"
+    },
+    {
+      "id": "eye_chanter_walk",
+      "key": "eye/eye_chanter_walk",
+      "path": "docs/art/harbour_review/images/eye_chanter_walk.png",
+      "path_x4": "docs/art/harbour_review/images/eye_chanter_walk_x4.png",
+      "size": [
+        352,
+        64
+      ],
+      "description": "Chanter walk strip (8 frames, robe rig, staff rigid)",
+      "before": "docs/art/harbour_review/shots/cultists_before.png",
+      "after": "docs/art/harbour_review/shots/cultists_after.png"
+    },
+    {
+      "id": "deep_herald_walk",
+      "key": "eye/deep_herald_walk",
+      "path": "docs/art/harbour_review/images/deep_herald_walk.png",
+      "path_x4": "docs/art/harbour_review/images/deep_herald_walk_x4.png",
+      "size": [
+        432,
+        64
+      ],
+      "description": "Herald of the Deep walk strip (was a still)"
+    },
+    {
+      "id": "harbourmaster_walk",
+      "key": "eye/harbourmaster_walk",
+      "path": "docs/art/harbour_review/images/harbourmaster_walk.png",
+      "path_x4": "docs/art/harbour_review/images/harbourmaster_walk_x4.png",
+      "size": [
+        1056,
+        124
+      ],
+      "description": "Harbourmaster walk strip (was a still; the anchor rides with the body)",
+      "before": "docs/art/harbour_review/shots/cultists_before.png",
+      "after": "docs/art/harbour_review/shots/cultists_after.png"
+    },
+    {
+      "id": "merrow_pulpit",
+      "key": "structures/merrow_pulpit",
+      "path": "docs/art/harbour_review/images/merrow_pulpit.png",
+      "path_x4": "docs/art/harbour_review/images/merrow_pulpit_x4.png",
+      "size": [
+        42,
+        40
+      ],
+      "description": "Abbot Merrow's driftwood pulpit, in front of him while he preaches",
+      "before": "docs/art/harbour_review/shots/merrow_before.png",
+      "after": "docs/art/harbour_review/shots/merrow_after.png"
+    },
+    {
+      "id": "harbour_pier",
+      "key": "structures/harbour_pier",
+      "path": "docs/art/harbour_review/images/harbour_pier.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_pier_x4.png",
+      "size": [
+        152,
+        40
+      ],
+      "description": "Smugglers' dry pier (drawn on the grid, turned along the pier)",
+      "before": "docs/art/harbour_review/shots/crowd_before.png",
+      "after": "docs/art/harbour_review/shots/crowd_after.png"
+    },
+    {
+      "id": "harbour_anchor",
+      "key": "projectiles/harbour_anchor",
+      "path": "docs/art/harbour_review/images/harbour_anchor.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_anchor_x4.png",
+      "size": [
+        24,
+        28
+      ],
+      "description": "The Harbourmaster's anchor (raised in wind-ups, hurled on its chain)",
+      "before": "docs/art/harbour_review/shots/cultists_before.png",
+      "after": "docs/art/harbour_review/shots/cultists_after.png"
+    },
+    {
+      "id": "anchor_chain_link",
+      "key": "projectiles/anchor_chain_link",
+      "path": "docs/art/harbour_review/images/anchor_chain_link.png",
+      "path_x4": "docs/art/harbour_review/images/anchor_chain_link_x4.png",
+      "size": [
+        7,
+        5
+      ],
+      "description": "One rusted chain link, repeated along the anchor chain",
+      "before": "docs/art/harbour_review/shots/cultists_before.png",
+      "after": "docs/art/harbour_review/shots/cultists_after.png"
+    },
+    {
+      "id": "harbour_net",
+      "key": "overlays/harbour_net",
+      "path": "docs/art/harbour_review/images/harbour_net.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_net_x4.png",
+      "size": [
+        33,
+        33
+      ],
+      "description": "The Netcaster's weighted net over a pinned summon (grid-drawn mesh)"
+    },
+    {
+      "id": "tide_wall",
+      "key": "overlays/tide_wall",
+      "path": "docs/art/harbour_review/images/tide_wall.png",
+      "path_x4": "docs/art/harbour_review/images/tide_wall_x4.png",
+      "size": [
+        152,
+        28
+      ],
+      "description": "The Tide Caller's rising line of sea water",
+      "before": "docs/art/harbour_review/shots/undertow_wall_before.png",
+      "after": "docs/art/harbour_review/shots/undertow_wall_after.png"
+    },
+    {
+      "id": "undertow_crest",
+      "key": "overlays/undertow_crest",
+      "path": "docs/art/harbour_review/images/undertow_crest.png",
+      "path_x4": "docs/art/harbour_review/images/undertow_crest_x4.png",
+      "size": [
+        10,
+        14
+      ],
+      "description": "One foam crest of the Undertow wave, repeated along its arc"
+    },
+    {
+      "id": "maelstrom_whirl",
+      "key": "overlays/maelstrom_whirl",
+      "path": "docs/art/harbour_review/images/maelstrom_whirl.png",
+      "path_x4": "docs/art/harbour_review/images/maelstrom_whirl_x4.png",
+      "size": [
+        92,
+        96
+      ],
+      "description": "A Maelstrom whirlpool, turned as it spins",
+      "before": "docs/art/harbour_review/shots/maelstrom_before.png",
+      "after": "docs/art/harbour_review/shots/maelstrom_after.png"
+    },
+    {
+      "id": "harbour_chapel_barnacles",
+      "key": "decals/harbour_chapel_barnacles",
+      "path": "docs/art/harbour_review/images/harbour_chapel_barnacles.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_chapel_barnacles_x4.png",
+      "size": [
+        17,
+        11
+      ],
+      "description": "Chapel floor decal: barnacles",
+      "before": "docs/art/harbour_review/shots/decals_chapel_before.png",
+      "after": "docs/art/harbour_review/shots/decals_chapel_after.png"
+    },
+    {
+      "id": "harbour_chapel_barnacles_2",
+      "key": "decals/harbour_chapel_barnacles_2",
+      "path": "docs/art/harbour_review/images/harbour_chapel_barnacles_2.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_chapel_barnacles_2_x4.png",
+      "size": [
+        14,
+        9
+      ],
+      "description": "Chapel floor decal: barnacles (variant)",
+      "before": "docs/art/harbour_review/shots/decals_chapel_before.png",
+      "after": "docs/art/harbour_review/shots/decals_chapel_after.png"
+    },
+    {
+      "id": "harbour_chapel_coral",
+      "key": "decals/harbour_chapel_coral",
+      "path": "docs/art/harbour_review/images/harbour_chapel_coral.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_chapel_coral_x4.png",
+      "size": [
+        16,
+        15
+      ],
+      "description": "Chapel floor decal: coral crust",
+      "before": "docs/art/harbour_review/shots/decals_chapel_before.png",
+      "after": "docs/art/harbour_review/shots/decals_chapel_after.png"
+    },
+    {
+      "id": "harbour_chapel_coral_2",
+      "key": "decals/harbour_chapel_coral_2",
+      "path": "docs/art/harbour_review/images/harbour_chapel_coral_2.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_chapel_coral_2_x4.png",
+      "size": [
+        13,
+        11
+      ],
+      "description": "Chapel floor decal: coral crust (variant)",
+      "before": "docs/art/harbour_review/shots/decals_chapel_before.png",
+      "after": "docs/art/harbour_review/shots/decals_chapel_after.png"
+    },
+    {
+      "id": "harbour_chapel_sigil",
+      "key": "decals/harbour_chapel_sigil",
+      "path": "docs/art/harbour_review/images/harbour_chapel_sigil.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_chapel_sigil_x4.png",
+      "size": [
+        25,
+        24
+      ],
+      "description": "Chapel floor decal: the Eye's carved sigil",
+      "before": "docs/art/harbour_review/shots/decals_chapel_before.png",
+      "after": "docs/art/harbour_review/shots/decals_chapel_after.png"
+    },
+    {
+      "id": "harbour_market_fish",
+      "key": "decals/harbour_market_fish",
+      "path": "docs/art/harbour_review/images/harbour_market_fish.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_market_fish_x4.png",
+      "size": [
+        19,
+        7
+      ],
+      "description": "Fish Market floor decal: a dropped fish",
+      "before": "docs/art/harbour_review/shots/decals_market_before.png",
+      "after": "docs/art/harbour_review/shots/decals_market_after.png"
+    },
+    {
+      "id": "harbour_market_fish_2",
+      "key": "decals/harbour_market_fish_2",
+      "path": "docs/art/harbour_review/images/harbour_market_fish_2.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_market_fish_2_x4.png",
+      "size": [
+        16,
+        6
+      ],
+      "description": "Fish Market floor decal: a dropped fish (variant)",
+      "before": "docs/art/harbour_review/shots/decals_market_before.png",
+      "after": "docs/art/harbour_review/shots/decals_market_after.png"
+    },
+    {
+      "id": "harbour_market_rope",
+      "key": "decals/harbour_market_rope",
+      "path": "docs/art/harbour_review/images/harbour_market_rope.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_market_rope_x4.png",
+      "size": [
+        20,
+        16
+      ],
+      "description": "Fish Market floor decal: rope coil",
+      "before": "docs/art/harbour_review/shots/decals_market_before.png",
+      "after": "docs/art/harbour_review/shots/decals_market_after.png"
+    },
+    {
+      "id": "harbour_market_rope_2",
+      "key": "decals/harbour_market_rope_2",
+      "path": "docs/art/harbour_review/images/harbour_market_rope_2.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_market_rope_2_x4.png",
+      "size": [
+        16,
+        13
+      ],
+      "description": "Fish Market floor decal: rope coil (variant)",
+      "before": "docs/art/harbour_review/shots/decals_market_before.png",
+      "after": "docs/art/harbour_review/shots/decals_market_after.png"
+    },
+    {
+      "id": "harbour_market_scales",
+      "key": "decals/harbour_market_scales",
+      "path": "docs/art/harbour_review/images/harbour_market_scales.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_market_scales_x4.png",
+      "size": [
+        14,
+        10
+      ],
+      "description": "Fish Market floor decal: fish scales",
+      "before": "docs/art/harbour_review/shots/decals_market_before.png",
+      "after": "docs/art/harbour_review/shots/decals_market_after.png"
+    },
+    {
+      "id": "harbour_market_scales_2",
+      "key": "decals/harbour_market_scales_2",
+      "path": "docs/art/harbour_review/images/harbour_market_scales_2.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_market_scales_2_x4.png",
+      "size": [
+        11,
+        7
+      ],
+      "description": "Fish Market floor decal: fish scales (variant)",
+      "before": "docs/art/harbour_review/shots/decals_market_before.png",
+      "after": "docs/art/harbour_review/shots/decals_market_after.png"
+    },
+    {
+      "id": "harbour_mudflats_kelp",
+      "key": "decals/harbour_mudflats_kelp",
+      "path": "docs/art/harbour_review/images/harbour_mudflats_kelp.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_mudflats_kelp_x4.png",
+      "size": [
+        14,
+        8
+      ],
+      "description": "Mudflats floor decal: stranded kelp",
+      "before": "docs/art/harbour_review/shots/decals_mudflats_before.png",
+      "after": "docs/art/harbour_review/shots/decals_mudflats_after.png"
+    },
+    {
+      "id": "harbour_mudflats_kelp_2",
+      "key": "decals/harbour_mudflats_kelp_2",
+      "path": "docs/art/harbour_review/images/harbour_mudflats_kelp_2.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_mudflats_kelp_2_x4.png",
+      "size": [
+        12,
+        7
+      ],
+      "description": "Mudflats floor decal: stranded kelp (variant)",
+      "before": "docs/art/harbour_review/shots/decals_mudflats_before.png",
+      "after": "docs/art/harbour_review/shots/decals_mudflats_after.png"
+    },
+    {
+      "id": "harbour_mudflats_shells",
+      "key": "decals/harbour_mudflats_shells",
+      "path": "docs/art/harbour_review/images/harbour_mudflats_shells.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_mudflats_shells_x4.png",
+      "size": [
+        8,
+        8
+      ],
+      "description": "Mudflats floor decal: sea shells",
+      "before": "docs/art/harbour_review/shots/decals_mudflats_before.png",
+      "after": "docs/art/harbour_review/shots/decals_mudflats_after.png"
+    },
+    {
+      "id": "harbour_mudflats_shells_2",
+      "key": "decals/harbour_mudflats_shells_2",
+      "path": "docs/art/harbour_review/images/harbour_mudflats_shells_2.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_mudflats_shells_2_x4.png",
+      "size": [
+        8,
+        7
+      ],
+      "description": "Mudflats floor decal: sea shells (variant)",
+      "before": "docs/art/harbour_review/shots/decals_mudflats_before.png",
+      "after": "docs/art/harbour_review/shots/decals_mudflats_after.png"
+    },
+    {
+      "id": "harbour_seawall_chain",
+      "key": "decals/harbour_seawall_chain",
+      "path": "docs/art/harbour_review/images/harbour_seawall_chain.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_seawall_chain_x4.png",
+      "size": [
+        22,
+        11
+      ],
+      "description": "Seawall floor decal: rusted chain",
+      "before": "docs/art/harbour_review/shots/decals_seawall_before.png",
+      "after": "docs/art/harbour_review/shots/decals_seawall_after.png"
+    },
+    {
+      "id": "harbour_seawall_chain_2",
+      "key": "decals/harbour_seawall_chain_2",
+      "path": "docs/art/harbour_review/images/harbour_seawall_chain_2.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_seawall_chain_2_x4.png",
+      "size": [
+        20,
+        10
+      ],
+      "description": "Seawall floor decal: rusted chain (variant)",
+      "before": "docs/art/harbour_review/shots/decals_seawall_before.png",
+      "after": "docs/art/harbour_review/shots/decals_seawall_after.png"
+    },
+    {
+      "id": "harbour_seawall_feather",
+      "key": "decals/harbour_seawall_feather",
+      "path": "docs/art/harbour_review/images/harbour_seawall_feather.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_seawall_feather_x4.png",
+      "size": [
+        6,
+        5
+      ],
+      "description": "Seawall floor decal: gull feather",
+      "before": "docs/art/harbour_review/shots/decals_seawall_before.png",
+      "after": "docs/art/harbour_review/shots/decals_seawall_after.png"
+    },
+    {
+      "id": "harbour_seawall_feather_2",
+      "key": "decals/harbour_seawall_feather_2",
+      "path": "docs/art/harbour_review/images/harbour_seawall_feather_2.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_seawall_feather_2_x4.png",
+      "size": [
+        6,
+        5
+      ],
+      "description": "Seawall floor decal: gull feather (variant)",
+      "before": "docs/art/harbour_review/shots/decals_seawall_before.png",
+      "after": "docs/art/harbour_review/shots/decals_seawall_after.png"
+    },
+    {
+      "id": "harbour_seawall_ring",
+      "key": "decals/harbour_seawall_ring",
+      "path": "docs/art/harbour_review/images/harbour_seawall_ring.png",
+      "path_x4": "docs/art/harbour_review/images/harbour_seawall_ring_x4.png",
+      "size": [
+        10,
+        12
+      ],
+      "description": "Seawall floor decal: mooring ring",
+      "before": "docs/art/harbour_review/shots/decals_seawall_before.png",
+      "after": "docs/art/harbour_review/shots/decals_seawall_after.png"
+    }
+  ],
+  "shots": [
+    {
+      "id": "cultists",
+      "before": "docs/art/harbour_review/shots/cultists_before.png",
+      "after": "docs/art/harbour_review/shots/cultists_after.png",
+      "source": "run 2 (art_0064.png), crop 430x220 at game size",
+      "description": "Initiates and Chanters of the Eye (were code-drawn cultists) and the Harbourmaster, early on the Mudflats"
+    },
+    {
+      "id": "crowd",
+      "before": "docs/art/harbour_review/shots/crowd_before.png",
+      "after": "docs/art/harbour_review/shots/crowd_after.png",
+      "source": "run 1 (art_0370.png), crop 640x360 at game size",
+      "description": "The Fish Market at 13:51: the Eye's crowd, a smugglers' pier and its cache, the market decals"
+    },
+    {
+      "id": "undertow_wall",
+      "before": "docs/art/harbour_review/shots/undertow_wall_before.png",
+      "after": "docs/art/harbour_review/shots/undertow_wall_after.png",
+      "source": "run 1 (art_0370.png), crop 320x240 at game size",
+      "description": "Undertow foam crests and a Tide Caller's rising water line (Brine Widow run)"
+    },
+    {
+      "id": "maelstrom",
+      "before": "docs/art/harbour_review/shots/maelstrom_before.png",
+      "after": "docs/art/harbour_review/shots/maelstrom_after.png",
+      "source": "run 1 (art_0620.png), crop 360x280 at game size",
+      "description": "A Maelstrom whirlpool in the Chapel of the Deep"
+    },
+    {
+      "id": "merrow",
+      "before": "docs/art/harbour_review/shots/merrow_before.png",
+      "after": "docs/art/harbour_review/shots/merrow_after.png",
+      "source": "run 1 (art_1060.png), crop 340x280 at game size",
+      "description": "Abbot Merrow preaching behind his pulpit (frozen by Stasis here), Undertow shallows with their foam rim, a pier"
+    },
+    {
+      "id": "decals_mudflats",
+      "before": "docs/art/harbour_review/shots/decals_mudflats_before.png",
+      "after": "docs/art/harbour_review/shots/decals_mudflats_after.png",
+      "source": "run 1 (art_0020.png), crop 420x300 at game size",
+      "description": "Mudflats floor: shells and kelp decals (were code dots and lines)"
+    },
+    {
+      "id": "decals_market",
+      "before": "docs/art/harbour_review/shots/decals_market_before.png",
+      "after": "docs/art/harbour_review/shots/decals_market_after.png",
+      "source": "run 1 (art_0370.png), crop 420x320 at game size",
+      "description": "Fish Market floor: rope coils, scales and fish decals (were code rings and dots)"
+    },
+    {
+      "id": "decals_chapel",
+      "before": "docs/art/harbour_review/shots/decals_chapel_before.png",
+      "after": "docs/art/harbour_review/shots/decals_chapel_after.png",
+      "source": "run 1 (art_0680.png), crop 460x320 at game size",
+      "description": "Chapel floor: coral crust, barnacles, the Eye's sigil decals (were translucent circles and rings)"
+    },
+    {
+      "id": "decals_seawall",
+      "before": "docs/art/harbour_review/shots/decals_seawall_before.png",
+      "after": "docs/art/harbour_review/shots/decals_seawall_after.png",
+      "source": "run 2 (art_1055.png), crop 520x360 at game size",
+      "description": "Seawall floor: mooring rings, chains and feathers decals"
+    }
+  ]
+}

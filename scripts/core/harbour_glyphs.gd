@@ -6,7 +6,10 @@
 ## the kits' telegraph accents (the Netcaster's net, the Tide Caller's water
 ## line, the Harbourmaster's anchor and chain), plus Abbot Merrow's fallback
 ## (BossMerrow). Palette: the Eye's drowned teal and bioluminescent violet,
-## bone and wet wood. Purely visual.
+## bone and wet wood. Harbour placeholder art pass (GDD §15.0): the pier, the
+## anchor, its chain, the net and the water line draw their pixel art first
+## (MarkerArtData "Gullhaven Harbour") and keep these shapes as the fallback.
+## Purely visual.
 class_name HarbourGlyphs
 extends RefCounted
 
@@ -20,6 +23,30 @@ const SALT := Color(0.78, 0.82, 0.76)
 const HIDE := Color(0.20, 0.36, 0.34)
 ## Rust of the anchor and chains.
 const RUST := Color(0.45, 0.28, 0.18)
+
+
+## -1 when `ci` is drawn mirrored (a unit facing left: its node has scale.x =
+## -1), else 1. The kits call CovenantKit.unmirror() before these helpers, so
+## their offsets are in world axes; sprite drawing sets its own transform, so
+## it mirrors the offset back itself (_flat()) and restores that unmirrored
+## transform after (_restore()).
+static func _mirror(ci: CanvasItem) -> float:
+	return -1.0 if ci.get_global_transform().determinant() < 0.0 else 1.0
+
+
+## SpriteBank.draw_flat() at world-axis offset `o` (angle `angle` rad) on a
+## possibly mirrored `ci` (see _mirror()); leaves `ci` in the unmirrored
+## transform the kits set. False (nothing drawn) without the art.
+static func _flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tint: Color = Color.WHITE, scale: float = 1.0) -> bool:
+	var m := _mirror(ci)  # -1 on a mirrored layer.
+	var drawn := SpriteBank.draw_flat(ci, key, Vector2(o.x * m, o.y), angle if m > 0.0 else PI - angle, tint, scale)
+	_restore(ci, m)
+	return drawn
+
+
+## Puts `ci` back in the unmirrored transform (identity when not mirrored).
+static func _restore(ci: CanvasItem, m: float) -> void:
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2(m, 1.0))
 
 
 ## Draws Harbour kind `kind` at `o` (body radius `r`); false when it is none
@@ -73,6 +100,9 @@ static func _deep_kin(ci: CanvasItem, o: Vector2, r: float, flash: bool, herald:
 
 ## A ship's anchor (the Harbourmaster's weapon, also its hurl in flight).
 static func draw_anchor(ci: CanvasItem, o: Vector2, s: float, flash: bool) -> void:
+	var anchor_px := float(SpriteData.FLAT_SIZES.get(MarkerArtData.HARBOUR_ANCHOR, 28.0))  # Anchor sprite height at scale 1 (px).
+	if _flat(ci, MarkerArtData.HARBOUR_ANCHOR, o, 0.0, SpriteData.FLASH_MODULATE if flash else Color.WHITE, maxf(1.0, s * 2.0 / anchor_px)):
+		return  # Pixel art, as tall as the code anchor (2 s), never smaller than 1:1.
 	var c := Glyphs._c(RUST, flash)
 	ci.draw_line(o + Vector2(0, -s), o + Vector2(0, s), c, 3.0)
 	ci.draw_line(o + Vector2(-s * 0.5, -s * 0.6), o + Vector2(s * 0.5, -s * 0.6), c, 2.0)
@@ -83,6 +113,13 @@ static func draw_anchor(ci: CanvasItem, o: Vector2, s: float, flash: bool) -> vo
 ## A taut chain from `a` to `b` (links every 7 px).
 static func draw_chain(ci: CanvasItem, a: Vector2, b: Vector2) -> void:
 	var d := b - a
+	if SpriteBank.has(MarkerArtData.CHAIN_LINK):
+		# Pixel-art links along the chain, every other one turned a quarter so they interlock.
+		var links := maxi(1, int(d.length() / MarkerArtData.CHAIN_LINK_STEP))  # Links drawn.
+		for i in links:
+			var ang := d.angle() + (0.0 if i % 2 == 0 else 0.35)  # Alternate links tilt (visual).
+			_flat(ci, MarkerArtData.CHAIN_LINK, a + d * (float(i) + 0.5) / float(links), ang)
+		return
 	var n := maxi(1, int(d.length() / 7.0))
 	ci.draw_line(a, b, Color(RUST.darkened(0.4), 0.9), 2.0)
 	for i in n:
@@ -91,6 +128,9 @@ static func draw_chain(ci: CanvasItem, a: Vector2, b: Vector2) -> void:
 
 ## A net drawn over a pinned body at `o` (radius `r`), fading with `alpha`.
 static func draw_net(ci: CanvasItem, o: Vector2, r: float, alpha: float) -> void:
+	var net_px := float(SpriteData.FLAT_SIZES.get(MarkerArtData.HARBOUR_NET, 33.0))  # Net sprite size at scale 1 (px).
+	if _flat(ci, MarkerArtData.HARBOUR_NET, o, 0.0, Color(1.0, 1.0, 1.0, alpha), maxf(0.5, r * 2.5 / net_px)):
+		return  # Pixel art, sized to the code net (2.5 radii across).
 	var c := Color(SALT, 0.85 * alpha)
 	var rr := r * 1.25
 	for i in 5:
@@ -105,6 +145,22 @@ static func draw_net(ci: CanvasItem, o: Vector2, r: float, alpha: float) -> void
 ## The Tide Caller's rising water line, from `a` to `b`, `w` px wide, at
 ## height 0..1 `k` (0 = telegraph only, 1 = full crest).
 static func draw_water_line(ci: CanvasItem, a: Vector2, b: Vector2, w: float, k: float) -> void:
+	var tex := SpriteBank.texture(MarkerArtData.TIDE_WALL)  # Water-line art, or null.
+	if tex != null:
+		# The wall along a -> b, rising out of the line: its top rows (the crest) first.
+		var rise := clampf(maxf(k, MarkerArtData.TIDE_WALL_MIN_RISE), 0.0, 1.0)  # Share of the wall shown.
+		var th := float(tex.get_height())  # Wall height (art px).
+		var rows := ceilf(th * rise)  # Rows shown.
+		var length := (b - a).length()  # Line length (px).
+		var m := _mirror(ci)  # -1 on a mirrored layer (see _mirror()).
+		var mid := (a + b) * 0.5  # Line centre (world-axis offset).
+		var along := (b - a) * Vector2(m, 1.0)  # Line direction in the layer's own axes.
+		SpriteBank.apply_sharp(ci)
+		ci.draw_set_transform(Vector2(mid.x * m, mid.y), along.angle(), Vector2.ONE)
+		ci.draw_texture_rect_region(tex, Rect2(-length * 0.5, th * 0.5 - rows, length, rows),
+				Rect2(0.0, 0.0, float(tex.get_width()), rows), Color(1.0, 1.0, 1.0, 0.6 + 0.4 * k))
+		_restore(ci, m)
+		return
 	var c := Color(Palette.EYE_DROWNED.lightened(0.2), 0.35 + 0.5 * k)
 	ci.draw_line(a, b, c, w * (0.4 + 0.6 * k))
 	ci.draw_line(a, b, Color(SALT, 0.3 + 0.6 * k), maxf(2.0, w * 0.25 * k))
@@ -112,6 +168,14 @@ static func draw_water_line(ci: CanvasItem, a: Vector2, b: Vector2, w: float, k:
 
 ## A pier: planks across a frame, `half_len` x `half_w` px around `c` along `dir`.
 static func draw_pier(ci: CanvasItem, c: Vector2, dir: Vector2, half_len: float, half_w: float) -> void:
+	var tex := SpriteBank.texture(MarkerArtData.HARBOUR_PIER)  # Pier art (drawn along +x), or null.
+	if tex != null:
+		# The plank deck turned along the pier and fitted to it (pilings poke out each side).
+		SpriteBank.apply_sharp(ci)
+		ci.draw_set_transform(c, dir.angle(), Vector2.ONE)
+		ci.draw_texture_rect(tex, Rect2(-half_len, -half_w, half_len * 2.0, half_w * 2.0), false)
+		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		return
 	var perp := Vector2(-dir.y, dir.x)
 	var corners := PackedVector2Array([c - dir * half_len - perp * half_w, c + dir * half_len - perp * half_w,
 		c + dir * half_len + perp * half_w, c - dir * half_len + perp * half_w])
