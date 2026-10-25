@@ -2052,3 +2052,50 @@ blades poses without the crease between rear and thigh and with thicker thighs, 
 fixed so the feet stay whole, the Deathlord Abbess's bounce box 1 px right. All by hand on the existing
 PNGs (deterministic scripts, no image generation, $0); strips rebuilt with `walk_cycle.py`. Each key's
 row above carries a "Round 2 redo" note. **For the owner's review.**
+
+### Act III AoE art (the Empire's warnings, beams and zones; Oct 2026)
+
+GDD §15.0 "Act III AoE art" (audit `docs/art/audit/act3.md` section A, branch `audit/act3-art`). Every
+piece is **procedural pixel art** in the locked palette, made by `python3 tools/empire_aoe_art.py`
+(deterministic; `--review DIR` writes the 1× / ×4 / GIF review images) and drawn by `EmpireFx`
+(`scripts/fx/empire_fx.gd`; keys and numbers in `scripts/data/empire_fx_data.gd`), always with the code
+shape as the fallback. It follows the Act I rules above (band pieces at 1:1 on the exact hit edge, fills
+as clipped 2 px rows, beam bodies scrolled at the beam's real width, no stretched big images, textured
+rects only) and adds the **Empire's own visual language**, so an Act III warning never reads as the
+Covenant's:
+
+- **Colour:** chrome and signal ramps; warning red and hard amber for danger, **cyan-white**
+  (`chrome_glint`) for targeting (ticks, scan line, brackets, crosshair, uplink); white-hot `signal_glow`
+  cores. The Death Ray stays the necromancer's violet; the finale's binding his soul green.
+- **Motifs:** hazard stripes in the band (period 5, seamless), a **hex grid** fill (14 × 24 seamless),
+  a scan-line timing front, **targeting brackets** closing from 1.45 × to the area's bounding box with
+  the timing, hex-segmented shock rings, sparks and chrome shards.
+- **Where:** every Act III circle / lane / cone warning, including the shared Effect telegraphs on an
+  Act III stage (`EffectManager.empire_look`).
+- **Alpha:** warning pieces, stills and strips are binary; glows, the gate field, the furnace haze and
+  the pulse wake use 2-4 stepped alphas; `storm_veil` / `storm_grit` are smooth grey masks tinted with
+  the dust colour (not pixel art, like `holy/soft_disc`).
+
+| Key | Subject | Art px | Drawn by |
+|---|---|---|---|
+| `empire_fx/edge`, `edge_tick` | Warning band piece (signal ink, red, two rows of amber hazard stripes, red, dark), and with a cyan-white tick into the danger (every other piece) | 10 × 6 / 10 × 10 | every Empire circle, lane, cone, square, sector |
+| `empire_fx/front`, `hex`, `chevron`, `target`, `bracket` | Scan-line front; seamless red hex grid with amber nodes; double chevron; crosshair; targeting box corner | 8 × 3, 14 × 24, 13 × 13, 15 × 15, 9 × 9 | `EmpireFx.telegraph_circle()` / `_line()` / `_cone()`, `square()`, `sweep()`, `build_frame()` |
+| `empire_fx/uplink` | Orbital uplink column (stepped alphas, base on the bottom row) | 16 × 96 | `EmpireFx.orbital()`: the last 28 % of a strike |
+| `effects/empire_blast`, `_red`, `_chrome` | Strike / slam landing: flash and lens glint, hex-segmented shock ring (ends at 0.84 of the half: fill 1.2), sparks, shards, smoke ring | 8 × 128 | `EffectManager.impact(..., anim)` at the Act III sites |
+| `effects/empire_boss_death` | An Empire boss falls: red blast, four amber secondary blasts, cyan-white shock (0.91 of the half: fill 1.1) | 10 × 256 | `EnemyDirector.on_enemy_killed()` on Act III stages |
+| `empire_fx/ray_body`, `ray_glow`, `ray_tip` | Death Ray soul laser body (scrolled, at the beam width), stepped glow and afterglow, tip burst | 16 × 10, 8 × 12, 4 × 24 | `EmpireFx.death_ray()` |
+| `empire_fx/laser_body`, `laser_glow`, `laser_warn`, `laser_cap` | Laser grid body (= its 10 px width), red glow, armed sight dash, emitter (armed / firing) | 16 × 10, 8 × 12, 8 × 3, 2 × 16 | `EmpireFx.laser()`, `laser_band()` |
+| `empire_fx/lance_body`, `lance_glow`, `lance_tip` | Judgment Lance body (= its 30 px width), amber glow, head | 16 × 30, 8 × 16, 4 × 32 | `EmpireFx.lance()` |
+| `empire_fx/gate_wall`, `gate_glow`, `gate_post`, `gate_cable` | Shield Gate hex energy wall (= its 18 px), outer glow, chrome end emitter, power cable | 22 × 18, 8 × 28, 22, 8 × 5 | `EmpireFx.gate_wall()`, `gate_cable()` |
+| `empire_fx/belt_68`, `_72`, `_80` | Conveyor belt repeat per belt width: rails and rollers, rubber, slats, dim amber chevrons (112 px holds 4 chevrons and 7 rollers) | 112 × W | `EmpireFx.belt()`: one scrolled rect per belt |
+| `empire_fx/furnace_slag`, `furnace_embers`, `furnace_molten_0..2`, `furnace_rim`, `furnace_warn`, `furnace_haze`, `furnace_flame` | Channel slag, glowing seams, molten metal (3 flicker frames), iron rim, hazard stripes, heat haze, flame tongue | 64 seamless; 12 × 3, 10 × 2, 8 × 6, 4 × 9 × 14 | `EmpireFx.channel()` (world-anchored) |
+| `empire_fx/storm_veil`, `storm_grit` | Scrap storm veil (hole at 0.2393 of the half = the 230 px clear radius) and drifting grit | 256, 128 | `EmpireFx.storm()` |
+| `empire_fx/jug_flame_0..2` | Juggernaut flame billows | 4 × 10 / 16 / 22 | `EmpireFx.jug_flame()` |
+| `empire_fx/static_edge`, `spark` | Arc Engineer field rim; static spark | 10 × 5, 2 × 7 | `EmpireFx.jam_field()` |
+| `empire_fx/mortar_shell`, `lock_open`, `lock_locked`, `pylon_stump` | Mortar shell; Lock-On reticles (red / white-hot blink); fallen pylon decal | 2 × 10, 2 × 35, 2 × 29, 30 × 14 | `EmpireShots`, `LockOn`, `WastesDirector` |
+| `empire_fx/shock_edge`, `pulse_front`, `pulse_charge`, `binding_edge`, `hangar_door` | Deus footfall shock; overload pulse front (= its 26 px, middle row on the radius); charge ring; soul-binding chain; hangar door (shut / opening / open) | 10 × 4, 12 × 26, 8 × 3, 10 × 5, 3 × 36 × 24 | `DeusHazards`, `CitadelGlyphs` hooks |
+| `empire_fx/magnet_edge`, `claw` | Motherboard magnet ring piece; crane claw (open / clamped) | 10 × 3, 2 × 16 | `AssemblyGlyphs` hooks |
+
+Left as code (low in the audit, or the intended look): Lock-On laser lines, pylon reach ring, repair
+arcs, Aegis shield arc, Spotter glow, Valkyrie's jets and blade storm, pop / slash / spawn rings, shot
+tracers. Review folder for the owner: `docs/art/act3_aoe_review/` (`manifest.json`).

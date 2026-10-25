@@ -356,7 +356,7 @@ static func laser(ci: CanvasItem, a: Vector2, b: Vector2, w: float, firing: bool
 		return false
 	var cap := 1 if firing else 0  # Emitter frame.
 	if firing:
-		CovenantFx.ray_strip(ci, a, b, EmpireFxData.LASER_GLOW, w * EmpireFxData.LASER_GLOW_MULT, 0.0, Color(1.0, 1.0, 1.0, 0.7))
+		CovenantFx.ray_strip(ci, a, b, EmpireFxData.LASER_GLOW, w * EmpireFxData.LASER_GLOW_MULT, 0.0, Color(1.0, 1.0, 1.0, 0.95))
 		CovenantFx.ray_strip(ci, a, b, EmpireFxData.LASER_BODY, w, now * EmpireFxData.LASER_SCROLL)
 		for end: Vector2 in [a, b]:
 			frame(ci, EmpireFxData.LASER_CAP, 2, cap, end, 0.0, maxf(1.0, w * 0.75 / EmpireFxData.LASER_CAP_R))
@@ -381,7 +381,7 @@ static func laser_band(ci: CanvasItem, c0: Vector2, n: Vector2, along: Vector2, 
 	var ny := 1.0 if along.orthogonal().dot(n) < 0.0 else -1.0  # Which side of the frame n points to.
 	var rect := Rect2(-half, 0.0 if ny > 0.0 else -sweep_px, half * 2.0, sweep_px)  # The band in its frame.
 	_xf(ci, c0, rot)
-	ci.draw_rect(rect, Color(RED, 0.04 + 0.05 * tele))
+	ci.draw_rect(rect, Color(RED, 0.06 + 0.08 * tele))  # The code's red film.
 	ci.draw_texture_rect_region(hex, rect, rect, Color(1.0, 1.0, 1.0, EmpireFxData.BAND_ALPHA.x + EmpireFxData.BAND_ALPHA.y * tele))
 	_reset(ci)
 	var x := -half + EmpireFxData.BAND_CHEVRON_PITCH * 0.5  # Chevron position along the band (px).

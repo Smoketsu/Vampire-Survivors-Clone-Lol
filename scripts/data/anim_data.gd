@@ -74,6 +74,7 @@ const ANIMS: Dictionary = {
 	# --- Act III AoE art (tools/empire_aoe_art.py; GDD §15.0 "Act III AoE art") ---
 	"empire_blast": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) an Empire strike / slam landing in amber: white-hot flash, a hex-segmented shock ring, sparks, chrome shards (8 frames of 128 px; impact() 0.4 s; the ring ends at 0.84 of the frame half = the radius)
 	"empire_blast_red": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) the same in warning red (overloads, heavy hits; impact() 0.4 s)
+	"empire_boss_death": {"duration": 0.4, "fill": 1.1},  # TUNING (not in GDD) an Empire stage boss falls: a red blast, four amber secondary blasts, a cyan-white shock ring (10 frames of 256 px; EnemyDirector impact() 0.4 s, as boss_death; the ring ends at 0.91 of the frame half)
 	"empire_blast_chrome": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) the same in chrome and cyan-white (energy pops; impact() 0.4 s)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is

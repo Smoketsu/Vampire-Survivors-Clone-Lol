@@ -230,7 +230,7 @@ def e_uplink() -> Canvas:
         for x in range(w):
             d = abs(x - 7.5)
             if d < 1.0:
-                cv.put(x, y, WHITE if up < 0.5 else GLINT, a)
+                cv.put(x, y, SG_GLOW if up < 0.5 else GLINT, a)
             elif d < 2.0:
                 cv.put(x, y, GLINT, a)
             elif d < 3.5:
@@ -246,70 +246,109 @@ def e_uplink() -> Canvas:
 # 2. Impact strips (EffectManager.impact(..., anim): AnimData empire_blast / _red / _chrome)
 # =================================================================================================
 
-def fx_blast(ramp_name: str) -> Canvas:
-    """effects/empire_blast(_red, _chrome): an Empire strike / slam landing (8 frames of 128 px):
-    a white-hot flash with a four-point lens glint, a hex-segmented shock ring rolling out to the
-    gameplay radius (0.84 of the frame half: AnimData fill 1.2), sparks and chrome shards flung
-    out, a scorched smoke ring dissolving. Binary alpha. Ramps: amber (strikes, slams), red
-    (overloads, heavy hits), chrome (energy pops, shields, Kestrel's feints)."""
+def _blast_frames(ramp_name: str, S: int = 128, n: int = 8, seed: int = 0) -> list:
+    """The frames of an Empire blast `S` px square, `n` frames (see fx_blast): every radius scales
+    with S / 128, the timing with the frame count; `seed` varies the noise."""
     ink, dark, mid, bright, core, spark = BLAST_RAMPS[ramp_name]
-    S = 128
+    sc = S / 128.0  # Size scale.
     c = S / 2.0
     frames = []
-    fire = (11, 21, 28, 27, 21, 13, 0, 0)  # Fireball radius by frame (art px).
-    for f in range(8):
+    fire_tab = (11, 21, 28, 27, 21, 13, 0, 0)  # Fireball radius over the play (art px at 128).
+    for f in range(n):
         cv = Canvas(S, S)
-        t = f / 7.0
-        ring_r = 15 + 39 * (1 - (1 - t) ** 2.0)  # Shock ring radius (art px): 54 at the end.
-        thick = 7.0 * (1 - t) + 2.5
-        fr = fire[f]
+        t = f / (n - 1.0)
+        u = t * 7.0
+        i0 = min(6, int(u))
+        fr = (fire_tab[i0] + (fire_tab[i0 + 1] - fire_tab[i0]) * (u - i0)) * sc  # Fireball radius (px).
+        ring_r = (15 + 39 * (1 - (1 - t) ** 2.0)) * sc  # Shock ring radius: 0.84 of the half at the end.
+        thick = (7.0 * (1 - t) + 2.5) * sc
+        late = t >= 0.5  # Ring broken into segments.
         for y in range(S):
             for x in range(S):
                 d, a = polar(cv, c, c, x, y)
-                # Shock ring, broken into hex-like segments from frame 4 and eaten away as it fades.
-                seg = (math.floor((a + math.pi) / (2 * math.pi) * 15) + f) % 4
-                if ring_r - thick <= d < ring_r and hf(x // 2, y // 2, 60 + f) > t * 0.55:
-                    if seg != 0 or f < 4:
+                # Shock ring, broken into hex-like segments late and eaten away as it fades.
+                seg = (math.floor((a + math.pi) / (2 * math.pi) * 15 * max(1.0, sc * 0.75)) + f) % 4
+                if ring_r - thick <= d < ring_r and hf(x // 2, y // 2, 60 + f + seed) > t * 0.55:
+                    if seg != 0 or not late:
                         cv.put(x, y, bright if d > ring_r - thick * 0.5 else mid)
                     continue
                 # Scorched smoke filling in behind the ring (dust clumps, dithered thinner).
-                if f >= 3 and fr * 0.7 <= d < ring_r - thick:
-                    band = 1.0 - abs(d - (ring_r - thick) * 0.78) / max(6.0, ring_r * 0.32)  # A smoke ring, thickest inside the shock.
-                    cov = 0.62 * (1.0 - t) ** 1.3 * band * (0.5 + vnoise(x / 6.0, y / 6.0, 72 + f // 2))
+                if t >= 0.4 and fr * 0.7 <= d < ring_r - thick:
+                    band = 1.0 - abs(d - (ring_r - thick) * 0.78) / max(6.0 * sc, ring_r * 0.32)  # A smoke ring inside the shock.
+                    cov = 0.62 * (1.0 - t) ** 1.3 * band * (0.5 + vnoise(x / 6.0, y / 6.0, 72 + f // 2 + seed))
                     if dither(x, y, cov):
-                        cv.put(x, y, CH_DK if hf(x // 2, y // 2, 71) > 0.4 else INK_CH)
+                        cv.put(x, y, CH_DK if hf(x // 2, y // 2, 71 + seed) > 0.4 else INK_CH)
                 # The fireball: a ragged white-hot / bright / mid ball, growing then collapsing.
-                if fr > 0:
-                    edge = fr * (0.8 + 0.2 * anoise(a, 9, 80 + f))
+                if fr > 0.5:
+                    edge = fr * (0.8 + 0.2 * anoise(a, 9, 80 + f + seed))
                     if d < edge:
                         k = d / edge
-                        col = core if k < 0.45 - 0.08 * max(0, f - 2) else (bright if k < 0.78 else mid)
-                        if f >= 3 and hf(x, y, 81 + f) > 0.9 - 0.08 * f:
+                        col = core if k < 0.45 - 0.08 * max(0.0, u - 2) else (bright if k < 0.78 else mid)
+                        if u >= 3 and hf(x, y, 81 + f + seed) > 0.9 - 0.08 * u:
                             col = dark
                         cv.put(x, y, col)
-        if f <= 1:  # Lens glint: a four-point star, long thin arms.
-            arm = (30, 40)[f]
+        if t < 0.2:  # Lens glint: a four-point star, long thin arms.
+            arm = int((30 + 70 * t) * sc)
             for k in range(-arm, arm + 1):
                 w = 2 if abs(k) < arm * 0.35 else 1
                 for o in range(w):
                     col = core if abs(k) < arm * 0.5 else spark
                     cv.put(int(c) + k, int(c) - 1 + o, col)
                     cv.put(int(c) - 1 + o, int(c) + k, col)
-        for m in range(22):  # Sparks (streaks) and chrome shards (squares) flung out.
-            a = 2 * math.pi * hf(m, 11)
-            rr = 12 + (46 + 10 * hf(m, 12)) * (1 - (1 - t) ** 1.6)
+        for m in range(int(22 * max(1.0, sc * 0.8))):  # Sparks (streaks) and chrome shards (squares) flung out.
+            a = 2 * math.pi * hf(m, 11 + seed)
+            rr = (12 + (46 + 10 * hf(m, 12 + seed)) * (1 - (1 - t) ** 1.6)) * sc
             if t > 0.75 and m % 2:
                 continue
             px, py = c + math.cos(a) * rr, c + math.sin(a) * rr
             if m % 3:
-                ln = 9 * (1 - t) + 3
+                ln = (9 * (1 - t) + 3) * min(sc, 1.5)
                 cv.thick_line(px, py, px - math.cos(a) * ln, py - math.sin(a) * ln, 1.6, spark if m % 2 else core)
             else:
                 cv.rect(int(px), int(py), 3, 2, P["chrome_light"] if ramp_name != "chrome" else bright)
                 cv.put(int(px), int(py) + 2, INK_CH)
                 cv.put(int(px) + 1, int(py) + 2, INK_CH)
         frames.append(cv)
-    return strip_of(frames)
+    return frames
+
+
+def fx_blast(ramp_name: str) -> Canvas:
+    """effects/empire_blast(_red, _chrome): an Empire strike / slam landing (8 frames of 128 px):
+    a white-hot flash with a four-point lens glint, a hex-segmented shock ring rolling out to the
+    gameplay radius (0.84 of the frame half: AnimData fill 1.2), sparks and chrome shards flung
+    out, a scorched smoke ring dissolving. Binary alpha. Ramps: amber (strikes, slams), red
+    (overloads, heavy hits), chrome (energy pops, shields, Kestrel's feints)."""
+    return strip_of(_blast_frames(ramp_name))
+
+
+def fx_boss_blast() -> Canvas:
+    """effects/empire_boss_death: an Empire stage boss falls (Kestrel, the Motherboard, Deus Ex
+    Machina; 10 frames of 256 px): a warning-red blast at the centre (its shock ring ending at 0.84
+    of the frame half), four amber secondary blasts popping one after another round the hull and a
+    cyan-white shock ring racing out to 0.91 of the frame half (AnimData fill 1.1, as boss_death)."""
+    S, n = 256, 10
+    main = _blast_frames("red", S, n, 3)
+    subs = [(_blast_frames("amber", 96, 8, 10 + k), off, start) for k, (off, start) in enumerate(
+        (((-44, -30), 1), ((40, -22), 2), ((-26, 40), 3), ((46, 34), 4)))]
+    out = []
+    c = S / 2.0
+    for f in range(n):
+        cv = main[f]
+        for frs, (ox, oy), st in subs:
+            j = f - st
+            if 0 <= j < len(frs):
+                cv.im.alpha_composite(frs[j].im, (int(c + ox - 48), int(c + oy - 48)))
+                cv.px = cv.im.load()
+        t = f / (n - 1.0)
+        rr = 30 + 86 * (1 - (1 - t) ** 2.2)  # The cyan-white shock: 116 px (0.91 of 128) at the end.
+        th = 3.0 * (1 - t) + 1.5
+        for y in range(S):
+            for x in range(S):
+                d, _ = polar(cv, c, c, x, y)
+                if rr - th <= d < rr and hf(x // 2, y // 2, 90 + f) > t * 0.6:
+                    cv.put(x, y, GLINT if d > rr - th * 0.5 else CH_L)
+        out.append(cv)
+    return strip_of(out)
 
 
 # =================================================================================================
@@ -382,10 +421,22 @@ def burst_tip(ramp: tuple, size: int, frames: int) -> Canvas:
 
 
 def death_ray_body() -> Canvas:
-    """empire_fx/ray_body: the Death Ray's body (16 x 12 seamless, scrolled outward along the beam
-    and drawn at the beam's exact width): deep violet edges, violet, a violet-glow band with flare
-    flow streaks and a violet-flare core: the necromancer's soul laser, never the Empire's red."""
-    return ray_body((VIO_DEEP, VIO, VIO_GLOW, VIO_FLARE, VIO_FLARE), 12, (VIO_FLARE, VIO))
+    """empire_fx/ray_body: the Death Ray's body (16 x 10 seamless = the beam's base 10 px width,
+    scrolled outward along it and drawn at its exact width): violet edges, violet-glow bands with
+    flare flow streaks, a 2 px violet-flare core: the necromancer's soul laser, never the Empire's red."""
+    rows = [
+        "vvvvvvvvvvvvvvvv",
+        "gggggggggggggggg",
+        "ffggggggffgggggg",
+        "gggfffgggggggfff",
+        "FFFFFFFFFFFFFFFF",
+        "FFFFFFFFFFFFFFFF",
+        "gggggfffggggfggg",
+        "ggfgggggggffgggg",
+        "gggggggggggggggg",
+        "vvvvvvvvvvvvvvvv",
+    ]
+    return from_bitmap(rows, {"v": VIO, "g": VIO_GLOW, "f": VIO_FLARE, "F": VIO_FLARE})
 
 
 def death_ray_glow() -> Canvas:
@@ -408,7 +459,7 @@ def laser_body() -> Canvas:
 
 def laser_glow() -> Canvas:
     """empire_fx/laser_glow: the laser's red glow (8 x 12, three stepped alphas), at 2.6 x its width."""
-    return ray_glow(SG_RED, 12, (60, 110, 160))
+    return ray_glow(SG_RED, 12, (80, 140, 200))
 
 
 def laser_warn() -> Canvas:
@@ -992,8 +1043,9 @@ ASSETS = {
     "empire_fx/uplink": (e_uplink, "still", 1, "Orbital uplink column (16 x 96, base at the bottom): a cyan-white targeting beam from the sky over a strike's last 0.3 s (Purge Protocol, Citadel guns)"),
     "effects/empire_blast": (lambda: fx_blast("amber"), "strip", 8, "Empire strike / slam landing, amber (8 frames of 128 px): white-hot flash and lens glint, a hex-segmented shock ring rolling out to the gameplay radius, sparks, chrome shards, a smoke ring"),
     "effects/empire_blast_red": (lambda: fx_blast("red"), "strip", 8, "The same landing in warning red (overloads, heavy hits: Kestrel's charge, Deus's phase breaks, the Motherboard's fall, the Trojan's split)"),
+    "effects/empire_boss_death": (fx_boss_blast, "strip", 10, "An Empire stage boss falls (10 frames of 256 px): a red blast at the heart, four amber secondary blasts popping round the hull, a cyan-white shock ring racing out (Kestrel, the Motherboard, Deus Ex Machina; the Covenant's holy boss_death elsewhere)"),
     "effects/empire_blast_chrome": (lambda: fx_blast("chrome"), "strip", 8, "The same in chrome and cyan-white (energy pops: Kestrel's leap, Deus's shield drones, the Trojan's stomp, Valkyrie's blade arc)"),
-    "empire_fx/ray_body": (death_ray_body, "tile", 1, "Death Ray body (16 x 12 seamless, scrolled outward, drawn at the beam's exact width): the necromancer's violet soul laser with flare flow streaks"),
+    "empire_fx/ray_body": (death_ray_body, "tile", 1, "Death Ray body (16 x 10 seamless, scrolled outward, drawn at the beam's exact width): the necromancer's violet soul laser with flare flow streaks"),
     "empire_fx/ray_glow": (death_ray_glow, "tile", 1, "Death Ray glow (8 x 12, stepped alphas): under the beam and as its fading afterglow"),
     "empire_fx/ray_tip": (death_ray_tip, "strip", 4, "Death Ray tip burst (4 frames of 24 px): flare core, glow ring, turning spokes; also its origin flare"),
     "empire_fx/laser_body": (laser_body, "tile", 1, "Laser grid beam body (16 x 10 seamless = its 10 px width): warning red, amber, white-hot core and flow streaks"),

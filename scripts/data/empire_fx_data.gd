@@ -41,9 +41,9 @@ const BRACKET: String = "empire_fx/bracket"  # TUNING (not in GDD)
 ## Orbital uplink column (16 x 96, base on the bottom row).
 const UPLINK: String = "empire_fx/uplink"  # TUNING (not in GDD)
 ## Opacity (0-1) of the hex fill over the whole danger area.
-const HEX_ALPHA: float = 0.3  # TUNING (not in GDD)
+const HEX_ALPHA: float = 0.22  # TUNING (not in GDD)
 ## Opacity (0-1) of the hex fill inside the part the timing has filled.
-const FILL_ALPHA: float = 0.7  # TUNING (not in GDD)
+const FILL_ALPHA: float = 0.5  # TUNING (not in GDD)
 ## Opacity (0-1) of the soft warning-red base tint under the whole area.
 const BASE_ALPHA: float = 0.07  # TUNING (not in GDD)
 ## Opacity (0-1) of the soft tint added under the filled part.
@@ -82,10 +82,12 @@ const BLAST: String = "empire_blast"  # TUNING (not in GDD)
 const BLAST_RED: String = "empire_blast_red"  # TUNING (not in GDD)
 ## Chrome / cyan-white landing strip (energy pops).
 const BLAST_CHROME: String = "empire_blast_chrome"  # TUNING (not in GDD)
+## An Empire stage boss falling (instead of the Covenant's holy boss_death on Act III stages).
+const BOSS_DEATH: String = "empire_boss_death"  # TUNING (not in GDD)
 
 # --- Beams -------------------------------------------------------------------------------
 
-## Death Ray body (16 x 12 tile), glow (8 x 12) and tip burst (4 frames of 24 px).
+## Death Ray body (16 x 10 tile = its base width), glow (8 x 12) and tip burst (4 frames of 24 px).
 const RAY_BODY: String = "empire_fx/ray_body"  # TUNING (not in GDD)
 ## Death Ray glow piece.
 const RAY_GLOW: String = "empire_fx/ray_glow"  # TUNING (not in GDD)
@@ -98,7 +100,7 @@ const TIP_FPS: float = 14.0  # TUNING (not in GDD)
 ## Scroll speed (px/s) of the Death Ray's flow streaks (outward).
 const RAY_SCROLL: float = 180.0  # TUNING (not in GDD)
 ## Glow width as a multiple of the beam width (the code's w + 4 glow line).
-const RAY_GLOW_MULT: float = 2.2  # TUNING (not in GDD)
+const RAY_GLOW_MULT: float = 2.0  # TUNING (not in GDD)
 ## Opacity (0-1) of the glow under the beam.
 const RAY_GLOW_ALPHA: float = 0.55  # TUNING (not in GDD)
 ## Opacity (0-1) of the nearest afterglow copy (each later one loses AFTER_STEP).
@@ -121,7 +123,7 @@ const LASER_GLOW_MULT: float = 2.6  # TUNING (not in GDD)
 const LASER_SCROLL: float = 260.0  # TUNING (not in GDD)
 ## Opacity (0-1) of the hex fill over a laser's sweep band at its faintest /
 ## extra at full telegraph (the code's 0.06 + 0.08 x tele red film).
-const BAND_ALPHA := Vector2(0.14, 0.26)  # TUNING (not in GDD)
+const BAND_ALPHA := Vector2(0.3, 0.35)  # TUNING (not in GDD)
 ## Gap (px) between two sweep chevrons along a laser's band.
 const BAND_CHEVRON_PITCH: float = 120.0  # TUNING (not in GDD)
 ## Judgment Lance body (16 x 30 = its width), glow and head (4 frames of 32 px).
