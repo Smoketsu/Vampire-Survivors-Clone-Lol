@@ -19,8 +19,8 @@
 ##                                         bands: it slows the living and makes
 ##                                         a summon wading it forget (2 s of
 ##                                         suppression); Charon's posts
-##    8:30  CERBERUS (in the Judges' Hall's run-up), the miniboss
 ##   10:00  Zone III, the Judges' Hall:    marble columns, the judges' benches
+##    8:30  CERBERUS, the miniboss (his three heads)
 ##    5:00  Zone IV,  the Throne of Hades: obsidian and bronze; the Styx again,
 ##                                         a moat before the throne
 ##    3:00  HADES, Lord of the Dead (BossHades, HadesData)

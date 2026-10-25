@@ -1586,6 +1586,51 @@ The shared kinds so far: the **Shade of the Dead** (pale, fast fodder in swarms)
 and round shield, forms the Phalanx) and the **Hero** (an elite demigod who carries Glory); the
 **Bronze Titan** is the Twilight's heavy. The Codex has a **Republic** tab.
 
+### Stage 12: the Asphodel Underworld (Act IV finale, not yet playable)
+
+<!-- --- Act IV: the Asphodel Underworld --- -->
+The finale of Act IV (GDD §15.0 "The Asphodel Underworld (Act IV phase 2)" and the rows after it; data in
+`scripts/data/stages/underworld_stage.gd`). With Olympus silent, the necromancer goes down to the god who
+started it all. Unlocked by toppling Zeus; Soul Ash ×3.75 (placeholder). Hades' fissures are its Wrath of
+the Gods.
+
+- **Four zones on the clock** (`MarchDirector`): the Asphodel Fields (20:00), the Styx Crossing (15:00),
+  the Judges' Hall (10:00) and the Throne of Hades (5:00), each with its own pixel-art floor
+  (`UnderworldGround`) and obstacles (grave steles, dead poplars, ferry posts, Styx rocks, broken
+  columns, the judges' benches, obsidian spires, soul braziers).
+- **The River Styx** (the Styx Crossing and the Throne of Hades; `UnderworldDirector`): bands of black
+  water cross the land. Wading it slows you (35%) and the living foes (40%; floating shades, the boss and
+  minibosses do not wade), and a summon in the water forgets: a 2 s suppression zone on its stretch of
+  river (its hits there deal 60%, and nothing replaces a summon that falls in it until the zone ends).
+- **Kinds:** the **Shade Hoplite** (the dead still in their ranks: they lock shields like the living)
+  and the miniboss **Cerberus** at 8:30 left: his body cannot be struck; kill his three heads one by
+  one (fire breath, a pouncing bite on your spot, a howl that raises shades and slows your summons);
+  the last head kills him (his chest and 14 Soul Ash). Ilion's and Olympus's kinds join as guests once
+  their stages are merged.
+- **Hades, Lord of the Dead** (17:00), the first rival necromancer: **the Helm of Darkness** (cloaked,
+  he cannot be seen or struck, only his footprints in the asphodel; his fissures open across your
+  ring; then he shows himself and sweeps his bident), **the Reclaiming** (he marks the summons nearest
+  him: still marked after 2 s, a summon falls and rises as his shade for 10 s, killing it returns its
+  soul as Dread Rally charge; the gods of Olympus rise as shades for one attack each: Ares' charge,
+  Artemis's volley, Poseidon's wave, Zeus's bolts) and **Lord of the Dead** (a ring of Tartarus
+  Wardens around him: behind it he takes a quarter of every hit; break the ring and he staggers,
+  open). Beaten, he kneels and gives up his crown.
+- **Rewards** (unlocked by beating Hades, offered on every stage): the spell **River Styx** (a black
+  river across your foes' way that drains and slows whatever crosses it; evolution **Lethe's Flood**,
+  two crossing rivers that make foes forget themselves, with the passive **Ferryman's Toll**: every
+  slowed foe that dies heals you a little and fills your Dread Rally), the character **the
+  Ferrywoman** (starts with River Styx; a foe slain in her river rises as a Risen), the summon class
+  **Myrmidon Shades** (undead hoplites, three to a card, holding the ring's front; three in a chain
+  lock shields and take 30% less, their spear runs through a second foe; evolution **Legion of
+  Tartarus** with the passive **Myrmidon Oath**: your front line is hardier and hits harder) and the
+  achievement **Empty Throne** (opens the Act IV epilogue part "The Gods Are Silent", then the closing
+  card "The Sun Still Rises"; their pictures come at integration).
+- **Autotest:** `--stage=underworld`, `--boss=hades`, `--spells=river_styx`,
+  `--classes=myrmidon_shade`, `--passives=ferrymans_toll,myrmidon_oath`, `--character=ferrywoman`,
+  `--spawn=cerberus@T`, `shade_hoplite`, `tartarus_warden`; the summary gains the `underworld`,
+  `underworld events`, `underworld kinds`, `hades`, `hades claims`, `river styx` and `myrmidon shades`
+  lines (`UnderworldReport`).
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2089,6 +2134,9 @@ scripts/
                             placeholder obstacles (Act IV)
     pantheon_ground.gd      The Act IV stubs' placeholder floor (the STAGE's "floor": sand / marble / asphodel)
     pantheon_report.gd      The autotest's Act IV lines (divine wrath, phalanx, glory, kinds, stage)
+    underworld_ground.gd    The Asphodel Underworld's four zone floors and the River Styx (Act IV)
+    underworld_glyphs.gd    Its obstacles, Cerberus, Hades and his marks, the Styx (code fallbacks; Act IV)
+    underworld_report.gd    The autotest's Underworld lines (the stage, Cerberus, Hades, River Styx, the Myrmidons)
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
     assembly_glyphs.gd      The Assembly Halls' code drawings: belts, furnace channels, jam fields, arcs, flames,
                             build frames, stamps, claws, the magnet, puppets on soul strings, fallback obstacles
@@ -2254,6 +2302,12 @@ scripts/
                             hit_from_front(), the bot's danger hint (null on Acts I to III)
       divine_wrath.gd       WRATH OF THE GODS: one scheduler (waves / lightning / fissures) hitting both armies,
                             the Twilight of the Gods after 0:00, the Grounded Bones hook
+      underworld_director.gd  The Asphodel Underworld: the River Styx (slow the living, the dead forget),
+                            Cerberus, guest squads (Act IV)
+      cerberus_kit.gd / cerberus_head_kit.gd  Cerberus, his three heads and their three attacks
+      shade_hoplite_kit.gd / tartarus_warden_kit.gd  The Underworld's dead hoplites; Hades' ring of the dead
+      boss_hades.gd / hades_hazards.gd  Hades: the Helm of Darkness, the Reclaiming (the Claims path), Lord of
+                            the Dead, the gods' shades, the kneeling finale
       phalanx.gd            PHALANX: shield walls lock (3+ within 28 px), one pace, front / flank hits, the
                             bronze shield line, the Bronze Breaker hook
       glory.gd              GLORY: heroes' stacks on summon kills, the chest and Soul Ash payout
@@ -2459,9 +2513,12 @@ scripts/
                             until phase 2)
     pantheon_rules_data.gd  Act IV's shared rules: WRATH (waves, lightning, fissures + Grounded Bones hook),
                             TWILIGHT, PHALANX (+ Bronze Breaker hook), GLORY, the SOUNDS map
+    hades_data.gd           Hades' arrival, fight, god-shade list (GOD_SHADES) and ending (Act IV)
+    river_styx_data.gd      River Styx / Lethe's Flood rules, Ferryman's Toll keys, the Ferrywoman's innate (Act IV)
     stages/ilion_stage.gd          Act IV stubs: the Shores of Ilion, Mount Olympus and the Asphodel Underworld;
     stages/olympus_stage.gd        act 4, "pantheon": true, their wrath kind, the Twilight of the Gods
     stages/underworld_stage.gd     Reckoning, placeholder floors / obstacles / timelines / boss scripts, zone names
+                                   (the Underworld is built: zones, the Styx, timeline, UNDERWORLD, Hades)
     stages/wastes_stage.gd         Act III stages: the Scrap Wastes (built: zones, timeline, WASTES), the Assembly Halls
     stages/assembly_stage.gd       and the Iron Citadel; act 3, "empire": true, "Iron Requiem", the Purge
     stages/citadel_stage.gd        Protocol Reckoning, placeholder floors / obstacles / timelines / boss scripts
