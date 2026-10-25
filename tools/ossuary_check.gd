@@ -265,7 +265,7 @@ func _screenshot() -> void:
 		"grave_flesh": 5, "bone_mail": 4, "fleet_shade": 3, "undying_will": 1,
 		"soul_magnet": 4, "grave_tithe": 3, "ash_harvest": 2, "fates_thread": 1, "profane_oath": 2}
 	for id: String in sample:
-		Meta.tiers[id] = int(sample[id])
+		Meta.tiers[id] = mini(int(sample[id]), maxi(_open, MetaData.UNGATED_MAX_TIER))  # Never above the sample's open level.
 	Meta.oath_active = 2
 	match _open:
 		7:

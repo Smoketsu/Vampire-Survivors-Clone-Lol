@@ -1656,7 +1656,8 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   `--meta=mid` is unchanged; with any upgrades the autotest prints an
   `ossuary:` line (levels owned / 140, levels 6-10 owned / 65, Soul Ash). The
   check `godot --headless res://tools/ossuary_check.tscn -- --autotest` covers
-  prices, gates, the migration, Refund all and the co-op loadout (temp files only).
+  prices, gates, the migration, Refund all and the co-op loadout (temp files only;
+  CI runs it in the Graveyard job; `--shot=PATH [--phone]` saves a screenshot).
 - **One modifier path.** At run start `Meta.run_modifiers()` turns the
   purchased tiers into a `MetaModifiers` object (`game.meta`). The existing
   stat code reads it in a few places (horde `compute_stats` / `capacity` /
