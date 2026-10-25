@@ -98,6 +98,8 @@ const KIND_SHARD: int = 1
 const MAX_BOULDERS: int = 48
 ## Safety cap on burning patches (not a balance number).
 const MAX_PATCHES: int = 160
+## Flat sprite of the Deus Revenant's missile (a boulder with that damage source is drawn as it, nose along its arc).
+const MISSILE_ART: String = "projectiles/deus_missile"
 ## Ember colour of fire patches and shard glow.
 const EMBER := Color(1.0, 0.42, 0.12)
 ## Hellfire colour (the hot core of a fire patch).
@@ -336,4 +338,9 @@ func _draw_air() -> void:
 			var k := clampf(b.t / b.flight, 0.0, 1.0)  # Flight progress.
 			var ground := b.from.lerp(b.to, k)
 			var h := 4.0 * b.arc * k * (1.0 - k)  # Height above the ground (px).
+			if b.source == RevenantBehavior.MISSILE_SOURCE:
+				# The Deus Revenant's missile (Act III missing sprites): nose along its arc.
+				var vel := (b.to - b.from) - Vector2(0.0, 4.0 * b.arc * (1.0 - 2.0 * k))  # Screen velocity direction.
+				if SpriteBank.draw_flat(_air, MISSILE_ART, ground - Vector2(0, h), vel.angle()):
+					continue
 			WarbandGlyphs.draw_boulder(_air, ground - Vector2(0, h), 6.0 + h * 0.03, k * 9.0, b.shard_radius > 0.0)

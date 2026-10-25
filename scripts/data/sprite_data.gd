@@ -360,6 +360,10 @@ const FLAT_SIZES: Dictionary = {
 	"projectiles/iron_shell": 18.0,  # TUNING (not in GDD) an Iron Revenant's cannon shell, 18 x 8, with a soul-teal trail
 	"projectiles/trojan_rocket": 24.0,  # TUNING (not in GDD) the Trojan Horse's Swarm Rocket, 24 x 12 (its hit circle is 6 px)
 	"projectiles/trojan_rocket_flame": 36.0,  # TUNING (not in GDD) its exhaust, a 3-frame strip of 12 x 8 (drawn by SpriteBank.draw_flat_frame)
+	"projectiles/empire_rail": 46.0,  # TUNING (not in GDD) the Lock-On rail slug, 46 x 7 (EmpireRulesData rail "art")
+	"projectiles/empire_missile": 26.0,  # TUNING (not in GDD) Deus Ex Machina's missile, 26 x 10 with its exhaust (missile "art")
+	"projectiles/mortar_shell": 12.0,  # TUNING (not in GDD) the Mortar Walker's lobbed shell, 12 x 12 (mortar "art")
+	"projectiles/deus_missile": 26.0,  # TUNING (not in GDD) the Deus Revenant's missile, 26 x 10 (HordeHazards draws it along its arc)
 	"projectiles/scrap_drone": 44.0,  # TUNING (not in GDD) a Scrap Swarm drone, a 2-frame rotor strip of 22 x 14
 	"projectiles/scrap_drone_bright": 44.0,  # TUNING (not in GDD) a Deathless Swarm kill drone (violet rotors), the same strip
 	"projectiles/harbour_anchor": 28.0,  # TUNING (not in GDD) the Harbourmaster's anchor raised or hurled, 24 x 28

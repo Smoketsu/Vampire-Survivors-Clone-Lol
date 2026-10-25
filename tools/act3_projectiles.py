@@ -10,6 +10,10 @@ shapes, in exact colours of tools/palette.json (fully opaque or fully transparen
     scrap_bolt            14x6   a Scrap Swarm / Rust Prophet bolt (bone shard wrapped in violet)
     iron_shell            18x8   an Iron Revenant / Deus Revenant cannon shell (iron, soul-teal trail)
     trojan_rocket         24x12  the Trojan Horse's Swarm Rocket (chrome, red fins, amber warhead)
+    empire_rail           46x7   the Lock-On rail slug (EmpireRulesData rail style)
+    empire_missile        26x10  Deus Ex Machina's missile (missile style)
+    mortar_shell          12x12  the Mortar Walker's lobbed shell (mortar style)
+    deus_missile          26x10  the Deus Revenant's missile (the undead's, thrown by HordeHazards)
     trojan_rocket_flame   36x8   its exhaust, 3 frames of 12x8 (nozzle on the right edge)
     scrap_drone           44x14  a Scrap Swarm drone, 2 rotor frames of 22x14 (bone body, violet eye)
     scrap_drone_bright    44x14  the Deathless Swarm kill drone (violet rotors, brighter eye)
@@ -226,6 +230,91 @@ def _flame(length, wob):
 
 
 SPRITES['trojan_rocket_flame'] = [_flame(9, 0.0), _flame(11, 0.6), _flame(8, 0.3)]
+
+
+# ---- Empire shot art (EmpireRulesData.SHOT_STYLES "art"): the rail slug, Deus's missile, the mortar shell ----
+def _blank(W, H):
+    return [[''] * W for _ in range(H)]
+
+
+def _rail():
+    """The Lock-On rail slug: a warning-red needle with an amber sleeve and a white-hot core, 46 x 9."""
+    W, H = 46, 7
+    g = _blank(W, H)
+    for x in range(1, 45):
+        hh = min(2.2, 0.6 + x * 0.09)                       # grows from a thin tail
+        if x > 36:
+            hh = min(hh, 0.6 + (44 - x) * 0.42)             # tapers to a point at the head
+        for y in range(H):
+            dy = abs(y - 3)
+            if dy <= hh:
+                if dy <= 0.5 and x > 12:
+                    g[y][x] = 'signal_glow'
+                elif dy <= hh - 1.0 and x > 6:
+                    g[y][x] = 'signal_amber'
+                else:
+                    g[y][x] = 'signal_red'
+    g[3][44] = 'signal_glow'
+    return _outline(g, W, H, lambda n: 'ink_signal')
+
+
+def _missile(body, band, nose, fin, flame, ink, W=26, H=10):
+    """A small warhead pointing +x with a static exhaust, W x H: exhaust (cols 0-8), body (9-21), nose (22-25).
+    body = (shade, mid, light), band = (dark, mid), nose = (outer, tip), fin / ink = ramp names, flame = (outer, mid, core)."""
+    g = _blank(W, H)
+    for d in range(9):                                       # exhaust: a tapering teardrop on the left
+        t = d / 9.0
+        hh = 1.7 * (1.0 - t) ** 0.8 + 0.3
+        for y in range(H):
+            dy = abs(y - 4.5)
+            if dy <= hh:
+                g[y][8 - d] = flame[2] if (dy <= hh * 0.4 and t < 0.5) else (flame[1] if dy <= hh * 0.7 and t < 0.8 else flame[0])
+    for x in range(9, 22):                                   # cylinder body, rows 3..6
+        g[3][x], g[4][x], g[5][x], g[6][x] = body[2], body[1], body[1], body[0]
+    for x in range(14, 16):                                  # the band
+        g[3][x], g[4][x], g[5][x], g[6][x] = band[1], band[1], band[1], band[0]
+    for x, (y0, y1) in {22: (3, 6), 23: (3, 6), 24: (4, 5), 25: (4, 5)}.items():   # nose cone
+        for y in range(y0, y1 + 1):
+            g[y][x] = nose[0]
+    g[4][25] = nose[1]
+    g[4][24] = nose[1]
+    for k, x in enumerate((10, 11, 12)):                     # swept fins, top and bottom
+        g[2][x] = fin
+        g[7][x] = fin
+        if k < 2:
+            g[1][x] = fin
+            g[8][x] = fin
+    return _outline(g, W, H, lambda n: ink)
+
+
+def _mortar_shell():
+    """The Mortar Walker's lobbed shell: a chrome bomb with a red band and an amber fuse light, 12 x 12."""
+    W, H = 12, 12
+    g = _blank(W, H)
+    for y in range(H):
+        for x in range(W):
+            d = ((x + 0.5 - 6.0) / 4.7) ** 2 + ((y + 0.5 - 6.4) / 4.7) ** 2
+            if d <= 1.0:
+                t = (x + 0.5 - 6.0) * 0.6 + (y + 0.5 - 6.4) * 0.8
+                g[y][x] = 'chrome_light' if t < -1.6 else ('chrome' if t < 0.8 else 'chrome_dark')
+    for x in range(W):                                       # warning-red band
+        for y in (6, 7):
+            if g[y][x]:
+                g[y][x] = 'signal_red' if y == 6 else 'signal_dark'
+    g[3][8], g[2][8], g[2][9] = 'signal_amber', 'signal_amber', 'signal_glow'   # the fuse light
+    g[3][5], g[3][4] = 'chrome_glint', 'chrome_glint'
+    return _outline(g, W, H, lambda n: 'ink_signal' if n.startswith('signal') else 'ink_chrome')
+
+
+SPRITES['empire_rail'] = [_rail()]
+SPRITES['empire_missile'] = [_missile(('chrome_dark', 'chrome', 'chrome_light'), ('signal_dark', 'signal_red'),
+                                      ('signal_amber', 'signal_glow'), 'signal_red',
+                                      ('signal_red', 'signal_amber', 'signal_glow'), 'ink_chrome')]
+SPRITES['mortar_shell'] = [_mortar_shell()]
+# The Deus Revenant's missile (the player's undead; iron grey, bone nose, soul-teal exhaust).
+SPRITES['deus_missile'] = [_missile(('grey_dark', 'grey', 'grey_light'), ('soul_dark', 'soul'),
+                                    ('bone', 'bone_mid'), 'grey_dark',
+                                    ('soul_dark', 'soul', 'soul_glow'), 'ink_cold')]
 
 
 def build(name):
