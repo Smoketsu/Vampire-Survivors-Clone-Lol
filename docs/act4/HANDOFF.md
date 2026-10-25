@@ -29,11 +29,22 @@ owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages wer
 
 ## What is left for Act IV, in order
 
-1. **The owner's art review:** round 1 (collection `act4_art_r1`): 154 OK, 41 Redo, the mixed lineup kept; the
-   redos are in. **Round 2 is published on the same page** (https://claude.ai/artifact/7BnCJnbvumT9an6eeB47Km, collection
-   `act4_art_r2`: 41 redone images next to their round 1 version, 4 changed with them; made by
-   `docs/act4/tools/make_act4_review_r2.py <marks dir> <out> 16ea7aa`). Read its marks when the owner says done; a round 3
-   passes the round 2 marks dir, the commit before the round 2 redos, and `3`.
+1. **The owner's art review** (one page, https://claude.ai/artifact/7BnCJnbvumT9an6eeB47Km; marks in db collections
+   `act4_art_r1`, `act4_art_r2`; GDD rows "Act IV art review, round 1" / "round 2"). Round 1: 154 OK / 41 Redo (mixed
+   lineup kept). Round 2: 25 OK / 16 Redo. **Round 3 was IN FLIGHT when this session hit its usage limit**: two agents
+   on LOCAL branches (not pushed, lost if the container is gone) `act4-r3-underworld` and `act4-r3-olympus`, worktrees
+   `/home/user/wt/act4-r3-*`, from `6cc2c91`. If those branches still exist with commits, check their contact sheets in
+   the scratchpad (`.../scratchpad/act4/r3-*/`), merge them (the ledger CSV conflicts: keep both sides), `--import`.
+   Otherwise redo the round 3 list (the GDD "round 2" row has it): **Hades** regenerated as a consistent set (still,
+   bident pose with TWO prongs, kneeling; robe and cloak in clearly different colours); the **Myrmidon Shade** and
+   **Legion of Tartarus** restarted from the round 1 originals (commit `16ea7aa`) with only a gentle speck cleanup
+   (the owner rejected the flat simplification); the **Ferrywoman**'s bust box widened 2 px left, her Deathlord skin's
+   3–4 px left; the **Amazon**'s hip box swaying SIDEWAYS instead of up and down (a new axis option in
+   `tools/walk_cycle.py`, other rigs unchanged); a **Bronze Titan** walk that reads (likely a new walk-friendly source
+   pose of the same titan with the legs apart, then the normal `legs` rig; the round 2 mirrored "stride" was rejected);
+   the **Gorgon**'s face ("so silly"). Opus agents for these (judgment-heavy art). Then publish round 3 on the same
+   page: `python3 docs/act4/tools/make_act4_review_r2.py <act4_art_r2 marks dir> <out.html> 6cc2c91 3` (read the r2
+   marks with ArtifactData `list` + `out_dir` first), Artifact publish with `url` = the page above (keeps capabilities).
 2. **The owner's playtest**, then the balance pass (open items in the GDD integration row: the naive Olympus opening,
    the Underworld is the easiest, siege towers rarely destroyed, strong Gigantomachy / Lethe's Flood / Myrmidons, the
    placeholder Soul Ash multipliers ×3.25 / ×3.5 / ×3.75).
