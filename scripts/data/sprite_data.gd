@@ -301,6 +301,17 @@ const HEIGHTS: Dictionary = {
 	"player/oathbreaker_hyper": 58.0,  # TUNING (not in GDD) skin art: his body, the gilded staff above
 	"player/oathbreaker_untouchable": 58.0,  # TUNING (not in GDD) skin art: his body, the ghost staff above
 	"player/oathbreaker_deathlord": 60.0,  # TUNING (not in GDD) skin art: his body, the spiked crown above
+	# --- Act IV: the Asphodel Underworld ---
+	"pantheon/cerberus": 92.0,  # TUNING (not in GDD) miniboss tier: a huge three-headed hound, wide rather than tall (the flame tips on top)
+	"bosses/hades": 116.0,  # TUNING (not in GDD) boss tier: a tall god, the blue flames of his crown and the bident above
+	"bosses/hades_bident": 108.0,  # TUNING (not in GDD) attack pose (BossPoseData 1): leaning into the sweep, lower
+	"bosses/hades_kneel": 84.0,  # TUNING (not in GDD) the ending: kneeling, offering his crown (HadesHazards' finale)
+	"player/ferrywoman": 56.0,  # TUNING (not in GDD) character tier: body ~48, the hood and the oar's lantern above
+	"player/ferrywoman_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, the gilded oar
+	"player/ferrywoman_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/ferrywoman_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/myrmidon_shade": 46.0,  # TUNING (not in GDD) a summon like the Warrior (44), the spear head above
+	"summons/legion_of_tartarus": 54.0,  # TUNING (not in GDD) its evolution, bigger
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

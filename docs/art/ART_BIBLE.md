@@ -2036,3 +2036,48 @@ review.**
 Code-drawn on purpose: the lightning storms' circles (the wrath's), the thunderbolt beam and its lanes, the
 trident in flight, the war-cry ring, the volley's aim fan, the gaze cone, the leap arc and landing circle, the
 moonlit groves, Stolen Thunder's charging orb and its arcs.
+### Act IV: the Asphodel Underworld (Stage 12; Act IV phase 2, Oct 2026)
+
+<!-- --- Act IV: the Asphodel Underworld --- -->
+The Act IV finale's art (GDD §15.0 "The Asphodel Underworld (Act IV phase 2)" and the rows after it), in the
+Republic's style above: grey ash, marble shades, cold Aegean light and dark bronze, with Hades' black. Prompts
+in `art_source/underworld/<id>.txt` (the unit template, the sex named), sources archived by `prepare_sprite.py`
+under `art_source/<key>.png`, the raw sheets in `art_source/underworld/`. Pipeline: `tools/gen_image.py`
+(`--ref` an approved sprite of the same tier: the Hero and the stage concept for Hades, the Hoplite for
+Cerberus, the Lightning Abbess for the Ferrywoman, the Warrior and the Hoplite for the Myrmidon; each pose and
+skin with its own approved base as the reference), then `prepare_sprite.py --ink-l 0.15` with explicit
+`--ramps` (Hades `grey,marble,aegean,bronze`; Cerberus `grey,flame,crimson,marble,bronze`). With `--no-levels`
+Hades' robe and Cerberus' fur went flat (every detail lost), with levels they came out mid-grey, so the levels
+version was kept and its grey shifted one step darker by script (`grey_light` -> `grey`, `grey` ->
+`grey_dark`; Cerberus only the light step). The Ferrywoman and her skins (figure-redesign style: hourglass
+figure, fully clothed, bust bounce, idle breathing) went through `pixelate_source.py` first, then
+`--ink-l 0.15 --no-cleanup`; the Deathlord skin's grey darkened one step the same way. Badges: two symbol
+sheets split by empty columns, each symbol through `prepare_sprite.py --art-height 24` and set on the frame
+of an approved badge (violet `abyssal_pact`, gold `tidecallers_host`; its inner 26 px cleared to the fill).
+Floors: two textures through `make_tile.py` recipes (`# --- Act IV: the Asphodel Underworld ---`). Obstacles:
+two prop sheets split by empty gaps, each prop converted at each size (circles: footprint + 4 wide; rects:
+length + 2 wide, the end-on `_v` stretched to length + 14 tall). 16 API images, about **$0.35** (ledger).
+art_check: every unit sprite passes height, alpha, palette and feet (the badges warn only that icons are not
+in `SpriteData.HEIGHTS`, like every badge). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `bosses/hades` | Hades (male): a tall gaunt god in a black robe and cloak, ashen face, cold blue flames over a dark bronze spiked crown, an upright bronze bident | 76x116 | robe walk (the bident rigid). The fork came out with three prongs: for review |
+| `bosses/hades_bident` | His attack pose (BossPoseData 1): leaning into a sweep of the bident | 116x108 | the bident sweep's windup and the phase changes |
+| `bosses/hades_kneel` | The ending: kneeling, head bowed, holding out his crown, the bident on the ground | 82x84 | drawn by `HadesHazards` for 14 s after his defeat |
+| `pantheon/cerberus` | Cerberus (male): a huge black hound with three heads in a fan, ember eyes, a mane of fire, spiked bronze collars, a flame tail | 94x92 | legs walk (hind / fore halves). The heads' hit bodies sit on its three heads (`head_offsets`); a dead head is a smoking stump drawn over it |
+| `player/ferrywoman` | The Ferrywoman (female, figure-redesign style): hooded violet cloak, fitted grey corset dress, silver hair, violet eyes, a gold obol, a tall oar with a violet soul lantern | 44x56 | robe walk (oar rigid) + bust (cols 19-29, rows 18-25), idle breathing |
+| `player/ferrywoman_hyper` / `_untouchable` / `_deathlord` | Golden Ferrywoman (gold trim and circlet), Untouchable (white phantom, soul-teal lantern), Deathlord (black iron, spiked crown, crimson lantern) | 40x56 / 40x56 / 42x58 | walk + idle through `SKINS` with their own oar and bust boxes (`SKIN_FIX`) |
+| `summons/myrmidon_shade` | Myrmidon Shade: a skeleton hoplite, grey crested helmet, skull face with soul-teal eyes, a round grey shield with a soul-teal boss, an upright spear | 26x46 | legs walk (spear and shield rigid) |
+| `summons/legion_of_tartarus` | Legion of Tartarus: bigger, darker, a glowing soul-teal spear head and a skull on the shield | 32x54 | legs walk |
+| `icons/river_styx`, `ferrymans_toll`, `myrmidon_shade`, `myrmidon_oath` | Violet badges: the black river with a violet current; an obol on its cord over an oar; the shield and the skull helmet; spear, shield and bone hand | 32 | |
+| `icons/lethes_flood`, `legion_of_tartarus`, `ach_empty_throne` | Gold badges: two crossing rivers; the skull shield with a gold rim; the empty black throne with the crown at its foot | 32 | |
+| `tiles/underworld_asphodel`, `_styx`, `_hall`, `_throne` | Grey ash; dark wet banks; cracked marble flags (32 px staggered); obsidian slabs (64 px) with dark bronze joints | 128 | `make_tile.py`; the asphodel flowers, the Styx and the floor details are code-drawn (`UnderworldGround`, `UnderworldGlyphs`) |
+| `obstacles/dead_poplar_{s,m,l}`, `styx_rock_{s,m,l}`, `judges_column_{s,m,l}`, `obsidian_spire_{s,l}`, `soul_brazier_{s,l}`, `ferry_post_{s,l}` | A dead grey tree; a black wet boulder; a broken marble column; an obsidian spike; a bronze brazier with a cold flame; a mooring post with a lantern | footprint + 4 wide | circles |
+| `obstacles/grave_stele_{s,m,l}` (+ `_v`), `judgement_bench_{s,m,l}` (+ `_v`) | A low marble grave slab with asphodels; the judges' marble bench with bronze trim | length + 2 wide; `_v` 26 / 28 wide | rects |
+
+Code-drawn on purpose: the River Styx (bands of black water, banks and drifting glints), the River Styx spell's
+rivers, Hades' footprints, the Helm's shimmer, his sigils over marked summons, the gods' shades (the god's own
+art tinted pale when it exists, else the shade glyph scaled up), the crown at the finale, Cerberus's fire breath
+glow and smoking stumps, the Myrmidon wall's ring. The Shade Hoplite and the Tartarus Warden wear the Hoplite's
+art tinted pale / dark (no art of their own).

@@ -125,6 +125,16 @@ const UNLOCKS := {
 	"stolen_thunder": {"type": "spell", "boss": "zeus", "text": "Slay Zeus on Mount Olympus to unlock."},  # Owner-approved Act IV proposal
 	"titans_blood": {"type": "passive", "boss": "zeus", "text": "Slay Zeus on Mount Olympus to unlock."},  # Stolen Thunder's paired passive, unlocked with it
 	"grounded_bones": {"type": "passive", "achievement": "twilight_of_the_gods", "text": "Earn Twilight of the Gods: clear the Pantheon Trial on Mount Olympus."},  # Owner-approved Act IV proposal
+	# --- Act IV: the Asphodel Underworld ---
+	# Hades' fall (owner-approved Act IV proposal "Rewards": River Styx is
+	# unlocked by Hades; the finale grants the Myrmidon Shades): the spell with its
+	# paired passive, and the summon class with its paired passive, offered on
+	# every stage (no card-row "act" key). The Empty Throne achievement opens the
+	# Act IV epilogue part (EpilogueData.ACT4_PART), not an unlock row.
+	"river_styx": {"type": "spell", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal
+	"ferrymans_toll": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # River Styx's paired passive, unlocked with it
+	"myrmidon_shade": {"type": "class", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal: the finale's reward
+	"myrmidon_oath": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Its paired passive (own decision), unlocked with it
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

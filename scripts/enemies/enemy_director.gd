@@ -181,6 +181,10 @@ var archive_haz: ArchiveHazards = null
 ## Citadel's guns, Sentry Turrets, Valkyrie 2.0, guest squads; StageRegistry
 ## "citadel"; null on every other stage).
 var citadel: CitadelDirector = null
+# --- Act IV: the Asphodel Underworld ---
+## The Asphodel Underworld's mechanics (Act IV: the River Styx, Cerberus, guest
+## squads; StageRegistry "underworld"; null on every other stage).
+var underworld: UnderworldDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -289,6 +293,12 @@ func _ready() -> void:
 		olympus.game = game
 		olympus.config = stage_def["olympus"]
 		add_child(olympus)
+	# --- Act IV: the Asphodel Underworld ---
+	if not (stage_def.get("underworld", {}) as Dictionary).is_empty():
+		underworld = UnderworldDirector.new()
+		underworld.game = game
+		underworld.config = stage_def["underworld"]
+		add_child(underworld)
 
 
 # =====================================================================================
@@ -389,6 +399,9 @@ func step(delta: float) -> void:
 	# --- Act IV: Mount Olympus ---
 	if olympus != null:
 		olympus.step(delta)
+	# --- Act IV: the Asphodel Underworld ---
+	if underworld != null:
+		underworld.step(delta)
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -473,6 +486,9 @@ func objective_text() -> String:
 	# --- Act IV: Mount Olympus ---
 	if olympus != null and olympus.objective_override() != "":
 		return olympus.objective_override()  # The Pantheon Trial's god in play.
+	# --- Act IV: the Asphodel Underworld ---
+	if underworld != null and underworld.objective_override() != "":
+		return underworld.objective_override()  # Cerberus's heads.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -617,6 +633,10 @@ func _run_event(ev: Dictionary) -> void:
 		"god":
 			if olympus != null:
 				olympus.start_event(ev)
+		# --- Act IV: the Asphodel Underworld ---
+		"cerberus":
+			if underworld != null:
+				underworld.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
 	show_banner(ev["banner"])

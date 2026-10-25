@@ -254,7 +254,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IV: the Shores of Ilion ---
 	"heel_found",
 	# --- Act IV: Mount Olympus ---
-	"twilight_of_the_gods"]
+	"twilight_of_the_gods",
+	# --- Act IV: the Asphodel Underworld ---
+	"empty_throne"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -358,6 +360,14 @@ const ACHIEVEMENTS := {
 	# unlocks the Grounded Bones counter-passive.
 	"twilight_of_the_gods": {"display_name": "Twilight of the Gods", "description": "Clear the Pantheon Trial on Mount Olympus",
 		"stat": "victories", "stage": "olympus", "goal": 1, "unlock": "The Grounded Bones passive", "bounty": 250},  # Owner-approved Act IV proposal; bounty TUNING (not in GDD) as Static in the Wastes
+	# --- Act IV: the Asphodel Underworld ---
+	# The finale of Act IV (owner-approved proposal: "Empty Throne (beat Hades;
+	# opens the Act IV epilogue)"): Hades beaten in the Asphodel Underworld,
+	# counted from the stage record. Its epilogue part is EpilogueData.ACT4_PART
+	# (the hook the lead appends to EpilogueData.PARTS at integration, with the
+	# closing card "The Sun Still Rises" after it).
+	"empty_throne": {"display_name": "Empty Throne", "description": "Make Hades kneel in the Asphodel Underworld",
+		"stat": "boss_kills", "stage": "underworld", "goal": 1, "unlock": "The Act IV epilogue", "bounty": 400},  # Owner-approved proposal; bounty TUNING (not in GDD) Act IV's last (Nothing Is Deathless 350)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

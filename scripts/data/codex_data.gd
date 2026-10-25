@@ -50,7 +50,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act III: the Assembly Halls --- (a silhouette naming the Motherboard until met)
 		"grave_drone",
 		# --- Act III: the Iron Citadel --- (a silhouette naming its unlock until met)
-		"iron_revenant"]
+		"iron_revenant",
+		# --- Act IV: the Asphodel Underworld --- (a silhouette naming its unlock until met)
+		"myrmidon_shade"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -128,13 +130,17 @@ const PANTHEON_SOLDIERS: Array[String] = ["shade_of_dead", "hoplite", "hero",
 	# --- Act IV: the Shores of Ilion ---
 	"legionary", "wolf_of_rome", "cyclops", "siege_tower",
 	# --- Act IV: Mount Olympus ---
-	"centaur_archer", "amazon", "gorgon", "moon_hound", "sea_serpent"]
+	"centaur_archer", "amazon", "gorgon", "moon_hound", "sea_serpent",
+	# --- Act IV: the Asphodel Underworld ---
+	"shade_hoplite"]
 ## Olympian Republic champions (minibosses) and the Act IV Reckoning kinds.
 const PANTHEON_CHAMPIONS: Array[String] = ["bronze_titan",
 	# --- Act IV: the Shores of Ilion ---
 	"polyphemus",
 	# --- Act IV: Mount Olympus --- (the Pantheon Trial's gods)
-	"ares", "artemis", "poseidon"]
+	"ares", "artemis", "poseidon",
+	# --- Act IV: the Asphodel Underworld ---
+	"cerberus", "tartarus_warden"]
 ## Olympian Republic stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const PANTHEON_BOSSES: Array[String] = ["achilles", "zeus", "hades"]
 
@@ -246,6 +252,10 @@ const DESCRIPTIONS: Dictionary = {
 	"ares": "The god of war: his war-cry drives every soldier on, his spear charge breaks on a blocker.",  # Owner-approved Act IV proposal
 	"artemis": "The Huntress: moonlit volleys, her hounds, and a step from grove to grove.",  # Owner-approved Act IV proposal
 	"poseidon": "The Lord of the Sea: he floods half the field, throws his trident, and calls a sea serpent.",  # Owner-approved Act IV proposal
+	# --- Act IV: the Asphodel Underworld ---
+	"shade_hoplite": "The dead of a thousand wars, still in their ranks. They lock shields like the living.",  # TUNING (not in GDD)
+	"cerberus": "The three-headed hound of the gates. His body cannot be wounded: kill each head on its own.",  # Owner-approved Act IV proposal
+	"tartarus_warden": "Hades' own ring of the dead. While it stands, its lord is all but untouchable.",  # Owner-approved Act IV proposal (Lord of the Dead)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -259,6 +269,9 @@ const SPRITE_KEYS: Dictionary = {
 	"netcaster": "eye/netcaster",
 	"deep_herald": "eye/deep_herald",
 	"harbourmaster": "eye/harbourmaster",
+	# --- Act IV: the Asphodel Underworld --- (the Underworld's dead wear the Hoplite's art)
+	"shade_hoplite": "pantheon/hoplite",
+	"tartarus_warden": "pantheon/hoplite",
 }
 
 ## Stat labels and record lines of the detail panel (format strings use
@@ -422,6 +435,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"heel_found": "ach_heel_found",  # TUNING (not in GDD)
 	# --- Act IV: Mount Olympus ---
 	"twilight_of_the_gods": "ach_twilight_of_the_gods",  # TUNING (not in GDD)
+	# --- Act IV: the Asphodel Underworld ---
+	"empty_throne": "ach_empty_throne",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -451,6 +466,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"heel_found": "bronze_breaker",
 	# --- Act IV: Mount Olympus ---
 	"twilight_of_the_gods": "grounded_bones",
+	# --- Act IV: the Asphodel Underworld ---
+	"empty_throne": "river_styx",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

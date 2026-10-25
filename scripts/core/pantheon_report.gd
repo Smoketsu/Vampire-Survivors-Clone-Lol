@@ -19,6 +19,8 @@
 ##   kinds, polyphemus, achilles).
 ## Phase 2 adds one line per stage system here (each stage in its own block;
 ## Mount Olympus: OlympusReport.stage_lines()).
+##   the Asphodel Underworld: UnderworldReport.stage_lines() (the director, its
+##                    events, its kinds, Hades).
 ## Read-only: it never changes the run.
 class_name PantheonReport
 extends RefCounted
@@ -56,6 +58,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	IlionReport.print_lines(game, st)  # Siege towers, the stage's kinds, Polyphemus, Achilles (each when it ran).
 	# --- Act IV: Mount Olympus ---
 	OlympusReport.stage_lines(game, st)  # The trial, its gods and kinds, the wrath's called strikes, Zeus.
+	# --- Act IV: the Asphodel Underworld ---
+	UnderworldReport.stage_lines(game, st)
 
 
 ## The "divine wrath" line (DivineWrath counters; the damage to summons and to

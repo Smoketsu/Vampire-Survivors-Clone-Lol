@@ -447,6 +447,32 @@ RECIPES = {
         "regions": {"stone": ["floor_marble", "floor_stone", "floor_slate"], "joint": ["floor_ochre"]},
         "cell_shift": True, "cell_l": 0.012, "bevel": 0.01,
     },
+    # --- Act IV: the Asphodel Underworld ---
+    # The four zone floors of THE ASPHODEL UNDERWORLD (UnderworldGround, tiles/underworld_<style>):
+    # one API texture of grey ash soil (the Asphodel Fields; darker and browner for the Styx's
+    # wet banks) and one of cracked dark marble (laid as the Judges' Hall's flagstones and as the
+    # throne room's big obsidian slabs with dark bronze joints). The asphodel flowers, the river
+    # and the floor details stay code-drawn (UnderworldGround / UnderworldGlyphs).
+    "underworld_asphodel": {
+        "source": "underworld_ash.png", "method": "quilt",  # The Asphodel Fields: grey ash.
+        "colors": ["floor_soil", "floor_slate", "floor_ash", "floor_stone"],
+    },
+    "underworld_styx": {
+        "source": "underworld_ash.png", "method": "quilt",  # The Styx Crossing: dark wet banks.
+        "colors": ["floor_soil", "floor_earth", "floor_slate"],
+    },
+    "underworld_hall": {
+        "source": "underworld_marble.png", "method": "layout",  # The Judges' Hall: cracked marble flags.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["floor_slate", "floor_marble"], "joint": ["ink_cold"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "underworld_throne": {
+        "source": "underworld_marble.png", "method": "layout",  # The Throne of Hades: big obsidian slabs, bronze joints.
+        "layout": {"type": "grid", "step": 64, "joint": 1},
+        "regions": {"stone": ["floor_soil", "floor_marble"], "joint": ["bronze_ink"]},
+        "cell_shift": True, "cell_l": 0.008, "bevel": 0.008,
+    },
 }
 
 

@@ -116,6 +116,13 @@
 ##   olympus            — OlympusDirector config (OlympusStage.OLYMPUS: the
 ##                        Pantheon Trial's gods, Artemis's groves); ground
 ##                        "olympus" is its OlympusGround (four zone floors).
+## --- Act IV: the Asphodel Underworld ---
+##   underworld         — UnderworldDirector config (UnderworldStage.UNDERWORLD,
+##                        Act IV, the Asphodel Underworld: the River Styx in the
+##                        zones whose ZONES row has "styx": true, Cerberus, guest
+##                        squads of the earlier Act IV kinds); ground
+##                        "underworld" is its UnderworldGround (four zone floors
+##                        and the Styx).
 class_name StageRegistry
 extends RefCounted
 

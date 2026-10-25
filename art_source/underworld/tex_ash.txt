@@ -1,0 +1,2 @@
+Seamless top-down GROUND TEXTURE for a dark 2D pixel-art game: the grey ash soil of the Underworld seen straight from above, fine grey dust with scattered small dark pebbles, a few shallow cracks and faint footprint-like dents, very flat even lighting, no objects, no flowers, no plants, no shadows of objects. Chunky pixel art at about 160 pixels across, crisp square pixels, flat colours, no gradients, no vignette, no text. Fully opaque, filling the whole image edge to edge.
+Colours: dark ash greys #161A1C #26272A #2A2724 #312E2B with a few slightly lighter flecks #3A3734.

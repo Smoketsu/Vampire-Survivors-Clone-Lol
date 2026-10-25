@@ -919,4 +919,69 @@ const PANTHEON_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "saw", "f0": 40.0, "f1": 90.0, "dur": 1.9, "amp": 0.3, "attack": 0.6, "decay": 0.8, "lp0": 400.0, "lp1": 1200.0},
 			{"wave": "noise", "dur": 1.9, "amp": 0.4, "attack": 0.5, "decay": 0.9, "lp0": 800.0, "lp1": 3000.0},
 			{"wave": "sine", "f0": 30.0, "f1": 22.0, "dur": 1.8, "amp": 0.6, "attack": 0.2, "decay": 0.8}]},
+	# --- Act IV: the Asphodel Underworld --- (Cerberus, Hades; played by id)
+	# Cerberus's fire breath: a roaring rush of flame, low and rough.
+	"fire_breath": {"dur": 1.3, "volume_db": -12.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 1.25, "amp": 0.5, "attack": 0.12, "decay": 0.5, "lp0": 2600.0, "lp1": 900.0},
+			{"wave": "saw", "f0": 82.0, "f1": 70.0, "dur": 1.2, "amp": 0.16, "attack": 0.1, "decay": 0.5, "lp0": 500.0}]},
+	# Cerberus's pounce: a heavy rush of air and claws scraping off.
+	"hound_pounce": {"dur": 0.5, "volume_db": -13.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.45, "amp": 0.4, "attack": 0.05, "decay": 0.18, "lp0": 3000.0, "lp1": 800.0},
+			{"wave": "sine", "f0": 140.0, "f1": 70.0, "dur": 0.3, "amp": 0.3, "decay": 0.12}]},
+	# Cerberus's bite landing: a snapping crunch with a thud under it.
+	"hound_bite": {"dur": 0.45, "volume_db": -11.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.08, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.7, "decay": 0.02, "lp0": 7000.0, "lp1": 2000.0},
+			{"wave": "sine", "f0": 90.0, "f1": 40.0, "dur": 0.4, "amp": 0.55, "decay": 0.15},
+			{"wave": "square", "f0": 210.0, "f1": 120.0, "start": 0.02, "dur": 0.12, "amp": 0.08, "decay": 0.04, "lp0": 1500.0}]},
+	# Cerberus's howl: three voices rising and falling a fifth apart, a long wolf howl.
+	"hound_howl": {"dur": 1.6, "volume_db": -12.0, "max_voices": 2, "min_interval": 600, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 260.0, "f1": 330.0, "dur": 1.5, "amp": 0.12, "attack": 0.25, "decay": 0.6, "lp0": 1400.0, "vib_hz": 5.5, "vib_depth": 0.02},
+			{"wave": "saw", "f0": 390.0, "f1": 495.0, "start": 0.08, "dur": 1.4, "amp": 0.09, "attack": 0.25, "decay": 0.6, "lp0": 1800.0, "vib_hz": 6.0, "vib_depth": 0.02},
+			{"wave": "sine", "f0": 195.0, "f1": 230.0, "start": 0.04, "dur": 1.45, "amp": 0.14, "attack": 0.3, "decay": 0.6}]},
+	# Hades rising (his arrival, a phase change, his ring): a deep choir-like drone swelling up.
+	"hades_rise": {"dur": 2.0, "volume_db": -10.0, "max_voices": 1, "min_interval": 900, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 55.0, "f1": 49.0, "dur": 1.9, "amp": 0.55, "attack": 0.5, "decay": 0.8},
+			{"wave": "saw", "f0": 110.0, "f1": 98.0, "dur": 1.8, "amp": 0.14, "attack": 0.6, "decay": 0.7, "lp0": 700.0, "vib_hz": 4.0, "vib_depth": 0.01},
+			{"wave": "sine", "f0": 165.0, "f1": 147.0, "start": 0.3, "dur": 1.5, "amp": 0.1, "attack": 0.5, "decay": 0.6},
+			{"wave": "noise", "dur": 1.6, "amp": 0.15, "attack": 0.4, "decay": 0.7, "lp0": 600.0, "lp1": 200.0}]},
+	# The Helm of Darkness on: a breath drawn inward, a fading hiss.
+	"helm_cloak": {"dur": 0.8, "volume_db": -14.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.75, "amp": 0.35, "attack": 0.4, "decay": 0.15, "lp0": 4000.0, "lp1": 9000.0},
+			{"wave": "sine", "f0": 220.0, "f1": 110.0, "dur": 0.7, "amp": 0.12, "attack": 0.3, "decay": 0.3}]},
+	# The Helm off: a cold shimmer snapping back into sight.
+	"helm_reveal": {"dur": 0.6, "volume_db": -14.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.15, "amp": 0.4, "decay": 0.05, "lp0": 9000.0, "lp1": 3000.0},
+			{"wave": "sine", "f0": 660.0, "f1": 880.0, "dur": 0.5, "amp": 0.12, "decay": 0.2},
+			{"wave": "sine", "f0": 990.0, "f1": 1320.0, "start": 0.05, "dur": 0.4, "amp": 0.07, "decay": 0.16}]},
+	# Hades marks (his sigils, a god's shade rising): a hollow bell struck under water.
+	"hades_mark": {"dur": 1.1, "volume_db": -13.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 311.0, "dur": 1.0, "amp": 0.22, "attack": 0.005, "decay": 0.45},
+			{"wave": "sine", "f0": 466.0, "dur": 0.9, "amp": 0.12, "attack": 0.005, "decay": 0.4, "vib_hz": 3.0, "vib_depth": 0.01},
+			{"wave": "sine", "f0": 155.5, "dur": 1.05, "amp": 0.16, "attack": 0.01, "decay": 0.5}]},
+	# The bident sweep: a heavy whoosh and a ringing bronze edge.
+	"bident_sweep": {"dur": 0.55, "volume_db": -12.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.35, "amp": 0.45, "attack": 0.08, "decay": 0.12, "lp0": 1800.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 740.0, "start": 0.12, "dur": 0.4, "amp": 0.1, "decay": 0.14}]},
+	# Artemis's shade's volley: a flight of thin whistling arrows.
+	"moon_volley": {"dur": 0.6, "volume_db": -14.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.25, "attack": 0.05, "decay": 0.2, "lp0": 9000.0, "lp1": 4000.0},
+			{"wave": "sine", "f0": 1800.0, "f1": 1300.0, "dur": 0.45, "amp": 0.06, "decay": 0.18},
+			{"wave": "sine", "f0": 2100.0, "f1": 1500.0, "start": 0.06, "dur": 0.4, "amp": 0.05, "decay": 0.16}]},
+	# Hades kneels: a long falling choir note over a soft bronze ring (the ending).
+	"hades_kneel": {"dur": 2.6, "volume_db": -9.0, "max_voices": 1, "min_interval": 3000, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 196.0, "f1": 130.8, "dur": 2.4, "amp": 0.3, "attack": 0.2, "decay": 1.0, "vib_hz": 4.5, "vib_depth": 0.01},
+			{"wave": "sine", "f0": 293.7, "f1": 196.0, "start": 0.1, "dur": 2.3, "amp": 0.18, "attack": 0.25, "decay": 1.0},
+			{"wave": "sine", "f0": 587.3, "start": 0.4, "dur": 1.8, "amp": 0.08, "attack": 0.01, "decay": 0.8},
+			{"wave": "sine", "f0": 49.0, "dur": 2.5, "amp": 0.4, "attack": 0.3, "decay": 1.0}]},
 }

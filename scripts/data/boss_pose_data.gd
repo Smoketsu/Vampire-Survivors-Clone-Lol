@@ -33,4 +33,6 @@ const POSES: Dictionary = {
 	"bosses/achilles": {3: "strike"},  # TUNING (not in GDD) the low spear lunge (BossAchilles: the lunge's windup, run and recovery; his rage form is its own still, bosses/achilles_rage)
 	# --- Act IV: Mount Olympus ---
 	"bosses/zeus": {1: "cast"},  # TUNING (not in GDD) the thunderbolt raised to call a storm or the beam (BossZeus; his true form is its own still, bosses/zeus_colossus)
+	# --- Act IV: the Asphodel Underworld ---
+	"bosses/hades": {1: "bident"},  # TUNING (not in GDD) the bident swept forward (BossHades: the sweep's windup and the phase changes)
 }

@@ -163,7 +163,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IV: the Shores of Ilion ---
 	"mortal_heel", "bronze_breaker",
 	# --- Act IV: Mount Olympus ---
-	"titans_blood", "grounded_bones"]
+	"titans_blood", "grounded_bones",
+	# --- Act IV: the Asphodel Underworld ---
+	"ferrymans_toll", "myrmidon_oath"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -183,7 +185,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act III: the Iron Citadel ---
 	"recoil_frame",
 	# --- Act IV: the Shores of Ilion ---
-	"bronze_breaker"]
+	"bronze_breaker",
+	# --- Act IV: the Asphodel Underworld ---
+	"myrmidon_oath"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -243,7 +247,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Content wave 2: Bone Golem --- (the slam's splash, GolemBehavior)
 	"golem_slam",
 	# --- Act III: the Iron Citadel --- (the Deus Revenant's missiles; the Rust Prophet's Risen scrap bolts)
-	"deus_revenant_missile", "scrap_bolt"]
+	"deus_revenant_missile", "scrap_bolt",
+	# --- Act IV: the Asphodel Underworld --- (the Myrmidon Shades' spear through a second foe)
+	"myrmidon_pierce"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -310,6 +316,10 @@ const BRINEWALKER_SUMMON_LEVEL: int = 3  # owner-approved
 ## Read by CombatResolver.damage_unit() (blocker_reduction) and
 ## HordeDirector.compute_stats() (hold_bonus).
 const MASONRY_CLASSES := ["warrior", "abomination", "bone_golem"]  # Owner-approved proposal 5
+# --- Act IV: the Asphodel Underworld ---
+## Myrmidon Oath: the front-line classes (the blockers on the Bone Ring's
+## outer posts) whose max HP and damage it raises (HordeDirector.compute_stats()).
+const OATH_CLASSES := ["warrior", "abomination", "bone_golem", "myrmidon_shade"]  # TUNING (not in GDD)
 # --- Act III: the Iron Citadel ---
 ## Recoil Frame: the attack profiles (UnitData "attack_profile", after a summon
 ## evolution's overlay) that count as RANGED summons: they fire faster and
@@ -1065,6 +1075,49 @@ const PASSIVES := {
 			{"wrath_reduction": 0.3},  # TUNING (not in GDD)
 			{"wrath_reduction": 0.4},  # TUNING (not in GDD)
 			{"wrath_reduction": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# Ferryman's Toll (GDD §15.0 "River Styx, Lethe's Flood, Ferryman's Toll and
+	# the Ferrywoman"; unlocked by defeating Hades, UnlockData): every foe slain
+	# while SLOWED (any slow: the Styx, Frost Wraiths, Soul Chains, Death Mark...)
+	# pays the ferryman: the necromancer heals toll_heal HP (at most
+	# RiverStyxData.TOLL_HEAL_CAP_PER_S a second) and the Dread Rally gains
+	# toll_rally soul points (CombatResolver._kill_enemy(), the one kill path).
+	# Pairs with River Styx -> Lethe's Flood.
+	"ferrymans_toll": {
+		"display_name": "Ferryman's Toll",
+		"icon": "ferrymans_toll",
+		"description": "Every slowed foe that dies pays the ferryman: you heal and your Dread Rally fills.",
+		"labels": {"toll_heal": ["Heal per slowed kill", "num"], "toll_rally": ["Rally charge per slowed kill", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"toll_heal": 0.2, "toll_rally": 0.2},  # TUNING (not in GDD)
+			{"toll_heal": 0.3, "toll_rally": 0.3},  # TUNING (not in GDD)
+			{"toll_heal": 0.4, "toll_rally": 0.4},  # TUNING (not in GDD)
+			{"toll_heal": 0.5, "toll_rally": 0.5},  # TUNING (not in GDD)
+			{"toll_heal": 0.6, "toll_rally": 0.6},  # TUNING (not in GDD)
+		],
+	},
+	# Myrmidon Oath (own decision: the Legion of Tartarus's paired passive, its
+	# name and rule; GDD §15.0 "Myrmidon Shades, Legion of Tartarus and Myrmidon
+	# Oath"; unlocked by defeating Hades): the front line swears to hold: the
+	# blockers on the Bone Ring's outer posts (OATH_CLASSES: Warriors,
+	# Abominations, the Bone Golem, the Myrmidon Shades and their evolutions)
+	# gain max HP and damage (HordeDirector.compute_stats()). Pairs with the
+	# Myrmidon Shades -> Legion of Tartarus.
+	"myrmidon_oath": {
+		"display_name": "Myrmidon Oath",
+		"icon": "myrmidon_oath",
+		"description": "Your front-line dead swear to hold: they are hardier and strike harder.",
+		"labels": {"front_hp": ["Front-line max HP", "pct"], "front_damage": ["Front-line damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"front_hp": 0.06, "front_damage": 0.04},  # TUNING (not in GDD)
+			{"front_hp": 0.12, "front_damage": 0.08},  # TUNING (not in GDD)
+			{"front_hp": 0.18, "front_damage": 0.12},  # TUNING (not in GDD)
+			{"front_hp": 0.24, "front_damage": 0.16},  # TUNING (not in GDD)
+			{"front_hp": 0.30, "front_damage": 0.20},  # TUNING (not in GDD)
 		],
 	},
 }

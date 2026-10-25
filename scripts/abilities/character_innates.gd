@@ -56,6 +56,9 @@
 ##   Oathbreaker      Kinslayer       StolenThunder._hit(): thunder_divine_bonus
 ##                    more Stolen Thunder damage on bosses, minibosses (the
 ##                    gods) and Heroes (kinslayer_hits).
+## Act IV, the Asphodel Underworld:
+##   Ferrywoman       Ferry of Souls  in RiverStyx.on_enemy_killed() (a foe slain
+##                    in her river rises as a temporary Risen); stat ferry_risen.
 class_name CharacterInnates
 extends Node2D
 
@@ -371,6 +374,9 @@ func summary_line() -> String:
 		# --- Act IV: Mount Olympus ---
 		"kinslayer":
 			counters = "kinslayer hits %d (thunder strikes %d)" % [int(st.get("kinslayer_hits", 0.0)), int(st.get("thunder_strikes", 0.0))]
+		# --- Act IV: the Asphodel Underworld --- (Ferry of Souls lives in RiverStyx.on_enemy_killed())
+		"ferry_of_souls":
+			counters = "ferried Risen %d (temporary summons %d)" % [int(st.get("ferry_risen", 0.0)), game.horde.temp_spawned]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

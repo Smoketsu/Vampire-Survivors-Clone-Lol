@@ -466,6 +466,14 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		if haste > 0.0:
 			out["attack_interval"] = float(out["attack_interval"]) / (1.0 + haste)
 			out["attack_range"] = float(out["attack_range"]) * (1.0 + ab.passive_value("recoil_frame", "ranged_reach"))
+	# --- Act IV: the Asphodel Underworld --- Myrmidon Oath: the front-line
+	# classes (PassiveData.OATH_CLASSES) gain max HP and damage, its own
+	# category. 0 when not owned, so every other run is unchanged.
+	if cls in PassiveData.OATH_CLASSES:
+		var oath_hp := ab.passive_value("myrmidon_oath", "front_hp")  # Max HP fraction.
+		if oath_hp > 0.0:
+			out["max_hp"] = float(out["max_hp"]) * (1.0 + oath_hp)
+			out["damage"] = float(out["damage"]) * (1.0 + ab.passive_value("myrmidon_oath", "front_damage"))
 	return out
 
 
