@@ -46,8 +46,9 @@ owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages wer
    published** (`act4_art_r6`), the last asset: the Amazon's skirt (high side flaps showing the thighs, a front panel with
    one flat hem over the crotch, a `swish` box in `walk_cycle.py`). Round 6: the owner sent the Amazon back to a fresh
    generation (GDD row "round 6"). **Round 7 is published** (`act4_art_r7`): the Amazon regenerated from her round 1
-   prompt, stronger, curvier and a bit scandalous (`art_source/pantheon/amazon_r7*`). Next: read `act4_art_r7`; if OK,
-   the art review is done (record it in GDD §15.0).
+   prompt, stronger, curvier and a bit scandalous (`art_source/pantheon/amazon_r7*`). Round 7: her still accepted. **Round 8 is published**
+   (`act4_art_r8`): only her walk and idle, with a chest bounce (`bust` box) and the hip sway on the `swish` box. Next:
+   read `act4_art_r8`; if OK, the art review is done (record it in GDD §15.0).
 2. **The owner's playtest**, then the balance pass (open items in the GDD integration row: the naive Olympus opening,
    the Underworld is the easiest, siege towers rarely destroyed, strong Gigantomachy / Lethe's Flood / Myrmidons, the
    placeholder Soul Ash multipliers ×3.25 / ×3.5 / ×3.75).
