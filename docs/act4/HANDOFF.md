@@ -29,13 +29,11 @@ owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages wer
 
 ## What is left for Act IV, in order
 
-1. **The owner's art review:** round 1 is published: https://claude.ai/artifact/7BnCJnbvumT9an6eeB47Km (db
-   collection `act4_art_r1`, 195 images plus the two concept lineups; made by `docs/act4/tools/make_act4_review.py`).
-   Read the marks with ArtifactData `list` when the owner says done; redo the Redo images, then publish round 2 new
-   next to old (adapt `docs/act3/tools/make_act3_review_r2.py`). Agents flagged: Hades' bident has three prongs (reads
-   as a trident), the Styx forget zones use the Covenant's gold suppression rings, the Stolen Thunder and Gigantomachy
-   badges are weak, a faint blue edge by Zeus's beard. Also still open: the soldiers' sex (the owner wanted to see the
-   all-female `_v1` lineups again; the mixed lineup was used).
+1. **The owner's art review:** round 1 (collection `act4_art_r1`): 154 OK, 41 Redo, the mixed lineup kept; the
+   redos are in. **Round 2 is published on the same page** (https://claude.ai/artifact/7BnCJnbvumT9an6eeB47Km, collection
+   `act4_art_r2`: 41 redone images next to their round 1 version, 4 changed with them; made by
+   `docs/act4/tools/make_act4_review_r2.py <marks dir> <out> 16ea7aa`). Read its marks when the owner says done; a round 3
+   passes the round 2 marks dir, the commit before the round 2 redos, and `3`.
 2. **The owner's playtest**, then the balance pass (open items in the GDD integration row: the naive Olympus opening,
    the Underworld is the easiest, siege towers rarely destroyed, strong Gigantomachy / Lethe's Flood / Myrmidons, the
    placeholder Soul Ash multipliers ×3.25 / ×3.5 / ×3.75).
