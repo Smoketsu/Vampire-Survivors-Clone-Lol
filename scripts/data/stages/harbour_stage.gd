@@ -69,7 +69,7 @@ const ENEMY_DAMAGE_MULT: float = 1.22  # TUNING (not in GDD) 1.15 left the naive
 ## starting Shadow Bolt's one-shot, the March's lesson).
 const ENEMY_MULT_FROM: float = 300.0  # TUNING (not in GDD)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.75  # TUNING (not in GDD) owner-approved proposal placeholder (Act I: x1.25, x1.5)
+const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## "The Deep Rises": the Harbour's Reckoning (same escalation as every stage;
 ## keys as GraveyardStage.RECKONING) with the stage's own main kind:

@@ -52,7 +52,7 @@ const ENEMY_DAMAGE_MULT: float = 1.2  # TUNING (not in GDD)
 ## enemies: Zone II (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) (Act II integration: 300.0; the naive bot died in 7 of 8 runs)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 2.0  # TUNING (not in GDD) owner-approved proposal placeholder (Act I: x1.25, x1.5)
+const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## The Unwritten: the Archive's Reckoning (keys as GraveyardStage.RECKONING
 ## plus SanctumStage.RECKONING's companions; "kind" the main wave's kind):
