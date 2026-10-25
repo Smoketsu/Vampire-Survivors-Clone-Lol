@@ -118,3 +118,10 @@ slot, −10% max HP), Mourner's Bell (elites drop a heart); some sold only after
 single-run boons, one per run, paid at run start; `offering_data.gd`. Panels `ossuary_relics_panel.gd` /
 `ossuary_offerings_panel.gd` (tab contract in AGENT_RULES.md); a compact pre-run "Rites" strip in the right column;
 co-op loadout; `--relics=` / `--offering=` flags; `--meta=max` equips a fixed set.
+
+**Update (Oct 25, 17:50 UTC):** `ossuary/options` (9,060: ten upgrades, Dominion, the tab bar), `ossuary/masteries` and
+`ossuary/recolours` are MERGED on `integration` (08ee6f8; conflicts in autotest / horde_director / coop_net loadout /
+ossuary_check resolved by keeping both sides). `--import` clean, `ossuary_check` PASS, seed 7 default clean (513 ash),
+`--meta=max --policy=army --mortal` victory 35 s past 0:00, build complete 13:26 (earlier than 16-18: the balance batch
+should judge it). Left: merge `ossuary/relics` when its agent reports (it was resumed after the usage limit), then the
+balance batch, CI, ship.
