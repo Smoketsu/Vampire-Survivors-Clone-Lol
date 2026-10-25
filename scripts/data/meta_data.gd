@@ -13,9 +13,20 @@
 ##   ash  = floor(raw * (1 + Ash Harvest bonus))
 ## A strong 20-minute run (~3,000 kills, ~15 elites, boss slain, ~30 s of
 ## Reckoning) earns roughly 150 + 90 + 60 + 75 + 75 = ~450 ash: two or three
-## mid-tier purchases. Every upgrade maxed costs 9,635 (Oath excluded; 8,965 before the
-## two Grave Step upgrades; max_total_cost() adds the Oath's 375), i.e. about 21 good
-## runs (very roughly 16-27 with weaker runs and Ash Harvest).
+## mid-tier purchases. Levels 1-5 of every upgrade (the Ossuary before the expansion)
+## cost 9,635 (Oath excluded; 8,965 before the two Grave Step upgrades), i.e. about 21
+## good runs (very roughly 16-27 with weaker runs and Ash Harvest).
+## Deep levels (Ossuary expansion step 2, GDD §15.0 "Ossuary deep levels"): the 13
+## upgrades with 3+ levels go up to level 10 (DEEP_UPGRADES). Each new level gives
+## half of the upgrade's per-level value (DEEP_VALUE_SHARE, one override) and costs
+## x1.35 the level before (DEEP_COST_GROWTH, from the upgrade's last old price,
+## rounded to 5; DEEP_COST_SCALE scales every new price). The 80 new levels cost
+## 60,105 in all (the six 3-level upgrades' seven new levels each are most of it:
+## 34,975; levels 6-10 alone, the gated ones, are 65 levels), so
+## everything maxed is 69,740 (Oath excluded; max_total_cost() adds its 375); 140
+## tiers in all, the Oath excluded (tools/ossuary_check.gd prints the table).
+## Levels 6-7 open after a clear on Lich or harder, 8-9 after a Deathlord clear and 10
+## after a Deathlord clear with Hyper (LEVEL_GATES; Meta.max_open_tier()).
 ##
 ## Four upgrade trees (GDD §9.2 table):
 ##   Necromancy  — minion cap, health and damage (+ replacement speed)
@@ -46,7 +57,9 @@ extends RefCounted
 
 ## Version written to user://save.cfg ([meta] save_version). Bump it and add
 ## a step to Meta._migrate() whenever the save layout changes.
-const SAVE_VERSION: int = 1
+## Version 2 (Ossuary deep levels): the [clears] section (hardest difficulty cleared,
+## with and without Hyper); tiers above 5 became valid. Nothing moves or is refunded.
+const SAVE_VERSION: int = 2
 
 # --- Soul Ash earn formula (header) -----------------------------------------------
 
@@ -152,8 +165,10 @@ const RETIRED_REFUNDS := {"spearhead_doctrine": 200}  # TUNING (not in GDD) = it
 ##   icon         — MetaGlyphs kind.
 ##   description  — Ossuary flavour + effect text.
 ##   stat         — STATS key raised by this upgrade.
-##   per_tier     — stat added per purchased tier (tier N gives N * per_tier).
-##   costs        — Soul Ash price of each tier (size = number of tiers).
+##   per_tier     — stat added per purchased tier up to the last listed one
+##                  (each deep level after it adds deep_per_tier(); value_at()).
+##   costs        — Soul Ash price of each listed tier (levels 1-5 at most; the
+##                  later levels of DEEP_UPGRADES are priced by deep_cost()).
 ##   requires     — {"id": upgrade, "tier": N} needed before tier 1 ({} = none).
 const UPGRADES := {
 	# Oath (standalone, user request): opt-in difficulty, cheap on purpose
@@ -232,6 +247,48 @@ const UPGRADES := {
 		"description": "Cast one more offer into the void: +1 level-up banish per run.",
 		"stat": "banishes", "per_tier": 1.0, "costs": [150, 310], "requires": {"id": "fates_thread", "tier": 1}},  # TUNING (not in GDD)
 }
+
+# --- Deep levels (Ossuary expansion step 2, owner decisions Oct 2026) ------------------
+
+## Highest level of an upgrade with deep levels (owner: "levels 6-10").
+const DEEP_MAX_TIER: int = 10  # GDD §15.0 "Ossuary expansion: owner decisions"
+## Upgrades that get deep levels: every upgrade with 3+ levels before the expansion
+## (the one- and two-level unlock-style ones and the Profane Oath keep their tiers).
+## One with fewer than 5 listed levels gets its missing levels up to 5 as well: new
+## levels under the same value and price rule, but open from the start (no gate).
+const DEEP_UPGRADES := [
+	"necrotic_marrow", "sharpened_bones", "grave_call",
+	"umbral_potency", "quickened_rites", "widening_dark", "restless_shade",
+	"grave_flesh", "bone_mail", "fleet_shade",
+	"soul_magnet", "grave_tithe", "ash_harvest",
+]  # GDD §15.0 "Ossuary deep levels"
+## Share (0..1) of an upgrade's listed per_tier that each new level adds (owner brief:
+## "about half of today's per-level value").
+const DEEP_VALUE_SHARE: float = 0.5  # TUNING (not in GDD)
+## Upgrade id -> stat added per new level, replacing per_tier * DEEP_VALUE_SHARE:
+##   restless_shade 0.03 (Grave Step cooldown share per level): half (0.05) over seven
+##   new levels would take the dash from 3.5 s to 1.75 s; at 0.03 level 10 is -51%,
+##   2.45 s, so the i-frame dash stays a choice rather than a stream.
+const DEEP_PER_TIER_OVERRIDES := {"restless_shade": 0.03}  # TUNING (not in GDD)
+## Price growth per new level: level N costs DEEP_COST_GROWTH x level N-1 (the first
+## new level grows from the last listed price).
+const DEEP_COST_GROWTH: float = 1.35  # TUNING (not in GDD) owner brief "about x1.35"
+## One scale over every new level's price (1.0 = the rule as is; the economy step's
+## knob). Keep it at 0.75 or above, or a level 6 would cost less than its level 5.
+const DEEP_COST_SCALE: float = 1.0  # TUNING (not in GDD)
+## New-level prices are rounded to the nearest multiple of this (Soul Ash).
+const DEEP_COST_ROUND: int = 5  # TUNING (not in GDD)
+## Highest level a save may buy without any difficulty clear.
+const UNGATED_MAX_TIER: int = 5  # GDD §15.0 "Ossuary expansion: owner decisions"
+## Difficulty gates, lowest first. A row opens levels `from`..`to` once a run reached
+## 0:00 (a victory) on ANY stage on `difficulty` or a harder DifficultyData level, with
+## Hyper on when `hyper` is true (Meta.gate_met(), Meta.max_open_tier()). `short` is
+## the word a tile shows while its next level waits on this gate.
+const LEVEL_GATES := [
+	{"from": 6, "to": 7, "difficulty": "lich", "hyper": false, "short": "Lich"},
+	{"from": 8, "to": 9, "difficulty": "deathlord", "hyper": false, "short": "Deathlord"},
+	{"from": 10, "to": 10, "difficulty": "deathlord", "hyper": true, "short": "Hyper"},
+]  # GDD §15.0 "Ossuary expansion: owner decisions" (decision 2)
 
 # --- Achievements (GDD §9.4) ---------------------------------------------------------
 
@@ -364,24 +421,77 @@ const DREAD_SOVEREIGN_CLASSES: Array = UnitData.CORE_CLASSES
 # --- Autotest profiles --------------------------------------------------------------
 
 ## Autotest --meta profiles: "none" (no upgrades, the default so balance runs
-## stay comparable), "mid" (about half of every tree, ~8 good runs) and "max"
-## (everything bought). Applied in memory only; user:// is never touched.
+## stay comparable), "mid" (about half of every tree's levels 1-5, ~8 good runs;
+## unchanged by the deep levels) and "max" (everything bought, levels 6-10 included). Applied in memory only; user:// is never touched.
 ## No profile includes the Profane Oath (a difficulty choice, not power), so
 ## balance comparisons stay clean; the autotest sets it with --oath=N.
 const AUTOTEST_PROFILES := ["none", "mid", "max"]
 
 
-## Number of tiers of upgrade `id`.
+## Number of tiers of upgrade `id` (DEEP_MAX_TIER for a DEEP_UPGRADES one).
 static func max_tier(id: String) -> int:
+	if DEEP_UPGRADES.has(id):
+		return DEEP_MAX_TIER
+	return listed_tiers(id)
+
+
+## Number of tiers listed in upgrade `id`'s `costs` (its levels before the expansion).
+static func listed_tiers(id: String) -> int:
 	return (UPGRADES[id]["costs"] as Array).size()
 
 
-## Soul Ash price of tier `tier` (1-based) of upgrade `id` (-1 if none).
+## Soul Ash price of tier `tier` (1-based) of upgrade `id` (-1 if none): the listed
+## price, or deep_cost() for a new level.
 static func tier_cost(id: String, tier: int) -> int:
-	var costs: Array = UPGRADES[id]["costs"]
-	if tier < 1 or tier > costs.size():
+	if tier < 1 or tier > max_tier(id):
 		return -1
-	return int(costs[tier - 1])
+	var costs: Array = UPGRADES[id]["costs"]
+	if tier <= costs.size():
+		return int(costs[tier - 1])
+	return deep_cost(id, tier)
+
+
+## Price of new level `tier` of upgrade `id`: its last listed price x
+## DEEP_COST_GROWTH per level after it, x DEEP_COST_SCALE, rounded to DEEP_COST_ROUND.
+static func deep_cost(id: String, tier: int) -> int:
+	var costs: Array = UPGRADES[id]["costs"]
+	var steps := tier - costs.size()  # New levels after the last listed one (1..).
+	var raw := float(costs[costs.size() - 1]) * pow(DEEP_COST_GROWTH, float(steps)) * DEEP_COST_SCALE  # Unrounded price.
+	return int(roundf(raw / float(DEEP_COST_ROUND))) * DEEP_COST_ROUND
+
+
+## Stat added by each new (deep) level of upgrade `id`.
+static func deep_per_tier(id: String) -> float:
+	if DEEP_PER_TIER_OVERRIDES.has(id):
+		return float(DEEP_PER_TIER_OVERRIDES[id])
+	return float(UPGRADES[id]["per_tier"]) * DEEP_VALUE_SHARE
+
+
+## Summed stat of upgrade `id` at tier `tier` (clamped to 0..max_tier): per_tier for
+## each listed level, deep_per_tier() for each new one. The one value rule:
+## MetaModifiers and the Ossuary's current / next values both read it.
+static func value_at(id: String, tier: int) -> float:
+	var t := clampi(tier, 0, max_tier(id))  # Valid tier.
+	var listed := mini(t, listed_tiers(id))  # Listed levels in it.
+	return float(UPGRADES[id]["per_tier"]) * float(listed) + deep_per_tier(id) * float(t - listed)
+
+
+## Number of tiers of every upgrade together (the Oath excluded, like the
+## autotest profiles): the autotest's Ossuary line.
+static func total_tiers() -> int:
+	var n := 0  # Tiers so far.
+	for id: String in UPGRADE_ORDER:
+		if id != PactData.OATH_ID:
+			n += max_tier(id)
+	return n
+
+
+## The LEVEL_GATES row that tier `tier` waits on ({} = open from the start).
+static func gate_of(tier: int) -> Dictionary:
+	for g: Dictionary in LEVEL_GATES:
+		if tier >= int(g["from"]) and tier <= int(g["to"]):
+			return g
+	return {}
 
 
 ## Total Soul Ash spent to own tiers 1..`tier` of upgrade `id`.
@@ -409,9 +519,11 @@ static func upgrades_in(tree_id: String) -> Array[String]:
 	return out
 
 
-## Upgrade id -> tier for an autotest profile (see AUTOTEST_PROFILES). "mid"
-## takes half of every upgrade (rounded up) and drops tiers whose
-## prerequisite the profile does not meet.
+## Upgrade id -> tier for an autotest profile (see AUTOTEST_PROFILES). "max"
+## is every tier, the deep levels included (a profile ignores the difficulty
+## gates); "mid" takes half of every upgrade's LISTED tiers (rounded up: the
+## same tiers as before the deep levels) and drops tiers whose prerequisite the
+## profile does not meet.
 static func autotest_tiers(profile: String) -> Dictionary:
 	var out := {}
 	if profile == "max":
@@ -419,7 +531,7 @@ static func autotest_tiers(profile: String) -> Dictionary:
 			out[id] = max_tier(id)
 	elif profile == "mid":
 		for id: String in UPGRADE_ORDER:
-			out[id] = ceili(float(max_tier(id)) / 2.0)
+			out[id] = ceili(float(listed_tiers(id)) / 2.0)
 		for id: String in UPGRADE_ORDER:
 			var req: Dictionary = UPGRADES[id]["requires"]
 			if not req.is_empty() and int(out.get(String(req["id"]), 0)) < int(req["tier"]):

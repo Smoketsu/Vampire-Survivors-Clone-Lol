@@ -105,6 +105,14 @@
 ## Epilogue (content wave 2): the parts of the illustrated epilogue already
 ## shown are kept in `epilogue_seen`, saved as [epilogue] seen_<part id> = true
 ## (older saves: none seen, so an earned part plays once after the next run).
+## Ossuary deep levels (expansion step 2, GDD §15.0 "Ossuary deep levels"):
+## the hardest difficulty of any victory, with and without Hyper, is kept in
+## `best_clear` / `best_hyper_clear` ([clears] best / best_hyper = a
+## DifficultyData id); max_open_tier() turns them into the highest level the
+## Ossuary sells (MetaData.LEVEL_GATES) and purchase_block() answers "gated"
+## above it. award_run() reports a newly opened level as "opened_tier". A save
+## from before version 2 gets a Deathlord clear from its Deathlord's Due
+## records (_load_clears()); its owned tiers are kept and nothing is refunded.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -186,6 +194,14 @@ var _codex_save_queued: bool = false
 ## (the [epilogue] seen_<id> save keys): the epilogue plays an open, unseen
 ## part once on its own after a run (EpilogueScreen.play_unseen()).
 var epilogue_seen: Dictionary = {}
+# --- Ossuary deep levels (expansion step 2) ---
+## Hardest difficulty cleared: the DifficultyData.ORDER index (0 Initiate .. 3
+## Deathlord) of the hardest difficulty any victory (a run that reached 0:00, any
+## stage, Hyper or not) was on; -1 = no victory yet. Saved as [clears] best (the
+## difficulty id, "" = none). Opens the Ossuary's deep levels (max_open_tier()).
+var best_clear: int = -1
+## The same for victories with Hyper on ([clears] best_hyper; -1 = none).
+var best_hyper_clear: int = -1
 
 ## Keys of every stage record (all floats, like the lifetime stats).
 const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills",
@@ -353,6 +369,9 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	if slew_unlock_boss:
 		hyper_unlocked = true
 	award["hyper_clear"] = _record_hyper_clear(summary)
+	var open_before := max_open_tier()  # Ossuary deep levels open before this run.
+	_record_clear(summary)
+	award["opened_tier"] = max_open_tier() if max_open_tier() > open_before else 0  # Highest level this run opened (0 = none).
 	_add_lifetime("ash_earned", float(award["total"]))
 	lifetime["best_time"] = maxf(float(lifetime["best_time"]), float(summary.get("time", 0.0)))
 	lifetime["best_reckoning"] = maxf(float(lifetime["best_reckoning"]), float(summary.get("time_past_zero", 0.0)))
@@ -842,6 +861,61 @@ func tier(id: String) -> int:
 	return int(tiers.get(id, 0))
 
 
+## Records the difficulty of a victory in `summary` (any stage) in best_clear,
+## and in best_hyper_clear when Hyper was on. A defeat records nothing.
+func _record_clear(summary: Dictionary) -> void:
+	if not bool(summary.get("victory", false)):
+		return
+	var idx := DifficultyData.ORDER.find(String(summary.get("difficulty_id", DifficultyData.DEFAULT_ID)))  # Its difficulty (-1 unknown).
+	best_clear = maxi(best_clear, idx)
+	if bool(summary.get("hyper", false)):
+		best_hyper_clear = maxi(best_hyper_clear, idx)
+
+
+## True when the save holds the clear that difficulty gate `g` (a
+## MetaData.LEVEL_GATES row) asks for: a victory on its difficulty or a harder
+## one, with Hyper when the row says so.
+func gate_met(g: Dictionary) -> bool:
+	var need := DifficultyData.ORDER.find(String(g["difficulty"]))  # Required difficulty index.
+	return (best_hyper_clear if bool(g["hyper"]) else best_clear) >= need
+
+
+## The ONE accessor for which Ossuary levels are open: the highest level any
+## upgrade may be bought to (MetaData.UNGATED_MAX_TIER, raised by each
+## LEVEL_GATES row in turn while its clear is held). The Ossuary screen and
+## purchase_block() read it; the run modifiers never do (owned levels always apply).
+func max_open_tier() -> int:
+	var top := MetaData.UNGATED_MAX_TIER  # Open so far.
+	for g: Dictionary in MetaData.LEVEL_GATES:
+		if not gate_met(g):
+			break
+		top = maxi(top, int(g["to"]))
+	return top
+
+
+## Reads [clears] (missing section or keys, wrong types, unknown ids = none) and
+## fills it from older records where they suffice: a Deathlord victory (the
+## Deathlord's Due achievement or its lifetime counter, content wave 2) counts as
+## a Deathlord clear. Older records hold no Lich clear and no difficulty for a
+## Hyper clear, so those start empty. Lifetime stats and achievements are read first.
+func _load_clears(cfg: ConfigFile) -> void:
+	best_clear = _read_difficulty(cfg, "best")
+	best_hyper_clear = _read_difficulty(cfg, "best_hyper")
+	if achievements.has("deathlords_due") or float(lifetime.get("deathlord_victories", 0.0)) > 0.0:
+		best_clear = maxi(best_clear, DifficultyData.ORDER.find(MetaData.DEATHLORD_DIFFICULTY_ID))
+
+
+## DifficultyData.ORDER index of the difficulty id at [clears] `key` (-1 = none).
+static func _read_difficulty(cfg: ConfigFile, key: String) -> int:
+	var v: Variant = cfg.get_value("clears", key, "")
+	return DifficultyData.ORDER.find(String(v)) if typeof(v) == TYPE_STRING else -1
+
+
+## Difficulty id of DifficultyData.ORDER index `idx` ("" for -1 / out of range).
+static func _difficulty_key(idx: int) -> String:
+	return String(DifficultyData.ORDER[idx]) if idx >= 0 and idx < DifficultyData.ORDER.size() else ""
+
+
 ## True when upgrade `id` has every tier.
 func is_maxed(id: String) -> bool:
 	return tier(id) >= MetaData.max_tier(id)
@@ -859,12 +933,15 @@ func next_cost(id: String) -> int:
 
 
 ## Why `id` cannot be bought right now: "" (it can), "maxed", "locked"
-## (prerequisite missing) or "cost" (not enough Soul Ash).
+## (prerequisite missing), "gated" (its next level waits on a difficulty clear,
+## max_open_tier()) or "cost" (not enough Soul Ash).
 func purchase_block(id: String) -> String:
 	if is_maxed(id):
 		return "maxed"
 	if not prerequisite_met(id):
 		return "locked"
+	if tier(id) + 1 > max_open_tier():
+		return "gated"
 	if soul_ash < next_cost(id):
 		return "cost"
 	return ""
@@ -957,6 +1034,8 @@ func save() -> Error:
 	cfg.set_value("prerun", "title", prerun_title)  # Content wave 2: the worn title ("" = none).
 	for id: String in epilogue_seen:  # Content wave 2: E. Illustrated epilogue.
 		cfg.set_value("epilogue", "seen_" + id, true)
+	cfg.set_value("clears", "best", _difficulty_key(best_clear))  # Ossuary deep levels: hardest difficulty cleared.
+	cfg.set_value("clears", "best_hyper", _difficulty_key(best_hyper_clear))
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -1012,6 +1091,7 @@ func load_save() -> void:
 	_load_unlocks(cfg)
 	_load_title(cfg)
 	_load_epilogue(cfg)
+	_load_clears(cfg)
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -1174,9 +1254,19 @@ func _load_hyper_skins(cfg: ConfigFile) -> void:
 ## Version 0 is a file without a save_version key; it has the version-1
 ## layout, so nothing moves. Future layout changes add one step per version
 ## here (rename / convert keys), so old saves keep loading.
+## 1 -> 2 (Ossuary deep levels): every owned tier is kept as it is (all were
+## 1-5, still valid) and nothing is refunded; the new [clears] section is
+## written empty here and filled from the older Deathlord records by
+## _load_clears() (the only clear an older save can prove).
 func _migrate(cfg: ConfigFile, from_version: int) -> void:
 	if from_version < 1:
 		cfg.set_value("meta", "save_version", 1)
+	if from_version < 2:
+		if not cfg.has_section_key("clears", "best"):
+			cfg.set_value("clears", "best", "")
+		if not cfg.has_section_key("clears", "best_hyper"):
+			cfg.set_value("clears", "best_hyper", "")
+		cfg.set_value("meta", "save_version", 2)
 
 
 ## Refunds tiers whose prerequisite is not met (a hand-edited save or a
@@ -1219,6 +1309,8 @@ func _reset() -> void:
 	unlocked_items = {}
 	prerun_title = ""
 	epilogue_seen = {}
+	best_clear = -1
+	best_hyper_clear = -1
 	load_status = "fresh"
 
 
