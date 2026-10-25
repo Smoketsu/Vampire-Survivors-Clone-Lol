@@ -83,7 +83,7 @@ const ENEMY_DAMAGE_MULT: float = 1.1  # TUNING (not in GDD) (March 1.05)
 ## and the Radiant Inquisitors already arrive together.
 const ENEMY_MULT_FROM: float = 510.0  # TUNING (not in GDD) Zone III (was 240, Zone II, before the Stage 3 kinds merged)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner-approved x1.5 (March x1.25)
+const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## Dawn's Wrath: the Sanctum's Reckoning (same escalation as the Graveyard;
 ## keys as GraveyardStage.RECKONING) plus:

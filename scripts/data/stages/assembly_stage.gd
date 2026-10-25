@@ -68,7 +68,7 @@ const ENEMY_DAMAGE_MULT: float = 1.1  # TUNING (not in GDD) (Act III balance: 1.
 ## enemies (the boss always gets them): Zone II.
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as the Archive and Ul-Thalos (7:00)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 2.75  # TUNING (not in GDD) placeholder (the Scrap Wastes x2.5)
+const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): the Purge
 ## Protocol, shared by every Act III stage: kill-drones pour in from every edge
