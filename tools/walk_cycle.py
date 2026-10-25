@@ -271,6 +271,7 @@ RIGS = {
     "empire/line_trooper": dict(mode="legs", hip=27, back=(0, 23), front=(23, 48), rigid=[], spread=2, lift=2, dip=1),
     "empire/spotter": dict(mode="legs", hip=41, back=(0, 28), front=(28, 62), rigid=[], spread=2, lift=2, dip=1),
     "empire/scout_drone": dict(mode="hover", bob=2, parts=[]),
+    "empire/kill_drone": dict(mode="hover", bob=2, parts=[]),  # Act III missing sprites: the Purge Protocol's drone bobs like the Scout Drone
     "summons/grave_gunner": dict(mode="legs", hip=27, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
     # --- Act III: the Assembly Halls ---
     # The Arc Engineer and the Juggernaut march on their legs (the emitter / flamethrower ride

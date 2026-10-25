@@ -185,6 +185,7 @@ const HEIGHTS: Dictionary = {
 	"summons/drowned_thrall_ally": 44.0,  # TUNING (not in GDD) Call of the Drowned's Thrall (soldier tier)
 	# --- Act III: the Electronic Empire (the shared kinds; assets/sprites/empire/) ---
 	"empire/scout_drone": 32.0,  # TUNING (not in GDD) fodder: a small flying drone, about 40 px wide with its rotors; art review round 1: 30 + two empty rows on top for the hover bob (walk_cycle.py "hover")
+	"empire/kill_drone": 32.0,  # TUNING (not in GDD) the Purge Protocol's armoured drone, 70 px wide with its rotors; like the Scout Drone: 30 + two empty rows on top for the hover bob (Act III missing sprites)
 	"empire/line_trooper": 50.0,  # TUNING (not in GDD) soldier tier: body ~46, the helmet dome on top
 	"empire/spotter": 56.0,  # TUNING (not in GDD) elite tier: a tall coated marksman, the antenna above
 	"summons/grave_gunner": 50.0,  # TUNING (not in GDD) a raised Line Trooper (Steel has no soul), drawn from its sprite
@@ -353,6 +354,14 @@ const FLAT_SIZES: Dictionary = {
 	"markers/chest_badge": 21.0,  # TUNING (not in GDD) off-screen chest badge, 21 x 21 (edge arrows)
 	# --- Gullhaven Harbour (harbour placeholder art pass; MarkerArtData "Gullhaven Harbour") ---
 	"structures/harbour_pier": 152.0,  # TUNING (not in GDD) a smugglers' dry pier, 152 x 40, along +x (pier_length 150 x pier_width 40)
+	# --- Act III missing sprites (hand-built on the grid, tools/act3_projectiles.py) ---
+	"projectiles/soul_round": 12.0,  # TUNING (not in GDD) a Grave Gunner's rifle round, 12 x 5, soul-teal fire
+	"projectiles/scrap_bolt": 14.0,  # TUNING (not in GDD) a scrap drone's bolt, 14 x 6, a bone shard wrapped in violet
+	"projectiles/iron_shell": 18.0,  # TUNING (not in GDD) an Iron Revenant's cannon shell, 18 x 8, with a soul-teal trail
+	"projectiles/trojan_rocket": 24.0,  # TUNING (not in GDD) the Trojan Horse's Swarm Rocket, 24 x 12 (its hit circle is 6 px)
+	"projectiles/trojan_rocket_flame": 36.0,  # TUNING (not in GDD) its exhaust, a 3-frame strip of 12 x 8 (drawn by SpriteBank.draw_flat_frame)
+	"projectiles/scrap_drone": 44.0,  # TUNING (not in GDD) a Scrap Swarm drone, a 2-frame rotor strip of 22 x 14
+	"projectiles/scrap_drone_bright": 44.0,  # TUNING (not in GDD) a Deathless Swarm kill drone (violet rotors), the same strip
 	"projectiles/harbour_anchor": 28.0,  # TUNING (not in GDD) the Harbourmaster's anchor raised or hurled, 24 x 28
 	"projectiles/anchor_chain_link": 7.0,  # TUNING (not in GDD) one link of the anchor chain, 7 x 5, along +x
 	"overlays/harbour_net": 33.0,  # TUNING (not in GDD) the Netcaster's net, 33 x 33, scaled to the pinned body

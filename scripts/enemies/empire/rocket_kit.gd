@@ -23,6 +23,8 @@
 class_name RocketKit
 extends CovenantKit
 
+## Distance (px) from the rocket's centre back to the centre of its 12 px exhaust flame art (the sprite's nozzle is 9 px behind its centre; the flame tucks 2 px under it).
+const FLAME_BACK: float = 13.0  # TUNING (not in GDD) px
 ## Unit heading of the rocket.
 var heading: Vector2 = Vector2.RIGHT
 ## Seconds since launch.
@@ -126,8 +128,12 @@ func draw_body(e: Enemy, ci: CanvasItem) -> void:
 	var a := heading.angle()  # Heading (rad).
 	var back := -heading * (e.radius + 2.0)  # The exhaust (px).
 	var f := 0.7 + 0.3 * float(int(age * 20.0) % 2)  # Flame flicker.
-	ci.draw_circle(back, 3.5 * f, Color(Palette.EMPIRE_SIGNAL_AMBER, 0.6))
-	ci.draw_circle(back, 1.8 * f, Palette.EMPIRE_SIGNAL_GLOW)
+	# The exhaust: the 3-frame flame strip behind the nozzle (Act III missing sprites; its
+	# right edge on the nozzle, so its centre FLAME_BACK px behind the body centre), else
+	# the flickering code circles.
+	if not SpriteBank.draw_flat_frame(ci, "projectiles/trojan_rocket_flame", 3, int(age * 20.0), -heading * FLAME_BACK, a):
+		ci.draw_circle(back, 3.5 * f, Color(Palette.EMPIRE_SIGNAL_AMBER, 0.6))
+		ci.draw_circle(back, 1.8 * f, Palette.EMPIRE_SIGNAL_GLOW)
 	if not SpriteBank.draw_flat(ci, "projectiles/trojan_rocket", Vector2.ZERO, a):
 		WastesGlyphs.draw_rocket(ci, Vector2.ZERO, heading, e.radius, e.flash > 0.0)
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
