@@ -404,8 +404,11 @@ RIGS = {
     # ink row, so the whole skirt rides with the body and never tears), legs split at col 33 (the gap
     # between the thighs), the shield's foot rigid; the hip box sways sideways on the skirt over her hips
     # (cols 22-42, rows 36-42, as the owner liked) and the `swish` box carries the hem one frame behind.
+    # Round 7 (owner: "at this level, we should get a bounce box on her chest as well"): the `bust` box
+    # bounces the bronze top (cols 28-41, rows 23-31, two lobes) and the hips' sideways sway the owner
+    # liked moved to the `swish` box over the skirt (cols 22-42, rows 36-45, 2 px).
     "pantheon/amazon": dict(mode="legs", hip=46, back=(0, 33), front=(33, 64), rigid=[(0, 22, 46, 51)],
-                            spread=2, lift=2, dip=1, bust=(22, 42, 36, 42, 1, 1), bust_axis="x", swish=(22, 42, 37, 45, 1)),
+                            spread=2, lift=2, dip=1, bust=(28, 41, 23, 31, 2, 2), swish=(22, 42, 36, 45, 2)),
     # Art review round 1 redo (slim-thick, a bit chubby; the old box sat too low): on her bust
     # (cols 21-31, rows 17-21, two lobes).
     "pantheon/gorgon": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(21, 32, 17, 22, 2, 2)),
