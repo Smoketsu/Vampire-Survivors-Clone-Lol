@@ -76,12 +76,18 @@ Keep edits small, additive and in a block headed `# --- Act IV: <your stage> ---
 it extends. Never reorder or reformat existing lines. Do not tune data another stage owns, and do not touch Act I–III
 stages' data.
 
-## Testing and gate
-As `docs/act3/BRIEF_PHASE2.md` "Testing", but the gate script is `docs/act4/tools/gate.sh <worktree> <outdir>`
-(seed 7: Graveyard default and army, Gullhaven, Ul-Thalos and the Iron Citadel army), compared with
-`docs/act3/tools/same_seed_gate.py` against the lead's base summaries. Allowed diffs: catalog counts only. **CPU: at
-most ONE Godot process at a time.** Keep your stage `"playable": false`. Difficulty target for your own sanity runs:
-a step harder than the Iron Citadel; `--policy=army` usually reaches 0:00 and kills your boss.
+## Testing (owner, Oct 25: "instead of testing each individually, just do a big pass at the end")
+The lead runs ONE big verification pass after all three branches merge (import, every Act IV stage on several
+seeds, the same-seed gate for stages 1–9, co-op, screenshots, the balance pass). So agents test only enough to hand
+over working code:
+- `--headless --import` clean (zero `SCRIPT ERROR` / `ERROR:` / `WARNING:`), whenever you need it while building;
+- **once, at the end:** one `--stage=<id> --policy=army --seed=7` autotest that reaches 0:00 with zero errors and
+  `stuck_units=0`, and shows your new systems in the summary (use `--spawn=` / `--boss=` in the same run if a system
+  would otherwise not appear);
+- no same-seed gate, no naive or multi-seed runs, no balancing beyond "the army bot is not obviously broken";
+- art: check every sprite with `tools/art_check.py` and look at a contact sheet at game size; in-game screenshots
+  are optional (the lead takes them in the final pass).
+**CPU: at most ONE Godot process at a time.** Keep your stage `"playable": false`.
 
 ---
 
