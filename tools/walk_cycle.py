@@ -106,6 +106,12 @@ ROBE_SWAY = (0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
 # ("down": it stays up, -0.5), overshoots as the body rises ("passing": +1), rebounds
 # ("up": -0.5) and settles on the contact (0, so frame 0 stays the still).
 BUST_BOUNCE = (0.0, -0.5, 1.0, -0.5, 0.0, -0.5, 1.0, -0.5)
+# Per frame (both steps): the same spring for a bounce box with `bust_axis="x"` (a sideways
+# jiggle; owner's Act IV art review, round 2, on the Amazon's hips: "things should be jiggling
+# side to side rather than up and down"), as a share of the box's px (+ = toward the facing
+# side, right). The weight shifts to the other foot on each step, so the kick changes side
+# every step: the first step's lag, overshoot and rebound one way, the second's the other way.
+BUST_SWAY = (0.0, -0.5, 1.0, -0.5, 0.0, 0.5, -1.0, 0.5)
 # Rows below the bust box over which the warp fades back to zero, per bounce px (the
 # belly takes up the motion instead of tearing at the box edge).
 BUST_TAIL_PER_PX = 1
@@ -178,6 +184,11 @@ STRIDE_FAR_SHADE = {"bronze_light": "bronze", "bronze": "bronze_dark", "marble_l
 #           `lobes` (default 1) = 2 puts one bell under each side instead of one across the
 #           box (each side peaks at its own centre, the cleavage stays): for a wide bust whose
 #           outer sides barely moved under one bell (owner's art review, round 2).
+#   bust_axis  optional "y" (default: the up-and-down bounce above) or "x": the same box and
+#           field moves sideways instead (each pixel takes the pixel |d| columns aside in its
+#           own row; + = right, the facing side), timed by BUST_SWAY in the walk (the kick
+#           changes side every step) and IDLE_BUST in the idle (one way on the exhale, the
+#           other on the inhale). For a box on the hips (the Amazon, art review round 2).
 RIGS = {
     # The pilot (ART_BIBLE "Walk cycles"): the three units with the most screen time.
     "player/necromancer": dict(mode="legs", hip=47, back=(0, 20), front=(20, 33), rigid=[(33, 46, 0, None)], spread=1, lift=1, dip=1),
@@ -337,10 +348,10 @@ RIGS = {
     "pantheon/shade_of_dead": dict(mode="hover", bob=2, parts=[]),
     "pantheon/hoplite": dict(mode="legs", hip=42, back=(0, 17), front=(17, 30), rigid=[(2, 6, 0, None)], spread=2, lift=2, dip=1),
     "pantheon/hero": dict(mode="legs", hip=41, back=(0, 31), front=(31, 58), rigid=[(0, 17, 41, 48)], spread=2, lift=2, dip=1),
-    # Owner's Act IV art review, round 1: his still's crossed legs could not walk ("mirror his
-    # legs"); the strip is a stride: the near (right) leg from row 66 swings between its own pose
-    # and its mirror image, a darker copy (the far leg) half a cycle behind, the fists ride along.
-    "pantheon/bronze_titan": dict(mode="stride", hip=66, near_x0=29, keep=[(0, 21, 44, 72), (50, 72, 44, 72)], far_dx=-4, reach=5, lift=3, dip=1),
+    # Owner's Act IV art review, round 2: the round 1 stride (his crossed legs mirrored) did not
+    # read ("not even close"). Round 3: a new still of the same titan with his legs apart (crotch
+    # at row 64), walked by the normal legs rig; both low fists (rows 64-69) ride with the body.
+    "pantheon/bronze_titan": dict(mode="legs", hip=64, back=(0, 40), front=(40, 74), rigid=[(0, 21, 64, 70), (56, 74, 64, 70)], spread=3, lift=4, dip=1),
     # --- Act IV: the Shores of Ilion ---
     # The Legionary marches behind his scutum (it ends above the hip); the Wolf of Rome lopes
     # (hind legs left, forelegs right: the bounding lope of the Bone Hound's rig); the Cyclops and
@@ -367,8 +378,10 @@ RIGS = {
     "pantheon/centaur_archer": dict(mode="legs", hip=41, back=(0, 26), front=(26, 54), rigid=[], spread=2, lift=2, dip=1),
     # Art review round 1 redo ("muscle mommy"; the owner liked her idle jiggling the hips, not the
     # bust): the bounce box sits on her hips and skirt (cols 18-37, rows 27-37, two lobes); the
-    # skirt's front flap hanging between her thighs rigid.
-    "pantheon/amazon": dict(mode="legs", hip=41, back=(0, 28), front=(28, 54), rigid=[(24, 30, 41, 44)], spread=2, lift=2, dip=1, bust=(18, 38, 27, 38, 2, 2)),
+    # skirt's front flap hanging between her thighs rigid. Round 2 ("jiggling side to side rather
+    # than up and down"): the box sways sideways (`bust_axis="x"`, BUST_SWAY / IDLE_BUST) as one
+    # mass (one bell: two lobes swaying the same way tore the skirt at the centre column).
+    "pantheon/amazon": dict(mode="legs", hip=41, back=(0, 28), front=(28, 54), rigid=[(24, 30, 41, 44)], spread=2, lift=2, dip=1, bust=(18, 38, 27, 38, 2, 1), bust_axis="x"),
     # Art review round 1 redo (slim-thick, a bit chubby; the old box sat too low): on her bust
     # (cols 21-31, rows 17-21, two lobes).
     "pantheon/gorgon": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(21, 32, 17, 22, 2, 2)),
@@ -860,21 +873,25 @@ def frames_of(key: str) -> list:
             hem = _shift_rows(parts["hem"], hip, dy, 0, ROBE_SWAY[f] * rig["sway"])
             frame = _stack([hem] + body)
         if "bust" in rig:
-            frame = _bounce(frame, rig["bust"], dy, BUST_BOUNCE[f] * rig["bust"][4])
+            axis = rig.get("bust_axis", "y")  # "y" bounces, "x" sways (BUST_SWAY).
+            share = (BUST_SWAY if axis == "x" else BUST_BOUNCE)[f]
+            frame = _bounce(frame, rig["bust"], dy, share * rig["bust"][4], axis)
         out.append(frame)
     if not np.array_equal(out[0], still):
         sys.exit(f"{key}: frame 0 differs from the still (rig error)")
     return out
 
 
-def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float) -> np.ndarray:
+def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float, axis: str = "y") -> np.ndarray:
     """Warps the bust of `frame` (the still's box `bust` lowered by the body dip `dy`) so its
     underside moves `s` px (+ = down) at the box's centre column. Displacement field: a
     sine bell across the columns (1 at the centre, 0 just outside the box) times a ramp down
     the rows (0 at the neckline, 1 on the underside), then a fade back to 0 over the
     BUST_TAIL_PER_PX * |s| rows below. Each pixel takes the pixel |d| rows above or below it
     in the same column (nearest, inverse mapping: no holes, no new colours). s = 0 returns
-    the frame unchanged."""
+    the frame unchanged. axis "x" (a rig's `bust_axis`): the same field moves the pixels
+    sideways instead (+ = right): each pixel takes the pixel |d| columns left or right of it
+    in the same row."""
     if s == 0:
         return frame
     x0, x1 = bust[0], bust[1]  # Box columns [x0, x1) (art px).
@@ -891,10 +908,17 @@ def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float) -> np.ndarray:
                 wy = (y - y0 + 1) / float(y1 - y0)  # 0 at the neckline, 1 on the underside.
             else:
                 wy = 1.0 - (y - y1 + 1) / float(tail + 1)  # Fades out under the bust.
-            d = int(round(s * wx * wy))  # Rows this pixel's content moves (+ = down).
-            sy = y - d  # Source row (inverse mapping).
-            if d != 0 and 0 <= sy < h:
-                out[y, x] = frame[sy, x]
+            d = int(round(s * wx * wy))  # Px this pixel's content moves (+ = down, or right on axis "x").
+            if d == 0:
+                continue
+            if axis == "x":
+                sx = x - d  # Source column (inverse mapping).
+                if 0 <= sx < frame.shape[1]:
+                    out[y, x] = frame[y, sx]
+            else:
+                sy = y - d  # Source row (inverse mapping).
+                if 0 <= sy < h:
+                    out[y, x] = frame[sy, x]
     return out
 
 
@@ -980,6 +1004,8 @@ IDLE_SINK = (0,) * 6 + (1,) * 12 + (0,) * 6
 # (+ = down; the same field as BUST_BOUNCE). A damped spring kicked by each sink and rise: it
 # lags the body (stays up as the body sinks, down as it rises), overshoots, rebounds less (only
 # the box's centre still moves), then settles; at rest it is 0, so frame 0 stays the still.
+# A `bust_axis="x"` box reads it sideways (+ = right): its kicks change side between the
+# exhale and the inhale on their own.
 IDLE_BUST = ((0.0,) * 6
              + (-0.5, 0.75, -0.375) + (0.0,) * 9
              + (0.5, -0.75, 0.375) + (0.0,) * 3)
@@ -1017,7 +1043,7 @@ def idle_frames_of(key: str) -> list:
     for f in range(IDLE_FRAMES):
         dy = IDLE_SINK[f]  # Body sink this frame (art px).
         frame = _sink(still, waist, dy)
-        frame = _bounce(frame, rig["bust"], dy, IDLE_BUST[f] * rig["bust"][4])
+        frame = _bounce(frame, rig["bust"], dy, IDLE_BUST[f] * rig["bust"][4], rig.get("bust_axis", "y"))
         out.append(frame)
     if not np.array_equal(out[0], still):
         sys.exit(f"{key}: idle frame 0 differs from the still (rig error)")
