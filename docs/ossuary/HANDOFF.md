@@ -5,9 +5,10 @@ soul ash on. As it is there's no reason for the player to try harder difficultie
 quickly. I think we need more levels in each option, and more options. Write proposal and handoff file."
 
 **The proposal** is a Claude Doc the owner reads and comments on: <https://claude.ai/artifact/3sZKSYQJc4L8kGAu33CUvc>
-("Ossuary Expansion Proposal"). Read it (and its comments) first; it ends with 7 decisions for the owner. **Do not build
-anything before the owner answers them**, except step 1 (measuring), which is safe either way. Then read `CLAUDE.md`
-(rules; it overrides this file).
+("Ossuary Expansion Proposal"). **The owner answered all 7 decisions (Oct 25): see GDD §15.0 "Ossuary expansion: owner
+decisions"** (all five parts; difficulty-gated levels 6-10; Masteries for summon classes only; Relic slots 1 -> 3;
+Offerings expensive; stage multipliers restart each act ×1 / ×1.25 / ×1.5, Lich ×1.5, Deathlord ×2; prestige later).
+Then read `CLAUDE.md` (rules; it overrides this file).
 
 ## Where things stand (Oct 25)
 
