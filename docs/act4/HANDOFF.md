@@ -39,9 +39,11 @@ owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages wer
    round 1 sprites recoloured (bone robe under a midnight-Aegean cloak, `art_source/underworld/r4/hades_recolour.py`;
    the alternative scheme E, charcoal robe, is a "choice" card: if the owner marks it OK, switch the script's scheme
    letter and rerun it), the Myrmidon Shade and Legion of Tartarus regenerated from their original prompts, the
-   Amazon's skirt (her front flap read as genitalia: now a full pleated war skirt; still, walk and idle rebuilt). Next:
-   read `act4_art_r4`; a round 5 is `python3 docs/act4/tools/make_act4_review_r2.py <act4_art_r4 marks dir> <out.html>
-   d9abd9d 5`.
+   Amazon's skirt (her front flap read as genitalia: now a full pleated war skirt; still, walk and idle rebuilt). Round 4 (GDD row "round 4"): the Legion of Tartarus
+   and scheme E approved. **Round 5 is published** (`act4_art_r5`): Hades regenerated as colour edits of his round 1
+   images (scheme E, the round 1 head pasted back; `art_source/underworld/r5/`), the Amazon regenerated (70 px, muscular,
+   short closed skirt), the Myrmidon Shade's face. Next: read `act4_art_r5`; a round 6 is
+   `python3 docs/act4/tools/make_act4_review_r2.py <act4_art_r5 marks dir> <out.html> <HEAD at publish> 6`.
 2. **The owner's playtest**, then the balance pass (open items in the GDD integration row: the naive Olympus opening,
    the Underworld is the easiest, siege towers rarely destroyed, strong Gigantomachy / Lethe's Flood / Myrmidons, the
    placeholder Soul Ash multipliers ×3.25 / ×3.5 / ×3.75).
