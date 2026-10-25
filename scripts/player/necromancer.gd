@@ -70,6 +70,9 @@ var _facing: float = 1.0
 ## SkinData id of the cosmetic skin worn this run ("" = the default look;
 ## set by Game at run start). Purely visual, never a stat.
 var skin_id: String = ""
+## RecolourData id of the palette swap worn on the skin this run ("" = the
+## skin's own colours; set by Game / CoopSession). Purely visual, never a stat.
+var recolour_id: String = ""
 ## Engine motion (UnitMotion: body / overlay layers, bob, lean, squashes,
 ## cast recoils); purely visual.
 var motion: UnitMotion = null
@@ -242,11 +245,12 @@ func _draw() -> void:
 
 ## Body layer on `ci`: a worn skin (SkinGlyphs) draws itself, falling back
 ## to this character's own look; otherwise the character's look
-## (CharacterGlyphs; the classic necromancer for the Gravecaller).
+## (CharacterGlyphs; the classic necromancer for the Gravecaller). Either is
+## palette-swapped by the worn recolour (`recolour_id`, cosmetic).
 func _draw_body(ci: CanvasItem) -> void:
-	if skin_id == "" or not SkinGlyphs.draw_skin(ci, skin_id, Vector2.ZERO, radius, flash > 0.0):
+	if skin_id == "" or not SkinGlyphs.draw_skin(ci, skin_id, Vector2.ZERO, radius, flash > 0.0, recolour_id):
 		var cid := character_id if character_id != "" else (game.character.id if game != null else CharacterData.DEFAULT_ID)  # Drawn character.
-		CharacterGlyphs.draw_player(ci, cid, Vector2.ZERO, radius, flash > 0.0)
+		CharacterGlyphs.draw_player(ci, cid, Vector2.ZERO, radius, flash > 0.0, Color.WHITE, recolour_id)
 
 
 ## Overlay layer on `ci`: the priest ward bubble.

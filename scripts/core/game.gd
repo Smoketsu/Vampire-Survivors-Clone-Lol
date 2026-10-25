@@ -359,6 +359,8 @@ func _ready() -> void:
 	innates.game = self
 	add_child(innates)
 	player.skin_id = _resolve_skin()  # Cosmetic only (SkinData); "" = the default look.
+	player.recolour_id = _resolve_recolour(player.skin_id)  # Cosmetic only (RecolourData); "" = the skin's own colours.
+	SkinGlyphs.warm(player.skin_id, run_config.character_key(), player.recolour_id)  # Remap its art now, not mid-run.
 	abilities = AbilityManager.new()
 	add_child(abilities)
 	abilities.setup(self)
@@ -457,6 +459,20 @@ func _resolve_skin() -> String:
 	elif not SkinData.skins_for(run_config.character_key()).has(id) or not Meta.is_skin_unlocked(id):
 		return ""
 	return "" if String(SkinData.skin(id).get("kind", "default")) == "default" else id
+
+
+## The recolour the necromancer wears this run (purely cosmetic, RecolourData):
+## the autotest's --recolour= (forced, for screenshots), else run_config.recolour_id
+## when the worn skin `skin` ("" = the character's default skin) offers it and
+## the save owns it (online co-op: the loadout's pick is trusted, it is cosmetic).
+## "" = the skin's own colours.
+func _resolve_recolour(skin: String) -> String:
+	if (GameState.autotest or GameState.victory_preview) and GameState.autotest_recolour != "":
+		return GameState.autotest_recolour
+	var key := skin if skin != "" else SkinData.default_skin(run_config.character_key())  # Skin that owns the recolour.
+	var id := run_config.recolour_id  # Requested recolour.
+	var owned := Meta.owns_recolour(key, id) or not coop_start.is_empty()  # Online co-op: slot 0 may be the partner's pick (their save owns it, cosmetic).
+	return id if id != "" and RecolourData.offered(key, id) and owned else ""
 
 
 ## The ultimate this run casts (UltimateData id): run_config.ultimate_id when
@@ -1072,6 +1088,7 @@ func build_summary() -> Dictionary:
 		"difficulty_label": difficulty.difficulty_label(),
 		"boss_id": String(boss_info.get("id", "")),
 		"skin_id": player.skin_id,
+		"recolour_id": player.recolour_id,
 		"run_rewards": rewards.counters(),  # Content wave 2: the one-run achievement counters (RunRewards).
 		"stats": stats.duplicate(),
 	}

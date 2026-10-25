@@ -34,6 +34,9 @@ var hyper: bool = false
 ## SkinData id of the cosmetic skin ("" = the character's default look).
 ## Purely visual: Game hands it to the Necromancer's drawing only.
 var skin_id: String = ""
+## RecolourData id of the palette swap worn on that skin ("" = its own
+## colours). Purely visual; only an owned one is worn (Game._resolve_recolour()).
+var recolour_id: String = ""
 ## UltimateData id of the ultimate the soul meter casts (default: Dread Rally;
 ## set through set_ultimate(), which validates; locks are checked by the
 ## picker, Meta.prerun_config() and Game, --ultimate= bypasses them).
@@ -100,5 +103,6 @@ func duplicate_config() -> RunConfig:
 	c.set_character(character_id)
 	c.hyper = hyper
 	c.skin_id = skin_id
+	c.recolour_id = recolour_id
 	c.set_ultimate(ultimate_id)
 	return c

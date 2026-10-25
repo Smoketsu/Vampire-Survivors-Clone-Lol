@@ -1783,6 +1783,14 @@ func _print_hyper_skins(summary: Dictionary) -> void:
 		int(st.get("rot_kills", 0.0)), int(st.get("kill_high_confessor", 0.0)), 1 if float(st.get("boss_kill_full_army", 0.0)) > 0.0 and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID and bool(summary["boss_defeated"]) else 0,
 		int(float(Meta.lifetime.get("rot_kills", 0.0))), int(float(Meta.lifetime.get("high_confessor_kills", 0.0))), int(float(Meta.lifetime.get("seraphine_kills_full_army", 0.0))),
 		Meta.unlocked_skin_ids().size(), SkinData.all_ids().size(), ", ".join(new_skins) if not new_skins.is_empty() else "none", cards])
+	var rc := String(summary.get("recolour_id", ""))  # Worn skin recolour ("" = none; the line only prints when one is forced, so default runs print nothing new).
+	if rc != "":
+		var rkey := String(SkinData.skin(skin).get("sprite", "")) if skin != "" else SkinData.base_sprite(String(summary.get("character_id", CharacterData.DEFAULT_ID)))  # Sprite remapped.
+		var rtex := SpriteBank.texture(rkey)  # The original art (null without it).
+		var rre := Recolour.texture(rtex, rkey, rc) if rtex != null else null  # The recoloured art.
+		print("[autotest] recolours: %s (%d Soul Ash) worn on %s | art %s: %s | %d recolours x %d skins, %d Soul Ash a skin" % [
+			RecolourData.display_name(rc), RecolourData.price(rc), skin if skin != "" else "the default look", rkey,
+			"remapped" if rre != null and rre != rtex else "no art, drawn unchanged", RecolourData.ORDER.size(), SkinData.all_ids().size(), RecolourData.price_per_skin()])
 
 
 ## Shadow Bolt damage stat with `prefix` ("dmg_" / "bossdmg_"), including the

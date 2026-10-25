@@ -48,6 +48,8 @@ class HeroStage:
 	var char_id: String = CharacterData.DEFAULT_ID
 	## Skin worn (SkinData id).
 	var skin_id: String = ""
+	## RecolourData id the skin is drawn in ("" = its own colours).
+	var recolour_id: String = ""
 	## True when the character is locked (silhouette, no walk).
 	var locked: bool = false
 	## Floor tile key under the hero.
@@ -87,6 +89,9 @@ class HeroStage:
 		if art.is_empty():
 			return
 		var still: Texture2D = art[0]
+		if recolour_id != "" and not locked:
+			art = _recoloured(art)  # The same art, palette-swapped (cosmetic).
+			still = art[0]
 		var fw := float(still.get_width())  # Frame width (art px).
 		var fh := float(still.get_height())  # Frame height (art px).
 		draw_set_transform(feet + Vector2(0.0, -2.0), 0.0, Vector2(1.0, 0.3))
@@ -106,7 +111,14 @@ class HeroStage:
 			var s := MaskIcon.art_size("padlock") * float(FrontDoorData.LOCK_ICON_SCALE)  # Padlock (px).
 			MaskIcon.paint(self, "padlock", (dst.get_center() - s * 0.5).round(), FrontDoorData.LOCK_ICON_SCALE)
 
-	## The art to draw: [still, walk strip (or null), colour]: the skin's own
+	## `art` (see _art()) with its still and walk strip palette-swapped to
+	## `recolour_id` (Recolour caches them under "hero|<key>").
+	func _recoloured(art: Array) -> Array:
+		var key := String(art[3])  # The sprite key drawn.
+		var strip: Texture2D = art[1]
+		return [Recolour.texture(art[0], "hero|" + key, recolour_id), Recolour.texture(strip, "hero|" + key + WalkData.SUFFIX, recolour_id) if strip != null else null, art[2], key]
+
+	## The art to draw: [still, walk strip (or null), colour, sprite key]: the skin's own
 	## sprite, else the character's sprite in the skin's tint. [] without art.
 	func _art() -> Array:
 		var row := SkinData.skin(skin_id)  # The skin ({} = default look).
@@ -123,7 +135,7 @@ class HeroStage:
 			var strip := EnvironmentArt.texture(String(kt[0]) + WalkData.SUFFIX)  # Walk strip, or null.
 			if strip != null and (strip.get_height() != still.get_height() or strip.get_width() % still.get_width() != 0):
 				strip = null
-			return [still, strip, kt[1]]
+			return [still, strip, kt[1], String(kt[0])]
 		return []
 
 	## Stepped dark bands along the box's edges (pixel-art vignette).
@@ -197,12 +209,14 @@ func show_title() -> void:
 	_frame.queue_redraw()
 
 
-## Shows character `id` in skin `skin` (`chosen`: the current choice, gold name).
-func show_character(id: String, skin: String, chosen: bool) -> void:
+## Shows character `id` in skin `skin` (`chosen`: the current choice, gold name),
+## palette-swapped by `recolour` (RecolourData id, "" = none).
+func show_character(id: String, skin: String, chosen: bool, recolour: String = "") -> void:
 	var d := CharacterModifiers.def(id)  # Character row.
 	var locked := not Meta.is_character_unlocked(id)  # Cannot be chosen yet.
 	_stage.char_id = id
 	_stage.skin_id = skin
+	_stage.recolour_id = recolour
 	_stage.locked = locked
 	_stage.tile_key = String(FrontDoorData.VIGNETTES.get(stage_id, {}).get("tile", ""))
 	_stage.queue_redraw()

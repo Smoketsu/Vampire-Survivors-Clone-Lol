@@ -15,6 +15,13 @@
 ## Under the row ONE detail line names the focused tile: the skin and, while
 ## locked, its unlock condition with progress; or Hyper's effect / lock text
 ## (fewer words on the tiles themselves; the full look is each tile's tooltip).
+## At the right end of that line sits the RECOLOUR control (Ossuary expansion
+## step 6b, RecolourData; cosmetic): one button with a colour chip and the
+## recolour's name that cycles the chosen skin's offers (Default, then four
+## palette swaps); an owned one is worn at once, an unowned one is only
+## previewed on the hero and a Buy button with its Soul Ash price appears
+## (a confirm dialog, the one UI that costs Soul Ash here). Hidden while the
+## skin is locked. The choice is kept per skin in the Meta save ([recolour_pick]).
 ## Keyboard / mouse / controller navigable: rows() gives the tiles as one row
 ## for the setup screen's explicit focus wiring (re-done on `rebuilt`);
 ## Enter / A toggles or chooses. refresh() follows a character change
@@ -50,6 +57,29 @@ var _hyper_badge: Control
 var _row: HBoxContainer
 ## The one detail line under the row.
 var _detail: Label
+## The line's row: the detail label, then the recolour controls.
+var _line: HBoxContainer
+## The recolour controls (cycle and Buy buttons); hidden while the skin is locked.
+var _rc_box: HBoxContainer
+## Recolour cycle button (chip, name).
+var _rc_cycle: Button
+## Colour chip inside the cycle button (the previewed recolour's swatch).
+var _rc_chip: RecolourChip
+## Name of the previewed recolour inside the cycle button.
+var _rc_name: Label
+## Recolour Buy button (soul ash icon, price); shown only for an unowned preview.
+var _rc_buy: Button
+## Price label inside the Buy button.
+var _rc_cost: Label
+## Skin the recolour state belongs to (the worn skin's id; "" = not built yet).
+var _rc_skin: String = ""
+## RecolourData id previewed on the hero ("" = the skin's own colours). The
+## worn one (config.recolour_id) is this one while it is owned, else "".
+var _rc_view: String = ""
+## "<recolour box shown>/<Buy shown>" of the last _refresh_recolour() (re-wire on change).
+var _rc_shape: String = ""
+## Skin id -> its tile's preview (so the worn skin's tile shows the recolour).
+var _previews: Dictionary = {}
 ## Skin id -> its tile Button (current character only).
 var _skin_buttons: Dictionary = {}
 ## Skin ids of the tiles, in order.
@@ -66,6 +96,8 @@ class SkinPreview:
 	var skin_id: String = ""
 	## True while the skin is locked (drawn dark).
 	var locked: bool = false
+	## RecolourData id drawn on it ("" = none; the worn skin's tile only).
+	var recolour: String = ""
 
 	func _init(id: String, is_locked: bool) -> void:
 		skin_id = id
@@ -75,12 +107,35 @@ class SkinPreview:
 	func _draw() -> void:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.03, 0.02, 0.05, 0.9))
 		SpriteBank.icon_cap = size.y * 0.92
-		SkinGlyphs.draw_skin(self, skin_id, size * 0.5, size.y * 0.28, false)
+		SkinGlyphs.draw_skin(self, skin_id, size * 0.5, size.y * 0.28, false, recolour)
 		SpriteBank.icon_cap = 0.0
 		if locked:
 			draw_rect(Rect2(Vector2.ZERO, size), Color(0.0, 0.0, 0.0, CharacterGlyphs.LOCK_VEIL))
 			var s := MaskIcon.art_size("padlock") * float(CharacterGlyphs.LOCK_ICON_SCALE)  # Padlock (px).
 			MaskIcon.paint(self, "padlock", size * 0.5 - s * 0.5, CharacterGlyphs.LOCK_ICON_SCALE)
+
+
+## The colour chip of the recolour button: a small square in the recolour's
+## swatch colour with a dark border; a recolour of "" draws a hollow square
+## (the skin's own colours).
+class RecolourChip:
+	extends Control
+	## RecolourData id shown ("" = the skin's own colours).
+	var recolour: String = ""
+
+	func _init() -> void:
+		custom_minimum_size = Vector2(14.0, 14.0)
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		size_flags_vertical = Control.SIZE_SHRINK_CENTER
+
+	func _draw() -> void:
+		var r := Rect2(Vector2.ZERO, size)  # The chip box (px).
+		draw_rect(r, Color(0.04, 0.02, 0.07))
+		var inner := r.grow(-2.0)  # Fill, inside the border.
+		if recolour == "":
+			draw_rect(inner, Color(0.45, 0.4, 0.55), false, 1.0)
+		else:
+			draw_rect(inner, RecolourData.swatch(recolour))
 
 
 func _ready() -> void:
@@ -95,10 +150,16 @@ func _ready() -> void:
 	fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_row.add_child(fill)
 	_row.add_child(_build_hyper_tile())
+	_line = HBoxContainer.new()
+	_line.add_theme_constant_override("separation", 6)
+	_line.custom_minimum_size.x = FrontDoorData.HERO_TEXT_WIDTH
+	add_child(_line)
 	_detail = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_detail.clip_text = true
-	_detail.custom_minimum_size.x = FrontDoorData.HERO_TEXT_WIDTH
-	add_child(_detail)
+	_detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_detail.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_line.add_child(_detail)
+	_build_recolour_controls()
 	_rebuild_skins()
 	refresh()
 
@@ -150,6 +211,7 @@ func _rebuild_skins() -> void:
 		_row.remove_child(old)
 		old.queue_free()
 	_skin_buttons.clear()
+	_previews.clear()
 	_character = config.character_key()
 	_skin_ids = SkinData.skins_for(_character)
 	# Content wave 2: more skins (the universal ones) -> compact tiles, so the row keeps its width.
@@ -180,6 +242,7 @@ func _build_skin_tile(id: String) -> Button:
 	p.offset_right = -4
 	p.offset_bottom = -4
 	b.add_child(p)
+	_previews[id] = p
 	b.pressed.connect(_choose_skin.bind(id))
 	b.focus_entered.connect(_on_skin_focus.bind(id))
 	b.mouse_entered.connect(_on_skin_focus.bind(id))
@@ -218,6 +281,9 @@ func _show_detail(id: String) -> void:
 		_detail.text = HyperData.TAGLINE if Meta.hyper_unlocked else "Locked: " + HyperData.LOCK_TEXT
 		_detail.add_theme_color_override("font_color", UiTheme.TEXT_DIM if Meta.hyper_unlocked else Palette.CRIMSON.lightened(0.4))
 		return
+	if id == "recolour":
+		_show_recolour_detail()
+		return
 	if id == "":
 		id = config.skin_id
 	var row := SkinData.skin(id)  # The skin's data.
@@ -242,10 +308,16 @@ func cards() -> Array:
 	return out
 
 
-## The tiles as focus rows (one row, left to right), for the setup screen's
-## explicit focus wiring.
+## The tiles as focus rows (the tiles, then the recolour buttons while shown),
+## for the setup screen's explicit focus wiring.
 func rows() -> Array:
-	return [cards()]
+	var out: Array = [cards()]  # The tiles, then the recolour buttons (when shown).
+	if _rc_box.visible:
+		var rc: Array = [_rc_cycle]  # Recolour buttons, left to right.
+		if _rc_buy.visible:
+			rc.append(_rc_buy)
+		out.append(rc)
+	return out
 
 
 ## Hyper tile pressed: toggles Hyper (`denied` while locked).
@@ -269,6 +341,7 @@ func _choose_skin(id: String) -> void:
 	refresh()
 	_show_detail(id)
 	changed.emit()
+	rebuilt.emit()  # The recolour buttons may appear or go (the setup screen re-wires its focus).
 
 
 ## Turns Hyper off (the setup screen's Standard button).
@@ -293,6 +366,7 @@ func refresh() -> void:
 	_hyper_badge.visible = Meta.is_hyper_cleared(config.stage_id, _character)
 	for id: String in _skin_ids:
 		_style(_skin_buttons[id], id == config.skin_id)
+	_sync_recolour()
 	var f := get_viewport().gui_get_focus_owner() if is_inside_tree() else null  # Current focus.
 	if f == null or not is_ancestor_of(f):
 		_show_detail("")
@@ -301,3 +375,197 @@ func refresh() -> void:
 ## Applies the on / worn look to tile `b` (normal and hover styles).
 static func _style(b: Button, on: bool) -> void:
 	UiTheme.style_button(b, "button", ON_ACCENT if on else "")
+
+
+# --- Recolour control (Ossuary expansion step 6b) -----------------------------------------------
+
+## Builds the recolour controls at the right end of the detail line: the cycle
+## button (chip and name) and the Buy button (Soul Ash icon and price).
+func _build_recolour_controls() -> void:
+	_rc_box = HBoxContainer.new()
+	_rc_box.add_theme_constant_override("separation", 4)
+	_rc_box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_rc_box.visible = false
+	_line.add_child(_rc_box)
+	_rc_cycle = Button.new()
+	_rc_cycle.custom_minimum_size = FrontDoorData.RECOLOUR_BUTTON
+	_rc_cycle.focus_mode = Control.FOCUS_ALL
+	_rc_cycle.tooltip_text = "Recolour: change this skin's colours"
+	_rc_cycle.pressed.connect(_cycle_recolour)
+	_rc_cycle.focus_entered.connect(_on_rc_focus)
+	_rc_cycle.mouse_entered.connect(_on_rc_focus)
+	_rc_cycle.focus_exited.connect(_on_left)
+	_rc_cycle.mouse_exited.connect(_on_left)
+	var cb := HBoxContainer.new()
+	cb.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	cb.offset_left = 8
+	cb.offset_right = -8
+	cb.add_theme_constant_override("separation", 6)
+	cb.alignment = BoxContainer.ALIGNMENT_CENTER
+	cb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_rc_cycle.add_child(cb)
+	_rc_chip = RecolourChip.new()
+	cb.add_child(_rc_chip)
+	_rc_name = UiTheme.tier_label("Default", UiTheme.Tier.BODY, UiTheme.TEXT)
+	_rc_name.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	cb.add_child(_rc_name)
+	_rc_box.add_child(_rc_cycle)
+	_rc_buy = Button.new()
+	_rc_buy.custom_minimum_size = FrontDoorData.RECOLOUR_BUY_BUTTON
+	_rc_buy.focus_mode = Control.FOCUS_ALL
+	_rc_buy.pressed.connect(_press_buy)
+	_rc_buy.focus_entered.connect(_on_rc_focus)
+	_rc_buy.mouse_entered.connect(_on_rc_focus)
+	_rc_buy.focus_exited.connect(_on_left)
+	_rc_buy.mouse_exited.connect(_on_left)
+	var bb := HBoxContainer.new()
+	bb.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bb.offset_left = 8
+	bb.offset_right = -8
+	bb.add_theme_constant_override("separation", 4)
+	bb.alignment = BoxContainer.ALIGNMENT_CENTER
+	bb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_rc_buy.add_child(bb)
+	var coin := IconGlyph.new("soul_ash_small", Vector2(OssuaryUiData.COST_ICON, OssuaryUiData.COST_ICON))
+	coin.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	bb.add_child(coin)
+	_rc_cost = UiTheme.tier_label("", UiTheme.Tier.BODY, OssuaryUiData.ASH_COLOR)
+	_rc_cost.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	bb.add_child(_rc_cost)
+	_rc_buy.visible = false
+	_rc_box.add_child(_rc_buy)
+
+
+## The recolour state follows the worn skin: on a new skin it shows that skin's
+## remembered recolour (the first time, the config's own if it is owned), and
+## the controls hide while the skin is locked.
+func _sync_recolour() -> void:
+	var skin := config.skin_id  # Worn skin id.
+	var offers := skin != "" and Meta.is_skin_unlocked(skin) and not RecolourData.ids_for(skin).is_empty()  # Recolours may be used.
+	if skin != _rc_skin:
+		var want := config.recolour_id if (_rc_skin == "" and Meta.owns_recolour(skin, config.recolour_id)) else Meta.chosen_recolour(skin)  # Recolour shown.
+		_rc_skin = skin
+		_rc_view = want if offers else ""
+		config.recolour_id = _rc_view
+	_rc_box.visible = offers
+	_refresh_recolour()
+
+
+## Redraws the recolour controls and the tile previews from `_rc_view`; asks the
+## setup screen to re-wire focus when the buttons that exist changed.
+func _refresh_recolour() -> void:
+	var owned := _rc_view == "" or Meta.owns_recolour(_rc_skin, _rc_view)  # The previewed recolour may be worn.
+	_rc_chip.recolour = _rc_view
+	_rc_chip.queue_redraw()
+	_rc_name.text = RecolourData.display_name(_rc_view)
+	var shape := "%s/%s" % [str(_rc_box.visible), str(_rc_box.visible and not owned)]  # Which buttons exist now.
+	_rc_buy.visible = _rc_box.visible and not owned
+	if not owned:
+		_rc_cost.text = str(RecolourData.price(_rc_view))
+		var can := Meta.soul_ash >= RecolourData.price(_rc_view)  # Affordable: the soul accent.
+		UiTheme.style_button(_rc_buy, "button", "soul" if can else "dim")
+		_rc_cost.add_theme_color_override("font_color", OssuaryUiData.ASH_COLOR if can else UiTheme.TEXT_DIM)
+	UiTheme.style_button(_rc_cycle, "button", ON_ACCENT if (_rc_view != "" and owned) else "")
+	for id: String in _previews:
+		var pv: SkinPreview = _previews[id]
+		var rc := config.recolour_id if id == config.skin_id else Meta.chosen_recolour(id)  # Recolour that tile would wear.
+		if pv.recolour != rc:
+			pv.recolour = rc
+			pv.queue_redraw()
+	if shape != _rc_shape:
+		_rc_shape = shape
+		rebuilt.emit()
+
+
+## The recolour previewed on the hero for the worn skin ("" = its own colours).
+func shown_recolour() -> String:
+	return _rc_view
+
+
+## Previews recolour `id` ("" = the skin's own colours) on the worn skin: an owned
+## one (or "") is worn and remembered at once; an unowned one is only shown, with
+## its price and a Buy button. Ignored while the skin is locked / offers no such
+## recolour.
+func preview_recolour(id: String) -> void:
+	if not _rc_box.visible or (id != "" and not RecolourData.offered(_rc_skin, id)):
+		return
+	_rc_view = id
+	var owned := id == "" or Meta.owns_recolour(_rc_skin, id)  # May be worn.
+	config.recolour_id = id if owned else ""
+	if owned:
+		Meta.set_chosen_recolour(_rc_skin, id)
+	_refresh_recolour()
+	_show_detail("recolour")
+	changed.emit()
+
+
+## The cycle button pressed: the next recolour of the skin (Default first).
+func _cycle_recolour() -> void:
+	var options := PackedStringArray([""])  # Default, then the skin's offers.
+	options.append_array(RecolourData.ids_for(_rc_skin))
+	var i := options.find(_rc_view)  # Position now (-1 = unknown: start from Default).
+	Sfx.play_ui("ui_tick")
+	preview_recolour(options[(i + 1) % options.size()])
+
+
+## The Buy button pressed: a confirm dialog (Soul Ash is spent), or `denied`
+## when the Soul Ash is short.
+func _press_buy() -> void:
+	if Meta.recolour_block(_rc_skin, _rc_view) != "":
+		Sfx.play_ui("denied")
+		_show_detail("recolour")
+		return
+	var skin := _rc_skin  # Skin bought for (captured: the dialog is modal).
+	var id := _rc_view  # Recolour bought.
+	if GameState.autotest:
+		_buy_now(skin, id)  # Nothing opens a dialog under the autotest.
+		return
+	ConfirmDialog.ask(_dialog_host(), "Buy %s?" % RecolourData.display_name(id), "%d Soul Ash. This skin keeps it." % RecolourData.price(id),
+			"Buy", _buy_now.bind(skin, id), false)
+
+
+## Buys recolour `id` of `skin` and wears it.
+func _buy_now(skin: String, id: String) -> void:
+	if not Meta.buy_recolour(skin, id):
+		Sfx.play_ui("denied")
+		return
+	Sfx.play_ui("purchase")
+	Meta.set_chosen_recolour(skin, id)
+	if skin == _rc_skin:
+		_rc_view = id
+		config.recolour_id = id
+		_refresh_recolour()
+		_show_detail("recolour")
+		changed.emit()
+		_rc_cycle.grab_focus.call_deferred()  # The Buy button just went away.
+
+
+## The full-screen control a dialog opens over: the setup screen (else this row).
+func _dialog_host() -> Control:
+	var n: Node = self  # Walks up to the PreRunSetup.
+	while n != null and not (n is PreRunSetup):
+		n = n.get_parent()
+	return (n as Control) if n != null else self
+
+
+## A recolour button focused / hovered: name the recolour, show the worn skin on the hero.
+func _on_rc_focus() -> void:
+	_show_detail("recolour")
+	skin_focused.emit("")
+
+
+## Detail line for the previewed recolour: its name and, when unowned, its price
+## (soul-teal text cannot show here: the amber ash colour when affordable, dim crimson when short).
+func _show_recolour_detail() -> void:
+	var owned := _rc_view == "" or Meta.owns_recolour(_rc_skin, _rc_view)  # May be worn.
+	if _rc_view == "":
+		_detail.text = "Own colours"
+		_detail.add_theme_color_override("font_color", UiTheme.TEXT_DIM)
+	elif owned:
+		_detail.text = "%s recolour" % RecolourData.display_name(_rc_view)
+		_detail.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
+	else:
+		var price := RecolourData.price(_rc_view)  # Soul Ash.
+		var short := price - Meta.soul_ash  # Missing Soul Ash (> 0 = cannot buy).
+		_detail.text = "%s: %d Soul Ash" % [RecolourData.display_name(_rc_view), price] if short <= 0 else "%s: %d more Soul Ash" % [RecolourData.display_name(_rc_view), short]
+		_detail.add_theme_color_override("font_color", OssuaryUiData.ASH_COLOR if short <= 0 else Palette.CRIMSON.lightened(0.4))

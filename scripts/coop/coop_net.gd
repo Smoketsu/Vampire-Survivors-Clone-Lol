@@ -312,7 +312,7 @@ static func make_loadout(config: RunConfig, player_name: String = "") -> Diction
 	for id: String in Meta.unlocked_items:
 		unlocks.append(id)
 	unlocks.sort()
-	return {"character_id": config.character_id, "skin_id": config.skin_id, "ultimate_id": config.ultimate_id,
+	return {"character_id": config.character_id, "skin_id": config.skin_id, "recolour_id": config.recolour_id, "ultimate_id": config.ultimate_id,
 		"title_id": Meta.selected_title(), "meta_levels": levels, "unlocks": unlocks, "name": player_name}
 
 
@@ -337,6 +337,7 @@ static func run_config_for(info: Dictionary, slot: int) -> RunConfig:
 	var lo: Dictionary = (info.get("loadouts", [{}, {}]) as Array)[clampi(slot, 0, 1)]
 	c.set_character(String(lo.get("character_id", CharacterData.DEFAULT_ID)))
 	c.skin_id = String(lo.get("skin_id", ""))
+	c.recolour_id = String(lo.get("recolour_id", ""))  # Cosmetic: the partner's palette swap (Game._resolve_recolour() checks the save's ownership for slot 0 only).
 	c.set_ultimate(String(lo.get("ultimate_id", UltimateData.DEFAULT_ID)))
 	return c
 
@@ -684,5 +685,6 @@ static func _clean_loadout(lo: Dictionary, slot: int) -> Dictionary:
 		for id: Variant in u:
 			unlocks.append(String(id))
 	return {"character_id": String(lo.get("character_id", CharacterData.DEFAULT_ID)),
-		"skin_id": String(lo.get("skin_id", "")), "ultimate_id": String(lo.get("ultimate_id", UltimateData.DEFAULT_ID)),
+		"skin_id": String(lo.get("skin_id", "")), "recolour_id": String(lo.get("recolour_id", "")),
+		"ultimate_id": String(lo.get("ultimate_id", UltimateData.DEFAULT_ID)),
 		"title_id": String(lo.get("title_id", "")), "meta_levels": levels, "unlocks": unlocks, "name": player_name}

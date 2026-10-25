@@ -256,13 +256,16 @@ static func draw_disc(ci: CanvasItem, o: Vector2, r: float, color: Color) -> voi
 ## the colours when not flashing (components above 1 brighten): a playable
 ## character without its own art draws the necromancer tinted
 ## (CharacterGlyphs), and a skin's palette fallback tints too (SkinGlyphs).
+## `recolour` (RecolourData id, "" = none) draws the sprite, its walk strip and
+## its idle strip palette-swapped (Recolour: a skin recolour, cosmetic).
 ## Grid art is drawn on the art grid through the sharp-pixel shader (see the
 ## header). Returns false and draws nothing when there is no art, so the
 ## caller can draw its glyph.
-static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Color = Color.WHITE) -> bool:
+static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Color = Color.WHITE, recolour: String = "") -> bool:
 	var tex := texture(key)  # Art for this key, or null.
 	if tex == null:
 		return false
+	var still := Recolour.texture(tex, key, recolour) if recolour != "" else tex  # The still to draw (recoloured or not).
 	var icon := icon_cap > 0.0  # Drawing a HUD / card icon rather than a world unit.
 	var size := _drawn_size(key, tex)  # Drawn size (px).
 	var h := size.y  # Drawn height (px).
@@ -300,8 +303,23 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Col
 				var isrc := Rect2(fw * float(layer.idle_frame), 0.0, fw, float(tex.get_height()))  # Frame in the idle strip.
 				ci.draw_texture_rect_region(_idle[key], Rect2(top_left, size), isrc, mod)
 				return true
-	ci.draw_texture_rect(tex, Rect2(top_left, size), false, mod)
+	ci.draw_texture_rect(still, Rect2(top_left, size), false, mod)
 	return true
+
+
+## Builds the recoloured still, walk strip and idle strip of sprite `key` for
+## recolour `id` now (Recolour caches them), so the first frame drawn in a run
+## does not pay for the remap. Does nothing for "" / an unknown id or no art.
+## Drawing only.
+static func warm_recolour(key: String, id: String) -> void:
+	var tex := texture(key)  # Art for this key, or null.
+	if tex == null or not RecolourData.has(id):
+		return
+	Recolour.texture(tex, key, id)
+	if walk_frames(key) > 0:
+		Recolour.texture(_walk[key], key + WalkData.SUFFIX, id)
+	if idle_frames(key) > 0:
+		Recolour.texture(_idle[key], key + IdleData.SUFFIX, id)
 
 
 ## Draws stage boss `key` (its still sprite key) in attack pose `pose`

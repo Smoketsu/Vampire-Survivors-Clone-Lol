@@ -168,6 +168,11 @@ func build_slot(i: int) -> void:
 	s.player.skin_id = String(s.loadout.get("skin_id", ""))
 	if s.player.skin_id != "" and not SkinData.skins_for(s.character.id).has(s.player.skin_id):
 		s.player.skin_id = ""  # A skin of another character: the default look.
+	# Cosmetic only (RecolourData): the partner's palette swap rides in the loadout. It is never read by the simulation or the checksum.
+	var rc_skin := s.player.skin_id if s.player.skin_id != "" else SkinData.default_skin(s.character.id)  # Skin that wears it.
+	var rc := String(s.loadout.get("recolour_id", ""))  # Requested recolour.
+	s.player.recolour_id = rc if RecolourData.offered(rc_skin, rc) else ""
+	SkinGlyphs.warm(s.player.skin_id, s.character.id, s.player.recolour_id)
 	s.abilities = AbilityManager.new()
 	s0.abilities.add_sibling(s.abilities)
 	s.abilities.setup(game)
