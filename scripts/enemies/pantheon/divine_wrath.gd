@@ -193,6 +193,27 @@ func strike(kind: String, at: Vector2, overrides: Dictionary = {}) -> int:
 	return _strike_at(kind, game.elapsed, at, c)
 
 
+## Opens ONE fissure NOW from world point `a` to `b` (a boss's own crack, e.g.
+## Hades' ring of fissures) with the fissure settings plus `overrides` (cfg
+## keys: telegraph, open, burn, spit, swallow; DivineWrath does the rest exactly
+## as for its own fissures). Returns 1, or 0 when WRATH_CAPS is reached (stat
+## wrath_capped). Stat wrath_called_fissures.
+func open_fissure(a: Vector2, b: Vector2, overrides: Dictionary = {}) -> int:
+	var c: Dictionary = cfg["fissures"]
+	if not overrides.is_empty():
+		c = c.duplicate()
+		for key: String in overrides:
+			c[key] = overrides[key]
+	if fissures.size() >= int(PantheonRulesData.WRATH_CAPS["fissures"]):
+		game.stat_add("wrath_capped", 1.0)
+		return 0
+	var open_t := game.elapsed + float(c["telegraph"])  # Game time it opens.
+	fissures.append({"a": a, "b": b, "open_t": open_t, "close_t": open_t + float(c["open"]),
+		"next_tick": open_t, "next_spit": open_t, "spit_until": open_t + float(c["spit_time"]), "opened": false, "c": c})
+	game.stat_add("wrath_called_fissures", 1.0)
+	return 1
+
+
 ## Starts one scheduled strike of kind `k` at game time `t` (its telegraph),
 ## around a standing necromancer.
 func _strike(k: String, t: float) -> void:

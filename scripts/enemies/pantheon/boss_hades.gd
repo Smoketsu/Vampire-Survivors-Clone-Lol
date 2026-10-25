@@ -20,10 +20,8 @@
 ##     posts around him; behind it he takes ring_damage_taken; once it breaks he
 ##     staggers, open, then raises a new one.
 ## WRATH OF THE GODS: his fissures and the Poseidon / Zeus shades' wave and
-## bolts are DivineWrath hazards (they hit both armies). LEAD (merge): the
-## Mount Olympus agent adds the public DivineWrath.strike(); until then the two
-## wrappers below (_wrath_strike(), _open_fissure()) reach DivineWrath's
-## private scheduler / fissure list, marked for the lead to switch over.
+## bolts are DivineWrath hazards (they hit both armies), through its public
+## DivineWrath.open_fissure() / strike() (_open_fissure(), _wrath_strike()).
 ## Beaten, he KNEELS and gives up his crown (HadesHazards.start_finale(): the
 ## kneeling figure and the crown at the necromancer's feet; the ending line and
 ## announcement, like Vhal'Neth's and Deus Ex Machina's).
@@ -369,28 +367,18 @@ func _ring_fissures(n: int) -> void:
 	game.stat_add("boss_atk_fissures", 1.0)
 
 
-## LEAD (merge): replace with the public DivineWrath.strike() the Mount Olympus
-## agent adds. Opens one Hades fissure centred at `centre`, lying along `dir`,
-## `length` px long, with the stage's fissure settings (telegraph, burn, spit,
-## swallow: DivineWrath does the rest exactly as for its own fissures).
+## Opens one Hades fissure centred at `centre`, lying along `dir`, `length` px
+## long, through the one fissure path (DivineWrath.open_fissure(): the stage's
+## telegraph, burn, spit and swallow).
 func _open_fissure(centre: Vector2, dir: Vector2, length: float) -> void:
-	var w := game.pantheon_rules().wrath  # The one wrath path.
-	var c: Dictionary = w.cfg["fissures"]
-	if w.fissures.size() >= int(PantheonRulesData.WRATH_CAPS["fissures"]):
-		game.stat_add("wrath_capped", 1.0)
-		return
-	var half := dir * length * 0.5
-	var open_t := game.elapsed + float(c["telegraph"])  # Game time it opens.
-	w.fissures.append({"a": centre - half, "b": centre + half, "open_t": open_t, "close_t": open_t + float(c["open"]),
-		"next_tick": open_t, "next_spit": open_t, "spit_until": open_t + float(c["spit_time"]), "opened": false, "c": c})
+	var half := dir * length * 0.5  # Half the crack.
+	game.pantheon_rules().wrath.open_fissure(centre - half, centre + half)
 
 
-## LEAD (merge): replace with the public DivineWrath.strike(kind, at, ...) the
-## Mount Olympus agent adds. Starts one Wrath of the Gods strike of `kind`
-## ("waves", "lightning", "fissures") around the necromancer through
-## DivineWrath's own scheduler (its private _strike()).
+## Starts one Wrath of the Gods strike of `kind` ("waves", "lightning") around
+## the (bound) necromancer through the public DivineWrath.strike().
 func _wrath_strike(kind: String) -> void:
-	game.pantheon_rules().wrath._strike(kind, game.elapsed)
+	game.pantheon_rules().wrath.strike(kind, game.player.position)
 
 
 # =====================================================================================
