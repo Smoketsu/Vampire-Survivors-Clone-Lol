@@ -1660,6 +1660,14 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   check `godot --headless res://tools/ossuary_check.tscn -- --autotest` covers
   prices, gates, the migration, Refund all and the co-op loadout (temp files only;
   CI runs it in the Graveyard job; `--shot=PATH [--phone]` saves a screenshot).
+- **Masteries** (Ossuary expansion step 4, GDD §15.0 "Ossuary Masteries"; the Masteries tab): each of the 17 offerable summon classes has a
+  mastery of 3 levels, **+4% max HP and +4% damage per level** for that class only (190 / 250 / 320 Soul Ash a class,
+  12,920 in all). It opens once you have taken that class to level 5 in any run (older saves open the classes of the
+  summon evolutions they already found); until then its tile is dimmed ("Lv 5") and the detail strip says "Take <class>
+  to level 5 in a run". An evolved form counts as its base class, the Profane Bishop as the better of Mender and Warder.
+  Masteries ride the one summon-stat path (`MetaModifiers.mastery_value()` → `HordeDirector.compute_stats()`), travel in
+  the co-op loadout (`mastery_levels`) and are not touched by Refund all. Save sections `[class_lv5]` and `[masteries]`.
+  `--meta=max` owns every mastery and prints a `masteries:` line; the other profiles own none.
 - **One modifier path.** At run start `Meta.run_modifiers()` turns the
   purchased tiers into a `MetaModifiers` object (`game.meta`). The existing
   stat code reads it in a few places (horde `compute_stats` / `capacity` /
