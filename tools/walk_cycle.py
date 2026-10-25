@@ -399,10 +399,13 @@ RIGS = {
     # rides with the body (per-column rigid rects down to its ink row, so it always covers where the
     # thighs meet); the shield's foot rigid. The hip box sways on the skirt (rows 35-38, fading to 41)
     # and the `swish` box carries the skirt one frame behind it, growing from the belt to the panel's hem (rows 35-45, fading below), so the pleats bend smoothly.
-    "pantheon/amazon": dict(mode="legs", hip=42, back=(0, 34), front=(34, 66),
-                            rigid=[(14, 22, 42, 50), (26, 27, 42, 45), (27, 28, 42, 46), (28, 29, 42, 47), (29, 39, 42, 48),
-                                   (39, 40, 42, 47), (40, 41, 42, 46), (41, 42, 42, 45)],
-                            spread=2, lift=2, dip=1, bust=(21, 47, 35, 39, 1, 1), bust_axis="x", swish=(21, 47, 35, 46, 2)),
+    # Round 7 (owner: "start again with fresh generation... the original style, a bit stronger and more
+    # voluptuous, a bit scandalous"): a new still, 64x70. Hip 46 (just under the skirt's front hem and its
+    # ink row, so the whole skirt rides with the body and never tears), legs split at col 33 (the gap
+    # between the thighs), the shield's foot rigid; the hip box sways sideways on the skirt over her hips
+    # (cols 22-42, rows 36-42, as the owner liked) and the `swish` box carries the hem one frame behind.
+    "pantheon/amazon": dict(mode="legs", hip=46, back=(0, 33), front=(33, 64), rigid=[(0, 22, 46, 51)],
+                            spread=2, lift=2, dip=1, bust=(22, 42, 36, 42, 1, 1), bust_axis="x", swish=(22, 42, 37, 45, 1)),
     # Art review round 1 redo (slim-thick, a bit chubby; the old box sat too low): on her bust
     # (cols 21-31, rows 17-21, two lobes).
     "pantheon/gorgon": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(21, 32, 17, 22, 2, 2)),
