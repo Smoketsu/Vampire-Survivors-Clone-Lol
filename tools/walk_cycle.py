@@ -383,7 +383,10 @@ RIGS = {
     # mass (one bell: two lobes swaying the same way tore the skirt at the centre column). Round 4
     # (the narrow front flap between bare thighs read as a crotch): the still's skirt covers both
     # thighs down to a flat hem (row 40), the flap is gone; only the hem's ink row (41) rides rigid.
-    "pantheon/amazon": dict(mode="legs", hip=41, back=(0, 28), front=(28, 54), rigid=[(24, 31, 41, 42)], spread=2, lift=2, dip=1, bust=(18, 38, 27, 38, 2, 1), bust_axis="x"),
+    # Round 5 (owner: the skirt too long; regenerated as a bigger, curvier "muscle mommy", 70 tall,
+    # 66 wide): a short closed skirt with a straight hem (row 42, ink row 43); the box sways on the
+    # skirt over her hips (cols 21-45, rows 35-40, fading over rows 41-42 above the hem ink; the belt above it stays); the shield's foot rigid.
+    "pantheon/amazon": dict(mode="legs", hip=44, back=(0, 34), front=(34, 66), rigid=[(14, 22, 44, 50)], spread=2, lift=2, dip=1, bust=(21, 46, 35, 41, 2, 1), bust_axis="x"),
     # Art review round 1 redo (slim-thick, a bit chubby; the old box sat too low): on her bust
     # (cols 21-31, rows 17-21, two lobes).
     "pantheon/gorgon": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(21, 32, 17, 22, 2, 2)),

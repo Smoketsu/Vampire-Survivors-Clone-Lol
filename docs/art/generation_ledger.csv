@@ -836,3 +836,8 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-25 16:48,bosses/hades_kneel,gpt-image-2.5-flare,medium,1024x1024,1,617,1024,439,0.0244,hades_kneel_a.png
 2026-10-25 17:48,summons/myrmidon_shade,gpt-image-2.5-flare,medium,1024x1024,2,664,14,439,0.0166,shade1.png
 2026-10-25 17:52,summons/legion_of_tartarus,gpt-image-2.5-flare,medium,1024x1024,1,653,1024,439,0.0246,legion1.png
+2026-10-25 18:20,bosses/hades,gpt-image-2.5-flare,medium,1024x1024,1,352,1024,439,0.0231,hades.png
+2026-10-25 18:20,bosses/hades_bident,gpt-image-2.5-flare,medium,1024x1024,1,356,1024,439,0.0231,hades_bident.png
+2026-10-25 18:20,bosses/hades_kneel,gpt-image-2.5-flare,medium,1024x1024,1,359,1024,439,0.0232,hades_kneel.png
+2026-10-25 18:27,pantheon/amazon,gpt-image-2.5-flare,medium,1024x1024,2,773,2048,439,0.0334,amazon_a.png
+2026-10-25 18:27,pantheon/amazon,gpt-image-2.5-flare,medium,1024x1024,2,773,2048,439,0.0334,amazon_b.png
