@@ -14,9 +14,8 @@ anything before the owner answers them**, except step 1 (measuring), which is sa
 - `main` = `integration` = `ae5c6aa` (if the last publish went through; check `gh run list --branch main`):
   everything shipped, including the placeholder-art sweep (Harbour, Act I enemy / player AoEs, Act I walk strips,
   Act III effects and sprites, all owner-approved on review pages) and "bosses don't flash" (`EnemyData.BIG_HIT_FLASH`).
-- Nothing in flight. No open agents. The Act III session (`session_01Etc2wb7CR1tZxL38Nta6Qe`) and this one agreed to
-  message each other before fast-forwarding `main`. The last heads-up (for `ae5c6aa`) was not delivered: the
-  message tool was denied. Tell that session `main` moved, or check it is still active.
+- Nothing in flight. No open agents. The owner said (Oct 25) there is no need to notify the Act III session
+  (`session_01Etc2wb7CR1tZxL38Nta6Qe`) any more before moving `main`; just fetch / rebase before pushing.
 
 ## The economy today (facts gathered for the proposal)
 
