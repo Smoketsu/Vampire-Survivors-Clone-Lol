@@ -106,7 +106,7 @@ const BOSS := {
 	"beam_width": 34.0,  # TUNING (not in GDD) px
 	"beam_width_p3": 52.0,  # TUNING (not in GDD) px in his true form
 	"beam_time": 0.45,  # TUNING (not in GDD) s the beam burns (each body hit once)
-	"beam_damage_player": 18.0,  # TUNING (not in GDD) before the time scaling
+	"beam_damage_player": 12.0,  # TUNING (not in GDD) before the time scaling; lead's integration pass 18 -> 12
 	"beam_damage_summon": 12.0,  # TUNING (not in GDD) before the time scaling (smoke run: 26 dealt 15,600 to the army bot's summons)
 	"beam_fan_p2": 3,  # TUNING (not in GDD) lanes from the Storm Throne on
 	"beam_fan_angle": 0.38,  # TUNING (not in GDD) rad between two lanes

@@ -48,7 +48,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 ## (Act IV starts a step above the Iron Citadel's 1.35 and climbs stage by stage).
 const ENEMY_HP_MULT: float = 1.45  # TUNING (not in GDD) placeholder, tuned in the lead's balance pass
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) placeholder, tuned in the lead's balance pass
+const ENEMY_DAMAGE_MULT: float = 1.3  # TUNING (not in GDD) lead's integration pass: 1.4 -> 1.3 (the army bot died to the stacked lightning, beam and arrows of the Zeus fight on 1 of 3 seeds)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) placeholder (Act III: 7:00)
@@ -59,6 +59,7 @@ const ASH_MULT: float = 3.5  # TUNING (not in GDD) placeholder (Ilion x3.25)
 ## key overrides PantheonRulesData.WRATH["lightning"] ({} = those defaults).
 const WRATH := {
 	"kind": "lightning",  # Owner-approved proposal: Zeus's lightning (Olympus)
+	"dmg_player": 6.0,  # TUNING (not in GDD) lead's integration pass: 9 -> 6 on this stage only (a salvo every 6 s all run; the shared default stays for the Twilight)
 }
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): the Twilight
