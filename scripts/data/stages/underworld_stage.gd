@@ -49,7 +49,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 ## (Act IV starts a step above the Iron Citadel's 1.4 and climbs stage by stage).
 const ENEMY_HP_MULT: float = 1.5  # TUNING (not in GDD) placeholder, tuned in the lead's balance pass
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.25  # TUNING (not in GDD) placeholder (the stub's 1.45 lowered: the Citadel's lesson, the step above is in HP, not damage)
+const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) owner's playtest pass 1 decision (Oct 25, 2026): 1.25 -> 1.5, the act's finale was the easiest Act IV stage (0/15 deaths at meta none)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00 (Act III)
