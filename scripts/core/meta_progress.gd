@@ -76,7 +76,14 @@
 ##     <character> = <skin id>); skin UNLOCKS are not stored but derived
 ##     (is_skin_unlocked()) from the Hyper clears, achievements and three
 ##     lifetime counters (rot_kills, high_confessor_kills,
-##     seraphine_kills_full_army), so they can never disagree with them.
+##     seraphine_kills_full_army), so they can never disagree with them,
+##   * `owned_recolours` are the skin recolours bought with Soul Ash (Ossuary
+##     expansion step 6b, RecolourData; cosmetic): skin id -> PackedStringArray
+##     of recolour ids ([recolours] <skin id> = "bone,blood"), kept for good
+##     (Refund all does not return them), and `chosen_recolours` the one worn
+##     per skin ([recolour_pick] <skin id> = <recolour id>; absent = the skin's
+##     own colours). Additive sections: an older save has none and loads as
+##     "owns nothing"; no SAVE_VERSION step is needed.
 ## award_run() reports what a run unlocked ("hyper_unlocked", "hyper_clear",
 ## "unlocked_skins") for the end screen. Older saves without these sections
 ## get the defaults; unknown ids are ignored.
@@ -186,6 +193,10 @@ var prerun_hyper: bool = false
 var prerun_ultimate: String = UltimateData.DEFAULT_ID
 ## Character id -> SkinData id last chosen for that character.
 var chosen_skins: Dictionary = {}
+## SkinData id -> PackedStringArray of the RecolourData ids bought for that skin.
+var owned_recolours: Dictionary = {}
+## SkinData id -> RecolourData id worn on that skin ("" / absent = none).
+var chosen_recolours: Dictionary = {}
 ## Codex: CodexData category -> {entry id -> true} for every entry met in
 ## any run (one Dictionary per CodexData.CATEGORIES entry, always present).
 var codex_seen: Dictionary = {}
@@ -490,6 +501,7 @@ func prerun_config(stage_id: String) -> RunConfig:
 	c.set_character(prerun_character if is_character_unlocked(prerun_character) else CharacterData.DEFAULT_ID)
 	c.hyper = prerun_hyper and hyper_unlocked
 	c.skin_id = chosen_skin(c.character_key())
+	c.recolour_id = chosen_recolour(c.skin_id)  # Ossuary recolours: the one worn on that skin ("" = none).
 	c.set_ultimate(prerun_ultimate if Unlocks.is_open(prerun_ultimate) else UltimateData.DEFAULT_ID)  # Content wave 2.
 	return c
 
@@ -499,6 +511,7 @@ func prerun_config(stage_id: String) -> RunConfig:
 ## saves when they changed.
 func remember_prerun(config: RunConfig) -> void:
 	var skin_changed := _remember_skin(config)  # The character's skin choice changed.
+	skin_changed = _remember_recolour(config) or skin_changed  # The skin's recolour choice changed.
 	if config.difficulty_id == prerun_difficulty and config.modifiers == prerun_modifiers \
 			and config.character_id == prerun_character and config.hyper == prerun_hyper and not skin_changed \
 			and config.ultimate_id == prerun_ultimate:
@@ -522,6 +535,23 @@ func _remember_skin(config: RunConfig) -> bool:
 	if String(chosen_skins.get(ch, SkinData.default_skin(ch))) == id:
 		return false
 	chosen_skins[ch] = id
+	return true
+
+
+## Stores the recolour of `config` as its skin's choice (an owned recolour of
+## an unlocked skin, or none). Returns true if the stored choice changed.
+func _remember_recolour(config: RunConfig) -> bool:
+	var ch := config.character_key()  # The run's character.
+	var skin := config.skin_id if config.skin_id != "" else SkinData.default_skin(ch)  # Skin that wears it.
+	if not SkinData.skins_for(ch).has(skin) or not is_skin_unlocked(skin):
+		return false
+	var rc := config.recolour_id if owns_recolour(skin, config.recolour_id) else ""  # Only an owned one is kept.
+	if String(chosen_recolours.get(skin, "")) == rc:
+		return false
+	if rc == "":
+		chosen_recolours.erase(skin)
+	else:
+		chosen_recolours[skin] = rc
 	return true
 
 
@@ -632,6 +662,88 @@ func chosen_skin(character: String) -> String:
 	if id != "" and SkinData.skins_for(ch).has(id) and is_skin_unlocked(id):
 		return id
 	return SkinData.default_skin(ch)
+
+
+# =====================================================================================
+# Skin recolours (Ossuary expansion step 6b; RecolourData; cosmetic)
+# =====================================================================================
+
+## True when recolour `id` is owned for skin `skin` (bought, and still offered
+## by the skin). "" is never owned: it means no recolour.
+func owns_recolour(skin: String, id: String) -> bool:
+	if id == "" or not RecolourData.offered(skin, id):
+		return false
+	return (owned_recolours.get(skin, PackedStringArray()) as PackedStringArray).has(id)
+
+
+## The recolours bought for `skin`, in RecolourData.ORDER.
+func owned_recolour_ids(skin: String) -> PackedStringArray:
+	var out := PackedStringArray()  # Recolour ids.
+	for id: String in RecolourData.ids_for(skin):
+		if owns_recolour(skin, id):
+			out.append(id)
+	return out
+
+
+## The recolour worn on `skin` next run: its remembered choice while still owned,
+## else "" (the skin's own colours).
+func chosen_recolour(skin: String) -> String:
+	var id := String(chosen_recolours.get(skin, ""))  # Remembered choice.
+	return id if owns_recolour(skin, id) and is_skin_unlocked(skin) else ""
+
+
+## Why recolour `id` cannot be bought for `skin` right now: "" (it can),
+## "unknown" (not a recolour this skin offers), "locked" (the skin itself is
+## not unlocked), "owned" or "cost" (not enough Soul Ash).
+func recolour_block(skin: String, id: String) -> String:
+	if not RecolourData.offered(skin, id):
+		return "unknown"
+	if not is_skin_unlocked(skin):
+		return "locked"
+	if owns_recolour(skin, id):
+		return "owned"
+	if soul_ash < RecolourData.price(id):
+		return "cost"
+	return ""
+
+
+## Buys recolour `id` for `skin` with Soul Ash and saves. Returns false if it
+## was blocked (see recolour_block()). Kept for good: no refund.
+func buy_recolour(skin: String, id: String) -> bool:
+	if recolour_block(skin, id) != "":
+		return false
+	soul_ash -= RecolourData.price(id)
+	var have: PackedStringArray = owned_recolours.get(skin, PackedStringArray())  # Already owned for the skin.
+	have.append(id)
+	owned_recolours[skin] = have
+	save()
+	changed.emit()
+	return true
+
+
+## Remembers `id` ("" = none) as the recolour worn on `skin` and saves. An
+## unowned recolour is ignored (the choice stays); a no-op when it is already
+## the choice.
+func set_chosen_recolour(skin: String, id: String) -> void:
+	if id != "" and not owns_recolour(skin, id):
+		return
+	var rc := id  # The recolour to keep ("" = none).
+	if String(chosen_recolours.get(skin, "")) == rc:
+		return
+	if rc == "":
+		chosen_recolours.erase(skin)
+	else:
+		chosen_recolours[skin] = rc
+	save()
+
+
+## Soul Ash spent on recolours so far.
+func recolour_spent_total() -> int:
+	var total := 0  # Soul Ash.
+	for skin: String in owned_recolours:
+		for id: String in (owned_recolours[skin] as PackedStringArray):
+			total += RecolourData.price(id)
+	return total
 
 
 # =====================================================================================
@@ -1142,6 +1254,12 @@ func save() -> Error:
 		cfg.set_value("hyper_clears", key, true)
 	for ch: String in chosen_skins:
 		cfg.set_value("skins", ch, String(chosen_skins[ch]))
+	for skin: String in owned_recolours:
+		var ids := owned_recolour_ids(skin)  # Only ids the skin still offers.
+		if not ids.is_empty():
+			cfg.set_value("recolours", skin, ",".join(ids))
+	for skin: String in chosen_recolours:
+		cfg.set_value("recolour_pick", skin, String(chosen_recolours[skin]))
 	for cat: String in CodexData.CATEGORIES:
 		cfg.set_value("codex", cat, ",".join(PackedStringArray((codex_seen[cat] as Dictionary).keys())))
 	for kind: String in codex_kills:
@@ -1210,6 +1328,7 @@ func load_save() -> void:
 	_load_recipes(cfg)
 	_load_characters(cfg)
 	_load_hyper_skins(cfg)
+	_load_recolours(cfg)
 	_load_codex(cfg)
 	_load_unlocks(cfg)
 	_load_title(cfg)
@@ -1374,6 +1493,24 @@ func _load_hyper_skins(cfg: ConfigFile) -> void:
 			chosen_skins[ch] = String(sk)
 
 
+## Reads the skin recolours ([recolours], [recolour_pick]; absent sections =
+## none owned). Unknown skins / recolours are ignored; a pick that is not owned
+## is dropped. Only skins that exist in this build are read.
+func _load_recolours(cfg: ConfigFile) -> void:
+	for skin: String in SkinData.all_ids():
+		var raw: Variant = cfg.get_value("recolours", skin, "")
+		if typeof(raw) == TYPE_STRING and String(raw) != "":
+			var ids := PackedStringArray()  # Recolours of this skin that are valid.
+			for id: String in String(raw).split(",", false):
+				if RecolourData.offered(skin, id) and not ids.has(id):
+					ids.append(id)
+			if not ids.is_empty():
+				owned_recolours[skin] = ids
+		var pick: Variant = cfg.get_value("recolour_pick", skin, "")
+		if typeof(pick) == TYPE_STRING and owns_recolour(skin, String(pick)):
+			chosen_recolours[skin] = String(pick)
+
+
 ## Upgrades an older save layout in `cfg` (in memory) to SAVE_VERSION.
 ## Version 0 is a file without a save_version key; it has the version-1
 ## layout, so nothing moves. Future layout changes add one step per version
@@ -1428,6 +1565,8 @@ func _reset() -> void:
 	prerun_hyper = false
 	prerun_ultimate = UltimateData.DEFAULT_ID
 	chosen_skins = {}
+	owned_recolours = {}
+	chosen_recolours = {}
 	codex_seen = _empty_codex()
 	codex_kills = {}
 	unlocked_items = {}

@@ -385,7 +385,10 @@ func _show_hero(id: String) -> void:
 	var skin := config.skin_id if id == config.character_id else Meta.chosen_skin(id)  # Worn skin.
 	if id == config.character_id and _preview_skin != "":
 		skin = _preview_skin  # A focused skin tile wins.
-	_hero.show_character(id, skin, id == config.character_id)
+	var recolour := Meta.chosen_recolour(skin)  # Palette swap that skin wears (Ossuary recolours, cosmetic).
+	if id == config.character_id and skin == config.skin_id:
+		recolour = _extras.shown_recolour()  # The worn skin: the one being previewed.
+	_hero.show_character(id, skin, id == config.character_id, recolour)
 
 
 ## A skin tile is focused ("" = none): the hero wears it (the chosen character).

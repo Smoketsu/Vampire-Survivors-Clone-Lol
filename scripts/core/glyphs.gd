@@ -56,8 +56,8 @@ static func hp_bar(ci: CanvasItem, c: Vector2, w: float, frac: float, fill: Colo
 
 ## The player: hooded purple robe (triangle), bone face, green eyes, staff
 ## with a necrotic green orb (GDD §17 "purple/green/black/bone").
-static func draw_necromancer(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
-	if SpriteBank.draw(ci, "player/necromancer", o, flash):
+static func draw_necromancer(ci: CanvasItem, o: Vector2, r: float, flash: bool, recolour: String = "") -> void:
+	if SpriteBank.draw(ci, "player/necromancer", o, flash, Color.WHITE, recolour):
 		return  # Sprite art exists (assets/sprites/player/necromancer.png).
 	ci.draw_circle(o + Vector2(0, r * 0.9), r * 0.9, Color(0, 0, 0, 0.35))
 	var robe := PackedVector2Array([o + Vector2(0, -r * 1.25), o + Vector2(-r, r * 1.05), o + Vector2(r, r * 1.05)])

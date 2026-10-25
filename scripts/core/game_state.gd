@@ -79,6 +79,9 @@
 ##   --skin=ID             Autotest skin (SkinData id, e.g. dread_sovereign
 ##                         or gravecaller_hyper), forced for screenshots:
 ##                         ignores the unlock and the character. Cosmetic.
+##   --recolour=ID         Autotest skin recolour (RecolourData id, e.g. blood
+##                         or gilded) drawn on the worn skin, forced for
+##                         screenshots: ignores ownership. Cosmetic.
 ##   --synergies=off       Autotest A/B switch: no army synergy (the four
 ##                         original ones and the newer classes') ever
 ##                         activates (default on).
@@ -225,6 +228,8 @@ var autotest_modifiers: PackedStringArray = PackedStringArray()
 var autotest_hyper: bool = false
 ## Autotest: SkinData id forced by --skin= ("" = the default look).
 var autotest_skin: String = ""
+## Autotest: RecolourData id forced by --recolour= ("" = the skin's own colours).
+var autotest_recolour: String = ""
 ## Autotest: true when --synergies=off keeps every army synergy off (old and
 ## new; SynergyManager.evaluate()) for A/B balance runs.
 var autotest_synergies_off: bool = false
@@ -489,6 +494,12 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_skin = skid
 			else:
 				push_error("Unknown --skin=%s (expected one of %s)" % [skid, ", ".join(SkinData.all_ids())])
+		elif arg.begins_with("--recolour="):
+			var rcid := arg.get_slice("=", 1).to_lower()  # Requested recolour id.
+			if RecolourData.has(rcid):
+				autotest_recolour = rcid
+			else:
+				push_error("Unknown --recolour=%s (expected one of %s)" % [rcid, ", ".join(RecolourData.ORDER)])
 		elif arg.begins_with("--synergies="):
 			var sv := arg.get_slice("=", 1).to_lower()  # "off" or "on".
 			if sv == "off" or sv == "on":

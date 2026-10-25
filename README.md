@@ -1161,6 +1161,50 @@ counters (`rot_kills`, `high_confessor_kills`, `seraphine_kills_full_army`)
 are lifetime stats in the save; unlocks are derived from them, the
 achievements and the Hyper clears, never stored separately.
 
+#### Skin recolours (Ossuary expansion, a Soul Ash sink)
+
+For a player who owns everything: every skin you have unlocked (default, Hyper,
+achievement and universal alike) can be **recoloured**, a palette swap of the
+same sprite, its walk and idle strips and its portraits. Four of five families
+are offered on each skin: **Bone** (300 Soul Ash, a near-greyscale ivory),
+**Blood** (400, crimson), **Abyss** (500, teal-blue) and **Gilded** (600, gold);
+the Hyper skins, already gold, offer **Verdant** (600, emerald) instead of Gilded.
+They are bought **per skin** and kept for good (Refund all does not return
+them): one skin's four cost 1,800, and the 76 skins together 136,800, a sink that
+is meant for the end of a long career, not a goal (a good run pays about 900 on
+Necromancer). Purely cosmetic like every skin: a recolour never touches a stat,
+a rule or the simulation, and is not in the co-op checksum.
+
+- **Where:** the pre-run setup screen's hero panel, at the right end of the line
+  under the skin tiles: one **Recolour** button (a colour chip and the family's
+  name) that cycles *Default, Bone, Blood, Abyss, Gilded* for the chosen skin. An
+  owned one is worn at once and remembered per skin; an unowned one is only
+  previewed on the hero and the line shows its price, with a **Buy** button
+  (Soul Ash icon and price: a confirm dialog, the one place here that costs Soul
+  Ash). The button hides while the skin is locked. Keyboard, pad and touch work as
+  on the rest of the screen; there is no Ossuary tab for recolours.
+- **How it is drawn:** no new art and no shader. `Recolour` (`scripts/core/recolour.gd`)
+  remaps every colour of the sprite once, on the CPU (hue to the family's, a share of
+  the old hue offset kept so a skin keeps some variety, greys take the family's cast;
+  numbers in `recolour_data.gd`), and caches the new texture per sprite and
+  recolour; the one draw path is the `recolour` parameter of `SpriteBank.draw()`, so
+  the world, the pre-run hero, the skin tiles and the co-op bust all follow. The
+  run's necromancer is remapped at run start (`SkinGlyphs.warm()`), so the first
+  frame does not pay for it. A glyph without sprite art keeps its own colours.
+- **Save:** Meta `[recolours] <skin id> = "bone,blood"` (owned) and
+  `[recolour_pick] <skin id> = <recolour id>` (worn); additive sections, no save
+  version step; unknown ids are ignored on load.
+- **Co-op:** the pick travels in the loadout (`recolour_id`), so the partner sees
+  it (the plate's bust and the world); it is cosmetic and never read by the
+  simulation.
+- **Autotest:** `--recolour=bone|blood|abyss|gilded|verdant` forces one on the
+  worn skin (screenshots; ignores ownership) and adds a `recolours` summary line
+  (only then: default runs print nothing new). `tools/ossuary_check.gd` checks the
+  data, the remap, the purchases, the save, the run config, the co-op loadout and the
+  pre-run control; its `--shot-prerun=PATH` mode (with `--shot-char=`, `--shot-skin=`,
+  `--shot-rc=`, `--shot-buy`, `--phone`) screenshots the screen under xvfb. Shots:
+  `docs/ossuary/shots/recolours/`.
+
 ### Stage 1: The Desecrated Graveyard (Stage & Boss)
 
 - **Obstacles.** Gravestones, dead trees and crypt walls are solid for the
@@ -2175,6 +2219,8 @@ scripts/
     environment_art.gd      Optional floor tiles and obstacle sprites (grid art), falls back to the code floors / glyphs
     skin_glyphs.gd          Cosmetic skins: the skin's art, else the character sprite / glyph with the
                             skin's palette tint, emblem and aura
+    recolour.gd             Skin recolours: the one palette remap of a sprite's pixels (cached per sprite and
+                            recolour; SpriteBank.draw()'s `recolour` parameter)
     ground.gd               Procedural graveyard floor, redrawn only when the camera changes cell
     march_ground.gd         Crimson March floor: the road and each battle zone's look (extends Ground)
     march_glyphs.gd         Crimson March shapes: new soldiers, structures, Marshal Vael, obstacles, corpse piles
@@ -2587,6 +2633,8 @@ scripts/
     skin_data.gd            Per-character (CharacterData) default / Hyper / achievement skins, the
                             universal Untouchable / Deathlord skins, unlock rules,
                             palette fallbacks (tint, accent, glow, emblem)
+    recolour_data.gd        Skin recolours (Bone, Blood, Abyss, Gilded, Verdant): prices 300-600, the hue / saturation /
+                            value numbers, which four each skin offers
     stance_data.gd          The Bone Ring: leash / recall / pull overrides, ring radii and spacing,
                             the switched-off flavour bonus
     character_data.gd       Playable characters: starting spell, innate (text + numbers), stats, art key,
@@ -2713,6 +2761,7 @@ Options (after `--`):
 | `--victory-preview` | Debug (with or without `--autotest`): skips the menu, raises a small army and after 6 game seconds ends the run as a scripted victory (83 s past 0:00, the boss slain, four evolutions, seven chests; `VictoryData.PREVIEW_*`), so the last stand and the victory card can be seen and screenshot at once; `--stage=`, `--difficulty=`, `--character=`, `--hyper` and `--skin=` apply. Nothing is saved. Every victory's summary has a `victory screen` line: `title=<stage title> best_overtime=<s> new_record=<bool> highlights=<n>` (the card's logic runs headless; under the autotest the Best starts from an empty in-memory record). |
 | `--feedback-url=URL`, `--feedback-entry=ID` | Debug: use `URL` as the feedback form's link (and `ID`, e.g. `entry.123456789`, as its prefilled field) instead of `FeedbackData.FORM_URL` / `DETAILS_ENTRY`, so the Feedback buttons show and their open path can be tried with a dummy link before the owner's form exists. Never opens anything under the autotest. Every summary ends with a `feedback` line: `url_set=<bool> \| report_chars=<menu>/<pause>/<results>` (three sample reports built headless, at most 1500 characters each) `\| url_chars=<n> \| opened=never (autotest)`. |
 | `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`, or a universal one such as `gravecaller_untouchable` / `brine_widow_deathlord`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |
+| `--recolour=ID` | Forces a skin recolour (`bone`, `blood`, `abyss`, `gilded` or `verdant`, `RecolourData`) on the worn skin, ignoring ownership, for screenshots. Cosmetic only. Adds a `recolours` summary line (the family, its price, the sprite remapped); default runs print nothing new. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 
 Setting the environment variable `NECROPATHY_AUTOTEST=1` (or the pre-rename `GRAVEBOUND_AUTOTEST=1`) is the same as `--autotest`.

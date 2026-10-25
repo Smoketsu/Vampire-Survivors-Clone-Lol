@@ -30,17 +30,17 @@ const LOCK_ICON_SCALE: int = 2  # TUNING (not in GDD)
 ## Draws character `id` centred near `o` (body radius `r`, hit `flash`).
 ## `skin_tint` (a skin palette's tint, SkinGlyphs; white = none) multiplies
 ## the colours of the character's own art or of its tinted fallback.
-static func draw_player(ci: CanvasItem, id: String, o: Vector2, r: float, flash: bool, skin_tint: Color = Color.WHITE) -> void:
+static func draw_player(ci: CanvasItem, id: String, o: Vector2, r: float, flash: bool, skin_tint: Color = Color.WHITE, recolour: String = "") -> void:
 	if id == CharacterData.DEFAULT_ID or not CharacterModifiers.is_known(id):
-		Glyphs.draw_necromancer(ci, o, r, flash)
+		Glyphs.draw_necromancer(ci, o, r, flash, recolour)
 		return
 	var d := CharacterModifiers.def(id)  # Character row.
 	var key := String(d["sprite"])  # Own art key.
-	if SpriteBank.draw(ci, key, o, flash, skin_tint):
+	if SpriteBank.draw(ci, key, o, flash, skin_tint, recolour):
 		return  # The character's own art exists.
 	var tint: Color = d["tint"]
 	_draw_aura(ci, o, r, tint)
-	if SpriteBank.draw(ci, "player/necromancer", o, flash, tint.lerp(Color.WHITE, SPRITE_TINT_LIGHTEN) * skin_tint):
+	if SpriteBank.draw(ci, "player/necromancer", o, flash, tint.lerp(Color.WHITE, SPRITE_TINT_LIGHTEN) * skin_tint, recolour):
 		return  # The necromancer's art, tinted with the school colour.
 	_draw_glyph(ci, o, r, flash, tint, skin_tint)
 
