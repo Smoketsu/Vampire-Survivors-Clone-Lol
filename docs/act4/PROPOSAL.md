@@ -153,7 +153,7 @@ tab is shorter); no shader may read the screen on the web build.
 3. **Act V mechanic:** "I really like sun's course, maybe we can do seasons next?" (seasons became the Act VII concept).
 4. **The Shogun:** "Yeah that's perfect, give him Iai style slashes and stuff."
 5. **Act VI limit:** "Go up to the limit of how suggestive you can make it" (no nudity, nothing explicit).
-6. **Soldiers' sex:** "Can I see V1 again? I need to see which ones look better." **Open.** Until the owner picks,
+6. **Soldiers' sex:** "Can I see V1 again? I need to see which ones look better." **Resolved (art review round 1, Oct 25): the mixed lineup** ("No the above approach is better"):
    Act IV art uses the mixed roster of the second lineup (`act4_lineup.png`): male hoplites and legionaries, the
    female kinds (Amazon, Gorgon, Atalanta, Artemis) in the figure-redesign style.
 7. **Names:** "Let's do The Olympian Republic" (was the Olympian Imperium); the other names are kept.
