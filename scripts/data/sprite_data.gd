@@ -357,7 +357,7 @@ const FLAT_SIZES: Dictionary = {
 	# --- Act III missing sprites (hand-built on the grid, tools/act3_projectiles.py) ---
 	"projectiles/soul_round": 12.0,  # TUNING (not in GDD) a Grave Gunner's rifle round, 12 x 5, soul-teal fire
 	"projectiles/scrap_bolt": 14.0,  # TUNING (not in GDD) a scrap drone's bolt, 14 x 6, a bone shard wrapped in violet
-	"projectiles/iron_shell": 18.0,  # TUNING (not in GDD) an Iron Revenant's cannon shell, 18 x 8, with a soul-teal trail
+	"projectiles/iron_shell": 20.0,  # TUNING (not in GDD) an Iron Revenant's cannon shell, 20 x 8, with a soul-teal trail
 	"projectiles/trojan_rocket": 24.0,  # TUNING (not in GDD) the Trojan Horse's Swarm Rocket, 24 x 12 (its hit circle is 6 px)
 	"projectiles/trojan_rocket_flame": 36.0,  # TUNING (not in GDD) its exhaust, a 3-frame strip of 12 x 8 (drawn by SpriteBank.draw_flat_frame)
 	"projectiles/empire_rail": 46.0,  # TUNING (not in GDD) the Lock-On rail slug, 46 x 7 (EmpireRulesData rail "art")

@@ -8,7 +8,7 @@ shapes, in exact colours of tools/palette.json (fully opaque or fully transparen
 +x. Strips (the rotor spin, the exhaust flicker) hold their frames side by side, left to right:
     soul_round            12x5   a Grave Gunner's rifle round (soul-teal fire)
     scrap_bolt            14x6   a Scrap Swarm / Rust Prophet bolt (bone shard wrapped in violet)
-    iron_shell            18x8   an Iron Revenant / Deus Revenant cannon shell (iron, soul-teal trail)
+    iron_shell            20x8   an Iron Revenant / Deus Revenant cannon shell (iron, soul-teal trail)
     trojan_rocket         24x12  the Trojan Horse's Swarm Rocket (chrome, red fins, amber warhead)
     empire_rail           46x7   the Lock-On rail slug (EmpireRulesData rail style)
     empire_missile        26x10  Deus Ex Machina's missile (missile style)
@@ -62,6 +62,20 @@ L = {
 
 SPRITES = {}
 
+
+def _outline(g, W, H, ink_for):
+    out = [row[:] for row in g]
+    for y in range(H):
+        for x in range(W):
+            if g[y][x] == '':
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < W and 0 <= ny < H and g[ny][nx] != '':
+                        out[y][x] = ink_for(g[ny][nx])
+                        break
+    return out
+
+
 # ---- Grave Gunner rifle round: a soul-fire slug, 12 x 5 -----------------------------------
 SPRITES['soul_round'] = [[
     "....nnnnnn..",
@@ -81,17 +95,34 @@ SPRITES['scrap_bolt'] = [[
     "......iiiiii..",
 ]]
 
-# ---- Iron Revenant cannon shell: grey iron, soul-teal fire trail, 18 x 8 --------------------------
-SPRITES['iron_shell'] = [[
-    "..........aaaa....",
-    "....nn..aaDGGHaa..",
-    ".nnuuonaaDGGHHHHaa",
-    "nuooOOoaaDGGHHHHHa",
-    "nuooOOoaaDGGGGHHHa",
-    ".nnuuonaaDDGGGHHaa",
-    "....nn..aaDDGGaa..",
-    "..........aaaa....",
-]]
+# ---- Iron Revenant cannon shell: an iron ogive shell, a soul-teal fire trail, 20 x 8 ------------
+def _iron_shell():
+    W, H = 20, 8
+    g = [[''] * W for _ in range(H)]
+    # trail (cols 0-8): a tapering soul-fire streak on the centre rows
+    for x in range(1, 9):
+        t = (8 - x) / 8.0                                    # 1 at the tail, 0 at the shell
+        hh = 1.9 * (1.0 - t) ** 0.8
+        for y in range(H):
+            dy = abs(y - 3.5)
+            if dy <= hh:
+                g[y][x] = 'soul_glow' if (dy <= hh * 0.4 and t < 0.5) else ('soul' if dy <= hh * 0.75 and t < 0.8 else 'soul_dark')
+    # the shell body (cols 8-19): rows 1..6 at the base, an ogive nose
+    prof = {8: 3, 9: 3, 10: 3, 11: 3, 12: 3, 13: 3, 14: 3, 15: 3, 16: 2, 17: 2, 18: 1, 19: 1}   # half height (px) per column
+    for x, hh in prof.items():
+        for y in range(H):
+            dy = y + 0.5 - 4.0
+            if abs(dy) <= hh:
+                g[y][x] = 'grey_light' if dy < -hh + 1.0 else ('grey' if dy < hh - 1.0 else 'grey_dark')
+    for y in range(1, 7):                                    # the driving band
+        g[y][11], g[y][12] = 'soul_dark', 'soul_dark'
+    g[2][9], g[2][10] = 'grey_light', 'grey_light'
+    g[3][16], g[3][17] = 'grey_light', 'grey_light'
+    return _outline(g, W, H, lambda n: 'ink_green' if n.startswith('soul') else 'ink_cold')
+
+
+SPRITES['iron_shell'] = [_iron_shell()]
+
 
 # ---- Trojan Swarm Rocket: chrome missile, red fins and band, amber warhead, 24 x 12 --------------
 def _rocket():
@@ -139,19 +170,6 @@ def _rocket():
 
 
 # ---- Scrap Swarm drone: a bone-and-scrap quadcopter seen from above, 22 x 14, 2 rotor frames ----
-def _outline(g, W, H, ink_for):
-    out = [row[:] for row in g]
-    for y in range(H):
-        for x in range(W):
-            if g[y][x] == '':
-                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    nx, ny = x + dx, y + dy
-                    if 0 <= nx < W and 0 <= ny < H and g[ny][nx] != '':
-                        out[y][x] = ink_for(g[ny][nx])
-                        break
-    return out
-
-
 def _drone(frame, bright):
     W, H = 22, 14
     g = [[''] * W for _ in range(H)]
