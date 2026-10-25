@@ -112,6 +112,11 @@ BUST_BOUNCE = (0.0, -0.5, 1.0, -0.5, 0.0, -0.5, 1.0, -0.5)
 # side, right). The weight shifts to the other foot on each step, so the kick changes side
 # every step: the first step's lag, overshoot and rebound one way, the second's the other way.
 BUST_SWAY = (0.0, -0.5, 1.0, -0.5, 0.0, 0.5, -1.0, 0.5)
+# Per frame (both steps): a rig's optional `swish` box (a skirt's front drape, owner's Act IV art
+# review round 5 on the Amazon: "it should swish in front of her") sways sideways like BUST_SWAY
+# one frame later (follow-through: the cloth lags the hips it hangs from), as a share of the
+# box's px (+ = right). Frame 0 stays 0 so frame 0 is the still.
+SWISH_SWAY = (0.0, 0.0, -0.5, 1.0, -0.5, 0.0, 0.5, -1.0)
 # Rows below the bust box over which the warp fades back to zero, per bounce px (the
 # belly takes up the motion instead of tearing at the box edge).
 BUST_TAIL_PER_PX = 1
@@ -189,6 +194,10 @@ STRIDE_FAR_SHADE = {"bronze_light": "bronze", "bronze": "bronze_dark", "marble_l
 #           own row; + = right, the facing side), timed by BUST_SWAY in the walk (the kick
 #           changes side every step) and IDLE_BUST in the idle (one way on the exhale, the
 #           other on the inhale). For a box on the hips (the Amazon, art review round 2).
+#   swish   optional (x0, x1, y0, y1, px): a second sideways box (a skirt's front drape), applied
+#           after the bust box through the same _bounce() field on axis "x", timed by SWISH_SWAY
+#           in the walk and SWISH_IDLE in the idle (each one frame behind the hips). It may
+#           reach below the hip / waist: the idle's waist check skips its columns there.
 RIGS = {
     # The pilot (ART_BIBLE "Walk cycles"): the three units with the most screen time.
     "player/necromancer": dict(mode="legs", hip=47, back=(0, 20), front=(20, 33), rigid=[(33, 46, 0, None)], spread=1, lift=1, dip=1),
@@ -384,9 +393,16 @@ RIGS = {
     # (the narrow front flap between bare thighs read as a crotch): the still's skirt covers both
     # thighs down to a flat hem (row 40), the flap is gone; only the hem's ink row (41) rides rigid.
     # Round 5 (owner: the skirt too long; regenerated as a bigger, curvier "muscle mommy", 70 tall,
-    # 66 wide): a short closed skirt with a straight hem (row 42, ink row 43); the box sways on the
-    # skirt over her hips (cols 21-45, rows 35-40, fading over rows 41-42 above the hem ink; the belt above it stays); the shield's foot rigid.
-    "pantheon/amazon": dict(mode="legs", hip=44, back=(0, 34), front=(34, 66), rigid=[(14, 22, 44, 50)], spread=2, lift=2, dip=1, bust=(21, 46, 35, 41, 2, 1), bust_axis="x"),
+    # 66 wide). Round 6 ("too boxy... it should swish in front of her, and show off her thighs"): the
+    # skirt is two short flared side flaps (hems rows 39-41) and a wide front panel (cols 26-41) hanging
+    # to row 46 over the crotch. Hip 42 (the thighs under the flaps walk); the panel below the hip
+    # rides with the body (per-column rigid rects down to its ink row, so it always covers where the
+    # thighs meet); the shield's foot rigid. The hip box sways on the skirt (rows 35-38, fading to 41)
+    # and the `swish` box carries the skirt one frame behind it, growing from the belt to the panel's hem (rows 35-45, fading below), so the pleats bend smoothly.
+    "pantheon/amazon": dict(mode="legs", hip=42, back=(0, 34), front=(34, 66),
+                            rigid=[(14, 22, 42, 50), (26, 27, 42, 45), (27, 28, 42, 46), (28, 29, 42, 47), (29, 39, 42, 48),
+                                   (39, 40, 42, 47), (40, 41, 42, 46), (41, 42, 42, 45)],
+                            spread=2, lift=2, dip=1, bust=(21, 47, 35, 39, 1, 1), bust_axis="x", swish=(21, 47, 35, 46, 2)),
     # Art review round 1 redo (slim-thick, a bit chubby; the old box sat too low): on her bust
     # (cols 21-31, rows 17-21, two lobes).
     "pantheon/gorgon": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(21, 32, 17, 22, 2, 2)),
@@ -883,6 +899,8 @@ def frames_of(key: str) -> list:
             axis = rig.get("bust_axis", "y")  # "y" bounces, "x" sways (BUST_SWAY).
             share = (BUST_SWAY if axis == "x" else BUST_BOUNCE)[f]
             frame = _bounce(frame, rig["bust"], dy, share * rig["bust"][4], axis)
+        if "swish" in rig:
+            frame = _bounce(frame, rig["swish"], dy, SWISH_SWAY[f] * rig["swish"][4], "x")
         out.append(frame)
     if not np.array_equal(out[0], still):
         sys.exit(f"{key}: frame 0 differs from the still (rig error)")
@@ -1019,6 +1037,9 @@ IDLE_BUST = ((0.0,) * 6
 # Per-key overrides of the idle cut (set after review): "waist" = the row taken out on the
 # exhale (default the rig's hip - 1, the last row above the hip).
 IDLE_FIX = {}
+# Per frame: a `swish` box's sideways share in the idle: IDLE_BUST one frame later (the drape
+# follows the hips).
+IDLE_SWISH = (0.0,) + IDLE_BUST[:-1]
 if len(IDLE_SINK) != IDLE_FRAMES or len(IDLE_BUST) != IDLE_FRAMES:
     sys.exit(f"idle_data.gd FRAMES is {IDLE_FRAMES}; IDLE_SINK / IDLE_BUST hold {len(IDLE_SINK)} / {len(IDLE_BUST)}")
 
@@ -1051,10 +1072,17 @@ def idle_frames_of(key: str) -> list:
         dy = IDLE_SINK[f]  # Body sink this frame (art px).
         frame = _sink(still, waist, dy)
         frame = _bounce(frame, rig["bust"], dy, IDLE_BUST[f] * rig["bust"][4], rig.get("bust_axis", "y"))
+        if "swish" in rig:
+            frame = _bounce(frame, rig["swish"], dy, IDLE_SWISH[f] * rig["swish"][4], "x")
         out.append(frame)
     if not np.array_equal(out[0], still):
         sys.exit(f"{key}: idle frame 0 differs from the still (rig error)")
-    if any(not np.array_equal(f[waist + 1:], still[waist + 1:]) for f in out):
+    keep = np.ones(still.shape[:2], dtype=bool)  # Pixels below the waist that must not move.
+    keep[:waist + 1] = False
+    if "swish" in rig:  # The drape's box (with its fade rows and the sink) may sway below the waist.
+        sx0, sx1, sy0, sy1, spx = rig["swish"]
+        keep[sy0:sy1 + int(np.ceil(spx * BUST_TAIL_PER_PX)) + 3, sx0:sx1] = False
+    if any(not np.array_equal(f[keep], still[keep]) for f in out):
         sys.exit(f"{key}: an idle frame moved a row below the waist (rig error)")
     return out
 
