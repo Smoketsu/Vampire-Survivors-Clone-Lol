@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, standing tall.
+
+LOW-RESOLUTION pixel art: the whole figure is only 100 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings, no muscle lines.
+
+Subject: POSEIDON, the Greek god of the sea, a huge MALE god: a long flowing sea-green beard and wild sea-green hair, a gold crown with spikes, his face clearly visible (two glowing pale-blue eyes), a broad bare skin-coloured chest and arms with gold armbands, a deep Aegean-blue and sea-green robe wrapped around his waist and over one shoulder down to his feet. In his front (right) hand a tall GOLD TRIDENT held upright beside him, its three prongs above his head.
+Signature shape that must read in silhouette: the tall gold trident, the crown, the long green beard.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: Aegean blue #123E66 #2C77B8 #6FB6E8, gold #8C6040 #E0A92E #FFDC66, skin #8C6040 #E0A882, moss green #081814 #3B5529 #76984A
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a sprite of this game: match its pixel size, outline weight and flat look exactly; (2) concept art of this character for the costume only (do NOT copy its detail level, its painted shading or its colours where they differ from the list above).

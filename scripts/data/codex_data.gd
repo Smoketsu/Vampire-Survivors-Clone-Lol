@@ -124,9 +124,13 @@ const EMPIRE_BOSSES: Array[String] = ["kestrel", "motherboard", "deus_ex_machina
 ## champions (minibosses and the Twilight's Bronze Titan) and its stage bosses
 ## (StageRegistry.BOSS_ARRIVALS ids). Each Act IV stage adds its own as it is
 ## built (phase 2).
-const PANTHEON_SOLDIERS: Array[String] = ["shade_of_dead", "hoplite", "hero"]
+const PANTHEON_SOLDIERS: Array[String] = ["shade_of_dead", "hoplite", "hero",
+	# --- Act IV: Mount Olympus ---
+	"centaur_archer", "amazon", "gorgon", "moon_hound", "sea_serpent"]
 ## Olympian Republic champions (minibosses) and the Act IV Reckoning kinds.
-const PANTHEON_CHAMPIONS: Array[String] = ["bronze_titan"]
+const PANTHEON_CHAMPIONS: Array[String] = ["bronze_titan",
+	# --- Act IV: Mount Olympus --- (the Pantheon Trial's gods)
+	"ares", "artemis", "poseidon"]
 ## Olympian Republic stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const PANTHEON_BOSSES: Array[String] = ["achilles", "zeus", "hades"]
 
@@ -221,8 +225,17 @@ const DESCRIPTIONS: Dictionary = {
 	"hero": "Named demigods who grow in Glory with every one of your dead they kill. Kill them early.",  # Owner-approved Act IV proposal (Glory)
 	"bronze_titan": "Bronze colossi that step out of the ground when the gods' twilight falls.",  # Owner-approved Act IV proposal (Twilight of the Gods)
 	"achilles": "The Unkillable: his front shrugs off nearly every blow. Strike his heel.",  # Owner-approved Act IV proposal
-	"zeus": "King of the Gods, waiting at the summit of the Pantheon Trial with his thunderbolts.",  # Owner-approved Act IV proposal
+	"zeus": "King of the Gods: lightning storms, the thunderbolt beam, and at the last his true colossal form.",  # Owner-approved Act IV proposal
 	"hades": "Lord of the Dead, who sent the gods to take the dead back. The first rival necromancer.",  # Owner-approved Act IV proposal
+	# --- Act IV: Mount Olympus ---
+	"centaur_archer": "Bronze-clad centaurs that shoot as they gallop straight at you. Kill them on approach.",  # Owner-approved Act IV proposal
+	"amazon": "Warrior women with axe and crescent shield who leap over your front row; a heavy blocker catches them.",  # Owner-approved Act IV proposal
+	"gorgon": "Snake-haired women whose gaze turns your dead to stone for a few seconds. Kill them first.",  # Owner-approved Act IV proposal
+	"moon_hound": "Artemis's hunting pack: lean, silver and fast.",  # TUNING (not in GDD)
+	"sea_serpent": "Poseidon's great sea snake: it lunges down a marked line.",  # Owner-approved Act IV proposal ("a sea serpent")
+	"ares": "The god of war: his war-cry drives every soldier on, his spear charge breaks on a blocker.",  # Owner-approved Act IV proposal
+	"artemis": "The Huntress: moonlit volleys, her hounds, and a step from grove to grove.",  # Owner-approved Act IV proposal
+	"poseidon": "The Lord of the Sea: he floods half the field, throws his trident, and calls a sea serpent.",  # Owner-approved Act IV proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -395,6 +408,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"static_in_the_wastes": "ach_static_in_the_wastes",  # TUNING (not in GDD)
 	# --- Act III: the Iron Citadel ---
 	"nothing_is_deathless": "ach_nothing_is_deathless",  # TUNING (not in GDD)
+	# --- Act IV: Mount Olympus ---
+	"twilight_of_the_gods": "ach_twilight_of_the_gods",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -420,6 +435,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"static_in_the_wastes": "lead_lined_bones",
 	# --- Act III: the Iron Citadel ---
 	"nothing_is_deathless": "scrap_swarm",
+	# --- Act IV: Mount Olympus ---
+	"twilight_of_the_gods": "grounded_bones",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

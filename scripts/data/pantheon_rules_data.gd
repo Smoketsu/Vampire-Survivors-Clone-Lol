@@ -252,4 +252,18 @@ const SOUNDS := {
 	"glory": "glory_gain",  # SoundData.PANTHEON_SOUNDS (lazy pack, loaded with the "bronze" music)
 	"hoplite_step": "hoplite_step",  # SoundData.PANTHEON_SOUNDS; reserved: nothing plays it yet (phase 2: a throttled march step for a locked wall)
 	"titan_rise": "titan_rise",  # SoundData.PANTHEON_SOUNDS (lazy pack, loaded with the "bronze" music)
+	# --- Act IV: Mount Olympus --- (the Pantheon Trial's gods and kinds; SoundData.PANTHEON_SOUNDS)
+	"ares_warcry": "ares_warcry",  # AresKit: the war-cry
+	"ares_charge": "ares_charge",  # AresKit: the spear charge
+	"artemis_horn": "artemis_horn",  # ArtemisKit: her arrival, the hounds
+	"artemis_blink": "artemis_blink",  # ArtemisKit: the teleport
+	"artemis_volley": "artemis_volley",  # ArtemisKit: the moonlit volley
+	"poseidon_trident": "poseidon_trident",  # PoseidonKit: the trident throw
+	"serpent_rise": "serpent_rise",  # PoseidonKit: the sea serpent
+	"gorgon_gaze": "gorgon_gaze",  # GorgonKit: the gaze winds up
+	"petrify": "petrify",  # GorgonKit: summons turned to stone
+	"amazon_leap": "amazon_leap",  # AmazonKit: the leap
+	"zeus_cast": "zeus_cast",  # BossZeus: a storm or the beam winds up
+	"zeus_beam": "zeus_beam",  # BossZeus: the thunderbolt beam
+	"zeus_transform": "zeus_transform",  # BossZeus: the true form
 }

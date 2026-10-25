@@ -280,6 +280,9 @@ const SPELLS := {
 	# --- Act III: the Iron Citadel ---
 	"scrap_swarm": {"every": 5, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 14], "speed": 280.0,
 		"life": 0.6, "share": 0.5, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) a ring of scrap shards (every 5 drone intervals)
+	# --- Act IV: Mount Olympus ---
+	"stolen_thunder": {"every": 1, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [3, 5, 7], "speed": 300.0,
+		"life": 0.9, "share": 0.2, "pierce": 0, "radius": 3.5, "style": "spark", "color": Color(0.435, 0.714, 0.910), "homing": 8.0},  # TUNING (not in GDD) Aegean sparks that seek the strongest foe with each bolt
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

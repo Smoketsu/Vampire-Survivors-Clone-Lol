@@ -782,19 +782,29 @@ func _pulse_aura() -> void:
 			continue
 		if e.position.distance_to(position) > aura_radius:
 			continue
-		if e.buff_time <= 0.0:
-			e.buff_damage = aura_damage_mult
-			e.buff_speed = aura_speed_mult
-			e.buff_taken = aura_taken_mult
-			e.queue_redraw()
-		else:
-			e.buff_damage = maxf(e.buff_damage, aura_damage_mult)
-			e.buff_speed = maxf(e.buff_speed, aura_speed_mult)
-			e.buff_taken = minf(e.buff_taken, aura_taken_mult)
-		e.buff_time = MarchEnemyData.AURA_LINGER
+		e.apply_buff(aura_damage_mult, aura_speed_mult, aura_taken_mult, MarchEnemyData.AURA_LINGER)
 		buffed += 1
 	if buffed > 0:
 		game.stat_add("march_aura_buff_pulses", float(buffed))
+
+
+## THE one enemy-buff path (the Banner Bearer's and Holy Standard's auras;
+## Act IV: Ares's war-cry): buffs this enemy for `time` s with damage dealt
+## x`dmg`, move speed x`spd` and damage taken x`taken`. While a buff already
+## runs, each multiplier keeps the stronger value (overlapping buffs never
+## stack) and the timer runs for the longer of the two (exactly `time` for the
+## auras, which all use MarchEnemyData.AURA_LINGER).
+func apply_buff(dmg: float, spd: float, taken: float, time: float) -> void:
+	if buff_time <= 0.0:
+		buff_damage = dmg
+		buff_speed = spd
+		buff_taken = taken
+		queue_redraw()
+	else:
+		buff_damage = maxf(buff_damage, dmg)
+		buff_speed = maxf(buff_speed, spd)
+		buff_taken = minf(buff_taken, taken)
+	buff_time = maxf(buff_time, time)
 
 
 ## Damage-dealt multiplier from an aura buff (1 when not buffed), times the

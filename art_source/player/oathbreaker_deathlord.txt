@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance.
+
+LOW-RESOLUTION pixel art: the whole figure is only 58 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings, no muscle lines.
+
+Subject: THE OATHBREAKER, a fallen MALE demigod turned necromancer: a tall man with a cracked bronze laurel wreath on dark hair, a gaunt pale face clearly visible with two glowing violet eyes and a short beard, a tattered deep violet hooded cloak over a tarnished bronze cuirass and a dark violet chiton, bronze greaves. In his front (right) hand a broken bronze spear-shaft with a crackling pale-blue stolen THUNDERBOLT bound to its top with violet cords. His DEATHLORD SKIN: the same Oathbreaker in black iron and deep crimson: a black spiked iron crown, a black and dark crimson cloak, black iron armour with crimson trim, burning crimson eyes, the thunderbolt on his staff crackling crimson.
+Signature shape that must read in silhouette: the violet cloak over bronze armour, the cracked laurel, the staff with the thunderbolt.
+
+Colours: flat fills, at most 3 shades per material, from: violet #160A21 #4A2569 #7A42AD #A35CFA, bronze #1E1408 (outline) #6B4423 #A8702E #E0A955, Aegean blue #123E66 #2C77B8 #6FB6E8, pale skin #8C6040 #E0A882
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) THE SAME CHARACTER, the approved sprite of this game: keep his pose, build, face, size, staff and silhouette exactly, only the costume colours and trims change as described; (2) a sprite of this game for the pixel look.

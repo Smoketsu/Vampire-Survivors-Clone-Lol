@@ -106,6 +106,10 @@
 ##                        PantheonRulesData.WRATH[kind] to override it}.
 ##   zones              — Act IV stubs: the planned zones ([{id, name, start}],
 ##                        names only until phase 2 builds them).
+## --- Act IV: Mount Olympus ---
+##   olympus            — OlympusDirector config (OlympusStage.OLYMPUS: the
+##                        Pantheon Trial's gods, Artemis's groves); ground
+##                        "olympus" is its OlympusGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

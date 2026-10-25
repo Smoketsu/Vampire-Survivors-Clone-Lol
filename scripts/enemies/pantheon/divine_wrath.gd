@@ -35,9 +35,16 @@
 ## RECKONING has a "twilight" dictionary, from 0:00 every kind in its "kinds"
 ## fires, each on interval x interval_mult x speedup ^ minutes past 0:00 (never
 ## under interval x interval_min_mult); the Bronze Titans are the RECKONING kind.
-## Grounded Bones hook (counter-passive, NOT built): grounded_mult(), the one
-## read, cuts the lightning and wave damage to the army and the necromancer.
-## Stats: wrath_salvos_<kind>, wrath_waves, wrath_bolts, wrath_fissures,
+## Grounded Bones (the Act IV counter-passive, Mount Olympus): grounded_mult(),
+## the one read, cuts the lightning and wave damage to the army and the
+## necromancer, PER TARGET SLOT (each player's own passive protects his own
+## necromancer and army in co-op).
+## THE GODS' "STRIKE NOW" ENTRY (Act IV phase 2, Mount Olympus): strike(kind,
+## at, overrides) starts one telegraphed strike of any kind around any world
+## point right away (Poseidon's flood, Zeus's storms; later Hades' fissures),
+## through the same hazard code as the schedule; it never moves the schedule.
+## Stats: wrath_salvos_<kind>, wrath_called_<kind> (strikes asked through
+## strike()), wrath_waves, wrath_bolts, wrath_fissures,
 ## wrath_drowned, wrath_chains, wrath_shades_spat, wrath_corpses_swallowed
 ## (PantheonRules), wrath_enemy_dmg_<kind>, wrath_capped; the damage to summons
 ## and the necromancer is CombatResolver's summon_dmg_from_wrath_* /
@@ -147,24 +154,65 @@ func interval(k: String) -> float:
 	return base
 
 
-## Grounded Bones hook (counter-passive, NOT built): the share of lightning
-## and wave damage the army and the necromancer still take, 1 - PassiveData
-## row GROUNDED_BONES's value (exactly 1 while no such passive exists).
-func grounded_mult() -> float:
-	return maxf(0.0, 1.0 - game.abilities.passive_value(PantheonRulesData.GROUNDED_BONES, PantheonRulesData.GROUNDED_BONES_KEY))
+## Grounded Bones (counter-passive, Act IV, Mount Olympus): the share of
+## lightning and wave damage `target` still takes, 1 - PassiveData row
+## GROUNDED_BONES's value of the player who OWNS the target: a necromancer's
+## own slot, a summon's army's slot (co-op: each player's own passive; solo
+## and a null target: the bound player's). Exactly 1 while it is not owned.
+## The one read of the passive.
+func grounded_mult(target: Node2D = null) -> float:
+	var ab := game.abilities  # The bound player's spells and passives.
+	if game.coop != null and target != null:
+		for s in game.coop.slots:
+			if s.player == target or (target is SummonedUnit and s.horde == (target as SummonedUnit).director):
+				ab = s.abilities
+				break
+	return maxf(0.0, 1.0 - ab.passive_value(PantheonRulesData.GROUNDED_BONES, PantheonRulesData.GROUNDED_BONES_KEY))
 
 
-## Starts one strike of kind `k` at game time `t` (its telegraph).
+## THE GODS' STRIKE ENTRY (Mount Olympus owns it; Poseidon, Zeus, Hades call
+## it): starts one strike of wrath kind `kind` ("waves" / "lightning" /
+## "fissures") NOW, around world point `at`, through the same telegraphs and
+## hazards as the schedule. `overrides` replaces any of the kind's settings
+## for this strike only (cfg[kind] keys, PantheonRulesData.WRATH: e.g.
+## {"count": 6, "telegraph": 0.9, "radius": 52.0}), plus one key of its own:
+##   "dir" (waves only) — the wall's heading (Vector2; absent = a random one).
+## The schedule (next_at) is untouched; WRATH_CAPS still bound it. Returns the
+## hazards queued (0 when capped or an unknown kind). Stat wrath_called_<kind>.
+## Damage scales as every wrath strike (enemies x HP scaling, the army and the
+## necromancer x damage scaling and Grounded Bones). Uses the seeded RNG.
+func strike(kind: String, at: Vector2, overrides: Dictionary = {}) -> int:
+	if not cfg.has(kind):
+		return 0
+	var c: Dictionary = cfg[kind]
+	if not overrides.is_empty():
+		c = c.duplicate()
+		for key: String in overrides:
+			c[key] = overrides[key]
+	game.stat_add("wrath_called_" + kind, 1.0)
+	return _strike_at(kind, game.elapsed, at, c)
+
+
+## Starts one scheduled strike of kind `k` at game time `t` (its telegraph),
+## around a standing necromancer.
 func _strike(k: String, t: float) -> void:
-	var c: Dictionary = cfg[k]
+	_strike_at(k, t, _aim_player().position, cfg[k])
+
+
+## Queues one strike of kind `k` at game time `t` around world point `p` with
+## settings `c` (the schedule's and strike()'s one hazard path). Returns the
+## hazards queued.
+func _strike_at(k: String, t: float, p: Vector2, c: Dictionary) -> int:
 	var cap := int(PantheonRulesData.WRATH_CAPS[k])  # Most pending of this kind.
-	var p := _aim_player().position  # The necromancer it strikes around.
+	var queued := 0  # Hazards queued by this strike.
 	match k:
 		"waves":
 			if waves.size() >= cap:
 				game.stat_add("wrath_capped", 1.0)
-				return
-			waves.append({"dir": Vector2.from_angle(randf() * TAU), "origin": p, "t0": t + float(c["telegraph"]), "c": c, "rolled": false})
+				return 0
+			var dir: Vector2 = c["dir"] if c.has("dir") else Vector2.from_angle(randf() * TAU)  # The wall's heading.
+			waves.append({"dir": dir, "origin": p, "t0": t + float(c["telegraph"]), "c": c, "rolled": false})
+			queued = 1
 		"lightning":
 			var n := int(c["count"])  # Bolts this salvo.
 			var aim := _bronze_near(p, float(c["scatter"]))  # Bronze bodies the storm may favour.
@@ -179,6 +227,7 @@ func _strike(k: String, t: float) -> void:
 					else:
 						at = p + Vector2.from_angle(randf() * TAU) * randf_range(float(c["radius"]), float(c["scatter"]))
 				bolts.append({"pos": at, "land": t + float(c["telegraph"]), "c": c})
+				queued += 1
 		"fissures":
 			var n := int(c["count"])  # Fissures this salvo.
 			for i in n:
@@ -192,7 +241,9 @@ func _strike(k: String, t: float) -> void:
 				var open_t := t + float(c["telegraph"])  # Game time it opens.
 				fissures.append({"a": centre - half, "b": centre + half, "open_t": open_t, "close_t": open_t + float(c["open"]),
 					"next_tick": open_t, "next_spit": open_t, "spit_until": open_t + float(c["spit_time"]), "opened": false, "c": c})
+				queued += 1
 	game.stat_add("wrath_salvos_" + k, 1.0)
+	return queued
 
 
 ## The necromancer a salvo strikes around: solo, the player; co-op, one of the
@@ -259,7 +310,7 @@ func _wave_bodies(w: Dictionary, f_prev: float, f: float, delta: float) -> void:
 	var half := float(c["half_len"])  # Half the wall's length (px).
 	var band := float(c["band"])  # Water depth behind the front (px).
 	var push := dir * float(c["push_speed"])  # Carry velocity (px/s).
-	var dm := game.enemies.damage_mult * grounded_mult()  # Army / necromancer damage scaling.
+	var dm := game.enemies.damage_mult  # Army / necromancer damage scaling (Grounded Bones per target).
 	# The necromancer(s): co-op binds each slot so the push reads its own dash.
 	for pl in game.all_players:
 		var rel := pl.position - origin
@@ -267,7 +318,7 @@ func _wave_bodies(w: Dictionary, f_prev: float, f: float, delta: float) -> void:
 			continue
 		var proj := rel.dot(dir)  # Along the heading (px).
 		if proj > f_prev and proj <= f:
-			game.combat.damage_player(float(c["dmg_player"]) * dm, SRC_WAVE, pl)
+			game.combat.damage_player(float(c["dmg_player"]) * dm * grounded_mult(pl), SRC_WAVE, pl)
 		if proj >= f - band and proj <= f:
 			_push_player(pl, push, delta)
 	# Summons of every army (index loop from the end: a death may remove one).
@@ -282,7 +333,7 @@ func _wave_bodies(w: Dictionary, f_prev: float, f: float, delta: float) -> void:
 					if proj >= f - band and proj <= f:
 						TerrainSlow.push_summon(game, u, push, delta)
 					if proj > f_prev and proj <= f:
-						game.combat.damage_unit(u, float(c["dmg_summon"]) * dm, SRC_WAVE)
+						game.combat.damage_unit(u, float(c["dmg_summon"]) * dm * grounded_mult(u), SRC_WAVE)
 			j -= 1
 	# Enemies (killed ones stay in the list until compaction).
 	var dmg_e := float(c["dmg_enemy"]) * game.enemies.hp_mult  # Damage to a non-fodder enemy.
@@ -343,14 +394,14 @@ func _land_bolt(b: Dictionary, t: float) -> void:
 	game.pantheon.play_sound("thunder", at)
 	game.shake(2.5)
 	flashes.append({"a": at + Vector2(0.0, -260.0), "b": at, "until": t + 0.22, "sky": true})
-	var dm := game.enemies.damage_mult * grounded_mult()  # Army / necromancer damage scaling.
+	var dm := game.enemies.damage_mult  # Army / necromancer damage scaling (Grounded Bones per target).
 	for pl in game.all_players:
 		if pl.position.distance_to(at) <= r + pl.radius:
-			game.combat.damage_player(float(c["dmg_player"]) * dm, SRC_BOLT, pl)
+			game.combat.damage_player(float(c["dmg_player"]) * dm * grounded_mult(pl), SRC_BOLT, pl)
 	game.ally_grid.query(at, r + PantheonRulesData.SUMMON_SLACK, _tmp)
 	for u: SummonedUnit in _tmp:
 		if u.active and u.position.distance_to(at) <= r + u.radius:
-			game.combat.damage_unit(u, float(c["dmg_summon"]) * dm, SRC_BOLT)
+			game.combat.damage_unit(u, float(c["dmg_summon"]) * dm * grounded_mult(u), SRC_BOLT)
 	_struck.clear()
 	var hp := game.enemies.hp_mult  # Enemy damage scaling.
 	game.enemy_grid.query(at, r + ProjectileManager.MAX_BODY_RADIUS, _tmp)

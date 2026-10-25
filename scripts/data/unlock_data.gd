@@ -109,6 +109,14 @@ const UNLOCKS := {
 	"recoil_frame": {"type": "passive", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Its paired passive, unlocked with it
 	"breaker_of_engines": {"type": "title", "achievement": "nothing_is_deathless",
 		"text": "Earn Nothing Is Deathless: defeat Deus Ex Machina in the Iron Citadel."},  # Owner-approved proposal
+	# --- Act IV: Mount Olympus ---
+	# Zeus's fall (owner-approved Act IV proposal "Rewards": Stolen Thunder is
+	# unlocked by Zeus) with its paired passive, offered on every stage; the
+	# stage's achievement Twilight of the Gods earns Act IV's counter-passive
+	# Grounded Bones (offered only in Act IV through its card row's "act").
+	"stolen_thunder": {"type": "spell", "boss": "zeus", "text": "Slay Zeus on Mount Olympus to unlock."},  # Owner-approved Act IV proposal
+	"titans_blood": {"type": "passive", "boss": "zeus", "text": "Slay Zeus on Mount Olympus to unlock."},  # Stolen Thunder's paired passive, unlocked with it
+	"grounded_bones": {"type": "passive", "achievement": "twilight_of_the_gods", "text": "Earn Twilight of the Gods: clear the Pantheon Trial on Mount Olympus."},  # Owner-approved Act IV proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

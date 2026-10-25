@@ -460,6 +460,8 @@ func _draw_obstacle(o: Obstacle) -> void:
 		return  # An Iron Citadel obstacle kind (Act III).
 	if PantheonGlyphs.draw_obstacle(self, o):
 		return  # An Act IV stub's placeholder obstacle kind.
+	if OlympusGlyphs.draw_obstacle(self, o):
+		return  # A Mount Olympus obstacle kind (Act IV).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

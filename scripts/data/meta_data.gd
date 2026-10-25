@@ -250,7 +250,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act III: the Scrap Wastes ---
 	"static_in_the_wastes",
 	# --- Act III: the Iron Citadel ---
-	"nothing_is_deathless"]
+	"nothing_is_deathless",
+	# --- Act IV: Mount Olympus ---
+	"twilight_of_the_gods"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -339,6 +341,13 @@ const ACHIEVEMENTS := {
 	# part is EpilogueData.ACT3_PART (the last row of EpilogueData.PARTS).
 	"nothing_is_deathless": {"display_name": "Nothing Is Deathless", "description": "Defeat Deus Ex Machina in the Iron Citadel",
 		"stat": "boss_kills", "stage": "citadel", "goal": 1, "unlock": "Title Breaker of Engines, the Act III epilogue", "bounty": 350},  # Owner-approved proposal; bounty TUNING (not in GDD) the campaign's last (The Dead God Serves 300)
+	# --- Act IV: Mount Olympus ---
+	# Owner-approved Act IV achievement "Twilight of the Gods (clear the Pantheon
+	# Trial)": a victory (the run reached 0:00) on Mount Olympus, the Pantheon
+	# Trial, counted from the stage record (like Static in the Wastes); it
+	# unlocks the Grounded Bones counter-passive.
+	"twilight_of_the_gods": {"display_name": "Twilight of the Gods", "description": "Clear the Pantheon Trial on Mount Olympus",
+		"stat": "victories", "stage": "olympus", "goal": 1, "unlock": "The Grounded Bones passive", "bounty": 250},  # Owner-approved Act IV proposal; bounty TUNING (not in GDD) as Static in the Wastes
 }
 
 # --- Content wave 2: B. Achievement rewards ---

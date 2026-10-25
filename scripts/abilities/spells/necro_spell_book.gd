@@ -29,6 +29,9 @@
 ## earned, UnlockData), each stage's in its own list with the generic NecroSpell
 ## hooks and its own autotest line (CitadelReport):
 ##   Scrap Swarm      -> ScrapSwarm       (evolves into Deathless Swarm; the Iron Citadel)
+## and Act IV's (Mount Olympus, OLYMPUS_IDS: the same generic hooks; its own
+## autotest line, OlympusReport):
+##   Stolen Thunder   -> StolenThunder    (evolves into Gigantomachy)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -74,6 +77,10 @@ const ACT3_IDS := [
 ## The Iron Citadel's unlockable spell (Deus Ex Machina's reward): stepped, kill
 ## hooked and after-physics hooked like ACT2_IDS, reported by CitadelReport.
 const CITADEL_IDS := ["scrap_swarm"]
+# --- Act IV: Mount Olympus ---
+## Mount Olympus's unlockable spell (Zeus's reward): stepped, kill hooked and
+## after-physics hooked like CITADEL_IDS, reported by OlympusReport.
+const OLYMPUS_IDS := ["stolen_thunder"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -98,6 +105,8 @@ const SOURCES := {
 	"death_ray": ["death_ray", "event_horizon", "ray_spark"],
 	# --- Act III: the Iron Citadel ---
 	"scrap_swarm": ["scrap_swarm", "deathless_swarm"],
+	# --- Act IV: Mount Olympus ---
+	"stolen_thunder": ["stolen_thunder", "gigantomachy", "thunderclap"],
 }
 
 ## Owning run.
@@ -129,7 +138,7 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))
-	for id: String in ACT3_IDS + CITADEL_IDS:
+	for id: String in ACT3_IDS + CITADEL_IDS + OLYMPUS_IDS:
 		if ab.spell_level(id) <= 0:
 			continue
 		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
@@ -185,6 +194,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act III: the Iron Citadel ---
 		"scrap_swarm":
 			node = ScrapSwarm.new()
+		# --- Act IV: Mount Olympus ---
+		"stolen_thunder":
+			node = StolenThunder.new()
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -211,7 +223,7 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
 		if node != null:
 			node.on_enemy_killed(e)
-	for id: String in ACT3_IDS + CITADEL_IDS:
+	for id: String in ACT3_IDS + CITADEL_IDS + OLYMPUS_IDS:
 		var node: NecroSpell = nodes.get(id)  # An Act III spell's node, if learned.
 		if node != null:
 			node.on_enemy_killed(e)
@@ -228,7 +240,7 @@ func after_physics(delta: float) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
 		if node != null:
 			node.after_physics(delta)
-	for id: String in ACT3_IDS + CITADEL_IDS:
+	for id: String in ACT3_IDS + CITADEL_IDS + OLYMPUS_IDS:
 		var node: NecroSpell = nodes.get(id)  # An Act III spell's node, if learned.
 		if node != null:
 			node.after_physics(delta)

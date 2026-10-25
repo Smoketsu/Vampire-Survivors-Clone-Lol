@@ -313,6 +313,22 @@ RIGS = {
     "pantheon/hoplite": dict(mode="legs", hip=42, back=(0, 17), front=(17, 30), rigid=[(2, 6, 0, None)], spread=2, lift=2, dip=1),
     "pantheon/hero": dict(mode="legs", hip=41, back=(0, 31), front=(31, 58), rigid=[(0, 17, 41, 48)], spread=2, lift=2, dip=1),
     "pantheon/bronze_titan": dict(mode="legs", hip=66, back=(0, 35), front=(35, 72), rigid=[(0, 18, 66, 73), (52, 72, 66, 72)], spread=2, lift=3, dip=1),
+    # --- Act IV: Mount Olympus ---
+    # Ares's spear tip (right of his front leg) rides with the body; Artemis, the Amazon and the
+    # Gorgon have the bust bounce (figure redesign); the centaur and the hound step their legs as
+    # two pairs (left and right halves); robes and tails sway (Zeus, Poseidon with his trident
+    # rigid, the Gorgon, the sea serpent, the Oathbreaker's cloak).
+    "pantheon/ares": dict(mode="legs", hip=70, back=(0, 45), front=(45, 70), rigid=[(70, 94, 66, None)], spread=2, lift=2, dip=1),
+    "pantheon/artemis": dict(mode="legs", hip=60, back=(0, 31), front=(31, 58), rigid=[], spread=2, lift=2, dip=1, bust=(27, 36, 18, 34, 2)),
+    "pantheon/poseidon": dict(mode="robe", hip=75, rigid=[(52, 68, 0, None)], sway=1, dip=1),
+    "pantheon/centaur_archer": dict(mode="legs", hip=41, back=(0, 26), front=(26, 54), rigid=[], spread=2, lift=2, dip=1),
+    "pantheon/amazon": dict(mode="legs", hip=40, back=(0, 25), front=(25, 50), rigid=[], spread=2, lift=2, dip=1, bust=(17, 24, 16, 31, 2)),
+    "pantheon/gorgon": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(22, 30, 18, 31, 2)),
+    "pantheon/moon_hound": dict(mode="legs", hip=16, back=(0, 14), front=(14, 28), rigid=[], spread=2, lift=2, dip=1),
+    "pantheon/sea_serpent": dict(mode="robe", hip=40, rigid=[], sway=2, dip=1),
+    "bosses/zeus": dict(mode="robe", hip=93, rigid=[(0, 24, 0, None)], sway=1, dip=1),
+    "bosses/zeus_colossus": dict(mode="legs", hip=141, back=(0, 82), front=(82, 164), rigid=[], spread=2, lift=3, dip=1),
+    "player/oathbreaker": dict(mode="robe", hip=48, rigid=[], sway=1, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -375,6 +391,10 @@ SKINS = {
     "player/rust_prophet_hyper": "player/rust_prophet",
     "player/rust_prophet_untouchable": "player/rust_prophet",
     "player/rust_prophet_deathlord": "player/rust_prophet",
+    # --- Act IV: Mount Olympus ---
+    "player/oathbreaker_hyper": "player/oathbreaker",
+    "player/oathbreaker_untouchable": "player/oathbreaker",
+    "player/oathbreaker_deathlord": "player/oathbreaker",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

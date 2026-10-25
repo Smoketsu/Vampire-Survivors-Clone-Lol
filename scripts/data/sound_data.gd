@@ -810,4 +810,76 @@ const PANTHEON_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 32.0, "f1": 24.0, "dur": 1.5, "amp": 0.6, "attack": 0.1, "decay": 0.7},
 			{"wave": "noise", "dur": 1.3, "amp": 0.3, "attack": 0.3, "decay": 0.5, "lp0": 700.0, "lp1": 200.0},
 			{"wave": "sine", "f0": 232.0, "f1": 190.0, "start": 0.2, "dur": 1.2, "amp": 0.08, "attack": 0.3, "decay": 0.5, "vib_hz": 5.0, "vib_depth": 0.02}]},
+	# --- Act IV: Mount Olympus --- (appended last: the pack's earlier seeds stay as they were)
+	# Ares's war-cry: a hoarse brass bellow over a war drum.
+	"ares_warcry": {"dur": 1.1, "volume_db": -11.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 140.0, "f1": 120.0, "dur": 0.9, "amp": 0.3, "attack": 0.05, "decay": 0.4, "lp0": 1400.0, "lp1": 700.0, "vib_hz": 6.0, "vib_depth": 0.03},
+			{"wave": "saw", "f0": 210.0, "f1": 180.0, "dur": 0.8, "amp": 0.15, "attack": 0.08, "decay": 0.35, "lp0": 1800.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 70.0, "f1": 45.0, "dur": 0.35, "amp": 0.6, "decay": 0.12},
+			{"wave": "noise", "dur": 0.25, "amp": 0.25, "decay": 0.08, "lp0": 900.0}]},
+	# Ares's spear charge: a rushing scrape and a heavy footfall.
+	"ares_charge": {"dur": 0.6, "volume_db": -14.0, "max_voices": 1, "min_interval": 300, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.4, "attack": 0.05, "decay": 0.2, "lp0": 2500.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 90.0, "f1": 50.0, "dur": 0.25, "amp": 0.5, "decay": 0.08}]},
+	# Artemis's hunting horn: a clear rising horn call.
+	"artemis_horn": {"dur": 0.9, "volume_db": -14.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "square", "f0": 392.0, "f1": 523.0, "dur": 0.8, "amp": 0.12, "attack": 0.06, "decay": 0.35, "lp0": 2200.0, "lp1": 1600.0},
+			{"wave": "sine", "f0": 784.0, "f1": 1046.0, "dur": 0.7, "amp": 0.06, "attack": 0.08, "decay": 0.3}]},
+	# Artemis's blink: a silvery shimmer, up then gone.
+	"artemis_blink": {"dur": 0.5, "volume_db": -16.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 1400.0, "f1": 2600.0, "dur": 0.4, "amp": 0.1, "attack": 0.02, "decay": 0.18, "vib_hz": 18.0, "vib_depth": 0.02},
+			{"wave": "noise", "dur": 0.3, "amp": 0.12, "attack": 0.05, "decay": 0.12, "lp0": 9000.0, "lp1": 4000.0}]},
+	# Artemis's volley: a ripple of bowstrings.
+	"artemis_volley": {"dur": 0.45, "volume_db": -15.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "square", "f0": 220.0, "f1": 110.0, "dur": 0.12, "amp": 0.12, "decay": 0.04, "lp0": 1800.0},
+			{"wave": "noise", "start": 0.04, "dur": 0.35, "amp": 0.3, "decay": 0.12, "lp0": 5000.0, "lp1": 2500.0},
+			{"wave": "square", "f0": 260.0, "f1": 130.0, "start": 0.08, "dur": 0.12, "amp": 0.08, "decay": 0.04, "lp0": 1800.0}]},
+	# Poseidon's trident throw: a whoosh of air and spray.
+	"poseidon_trident": {"dur": 0.5, "volume_db": -14.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.45, "amp": 0.45, "attack": 0.03, "decay": 0.2, "lp0": 1500.0, "lp1": 6000.0},
+			{"wave": "sine", "f0": 600.0, "f1": 300.0, "dur": 0.3, "amp": 0.08, "decay": 0.1}]},
+	# The sea serpent rising: a deep wet surge and a hiss.
+	"serpent_rise": {"dur": 1.0, "volume_db": -12.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.9, "amp": 0.4, "attack": 0.2, "decay": 0.4, "lp0": 600.0, "lp1": 1800.0},
+			{"wave": "sine", "f0": 55.0, "f1": 80.0, "dur": 0.8, "amp": 0.5, "attack": 0.15, "decay": 0.35},
+			{"wave": "noise", "start": 0.55, "dur": 0.4, "amp": 0.18, "decay": 0.15, "lp0": 8000.0, "lp1": 6000.0}]},
+	# A Gorgon's gaze: a rising sibilant hiss and a low drone.
+	"gorgon_gaze": {"dur": 1.0, "volume_db": -15.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.9, "amp": 0.25, "attack": 0.4, "decay": 0.3, "lp0": 5000.0, "lp1": 9000.0},
+			{"wave": "saw", "f0": 110.0, "f1": 165.0, "dur": 0.9, "amp": 0.1, "attack": 0.3, "decay": 0.3, "lp0": 900.0}]},
+	# Summons turned to stone: a dry grinding crackle.
+	"petrify": {"dur": 0.5, "volume_db": -14.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.45, "amp": 0.5, "decay": 0.15, "lp0": 2000.0, "lp1": 600.0},
+			{"wave": "square", "f0": 90.0, "f1": 60.0, "dur": 0.3, "amp": 0.1, "decay": 0.1, "lp0": 700.0}]},
+	# An Amazon's leap: a short war shout and a rush of air.
+	"amazon_leap": {"dur": 0.4, "volume_db": -17.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "saw", "f0": 330.0, "f1": 440.0, "dur": 0.2, "amp": 0.1, "attack": 0.02, "decay": 0.08, "lp0": 2400.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.3, "amp": 0.25, "decay": 0.1, "lp0": 3000.0, "lp1": 6000.0}]},
+	# Zeus raising the bolt: a gathering electric whine.
+	"zeus_cast": {"dur": 0.8, "volume_db": -13.0, "max_voices": 1, "min_interval": 300, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 200.0, "f1": 900.0, "dur": 0.7, "amp": 0.12, "attack": 0.3, "decay": 0.2, "lp0": 3000.0, "vib_hz": 22.0, "vib_depth": 0.03},
+			{"wave": "noise", "dur": 0.7, "amp": 0.15, "attack": 0.3, "decay": 0.2, "lp0": 6000.0, "lp1": 9000.0}]},
+	# Zeus's thunderbolt beam: a searing crack and a long roar.
+	"zeus_beam": {"dur": 1.2, "volume_db": -10.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.2, "amp": 0.8, "decay": 0.05, "lp0": 12000.0, "lp1": 6000.0},
+			{"wave": "noise", "start": 0.05, "dur": 1.1, "amp": 0.45, "decay": 0.5, "lp0": 2500.0, "lp1": 300.0},
+			{"wave": "sine", "f0": 60.0, "f1": 35.0, "dur": 1.0, "amp": 0.6, "decay": 0.45}]},
+	# Zeus taking his true form: a vast rising roar of storm and stone.
+	"zeus_transform": {"dur": 2.0, "volume_db": -9.0, "max_voices": 1, "min_interval": 1500, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 40.0, "f1": 90.0, "dur": 1.9, "amp": 0.3, "attack": 0.6, "decay": 0.8, "lp0": 400.0, "lp1": 1200.0},
+			{"wave": "noise", "dur": 1.9, "amp": 0.4, "attack": 0.5, "decay": 0.9, "lp0": 800.0, "lp1": 3000.0},
+			{"wave": "sine", "f0": 30.0, "f1": 22.0, "dur": 1.8, "amp": 0.6, "attack": 0.2, "decay": 0.8}]},
 }

@@ -65,6 +65,10 @@
 ##     by name from PANTHEON_BOSS_DIR after the Empire's folder. Its shared
 ##     rules (Wrath of the Gods, Phalanx, Glory, the Twilight of the Gods) live
 ##     in PantheonRules (Game.pantheon), not here.
+##   * Act IV, Mount Olympus (GDD §15.0 "Mount Olympus (Act IV phase 2)"): on a
+##     stage with an "olympus" config it owns the OlympusDirector (the Pantheon
+##     Trial's gods and Artemis's groves; `olympus`) and hands it the "god"
+##     events. Null on every other stage.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -189,6 +193,10 @@ var assembly: AssemblyDirector = null
 ## The Scrap Wastes' stage systems: Signal Pylons, scrap storms, the Trojan
 ## Horse (StageRegistry "wastes"; null elsewhere).
 var wastes: WastesDirector = null
+# --- Act IV: Mount Olympus ---
+## Mount Olympus's stage systems: the Pantheon Trial's gods, Artemis's groves
+## (StageRegistry "olympus"; null elsewhere).
+var olympus: OlympusDirector = null
 
 
 func _ready() -> void:
@@ -259,6 +267,12 @@ func _ready() -> void:
 		citadel.game = game
 		citadel.config = stage_def["citadel"]
 		add_child(citadel)
+	# --- Act IV: Mount Olympus ---
+	if not (stage_def.get("olympus", {}) as Dictionary).is_empty():
+		olympus = OlympusDirector.new()
+		olympus.game = game
+		olympus.config = stage_def["olympus"]
+		add_child(olympus)
 
 
 # =====================================================================================
@@ -353,6 +367,9 @@ func step(delta: float) -> void:
 	# --- Act III: the Iron Citadel ---
 	if citadel != null:
 		citadel.step(delta)
+	# --- Act IV: Mount Olympus ---
+	if olympus != null:
+		olympus.step(delta)
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -431,6 +448,9 @@ func objective_text() -> String:
 	# --- Act III: the Iron Citadel ---
 	if citadel != null and citadel.objective_override() != "":
 		return citadel.objective_override()  # Shield Gates, sentry turrets.
+	# --- Act IV: Mount Olympus ---
+	if olympus != null and olympus.objective_override() != "":
+		return olympus.objective_override()  # The Pantheon Trial's god in play.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -565,6 +585,12 @@ func _run_event(ev: Dictionary) -> void:
 		"gate", "turrets", "valkyrie":
 			if citadel != null:
 				citadel.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act IV: Mount Olympus ---
+		"god":
+			if olympus != null:
+				olympus.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
 	show_banner(ev["banner"])

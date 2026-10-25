@@ -313,6 +313,9 @@ func _ready() -> void:
 			var pg := PantheonGround.new()  # Act IV placeholder floor (the STAGE's "floor").
 			pg.look = stage_def.get("floor", {})
 			ground = pg
+		# --- Act IV: Mount Olympus ---
+		"olympus":
+			ground = OlympusGround.new()  # Act IV: Mount Olympus's four zone floors.
 		_:
 			ground = Ground.new()
 	add_child(ground)

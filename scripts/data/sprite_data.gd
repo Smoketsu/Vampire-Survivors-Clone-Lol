@@ -272,6 +272,22 @@ const HEIGHTS: Dictionary = {
 	"pantheon/hoplite": 56.0,  # TUNING (not in GDD) soldier tier: body ~50 (crest to sandals), the upright spear head above
 	"pantheon/hero": 58.0,  # TUNING (not in GDD) elite tier: a demigod, the tall plume on top (elites are also drawn larger by the game)
 	"pantheon/bronze_titan": 96.0,  # TUNING (not in GDD) the Reckoning's heavy, bigger than the heavy tier (60-72) and below the minibosses (104+)
+	# --- Act IV: Mount Olympus (assets/sprites/pantheon/, bosses/, player/) ---
+	"pantheon/centaur_archer": 60.0,  # TUNING (not in GDD) ranged, a horse body (wider than tall), the helmet crest on top
+	"pantheon/amazon": 54.0,  # TUNING (not in GDD) elite tier, female (figure redesign): body ~48, the crest and the raised axe above
+	"pantheon/gorgon": 54.0,  # TUNING (not in GDD) elite tier, female (figure redesign): reared on her tail, the snake hair on top
+	"pantheon/moon_hound": 30.0,  # TUNING (not in GDD) fodder: a lean hound (Bone Hound tier), wider than tall
+	"pantheon/sea_serpent": 64.0,  # TUNING (not in GDD) heavy tier: the reared S-neck over its coil
+	"pantheon/ares": 96.0,  # TUNING (not in GDD) a god of the trial (miniboss tier, below Zeus): the crest and the spear head above
+	"pantheon/artemis": 92.0,  # TUNING (not in GDD) a goddess of the trial (miniboss tier), the bow above her head
+	"pantheon/poseidon": 100.0,  # TUNING (not in GDD) a god of the trial (miniboss tier), the trident's prongs above
+	"bosses/zeus": 124.0,  # TUNING (not in GDD) boss tier: the King of the Gods
+	"bosses/zeus_cast": 128.0,  # TUNING (not in GDD) attack pose: the thunderbolt raised above his head
+	"bosses/zeus_colossus": 176.0,  # TUNING (not in GDD) phase 3, his true colossal form (x1.55 body, bigger than any boss)
+	"player/oathbreaker": 58.0,  # TUNING (not in GDD) character tier: body ~48, the thunderbolt staff above
+	"player/oathbreaker_hyper": 58.0,  # TUNING (not in GDD) skin art: his body, the gilded staff above
+	"player/oathbreaker_untouchable": 58.0,  # TUNING (not in GDD) skin art: his body, the ghost staff above
+	"player/oathbreaker_deathlord": 60.0,  # TUNING (not in GDD) skin art: his body, the spiked crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

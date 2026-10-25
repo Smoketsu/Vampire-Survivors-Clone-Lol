@@ -184,6 +184,12 @@
 ##     Pantheon ran, the summary adds the "divine wrath", "phalanx", "glory",
 ##     "pantheon kinds" and (on an Act IV stage) "pantheon stage" lines
 ##     (PantheonReport).
+##   * Act IV, Mount Olympus: --spawn= with its kinds (centaur_archer, amazon,
+##     gorgon, moon_hound, sea_serpent) and its gods (ares, artemis, poseidon;
+##     any stage), --boss=zeus, --character=oathbreaker; the "olympus",
+##     "pantheon trial", "olympus kinds", "wrath called" and "zeus" lines
+##     (OlympusReport, through PantheonReport), and on every stage the
+##     "stolen thunder" / "grounded bones" lines when used.
 class_name Autotest
 extends Node
 
@@ -1380,6 +1386,7 @@ func finish(summary: Dictionary) -> void:
 	SpireReport.print_all(game, st)  # Act II, Ul-Thalos: the sinking, pillars, kinds, Vhal'Neth, the Waking, its items (only when they ran).
 	AssemblyReport.print_items(game, st)  # Act III, the Assembly Halls: Hollow Puppet, the Grave Drone, their passives, Signal Ghost (only when owned).
 	CitadelReport.item_lines(game, st)  # Act III, the Iron Citadel: Scrap Swarm, the Iron Revenant (only when used; the stage's own lines are EmpireReport's).
+	OlympusReport.item_lines(game, st)  # Act IV, Mount Olympus: Stolen Thunder, Grounded Bones (only when used; the stage's own lines are PantheonReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired
