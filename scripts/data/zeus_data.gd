@@ -99,7 +99,7 @@ const BOSS := {
 	"storm_scatter": 260.0,  # TUNING (not in GDD) px: the others within this
 	# The thunderbolt beam (owner-approved "the thunderbolt beam").
 	"first_beam": 6.0,  # TUNING (not in GDD) s after arrival
-	"beam_cooldown": 9.0,  # TUNING (not in GDD) s
+	"beam_cooldown": 10.0,  # TUNING (not in GDD) s (smoke run: 9)
 	"beam_cooldown_p2": 7.0,  # TUNING (not in GDD) s
 	"beam_telegraph": 1.1,  # TUNING (not in GDD) s the lane shows before the beam
 	"beam_length": 540.0,  # TUNING (not in GDD) px (cut short by nothing: a god's bolt)
@@ -107,7 +107,7 @@ const BOSS := {
 	"beam_width_p3": 52.0,  # TUNING (not in GDD) px in his true form
 	"beam_time": 0.45,  # TUNING (not in GDD) s the beam burns (each body hit once)
 	"beam_damage_player": 18.0,  # TUNING (not in GDD) before the time scaling
-	"beam_damage_summon": 26.0,  # TUNING (not in GDD) before the time scaling
+	"beam_damage_summon": 12.0,  # TUNING (not in GDD) before the time scaling (smoke run: 26 dealt 15,600 to the army bot's summons)
 	"beam_fan_p2": 3,  # TUNING (not in GDD) lanes from the Storm Throne on
 	"beam_fan_angle": 0.38,  # TUNING (not in GDD) rad between two lanes
 	# The True Form (owner-approved "in phase 3 he takes his true colossal form").

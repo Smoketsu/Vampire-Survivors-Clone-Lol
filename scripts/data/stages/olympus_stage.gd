@@ -99,37 +99,37 @@ const SEGMENTS := [
 		"weights": {"shade_of_dead": 0.66, "hoplite": 0.26, "centaur_archer": 0.08},
 		"objective": "Centaurs gallop in shooting: kill them on approach"},
 	{"start": 240.0, "rate": 2.4, "max_alive": 54,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.56, "hoplite": 0.3, "centaur_archer": 0.12, "amazon": 0.02},
+		"weights": {"shade_of_dead": 0.56, "hoplite": 0.3, "centaur_archer": 0.12, "amazon": 0.01},  # TUNING (not in GDD) smoke run: Gorgons x0.35, Amazons x0.5 (87 Gorgons petrified 1,072 summons)
 		"objective": "Amazons leap over your front row: keep blockers by you"},
 	{"start": 360.0, "rate": 2.2, "max_alive": 50,  # TUNING (not in GDD) thinner while Ares fights
-		"weights": {"shade_of_dead": 0.56, "hoplite": 0.3, "centaur_archer": 0.11, "amazon": 0.02, "hero": 0.01},
+		"weights": {"shade_of_dead": 0.56, "hoplite": 0.3, "centaur_archer": 0.11, "amazon": 0.01, "hero": 0.01},  # TUNING (not in GDD) smoke run: Gorgons x0.35, Amazons x0.5 (87 Gorgons petrified 1,072 summons)
 		"objective": "Ares, God of War: put a blocker in his charge"},
 	{"start": 480.0, "rate": 2.9, "max_alive": 70,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.5, "hoplite": 0.3, "centaur_archer": 0.14, "amazon": 0.03, "gorgon": 0.02, "hero": 0.01},
+		"weights": {"shade_of_dead": 0.5, "hoplite": 0.3, "centaur_archer": 0.14, "amazon": 0.015, "gorgon": 0.007, "hero": 0.01},  # TUNING (not in GDD) smoke run: Gorgons x0.35, Amazons x0.5 (87 Gorgons petrified 1,072 summons)
 		"objective": "Gorgons turn your dead to stone: kill them first"},
 	{"start": 570.0, "rate": 3.2, "max_alive": 78,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.48, "hoplite": 0.3, "centaur_archer": 0.15, "amazon": 0.03, "gorgon": 0.03, "hero": 0.01},
+		"weights": {"shade_of_dead": 0.48, "hoplite": 0.3, "centaur_archer": 0.15, "amazon": 0.015, "gorgon": 0.01, "hero": 0.01},  # TUNING (not in GDD) smoke run: Gorgons x0.35, Amazons x0.5 (87 Gorgons petrified 1,072 summons)
 		"objective": "Moonlight glows in the groves above"},
 	# Zone II (9:30 left), the Groves of Artemis.
 	{"start": 630.0, "rate": 2.9, "max_alive": 72,  # TUNING (not in GDD) thinner while Artemis fights
-		"weights": {"shade_of_dead": 0.48, "hoplite": 0.28, "centaur_archer": 0.16, "amazon": 0.04, "gorgon": 0.03, "hero": 0.01},
+		"weights": {"shade_of_dead": 0.48, "hoplite": 0.28, "centaur_archer": 0.16, "amazon": 0.02, "gorgon": 0.01, "hero": 0.01},  # TUNING (not in GDD) smoke run: Gorgons x0.35, Amazons x0.5 (87 Gorgons petrified 1,072 summons)
 		"objective": "The Groves of Artemis: the Huntress strikes from the trees"},
 	{"start": 720.0, "rate": 3.5, "max_alive": 86,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.46, "hoplite": 0.28, "centaur_archer": 0.17, "amazon": 0.04, "gorgon": 0.04, "hero": 0.01},
+		"weights": {"shade_of_dead": 0.46, "hoplite": 0.28, "centaur_archer": 0.17, "amazon": 0.02, "gorgon": 0.014, "hero": 0.01},  # TUNING (not in GDD) smoke run: Gorgons x0.35, Amazons x0.5 (87 Gorgons petrified 1,072 summons)
 		"objective": "Lure the bronze under the storm: the lightning chains through it"},
 	# Zone III (6:00 left), the Terraces of Poseidon.
 	{"start": 840.0, "rate": 3.2, "max_alive": 82,  # TUNING (not in GDD) thinner while Poseidon fights
-		"weights": {"shade_of_dead": 0.46, "hoplite": 0.28, "centaur_archer": 0.16, "amazon": 0.04, "gorgon": 0.04, "hero": 0.02},
+		"weights": {"shade_of_dead": 0.46, "hoplite": 0.28, "centaur_archer": 0.16, "amazon": 0.02, "gorgon": 0.014, "hero": 0.02},  # TUNING (not in GDD) smoke run: Gorgons x0.35, Amazons x0.5 (87 Gorgons petrified 1,072 summons)
 		"objective": "The Terraces of Poseidon: the sea climbs the mountain"},
 	{"start": 930.0, "rate": 3.9, "max_alive": 96,  # TUNING (not in GDD) the density peak
-		"weights": {"shade_of_dead": 0.44, "hoplite": 0.29, "centaur_archer": 0.16, "amazon": 0.05, "gorgon": 0.04, "hero": 0.02},
+		"weights": {"shade_of_dead": 0.44, "hoplite": 0.29, "centaur_archer": 0.16, "amazon": 0.025, "gorgon": 0.014, "hero": 0.02},  # TUNING (not in GDD) smoke run: Gorgons x0.35, Amazons x0.5 (87 Gorgons petrified 1,072 summons)
 		"objective": "The summit is close: the storm thickens"},
 	# Zone IV (3:00 left), the Summit: Zeus. A thinner trickle so the fight stays readable.
 	{"start": BOSS_TIME, "rate": 2.6, "max_alive": 70,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.5, "hoplite": 0.28, "centaur_archer": 0.14, "amazon": 0.04, "gorgon": 0.03, "hero": 0.01},
+		"weights": {"shade_of_dead": 0.5, "hoplite": 0.28, "centaur_archer": 0.14, "amazon": 0.02, "gorgon": 0.01, "hero": 0.01},  # TUNING (not in GDD) smoke run: Gorgons x0.35, Amazons x0.5 (87 Gorgons petrified 1,072 summons)
 		"objective": "Topple Zeus from his summit"},
 	{"start": 1110.0, "rate": 3.2, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.48, "hoplite": 0.29, "centaur_archer": 0.15, "amazon": 0.04, "gorgon": 0.03, "hero": 0.01},
+		"weights": {"shade_of_dead": 0.48, "hoplite": 0.29, "centaur_archer": 0.15, "amazon": 0.02, "gorgon": 0.01, "hero": 0.01},  # TUNING (not in GDD) smoke run: Gorgons x0.35, Amazons x0.5 (87 Gorgons petrified 1,072 summons)
 		"objective": "Topple Zeus from his summit"},
 ]
 
