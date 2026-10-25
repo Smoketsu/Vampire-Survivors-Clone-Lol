@@ -230,8 +230,18 @@ def war_trophy(r):
     cx = w / 2.0
     base_y = h - 2 - ry
     ellipse(px, w, h, cx, base_y, r - 1, ry, P["brown"])  # The cairn of earth at its foot.
-    line(px, w, h, cx - r + 2, base_y - tall * 0.8, cx + r - 2, base_y - 2, P["brown_light"])  # Crossed spears.
-    line(px, w, h, cx + r - 2, base_y - tall * 0.8, cx - r + 2, base_y - 2, P["brown_light"])
+    reach = r - 5  # Half the spread of the shafts' upper ends (px): room for the heads inside the canvas.
+    line(px, w, h, cx - reach, base_y - tall * 0.8, cx + r - 2, base_y - 2, P["brown_light"])  # Crossed spears.
+    line(px, w, h, cx + reach, base_y - tall * 0.8, cx - r + 2, base_y - 2, P["brown_light"])
+    for sx in (-1, 1):  # A bronze leaf head on each spear's upper end (owner's art review, round 1).
+        ax, ay = cx - sx * (r - 2), base_y - 2  # Butt.
+        bx, by = cx + sx * reach, base_y - tall * 0.8  # Upper end of the shaft.
+        ln = math.hypot(bx - ax, by - ay)
+        ux, uy = (bx - ax) / ln, (by - ay) / ln  # Unit vector along the shaft, upward.
+        head = max(4, round(r * 0.35))  # Head length (px).
+        line(px, w, h, bx + ux, by + uy, bx + ux * (head - 1), by + uy * (head - 1), P["bronze"], 1)  # The leaf.
+        line(px, w, h, bx + ux, by + uy, bx + ux * (head - 1), by + uy * (head - 1), P["bronze_light"])  # Its lit spine.
+        line(px, w, h, bx + ux * head, by + uy * head, bx + ux * (head + 1), by + uy * (head + 1), P["bronze_light"])  # The point.
     rect(px, w, h, cx - 1, base_y - tall, cx, base_y, P["brown"])  # The post.
     sr = max(4, round(r * 0.75))
     sy = base_y - tall * 0.45
@@ -285,7 +295,9 @@ def moon_shrine(r):
     rect(px, w, h, cx - pr, top + pr * 2, cx + pr - 1, base_y - 2, P["marble"])
     rect(px, w, h, cx - pr, top + pr * 2, cx - pr, base_y - 2, P["marble_light"])
     cr = max(3, round(r * 0.45))  # The crescent.
-    ellipse(px, w, h, cx, top + cr, cr, cr, P["marble_light"])
+    # The crescent a shade lighter than the marble (owner's art review, round 1): the palette's
+    # palest silver, so it no longer reads as the same stone as the pillar under it.
+    ellipse(px, w, h, cx, top + cr, cr, cr, P["ice_light"])
     ellipse(px, w, h, cx + cr * 0.45, top + cr - 1, cr * 0.8, cr * 0.8, (0, 0, 0, 0))
     ellipse(px, w, h, cx, top + cr * 2 + 1, 1, 1, P["aegean_light"])
     outline(img, P["bronze_ink"])
