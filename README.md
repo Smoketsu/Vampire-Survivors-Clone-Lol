@@ -1914,6 +1914,11 @@ collapsing arena, the Cathedral Guardian's beam, the Confessor's pillar and shie
 are procedural pixel art made by `python3 tools/covenant_aoe_art.py` and drawn by `CovenantFx`: band
 pieces tiled at 1:1 along the exact danger edge, a hatch tile clipped to the shape row by row, discs baked
 at the radii the game uses, so they stay crisp at any size (GDD §15.0 "Act I enemy AoE art").
+Act III's missing sprites (the Kill-Drone, the Trojan Swarm Rocket and its exhaust, the Scrap Swarm drones with a
+2-frame rotor strip, the scrap bolt, iron shell, soul round, the Empire's rail slug, Deus missile and mortar shell, the
+Deus Revenant's missile) are hand-built on the grid by `python3 tools/act3_projectiles.py [id]` (the Kill-Drone is one
+AI image); `SpriteBank.draw_flat_frame()` draws a frame of a flat strip; the Scrap Wastes' stage card is data in
+`FrontDoorData.VIGNETTES` (GDD §15.0 "Act III missing sprites").
 
 **Engine motion (tier 0, art pass).** Every unit is still one image, so the engine animates it
 procedurally: a **step bob** matched to its real speed, a small **lean** into the movement, a

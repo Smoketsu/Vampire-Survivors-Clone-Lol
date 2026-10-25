@@ -1860,7 +1860,7 @@ the Trooper's interior `chrome_dark` lifted to `chrome` and the Spotter's chrome
 
 Code-drawn on purpose: the Empire's shots (amber tracers, the warning-red rail slug, arcing shells),
 the Lock-On lines and reticles, the orbital strike circles, the Spotter's red glow, the Kill-Drone
-(`EmpireGlyphs`, red-eyed) and the stubs' placeholder floors and obstacles; phase 2 brings the
+(`EmpireGlyphs`, red-eyed; it has its own sprite since "Act III missing sprites" below) and the stubs' placeholder floors and obstacles; phase 2 brings the
 stages' own art.
 
 ### Act III: the Assembly Halls (Stage 8; Oct 2026)
@@ -2052,3 +2052,41 @@ blades poses without the crease between rear and thigh and with thicker thighs, 
 fixed so the feet stay whole, the Deathlord Abbess's bounce box 1 px right. All by hand on the existing
 PNGs (deterministic scripts, no image generation, $0); strips rebuilt with `walk_cycle.py`. Each key's
 row above carries a "Round 2 redo" note. **For the owner's review.**
+
+### Act III missing sprites (owner report, Oct 2026)
+
+The Act III art audit (`docs/art/audit/act3.md`, branch `audit/act3-art`) found two kinds and four projectile
+keys without a PNG (`[art-miss]` totals in the audit), the Scrap Wastes' stage card on a borrowed floor, and
+a few optional shot looks. Everything below is wired through the keys the code already asked for
+(`SpriteBank` / `EnvironmentArt`); the code drawings stay as fallbacks. Visual only. **The Kill-Drone** is the one
+AI image (`tools/gen_image.py`, the template above, `--ref` the Scout Drone's source; one image, $0.024, ledger
+`empire/kill_drone`; prompt `art_source/empire/kill_drone_prompt.txt`, source `art_source/empire/kill_drone.png`):
+`pixelate_source.py` to 30 rows, `prepare_sprite.py --no-levels --no-prune --ink-l 0.15` (cleanup on), then by
+hand: the bone / skin / brown / amber specks the AI's red plate and arms left snapped to the `signal` ramp,
+a clean 7 x 7 lens ring (ink, dark red, red, a 2 x 2 hot core) drawn on the grid, two empty rows on top for the hover
+bob. Every other sprite is **hand-built on the grid** by `tools/act3_projectiles.py` (letter maps and small
+procedural shapes, exact palette colours, one-pixel ink outline in the part's own ramp; rebuild with
+`python3 tools/act3_projectiles.py [id]`): no generation, so each pixel is intentional. Flat sprites face +x;
+`SpriteBank.draw_flat_frame()` draws one frame of a strip. **For the owner's review**
+(`docs/art/act3_sprites_review/`).
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `empire/kill_drone` | Kill-Drone (the Purge Protocol Reckoning kind, a machine): the Scout Drone's chrome disc and two flat rotors made heavy: a broad warning-red armour plate across the top, one big red lens with a hot core, two gun barrels under the body | 70x32 | hover (`_walk`, rig `hover` bob 2); `HEIGHTS` 32 |
+| `projectiles/trojan_rocket` | Swarm Rocket: a chrome missile with swept warning-red fins and band, an amber warhead light | 24x12 | `FLAT_SIZES` 24; drawn turned along its heading by `RocketKit` |
+| `projectiles/trojan_rocket_flame` | its exhaust: a tapering amber / red flame, glow core | 3 x 12x8 | strip, `RocketKit` picks the frame from its age (50 ms) |
+| `projectiles/scrap_drone` | Scrap Swarm drone (also the Rust Prophet's): a bone skull-body with one violet eye and a scrap jaw, two grey rotor discs | 2 x 22x14 | rotor strip, `ScrapSwarm.ROTOR_FPS` 14 Hz from game time; the player's violet and bone, no Empire colour |
+| `projectiles/scrap_drone_bright` | the Deathless Swarm kill drone: the same with violet rotors and a flare eye | 2 x 22x14 | replaces the old violet ring |
+| `projectiles/scrap_bolt` | a bone shard wrapped in violet with a violet trail | 14x6 | `Projectile.Kind.SCRAP_BOLT` |
+| `projectiles/iron_shell` | an Iron Revenant cannon shell: an iron ogive shell with a driving band, a soul-teal fire trail | 20x8 | `Projectile.Kind.IRON_SHELL` |
+| `projectiles/soul_round` | a Grave Gunner's rifle round: a soul-teal fire slug with a bright core | 12x5 | `Projectile.Kind.SOUL_ROUND` |
+| `projectiles/empire_rail` | the Lock-On rail slug: a warning-red needle, amber sleeve, white-hot core | 46x7 | `SHOT_STYLES` rail `art`; its head on the shot |
+| `projectiles/empire_missile` | Deus Ex Machina's missile: chrome body, red fins and band, amber nose, a static exhaust | 26x10 | `SHOT_STYLES` missile `art` |
+| `projectiles/mortar_shell` | the Mortar Walker's lobbed shell: a chrome bomb, red band, amber fuse light | 12x12 | `SHOT_STYLES` mortar `art`, drawn at the lob's height |
+| `projectiles/deus_missile` | the Deus Revenant's missile (the undead's): iron body, bone nose, soul-teal exhaust | 26x10 | `HordeHazards` draws a boulder with source `deus_revenant_missile` as it, nose along its arc |
+
+The Scrap Wastes' stage-select card is data only (`FrontDoorData.VIGNETTES["wastes"]`, no new PNG): `tiles/wastes_slag`,
+`obstacles/titan_hull_s`, `wreck_plate_s`, `slag_mound_m`, `tank_trap_s`, `empire/signal_pylon`, `empire/aegis_bot`,
+`empire/scout_drone`, `summons/warrior` + `archer`, and `bosses/kestrel_aim` facing them. The small tracers (zap, round,
+arc bolt, rivet, turret bolt, chaingun), Kestrel's decoy projectors and the sentry / turret barrels stay code
+(audit: acceptable / low).

@@ -1,0 +1,246 @@
+{
+ "title": "Act III missing sprites (kill-drone, rockets, scrap drones, bolts, shells, the Scrap Wastes card)",
+ "note": "Every sprite that had no PNG in Act III, wired through the SpriteBank keys the code already asked for (code drawings stay as fallbacks; visual only, no gameplay change). The Kill-Drone is an AI source (one image, about $0.024) converted with the Empire pipeline and fixed by hand; every projectile is hand-built on the art grid by tools/act3_projectiles.py (no generation). Images are at 1x and x4 (nearest neighbour) on the Wastes slag colour; strips also as GIFs. Before / after crops are 1:1 frames of the same seeded autotest moments under xvfb (before = the new PNGs removed, so the code fallback draws; after = this branch). The projectile lineup is a scratch scene (not in the repo) that draws the real Projectile fallbacks and the EmpireShots tracer / shell fallback next to the art at one size.",
+ "runs": {
+  "R1": "--seed=7 --stage=wastes --policy=army --spells=scrap_swarm --spawn=trojan_horse@40,mortar_walker@42x3,kill_drone@44x8,spotter@45x2 --speed=4 --art-shots=...",
+  "R2": "--seed=11 --stage=citadel --policy=army --spells=scrap_swarm,raise_dead --classes=iron_revenant,grave_drone --spawn=line_trooper@30x8,mortar_walker@34x2,spotter@36x2,line_trooper@50x8 --speed=4 --art-shots=...",
+  "R3": "--seed=3 --stage=wastes --policy=army --spells=death_mark,raise_dead --spawn=line_trooper@25x14,line_trooper@45x14,line_trooper@65x14 (Grave Gunners fire soul rounds: steel line, 10 raised, gunner dmg 137)",
+  "scratch": "the stage-card renderer and the projectile lineup are scratch Godot scenes (a StageVignette per stage / the Projectile node per kind), not in the repo"
+ },
+ "images": [
+  {
+   "id": "kill_drone",
+   "key": "empire/kill_drone",
+   "path": "docs/art/act3_sprites_review/images/kill_drone.png",
+   "path_x4": "docs/art/act3_sprites_review/images/kill_drone_x4.png",
+   "size": [
+    70,
+    32
+   ],
+   "description": "Kill-Drone (Purge Protocol): the Scout Drone's family made heavy: a broad warning-red armour plate, one big red lens with a hot core, two gun barrels under the body, two flat rotors. 70 x 32 (30 + 2 empty rows on top for the hover bob). AI source from the Scout Drone (art_source/empire/kill_drone.png), converted, lens and reds fixed by hand on the grid",
+   "before": "docs/art/act3_sprites_review/shots/wastes_purge_drones_rockets_before.png",
+   "after": "docs/art/act3_sprites_review/shots/wastes_purge_drones_rockets_after.png"
+  },
+  {
+   "id": "kill_drone_walk",
+   "key": "empire/kill_drone_walk",
+   "path": "docs/art/act3_sprites_review/images/kill_drone_walk.png",
+   "path_x4": "docs/art/act3_sprites_review/images/kill_drone_walk_x4.png",
+   "size": [
+    70,
+    32
+   ],
+   "description": "Its hover strip: 8 frames, the whole drone bobs 2 px (walk_cycle.py \"hover\", like the Scout Drone)",
+   "gif": "docs/art/act3_sprites_review/images/kill_drone_walk.gif",
+   "frames": 8,
+   "before": "docs/art/act3_sprites_review/shots/wastes_purge_drones_rockets_before.png",
+   "after": "docs/art/act3_sprites_review/shots/wastes_purge_drones_rockets_after.png"
+  },
+  {
+   "id": "trojan_rocket",
+   "key": "projectiles/trojan_rocket",
+   "path": "docs/art/act3_sprites_review/images/trojan_rocket.png",
+   "path_x4": "docs/art/act3_sprites_review/images/trojan_rocket_x4.png",
+   "size": [
+    24,
+    12
+   ],
+   "description": "Trojan Horse Swarm Rocket: chrome body, warning-red fins and band, amber warhead light. 24 x 12, facing +x, hand-built on the grid",
+   "before": "docs/art/act3_sprites_review/shots/wastes_purge_drones_rockets_before.png",
+   "after": "docs/art/act3_sprites_review/shots/wastes_purge_drones_rockets_after.png"
+  },
+  {
+   "id": "trojan_rocket_flame",
+   "key": "projectiles/trojan_rocket_flame",
+   "path": "docs/art/act3_sprites_review/images/trojan_rocket_flame.png",
+   "path_x4": "docs/art/act3_sprites_review/images/trojan_rocket_flame_x4.png",
+   "size": [
+    12,
+    8
+   ],
+   "description": "Its exhaust: 3 flicker frames of 12 x 8, drawn behind the nozzle (replaces two code circles)",
+   "gif": "docs/art/act3_sprites_review/images/trojan_rocket_flame.gif",
+   "frames": 3,
+   "before": "docs/art/act3_sprites_review/shots/wastes_purge_drones_rockets_before.png",
+   "after": "docs/art/act3_sprites_review/shots/wastes_purge_drones_rockets_after.png"
+  },
+  {
+   "id": "scrap_drone",
+   "key": "projectiles/scrap_drone",
+   "path": "docs/art/act3_sprites_review/images/scrap_drone.png",
+   "path_x4": "docs/art/act3_sprites_review/images/scrap_drone_x4.png",
+   "size": [
+    22,
+    14
+   ],
+   "description": "Scrap Swarm drone (also the Rust Prophet's): a bone skull-body with a violet eye, scrap jaw, two grey rotors; 2 rotor frames of 22 x 14",
+   "gif": "docs/art/act3_sprites_review/images/scrap_drone.gif",
+   "frames": 2,
+   "before": "docs/art/act3_sprites_review/shots/wastes_scrap_drones_before.png",
+   "after": "docs/art/act3_sprites_review/shots/wastes_scrap_drones_after.png"
+  },
+  {
+   "id": "scrap_drone_bright",
+   "key": "projectiles/scrap_drone_bright",
+   "path": "docs/art/act3_sprites_review/images/scrap_drone_bright.png",
+   "path_x4": "docs/art/act3_sprites_review/images/scrap_drone_bright_x4.png",
+   "size": [
+    22,
+    14
+   ],
+   "description": "The Deathless Swarm kill drone: the same with violet rotors and a flare eye (replaces the old violet ring)",
+   "gif": "docs/art/act3_sprites_review/images/scrap_drone_bright.gif",
+   "frames": 2,
+   "before": "docs/art/act3_sprites_review/shots/wastes_scrap_drones_before.png",
+   "after": "docs/art/act3_sprites_review/shots/wastes_scrap_drones_after.png"
+  },
+  {
+   "id": "scrap_bolt",
+   "key": "projectiles/scrap_bolt",
+   "path": "docs/art/act3_sprites_review/images/scrap_bolt.png",
+   "path_x4": "docs/art/act3_sprites_review/images/scrap_bolt_x4.png",
+   "size": [
+    14,
+    6
+   ],
+   "description": "Scrap bolt: a bone shard wrapped in violet, 14 x 6, facing +x",
+   "before": "docs/art/act3_sprites_review/shots/projectile_lineup_before.png",
+   "after": "docs/art/act3_sprites_review/shots/projectile_lineup_after.png"
+  },
+  {
+   "id": "iron_shell",
+   "key": "projectiles/iron_shell",
+   "path": "docs/art/act3_sprites_review/images/iron_shell.png",
+   "path_x4": "docs/art/act3_sprites_review/images/iron_shell_x4.png",
+   "size": [
+    20,
+    8
+   ],
+   "description": "Iron Revenant cannon shell (and the Deus Revenant's twin cannons): an iron ogive shell with a driving band and a soul-teal fire trail, 20 x 8",
+   "before": "docs/art/act3_sprites_review/shots/projectile_lineup_before.png",
+   "after": "docs/art/act3_sprites_review/shots/projectile_lineup_after.png"
+  },
+  {
+   "id": "soul_round",
+   "key": "projectiles/soul_round",
+   "path": "docs/art/act3_sprites_review/images/soul_round.png",
+   "path_x4": "docs/art/act3_sprites_review/images/soul_round_x4.png",
+   "size": [
+    12,
+    5
+   ],
+   "description": "Grave Gunner rifle round: a soul-teal fire slug with a bright core, 12 x 5",
+   "before": "docs/art/act3_sprites_review/shots/projectile_lineup_before.png",
+   "after": "docs/art/act3_sprites_review/shots/projectile_lineup_after.png"
+  },
+  {
+   "id": "empire_rail",
+   "key": "projectiles/empire_rail",
+   "path": "docs/art/act3_sprites_review/images/empire_rail.png",
+   "path_x4": "docs/art/act3_sprites_review/images/empire_rail_x4.png",
+   "size": [
+    46,
+    7
+   ],
+   "description": "Lock-On rail slug (Spotter, Kestrel): a warning-red needle with an amber sleeve and a white-hot core, 46 x 7 (EmpireRulesData rail \"art\")",
+   "before": "docs/art/act3_sprites_review/shots/projectile_lineup_before.png",
+   "after": "docs/art/act3_sprites_review/shots/projectile_lineup_after.png"
+  },
+  {
+   "id": "empire_missile",
+   "key": "projectiles/empire_missile",
+   "path": "docs/art/act3_sprites_review/images/empire_missile.png",
+   "path_x4": "docs/art/act3_sprites_review/images/empire_missile_x4.png",
+   "size": [
+    26,
+    10
+   ],
+   "description": "Deus Ex Machina's Lock-On missile: chrome body, red fins and band, amber nose, a static exhaust, 26 x 10 (missile \"art\")",
+   "before": "docs/art/act3_sprites_review/shots/projectile_lineup_before.png",
+   "after": "docs/art/act3_sprites_review/shots/projectile_lineup_after.png"
+  },
+  {
+   "id": "mortar_shell",
+   "key": "projectiles/mortar_shell",
+   "path": "docs/art/act3_sprites_review/images/mortar_shell.png",
+   "path_x4": "docs/art/act3_sprites_review/images/mortar_shell_x4.png",
+   "size": [
+    12,
+    12
+   ],
+   "description": "Mortar Walker shell: a chrome bomb with a warning-red band and an amber fuse light, 12 x 12 (mortar \"art\")",
+   "before": "docs/art/act3_sprites_review/shots/citadel_mortar_shell_before.png",
+   "after": "docs/art/act3_sprites_review/shots/citadel_mortar_shell_after.png"
+  },
+  {
+   "id": "deus_missile",
+   "key": "projectiles/deus_missile",
+   "path": "docs/art/act3_sprites_review/images/deus_missile.png",
+   "path_x4": "docs/art/act3_sprites_review/images/deus_missile_x4.png",
+   "size": [
+    26,
+    10
+   ],
+   "description": "Deus Revenant missile (the undead's, a corpse boulder until now): iron body, bone nose, soul-teal exhaust, 26 x 10, turned along its arc by HordeHazards",
+   "before": "docs/art/act3_sprites_review/shots/projectile_lineup_before.png",
+   "after": "docs/art/act3_sprites_review/shots/projectile_lineup_after.png"
+  },
+  {
+   "id": "wastes_card",
+   "key": "front_door_data.gd VIGNETTES[\"wastes\"]",
+   "path": "docs/art/act3_sprites_review/images/wastes_card.png",
+   "path_x4": "docs/art/act3_sprites_review/images/wastes_card_x3.png",
+   "size": [
+    276,
+    232
+   ],
+   "description": "The Scrap Wastes stage-select card (also the victory card): its own slag floor (tiles/wastes_slag, no longer the Crimson March's), a titan hull, a wreck plate, a slag mound and a tank trap, a signal pylon, an Aegis Bot and a Scout Drone, two undead, and Kestrel kneeling in her aim pose; drifting amber embers as before. Data only: no new PNG, the same kinds of items the Assembly and Citadel cards use. (the _x4 file is x3)",
+   "before": "docs/art/act3_sprites_review/shots/wastes_card_before.png",
+   "after": "docs/art/act3_sprites_review/shots/wastes_card_after.png"
+  }
+ ],
+ "shots": [
+  {
+   "id": "wastes_purge_drones_rockets",
+   "before": "docs/art/act3_sprites_review/shots/wastes_purge_drones_rockets_before.png",
+   "after": "docs/art/act3_sprites_review/shots/wastes_purge_drones_rockets_after.png",
+   "source": "R1 (art_52)",
+   "description": "Purge Protocol Kill-Drones (red armour plate, red lens) among a Scout Drone, and the Trojan Horse's Swarm Rockets (chrome, red fins, amber nose, flame) instead of grey capsules and tiny discs"
+  },
+  {
+   "id": "wastes_scrap_drones",
+   "before": "docs/art/act3_sprites_review/shots/wastes_scrap_drones_before.png",
+   "after": "docs/art/act3_sprites_review/shots/wastes_scrap_drones_after.png",
+   "source": "R1 (art_54)",
+   "description": "A Scrap Swarm drone (top left: bone body, violet eye, rotors) beside five Kill-Drones and three Swarm Rockets"
+  },
+  {
+   "id": "wastes_kill_drone_swarm",
+   "before": "docs/art/act3_sprites_review/shots/wastes_kill_drone_swarm_before.png",
+   "after": "docs/art/act3_sprites_review/shots/wastes_kill_drone_swarm_after.png",
+   "source": "R1 (art_50)",
+   "description": "The Reckoning swarm: Kill-Drones beside Scout Drones, one Swarm Rocket in flight"
+  },
+  {
+   "id": "citadel_mortar_shell",
+   "before": "docs/art/act3_sprites_review/shots/citadel_mortar_shell_before.png",
+   "after": "docs/art/act3_sprites_review/shots/citadel_mortar_shell_after.png",
+   "source": "R2 (art_56)",
+   "description": "A Mortar Walker's lobbed shell: a chrome bomb with a red band and fuse light instead of an orange blob"
+  },
+  {
+   "id": "projectile_lineup",
+   "before": "docs/art/act3_sprites_review/shots/projectile_lineup_before.png",
+   "after": "docs/art/act3_sprites_review/shots/projectile_lineup_after.png",
+   "source": "scratch scene",
+   "description": "Top row: the rail slug, Deus's missile, the mortar shell; right: the Deus Revenant missile (a skull boulder before). Below, each twice at two angles: the soul round, the scrap bolt, the iron shell. Code fallbacks left, art right, 1:1 on the Wastes floor (the Projectile node and the EmpireShots tracer logic draw both)"
+  },
+  {
+   "id": "wastes_card",
+   "before": "docs/art/act3_sprites_review/shots/wastes_card_before.png",
+   "after": "docs/art/act3_sprites_review/shots/wastes_card_after.png",
+   "source": "scratch scene",
+   "description": "The Scrap Wastes stage-select card (StageVignette) before and after"
+  }
+ ]
+}
