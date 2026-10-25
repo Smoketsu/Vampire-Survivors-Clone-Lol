@@ -26,6 +26,11 @@
 ##                     own HP; CerberusKit runs the attack of each living head.
 ##   tartarus_warden — Hades' guard of the dead (Lord of the Dead): a dark
 ##                     hoplite of Tartarus raised around him in a ring; PHALANX.
+##   shade_archer    — Shade Archer: soldier, RANGED (owner request after playtest
+##                     pass 2, Oct 25, 2026: the Underworld had no ranged kind, so
+##                     the army body-blocked everything and the stage was the act's
+##                     easiest). The archers of Troy, still drawing their bows;
+##                     glides like the Shade of the Dead and always advances.
 ## The GDD gives no numbers: everything is TUNING (not in GDD) unless marked as
 ## the owner-approved proposal.
 class_name UnderworldEnemyData
@@ -39,6 +44,8 @@ const CERBERUS: String = "cerberus"
 const CERBERUS_HEAD: String = "cerberus_head"
 ## Kind id of Hades' ring guard (Lord of the Dead).
 const WARDEN: String = "tartarus_warden"
+## Kind id of the Underworld's ranged dead (ShadeArcherKit).
+const SHADE_ARCHER: String = "shade_archer"
 
 ## Pale ghost tint (multiply, RGBA 0..1) of the Underworld's dead (the Hoplite
 ## art they borrow; marble and Aegean, never the undead's bone and teal).
@@ -184,5 +191,30 @@ const ENEMIES := {
 		"phalanx": true,  # His ring locks shields.
 		"wears": "pantheon/hoplite",  # Own decision: the Hoplite's art, dark (no new art).
 		"wear_tint": WARDEN_TINT,
+	},
+	# Soldier, ranged: an archer of Troy's dead, still drawing its bow (owner
+	# request after playtest pass 2: the Underworld's ranged threat). Its own
+	# art (pantheon/shade_archer); the code glyph draws it until that loads.
+	"shade_archer": {
+		"display_name": "Shade Archer",
+		"max_hp": 18.0,  # TUNING (not in GDD) frail: kill it on approach (Shade Hoplite 30, Centaur Archer 46)
+		"move_speed": 56.0,  # TUNING (not in GDD) px/s; it glides in behind the shield walls (Shade Hoplite 46)
+		"damage": 3.5,  # TUNING (not in GDD) per arrow, before the time scaling (Centaur Archer 4.5)
+		"attack_interval": 1.8,  # TUNING (not in GDD) s (Centaur Archer 1.6)
+		"attack_range": 230.0,  # TUNING (not in GDD) px; over the army's ring (Centaur Archer 250)
+		"radius": 8.0,  # TUNING (not in GDD) px
+		"armor": 0.0,  # TUNING (not in GDD) no bronze left on it
+		"xp": 2,  # TUNING (not in GDD)
+		"behavior": "ranged",  # The shared ranged AI: always advances on the necromancer (no kiting).
+		"projectile_speed": 260.0,  # TUNING (not in GDD) px/s (Centaur Archer 300): a slower, dodgeable arrow
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.6,  # TUNING (not in GDD) 0..1; the army goes for the archers like for the centaurs
+		"mass": 0.8,  # TUNING (not in GDD) a ghost: light
+		"faction": PantheonEnemyData.FACTION,
+		"kit": "shade_archer",
+		"floating": true,  # Glides, drawn hovering (as the Shade of the Dead).
 	},
 }

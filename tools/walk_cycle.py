@@ -363,6 +363,7 @@ RIGS = {
     # rigid; the Hero strides, the low hem of his blue cloak (left of his back leg) rigid; the
     # Bronze Titan stomps, both huge low fists hanging below the hip ride with the body.
     "pantheon/shade_of_dead": dict(mode="hover", bob=2, parts=[]),
+    "pantheon/shade_archer": dict(mode="hover", bob=2, parts=[]),  # a ghost archer: the whole sprite bobs, bow and all
     "pantheon/hoplite": dict(mode="legs", hip=42, back=(0, 17), front=(17, 30), rigid=[(2, 6, 0, None)], spread=2, lift=2, dip=1),
     "pantheon/hero": dict(mode="legs", hip=41, back=(0, 31), front=(31, 58), rigid=[(0, 17, 41, 48)], spread=2, lift=2, dip=1),
     # Owner's Act IV art review, round 2: the round 1 stride (his crossed legs mirrored) did not

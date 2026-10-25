@@ -86,7 +86,9 @@ const WRATH := {
 ## Continuous spawning segments, sorted by start time (keys as
 ## GraveyardStage.SEGMENTS). Shades of the Dead are the fodder, Shade Hoplites
 ## (the Underworld's dead in their ranks) and Hoplites the shield walls, Heroes
-## the rare elites. Shades alone for the first minute (the Act III lesson: the
+## the rare elites; Shade Archers (from 3:00) and Centaur Archers (from 5:00)
+## shoot over the army's ring (owner request after playtest pass 2: the stage
+## had no ranged threat, so the army body-blocked everything). Shades alone for the first minute (the Act III lesson: the
 ## starting army needs room).
 const SEGMENTS := [
 	# Zone I, the Asphodel Fields.
@@ -97,32 +99,32 @@ const SEGMENTS := [
 		"weights": {"shade_of_dead": 0.8, "shade_hoplite": 0.2},
 		"objective": "The dead still march in their ranks: break the walls from the flanks"},
 	{"start": 180.0, "rate": 2.0, "max_alive": 48,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.7, "shade_hoplite": 0.22, "hoplite": 0.08},
+		"weights": {"shade_of_dead": 0.64, "shade_hoplite": 0.22, "hoplite": 0.08, "shade_archer": 0.06},
 		"objective": "Hades' fissures swallow the dead: no corpse rises there"},
 	# Zone II, the Styx Crossing.
 	{"start": 300.0, "rate": 2.3, "max_alive": 56,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.62, "shade_hoplite": 0.24, "hoplite": 0.13, "hero": 0.01},
+		"weights": {"shade_of_dead": 0.54, "shade_hoplite": 0.22, "hoplite": 0.12, "hero": 0.01, "shade_archer": 0.08, "centaur_archer": 0.03},
 		"objective": "The Styx: the living slow in it, your dead forget"},
 	{"start": 420.0, "rate": 2.6, "max_alive": 64,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.58, "shade_hoplite": 0.26, "hoplite": 0.145, "hero": 0.015},
+		"weights": {"shade_of_dead": 0.5, "shade_hoplite": 0.23, "hoplite": 0.135, "hero": 0.015, "shade_archer": 0.09, "centaur_archer": 0.03},
 		"objective": "Fight on the banks: keep your dead out of the river"},
 	{"start": 540.0, "rate": 2.8, "max_alive": 70,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.56, "shade_hoplite": 0.27, "hoplite": 0.155, "hero": 0.015},
+		"weights": {"shade_of_dead": 0.47, "shade_hoplite": 0.24, "hoplite": 0.145, "hero": 0.015, "shade_archer": 0.095, "centaur_archer": 0.035},
 		"objective": "Cross the Styx: the Judges wait beyond"},
 	# Zone III, the Judges' Hall.
 	{"start": 600.0, "rate": 3.0, "max_alive": 76,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.54, "shade_hoplite": 0.28, "hoplite": 0.16, "hero": 0.02},
+		"weights": {"shade_of_dead": 0.45, "shade_hoplite": 0.24, "hoplite": 0.15, "hero": 0.02, "shade_archer": 0.1, "centaur_archer": 0.04},
 		"objective": "The Judges' Hall: the dead are weighed here"},
 	{"start": 750.0, "rate": 3.3, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.52, "shade_hoplite": 0.29, "hoplite": 0.17, "hero": 0.02},
+		"weights": {"shade_of_dead": 0.42, "shade_hoplite": 0.25, "hoplite": 0.16, "hero": 0.02, "shade_archer": 0.11, "centaur_archer": 0.04},
 		"objective": "The hound of the gates hunts you: kill his heads one by one"},
 	# Zone IV, the Throne of Hades.
 	{"start": 900.0, "rate": 3.6, "max_alive": 92,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.5, "shade_hoplite": 0.3, "hoplite": 0.175, "hero": 0.025},
+		"weights": {"shade_of_dead": 0.4, "shade_hoplite": 0.25, "hoplite": 0.16, "hero": 0.025, "shade_archer": 0.12, "centaur_archer": 0.045},
 		"objective": "The Throne of Hades: the Lord of the Dead stirs"},
 	# 17:00, the boss: a thinner trickle so the fight stays readable.
 	{"start": BOSS_TIME, "rate": 2.4, "max_alive": 64,  # TUNING (not in GDD)
-		"weights": {"shade_of_dead": 0.6, "shade_hoplite": 0.26, "hoplite": 0.125, "hero": 0.015},
+		"weights": {"shade_of_dead": 0.5, "shade_hoplite": 0.22, "hoplite": 0.115, "hero": 0.015, "shade_archer": 0.11, "centaur_archer": 0.04},
 		"objective": "Make the Lord of the Dead kneel"},
 ]
 
@@ -139,29 +141,29 @@ const EVENTS := [
 	{"time": 170.0, "type": "wave", "banner": "A Hero's shade takes the field: kill it before it wins Glory!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "hero", "count": 1, "elite": false}, {"kind": "shade_of_dead", "count": 8, "elite": false}]},
 	{"time": 260.0, "type": "wave", "banner": "Two shield walls close in!", "formation": "line",  # TUNING (not in GDD)
-		"groups": [{"kind": "shade_hoplite", "count": 8, "elite": false}, {"kind": "hoplite", "count": 4, "elite": false}]},
+		"groups": [{"kind": "shade_hoplite", "count": 8, "elite": false}, {"kind": "hoplite", "count": 4, "elite": false}, {"kind": "shade_archer", "count": 4, "elite": false}]},
 	# Zone II (5:00): the Styx Crossing.
 	{"time": 330.0, "type": "wave", "banner": "The dead ford the Styx toward you!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "shade_of_dead", "count": 18, "elite": false}, {"kind": "shade_hoplite", "count": 6, "elite": false}]},
 	{"time": 430.0, "type": "wave", "banner": "Heroes lead the host across the river!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "hero", "count": 2, "elite": false}, {"kind": "hoplite", "count": 8, "elite": false}, {"kind": "shade_of_dead", "count": 10, "elite": false}]},
+		"groups": [{"kind": "hero", "count": 2, "elite": false}, {"kind": "hoplite", "count": 8, "elite": false}, {"kind": "shade_of_dead", "count": 10, "elite": false}, {"kind": "centaur_archer", "count": 3, "elite": false}]},
 	{"time": 530.0, "type": "wave", "banner": "A phalanx of the dead holds the far bank!", "formation": "line",  # TUNING (not in GDD)
-		"groups": [{"kind": "shade_hoplite", "count": 16, "elite": false}]},
+		"groups": [{"kind": "shade_hoplite", "count": 16, "elite": false}, {"kind": "shade_archer", "count": 6, "elite": false}]},
 	# Zone III (10:00): the Judges' Hall.
 	{"time": 615.0, "type": "wave", "banner": "The Judges' Hall: the condemned are loosed on you!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "shade_of_dead", "count": 22, "elite": false}, {"kind": "shade_hoplite", "count": 8, "elite": false}, {"kind": "hero", "count": 1, "elite": false}]},
+		"groups": [{"kind": "shade_of_dead", "count": 22, "elite": false}, {"kind": "shade_hoplite", "count": 8, "elite": false}, {"kind": "hero", "count": 1, "elite": false}, {"kind": "shade_archer", "count": 6, "elite": false}]},
 	{"time": 690.0, "type": "cerberus", "banner": "CERBERUS bounds out of the dark: kill his three heads!", "kind": UnderworldEnemyData.CERBERUS,  # Owner-approved proposal: the miniboss
 		"escort": [{"kind": "shade_of_dead", "count": 8, "elite": false}]},  # TUNING (not in GDD)
 	{"time": 820.0, "type": "wave", "banner": "The phalanx marches on you!", "formation": "line",  # TUNING (not in GDD)
-		"groups": [{"kind": "hoplite", "count": 12, "elite": false}, {"kind": "shade_hoplite", "count": 12, "elite": false}]},
+		"groups": [{"kind": "hoplite", "count": 12, "elite": false}, {"kind": "shade_hoplite", "count": 12, "elite": false}, {"kind": "centaur_archer", "count": 4, "elite": false}]},
 	# Zone IV (15:00): the Throne of Hades.
 	{"time": 905.0, "type": "wave", "banner": "The Throne of Hades: his court of the dead stands before it!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "hero", "count": 2, "elite": false}, {"kind": "shade_hoplite", "count": 16, "elite": false}, {"kind": "shade_of_dead", "count": 14, "elite": false}]},
+		"groups": [{"kind": "hero", "count": 2, "elite": false}, {"kind": "shade_hoplite", "count": 16, "elite": false}, {"kind": "shade_of_dead", "count": 14, "elite": false}, {"kind": "shade_archer", "count": 8, "elite": false}]},
 	{"time": 965.0, "type": "wave", "banner": "The last host of the Underworld!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "hero", "count": 2, "elite": false}, {"kind": "hoplite", "count": 14, "elite": false}, {"kind": "shade_of_dead", "count": 16, "elite": false}]},
+		"groups": [{"kind": "hero", "count": 2, "elite": false}, {"kind": "hoplite", "count": 14, "elite": false}, {"kind": "shade_of_dead", "count": 16, "elite": false}, {"kind": "centaur_archer", "count": 4, "elite": false}]},
 	# 17:00 Hades (BOSS_TIME), plus two sallies.
 	{"time": 1090.0, "type": "wave", "banner": "The dead rally to their lord!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "shade_hoplite", "count": 10, "elite": false}, {"kind": "shade_of_dead", "count": 10, "elite": false}]},
+		"groups": [{"kind": "shade_hoplite", "count": 10, "elite": false}, {"kind": "shade_of_dead", "count": 10, "elite": false}, {"kind": "shade_archer", "count": 6, "elite": false}]},
 	{"time": 1160.0, "type": "wave", "banner": "Shades pour out of Tartarus!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "shade_of_dead", "count": 20, "elite": false}, {"kind": "hero", "count": 1, "elite": false}]},
 ]
@@ -286,7 +288,7 @@ const UNDERWORLD := {
 		{"ids": ["legionary"], "weight": 1.0},  # The Shores of Ilion (Act IV phase 2): the testudo soldiers
 		{"ids": ["wolf_of_rome"], "weight": 0.8},
 		{"ids": ["cyclops"], "weight": 0.3},
-		{"ids": ["centaur_archer"], "weight": 0.6},  # Mount Olympus (Act IV phase 2)
+		{"ids": ["centaur_archer"], "weight": 1.2},  # Mount Olympus (Act IV phase 2); 0.6 -> 1.2 after playtest pass 2 (owner: "add some centaurs in")
 		{"ids": ["amazon"], "weight": 0.5},
 		{"ids": ["gorgon"], "weight": 0.3},
 	],

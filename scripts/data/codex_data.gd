@@ -132,7 +132,7 @@ const PANTHEON_SOLDIERS: Array[String] = ["shade_of_dead", "hoplite", "hero",
 	# --- Act IV: Mount Olympus ---
 	"centaur_archer", "amazon", "gorgon", "moon_hound", "sea_serpent",
 	# --- Act IV: the Asphodel Underworld ---
-	"shade_hoplite"]
+	"shade_hoplite", "shade_archer"]
 ## Olympian Republic champions (minibosses) and the Act IV Reckoning kinds.
 const PANTHEON_CHAMPIONS: Array[String] = ["bronze_titan",
 	# --- Act IV: the Shores of Ilion ---
@@ -254,6 +254,7 @@ const DESCRIPTIONS: Dictionary = {
 	"poseidon": "The Lord of the Sea: he floods half the field, throws his trident, and calls a sea serpent.",  # Owner-approved Act IV proposal
 	# --- Act IV: the Asphodel Underworld ---
 	"shade_hoplite": "The dead of a thousand wars, still in their ranks. They lock shields like the living.",  # TUNING (not in GDD)
+	"shade_archer": "Troy's archers, still drawing their bows in the dark. They shoot over your army's ring: kill them on approach.",  # TUNING (not in GDD)
 	"cerberus": "The three-headed hound of the gates. His body cannot be wounded: kill each head on its own.",  # Owner-approved Act IV proposal
 	"tartarus_warden": "Hades' own ring of the dead. While it stands, its lord is all but untouchable.",  # Owner-approved Act IV proposal (Lord of the Dead)
 }

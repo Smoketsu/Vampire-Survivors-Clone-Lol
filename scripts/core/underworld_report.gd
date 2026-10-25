@@ -5,7 +5,8 @@
 ##     underworld        UnderworldDirector (the Styx, guests, objective Soul Ash)
 ##     underworld events the director's event log
 ##     underworld kinds  Cerberus (heads, attacks, time to kill), the Shade
-##                       Hoplites, the Tartarus Wardens (when any spawned)
+##                       Hoplites, the Tartarus Wardens, the Shade Archers and
+##                       the damage their arrows did (when any spawned)
 ##     hades             BossHades.summary_line() (when he fought) and his shades
 ##                       through the Claims path
 ##   item_lines(): called from Autotest.finish() on EVERY stage, each line only
@@ -24,14 +25,17 @@ static func stage_lines(game: Game, st: Dictionary) -> void:
 		print("[autotest] underworld: %s" % ud.summary_line())
 		print("[autotest] underworld events (%d): %s" % [ud.fired.size(), ", ".join(ud.fired)])
 	if int(st.get("cerberus_spawned", 0.0)) > 0 or int(st.get("spawned_" + UnderworldEnemyData.SHADE_HOPLITE, 0.0)) > 0 \
-			or int(st.get("spawned_" + UnderworldEnemyData.WARDEN, 0.0)) > 0:
-		print("[autotest] underworld kinds: shade hoplites %d/%d | cerberus %d, killed %d (ttk %ds): heads killed %d, breaths %d, pounces %d, howls %d (shades %d), you hit %d, summon hits %d | tartarus wardens %d/%d" % [
+			or int(st.get("spawned_" + UnderworldEnemyData.WARDEN, 0.0)) > 0 \
+			or int(st.get("spawned_" + UnderworldEnemyData.SHADE_ARCHER, 0.0)) > 0:
+		print("[autotest] underworld kinds: shade hoplites %d/%d | cerberus %d, killed %d (ttk %ds): heads killed %d, breaths %d, pounces %d, howls %d (shades %d), you hit %d, summon hits %d | tartarus wardens %d/%d | shade archers %d/%d, arrows hit you %d, summons %d" % [
 			int(st.get("spawned_" + UnderworldEnemyData.SHADE_HOPLITE, 0.0)), int(st.get("kill_" + UnderworldEnemyData.SHADE_HOPLITE, 0.0)),
 			int(st.get("cerberus_spawned", 0.0)), int(st.get("cerberus_kills", 0.0)), int(st.get("cerberus_ttk", 0.0)),
 			int(st.get("cerberus_heads_killed", 0.0)), int(st.get("cerberus_breaths", 0.0)), int(st.get("cerberus_pounces", 0.0)),
 			int(st.get("cerberus_howls", 0.0)), int(st.get("cerberus_shades", 0.0)), int(st.get("cerberus_player_hits", 0.0)),
 			int(st.get("cerberus_summon_hits", 0.0)),
-			int(st.get("spawned_" + UnderworldEnemyData.WARDEN, 0.0)), int(st.get("kill_" + UnderworldEnemyData.WARDEN, 0.0))])
+			int(st.get("spawned_" + UnderworldEnemyData.WARDEN, 0.0)), int(st.get("kill_" + UnderworldEnemyData.WARDEN, 0.0)),
+			int(st.get("spawned_" + UnderworldEnemyData.SHADE_ARCHER, 0.0)), int(st.get("kill_" + UnderworldEnemyData.SHADE_ARCHER, 0.0)),
+			int(st.get("player_dmg_from_" + UnderworldEnemyData.SHADE_ARCHER, 0.0)), int(st.get("summon_dmg_from_" + UnderworldEnemyData.SHADE_ARCHER, 0.0))])
 	if game.enemies.boss is BossHades:
 		print("[autotest] hades: %s" % BossHades.summary_line(st))
 		if game.claims != null:
