@@ -1705,10 +1705,33 @@ func _print_powerups(summary: Dictionary) -> void:
 		int(ash.get("pact_bonus", 0)), int(ash.get("oath_bonus", 0))])
 
 
+## Ossuary deep levels: the run's upgrade levels against the whole Ossuary (the
+## Profane Oath left out, like the profiles): levels owned, of them the gated
+## ones (above MetaData.UNGATED_MAX_TIER), and their Soul Ash price.
+func _print_ossuary_totals() -> void:
+	var owned := 0  # Levels owned.
+	var deep := 0  # Of them above level 5 (the difficulty-gated levels).
+	var deep_total := 0  # Gated levels in the whole Ossuary.
+	var cost := 0  # Soul Ash price of the owned levels.
+	for id: String in MetaData.UPGRADE_ORDER:
+		if id == PactData.OATH_ID:
+			continue
+		var t := int(game.meta.tiers.get(id, 0))  # This upgrade's level.
+		owned += t
+		deep += maxi(0, t - MetaData.UNGATED_MAX_TIER)
+		deep_total += maxi(0, MetaData.max_tier(id) - MetaData.UNGATED_MAX_TIER)
+		cost += MetaData.cost_up_to(id, t)
+	var all_cost := MetaData.max_total_cost() - MetaData.cost_up_to(PactData.OATH_ID, MetaData.max_tier(PactData.OATH_ID))  # Whole Ossuary, Oath excluded.
+	print("[autotest] ossuary: levels %d / %d owned (levels 6-10: %d / %d) | soul ash %d / %d" % [
+		owned, MetaData.total_tiers(), deep, deep_total, cost, all_cost])
+
+
 ## Prints the meta profile and the run's Soul Ash award (Meta.award_run()).
 func _print_soul_ash(summary: Dictionary) -> void:
 	print("[autotest] meta upgrades (--meta=%s): %s | revivals used: %d" % [
 		GameState.autotest_meta, game.meta.describe(), int(game.stats.get("revivals", 0.0))])
+	if not game.meta.is_empty():
+		_print_ossuary_totals()  # Only with upgrades: the default (--meta=none) summary keeps its lines.
 	var ash: Dictionary = summary.get("soul_ash", {})
 	if ash.is_empty():
 		return

@@ -57,6 +57,11 @@ const PIP_OATH_IDLE := Color(0.42, 0.1, 0.14)  # TUNING (not in GDD) palette cri
 const PIP_EMPTY := Color(0.11, 0.08, 0.16)  # TUNING (not in GDD)
 ## 1 px rim of an empty pip socket.
 const PIP_RIM := Color(0.4, 0.32, 0.55)  # TUNING (not in GDD)
+## Fill of a sealed socket: a deep level still behind its difficulty gate
+## (darker than an empty socket, so the open levels read first).
+const PIP_SEALED := Color(0.05, 0.04, 0.07)  # TUNING (not in GDD)
+## Rim and middle bar of a sealed socket (dim violet: locked, not danger).
+const PIP_SEALED_RIM := Color(0.22, 0.18, 0.29)  # TUNING (not in GDD)
 
 # --- Colours ----------------------------------------------------------------------------
 
@@ -120,6 +125,15 @@ const MAXED: String = "MAX"  # TUNING (not in GDD)
 const MAXED_LONG: String = "Maxed"  # TUNING (not in GDD)
 ## Detail-panel line of a locked upgrade: prerequisite name, tier numeral.
 const NEEDS: String = "Needs %s %s"  # TUNING (not in GDD)
+## Detail-panel line of an upgrade whose next level waits on a difficulty gate,
+## one per MetaData.LEVEL_GATES row (same order); the tile shows the row's `short`.
+const GATE_LINES := [
+	"Clear a stage on Lich to open levels 6-7",
+	"Clear a stage on Deathlord to open levels 8-9",
+	"Clear a stage on Deathlord + Hyper to open level 10",
+]  # TUNING (not in GDD) owner brief wording
+## Colour of a tile's gate word (dim bone: locked, not unaffordable).
+const GATE_WORD := Color(0.62, 0.58, 0.68)  # TUNING (not in GDD)
 ## Buy hint word (next to the accept chip) in the detail panel.
 const BUY: String = "Buy"  # TUNING (not in GDD)
 ## Raise hint word for a lowered Profane Oath (free).

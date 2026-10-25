@@ -22,7 +22,10 @@ var _values: Dictionary = {}
 
 
 ## Builds the modifiers for upgrade tiers `p_tiers` (id -> tier). Unknown ids
-## are ignored and tiers are clamped to each upgrade's range.
+## are ignored and tiers are clamped to each upgrade's range (levels 6-10 of the
+## deep upgrades included: the difficulty gates only limit buying, Meta.purchase_block(),
+## so a co-op partner's loadout and the --meta=max profile apply in full).
+## Each upgrade adds MetaData.value_at(id, tier).
 static func from_tiers(p_tiers: Dictionary) -> MetaModifiers:
 	var m := MetaModifiers.new()
 	for id: String in MetaData.UPGRADE_ORDER:
@@ -30,9 +33,8 @@ static func from_tiers(p_tiers: Dictionary) -> MetaModifiers:
 		if t <= 0:
 			continue
 		m.tiers[id] = t
-		var def: Dictionary = MetaData.UPGRADES[id]
-		var stat: String = def["stat"]
-		m._values[stat] = float(m._values.get(stat, 0.0)) + float(def["per_tier"]) * float(t)
+		var stat: String = MetaData.UPGRADES[id]["stat"]
+		m._values[stat] = float(m._values.get(stat, 0.0)) + MetaData.value_at(id, t)  # Listed levels + deep levels (6-10).
 	return m
 
 

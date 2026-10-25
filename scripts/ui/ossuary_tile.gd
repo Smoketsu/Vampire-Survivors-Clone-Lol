@@ -1,7 +1,9 @@
 ## OssuaryTile — one upgrade tile of the Ossuary (OssuaryMenu; menu
 ## modernization wave 2, GDD §15.0 "Ossuary redesign"): a focusable kit
 ## button showing the upgrade's 32 px badge icon, its name, its level pips
-## and its next cost (the small Soul Ash symbol and a number), nothing else:
+## and its next cost (the small Soul Ash symbol and a number; or, when its next
+## level waits on a difficulty clear, the gate's word, with the gated levels'
+## pips sealed: Ossuary deep levels, GDD §15.0), nothing else:
 ## the effect, the current → next value and the prerequisite live in the
 ## screen's one detail panel. The frame accent carries the state (UiTheme
 ## kit "button"): soul teal = affordable, violet = too expensive, gold =
@@ -103,11 +105,13 @@ func _ready() -> void:
 
 
 ## Shows the tile's state. `state` is "buy" (affordable), "cost" (too
-## expensive), "maxed", "locked" or "oath" (an owned Oath tier); `tier` /
-## `max_tier` fill the pips; `cost` is the next tier's price (ignored when
-## maxed / locked); `idle` lights pips up to that index as owned-but-lowered
-## (the Oath).
-func show_state(state: String, tier: int, max_tier: int, cost: int, idle: int = 0) -> void:
+## expensive), "maxed", "locked", "gated" (the next level waits on a
+## difficulty clear: `gate_word` replaces the cost) or "oath" (an owned Oath
+## tier); `tier` / `max_tier` fill the pips; `cost` is the next tier's price
+## (ignored when maxed / locked / gated); `idle` lights pips up to that index
+## as owned-but-lowered (the Oath); `sealed` is the number of open levels
+## (Meta.max_open_tier()): sockets past it are drawn sealed (-1 = none).
+func show_state(state: String, tier: int, max_tier: int, cost: int, idle: int = 0, sealed: int = -1, gate_word: String = "") -> void:
 	locked = state == "locked"
 	var accent := "violet"  # Kit frame accent (UiTheme.style()).
 	var name_col := UiTheme.TEXT  # Name colour.
@@ -132,13 +136,17 @@ func show_state(state: String, tier: int, max_tier: int, cost: int, idle: int = 
 			name_col = UiTheme.TEXT_DIM
 			cost_icon.visible = false
 			cost_label.text = ""
+		"gated":
+			cost_icon.visible = false
+			cost_label.text = gate_word
+			cost_label.add_theme_color_override("font_color", OssuaryUiData.GATE_WORD)
 	if upgrade_id == PactData.OATH_ID:
 		pip_col = OssuaryUiData.PIP_OATH
 		if tier > 0 or idle > 0:
 			accent = "crimson"
 	UiTheme.style_button(self, "button", accent)
 	name_label.add_theme_color_override("font_color", name_col)
-	pips.set_pips(max_tier, tier, pip_col, idle)
+	pips.set_pips(max_tier, tier, pip_col, idle, sealed if sealed < max_tier else -1)
 	icon_glyph.modulate = OssuaryUiData.LOCKED_ICON_TINT if locked else Color.WHITE
 	_fx.queue_redraw()
 

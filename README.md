@@ -1606,9 +1606,10 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   A strong run earns about **450** at no upgrades (about 550-610 with mid / max
   upgrades, Ash Harvest included): two or three mid-tier upgrades. A death at
   9-11 min still keeps about 100-150. The Reckoning pays only about 8% of a
-  good run. Buying everything costs **9,635** (8,965 before the two Grave
+  good run. Levels 1-5 of everything cost **9,635** (8,965 before the two Grave
   Step upgrades), about 21 good runs (16–27 including weaker runs and Ash
-  Harvest), plus 375 for the optional Profane Oath (10,010 in all). The Profane Pact and Oath rewards add their own bonus
+  Harvest); the **deep levels** (below) add **60,105**, so buying everything
+  costs **69,740**, plus 375 for the optional Profane Oath. The Profane Pact and Oath rewards add their own bonus
   lines on top (below).
 - **The Ossuary** (main menu) holds the four GDD §9.2 trees. Each upgrade
   raises one stat per tier, costs rise per tier, and some need a prerequisite
@@ -1632,6 +1633,33 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   be bought answers with a thud and a shake. **Refund all** (respec) returns
   every spent Soul Ash after a confirmation. The screen is fully usable with
   keyboard or controller.
+- **Deep levels** (Ossuary expansion step 2, GDD §15.0 "Ossuary deep levels"):
+  the 13 upgrades with 3+ levels (Necrotic Marrow, Sharpened Bones, Grave Call,
+  Umbral Potency, Quickened Rites, Widening Dark, Restless Shade, Grave-Hardened
+  Flesh, Bone Mail, Fleet Shade, Soul Magnet, Grave Tithe, Ash Harvest) go up to
+  **level 10**. Levels 1-5 keep their values and prices; every new level gives
+  half of the upgrade's per-level value (Restless Shade 3%: level 10 = 2.45 s)
+  and costs ×1.35 the level before it (from the last old price, rounded to 5;
+  e.g. Necrotic Marrow 310 / 420 / 565 / 765 / 1,030 for +3% minion HP each, 45%
+  at level 10). A 3- or 4-level upgrade's own levels 4-5 are open from the
+  start. The one- and two-level upgrades (Risen Vanguard, Legion of Bone,
+  Shadow Mastery, Undying Will, Twin Shadow, Fate's Thread, Banishing Rite) and
+  the Profane Oath keep their tiers. Levels 6-10 are **gated by difficulty
+  clears** (a clear = reaching 0:00 on any stage): **6-7** after a clear on Lich
+  or harder, **8-9** after a Deathlord clear, **10** after a Deathlord clear with
+  Hyper. The save keeps the hardest difficulty cleared (`[clears]`, save
+  version 2; an older save's Deathlord's Due counts as a Deathlord clear;
+  nothing is refunded). The tiles show up to 10 pips, the gated ones as sealed
+  sockets; a tile whose next level is gated shows the gate (Lich / Deathlord /
+  Hyper) instead of a price and the detail panel the clear it needs ("Clear a
+  stage on Lich to open levels 6-7"). Refund all returns the deep levels too. In
+  co-op each partner's own levels (deep ones included) travel in the loadout
+  and apply to their own slot. `--meta=max` buys every level (gates ignored);
+  `--meta=mid` is unchanged; with any upgrades the autotest prints an
+  `ossuary:` line (levels owned / 140, levels 6-10 owned / 65, Soul Ash). The
+  check `godot --headless res://tools/ossuary_check.tscn -- --autotest` covers
+  prices, gates, the migration, Refund all and the co-op loadout (temp files only;
+  CI runs it in the Graveyard job; `--shot=PATH [--phone]` saves a screenshot).
 - **One modifier path.** At run start `Meta.run_modifiers()` turns the
   purchased tiers into a `MetaModifiers` object (`game.meta`). The existing
   stat code reads it in a few places (horde `compute_stats` / `capacity` /
@@ -1986,7 +2014,7 @@ snapped to the locked palette, lone-pixel cleanup; `--all` rebuilds every panel 
 | Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
 | Stage 3 (§8.3, §7.2, §7.4) | The Sanctum of Judgment: four battle zones on the clock (courtyards, golden halls, cloisters, final sanctuary), two sanctified chambers with ward crystals, the Cathedral Guardian miniboss (slams, sweeping beam, its own HUD bar, chest), three optional sacred altars (−6% soldier HP each, one healer fewer for Seraphine), floor corruption, Dawn's Wrath with Sun Paladins, and four new Covenant kinds (Sanctified Sentinel, Radiant Inquisitor with suppression, High Confessor with holy shields and revivals, Sun Paladin). See *Stage 3* above. |
 | Stage 3 boss (§7.5) | Grand Inquisitor Seraphine with her three GDD phases (Divine Judgment, Avatar of the Dawn, The Last Light): radiant fans, delayed holy circles, Templar squads, teleports, healing attendants, rotating holy beams, barrages, constructs, undead suppression, the safe-zone Judgment nova, the collapsing arena and a final guard, the relic shatter and the ending text. She ends the Sanctum of Judgment; `--boss=seraphine` also puts her on any other stage. See *Stage 3 boss* above. |
-| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, the Codex (GDD §10.1 Collection / Codex and Achievements), and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
+| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (20 upgrades, 13 of them to level 10 behind difficulty gates, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, the Codex (GDD §10.1 Collection / Codex and Achievements), and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Playable characters (§10.2, §11.4) | Twelve characters, one per spell, each with its starting spell, one innate passive and stat modifiers; chosen on the pre-run setup screen, unlocked by reaching Lv 5 with the character's spell, remembered in the save. The Gravecaller is the default and plays exactly like the game before characters. See *Characters* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |

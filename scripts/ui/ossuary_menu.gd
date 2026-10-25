@@ -17,6 +17,12 @@
 ##     bright and owned-but-lowered tiers dark), "Lower Oath" (lowers the
 ##     ACTIVE tier by one at once: free and reversible, owned tiers stay owned,
 ##     Meta.set_oath_active), "Refund all" (respec; asks first) and Back.
+## Deep levels (Ossuary expansion step 2, GDD §15.0 "Ossuary deep levels"): up
+## to 10 pips per upgrade; the levels above Meta.max_open_tier() are sealed
+## sockets, and a tile whose next level waits on a difficulty clear shows the
+## gate's word (Lich / Deathlord / Hyper) instead of a cost while the detail
+## panel names the clear ("Clear a stage on Lich to open levels 6-7"); pressing
+## it answers `denied` like any blocked tile. Refund all returns every level.
 ## Pressing an affordable tile buys its next tier through the Meta autoload
 ## (which saves at once) with the `purchase` sound, a flash and spark burst on
 ## the tile; a locked, too expensive or maxed tile plays `denied` and shakes.
@@ -37,8 +43,8 @@ extends Control
 ## Emitted when the menu is about to be freed.
 signal closed
 
-## Roman numerals for tier names in prerequisite text (index = tier, 0..6).
-const ROMAN := ["0", "I", "II", "III", "IV", "V", "VI"]
+## Roman numerals for tier names in prerequisite text (index = tier, 0..10).
+const ROMAN := ["0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 
 ## Control focused again when the menu closes (may be null).
 var return_focus: Control = null
@@ -392,14 +398,29 @@ func _refresh_tile(id: String) -> void:
 			tile.cost_label.text = OssuaryUiData.FREE
 			tile.cost_label.add_theme_color_override("font_color", UiTheme.TEXT_GOOD)
 		return
-	tile.show_state(state, t, mx, cost)
+	tile.show_state(state, t, mx, cost, 0, Meta.max_open_tier(), _gate_word(id))
 
 
-## "+6%" style value of upgrade `id` at tier `t` (MetaData.STATS format).
+## The LEVEL_GATES index the next level of `id` waits on (-1 = none: open,
+## maxed or another block).
+static func _gate_index(id: String) -> int:
+	if Meta.purchase_block(id) != "gated":
+		return -1
+	return MetaData.LEVEL_GATES.find(MetaData.gate_of(Meta.tier(id) + 1))
+
+
+## The tile word of the gate `id` waits on ("" = none).
+static func _gate_word(id: String) -> String:
+	var gi := _gate_index(id)
+	return String(MetaData.LEVEL_GATES[gi]["short"]) if gi >= 0 else ""
+
+
+## "+6%" style value of upgrade `id` at tier `t` (MetaData.STATS format;
+## MetaData.value_at(), so the deep levels' smaller steps show as they apply).
 static func _value(id: String, t: int) -> String:
 	var def: Dictionary = MetaData.UPGRADES[id]
 	var stat_def: Array = MetaData.STATS[String(def["stat"])]
-	return format_stat(float(def["per_tier"]) * float(t), String(stat_def[1]))
+	return format_stat(MetaData.value_at(id, t), String(stat_def[1]))
 
 
 ## Formats a modifier value per its MetaData.STATS format.
@@ -445,7 +466,8 @@ func _show_detail(id: String) -> void:
 	if is_oath:
 		pips.set_pips(mx, Meta.oath_active_tier(), OssuaryUiData.PIP_OATH, t)
 	else:
-		pips.set_pips(mx, t, OssuaryUiData.PIP_MAXED if state == "maxed" else OssuaryUiData.PIP_OWNED)
+		var open := Meta.max_open_tier()  # Levels open now; the rest are sealed.
+		pips.set_pips(mx, t, OssuaryUiData.PIP_MAXED if state == "maxed" else OssuaryUiData.PIP_OWNED, 0, open if open < mx else -1)
 	(_d["desc"] as Label).text = OssuaryUiData.OATH_LINE if is_oath else String(def["description"])
 	if is_oath:
 		_show_oath_values()
@@ -493,6 +515,7 @@ func _show_cost(id: String, state: String) -> void:
 	hint.visible = false
 	word.text = OssuaryUiData.BUY
 	cost.add_theme_color_override("font_color", OssuaryUiData.ASH_COLOR)
+	UiTheme.set_tier(cost, UiTheme.Tier.NAME)
 	if id == PactData.OATH_ID and Meta.oath_active_tier() < Meta.tier(id):
 		icon.visible = false
 		cost.text = OssuaryUiData.FREE
@@ -509,6 +532,14 @@ func _show_cost(id: String, state: String) -> void:
 			var req: Dictionary = MetaData.UPGRADES[id]["requires"]
 			icon.visible = false
 			cost.text = OssuaryUiData.NEEDS % [String(MetaData.UPGRADES[req["id"]]["display_name"]), ROMAN[int(req["tier"])]]
+			cost.add_theme_color_override("font_color", OssuaryUiData.DENIED)
+		"gated":
+			# The next level waits on a difficulty clear (Meta.max_open_tier()):
+			# one BODY line naming it, so it fits beside the values.
+			icon.visible = false
+			var gi := _gate_index(id)  # LEVEL_GATES row.
+			cost.text = String(OssuaryUiData.GATE_LINES[gi]) if gi >= 0 and gi < OssuaryUiData.GATE_LINES.size() else ""
+			UiTheme.set_tier(cost, UiTheme.Tier.BODY)
 			cost.add_theme_color_override("font_color", OssuaryUiData.DENIED)
 		"cost":
 			cost.text = str(Meta.next_cost(id))

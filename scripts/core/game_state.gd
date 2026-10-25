@@ -30,7 +30,8 @@
 ##                         Pact below every card, fallbacks included).
 ##   --meta=PROFILE        Autotest Soul Ash upgrades, applied in memory only:
 ##                         "none" (default, no upgrades), "mid" or "max"
-##                         (MetaData.AUTOTEST_PROFILES).
+##                         (MetaData.AUTOTEST_PROFILES; "max" = every level,
+##                         the gated deep levels 6-10 included).
 ##   --meta-save           Test flag: lets the autotest read and write
 ##                         user://save.cfg (by default it never touches it).
 ##   --oath=N              Autotest active Profane Oath tier 0-5 (default 0;
