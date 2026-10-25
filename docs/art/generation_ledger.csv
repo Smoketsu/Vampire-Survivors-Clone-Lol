@@ -831,3 +831,6 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-25 15:54,pantheon/gorgon,gpt-image-2.5-flare,medium,1024x1024,2,635,2048,439,0.0327,gorgon.png
 2026-10-25 16:44,pantheon/bronze_titan,gpt-image-2.5-flare,medium,1024x1024,2,675,1849,439,0.0313,titan1.png
 2026-10-25 17:22,pantheon/gorgon,gpt-image-2.5-flare,medium,1024x1024,2,594,1856,439,0.0310,gorgon1.png
+2026-10-25 16:43,bosses/hades,gpt-image-2.5-flare,medium,1024x1024,1,704,32,439,0.0169,hades_a.png
+2026-10-25 16:47,bosses/hades_bident,gpt-image-2.5-flare,medium,1024x1024,1,619,1024,439,0.0245,hades_bident_a.png
+2026-10-25 16:48,bosses/hades_kneel,gpt-image-2.5-flare,medium,1024x1024,1,617,1024,439,0.0244,hades_kneel_a.png
