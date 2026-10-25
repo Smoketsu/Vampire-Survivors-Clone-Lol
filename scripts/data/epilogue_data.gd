@@ -58,6 +58,7 @@ const PARTS := [
 		],
 	},
 	ACT3_PART,  # Act III, "The Machines Go Dark" (its row and panels below).
+	ACT4_PART,  # Act IV, "The Gods Are Silent" (its row and panels below; opened by Empty Throne).
 ]
 # --- Act III: the Iron Citadel ---
 ## HOOK for the Act III part of the epilogue (owner-approved proposal: "a third
@@ -89,6 +90,9 @@ const ACT3_PART := {
 	],
 }
 # --- Act IV: the Asphodel Underworld ---
+## The Act IV part of the epilogue (now in PARTS; its four panels were made at
+## integration, GDD §15.0 "Act IV epilogue and the Sun Still Rises card"; the
+## original hook note follows).
 ## HOOK for the Act IV part of the epilogue (owner-approved proposal: "Epilogue
 ## parts: The Gods Are Silent (Act IV)"; "Empty Throne (beat Hades; opens the Act
 ## IV epilogue)"). The Asphodel Underworld's agent leaves it OUT of PARTS: the
@@ -113,7 +117,12 @@ const ACT4_PART := {
 		"Below the world, in the grey fields of asphodel, the Lord of the Dead rose from his throne to fight for what was his. Beaten, he did not die. He knelt, and laid his crown at the necromancer's feet.",  # Owner-approved proposal ending
 		"The Styx runs again, and every soul it carries answers to one master. The gods are silent. The throne below is empty.",  # TUNING (not in GDD)
 	],
-	"panels": [],  # The lead fills the four panels at integration (see above).
+	"panels": [
+		["epilogue/act4_1", Vector2(0.0, 0.6), Vector2(1.0, 0.3)],  # TUNING (not in GDD) across the asphodel fields and the dry Styx, from the necromancer along his army
+		["epilogue/act4_2", Vector2(0.5, 0.0), Vector2(0.5, 1.0)],  # TUNING (not in GDD) the descending gods in gold, down to the undead line
+		["epilogue/act4_3", Vector2(0.0, 0.5), Vector2(1.0, 0.5)],  # TUNING (not in GDD) from the necromancer across to Hades kneeling with his crown
+		["epilogue/act4_4", Vector2(0.5, 0.0), Vector2(0.5, 1.0)],  # TUNING (not in GDD) the empty marble thrones of Olympus, down to the army and the necromancer
+	],
 }
 ## The closing cards, one per act, in reading order (owner: "tie everything
 ## together nicely"; docs/act4/PROPOSAL.md "Closing cards"; GDD §15.0 "Closing
@@ -156,7 +165,7 @@ const CLOSINGS := [
 		"heading": "The Sun Still Rises",  # Owner-approved proposal (docs/act4/PROPOSAL.md "Closing cards")
 		"line": "Olympus is silent and Hades kneels. Only one light still burns against the dead: across the eastern sea, a goddess opens her eyes.",  # Owner-approved proposal
 		"tag": "To be continued.",  # TUNING (not in GDD)
-		"panel": ["epilogue/close_act4", Vector2(0.0, 0.5), Vector2(1.0, 0.3)],  # TUNING (not in GDD) the lead's panel: across the dark sea to the rising sun (pan to adjust with the art)
+		"panel": ["epilogue/close_act4", Vector2(0.0, 0.8), Vector2(1.0, 0.1)],  # TUNING (not in GDD) from the ruined throne across the dark sea to the torii and the opening eyes
 	},
 ]
 ## Line shown in place of a part that is still sealed.
