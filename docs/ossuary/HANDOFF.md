@@ -125,3 +125,10 @@ ossuary_check resolved by keeping both sides). `--import` clean, `ossuary_check`
 `--meta=max --policy=army --mortal` victory 35 s past 0:00, build complete 13:26 (earlier than 16-18: the balance batch
 should judge it). Left: merge `ossuary/relics` when its agent reports (it was resumed after the usage limit), then the
 balance batch, CI, ship.
+
+**Update (Oct 25, ~18:30 UTC):** ALL FOUR branches merged on `integration` (7ce7e4d). Checks after the merge: `--import`
+clean, `ossuary_check` PASS (168 tiers), seed 7 default identical to before the merge, `--meta=max --policy=army
+--mortal` victory 44 s past 0:00 (build 13:22), `--coop-bot --meta=max` clean. Running: the balance batch (Sonnet,
+branch `ossuary/balance`: meta none / max × army / naive × graveyard / harbour / citadel, 8 seeds, + citadel Deathlord;
+`docs/ossuary/BALANCE.md`). Then: merge its data changes, CI on integration, fast-forward main, tell the owner with
+screenshots (`docs/ossuary/shots/*`).
