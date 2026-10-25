@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance, standing tall.
+
+LOW-RESOLUTION pixel art: the whole figure is only 110 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze.
+
+Subject: HADES, LORD OF THE DEAD, a MALE Greek god-king and the final boss. Tall, gaunt and regal, menacing. A pale grey-white face with hollow cheeks, a short dark beard, narrow cold glowing pale-blue eyes. On his head a dark bronze spiked crown with a CROWN OF COLD BLUE FLAME rising from it. He wears a long floor-length robe of DARK AEGEAN BLUE with a clear BRONZE TRIM down its front edge and hem and a bronze belt; over his shoulders hangs a long heavy CLOAK of NEAR-BLACK DEEP VIOLET (a different colour from the robe), clasped with bronze at the chest, falling behind him to the ground. The blue robe must stand out clearly in front of the dark violet cloak: two distinct colours, so his body reads against his cloak. Pale bony hands. In his front (right) hand a tall dark bronze BIDENT held upright: a long staff topped with exactly TWO straight prongs (a two-pronged fork, NOT a trident, NOT three prongs), the prongs above his head.
+Signature shape that must read in silhouette: the tall robed god, the flaming crown, the upright two-pronged bident.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: robe dark Aegean blue #0F141C (outline) #123E66 #2C77B8 #6FB6E8; cloak near-black violet #160A21 (outline) #4A2569 #7A42AD; pale face and hands #8E8A86 #CFCBC4 #F4F1EA; crown flame #2C77B8 #6FB6E8 #E4FAFF; bronze crown, trim and bident #1E1408 (outline) #6B4423 #A8702E #E0A955.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a sprite of this game: match its pixel size, outline weight and flat look exactly (not its subject or colours).
