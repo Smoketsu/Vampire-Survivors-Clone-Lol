@@ -403,8 +403,10 @@ RIGS = {
     "pantheon/cerberus": dict(mode="legs", hip=66, back=(0, 48), front=(48, 94), rigid=[], spread=2, lift=2, dip=1),
     "bosses/hades": dict(mode="robe", hip=78, rigid=[(56, 70, 0, None)], sway=1, dip=1),  # Act IV art review round 4: back to the round 1 still (the bident on the right, cols 56-70), recoloured.
     "player/ferrywoman": dict(mode="robe", hip=34, rigid=[(32, 39, 0, None)], sway=2, dip=1, bust=(19, 31, 18, 25, 2)),  # Act IV art review round 1 redo: box 2 px right (was cols 19-29); round 2 redo: widened 2 px left (cols 19-31).
-    "summons/myrmidon_shade": dict(mode="legs", hip=34, back=(0, 13), front=(13, 26), rigid=[(1, 5, 0, None), (14, 26, 20, 41)], spread=2, lift=2, dip=1),
-    "summons/legion_of_tartarus": dict(mode="legs", hip=40, back=(0, 15), front=(15, 32), rigid=[(2, 7, 0, None), (17, 32, 23, 47)], spread=2, lift=2, dip=1),
+    # Act IV art review round 4: regenerated from the original prompt (24 wide): the spear (cols 0-4, to row 37) and the shield rigid.
+    "summons/myrmidon_shade": dict(mode="legs", hip=34, back=(0, 10), front=(10, 24), rigid=[(0, 5, 0, 38), (12, 24, 20, 37)], spread=2, lift=2, dip=1),
+    # Act IV art review round 4: regenerated (36 wide): the spear (cols 2-5, to the ground) and the shield rigid.
+    "summons/legion_of_tartarus": dict(mode="legs", hip=41, back=(0, 15), front=(15, 36), rigid=[(2, 6, 0, None), (23, 36, 23, 46)], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
