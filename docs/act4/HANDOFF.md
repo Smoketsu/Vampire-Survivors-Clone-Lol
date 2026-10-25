@@ -36,8 +36,8 @@ owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages wer
    cleanup, the Ferrywoman boxes widened left, the Amazon's sideways sway (`walk_cycle.py` rig key `bust_axis="x"`), the
    Bronze Titan in a new legs-apart pose with a `legs` walk, the Gorgon's face repainted). Open question on the page:
    Hades' cloak uses the player's violet. Next: read `act4_art_r3` with ArtifactData `list` + `out_dir`; a round 4 is
-   `python3 docs/act4/tools/make_act4_review_r2.py <act4_art_r3 marks dir> <out.html> <commit before the round 3 redos:
-   1be2098> 4`.
+   `python3 docs/act4/tools/make_act4_review_r2.py <act4_art_r3 marks dir> <out.html> <commit holding the round 3 images:
+   b1ae374> 4`.
 2. **The owner's playtest**, then the balance pass (open items in the GDD integration row: the naive Olympus opening,
    the Underworld is the easiest, siege towers rarely destroyed, strong Gigantomachy / Lethe's Flood / Myrmidons, the
    placeholder Soul Ash multipliers ×3.25 / ×3.5 / ×3.75).
