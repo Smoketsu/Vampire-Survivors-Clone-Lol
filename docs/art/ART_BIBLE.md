@@ -2089,7 +2089,7 @@ Covenant's:
 | `empire_fx/gate_wall`, `gate_glow`, `gate_post`, `gate_cable` | Shield Gate hex energy wall (= its 18 px), outer glow, chrome end emitter, power cable | 22 × 18, 8 × 28, 22, 8 × 5 | `EmpireFx.gate_wall()`, `gate_cable()` |
 | `empire_fx/belt_68`, `_72`, `_80` | Conveyor belt repeat per belt width: rails and rollers, rubber, slats, dim amber chevrons (112 px holds 4 chevrons and 7 rollers) | 112 × W | `EmpireFx.belt()`: one scrolled rect per belt |
 | `empire_fx/furnace_slag`, `furnace_embers`, `furnace_molten_0..2`, `furnace_rim`, `furnace_warn`, `furnace_haze`, `furnace_flame` | Channel slag, glowing seams, molten metal (3 flicker frames), iron rim, hazard stripes, heat haze, flame tongue | 64 seamless; 12 × 3, 10 × 2, 8 × 6, 4 × 9 × 14 | `EmpireFx.channel()` (world-anchored) |
-| `empire_fx/storm_veil`, `storm_grit` | Scrap storm veil (hole at 0.2393 of the half = the 230 px clear radius) and drifting grit | 256, 128 | `EmpireFx.storm()` |
+| `empire_fx/storm_veil`, `storm_grit` | Scrap storm veil (hole at 0.2393 of the half = the 230 px clear radius) and drifting grit | 256, 256 | `EmpireFx.storm()` |
 | `empire_fx/jug_flame_0..2` | Juggernaut flame billows | 4 × 10 / 16 / 22 | `EmpireFx.jug_flame()` |
 | `empire_fx/static_edge`, `spark` | Arc Engineer field rim; static spark | 10 × 5, 2 × 7 | `EmpireFx.jam_field()` |
 | `empire_fx/mortar_shell`, `lock_open`, `lock_locked`, `pylon_stump` | Mortar shell; Lock-On reticles (red / white-hot blink); fallen pylon decal | 2 × 10, 2 × 35, 2 × 29, 30 × 14 | `EmpireShots`, `LockOn`, `WastesDirector` |

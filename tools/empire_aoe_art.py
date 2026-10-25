@@ -600,19 +600,22 @@ def storm_veil() -> Canvas:
 
 
 def storm_grit() -> Canvas:
-    """empire_fx/storm_grit: the storm's grit (128 x 128 seamless grey mask, two stepped alphas):
-    short streaks and specks of scrap leaning with the wind (+x, a 0.28 slope), scrolled with it."""
-    n = 128
+    """empire_fx/storm_grit: the storm's grit (256 x 256 seamless grey mask, two stepped alphas):
+    a few 2 px streaks of scrap (14-26 px, the code's streaks) and specks leaning with the wind
+    (+x, a 0.28 slope), scrolled with it: about as many on screen as the code's 46 lines."""
+    n = 256
     cv = Canvas(n, n)
-    for m in range(56):
+    for m in range(6):
         x0 = hf(m, 1) * n
         y0 = hf(m, 2) * n
-        ln = 6 + int(hf(m, 3) * 12)
-        a = 255 if m % 3 == 0 else 150
+        ln = 14 + int(hf(m, 3) * 12)
+        a = 255 if m % 2 == 0 else 150
         for k in range(ln):
-            cv.put(int(x0 + k) % n, int(y0 + k * 0.28) % n, WHITE, a)
-        if m % 4 == 0:
-            cv.put(int(x0 + ln + 3) % n, int(y0 + ln * 0.28) % n, WHITE, 255)
+            for o in range(2):
+                cv.put(int(x0 + k) % n, int(y0 + k * 0.28 + o) % n, WHITE, a)
+    for m in range(5):
+        cv.put(int(hf(m, 4) * n), int(hf(m, 5) * n), WHITE, 255)
+        cv.put(int(hf(m, 4) * n) + 1, int(hf(m, 5) * n), WHITE, 150)
     return cv
 
 
@@ -794,7 +797,7 @@ def belt_tile(width: int) -> Canvas:
         a = 14 + k * 28
         tip = (a + arm * 0.5, mid)
         for wing in (mid - arm, mid + arm):
-            cv.thick_line(a - arm * 0.5, wing, tip[0], tip[1], 2.0, SG_DK)
+            cv.thick_line(a - arm * 0.5, wing, tip[0], tip[1], 2.0, BROWN_L)  # A dull amber, as the code's 42%.
         cv.thick_line(tip[0] - 3, tip[1] - 3, tip[0], tip[1], 1.0, SG_AMB)  # A lit tip only: the code drew them at 42%.
         cv.thick_line(tip[0] - 3, tip[1] + 3, tip[0], tip[1], 1.0, SG_AMB)
     return cv
@@ -1060,7 +1063,7 @@ ASSETS = {
     "empire_fx/gate_post": (gate_post, "still", 1, "Shield Gate end emitter (22 x 22): chrome housing, amber lens, white-hot heart"),
     "empire_fx/gate_cable": (gate_cable, "tile", 1, "Generator power cable (8 x 5, scrolled toward the wall): amber with a white-hot heart"),
     "empire_fx/storm_veil": (storm_veil, "mask", 1, "Scrap storm veil (256 px grey mask, smooth alpha, tinted rust-ochre): clear round the necromancer, thickening outward, mottled with dust clumps; one textured rect instead of 12-20 wide arcs a frame"),
-    "empire_fx/storm_grit": (storm_grit, "mask", 1, "Scrap storm grit (128 px seamless grey mask): streaks and specks leaning with the wind, scrolled with it (one tiled rect instead of 46 lines)"),
+    "empire_fx/storm_grit": (storm_grit, "mask", 1, "Scrap storm grit (256 px seamless grey mask): streaks and specks leaning with the wind, scrolled with it (one tiled rect instead of 46 lines)"),
     "empire_fx/pylon_stump": (pylon_stump, "still", 1, "Fallen Signal Pylon (30 x 14 decal): the toppled chrome mast on its scorched plate, the lens dark"),
     "empire_fx/furnace_slag": (furnace_slag, "tile", 1, "Furnace channel, cold (64 x 64 seamless): slag crust of warm ink and brown clinker plates"),
     "empire_fx/furnace_embers": (furnace_embers, "tile", 1, "Furnace channel seams (64 x 64 seamless overlay): signal-dark cracks with molten specks, faded in as it warms"),

@@ -183,7 +183,7 @@ const FURNACE_FLAME_PITCH: float = 44.0  # TUNING (not in GDD)
 
 # --- Wastes: storm veil, pylon stump ---------------------------------------------------
 
-## Storm veil grey mask (256 px) and its grit tile (128 px seamless).
+## Storm veil grey mask (256 px) and its grit tile (256 px seamless).
 const STORM_VEIL: String = "empire_fx/storm_veil"  # TUNING (not in GDD)
 ## Storm grit tile.
 const STORM_GRIT: String = "empire_fx/storm_grit"  # TUNING (not in GDD)
@@ -191,7 +191,7 @@ const STORM_GRIT: String = "empire_fx/storm_grit"  # TUNING (not in GDD)
 ## 0.2393 = the stage's 230 px clear radius / the 961 px veil of a 1280 x 720 view).
 const STORM_HOLE: float = 0.2393  # TUNING (not in GDD)
 ## Opacity (0-1) of the grit at full storm (the code's 0.35 streaks).
-const STORM_GRIT_ALPHA: float = 0.42  # TUNING (not in GDD)
+const STORM_GRIT_ALPHA: float = 0.35  # TUNING (not in GDD)
 ## Grit drift (px/s along the wind; the code's 260-420 px/s streaks).
 const STORM_GRIT_SPEED := Vector2(320.0, 90.0)  # TUNING (not in GDD)
 ## A fallen pylon's toppled mast decal (30 x 14).
