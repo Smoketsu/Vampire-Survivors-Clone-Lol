@@ -29,8 +29,10 @@ owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages wer
 
 ## What is left for Act IV, in order
 
-1. **The owner's art review:** a review page (db + user capabilities; OK / Redo and a note per image), like the Act III
-   ones (`docs/act3/tools/make_act3_review_r2.py` is the template). Agents flagged: Hades' bident has three prongs (reads
+1. **The owner's art review:** round 1 is published: https://claude.ai/artifact/7BnCJnbvumT9an6eeB47Km (db
+   collection `act4_art_r1`, 195 images plus the two concept lineups; made by `docs/act4/tools/make_act4_review.py`).
+   Read the marks with ArtifactData `list` when the owner says done; redo the Redo images, then publish round 2 new
+   next to old (adapt `docs/act3/tools/make_act3_review_r2.py`). Agents flagged: Hades' bident has three prongs (reads
    as a trident), the Styx forget zones use the Covenant's gold suppression rings, the Stolen Thunder and Gigantomachy
    badges are weak, a faint blue edge by Zeus's beard. Also still open: the soldiers' sex (the owner wanted to see the
    all-female `_v1` lineups again; the mixed lineup was used).
