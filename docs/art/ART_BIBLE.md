@@ -438,6 +438,15 @@ pixels of its `colors` (a bone rotor lifted off the flame behind it); lone pixel
 box are dropped. Pixels are only moved, never recoloured. Used by the Scout Drone (bob only), the
 Grave Drone (wingbeat) and the Wraith Drone (three spinning rotors).
 
+**Stride rigs (Act IV art review, round 1).** The Bronze Titan's still stands with crossed legs, which the legs mode
+can only close and open ("mirror his legs so it looks like he's walking"). A rig with `mode="stride"` cuts the legs
+off at `hip` (low fists in `keep` ride with the body), takes the near leg (the largest blob right of `near_x0`) as
+the forward pose and its mirror image about its own hip as the backward pose, swings it between the two on a cosine
+(`STRIDE_SWING`, each frame the nearer pose sheared at most half the way, so the shear stays small), and draws a
+one-shade-darker copy (`STRIDE_FAR_SHADE`) half a cycle behind it as the far leg (`far_dx` px aside); the leg swinging
+forward lifts (`STRIDE_LIFT_*`). Only colours of the still; frame 0 is the stride, not the still (the approved still
+stays as it is and shows when he stands).
+
 **Bust bounce (figure redesign, Oct 2026; owner request).** A rig may carry `bust = (x0, x1, y0, y1,
 px)`: the box holding the bust (y0 the neckline, y1 - 1 the underside) and the bounce in art px. Each
 frame warps that box vertically (`_bounce()`): the neckline stays, the underside moves `BUST_BOUNCE`
@@ -1941,7 +1950,7 @@ warning). **For the owner's review.**
 | `pantheon/shade_of_dead` | Shade of the Dead (fodder, male): a pale ghost in a marble-grey burial shroud pulled up as a hood, a dark face opening with two pale Aegean eyes, both arms reaching forward, no legs: the shroud tapers into a curling wisp tail | 40x36 | hover (`_walk`: the whole ghost bobs 2 px; the still keeps two empty rows on top, body 34) |
 | `pantheon/hoplite` | Hoplite (soldier, male): bronze Corinthian helmet with a tall Aegean crest, the face in its opening, bronze cuirass over a marble linen tunic, a big round bronze aspis held forward (Aegean boss), an upright spear | 30x56 | legs walk (`_walk`, hip 42; the spear rigid). Body ~50 under the spear head |
 | `pantheon/hero` | Hero (elite, male demigod, Hector-like): a gold open-faced helmet with a tall white plume, face and arms in skin, a gold cuirass, bronze greaves, a billowing Aegean-blue cloak, a bronze sword held forward | 58x58 | legs walk (`_walk`, hip 41; the cloak's low hem rigid). Grander than the hoplite: the gold is the hero's (Glory) |
-| `pantheon/bronze_titan` | Bronze Titan (the Reckoning's heavy, male colossus): a walking bronze statue, huge shoulders and low fists, a small crested head with glowing Aegean eyes, Aegean cracks of light on the chest, a marble kilt and marble plinth chunks on his shins and feet | 72x96 | legs walk (`_walk`, hip 66; the low fists ride with the body), lift 3. Stepping out of the ground is drawn by code |
+| `pantheon/bronze_titan` | Bronze Titan (the Reckoning's heavy, male colossus): a walking bronze statue, huge shoulders and low fists, a small crested head with glowing Aegean eyes, Aegean cracks of light on the chest, a marble kilt and marble plinth chunks on his shins and feet | 72x96 | **stride** walk (art review round 1, "mirror his legs": `walk_cycle.py` mode `stride`, hip 66: his near leg swings between its own pose and its mirror image, a one-shade-darker copy half a cycle behind as the far leg, so the legs alternate; the low fists ride with the body); the still is unchanged, so the strip's frame 0 is the stride, not the still. Stepping out of the ground is drawn by code |
 
 Code-drawn on purpose (phase 1): the wrath telegraphs and strikes, the phalanx's locked shield line, the Glory aura
 and the stubs' placeholder floors and obstacles (`PantheonGlyphs`, `PantheonGround`); phase 2 brings the stages' own
@@ -2020,23 +2029,32 @@ review.**
 
 | Key | What it is | Art px | Notes |
 |---|---|---|---|
-| `pantheon/ares` | Ares, God of War (god, male): crested bronze Corinthian helmet with gold crest and eye slits, bronze armour, iron-grey cloak, a long spear held low for the charge, a round shield | 94x96 | legs walk (the spear tip rigid) |
-| `pantheon/artemis` | Artemis, the Huntress (goddess, female, figure redesign): ponytail, silver crescent circlet, short white chiton with a gold belt, laced sandals, drawing a tall silver bow | 58x92 | legs walk + bust (rows 27-36), idle breathing |
+| `pantheon/ares` | Ares, God of War (god, male): crested bronze Corinthian helmet with gold crest and eye slits, bronze armour, iron-grey cloak, a long spear held low for the charge, a round shield | 94x96 | legs walk (the spear tip rigid). Round 1 redo ("too dark, muddy, not bronze"): re-converted from the same source, no new image: warm pixels brightened (HSV value ^0.6), no skin pre-snap (it had caught the dark cuirass), `--ramps bronze,gold,grey,skin` with levels (no `brown`, which had made the armour mud), the cloak moved one shade down (grey_light -> grey, grey -> grey_dark); now mostly bronze / bronze_light |
+| `pantheon/artemis` | Artemis, the Huntress (goddess, female, figure redesign, slim-thick and muscular since round 1): ponytail, silver crescent circlet, short white chiton with a gold belt, laced sandals, drawing a tall silver bow held far forward | 62x92 | legs walk (the bow's lower limb rigid) + bust (cols 23-37, rows 31-39, two lobes; round 1: the old box sat on her bow), idle breathing. Round 1 redo: new image (old source as reference), skin pre-snapped by hue (skin below hue 0.08, value >= 0.6; lit -> `skin`, shade -> `brown_light`, the muscle shading), `--no-levels --no-prune --ramps marble,skin,brown,gold`, the quiver's bone fletching -> marble_light |
 | `pantheon/poseidon` | Poseidon, Lord of the Sea (god, male): sea-green hair and beard, gold crown, Aegean and sea-green robe, a gold trident | 68x100 | robe walk (the trident rigid) |
 | `bosses/zeus` (+ `_cast`) | Zeus, King of the Gods: white hair and beard, gold laurel crown, glowing blue eyes, white toga with gold belt and hem, a thunderbolt at his side; `_cast` the bolt raised above his head (BossPoseData 1) | 88x124 / 100x128 | robe walk (the bolt rigid) |
 | `bosses/zeus_colossus` | Zeus's true form: a marble giant veined with blue lightning, a cloud beard, gold crown and bands, lightning around one fist | 164x176 | legs walk |
 | `pantheon/centaur_archer` | Centaur Archer (male): bronze cuirass and crested helmet, a bow drawn forward, a brown horse body mid-gallop | 54x60 | legs walk (front and back leg pairs) |
-| `pantheon/amazon` | Amazon (female, figure redesign): Aegean-crested bronze helmet over long hair, bronze breastplate, Aegean war skirt, a double axe and a crescent shield | 50x54 | legs walk + bust (rows 17-24), idle breathing |
-| `pantheon/gorgon` | Gorgon (female, figure redesign): living snakes for hair, pale green skin, gold eyes, white chiton with gold, a coiled serpent tail | 40x54 | robe (tail) sway + bust (rows 22-30), idle breathing |
-| `pantheon/moon_hound` | Hound of Artemis: a lean silver greyhound with pale-blue eyes and a crescent collar | 28x30 | legs walk |
+| `pantheon/amazon` | Amazon (female, figure redesign, a tall "muscle mommy" since round 1: broad shoulders, big arms, abs, thick thighs): Aegean-crested bronze helmet over long hair, bronze breastplate, Aegean war skirt, a double axe and a crescent shield | 54x58 | legs walk (the skirt's front flap rigid) + a **hip** bounce box (cols 18-37, rows 27-37, two lobes: the owner liked her old idle jiggling the hips, kept on purpose), idle breathing. Round 1 redo: new image, 58 tall (was 54), skin pre-snapped by hue (below 0.068, sat 0.4-0.8: her tan skin sat next to the bronze and converted to it), `--no-levels --no-prune --ramps bronze,marble,aegean,skin,brown,gold` |
+| `pantheon/gorgon` | Gorgon (female, figure redesign, slim-thick and a bit chubby since round 1: round tummy, soft arms, very wide hips): living snakes for hair, pale green skin, gold eyes, white chiton with gold, a coiled serpent tail | 42x54 | robe (tail) sway + bust (cols 21-31, rows 17-21, two lobes; round 1: the old box sat too low), idle breathing. Round 1 redo: two new images (the first came back slim; the second asked for chubby with the first as reference), `--no-levels --ramps moss,marble,gold`; her face painted by hand (a moss face, two gold_light eyes, a mouth pixel: the conversion lost it in the snakes) |
+| `pantheon/moon_hound` | Hound of Artemis: a lean silver greyhound / saluki seen from the side, a long muzzle, folded ears, an Aegean collar | 56x30 | legs walk (hind legs left, forelegs right, the chin rigid). Round 1 redo ("looks strange"): a new image in side view (the Wolf of Rome's source as the pixel reference), `--no-levels --no-prune --ramps marble,grey,aegean`, the eye (aegean_light) painted by hand |
 | `pantheon/sea_serpent` | Sea Serpent: Aegean scales, a pale belly, a finned head, reared over its coil | 46x64 | robe sway |
 | `player/oathbreaker` | The Oathbreaker (male, a fallen demigod): cracked bronze laurel, violet hooded cloak over tarnished bronze, a staff with a stolen thunderbolt bound in violet cords | 52x58 | robe walk |
 | `player/oathbreaker_hyper` / `_untouchable` / `_deathlord` | Gilded Oathbreaker (gold armour and laurel, sun emblem), Untouchable (white phantom with pale-blue trims), Deathlord (black iron and crimson, spiked crown) | 58 / 58 / 60 | walk through `SKINS` |
 | `tiles/olympus_field`, `_grove`, `_terrace`, `_summit` | The four zone floors: trampled earth and dry grass; moss and cypress needles; marble courses; square marble slabs with dark gold joints | 128 | `make_tile.py` (`# --- Act IV: Mount Olympus ---`); the decals stay code-drawn |
-| `obstacles/war_trophy_{s,m,l}`, `cypress_{s,m,l}`, `moon_shrine_{s,l}`, `fountain_{s,l}`, `broken_column_{s,m,l}`, `bronze_brazier_{s,l}` | A trophy post with a shield, crossed spears and a crested helmet; a dark cypress; a marble shrine with a silver crescent; a marble fountain basin; a broken fluted column; a bronze brazier with fire | footprint + 2 wide | circles, `tools/olympus_props.py` |
+| `obstacles/war_trophy_{s,m,l}` (round 1: bronze leaf heads on the crossed spears), `cypress_{s,m,l}`, `moon_shrine_{s,l}` (round 1: the crescent a shade lighter, `ice_light`), `fountain_{s,l}`, `broken_column_{s,m,l}`, `bronze_brazier_{s,l}` | A trophy post with a shield, crossed spears and a crested helmet; a dark cypress; a marble shrine with a silver crescent; a marble fountain basin; a broken fluted column; a bronze brazier with fire | footprint + 2 wide | circles, `tools/olympus_props.py` |
 | `obstacles/chariot_wreck_{s,l}`, `balustrade_{s,m,l}`, `marble_block_{s,m,l}` (+ `_v`) | A bronze war chariot on its side with a broken wheel; a marble terrace balustrade; a fallen marble block with a gold band and a crack | long side + 4 x short; `_v` short + 2 wide | rects, `tools/olympus_props.py` |
 | `icons/stolen_thunder`, `titans_blood`, `grounded_bones` | Violet badges: a bolt in a violet hand; a violet drop of blood with a spark; a ribcage under a lightning rod | 32 | symbol sheet split, each pixelated to 24 px on the frame of `machine_soul` |
 | `icons/gigantomachy`, `ach_twilight_of_the_gods` | Gold badges: a titan's fist among bolts; a cracked laurel over a setting sun | 32 | on the frame of `ach_nothing_is_deathless` |
+
+**Art review, round 1 redo (Oct 2026).** The owner's eight Olympus notes (GDD §15.0 "Act IV art review, round 1"):
+the Amazon, Artemis and the Gorgon redrawn in the figure-redesign style with the requested builds and their bounce
+boxes checked against the new pixels (the Amazon's on her hips, as the owner liked; Artemis's and the Gorgon's on the
+bust), Ares re-converted bright (no new image), the Hound of Artemis regenerated, the Bronze Titan's walk rebuilt as a
+stride (`walk_cycle.py` mode `stride`, under the Act IV foundation table), spear heads on the war trophies and a lighter
+moon on the shrines (`tools/olympus_props.py`). 5 API images, about $0.16 (ledger). `art_check.py`: the Amazon,
+Artemis and the hound pass every floor; Ares fails only Sanctum IV (+0.13), the Gorgon the March roads and the
+Sanctum floors (as before; she only stands on Olympus).
 
 Code-drawn on purpose: the lightning storms' circles (the wrath's), the thunderbolt beam and its lanes, the
 trident in flight, the war-cry ring, the volley's aim fan, the gaze cone, the leap arc and landing circle, the

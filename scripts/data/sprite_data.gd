@@ -287,7 +287,7 @@ const HEIGHTS: Dictionary = {
 	"player/doomed_prophetess_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 	# --- Act IV: Mount Olympus (assets/sprites/pantheon/, bosses/, player/) ---
 	"pantheon/centaur_archer": 60.0,  # TUNING (not in GDD) ranged, a horse body (wider than tall), the helmet crest on top
-	"pantheon/amazon": 54.0,  # TUNING (not in GDD) elite tier, female (figure redesign): body ~48, the crest and the raised axe above
+	"pantheon/amazon": 58.0,  # TUNING (not in GDD) elite tier, female (figure redesign, a tall muscular build since the art review round 1): body ~52, the crest and the raised axe above
 	"pantheon/gorgon": 54.0,  # TUNING (not in GDD) elite tier, female (figure redesign): reared on her tail, the snake hair on top
 	"pantheon/moon_hound": 30.0,  # TUNING (not in GDD) fodder: a lean hound (Bone Hound tier), wider than tall
 	"pantheon/sea_serpent": 64.0,  # TUNING (not in GDD) heavy tier: the reared S-neck over its coil
