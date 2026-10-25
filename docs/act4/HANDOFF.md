@@ -33,7 +33,11 @@ owner-answered design) and `docs/act4/BRIEF_PHASE2.md` (how the three stages wer
    `act4_art_r1`, `act4_art_r2`; GDD rows "Act IV art review, round 1" / "round 2"). Round 1: 154 OK / 41 Redo (mixed
    lineup kept). Round 2: 25 OK / 16 Redo. **Round 3 was IN FLIGHT when this session hit its usage limit**: two agents
    on LOCAL branches (not pushed, lost if the container is gone) `act4-r3-underworld` and `act4-r3-olympus`, worktrees
-   `/home/user/wt/act4-r3-*`, from `6cc2c91`. If those branches still exist with commits, check their contact sheets in
+   `/home/user/wt/act4-r3-*`, from `6cc2c91`. **Status:** both agents stopped at the usage limit (resets 5:20 pm UTC) with partial work, saved as
+   one unreviewed WIP commit on each branch: Underworld had the Ferrywoman boxes, the Legion of Tartarus and two Hades
+   sources changed (the Myrmidon Shade and the Hades sprites not yet); Olympus had the Amazon's sideways sway and a new
+   Titan pose in progress (the Gorgon's face not yet). Resume them (SendMessage to the same agents) or finish by hand,
+   then check every change against the owner's notes before merging. If those branches still exist with commits, check their contact sheets in
    the scratchpad (`.../scratchpad/act4/r3-*/`), merge them (the ledger CSV conflicts: keep both sides), `--import`.
    Otherwise redo the round 3 list (the GDD "round 2" row has it): **Hades** regenerated as a consistent set (still,
    bident pose with TWO prongs, kneeling; robe and cloak in clearly different colours); the **Myrmidon Shade** and
