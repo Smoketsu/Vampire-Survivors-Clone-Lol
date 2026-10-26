@@ -33,8 +33,9 @@
 ## light pools goes dark: a small darkness texture (one texel per SUN cell px,
 ## its alpha 0 inside a pool and SUN darkness (~0.55) beyond, updated each frame
 ## from the same pools as light_at()) stretched over the view with linear
-## filtering, plus warm light-pool sprites drawn ADDITIVELY on the lit lanterns
-## (a child node with an ADD CanvasItemMaterial). No shader reads the screen and
+## filtering, plus light-pool sprites drawn ADDITIVELY (a child node with an ADD
+## CanvasItemMaterial): warm on the lit lanterns, a faint pale one on each
+## necromancer's pool so it reads even on a dark floor. No shader reads the screen and
 ## no polygon is redrawn every frame (GDD §15.0 "Web GL id leak patch"). Units in
 ## the dark are dimmed, never hidden. Nothing is drawn headless.
 ## Inert off Act V: `enabled` is false unless the STAGE has "shogunate": phase()
@@ -526,15 +527,20 @@ func _draw() -> void:
 		draw_texture_rect(_tex, Rect2(_origin, Vector2(float(_cols), float(_rows)) * float(cfg["cell"])), false)
 
 
-## Draws the lit lanterns' warm light pools on `layer` (the additive child; the
-## necromancer's own pool is the hole in the darkness). Visual only.
+## Draws the light pools' sprites on `layer` (the additive child): a faint pale
+## glow on each necromancer's pool (so it reads even on a dark floor) and the
+## lit lanterns' warm pools. Visual only.
 func draw_glows(layer: CanvasItem) -> void:
 	var dark := darkness_alpha()
-	if dark <= 0.005 or lit.is_empty():
+	if dark <= 0.005:
 		return
 	var view := _view()
-	var r := lantern_radius()
 	var k := clampf(dark / maxf(float(cfg["darkness"]), 0.01), 0.0, 1.0)  # Glow strength with the night.
+	var pale := Color(ShogunateRulesData.NECRO_GLOW_COLOR, ShogunateRulesData.NECRO_GLOW_ALPHA * k)
+	for pl in game.all_players:
+		var pr := light_radius(pl)
+		layer.draw_texture_rect(_pool_texture(), Rect2(pl.position - Vector2(pr, pr), Vector2(pr, pr) * 2.0), false, pale)
+	var r := lantern_radius()
 	var warm := Color(Palette.FLAME, ShogunateRulesData.LANTERN_GLOW_ALPHA * k)
 	for key: Vector2i in lit:
 		var c: Vector2 = lit[key]

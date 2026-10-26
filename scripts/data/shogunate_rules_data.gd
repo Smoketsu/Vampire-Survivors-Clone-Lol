@@ -91,6 +91,12 @@ const SUN_BANNERS := {
 ## Alpha (0..1) of a lit stone lantern's warm light-pool sprite at full night
 ## (drawn additively; visual only).
 const LANTERN_GLOW_ALPHA: float = 0.28  # TUNING (not in GDD)
+## Colour and alpha (0..1) of the faint light-pool sprite on each necromancer's
+## pool at full night (drawn additively; visual only: without it the pool did
+## not read on the Province's dark paddy floor).
+const NECRO_GLOW_COLOR := Color(0.85, 0.80, 0.70)  # TUNING (not in GDD) pale lamplight
+## Alpha of that sprite at full night.
+const NECRO_GLOW_ALPHA: float = 0.12  # TUNING (not in GDD)
 
 ## The future Act V counter-passive Paper Lanterns (owner-approved proposal; NOT
 ## built in phase 1): PassiveData row PAPER_LANTERNS's level value
@@ -185,7 +191,7 @@ const AMBUSH := {
 	"ring_min": 34.0,  # TUNING (not in GDD) px
 	"spread": 20.0,  # TUNING (not in GDD) px
 	"max_pending": 12,  # TUNING (not in GDD)
-	"puff_radius": 16.0,  # TUNING (not in GDD) px
+	"puff_radius": 22.0,  # TUNING (not in GDD) px; first pass 16 read too small in a screenshot
 }
 
 # --- The Teppo volley (TeppoKit) -----------------------------------------------------------

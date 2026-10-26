@@ -13,7 +13,7 @@
 ## Sun's Course (ashigaru, samurai and teppo gunners by day; ninja ambushes from
 ## dusk through the "ambush" events and the segments' "ambush" trickle; the
 ## onryo and the oni only at night, through the segments' "night_weights" and
-## the timeline helper) against a PLACEHOLDER boss script (the "seraphine" boss script under Amaterasu's name),
+## the timeline helper) against a PLACEHOLDER boss script (the "vael" boss script under Amaterasu's name (first pass "seraphine": her safe-zone novas killed the army bot on one seed)),
 ## with the Endless Night Reckoning (oni and onryo, the sun never rises). It is
 ## hidden from the stage select ("playable": false) until phase 2 builds it:
 ## the torii road, the sacred forest, the Kirin, its kinds, Amaterasu and her moving sun.
@@ -164,12 +164,12 @@ const ARENA := {
 }
 
 ## The stage boss's arrival (keys as GraveyardStage.BOSS, plus "script": the
-## boss script when it differs from the id). PLACEHOLDER: the "seraphine" boss script under Amaterasu's name
+## boss script when it differs from the id). PLACEHOLDER: the "vael" boss script under Amaterasu's name (first pass "seraphine": her safe-zone novas killed the army bot on one seed)
 ## until phase 2 adds scripts/enemies/shogunate/boss_amaterasu.gd (then
 ## remove the "script" key).
 const BOSS := {
 	"id": "amaterasu",
-	"script": "seraphine",  # PLACEHOLDER boss script until phase 2 adds boss_amaterasu.gd (then remove this key).
+	"script": "vael",  # PLACEHOLDER boss script until phase 2 adds boss_amaterasu.gd (then remove this key).
 	"time": BOSS_TIME,
 	"display_name": "Amaterasu, the Sun Goddess",
 	"short_name": "Amaterasu",

@@ -22,7 +22,7 @@ func _draw() -> void:
 	var center := Vector2(_center_cell) * REDRAW_CELL + Vector2.ONE * REDRAW_CELL * 0.5
 	var rect := Rect2(center - Vector2.ONE * HALF_EXTENT, Vector2.ONE * HALF_EXTENT * 2.0)
 	var style := String(look.get("style", "paddy"))  # Floor style.
-	draw_rect(rect, look.get("base", Color(0.15, 0.13, 0.09)))
+	draw_rect(rect, look.get("base", Color(0.19, 0.17, 0.11)))
 	var line: Color = look.get("line", Color(0.19, 0.17, 0.12))  # Joint / row colour.
 	if style == "castle":
 		_courses(rect, GRID * 1.5, line)

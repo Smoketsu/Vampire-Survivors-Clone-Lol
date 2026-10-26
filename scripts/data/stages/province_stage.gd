@@ -182,7 +182,7 @@ const BOSS := {
 ## stage's zone floors: base colour, joint lines, accent, trim, style.
 const FLOOR := {
 	"style": "paddy",  # Dark paddy mud, rows of rice shoots, still water.
-	"base": Color(0.15, 0.13, 0.09),  # TUNING (not in GDD) dark paddy mud
+	"base": Color(0.19, 0.17, 0.11),  # TUNING (not in GDD) dark paddy mud
 	"line": Color(0.19, 0.17, 0.12),  # TUNING (not in GDD)
 	"accent": Color(0.30, 0.42, 0.22),  # TUNING (not in GDD) rice-shoot green
 	"trim": Color(0.416, 0.510, 0.753),  # TUNING (not in GDD) indigo_light water glint
