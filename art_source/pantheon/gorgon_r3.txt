@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, reared up on her tail, clawed hands reaching forward.
+
+This is the SAME GORGON as the attached images: keep her body, pose, gown, gold jewellery, snake hair and coiled tail exactly. The ONLY change: HER FACE. The earlier face read as cartoonish and silly. Give her a proper, BEAUTIFUL BUT MENACING face that still reads when the whole sprite is only 54 pixels tall: a FEMALE face in three-quarter view turned to the right, a slightly LARGER face area clearly framed by the snakes (the snakes kept away from the face), a defined pointed chin and jaw, high cheekbones, a straight nose shown by one shadow, dark lips with a cruel slight SMIRK, and two narrowed, glowing GOLD eyes with black vertical slit pupils under dark, sharply angled brows. Cold, predatory, confident, seductive. Not cute, not cartoonish, no big round eyes, no open mouth.
+
+She has the game's figure-redesign style: SLIM-THICK and noticeably CHUBBY, an exaggerated hourglass figure with a VERY BIG bust, a soft round tummy and very wide hips, FULLY CLOTHED in her white chiton (nothing revealing, never explicit). Pale green skin, living green snakes for hair.
+
+LOW-RESOLUTION pixel art: the whole figure is only 54 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze.
+
+Colours: ONLY flat fills from this list: moss green #081814 #3B5529 #76984A, marble white #8E8A86 #CFCBC4 #F4F1EA, gold #8C6040 #E0A92E #FFDC66 (the eyes gold, the lips the dark brown #8C6040).
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour. Light from the top-left.
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, no checkerboard, no glow), one subject only, centred, filling about 85% of the image height. No ground, no shadow, no scenery, no text, no frame.
+Attached: (1) the approved source image of this exact character: copy it, only redraw the face; (2) her approved in-game sprite: keep its look.

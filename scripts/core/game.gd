@@ -58,6 +58,11 @@
 ## runs the Electronic Empire's shared rules (Line of Fire, Lock-On, Steel has
 ## no soul, the Purge Protocol), stepped right after the projectiles; null on
 ## Acts I and II unless an Empire kind forced there asks for it (empire_rules()).
+## Act IV (GDD §15.0 "Act IV foundation (phase 1)"): `pantheon` (PantheonRules)
+## runs the Olympian Republic's shared rules (Wrath of the Gods, Phalanx, Glory,
+## the Twilight of the Gods), stepped after the enemies and before the obstacle
+## push-out; null on Acts I to III unless a Pantheon kind forced there asks for
+## it (pantheon_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -202,6 +207,11 @@ var claims: EyeClaims = null
 ## stage's STAGE has "empire": true, or an Empire kind spawned on another stage
 ## asked for it through empire_rules(); Acts I and II never create it).
 var empire: EmpireRules = null
+# --- Act IV: the Olympian Republic ---
+## Act IV, the Olympian Republic's shared rules (PantheonRules; null unless the
+## stage's STAGE has "pantheon": true, or a Pantheon kind spawned on another
+## stage asked for it through pantheon_rules(); Acts I to III never create it).
+var pantheon: PantheonRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -311,6 +321,20 @@ func _ready() -> void:
 		# --- Act III: the Scrap Wastes ---
 		"wastes":
 			ground = WastesGround.new()  # Act III: the Scrap Wastes' four zone floors.
+		# --- Act IV: the Olympian Republic ---
+		"pantheon":
+			var pg := PantheonGround.new()  # Act IV placeholder floor (the STAGE's "floor").
+			pg.look = stage_def.get("floor", {})
+			ground = pg
+		# --- Act IV: the Shores of Ilion ---
+		"ilion":
+			ground = IlionGround.new()  # Act IV: the Shores of Ilion's four zone floors (IlionStage.ZONES).
+		# --- Act IV: Mount Olympus ---
+		"olympus":
+			ground = OlympusGround.new()  # Act IV: Mount Olympus's four zone floors.
+		# --- Act IV: the Asphodel Underworld ---
+		"underworld":
+			ground = UnderworldGround.new()  # The four zone floors and the River Styx (UnderworldStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -391,6 +415,8 @@ func _ready() -> void:
 	if bool(stage_def.get("empire", false)):
 		empire_rules()  # Act III: the Electronic Empire's shared rules.
 		effects.empire_look = true  # Its telegraphs in the Empire's warning set (visual only).
+	if bool(stage_def.get("pantheon", false)):
+		pantheon_rules()  # Act IV: the Olympian Republic's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -686,6 +712,8 @@ func _physics_process(delta: float) -> void:
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ARMY, tl)
 	enemies.step(delta)
+	if pantheon != null:
+		pantheon.step(delta)  # Act IV: the gods' wrath (its waves carry bodies before the push-out), shield walls.
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -793,6 +821,31 @@ func empire_rules() -> EmpireRules:
 		empire = EmpireRules.new(self)
 		add_child(empire)
 	return empire
+
+
+# --- Act IV: the Olympian Republic ---
+## The Olympian Republic's shared rules (Act IV), created on first use: at the
+## start of an Act IV run, or when a Pantheon kind forced onto another stage is
+## activated (PantheonKit.reset()), so its shield walls and Glory work there.
+func pantheon_rules() -> PantheonRules:
+	if pantheon == null:
+		pantheon = PantheonRules.new(self)
+		add_child(pantheon)
+	return pantheon
+
+
+# --- Act IV: the Asphodel Underworld ---
+## THE ONE SWITCH that creates the Claims path (EyeClaims, Act II's "the fight
+## over the dead") outside Act II: Hades, Lord of the Dead (BossHades), calls it
+## when he arrives, so his Reclaiming turns the summons he marks into his shades
+## through the same HordeDirector.claim_fallen() path (GDD §15.0 "The Asphodel
+## Underworld (Act IV phase 2)"). An Act II stage still creates `claims` from
+## its STAGE key in _ready() exactly as before (this returns that one); no other
+## caller exists, so Acts I and III never create it.
+func claims_rules() -> EyeClaims:
+	if claims == null:
+		claims = EyeClaims.new(self)
+	return claims
 
 
 ## Re-inserts every living enemy and summon into the spatial hashes.

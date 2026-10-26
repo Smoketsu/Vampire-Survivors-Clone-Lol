@@ -12,6 +12,7 @@
 ##   "bulwark" Bone Golem         GolemBehavior (content wave 2)
 ##   "hover"  Grave Drone         GraveDroneBehavior (Act III, the Assembly Halls)
 ##   "suppress" Iron Revenant     RevenantBehavior (Act III, the Iron Citadel)
+##   "shieldwall" Myrmidon Shade  MyrmidonBehavior (Act IV, the Asphodel Underworld)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -57,6 +58,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act III: the Iron Citadel ---
 		"suppress":
 			b = RevenantBehavior.new()  # The Iron Revenant.
+		# --- Act IV: the Asphodel Underworld ---
+		"shieldwall":
+			b = MyrmidonBehavior.new()  # The Myrmidon Shades.
 	if b != null:
 		b.kind = kind
 	return b
@@ -156,6 +160,11 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Shells per burst", a, b, "shells")
 				_delta(out, "Slow time (s)", a, b, "slow_duration")
+		# --- Act IV: the Asphodel Underworld ---
+		"shieldwall":
+			if a.is_empty():
+				out.append("Holds the ring's front; three side by side lock shields")
+				out.append("Shield wall: %d%% less damage; the spear runs through a foe behind" % int(roundf(float(b["wall_cut"]) * 100.0)))
 	return out
 
 

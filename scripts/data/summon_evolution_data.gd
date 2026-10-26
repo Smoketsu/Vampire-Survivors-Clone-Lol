@@ -67,7 +67,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act III: the Assembly Halls ---
 	"wraith_drone",
 	# --- Act III: the Iron Citadel ---
-	"deus_revenant"]
+	"deus_revenant",
+	# --- Act IV: the Asphodel Underworld ---
+	"legion_of_tartarus"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -736,6 +738,41 @@ const EVOLUTIONS := {
 			"salvo_range": 340.0,  # TUNING (not in GDD) px
 			"salvo_radius": 40.0,  # TUNING (not in GDD) px
 			"salvo_fraction": 2.5,  # TUNING (not in GDD) x one shell
+		},
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# Legion of Tartarus (owner-approved proposal: "Myrmidon Shades (evolution
+	# Legion of Tartarus)"; GDD §15.0 "Myrmidon Shades, Legion of Tartarus and
+	# Myrmidon Oath"): Myrmidon Shade Lv 5 + Myrmidon Oath Lv 5 (a NEW passive,
+	# own decision, owner rule: maxed). The Myrmidons come back from Tartarus in
+	# black bronze: MyrmidonBehavior reads these special_set keys (final, not
+	# suffix-scaled):
+	#   wall_cut      — share of every hit a Myrmidon in a locked wall no longer takes;
+	#   pierce_count  — foes behind the struck one the spear runs through;
+	#   grip_slow / grip_time — every foe the spear strikes is slowed this much
+	#                   for this long (the grip of Tartarus).
+	"legion_of_tartarus": {
+		"mode": "transform",
+		"bases": ["myrmidon_shade"],
+		"passive": "myrmidon_oath",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Legion of Tartarus",  # Owner-approved proposal
+		"plural": "Legionaries of Tartarus",
+		"icon": "legion_of_tartarus",
+		"description": "The wall returns from Tartarus: harder shields, a spear through two more foes, and a grip that slows.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 11.0,  # TUNING (not in GDD) Myrmidons are 10
+			"block_mass": 4.5,  # TUNING (not in GDD) a heavier wall (Myrmidons 3.5)
+		},
+		"special_set": {
+			"wall_cut": 0.45,  # TUNING (not in GDD) (base 0.3)
+			"pierce_count": 2,  # TUNING (not in GDD) (base 1)
+			"grip_slow": 0.3,  # TUNING (not in GDD)
+			"grip_time": 1.0,  # TUNING (not in GDD) s
 		},
 	},
 }

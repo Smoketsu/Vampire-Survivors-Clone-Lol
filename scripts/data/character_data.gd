@@ -60,7 +60,13 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act III: the Scrap Wastes ---
 	"lightning_abbess",
 	# --- Act III: the Iron Citadel ---
-	"rust_prophet"]
+	"rust_prophet",
+	# --- Act IV: the Shores of Ilion ---
+	"doomed_prophetess",
+	# --- Act IV: Mount Olympus ---
+	"oathbreaker",
+	# --- Act IV: the Asphodel Underworld ---
+	"ferrywoman"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -106,6 +112,11 @@ const STAT_LABELS := {
 ##                           between a temporary Risen's scrap bolts; Act III)
 ##   risen_bolt_damage       CharacterInnates (damage of each scrap bolt, before
 ##                           the Risen's own summon bonuses)
+##   thunder_divine_bonus    StolenThunder._hit (extra damage fraction on bosses,
+##                           minibosses and Heroes; Act IV)
+##   ferry_cooldown          RiverStyx.on_enemy_killed (s between two Risen a foe
+##                           slain in her river raises; Act IV)
+##   ferry_life              RiverStyx.on_enemy_killed (s that Risen stands)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -121,7 +132,13 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act III: the Scrap Wastes ---
 	"ray_extra_sparks",
 	# --- Act III: the Iron Citadel ---
-	"risen_bolt_interval", "risen_bolt_damage"]
+	"risen_bolt_interval", "risen_bolt_damage",
+	# --- Act IV: the Shores of Ilion ---
+	"arrow_elite_bonus",
+	# --- Act IV: Mount Olympus ---
+	"thunder_divine_bonus",
+	# --- Act IV: the Asphodel Underworld ---
+	"ferry_cooldown", "ferry_life"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -416,6 +433,72 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "spell_area": 0.05},  # TUNING (not in GDD) an engineer's plating and a wider reach
 		"sprite": "player/rust_prophet",
 		"tint": Color(0.86, 0.58, 0.34),  # TUNING (not in GDD) rust orange over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act IV: the Shores of Ilion ---
+	# The Doomed Prophetess (Paris's Arrow's character; owner-approved Act IV
+	# proposal: "a dead seer of Troy (figure style)"; female, in the
+	# figure-redesign style: fully clothed, the bust rig and idle breathing). She
+	# foresaw the fall of Troy and the death of Achilles at the heel, and no one
+	# believed her; dead, she still sees where every champion will fall. Her
+	# spell must be unlocked first (by Achilles), then she unlocks the usual way
+	# (Paris's Arrow to Lv 5). Own decision on her innate (the proposal names
+	# none): her arrows strike champions harder (ParisArrow reads it).
+	"doomed_prophetess": {
+		"display_name": "The Doomed Prophetess",
+		"title": "She saw the heel. No one believed her.",
+		"spell": "paris_arrow",
+		"innate": {
+			"id": "foretold_fall", "name": "Foretold Fall",
+			"description": "Your ghost arrows strike elites, champions and bosses harder.",
+			"values": {"arrow_elite_bonus": 0.3},  # TUNING (not in GDD) +30% Paris's Arrow damage to elites, minibosses and bosses
+		},
+		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail seer with a wide sight
+		"sprite": "player/doomed_prophetess",
+		"tint": Color(0.62, 0.48, 0.92),  # TUNING (not in GDD) twilight violet
+		"starts_unlocked": false,
+	},
+	# --- Act IV: Mount Olympus ---
+	# The Oathbreaker (Stolen Thunder's character; owner-approved Act IV
+	# proposal: "a fallen demigod", male; his spell must be unlocked first, by
+	# Zeus). A son of Zeus who swore to guard the dead and broke the oath to
+	# raise them: he stole a bolt from his father's hand on the way down, and
+	# it strikes hardest at his own kin (StolenThunder reads the innate).
+	"oathbreaker": {
+		"display_name": "The Oathbreaker",
+		"title": "He swore to guard the dead. Now he leads them against his father.",
+		"spell": "stolen_thunder",
+		"innate": {
+			"id": "kinslayer", "name": "Kinslayer",
+			"description": "Your Stolen Thunder strikes bosses, gods and Heroes harder.",
+			"values": {"thunder_divine_bonus": 0.35},  # TUNING (not in GDD) +35% Stolen Thunder damage on bosses, minibosses and Heroes
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) a demigod's body, heavy bronze
+		"sprite": "player/oathbreaker",
+		"tint": Color(0.85, 0.72, 0.45),  # TUNING (not in GDD) tarnished bronze over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# The Ferrywoman (River Styx's character; owner-approved Act IV proposal:
+	# "the Ferrywoman, Charon's daughter (figure style)": female, in the
+	# figure-redesign style, an hourglass figure fully clothed in a hooded grey
+	# ferryman's robe and a dark corset, a lantern and a long oar, an obol on a
+	# cord; the bust rig and idle breathing). River Styx must be unlocked (Hades)
+	# before she can be earned, by the usual Lv 5 rule. She ferries the dead the
+	# other way: a foe slain in her river rises as a temporary Risen
+	# (RiverStyx.on_enemy_killed(), through HordeDirector.spawn_temporary()).
+	"ferrywoman": {
+		"display_name": "The Ferrywoman",  # Owner-approved proposal
+		"title": "Charon's daughter. The river ran dry, so she rows for you.",
+		"spell": "river_styx",
+		"innate": {
+			"id": "ferry_of_souls", "name": "Ferry of Souls",
+			"description": "A foe slain in your river rises as a Risen for a few seconds.",
+			"values": {"ferry_cooldown": 2.0, "ferry_life": 8.0},  # TUNING (not in GDD) s between two Risen, s each stands
+		},
+		"stats": {"max_hp": 5.0, "move_speed": 0.05},  # TUNING (not in GDD) a rower's strength, a ferry's glide
+		"sprite": "player/ferrywoman",
+		"tint": Color(0.58, 0.66, 0.80),  # TUNING (not in GDD) a cold river grey-blue over the violet
 		"starts_unlocked": false,
 	},
 }

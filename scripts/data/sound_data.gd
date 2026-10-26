@@ -443,17 +443,59 @@ const IRON_SCORE := {
 		]},  # TUNING (not in GDD) two octaves over the pad
 }
 
+## "Hymn of Bronze", the Act IV run loop (GDD §15.0 "Hymn of Bronze and the
+## Pantheon sounds", owner-approved proposal: "a martial, ancient feel"): the
+## RunLoopSynth score of every stage whose STAGE has "music": "bronze" (keys in
+## RunLoopSynth's header). A low D drone and sea-wind bed under a Dorian choir
+## pad (Dm - C - G - Dm), a war drum on every beat with a ghost note after the
+## off-beats, a plucked lyre arpeggio and a brassy horn swell twice a loop.
+## Rendered lazily (Sfx), never under the autotest. 90 bpm: 24 beats per 16 s.
+const BRONZE_SCORE := {
+	"loop_seconds": 16.0,  # TUNING (not in GDD) 24 beats at 90 bpm
+	"root_hz": 36.71,  # TUNING (not in GDD) D1, the drone under a Dorian D
+	# Dm -> C -> G -> Dm/A (D Dorian: the raised sixth shows in the lyre), voiced low.
+	"chords": [
+		[146.83, 174.61, 220.0],
+		[130.81, 164.81, 196.0],
+		[98.0, 123.47, 146.83],
+		[110.0, 146.83, 174.61],
+	],  # TUNING (not in GDD)
+	"drone_lp_hz": 70.0,  # TUNING (not in GDD) a little brighter than Act I's 60: a brass-bowl hum
+	"wind_lp_hz": 110.0,  # TUNING (not in GDD) a low sea wind off the Aegean
+	"wind_swells": 2.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.5,  # TUNING (not in GDD)
+	"vibrato_depth": 0.006,  # TUNING (not in GDD)
+	# The war drum: a skin thump (falling sine plus a noise slap) on every beat,
+	# the 4th beat of each bar accented, and a soft ghost hit `ghost_at` of a beat later.
+	"drums": {"step": 0.6667, "hz0": 105.0, "hz1": 52.0, "dur": 0.32, "amp": 0.4, "decay": 0.1,
+		"accent_every": 4, "accent_amp": 0.62, "slap": 0.12, "ghost_at": 0.75, "ghost_amp": 0.16},  # TUNING (not in GDD)
+	# The lyre: plucked triangle notes, one per eighth, up each chord's tones (D Dorian).
+	"arp": {"step": 0.3333, "dur": 0.3, "amp": 0.09, "decay": 0.09, "lp0": 3600.0, "wave": "tri",
+		"chords": [
+			[293.66, 349.23, 440.0, 587.33],
+			[261.63, 329.63, 392.0, 523.25],
+			[196.0, 246.94, 293.66, 392.0],
+			[220.0, 293.66, 349.23, 440.0],
+		]},  # TUNING (not in GDD) an octave and a half above the pad
+	# The horn: two slow brass swells a loop (a saw and its fifth through a rising low-pass).
+	"horn": {"starts": [0.0, 8.0], "dur": 6.5, "attack": 2.0, "decay": 3.0, "amp": 0.07, "lp0": 450.0, "lp1": 1700.0,
+		"notes": [[146.83, 220.0], [130.81, 196.0]]},  # TUNING (not in GDD) [root, fifth] (Hz) per swell
+}
+
 ## Run-loop scores by STAGE "music" id (Sfx.play_music() modes; "" / absent =
 ## the Act I loop): "tide" = "Below the Tide" (Act II), "iron" = "Iron Requiem"
-## (Act III). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
+## (Act III), "bronze" = "Hymn of Bronze" (Act IV). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
 const SCORES := {
 	"tide": TIDE_SCORE,
 	"iron": IRON_SCORE,
+	"bronze": BRONZE_SCORE,
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
-## "empire" = EMPIRE_SOUNDS, the Act III effects); absent = none.
+## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
+## the Act IV ones); absent = none.
 const SCORE_PACKS := {
 	"iron": "empire",
+	"bronze": "pantheon",
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -704,3 +746,242 @@ const WEB_SYNTH_BUDGET_MS: float = 6.0  # TUNING (not in GDD)
 ## encoding; RunLoopSynth). Only sets how finely the work is split; the
 ## rendered loop is the same for any value (>= 1).
 const WEB_SYNTH_CHUNK_SAMPLES: int = 8192  # TUNING (not in GDD)
+
+## Act IV sound effects (the Olympian Republic; recipe keys as SOUNDS). Like
+## EMPIRE_SOUNDS, kept OUT of SOUNDS so the startup bank and its seeds stay
+## exactly as before: Sfx renders this pack lazily the first time an Act IV
+## run's music ("bronze") is asked for (Sfx.prepare_pack("pantheon"); seeds
+## Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["pantheon"] + i). Mapped to game
+## events by the foundation's PantheonRulesData sound map.
+const PANTHEON_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# Wrath of the Gods, Poseidon's wave: a rolling surf crash, a long hushed roar that swells and drains.
+	"wrath_wave": {"dur": 1.4, "volume_db": -12.0, "max_voices": 2, "min_interval": 500, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 1.35, "amp": 0.55, "attack": 0.35, "decay": 0.55, "lp0": 1800.0, "lp1": 500.0},
+			{"wave": "noise", "start": 0.1, "dur": 1.2, "amp": 0.18, "attack": 0.5, "decay": 0.4, "lp0": 6000.0, "lp1": 2500.0},
+			{"wave": "sine", "f0": 62.0, "f1": 40.0, "dur": 1.1, "amp": 0.38, "attack": 0.3, "decay": 0.4}]},
+	# Zeus' lightning: a sharp crack, a falling sizzle and a rolling boom behind it.
+	"wrath_thunder": {"dur": 1.2, "volume_db": -10.0, "max_voices": 3, "min_interval": 90, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.07, "amp": 0.8, "attack": 0.001, "decay": 0.015, "lp0": 12000.0, "lp1": 4000.0},
+			{"wave": "noise", "start": 0.04, "dur": 0.5, "amp": 0.3, "decay": 0.16, "lp0": 7000.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 80.0, "f1": 32.0, "start": 0.06, "dur": 1.1, "amp": 0.6, "attack": 0.01, "decay": 0.4},
+			{"wave": "noise", "start": 0.2, "dur": 0.95, "amp": 0.22, "attack": 0.1, "decay": 0.4, "lp0": 500.0, "lp1": 160.0}]},
+	# Hades' fissure: grinding rock splitting, a low sub-drop and a thin hiss.
+	"wrath_fissure": {"dur": 1.0, "volume_db": -12.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.9, "amp": 0.5, "attack": 0.04, "decay": 0.35, "lp0": 1100.0, "lp1": 300.0},
+			{"wave": "saw", "f0": 70.0, "f1": 38.0, "dur": 0.8, "amp": 0.2, "attack": 0.03, "decay": 0.3, "lp0": 400.0},
+			{"wave": "noise", "start": 0.3, "dur": 0.65, "amp": 0.16, "attack": 0.1, "decay": 0.25, "lp0": 9000.0, "lp1": 6000.0}]},
+	# Phalanx lock: bronze shields clanging into place, three staggered rims.
+	"shield_lock": {"dur": 0.55, "volume_db": -15.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.03, "amp": 0.4, "decay": 0.008, "lp0": 6000.0},
+			{"wave": "sine", "f0": 430.0, "dur": 0.4, "amp": 0.2, "decay": 0.12},
+			{"wave": "sine", "f0": 990.0, "dur": 0.3, "amp": 0.12, "decay": 0.08},
+			{"wave": "noise", "start": 0.07, "dur": 0.03, "amp": 0.3, "decay": 0.008, "lp0": 6000.0},
+			{"wave": "sine", "f0": 520.0, "start": 0.07, "dur": 0.35, "amp": 0.16, "decay": 0.1},
+			{"wave": "noise", "start": 0.14, "dur": 0.03, "amp": 0.3, "decay": 0.008, "lp0": 6000.0},
+			{"wave": "sine", "f0": 380.0, "start": 0.14, "dur": 0.4, "amp": 0.18, "decay": 0.14}]},
+	# Phalanx break: a bronze clang with a scraping slide.
+	"shield_break": {"dur": 0.5, "volume_db": -14.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.04, "amp": 0.5, "decay": 0.01, "lp0": 8000.0},
+			{"wave": "sine", "f0": 610.0, "dur": 0.4, "amp": 0.22, "decay": 0.1},
+			{"wave": "sine", "f0": 1410.0, "dur": 0.25, "amp": 0.1, "decay": 0.06},
+			{"wave": "saw", "f0": 900.0, "f1": 240.0, "start": 0.03, "dur": 0.4, "amp": 0.1, "decay": 0.12, "lp0": 2400.0, "lp1": 700.0},
+			{"wave": "noise", "start": 0.05, "dur": 0.35, "amp": 0.2, "decay": 0.1, "lp0": 4000.0, "lp1": 1500.0}]},
+	# Glory gained: a short bright brass chime, a fifth over its root.
+	"glory_gain": {"dur": 0.45, "volume_db": -17.0, "max_voices": 2, "min_interval": 120, "pitch_var": 0.03, "priority": 1,
+		"layers": [
+			{"wave": "square", "f0": 587.33, "dur": 0.28, "amp": 0.1, "attack": 0.01, "decay": 0.12, "lp0": 3500.0},
+			{"wave": "square", "f0": 880.0, "start": 0.07, "dur": 0.34, "amp": 0.1, "attack": 0.01, "decay": 0.14, "lp0": 4500.0},
+			{"wave": "sine", "f0": 1760.0, "start": 0.07, "dur": 0.3, "amp": 0.1, "decay": 0.12}]},
+	# Hoplite step: a heavy armoured tread, a dull thud and a rattle of bronze plates.
+	"hoplite_step": {"dur": 0.2, "volume_db": -22.0, "max_voices": 3, "min_interval": 130, "pitch_var": 0.12, "priority": 0,
+		"layers": [
+			{"wave": "sine", "f0": 95.0, "f1": 55.0, "dur": 0.14, "amp": 0.5, "decay": 0.04},
+			{"wave": "noise", "dur": 0.06, "amp": 0.25, "decay": 0.02, "lp0": 1800.0, "lp1": 700.0},
+			{"wave": "sine", "f0": 1250.0, "start": 0.03, "dur": 0.12, "amp": 0.05, "decay": 0.04}]},
+	# Bronze Titan rising: a deep bronze groan, a grinding sweep and a heavy boom under it.
+	"titan_rise": {"dur": 1.6, "volume_db": -11.0, "max_voices": 2, "min_interval": 600, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 48.0, "f1": 70.0, "dur": 1.5, "amp": 0.3, "attack": 0.4, "decay": 0.7, "lp0": 300.0, "lp1": 600.0},
+			{"wave": "sine", "f0": 32.0, "f1": 24.0, "dur": 1.5, "amp": 0.6, "attack": 0.1, "decay": 0.7},
+			{"wave": "noise", "dur": 1.3, "amp": 0.3, "attack": 0.3, "decay": 0.5, "lp0": 700.0, "lp1": 200.0},
+			{"wave": "sine", "f0": 232.0, "f1": 190.0, "start": 0.2, "dur": 1.2, "amp": 0.08, "attack": 0.3, "decay": 0.5, "vib_hz": 5.0, "vib_depth": 0.02}]},
+	# --- Act IV: the Shores of Ilion ---
+	# A cyclops hurls a boulder: a heavy grunt and the whoosh of a rock thrown high.
+	"boulder_throw": {"dur": 0.6, "volume_db": -15.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "saw", "f0": 110.0, "f1": 80.0, "dur": 0.18, "amp": 0.18, "attack": 0.01, "decay": 0.08, "lp0": 600.0},
+			{"wave": "noise", "start": 0.08, "dur": 0.5, "amp": 0.3, "attack": 0.15, "decay": 0.2, "lp0": 900.0, "lp1": 2800.0}]},
+	# A boulder lands (and Polyphemus's stomp): a deep thud, a crack of stone and grit.
+	"boulder_land": {"dur": 0.7, "volume_db": -12.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 70.0, "f1": 34.0, "dur": 0.5, "amp": 0.7, "attack": 0.002, "decay": 0.18},
+			{"wave": "noise", "dur": 0.08, "amp": 0.6, "decay": 0.02, "lp0": 5000.0, "lp1": 1500.0},
+			{"wave": "noise", "start": 0.05, "dur": 0.55, "amp": 0.22, "decay": 0.2, "lp0": 1400.0, "lp1": 400.0}]},
+	# A siege tower's timbers: a slow wooden groan and the rumble of wheels.
+	"siege_creak": {"dur": 0.9, "volume_db": -20.0, "max_voices": 2, "min_interval": 900, "pitch_var": 0.1, "priority": 0,
+		"layers": [
+			{"wave": "saw", "f0": 180.0, "f1": 140.0, "dur": 0.7, "amp": 0.12, "attack": 0.12, "decay": 0.3, "lp0": 900.0, "lp1": 500.0, "vib_hz": 9.0, "vib_depth": 0.04},
+			{"wave": "noise", "dur": 0.85, "amp": 0.18, "attack": 0.2, "decay": 0.35, "lp0": 300.0, "lp1": 180.0}]},
+	# A siege tower crashes down: splintering timbers and a long collapsing rumble.
+	"siege_collapse": {"dur": 1.3, "volume_db": -11.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.12, "amp": 0.7, "decay": 0.04, "lp0": 6000.0, "lp1": 2000.0},
+			{"wave": "noise", "start": 0.05, "dur": 1.2, "amp": 0.4, "attack": 0.05, "decay": 0.5, "lp0": 1200.0, "lp1": 200.0},
+			{"wave": "sine", "f0": 55.0, "f1": 30.0, "start": 0.1, "dur": 1.0, "amp": 0.5, "attack": 0.02, "decay": 0.4},
+			{"wave": "saw", "f0": 300.0, "f1": 90.0, "start": 0.02, "dur": 0.4, "amp": 0.1, "decay": 0.15, "lp0": 1500.0}]},
+	# A blow to Achilles' heel: a bright bronze ring and a short gasp of air.
+	"heel_struck": {"dur": 0.5, "volume_db": -14.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 1320.0, "dur": 0.4, "amp": 0.16, "decay": 0.12},
+			{"wave": "sine", "f0": 660.0, "dur": 0.45, "amp": 0.14, "decay": 0.15},
+			{"wave": "noise", "dur": 0.2, "amp": 0.2, "attack": 0.02, "decay": 0.07, "lp0": 3000.0, "lp1": 900.0}]},
+	# Achilles' war cry: a rising brassy roar over a drum-like boom.
+	"achilles_rage": {"dur": 1.4, "volume_db": -10.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.02, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 140.0, "f1": 220.0, "dur": 1.2, "amp": 0.22, "attack": 0.15, "decay": 0.5, "lp0": 1200.0, "lp1": 2200.0, "vib_hz": 6.0, "vib_depth": 0.03},
+			{"wave": "square", "f0": 210.0, "f1": 330.0, "start": 0.1, "dur": 1.1, "amp": 0.08, "attack": 0.2, "decay": 0.5, "lp0": 2400.0},
+			{"wave": "sine", "f0": 60.0, "f1": 38.0, "dur": 0.8, "amp": 0.55, "attack": 0.005, "decay": 0.3},
+			{"wave": "noise", "start": 0.05, "dur": 1.1, "amp": 0.15, "attack": 0.3, "decay": 0.4, "lp0": 2000.0, "lp1": 800.0}]},
+	# --- Act IV: Mount Olympus --- (appended last: the pack's earlier seeds stay as they were)
+	# Ares's war-cry: a hoarse brass bellow over a war drum.
+	"ares_warcry": {"dur": 1.1, "volume_db": -11.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 140.0, "f1": 120.0, "dur": 0.9, "amp": 0.3, "attack": 0.05, "decay": 0.4, "lp0": 1400.0, "lp1": 700.0, "vib_hz": 6.0, "vib_depth": 0.03},
+			{"wave": "saw", "f0": 210.0, "f1": 180.0, "dur": 0.8, "amp": 0.15, "attack": 0.08, "decay": 0.35, "lp0": 1800.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 70.0, "f1": 45.0, "dur": 0.35, "amp": 0.6, "decay": 0.12},
+			{"wave": "noise", "dur": 0.25, "amp": 0.25, "decay": 0.08, "lp0": 900.0}]},
+	# Ares's spear charge: a rushing scrape and a heavy footfall.
+	"ares_charge": {"dur": 0.6, "volume_db": -14.0, "max_voices": 1, "min_interval": 300, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.4, "attack": 0.05, "decay": 0.2, "lp0": 2500.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 90.0, "f1": 50.0, "dur": 0.25, "amp": 0.5, "decay": 0.08}]},
+	# Artemis's hunting horn: a clear rising horn call.
+	"artemis_horn": {"dur": 0.9, "volume_db": -14.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "square", "f0": 392.0, "f1": 523.0, "dur": 0.8, "amp": 0.12, "attack": 0.06, "decay": 0.35, "lp0": 2200.0, "lp1": 1600.0},
+			{"wave": "sine", "f0": 784.0, "f1": 1046.0, "dur": 0.7, "amp": 0.06, "attack": 0.08, "decay": 0.3}]},
+	# Artemis's blink: a silvery shimmer, up then gone.
+	"artemis_blink": {"dur": 0.5, "volume_db": -16.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 1400.0, "f1": 2600.0, "dur": 0.4, "amp": 0.1, "attack": 0.02, "decay": 0.18, "vib_hz": 18.0, "vib_depth": 0.02},
+			{"wave": "noise", "dur": 0.3, "amp": 0.12, "attack": 0.05, "decay": 0.12, "lp0": 9000.0, "lp1": 4000.0}]},
+	# Artemis's volley: a ripple of bowstrings.
+	"artemis_volley": {"dur": 0.45, "volume_db": -15.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "square", "f0": 220.0, "f1": 110.0, "dur": 0.12, "amp": 0.12, "decay": 0.04, "lp0": 1800.0},
+			{"wave": "noise", "start": 0.04, "dur": 0.35, "amp": 0.3, "decay": 0.12, "lp0": 5000.0, "lp1": 2500.0},
+			{"wave": "square", "f0": 260.0, "f1": 130.0, "start": 0.08, "dur": 0.12, "amp": 0.08, "decay": 0.04, "lp0": 1800.0}]},
+	# Poseidon's trident throw: a whoosh of air and spray.
+	"poseidon_trident": {"dur": 0.5, "volume_db": -14.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.45, "amp": 0.45, "attack": 0.03, "decay": 0.2, "lp0": 1500.0, "lp1": 6000.0},
+			{"wave": "sine", "f0": 600.0, "f1": 300.0, "dur": 0.3, "amp": 0.08, "decay": 0.1}]},
+	# The sea serpent rising: a deep wet surge and a hiss.
+	"serpent_rise": {"dur": 1.0, "volume_db": -12.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.9, "amp": 0.4, "attack": 0.2, "decay": 0.4, "lp0": 600.0, "lp1": 1800.0},
+			{"wave": "sine", "f0": 55.0, "f1": 80.0, "dur": 0.8, "amp": 0.5, "attack": 0.15, "decay": 0.35},
+			{"wave": "noise", "start": 0.55, "dur": 0.4, "amp": 0.18, "decay": 0.15, "lp0": 8000.0, "lp1": 6000.0}]},
+	# A Gorgon's gaze: a rising sibilant hiss and a low drone.
+	"gorgon_gaze": {"dur": 1.0, "volume_db": -15.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.9, "amp": 0.25, "attack": 0.4, "decay": 0.3, "lp0": 5000.0, "lp1": 9000.0},
+			{"wave": "saw", "f0": 110.0, "f1": 165.0, "dur": 0.9, "amp": 0.1, "attack": 0.3, "decay": 0.3, "lp0": 900.0}]},
+	# Summons turned to stone: a dry grinding crackle.
+	"petrify": {"dur": 0.5, "volume_db": -14.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.45, "amp": 0.5, "decay": 0.15, "lp0": 2000.0, "lp1": 600.0},
+			{"wave": "square", "f0": 90.0, "f1": 60.0, "dur": 0.3, "amp": 0.1, "decay": 0.1, "lp0": 700.0}]},
+	# An Amazon's leap: a short war shout and a rush of air.
+	"amazon_leap": {"dur": 0.4, "volume_db": -17.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "saw", "f0": 330.0, "f1": 440.0, "dur": 0.2, "amp": 0.1, "attack": 0.02, "decay": 0.08, "lp0": 2400.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.3, "amp": 0.25, "decay": 0.1, "lp0": 3000.0, "lp1": 6000.0}]},
+	# Zeus raising the bolt: a gathering electric whine.
+	"zeus_cast": {"dur": 0.8, "volume_db": -13.0, "max_voices": 1, "min_interval": 300, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 200.0, "f1": 900.0, "dur": 0.7, "amp": 0.12, "attack": 0.3, "decay": 0.2, "lp0": 3000.0, "vib_hz": 22.0, "vib_depth": 0.03},
+			{"wave": "noise", "dur": 0.7, "amp": 0.15, "attack": 0.3, "decay": 0.2, "lp0": 6000.0, "lp1": 9000.0}]},
+	# Zeus's thunderbolt beam: a searing crack and a long roar.
+	"zeus_beam": {"dur": 1.2, "volume_db": -10.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.2, "amp": 0.8, "decay": 0.05, "lp0": 12000.0, "lp1": 6000.0},
+			{"wave": "noise", "start": 0.05, "dur": 1.1, "amp": 0.45, "decay": 0.5, "lp0": 2500.0, "lp1": 300.0},
+			{"wave": "sine", "f0": 60.0, "f1": 35.0, "dur": 1.0, "amp": 0.6, "decay": 0.45}]},
+	# Zeus taking his true form: a vast rising roar of storm and stone.
+	"zeus_transform": {"dur": 2.0, "volume_db": -9.0, "max_voices": 1, "min_interval": 1500, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 40.0, "f1": 90.0, "dur": 1.9, "amp": 0.3, "attack": 0.6, "decay": 0.8, "lp0": 400.0, "lp1": 1200.0},
+			{"wave": "noise", "dur": 1.9, "amp": 0.4, "attack": 0.5, "decay": 0.9, "lp0": 800.0, "lp1": 3000.0},
+			{"wave": "sine", "f0": 30.0, "f1": 22.0, "dur": 1.8, "amp": 0.6, "attack": 0.2, "decay": 0.8}]},
+	# --- Act IV: the Asphodel Underworld --- (Cerberus, Hades; played by id)
+	# Cerberus's fire breath: a roaring rush of flame, low and rough.
+	"fire_breath": {"dur": 1.3, "volume_db": -12.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 1.25, "amp": 0.5, "attack": 0.12, "decay": 0.5, "lp0": 2600.0, "lp1": 900.0},
+			{"wave": "saw", "f0": 82.0, "f1": 70.0, "dur": 1.2, "amp": 0.16, "attack": 0.1, "decay": 0.5, "lp0": 500.0}]},
+	# Cerberus's pounce: a heavy rush of air and claws scraping off.
+	"hound_pounce": {"dur": 0.5, "volume_db": -13.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.45, "amp": 0.4, "attack": 0.05, "decay": 0.18, "lp0": 3000.0, "lp1": 800.0},
+			{"wave": "sine", "f0": 140.0, "f1": 70.0, "dur": 0.3, "amp": 0.3, "decay": 0.12}]},
+	# Cerberus's bite landing: a snapping crunch with a thud under it.
+	"hound_bite": {"dur": 0.45, "volume_db": -11.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.08, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.7, "decay": 0.02, "lp0": 7000.0, "lp1": 2000.0},
+			{"wave": "sine", "f0": 90.0, "f1": 40.0, "dur": 0.4, "amp": 0.55, "decay": 0.15},
+			{"wave": "square", "f0": 210.0, "f1": 120.0, "start": 0.02, "dur": 0.12, "amp": 0.08, "decay": 0.04, "lp0": 1500.0}]},
+	# Cerberus's howl: three voices rising and falling a fifth apart, a long wolf howl.
+	"hound_howl": {"dur": 1.6, "volume_db": -12.0, "max_voices": 2, "min_interval": 600, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 260.0, "f1": 330.0, "dur": 1.5, "amp": 0.12, "attack": 0.25, "decay": 0.6, "lp0": 1400.0, "vib_hz": 5.5, "vib_depth": 0.02},
+			{"wave": "saw", "f0": 390.0, "f1": 495.0, "start": 0.08, "dur": 1.4, "amp": 0.09, "attack": 0.25, "decay": 0.6, "lp0": 1800.0, "vib_hz": 6.0, "vib_depth": 0.02},
+			{"wave": "sine", "f0": 195.0, "f1": 230.0, "start": 0.04, "dur": 1.45, "amp": 0.14, "attack": 0.3, "decay": 0.6}]},
+	# Hades rising (his arrival, a phase change, his ring): a deep choir-like drone swelling up.
+	"hades_rise": {"dur": 2.0, "volume_db": -10.0, "max_voices": 1, "min_interval": 900, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 55.0, "f1": 49.0, "dur": 1.9, "amp": 0.55, "attack": 0.5, "decay": 0.8},
+			{"wave": "saw", "f0": 110.0, "f1": 98.0, "dur": 1.8, "amp": 0.14, "attack": 0.6, "decay": 0.7, "lp0": 700.0, "vib_hz": 4.0, "vib_depth": 0.01},
+			{"wave": "sine", "f0": 165.0, "f1": 147.0, "start": 0.3, "dur": 1.5, "amp": 0.1, "attack": 0.5, "decay": 0.6},
+			{"wave": "noise", "dur": 1.6, "amp": 0.15, "attack": 0.4, "decay": 0.7, "lp0": 600.0, "lp1": 200.0}]},
+	# The Helm of Darkness on: a breath drawn inward, a fading hiss.
+	"helm_cloak": {"dur": 0.8, "volume_db": -14.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.75, "amp": 0.35, "attack": 0.4, "decay": 0.15, "lp0": 4000.0, "lp1": 9000.0},
+			{"wave": "sine", "f0": 220.0, "f1": 110.0, "dur": 0.7, "amp": 0.12, "attack": 0.3, "decay": 0.3}]},
+	# The Helm off: a cold shimmer snapping back into sight.
+	"helm_reveal": {"dur": 0.6, "volume_db": -14.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.15, "amp": 0.4, "decay": 0.05, "lp0": 9000.0, "lp1": 3000.0},
+			{"wave": "sine", "f0": 660.0, "f1": 880.0, "dur": 0.5, "amp": 0.12, "decay": 0.2},
+			{"wave": "sine", "f0": 990.0, "f1": 1320.0, "start": 0.05, "dur": 0.4, "amp": 0.07, "decay": 0.16}]},
+	# Hades marks (his sigils, a god's shade rising): a hollow bell struck under water.
+	"hades_mark": {"dur": 1.1, "volume_db": -13.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 311.0, "dur": 1.0, "amp": 0.22, "attack": 0.005, "decay": 0.45},
+			{"wave": "sine", "f0": 466.0, "dur": 0.9, "amp": 0.12, "attack": 0.005, "decay": 0.4, "vib_hz": 3.0, "vib_depth": 0.01},
+			{"wave": "sine", "f0": 155.5, "dur": 1.05, "amp": 0.16, "attack": 0.01, "decay": 0.5}]},
+	# The bident sweep: a heavy whoosh and a ringing bronze edge.
+	"bident_sweep": {"dur": 0.55, "volume_db": -12.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.35, "amp": 0.45, "attack": 0.08, "decay": 0.12, "lp0": 1800.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 740.0, "start": 0.12, "dur": 0.4, "amp": 0.1, "decay": 0.14}]},
+	# Artemis's shade's volley: a flight of thin whistling arrows.
+	"moon_volley": {"dur": 0.6, "volume_db": -14.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.25, "attack": 0.05, "decay": 0.2, "lp0": 9000.0, "lp1": 4000.0},
+			{"wave": "sine", "f0": 1800.0, "f1": 1300.0, "dur": 0.45, "amp": 0.06, "decay": 0.18},
+			{"wave": "sine", "f0": 2100.0, "f1": 1500.0, "start": 0.06, "dur": 0.4, "amp": 0.05, "decay": 0.16}]},
+	# Hades kneels: a long falling choir note over a soft bronze ring (the ending).
+	"hades_kneel": {"dur": 2.6, "volume_db": -9.0, "max_voices": 1, "min_interval": 3000, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 196.0, "f1": 130.8, "dur": 2.4, "amp": 0.3, "attack": 0.2, "decay": 1.0, "vib_hz": 4.5, "vib_depth": 0.01},
+			{"wave": "sine", "f0": 293.7, "f1": 196.0, "start": 0.1, "dur": 2.3, "amp": 0.18, "attack": 0.25, "decay": 1.0},
+			{"wave": "sine", "f0": 587.3, "start": 0.4, "dur": 1.8, "amp": 0.08, "attack": 0.01, "decay": 0.8},
+			{"wave": "sine", "f0": 49.0, "dur": 2.5, "amp": 0.4, "attack": 0.3, "decay": 1.0}]},
+}

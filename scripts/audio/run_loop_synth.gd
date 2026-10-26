@@ -32,6 +32,13 @@
 ##             `partials` [[ratio, amp], ...] over root_hz, plus a noise click),
 ##   "arp"   — an arpeggio: one note every `step` s cycling up the current
 ##             loop segment's `chords` entry ({step, dur, amp, decay, lp0, wave}).
+## Act IV (SoundData.BRONZE_SCORE, "Hymn of Bronze") adds two more, the same way
+## ("arp" takes any Synth wave, so the lyre is a plucked "tri"):
+##   "drums" — a war drum every `step` s instead of the heartbeat ({step, hz0, hz1,
+##             dur, amp, decay, accent_every, accent_amp, slap, ghost_at, ghost_amp}),
+##   "horn"  — brass swells: per `starts` entry a saw and its fifth (`notes`
+##             [[root, fifth], ...]) through a rising low-pass ({starts, dur,
+##             attack, decay, amp, lp0, lp1, notes}).
 ## Every note ends before the loop end, so the loop stays seamless.
 class_name RunLoopSynth
 extends RefCounted
@@ -164,12 +171,16 @@ func _init(rng_seed: int, score: Dictionary = {}) -> void:
 		_jobs.append(_job_toll)
 	elif score.has("pulse"):
 		_jobs.append(_job_pulse)  # Act III: the pulsing low synth replaces the heartbeat.
+	elif score.has("drums"):
+		_jobs.append(_job_drums)  # Act IV: the war drum replaces the heartbeat.
 	else:
 		_jobs.append(_job_heartbeat)
 	if score.has("hits"):
 		_jobs.append(_job_hits)  # Act III: metallic hits.
 	if score.has("arp"):
-		_jobs.append(_job_arp)  # Act III: the cold arpeggio.
+		_jobs.append(_job_arp)  # Act III: the cold arpeggio (Act IV: the lyre).
+	if score.has("horn"):
+		_jobs.append(_job_horn)  # Act IV: the brass swells.
 	_schedule(_job_peak, 0, _n, chunk)
 	_jobs.append(_job_alloc)
 	_schedule(_job_encode, 0, _n, chunk)
@@ -326,6 +337,48 @@ func _job_arp() -> void:
 		var tones: Array = chords[mini(chords.size() - 1, int(t / seg_s))]  # This segment's tones.
 		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": String(a["wave"]), "f0": float(tones[k % tones.size()]), "start": t,
 			"dur": dur, "amp": float(a["amp"]), "attack": 0.003, "decay": float(a["decay"]), "lp0": float(a["lp0"])}, _rng)
+
+
+## War drum (a score's "drums", Act IV): a skin thump (a falling sine with a
+## noise slap) every `step` s, every `accent_every`-th one louder, and a soft
+## ghost hit `ghost_at` of a step after each unaccented beat. A hit that would
+## not end before the loop end is skipped, so the loop stays seamless.
+func _job_drums() -> void:
+	var d: Dictionary = _score["drums"]
+	var step := float(d["step"])  # s between beats.
+	var dur := float(d["dur"])  # Hit length (s).
+	var every := int(d.get("accent_every", 0))  # Beats per accent (0 = none).
+	var k := 0  # Beat index.
+	while float(k) * step + dur < _loop_s:
+		var t := float(k) * step  # This beat (s).
+		var accent := every > 0 and k % every == 0  # A bar's first beat.
+		var amp := float(d["accent_amp"]) if accent else float(d["amp"])  # Thump level.
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": float(d["hz0"]), "f1": float(d["hz1"]), "start": t,
+			"dur": dur, "amp": amp, "attack": 0.003, "decay": float(d["decay"])}, _rng)
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": t, "dur": 0.05, "amp": float(d["slap"]),
+			"decay": 0.012, "lp0": 1400.0}, _rng)
+		var ghost := t + step * float(d["ghost_at"])  # The soft after-beat.
+		if not accent and ghost + dur < _loop_s:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": float(d["hz0"]) * 0.9, "f1": float(d["hz1"]),
+				"start": ghost, "dur": dur * 0.7, "amp": float(d["ghost_amp"]), "attack": 0.003, "decay": float(d["decay"])}, _rng)
+		k += 1
+
+
+## Brass swells (a score's "horn", Act IV): at each `starts` time a saw and its
+## fifth rise out of silence (slow attack) through a low-pass that opens, then
+## fade; each ends before the loop end.
+func _job_horn() -> void:
+	var h: Dictionary = _score["horn"]
+	var starts: Array = h["starts"]  # Swell start times (s).
+	var notes: Array = h["notes"]  # [root, fifth] (Hz) of each swell.
+	var dur := minf(float(h["dur"]), _loop_s)  # Swell length (s).
+	for k in starts.size():
+		var t := float(starts[k])  # This swell's start (s).
+		var pair: Array = notes[mini(k, notes.size() - 1)]  # Its two pitches.
+		for hz: float in pair:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "saw", "f0": hz, "start": t, "dur": minf(dur, _loop_s - t - 0.05),
+				"amp": float(h["amp"]), "attack": float(h["attack"]), "decay": float(h["decay"]),
+				"lp0": float(h["lp0"]), "lp1": float(h["lp1"]), "vib_hz": 5.0, "vib_depth": 0.004}, _rng)
 
 
 ## Peak search over samples [a, b) of the finished mix.

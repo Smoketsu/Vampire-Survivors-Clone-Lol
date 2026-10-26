@@ -254,6 +254,12 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	if out.has("beam_length"):
 		out["beam_length"] = float(out["beam_length"]) * (1.0 + passive_value("conductive_marrow", "beam_length"))
 		out["beam_width"] = float(out["beam_width"]) * (1.0 + passive_value("conductive_marrow", "beam_width"))
+	# --- Act IV: Mount Olympus --- Titan's Blood: Stolen Thunder chains more
+	# hops and charges faster (its keys exist only in the Stolen Thunder /
+	# Gigantomachy rows; the passive's values are 0 while it is not owned).
+	if out.has("thunder_chains"):
+		out["thunder_chains"] = int(out["thunder_chains"]) + int(passive_value(StolenThunderData.TITANS_BLOOD, StolenThunderData.CHAINS_KEY))
+		out["thunder_charge"] = float(out["thunder_charge"]) * (1.0 - passive_value(StolenThunderData.TITANS_BLOOD, StolenThunderData.CHARGE_KEY))
 	return out
 
 

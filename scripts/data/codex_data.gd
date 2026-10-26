@@ -33,7 +33,9 @@ const CATEGORIES: Array[String] = [SPELL, SUMMON, ENEMY, BOSS]
 ## Screen tabs, left to right: [tab id, button text]. "feats" is the
 ## achievements list; the others are codex pages.
 const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons", "Summons"], ["covenant", "Covenant"], ["eye", "Ancient Eye"],
-		["empire", "Empire"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's
+		["empire", "Empire"],
+		# --- Act IV: the Olympian Republic ---
+		["pantheon", "Republic"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -48,7 +50,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act III: the Assembly Halls --- (a silhouette naming the Motherboard until met)
 		"grave_drone",
 		# --- Act III: the Iron Citadel --- (a silhouette naming its unlock until met)
-		"iron_revenant"]
+		"iron_revenant",
+		# --- Act IV: the Asphodel Underworld --- (a silhouette naming its unlock until met)
+		"myrmidon_shade"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -116,6 +120,30 @@ const EMPIRE_CHAMPIONS: Array[String] = ["kill_drone",
 ## Electronic Empire stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const EMPIRE_BOSSES: Array[String] = ["kestrel", "motherboard", "deus_ex_machina"]
 
+# --- Act IV: the Olympian Republic ---
+## Act IV, the Olympian Republic (GDD §15.0 "Act IV foundation (phase 1)"; the
+## Republic tab): its soldiers in the order the stages bring them, its
+## champions (minibosses and the Twilight's Bronze Titan) and its stage bosses
+## (StageRegistry.BOSS_ARRIVALS ids). Each Act IV stage adds its own as it is
+## built (phase 2).
+const PANTHEON_SOLDIERS: Array[String] = ["shade_of_dead", "hoplite", "hero",
+	# --- Act IV: the Shores of Ilion ---
+	"legionary", "wolf_of_rome", "cyclops", "siege_tower",
+	# --- Act IV: Mount Olympus ---
+	"centaur_archer", "amazon", "gorgon", "moon_hound", "sea_serpent",
+	# --- Act IV: the Asphodel Underworld ---
+	"shade_hoplite", "shade_archer"]
+## Olympian Republic champions (minibosses) and the Act IV Reckoning kinds.
+const PANTHEON_CHAMPIONS: Array[String] = ["bronze_titan",
+	# --- Act IV: the Shores of Ilion ---
+	"polyphemus",
+	# --- Act IV: Mount Olympus --- (the Pantheon Trial's gods)
+	"ares", "artemis", "poseidon",
+	# --- Act IV: the Asphodel Underworld ---
+	"cerberus", "tartarus_warden"]
+## Olympian Republic stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const PANTHEON_BOSSES: Array[String] = ["achilles", "zeus", "hades"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
@@ -123,6 +151,8 @@ const SECTIONS: Dictionary = {
 	"covenant": [["soldiers", "Soldiers"], ["structures", "Structures"], ["champions", "Champions"], ["bosses", "Bosses"]],  # TUNING (not in GDD)
 	"eye": [["eye_soldiers", "Soldiers"], ["eye_champions", "Champions"], ["eye_bosses", "Bosses"]],  # TUNING (not in GDD) Act II
 	"empire": [["empire_soldiers", "Soldiers"], ["empire_champions", "Champions"], ["empire_bosses", "Bosses"]],  # TUNING (not in GDD) Act III
+	# --- Act IV: the Olympian Republic ---
+	"pantheon": [["pantheon_soldiers", "Soldiers"], ["pantheon_champions", "Champions"], ["pantheon_bosses", "Bosses"]],  # TUNING (not in GDD) Act IV
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -199,6 +229,34 @@ const DESCRIPTIONS: Dictionary = {
 	"sentry_turret": "Fixed gun emplacements behind the shield walls; siege them for a Soul Ash bounty.",  # Owner-approved Act III proposal
 	"shield_generator": "Two hold up each Shield Gate; while they stand the wall bars your way.",  # Owner-approved Act III proposal
 	"valkyrie_prime": "The Duelists' upgraded leader: a jet dash, a shield bash and a storm of blades.",  # Owner-approved Act III proposal (Valkyrie 2.0)
+	# --- Act IV: the Olympian Republic ---
+	"shade_of_dead": "Pale ghosts fleeing the Underworld: weak and fast, they come in swarms.",  # Owner-approved Act IV proposal
+	"hoplite": "Spear and round shield. Three side by side lock shields: break the wall from the flanks.",  # Owner-approved Act IV proposal (Phalanx)
+	"hero": "Named demigods who grow in Glory with every one of your dead they kill. Kill them early.",  # Owner-approved Act IV proposal (Glory)
+	"bronze_titan": "Bronze colossi that step out of the ground when the gods' twilight falls.",  # Owner-approved Act IV proposal (Twilight of the Gods)
+	"achilles": "The Unkillable: his front shrugs off nearly every blow. Strike his heel.",  # Owner-approved Act IV proposal
+	"zeus": "King of the Gods: lightning storms, the thunderbolt beam, and at the last his true colossal form.",  # Owner-approved Act IV proposal
+	"hades": "Lord of the Dead, who sent the gods to take the dead back. The first rival necromancer.",  # Owner-approved Act IV proposal
+	# --- Act IV: the Shores of Ilion ---
+	"legionary": "Scutum and gladius. Locked together they raise the testudo: arrows glance off, blades and stomps do not.",  # Owner-approved Act IV proposal
+	"wolf_of_rome": "Bronze wolves come alive, hunting in packs of five with fast lunges. Hold them on your blockers.",  # Owner-approved Act IV proposal
+	"cyclops": "One-eyed giants who hurl boulders onto red circles. Their stony hide shrugs off small blows.",  # Owner-approved Act IV proposal
+	"siege_tower": "Towers rolling for the walls of Troy. Burn one for its bounty; let it arrive and its garrison marches out.",  # Owner-approved Act IV proposal
+	"polyphemus": "Chieftain of the cyclopes: boulders rain on red circles and his stomp shakes the shore.",  # Owner-approved Act IV proposal
+	# --- Act IV: Mount Olympus ---
+	"centaur_archer": "Bronze-clad centaurs that shoot as they gallop straight at you. Kill them on approach.",  # Owner-approved Act IV proposal
+	"amazon": "Warrior women with axe and crescent shield who leap over your front row; a heavy blocker catches them.",  # Owner-approved Act IV proposal
+	"gorgon": "Snake-haired women whose gaze turns your dead to stone for a few seconds. Kill them first.",  # Owner-approved Act IV proposal
+	"moon_hound": "Artemis's hunting pack: lean, silver and fast.",  # TUNING (not in GDD)
+	"sea_serpent": "Poseidon's great sea snake: it lunges down a marked line.",  # Owner-approved Act IV proposal ("a sea serpent")
+	"ares": "The god of war: his war-cry drives every soldier on, his spear charge breaks on a blocker.",  # Owner-approved Act IV proposal
+	"artemis": "The Huntress: moonlit volleys, her hounds, and a step from grove to grove.",  # Owner-approved Act IV proposal
+	"poseidon": "The Lord of the Sea: he floods half the field, throws his trident, and calls a sea serpent.",  # Owner-approved Act IV proposal
+	# --- Act IV: the Asphodel Underworld ---
+	"shade_hoplite": "The dead of a thousand wars, still in their ranks. They lock shields like the living.",  # TUNING (not in GDD)
+	"shade_archer": "Troy's archers, still drawing their bows in the dark. They shoot over your army's ring: kill them on approach.",  # TUNING (not in GDD)
+	"cerberus": "The three-headed hound of the gates. His body cannot be wounded: kill each head on its own.",  # Owner-approved Act IV proposal
+	"tartarus_warden": "Hades' own ring of the dead. While it stands, its lord is all but untouchable.",  # Owner-approved Act IV proposal (Lord of the Dead)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -212,6 +270,9 @@ const SPRITE_KEYS: Dictionary = {
 	"netcaster": "eye/netcaster",
 	"deep_herald": "eye/deep_herald",
 	"harbourmaster": "eye/harbourmaster",
+	# --- Act IV: the Asphodel Underworld --- (the Underworld's dead wear the Hoplite's art)
+	"shade_hoplite": "pantheon/hoplite",
+	"tartarus_warden": "pantheon/hoplite",
 }
 
 ## Stat labels and record lines of the detail panel (format strings use
@@ -244,6 +305,9 @@ const LOCKED_HINT: Dictionary = {
 	"empire_soldiers": "Destroy one to record it.",  # TUNING (not in GDD)
 	"empire_champions": "Destroy one to record it.",  # TUNING (not in GDD)
 	"empire_bosses": "Face it to record it.",  # TUNING (not in GDD)
+	"pantheon_soldiers": "Slay one to record it.",  # TUNING (not in GDD) Act IV
+	"pantheon_champions": "Slay one to record it.",  # TUNING (not in GDD) Act IV
+	"pantheon_bosses": "Face it to record it.",  # TUNING (not in GDD) Act IV
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -266,6 +330,9 @@ const TAGS: Dictionary = {
 	"empire_soldiers": "Electronic Empire",  # TUNING (not in GDD)
 	"empire_champions": "Champion of the Empire",  # TUNING (not in GDD)
 	"empire_bosses": "Stage boss",  # TUNING (not in GDD)
+	"pantheon_soldiers": "Olympian Republic",  # TUNING (not in GDD) Act IV
+	"pantheon_champions": "Champion of the Republic",  # TUNING (not in GDD) Act IV
+	"pantheon_bosses": "Stage boss",  # TUNING (not in GDD) Act IV
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -365,6 +432,12 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"static_in_the_wastes": "ach_static_in_the_wastes",  # TUNING (not in GDD)
 	# --- Act III: the Iron Citadel ---
 	"nothing_is_deathless": "ach_nothing_is_deathless",  # TUNING (not in GDD)
+	# --- Act IV: the Shores of Ilion ---
+	"heel_found": "ach_heel_found",  # TUNING (not in GDD)
+	# --- Act IV: Mount Olympus ---
+	"twilight_of_the_gods": "ach_twilight_of_the_gods",  # TUNING (not in GDD)
+	# --- Act IV: the Asphodel Underworld ---
+	"empty_throne": "ach_empty_throne",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -390,6 +463,12 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"static_in_the_wastes": "lead_lined_bones",
 	# --- Act III: the Iron Citadel ---
 	"nothing_is_deathless": "scrap_swarm",
+	# --- Act IV: the Shores of Ilion ---
+	"heel_found": "bronze_breaker",
+	# --- Act IV: Mount Olympus ---
+	"twilight_of_the_gods": "grounded_bones",
+	# --- Act IV: the Asphodel Underworld ---
+	"empty_throne": "river_styx",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)
@@ -425,9 +504,10 @@ static func is_known(cat: String, id: String) -> bool:
 		ENEMY:
 			return SOLDIERS.has(id) or STRUCTURES.has(id) or CHAMPIONS.has(id) \
 					or EYE_SOLDIERS.has(id) or EYE_CHAMPIONS.has(id) \
-					or EMPIRE_SOLDIERS.has(id) or EMPIRE_CHAMPIONS.has(id)
+					or EMPIRE_SOLDIERS.has(id) or EMPIRE_CHAMPIONS.has(id) \
+					or PANTHEON_SOLDIERS.has(id) or PANTHEON_CHAMPIONS.has(id)  # Act IV
 		BOSS:
-			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id)
+			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id)  # (Act IV last)
 	return false
 
 
@@ -440,9 +520,10 @@ static func total(cat: String) -> int:
 			return SUMMON_ORDER.size()
 		ENEMY:
 			return SOLDIERS.size() + STRUCTURES.size() + CHAMPIONS.size() + EYE_SOLDIERS.size() + EYE_CHAMPIONS.size() \
-					+ EMPIRE_SOLDIERS.size() + EMPIRE_CHAMPIONS.size()
+					+ EMPIRE_SOLDIERS.size() + EMPIRE_CHAMPIONS.size() \
+					+ PANTHEON_SOLDIERS.size() + PANTHEON_CHAMPIONS.size()  # Act IV
 		BOSS:
-			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size()
+			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size()  # (Act IV last)
 	return 0
 
 
@@ -460,6 +541,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var empire := EnemyDirector.empire_def(id)  # Act III kinds ({} when none).
 	if not empire.is_empty():
 		return empire
+	var pantheon := EnemyDirector.pantheon_def(id)  # Act IV kinds ({} when none).
+	if not pantheon.is_empty():
+		return pantheon
 	match id:
 		"alaric":
 			return EnemyData.BOSS

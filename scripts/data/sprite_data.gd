@@ -272,6 +272,52 @@ const HEIGHTS: Dictionary = {
 	"player/rust_prophet_deathlord": 60.0,  # TUNING (not in GDD) skin art: his body, the crowned hood and staff above
 	"summons/iron_revenant": 58.0,  # TUNING (not in GDD) a heavy summon (Corpse Catapult 56, Spawn of the Deep 60)
 	"summons/deus_revenant": 70.0,  # TUNING (not in GDD) its evolution, bigger
+	# --- Act IV: the Olympian Republic (the shared kinds; assets/sprites/pantheon/) ---
+	"pantheon/shade_of_dead": 36.0,  # TUNING (not in GDD) fodder: a hooded ghost with a long wisp tail (34) + two empty rows on top for the hover bob (walk_cycle.py "hover")
+	"pantheon/shade_archer": 40.0,  # TUNING (not in GDD) ranged soldier: a hooded-crested ghost drawing a recurve bow, a wisp tail (38) + two empty rows on top for the hover bob (walk_cycle.py "hover"); a little taller than the Shade of the Dead
+	"pantheon/hoplite": 56.0,  # TUNING (not in GDD) soldier tier: body ~50 (crest to sandals), the upright spear head above
+	"pantheon/hero": 58.0,  # TUNING (not in GDD) elite tier: a demigod, the tall plume on top (elites are also drawn larger by the game)
+	"pantheon/bronze_titan": 96.0,  # TUNING (not in GDD) the Reckoning's heavy, bigger than the heavy tier (60-72) and below the minibosses (104+)
+	# --- Act IV: the Shores of Ilion (assets/sprites/pantheon/, bosses/, player/) ---
+	"pantheon/legionary": 56.0,  # TUNING (not in GDD) soldier tier like the Hoplite: body ~50, the crest above
+	"pantheon/wolf_of_rome": 36.0,  # TUNING (not in GDD) fodder pack: a low bronze wolf, about 1.6 x as long as tall
+	"pantheon/cyclops": 70.0,  # TUNING (not in GDD) heavy tier (60-72): a hulking giant, the boulder beside his head
+	"pantheon/polyphemus": 112.0,  # TUNING (not in GDD) miniboss tier (104+): the giant with a boulder over his head
+	"pantheon/siege_tower": 104.0,  # TUNING (not in GDD) a structure: a tall tower on wheels (the Signal Pylon 96)
+	"bosses/achilles": 120.0,  # TUNING (not in GDD) boss tier: the hero with his crest and long spear (Kestrel 124)
+	"bosses/achilles_strike": 80.0,  # TUNING (not in GDD) attack pose: the low lunge, the spear thrust far ahead (BossPoseData 3)
+	"bosses/achilles_rage": 120.0,  # TUNING (not in GDD) his rage: helmet and shield gone, the spear raised high
+	"player/doomed_prophetess": 56.0,  # TUNING (not in GDD) character tier: body ~50, the bone circlet and bow tip above
+	"player/doomed_prophetess_hyper": 58.0,  # TUNING (not in GDD) skin art: her body, the gold laurel crown above
+	"player/doomed_prophetess_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body
+	"player/doomed_prophetess_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	# --- Act IV: Mount Olympus (assets/sprites/pantheon/, bosses/, player/) ---
+	"pantheon/centaur_archer": 60.0,  # TUNING (not in GDD) ranged, a horse body (wider than tall), the helmet crest on top
+	"pantheon/amazon": 70.0,  # TUNING (not in GDD) elite tier, female (figure redesign, a towering muscular build since the art review round 1; round 5: 70, was 58, bigger than the elites for the detail, below the gods / bosses at 92+): the crest on top
+	"pantheon/gorgon": 54.0,  # TUNING (not in GDD) elite tier, female (figure redesign): reared on her tail, the snake hair on top
+	"pantheon/moon_hound": 30.0,  # TUNING (not in GDD) fodder: a lean hound (Bone Hound tier), wider than tall
+	"pantheon/sea_serpent": 64.0,  # TUNING (not in GDD) heavy tier: the reared S-neck over its coil
+	"pantheon/ares": 96.0,  # TUNING (not in GDD) a god of the trial (miniboss tier, below Zeus): the crest and the spear head above
+	"pantheon/artemis": 92.0,  # TUNING (not in GDD) a goddess of the trial (miniboss tier), the bow above her head
+	"pantheon/poseidon": 100.0,  # TUNING (not in GDD) a god of the trial (miniboss tier), the trident's prongs above
+	"bosses/zeus": 124.0,  # TUNING (not in GDD) boss tier: the King of the Gods
+	"bosses/zeus_cast": 128.0,  # TUNING (not in GDD) attack pose: the thunderbolt raised above his head
+	"bosses/zeus_colossus": 176.0,  # TUNING (not in GDD) phase 3, his true colossal form (x1.55 body, bigger than any boss)
+	"player/oathbreaker": 58.0,  # TUNING (not in GDD) character tier: body ~48, the thunderbolt staff above
+	"player/oathbreaker_hyper": 58.0,  # TUNING (not in GDD) skin art: his body, the gilded staff above
+	"player/oathbreaker_untouchable": 58.0,  # TUNING (not in GDD) skin art: his body, the ghost staff above
+	"player/oathbreaker_deathlord": 60.0,  # TUNING (not in GDD) skin art: his body, the spiked crown above
+	# --- Act IV: the Asphodel Underworld ---
+	"pantheon/cerberus": 92.0,  # TUNING (not in GDD) miniboss tier: a huge three-headed hound, wide rather than tall (the flame tips on top)
+	"bosses/hades": 116.0,  # TUNING (not in GDD) boss tier: a tall god, the blue flames of his crown and the bident above
+	"bosses/hades_bident": 108.0,  # TUNING (not in GDD) attack pose (BossPoseData 1): leaning into the sweep, lower
+	"bosses/hades_kneel": 84.0,  # TUNING (not in GDD) the ending: kneeling, offering his crown (HadesHazards' finale)
+	"player/ferrywoman": 56.0,  # TUNING (not in GDD) character tier: body ~48, the hood and the oar's lantern above
+	"player/ferrywoman_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, the gilded oar
+	"player/ferrywoman_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/ferrywoman_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/myrmidon_shade": 46.0,  # TUNING (not in GDD) a summon like the Warrior (44), the spear head above
+	"summons/legion_of_tartarus": 54.0,  # TUNING (not in GDD) its evolution, bigger
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

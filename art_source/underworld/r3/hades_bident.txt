@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, ATTACK POSE.
+
+LOW-RESOLUTION pixel art: the whole figure is only 100 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze.
+
+Subject: the SAME HADES as the attached image (MALE god-king of the dead: pale gaunt face with a short dark beard and glowing pale-blue eyes, dark bronze spiked crown with cold blue flame, a dark Aegean-blue robe with bronze trim and belt, a near-black deep violet cloak behind him), in an ATTACK POSE: he sweeps his long dark bronze BIDENT (exactly TWO straight prongs, not three) forward and down to his front (right) in a wide low arc with both hands, leaning into the blow, one foot forward, the violet cloak flaring out behind him. The blue robe and the violet cloak stay two clearly different colours. Same proportions.
+Signature shape: the leaning robed god, the flaming crown, the two-pronged bident thrust low to the right.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: robe dark Aegean blue #0F141C (outline) #123E66 #2C77B8 #6FB6E8; cloak near-black violet #160A21 (outline) #4A2569 #7A42AD; pale face and hands #8E8A86 #CFCBC4 #F4F1EA; crown flame #2C77B8 #6FB6E8 #E4FAFF; bronze crown, trim and bident #1E1408 (outline) #6B4423 #A8702E #E0A955.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: the approved image of this same boss: keep his exact face, crown, costume, colours, pixel size and outline; only the pose changes.

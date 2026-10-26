@@ -105,7 +105,26 @@ ROBE_SWAY = (0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
 # "jiggle"), timed like a damped spring driven by the step: the bust lags the body's dip
 # ("down": it stays up, -0.5), overshoots as the body rises ("passing": +1), rebounds
 # ("up": -0.5) and settles on the contact (0, so frame 0 stays the still).
-BUST_BOUNCE = (0.0, -0.5, 1.0, -0.5, 0.0, -0.5, 1.0, -0.5)
+# Owner, Oct 2026 (after the Act IV art review): "every bounce animation... just too fast, make
+# them a bit slower": the three reversals a step (lag, overshoot, rebound) became one smooth
+# swell a step (down to the passing pose and back), so the bust moves at half the rate.
+# Was (0.0, -0.5, 1.0, -0.5, 0.0, -0.5, 1.0, -0.5).
+BUST_BOUNCE = (0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5)
+# Per frame (both steps): the same spring for a bounce box with `bust_axis="x"` (a sideways
+# jiggle; owner's Act IV art review, round 2, on the Amazon's hips: "things should be jiggling
+# side to side rather than up and down"), as a share of the box's px (+ = toward the facing
+# side, right). The weight shifts to the other foot on each step, so the kick changes side
+# every step: the first step's lag, overshoot and rebound one way, the second's the other way.
+# Slowed with BUST_BOUNCE (owner, Oct 2026): one smooth swing to each side per stride instead of a
+# kick and rebound every step. Was (0.0, -0.5, 1.0, -0.5, 0.0, 0.5, -1.0, 0.5).
+BUST_SWAY = (0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
+# Per frame (both steps): a rig's optional `swish` box (a skirt's front drape, owner's Act IV art
+# review round 5 on the Amazon: "it should swish in front of her") sways sideways like BUST_SWAY
+# one frame later (follow-through: the cloth lags the hips it hangs from), as a share of the
+# box's px (+ = right). Frame 0 stays 0 so frame 0 is the still.
+# Slowed with BUST_SWAY (owner, Oct 2026): BUST_SWAY one frame later, frame 0 kept at 0.
+# Was (0.0, 0.0, -0.5, 1.0, -0.5, 0.0, 0.5, -1.0).
+SWISH_SWAY = (0.0, 0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0)
 # Rows below the bust box over which the warp fades back to zero, per bounce px (the
 # belly takes up the motion instead of tearing at the box edge).
 BUST_TAIL_PER_PX = 1
@@ -126,10 +145,23 @@ FLAP = (0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5)
 # seen edge-on foreshortens as it turns: full, shorter, almost gone, shorter): two turns
 # per cycle.
 SPIN = (1.0, 0.6, 0.3, 0.6, 1.0, 0.6, 0.3, 0.6)
+# Stride mode (owner's Act IV art review, round 1, on the Bronze Titan: "his pose isn't going to
+# work for this kind of animation; mirror his legs so it looks like he's walking"). Per frame:
+# how far the near leg has swung from its forward pose (0, the still's leg) to its backward pose
+# (1, the same leg mirrored about its hip): a cosine, back at frame 4, forward again at frame 8.
+# The far leg runs half a cycle behind, so the legs really alternate instead of closing and opening.
+STRIDE_SWING = tuple((1.0 - float(np.cos(2.0 * np.pi * f / 8))) / 2.0 for f in range(8))
+# Per frame: share of the rig's `lift` each leg is raised while it swings forward (the near leg
+# on the second step, the far leg on the first).
+STRIDE_LIFT_NEAR = (0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 1.0, 0.5)
+STRIDE_LIFT_FAR = (0.0, 0.5, 1.0, 0.5, 0.0, 0.0, 0.0, 0.0)
+# The far leg is the near leg one shade darker (it is farther from the light and the camera, and
+# the mirrored pose's rim light would otherwise sit on the wrong side): palette name -> darker name.
+STRIDE_FAR_SHADE = {"bronze_light": "bronze", "bronze": "bronze_dark", "marble_light": "marble", "marble": "marble_dark"}
 
 # Rigs: how each still is cut. Columns and rows are art px in the still (x from
 # the left, y from the top; ranges are [start, end) ). Keys:
-#   mode    "legs" (two legs), "robe" (one hem layer) or "hover" (a flyer: the whole
+#   mode    "legs" (two legs), "robe" (one hem layer), "stride" (see `stride`) or "hover" (a flyer: the whole
 #           sprite bobs, HOVER_BOB, and only its `parts` move: wings flap, rotors spin).
 #   bob     px the sprite rises at the top of the bob ("hover").
 #   parts   "hover": list of moving parts, each a dict: `box` (x0, x1, y0, y1) of the still
@@ -149,6 +181,18 @@ SPIN = (1.0, 0.6, 0.3, 0.6, 1.0, 0.6, 0.3, 0.6)
 #   lift    px the swinging foot rises at passing ("legs").
 #   sway    px the hem bottom swings at most ("robe").
 #   dip     px the body dips on the "down" pose (0 or 1; 1 for every unit so far).
+#   stride  mode "stride" (a figure whose still pose cannot be sheared into a walk: the Bronze
+#           Titan): the rows from `hip` down are cut off, except the `keep` rectangles
+#           (x0, x1, y0, y1; low fists) which ride with the body; the pixels from `hip` down at
+#           columns >= `near_x0` (outside `keep`) are the near leg, the forward pose; its mirror
+#           image about its own hip (the middle of its top row) is the backward pose. Each frame
+#           blends the two by STRIDE_SWING: the nearer pose, sheared about the hip row toward
+#           the other (at most half the distance between the two feet, so the shear stays small);
+#           the far leg is the same leg darkened (STRIDE_FAR_SHADE), `far_dx` px aside, half a
+#           cycle behind and drawn behind it; the leg swinging forward is lifted STRIDE_LIFT_* *
+#           `lift` px; `reach` px pushes both poses' feet further apart (a longer stride); the
+#           body dips like the legs mode. Frame 0 is the stride, NOT the still (the
+#           still is approved as it stands; the strip plays only while the unit walks).
 #   swing   optional (x0, x1, y0, y1, pivot_y, px): a hanging part (the Harbourmaster's
 #           anchor) in the still's box [x0, x1) x [y0, y1) that swings like a pendulum from
 #           row `pivot_y` (where it is held): each frame its rows slide sideways SWING * px at
@@ -163,6 +207,15 @@ SPIN = (1.0, 0.6, 0.3, 0.6, 1.0, 0.6, 0.3, 0.6)
 #           `lobes` (default 1) = 2 puts one bell under each side instead of one across the
 #           box (each side peaks at its own centre, the cleavage stays): for a wide bust whose
 #           outer sides barely moved under one bell (owner's art review, round 2).
+#   bust_axis  optional "y" (default: the up-and-down bounce above) or "x": the same box and
+#           field moves sideways instead (each pixel takes the pixel |d| columns aside in its
+#           own row; + = right, the facing side), timed by BUST_SWAY in the walk (the kick
+#           changes side every step) and IDLE_BUST in the idle (one way on the exhale, the
+#           other on the inhale). For a box on the hips (the Amazon, art review round 2).
+#   swish   optional (x0, x1, y0, y1, px): a second sideways box (a skirt's front drape), applied
+#           after the bust box through the same _bounce() field on axis "x", timed by SWISH_SWAY
+#           in the walk and SWISH_IDLE in the idle (each one frame behind the hips). It may
+#           reach below the hip / waist: the idle's waist check skips its columns there.
 RIGS = {
     # The pilot (ART_BIBLE "Walk cycles"): the three units with the most screen time.
     "player/necromancer": dict(mode="legs", hip=47, back=(0, 20), front=(20, 33), rigid=[(33, 46, 0, None)], spread=1, lift=1, dip=1),
@@ -326,6 +379,90 @@ RIGS = {
     "player/rust_prophet": dict(mode="robe", hip=40, rigid=[(30, 42, 0, None)], sway=1, dip=1),
     "summons/iron_revenant": dict(mode="legs", hip=34, back=(0, 26), front=(26, 58), rigid=[], spread=2, lift=2, dip=1),
     "summons/deus_revenant": dict(mode="legs", hip=44, back=(0, 27), front=(27, 66), rigid=[], spread=2, lift=2, dip=1),  # Round 1 redo (simpler drawing).
+    # --- Act IV: the Olympian Republic (the shared kinds) ---
+    # The Shade of the Dead hovers (a ghost: the whole sprite bobs 2 px, nothing steps; the
+    # still keeps two empty rows on top). The Hoplite marches, his upright spear (cols 2-5)
+    # rigid; the Hero strides, the low hem of his blue cloak (left of his back leg) rigid; the
+    # Bronze Titan stomps, both huge low fists hanging below the hip ride with the body.
+    "pantheon/shade_of_dead": dict(mode="hover", bob=2, parts=[]),
+    "pantheon/shade_archer": dict(mode="hover", bob=2, parts=[]),  # a ghost archer: the whole sprite bobs, bow and all
+    "pantheon/hoplite": dict(mode="legs", hip=42, back=(0, 17), front=(17, 30), rigid=[(2, 6, 0, None)], spread=2, lift=2, dip=1),
+    "pantheon/hero": dict(mode="legs", hip=41, back=(0, 31), front=(31, 58), rigid=[(0, 17, 41, 48)], spread=2, lift=2, dip=1),
+    # Owner's Act IV art review, round 2: the round 1 stride (his crossed legs mirrored) did not
+    # read ("not even close"). Round 3: a new still of the same titan with his legs apart (crotch
+    # at row 64), walked by the normal legs rig; both low fists (rows 64-69) ride with the body.
+    "pantheon/bronze_titan": dict(mode="legs", hip=64, back=(0, 40), front=(40, 74), rigid=[(0, 21, 64, 70), (56, 74, 64, 70)], spread=3, lift=4, dip=1),
+    # --- Act IV: the Shores of Ilion ---
+    # The Legionary marches behind his scutum (it ends above the hip); the Wolf of Rome lopes
+    # (hind legs left, forelegs right: the bounding lope of the Bone Hound's rig); the Cyclops and
+    # Polyphemus stomp (short spread, a big lift); Achilles strides with his spear rigid (cols 0-13)
+    # and his rage form strides wide. The Doomed Prophetess glides in her long peplos (robe: hem
+    # sway, the tall bone bow rigid, bust bounce and idle breathing). The siege tower rolls (no strip).
+    "pantheon/legionary": dict(mode="legs", hip=41, back=(0, 15), front=(15, 32), rigid=[], spread=2, lift=2, dip=1),
+    "pantheon/wolf_of_rome": dict(mode="legs", hip=19, back=(0, 30), front=(30, 68), rigid=[], spread=3, lift=2, dip=1),
+    "pantheon/cyclops": dict(mode="legs", hip=53, back=(0, 25), front=(25, 56), rigid=[], spread=2, lift=3, dip=1),
+    "pantheon/polyphemus": dict(mode="legs", hip=88, back=(0, 30), front=(30, 60), rigid=[], spread=2, lift=3, dip=1),
+    "bosses/achilles": dict(mode="legs", hip=91, back=(14, 33), front=(33, 64), rigid=[(0, 14, 0, None)], spread=2, lift=2, dip=1),
+    "bosses/achilles_rage": dict(mode="legs", hip=90, back=(0, 46), front=(46, 92), rigid=[], spread=2, lift=2, dip=1),
+    "player/doomed_prophetess": dict(mode="robe", hip=36, rigid=[(27, 36, 0, None)], sway=2, dip=1, bust=(16, 26, 15, 22, 2)),
+    # --- Act IV: Mount Olympus ---
+    # Ares's spear tip (right of his front leg) rides with the body; Artemis, the Amazon and the
+    # Gorgon have the bust bounce (figure redesign); the centaur and the hound step their legs as
+    # two pairs (left and right halves); robes and tails sway (Zeus, Poseidon with his trident
+    # rigid, the Gorgon, the sea serpent, the Oathbreaker's cloak).
+    "pantheon/ares": dict(mode="legs", hip=70, back=(0, 45), front=(45, 70), rigid=[(70, 94, 66, None)], spread=2, lift=2, dip=1),
+    # Art review round 1 redo (slim-thick, muscular; the old box sat on her bow): the bust box on
+    # her chest (cols 23-37, rows 31-39, two lobes), the bow's lower limb right of her front leg rigid.
+    "pantheon/artemis": dict(mode="legs", hip=60, back=(0, 31), front=(31, 62), rigid=[(46, 62, 0, 64)], spread=2, lift=2, dip=1, bust=(23, 38, 31, 40, 2, 2)),
+    "pantheon/poseidon": dict(mode="robe", hip=75, rigid=[(52, 68, 0, None)], sway=1, dip=1),
+    "pantheon/centaur_archer": dict(mode="legs", hip=41, back=(0, 26), front=(26, 54), rigid=[], spread=2, lift=2, dip=1),
+    # Art review round 1 redo ("muscle mommy"; the owner liked her idle jiggling the hips, not the
+    # bust): the bounce box sits on her hips and skirt (cols 18-37, rows 27-37, two lobes); the
+    # skirt's front flap hanging between her thighs rigid. Round 2 ("jiggling side to side rather
+    # than up and down"): the box sways sideways (`bust_axis="x"`, BUST_SWAY / IDLE_BUST) as one
+    # mass (one bell: two lobes swaying the same way tore the skirt at the centre column). Round 4
+    # (the narrow front flap between bare thighs read as a crotch): the still's skirt covers both
+    # thighs down to a flat hem (row 40), the flap is gone; only the hem's ink row (41) rides rigid.
+    # Round 5 (owner: the skirt too long; regenerated as a bigger, curvier "muscle mommy", 70 tall,
+    # 66 wide). Round 6 ("too boxy... it should swish in front of her, and show off her thighs"): the
+    # skirt is two short flared side flaps (hems rows 39-41) and a wide front panel (cols 26-41) hanging
+    # to row 46 over the crotch. Hip 42 (the thighs under the flaps walk); the panel below the hip
+    # rides with the body (per-column rigid rects down to its ink row, so it always covers where the
+    # thighs meet); the shield's foot rigid. The hip box sways on the skirt (rows 35-38, fading to 41)
+    # and the `swish` box carries the skirt one frame behind it, growing from the belt to the panel's hem (rows 35-45, fading below), so the pleats bend smoothly.
+    # Round 7 (owner: "start again with fresh generation... the original style, a bit stronger and more
+    # voluptuous, a bit scandalous"): a new still, 64x70. Hip 46 (just under the skirt's front hem and its
+    # ink row, so the whole skirt rides with the body and never tears), legs split at col 33 (the gap
+    # between the thighs), the shield's foot rigid; the hip box sways sideways on the skirt over her hips
+    # (cols 22-42, rows 36-42, as the owner liked) and the `swish` box carries the hem one frame behind.
+    # Round 7 (owner: "at this level, we should get a bounce box on her chest as well"): the `bust` box
+    # bounces the bronze top (cols 28-41, rows 23-31, two lobes) and the hips' sideways sway the owner
+    # liked moved to the `swish` box over the skirt (cols 22-42, rows 36-45, 2 px).
+    "pantheon/amazon": dict(mode="legs", hip=46, back=(0, 33), front=(33, 64), rigid=[(0, 22, 46, 51)],
+                            spread=2, lift=2, dip=1, bust=(28, 41, 23, 31, 2, 2), swish=(22, 42, 36, 45, 2)),
+    # Art review round 1 redo (slim-thick, a bit chubby; the old box sat too low): on her bust
+    # (cols 21-31, rows 17-21, two lobes).
+    "pantheon/gorgon": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(21, 32, 17, 22, 2, 2)),
+    # Art review round 1 redo (regenerated, side view): hind legs left, forelegs right, the chin
+    # just below the hip rigid.
+    "pantheon/moon_hound": dict(mode="legs", hip=13, back=(0, 28), front=(28, 56), rigid=[(38, 56, 13, 16)], spread=2, lift=2, dip=1),
+    "pantheon/sea_serpent": dict(mode="robe", hip=40, rigid=[], sway=2, dip=1),
+    "bosses/zeus": dict(mode="robe", hip=93, rigid=[(0, 24, 0, None)], sway=1, dip=1),
+    "bosses/zeus_colossus": dict(mode="legs", hip=141, back=(0, 82), front=(82, 164), rigid=[], spread=2, lift=3, dip=1),
+    "player/oathbreaker": dict(mode="robe", hip=48, rigid=[], sway=1, dip=1),
+    # --- Act IV: the Asphodel Underworld ---
+    # Cerberus lopes on four legs (the hind pair left, the forelegs right; the flame tail and
+    # the three heads above the hip ride with the body). Hades glides in his long robe, the
+    # upright bident rigid. The Ferrywoman (figure redesign: bust bounce, idle breathing) glides
+    # in her cloak, the oar and its lantern rigid. The Myrmidons march, the upright spear rigid,
+    # the round shield (low on the front side) riding with the body.
+    "pantheon/cerberus": dict(mode="legs", hip=66, back=(0, 48), front=(48, 94), rigid=[], spread=2, lift=2, dip=1),
+    "bosses/hades": dict(mode="robe", hip=78, rigid=[(56, 70, 0, None)], sway=1, dip=1),  # Act IV art review round 4: back to the round 1 still (the bident on the right, cols 56-70), recoloured.
+    "player/ferrywoman": dict(mode="robe", hip=34, rigid=[(32, 39, 0, None)], sway=2, dip=1, bust=(19, 31, 18, 25, 2)),  # Act IV art review round 1 redo: box 2 px right (was cols 19-29); round 2 redo: widened 2 px left (cols 19-31).
+    # Act IV art review round 4: regenerated from the original prompt (24 wide): the spear (cols 0-4, to row 37) and the shield rigid.
+    "summons/myrmidon_shade": dict(mode="legs", hip=34, back=(0, 10), front=(10, 24), rigid=[(0, 5, 0, 38), (12, 24, 20, 37)], spread=2, lift=2, dip=1),
+    # Act IV art review round 4: regenerated (36 wide): the spear (cols 2-5, to the ground) and the shield rigid.
+    "summons/legion_of_tartarus": dict(mode="legs", hip=41, back=(0, 15), front=(15, 36), rigid=[(2, 6, 0, None), (23, 36, 23, 46)], spread=2, lift=2, dip=1),
     # --- Act I walk strips (audit "walk strips" findings U01 - U03; GDD §15.0 "Act I walk strips") ---
     # The heavy summon bodies. The Abomination's two huge fists hang over the tops of its short
     # legs (rigid, down to where the feet start); the Colossus carries its club (right, rigid) and
@@ -422,9 +559,29 @@ SKINS = {
     "player/rust_prophet_hyper": "player/rust_prophet",
     "player/rust_prophet_untouchable": "player/rust_prophet",
     "player/rust_prophet_deathlord": "player/rust_prophet",
+    # --- Act IV: the Shores of Ilion ---
+    "player/doomed_prophetess_hyper": "player/doomed_prophetess",
+    "player/doomed_prophetess_untouchable": "player/doomed_prophetess",
+    "player/doomed_prophetess_deathlord": "player/doomed_prophetess",
+    # --- Act IV: Mount Olympus ---
+    "player/oathbreaker_hyper": "player/oathbreaker",
+    "player/oathbreaker_untouchable": "player/oathbreaker",
+    "player/oathbreaker_deathlord": "player/oathbreaker",
+    # --- Act IV: the Asphodel Underworld ---
+    "player/ferrywoman_hyper": "player/ferrywoman",
+    "player/ferrywoman_untouchable": "player/ferrywoman",
+    "player/ferrywoman_deathlord": "player/ferrywoman",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
+    # --- Act IV: the Asphodel Underworld --- (the Ferrywoman's skins: their own oar column and bust box)
+    "player/ferrywoman_hyper": {"rigid": [(28, 35, 0, None)], "bust": (17, 26, 17, 24, 2)},
+    "player/ferrywoman_untouchable": {"rigid": [(28, 34, 0, None)], "bust": (17, 27, 17, 24, 2)},
+    "player/ferrywoman_deathlord": {"rigid": [(29, 35, 0, None)], "bust": (16, 29, 19, 26, 2)},  # Round 1 redo: box 2 px right (was cols 18-27); round 2 redo: widened 4 px left (cols 16-29).
+    # Act IV art review round 1 redo: the Doomed Prophetess's Hyper and Deathlord skins' boxes extend 2 px
+    # further left (derived boxes were cols 14-24 and 17-27, both starting right of the bust's left edge).
+    "player/doomed_prophetess_hyper": {"bust": (12, 24, 17, 24, 2)},
+    "player/doomed_prophetess_deathlord": {"bust": (15, 27, 17, 24, 2)},
     # The Hyper gown's crown adds 2 rows on top but her bust sits no lower than the base
     # Tide Widow's, so the derived box (rows 20-28) landed on the waist (owner's art review).
     # Round 2: 2 px wider to the right and two lobes, so both sides bounce ("just one is bouncing").
@@ -671,10 +828,123 @@ def hover_frames(key: str, still: np.ndarray, rig: dict) -> list:
     return out
 
 
+def _shear_leg(layer: np.ndarray, top: int, shift: float, lift: int) -> np.ndarray:
+    """Stride leg `layer` (rows from `top` down) sheared sideways by round(shift * t) per row, t = 0
+    at `top` to 1 at its lowest opaque row, then raised `lift` rows."""
+    h, w = layer.shape[:2]
+    rows = np.nonzero(layer[:, :, 3].any(axis=1))[0]
+    out = np.zeros_like(layer)
+    if rows.size == 0:
+        return out
+    bottom = max(int(rows.max()), top + 1)  # Foot row.
+    for y in rows:
+        t = (y - top) / float(bottom - top)  # 0 at the hip, 1 at the foot.
+        dx = int(np.floor(shift * t + 0.5)) if shift >= 0 else -int(np.floor(-shift * t + 0.5))  # Sideways px.
+        yy = y - lift  # Destination row.
+        if not 0 <= yy < h:
+            continue
+        if dx > 0:
+            out[yy, dx:] = layer[y, :w - dx]
+        elif dx < 0:
+            out[yy, :w + dx] = layer[y, -dx:]
+        else:
+            out[yy] = layer[y]
+    return out
+
+
+def stride_frames(key: str, still: np.ndarray, rig: dict) -> list:
+    """The FRAMES frames of a "stride" rig (RIGS key list): the body, the near leg swinging between
+    its forward pose and its mirror image, and the far leg (darker) half a cycle behind it."""
+    h, w = still.shape[:2]
+    hip = rig["hip"]
+    keep = np.zeros((h, w), dtype=bool)  # Pixels below the hip that ride with the body (fists).
+    for x0, x1, y0, y1 in rig.get("keep", []):
+        keep[y0:y1, x0:x1] = True
+    lower = np.zeros((h, w), dtype=bool)
+    lower[hip:] = True
+    body = still.copy()
+    body[lower & ~keep] = 0
+    fwd_m = lower & ~keep & (np.arange(w) >= rig["near_x0"])[None, :] & (still[:, :, 3] > 0)
+    fwd_m = _largest_blob(fwd_m)  # Only the leg itself (bits of the other leg's heel left out).
+    fwd = np.zeros_like(still)  # Forward pose: the still's near leg.
+    fwd[fwd_m] = still[fwd_m]
+    top_cols = np.nonzero(fwd[hip, :, 3])[0]
+    pivot = int(top_cols.min() + top_cols.max())  # Column sum of the mirror (its axis = the hip's middle).
+    back = np.zeros_like(still)  # Backward pose: the leg mirrored about its hip.
+    for x in range(w):
+        if 0 <= pivot - x < w:
+            back[:, pivot - x] = fwd[:, x]
+    rows = np.nonzero(fwd[:, :, 3].any(axis=1))[0]
+    foot = fwd[rows.max() - 3:rows.max() + 1, :, 3].any(axis=0).nonzero()[0]  # The foot's columns.
+    amp = float(foot.min() + foot.max()) - pivot  # Px between the two poses' feet (forward - backward).
+
+    def pose(q: float) -> np.ndarray:
+        """The leg swung `q` (0 forward .. 1 backward) of the way: the nearer pose, sheared."""
+        r = rig.get("reach", 0)  # Extra px each pose's foot is pushed out (a longer stride).
+        span = amp + 2 * r  # Px between the two pushed-out feet.
+        return (_shear_leg(fwd, hip, r - q * span, 0) if q <= 0.5
+                else _shear_leg(back, hip, -r + (1.0 - q) * span, 0))
+
+    names = dict(zip(STRIDE_FAR_SHADE, _palette_rgb(list(STRIDE_FAR_SHADE))))  # Lighter name -> RGB.
+    dark = dict(zip(STRIDE_FAR_SHADE, _palette_rgb(list(STRIDE_FAR_SHADE.values()))))  # Lighter name -> darker RGB.
+    out = []
+    for f in range(FRAMES):
+        q = STRIDE_SWING[f]  # Near leg's swing (0 forward, 1 backward); the far leg's is 1 - q.
+        dy = DIP[f % POSES] * rig.get("dip", 1)
+        near = _lift(pose(q), int(round(STRIDE_LIFT_NEAR[f] * rig["lift"])), hip)
+        far = _lift(pose(1.0 - q), int(round(STRIDE_LIFT_FAR[f] * rig["lift"])), hip)
+        far = np.roll(far, rig.get("far_dx", 0), axis=1)
+        src = far.copy()
+        for n, rgb in names.items():
+            m = (src[:, :, :3] == np.array(rgb, dtype=np.uint8)).all(-1) & (src[:, :, 3] > 0)
+            far[m, :3] = dark[n]
+        out.append(_stack([far, near, _move(body, dy)]))
+    return out
+
+
+def _largest_blob(mask: np.ndarray) -> np.ndarray:
+    """The largest 8-connected region of the boolean `mask` (flood fill)."""
+    seen = np.zeros_like(mask)
+    best = np.zeros_like(mask)
+    h, w = mask.shape
+    for y0, x0 in zip(*np.nonzero(mask)):
+        if seen[y0, x0]:
+            continue
+        blob = np.zeros_like(mask)
+        stack = [(y0, x0)]
+        seen[y0, x0] = True
+        while stack:
+            y, x = stack.pop()
+            blob[y, x] = True
+            for dy in (-1, 0, 1):
+                for dx in (-1, 0, 1):
+                    yy, xx = y + dy, x + dx
+                    if 0 <= yy < h and 0 <= xx < w and mask[yy, xx] and not seen[yy, xx]:
+                        seen[yy, xx] = True
+                        stack.append((yy, xx))
+        if blob.sum() > best.sum():
+            best = blob
+    return best
+
+
+def _lift(layer: np.ndarray, n: int, top: int) -> np.ndarray:
+    """`layer` raised `n` rows; rows pushed above row `top` (the hip) are dropped, so nothing of
+    the leg shows through the gaps between the body's kilt and fists."""
+    if n <= 0:
+        return layer
+    out = np.zeros_like(layer)
+    out[:-n] = layer[n:]
+    out[:top] = 0
+    return out
+
+
 def frames_of(key: str) -> list:
-    """The FRAMES walk frames of `key` (RGBA arrays the still's size); frame 0 is the still."""
+    """The FRAMES walk frames of `key` (RGBA arrays the still's size); frame 0 is the still
+    (except a "stride" rig's, whose frame 0 is the mirrored stance)."""
     still = load(key)
     rig = RIGS[key]
+    if rig["mode"] == "stride":
+        return stride_frames(key, still, rig)
     if rig["mode"] == "hover":
         out = hover_frames(key, still, rig)
         if not np.array_equal(out[0], still):
@@ -699,7 +969,11 @@ def frames_of(key: str) -> list:
         if "swing" in rig:
             frame = _swing(frame, rig["swing"], dy, SWING[f])
         if "bust" in rig:
-            frame = _bounce(frame, rig["bust"], dy, BUST_BOUNCE[f] * rig["bust"][4])
+            axis = rig.get("bust_axis", "y")  # "y" bounces, "x" sways (BUST_SWAY).
+            share = (BUST_SWAY if axis == "x" else BUST_BOUNCE)[f]
+            frame = _bounce(frame, rig["bust"], dy, share * rig["bust"][4], axis)
+        if "swish" in rig:
+            frame = _bounce(frame, rig["swish"], dy, SWISH_SWAY[f] * rig["swish"][4], "x")
         out.append(frame)
     if not np.array_equal(out[0], still):
         sys.exit(f"{key}: frame 0 differs from the still (rig error)")
@@ -741,14 +1015,16 @@ def _swing(frame: np.ndarray, swing: tuple, dy: int, k: float) -> np.ndarray:
     return out
 
 
-def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float) -> np.ndarray:
+def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float, axis: str = "y") -> np.ndarray:
     """Warps the bust of `frame` (the still's box `bust` lowered by the body dip `dy`) so its
     underside moves `s` px (+ = down) at the box's centre column. Displacement field: a
     sine bell across the columns (1 at the centre, 0 just outside the box) times a ramp down
     the rows (0 at the neckline, 1 on the underside), then a fade back to 0 over the
     BUST_TAIL_PER_PX * |s| rows below. Each pixel takes the pixel |d| rows above or below it
     in the same column (nearest, inverse mapping: no holes, no new colours). s = 0 returns
-    the frame unchanged."""
+    the frame unchanged. axis "x" (a rig's `bust_axis`): the same field moves the pixels
+    sideways instead (+ = right): each pixel takes the pixel |d| columns left or right of it
+    in the same row."""
     if s == 0:
         return frame
     x0, x1 = bust[0], bust[1]  # Box columns [x0, x1) (art px).
@@ -765,10 +1041,17 @@ def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float) -> np.ndarray:
                 wy = (y - y0 + 1) / float(y1 - y0)  # 0 at the neckline, 1 on the underside.
             else:
                 wy = 1.0 - (y - y1 + 1) / float(tail + 1)  # Fades out under the bust.
-            d = int(round(s * wx * wy))  # Rows this pixel's content moves (+ = down).
-            sy = y - d  # Source row (inverse mapping).
-            if d != 0 and 0 <= sy < h:
-                out[y, x] = frame[sy, x]
+            d = int(round(s * wx * wy))  # Px this pixel's content moves (+ = down, or right on axis "x").
+            if d == 0:
+                continue
+            if axis == "x":
+                sx = x - d  # Source column (inverse mapping).
+                if 0 <= sx < frame.shape[1]:
+                    out[y, x] = frame[y, sx]
+            else:
+                sy = y - d  # Source row (inverse mapping).
+                if 0 <= sy < h:
+                    out[y, x] = frame[sy, x]
     return out
 
 
@@ -778,7 +1061,7 @@ def build(key: str) -> Path:
     strip = np.concatenate(frames, axis=1)
     dest = SPRITE_DIR / (key + SUFFIX + ".png")
     Image.fromarray(strip, "RGBA").save(dest, optimize=True)
-    still = frames[0]
+    still = load(key)  # The approved still (a stride strip's frame 0 is not it).
     new_cols = {tuple(c) for f in frames for c in f[f[:, :, 3] > 0].tolist()} - {tuple(c) for c in still[still[:, :, 3] > 0].tolist()}
     if new_cols:
         sys.exit(f"{key}: frames hold colours the still does not ({len(new_cols)})")
@@ -854,12 +1137,17 @@ IDLE_SINK = (0,) * 6 + (1,) * 12 + (0,) * 6
 # (+ = down; the same field as BUST_BOUNCE). A damped spring kicked by each sink and rise: it
 # lags the body (stays up as the body sinks, down as it rises), overshoots, rebounds less (only
 # the box's centre still moves), then settles; at rest it is 0, so frame 0 stays the still.
+# A `bust_axis="x"` box reads it sideways (+ = right): its kicks change side between the
+# exhale and the inhale on their own.
 IDLE_BUST = ((0.0,) * 6
              + (-0.5, 0.75, -0.375) + (0.0,) * 9
              + (0.5, -0.75, 0.375) + (0.0,) * 3)
 # Per-key overrides of the idle cut (set after review): "waist" = the row taken out on the
 # exhale (default the rig's hip - 1, the last row above the hip).
 IDLE_FIX = {}
+# Per frame: a `swish` box's sideways share in the idle: IDLE_BUST one frame later (the drape
+# follows the hips).
+IDLE_SWISH = (0.0,) + IDLE_BUST[:-1]
 if len(IDLE_SINK) != IDLE_FRAMES or len(IDLE_BUST) != IDLE_FRAMES:
     sys.exit(f"idle_data.gd FRAMES is {IDLE_FRAMES}; IDLE_SINK / IDLE_BUST hold {len(IDLE_SINK)} / {len(IDLE_BUST)}")
 
@@ -891,11 +1179,18 @@ def idle_frames_of(key: str) -> list:
     for f in range(IDLE_FRAMES):
         dy = IDLE_SINK[f]  # Body sink this frame (art px).
         frame = _sink(still, waist, dy)
-        frame = _bounce(frame, rig["bust"], dy, IDLE_BUST[f] * rig["bust"][4])
+        frame = _bounce(frame, rig["bust"], dy, IDLE_BUST[f] * rig["bust"][4], rig.get("bust_axis", "y"))
+        if "swish" in rig:
+            frame = _bounce(frame, rig["swish"], dy, IDLE_SWISH[f] * rig["swish"][4], "x")
         out.append(frame)
     if not np.array_equal(out[0], still):
         sys.exit(f"{key}: idle frame 0 differs from the still (rig error)")
-    if any(not np.array_equal(f[waist + 1:], still[waist + 1:]) for f in out):
+    keep = np.ones(still.shape[:2], dtype=bool)  # Pixels below the waist that must not move.
+    keep[:waist + 1] = False
+    if "swish" in rig:  # The drape's box (with its fade rows and the sink) may sway below the waist.
+        sx0, sx1, sy0, sy1, spx = rig["swish"]
+        keep[sy0:sy1 + int(np.ceil(spx * BUST_TAIL_PER_PX)) + 3, sx0:sx1] = False
+    if any(not np.array_equal(f[keep], still[keep]) for f in out):
         sys.exit(f"{key}: an idle frame moved a row below the waist (rig error)")
     return out
 
@@ -905,7 +1200,7 @@ def build_idle(key: str) -> Path:
     frames = idle_frames_of(key)
     strip = np.concatenate(frames, axis=1)
     dest = SPRITE_DIR / (key + IDLE_SUFFIX + ".png")
-    still = frames[0]
+    still = load(key)  # The approved still (a stride strip's frame 0 is not it).
     new_cols = {tuple(c) for f in frames for c in f[f[:, :, 3] > 0].tolist()} - {tuple(c) for c in still[still[:, :, 3] > 0].tolist()}
     if new_cols:
         sys.exit(f"{key}: idle frames hold colours the still does not ({len(new_cols)})")

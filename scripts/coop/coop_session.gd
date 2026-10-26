@@ -408,6 +408,9 @@ func step(delta: float) -> void:
 	bind_primary()
 	game.enemies.step(delta)  # Binds each enemy's nearest necromancer.
 	peak_enemies = maxi(peak_enemies, game.enemies.active.size())
+	if game.pantheon != null:
+		bind_primary()
+		game.pantheon.step(delta)  # Act IV: the gods' wrath and shield walls (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

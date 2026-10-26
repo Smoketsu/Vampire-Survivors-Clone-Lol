@@ -45,6 +45,11 @@
 ##                 every few seconds, cutting everything along it out to about
 ##                 420 px; a beam kill sparks lightning to a nearby enemy (the
 ##                 Scrap Wastes, Kestrel; logic DeathRay, rules DeathRayData).
+## Act IV's unlockable spells (owner-approved Act IV proposal "Rewards"; the
+## same rule):
+##   Stolen Thunder — a charged bolt strikes the strongest enemy and chains to
+##                 armoured foes (Mount Olympus, Zeus; logic StolenThunder,
+##                 rules StolenThunderData).
 class_name AbilityData
 extends RefCounted
 
@@ -69,7 +74,13 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act III: the Scrap Wastes ---
 	"death_ray",
 	# --- Act III: the Iron Citadel ---
-	"scrap_swarm"]
+	"scrap_swarm",
+	# --- Act IV: the Shores of Ilion ---
+	"paris_arrow",
+	# --- Act IV: Mount Olympus ---
+	"stolen_thunder",
+	# --- Act IV: the Asphodel Underworld ---
+	"river_styx"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -456,6 +467,80 @@ const SPELLS := {
 			{"drones": 5, "damage": 15.0, "cooldown": 0.85, "range": 240.0, "orbit_speed": 1.2},  # TUNING (not in GDD) first pass 19 (with the evolution 296k damage in a forced army run)
 		],
 	},
+	# --- Act IV: the Shores of Ilion ---
+	# Paris's Arrow (owner-approved Act IV proposal "Rewards": "a spectral arrow
+	# that always strikes its target from behind (full damage through phalanx
+	# fronts)"; unlocked by slaying Achilles, UnlockData). Every `cooldown` s
+	# (start to start) it looses `arrows` violet ghost arrows at the strongest
+	# foes (most max HP first: it hunts champions) within `range` px; each
+	# swings around its target in `flight` s and strikes it FROM BEHIND (its
+	# origin behind the target's facing: CombatResolver.damage_enemy() with
+	# that origin, a shot), dealing `damage`: full damage through a locked
+	# shield front or a testudo, it breaks the wall it strikes and finds
+	# Achilles' back. Stat keys: damage, cooldown (s), arrows, range (px),
+	# flight (s). Logic: ParisArrow; fixed rules: ParisArrowData; Mortal Heel
+	# (its paired passive) raises every hit from behind, these included.
+	"paris_arrow": {
+		"display_name": "Paris's Arrow",
+		"icon": "paris_arrow",
+		"description": "Ghost arrows swing around the strongest foes and strike them from behind.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act IV spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Arrow damage", "arrows": "Arrows", "cooldown": "Cooldown (s)", "range": "Range"},
+		"levels": [
+			{"damage": 30.0, "arrows": 1, "cooldown": 2.6, "range": 360.0, "flight": 0.55},  # TUNING (not in GDD) a single-target hunter (the act's champions and fronts)
+			{"damage": 36.0, "arrows": 2, "cooldown": 2.6, "range": 370.0, "flight": 0.55},  # TUNING (not in GDD)
+			{"damage": 42.0, "arrows": 2, "cooldown": 2.4, "range": 380.0, "flight": 0.5},  # TUNING (not in GDD)
+			{"damage": 50.0, "arrows": 3, "cooldown": 2.3, "range": 390.0, "flight": 0.5},  # TUNING (not in GDD)
+			{"damage": 58.0, "arrows": 3, "cooldown": 2.1, "range": 400.0, "flight": 0.45},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IV: Mount Olympus ---
+	# Stolen Thunder (owner-approved Act IV proposal "Rewards": "a charged bolt
+	# on the strongest enemy that chains to armoured foes"; unlocked by slaying
+	# Zeus, UnlockData). Every `cooldown` s the bolt charges `thunder_charge` s
+	# over the necromancer, then strikes the foe with the most HP left within
+	# `range` px for `damage`, and chains up to `thunder_chains` hops to the
+	# nearest ARMOURED foe within `chain_range` px (each hop `chain_falloff`
+	# weaker); armoured foes take `armour_bonus` more. Logic: StolenThunder;
+	# fixed rules: StolenThunderData; Titan's Blood adds hops and cuts the
+	# charge (AbilityManager.apply_spell_mods(): thunder_chains, thunder_charge).
+	"stolen_thunder": {
+		"display_name": "Stolen Thunder",
+		"icon": "stolen_thunder",
+		"description": "A charged bolt strikes the strongest foe and leaps on to armoured ones.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act IV spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bolt damage", "thunder_chains": "Chain hops", "cooldown": "Bolt every (s)", "armour_bonus": "Bonus vs armour", "range": "Range"},
+		"levels": [
+			{"damage": 60.0, "cooldown": 3.6, "thunder_charge": 0.8, "range": 420.0, "thunder_chains": 2, "chain_range": 150.0, "chain_falloff": 0.15, "armour_bonus": 0.25},  # TUNING (not in GDD)
+			{"damage": 76.0, "cooldown": 3.4, "thunder_charge": 0.8, "range": 430.0, "thunder_chains": 3, "chain_range": 155.0, "chain_falloff": 0.15, "armour_bonus": 0.25},  # TUNING (not in GDD)
+			{"damage": 92.0, "cooldown": 3.2, "thunder_charge": 0.75, "range": 440.0, "thunder_chains": 3, "chain_range": 160.0, "chain_falloff": 0.12, "armour_bonus": 0.3},  # TUNING (not in GDD)
+			{"damage": 112.0, "cooldown": 3.0, "thunder_charge": 0.7, "range": 450.0, "thunder_chains": 4, "chain_range": 170.0, "chain_falloff": 0.12, "armour_bonus": 0.3},  # TUNING (not in GDD)
+			{"damage": 136.0, "cooldown": 2.8, "thunder_charge": 0.65, "range": 460.0, "thunder_chains": 5, "chain_range": 180.0, "chain_falloff": 0.1, "armour_bonus": 0.35},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# River Styx (GDD §15.0 "River Styx, Lethe's Flood, Ferryman's Toll and the
+	# Ferrywoman"; owner-approved proposal: "a black river line that drains and
+	# slows whatever crosses it"; unlocked by defeating Hades, UnlockData): every
+	# `cooldown` s, `rivers` river line(s) `length` px long and 2 x `radius` px
+	# wide across the nearest foe's way, flowing `duration` s; every `tick` s each
+	# foe in the water takes `damage` and is slowed by `river_slow` for
+	# `slow_duration` s; the necromancer heals `drain_share` of it (at most
+	# `drain_cap` HP a second). Logic: RiverStyx; fixed rules: RiverStyxData.
+	"river_styx": {
+		"display_name": "River Styx",
+		"icon": "river_styx",
+		"description": "A black river opens across your foes' path: it drains and slows whatever crosses it.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Drain per tick", "river_slow": "Slow", "length": "River length", "duration": "Duration (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"rivers": 1, "damage": 6.0, "tick": 0.5, "river_slow": 0.30, "slow_duration": 0.8, "length": 170.0, "radius": 16.0, "duration": 4.0, "cooldown": 5.0, "drain_share": 0.04, "drain_cap": 3.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 8.0, "tick": 0.5, "river_slow": 0.32, "slow_duration": 0.8, "length": 190.0, "radius": 17.0, "duration": 4.5, "cooldown": 4.8, "drain_share": 0.04, "drain_cap": 3.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 9.0, "tick": 0.5, "river_slow": 0.35, "slow_duration": 0.8, "length": 210.0, "radius": 18.0, "duration": 5.0, "cooldown": 4.5, "drain_share": 0.05, "drain_cap": 4.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 11.0, "tick": 0.5, "river_slow": 0.38, "slow_duration": 0.8, "length": 230.0, "radius": 19.0, "duration": 5.5, "cooldown": 4.2, "drain_share": 0.05, "drain_cap": 4.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 13.0, "tick": 0.5, "river_slow": 0.40, "slow_duration": 0.8, "length": 250.0, "radius": 20.0, "duration": 6.0, "cooldown": 4.0, "drain_share": 0.06, "drain_cap": 5.0},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -466,7 +551,11 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act III: the Assembly Halls ---
 	"puppet_hp",
 	# --- Act III: the Scrap Wastes ---
-	"spark"]
+	"spark",
+	# --- Act IV: Mount Olympus ---
+	"armour_bonus", "chain_falloff", "clap_share",
+	# --- Act IV: the Asphodel Underworld ---
+	"river_slow", "drain_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

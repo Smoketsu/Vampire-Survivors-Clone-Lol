@@ -122,6 +122,31 @@
 ## Grave Ward hit before any reduction and starts Last Rites after a hit that
 ## leaves the necromancer under a quarter of his HP; damage_enemy() tells the
 ## Dread Rally meter whether a kill was a summon's (Dark Tithe).
+## Act IV (the Olympian Republic; Game.pantheon is null on every other act, so
+## none of this runs there):
+##   Phalanx — damage_enemy() takes the hit's ORIGIN (`origin`, the world point
+##             it came from: a projectile's point of departure along its path,
+##             a melee attacker's position; NO_ORIGIN = no direction, every
+##             area / stomp / arcing / damage-over-time hit) and `shot` (true
+##             for a projectile). A directed hit is multiplied once by
+##             PantheonRules.directed_hit_mult(), right after the synergies: a
+##             locked shield's front stops most of a shot and all knockback; a
+##             hit from the side or behind breaks the wall.
+##   Glory   — damage_unit() takes the enemy whose blow it is (`by`, null when
+##             none); a summon it kills reports to PantheonRules
+##             .on_summon_killed() (a hero's Glory stack).
+##   kills   — _kill_enemy() reports to PantheonRules.on_enemy_killed() (a
+##             corpse swallowed by a fissure, a hero's Glory payout).
+## Act IV, the Shores of Ilion: FROM_ABOVE is the origin of an arcing hit (a
+## catapult boulder): it reaches PantheonRules.directed_hit_mult() (the
+## Legionary's testudo cuts it; nothing else does) but never Mortal Heel.
+## Mortal Heel — damage_enemy(): a directed hit from behind its target deals
+## more (stat mortal_heel_bonus_dmg); exactly 1 while the passive is not owned.
+##   Mount Olympus (Act IV phase 2) — stun_unit(): THE one stun path for
+##             summons (a Gorgon's petrifying gaze): SummonedUnit.stun()
+##             holds the unit (no thinking, moving, attacking or casting,
+##             drawn stone-grey); stats summon_stuns, summon_stunned_seconds,
+##             summon_stuns_<source>.
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -132,6 +157,15 @@
 ## credited to the bound slot (CoopSession.on_kill()). In solo nothing is rebound.
 class_name CombatResolver
 extends RefCounted
+
+# --- Act IV: the Olympian Republic ---
+## damage_enemy() origin meaning "no direction" (full damage, the front ignored).
+const NO_ORIGIN: Vector2 = Vector2.INF
+# --- Act IV: the Shores of Ilion ---
+## damage_enemy() origin of an ARCING hit that falls from above (a catapult
+## boulder): no front, no flank, no back (a shield wall is not broken by it),
+## but a locked Legionary's testudo roofs against it (Phalanx.directed_hit_mult()).
+const FROM_ABOVE: Vector2 = Vector2(INF, -INF)
 
 ## Owning run.
 var game: Game
@@ -144,6 +178,12 @@ var _crit_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 ## Damage-source tag -> true / false: is it a ranged hit (is_ranged_source(),
 ## filled lazily, only while Lead-Lined Bones is owned).
 var _ranged_sources: Dictionary = {}
+# --- Act IV: the Asphodel Underworld ---
+## Ferryman's Toll: game time its current one-second heal window started.
+var _toll_window_t: float = -1.0
+## Ferryman's Toll: HP healed in the current one-second window (capped at
+## RiverStyxData.TOLL_HEAL_CAP_PER_S).
+var _toll_window: float = 0.0
 
 
 func _init(p_game: Game) -> void:
@@ -178,11 +218,13 @@ func is_minion_source(source: String) -> bool:
 ## A cursed enemy (Gravebow curse, Enemy.curse_until, curse_enemy()) takes
 ## curse_amp more from every undead source; the extra is counted in the
 ## curse_bonus_dmg stat.
-func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1) -> float:
+## Act IV: `origin` (the world point the hit came from; NO_ORIGIN = none) and
+## `shot` (a projectile) feed the Phalanx's front test (see the header).
+func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, origin: Vector2 = NO_ORIGIN, shot: bool = false) -> float:
 	if as_slot >= 0 and game.coop != null and as_slot != game.coop.bound:
 		var prev := game.coop.bound  # Co-op: resolve the hit as its owner slot's (see the header).
 		game.coop.bind(as_slot)
-		var dealt_as := damage_enemy(e, amount, source)
+		var dealt_as := damage_enemy(e, amount, source, -1, origin, shot)
 		game.coop.bind(prev)
 		return dealt_as
 	if not e.active or amount <= 0.0:
@@ -209,6 +251,25 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1) ->
 	var syn := game.horde.synergies  # Army synergies.
 	var syn_mult := syn.hit_mult(source, e)  # Synergy multiplier of this hit.
 	amount *= syn_mult
+	# Act IV, the Phalanx (the one front test): a directed hit on a Pantheon
+	# enemy. Skipped entirely off Act IV (Game.pantheon null) and for hits with
+	# no direction.
+	if game.pantheon != null and origin != NO_ORIGIN:
+		var front := game.pantheon.directed_hit_mult(e, origin, shot, source)  # 1 = the front did nothing.
+		if front != 1.0:
+			if front < 1.0:
+				game.stat_add("phalanx_front_dmg_prevented", amount * (1.0 - front) * (1.0 - e.armor))
+			amount *= front
+	# --- Act IV: the Shores of Ilion --- Mortal Heel (the paired passive of
+	# Paris's Arrow, offered on every stage once Achilles fell): a directed hit
+	# from BEHIND its target (PantheonRules.hit_from_behind(), the one direction
+	# test, which reads any enemy's facing) deals back_damage more. Exactly 1
+	# while the passive is not owned; never for an undirected or arcing hit.
+	if origin != NO_ORIGIN and origin != FROM_ABOVE:
+		var heel := game.abilities.passive_value("mortal_heel", "back_damage")  # 0 when not owned.
+		if heel > 0.0 and PantheonRules.hit_from_behind(e, origin):
+			game.stat_add("mortal_heel_bonus_dmg", amount * heel)
+			amount *= 1.0 + heel
 	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
 	# undead fighting on it hit weaker.
 	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).
@@ -357,13 +418,15 @@ func _sanctum_mitigation(e: Enemy, raw: float, source: String, shred: float = 0.
 ## barrier) absorbs what it can before HP is lost. Stats:
 ## host_dmg_prevented, resilience_dmg_prevented (+ _area / _holy),
 ## plating_dmg_prevented.
-func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
+## Act IV: `by` is the enemy whose own blow this is (Enemy._melee_hit() and
+## its cleave; null for every other hit): a summon it kills is Glory for a hero.
+func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = null) -> void:
 	if not u.active or u.state == SummonedUnit.State.DEAD or amount <= 0.0:
 		return
 	if game.coop != null and u.director != null and u.director.slot != game.coop.bound:
 		var prev := game.coop.bound  # Co-op: the summon's own army's rules (see the header).
 		game.coop.bind(u.director.slot)
-		damage_unit(u, amount, source)
+		damage_unit(u, amount, source, by)
 		game.coop.bind(prev)
 		return
 	if u.airborne:
@@ -406,6 +469,13 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 		if bastion > 0.0:
 			game.stat_add("syn_bastion_prevented", prevented - by_mason)
 		amount *= mult
+	# --- Act IV: the Asphodel Underworld --- a summon behaviour's own cut (the
+	# Myrmidon Shades' locked shield wall; exactly 1 for every other class).
+	if u.behavior != null:
+		var bm := u.behavior.damage_taken_mult(u, source)  # Share of the hit kept.
+		if bm < 1.0:
+			game.stat_add("behavior_dmg_prevented_" + u.unit_class, amount * (1.0 - bm))
+			amount *= bm
 	# --- Act III: the Scrap Wastes --- Lead-Lined Bones: ranged hits deal less.
 	var lead := ab.passive_value("lead_lined_bones", "ranged_reduction")  # 0..1, 0 when not owned.
 	if lead > 0.0 and is_ranged_source(source):
@@ -432,6 +502,8 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	if u.hp <= 0.0:
 		game.stat_add("death_" + u.unit_class + "_by_" + source, 1.0)
 		game.horde.colossi.on_unit_killed(u)  # Bone Colossus shrapnel burst.
+		if by != null and game.pantheon != null:
+			game.pantheon.on_summon_killed(u, by)  # Act IV: a hero's Glory stack.
 		game.horde.on_unit_died(u)
 
 
@@ -749,6 +821,22 @@ func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) 
 	return d
 
 
+# --- Act IV: Mount Olympus ---
+## THE one stun path for summons (Act IV: a Gorgon's gaze turns them to
+## stone): holds summon `u` for `duration` s (SummonedUnit.stun(): no
+## thinking, moving, attacking or casting; drawn stone-grey). A longer stun
+## already running is kept; airborne, spawning and dead units are immune.
+## `source` tags the stats. Returns the seconds applied (0 = immune). Stats:
+## summon_stuns, summon_stunned_seconds, summon_stuns_<source>.
+func stun_unit(u: SummonedUnit, duration: float, source: String) -> float:
+	if duration <= 0.0 or not u.stun(game.elapsed + duration):
+		return 0.0
+	game.stat_add("summon_stuns", 1.0)
+	game.stat_add("summon_stunned_seconds", duration)
+	game.stat_add("summon_stuns_" + source, 1.0)
+	return duration
+
+
 ## Death of an enemy: cosmetic pop, XP crystal, kill counter, power-up drop
 ## and chest rolls, then the EnemyDirector deactivates/pools it (or ends the run for the
 ## boss).
@@ -776,12 +864,35 @@ func _kill_enemy(e: Enemy, by_summon: bool = true) -> void:
 	game.powerups.on_enemy_killed(e)  # Power-up drop roll (PowerupData rules).
 	game.chests.on_enemy_killed(e)  # Treasure chest roll (ChestData rules).
 	game.dread_rally.on_enemy_killed(e, not by_summon)  # Dread Rally soul meter (Dark Tithe on the necromancer's own kills).
+	_ferrymans_toll(e)  # Act IV, the Asphodel Underworld: a slowed foe pays the ferryman (no-op unless owned).
 	game.ultimates.on_enemy_killed(e)  # Grave Tide raises (no-op unless it runs).
 	if game.dread != null:
 		game.dread.on_kill()  # Act II: a kill steadies the mind.
 	if e.is_elite and not e.is_boss and not e.is_structure:
 		_holy_retribution(e)
+	if game.pantheon != null:
+		game.pantheon.on_enemy_killed(e)  # Act IV: a swallowed corpse, a hero's Glory payout.
 	game.enemies.on_enemy_killed(e)
+
+
+# --- Act IV: the Asphodel Underworld ---
+## Ferryman's Toll (PassiveData "ferrymans_toll", RiverStyxData): foe `e`, slain
+## while slowed, pays the ferryman: the necromancer heals toll_heal HP (at most
+## TOLL_HEAL_CAP_PER_S a second) and the Dread Rally gains toll_rally soul
+## points. Its value is 0 while the passive is not owned: nothing happens then.
+func _ferrymans_toll(e: Enemy) -> void:
+	var heal := game.abilities.passive_value(RiverStyxData.TOLL, RiverStyxData.TOLL_HEAL_KEY)  # HP per slowed kill.
+	if heal <= 0.0 or e.slow_timer <= 0.0:
+		return
+	game.stat_add("toll_kills", 1.0)
+	game.dread_rally.add_points(game.abilities.passive_value(RiverStyxData.TOLL, RiverStyxData.TOLL_RALLY_KEY))
+	if game.elapsed - _toll_window_t >= 1.0:
+		_toll_window_t = game.elapsed
+		_toll_window = 0.0
+	var h := minf(heal, RiverStyxData.TOLL_HEAL_CAP_PER_S - _toll_window)
+	if h > 0.0:
+		_toll_window += h
+		game.stat_add("toll_healed", heal_player(h))
 
 
 ## Holy Retribution (GDD §8.5 run modifier, game.difficulty): a slain elite

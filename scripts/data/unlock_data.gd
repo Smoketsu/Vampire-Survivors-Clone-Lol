@@ -109,6 +109,32 @@ const UNLOCKS := {
 	"recoil_frame": {"type": "passive", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Its paired passive, unlocked with it
 	"breaker_of_engines": {"type": "title", "achievement": "nothing_is_deathless",
 		"text": "Earn Nothing Is Deathless: defeat Deus Ex Machina in the Iron Citadel."},  # Owner-approved proposal
+	# --- Act IV: the Shores of Ilion ---
+	# Achilles' fall (owner-approved Act IV proposal "Rewards": Paris's Arrow is
+	# unlocked by Achilles) with its paired passive, offered on every stage; the
+	# stage's achievement Heel Found earns the counter-passive Bronze Breaker
+	# (offered only in Act IV through its card row's "act").
+	"paris_arrow": {"type": "spell", "boss": "achilles", "text": "Slay Achilles on the Shores of Ilion to unlock."},  # Owner-approved Act IV proposal
+	"mortal_heel": {"type": "passive", "boss": "achilles", "text": "Slay Achilles on the Shores of Ilion to unlock."},  # Paris's Arrow's paired passive, unlocked with it
+	"bronze_breaker": {"type": "passive", "achievement": "heel_found", "text": "Earn Heel Found: slay Achilles with a blow to his back or heel."},  # Owner-approved Act IV proposal
+	# --- Act IV: Mount Olympus ---
+	# Zeus's fall (owner-approved Act IV proposal "Rewards": Stolen Thunder is
+	# unlocked by Zeus) with its paired passive, offered on every stage; the
+	# stage's achievement Twilight of the Gods earns Act IV's counter-passive
+	# Grounded Bones (offered only in Act IV through its card row's "act").
+	"stolen_thunder": {"type": "spell", "boss": "zeus", "text": "Slay Zeus on Mount Olympus to unlock."},  # Owner-approved Act IV proposal
+	"titans_blood": {"type": "passive", "boss": "zeus", "text": "Slay Zeus on Mount Olympus to unlock."},  # Stolen Thunder's paired passive, unlocked with it
+	"grounded_bones": {"type": "passive", "achievement": "twilight_of_the_gods", "text": "Earn Twilight of the Gods: clear the Pantheon Trial on Mount Olympus."},  # Owner-approved Act IV proposal
+	# --- Act IV: the Asphodel Underworld ---
+	# Hades' fall (owner-approved Act IV proposal "Rewards": River Styx is
+	# unlocked by Hades; the finale grants the Myrmidon Shades): the spell with its
+	# paired passive, and the summon class with its paired passive, offered on
+	# every stage (no card-row "act" key). The Empty Throne achievement opens the
+	# Act IV epilogue part (EpilogueData.ACT4_PART), not an unlock row.
+	"river_styx": {"type": "spell", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal
+	"ferrymans_toll": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # River Styx's paired passive, unlocked with it
+	"myrmidon_shade": {"type": "class", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal: the finale's reward
+	"myrmidon_oath": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Its paired passive (own decision), unlocked with it
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

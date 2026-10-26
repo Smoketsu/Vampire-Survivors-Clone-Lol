@@ -376,6 +376,24 @@ RECIPES = {
         "source": "wastes_wall.png", "method": "quilt",
         "colors": ["ink_cold", "floor_slate", "floor_marble", "floor_stone"],
     },
+    # --- Act IV: the Shores of Ilion --- (one source each, no variants; the API sources came back
+    # nearly transparent and are stored with their alpha set opaque)
+    "ilion_beach": {
+        "source": "ilion_beach.png", "method": "quilt",
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_ochre"],
+    },
+    "ilion_camp": {
+        "source": "ilion_camp.png", "method": "quilt",
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_dirt"],
+    },
+    "ilion_gate": {
+        "source": "ilion_gate.png", "method": "quilt",
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_stone"],
+    },
+    "ilion_walls": {
+        "source": "ilion_walls.png", "method": "quilt",
+        "colors": ["ink_cold", "floor_slate", "floor_marble", "floor_stone"],
+    },
     # --- Act III: the Iron Citadel ---
     # The four zone floors of THE IRON CITADEL (CitadelGround, tiles/citadel_<style>): riveted
     # steel deck plates (one API texture, laid out three ways) and the Core's circuit-etched
@@ -402,6 +420,58 @@ RECIPES = {
         "source": "citadel_core.png", "method": "quilt",  # The Core: circuit-etched plating, dim red traces.
         "colors": ["ink_chrome", "floor_soil", "floor_slate", "chrome_dark", "signal_dark"],
         "bias": {"chrome_dark": 0.02, "signal_dark": 0.03}, "keep": ["chrome_dark", "signal_dark"],
+    },
+    # --- Act IV: Mount Olympus ---
+    # The four zone floors of MOUNT OLYMPUS (OlympusGround, tiles/olympus_<style>): trampled
+    # earth (the Field of Ares), moonlit moss (the Groves of Artemis), and one storm-dark marble
+    # texture laid out twice (the Terraces' long flagstone courses, the Summit's square slabs with
+    # dark gold joints).
+    "olympus_field": {
+        "source": "olympus_field.png", "method": "quilt",
+        "colors": ["ink_warm", "floor_earth", "floor_dirt", "floor_ochre", "floor_grass"],
+    },
+    "olympus_grove": {
+        "source": "olympus_grove.png", "method": "quilt",
+        "colors": ["ink_green", "floor_soil", "floor_grass", "floor_moss", "floor_slate"],
+    },
+    "olympus_terrace": {
+        "source": "olympus_marble.png", "method": "layout",  # The Terraces: long wet marble courses.
+        "layout": {"type": "courses", "rows": [32, 32, 32, 32], "joint": 1,
+                   "slabs": [[64, 64], [40, 48, 40], [56, 72], [48, 40, 40]], "offsets": [0, 24, 12, 36]},
+        "regions": {"stone": ["floor_marble", "floor_slate", "floor_stone"], "joint": ["ink_cold"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "olympus_summit": {
+        "source": "olympus_marble.png", "method": "layout",  # The Summit: square marble slabs, gold joints.
+        "layout": {"type": "grid", "step": 32, "joint": 1},
+        "regions": {"stone": ["floor_marble", "floor_stone", "floor_slate"], "joint": ["floor_ochre"]},
+        "cell_shift": True, "cell_l": 0.012, "bevel": 0.01,
+    },
+    # --- Act IV: the Asphodel Underworld ---
+    # The four zone floors of THE ASPHODEL UNDERWORLD (UnderworldGround, tiles/underworld_<style>):
+    # one API texture of grey ash soil (the Asphodel Fields; darker and browner for the Styx's
+    # wet banks) and one of cracked dark marble (laid as the Judges' Hall's flagstones and as the
+    # throne room's big obsidian slabs with dark bronze joints). The asphodel flowers, the river
+    # and the floor details stay code-drawn (UnderworldGround / UnderworldGlyphs).
+    "underworld_asphodel": {
+        "source": "underworld_ash.png", "method": "quilt",  # The Asphodel Fields: grey ash.
+        "colors": ["floor_soil", "floor_slate", "floor_ash", "floor_stone"],
+    },
+    "underworld_styx": {
+        "source": "underworld_ash.png", "method": "quilt",  # The Styx Crossing: dark wet banks.
+        "colors": ["floor_soil", "floor_earth", "floor_slate"],
+    },
+    "underworld_hall": {
+        "source": "underworld_marble.png", "method": "layout",  # The Judges' Hall: cracked marble flags.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["floor_slate", "floor_marble"], "joint": ["ink_cold"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "underworld_throne": {
+        "source": "underworld_marble.png", "method": "layout",  # The Throne of Hades: big obsidian slabs, bronze joints.
+        "layout": {"type": "grid", "step": 64, "joint": 1},
+        "regions": {"stone": ["floor_soil", "floor_marble"], "joint": ["bronze_ink"]},
+        "cell_shift": True, "cell_l": 0.008, "bevel": 0.008,
     },
 }
 

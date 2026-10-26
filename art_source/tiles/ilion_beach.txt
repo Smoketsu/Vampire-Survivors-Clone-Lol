@@ -1,0 +1,8 @@
+A SEAMLESS, tileable ground texture for a top-down 2D pixel-art game, seen straight from above. LOW-RESOLUTION pixel art: exactly 128 x 128 pixels, shown enlarged so every pixel is a big square block. The left edge must continue the right edge and the top edge the bottom edge.
+
+Subject: dark wet beach sand at dusk: rippled sand with faint wave lines, a few small shells and pebbles, a strand of dark seaweed. Very DARK and LOW CONTRAST: it is a background that every character must stand out from. No objects that look solid, no characters.
+
+Colours: ONLY flat fills from this list: sand #1F1A13 (most of the tile), #2A231A, ripple lines #15120E, rare shells #4A4238 (a few pixels only). No gradients, no dithering, no noise.
+
+Output: a square PNG, the tile filling the whole image edge to edge. No border, no text, no watermark.
+Attached: an approved floor tile of this game, for the pixel size and darkness.

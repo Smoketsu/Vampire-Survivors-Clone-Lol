@@ -23,6 +23,11 @@
 ## plus Act III's unlockable spells (owner-approved Act III proposal; each with a
 ## NEW paired passive, unlocked with its spell):
 ##   Death Ray         + Conductive Marrow     = Event Horizon
+## plus Act IV's unlockable spells (owner-approved Act IV proposal "Rewards";
+## each with a NEW paired passive, unlocked with its spell):
+##   Paris's Arrow     + Mortal Heel           = Arrow of Fate
+##   Stolen Thunder    + Titan's Blood         = Gigantomachy
+##   River Styx        + Ferryman's Toll       = Lethe's Flood
 ##
 ## Evolution condition (GDD open question 27; decisions recorded in GDD
 ## §15.0): the base spell is at its max level (5), the paired passive is at
@@ -67,7 +72,13 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act III: the Scrap Wastes ---
 	"event_horizon",
 	# --- Act III: the Iron Citadel ---
-	"deathless_swarm"]
+	"deathless_swarm",
+	# --- Act IV: the Shores of Ilion ---
+	"arrow_of_fate",
+	# --- Act IV: Mount Olympus ---
+	"gigantomachy",
+	# --- Act IV: the Asphodel Underworld ---
+	"lethes_flood"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -392,6 +403,66 @@ const EVOLUTIONS := {
 		"stats": {
 			"drones": 6, "damage": 18.0, "cooldown": 0.8, "range": 260.0, "orbit_speed": 1.3,  # TUNING (not in GDD) first pass 7 x 24 every 0.75 s dealt 256k in a forced army run
 			"kill_drones": 4,  # TUNING (not in GDD) the evolution flag: extra drones from kills, at most this many (first pass 6)
+		},
+	},
+	# --- Act IV: the Shores of Ilion ---
+	# Arrow of Fate (owner-approved Act IV proposal: "Paris's Arrow ... -> Arrow
+	# of Fate (+ Mortal Heel)"): Paris's Arrow + Mortal Heel (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: more arrows, and fate cannot
+	# be escaped: an arrow that kills its target flies on from the body to the
+	# next strongest foe within `fate_range` px it has not struck, up to
+	# `fate_jumps` times, each time from behind. Detected by the "fate_jumps" key.
+	"arrow_of_fate": {
+		"base": "paris_arrow",
+		"passive": "mortal_heel",
+		"display_name": "Arrow of Fate",
+		"icon": "arrow_of_fate",
+		"description": "More ghost arrows, and one that kills flies on to the next foe's back.",
+		"labels": {"damage": "Arrow damage", "arrows": "Arrows", "fate_jumps": "Fated jumps", "cooldown": "Cooldown (s)", "range": "Range"},
+		"stats": {
+			"damage": 64.0, "arrows": 4, "cooldown": 1.9, "range": 420.0, "flight": 0.45,  # TUNING (not in GDD)
+			"fate_jumps": 3,  # TUNING (not in GDD) the evolution flag: a killing arrow flies on, at most this many times
+			"fate_range": 220.0,  # TUNING (not in GDD) px from the body to its next target
+		},
+	},
+	# --- Act IV: Mount Olympus ---
+	# Gigantomachy (owner-approved Act IV proposal: Stolen Thunder + Titan's
+	# Blood, a NEW passive, owner rule: at Lv 5): the war of the giants. Each
+	# strike also hurls `giants` more bolts at the next strongest foes (each
+	# chaining the same way), and every hop cracks a thunderclap of `clap_share`
+	# of the hop's damage within `clap_radius` px. Detected by the "giants" key.
+	"gigantomachy": {
+		"base": "stolen_thunder",
+		"passive": "titans_blood",
+		"display_name": "Gigantomachy",
+		"icon": "gigantomachy",
+		"description": "Three stolen bolts fall at once, and every leap of the lightning cracks a thunderclap.",
+		"labels": {"damage": "Bolt damage", "giants": "Extra bolts", "thunder_chains": "Chain hops", "cooldown": "Bolts every (s)", "clap_share": "Thunderclap damage"},
+		"stats": {
+			"damage": 150.0, "cooldown": 2.6, "thunder_charge": 0.6, "range": 480.0, "thunder_chains": 5, "chain_range": 190.0, "chain_falloff": 0.1, "armour_bonus": 0.4,  # TUNING (not in GDD)
+			"giants": 2,  # TUNING (not in GDD) the evolution flag: extra bolts per strike
+			"clap_share": 0.4,  # TUNING (not in GDD) share of the hop's damage
+			"clap_radius": 46.0,  # TUNING (not in GDD) px
+		},
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# Lethe's Flood (GDD §15.0 "River Styx, Lethe's Flood, Ferryman's Toll and the
+	# Ferrywoman"; owner-approved proposal "River Styx -> Lethe's Flood (+
+	# Ferryman's Toll)"): River Styx + Ferryman's Toll (a NEW passive, owner rule:
+	# at Lv 5). Two crossing rivers, wider, longer and harder, and the water of
+	# forgetting: a foe entering a river is stunned `forget` s (bosses and
+	# minibosses a quarter, elites half: RiverStyxData). Detected by the "forget" key.
+	"lethes_flood": {
+		"base": "river_styx",
+		"passive": "ferrymans_toll",
+		"display_name": "Lethe's Flood",
+		"icon": "lethes_flood",
+		"description": "Two crossing rivers of forgetting: foes that wade in forget themselves and stand still.",
+		"labels": {"damage": "Drain per tick", "rivers": "Rivers", "length": "River length", "forget": "Forget (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"rivers": 2, "damage": 16.0, "tick": 0.5, "river_slow": 0.45, "slow_duration": 0.8, "length": 280.0, "radius": 24.0,  # TUNING (not in GDD)
+			"duration": 6.5, "cooldown": 4.0, "drain_share": 0.06, "drain_cap": 6.0,  # TUNING (not in GDD)
+			"forget": 1.2,  # TUNING (not in GDD) the evolution flag: s a foe entering a river stands stunned (once per river)
 		},
 	},
 }

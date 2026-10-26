@@ -110,6 +110,20 @@
 ##                       multiplier in CombatResolver.damage_unit() for ranged
 ##                       sources, CombatResolver.is_ranged_source()). Evolves
 ##                       nothing.
+## plus Mount Olympus's two (Act IV, GDD §15.0 "Stolen Thunder, Titan's Blood and
+## the Oathbreaker" and "Twilight of the Gods and Grounded Bones"; both locked
+## until earned, UnlockData):
+##   Titan's Blood     — Stolen Thunder chains more hops and charges faster
+##                       (thunder_chains / thunder_charge in
+##                       AbilityManager.apply_spell_mods(); evolves Stolen
+##                       Thunder into Gigantomachy). Unlocked with the spell by
+##                       slaying Zeus.
+##   Grounded Bones    — an Act IV counter-passive ("act": 4, offered only on
+##                       Act IV stages; unlocked by the achievement Twilight of
+##                       the Gods): less lightning and wave damage (the Wrath of
+##                       the Gods) to the army and the necromancer
+##                       (DivineWrath.grounded_mult(), the one read, per target
+##                       slot). Evolves nothing.
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -145,7 +159,13 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act III: the Scrap Wastes ---
 	"conductive_marrow", "lead_lined_bones",
 	# --- Act III: the Iron Citadel ---
-	"machine_soul", "recoil_frame"]
+	"machine_soul", "recoil_frame",
+	# --- Act IV: the Shores of Ilion ---
+	"mortal_heel", "bronze_breaker",
+	# --- Act IV: Mount Olympus ---
+	"titans_blood", "grounded_bones",
+	# --- Act IV: the Asphodel Underworld ---
+	"ferrymans_toll", "myrmidon_oath"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -163,7 +183,11 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act III: the Scrap Wastes ---
 	"lead_lined_bones",
 	# --- Act III: the Iron Citadel ---
-	"recoil_frame"]
+	"recoil_frame",
+	# --- Act IV: the Shores of Ilion ---
+	"bronze_breaker",
+	# --- Act IV: the Asphodel Underworld ---
+	"myrmidon_oath"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -223,7 +247,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Content wave 2: Bone Golem --- (the slam's splash, GolemBehavior)
 	"golem_slam",
 	# --- Act III: the Iron Citadel --- (the Deus Revenant's missiles; the Rust Prophet's Risen scrap bolts)
-	"deus_revenant_missile", "scrap_bolt"]
+	"deus_revenant_missile", "scrap_bolt",
+	# --- Act IV: the Asphodel Underworld --- (the Myrmidon Shades' spear through a second foe)
+	"myrmidon_pierce"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -290,6 +316,10 @@ const BRINEWALKER_SUMMON_LEVEL: int = 3  # owner-approved
 ## Read by CombatResolver.damage_unit() (blocker_reduction) and
 ## HordeDirector.compute_stats() (hold_bonus).
 const MASONRY_CLASSES := ["warrior", "abomination", "bone_golem"]  # Owner-approved proposal 5
+# --- Act IV: the Asphodel Underworld ---
+## Myrmidon Oath: the front-line classes (the blockers on the Bone Ring's
+## outer posts) whose max HP and damage it raises (HordeDirector.compute_stats()).
+const OATH_CLASSES := ["warrior", "abomination", "bone_golem", "myrmidon_shade"]  # TUNING (not in GDD)
 # --- Act III: the Iron Citadel ---
 ## Recoil Frame: the attack profiles (UnitData "attack_profile", after a summon
 ## evolution's overlay) that count as RANGED summons: they fire faster and
@@ -960,6 +990,134 @@ const PASSIVES := {
 			{"ranged_haste": 0.18, "ranged_reach": 0.12},  # TUNING (not in GDD)
 			{"ranged_haste": 0.24, "ranged_reach": 0.16},  # TUNING (not in GDD)
 			{"ranged_haste": 0.30, "ranged_reach": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IV: the Shores of Ilion ---
+	# Paris's Arrow's paired passive (owner-approved Act IV proposal: "Arrow of
+	# Fate (+ Mortal Heel)"); unlocked with the spell by Achilles and offered on
+	# every stage. Own decision on its effect: every DIRECTED hit (a shot or a
+	# blow with an origin) that strikes a foe from BEHIND deals back_damage more
+	# (CombatResolver.damage_enemy(), PantheonRules.hit_from_behind(): the one
+	# direction test, any enemy's facing), Paris's Arrow's hits included; it
+	# rewards the ring that surrounds, the Rogue's dash and the Gargoyle's dive.
+	"mortal_heel": {
+		"display_name": "Mortal Heel",
+		"icon": "mortal_heel",
+		"description": "Every hit that strikes a foe from behind deals more.",
+		"labels": {"back_damage": ["Damage from behind", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"back_damage": 0.08},  # TUNING (not in GDD)
+			{"back_damage": 0.16},  # TUNING (not in GDD)
+			{"back_damage": 0.24},  # TUNING (not in GDD)
+			{"back_damage": 0.32},  # TUNING (not in GDD)
+			{"back_damage": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# Act IV's counter-passive Bronze Breaker (owner-approved Act IV proposal:
+	# "summon hits on shielded fronts deal more"; unlocked by the achievement
+	# Heel Found and offered only in Act IV through its card row's "act").
+	# Phalanx.breaker_mult() (the foundation's one read,
+	# PantheonRulesData.BRONZE_BREAKER / BRONZE_BREAKER_KEY): a summon hit on a
+	# locked shield's front (or a Legionary's testudo) deals 1 + front_damage
+	# times its share.
+	"bronze_breaker": {
+		"display_name": "Bronze Breaker",  # Owner-approved proposal
+		"icon": "bronze_breaker",
+		"description": "Your summons' blows on a locked shield wall's front hit harder.",
+		"labels": {"front_damage": ["Summon damage to shield fronts", "pct"]},
+		"act": 4,  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"front_damage": 0.2},  # TUNING (not in GDD) a front shot 10% -> 12%, a front blow x1.2
+			{"front_damage": 0.4},  # TUNING (not in GDD)
+			{"front_damage": 0.6},  # TUNING (not in GDD)
+			{"front_damage": 0.8},  # TUNING (not in GDD)
+			{"front_damage": 1.0},  # TUNING (not in GDD) a front shot 10% -> 20%, a front blow x2
+		],
+	},
+	# --- Act IV: Mount Olympus ---
+	# Titan's Blood (owner-approved Act IV proposal: Stolen Thunder's paired
+	# passive; unlocked with the spell by slaying Zeus): the blood of the giants
+	# the gods buried: Stolen Thunder chains `chain_bonus` more hops and its
+	# charge is `charge_cut` shorter (AbilityManager.apply_spell_mods()). Pairs
+	# with Stolen Thunder -> Gigantomachy.
+	"titans_blood": {
+		"display_name": "Titan's Blood",
+		"icon": "titans_blood",
+		"description": "Your Stolen Thunder charges faster and leaps to more armoured foes.",
+		"labels": {"chain_bonus": ["Extra chain hops", "int"], "charge_cut": ["Charge time", "neg_pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"chain_bonus": 0.0, "charge_cut": 0.08},  # TUNING (not in GDD)
+			{"chain_bonus": 1.0, "charge_cut": 0.14},  # TUNING (not in GDD)
+			{"chain_bonus": 1.0, "charge_cut": 0.2},  # TUNING (not in GDD)
+			{"chain_bonus": 2.0, "charge_cut": 0.26},  # TUNING (not in GDD)
+			{"chain_bonus": 2.0, "charge_cut": 0.32},  # TUNING (not in GDD)
+		],
+	},
+	# Grounded Bones (owner-approved Act IV proposal: "less lightning and wave
+	# damage to the army"; Act IV's counter-passive, offered only in Act IV,
+	# unlocked by the achievement Twilight of the Gods): the share of the
+	# Wrath of the Gods' lightning and wave damage the necromancer and his army
+	# no longer take (DivineWrath.grounded_mult(), the one read, per target
+	# slot; PantheonRulesData.GROUNDED_BONES_KEY). The fissures are not cut.
+	"grounded_bones": {
+		"display_name": "Grounded Bones",
+		"icon": "grounded_bones",
+		"description": "The gods' lightning and waves hurt you and your dead less.",
+		"labels": {"wrath_reduction": ["Lightning and wave damage", "neg_pct"]},
+		"act": 4,  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"wrath_reduction": 0.1},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.2},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.3},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.4},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# Ferryman's Toll (GDD §15.0 "River Styx, Lethe's Flood, Ferryman's Toll and
+	# the Ferrywoman"; unlocked by defeating Hades, UnlockData): every foe slain
+	# while SLOWED (any slow: the Styx, Frost Wraiths, Soul Chains, Death Mark...)
+	# pays the ferryman: the necromancer heals toll_heal HP (at most
+	# RiverStyxData.TOLL_HEAL_CAP_PER_S a second) and the Dread Rally gains
+	# toll_rally soul points (CombatResolver._kill_enemy(), the one kill path).
+	# Pairs with River Styx -> Lethe's Flood.
+	"ferrymans_toll": {
+		"display_name": "Ferryman's Toll",
+		"icon": "ferrymans_toll",
+		"description": "Every slowed foe that dies pays the ferryman: you heal and your Dread Rally fills.",
+		"labels": {"toll_heal": ["Heal per slowed kill", "num"], "toll_rally": ["Rally charge per slowed kill", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"toll_heal": 0.2, "toll_rally": 0.2},  # TUNING (not in GDD)
+			{"toll_heal": 0.3, "toll_rally": 0.3},  # TUNING (not in GDD)
+			{"toll_heal": 0.4, "toll_rally": 0.4},  # TUNING (not in GDD)
+			{"toll_heal": 0.5, "toll_rally": 0.5},  # TUNING (not in GDD)
+			{"toll_heal": 0.6, "toll_rally": 0.6},  # TUNING (not in GDD)
+		],
+	},
+	# Myrmidon Oath (own decision: the Legion of Tartarus's paired passive, its
+	# name and rule; GDD §15.0 "Myrmidon Shades, Legion of Tartarus and Myrmidon
+	# Oath"; unlocked by defeating Hades): the front line swears to hold: the
+	# blockers on the Bone Ring's outer posts (OATH_CLASSES: Warriors,
+	# Abominations, the Bone Golem, the Myrmidon Shades and their evolutions)
+	# gain max HP and damage (HordeDirector.compute_stats()). Pairs with the
+	# Myrmidon Shades -> Legion of Tartarus.
+	"myrmidon_oath": {
+		"display_name": "Myrmidon Oath",
+		"icon": "myrmidon_oath",
+		"description": "Your front-line dead swear to hold: they are hardier and strike harder.",
+		"labels": {"front_hp": ["Front-line max HP", "pct"], "front_damage": ["Front-line damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"front_hp": 0.06, "front_damage": 0.04},  # TUNING (not in GDD)
+			{"front_hp": 0.12, "front_damage": 0.08},  # TUNING (not in GDD)
+			{"front_hp": 0.18, "front_damage": 0.12},  # TUNING (not in GDD)
+			{"front_hp": 0.24, "front_damage": 0.16},  # TUNING (not in GDD)
+			{"front_hp": 0.30, "front_damage": 0.20},  # TUNING (not in GDD)
 		],
 	},
 }

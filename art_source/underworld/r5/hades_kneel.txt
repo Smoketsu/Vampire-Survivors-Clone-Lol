@@ -1,0 +1,9 @@
+Edit the attached image. Return the SAME image: the identical figure, pose, silhouette, proportions, pixel grid, outline, size and position on the canvas. Keep EXACTLY as they are: his head, pale ashen face, eyes, his BLACK hair and his BLACK beard, the cold pale-blue flames on his head, the dark bronze spiked crown he holds out in his pale hands, the bronze clasp and belt, and the bronze two-pronged bident lying on the ground.
+
+Change ONLY the colours of his two cloths, so they separate clearly:
+1. The long ROBE (the chiton from his chest to his feet, between the cloak's edges): a mid CHARCOAL GREY (#3B4352 main, #4A4E5A and #6B7A94 for the lit folds, #2A2D36 in the deep folds), with a thin BRONZE trim (#A8702E) running down its front edges where it meets the cloak and along its hem.
+2. The CLOAK (over his shoulders and hanging behind him and around him): a deep MIDNIGHT BLUE (#123E66 main, #0B2440 in the deep folds, #2C77B8 for the lit folds on the top-left edges).
+
+The beard and the hair stay black, NOT blue and NOT charcoal. The face stays pale. Every shape and fold stays where it is; only those two cloths change colour.
+
+Flat pixel-art fills only, no gradients, no anti-aliasing, no glow. Output: a square PNG with a FULLY TRANSPARENT background (real alpha), no ground, no shadow, no text.

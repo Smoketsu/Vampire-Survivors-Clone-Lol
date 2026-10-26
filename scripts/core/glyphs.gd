@@ -143,9 +143,10 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		ci.draw_arc(o, r * 1.4, 0.0, TAU, 24, Palette.GOLD, 2.0)
 	# Sprite art, if any: soldiers in enemies/, buildings and carts in
 	# structures/, the Ancient Eye's kinds (Act II) in eye/, the Electronic
-	# Empire's (Act III) in empire/.
+	# Empire's (Act III) in empire/, the Olympian Republic's (Act IV) in pantheon/.
 	if SpriteBank.draw(ci, "enemies/" + kind, o, flash) or SpriteBank.draw(ci, "structures/" + kind, o, flash) \
-			or SpriteBank.draw(ci, "eye/" + kind, o, flash) or SpriteBank.draw(ci, "empire/" + kind, o, flash):
+			or SpriteBank.draw(ci, "eye/" + kind, o, flash) or SpriteBank.draw(ci, "empire/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "pantheon/" + kind, o, flash):
 		return
 	match kind:
 		"recruit":
@@ -166,7 +167,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			if not MarchGlyphs.draw_enemy(ci, kind, o, r, flash):  # Crimson March kinds ...
 				if not SanctumGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Sanctum's ...
 					if not EmpireGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Electronic Empire's (Act III) ...
-						EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
+						if not PantheonGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Olympian Republic's (Act IV) ...
+							EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
 
 
 ## Covenant Recruit: small crimson round body, ivory tabard, silver helm, spear.

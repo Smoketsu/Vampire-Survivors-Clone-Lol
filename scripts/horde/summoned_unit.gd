@@ -310,6 +310,12 @@ var compel_until: float = 0.0
 var compel_point: Vector2 = Vector2.ZERO
 ## Multiplier on move speed while compelled (0 = held fast: it cannot move).
 var compel_speed: float = 0.0
+# --- Act IV: Mount Olympus ---
+## Game time (s) until which this summon is STUNNED (turned to stone by a
+## Gorgon's gaze): it neither thinks, moves, attacks nor casts, and is drawn
+## stone-grey (0 = never / expired). Written only by THE one stun path for
+## summons, CombatResolver.stun_unit().
+var stunned_until: float = 0.0
 
 
 # =====================================================================================
@@ -354,6 +360,7 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	held_until = 0.0
 	misdirect_until = 0.0
 	compel_until = 0.0
+	stunned_until = 0.0  # Act IV: Mount Olympus (a Gorgon's stone).
 	slot_jitter = randf()
 	band_jitter = randf()
 	anchor_offset = pos - game.player.position
@@ -544,8 +551,8 @@ func misdirect(dir: Vector2, duration: float, speed_mult: float) -> bool:
 func think() -> void:
 	if not active or state == State.DEAD or state == State.SPAWNING:
 		return
-	if compel_until > game.elapsed:
-		_stall_since = -1.0  # Held or lured: no stall window, no decisions.
+	if compel_until > game.elapsed or stunned_until > game.elapsed:
+		_stall_since = -1.0  # Held, lured or stunned: no stall window, no decisions.
 		return
 	var player_pos := game.player.position
 	var d_player := position.distance_to(player_pos)
@@ -885,7 +892,7 @@ func try_bash(e: Enemy, normal: Vector2) -> void:
 	e.knockback += normal * bash_knockback / maxf(e.mass, 0.1)
 	game.effects.slash(position + normal * radius, normal, Palette.COLD_BLUE if evolution == "" else Palette.VIOLET, radius * 1.6)
 	game.stat_add("warrior_bashes", 1.0)
-	game.combat.damage_enemy(e, bash_damage, "bash" if evolution == "" else evolution + "_bash", director.slot)  # Co-op: called from the enemy's step, so the bash names its army.
+	game.combat.damage_enemy(e, bash_damage, "bash" if evolution == "" else evolution + "_bash", director.slot, position)  # Co-op: called from the enemy's step, so the bash names its army. Act IV: from where it stands.
 
 
 # =====================================================================================
@@ -923,6 +930,8 @@ func physics_step(delta: float) -> void:
 		if aura_cd <= 0.0:
 			aura_cd = aura_interval
 			SummonAbilities.aura_pulse(self)
+	if stunned_until > 0.0 and _step_stunned():
+		return  # Act IV: turned to stone (stun()): no move, no attack, no cast.
 	if misdirect_until > game.elapsed:
 		velocity = misdirect_dir * move_speed * misdirect_speed  # Turned around (misdirect()).
 	elif compel_until > 0.0 and _step_compelled(delta):
@@ -959,6 +968,37 @@ func compel(point: Vector2, until: float, speed_mult: float) -> bool:
 	velocity = Vector2.ZERO
 	queue_redraw()
 	return true
+
+
+# --- Act IV: Mount Olympus ---
+## Act IV, the summon side of THE one stun path (CombatResolver.stun_unit()
+## calls it; nothing else should): stuns the unit until game time `until`
+## (a longer stun already running is kept). It drops its target, leaves a
+## special in progress (CASTING) and is drawn stone-grey. Airborne, spawning
+## and dead units are immune. Returns true when it took hold.
+func stun(until: float) -> bool:
+	if not active or airborne or state == State.SPAWNING or state == State.DEAD:
+		return false
+	stunned_until = maxf(stunned_until, until)
+	_drop_target()
+	_enter(State.FOLLOWING)  # Leaves CASTING: a special in progress is cancelled.
+	velocity = Vector2.ZERO
+	self_modulate = ReaperHorrorGlyphs.STONE_TINT
+	queue_redraw()
+	return true
+
+
+## The tick of a stunned unit: holds it still and returns true; once the stun
+## ran out it clears it (and the stone tint) and returns false.
+func _step_stunned() -> bool:
+	if stunned_until > game.elapsed:
+		velocity = Vector2.ZERO
+		return true
+	stunned_until = 0.0
+	if not stone_form:
+		self_modulate = Color.WHITE
+	queue_redraw()
+	return false
 
 
 ## True while the Ancient Eye compels this unit.
@@ -1169,7 +1209,7 @@ func _release_attack() -> void:
 					var struck := target  # The struck enemy (the target may die).
 					game.effects.slash(position + dir * radius, dir, Palette.BONE, radius * 1.4)
 					var mult := behavior.melee_bonus(self, struck) if behavior != null else 1.0  # Class bonus (Pack Hunt).
-					var dealt := game.combat.damage_enemy(struck, damage * mult, dmg_source)
+					var dealt := game.combat.damage_enemy(struck, damage * mult, dmg_source, -1, position)  # Act IV: a blow from where it stands (the Phalanx's flank test).
 					if behavior != null:
 						behavior.on_melee_hit(self, struck, dealt)  # Hellhound burn.
 					if cleave_radius > 0.0 or lifesteal > 0.0:

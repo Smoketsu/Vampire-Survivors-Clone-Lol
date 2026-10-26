@@ -1,0 +1,5 @@
+Edit the attached image. Return the SAME image: the identical woman, pose, body, muscles, abs, bust, breastplate, helmet, crest, face, hair, arms, axe, shield, greaves, boots, pixel grid, outline, size and position on the canvas.
+
+Change ONLY her war skirt (the blue pleated skirt under the bronze belt): make it a SHORT, FLOWING, FLARED pleated skirt that swishes, cut HIGH at the outer sides of her hips so her bare muscular thighs show, with a wider FRONT PANEL of the same blue cloth that hangs a little longer in front of her and fully covers her crotch. The front panel's lower edge is ONE smooth rounded curve (not a point, not a V, no split, no slit, no gap between the panel and the skirt). The pleats fan outward as the skirt flares; a thin bronze trim along the hem. Fully clothed, never revealing anything between the thighs.
+
+Flat pixel-art fills only, no gradients, no anti-aliasing. Output: a square PNG with a FULLY TRANSPARENT background (real alpha), no ground, no shadow, no text.

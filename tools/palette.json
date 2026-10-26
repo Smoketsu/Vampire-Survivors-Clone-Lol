@@ -94,7 +94,17 @@
     {"name": "signal_dark", "hex": "#962410", "ramp": "signal", "index": 1, "group": "unit", "role": "signal light housings, warning paint in shadow (Act III)"},
     {"name": "signal_red", "hex": "#E0391E", "ramp": "signal", "index": 2, "group": "unit", "role": "warning red: lock-on lasers, sensor eyes, alarm lights (Act III; more orange than the Covenant crimson)"},
     {"name": "signal_amber", "hex": "#FFAE1A", "ramp": "signal", "index": 3, "group": "unit", "role": "hard amber: running lights, screens, tracer rounds (Act III)"},
-    {"name": "signal_glow", "hex": "#FFEBA8", "ramp": "signal", "index": 4, "group": "glow", "role": "white-hot core of the Empire's lights and lasers (Act III)"}
+    {"name": "signal_glow", "hex": "#FFEBA8", "ramp": "signal", "index": 4, "group": "glow", "role": "white-hot core of the Empire's lights and lasers (Act III)"},
+    {"name": "bronze_ink", "hex": "#1E1408", "ramp": "bronze", "index": 0, "group": "ink", "role": "outline of the Olympian Republic's bronze and marble (Act IV; PANTHEON_BRONZE_INK)"},
+    {"name": "bronze_dark", "hex": "#6B4423", "ramp": "bronze", "index": 1, "group": "unit", "role": "Olympian bronze in shadow: shield rims, greaves, helmet cheeks (Act IV; PANTHEON_BRONZE_DARK)"},
+    {"name": "bronze", "hex": "#A8702E", "ramp": "bronze", "index": 2, "group": "unit", "role": "Olympian bronze: helmets, cuirasses, round shields, the Titans (Act IV; PANTHEON_BRONZE)"},
+    {"name": "bronze_light", "hex": "#E0A955", "ramp": "bronze", "index": 3, "group": "unit", "role": "lit bronze: shield faces and helmet crowns (Act IV; PANTHEON_BRONZE_LIGHT; warmer and duller than the gold)"},
+    {"name": "marble_dark", "hex": "#8E8A86", "ramp": "marble", "index": 1, "group": "unit", "role": "marble and pale linen in shadow, the shades' ghostly grey (Act IV; PANTHEON_MARBLE_DARK)"},
+    {"name": "marble", "hex": "#CFCBC4", "ramp": "marble", "index": 2, "group": "unit", "role": "marble white: chitons, crests, statues, the shades (Act IV; PANTHEON_MARBLE; cooler and greyer than the bone ivory)"},
+    {"name": "marble_light", "hex": "#F4F1EA", "ramp": "marble", "index": 3, "group": "unit", "role": "lit marble (Act IV; PANTHEON_MARBLE_LIGHT)"},
+    {"name": "aegean_dark", "hex": "#123E66", "ramp": "aegean", "index": 1, "group": "unit", "role": "Aegean blue in shadow: cloaks, crests (Act IV; PANTHEON_AEGEAN_DARK)"},
+    {"name": "aegean", "hex": "#2C77B8", "ramp": "aegean", "index": 2, "group": "unit", "role": "Aegean blue: hero cloaks, crests, shield emblems (Act IV; PANTHEON_AEGEAN; warmer and greener than the undead's arcane blue)"},
+    {"name": "aegean_light", "hex": "#6FB6E8", "ramp": "aegean", "index": 3, "group": "unit", "role": "lit Aegean blue, the gods' pale glow: shade eyes, Titan eyes (Act IV; PANTHEON_AEGEAN_LIGHT)"}
   ],
   "ramps": {
     "violet": {"members": ["ink_violet", "violet_deep", "violet", "violet_glow", "violet_flare"], "role": "the player only: necromancer, the 12 characters, their spells and icons"},
@@ -114,6 +124,9 @@
     "biolume": {"members": ["ink_biolume", "biolume_dark", "biolume", "biolume_glow"], "role": "the Ancient Eye's bioluminescence (Act II): glow spots, eyes, sigils; magenta-leaning so it never reads as the player's violet"},
     "chrome": {"members": ["ink_chrome", "chrome_dark", "chrome", "chrome_light", "chrome_glint"], "role": "the Electronic Empire's chrome (Act III): cold steel greys with a blue cast for machines and cyborg plating; bluer and more polished than the undead's cold grey"},
     "signal": {"members": ["ink_signal", "signal_dark", "signal_red", "signal_amber", "signal_glow"], "role": "the Electronic Empire's signal lights (Act III): hard amber to warning red for lights, lasers and screens; never the undead's soul teal or the player's violet"},
+    "bronze": {"members": ["bronze_ink", "bronze_dark", "bronze", "bronze_light"], "role": "the Olympian Republic's bronze (Act IV): helmets, cuirasses, round shields, the Titans; warmer and duller than the Covenant gold, which stays gold (evolution, chest, victory, Glory)"},
+    "marble": {"members": ["bronze_ink", "marble_dark", "marble", "marble_light"], "role": "the Olympian Republic's marble white (Act IV): linen, crests, statues and the pale shades of the dead; cooler and greyer than the bone ivory (outline borrowed from the bronze ink)"},
+    "aegean": {"members": ["ink_cold", "aegean_dark", "aegean", "aegean_light"], "role": "the Olympian Republic's Aegean blue (Act IV): cloaks, crests, emblems and the gods' pale glow; kept apart from the undead's arcane blue and ice (outline borrowed from the cold ink)"},
     "floor": {"members": ["floor_soil", "floor_earth", "floor_grass", "floor_ochre", "floor_slate", "floor_ash", "floor_dirt", "floor_moss", "floor_marble", "floor_stone"], "role": "ground colours of the three stages (tiles only, never sprites), dark -> light; the zone tiles add close shades per zone"}
   }
 }

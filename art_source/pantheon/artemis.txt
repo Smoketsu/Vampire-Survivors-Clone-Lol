@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, drawing her bow.
+
+LOW-RESOLUTION pixel art: the whole figure is only 92 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings.
+
+Subject: ARTEMIS, the Greek goddess of the hunt, a FEMALE goddess with a SLIM-THICK, ATHLETIC MUSCULAR build like a strong huntress: toned defined arms and shoulders, a flat toned stomach, thick strong thighs and calves. She keeps the game's figure-redesign style: an exaggerated hourglass figure with a big bust, a narrow waist and wide hips, FULLY CLOTHED (nothing revealing, never explicit), confident and attractive. Long dark hair in a high ponytail, a silver crescent-moon circlet on her brow, her face clearly visible (two clear eyes), skin-coloured. A short pleated silver-white chiton belted with gold, covering her chest fully and reaching mid-thigh, white sandals laced up her calves, a quiver of arrows on her back. She holds a tall silver-white longbow FAR OUT IN FRONT of her body with her front (right) arm fully extended, so the bow is clearly in front of and apart from her chest; her other hand draws the string back at her cheek. Muscles shown by 2-3 big flat skin shades only, no thin lines.
+Signature shape that must read in silhouette: the tall silver bow held far forward, the ponytail, the short white chiton and her hourglass figure.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: marble white #8E8A86 #CFCBC4 #F4F1EA, skin #8C6040 #E0A882, hair and leather #1C110B #4F3320 #8C6040, gold #E0A92E #FFDC66
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a sprite of this game: match its pixel size, outline weight and flat look exactly; (2) the earlier version of this character: keep her costume and colours, change her body as described.

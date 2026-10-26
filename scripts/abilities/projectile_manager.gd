@@ -300,7 +300,7 @@ func _friendly_hits(p: Projectile) -> bool:
 			if bonus > 0.0:
 				dmg *= 1.0 + bonus
 				game.stat_add("volley_marked_hits", 1.0)
-		game.combat.damage_enemy(e, dmg, p.source)
+		game.combat.damage_enemy(e, dmg, p.source, -1, p.position - p.velocity, true)  # Act IV: a shot from where it flew in (the Phalanx's front).
 		if p.kind == Projectile.Kind.SHADOW_BOLT or p.kind == Projectile.Kind.VOID_BOLT or p.kind == Projectile.Kind.VOID_SHARD:
 			# The player's spell bolts splash where they hit (art-only, visual).
 			game.effects.burst(p.position, AnimData.BOLT_IMPACT_RADIUS, "bolt_impact")

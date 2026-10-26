@@ -125,9 +125,8 @@ func _act_row() -> Control:
 	lb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(lb)
 	for a: int in _acts():
-		var info: Dictionary = StageRegistry.ACTS[a]
 		var b := Button.new()
-		b.text = "%s · %s" % [String(info["name"]), String(info["subtitle"])]
+		b.text = _act_text(a, true)
 		b.custom_minimum_size = FrontDoorData.ACT_TAB_SIZE
 		b.focus_mode = Control.FOCUS_NONE  # Switched by Q / E or a click; focus stays on the cards.
 		b.set_meta(UiMotion.META_LIFT, false)
@@ -140,10 +139,31 @@ func _act_row() -> Control:
 	return row
 
 
+# --- Act IV: the Olympian Republic ---
+## Text of act `a`'s tab: "Act IV · The Olympian Republic" when `full`, else
+## "Act IV" (compact tabs, FrontDoorData.ACT_TABS_FULL_MAX).
+static func _act_text(a: int, full: bool) -> String:
+	var info: Dictionary = StageRegistry.ACTS[a]
+	return "%s · %s" % [String(info["name"]), String(info["subtitle"])] if full else String(info["name"])
+
+
+## Act IV: with more acts than FrontDoorData.ACT_TABS_FULL_MAX, only the shown
+## act's tab keeps its full text and size, the others are compact (the row
+## fits six acts at 1280 x 600 layout px); with fewer, every tab is full.
+func _size_act_tabs() -> void:
+	var compact := _act_tabs.size() > FrontDoorData.ACT_TABS_FULL_MAX  # Too many acts for full tabs.
+	for a: int in _act_tabs:
+		var b := _act_tabs[a] as Button
+		var full := not compact or a == _act  # This tab shows its subtitle.
+		b.text = _act_text(a, full)
+		b.custom_minimum_size = FrontDoorData.ACT_TAB_SIZE if full else FrontDoorData.ACT_TAB_COMPACT_SIZE
+
+
 ## Shows act `act`'s cards (rebuilt), the gold frame on its tab, and focuses
 ## `focus_id`'s card when it is in the act and unlocked, else the act's first.
 func _show_act(act: int, focus_id: String = "") -> void:
 	_act = act
+	_size_act_tabs()  # Act IV: compact tabs beyond three acts.
 	for a: int in _act_tabs:
 		UiTheme.style_button(_act_tabs[a] as Button, "button", "gold" if a == act else "")
 	for c: Node in _row.get_children():

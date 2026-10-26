@@ -176,6 +176,20 @@
 ##     (_character_list()). The summary adds a "character" line (starting
 ##     spell level, stats, the innate's counters, characters unlocked this
 ##     run; CharacterInnates.summary_line()).
+##   * Act IV, the Olympian Republic (GDD §15.0 "Act IV foundation (phase
+##     1)"): --stage=ilion|olympus|underworld, --spawn= with its kinds
+##     (shade_of_dead, hoplite, hero, bronze_titan), --boss=achilles|zeus|
+##     hades. The bot steps off telegraphed bolt circles and fissures
+##     (PantheonRules.danger_push(); the waves cannot be dodged). When the
+##     Pantheon ran, the summary adds the "divine wrath", "phalanx", "glory",
+##     "pantheon kinds" and (on an Act IV stage) "pantheon stage" lines
+##     (PantheonReport).
+##   * Act IV, Mount Olympus: --spawn= with its kinds (centaur_archer, amazon,
+##     gorgon, moon_hound, sea_serpent) and its gods (ares, artemis, poseidon;
+##     any stage), --boss=zeus, --character=oathbreaker; the "olympus",
+##     "pantheon trial", "olympus kinds", "wrath called" and "zeus" lines
+##     (OlympusReport, through PantheonReport), and on every stage the
+##     "stolen thunder" / "grounded bones" lines when used.
 class_name Autotest
 extends Node
 
@@ -1077,10 +1091,14 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.enemies.archive_haz.danger_push(pos)  # Act II: pages, spore clouds, ink (null elsewhere).
 	if game.empire != null:
 		danger += game.empire.danger_push(pos)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
+	if game.pantheon != null:
+		danger += game.pantheon.danger_push(pos)  # Act IV: bolt circles, fissures (null elsewhere).
 	if game.enemies.assembly != null:
 		danger += game.enemies.assembly.danger_push(pos)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	if game.enemies.citadel != null:
 		danger += game.enemies.citadel.danger_push(pos)  # Act III, the Iron Citadel: laser grids (null elsewhere).
+	if game.enemies.underworld != null:
+		danger += game.enemies.underworld.danger_push(pos)  # Act IV, the Asphodel Underworld: out of the Styx (null elsewhere).
 	return danger
 
 
@@ -1169,10 +1187,14 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.archive_haz.danger_push(p)  # Act II: pages, spore clouds, ink (null elsewhere).
 	if game.empire != null:
 		danger += game.empire.danger_push(p)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
+	if game.pantheon != null:
+		danger += game.pantheon.danger_push(p)  # Act IV: bolt circles, fissures (null elsewhere).
 	if game.enemies.assembly != null:
 		danger += game.enemies.assembly.danger_push(p)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	if game.enemies.citadel != null:
 		danger += game.enemies.citadel.danger_push(p)  # Act III, the Iron Citadel: laser grids (null elsewhere).
+	if game.enemies.underworld != null:
+		danger += game.enemies.underworld.danger_push(p)  # Act IV, the Asphodel Underworld: out of the Styx (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1201,6 +1223,9 @@ func get_move_vector() -> Vector2:
 	if goal == Vector2.INF and game.enemies.citadel != null and away.length() < 0.3 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES \
 			and game.horde.units.size() >= CITADEL_SEEK_ARMY:
 		goal = game.enemies.citadel.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Iron Citadel: gate generators, then turrets, when calm and the army can take them.
+	# --- Act IV: the Shores of Ilion ---
+	if goal == Vector2.INF and game.enemies.ilion != null and away.length() < 0.2 and policy() in SANCTUM_SEEK_POLICIES:
+		goal = game.enemies.ilion.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Shores of Ilion: burn the siege towers when calm.
 	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
 		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
 		var at := (game.enemies.boss as BossVhalneth).approach_point(p)
@@ -1320,7 +1345,9 @@ func finish(summary: Dictionary) -> void:
 	if game.claims != null:
 		print("[autotest] claims: %s" % game.claims.summary_line())  # Act II Claims (EyeClaims; Act II stages only).
 	EmpireReport.print_lines(game, st_all)  # Act III: line of fire, lock-on, steel, purge protocol, kinds, the stage (only when the Empire ran).
+	PantheonReport.print_lines(game, st_all)  # Act IV: divine wrath, phalanx, glory, kinds, the stage (only when the Pantheon ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
+	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	print("[autotest] gravebow / bone colossus: %s | %s" % [GravebowKit.summary_line(st_all), ColossusKit.summary_line(st_all)])
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())
 	print("[autotest] later spells: %s" % ab.spells.later_summary_line())
@@ -1370,6 +1397,8 @@ func finish(summary: Dictionary) -> void:
 	SpireReport.print_all(game, st)  # Act II, Ul-Thalos: the sinking, pillars, kinds, Vhal'Neth, the Waking, its items (only when they ran).
 	AssemblyReport.print_items(game, st)  # Act III, the Assembly Halls: Hollow Puppet, the Grave Drone, their passives, Signal Ghost (only when owned).
 	CitadelReport.item_lines(game, st)  # Act III, the Iron Citadel: Scrap Swarm, the Iron Revenant (only when used; the stage's own lines are EmpireReport's).
+	OlympusReport.item_lines(game, st)  # Act IV, Mount Olympus: Stolen Thunder, Grounded Bones (only when used; the stage's own lines are PantheonReport's).
+	UnderworldReport.item_lines(game, st)  # Act IV, the Asphodel Underworld: River Styx, the Myrmidon Shades (only when used; the stage's own lines are PantheonReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

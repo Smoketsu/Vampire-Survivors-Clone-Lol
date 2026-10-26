@@ -1,0 +1,10 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance.
+
+LOW-RESOLUTION pixel art: the whole figure is only 50 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings.
+
+Subject: THE FERRYWOMAN (female, figure-redesign style: hourglass figure, big bust, wide hips, fully clothed and modest), her HYPER skin "Golden Ferrywoman": the same hooded cloak and fitted corset dress, now in deep violet with rich GOLD trim and gold embroidery, a gold circlet over the hood, the obol coin bigger and gold, the oar gilded with gold bands and a golden lantern with a violet flame, a faint gold glow. Colours: violet #3B1F5C #6B39A6 #A35CFA; gold #4F3320 #E0A92E #FFDC66 #FFF6D8; skin bone #A79A80 #CFC7AE #EDE6D0.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: the approved sprite of this same character: keep her exact pose, figure, proportions, height, pixel size and outline; change only the costume colours and details described.
