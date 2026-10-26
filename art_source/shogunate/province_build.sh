@@ -12,6 +12,13 @@ python3 tools/prepare_sprite.py art_source/player/grave_kunoichi_hyper.png playe
 python3 tools/prepare_sprite.py art_source/player/grave_kunoichi_untouchable.png player/grave_kunoichi_untouchable --ink-l 0.20 --ramps bone,soul,grey,violet
 python3 tools/prepare_sprite.py art_source/player/grave_kunoichi_deathlord.png player/grave_kunoichi_deathlord --ink-l 0.20 --ramps violet,crimson,steel,grey,bone
 K="shogunate/kunoichi shogunate/kappa shogunate/shuten_doji bosses/kage player/grave_kunoichi player/grave_kunoichi_hyper player/grave_kunoichi_untouchable player/grave_kunoichi_deathlord"
+# Fishnets (Act V art review round 1): the converter cannot hold a 1-px net, so it is painted on after conversion.
+# Kunoichi / Kage: every 8c6040 skin pixel below a row; the Grave Kunoichi and her skins: the net area of the
+# API still (art_source/shogunate/fishnet/*.py, run from the repo root with PYTHONPATH=art_source/shogunate/fishnet).
+export PYTHONPATH=art_source/shogunate/fishnet
+python3 art_source/shogunate/fishnet/fishc.py shogunate/kunoichi 8c6040 26 e0a882 1c110b
+python3 art_source/shogunate/fishnet/fishc.py bosses/kage 8c6040 30 e0a882 1c110b
+for v in "" _hyper _untouchable _deathlord; do python3 art_source/shogunate/fishnet/fish.py art_source/player/grave_kunoichi$v.png player/grave_kunoichi$v 0.5 b4aa8a 160a21; done
 python3 tools/walk_cycle.py build $K
 python3 tools/walk_cycle.py idle shogunate/kunoichi bosses/kage player/grave_kunoichi player/grave_kunoichi_hyper player/grave_kunoichi_untouchable player/grave_kunoichi_deathlord
 python3 art_source/shogunate/province_build.py

@@ -513,11 +513,11 @@ RIGS = {
     # idle breathing (figure-redesign style); the Kappa scuttles, its reaching claw rigid; Shuten-doji stomps, his
     # spiked kanabo (cols 62+) riding with the body; Kage strides wide in her ready stance (bust box, idle breathing;
     # her clones wear the same strips); the Grave Kunoichi strides, her long scarf (cols 0-16) riding with the body.
-    "shogunate/kunoichi": dict(mode="legs", hip=34, back=(12, 20), front=(20, 30), rigid=[(0, 12, 0, None), (30, 40, 0, None)], spread=1, lift=1, dip=1, bust=(16, 26, 14, 20, 2)),
+    "shogunate/kunoichi": dict(mode="legs", hip=34, back=(12, 20), front=(20, 30), rigid=[(0, 12, 0, None), (30, 40, 0, None)], spread=1, lift=1, dip=1, bust=(16, 28, 14, 20, 2)),  # Round 1 redo: box 2 px to the right (was cols 16-26).
     "shogunate/kappa": dict(mode="legs", hip=24, back=(0, 14), front=(14, 24), rigid=[(24, 32, 0, None)], spread=1, lift=2, dip=1),
     "shogunate/shuten_doji": dict(mode="legs", hip=86, back=(0, 36), front=(36, 62), rigid=[(62, 94, 0, None)], spread=2, lift=3, dip=1),
-    "bosses/kage": dict(mode="legs", hip=44, back=(0, 32), front=(32, 50), rigid=[(50, 66, 0, None)], spread=2, lift=2, dip=1, bust=(27, 40, 18, 26, 2)),
-    "player/grave_kunoichi": dict(mode="legs", hip=40, back=(17, 27), front=(27, 44), rigid=[(0, 17, 0, None)], spread=1, lift=1, dip=1, bust=(21, 32, 16, 23, 2)),
+    "bosses/kage": dict(mode="legs", hip=44, back=(0, 32), front=(32, 50), rigid=[(50, 66, 0, None)], spread=2, lift=2, dip=1, bust=(24, 37, 15, 23, 2)),  # Round 1 redo: box up and left onto the chest (was cols 27-40, rows 18-26).
+    "player/grave_kunoichi": dict(mode="legs", hip=40, back=(17, 27), front=(27, 44), rigid=[(0, 17, 0, None)], spread=1, lift=1, dip=1, bust=(21, 34, 16, 23, 2)),  # Round 1 redo: box widened to the right (was cols 21-32; the three skins share it).
     # --- Act V: the Road to the Sun ---
     # The Sohei strides, the naginata (above the hip) riding with the body; the Kirin lopes on four legs (the hind
     # pair left, the forelegs right, like Cerberus); the Kitsune (figure redesign: bust bounce, idle breathing)
