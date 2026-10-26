@@ -30,8 +30,8 @@ UNITS = {
 
     "shogunate/sohei": ("art_source/shogunate/sohei.png", ["--ramps", "indigo,lacquer,marble,grey,gold,skin,brown", "--ink-l", "0.22"]),
     "shogunate/kirin": ("art_source/shogunate/kirin.png", ["--ramps", "gold,marble,bone,brown,sakura", "--ink-l", "0.22"]),
-    "bosses/amaterasu": ("art_source/bosses/amaterasu.png", ["--ramps", "marble,gold,lacquer,indigo,skin", "--ink-l", "0.22"]),
-    "bosses/amaterasu_mirror": ("art_source/bosses/amaterasu_mirror.png", ["--ramps", "marble,gold,lacquer,indigo,skin", "--ink-l", "0.22"]),
+    "bosses/amaterasu": ("art_source/bosses/amaterasu.png", ["--ramps", "marble,gold,lacquer,indigo,skin", "--ink-l", "0.22", "--no-levels"]),  # Round 1 redo: --no-levels keeps her black hair dark.
+    "bosses/amaterasu_mirror": ("art_source/bosses/amaterasu_mirror.png", ["--ramps", "marble,gold,lacquer,indigo,skin", "--ink-l", "0.22", "--no-levels"]),
     "summons/bound_oni": ("art_source/summons/bound_oni.png", ["--ramps", "grey,crimson,bone,gold,soul,brown", "--ink-l", "0.22"]),
     "summons/oni_lord": ("art_source/summons/oni_lord.png", ["--ramps", "grey,crimson,bone,gold,soul,brown", "--ink-l", "0.22"]),
 }
