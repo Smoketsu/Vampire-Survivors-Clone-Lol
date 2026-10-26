@@ -9,7 +9,7 @@ python3 tools/prepare_sprite.py art_source/shogunate/shuten_doji.png shogunate/s
 python3 tools/prepare_sprite.py art_source/bosses/kage.png bosses/kage --ink-l 0.12 --no-levels --ramps indigo,lacquer,grey,gold,skin,marble
 python3 tools/prepare_sprite.py art_source/player/grave_kunoichi.png player/grave_kunoichi --ink-l 0.20 --ramps violet,bone,soul,grey
 python3 tools/prepare_sprite.py art_source/player/grave_kunoichi_hyper.png player/grave_kunoichi_hyper --ink-l 0.20 --no-levels --ramps violet,bone,gold,grey
-python3 tools/prepare_sprite.py art_source/player/grave_kunoichi_untouchable.png player/grave_kunoichi_untouchable --ink-l 0.20 --ramps bone,soul,grey,violet
+python3 tools/prepare_sprite.py art_source/player/grave_kunoichi_untouchable.png player/grave_kunoichi_untouchable --ink-l 0.20 --no-levels --ramps marble,soul,grey
 python3 tools/prepare_sprite.py art_source/player/grave_kunoichi_deathlord.png player/grave_kunoichi_deathlord --ink-l 0.20 --ramps violet,crimson,steel,grey,bone
 K="shogunate/kunoichi shogunate/kappa shogunate/shuten_doji bosses/kage player/grave_kunoichi player/grave_kunoichi_hyper player/grave_kunoichi_untouchable player/grave_kunoichi_deathlord"
 # Fishnets (Act V art review round 1): the converter cannot hold a 1-px net, so it is painted on after conversion.
@@ -17,8 +17,10 @@ K="shogunate/kunoichi shogunate/kappa shogunate/shuten_doji bosses/kage player/g
 # API still (art_source/shogunate/fishnet/*.py, run from the repo root with PYTHONPATH=art_source/shogunate/fishnet).
 export PYTHONPATH=art_source/shogunate/fishnet
 python3 art_source/shogunate/fishnet/fishc.py shogunate/kunoichi 8c6040 26 e0a882 1c110b
-python3 art_source/shogunate/fishnet/fishc.py bosses/kage 8c6040 30 e0a882 1c110b
-for v in "" _hyper _untouchable _deathlord; do python3 art_source/shogunate/fishnet/fish.py art_source/player/grave_kunoichi$v.png player/grave_kunoichi$v 0.5 b4aa8a 160a21; done
+python3 art_source/shogunate/fishnet/fishk.py bosses/kage 31 22 e0a882 1c110b  # round 2: both skin shades, legs only
+for v in "" _hyper _deathlord; do python3 art_source/shogunate/fishnet/fish.py art_source/player/grave_kunoichi$v.png player/grave_kunoichi$v 0.5 b4aa8a 160a21; done
+# Round 2: the Untouchable skin's net sits only inside leg polygons of its still (never over the skirt).
+python3 art_source/shogunate/fishnet/fishp.py art_source/player/grave_kunoichi_untouchable.png player/grave_kunoichi_untouchable cfcbc4 3b4352 "456,490 505,480 560,490 590,560 605,650 590,705 560,755 515,755 475,705 465,620 455,560" "425,815 500,800 510,880 505,930 435,930 428,880" "682,785 722,785 722,905 684,905"
 python3 tools/walk_cycle.py build $K
 python3 tools/walk_cycle.py idle shogunate/kunoichi bosses/kage player/grave_kunoichi player/grave_kunoichi_hyper player/grave_kunoichi_untouchable player/grave_kunoichi_deathlord
 python3 art_source/shogunate/province_build.py
