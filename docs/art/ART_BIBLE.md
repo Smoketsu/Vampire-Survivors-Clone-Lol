@@ -2472,6 +2472,8 @@ Code-drawn on purpose: Amaterasu's sun disc, beams (a soft strip texture stretch
 zenith columns, the noon glare and the noon shade, the dark sun of her fall; the Black Sun's suns and beams; the
 Kirin's halo; the fox-fire flicker and wisp over an illusion.
 
+**Round 1 redo (Group B, Oct 2026).** Amaterasu is a fuller, more mature figure (bigger bust, wider hips and thighs, closed neckline) redrawn from her old source; prepare her with `--no-levels` or the black hair turns bright indigo. Her bust box is cols 43-60, rows 32-43 (two lobes, px 2). The mirror pose, the walk and the idle follow the new still. `epilogue/act5_4` takes the new still as the figure reference (`y_bias` 0.15). The Shrine Maiden boxes: base cols 17-29 rows 15-23, Hyper cols 18-30 rows 12-20, Untouchable cols 17-29 rows 12-20; the Deathlord skin is redrawn with few big shapes (the round 1 version was "very busy"; the second prompt names the hourglass figure so a bust exists to bounce) and its box is cols 15-26, rows 18-23. The Kitsune is bustier (covered by the kimono, narrow slit), box cols 13-24 rows 15-20. Keep any "bigger" note inside the covering rules: closed neckline, covered shoulders, a slit that shows the leg only from the knee down.
+
 ### Act V: Castle Kurogane (Stage 14; Act V phase 2, Oct 2026)
 
 <!-- --- Act V: Castle Kurogane --- -->

@@ -526,9 +526,13 @@ RIGS = {
     # the Oni Lord stomp, the tip of the kanabo (held low across the front) rigid.
     "shogunate/sohei": dict(mode="legs", hip=41, back=(0, 32), front=(32, 64), rigid=[], spread=2, lift=2, dip=1),
     "shogunate/kirin": dict(mode="legs", hip=64, back=(0, 63), front=(63, 104), rigid=[], spread=2, lift=2, dip=1),
-    "shogunate/kitsune": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(13, 23, 15, 22, 1)),
-    "bosses/amaterasu": dict(mode="robe", hip=78, rigid=[], sway=1, dip=1, bust=(36, 52, 34, 45, 1)),
-    "player/shrine_maiden": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(17, 27, 17, 25, 1)),
+    # Round 1 redo (owner: "make her bustier"): redrawn with a larger bust, rows 15-19 above the sash, cols 13-23 (two lobes).
+    "shogunate/kitsune": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(13, 24, 15, 20, 1, 2)),
+    # Round 1 redo (owner: "bounce box needs to go up and to the right"): she was redrawn fuller (more mature figure), her
+    # chest now rows 32-42, cols 43-59 (two lobes, a gold collar between); the old box (cols 36-52, rows 34-45) sat low and left.
+    "bosses/amaterasu": dict(mode="robe", hip=78, rigid=[], sway=1, dip=1, bust=(43, 60, 32, 43, 2, 2)),
+    # Round 1 redo (owner: "extend two pixels to the right and go up two pixels"): the box was cols 17-27, rows 17-25, now cols 17-29, rows 15-23.
+    "player/shrine_maiden": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(17, 29, 15, 23, 1)),
     "summons/bound_oni": dict(mode="legs", hip=50, back=(0, 26), front=(26, 54), rigid=[], spread=2, lift=2, dip=1),
     "summons/oni_lord": dict(mode="legs", hip=60, back=(0, 31), front=(31, 68), rigid=[], spread=2, lift=2, dip=1),
     # --- Act V: Castle Kurogane ---
@@ -631,8 +635,12 @@ SKINS = {
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
     # --- Act V: the Road to the Sun --- (the Shrine Maiden's skins: their own bust boxes)
-    "player/shrine_maiden_hyper": {"bust": (18, 28, 17, 25, 1)},
-    "player/shrine_maiden_deathlord": {"bust": (13, 23, 17, 25, 1)},
+    # Round 1 redo: the Hyper box up 5 px and 2 px wider to the right (was cols 18-28, rows 17-25; owner); the Untouchable skin
+    # (a new entry) takes the same box, up 5 / right 2, which lands on its bust (rows 14-19) and stops above the teal bow;
+    # the Deathlord skin was redrawn with fewer, bigger shapes, its bust sits under the chin (rows 18-22) right of the face.
+    "player/shrine_maiden_hyper": {"bust": (18, 30, 12, 20, 1)},
+    "player/shrine_maiden_untouchable": {"bust": (17, 29, 12, 20, 1)},
+    "player/shrine_maiden_deathlord": {"bust": (15, 26, 18, 23, 1)},
     # --- Act IV: the Asphodel Underworld --- (the Ferrywoman's skins: their own oar column and bust box)
     "player/ferrywoman_hyper": {"rigid": [(28, 35, 0, None)], "bust": (17, 26, 17, 24, 2)},
     "player/ferrywoman_untouchable": {"rigid": [(28, 34, 0, None)], "bust": (17, 27, 17, 24, 2)},

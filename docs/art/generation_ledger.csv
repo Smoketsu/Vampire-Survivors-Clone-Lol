@@ -938,3 +938,12 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-26 17:55,summons/bound_oni,gpt-image-2.5-flare,medium,1024x1024,1,710,1024,439,0.0249,bound_oni_new.png
 2026-10-26 17:55,shogunate/samurai,gpt-image-2.5-flare,medium,1024x1024,1,719,1024,439,0.0250,samurai_new.png
 2026-10-26 17:56,summons/bound_oni,gpt-image-2.5-flare,medium,1024x1024,2,818,2048,439,0.0336,bound_oni_new.png
+2026-10-26 17:55,bosses/amaterasu,gpt-image-2.5-flare,medium,1024x1024,1,717,1024,439,0.0249,amaterasu_a.png
+2026-10-26 17:55,bosses/amaterasu,gpt-image-2.5-flare,medium,1024x1024,1,752,1024,439,0.0251,amaterasu_b.png
+2026-10-26 17:55,bosses/amaterasu,gpt-image-2.5-flare,medium,1024x1024,1,783,1024,439,0.0253,amaterasu_c.png
+2026-10-26 17:56,bosses/amaterasu_mirror,gpt-image-2.5-flare,medium,1024x1024,1,187,1024,439,0.0223,mirror_a.png
+2026-10-26 17:57,epilogue/act5_4,gpt-image-2.5-flare,medium,1536x1024,3,1011,4081,343,0.0480,act5_4_a.png
+2026-10-26 17:59,player/shrine_maiden_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,428,1408,439,0.0266,sm_dl_a.png
+2026-10-26 17:59,player/shrine_maiden_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,486,1408,439,0.0269,sm_dl_b.png
+2026-10-26 18:00,shogunate/kitsune,gpt-image-2.5-flare,medium,1024x1024,1,773,640,439,0.0222,kitsune_a.png
+2026-10-26 18:00,shogunate/kitsune,gpt-image-2.5-flare,medium,1024x1024,1,854,640,439,0.0226,kitsune_b.png
