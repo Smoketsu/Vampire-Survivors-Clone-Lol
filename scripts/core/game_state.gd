@@ -30,7 +30,13 @@
 ##                         Pact below every card, fallbacks included).
 ##   --meta=PROFILE        Autotest Soul Ash upgrades, applied in memory only:
 ##                         "none" (default, no upgrades), "mid" or "max"
-##                         (MetaData.AUTOTEST_PROFILES).
+##                         (MetaData.AUTOTEST_PROFILES; "max" = every level,
+##                         the gated deep levels 6-10 included).
+##   --relics=a,b          Autotest relics equipped (RelicData ids, at most
+##                         RelicData.MAX_SLOTS; owning them is not needed;
+##                         default none, --meta=max equips
+##                         RelicData.AUTOTEST_MAX_RELICS).
+##   --offering=ID         Autotest Grave Offering (OfferingData id; nothing paid).
 ##   --meta-save           Test flag: lets the autotest read and write
 ##                         user://save.cfg (by default it never touches it).
 ##   --oath=N              Autotest active Profane Oath tier 0-5 (default 0;
@@ -78,6 +84,9 @@
 ##   --skin=ID             Autotest skin (SkinData id, e.g. dread_sovereign
 ##                         or gravecaller_hyper), forced for screenshots:
 ##                         ignores the unlock and the character. Cosmetic.
+##   --recolour=ID         Autotest skin recolour (RecolourData id, e.g. blood
+##                         or gilded) drawn on the worn skin, forced for
+##                         screenshots: ignores ownership. Cosmetic.
 ##   --synergies=off       Autotest A/B switch: no army synergy (the four
 ##                         original ones and the newer classes') ever
 ##                         activates (default on).
@@ -197,6 +206,10 @@ var autotest_timeout: float = 1500.0
 var autotest_policy: String = "naive"
 ## Autotest: simulated meta-upgrade profile, "none", "mid" or "max" (see header).
 var autotest_meta: String = "none"
+## Autotest: RelicData ids equipped by --relics=a,b (empty = none / the profile's).
+var autotest_relics: Array = []
+## Autotest: OfferingData id of --offering=ID ("" = none).
+var autotest_offering: String = ""
 ## Autotest: true when --meta-save allows the run to use user://save.cfg.
 var autotest_meta_save: bool = false
 ## Autotest: active Profane Oath tier (--oath=N, 0 = off).
@@ -224,6 +237,8 @@ var autotest_modifiers: PackedStringArray = PackedStringArray()
 var autotest_hyper: bool = false
 ## Autotest: SkinData id forced by --skin= ("" = the default look).
 var autotest_skin: String = ""
+## Autotest: RecolourData id forced by --recolour= ("" = the skin's own colours).
+var autotest_recolour: String = ""
 ## Autotest: true when --synergies=off keeps every army synergy off (old and
 ## new; SynergyManager.evaluate()) for A/B balance runs.
 var autotest_synergies_off: bool = false
@@ -433,6 +448,18 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_meta = profile if profile in MetaData.AUTOTEST_PROFILES else "none"
 		elif arg == "--meta-save":
 			autotest_meta_save = true
+		elif arg.begins_with("--relics="):
+			for id: String in arg.get_slice("=", 1).split(",", false):
+				if RelicData.has(id) and not autotest_relics.has(id) and autotest_relics.size() < RelicData.MAX_SLOTS:
+					autotest_relics.append(id)
+				else:
+					push_error("--relics: '%s' is not a relic, repeated, or past %d slots (relics: %s)" % [id, RelicData.MAX_SLOTS, ", ".join(PackedStringArray(RelicData.ORDER))])
+		elif arg.begins_with("--offering="):
+			var oid := arg.get_slice("=", 1).to_lower()  # Requested offering id.
+			if OfferingData.has(oid):
+				autotest_offering = oid
+			else:
+				push_error("Unknown --offering=%s (expected one of %s)" % [oid, ", ".join(PackedStringArray(OfferingData.ORDER))])
 		elif arg == "--pact":
 			autotest_pact = true
 		elif arg.begins_with("--spells="):
@@ -488,6 +515,12 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_skin = skid
 			else:
 				push_error("Unknown --skin=%s (expected one of %s)" % [skid, ", ".join(SkinData.all_ids())])
+		elif arg.begins_with("--recolour="):
+			var rcid := arg.get_slice("=", 1).to_lower()  # Requested recolour id.
+			if RecolourData.has(rcid):
+				autotest_recolour = rcid
+			else:
+				push_error("Unknown --recolour=%s (expected one of %s)" % [rcid, ", ".join(RecolourData.ORDER)])
 		elif arg.begins_with("--synergies="):
 			var sv := arg.get_slice("=", 1).to_lower()  # "off" or "on".
 			if sv == "off" or sv == "on":

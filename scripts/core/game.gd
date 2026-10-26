@@ -289,7 +289,8 @@ func _ready() -> void:
 	if GameState.autotest and GameState.autotest_monitor > 0.0:
 		monitor = MonitorProbe.new(self, GameState.autotest_monitor)  # --monitor=N: memory / draw sampling (reads only).
 	ArtMissLog.on = GameState.autotest and GameState.autotest_art_misses  # --art-misses: the art audit (drawing only).
-	meta = Meta.run_modifiers() if coop == null else coop.meta_for(0)
+	_pay_offering()  # Relics and Grave Offerings: this machine's offering is paid as the run starts.
+	meta = Meta.run_modifiers(run_config) if coop == null else coop.meta_for(0)  # Upgrades + the relics / offering (RelicEffects).
 	character = CharacterModifiers.for_id(run_config.character_id) if coop == null else coop.character_for(0)
 	enemy_grid = SpatialHash.new(GRID_CELL)
 	ally_grid = SpatialHash.new(GRID_CELL)
@@ -408,6 +409,8 @@ func _ready() -> void:
 	innates.game = self
 	add_child(innates)
 	player.skin_id = _resolve_skin()  # Cosmetic only (SkinData); "" = the default look.
+	player.recolour_id = _resolve_recolour(player.skin_id)  # Cosmetic only (RecolourData); "" = the skin's own colours.
+	SkinGlyphs.warm(player.skin_id, run_config.character_key(), player.recolour_id)  # Remap its art now, not mid-run.
 	abilities = AbilityManager.new()
 	add_child(abilities)
 	abilities.setup(self)
@@ -456,6 +459,7 @@ func _ready() -> void:
 	horde.set_class_level("warrior", 1)
 	if coop != null:
 		_build_coop_slots()
+	_head_start()  # Dominion (Ossuary): levels gained at 0:00; no-op without the upgrade.
 	if GameState.victory_preview:
 		VictoryPreview.setup(self)  # Debug: a small army for the scripted victory.
 	_build_ui()
@@ -510,6 +514,20 @@ func _resolve_skin() -> String:
 	elif not SkinData.skins_for(run_config.character_key()).has(id) or not Meta.is_skin_unlocked(id):
 		return ""
 	return "" if String(SkinData.skin(id).get("kind", "default")) == "default" else id
+
+
+## The recolour the necromancer wears this run (purely cosmetic, RecolourData):
+## the autotest's --recolour= (forced, for screenshots), else run_config.recolour_id
+## when the worn skin `skin` ("" = the character's default skin) offers it and
+## the save owns it (online co-op: the loadout's pick is trusted, it is cosmetic).
+## "" = the skin's own colours.
+func _resolve_recolour(skin: String) -> String:
+	if (GameState.autotest or GameState.victory_preview) and GameState.autotest_recolour != "":
+		return GameState.autotest_recolour
+	var key := skin if skin != "" else SkinData.default_skin(run_config.character_key())  # Skin that owns the recolour.
+	var id := run_config.recolour_id  # Requested recolour.
+	var owned := Meta.owns_recolour(key, id) or not coop_start.is_empty()  # Online co-op: slot 0 may be the partner's pick (their save owns it, cosmetic).
+	return id if id != "" and RecolourData.offered(key, id) and owned else ""
 
 
 ## The ultimate this run casts (UltimateData id): run_config.ultimate_id when
@@ -965,9 +983,56 @@ func add_xp(amount: int) -> void:
 		level += 1
 		xp_to_next = PlayerData.xp_to_next(level)
 		pending_level_ups += 1
+		_on_level_reached()  # Relics: the Bone Abacus.
 	if level > level_before:
 		# Column of violet light on the necromancer (art-only, visual).
 		effects.burst(AnimData.LEVEL_UP_OFFSET, AnimData.LEVEL_UP_RADIUS, "level_up", player)
+
+
+## Head Start (Ossuary Dominion tree, MetaModifiers "head_start", expansion step 3):
+## the run begins that many levels up with their picks waiting (the first opens
+## on the first tick, like any level-up). Co-op: the host's tier sets the shared
+## level, like the host's Profane Oath. No-op without the upgrade.
+func _head_start() -> void:
+	var m: MetaModifiers = coop.slots[0].meta if coop != null else meta  # Whose Head Start counts.
+	var n := m.int_value("head_start")  # Levels gained.
+	if n <= 0:
+		return
+	level += n
+	pending_level_ups += n
+	xp_to_next = PlayerData.xp_to_next(level)
+	stat_add("head_start_levels", float(n))
+
+
+## Level `level` was just reached: every player's AbilityManager hears it (the
+## Bone Abacus relic's reroll; co-op: the one shared level reaches both slots).
+func _on_level_reached() -> void:
+	if coop == null:
+		abilities.on_level(level)
+		return
+	for s in coop.slots:
+		if s.abilities != null:
+			s.abilities.on_level(level)
+
+
+## Relics and Grave Offerings (GDD §15.0 "Relics and Grave Offerings"): pays the
+## Soul Ash of this machine's Grave Offering as its run starts (never under the
+## autotest or a --victory-preview run). Solo: an offering the balance can no
+## longer pay is dropped from run_config before game.meta is built. Online co-op:
+## the local player's own offering from his own save; the run applies both
+## loadouts' offerings either way (both machines must build the same run).
+func _pay_offering() -> void:
+	if GameState.autotest or GameState.victory_preview:
+		return
+	if coop == null:
+		if run_config.offering_id != "" and not Meta.relics.pay_offering(run_config.offering_id):
+			run_config.offering_id = ""
+			run_config.borrowed_relic = ""
+		return
+	var los: Array = coop_start.get("loadouts", [])  # Both loadouts (CoopNet.start_info).
+	var me := int(coop_start.get("local_slot", -1))  # This machine's seat.
+	if me >= 0 and me < los.size():
+		Meta.relics.pay_offering(String((los[me] as Dictionary).get("offering", "")))
 
 
 ## Pauses combat and shows three cards (GDD §16 "Level-up panel: Pause combat").
@@ -1166,6 +1231,7 @@ func build_summary() -> Dictionary:
 		"difficulty_label": difficulty.difficulty_label(),
 		"boss_id": String(boss_info.get("id", "")),
 		"skin_id": player.skin_id,
+		"recolour_id": player.recolour_id,
 		"run_rewards": rewards.counters(),  # Content wave 2: the one-run achievement counters (RunRewards).
 		"stats": stats.duplicate(),
 	}

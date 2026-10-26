@@ -74,7 +74,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Feedback (main menu, pause menu, results card; shown once the owner's form link is set) | Click it, or move the focus to it and press Enter: the feedback form opens in your browser (a new tab on the Web build) with a short report filled in; the game stays where it was (a paused run stays paused) | Focus + **A** (in a browser a controller press may be stopped by the pop-up blocker) |
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move over the grid, Esc / Back closes | D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
-| Ossuary (Soul Ash upgrades) | **Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
+| Ossuary (Soul Ash upgrades) | **Ossuary** in the main menu; **Q / E** switch tabs, arrows move, Enter buys; Esc closes | **LB / RB** switch tabs, D-pad / stick move, **A** buys, **B** closes |
 | Settings (Audio / Video / Controls tabs: volume, fullscreen, zoom Normal / Close, effects Full / Reduced, shake, damage numbers, reduce motion, keys) | **Settings** in the main or pause menu; **Q / E** switch tabs; Esc / Back closes | Focus + **A**; **LB / RB** switch tabs; **B** closes |
 | Codex (achievements, spells, summons, the Covenant) | **Codex** in the main menu; **Q / E** switch tabs, arrows move through the tiles, Esc / Back closes | **LB / RB** switch tabs; D-pad / stick move; **B** closes |
 | Credits (and the Godot / font licences) | **Credits** in the main menu; **Q / E** switch Credits / Licences, Up / Down scroll, Esc / Back closes | **LB / RB**, D-pad up / down, **B** closes |
@@ -1002,6 +1002,8 @@ structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
 | Chapter II, **The Crimson March** | slay Sir Alaric once (GDD §9.3) | Marshal Vael, the Crimson Bulwark | ×1.25 |
 | Chapter III, **The Sanctum of Judgment** | slay Marshal Vael once (GDD §9.3) | Grand Inquisitor Seraphine, Voice of the Dawn | ×1.5 |
 
+**The stage Soul Ash bonus restarts in every act** (owner decision Oct 2026, GDD §15.0 "Soul Ash per act and difficulty"): stage 1 of an act ×1, stage 2 ×1.25, stage 3 ×1.5. Graveyard / Gullhaven Harbour / Scrap Wastes ×1.0; Crimson March / Hollow Archive / Assembly Halls ×1.25; Sanctum / Ul-Thalos / Iron Citadel ×1.5. Difficulty is the bigger lever (Initiate ×0.8, Necromancer ×1, Lich ×1.5, Deathlord ×2). The bonuses add on the run subtotal rather than multiply (see Difficulty & run modifiers). Measured payouts: `docs/ossuary/ECONOMY.md`, tool `tools/ash_measure.py`.
+
 ### Characters
 
 The **pre-run setup** screen (after the stage select) picks your
@@ -1069,8 +1071,8 @@ the difficulty and the active modifiers.
 |---|---|---|
 | **Initiate** ("easier scaling") | HP ×0.9 and damage ×0.8, and both grow 25% slower over time (×0.70 HP and ×0.66 damage by 0:00); boss HP ×0.8 | ×0.8 |
 | **Necromancer** (standard) | today's game, every value ×1 | ×1 |
-| **Lich** ("increased HP / aggression") | HP and damage ×1.05, growing faster over time (×1.28 HP and ×1.20 damage by 0:00); move speed ×1.05; boss HP ×1.15 | ×1.25 |
-| **Deathlord** ("hardest, with more elites") | HP and damage ×1.05, growing 40% faster (×1.42 HP and ×1.35 damage by 0:00); move speed ×1.06; 0.8% of trickle soldiers are promoted to elites (elite HP and size, but plain XP and no elite chest or power-up chance); boss HP ×1.3 | ×1.5 |
+| **Lich** ("increased HP / aggression") | HP and damage ×1.05, growing faster over time (×1.28 HP and ×1.20 damage by 0:00); move speed ×1.05; boss HP ×1.15 | ×1.5 |
+| **Deathlord** ("hardest, with more elites") | HP and damage ×1.05, growing 40% faster (×1.42 HP and ×1.35 damage by 0:00); move speed ×1.06; 0.8% of trickle soldiers are promoted to elites (elite HP and size, but plain XP and no elite chest or power-up chance); boss HP ×1.3 | ×2 |
 
 The levels mostly bite later in the run: an army that falls behind in the
 first minutes never recovers, so a harsh opening would make Deathlord a coin
@@ -1095,10 +1097,10 @@ Pact and the Profane Oath are one opt-in category whose bonuses **add**. So
 enemy HP = time scaling × stage × level HP × (1 + Pact + Oath + modifiers),
 and the same for damage and spawns. Soul Ash: every source pays its own line
 on the run subtotal, and the lines add: Ash Harvest, Pact, Oath, the stage
-bonus, **Difficulty** (−20% on Initiate up to +50% on Deathlord) and **Run
+bonus, **Difficulty** (−20% on Initiate up to +100% on Deathlord) and **Run
 modifiers** (the sum of the active modifiers' rewards, +125% with all eight).
 The setup screen's total is level ×ash + modifier rewards (Deathlord with
-every modifier: ×2.75).
+every modifier: ×3.25; owner decision Oct 2026, GDD §15.0 "Soul Ash per act and difficulty").
 
 ### Hyper mode & skins
 
@@ -1163,6 +1165,50 @@ size so the row keeps its width. The three
 counters (`rot_kills`, `high_confessor_kills`, `seraphine_kills_full_army`)
 are lifetime stats in the save; unlocks are derived from them, the
 achievements and the Hyper clears, never stored separately.
+
+#### Skin recolours (Ossuary expansion, a Soul Ash sink)
+
+For a player who owns everything: every skin you have unlocked (default, Hyper,
+achievement and universal alike) can be **recoloured**, a palette swap of the
+same sprite, its walk and idle strips and its portraits. Four of five families
+are offered on each skin: **Bone** (300 Soul Ash, a near-greyscale ivory),
+**Blood** (400, crimson), **Abyss** (500, teal-blue) and **Gilded** (600, gold);
+the Hyper skins, already gold, offer **Verdant** (600, emerald) instead of Gilded.
+They are bought **per skin** and kept for good (Refund all does not return
+them): one skin's four cost 1,800, and the 76 skins together 136,800, a sink that
+is meant for the end of a long career, not a goal (a good run pays about 900 on
+Necromancer). Purely cosmetic like every skin: a recolour never touches a stat,
+a rule or the simulation, and is not in the co-op checksum.
+
+- **Where:** the pre-run setup screen's hero panel, at the right end of the line
+  under the skin tiles: one **Recolour** button (a colour chip and the family's
+  name) that cycles *Default, Bone, Blood, Abyss, Gilded* for the chosen skin. An
+  owned one is worn at once and remembered per skin; an unowned one is only
+  previewed on the hero and the line shows its price, with a **Buy** button
+  (Soul Ash icon and price: a confirm dialog, the one place here that costs Soul
+  Ash). The button hides while the skin is locked. Keyboard, pad and touch work as
+  on the rest of the screen; there is no Ossuary tab for recolours.
+- **How it is drawn:** no new art and no shader. `Recolour` (`scripts/core/recolour.gd`)
+  remaps every colour of the sprite once, on the CPU (hue to the family's, a share of
+  the old hue offset kept so a skin keeps some variety, greys take the family's cast;
+  numbers in `recolour_data.gd`), and caches the new texture per sprite and
+  recolour; the one draw path is the `recolour` parameter of `SpriteBank.draw()`, so
+  the world, the pre-run hero, the skin tiles and the co-op bust all follow. The
+  run's necromancer is remapped at run start (`SkinGlyphs.warm()`), so the first
+  frame does not pay for it. A glyph without sprite art keeps its own colours.
+- **Save:** Meta `[recolours] <skin id> = "bone,blood"` (owned) and
+  `[recolour_pick] <skin id> = <recolour id>` (worn); additive sections, no save
+  version step; unknown ids are ignored on load.
+- **Co-op:** the pick travels in the loadout (`recolour_id`), so the partner sees
+  it (the plate's bust and the world); it is cosmetic and never read by the
+  simulation.
+- **Autotest:** `--recolour=bone|blood|abyss|gilded|verdant` forces one on the
+  worn skin (screenshots; ignores ownership) and adds a `recolours` summary line
+  (only then: default runs print nothing new). `tools/ossuary_check.gd` checks the
+  data, the remap, the purchases, the save, the run config, the co-op loadout and the
+  pre-run control; its `--shot-prerun=PATH` mode (with `--shot-char=`, `--shot-skin=`,
+  `--shot-rc=`, `--shot-buy`, `--phone`) screenshots the screen under xvfb. Shots:
+  `docs/ossuary/shots/recolours/`.
 
 ### Stage 1: The Desecrated Graveyard (Stage & Boss)
 
@@ -1274,7 +1320,7 @@ open). The zone is shown under the timer.
   tethers them only when no soldier is in range.
 - **Harder than the Graveyard**: from Zone II (4:00) enemies have ×1.1 HP and
   ×1.05 damage on top of the usual time scaling (Marshal Vael always), tougher
-  kinds arrive earlier, and Soul Ash is ×1.25 (its own end-screen line). The
+  kinds arrive earlier, and Soul Ash is ×1.25 (its own end-screen line; stage 2 of Act I). The
   first two minutes are recruit patrols only, like the Graveyard's opening:
   every build starts with Shadow Bolt and two warriors, and a harder opening
   snowballed into starved runs.
@@ -1317,7 +1363,7 @@ countdown with the boss at 17:00 like the other stages.
 - **The crypts beneath**: open crypts work like the Graveyard's empowered graves.
 - **Hardest stage**: its own kinds arrive from Zone II, and from Zone III
   (8:30) enemies also have ×1.1 HP and ×1.1 damage (the boss always), and
-  Soul Ash is ×1.5. The opening minute is recruits only, and the first four
+  Soul Ash is ×1.5 (stage 3 of Act I). The opening minute is recruits only, and the first four
   minutes use the March's opening numbers. The elite kinds (Radiant
   Inquisitors, High Confessors, Sun Paladins) come in scripted waves, never
   in the trickle.
@@ -1444,7 +1490,7 @@ integration").
 The last stage of Act II (GDD §15.0 "Ul-Thalos, the Risen Spire"; data in
 `scripts/data/stages/spire_stage.gd`).
 The god's city surfaces mid-ocean: wet green cyclopean stone and wrong angles around the spire
-where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.25.
+where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×1.5 (stage 3 of Act II).
 
 - **Four zones on the clock** (run by `MarchDirector`, as on the March and in the Sanctum): the
   Breakwater (20:00), the Sunken Steps (15:00), the Dream Gate (10:00) and the Spire (5:00),
@@ -1514,7 +1560,7 @@ where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.2
 The last stage of the campaign (GDD §15.0 "The Iron Citadel (Act III phase 2)" and the rows after
 it; data in `scripts/data/stages/citadel_stage.gd`). The Empire's throne of iron, where death was
 conquered with steel; Varn, the Root User, waits at its summit inside Deus Ex Machina. Unlocked by
-shutting down the Motherboard; Soul Ash ×3.0 (placeholder).
+shutting down the Motherboard; Soul Ash ×1.5 (stage 3 of Act III).
 
 - **Four zones on the clock** (`MarchDirector`): the Shield Gates (20:00), the Laser Courts
   (15:00), the Spire Lifts (10:00) and the Core (5:00), each with its own pixel-art floor
@@ -1671,7 +1717,7 @@ Ares under the storm), and each zone has its god. Unlocked by slaying Achilles. 
 <!-- --- Act IV: the Asphodel Underworld --- -->
 The finale of Act IV (GDD §15.0 "The Asphodel Underworld (Act IV phase 2)" and the rows after it; data in
 `scripts/data/stages/underworld_stage.gd`). With Olympus silent, the necromancer goes down to the god who
-started it all. Unlocked by toppling Zeus; Soul Ash ×3.75 (placeholder). Hades' fissures are its Wrath of
+started it all. Unlocked by toppling Zeus; Soul Ash ×1.5 (stage 3 of Act IV, per-act rule). Hades' fissures are its Wrath of
 the Gods.
 
 - **Four zones on the clock** (`MarchDirector`): the Asphodel Fields (20:00), the Styx Crossing (15:00),
@@ -1889,11 +1935,12 @@ light above, the set-up of Act IV.
   A strong run earns about **450** at no upgrades (about 550-610 with mid / max
   upgrades, Ash Harvest included): two or three mid-tier upgrades. A death at
   9-11 min still keeps about 100-150. The Reckoning pays only about 8% of a
-  good run. Buying everything costs **9,635** (8,965 before the two Grave
+  good run. Levels 1-5 of everything cost **9,635** (8,965 before the two Grave
   Step upgrades), about 21 good runs (16–27 including weaker runs and Ash
-  Harvest), plus 375 for the optional Profane Oath (10,010 in all). The Profane Pact and Oath rewards add their own bonus
+  Harvest); the **deep levels** (below) add **24,950**, so buying everything
+  costs **34,585**, and the **new options** (below) **8,560** more (**43,145**), plus 375 for the optional Profane Oath. The Profane Pact and Oath rewards add their own bonus
   lines on top (below).
-- **The Ossuary** (main menu) holds the four GDD §9.2 trees. Each upgrade
+- **The Ossuary** (main menu) holds the four GDD §9.2 trees (and Dominion, below). Each upgrade
   raises one stat per tier, costs rise per tier, and some need a prerequisite
   in the same tree:
 
@@ -1915,6 +1962,101 @@ light above, the set-up of Act IV.
   be bought answers with a thud and a shake. **Refund all** (respec) returns
   every spent Soul Ash after a confirmation. The screen is fully usable with
   keyboard or controller.
+- **Deep levels** (Ossuary expansion step 2, GDD §15.0 "Ossuary deep levels"):
+  the 13 upgrades with 3+ levels (Necrotic Marrow, Sharpened Bones, Grave Call,
+  Umbral Potency, Quickened Rites, Widening Dark, Restless Shade, Grave-Hardened
+  Flesh, Bone Mail, Fleet Shade, Soul Magnet, Grave Tithe, Ash Harvest) go up to
+  **level 10**. Levels 1-5 keep their values and prices; every new level gives
+  half of the upgrade's per-level value (Restless Shade 3%: level 10 = 2.45 s)
+  and costs ×1.10 the level before it (from the last old price, rounded to 5;
+  e.g. Necrotic Marrow 255 / 280 / 305 / 335 / 370 for +3% minion HP each, 45%
+  at level 10). A 3- or 4-level upgrade's own levels 4-5 are open from the
+  start. The one- and two-level upgrades (Risen Vanguard, Legion of Bone,
+  Shadow Mastery, Undying Will, Twin Shadow, Fate's Thread, Banishing Rite) and
+  the Profane Oath keep their tiers. Levels 6-10 are **gated by difficulty
+  clears** (a clear = reaching 0:00 on any stage): **6-7** after a clear on Lich
+  or harder, **8-9** after a Deathlord clear, **10** after a Deathlord clear with
+  Hyper. The save keeps the hardest difficulty cleared (`[clears]`, save
+  version 2; an older save's Deathlord's Due counts as a Deathlord clear;
+  nothing is refunded). The tiles show up to 10 pips, the gated ones as sealed
+  sockets; a tile whose next level is gated shows the gate (Lich / Deathlord /
+  Hyper) instead of a price and the detail panel the clear it needs ("Clear a
+  stage on Lich to open levels 6-7"). Refund all returns the deep levels too. In
+  co-op each partner's own levels (deep ones included) travel in the loadout
+  and apply to their own slot. `--meta=max` buys every level (gates ignored);
+  `--meta=mid` is unchanged; with any upgrades the autotest prints an
+  `ossuary:` line (levels owned / 140, levels 6-10 owned / 65, Soul Ash). The
+  check `godot --headless res://tools/ossuary_check.tscn -- --autotest` covers
+  prices, gates, the migration, Refund all and the co-op loadout (temp files only;
+  CI runs it in the Graveyard job; `--shot=PATH [--phone]` saves a screenshot).
+- **New options and Dominion** (Ossuary expansion step 3, GDD §15.0 "Ossuary new
+  options and Dominion"): sideways upgrades, small values, **8,560** Soul Ash in all
+  (everything in the trees is now **43,145**, plus 375 for the Oath). Each has its
+  own levels only (no deep levels, no difficulty gates):
+
+  | Tree | New upgrades (per level, levels, cost) |
+  |---|---|
+  | Necromancy | **Bone Reserve**: a summon replaced after falling rises with a barrier of 3% of its max HP per level (10% before the balance batch) (3, 120→380) · **Commander's Presence**: +1% minion damage per distinct summon class you command (3, 130→410; needs Sharpened Bones II) |
+  | Shadowcraft | **Echo Weaving**: spell echoes (Volleys) start at spell Lv 2 instead of 3 (1, 600; needs Umbral Potency II) · **Dark Tithe**: a kill not dealt by a summon charges the ultimate meter +25% more (3, 120→380) |
+  | Survival | **Last Rites**: the first time a hit leaves you under 25% HP, 0.5 s of invulnerability per level (3, 150→450; 1 s per level before the balance batch) · **Grave Ward**: start every run with a ward that blocks one whole hit (1 level, 250; needs Bone Mail I; a second level was dropped by the balance batch) |
+  | Fortune | **Gilded Chests**: 15% per level that a chest draw is weighed against a second draw and the one nearer its peak (the higher level) is kept (3, 140→430) · **Elite Bounty**: +1 Soul Ash per elite (3, 100→320) · Fate's Thread and Banishing Rite get a **third level** (450 / 520) |
+  | Dominion | **Head Start**: begin the run a level ahead per level, the picks waiting (2, 400→700; co-op: the host's, like the Oath) · **Chosen Vanguard**: the first summon class you raise starts one level higher (1, 450) · **Patient Grave**: your first skip per level hands back a reroll (2, 200→350) |
+
+  **Dominion** is the fifth tree: it opens for buying the first time Grand
+  Inquisitor Seraphine falls (read from the stage records or the Hyper unlock, so
+  older saves that slew her have it at once); before that its tiles are sealed
+  ("Slay the boss of the Sanctum to open Dominion"). Skips were already free and
+  unlimited, so the proposal's "free skip" became Patient Grave. The new upgrades
+  are ordinary `[upgrades]` save keys (no save version bump) and travel in the
+  co-op loadout like every level. `--meta=max` buys them all; `--meta=mid` leaves
+  them out and keeps Fate's Thread / Banishing Rite at 1 (unchanged); with upgrades
+  the autotest adds an `ossuary options:` line.
+- **The Ossuary tabs**: a tab bar over the screen, **Trees · Masteries · Relics ·
+  Offerings** (Q / E or LB / RB switch; Back sits at its right end). Trees holds the
+  five tree columns (seven rows each; Dominion's column ends with the Profane Oath
+  tile, Lower Oath and Refund all) over the full-width detail panel. Each other tab
+  is a panel script (`scripts/ui/ossuary_<tab>_panel.gd`: a Control with
+  `refresh()` and a `changed` signal), loaded by path, so a tab whose panel does not
+  exist yet is simply not shown.
+- **Masteries** (Ossuary expansion step 4, GDD §15.0 "Ossuary Masteries"; the Masteries tab): each of the 18 offerable summon classes has a
+  mastery of 3 levels, **+2% max HP and +2% damage per level** (+4% each before the balance batch, docs/ossuary/BALANCE.md) for that class only (190 / 250 / 320 Soul Ash a class,
+  13,680 in all; the Myrmidon Shade joined with Act IV). It opens once you have taken that class to level 5 in any run (older saves open the classes of the
+  summon evolutions they already found); until then its tile is dimmed ("Lv 5") and the detail strip says "Take <class>
+  to level 5 in a run". An evolved form counts as its base class, the Profane Bishop as the better of Mender and Warder.
+  Masteries ride the one summon-stat path (`MetaModifiers.mastery_value()` → `HordeDirector.compute_stats()`), travel in
+  the co-op loadout (`mastery_levels`) and are not touched by Refund all. Save sections `[class_lv5]` and `[masteries]`.
+  `--meta=max` owns every mastery and prints a `masteries:` line; the other profiles own none.
+- **Relics** (Ossuary expansion step 5, GDD §15.0 "Relics and Grave Offerings";
+  data `relic_data.gd`): 15 run-shaping perks bought **once** in the Ossuary's
+  **Relics** tab and **equipped before a run** on the setup screen's **Rites**
+  strip (beside the ultimate picker): **1 slot** from the start, slots 2 and 3
+  cost 1,000 / 1,500. Grave Lantern 400 (chests +1 upgrade, power-ups half as
+  often), Black Banner 250 (soul meter starts half full), Bone Abacus 300 (a
+  free reroll every 5 levels), Hollow Crown 600 (+1 active slot, -10% max HP),
+  Mourner's Bell 300 (elites drop a Grave Feast), Bone Flute 300, Martyr's Nail
+  350, War Drum 350, Shade Cloak 300, Seer's Eye 250, Leaden Shroud 350, Tallow
+  Candle 300; sold only after a feat: Lich's Phylactery 450 (a Lich clear: +1
+  revival, -20% max HP), Deathlord's Seal 550 (a Deathlord clear: +1 of every
+  summon, -15% max HP), Fallen Halo 450 (an act's last stage cleared on Hyper:
+  the meter fills 35% faster). Everything: **8,000** Soul Ash. Relics are kept
+  by Refund all (upgrades only). Effects go through `RelicEffects`, attached to
+  the run's `game.meta` (stats add to the Ossuary stats; a few specials are read
+  where the game applies them). Save: `[relics] owned / slots`, `[prerun] relics`.
+- **Grave Offerings** (step 6a, `offering_data.gd`): one single-run boon per
+  run, chosen on the Rites strip and **paid when the run starts** (nothing is
+  paid if the run never starts; one the balance cannot pay is dropped; Restart /
+  Again / Next start without it): Tithe of Insight 450 (+10% XP), Gilded Coffer
+  500 (a chest beside you at 6:00), Borrowed Relic 550 (a random owned relic in
+  a 4th slot), Blood Vigil 400 (+2 rerolls, +2 banishes), Second Breath 600 (+1
+  revival), War Horn 350 (meter starts full): 40-68% of a good Necromancer run's
+  877. The **Offerings** tab only lists them.
+- In co-op each player's relics and offering travel in his loadout and apply to
+  his own slot; each pays his own offering from his own save. Autotest:
+  `--relics=a,b`, `--offering=ID`; `--meta=max` equips Bone Abacus, Black Banner
+  and Mourner's Bell (all slots); a `rites:` line prints when any is in effect.
+  Badges: `tools/relic_badges.py` (procedural); screenshots in
+  `docs/ossuary/shots/relics/`; `ossuary_check` also checks the relics
+  (`--shot-what=rites|picker|relics|offerings` for screenshots).
 - **One modifier path.** At run start `Meta.run_modifiers()` turns the
   purchased tiers into a `MetaModifiers` object (`game.meta`). The existing
   stat code reads it in a few places (horde `compute_stats` / `capacity` /
@@ -2271,7 +2413,7 @@ snapped to the locked palette, lone-pixel cleanup; `--all` rebuilds every panel 
 | Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
 | Stage 3 (§8.3, §7.2, §7.4) | The Sanctum of Judgment: four battle zones on the clock (courtyards, golden halls, cloisters, final sanctuary), two sanctified chambers with ward crystals, the Cathedral Guardian miniboss (slams, sweeping beam, its own HUD bar, chest), three optional sacred altars (−6% soldier HP each, one healer fewer for Seraphine), floor corruption, Dawn's Wrath with Sun Paladins, and four new Covenant kinds (Sanctified Sentinel, Radiant Inquisitor with suppression, High Confessor with holy shields and revivals, Sun Paladin). See *Stage 3* above. |
 | Stage 3 boss (§7.5) | Grand Inquisitor Seraphine with her three GDD phases (Divine Judgment, Avatar of the Dawn, The Last Light): radiant fans, delayed holy circles, Templar squads, teleports, healing attendants, rotating holy beams, barrages, constructs, undead suppression, the safe-zone Judgment nova, the collapsing arena and a final guard, the relic shatter and the ending text. She ends the Sanctum of Judgment; `--boss=seraphine` also puts her on any other stage. See *Stage 3 boss* above. |
-| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, the Codex (GDD §10.1 Collection / Codex and Achievements), and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
+| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with five trees (31 upgrades, 13 of them to level 10 behind difficulty gates, the Dominion tree opened by Seraphine, prerequisites, respec, a tab bar) plus the opt-in Profane Oath, 4 tracked achievements, the Codex (GDD §10.1 Collection / Codex and Achievements), and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Playable characters (§10.2, §11.4) | Twelve characters, one per spell, each with its starting spell, one innate passive and stat modifiers; chosen on the pre-run setup screen, unlocked by reaching Lv 5 with the character's spell, remembered in the save. The Gravecaller is the default and plays exactly like the game before characters. See *Characters* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
@@ -2425,6 +2567,8 @@ scripts/
     environment_art.gd      Optional floor tiles and obstacle sprites (grid art), falls back to the code floors / glyphs
     skin_glyphs.gd          Cosmetic skins: the skin's art, else the character sprite / glyph with the
                             skin's palette tint, emblem and aura
+    recolour.gd             Skin recolours: the one palette remap of a sprite's pixels (cached per sprite and
+                            recolour; SpriteBank.draw()'s `recolour` parameter)
     ground.gd               Procedural graveyard floor, redrawn only when the camera changes cell
     march_ground.gd         Crimson March floor: the road and each battle zone's look (extends Ground)
     march_glyphs.gd         Crimson March shapes: new soldiers, structures, Marshal Vael, obstacles, corpse piles
@@ -2938,6 +3082,8 @@ scripts/
     skin_data.gd            Per-character (CharacterData) default / Hyper / achievement skins, the
                             universal Untouchable / Deathlord skins, unlock rules,
                             palette fallbacks (tint, accent, glow, emblem)
+    recolour_data.gd        Skin recolours (Bone, Blood, Abyss, Gilded, Verdant): prices 300-600, the hue / saturation /
+                            value numbers, which four each skin offers
     stance_data.gd          The Bone Ring: leash / recall / pull overrides, ring radii and spacing,
                             the switched-off flavour bonus
     character_data.gd       Playable characters: starting spell, innate (text + numbers), stats, art key,
@@ -3070,6 +3216,7 @@ Options (after `--`):
 | `--victory-preview` | Debug (with or without `--autotest`): skips the menu, raises a small army and after 6 game seconds ends the run as a scripted victory (83 s past 0:00, the boss slain, four evolutions, seven chests; `VictoryData.PREVIEW_*`), so the last stand and the victory card can be seen and screenshot at once; `--stage=`, `--difficulty=`, `--character=`, `--hyper` and `--skin=` apply. Nothing is saved. Every victory's summary has a `victory screen` line: `title=<stage title> best_overtime=<s> new_record=<bool> highlights=<n>` (the card's logic runs headless; under the autotest the Best starts from an empty in-memory record). |
 | `--feedback-url=URL`, `--feedback-entry=ID` | Debug: use `URL` as the feedback form's link (and `ID`, e.g. `entry.123456789`, as its prefilled field) instead of `FeedbackData.FORM_URL` / `DETAILS_ENTRY`, so the Feedback buttons show and their open path can be tried with a dummy link before the owner's form exists. Never opens anything under the autotest. Every summary ends with a `feedback` line: `url_set=<bool> \| report_chars=<menu>/<pause>/<results>` (three sample reports built headless, at most 1500 characters each) `\| url_chars=<n> \| opened=never (autotest)`. |
 | `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`, or a universal one such as `gravecaller_untouchable` / `brine_widow_deathlord`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |
+| `--recolour=ID` | Forces a skin recolour (`bone`, `blood`, `abyss`, `gilded` or `verdant`, `RecolourData`) on the worn skin, ignoring ownership, for screenshots. Cosmetic only. Adds a `recolours` summary line (the family, its price, the sprite remapped); default runs print nothing new. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 
 Setting the environment variable `NECROPATHY_AUTOTEST=1` (or the pre-rename `GRAVEBOUND_AUTOTEST=1`) is the same as `--autotest`.

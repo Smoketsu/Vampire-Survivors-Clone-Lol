@@ -581,6 +581,17 @@ tiny tweaks.
   `--monitor` / `--draw-probe` / `--adaptive`. Owner's iPhone check: one full run, no reload, crisp, sound fine,
   cooler phone.
 
+- the **Ossuary expansion** (owner request "more levels in each option, and more options", Oct 2026; proposal Claude Doc,
+  `docs/ossuary/`, GDD §15.0 from "Ossuary expansion: owner decisions" on): Soul Ash restarts per act (stage 1 ×1, 2 ×1.25,
+  3 ×1.5; Lich ×1.5, Deathlord ×2; `tools/ash_measure.py`, `docs/ossuary/ECONOMY.md`); levels 6-10 for 13 upgrades gated by
+  difficulty clears (`[clears]`, `Meta.max_open_tier()`, SAVE_VERSION 2); ten new options and the Dominion tree (after
+  Seraphine) with the Ossuary tab bar (Trees / Masteries / Relics / Offerings); summon-class Masteries (`mastery_data.gd`,
+  `[class_lv5]` / `[masteries]`, through `HordeDirector.compute_stats()`); Relics (`relic_data.gd`, `RelicEffects`, 1 -> 3
+  slots, pre-run Rites strip) and expensive Grave Offerings (`offering_data.gd`); cosmetic recolours (`recolour_data.gd`,
+  `Recolour`, `SpriteBank.draw()` `recolour`). All of it travels in the co-op loadout. `tools/ossuary_check.tscn` (CI),
+  `tools/ossuary_balance.py`, `docs/ossuary/BALANCE.md`; the "too strong" gate (everything + Hyper + Oath 5 + Pact must
+  fail a third) reached 31%, accepted by the owner. Prestige is noted for later.
+
 - **online co-op** (owner request "add co-op, a lobby and code system", Oct 2026; `docs/coop/`): the relay and lobby
   (`coop-net`: Worker + `tools/coop_relay.py`, `CoopNet`, Co-op on the title screen, Host / Join with a letter pad,
   the lobby), two slots in one simulation (`coop-sim`: `CoopSession` / `CoopSlot`, `CoopData`, the co-op rules,
@@ -647,7 +658,7 @@ tiny tweaks.
 6b. **Act IV, the Olympian Republic: live (Oct 25, 2026).** The three stages are playable (GDD §15.0 "Act IV goes
    live"), with one CI army job each. Shipped after the art review (eight rounds) and three bot playtest passes at meta
    none (`docs/act4/playtest/`; the Underworld got damage ×1.5, Centaur Archers and the new Shade Archer). Open: the
-   owner's own playtest notes, the placeholder Soul Ash multipliers (×3.25 / ×3.5 / ×3.75), the Web performance check
+   owner's own playtest notes (Soul Ash now ×1 / ×1.25 / ×1.5, the per-act rule), the Web performance check
    on Olympus late game. Handoff: `docs/act4/HANDOFF.md`.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot

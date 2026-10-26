@@ -53,7 +53,7 @@ const ENEMY_DAMAGE_MULT: float = 1.3  # TUNING (not in GDD) lead's integration p
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) placeholder (Act III: 7:00)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 3.5  # TUNING (not in GDD) placeholder (Ilion x3.25)
+const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 2 of Act IV
 
 ## Wrath of the Gods on this stage (DivineWrath): Zeus's lightning. Any other
 ## key overrides PantheonRulesData.WRATH["lightning"] ({} = those defaults).

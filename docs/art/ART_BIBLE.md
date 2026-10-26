@@ -1013,6 +1013,18 @@ stone wing, ice, wail) meeting its finisher's (sword, boulder, dagger, hound sku
 | `syn_baying.png` | Synergy Baying of the Damned: a howling hound skull with pale wail ripples |
 | `syn_charnel_menagerie.png` | Synergy The Charnel Menagerie: a skull-topped rib cage holding a teal soul flame |
 | `profane_oath.png` | Ossuary Profane Oath: a skeletal hand raised in an oath under a crimson flame (the Oath is the one crimson Ossuary icon, like the Pact) |
+| `bone_reserve.png` | Ossuary Bone Reserve (expansion step 3): a bone skull rising from the ground behind a soul-teal barrier arc |
+| `commanders_presence.png` | Ossuary Commander's Presence: a bone war banner with a teal pennant over three small skulls of different classes |
+| `echo_weaving.png` | Ossuary Echo Weaving: a violet shadow orb in two echo rings, wrapped by a bone spindle thread |
+| `dark_tithe.png` | Ossuary Dark Tithe: violet soul drops falling into an upturned skull-cap bowl |
+| `last_rites.png` | Ossuary Last Rites: a cold-blue candle with an ice-white flame and a small skull at its foot |
+| `grave_ward.png` | Ossuary Grave Ward: a round cold-blue rune shield with a tombstone in its centre, cracked by a blow it stopped |
+| `gilded_chests.png` | Ossuary Gilded Chests: an open gold chest with two teal crystals rising, the right one brighter |
+| `elite_bounty.png` | Ossuary Elite Bounty: a gold ring-crowned skull on a heap of coins under a teal ember |
+| `head_start.png` | Ossuary Head Start (Dominion): a bone stair of three steps under a violet upward chevron |
+| `chosen_vanguard.png` | Ossuary Chosen Vanguard (Dominion): a bone skeleton helm with a violet plume over a bone laurel |
+| `patient_grave.png` | Ossuary Patient Grave (Dominion): a bone hourglass of violet sand with a violet return arrow |
+| `tree_dominion.png` | Ossuary tree emblem Dominion: a crown of five finger-bone spikes with a violet gem (made by `art_source/ossuary_options/`, 12 images, about $0.18) |
 | `warrior.png` | Summon class badge (hotbar and army list): a skeleton warrior's helmed skull behind a round shield |
 | `archer.png` | Summon class badge: a moss-hooded skeleton drawing a bone bow with a teal arrow |
 | `mage.png` | Summon class badge: a skull in an arcane-blue hood beside an orb staff |

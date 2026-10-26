@@ -118,6 +118,10 @@
 ## tagged with its kind id, or WastesEnemyData.RANGED_EXTRA_SOURCES) is cut by
 ## ranged_reduction (stat lead_lined_dmg_prevented); exactly 1 while the
 ## passive is not owned.
+## Ossuary new options (expansion step 3, game.meta): damage_player() spends a
+## Grave Ward hit before any reduction and starts Last Rites after a hit that
+## leaves the necromancer under a quarter of his HP; damage_enemy() tells the
+## Dread Rally meter whether a kill was a summon's (Dark Tithe).
 ## Act IV (the Olympian Republic; Game.pantheon is null on every other act, so
 ## none of this runs there):
 ##   Phalanx — damage_enemy() takes the hit's ORIGIN (`origin`, the world point
@@ -399,7 +403,7 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 			game.stat_add("warrior_kills", 1.0)  # Bone Legion achievement (MetaData)
 		game.horde.evolutions.on_enemy_killed(e, source)  # Lich raise-the-dead.
 		game.innates.on_enemy_killed(e, source)  # Character innates (no-op without one).
-		_kill_enemy(e)
+		_kill_enemy(e, is_minion_source(source))
 	return dealt
 
 
@@ -558,6 +562,8 @@ func damage_player(amount: float, source: String, target: Necromancer = null) ->
 		return  # Sovereign's Decree: the necromancer cannot be targeted (every hit ignored).
 	if game.innates.try_block_hit():
 		return  # Ossuary Ward shard (Bone Oracle) absorbed the whole hit.
+	if _grave_ward_blocks():
+		return  # Grave Ward (Ossuary) swallowed the whole hit.
 	amount *= 1.0 - game.abilities.passive_value("warding_ritual", "damage_reduction")
 	amount *= 1.0 - game.meta.value("damage_reduction")
 	if game.dread != null:
@@ -569,6 +575,37 @@ func damage_player(amount: float, source: String, target: Necromancer = null) ->
 		game.stat_add("damage_to_player", lost)
 		game.stat_add("player_dmg_from_" + source, lost)
 		game.shake(4.0)
+		_check_last_rites()
+
+
+## Grave Ward (Ossuary expansion step 3, MetaModifiers "ward_hits"): spends one of
+## the run's warded hits on a hit that would land (not during i-frames) and grants
+## the normal post-hit i-frames, so one burst never eats two. False (no-op) when no
+## ward is left: always the case without the upgrade.
+func _grave_ward_blocks() -> bool:
+	var p := game.player
+	if p.ward_hits_left <= 0 or p.dead or p.iframes > 0.0:
+		return false
+	p.ward_hits_left -= 1
+	p.iframes = PlayerData.IFRAMES
+	game.stat_add("grave_ward_blocks", 1.0)
+	game.effects.ring(p.position, p.radius * 3.0, Palette.BONE, 0.35)  # The ward breaks (visual only).
+	return true
+
+
+## Last Rites (Ossuary expansion step 3, MetaModifiers "last_rites"): the first
+## time in a run a hit leaves the necromancer alive under
+## MetaData.LAST_RITES_HP_FRACTION of his max HP, he gets that many seconds of
+## invulnerability (his i-frames). No-op without the upgrade.
+func _check_last_rites() -> void:
+	var p := game.player
+	var secs := game.meta.value("last_rites")  # Seconds of invulnerability (0 = not owned).
+	if secs <= 0.0 or p.last_rites_used or p.dead or p.hp >= p.max_hp * MetaData.LAST_RITES_HP_FRACTION:
+		return
+	p.last_rites_used = true
+	p.iframes = maxf(p.iframes, secs)
+	game.stat_add("last_rites_fired", 1.0)
+	game.effects.ring(p.position, p.radius * 4.0, Palette.NECRO_GREEN, 0.5)  # Visual only.
 
 
 ## Heals a summon, capped at max HP. Returns HP actually restored.
@@ -861,7 +898,9 @@ func _onis_resolve(u: SummonedUnit) -> float:
 ## Death of an enemy: cosmetic pop, XP crystal, kill counter, power-up drop
 ## and chest rolls, then the EnemyDirector deactivates/pools it (or ends the run for the
 ## boss).
-func _kill_enemy(e: Enemy) -> void:
+## `by_summon` is true when the killing blow was a summon's (is_minion_source()):
+## Dark Tithe (Ossuary) charges the ultimate meter more for the other kills.
+func _kill_enemy(e: Enemy, by_summon: bool = true) -> void:
 	game.effects.pop(e.position, Palette.CRIMSON if not e.is_boss else Palette.GOLD, e.radius * 1.2, "enemy_death")  # Animation when its art exists (visual only).
 	game.motion.on_enemy_killed(e)  # Collapses into holy ash (visual only; not bosses or structures).
 	Juice.enemy_killed(e)
@@ -882,7 +921,7 @@ func _kill_enemy(e: Enemy) -> void:
 	game.abilities.on_enemy_killed(e)  # Corpse Explosion corpses, Soul Rapture bursts.
 	game.powerups.on_enemy_killed(e)  # Power-up drop roll (PowerupData rules).
 	game.chests.on_enemy_killed(e)  # Treasure chest roll (ChestData rules).
-	game.dread_rally.on_enemy_killed(e)  # Dread Rally soul meter.
+	game.dread_rally.on_enemy_killed(e, not by_summon)  # Dread Rally soul meter (Dark Tithe on the necromancer's own kills).
 	_ferrymans_toll(e)  # Act IV, the Asphodel Underworld: a slowed foe pays the ferryman (no-op unless owned).
 	game.ultimates.on_enemy_killed(e)  # Grave Tide raises (no-op unless it runs).
 	if game.dread != null:

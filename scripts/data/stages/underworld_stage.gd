@@ -54,7 +54,7 @@ const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) owner's playtest pas
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00 (Act III)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 3.75  # TUNING (not in GDD) placeholder (Mount Olympus x3.5)
+const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 3 of Act IV
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): the Twilight
 ## of the Gods, shared by every Act IV stage: Bronze Titans step out of the

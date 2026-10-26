@@ -4,32 +4,49 @@
 ##   * a title row: "The Ossuary" and the Soul Ash balance (the Soul Ash
 ##     badge and the number, which counts down after a purchase while the
 ##     spent amount floats away);
-##   * four tree columns (Necromancy, Shadowcraft, Survival, Fortune) under
-##     header bands with their pixel emblems; each upgrade is one OssuaryTile
-##     (icon, name, level pips, next cost; its frame colour is its state:
-##     soul teal affordable, violet too expensive, gold maxed, dim locked);
-##   * ONE ornate detail panel that follows the focused / hovered tile: its
-##     icon at x2, name and pips, the one-line effect, the current → next
-##     value with a pixel arrow, the cost with the Soul Ash symbol (or what it
-##     needs / "Maxed") and a Buy chip when it can be bought;
-##   * bottom right: the standalone Profane Oath tile (opt-in difficulty,
-##     MetaData "oath", crimson once owned: its pips show the active tiers
-##     bright and owned-but-lowered tiers dark), "Lower Oath" (lowers the
+##   * a tab bar (Ossuary expansion step 3, GDD §15.0 "Ossuary new options and
+##     Dominion"): Trees, Masteries, Relics, Offerings between the Q / E (LB /
+##     RB) chips, and Back at its right end. Trees is built here; every other
+##     tab is a panel script (OssuaryUiData.TAB_PANELS, the tab contract: a
+##     Control with `func refresh() -> void` and `signal changed`, emitted after
+##     a purchase; optionally `func first_focus() -> Control`), loaded with
+##     ResourceLoader.exists() + load(), so a missing panel just hides its tab.
+##     Every page fills the same OssuaryUiData.PAGE_SIZE area;
+##   * the Trees page: five tree columns (Necromancy, Shadowcraft, Survival,
+##     Fortune and Dominion, which opens after Seraphine's first defeat,
+##     Meta.tree_open(); before that its tiles are sealed) under header bands
+##     with their pixel emblems; each upgrade is one OssuaryTile (icon, name,
+##     level pips, next cost; its frame colour is its state: soul teal
+##     affordable, violet too expensive, gold maxed, dim locked / sealed);
+##     under Dominion's three tiles the standalone Profane Oath tile (opt-in
+##     difficulty, MetaData "oath", crimson once owned: its pips show the active
+##     tiers bright and owned-but-lowered tiers dark), "Lower Oath" (lowers the
 ##     ACTIVE tier by one at once: free and reversible, owned tiers stay owned,
-##     Meta.set_oath_active), "Refund all" (respec; asks first) and Back.
+##     Meta.set_oath_active) and "Refund all" (respec; asks first);
+##   * ONE ornate detail panel under the columns that follows the focused /
+##     hovered tile: its icon at x2, name and pips, the one-line effect, the
+##     current → next value with a pixel arrow, the cost with the Soul Ash
+##     symbol (or what it needs / "Maxed") and a Buy chip when it can be bought.
+## Deep levels (Ossuary expansion step 2, GDD §15.0 "Ossuary deep levels"): up
+## to 10 pips per upgrade; the levels above Meta.max_open_tier() are sealed
+## sockets, and a tile whose next level waits on a difficulty clear shows the
+## gate's word (Lich / Deathlord / Hyper) instead of a cost while the detail
+## panel names the clear ("Clear a stage on Lich to open levels 6-7"); pressing
+## it answers `denied` like any blocked tile. Refund all returns every level.
 ## Pressing an affordable tile buys its next tier through the Meta autoload
 ## (which saves at once) with the `purchase` sound, a flash and spark burst on
-## the tile; a locked, too expensive or maxed tile plays `denied` and shakes.
-## A lowered Oath tile raises the active tier again for free. Refund all and
-## Lower Oath never look disabled (Lower Oath turns crimson while an Oath
+## the tile; a locked, sealed, too expensive or maxed tile plays `denied` and
+## shakes. A lowered Oath tile raises the active tier again for free. Refund all
+## and Lower Oath never look disabled (Lower Oath turns crimson while an Oath
 ## tier is active): with nothing to refund / lower they answer `denied`.
 ## Fully usable with keyboard and controller: explicit focus neighbours make
 ## the tiles a grid (up / down inside a tree, left / right across trees at the
-## same row, down from any tree to the Oath tile, up from it back to the tree
-## last visited), A / Enter buys, B / Esc closes the confirmation or the
-## menu. On a touchscreen (no hover) the first tap on a tile shows its
-## details and a second tap on the same tile buys. The first upgrade is focused on open. Every number is in
-## OssuaryUiData; the upgrade data stays in MetaData.
+## same row, up from a tree's top tile to the Trees tab, Dominion's column
+## running on into the Oath tile and its two buttons), Q / E and LB / RB switch
+## tabs, A / Enter buys, B / Esc closes the confirmation or the menu. On a
+## touchscreen (no hover) the first tap on a tile shows its details and a second
+## tap on the same tile buys. The first upgrade is focused on open. Every number
+## is in OssuaryUiData; the upgrade data stays in MetaData.
 ## Open it with OssuaryMenu.open_over(parent, button_to_refocus).
 class_name OssuaryMenu
 extends Control
@@ -37,23 +54,34 @@ extends Control
 ## Emitted when the menu is about to be freed.
 signal closed
 
-## Roman numerals for tier names in prerequisite text (index = tier, 0..6).
-const ROMAN := ["0", "I", "II", "III", "IV", "V", "VI"]
+## Roman numerals for tier names in prerequisite text (index = tier, 0..10).
+const ROMAN := ["0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 
 ## Control focused again when the menu closes (may be null).
 var return_focus: Control = null
-## Upgrade id -> its OssuaryTile (the four trees and the Oath).
+## Upgrade id -> its OssuaryTile (the five trees and the Oath).
 var buttons: Dictionary = {}
-## Tiles per tree column, in MetaData.TREE_ORDER (the focus grid).
+## Tiles per tree column, in MetaData.TREE_ORDER (the focus grid; Dominion's
+## column ends with the Oath tile).
 var _grid: Array = []
 ## "Refund all" button.
 var refund_button: Button
-## "Back" button.
+## "Back" button (the tab bar's right end).
 var back_button: Button
-## Profane Oath tile (bottom right).
+## Profane Oath tile (under the Dominion column).
 var oath_button: OssuaryTile
 ## "Lower Oath" button: lowers the active Oath tier by one (free, reversible).
 var oath_lower_button: Button
+## Tab id (OssuaryUiData.TABS) -> its tab Button (only the tabs shown).
+var tab_buttons: Dictionary = {}
+## Tab ids shown, in tab-bar order (a tab whose panel script is missing is left out).
+var _tab_ids: Array[String] = []
+## Tab id -> its page Control (the Trees page, or the tab's panel).
+var _pages: Dictionary = {}
+## Tab id of the page shown.
+var _tab: String = "trees"
+## Tree id -> [header band name Label, emblem IconGlyph] (a sealed tree's dims).
+var _band_parts: Dictionary = {}
 ## Soul Ash balance label (HEADER tier).
 var _ash_label: Label
 ## Floating "-N" label shown next to the balance after a purchase.
@@ -62,7 +90,7 @@ var _spent_float: Label
 var _count_from: int = -1
 ## Upgrade id shown in the detail panel ("" = none yet).
 var _focus_id: String = ""
-## Tree column (0..3) of the last focused upgrade tile (the Oath tile's "up").
+## Tree column (0..4) of the last focused upgrade tile.
 var _last_col: int = 0
 ## Touch input only: the upgrade tile tapped once (its details shown); a
 ## second tap on it buys ("" = none). Keys, pads and mice buy at once.
@@ -99,18 +127,31 @@ func _ready() -> void:
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
 	TouchSupport.fit_to_screen(center)  # A short phone layout: shrink to fit (no-op at 720 px).
-	var root := VBoxContainer.new()  # Title row, trees, bottom row.
+	var root := VBoxContainer.new()  # Title row, tab bar, page area.
 	root.add_theme_constant_override("separation", OssuaryUiData.BLOCK_GAP)
 	center.add_child(root)
 	root.add_child(_build_header())
-	var cols := HBoxContainer.new()  # The four tree columns.
-	cols.add_theme_constant_override("separation", OssuaryUiData.COLUMN_GAP)
-	root.add_child(cols)
-	for tree_id: String in MetaData.TREE_ORDER:
-		cols.add_child(_build_column(tree_id))
-	root.add_child(_build_bottom())
+	_pages["trees"] = _build_trees_page()
+	_tab_ids.append("trees")
+	for id: String in OssuaryUiData.TABS:
+		if id == "trees":
+			continue
+		var panel := _load_panel(id)
+		if panel != null:
+			_pages[id] = panel
+			_tab_ids.append(id)
+	root.add_child(_build_tab_bar())
+	var page_area := Control.new()  # Every page fills it (PAGE_SIZE), so nothing moves on a tab switch.
+	page_area.custom_minimum_size = OssuaryUiData.PAGE_SIZE
+	page_area.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(page_area)
+	for id: String in _tab_ids:
+		var page: Control = _pages[id]
+		page_area.add_child(page)
+		page.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_wire_focus()
 	Meta.changed.connect(_refresh)
+	select_tab("trees")
 	_refresh()
 	var first: Button = _grid[0][0]
 	first.grab_focus.call_deferred()
@@ -120,6 +161,27 @@ func _ready() -> void:
 	for col: Array in _grid:
 		tiles.append_array(col)
 	UiMotion.stagger(tiles, 0.04, 0.018)
+
+
+## The panel of tab `id` from its OssuaryUiData.TAB_PANELS script (null when the
+## script does not exist or does not make a Control: the tab is then hidden). Its
+## `changed` signal refreshes the balance and the trees.
+func _load_panel(id: String) -> Control:
+	var path := String(OssuaryUiData.TAB_PANELS.get(id, ""))
+	if path == "" or not ResourceLoader.exists(path):
+		return null
+	var script: Variant = load(path)
+	if not script is GDScript:
+		return null
+	var inst: Variant = (script as GDScript).new()
+	if not inst is Control:
+		if inst is Node:
+			(inst as Node).free()
+		return null
+	var panel := inst as Control
+	if panel.has_signal("changed"):
+		panel.connect("changed", _refresh)
+	return panel
 
 
 ## Title and the Soul Ash balance (badge, number and the floating "-N").
@@ -143,24 +205,92 @@ func _build_header() -> Control:
 	return row
 
 
+## The tab bar: the previous-tab chip, one button per shown tab, the next-tab
+## chip, then Back at the right end (with its Esc / B chip).
+func _build_tab_bar() -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", OssuaryUiData.TAB_GAP)
+	var prev := InputHints.chip(InputHints.raw(OssuaryUiData.TAB_PREV_KEY, OssuaryUiData.TAB_PREV_PAD))
+	prev.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(prev)
+	for id: String in _tab_ids:
+		var b := Button.new()
+		b.text = String(OssuaryUiData.TAB_NAMES[id])
+		b.custom_minimum_size = OssuaryUiData.TAB_SIZE
+		b.focus_mode = Control.FOCUS_ALL
+		b.set_meta(&"ui_lift", false)
+		b.pressed.connect(select_tab.bind(id))
+		b.focus_entered.connect(select_tab.bind(id))
+		row.add_child(b)
+		tab_buttons[id] = b
+	var nxt := InputHints.chip(InputHints.raw(OssuaryUiData.TAB_NEXT_KEY, OssuaryUiData.TAB_NEXT_PAD))
+	nxt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(nxt)
+	if _tab_ids.size() <= 1:
+		prev.visible = false  # One page only: no tab keys to show.
+		nxt.visible = false
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(spacer)
+	back_button = Button.new()
+	back_button.text = OssuaryUiData.BACK
+	back_button.custom_minimum_size = Vector2(OssuaryUiData.BACK_WIDTH, OssuaryUiData.TAB_SIZE.y)
+	back_button.focus_mode = Control.FOCUS_ALL
+	back_button.pressed.connect(close)
+	back_button.set_meta(&"ui_back", true)
+	row.add_child(back_button)
+	InputHints.attach(back_button, "ui_cancel", true, 12.0)
+	return row
+
+
+## The Trees page: the five tree columns over the detail panel.
+func _build_trees_page() -> Control:
+	var page := VBoxContainer.new()
+	page.add_theme_constant_override("separation", OssuaryUiData.BLOCK_GAP)
+	var cols := HBoxContainer.new()  # The five tree columns.
+	cols.add_theme_constant_override("separation", OssuaryUiData.COLUMN_GAP)
+	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	page.add_child(cols)
+	for tree_id: String in MetaData.TREE_ORDER:
+		cols.add_child(_build_column(tree_id))
+	page.add_child(_build_detail())
+	return page
+
+
 ## One tree column: a header band (emblem + name), then one tile per upgrade.
+## The last column (Dominion) ends with the Oath tile and Lower Oath / Refund all
+## at its bottom.
 func _build_column(tree_id: String) -> Control:
 	var def: Dictionary = MetaData.TREES[tree_id]
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", OssuaryUiData.ROW_GAP)
-	vb.add_child(_tree_band(def))
+	vb.add_child(_tree_band(tree_id, def))
 	var column: Array[Button] = []
 	for id: String in MetaData.upgrades_in(tree_id):
 		var b := _make_tile(id)
 		vb.add_child(b)
 		column.append(b)
+	if tree_id == String(MetaData.TREE_ORDER[MetaData.TREE_ORDER.size() - 1]):
+		var fill := Control.new()  # Pushes the Oath cluster to the column's bottom.
+		fill.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		vb.add_child(fill)
+		oath_button = _make_tile(PactData.OATH_ID)
+		vb.add_child(oath_button)
+		column.append(oath_button)
+		var pair := HBoxContainer.new()
+		pair.add_theme_constant_override("separation", OssuaryUiData.ROW_GAP)
+		vb.add_child(pair)
+		oath_lower_button = _plain_button(pair, OssuaryUiData.LOWER, lower_oath)
+		refund_button = _plain_button(pair, OssuaryUiData.REFUND, _on_refund_pressed)
 	_grid.append(column)
 	return vb
 
 
 ## A tree's header band: the kit header strip holding the tree emblem and
-## its name in the tree's colour.
-func _tree_band(def: Dictionary) -> Control:
+## its name in the tree's colour (dimmed by _refresh() while the tree is sealed).
+func _tree_band(tree_id: String, def: Dictionary) -> Control:
 	var band := PanelContainer.new()
 	band.add_theme_stylebox_override("panel", UiTheme.style("header", "violet"))
 	band.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -176,6 +306,7 @@ func _tree_band(def: Dictionary) -> Control:
 	var name_label := UiTheme.tier_label(String(def["display_name"]), UiTheme.Tier.NAME, (def["color"] as Color).lightened(0.3))
 	name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hb.add_child(name_label)
+	_band_parts[tree_id] = [name_label, icon]
 	return band
 
 
@@ -189,34 +320,10 @@ func _make_tile(id: String) -> OssuaryTile:
 	return b
 
 
-## Bottom row: the detail panel (left, three columns wide) and the Oath /
-## Refund all / Back cluster (right, one column wide).
-func _build_bottom() -> Control:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", OssuaryUiData.COLUMN_GAP)
-	row.add_child(_build_detail())
-	var right := VBoxContainer.new()  # Oath tile, Lower + Refund, Back.
-	right.add_theme_constant_override("separation", OssuaryUiData.ROW_GAP)
-	right.custom_minimum_size.x = OssuaryUiData.TILE_SIZE.x
-	right.size_flags_vertical = Control.SIZE_SHRINK_END
-	row.add_child(right)
-	oath_button = _make_tile(PactData.OATH_ID)
-	right.add_child(oath_button)
-	var pair := HBoxContainer.new()
-	pair.add_theme_constant_override("separation", OssuaryUiData.ROW_GAP)
-	right.add_child(pair)
-	oath_lower_button = _plain_button(pair, OssuaryUiData.LOWER, lower_oath)
-	refund_button = _plain_button(pair, OssuaryUiData.REFUND, _on_refund_pressed)
-	back_button = _plain_button(right, OssuaryUiData.BACK, close)
-	back_button.set_meta(&"ui_back", true)
-	InputHints.attach(back_button, "ui_cancel", true, 12.0)
-	return row
-
-
-## The ornate detail panel (contents filled by _show_detail()).
+## The ornate detail panel (contents filled by _show_detail()), the page's width.
 func _build_detail() -> Control:
 	_detail_panel = UiTheme.ornate_panel("violet")
-	_detail_panel.custom_minimum_size.x = OssuaryUiData.TILE_SIZE.x * 3.0 + float(OssuaryUiData.COLUMN_GAP) * 2.0
+	_detail_panel.custom_minimum_size.x = OssuaryUiData.PAGE_SIZE.x
 	_detail_panel.size_flags_vertical = Control.SIZE_SHRINK_END
 	var hb := HBoxContainer.new()
 	hb.add_theme_constant_override("separation", 16)
@@ -286,7 +393,7 @@ func _build_detail() -> Control:
 	return _detail_panel
 
 
-## Adds a bottom-row button calling `cb`.
+## Adds a Lower Oath / Refund all style button calling `cb` (half a tile wide).
 func _plain_button(parent: Control, text: String, cb: Callable) -> Button:
 	var b := Button.new()
 	b.text = text
@@ -298,15 +405,21 @@ func _plain_button(parent: Control, text: String, cb: Callable) -> Button:
 	return b
 
 
-## Explicit focus neighbours so D-pad / stick / arrow navigation is a grid.
+## Explicit focus neighbours so D-pad / stick / arrow navigation is a grid: the
+## tiles (Dominion's column runs on into the Oath tile, then Lower Oath / Refund
+## all), the tab bar above them (up from a top tile, down from a tab) and Back
+## at the tab bar's end.
 func _wire_focus() -> void:
 	var n_cols := _grid.size()
+	var trees_tab: Control = tab_buttons["trees"]
 	for c in n_cols:
 		var col: Array = _grid[c]
 		for r in col.size():
 			var b: Button = col[r]
-			var up: Control = col[r - 1] if r > 0 else b
-			var down: Control = col[r + 1] if r < col.size() - 1 else oath_button
+			var up: Control = col[r - 1] if r > 0 else trees_tab
+			var down: Control = col[r + 1] if r < col.size() - 1 else b
+			if b == oath_button:
+				down = oath_lower_button
 			var left_col: Array = _grid[c - 1] if c > 0 else col
 			var right_col: Array = _grid[c + 1] if c < n_cols - 1 else col
 			var left: Control = left_col[mini(r, left_col.size() - 1)]
@@ -314,11 +427,14 @@ func _wire_focus() -> void:
 			_set_neighbors(b, up, down, left, right)
 			b.focus_previous = b.get_path_to(left)
 			b.focus_next = b.get_path_to(right)
-	var last_col: Array = _grid[n_cols - 1]
-	_set_neighbors(oath_button, last_col[last_col.size() - 1], oath_lower_button, oath_button, oath_button)
-	_set_neighbors(oath_lower_button, oath_button, back_button, oath_lower_button, refund_button)
-	_set_neighbors(refund_button, oath_button, back_button, oath_lower_button, refund_button)
-	_set_neighbors(back_button, oath_lower_button, back_button, back_button, back_button)
+	var left_col_end: Array = _grid[maxi(0, n_cols - 2)]  # The tree left of Dominion.
+	_set_neighbors(oath_lower_button, oath_button, oath_lower_button, left_col_end[left_col_end.size() - 1], refund_button)
+	_set_neighbors(refund_button, oath_button, refund_button, oath_lower_button, refund_button)
+	for k in _tab_ids.size():
+		var t: Button = tab_buttons[_tab_ids[k]]
+		var right_t: Control = tab_buttons[_tab_ids[k + 1]] if k < _tab_ids.size() - 1 else back_button
+		_set_neighbors(t, t, _grid[0][0], tab_buttons[_tab_ids[maxi(k - 1, 0)]], right_t)
+	_set_neighbors(back_button, back_button, _grid[n_cols - 1][0], tab_buttons[_tab_ids[_tab_ids.size() - 1]], back_button)
 
 
 ## Sets the four focus neighbours of `b`.
@@ -329,18 +445,66 @@ func _set_neighbors(b: Control, up: Control, down: Control, left: Control, right
 	b.focus_neighbor_right = b.get_path_to(right)
 
 
-## A tile took focus: show it, and make the Oath tile's "up" return to this
-## tree column.
+## A tile took focus: show it, and remember its tree column.
 func _on_tile_focus(id: String) -> void:
 	_show_detail(id)
 	for c in _grid.size():
-		var col: Array = _grid[c]
-		for b: Button in col:
+		for b: Button in (_grid[c] as Array):
 			if b == buttons[id]:
 				_last_col = c
-				var back_to: Button = col[col.size() - 1]  # Bottom tile of this column.
-				oath_button.focus_neighbor_top = oath_button.get_path_to(back_to)
 				return
+
+
+# =====================================================================================
+# Tabs
+# =====================================================================================
+
+## Shows tab `id`: its page (refreshed when it is a panel), its button in gold,
+## and points the tab bar's "down" into that page.
+func select_tab(id: String) -> void:
+	if not _pages.has(id):
+		return
+	_tab = id
+	for k: String in _pages:
+		(_pages[k] as Control).visible = k == id
+	var into := _page_first_focus(id)  # Where "down" from the tab bar goes (null = Godot's own search).
+	for k: String in tab_buttons:
+		var t: Button = tab_buttons[k]
+		UiTheme.style_button(t, "button", "gold" if k == id else "")
+		t.add_theme_color_override("font_color", UiTheme.TEXT_GOLD if k == id else UiTheme.TEXT_DIM)
+		t.focus_neighbor_bottom = t.get_path_to(into) if into != null else NodePath("")
+	back_button.focus_neighbor_bottom = back_button.get_path_to(into) if into != null else NodePath("")
+	if id != "trees" and _pages[id].has_method("refresh"):
+		_pages[id].call("refresh")
+
+
+## The first control of page `id`: the Trees page's first tile, a panel's
+## `first_focus()` when it has one, else null (Godot's own focus search).
+func _page_first_focus(id: String) -> Control:
+	if id == "trees":
+		return _grid[0][0]
+	var page: Control = _pages[id]
+	if page.has_method("first_focus"):
+		var f: Variant = page.call("first_focus")
+		if f is Control:
+			return f as Control
+	return null
+
+
+## Q / E (LB / RB): the previous / next tab, focus on its tab button (or on the
+## new page's first control when focus was inside a page).
+func _step_tab(d: int) -> void:
+	if _tab_ids.size() <= 1:
+		return
+	var f := get_viewport().gui_get_focus_owner()
+	var on_tabs := f != null and tab_buttons.values().has(f)  # True when a tab button has focus.
+	select_tab(_tab_ids[wrapi(_tab_ids.find(_tab) + d, 0, _tab_ids.size())])
+	Sfx.play("ui_hover")
+	var into := _page_first_focus(_tab)
+	if on_tabs or into == null:
+		(tab_buttons[_tab] as Button).grab_focus()
+	else:
+		into.grab_focus()
 
 
 # =====================================================================================
@@ -355,6 +519,12 @@ func _refresh() -> void:
 	# Never the disabled look: Lower Oath turns crimson while an Oath tier is
 	# active; with nothing to lower / refund a press answers `denied`.
 	UiTheme.style_button(oath_lower_button, "button", "crimson" if Meta.oath_active_tier() > 0 else "")
+	for tree_id: String in _band_parts:
+		var parts: Array = _band_parts[tree_id]
+		var open := Meta.tree_open(tree_id)  # Dominion: sealed until its boss falls.
+		var col: Color = (MetaData.TREES[tree_id]["color"] as Color).lightened(0.3)
+		(parts[0] as Label).add_theme_color_override("font_color", col if open else UiTheme.TEXT_DIM)
+		(parts[1] as Control).modulate = Color.WHITE if open else OssuaryUiData.LOCKED_ICON_TINT
 	if _focus_id != "":
 		_show_detail(_focus_id)
 
@@ -369,8 +539,9 @@ func _show_balance() -> void:
 	_count_from = -1
 
 
-## The display state of upgrade `id`: "buy", "cost", "maxed" or "locked"
-## (Meta.purchase_block(); a lowered Oath counts as "buy": its raise is free).
+## The display state of upgrade `id`: "buy", "cost", "maxed", "locked",
+## "sealed" or "gated" (Meta.purchase_block(); a lowered Oath counts as "buy": its
+## raise is free).
 static func _state_of(id: String) -> String:
 	if id == PactData.OATH_ID and Meta.oath_active_tier() < Meta.tier(id):
 		return "buy"
@@ -392,14 +563,29 @@ func _refresh_tile(id: String) -> void:
 			tile.cost_label.text = OssuaryUiData.FREE
 			tile.cost_label.add_theme_color_override("font_color", UiTheme.TEXT_GOOD)
 		return
-	tile.show_state(state, t, mx, cost)
+	tile.show_state(state, t, mx, cost, 0, Meta.max_open_tier(), _gate_word(id))
 
 
-## "+6%" style value of upgrade `id` at tier `t` (MetaData.STATS format).
+## The LEVEL_GATES index the next level of `id` waits on (-1 = none: open,
+## maxed or another block).
+static func _gate_index(id: String) -> int:
+	if Meta.purchase_block(id) != "gated":
+		return -1
+	return MetaData.LEVEL_GATES.find(MetaData.gate_of(Meta.tier(id) + 1))
+
+
+## The tile word of the gate `id` waits on ("" = none).
+static func _gate_word(id: String) -> String:
+	var gi := _gate_index(id)
+	return String(MetaData.LEVEL_GATES[gi]["short"]) if gi >= 0 else ""
+
+
+## "+6%" style value of upgrade `id` at tier `t` (MetaData.STATS format;
+## MetaData.value_at(), so the deep levels' smaller steps show as they apply).
 static func _value(id: String, t: int) -> String:
 	var def: Dictionary = MetaData.UPGRADES[id]
 	var stat_def: Array = MetaData.STATS[String(def["stat"])]
-	return format_stat(float(def["per_tier"]) * float(t), String(stat_def[1]))
+	return format_stat(MetaData.value_at(id, t), String(stat_def[1]))
 
 
 ## Formats a modifier value per its MetaData.STATS format.
@@ -411,6 +597,10 @@ static func format_stat(v: float, fmt: String) -> String:
 			return "-%d%%" % int(roundf(v * 100.0))
 		"unlock":
 			return "Unlocked" if v >= 1.0 else "Locked"
+		"sec":
+			return "%d s" % int(roundf(v)) if is_equal_approx(v, roundf(v)) else "%.1f s" % v
+		"level":
+			return "Lv %d" % (1 + int(roundf(v)))
 	return "+%d" % int(roundf(v))
 
 
@@ -425,7 +615,7 @@ func _show_detail(id: String) -> void:
 	var mx := MetaData.max_tier(id)
 	var is_oath := id == PactData.OATH_ID
 	(_d["icon"] as IconGlyph).set_icon(String(def["icon"]))
-	(_d["icon"] as IconGlyph).modulate = OssuaryUiData.LOCKED_ICON_TINT if state == "locked" else Color.WHITE
+	(_d["icon"] as IconGlyph).modulate = OssuaryUiData.LOCKED_ICON_TINT if state == "locked" or state == "sealed" else Color.WHITE
 	var name_label: Label = _d["name"]
 	name_label.text = String(def["display_name"])
 	var accent := "violet"  # Detail panel frame accent.
@@ -434,7 +624,7 @@ func _show_detail(id: String) -> void:
 		"maxed":
 			accent = "gold"
 			name_col = UiTheme.TEXT_GOLD
-		"locked":
+		"locked", "sealed":
 			name_col = UiTheme.TEXT_DIM
 	if is_oath:
 		accent = "crimson"
@@ -445,7 +635,8 @@ func _show_detail(id: String) -> void:
 	if is_oath:
 		pips.set_pips(mx, Meta.oath_active_tier(), OssuaryUiData.PIP_OATH, t)
 	else:
-		pips.set_pips(mx, t, OssuaryUiData.PIP_MAXED if state == "maxed" else OssuaryUiData.PIP_OWNED)
+		var open := Meta.max_open_tier()  # Levels open now; the rest are sealed.
+		pips.set_pips(mx, t, OssuaryUiData.PIP_MAXED if state == "maxed" else OssuaryUiData.PIP_OWNED, 0, open if open < mx else -1)
 	(_d["desc"] as Label).text = OssuaryUiData.OATH_LINE if is_oath else String(def["description"])
 	if is_oath:
 		_show_oath_values()
@@ -493,6 +684,7 @@ func _show_cost(id: String, state: String) -> void:
 	hint.visible = false
 	word.text = OssuaryUiData.BUY
 	cost.add_theme_color_override("font_color", OssuaryUiData.ASH_COLOR)
+	UiTheme.set_tier(cost, UiTheme.Tier.NAME)
 	if id == PactData.OATH_ID and Meta.oath_active_tier() < Meta.tier(id):
 		icon.visible = false
 		cost.text = OssuaryUiData.FREE
@@ -509,6 +701,20 @@ func _show_cost(id: String, state: String) -> void:
 			var req: Dictionary = MetaData.UPGRADES[id]["requires"]
 			icon.visible = false
 			cost.text = OssuaryUiData.NEEDS % [String(MetaData.UPGRADES[req["id"]]["display_name"]), ROMAN[int(req["tier"])]]
+			cost.add_theme_color_override("font_color", OssuaryUiData.DENIED)
+		"sealed":
+			# The tree waits on a boss (MetaData.TREE_GATES, Meta.tree_open()).
+			icon.visible = false
+			cost.text = String(OssuaryUiData.SEALED_LINES.get(String(MetaData.UPGRADES[id]["tree"]), ""))
+			UiTheme.set_tier(cost, UiTheme.Tier.BODY)
+			cost.add_theme_color_override("font_color", OssuaryUiData.DENIED)
+		"gated":
+			# The next level waits on a difficulty clear (Meta.max_open_tier()):
+			# one BODY line naming it, so it fits beside the values.
+			icon.visible = false
+			var gi := _gate_index(id)  # LEVEL_GATES row.
+			cost.text = String(OssuaryUiData.GATE_LINES[gi]) if gi >= 0 and gi < OssuaryUiData.GATE_LINES.size() else ""
+			UiTheme.set_tier(cost, UiTheme.Tier.BODY)
 			cost.add_theme_color_override("font_color", OssuaryUiData.DENIED)
 		"cost":
 			cost.text = str(Meta.next_cost(id))
@@ -691,8 +897,22 @@ func close() -> void:
 	UiMotion.close(self, queue_free)  # Quick fade out, then freed.
 
 
-## Esc / controller B: closes the confirmation first, then the menu.
+## Esc / controller B: closes the confirmation first, then the menu. Q / E and
+## LB / RB switch tabs (not while the confirmation is open).
 func _input(event: InputEvent) -> void:
+	if _confirm == null:
+		var k := event as InputEventKey
+		if k != null and k.pressed and not k.echo:
+			var code := int(k.physical_keycode) if k.physical_keycode != KEY_NONE else int(k.keycode)
+			if code == OssuaryUiData.TAB_PREV_KEY or code == OssuaryUiData.TAB_NEXT_KEY:
+				get_viewport().set_input_as_handled()
+				_step_tab(-1 if code == OssuaryUiData.TAB_PREV_KEY else 1)
+				return
+		var jb := event as InputEventJoypadButton
+		if jb != null and jb.pressed and (jb.button_index == OssuaryUiData.TAB_PREV_PAD or jb.button_index == OssuaryUiData.TAB_NEXT_PAD):
+			get_viewport().set_input_as_handled()
+			_step_tab(-1 if jb.button_index == OssuaryUiData.TAB_PREV_PAD else 1)
+			return
 	if event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		if _confirm != null:

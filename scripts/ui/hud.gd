@@ -331,7 +331,7 @@ func _build() -> void:
 	actives.alignment = BoxContainer.ALIGNMENT_CENTER
 	actives.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	bc.add_child(actives)
-	for i in PlayerData.ACTIVE_SLOTS:
+	for i in _active_slot_count():
 		var g := IconGlyph.new("", Vector2(42, 48))
 		g.slot_frame = true  # UI kit slot socket.
 		actives.add_child(g)
@@ -351,6 +351,19 @@ func _build() -> void:
 	add_child(HudAbilities.new(game))
 	if coop_ui != null:
 		add_child(coop_ui)  # Co-op: the self plate, the arrows, the markers, the waiting panel.
+
+
+## Active-slot sockets of the ability bar: PlayerData.ACTIVE_SLOTS, plus the
+## relics' extra slot (Hollow Crown) of any player of the run.
+func _active_slot_count() -> int:
+	var n := PlayerData.ACTIVE_SLOTS  # Sockets.
+	if game.coop != null:
+		for s in game.coop.slots:
+			if s.abilities != null:
+				n = maxi(n, s.abilities.active_slots())
+	elif game.abilities != null:
+		n = game.abilities.active_slots()
+	return n
 
 
 ## Pulls current values from the Game into the widgets.

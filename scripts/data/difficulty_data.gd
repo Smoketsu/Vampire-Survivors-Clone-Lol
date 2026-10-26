@@ -84,7 +84,7 @@ const LEVELS := {
 		"enemy_speed": 1.05,  # TUNING (not in GDD) "aggression"
 		"elite_chance": 0.0,  # TUNING (not in GDD)
 		"boss_hp": 1.15,  # TUNING (not in GDD)
-		"ash_mult": 1.25,  # TUNING (not in GDD)
+		"ash_mult": 1.5,  # TUNING (not in GDD) owner decision Oct 2026 (was 1.25), GDD §15.0 "Ossuary expansion: owner decisions"
 		"xp_mult": 1.0,  # TUNING (not in GDD)
 	},
 	"deathlord": {
@@ -98,7 +98,7 @@ const LEVELS := {
 		"enemy_speed": 1.06,  # TUNING (not in GDD)
 		"elite_chance": 0.008,  # TUNING (not in GDD) ~1 trickle soldier in 125 is an elite
 		"boss_hp": 1.3,  # TUNING (not in GDD)
-		"ash_mult": 1.5,  # TUNING (not in GDD)
+		"ash_mult": 2.0,  # TUNING (not in GDD) owner decision Oct 2026 (was 1.5), GDD §15.0 "Ossuary expansion: owner decisions"
 		"xp_mult": 1.0,  # TUNING (not in GDD) an XP bonus completed builds by 15:00
 	},
 }

@@ -124,6 +124,16 @@ jobs:
           grep -qF "[enemy_pool_check] PASS mode=solo" enemy_pool_solo.log
           grep -qF "[enemy_pool_check] PASS mode=co-op" enemy_pool_coop.log
 
+      - name: Ossuary deep levels check (prices, gates, save migration)
+        if: matrix.id == 'graveyard'
+        run: |
+          set -euo pipefail
+          timeout 60 "$GODOT_BIN" --headless res://tools/ossuary_check.tscn -- --autotest --check-dir="$RUNNER_TEMP/ossuary_check" 2>&1 | tee ossuary_check.log
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" ossuary_check.log; then
+            echo "::error::Errors/warnings during the Ossuary check"; exit 1
+          fi
+          grep -qF "[ossuary_check] PASS" ossuary_check.log
+
       - name: Autotest (${{ matrix.name }})
         run: |
           # Exit code is 0 only when the run completes (reaches 0:00).

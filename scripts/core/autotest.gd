@@ -568,7 +568,7 @@ func _apply_forced_classes() -> void:
 	for cls: String in _classes():
 		if int(game.horde.class_levels[cls]) > 0:
 			continue
-		if game.abilities.active_count() >= PlayerData.ACTIVE_SLOTS:
+		if game.abilities.active_count() >= game.abilities.active_slots():
 			print("[autotest] forced class %s skipped: no active slot left" % cls)
 			continue
 		game.horde.set_class_level(cls, 1)
@@ -1024,7 +1024,7 @@ func _forced_slots_short(kind: String) -> bool:
 			missing += 1
 	if missing == 0:
 		return false
-	var free := (PlayerData.PASSIVE_SLOTS - ab.passive_count()) if passive else (PlayerData.ACTIVE_SLOTS - ab.active_count())  # Free slots.
+	var free := (PlayerData.PASSIVE_SLOTS - ab.passive_count()) if passive else (ab.active_slots() - ab.active_count())  # Free slots (relics may add an active one).
 	return free <= missing + FORCED_SPARE_SLOTS
 
 
@@ -1751,10 +1751,73 @@ func _print_powerups(summary: Dictionary) -> void:
 		int(ash.get("pact_bonus", 0)), int(ash.get("oath_bonus", 0))])
 
 
+## Ossuary deep levels: the run's upgrade levels against the whole Ossuary (the
+## Profane Oath left out, like the profiles): levels owned, of them the gated
+## ones (above MetaData.UNGATED_MAX_TIER), and their Soul Ash price.
+func _print_ossuary_totals() -> void:
+	var owned := 0  # Levels owned.
+	var deep := 0  # Of them above level 5 (the difficulty-gated levels).
+	var deep_total := 0  # Gated levels in the whole Ossuary.
+	var cost := 0  # Soul Ash price of the owned levels.
+	for id: String in MetaData.UPGRADE_ORDER:
+		if id == PactData.OATH_ID:
+			continue
+		var t := int(game.meta.tiers.get(id, 0))  # This upgrade's level.
+		owned += t
+		deep += maxi(0, t - MetaData.UNGATED_MAX_TIER)
+		deep_total += maxi(0, MetaData.max_tier(id) - MetaData.UNGATED_MAX_TIER)
+		cost += MetaData.cost_up_to(id, t)
+	var all_cost := MetaData.max_total_cost() - MetaData.cost_up_to(PactData.OATH_ID, MetaData.max_tier(PactData.OATH_ID))  # Whole Ossuary, Oath excluded.
+	print("[autotest] ossuary: levels %d / %d owned (levels 6-10: %d / %d) | soul ash %d / %d" % [
+		owned, MetaData.total_tiers(), deep, deep_total, cost, all_cost])
+
+
+## Ossuary new options (expansion step 3): what each one did this run (only with
+## upgrades, like the line above).
+func _print_ossuary_options() -> void:
+	var st := game.stats
+	print("[autotest] ossuary options: bone reserve %d barrier HP | presence +%d%% (%d classes) | echoes from Lv %d | dark tithe +%.0f meter | last rites %d | grave ward %d blocked | gilded %d draws, %d swaps | elite bounty +%d ash | head start %d | vanguard %d | patient grave %d rerolls" % [
+		int(st.get("bone_reserve_barrier", 0.0)), int(roundf(game.meta.value("presence_damage") * float(game.horde.distinct_classes()) * 100.0)),
+		game.horde.distinct_classes(), maxi(1, VolleyData.LEVEL_ON - game.meta.int_value("echo_levels")),
+		float(st.get("dark_tithe_points", 0.0)), int(st.get("last_rites_fired", 0.0)), int(st.get("grave_ward_blocks", 0.0)),
+		int(st.get("gilded_draws", 0.0)), int(st.get("gilded_swaps", 0.0)),
+		floori(float(st.get("elite_kills", 0.0)) * game.meta.value("elite_ash")), int(st.get("head_start_levels", 0.0)),
+		int(st.get("vanguard_raises", 0.0)), int(st.get("patient_grave_rerolls", 0.0))])
+## Ossuary Masteries (expansion step 4): the run's Mastery levels against all of them.
+func _print_mastery_line() -> void:
+	var levels := 0  # Mastery levels owned.
+	var cost := 0  # Soul Ash price of the owned levels.
+	for cls: String in MasteryData.CLASSES:
+		var lv := int(game.meta.masteries.get(cls, 0))  # This class's level.
+		levels += lv
+		cost += MasteryData.cost_up_to(lv)
+	print("[autotest] masteries: %d / %d levels owned | soul ash %d / %d | %s" % [
+		levels, MasteryData.CLASSES.size() * MasteryData.MAX_LEVEL, cost, MasteryData.total_cost(), game.meta.describe_masteries()])
+
+
+## Relics and Grave Offerings (GDD §15.0 "Relics and Grave Offerings"): what the
+## run equipped and what the relic hooks did (rerolls from the Bone Abacus, Grave
+## Feasts from Mourner's Bell, Gilded Coffer chests, extra active slots, the
+## chest bonus, the meter's start and the max HP multiplier).
+func _print_rites() -> void:
+	var m := game.meta  # The bound (solo) player's modifiers.
+	print("[autotest] rites: %s | active slots %d | chest +%d | meter start %d%%, charge x%.2f | max HP x%.2f | relic rerolls %d | relic feasts %d | offering chests %d" % [
+		m.rites.describe(), game.abilities.active_slots(), m.relic_int("chest_bonus"),
+		roundi(clampf(m.relic("ult_start"), 0.0, 1.0) * 100.0), game.dread_rally.charge_mult, m.relic("max_hp_mult"),
+		int(game.stats.get("relic_rerolls", 0.0)), int(game.stats.get("relic_feasts", 0.0)), int(game.stats.get("offering_chests", 0.0))])
+
+
 ## Prints the meta profile and the run's Soul Ash award (Meta.award_run()).
 func _print_soul_ash(summary: Dictionary) -> void:
 	print("[autotest] meta upgrades (--meta=%s): %s | revivals used: %d" % [
 		GameState.autotest_meta, game.meta.describe(), int(game.stats.get("revivals", 0.0))])
+	if not game.meta.is_empty():
+		_print_ossuary_totals()  # Only with upgrades: the default (--meta=none) summary keeps its lines.
+		_print_ossuary_options()
+	if not game.meta.masteries.is_empty():
+		_print_mastery_line()  # Only with Masteries (--meta=max): the other summaries keep their lines.
+	if not game.meta.rites.is_empty():
+		_print_rites()  # Relics / offering only (the default summary keeps its lines).
 	var ash: Dictionary = summary.get("soul_ash", {})
 	if ash.is_empty():
 		return
@@ -1806,6 +1869,14 @@ func _print_hyper_skins(summary: Dictionary) -> void:
 		int(st.get("rot_kills", 0.0)), int(st.get("kill_high_confessor", 0.0)), 1 if float(st.get("boss_kill_full_army", 0.0)) > 0.0 and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID and bool(summary["boss_defeated"]) else 0,
 		int(float(Meta.lifetime.get("rot_kills", 0.0))), int(float(Meta.lifetime.get("high_confessor_kills", 0.0))), int(float(Meta.lifetime.get("seraphine_kills_full_army", 0.0))),
 		Meta.unlocked_skin_ids().size(), SkinData.all_ids().size(), ", ".join(new_skins) if not new_skins.is_empty() else "none", cards])
+	var rc := String(summary.get("recolour_id", ""))  # Worn skin recolour ("" = none; the line only prints when one is forced, so default runs print nothing new).
+	if rc != "":
+		var rkey := String(SkinData.skin(skin).get("sprite", "")) if skin != "" else SkinData.base_sprite(String(summary.get("character_id", CharacterData.DEFAULT_ID)))  # Sprite remapped.
+		var rtex := SpriteBank.texture(rkey)  # The original art (null without it).
+		var rre := Recolour.texture(rtex, rkey, rc) if rtex != null else null  # The recoloured art.
+		print("[autotest] recolours: %s (%d Soul Ash) worn on %s | art %s: %s | %d recolours x %d skins, %d Soul Ash a skin" % [
+			RecolourData.display_name(rc), RecolourData.price(rc), skin if skin != "" else "the default look", rkey,
+			"remapped" if rre != null and rre != rtex else "no art, drawn unchanged", RecolourData.ORDER.size(), SkinData.all_ids().size(), RecolourData.price_per_skin()])
 
 
 ## Shadow Bolt damage stat with `prefix` ("dmg_" / "bossdmg_"), including the
