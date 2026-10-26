@@ -100,6 +100,9 @@ const RECKONING_OBJECTIVE: String = "THE ENDLESS NIGHT: the sun will not rise ag
 ## on)). Ashigaru are the fodder; samurai the soldiers; teppo gunners the
 ## ranged line; Kiba-musha the cavalry (from the Gatehouse); the Hatamoto the
 ## rare elite banners (always elite, their aura buffs the soldiers near them).
+## Owner's playtest pass 1 decision (Oct 26, 2026): the cavalry broke the ring
+## around 11:00, so from 10:00 the Kiba-musha weight is cut by about a third
+## (the share goes to the ashigaru); their charges also hit summons for less.
 const SEGMENTS := [
 	# Zone I, the Outer Bailey.
 	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
@@ -128,26 +131,26 @@ const SEGMENTS := [
 		"objective": "Step out of the white lines and the charging lanes"},
 	# Zone III, the Courtyards: the General of the Left at 9:00; night at 7:00.
 	{"start": 600.0, "rate": 3.3, "max_alive": 82,  # TUNING (not in GDD)
-		"weights": {"ashigaru": 0.44, "samurai": 0.29, "teppo_gunner": 0.14, "kiba_musha": 0.11, "hatamoto": 0.014},
+		"weights": {"ashigaru": 0.478, "samurai": 0.29, "teppo_gunner": 0.14, "kiba_musha": 0.072, "hatamoto": 0.014},
 		"ambush": {"every": 35.0, "kind": "ninja", "count": 3},  # TUNING (not in GDD)
 		"objective": "The Courtyards: samurai duelists draw among the pines"},
 	{"start": 720.0, "rate": 3.6, "max_alive": 90,  # TUNING (not in GDD)
-		"weights": {"ashigaru": 0.44, "samurai": 0.29, "teppo_gunner": 0.14, "kiba_musha": 0.11, "hatamoto": 0.014},
+		"weights": {"ashigaru": 0.478, "samurai": 0.29, "teppo_gunner": 0.14, "kiba_musha": 0.072, "hatamoto": 0.014},
 		"ambush": {"every": 35.0, "kind": "ninja", "count": 3},  # TUNING (not in GDD)
 		"objective": "The light fails over the courtyards"},
 	{"start": NIGHT, "rate": 3.8, "max_alive": 96,  # TUNING (not in GDD)
-		"weights": {"ashigaru": 0.36, "samurai": 0.28, "teppo_gunner": 0.12, "kiba_musha": 0.1, "hatamoto": 0.012},
+		"weights": {"ashigaru": 0.395, "samurai": 0.28, "teppo_gunner": 0.12, "kiba_musha": 0.065, "hatamoto": 0.012},
 		"night_weights": {"onryo": 0.45, "oni": 0.014},  # TUNING (not in GDD) the yokai join at night
 		"ambush": {"every": 30.0, "kind": "ninja", "count": 3},  # TUNING (not in GDD)
 		"objective": "Night in the Courtyards: keep to the lanterns' light"},
 	# Zone IV, the Keep: the density peak of the run.
 	{"start": 900.0, "rate": 4.2, "max_alive": 104,  # TUNING (not in GDD)
-		"weights": {"ashigaru": 0.36, "samurai": 0.3, "teppo_gunner": 0.12, "kiba_musha": 0.1, "hatamoto": 0.014},
+		"weights": {"ashigaru": 0.395, "samurai": 0.3, "teppo_gunner": 0.12, "kiba_musha": 0.065, "hatamoto": 0.014},
 		"night_weights": {"onryo": 0.45, "oni": 0.016},  # TUNING (not in GDD)
 		"ambush": {"every": 30.0, "kind": "ninja", "count": 3},  # TUNING (not in GDD)
 		"objective": "The Keep: the Shogun's guard holds the stair"},
 	{"start": 960.0, "rate": 4.4, "max_alive": 108,  # TUNING (not in GDD)
-		"weights": {"ashigaru": 0.36, "samurai": 0.3, "teppo_gunner": 0.12, "kiba_musha": 0.1, "hatamoto": 0.014},
+		"weights": {"ashigaru": 0.395, "samurai": 0.3, "teppo_gunner": 0.12, "kiba_musha": 0.065, "hatamoto": 0.014},
 		"night_weights": {"onryo": 0.45, "oni": 0.016},  # TUNING (not in GDD)
 		"ambush": {"every": 30.0, "kind": "ninja", "count": 3},  # TUNING (not in GDD)
 		"objective": "Taiko drums beat in the keep: the Shogun is coming"},
