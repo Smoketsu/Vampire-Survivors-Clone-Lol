@@ -1745,6 +1745,38 @@ the **Teppo Gunner** (arquebus volleys on a shared 6 s beat, then a long reload 
 through walls and the ring) and the **Oni** (a heavy whose iron kanabō stuns summons; flat armour; the Endless
 Night's kind). The Codex has a **Shogunate** tab.
 
+### Stage 15: the Road to the Sun (Act V finale)
+
+<!-- --- Act V: the Road to the Sun --- -->
+The finale of Act V (GDD §15.0 "The Road to the Sun (Act V phase 2)" and the rows after it; data in
+`scripts/data/stages/sun_road_stage.gd`; still "Coming soon" until the lead's merge and review). A pilgrim road
+of torii gates climbing to the sun goddess's shrine above the clouds. Unlocked by defeating Shogun Kurogane;
+Soul Ash ×4.5 (placeholder).
+
+- **Four zones on the clock** (`MarchDirector`): the Torii Road (20:00), the Sacred Forest (15:00), the Shrine
+  Steps (10:00) and the High Plain of Heaven (5:00), each with its own pixel-art floor (`SunRoadGround`) and
+  obstacles (vermilion torii posts, stone markers, roped sacred cedars, mossy rocks, guardian lion-dogs, step
+  walls, cloud rocks, sun mirrors, and the Sun's Course's stone lanterns).
+- **Kinds:** the **Sōhei** (a warrior monk whose naginata sweeps a telegraphed wide arc), the **Kitsune** (night
+  support: she conjures **fox-fire illusions** of herself that your summons waste their blows on; light, such as
+  your own lamp or a lantern's pool, or any area damage (a spell, a splash, a hazard) dispels them) and the
+  miniboss **the Kirin**, a holy beast of light (a golden gallop down a telegraphed lane, the Horn of Heaven's
+  rays, a halo that burns the dead near it; chest and Soul Ash bounty). The other Act V stages' kinds join as
+  guest squads once they exist.
+- **Amaterasu, the Sun Goddess** (3:00 left). Her place in the sky is the phase, and her sky is the Sun's
+  Course's: at **dawn** she rises on the east edge (sweeping mirror beams, sun-disc mines), at **noon** she
+  stands overhead (beams fall on marked circles, and the noon glare scorches everything in the open: **the
+  obstacles' shadows are the only safe ground**), at **sunset** she sinks to the west (a wide setting-sun beam
+  across the arena, the light turning red as night closes in). While her sun is up the night's yokai hold
+  back. When she falls, **the sun goes out**: the night returns, and at 0:00 the Endless Night.
+- **Rewards** (offered on every stage once she falls): the spell **Black Sun** (a dark sun orbits you and burns
+  a short beam through the nearest group) → **Eclipse of Heaven** with its new passive **Stolen Dawn**; the
+  character **the Shrine Maiden of Night** (innate *Night Prayer*: a second beam at another group); the summon
+  class **the Bound Oni** (chained oni brutes holding the front; the kanabō smash stuns every foe it lands on)
+  → **the Oni Lord** (a quake around every smash) with its new passive **Oni's Resolve** (stuns on your summons
+  wear off sooner). The achievement **The Sun Goes Out** opens the Act V epilogue part (its panels and the
+  closing card "The Pit Keeps Count" come at integration).
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2277,6 +2309,9 @@ scripts/
                             obstacles, the stone lantern (lit sprite at night) and the long dusk shadows (Act V)
     shogunate_ground.gd     The Act V stubs' placeholder floor (the STAGE's "floor": paddy / castle / gravel)
     shogunate_report.gd     The autotest's Act V lines (sun's course, the draw, from the shadows, kinds, stage)
+    sun_road_glyphs.gd      The Road to the Sun's code-drawn fallbacks (Kitsune, Sohei, Kirin, Amaterasu, obstacles)
+    sun_road_ground.gd      The Road to the Sun's four zone floors (torii road, forest, steps, heaven) (Act V)
+    sun_road_report.gd      The autotest's Road to the Sun lines (stage, kinds, Amaterasu, Black Sun, Bound Oni)
     ilion_report.gd         The Shores of Ilion's autotest lines (ilion, ilion kinds, polyphemus, achilles,
                             act IV spell / passives)
     ilion_ground.gd         The Shores of Ilion's zone floors (beach, camp, gate, walls)
@@ -2456,6 +2491,11 @@ scripts/
                             night's darkness texture and the dusk tint, the Paper Lanterns hook
       draw_cuts.gd          THE DRAW: draw(source, from, dir, opts): a white line for 0.8 s, then one cut on
                             every body on it; max 3, boss override; the Unbending hook
+      sun_road_director.gd  The Road to the Sun: the Kirin's event, guest squads of the other Act V stages
+      boss_amaterasu.gd     Amaterasu: dawn / noon / sunset by her place in the sky (the SunCourse override)
+      amaterasu_hazards.gd  Her mirror beams, sun-disc mines, zenith circles, noon glare and shade, sunset beam
+      kitsune_kit.gd, fox_fire_kit.gd, sohei_kit.gd, kirin_kit.gd  The Road's kinds (fox-fire illusions,
+                            the naginata sweep, the Kirin's gallop / horn / halo)
       shadow_ambush.gd      FROM THE SHADOWS: ambusher squads from obstacle shadows (or inside the Bone Ring)
                             after a smoke puff, longer in light; the "ambush" event and segment trickle
       shogunate_kit.gd      Base kit: the row flags (night, draws, ambusher, ethereal), start_draw(), light()
@@ -2716,6 +2756,9 @@ scripts/
     stages/kurogane_stage.gd       act 5, "shogunate": true, the Sun's Course timeline, the Endless Night
     stages/sun_road_stage.gd       Reckoning, placeholder floors / obstacles / boss scripts, zone names
     hades_data.gd           Hades' arrival, fight, god-shade list (GOD_SHADES) and ending (Act IV)
+    amaterasu_data.gd       Amaterasu's arrival, fight, sky per phase (SKY) and ending (Act V)
+    black_sun_data.gd       Black Sun / Eclipse of Heaven rules, Stolen Dawn keys, Night Prayer key (Act V)
+    sun_road_enemy_data.gd  The Road to the Sun's kinds: Kitsune, fox fire, Sohei, the Kirin (Act V)
     river_styx_data.gd      River Styx / Lethe's Flood rules, Ferryman's Toll keys, the Ferrywoman's innate (Act IV)
     stages/ilion_stage.gd          Act IV stubs: the Shores of Ilion, Mount Olympus and the Asphodel Underworld;
     stages/olympus_stage.gd        act 4, "pantheon": true, their wrath kind, the Twilight of the Gods

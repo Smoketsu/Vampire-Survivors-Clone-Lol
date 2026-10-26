@@ -2383,3 +2383,44 @@ where Act V units never stand. **For the owner's review.**
 | `shogunate/onryo` | Onryo (night fodder, female ghost): pale white burial kimono, long black hair over the face, reaching arms, a wisp tail | 38x36 | hover (the whole ghost bobs 2 px; two empty rows on top). No bust rig |
 | `shogunate/oni` | Oni (night heavy, male): red-skinned ogre, ivory horns, tiger-skin loincloth, an iron kanabo held low | 64x80 | legs walk (hip 66, spread 3, lift 3; the club rides above the hip) |
 | `obstacles/stone_lantern` (+ `_lit`) | A stone toro: base, post, lantern box with a window, wide roof, finial; `_lit` has a warm gold window | 28x40 | no strip; the glow pool is code |
+
+### Act V: the Road to the Sun (Stage 15; Act V phase 2, Oct 2026)
+
+<!-- --- Act V: the Road to the Sun --- -->
+The Act V finale's art (GDD §15.0 "The Road to the Sun (Act V phase 2)" and the rows after it), in the Shogunate's
+style above, with the sun's gold and white for Amaterasu and the Kirin and the necromancer's violet for his rewards.
+Prompts (the unit template, the sex named) and the rebuild script `make_art.py` in `art_source/sun_road/`; the unit
+sources archived under `art_source/<key>.png`, the sheets in `art_source/sun_road/`, the textures in
+`art_source/tiles/sun_road_earth.png` / `_stone.png`. References: the Samurai's source (the Sōhei), Cerberus's (the
+Kirin), the Ferrywoman's plus crops of `act5_lineup.png` / `act5_boss.png` (the Kitsune, Amaterasu, the Shrine
+Maiden), the Oni's and the Myrmidon Shade's (the Bound Oni); each pose and skin with its own new base as the
+reference. Pipeline: `prepare_sprite.py --ink-l 0.22` with explicit ramps for the units; the figure-redesign figures
+through `pixelate_source.py` first, then `--ink-l 0.15 --no-cleanup` (`--no-levels` for the maiden and her gilded and
+Deathlord skins: with levels the black hair turned a bright indigo). Badges: two symbol sheets split by empty
+columns, each symbol at `--art-height 24` on the frame of an approved badge (violet `abyssal_pact`, gold
+`tidecallers_host`), the inner 26 px cleared to the frame's fill (the gold sheet came with a fourth, unused symbol).
+Obstacles: two prop sheets split by empty gaps (circles: footprint + 4 wide, at most 2.6 x as tall; rects: length +
+2 wide, the end-on `_v` stretched to length + 14 tall). Floors: two textures through `make_tile.py` recipes. 17 API
+images, about **$0.36** (ledger). `art_check.py`: every unit passes height, alpha, palette and feet; the base Shrine
+Maiden and her Deathlord skin are +0.14 over the darkest floors (0.01 under the rule). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/kitsune` | Kitsune (night support, female, figure-redesign style): white hair and fox ears, three pale tails, a white miko kimono with a red skirt and sash, blue fox-fire in her palm | 32x52 | robe walk + bust (cols 13-22, rows 15-21), idle breathing; her fox-fire illusions are this sprite tinted (FoxFireKit) |
+| `shogunate/sohei` | Sōhei (soldier, male): white hood, indigo robes over a red chest plate, a gold kesa, a naginata across the body | 64x56 | legs walk (hip 41; the naginata above it) |
+| `shogunate/kirin` | The Kirin (miniboss): a golden-scaled deer-dragon, a single horn, a white cloud mane and tail, sakura wisps | 104x96 | four-legged walk (hind pair / forelegs, like Cerberus) |
+| `bosses/amaterasu` | Amaterasu (female, figure-redesign style): a rayed gold sun crown, long black hair, white, gold and red-orange robes with long sashes, a gold mirror | 84x116 | robe walk (her glide) + bust (cols 36-51, rows 34-44), idle breathing; the sun disc behind her is code |
+| `bosses/amaterasu_mirror` | Her attack pose (BossPoseData 1): the mirror raised high | 88x112 | the beams' windups and her crossings |
+| `player/shrine_maiden` | The Shrine Maiden of Night (female, figure-redesign style): black hair with a moon ornament, a black and violet miko, a gohei, a tiny black sun above her hand | 42x56 | robe walk + bust (cols 17-26, rows 17-24), idle breathing |
+| `player/shrine_maiden_hyper` / `_untouchable` / `_deathlord` | Maiden of the Golden Dawn (white and gold), Untouchable (white phantom, soul-teal), Deathlord (black iron, spiked crown, crimson) | 44x56 / 42x56 / 36x58 | walk + idle through `SKINS` (`SKIN_FIX` bust boxes for the gilded and Deathlord skins) |
+| `summons/bound_oni` | Bound Oni: an ashen oni with ivory horns, soul-teal eyes, bone chains and collar, a spiked kanabo held low | 46x60 | legs walk (the club tip rigid) |
+| `summons/oni_lord` | Oni Lord: bigger, a bone crown between tall horns, broken chains, a kanabo studded with soul-teal iron, a tattered cape | 66x70 | legs walk (the club tip rigid) |
+| `icons/black_sun`, `stolen_dawn`, `bound_oni`, `onis_resolve` | Violet badges: a black sun in a violet corona; a gold dawn swallowed by a black crescent, drawn into a bone hand; the bound oni's head; a broken bone chain over a kanabo | 32 | |
+| `icons/eclipse_of_heaven`, `oni_lord`, `ach_the_sun_goes_out` | Gold badges: two black suns in gold coronas; the Oni Lord's crowned head; a red torii before an extinguished sun | 32 | |
+| `tiles/sun_road_torii`, `_forest`, `_steps`, `_heaven` | Packed earth and gravel; dark moss; grey granite step courses (32 px, staggered); pale paving | 128 | `make_tile.py`; petals, ferns, cloud wisps and sunlight specks are code-drawn (`SunRoadGround`) |
+| `obstacles/torii_post_{s,l}`, `sacred_cedar_{s,m,l}`, `moss_rock_{s,l}`, `komainu_{s,l}`, `cloud_rock_{s,m,l}`, `sun_mirror_{s,l}` | A vermilion torii pillar; a roped sacred cedar; a mossy boulder; a stone lion-dog on its plinth; a rock peak in a cloud; a bronze sun mirror on a black stand | footprint + 4 wide | circles |
+| `obstacles/stone_marker_{s,l}` (+ `_v`), `step_wall_{s,l}` (+ `_v`) | A long carved pilgrim-road stone with sakura petals; a mossy stone retaining wall of the steps | length + 2 wide; `_v` 26 wide | rects |
+
+Code-drawn on purpose: Amaterasu's sun disc, beams (a soft strip texture stretched and rotated), sun-disc mines,
+zenith columns, the noon glare and the noon shade, the dark sun of her fall; the Black Sun's suns and beams; the
+Kirin's halo; the fox-fire flicker and wisp over an illusion.
