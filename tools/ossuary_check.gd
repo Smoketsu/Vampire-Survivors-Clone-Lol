@@ -22,10 +22,17 @@
 ## adds its checks to the run; --shot-what=rites|picker|relics|offerings makes the
 ## screenshot mode open the pre-run setup screen (its Rites strip, or the relic
 ## picker open) or the Relics / Offerings tab panel instead of the Ossuary.
+## Recolour Caskets (GDD §15.0 "Recolour Caskets (owner request, Oct 2026)"):
+## ossuary_casket_check.gd adds its checks; --shot-what=caskets|casket_mid|casket_epic
+## opens the Ossuary on the Caskets tab (before opening, mid-reveal frozen, after an
+## Epic reveal). --shot-prerun=PATH --shot-buy --shot-rc=ID shows an unowned
+## recolour previewed on the pre-run skin row (its "found in the Caskets" line).
 extends Node
 
 ## The relic and Grave Offering checks and screenshot helpers.
 const RelicCheck := preload("res://tools/ossuary_relic_check.gd")
+## The Recolour Casket checks and screenshot helper.
+const CasketCheck := preload("res://tools/ossuary_casket_check.gd")
 
 ## Failed checks (any failure exits 1).
 var _failures: int = 0
@@ -35,8 +42,8 @@ var _dir: String = "user://ossuary_check"
 var _shot: String = ""
 ## Recolours screenshot (step 6b, `--shot-prerun=PATH`): the pre-run screen of
 ## `--shot-char=ID` (default bone_oracle) wearing `--shot-skin=ID` with the
-## recolour `--shot-rc=ID` bought and worn ("" = none; `--shot-buy` shows an
-## unowned one instead), the window saved to PATH.
+## recolour `--shot-rc=ID` owned and worn ("" = none; `--shot-buy` previews it
+## unowned instead: the Caskets line), the window saved to PATH.
 var _shot_prerun: String = ""
 ## Recolours screenshot: character id.
 var _shot_char: String = "bone_oracle"
@@ -44,7 +51,7 @@ var _shot_char: String = "bone_oracle"
 var _shot_skin: String = ""
 ## Recolours screenshot: recolour id shown.
 var _shot_rc: String = ""
-## Recolours screenshot: true shows the recolour as an unowned offer.
+## Recolours screenshot: true previews the recolour unowned (the Caskets line).
 var _shot_buy: bool = false
 ## Screenshot mode: emulate a landscape phone.
 var _phone: bool = false
@@ -111,6 +118,7 @@ func _run() -> void:
 	_check_masteries()
 	_check_recolours()
 	RelicCheck.new(self).run()  # Relics and Grave Offerings.
+	CasketCheck.new(self).run()  # Recolour Caskets.
 	Meta._reset()
 	Meta.save_path = Meta.DEFAULT_PATH
 	if _failures == 0:
@@ -439,15 +447,10 @@ func _check_recolours() -> void:
 		_check(RecolourData.ids_for(id).size() == 4, "%s offers four recolours" % id)
 	_check(RecolourData.offered(hyper_skin, "verdant") and not RecolourData.offered(hyper_skin, "gilded"), "a Hyper skin offers Verdant, not Gilded")
 	_check(RecolourData.offered(plain_skin, "gilded") and not RecolourData.offered(plain_skin, "verdant"), "other skins offer Gilded, not Verdant")
-	var lo := 100000  # Cheapest price.
-	var hi := 0  # Dearest price.
 	for id: String in RecolourData.ORDER:
-		lo = mini(lo, RecolourData.price(id))
-		hi = maxi(hi, RecolourData.price(id))
-	_check(lo >= 300 and hi <= 600, "recolours cost 300-600 each (got %d-%d)" % [lo, hi])
-	_check(RecolourData.price_per_skin() == 1800, "one skin's four recolours cost 1,800 (got %d)" % RecolourData.price_per_skin())
-	print("[ossuary_check] recolours: %d skins x 4 offers, %d-%d Soul Ash each, %d a skin, %d in all" % [
-		skins.size(), lo, hi, RecolourData.price_per_skin(), skins.size() * RecolourData.price_per_skin()])
+		_check(CasketData.RECOLOUR_TIERS.has(id) and CasketData.TIERS.has(String(CasketData.RECOLOUR_TIERS[id])), "%s has a casket rarity" % id)
+	print("[ossuary_check] recolours: %d skins x 4 offers = %d casket prizes (no price: won from caskets, %d Soul Ash each)" % [
+		skins.size(), skins.size() * 4, CasketData.PRICE])
 	# --- The remap: a colour change that keeps alpha, hue families that land where they say, greys that take the cast.
 	var purple := Color8(122, 66, 173)  # The necromancer's robe purple.
 	var bone_c := Recolour.color(purple, "bone")
@@ -491,17 +494,13 @@ func _check_recolours() -> void:
 					if b.get_pixel(x, y).a > 0.0 and a.get_pixel(x, y).to_rgba32() != b.get_pixel(x, y).to_rgba32():
 						differs = true
 			_check(differs, "a recoloured sprite has new colours")
-	# --- Purchases: price, ownership, blocks, kept by Refund all.
+	# --- Ownership (as an older save that bought them has it): per skin, kept by Refund all.
 	Meta._reset()
 	Meta.soul_ash = 1000
-	_check(Meta.recolour_block(plain_skin, "bone") == "" and Meta.recolour_block(plain_skin, "verdant") == "unknown", "bone is for sale, verdant is not offered on a plain skin")
-	_check(Meta.recolour_block(hyper_skin, "bone") == "locked", "a locked Hyper skin cannot buy recolours")
-	_check(Meta.buy_recolour(plain_skin, "bone") and Meta.soul_ash == 700 and Meta.owns_recolour(plain_skin, "bone"), "Bone buys for 300")
-	_check(not Meta.buy_recolour(plain_skin, "bone") and Meta.soul_ash == 700 and Meta.recolour_block(plain_skin, "bone") == "owned", "an owned recolour is not bought twice")
-	_check(Meta.buy_recolour(plain_skin, "blood") and Meta.soul_ash == 300, "Blood buys for 400")
-	_check(Meta.recolour_block(plain_skin, "abyss") == "cost" and not Meta.buy_recolour(plain_skin, "abyss") and Meta.soul_ash == 300, "Abyss (500) is refused with 300")
+	Meta.owned_recolours[plain_skin] = PackedStringArray(["bone", "blood"])  # Bought before the Caskets.
+	_check(not Meta.has_method("buy_recolour") and not Meta.has_method("recolour_block"), "nothing buys a recolour directly any more")
+	_check(Meta.owns_recolour(plain_skin, "bone") and Meta.owns_recolour(plain_skin, "blood"), "recolours an older save bought are owned")
 	_check(not Meta.owns_recolour(plain_skin, "abyss") and not Meta.owns_recolour(SkinData.default_skin("bone_oracle"), "bone"), "ownership is per skin")
-	_check(Meta.recolour_spent_total() == 700, "700 Soul Ash spent on recolours")
 	Meta.set_chosen_recolour(plain_skin, "blood")
 	_check(Meta.chosen_recolour(plain_skin) == "blood", "the choice is remembered")
 	Meta.set_chosen_recolour(plain_skin, "abyss")
@@ -554,24 +553,25 @@ func _check_recolours() -> void:
 	_check(String(lod.get("recolour_id", "")) == "blood", "the loadout carries the recolour")
 	_check(String(CoopNet._clean_loadout(lod, 1).get("recolour_id", "")) == "blood" and String(CoopNet._clean_loadout({}, 1).get("recolour_id", "x")) == "", "the cleaned loadout keeps / defaults it")
 	_check(CoopNet.run_config_for({"loadouts": [lod, lod]}, 1).recolour_id == "blood", "the partner's config has the recolour")
-	# --- The pre-run control: cycle, preview an unowned one, buy it (no dialog under the autotest).
+	# --- The pre-run control: cycle, preview an unowned one (a tease, nothing to buy), wear an owned one.
 	Meta._reset()
 	Meta.soul_ash = 450
+	Meta.owned_recolours[plain_skin] = PackedStringArray(["blood"])  # Won from a casket.
 	var row := PreRunHyperSkins.new()
 	row.config = RunConfig.for_stage(StageRegistry.DEFAULT_ID)
 	add_child(row)
-	_check(row._rc_box.visible and not row._rc_buy.visible and row.shown_recolour() == "", "the control shows on an unlocked skin, no Buy at first")
+	_check(row._rc_box.visible and row.shown_recolour() == "" and row.rows().size() == 2 and (row.rows()[1] as Array).size() == 1, "the control shows on an unlocked skin: one cycle button, no Buy")
 	row._cycle_recolour()
-	_check(row.shown_recolour() == "bone" and row._rc_buy.visible and row.config.recolour_id == "", "cycling onto an unowned recolour previews it with a Buy button and does not wear it")
-	row._press_buy()
-	_check(Meta.owns_recolour(plain_skin, "bone") and row.config.recolour_id == "bone" and not row._rc_buy.visible and Meta.soul_ash == 150, "Buy wears it and spends 300")
-	row._cycle_recolour()  # Blood: 400, too dear with 150.
-	_check(row.shown_recolour() == "blood" and row._rc_buy.visible and row.config.recolour_id == "", "Blood is previewed, not worn")
-	row._press_buy()
-	_check(not Meta.owns_recolour(plain_skin, "blood") and Meta.soul_ash == 150, "Blood is refused with 150 Soul Ash")
+	_check(row.shown_recolour() == "bone" and row.config.recolour_id == "" and Meta.soul_ash == 450, "cycling onto an unowned recolour previews it, does not wear it and charges nothing")
+	row._show_detail("recolour")
+	_check(row._detail.text == FrontDoorData.RECOLOUR_UNOWNED_LINE % "Bone", "the line says an unowned recolour is found in the Caskets (got '%s')" % row._detail.text)
+	row._cycle_recolour()  # Blood: owned.
+	_check(row.shown_recolour() == "blood" and row.config.recolour_id == "blood" and Meta.chosen_recolour(plain_skin) == "blood", "an owned recolour is worn at once")
 	for i in 4:
 		row._cycle_recolour()  # Abyss, Gilded, Default, Bone.
-	_check(row.shown_recolour() == "bone" and row.config.recolour_id == "bone", "five presses go round to the owned Bone")
+	_check(row.shown_recolour() == "bone" and row.config.recolour_id == "", "five presses go round to the unowned Bone, not worn")
+	row._cycle_recolour()
+	_check(row.shown_recolour() == "blood" and row.config.recolour_id == "blood", "and on to the owned Blood again")
 	row.preview_recolour("")
 	_check(row.config.recolour_id == "" and Meta.chosen_recolour(plain_skin) == "", "Default takes the recolour off")
 	row.queue_free()
@@ -617,6 +617,12 @@ func _screenshot() -> void:
 	add_child(holder)
 	if _tab == "masteries":
 		await _screenshot_masteries(holder)
+		return
+	if _shot_what.begins_with("casket"):
+		await CasketCheck.open_shot(holder, _shot_what)
+		for i in (2 if _shot_what == "casket_mid" else 20):
+			await get_tree().process_frame
+		await _save_shot()
 		return
 	if _shot_what != "":
 		await RelicCheck.open_shot(holder, _shot_what)

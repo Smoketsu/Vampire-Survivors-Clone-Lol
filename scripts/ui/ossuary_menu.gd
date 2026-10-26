@@ -5,8 +5,9 @@
 ##     badge and the number, which counts down after a purchase while the
 ##     spent amount floats away);
 ##   * a tab bar (Ossuary expansion step 3, GDD §15.0 "Ossuary new options and
-##     Dominion"): Trees, Masteries, Relics, Offerings between the Q / E (LB /
-##     RB) chips, and Back at its right end. Trees is built here; every other
+##     Dominion"): Trees, Masteries, Relics, Offerings and Caskets (the recolour
+##     gamble, GDD §15.0 "Recolour Caskets (owner request, Oct 2026)") between
+##     the Q / E (LB / RB) chips, and Back at its right end. Trees is built here; every other
 ##     tab is a panel script (OssuaryUiData.TAB_PANELS, the tab contract: a
 ##     Control with `func refresh() -> void` and `signal changed`, emitted after
 ##     a purchase; optionally `func first_focus() -> Control`), loaded with

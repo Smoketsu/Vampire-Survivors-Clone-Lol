@@ -415,8 +415,10 @@ const SKIN_TILE_COMPACT: Vector2 = Vector2(44.0, 64.0)  # TUNING (not in GDD)
 ## Size (layout px) of the skin recolour cycle button at the end of the skin
 ## detail line (chip and name; Ossuary expansion step 6b, RecolourData).
 const RECOLOUR_BUTTON: Vector2 = Vector2(104.0, 30.0)  # TUNING (not in GDD)
-## Size (layout px) of the recolour Buy button (Soul Ash icon and price).
-const RECOLOUR_BUY_BUTTON: Vector2 = Vector2(80.0, 30.0)  # TUNING (not in GDD)
+## Skin detail line of a previewed recolour the skin does not own (%s = its
+## name): recolours are won from the Ossuary's Caskets, not bought here (GDD
+## §15.0 "Recolour Caskets (owner request, Oct 2026)").
+const RECOLOUR_UNOWNED_LINE: String = "%s: found in the Ossuary's Caskets"  # TUNING (not in GDD)
 ## Compact Hyper tile (px).
 const HYPER_TILE_COMPACT: Vector2 = Vector2(112.0, 64.0)  # TUNING (not in GDD)
 ## Gap between compact skin tiles (px; the full row uses 6).
