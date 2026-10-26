@@ -52,7 +52,7 @@ const ENEMY_HP_MULT: float = 1.65  # TUNING (not in GDD) placeholder, tuned in t
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (below the Underworld's and the other Act V stages' 1.5 since the Act V
 ## integration balance: the finale's step up is in HP and in Amaterasu).
-const ENEMY_DAMAGE_MULT: float = 1.35  # TUNING (not in GDD) Act V integration balance: 1.5 -> 1.35 (the army bot's ring broke at 7:00, under the Kirin and in Amaterasu's first minute on 3 of 3 seeds; the step up stays in HP)
+const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) owner's Act V playtest pass 2 decision (Oct 26, 2026): 1.35 -> 1.5, the finale was the easiest Act V stage (1/15 deaths); before that, Act V integration balance: 1.5 -> 1.35 (the army bot's ring broke at 7:00, under the Kirin and in Amaterasu's first minute on 3 of 3 seeds; the step up stays in HP)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) placeholder (Acts III and IV: 7:00)
