@@ -104,7 +104,17 @@
     {"name": "marble_light", "hex": "#F4F1EA", "ramp": "marble", "index": 3, "group": "unit", "role": "lit marble (Act IV; PANTHEON_MARBLE_LIGHT)"},
     {"name": "aegean_dark", "hex": "#123E66", "ramp": "aegean", "index": 1, "group": "unit", "role": "Aegean blue in shadow: cloaks, crests (Act IV; PANTHEON_AEGEAN_DARK)"},
     {"name": "aegean", "hex": "#2C77B8", "ramp": "aegean", "index": 2, "group": "unit", "role": "Aegean blue: hero cloaks, crests, shield emblems (Act IV; PANTHEON_AEGEAN; warmer and greener than the undead's arcane blue)"},
-    {"name": "aegean_light", "hex": "#6FB6E8", "ramp": "aegean", "index": 3, "group": "unit", "role": "lit Aegean blue, the gods' pale glow: shade eyes, Titan eyes (Act IV; PANTHEON_AEGEAN_LIGHT)"}
+    {"name": "aegean_light", "hex": "#6FB6E8", "ramp": "aegean", "index": 3, "group": "unit", "role": "lit Aegean blue, the gods' pale glow: shade eyes, Titan eyes (Act IV; PANTHEON_AEGEAN_LIGHT)"},
+    {"name": "lacquer_ink", "hex": "#1A0B0C", "ramp": "lacquer", "index": 0, "group": "ink", "role": "outline of the Shogunate's lacquer, indigo and sakura (Act V; SHOGUN_LACQUER_INK)"},
+    {"name": "lacquer_dark", "hex": "#6A1418", "ramp": "lacquer", "index": 1, "group": "unit", "role": "red lacquer in shadow: armour plates, cord lacing (Act V; SHOGUN_LACQUER_DARK)"},
+    {"name": "lacquer", "hex": "#B3262B", "ramp": "lacquer", "index": 2, "group": "unit", "role": "red lacquered armour, the ashigaru's do, the oni's red (Act V; SHOGUN_LACQUER; warmer and harder than the Covenant crimson)"},
+    {"name": "lacquer_light", "hex": "#E2594A", "ramp": "lacquer", "index": 3, "group": "unit", "role": "lit lacquer, banners and the oni's lit skin (Act V; SHOGUN_LACQUER_LIGHT)"},
+    {"name": "indigo_dark", "hex": "#161D38", "ramp": "indigo", "index": 1, "group": "unit", "role": "indigo-black: the ninja's cloth in shadow (Act V; SHOGUN_INDIGO_DARK)"},
+    {"name": "indigo", "hex": "#2E3F74", "ramp": "indigo", "index": 2, "group": "unit", "role": "indigo cloth: ninja, gunners' tunics (Act V; SHOGUN_INDIGO)"},
+    {"name": "indigo_light", "hex": "#6A82C0", "ramp": "indigo", "index": 3, "group": "unit", "role": "lit indigo and the rim light that parts a ninja from a dark ground (Act V; SHOGUN_INDIGO_LIGHT)"},
+    {"name": "sakura_dark", "hex": "#A8546E", "ramp": "sakura", "index": 1, "group": "unit", "role": "sakura pink in shadow (Act V; SHOGUN_SAKURA_DARK)"},
+    {"name": "sakura", "hex": "#E494AC", "ramp": "sakura", "index": 2, "group": "unit", "role": "sakura blossom pink: petals, the kitsune's miko trim (Act V; SHOGUN_SAKURA)"},
+    {"name": "sakura_light", "hex": "#F9D3DD", "ramp": "sakura", "index": 3, "group": "unit", "role": "lit sakura, pale petals (Act V; SHOGUN_SAKURA_LIGHT)"}
   ],
   "ramps": {
     "violet": {"members": ["ink_violet", "violet_deep", "violet", "violet_glow", "violet_flare"], "role": "the player only: necromancer, the 12 characters, their spells and icons"},
@@ -127,6 +137,9 @@
     "bronze": {"members": ["bronze_ink", "bronze_dark", "bronze", "bronze_light"], "role": "the Olympian Republic's bronze (Act IV): helmets, cuirasses, round shields, the Titans; warmer and duller than the Covenant gold, which stays gold (evolution, chest, victory, Glory)"},
     "marble": {"members": ["bronze_ink", "marble_dark", "marble", "marble_light"], "role": "the Olympian Republic's marble white (Act IV): linen, crests, statues and the pale shades of the dead; cooler and greyer than the bone ivory (outline borrowed from the bronze ink)"},
     "aegean": {"members": ["ink_cold", "aegean_dark", "aegean", "aegean_light"], "role": "the Olympian Republic's Aegean blue (Act IV): cloaks, crests, emblems and the gods' pale glow; kept apart from the undead's arcane blue and ice (outline borrowed from the cold ink)"},
+    "lacquer": {"members": ["lacquer_ink", "lacquer_dark", "lacquer", "lacquer_light"], "role": "the Shogunate's red lacquer (Act V): armour, the oni's red skin, banners; harder and warmer than the Covenant crimson (never the player's violet)"},
+    "indigo": {"members": ["ink_cold", "indigo_dark", "indigo", "indigo_light"], "role": "the Shogunate's indigo (Act V): the ninja's cloth, gunners' tunics; the light shade is the rim that keeps a ninja readable on a dark ground (outline borrowed from the cold ink)"},
+    "sakura": {"members": ["lacquer_ink", "sakura_dark", "sakura", "sakura_light"], "role": "the Shogunate's sakura pink (Act V): blossom petals, the kitsune's trim, shrine paper (outline borrowed from the lacquer ink)"},
     "floor": {"members": ["floor_soil", "floor_earth", "floor_grass", "floor_ochre", "floor_slate", "floor_ash", "floor_dirt", "floor_moss", "floor_marble", "floor_stone"], "role": "ground colours of the three stages (tiles only, never sprites), dark -> light; the zone tiles add close shades per zone"}
   }
 }

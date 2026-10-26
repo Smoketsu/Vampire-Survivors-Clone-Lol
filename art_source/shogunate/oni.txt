@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a heavy menacing stance, club held low.
+
+LOW-RESOLUTION pixel art: the whole figure is only 80 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a MALE ONI, a huge hulking red-skinned ogre demon of Japanese folklore: broad bare muscular torso and arms in lacquer red skin, a fierce snarling face with two fangs and two short ivory-white horns, a wild black mane, a TIGER-SKIN LOINCLOTH (gold and black stripes) tied with a rope belt over dark trousers, bare feet with claws, a gold bead necklace. In both hands a huge iron KANABO club (a thick dark iron club studded with rows of bright spikes) resting low in front.
+Signature shape that must read in silhouette: the horns, the huge shoulders and the spiked iron club.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: lacquer red #6A1418 #B3262B #E2594A; lacquer black and outline #1A0B0C; indigo #161D38 #2E3F74 #6A82C0; steel grey #4A5566 #8793A6 #C4CCD8; gold #8A6A1E #D9A93A #F5D870; skin #8C6040 #E0A882; wood and leather #4F3320 #8C6040; white cloth #8E8A86 #CFCBC4 #F4F1EA.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a sprite of this game: match its pixel size, outline weight and flat look exactly; (2) concept art of this army for the oni's costume only (do NOT copy its detail level, painted shading or colours where they differ from the list above).
+

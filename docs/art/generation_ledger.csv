@@ -865,3 +865,10 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-24 19:43,markers/tide_wall,gpt-image-2.5-flare,medium,1536x1024,1,268,1024,343,0.0198,tidewall.png
 2026-10-24 19:43,effects/undertow_shallows,gpt-image-2.5-flare,medium,1024x1024,1,221,1024,439,0.0225,shallows.png
 2026-10-25 01:19,empire/kill_drone,gpt-image-2.5-flare,medium,1024x1024,1,542,1024,439,0.0241,kill_drone_src.png
+2026-10-26 12:57,shogunate/samurai,gpt-image-2.5-flare,medium,1024x1024,2,649,1414,439,0.0277,samurai.png
+2026-10-26 12:57,shogunate/ninja,gpt-image-2.5-flare,medium,1024x1024,2,645,1336,439,0.0271,ninja.png
+2026-10-26 12:57,shogunate/teppo_gunner,gpt-image-2.5-flare,medium,1024x1024,2,640,1324,439,0.0270,teppo_gunner.png
+2026-10-26 12:57,shogunate/ashigaru,gpt-image-2.5-flare,medium,1024x1024,2,610,1376,439,0.0272,ashigaru.png
+2026-10-26 12:57,shogunate/oni,gpt-image-2.5-flare,medium,1024x1024,2,646,1568,439,0.0289,oni.png
+2026-10-26 12:57,obstacles/stone_lantern,gpt-image-2.5-flare,medium,1024x1024,1,436,1024,439,0.0235,stone_lantern.png
+2026-10-26 12:57,shogunate/onryo,gpt-image-2.5-flare,medium,1024x1024,2,702,2048,439,0.0331,onryo.png
