@@ -634,6 +634,13 @@ SKINS = {
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
+    # --- Act V: the Burning Province --- (the Grave Kunoichi's skins)
+    # Round 2 redo: the Hyper and Deathlord skins have their own box, the shared one (derived: cols 23-36, rows 18-25)
+    # with 1 px less at the bottom (owner: "reduced like 1 pixel on the bottom"); the base keeps the approved shared box.
+    # The Untouchable skin was redrawn (a ghost-white phantom): its bust sits at cols 19-30, rows 15-21.
+    "player/grave_kunoichi_hyper": {"bust": (23, 36, 18, 24, 2)},
+    "player/grave_kunoichi_deathlord": {"bust": (23, 36, 18, 24, 2)},
+    "player/grave_kunoichi_untouchable": {"bust": (19, 31, 15, 22, 2)},
     # --- Act V: the Road to the Sun --- (the Shrine Maiden's skins: their own bust boxes)
     # Round 1 redo: the Hyper box up 5 px and 2 px wider to the right (was cols 18-28, rows 17-25; owner); the Untouchable skin
     # (a new entry) takes the same box, up 5 / right 2, which lands on its bust (rows 14-19) and stops above the teal bow;
