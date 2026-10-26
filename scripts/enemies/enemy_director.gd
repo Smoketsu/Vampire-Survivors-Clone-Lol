@@ -73,6 +73,17 @@
 ##     stage with an "olympus" config it owns the OlympusDirector (the Pantheon
 ##     Trial's gods and Artemis's groves; `olympus`) and hands it the "god"
 ##     events. Null on every other stage.
+##   * Act V, the Shogunate of the Rising Sun (GDD §15.0 "Act V foundation
+##     (phase 1)"): its kinds are looked up through shogunate_def()
+##     (ShogunateEnemyData, then each Act V stage's table) after the
+##     Pantheon's, and its bosses load by name from SHOGUNATE_BOSS_DIR after
+##     the Pantheon's folder. Its shared rules (the Sun's Course, the Draw, From
+##     the Shadows, the Endless Night) live in ShogunateRules (Game.shogunate);
+##     this director only asks them, while they exist, for the trickle's and
+##     the waves' night kinds (SunCourse.timeline_weights() / filter_groups(),
+##     the one timeline helper), hands the "ambush" events and the segments'
+##     "ambush" trickle to ShadowAmbush, and lets the Endless Night quicken
+##     each Reckoning enemy (ShogunateRules.on_reckoning_spawn()).
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -92,6 +103,9 @@ const EMPIRE_BOSS_DIR: String = "res://scripts/enemies/empire/"
 # --- Act IV: the Olympian Republic ---
 ## Folder of the Olympian Republic's boss scripts ("boss_<id>.gd", each a Boss; Act IV).
 const PANTHEON_BOSS_DIR: String = "res://scripts/enemies/pantheon/"
+# --- Act V: the Shogunate of the Rising Sun ---
+## Folder of the Shogunate's boss scripts ("boss_<id>.gd", each a Boss; Act V).
+const SHOGUNATE_BOSS_DIR: String = "res://scripts/enemies/shogunate/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -536,7 +550,10 @@ func _spawn_trickle(delta: float) -> void:
 		spawn_accum -= 1.0
 		if alive >= cap:
 			continue
-		var kind := _pick_kind(game.difficulty.trickle_weights(seg["weights"], game.elapsed))
+		var weights: Dictionary = seg["weights"]  # The segment's kind weights.
+		if game.shogunate != null:
+			weights = game.shogunate.sun.timeline_weights(seg)  # Act V: night kinds only at night (the one timeline helper).
+		var kind := _pick_kind(game.difficulty.trickle_weights(weights, game.elapsed))
 		var pos := _ring_point(randf() * TAU) if game.coop == null else _ring_point_at(game.coop.spawn_anchor(), randf() * TAU)  # Spawn point on the ring (co-op: each necromancer in turn).
 		var elite := elite_chance > 0.0 and randf() < elite_chance  # Promoted by the level.
 		var e := _spawn_enemy(kind, pos, elite)  # The new soldier.
@@ -643,8 +660,16 @@ func _run_event(ev: Dictionary) -> void:
 				underworld.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
+		# --- Act V: the Shogunate of the Rising Sun ---
+		"ambush":
+			if game.shogunate != null:
+				game.shogunate.ambush.start_event(ev)  # From the Shadows (it shows the banner when the squad appears).
+			game.stat_add("wave_events", 1.0)
+			return
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
+	if game.shogunate != null:
+		groups = game.shogunate.sun.filter_groups(groups)  # Act V: night kinds only at night (the one timeline helper).
 	if harbour != null and harbour.wave_mult() < 1.0:
 		groups = _scaled_groups(groups, harbour.wave_mult())  # Act II: sunk bell buoys shrink the Eye's waves.
 	if assembly != null and assembly.wave_mult() < 1.0:
@@ -740,7 +765,8 @@ func _spawn_boss() -> void:
 	# Ancient Eye boss loaded from EYE_BOSS_DIR + "boss_<id>.gd" (each Act II
 	# stage adds its boss as a new file), else an Electronic Empire boss from
 	# EMPIRE_BOSS_DIR (Act III, the same way), else an Olympian Republic boss
-	# from PANTHEON_BOSS_DIR (Act IV); Sir Alaric when none exists.
+	# from PANTHEON_BOSS_DIR (Act IV), else a Shogunate boss from
+	# SHOGUNATE_BOSS_DIR (Act V); Sir Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -755,6 +781,8 @@ func _spawn_boss() -> void:
 				path = EMPIRE_BOSS_DIR + "boss_" + sid + ".gd"  # Act III: an Electronic Empire boss script.
 			if not ResourceLoader.exists(path):
 				path = PANTHEON_BOSS_DIR + "boss_" + sid + ".gd"  # Act IV: an Olympian Republic boss script.
+			if not ResourceLoader.exists(path):
+				path = SHOGUNATE_BOSS_DIR + "boss_" + sid + ".gd"  # Act V: a Shogunate boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -800,6 +828,8 @@ func _reckoning_wave_here(r: Dictionary) -> void:
 		var e := _spawn_enemy_def(rkind, rdef, _ring_point(offset + TAU * float(i) / float(count)), hp_scale, false)
 		e.damage *= dmg_scale
 		e.is_reckoning = true
+		if game.shogunate != null:
+			game.shogunate.on_reckoning_spawn(e)  # Act V: the Endless Night quickens it.
 	for comp: Dictionary in r.get("companions", []):
 		var n := int(comp["count"]) + floori(float(reckoning_wave) * float(comp["growth"]))  # Companions this wave.
 		var kind := resolve_kind(String(comp["kind"]))  # Real kind of the companion.
@@ -807,6 +837,8 @@ func _reckoning_wave_here(r: Dictionary) -> void:
 			var c := _spawn_enemy_def(kind, enemy_def(kind), _ring_point(offset + TAU * (float(i) + 0.5) / float(maxi(1, n))), hp_scale, false)
 			c.damage *= dmg_scale
 			c.is_reckoning = true
+			if game.shogunate != null:
+				game.shogunate.on_reckoning_spawn(c)  # Act V: the Endless Night quickens it.
 		count += n
 	game.stat_add("reckoning_spawned", float(count))
 
@@ -850,7 +882,8 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## then the Ancient Eye's tables (Act II: EyeEnemyData, then each stage's own
 ## HarbourEnemyData / ArchiveEnemyData / SpireEnemyData), then the
 ## Electronic Empire's (Act III: empire_def()), then the Olympian Republic's
-## (Act IV: pantheon_def()), then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
+## (Act IV: pantheon_def()), then the Shogunate's (Act V: shogunate_def()),
+## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
 	kind = resolve_kind(kind)
@@ -871,6 +904,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var pantheon := pantheon_def(kind)  # Act IV kinds ({} when not a Pantheon kind).
 	if not pantheon.is_empty():
 		return pantheon
+	var shogunate := shogunate_def(kind)  # Act V kinds ({} when not a Shogunate kind).
+	if not shogunate.is_empty():
+		return shogunate
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -920,13 +956,30 @@ static func pantheon_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act V: the Shogunate of the Rising Sun ---
+## Design row of Shogunate kind `kind` (real id), or {} when it is none:
+## ShogunateEnemyData (the shared kinds, the Endless Night's Oni among them)
+## first, then each Act V stage's own table (phase 2 fills them).
+static func shogunate_def(kind: String) -> Dictionary:
+	if ShogunateEnemyData.ENEMIES.has(kind):
+		return ShogunateEnemyData.ENEMIES[kind]
+	if ProvinceEnemyData.ENEMIES.has(kind):
+		return ProvinceEnemyData.ENEMIES[kind]
+	if KuroganeEnemyData.ENEMIES.has(kind):
+		return KuroganeEnemyData.ENEMIES[kind]
+	if SunRoadEnemyData.ENEMIES.has(kind):
+		return SunRoadEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
 	return EnemyData.ENEMIES.has(kind) or SanctumObjectiveData.STRUCTURES.has(kind) \
 			or MarchEnemyData.ENEMIES.has(kind) or BattleSisterData.ENEMIES.has(kind) \
 			or SanctumEnemyData.ENEMIES.has(kind) or not eye_def(kind).is_empty() \
-			or not empire_def(kind).is_empty() or not pantheon_def(kind).is_empty()
+			or not empire_def(kind).is_empty() or not pantheon_def(kind).is_empty() \
+			or not shogunate_def(kind).is_empty()  # Act V
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar

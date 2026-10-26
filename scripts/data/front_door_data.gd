@@ -167,6 +167,10 @@ const STAGE_LINES: Dictionary = {
 	"ilion": "The gods want the dead back. Meet them on the beach.",  # TUNING (not in GDD) Act IV
 	"olympus": "Climb the mountain. Face the Pantheon.",  # TUNING (not in GDD) Act IV
 	"underworld": "Go down to the god who started it.",  # TUNING (not in GDD) Act IV
+	# --- Act V: the Shogunate of the Rising Sun ---
+	"province": "The war burns the countryside. Fight it by day and by night.",  # TUNING (not in GDD) Act V
+	"kurogane": "Storm the Shogun's castle. Break his regiments.",  # TUNING (not in GDD) Act V
+	"sun_road": "Climb to the sun goddess. Put out the sun.",  # TUNING (not in GDD) Act V
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
@@ -331,6 +335,34 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "wisps", "fx_color": Color8(207, 203, 196),
 	},  # TUNING (not in GDD) pale marble wisps of the dead
+	# --- Act V: the Shogunate of the Rising Sun (placeholder scenes from the shared kinds' art
+	# until each stage brings its own floor, props and boss; a missing sprite is skipped) ---
+	"province": {
+		"tile": "tiles/graveyard",
+		"items": [
+			["shogunate/ashigaru", 200, 90, true], ["shogunate/ashigaru", 236, 110, true],
+			["shogunate/samurai", 196, 186, true], ["shogunate/ninja", 150, 224, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "embers", "fx_color": Color8(226, 89, 74),
+	},  # TUNING (not in GDD) lacquer_light embers of the burning village
+	"kurogane": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["shogunate/teppo_gunner", 214, 100, true], ["shogunate/samurai", 200, 180, true],
+			["shogunate/samurai", 236, 200, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(106, 130, 192),
+	},  # TUNING (not in GDD) indigo_light dusk motes
+	"sun_road": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["shogunate/onryo", 200, 90, true], ["shogunate/oni", 190, 220, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(249, 211, 221),
+	},  # TUNING (not in GDD) sakura_light petals
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

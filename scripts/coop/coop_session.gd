@@ -402,6 +402,9 @@ func step(delta: float) -> void:
 	if game.pantheon != null:
 		bind_primary()
 		game.pantheon.step(delta)  # Act IV: the gods' wrath and shield walls (before the push-out, as in solo).
+	if game.shogunate != null:
+		bind_primary()
+		game.shogunate.step(delta)  # Act V: the Sun's Course, ambushes, the Draw (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

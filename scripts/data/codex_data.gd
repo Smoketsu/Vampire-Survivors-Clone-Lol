@@ -35,7 +35,9 @@ const CATEGORIES: Array[String] = [SPELL, SUMMON, ENEMY, BOSS]
 const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons", "Summons"], ["covenant", "Covenant"], ["eye", "Ancient Eye"],
 		["empire", "Empire"],
 		# --- Act IV: the Olympian Republic ---
-		["pantheon", "Republic"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's
+		["pantheon", "Republic"],
+		# --- Act V: the Shogunate of the Rising Sun ---
+		["shogunate", "Shogunate"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -144,6 +146,18 @@ const PANTHEON_CHAMPIONS: Array[String] = ["bronze_titan",
 ## Olympian Republic stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const PANTHEON_BOSSES: Array[String] = ["achilles", "zeus", "hades"]
 
+# --- Act V: the Shogunate of the Rising Sun ---
+## Act V, the Shogunate of the Rising Sun (GDD §15.0 "Act V foundation (phase
+## 1)"; the Shogunate tab): its soldiers in the order the day brings them, its
+## champions (the night heavy that is also the Endless Night's kind, and phase
+## 2's minibosses) and its stage bosses (StageRegistry.BOSS_ARRIVALS ids). Each
+## Act V stage adds its own as it is built (phase 2).
+const SHOGUNATE_SOLDIERS: Array[String] = ["ashigaru", "samurai", "teppo_gunner", "ninja", "onryo"]
+## Shogunate champions (minibosses) and the Act V Reckoning kinds.
+const SHOGUNATE_CHAMPIONS: Array[String] = ["oni"]
+## Shogunate stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const SHOGUNATE_BOSSES: Array[String] = ["kage", "shogun", "amaterasu"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
@@ -153,6 +167,8 @@ const SECTIONS: Dictionary = {
 	"empire": [["empire_soldiers", "Soldiers"], ["empire_champions", "Champions"], ["empire_bosses", "Bosses"]],  # TUNING (not in GDD) Act III
 	# --- Act IV: the Olympian Republic ---
 	"pantheon": [["pantheon_soldiers", "Soldiers"], ["pantheon_champions", "Champions"], ["pantheon_bosses", "Bosses"]],  # TUNING (not in GDD) Act IV
+	# --- Act V: the Shogunate of the Rising Sun ---
+	"shogunate": [["shogunate_soldiers", "Soldiers"], ["shogunate_champions", "Champions"], ["shogunate_bosses", "Bosses"]],  # TUNING (not in GDD) Act V
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -257,6 +273,16 @@ const DESCRIPTIONS: Dictionary = {
 	"shade_archer": "Troy's archers, still drawing their bows in the dark. They shoot over your army's ring: kill them on approach.",  # TUNING (not in GDD)
 	"cerberus": "The three-headed hound of the gates. His body cannot be wounded: kill each head on its own.",  # Owner-approved Act IV proposal
 	"tartarus_warden": "Hades' own ring of the dead. While it stands, its lord is all but untouchable.",  # Owner-approved Act IV proposal (Lord of the Dead)
+	# --- Act V: the Shogunate of the Rising Sun ---
+	"ashigaru": "Spear levies of the Shogunate, marching in wide ranks by day.",  # Owner-approved Act V proposal
+	"samurai": "Katana duelists. Their elites stop, hand on the hilt, and draw: step out of the white line.",  # Owner-approved Act V proposal (the Draw)
+	"teppo_gunner": "Arquebus lines that fire as one volley every few seconds. Rush them while they reload.",  # Owner-approved Act V proposal
+	"ninja": "They never walk in from the edge: a puff of smoke in a shadow, and they are among your dead.",  # Owner-approved Act V proposal (From the Shadows)
+	"onryo": "Vengeful ghosts of the night that drift through walls and through your ring.",  # Owner-approved Act V proposal
+	"oni": "Ogres of the old stories who walk at night. The iron club stuns whatever it lands on.",  # Owner-approved Act V proposal
+	"kage": "Mistress of the Hidden Hand, the ninja grandmaster: shadow clones, smoke and chained kunai.",  # Owner-approved Act V proposal
+	"shogun": "Shogun Kurogane: his army is his strength. Break his regiments and he draws his own blade.",  # Owner-approved Act V proposal
+	"amaterasu": "The sun goddess herself. Her place in the sky is the battle; when she falls, the sun goes out.",  # Owner-approved Act V proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -308,6 +334,9 @@ const LOCKED_HINT: Dictionary = {
 	"pantheon_soldiers": "Slay one to record it.",  # TUNING (not in GDD) Act IV
 	"pantheon_champions": "Slay one to record it.",  # TUNING (not in GDD) Act IV
 	"pantheon_bosses": "Face it to record it.",  # TUNING (not in GDD) Act IV
+	"shogunate_soldiers": "Slay one to record it.",  # TUNING (not in GDD) Act V
+	"shogunate_champions": "Slay one to record it.",  # TUNING (not in GDD) Act V
+	"shogunate_bosses": "Face it to record it.",  # TUNING (not in GDD) Act V
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -333,6 +362,9 @@ const TAGS: Dictionary = {
 	"pantheon_soldiers": "Olympian Republic",  # TUNING (not in GDD) Act IV
 	"pantheon_champions": "Champion of the Republic",  # TUNING (not in GDD) Act IV
 	"pantheon_bosses": "Stage boss",  # TUNING (not in GDD) Act IV
+	"shogunate_soldiers": "Shogunate of the Rising Sun",  # TUNING (not in GDD) Act V
+	"shogunate_champions": "Champion of the Shogunate",  # TUNING (not in GDD) Act V
+	"shogunate_bosses": "Stage boss",  # TUNING (not in GDD) Act V
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -505,9 +537,11 @@ static func is_known(cat: String, id: String) -> bool:
 			return SOLDIERS.has(id) or STRUCTURES.has(id) or CHAMPIONS.has(id) \
 					or EYE_SOLDIERS.has(id) or EYE_CHAMPIONS.has(id) \
 					or EMPIRE_SOLDIERS.has(id) or EMPIRE_CHAMPIONS.has(id) \
-					or PANTHEON_SOLDIERS.has(id) or PANTHEON_CHAMPIONS.has(id)  # Act IV
+					or PANTHEON_SOLDIERS.has(id) or PANTHEON_CHAMPIONS.has(id) \
+					or SHOGUNATE_SOLDIERS.has(id) or SHOGUNATE_CHAMPIONS.has(id)  # Act IV, Act V
 		BOSS:
-			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id)  # (Act IV last)
+			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
+					or SHOGUNATE_BOSSES.has(id)  # (Act V last)
 	return false
 
 
@@ -521,9 +555,11 @@ static func total(cat: String) -> int:
 		ENEMY:
 			return SOLDIERS.size() + STRUCTURES.size() + CHAMPIONS.size() + EYE_SOLDIERS.size() + EYE_CHAMPIONS.size() \
 					+ EMPIRE_SOLDIERS.size() + EMPIRE_CHAMPIONS.size() \
-					+ PANTHEON_SOLDIERS.size() + PANTHEON_CHAMPIONS.size()  # Act IV
+					+ PANTHEON_SOLDIERS.size() + PANTHEON_CHAMPIONS.size() \
+					+ SHOGUNATE_SOLDIERS.size() + SHOGUNATE_CHAMPIONS.size()  # Act IV, Act V
 		BOSS:
-			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size()  # (Act IV last)
+			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
+					+ SHOGUNATE_BOSSES.size()  # (Act V last)
 	return 0
 
 
@@ -544,6 +580,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var pantheon := EnemyDirector.pantheon_def(id)  # Act IV kinds ({} when none).
 	if not pantheon.is_empty():
 		return pantheon
+	var shogunate := EnemyDirector.shogunate_def(id)  # Act V kinds ({} when none).
+	if not shogunate.is_empty():
+		return shogunate
 	match id:
 		"alaric":
 			return EnemyData.BOSS
