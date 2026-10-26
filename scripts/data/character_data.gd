@@ -66,7 +66,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act IV: Mount Olympus ---
 	"oathbreaker",
 	# --- Act IV: the Asphodel Underworld ---
-	"ferrywoman"]
+	"ferrywoman",
+	# --- Act V: the Burning Province ---
+	"grave_kunoichi"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -138,7 +140,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act IV: Mount Olympus ---
 	"thunder_divine_bonus",
 	# --- Act IV: the Asphodel Underworld ---
-	"ferry_cooldown", "ferry_life"]
+	"ferry_cooldown", "ferry_life",
+	# --- Act V: the Burning Province ---
+	"shadow_extra_clones"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -499,6 +503,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": 0.05},  # TUNING (not in GDD) a rower's strength, a ferry's glide
 		"sprite": "player/ferrywoman",
 		"tint": Color(0.58, 0.66, 0.80),  # TUNING (not in GDD) a cold river grey-blue over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act V: the Burning Province ---
+	# The Grave Kunoichi (Hundred Shadows' character; owner-approved Act V
+	# proposal: "The Grave Kunoichi (figure style)"; female, in the
+	# figure-redesign style: an hourglass figure fully clothed in a dark violet
+	# shinobi garb with a bone-white sash, a long soul-teal scarf, a bone mask
+	# pushed up on her brow; the bust rig and idle breathing). A kunoichi of the
+	# Hidden Hand who died in the Province's fires and answered the necromancer's
+	# call; her shadows outnumber the living. Her spell must be unlocked first (by
+	# Kage), then she unlocks the usual way (Hundred Shadows to Lv 5). Own
+	# decision on her innate (the proposal names none): one more shadow clone
+	# (HundredShadows reads it).
+	"grave_kunoichi": {
+		"display_name": "The Grave Kunoichi",  # Owner-approved proposal
+		"title": "She died in the fires. Her shadows did not.",
+		"spell": "hundred_shadows",
+		"innate": {
+			"id": "many_faces", "name": "Many Faces",
+			"description": "Hundred Shadows calls one more shadow clone.",
+			"values": {"shadow_extra_clones": 1.0},  # TUNING (not in GDD) one more clone per split
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.06},  # TUNING (not in GDD) light and quick
+		"sprite": "player/grave_kunoichi",
+		"tint": Color(0.52, 0.40, 0.82),  # TUNING (not in GDD) a shadow violet
 		"starts_unlocked": false,
 	},
 }

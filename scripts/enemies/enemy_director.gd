@@ -84,6 +84,12 @@
 ##     the one timeline helper), hands the "ambush" events and the segments'
 ##     "ambush" trickle to ShadowAmbush, and lets the Endless Night quicken
 ##     each Reckoning enemy (ShogunateRules.on_reckoning_spawn()).
+##   * Act V, the Burning Province (GDD §15.0 "The Burning Province (Act V
+##     phase 2)"): on a stage with a "province" config it owns the
+##     ProvinceDirector (the paddy water, the village fires, Shuten-dōji;
+##     `province`) and hands it the "shuten_doji" events; the Province kinds'
+##     fire patches and smoke clouds live in ProvinceHazards
+##     (province_hazards(), created on first use on any stage, stepped here).
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -199,6 +205,15 @@ var citadel: CitadelDirector = null
 ## The Asphodel Underworld's mechanics (Act IV: the River Styx, Cerberus, guest
 ## squads; StageRegistry "underworld"; null on every other stage).
 var underworld: UnderworldDirector = null
+
+
+# --- Act V: the Burning Province ---
+## The Burning Province's stage systems: the paddies, the village fires,
+## Shuten-dōji (StageRegistry "province"; null elsewhere).
+var province: ProvinceDirector = null
+## The Province kinds' world hazards (fire patches, smoke clouds;
+## ProvinceHazards), created on first use (province_hazards()); null until then.
+var province_haz: ProvinceHazards = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -313,6 +328,12 @@ func _ready() -> void:
 		underworld.game = game
 		underworld.config = stage_def["underworld"]
 		add_child(underworld)
+	# --- Act V: the Burning Province ---
+	if not (stage_def.get("province", {}) as Dictionary).is_empty():
+		province = ProvinceDirector.new()
+		province.game = game
+		province.config = stage_def["province"]
+		add_child(province)
 
 
 # =====================================================================================
@@ -416,6 +437,11 @@ func step(delta: float) -> void:
 	# --- Act IV: the Asphodel Underworld ---
 	if underworld != null:
 		underworld.step(delta)
+	# --- Act V: the Burning Province ---
+	if province != null:
+		province.step(delta)  # The paddies, the village fires, Shuten-dōji.
+	if province_haz != null:
+		province_haz.step(delta)  # Fire patches and smoke clouds of the Province kinds.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -425,6 +451,18 @@ func archive_hazards() -> ArchiveHazards:
 		archive_haz.game = game
 		add_child(archive_haz)
 	return archive_haz
+
+
+# --- Act V: the Burning Province ---
+## The Province kinds' world hazards (ProvinceHazards: the sake fires, the
+## village fires, the smoke clouds), created on first use, on any stage (a
+## Province kind forced elsewhere with --spawn= brings its own fire and smoke).
+func province_hazards() -> ProvinceHazards:
+	if province_haz == null:
+		province_haz = ProvinceHazards.new()
+		province_haz.game = game
+		add_child(province_haz)
+	return province_haz
 
 
 ## Removes inactive enemies from `active`, preserving the existing swap-pop
@@ -503,6 +541,9 @@ func objective_text() -> String:
 	# --- Act IV: the Asphodel Underworld ---
 	if underworld != null and underworld.objective_override() != "":
 		return underworld.objective_override()  # Cerberus's heads.
+	# --- Act V: the Burning Province ---
+	if province != null and province.objective_override() != "":
+		return province.objective_override()  # Shuten-dōji.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -664,6 +705,12 @@ func _run_event(ev: Dictionary) -> void:
 		"ambush":
 			if game.shogunate != null:
 				game.shogunate.ambush.start_event(ev)  # From the Shadows (it shows the banner when the squad appears).
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act V: the Burning Province ---
+		"shuten_doji":
+			if province != null:
+				province.start_event(ev)  # Night only: it waits for the night.
 			game.stat_add("wave_events", 1.0)
 			return
 	show_banner(ev["banner"])

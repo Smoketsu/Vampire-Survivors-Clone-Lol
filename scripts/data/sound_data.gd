@@ -1101,4 +1101,26 @@ const SHOGUNATE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 330.0, "f1": 300.0, "dur": 0.5, "amp": 0.14, "decay": 0.14},
 			{"wave": "sine", "f0": 760.0, "dur": 0.35, "amp": 0.07, "decay": 0.09},
 			{"wave": "noise", "start": 0.06, "dur": 0.6, "amp": 0.25, "attack": 0.02, "decay": 0.22, "lp0": 1200.0, "lp1": 300.0}]},
+	# --- Act V: the Burning Province ---
+	# A sake barrel bursts into fire: splintering staves, a splash and a whoosh of flame.
+	"sake_burst": {"dur": 0.9, "volume_db": -12.0, "max_voices": 3, "min_interval": 110, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.09, "amp": 0.6, "attack": 0.001, "decay": 0.025, "lp0": 5000.0, "lp1": 1600.0},
+			{"wave": "sine", "f0": 95.0, "f1": 40.0, "dur": 0.4, "amp": 0.45, "attack": 0.002, "decay": 0.12},
+			{"wave": "noise", "start": 0.04, "dur": 0.25, "amp": 0.22, "attack": 0.01, "decay": 0.08, "lp0": 2400.0, "lp1": 800.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.75, "amp": 0.24, "attack": 0.12, "decay": 0.3, "lp0": 900.0, "lp1": 3200.0}]},
+	# Kage's chained kunai: a fast throw and a rattle of chain links.
+	"kunai_chain": {"dur": 0.6, "volume_db": -15.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.12, "amp": 0.3, "attack": 0.02, "decay": 0.05, "lp0": 2000.0, "lp1": 8000.0},
+			{"wave": "sine", "f0": 2900.0, "start": 0.12, "dur": 0.08, "amp": 0.1, "decay": 0.03},
+			{"wave": "sine", "f0": 3400.0, "start": 0.2, "dur": 0.08, "amp": 0.09, "decay": 0.03},
+			{"wave": "sine", "f0": 3100.0, "start": 0.28, "dur": 0.08, "amp": 0.08, "decay": 0.03},
+			{"wave": "noise", "start": 0.12, "dur": 0.4, "amp": 0.1, "attack": 0.01, "decay": 0.15, "lp0": 6000.0, "lp1": 3000.0}]},
+	# Kage splits into her shadows: a hollow swirl that drops away.
+	"kage_split": {"dur": 1.0, "volume_db": -13.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.9, "amp": 0.25, "attack": 0.3, "decay": 0.35, "lp0": 600.0, "lp1": 3500.0},
+			{"wave": "sine", "f0": 440.0, "f1": 220.0, "dur": 0.8, "amp": 0.14, "attack": 0.1, "decay": 0.3, "vib_hz": 7.0, "vib_depth": 0.04},
+			{"wave": "sine", "f0": 660.0, "f1": 330.0, "start": 0.1, "dur": 0.7, "amp": 0.07, "attack": 0.1, "decay": 0.25}]},
 }

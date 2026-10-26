@@ -256,7 +256,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IV: Mount Olympus ---
 	"twilight_of_the_gods",
 	# --- Act IV: the Asphodel Underworld ---
-	"empty_throne"]
+	"empty_throne",
+	# --- Act V: the Burning Province ---
+	"no_shadow_unlit"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -368,6 +370,16 @@ const ACHIEVEMENTS := {
 	# closing card "The Sun Still Rises" after it).
 	"empty_throne": {"display_name": "Empty Throne", "description": "Make Hades kneel in the Asphodel Underworld",
 		"stat": "boss_kills", "stage": "underworld", "goal": 1, "unlock": "The Act IV epilogue", "bounty": 400},  # Owner-approved proposal; bounty TUNING (not in GDD) Act IV's last (Nothing Is Deathless 350)
+	# --- Act V: the Burning Province ---
+	# Owner-approved Act V achievement "No Shadow Unlit". Own decision on its
+	# rule (the brief: "e.g. clear the Province having lit every stone
+	# lantern"): a Burning Province run that slays Kage with at least
+	# ProvinceStage.PROVINCE no_shadow_lanterns stone lanterns lit
+	# (ProvinceDirector sets the run stat province_no_shadow_unlit; MetaProgress
+	# counts the runs, lifetime province_unlit_runs). It unlocks the
+	# counter-passive Paper Lanterns.
+	"no_shadow_unlit": {"display_name": "No Shadow Unlit", "description": "Light 20 stone lanterns in one Burning Province run and slay Kage",
+		"stat": "province_unlit_runs", "goal": 1, "unlock": "The Paper Lanterns passive", "bounty": 250},  # Owner-approved Act V proposal; bounty TUNING (not in GDD) as Heel Found
 }
 
 # --- Content wave 2: B. Achievement rewards ---

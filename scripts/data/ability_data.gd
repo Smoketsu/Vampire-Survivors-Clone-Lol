@@ -80,7 +80,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act IV: Mount Olympus ---
 	"stolen_thunder",
 	# --- Act IV: the Asphodel Underworld ---
-	"river_styx"]
+	"river_styx",
+	# --- Act V: the Burning Province ---
+	"hundred_shadows"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -541,6 +543,31 @@ const SPELLS := {
 			{"rivers": 1, "damage": 13.0, "tick": 0.5, "river_slow": 0.40, "slow_duration": 0.8, "length": 250.0, "radius": 20.0, "duration": 6.0, "cooldown": 4.0, "drain_share": 0.06, "drain_cap": 5.0},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act V: the Burning Province ---
+	# Hundred Shadows (GDD §15.0 "Hundred Shadows, Hidden Hand and the Grave
+	# Kunoichi (Act V)"; owner-approved proposal: "shadow clones of the
+	# necromancer that echo your next spell cast"; unlocked by slaying Kage,
+	# UnlockData): every `cooldown` s, `clones` shadow clones step out around the
+	# necromancer for `life` s, each throwing a shadow kunai (`damage`) at the
+	# nearest foe within `range` px; each then ECHOES the necromancer's next
+	# spell hit with another kunai at that foe (`damage` + `echo_share` x the
+	# hit). Stat keys: damage, clones, cooldown (s), life (s), echo_share, range
+	# (px). Logic: HundredShadows; fixed rules: HundredShadowsData; Hidden Hand
+	# (its paired passive) raises every spell hit on a foe busy with a summon.
+	"hundred_shadows": {
+		"display_name": "Hundred Shadows",
+		"icon": "hundred_shadows",
+		"description": "Shadow clones step out of you, throw kunai, then echo your next spell.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act V spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Kunai damage", "clones": "Clones", "echo_share": "Echo of the spell", "life": "Clone life (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 14.0, "clones": 1, "cooldown": 5.5, "life": 4.0, "echo_share": 0.5, "range": 300.0},  # TUNING (not in GDD)
+			{"damage": 17.0, "clones": 2, "cooldown": 5.5, "life": 4.0, "echo_share": 0.5, "range": 310.0},  # TUNING (not in GDD)
+			{"damage": 21.0, "clones": 2, "cooldown": 5.0, "life": 4.5, "echo_share": 0.6, "range": 320.0},  # TUNING (not in GDD)
+			{"damage": 25.0, "clones": 3, "cooldown": 4.8, "life": 4.5, "echo_share": 0.6, "range": 330.0},  # TUNING (not in GDD)
+			{"damage": 30.0, "clones": 3, "cooldown": 4.5, "life": 5.0, "echo_share": 0.7, "range": 340.0},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -555,7 +582,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act IV: Mount Olympus ---
 	"armour_bonus", "chain_falloff", "clap_share",
 	# --- Act IV: the Asphodel Underworld ---
-	"river_slow", "drain_share"]
+	"river_slow", "drain_share",
+	# --- Act V: the Burning Province ---
+	"echo_share", "burst_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

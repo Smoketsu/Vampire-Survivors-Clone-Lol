@@ -343,6 +343,7 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("archive_all_tomes_runs", 1.0 if float(st.get("archive_all_tomes", 0.0)) > 0.0 else 0.0)  # Nothing Unwritten (Act II)
 	_add_lifetime("assembly_cold_runs", 1.0 if float(st.get("assembly_all_fabricators", 0.0)) > 0.0 else 0.0)  # Cold Assembly (Act III)
 	_add_lifetime("achilles_heel_kills", float(st.get("achilles_heel_kills", 0.0)))  # Heel Found (Act IV, the Shores of Ilion)
+	_add_lifetime("province_unlit_runs", 1.0 if float(st.get("province_no_shadow_unlit", 0.0)) > 0.0 else 0.0)  # No Shadow Unlit (Act V, the Burning Province)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
@@ -1245,6 +1246,8 @@ static func _default_lifetime() -> Dictionary:
 		"assembly_cold_runs": 0.0,  # Assembly Halls runs that destroyed every fabricator (Cold Assembly)
 		# --- Act IV: the Shores of Ilion ---
 		"achilles_heel_kills": 0.0,  # Achilles slain by a blow to his back or heel (Heel Found)
+		# --- Act V: the Burning Province ---
+		"province_unlit_runs": 0.0,  # Burning Province runs that slew Kage with 20 stone lanterns lit (No Shadow Unlit)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

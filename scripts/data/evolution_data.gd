@@ -78,7 +78,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IV: Mount Olympus ---
 	"gigantomachy",
 	# --- Act IV: the Asphodel Underworld ---
-	"lethes_flood"]
+	"lethes_flood",
+	# --- Act V: the Burning Province ---
+	"thousand_shadows"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -463,6 +465,27 @@ const EVOLUTIONS := {
 			"rivers": 2, "damage": 16.0, "tick": 0.5, "river_slow": 0.45, "slow_duration": 0.8, "length": 280.0, "radius": 24.0,  # TUNING (not in GDD)
 			"duration": 6.5, "cooldown": 4.0, "drain_share": 0.06, "drain_cap": 6.0,  # TUNING (not in GDD)
 			"forget": 1.2,  # TUNING (not in GDD) the evolution flag: s a foe entering a river stands stunned (once per river)
+		},
+	},
+	# --- Act V: the Burning Province ---
+	# Thousand Shadows (owner-approved Act V proposal: "Hundred Shadows ... ->
+	# Thousand Shadows (+ Hidden Hand)"): Hundred Shadows + Hidden Hand (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: five clones, each
+	# echoing the next `echoes` spell hits, and every clone bursts into a ring of
+	# shadow blades when its life ends (`burst_share` x damage to every foe
+	# within `burst_radius` px). Detected by the "burst_radius" key.
+	"thousand_shadows": {
+		"base": "hundred_shadows",
+		"passive": "hidden_hand",
+		"display_name": "Thousand Shadows",
+		"icon": "thousand_shadows",
+		"description": "Five shadows echo every spell, then burst into blades when they fade.",
+		"labels": {"damage": "Kunai damage", "clones": "Clones", "echoes": "Echoes each", "burst_radius": "Burst radius", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 36.0, "clones": 5, "cooldown": 4.2, "life": 5.0, "echo_share": 0.8, "range": 360.0,  # TUNING (not in GDD)
+			"echoes": 3,  # TUNING (not in GDD) spell hits each clone echoes
+			"burst_radius": 50.0,  # TUNING (not in GDD) the evolution flag: px of a fading clone's burst
+			"burst_share": 1.0,  # TUNING (not in GDD) x damage of the burst
 		},
 	},
 }

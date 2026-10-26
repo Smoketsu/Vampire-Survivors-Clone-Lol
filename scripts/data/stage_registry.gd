@@ -141,6 +141,14 @@
 ## trickle only at night, SunCourse.timeline_weights()) and "ambush"
 ## ({"every", "kind", "count", "elite"}: ShadowAmbush's trickle from dusk on);
 ## Act V event type "ambush" (its "groups" appear From the Shadows).
+## --- Act V: the Burning Province ---
+##   province           — ProvinceDirector config (ProvinceStage.PROVINCE, Act
+##                        V, the Burning Province: the paddy water in the zones
+##                        whose ground has a "paddy" share, the village fires in
+##                        a zone with "fires", Shuten-doji (its "shuten_doji"
+##                        event, night only), No Shadow Unlit); ground
+##                        "province" is its ProvinceGround (four zone floors and
+##                        the paddy water).
 class_name StageRegistry
 extends RefCounted
 

@@ -31,6 +31,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	var row := EnemyDirector.shogunate_def(kind)  # Its design row ({} = not a Shogunate kind).
 	if row.is_empty():
 		return false
+	# --- Act V: the Burning Province ---
+	if ProvinceGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # The Kunoichi, the Kappa, Shuten-doji, Kage's shadows.
 	match kind:
 		"samurai":
 			_samurai(ci, o, r, flash)

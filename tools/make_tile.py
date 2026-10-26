@@ -473,6 +473,23 @@ RECIPES = {
         "regions": {"stone": ["floor_soil", "floor_marble"], "joint": ["bronze_ink"]},
         "cell_shift": True, "cell_l": 0.008, "bevel": 0.008,
     },
+    # --- Act V: the Burning Province --- (one source each; the paddy water is code-drawn over the paddies tile)
+    "province_paddies": {
+        "source": "province_paddies.png", "method": "quilt",  # The Paddies: dark dike mud.
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_moss"],
+    },
+    "province_bamboo": {
+        "source": "province_bamboo.png", "method": "quilt",  # The Bamboo Grove: leaf litter on dark earth.
+        "colors": ["ink_green", "floor_soil", "floor_moss", "floor_grass"],
+    },
+    "province_village": {
+        "source": "province_village.png", "method": "quilt",  # The Burning Village: trampled earth, ash and cinders.
+        "colors": ["ink_warm", "floor_soil", "floor_dirt", "floor_ash"],
+    },
+    "province_shrine": {
+        "source": "province_shrine.png", "method": "quilt",  # The Mountain Shrine: raked grey gravel.
+        "colors": ["floor_soil", "floor_slate", "floor_stone"],
+    },
 }
 
 

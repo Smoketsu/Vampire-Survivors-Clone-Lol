@@ -1361,6 +1361,8 @@ func finish(summary: Dictionary) -> void:
 	ShogunateReport.print_lines(game, st_all)  # Act V: the sun's course, the draw, from the shadows, kinds, the stage (only when the Shogunate ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
+	# --- Act V: the Burning Province ---
+	ProvinceReport.print_items(game, st_all)  # Hundred Shadows and its passives (only when taken).
 	print("[autotest] gravebow / bone colossus: %s | %s" % [GravebowKit.summary_line(st_all), ColossusKit.summary_line(st_all)])
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())
 	print("[autotest] later spells: %s" % ab.spells.later_summary_line())

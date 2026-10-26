@@ -135,6 +135,14 @@ const UNLOCKS := {
 	"ferrymans_toll": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # River Styx's paired passive, unlocked with it
 	"myrmidon_shade": {"type": "class", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal: the finale's reward
 	"myrmidon_oath": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Its paired passive (own decision), unlocked with it
+	# --- Act V: the Burning Province ---
+	# Kage's fall (owner-approved Act V proposal "Rewards": Hundred Shadows is
+	# unlocked by Kage) with its paired passive, offered on every stage; the
+	# stage's achievement No Shadow Unlit earns Act V's counter-passive Paper
+	# Lanterns (offered only in Act V through its card row's "act").
+	"hundred_shadows": {"type": "spell", "boss": "kage", "text": "Slay Kage in the Burning Province to unlock."},  # Owner-approved Act V proposal
+	"hidden_hand": {"type": "passive", "boss": "kage", "text": "Slay Kage in the Burning Province to unlock."},  # Hundred Shadows' paired passive, unlocked with it
+	"paper_lanterns": {"type": "passive", "achievement": "no_shadow_unlit", "text": "Earn No Shadow Unlit: light 20 stone lanterns in one Burning Province run and slay Kage."},  # Owner-approved Act V proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

@@ -298,6 +298,9 @@ const SPELLS := {
 	# --- Act IV: the Asphodel Underworld ---
 	"river_styx": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 7], "spread": 40.0, "speed": 220.0,
 		"life": 0.8, "share": 0.4, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) drops of black water flung after each new river
+	# --- Act V: the Burning Province ---
+	"hundred_shadows": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 8], "spread": 50.0, "speed": 420.0,
+		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "dagger", "color": Color(0.45, 0.32, 0.78)},  # TUNING (not in GDD) a fan of shadow kunai with every other split
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

@@ -316,6 +316,12 @@ var compel_speed: float = 0.0
 ## stone-grey (0 = never / expired). Written only by THE one stun path for
 ## summons, CombatResolver.stun_unit().
 var stunned_until: float = 0.0
+# --- Act V: the Burning Province ---
+## Game time (s) until which this summon is BLINDED by smoke (a Kunoichi's
+## smoke bomb, Kage's smoke fields): it keeps to the ring but cannot find or
+## fight a foe (0 = never / expired). Written only by THE one summon blind
+## path, CombatResolver.blind_unit() (through blind()).
+var blinded_until: float = 0.0
 
 
 # =====================================================================================
@@ -361,6 +367,7 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	misdirect_until = 0.0
 	compel_until = 0.0
 	stunned_until = 0.0  # Act IV: Mount Olympus (a Gorgon's stone).
+	blinded_until = 0.0  # Act V: the Burning Province (smoke).
 	slot_jitter = randf()
 	band_jitter = randf()
 	anchor_offset = pos - game.player.position
@@ -562,6 +569,10 @@ func think() -> void:
 		return
 	if misdirect_until > game.elapsed:
 		return  # Turned around (misdirect()): no decisions until it wears off.
+	# --- Act V: the Burning Province ---
+	if blinded_until > game.elapsed:
+		_think_blinded()
+		return  # Blinded by smoke (blind()): it keeps to the ring but finds no foe.
 	_update_threat_avoidance()
 	if _check_stall(player_pos):
 		return
@@ -970,6 +981,34 @@ func compel(point: Vector2, until: float, speed_mult: float) -> bool:
 	return true
 
 
+# --- Act V: the Burning Province ---
+## Act V, the summon side of THE one blind path (CombatResolver.blind_unit()
+## calls it; nothing else should): blinds the unit until game time `until` (a
+## longer blind already running is kept). It drops its target and leaves a
+## special in progress (CASTING); while blinded it follows the ring but finds
+## no foe, so it neither strikes, shoots nor casts at one (a class special
+## that needs no target still runs). Spawning and dead units are immune; an
+## airborne one (a Gargoyle's swoop) flies above the smoke. Returns true when
+## it took hold.
+func blind(until: float) -> bool:
+	if not active or airborne or state == State.SPAWNING or state == State.DEAD:
+		return false
+	blinded_until = maxf(blinded_until, until)
+	_drop_target()
+	if state != State.FOLLOWING and state != State.RETURNING:
+		_enter(State.FOLLOWING)  # Leaves CASTING: a special in progress is cancelled.
+	queue_redraw()
+	return true
+
+
+## The 5 Hz decision of a blinded unit: no target, back to the ring.
+func _think_blinded() -> void:
+	if target != null or heal_target != null:
+		_drop_target()
+	if state != State.FOLLOWING and state != State.RETURNING:
+		_enter(State.FOLLOWING)
+
+
 # --- Act IV: Mount Olympus ---
 ## Act IV, the summon side of THE one stun path (CombatResolver.stun_unit()
 ## calls it; nothing else should): stuns the unit until game time `until`
@@ -1331,6 +1370,8 @@ func _draw_over(ci: CanvasItem) -> void:
 		ProgressionGlyphs.draw_barrier(ci, Vector2.ZERO, radius, barrier_hp / maxf(max_hp, 1.0))
 	if compel_until > 0.0 and game != null and compel_until > game.elapsed:
 		SpireGlyphs.draw_compelled(ci, radius, compel_speed > 0.0)  # Act II: lured (notes) or held (a tentacle coil).
+	if blinded_until > 0.0 and game != null and blinded_until > game.elapsed:
+		ProvinceGlyphs.draw_blinded(ci, radius, game.elapsed)  # Act V: smoke over its eyes (visual only).
 	if hp < max_hp - 0.5 and state != State.SPAWNING:
 		# The node is mirrored via scale.x; counter-flip so the bar always
 		# fills left-to-right.

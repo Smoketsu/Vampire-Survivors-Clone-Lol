@@ -508,6 +508,16 @@ RIGS = {
     "shogunate/ninja": dict(mode="legs", hip=28, back=(0, 18), front=(18, 36), rigid=[], spread=2, lift=2, dip=1),
     "shogunate/onryo": dict(mode="hover", bob=2, parts=[]),
     "shogunate/oni": dict(mode="legs", hip=66, back=(0, 26), front=(26, 64), rigid=[], spread=3, lift=3, dip=1),
+    # --- Act V: the Burning Province ---
+    # The Kunoichi strides, a tanto in each hand (the blades riding with the body below the hip), with a bust box and
+    # idle breathing (figure-redesign style); the Kappa scuttles, its reaching claw rigid; Shuten-doji stomps, his
+    # spiked kanabo (cols 62+) riding with the body; Kage strides wide in her ready stance (bust box, idle breathing;
+    # her clones wear the same strips); the Grave Kunoichi strides, her long scarf (cols 0-16) riding with the body.
+    "shogunate/kunoichi": dict(mode="legs", hip=34, back=(12, 20), front=(20, 30), rigid=[(0, 12, 0, None), (30, 40, 0, None)], spread=1, lift=1, dip=1, bust=(16, 26, 14, 20, 2)),
+    "shogunate/kappa": dict(mode="legs", hip=24, back=(0, 14), front=(14, 24), rigid=[(24, 32, 0, None)], spread=1, lift=2, dip=1),
+    "shogunate/shuten_doji": dict(mode="legs", hip=86, back=(0, 36), front=(36, 62), rigid=[(62, 94, 0, None)], spread=2, lift=3, dip=1),
+    "bosses/kage": dict(mode="legs", hip=44, back=(0, 32), front=(32, 50), rigid=[(50, 66, 0, None)], spread=2, lift=2, dip=1, bust=(27, 40, 18, 26, 2)),
+    "player/grave_kunoichi": dict(mode="legs", hip=40, back=(17, 27), front=(27, 44), rigid=[(0, 17, 0, None)], spread=1, lift=1, dip=1, bust=(21, 32, 16, 23, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -582,6 +592,10 @@ SKINS = {
     "player/ferrywoman_hyper": "player/ferrywoman",
     "player/ferrywoman_untouchable": "player/ferrywoman",
     "player/ferrywoman_deathlord": "player/ferrywoman",
+    # --- Act V: the Burning Province ---
+    "player/grave_kunoichi_hyper": "player/grave_kunoichi",
+    "player/grave_kunoichi_untouchable": "player/grave_kunoichi",
+    "player/grave_kunoichi_deathlord": "player/grave_kunoichi",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

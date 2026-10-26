@@ -165,7 +165,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IV: Mount Olympus ---
 	"titans_blood", "grounded_bones",
 	# --- Act IV: the Asphodel Underworld ---
-	"ferrymans_toll", "myrmidon_oath"]
+	"ferrymans_toll", "myrmidon_oath",
+	# --- Act V: the Burning Province ---
+	"hidden_hand", "paper_lanterns"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -1118,6 +1120,49 @@ const PASSIVES := {
 			{"front_hp": 0.18, "front_damage": 0.12},  # TUNING (not in GDD)
 			{"front_hp": 0.24, "front_damage": 0.16},  # TUNING (not in GDD)
 			{"front_hp": 0.30, "front_damage": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act V: the Burning Province ---
+	# Hundred Shadows' paired passive (owner-approved Act V proposal: "Thousand
+	# Shadows (+ Hidden Hand)"); unlocked with the spell by Kage and offered on
+	# every stage. Own decision on its effect: the hidden hand strikes while the
+	# foe looks elsewhere: every SPELL hit (HundredShadowsData.is_spell_source())
+	# on a foe busy fighting a summon (Enemy.targeting_summon) deals hand_damage
+	# more (CombatResolver.damage_enemy(), one block; stat hidden_hand_bonus_dmg).
+	"hidden_hand": {
+		"display_name": "Hidden Hand",
+		"icon": "hidden_hand",
+		"description": "Your spells strike foes busy fighting your summons harder.",
+		"labels": {"hand_damage": ["Spell damage to busy foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hand_damage": 0.08},  # TUNING (not in GDD)
+			{"hand_damage": 0.16},  # TUNING (not in GDD)
+			{"hand_damage": 0.24},  # TUNING (not in GDD)
+			{"hand_damage": 0.32},  # TUNING (not in GDD)
+			{"hand_damage": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# Act V's counter-passive Paper Lanterns (owner-approved Act V proposal: "a
+	# wider light radius; ambushes show earlier"; unlocked by the achievement No
+	# Shadow Unlit and offered only in Act V through its card row's "act").
+	# SunCourse.lantern_mult() (the foundation's one read,
+	# ShogunateRulesData.PAPER_LANTERNS / PAPER_LANTERNS_KEY): the necromancer's
+	# light radius x (1 + light_radius), and the lit part of an ambush's smoke
+	# warning lasts that much longer (ShadowAmbush).
+	"paper_lanterns": {
+		"display_name": "Paper Lanterns",  # Owner-approved proposal
+		"icon": "paper_lanterns",
+		"description": "Your light reaches farther, and ambushes show earlier.",
+		"labels": {"light_radius": ["Light radius", "pct"]},
+		"act": 5,  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"light_radius": 0.15},  # TUNING (not in GDD)
+			{"light_radius": 0.30},  # TUNING (not in GDD)
+			{"light_radius": 0.45},  # TUNING (not in GDD)
+			{"light_radius": 0.60},  # TUNING (not in GDD)
+			{"light_radius": 0.75},  # TUNING (not in GDD) 150 px -> 262 px
 		],
 	},
 }

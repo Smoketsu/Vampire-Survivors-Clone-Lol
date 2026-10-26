@@ -215,5 +215,9 @@ const SOUNDS := {
 	"lantern_lit": "lantern_lit",  # A stone lantern catching light at nightfall.
 	"nightfall": "nightfall",  # The low swell and temple bell of the night transition.
 	"oni_smash": "oni_smash",  # The oni's iron kanabo.
+	# --- Act V: the Burning Province ---
+	"sake_burst": "sake_burst",  # SoundData.SHOGUNATE_SOUNDS: Shuten-doji's sake barrels burst into fire (ShutenDojiKit)
+	"kunai_chain": "kunai_chain",  # SoundData.SHOGUNATE_SOUNDS: Kage's chained kunai leave her hand (BossKage)
+	"kage_split": "kage_split",  # SoundData.SHOGUNATE_SOUNDS: Kage splits into her shadows (BossKage)
 }
 

@@ -143,6 +143,16 @@
 ##             holds the unit (no thinking, moving, attacking or casting,
 ##             drawn stone-grey); stats summon_stuns, summon_stunned_seconds,
 ##             summon_stuns_<source>.
+##   the Burning Province (Act V phase 2) — blind_unit(): THE one blind path
+##             for summons (a Kunoichi's smoke bomb, Kage's smoke fields):
+##             SummonedUnit.blind() keeps the unit to the ring without a foe;
+##             stats summon_blinds, summon_blinded_seconds,
+##             summon_blinds_<source>. Hidden Hand — damage_enemy(): a SPELL
+##             hit (HundredShadowsData.is_spell_source()) on a foe busy
+##             fighting a summon deals more (stat hidden_hand_bonus_dmg);
+##             exactly 1 while the passive is not owned. Hundred Shadows hears
+##             each spell hit there too (NecroSpellBook.on_spell_hit(): its
+##             clones echo the next spell; only while the spell is learned).
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -266,6 +276,18 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		if heel > 0.0 and PantheonRules.hit_from_behind(e, origin):
 			game.stat_add("mortal_heel_bonus_dmg", amount * heel)
 			amount *= 1.0 + heel
+	# --- Act V: the Burning Province --- Hidden Hand (the paired passive of
+	# Hundred Shadows, offered on every stage once Kage fell): a SPELL hit on a
+	# foe busy fighting a summon (Enemy.targeting_summon) deals hand_damage
+	# more; exactly 1 while the passive is not owned. Then Hundred Shadows hears
+	# the spell hit (its clones echo the next spell cast).
+	if HundredShadowsData.is_spell_source(source):
+		var hand := game.abilities.passive_value("hidden_hand", "hand_damage")  # 0 when not owned.
+		if hand > 0.0 and e.targeting_summon:
+			game.stat_add("hidden_hand_bonus_dmg", amount * hand)
+			amount *= 1.0 + hand
+		if game.abilities.spell_level(HundredShadowsData.ID) > 0:
+			game.abilities.spells.on_spell_hit(e, amount, source)
 	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
 	# undead fighting on it hit weaker.
 	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).
@@ -797,6 +819,23 @@ func stun_unit(u: SummonedUnit, duration: float, source: String) -> float:
 	game.stat_add("summon_stuns", 1.0)
 	game.stat_add("summon_stunned_seconds", duration)
 	game.stat_add("summon_stuns_" + source, 1.0)
+	return duration
+
+
+# --- Act V: the Burning Province ---
+## THE one blind path for summons (Act V: a Kunoichi's smoke bomb, Kage's
+## smoke fields): blinds summon `u` for `duration` s (SummonedUnit.blind(): it
+## keeps to the ring but cannot find or fight a foe; drawn with smoke over its
+## eyes). A longer blind already running is kept; airborne, spawning and dead
+## units are immune. An enemy effect on a unit: summons have no act rule of
+## their own. `source` tags the stats. Returns the seconds applied (0 =
+## immune). Stats: summon_blinds, summon_blinded_seconds, summon_blinds_<source>.
+func blind_unit(u: SummonedUnit, duration: float, source: String) -> float:
+	if duration <= 0.0 or not u.blind(game.elapsed + duration):
+		return 0.0
+	game.stat_add("summon_blinds", 1.0)
+	game.stat_add("summon_blinded_seconds", duration)
+	game.stat_add("summon_blinds_" + source, 1.0)
 	return duration
 
 

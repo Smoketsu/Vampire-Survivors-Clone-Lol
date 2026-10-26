@@ -327,6 +327,15 @@ const HEIGHTS: Dictionary = {
 	"shogunate/oni": 80.0,  # TUNING (not in GDD) night heavy tier (60-72 and up): a huge red ogre, the horns and the club
 	"obstacles/stone_lantern": 40.0,  # TUNING (not in GDD) a toro, unlit (an obstacle; the glow pool is drawn by code)
 	"obstacles/stone_lantern_lit": 40.0,  # TUNING (not in GDD) the same toro with a warm lit window
+	# --- Act V: the Burning Province (assets/sprites/shogunate/, bosses/, player/) ---
+	"shogunate/kunoichi": 52.0,  # TUNING (not in GDD) elite tier (elites are also drawn larger): body ~46, the hair knot and scarf above
+	"shogunate/kappa": 34.0,  # TUNING (not in GDD) fodder: a squat river imp, the water dish on top
+	"shogunate/shuten_doji": 112.0,  # TUNING (not in GDD) miniboss tier (104+, Polyphemus 112): the Oni King, the barrel on his shoulder
+	"bosses/kage": 64.0,  # TUNING (not in GDD) boss tier for a slender figure (a ninja grandmaster, not a giant): body ~58, the hair and scarf above; her clones wear it
+	"player/grave_kunoichi": 56.0,  # TUNING (not in GDD) character tier: body ~50, the hair knot above
+	"player/grave_kunoichi_hyper": 58.0,  # TUNING (not in GDD) skin art: her body, the gold crest above
+	"player/grave_kunoichi_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body
+	"player/grave_kunoichi_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

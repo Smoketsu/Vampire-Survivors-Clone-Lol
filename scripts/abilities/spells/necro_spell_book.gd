@@ -37,6 +37,11 @@
 ##   Stolen Thunder   -> StolenThunder    (evolves into Gigantomachy)
 ## and Act IV's (each Act IV stage in its own list with the same hooks):
 ##   River Styx       -> RiverStyx        (evolves into Lethe's Flood; the Asphodel Underworld)
+## and Act V's (each Act V stage in its own list with the same hooks; its own
+## autotest line, ProvinceReport):
+##   Hundred Shadows  -> HundredShadows   (evolves into Thousand Shadows; the Burning Province)
+## Hundred Shadows also hears every spell hit (on_spell_hit(), called once per
+## hit by CombatResolver.damage_enemy(): its clones echo the next spell cast).
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -95,6 +100,10 @@ const OLYMPUS_IDS := ["stolen_thunder"]
 ## The Asphodel Underworld's unlockable spell (Hades' reward): stepped, kill
 ## hooked and after-physics hooked like CITADEL_IDS, reported by UnderworldReport.
 const UNDERWORLD_IDS := ["river_styx"]
+# --- Act V: the Burning Province ---
+## The Burning Province's unlockable spell (Kage's reward): stepped, kill
+## hooked and after-physics hooked like UNDERWORLD_IDS, reported by ProvinceReport.
+const PROVINCE_IDS := ["hundred_shadows"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -125,6 +134,8 @@ const SOURCES := {
 	"stolen_thunder": ["stolen_thunder", "gigantomachy", "thunderclap"],
 	# --- Act IV: the Asphodel Underworld ---
 	"river_styx": ["river_styx", "lethes_flood"],
+	# --- Act V: the Burning Province ---
+	"hundred_shadows": ["hundred_shadows", "thousand_shadows"],
 }
 
 ## Owning run.
@@ -172,6 +183,15 @@ func step(delta: float) -> void:
 		if node == null:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))
+	# --- Act V: the Burning Province ---
+	for id: String in PROVINCE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()); Hundred Shadows' clones.
 		node.step(delta, ab.spell_stats(id))
 
 
@@ -230,6 +250,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act IV: the Asphodel Underworld ---
 		"river_styx":
 			node = RiverStyx.new()
+		# --- Act V: the Burning Province ---
+		"hundred_shadows":
+			node = HundredShadows.new()
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -264,6 +287,11 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act IV spell's node, if learned (the Underworld).
 		if node != null:
 			node.on_enemy_killed(e)
+	# --- Act V: the Burning Province ---
+	for id: String in PROVINCE_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Province).
+		if node != null:
+			node.on_enemy_killed(e)
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
@@ -285,6 +313,24 @@ func after_physics(delta: float) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act IV spell's node, if learned (the Underworld).
 		if node != null:
 			node.after_physics(delta)
+	# --- Act V: the Burning Province ---
+	for id: String in PROVINCE_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Province).
+		if node != null:
+			node.after_physics(delta)
+
+
+# --- Act V: the Burning Province ---
+## A spell hit landed (CombatResolver.damage_enemy(), once per hit, only while
+## Hundred Shadows is learned): `amount` damage on `e` tagged `source`. Hundred
+## Shadows' clones echo the necromancer's next spell (HundredShadows.on_spell_hit());
+## a hit that is no spell (HundredShadowsData.is_spell_source()) is ignored.
+func on_spell_hit(e: Enemy, amount: float, source: String) -> void:
+	if not HundredShadowsData.is_spell_source(source):
+		return
+	var node: HundredShadows = nodes.get(HundredShadowsData.ID)  # The spell's node, if it ever stepped.
+	if node != null:
+		node.on_spell_hit(e, amount)
 
 
 ## Total damage dealt so far by spell `id` (base and evolved sources).

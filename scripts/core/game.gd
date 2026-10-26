@@ -350,6 +350,9 @@ func _ready() -> void:
 			var sg := ShogunateGround.new()  # Act V placeholder floor (the STAGE's "floor").
 			sg.look = stage_def.get("floor", {})
 			ground = sg
+		# --- Act V: the Burning Province ---
+		"province":
+			ground = ProvinceGround.new()  # Act V: the Burning Province's four zone floors and the paddy water (ProvinceStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)
