@@ -679,6 +679,10 @@ tiny tweaks.
    softened, the Road to the Sun's damage back to ×1.5). Soul Ash ×1 / ×1.25 / ×1.5 (the per-act rule); the Bound Oni
    has its Ossuary mastery. Open: the owner's own playtest notes, the spell-only build on Kurogane, a phone check of
    the night darkness and the Shogun fight.
+6d. **Act VI, the Inferno: waits for the owner's playtest of Acts IV and V** (owner decision Oct 26, 2026, GDD §15.0
+   "Act VI and the act order"). When built it ends Part One; the Morning Star has two phases (the Throne phase cut for
+   now). A proposal to reorder all ten acts so they escalate is open with the owner (Claude Doc "Necropathy: A New Act
+   Order", https://claude.ai/artifact/B76vzD659dz2dAyy5P4bqh); build the plan from `docs/act5/` again once it starts.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
