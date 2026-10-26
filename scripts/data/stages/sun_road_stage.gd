@@ -269,9 +269,11 @@ const MARCH := {
 ## The Road's systems (SunRoadDirector; StageRegistry "sun_road").
 ##   guest_* / guests — the other Act V stages' kinds in small squads (as
 ##            UnderworldStage.UNDERWORLD): candidate ids per kind (the first
-##            one this build knows; none = skipped) and a weight. The ids are
-##            the ones the Burning Province's and Castle Kurogane's agents plan
-##            (built in parallel); the lead checks them at the merge.
+##            one this build knows; none = skipped) and a weight. The ids were
+##            guessed while the three stages were built in parallel and checked
+##            at the Act V integration against ProvinceEnemyData (kunoichi,
+##            kappa) and KuroganeEnemyData (hatamoto, kiba_musha; its General of
+##            the Left is a miniboss, never a guest).
 const SUN_ROAD := {
 	"guest_first": 300.0,  # TUNING (not in GDD) no guests before 5:00
 	"guest_interval": 85.0,  # TUNING (not in GDD)
@@ -283,7 +285,7 @@ const SUN_ROAD := {
 		{"ids": ["kunoichi"], "weight": 0.8},  # The Burning Province (Act V phase 2)
 		{"ids": ["kappa"], "weight": 0.6},  # The Burning Province (night: only at night)
 		{"ids": ["hatamoto"], "weight": 0.4},  # Castle Kurogane (Act V phase 2)
-		{"ids": ["kiba_musha", "kibamusha"], "weight": 0.6},  # Castle Kurogane
+		{"ids": ["kiba_musha"], "weight": 0.6},  # Castle Kurogane (the Kiba-musha cavalry)
 	],
 }
 
