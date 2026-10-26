@@ -54,18 +54,18 @@ Pass criterion: **at least one third of the runs die before 0:00**. Nine build f
 (`bone_spear,soul_siphon,corpse_explosion,plague_cloud`), forced spells B (`death_mark,bone_wall,soul_chains`), characters
 (army bot as bone_oracle, wither_witch, tide_widow, rust_prophet, two runs each). 72 runs per round.
 
-| Family | Round 0 (full expansion) | Round 1 (trim A) | Round 2 (trim B, final) | Meta none (reference) |
-|---|---|---|---|---|
-| army | 0 / 8 | 1 / 8 | 2 / 8 | 7 / 8 |
-| summon | 0 / 8 | 0 / 8 | 0 / 8 | 7 / 8 |
-| evolve | 1 / 8 | 3 / 8 | 2 / 8 | 7 / 8 |
-| naive (= pact policy) | 5 / 8 | 3 / 8 | 4 / 8 | 8 / 8 |
-| classes A | 2 / 8 | 2 / 8 | 3 / 8 | |
-| classes B | 3 / 8 | 1 / 8 | 3 / 8 | |
-| spells A | 3 / 8 | 3 / 8 | 4 / 8 | |
-| spells B | 3 / 8 | 2 / 8 | 4 / 8 | |
-| characters | 0 / 8 | 1 / 8 | 1 / 8 | |
-| **Overall** | **17 / 72 (24%)** | **16 / 72 (22%)** | **23 / 72 (32%)** | 29 / 32 (91%, four families) |
+| Family | Round 0 (full expansion) | Round 1 (trim A) | Round 2 (trim B) | Round 3 (survival options, final) | Round 4 (more levers, reverted) | Meta none (reference) |
+|---|---|---|---|---|---|---|
+| army | 0 / 8 | 1 / 8 | 2 / 8 | 2 / 8 | 2 / 8 | 7 / 8 |
+| summon | 0 / 8 | 0 / 8 | 0 / 8 | 0 / 8 | 0 / 8 | 7 / 8 |
+| evolve | 1 / 8 | 3 / 8 | 2 / 8 | 2 / 8 | 3 / 8 | 7 / 8 |
+| naive (= pact policy) | 5 / 8 | 3 / 8 | 4 / 8 | 4 / 8 | 4 / 8 | 8 / 8 |
+| classes A | 2 / 8 | 2 / 8 | 3 / 8 | 3 / 8 | 4 / 8 | |
+| classes B | 3 / 8 | 1 / 8 | 3 / 8 | 3 / 8 | 3 / 8 | |
+| spells A | 3 / 8 | 3 / 8 | 4 / 8 | 4 / 8 | 3 / 8 | |
+| spells B | 3 / 8 | 2 / 8 | 4 / 8 | 3 / 8 | 3 / 8 | |
+| characters | 0 / 8 | 1 / 8 | 1 / 8 | 1 / 8 | 1 / 8 | |
+| **Overall** | **17 / 72 (24%)** | **16 / 72 (22%)** | **23 / 72 (32%)** | **22 / 72 (31%)** | **23 / 72 (32%)** | 29 / 32 (91%, four families) |
 
 Final round by setting: Graveyard 0 / 18 died, Harbour 1 / 18, Citadel 7 / 18, Citadel on Deathlord 15 / 18. Deaths came at
 10:36 to 19:24 (median about 17:10); survivors ended 6-115 s past 0:00 (median about 25 s) with a median lowest HP of 58-141 in the
@@ -84,22 +84,34 @@ visible). The strong builds (army, summon, evolve) on the Graveyard and Harbour 
 | `DEEP_VALUE_SHARE` (value of each level 6-10 as a share of the upgrade's per-level value) | 0.5 | 0.15 | `scripts/data/meta_data.gd` |
 | Bone Reserve `per_tier` (barrier share of max HP per level; 3 levels) | 0.10 | 0.03 | `scripts/data/meta_data.gd` |
 | Mastery `HP_PER_LEVEL` and `DAMAGE_PER_LEVEL` (3 levels) | 0.04 | 0.02 | `scripts/data/mastery_data.gd` |
+| Last Rites `per_tier` (seconds of invulnerability; 3 levels) | 1.0 | 0.5 (0.5 / 1 / 1.5 s) | `scripts/data/meta_data.gd` |
+| Grave Ward levels (whole blows blocked at the start of a run) | 2 levels, 250 + 500 | 1 level, 250 | `scripts/data/meta_data.gd` |
 
-Effect at meta max: max HP 195 -> 177 (levels 6-10 of Grave-Hardened Flesh now +1.5 each), damage reduction from deep Bone Mail
-+9% -> +2.7%, deep minion / spell levels worth 30% of what they were, Masteries +6% HP and damage at level 3 (was 12%), Bone Reserve
-barrier 9% of max HP (was 30%). Soul Ash prices are unchanged (the deep levels still cost what the economy needs; they are now a
-modest sink, as intended by "levels 6-10 are smaller steps"). `tools/ossuary_check.gd` now reads these constants instead of
-hard-coded numbers. README Masteries and Bone Reserve lines updated.
+The options total drops from 9,060 to 8,560 Soul Ash (everything in the trees 43,145; README and `ossuary_check` updated).
+Effect at meta max: max HP 195 -> 177, deep Bone Mail damage reduction +9% -> +2.7%, deep levels worth 30% of what they were,
+Masteries +6% HP and damage at level 3 (was 12%), Bone Reserve barrier 9% of max HP (was 30%), one warded blow, 1.5 s Last Rites.
+`tools/ossuary_check.gd` reads these constants instead of hard-coded numbers.
 
-## 4. Verdict and what is left for the lead
+## 4. Rounds 3 and 4: the survival options did not move the failure rate
 
-* Meta none: unchanged, on target.
-* Plain meta max: clearly easier, Reckoning ends every run (21-75 s past 0:00), builds complete 12:49-14:31.
-* Key test: 32% (23 of 72) after the trims, from 24% before; short of the one-third bar by one run and well inside the noise, so
-  it is not a clear pass. A further push would have to come from the remaining expansion levers, none of which is a pure number
-  change: **Mourner's Bell** (every elite drops a Grave Feast: 80 hearts in a Citadel run; making it a chance needs a code
-  change in `powerup_manager.gd`), **Black Banner** (`ult_start` 0.5, data), **Last Rites** / **Grave Ward** (survival, data),
-  **Head Start** (+2 levels, data) and a further cut of `DEEP_VALUE_SHARE` (0.15 already leaves levels 6-10 nearly cosmetic).
-  The owner may prefer to harden the Citadel itself or to accept 32% as "not easy": 8 of 9 families still lose a quarter to
-  a half of their runs, only the summon bot is untouched.
-* The naive and summon bots are the extremes (naive 4 of 8, summon 0 of 8 at every round).
+The lead asked for a margin (38-45%). Round 3 trimmed Last Rites and Grave Ward: 22 of 72 (31%). Round 4 added Black Banner's
+meter start 50% -> 30%, Commander's Presence 1% -> 0.5% per class, Dark Tithe +25% -> +15% and Masteries 2% -> 1%: 23 of 72 (32%).
+Round 4 changed nothing measurable, so **it was reverted** (its values would only have hollowed the Mastery and Presence sinks for
+no balance gain); the branch holds the round-3 data, the configuration that was measured at 22 of 72.
+
+Round 3 by setting: Graveyard 0 / 18 died, Harbour 1 / 18, Citadel 6 / 18, Citadel Deathlord 15 / 18. Deaths came at 10:54 to
+19:00 (median about 16:15). By family (of 8 each): army 2, summon 0, evolve 2, naive 4, classes A 3, classes B 3, spells A 4,
+spells B 3, characters 1. Round 4 by setting: 0 / 1 / 7 / 15.
+
+## 5. Verdict and what is left for the lead
+
+* Meta none: unchanged, on target (the seed-7 summary was identical after the trims and again after round 3).
+* Plain meta max (rounds 0-2 data, before the survival trims): clearly easier, the Reckoning ends every run 21-75 s past 0:00,
+  builds complete 12:49-14:31.
+* Key test: **stuck at 31-32%** (22-23 of 72) from round 2 on, whichever survival lever is trimmed. The rate is a stage effect:
+  the Graveyard and Harbour almost never kill a strong build even with Hyper + Oath 5 + Pact (1 death in 36 runs), while the
+  Citadel kills 21 of 36 (Deathlord 15 of 18). The summon bot survives every setting in every round. With no Ossuary at all the same
+  setup kills 91% (meta none), so what keeps the early stages safe is the original meta (levels 1-5 and the original options), not
+  the expansion. Further expansion trims would not reach 38-45%; what remains is the stage / Hyper difficulty itself (for example
+  Hyper's growth multiplier on the Graveyard and Harbour) or a code-level cut such as Mourner's Bell (80 Grave Feasts in a Citadel
+  run), which the data-only brief excluded.

@@ -29,7 +29,7 @@
 ## New options (Ossuary expansion step 3, GDD §15.0 "Ossuary new options and
 ## Dominion"): two sideways upgrades per tree, a third level for Fate's Thread and
 ## Banishing Rite, and the fifth tree, Dominion (run-start privileges, opened by
-## Seraphine's first defeat: TREE_GATES); 9,060 Soul Ash in all (OPTIONS_UPGRADES).
+## Seraphine's first defeat: TREE_GATES); 8,560 Soul Ash in all (9,060 before the balance batch dropped Grave Ward's second level) (OPTIONS_UPGRADES).
 ##
 ## Four upgrade trees (GDD §9.2 table):
 ##   Necromancy  — minion cap, health and damage (+ replacement speed)
@@ -303,7 +303,7 @@ const UPGRADES := {
 		"description": "Cast one more offer into the void: +1 level-up banish per run.",
 		"stat": "banishes", "per_tier": 1.0, "costs": [150, 310, 520], "requires": {"id": "fates_thread", "tier": 1}},  # TUNING (not in GDD) third level: Ossuary expansion step 3
 	# --- Ossuary expansion step 3: new options (sideways, small values; GDD §15.0
-	# "Ossuary new options and Dominion"; 9,060 Soul Ash with the two third levels) ---
+	# "Ossuary new options and Dominion"; 8,560 Soul Ash with the two third levels) ---
 	# Necromancy.
 	"bone_reserve": {"tree": "necromancy", "display_name": "Bone Reserve", "icon": "bone_reserve",
 		"description": "A fallen summon that rises again returns behind a barrier of bone.",
@@ -321,10 +321,10 @@ const UPGRADES := {
 	# Survival.
 	"last_rites": {"tree": "survival", "display_name": "Last Rites", "icon": "last_rites",
 		"description": "The first time you fall below a quarter of your health, death looks away.",
-		"stat": "last_rites", "per_tier": 1.0, "costs": [150, 290, 450], "requires": {}},  # TUNING (not in GDD) seconds of invulnerability, once a run (LAST_RITES_HP_FRACTION)
+		"stat": "last_rites", "per_tier": 0.5, "costs": [150, 290, 450], "requires": {}},  # TUNING (not in GDD) seconds of invulnerability, once a run (LAST_RITES_HP_FRACTION); 0.5 / 1 / 1.5 s, was 1 / 2 / 3 s (balance batch round 3)
 	"grave_ward": {"tree": "survival", "display_name": "Grave Ward", "icon": "grave_ward",
 		"description": "Begin every run behind a ward that swallows a whole blow.",
-		"stat": "ward_hits", "per_tier": 1.0, "costs": [250, 500], "requires": {"id": "bone_mail", "tier": 1}},  # TUNING (not in GDD) whole hits blocked at the start of a run
+		"stat": "ward_hits", "per_tier": 1.0, "costs": [250], "requires": {"id": "bone_mail", "tier": 1}},  # TUNING (not in GDD) whole hits blocked at the start of a run; one level, was two (balance batch round 3)
 	# Fortune.
 	"gilded_chests": {"tree": "fortune", "display_name": "Gilded Chests", "icon": "gilded_chests",
 		"description": "A chest may weigh two rewards and keep the one nearest its peak.",

@@ -1653,7 +1653,7 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   good run. Levels 1-5 of everything cost **9,635** (8,965 before the two Grave
   Step upgrades), about 21 good runs (16–27 including weaker runs and Ash
   Harvest); the **deep levels** (below) add **24,950**, so buying everything
-  costs **34,585**, and the **new options** (below) **9,060** more (**43,645**), plus 375 for the optional Profane Oath. The Profane Pact and Oath rewards add their own bonus
+  costs **34,585**, and the **new options** (below) **8,560** more (**43,145**), plus 375 for the optional Profane Oath. The Profane Pact and Oath rewards add their own bonus
   lines on top (below).
 - **The Ossuary** (main menu) holds the four GDD §9.2 trees (and Dominion, below). Each upgrade
   raises one stat per tier, costs rise per tier, and some need a prerequisite
@@ -1705,15 +1705,15 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   prices, gates, the migration, Refund all and the co-op loadout (temp files only;
   CI runs it in the Graveyard job; `--shot=PATH [--phone]` saves a screenshot).
 - **New options and Dominion** (Ossuary expansion step 3, GDD §15.0 "Ossuary new
-  options and Dominion"): sideways upgrades, small values, **9,060** Soul Ash in all
-  (everything in the trees is now **43,645**, plus 375 for the Oath). Each has its
+  options and Dominion"): sideways upgrades, small values, **8,560** Soul Ash in all
+  (everything in the trees is now **43,145**, plus 375 for the Oath). Each has its
   own levels only (no deep levels, no difficulty gates):
 
   | Tree | New upgrades (per level, levels, cost) |
   |---|---|
   | Necromancy | **Bone Reserve**: a summon replaced after falling rises with a barrier of 3% of its max HP per level (10% before the balance batch) (3, 120→380) · **Commander's Presence**: +1% minion damage per distinct summon class you command (3, 130→410; needs Sharpened Bones II) |
   | Shadowcraft | **Echo Weaving**: spell echoes (Volleys) start at spell Lv 2 instead of 3 (1, 600; needs Umbral Potency II) · **Dark Tithe**: a kill not dealt by a summon charges the ultimate meter +25% more (3, 120→380) |
-  | Survival | **Last Rites**: the first time a hit leaves you under 25% HP, 1 s of invulnerability per level (3, 150→450) · **Grave Ward**: start every run with a ward that blocks one whole hit per level (2, 250→500; needs Bone Mail I) |
+  | Survival | **Last Rites**: the first time a hit leaves you under 25% HP, 0.5 s of invulnerability per level (3, 150→450; 1 s per level before the balance batch) · **Grave Ward**: start every run with a ward that blocks one whole hit (1 level, 250; needs Bone Mail I; a second level was dropped by the balance batch) |
   | Fortune | **Gilded Chests**: 15% per level that a chest draw is weighed against a second draw and the one nearer its peak (the higher level) is kept (3, 140→430) · **Elite Bounty**: +1 Soul Ash per elite (3, 100→320) · Fate's Thread and Banishing Rite get a **third level** (450 / 520) |
   | Dominion | **Head Start**: begin the run a level ahead per level, the picks waiting (2, 400→700; co-op: the host's, like the Oath) · **Chosen Vanguard**: the first summon class you raise starts one level higher (1, 450) · **Patient Grave**: your first skip per level hands back a reroll (2, 200→350) |
 

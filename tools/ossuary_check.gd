@@ -172,7 +172,7 @@ func _check_data() -> void:
 		listed_total, new_total, listed_total + new_total, MetaData.total_tiers()])
 	print("[ossuary_check] new options (step 3): %d upgrades + 2 third levels, %d Soul Ash; everything %d (Oath excluded)" % [
 		MetaData.OPTIONS_UPGRADES.size(), options_total, listed_total + new_total + options_total])
-	_check(options_total == 9060, "the new options cost 9,060 in all (got %d)" % options_total)
+	_check(options_total == 8560, "the new options cost 8,560 in all (got %d)" % options_total)
 	for id: String in MetaData.OPTIONS_UPGRADES:
 		_check(MetaData.UPGRADES.has(id) and MetaData.UPGRADE_ORDER.has(id), "%s is an upgrade" % id)
 		_check(not MetaData.DEEP_UPGRADES.has(id) and MetaData.max_tier(id) <= 5, "%s has 1-5 levels, no deep ones" % id)
@@ -237,8 +237,8 @@ func _check_dominion() -> void:
 	Meta._reset()
 	Meta.hyper_unlocked = true  # The same boss through the Hyper unlock.
 	_check(Meta.tree_open("dominion"), "the Hyper unlock opens Dominion too")
-	var mods := MetaModifiers.from_tiers({"head_start": 2, "last_rites": 3, "grave_ward": 2, "gilded_chests": 1})
-	_check(mods.int_value("head_start") == 2 and is_equal_approx(mods.value("last_rites"), 3.0) and mods.int_value("ward_hits") == 2 and is_equal_approx(mods.value("gilded_chance"), 0.15), "the new stats sum")
+	var mods := MetaModifiers.from_tiers({"head_start": 2, "last_rites": 3, "grave_ward": 1, "gilded_chests": 1})
+	_check(mods.int_value("head_start") == 2 and is_equal_approx(mods.value("last_rites"), 1.5) and mods.int_value("ward_hits") == 1 and is_equal_approx(mods.value("gilded_chance"), 0.15), "the new stats sum")
 	Meta._reset()
 
 
@@ -347,7 +347,7 @@ func _check_coop_loadout() -> void:
 	_check(is_equal_approx(m.value("damage_reduction"), 0.12 + 4.0 * MetaData.deep_per_tier("bone_mail")), "the partner's Bone Mail 8 applies")
 	var lo2 := {"meta_levels": {"commanders_presence": 3, "head_start": 1}}
 	var m2 := MetaModifiers.from_tiers(CoopNet._clean_loadout(lo2, 1)["meta_levels"])
-	_check(is_equal_approx(m2.value("presence_damage"), 0.03) and m2.int_value("head_start") == 1, "the co-op loadout carries the new options")
+	_check(is_equal_approx(m2.value("presence_damage"), 3.0 * float(MetaData.UPGRADES["commanders_presence"]["per_tier"])) and m2.int_value("head_start") == 1, "the co-op loadout carries the new options")
 
 
 # --- Masteries (Ossuary expansion step 4) -----------------------------------------------
