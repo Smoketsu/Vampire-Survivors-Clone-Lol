@@ -1,0 +1,11 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a hunched, creeping crouch, webbed claws reaching forward.
+
+LOW-RESOLUTION pixel art: the whole figure is only 34 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a KAPPA, a small river imp of Japanese folklore: green scaly skin, a hard brown TURTLE SHELL on its back, a yellow duck-like beak, big round yellow eyes, a ring of shaggy dark hair around a shallow DISH of water on top of its head (the water a pale blue), webbed hands and feet with claws, a short stocky frog-like body. Monster, not a person; no clothes. Signature shape: the shell, the beak and the water dish on its head.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: kappa green #1F3A22 (outline) #3E6B3A #6C9A4E #A8C66A; shell brown #2E2214 #5A4426 #8C6A3A; beak and eyes gold #8A6A1E #D9A93A #F5D870; water indigo #2E3F74 #6A82C0 #C4CCD8; hair #1A0B0C #2E3F74.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a sprite of this game: match its pixel size, outline weight and flat look exactly.

@@ -1,0 +1,8 @@
+A SEAMLESS, tileable ground texture for a top-down 2D pixel-art game, seen straight from above. LOW-RESOLUTION pixel art: exactly 128 x 128 pixels, shown enlarged so every pixel is a big square block. The left edge must continue the right edge and the top edge the bottom edge.
+
+Subject: the raked GRAVEL of a mountain shrine courtyard: fine grey gravel raked in faint parallel lines, a few flat stepping stones, a few fallen sakura petals. Very DARK and LOW CONTRAST: it is a background that every character must stand out from. No objects that look solid, no characters.
+
+Colours: ONLY flat fills from this list: gravel #24221F (most of the tile), #2E2B28, rake lines #1A1917, stones #3A3733, rare petals #A8546E (a few pixels only). No gradients, no dithering, no noise.
+
+Output: a square PNG, the tile filling the whole image edge to edge. No border, no text, no watermark.
+Attached: an approved floor tile of this game, for the pixel size and darkness.

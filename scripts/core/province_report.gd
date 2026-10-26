@@ -27,8 +27,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	for k: String in [ProvinceEnemyData.KUNOICHI, ProvinceEnemyData.KAPPA, ProvinceEnemyData.SHUTEN_DOJI]:
 		kinds = kinds or float(st.get("spawned_" + k, 0.0)) > 0.0
 	if kinds or en.province_haz != null:
-		print("[autotest] province kinds: kunoichi smokes %d (summons blinded %d, %d s in all), lunges %d (hit you %d) | kappa grapples %d (squeezes %d) | fires: sake %d, village %d (dmg to summons %d, to you %d) | smoke clouds %d" % [
-			int(st.get("kunoichi_smokes", 0.0)), int(st.get("summon_blinds_kunoichi_smoke", 0.0)), int(st.get("summon_blinded_seconds", 0.0)),
+		print("[autotest] province kinds: kunoichi smokes %d (summons blinded %d; all smoke: blinds %d, %d s), lunges %d (hit you %d) | kappa grapples %d (squeezes %d) | fires: sake %d, village %d (dmg to summons %d, to you %d) | smoke clouds %d" % [
+			int(st.get("kunoichi_smokes", 0.0)), int(st.get("summon_blinds_kunoichi_smoke", 0.0)), int(st.get("summon_blinds", 0.0)), int(st.get("summon_blinded_seconds", 0.0)),
 			int(st.get("kunoichi_lunges", 0.0)), int(st.get("kunoichi_lunge_hits", 0.0)), int(st.get("kappa_grapples", 0.0)), int(st.get("kappa_squeezes", 0.0)),
 			int(st.get("shuten_barrels", 0.0)), int(st.get("village_fires", 0.0)),
 			int(st.get("summon_dmg_from_" + ProvinceEnemyData.SAKE_FIRE_SOURCE, 0.0) + st.get("summon_dmg_from_village_fire", 0.0)),

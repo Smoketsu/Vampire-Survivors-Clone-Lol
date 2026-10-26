@@ -1745,6 +1745,26 @@ the **Teppo Gunner** (arquebus volleys on a shared 6 s beat, then a long reload 
 through walls and the ring) and the **Oni** (a heavy whose iron kanabō stuns summons; flat armour; the Endless
 Night's kind). The Codex has a **Shogunate** tab.
 
+### Act V: the Burning Province (Stage 13, built, not yet playable)
+
+<!-- --- Act V: the Burning Province --- -->
+Rice terraces, bamboo groves and a village in flames (GDD §15.0 "The Burning Province (Act V phase 2)"; still
+`"playable": false` for the lead's pass). Four zones on the clock: **the Paddies** (flooded terraces: the water
+slows you, your summons and the Shogunate alike, through the one ground-slow path, but never the kappa), **the
+Bamboo Grove** (dense bamboo; from dusk the ninja come out of every shadow), **the Burning Village** (fire flares
+beside the burning houses and burns every body in it, foes too) and **the Mountain Shrine** (rows of stone
+lanterns that light the night). Its kinds: the **Kunoichi** (an elite out of the shadows: smoke bombs that blind
+your summons for 2 s, a lunge at you) and the **Kappa** (night fodder that the water never slows; it grabs a
+summon and holds it). At 6:00 left, at night only, **Shuten-dōji, the Oni King** staggers in: drunk, enormous,
+the oni's club smash and sake barrels that burst into fire on red circles. At 3:00 left **Kage, Mistress of the
+Hidden Hand**: she splits into shadow clones (only one is real; light shows the others false and they dissolve),
+plants smoke fields on the Bone Ring that blind your dead, and throws chained kunai that hook a summon and reel
+it out of the ring. Her fall unlocks **Hundred Shadows** (shadow clones that throw kunai and echo your next spell;
+evolves into **Thousand Shadows** with its paired passive **Hidden Hand**: spells strike foes busy with your
+summons harder) and so its character, **the Grave Kunoichi** (innate Many Faces: one more clone). The achievement
+**No Shadow Unlit** (light 20 stone lanterns in one Province run and slay Kage) unlocks **Paper Lanterns** (a
+wider light and earlier ambush warnings; offered only in Act V).
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2277,6 +2297,10 @@ scripts/
                             obstacles, the stone lantern (lit sprite at night) and the long dusk shadows (Act V)
     shogunate_ground.gd     The Act V stubs' placeholder floor (the STAGE's "floor": paddy / castle / gravel)
     shogunate_report.gd     The autotest's Act V lines (sun's course, the draw, from the shadows, kinds, stage)
+    province_report.gd      The Burning Province's autotest lines (province, province kinds, shuten-doji, kage,
+                            act V spell / passives)
+    province_ground.gd      The Burning Province's zone floors (paddies, bamboo, village, shrine) and paddy water
+    province_glyphs.gd      The Province's fallback glyphs, obstacles, barrels, chains, smoke (Act V)
     ilion_report.gd         The Shores of Ilion's autotest lines (ilion, ilion kinds, polyphemus, achilles,
                             act IV spell / passives)
     ilion_ground.gd         The Shores of Ilion's zone floors (beach, camp, gate, walls)
@@ -2460,6 +2484,12 @@ scripts/
                             after a smoke puff, longer in light; the "ambush" event and segment trickle
       shogunate_kit.gd      Base kit: the row flags (night, draws, ambusher, ethereal), start_draw(), light()
       ashigaru_kit.gd, samurai_kit.gd, teppo_kit.gd, ninja_kit.gd, onryo_kit.gd, oni_kit.gd   The shared kinds
+      province_director.gd  The Burning Province: the paddy water (TerrainSlow), the village fires, Shuten-dōji
+                            (night only), No Shadow Unlit (Act V)
+      province_hazards.gd   The Province's fire patches and smoke clouds (sake and village fires; the smoke that
+                            blinds summons through CombatResolver.blind_unit())
+      boss_kage.gd          Kage: shadow clones revealed by light, smoke fields, chained kunai (the compel path)
+      kunoichi_kit.gd, kappa_kit.gd, shuten_doji_kit.gd, kage_clone_kit.gd   The Burning Province's kinds
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -2708,11 +2738,13 @@ scripts/
                             TWILIGHT, PHALANX (+ Bronze Breaker hook), GLORY, the SOUNDS map
     shogunate_enemy_data.gd The Shogunate's shared kinds (Ashigaru, Samurai, Teppo Gunner, Ninja, Onryō, Oni)
                             and the night / draws / ambusher / ethereal flags (Act V)
-    province_enemy_data.gd  Each Act V stage's own kinds (kurogane_ / sun_road_enemy_data.gd likewise; empty
-                            until phase 2)
+    province_enemy_data.gd  Each Act V stage's own kinds (kurogane_ / sun_road_enemy_data.gd likewise); the
+                            Province's: the Kunoichi, the Kappa, Shuten-dōji, Kage's shadow clones
+    kage_data.gd            Kage's arrival, clones, smoke fields, chained kunai and phases (Act V)
+    hundred_shadows_data.gd Hundred Shadows / Thousand Shadows fixed rules and the one spell-source test (Act V)
     shogunate_rules_data.gd Act V's shared rules: SUN (+ Paper Lanterns hook), ENDLESS_NIGHT, DRAW (+ Unbending
                             hook), AMBUSH, the volley beat, the SOUNDS map
-    stages/province_stage.gd       Act V stubs: the Burning Province, Castle Kurogane and the Road to the Sun;
+    stages/province_stage.gd       Act V stages: the Burning Province (built: zones, paddies, timeline, PROVINCE), Castle Kurogane and the Road to the Sun;
     stages/kurogane_stage.gd       act 5, "shogunate": true, the Sun's Course timeline, the Endless Night
     stages/sun_road_stage.gd       Reckoning, placeholder floors / obstacles / boss scripts, zone names
     hades_data.gd           Hades' arrival, fight, god-shade list (GOD_SHADES) and ending (Act IV)
@@ -2916,6 +2948,7 @@ Options (after `--`):
 | (the Shores of Ilion) | `--stage=ilion` adds `ilion` (siege towers rolled / destroyed and when / reached the walls / rolling, garrison spilled and marched out, Polyphemus, objective Soul Ash), `ilion kinds` (testudo shots and boulders cut, wolf packs, packmates, lunges and hits, cyclops throws, boulders and hits; also wherever an Ilion kind was forced, e.g. `--spawn=legionary@60x6,wolf_of_rome@90,cyclops@120x2,siege_tower@150,polyphemus@180`), `polyphemus` and `achilles` (front / flank / back / heel / undirected hits, staggers, lunges, the Myrmidon guard, the rage, killed from behind; also `--boss=achilles`). On any stage, `act IV spell` (Paris's Arrow when learned, e.g. `--spells=paris_arrow`) and `act IV passives` (Mortal Heel, Bronze Breaker, e.g. `--passives=bronze_breaker`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). Mount Olympus (built) adds `olympus` and `olympus events` (each god's arrival and fall, the groves, the trial), `pantheon trial` (Ares's war-cries, enemies buffed, charges, impalings; Artemis's volleys, hounds, teleports; Poseidon's floods, tridents, serpents), `olympus kinds` (centaurs, Amazon leaps and catches, Gorgon gazes and summons petrified, sea serpent lunges), `wrath called` (the gods' DivineWrath.strike() calls) and `zeus` (storms, beams, the Storm Throne and true form times, stomps); the gods and kinds can be forced anywhere (`--spawn=ares@60,artemis@90,poseidon@120,gorgon@30x2`), and on every stage `stolen thunder` / `grounded bones` print when used (`--character=oathbreaker`, `--passives=grounded_bones`). |
 | (Act V) | `--stage=province\|kurogane\|sun_road` (the Act V stubs) prints `sun's course` (when day, dusk, night and the Endless Night began; stone lanterns lit; ambushes revealed in light; night groups held back by day and night kinds activated by day, both 0 on a stub; Reckoning enemies quickened), `the draw` (lines drawn and on you, cuts, refused at the cap, cancelled by a slain drawer, most at once; bodies cut: you and each summon class; damage to summons and to you; dodged by the bot), `from the shadows` (squads and units, appeared, capped, inside the Bone Ring, obstacle shadow spots, revealed in light, the average warning), `shogunate kinds` (spawned / killed, first appearance and damage per kind; samurai draws, teppo shots, ninja shuriken, oni smashes and summons stunned) and `shogunate stage`. The Draw and kind lines also print on any stage where a Shogunate kind was forced (the Sun's Course stays day there): `--spawn=samurai@60x6,ninja@90x4,oni@120,onryo@30x10`; `--boss=kage\|shogun\|amaterasu` (placeholder boss scripts until phase 2). |
+| (Act V, the Burning Province) | `--stage=province` adds `province` (the paddy checks and slows, the kappa left unslowed, the village fires and their burns, Shuten-dōji, the lanterns lit toward No Shadow Unlit), `province kinds` (Kunoichi smokes, summons blinded and lunges; Kappa grapples; sake and village fires; smoke clouds), `shuten-doji` and `kage` (splits, clones revealed by light / faded / killed, smoke fields, kunai hooks and pulls, phases); `act V spell` / `act V passives` print when Hundred Shadows, Hidden Hand or Paper Lanterns was taken (e.g. `--spells=hundred_shadows --passives=paper_lanterns`, `--character=grave_kunoichi`). `--spawn=kunoichi@60x2,kappa@90x4,shuten_doji@120` works on any stage; `--boss=kage`. |
 | (Assembly Halls) | `--stage=assembly` adds `assembly` (fabricators destroyed / placed / planned and when, soldiers built and capped, the wave and trickle thinning, Cold Assembly, the Beta Build, objective Soul Ash), `assembly floor` (seconds carried by belts for you / summons / enemies, furnace flares, furnace hits and damage per side), `assembly events`, `assembly kinds` (Arc Engineer repairs and jams, Juggernaut flames and flat armour, the Beta Build's swipes, rivets, patching and kill time) and `motherboard` (grabs, hurls, stamps, magnet pulls, turret builds, turrets and their shots, when Full Load and Overclock began, its damage). Reward lines print when owned: `hollow puppet` (`--spells=hollow_puppet`), `class grave_drone` (`--classes=grave_drone`), `signal ghost` (`--passives=signal_ghost`) and `marionette` (`--character=marionette`). `--spawn=arc_engineer@60x4,juggernaut@120x2,beta_build@180` works on any stage. |
 | (the Iron Citadel) | `--stage=citadel` adds `citadel` (gates raised / broken / locked down, garrison spawns, wall pushes, laser cycles and their hits on you, summons and enemies, citadel gun salvos, strikes and hits, turrets placed / destroyed / left behind, guests, objective Soul Ash), `citadel events`, `citadel kinds` (Duelist lunges: blocked / reached you / summons sliced; turret bursts; Valkyrie 2.0: spawned, killed and time to kill, dashes (blocked, hit you), bashes, storms, summon hits) and, when it fought, `deus ex machina` (phase times, plates broken, chaingun / salvo / footfall / stomp counts and hits, drones launched and downed, exposures, lances and their blocked ticks, hangars, pulses, teleports, machines gone dark, damage to you by attack). On every stage, `scrap swarm` (level, damage, kills, bolts, kill drones, peak drones, orbit radius; Machine Soul's bonus damage) and `iron revenant` (level, damage by source, bursts, shells, salvos, missiles; Recoil Frame) print only when used. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |

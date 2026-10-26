@@ -6,9 +6,8 @@
 ## She walks at the necromancer with the shared melee AI (enemies always
 ## advance) and, on her own rhythm:
 ##   * SMOKE BOMB — when a summon stands within smoke_range px of her and the
-##     bomb is ready, she throws it at the summons between her and the
-##     necromancer (the point on her way to him smoke_range x 0.6 px out,
-##     shown as a landing circle for smoke_flight s); it bursts into a smoke
+##     bomb is ready, she throws it onto the nearest summon (shown as a
+##     landing circle for smoke_flight s); it bursts into a smoke
 ##     cloud of smoke_radius px (ProvinceHazards) that BLINDS every summon in
 ##     it for smoke_blind s through THE one summon blind path
 ##     (CombatResolver.blind_unit()): they keep to the ring but find no foe.
@@ -86,28 +85,35 @@ func physics(e: Enemy, delta: float) -> bool:
 	if _lunge_cd <= 0.0 and dist >= float(d["lunge_min"]) and dist <= float(d["lunge_max"]):
 		_start_lunge(e, pl.position)
 		return true
-	if _smoke_cd <= 0.0 and _bomb_at == Vector2.INF and _summon_near(e):
-		_throw_bomb(e, pl.position)
+	if _smoke_cd <= 0.0 and _bomb_at == Vector2.INF:
+		var u := _summon_near(e)  # The nearest summon in reach (null = none).
+		if u != null:
+			_throw_bomb(e, u.position)
 	return false
 
 
-## True when a summon stands within smoke_range px of her.
-func _summon_near(e: Enemy) -> bool:
+## The nearest grounded summon within smoke_range px of her (null = none).
+func _summon_near(e: Enemy) -> SummonedUnit:
 	var r := float(d["smoke_range"])
 	e.game.ally_grid.query(e.position, r + UnitData.MAX_BLOCK_RADIUS, _tmp)
+	var best: SummonedUnit = null
+	var best_d := INF
 	for u: SummonedUnit in _tmp:
-		if u.active and u.state != SummonedUnit.State.DEAD and u.position.distance_to(e.position) <= r + u.radius:
-			return true
-	return false
+		if not u.active or u.airborne or u.state == SummonedUnit.State.DEAD or u.state == SummonedUnit.State.SPAWNING:
+			continue
+		var dd := u.position.distance_to(e.position)
+		if dd <= r + u.radius and dd < best_d:
+			best_d = dd
+			best = u
+	return best
 
 
-## Throws the smoke bomb toward the necromancer's ring (see the header).
+## Throws the smoke bomb onto the nearest summon (see the header).
 func _throw_bomb(e: Enemy, at: Vector2) -> void:
 	_smoke_cd = float(d["smoke_every"])
 	var to := at - e.position
 	var dir := to.normalized() if to.length() > 1.0 else Vector2.RIGHT
-	var reach := minf(to.length(), float(d["smoke_range"]) * 0.6)  # Into the summons between them.
-	_bomb_at = e.position + dir * reach
+	_bomb_at = at
 	_bomb_t = 0.0
 	_bomb_from = e.position
 	e.game.effects.telegraph_circle(_bomb_at, float(d["smoke_radius"]), float(d["smoke_flight"]), e)

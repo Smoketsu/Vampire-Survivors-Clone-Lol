@@ -2383,3 +2383,45 @@ where Act V units never stand. **For the owner's review.**
 | `shogunate/onryo` | Onryo (night fodder, female ghost): pale white burial kimono, long black hair over the face, reaching arms, a wisp tail | 38x36 | hover (the whole ghost bobs 2 px; two empty rows on top). No bust rig |
 | `shogunate/oni` | Oni (night heavy, male): red-skinned ogre, ivory horns, tiger-skin loincloth, an iron kanabo held low | 64x80 | legs walk (hip 66, spread 3, lift 3; the club rides above the hip) |
 | `obstacles/stone_lantern` (+ `_lit`) | A stone toro: base, post, lantern box with a window, wide roof, finial; `_lit` has a warm gold window | 28x40 | no strip; the glow pool is code |
+
+### Act V: the Burning Province (Stage 13; Act V phase 2, Oct 2026)
+
+<!-- --- Act V: the Burning Province --- -->
+Generated with `tools/gen_image.py` (prompts beside each source, `art_source/<key>.txt`, the sex named in every figure
+prompt; `--ref` the Ferrywoman's source for the figure-redesign women plus a crop of `act5_lineup.png` (the kunoichi)
+for the Kunoichi and Kage; the Hoplite's source plus a lineup crop of the oni for Shuten-dōji; the Hoplite's source for
+the Kappa; the Ferrywoman's and the necromancer's sources for the Grave Kunoichi, then her source for her three skins;
+the March's `burned_house_l` / Gullhaven's `barrel_stack_l` sources for the obstacles, `underworld_ash` for the tiles,
+`paris_arrow` for the icon symbols). Pipeline: `prepare_sprite.py` straight on the source (every command in
+`art_source/shogunate/province_build.sh`): the Kunoichi `--ink-l 0.15` (a `--no-levels` copy read more like a
+ninja but failed the lightness check on every Act I floor), Kage `--ink-l 0.12 --no-levels` (her black suit stays
+black; she only fails the light March roads and the Sanctum, where she never stands), Shuten-dōji's source stored
+mirrored (the API drew him facing left), the Grave Kunoichi `--ink-l 0.20` with violet, bone, soul and grey, her
+Hyper skin `--no-levels` (gold). Walk / idle strips by `walk_cycle.py` (rigs under `# --- Act V: the Burning
+Province ---`; the Kunoichi, Kage and the Grave Kunoichi with her skins have bust boxes and idle breathing strips).
+Obstacles and icons by `art_source/shogunate/province_build.py` (pairs split at the widest gap; each size at its
+footprint width with `--no-center`; the 26 px symbol on a badge cleared from an approved icon, gold for the
+evolution and the achievement). Tiles: `make_tile.py` quilt recipes `province_*`. 21 API images, about $0.53 (ledger
+estimate). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/kunoichi` | Kunoichi (elite, female, figure redesign, fully clothed): indigo-black bodysuit, red armour plates and sash, a long red scarf, a mask, high ponytail, a tanto in each hand | 40x52 | legs walk (blades rigid), bust box, idle breathing |
+| `shogunate/kappa` | Kappa (night fodder): green river imp, turtle shell, yellow beak, the water dish on its head | 32x34 | legs walk (the reaching claw rigid) |
+| `shogunate/shuten_doji` | Shuten-dōji, the Oni King (miniboss, male): crimson giant, white mane, horns, open red-and-gold kimono, sake gourd, a barrel on his shoulder, a spiked kanabō | 94x112 | legs walk (the club rigid); the thrown barrels and the sake fires are code / AoeArt |
+| `bosses/kage` | Kage, Mistress of the Hidden Hand (boss, female, figure redesign, fully clothed): white ponytail, half mask, black-and-indigo bodysuit, short black jacket lined red, red obi, a ninjato on her back, a chained kunai in hand | 66x64 | legs walk, bust box, idle breathing; her clones wear the same art tinted |
+| `player/grave_kunoichi` | The Grave Kunoichi (female, figure redesign, fully clothed): pale grey skin, violet eyes, violet shinobi garb, bone plates and sash, a long soul-teal scarf, a kunai | 44x56 | legs walk (the scarf rigid), bust box, idle breathing |
+| `player/grave_kunoichi_hyper` | Gilded Kunoichi (Hyper): deep violet garb, a gold hair crest, gold sash and scarf, a gold kunai | 48x58 | through `SKINS` |
+| `player/grave_kunoichi_untouchable` | Untouchable: a bone-white phantom, a teal scarf and kunai | 46x56 | through `SKINS` |
+| `player/grave_kunoichi_deathlord` | Deathlord: a spiked iron crown, iron pauldrons, a crimson mantle and scarf | 48x58 | through `SKINS` |
+| `obstacles/rice_sheaves_{s,l}` | Rice sheaves hung on a wooden drying frame | 26 / 34 wide | circle |
+| `obstacles/bamboo_stand_{s,m,l}` | A dense stand of tall bamboo | 26 / 34 / 42 wide | circle |
+| `obstacles/burning_house_{s,l}` (+ `_v`) | A thatched farmhouse in flames | 56 / 72; `_v` 40 | H + V pair; the flares beside it are code (ProvinceHazards) |
+| `obstacles/shrine_hall_{s,l}` (+ `_v`) | A small mountain shrine hall: red pillars, a curved grey roof, a shimenawa | 52 / 64; `_v` 40 | H + V pair |
+| `tiles/province_paddies`, `province_bamboo`, `province_village`, `province_shrine` | The four zone floors: dike mud, leaf litter, ash and cinders, raked gravel | 128 | quilt; the paddy water is code-drawn over them (ProvinceGround) |
+| `icons/hundred_shadows`, `hidden_hand`, `paper_lanterns` | Badges (violet border): three ninja shadows with kunai; a hand with a kunai out of smoke; a glowing paper lantern | 32 | |
+| `icons/thousand_shadows`, `ach_no_shadow_unlit` | Gold-border badges: a ring of shadows around crossed kunai; a lit stone lantern and a fleeing shadow | 32 | |
+
+Code-drawn on purpose: the paddy water, the sake barrels (held and in flight), the landing circles, the fire patches
+(the Hellhound fire textures), the smoke clouds and the blinded summons' smoke, Kage's kunai chains, the Hundred
+Shadows clones (the caster's own sprite in shadow) and their kunai.

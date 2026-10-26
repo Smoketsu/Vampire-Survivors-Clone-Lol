@@ -1,0 +1,6 @@
+A pixel-art game ability symbol, exactly 26 x 26 pixels, shown enlarged so every pixel is a big crisp square block, on a FULLY TRANSPARENT background (no badge, no border, no frame). ONE bold simple symbol filling the image: a ring of many small violet NINJA SILHOUETTES around a bright violet burst of crossed bone-white kunai blades. No detail under 2 pixels. Readable at its real size of 26 pixels. No anti-aliasing, no gradients, no dithering, no text. A clean 1-pixel dark outline.
+
+Colours: ONLY flat fills from this list: violet #160A21 #4A2569 #7A42AD #A35CFA #DDBDFF; bone #2A2219 #8C7B5E #D9CCAA #F2EBD3; gold #6B4A12 #E0A92E #FFDC66.
+
+Output: a square PNG with real alpha.
+Attached: an approved icon of this game, for the pixel size and look.
