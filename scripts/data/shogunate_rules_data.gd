@@ -203,18 +203,17 @@ const VOLLEY_BEAT: float = 6.0  # Owner-approved proposal: "every 6 s"
 # --- Sounds ------------------------------------------------------------------------------------
 
 ## Shogunate event -> sound id played for it (Sfx.play(); an id that is not
-## rendered is a silent no-op). FOR NOW these point at existing startup-bank
-## sounds (only the startup bank, so they sound with any music loaded): the audio pass adds the Shogunate pack (SoundData.SHOGUNATE_SOUNDS)
-## and the lead switches each value at the merge to the intended id named in
-## its comment (the Fixed names: draw_flash, draw_cut, smoke_puff,
-## teppo_volley, taiko_hit, lantern_lit, nightfall, oni_smash).
+## rendered is a silent no-op). The ids are the Shogunate pack's
+## (SoundData.SHOGUNATE_SOUNDS), loaded lazily with the "sun" music; wired by the
+## lead at the foundation merge.
 const SOUNDS := {
-	"draw_flash": "frost_bolt",  # Intended: "draw_flash"
-	"draw_cut": "rogue_dash",  # Intended: "draw_cut"
-	"smoke_puff": "orb_block",  # Intended: "smoke_puff"
-	"teppo_volley": "catapult_launch",  # Intended: "teppo_volley"
-	"taiko_hit": "",  # Intended: "taiko_hit" (no stand-in: silent until the pack exists; reserved for phase 2)
-	"lantern_lit": "priest_ward",  # Intended: "lantern_lit"
-	"nightfall": "boss_telegraph",  # Intended: "nightfall"
-	"oni_smash": "abom_stomp",  # Intended: "oni_smash"
+	"draw_flash": "draw_flash",  # A thin steel ring as the blade leaves the saya (Shogunate pack).
+	"draw_cut": "draw_cut",  # The cut's slicing whoosh.
+	"smoke_puff": "smoke_puff",  # An ambush's smoke burst.
+	"teppo_volley": "teppo_volley",  # A ragged crackle of matchlocks.
+	"taiko_hit": "taiko_hit",  # One deep drum (reserved for phase 2's regiments and banners).
+	"lantern_lit": "lantern_lit",  # A stone lantern catching light at nightfall.
+	"nightfall": "nightfall",  # The low swell and temple bell of the night transition.
+	"oni_smash": "oni_smash",  # The oni's iron kanabo.
 }
+

@@ -218,8 +218,5 @@ const STAGE := {
 	"shogunate": true,  # Act V: the Sun's Course, the Draw, From the Shadows (ShogunateRules).
 	"sun": SUN,  # Act V: this stage's Sun's Course overrides ({} = the defaults).
 	"zones": ZONES,  # Act V stub: the planned zone names (phase 2 builds them).
-	# Music key "bronze" FOR NOW (the Act IV loop): the audio pass adds "sun"
-	# ("The Setting Sun", SoundData.SUN_SCORE) and the lead switches this to
-	# "sun" at the merge.
-	"music": "bronze",
+	"music": "sun",  # "The Setting Sun" (SoundData.SUN_SCORE), which also loads the Shogunate sound pack
 }
