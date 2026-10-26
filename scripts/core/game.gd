@@ -350,6 +350,9 @@ func _ready() -> void:
 			var sg := ShogunateGround.new()  # Act V placeholder floor (the STAGE's "floor").
 			sg.look = stage_def.get("floor", {})
 			ground = sg
+		# --- Act V: Castle Kurogane ---
+		"kurogane":
+			ground = KuroganeGround.new()  # Act V: Castle Kurogane's four zone floors (KuroganeStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

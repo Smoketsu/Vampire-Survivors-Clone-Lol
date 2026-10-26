@@ -905,7 +905,7 @@ func physics_step(delta: float) -> void:
 		return
 	state_time += delta
 	target_hold += delta
-	attack_cd -= delta
+	attack_cd -= delta * director.attack_haste(self)  # Act V: Banner of the Dead / Warlord's Seal (exactly 1 without them).
 	_kite_cd -= delta
 	bash_cd -= delta
 	_shield_cd -= delta

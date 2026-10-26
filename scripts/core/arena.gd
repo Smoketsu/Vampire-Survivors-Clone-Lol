@@ -472,6 +472,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 		return  # An Asphodel Underworld obstacle kind (Act IV).
 	if ShogunateGlyphs.draw_obstacle(self, o):
 		return  # An Act V stub's placeholder obstacle kind.
+	# --- Act V: Castle Kurogane ---
+	if KuroganeGlyphs.draw_obstacle(self, o):
+		return  # A Castle Kurogane obstacle kind (Act V).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

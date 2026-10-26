@@ -298,6 +298,9 @@ const SPELLS := {
 	# --- Act IV: the Asphodel Underworld ---
 	"river_styx": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 7], "spread": 40.0, "speed": 220.0,
 		"life": 0.8, "share": 0.4, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) drops of black water flung after each new river
+	# --- Act V: Castle Kurogane ---
+	"banner_of_the_dead": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 14], "speed": 260.0,
+		"life": 0.6, "share": 0.4, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) a ring of violet bone shards with each planting
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

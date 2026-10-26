@@ -327,6 +327,17 @@ const HEIGHTS: Dictionary = {
 	"shogunate/oni": 80.0,  # TUNING (not in GDD) night heavy tier (60-72 and up): a huge red ogre, the horns and the club
 	"obstacles/stone_lantern": 40.0,  # TUNING (not in GDD) a toro, unlit (an obstacle; the glow pool is drawn by code)
 	"obstacles/stone_lantern_lit": 40.0,  # TUNING (not in GDD) the same toro with a warm lit window
+	# --- Act V: Castle Kurogane (assets/sprites/shogunate/, bosses/, player/) ---
+	"shogunate/hatamoto": 72.0,  # TUNING (not in GDD) elite tier: body ~46, the tall white sashimono banner rising far above the helmet
+	"shogunate/kiba_musha": 60.0,  # TUNING (not in GDD) a horse and rider, about 1.2 x as long as tall
+	"shogunate/general_left": 100.0,  # TUNING (not in GDD) miniboss tier: the huge black war horse and the antler crest
+	"shogunate/command_platform": 124.0,  # TUNING (not in GDD) the Shogun's platform with its four nobori (BossShogun draws it at its art size)
+	"bosses/shogun": 116.0,  # TUNING (not in GDD) boss tier: the crescent crest and the raised war fan (Achilles 120)
+	"bosses/shogun_duel": 100.0,  # TUNING (not in GDD) duel pose: low iai stance, the blade drawn level (BossPoseData 3)
+	"player/ronin_revenant": 58.0,  # TUNING (not in GDD) character tier: body ~50, the straw hat and the small banner above
+	"player/ronin_revenant_hyper": 58.0,  # TUNING (not in GDD) skin art: his body, the gilded hat
+	"player/ronin_revenant_untouchable": 58.0,  # TUNING (not in GDD) skin art: his body, the white phantom
+	"player/ronin_revenant_deathlord": 58.0,  # TUNING (not in GDD) skin art: his body, the black iron crest
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

@@ -1,0 +1,9 @@
+A sheet of FOUR separate pixel-art game OBSTACLE PROPS in one row, on a FULLY TRANSPARENT background (real alpha), with wide empty gaps between them. Three-quarter top-down view (camera above and in front, like a top-down action game), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text. Each prop about 36 pixels wide.
+From left to right:
+1. A JAPANESE BLACK PINE (matsu) in a castle garden: a short twisted dark trunk and flat layered clouds of dark green needles.
+2. A big mossy GARDEN ROCK: a rounded grey boulder with a few moss patches.
+3. A stack of three SAKE BARRELS (taru) bound with rope, straw-wrapped with a red painted label band.
+4. A big TAIKO WAR DRUM on a dark wooden stand: a round red lacquered drum body with gold studs, a pale drum head.
+Colours: pine green #1B2B2E #2E4A2C #4E7A3A; bark #1A0B0C #4F3320 #8C6040; stone #1A1C22 #4A5566 #8793A6 #C4CCD8; straw #8A6A1E #D9A93A #F5D870; lacquer red #6A1418 #B3262B #E2594A; gold #D9A93A; drum skin #CFCBC4 #F4F1EA.
+Keep them a little darker and calmer than the characters (they are scenery), but clearly brighter than a near-black ground.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

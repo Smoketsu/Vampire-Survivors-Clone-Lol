@@ -119,6 +119,20 @@ var block_query_radius: float = UnitData.MAX_BLOCK_RADIUS
 ## (StanceFormations._ring(); StanceData.RING_MIN before the first): the Scrap
 ## Swarm spell orbits just outside it. Read only; it changes no unit.
 var ring_radius: float = StanceData.RING_MIN
+# --- Act V: Castle Kurogane ---
+## Banner of the Dead: this army's standing banners, (x, y, radius px) each,
+## written every tick by the spell (set_banners(); empty = none). Read only
+## through attack_haste().
+var banner_zones: PackedVector3Array = PackedVector3Array()
+## Banner of the Dead: the attack-speed share (fraction) a summon inside a
+## banner's radius gains (0 = no banner).
+var banner_haste: float = 0.0
+## Warlord's Seal: the attack-speed share (fraction) a summon within
+## BannerData.SEAL_RADIUS px of this army's necromancer gains (cached at the
+## start of each step from the bound player's passive; 0 = not owned).
+var _seal_haste: float = 0.0
+## Warlord's Seal: where this army's necromancer stood at the start of the step.
+var _seal_pos: Vector2 = Vector2.ZERO
 
 
 func _init() -> void:
@@ -181,6 +195,8 @@ func golem_kit() -> GolemKit:
 ## Fixed-order update called by Game every physics tick.
 func step(delta: float) -> void:
 	_frame += 1
+	_seal_haste = game.abilities.passive_value(BannerData.SEAL, BannerData.SEAL_KEY)  # Act V: Warlord's Seal (0 when not owned).
+	_seal_pos = game.player.position
 	if temp_alive > 0:
 		_update_temporaries(delta)
 	suppression.step(delta)
@@ -876,3 +892,32 @@ func state_counts() -> Dictionary:
 		var key: String = SummonedUnit.State.keys()[u.state]
 		counts[key] = int(counts.get(key, 0)) + 1
 	return counts
+
+
+# --- Act V: Castle Kurogane ---
+## Banner of the Dead (the spell, every tick): this army's standing banners
+## `zones` ((x, y, radius px) each) and their attack-speed share `haste`.
+func set_banners(zones: PackedVector3Array, haste: float) -> void:
+	banner_zones = zones
+	banner_haste = haste
+
+
+## THE one per-summon attack-speed read (SummonedUnit's attack timer runs this
+## much faster): 1 + Banner of the Dead's haste when `u` stands inside one of
+## this army's banners (the strongest, not added up) + Warlord's Seal's when it
+## stands within BannerData.SEAL_RADIUS px of its necromancer. Exactly 1 when
+## neither the spell nor the passive is owned (every older run unchanged). The
+## same on every stage (no act-only rule).
+func attack_haste(u: SummonedUnit) -> float:
+	if banner_haste <= 0.0 and _seal_haste <= 0.0:
+		return 1.0
+	var h := 0.0  # Extra share.
+	if banner_haste > 0.0:
+		for z in banner_zones:
+			if u.position.distance_squared_to(Vector2(z.x, z.y)) <= z.z * z.z:
+				h += banner_haste
+				break
+	if _seal_haste > 0.0 and u.position.distance_squared_to(_seal_pos) <= BannerData.SEAL_RADIUS * BannerData.SEAL_RADIUS:
+		h += _seal_haste
+	return 1.0 + h
+

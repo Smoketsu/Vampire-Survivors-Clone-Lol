@@ -84,6 +84,10 @@
 ##     the one timeline helper), hands the "ambush" events and the segments'
 ##     "ambush" trickle to ShadowAmbush, and lets the Endless Night quicken
 ##     each Reckoning enemy (ShogunateRules.on_reckoning_spawn()).
+##   * Act V, Castle Kurogane (GDD §15.0 "Castle Kurogane (Act V phase 2)"): on
+##     a stage with a "kurogane" config it owns the KuroganeDirector (the
+##     General of the Left, the Shogun's army objective; `kurogane`) and hands
+##     it the "general_left" events. Null on every other stage.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -199,6 +203,10 @@ var citadel: CitadelDirector = null
 ## The Asphodel Underworld's mechanics (Act IV: the River Styx, Cerberus, guest
 ## squads; StageRegistry "underworld"; null on every other stage).
 var underworld: UnderworldDirector = null
+# --- Act V: Castle Kurogane ---
+## Castle Kurogane's mechanics (Act V: the General of the Left, the Shogun's
+## army objective; StageRegistry "kurogane"; null on every other stage).
+var kurogane: KuroganeDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -313,6 +321,12 @@ func _ready() -> void:
 		underworld.game = game
 		underworld.config = stage_def["underworld"]
 		add_child(underworld)
+	# --- Act V: Castle Kurogane ---
+	if not (stage_def.get("kurogane", {}) as Dictionary).is_empty():
+		kurogane = KuroganeDirector.new()
+		kurogane.game = game
+		kurogane.config = stage_def["kurogane"]
+		add_child(kurogane)  # Castle Kurogane's director.
 
 
 # =====================================================================================
@@ -416,6 +430,9 @@ func step(delta: float) -> void:
 	# --- Act IV: the Asphodel Underworld ---
 	if underworld != null:
 		underworld.step(delta)
+	# --- Act V: Castle Kurogane ---
+	if kurogane != null:
+		kurogane.step(delta)  # The General of the Left.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -503,6 +520,9 @@ func objective_text() -> String:
 	# --- Act IV: the Asphodel Underworld ---
 	if underworld != null and underworld.objective_override() != "":
 		return underworld.objective_override()  # Cerberus's heads.
+	# --- Act V: Castle Kurogane ---
+	if kurogane != null and kurogane.objective_override() != "":
+		return kurogane.objective_override()  # The General of the Left, the Shogun's army.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -666,6 +686,12 @@ func _run_event(ev: Dictionary) -> void:
 				game.shogunate.ambush.start_event(ev)  # From the Shadows (it shows the banner when the squad appears).
 			game.stat_add("wave_events", 1.0)
 			return
+		# --- Act V: Castle Kurogane ---
+		"general_left":
+			if kurogane != null:
+				kurogane.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Castle Kurogane's miniboss.
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

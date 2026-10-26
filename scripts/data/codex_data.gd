@@ -152,9 +152,13 @@ const PANTHEON_BOSSES: Array[String] = ["achilles", "zeus", "hades"]
 ## champions (the night heavy that is also the Endless Night's kind, and phase
 ## 2's minibosses) and its stage bosses (StageRegistry.BOSS_ARRIVALS ids). Each
 ## Act V stage adds its own as it is built (phase 2).
-const SHOGUNATE_SOLDIERS: Array[String] = ["ashigaru", "samurai", "teppo_gunner", "ninja", "onryo"]
+const SHOGUNATE_SOLDIERS: Array[String] = ["ashigaru", "samurai", "teppo_gunner", "ninja", "onryo",
+	# --- Act V: Castle Kurogane ---
+	"hatamoto", "kiba_musha"]
 ## Shogunate champions (minibosses) and the Act V Reckoning kinds.
-const SHOGUNATE_CHAMPIONS: Array[String] = ["oni"]
+const SHOGUNATE_CHAMPIONS: Array[String] = ["oni",
+	# --- Act V: Castle Kurogane ---
+	"general_left"]
 ## Shogunate stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const SHOGUNATE_BOSSES: Array[String] = ["kage", "shogun", "amaterasu"]
 
@@ -283,6 +287,10 @@ const DESCRIPTIONS: Dictionary = {
 	"kage": "Mistress of the Hidden Hand, the ninja grandmaster: shadow clones, smoke and chained kunai.",  # Owner-approved Act V proposal
 	"shogun": "Shogun Kurogane: his army is his strength. Break his regiments and he draws his own blade.",  # Owner-approved Act V proposal
 	"amaterasu": "The sun goddess herself. Her place in the sky is the battle; when she falls, the sun goes out.",  # Owner-approved Act V proposal
+	# --- Act V: Castle Kurogane ---
+	"hatamoto": "Banner guards of the Shogun. While one stands, the soldiers near him fight harder. Kill the banner.",  # Owner-approved Act V proposal
+	"kiba_musha": "Mounted samurai who rein in, then charge down a lane: step aside, or let the horse ride through your dead.",  # Owner-approved Act V proposal
+	"general_left": "The General of the Left charges straight through your ring on his black war horse and calls his riders.",  # Owner-approved Act V proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -470,6 +478,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"twilight_of_the_gods": "ach_twilight_of_the_gods",  # TUNING (not in GDD)
 	# --- Act IV: the Asphodel Underworld ---
 	"empty_throne": "ach_empty_throne",  # TUNING (not in GDD)
+	# --- Act V: Castle Kurogane ---
+	"regiments_broken": "ach_regiments_broken",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -501,6 +511,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"twilight_of_the_gods": "grounded_bones",
 	# --- Act IV: the Asphodel Underworld ---
 	"empty_throne": "river_styx",
+	# --- Act V: Castle Kurogane ---
+	"regiments_broken": "unbending",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

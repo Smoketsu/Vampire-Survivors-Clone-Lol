@@ -1412,6 +1412,7 @@ func finish(summary: Dictionary) -> void:
 	CitadelReport.item_lines(game, st)  # Act III, the Iron Citadel: Scrap Swarm, the Iron Revenant (only when used; the stage's own lines are EmpireReport's).
 	OlympusReport.item_lines(game, st)  # Act IV, Mount Olympus: Stolen Thunder, Grounded Bones (only when used; the stage's own lines are PantheonReport's).
 	UnderworldReport.item_lines(game, st)  # Act IV, the Asphodel Underworld: River Styx, the Myrmidon Shades (only when used; the stage's own lines are PantheonReport's).
+	KuroganeReport.item_lines(game, st)  # Act V, Castle Kurogane: Banner of the Dead, Warlord's Seal, Unbending (only when taken; the stage's own lines are ShogunateReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

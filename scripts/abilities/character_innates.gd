@@ -377,6 +377,9 @@ func summary_line() -> String:
 		# --- Act IV: the Asphodel Underworld --- (Ferry of Souls lives in RiverStyx.on_enemy_killed())
 		"ferry_of_souls":
 			counters = "ferried Risen %d (temporary summons %d)" % [int(st.get("ferry_risen", 0.0)), game.horde.temp_spawned]
+		# --- Act V: Castle Kurogane --- (Unbowed Banner lives in BannerOfTheDead.step())
+		"unbowed_banner":
+			counters = "banners planted %d (haste x%.2f)" % [int(st.get("banner_planted", 0.0)), 1.0 + game.character.innate_value(BannerData.INNATE_KEY)]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

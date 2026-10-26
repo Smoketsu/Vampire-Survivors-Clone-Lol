@@ -508,6 +508,16 @@ RIGS = {
     "shogunate/ninja": dict(mode="legs", hip=28, back=(0, 18), front=(18, 36), rigid=[], spread=2, lift=2, dip=1),
     "shogunate/onryo": dict(mode="hover", bob=2, parts=[]),
     "shogunate/oni": dict(mode="legs", hip=66, back=(0, 26), front=(26, 64), rigid=[], spread=3, lift=3, dip=1),
+    # --- Act V: Castle Kurogane ---
+    # The Hatamoto marches under his tall white banner (pole cols 22-28, the whole height, rigid); the Kiba-musha and the
+    # General of the Left gallop (the horse's hind legs left, forelegs right; a wide spread and a high lift); Shogun
+    # Kurogane strides under his crimson cloak (his duel pose bosses/shogun_duel is a still: no strip). The Ronin
+    # Revenant walks in his tattered kimono and hakama (robe: the hem sways).
+    "shogunate/hatamoto": dict(mode="legs", hip=61, back=(0, 12), front=(12, 22), rigid=[(22, 29, 0, None)], spread=2, lift=2, dip=1),
+    "shogunate/kiba_musha": dict(mode="legs", hip=46, back=(0, 37), front=(37, 74), rigid=[], spread=3, lift=2, dip=1),
+    "shogunate/general_left": dict(mode="legs", hip=77, back=(0, 60), front=(60, 110), rigid=[], spread=3, lift=3, dip=1),
+    "bosses/shogun": dict(mode="legs", hip=94, back=(0, 64), front=(64, 116), rigid=[], spread=2, lift=2, dip=1),
+    "player/ronin_revenant": dict(mode="robe", hip=50, rigid=[], sway=1, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -582,6 +592,10 @@ SKINS = {
     "player/ferrywoman_hyper": "player/ferrywoman",
     "player/ferrywoman_untouchable": "player/ferrywoman",
     "player/ferrywoman_deathlord": "player/ferrywoman",
+    # --- Act V: Castle Kurogane ---
+    "player/ronin_revenant_hyper": "player/ronin_revenant",
+    "player/ronin_revenant_untouchable": "player/ronin_revenant",
+    "player/ronin_revenant_deathlord": "player/ronin_revenant",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

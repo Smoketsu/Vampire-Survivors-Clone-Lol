@@ -135,6 +135,14 @@ const UNLOCKS := {
 	"ferrymans_toll": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # River Styx's paired passive, unlocked with it
 	"myrmidon_shade": {"type": "class", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal: the finale's reward
 	"myrmidon_oath": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Its paired passive (own decision), unlocked with it
+	# --- Act V: Castle Kurogane ---
+	# Shogun Kurogane's fall (owner-approved Act V proposal "Rewards": Banner of
+	# the Dead is unlocked by the Shogun) with its paired passive, offered on
+	# every stage; the stage's achievement Regiments Broken earns Act V's
+	# counter-passive Unbending (offered only in Act V through its card row's "act").
+	"banner_of_the_dead": {"type": "spell", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Owner-approved Act V proposal
+	"warlords_seal": {"type": "passive", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Banner of the Dead's paired passive, unlocked with it
+	"unbending": {"type": "passive", "achievement": "regiments_broken", "text": "Earn Regiments Broken: slay the Shogun after breaking all six of his banners."},  # Owner-approved Act V proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

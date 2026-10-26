@@ -141,6 +141,12 @@
 ## trickle only at night, SunCourse.timeline_weights()) and "ambush"
 ## ({"every", "kind", "count", "elite"}: ShadowAmbush's trickle from dusk on);
 ## Act V event type "ambush" (its "groups" appear From the Shadows).
+## --- Act V: Castle Kurogane ---
+##   kurogane           — KuroganeDirector config (KuroganeStage.KUROGANE, Act V,
+##                        Castle Kurogane: the General of the Left, the HUD
+##                        objective of the Shogun's army; its "general_left"
+##                        event); ground "kurogane" is its KuroganeGround (four
+##                        zone floors).
 class_name StageRegistry
 extends RefCounted
 

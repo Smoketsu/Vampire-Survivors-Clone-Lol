@@ -215,5 +215,8 @@ const SOUNDS := {
 	"lantern_lit": "lantern_lit",  # A stone lantern catching light at nightfall.
 	"nightfall": "nightfall",  # The low swell and temple bell of the night transition.
 	"oni_smash": "oni_smash",  # The oni's iron kanabo.
+	# --- Act V: Castle Kurogane ---
+	"cavalry_charge": "cavalry_charge",  # SoundData.SHOGUNATE_SOUNDS: a Kiba-musha's / the General's charge (KibaKit)
+	"regiment_break": "regiment_break",  # SoundData.SHOGUNATE_SOUNDS: a regiment breaks as its Hatamoto falls (ShogunRegiments)
 }
 

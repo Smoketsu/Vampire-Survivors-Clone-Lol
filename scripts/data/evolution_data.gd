@@ -78,7 +78,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IV: Mount Olympus ---
 	"gigantomachy",
 	# --- Act IV: the Asphodel Underworld ---
-	"lethes_flood"]
+	"lethes_flood",
+	# --- Act V: Castle Kurogane ---
+	"hundred_banners"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -463,6 +465,27 @@ const EVOLUTIONS := {
 			"rivers": 2, "damage": 16.0, "tick": 0.5, "river_slow": 0.45, "slow_duration": 0.8, "length": 280.0, "radius": 24.0,  # TUNING (not in GDD)
 			"duration": 6.5, "cooldown": 4.0, "drain_share": 0.06, "drain_cap": 6.0,  # TUNING (not in GDD)
 			"forget": 1.2,  # TUNING (not in GDD) the evolution flag: s a foe entering a river stands stunned (once per river)
+		},
+	},
+	# --- Act V: Castle Kurogane ---
+	# Hundred Banners (owner-approved Act V proposal: "Banner of the Dead ->
+	# Hundred Banners (+ Warlord's Seal)"): Banner of the Dead + Warlord's Seal
+	# (a NEW passive, owner rule: at Lv 5). Own decision on its kit: each
+	# planting raises `banners` banners at once on a ring round the necromancer
+	# (BannerData.RING), and every banner beats a war drum every
+	# `pulse_interval` s: `pulse_damage` to every foe within `pulse_radius` px.
+	# Detected by the "pulse_interval" key.
+	"hundred_banners": {
+		"base": "banner_of_the_dead",
+		"passive": "warlords_seal",
+		"display_name": "Hundred Banners",
+		"icon": "hundred_banners",
+		"description": "A ring of war banners rises round you, and their war drums beat on your foes.",
+		"labels": {"haste": "Attack speed near them", "banners": "Banners", "pulse_damage": "War drum", "duration": "Duration (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 56.0, "pulse_radius": 84.0, "haste": 0.45, "radius": 130.0, "banners": 4, "duration": 10.0, "cooldown": 7.0,  # TUNING (not in GDD)
+			"pulse_damage": 16.0,  # TUNING (not in GDD) each war drum's beat
+			"pulse_interval": 2.0,  # TUNING (not in GDD) the evolution flag: s between two beats of each banner's drum
 		},
 	},
 }

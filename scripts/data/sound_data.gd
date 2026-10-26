@@ -1101,4 +1101,20 @@ const SHOGUNATE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 330.0, "f1": 300.0, "dur": 0.5, "amp": 0.14, "decay": 0.14},
 			{"wave": "sine", "f0": 760.0, "dur": 0.35, "amp": 0.07, "decay": 0.09},
 			{"wave": "noise", "start": 0.06, "dur": 0.6, "amp": 0.25, "attack": 0.02, "decay": 0.22, "lp0": 1200.0, "lp1": 300.0}]},
+	# --- Act V: Castle Kurogane ---
+	# A cavalry charge (Kiba-musha, the General of the Left): drumming hooves under a rising whinny.
+	"cavalry_charge": {"dur": 0.9, "volume_db": -15.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.45, "decay": 0.03, "lp0": 900.0, "lp1": 300.0},
+			{"wave": "noise", "start": 0.16, "dur": 0.08, "amp": 0.45, "decay": 0.03, "lp0": 900.0, "lp1": 300.0},
+			{"wave": "noise", "start": 0.32, "dur": 0.08, "amp": 0.45, "decay": 0.03, "lp0": 900.0, "lp1": 300.0},
+			{"wave": "noise", "start": 0.48, "dur": 0.08, "amp": 0.45, "decay": 0.03, "lp0": 900.0, "lp1": 300.0},
+			{"wave": "saw", "f0": 520.0, "f1": 760.0, "start": 0.05, "dur": 0.5, "amp": 0.06, "attack": 0.08, "decay": 0.2, "lp0": 2200.0, "vib_hz": 11.0, "vib_depth": 0.05}]},
+	# A regiment breaks (its Hatamoto falls): a banner pole snapping and a low taiko roll fading out.
+	"regiment_break": {"dur": 1.2, "volume_db": -11.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.1, "amp": 0.6, "decay": 0.03, "lp0": 5000.0, "lp1": 1500.0},
+			{"wave": "sine", "f0": 70.0, "f1": 45.0, "start": 0.05, "dur": 0.4, "amp": 0.55, "attack": 0.003, "decay": 0.15},
+			{"wave": "sine", "f0": 66.0, "f1": 42.0, "start": 0.35, "dur": 0.4, "amp": 0.4, "attack": 0.003, "decay": 0.15},
+			{"wave": "sine", "f0": 62.0, "f1": 40.0, "start": 0.65, "dur": 0.5, "amp": 0.28, "attack": 0.003, "decay": 0.18}]},
 }
