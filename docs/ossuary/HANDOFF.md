@@ -132,3 +132,12 @@ clean, `ossuary_check` PASS (168 tiers), seed 7 default identical to before the 
 branch `ossuary/balance`: meta none / max × army / naive × graveyard / harbour / citadel, 8 seeds, + citadel Deathlord;
 `docs/ossuary/BALANCE.md`). Then: merge its data changes, CI on integration, fast-forward main, tell the owner with
 screenshots (`docs/ossuary/shots/*`).
+
+## Act IV merge (Oct 26)
+
+Another session put Act IV live on `main` (f044ab8) while the Ossuary expansion waited on `integration`. Merged main
+into integration (dfa47c5): Act IV's stages now follow the per-act Soul Ash rule (Ilion x1.0, Olympus x1.25,
+Underworld x1.5; GDD §15.0 "Act IV follows the per-act Soul Ash rule"), and Act IV's new summon class, the
+**Myrmidon Shade**, got its Mastery (18 classes, 13,680 in all; `ossuary_check` PASS). Verified: `--import` clean,
+seed 7 default Graveyard, `--stage=ilion --policy=army --mortal` and `--stage=underworld --policy=army` with zero
+errors and `stuck_units=0`. Then CI on integration and fast-forward `main`.

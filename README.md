@@ -1896,9 +1896,9 @@ light above, the set-up of Act IV.
   is a panel script (`scripts/ui/ossuary_<tab>_panel.gd`: a Control with
   `refresh()` and a `changed` signal), loaded by path, so a tab whose panel does not
   exist yet is simply not shown.
-- **Masteries** (Ossuary expansion step 4, GDD §15.0 "Ossuary Masteries"; the Masteries tab): each of the 17 offerable summon classes has a
+- **Masteries** (Ossuary expansion step 4, GDD §15.0 "Ossuary Masteries"; the Masteries tab): each of the 18 offerable summon classes has a
   mastery of 3 levels, **+2% max HP and +2% damage per level** (+4% each before the balance batch, docs/ossuary/BALANCE.md) for that class only (190 / 250 / 320 Soul Ash a class,
-  12,920 in all). It opens once you have taken that class to level 5 in any run (older saves open the classes of the
+  13,680 in all; the Myrmidon Shade joined with Act IV). It opens once you have taken that class to level 5 in any run (older saves open the classes of the
   summon evolutions they already found); until then its tile is dimmed ("Lv 5") and the detail strip says "Take <class>
   to level 5 in a run". An evolved form counts as its base class, the Profane Bishop as the better of Mender and Warder.
   Masteries ride the one summon-stat path (`MetaModifiers.mastery_value()` → `HordeDirector.compute_stats()`), travel in
