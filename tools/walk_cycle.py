@@ -503,11 +503,11 @@ RIGS = {
     # legs); the Onryo glides (the whole ghost bobs 2 px; the still keeps two empty rows on top, no bust: a ghost, not the
     # figure-redesign style); the Oni stomps, his iron kanabo (held low across the front) riding with the body above the hip.
     "shogunate/ashigaru": dict(mode="legs", hip=39, back=(0, 13), front=(13, 22), rigid=[(3, 6, 0, None)], spread=2, lift=2, dip=1),
-    "shogunate/samurai": dict(mode="legs", hip=40, back=(0, 17), front=(17, 32), rigid=[], spread=2, lift=2, dip=1),
+    "shogunate/samurai": dict(mode="legs", hip=40, back=(0, 23), front=(23, 52), rigid=[], spread=2, lift=2, dip=1),
     "shogunate/teppo_gunner": dict(mode="legs", hip=33, back=(0, 32), front=(32, 62), rigid=[], spread=2, lift=2, dip=1),
     "shogunate/ninja": dict(mode="legs", hip=28, back=(0, 18), front=(18, 36), rigid=[], spread=2, lift=2, dip=1),
     "shogunate/onryo": dict(mode="hover", bob=2, parts=[]),
-    "shogunate/oni": dict(mode="legs", hip=66, back=(0, 26), front=(26, 64), rigid=[], spread=3, lift=3, dip=1),
+    "shogunate/oni": dict(mode="legs", hip=61, back=(0, 31), front=(31, 70), rigid=[], spread=3, lift=3, dip=1),
     # --- Act V: the Burning Province ---
     # The Kunoichi strides, a tanto in each hand (the blades riding with the body below the hip), with a bust box and
     # idle breathing (figure-redesign style); the Kappa scuttles, its reaching claw rigid; Shuten-doji stomps, his
@@ -529,8 +529,8 @@ RIGS = {
     "shogunate/kitsune": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(13, 23, 15, 22, 1)),
     "bosses/amaterasu": dict(mode="robe", hip=78, rigid=[], sway=1, dip=1, bust=(36, 52, 34, 45, 1)),
     "player/shrine_maiden": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(17, 27, 17, 25, 1)),
-    "summons/bound_oni": dict(mode="legs", hip=46, back=(0, 18), front=(18, 37), rigid=[(37, 46, 0, None)], spread=2, lift=2, dip=1),
-    "summons/oni_lord": dict(mode="legs", hip=59, back=(0, 32), front=(32, 54), rigid=[(54, 66, 0, None)], spread=2, lift=2, dip=1),
+    "summons/bound_oni": dict(mode="legs", hip=50, back=(0, 26), front=(26, 54), rigid=[], spread=2, lift=2, dip=1),
+    "summons/oni_lord": dict(mode="legs", hip=60, back=(0, 31), front=(31, 68), rigid=[], spread=2, lift=2, dip=1),
     # --- Act V: Castle Kurogane ---
     # The Hatamoto marches under his tall white banner (pole cols 22-28, the whole height, rigid); the Kiba-musha and the
     # General of the Left gallop (the horse's hind legs left, forelegs right; a wide spread and a high lift); Shogun

@@ -933,3 +933,8 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-26 16:13,epilogue/act5_1,gpt-image-2.5-flare,medium,1536x1024,2,879,588,343,0.0194,act5_1.png
 2026-10-26 16:13,epilogue/act5_3,gpt-image-2.5-flare,medium,1536x1024,2,876,588,343,0.0194,act5_3.png
 2026-10-26 16:13,epilogue/act5_2,gpt-image-2.5-flare,medium,1536x1024,2,865,588,343,0.0193,act5_2.png
+2026-10-26 17:54,shogunate/oni,gpt-image-2.5-flare,medium,1024x1024,1,676,1024,439,0.0247,oni_new.png
+2026-10-26 17:55,summons/oni_lord,gpt-image-2.5-flare,medium,1024x1024,1,281,1024,439,0.0228,oni_lord_new.png
+2026-10-26 17:55,summons/bound_oni,gpt-image-2.5-flare,medium,1024x1024,1,710,1024,439,0.0249,bound_oni_new.png
+2026-10-26 17:55,shogunate/samurai,gpt-image-2.5-flare,medium,1024x1024,1,719,1024,439,0.0250,samurai_new.png
+2026-10-26 17:56,summons/bound_oni,gpt-image-2.5-flare,medium,1024x1024,2,818,2048,439,0.0336,bound_oni_new.png

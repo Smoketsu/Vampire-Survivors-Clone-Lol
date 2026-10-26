@@ -2382,11 +2382,11 @@ where Act V units never stand. **For the owner's review.**
 | Key | What it is | Art px | Notes |
 |---|---|---|---|
 | `shogunate/ashigaru` | Ashigaru (fodder, male): jingasa hat, red do over an indigo jacket, a very long yari | 22x46 | legs walk (hip 39; the yari, cols 3-5, rigid). Body ~32 |
-| `shogunate/samurai` | Samurai (soldier, male): black-and-red lacquered o-yoroi, kabuto with a gold crescent crest, hand near the hilt of the katana | 32x56 | legs walk (hip 40). The Draw telegraph is code |
+| `shogunate/samurai` | Samurai (soldier, male): black-and-red lacquered o-yoroi, kabuto with a gold crescent crest, iai stance (crouched forward, right hand gripping the hilt, scabbard angled; art review round 1) | 52x56 | legs walk (hip 40, back 0-23, front 23-52). The Draw telegraph is code |
 | `shogunate/teppo_gunner` | Teppo Gunner (ranged, male): indigo jacket, red lacquer chest plate, a level arquebus, a smouldering match cord | 62x46 | legs walk (hip 33; the gun rides with the body) |
 | `shogunate/ninja` | Ninja (soldier, male): indigo-black hood and face wrap, a crouch, a steel shuriken | 36x40 | legs walk (hip 28) |
 | `shogunate/onryo` | Onryo (night fodder, female ghost): pale white burial kimono, long black hair over the face, reaching arms, a wisp tail | 38x36 | hover (the whole ghost bobs 2 px; two empty rows on top). No bust rig |
-| `shogunate/oni` | Oni (night heavy, male): red-skinned ogre, ivory horns, tiger-skin loincloth, an iron kanabo held low | 64x80 | legs walk (hip 66, spread 3, lift 3; the club rides above the hip) |
+| `shogunate/oni` | Oni (night heavy, male): red-skinned ogre, ivory horns, tiger-skin loincloth, an iron kanabo resting over his shoulder (art review round 1) | 70x80 | legs walk (hip 61, spread 3, lift 3; the club rides with the upper body) |
 | `obstacles/stone_lantern` (+ `_lit`) | A stone toro: base, post, lantern box with a window, wide roof, finial; `_lit` has a warm gold window | 28x40 | no strip; the glow pool is code |
 
 ### Act V: the Burning Province (Stage 13; Act V phase 2, Oct 2026)
@@ -2460,8 +2460,8 @@ Maiden and her Deathlord skin are +0.14 over the darkest floors (0.01 under the 
 | `bosses/amaterasu_mirror` | Her attack pose (BossPoseData 1): the mirror raised high | 88x112 | the beams' windups and her crossings |
 | `player/shrine_maiden` | The Shrine Maiden of Night (female, figure-redesign style): black hair with a moon ornament, a black and violet miko, a gohei, a tiny black sun above her hand | 42x56 | robe walk + bust (cols 17-26, rows 17-24), idle breathing |
 | `player/shrine_maiden_hyper` / `_untouchable` / `_deathlord` | Maiden of the Golden Dawn (white and gold), Untouchable (white phantom, soul-teal), Deathlord (black iron, spiked crown, crimson) | 44x56 / 42x56 / 36x58 | walk + idle through `SKINS` (`SKIN_FIX` bust boxes for the gilded and Deathlord skins) |
-| `summons/bound_oni` | Bound Oni: an ashen oni with ivory horns, soul-teal eyes, bone chains and collar, a spiked kanabo held low | 46x60 | legs walk (the club tip rigid) |
-| `summons/oni_lord` | Oni Lord: bigger, a bone crown between tall horns, broken chains, a kanabo studded with soul-teal iron, a tattered cape | 66x70 | legs walk (the club tip rigid) |
+| `summons/bound_oni` | Bound Oni: an ashen oni with ivory horns, soul-teal eyes, bone chains and collar, the kanabo resting over his shoulder, bold bone-and-iron collar, wrist shackles and big dangling chain links (art review round 1) | 54x60 | legs walk (the club rides with the upper body) |
+| `summons/oni_lord` | Oni Lord: bigger, a bone crown between tall horns, broken chains, a kanabo studded with soul-teal iron resting over his shoulder, a tattered cape | 68x70 | legs walk (the club rides with the upper body) |
 | `icons/black_sun`, `stolen_dawn`, `bound_oni`, `onis_resolve` | Violet badges: a black sun in a violet corona; a gold dawn swallowed by a black crescent, drawn into a bone hand; the bound oni's head; a broken bone chain over a kanabo | 32 | |
 | `icons/eclipse_of_heaven`, `oni_lord`, `ach_the_sun_goes_out` | Gold badges: two black suns in gold coronas; the Oni Lord's crowned head; a red torii before an extinguished sun | 32 | |
 | `tiles/sun_road_torii`, `_forest`, `_steps`, `_heaven` | Packed earth and gravel; dark moss; grey granite step courses (32 px, staggered); pale paving | 128 | `make_tile.py`; petals, ferns, cloud wisps and sunlight specks are code-drawn (`SunRoadGround`) |
