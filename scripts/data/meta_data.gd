@@ -18,7 +18,7 @@
 ## good runs (very roughly 16-27 with weaker runs and Ash Harvest).
 ## Deep levels (Ossuary expansion step 2, GDD §15.0 "Ossuary deep levels"): the 13
 ## upgrades with 3+ levels go up to level 10 (DEEP_UPGRADES). Each new level gives
-## half of the upgrade's per-level value (DEEP_VALUE_SHARE, one override) and costs
+## a share of the upgrade per-level value (DEEP_VALUE_SHARE, one override; 0.5 at first, 0.15 after the balance batch) and costs
 ## x1.10 the level before (DEEP_COST_GROWTH, from the upgrade's last old price,
 ## rounded to 5; DEEP_COST_SCALE scales every new price). The 80 new levels cost
 ## 24,950 in all (levels 6-10 alone, the gated ones, are 65 levels), so
@@ -29,7 +29,7 @@
 ## New options (Ossuary expansion step 3, GDD §15.0 "Ossuary new options and
 ## Dominion"): two sideways upgrades per tree, a third level for Fate's Thread and
 ## Banishing Rite, and the fifth tree, Dominion (run-start privileges, opened by
-## Seraphine's first defeat: TREE_GATES); 9,060 Soul Ash in all (OPTIONS_UPGRADES).
+## Seraphine's first defeat: TREE_GATES); 8,560 Soul Ash in all (9,060 before the balance batch dropped Grave Ward's second level) (OPTIONS_UPGRADES).
 ##
 ## Four upgrade trees (GDD §9.2 table):
 ##   Necromancy  — minion cap, health and damage (+ replacement speed)
@@ -303,11 +303,11 @@ const UPGRADES := {
 		"description": "Cast one more offer into the void: +1 level-up banish per run.",
 		"stat": "banishes", "per_tier": 1.0, "costs": [150, 310, 520], "requires": {"id": "fates_thread", "tier": 1}},  # TUNING (not in GDD) third level: Ossuary expansion step 3
 	# --- Ossuary expansion step 3: new options (sideways, small values; GDD §15.0
-	# "Ossuary new options and Dominion"; 9,060 Soul Ash with the two third levels) ---
+	# "Ossuary new options and Dominion"; 8,560 Soul Ash with the two third levels) ---
 	# Necromancy.
 	"bone_reserve": {"tree": "necromancy", "display_name": "Bone Reserve", "icon": "bone_reserve",
 		"description": "A fallen summon that rises again returns behind a barrier of bone.",
-		"stat": "reserve_barrier", "per_tier": 0.10, "costs": [120, 240, 380], "requires": {}},  # TUNING (not in GDD) barrier = share of the unit's max HP
+		"stat": "reserve_barrier", "per_tier": 0.03, "costs": [120, 240, 380], "requires": {}},  # TUNING (not in GDD) barrier = share of the unit's max HP; was 0.10 per level, trimmed by the balance batch (a Deathlord run absorbed 11,000 damage with it)
 	"commanders_presence": {"tree": "necromancy", "display_name": "Commander's Presence", "icon": "commanders_presence",
 		"description": "Every summon class you command makes all of them strike harder.",
 		"stat": "presence_damage", "per_tier": 0.01, "costs": [130, 260, 410], "requires": {"id": "sharpened_bones", "tier": 2}},  # TUNING (not in GDD) minion damage per distinct class (6 classes at level 3 = +18%)
@@ -321,10 +321,10 @@ const UPGRADES := {
 	# Survival.
 	"last_rites": {"tree": "survival", "display_name": "Last Rites", "icon": "last_rites",
 		"description": "The first time you fall below a quarter of your health, death looks away.",
-		"stat": "last_rites", "per_tier": 1.0, "costs": [150, 290, 450], "requires": {}},  # TUNING (not in GDD) seconds of invulnerability, once a run (LAST_RITES_HP_FRACTION)
+		"stat": "last_rites", "per_tier": 0.5, "costs": [150, 290, 450], "requires": {}},  # TUNING (not in GDD) seconds of invulnerability, once a run (LAST_RITES_HP_FRACTION); 0.5 / 1 / 1.5 s, was 1 / 2 / 3 s (balance batch round 3)
 	"grave_ward": {"tree": "survival", "display_name": "Grave Ward", "icon": "grave_ward",
 		"description": "Begin every run behind a ward that swallows a whole blow.",
-		"stat": "ward_hits", "per_tier": 1.0, "costs": [250, 500], "requires": {"id": "bone_mail", "tier": 1}},  # TUNING (not in GDD) whole hits blocked at the start of a run
+		"stat": "ward_hits", "per_tier": 1.0, "costs": [250], "requires": {"id": "bone_mail", "tier": 1}},  # TUNING (not in GDD) whole hits blocked at the start of a run; one level, was two (balance batch round 3)
 	# Fortune.
 	"gilded_chests": {"tree": "fortune", "display_name": "Gilded Chests", "icon": "gilded_chests",
 		"description": "A chest may weigh two rewards and keep the one nearest its peak.",
@@ -365,7 +365,7 @@ const DEEP_UPGRADES := [
 ]  # GDD §15.0 "Ossuary deep levels"
 ## Share (0..1) of an upgrade's listed per_tier that each new level adds (owner brief:
 ## "about half of today's per-level value").
-const DEEP_VALUE_SHARE: float = 0.5  # TUNING (not in GDD)
+const DEEP_VALUE_SHARE: float = 0.15  # TUNING (not in GDD) was 0.5; trimmed twice by the balance batch (docs/ossuary/BALANCE.md): with everything bought plus Hyper, the full Oath and the Pact fewer than a third of the runs failed
 ## Upgrade id -> stat added per new level, replacing per_tier * DEEP_VALUE_SHARE:
 ##   restless_shade 0.03 (Grave Step cooldown share per level): half (0.05) over seven
 ##   new levels would take the dash from 3.5 s to 1.75 s; at 0.03 level 10 is -51%,
