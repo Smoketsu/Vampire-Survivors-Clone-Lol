@@ -1,0 +1,9 @@
+A sheet of SIX separate pixel-art game OBSTACLE PROPS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Three-quarter top-down view (camera above and in front, like a top-down action game), each prop standing upright on its base, chunky low-resolution pixel art (each prop about 30 pixels wide), crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+From left to right (a Japanese pilgrim road climbing to a sun shrine above the clouds):
+1. A TORII POST: one thick round vermilion-lacquered pillar of a torii gate with a black base ring, standing alone (no crossbeam).
+2. A SACRED CEDAR: the thick trunk of a giant old cedar tree with dark green needle foliage on top, a white shimenawa rope with zigzag paper streamers tied around the trunk.
+3. A MOSS ROCK: a rounded grey boulder covered on top with green moss.
+4. A KOMAINU: a grey stone guardian lion-dog statue sitting on a square stone plinth.
+5. A CLOUD ROCK: a pale grey-white rock peak rising out of a puff of white cloud, a little gold sunlight on its top.
+6. A SUN MIRROR: a round polished bronze-gold mirror on a small black lacquered wooden stand, a white highlight on the mirror.
+Colours: vermilion #6A1418 #B3262B #E2594A; black lacquer #1A0B0C; stone greys #2A2D36 #4A4E5A #7C8290; pale stone #8E8A86 #CFCBC4 #F4F1EA; cedar bark #2A1C12 #5B3D26 #8C6040; dark green #16261A #2C4A30 #4F7A48; gold #8A6A1E #D9A93A #F5D870.

@@ -472,6 +472,29 @@ RECIPES = {
         "layout": {"type": "grid", "step": 64, "joint": 1},
         "regions": {"stone": ["floor_soil", "floor_marble"], "joint": ["bronze_ink"]},
         "cell_shift": True, "cell_l": 0.008, "bevel": 0.008,
+    },    # --- Act V: the Road to the Sun ---
+    # The four zone floors of THE ROAD TO THE SUN (SunRoadGround, tiles/sun_road_<style>): one
+    # API texture of packed brown earth with gravel (the Torii Road; recoloured mossy and dark
+    # for the Sacred Forest) and one of worn grey granite (laid as the Shrine Steps' long step
+    # courses and as the High Plain of Heaven's pale paving). The petals, ferns, cloud wisps and
+    # sunlight specks stay code-drawn (SunRoadGround).
+    "sun_road_torii": {
+        "source": "sun_road_earth.png", "method": "quilt",  # The Torii Road: packed earth and gravel.
+        "colors": ["floor_earth", "floor_dirt", "floor_ash", "floor_stone"],
+    },
+    "sun_road_forest": {
+        "source": "sun_road_earth.png", "method": "quilt",  # The Sacred Forest: moss and cedar needles.
+        "colors": ["floor_soil", "floor_moss", "floor_grass", "floor_earth"],
+    },
+    "sun_road_steps": {
+        "source": "sun_road_stone.png", "method": "layout",  # The Shrine Steps: long step courses.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["floor_slate", "floor_stone"], "joint": ["ink_cold"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "sun_road_heaven": {
+        "source": "sun_road_stone.png", "method": "quilt",  # The High Plain of Heaven: pale paving above the clouds.
+        "colors": ["floor_marble", "floor_slate", "floor_stone"],
     },
 }
 

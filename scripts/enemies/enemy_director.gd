@@ -199,6 +199,10 @@ var citadel: CitadelDirector = null
 ## The Asphodel Underworld's mechanics (Act IV: the River Styx, Cerberus, guest
 ## squads; StageRegistry "underworld"; null on every other stage).
 var underworld: UnderworldDirector = null
+# --- Act V: the Road to the Sun ---
+## The Road to the Sun's mechanics (Act V: the Kirin, guest squads;
+## StageRegistry "sun_road"; null on every other stage).
+var sun_road: SunRoadDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -313,6 +317,12 @@ func _ready() -> void:
 		underworld.game = game
 		underworld.config = stage_def["underworld"]
 		add_child(underworld)
+	# --- Act V: the Road to the Sun ---
+	if not (stage_def.get("sun_road", {}) as Dictionary).is_empty():
+		sun_road = SunRoadDirector.new()
+		sun_road.game = game
+		sun_road.config = stage_def["sun_road"]
+		add_child(sun_road)
 
 
 # =====================================================================================
@@ -416,6 +426,9 @@ func step(delta: float) -> void:
 	# --- Act IV: the Asphodel Underworld ---
 	if underworld != null:
 		underworld.step(delta)
+	# --- Act V: the Road to the Sun ---
+	if sun_road != null:
+		sun_road.step(delta)
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -503,6 +516,9 @@ func objective_text() -> String:
 	# --- Act IV: the Asphodel Underworld ---
 	if underworld != null and underworld.objective_override() != "":
 		return underworld.objective_override()  # Cerberus's heads.
+	# --- Act V: the Road to the Sun ---
+	if sun_road != null and sun_road.objective_override() != "":
+		return sun_road.objective_override()  # The Kirin.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -666,6 +682,12 @@ func _run_event(ev: Dictionary) -> void:
 				game.shogunate.ambush.start_event(ev)  # From the Shadows (it shows the banner when the squad appears).
 			game.stat_add("wave_events", 1.0)
 			return
+		# --- Act V: the Road to the Sun ---
+		"kirin":
+			if sun_road != null:
+				sun_road.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Kirin's event (SunRoadDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

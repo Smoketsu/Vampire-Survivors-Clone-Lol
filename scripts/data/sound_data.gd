@@ -1101,4 +1101,53 @@ const SHOGUNATE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 330.0, "f1": 300.0, "dur": 0.5, "amp": 0.14, "decay": 0.14},
 			{"wave": "sine", "f0": 760.0, "dur": 0.35, "amp": 0.07, "decay": 0.09},
 			{"wave": "noise", "start": 0.06, "dur": 0.6, "amp": 0.25, "attack": 0.02, "decay": 0.22, "lp0": 1200.0, "lp1": 300.0}]},
+	# --- Act V: the Road to the Sun ---
+	# The Kirin's gallop: a rush of hooves on stone and a bright chime.
+	"kirin_gallop": {"dur": 0.7, "volume_db": -12.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.4, "attack": 0.02, "decay": 0.2, "lp0": 1200.0, "lp1": 2600.0},
+			{"wave": "sine", "f0": 90.0, "f1": 60.0, "dur": 0.4, "amp": 0.4, "attack": 0.005, "decay": 0.15},
+			{"wave": "sine", "f0": 1568.0, "start": 0.05, "dur": 0.6, "amp": 0.08, "attack": 0.005, "decay": 0.25}]},
+	# The Horn of Heaven: a pure rising tone and a shimmer of bells.
+	"kirin_horn": {"dur": 1.0, "volume_db": -13.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.02, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 784.0, "f1": 1046.0, "dur": 0.9, "amp": 0.16, "attack": 0.05, "decay": 0.35},
+			{"wave": "sine", "f0": 1568.0, "f1": 2093.0, "start": 0.05, "dur": 0.8, "amp": 0.07, "attack": 0.02, "decay": 0.3},
+			{"wave": "noise", "dur": 0.6, "amp": 0.1, "attack": 0.1, "decay": 0.25, "lp0": 9000.0, "lp1": 5000.0}]},
+	# Amaterasu rises (and crosses the sky): a swelling choir chord in the D in scale.
+	"amaterasu_rise": {"dur": 2.2, "volume_db": -10.0, "max_voices": 1, "min_interval": 1500, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 146.8, "dur": 2.1, "amp": 0.26, "attack": 0.8, "decay": 0.8, "vib_hz": 4.0, "vib_depth": 0.008},
+			{"wave": "sine", "f0": 220.0, "start": 0.2, "dur": 1.9, "amp": 0.18, "attack": 0.7, "decay": 0.7},
+			{"wave": "sine", "f0": 293.7, "start": 0.4, "dur": 1.7, "amp": 0.12, "attack": 0.6, "decay": 0.6},
+			{"wave": "noise", "dur": 2.0, "amp": 0.08, "attack": 0.9, "decay": 0.8, "lp0": 3000.0, "lp1": 7000.0}]},
+	# Her mirror gathers light: a bright rising whine.
+	"sun_charge": {"dur": 0.9, "volume_db": -15.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 660.0, "f1": 1320.0, "dur": 0.85, "amp": 0.12, "attack": 0.4, "decay": 0.2},
+			{"wave": "noise", "dur": 0.8, "amp": 0.1, "attack": 0.4, "decay": 0.2, "lp0": 4000.0, "lp1": 9000.0}]},
+	# A beam of the sun strikes: a searing roar.
+	"sun_beam": {"dur": 0.8, "volume_db": -11.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.7, "amp": 0.45, "attack": 0.01, "decay": 0.3, "lp0": 6000.0, "lp1": 1500.0},
+			{"wave": "saw", "f0": 220.0, "f1": 110.0, "dur": 0.6, "amp": 0.12, "attack": 0.01, "decay": 0.25, "lp0": 1800.0}]},
+	# A sun-disc mine bursts: a bright crack and a hiss.
+	"sun_mine": {"dur": 0.5, "volume_db": -13.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.06, "amp": 0.6, "attack": 0.001, "decay": 0.02, "lp0": 9000.0, "lp1": 4000.0},
+			{"wave": "noise", "start": 0.04, "dur": 0.4, "amp": 0.2, "attack": 0.01, "decay": 0.18, "lp0": 5000.0, "lp1": 2000.0},
+			{"wave": "sine", "f0": 1200.0, "f1": 600.0, "dur": 0.2, "amp": 0.1, "decay": 0.08}]},
+	# The noon glare: a long building white hiss.
+	"noon_glare": {"dur": 1.6, "volume_db": -13.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.0, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 1.5, "amp": 0.3, "attack": 1.0, "decay": 0.3, "lp0": 3000.0, "lp1": 9000.0},
+			{"wave": "sine", "f0": 1046.0, "f1": 1568.0, "dur": 1.4, "amp": 0.06, "attack": 1.0, "decay": 0.3}]},
+	# The sun goes out: a vast falling chord and a final temple bell.
+	"sun_goes_out": {"dur": 3.0, "volume_db": -8.0, "max_voices": 1, "min_interval": 3000, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 293.7, "f1": 73.4, "dur": 2.8, "amp": 0.3, "attack": 0.05, "decay": 1.2},
+			{"wave": "sine", "f0": 440.0, "f1": 110.0, "dur": 2.6, "amp": 0.18, "attack": 0.05, "decay": 1.1},
+			{"wave": "sine", "f0": 36.7, "dur": 2.9, "amp": 0.45, "attack": 0.2, "decay": 1.2},
+			{"wave": "sine", "f0": 220.0, "start": 1.2, "dur": 1.7, "amp": 0.18, "attack": 0.004, "decay": 0.6},
+			{"wave": "sine", "f0": 607.0, "start": 1.2, "dur": 1.4, "amp": 0.08, "attack": 0.004, "decay": 0.4}]},
 }

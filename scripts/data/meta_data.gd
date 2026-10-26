@@ -256,7 +256,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IV: Mount Olympus ---
 	"twilight_of_the_gods",
 	# --- Act IV: the Asphodel Underworld ---
-	"empty_throne"]
+	"empty_throne",
+	# --- Act V: the Road to the Sun ---
+	"the_sun_goes_out"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -368,6 +370,14 @@ const ACHIEVEMENTS := {
 	# closing card "The Sun Still Rises" after it).
 	"empty_throne": {"display_name": "Empty Throne", "description": "Make Hades kneel in the Asphodel Underworld",
 		"stat": "boss_kills", "stage": "underworld", "goal": 1, "unlock": "The Act IV epilogue", "bounty": 400},  # Owner-approved proposal; bounty TUNING (not in GDD) Act IV's last (Nothing Is Deathless 350)
+	# --- Act V: the Road to the Sun ---
+	# The finale of Act V (owner-approved proposal: "The Sun Goes Out (beat
+	# Amaterasu; opens the Act V epilogue)"): Amaterasu beaten on the Road to the
+	# Sun, counted from the stage record. Its epilogue part is
+	# EpilogueData.ACT5_PART (the hook the lead appends to EpilogueData.PARTS at
+	# integration, with the closing card "The Pit Keeps Count" after it).
+	"the_sun_goes_out": {"display_name": "The Sun Goes Out", "description": "Defeat Amaterasu on the Road to the Sun",
+		"stat": "boss_kills", "stage": "sun_road", "goal": 1, "unlock": "The Act V epilogue", "bounty": 450},  # Owner-approved proposal; bounty TUNING (not in GDD) Act V's last (Empty Throne 400)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

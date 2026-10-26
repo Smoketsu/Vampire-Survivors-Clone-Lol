@@ -350,6 +350,9 @@ func _ready() -> void:
 			var sg := ShogunateGround.new()  # Act V placeholder floor (the STAGE's "floor").
 			sg.look = stage_def.get("floor", {})
 			ground = sg
+		# --- Act V: the Road to the Sun ---
+		"sun_road":
+			ground = SunRoadGround.new()  # Act V: the Road to the Sun's four zone floors (SunRoadStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

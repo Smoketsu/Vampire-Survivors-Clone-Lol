@@ -1,0 +1,6 @@
+A sheet of FOUR separate pixel-art game OBSTACLE PROPS on a FULLY TRANSPARENT background (real alpha), with wide empty gaps between them. Three-quarter top-down view (camera above and in front, like a top-down action game), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+Top row, two LONG HORIZONTAL props (each about 70 pixels long and 24 pixels deep):
+1. A STONE MARKER: a long low weathered grey stone slab lying along a Japanese pilgrim road, a carved rope border, a few pink sakura petals at its foot.
+2. A STEP WALL: a long low retaining wall of fitted grey stone blocks edging the shrine steps, moss in its joints.
+Bottom row, the SAME TWO props seen END-ON, standing vertically (each about 24 pixels wide and 70 pixels tall: the same slab and wall rotated to run away from the camera).
+Colours: stone greys #2A2D36 #4A4E5A #7C8290; pale stone #8E8A86 #CFCBC4; moss green #2C4A30 #4F7A48; sakura #E494AC #F9D3DD.

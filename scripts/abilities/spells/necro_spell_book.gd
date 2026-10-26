@@ -37,6 +37,8 @@
 ##   Stolen Thunder   -> StolenThunder    (evolves into Gigantomachy)
 ## and Act IV's (each Act IV stage in its own list with the same hooks):
 ##   River Styx       -> RiverStyx        (evolves into Lethe's Flood; the Asphodel Underworld)
+## and Act V's (each Act V stage in its own list with the same hooks):
+##   Black Sun        -> BlackSun         (evolves into Eclipse of Heaven; the Road to the Sun)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -95,6 +97,10 @@ const OLYMPUS_IDS := ["stolen_thunder"]
 ## The Asphodel Underworld's unlockable spell (Hades' reward): stepped, kill
 ## hooked and after-physics hooked like CITADEL_IDS, reported by UnderworldReport.
 const UNDERWORLD_IDS := ["river_styx"]
+# --- Act V: the Road to the Sun ---
+## The Road to the Sun's unlockable spell (Amaterasu's reward): stepped, kill
+## hooked and after-physics hooked like UNDERWORLD_IDS, reported by SunRoadReport.
+const SUN_ROAD_IDS := ["black_sun"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -125,6 +131,8 @@ const SOURCES := {
 	"stolen_thunder": ["stolen_thunder", "gigantomachy", "thunderclap"],
 	# --- Act IV: the Asphodel Underworld ---
 	"river_styx": ["river_styx", "lethes_flood"],
+	# --- Act V: the Road to the Sun ---
+	"black_sun": ["black_sun", "eclipse_of_heaven", "eclipse_corona"],
 }
 
 ## Owning run.
@@ -166,6 +174,15 @@ func step(delta: float) -> void:
 		node.step(delta, ab.spell_stats(id))
 	# --- Act IV: the Asphodel Underworld ---
 	for id: String in UNDERWORLD_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))
+	# --- Act V: the Road to the Sun ---
+	for id: String in SUN_ROAD_IDS:
 		if ab.spell_level(id) <= 0:
 			continue
 		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
@@ -230,6 +247,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act IV: the Asphodel Underworld ---
 		"river_styx":
 			node = RiverStyx.new()
+		# --- Act V: the Road to the Sun ---
+		"black_sun":
+			node = BlackSun.new()
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -264,6 +284,10 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act IV spell's node, if learned (the Underworld).
 		if node != null:
 			node.on_enemy_killed(e)
+	for id: String in SUN_ROAD_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Road to the Sun).
+		if node != null:
+			node.on_enemy_killed(e)
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
@@ -283,6 +307,10 @@ func after_physics(delta: float) -> void:
 			node.after_physics(delta)
 	for id: String in UNDERWORLD_IDS:
 		var node: NecroSpell = nodes.get(id)  # An Act IV spell's node, if learned (the Underworld).
+		if node != null:
+			node.after_physics(delta)
+	for id: String in SUN_ROAD_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Road to the Sun).
 		if node != null:
 			node.after_physics(delta)
 

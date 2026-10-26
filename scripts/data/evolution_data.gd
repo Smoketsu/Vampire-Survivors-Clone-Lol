@@ -78,7 +78,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IV: Mount Olympus ---
 	"gigantomachy",
 	# --- Act IV: the Asphodel Underworld ---
-	"lethes_flood"]
+	"lethes_flood",
+	# --- Act V: the Road to the Sun ---
+	"eclipse_of_heaven"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -463,6 +465,25 @@ const EVOLUTIONS := {
 			"rivers": 2, "damage": 16.0, "tick": 0.5, "river_slow": 0.45, "slow_duration": 0.8, "length": 280.0, "radius": 24.0,  # TUNING (not in GDD)
 			"duration": 6.5, "cooldown": 4.0, "drain_share": 0.06, "drain_cap": 6.0,  # TUNING (not in GDD)
 			"forget": 1.2,  # TUNING (not in GDD) the evolution flag: s a foe entering a river stands stunned (once per river)
+		},
+	},
+	# --- Act V: the Road to the Sun ---
+	# Eclipse of Heaven (GDD §15.0 "Black Sun, Eclipse of Heaven, Stolen Dawn and
+	# the Shrine Maiden of Night"; owner-approved proposal "Black Sun -> Eclipse
+	# of Heaven (+ Stolen Dawn)"): Black Sun + Stolen Dawn (a NEW passive, owner
+	# rule: at Lv 5). Two dark suns orbit him, their beams longer and harder, and
+	# each beam ends in a CORONA burst (`corona` x the beam's damage to every foe
+	# within BlackSunData.CORONA_RADIUS px of its end). Detected by the "corona" key.
+	"eclipse_of_heaven": {
+		"base": "black_sun",
+		"passive": "stolen_dawn",
+		"display_name": "Eclipse of Heaven",
+		"icon": "eclipse_of_heaven",
+		"description": "Two dark suns eclipse the sky: longer beams that end in a burst of black corona.",
+		"labels": {"damage": "Beam damage", "suns": "Dark suns", "sun_reach": "Beam reach", "corona": "Corona", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"suns": 2, "damage": 26.0, "cooldown": 1.2, "sun_reach": 240.0, "sun_width": 22.0, "group_radius": 72.0,  # TUNING (not in GDD)
+			"corona": 0.5,  # TUNING (not in GDD) the evolution flag: share of the beam's damage its corona deals
 		},
 	},
 }

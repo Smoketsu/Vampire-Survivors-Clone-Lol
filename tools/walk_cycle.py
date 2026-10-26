@@ -507,7 +507,19 @@ RIGS = {
     "shogunate/teppo_gunner": dict(mode="legs", hip=33, back=(0, 32), front=(32, 62), rigid=[], spread=2, lift=2, dip=1),
     "shogunate/ninja": dict(mode="legs", hip=28, back=(0, 18), front=(18, 36), rigid=[], spread=2, lift=2, dip=1),
     "shogunate/onryo": dict(mode="hover", bob=2, parts=[]),
-    "shogunate/oni": dict(mode="legs", hip=66, back=(0, 26), front=(26, 64), rigid=[], spread=3, lift=3, dip=1),
+    "shogunate/oni": dict(mode="legs", hip=66, back=(0, 26), front=(26, 64), rigid=[], spread=3, lift=3, dip=1),    # --- Act V: the Road to the Sun ---
+    # The Sohei strides, the naginata (above the hip) riding with the body; the Kirin lopes on four legs (the hind
+    # pair left, the forelegs right, like Cerberus); the Kitsune (figure redesign: bust bounce, idle breathing)
+    # glides in her kimono; Amaterasu floats, her robe and sashes swaying (bust bounce, the mirror above the hip);
+    # the Shrine Maiden of Night (figure redesign) glides in her hakama, the gohei above the hip; the Bound Oni and
+    # the Oni Lord stomp, the tip of the kanabo (held low across the front) rigid.
+    "shogunate/sohei": dict(mode="legs", hip=41, back=(0, 32), front=(32, 64), rigid=[], spread=2, lift=2, dip=1),
+    "shogunate/kirin": dict(mode="legs", hip=64, back=(0, 63), front=(63, 104), rigid=[], spread=2, lift=2, dip=1),
+    "shogunate/kitsune": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(13, 23, 15, 22, 1)),
+    "bosses/amaterasu": dict(mode="robe", hip=78, rigid=[], sway=1, dip=1, bust=(36, 52, 34, 45, 1)),
+    "player/shrine_maiden": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(17, 27, 17, 25, 1)),
+    "summons/bound_oni": dict(mode="legs", hip=46, back=(0, 18), front=(18, 37), rigid=[(37, 46, 0, None)], spread=2, lift=2, dip=1),
+    "summons/oni_lord": dict(mode="legs", hip=59, back=(0, 32), front=(32, 54), rigid=[(54, 66, 0, None)], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -581,10 +593,16 @@ SKINS = {
     # --- Act IV: the Asphodel Underworld ---
     "player/ferrywoman_hyper": "player/ferrywoman",
     "player/ferrywoman_untouchable": "player/ferrywoman",
-    "player/ferrywoman_deathlord": "player/ferrywoman",
+    "player/ferrywoman_deathlord": "player/ferrywoman",    # --- Act V: the Road to the Sun ---
+    "player/shrine_maiden_hyper": "player/shrine_maiden",
+    "player/shrine_maiden_untouchable": "player/shrine_maiden",
+    "player/shrine_maiden_deathlord": "player/shrine_maiden",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
+    # --- Act V: the Road to the Sun --- (the Shrine Maiden's skins: their own bust boxes)
+    "player/shrine_maiden_hyper": {"bust": (18, 28, 17, 25, 1)},
+    "player/shrine_maiden_deathlord": {"bust": (13, 23, 17, 25, 1)},
     # --- Act IV: the Asphodel Underworld --- (the Ferrywoman's skins: their own oar column and bust box)
     "player/ferrywoman_hyper": {"rigid": [(28, 35, 0, None)], "bust": (17, 26, 17, 24, 2)},
     "player/ferrywoman_untouchable": {"rigid": [(28, 34, 0, None)], "bust": (17, 27, 17, 24, 2)},

@@ -327,6 +327,18 @@ const HEIGHTS: Dictionary = {
 	"shogunate/oni": 80.0,  # TUNING (not in GDD) night heavy tier (60-72 and up): a huge red ogre, the horns and the club
 	"obstacles/stone_lantern": 40.0,  # TUNING (not in GDD) a toro, unlit (an obstacle; the glow pool is drawn by code)
 	"obstacles/stone_lantern_lit": 40.0,  # TUNING (not in GDD) the same toro with a warm lit window
+	# --- Act V: the Road to the Sun ---
+	"shogunate/kitsune": 52.0,  # TUNING (not in GDD) support tier: body ~44, her ears and tails above (the figure redesign)
+	"shogunate/sohei": 56.0,  # TUNING (not in GDD) soldier tier: body ~46, the naginata's blade above
+	"shogunate/kirin": 96.0,  # TUNING (not in GDD) miniboss tier: a tall beast, the horn and mane on top
+	"bosses/amaterasu": 116.0,  # TUNING (not in GDD) boss tier: a goddess, her sun crown and mirror above
+	"bosses/amaterasu_mirror": 112.0,  # TUNING (not in GDD) attack pose (BossPoseData 1): the mirror raised high
+	"player/shrine_maiden": 56.0,  # TUNING (not in GDD) character tier: body ~48, the hair ornament and the gohei above
+	"player/shrine_maiden_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold and white
+	"player/shrine_maiden_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/shrine_maiden_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/bound_oni": 60.0,  # TUNING (not in GDD) a heavy summon (Abomination ~56), the horns and kanabō above
+	"summons/oni_lord": 70.0,  # TUNING (not in GDD) its evolution, bigger
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

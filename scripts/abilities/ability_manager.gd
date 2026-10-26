@@ -246,6 +246,12 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	if out.has("thunder_chains"):
 		out["thunder_chains"] = int(out["thunder_chains"]) + int(passive_value(StolenThunderData.TITANS_BLOOD, StolenThunderData.CHAINS_KEY))
 		out["thunder_charge"] = float(out["thunder_charge"]) * (1.0 - passive_value(StolenThunderData.TITANS_BLOOD, StolenThunderData.CHARGE_KEY))
+	# --- Act V: the Road to the Sun --- Stolen Dawn: Black Sun's beams come sooner and
+	# each volley of them heals (its keys exist only in the Black Sun / Eclipse
+	# of Heaven rows; the passive's values are 0 while it is not owned).
+	if out.has("sun_reach"):
+		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(BlackSunData.STOLEN_DAWN, BlackSunData.HASTE_KEY))
+		out["beam_heal"] = passive_value(BlackSunData.STOLEN_DAWN, BlackSunData.HEAL_KEY)
 	return out
 
 

@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a neutral ready stance.
+
+LOW-RESOLUTION pixel art: the whole figure is only 50 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: THE SHRINE MAIDEN OF NIGHT, a FEMALE dark miko priestess who serves the necromancer, in the game's figure-redesign style: an exaggerated hourglass figure with a full bust and wide hips, a very narrow waist, attractive and confident, FULLY CLOTHED (a little daring is fine, but never nudity and no gap, notch or cut-out that reads as anatomy): long straight black hair with a silver crescent-moon ornament, pale skin, calm violet glowing eyes, a black and deep violet miko outfit (a white kosode under-collar, a black haori with long wide sleeves, a deep violet hakama skirt with a side slit, a red cord bow at the chest), black sandals. In her front (right) hand a GOHEI wand (a wooden stick with zigzag BLACK paper streamers) and above her open left hand a tiny BLACK SUN with a violet corona.
+Signature shape that must read in silhouette: the long black hair, the wide sleeves, the gohei wand.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: black and violet cloth #1C0F2B (outline) #3B1F5C #6B39A6 #A35CFA; white collar #8E8A86 #CFCBC4 #F4F1EA; hair black #14161C #2A2D36; skin #A79A80 #CFC7AE #EDE6D0; red cord #6A1418 #B3262B; wood #5B3D26 #8C6040; moon silver #8E9AA8 #C4CCD8.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a sprite of this game in the same figure style: match its pixel size, outline weight and flat look exactly (not its subject or colours).

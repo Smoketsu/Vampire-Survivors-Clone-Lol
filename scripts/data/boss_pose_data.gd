@@ -35,4 +35,6 @@ const POSES: Dictionary = {
 	"bosses/zeus": {1: "cast"},  # TUNING (not in GDD) the thunderbolt raised to call a storm or the beam (BossZeus; his true form is its own still, bosses/zeus_colossus)
 	# --- Act IV: the Asphodel Underworld ---
 	"bosses/hades": {1: "bident"},  # TUNING (not in GDD) the bident swept forward (BossHades: the sweep's windup and the phase changes)
+	# --- Act V: the Road to the Sun ---
+	"bosses/amaterasu": {1: "mirror"},  # TUNING (not in GDD) the mirror raised to the sky (BossAmaterasu: her beams' windups and her crossings)
 }

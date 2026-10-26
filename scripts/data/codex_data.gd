@@ -54,7 +54,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act III: the Iron Citadel --- (a silhouette naming its unlock until met)
 		"iron_revenant",
 		# --- Act IV: the Asphodel Underworld --- (a silhouette naming its unlock until met)
-		"myrmidon_shade"]
+		"myrmidon_shade",
+		# --- Act V: the Road to the Sun --- (a silhouette naming its unlock until met)
+		"bound_oni"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -152,9 +154,13 @@ const PANTHEON_BOSSES: Array[String] = ["achilles", "zeus", "hades"]
 ## champions (the night heavy that is also the Endless Night's kind, and phase
 ## 2's minibosses) and its stage bosses (StageRegistry.BOSS_ARRIVALS ids). Each
 ## Act V stage adds its own as it is built (phase 2).
-const SHOGUNATE_SOLDIERS: Array[String] = ["ashigaru", "samurai", "teppo_gunner", "ninja", "onryo"]
+const SHOGUNATE_SOLDIERS: Array[String] = ["ashigaru", "samurai", "teppo_gunner", "ninja", "onryo",
+	# --- Act V: the Road to the Sun ---
+	"sohei", "kitsune"]
 ## Shogunate champions (minibosses) and the Act V Reckoning kinds.
-const SHOGUNATE_CHAMPIONS: Array[String] = ["oni"]
+const SHOGUNATE_CHAMPIONS: Array[String] = ["oni",
+	# --- Act V: the Road to the Sun ---
+	"kirin"]
 ## Shogunate stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const SHOGUNATE_BOSSES: Array[String] = ["kage", "shogun", "amaterasu"]
 
@@ -283,6 +289,10 @@ const DESCRIPTIONS: Dictionary = {
 	"kage": "Mistress of the Hidden Hand, the ninja grandmaster: shadow clones, smoke and chained kunai.",  # Owner-approved Act V proposal
 	"shogun": "Shogun Kurogane: his army is his strength. Break his regiments and he draws his own blade.",  # Owner-approved Act V proposal
 	"amaterasu": "The sun goddess herself. Her place in the sky is the battle; when she falls, the sun goes out.",  # Owner-approved Act V proposal
+	# --- Act V: the Road to the Sun ---
+	"sohei": "Warrior monks of the sun's shrines. The naginata sweeps a wide arc: step out of it.",  # TUNING (not in GDD)
+	"kitsune": "Fox spirits of the night. Their fox-fire copies draw your dead's blows; light or area damage reveals them.",  # Owner-approved Act V proposal
+	"kirin": "A holy beast of light that walks the road to the sun. Its gallop and its horn's rays burn the dead.",  # Owner-approved Act V proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -470,6 +480,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"twilight_of_the_gods": "ach_twilight_of_the_gods",  # TUNING (not in GDD)
 	# --- Act IV: the Asphodel Underworld ---
 	"empty_throne": "ach_empty_throne",  # TUNING (not in GDD)
+	# --- Act V: the Road to the Sun ---
+	"the_sun_goes_out": "ach_the_sun_goes_out",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -501,6 +513,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"twilight_of_the_gods": "grounded_bones",
 	# --- Act IV: the Asphodel Underworld ---
 	"empty_throne": "river_styx",
+	# --- Act V: the Road to the Sun ---
+	"the_sun_goes_out": "black_sun",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)
