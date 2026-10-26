@@ -1745,6 +1745,40 @@ the **Teppo Gunner** (arquebus volleys on a shared 6 s beat, then a long reload 
 through walls and the ring) and the **Oni** (a heavy whose iron kanabō stuns summons; flat armour; the Endless
 Night's kind). The Codex has a **Shogunate** tab.
 
+### Stage 14: Castle Kurogane (Act V)
+
+<!-- --- Act V: Castle Kurogane --- -->
+The Shogun's fortress (GDD §15.0 "Castle Kurogane (Act V phase 2)"; still "Coming soon" until the lead's merge).
+Four zones on the clock: **the Outer Bailey** (trampled earth, outer walls, pines and garden rocks), **the
+Gatehouse** (granite paving among stone walls and timber gate fences), **the Courtyards** (raked gravel, pines,
+stone lanterns, sake barrels) and **the Keep** (dark floorboards, taiko drums). The Sun's Course, the Draw and
+the ambushes run as on every Act V stage.
+
+- **Its kinds.** The **Hatamoto** is an elite banner guard under a tall war banner: the soldiers near him fight
+  harder and move faster while he stands; kill the banner. The **Kiba-musha** is mounted samurai cavalry: it
+  reins in, a lane shows on the ground, then it gallops down it, striking you once and throwing your summons aside.
+- **The General of the Left** (miniboss, 9:00 left): a samurai general on a black war horse who charges straight
+  through your ring on a long telegraphed lane, calls three riders after his charges, and below 40% charges twice
+  in a row. His chest drops when he falls.
+- **Shogun Kurogane** (3:00 left): **his army is his health bar.** He stands on his command platform out of reach,
+  signalling with his war fan, while six regiments (600 soldiers) march one after another, each under its own
+  banner colour and with its own order: a spear wall (white), an arquebus line (indigo), a cavalry charge
+  (crimson), a ninja ambush out of the shadows (black), a samurai duel squad that draws (gold) and the night host
+  of oni and vengeful dead (sakura). His bar is the soldiers he has left: every Shogunate kill takes a point off,
+  and killing a regiment's **Hatamoto breaks it**: the rest flee and count as lost. At 10% he draws his blade
+  and comes down with six samurai of his honour guard for the **duel**: the rest of the bar is now his own life,
+  and he fights with **iai cuts**, white lines flashed from him through you and on past you, faster as his guard
+  falls; below a third of his life comes his last move, the **triple cut**: three lines at once crossing on you.
+- **Rewards.** Slaying him unlocks the spell **Banner of the Dead** (a war banner planted where you stand: the
+  planting strikes nearby foes and your summons near it attack faster; it evolves into **Hundred Banners**, a ring
+  of banners whose war drums beat on your foes, with the new passive **Warlord's Seal**: your summons near you
+  attack faster) and so its character, the **Ronin Revenant** (innate Unbowed Banner: his banners quicken the
+  dead even more; Hyper, Untouchable and Deathlord skins). The achievement **Regiments Broken** (slay the Shogun
+  after breaking all six banners) unlocks **Unbending** (the Draw's cuts hit your summons for less; offered only
+  in Act V).
+- **Autotest:** `--stage=kurogane`, `--boss=shogun`, `--spells=banner_of_the_dead`, `--passives=unbending`,
+  `--character=ronin_revenant`, `--spawn=hatamoto@T`, `kiba_musha@T`, `general_left@T`.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2288,6 +2322,10 @@ scripts/
     underworld_ground.gd    The Asphodel Underworld's four zone floors and the River Styx (Act IV)
     underworld_glyphs.gd    Its obstacles, Cerberus, Hades and his marks, the Styx (code fallbacks; Act IV)
     underworld_report.gd    The autotest's Underworld lines (the stage, Cerberus, Hades, River Styx, the Myrmidons)
+    kurogane_ground.gd      Castle Kurogane's four zone floors (bailey, gatehouse, courtyard, keep; Act V)
+    kurogane_glyphs.gd      Code fallbacks of its obstacles, the Shogun and his command platform (Act V)
+    kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
+                            the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
     assembly_glyphs.gd      The Assembly Halls' code drawings: belts, furnace channels, jam fields, arcs, flames,
                             build frames, stamps, claws, the magnet, puppets on soul strings, fallback obstacles
@@ -2460,6 +2498,12 @@ scripts/
                             after a smoke puff, longer in light; the "ambush" event and segment trickle
       shogunate_kit.gd      Base kit: the row flags (night, draws, ambusher, ethereal), start_draw(), light()
       ashigaru_kit.gd, samurai_kit.gd, teppo_kit.gd, ninja_kit.gd, onryo_kit.gd, oni_kit.gd   The shared kinds
+      kurogane_director.gd  Castle Kurogane: the General of the Left, the HUD objective of the Shogun's army
+      hatamoto_kit.gd, kiba_kit.gd, general_kit.gd   Hatamoto (banner colour), Kiba-musha (charging lane),
+                            the General of the Left (miniboss: charges through the ring, his riders)
+      boss_shogun.gd        Shogun Kurogane: the command platform (untargetable), his bar = his army, the duel
+                            (iai cuts and the triple cut through DrawCuts' boss override)
+      shogun_regiments.gd   His six regiments: the one count of soldiers left, the march, batches, breaks
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -2717,6 +2761,9 @@ scripts/
     stages/sun_road_stage.gd       Reckoning, placeholder floors / obstacles / boss scripts, zone names
     hades_data.gd           Hades' arrival, fight, god-shade list (GOD_SHADES) and ending (Act IV)
     river_styx_data.gd      River Styx / Lethe's Flood rules, Ferryman's Toll keys, the Ferrywoman's innate (Act IV)
+    kurogane_enemy_data.gd  Castle Kurogane's kinds: Hatamoto, Kiba-musha, the General of the Left (Act V)
+    shogun_data.gd          Shogun Kurogane: arrival, fight, the six REGIMENTS and the march (Act V)
+    banner_data.gd          Banner of the Dead / Hundred Banners rules, Warlord's Seal and the Ronin's keys (Act V)
     stages/ilion_stage.gd          Act IV stubs: the Shores of Ilion, Mount Olympus and the Asphodel Underworld;
     stages/olympus_stage.gd        act 4, "pantheon": true, their wrath kind, the Twilight of the Gods
     stages/underworld_stage.gd     Reckoning, placeholder floors / obstacles / timelines / boss scripts, zone names
@@ -2916,6 +2963,7 @@ Options (after `--`):
 | (the Shores of Ilion) | `--stage=ilion` adds `ilion` (siege towers rolled / destroyed and when / reached the walls / rolling, garrison spilled and marched out, Polyphemus, objective Soul Ash), `ilion kinds` (testudo shots and boulders cut, wolf packs, packmates, lunges and hits, cyclops throws, boulders and hits; also wherever an Ilion kind was forced, e.g. `--spawn=legionary@60x6,wolf_of_rome@90,cyclops@120x2,siege_tower@150,polyphemus@180`), `polyphemus` and `achilles` (front / flank / back / heel / undirected hits, staggers, lunges, the Myrmidon guard, the rage, killed from behind; also `--boss=achilles`). On any stage, `act IV spell` (Paris's Arrow when learned, e.g. `--spells=paris_arrow`) and `act IV passives` (Mortal Heel, Bronze Breaker, e.g. `--passives=bronze_breaker`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). Mount Olympus (built) adds `olympus` and `olympus events` (each god's arrival and fall, the groves, the trial), `pantheon trial` (Ares's war-cries, enemies buffed, charges, impalings; Artemis's volleys, hounds, teleports; Poseidon's floods, tridents, serpents), `olympus kinds` (centaurs, Amazon leaps and catches, Gorgon gazes and summons petrified, sea serpent lunges), `wrath called` (the gods' DivineWrath.strike() calls) and `zeus` (storms, beams, the Storm Throne and true form times, stomps); the gods and kinds can be forced anywhere (`--spawn=ares@60,artemis@90,poseidon@120,gorgon@30x2`), and on every stage `stolen thunder` / `grounded bones` print when used (`--character=oathbreaker`, `--passives=grounded_bones`). |
 | (Act V) | `--stage=province\|kurogane\|sun_road` (the Act V stubs) prints `sun's course` (when day, dusk, night and the Endless Night began; stone lanterns lit; ambushes revealed in light; night groups held back by day and night kinds activated by day, both 0 on a stub; Reckoning enemies quickened), `the draw` (lines drawn and on you, cuts, refused at the cap, cancelled by a slain drawer, most at once; bodies cut: you and each summon class; damage to summons and to you; dodged by the bot), `from the shadows` (squads and units, appeared, capped, inside the Bone Ring, obstacle shadow spots, revealed in light, the average warning), `shogunate kinds` (spawned / killed, first appearance and damage per kind; samurai draws, teppo shots, ninja shuriken, oni smashes and summons stunned) and `shogunate stage`. The Draw and kind lines also print on any stage where a Shogunate kind was forced (the Sun's Course stays day there): `--spawn=samurai@60x6,ninja@90x4,oni@120,onryo@30x10`; `--boss=kage\|shogun\|amaterasu` (placeholder boss scripts until phase 2). |
+| (Castle Kurogane) | `--stage=kurogane` adds `kurogane` (the General of the Left's arrival and fall), `kurogane kinds` (Hatamoto spawned and killed, aura pulses, Kiba-musha charges and their hits; also wherever a Kurogane kind was forced, e.g. `--spawn=hatamoto@60,kiba_musha@90x4,general_left@120`), `general of the left` (charges and hits, riders called, rage, kill time) and `shogun` (the bar, each regiment's order and fate, soldiers sent / killed / fled / lost, other kills taken off the bar, banners broken, when he came down, his guard, iai and triple cuts, Regiments Broken; also `--boss=shogun`). On any stage, `act V spell` (Banner of the Dead when learned, e.g. `--spells=banner_of_the_dead`) and `act V passives` (Warlord's Seal, Unbending, e.g. `--passives=unbending`). |
 | (Assembly Halls) | `--stage=assembly` adds `assembly` (fabricators destroyed / placed / planned and when, soldiers built and capped, the wave and trickle thinning, Cold Assembly, the Beta Build, objective Soul Ash), `assembly floor` (seconds carried by belts for you / summons / enemies, furnace flares, furnace hits and damage per side), `assembly events`, `assembly kinds` (Arc Engineer repairs and jams, Juggernaut flames and flat armour, the Beta Build's swipes, rivets, patching and kill time) and `motherboard` (grabs, hurls, stamps, magnet pulls, turret builds, turrets and their shots, when Full Load and Overclock began, its damage). Reward lines print when owned: `hollow puppet` (`--spells=hollow_puppet`), `class grave_drone` (`--classes=grave_drone`), `signal ghost` (`--passives=signal_ghost`) and `marionette` (`--character=marionette`). `--spawn=arc_engineer@60x4,juggernaut@120x2,beta_build@180` works on any stage. |
 | (the Iron Citadel) | `--stage=citadel` adds `citadel` (gates raised / broken / locked down, garrison spawns, wall pushes, laser cycles and their hits on you, summons and enemies, citadel gun salvos, strikes and hits, turrets placed / destroyed / left behind, guests, objective Soul Ash), `citadel events`, `citadel kinds` (Duelist lunges: blocked / reached you / summons sliced; turret bursts; Valkyrie 2.0: spawned, killed and time to kill, dashes (blocked, hit you), bashes, storms, summon hits) and, when it fought, `deus ex machina` (phase times, plates broken, chaingun / salvo / footfall / stomp counts and hits, drones launched and downed, exposures, lances and their blocked ticks, hangars, pulses, teleports, machines gone dark, damage to you by attack). On every stage, `scrap swarm` (level, damage, kills, bolts, kill drones, peak drones, orbit radius; Machine Soul's bonus damage) and `iron revenant` (level, damage by source, bursts, shells, salvos, missiles; Recoil Frame) print only when used. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |

@@ -61,10 +61,10 @@ const SPECIALS := ["regiment", "fan", "iai", "triple"]
 ## The Shogun's design row.
 const BOSS := {
 	"display_name": "Shogun Kurogane",
-	"max_hp": 6500.0,  # TUNING (not in GDD) his own life in the duel, x the stage HP multiplier (10,400 on Kurogane); the regiments are the rest of the fight
+	"max_hp": 5500.0,  # TUNING (not in GDD) his own life in the duel, x the stage HP multiplier (8,800 on Kurogane); the regiments are the rest of the fight (first pass 6500 came down too late to finish; 4500 fell in 16 s)
 	"move_speed": 56.0,  # TUNING (not in GDD) px/s in the duel
-	"damage": 16.0,  # TUNING (not in GDD) a blade cut in reach
-	"attack_interval": 1.1,  # TUNING (not in GDD) s
+	"damage": 9.0,  # TUNING (not in GDD) a blade cut in reach (first pass 16: his melee after a cut killed the army bot; his iai cuts are his damage)
+	"attack_interval": 1.4,  # TUNING (not in GDD) s
 	"attack_range": 16.0,  # TUNING (not in GDD) px
 	"radius": 18.0,  # TUNING (not in GDD) px
 	"armor": 0.25,  # TUNING (not in GDD) black lacquer and gold
@@ -103,7 +103,7 @@ const BOSS := {
 	"cut_flash_fast": 0.45,  # TUNING (not in GDD) s once his guard has fallen ("faster as his guard falls")
 	"cut_dmg_player": 18.0,  # TUNING (not in GDD) before the time scaling (the Draw 13)
 	"cut_dmg_summon": 22.0,  # TUNING (not in GDD) before the time scaling (the Draw 24; first pass 30: his cuts took ~36 summons in a 60 s duel)
-	"cut_dash": 0.7,  # TUNING (not in GDD) share of the line he dashes along
+	"cut_dash": 1.0,  # TUNING (not in GDD) share of the line he dashes along: the whole line, he ends cut_length px past the necromancer (first pass 0.7 left him in reach)
 	"triple_hp": 0.35,  # TUNING (not in GDD) share of his own life below which the triple cut comes ("his last move")
 	"triple_every": 4.2,  # TUNING (not in GDD) s
 	"triple_length": 380.0,  # TUNING (not in GDD) px of each of the three lines (centred on the necromancer)
@@ -133,24 +133,24 @@ const BOSS := {
 ##   elites      — elites in each batch (the duel squad's drawing samurai).
 const REGIMENTS := [
 	{"name": "The White Regiment: a spear wall advances!", "order": "spear_wall", "color": Color(1.0, 1.0, 1.0),  # TUNING (not in GDD)
-		"size": 130, "kinds": {"ashigaru": 1.0}, "batch": 12, "every": 2.4, "field": 34, "elites": 0},
+		"size": 130, "kinds": {"ashigaru": 1.0}, "batch": 12, "every": 1.6, "field": 34, "elites": 0},
 	{"name": "The Indigo Regiment: an arquebus line! Rush the reload!", "order": "arquebus", "color": Color(0.55, 0.65, 1.0),  # TUNING (not in GDD)
-		"size": 100, "kinds": {"teppo_gunner": 0.7, "ashigaru": 0.3}, "batch": 8, "every": 2.6, "field": 24, "elites": 0},
+		"size": 100, "kinds": {"teppo_gunner": 0.7, "ashigaru": 0.3}, "batch": 8, "every": 1.7, "field": 24, "elites": 0},
 	{"name": "The Crimson Regiment: the cavalry charges!", "order": "cavalry", "color": Color(1.0, 0.45, 0.42),  # TUNING (not in GDD)
-		"size": 90, "kinds": {"kiba_musha": 1.0}, "batch": 5, "every": 2.8, "field": 16, "elites": 0},
+		"size": 90, "kinds": {"kiba_musha": 1.0}, "batch": 5, "every": 1.8, "field": 16, "elites": 0},
 	{"name": "The Black Regiment: ninja in the shadows!", "order": "ambush", "color": Color(0.5, 0.5, 0.58),  # TUNING (not in GDD)
-		"size": 90, "kinds": {"ninja": 1.0}, "batch": 4, "every": 2.6, "field": 16, "elites": 0},
+		"size": 90, "kinds": {"ninja": 1.0}, "batch": 4, "every": 1.7, "field": 16, "elites": 0},
 	{"name": "The Gold Regiment: a samurai duel squad draws!", "order": "duel", "color": Color(1.0, 0.85, 0.4),  # TUNING (not in GDD)
-		"size": 90, "kinds": {"samurai": 1.0}, "batch": 5, "every": 2.8, "field": 16, "elites": 1},
+		"size": 90, "kinds": {"samurai": 1.0}, "batch": 5, "every": 1.8, "field": 16, "elites": 1},
 	{"name": "The Sakura Regiment: the night host rises to his banner!", "order": "night_host", "color": Color(1.0, 0.68, 0.8),  # TUNING (not in GDD)
-		"size": 100, "kinds": {"onryo": 0.82, "oni": 0.18}, "batch": 8, "every": 2.6, "field": 24, "elites": 0},
+		"size": 100, "kinds": {"onryo": 0.82, "oni": 0.18}, "batch": 8, "every": 1.7, "field": 24, "elites": 0},
 ]
 ## Seconds after his arrival the first regiment marches.
 const FIRST_MARCH: float = 3.0  # TUNING (not in GDD)
 ## Seconds between two regiments' march (a later one waits at most this long).
-const MARCH_EVERY: float = 22.0  # TUNING (not in GDD) six regiments in about two minutes: the duel fits the 3:00 window
+const MARCH_EVERY: float = 15.0  # TUNING (not in GDD) six regiments in about 80 s (first pass 22 with MAX_ACTIVE 2: he came down at 1:51 left, too late for the duel)
 ## Most regiments on the field at once (the next waits for one to break or be spent).
-const MAX_ACTIVE: int = 2  # TUNING (not in GDD)
+const MAX_ACTIVE: int = 3  # TUNING (not in GDD) first pass 2
 ## px from the necromancer a regiment's line forms (on the spawn ring when larger).
 const MARCH_DISTANCE: float = 0.0  # TUNING (not in GDD) 0 = the spawn ring
 ## px between two soldiers of a regiment's line.

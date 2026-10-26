@@ -111,7 +111,7 @@ const ENEMIES := {
 		"charge_telegraph": 0.7,  # TUNING (not in GDD) s
 		"charge_speed": 420.0,  # TUNING (not in GDD) px/s
 		"charge_damage_player": 9.0,  # TUNING (not in GDD) before the time scaling
-		"charge_damage_summon": 12.0,  # TUNING (not in GDD) before the time scaling
+		"charge_damage_summon": 9.0,  # TUNING (not in GDD) before the time scaling (first pass 12: the charges struck 1,213 summons on the seed 7 run)
 		"charge_push": 26.0,  # TUNING (not in GDD) px
 		"charge_recover": 0.5,  # TUNING (not in GDD) s
 	},
@@ -158,7 +158,7 @@ const ENEMIES := {
 		"charge_telegraph": 0.9,  # TUNING (not in GDD) s
 		"charge_speed": 560.0,  # TUNING (not in GDD) px/s
 		"charge_damage_player": 16.0,  # TUNING (not in GDD) before the time scaling
-		"charge_damage_summon": 20.0,  # TUNING (not in GDD) before the time scaling
+		"charge_damage_summon": 15.0,  # TUNING (not in GDD) before the time scaling (first pass 20)
 		"charge_push": 40.0,  # TUNING (not in GDD) px
 		"charge_recover": 0.7,  # TUNING (not in GDD) s
 		"riders_every": 18.0,  # TUNING (not in GDD) s between two calls of his riders
