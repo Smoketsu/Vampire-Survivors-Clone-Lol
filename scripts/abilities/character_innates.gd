@@ -59,6 +59,9 @@
 ## Act IV, the Asphodel Underworld:
 ##   Ferrywoman       Ferry of Souls  in RiverStyx.on_enemy_killed() (a foe slain
 ##                    in her river rises as a temporary Risen); stat ferry_risen.
+## Act V, the Road to the Sun:
+##   Shrine Maiden    Night Prayer    in BlackSun._fire() (each dark sun fires a
+##                    second beam at another group); stat black_sun_forks.
 class_name CharacterInnates
 extends Node2D
 
@@ -380,6 +383,9 @@ func summary_line() -> String:
 		# --- Act V: the Burning Province --- (Many Faces lives in HundredShadows._split())
 		"many_faces":
 			counters = "extra clones %d (splits %d, echoes %d)" % [int(st.get("kunoichi_extra_clones", 0.0)), int(st.get("shadow_splits", 0.0)), int(st.get("shadow_echoes", 0.0))]
+		# --- Act V: the Road to the Sun --- (Night Prayer lives in BlackSun._fire())
+		"night_prayer":
+			counters = "second beams %d (dmg as black_sun / eclipse_of_heaven)" % int(st.get("black_sun_forks", 0.0))
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

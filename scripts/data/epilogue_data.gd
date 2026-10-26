@@ -124,6 +124,34 @@ const ACT4_PART := {
 		["epilogue/act4_4", Vector2(0.5, 0.0), Vector2(0.5, 1.0)],  # TUNING (not in GDD) the empty marble thrones of Olympus, down to the army and the necromancer
 	],
 }
+# --- Act V: the Road to the Sun ---
+## HOOK for the Act V part of the epilogue (owner-approved proposal: "Act V's
+## epilogue part is The Sun Goes Out"; "The Sun Goes Out (beat Amaterasu; opens
+## the Act V epilogue)"). The Road to the Sun's agent leaves it OUT of PARTS:
+## the lead makes its panels at integration (tools/epilogue_panel.py,
+## art_source/epilogue/act5_<n>), fills `panels` (one per line), then appends
+## this row to PARTS after ACT4_PART, so the epilogue screen, the main menu's
+## Epilogue button (any_open()) and the autoplay-once flow pick it up with no
+## other change; the closing card "The Pit Keeps Count" (CLOSINGS, after
+## "act5") then follows it. `achievement` is MetaData "the_sun_goes_out"
+## (Amaterasu beaten on the Road to the Sun); its Meta flag will be [epilogue]
+## seen_act5. The text follows the proposal's story (with Olympus fallen, one
+## day was left for the dead to fear; the Shogun's armies sailed to burn the
+## night out; the Province burned, the castle fell, the sun goddess fell, and
+## the sun went out).
+const ACT5_PART := {
+	"id": "act5",  # TUNING (not in GDD)
+	"achievement": "the_sun_goes_out",
+	"act": "Act V: The Shogunate of the Rising Sun",
+	"heading": "The Sun Goes Out",  # Owner-approved proposal
+	"lines": [
+		"With Olympus fallen there was only one day left for the dead to fear. Across the eastern sea a Shogun ruled in the sun goddess's name, and she had seen the night spreading west.",  # Owner-approved proposal story
+		"His armies sailed to burn it out. The dead met them in the burning rice fields, and the ninja of the Hidden Hand could not hide from them in any shadow.",  # Owner-approved proposal story (TUNING the words)
+		"Castle Kurogane fell regiment by regiment, until the Shogun came down from his platform and drew his own blade, and was cut down by the night.",  # Owner-approved proposal story (TUNING the words)
+		"On the road above the clouds the sun goddess crossed the sky one last time. When she fell, the sun went out. There will be no dawn again: only the night, and the dead who walk in it.",  # Owner-approved proposal ending
+	],
+	"panels": [],  # The lead fills the four panels at integration (see above).
+}
 ## The closing cards, one per act, in reading order (owner: "tie everything
 ## together nicely"; docs/act4/PROPOSAL.md "Closing cards"; GDD §15.0 "Closing
 ## cards, one per act"). Each names the next enemy without showing it, and
@@ -166,6 +194,17 @@ const CLOSINGS := [
 		"line": "Olympus is silent and Hades kneels. Only one light still burns against the dead: across the eastern sea, a goddess opens her eyes.",  # Owner-approved proposal
 		"tag": "To be continued.",  # TUNING (not in GDD)
 		"panel": ["epilogue/close_act4", Vector2(0.0, 0.8), Vector2(1.0, 0.1)],  # TUNING (not in GDD) from the ruined throne across the dark sea to the torii and the opening eyes
+	},	# --- Act V: the Road to the Sun ---
+	# The card after Act V sets up Act VI, the Inferno. It shows once the Act V
+	# part (ACT5_PART, appended to PARTS by the lead) is open; its panel
+	# "epilogue/close_act5" is made by the lead at integration.
+	{
+		"after": "act5",  # TUNING (not in GDD) follows the Act V part ("The Sun Goes Out")
+		"act": "Far below",  # TUNING (not in GDD)
+		"heading": "The Pit Keeps Count",  # Owner-approved proposal (docs/act5/PROPOSAL.md)
+		"line": "The sun is out, and the night has no end. Far below, the souls owed to the Pit have stopped arriving, and something down there has started counting.",  # Owner-approved proposal
+		"tag": "To be continued.",  # TUNING (not in GDD)
+		"panel": ["epilogue/close_act5", Vector2(0.5, 0.0), Vector2(0.5, 1.0)],  # TUNING (not in GDD) the lead's panel: from the dark sky down into the Pit (pan to adjust with the art)
 	},
 ]
 ## Line shown in place of a part that is still sealed.

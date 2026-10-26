@@ -191,6 +191,9 @@ const CLASSES := {
 	# --- Act IV: the Asphodel Underworld ---
 	"myrmidon_shade": {"trigger": "attack", "every": 3, "pattern": "fan", "counts": [3, 5], "spread": 20.0, "speed": 360.0,
 		"life": 0.4, "share": 0.35, "pierce": 1, "radius": 4.0, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) a fan of bone spear-points thrown past the wall
+	# --- Act V: the Road to the Sun ---
+	"bound_oni": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [6, 9], "speed": 260.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) shards of stone thrown up by the kanabō
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -236,6 +239,9 @@ const EVOLVED := {
 	# --- Act IV: the Asphodel Underworld ---
 	"legion_of_tartarus": {"trigger": "attack", "every": 3, "pattern": "fan", "counts": [7], "spread": 44.0, "speed": 380.0,
 		"life": 0.45, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "shard", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a wide fan of soul-lit spear-points from the wall
+	# --- Act V: the Road to the Sun ---
+	"oni_lord": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [14], "speed": 300.0,
+		"life": 0.55, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "shard", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) the quake's ring of soul-lit stone
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -301,6 +307,9 @@ const SPELLS := {
 	# --- Act V: the Burning Province ---
 	"hundred_shadows": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 8], "spread": 50.0, "speed": 420.0,
 		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "dagger", "color": Color(0.45, 0.32, 0.78)},  # TUNING (not in GDD) a fan of shadow kunai with every other split
+	# --- Act V: the Road to the Sun ---
+	"black_sun": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 7], "spread": 30.0, "speed": 260.0,
+		"life": 0.7, "share": 0.4, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) embers of the dark sun flung after every third volley of beams
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

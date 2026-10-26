@@ -143,6 +143,16 @@ const UNLOCKS := {
 	"hundred_shadows": {"type": "spell", "boss": "kage", "text": "Slay Kage in the Burning Province to unlock."},  # Owner-approved Act V proposal
 	"hidden_hand": {"type": "passive", "boss": "kage", "text": "Slay Kage in the Burning Province to unlock."},  # Hundred Shadows' paired passive, unlocked with it
 	"paper_lanterns": {"type": "passive", "achievement": "no_shadow_unlit", "text": "Earn No Shadow Unlit: light 20 stone lanterns in one Burning Province run and slay Kage."},  # Owner-approved Act V proposal
+	# --- Act V: the Road to the Sun ---
+	# Amaterasu's fall (owner-approved Act V proposal "Rewards": Black Sun is
+	# unlocked by Amaterasu; the finale grants the Oni): the spell with its paired
+	# passive, and the summon class with its paired passive, offered on every
+	# stage (no card-row "act" key). The Sun Goes Out achievement opens the Act V
+	# epilogue part (EpilogueData.ACT5_PART), not an unlock row.
+	"black_sun": {"type": "spell", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Owner-approved proposal
+	"stolen_dawn": {"type": "passive", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Black Sun's paired passive, unlocked with it
+	"bound_oni": {"type": "class", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Owner-approved proposal: the finale's reward
+	"onis_resolve": {"type": "passive", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Its paired passive (own decision), unlocked with it
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

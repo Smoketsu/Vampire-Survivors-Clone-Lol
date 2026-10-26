@@ -1,0 +1,2 @@
+Seamless top-down GROUND TEXTURE for a dark 2D pixel-art game: the packed earth of an old Japanese pilgrim road seen straight from above, brown earth with scattered small pale gravel stones and a few shallow ruts, very flat even lighting, no objects, no plants, no shadows of objects. Chunky pixel art at about 160 pixels across, crisp square pixels, flat colours, no gradients, no vignette, no text. Fully opaque, filling the whole image edge to edge.
+Colours: dark earth browns #1E1915 #2A231D #33291F #3A3027 with a few lighter gravel flecks #4A443C.

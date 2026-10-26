@@ -843,6 +843,13 @@ func hit_mult() -> float:
 ## (MarchEnemyData.PROJECTILE_SOURCES). A Soul Nova ignores both. Graveyard
 ## kinds have neither, so this is exactly 1 for them.
 func damage_taken_mult(source: String) -> float:
+	# --- Act V: the Road to the Sun --- a kit's own share of the hit (the
+	# Kitsune's fox-fire illusions take none: CovenantKit.taken_mult(); exactly
+	# 1 for every other kit, so nothing changes elsewhere).
+	if kit != null:
+		var km := kit.taken_mult(self, source)  # The kit's share (1 = no change).
+		if km != 1.0:
+			return km
 	if source == "nova":
 		return 1.0
 	var m := buff_taken if buff_time > 0.0 else 1.0  # Aura buff.

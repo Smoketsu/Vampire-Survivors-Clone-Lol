@@ -82,7 +82,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act IV: the Asphodel Underworld ---
 	"river_styx",
 	# --- Act V: the Burning Province ---
-	"hundred_shadows"]
+	"hundred_shadows",
+	# --- Act V: the Road to the Sun ---
+	"black_sun"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -566,6 +568,31 @@ const SPELLS := {
 			{"damage": 21.0, "clones": 2, "cooldown": 5.0, "life": 4.5, "echo_share": 0.6, "range": 320.0},  # TUNING (not in GDD)
 			{"damage": 25.0, "clones": 3, "cooldown": 4.8, "life": 4.5, "echo_share": 0.6, "range": 330.0},  # TUNING (not in GDD)
 			{"damage": 30.0, "clones": 3, "cooldown": 4.5, "life": 5.0, "echo_share": 0.7, "range": 340.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act V: the Road to the Sun ---
+	# Black Sun (GDD §15.0 "Black Sun, Eclipse of Heaven, Stolen Dawn and the
+	# Shrine Maiden of Night"; owner-approved proposal: "a dark sun orbits the
+	# necromancer and fires a short beam at the nearest group"; unlocked by
+	# defeating Amaterasu, UnlockData): `suns` dark sun(s) orbit him
+	# (BlackSunData.ORBIT_RADIUS px); every `cooldown` s each fires a beam
+	# `sun_reach` px long and `sun_width` px wide at the nearest group of foes
+	# (the nearest foe within BlackSunData.AIM_RANGE and the foes within
+	# `group_radius` px of it), hitting every foe on it for `damage`. Logic:
+	# BlackSun; fixed rules: BlackSunData. (Its own keys, not the Death Ray's
+	# beam_length / beam_width: Conductive Marrow stays the Death Ray's.)
+	"black_sun": {
+		"display_name": "Black Sun",
+		"icon": "black_sun",
+		"description": "A dark sun orbits you and burns a short beam through the nearest group of foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Beam damage", "sun_reach": "Beam reach", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"suns": 1, "damage": 12.0, "cooldown": 1.8, "sun_reach": 160.0, "sun_width": 14.0, "group_radius": 60.0},  # TUNING (not in GDD)
+			{"suns": 1, "damage": 15.0, "cooldown": 1.7, "sun_reach": 170.0, "sun_width": 15.0, "group_radius": 60.0},  # TUNING (not in GDD)
+			{"suns": 1, "damage": 17.0, "cooldown": 1.55, "sun_reach": 180.0, "sun_width": 16.0, "group_radius": 64.0},  # TUNING (not in GDD)
+			{"suns": 1, "damage": 20.0, "cooldown": 1.45, "sun_reach": 190.0, "sun_width": 17.0, "group_radius": 64.0},  # TUNING (not in GDD)
+			{"suns": 1, "damage": 23.0, "cooldown": 1.3, "sun_reach": 200.0, "sun_width": 18.0, "group_radius": 68.0},  # TUNING (not in GDD)
 		],
 	},
 }

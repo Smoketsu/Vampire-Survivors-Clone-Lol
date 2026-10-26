@@ -18,9 +18,11 @@
 ##                      its first appearance, and the kits' counters
 ##   shogunate stage:   the Act V stage itself (stub status, boss, Soul Ash,
 ##                      the Reckoning)
-## Phase 2 adds one line per stage system here (each stage in its own block).
+## Phase 2 adds one line per stage system here (each stage in its own block):
 ##   Act V, the Burning Province: ProvinceReport.print_lines() (province,
 ##   province kinds, shuten-doji, kage).
+##   the Road to the Sun: SunRoadReport.stage_lines() (the director, its events,
+##                      its kinds, Amaterasu and her sky).
 ## Read-only: it never changes the run.
 class_name ShogunateReport
 extends RefCounted
@@ -59,6 +61,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not sh.sun.endless.is_empty())])
 	# --- Act V: the Burning Province ---
 	ProvinceReport.print_lines(game, st)  # The paddies, the fires, the stage's kinds, Shuten-doji, Kage (each when it ran).
+	# --- Act V: the Road to the Sun ---
+	SunRoadReport.stage_lines(game, st)
 
 
 ## The "sun's course" line (SunCourse).

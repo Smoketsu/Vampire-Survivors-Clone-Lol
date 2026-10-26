@@ -814,6 +814,12 @@ func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) 
 ## `source` tags the stats. Returns the seconds applied (0 = immune). Stats:
 ## summon_stuns, summon_stunned_seconds, summon_stuns_<source>.
 func stun_unit(u: SummonedUnit, duration: float, source: String) -> float:
+	# --- Act V: the Road to the Sun --- Oni's Resolve: the summon's own necromancer's
+	# passive shortens every stun on it (0 while not owned: nothing changes).
+	var resolve := _onis_resolve(u)  # Share of the stun shrugged off (0..1).
+	if resolve > 0.0 and duration > 0.0:
+		game.stat_add("onis_resolve_seconds", duration * resolve)
+		duration *= 1.0 - resolve
 	if duration <= 0.0 or not u.stun(game.elapsed + duration):
 		return 0.0
 	game.stat_add("summon_stuns", 1.0)
@@ -837,6 +843,19 @@ func blind_unit(u: SummonedUnit, duration: float, source: String) -> float:
 	game.stat_add("summon_blinded_seconds", duration)
 	game.stat_add("summon_blinds_" + source, 1.0)
 	return duration
+
+
+## Oni's Resolve (PassiveData "onis_resolve"): the share (0..1) of a stun summon
+## `u` shrugs off, read from its own necromancer's build (co-op: the slot whose
+## army it is, like DrawCuts.unbending_mult()); 0 while not owned.
+func _onis_resolve(u: SummonedUnit) -> float:
+	var ab := game.abilities  # The bound player's passives.
+	if game.coop != null and u != null:
+		for s in game.coop.slots:
+			if s.horde == u.director:
+				ab = s.abilities
+				break
+	return clampf(ab.passive_value(OniBehavior.RESOLVE, OniBehavior.RESOLVE_KEY), 0.0, 0.9)
 
 
 ## Death of an enemy: cosmetic pop, XP crystal, kill counter, power-up drop

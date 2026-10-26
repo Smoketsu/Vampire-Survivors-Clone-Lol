@@ -88,6 +88,8 @@ const HYPER_NAMES := {
 	"ferrywoman": "Golden Ferrywoman",  # TUNING (not in GDD)
 	# --- Act V: the Burning Province ---
 	"grave_kunoichi": "Gilded Kunoichi",  # TUNING (not in GDD)
+	# --- Act V: the Road to the Sun ---
+	"shrine_maiden": "Maiden of the Golden Dawn",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -124,6 +126,8 @@ const HYPER_TINTS := {
 	"ferrywoman": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 	# --- Act V: the Burning Province ---
 	"grave_kunoichi": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
+	# --- Act V: the Road to the Sun ---
+	"shrine_maiden": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD

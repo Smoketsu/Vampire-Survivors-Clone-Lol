@@ -353,6 +353,9 @@ func _ready() -> void:
 		# --- Act V: the Burning Province ---
 		"province":
 			ground = ProvinceGround.new()  # Act V: the Burning Province's four zone floors and the paddy water (ProvinceStage.ZONES).
+		# --- Act V: the Road to the Sun ---
+		"sun_road":
+			ground = SunRoadGround.new()  # Act V: the Road to the Sun's four zone floors (SunRoadStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

@@ -54,7 +54,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act III: the Iron Citadel --- (a silhouette naming its unlock until met)
 		"iron_revenant",
 		# --- Act IV: the Asphodel Underworld --- (a silhouette naming its unlock until met)
-		"myrmidon_shade"]
+		"myrmidon_shade",
+		# --- Act V: the Road to the Sun --- (a silhouette naming its unlock until met)
+		"bound_oni"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -154,11 +156,15 @@ const PANTHEON_BOSSES: Array[String] = ["achilles", "zeus", "hades"]
 ## Act V stage adds its own as it is built (phase 2).
 const SHOGUNATE_SOLDIERS: Array[String] = ["ashigaru", "samurai", "teppo_gunner", "ninja", "onryo",
 	# --- Act V: the Burning Province ---
-	"kunoichi", "kappa"]
+	"kunoichi", "kappa",
+	# --- Act V: the Road to the Sun ---
+	"sohei", "kitsune"]
 ## Shogunate champions (minibosses) and the Act V Reckoning kinds.
 const SHOGUNATE_CHAMPIONS: Array[String] = ["oni",
 	# --- Act V: the Burning Province ---
-	"shuten_doji"]
+	"shuten_doji",
+	# --- Act V: the Road to the Sun ---
+	"kirin"]
 ## Shogunate stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const SHOGUNATE_BOSSES: Array[String] = ["kage", "shogun", "amaterasu"]
 
@@ -291,6 +297,10 @@ const DESCRIPTIONS: Dictionary = {
 	"kunoichi": "Ninja elites out of the shadows. Their smoke bombs blind your dead; then they lunge at you.",  # Owner-approved Act V proposal
 	"kappa": "River imps of the paddies that walk at night. The water never slows them, and they grab your dead.",  # Owner-approved Act V brief
 	"shuten_doji": "The Oni King, drunk and enormous. His sake barrels burst into fire where they land.",  # Owner-approved Act V proposal
+	# --- Act V: the Road to the Sun ---
+	"sohei": "Warrior monks of the sun's shrines. The naginata sweeps a wide arc: step out of it.",  # TUNING (not in GDD)
+	"kitsune": "Fox spirits of the night. Their fox-fire copies draw your dead's blows; light or area damage reveals them.",  # Owner-approved Act V proposal
+	"kirin": "A holy beast of light that walks the road to the sun. Its gallop and its horn's rays burn the dead.",  # Owner-approved Act V proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -480,6 +490,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"empty_throne": "ach_empty_throne",  # TUNING (not in GDD)
 	# --- Act V: the Burning Province ---
 	"no_shadow_unlit": "ach_no_shadow_unlit",  # TUNING (not in GDD)
+	# --- Act V: the Road to the Sun ---
+	"the_sun_goes_out": "ach_the_sun_goes_out",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -513,6 +525,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"empty_throne": "river_styx",
 	# --- Act V: the Burning Province ---
 	"no_shadow_unlit": "paper_lanterns",
+	# --- Act V: the Road to the Sun ---
+	"the_sun_goes_out": "black_sun",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

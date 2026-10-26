@@ -258,7 +258,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IV: the Asphodel Underworld ---
 	"empty_throne",
 	# --- Act V: the Burning Province ---
-	"no_shadow_unlit"]
+	"no_shadow_unlit",
+	# --- Act V: the Road to the Sun ---
+	"the_sun_goes_out"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -380,6 +382,14 @@ const ACHIEVEMENTS := {
 	# counter-passive Paper Lanterns.
 	"no_shadow_unlit": {"display_name": "No Shadow Unlit", "description": "Light 20 stone lanterns in one Burning Province run and slay Kage",
 		"stat": "province_unlit_runs", "goal": 1, "unlock": "The Paper Lanterns passive", "bounty": 250},  # Owner-approved Act V proposal; bounty TUNING (not in GDD) as Heel Found
+	# --- Act V: the Road to the Sun ---
+	# The finale of Act V (owner-approved proposal: "The Sun Goes Out (beat
+	# Amaterasu; opens the Act V epilogue)"): Amaterasu beaten on the Road to the
+	# Sun, counted from the stage record. Its epilogue part is
+	# EpilogueData.ACT5_PART (the hook the lead appends to EpilogueData.PARTS at
+	# integration, with the closing card "The Pit Keeps Count" after it).
+	"the_sun_goes_out": {"display_name": "The Sun Goes Out", "description": "Defeat Amaterasu on the Road to the Sun",
+		"stat": "boss_kills", "stage": "sun_road", "goal": 1, "unlock": "The Act V epilogue", "bounty": 450},  # Owner-approved proposal; bounty TUNING (not in GDD) Act V's last (Empty Throne 400)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

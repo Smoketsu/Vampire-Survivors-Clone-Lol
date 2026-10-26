@@ -167,7 +167,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IV: the Asphodel Underworld ---
 	"ferrymans_toll", "myrmidon_oath",
 	# --- Act V: the Burning Province ---
-	"hidden_hand", "paper_lanterns"]
+	"hidden_hand", "paper_lanterns",
+	# --- Act V: the Road to the Sun ---
+	"stolen_dawn", "onis_resolve"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -189,7 +191,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IV: the Shores of Ilion ---
 	"bronze_breaker",
 	# --- Act IV: the Asphodel Underworld ---
-	"myrmidon_oath"]
+	"myrmidon_oath",
+	# --- Act V: the Road to the Sun ---
+	"onis_resolve"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -251,7 +255,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Act III: the Iron Citadel --- (the Deus Revenant's missiles; the Rust Prophet's Risen scrap bolts)
 	"deus_revenant_missile", "scrap_bolt",
 	# --- Act IV: the Asphodel Underworld --- (the Myrmidon Shades' spear through a second foe)
-	"myrmidon_pierce"]
+	"myrmidon_pierce",
+	# --- Act V: the Road to the Sun --- (the Bound Oni's kanabō smash and the Oni Lord's quake)
+	"oni_kanabo", "oni_quake"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -290,6 +296,15 @@ const AREA_HOLY_SOURCES := {
 	"beta_swipe": "area",  # TUNING (not in GDD) the Beta Build's weld swipe.
 	"motherboard_stamp": "area",  # TUNING (not in GDD) the Motherboard's press-stamps.
 	"motherboard_hurl": "area",  # TUNING (not in GDD) a hurled summon landing.
+	# --- Act V: the Road to the Sun ---
+	"sohei_sweep": "area",  # TUNING (not in GDD) a Sōhei's naginata sweep.
+	"kirin_horn": "holy",  # TUNING (not in GDD) the Kirin's Horn of Heaven rays.
+	"kirin_halo": "holy",  # TUNING (not in GDD) the Kirin's halo.
+	"amaterasu_mirror": "holy",  # TUNING (not in GDD) Amaterasu's mirror beams.
+	"amaterasu_mine": "area",  # TUNING (not in GDD) her sun-disc mines.
+	"amaterasu_zenith": "holy",  # TUNING (not in GDD) her noon beams on marked circles.
+	"amaterasu_glare": "holy",  # TUNING (not in GDD) the noon glare.
+	"amaterasu_sunset": "holy",  # TUNING (not in GDD) the setting-sun beam.
 }
 ## Bone Plating: a plated hit always keeps at least this fraction (0..1) of
 ## its damage, so the flat reduction never makes a summon immune to the
@@ -1163,6 +1178,48 @@ const PASSIVES := {
 			{"light_radius": 0.45},  # TUNING (not in GDD)
 			{"light_radius": 0.60},  # TUNING (not in GDD)
 			{"light_radius": 0.75},  # TUNING (not in GDD) 150 px -> 262 px
+		],
+	},
+	# --- Act V: the Road to the Sun ---
+	# Stolen Dawn (own decision: Eclipse of Heaven's paired passive, its rule;
+	# GDD §15.0 "Black Sun, Eclipse of Heaven, Stolen Dawn and the Shrine Maiden of
+	# Night"; unlocked by defeating Amaterasu, UnlockData): the dawn you stole
+	# feeds the dark sun: Black Sun's beams come beam_haste sooner and every
+	# volley of beams that strikes heals the necromancer beam_heal HP
+	# (AbilityManager.apply_spell_mods() on the Black Sun rows' own keys, like
+	# Titan's Blood; BlackSun heals). Pairs with Black Sun -> Eclipse of Heaven.
+	"stolen_dawn": {
+		"display_name": "Stolen Dawn",
+		"icon": "stolen_dawn",
+		"description": "The dawn you stole feeds your dark sun: its beams come sooner and mend you.",
+		"labels": {"beam_haste": ["Black Sun cooldown", "neg_pct"], "beam_heal": ["Heal per beam volley", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"beam_haste": 0.04, "beam_heal": 0.3},  # TUNING (not in GDD)
+			{"beam_haste": 0.08, "beam_heal": 0.6},  # TUNING (not in GDD)
+			{"beam_haste": 0.12, "beam_heal": 0.9},  # TUNING (not in GDD)
+			{"beam_haste": 0.16, "beam_heal": 1.2},  # TUNING (not in GDD)
+			{"beam_haste": 0.20, "beam_heal": 1.5},  # TUNING (not in GDD)
+		],
+	},
+	# Oni's Resolve (own decision: the Oni Lord's paired passive, its name and
+	# rule; GDD §15.0 "The Bound Oni, the Oni Lord and Oni's Resolve"; unlocked by
+	# defeating Amaterasu): bound demons cannot be held: every stun on your
+	# summons (CombatResolver.stun_unit(), the one summon stun path: an oni's
+	# kanabō, a Gorgon's gaze, a Draw...) lasts stun_resist shorter. Works the
+	# same on every stage. Pairs with the Bound Oni -> the Oni Lord.
+	"onis_resolve": {
+		"display_name": "Oni's Resolve",
+		"icon": "onis_resolve",
+		"description": "Your dead have a demon's will: stuns on them wear off sooner.",
+		"labels": {"stun_resist": ["Summon stun time", "neg_pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"stun_resist": 0.10},  # TUNING (not in GDD)
+			{"stun_resist": 0.20},  # TUNING (not in GDD)
+			{"stun_resist": 0.30},  # TUNING (not in GDD)
+			{"stun_resist": 0.40},  # TUNING (not in GDD)
+			{"stun_resist": 0.50},  # TUNING (not in GDD)
 		],
 	},
 }

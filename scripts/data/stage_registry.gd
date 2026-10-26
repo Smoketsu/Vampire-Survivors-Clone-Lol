@@ -149,6 +149,11 @@
 ##                        event, night only), No Shadow Unlit); ground
 ##                        "province" is its ProvinceGround (four zone floors and
 ##                        the paddy water).
+## --- Act V: the Road to the Sun ---
+##   sun_road           — SunRoadDirector config (SunRoadStage.SUN_ROAD, Act V,
+##                        the Road to the Sun: the Kirin's "kirin" event, guest
+##                        squads of the other Act V stages' kinds); ground
+##                        "sun_road" is its SunRoadGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

@@ -214,6 +214,10 @@ var province: ProvinceDirector = null
 ## The Province kinds' world hazards (fire patches, smoke clouds;
 ## ProvinceHazards), created on first use (province_hazards()); null until then.
 var province_haz: ProvinceHazards = null
+# --- Act V: the Road to the Sun ---
+## The Road to the Sun's mechanics (Act V: the Kirin, guest squads;
+## StageRegistry "sun_road"; null on every other stage).
+var sun_road: SunRoadDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -334,6 +338,12 @@ func _ready() -> void:
 		province.game = game
 		province.config = stage_def["province"]
 		add_child(province)
+	# --- Act V: the Road to the Sun ---
+	if not (stage_def.get("sun_road", {}) as Dictionary).is_empty():
+		sun_road = SunRoadDirector.new()
+		sun_road.game = game
+		sun_road.config = stage_def["sun_road"]
+		add_child(sun_road)
 
 
 # =====================================================================================
@@ -442,6 +452,9 @@ func step(delta: float) -> void:
 		province.step(delta)  # The paddies, the village fires, Shuten-dōji.
 	if province_haz != null:
 		province_haz.step(delta)  # Fire patches and smoke clouds of the Province kinds.
+	# --- Act V: the Road to the Sun ---
+	if sun_road != null:
+		sun_road.step(delta)
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -544,6 +557,9 @@ func objective_text() -> String:
 	# --- Act V: the Burning Province ---
 	if province != null and province.objective_override() != "":
 		return province.objective_override()  # Shuten-dōji.
+	# --- Act V: the Road to the Sun ---
+	if sun_road != null and sun_road.objective_override() != "":
+		return sun_road.objective_override()  # The Kirin.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -713,6 +729,12 @@ func _run_event(ev: Dictionary) -> void:
 				province.start_event(ev)  # Night only: it waits for the night.
 			game.stat_add("wave_events", 1.0)
 			return
+		# --- Act V: the Road to the Sun ---
+		"kirin":
+			if sun_road != null:
+				sun_road.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Kirin's event (SunRoadDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

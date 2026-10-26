@@ -40,6 +40,15 @@
 ## the dark are dimmed, never hidden. Nothing is drawn headless.
 ## Inert off Act V: `enabled` is false unless the STAGE has "shogunate": phase()
 ## is DAY, light_at() is 1 and nothing draws.
+## --- Act V: the Road to the Sun --- THE SKY OVERRIDE (the one entry a boss
+## that changes the sky uses; Amaterasu, BossAmaterasu): set_override(opts)
+## puts the sky under her (opts: phase, ambient, dusk, tint, tint_alpha,
+## shadow_dir; each change blends over SUN blend s from what shows now) and
+## clear_override() hands it back to the clock (blending back the same way).
+## phase(), ambient() and so light_at(), the darkness and the dusk wash all
+## read it, so there is no second lighting path. The Endless Night outranks
+## it: from 0:00 on a stage with one, the override is ignored. Changes it
+## causes show no phase banner (the boss shows her own).
 class_name SunCourse
 extends Node2D
 
@@ -77,6 +86,22 @@ var lit: Dictionary = {}
 var ever_lit: Dictionary = {}
 ## Game time (s) of the next lantern scan.
 var _scan_at: float = 0.0
+# --- Act V: the Road to the Sun (the sky override) ---
+## The sky override now ({} = none; see set_override()): phase (Phase),
+## ambient (0..1), dusk (0..1, the wash and the long shadows), tint (Color of
+## the wash), tint_alpha (0..1 at dusk 1), shadow_dir (unit Vector2), plus the
+## blend bookkeeping t0 (game time s the last change began) and from_ambient /
+## from_dusk (what showed then).
+var override: Dictionary = {}
+## Game time (s) the override was cleared (-1 = never): the sky blends back
+## to the clock's from release_ambient / release_dusk over SUN blend s.
+var _release_t: float = -1.0
+## Ambient light (0..1) showing when the override was cleared.
+var _release_ambient: float = 1.0
+## Dusk wash amount (0..1) showing when the override was cleared.
+var _release_dusk: float = 0.0
+## True while a phase change the override caused is being entered (no banner).
+var _quiet: bool = false
 ## Game time (s) of the next arena redraw while a phase blends (the long shadows).
 var _shadow_redraw_at: float = 0.0
 ## Cached timeline weights: the segment dictionary they were built from.
@@ -150,6 +175,8 @@ func phase_at(t: float) -> int:
 		return ShogunateRulesData.Phase.DAY
 	if t >= WaveData.RUN_DURATION and not endless.is_empty():
 		return ShogunateRulesData.Phase.ENDLESS_NIGHT
+	if _ov_active():
+		return int(override["phase"])  # Act V, the Road to the Sun: the sky is the boss's.
 	if t >= float(cfg["night_at"]):
 		return ShogunateRulesData.Phase.NIGHT
 	if t >= float(cfg["dusk_at"]):
@@ -176,6 +203,15 @@ func _blend(start: float) -> float:
 func ambient() -> float:
 	if not enabled:
 		return 1.0
+	if _ov_active():
+		return lerpf(float(override["from_ambient"]), float(override["ambient"]), _blend(float(override["t0"])))
+	if _release_t >= 0.0 and game.elapsed - _release_t < float(cfg["blend"]):
+		return lerpf(_release_ambient, _clock_ambient(), _blend(_release_t))
+	return _clock_ambient()
+
+
+## The clock's ambient light now (0..1), without the sky override.
+func _clock_ambient() -> float:
 	var t := game.elapsed
 	var day := float(cfg["ambient_day"])
 	var dusk := float(cfg["ambient_dusk"])
@@ -191,6 +227,15 @@ func ambient() -> float:
 func dusk_amount() -> float:
 	if not enabled:
 		return 0.0
+	if _ov_active():
+		return lerpf(float(override["from_dusk"]), float(override["dusk"]), _blend(float(override["t0"])))
+	if _release_t >= 0.0 and game.elapsed - _release_t < float(cfg["blend"]):
+		return lerpf(_release_dusk, _clock_dusk(), _blend(_release_t))
+	return _clock_dusk()
+
+
+## The clock's dusk wash amount now (0..1), without the sky override.
+func _clock_dusk() -> float:
 	var t := game.elapsed
 	if t < float(cfg["dusk_at"]):
 		return 0.0
@@ -226,6 +271,74 @@ func endless_speed_mult() -> float:
 	if endless.is_empty() or game.elapsed < WaveData.RUN_DURATION:
 		return 1.0
 	return minf(float(endless["max_speed_mult"]), 1.0 + float(endless["speed_per_min"]) * _minutes_past())
+
+
+# =====================================================================================
+# The sky override (Act V, the Road to the Sun: Amaterasu)
+# =====================================================================================
+
+## True while the sky override rules the sky (set, and not outranked by the
+## Endless Night).
+func _ov_active() -> bool:
+	if override.is_empty():
+		return false
+	return endless.is_empty() or game.elapsed < WaveData.RUN_DURATION
+
+
+## THE SKY OVERRIDE: a boss that changes the sky (Amaterasu) takes it with
+## `opts` (any of: phase (ShogunateRulesData.Phase, the time of day every
+## system reads), ambient (0..1), dusk (0..1: the wash and the long shadows),
+## tint (Color of the wash), tint_alpha (0..1 at dusk 1), shadow_dir (unit
+## Vector2, the way the shadows fall)); keys left out keep their current
+## override value (or the clock's). Every call blends from what shows now over
+## SUN blend s. No phase banner shows for the changes it causes. Inert off Act V.
+func set_override(opts: Dictionary) -> void:
+	if not enabled:
+		return
+	var amb := ambient()  # What shows now (the blend start).
+	var dk := dusk_amount()
+	var ov := override.duplicate()
+	if ov.is_empty():
+		ov = {"phase": phase(), "ambient": amb, "dusk": dk, "tint": cfg["dusk_tint"],
+			"tint_alpha": float(cfg["dusk_tint_alpha"]), "shadow_dir": cfg["sun_dir"]}
+	for key: String in opts:
+		ov[key] = opts[key]
+	ov["t0"] = game.elapsed
+	ov["from_ambient"] = amb
+	ov["from_dusk"] = dk
+	override = ov
+	_release_t = -1.0
+	game.stat_add("sun_overrides", 1.0)
+	game.arena.queue_redraw()  # The shadows follow (drawing only).
+
+
+## Hands the sky back to the clock (the override's boss fell): it blends back
+## from what shows now over SUN blend s; the phase change it causes shows no
+## banner (the boss shows its own).
+func clear_override() -> void:
+	if override.is_empty():
+		return
+	_release_ambient = ambient()
+	_release_dusk = dusk_amount()
+	_release_t = game.elapsed
+	override = {}
+	game.arena.queue_redraw()
+
+
+## Colour of the dusk wash now (the override's tint while it rules the sky).
+func tint_color() -> Color:
+	return override["tint"] if _ov_active() else cfg["dusk_tint"]
+
+
+## Alpha (0..1) of the dusk wash at dusk 1 now (the override's while it rules).
+func tint_alpha() -> float:
+	return float(override["tint_alpha"]) if _ov_active() else float(cfg["dusk_tint_alpha"])
+
+
+## Unit direction the obstacles' shadows fall now (SUN sun_dir, or the
+## override's: away from where its sun stands).
+func shadow_dir() -> Vector2:
+	return override["shadow_dir"] if _ov_active() else cfg["sun_dir"]
 
 
 # =====================================================================================
@@ -354,7 +467,9 @@ func step(_delta: float) -> void:
 		return
 	var ph := phase()
 	if ph != current:
+		_quiet = _ov_active() or (_release_t >= 0.0 and game.elapsed - _release_t < 0.5)  # The sky override's own change: no banner.
 		_enter_phase(ph)
+		_quiet = false
 	var t := game.elapsed
 	if ph >= ShogunateRulesData.Phase.NIGHT and t >= _scan_at:
 		_scan_at = t + float(cfg["scan_every"])
@@ -362,7 +477,9 @@ func step(_delta: float) -> void:
 	# While a phase blends, redraw the arena now and then so the long dusk
 	# shadows grow and fade (drawing only).
 	var blending := (t >= float(cfg["dusk_at"]) and t <= float(cfg["dusk_at"]) + float(cfg["blend"]) + 0.5) \
-			or (t >= float(cfg["night_at"]) and t <= float(cfg["night_at"]) + float(cfg["blend"]) + 0.5)
+			or (t >= float(cfg["night_at"]) and t <= float(cfg["night_at"]) + float(cfg["blend"]) + 0.5) \
+			or (not override.is_empty() and t <= float(override["t0"]) + float(cfg["blend"]) + 0.5) \
+			or (_release_t >= 0.0 and t <= _release_t + float(cfg["blend"]) + 0.5)  # Act V, the Road to the Sun: the sky override blends.
 	if blending and t >= _shadow_redraw_at:
 		_shadow_redraw_at = t + 0.5
 		game.arena.queue_redraw()
@@ -371,16 +488,17 @@ func step(_delta: float) -> void:
 ## Phase `ph` begins: the record, the banner and the sound.
 func _enter_phase(ph: int) -> void:
 	current = ph
-	phase_started[ph] = game.elapsed
+	if not phase_started.has(ph):
+		phase_started[ph] = game.elapsed  # The first time (the sky override may bring a phase back).
 	game.stat_add("sun_phase_" + String(ShogunateRulesData.PHASE_NAMES[ph]).replace(" ", "_"), 1.0)
 	match ph:
 		ShogunateRulesData.Phase.DUSK:
-			if game.elapsed > 0.5:
+			if game.elapsed > 0.5 and not _quiet:
 				game.enemies.show_banner(String(cfg.get("dusk_banner", ShogunateRulesData.SUN_BANNERS["dusk"])))
 		ShogunateRulesData.Phase.NIGHT:
-			if game.elapsed > 0.5:
+			if game.elapsed > 0.5 and not _quiet:
 				game.enemies.show_banner(String(cfg.get("night_banner", ShogunateRulesData.SUN_BANNERS["night"])))
-			if game.shogunate != null:
+			if game.shogunate != null and not _quiet:
 				game.shogunate.play_sound("nightfall")
 			_scan_at = game.elapsed
 		ShogunateRulesData.Phase.ENDLESS_NIGHT:
@@ -522,7 +640,7 @@ func _draw() -> void:
 	var view := _view()
 	var tint := dusk_amount()
 	if tint > 0.005:
-		draw_rect(view, Color(cfg["dusk_tint"] as Color, float(cfg["dusk_tint_alpha"]) * tint))  # The dusk wash.
+		draw_rect(view, Color(tint_color(), tint_alpha() * tint))  # The dusk wash (the sky override's colour while it rules).
 	if _tex != null and darkness_alpha() > 0.005:
 		draw_texture_rect(_tex, Rect2(_origin, Vector2(float(_cols), float(_rows)) * float(cfg["cell"])), false)
 

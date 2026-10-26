@@ -34,6 +34,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	# --- Act V: the Burning Province ---
 	if ProvinceGlyphs.draw_enemy(ci, kind, o, r, flash):
 		return true  # The Kunoichi, the Kappa, Shuten-doji, Kage's shadows.
+	# --- Act V: the Road to the Sun ---
+	if SunRoadGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # The Kitsune, her fox-fire, the Sōhei, the Kirin.
 	match kind:
 		"samurai":
 			_samurai(ci, o, r, flash)
@@ -218,7 +221,7 @@ static func draw_long_shadow(ci: CanvasItem, o: Arena.Obstacle, sun: SunCourse) 
 	var k := sun.dusk_amount()  # 0 .. full dusk.
 	if k <= 0.02:
 		return
-	var dir: Vector2 = sun.cfg["sun_dir"]
+	var dir := sun.shadow_dir()  # SUN sun_dir, or the sky override's (Act V, the Road to the Sun).
 	var ext := o.radius if o.is_circle else maxf(o.half.x, o.half.y)  # Its size (px).
 	var length := ext + float(sun.cfg["shadow_len"]) * k  # Shadow length (px).
 	ci.draw_set_transform(o.center + dir * length * 0.6, dir.angle(), Vector2(length / maxf(ext, 1.0), 0.7))

@@ -475,6 +475,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act V: the Burning Province ---
 	if ProvinceGlyphs.draw_obstacle(self, o):
 		return  # A Burning Province obstacle kind (Act V).
+	# --- Act V: the Road to the Sun ---
+	if SunRoadGlyphs.draw_obstacle(self, o):
+		return  # A Road to the Sun obstacle kind (Act V).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:
