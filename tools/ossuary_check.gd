@@ -731,6 +731,8 @@ func _screenshot_prerun() -> void:
 		await get_tree().process_frame
 	if _shot_buy and setup._extras != null:
 		setup._extras.preview_recolour(_shot_rc)  # The unowned offer, previewed.
+		setup._extras._rc_cycle.grab_focus()  # Its line ("found in the Caskets") stays shown.
+		setup._extras._show_detail("recolour")
 	for i in 20:
 		await get_tree().process_frame
 	await RenderingServer.frame_post_draw

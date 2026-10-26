@@ -63,6 +63,9 @@ var _collection: Label
 var _touch_armed: bool = false
 ## True once the prize's name and tier are shown for the current reveal.
 var _text_shown: bool = true
+## True from a casket's opening until its prize has risen: the info lines (pity,
+## odds, collection) wait, so they do not give the tier away mid-reveal.
+var _hold: bool = false
 
 
 ## The prize portrait: the won skin drawn in the won recolour (SkinGlyphs), at a
@@ -249,8 +252,9 @@ class CasketStage:
 		if empty:
 			alpha *= 0.4
 		var gc := c.lerp(prize_center(), e)  # Glow centre.
+		var radius := CasketUiData.GLOW_RADIUS * lerpf(CasketUiData.GLOW_IDLE_SCALE, 1.0, shake_k)  # Grows as it rattles.
 		for i in CasketUiData.GLOW_STEPS:
-			var r := CasketUiData.GLOW_RADIUS * (1.0 - float(i) / float(CasketUiData.GLOW_STEPS))
+			var r := radius * (1.0 - float(i) / float(CasketUiData.GLOW_STEPS))
 			draw_circle(gc, r, Color(col, alpha * 0.5))
 		if open_k > 0.0:
 			_rays(prize_center().lerp(c, 1.0 - e), open_k, t)
@@ -408,7 +412,7 @@ func _build_info() -> Control:
 ## Redraws the price, the buttons, the status, odds, pity and collection lines
 ## (and the idle stage while no prize was opened on this visit).
 func refresh() -> void:
-	if not is_inside_tree():
+	if not is_inside_tree() or _hold:
 		return
 	var led := Meta.caskets  # The save's casket ledger.
 	var pool := led.prize_pool()  # Prizes left.
@@ -522,8 +526,10 @@ func _on_open_pressed() -> void:
 		Sfx.play_ui("denied")
 		_flash_price()
 		return
-	var p := Meta.caskets.open()  # Owned and saved; emits Meta.changed (refresh()).
+	_hold = true  # The info lines wait for the reveal (refresh() is skipped until the prize has risen).
+	var p := Meta.caskets.open()  # Owned and saved; emits Meta.changed.
 	if p.is_empty():
+		_hold = false
 		Sfx.play_ui("denied")
 		return
 	prize = p
@@ -555,8 +561,10 @@ func _on_opened() -> void:
 
 ## The prize has risen: its name and tier, and Wear.
 func _on_risen() -> void:
+	_hold = false
 	if not prize.is_empty():
 		_show_prize_text()
+	refresh()  # The info lines, held since the opening.
 
 
 ## Wear pressed: wears the prize (free and reversible: the skin row changes it back).

@@ -141,3 +141,20 @@ Underworld x1.5; GDD §15.0 "Act IV follows the per-act Soul Ash rule"), and Act
 **Myrmidon Shade**, got its Mastery (18 classes, 13,680 in all; `ossuary_check` PASS). Verified: `--import` clean,
 seed 7 default Graveyard, `--stage=ilion --policy=army --mortal` and `--stage=underworld --policy=army` with zero
 errors and `stuck_units=0`. Then CI on integration and fast-forward `main`.
+
+## Recolour Caskets (Oct 26, branch `ossuary-caskets`)
+
+Owner: "Can you add the recolors as a gacha system instead of being directly buyable? ... we can put future skins in
+there too." Built as the Ossuary's fifth tab, **Caskets** (GDD §15.0 "Recolour Caskets (owner request, Oct 2026)"):
+350 Soul Ash a casket, one prize the player does not own (a recolour of an unlocked skin; later a casket-only skin), never
+a duplicate, rarity Common Bone / Rare Blood, Abyss / Epic Gilded, Verdant / Legendary casket skins at 60 / 30 / 10 / 3
+(renormalised over non-empty tiers), pity on the 10th. The pre-run Buy button is gone (the cycle button still previews).
+- Files: `scripts/data/casket_data.gd` (rules + how to add a casket-only skin), `scripts/data/casket_ui_data.gd`,
+  `scripts/core/casket_ledger.gd` (`Meta.caskets`: pool, roll, open, wear; `[caskets]`, `[casket_skins]`),
+  `scripts/ui/ossuary_caskets_panel.gd` (the tab and the reveal), `SkinData.CASKET_SKINS` (empty) and the `casket`
+  unlock (`Meta.skin_row_unlocked()`), `tools/ossuary_casket_check.gd` (replaces the old buy checks).
+- RNG: a per-save casket seed (drawn once, fixed under the autotest) + the opened count seed each opening; no gameplay RNG.
+- Shots: `docs/ossuary/shots/caskets/` (`tab`, `reveal_mid`, `reveal_epic`, `phone_tab`, `phone_epic`,
+  `prerun_unowned`); `--shot-what=caskets|casket_mid|casket_epic`.
+- Open for the owner: the price (350) and the weights are lead picks; a first casket-only skin needs art (one
+  `CASKET_SKINS` row + `player/<character>_<id>.png`; check the pre-run skin row then: it fits five skins a character).

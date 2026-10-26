@@ -369,8 +369,12 @@ static func open_shot(holder: Control, what: String) -> void:
 	if what == "caskets":
 		return
 	Meta.caskets.since_epic = CasketData.PITY_AFTER  # The pity casket: Epic.
+	panel.refresh()
+	var held := [panel._pity.text, panel._collection.text]  # The info lines as a real reveal holds them.
 	panel._on_open_pressed()
 	if what == "casket_mid":
+		panel._pity.text = held[0]
+		panel._collection.text = held[1]
 		var st := panel.stage
 		var t := CasketUiData.SHAKE_TIME + CasketUiData.RISE_TIME * 0.45  # Mid-rise, the lid in flight.
 		panel._name.text = ""

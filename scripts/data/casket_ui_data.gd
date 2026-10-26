@@ -40,13 +40,16 @@ const LID_FLY: float = 26.0  # TUNING (not in GDD)
 ## Turn (radians) of the flying lid at the end of its flight.
 const LID_SPIN: float = 0.35  # TUNING (not in GDD)
 ## Side (layout px) of the prize portrait box (the skin drawn inside it).
-const PORTRAIT_BOX := Vector2(170, 170)  # TUNING (not in GDD)
-## Height (layout px) the portrait settles at, centre above the stage's top edge.
-const PORTRAIT_Y: float = 125.0  # TUNING (not in GDD)
+const PORTRAIT_BOX := Vector2(196, 196)  # TUNING (not in GDD) a 56 px character sprite at x3
+## Height (layout px) the portrait settles at, its centre below the stage's top edge.
+const PORTRAIT_Y: float = 120.0  # TUNING (not in GDD)
 ## Portrait scale while it leaves the casket (grows to 1).
 const PORTRAIT_START_SCALE: float = 0.35  # TUNING (not in GDD)
 ## Radius (layout px) of the soft glow behind the casket / the prize.
 const GLOW_RADIUS: float = 120.0  # TUNING (not in GDD)
+## Share (0..1) of GLOW_RADIUS the glow has before a casket is opened (it grows
+## to the full radius as the casket rattles; small enough to stay inside the stage).
+const GLOW_IDLE_SCALE: float = 0.78  # TUNING (not in GDD)
 ## Steps of that glow (stepped discs, the pixel look).
 const GLOW_STEPS: int = 4  # TUNING (not in GDD)
 ## Glow opacity (0..1) before a casket is opened (violet, waiting).
