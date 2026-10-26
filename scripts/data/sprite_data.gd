@@ -318,6 +318,15 @@ const HEIGHTS: Dictionary = {
 	"player/ferrywoman_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 	"summons/myrmidon_shade": 46.0,  # TUNING (not in GDD) a summon like the Warrior (44), the spear head above
 	"summons/legion_of_tartarus": 54.0,  # TUNING (not in GDD) its evolution, bigger
+	# --- Act V: the Shogunate of the Rising Sun (the shared kinds; assets/sprites/shogunate/) ---
+	"shogunate/ashigaru": 46.0,  # TUNING (not in GDD) fodder: body ~32 (hat to sandals), the long yari rising far above the hat
+	"shogunate/samurai": 56.0,  # TUNING (not in GDD) soldier tier: body ~50, the crescent crest above
+	"shogunate/teppo_gunner": 46.0,  # TUNING (not in GDD) ranged soldier: body ~44, the arquebus held level
+	"shogunate/ninja": 40.0,  # TUNING (not in GDD) soldier tier, a crouching figure
+	"shogunate/onryo": 36.0,  # TUNING (not in GDD) night fodder: a floating ghost (34) + two empty rows on top for the hover bob (walk_cycle.py "hover")
+	"shogunate/oni": 80.0,  # TUNING (not in GDD) night heavy tier (60-72 and up): a huge red ogre, the horns and the club
+	"obstacles/stone_lantern": 40.0,  # TUNING (not in GDD) a toro, unlit (an obstacle; the glow pool is drawn by code)
+	"obstacles/stone_lantern_lit": 40.0,  # TUNING (not in GDD) the same toro with a warm lit window
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

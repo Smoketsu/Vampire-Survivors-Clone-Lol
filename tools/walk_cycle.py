@@ -497,6 +497,17 @@ RIGS = {
     "enemies/inquisitor": dict(mode="legs", hip=46, back=(0, 24), front=(24, 48), rigid=[], spread=1, lift=1, dip=1),
     "bosses/alaric": dict(mode="legs", hip=78, back=(0, 86), front=(110, 174), rigid=[(0, 54, 78, 102), (86, 110, 78, None)], spread=2, lift=2, dip=1),
     "bosses/vael": dict(mode="legs", hip=70, back=(0, 50), front=(50, 120), rigid=[(46, 94, 70, 106)], spread=2, lift=2, dip=1),
+    # --- Act V: the Shogunate of the Rising Sun (the shared kinds) ---
+    # The Ashigaru marches with his long yari (cols 3-5, the whole height) rigid; the Samurai strides, hand on his hilt (all
+    # above the hip); the Teppo Gunner shuffles under his level arquebus (above the hip); the Ninja creeps low (long diagonal
+    # legs); the Onryo glides (the whole ghost bobs 2 px; the still keeps two empty rows on top, no bust: a ghost, not the
+    # figure-redesign style); the Oni stomps, his iron kanabo (held low across the front) riding with the body above the hip.
+    "shogunate/ashigaru": dict(mode="legs", hip=39, back=(0, 13), front=(13, 22), rigid=[(3, 6, 0, None)], spread=2, lift=2, dip=1),
+    "shogunate/samurai": dict(mode="legs", hip=40, back=(0, 17), front=(17, 32), rigid=[], spread=2, lift=2, dip=1),
+    "shogunate/teppo_gunner": dict(mode="legs", hip=33, back=(0, 32), front=(32, 62), rigid=[], spread=2, lift=2, dip=1),
+    "shogunate/ninja": dict(mode="legs", hip=28, back=(0, 18), front=(18, 36), rigid=[], spread=2, lift=2, dip=1),
+    "shogunate/onryo": dict(mode="hover", bob=2, parts=[]),
+    "shogunate/oni": dict(mode="legs", hip=66, back=(0, 26), front=(26, 64), rigid=[], spread=3, lift=3, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

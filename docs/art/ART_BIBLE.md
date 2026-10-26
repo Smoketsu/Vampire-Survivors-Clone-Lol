@@ -2347,3 +2347,39 @@ The Scrap Wastes' stage-select card is data only (`FrontDoorData.VIGNETTES["wast
 `empire/scout_drone`, `summons/warrior` + `archer`, and `bosses/kestrel_aim` facing them. The small tracers (zap, round,
 arc bolt, rivet, turret bolt, chaingun), Kestrel's decoy projectors and the sentry / turret barrels stay code
 (audit: acceptable / low).
+
+### Act V: the Shogunate of the Rising Sun, the shared kinds (foundation, Oct 2026)
+
+<!-- --- Act V: the Shogunate of the Rising Sun --- -->
+The Shogunate's style for the stage agents (GDD §15.0 "Act V art: the shared kinds"; `docs/act5/PROPOSAL.md`): **red lacquer**
+armour (the new `lacquer` ramp: harder and warmer than the Covenant crimson), **steel** (the existing `grey` ramp), **indigo**
+cloth (the new `indigo` ramp; its light shade is the rim that keeps a ninja readable on a dark ground), **sakura pink** (the new
+`sakura` ramp: petals, trims; the oni's ivory horns use `sakura_light`), and **gold** for the sun and crests (the existing
+gold keeps its meaning). Hard, clean silhouettes with one big shape each (the ashigaru's conical hat and long yari, the samurai's
+crescent crest and broad shoulder plates with the hand on the hilt, the gunner's level arquebus, the ninja's masked crouch, the
+onryo's curtain of black hair, the oni's horns and spiked kanabo). Never the player's violet, the undead's bone or teal or the
+Covenant's crimson. `prepare_sprite.py` folder `shogunate/`: ramps lacquer, indigo, sakura, grey, gold, skin, brown. Concept
+references: `art_source/concepts/act5_lineup.png` (costumes); prompts beside each source in `art_source/shogunate/<id>.txt`
+(the Act IV template, the sex named).
+
+Generated with `tools/gen_image.py` (`--ref` the Hoplite's source for the pixel look plus a crop of the concept lineup for the
+costume; the Shade of the Dead's source for the onryo). Pipeline: `prepare_sprite.py` straight on the source with explicit
+`--ramps` and `--ink-l 0.22` (0.15 for the ninja, whose indigo cloth must stay cloth; 0.3 and `--ramps marble,indigo` for the
+onryo, the Republic's marble giving the ghost a pale white; the lantern `--ramps grey,gold`), then scripted palette-colour
+touch-ups (`art_source/shogunate/touchups.py`, run by `build.sh` right after a fresh conversion: it is not idempotent):
+holy_white / bone remapped to grey_light (sakura_light for the oni's horns), the samurai's two crest prongs joined into a
+crescent, the gunner's helmet one indigo shade down, the onryo's hair filled with indigo_dark inside its ink edge and two empty
+rows added on top for the hover bob, the lantern's window recoloured gold for the lit state. Walk strips by `walk_cycle.py`
+(rigs under `# --- Act V: the Shogunate of the Rising Sun (the shared kinds) ---`). 7 API images, about $0.20. `art_check.py`: 0
+warnings; the only failure is lightness on Sanctum IV's light floor (the dark indigo ninja and gunner, the red kinds nearly),
+where Act V units never stand. **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/ashigaru` | Ashigaru (fodder, male): jingasa hat, red do over an indigo jacket, a very long yari | 22x46 | legs walk (hip 39; the yari, cols 3-5, rigid). Body ~32 |
+| `shogunate/samurai` | Samurai (soldier, male): black-and-red lacquered o-yoroi, kabuto with a gold crescent crest, hand near the hilt of the katana | 32x56 | legs walk (hip 40). The Draw telegraph is code |
+| `shogunate/teppo_gunner` | Teppo Gunner (ranged, male): indigo jacket, red lacquer chest plate, a level arquebus, a smouldering match cord | 62x46 | legs walk (hip 33; the gun rides with the body) |
+| `shogunate/ninja` | Ninja (soldier, male): indigo-black hood and face wrap, a crouch, a steel shuriken | 36x40 | legs walk (hip 28) |
+| `shogunate/onryo` | Onryo (night fodder, female ghost): pale white burial kimono, long black hair over the face, reaching arms, a wisp tail | 38x36 | hover (the whole ghost bobs 2 px; two empty rows on top). No bust rig |
+| `shogunate/oni` | Oni (night heavy, male): red-skinned ogre, ivory horns, tiger-skin loincloth, an iron kanabo held low | 64x80 | legs walk (hip 66, spread 3, lift 3; the club rides above the hip) |
+| `obstacles/stone_lantern` (+ `_lit`) | A stone toro: base, post, lantern box with a window, wide roof, finial; `_lit` has a warm gold window | 28x40 | no strip; the glow pool is code |
