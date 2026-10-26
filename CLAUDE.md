@@ -658,7 +658,7 @@ tiny tweaks.
 6b. **Act IV, the Olympian Republic: live (Oct 25, 2026).** The three stages are playable (GDD §15.0 "Act IV goes
    live"), with one CI army job each. Shipped after the art review (eight rounds) and three bot playtest passes at meta
    none (`docs/act4/playtest/`; the Underworld got damage ×1.5, Centaur Archers and the new Shade Archer). Open: the
-   owner's own playtest notes, the placeholder Soul Ash multipliers (×3.25 / ×3.5 / ×3.75), the Web performance check
+   owner's own playtest notes (Soul Ash now ×1 / ×1.25 / ×1.5, the per-act rule), the Web performance check
    on Olympus late game. Handoff: `docs/act4/HANDOFF.md`.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
