@@ -16,6 +16,9 @@
 ##   first regiment that still has one (a marching one first, else the next to
 ##   march). The kills are read from the run's kill_<kind> stats over every
 ##   Shogunate kind (no hook in the kill path).
+## Co-op: each regiment's size (so the bar's total) is x CoopData.SCALING
+## enemy_spawn (read once at his arrival through DifficultyModifiers.coop_mult(),
+## exactly 1 in solo), as the trickle is; its batch, field and Hatamoto stay.
 ## The march: regiment i marches FIRST_MARCH + i x MARCH_EVERY s after his
 ## arrival, or as soon as no regiment is on the field, at most MAX_ACTIVE at
 ## once, each from its own side (MARCH_TURN apart); its Hatamoto comes with its
@@ -53,6 +56,9 @@ class Regiment:
 	var def: Dictionary = {}
 	## WAITING, MARCHING or BROKEN.
 	var state: int = 0
+	## Soldiers in it (points of the bar): its row's `size`, x the co-op
+	## enemy_spawn multiplier in co-op (exactly the row's size in solo).
+	var size: int = 0
 	## Soldiers not yet sent (points of the bar).
 	var reserve: int = 0
 	## Soldiers it spawned that are on the field.
@@ -116,16 +122,18 @@ func _init(p_boss: Enemy) -> void:
 		var r := Regiment.new()
 		r.index = i
 		r.def = ShogunData.REGIMENTS[i]
-		r.reserve = int(r.def["size"])
+		r.size = roundi(float(r.def["size"]) * game.difficulty.coop_mult("enemy_spawn"))  # Co-op: as the trickle, doubled (CoopData.SCALING, the one co-op path); solo x1 exactly.
+		r.reserve = r.size
 		r.dir = Vector2.from_angle(_base_angle + ShogunData.MARCH_TURN * float(i))
 		regiments.append(r)
 
 
-## Total soldiers (the bar's full length).
+## Total soldiers (the bar's full length; the regiments' sizes, so x the co-op
+## enemy_spawn multiplier in co-op).
 func total() -> int:
 	var n := 0
 	for r in regiments:
-		n += int(r.def["size"])
+		n += r.size
 	return n
 
 

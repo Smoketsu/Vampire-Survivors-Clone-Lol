@@ -125,7 +125,8 @@ const BOSS := {
 ##                 elite: they Draw), "night_host" (oni and onryo).
 ##   color       — the banner colour (the Hatamoto's sprite tint; the HUD
 ##                 objective names it).
-##   size        — soldiers in it (points of the bar), the Hatamoto included.
+##   size        — soldiers in it (points of the bar), the Hatamoto included
+##                 (x CoopData.SCALING enemy_spawn in co-op, ShogunRegiments).
 ##   kinds       — {kind: weight} of its soldiers (seeded pick per soldier).
 ##   batch       — soldiers it sends at once.
 ##   every       — s between two batches.

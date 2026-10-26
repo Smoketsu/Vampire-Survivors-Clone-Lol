@@ -1813,11 +1813,12 @@ the ambushes run as on every Act V stage.
   through your ring on a long telegraphed lane, calls three riders after his charges, and below 40% charges twice
   in a row. His chest drops when he falls.
 - **Shogun Kurogane** (3:00 left): **his army is his health bar.** He stands on his command platform out of reach,
-  signalling with his war fan, while six regiments (600 soldiers) march one after another, each under its own
+  signalling with his war fan, while six regiments (600 soldiers, 1,200 in co-op) march one after another, each under its own
   banner colour and with its own order: a spear wall (white), an arquebus line (indigo), a cavalry charge
   (crimson), a ninja ambush out of the shadows (black), a samurai duel squad that draws (gold) and the night host
   of oni and vengeful dead (sakura). His bar is the soldiers he has left: every Shogunate kill takes a point off,
-  and killing a regiment's **Hatamoto breaks it**: the rest flee and count as lost. At 10% he draws his blade
+  and killing a regiment's **Hatamoto breaks it**: the rest flee and count as lost (a Hatamoto still standing when
+  the Shogun comes down can still be broken in the duel). At 10% he draws his blade
   and comes down with six samurai of his honour guard for the **duel**: the rest of the bar is now his own life,
   and he fights with **iai cuts**, white lines flashed from him through you and on past you, faster as his guard
   falls; below a third of his life comes his last move, the **triple cut**: three lines at once crossing on you.

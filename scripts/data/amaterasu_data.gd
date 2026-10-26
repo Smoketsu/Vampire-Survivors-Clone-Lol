@@ -127,7 +127,7 @@ const BOSS := {
 	"mirror_width": 20.0,  # TUNING (not in GDD) px
 	"mirror_tick": 0.25,  # TUNING (not in GDD) s between two burns of a body in it
 	"mirror_damage_player": 3.0,  # TUNING (not in GDD) per tick, before the time scaling
-	"mirror_damage_summon": 3.5,  # TUNING (not in GDD) per tick, before the time scaling
+	"mirror_damage_summon": 2.0,  # TUNING (not in GDD) per tick, before the time scaling (Act V integration balance: 3.5 -> 2; the sweep crosses the whole Bone Ring, ~1,950 summon damage in her first minute)
 	"sunset_mirror_mult": 1.4,  # TUNING (not in GDD) x mirror_cooldown at sunset
 	# Dawn: sun-disc mines.
 	"mine_cooldown": 9.0,  # TUNING (not in GDD) s
@@ -140,7 +140,7 @@ const BOSS := {
 	"mine_fuse": 6.0,  # TUNING (not in GDD) s: it bursts by itself then
 	"mine_radius": 46.0,  # TUNING (not in GDD) px of the burst
 	"mine_damage_player": 9.0,  # TUNING (not in GDD) before the time scaling
-	"mine_damage_summon": 10.0,  # TUNING (not in GDD) before the time scaling
+	"mine_damage_summon": 6.0,  # TUNING (not in GDD) before the time scaling (Act V integration balance: 10 -> 6; the discs lie on the ring)
 	# Noon: beams on marked circles.
 	"zenith_cooldown": 3.4,  # TUNING (not in GDD) s
 	"zenith_first": 1.5,  # TUNING (not in GDD) s into the phase
@@ -148,13 +148,13 @@ const BOSS := {
 	"zenith_reach": 190.0,  # TUNING (not in GDD) px around him for the others (on his army)
 	"zenith_radius": 40.0,  # TUNING (not in GDD) px
 	"zenith_telegraph": 1.3,  # TUNING (not in GDD) s
-	"zenith_damage_player": 12.0,  # TUNING (not in GDD) before the time scaling
-	"zenith_damage_summon": 12.0,  # TUNING (not in GDD) before the time scaling
+	"zenith_damage_player": 8.0,  # TUNING (not in GDD) before the time scaling (Act V integration balance: 12 -> 8, ~53 a hit at 17:00 took the army bot to 8 HP)
+	"zenith_damage_summon": 8.0,  # TUNING (not in GDD) before the time scaling (Act V integration balance: 12 -> 8; three of four circles fall on the army)
 	# Noon: the glare.
 	"glare_cooldown": 12.0,  # TUNING (not in GDD) s
 	"glare_first": 5.0,  # TUNING (not in GDD) s into the phase
 	"glare_windup": 3.0,  # TUNING (not in GDD) s it builds (time to reach a shadow)
-	"glare_damage_player": 10.0,  # TUNING (not in GDD) before the time scaling
+	"glare_damage_player": 7.0,  # TUNING (not in GDD) before the time scaling (Act V integration balance: 10 -> 7; ~40 a glare at 17:00, a third of the necromancer's life when a shadow is not in reach)
 	"glare_damage_summon": 4.0,  # TUNING (not in GDD) before the time scaling (the ring cannot all hide)
 	"shade_pad": 16.0,  # TUNING (not in GDD) px an obstacle's noon shadow reaches past its footprint
 	"shade_offset": 4.0,  # TUNING (not in GDD) px the noon shadow lies south of the obstacle (drawn and tested alike)

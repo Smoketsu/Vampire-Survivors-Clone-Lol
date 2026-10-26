@@ -186,6 +186,7 @@ func physics_step(delta: float) -> void:
 			if k >= 1.0:
 				_start_duel()
 		Phase.DUEL:
+			regiments.step(delta)  # Stopped: no more marching, but a Hatamoto who falls in the duel still breaks his banner (Regiments Broken).
 			_step_duel(delta)
 	_face_sprite()
 

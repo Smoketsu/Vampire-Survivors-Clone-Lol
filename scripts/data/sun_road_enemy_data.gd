@@ -149,7 +149,7 @@ const ENEMIES := {
 		"sweep_radius": 54.0,  # TUNING (not in GDD) px
 		"sweep_half_angle": 1.1,  # Owner-approved proposal "a sweeping cut" (TUNING the arc: about 125 degrees)
 		"sweep_telegraph": 0.55,  # TUNING (not in GDD) s
-		"sweep_damage_summon": 9.0,  # TUNING (not in GDD)
+		"sweep_damage_summon": 6.0,  # TUNING (not in GDD) Act V integration balance: 9 -> 6 (its arc cuts several summons at once: the stage's top summon killer, it broke the army bot's ring at 7:00 on seed 3)
 		"sweep_damage_player": 8.0,  # TUNING (not in GDD)
 		"sweep_knockback": 22.0,  # TUNING (not in GDD) px
 	},
