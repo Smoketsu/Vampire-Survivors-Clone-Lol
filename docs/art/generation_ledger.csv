@@ -960,3 +960,5 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-26 18:13,player/grave_kunoichi_untouchable,gpt-image-2.5-flare,medium,1024x1024,2,800,1728,439,0.0310,unt_1.png
 2026-10-26 18:13,player/grave_kunoichi_untouchable,gpt-image-2.5-flare,medium,1024x1024,2,800,1728,439,0.0310,unt_2.png
 2026-10-26 18:14,player/grave_kunoichi_untouchable,gpt-image-2.5-flare,medium,1024x1024,2,800,1728,439,0.0310,unt_3.png
+2026-10-26 18:55,epilogue_act5_4_r3,gpt-image-2.5-flare,medium,1536x1024,3,1084,1164,343,0.0250,cand1.png
+2026-10-26 18:55,epilogue_act5_4_r3,gpt-image-2.5-flare,medium,1536x1024,3,1084,1164,343,0.0250,cand2.png

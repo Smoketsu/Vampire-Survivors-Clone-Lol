@@ -155,7 +155,7 @@ const ACT5_PART := {
 		["epilogue/act5_1", Vector2(0.0, 0.6), Vector2(1.0, 0.2)],  # TUNING (not in GDD) from the necromancer and his skeletons up the winding road to the torii and the low sun
 		["epilogue/act5_2", Vector2(0.0, 0.5), Vector2(1.0, 0.5)],  # TUNING (not in GDD) across the burning rice fields, from the dead line to the samurai and their banners
 		["epilogue/act5_3", Vector2(0.0, 0.6), Vector2(1.0, 0.6)],  # TUNING (not in GDD) from the necromancer and his skeletons across the castle courtyard to the fallen Shogun
-		["epilogue/act5_4", Vector2(1.0, 0.0), Vector2(0.0, 1.0)],  # TUNING (not in GDD) from the falling goddess and the dying sun down to the army on the road above the clouds
+		["epilogue/act5_4", Vector2(1.0, 0.0), Vector2(0.0, 1.0)],  # TUNING (not in GDD) from the black sun in its last ring of gold, across the torii, down to the necromancer and the broken mirror and crown at his feet
 	],
 }
 ## The closing cards, one per act, in reading order (owner: "tie everything
