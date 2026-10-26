@@ -39,6 +39,15 @@
 ##   "horn"  — brass swells: per `starts` entry a saw and its fifth (`notes`
 ##             [[root, fifth], ...]) through a rising low-pass ({starts, dur,
 ##             attack, decay, amp, lp0, lp1, notes}).
+## Act V (SoundData.SUN_SCORE, "The Setting Sun") adds three more, the same way:
+##   "taiko" — drum patterns instead of the heartbeat: per `beats_per_bar`-beat bar
+##             (`beat` s a beat) the hits [beat, "don" | "ka", amp] of pattern
+##             bar % patterns.size() ({beat, beats_per_bar, don_hz0, don_hz1,
+##             don_dur, don_decay, ka_hz0, ka_hz1, ka_dur, ka_decay, slap, patterns}),
+##   "koto"  — plucked notes [start, Hz, amp, glide-to Hz (0 = none)] ({dur, decay,
+##             lp0, lp1, click, notes}),
+##   "flute" — breathy sustained notes [start, Hz, length] ({amp, breath, attack,
+##             decay, vib_hz, vib_depth, notes}).
 ## Every note ends before the loop end, so the loop stays seamless.
 class_name RunLoopSynth
 extends RefCounted
@@ -171,6 +180,8 @@ func _init(rng_seed: int, score: Dictionary = {}) -> void:
 		_jobs.append(_job_toll)
 	elif score.has("pulse"):
 		_jobs.append(_job_pulse)  # Act III: the pulsing low synth replaces the heartbeat.
+	elif score.has("taiko"):
+		_jobs.append(_job_taiko)  # Act V: taiko patterns replace the heartbeat.
 	elif score.has("drums"):
 		_jobs.append(_job_drums)  # Act IV: the war drum replaces the heartbeat.
 	else:
@@ -181,6 +192,10 @@ func _init(rng_seed: int, score: Dictionary = {}) -> void:
 		_jobs.append(_job_arp)  # Act III: the cold arpeggio (Act IV: the lyre).
 	if score.has("horn"):
 		_jobs.append(_job_horn)  # Act IV: the brass swells.
+	if score.has("koto"):
+		_jobs.append(_job_koto)  # Act V: the plucked koto line.
+	if score.has("flute"):
+		_jobs.append(_job_flute)  # Act V: the shakuhachi lead.
 	_schedule(_job_peak, 0, _n, chunk)
 	_jobs.append(_job_alloc)
 	_schedule(_job_encode, 0, _n, chunk)
@@ -379,6 +394,67 @@ func _job_horn() -> void:
 			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "saw", "f0": hz, "start": t, "dur": minf(dur, _loop_s - t - 0.05),
 				"amp": float(h["amp"]), "attack": float(h["attack"]), "decay": float(h["decay"]),
 				"lp0": float(h["lp0"]), "lp1": float(h["lp1"]), "vib_hz": 5.0, "vib_depth": 0.004}, _rng)
+
+
+## Taiko (a score's "taiko", Act V): each bar plays one pattern of deep "don" and
+## rim "ka" hits; a hit that would not end before the loop end is skipped.
+func _job_taiko() -> void:
+	var t: Dictionary = _score["taiko"]
+	var beat := float(t["beat"])  # s per beat.
+	var bar_beats := int(t["beats_per_bar"])  # Beats per bar.
+	var patterns: Array = t["patterns"]  # Hit lists, one per pattern.
+	var bars := int(_loop_s / (beat * float(bar_beats)))  # Whole bars in the loop.
+	for b in bars:
+		for h: Array in patterns[b % patterns.size()]:
+			var at := (float(b * bar_beats) + float(h[0])) * beat  # Hit time (s).
+			var amp := float(h[2])  # Hit level.
+			if String(h[1]) == "don":
+				var dur := float(t["don_dur"])  # Hit length (s).
+				if at + dur >= _loop_s:
+					continue
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": float(t["don_hz0"]), "f1": float(t["don_hz1"]),
+					"start": at, "dur": dur, "amp": amp, "attack": 0.003, "decay": float(t["don_decay"])}, _rng)
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": 0.05, "amp": float(t["slap"]),
+					"decay": 0.012, "lp0": 1200.0}, _rng)
+			else:
+				var dur := float(t["ka_dur"])  # Rim hit length (s).
+				if at + dur >= _loop_s:
+					continue
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": float(t["ka_hz0"]), "f1": float(t["ka_hz1"]),
+					"start": at, "dur": dur, "amp": amp, "attack": 0.002, "decay": float(t["ka_decay"])}, _rng)
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": 0.03, "amp": amp * 0.6,
+					"decay": 0.008, "lp0": 4000.0}, _rng)
+
+
+## Koto (a score's "koto", Act V): plucked triangle notes with a short noise click
+## and a closing low-pass; a note may glide to a second pitch. Each is cut at the loop end.
+func _job_koto() -> void:
+	var k: Dictionary = _score["koto"]
+	for n: Array in k["notes"]:
+		var at := float(n[0])  # Note start (s).
+		var hz := float(n[1])  # Pitch (Hz).
+		var to_hz := float(n[3]) if float(n[3]) > 0.0 else hz  # Glide target (Hz).
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": hz, "f1": to_hz, "start": at,
+			"dur": minf(float(k["dur"]), _loop_s - at - 0.05), "amp": float(n[2]), "attack": 0.002, "decay": float(k["decay"]),
+			"lp0": float(k["lp0"]), "lp1": float(k["lp1"])}, _rng)
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": 0.02, "amp": float(k["click"]),
+			"decay": 0.006, "lp0": 5000.0}, _rng)
+
+
+## Shakuhachi (a score's "flute", Act V): a sine with slow vibrato and an octave
+## overtone, plus a breath of filtered noise that swells in with the note.
+func _job_flute() -> void:
+	var f: Dictionary = _score["flute"]
+	for n: Array in f["notes"]:
+		var at := float(n[0])  # Note start (s).
+		var hz := float(n[1])  # Pitch (Hz).
+		var dur := minf(float(n[2]), _loop_s - at - 0.05)  # Note length (s).
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": hz, "start": at, "dur": dur, "amp": float(f["amp"]),
+			"attack": float(f["attack"]), "decay": float(f["decay"]), "vib_hz": float(f["vib_hz"]), "vib_depth": float(f["vib_depth"])}, _rng)
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": hz * 2.0, "start": at, "dur": dur, "amp": float(f["amp"]) * 0.18,
+			"attack": float(f["attack"]) * 1.4, "decay": float(f["decay"]), "vib_hz": float(f["vib_hz"]), "vib_depth": float(f["vib_depth"])}, _rng)
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": dur, "amp": float(f["breath"]),
+			"attack": float(f["attack"]) * 0.8, "decay": float(f["decay"]), "lp0": hz * 2.5, "lp1": hz * 3.5}, _rng)
 
 
 ## Peak search over samples [a, b) of the finished mix.

@@ -428,6 +428,9 @@ all three show "Coming soon" until their stages are built (phase 2). The act's s
   rifle and fires for you as a **Grave Gunner**. Dread Rally still charges from every kill.
 - **The Purge Protocol.** At 0:00 kill-drones pour in from every edge while orbital strikes land
   on red circles, faster each minute.
+- **Act V music and sounds.** "The Setting Sun" (`SoundData.SUN_SCORE`: a D "in" scale pad, taiko patterns, a
+  plucked koto and a breathy shakuhachi) and the eight Shogunate sounds (`SoundData.SHOGUNATE_SOUNDS`) render
+  lazily the same way once a stage uses `"music": "sun"`.
 - **Music.** (Act IV's "Hymn of Bronze", a war drum under a Dorian pad with a plucked lyre and brass
   swells, and its eight Pantheon sounds are rendered lazily the same way: `SoundData.BRONZE_SCORE`,
   `PANTHEON_SOUNDS`; the stages switch to it with `"music": "bronze"`.) Act III runs play their own loop, "Iron Requiem" (a pulsing low synth, metallic hits
@@ -2543,8 +2546,9 @@ scripts/
   pickups/chest.gd, chest_manager.gd       Pooled treasure chests and their drop rules
   pickups/chest_beacon.gd   Chest beacon: chevrons over the chests, ground glow, edge-arrow layout, autotest counts
   audio/sfx.gd              Autoload: audio buses, pooled voices with per-sound and global voice limits
-                            (score loops: "Below the Tide", "Iron Requiem", "Hymn of Bronze"; the Act III
-                            and Act IV (`PANTHEON_SOUNDS`) sound packs, lazy, seeds per pack)
+                            (score loops: "Below the Tide", "Iron Requiem", "Hymn of Bronze",
+                            "The Setting Sun"; the Act III, Act IV (`PANTHEON_SOUNDS`) and Act V
+                            (`SHOGUNATE_SOUNDS`) sound packs, lazy, seeds per pack)
   audio/synth.gd            Procedural sound and music synthesis (no audio files)
   audio/run_loop_synth.gd   The in-run music loop's recipe as a list of small jobs (run at once, or over frames;
                             scores add pulse / hits / arp (Act III) and drums / horn (Act IV) jobs)
