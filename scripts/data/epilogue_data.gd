@@ -59,6 +59,7 @@ const PARTS := [
 	},
 	ACT3_PART,  # Act III, "The Machines Go Dark" (its row and panels below).
 	ACT4_PART,  # Act IV, "The Gods Are Silent" (its row and panels below; opened by Empty Throne).
+	ACT5_PART,  # Act V, "The Sun Goes Out" (its row and panels below; opened by The Sun Goes Out).
 ]
 # --- Act III: the Iron Citadel ---
 ## HOOK for the Act III part of the epilogue (owner-approved proposal: "a third
@@ -150,7 +151,12 @@ const ACT5_PART := {
 		"Castle Kurogane fell regiment by regiment, until the Shogun came down from his platform and drew his own blade, and was cut down by the night.",  # Owner-approved proposal story (TUNING the words)
 		"On the road above the clouds the sun goddess crossed the sky one last time. When she fell, the sun went out. There will be no dawn again: only the night, and the dead who walk in it.",  # Owner-approved proposal ending
 	],
-	"panels": [],  # The lead fills the four panels at integration (see above).
+	"panels": [
+		["epilogue/act5_1", Vector2(0.0, 0.6), Vector2(1.0, 0.2)],  # TUNING (not in GDD) from the necromancer and his skeletons up the winding road to the torii and the low sun
+		["epilogue/act5_2", Vector2(0.0, 0.5), Vector2(1.0, 0.5)],  # TUNING (not in GDD) across the burning rice fields, from the dead line to the samurai and their banners
+		["epilogue/act5_3", Vector2(0.0, 0.6), Vector2(1.0, 0.6)],  # TUNING (not in GDD) from the necromancer and his skeletons across the castle courtyard to the fallen Shogun
+		["epilogue/act5_4", Vector2(1.0, 0.0), Vector2(0.0, 1.0)],  # TUNING (not in GDD) from the falling goddess and the dying sun down to the army on the road above the clouds
+	],
 }
 ## The closing cards, one per act, in reading order (owner: "tie everything
 ## together nicely"; docs/act4/PROPOSAL.md "Closing cards"; GDD §15.0 "Closing
@@ -204,7 +210,7 @@ const CLOSINGS := [
 		"heading": "The Pit Keeps Count",  # Owner-approved proposal (docs/act5/PROPOSAL.md)
 		"line": "The sun is out, and the night has no end. Far below, the souls owed to the Pit have stopped arriving, and something down there has started counting.",  # Owner-approved proposal
 		"tag": "To be continued.",  # TUNING (not in GDD)
-		"panel": ["epilogue/close_act5", Vector2(0.5, 0.0), Vector2(0.5, 1.0)],  # TUNING (not in GDD) the lead's panel: from the dark sky down into the Pit (pan to adjust with the art)
+		"panel": ["epilogue/close_act5", Vector2(0.5, 0.0), Vector2(0.5, 1.0)],  # TUNING (not in GDD) from the rim of the Pit, with the ledger slabs, down to the two red embers in the dark
 	},
 ]
 ## Line shown in place of a part that is still sealed.
