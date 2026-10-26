@@ -75,6 +75,11 @@ PANEL_OPTS = {
     "act4_3": {"drop": ["skin", "ice"]},  # Hades kneeling with his crown: the default drops.
     "act4_4": {"drop": ["skin", "ice"]},  # Silent Olympus and the army below: the default drops.
     "close_act4": {"drop": ["skin", "ice"]},  # The torii and the rising sun over the eastern sea: the default drops.
+    "act5_1": {"drop": ["skin", "ice"]},  # The army on the Road to the Sun: the default drops.
+    "act5_2": {"drop": ["skin", "ice"]},  # The burning rice fields: the default drops.
+    "act5_3": {"drop": ["skin", "ice"]},  # The fallen Shogun in Castle Kurogane: the default drops.
+    "act5_4": {"drop": ["skin", "ice"]},  # Amaterasu falling, the sun going out: the default drops.
+    "close_act5": {"drop": ["skin", "ice"]},  # The Pit with its ledger of souls: the default drops.
 }
 
 
