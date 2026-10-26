@@ -956,3 +956,4 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-26 17:59,shogunate/kappa,gpt-image-2.5-flare,medium,1024x1024,1,677,1024,439,0.0247,kappa.png
 2026-10-26 17:59,icons/hundred_shadows,gpt-image-2.5-flare,medium,1024x1024,1,295,928,439,0.0221,hundred_shadows.png
 2026-10-26 18:00,icons/ach_no_shadow_unlit,gpt-image-2.5-flare,medium,1024x1024,1,291,1024,439,0.0228,ach_no_shadow_unlit.png
+2026-10-26 18:12,epilogue/act5_4,gpt-image-2.5-flare,medium,1536x1024,2,1055,1584,343,0.0282,act5_4_a.png

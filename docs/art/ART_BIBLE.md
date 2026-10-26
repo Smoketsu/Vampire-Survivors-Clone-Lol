@@ -2523,3 +2523,5 @@ the Kiba-musha), where Act V units never stand. **For the owner's review.**
 Code-drawn on purpose: the Banner of the Dead's planted banners and aura (rects and a texture disc), the regiments'
 banner colours (a tint), the charge lanes, the Draw lines of the Shogun's iai and triple cuts (DrawCuts), the war fan's
 flourish, the fallbacks (KuroganeGlyphs).
+
+**Act V round 2 (Road to the Sun).** Epilogue `act5_4` is deliberately sparse: one big figure, one flat ring, flat cloud bands; a first "everything" composition read as a mess. Amaterasu's bust box is now cols 42-60, rows 30-43; Kitsune's cols 9-24, rows 13-20.

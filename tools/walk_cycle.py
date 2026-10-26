@@ -527,10 +527,10 @@ RIGS = {
     "shogunate/sohei": dict(mode="legs", hip=41, back=(0, 32), front=(32, 64), rigid=[], spread=2, lift=2, dip=1),
     "shogunate/kirin": dict(mode="legs", hip=64, back=(0, 63), front=(63, 104), rigid=[], spread=2, lift=2, dip=1),
     # Round 1 redo (owner: "make her bustier"): redrawn with a larger bust, rows 15-19 above the sash, cols 13-23 (two lobes).
-    "shogunate/kitsune": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(13, 24, 15, 20, 1, 2)),
+    "shogunate/kitsune": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(9, 24, 13, 20, 1, 2)),
     # Round 1 redo (owner: "bounce box needs to go up and to the right"): she was redrawn fuller (more mature figure), her
     # chest now rows 32-42, cols 43-59 (two lobes, a gold collar between); the old box (cols 36-52, rows 34-45) sat low and left.
-    "bosses/amaterasu": dict(mode="robe", hip=78, rigid=[], sway=1, dip=1, bust=(43, 60, 32, 43, 2, 2)),
+    "bosses/amaterasu": dict(mode="robe", hip=78, rigid=[], sway=1, dip=1, bust=(42, 60, 30, 43, 2, 2)),
     # Round 1 redo (owner: "extend two pixels to the right and go up two pixels"): the box was cols 17-27, rows 17-25, now cols 17-29, rows 15-23.
     "player/shrine_maiden": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(17, 29, 15, 23, 1)),
     "summons/bound_oni": dict(mode="legs", hip=50, back=(0, 26), front=(26, 54), rigid=[], spread=2, lift=2, dip=1),
