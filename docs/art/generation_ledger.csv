@@ -947,11 +947,6 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-26 17:59,player/shrine_maiden_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,486,1408,439,0.0269,sm_dl_b.png
 2026-10-26 18:00,shogunate/kitsune,gpt-image-2.5-flare,medium,1024x1024,1,773,640,439,0.0222,kitsune_a.png
 2026-10-26 18:00,shogunate/kitsune,gpt-image-2.5-flare,medium,1024x1024,1,854,640,439,0.0226,kitsune_b.png
-2026-10-26 16:13,epilogue/close_act5,gpt-image-2.5-flare,medium,1536x1024,1,913,576,343,0.0195,close_act5.png
-2026-10-26 16:13,epilogue/act5_4,gpt-image-2.5-flare,medium,1536x1024,2,880,588,343,0.0194,act5_4.png
-2026-10-26 16:13,epilogue/act5_1,gpt-image-2.5-flare,medium,1536x1024,2,879,588,343,0.0194,act5_1.png
-2026-10-26 16:13,epilogue/act5_3,gpt-image-2.5-flare,medium,1536x1024,2,876,588,343,0.0194,act5_3.png
-2026-10-26 16:13,epilogue/act5_2,gpt-image-2.5-flare,medium,1536x1024,2,865,588,343,0.0193,act5_2.png
 2026-10-26 17:54,bosses/kage,gpt-image-2.5-flare,medium,1024x1024,1,518,1024,439,0.0240,kage.png
 2026-10-26 17:55,shogunate/kunoichi,gpt-image-2.5-flare,medium,1024x1024,1,518,1024,439,0.0240,shogunate_kunoichi.png
 2026-10-26 17:55,player/grave_kunoichi,gpt-image-2.5-flare,medium,1024x1024,1,471,1024,439,0.0237,player_grave_kunoichi.png
