@@ -513,6 +513,29 @@ RECIPES = {
         "source": "province_shrine.png", "method": "quilt",  # The Mountain Shrine: raked grey gravel.
         "colors": ["floor_soil", "floor_slate", "floor_stone"],
     },
+    # --- Act V: Castle Kurogane ---
+    # The four zone floors of CASTLE KUROGANE (KuroganeGround, tiles/kurogane_<style>), one API source each (the
+    # bailey and courtyard sources came back nearly transparent and are stored with their alpha set opaque).
+    "kurogane_bailey": {
+        "source": "kurogane_bailey.png", "method": "quilt",  # The Outer Bailey: trampled earth, small stones.
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_dirt"],
+    },
+    "kurogane_gatehouse": {
+        "source": "kurogane_gatehouse.png", "method": "quilt",  # The Gatehouse: fitted granite paving.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_stone"],
+    },
+    "kurogane_courtyard": {
+        "source": "kurogane_courtyard.png", "method": "quilt",  # The Courtyards: raked grey gravel.
+        "colors": ["ink_cold", "floor_slate", "floor_marble", "floor_ash"],
+    },
+    "kurogane_keep": {
+        "source": "kurogane_keep.png", "method": "layout",  # The Keep: dark polished floorboards in staggered rows.
+        "layout": {"type": "courses", "rows": [16, 16, 16, 16, 16, 16, 16, 16], "joint": 1,
+                   "slabs": [[128], [80, 48], [40, 88], [128], [96, 32], [56, 72], [128], [24, 104]],
+                   "offsets": [0, 40, 12, 72, 24, 100, 56, 8]},
+        "regions": {"stone": ["floor_earth", "floor_dirt"], "joint": ["ink_warm"]},
+        "cell_shift": True, "cell_l": 0.008, "bevel": 0.006,
+    },
 }
 
 

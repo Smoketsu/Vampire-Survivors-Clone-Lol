@@ -90,6 +90,10 @@
 ##     `province`) and hands it the "shuten_doji" events; the Province kinds'
 ##     fire patches and smoke clouds live in ProvinceHazards
 ##     (province_hazards(), created on first use on any stage, stepped here).
+##   * Act V, Castle Kurogane (GDD §15.0 "Castle Kurogane (Act V phase 2)"): on
+##     a stage with a "kurogane" config it owns the KuroganeDirector (the
+##     General of the Left, the Shogun's army objective; `kurogane`) and hands
+##     it the "general_left" events. Null on every other stage.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -218,6 +222,10 @@ var province_haz: ProvinceHazards = null
 ## The Road to the Sun's mechanics (Act V: the Kirin, guest squads;
 ## StageRegistry "sun_road"; null on every other stage).
 var sun_road: SunRoadDirector = null
+# --- Act V: Castle Kurogane ---
+## Castle Kurogane's mechanics (Act V: the General of the Left, the Shogun's
+## army objective; StageRegistry "kurogane"; null on every other stage).
+var kurogane: KuroganeDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -344,6 +352,12 @@ func _ready() -> void:
 		sun_road.game = game
 		sun_road.config = stage_def["sun_road"]
 		add_child(sun_road)
+	# --- Act V: Castle Kurogane ---
+	if not (stage_def.get("kurogane", {}) as Dictionary).is_empty():
+		kurogane = KuroganeDirector.new()
+		kurogane.game = game
+		kurogane.config = stage_def["kurogane"]
+		add_child(kurogane)  # Castle Kurogane's director.
 
 
 # =====================================================================================
@@ -455,6 +469,9 @@ func step(delta: float) -> void:
 	# --- Act V: the Road to the Sun ---
 	if sun_road != null:
 		sun_road.step(delta)
+	# --- Act V: Castle Kurogane ---
+	if kurogane != null:
+		kurogane.step(delta)  # The General of the Left.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -560,6 +577,9 @@ func objective_text() -> String:
 	# --- Act V: the Road to the Sun ---
 	if sun_road != null and sun_road.objective_override() != "":
 		return sun_road.objective_override()  # The Kirin.
+	# --- Act V: Castle Kurogane ---
+	if kurogane != null and kurogane.objective_override() != "":
+		return kurogane.objective_override()  # The General of the Left, the Shogun's army.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -735,6 +755,12 @@ func _run_event(ev: Dictionary) -> void:
 				sun_road.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Kirin's event (SunRoadDirector).
+		# --- Act V: Castle Kurogane ---
+		"general_left":
+			if kurogane != null:
+				kurogane.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Castle Kurogane's miniboss.
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

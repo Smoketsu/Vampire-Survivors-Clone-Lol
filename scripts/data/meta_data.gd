@@ -260,7 +260,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act V: the Burning Province ---
 	"no_shadow_unlit",
 	# --- Act V: the Road to the Sun ---
-	"the_sun_goes_out"]
+	"the_sun_goes_out",
+	# --- Act V: Castle Kurogane ---
+	"regiments_broken"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -390,6 +392,14 @@ const ACHIEVEMENTS := {
 	# integration, with the closing card "The Pit Keeps Count" after it).
 	"the_sun_goes_out": {"display_name": "The Sun Goes Out", "description": "Defeat Amaterasu on the Road to the Sun",
 		"stat": "boss_kills", "stage": "sun_road", "goal": 1, "unlock": "The Act V epilogue", "bounty": 450},  # Owner-approved proposal; bounty TUNING (not in GDD) Act V's last (Empty Throne 400)
+	# --- Act V: Castle Kurogane ---
+	# Owner-approved Act V achievement "Regiments Broken (beat the Shogun after
+	# breaking all six banners)": Shogun Kurogane slain after every one of his
+	# six regiments' Hatamoto fell (BossShogun counts it as the run stat
+	# shogun_regiments_broken_kills; MetaProgress keeps the lifetime count). It
+	# unlocks the counter-passive Unbending.
+	"regiments_broken": {"display_name": "Regiments Broken", "description": "Slay Shogun Kurogane after breaking all six of his banners",
+		"stat": "shogun_regiments_broken_kills", "goal": 1, "unlock": "The Unbending passive", "bounty": 300},  # Owner-approved Act V proposal; bounty TUNING (not in GDD) (Heel Found 250: all six banners is harder)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

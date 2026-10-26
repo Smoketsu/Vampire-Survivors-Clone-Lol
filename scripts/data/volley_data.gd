@@ -310,6 +310,9 @@ const SPELLS := {
 	# --- Act V: the Road to the Sun ---
 	"black_sun": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 7], "spread": 30.0, "speed": 260.0,
 		"life": 0.7, "share": 0.4, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) embers of the dark sun flung after every third volley of beams
+	# --- Act V: Castle Kurogane ---
+	"banner_of_the_dead": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 14], "speed": 260.0,
+		"life": 0.6, "share": 0.4, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) a ring of violet bone shards with each planting
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

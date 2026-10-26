@@ -84,7 +84,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act V: the Burning Province ---
 	"hundred_shadows",
 	# --- Act V: the Road to the Sun ---
-	"black_sun"]
+	"black_sun",
+	# --- Act V: Castle Kurogane ---
+	"banner_of_the_dead"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -595,6 +597,29 @@ const SPELLS := {
 			{"suns": 1, "damage": 23.0, "cooldown": 1.3, "sun_reach": 200.0, "sun_width": 18.0, "group_radius": 68.0},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act V: Castle Kurogane ---
+	# Banner of the Dead (owner-approved Act V proposal "Rewards": "a war banner
+	# planted where you stand; summons near it attack faster"; unlocked by
+	# slaying Shogun Kurogane, UnlockData). Every `cooldown` s it plants a war
+	# banner where the necromancer stands: the planting strikes every foe within
+	# `pulse_radius` px for `damage`; the banner stands `duration` s (at most
+	# `banners` at once) and every summon of his within `radius` px of it
+	# attacks `haste` faster (HordeDirector.attack_haste(), the one read; the
+	# same on every stage). Logic: BannerOfTheDead; fixed rules: BannerData.
+	"banner_of_the_dead": {
+		"display_name": "Banner of the Dead",
+		"icon": "banner_of_the_dead",
+		"description": "Plant a war banner where you stand: your dead near it attack faster.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"haste": "Attack speed near it", "radius": "Banner reach", "banners": "Banners", "duration": "Duration (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 20.0, "pulse_radius": 70.0, "haste": 0.20, "radius": 110.0, "banners": 1, "duration": 7.0, "cooldown": 9.0},  # TUNING (not in GDD) a support spell: the haste is its worth
+			{"damage": 26.0, "pulse_radius": 74.0, "haste": 0.25, "radius": 120.0, "banners": 1, "duration": 7.5, "cooldown": 8.5},  # TUNING (not in GDD)
+			{"damage": 32.0, "pulse_radius": 78.0, "haste": 0.30, "radius": 130.0, "banners": 2, "duration": 8.0, "cooldown": 8.0},  # TUNING (not in GDD)
+			{"damage": 40.0, "pulse_radius": 82.0, "haste": 0.35, "radius": 140.0, "banners": 2, "duration": 8.5, "cooldown": 7.5},  # TUNING (not in GDD)
+			{"damage": 48.0, "pulse_radius": 86.0, "haste": 0.40, "radius": 150.0, "banners": 2, "duration": 9.0, "cooldown": 7.0},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -611,7 +636,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act IV: the Asphodel Underworld ---
 	"river_slow", "drain_share",
 	# --- Act V: the Burning Province ---
-	"echo_share", "burst_share"]
+	"echo_share", "burst_share",
+	# --- Act V: Castle Kurogane ---
+	"haste"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

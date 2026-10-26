@@ -23,6 +23,8 @@
 ##   province kinds, shuten-doji, kage).
 ##   the Road to the Sun: SunRoadReport.stage_lines() (the director, its events,
 ##                      its kinds, Amaterasu and her sky).
+##   Act V, Castle Kurogane: KuroganeReport.print_lines() (kurogane, kurogane
+##   kinds, general of the left, shogun).
 ## Read-only: it never changes the run.
 class_name ShogunateReport
 extends RefCounted
@@ -63,6 +65,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	ProvinceReport.print_lines(game, st)  # The paddies, the fires, the stage's kinds, Shuten-doji, Kage (each when it ran).
 	# --- Act V: the Road to the Sun ---
 	SunRoadReport.stage_lines(game, st)
+	# --- Act V: Castle Kurogane ---
+	KuroganeReport.print_lines(game, st)  # The General of the Left, the stage's kinds, the Shogun (each when it ran).
 
 
 ## The "sun's course" line (SunCourse).

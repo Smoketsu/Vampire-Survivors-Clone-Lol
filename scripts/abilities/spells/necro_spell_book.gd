@@ -44,6 +44,9 @@
 ## hit by CombatResolver.damage_enemy(): its clones echo the next spell cast).
 ## and Act V's (each Act V stage in its own list with the same hooks):
 ##   Black Sun        -> BlackSun         (evolves into Eclipse of Heaven; the Road to the Sun)
+## and Act V's (Castle Kurogane, KUROGANE_IDS: the same generic hooks; its own
+## autotest line, KuroganeReport.item_lines()):
+##   Banner of the Dead -> BannerOfTheDead (evolves into Hundred Banners)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -110,6 +113,10 @@ const PROVINCE_IDS := ["hundred_shadows"]
 ## The Road to the Sun's unlockable spell (Amaterasu's reward): stepped, kill
 ## hooked and after-physics hooked like UNDERWORLD_IDS, reported by SunRoadReport.
 const SUN_ROAD_IDS := ["black_sun"]
+# --- Act V: Castle Kurogane ---
+## Castle Kurogane's unlockable spell (Shogun Kurogane's reward): stepped, kill
+## hooked and after-physics hooked like UNDERWORLD_IDS, reported by KuroganeReport.
+const KUROGANE_IDS := ["banner_of_the_dead"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -144,6 +151,8 @@ const SOURCES := {
 	"hundred_shadows": ["hundred_shadows", "thousand_shadows"],
 	# --- Act V: the Road to the Sun ---
 	"black_sun": ["black_sun", "eclipse_of_heaven", "eclipse_corona"],
+	# --- Act V: Castle Kurogane ---
+	"banner_of_the_dead": ["banner_of_the_dead", "hundred_banners"],
 }
 
 ## Owning run.
@@ -210,6 +219,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))
+	# --- Act V: Castle Kurogane ---
+	for id: String in KUROGANE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Castle Kurogane's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -273,6 +291,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act V: the Road to the Sun ---
 		"black_sun":
 			node = BlackSun.new()
+		# --- Act V: Castle Kurogane ---
+		"banner_of_the_dead":
+			node = BannerOfTheDead.new()
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -317,6 +338,11 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Road to the Sun).
 		if node != null:
 			node.on_enemy_killed(e)
+	# --- Act V: Castle Kurogane ---
+	for id: String in KUROGANE_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (Castle Kurogane).
+		if node != null:
+			node.on_enemy_killed(e)  # Castle Kurogane's spell.
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
@@ -338,11 +364,16 @@ func after_physics(delta: float) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act IV spell's node, if learned (the Underworld).
 		if node != null:
 			node.after_physics(delta)
-	# --- Act V: the Road to the Sun --- (before the Province's loop: its block runs on into on_spell_hit())
+	# --- Act V: the Road to the Sun --- (this loop and Castle Kurogane's run before the Province's, whose block runs on into on_spell_hit())
 	for id: String in SUN_ROAD_IDS:
 		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Road to the Sun).
 		if node != null:
 			node.after_physics(delta)
+	# --- Act V: Castle Kurogane ---
+	for id: String in KUROGANE_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (Castle Kurogane).
+		if node != null:
+			node.after_physics(delta)  # Castle Kurogane's spell.
 	# --- Act V: the Burning Province ---
 	for id: String in PROVINCE_IDS:
 		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Province).

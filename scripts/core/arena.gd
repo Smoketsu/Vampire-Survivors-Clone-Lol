@@ -478,6 +478,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act V: the Road to the Sun ---
 	if SunRoadGlyphs.draw_obstacle(self, o):
 		return  # A Road to the Sun obstacle kind (Act V).
+	# --- Act V: Castle Kurogane ---
+	if KuroganeGlyphs.draw_obstacle(self, o):
+		return  # A Castle Kurogane obstacle kind (Act V).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

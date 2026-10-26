@@ -2466,3 +2466,52 @@ Maiden and her Deathlord skin are +0.14 over the darkest floors (0.01 under the 
 Code-drawn on purpose: Amaterasu's sun disc, beams (a soft strip texture stretched and rotated), sun-disc mines,
 zenith columns, the noon glare and the noon shade, the dark sun of her fall; the Black Sun's suns and beams; the
 Kirin's halo; the fox-fire flicker and wisp over an illusion.
+
+### Act V: Castle Kurogane (Stage 14; Act V phase 2, Oct 2026)
+
+<!-- --- Act V: Castle Kurogane --- -->
+Castle Kurogane's art (GDD §15.0 "Castle Kurogane (Act V phase 2)" and the rows after it), in the Shogunate's style
+above: black and red lacquer, steel, indigo and gold, with the castle's grey stone, white plaster and dark timber.
+Prompts in `art_source/kurogane/<id>.txt` (the Act V unit template, the sex named in every figure prompt: all male
+here), raw API images in `art_source/kurogane/raw/`, converted sources archived by `prepare_sprite.py` under
+`art_source/<key>.png`. Generated with `tools/gen_image.py`: `--ref` the Samurai's source for the pixel look plus a crop
+of `act5_lineup.png` (the banner bearer, for the Hatamoto) or of `act5_boss.png` (the cavalry for the Kiba-musha and the
+General; the Shogun on his platform for the Shogun); the Shogun's source for his duel pose; the Oathbreaker's and the
+Samurai's sources for the Ronin Revenant, then his source for his three skins; the stone lantern for the props and
+the platform; `ilion_gate` for the floors; `river_styx` / `lethes_flood` for the badges. Pipeline:
+`prepare_sprite.py` straight on the source with `--ramps lacquer,grey,gold,skin,brown,sakura` (no indigo: with it
+the black lacquer came out navy blue) and `--ink-l 0.15`; `--no-levels` for the Hatamoto and the Shogun's two poses
+(levels turned the black armour grey-blue), levels on for the two horsemen (their dark horses failed the lightness
+check without); the Ronin `--ramps violet,lacquer,grey,gold,skin,brown --ink-l 0.2`, his Hyper skin `--no-levels`, the
+Untouchable `--ramps marble,soul,grey,skin`, the Deathlord `--ramps crimson,grey,lacquer,gold,skin`. Prop and badge
+sheets split by `art_source/kurogane/split_sheet.py` (connected pieces), the props converted at each size by
+`make_props.py` (circles: footprint x 2 + 4 wide; rects: length + 2 wide, the end-on `_v` length + 14 tall; the
+command platform's stray palisade cut away by hand), the badges by `make_badges.py` (each symbol at 24 art px on the
+frame of an approved badge: violet `abyssal_pact`, gold `tidecallers_host`). Floors: `make_tile.py` recipes
+`kurogane_*` (the bailey and courtyard sources came back nearly transparent and are stored opaque; the keep as a
+staggered-plank layout). Walk strips by `walk_cycle.py` (rigs under `# --- Act V: Castle Kurogane ---`; the Ronin's
+skins through `SKINS`; no bust rigs: every figure here is male). The Hatamoto's banner is white on purpose: the game
+multiplies his sprite by his regiment's banner colour (HatamotoKit). 18 API images (2 prop sheets, 2 badge sheets),
+about **$0.37** (ledger). `art_check.py`: every sprite passes height, alpha, palette and feet; lightness passes on the
+dark floors and fails only on the light Act I March road / Sanctum floors (the Shogun, his duel pose, the General,
+the Kiba-musha), where Act V units never stand. **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/hatamoto` | Hatamoto (elite banner guard, male): black lacquer laced red, a low kabuto with a gold crest, a red sash, a short yari, a tall plain white sashimono banner on his back | 32x72 | legs walk (hip 61; the yari, cols 22-28, rigid); the banner takes the regiment's colour by tint |
+| `shogunate/kiba_musha` | Kiba-musha (mounted samurai cavalry, male): crescent kabuto, black-and-red lacquer, a levelled yari, a brown war horse with a red lacquer saddle cloth | 74x60 | legs walk (hip 46; hind legs left, forelegs right); the charge lane is code (EffectManager.telegraph_line) |
+| `shogunate/general_left` | The General of the Left (miniboss, male): antler crests, a red menpo, gold-trimmed black lacquer, a red war cloak, a levelled naginata, an indigo sashimono, a huge black war horse in red barding | 110x100 | legs walk (hip 77) |
+| `shogunate/command_platform` | The Shogun's command platform: a timber war platform with a red lacquered railing, gold post caps, a stair and four nobori (black and white, gold circles) | 106x124 | drawn by BossShogun under his feet (ShogunData.PLATFORM_DECK_RISE) and left where it stood |
+| `bosses/shogun` | Shogun Kurogane (male): black-and-gold o-yoroi, a huge gold crescent crest, black beard, crimson cloak, an open black-and-gold war fan raised high | 116x116 | legs walk (hip 94) |
+| `bosses/shogun_duel` | His duel pose (BossPoseData 3): a low iai stance, the long blade drawn level, the cloak flaring | 120x100 | the leap down and every cut he stands to draw; the white lines are DrawCuts' |
+| `player/ronin_revenant` | The Ronin Revenant (male): a battered straw sandogasa, a pale face with violet eyes, a tattered violet kimono and dark hakama over cracked black lacquer plates, a red sash, a katana, a small black banner with a violet skull on his back | 32x58 | robe walk (hip 50, hem sway) |
+| `player/ronin_revenant_hyper` / `_untouchable` / `_deathlord` | Gilded Ronin (gold kimono, gilded hat and banner), Untouchable (white phantom with soul-teal trims), Deathlord (black iron kabuto with a spiked crest, crimson) | 32x58 each | walk through `SKINS` (derived rig) |
+| `tiles/kurogane_bailey`, `_gatehouse`, `_courtyard`, `_keep` | Trampled earth; fitted granite paving; raked gravel; dark floorboards (staggered planks) | 128 | mean L 0.22 / 0.26 / 0.26 / 0.25 |
+| `obstacles/castle_wall_{s,l}` (+ `_v`), `palisade_gate_{s,l}` (+ `_v`) | A length of castle wall (fitted grey stone, white plaster band, dark tiled cap); a timber gate fence with iron studs and a red beam | 64 / 86; `_v` 22 / 30 wide | rects, H + V |
+| `obstacles/black_pine_{s,l}`, `garden_rock_{s,l}`, `sake_barrels_m`, `taiko_drum_m` | A twisted garden pine; a mossy boulder; three straw-wrapped sake barrels; a red war drum on its stand | footprint x 2 + 4 wide | circles; the stone lanterns are the shared Act V toro |
+| `icons/banner_of_the_dead`, `warlord_seal`, `unbending` | Violet badges: a black war banner with a violet skull on a bone pole; a red lacquer seal with a violet skull; a bone forearm breaking a katana blade | 32 | |
+| `icons/hundred_banners`, `ach_regiments_broken` | Gold badges: three banners in a fan; a snapped banner over a gold war fan | 32 | |
+
+Code-drawn on purpose: the Banner of the Dead's planted banners and aura (rects and a texture disc), the regiments'
+banner colours (a tint), the charge lanes, the Draw lines of the Shogun's iai and triple cuts (DrawCuts), the war fan's
+flourish, the fallbacks (KuroganeGlyphs).

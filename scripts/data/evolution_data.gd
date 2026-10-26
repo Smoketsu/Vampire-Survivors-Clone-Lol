@@ -82,7 +82,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act V: the Burning Province ---
 	"thousand_shadows",
 	# --- Act V: the Road to the Sun ---
-	"eclipse_of_heaven"]
+	"eclipse_of_heaven",
+	# --- Act V: Castle Kurogane ---
+	"hundred_banners"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -507,6 +509,27 @@ const EVOLUTIONS := {
 		"stats": {
 			"suns": 2, "damage": 26.0, "cooldown": 1.2, "sun_reach": 240.0, "sun_width": 22.0, "group_radius": 72.0,  # TUNING (not in GDD)
 			"corona": 0.5,  # TUNING (not in GDD) the evolution flag: share of the beam's damage its corona deals
+		},
+	},
+	# --- Act V: Castle Kurogane ---
+	# Hundred Banners (owner-approved Act V proposal: "Banner of the Dead ->
+	# Hundred Banners (+ Warlord's Seal)"): Banner of the Dead + Warlord's Seal
+	# (a NEW passive, owner rule: at Lv 5). Own decision on its kit: each
+	# planting raises `banners` banners at once on a ring round the necromancer
+	# (BannerData.RING), and every banner beats a war drum every
+	# `pulse_interval` s: `pulse_damage` to every foe within `pulse_radius` px.
+	# Detected by the "pulse_interval" key.
+	"hundred_banners": {
+		"base": "banner_of_the_dead",
+		"passive": "warlords_seal",
+		"display_name": "Hundred Banners",
+		"icon": "hundred_banners",
+		"description": "A ring of war banners rises round you, and their war drums beat on your foes.",
+		"labels": {"haste": "Attack speed near them", "banners": "Banners", "pulse_damage": "War drum", "duration": "Duration (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 56.0, "pulse_radius": 84.0, "haste": 0.45, "radius": 130.0, "banners": 4, "duration": 10.0, "cooldown": 7.0,  # TUNING (not in GDD)
+			"pulse_damage": 16.0,  # TUNING (not in GDD) each war drum's beat
+			"pulse_interval": 2.0,  # TUNING (not in GDD) the evolution flag: s between two beats of each banner's drum
 		},
 	},
 }

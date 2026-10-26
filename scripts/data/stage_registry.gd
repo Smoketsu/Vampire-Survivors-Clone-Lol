@@ -154,6 +154,12 @@
 ##                        the Road to the Sun: the Kirin's "kirin" event, guest
 ##                        squads of the other Act V stages' kinds); ground
 ##                        "sun_road" is its SunRoadGround (four zone floors).
+## --- Act V: Castle Kurogane ---
+##   kurogane           — KuroganeDirector config (KuroganeStage.KUROGANE, Act V,
+##                        Castle Kurogane: the General of the Left, the HUD
+##                        objective of the Shogun's army; its "general_left"
+##                        event); ground "kurogane" is its KuroganeGround (four
+##                        zone floors).
 class_name StageRegistry
 extends RefCounted
 

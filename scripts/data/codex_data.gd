@@ -158,13 +158,17 @@ const SHOGUNATE_SOLDIERS: Array[String] = ["ashigaru", "samurai", "teppo_gunner"
 	# --- Act V: the Burning Province ---
 	"kunoichi", "kappa",
 	# --- Act V: the Road to the Sun ---
-	"sohei", "kitsune"]
+	"sohei", "kitsune",
+	# --- Act V: Castle Kurogane ---
+	"hatamoto", "kiba_musha"]
 ## Shogunate champions (minibosses) and the Act V Reckoning kinds.
 const SHOGUNATE_CHAMPIONS: Array[String] = ["oni",
 	# --- Act V: the Burning Province ---
 	"shuten_doji",
 	# --- Act V: the Road to the Sun ---
-	"kirin"]
+	"kirin",
+	# --- Act V: Castle Kurogane ---
+	"general_left"]
 ## Shogunate stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const SHOGUNATE_BOSSES: Array[String] = ["kage", "shogun", "amaterasu"]
 
@@ -301,6 +305,10 @@ const DESCRIPTIONS: Dictionary = {
 	"sohei": "Warrior monks of the sun's shrines. The naginata sweeps a wide arc: step out of it.",  # TUNING (not in GDD)
 	"kitsune": "Fox spirits of the night. Their fox-fire copies draw your dead's blows; light or area damage reveals them.",  # Owner-approved Act V proposal
 	"kirin": "A holy beast of light that walks the road to the sun. Its gallop and its horn's rays burn the dead.",  # Owner-approved Act V proposal
+	# --- Act V: Castle Kurogane ---
+	"hatamoto": "Banner guards of the Shogun. While one stands, the soldiers near him fight harder. Kill the banner.",  # Owner-approved Act V proposal
+	"kiba_musha": "Mounted samurai who rein in, then charge down a lane: step aside, or let the horse ride through your dead.",  # Owner-approved Act V proposal
+	"general_left": "The General of the Left charges straight through your ring on his black war horse and calls his riders.",  # Owner-approved Act V proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -492,6 +500,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"no_shadow_unlit": "ach_no_shadow_unlit",  # TUNING (not in GDD)
 	# --- Act V: the Road to the Sun ---
 	"the_sun_goes_out": "ach_the_sun_goes_out",  # TUNING (not in GDD)
+	# --- Act V: Castle Kurogane ---
+	"regiments_broken": "ach_regiments_broken",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -527,6 +537,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"no_shadow_unlit": "paper_lanterns",
 	# --- Act V: the Road to the Sun ---
 	"the_sun_goes_out": "black_sun",
+	# --- Act V: Castle Kurogane ---
+	"regiments_broken": "unbending",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

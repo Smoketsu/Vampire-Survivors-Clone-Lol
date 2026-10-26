@@ -531,6 +531,16 @@ RIGS = {
     "player/shrine_maiden": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(17, 27, 17, 25, 1)),
     "summons/bound_oni": dict(mode="legs", hip=46, back=(0, 18), front=(18, 37), rigid=[(37, 46, 0, None)], spread=2, lift=2, dip=1),
     "summons/oni_lord": dict(mode="legs", hip=59, back=(0, 32), front=(32, 54), rigid=[(54, 66, 0, None)], spread=2, lift=2, dip=1),
+    # --- Act V: Castle Kurogane ---
+    # The Hatamoto marches under his tall white banner (pole cols 22-28, the whole height, rigid); the Kiba-musha and the
+    # General of the Left gallop (the horse's hind legs left, forelegs right; a wide spread and a high lift); Shogun
+    # Kurogane strides under his crimson cloak (his duel pose bosses/shogun_duel is a still: no strip). The Ronin
+    # Revenant walks in his tattered kimono and hakama (robe: the hem sways).
+    "shogunate/hatamoto": dict(mode="legs", hip=61, back=(0, 12), front=(12, 22), rigid=[(22, 29, 0, None)], spread=2, lift=2, dip=1),
+    "shogunate/kiba_musha": dict(mode="legs", hip=46, back=(0, 37), front=(37, 74), rigid=[], spread=3, lift=2, dip=1),
+    "shogunate/general_left": dict(mode="legs", hip=77, back=(0, 60), front=(60, 110), rigid=[], spread=3, lift=3, dip=1),
+    "bosses/shogun": dict(mode="legs", hip=94, back=(0, 64), front=(64, 116), rigid=[], spread=2, lift=2, dip=1),
+    "player/ronin_revenant": dict(mode="robe", hip=50, rigid=[], sway=1, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -613,6 +623,10 @@ SKINS = {
     "player/shrine_maiden_hyper": "player/shrine_maiden",
     "player/shrine_maiden_untouchable": "player/shrine_maiden",
     "player/shrine_maiden_deathlord": "player/shrine_maiden",
+    # --- Act V: Castle Kurogane ---
+    "player/ronin_revenant_hyper": "player/ronin_revenant",
+    "player/ronin_revenant_untouchable": "player/ronin_revenant",
+    "player/ronin_revenant_deathlord": "player/ronin_revenant",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

@@ -219,5 +219,8 @@ const SOUNDS := {
 	"sake_burst": "sake_burst",  # SoundData.SHOGUNATE_SOUNDS: Shuten-doji's sake barrels burst into fire (ShutenDojiKit)
 	"kunai_chain": "kunai_chain",  # SoundData.SHOGUNATE_SOUNDS: Kage's chained kunai leave her hand (BossKage)
 	"kage_split": "kage_split",  # SoundData.SHOGUNATE_SOUNDS: Kage splits into her shadows (BossKage)
+	# --- Act V: Castle Kurogane ---
+	"cavalry_charge": "cavalry_charge",  # SoundData.SHOGUNATE_SOUNDS: a Kiba-musha's / the General's charge (KibaKit)
+	"regiment_break": "regiment_break",  # SoundData.SHOGUNATE_SOUNDS: a regiment breaks as its Hatamoto falls (ShogunRegiments)
 }
 

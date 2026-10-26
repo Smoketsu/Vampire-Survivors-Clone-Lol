@@ -124,6 +124,19 @@
 ##                       the Gods) to the army and the necromancer
 ##                       (DivineWrath.grounded_mult(), the one read, per target
 ##                       slot). Evolves nothing.
+## plus Castle Kurogane's two (Act V, GDD §15.0 "Banner of the Dead, Warlord's
+## Seal and the Ronin Revenant" and "Regiments Broken and Unbending"; both
+## locked until earned, UnlockData):
+##   Warlord's Seal    — summons within BannerData.SEAL_RADIUS px of the
+##                       necromancer attack faster (HordeDirector
+##                       .attack_haste(), the one per-summon attack-speed read;
+##                       evolves Banner of the Dead into Hundred Banners).
+##                       Unlocked with the spell by slaying Shogun Kurogane.
+##   Unbending         — an Act V counter-passive ("act": 5, offered only on
+##                       Act V stages; unlocked by the achievement Regiments
+##                       Broken): the Draw's cuts hit summons for less
+##                       (DrawCuts.unbending_mult(), the foundation's one read,
+##                       per summon's own player). Evolves nothing.
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -169,7 +182,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act V: the Burning Province ---
 	"hidden_hand", "paper_lanterns",
 	# --- Act V: the Road to the Sun ---
-	"stolen_dawn", "onis_resolve"]
+	"stolen_dawn", "onis_resolve",
+	# --- Act V: Castle Kurogane ---
+	"warlords_seal", "unbending"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -193,7 +208,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IV: the Asphodel Underworld ---
 	"myrmidon_oath",
 	# --- Act V: the Road to the Sun ---
-	"onis_resolve"]
+	"onis_resolve",
+	# --- Act V: Castle Kurogane ---
+	"warlords_seal", "unbending"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1220,6 +1237,49 @@ const PASSIVES := {
 			{"stun_resist": 0.30},  # TUNING (not in GDD)
 			{"stun_resist": 0.40},  # TUNING (not in GDD)
 			{"stun_resist": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act V: Castle Kurogane ---
+	# Warlord's Seal (Banner of the Dead's paired passive; owner-approved Act V
+	# proposal: "Hundred Banners (+ Warlord's Seal)"; unlocked with the spell by
+	# Shogun Kurogane and offered on every stage). Own decision on its effect:
+	# the warlord's seal of command: every summon within BannerData.SEAL_RADIUS
+	# px of the necromancer attacks seal_haste faster (HordeDirector
+	# .attack_haste(), the one per-summon attack-speed read: the Bone Ring keeps
+	# most of the army inside it); it adds to a banner's haste.
+	"warlords_seal": {
+		"display_name": "Warlord's Seal",  # Owner-approved proposal
+		"icon": "warlord_seal",
+		"description": "Your dead near you attack faster under your seal of command.",
+		"labels": {"seal_haste": ["Attack speed near you", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"seal_haste": 0.04},  # TUNING (not in GDD)
+			{"seal_haste": 0.08},  # TUNING (not in GDD)
+			{"seal_haste": 0.12},  # TUNING (not in GDD)
+			{"seal_haste": 0.16},  # TUNING (not in GDD)
+			{"seal_haste": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# Act V's counter-passive Unbending (owner-approved Act V proposal: "Unbending
+	# (Draw cuts hit summons for less)"; unlocked by the achievement Regiments
+	# Broken and offered only in Act V through its card row's "act").
+	# DrawCuts.unbending_mult() (the foundation's one read,
+	# ShogunateRulesData.UNBENDING / UNBENDING_KEY): a Draw cut on a summon deals
+	# 1 - draw_reduction of its damage.
+	"unbending": {
+		"display_name": "Unbending",  # Owner-approved proposal
+		"icon": "unbending",
+		"description": "The samurai's Draw cuts your summons for less.",
+		"labels": {"draw_reduction": ["Draw cut damage to summons", "neg_pct"]},
+		"act": 5,  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"draw_reduction": 0.15},  # TUNING (not in GDD)
+			{"draw_reduction": 0.25},  # TUNING (not in GDD)
+			{"draw_reduction": 0.35},  # TUNING (not in GDD)
+			{"draw_reduction": 0.45},  # TUNING (not in GDD)
+			{"draw_reduction": 0.55},  # TUNING (not in GDD) a cut 24 -> ~11 to a summon
 		],
 	},
 }
