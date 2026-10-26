@@ -54,7 +54,7 @@ const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) placeholder, tuned i
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) placeholder (Acts III and IV: 7:00)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 4.25  # TUNING (not in GDD) placeholder (the Burning Province x4.0)
+const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 2 of Act V
 
 ## Game time (s) dusk falls: the timeline below starts its ambush trickle then.
 ## Must equal the Sun's Course's dusk_at (ShogunateRulesData.SUN, or this
@@ -317,7 +317,7 @@ const STAGE := {
 	"short_name": "Kurogane",
 	"chapter": "Chapter XIV",
 	"act": 5,  # Act V, the Shogunate of the Rising Sun.
-	"playable": false,  # Act V phase 2: built; the lead turns it on after the merge, the review and the owner's playtest.
+	"playable": true,  # Owner decision (Oct 26, 2026): "Ship the curve" after the art review (four rounds) and three playtest passes (GDD §15.0 "Act V goes live").
 	"description": "The Shogun's fortress: stone walls, gates, courtyards and the keep. His regiments are his strength: break their banners and he draws his own blade.",
 	"unlock": {"stage": "province", "boss_kills": 1},  # Owner-approved: each boss unlocks the next stage
 	"unlock_text": "Slay Kage in the Burning Province to unlock.",

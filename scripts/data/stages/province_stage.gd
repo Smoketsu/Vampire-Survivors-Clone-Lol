@@ -54,7 +54,7 @@ const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) placeholder, tuned i
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) placeholder (Acts III and IV: 7:00)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 4.0  # TUNING (not in GDD) placeholder (the Asphodel Underworld x3.75)
+const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 1 of Act V
 
 ## Game time (s) dusk falls: the timeline below starts its ambush trickle then.
 ## Must equal the Sun's Course's dusk_at (ShogunateRulesData.SUN, or this
@@ -345,7 +345,7 @@ const STAGE := {
 	"short_name": "The Province",
 	"chapter": "Chapter XIII",
 	"act": 5,  # Act V, the Shogunate of the Rising Sun.
-	"playable": false,  # Act V phase 2: built, kept hidden for the lead's pass and the owner's playtest.
+	"playable": true,  # Owner decision (Oct 26, 2026): "Ship the curve" after the art review (four rounds) and three playtest passes (GDD §15.0 "Act V goes live").
 	"description": "Rice terraces, bamboo groves and a village in flames: the Shogunate's armies have reached the countryside, and by night the old stories walk with them.",
 	"unlock": {"stage": "underworld", "boss_kills": 1},  # Owner-approved: Hades's fall opens Act V
 	"unlock_text": "Make Hades kneel in the Asphodel Underworld to unlock.",

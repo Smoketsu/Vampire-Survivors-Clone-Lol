@@ -7,7 +7,7 @@
 class_name MasteryUiData
 extends RefCounted
 
-## Tiles per row (18 classes make 5 rows; four columns of OssuaryUiData.TILE_SIZE
+## Tiles per row (19 classes make 5 rows; four columns of OssuaryUiData.TILE_SIZE
 ## fill 1200 of the 1280 px layout, like the four trees).
 const COLUMNS: int = 4  # TUNING (not in GDD) layout fit
 ## Height (layout px) the panel reserves for its detail strip (the 64 px icon plus

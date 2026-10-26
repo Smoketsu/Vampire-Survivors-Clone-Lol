@@ -1759,7 +1759,7 @@ the Gods.
   `underworld events`, `underworld kinds`, `hades`, `hades claims`, `river styx` and `myrmidon shades`
   lines (`UnderworldReport`).
 
-### Act V: the Shogunate of the Rising Sun (foundation, not yet playable)
+### Act V: the Shogunate of the Rising Sun (live)
 
 <!-- --- Act V: the Shogunate of the Rising Sun --- -->
 With Olympus fallen there is no more day for the dead to fear but one. Across the eastern sea a Shogun rules
@@ -1767,8 +1767,8 @@ in the name of the sun goddess, and his armies sail to burn the night out: **the
 Sun** (GDD §15.0 "Act V foundation (phase 1)"; owner-approved proposal `docs/act5/PROPOSAL.md`). The stage
 select has an **Act V** tab with its three stages, **the Burning Province**, **Castle Kurogane** and **the
 Road to the Sun** (bosses Kage, Mistress of the Hidden Hand; Shogun Kurogane; Amaterasu); making Hades kneel
-opens the Province, each boss opens the next stage, and all three show "Coming soon" until their stages are
-built (phase 2). The act's shared rules:
+opens the Province and each boss opens the next stage. All three are playable (owner decision Oct 26, 2026, GDD
+§15.0 "Act V goes live"). The act's shared rules:
 
 - **The Sun's Course.** Every Act V run goes from day to night on the 20:00 clock: **day** (20:00-13:00
   left, clear light, the Shogunate's soldiers), **dusk** (13:00-7:00, the light turns orange and the
@@ -1791,7 +1791,7 @@ the **Teppo Gunner** (arquebus volleys on a shared 6 s beat, then a long reload 
 through walls and the ring) and the **Oni** (a heavy whose iron kanabō stuns summons; flat armour; the Endless
 Night's kind). The Codex has a **Shogunate** tab.
 
-### Act V: the Burning Province (Stage 13, built, not yet playable)
+### Act V: the Burning Province (Stage 13)
 
 <!-- --- Act V: the Burning Province --- -->
 Rice terraces, bamboo groves and a village in flames (GDD §15.0 "The Burning Province (Act V phase 2)"; still
@@ -1815,9 +1815,9 @@ wider light and earlier ambush warnings; offered only in Act V).
 
 <!-- --- Act V: the Road to the Sun --- -->
 The finale of Act V (GDD §15.0 "The Road to the Sun (Act V phase 2)" and the rows after it; data in
-`scripts/data/stages/sun_road_stage.gd`; still "Coming soon" until the lead's merge and review). A pilgrim road
+`scripts/data/stages/sun_road_stage.gd`). A pilgrim road
 of torii gates climbing to the sun goddess's shrine above the clouds. Unlocked by defeating Shogun Kurogane;
-Soul Ash ×4.5 (placeholder).
+Soul Ash ×1.5 (the per-act rule: every act restarts at ×1 / ×1.25 / ×1.5).
 
 - **Four zones on the clock** (`MarchDirector`): the Torii Road (20:00), the Sacred Forest (15:00), the Shrine
   Steps (10:00) and the High Plain of Heaven (5:00), each with its own pixel-art floor (`SunRoadGround`) and
@@ -1846,7 +1846,7 @@ Soul Ash ×4.5 (placeholder).
 ### Stage 14: Castle Kurogane (Act V)
 
 <!-- --- Act V: Castle Kurogane --- -->
-The Shogun's fortress (GDD §15.0 "Castle Kurogane (Act V phase 2)"; still "Coming soon" until the lead's merge).
+The Shogun's fortress (GDD §15.0 "Castle Kurogane (Act V phase 2)").
 Four zones on the clock: **the Outer Bailey** (trampled earth, outer walls, pines and garden rocks), **the
 Gatehouse** (granite paving among stone walls and timber gate fences), **the Courtyards** (raked gravel, pines,
 stone lanterns, sake barrels) and **the Keep** (dark floorboards, taiko drums). The Sun's Course, the Draw and

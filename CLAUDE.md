@@ -204,9 +204,9 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as ten **parallel** matrix jobs, the Graveyard
+CI (`.github/workflows/ci.yml`) runs the import and, as thirteen **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
-policy) and one army autotest per Act II and Act IV stage; beside them, the Windows/Linux/Web exports (artifacts
+policy) and one army autotest per Act II, Act IV and Act V stage; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -624,6 +624,18 @@ tiny tweaks.
   Cerberus, Hades on the Claims path; River Styx / Lethe's Flood + Ferryman's Toll; the Ferrywoman; the Myrmidon Shades
   / Legion of Tartarus + Myrmidon Oath; Empty Throne), the Act IV epilogue "The Gods Are Silent" and the card "The Sun
   Still Rises". Stages 1–9 same-seed summaries unchanged.
+- **Act V, the Shogunate of the Rising Sun** (owner: "use a similar plan to tackle act 5"; GDD §15.0 rows from "Act V
+  foundation (phase 1)" to "Act V goes live"; `docs/act5/`): the foundation (`game.shogunate`, `ShogunateRules`: the
+  Sun's Course `SunCourse` day / dusk / night with a darkness texture and lit stone lanterns, the Draw `DrawCuts`, From
+  the Shadows `ShadowAmbush`; the shared kinds ashigaru, samurai, teppo gunner, ninja, onryo, oni; the Endless Night
+  Reckoning; "The Setting Sun" and the Shogunate sounds) and three stages: **the Burning Province** (paddies, village
+  fires, Shuten-doji, Kage and her clones revealed by light; Kunoichi, Kappa; Hundred Shadows / Thousand Shadows +
+  Hidden Hand; the Grave Kunoichi; No Shadow Unlit → Paper Lanterns), **Castle Kurogane** (the General of the Left,
+  Shogun Kurogane whose army is his health bar, six regiments and the iai duel; Hatamoto, Kiba-musha; Banner of the
+  Dead / Hundred Banners + Warlord's Seal; the Ronin Revenant; Regiments Broken → Unbending), **the Road to the Sun**
+  (the Kirin, Amaterasu crossing the sky through `SunCourse.set_override()`; Kitsune and fox-fire illusions, Sohei;
+  Black Sun / Eclipse of Heaven + Stolen Dawn; the Shrine Maiden of Night; the Bound Oni / Oni Lord + Oni's Resolve;
+  The Sun Goes Out → the epilogue part and "The Pit Keeps Count"). Stages 1–12 same-seed summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -660,6 +672,13 @@ tiny tweaks.
    none (`docs/act4/playtest/`; the Underworld got damage ×1.5, Centaur Archers and the new Shade Archer). Open: the
    owner's own playtest notes (Soul Ash now ×1 / ×1.25 / ×1.5, the per-act rule), the Web performance check
    on Olympus late game. Handoff: `docs/act4/HANDOFF.md`.
+6c. **Act V, the Shogunate of the Rising Sun: live (Oct 26, 2026).** The three stages are playable (GDD §15.0 "Act V
+   goes live"), one CI army job each. Built with the Act IV plan (`docs/act5/`: proposal copy, foundation and phase 2
+   briefs, three parallel agents each, an integration agent for the merge); art review four rounds
+   (`docs/act5/ART_REDO_R*.md`); three bot playtest passes at meta none (`docs/act5/playtest/`: Kurogane's cavalry
+   softened, the Road to the Sun's damage back to ×1.5). Soul Ash ×1 / ×1.25 / ×1.5 (the per-act rule); the Bound Oni
+   has its Ossuary mastery. Open: the owner's own playtest notes, the spell-only build on Kurogane, a phone check of
+   the night darkness and the Shogun fight.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
