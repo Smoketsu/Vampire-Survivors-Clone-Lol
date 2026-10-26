@@ -572,6 +572,17 @@ tiny tweaks.
   `--monitor` / `--draw-probe` / `--adaptive`. Owner's iPhone check: one full run, no reload, crisp, sound fine,
   cooler phone.
 
+- the **Ossuary expansion** (owner request "more levels in each option, and more options", Oct 2026; proposal Claude Doc,
+  `docs/ossuary/`, GDD §15.0 from "Ossuary expansion: owner decisions" on): Soul Ash restarts per act (stage 1 ×1, 2 ×1.25,
+  3 ×1.5; Lich ×1.5, Deathlord ×2; `tools/ash_measure.py`, `docs/ossuary/ECONOMY.md`); levels 6-10 for 13 upgrades gated by
+  difficulty clears (`[clears]`, `Meta.max_open_tier()`, SAVE_VERSION 2); ten new options and the Dominion tree (after
+  Seraphine) with the Ossuary tab bar (Trees / Masteries / Relics / Offerings); summon-class Masteries (`mastery_data.gd`,
+  `[class_lv5]` / `[masteries]`, through `HordeDirector.compute_stats()`); Relics (`relic_data.gd`, `RelicEffects`, 1 -> 3
+  slots, pre-run Rites strip) and expensive Grave Offerings (`offering_data.gd`); cosmetic recolours (`recolour_data.gd`,
+  `Recolour`, `SpriteBank.draw()` `recolour`). All of it travels in the co-op loadout. `tools/ossuary_check.tscn` (CI),
+  `tools/ossuary_balance.py`, `docs/ossuary/BALANCE.md`; the "too strong" gate (everything + Hyper + Oath 5 + Pact must
+  fail a third) reached 31%, accepted by the owner. Prestige is noted for later.
+
 - **online co-op** (owner request "add co-op, a lobby and code system", Oct 2026; `docs/coop/`): the relay and lobby
   (`coop-net`: Worker + `tools/coop_relay.py`, `CoopNet`, Co-op on the title screen, Host / Join with a letter pad,
   the lobby), two slots in one simulation (`coop-sim`: `CoopSession` / `CoopSlot`, `CoopData`, the co-op rules,
