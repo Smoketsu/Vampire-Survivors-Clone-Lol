@@ -1770,6 +1770,11 @@ slowly in a 944×424 window. Panels are whole opaque scenes, **1024×576 art px*
 | `act4_3` | Act IV ¶3: Hades kneels with his crown | AI source, converted | the Underworld hall with a black throne and teal braziers; Hades in violet robes kneeling with his bident, offering the gold crown to the necromancer, two skeletons behind him |
 | `act4_4` | Act IV ¶4: Olympus silent, the dead below | AI source, converted | the dusk marble palace with empty thrones, a toppled statue and cold braziers; a teal river from the Underworld and the army gathered at the foot of the stairs, the necromancer looking up |
 | `close_act4` | Closing card after Act IV: "The Sun Still Rises" | AI source (one generation, ref: `close_act3`), converted (default drops) | a huge red sun rising over a dark sea behind a red torii in the water, a goddess's two gold eyes opening in the clouds above it; in the dim foreground the fallen marble of Olympus and an empty throne with a crown on its steps. No necromancer, nothing of the Shogunate shown clearly |
+| `act5_1` | Act V ¶1: the dead march up the Road to the Sun | AI source (Act V epilogue, Oct 2026; refs: `act4_1` and the necromancer sprite), converted (default drops) | a winding road through dark pine mountains to a red torii and a low gold-and-red sun over a far sea, ranks of skeletons climbing it, the necromancer from behind at the left, sakura petals |
+| `act5_2` | Act V ¶2: the burning rice fields | AI source, converted | flooded terraces on fire, skeleton spearmen against red lacquer samurai and straw-hatted ashigaru with banners, fallen indigo ninja caught on the lit ground |
+| `act5_3` | Act V ¶3: the Shogun falls | AI source, converted | Castle Kurogane's burning courtyard, the horned red-armoured Shogun kneeling with his broken katana, the necromancer and skeletons facing him |
+| `act5_4` | Act V ¶4: the sun goes out | AI source, converted. **Round 3 redo from scratch** (owner rejected the falling-goddess composition three times: "Looks like mess", "Not looking good, start from scratch"; GDD §15.0 "Act V art review, round 3 (the epilogue panel)"): a calm, painterly scene like `act5_1` to `act5_3`; refs `act5_3`, `act5_1` and the necromancer sprite; `y_bias` 0.26 | the necromancer from behind on the shrine steps at the top of the Road to the Sun, a black disc with a thin gold ring (the eclipsed sun) in the sky, a red torii and stone lanterns in shadow, night over a sea of clouds, and at his feet the goddess's cracked bronze mirror, her broken rayed gold crown, gold shards and a red sash. No Amaterasu figure, no army |
+| `close_act5` | Closing card after Act V: "The Pit Keeps Count" | AI source (one generation, ref: `close_act3`), converted (default drops) | a terraced red-rock pit with grey tally-marked ledger slabs on the rim, chains, teal soul wisps, two big red embers far down in the dark; no demon shown (a tiny necromancer figure stands on the rim) |
 
 **How they are made.** `art_source/epilogue/<id>.png` (1536×1024, `tools/gen_image.py`, prompt in
 `<id>.txt`: a shared style block plus the scene; references were sheets of the game's sprites ×5,
@@ -2359,3 +2364,177 @@ The Scrap Wastes' stage-select card is data only (`FrontDoorData.VIGNETTES["wast
 `empire/scout_drone`, `summons/warrior` + `archer`, and `bosses/kestrel_aim` facing them. The small tracers (zap, round,
 arc bolt, rivet, turret bolt, chaingun), Kestrel's decoy projectors and the sentry / turret barrels stay code
 (audit: acceptable / low).
+
+### Act V: the Shogunate of the Rising Sun, the shared kinds (foundation, Oct 2026)
+
+<!-- --- Act V: the Shogunate of the Rising Sun --- -->
+The Shogunate's style for the stage agents (GDD §15.0 "Act V art: the shared kinds"; `docs/act5/PROPOSAL.md`): **red lacquer**
+armour (the new `lacquer` ramp: harder and warmer than the Covenant crimson), **steel** (the existing `grey` ramp), **indigo**
+cloth (the new `indigo` ramp; its light shade is the rim that keeps a ninja readable on a dark ground), **sakura pink** (the new
+`sakura` ramp: petals, trims; the oni's ivory horns use `sakura_light`), and **gold** for the sun and crests (the existing
+gold keeps its meaning). Hard, clean silhouettes with one big shape each (the ashigaru's conical hat and long yari, the samurai's
+crescent crest and broad shoulder plates with the hand on the hilt, the gunner's level arquebus, the ninja's masked crouch, the
+onryo's curtain of black hair, the oni's horns and spiked kanabo). Never the player's violet, the undead's bone or teal or the
+Covenant's crimson. `prepare_sprite.py` folder `shogunate/`: ramps lacquer, indigo, sakura, grey, gold, skin, brown. Concept
+references: `art_source/concepts/act5_lineup.png` (costumes); prompts beside each source in `art_source/shogunate/<id>.txt`
+(the Act IV template, the sex named).
+
+Generated with `tools/gen_image.py` (`--ref` the Hoplite's source for the pixel look plus a crop of the concept lineup for the
+costume; the Shade of the Dead's source for the onryo). Pipeline: `prepare_sprite.py` straight on the source with explicit
+`--ramps` and `--ink-l 0.22` (0.15 for the ninja, whose indigo cloth must stay cloth; 0.3 and `--ramps marble,indigo` for the
+onryo, the Republic's marble giving the ghost a pale white; the lantern `--ramps grey,gold`), then scripted palette-colour
+touch-ups (`art_source/shogunate/touchups.py`, run by `build.sh` right after a fresh conversion: it is not idempotent):
+holy_white / bone remapped to grey_light (sakura_light for the oni's horns), the samurai's two crest prongs joined into a
+crescent, the gunner's helmet one indigo shade down, the onryo's hair filled with indigo_dark inside its ink edge and two empty
+rows added on top for the hover bob, the lantern's window recoloured gold for the lit state. Walk strips by `walk_cycle.py`
+(rigs under `# --- Act V: the Shogunate of the Rising Sun (the shared kinds) ---`). 7 API images, about $0.20. `art_check.py`: 0
+warnings; the only failure is lightness on Sanctum IV's light floor (the dark indigo ninja and gunner, the red kinds nearly),
+where Act V units never stand. **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/ashigaru` | Ashigaru (fodder, male): jingasa hat, red do over an indigo jacket, a very long yari | 22x46 | legs walk (hip 39; the yari, cols 3-5, rigid). Body ~32 |
+| `shogunate/samurai` | Samurai (soldier, male): black-and-red lacquered o-yoroi, kabuto with a gold crescent crest, iai stance (crouched forward, right hand gripping the hilt, scabbard angled; art review round 1) | 52x56 | legs walk (hip 40, back 0-23, front 23-52). The Draw telegraph is code |
+| `shogunate/teppo_gunner` | Teppo Gunner (ranged, male): indigo jacket, red lacquer chest plate, a level arquebus, a smouldering match cord | 62x46 | legs walk (hip 33; the gun rides with the body) |
+| `shogunate/ninja` | Ninja (soldier, male): indigo-black hood and face wrap, a crouch, a steel shuriken | 36x40 | legs walk (hip 28) |
+| `shogunate/onryo` | Onryo (night fodder, female ghost): pale white burial kimono, long black hair over the face, reaching arms, a wisp tail | 38x36 | hover (the whole ghost bobs 2 px; two empty rows on top). No bust rig |
+| `shogunate/oni` | Oni (night heavy, male): red-skinned ogre, ivory horns, tiger-skin loincloth, an iron kanabo resting over his shoulder (art review round 1) | 70x80 | legs walk (hip 61, spread 3, lift 3; the club rides with the upper body) |
+| `obstacles/stone_lantern` (+ `_lit`) | A stone toro: base, post, lantern box with a window, wide roof, finial; `_lit` has a warm gold window | 28x40 | no strip; the glow pool is code |
+
+### Act V: the Burning Province (Stage 13; Act V phase 2, Oct 2026)
+
+<!-- --- Act V: the Burning Province --- -->
+Generated with `tools/gen_image.py` (prompts beside each source, `art_source/<key>.txt`, the sex named in every figure
+prompt; `--ref` the Ferrywoman's source for the figure-redesign women plus a crop of `act5_lineup.png` (the kunoichi)
+for the Kunoichi and Kage; the Hoplite's source plus a lineup crop of the oni for Shuten-dōji; the Hoplite's source for
+the Kappa; the Ferrywoman's and the necromancer's sources for the Grave Kunoichi, then her source for her three skins;
+the March's `burned_house_l` / Gullhaven's `barrel_stack_l` sources for the obstacles, `underworld_ash` for the tiles,
+`paris_arrow` for the icon symbols). Pipeline: `prepare_sprite.py` straight on the source (every command in
+`art_source/shogunate/province_build.sh`): the Kunoichi `--ink-l 0.15` (a `--no-levels` copy read more like a
+ninja but failed the lightness check on every Act I floor), Kage `--ink-l 0.12 --no-levels` (her black suit stays
+black; she only fails the light March roads and the Sanctum, where she never stands), Shuten-dōji's source stored
+mirrored (the API drew him facing left), the Grave Kunoichi `--ink-l 0.20` with violet, bone, soul and grey, her
+Hyper skin `--no-levels` (gold). Walk / idle strips by `walk_cycle.py` (rigs under `# --- Act V: the Burning
+Province ---`; the Kunoichi, Kage and the Grave Kunoichi with her skins have bust boxes and idle breathing strips).
+Obstacles and icons by `art_source/shogunate/province_build.py` (pairs split at the widest gap; each size at its
+footprint width with `--no-center`; the 26 px symbol on a badge cleared from an approved icon, gold for the
+evolution and the achievement). Tiles: `make_tile.py` quilt recipes `province_*`. 21 API images, about $0.53 (ledger
+estimate). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/kunoichi` | Kunoichi (elite, female, figure redesign, fully clothed): indigo-black bodysuit, red armour plates and sash, a long red scarf, a mask, high ponytail, a tanto in each hand | 40x52 | legs walk (blades rigid), bust box, idle breathing |
+| `shogunate/kappa` | Kappa (night fodder): green river imp, turtle shell, yellow beak, the water dish on its head | 32x34 | legs walk (the reaching claw rigid) |
+| Round 2 redo (Group A) | Kage's net covers both leg skin shades (`fishk.py`); the Hyper and Deathlord Grave Kunoichi skins have their own bust box (1 px shorter at the bottom); the Untouchable skin is a regenerated ghost-white phantom (`marble,soul,grey`, net inside leg polygons only, `fishp.py`) | | |
+| Round 1 redo (Group A) | Fishnets on `shogunate/kunoichi`, `bosses/kage` and `player/grave_kunoichi` (+ skins): painted after conversion as a period-4 diagonal lattice (`art_source/shogunate/fishnet/`); the Kappa is redrawn with a bigger shell, beak and dish; `icons/hundred_shadows` and `icons/ach_no_shadow_unlit` are redrawn; bust boxes moved (Kage up/left, Kunoichi +2 px right, Grave Kunoichi +1 px right) | | |
+| `shogunate/shuten_doji` | Shuten-dōji, the Oni King (miniboss, male): crimson giant, white mane, horns, open red-and-gold kimono, sake gourd, a barrel on his shoulder, a spiked kanabō | 94x112 | legs walk (the club rigid); the thrown barrels and the sake fires are code / AoeArt |
+| `bosses/kage` | Kage, Mistress of the Hidden Hand (boss, female, figure redesign, fully clothed): white ponytail, half mask, black-and-indigo bodysuit, short black jacket lined red, red obi, a ninjato on her back, a chained kunai in hand | 66x64 | legs walk, bust box, idle breathing; her clones wear the same art tinted |
+| `player/grave_kunoichi` | The Grave Kunoichi (female, figure redesign, fully clothed): pale grey skin, violet eyes, violet shinobi garb, bone plates and sash, a long soul-teal scarf, a kunai | 44x56 | legs walk (the scarf rigid), bust box, idle breathing |
+| `player/grave_kunoichi_hyper` | Gilded Kunoichi (Hyper): deep violet garb, a gold hair crest, gold sash and scarf, a gold kunai | 48x58 | through `SKINS` |
+| `player/grave_kunoichi_untouchable` | Untouchable: a bone-white phantom, a teal scarf and kunai | 46x56 | through `SKINS` |
+| `player/grave_kunoichi_deathlord` | Deathlord: a spiked iron crown, iron pauldrons, a crimson mantle and scarf | 48x58 | through `SKINS` |
+| `obstacles/rice_sheaves_{s,l}` | Rice sheaves hung on a wooden drying frame | 26 / 34 wide | circle |
+| `obstacles/bamboo_stand_{s,m,l}` | A dense stand of tall bamboo | 26 / 34 / 42 wide | circle |
+| `obstacles/burning_house_{s,l}` (+ `_v`) | A thatched farmhouse in flames | 56 / 72; `_v` 40 | H + V pair; the flares beside it are code (ProvinceHazards) |
+| `obstacles/shrine_hall_{s,l}` (+ `_v`) | A small mountain shrine hall: red pillars, a curved grey roof, a shimenawa | 52 / 64; `_v` 40 | H + V pair |
+| `tiles/province_paddies`, `province_bamboo`, `province_village`, `province_shrine` | The four zone floors: dike mud, leaf litter, ash and cinders, raked gravel | 128 | quilt; the paddy water is code-drawn over them (ProvinceGround) |
+| `icons/hundred_shadows`, `hidden_hand`, `paper_lanterns` | Badges (violet border): three ninja shadows with kunai; a hand with a kunai out of smoke; a glowing paper lantern | 32 | |
+| `icons/thousand_shadows`, `ach_no_shadow_unlit` | Gold-border badges: a ring of shadows around crossed kunai; a lit stone lantern and a fleeing shadow | 32 | |
+
+Code-drawn on purpose: the paddy water, the sake barrels (held and in flight), the landing circles, the fire patches
+(the Hellhound fire textures), the smoke clouds and the blinded summons' smoke, Kage's kunai chains, the Hundred
+Shadows clones (the caster's own sprite in shadow) and their kunai.
+
+### Act V: the Road to the Sun (Stage 15; Act V phase 2, Oct 2026)
+
+<!-- --- Act V: the Road to the Sun --- -->
+The Act V finale's art (GDD §15.0 "The Road to the Sun (Act V phase 2)" and the rows after it), in the Shogunate's
+style above, with the sun's gold and white for Amaterasu and the Kirin and the necromancer's violet for his rewards.
+Prompts (the unit template, the sex named) and the rebuild script `make_art.py` in `art_source/sun_road/`; the unit
+sources archived under `art_source/<key>.png`, the sheets in `art_source/sun_road/`, the textures in
+`art_source/tiles/sun_road_earth.png` / `_stone.png`. References: the Samurai's source (the Sōhei), Cerberus's (the
+Kirin), the Ferrywoman's plus crops of `act5_lineup.png` / `act5_boss.png` (the Kitsune, Amaterasu, the Shrine
+Maiden), the Oni's and the Myrmidon Shade's (the Bound Oni); each pose and skin with its own new base as the
+reference. Pipeline: `prepare_sprite.py --ink-l 0.22` with explicit ramps for the units; the figure-redesign figures
+through `pixelate_source.py` first, then `--ink-l 0.15 --no-cleanup` (`--no-levels` for the maiden and her gilded and
+Deathlord skins: with levels the black hair turned a bright indigo). Badges: two symbol sheets split by empty
+columns, each symbol at `--art-height 24` on the frame of an approved badge (violet `abyssal_pact`, gold
+`tidecallers_host`), the inner 26 px cleared to the frame's fill (the gold sheet came with a fourth, unused symbol).
+Obstacles: two prop sheets split by empty gaps (circles: footprint + 4 wide, at most 2.6 x as tall; rects: length +
+2 wide, the end-on `_v` stretched to length + 14 tall). Floors: two textures through `make_tile.py` recipes. 17 API
+images, about **$0.36** (ledger). `art_check.py`: every unit passes height, alpha, palette and feet; the base Shrine
+Maiden and her Deathlord skin are +0.14 over the darkest floors (0.01 under the rule). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/kitsune` | Kitsune (night support, female, figure-redesign style): white hair and fox ears, three pale tails, a white miko kimono with a red skirt and sash, blue fox-fire in her palm | 32x52 | robe walk + bust (cols 13-22, rows 15-21), idle breathing; her fox-fire illusions are this sprite tinted (FoxFireKit) |
+| `shogunate/sohei` | Sōhei (soldier, male): white hood, indigo robes over a red chest plate, a gold kesa, a naginata across the body | 64x56 | legs walk (hip 41; the naginata above it) |
+| `shogunate/kirin` | The Kirin (miniboss): a golden-scaled deer-dragon, a single horn, a white cloud mane and tail, sakura wisps | 104x96 | four-legged walk (hind pair / forelegs, like Cerberus) |
+| `bosses/amaterasu` | Amaterasu (female, figure-redesign style): a rayed gold sun crown, long black hair, white, gold and red-orange robes with long sashes, a gold mirror | 84x116 | robe walk (her glide) + bust (cols 36-51, rows 34-44), idle breathing; the sun disc behind her is code |
+| `bosses/amaterasu_mirror` | Her attack pose (BossPoseData 1): the mirror raised high | 88x112 | the beams' windups and her crossings |
+| `player/shrine_maiden` | The Shrine Maiden of Night (female, figure-redesign style): black hair with a moon ornament, a black and violet miko, a gohei, a tiny black sun above her hand | 42x56 | robe walk + bust (cols 17-26, rows 17-24), idle breathing |
+| `player/shrine_maiden_hyper` / `_untouchable` / `_deathlord` | Maiden of the Golden Dawn (white and gold), Untouchable (white phantom, soul-teal), Deathlord (black iron, spiked crown, crimson) | 44x56 / 42x56 / 36x58 | walk + idle through `SKINS` (`SKIN_FIX` bust boxes for the gilded and Deathlord skins) |
+| `summons/bound_oni` | Bound Oni: an ashen oni with ivory horns, soul-teal eyes, bone chains and collar, the kanabo resting over his shoulder, bold bone-and-iron collar, wrist shackles and big dangling chain links (art review round 1) | 54x60 | legs walk (the club rides with the upper body) |
+| `summons/oni_lord` | Oni Lord: bigger, a bone crown between tall horns, broken chains, a kanabo studded with soul-teal iron resting over his shoulder, a tattered cape | 68x70 | legs walk (the club rides with the upper body) |
+| `icons/black_sun`, `stolen_dawn`, `bound_oni`, `onis_resolve` | Violet badges: a black sun in a violet corona; a gold dawn swallowed by a black crescent, drawn into a bone hand; the bound oni's head; a broken bone chain over a kanabo | 32 | |
+| `icons/eclipse_of_heaven`, `oni_lord`, `ach_the_sun_goes_out` | Gold badges: two black suns in gold coronas; the Oni Lord's crowned head; a red torii before an extinguished sun | 32 | |
+| `tiles/sun_road_torii`, `_forest`, `_steps`, `_heaven` | Packed earth and gravel; dark moss; grey granite step courses (32 px, staggered); pale paving | 128 | `make_tile.py`; petals, ferns, cloud wisps and sunlight specks are code-drawn (`SunRoadGround`) |
+| `obstacles/torii_post_{s,l}`, `sacred_cedar_{s,m,l}`, `moss_rock_{s,l}`, `komainu_{s,l}`, `cloud_rock_{s,m,l}`, `sun_mirror_{s,l}` | A vermilion torii pillar; a roped sacred cedar; a mossy boulder; a stone lion-dog on its plinth; a rock peak in a cloud; a bronze sun mirror on a black stand | footprint + 4 wide | circles |
+| `obstacles/stone_marker_{s,l}` (+ `_v`), `step_wall_{s,l}` (+ `_v`) | A long carved pilgrim-road stone with sakura petals; a mossy stone retaining wall of the steps | length + 2 wide; `_v` 26 wide | rects |
+
+Code-drawn on purpose: Amaterasu's sun disc, beams (a soft strip texture stretched and rotated), sun-disc mines,
+zenith columns, the noon glare and the noon shade, the dark sun of her fall; the Black Sun's suns and beams; the
+Kirin's halo; the fox-fire flicker and wisp over an illusion.
+
+**Round 1 redo (Group B, Oct 2026).** Amaterasu is a fuller, more mature figure (bigger bust, wider hips and thighs, closed neckline) redrawn from her old source; prepare her with `--no-levels` or the black hair turns bright indigo. Her bust box is cols 43-60, rows 32-43 (two lobes, px 2). The mirror pose, the walk and the idle follow the new still. `epilogue/act5_4` takes the new still as the figure reference (`y_bias` 0.15). The Shrine Maiden boxes: base cols 17-29 rows 15-23, Hyper cols 18-30 rows 12-20, Untouchable cols 17-29 rows 12-20; the Deathlord skin is redrawn with few big shapes (the round 1 version was "very busy"; the second prompt names the hourglass figure so a bust exists to bounce) and its box is cols 15-26, rows 18-23. The Kitsune is bustier (covered by the kimono, narrow slit), box cols 13-24 rows 15-20. Keep any "bigger" note inside the covering rules: closed neckline, covered shoulders, a slit that shows the leg only from the knee down.
+
+### Act V: Castle Kurogane (Stage 14; Act V phase 2, Oct 2026)
+
+<!-- --- Act V: Castle Kurogane --- -->
+Castle Kurogane's art (GDD §15.0 "Castle Kurogane (Act V phase 2)" and the rows after it), in the Shogunate's style
+above: black and red lacquer, steel, indigo and gold, with the castle's grey stone, white plaster and dark timber.
+Prompts in `art_source/kurogane/<id>.txt` (the Act V unit template, the sex named in every figure prompt: all male
+here), raw API images in `art_source/kurogane/raw/`, converted sources archived by `prepare_sprite.py` under
+`art_source/<key>.png`. Generated with `tools/gen_image.py`: `--ref` the Samurai's source for the pixel look plus a crop
+of `act5_lineup.png` (the banner bearer, for the Hatamoto) or of `act5_boss.png` (the cavalry for the Kiba-musha and the
+General; the Shogun on his platform for the Shogun); the Shogun's source for his duel pose; the Oathbreaker's and the
+Samurai's sources for the Ronin Revenant, then his source for his three skins; the stone lantern for the props and
+the platform; `ilion_gate` for the floors; `river_styx` / `lethes_flood` for the badges. Pipeline:
+`prepare_sprite.py` straight on the source with `--ramps lacquer,grey,gold,skin,brown,sakura` (no indigo: with it
+the black lacquer came out navy blue) and `--ink-l 0.15`; `--no-levels` for the Hatamoto and the Shogun's two poses
+(levels turned the black armour grey-blue), levels on for the two horsemen (their dark horses failed the lightness
+check without); the Ronin `--ramps violet,lacquer,grey,gold,skin,brown --ink-l 0.2`, his Hyper skin `--no-levels`, the
+Untouchable `--ramps marble,soul,grey,skin`, the Deathlord `--ramps crimson,grey,lacquer,gold,skin`. Prop and badge
+sheets split by `art_source/kurogane/split_sheet.py` (connected pieces), the props converted at each size by
+`make_props.py` (circles: footprint x 2 + 4 wide; rects: length + 2 wide, the end-on `_v` length + 14 tall; the
+command platform's stray palisade cut away by hand), the badges by `make_badges.py` (each symbol at 24 art px on the
+frame of an approved badge: violet `abyssal_pact`, gold `tidecallers_host`). Floors: `make_tile.py` recipes
+`kurogane_*` (the bailey and courtyard sources came back nearly transparent and are stored opaque; the keep as a
+staggered-plank layout). Walk strips by `walk_cycle.py` (rigs under `# --- Act V: Castle Kurogane ---`; the Ronin's
+skins through `SKINS`; no bust rigs: every figure here is male). The Hatamoto's banner is white on purpose: the game
+multiplies his sprite by his regiment's banner colour (HatamotoKit). 18 API images (2 prop sheets, 2 badge sheets),
+about **$0.37** (ledger). `art_check.py`: every sprite passes height, alpha, palette and feet; lightness passes on the
+dark floors and fails only on the light Act I March road / Sanctum floors (the Shogun, his duel pose, the General,
+the Kiba-musha), where Act V units never stand. **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/hatamoto` | Hatamoto (elite banner guard, male): black lacquer laced red, a low kabuto with a gold crest, a red sash, a short yari, a tall plain white sashimono banner on his back | 32x72 | legs walk (hip 61; the yari, cols 22-28, rigid); the banner takes the regiment's colour by tint |
+| `shogunate/kiba_musha` | Kiba-musha (mounted samurai cavalry, male): crescent kabuto, black-and-red lacquer, a levelled yari, a brown war horse with a red lacquer saddle cloth | 74x60 | legs walk (hip 46; hind legs left, forelegs right); the charge lane is code (EffectManager.telegraph_line) |
+| `shogunate/general_left` | The General of the Left (miniboss, male): antler crests, a red menpo, gold-trimmed black lacquer, a red war cloak, a levelled naginata, an indigo sashimono, a huge black war horse in red barding | 110x100 | legs walk (hip 77) |
+| `shogunate/command_platform` | The Shogun's command platform: a timber war platform with a red lacquered railing, gold post caps, a stair and four nobori (black and white, gold circles) | 106x124 | drawn by BossShogun under his feet (ShogunData.PLATFORM_DECK_RISE) and left where it stood |
+| `bosses/shogun` | Shogun Kurogane (male): black-and-gold o-yoroi, a huge gold crescent crest, black beard, crimson cloak, an open black-and-gold war fan raised high | 116x116 | legs walk (hip 94) |
+| `bosses/shogun_duel` | His duel pose (BossPoseData 3): a low iai stance, the long blade drawn level, the cloak flaring | 120x100 | the leap down and every cut he stands to draw; the white lines are DrawCuts' |
+| `player/ronin_revenant` | The Ronin Revenant (male): a battered straw sandogasa, a pale face with violet eyes, a tattered violet kimono and dark hakama over cracked black lacquer plates, a red sash, a katana, a small black banner with a violet skull on his back | 32x58 | robe walk (hip 50, hem sway) |
+| `player/ronin_revenant_hyper` / `_untouchable` / `_deathlord` | Gilded Ronin (gold kimono, gilded hat and banner), Untouchable (white phantom with soul-teal trims), Deathlord (black iron kabuto with a spiked crest, crimson) | 32x58 each | walk through `SKINS` (derived rig) |
+| `tiles/kurogane_bailey`, `_gatehouse`, `_courtyard`, `_keep` | Trampled earth; fitted granite paving; raked gravel; dark floorboards (staggered planks) | 128 | mean L 0.22 / 0.26 / 0.26 / 0.25 |
+| `obstacles/castle_wall_{s,l}` (+ `_v`), `palisade_gate_{s,l}` (+ `_v`) | A length of castle wall (fitted grey stone, white plaster band, dark tiled cap); a timber gate fence with iron studs and a red beam | 64 / 86; `_v` 22 / 30 wide | rects, H + V |
+| `obstacles/black_pine_{s,l}`, `garden_rock_{s,l}`, `sake_barrels_m`, `taiko_drum_m` | A twisted garden pine; a mossy boulder; three straw-wrapped sake barrels; a red war drum on its stand | footprint x 2 + 4 wide | circles; the stone lanterns are the shared Act V toro |
+| `icons/banner_of_the_dead`, `warlord_seal`, `unbending` | Violet badges: a black war banner with a violet skull on a bone pole; a red lacquer seal with a violet skull; a bone forearm breaking a katana blade | 32 | |
+| `icons/hundred_banners`, `ach_regiments_broken` | Gold badges: three banners in a fan; a snapped banner over a gold war fan | 32 | |
+
+Code-drawn on purpose: the Banner of the Dead's planted banners and aura (rects and a texture disc), the regiments'
+banner colours (a tint), the charge lanes, the Draw lines of the Shogun's iai and triple cuts (DrawCuts), the war fan's
+flourish, the fallbacks (KuroganeGlyphs).
+
+**Act V round 2 (Road to the Sun).** Epilogue `act5_4` is deliberately sparse: one big figure, one flat ring, flat cloud bands; a first "everything" composition read as a mess. Amaterasu's bust box is now cols 42-60, rows 30-43; Kitsune's cols 9-24, rows 13-20.

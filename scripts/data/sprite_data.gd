@@ -318,6 +318,47 @@ const HEIGHTS: Dictionary = {
 	"player/ferrywoman_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 	"summons/myrmidon_shade": 46.0,  # TUNING (not in GDD) a summon like the Warrior (44), the spear head above
 	"summons/legion_of_tartarus": 54.0,  # TUNING (not in GDD) its evolution, bigger
+	# --- Act V: the Shogunate of the Rising Sun (the shared kinds; assets/sprites/shogunate/) ---
+	"shogunate/ashigaru": 46.0,  # TUNING (not in GDD) fodder: body ~32 (hat to sandals), the long yari rising far above the hat
+	"shogunate/samurai": 56.0,  # TUNING (not in GDD) soldier tier: body ~50, the crescent crest above
+	"shogunate/teppo_gunner": 46.0,  # TUNING (not in GDD) ranged soldier: body ~44, the arquebus held level
+	"shogunate/ninja": 40.0,  # TUNING (not in GDD) soldier tier, a crouching figure
+	"shogunate/onryo": 36.0,  # TUNING (not in GDD) night fodder: a floating ghost (34) + two empty rows on top for the hover bob (walk_cycle.py "hover")
+	"shogunate/oni": 80.0,  # TUNING (not in GDD) night heavy tier (60-72 and up): a huge red ogre, the horns and the club
+	"obstacles/stone_lantern": 40.0,  # TUNING (not in GDD) a toro, unlit (an obstacle; the glow pool is drawn by code)
+	"obstacles/stone_lantern_lit": 40.0,  # TUNING (not in GDD) the same toro with a warm lit window
+	# --- Act V: the Burning Province (assets/sprites/shogunate/, bosses/, player/) ---
+	"shogunate/kunoichi": 52.0,  # TUNING (not in GDD) elite tier (elites are also drawn larger): body ~46, the hair knot and scarf above
+	"shogunate/kappa": 34.0,  # TUNING (not in GDD) fodder: a squat river imp, the water dish on top
+	"shogunate/shuten_doji": 112.0,  # TUNING (not in GDD) miniboss tier (104+, Polyphemus 112): the Oni King, the barrel on his shoulder
+	"bosses/kage": 64.0,  # TUNING (not in GDD) boss tier for a slender figure (a ninja grandmaster, not a giant): body ~58, the hair and scarf above; her clones wear it
+	"player/grave_kunoichi": 56.0,  # TUNING (not in GDD) character tier: body ~50, the hair knot above
+	"player/grave_kunoichi_hyper": 58.0,  # TUNING (not in GDD) skin art: her body, the gold crest above
+	"player/grave_kunoichi_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body
+	"player/grave_kunoichi_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	# --- Act V: the Road to the Sun ---
+	"shogunate/kitsune": 52.0,  # TUNING (not in GDD) support tier: body ~44, her ears and tails above (the figure redesign)
+	"shogunate/sohei": 56.0,  # TUNING (not in GDD) soldier tier: body ~46, the naginata's blade above
+	"shogunate/kirin": 96.0,  # TUNING (not in GDD) miniboss tier: a tall beast, the horn and mane on top
+	"bosses/amaterasu": 116.0,  # TUNING (not in GDD) boss tier: a goddess, her sun crown and mirror above
+	"bosses/amaterasu_mirror": 112.0,  # TUNING (not in GDD) attack pose (BossPoseData 1): the mirror raised high
+	"player/shrine_maiden": 56.0,  # TUNING (not in GDD) character tier: body ~48, the hair ornament and the gohei above
+	"player/shrine_maiden_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold and white
+	"player/shrine_maiden_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/shrine_maiden_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/bound_oni": 60.0,  # TUNING (not in GDD) a heavy summon (Abomination ~56), the horns and kanabō above
+	"summons/oni_lord": 70.0,  # TUNING (not in GDD) its evolution, bigger
+	# --- Act V: Castle Kurogane (assets/sprites/shogunate/, bosses/, player/) ---
+	"shogunate/hatamoto": 72.0,  # TUNING (not in GDD) elite tier: body ~46, the tall white sashimono banner rising far above the helmet
+	"shogunate/kiba_musha": 60.0,  # TUNING (not in GDD) a horse and rider, about 1.2 x as long as tall
+	"shogunate/general_left": 100.0,  # TUNING (not in GDD) miniboss tier: the huge black war horse and the antler crest
+	"shogunate/command_platform": 124.0,  # TUNING (not in GDD) the Shogun's platform with its four nobori (BossShogun draws it at its art size)
+	"bosses/shogun": 116.0,  # TUNING (not in GDD) boss tier: the crescent crest and the raised war fan (Achilles 120)
+	"bosses/shogun_duel": 100.0,  # TUNING (not in GDD) duel pose: low iai stance, the blade drawn level (BossPoseData 3)
+	"player/ronin_revenant": 58.0,  # TUNING (not in GDD) character tier: body ~50, the straw hat and the small banner above
+	"player/ronin_revenant_hyper": 58.0,  # TUNING (not in GDD) skin art: his body, the gilded hat
+	"player/ronin_revenant_untouchable": 58.0,  # TUNING (not in GDD) skin art: his body, the white phantom
+	"player/ronin_revenant_deathlord": 58.0,  # TUNING (not in GDD) skin art: his body, the black iron crest
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

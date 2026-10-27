@@ -132,3 +132,29 @@ const PANTHEON_AEGEAN_DARK := Color(0.071, 0.243, 0.400)  # #123E66
 const PANTHEON_AEGEAN := Color(0.173, 0.467, 0.722)  # #2C77B8
 ## Lit Aegean ("aegean_light"): foam lines, lightning halos, wave crests.
 const PANTHEON_AEGEAN_LIGHT := Color(0.435, 0.714, 0.910)  # #6FB6E8
+
+# --- Act V: the Shogunate of the Rising Sun ---
+# GDD §15.0 "Act V foundation (phase 1)": the fixed values of docs/act5/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps lacquer, indigo, sakura, owned by the art pass). Steel uses the
+# existing grey / chrome ramps; gold stays Palette.GOLD (evolution / chest / victory, and the sun).
+
+## Lacquer outline ink (tools/palette.json "lacquer" ramp, darkest): every Shogunate sprite's outline.
+const SHOGUN_LACQUER_INK := Color(0.102, 0.043, 0.047)  # #1A0B0C
+## Lacquer in shadow ("lacquer_dark"): armour plates in shadow, the oni's skin in shadow.
+const SHOGUN_LACQUER_DARK := Color(0.416, 0.078, 0.094)  # #6A1418
+## Lacquer red ("lacquer"): samurai and ashigaru armour, banners, the oni's skin.
+const SHOGUN_LACQUER := Color(0.702, 0.149, 0.169)  # #B3262B
+## Lit lacquer ("lacquer_light"): highlights, the match cord's glow, torii gates.
+const SHOGUN_LACQUER_LIGHT := Color(0.886, 0.349, 0.290)  # #E2594A
+## Indigo in shadow ("indigo_dark"): ninja garb, the night's tint.
+const SHOGUN_INDIGO_DARK := Color(0.086, 0.114, 0.220)  # #161D38
+## Indigo ("indigo"): gunners' coats, ninja garb, the smoke of an ambush.
+const SHOGUN_INDIGO := Color(0.180, 0.247, 0.455)  # #2E3F74
+## Lit indigo ("indigo_light"): the rim that keeps a ninja readable on dark ground.
+const SHOGUN_INDIGO_LIGHT := Color(0.416, 0.510, 0.753)  # #6A82C0
+## Sakura in shadow ("sakura_dark"): blossom petals in shadow.
+const SHOGUN_SAKURA_DARK := Color(0.659, 0.329, 0.431)  # #A8546E
+## Sakura pink ("sakura"): blossoms, kimono accents.
+const SHOGUN_SAKURA := Color(0.894, 0.580, 0.675)  # #E494AC
+## Lit sakura ("sakura_light"): highlights, petals in the light.
+const SHOGUN_SAKURA_LIGHT := Color(0.976, 0.827, 0.867)  # #F9D3DD

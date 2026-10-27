@@ -78,7 +78,13 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IV: Mount Olympus ---
 	"gigantomachy",
 	# --- Act IV: the Asphodel Underworld ---
-	"lethes_flood"]
+	"lethes_flood",
+	# --- Act V: the Burning Province ---
+	"thousand_shadows",
+	# --- Act V: the Road to the Sun ---
+	"eclipse_of_heaven",
+	# --- Act V: Castle Kurogane ---
+	"hundred_banners"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -463,6 +469,67 @@ const EVOLUTIONS := {
 			"rivers": 2, "damage": 16.0, "tick": 0.5, "river_slow": 0.45, "slow_duration": 0.8, "length": 280.0, "radius": 24.0,  # TUNING (not in GDD)
 			"duration": 6.5, "cooldown": 4.0, "drain_share": 0.06, "drain_cap": 6.0,  # TUNING (not in GDD)
 			"forget": 1.2,  # TUNING (not in GDD) the evolution flag: s a foe entering a river stands stunned (once per river)
+		},
+	},
+	# --- Act V: the Burning Province ---
+	# Thousand Shadows (owner-approved Act V proposal: "Hundred Shadows ... ->
+	# Thousand Shadows (+ Hidden Hand)"): Hundred Shadows + Hidden Hand (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: five clones, each
+	# echoing the next `echoes` spell hits, and every clone bursts into a ring of
+	# shadow blades when its life ends (`burst_share` x damage to every foe
+	# within `burst_radius` px). Detected by the "burst_radius" key.
+	"thousand_shadows": {
+		"base": "hundred_shadows",
+		"passive": "hidden_hand",
+		"display_name": "Thousand Shadows",
+		"icon": "thousand_shadows",
+		"description": "Five shadows echo every spell, then burst into blades when they fade.",
+		"labels": {"damage": "Kunai damage", "clones": "Clones", "echoes": "Echoes each", "burst_radius": "Burst radius", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 36.0, "clones": 5, "cooldown": 4.2, "life": 5.0, "echo_share": 0.8, "range": 360.0,  # TUNING (not in GDD)
+			"echoes": 3,  # TUNING (not in GDD) spell hits each clone echoes
+			"burst_radius": 50.0,  # TUNING (not in GDD) the evolution flag: px of a fading clone's burst
+			"burst_share": 1.0,  # TUNING (not in GDD) x damage of the burst
+		},
+	},
+	# --- Act V: the Road to the Sun ---
+	# Eclipse of Heaven (GDD §15.0 "Black Sun, Eclipse of Heaven, Stolen Dawn and
+	# the Shrine Maiden of Night"; owner-approved proposal "Black Sun -> Eclipse
+	# of Heaven (+ Stolen Dawn)"): Black Sun + Stolen Dawn (a NEW passive, owner
+	# rule: at Lv 5). Two dark suns orbit him, their beams longer and harder, and
+	# each beam ends in a CORONA burst (`corona` x the beam's damage to every foe
+	# within BlackSunData.CORONA_RADIUS px of its end). Detected by the "corona" key.
+	"eclipse_of_heaven": {
+		"base": "black_sun",
+		"passive": "stolen_dawn",
+		"display_name": "Eclipse of Heaven",
+		"icon": "eclipse_of_heaven",
+		"description": "Two dark suns eclipse the sky: longer beams that end in a burst of black corona.",
+		"labels": {"damage": "Beam damage", "suns": "Dark suns", "sun_reach": "Beam reach", "corona": "Corona", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"suns": 2, "damage": 26.0, "cooldown": 1.2, "sun_reach": 240.0, "sun_width": 22.0, "group_radius": 72.0,  # TUNING (not in GDD)
+			"corona": 0.5,  # TUNING (not in GDD) the evolution flag: share of the beam's damage its corona deals
+		},
+	},
+	# --- Act V: Castle Kurogane ---
+	# Hundred Banners (owner-approved Act V proposal: "Banner of the Dead ->
+	# Hundred Banners (+ Warlord's Seal)"): Banner of the Dead + Warlord's Seal
+	# (a NEW passive, owner rule: at Lv 5). Own decision on its kit: each
+	# planting raises `banners` banners at once on a ring round the necromancer
+	# (BannerData.RING), and every banner beats a war drum every
+	# `pulse_interval` s: `pulse_damage` to every foe within `pulse_radius` px.
+	# Detected by the "pulse_interval" key.
+	"hundred_banners": {
+		"base": "banner_of_the_dead",
+		"passive": "warlords_seal",
+		"display_name": "Hundred Banners",
+		"icon": "hundred_banners",
+		"description": "A ring of war banners rises round you, and their war drums beat on your foes.",
+		"labels": {"haste": "Attack speed near them", "banners": "Banners", "pulse_damage": "War drum", "duration": "Duration (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 56.0, "pulse_radius": 84.0, "haste": 0.45, "radius": 130.0, "banners": 4, "duration": 10.0, "cooldown": 7.0,  # TUNING (not in GDD)
+			"pulse_damage": 16.0,  # TUNING (not in GDD) each war drum's beat
+			"pulse_interval": 2.0,  # TUNING (not in GDD) the evolution flag: s between two beats of each banner's drum
 		},
 	},
 }

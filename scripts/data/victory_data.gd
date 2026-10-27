@@ -35,6 +35,10 @@ const STAGES := {
 	"ilion": {"title": "The Walls Fall", "boss_line": "Achilles dies at the heel."},  # TUNING (not in GDD) Act IV placeholder
 	"olympus": {"title": "Olympus Is Silent", "boss_line": "Zeus's thunder dies on the summit."},  # TUNING (not in GDD) Act IV placeholder
 	"underworld": {"title": "The Empty Throne", "boss_line": "Hades kneels and gives up his crown."},  # TUNING (not in GDD) Act IV placeholder
+	# --- Act V: the Shogunate of the Rising Sun (placeholders until each stage is built) ---
+	"province": {"title": "The Province Burns Out", "boss_line": "Kage's last shadow is lit and gone."},  # TUNING (not in GDD) Act V placeholder
+	"kurogane": {"title": "The Banners Fall", "boss_line": "Shogun Kurogane's regiments are broken."},  # TUNING (not in GDD) Act V placeholder
+	"sun_road": {"title": "The Sun Goes Out", "boss_line": "Amaterasu falls, and the sun with her."},  # TUNING (not in GDD) Act V placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -45,6 +49,8 @@ const ACT_LINES := {
 	2: "You outlasted the Eye. The Reckoning claimed you at last.",  # TUNING (not in GDD)
 	3: "You outlasted the Empire. The Purge Protocol deleted you at last.",  # TUNING (not in GDD) Act III
 	4: "You outlasted the gods. Their twilight buried you at last.",  # TUNING (not in GDD) Act IV
+	# --- Act V: the Shogunate of the Rising Sun ---
+	5: "You outlasted the Shogunate. The Endless Night swallowed you at last.",  # TUNING (not in GDD) Act V
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

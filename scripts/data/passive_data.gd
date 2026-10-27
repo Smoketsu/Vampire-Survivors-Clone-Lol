@@ -124,6 +124,19 @@
 ##                       the Gods) to the army and the necromancer
 ##                       (DivineWrath.grounded_mult(), the one read, per target
 ##                       slot). Evolves nothing.
+## plus Castle Kurogane's two (Act V, GDD §15.0 "Banner of the Dead, Warlord's
+## Seal and the Ronin Revenant" and "Regiments Broken and Unbending"; both
+## locked until earned, UnlockData):
+##   Warlord's Seal    — summons within BannerData.SEAL_RADIUS px of the
+##                       necromancer attack faster (HordeDirector
+##                       .attack_haste(), the one per-summon attack-speed read;
+##                       evolves Banner of the Dead into Hundred Banners).
+##                       Unlocked with the spell by slaying Shogun Kurogane.
+##   Unbending         — an Act V counter-passive ("act": 5, offered only on
+##                       Act V stages; unlocked by the achievement Regiments
+##                       Broken): the Draw's cuts hit summons for less
+##                       (DrawCuts.unbending_mult(), the foundation's one read,
+##                       per summon's own player). Evolves nothing.
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -165,7 +178,13 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IV: Mount Olympus ---
 	"titans_blood", "grounded_bones",
 	# --- Act IV: the Asphodel Underworld ---
-	"ferrymans_toll", "myrmidon_oath"]
+	"ferrymans_toll", "myrmidon_oath",
+	# --- Act V: the Burning Province ---
+	"hidden_hand", "paper_lanterns",
+	# --- Act V: the Road to the Sun ---
+	"stolen_dawn", "onis_resolve",
+	# --- Act V: Castle Kurogane ---
+	"warlords_seal", "unbending"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -187,7 +206,11 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IV: the Shores of Ilion ---
 	"bronze_breaker",
 	# --- Act IV: the Asphodel Underworld ---
-	"myrmidon_oath"]
+	"myrmidon_oath",
+	# --- Act V: the Road to the Sun ---
+	"onis_resolve",
+	# --- Act V: Castle Kurogane ---
+	"warlords_seal", "unbending"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -249,7 +272,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Act III: the Iron Citadel --- (the Deus Revenant's missiles; the Rust Prophet's Risen scrap bolts)
 	"deus_revenant_missile", "scrap_bolt",
 	# --- Act IV: the Asphodel Underworld --- (the Myrmidon Shades' spear through a second foe)
-	"myrmidon_pierce"]
+	"myrmidon_pierce",
+	# --- Act V: the Road to the Sun --- (the Bound Oni's kanabō smash and the Oni Lord's quake)
+	"oni_kanabo", "oni_quake"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -288,6 +313,15 @@ const AREA_HOLY_SOURCES := {
 	"beta_swipe": "area",  # TUNING (not in GDD) the Beta Build's weld swipe.
 	"motherboard_stamp": "area",  # TUNING (not in GDD) the Motherboard's press-stamps.
 	"motherboard_hurl": "area",  # TUNING (not in GDD) a hurled summon landing.
+	# --- Act V: the Road to the Sun ---
+	"sohei_sweep": "area",  # TUNING (not in GDD) a Sōhei's naginata sweep.
+	"kirin_horn": "holy",  # TUNING (not in GDD) the Kirin's Horn of Heaven rays.
+	"kirin_halo": "holy",  # TUNING (not in GDD) the Kirin's halo.
+	"amaterasu_mirror": "holy",  # TUNING (not in GDD) Amaterasu's mirror beams.
+	"amaterasu_mine": "area",  # TUNING (not in GDD) her sun-disc mines.
+	"amaterasu_zenith": "holy",  # TUNING (not in GDD) her noon beams on marked circles.
+	"amaterasu_glare": "holy",  # TUNING (not in GDD) the noon glare.
+	"amaterasu_sunset": "holy",  # TUNING (not in GDD) the setting-sun beam.
 }
 ## Bone Plating: a plated hit always keeps at least this fraction (0..1) of
 ## its damage, so the flat reduction never makes a summon immune to the
@@ -1118,6 +1152,134 @@ const PASSIVES := {
 			{"front_hp": 0.18, "front_damage": 0.12},  # TUNING (not in GDD)
 			{"front_hp": 0.24, "front_damage": 0.16},  # TUNING (not in GDD)
 			{"front_hp": 0.30, "front_damage": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act V: the Burning Province ---
+	# Hundred Shadows' paired passive (owner-approved Act V proposal: "Thousand
+	# Shadows (+ Hidden Hand)"); unlocked with the spell by Kage and offered on
+	# every stage. Own decision on its effect: the hidden hand strikes while the
+	# foe looks elsewhere: every SPELL hit (HundredShadowsData.is_spell_source())
+	# on a foe busy fighting a summon (Enemy.targeting_summon) deals hand_damage
+	# more (CombatResolver.damage_enemy(), one block; stat hidden_hand_bonus_dmg).
+	"hidden_hand": {
+		"display_name": "Hidden Hand",
+		"icon": "hidden_hand",
+		"description": "Your spells strike foes busy fighting your summons harder.",
+		"labels": {"hand_damage": ["Spell damage to busy foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hand_damage": 0.08},  # TUNING (not in GDD)
+			{"hand_damage": 0.16},  # TUNING (not in GDD)
+			{"hand_damage": 0.24},  # TUNING (not in GDD)
+			{"hand_damage": 0.32},  # TUNING (not in GDD)
+			{"hand_damage": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# Act V's counter-passive Paper Lanterns (owner-approved Act V proposal: "a
+	# wider light radius; ambushes show earlier"; unlocked by the achievement No
+	# Shadow Unlit and offered only in Act V through its card row's "act").
+	# SunCourse.lantern_mult() (the foundation's one read,
+	# ShogunateRulesData.PAPER_LANTERNS / PAPER_LANTERNS_KEY): the necromancer's
+	# light radius x (1 + light_radius), and the lit part of an ambush's smoke
+	# warning lasts that much longer (ShadowAmbush).
+	"paper_lanterns": {
+		"display_name": "Paper Lanterns",  # Owner-approved proposal
+		"icon": "paper_lanterns",
+		"description": "Your light reaches farther, and ambushes show earlier.",
+		"labels": {"light_radius": ["Light radius", "pct"]},
+		"act": 5,  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"light_radius": 0.15},  # TUNING (not in GDD)
+			{"light_radius": 0.30},  # TUNING (not in GDD)
+			{"light_radius": 0.45},  # TUNING (not in GDD)
+			{"light_radius": 0.60},  # TUNING (not in GDD)
+			{"light_radius": 0.75},  # TUNING (not in GDD) 150 px -> 262 px
+		],
+	},
+	# --- Act V: the Road to the Sun ---
+	# Stolen Dawn (own decision: Eclipse of Heaven's paired passive, its rule;
+	# GDD §15.0 "Black Sun, Eclipse of Heaven, Stolen Dawn and the Shrine Maiden of
+	# Night"; unlocked by defeating Amaterasu, UnlockData): the dawn you stole
+	# feeds the dark sun: Black Sun's beams come beam_haste sooner and every
+	# volley of beams that strikes heals the necromancer beam_heal HP
+	# (AbilityManager.apply_spell_mods() on the Black Sun rows' own keys, like
+	# Titan's Blood; BlackSun heals). Pairs with Black Sun -> Eclipse of Heaven.
+	"stolen_dawn": {
+		"display_name": "Stolen Dawn",
+		"icon": "stolen_dawn",
+		"description": "The dawn you stole feeds your dark sun: its beams come sooner and mend you.",
+		"labels": {"beam_haste": ["Black Sun cooldown", "neg_pct"], "beam_heal": ["Heal per beam volley", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"beam_haste": 0.04, "beam_heal": 0.3},  # TUNING (not in GDD)
+			{"beam_haste": 0.08, "beam_heal": 0.6},  # TUNING (not in GDD)
+			{"beam_haste": 0.12, "beam_heal": 0.9},  # TUNING (not in GDD)
+			{"beam_haste": 0.16, "beam_heal": 1.2},  # TUNING (not in GDD)
+			{"beam_haste": 0.20, "beam_heal": 1.5},  # TUNING (not in GDD)
+		],
+	},
+	# Oni's Resolve (own decision: the Oni Lord's paired passive, its name and
+	# rule; GDD §15.0 "The Bound Oni, the Oni Lord and Oni's Resolve"; unlocked by
+	# defeating Amaterasu): bound demons cannot be held: every stun on your
+	# summons (CombatResolver.stun_unit(), the one summon stun path: an oni's
+	# kanabō, a Gorgon's gaze, a Draw...) lasts stun_resist shorter. Works the
+	# same on every stage. Pairs with the Bound Oni -> the Oni Lord.
+	"onis_resolve": {
+		"display_name": "Oni's Resolve",
+		"icon": "onis_resolve",
+		"description": "Your dead have a demon's will: stuns on them wear off sooner.",
+		"labels": {"stun_resist": ["Summon stun time", "neg_pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"stun_resist": 0.10},  # TUNING (not in GDD)
+			{"stun_resist": 0.20},  # TUNING (not in GDD)
+			{"stun_resist": 0.30},  # TUNING (not in GDD)
+			{"stun_resist": 0.40},  # TUNING (not in GDD)
+			{"stun_resist": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act V: Castle Kurogane ---
+	# Warlord's Seal (Banner of the Dead's paired passive; owner-approved Act V
+	# proposal: "Hundred Banners (+ Warlord's Seal)"; unlocked with the spell by
+	# Shogun Kurogane and offered on every stage). Own decision on its effect:
+	# the warlord's seal of command: every summon within BannerData.SEAL_RADIUS
+	# px of the necromancer attacks seal_haste faster (HordeDirector
+	# .attack_haste(), the one per-summon attack-speed read: the Bone Ring keeps
+	# most of the army inside it); it adds to a banner's haste.
+	"warlords_seal": {
+		"display_name": "Warlord's Seal",  # Owner-approved proposal
+		"icon": "warlord_seal",
+		"description": "Your dead near you attack faster under your seal of command.",
+		"labels": {"seal_haste": ["Attack speed near you", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"seal_haste": 0.04},  # TUNING (not in GDD)
+			{"seal_haste": 0.08},  # TUNING (not in GDD)
+			{"seal_haste": 0.12},  # TUNING (not in GDD)
+			{"seal_haste": 0.16},  # TUNING (not in GDD)
+			{"seal_haste": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# Act V's counter-passive Unbending (owner-approved Act V proposal: "Unbending
+	# (Draw cuts hit summons for less)"; unlocked by the achievement Regiments
+	# Broken and offered only in Act V through its card row's "act").
+	# DrawCuts.unbending_mult() (the foundation's one read,
+	# ShogunateRulesData.UNBENDING / UNBENDING_KEY): a Draw cut on a summon deals
+	# 1 - draw_reduction of its damage.
+	"unbending": {
+		"display_name": "Unbending",  # Owner-approved proposal
+		"icon": "unbending",
+		"description": "The samurai's Draw cuts your summons for less.",
+		"labels": {"draw_reduction": ["Draw cut damage to summons", "neg_pct"]},
+		"act": 5,  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"draw_reduction": 0.15},  # TUNING (not in GDD)
+			{"draw_reduction": 0.25},  # TUNING (not in GDD)
+			{"draw_reduction": 0.35},  # TUNING (not in GDD)
+			{"draw_reduction": 0.45},  # TUNING (not in GDD)
+			{"draw_reduction": 0.55},  # TUNING (not in GDD) a cut 24 -> ~11 to a summon
 		],
 	},
 }

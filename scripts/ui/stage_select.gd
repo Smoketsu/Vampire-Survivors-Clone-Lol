@@ -136,6 +136,11 @@ func _act_row() -> Control:
 	var rb := InputHints.chip(InputHints.raw(KEY_E, JOY_BUTTON_RIGHT_SHOULDER))
 	rb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(rb)
+	# --- Act V: the Shogunate of the Rising Sun ---
+	# Compact from the first layout: five full tabs made the column wider than
+	# 1280 px before _show_act() shrank them, and the centred column kept that
+	# width (the cards sat ~160 px right of centre).
+	_size_act_tabs()
 	return row
 
 

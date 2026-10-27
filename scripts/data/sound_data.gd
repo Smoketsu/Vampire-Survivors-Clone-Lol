@@ -482,20 +482,71 @@ const BRONZE_SCORE := {
 		"notes": [[146.83, 220.0], [130.81, 196.0]]},  # TUNING (not in GDD) [root, fifth] (Hz) per swell
 }
 
+## "The Setting Sun", the Act V run loop (GDD §15.0 "The Setting Sun and the
+## Shogunate sounds", owner-approved proposal: a Japanese feel): the RunLoopSynth
+## score of every stage whose STAGE has "music": "sun" (keys in RunLoopSynth's
+## header). A low D drone and a thin wind bed under a sparse in-scale pad
+## (D, Eb, G, A, Bb: the "in" pentatonic), taiko patterns (don / ka) instead of
+## the heartbeat, a plucked koto line and a breathy shakuhachi lead. Rendered
+## lazily (Sfx), never under the autotest. 96 bpm: 24 beats per 15 s loop, six
+## 4-beat bars.
+const SUN_SCORE := {
+	"loop_seconds": 15.0,  # TUNING (not in GDD) 24 beats at 96 bpm (0.625 s a beat)
+	"root_hz": 36.71,  # TUNING (not in GDD) D1, the drone under the scale's D
+	# Open, sparse voicings (no thirds: the scale has none): D-G-A, Eb-G-Bb, G-A-D, D-A-D.
+	"chords": [
+		[146.83, 196.0, 220.0],
+		[155.56, 196.0, 233.08],
+		[196.0, 220.0, 293.66],
+		[146.83, 220.0, 293.66],
+	],  # TUNING (not in GDD)
+	"drone_lp_hz": 55.0,  # TUNING (not in GDD) a deep temple hum
+	"wind_lp_hz": 200.0,  # TUNING (not in GDD) a thin wind through bamboo
+	"wind_swells": 3.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.4,  # TUNING (not in GDD)
+	"vibrato_depth": 0.004,  # TUNING (not in GDD)
+	# Taiko: 4-beat bars of hits [beat, kind, amp]; "don" = the deep drum head,
+	# "ka" = the rim. Bar b plays pattern b % patterns.size().
+	"taiko": {"beat": 0.625, "beats_per_bar": 4, "don_hz0": 98.0, "don_hz1": 46.0, "don_dur": 0.42, "don_decay": 0.13,
+		"ka_hz0": 260.0, "ka_hz1": 170.0, "ka_dur": 0.12, "ka_decay": 0.03, "slap": 0.14,
+		"patterns": [
+			[[0.0, "don", 0.62], [1.5, "ka", 0.14], [2.0, "don", 0.34], [3.0, "ka", 0.14], [3.5, "ka", 0.1]],
+			[[0.0, "don", 0.62], [0.75, "ka", 0.1], [1.5, "don", 0.3], [2.0, "don", 0.4], [3.0, "ka", 0.14]],
+			[[0.0, "don", 0.62], [1.0, "ka", 0.12], [2.0, "don", 0.34], [2.5, "don", 0.26], [3.0, "don", 0.46], [3.5, "ka", 0.12]],
+			[[0.0, "don", 0.7], [0.5, "ka", 0.1], [1.0, "ka", 0.1], [2.0, "don", 0.4], [3.25, "don", 0.5], [3.625, "ka", 0.14]],
+		]},  # TUNING (not in GDD)
+	# Koto: plucked notes [start (s), Hz, amp, glide-to Hz (0 = none)] in the D in scale
+	# (D Eb G A Bb): a falling phrase, a rest, an answering rise. Each rings `dur` s.
+	"koto": {"dur": 1.3, "decay": 0.34, "lp0": 3800.0, "lp1": 1500.0, "click": 0.05,
+		"notes": [
+			[0.0, 587.33, 0.1, 0.0], [0.625, 466.16, 0.08, 0.0], [1.25, 392.0, 0.09, 0.0], [2.5, 440.0, 0.08, 392.0],
+			[3.75, 293.66, 0.1, 0.0], [4.375, 392.0, 0.08, 0.0], [5.0, 440.0, 0.09, 0.0],
+			[6.25, 622.25, 0.1, 0.0], [6.875, 587.33, 0.08, 0.0], [7.5, 466.16, 0.09, 0.0], [8.75, 392.0, 0.08, 0.0],
+			[10.0, 311.13, 0.09, 0.0], [10.625, 392.0, 0.08, 0.0], [11.25, 466.16, 0.09, 0.0], [11.875, 587.33, 0.1, 622.25],
+			[13.125, 440.0, 0.08, 0.0],
+		]},  # TUNING (not in GDD)
+	# Shakuhachi: breathy sustained notes [start (s), Hz, length (s)]: a sine with slow
+	# vibrato, a late-swelling noise breath and a faint octave overtone.
+	"flute": {"amp": 0.09, "breath": 0.07, "attack": 0.28, "decay": 1.6, "vib_hz": 4.6, "vib_depth": 0.012,
+		"notes": [[1.25, 587.33, 3.4], [5.6, 783.99, 2.2], [8.1, 622.25, 2.6], [11.9, 587.33, 2.8]]},  # TUNING (not in GDD)
+}
+
 ## Run-loop scores by STAGE "music" id (Sfx.play_music() modes; "" / absent =
 ## the Act I loop): "tide" = "Below the Tide" (Act II), "iron" = "Iron Requiem"
-## (Act III), "bronze" = "Hymn of Bronze" (Act IV). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
+## (Act III), "bronze" = "Hymn of Bronze" (Act IV), "sun" = "The Setting Sun" (Act V). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
 const SCORES := {
 	"tide": TIDE_SCORE,
 	"iron": IRON_SCORE,
 	"bronze": BRONZE_SCORE,
+	"sun": SUN_SCORE,  # Act V
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
 ## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
-## the Act IV ones); absent = none.
+## the Act IV ones; "shogunate" = SHOGUNATE_SOUNDS, the Act V ones); absent = none.
 const SCORE_PACKS := {
 	"iron": "empire",
 	"bronze": "pantheon",
+	"sun": "shogunate",  # Act V
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -984,4 +1035,157 @@ const PANTHEON_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 293.7, "f1": 196.0, "start": 0.1, "dur": 2.3, "amp": 0.18, "attack": 0.25, "decay": 1.0},
 			{"wave": "sine", "f0": 587.3, "start": 0.4, "dur": 1.8, "amp": 0.08, "attack": 0.01, "decay": 0.8},
 			{"wave": "sine", "f0": 49.0, "dur": 2.5, "amp": 0.4, "attack": 0.3, "decay": 1.0}]},
+}
+
+## Act V sound effects (the Shogunate of the Rising Sun; recipe keys as SOUNDS).
+## Kept OUT of SOUNDS like the other packs: Sfx renders it lazily the first time
+## an Act V run's music ("sun") is asked for (Sfx.prepare_pack("shogunate"); seeds
+## Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["shogunate"] + i). Nothing plays them
+## until the lead wires the foundation's sound map.
+const SHOGUNATE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# The Draw, the tell: a thin steel ring as a blade leaves the saya.
+	"draw_flash": {"dur": 0.5, "volume_db": -17.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.12, "amp": 0.16, "attack": 0.02, "decay": 0.05, "lp0": 3000.0, "lp1": 9000.0},
+			{"wave": "sine", "f0": 2640.0, "f1": 3100.0, "start": 0.04, "dur": 0.42, "amp": 0.14, "attack": 0.004, "decay": 0.16},
+			{"wave": "sine", "f0": 4180.0, "f1": 4400.0, "start": 0.05, "dur": 0.34, "amp": 0.07, "attack": 0.004, "decay": 0.1},
+			{"wave": "sine", "f0": 1320.0, "start": 0.04, "dur": 0.3, "amp": 0.06, "decay": 0.1}]},
+	# The Draw, the cut: a fast slicing whoosh with a sharp tail.
+	"draw_cut": {"dur": 0.4, "volume_db": -14.0, "max_voices": 3, "min_interval": 90, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.16, "amp": 0.42, "attack": 0.03, "decay": 0.06, "lp0": 1500.0, "lp1": 9000.0},
+			{"wave": "noise", "start": 0.13, "dur": 0.05, "amp": 0.4, "attack": 0.001, "decay": 0.012, "lp0": 9000.0, "lp1": 6000.0},
+			{"wave": "sine", "f0": 3300.0, "f1": 2200.0, "start": 0.13, "dur": 0.25, "amp": 0.1, "attack": 0.002, "decay": 0.07}]},
+	# Ninja smoke bomb: a soft burst and a hiss.
+	"smoke_puff": {"dur": 0.7, "volume_db": -18.0, "max_voices": 3, "min_interval": 140, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 120.0, "f1": 55.0, "dur": 0.16, "amp": 0.3, "attack": 0.004, "decay": 0.05},
+			{"wave": "noise", "dur": 0.1, "amp": 0.3, "attack": 0.004, "decay": 0.03, "lp0": 2500.0, "lp1": 900.0},
+			{"wave": "noise", "start": 0.05, "dur": 0.6, "amp": 0.2, "attack": 0.1, "decay": 0.2, "lp0": 7000.0, "lp1": 3000.0}]},
+	# Teppo volley: a ragged crackle of matchlocks, six cracks out of time.
+	"teppo_volley": {"dur": 0.9, "volume_db": -15.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.05, "amp": 0.6, "attack": 0.001, "decay": 0.012, "lp0": 7000.0, "lp1": 1800.0},
+			{"wave": "noise", "start": 0.07, "dur": 0.05, "amp": 0.5, "attack": 0.001, "decay": 0.012, "lp0": 6500.0, "lp1": 1600.0},
+			{"wave": "noise", "start": 0.13, "dur": 0.05, "amp": 0.55, "attack": 0.001, "decay": 0.012, "lp0": 7500.0, "lp1": 2000.0},
+			{"wave": "noise", "start": 0.25, "dur": 0.05, "amp": 0.42, "attack": 0.001, "decay": 0.012, "lp0": 6000.0, "lp1": 1700.0},
+			{"wave": "noise", "start": 0.33, "dur": 0.05, "amp": 0.46, "attack": 0.001, "decay": 0.012, "lp0": 7000.0, "lp1": 1800.0},
+			{"wave": "noise", "start": 0.52, "dur": 0.05, "amp": 0.35, "attack": 0.001, "decay": 0.012, "lp0": 6500.0, "lp1": 1500.0},
+			{"wave": "sine", "f0": 90.0, "f1": 50.0, "dur": 0.4, "amp": 0.3, "decay": 0.1},
+			{"wave": "noise", "start": 0.05, "dur": 0.8, "amp": 0.1, "attack": 0.05, "decay": 0.3, "lp0": 900.0, "lp1": 300.0}]},
+	# One deep taiko hit.
+	"taiko_hit": {"dur": 0.8, "volume_db": -11.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 105.0, "f1": 42.0, "dur": 0.7, "amp": 0.75, "attack": 0.003, "decay": 0.2},
+			{"wave": "sine", "f0": 190.0, "f1": 90.0, "dur": 0.25, "amp": 0.25, "attack": 0.002, "decay": 0.06},
+			{"wave": "noise", "dur": 0.06, "amp": 0.35, "attack": 0.001, "decay": 0.015, "lp0": 1600.0, "lp1": 600.0}]},
+	# A paper lantern lit: a soft paper whump and a flicker of flame.
+	"lantern_lit": {"dur": 0.7, "volume_db": -19.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 140.0, "f1": 70.0, "dur": 0.25, "amp": 0.4, "attack": 0.015, "decay": 0.08},
+			{"wave": "noise", "dur": 0.2, "amp": 0.25, "attack": 0.03, "decay": 0.07, "lp0": 800.0, "lp1": 1800.0},
+			{"wave": "noise", "start": 0.12, "dur": 0.55, "amp": 0.12, "attack": 0.08, "decay": 0.2, "lp0": 3200.0, "lp1": 1500.0}]},
+	# Nightfall: a low falling swell with a temple bell.
+	"nightfall": {"dur": 2.4, "volume_db": -12.0, "max_voices": 1, "min_interval": 1500, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 110.0, "f1": 41.0, "dur": 2.3, "amp": 0.26, "attack": 0.7, "decay": 0.9, "lp0": 500.0, "lp1": 140.0},
+			{"wave": "sine", "f0": 55.0, "f1": 36.0, "dur": 2.3, "amp": 0.45, "attack": 0.5, "decay": 0.9},
+			{"wave": "sine", "f0": 220.0, "start": 0.5, "dur": 1.9, "amp": 0.2, "attack": 0.004, "decay": 0.6},
+			{"wave": "sine", "f0": 607.0, "start": 0.5, "dur": 1.5, "amp": 0.1, "attack": 0.004, "decay": 0.35},
+			{"wave": "sine", "f0": 1180.0, "start": 0.5, "dur": 1.0, "amp": 0.05, "attack": 0.004, "decay": 0.2}]},
+	# An oni's iron club: a heavy impact, a crack of metal and a rolling thud.
+	"oni_smash": {"dur": 0.9, "volume_db": -10.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 80.0, "f1": 30.0, "dur": 0.7, "amp": 0.8, "attack": 0.002, "decay": 0.22},
+			{"wave": "noise", "dur": 0.07, "amp": 0.7, "attack": 0.001, "decay": 0.018, "lp0": 6000.0, "lp1": 1500.0},
+			{"wave": "sine", "f0": 330.0, "f1": 300.0, "dur": 0.5, "amp": 0.14, "decay": 0.14},
+			{"wave": "sine", "f0": 760.0, "dur": 0.35, "amp": 0.07, "decay": 0.09},
+			{"wave": "noise", "start": 0.06, "dur": 0.6, "amp": 0.25, "attack": 0.02, "decay": 0.22, "lp0": 1200.0, "lp1": 300.0}]},
+	# --- Act V: the Burning Province ---
+	# A sake barrel bursts into fire: splintering staves, a splash and a whoosh of flame.
+	"sake_burst": {"dur": 0.9, "volume_db": -12.0, "max_voices": 3, "min_interval": 110, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.09, "amp": 0.6, "attack": 0.001, "decay": 0.025, "lp0": 5000.0, "lp1": 1600.0},
+			{"wave": "sine", "f0": 95.0, "f1": 40.0, "dur": 0.4, "amp": 0.45, "attack": 0.002, "decay": 0.12},
+			{"wave": "noise", "start": 0.04, "dur": 0.25, "amp": 0.22, "attack": 0.01, "decay": 0.08, "lp0": 2400.0, "lp1": 800.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.75, "amp": 0.24, "attack": 0.12, "decay": 0.3, "lp0": 900.0, "lp1": 3200.0}]},
+	# Kage's chained kunai: a fast throw and a rattle of chain links.
+	"kunai_chain": {"dur": 0.6, "volume_db": -15.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.12, "amp": 0.3, "attack": 0.02, "decay": 0.05, "lp0": 2000.0, "lp1": 8000.0},
+			{"wave": "sine", "f0": 2900.0, "start": 0.12, "dur": 0.08, "amp": 0.1, "decay": 0.03},
+			{"wave": "sine", "f0": 3400.0, "start": 0.2, "dur": 0.08, "amp": 0.09, "decay": 0.03},
+			{"wave": "sine", "f0": 3100.0, "start": 0.28, "dur": 0.08, "amp": 0.08, "decay": 0.03},
+			{"wave": "noise", "start": 0.12, "dur": 0.4, "amp": 0.1, "attack": 0.01, "decay": 0.15, "lp0": 6000.0, "lp1": 3000.0}]},
+	# Kage splits into her shadows: a hollow swirl that drops away.
+	"kage_split": {"dur": 1.0, "volume_db": -13.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.9, "amp": 0.25, "attack": 0.3, "decay": 0.35, "lp0": 600.0, "lp1": 3500.0},
+			{"wave": "sine", "f0": 440.0, "f1": 220.0, "dur": 0.8, "amp": 0.14, "attack": 0.1, "decay": 0.3, "vib_hz": 7.0, "vib_depth": 0.04},
+			{"wave": "sine", "f0": 660.0, "f1": 330.0, "start": 0.1, "dur": 0.7, "amp": 0.07, "attack": 0.1, "decay": 0.25}]},
+	# --- Act V: the Road to the Sun ---
+	# The Kirin's gallop: a rush of hooves on stone and a bright chime.
+	"kirin_gallop": {"dur": 0.7, "volume_db": -12.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.4, "attack": 0.02, "decay": 0.2, "lp0": 1200.0, "lp1": 2600.0},
+			{"wave": "sine", "f0": 90.0, "f1": 60.0, "dur": 0.4, "amp": 0.4, "attack": 0.005, "decay": 0.15},
+			{"wave": "sine", "f0": 1568.0, "start": 0.05, "dur": 0.6, "amp": 0.08, "attack": 0.005, "decay": 0.25}]},
+	# The Horn of Heaven: a pure rising tone and a shimmer of bells.
+	"kirin_horn": {"dur": 1.0, "volume_db": -13.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.02, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 784.0, "f1": 1046.0, "dur": 0.9, "amp": 0.16, "attack": 0.05, "decay": 0.35},
+			{"wave": "sine", "f0": 1568.0, "f1": 2093.0, "start": 0.05, "dur": 0.8, "amp": 0.07, "attack": 0.02, "decay": 0.3},
+			{"wave": "noise", "dur": 0.6, "amp": 0.1, "attack": 0.1, "decay": 0.25, "lp0": 9000.0, "lp1": 5000.0}]},
+	# Amaterasu rises (and crosses the sky): a swelling choir chord in the D in scale.
+	"amaterasu_rise": {"dur": 2.2, "volume_db": -10.0, "max_voices": 1, "min_interval": 1500, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 146.8, "dur": 2.1, "amp": 0.26, "attack": 0.8, "decay": 0.8, "vib_hz": 4.0, "vib_depth": 0.008},
+			{"wave": "sine", "f0": 220.0, "start": 0.2, "dur": 1.9, "amp": 0.18, "attack": 0.7, "decay": 0.7},
+			{"wave": "sine", "f0": 293.7, "start": 0.4, "dur": 1.7, "amp": 0.12, "attack": 0.6, "decay": 0.6},
+			{"wave": "noise", "dur": 2.0, "amp": 0.08, "attack": 0.9, "decay": 0.8, "lp0": 3000.0, "lp1": 7000.0}]},
+	# Her mirror gathers light: a bright rising whine.
+	"sun_charge": {"dur": 0.9, "volume_db": -15.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 660.0, "f1": 1320.0, "dur": 0.85, "amp": 0.12, "attack": 0.4, "decay": 0.2},
+			{"wave": "noise", "dur": 0.8, "amp": 0.1, "attack": 0.4, "decay": 0.2, "lp0": 4000.0, "lp1": 9000.0}]},
+	# A beam of the sun strikes: a searing roar.
+	"sun_beam": {"dur": 0.8, "volume_db": -11.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.7, "amp": 0.45, "attack": 0.01, "decay": 0.3, "lp0": 6000.0, "lp1": 1500.0},
+			{"wave": "saw", "f0": 220.0, "f1": 110.0, "dur": 0.6, "amp": 0.12, "attack": 0.01, "decay": 0.25, "lp0": 1800.0}]},
+	# A sun-disc mine bursts: a bright crack and a hiss.
+	"sun_mine": {"dur": 0.5, "volume_db": -13.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.06, "amp": 0.6, "attack": 0.001, "decay": 0.02, "lp0": 9000.0, "lp1": 4000.0},
+			{"wave": "noise", "start": 0.04, "dur": 0.4, "amp": 0.2, "attack": 0.01, "decay": 0.18, "lp0": 5000.0, "lp1": 2000.0},
+			{"wave": "sine", "f0": 1200.0, "f1": 600.0, "dur": 0.2, "amp": 0.1, "decay": 0.08}]},
+	# The noon glare: a long building white hiss.
+	"noon_glare": {"dur": 1.6, "volume_db": -13.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.0, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 1.5, "amp": 0.3, "attack": 1.0, "decay": 0.3, "lp0": 3000.0, "lp1": 9000.0},
+			{"wave": "sine", "f0": 1046.0, "f1": 1568.0, "dur": 1.4, "amp": 0.06, "attack": 1.0, "decay": 0.3}]},
+	# The sun goes out: a vast falling chord and a final temple bell.
+	"sun_goes_out": {"dur": 3.0, "volume_db": -8.0, "max_voices": 1, "min_interval": 3000, "pitch_var": 0.0, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 293.7, "f1": 73.4, "dur": 2.8, "amp": 0.3, "attack": 0.05, "decay": 1.2},
+			{"wave": "sine", "f0": 440.0, "f1": 110.0, "dur": 2.6, "amp": 0.18, "attack": 0.05, "decay": 1.1},
+			{"wave": "sine", "f0": 36.7, "dur": 2.9, "amp": 0.45, "attack": 0.2, "decay": 1.2},
+			{"wave": "sine", "f0": 220.0, "start": 1.2, "dur": 1.7, "amp": 0.18, "attack": 0.004, "decay": 0.6},
+			{"wave": "sine", "f0": 607.0, "start": 1.2, "dur": 1.4, "amp": 0.08, "attack": 0.004, "decay": 0.4}]},
+	# --- Act V: Castle Kurogane ---
+	# A cavalry charge (Kiba-musha, the General of the Left): drumming hooves under a rising whinny.
+	"cavalry_charge": {"dur": 0.9, "volume_db": -15.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.45, "decay": 0.03, "lp0": 900.0, "lp1": 300.0},
+			{"wave": "noise", "start": 0.16, "dur": 0.08, "amp": 0.45, "decay": 0.03, "lp0": 900.0, "lp1": 300.0},
+			{"wave": "noise", "start": 0.32, "dur": 0.08, "amp": 0.45, "decay": 0.03, "lp0": 900.0, "lp1": 300.0},
+			{"wave": "noise", "start": 0.48, "dur": 0.08, "amp": 0.45, "decay": 0.03, "lp0": 900.0, "lp1": 300.0},
+			{"wave": "saw", "f0": 520.0, "f1": 760.0, "start": 0.05, "dur": 0.5, "amp": 0.06, "attack": 0.08, "decay": 0.2, "lp0": 2200.0, "vib_hz": 11.0, "vib_depth": 0.05}]},
+	# A regiment breaks (its Hatamoto falls): a banner pole snapping and a low taiko roll fading out.
+	"regiment_break": {"dur": 1.2, "volume_db": -11.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.1, "amp": 0.6, "decay": 0.03, "lp0": 5000.0, "lp1": 1500.0},
+			{"wave": "sine", "f0": 70.0, "f1": 45.0, "start": 0.05, "dur": 0.4, "amp": 0.55, "attack": 0.003, "decay": 0.15},
+			{"wave": "sine", "f0": 66.0, "f1": 42.0, "start": 0.35, "dur": 0.4, "amp": 0.4, "attack": 0.003, "decay": 0.15},
+			{"wave": "sine", "f0": 62.0, "f1": 40.0, "start": 0.65, "dur": 0.5, "amp": 0.28, "attack": 0.003, "decay": 0.18}]},
 }

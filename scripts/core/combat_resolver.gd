@@ -147,6 +147,16 @@
 ##             holds the unit (no thinking, moving, attacking or casting,
 ##             drawn stone-grey); stats summon_stuns, summon_stunned_seconds,
 ##             summon_stuns_<source>.
+##   the Burning Province (Act V phase 2) — blind_unit(): THE one blind path
+##             for summons (a Kunoichi's smoke bomb, Kage's smoke fields):
+##             SummonedUnit.blind() keeps the unit to the ring without a foe;
+##             stats summon_blinds, summon_blinded_seconds,
+##             summon_blinds_<source>. Hidden Hand — damage_enemy(): a SPELL
+##             hit (HundredShadowsData.is_spell_source()) on a foe busy
+##             fighting a summon deals more (stat hidden_hand_bonus_dmg);
+##             exactly 1 while the passive is not owned. Hundred Shadows hears
+##             each spell hit there too (NecroSpellBook.on_spell_hit(): its
+##             clones echo the next spell; only while the spell is learned).
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -270,6 +280,18 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		if heel > 0.0 and PantheonRules.hit_from_behind(e, origin):
 			game.stat_add("mortal_heel_bonus_dmg", amount * heel)
 			amount *= 1.0 + heel
+	# --- Act V: the Burning Province --- Hidden Hand (the paired passive of
+	# Hundred Shadows, offered on every stage once Kage fell): a SPELL hit on a
+	# foe busy fighting a summon (Enemy.targeting_summon) deals hand_damage
+	# more; exactly 1 while the passive is not owned. Then Hundred Shadows hears
+	# the spell hit (its clones echo the next spell cast).
+	if HundredShadowsData.is_spell_source(source):
+		var hand := game.abilities.passive_value("hidden_hand", "hand_damage")  # 0 when not owned.
+		if hand > 0.0 and e.targeting_summon:
+			game.stat_add("hidden_hand_bonus_dmg", amount * hand)
+			amount *= 1.0 + hand
+		if game.abilities.spell_level(HundredShadowsData.ID) > 0:
+			game.abilities.spells.on_spell_hit(e, amount, source)
 	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
 	# undead fighting on it hit weaker.
 	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).
@@ -829,12 +851,48 @@ func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) 
 ## `source` tags the stats. Returns the seconds applied (0 = immune). Stats:
 ## summon_stuns, summon_stunned_seconds, summon_stuns_<source>.
 func stun_unit(u: SummonedUnit, duration: float, source: String) -> float:
+	# --- Act V: the Road to the Sun --- Oni's Resolve: the summon's own necromancer's
+	# passive shortens every stun on it (0 while not owned: nothing changes).
+	var resolve := _onis_resolve(u)  # Share of the stun shrugged off (0..1).
+	if resolve > 0.0 and duration > 0.0:
+		game.stat_add("onis_resolve_seconds", duration * resolve)
+		duration *= 1.0 - resolve
 	if duration <= 0.0 or not u.stun(game.elapsed + duration):
 		return 0.0
 	game.stat_add("summon_stuns", 1.0)
 	game.stat_add("summon_stunned_seconds", duration)
 	game.stat_add("summon_stuns_" + source, 1.0)
 	return duration
+
+
+# --- Act V: the Burning Province ---
+## THE one blind path for summons (Act V: a Kunoichi's smoke bomb, Kage's
+## smoke fields): blinds summon `u` for `duration` s (SummonedUnit.blind(): it
+## keeps to the ring but cannot find or fight a foe; drawn with smoke over its
+## eyes). A longer blind already running is kept; airborne, spawning and dead
+## units are immune. An enemy effect on a unit: summons have no act rule of
+## their own. `source` tags the stats. Returns the seconds applied (0 =
+## immune). Stats: summon_blinds, summon_blinded_seconds, summon_blinds_<source>.
+func blind_unit(u: SummonedUnit, duration: float, source: String) -> float:
+	if duration <= 0.0 or not u.blind(game.elapsed + duration):
+		return 0.0
+	game.stat_add("summon_blinds", 1.0)
+	game.stat_add("summon_blinded_seconds", duration)
+	game.stat_add("summon_blinds_" + source, 1.0)
+	return duration
+
+
+## Oni's Resolve (PassiveData "onis_resolve"): the share (0..1) of a stun summon
+## `u` shrugs off, read from its own necromancer's build (co-op: the slot whose
+## army it is, like DrawCuts.unbending_mult()); 0 while not owned.
+func _onis_resolve(u: SummonedUnit) -> float:
+	var ab := game.abilities  # The bound player's passives.
+	if game.coop != null and u != null:
+		for s in game.coop.slots:
+			if s.horde == u.director:
+				ab = s.abilities
+				break
+	return clampf(ab.passive_value(OniBehavior.RESOLVE, OniBehavior.RESOLVE_KEY), 0.0, 0.9)
 
 
 ## Death of an enemy: cosmetic pop, XP crystal, kill counter, power-up drop

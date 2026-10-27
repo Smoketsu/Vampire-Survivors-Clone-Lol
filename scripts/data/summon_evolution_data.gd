@@ -69,7 +69,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act III: the Iron Citadel ---
 	"deus_revenant",
 	# --- Act IV: the Asphodel Underworld ---
-	"legion_of_tartarus"]
+	"legion_of_tartarus",
+	# --- Act V: the Road to the Sun ---
+	"oni_lord"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -773,6 +775,38 @@ const EVOLUTIONS := {
 			"pierce_count": 2,  # TUNING (not in GDD) (base 1)
 			"grip_slow": 0.3,  # TUNING (not in GDD)
 			"grip_time": 1.0,  # TUNING (not in GDD) s
+		},
+	},
+	# --- Act V: the Road to the Sun ---
+	# The Oni Lord (owner-approved proposal: "the Oni ... evolution Oni Lord";
+	# GDD §15.0 "The Bound Oni, the Oni Lord and Oni's Resolve"): Bound Oni Lv 5 +
+	# Oni's Resolve Lv 5 (a NEW passive, own decision, owner rule: maxed). A
+	# great horned oni in bone chains broken loose, a kanabō studded with
+	# soul-teal iron. OniBehavior reads these special_set keys (final):
+	#   quake_radius   — px of the QUAKE the smash sends out around the blow
+	#                    (every foe in it struck for quake_fraction of the smash
+	#                    and knocked back, not stunned);
+	#   quake_fraction — share of the smash the quake deals.
+	"oni_lord": {
+		"mode": "transform",
+		"bases": ["bound_oni"],
+		"passive": "onis_resolve",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Oni Lord",  # Owner-approved proposal
+		"plural": "Oni Lords",
+		"icon": "oni_lord",
+		"description": "The chains break: a lord of the oni whose smash shakes the ground around it.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 17.0,  # TUNING (not in GDD) Bound Oni 15
+			"block_mass": 10.0,  # TUNING (not in GDD) Bound Oni 7
+		},
+		"special_set": {
+			"quake_radius": 92.0,  # TUNING (not in GDD) px
+			"quake_fraction": 0.5,  # TUNING (not in GDD)
 		},
 	},
 }

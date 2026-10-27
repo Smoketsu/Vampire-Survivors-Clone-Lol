@@ -497,6 +497,55 @@ RIGS = {
     "enemies/inquisitor": dict(mode="legs", hip=46, back=(0, 24), front=(24, 48), rigid=[], spread=1, lift=1, dip=1),
     "bosses/alaric": dict(mode="legs", hip=78, back=(0, 86), front=(110, 174), rigid=[(0, 54, 78, 102), (86, 110, 78, None)], spread=2, lift=2, dip=1),
     "bosses/vael": dict(mode="legs", hip=70, back=(0, 50), front=(50, 120), rigid=[(46, 94, 70, 106)], spread=2, lift=2, dip=1),
+    # --- Act V: the Shogunate of the Rising Sun (the shared kinds) ---
+    # The Ashigaru marches with his long yari (cols 3-5, the whole height) rigid; the Samurai strides, hand on his hilt (all
+    # above the hip); the Teppo Gunner shuffles under his level arquebus (above the hip); the Ninja creeps low (long diagonal
+    # legs); the Onryo glides (the whole ghost bobs 2 px; the still keeps two empty rows on top, no bust: a ghost, not the
+    # figure-redesign style); the Oni stomps, his iron kanabo (held low across the front) riding with the body above the hip.
+    "shogunate/ashigaru": dict(mode="legs", hip=39, back=(0, 13), front=(13, 22), rigid=[(3, 6, 0, None)], spread=2, lift=2, dip=1),
+    "shogunate/samurai": dict(mode="legs", hip=40, back=(0, 23), front=(23, 52), rigid=[], spread=2, lift=2, dip=1),
+    "shogunate/teppo_gunner": dict(mode="legs", hip=33, back=(0, 32), front=(32, 62), rigid=[], spread=2, lift=2, dip=1),
+    "shogunate/ninja": dict(mode="legs", hip=28, back=(0, 18), front=(18, 36), rigid=[], spread=2, lift=2, dip=1),
+    "shogunate/onryo": dict(mode="hover", bob=2, parts=[]),
+    "shogunate/oni": dict(mode="legs", hip=61, back=(0, 31), front=(31, 70), rigid=[], spread=3, lift=3, dip=1),
+    # --- Act V: the Burning Province ---
+    # The Kunoichi strides, a tanto in each hand (the blades riding with the body below the hip), with a bust box and
+    # idle breathing (figure-redesign style); the Kappa scuttles, its reaching claw rigid; Shuten-doji stomps, his
+    # spiked kanabo (cols 62+) riding with the body; Kage strides wide in her ready stance (bust box, idle breathing;
+    # her clones wear the same strips); the Grave Kunoichi strides, her long scarf (cols 0-16) riding with the body.
+    "shogunate/kunoichi": dict(mode="legs", hip=34, back=(12, 20), front=(20, 30), rigid=[(0, 12, 0, None), (30, 40, 0, None)], spread=1, lift=1, dip=1, bust=(16, 28, 14, 20, 2)),  # Round 1 redo: box 2 px to the right (was cols 16-26).
+    "shogunate/kappa": dict(mode="legs", hip=24, back=(0, 14), front=(14, 24), rigid=[(24, 32, 0, None)], spread=1, lift=2, dip=1),
+    "shogunate/shuten_doji": dict(mode="legs", hip=86, back=(0, 36), front=(36, 62), rigid=[(62, 94, 0, None)], spread=2, lift=3, dip=1),
+    "bosses/kage": dict(mode="legs", hip=44, back=(0, 32), front=(32, 50), rigid=[(50, 66, 0, None)], spread=2, lift=2, dip=1, bust=(24, 37, 15, 23, 2)),  # Round 1 redo: box up and left onto the chest (was cols 27-40, rows 18-26).
+    "player/grave_kunoichi": dict(mode="legs", hip=40, back=(17, 27), front=(27, 44), rigid=[(0, 17, 0, None)], spread=1, lift=1, dip=1, bust=(21, 34, 16, 23, 2)),  # Round 1 redo: box widened to the right (was cols 21-32; the three skins share it).
+    # --- Act V: the Road to the Sun ---
+    # The Sohei strides, the naginata (above the hip) riding with the body; the Kirin lopes on four legs (the hind
+    # pair left, the forelegs right, like Cerberus); the Kitsune (figure redesign: bust bounce, idle breathing)
+    # glides in her kimono; Amaterasu floats, her robe and sashes swaying (bust bounce, the mirror above the hip);
+    # the Shrine Maiden of Night (figure redesign) glides in her hakama, the gohei above the hip; the Bound Oni and
+    # the Oni Lord stomp, the tip of the kanabo (held low across the front) rigid.
+    "shogunate/sohei": dict(mode="legs", hip=41, back=(0, 32), front=(32, 64), rigid=[], spread=2, lift=2, dip=1),
+    "shogunate/kirin": dict(mode="legs", hip=64, back=(0, 63), front=(63, 104), rigid=[], spread=2, lift=2, dip=1),
+    # Round 1 redo (owner: "make her bustier"): redrawn with a larger bust, rows 15-19 above the sash, cols 13-23 (two lobes).
+    # Round 3 (owner: "extend bounce box to the right 3 pixels, reduce on the left 3 pixels"): cols 9-24 -> 12-27.
+    "shogunate/kitsune": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(12, 27, 13, 20, 1, 2)),
+    # Round 1 redo (owner: "bounce box needs to go up and to the right"): she was redrawn fuller (more mature figure), her
+    # chest now rows 32-42, cols 43-59 (two lobes, a gold collar between); the old box (cols 36-52, rows 34-45) sat low and left.
+    "bosses/amaterasu": dict(mode="robe", hip=78, rigid=[], sway=1, dip=1, bust=(42, 60, 30, 43, 2, 2)),
+    # Round 1 redo (owner: "extend two pixels to the right and go up two pixels"): the box was cols 17-27, rows 17-25, now cols 17-29, rows 15-23.
+    "player/shrine_maiden": dict(mode="robe", hip=36, rigid=[], sway=2, dip=1, bust=(17, 29, 15, 23, 1)),
+    "summons/bound_oni": dict(mode="legs", hip=50, back=(0, 26), front=(26, 54), rigid=[], spread=2, lift=2, dip=1),
+    "summons/oni_lord": dict(mode="legs", hip=60, back=(0, 31), front=(31, 68), rigid=[], spread=2, lift=2, dip=1),
+    # --- Act V: Castle Kurogane ---
+    # The Hatamoto marches under his tall white banner (pole cols 22-28, the whole height, rigid); the Kiba-musha and the
+    # General of the Left gallop (the horse's hind legs left, forelegs right; a wide spread and a high lift); Shogun
+    # Kurogane strides under his crimson cloak (his duel pose bosses/shogun_duel is a still: no strip). The Ronin
+    # Revenant walks in his tattered kimono and hakama (robe: the hem sways).
+    "shogunate/hatamoto": dict(mode="legs", hip=61, back=(0, 12), front=(12, 22), rigid=[(22, 29, 0, None)], spread=2, lift=2, dip=1),
+    "shogunate/kiba_musha": dict(mode="legs", hip=46, back=(0, 37), front=(37, 74), rigid=[], spread=3, lift=2, dip=1),
+    "shogunate/general_left": dict(mode="legs", hip=77, back=(0, 60), front=(60, 110), rigid=[], spread=3, lift=3, dip=1),
+    "bosses/shogun": dict(mode="legs", hip=94, back=(0, 64), front=(64, 116), rigid=[], spread=2, lift=2, dip=1),
+    "player/ronin_revenant": dict(mode="robe", hip=50, rigid=[], sway=1, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -571,9 +620,35 @@ SKINS = {
     "player/ferrywoman_hyper": "player/ferrywoman",
     "player/ferrywoman_untouchable": "player/ferrywoman",
     "player/ferrywoman_deathlord": "player/ferrywoman",
+    # --- Act V: the Burning Province ---
+    "player/grave_kunoichi_hyper": "player/grave_kunoichi",
+    "player/grave_kunoichi_untouchable": "player/grave_kunoichi",
+    "player/grave_kunoichi_deathlord": "player/grave_kunoichi",
+    # --- Act V: the Road to the Sun ---
+    "player/shrine_maiden_hyper": "player/shrine_maiden",
+    "player/shrine_maiden_untouchable": "player/shrine_maiden",
+    "player/shrine_maiden_deathlord": "player/shrine_maiden",
+    # --- Act V: Castle Kurogane ---
+    "player/ronin_revenant_hyper": "player/ronin_revenant",
+    "player/ronin_revenant_untouchable": "player/ronin_revenant",
+    "player/ronin_revenant_deathlord": "player/ronin_revenant",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
+    # --- Act V: the Burning Province --- (the Grave Kunoichi's skins)
+    # Round 2 redo: the Hyper and Deathlord skins have their own box, the shared one (derived: cols 23-36, rows 18-25)
+    # with 1 px less at the bottom (owner: "reduced like 1 pixel on the bottom"); the base keeps the approved shared box.
+    # The Untouchable skin was redrawn (a ghost-white phantom): its bust sits at cols 19-30, rows 15-21.
+    "player/grave_kunoichi_hyper": {"bust": (23, 36, 18, 24, 2)},
+    "player/grave_kunoichi_deathlord": {"bust": (23, 36, 18, 24, 2)},
+    "player/grave_kunoichi_untouchable": {"bust": (19, 31, 15, 22, 2)},
+    # --- Act V: the Road to the Sun --- (the Shrine Maiden's skins: their own bust boxes)
+    # Round 1 redo: the Hyper box up 5 px and 2 px wider to the right (was cols 18-28, rows 17-25; owner); the Untouchable skin
+    # (a new entry) takes the same box, up 5 / right 2, which lands on its bust (rows 14-19) and stops above the teal bow;
+    # the Deathlord skin was redrawn with fewer, bigger shapes, its bust sits under the chin (rows 18-22) right of the face.
+    "player/shrine_maiden_hyper": {"bust": (18, 30, 12, 20, 1)},
+    "player/shrine_maiden_untouchable": {"bust": (17, 29, 12, 20, 1)},
+    "player/shrine_maiden_deathlord": {"bust": (15, 26, 18, 23, 1)},
     # --- Act IV: the Asphodel Underworld --- (the Ferrywoman's skins: their own oar column and bust box)
     "player/ferrywoman_hyper": {"rigid": [(28, 35, 0, None)], "bust": (17, 26, 17, 24, 2)},
     "player/ferrywoman_untouchable": {"rigid": [(28, 34, 0, None)], "bust": (17, 27, 17, 24, 2)},

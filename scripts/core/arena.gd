@@ -440,6 +440,10 @@ func _peek(pos: Vector2) -> Obstacle:
 
 ## Draws one obstacle; the solid outline matches its collision shape.
 func _draw_obstacle(o: Obstacle) -> void:
+	if game != null and game.shogunate != null:
+		ShogunateGlyphs.draw_long_shadow(self, o, game.shogunate.sun)  # Act V: the long dusk shadows (drawing only).
+		if ShogunateGlyphs.draw_lantern(self, o, game.shogunate.sun):
+			return  # Act V: a stone lantern, lit at night by the Sun's Course.
 	if EnvironmentArt.draw_obstacle(self, o):
 		return  # Its sprite (art pass); otherwise the code glyph below.
 	if MarchGlyphs.draw_obstacle(self, o):
@@ -466,6 +470,17 @@ func _draw_obstacle(o: Obstacle) -> void:
 		return  # A Mount Olympus obstacle kind (Act IV).
 	if UnderworldGlyphs.draw_obstacle(self, o):
 		return  # An Asphodel Underworld obstacle kind (Act IV).
+	if ShogunateGlyphs.draw_obstacle(self, o):
+		return  # An Act V stub's placeholder obstacle kind.
+	# --- Act V: the Burning Province ---
+	if ProvinceGlyphs.draw_obstacle(self, o):
+		return  # A Burning Province obstacle kind (Act V).
+	# --- Act V: the Road to the Sun ---
+	if SunRoadGlyphs.draw_obstacle(self, o):
+		return  # A Road to the Sun obstacle kind (Act V).
+	# --- Act V: Castle Kurogane ---
+	if KuroganeGlyphs.draw_obstacle(self, o):
+		return  # A Castle Kurogane obstacle kind (Act V).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

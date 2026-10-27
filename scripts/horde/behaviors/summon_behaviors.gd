@@ -13,6 +13,7 @@
 ##   "hover"  Grave Drone         GraveDroneBehavior (Act III, the Assembly Halls)
 ##   "suppress" Iron Revenant     RevenantBehavior (Act III, the Iron Citadel)
 ##   "shieldwall" Myrmidon Shade  MyrmidonBehavior (Act IV, the Asphodel Underworld)
+##   "kanabo" Bound Oni           OniBehavior (Act V, the Road to the Sun)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -61,6 +62,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act IV: the Asphodel Underworld ---
 		"shieldwall":
 			b = MyrmidonBehavior.new()  # The Myrmidon Shades.
+		# --- Act V: the Road to the Sun ---
+		"kanabo":
+			b = OniBehavior.new()  # The Bound Oni.
 	if b != null:
 		b.kind = kind
 	return b
@@ -165,6 +169,14 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			if a.is_empty():
 				out.append("Holds the ring's front; three side by side lock shields")
 				out.append("Shield wall: %d%% less damage; the spear runs through a foe behind" % int(roundf(float(b["wall_cut"]) * 100.0)))
+		# --- Act V: the Road to the Sun ---
+		"kanabo":
+			if a.is_empty():
+				out.append("Holds the ring's front like a wall of muscle")
+				out.append("Kanabo smash: stuns every foe it lands on for %.1f s" % float(b["smash_stun_duration"]))
+			else:
+				_delta(out, "Smash damage", a, b, "smash_damage")
+				_delta(out, "Stun (s)", a, b, "smash_stun_duration")
 	return out
 
 

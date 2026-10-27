@@ -1,0 +1,6 @@
+A pixel-art game achievement symbol, exactly 26 x 26 pixels, shown enlarged so every pixel is a big crisp square block, on a FULLY TRANSPARENT background (no badge, no border, no frame). ONE bold, instantly readable scene in two big shapes: on the LEFT a tall stone Japanese TORO LANTERN (a wide flat roof, a lantern box with a big square bright GOLD glowing window and a few light rays, a thin post and a base), drawn in light grey stone; on the RIGHT a solid BLACK hooded ninja SHADOW silhouette running away, leaning, clearly a person-shaped dark silhouette with a hood and a trailing scarf, fleeing from the light. Big simple shapes only, no detail under 2 pixels, no text. Readable at its real size of 26 pixels. No anti-aliasing, no gradients, no dithering. A clean 1-pixel dark outline.
+
+Colours: ONLY flat fills from this list: stone #1C1E24 #4A5566 #8793A6 #C4CCD8; gold #6B4A12 #E0A92E #FFDC66; ink #1A0B0C #161D38.
+
+Output: a square PNG with real alpha.
+Attached: an approved icon of this game, for the pixel size and look.

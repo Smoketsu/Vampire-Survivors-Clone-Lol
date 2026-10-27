@@ -5,7 +5,9 @@
 ## Scrap Wastes -> the Assembly Halls -> the Iron Citadel, opened by slaying
 ## Vhal'Neth; Act IV, GDD §15.0 "Act IV foundation (phase 1)": the Shores of
 ## Ilion -> Mount Olympus -> the Asphodel Underworld, opened by slaying Deus Ex
-## Machina). One entry per stage, each
+## Machina; Act V, GDD §15.0 "Act V foundation (phase 1)": the Burning Province
+## -> Castle Kurogane -> the Road to the Sun, opened by making Hades kneel). One
+## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
 ## in the game hard-codes a stage.
@@ -54,7 +56,8 @@
 ## Optional keys (absent = off):
 ##   act                — campaign act (1 = the Crimson Covenant, 2 = the
 ##                        Ancient Eye, 3 = the Electronic Empire, 4 = the
-##                        Olympian Republic; absent = 1). The stage select shows one
+##                        Olympian Republic, 5 = the Shogunate of the Rising
+##                        Sun; absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
 ##   playable           — false hides a registered stage from the stage select
@@ -123,6 +126,40 @@
 ##                        squads of the earlier Act IV kinds); ground
 ##                        "underworld" is its UnderworldGround (four zone floors
 ##                        and the Styx).
+## --- Act V: the Shogunate of the Rising Sun ---
+##   shogunate          — true: the Shogunate's shared rules (Act V,
+##                        ShogunateRules as Game.shogunate: the Sun's Course, the
+##                        Draw, From the Shadows, and the Endless Night when the
+##                        RECKONING has an "endless_night" key); ground
+##                        "shogunate" is the placeholder ShogunateGround (from
+##                        the "floor" dictionary, styles paddy / castle / gravel).
+##   sun                — the stage's Sun's Course (SunCourse): any key of
+##                        ShogunateRulesData.SUN overrides it ({} = defaults:
+##                        dusk at 13:00 left, night at 7:00).
+##   zones              — Act V stubs too: the planned zones (names only).
+## Act V segment keys (SEGMENTS rows): "night_weights" (kinds that join the
+## trickle only at night, SunCourse.timeline_weights()) and "ambush"
+## ({"every", "kind", "count", "elite"}: ShadowAmbush's trickle from dusk on);
+## Act V event type "ambush" (its "groups" appear From the Shadows).
+## --- Act V: the Burning Province ---
+##   province           — ProvinceDirector config (ProvinceStage.PROVINCE, Act
+##                        V, the Burning Province: the paddy water in the zones
+##                        whose ground has a "paddy" share, the village fires in
+##                        a zone with "fires", Shuten-doji (its "shuten_doji"
+##                        event, night only), No Shadow Unlit); ground
+##                        "province" is its ProvinceGround (four zone floors and
+##                        the paddy water).
+## --- Act V: the Road to the Sun ---
+##   sun_road           — SunRoadDirector config (SunRoadStage.SUN_ROAD, Act V,
+##                        the Road to the Sun: the Kirin's "kirin" event, guest
+##                        squads of the other Act V stages' kinds); ground
+##                        "sun_road" is its SunRoadGround (four zone floors).
+## --- Act V: Castle Kurogane ---
+##   kurogane           — KuroganeDirector config (KuroganeStage.KUROGANE, Act V,
+##                        Castle Kurogane: the General of the Left, the HUD
+##                        objective of the Shogun's army; its "general_left"
+##                        event); ground "kurogane" is its KuroganeGround (four
+##                        zone floors).
 class_name StageRegistry
 extends RefCounted
 
@@ -131,7 +168,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act III: the Electronic Empire ---
 	"wastes", "assembly", "citadel",
 	# --- Act IV: the Olympian Republic ---
-	"ilion", "olympus", "underworld"]
+	"ilion", "olympus", "underworld",
+	# --- Act V: the Shogunate of the Rising Sun ---
+	"province", "kurogane", "sun_road"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -150,6 +189,10 @@ const STAGES := {
 	"ilion": IlionStage.STAGE,
 	"olympus": OlympusStage.STAGE,
 	"underworld": UnderworldStage.STAGE,
+	# --- Act V: the Shogunate of the Rising Sun ---
+	"province": ProvinceStage.STAGE,
+	"kurogane": KuroganeStage.STAGE,
+	"sun_road": SunRoadStage.STAGE,
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -159,6 +202,8 @@ const ACTS := {
 	3: {"name": "Act III", "subtitle": "The Electronic Empire"},
 	# --- Act IV: the Olympian Republic ---
 	4: {"name": "Act IV", "subtitle": "The Olympian Republic"},
+	# --- Act V: the Shogunate of the Rising Sun ---
+	5: {"name": "Act V", "subtitle": "The Shogunate of the Rising Sun"},
 }
 
 
@@ -207,4 +252,9 @@ const BOSS_ARRIVALS := {
 	"achilles": IlionStage.BOSS,
 	"zeus": OlympusStage.BOSS,
 	"hades": UnderworldStage.BOSS,
+	# --- Act V: the Shogunate of the Rising Sun (stubs: each stage's BOSS until
+	# phase 2 gives the boss its own data file) ---
+	"kage": ProvinceStage.BOSS,
+	"shogun": KuroganeStage.BOSS,
+	"amaterasu": SunRoadStage.BOSS,
 }

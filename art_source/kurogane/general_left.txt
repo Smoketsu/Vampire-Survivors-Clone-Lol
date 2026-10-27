@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, charging.
+
+LOW-RESOLUTION pixel art: the whole rider and horse are only 92 pixels tall and about 100 pixels long, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. Details must be big enough to read at game size. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: THE GENERAL OF THE LEFT, a MALE samurai general on a huge black war horse, charging (all four legs clearly visible, the horse rearing slightly forward, its head to the right). The general wears grand gold-trimmed black lacquered armour with big red shoulder plates, a horned kabuto with tall golden antler crests (kuwagata), a fierce red menpo face mask, a long red war cloak flying behind him, and holds a long naginata blade levelled forward. A small indigo sashimono flag on his back. The horse wears red lacquer armour on its face and chest.
+Signature shape that must read in silhouette: the big charging black horse, the antler crest and the levelled naginata.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: lacquer red #6A1418 #B3262B #E2594A; lacquer black and outline #1A0B0C; indigo #161D38 #2E3F74 #6A82C0; steel grey #4A5566 #8793A6 #C4CCD8; gold #8A6A1E #D9A93A #F5D870; skin #8C6040 #E0A882; wood and leather #4F3320 #8C6040; white cloth #8E8A86 #CFCBC4 #F4F1EA.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a sprite of this game: match its pixel size, outline weight and flat look exactly; (2) concept art of this army's cavalry for the costume only (do NOT copy its detail level, painted shading or colours where they differ from the list above).

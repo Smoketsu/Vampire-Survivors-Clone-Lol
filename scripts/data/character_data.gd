@@ -66,7 +66,13 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act IV: Mount Olympus ---
 	"oathbreaker",
 	# --- Act IV: the Asphodel Underworld ---
-	"ferrywoman"]
+	"ferrywoman",
+	# --- Act V: the Burning Province ---
+	"grave_kunoichi",
+	# --- Act V: the Road to the Sun ---
+	"shrine_maiden",
+	# --- Act V: Castle Kurogane ---
+	"ronin_revenant"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -117,6 +123,10 @@ const STAT_LABELS := {
 ##   ferry_cooldown          RiverStyx.on_enemy_killed (s between two Risen a foe
 ##                           slain in her river raises; Act IV)
 ##   ferry_life              RiverStyx.on_enemy_killed (s that Risen stands)
+##   black_sun_fork          BlackSun._fire (share of a beam's damage its second
+##                           beam deals, at another group; Act V)
+##   banner_haste_bonus      BannerOfTheDead.step (extra share of his banners'
+##                           attack-speed haste, x (1 + value); Act V)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -138,7 +148,13 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act IV: Mount Olympus ---
 	"thunder_divine_bonus",
 	# --- Act IV: the Asphodel Underworld ---
-	"ferry_cooldown", "ferry_life"]
+	"ferry_cooldown", "ferry_life",
+	# --- Act V: the Burning Province ---
+	"shadow_extra_clones",
+	# --- Act V: the Road to the Sun ---
+	"black_sun_fork",
+	# --- Act V: Castle Kurogane ---
+	"banner_haste_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -501,4 +517,77 @@ const CHARACTERS := {
 		"tint": Color(0.58, 0.66, 0.80),  # TUNING (not in GDD) a cold river grey-blue over the violet
 		"starts_unlocked": false,
 	},
+	# --- Act V: the Burning Province ---
+	# The Grave Kunoichi (Hundred Shadows' character; owner-approved Act V
+	# proposal: "The Grave Kunoichi (figure style)"; female, in the
+	# figure-redesign style: an hourglass figure fully clothed in a dark violet
+	# shinobi garb with a bone-white sash, a long soul-teal scarf, a bone mask
+	# pushed up on her brow; the bust rig and idle breathing). A kunoichi of the
+	# Hidden Hand who died in the Province's fires and answered the necromancer's
+	# call; her shadows outnumber the living. Her spell must be unlocked first (by
+	# Kage), then she unlocks the usual way (Hundred Shadows to Lv 5). Own
+	# decision on her innate (the proposal names none): one more shadow clone
+	# (HundredShadows reads it).
+	"grave_kunoichi": {
+		"display_name": "The Grave Kunoichi",  # Owner-approved proposal
+		"title": "She died in the fires. Her shadows did not.",
+		"spell": "hundred_shadows",
+		"innate": {
+			"id": "many_faces", "name": "Many Faces",
+			"description": "Hundred Shadows calls one more shadow clone.",
+			"values": {"shadow_extra_clones": 1.0},  # TUNING (not in GDD) one more clone per split
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.06},  # TUNING (not in GDD) light and quick
+		"sprite": "player/grave_kunoichi",
+		"tint": Color(0.52, 0.40, 0.82),  # TUNING (not in GDD) a shadow violet
+		"starts_unlocked": false,
+	},
+	# --- Act V: the Road to the Sun ---
+	# The Shrine Maiden of Night (Black Sun's character; owner-approved Act V
+	# proposal: "The Shrine Maiden of Night (figure style)": female, in the
+	# figure-redesign style, an hourglass figure fully clothed in a black and
+	# deep-violet miko's robes (a white kosode under a black hakama-skirt, wide
+	# sleeves, a red cord), long black hair with a moon-silver ornament, a gohei
+	# wand with black paper streamers; the bust rig and idle breathing). Black Sun
+	# must be unlocked (Amaterasu) before she can be earned, by the usual Lv 5
+	# rule. She keeps the night's vigil: her dark sun fires a second beam at
+	# another group (BlackSun._fire()).
+	"shrine_maiden": {
+		"display_name": "The Shrine Maiden of Night",  # Owner-approved proposal
+		"title": "She tended the sun goddess's shrine. Now she prays to the dark.",
+		"spell": "black_sun",
+		"innate": {
+			"id": "night_prayer", "name": "Night Prayer",
+			"description": "Your dark sun fires a second beam at another group.",
+			"values": {"black_sun_fork": 0.5},  # TUNING (not in GDD) the second beam's share of the damage
+		},
+		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail priestess with a wide reach
+		"sprite": "player/shrine_maiden",
+		"tint": Color(0.62, 0.52, 0.86),  # TUNING (not in GDD) a night violet over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act V: Castle Kurogane ---
+	# The Ronin Revenant (Banner of the Dead's character; owner-approved Act V
+	# proposal "Rewards": "Banner of the Dead ... | The Ronin Revenant"; male): a
+	# masterless samurai who died when his lord's banner fell, and rose under a
+	# banner of his own: a battered straw hat, a tattered violet kimono over
+	# cracked black lacquer, a small black war banner on his back. Banner of the
+	# Dead must be unlocked first (by the Shogun), then he unlocks the usual way
+	# (the spell to Lv 5). Own decision on his innate (the proposal names none):
+	# his banners quicken his dead even more (BannerOfTheDead reads it).
+	"ronin_revenant": {
+		"display_name": "The Ronin Revenant",  # Owner-approved proposal
+		"title": "His lord's banner fell. He raised his own.",
+		"spell": "banner_of_the_dead",
+		"innate": {
+			"id": "unbowed_banner", "name": "Unbowed Banner",
+			"description": "Your war banners quicken your dead even more.",
+			"values": {"banner_haste_bonus": 0.3},  # TUNING (not in GDD) +30% of the banners' attack-speed haste
+		},
+		"stats": {"max_hp": 5.0, "move_speed": 0.03},  # TUNING (not in GDD) a swordsman's body, a wanderer's pace
+		"sprite": "player/ronin_revenant",
+		"tint": Color(0.80, 0.42, 0.45),  # TUNING (not in GDD) a lacquer red over the violet
+		"starts_unlocked": false,
+	},
 }
+

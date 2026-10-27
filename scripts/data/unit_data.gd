@@ -46,7 +46,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"iron_revenant",
 		# --- Act IV: the Asphodel Underworld ---
 		# Unlockable (UnlockData: defeating Hades), so a fresh save never offers it.
-		"myrmidon_shade"]
+		"myrmidon_shade",
+		# --- Act V: the Road to the Sun ---
+		# Unlockable (UnlockData: defeating Amaterasu), so a fresh save never offers it.
+		"bound_oni"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1035,6 +1038,61 @@ const UNITS := {
 			"pierce_fraction": 0.6,  # TUNING (not in GDD) the second foe takes this x the thrust
 		},
 	},
+	# --- Act V: the Road to the Sun ---
+	# Bound Oni (owner-approved proposal: "Finale summon class: the Oni, bound
+	# oni brutes with kanabō (a heavy blocker with a stun smash)"; GDD §15.0 "The
+	# Bound Oni, the Oni Lord and Oni's Resolve"; id "bound_oni", so its stats and
+	# art never meet the enemy kind "oni"): an oni of the old stories, chained in
+	# bone and bound to the necromancer, soul-teal eyes. A heavy blocker on the
+	# Bone Ring's front posts (formation "front", it blocks like the
+	# Abomination) whose KANABŌ SMASH (OniBehavior, "kanabo") brings the iron
+	# club down in front of it: every foe in the circle is struck and STUNNED
+	# (CombatResolver.stun_enemy(): bosses and minibosses a quarter, elites
+	# half). No act rule (owner rule: summons work the same everywhere).
+	# Unlockable (UnlockData), then offered on every stage.
+	"bound_oni": {
+		"display_name": "Bound Oni",  # Owner-approved proposal ("the Oni, bound oni brutes")
+		"plural": "Bound Oni",
+		"description": "Chained oni brutes that hold the front and stun whatever their iron club lands on.",  # Card text: one short sentence (owner rule).
+		"max_hp": 240.0,  # TUNING (not in GDD) a heavy (Abomination 260)
+		"damage": 18.0,  # TUNING (not in GDD) a kanabō blow (Abomination 16)
+		"attack_interval": 1.7,  # TUNING (not in GDD) s
+		"attack_range": 18.0,  # TUNING (not in GDD) edge-to-edge reach (px): the long club
+		"move_speed": 64.0,  # TUNING (not in GDD) px/s, a heavy's pace (Abomination 62)
+		"radius": 15.0,  # TUNING (not in GDD) px
+		"acquisition_range": 140.0,  # TUNING (not in GDD) px
+		"replenish_interval": 18.0,  # TUNING (not in GDD) s, slow to rebuild (Abomination 20)
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 95.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a brute never shies away
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.32,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) healers value the brute
+		"block_radius": 19.0,  # TUNING (not in GDD) px, blocks like the Abomination
+		"block_mass": 7.0,  # TUNING (not in GDD) (Abomination 8)
+		"engaged_speed_mult": 0.45,  # TUNING (not in GDD) touching enemies move at 45%
+		"formation": "front",  # Owner-approved proposal: "a heavy blocker"
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2, like the Abominations
+		"behavior": "kanabo",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"smash_damage": 24.0,  # TUNING (not in GDD) to every foe in the circle
+			"smash_radius": 40.0,  # TUNING (not in GDD) px of the circle in front of it
+			"smash_cooldown": 5.5,  # TUNING (not in GDD) s
+			"smash_windup": 0.5,  # TUNING (not in GDD) s the club is raised (the circle telegraphed)
+			"smash_recover": 0.3,  # TUNING (not in GDD) s it stands after the blow
+			"smash_stun_duration": 1.0,  # Owner-approved proposal "a stun smash"; TUNING (not in GDD) s (special_duration lengthens it)
+			"smash_trigger": 26.0,  # TUNING (not in GDD) px edge to edge: it smashes when a foe is this close
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1224,6 +1282,16 @@ const LEVELS := {
 		{"count": 4, "damage_bonus": 0.2, "hp_bonus": 0.2},
 		{"count": 5, "damage_bonus": 0.3, "hp_bonus": 0.25},
 		{"count": 6, "damage_bonus": 0.4, "hp_bonus": 0.3, "speed_bonus": 0.1},
+	],
+	# --- Act V: the Road to the Sun ---
+	# TUNING (not in GDD): one brute to a card (a heavy), 1 -> 3 Bound Oni; then
+	# harder, wider smashes and longer stuns.
+	"bound_oni": [
+		{"count": 1},
+		{"count": 1, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_duration": 0.2},
+		{"count": 2, "hp_bonus": 0.4, "special_bonus": 0.35, "special_area": 0.2, "special_duration": 0.2},
+		{"count": 3, "hp_bonus": 0.4, "damage_bonus": 0.2, "special_bonus": 0.5, "special_area": 0.2, "special_duration": 0.3},
 	],
 }
 

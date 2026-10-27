@@ -63,6 +63,11 @@
 ## the Twilight of the Gods), stepped after the enemies and before the obstacle
 ## push-out; null on Acts I to III unless a Pantheon kind forced there asks for
 ## it (pantheon_rules()).
+## Act V (GDD §15.0 "Act V foundation (phase 1)"): `shogunate` (ShogunateRules)
+## runs the Shogunate of the Rising Sun's shared rules (the Sun's Course, the
+## Draw, From the Shadows, the Endless Night), stepped after the Pantheon's and
+## before the obstacle push-out; null on Acts I to IV unless a Shogunate kind
+## forced there asks for it (shogunate_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -212,6 +217,12 @@ var empire: EmpireRules = null
 ## stage's STAGE has "pantheon": true, or a Pantheon kind spawned on another
 ## stage asked for it through pantheon_rules(); Acts I to III never create it).
 var pantheon: PantheonRules = null
+# --- Act V: the Shogunate of the Rising Sun ---
+## Act V, the Shogunate of the Rising Sun's shared rules (ShogunateRules; null
+## unless the stage's STAGE has "shogunate": true, or a Shogunate kind spawned
+## on another stage asked for it through shogunate_rules(); Acts I to IV never
+## create it).
+var shogunate: ShogunateRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -335,6 +346,20 @@ func _ready() -> void:
 		# --- Act IV: the Asphodel Underworld ---
 		"underworld":
 			ground = UnderworldGround.new()  # The four zone floors and the River Styx (UnderworldStage.ZONES).
+		# --- Act V: the Shogunate of the Rising Sun ---
+		"shogunate":
+			var sg := ShogunateGround.new()  # Act V placeholder floor (the STAGE's "floor").
+			sg.look = stage_def.get("floor", {})
+			ground = sg
+		# --- Act V: the Burning Province ---
+		"province":
+			ground = ProvinceGround.new()  # Act V: the Burning Province's four zone floors and the paddy water (ProvinceStage.ZONES).
+		# --- Act V: the Road to the Sun ---
+		"sun_road":
+			ground = SunRoadGround.new()  # Act V: the Road to the Sun's four zone floors (SunRoadStage.ZONES).
+		# --- Act V: Castle Kurogane ---
+		"kurogane":
+			ground = KuroganeGround.new()  # Act V: Castle Kurogane's four zone floors (KuroganeStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -417,6 +442,8 @@ func _ready() -> void:
 		effects.empire_look = true  # Its telegraphs in the Empire's warning set (visual only).
 	if bool(stage_def.get("pantheon", false)):
 		pantheon_rules()  # Act IV: the Olympian Republic's shared rules.
+	if bool(stage_def.get("shogunate", false)):
+		shogunate_rules()  # Act V: the Shogunate of the Rising Sun's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -714,6 +741,8 @@ func _physics_process(delta: float) -> void:
 	enemies.step(delta)
 	if pantheon != null:
 		pantheon.step(delta)  # Act IV: the gods' wrath (its waves carry bodies before the push-out), shield walls.
+	if shogunate != null:
+		shogunate.step(delta)  # Act V: the Sun's Course, ambushes (pushed out of obstacles next), the Draw.
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -832,6 +861,18 @@ func pantheon_rules() -> PantheonRules:
 		pantheon = PantheonRules.new(self)
 		add_child(pantheon)
 	return pantheon
+
+
+# --- Act V: the Shogunate of the Rising Sun ---
+## The Shogunate's shared rules (Act V), created on first use: at the start of
+## an Act V run, or when a Shogunate kind forced onto another stage is activated
+## (ShogunateKit.reset()), so its Draw works there (the Sun's Course stays day
+## off Act V).
+func shogunate_rules() -> ShogunateRules:
+	if shogunate == null:
+		shogunate = ShogunateRules.new(self)
+		add_child(shogunate)
+	return shogunate
 
 
 # --- Act IV: the Asphodel Underworld ---

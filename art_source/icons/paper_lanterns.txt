@@ -1,0 +1,6 @@
+A pixel-art game ability symbol, exactly 26 x 26 pixels, shown enlarged so every pixel is a big crisp square block, on a FULLY TRANSPARENT background (no badge, no border, no frame). ONE bold simple symbol filling the image: a round Japanese PAPER LANTERN glowing warm gold, a red band at its top and bottom, hung from a short cord, soft rays around it. No detail under 2 pixels. Readable at its real size of 26 pixels. No anti-aliasing, no gradients, no dithering, no text. A clean 1-pixel dark outline.
+
+Colours: ONLY flat fills from this list: gold #6B4A12 #E0A92E #FFDC66; lacquer red #6A1418 #B3262B; ink #1A0B0C.
+
+Output: a square PNG with real alpha.
+Attached: an approved icon of this game, for the pixel size and look.

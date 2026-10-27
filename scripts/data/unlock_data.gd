@@ -135,6 +135,32 @@ const UNLOCKS := {
 	"ferrymans_toll": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # River Styx's paired passive, unlocked with it
 	"myrmidon_shade": {"type": "class", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal: the finale's reward
 	"myrmidon_oath": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Its paired passive (own decision), unlocked with it
+	# --- Act V: the Burning Province ---
+	# Kage's fall (owner-approved Act V proposal "Rewards": Hundred Shadows is
+	# unlocked by Kage) with its paired passive, offered on every stage; the
+	# stage's achievement No Shadow Unlit earns Act V's counter-passive Paper
+	# Lanterns (offered only in Act V through its card row's "act").
+	"hundred_shadows": {"type": "spell", "boss": "kage", "text": "Slay Kage in the Burning Province to unlock."},  # Owner-approved Act V proposal
+	"hidden_hand": {"type": "passive", "boss": "kage", "text": "Slay Kage in the Burning Province to unlock."},  # Hundred Shadows' paired passive, unlocked with it
+	"paper_lanterns": {"type": "passive", "achievement": "no_shadow_unlit", "text": "Earn No Shadow Unlit: light 20 stone lanterns in one Burning Province run and slay Kage."},  # Owner-approved Act V proposal
+	# --- Act V: the Road to the Sun ---
+	# Amaterasu's fall (owner-approved Act V proposal "Rewards": Black Sun is
+	# unlocked by Amaterasu; the finale grants the Oni): the spell with its paired
+	# passive, and the summon class with its paired passive, offered on every
+	# stage (no card-row "act" key). The Sun Goes Out achievement opens the Act V
+	# epilogue part (EpilogueData.ACT5_PART), not an unlock row.
+	"black_sun": {"type": "spell", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Owner-approved proposal
+	"stolen_dawn": {"type": "passive", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Black Sun's paired passive, unlocked with it
+	"bound_oni": {"type": "class", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Owner-approved proposal: the finale's reward
+	"onis_resolve": {"type": "passive", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Its paired passive (own decision), unlocked with it
+	# --- Act V: Castle Kurogane ---
+	# Shogun Kurogane's fall (owner-approved Act V proposal "Rewards": Banner of
+	# the Dead is unlocked by the Shogun) with its paired passive, offered on
+	# every stage; the stage's achievement Regiments Broken earns Act V's
+	# counter-passive Unbending (offered only in Act V through its card row's "act").
+	"banner_of_the_dead": {"type": "spell", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Owner-approved Act V proposal
+	"warlords_seal": {"type": "passive", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Banner of the Dead's paired passive, unlocked with it
+	"unbending": {"type": "passive", "achievement": "regiments_broken", "text": "Earn Regiments Broken: slay the Shogun after breaking all six of his banners."},  # Owner-approved Act V proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

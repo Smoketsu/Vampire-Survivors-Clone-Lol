@@ -8,8 +8,9 @@
 #               (--stage=crimson_march) and in the Sanctum of Judgment
 #               (--stage=sanctum, army policy so its objectives are
 #               exercised), and on the three Act II stages (--stage=harbour,
-#               archive, spire; army policy) and the three Act IV stages (--stage=ilion,
-#               olympus, underworld; army policy). Fails on any script error/warning or if a run
+#               archive, spire; army policy), the three Act IV stages (--stage=ilion,
+#               olympus, underworld; army policy) and the three Act V stages (--stage=province,
+#               kurogane, sun_road; army policy). Fails on any script error/warning or if a run
 #               doesn't complete.
 #   2. export - builds single-file Windows (.exe) and Linux executables and the
 #               no-threads Web build (index.html + .js + .wasm + .pck, any static
@@ -87,6 +88,9 @@ jobs:
           - {id: ilion, name: "Act IV Stage 10, the Shores of Ilion", args: "--stage=ilion --policy=army", timeout: 900}
           - {id: olympus, name: "Act IV Stage 11, Mount Olympus", args: "--stage=olympus --policy=army", timeout: 900}
           - {id: underworld, name: "Act IV Stage 12, the Asphodel Underworld", args: "--stage=underworld --policy=army", timeout: 900}
+          - {id: province, name: "Act V Stage 13, the Burning Province", args: "--stage=province --policy=army", timeout: 900}
+          - {id: kurogane, name: "Act V Stage 14, Castle Kurogane", args: "--stage=kurogane --policy=army", timeout: 900}
+          - {id: sun_road, name: "Act V Stage 15, the Road to the Sun", args: "--stage=sun_road --policy=army", timeout: 900}
     steps:
       - uses: actions/checkout@v4
 

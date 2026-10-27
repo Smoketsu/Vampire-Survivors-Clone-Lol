@@ -27,7 +27,7 @@ const MAX_LEVEL: int = 3  # TUNING (not in GDD) owner brief: 3 levels
 ## Class level a run must have reached to open that class's mastery.
 const UNLOCK_LEVEL: int = 5  # TUNING (not in GDD) owner brief: "level 5 in any run"
 ## Soul Ash price of level 1, 2, 3 (index = level - 1; ints >= 1).
-const PRICES: Array[int] = [190, 250, 320]  # TUNING (not in GDD) 18 classes x 760 = 13,680
+const PRICES: Array[int] = [190, 250, 320]  # TUNING (not in GDD) 19 classes x 760 = 14,440
 ## Max HP bonus per level (fraction: 0.02 = +2% per level, +6% at level 3).
 const HP_PER_LEVEL: float = 0.02  # TUNING (not in GDD) modest, one shape for all classes; was 0.04, trimmed by the balance batch
 ## Damage bonus per level (fraction: 0.02 = +2% per level, +6% at level 3).
@@ -41,7 +41,9 @@ const CLASSES: Array[String] = [
 	"bone_hound", "banshee", "corpse_catapult",
 	"fallen_seraph", "spawn_of_the_deep", "bone_golem", "grave_drone", "iron_revenant",
 	"myrmidon_shade",
-]  # TUNING (not in GDD) every offerable summon class of all four acts
+	# --- Act V: the Shogunate of the Rising Sun ---
+	"bound_oni",
+]  # TUNING (not in GDD) every offerable summon class of all five acts
 
 ## Evolved-only class -> the classes whose mastery it uses (the best level
 ## counts: the Profane Bishop is a Mender and a Warder in one).
@@ -70,6 +72,7 @@ const FLAVOUR := {
 	"grave_drone": "Salvaged plating, tuned guns.",
 	"iron_revenant": "Rust made into resolve.",
 	"myrmidon_shade": "A shade that remembers the phalanx.",
+	"bound_oni": "An oni that remembers its chains.",  # TUNING (not in GDD) Act V's class
 }  # TUNING (not in GDD) flavour only
 
 ## Autotest profile "max" owns every level of every mastery; "none" and "mid"

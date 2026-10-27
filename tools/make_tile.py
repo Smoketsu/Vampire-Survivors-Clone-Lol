@@ -472,6 +472,69 @@ RECIPES = {
         "layout": {"type": "grid", "step": 64, "joint": 1},
         "regions": {"stone": ["floor_soil", "floor_marble"], "joint": ["bronze_ink"]},
         "cell_shift": True, "cell_l": 0.008, "bevel": 0.008,
+    },    # --- Act V: the Road to the Sun ---
+    # The four zone floors of THE ROAD TO THE SUN (SunRoadGround, tiles/sun_road_<style>): one
+    # API texture of packed brown earth with gravel (the Torii Road; recoloured mossy and dark
+    # for the Sacred Forest) and one of worn grey granite (laid as the Shrine Steps' long step
+    # courses and as the High Plain of Heaven's pale paving). The petals, ferns, cloud wisps and
+    # sunlight specks stay code-drawn (SunRoadGround).
+    "sun_road_torii": {
+        "source": "sun_road_earth.png", "method": "quilt",  # The Torii Road: packed earth and gravel.
+        "colors": ["floor_earth", "floor_dirt", "floor_ash", "floor_stone"],
+    },
+    "sun_road_forest": {
+        "source": "sun_road_earth.png", "method": "quilt",  # The Sacred Forest: moss and cedar needles.
+        "colors": ["floor_soil", "floor_moss", "floor_grass", "floor_earth"],
+    },
+    "sun_road_steps": {
+        "source": "sun_road_stone.png", "method": "layout",  # The Shrine Steps: long step courses.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["floor_slate", "floor_stone"], "joint": ["ink_cold"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "sun_road_heaven": {
+        "source": "sun_road_stone.png", "method": "quilt",  # The High Plain of Heaven: pale paving above the clouds.
+        "colors": ["floor_marble", "floor_slate", "floor_stone"],
+    },
+    # --- Act V: the Burning Province --- (one source each; the paddy water is code-drawn over the paddies tile)
+    "province_paddies": {
+        "source": "province_paddies.png", "method": "quilt",  # The Paddies: dark dike mud.
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_moss"],
+    },
+    "province_bamboo": {
+        "source": "province_bamboo.png", "method": "quilt",  # The Bamboo Grove: leaf litter on dark earth.
+        "colors": ["ink_green", "floor_soil", "floor_moss", "floor_grass"],
+    },
+    "province_village": {
+        "source": "province_village.png", "method": "quilt",  # The Burning Village: trampled earth, ash and cinders.
+        "colors": ["ink_warm", "floor_soil", "floor_dirt", "floor_ash"],
+    },
+    "province_shrine": {
+        "source": "province_shrine.png", "method": "quilt",  # The Mountain Shrine: raked grey gravel.
+        "colors": ["floor_soil", "floor_slate", "floor_stone"],
+    },
+    # --- Act V: Castle Kurogane ---
+    # The four zone floors of CASTLE KUROGANE (KuroganeGround, tiles/kurogane_<style>), one API source each (the
+    # bailey and courtyard sources came back nearly transparent and are stored with their alpha set opaque).
+    "kurogane_bailey": {
+        "source": "kurogane_bailey.png", "method": "quilt",  # The Outer Bailey: trampled earth, small stones.
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_dirt"],
+    },
+    "kurogane_gatehouse": {
+        "source": "kurogane_gatehouse.png", "method": "quilt",  # The Gatehouse: fitted granite paving.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_stone"],
+    },
+    "kurogane_courtyard": {
+        "source": "kurogane_courtyard.png", "method": "quilt",  # The Courtyards: raked grey gravel.
+        "colors": ["ink_cold", "floor_slate", "floor_marble", "floor_ash"],
+    },
+    "kurogane_keep": {
+        "source": "kurogane_keep.png", "method": "layout",  # The Keep: dark polished floorboards in staggered rows.
+        "layout": {"type": "courses", "rows": [16, 16, 16, 16, 16, 16, 16, 16], "joint": 1,
+                   "slabs": [[128], [80, 48], [40, 88], [128], [96, 32], [56, 72], [128], [24, 104]],
+                   "offsets": [0, 40, 12, 72, 24, 100, 56, 8]},
+        "regions": {"stone": ["floor_earth", "floor_dirt"], "joint": ["ink_warm"]},
+        "cell_shift": True, "cell_l": 0.008, "bevel": 0.006,
     },
 }
 
