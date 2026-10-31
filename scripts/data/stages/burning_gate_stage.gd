@@ -66,13 +66,13 @@ const PITS := {
 	"max_pits": 40,  # TUNING (not in GDD) room for hound trails and Moloch's cracks (default 24)
 	"band": {
 		"zones": [2],  # Owner-approved proposal: zone III, "the River of Fire"
-		"spacing": 1150.0,  # TUNING (not in GDD) px between two bands north-south
+		"spacing": 1500.0,  # TUNING (not in GDD) px between two bands north-south (first pass 1150: the army lost most of its summons to the river)
 		"amp": 90.0,  # TUNING (not in GDD) px of the meander
 		"wavelength": 900.0,  # TUNING (not in GDD) px of one meander
 		"radius": 34.0,  # TUNING (not in GDD) px of each burning circle (the band ~68 px wide)
 		"step": 44.0,  # TUNING (not in GDD) px between two circles along the band
-		"ford_every": 480,  # TUNING (not in GDD) px between two fords (first pass 520)
-		"ford_width": 170,  # TUNING (not in GDD) px of a ford (the ring passes; first pass 140)
+		"ford_every": 440,  # TUNING (not in GDD) px between two fords (first pass 520)
+		"ford_width": 200,  # TUNING (not in GDD) px of a ford (the ring passes; first pass 140)
 	},
 }
 

@@ -2573,3 +2573,44 @@ were lost, as with the Kunoichi (52).
 | `inferno/succubus` | Succubus (elite, female, figure redesign): horns, wings, spaded tail, corset bodysuit, thigh-high boots, a charm heart | 36x56 | glide (robe rig, hip 32): bust box (cols 12-26, rows 13-19, two lobes) and `swish` hip box (cols 11-27, rows 23-32); idle strip |
 | `inferno/demon_brute` | Demon Brute (heavy, male): four arms, bull horns, spiked chest plate, skull belt | 72x84 | legs walk (hip 70, spread 3) |
 | `structures/demon_portal` | Demon portal: obsidian ring, lava cracks, horned skull, a charm-pink swirl | 56x64 | still only; the loop glow is code |
+
+### Act VI: the Burning Gate (Stage 16; Act VI phase 2, Oct 2026)
+
+<!-- --- Act VI: the Burning Gate --- -->
+The Burning Gate's art (GDD §15.0 "The Burning Gate (Act VI phase 2)" and the rows after it), in the Inferno's style above:
+obsidian, lava, demon skin, with rusted iron, bone and ash grey; the Furnace Priest in the player's violet. Every figure here is
+**male** (named in each prompt), so no bust rigs or idle strips. Prompts in `art_source/burning_gate/<id>.txt` (the Act VI unit
+template), raw API images in `art_source/burning_gate/raw/`, references in `refs/` (2× crops of `act6_lineup.png`: the
+hellhound, the robed cultist, the brute). Generated with `tools/gen_image.py`: `--ref` the shared kinds' sources
+(`inferno/hell_knight`, `damned`, `demon_brute`) for the pixel look plus a lineup crop; the Ronin Revenant's source for the
+Furnace Priest, then his source and the Ronin's matching skin for his three skins; `castle_wall_l` / `garden_rock_l` for the
+props, `kurogane_keep` for the floors, `unbending` / `hundred_banners` for the badge sheets. Rebuild: `art_source/burning_gate/build.sh`.
+
+Pipeline notes: `prepare_sprite.py --ink-l 0.15` with the Inferno ramps; the dark figures are lifted first by `brighten.py`
+(×1.15–1.5) to pass the lightness rule, and the **Pit Cultist and the Furnace Priest snap without the `obsidian` ramp** (their
+black robes snapped to its two darkest shades, main-shape L 0.32 on any ramp setting; with `grey` / `violet` instead L 0.38,
+a pass). The Furnace Priest's source is stored mirrored (the API drew him facing left). Both icon sheets came back with one
+extra symbol copied from the reference badge; `make_art.py` skips those pieces. All four floor sources came back nearly
+transparent and are stored opaque (`art_source/tiles/burning_gate_*.png`, `make_tile.py` recipes `burning_gate_*`; the Cages
+with fixed colour shares: free snapping came out blotchy). 16 API images, about **$0.40** (ledger). `art_check.py`: every
+figure passes height, alpha, palette, feet and lightness on the dark floors; lightness fails only on the light Act I March road
+and Sanctum floors (as every Act V / VI kind), and the props are scenery (a little darker on purpose, as Kurogane's).
+**For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `inferno/lava_hound` | Hellhound (pack, male beast): black crust cracked with lava, bone skull head, flaming spines | 40x30 | legs walk (hip 19; hind left, fore right) |
+| `inferno/pit_cultist` | Pit Cultist (support, a living man): black-and-red hooded robe, goat-skull mask with horns, a dagger raised, a censer | 30x46 | robe walk (hip 38) |
+| `inferno/gatekeeper` | The Gatekeeper (miniboss, male): hunched ash-grey giant, iron collar, manacles with long chains to the ground, loincloth, lava cracks | 116x108 | legs walk (hip 80); the flying chains are code |
+| `bosses/moloch` | Moloch, the Furnace King (male): black bull head with huge horns and a nose ring, red demon body, spiked iron shoulders, a barred furnace door glowing in his belly, coal chains, a tail | 124x124 | legs walk (hip 96); no attack pose (the furnace glow, the inhale and the waves are code) |
+| `player/furnace_priest` | The Furnace Priest (male): soot cassock, violet stole, horned iron mitre, skull face with ember eyes, a censer of coals, an iron staff | 38x56 | robe walk (hip 46) |
+| `player/furnace_priest_hyper` / `_untouchable` / `_deathlord` | Gilded (gold stole and mitre, a sun halo), Untouchable (white phantom, soul-teal stole), Deathlord (black spiked crown, crimson) | 34x56 each | walk through `SKINS` (derived rig) |
+| `tiles/burning_gate_ash_plain`, `_cages`, `_river`, `_gate` | Grey-black ash; black cinders and soot; the scorched red-brown bank; black flagstones | 128 | mean L 0.24 / 0.23 / 0.21 / 0.26 |
+| `obstacles/damned_cage_{s,l}` (+ `_v`), `gate_pillar_{s,l}` (+ `_v`) | A rusted iron cage of the damned on a bone-and-chain frame; a black obsidian gate block with a horned skull and chains | 46 / 56, 56 / 72; `_v` 58–86 tall | rects, H + V |
+| `obstacles/ember_rock_{s,m,l}` | An obsidian boulder veined with lava | 22 / 28 / 36 wide | circle |
+| `icons/brimstone`, `furnace_heart`, `salt_circle` | Violet badges: a falling burning stone; an iron heart-shaped furnace; a ring of salt around a violet skull | 32 | |
+| `icons/rain_of_fire`, `ach_gate_crashed` | Gold badges: burning stones raining from a cloud; a broken portal ring over a broken bull skull | 32 | |
+
+Code-drawn on purpose: the River of Fire (the Hell Pits' lava texture along its bands), the Brimstone stones and their pits,
+Moloch's furnace glow and fire waves (texture discs), the Gatekeeper's chains, the cultist's rite sparks, the fallbacks
+(`BurningGateGlyphs`).

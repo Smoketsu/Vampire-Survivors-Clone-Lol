@@ -84,11 +84,11 @@ const ENEMIES := {
 		"kit": "lava_hound",
 		"demon": true,  # A hound of the Pit: its own fire spares it.
 		"fodder": true,
-		"trail_every": 1.6,  # TUNING (not in GDD) s; first pass 0.8 (489 hounds laid 4621 pits in one run)
+		"trail_every": 2.2,  # TUNING (not in GDD) s; first pass 0.8 (489 hounds laid 4621 pits in one run), second 1.6
 		"trail_radius": 14.0,  # TUNING (not in GDD) px ("small pits")
 		"trail_telegraph": 0.3,  # TUNING (not in GDD) s
 		"trail_life": 1.8,  # TUNING (not in GDD) s ("a short fire trail"); first pass 2.2
-		"trail_dps_mult": 0.6,  # TUNING (not in GDD)
+		"trail_dps_mult": 0.4,  # TUNING (not in GDD) first pass 0.6 (the pits were the army's top killer)
 		"trail_room": 16,  # TUNING (not in GDD) slots left free (first pass 10)
 		"trail_min_move": 18.0,  # TUNING (not in GDD) px
 		"trail_reach": 600.0,  # TUNING (not in GDD) px: it trails only this close to a necromancer (where the army walks)
@@ -156,7 +156,7 @@ const ENEMIES := {
 	#   coffle_count    — damned souls in a coffle.
 	"gatekeeper": {
 		"display_name": "The Gatekeeper",  # Owner-approved proposal
-		"max_hp": 2800.0,  # TUNING (not in GDD) before the time / stage scaling (the General of the Left 2600)
+		"max_hp": 2300.0,  # TUNING (not in GDD) before the time / stage scaling (the General of the Left 2600); first pass 2800 lived 6 min
 		"move_speed": 40.0,  # TUNING (not in GDD) px/s; a chained giant
 		"damage": 15.0,  # TUNING (not in GDD) a manacled fist in reach
 		"attack_interval": 1.5,  # TUNING (not in GDD) s
@@ -183,7 +183,7 @@ const ENEMIES := {
 		"reward_crystals": 12,  # TUNING (not in GDD)
 		"advance_range": 480.0,  # TUNING (not in GDD) px
 		"advance_speed_mult": 1.8,  # TUNING (not in GDD)
-		"chain_every": 6.5,  # TUNING (not in GDD) s
+		"chain_every": 8.0,  # TUNING (not in GDD) s; first pass 6.5
 		"chain_count": 3,  # TUNING (not in GDD)
 		"chain_spread": 0.32,  # TUNING (not in GDD) rad
 		"chain_range": 320.0,  # TUNING (not in GDD) px
@@ -195,13 +195,13 @@ const ENEMIES := {
 		"drag_speed": 230.0,  # TUNING (not in GDD) px/s
 		"drag_hold": 2.5,  # TUNING (not in GDD) s
 		"crush_damage": 14.0,  # TUNING (not in GDD) before the time scaling
-		"devour_heal": 0.015,  # TUNING (not in GDD) of his max HP per soul
+		"devour_heal": 0.006,  # TUNING (not in GDD) of his max HP per soul; first pass 0.015 (healed 2555 in one fight)
 		"slam_every": 8.0,  # TUNING (not in GDD) s
 		"slam_trigger": 60.0,  # TUNING (not in GDD) px edge to edge
 		"slam_windup": 1.0,  # TUNING (not in GDD) s
 		"slam_radius": 88.0,  # TUNING (not in GDD) px
 		"slam_damage_player": 12.0,  # TUNING (not in GDD) before the time scaling
-		"slam_damage_summon": 16.0,  # TUNING (not in GDD) before the time scaling
+		"slam_damage_summon": 12.0,  # TUNING (not in GDD) before the time scaling; first pass 16
 		"slam_push": 36.0,  # TUNING (not in GDD) px
 		"coffle_every": 20.0,  # TUNING (not in GDD) s
 		"coffle_count": 6,  # TUNING (not in GDD)

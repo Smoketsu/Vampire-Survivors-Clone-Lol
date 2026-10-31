@@ -57,8 +57,7 @@ func physics(e: Enemy, delta: float) -> bool:
 		return false
 	var portals := rules(e).portals
 	if portals.standing() >= int(portals.cfg["max_open"]):
-		_cd = 2.0  # The gate is crowded: try again soon.
-		g.stat_add("cultist_rites_refused", 1.0)
+		_cd = 2.0  # The gate is crowded: try again soon (not counted: only a finished rite that finds no room is).
 		return false
 	var to := pl.position - e.position
 	_at = g.arena.free_point(e.position + (to.normalized() if to.length() > 1.0 else Vector2.RIGHT) * float(d.get("rite_ahead", 40.0)),

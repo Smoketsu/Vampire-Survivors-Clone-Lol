@@ -549,7 +549,7 @@ const EVOLUTIONS := {
 		"description": "Brimstone pours from the sky in a burning rain that leaves the ground on fire.",
 		"labels": {"damage": "Stone damage", "stones": "Stones", "radius": "Blast radius", "pit_share": "Fire per second", "pit_life": "Fire lasts (s)", "cooldown": "Cooldown (s)"},
 		"stats": {
-			"damage": 40.0, "stones": 6, "radius": 44.0, "pit_radius": 38.0, "pit_life": 3.0, "pit_share": 0.3, "cooldown": 2.6, "range": 380.0,  # TUNING (not in GDD) first pass 46 / 3.5 s / 0.4 (the forced smoke run: 260k damage, ahead of the Death Knights' 140k)
+			"damage": 36.0, "stones": 5, "radius": 44.0, "pit_radius": 38.0, "pit_life": 3.0, "pit_share": 0.3, "cooldown": 2.6, "range": 380.0,  # TUNING (not in GDD) first pass 46 dmg, 6 stones, 3.5 s, 0.4 (the forced smoke run: 260k damage, ahead of the Death Knights' 140k)
 			"rain_gap": 0.12,  # TUNING (not in GDD) the evolution flag: s between two stones of a rain
 			"rain_spread": 60.0,  # TUNING (not in GDD) px the stones beyond the groups scatter
 		},

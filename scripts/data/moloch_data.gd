@@ -58,9 +58,9 @@ const CRACK_TAG: String = "moloch"
 const SWALLOW_TINT := Color(1.0, 0.55, 0.25)  # TUNING (not in GDD) furnace orange
 
 ## Moloch's base max HP (x the boss HP multiplier and the stage's HP multiplier:
-## 18,375 on the Burning Gate). Kage 11,000 (17,050 on the Province): Act VI
-## starts a step above Act V's first boss.
-const MAX_HP: float = 10500.0  # TUNING (not in GDD)
+## 14,875 on the Burning Gate). Kage 11,000 (17,050 on the Province): lower,
+## because every swallow turns his attackers into his guards for 6 s.
+const MAX_HP: float = 8500.0  # TUNING (not in GDD) first pass 10500: the army bot's seed-7 run left him 5186 HP at 0:00
 
 ## Moloch's design row.
 const BOSS := {
@@ -96,8 +96,8 @@ const BOSS := {
 	# The swallow (owner-approved "he swallows summons; they come back burning,
 	# as his for 6 s"), through HordeDirector.charm().
 	"first_swallow": 5.0,  # TUNING (not in GDD) s after arrival
-	"swallow_cooldown": 11.0,  # TUNING (not in GDD) s
-	"swallow_cooldown_p2": 9.0,  # TUNING (not in GDD) s
+	"swallow_cooldown": 13.0,  # TUNING (not in GDD) s; first pass 11
+	"swallow_cooldown_p2": 11.0,  # TUNING (not in GDD) s; first pass 9
 	"swallow_windup": 1.1,  # TUNING (not in GDD) s of the inhale (the cone shows)
 	"swallow_reach": 130.0,  # TUNING (not in GDD) px from his centre
 	"swallow_arc": 0.75,  # TUNING (not in GDD) rad each side of his facing
@@ -116,8 +116,8 @@ const BOSS := {
 	"wave_length": 560.0,  # TUNING (not in GDD) px a wave runs
 	"wave_width": 54.0,  # TUNING (not in GDD) px
 	"wave_speed": 420.0,  # TUNING (not in GDD) px/s
-	"wave_damage_player": 12.0,  # TUNING (not in GDD) before the time scaling
-	"wave_damage_summon": 12.0,  # TUNING (not in GDD) before the time scaling
+	"wave_damage_player": 10.0,  # TUNING (not in GDD) before the time scaling; first pass 12
+	"wave_damage_summon": 9.0,  # TUNING (not in GDD) before the time scaling; first pass 12
 	# The crack (owner-approved "cracks the arena into pits"), through HellPits.open_pit().
 	"first_crack": 13.0,  # TUNING (not in GDD) s after arrival
 	"crack_cooldown": 12.0,  # TUNING (not in GDD) s
@@ -132,7 +132,7 @@ const BOSS := {
 	# The Molten King.
 	"molten_speed": 54.0,  # TUNING (not in GDD) px/s
 	"molten_damage": 18.0,  # TUNING (not in GDD) per blow
-	"footprint_every": 1.2,  # TUNING (not in GDD) s between two molten footprints
+	"footprint_every": 2.0,  # TUNING (not in GDD) s between two molten footprints; first pass 1.2
 	"footprint_radius": 26.0,  # TUNING (not in GDD) px
 	"footprint_life": 4.0,  # TUNING (not in GDD) s
 }
