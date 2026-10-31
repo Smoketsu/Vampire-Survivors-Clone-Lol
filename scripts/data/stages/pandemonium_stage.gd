@@ -27,9 +27,9 @@
 ##    3:00  THE MORNING STAR (BossMorningStar, MorningStarData): the Angel, then
 ##          the Beast; when he falls, the necromancer takes the throne
 ##    0:00  THE LAST JUDGMENT (the shared Act VI Reckoning)
-## The other Act VI stages' kinds (the Burning Gate's, the Palace of Silk and
-## Ash's) join as guest squads once this build knows them (PANDEMONIUM
-## "guests"), like the Road to the Sun's guests. Every rate, cap and weight is
+## The other Act VI stages' kinds (the Burning Gate's Hellhound and Pit
+## Cultist, the Palace of Silk and Ash's Lilim Witch; never their minibosses)
+## join as guest squads (PANDEMONIUM "guests"), like the Road to the Sun's guests. Every rate, cap and weight is
 ## TUNING (not in GDD) unless marked as the owner-approved proposal.
 class_name PandemoniumStage
 extends RefCounted
@@ -247,9 +247,10 @@ const EVENTS := [
 ##   guest_* / guests — the other Act VI stages' kinds in small squads (as
 ##            SunRoadStage.SUN_ROAD): candidate ids per kind (the first one this
 ##            build knows; none = skipped) and a weight. The ids were guessed
-##            while the three Act VI stages were built in parallel (the Burning
-##            Gate's hellhound and pit cultist, the Palace's lilim witch); check
-##            them at the Act VI integration.
+##            while the three Act VI stages were built in parallel and set to
+##            the real ones at the Act VI integration (lava_hound, pit_cultist,
+##            lilim_witch; the minibosses gatekeeper / twin_naamah / twin_agrat
+##            are never guests).
 const PANDEMONIUM := {
 	"guest_first": 300.0,  # TUNING (not in GDD) no guests before 5:00
 	"guest_interval": 85.0,  # TUNING (not in GDD)
@@ -258,9 +259,9 @@ const PANDEMONIUM := {
 	"guest_growth": 0.4,  # TUNING (not in GDD)
 	"guest_max": 6,  # TUNING (not in GDD)
 	"guests": [
-		{"ids": ["hellhound", "hell_hound", "lava_hound"], "weight": 0.8},  # The Burning Gate (Act VI phase 2)
-		{"ids": ["pit_cultist", "cultist"], "weight": 0.4},  # The Burning Gate (they open portals)
-		{"ids": ["lilim_witch", "lilim"], "weight": 0.5},  # The Palace of Silk and Ash (Act VI phase 2)
+		{"ids": ["lava_hound"], "weight": 0.8},  # The Burning Gate (Act VI phase 2): the Hellhounds (real id, Act VI integration)
+		{"ids": ["pit_cultist"], "weight": 0.4},  # The Burning Gate (they open portals)
+		{"ids": ["lilim_witch"], "weight": 0.5},  # The Palace of Silk and Ash (Act VI phase 2)
 	],
 }
 

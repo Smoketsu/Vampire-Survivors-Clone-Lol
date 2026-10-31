@@ -30,8 +30,8 @@
 ##    5:00  Zone IV,  the Queen's Chamber:   velvet, roses and mirrors
 ##    3:00  LILITH, Queen of the Night, Mother of Demons (BossLilith, LilithData)
 ##    0:00  THE LAST JUDGMENT (the shared Act VI Reckoning)
-## The Burning Gate's kinds (built in parallel; candidate ids) join as guest
-## squads once this build knows them (SILK_PALACE "guests"), like the Road to
+## The Burning Gate's kinds (the Hellhound, the Pit Cultist; never its
+## miniboss) join as guest squads (SILK_PALACE "guests"), like the Road to
 ## the Sun's guests. Every rate, cap and weight is TUNING (not in GDD) unless
 ## marked as the owner-approved proposal.
 class_name SilkPalaceStage
@@ -270,8 +270,9 @@ const MARCH := {
 ##   mirror_turn      — s a lured summon walks toward the reflection
 ##                      (SummonedUnit.misdirect(), the one turn-around path).
 ##   mirror_speed     — share (0..1) of its speed a lured summon walks at.
-##   guest_* / guests — the Burning Gate's kinds in small squads (candidate ids:
-##                      the first this build knows; none = skipped).
+##   guest_* / guests — the Burning Gate's kinds in small squads (ids: the first
+##                      this build knows; none = skipped; the real ids since the
+##                      Act VI integration, minibosses never guests).
 const SILK_PALACE := {
 	"mirror_zone": "hall_of_mirrors",  # Owner-approved proposal: "the Hall of Mirrors (reflections of the necromancer confuse summon targeting)"
 	"mirror_kinds": ["palace_mirror", "mirror_wall"],
@@ -292,8 +293,8 @@ const SILK_PALACE := {
 	"guest_growth": 0.4,  # TUNING (not in GDD)
 	"guest_max": 6,  # TUNING (not in GDD)
 	"guests": [
-		{"ids": ["hellhound", "lava_hound", "hell_hound"], "weight": 0.7},  # The Burning Gate (Act VI phase 2): the lava hounds
-		{"ids": ["pit_cultist", "cultist"], "weight": 0.4},  # The Burning Gate: the Pit Cultists
+		{"ids": ["lava_hound"], "weight": 0.7},  # The Burning Gate (Act VI phase 2): the Hellhounds (real id, Act VI integration)
+		{"ids": ["pit_cultist"], "weight": 0.4},  # The Burning Gate: the Pit Cultists (real id, Act VI integration)
 	],
 }
 
