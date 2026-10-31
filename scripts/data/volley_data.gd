@@ -194,6 +194,9 @@ const CLASSES := {
 	# --- Act V: the Road to the Sun ---
 	"bound_oni": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [6, 9], "speed": 260.0,
 		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) shards of stone thrown up by the kanabō
+	# --- Act VI: Pandemonium ---
+	"archfiend": {"trigger": "special", "every": 1, "pattern": "fan", "counts": [5, 7], "spread": 60.0, "speed": 300.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a fan of soul-fire embers off the cleave
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -242,6 +245,9 @@ const EVOLVED := {
 	# --- Act V: the Road to the Sun ---
 	"oni_lord": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [14], "speed": 300.0,
 		"life": 0.55, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "shard", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) the quake's ring of soul-lit stone
+	# --- Act VI: Pandemonium ---
+	"prince_of_hell": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 320.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) the full-circle cleave's ring of soul-fire
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -313,6 +319,9 @@ const SPELLS := {
 	# --- Act V: Castle Kurogane ---
 	"banner_of_the_dead": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 14], "speed": 260.0,
 		"life": 0.6, "share": 0.4, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) a ring of violet bone shards with each planting
+	# --- Act VI: Pandemonium ---
+	"fall_from_grace": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [5, 7, 10], "speed": 240.0,
+		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(1.0, 0.82, 0.30)},  # TUNING (not in GDD) a ring of star-sparks with every other cast
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

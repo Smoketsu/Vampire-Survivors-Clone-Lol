@@ -49,7 +49,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"myrmidon_shade",
 		# --- Act V: the Road to the Sun ---
 		# Unlockable (UnlockData: defeating Amaterasu), so a fresh save never offers it.
-		"bound_oni"]
+		"bound_oni",
+		# --- Act VI: Pandemonium ---
+		# Unlockable (UnlockData: defeating the Morning Star), so a fresh save never offers it.
+		"archfiend"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1093,6 +1096,61 @@ const UNITS := {
 			"smash_trigger": 26.0,  # TUNING (not in GDD) px edge to edge: it smashes when a foe is this close
 		},
 	},
+	# --- Act VI: Pandemonium ---
+	# Archfiend (owner-approved proposal: "the finale's Archfiend (a winged heavy
+	# demon; evolution Prince of Hell)"; GDD §15.0 "The Archfiend, the Prince of
+	# Hell and Crown of Horns"): a horned demon with bat wings, bound to the
+	# necromancer in undeath (ashen grey-violet skin, soul-teal eyes, a bone
+	# collar), a huge black cleaver. A heavy blocker on the Bone Ring's front
+	# posts (formation "front", it blocks like the Abomination) whose HELLFIRE
+	# CLEAVE (ArchfiendBehavior, "hellfire") sweeps a wide arc in front of it,
+	# knocking every foe in it back. Winged, but it fights on the ground (it is
+	# no flier: summons never get act-only rules, and the Gargoyle keeps the
+	# air). Unlockable (UnlockData), then offered on every stage.
+	"archfiend": {
+		"display_name": "Archfiend",  # Owner-approved proposal
+		"plural": "Archfiends",
+		"description": "Winged demons bound in undeath that hold the front and cleave whole ranks aside.",  # Card text: one short sentence (owner rule).
+		"max_hp": 250.0,  # TUNING (not in GDD) a heavy (Bound Oni 240, Abomination 260)
+		"damage": 19.0,  # TUNING (not in GDD) a cleaver blow (Bound Oni 18)
+		"attack_interval": 1.6,  # TUNING (not in GDD) s
+		"attack_range": 18.0,  # TUNING (not in GDD) edge-to-edge reach (px): the long cleaver
+		"move_speed": 70.0,  # TUNING (not in GDD) px/s, a heavy that half-flies (Bound Oni 64)
+		"radius": 15.0,  # TUNING (not in GDD) px
+		"acquisition_range": 150.0,  # TUNING (not in GDD) px
+		"replenish_interval": 18.0,  # TUNING (not in GDD) s, slow to rebuild (Bound Oni 18)
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 95.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a demon never shies away
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.3,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) healers value the heavy
+		"block_radius": 19.0,  # TUNING (not in GDD) px, blocks like the Abomination
+		"block_mass": 7.0,  # TUNING (not in GDD) (Bound Oni 7)
+		"engaged_speed_mult": 0.45,  # TUNING (not in GDD) touching enemies move at 45%
+		"formation": "front",  # Owner-approved proposal: "a winged heavy demon"
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2, like the Abominations
+		"behavior": "hellfire",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"cleave_damage": 22.0,  # TUNING (not in GDD) to every foe in the arc
+			"cleave_radius": 46.0,  # TUNING (not in GDD) px of the arc from its centre
+			"cleave_arc": 70.0,  # TUNING (not in GDD) degrees each side (the Prince of Hell: 180, a full circle)
+			"cleave_cooldown": 5.0,  # TUNING (not in GDD) s
+			"cleave_windup": 0.4,  # TUNING (not in GDD) s the cleaver is raised (the arc telegraphed)
+			"cleave_recover": 0.3,  # TUNING (not in GDD) s it stands after the sweep
+			"cleave_knockback": 160.0,  # TUNING (not in GDD) px/s impulse, divided by the foe's mass
+			"cleave_trigger": 28.0,  # TUNING (not in GDD) px edge to edge: it cleaves when a foe is this close
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1292,6 +1350,16 @@ const LEVELS := {
 		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_duration": 0.2},
 		{"count": 2, "hp_bonus": 0.4, "special_bonus": 0.35, "special_area": 0.2, "special_duration": 0.2},
 		{"count": 3, "hp_bonus": 0.4, "damage_bonus": 0.2, "special_bonus": 0.5, "special_area": 0.2, "special_duration": 0.3},
+	],
+	# --- Act VI: Pandemonium ---
+	# TUNING (not in GDD): one demon to a card (a heavy), 1 -> 3 Archfiends;
+	# then harder, wider and quicker cleaves.
+	"archfiend": [
+		{"count": 1},
+		{"count": 1, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_haste": 0.1},
+		{"count": 2, "hp_bonus": 0.4, "special_bonus": 0.35, "special_area": 0.2, "special_haste": 0.1},
+		{"count": 3, "hp_bonus": 0.4, "damage_bonus": 0.2, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
 	],
 }
 

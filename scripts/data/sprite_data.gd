@@ -366,6 +366,17 @@ const HEIGHTS: Dictionary = {
 	"inferno/succubus": 56.0,  # TUNING (not in GDD) elite tier, female (figure redesign, the approved act6_units concept; 56, not 48: at 48 the face and the hourglass were lost, as with the Kunoichi at 52): body ~52, the curled horns above; she flies, the bust and hip box sway in the glide strip
 	"inferno/demon_brute": 84.0,  # TUNING (not in GDD) heavy tier (60-72 and up): a huge four-armed demon, the horns and the raised fists
 	"structures/demon_portal": 64.0,  # TUNING (not in GDD) the Inferno's portal structure: an obsidian-and-lava ring with a charm-pink swirl (the looping glow is drawn by code)
+	# --- Act VI: Pandemonium ---
+	"inferno/fallen_angel": 60.0,  # TUNING (not in GDD) elite tier, female (figure redesign at the approved act6_units level, as the succubus): body ~52, the halo and the burning spear above
+	"inferno/seraph_general": 92.0,  # TUNING (not in GDD) miniboss tier: a tall winged warlord, the four wings and the halo crown above
+	"bosses/morning_star": 116.0,  # TUNING (not in GDD) boss tier: the Angel, six wings fanned and the halo above
+	"bosses/morning_star_beast": 140.0,  # TUNING (not in GDD) boss tier, bigger: the throne-skull Beast, horns and torn wings
+	"player/fallen_saint": 56.0,  # TUNING (not in GDD) character tier: body ~48, the halo and the staff above
+	"player/fallen_saint_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold and white
+	"player/fallen_saint_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/fallen_saint_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/archfiend": 62.0,  # TUNING (not in GDD) a heavy summon (Bound Oni 60), the horns and wings above
+	"summons/prince_of_hell": 72.0,  # TUNING (not in GDD) its evolution, bigger
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

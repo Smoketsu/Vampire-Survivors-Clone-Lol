@@ -548,6 +548,9 @@ func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dicti
 	var out := {}  # Effective special numbers.
 	var src: Dictionary = base.get("special", {})  # Base special numbers.
 	var dmg := dmg_mult * (1.0 + float(row.get("special_bonus", 0.0)))  # Special damage multiplier.
+	# --- Act VI: Pandemonium --- Crown of Horns: every class special hits
+	# harder, its own category (0 when not owned, so every other run is unchanged).
+	dmg *= 1.0 + game.abilities.passive_value(ArchfiendBehavior.CROWN, ArchfiendBehavior.CROWN_KEY)
 	var area := 1.0 + float(row.get("special_area", 0.0))  # Radius / length multiplier.
 	var haste := 1.0 + float(row.get("special_haste", 0.0))  # Cooldown divisor.
 	haste *= 1.0 + game.abilities.passive_value("fallen_grace", "special_haste")  # Fallen Grace (0 when not owned).

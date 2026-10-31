@@ -484,6 +484,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act VI: the Inferno ---
 	if InfernoGlyphs.draw_obstacle(self, o):
 		return  # An Act VI stub's placeholder obstacle kind.
+	# --- Act VI: Pandemonium ---
+	if PandemoniumGlyphs.draw_obstacle(self, o):
+		return  # A Pandemonium obstacle kind (Act VI).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

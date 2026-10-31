@@ -1,0 +1,2 @@
+Seamless top-down FLOOR TEXTURE for a dark 2D pixel-art game: grey-black ash-stone flagstones of a burnt cathedral seen straight from above, the stone with faint speckles, scorch marks and a dusting of grey ash, very flat even lighting, no objects, no joints needed (just the stone surface). Chunky pixel art at about 160 pixels across, crisp square pixels, flat colours, no gradients, no vignette, no text. Fully opaque, filling the whole image edge to edge.
+Colours: ash stone #1A191C #212024 #28272C #302F35, a few paler ash speckles #3C3B42.

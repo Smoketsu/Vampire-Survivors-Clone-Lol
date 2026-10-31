@@ -58,7 +58,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act IV: the Asphodel Underworld --- (a silhouette naming its unlock until met)
 		"myrmidon_shade",
 		# --- Act V: the Road to the Sun --- (a silhouette naming its unlock until met)
-		"bound_oni"]
+		"bound_oni",
+		# --- Act VI: Pandemonium --- (a silhouette naming its unlock until met)
+		"archfiend"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -181,9 +183,13 @@ const SHOGUNATE_BOSSES: Array[String] = ["kage", "shogun", "amaterasu"]
 ## Judgment's kind, and phase 2's minibosses) and its stage bosses
 ## (StageRegistry.BOSS_ARRIVALS ids). The charmed body (Temptation) is never
 ## listed. Each Act VI stage adds its own as it is built (phase 2).
-const INFERNO_SOLDIERS: Array[String] = ["damned", "imp", "hell_knight", "succubus", "demon_portal"]
+const INFERNO_SOLDIERS: Array[String] = ["damned", "imp", "hell_knight", "succubus", "demon_portal",
+	# --- Act VI: Pandemonium ---
+	"fallen_angel"]
 ## Inferno champions (minibosses) and the Act VI Reckoning kinds.
-const INFERNO_CHAMPIONS: Array[String] = ["demon_brute"]
+const INFERNO_CHAMPIONS: Array[String] = ["demon_brute",
+	# --- Act VI: Pandemonium ---
+	"seraph_general"]
 ## Inferno stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const INFERNO_BOSSES: Array[String] = ["moloch", "lilith", "morning_star"]
 
@@ -336,6 +342,9 @@ const DESCRIPTIONS: Dictionary = {
 	"moloch": "The Furnace King, a colossal bull-headed demon. He swallows your dead and cracks the ground into pits.",  # Owner-approved Act VI proposal
 	"lilith": "Queen of the Night, Mother of Demons. Her charm turns a whole arc of your ring.",  # Owner-approved Act VI proposal
 	"morning_star": "The Adversary himself: first the Angel with six burnt wings, then the Beast.",  # Owner-approved Act VI proposal (two phases, owner Oct 26)
+	# --- Act VI: Pandemonium ---
+	"fallen_angel": "She dives from above with a burning spear. Aloft, your blades barely reach her: gargoyles and ranged dead answer her.",  # Owner-approved Act VI proposal ("Gargoyles, ranged")
+	"seraph_general": "A fallen archangel warlord with four burnt wings. His cleave cracks the ground; at half strength he calls the Fallen Host.",  # Owner-approved Act VI proposal (the miniboss)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -535,6 +544,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_sun_goes_out": "ach_the_sun_goes_out",  # TUNING (not in GDD)
 	# --- Act V: Castle Kurogane ---
 	"regiments_broken": "ach_regiments_broken",  # TUNING (not in GDD)
+	# --- Act VI: Pandemonium ---
+	"morning_star_falls": "ach_morning_star_falls",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -572,6 +583,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_sun_goes_out": "black_sun",
 	# --- Act V: Castle Kurogane ---
 	"regiments_broken": "unbending",
+	# --- Act VI: Pandemonium ---
+	"morning_star_falls": "fall_from_grace",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

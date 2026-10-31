@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a commanding battle stance, a huge burning greatsword held in both hands across his body
+
+LOW-RESOLUTION pixel art: the whole figure is only 88 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: the FALLEN SERAPH GENERAL (miniboss), a MALE fallen archangel warlord of hell: tall and powerful, a stern handsome face with burning gold eyes and short white hair, a broken black-iron HALO crown, FOUR huge burnt BLACK FEATHERED WINGS spread wide behind him (their tips smouldering orange), black obsidian plate armour with gold edges and glowing ember cracks, a tattered crimson-black battle cape, a huge greatsword whose blade is white-hot lava with flames. Imposing, regal, menacing.
+Signature shape that must read in silhouette: the four spread wings, the broken halo and the long burning greatsword.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: obsidian armour and wings #0B0A10 #1E1A26 #352E40 #5A5068 (the lightest as a rim); gold #8A6A1E #D9A93A #F5D870; ember lava #8A2A08 #E0601A #FFB347; skin #A79A80 #CFC7AE #EDE6D0; white hair #C4CCD8 #F4F1EA; cape #3A0E1A #6A1428.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite (the hell knight) for pixel size, outline weight and flat look; (2) concept art of the act's final boss for the fallen-angel style only (do NOT copy his face, throne or detail level).

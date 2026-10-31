@@ -161,6 +161,18 @@ const UNLOCKS := {
 	"banner_of_the_dead": {"type": "spell", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Owner-approved Act V proposal
 	"warlords_seal": {"type": "passive", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Banner of the Dead's paired passive, unlocked with it
 	"unbending": {"type": "passive", "achievement": "regiments_broken", "text": "Earn Regiments Broken: slay the Shogun after breaking all six of his banners."},  # Owner-approved Act V proposal
+	# --- Act VI: Pandemonium ---
+	# The Morning Star's fall (owner-approved Act VI proposal "Rewards": Fall from
+	# Grace is unlocked by the Morning Star; the finale grants the Archfiend): the
+	# spell with its paired passive, and the summon class with its paired
+	# passive, offered on every stage (no card-row "act" key). The title
+	# Sovereign of Pandemonium is the Morning Star Falls achievement's reward.
+	"fall_from_grace": {"type": "spell", "boss": "morning_star", "text": "Cast down the Morning Star in Pandemonium to unlock."},  # Owner-approved Act VI proposal
+	"pride": {"type": "passive", "boss": "morning_star", "text": "Cast down the Morning Star in Pandemonium to unlock."},  # Fall from Grace's paired passive (owner-approved proposal), unlocked with it
+	"archfiend": {"type": "class", "boss": "morning_star", "text": "Cast down the Morning Star in Pandemonium to unlock."},  # Owner-approved proposal: the finale's reward
+	"crown_of_horns": {"type": "passive", "boss": "morning_star", "text": "Cast down the Morning Star in Pandemonium to unlock."},  # Its paired passive (own decision), unlocked with it
+	"sovereign_of_pandemonium": {"type": "title", "achievement": "morning_star_falls",
+		"text": "Earn Morning Star Falls: cast down the Morning Star in Pandemonium."},  # Own decision (the clear is recorded as a title, as Act III's Breaker of Engines)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

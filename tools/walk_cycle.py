@@ -560,6 +560,18 @@ RIGS = {
     "inferno/hell_knight": dict(mode="legs", hip=38, back=(0, 20), front=(20, 36), rigid=[(36, 52, 0, None)], spread=2, lift=2, dip=1),
     "inferno/demon_brute": dict(mode="legs", hip=70, back=(0, 38), front=(38, 72), rigid=[], spread=3, lift=3, dip=1),
     "inferno/succubus": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(12, 26, 13, 19, 2, 2), swish=(11, 27, 23, 32, 2)),
+    # --- Act VI: Pandemonium ---
+    # The Fallen Angel glides like the succubus (robe mode, the boots as one hem) with the figure-redesign rigs: the
+    # two-lobe bust box and the hip `swish`; the Fallen Seraph General, the Morning Star's Beast, the Archfiend and the
+    # Prince of Hell stride (legs, their wings riding with the body); the Morning Star's Angel glides in his long cloak;
+    # the Fallen Saint (figure redesign) glides in her gown, the bust box bouncing.
+    "inferno/fallen_angel": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1, bust=(13, 24, 15, 22, 2, 2), swish=(12, 25, 25, 34, 2)),
+    "inferno/seraph_general": dict(mode="legs", hip=62, back=(0, 48), front=(48, 96), rigid=[], spread=2, lift=2, dip=1),
+    "bosses/morning_star": dict(mode="robe", hip=80, rigid=[], sway=1, dip=1),
+    "bosses/morning_star_beast": dict(mode="legs", hip=104, back=(0, 70), front=(70, 142), rigid=[], spread=3, lift=3, dip=1),
+    "player/fallen_saint": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(13, 25, 16, 22, 1)),
+    "summons/archfiend": dict(mode="legs", hip=44, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=2, dip=1),
+    "summons/prince_of_hell": dict(mode="legs", hip=52, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -646,6 +658,10 @@ SKINS = {
     "player/ronin_revenant_hyper": "player/ronin_revenant",
     "player/ronin_revenant_untouchable": "player/ronin_revenant",
     "player/ronin_revenant_deathlord": "player/ronin_revenant",
+    # --- Act VI: Pandemonium ---
+    "player/fallen_saint_hyper": "player/fallen_saint",
+    "player/fallen_saint_untouchable": "player/fallen_saint",
+    "player/fallen_saint_deathlord": "player/fallen_saint",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

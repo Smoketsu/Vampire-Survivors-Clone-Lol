@@ -61,6 +61,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
 			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not inf.judgment.cfg.is_empty())])
+	# --- Act VI: Pandemonium --- (its stage, kinds and boss; PandemoniumReport)
+	PandemoniumReport.stage_lines(game, st)
 
 
 ## The "hell pits" line (HellPits).

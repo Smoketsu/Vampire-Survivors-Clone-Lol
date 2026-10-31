@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a heavy stomping stance, a huge cleaver-blade in his front (right) hand, wings half-spread
+
+LOW-RESOLUTION pixel art: the whole figure is only 62 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: an ARCHFIEND, a MALE winged heavy demon bound in undeath to a necromancer: a hulking horned demon with ASHEN GREY-VIOLET dead skin, two big curled black horns, glowing SOUL-TEAL eyes, two big bat-like leathery WINGS half-spread behind him (grey-violet membranes, bone fingers), a bone-and-iron COLLAR with a big chain ring, iron bracers, a tattered dark loincloth, a huge jagged black iron CLEAVER-SWORD with a few soul-teal runes. Heavy and brutal.
+Signature shape that must read in silhouette: the horns, the half-spread bat wings and the huge cleaver.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: dead skin #6E6B7B #8A8796 #A5A2B3; horns and iron #14161C #2A2D36 #4A4E5A; bone #A79A80 #CFC7AE #EDE6D0; soul teal #1F7A5C #3FD39A #9CFFD8; cloth #3A2A30.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: an undead summon of this game (the Bound Oni) for the pixel size, outline weight, flat look and the soul-teal undead style (not its subject).

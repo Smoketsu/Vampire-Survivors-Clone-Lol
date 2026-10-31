@@ -47,6 +47,9 @@
 ## and Act V's (Castle Kurogane, KUROGANE_IDS: the same generic hooks; its own
 ## autotest line, KuroganeReport.item_lines()):
 ##   Banner of the Dead -> BannerOfTheDead (evolves into Hundred Banners)
+## and Act VI's (Pandemonium, PANDEMONIUM_IDS: the same generic hooks; its own
+## autotest line, PandemoniumReport.item_lines()):
+##   Fall from Grace  -> FallFromGrace    (evolves into Lightbringer)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -117,6 +120,10 @@ const SUN_ROAD_IDS := ["black_sun"]
 ## Castle Kurogane's unlockable spell (Shogun Kurogane's reward): stepped, kill
 ## hooked and after-physics hooked like UNDERWORLD_IDS, reported by KuroganeReport.
 const KUROGANE_IDS := ["banner_of_the_dead"]
+# --- Act VI: Pandemonium ---
+## Pandemonium's unlockable spell (the Morning Star's reward): stepped, kill
+## hooked and after-physics hooked like KUROGANE_IDS, reported by PandemoniumReport.
+const PANDEMONIUM_IDS := ["fall_from_grace"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -153,6 +160,8 @@ const SOURCES := {
 	"black_sun": ["black_sun", "eclipse_of_heaven", "eclipse_corona"],
 	# --- Act V: Castle Kurogane ---
 	"banner_of_the_dead": ["banner_of_the_dead", "hundred_banners"],
+	# --- Act VI: Pandemonium ---
+	"fall_from_grace": ["fall_from_grace", "lightbringer", "lightbringer_flare"],
 }
 
 ## Owning run.
@@ -228,6 +237,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # Castle Kurogane's spell.
+	# --- Act VI: Pandemonium ---
+	for id: String in PANDEMONIUM_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Pandemonium's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -294,6 +312,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act V: Castle Kurogane ---
 		"banner_of_the_dead":
 			node = BannerOfTheDead.new()
+		# --- Act VI: Pandemonium ---
+		"fall_from_grace":
+			node = FallFromGrace.new()  # Pandemonium's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -343,6 +364,11 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (Castle Kurogane).
 		if node != null:
 			node.on_enemy_killed(e)  # Castle Kurogane's spell.
+	# --- Act VI: Pandemonium ---
+	for id: String in PANDEMONIUM_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act VI spell's node, if learned (Pandemonium).
+		if node != null:
+			node.on_enemy_killed(e)  # Pandemonium's spell.
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
@@ -379,6 +405,11 @@ func after_physics(delta: float) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Province).
 		if node != null:
 			node.after_physics(delta)
+	# --- Act VI: Pandemonium ---
+	for id: String in PANDEMONIUM_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act VI spell's node, if learned (Pandemonium).
+		if node != null:
+			node.after_physics(delta)  # Pandemonium's spell.
 
 
 # --- Act V: the Burning Province ---

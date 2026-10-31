@@ -375,6 +375,9 @@ func _ready() -> void:
 			var ig := InfernoGround.new()  # Act VI placeholder floor (the STAGE's "floor").
 			ig.look = stage_def.get("floor", {})
 			ground = ig
+		# --- Act VI: Pandemonium ---
+		"pandemonium":
+			ground = PandemoniumGround.new()  # Act VI: Pandemonium's four zone floors (PandemoniumStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

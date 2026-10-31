@@ -86,7 +86,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act V: the Road to the Sun ---
 	"black_sun",
 	# --- Act V: Castle Kurogane ---
-	"banner_of_the_dead"]
+	"banner_of_the_dead",
+	# --- Act VI: Pandemonium ---
+	"fall_from_grace"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -620,6 +622,31 @@ const SPELLS := {
 			{"damage": 48.0, "pulse_radius": 86.0, "haste": 0.40, "radius": 150.0, "banners": 2, "duration": 9.0, "cooldown": 7.0},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act VI: Pandemonium ---
+	# Fall from Grace (GDD §15.0 "Fall from Grace, Lightbringer, Pride and the
+	# Fallen Saint"; owner-approved proposal: "a fallen star crashes on the
+	# strongest enemy"; unlocked by defeating the Morning Star, UnlockData):
+	# every `cooldown` s `stars` star(s) (1 before the evolution) fall for
+	# `fall_time` s on the strongest foes within FallFromGraceData.AIM_RANGE px
+	# (the most HP left) and crash: `damage` to the target, `splash` x that to
+	# every other foe within `radius` px (Necrotic Expanse widens it, like every
+	# spell radius). Logic: FallFromGrace; fixed rules: FallFromGraceData.
+	# A single-target spell: the tall foe it finds is what spell-only builds
+	# lacked (CLAUDE.md "Next" 7).
+	"fall_from_grace": {
+		"display_name": "Fall from Grace",
+		"icon": "fall_from_grace",
+		"description": "A fallen star crashes down on the strongest foe near you.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Star damage", "radius": "Crash radius", "splash": "Splash", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 36.0, "radius": 40.0, "splash": 0.4, "fall_time": 0.6, "cooldown": 3.2},  # TUNING (not in GDD) a heavy single blow (first pass 46-106 at Lv 1-5: Lightbringer led every source by 4x in the agent run)
+			{"damage": 44.0, "radius": 42.0, "splash": 0.4, "fall_time": 0.6, "cooldown": 3.0},  # TUNING (not in GDD)
+			{"damage": 54.0, "radius": 44.0, "splash": 0.45, "fall_time": 0.55, "cooldown": 2.8},  # TUNING (not in GDD)
+			{"damage": 66.0, "radius": 46.0, "splash": 0.45, "fall_time": 0.55, "cooldown": 2.6},  # TUNING (not in GDD)
+			{"damage": 80.0, "radius": 48.0, "splash": 0.5, "fall_time": 0.5, "cooldown": 2.4},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -638,7 +665,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act V: the Burning Province ---
 	"echo_share", "burst_share",
 	# --- Act V: Castle Kurogane ---
-	"haste"]
+	"haste",
+	# --- Act VI: Pandemonium ---
+	"splash", "flare"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

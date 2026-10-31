@@ -236,6 +236,10 @@ var sun_road: SunRoadDirector = null
 ## Castle Kurogane's mechanics (Act V: the General of the Left, the Shogun's
 ## army objective; StageRegistry "kurogane"; null on every other stage).
 var kurogane: KuroganeDirector = null
+# --- Act VI: Pandemonium ---
+## Pandemonium's mechanics (Act VI: the Fallen Seraph General, guest squads;
+## StageRegistry "pandemonium"; null on every other stage).
+var pandemonium: PandemoniumDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -368,6 +372,12 @@ func _ready() -> void:
 		kurogane.game = game
 		kurogane.config = stage_def["kurogane"]
 		add_child(kurogane)  # Castle Kurogane's director.
+	# --- Act VI: Pandemonium ---
+	if not (stage_def.get("pandemonium", {}) as Dictionary).is_empty():
+		pandemonium = PandemoniumDirector.new()
+		pandemonium.game = game
+		pandemonium.config = stage_def["pandemonium"]
+		add_child(pandemonium)  # Pandemonium's director.
 
 
 # =====================================================================================
@@ -482,6 +492,9 @@ func step(delta: float) -> void:
 	# --- Act V: Castle Kurogane ---
 	if kurogane != null:
 		kurogane.step(delta)  # The General of the Left.
+	# --- Act VI: Pandemonium ---
+	if pandemonium != null:
+		pandemonium.step(delta)  # Pandemonium's guest squads.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -590,6 +603,9 @@ func objective_text() -> String:
 	# --- Act V: Castle Kurogane ---
 	if kurogane != null and kurogane.objective_override() != "":
 		return kurogane.objective_override()  # The General of the Left, the Shogun's army.
+	# --- Act VI: Pandemonium ---
+	if pandemonium != null and pandemonium.objective_override() != "":
+		return pandemonium.objective_override()  # The Fallen Seraph General.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -776,6 +792,12 @@ func _run_event(ev: Dictionary) -> void:
 			game.inferno_rules().portals.start_event(ev)  # Demon portals (they show the event's banner).
 			game.stat_add("wave_events", 1.0)
 			return  # An Act VI portal event.
+		# --- Act VI: Pandemonium ---
+		"seraph_general":
+			if pandemonium != null:
+				pandemonium.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Pandemonium's miniboss (PandemoniumDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

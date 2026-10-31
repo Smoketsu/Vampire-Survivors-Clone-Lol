@@ -179,6 +179,12 @@
 ##                        the Hell Pits read the starts).
 ## Act VI event type "portal" ({count, banner, distance_min, distance_max,
 ## table, pour_every}: DemonPortals.start_event()).
+## --- Act VI: Pandemonium ---
+##   pandemonium        — PandemoniumDirector config (PandemoniumStage.PANDEMONIUM,
+##                        Act VI, Pandemonium: the Fallen Seraph General's
+##                        "seraph_general" event, guest squads of the other Act
+##                        VI stages' kinds); ground "pandemonium" is its
+##                        PandemoniumGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 
