@@ -220,6 +220,7 @@ func rage(e: Enemy) -> void:
 	g.shake(5.0)
 	g.enemies.show_banner("%s RAGES for her sister!" % e.display_name.get_slice(",", 0))
 	g.stat_add("twin_rages", 1.0)
+	rules(e).play_sound("twin_rage", e.position)
 	e.queue_redraw()
 
 

@@ -420,7 +420,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act V: the Road to the Sun ---
 	"the_sun_goes_out",
 	# --- Act V: Castle Kurogane ---
-	"regiments_broken"]
+	"regiments_broken",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"unmoved"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -558,6 +560,15 @@ const ACHIEVEMENTS := {
 	# unlocks the counter-passive Unbending.
 	"regiments_broken": {"display_name": "Regiments Broken", "description": "Slay Shogun Kurogane after breaking all six of his banners",
 		"stat": "shogun_regiments_broken_kills", "goal": 1, "unlock": "The Unbending passive", "bounty": 300},  # Owner-approved Act V proposal; bounty TUNING (not in GDD) (Heel Found 250: all six banners is harder)
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Owner-approved Act VI achievement "Unmoved (beat Lilith without a single
+	# summon charmed)". Own decision on the window: from Lilith's arrival to her
+	# fall on the Palace of Silk and Ash, no summon of the run was charmed (by
+	# her waves or any succubus; BossLilith counts it as the run stat
+	# lilith_unmoved_kills; MetaProgress keeps the lifetime count). It unlocks
+	# the counter-passive Faithless.
+	"unmoved": {"display_name": "Unmoved", "description": "Slay Lilith in the Palace of Silk and Ash with no summon charmed during her fight",
+		"stat": "lilith_unmoved_kills", "goal": 1, "unlock": "The Faithless passive", "bounty": 300},  # Owner-approved Act VI proposal; bounty TUNING (not in GDD) as Regiments Broken
 }
 
 # --- Content wave 2: B. Achievement rewards ---

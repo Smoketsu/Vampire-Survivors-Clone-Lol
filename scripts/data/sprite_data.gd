@@ -366,6 +366,18 @@ const HEIGHTS: Dictionary = {
 	"inferno/succubus": 56.0,  # TUNING (not in GDD) elite tier, female (figure redesign, the approved act6_units concept; 56, not 48: at 48 the face and the hourglass were lost, as with the Kunoichi at 52): body ~52, the curled horns above; she flies, the bust and hip box sway in the glide strip
 	"inferno/demon_brute": 84.0,  # TUNING (not in GDD) heavy tier (60-72 and up): a huge four-armed demon, the horns and the raised fists
 	"structures/demon_portal": 64.0,  # TUNING (not in GDD) the Inferno's portal structure: an obsidian-and-lava ring with a charm-pink swirl (the looping glow is drawn by code)
+	# --- Act VI: the Palace of Silk and Ash ---
+	"inferno/lilim_witch": 56.0,  # TUNING (not in GDD) support tier, female (the approved act6_units level): body ~50, the horns and the eye-staff above
+	"inferno/twin_naamah": 62.0,  # TUNING (not in GDD) miniboss tier, female: body ~54, the tall horns and the crown above, the wings wide
+	"inferno/twin_agrat": 62.0,  # TUNING (not in GDD) miniboss tier, female: her sister's size
+	"bosses/lilith": 112.0,  # TUNING (not in GDD) boss tier: a queen, her horns, crown and great wings above
+	"bosses/lilith_demon": 124.0,  # TUNING (not in GDD) her true demon form, bigger (the last phase)
+	"player/succubus_queen": 56.0,  # TUNING (not in GDD) character tier: body ~50, the horns and tiara above
+	"player/succubus_queen_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold and white
+	"player/succubus_queen_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/succubus_queen_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/bound_succubus": 52.0,  # TUNING (not in GDD) a support summon (Banshee ~48), the horns above
+	"summons/lilim_matriarch": 62.0,  # TUNING (not in GDD) its evolution, bigger, the wings wide
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

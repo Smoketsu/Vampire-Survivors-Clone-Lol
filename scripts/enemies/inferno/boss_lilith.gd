@@ -309,6 +309,7 @@ func _charm_wave() -> void:
 			game.stat_add("lilith_wave_refused", 1.0)
 	game.stat_add("lilith_wave_charms", float(taken))
 	game.effects.ring(mid, outer * 0.5, Palette.INFERNO_CHARM, 0.5)
+	game.inferno.play_sound("lilith_wave", mid)
 	game.shake(3.0)
 
 

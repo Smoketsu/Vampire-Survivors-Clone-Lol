@@ -79,6 +79,9 @@ static func draw_summon(ci: CanvasItem, cls: String, o: Vector2, r: float, flash
 	if cls.begins_with(PuppetData.GLYPH_PREFIX):
 		AssemblyGlyphs.draw_puppet(ci, cls.substr(PuppetData.GLYPH_PREFIX.length()), o, r, flash)
 		return  # Act III: a Hollow Puppet (the foe's own art on soul strings).
+	if cls.begins_with(TemptData.GLYPH_PREFIX):
+		SilkPalaceGlyphs.draw_enthralled(ci, cls.substr(TemptData.GLYPH_PREFIX.length()), o, r, flash)
+		return  # Act VI: a thrall (Enthrall: the foe's own art, charmed pink, a heart over it).
 	if SpriteBank.draw(ci, "summons/" + cls, o, flash):
 		return  # Sprite art exists (assets/sprites/summons/<cls>.png).
 	match cls:

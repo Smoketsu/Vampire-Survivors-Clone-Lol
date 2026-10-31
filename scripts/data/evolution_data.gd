@@ -84,7 +84,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act V: the Road to the Sun ---
 	"eclipse_of_heaven",
 	# --- Act V: Castle Kurogane ---
-	"hundred_banners"]
+	"hundred_banners",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"unholy_desire"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -530,6 +532,26 @@ const EVOLUTIONS := {
 			"damage": 56.0, "pulse_radius": 84.0, "haste": 0.45, "radius": 130.0, "banners": 4, "duration": 10.0, "cooldown": 7.0,  # TUNING (not in GDD)
 			"pulse_damage": 16.0,  # TUNING (not in GDD) each war drum's beat
 			"pulse_interval": 2.0,  # TUNING (not in GDD) the evolution flag: s between two beats of each banner's drum
+		},
+	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Unholy Desire (owner-approved Act VI proposal "Rewards": "Temptation ->
+	# Unholy Desire (+ Velvet Chains)"): Temptation + Velvet Chains (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: three charms a
+	# cast, longer, harder-hitting thralls, and every charm that ends (or thrall
+	# that falls) BURSTS: `desire` x the thrall's hit to every foe within
+	# TemptData.BURST_RADIUS px (TemptData.BURST_SOURCE). Detected by the
+	# "desire" key.
+	"unholy_desire": {
+		"base": "tempt",
+		"passive": "velvet_chains",
+		"display_name": "Unholy Desire",  # Owner-approved proposal
+		"icon": "unholy_desire",
+		"description": "Three foes at once burn with desire for you, and burst when the spell lets them go.",
+		"labels": {"charms": "Foes charmed", "charm_time": "Charm (s)", "damage": "Thrall hit", "desire": "Burst", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"charms": 3, "charm_time": 8.0, "damage": 30.0, "range": 280.0, "cooldown": 5.0,  # TUNING (not in GDD)
+			"desire": 1.5,  # TUNING (not in GDD) the evolution flag: share of the thrall's hit its burst deals
 		},
 	},
 }

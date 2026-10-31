@@ -184,7 +184,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act V: the Road to the Sun ---
 	"stolen_dawn", "onis_resolve",
 	# --- Act V: Castle Kurogane ---
-	"warlords_seal", "unbending"]
+	"warlords_seal", "unbending",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"velvet_chains", "sweet_surrender", "faithless"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -210,7 +212,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act V: the Road to the Sun ---
 	"onis_resolve",
 	# --- Act V: Castle Kurogane ---
-	"warlords_seal", "unbending"]
+	"warlords_seal", "unbending",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"sweet_surrender", "faithless"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1280,6 +1284,70 @@ const PASSIVES := {
 			{"draw_reduction": 0.35},  # TUNING (not in GDD)
 			{"draw_reduction": 0.45},  # TUNING (not in GDD)
 			{"draw_reduction": 0.55},  # TUNING (not in GDD) a cut 24 -> ~11 to a summon
+		],
+	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Velvet Chains (Temptation's paired passive; owner-approved Act VI proposal:
+	# "Temptation -> Unholy Desire (+ Velvet Chains)"; unlocked with the spell by
+	# Lilith and offered on every stage). Own decision on its effect: the chains
+	# of desire hold tighter: Temptation's charms last chain_time longer and its
+	# thralls strike chain_power harder (AbilityManager.apply_spell_mods() on the
+	# Temptation rows' own keys, like Stolen Dawn: nothing else reads it).
+	"velvet_chains": {
+		"display_name": "Velvet Chains",  # Owner-approved proposal
+		"icon": "velvet_chains",
+		"description": "Your charmed foes are bound tighter: they serve longer and strike harder.",
+		"labels": {"chain_time": ["Temptation charm time", "pct"], "chain_power": ["Thrall damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"chain_time": 0.06, "chain_power": 0.06},  # TUNING (not in GDD)
+			{"chain_time": 0.12, "chain_power": 0.12},  # TUNING (not in GDD)
+			{"chain_time": 0.18, "chain_power": 0.18},  # TUNING (not in GDD)
+			{"chain_time": 0.24, "chain_power": 0.24},  # TUNING (not in GDD)
+			{"chain_time": 0.30, "chain_power": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# Sweet Surrender (own decision: the Lilim Matriarch's paired passive, its
+	# name and rule; GDD §15.0 "The Succubus, the Lilim Matriarch and Sweet
+	# Surrender"; unlocked with the Succubus by Lilith): the foes your Succubi
+	# kiss give in sooner and longer: the Succubus's charm comes allure_haste
+	# sooner and lasts allure_time longer (BoundSuccubusBehavior reads it from its
+	# own necromancer's build). Works the same on every stage. Pairs with the
+	# Succubus -> the Lilim Matriarch.
+	"sweet_surrender": {
+		"display_name": "Sweet Surrender",
+		"icon": "sweet_surrender",
+		"description": "Foes your Succubi kiss give in sooner and serve you longer.",
+		"labels": {"allure_haste": ["Succubus charm cooldown", "neg_pct"], "allure_time": ["Succubus charm time", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"allure_haste": 0.05, "allure_time": 0.10},  # TUNING (not in GDD)
+			{"allure_haste": 0.10, "allure_time": 0.20},  # TUNING (not in GDD)
+			{"allure_haste": 0.15, "allure_time": 0.30},  # TUNING (not in GDD)
+			{"allure_haste": 0.20, "allure_time": 0.40},  # TUNING (not in GDD)
+			{"allure_haste": 0.25, "allure_time": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# Act VI's counter-passive Faithless (owner-approved Act VI proposal:
+	# "Faithless (charms on summons last half as long)"; unlocked by the
+	# achievement Unmoved and offered only in Act VI through its card row's
+	# "act"). Temptation.faithless_mult() (the foundation's one read,
+	# InfernoRulesData.FAITHLESS / FAITHLESS_KEY): every charm on a summon (a
+	# succubus's kiss, Lilith's wave, Moloch's swallow) lasts 1 - charm_reduction
+	# of its time; at Lv 5 half as long (the proposal's number).
+	"faithless": {
+		"display_name": "Faithless",  # Owner-approved proposal
+		"icon": "faithless",
+		"description": "Your dead keep no faith with hell: charms on them wear off sooner.",
+		"labels": {"charm_reduction": ["Charm time on your summons", "neg_pct"]},
+		"act": 6,  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"charm_reduction": 0.10},  # TUNING (not in GDD)
+			{"charm_reduction": 0.20},  # TUNING (not in GDD)
+			{"charm_reduction": 0.30},  # TUNING (not in GDD)
+			{"charm_reduction": 0.40},  # TUNING (not in GDD)
+			{"charm_reduction": 0.50},  # Owner-approved proposal: "last half as long"
 		],
 	},
 }

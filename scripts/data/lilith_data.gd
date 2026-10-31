@@ -81,9 +81,9 @@ const ENDING_BANNER_TIME: float = 6.0  # TUNING (not in GDD)
 ## Lilith's design row.
 const BOSS := {
 	"display_name": "Lilith, Queen of the Night",
-	"max_hp": 12500.0,  # TUNING (not in GDD) x the stage HP multiplier (21,875 on the Palace; Amaterasu 14,000 x 1.65)
+	"max_hp": 10500.0,  # TUNING (not in GDD) x the stage HP multiplier (18,375 on the Palace; Amaterasu 14,000 x 1.65); first pass 12,500 (the army bot died under her true form)
 	"move_speed": 52.0,  # TUNING (not in GDD) px/s; a queen's glide
-	"damage": 14.0,  # TUNING (not in GDD) a raking claw in reach
+	"damage": 11.0,  # TUNING (not in GDD) a raking claw in reach; first pass 14
 	"attack_interval": 1.1,  # TUNING (not in GDD) s
 	"attack_range": 14.0,  # TUNING (not in GDD) px
 	"radius": 22.0,  # TUNING (not in GDD) px
@@ -134,9 +134,9 @@ const BOSS := {
 	"phase3_hp": 0.33,  # TUNING (not in GDD) HP share: her true demon form (owner-approved "a final phase")
 	"form_time": 2.5,  # TUNING (not in GDD) s invulnerable while she changes
 	"demon_radius": 28.0,  # TUNING (not in GDD) px
-	"demon_speed_mult": 1.3,  # TUNING (not in GDD)
+	"demon_speed_mult": 1.15,  # TUNING (not in GDD) first pass 1.3
 	"demon_cd_mult": 0.75,  # TUNING (not in GDD)
-	"demon_damage_mult": 1.3,  # TUNING (not in GDD) her claws in true form
+	"demon_damage_mult": 1.15,  # TUNING (not in GDD) her claws in true form; first pass 1.3
 	# The wing storm (true form only).
 	"storm_cooldown": 8.0,  # TUNING (not in GDD) s
 	"storm_cast": 1.0,  # TUNING (not in GDD) s

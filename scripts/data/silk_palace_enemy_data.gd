@@ -77,10 +77,10 @@ const ENEMIES := {
 		"faction": InfernoEnemyData.FACTION,
 		"kit": "lilim_witch",
 		"demon": true,
-		"pit_every": 9.0,  # TUNING (not in GDD) s
+		"pit_every": 10.0,  # TUNING (not in GDD) s; first pass 9 (370 pits in one run)
 		"pit_trigger": 380.0,  # TUNING (not in GDD) px to the necromancer
 		"pit_windup": 0.8,  # TUNING (not in GDD) s the staff is raised
-		"pit_count": 2,  # TUNING (not in GDD) pits per curse
+		"pit_count": 1,  # TUNING (not in GDD) pits per curse; first pass 2
 		"pit_radius": 28.0,  # TUNING (not in GDD) px ("small pits")
 		"pit_telegraph": 1.5,  # Owner-approved proposal: "a glowing rim for 1.5 s"
 		"pit_life": 6.0,  # TUNING (not in GDD) s
@@ -88,7 +88,7 @@ const ENEMIES := {
 		"rite_every": 3.0,  # TUNING (not in GDD) s
 		"portal_reach": 260.0,  # TUNING (not in GDD) px from her to the portal
 		"rite_radius": 150.0,  # TUNING (not in GDD) px around the portal
-		"rite_amount": 6.0,  # TUNING (not in GDD) HP per demon, x the enemies' HP scaling
+		"rite_amount": 4.0,  # TUNING (not in GDD) first pass 6 (8,600 HP healed in one run); HP per demon, x the enemies' HP scaling
 	},  # (lilim_witch)
 	# The Twin Succubi: the stage MINIBOSS, two sisters of one kit. Each charms
 	# in turn (the elder from first_charm, the younger charm_every / 2 later,
@@ -107,7 +107,7 @@ const ENEMIES := {
 	#                   her sister's + charm_every / 2: they charm in turns).
 	"twin_naamah": {
 		"display_name": "Naamah, the Elder Twin",  # Owner-approved "the Twin Succubi"; the names TUNING (not in GDD) own decision
-		"max_hp": 1500.0,  # TUNING (not in GDD) before the time / stage scaling; two bodies (the Kirin 2300 alone)
+		"max_hp": 1100.0,  # TUNING (not in GDD) before the time / stage scaling; two bodies (the Kirin 2300 alone); first pass 1500 (alive 3:30 after they came)
 		"move_speed": 58.0,  # TUNING (not in GDD) px/s
 		"damage": 9.0,  # TUNING (not in GDD) a raking claw in reach, before the time scaling
 		"attack_interval": 1.2,  # TUNING (not in GDD) s
@@ -146,8 +146,8 @@ const ENEMIES := {
 		"pain_every": 6.0,  # TUNING (not in GDD) s
 		"pain_radius": 46.0,  # TUNING (not in GDD) px
 		"pain_windup": 1.0,  # TUNING (not in GDD) s
-		"pain_damage_player": 9.0,  # TUNING (not in GDD) before the time scaling
-		"pain_damage_summon": 8.0,  # TUNING (not in GDD) before the time scaling
+		"pain_damage_player": 7.0,  # TUNING (not in GDD) before the time scaling; first pass 9
+		"pain_damage_summon": 6.0,  # TUNING (not in GDD) before the time scaling; first pass 8
 		"pain_reach": 420.0,  # TUNING (not in GDD) px
 		"advance_range": 380.0,  # TUNING (not in GDD) px beyond which she flies faster
 		"advance_speed_mult": 1.7,  # TUNING (not in GDD)
@@ -158,7 +158,7 @@ const ENEMIES := {
 	},  # (twin_naamah)
 	"twin_agrat": {
 		"display_name": "Agrat, the Younger Twin",  # TUNING (not in GDD) names own decision
-		"max_hp": 1500.0,  # TUNING (not in GDD) as her sister
+		"max_hp": 1100.0,  # TUNING (not in GDD) as her sister
 		"move_speed": 62.0,  # TUNING (not in GDD) px/s; the younger is quicker
 		"damage": 8.0,  # TUNING (not in GDD)
 		"attack_interval": 1.0,  # TUNING (not in GDD) s
@@ -197,8 +197,8 @@ const ENEMIES := {
 		"pain_every": 6.0,  # TUNING (not in GDD) s
 		"pain_radius": 46.0,  # TUNING (not in GDD) px
 		"pain_windup": 1.0,  # TUNING (not in GDD) s
-		"pain_damage_player": 9.0,  # TUNING (not in GDD)
-		"pain_damage_summon": 8.0,  # TUNING (not in GDD)
+		"pain_damage_player": 7.0,  # TUNING (not in GDD)
+		"pain_damage_summon": 6.0,  # TUNING (not in GDD)
 		"pain_reach": 420.0,  # TUNING (not in GDD) px
 		"advance_range": 380.0,  # TUNING (not in GDD) px
 		"advance_speed_mult": 1.7,  # TUNING (not in GDD)

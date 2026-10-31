@@ -258,6 +258,10 @@ const SOUNDS := {
 	"imp_cackle": "imp_cackle",  # An imp's cackle (Inferno pack).
 	"brute_slam": "brute_slam",  # The Demon Brute's slam (Inferno pack).
 	"hand_grab": "boss_impact",  # No own id: the Adversary's hand (stand-in; the startup bank's boss_impact)
+	# --- Act VI: the Palace of Silk and Ash ---
+	"mirror_lure": "mirror_lure",  # A reflection steps out of a mirror (Inferno pack, the Palace's block).
+	"lilith_wave": "lilith_wave",  # Lilith's charm wave lands (Inferno pack).
+	"twin_rage": "twin_rage",  # A twin succubus rages for her sister (Inferno pack).
 }
 ## Least s between two pit_burn sounds (a burn tick hits many bodies at once).
 const BURN_SOUND_GAP: float = 0.6  # TUNING (not in GDD)

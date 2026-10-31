@@ -58,7 +58,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act IV: the Asphodel Underworld --- (a silhouette naming its unlock until met)
 		"myrmidon_shade",
 		# --- Act V: the Road to the Sun --- (a silhouette naming its unlock until met)
-		"bound_oni"]
+		"bound_oni",
+		# --- Act VI: the Palace of Silk and Ash --- (a silhouette naming its unlock until met)
+		"bound_succubus"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -181,9 +183,13 @@ const SHOGUNATE_BOSSES: Array[String] = ["kage", "shogun", "amaterasu"]
 ## Judgment's kind, and phase 2's minibosses) and its stage bosses
 ## (StageRegistry.BOSS_ARRIVALS ids). The charmed body (Temptation) is never
 ## listed. Each Act VI stage adds its own as it is built (phase 2).
-const INFERNO_SOLDIERS: Array[String] = ["damned", "imp", "hell_knight", "succubus", "demon_portal"]
+const INFERNO_SOLDIERS: Array[String] = ["damned", "imp", "hell_knight", "succubus", "demon_portal",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"lilim_witch"]
 ## Inferno champions (minibosses) and the Act VI Reckoning kinds.
-const INFERNO_CHAMPIONS: Array[String] = ["demon_brute"]
+const INFERNO_CHAMPIONS: Array[String] = ["demon_brute",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"twin_naamah", "twin_agrat"]
 ## Inferno stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const INFERNO_BOSSES: Array[String] = ["moloch", "lilith", "morning_star"]
 
@@ -336,6 +342,10 @@ const DESCRIPTIONS: Dictionary = {
 	"moloch": "The Furnace King, a colossal bull-headed demon. He swallows your dead and cracks the ground into pits.",  # Owner-approved Act VI proposal
 	"lilith": "Queen of the Night, Mother of Demons. Her charm turns a whole arc of your ring.",  # Owner-approved Act VI proposal
 	"morning_star": "The Adversary himself: first the Angel with six burnt wings, then the Beast.",  # Owner-approved Act VI proposal (two phases, owner Oct 26)
+	# --- Act VI: the Palace of Silk and Ash ---
+	"lilim_witch": "A demon sorceress of Lilith's court. She opens pits under your ring and heals the demons at a portal.",  # Owner-approved Act VI proposal
+	"twin_naamah": "The elder of the Twin Succubi. The sisters charm in turns; kill one and the other rages.",  # Owner-approved Act VI proposal
+	"twin_agrat": "The younger of the Twin Succubi, quicker than her sister, and as cruel.",  # TUNING (not in GDD)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -535,6 +545,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_sun_goes_out": "ach_the_sun_goes_out",  # TUNING (not in GDD)
 	# --- Act V: Castle Kurogane ---
 	"regiments_broken": "ach_regiments_broken",  # TUNING (not in GDD)
+	# --- Act VI: the Palace of Silk and Ash ---
+	"unmoved": "ach_unmoved",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -572,6 +584,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_sun_goes_out": "black_sun",
 	# --- Act V: Castle Kurogane ---
 	"regiments_broken": "unbending",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"unmoved": "faithless",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

@@ -49,7 +49,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"myrmidon_shade",
 		# --- Act V: the Road to the Sun ---
 		# Unlockable (UnlockData: defeating Amaterasu), so a fresh save never offers it.
-		"bound_oni"]
+		"bound_oni",
+		# --- Act VI: the Palace of Silk and Ash ---
+		# Unlockable (UnlockData: slaying Lilith), so a fresh save never offers it.
+		"bound_succubus"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1093,6 +1096,58 @@ const UNITS := {
 			"smash_trigger": 26.0,  # TUNING (not in GDD) px edge to edge: it smashes when a foe is this close
 		},
 	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# The Succubus (owner-approved Act VI proposal: "the Succubus (unlocked by
+	# Lilith, like the Fallen Seraph by Seraphine: a flying charm support)"; GDD
+	# §15.0 "The Succubus, the Lilim Matriarch and Sweet Surrender"; id
+	# "bound_succubus", so its stats, art and Codex key never meet the enemy kind
+	# "succubus"): a succubus bound to the necromancer in bone chains,
+	# soul-teal eyes. A floating support on the ring's middle posts (hittable,
+	# not airborne: it floats like the Banshee) that throws kiss bolts and, with
+	# its CHARM (BoundSuccubusBehavior, "allure"), turns the foe it fights to
+	# fight beside the army for charm_duration s through the one Enthrall path
+	# (HordeDirector.enthrall_foe(): never a boss, miniboss or structure; the
+	# thrall hits for thrall_damage). No act rule (owner rule: summons work the
+	# same everywhere). Unlockable (UnlockData), then offered on every stage.
+	"bound_succubus": {
+		"display_name": "Succubus",  # Owner-approved proposal
+		"plural": "Succubi",
+		"description": "Bound succubi that float behind your ring and charm foes to fight beside your dead.",  # Card text: one short sentence (owner rule).
+		"max_hp": 46.0,  # TUNING (not in GDD) a frail support (Banshee 40)
+		"damage": 12.0,  # TUNING (not in GDD) a kiss bolt (Banshee 14)
+		"attack_interval": 1.6,  # TUNING (not in GDD) s
+		"attack_range": 160.0,  # TUNING (not in GDD) centre-to-edge (px); also the charm's reach
+		"move_speed": 96.0,  # TUNING (not in GDD) px/s, a flier
+		"radius": 10.0,  # TUNING (not in GDD)
+		"acquisition_range": 250.0,  # TUNING (not in GDD)
+		"replenish_interval": 15.0,  # TUNING (not in GDD) s
+		"band_min": 90.0,  # TUNING (not in GDD) midline (px)
+		"band_max": 150.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.5,  # TUNING (not in GDD)
+		"w_formation": 0.6,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.9,  # TUNING (not in GDD) a frail support keeps out of the crowd
+		"attack_profile": "allure",
+		"target_profile": "dirge",  # Foes closing on the necromancer first (the Banshee's weights).
+		"windup": 0.25,  # TUNING (not in GDD) s
+		"projectile_speed": 280.0,  # TUNING (not in GDD) px/s
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "mid",
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "allure",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"charm_cooldown": 9.0,  # TUNING (not in GDD) s between two charms
+			"charm_windup": 0.6,  # TUNING (not in GDD) s the kiss is blown (a pink line to the foe)
+			"charm_duration": 3.0,  # Owner-approved proposal "charms enemies briefly"; TUNING (not in GDD) the 3 s (special_duration lengthens it)
+			"thrall_damage": 16.0,  # TUNING (not in GDD) the thrall's hit (scaled like the class's damage)
+			"charm_targets": 1,  # TUNING (not in GDD) foes per charm (the Lilim Matriarch: 2)
+			"charm_spread": 0.0,  # TUNING (not in GDD) px around the first foe for the others (0 = none)
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1292,6 +1347,15 @@ const LEVELS := {
 		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_duration": 0.2},
 		{"count": 2, "hp_bonus": 0.4, "special_bonus": 0.35, "special_area": 0.2, "special_duration": 0.2},
 		{"count": 3, "hp_bonus": 0.4, "damage_bonus": 0.2, "special_bonus": 0.5, "special_area": 0.2, "special_duration": 0.3},
+	],
+	# --- Act VI: the Palace of Silk and Ash ---
+	# TUNING (not in GDD): 1 -> 3 Succubi; then longer charms and harder thralls.
+	"bound_succubus": [
+		{"count": 1},
+		{"count": 2, "hp_bonus": 0.1},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_duration": 0.2},
+		{"count": 3, "hp_bonus": 0.2, "damage_bonus": 0.15, "special_bonus": 0.35, "special_duration": 0.3},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.3, "special_bonus": 0.5, "special_duration": 0.4, "special_haste": 0.15},
 	],
 }
 

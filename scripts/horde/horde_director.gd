@@ -118,6 +118,10 @@ var feathers: SeraphFeathers = null
 ## Content wave 2: the Bone Golem's army-wide rules (GolemKit); null until the
 ## first Golem rises (golem_kit()), so runs without one never create it.
 var golems: GolemKit = null
+# --- Act VI: the Palace of Silk and Ash ---
+## The thralls of this army (Enthrall: foes turned by the Temptation spell and
+## the Succubus class); null until the first turn (enthrall_foe()).
+var enthrall: Enthrall = null
 ## Radius (px) Enemy.resolve_blocking() adds to its own to find blockers:
 ## UnitData.MAX_BLOCK_RADIUS, raised to the widest block_radius ever spawned
 ## this run (the Corpse Abomination's), never lowered.
@@ -211,6 +215,8 @@ func step(delta: float) -> void:
 	hazards.step(delta)
 	if feathers != null:
 		feathers.step(delta)  # Act II: Fallen Seraph feather rings.
+	if enthrall != null:
+		enthrall.step()  # Act VI: thralls slain, charms run out (Enthrall).
 	_update_replenishment(delta)
 	synergies.step(delta)
 	if _frame % UnitData.FORMATION_TICK_DIVISOR == 0:
@@ -849,6 +855,17 @@ func charm(unit: SummonedUnit, by: Enemy, duration: float, opts: Dictionary = {}
 	if unit == null or unit.director != self:
 		return unit != null and unit.director != null and unit.director.charm(unit, by, duration, opts)  # Co-op: the summon's own army.
 	return game.inferno_rules().temptation.charm(unit, by, duration, opts)
+
+
+## Act VI, the Palace of Silk and Ash: THE ONE PATH that turns foe `e` to this
+## army's side for `duration` s (Enthrall.turn(); opts there): the Temptation
+## spell (TemptSpell) and the Succubus class (BoundSuccubusBehavior). The
+## player's own charm, a spell's effect on an ENEMY: the summon charm path above
+## is never used. Returns the thrall, or null when refused.
+func enthrall_foe(e: Enemy, duration: float, opts: Dictionary) -> SummonedUnit:
+	if enthrall == null:
+		enthrall = Enthrall.new(game, self)
+	return enthrall.turn(e, duration, opts)
 
 
 ## TEMPTATION: breaks every charm charmer `by` holds (its summons come back at

@@ -71,7 +71,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act IV: the Asphodel Underworld ---
 	"legion_of_tartarus",
 	# --- Act V: the Road to the Sun ---
-	"oni_lord"]
+	"oni_lord",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"lilim_matriarch"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -807,6 +809,36 @@ const EVOLUTIONS := {
 		"special_set": {
 			"quake_radius": 92.0,  # TUNING (not in GDD) px
 			"quake_fraction": 0.5,  # TUNING (not in GDD)
+		},
+	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# The Lilim Matriarch (owner-approved Act VI proposal: "the Succubus ...
+	# evolution Lilim Matriarch"; GDD §15.0 "The Succubus, the Lilim Matriarch
+	# and Sweet Surrender"): Succubus Lv 5 + Sweet Surrender Lv 5 (a NEW passive,
+	# own decision, owner rule: maxed). A winged demon matriarch in broken bone
+	# chains, four horns and a bone crown, soul-teal eyes. BoundSuccubusBehavior
+	# reads these special_set keys (final):
+	#   charm_targets — foes each charm turns (the first and the nearest others);
+	#   charm_spread  — px around the first foe the others must stand within.
+	"lilim_matriarch": {
+		"mode": "transform",
+		"bases": ["bound_succubus"],
+		"passive": "sweet_surrender",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Lilim Matriarch",  # Owner-approved proposal
+		"plural": "Lilim Matriarchs",
+		"icon": "lilim_matriarch",
+		"description": "The chains break: a mother of demons whose kiss turns two foes at once.",
+		"mult": {
+			"max_hp": 1.35,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 12.0,  # TUNING (not in GDD) Succubus 10
+		},
+		"special_set": {
+			"charm_targets": 2,  # TUNING (not in GDD)
+			"charm_spread": 90.0,  # TUNING (not in GDD) px
 		},
 	},
 }

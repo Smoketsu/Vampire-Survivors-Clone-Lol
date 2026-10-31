@@ -1482,6 +1482,7 @@ func finish(summary: Dictionary) -> void:
 	UnderworldReport.item_lines(game, st)  # Act IV, the Asphodel Underworld: River Styx, the Myrmidon Shades (only when used; the stage's own lines are PantheonReport's).
 	SunRoadReport.item_lines(game, st)  # Act V, the Road to the Sun: Black Sun, the Bound Oni (only when used; the stage's own lines are ShogunateReport's).
 	KuroganeReport.item_lines(game, st)  # Act V, Castle Kurogane: Banner of the Dead, Warlord's Seal, Unbending (only when taken; the stage's own lines are ShogunateReport's).
+	SilkPalaceReport.item_lines(game, st)  # Act VI, the Palace of Silk and Ash: Temptation, the Succubus, Faithless (only when taken; the stage's own lines are InfernoReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

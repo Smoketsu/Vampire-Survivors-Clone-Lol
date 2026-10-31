@@ -62,6 +62,10 @@
 ## Act V, the Road to the Sun:
 ##   Shrine Maiden    Night Prayer    in BlackSun._fire() (each dark sun fires a
 ##                    second beam at another group); stat black_sun_forks.
+## Act VI, the Palace of Silk and Ash:
+##   Succubus Queen   Heartbreaker    in TemptSpell / Enthrall._return() (a foe
+##                    whose charm ends loses a share of its max HP); stat
+##                    enthrall_heartbreaks.
 class_name CharacterInnates
 extends Node2D
 
@@ -389,6 +393,9 @@ func summary_line() -> String:
 		# --- Act V: Castle Kurogane --- (Unbowed Banner lives in BannerOfTheDead.step())
 		"unbowed_banner":
 			counters = "banners planted %d (haste x%.2f)" % [int(st.get("banner_planted", 0.0)), 1.0 + game.character.innate_value(BannerData.INNATE_KEY)]
+		# --- Act VI: the Palace of Silk and Ash --- (Heartbreaker lives in Enthrall._return())
+		"heartbreaker":
+			counters = "heartbreaks %d (dmg %d)" % [int(st.get("enthrall_heartbreaks", 0.0)), int(st.get("dmg_" + TemptData.HEARTBREAK_SOURCE, 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

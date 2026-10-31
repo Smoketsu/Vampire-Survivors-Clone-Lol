@@ -560,12 +560,26 @@ RIGS = {
     "inferno/hell_knight": dict(mode="legs", hip=38, back=(0, 20), front=(20, 36), rigid=[(36, 52, 0, None)], spread=2, lift=2, dip=1),
     "inferno/demon_brute": dict(mode="legs", hip=70, back=(0, 38), front=(38, 72), rigid=[], spread=3, lift=3, dip=1),
     "inferno/succubus": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(12, 26, 13, 19, 2, 2), swish=(11, 27, 23, 32, 2)),
+    # --- Act VI: the Palace of Silk and Ash ---
+    # The female figures (the approved Act VI level) glide like the succubus: the robe rig, the bust box bouncing and
+    # the `swish` hip box swaying (boxes from each sprite's torso; for the owner's review); Lilith glides in her gown.
+    "inferno/lilim_witch": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(5, 19, 13, 19, 2, 2), swish=(4, 20, 24, 32, 2)),
+    "inferno/twin_naamah": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(16, 32, 15, 21, 2, 2), swish=(15, 33, 26, 36, 2)),
+    "inferno/twin_agrat": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(15, 31, 15, 21, 2, 2), swish=(14, 32, 26, 36, 2)),
+    "bosses/lilith": dict(mode="robe", hip=64, rigid=[], sway=1, dip=1, bust=(31, 61, 27, 38, 3, 2), swish=(30, 62, 47, 65, 2)),
+    "player/succubus_queen": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(11, 25, 13, 19, 2, 2), swish=(10, 26, 24, 32, 2)),
+    "summons/bound_succubus": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(15, 29, 12, 18, 2, 2), swish=(14, 30, 22, 30, 2)),
+    "summons/lilim_matriarch": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(19, 35, 15, 21, 2, 2), swish=(18, 36, 26, 36, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
 # its character's body height and pose (ART_BIBLE "Player skins"), so its rig is derived
 # from the character's (skin_rig()); SKIN_FIX overrides single fields after review.
 SKINS = {
+    # --- Act VI: the Palace of Silk and Ash ---
+    "player/succubus_queen_hyper": "player/succubus_queen",
+    "player/succubus_queen_untouchable": "player/succubus_queen",
+    "player/succubus_queen_deathlord": "player/succubus_queen",
     "player/gravecaller_dread_sovereign": "player/necromancer",
     "player/gravecaller_hyper": "player/necromancer",
     "player/umbral_warden_hyper": "player/umbral_warden",
@@ -649,6 +663,8 @@ SKINS = {
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
+    # --- Act VI: the Palace of Silk and Ash --- (the Succubus Queen's Deathlord skin is 58 tall: its own boxes)
+    "player/succubus_queen_deathlord": {"hip": 33, "bust": (12, 28, 14, 20, 2, 2), "swish": (11, 29, 24, 34, 2)},
     # --- Act V: the Burning Province --- (the Grave Kunoichi's skins)
     # Round 2 redo: the Hyper and Deathlord skins have their own box, the shared one (derived: cols 23-36, rows 18-25)
     # with 1 px less at the bottom (owner: "reduced like 1 pixel on the bottom"); the base keeps the approved shared box.

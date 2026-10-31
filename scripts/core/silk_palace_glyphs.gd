@@ -103,3 +103,25 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 		_:
 			return false
 	return true
+
+
+# =====================================================================================
+# Thralls (Enthrall: the Temptation spell, the Succubus class)
+# =====================================================================================
+
+## A thrall (Glyphs.draw_summon() "enthralled:<kind>"): the foe's own art in
+## any act's folder, tinted TemptData.TINT, a violet-pink heart over its head;
+## its glyph without art.
+static func draw_enthralled(ci: CanvasItem, kind: String, o: Vector2, r: float, flash: bool) -> void:
+	var top := -r * 1.6  # The head's top (px), for a body without art.
+	var drawn := false
+	for folder: String in ["enemies/", "inferno/", "shogunate/", "pantheon/", "empire/", "eye/"]:
+		var key := folder + kind
+		if SpriteBank.has(key):
+			SpriteBank.draw(ci, key, o, flash, TemptData.TINT)
+			top = -SpriteBank.drawn_height(key) * (0.5 - SpriteData.CENTER_OFFSET)
+			drawn = true
+			break
+	if not drawn:
+		Glyphs.draw_enemy(ci, kind, o, r, flash, false)
+	InfernoGlyphs.draw_heart(ci, Vector2(o.x, o.y + top - 7.0), 4.0, TemptData.HEART_COLOR)

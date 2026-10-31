@@ -536,6 +536,32 @@ RECIPES = {
         "regions": {"stone": ["floor_earth", "floor_dirt"], "joint": ["ink_warm"]},
         "cell_shift": True, "cell_l": 0.008, "bevel": 0.006,
     },
+    # --- Act VI: the Palace of Silk and Ash ---
+    # The four zone floors of THE PALACE OF SILK AND ASH (SilkPalaceGround, tiles/silk_palace_<style>): one API
+    # texture of dark rose-garden soil strewn with black petals (the Rose Garden; recoloured a dark wine for the
+    # velvet of the Queen's Chamber) and one of dark rose-veined marble (laid in square flags for the Hall of
+    # Mirrors and in a smaller checker for the Ballroom over the lava lake). The petals, glints and the lava's glow
+    # stay code-drawn (SilkPalaceGround).
+    "silk_palace_roses": {
+        "source": "silk_palace_soil.png", "method": "quilt",  # The Rose Garden: dark soil, black petals, thorns.
+        "colors": ["ink_red", "floor_soil", "floor_earth", "obsidian_dark"],
+    },
+    "silk_palace_chamber": {
+        "source": "silk_palace_soil.png", "method": "quilt",  # The Queen's Chamber: dark wine velvet.
+        "colors": ["ink_red", "ink_biolume", "obsidian_dark", "floor_ash"],
+    },
+    "silk_palace_mirrors": {
+        "source": "silk_palace_marble.png", "method": "layout",  # The Hall of Mirrors: black-violet marble flags.
+        "layout": {"type": "grid", "step": 64, "joint": 1},
+        "regions": {"stone": ["obsidian_dark", "floor_marble"], "joint": ["obsidian_ink"]},
+        "cell_shift": True, "cell_l": 0.008, "bevel": 0.008,
+    },
+    "silk_palace_ballroom": {
+        "source": "silk_palace_marble.png", "method": "layout",  # The Ballroom: rose marble over the lava lake.
+        "layout": {"type": "grid", "step": 32, "joint": 1},
+        "regions": {"stone": ["floor_marble", "ink_red", "obsidian_dark"], "joint": ["ink_signal"]},
+        "cell_shift": True, "cell_l": 0.012, "bevel": 0.008,
+    },
 }
 
 

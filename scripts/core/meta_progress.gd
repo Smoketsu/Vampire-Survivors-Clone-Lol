@@ -418,6 +418,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("province_unlit_runs", 1.0 if float(st.get("province_no_shadow_unlit", 0.0)) > 0.0 else 0.0)  # No Shadow Unlit (Act V, the Burning Province)
 	# --- Act V: Castle Kurogane ---
 	_add_lifetime("shogun_regiments_broken_kills", float(st.get("shogun_regiments_broken_kills", 0.0)))  # Regiments Broken (Act V, Castle Kurogane)
+	# --- Act VI: the Palace of Silk and Ash ---
+	_add_lifetime("lilith_unmoved_kills", float(st.get("lilith_unmoved_kills", 0.0)))  # Unmoved (Act VI, the Palace of Silk and Ash)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
@@ -1615,6 +1617,8 @@ static func _default_lifetime() -> Dictionary:
 		"province_unlit_runs": 0.0,  # Burning Province runs that slew Kage with 20 stone lanterns lit (No Shadow Unlit)
 		# --- Act V: Castle Kurogane ---
 		"shogun_regiments_broken_kills": 0.0,  # Shogun Kurogane slain after all six of his banners broke (Regiments Broken)
+		# --- Act VI: the Palace of Silk and Ash ---
+		"lilith_unmoved_kills": 0.0,  # Lilith slain with no summon charmed during her fight (Unmoved)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

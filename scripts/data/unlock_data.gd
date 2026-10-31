@@ -161,6 +161,18 @@ const UNLOCKS := {
 	"banner_of_the_dead": {"type": "spell", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Owner-approved Act V proposal
 	"warlords_seal": {"type": "passive", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Banner of the Dead's paired passive, unlocked with it
 	"unbending": {"type": "passive", "achievement": "regiments_broken", "text": "Earn Regiments Broken: slay the Shogun after breaking all six of his banners."},  # Owner-approved Act V proposal
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Lilith's fall (owner-approved Act VI proposal "Rewards": Temptation is
+	# unlocked by Lilith; "the Succubus (unlocked by Lilith, like the Fallen Seraph
+	# by Seraphine)"): the spell with its paired passive and the summon class
+	# with its paired passive, offered on every stage (no card-row "act" key).
+	# The stage's achievement Unmoved earns Act VI's counter-passive Faithless
+	# (offered only in Act VI through its card row's "act").
+	"tempt": {"type": "spell", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Owner-approved proposal
+	"velvet_chains": {"type": "passive", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Temptation's paired passive, unlocked with it
+	"bound_succubus": {"type": "class", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Owner-approved proposal
+	"sweet_surrender": {"type": "passive", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Its paired passive (own decision), unlocked with it
+	"faithless": {"type": "passive", "achievement": "unmoved", "text": "Earn Unmoved: slay Lilith without a single summon charmed during her fight."},  # Owner-approved Act VI proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.
