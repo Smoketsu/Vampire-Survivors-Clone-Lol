@@ -242,6 +242,12 @@ tiny tweaks.
 
 ## Working with agents (how this project has been built)
 
+- **The lead orchestrates; agents develop** (owner, Oct 31, 2026: "Act as an orchestrator for the different agents
+  instead of doing development yourself", "make sure you're not wasting usage"). The lead writes briefs, starts
+  agents, reads their reports and talks to the owner; merges, verification and playtests go to agents too. Pick the
+  cheapest model that does the job: **Opus** for game code (foundations, stages, bosses, hard merges, balance
+  analysis), **Sonnet** for art, audio, concept images, docs and routine merges, **Haiku** for mechanical runs (gates,
+  autotest batches, playtest tables; it must run its commands in the foreground and only report when they finish).
 - Use **Opus** subagents for implementation, balance and review. Run independent features in parallel
   in **git worktrees**, then merge on an `integration` branch, run the full verification, and only
   then fast-forward `main`.
