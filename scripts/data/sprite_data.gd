@@ -374,7 +374,7 @@ const HEIGHTS: Dictionary = {
 	"player/furnace_priest": 56.0,  # TUNING (not in GDD) character tier: body ~50, the horned mitre above
 	"player/furnace_priest_hyper": 56.0,  # TUNING (not in GDD) skin art: his body, gilded
 	"player/furnace_priest_untouchable": 56.0,  # TUNING (not in GDD) skin art: his body, the white phantom
-	"player/furnace_priest_deathlord": 58.0,  # TUNING (not in GDD) skin art: his body, the spiked crown above
+	"player/furnace_priest_deathlord": 56.0,  # TUNING (not in GDD) skin art: his body, the spiked crown inside the same height
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

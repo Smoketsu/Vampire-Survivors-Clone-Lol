@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a heavy hunched stance, one manacled fist raised, long chains swinging from both wrists
+
+LOW-RESOLUTION pixel art: the whole figure is only 108 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: THE GATEKEEPER (a MALE chained giant demon, miniboss): a colossal hunched giant with ash-grey demon hide, a small horned head sunk between huge shoulders, a rusted iron collar around his neck, heavy rusted iron manacles on both wrists with long thick iron chains trailing and swinging from them to the ground, a ragged leather loincloth, glowing orange eyes and lava cracks on his chest, massive arms longer than his legs. The biggest, most hulking figure of the army.
+Signature shape that must read in silhouette: the hunched huge shoulders, the iron collar and the long chains from both wrists.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: ash-grey hide #352E40 #5A5068 #8793A6; horns bone #8C7B5E #D9CCAA; rusted iron collar, manacles and chains #2A1E16 #5C4030 #8C6040 #4A5566; leather #4F3320 #8C6040; eyes and cracks #8A2A08 #E0601A #FFB347
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of a demon brute for the build only (do NOT copy it: the Gatekeeper is ash grey, hunched and chained, with two arms).

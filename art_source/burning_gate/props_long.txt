@@ -1,0 +1,8 @@
+A sheet of FOUR separate pixel-art game OBSTACLE PROPS on a FULLY TRANSPARENT background (real alpha), with wide empty gaps between them. Three-quarter top-down view (camera above and in front, like a top-down action game), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+Top row, two LONG HORIZONTAL props (each about 64 pixels long and 28 pixels deep):
+1. A CAGE OF THE DAMNED: a long low rusted iron cage of thick vertical bars on a frame of black bone and chain, a grey wailing damned soul's arms reaching between the bars, a few glowing embers below.
+2. A PILLAR OF THE GATE OF HELL: a long low black obsidian wall block with lava cracks, a horned bone-white skull set in its middle, heavy iron chains draped along it.
+Bottom row, the SAME TWO props seen END-ON, standing vertically (each about 26 pixels wide and 64 pixels tall: the same cage and wall rotated to run away from the camera).
+Colours: obsidian #0B0A10 (outline) #1E1A26 #352E40 #5A5068; rusted iron #2A1E16 #5C4030 #8C6040; iron grey #4A5566 #8793A6; bone #8C7B5E #D9CCAA; grey soul #5A5068 #8793A6; lava #8A2A08 #E0601A #FFB347.
+Keep them a little darker and calmer than the characters (they are scenery), but clearly brighter than a near-black ground.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.
