@@ -30,7 +30,7 @@ SCRATCH = HERE / "_work"  # Temporary crops (deleted at the end).
 
 # Sprite key -> (source PNG relative to the repo root, extra prepare_sprite arguments).
 UNITS = {
-    "inferno/seraph_general": ("art_source/inferno/seraph_general.png", ["--ramps", "obsidian,gold,lava,skin,marble,crimson", "--ink-l", "0.15", "--no-levels"]),
+    "inferno/seraph_general": ("art_source/inferno/seraph_general.png", ["--ramps", "obsidian,gold,lava,skin,marble,crimson", "--ink-l", "0.15"]),  # The levels stretch lifts his black wings to the hell knight's lightness (art_check).
     "bosses/morning_star": ("art_source/bosses/morning_star.png", ["--ramps", "obsidian,gold,lava,skin,marble", "--ink-l", "0.15", "--no-levels"]),
     "bosses/morning_star_beast": ("art_source/bosses/morning_star_beast.png", ["--ramps", "obsidian,bone,lava,gold,brown", "--ink-l", "0.15", "--no-levels"]),
     "summons/archfiend": ("art_source/summons/archfiend.png", ["--ramps", "grey,bone,soul,brown,violet", "--ink-l", "0.15"]),
@@ -116,7 +116,7 @@ def figures() -> None:
 def badges() -> None:
     for sheet, (frame_key, ids) in ICONS.items():
         im = Image.open(HERE / sheet).convert("RGBA")
-        spans = islands(im, 0)
+        spans = islands(im, 0, min_gap=4)  # The symbols sit close together on these sheets.
         for (x0, x1), sid in zip(spans, ids):
             if sid == "":
                 continue
