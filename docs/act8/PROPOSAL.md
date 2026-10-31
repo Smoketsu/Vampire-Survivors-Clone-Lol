@@ -111,4 +111,14 @@ Counter-passives (Act VIII only): Kevlar Bones (summons take less ranged damage)
 
 Achievements: Radio Silence (cut every mast on Skid Row), Broken Arrow (kill the General before the countdown ends), No More Heroes (beat Paragon with no Super at his side; opens the Act VIII epilogue).
 
-
+## Concept art
+In `art_source/concepts/act8_*.png`, with the prompts beside each image (awaiting the owner's approval before any sprite).
+- `act8_lineup.png`: thug, gang gunner, riot cop, SWAT breacher, field medic (a woman, figure style), rifleman, machine
+  gunner, tank, and four Supers: a speedster, a strongman, a flying blaster (a woman, figure style) and a gadget vigilante.
+  The first lineup's Supers copied famous heroes too closely (a cape-and-belt strongman, a bat-eared vigilante), so they
+  were redone as looser nods with no emblems, bat shapes or lightning bolts.
+- `act8_boss.png`: Paragon (white-and-silver suit, blue cape, heat vision; the first version read as the famous red-and-blue
+  hero and was redone), Don Marrow behind his gold-minigun limousine, and General Harrow in power armour.
+- `act8_stage.png`: Skid Row in the owner's new map style, a strict top-down grid of rectangular city blocks with streets,
+  crosswalks and narrow alleys, fleeing civilians, an armoured car with headlight lane lines, a speedster and the ring
+  fighting riot cops, thugs and gunners.

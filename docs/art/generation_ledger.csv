@@ -994,3 +994,15 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-26 18:14,player/grave_kunoichi_untouchable,gpt-image-2.5-flare,medium,1024x1024,2,800,1728,439,0.0310,unt_3.png
 2026-10-26 18:55,epilogue_act5_4_r3,gpt-image-2.5-flare,medium,1536x1024,3,1084,1164,343,0.0250,cand1.png
 2026-10-26 18:55,epilogue_act5_4_r3,gpt-image-2.5-flare,medium,1536x1024,3,1084,1164,343,0.0250,cand2.png
+2026-10-31 00:53,concepts/act7_stage,gpt-image-2.5-flare,medium,1536x1024,1,412,480,343,0.0162,act7_stage.png
+2026-10-31 00:53,concepts/act7_lineup,gpt-image-2.5-flare,medium,1536x1024,1,690,480,343,0.0176,act7_lineup.png
+2026-10-31 00:53,concepts/act7_boss,gpt-image-2.5-flare,medium,1536x1024,1,504,480,343,0.0167,act7_boss.png
+2026-10-31 00:54,concepts/act8_boss,gpt-image-2.5-flare,medium,1536x1024,1,446,480,343,0.0164,act8_boss.png
+2026-10-31 00:54,concepts/act8_lineup,gpt-image-2.5-flare,medium,1536x1024,1,703,480,343,0.0176,act8_lineup.png
+2026-10-31 00:54,concepts/act8_stage,gpt-image-2.5-flare,medium,1536x1024,1,460,480,343,0.0164,act8_stage.png
+2026-10-31 00:54,concepts/act9_boss,gpt-image-2.5-flare,medium,1536x1024,1,444,480,343,0.0163,act9_boss.png
+2026-10-31 00:54,concepts/act9_stage,gpt-image-2.5-flare,medium,1536x1024,1,456,480,343,0.0164,act9_stage.png
+2026-10-31 00:54,concepts/act9_lineup,gpt-image-2.5-flare,medium,1536x1024,1,664,480,343,0.0175,act9_lineup.png
+2026-10-31 00:54,concepts/act8_boss_r2,gpt-image-2.5-flare,medium,1536x1024,1,481,480,343,0.0165,act8_boss.png
+2026-10-31 00:54,concepts/act8_lineup_r2,gpt-image-2.5-flare,medium,1536x1024,1,807,480,343,0.0182,act8_lineup.png
+2026-10-31 00:55,concepts/act9_lineup_r2,gpt-image-2.5-flare,medium,1536x1024,1,725,480,343,0.0178,act9_lineup.png

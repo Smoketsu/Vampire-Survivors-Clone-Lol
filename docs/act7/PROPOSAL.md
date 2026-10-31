@@ -99,4 +99,11 @@ Counter-passives (Act VII only): Embalmed (enemies heal half as much from hittin
 
 Achievements: Coffin Nails (break every coffin on Ravensmoor before it opens), The Coven Breaks (kill Isolde's three sisters within 1 s), Last Supper (beat the Elder; opens the Act VII epilogue).
 
-
+## Concept art
+In `art_source/concepts/act7_*.png`, with the prompts beside each image (awaiting the owner's approval before any sprite).
+- `act7_lineup.png`: thrall, ghoul, vampire bat, Blood Knight, the Vampire Noble (a woman, figure style), the Chiropteran,
+  the Werewolf (the largest), the Crimson Witch (a woman, figure style) and the Bloated Thrall.
+- `act7_boss.png`: Queen Carmilla (figure style at its limit, blood-drain beam), the Elder rising from his coffin, and
+  Vargr the Moon-Eater howling, in a candlelit throne hall under the moon, with the necromancer's army at the bottom.
+- `act7_stage.png`: Ravensmoor in play under the red moon, with Bloodfeast (red threads from bitten skeletons to glowing
+  vampire knights), Night Wings (bats and bat-folk with landing shadows), sleeping coffins, a noble's drain beam and a werewolf.

@@ -122,4 +122,13 @@ Other structures: one race per stage with no coalition (a cleaner art plan, thre
 
 Other twists for the finale: the Harvester is the one who made the first necromancer; or the Concord offers the necromancer a place among it, and the last phase is the Concord's other races turning on the Harvester beside you.
 
-
+## Concept art
+In `art_source/concepts/act9_*.png`, with the prompts beside each image (awaiting the owner's approval before any sprite).
+- `act9_lineup.png`: Broodling, Burrower, Acid Spitter, Grey Drone, Saucer, Grey Overseer, Vrask Hunter, Lumen Sentinel
+  and the Prism (the Star-Seer, a woman, figure style). The first Prism was drawn in a cut-out bodice and was redone in an
+  opaque, fully covering gown.
+- `act9_boss.png`: the Harvester floating above a throne of rings on the mothership bridge, with a tractor beam lifting
+  skeletons, its true halo of rings behind it, a Brood queen-guard and a Vrask hunter beside it.
+- `act9_stage.png`: Stage 25, the Crash Site, with a Harvester scout ship in the crater, magenta aiming lines and a
+  sweeping beam, a saucer abducting a skeleton, Brood swarming, a burrower mound and Terraforming ground (green healing
+  glow on Brood units, patches burnt black).
