@@ -359,6 +359,13 @@ const HEIGHTS: Dictionary = {
 	"player/ronin_revenant_hyper": 58.0,  # TUNING (not in GDD) skin art: his body, the gilded hat
 	"player/ronin_revenant_untouchable": 58.0,  # TUNING (not in GDD) skin art: his body, the white phantom
 	"player/ronin_revenant_deathlord": 58.0,  # TUNING (not in GDD) skin art: his body, the black iron crest
+	# --- Act VI: the Inferno (the shared kinds; assets/sprites/inferno/) ---
+	"inferno/damned": 30.0,  # TUNING (not in GDD) fodder: a hunched wailing soul in chains, body ~30
+	"inferno/imp": 32.0,  # TUNING (not in GDD) fodder flier: body ~26 + two empty rows on top for the hover bob, the pitchfork and horns above
+	"inferno/hell_knight": 54.0,  # TUNING (not in GDD) soldier tier: body ~50, the horned helm above, the burning greatsword held forward
+	"inferno/succubus": 56.0,  # TUNING (not in GDD) elite tier, female (figure redesign, the approved act6_units concept; 56, not 48: at 48 the face and the hourglass were lost, as with the Kunoichi at 52): body ~52, the curled horns above; she flies, the bust and hip box sway in the glide strip
+	"inferno/demon_brute": 84.0,  # TUNING (not in GDD) heavy tier (60-72 and up): a huge four-armed demon, the horns and the raised fists
+	"structures/demon_portal": 64.0,  # TUNING (not in GDD) the Inferno's portal structure: an obsidian-and-lava ring with a charm-pink swirl (the looping glow is drawn by code)
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

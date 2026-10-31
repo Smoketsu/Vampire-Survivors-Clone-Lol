@@ -1,0 +1,12 @@
+Pixel-art game structure sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), a standing ring portal.
+
+LOW-RESOLUTION pixel art: the whole object is only 64 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze.
+
+Subject: a DEMON PORTAL: a thick round stone ring standing upright (seen slightly from above, a squashed circle), made of black obsidian blocks with jagged spikes and horn-like points around it and glowing orange lava cracks between the blocks, a small horned demon skull keystone at the top. Inside the ring a swirling vortex in charm pink and pale pink spiralling to a bright pale-pink centre. Short broken obsidian rubble at the base. Menacing but readable at a glance.
+Signature shape that must read in silhouette: the spiked round ring with the bright pink swirl inside.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: obsidian and outline #0B0A10 #1E1A26 #352E40 #5A5068; lava #8A2A08 #E0601A #FFB347; charm pink #FF6FB5 #FFB8DD; demon maroon #5C1A3A #9B2D5E (the swirl's dark arms only).
+Outline: a clean 1-pixel dark outline around the whole object in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter.
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the object), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game structure sprite for pixel size, outline weight and flat look.

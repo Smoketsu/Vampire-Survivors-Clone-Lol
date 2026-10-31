@@ -2538,3 +2538,38 @@ banner colours (a tint), the charge lanes, the Draw lines of the Shogun's iai an
 flourish, the fallbacks (KuroganeGlyphs).
 
 **Act V round 2 (Road to the Sun).** Epilogue `act5_4` is deliberately sparse: one big figure, one flat ring, flat cloud bands; a first "everything" composition read as a mess. Amaterasu's bust box is now cols 42-60, rows 30-43; Kitsune's cols 9-24, rows 13-20.
+
+### Act VI: the Inferno, the shared kinds (foundation, Oct 2026)
+
+<!-- --- Act VI: the Inferno --- -->
+The Inferno's style for the stage agents (GDD §15.0 "Act VI art: the shared kinds"; `docs/act6/PROPOSAL.md`): **black obsidian**
+(the new `obsidian` ramp: armour, chains, the portal ring; its light shade is the rim that keeps black armour readable on a dark
+floor), **lava** (`lava`: ember cracks, burning blades, pit fire, eyes), **demon skin** (`demon`: a magenta-red apart from the
+Covenant crimson and the Shogunate lacquer) and **charm pink** (`charm`: Temptation, the act's signature colour; `charm_light` is
+a glow colour), with steel grey for horns and spikes, skin and brown. Gold keeps its meaning (evolution, chest, victory). Never the
+player's violet, the undead's bone or teal, the Covenant's crimson or the Shogunate's lacquer. Concept references (the approved target,
+owner "perfect"): `art_source/concepts/act6_units.png`, `act6_lineup.png`; prompts beside each source in `art_source/inferno/<id>.txt`
+(the Act V template, the sex named). `prepare_sprite.py` folder `inferno/`: ramps obsidian, lava, demon, charm, grey, skin, brown.
+
+Generated with `tools/gen_image.py` (`--ref` a Shogunate sprite for the pixel look plus a 2x crop of the concept lineup for the
+costume). Pipeline: `prepare_sprite.py --ink-l 0.15` straight on the source (`--no-levels` for the knight, the brute and the
+portal, whose levels stretch turned the demon skin pink-white); the **succubus** through `pixelate_source.py` at 56 first, then
+`--ink-l 0.15 --no-cleanup --no-prune` (the usual figure route: direct conversion lost her face); `touchups.py` pads the imp with
+two empty rows for the hover bob (not idempotent; `build.sh` runs it right after the conversions). Walk strips by `walk_cycle.py`
+(rigs under `# --- Act VI: the Inferno (the shared kinds) ---`), the succubus idle by `walk_cycle.py idle`.
+
+**Moderation note:** the image API refused the succubus prompt twice ("sexual") with the concept's wording ("sultry pin-up",
+"lingerie-styled corset", "bare back, midriff and thighs", "stockings"). It accepted a confident pose, "a sleek black leather
+corset-style bodysuit with a high-cut hip and a V neckline, a bare midriff strip at the waist, bare shoulders and back, black
+thigh-high stockings and boots, fully clothed, tasteful", and an explicit hourglass line; the result is close to the concept
+but a touch less revealing (no garter straps). The sprite is 56, not the briefed ~48: at 48 (24 px wide) her face and figure
+were lost, as with the Kunoichi (52).
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `inferno/damned` | Damned soul (fodder, male): gaunt grey, open mouth, ragged robe, shackles with a chain | 20x30 | legs walk (hip 25) |
+| `inferno/imp` | Imp (fodder flier, male): red, wings, horns, grin, a trident | 28x32 | hover (bob 2, left wing flaps from col 11; two empty rows on top) |
+| `inferno/hell_knight` | Hell Knight (soldier, male): obsidian plate, spiked pauldrons, horned helm, ember cracks, a burning greatsword | 52x54 | legs walk (hip 38; the sword, cols 36+, rigid) |
+| `inferno/succubus` | Succubus (elite, female, figure redesign): horns, wings, spaded tail, corset bodysuit, thigh-high boots, a charm heart | 36x56 | glide (robe rig, hip 32): bust box (cols 12-26, rows 13-19, two lobes) and `swish` hip box (cols 11-27, rows 23-32); idle strip |
+| `inferno/demon_brute` | Demon Brute (heavy, male): four arms, bull horns, spiked chest plate, skull belt | 72x84 | legs walk (hip 70, spread 3) |
+| `structures/demon_portal` | Demon portal: obsidian ring, lava cracks, horned skull, a charm-pink swirl | 56x64 | still only; the loop glow is code |

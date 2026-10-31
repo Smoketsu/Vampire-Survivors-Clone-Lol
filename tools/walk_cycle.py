@@ -546,6 +546,20 @@ RIGS = {
     "shogunate/general_left": dict(mode="legs", hip=77, back=(0, 60), front=(60, 110), rigid=[], spread=3, lift=3, dip=1),
     "bosses/shogun": dict(mode="legs", hip=94, back=(0, 64), front=(64, 116), rigid=[], spread=2, lift=2, dip=1),
     "player/ronin_revenant": dict(mode="robe", hip=50, rigid=[], sway=1, dip=1),
+    # --- Act VI: the Inferno (the shared kinds) ---
+    # The Damned shuffle on their feet under the ragged robe (the robe above the hip rides with the body); the Imp hovers
+    # (the whole imp bobs 2 px, the left wing flaps from its shoulder root, the still keeps two empty rows on top); the
+    # Hell Knight strides, the burning greatsword (held forward on the right, cols 36+) rigid with the body; the Demon
+    # Brute stomps (the loincloth and the four arms ride above the hip, spread 3 for the heavy stride). The Succubus
+    # glides (robe mode: her boots sway as one hem, the whole figure dips) with the figure-redesign rigs: the chest box
+    # bounces up and down (two lobes) and the `swish` box over her hips sways sideways one frame behind, the Amazon's
+    # walk the owner liked (round 7 of her art review: bust y + hip swish x); the idle strip breathes through the same boxes.
+    "inferno/damned": dict(mode="legs", hip=25, back=(0, 10), front=(10, 20), rigid=[], spread=1, lift=1, dip=1),
+    "inferno/imp": dict(mode="hover", bob=2, parts=[
+        dict(kind="flap", box=(0, 11, 0, 32), root=11, amp=3)]),
+    "inferno/hell_knight": dict(mode="legs", hip=38, back=(0, 20), front=(20, 36), rigid=[(36, 52, 0, None)], spread=2, lift=2, dip=1),
+    "inferno/demon_brute": dict(mode="legs", hip=70, back=(0, 38), front=(38, 72), rigid=[], spread=3, lift=3, dip=1),
+    "inferno/succubus": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(12, 26, 13, 19, 2, 2), swish=(11, 27, 23, 32, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
