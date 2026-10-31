@@ -1939,6 +1939,36 @@ a pitchfork), the **Hell Knight** (ember armour, a burning greatsword's sweep), 
 summons; flies) and the **Demon Brute** (four arms, a ground slam that throws your dead aside, flat armour; the
 Last Judgment's heavy). The Codex has an **Inferno** tab.
 
+### Act VI: the Burning Gate (Stage 16)
+
+<!-- --- Act VI: the Burning Gate --- -->
+A plain of ash and obsidian before the gate of hell, the river of fire Phlegethon along its edge (GDD §15.0 "The
+Burning Gate (Act VI phase 2)" and the rows after it). Built, still hidden ("playable": false) until the lead's
+integration and the owner's review.
+
+- **Four zones on the clock:** the Ash Plain (20:00), the Cages (15:00), the River of Fire (10:00) and the Gate
+  (5:00), each with its own floor, obstacles (ember rocks, cages of the damned, gate pillars) and fixed pits.
+- **The River of Fire.** In the third zone burning bands of fire run east-west across the world, every 1,500 px,
+  broken by fords. It is part of the Hell Pits (it burns, the ring flows around it and through the fords).
+- **Hellhounds.** Fast packs of lava hounds that leave a short trail of small pits behind them.
+- **Pit Cultists.** Living men who stop to chant a 3 s rite; if they finish, a demon portal tears open. Kill them
+  first (they also burn in the pits).
+- **The Gatekeeper** (miniboss, 9:00 left). A chained giant: his chains fly in a telegraphed fan and drag the first
+  summon or damned soul they hit to his feet (a summon is crushed, a soul devoured to heal him); a slam; he hauls
+  in coffles of the damned. Lead the damned through the pits to starve him.
+- **Moloch, the Furnace King** (3:00 left). He **swallows** your summons in a cone in front of him: they come back
+  burning, as his, for 6 s (break the body to free one; his death frees them all); he vents **fire waves** down
+  telegraphed lanes; he **cracks** the arena into pits around you. Below two thirds the furnace opens (more
+  swallowed, three-lane waves, more cracks); below a third he runs molten (faster, harder, burning footprints).
+- **Rewards.** Slaying Moloch unlocks **Brimstone** (burning stones fall on the densest groups and leave short
+  pits that burn enemies only; evolves into **Rain of Fire** with **Furnace Heart**: your spells hit foes standing
+  in fire harder) and so its character, **the Furnace Priest** (innate Stoker: one more stone; skins Gilded,
+  Untouchable, Deathlord). The achievement **Gate Crashed** (seal 5 portals in one run and slay Moloch) unlocks
+  the Act VI counter-passive **Salt Circle** (summons take less pit damage; offered only in Act VI).
+- **Autotest:** `--stage=burning_gate`, `--boss=moloch`, `--spells=brimstone`, `--passives=salt_circle`,
+  `--character=furnace_priest`, `--spawn=lava_hound@T`, `pit_cultist@T`, `gatekeeper@T`; lines `burning gate`,
+  `burning gate kinds`, `gatekeeper`, `moloch`, `act VI spell`, `act VI passives`.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2596,6 +2626,10 @@ scripts/
     inferno_ground.gd       The Act VI stubs' placeholder floor (the STAGE's "floor": ash / velvet / obsidian)
     inferno_report.gd       The autotest's Act VI lines (hell pits, portals, temptation, kinds, last judgment,
                             stage)
+    burning_gate_report.gd  The autotest's Burning Gate lines (burning gate, kinds, the Gatekeeper, Moloch) and
+                            the Brimstone / Furnace Heart / Salt Circle lines
+    burning_gate_ground.gd  The Burning Gate's four zone floors (tiles/burning_gate_<style>, Act VI)
+    burning_gate_glyphs.gd  Code-drawn fallbacks of the Burning Gate's obstacles, kinds and Moloch (Act VI)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
                             the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
@@ -2808,6 +2842,10 @@ scripts/
       damned_kit.gd, imp_kit.gd, hell_knight_kit.gd, succubus_kit.gd, demon_brute_kit.gd   The shared kinds
                             (the knight's sweep, the kiss, the brute's slam)
       demon_portal_kit.gd, charmed_kit.gd   The portal's looping glow; a charmed body's hearts
+      burning_gate_director.gd  The Burning Gate (Act VI): the Gatekeeper's event and objective, Gate Crashed
+      lava_hound_kit.gd, pit_cultist_kit.gd   The Hellhound's trail of small pits; the Pit Cultist's portal rite
+      gatekeeper_kit.gd     The Gatekeeper: chains through the one pull path (pull()), slam, coffles of the damned
+      boss_moloch.gd        Moloch: the swallow (the charm path), fire waves, cracks (open_pit()), the Molten King
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3067,8 +3105,10 @@ scripts/
     stages/sun_road_stage.gd       Reckoning, placeholder floors / obstacles / boss scripts, zone names
     inferno_enemy_data.gd   The Inferno's shared kinds (the Damned, Imp, Hell Knight, Succubus, Demon Brute),
                             the demon portal and the charmed body; the demon / flier / charmer / damned flags (Act VI)
-    burning_gate_enemy_data.gd  Each Act VI stage's own kinds (silk_palace_ / pandemonium_enemy_data.gd
-                            likewise; empty until phase 2)
+    burning_gate_enemy_data.gd  The Burning Gate's kinds: Hellhound (lava_hound), Pit Cultist, the Gatekeeper
+                            (silk_palace_ / pandemonium_enemy_data.gd: the other Act VI stages' own kinds)
+    moloch_data.gd          Moloch's arrival and fight: swallow, fire waves, cracks, the Molten King (Act VI)
+    brimstone_data.gd       Brimstone / Rain of Fire rules, Furnace Heart and Salt Circle keys, Stoker key (Act VI)
     inferno_rules_data.gd   Act VI's shared rules: PITS (+ Salt Circle hook), PORTALS, TEMPTATION (+ Faithless
                             hook), LAST_JUDGMENT, the SOUNDS map
     stages/burning_gate_stage.gd   Act VI stubs: the Burning Gate, the Palace of Silk and Ash and Pandemonium;

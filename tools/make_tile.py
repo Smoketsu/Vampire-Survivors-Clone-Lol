@@ -536,6 +536,26 @@ RECIPES = {
         "regions": {"stone": ["floor_earth", "floor_dirt"], "joint": ["ink_warm"]},
         "cell_shift": True, "cell_l": 0.008, "bevel": 0.006,
     },
+    # --- Act VI: the Burning Gate ---
+    # The four zone floors of THE BURNING GATE (BurningGateGround, tiles/burning_gate_<style>), one API source each (all
+    # four came back nearly transparent and are stored with their alpha set opaque, as Kurogane's).
+    "burning_gate_ash_plain": {
+        "source": "burning_gate_ash_plain.png", "method": "quilt",  # The Ash Plain: grey ash and obsidian shards.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_ash"],
+    },
+    "burning_gate_cages": {
+        "source": "burning_gate_cages.png", "method": "quilt",  # The Cages: black cinders and soot.
+        "colors": ["ink_warm", "floor_soil", "floor_ash"],
+        "shares": {"ink_warm": 0.06, "floor_soil": 0.70, "floor_ash": 0.24},  # Exact shares: free snapping came out blotchy.
+    },
+    "burning_gate_river": {
+        "source": "burning_gate_river.png", "method": "quilt",  # The River of Fire: scorched red-brown bank.
+        "colors": ["ink_red", "ink_warm", "floor_soil", "floor_earth"],
+    },
+    "burning_gate_gate": {
+        "source": "burning_gate_gate.png", "method": "quilt",  # The Gate: black flagstones.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_stone"],
+    },
 }
 
 

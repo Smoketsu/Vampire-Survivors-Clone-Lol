@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, walking, both hands raised to chant, a dagger in one hand
+
+LOW-RESOLUTION pixel art: the whole figure is only 46 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a MALE PIT CULTIST (a living human who serves hell, support): a man in a long ragged black-and-blood-red hooded robe with a gold-trimmed red sash, his face hidden by a pale goat skull mask with two curved horns, a ritual dagger in his raised right hand, a small iron censer with a glowing coal hanging from his left hand. Thin, hunched, sinister.
+Signature shape that must read in silhouette: the long robe, the horned skull mask and the raised hands.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: robe black #0B0A10 #1E1A26 #352E40; blood red cloth #5C1A3A #9B2D5E; gold trim #8C6A1E #E0B848; skull mask and horns bone #8C7B5E #D9CCAA #F2EBD3; skin #8C6040 #C99A6E; censer iron #4A5566 #8793A6; coal #E0601A #FFB347
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of the cultist for the robe and mask only (do NOT copy its detail level or painted shading).

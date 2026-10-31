@@ -84,7 +84,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act V: the Road to the Sun ---
 	"eclipse_of_heaven",
 	# --- Act V: Castle Kurogane ---
-	"hundred_banners"]
+	"hundred_banners",
+	# --- Act VI: the Burning Gate ---
+	"rain_of_fire"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -530,6 +532,26 @@ const EVOLUTIONS := {
 			"damage": 56.0, "pulse_radius": 84.0, "haste": 0.45, "radius": 130.0, "banners": 4, "duration": 10.0, "cooldown": 7.0,  # TUNING (not in GDD)
 			"pulse_damage": 16.0,  # TUNING (not in GDD) each war drum's beat
 			"pulse_interval": 2.0,  # TUNING (not in GDD) the evolution flag: s between two beats of each banner's drum
+		},
+	},
+	# --- Act VI: the Burning Gate ---
+	# Rain of Fire (owner-approved Act VI proposal: "Brimstone ... -> Rain of
+	# Fire (+ Furnace Heart)"): Brimstone + Furnace Heart (a NEW passive, owner
+	# rule: at Lv 5). Own decision on its kit: a true rain: `stones` stones fall
+	# one after another `rain_gap` s apart over the densest groups (the stones
+	# beyond the groups scatter `rain_spread` px around the densest), harder and
+	# wider, and their pits burn longer. Detected by the "rain_gap" key.
+	"rain_of_fire": {
+		"base": "brimstone",
+		"passive": "furnace_heart",
+		"display_name": "Rain of Fire",  # Owner-approved proposal
+		"icon": "rain_of_fire",
+		"description": "Brimstone pours from the sky in a burning rain that leaves the ground on fire.",
+		"labels": {"damage": "Stone damage", "stones": "Stones", "radius": "Blast radius", "pit_share": "Fire per second", "pit_life": "Fire lasts (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 36.0, "stones": 5, "radius": 44.0, "pit_radius": 38.0, "pit_life": 3.0, "pit_share": 0.3, "cooldown": 2.6, "range": 380.0,  # TUNING (not in GDD) first pass 46 dmg, 6 stones, 3.5 s, 0.4 (the forced smoke run: 260k damage, ahead of the Death Knights' 140k)
+			"rain_gap": 0.12,  # TUNING (not in GDD) the evolution flag: s between two stones of a rain
+			"rain_spread": 60.0,  # TUNING (not in GDD) px the stones beyond the groups scatter
 		},
 	},
 }

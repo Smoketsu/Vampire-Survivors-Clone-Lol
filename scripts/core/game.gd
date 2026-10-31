@@ -375,6 +375,9 @@ func _ready() -> void:
 			var ig := InfernoGround.new()  # Act VI placeholder floor (the STAGE's "floor").
 			ig.look = stage_def.get("floor", {})
 			ground = ig
+		# --- Act VI: the Burning Gate ---
+		"burning_gate":
+			ground = BurningGateGround.new()  # Act VI: the Burning Gate's four zone floors (BurningGateStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

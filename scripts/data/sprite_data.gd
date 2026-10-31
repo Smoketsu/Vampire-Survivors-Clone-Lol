@@ -366,6 +366,15 @@ const HEIGHTS: Dictionary = {
 	"inferno/succubus": 56.0,  # TUNING (not in GDD) elite tier, female (figure redesign, the approved act6_units concept; 56, not 48: at 48 the face and the hourglass were lost, as with the Kunoichi at 52): body ~52, the curled horns above; she flies, the bust and hip box sway in the glide strip
 	"inferno/demon_brute": 84.0,  # TUNING (not in GDD) heavy tier (60-72 and up): a huge four-armed demon, the horns and the raised fists
 	"structures/demon_portal": 64.0,  # TUNING (not in GDD) the Inferno's portal structure: an obsidian-and-lava ring with a charm-pink swirl (the looping glow is drawn by code)
+	# --- Act VI: the Burning Gate (assets/sprites/inferno/, bosses/, player/) ---
+	"inferno/lava_hound": 30.0,  # TUNING (not in GDD) pack tier: a long low hound, ~1.5 x as long as tall
+	"inferno/pit_cultist": 46.0,  # TUNING (not in GDD) support tier: a robed man, the horned mask above
+	"inferno/gatekeeper": 108.0,  # TUNING (not in GDD) miniboss tier (104+, the General 100): a chained giant
+	"bosses/moloch": 124.0,  # TUNING (not in GDD) boss tier, colossal: the bull horns and the furnace belly (the Shogun 116)
+	"player/furnace_priest": 56.0,  # TUNING (not in GDD) character tier: body ~50, the horned mitre above
+	"player/furnace_priest_hyper": 56.0,  # TUNING (not in GDD) skin art: his body, gilded
+	"player/furnace_priest_untouchable": 56.0,  # TUNING (not in GDD) skin art: his body, the white phantom
+	"player/furnace_priest_deathlord": 56.0,  # TUNING (not in GDD) skin art: his body, the spiked crown inside the same height
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

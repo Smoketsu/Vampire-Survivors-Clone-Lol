@@ -258,6 +258,10 @@ const SOUNDS := {
 	"imp_cackle": "imp_cackle",  # An imp's cackle (Inferno pack).
 	"brute_slam": "brute_slam",  # The Demon Brute's slam (Inferno pack).
 	"hand_grab": "boss_impact",  # No own id: the Adversary's hand (stand-in; the startup bank's boss_impact)
+	# --- Act VI: the Burning Gate ---
+	"moloch_roar": "moloch_roar",  # SoundData.INFERNO_SOUNDS: Moloch's furnace roars open (his swallow, his phases; BossMoloch)
+	"chain_haul": "chain_haul",  # SoundData.INFERNO_SOUNDS: the Gatekeeper's chains fly (GatekeeperKit)
+	"cultist_chant": "cultist_chant",  # SoundData.INFERNO_SOUNDS: a Pit Cultist's rite begins (PitCultistKit)
 }
 ## Least s between two pit_burn sounds (a burn tick hits many bodies at once).
 const BURN_SOUND_GAP: float = 0.6  # TUNING (not in GDD)

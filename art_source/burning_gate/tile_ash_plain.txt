@@ -1,0 +1,8 @@
+A SEAMLESS, tileable ground texture for a top-down 2D pixel-art game, seen straight from above. LOW-RESOLUTION pixel art: exactly 128 x 128 pixels, shown enlarged so every pixel is a big square block. The left edge must continue the right edge and the top edge the bottom edge.
+
+Subject: the ASH PLAIN before the gate of hell: flat grey-black volcanic ash with soft drifts, scattered small black obsidian shards and a few tiny dim ember pixels. Very DARK and LOW CONTRAST: it is a background that every character must stand out from. No objects that look solid, no characters.
+
+Colours: ONLY flat fills from this list: ash #1C1B1E (most of the tile), #242226, drifts #2E2B30, obsidian shards #0E0D12, rare embers #5A1A0A (a few pixels only). No gradients, no dithering, no noise.
+
+Output: a square PNG, the tile filling the whole image edge to edge. No border, no text, no watermark.
+Attached: an approved floor tile of this game, for the pixel size and darkness.

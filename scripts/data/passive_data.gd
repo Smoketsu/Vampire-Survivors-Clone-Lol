@@ -184,7 +184,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act V: the Road to the Sun ---
 	"stolen_dawn", "onis_resolve",
 	# --- Act V: Castle Kurogane ---
-	"warlords_seal", "unbending"]
+	"warlords_seal", "unbending",
+	# --- Act VI: the Burning Gate ---
+	"furnace_heart", "salt_circle"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -210,7 +212,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act V: the Road to the Sun ---
 	"onis_resolve",
 	# --- Act V: Castle Kurogane ---
-	"warlords_seal", "unbending"]
+	"warlords_seal", "unbending",
+	# --- Act VI: the Burning Gate ---
+	"salt_circle"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1280,6 +1284,49 @@ const PASSIVES := {
 			{"draw_reduction": 0.35},  # TUNING (not in GDD)
 			{"draw_reduction": 0.45},  # TUNING (not in GDD)
 			{"draw_reduction": 0.55},  # TUNING (not in GDD) a cut 24 -> ~11 to a summon
+		],
+	},
+	# --- Act VI: the Burning Gate ---
+	# Furnace Heart (Brimstone's paired passive; owner-approved Act VI proposal:
+	# "Rain of Fire (+ Furnace Heart)"; unlocked with the spell by Moloch and
+	# offered on every stage). Own decision on its effect: a heart of the
+	# furnace: every SPELL hit (HundredShadowsData.is_spell_source()) on a foe
+	# standing in fire (a burning Brimstone pit, or a burning Hell Pit on an Act
+	# VI stage: Brimstone.in_fire()) deals heart_damage more
+	# (CombatResolver.damage_enemy(), one block; stat furnace_heart_bonus_dmg).
+	"furnace_heart": {
+		"display_name": "Furnace Heart",  # Owner-approved proposal
+		"icon": "furnace_heart",
+		"description": "Your spells strike foes standing in fire harder.",
+		"labels": {"heart_damage": ["Spell damage to burning foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"heart_damage": 0.08},  # TUNING (not in GDD)
+			{"heart_damage": 0.16},  # TUNING (not in GDD)
+			{"heart_damage": 0.24},  # TUNING (not in GDD)
+			{"heart_damage": 0.32},  # TUNING (not in GDD)
+			{"heart_damage": 0.40},  # TUNING (not in GDD) as Hidden Hand (first pass 0.5)
+		],
+	},
+	# Act VI's counter-passive Salt Circle (owner-approved Act VI proposal:
+	# "Salt Circle (summons take less pit damage)"; unlocked by the achievement
+	# Gate Crashed and offered only in Act VI through its card row's "act").
+	# HellPits.salt_circle_mult() (the foundation's one read,
+	# InfernoRulesData.SALT_CIRCLE / SALT_CIRCLE_KEY): a Hell Pit's burn on a
+	# summon deals 1 - pit_reduction of its damage.
+	"salt_circle": {
+		"display_name": "Salt Circle",  # Owner-approved proposal
+		"icon": "salt_circle",
+		"description": "A ring of salt shields your summons: the Hell Pits burn them for less.",
+		"labels": {"pit_reduction": ["Pit damage to summons", "neg_pct"]},
+		"act": 6,  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"pit_reduction": 0.15},  # TUNING (not in GDD)
+			{"pit_reduction": 0.25},  # TUNING (not in GDD)
+			{"pit_reduction": 0.35},  # TUNING (not in GDD)
+			{"pit_reduction": 0.45},  # TUNING (not in GDD)
+			{"pit_reduction": 0.55},  # TUNING (not in GDD) a summon in a pit 9 -> ~4 per s
 		],
 	},
 }

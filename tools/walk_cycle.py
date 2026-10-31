@@ -560,6 +560,12 @@ RIGS = {
     "inferno/hell_knight": dict(mode="legs", hip=38, back=(0, 20), front=(20, 36), rigid=[(36, 52, 0, None)], spread=2, lift=2, dip=1),
     "inferno/demon_brute": dict(mode="legs", hip=70, back=(0, 38), front=(38, 72), rigid=[], spread=3, lift=3, dip=1),
     "inferno/succubus": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(12, 26, 13, 19, 2, 2), swish=(11, 27, 23, 32, 2)),
+    # --- Act VI: the Burning Gate (every figure here is male: no bust rigs) ---
+    "inferno/lava_hound": dict(mode="legs", hip=19, back=(0, 20), front=(20, 40), rigid=[], spread=2, lift=2, dip=1),
+    "inferno/pit_cultist": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1),
+    "inferno/gatekeeper": dict(mode="legs", hip=80, back=(0, 58), front=(58, 116), rigid=[], spread=3, lift=3, dip=1),
+    "bosses/moloch": dict(mode="legs", hip=96, back=(0, 62), front=(62, 124), rigid=[], spread=3, lift=3, dip=1),
+    "player/furnace_priest": dict(mode="robe", hip=46, rigid=[], sway=1, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -646,6 +652,10 @@ SKINS = {
     "player/ronin_revenant_hyper": "player/ronin_revenant",
     "player/ronin_revenant_untouchable": "player/ronin_revenant",
     "player/ronin_revenant_deathlord": "player/ronin_revenant",
+    # --- Act VI: the Burning Gate ---
+    "player/furnace_priest_hyper": "player/furnace_priest",
+    "player/furnace_priest_untouchable": "player/furnace_priest",
+    "player/furnace_priest_deathlord": "player/furnace_priest",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

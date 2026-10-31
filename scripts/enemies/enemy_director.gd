@@ -101,6 +101,10 @@
 ##     Hell Pits, the demon portals, Temptation, the Last Judgment) live in
 ##     InfernoRules (Game.inferno); this director only hands it the "portal"
 ##     events (DemonPortals.start_event()).
+##   * Act VI, the Burning Gate (GDD §15.0 "The Burning Gate (Act VI phase
+##     2)"): on a stage with a "burning_gate" config it creates the
+##     BurningGateDirector (the Gatekeeper, Gate Crashed; `burning_gate`) and
+##     hands it the "gatekeeper" events. Null on every other stage.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -236,6 +240,10 @@ var sun_road: SunRoadDirector = null
 ## Castle Kurogane's mechanics (Act V: the General of the Left, the Shogun's
 ## army objective; StageRegistry "kurogane"; null on every other stage).
 var kurogane: KuroganeDirector = null
+# --- Act VI: the Burning Gate ---
+## The Burning Gate's mechanics (Act VI: the Gatekeeper, Gate Crashed;
+## StageRegistry "burning_gate"; null on every other stage).
+var burning_gate: BurningGateDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -368,6 +376,12 @@ func _ready() -> void:
 		kurogane.game = game
 		kurogane.config = stage_def["kurogane"]
 		add_child(kurogane)  # Castle Kurogane's director.
+	# --- Act VI: the Burning Gate ---
+	if not (stage_def.get("burning_gate", {}) as Dictionary).is_empty():
+		burning_gate = BurningGateDirector.new()
+		burning_gate.game = game
+		burning_gate.config = stage_def["burning_gate"]
+		add_child(burning_gate)  # The Burning Gate's director.
 
 
 # =====================================================================================
@@ -482,6 +496,9 @@ func step(delta: float) -> void:
 	# --- Act V: Castle Kurogane ---
 	if kurogane != null:
 		kurogane.step(delta)  # The General of the Left.
+	# --- Act VI: the Burning Gate ---
+	if burning_gate != null:
+		burning_gate.step(delta)  # The Gatekeeper.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -590,6 +607,9 @@ func objective_text() -> String:
 	# --- Act V: Castle Kurogane ---
 	if kurogane != null and kurogane.objective_override() != "":
 		return kurogane.objective_override()  # The General of the Left, the Shogun's army.
+	# --- Act VI: the Burning Gate ---
+	if burning_gate != null and burning_gate.objective_override() != "":
+		return burning_gate.objective_override()  # The Gatekeeper.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -776,6 +796,12 @@ func _run_event(ev: Dictionary) -> void:
 			game.inferno_rules().portals.start_event(ev)  # Demon portals (they show the event's banner).
 			game.stat_add("wave_events", 1.0)
 			return  # An Act VI portal event.
+		# --- Act VI: the Burning Gate ---
+		"gatekeeper":
+			if burning_gate != null:
+				burning_gate.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Burning Gate's miniboss.
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:
