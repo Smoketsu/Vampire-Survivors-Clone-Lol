@@ -585,10 +585,14 @@ tiny tweaks.
   `docs/ossuary/`, GDD §15.0 from "Ossuary expansion: owner decisions" on): Soul Ash restarts per act (stage 1 ×1, 2 ×1.25,
   3 ×1.5; Lich ×1.5, Deathlord ×2; `tools/ash_measure.py`, `docs/ossuary/ECONOMY.md`); levels 6-10 for 13 upgrades gated by
   difficulty clears (`[clears]`, `Meta.max_open_tier()`, SAVE_VERSION 2); ten new options and the Dominion tree (after
-  Seraphine) with the Ossuary tab bar (Trees / Masteries / Relics / Offerings); summon-class Masteries (`mastery_data.gd`,
+  Seraphine) with the Ossuary tab bar (Trees / Masteries / Relics / Offerings / Caskets); summon-class Masteries (`mastery_data.gd`,
   `[class_lv5]` / `[masteries]`, through `HordeDirector.compute_stats()`); Relics (`relic_data.gd`, `RelicEffects`, 1 -> 3
   slots, pre-run Rites strip) and expensive Grave Offerings (`offering_data.gd`); cosmetic recolours (`recolour_data.gd`,
-  `Recolour`, `SpriteBank.draw()` `recolour`). All of it travels in the co-op loadout. `tools/ossuary_check.tscn` (CI),
+  `Recolour`, `SpriteBank.draw()` `recolour`), won from **Recolour Caskets** (owner request "a bit of gambling", GDD §15.0
+  "Recolour Caskets (owner request, Oct 2026)": the fifth tab, 350 Soul Ash a casket, one unowned prize each, rarity
+  60 / 30 / 10 / 3 with a pity on the 10th, seeded per save, never gameplay RNG; `casket_data.gd`, `CasketLedger` as
+  `Meta.caskets`, `[caskets]` / `[casket_skins]`; future casket-only skins are a `SkinData.CASKET_SKINS` row + art; nothing
+  buys a recolour directly any more). All of it travels in the co-op loadout. `tools/ossuary_check.tscn` (CI),
   `tools/ossuary_balance.py`, `docs/ossuary/BALANCE.md`; the "too strong" gate (everything + Hyper + Oath 5 + Pact must
   fail a third) reached 31%, accepted by the owner. Prestige is noted for later.
 

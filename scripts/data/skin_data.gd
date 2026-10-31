@@ -8,8 +8,9 @@
 ##   * its DEFAULT look ("<character>_default", the character's own sprite),
 ##   * a HYPER skin ("<character>_hyper"), unlocked by clearing the Sanctum
 ##     of Judgment on Hyper (HyperData) with that character,
-## and four characters have an ACHIEVEMENT skin (ACHIEVEMENT_SKINS); every
-## character also has the two UNIVERSAL skins ("<character>_untouchable",
+## and four characters have an ACHIEVEMENT skin (ACHIEVEMENT_SKINS); a
+## character may also have CASKET-ONLY skins (CASKET_SKINS, won from the
+## Ossuary's Caskets; none ship yet); every character also has the two UNIVERSAL skins ("<character>_untouchable",
 ## "<character>_deathlord"; content wave 2, UNIVERSAL_SKINS).
 ##
 ## Rendering: a skin's sprite key is "player/<character>_<skin>" (the default
@@ -203,6 +204,20 @@ const ACHIEVEMENT_SKINS := {
 	},
 }
 
+## CASKET-ONLY skins (GDD §15.0 "Recolour Caskets (owner request, Oct 2026)"):
+## skins that are only won from the Ossuary's Caskets (CasketData, the Legendary
+## tier), never earned another way; Meta keeps the won ones ([casket_skins],
+## CasketLedger) and is_skin_unlocked() reads them. Keys as in ACHIEVEMENT_SKINS
+## without `unlock` / `unlock_text` (skin() fills them: unlock {"type": "casket"}).
+## Its art is "player/<character>_<skin id>.png" (the palette fallback until it
+## exists). None ship yet (no art): adding one is a row here plus its art (see
+## CasketData's header).
+const CASKET_SKINS := {}  # TUNING (not in GDD) empty until the first casket skin's art exists
+## Locked-skin line of every casket-only skin (the end screen / tooltips).
+const CASKET_UNLOCK_TEXT: String = "Found only in the Ossuary's Caskets"  # TUNING (not in GDD)
+## Short form of it (the setup screen's detail line).
+const CASKET_UNLOCK_SHORT: String = "Found in Caskets"  # TUNING (not in GDD)
+
 # --- Content wave 2: B. Achievement rewards ---
 ## Skin FAMILIES worn by EVERY character (owner-approved Proposal 2, GDD
 ## §15.0 "Achievement rewards (content wave 2)"): each family generates the
@@ -262,12 +277,16 @@ static func default_skin(character: String) -> String:
 
 
 ## Skin ids of character `character` in UI order: default, Hyper, then its
-## achievement skin (if any), then the universal skins (UNIVERSAL_ORDER).
+## achievement skin (if any), its casket-only skins (CASKET_SKINS), then the
+## universal skins (UNIVERSAL_ORDER).
 static func skins_for(character: String) -> PackedStringArray:
 	var ch := character_or_default(character)  # Known character id.
 	var out := PackedStringArray([ch + "_default", ch + "_hyper"])  # Ids.
 	for id: String in ACHIEVEMENT_SKINS:
 		if String(ACHIEVEMENT_SKINS[id]["character"]) == ch:
+			out.append(id)
+	for id: String in CASKET_SKINS:
+		if String(CASKET_SKINS[id]["character"]) == ch:
 			out.append(id)
 	for fam: String in UNIVERSAL_ORDER:
 		out.append("%s_%s" % [ch, fam])
@@ -300,19 +319,28 @@ static func all_ids() -> PackedStringArray:
 
 ## True when `id` names a skin.
 static func has(id: String) -> bool:
-	return ACHIEVEMENT_SKINS.has(id) or _generated_character(id) != ""
+	return ACHIEVEMENT_SKINS.has(id) or CASKET_SKINS.has(id) or _generated_character(id) != ""
 
 
 ## The skin row of `id` ({} for an unknown id) with the keys of
-## ACHIEVEMENT_SKINS plus "kind" ("default", "hyper" or "achievement") and
-## "sprite" (its sprite key). Default and Hyper rows are built from the
-## per-character tables above.
+## ACHIEVEMENT_SKINS plus "kind" ("default", "hyper", "achievement", "casket" or
+## "universal") and "sprite" (its sprite key). Default and Hyper rows are built
+## from the per-character tables above.
 static func skin(id: String) -> Dictionary:
 	if ACHIEVEMENT_SKINS.has(id):
 		var row: Dictionary = (ACHIEVEMENT_SKINS[id] as Dictionary).duplicate()
 		row["kind"] = "achievement"
 		row["sprite"] = "player/%s_%s" % [row["character"], id]
 		return row
+	if CASKET_SKINS.has(id):
+		var c: Dictionary = (CASKET_SKINS[id] as Dictionary).duplicate()
+		c["kind"] = "casket"
+		c["unlock"] = {"type": "casket"}  # Won from a casket (Meta.caskets, CasketLedger).
+		c["unlock_text"] = CASKET_UNLOCK_TEXT
+		if not c.has("unlock_short"):
+			c["unlock_short"] = CASKET_UNLOCK_SHORT
+		c["sprite"] = "player/%s_%s" % [c["character"], id]
+		return c
 	var ch := _generated_character(id)  # Owning character ("" = unknown id).
 	if ch == "":
 		return {}

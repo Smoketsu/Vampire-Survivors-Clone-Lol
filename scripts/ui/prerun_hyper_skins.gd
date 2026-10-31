@@ -19,9 +19,10 @@
 ## step 6b, RecolourData; cosmetic): one button with a colour chip and the
 ## recolour's name that cycles the chosen skin's offers (Default, then four
 ## palette swaps); an owned one is worn at once, an unowned one is only
-## previewed on the hero and a Buy button with its Soul Ash price appears
-## (a confirm dialog, the one UI that costs Soul Ash here). Hidden while the
-## skin is locked. The choice is kept per skin in the Meta save ([recolour_pick]).
+## previewed on the hero (a tease) and the line says it is found in the
+## Ossuary's Caskets (GDD §15.0 "Recolour Caskets (owner request, Oct 2026)":
+## nothing is bought here any more). Hidden while the skin is locked. The
+## choice is kept per skin in the Meta save ([recolour_pick]).
 ## Keyboard / mouse / controller navigable: rows() gives the tiles as one row
 ## for the setup screen's explicit focus wiring (re-done on `rebuilt`);
 ## Enter / A toggles or chooses. refresh() follows a character change
@@ -59,7 +60,7 @@ var _row: HBoxContainer
 var _detail: Label
 ## The line's row: the detail label, then the recolour controls.
 var _line: HBoxContainer
-## The recolour controls (cycle and Buy buttons); hidden while the skin is locked.
+## The recolour control (the cycle button); hidden while the skin is locked.
 var _rc_box: HBoxContainer
 ## Recolour cycle button (chip, name).
 var _rc_cycle: Button
@@ -67,16 +68,12 @@ var _rc_cycle: Button
 var _rc_chip: RecolourChip
 ## Name of the previewed recolour inside the cycle button.
 var _rc_name: Label
-## Recolour Buy button (soul ash icon, price); shown only for an unowned preview.
-var _rc_buy: Button
-## Price label inside the Buy button.
-var _rc_cost: Label
 ## Skin the recolour state belongs to (the worn skin's id; "" = not built yet).
 var _rc_skin: String = ""
 ## RecolourData id previewed on the hero ("" = the skin's own colours). The
 ## worn one (config.recolour_id) is this one while it is owned, else "".
 var _rc_view: String = ""
-## "<recolour box shown>/<Buy shown>" of the last _refresh_recolour() (re-wire on change).
+## "<recolour box shown>" of the last _refresh_recolour() (re-wire on change).
 var _rc_shape: String = ""
 ## Skin id -> its tile's preview (so the worn skin's tile shows the recolour).
 var _previews: Dictionary = {}
@@ -313,10 +310,7 @@ func cards() -> Array:
 func rows() -> Array:
 	var out: Array = [cards()]  # The tiles, then the recolour buttons (when shown).
 	if _rc_box.visible:
-		var rc: Array = [_rc_cycle]  # Recolour buttons, left to right.
-		if _rc_buy.visible:
-			rc.append(_rc_buy)
-		out.append(rc)
+		out.append([_rc_cycle])
 	return out
 
 
@@ -379,8 +373,8 @@ static func _style(b: Button, on: bool) -> void:
 
 # --- Recolour control (Ossuary expansion step 6b) -----------------------------------------------
 
-## Builds the recolour controls at the right end of the detail line: the cycle
-## button (chip and name) and the Buy button (Soul Ash icon and price).
+## Builds the recolour control at the right end of the detail line: the cycle
+## button (chip and name). Nothing buys a recolour here (the Ossuary's Caskets).
 func _build_recolour_controls() -> void:
 	_rc_box = HBoxContainer.new()
 	_rc_box.add_theme_constant_override("separation", 4)
@@ -410,30 +404,6 @@ func _build_recolour_controls() -> void:
 	_rc_name.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	cb.add_child(_rc_name)
 	_rc_box.add_child(_rc_cycle)
-	_rc_buy = Button.new()
-	_rc_buy.custom_minimum_size = FrontDoorData.RECOLOUR_BUY_BUTTON
-	_rc_buy.focus_mode = Control.FOCUS_ALL
-	_rc_buy.pressed.connect(_press_buy)
-	_rc_buy.focus_entered.connect(_on_rc_focus)
-	_rc_buy.mouse_entered.connect(_on_rc_focus)
-	_rc_buy.focus_exited.connect(_on_left)
-	_rc_buy.mouse_exited.connect(_on_left)
-	var bb := HBoxContainer.new()
-	bb.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bb.offset_left = 8
-	bb.offset_right = -8
-	bb.add_theme_constant_override("separation", 4)
-	bb.alignment = BoxContainer.ALIGNMENT_CENTER
-	bb.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_rc_buy.add_child(bb)
-	var coin := IconGlyph.new("soul_ash_small", Vector2(OssuaryUiData.COST_ICON, OssuaryUiData.COST_ICON))
-	coin.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	bb.add_child(coin)
-	_rc_cost = UiTheme.tier_label("", UiTheme.Tier.BODY, OssuaryUiData.ASH_COLOR)
-	_rc_cost.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	bb.add_child(_rc_cost)
-	_rc_buy.visible = false
-	_rc_box.add_child(_rc_buy)
 
 
 ## The recolour state follows the worn skin: on a new skin it shows that skin's
@@ -451,20 +421,15 @@ func _sync_recolour() -> void:
 	_refresh_recolour()
 
 
-## Redraws the recolour controls and the tile previews from `_rc_view`; asks the
-## setup screen to re-wire focus when the buttons that exist changed.
+## Redraws the recolour control and the tile previews from `_rc_view`; asks the
+## setup screen to re-wire focus when the control appeared or went.
 func _refresh_recolour() -> void:
 	var owned := _rc_view == "" or Meta.owns_recolour(_rc_skin, _rc_view)  # The previewed recolour may be worn.
 	_rc_chip.recolour = _rc_view
 	_rc_chip.queue_redraw()
 	_rc_name.text = RecolourData.display_name(_rc_view)
-	var shape := "%s/%s" % [str(_rc_box.visible), str(_rc_box.visible and not owned)]  # Which buttons exist now.
-	_rc_buy.visible = _rc_box.visible and not owned
-	if not owned:
-		_rc_cost.text = str(RecolourData.price(_rc_view))
-		var can := Meta.soul_ash >= RecolourData.price(_rc_view)  # Affordable: the soul accent.
-		UiTheme.style_button(_rc_buy, "button", "soul" if can else "dim")
-		_rc_cost.add_theme_color_override("font_color", OssuaryUiData.ASH_COLOR if can else UiTheme.TEXT_DIM)
+	_rc_name.add_theme_color_override("font_color", UiTheme.TEXT if owned else UiTheme.TEXT_DIM)  # An unowned preview reads dim.
+	var shape := str(_rc_box.visible)  # Whether the control exists now.
 	UiTheme.style_button(_rc_cycle, "button", ON_ACCENT if (_rc_view != "" and owned) else "")
 	for id: String in _previews:
 		var pv: SkinPreview = _previews[id]
@@ -483,9 +448,9 @@ func shown_recolour() -> String:
 
 
 ## Previews recolour `id` ("" = the skin's own colours) on the worn skin: an owned
-## one (or "") is worn and remembered at once; an unowned one is only shown, with
-## its price and a Buy button. Ignored while the skin is locked / offers no such
-## recolour.
+## one (or "") is worn and remembered at once; an unowned one is only shown (the
+## line points to the Ossuary's Caskets). Ignored while the skin is locked /
+## offers no such recolour.
 func preview_recolour(id: String) -> void:
 	if not _rc_box.visible or (id != "" and not RecolourData.offered(_rc_skin, id)):
 		return
@@ -508,54 +473,14 @@ func _cycle_recolour() -> void:
 	preview_recolour(options[(i + 1) % options.size()])
 
 
-## The Buy button pressed: a confirm dialog (Soul Ash is spent), or `denied`
-## when the Soul Ash is short.
-func _press_buy() -> void:
-	if Meta.recolour_block(_rc_skin, _rc_view) != "":
-		Sfx.play_ui("denied")
-		_show_detail("recolour")
-		return
-	var skin := _rc_skin  # Skin bought for (captured: the dialog is modal).
-	var id := _rc_view  # Recolour bought.
-	if GameState.autotest:
-		_buy_now(skin, id)  # Nothing opens a dialog under the autotest.
-		return
-	ConfirmDialog.ask(_dialog_host(), "Buy %s?" % RecolourData.display_name(id), "%d Soul Ash. This skin keeps it." % RecolourData.price(id),
-			"Buy", _buy_now.bind(skin, id), false)
-
-
-## Buys recolour `id` of `skin` and wears it.
-func _buy_now(skin: String, id: String) -> void:
-	if not Meta.buy_recolour(skin, id):
-		Sfx.play_ui("denied")
-		return
-	Sfx.play_ui("purchase")
-	Meta.set_chosen_recolour(skin, id)
-	if skin == _rc_skin:
-		_rc_view = id
-		config.recolour_id = id
-		_refresh_recolour()
-		_show_detail("recolour")
-		changed.emit()
-		_rc_cycle.grab_focus.call_deferred()  # The Buy button just went away.
-
-
-## The full-screen control a dialog opens over: the setup screen (else this row).
-func _dialog_host() -> Control:
-	var n: Node = self  # Walks up to the PreRunSetup.
-	while n != null and not (n is PreRunSetup):
-		n = n.get_parent()
-	return (n as Control) if n != null else self
-
-
 ## A recolour button focused / hovered: name the recolour, show the worn skin on the hero.
 func _on_rc_focus() -> void:
 	_show_detail("recolour")
 	skin_focused.emit("")
 
 
-## Detail line for the previewed recolour: its name and, when unowned, its price
-## (soul-teal text cannot show here: the amber ash colour when affordable, dim crimson when short).
+## Detail line for the previewed recolour: its name and, when unowned, where it
+## is found (the Ossuary's Caskets; dim text: a tease, not a price).
 func _show_recolour_detail() -> void:
 	var owned := _rc_view == "" or Meta.owns_recolour(_rc_skin, _rc_view)  # May be worn.
 	if _rc_view == "":
@@ -565,7 +490,5 @@ func _show_recolour_detail() -> void:
 		_detail.text = "%s recolour" % RecolourData.display_name(_rc_view)
 		_detail.add_theme_color_override("font_color", UiTheme.TEXT_GOLD)
 	else:
-		var price := RecolourData.price(_rc_view)  # Soul Ash.
-		var short := price - Meta.soul_ash  # Missing Soul Ash (> 0 = cannot buy).
-		_detail.text = "%s: %d Soul Ash" % [RecolourData.display_name(_rc_view), price] if short <= 0 else "%s: %d more Soul Ash" % [RecolourData.display_name(_rc_view), short]
-		_detail.add_theme_color_override("font_color", OssuaryUiData.ASH_COLOR if short <= 0 else Palette.CRIMSON.lightened(0.4))
+		_detail.text = FrontDoorData.RECOLOUR_UNOWNED_LINE % RecolourData.display_name(_rc_view)
+		_detail.add_theme_color_override("font_color", UiTheme.TEXT_DIM)

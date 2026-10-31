@@ -77,13 +77,18 @@
 ##     (is_skin_unlocked()) from the Hyper clears, achievements and three
 ##     lifetime counters (rot_kills, high_confessor_kills,
 ##     seraphine_kills_full_army), so they can never disagree with them,
-##   * `owned_recolours` are the skin recolours bought with Soul Ash (Ossuary
-##     expansion step 6b, RecolourData; cosmetic): skin id -> PackedStringArray
-##     of recolour ids ([recolours] <skin id> = "bone,blood"), kept for good
-##     (Refund all does not return them), and `chosen_recolours` the one worn
-##     per skin ([recolour_pick] <skin id> = <recolour id>; absent = the skin's
-##     own colours). Additive sections: an older save has none and loads as
-##     "owns nothing"; no SAVE_VERSION step is needed.
+##   * `owned_recolours` are the skin recolours owned (Ossuary expansion step
+##     6b, RecolourData; cosmetic): skin id -> PackedStringArray of recolour ids
+##     ([recolours] <skin id> = "bone,blood"), kept for good (Refund all does not
+##     return them), and `chosen_recolours` the one worn per skin
+##     ([recolour_pick] <skin id> = <recolour id>; absent = the skin's own
+##     colours). Additive sections: an older save has none and loads as "owns
+##     nothing"; no SAVE_VERSION step is needed. Since the Recolour Caskets (GDD
+##     §15.0 "Recolour Caskets (owner request, Oct 2026)") they are won, not
+##     bought: `caskets` (CasketLedger) opens caskets and keeps their seed, count,
+##     pity counter and spending ([caskets]) and the casket-only skins won
+##     ([casket_skins], read by is_skin_unlocked()); recolours an older save
+##     bought stay owned. Caskets are never refunded.
 ## award_run() reports what a run unlocked ("hyper_unlocked", "hyper_clear",
 ## "unlocked_skins") for the end screen. Older saves without these sections
 ## get the defaults; unknown ids are ignored.
@@ -198,7 +203,8 @@ var prerun_hyper: bool = false
 var prerun_ultimate: String = UltimateData.DEFAULT_ID
 ## Character id -> SkinData id last chosen for that character.
 var chosen_skins: Dictionary = {}
-## SkinData id -> PackedStringArray of the RecolourData ids bought for that skin.
+## SkinData id -> PackedStringArray of the RecolourData ids owned for that skin
+## (won from caskets, or bought on an older save).
 var owned_recolours: Dictionary = {}
 ## SkinData id -> RecolourData id worn on that skin ("" / absent = none).
 var chosen_recolours: Dictionary = {}
@@ -240,6 +246,10 @@ var mastery_levels: Dictionary = {}
 # --- Relics and Grave Offerings (expansion steps 5 and 6a) ---
 ## Relics bought, relic slots and the relics last equipped (RelicLedger).
 var relics: RelicLedger = RelicLedger.new()
+# --- Recolour Caskets (owner request, Oct 2026) ---
+## Caskets opened, their seed, pity counter and spending, and the casket-only
+## skins won (CasketLedger; [caskets], [casket_skins]).
+var caskets: CasketLedger = CasketLedger.new()
 
 ## Keys of every stage record (all floats, like the lifetime stats).
 const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills",
@@ -615,7 +625,13 @@ func hyper_clear_count(stage_id: String) -> int:
 ## True when skin `id` may be worn (SkinData unlock rules; default skins
 ## always). Unknown ids are locked.
 func is_skin_unlocked(id: String) -> bool:
-	var row := SkinData.skin(id)  # The skin's data ({} if unknown).
+	return skin_row_unlocked(id, SkinData.skin(id))
+
+
+## True when skin `id` with SkinData row `row` may be worn (the rule of
+## is_skin_unlocked(); the casket check passes rows of its own). A casket-only
+## skin ("casket" unlock) is open once won from a casket (caskets, CasketLedger).
+func skin_row_unlocked(id: String, row: Dictionary) -> bool:
 	if row.is_empty():
 		return false
 	var u: Dictionary = row["unlock"]
@@ -630,6 +646,8 @@ func is_skin_unlocked(id: String) -> bool:
 			return float(lifetime.get(String(u["stat"]), 0.0)) >= float(u["goal"])
 		"reward":
 			return Unlocks.is_open(String(u["id"]))  # Content wave 2: a universal skin family (UnlockData "skin" row).
+		"casket":
+			return caskets.has_won(id)  # Recolour Caskets: a casket-only skin, won from a casket.
 	return false
 
 
@@ -688,15 +706,19 @@ func chosen_skin(character: String) -> String:
 # Skin recolours (Ossuary expansion step 6b; RecolourData; cosmetic)
 # =====================================================================================
 
-## True when recolour `id` is owned for skin `skin` (bought, and still offered
-## by the skin). "" is never owned: it means no recolour.
+## Recolours are won from the Ossuary's Caskets (`caskets`, CasketLedger; GDD
+## §15.0 "Recolour Caskets (owner request, Oct 2026)"); nothing buys one directly
+## any more. Those an older save bought stay owned.
+
+## True when recolour `id` is owned for skin `skin` (won, or bought on an older
+## save, and still offered by the skin). "" is never owned: it means no recolour.
 func owns_recolour(skin: String, id: String) -> bool:
 	if id == "" or not RecolourData.offered(skin, id):
 		return false
 	return (owned_recolours.get(skin, PackedStringArray()) as PackedStringArray).has(id)
 
 
-## The recolours bought for `skin`, in RecolourData.ORDER.
+## The recolours owned for `skin`, in RecolourData.ORDER.
 func owned_recolour_ids(skin: String) -> PackedStringArray:
 	var out := PackedStringArray()  # Recolour ids.
 	for id: String in RecolourData.ids_for(skin):
@@ -710,35 +732,6 @@ func owned_recolour_ids(skin: String) -> PackedStringArray:
 func chosen_recolour(skin: String) -> String:
 	var id := String(chosen_recolours.get(skin, ""))  # Remembered choice.
 	return id if owns_recolour(skin, id) and is_skin_unlocked(skin) else ""
-
-
-## Why recolour `id` cannot be bought for `skin` right now: "" (it can),
-## "unknown" (not a recolour this skin offers), "locked" (the skin itself is
-## not unlocked), "owned" or "cost" (not enough Soul Ash).
-func recolour_block(skin: String, id: String) -> String:
-	if not RecolourData.offered(skin, id):
-		return "unknown"
-	if not is_skin_unlocked(skin):
-		return "locked"
-	if owns_recolour(skin, id):
-		return "owned"
-	if soul_ash < RecolourData.price(id):
-		return "cost"
-	return ""
-
-
-## Buys recolour `id` for `skin` with Soul Ash and saves. Returns false if it
-## was blocked (see recolour_block()). Kept for good: no refund.
-func buy_recolour(skin: String, id: String) -> bool:
-	if recolour_block(skin, id) != "":
-		return false
-	soul_ash -= RecolourData.price(id)
-	var have: PackedStringArray = owned_recolours.get(skin, PackedStringArray())  # Already owned for the skin.
-	have.append(id)
-	owned_recolours[skin] = have
-	save()
-	changed.emit()
-	return true
 
 
 ## Remembers `id` ("" = none) as the recolour worn on `skin` and saves. An
@@ -755,15 +748,6 @@ func set_chosen_recolour(skin: String, id: String) -> void:
 	else:
 		chosen_recolours[skin] = rc
 	save()
-
-
-## Soul Ash spent on recolours so far.
-func recolour_spent_total() -> int:
-	var total := 0  # Soul Ash.
-	for skin: String in owned_recolours:
-		for id: String in (owned_recolours[skin] as PackedStringArray):
-			total += RecolourData.price(id)
-	return total
 
 
 # =====================================================================================
@@ -1298,6 +1282,7 @@ func save() -> Error:
 		if mastery_level(cls) > 0:
 			cfg.set_value("masteries", cls, mastery_level(cls))
 	relics.write(cfg)  # Relics: [relics] owned / slots, [prerun] relics.
+	caskets.write(cfg)  # Recolour Caskets: [caskets], [casket_skins].
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -1357,6 +1342,7 @@ func load_save() -> void:
 	_load_clears(cfg)
 	_load_masteries(cfg)
 	relics.read(cfg)  # Relics (after the clears: nothing there depends on them).
+	caskets.read(cfg)  # Recolour Caskets (independent of the rest).
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -1599,6 +1585,7 @@ func _reset() -> void:
 	class_lv5 = {}
 	mastery_levels = {}
 	relics.reset()
+	caskets.reset()
 	load_status = "fresh"
 
 

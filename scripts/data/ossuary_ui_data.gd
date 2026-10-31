@@ -44,10 +44,11 @@ const PAGE_SIZE := Vector2(1198, 548)  # TUNING (not in GDD) layout fit
 
 # --- Tabs (Ossuary expansion step 3) ---------------------------------------------------
 
-## Tab ids in tab-bar order (owner plan: Trees, Masteries, Relics, Offerings).
-const TABS := ["trees", "masteries", "relics", "offerings"]  # GDD §15.0 "Ossuary new options and Dominion"
+## Tab ids in tab-bar order (owner plan: Trees, Masteries, Relics, Offerings;
+## then Caskets, GDD §15.0 "Recolour Caskets (owner request, Oct 2026)").
+const TABS := ["trees", "masteries", "relics", "offerings", "caskets"]  # GDD §15.0 "Ossuary new options and Dominion"
 ## Tab id -> its one-word button text.
-const TAB_NAMES := {"trees": "Trees", "masteries": "Masteries", "relics": "Relics", "offerings": "Offerings"}  # TUNING (not in GDD)
+const TAB_NAMES := {"trees": "Trees", "masteries": "Masteries", "relics": "Relics", "offerings": "Offerings", "caskets": "Caskets"}  # TUNING (not in GDD)
 ## Tab id -> the script of its panel (the tab contract: a Control with
 ## `func refresh() -> void` and `signal changed`, emitted after a purchase). A tab
 ## whose script does not exist is hidden. "trees" is built by OssuaryMenu itself.
@@ -55,6 +56,7 @@ const TAB_PANELS := {
 	"masteries": "res://scripts/ui/ossuary_masteries_panel.gd",
 	"relics": "res://scripts/ui/ossuary_relics_panel.gd",
 	"offerings": "res://scripts/ui/ossuary_offerings_panel.gd",
+	"caskets": "res://scripts/ui/ossuary_caskets_panel.gd",
 }  # TUNING (not in GDD) contract shared by the Ossuary expansion agents
 ## Size (layout px) of one tab button.
 const TAB_SIZE := Vector2(150, 40)  # TUNING (not in GDD)

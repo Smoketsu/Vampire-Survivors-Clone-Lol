@@ -1874,9 +1874,9 @@ func _print_hyper_skins(summary: Dictionary) -> void:
 		var rkey := String(SkinData.skin(skin).get("sprite", "")) if skin != "" else SkinData.base_sprite(String(summary.get("character_id", CharacterData.DEFAULT_ID)))  # Sprite remapped.
 		var rtex := SpriteBank.texture(rkey)  # The original art (null without it).
 		var rre := Recolour.texture(rtex, rkey, rc) if rtex != null else null  # The recoloured art.
-		print("[autotest] recolours: %s (%d Soul Ash) worn on %s | art %s: %s | %d recolours x %d skins, %d Soul Ash a skin" % [
-			RecolourData.display_name(rc), RecolourData.price(rc), skin if skin != "" else "the default look", rkey,
-			"remapped" if rre != null and rre != rtex else "no art, drawn unchanged", RecolourData.ORDER.size(), SkinData.all_ids().size(), RecolourData.price_per_skin()])
+		print("[autotest] recolours: %s (%s, from caskets) worn on %s | art %s: %s | %d recolours x %d skins, a casket %d Soul Ash" % [
+			RecolourData.display_name(rc), CasketLedger.recolour_tier(rc), skin if skin != "" else "the default look", rkey,
+			"remapped" if rre != null and rre != rtex else "no art, drawn unchanged", RecolourData.ORDER.size(), SkinData.all_ids().size(), CasketData.PRICE])
 
 
 ## Shadow Bolt damage stat with `prefix` ("dmg_" / "bossdmg_"), including the
