@@ -197,6 +197,9 @@ const CLASSES := {
 	# --- Act VI: the Palace of Silk and Ash ---
 	"bound_succubus": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 8], "speed": 220.0,
 		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(1.0, 0.44, 0.71)},  # TUNING (not in GDD) a ring of charm-pink kisses around each charm
+	# --- Act VI: Pandemonium ---
+	"archfiend": {"trigger": "special", "every": 1, "pattern": "fan", "counts": [5, 7], "spread": 60.0, "speed": 300.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a fan of soul-fire embers off the cleave
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -248,6 +251,9 @@ const EVOLVED := {
 	# --- Act VI: the Palace of Silk and Ash ---
 	"lilim_matriarch": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 250.0,
 		"life": 0.6, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a soul-lit ring of kisses around each double charm
+	# --- Act VI: Pandemonium ---
+	"prince_of_hell": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 320.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) the full-circle cleave's ring of soul-fire
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -325,6 +331,9 @@ const SPELLS := {
 	# --- Act VI: the Palace of Silk and Ash ---
 	"tempt": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 7], "spread": 36.0, "speed": 240.0,
 		"life": 0.7, "share": 0.4, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.85, 0.55, 1.0)},  # TUNING (not in GDD) a fan of violet-pink kisses blown with each charm
+	# --- Act VI: Pandemonium ---
+	"fall_from_grace": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [5, 7, 10], "speed": 240.0,
+		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(1.0, 0.82, 0.30)},  # TUNING (not in GDD) a ring of star-sparks with every other cast
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

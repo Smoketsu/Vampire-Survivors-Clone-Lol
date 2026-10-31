@@ -73,7 +73,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act V: the Road to the Sun ---
 	"oni_lord",
 	# --- Act VI: the Palace of Silk and Ash ---
-	"lilim_matriarch"]
+	"lilim_matriarch",
+	# --- Act VI: Pandemonium ---
+	"prince_of_hell"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -839,6 +841,40 @@ const EVOLUTIONS := {
 		"special_set": {
 			"charm_targets": 2,  # TUNING (not in GDD)
 			"charm_spread": 90.0,  # TUNING (not in GDD) px
+		},
+	},
+	# --- Act VI: Pandemonium ---
+	# The Prince of Hell (owner-approved proposal: "the Archfiend ... evolution
+	# Prince of Hell"; GDD §15.0 "The Archfiend, the Prince of Hell and Crown of
+	# Horns"): Archfiend Lv 5 + Crown of Horns Lv 5 (a NEW passive, own decision,
+	# owner rule: maxed). Four great wings, a crown of spikes between its horns,
+	# a cleaver wreathed in soul-fire. ArchfiendBehavior reads these special_set
+	# keys (final):
+	#   cleave_arc     — degrees each side: 180, the sweep is a full circle;
+	#   dread_cut      — share (0..1) every foe it strikes deals less, for
+	#   dread_duration — s (CombatResolver.weaken_enemy(), the one debuff path;
+	#                    bosses and minibosses ArchfiendBehavior.DREAD_BOSS of it).
+	"prince_of_hell": {
+		"mode": "transform",
+		"bases": ["archfiend"],
+		"passive": "crown_of_horns",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Prince of Hell",  # Owner-approved proposal
+		"plural": "Princes of Hell",
+		"icon": "prince_of_hell",
+		"description": "A crowned prince of the Pit: its cleave sweeps all around it, and those it strikes cower.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 17.0,  # TUNING (not in GDD) Archfiend 15
+			"block_mass": 10.0,  # TUNING (not in GDD) Archfiend 7
+		},
+		"special_set": {
+			"cleave_arc": 180.0,  # TUNING (not in GDD) a full circle
+			"dread_cut": 0.25,  # TUNING (not in GDD) its foes deal 25% less
+			"dread_duration": 3.0,  # TUNING (not in GDD) s
 		},
 	},
 }

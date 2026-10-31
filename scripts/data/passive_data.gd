@@ -188,7 +188,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act VI: the Burning Gate ---
 	"furnace_heart", "salt_circle",
 	# --- Act VI: the Palace of Silk and Ash ---
-	"velvet_chains", "sweet_surrender", "faithless"]
+	"velvet_chains", "sweet_surrender", "faithless",
+	# --- Act VI: Pandemonium ---
+	"pride", "crown_of_horns"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -218,7 +220,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act VI: the Burning Gate ---
 	"salt_circle",
 	# --- Act VI: the Palace of Silk and Ash ---
-	"sweet_surrender", "faithless"]
+	"sweet_surrender", "faithless",
+	# --- Act VI: Pandemonium ---
+	"crown_of_horns"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -282,7 +286,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Act IV: the Asphodel Underworld --- (the Myrmidon Shades' spear through a second foe)
 	"myrmidon_pierce",
 	# --- Act V: the Road to the Sun --- (the Bound Oni's kanabō smash and the Oni Lord's quake)
-	"oni_kanabo", "oni_quake"]
+	"oni_kanabo", "oni_quake",
+	# --- Act VI: Pandemonium --- (the Archfiend's Hellfire Cleave)
+	"archfiend_cleave"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -330,6 +336,13 @@ const AREA_HOLY_SOURCES := {
 	"amaterasu_zenith": "holy",  # TUNING (not in GDD) her noon beams on marked circles.
 	"amaterasu_glare": "holy",  # TUNING (not in GDD) the noon glare.
 	"amaterasu_sunset": "holy",  # TUNING (not in GDD) the setting-sun beam.
+	# --- Act VI: Pandemonium ---
+	"fallen_angel_dive": "area",  # TUNING (not in GDD) a Fallen Angel's landing.
+	"seraph_cleave": "holy",  # TUNING (not in GDD) the Fallen Seraph General's Judgment Cleave.
+	"seraph_feathers": "area",  # TUNING (not in GDD) his Wings of Ruin.
+	"morning_star_light": "holy",  # TUNING (not in GDD) the Morning Star's light beams.
+	"morning_star_dark": "area",  # TUNING (not in GDD) his dark beams.
+	"morning_star_slam": "area",  # TUNING (not in GDD) the Beast's slam.
 }
 ## Bone Plating: a plated hit always keeps at least this fraction (0..1) of
 ## its damage, so the flat reduction never makes a summon immune to the
@@ -1395,6 +1408,51 @@ const PASSIVES := {
 			{"charm_reduction": 0.30},  # TUNING (not in GDD)
 			{"charm_reduction": 0.40},  # TUNING (not in GDD)
 			{"charm_reduction": 0.50},  # Owner-approved proposal: "last half as long"
+		],
+	},
+	# --- Act VI: Pandemonium ---
+	# Pride (owner-approved proposal: Lightbringer's paired passive; own
+	# decision on its rule; GDD §15.0 "Fall from Grace, Lightbringer, Pride and
+	# the Fallen Saint"; unlocked by defeating the Morning Star, UnlockData):
+	# the sin that cast the Morning Star down: Fall from Grace's stars come
+	# star_haste sooner and strike an ELITE, a miniboss or a boss for
+	# pride_bonus more (AbilityManager.apply_spell_mods() on the spell rows' own
+	# keys, like Stolen Dawn; FallFromGrace reads "pride_bonus"). Pairs with
+	# Fall from Grace -> Lightbringer.
+	"pride": {
+		"display_name": "Pride",  # Owner-approved proposal
+		"icon": "pride",
+		"description": "Your falling stars come sooner and strike the mighty harder.",
+		"labels": {"star_haste": ["Fall from Grace cooldown", "neg_pct"], "pride_bonus": ["Star damage on elites and bosses", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"star_haste": 0.04, "pride_bonus": 0.10},  # TUNING (not in GDD)
+			{"star_haste": 0.08, "pride_bonus": 0.20},  # TUNING (not in GDD)
+			{"star_haste": 0.12, "pride_bonus": 0.30},  # TUNING (not in GDD)
+			{"star_haste": 0.16, "pride_bonus": 0.40},  # TUNING (not in GDD)
+			{"star_haste": 0.20, "pride_bonus": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# Crown of Horns (own decision: the Prince of Hell's paired passive, its
+	# name and rule; GDD §15.0 "The Archfiend, the Prince of Hell and Crown of
+	# Horns"; unlocked by defeating the Morning Star): a crown for the princes of
+	# your host: every summon class special (the *_damage keys of a UnitData
+	# "special": the Archfiend's cleave, the Abomination's stomp, the oni's
+	# smash, the gargoyle's swoop...) deals special_damage more
+	# (HordeDirector._special_stats(), its own category). Works the same on
+	# every stage. Pairs with the Archfiend -> the Prince of Hell.
+	"crown_of_horns": {
+		"display_name": "Crown of Horns",
+		"icon": "crown_of_horns",
+		"description": "Your dead's special attacks strike harder.",
+		"labels": {"special_damage": ["Summon special damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"special_damage": 0.08},  # TUNING (not in GDD)
+			{"special_damage": 0.16},  # TUNING (not in GDD)
+			{"special_damage": 0.24},  # TUNING (not in GDD)
+			{"special_damage": 0.32},  # TUNING (not in GDD)
+			{"special_damage": 0.40},  # TUNING (not in GDD)
 		],
 	},
 }

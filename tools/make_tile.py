@@ -582,6 +582,29 @@ RECIPES = {
         "regions": {"stone": ["floor_marble", "ink_red", "obsidian_dark"], "joint": ["ink_signal"]},
         "cell_shift": True, "cell_l": 0.012, "bevel": 0.008,
     },
+    # --- Act VI: Pandemonium ---
+    # The four zone floors of PANDEMONIUM (PandemoniumGround, tiles/pandemonium_<style>): one API texture of polished
+    # black obsidian (the Iron City's paving in courses, the Throne's polished floor) and one of grey ash-stone flagstones
+    # (the Chain Bridges' dark boards, recoloured warm; the Cathedral of Ash's flagstones). The lava glow, chains, scorch
+    # marks, gold inlay and bones stay code-drawn (PandemoniumGround).
+    "pandemonium_iron": {
+        "source": "pandemonium_obsidian.png", "method": "layout",  # The Iron City: obsidian paving in courses.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["obsidian_ink", "floor_soil", "floor_slate"], "joint": ["obsidian_ink"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "pandemonium_bridges": {
+        "source": "pandemonium_ash.png", "method": "quilt",  # The Chain Bridges: dark boards over the lava glow.
+        "colors": ["obsidian_ink", "floor_earth", "floor_dirt"],
+    },
+    "pandemonium_cathedral": {
+        "source": "pandemonium_ash.png", "method": "quilt",  # The Cathedral of Ash: grey ash-stone flagstones.
+        "colors": ["obsidian_ink", "floor_slate", "floor_ash", "floor_marble"],
+    },
+    "pandemonium_throne": {
+        "source": "pandemonium_obsidian.png", "method": "quilt",  # The Throne: polished obsidian.
+        "colors": ["obsidian_ink", "floor_soil", "floor_slate", "floor_marble"],
+    },
 }
 
 

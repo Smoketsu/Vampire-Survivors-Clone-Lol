@@ -53,6 +53,9 @@
 ## and Act VI's (the Palace of Silk and Ash, SILK_PALACE_IDS: stepped only; its
 ## own autotest line, SilkPalaceReport.item_lines()):
 ##   Temptation ("tempt") -> TemptSpell (evolves into Unholy Desire)
+## and Act VI's (Pandemonium, PANDEMONIUM_IDS: the same generic hooks; its own
+## autotest line, PandemoniumReport.item_lines()):
+##   Fall from Grace  -> FallFromGrace    (evolves into Lightbringer)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -132,6 +135,10 @@ const BURNING_GATE_IDS := ["brimstone"]
 ## KUROGANE_IDS (it needs no kill or after-physics hook), reported by
 ## SilkPalaceReport. Its id is "tempt" (never a kind or rule id).
 const SILK_PALACE_IDS := ["tempt"]
+# --- Act VI: Pandemonium ---
+## Pandemonium's unlockable spell (the Morning Star's reward): stepped, kill
+## hooked and after-physics hooked like KUROGANE_IDS, reported by PandemoniumReport.
+const PANDEMONIUM_IDS := ["fall_from_grace"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -172,6 +179,8 @@ const SOURCES := {
 	"brimstone": ["brimstone", "rain_of_fire", "brimstone_pit"],
 	# --- Act VI: the Palace of Silk and Ash --- (the thralls' blows, Unholy Desire's burst, the Succubus Queen's Heartbreaker)
 	"tempt": ["tempt", "unholy_desire", "desire_burst", "tempt_heartbreak"],
+	# --- Act VI: Pandemonium ---
+	"fall_from_grace": ["fall_from_grace", "lightbringer", "lightbringer_flare"],
 }
 
 ## Owning run.
@@ -265,6 +274,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Palace of Silk and Ash's spell.
+	# --- Act VI: Pandemonium ---
+	for id: String in PANDEMONIUM_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Pandemonium's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -337,6 +355,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act VI: the Palace of Silk and Ash ---
 		"tempt":
 			node = TemptSpell.new()  # Temptation (its id "tempt").
+		# --- Act VI: Pandemonium ---
+		"fall_from_grace":
+			node = FallFromGrace.new()  # Pandemonium's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -386,6 +407,11 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (Castle Kurogane).
 		if node != null:
 			node.on_enemy_killed(e)  # Castle Kurogane's spell.
+	# --- Act VI: Pandemonium ---
+	for id: String in PANDEMONIUM_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act VI spell's node, if learned (Pandemonium).
+		if node != null:
+			node.on_enemy_killed(e)  # Pandemonium's spell.
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
@@ -422,6 +448,11 @@ func after_physics(delta: float) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Province).
 		if node != null:
 			node.after_physics(delta)
+	# --- Act VI: Pandemonium ---
+	for id: String in PANDEMONIUM_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act VI spell's node, if learned (Pandemonium).
+		if node != null:
+			node.after_physics(delta)  # Pandemonium's spell.
 
 
 # --- Act V: the Burning Province ---

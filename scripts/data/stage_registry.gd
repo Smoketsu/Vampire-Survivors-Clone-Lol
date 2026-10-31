@@ -192,6 +192,12 @@
 ##                        reflections, the Twin Succubi's "twins" event, guest
 ##                        squads of the Burning Gate's kinds); ground
 ##                        "silk_palace" is its SilkPalaceGround (four zone floors).
+## --- Act VI: Pandemonium ---
+##   pandemonium        — PandemoniumDirector config (PandemoniumStage.PANDEMONIUM,
+##                        Act VI, Pandemonium: the Fallen Seraph General's
+##                        "seraph_general" event, guest squads of the other Act
+##                        VI stages' kinds); ground "pandemonium" is its
+##                        PandemoniumGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

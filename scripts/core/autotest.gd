@@ -1485,6 +1485,7 @@ func finish(summary: Dictionary) -> void:
 	# --- Act VI: the Burning Gate ---
 	BurningGateReport.item_lines(game, st)  # Brimstone, Furnace Heart, Salt Circle (only when taken; the stage's own lines are InfernoReport's).
 	SilkPalaceReport.item_lines(game, st)  # Act VI, the Palace of Silk and Ash: Temptation, the Succubus, Faithless (only when taken; the stage's own lines are InfernoReport's).
+	PandemoniumReport.item_lines(game, st)  # Act VI, Pandemonium: Fall from Grace, the Archfiend (only when used; the stage's own lines are InfernoReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

@@ -69,6 +69,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	BurningGateReport.print_lines(game, st)  # The Gatekeeper, the river, Gate Crashed, the stage's kinds, Moloch (each when it ran).
 	# --- Act VI: the Palace of Silk and Ash ---
 	SilkPalaceReport.stage_lines(game, st)  # The Hall of Mirrors, the Lilim Witches, the Twin Succubi, Lilith (each when it ran).
+	# --- Act VI: Pandemonium --- (its stage, kinds and boss; PandemoniumReport)
+	PandemoniumReport.stage_lines(game, st)
 
 
 ## The "hell pits" line (HellPits).

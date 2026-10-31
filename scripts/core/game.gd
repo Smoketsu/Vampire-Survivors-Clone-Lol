@@ -381,6 +381,9 @@ func _ready() -> void:
 		# --- Act VI: the Burning Gate ---
 		"burning_gate":
 			ground = BurningGateGround.new()  # Act VI: the Burning Gate's four zone floors (BurningGateStage.ZONES).
+		# --- Act VI: Pandemonium ---
+		"pandemonium":
+			ground = PandemoniumGround.new()  # Act VI: Pandemonium's four zone floors (PandemoniumStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

@@ -1993,6 +1993,23 @@ Ballroom** (rose marble over a lava lake: the most fixed Hell Pits of the act) a
   Lilith with no summon charmed during her fight) unlocks the Act VI counter-passive **Faithless** (charms on your
   summons wear off sooner; half as long at Lv 5).
 
+<!-- --- Act VI: Pandemonium --- -->
+**Pandemonium** (Stage 18, the finale of Part One; GDD §15.0 "Pandemonium (Act VI phase 2)" and the rows after it;
+built, still hidden until the Act VI integration). The capital of hell in four zones on the clock: **the Iron
+City**, **the Chain Bridges** (chain bridges over rivers of lava: the most fixed pits of the run), **the Cathedral of
+Ash** and **the Throne**. Its own kinds: the **Fallen Angel** (an elite who dives from above with a burning spear and
+leaves a short pit; aloft, your grounded blades only graze her: gargoyles, archers, mages and spells answer her) and,
+at 8:20 left, the miniboss **the Fallen Seraph General** (a cone cleave that cracks the ground, lines of burnt
+feathers, and at half health a flight of Fallen Angels). The other Act VI stages' kinds join as small guest squads.
+At 3:00 left **the Morning Star** rises: first **the Angel** (a burning sword, fans of light beams at you and dark
+beams crossing your army), then, burning away, **the Beast** of the throne (slams that leave pits, and rings of pits
+opening around you). When he falls, you take the throne. Rewards: the spell **Fall from Grace** (a fallen star on
+the strongest foe near you; evolves into **Lightbringer** with **Pride**), the character **the Fallen Saint**
+(Second Fall: a second star on the next-strongest foe), the summon class **the Archfiend** (a winged heavy demon
+whose Hellfire Cleave throws whole ranks aside; evolves into **the Prince of Hell** with **Crown of Horns**: every
+summon special hits harder) and its Ossuary mastery, and the achievement **Morning Star Falls** (the title
+Sovereign of Pandemonium).
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2659,6 +2676,10 @@ scripts/
                             look (Enthrall: the foe's own art, charmed pink, a heart over it)
     silk_palace_report.gd   The autotest's Palace lines (the stage, its kinds, Lilith, Temptation, the Succubus,
                             Faithless)
+    pandemonium_ground.gd   Pandemonium's four zone floors (iron / bridges / cathedral / throne; Act VI)
+    pandemonium_glyphs.gd   Code-drawn fallbacks of Pandemonium's kinds, the Morning Star and its obstacles (Act VI)
+    pandemonium_report.gd   The autotest's Pandemonium lines (pandemonium, kinds, morning star) and the Fall from
+                            Grace / Archfiend lines (Act VI)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
                             the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
@@ -2747,6 +2768,7 @@ scripts/
     behaviors/bound_succubus_behavior.gd  Act VI: the Succubus's kiss bolts and charm (Enthrall), Sweet Surrender
     enthrall.gd             Act VI: THE one path that turns a foe to your side for a while (Temptation, the
                             Succubus): the thrall, its return, Heartbreaker and Unholy Desire's burst
+    behaviors/archfiend_behavior.gd  Act VI: the Archfiend's Hellfire Cleave (the Prince of Hell's full circle and dread)
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
@@ -2883,6 +2905,10 @@ scripts/
       lilim_witch_kit.gd, twin_succubus_kit.gd   The Lilim Witch (pits under the ring, portal rites); the Twin
                             Succubi (charms in turn, the kiss of pain, the rage, the shared miniboss bar)
       boss_lilith.gd, lilith_hazards.gd   Lilith: charm waves, the kiss and its mark, children, her true form
+      fallen_angel_kit.gd, seraph_general_kit.gd   Pandemonium's kinds: the Fallen Angel's dive (grazed aloft),
+                            the Fallen Seraph General (cleave, feathers, the Fallen Host)
+      pandemonium_director.gd  Pandemonium: the General's event and the guest squads
+      boss_morning_star.gd  The Morning Star: the Angel (sword, light and dark beams), the Beast (slams, pit rings)
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3153,6 +3179,8 @@ scripts/
     stages/pandemonium_stage.gd    shared kinds with portal events, the Last Judgment, placeholder floors / bosses
     hades_data.gd           Hades' arrival, fight, god-shade list (GOD_SHADES) and ending (Act IV)
     amaterasu_data.gd       Amaterasu's arrival, fight, sky per phase (SKY) and ending (Act V)
+    morning_star_data.gd    The Morning Star's arrival, two phases (the Angel, the Beast) and ending (Act VI)
+    fall_from_grace_data.gd Fall from Grace / Lightbringer / Pride / Second Fall rules (Act VI)
     black_sun_data.gd       Black Sun / Eclipse of Heaven rules, Stolen Dawn keys, Night Prayer key (Act V)
     lilith_data.gd          Lilith's arrival, fight (charm waves, the kiss, children, her true form) (Act VI)
     tempt_data.gd           The Enthrall path and Temptation / Unholy Desire rules, Velvet Chains keys,
@@ -3370,6 +3398,7 @@ Options (after `--`):
 | (Act V, the Burning Province) | `--stage=province` adds `province` (the paddy checks and slows, the kappa left unslowed, the village fires and their burns, Shuten-dōji, the lanterns lit toward No Shadow Unlit), `province kinds` (Kunoichi smokes, summons blinded and lunges; Kappa grapples; sake and village fires; smoke clouds), `shuten-doji` and `kage` (splits, clones revealed by light / faded / killed, smoke fields, kunai hooks and pulls, phases); `act V spell` / `act V passives` print when Hundred Shadows, Hidden Hand or Paper Lanterns was taken (e.g. `--spells=hundred_shadows --passives=paper_lanterns`, `--character=grave_kunoichi`). `--spawn=kunoichi@60x2,kappa@90x4,shuten_doji@120` works on any stage; `--boss=kage`. |
 | (Castle Kurogane) | `--stage=kurogane` adds `kurogane` (the General of the Left's arrival and fall), `kurogane kinds` (Hatamoto spawned and killed, aura pulses, Kiba-musha charges and their hits; also wherever a Kurogane kind was forced, e.g. `--spawn=hatamoto@60,kiba_musha@90x4,general_left@120`), `general of the left` (charges and hits, riders called, rage, kill time) and `shogun` (the bar, each regiment's order and fate, soldiers sent / killed / fled / lost, other kills taken off the bar, banners broken, when he came down, his guard, iai and triple cuts, Regiments Broken; also `--boss=shogun`). On any stage, `act V spell` (Banner of the Dead when learned, e.g. `--spells=banner_of_the_dead`) and `act V passives` (Warlord's Seal, Unbending, e.g. `--passives=unbending`). |
 | (Act VI) | `--stage=burning_gate\|silk_palace\|pandemonium` (the Act VI stubs) prints `hell pits` (pits opened: timed, Last Judgment, opened by kinds; refused; the most fixed pits live and the zone at the end; burns; damage to summons, to you, to enemies; pit kills and the damned burned), `portals` (opened, destroyed, sealed with the times and the Soul Ash bounty, standing at the end; squads and units poured, capped), `temptation` (charms, the most at once, broken by the charmer's death, expired, freed by breaking the body, refused at the cap; damage by charmed summons to summons and to you; by class), `inferno kinds` (spawned / killed, first appearance and damage per kind; knight sweeps, succubus kisses, brute slams), `last judgment` (after 0:00: portals opened, pits, the Adversary's grabs and their hits) and `inferno stage`. The army bot seals portals (it walks into a ring when its army holds and it is calm). The portal, temptation and kind lines also print on any stage where an Inferno kind was forced (the pits stay off there): `--spawn=succubus@60x2,demon_portal@90,hell_knight@120x4`; `--boss=moloch\|lilith\|morning_star` (placeholder boss scripts until phase 2). |
+| (Pandemonium) | `--stage=pandemonium` adds `pandemonium` (guest squads, objective Soul Ash) and its event log, `pandemonium kinds` (Fallen Angel dives and hits, blows grazed aloft / taken landed, spear pits; the Fallen Seraph General's cleaves, feathers, hits, pits, the Fallen Host and time to kill; also wherever they were forced, e.g. `--spawn=fallen_angel@60x3,seraph_general@120`) and `morning star` (the Beast's time, sword / beams / slams / pit rings, damage by attack). On any stage `fall from grace` (Fall from Grace / Lightbringer, Pride, Second Fall) and `archfiend` (the Archfiend / Prince of Hell, cleaves, dreads, Crown of Horns) print when used. |
 | (Assembly Halls) | `--stage=assembly` adds `assembly` (fabricators destroyed / placed / planned and when, soldiers built and capped, the wave and trickle thinning, Cold Assembly, the Beta Build, objective Soul Ash), `assembly floor` (seconds carried by belts for you / summons / enemies, furnace flares, furnace hits and damage per side), `assembly events`, `assembly kinds` (Arc Engineer repairs and jams, Juggernaut flames and flat armour, the Beta Build's swipes, rivets, patching and kill time) and `motherboard` (grabs, hurls, stamps, magnet pulls, turret builds, turrets and their shots, when Full Load and Overclock began, its damage). Reward lines print when owned: `hollow puppet` (`--spells=hollow_puppet`), `class grave_drone` (`--classes=grave_drone`), `signal ghost` (`--passives=signal_ghost`) and `marionette` (`--character=marionette`). `--spawn=arc_engineer@60x4,juggernaut@120x2,beta_build@180` works on any stage. |
 | (the Iron Citadel) | `--stage=citadel` adds `citadel` (gates raised / broken / locked down, garrison spawns, wall pushes, laser cycles and their hits on you, summons and enemies, citadel gun salvos, strikes and hits, turrets placed / destroyed / left behind, guests, objective Soul Ash), `citadel events`, `citadel kinds` (Duelist lunges: blocked / reached you / summons sliced; turret bursts; Valkyrie 2.0: spawned, killed and time to kill, dashes (blocked, hit you), bashes, storms, summon hits) and, when it fought, `deus ex machina` (phase times, plates broken, chaingun / salvo / footfall / stomp counts and hits, drones launched and downed, exposures, lances and their blocked ticks, hangars, pulses, teleports, machines gone dark, damage to you by attack). On every stage, `scrap swarm` (level, damage, kills, bolts, kill drones, peak drones, orbit radius; Machine Soul's bonus damage) and `iron revenant` (level, damage by source, bursts, shells, salvos, missiles; Recoil Frame) print only when used. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |

@@ -253,6 +253,10 @@ var burning_gate: BurningGateDirector = null
 ## reflections, the Twin Succubi, guest squads; StageRegistry "silk_palace";
 ## null on every other stage).
 var silk_palace: SilkPalaceDirector = null
+# --- Act VI: Pandemonium ---
+## Pandemonium's mechanics (Act VI: the Fallen Seraph General, guest squads;
+## StageRegistry "pandemonium"; null on every other stage).
+var pandemonium: PandemoniumDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -397,6 +401,12 @@ func _ready() -> void:
 		silk_palace.game = game
 		silk_palace.config = stage_def["silk_palace"]
 		add_child(silk_palace)  # The Palace of Silk and Ash's director.
+	# --- Act VI: Pandemonium ---
+	if not (stage_def.get("pandemonium", {}) as Dictionary).is_empty():
+		pandemonium = PandemoniumDirector.new()
+		pandemonium.game = game
+		pandemonium.config = stage_def["pandemonium"]
+		add_child(pandemonium)  # Pandemonium's director.
 
 
 # =====================================================================================
@@ -517,6 +527,9 @@ func step(delta: float) -> void:
 	# --- Act VI: the Palace of Silk and Ash ---
 	if silk_palace != null:
 		silk_palace.step(delta)  # The Hall of Mirrors' reflections, guests.
+	# --- Act VI: Pandemonium ---
+	if pandemonium != null:
+		pandemonium.step(delta)  # Pandemonium's guest squads.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -631,6 +644,9 @@ func objective_text() -> String:
 	# --- Act VI: the Palace of Silk and Ash ---
 	if silk_palace != null and silk_palace.objective_override() != "":
 		return silk_palace.objective_override()  # The Twin Succubi, the Hall of Mirrors.
+	# --- Act VI: Pandemonium ---
+	if pandemonium != null and pandemonium.objective_override() != "":
+		return pandemonium.objective_override()  # The Fallen Seraph General.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -829,6 +845,12 @@ func _run_event(ev: Dictionary) -> void:
 				silk_palace.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Twin Succubi's event (SilkPalaceDirector).
+		# --- Act VI: Pandemonium ---
+		"seraph_general":
+			if pandemonium != null:
+				pandemonium.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Pandemonium's miniboss (PandemoniumDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

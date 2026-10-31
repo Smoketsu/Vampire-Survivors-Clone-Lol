@@ -88,7 +88,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VI: the Burning Gate ---
 	"rain_of_fire",
 	# --- Act VI: the Palace of Silk and Ash ---
-	"unholy_desire"]
+	"unholy_desire",
+	# --- Act VI: Pandemonium ---
+	"lightbringer"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -574,6 +576,26 @@ const EVOLUTIONS := {
 		"stats": {
 			"charms": 3, "charm_time": 8.0, "damage": 30.0, "range": 280.0, "cooldown": 5.0,  # TUNING (not in GDD)
 			"desire": 1.0,  # TUNING (not in GDD) the evolution flag: share of the thrall's hit its burst deals; first pass 1.5 (151k burst damage in the forced run)
+		},
+	},
+	# --- Act VI: Pandemonium ---
+	# Lightbringer (GDD §15.0 "Fall from Grace, Lightbringer, Pride and the
+	# Fallen Saint"; owner-approved proposal "Fall from Grace -> Lightbringer (+
+	# Pride)"): Fall from Grace + Pride (a NEW passive, owner rule: at Lv 5).
+	# Three stars a cast on the three strongest foes, harder and wider, and each
+	# crash sends a FLARE ring out to FallFromGraceData.FLARE_RADIUS_MULT x the
+	# crash radius (`flare` x the damage to every foe in the ring beyond the
+	# crash). Detected by the "flare" key.
+	"lightbringer": {
+		"base": "fall_from_grace",
+		"passive": "pride",
+		"display_name": "Lightbringer",
+		"icon": "lightbringer",
+		"description": "Three morning stars fall on the mightiest foes, and every crash flares out in a ring of light.",
+		"labels": {"damage": "Star damage", "stars": "Stars", "radius": "Crash radius", "flare": "Flare", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"stars": 3, "damage": 90.0, "radius": 52.0, "splash": 0.5, "fall_time": 0.45, "cooldown": 2.5,  # TUNING (not in GDD) first pass 120 / r56 / 2.2 s led every source by 4x
+			"flare": 0.25,  # TUNING (not in GDD) first pass 0.35; the evolution flag: share of the star's damage its flare ring deals
 		},
 	},
 }

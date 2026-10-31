@@ -368,7 +368,7 @@ func _check_masteries() -> void:
 		_check(MasteryData.is_masterable(cls) == not evolved, "%s %s a mastery" % [cls, "has no" if evolved else "has"])
 		covered += 0 if evolved else 1
 	_check(covered == MasteryData.CLASSES.size(), "every offerable class is in MasteryData.CLASSES")
-	_check(MasteryData.cost_up_to(3) == 760 and MasteryData.total_cost() == 15200, "masteries cost 760 a class, 15,200 in all (got %d)" % MasteryData.total_cost())  # Act VI: the Succubus (20 classes)
+	_check(MasteryData.cost_up_to(3) == 760 and MasteryData.total_cost() == 760 * MasteryData.CLASSES.size(), "masteries cost 760 a class, %d in all (got %d)" % [760 * MasteryData.CLASSES.size(), MasteryData.total_cost()])  # Act VI: 21 classes (the Succubus, the Archfiend) = 15,960; the total follows the class list so each new class needs no edit here
 	print("[ossuary_check] masteries: %d classes x %d / %d / %d = %d" % [MasteryData.CLASSES.size(), MasteryData.PRICES[0], MasteryData.PRICES[1], MasteryData.PRICES[2], MasteryData.total_cost()])
 	# Unlock rule and purchases.
 	Meta._reset()

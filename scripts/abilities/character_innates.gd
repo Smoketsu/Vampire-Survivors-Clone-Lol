@@ -69,6 +69,10 @@
 ##   Succubus Queen   Heartbreaker    in TemptSpell / Enthrall._return() (a foe
 ##                    whose charm ends loses a share of its max HP); stat
 ##                    enthrall_heartbreaks.
+## Act VI, Pandemonium:
+##   Fallen Saint     Second Fall     in FallFromGrace._cast() (every cast drops
+##                    a second star on the next-strongest foe); stat
+##                    grace_second_stars.
 class_name CharacterInnates
 extends Node2D
 
@@ -402,6 +406,9 @@ func summary_line() -> String:
 		# --- Act VI: the Palace of Silk and Ash --- (Heartbreaker lives in Enthrall._return())
 		"heartbreaker":
 			counters = "heartbreaks %d (dmg %d)" % [int(st.get("enthrall_heartbreaks", 0.0)), int(st.get("dmg_" + TemptData.HEARTBREAK_SOURCE, 0.0))]
+		# --- Act VI: Pandemonium --- (Second Fall lives in FallFromGrace._cast())
+		"second_fall":
+			counters = "second stars %d (dmg as fall_from_grace / lightbringer)" % int(st.get("grace_second_stars", 0.0))
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

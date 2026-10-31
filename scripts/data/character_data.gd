@@ -76,7 +76,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act VI: the Burning Gate ---
 	"furnace_priest",
 	# --- Act VI: the Palace of Silk and Ash ---
-	"succubus_queen"]
+	"succubus_queen",
+	# --- Act VI: Pandemonium ---
+	"fallen_saint"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -133,6 +135,8 @@ const STAT_LABELS := {
 ##                           attack-speed haste, x (1 + value); Act V)
 ##   tempt_heartbreak        TemptSpell / Enthrall (share of its max HP a foe
 ##                           loses when her charm on it ends; Act VI)
+##   grace_second_star       FallFromGrace._cast (share of a star's damage a
+##                           second star deals on the next-strongest foe; Act VI)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -164,7 +168,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act VI: the Burning Gate ---
 	"brimstone_extra_stones",
 	# --- Act VI: the Palace of Silk and Ash ---
-	"tempt_heartbreak"]
+	"tempt_heartbreak",
+	# --- Act VI: Pandemonium ---
+	"grace_second_star"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -646,6 +652,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a frail queen on wings
 		"sprite": "player/succubus_queen",
 		"tint": Color(0.86, 0.56, 0.86),  # TUNING (not in GDD) a lilac over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act VI: Pandemonium ---
+	# The Fallen Saint (Fall from Grace's character; owner-approved Act VI
+	# proposal "Rewards": "Fall from Grace ... | The Fallen Saint (figure
+	# style)"): female, in the figure-redesign style, an hourglass figure fully
+	# clothed in a fitted black and deep-violet nun's gown with gold trims and a
+	# high side slit, a torn white veil, long ash-blonde hair, a cracked gold
+	# halo tilted above her head, a censer-staff and a small falling star above
+	# her hand; the bust rig and idle breathing. Fall from Grace must be unlocked
+	# (the Morning Star) before she can be earned, by the usual Lv 5 rule. Own
+	# decision on her innate (the proposal names none): she fell twice, so her
+	# stars fall twice (FallFromGrace._cast()).
+	"fallen_saint": {
+		"display_name": "The Fallen Saint",  # Owner-approved proposal
+		"title": "Heaven cast her out. She brought its stars down with her.",
+		"spell": "fall_from_grace",
+		"innate": {
+			"id": "second_fall", "name": "Second Fall",
+			"description": "Fall from Grace drops a second star on the next-strongest foe.",
+			"values": {"grace_second_star": 0.5},  # TUNING (not in GDD) the second star's share of the damage
+		},
+		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail saint whose stars fall wide
+		"sprite": "player/fallen_saint",
+		"tint": Color(0.72, 0.58, 0.90),  # TUNING (not in GDD) a fallen violet over the violet
 		"starts_unlocked": false,
 	},
 }

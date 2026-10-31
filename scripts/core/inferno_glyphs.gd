@@ -47,6 +47,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		return true  # The Hellhound, the Pit Cultist, the Gatekeeper.
 	if SilkPalaceGlyphs.draw_enemy(ci, kind, o, r, flash):
 		return true  # --- Act VI: the Palace of Silk and Ash --- (the Lilim Witch, the Twin Succubi)
+	# --- Act VI: Pandemonium --- (its own kinds' fallbacks)
+	if PandemoniumGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # A Pandemonium kind (the Fallen Angel, the Fallen Seraph General).
 	match kind:
 		"imp":
 			_imp(ci, o, r, flash)

@@ -387,6 +387,17 @@ const HEIGHTS: Dictionary = {
 	"player/succubus_queen_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 	"summons/bound_succubus": 52.0,  # TUNING (not in GDD) a support summon (Banshee ~48), the horns above
 	"summons/lilim_matriarch": 62.0,  # TUNING (not in GDD) its evolution, bigger, the wings wide
+	# --- Act VI: Pandemonium ---
+	"inferno/fallen_angel": 60.0,  # TUNING (not in GDD) elite tier, female (figure redesign at the approved act6_units level, as the succubus): body ~52, the halo and the burning spear above
+	"inferno/seraph_general": 92.0,  # TUNING (not in GDD) miniboss tier: a tall winged warlord, the four wings and the halo crown above
+	"bosses/morning_star": 116.0,  # TUNING (not in GDD) boss tier: the Angel, six wings fanned and the halo above
+	"bosses/morning_star_beast": 140.0,  # TUNING (not in GDD) boss tier, bigger: the throne-skull Beast, horns and torn wings
+	"player/fallen_saint": 56.0,  # TUNING (not in GDD) character tier: body ~48, the halo and the staff above
+	"player/fallen_saint_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold and white
+	"player/fallen_saint_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/fallen_saint_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/archfiend": 62.0,  # TUNING (not in GDD) a heavy summon (Bound Oni 60), the horns and wings above
+	"summons/prince_of_hell": 72.0,  # TUNING (not in GDD) its evolution, bigger
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

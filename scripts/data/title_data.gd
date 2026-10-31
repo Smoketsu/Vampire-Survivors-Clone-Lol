@@ -23,7 +23,9 @@ extends RefCounted
 ## Title ids in display order (the setup screen's cycle order after "None").
 const ORDER := ["heretics_bane", "master_of_the_drowned", "archnecromancer", "executioner",
 	# --- Act III: the Iron Citadel ---
-	"breaker_of_engines"]  # owner-approved Proposal 2; Act III proposal
+	"breaker_of_engines",
+	# --- Act VI: Pandemonium ---
+	"sovereign_of_pandemonium"]  # owner-approved Proposal 2; Act III proposal; Act VI (own decision)
 
 ## Title id -> row (keys above).
 const TITLES := {
@@ -33,6 +35,8 @@ const TITLES := {
 	"executioner": {"display_name": "Executioner", "achievement": "swift_judgment", "frame": ""},  # owner-approved Proposal 2
 	# --- Act III: the Iron Citadel ---
 	"breaker_of_engines": {"display_name": "Breaker of Engines", "achievement": "nothing_is_deathless", "frame": ""},  # Owner-approved Act III proposal
+	# --- Act VI: Pandemonium ---
+	"sovereign_of_pandemonium": {"display_name": "Sovereign of Pandemonium", "achievement": "morning_star_falls", "frame": ""},  # Own decision: Morning Star Falls records the clear (no epilogue yet, owner Oct 31)
 }
 
 ## Text of the "no title" choice on the setup screen's cycle row.

@@ -424,7 +424,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VI: the Burning Gate ---
 	"gate_crashed",
 	# --- Act VI: the Palace of Silk and Ash ---
-	"unmoved"]
+	"unmoved",
+	# --- Act VI: Pandemonium ---
+	"morning_star_falls"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -580,6 +582,14 @@ const ACHIEVEMENTS := {
 	# the counter-passive Faithless.
 	"unmoved": {"display_name": "Unmoved", "description": "Slay Lilith in the Palace of Silk and Ash with no summon charmed during her fight",
 		"stat": "lilith_unmoved_kills", "goal": 1, "unlock": "The Faithless passive", "bounty": 300},  # Owner-approved Act VI proposal; bounty TUNING (not in GDD) as Regiments Broken
+	# --- Act VI: Pandemonium ---
+	# The finale of Part One (owner-approved Act VI proposal: "Morning Star Falls
+	# (beat the Adversary)"): the Morning Star beaten in Pandemonium, counted from
+	# the stage record. No epilogue part yet (owner decision Oct 31, 2026: the
+	# epilogues wait for the act order); it records the clear with the title
+	# Sovereign of Pandemonium (UnlockData / TitleData).
+	"morning_star_falls": {"display_name": "Morning Star Falls", "description": "Cast down the Morning Star in Pandemonium",
+		"stat": "boss_kills", "stage": "pandemonium", "goal": 1, "unlock": "The title Sovereign of Pandemonium", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) the end of Part One (The Sun Goes Out 450)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

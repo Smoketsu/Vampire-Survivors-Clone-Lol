@@ -60,7 +60,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act V: the Road to the Sun --- (a silhouette naming its unlock until met)
 		"bound_oni",
 		# --- Act VI: the Palace of Silk and Ash --- (a silhouette naming its unlock until met)
-		"bound_succubus"]
+		"bound_succubus",
+		# --- Act VI: Pandemonium --- (a silhouette naming its unlock until met)
+		"archfiend"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -187,13 +189,17 @@ const INFERNO_SOLDIERS: Array[String] = ["damned", "imp", "hell_knight", "succub
 	# --- Act VI: the Burning Gate ---
 	"lava_hound", "pit_cultist",
 	# --- Act VI: the Palace of Silk and Ash ---
-	"lilim_witch"]
+	"lilim_witch",
+	# --- Act VI: Pandemonium ---
+	"fallen_angel"]
 ## Inferno champions (minibosses) and the Act VI Reckoning kinds.
 const INFERNO_CHAMPIONS: Array[String] = ["demon_brute",
 	# --- Act VI: the Burning Gate ---
 	"gatekeeper",
 	# --- Act VI: the Palace of Silk and Ash ---
-	"twin_naamah", "twin_agrat"]
+	"twin_naamah", "twin_agrat",
+	# --- Act VI: Pandemonium ---
+	"seraph_general"]
 ## Inferno stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const INFERNO_BOSSES: Array[String] = ["moloch", "lilith", "morning_star"]
 
@@ -354,6 +360,9 @@ const DESCRIPTIONS: Dictionary = {
 	"lilim_witch": "A demon sorceress of Lilith's court. She opens pits under your ring and heals the demons at a portal.",  # Owner-approved Act VI proposal
 	"twin_naamah": "The elder of the Twin Succubi. The sisters charm in turns; kill one and the other rages.",  # Owner-approved Act VI proposal
 	"twin_agrat": "The younger of the Twin Succubi, quicker than her sister, and as cruel.",  # TUNING (not in GDD)
+	# --- Act VI: Pandemonium ---
+	"fallen_angel": "She dives from above with a burning spear. Aloft, your blades barely reach her: gargoyles and ranged dead answer her.",  # Owner-approved Act VI proposal ("Gargoyles, ranged")
+	"seraph_general": "A fallen archangel warlord with four burnt wings. His cleave cracks the ground; at half strength he calls the Fallen Host.",  # Owner-approved Act VI proposal (the miniboss)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -557,6 +566,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"gate_crashed": "ach_gate_crashed",  # TUNING (not in GDD)
 	# --- Act VI: the Palace of Silk and Ash ---
 	"unmoved": "ach_unmoved",  # TUNING (not in GDD)
+	# --- Act VI: Pandemonium ---
+	"morning_star_falls": "ach_morning_star_falls",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -598,6 +609,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"gate_crashed": "salt_circle",
 	# --- Act VI: the Palace of Silk and Ash ---
 	"unmoved": "faithless",
+	# --- Act VI: Pandemonium ---
+	"morning_star_falls": "fall_from_grace",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

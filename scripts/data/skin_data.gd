@@ -97,6 +97,8 @@ const HYPER_NAMES := {
 	"furnace_priest": "Gilded Furnace Priest",  # TUNING (not in GDD)
 	# --- Act VI: the Palace of Silk and Ash ---
 	"succubus_queen": "The Golden Temptress",  # TUNING (not in GDD)
+	# --- Act VI: Pandemonium ---
+	"fallen_saint": "Saint of the Morning",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -141,6 +143,8 @@ const HYPER_TINTS := {
 	"furnace_priest": Color(1.2, 1.05, 0.6),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 	# --- Act VI: the Palace of Silk and Ash ---
 	"succubus_queen": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
+	# --- Act VI: Pandemonium ---
+	"fallen_saint": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD

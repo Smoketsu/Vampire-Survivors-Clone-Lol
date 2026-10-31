@@ -272,6 +272,12 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	if out.has("charm_time"):
 		out["charm_time"] = float(out["charm_time"]) * (1.0 + passive_value(TemptData.VELVET_CHAINS, TemptData.CHAIN_TIME_KEY))
 		out["damage"] = float(out["damage"]) * (1.0 + passive_value(TemptData.VELVET_CHAINS, TemptData.CHAIN_POWER_KEY))
+	# --- Act VI: Pandemonium --- Pride: Fall from Grace's stars come sooner and
+	# strike the proud harder (its keys exist only in the Fall from Grace /
+	# Lightbringer rows; the passive's values are 0 while it is not owned).
+	if out.has("fall_time"):
+		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(FallFromGraceData.PRIDE, FallFromGraceData.HASTE_KEY))
+		out[FallFromGraceData.PROUD_KEY] = passive_value(FallFromGraceData.PRIDE, FallFromGraceData.PROUD_KEY)
 	return out
 
 

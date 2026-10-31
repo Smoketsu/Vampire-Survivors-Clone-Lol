@@ -15,6 +15,7 @@
 ##   "shieldwall" Myrmidon Shade  MyrmidonBehavior (Act IV, the Asphodel Underworld)
 ##   "kanabo" Bound Oni           OniBehavior (Act V, the Road to the Sun)
 ##   "allure" Succubus            BoundSuccubusBehavior (Act VI, the Palace of Silk and Ash)
+##   "hellfire" Archfiend         ArchfiendBehavior (Act VI, Pandemonium)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -69,6 +70,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act VI: the Palace of Silk and Ash ---
 		"allure":
 			b = BoundSuccubusBehavior.new()  # The Succubus.
+		# --- Act VI: Pandemonium ---
+		"hellfire":
+			b = ArchfiendBehavior.new()  # The Archfiend.
 	if b != null:
 		b.kind = kind
 	return b
@@ -189,6 +193,14 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Charm (s)", a, b, "charm_duration")
 				_delta(out, "Thrall hit", a, b, "thrall_damage")
+		# --- Act VI: Pandemonium ---
+		"hellfire":
+			if a.is_empty():
+				out.append("Holds the ring's front on spread wings")
+				out.append("Hellfire Cleave: sweeps a wide arc and throws the foes in it back")
+			else:
+				_delta(out, "Cleave damage", a, b, "cleave_damage")
+				_delta(out, "Cleave cooldown (s)", a, b, "cleave_cooldown")
 	return out
 
 

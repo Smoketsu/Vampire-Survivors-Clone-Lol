@@ -1,0 +1,7 @@
+A sheet of pixel-art game OBSTACLE PROPS in TWO ROWS on a FULLY TRANSPARENT background (real alpha), wide empty gaps between all props. Three-quarter top-down view (camera above and in front), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+TOP ROW, three LONG props lying left-right (each about 60 pixels long and 16 pixels deep), from left to right:
+1. AN IRON WALL: a low wall of black riveted iron plates with a row of short spikes along its top.
+2. A BRIDGE RAIL: a long black iron chain-bridge railing: two thick posts joined by heavy hanging chains over dark planks.
+3. AN ASH PEW: a long cathedral pew of black ash stone with a high carved back.
+BOTTOM ROW, the SAME three props seen END-ON (turned 90 degrees, so each is narrow and runs away from the camera, about 16 pixels wide and 40 pixels tall), in the same order.
+Colours: obsidian #0B0A10 #1E1A26 #352E40 #5A5068 (the lightest as a top-left rim); iron greys #2A2D36 #4A4E5A #7C8290; ash stone #26272A #3E3F44 #5E5F66; dark wood #2A1C12 #5B3D26; lava glints #E0601A #FFB347.

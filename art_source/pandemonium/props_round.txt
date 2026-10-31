@@ -1,0 +1,9 @@
+A sheet of SIX separate pixel-art game OBSTACLE PROPS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Three-quarter top-down view (camera above and in front, like a top-down action game), each prop standing upright on its base, chunky low-resolution pixel art (each prop about 30 pixels wide), crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+From left to right (Pandemonium, the obsidian capital city of hell):
+1. AN IRON BRAZIER: a black iron fire bowl on three clawed legs, orange flames rising from it.
+2. A CHAIN POST: a thick black iron bollard with a big ring on top and a heavy chain hanging in a loop from it.
+3. AN ASH COLUMN: a stout round grey-black cathedral column of ash stone with a carved capital, cracked, a little ash at its base.
+4. A BURNING CENSER: a tall black iron censer-lamp on a stand, a cage with an orange fire inside, a thin line of smoke.
+5. A SKULL PILLAR: a short round pillar built of stacked brown-ivory skulls with a horned skull on top.
+6. AN OBSIDIAN SHARD: a jagged black volcanic glass spike rising from the ground, glowing orange lava cracks in it.
+Colours: obsidian #0B0A10 #1E1A26 #352E40 #5A5068 (the lightest as a top-left rim); iron greys #2A2D36 #4A4E5A #7C8290; ash stone #26272A #3E3F44 #5E5F66; bone #4F3320 #A79A80 #CFC7AE; lava #8A2A08 #E0601A #FFB347.

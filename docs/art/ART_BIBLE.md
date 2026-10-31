@@ -2644,3 +2644,36 @@ from each sprite's torso, for review) and 24-frame idle strips for every figure.
 | `obstacles/black_rosebush`, `rose_column`, `palace_mirror`, `candelabra` (`_s` / `_l`) | Round props | footprint + 4 wide | height capped at 2.1 x width |
 | `obstacles/velvet_divan`, `mirror_wall` (`_s` / `_l`, `_v`) | Long props, both orientations | length + 2 | end-on `_v` from the sheet's second row |
 | `tiles/silk_palace_roses` / `_mirrors` / `_ballroom` / `_chamber` | Zone floors from two textures (soil, rose marble) | 128 | `make_tile.py` recipes under `# --- Act VI: the Palace of Silk and Ash ---` |
+
+### Act VI: Pandemonium (phase 2, Oct 2026)
+
+<!-- --- Act VI: Pandemonium --- -->
+Stage 18's art (GDD §15.0 "Pandemonium (Act VI phase 2)" and the rows after it), built by `art_source/pandemonium/make_art.py`
+(steps units, figures, badges, props, floors, strips; prompts beside it in `art_source/pandemonium/<id>.txt`, the sex named
+in each). References: the Fallen Angel from a 2x crop of the approved `act6_units.png` (the rightmost figure) plus the
+succubus sprite; the Morning Star from `act6_boss.png` (his face, hair, halo, armour and wings; the Beast from its horned skull
+and wings); the Fallen Saint from the Shrine Maiden sprite (her skins from the Saint's own source); the Archfiend from the
+Bound Oni. Pipeline: `prepare_sprite.py --ink-l 0.15` (the Act VI ink) with explicit ramps; `--no-levels` for the Morning Star
+and the Beast (their black stays black); the Fallen Seraph General WITH the levels stretch (without it his wings sat at main L
+0.23, below the hell knight's 0.32); the Fallen Angel and the Fallen Saint (and her skins) through `pixelate_source.py` first
+(60 / 56 art px), then `--no-cleanup`. The Saint's source faced left and was mirrored before conversion (all four sources).
+The art_check lightness "FAIL" lines against the Act I floors are the same as the approved hell knight's (black obsidian
+units); on Pandemonium's own floors (main L 0.17-0.24) they read. The Prince of Hell's violet cape is the player's colour on
+the player's summon (art_check WARN, accepted). Badges: two 5-symbol sheets split with a 4 px gap (the symbols sit close),
+set on the abyssal_pact (violet) and tidecallers_host (gold) frames. Floors: two API textures through `make_tile.py`
+recipes `pandemonium_*`.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `inferno/fallen_angel` | Fallen Angel (elite, female, the approved act6_units level): silver hair, cracked gold halo, black wings, black corset bodysuit with gold, thigh-high armoured boots, a burning spear | 38x60 | glide (robe, hip 36): bust box (cols 13-24, rows 15-22, two lobes) and hip `swish` (cols 12-25, rows 25-34); idle strip |
+| `inferno/seraph_general` | The Fallen Seraph General (miniboss, male): four burnt wings, broken halo crown, black and gold plate, a burning greatsword | 96x92 | legs walk (hip 62) |
+| `bosses/morning_star` | The Morning Star, the Angel (male): six burnt wings, gold halo, silver hair, black armour, a burning sword of light | 114x116 | glide in his cloak (hip 80); no attack pose (BossPoseData) yet |
+| `bosses/morning_star_beast` | The Morning Star, the Beast: a giant horned skull with a tilted halo, obsidian and charred bone body, torn wings, chained claws | 142x140 | legs walk (hip 104, spread 3) |
+| `player/fallen_saint` (+ `_hyper`, `_untouchable`, `_deathlord`) | The Fallen Saint (female, figure style): black and violet gown with gold, a high slit, a torn white veil, ash-blonde hair, a tilted halo, a staff, a falling star | 36x56 | glide (hip 34), bust box (cols 13-25, rows 16-22); idle strips; the skins derived (walk_cycle SKINS) |
+| `summons/archfiend` | Archfiend (male, the bound undead style): ashen grey-violet skin, curled horns, bat wings, bone collar, a black cleaver with soul-teal runes | 68x62 | legs walk (hip 44) |
+| `summons/prince_of_hell` | Prince of Hell: four wings, a spiked crown, violet cape, runed armour, a soul-fire cleaver | 76x72 | legs walk (hip 52) |
+| `icons/fall_from_grace`, `pride`, `archfiend`, `crown_of_horns` | Violet badges | 32x32 | from `icons_violet.png` |
+| `icons/lightbringer`, `prince_of_hell`, `ach_morning_star_falls` | Gold badges | 32x32 | from `icons_gold.png` |
+| `obstacles/iron_brazier`, `chain_post`, `ash_column`, `burning_censer`, `skull_pillar`, `obsidian_shard` (`_s/_m/_l`) | Round props | footprint + 4 wide | from `props_round.png` |
+| `obstacles/iron_wall`, `bridge_rail`, `ash_pew` (`_s/_l`, `_v`) | Long props, horizontal and end-on | length + 2 | from `props_long.png` |
+| `tiles/pandemonium_iron`, `_bridges`, `_cathedral`, `_throne` | Zone floors | 128x128 | `art_source/tiles/pandemonium_obsidian.png` / `_ash.png` |
