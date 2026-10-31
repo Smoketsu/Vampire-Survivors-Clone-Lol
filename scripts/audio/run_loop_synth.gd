@@ -48,6 +48,16 @@
 ##             lp0, lp1, click, notes}),
 ##   "flute" — breathy sustained notes [start, Hz, length] ({amp, breath, attack,
 ##             decay, vib_hz, vib_depth, notes}).
+## Act VI (SoundData.BRIMSTONE_SCORE, "Hymn of the Pit") adds two more, the same way
+## (its war drum is the existing "drums", its bells the existing "hits"):
+##   "organ" — held pipe-organ pedal notes [start, Hz, length] built from sine
+##             `partials` [[ratio, amp], ...] ({attack, decay, vib_hz, vib_depth,
+##             partials, notes}),
+##   "snarl" — a distorted bass pulse: per `beat`-second beat of a `beats_per_bar` bar
+##             the pattern entries [beat, ratio, length in beats] on that bar's root
+##             (`roots`, Hz, bar b uses roots[b % roots.size()]), as saws plus a square
+##             through a low-pass, then soft-clipped by tanh(drive * x) ({beat,
+##             beats_per_bar, roots, pattern, drive, amp, decay, lp0, lp1}).
 ## Every note ends before the loop end, so the loop stays seamless.
 class_name RunLoopSynth
 extends RefCounted
@@ -192,6 +202,10 @@ func _init(rng_seed: int, score: Dictionary = {}) -> void:
 		_jobs.append(_job_arp)  # Act III: the cold arpeggio (Act IV: the lyre).
 	if score.has("horn"):
 		_jobs.append(_job_horn)  # Act IV: the brass swells.
+	if score.has("organ"):
+		_jobs.append(_job_organ)  # Act VI: the pipe-organ pedal.
+	if score.has("snarl"):
+		_jobs.append(_job_snarl)  # Act VI: the distorted bass pulse.
 	if score.has("koto"):
 		_jobs.append(_job_koto)  # Act V: the plucked koto line.
 	if score.has("flute"):
@@ -455,6 +469,53 @@ func _job_flute() -> void:
 			"attack": float(f["attack"]) * 1.4, "decay": float(f["decay"]), "vib_hz": float(f["vib_hz"]), "vib_depth": float(f["vib_depth"])}, _rng)
 		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": dur, "amp": float(f["breath"]),
 			"attack": float(f["attack"]) * 0.8, "decay": float(f["decay"]), "lp0": hz * 2.5, "lp1": hz * 3.5}, _rng)
+
+
+## Pipe organ (a score's "organ", Act VI): each note is a stack of sine partials
+## that swells in slowly (the pedal of a cathedral organ gone wrong), with a faint
+## vibrato; each ends before the loop end.
+func _job_organ() -> void:
+	var o: Dictionary = _score["organ"]
+	var partials: Array = o["partials"]  # [[ratio, amp], ...] of the stack.
+	for n: Array in o["notes"]:
+		var at := float(n[0])  # Note start (s).
+		var hz := float(n[1])  # Fundamental (Hz).
+		var dur := minf(float(n[2]), _loop_s - at - 0.05)  # Note length (s).
+		for pr: Array in partials:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": hz * float(pr[0]), "start": at, "dur": dur,
+				"amp": float(pr[1]), "attack": float(o["attack"]), "decay": float(o["decay"]),
+				"vib_hz": float(o["vib_hz"]), "vib_depth": float(o["vib_depth"])}, _rng)
+
+
+## Snarling bass (a score's "snarl", Act VI): the pattern's notes are rendered into a
+## scratch buffer (two detuned saws and a square through a closing low-pass), pushed
+## through tanh(drive * x) and added to the mix. A note that would not end before the
+## loop end is skipped.
+func _job_snarl() -> void:
+	var sn: Dictionary = _score["snarl"]
+	var beat := float(sn["beat"])  # s per beat.
+	var bar_beats := int(sn["beats_per_bar"])  # Beats per bar.
+	var roots: Array = sn["roots"]  # Bar root pitches (Hz).
+	var pattern: Array = sn["pattern"]  # [beat, ratio, length in beats] entries.
+	var drive := float(sn["drive"])  # Pre-clip gain.
+	var scratch := PackedFloat32Array()  # The un-distorted line.
+	scratch.resize(_n)
+	var bars := int(_loop_s / (beat * float(bar_beats)))  # Whole bars in the loop.
+	for b in bars:
+		var root := float(roots[b % roots.size()])  # This bar's root (Hz).
+		for h: Array in pattern:
+			var at := (float(b * bar_beats) + float(h[0])) * beat  # Note start (s).
+			var dur := float(h[2]) * beat  # Note length (s).
+			if at + dur >= _loop_s:
+				continue
+			var hz := root * float(h[1])  # Note pitch (Hz).
+			for v: Array in [[1.0, "saw", 1.0], [1.012, "saw", 0.8], [0.5, "square", 0.7]]:
+				Synth.add_layer(scratch, Synth.MUSIC_RATE, {"wave": String(v[1]), "f0": hz * float(v[0]), "start": at, "dur": dur,
+					"amp": float(v[2]), "attack": 0.006, "decay": float(sn["decay"]), "lp0": float(sn["lp0"]),
+					"lp1": float(sn["lp1"])}, _rng)
+	var amp := float(sn["amp"])  # Level of the clipped line in the mix.
+	for i in _n:
+		_buf[i] += tanh(drive * scratch[i]) * amp
 
 
 ## Peak search over samples [a, b) of the finished mix.

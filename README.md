@@ -431,6 +431,9 @@ all three show "Coming soon" until their stages are built (phase 2). The act's s
 - **Act V music and sounds.** "The Setting Sun" (`SoundData.SUN_SCORE`: a D "in" scale pad, taiko patterns, a
   plucked koto and a breathy shakuhachi) and the eight Shogunate sounds (`SoundData.SHOGUNATE_SOUNDS`) render
   lazily the same way once a stage uses `"music": "sun"`.
+- **Act VI music and sounds.** "Hymn of the Pit" (`SoundData.BRIMSTONE_SCORE`: a deep organ drone and pedal, slow war
+  drums, a dissonant Phrygian choir pad, a distorted bass pulse and a tolling bell) and the eight Inferno sounds
+  (`SoundData.INFERNO_SOUNDS`) render lazily the same way once a stage uses `"music": "brimstone"`.
 - **Music.** (Act IV's "Hymn of Bronze", a war drum under a Dorian pad with a plucked lyre and brass
   swells, and its eight Pantheon sounds are rendered lazily the same way: `SoundData.BRONZE_SCORE`,
   `PANTHEON_SOUNDS`; the stages switch to it with `"music": "bronze"`.) Act III runs play their own loop, "Iron Requiem" (a pulsing low synth, metallic hits

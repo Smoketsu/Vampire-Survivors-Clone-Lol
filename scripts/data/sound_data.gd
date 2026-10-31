@@ -531,22 +531,64 @@ const SUN_SCORE := {
 		"notes": [[1.25, 587.33, 3.4], [5.6, 783.99, 2.2], [8.1, 622.25, 2.6], [11.9, 587.33, 2.8]]},  # TUNING (not in GDD)
 }
 
+## "Hymn of the Pit", the Act VI run loop (GDD §15.0 "Hymn of the Pit and the
+## Inferno sounds", owner-approved proposal: an infernal feel): the RunLoopSynth
+## score of every stage whose STAGE has "music": "brimstone" (keys in
+## RunLoopSynth's header). A deep C drone and a dry furnace-wind bed under a
+## dissonant choir pad (tritones and a diminished triad over C Phrygian: C-Gb-Bb,
+## Db-G-B, C-Eb-Gb, B-F-Ab), a heavy pipe-organ pedal, slow pounding war drums
+## (the Act IV "drums" job, slower and lower), a snarling distorted bass pulse
+## and a tolling bell. Rendered lazily (Sfx), never under the autotest. 60 bpm:
+## 16 beats per 16 s loop, four 4-beat bars.
+const BRIMSTONE_SCORE := {
+	"loop_seconds": 16.0,  # TUNING (not in GDD) 16 beats at 60 bpm (1 s a beat)
+	"root_hz": 32.7,  # TUNING (not in GDD) C1, the drone under a Phrygian C
+	# Dissonant choir voicings (tritones, a diminished triad), low.
+	"chords": [
+		[130.81, 185.0, 233.08],
+		[138.59, 196.0, 246.94],
+		[130.81, 155.56, 185.0],
+		[123.47, 174.61, 207.65],
+	],  # TUNING (not in GDD)
+	"drone_lp_hz": 80.0,  # TUNING (not in GDD) a furnace hum, a little brighter than Act IV's
+	"wind_lp_hz": 260.0,  # TUNING (not in GDD) a dry scorching draught
+	"wind_swells": 4.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.7,  # TUNING (not in GDD) a restless choir
+	"vibrato_depth": 0.009,  # TUNING (not in GDD)
+	# War drums, slow and pounding: one deep thump a second, every 4th a heavy accent, a soft ghost half a beat later.
+	"drums": {"step": 1.0, "hz0": 82.0, "hz1": 36.0, "dur": 0.5, "amp": 0.44, "decay": 0.16,
+		"accent_every": 4, "accent_amp": 0.72, "slap": 0.12, "ghost_at": 0.5, "ghost_amp": 0.2},  # TUNING (not in GDD)
+	# The organ pedal: a stack of sine partials swelling in under each bar pair (C, then Db: the Phrygian second).
+	"organ": {"attack": 1.4, "decay": 5.0, "vib_hz": 0.9, "vib_depth": 0.004,
+		"partials": [[1.0, 0.13], [2.0, 0.1], [3.0, 0.06], [4.0, 0.05], [6.0, 0.025]],
+		"notes": [[0.0, 65.41, 7.6], [8.0, 69.3, 7.6]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The snarl: a bass pulse on the bar root; ratios 1 = root, 1.0595 = flat second, 1.4142 = tritone.
+	"snarl": {"beat": 1.0, "beats_per_bar": 4, "roots": [65.41, 69.3, 65.41, 61.74],
+		"pattern": [[0.0, 1.0, 0.35], [0.75, 1.0, 0.2], [1.5, 1.0595, 0.3], [2.5, 1.0, 0.35], [3.25, 1.4142, 0.4]],
+		"drive": 5.0, "amp": 0.13, "decay": 0.28, "lp0": 900.0, "lp1": 320.0},  # TUNING (not in GDD) [beat, ratio, beats]
+	# The bell: a struck, dissonant bell every 4 s from 3 s (partials over a low Bb).
+	"hits": {"every": 4.0, "offset": 3.0, "root_hz": 233.08, "dur": 2.4, "decay": 0.9,
+		"partials": [[1.0, 0.1], [2.76, 0.06], [5.4, 0.035], [8.93, 0.015]], "click": 0.08},  # TUNING (not in GDD)
+}
+
 ## Run-loop scores by STAGE "music" id (Sfx.play_music() modes; "" / absent =
 ## the Act I loop): "tide" = "Below the Tide" (Act II), "iron" = "Iron Requiem"
-## (Act III), "bronze" = "Hymn of Bronze" (Act IV), "sun" = "The Setting Sun" (Act V). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
+## (Act III), "bronze" = "Hymn of Bronze" (Act IV), "sun" = "The Setting Sun" (Act V), "brimstone" = "Hymn of the Pit" (Act VI). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
 const SCORES := {
 	"tide": TIDE_SCORE,
 	"iron": IRON_SCORE,
 	"bronze": BRONZE_SCORE,
 	"sun": SUN_SCORE,  # Act V
+	"brimstone": BRIMSTONE_SCORE,  # Act VI
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
 ## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
-## the Act IV ones; "shogunate" = SHOGUNATE_SOUNDS, the Act V ones); absent = none.
+## the Act IV ones; "shogunate" = SHOGUNATE_SOUNDS, the Act V ones; "inferno" = INFERNO_SOUNDS, the Act VI ones); absent = none.
 const SCORE_PACKS := {
 	"iron": "empire",
 	"bronze": "pantheon",
 	"sun": "shogunate",  # Act V
+	"brimstone": "inferno",  # Act VI
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -1188,4 +1230,74 @@ const SHOGUNATE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 70.0, "f1": 45.0, "start": 0.05, "dur": 0.4, "amp": 0.55, "attack": 0.003, "decay": 0.15},
 			{"wave": "sine", "f0": 66.0, "f1": 42.0, "start": 0.35, "dur": 0.4, "amp": 0.4, "attack": 0.003, "decay": 0.15},
 			{"wave": "sine", "f0": 62.0, "f1": 40.0, "start": 0.65, "dur": 0.5, "amp": 0.28, "attack": 0.003, "decay": 0.18}]},
+}
+
+## Act VI sound effects (the Inferno; recipe keys as SOUNDS). Kept OUT of SOUNDS
+## like the other packs: Sfx renders it lazily the first time an Act VI run's music
+## ("brimstone") is asked for (Sfx.prepare_pack("inferno"); seeds Sfx.PACK_SEED +
+## Sfx.PACK_SEED_OFFSETS["inferno"] + i). Nothing plays them until the lead wires the
+## foundation's sound map (InfernoRulesData).
+const INFERNO_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# A pit opens: a rumbling crack of rock and a long lava hiss.
+	"pit_open": {"dur": 1.4, "volume_db": -11.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 70.0, "f1": 30.0, "dur": 1.0, "amp": 0.7, "attack": 0.01, "decay": 0.35},
+			{"wave": "noise", "dur": 0.08, "amp": 0.7, "attack": 0.001, "decay": 0.02, "lp0": 5000.0, "lp1": 1200.0},
+			{"wave": "noise", "start": 0.05, "dur": 0.9, "amp": 0.35, "attack": 0.04, "decay": 0.3, "lp0": 600.0, "lp1": 200.0},
+			{"wave": "noise", "start": 0.15, "dur": 1.2, "amp": 0.16, "attack": 0.2, "decay": 0.5, "lp0": 7000.0, "lp1": 3000.0}]},
+	# Something burning in a pit: a short sizzle.
+	"pit_burn": {"dur": 0.35, "volume_db": -20.0, "max_voices": 4, "min_interval": 90, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.3, "amp": 0.3, "attack": 0.01, "decay": 0.08, "lp0": 8000.0, "lp1": 4000.0},
+			{"wave": "noise", "start": 0.02, "dur": 0.04, "amp": 0.3, "attack": 0.001, "decay": 0.01, "lp0": 3000.0},
+			{"wave": "noise", "start": 0.12, "dur": 0.03, "amp": 0.25, "attack": 0.001, "decay": 0.008, "lp0": 2500.0},
+			{"wave": "sine", "f0": 90.0, "f1": 60.0, "dur": 0.15, "amp": 0.15, "decay": 0.05}]},
+	# A demon portal tears open: a deep whoosh and a dissonant choir swell.
+	"portal_open": {"dur": 1.8, "volume_db": -12.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 1.5, "amp": 0.5, "attack": 0.6, "decay": 0.5, "lp0": 300.0, "lp1": 1800.0},
+			{"wave": "sine", "f0": 60.0, "f1": 45.0, "dur": 1.7, "amp": 0.45, "attack": 0.5, "decay": 0.7},
+			{"wave": "tri", "f0": 196.0, "dur": 1.6, "amp": 0.14, "attack": 0.7, "decay": 0.6, "vib_hz": 5.0, "vib_depth": 0.01},
+			{"wave": "tri", "f0": 277.2, "dur": 1.6, "amp": 0.12, "attack": 0.75, "decay": 0.6, "vib_hz": 5.3, "vib_depth": 0.01},
+			{"wave": "tri", "f0": 392.0, "dur": 1.5, "amp": 0.08, "attack": 0.8, "decay": 0.5, "vib_hz": 4.7, "vib_depth": 0.01}]},
+	# A portal sealed: a heavy slam and a tolling bell.
+	"portal_seal": {"dur": 1.6, "volume_db": -10.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 90.0, "f1": 32.0, "dur": 0.6, "amp": 0.8, "attack": 0.002, "decay": 0.18},
+			{"wave": "noise", "dur": 0.07, "amp": 0.6, "attack": 0.001, "decay": 0.018, "lp0": 4000.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 233.0, "start": 0.08, "dur": 1.5, "amp": 0.22, "attack": 0.003, "decay": 0.55},
+			{"wave": "sine", "f0": 643.0, "start": 0.08, "dur": 1.1, "amp": 0.12, "attack": 0.003, "decay": 0.35},
+			{"wave": "sine", "f0": 1258.0, "start": 0.08, "dur": 0.7, "amp": 0.05, "attack": 0.003, "decay": 0.18}]},
+	# Temptation lands: a soft kiss (a lip pop, a rising "mwah") over a shimmering chime.
+	"charm_kiss": {"dur": 0.9, "volume_db": -15.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.05, "amp": 0.2, "attack": 0.008, "decay": 0.015, "lp0": 2500.0, "lp1": 1200.0},
+			{"wave": "sine", "f0": 380.0, "f1": 640.0, "start": 0.02, "dur": 0.12, "amp": 0.2, "attack": 0.01, "decay": 0.05},
+			{"wave": "noise", "start": 0.14, "dur": 0.025, "amp": 0.25, "attack": 0.001, "decay": 0.006, "lp0": 4500.0},
+			{"wave": "sine", "f0": 1568.0, "start": 0.12, "dur": 0.7, "amp": 0.1, "attack": 0.004, "decay": 0.25, "vib_hz": 7.0, "vib_depth": 0.004},
+			{"wave": "sine", "f0": 2349.0, "start": 0.16, "dur": 0.6, "amp": 0.06, "attack": 0.004, "decay": 0.2, "vib_hz": 8.0, "vib_depth": 0.004},
+			{"wave": "sine", "f0": 3136.0, "start": 0.2, "dur": 0.5, "amp": 0.035, "attack": 0.004, "decay": 0.15}]},
+	# A charm breaks: a glassy snap.
+	"charm_break": {"dur": 0.5, "volume_db": -14.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.03, "amp": 0.6, "attack": 0.001, "decay": 0.008, "lp0": 9000.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 3520.0, "f1": 2200.0, "dur": 0.3, "amp": 0.14, "attack": 0.001, "decay": 0.07},
+			{"wave": "sine", "f0": 4700.0, "f1": 3000.0, "dur": 0.2, "amp": 0.08, "attack": 0.001, "decay": 0.045},
+			{"wave": "noise", "start": 0.05, "dur": 0.3, "amp": 0.12, "attack": 0.002, "decay": 0.06, "lp0": 9000.0, "lp1": 6000.0}]},
+	# An imp's cackle: a short chittering laugh, five square blips rising and falling.
+	"imp_cackle": {"dur": 0.6, "volume_db": -18.0, "max_voices": 3, "min_interval": 180, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "square", "f0": 620.0, "f1": 760.0, "dur": 0.07, "amp": 0.14, "attack": 0.004, "decay": 0.03, "lp0": 3000.0},
+			{"wave": "square", "f0": 720.0, "f1": 880.0, "start": 0.1, "dur": 0.07, "amp": 0.14, "attack": 0.004, "decay": 0.03, "lp0": 3000.0},
+			{"wave": "square", "f0": 660.0, "f1": 820.0, "start": 0.2, "dur": 0.07, "amp": 0.13, "attack": 0.004, "decay": 0.03, "lp0": 3000.0},
+			{"wave": "square", "f0": 560.0, "f1": 700.0, "start": 0.3, "dur": 0.07, "amp": 0.12, "attack": 0.004, "decay": 0.03, "lp0": 3000.0},
+			{"wave": "square", "f0": 480.0, "f1": 620.0, "start": 0.4, "dur": 0.08, "amp": 0.11, "attack": 0.004, "decay": 0.035, "lp0": 3000.0},
+			{"wave": "noise", "dur": 0.5, "amp": 0.04, "attack": 0.02, "decay": 0.2, "lp0": 5000.0, "lp1": 3500.0}]},
+	# A brute's slam: a ground-shaking impact, a crack and a long rolling rumble.
+	"brute_slam": {"dur": 1.2, "volume_db": -9.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 70.0, "f1": 24.0, "dur": 0.9, "amp": 0.95, "attack": 0.002, "decay": 0.28},
+			{"wave": "noise", "dur": 0.08, "amp": 0.8, "attack": 0.001, "decay": 0.02, "lp0": 5000.0, "lp1": 1000.0},
+			{"wave": "sine", "f0": 140.0, "f1": 60.0, "dur": 0.4, "amp": 0.3, "decay": 0.1},
+			{"wave": "noise", "start": 0.05, "dur": 1.0, "amp": 0.35, "attack": 0.03, "decay": 0.35, "lp0": 700.0, "lp1": 150.0}]},
 }
