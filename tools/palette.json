@@ -114,7 +114,19 @@
     {"name": "indigo_light", "hex": "#6A82C0", "ramp": "indigo", "index": 3, "group": "unit", "role": "lit indigo and the rim light that parts a ninja from a dark ground (Act V; SHOGUN_INDIGO_LIGHT)"},
     {"name": "sakura_dark", "hex": "#A8546E", "ramp": "sakura", "index": 1, "group": "unit", "role": "sakura pink in shadow (Act V; SHOGUN_SAKURA_DARK)"},
     {"name": "sakura", "hex": "#E494AC", "ramp": "sakura", "index": 2, "group": "unit", "role": "sakura blossom pink: petals, the kitsune's miko trim (Act V; SHOGUN_SAKURA)"},
-    {"name": "sakura_light", "hex": "#F9D3DD", "ramp": "sakura", "index": 3, "group": "unit", "role": "lit sakura, pale petals (Act V; SHOGUN_SAKURA_LIGHT)"}
+    {"name": "sakura_light", "hex": "#F9D3DD", "ramp": "sakura", "index": 3, "group": "unit", "role": "lit sakura, pale petals (Act V; SHOGUN_SAKURA_LIGHT)"},
+    {"name": "obsidian_ink", "hex": "#0B0A10", "ramp": "obsidian", "index": 0, "group": "ink", "role": "outline of the Inferno's obsidian, lava, demon skin and charm (Act VI; INFERNO_OBSIDIAN_INK)"},
+    {"name": "obsidian_dark", "hex": "#1E1A26", "ramp": "obsidian", "index": 1, "group": "unit", "role": "black obsidian in shadow: the hell knight's armour plates (Act VI; INFERNO_OBSIDIAN_DARK)"},
+    {"name": "obsidian", "hex": "#352E40", "ramp": "obsidian", "index": 2, "group": "unit", "role": "obsidian: armour, chains, cracked ground, the portal ring (Act VI; INFERNO_OBSIDIAN)"},
+    {"name": "obsidian_light", "hex": "#5A5068", "ramp": "obsidian", "index": 3, "group": "unit", "role": "lit obsidian, the rim that keeps black armour readable on a dark floor (Act VI; INFERNO_OBSIDIAN_LIGHT)"},
+    {"name": "lava_dark", "hex": "#8A2A08", "ramp": "lava", "index": 1, "group": "unit", "role": "lava in shadow: ember cracks, the imp's red in shade (Act VI; INFERNO_LAVA_DARK)"},
+    {"name": "lava", "hex": "#E0601A", "ramp": "lava", "index": 2, "group": "unit", "role": "lava orange: ember cracks, burning blades, pit glow (Act VI; INFERNO_LAVA)"},
+    {"name": "lava_light", "hex": "#FFB347", "ramp": "lava", "index": 3, "group": "unit", "role": "white-hot lava: the burning sword's core, eyes, fire highlights (Act VI; INFERNO_LAVA_LIGHT)"},
+    {"name": "demon_dark", "hex": "#5C1A3A", "ramp": "demon", "index": 1, "group": "unit", "role": "demon skin in shadow: deep maroon, the succubus's hair and shaded skin (Act VI; INFERNO_DEMON_DARK)"},
+    {"name": "demon", "hex": "#9B2D5E", "ramp": "demon", "index": 2, "group": "unit", "role": "demon skin: imps, brutes, the succubus (Act VI; INFERNO_DEMON; a magenta-red, apart from the Covenant crimson and the Shogunate lacquer)"},
+    {"name": "demon_light", "hex": "#D45C8A", "ramp": "demon", "index": 3, "group": "unit", "role": "lit demon skin, horn tips, a rim light (Act VI; INFERNO_DEMON_LIGHT)"},
+    {"name": "charm", "hex": "#FF6FB5", "ramp": "charm", "index": 1, "group": "unit", "role": "charm pink, the act's signature colour: Temptation, the portal's swirl, hearts (Act VI; INFERNO_CHARM)"},
+    {"name": "charm_light", "hex": "#FFB8DD", "ramp": "charm", "index": 2, "group": "glow", "role": "pale charm glow: the portal's core, Temptation sparks (Act VI; INFERNO_CHARM_LIGHT)"}
   ],
   "ramps": {
     "violet": {"members": ["ink_violet", "violet_deep", "violet", "violet_glow", "violet_flare"], "role": "the player only: necromancer, the 12 characters, their spells and icons"},
@@ -140,6 +152,10 @@
     "lacquer": {"members": ["lacquer_ink", "lacquer_dark", "lacquer", "lacquer_light"], "role": "the Shogunate's red lacquer (Act V): armour, the oni's red skin, banners; harder and warmer than the Covenant crimson (never the player's violet)"},
     "indigo": {"members": ["ink_cold", "indigo_dark", "indigo", "indigo_light"], "role": "the Shogunate's indigo (Act V): the ninja's cloth, gunners' tunics; the light shade is the rim that keeps a ninja readable on a dark ground (outline borrowed from the cold ink)"},
     "sakura": {"members": ["lacquer_ink", "sakura_dark", "sakura", "sakura_light"], "role": "the Shogunate's sakura pink (Act V): blossom petals, the kitsune's trim, shrine paper (outline borrowed from the lacquer ink)"},
+    "obsidian": {"members": ["obsidian_ink", "obsidian_dark", "obsidian", "obsidian_light"], "role": "the Inferno's black obsidian (Act VI): hell knight armour, chains, the demon portal's ring; the light shade is the rim that keeps black armour readable on a dark floor"},
+    "lava": {"members": ["obsidian_ink", "lava_dark", "lava", "lava_light"], "role": "the Inferno's lava (Act VI): ember cracks, burning blades, pit fire and eyes (outline borrowed from the obsidian ink)"},
+    "demon": {"members": ["obsidian_ink", "demon_dark", "demon", "demon_light"], "role": "the Inferno's demon skin (Act VI): imps, brutes, the succubus; a magenta-red apart from the Covenant crimson and the Shogunate lacquer (outline borrowed from the obsidian ink)"},
+    "charm": {"members": ["obsidian_ink", "charm", "charm_light"], "role": "the Inferno's charm pink (Act VI): Temptation, the portal's swirl, hearts; the act's signature colour (outline borrowed from the obsidian ink)"},
     "floor": {"members": ["floor_soil", "floor_earth", "floor_grass", "floor_ochre", "floor_slate", "floor_ash", "floor_dirt", "floor_moss", "floor_marble", "floor_stone"], "role": "ground colours of the three stages (tiles only, never sprites), dark -> light; the zone tiles add close shades per zone"}
   }
 }

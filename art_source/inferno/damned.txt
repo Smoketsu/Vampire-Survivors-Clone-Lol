@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a wailing, shambling stance, hands in iron shackles held forward
+
+LOW-RESOLUTION pixel art: the whole figure is only 30 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a MALE DAMNED SOUL of Hell (fodder): a gaunt, grey-skinned, bald man with his mouth open in a silent wail and hollow eyes, wearing a ragged torn grey cloth robe to the knees, iron shackles on both wrists with a short chain hanging between them, bare feet. He is pitiful and weak, not armoured.
+Signature shape that must read in silhouette: the hunched wailing figure, the open mouth and the chain between the raised wrists.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: ash grey cloth and skin #1E1A26 #352E40 #5A5068; pale grey skin #5A5068 #8793A6 #C4CCD8; obsidian outline #0B0A10; iron chain #352E40 #5A5068; a hint of ember lava #E0601A on the shackle edges only
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of the damned soul for the costume only (do NOT copy its detail level or painted shading).

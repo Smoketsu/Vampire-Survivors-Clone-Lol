@@ -193,6 +193,11 @@ FACTION_RAMPS = {
     # crests, plus faces and oni skin (skin) and wooden shafts (brown); never the player's
     # violet, the undead's bone or soul teal, or the Covenant's crimson.
     "shogunate": ["lacquer", "indigo", "sakura", "grey", "gold", "skin", "brown"],
+    # --- Act VI: the Inferno (assets/sprites/inferno/) ---
+    # Black obsidian armour, lava and ember light, demon skin, charm pink (Temptation), plus
+    # the damned's pale skin and wooden shafts; never the player's violet, the undead's bone
+    # or soul teal, the Covenant's crimson or the Shogunate's lacquer.
+    "inferno": ["obsidian", "lava", "demon", "charm", "grey", "skin", "brown"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
 # blue of the Mage and Lich and the icy cyan of the frost summons never mix (GDD 15.0 art

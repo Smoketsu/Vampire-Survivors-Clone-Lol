@@ -994,3 +994,13 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-26 18:14,player/grave_kunoichi_untouchable,gpt-image-2.5-flare,medium,1024x1024,2,800,1728,439,0.0310,unt_3.png
 2026-10-26 18:55,epilogue_act5_4_r3,gpt-image-2.5-flare,medium,1536x1024,3,1084,1164,343,0.0250,cand1.png
 2026-10-26 18:55,epilogue_act5_4_r3,gpt-image-2.5-flare,medium,1536x1024,3,1084,1164,343,0.0250,cand2.png
+2026-10-31 00:48,inferno/hell_knight,gpt-image-2.5-flare,medium,1024x1024,2,572,1472,439,0.0278,hell_knight.png
+2026-10-31 00:48,inferno/succubus,gpt-image-2.5-flare,medium,1024x1024,2,674,1504,439,0.0286,succubus.png
+2026-10-31 00:48,inferno/damned,gpt-image-2.5-flare,medium,1024x1024,2,548,1440,439,0.0274,damned.png
+2026-10-31 00:48,inferno/imp,gpt-image-2.5-flare,medium,1024x1024,2,542,1600,439,0.0287,imp.png
+2026-10-31 00:48,inferno/demon_brute,gpt-image-2.5-flare,medium,1024x1024,2,614,1651,439,0.0294,demon_brute.png
+2026-10-31 00:49,inferno/succubus,gpt-image-2.5-flare,medium,1024x1024,2,710,1504,439,0.0288,succubus.png
+2026-10-31 00:50,inferno/succubus,gpt-image-2.5-flare,medium,1024x1024,2,744,1504,439,0.0289,succ_b.png
+2026-10-31 00:50,inferno/succubus,gpt-image-2.5-flare,medium,1024x1024,2,744,1504,439,0.0289,succ_a.png
+2026-10-31 00:51,inferno/succubus,gpt-image-2.5-flare,medium,1024x1024,2,760,1504,439,0.0290,succ2_a.png
+2026-10-31 00:54,structures/demon_portal,gpt-image-2.5-flare,medium,1024x1024,1,483,1024,439,0.0238,demon_portal.png
