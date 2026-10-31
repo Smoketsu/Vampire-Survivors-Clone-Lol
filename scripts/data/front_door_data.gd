@@ -389,7 +389,7 @@ const VIGNETTES: Dictionary = {
 	"pandemonium": {
 		"tile": "tiles/sanctum_halls",
 		"items": [
-			["inferno/demon_portal", 210, 96, true], ["inferno/demon_brute", 196, 214, true],
+			["structures/demon_portal", 210, 96, true], ["inferno/demon_brute", 196, 214, true],
 			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
 		],
 		"fx": "embers", "fx_color": Color8(224, 96, 26),

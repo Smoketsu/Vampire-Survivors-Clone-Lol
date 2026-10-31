@@ -244,22 +244,20 @@ const HAND_SOURCE: String = "adversary_hand"
 # --- Sounds ------------------------------------------------------------------------------------
 
 ## Inferno event -> sound id played for it (Sfx.play(); an id that is not
-## rendered is a silent no-op). FOR NOW these point at existing startup-bank
-## sounds (only the startup bank, so they sound with any music loaded): the
-## audio pass adds the Inferno pack (SoundData.INFERNO_SOUNDS) and the lead
-## switches each value at the merge to the intended id named in its comment
-## (the Fixed names: pit_open, pit_burn, portal_open, portal_seal, charm_kiss,
-## charm_break, imp_cackle, brute_slam).
+## rendered is a silent no-op). The ids are the Inferno pack's
+## (SoundData.INFERNO_SOUNDS), loaded lazily with the "brimstone" music; wired by
+## the lead at the foundation merge. "hand_grab" has no own sound and stays on
+## its stand-in (the Adversary's hand; it may later point at "brute_slam").
 const SOUNDS := {
-	"pit_open": "eruption",  # Intended: "pit_open"
-	"pit_burn": "plague_tick",  # Intended: "pit_burn"
-	"portal_open": "boss_telegraph",  # Intended: "portal_open"
-	"portal_seal": "pu_nova",  # Intended: "portal_seal"
-	"charm_kiss": "priest_ward",  # Intended: "charm_kiss"
-	"charm_break": "orb_block",  # Intended: "charm_break"
-	"imp_cackle": "",  # Intended: "imp_cackle" (no stand-in: silent until the pack exists)
-	"brute_slam": "abom_stomp",  # Intended: "brute_slam"
-	"hand_grab": "boss_impact",  # No own id: the Adversary's hand (the lead may point it at "brute_slam")
+	"pit_open": "pit_open",  # A pit's rim cracking open and flaring (Inferno pack).
+	"pit_burn": "pit_burn",  # The sizzle of a burn tick (Inferno pack).
+	"portal_open": "portal_open",  # A demon portal tearing open (Inferno pack).
+	"portal_seal": "portal_seal",  # A portal sealed or destroyed (Inferno pack).
+	"charm_kiss": "charm_kiss",  # A succubus's charm landing (Inferno pack).
+	"charm_break": "charm_break",  # A charm breaking (Inferno pack).
+	"imp_cackle": "imp_cackle",  # An imp's cackle (Inferno pack).
+	"brute_slam": "brute_slam",  # The Demon Brute's slam (Inferno pack).
+	"hand_grab": "boss_impact",  # No own id: the Adversary's hand (stand-in; the startup bank's boss_impact)
 }
 ## Least s between two pit_burn sounds (a burn tick hits many bodies at once).
 const BURN_SOUND_GAP: float = 0.6  # TUNING (not in GDD)

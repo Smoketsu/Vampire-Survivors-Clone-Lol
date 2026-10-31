@@ -201,8 +201,6 @@ const STAGE := {
 	"pits": PITS,  # Act VI: this stage's Hell Pits overrides ({} = the defaults).
 	"portals": PORTALS,  # Act VI: this stage's portal overrides.
 	"zones": ZONES,  # Act VI stub: the planned zones (phase 2 builds them; the fixed pits change with each).
-	# Music key "sun" FOR NOW (the Act V loop): the audio pass adds "brimstone"
-	# ("Hymn of the Pit", SoundData.BRIMSTONE_SCORE) and the lead switches this to
-	# "brimstone" at the merge.
-	"music": "sun",
+	# Music key "brimstone": the Act VI loop "Hymn of the Pit" (SoundData.BRIMSTONE_SCORE).
+	"music": "brimstone",
 }
