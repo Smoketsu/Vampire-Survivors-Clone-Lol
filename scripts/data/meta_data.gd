@@ -422,7 +422,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act V: Castle Kurogane ---
 	"regiments_broken",
 	# --- Act VI: the Burning Gate ---
-	"gate_crashed"]
+	"gate_crashed",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"unmoved"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -569,6 +571,15 @@ const ACHIEVEMENTS := {
 	# gate_crashed_runs). It unlocks the counter-passive Salt Circle.
 	"gate_crashed": {"display_name": "Gate Crashed", "description": "Seal 5 demon portals in one Burning Gate run and slay Moloch",
 		"stat": "gate_crashed_runs", "goal": 1, "unlock": "The Salt Circle passive", "bounty": 300},  # Owner-approved Act VI proposal; bounty TUNING (not in GDD) as Regiments Broken
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Owner-approved Act VI achievement "Unmoved (beat Lilith without a single
+	# summon charmed)". Own decision on the window: from Lilith's arrival to her
+	# fall on the Palace of Silk and Ash, no summon of the run was charmed (by
+	# her waves or any succubus; BossLilith counts it as the run stat
+	# lilith_unmoved_kills; MetaProgress keeps the lifetime count). It unlocks
+	# the counter-passive Faithless.
+	"unmoved": {"display_name": "Unmoved", "description": "Slay Lilith in the Palace of Silk and Ash with no summon charmed during her fight",
+		"stat": "lilith_unmoved_kills", "goal": 1, "unlock": "The Faithless passive", "bounty": 300},  # Owner-approved Act VI proposal; bounty TUNING (not in GDD) as Regiments Broken
 }
 
 # --- Content wave 2: B. Achievement rewards ---

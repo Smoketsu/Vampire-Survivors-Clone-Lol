@@ -17,9 +17,11 @@
 ##   last judgment: LastJudgment (only once the Reckoning ran)
 ##   inferno stage: the Act VI stage itself (stub status, boss, Soul Ash, the
 ##                  Reckoning)
-## Phase 2 adds one line per stage system here (each stage in its own block).
+## Phase 2 adds one line per stage system here (each stage in its own block):
 ##   Act VI, the Burning Gate: BurningGateReport.print_lines() (burning gate,
 ##   burning gate kinds, gatekeeper, moloch).
+##   the Palace of Silk and Ash: SilkPalaceReport.stage_lines() (silk palace,
+##                  silk palace kinds, lilith; each when it ran).
 ## Read-only: it never changes the run.
 class_name InfernoReport
 extends RefCounted
@@ -65,6 +67,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not inf.judgment.cfg.is_empty())])
 	# --- Act VI: the Burning Gate ---
 	BurningGateReport.print_lines(game, st)  # The Gatekeeper, the river, Gate Crashed, the stage's kinds, Moloch (each when it ran).
+	# --- Act VI: the Palace of Silk and Ash ---
+	SilkPalaceReport.stage_lines(game, st)  # The Hall of Mirrors, the Lilim Witches, the Twin Succubi, Lilith (each when it ran).
 
 
 ## The "hell pits" line (HellPits).

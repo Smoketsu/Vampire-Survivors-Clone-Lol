@@ -87,6 +87,11 @@ var dash: GraveStep = null
 ## CharacterData id he is drawn as ("" = the run's character, game.character;
 ## a co-op slot sets its own so each necromancer looks like his player's pick).
 var character_id: String = ""
+# --- Act VI: the Palace of Silk and Ash ---
+## Game time (s) until which Lilith's kiss MARKS him (LilithHazards): while
+## marked, every heal on him is turned into damage (the one check, in
+## CombatResolver.heal_player()). 0 = never marked (every other run).
+var kiss_marked_until: float = 0.0
 
 
 func _ready() -> void:

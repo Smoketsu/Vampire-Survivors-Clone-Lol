@@ -487,6 +487,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act VI: the Burning Gate ---
 	if BurningGateGlyphs.draw_obstacle(self, o):
 		return  # A Burning Gate obstacle kind (Act VI).
+	# --- Act VI: the Palace of Silk and Ash ---
+	if SilkPalaceGlyphs.draw_obstacle(self, o):
+		return  # A Palace of Silk and Ash obstacle kind (Act VI).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

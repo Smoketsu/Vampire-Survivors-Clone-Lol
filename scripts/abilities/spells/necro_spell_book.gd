@@ -50,6 +50,9 @@
 ## and Act VI's (the Burning Gate, BURNING_GATE_IDS: stepped only; its own
 ## autotest line, BurningGateReport.item_lines()):
 ##   Brimstone        -> Brimstone        (evolves into Rain of Fire)
+## and Act VI's (the Palace of Silk and Ash, SILK_PALACE_IDS: stepped only; its
+## own autotest line, SilkPalaceReport.item_lines()):
+##   Temptation ("tempt") -> TemptSpell (evolves into Unholy Desire)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -124,6 +127,11 @@ const KUROGANE_IDS := ["banner_of_the_dead"]
 ## The Burning Gate's unlockable spell (Moloch's reward): stepped like
 ## UNDERWORLD_IDS (no kill or after-physics hook), reported by BurningGateReport.
 const BURNING_GATE_IDS := ["brimstone"]
+# --- Act VI: the Palace of Silk and Ash ---
+## The Palace of Silk and Ash's unlockable spell (Lilith's reward): stepped like
+## KUROGANE_IDS (it needs no kill or after-physics hook), reported by
+## SilkPalaceReport. Its id is "tempt" (never a kind or rule id).
+const SILK_PALACE_IDS := ["tempt"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -162,6 +170,8 @@ const SOURCES := {
 	"banner_of_the_dead": ["banner_of_the_dead", "hundred_banners"],
 	# --- Act VI: the Burning Gate ---
 	"brimstone": ["brimstone", "rain_of_fire", "brimstone_pit"],
+	# --- Act VI: the Palace of Silk and Ash --- (the thralls' blows, Unholy Desire's burst, the Succubus Queen's Heartbreaker)
+	"tempt": ["tempt", "unholy_desire", "desire_burst", "tempt_heartbreak"],
 }
 
 ## Owning run.
@@ -246,6 +256,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Burning Gate's spell.
+	# --- Act VI: the Palace of Silk and Ash ---
+	for id: String in SILK_PALACE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Palace of Silk and Ash's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -315,6 +334,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act VI: the Burning Gate ---
 		"brimstone":
 			node = Brimstone.new()  # The Burning Gate's spell.
+		# --- Act VI: the Palace of Silk and Ash ---
+		"tempt":
+			node = TemptSpell.new()  # Temptation (its id "tempt").
 		_:
 			node = PlagueCloud.new()
 	node.game = game

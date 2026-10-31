@@ -86,7 +86,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act V: Castle Kurogane ---
 	"hundred_banners",
 	# --- Act VI: the Burning Gate ---
-	"rain_of_fire"]
+	"rain_of_fire",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"unholy_desire"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -552,6 +554,26 @@ const EVOLUTIONS := {
 			"damage": 36.0, "stones": 5, "radius": 44.0, "pit_radius": 38.0, "pit_life": 3.0, "pit_share": 0.3, "cooldown": 2.6, "range": 380.0,  # TUNING (not in GDD) first pass 46 dmg, 6 stones, 3.5 s, 0.4 (the forced smoke run: 260k damage, ahead of the Death Knights' 140k)
 			"rain_gap": 0.12,  # TUNING (not in GDD) the evolution flag: s between two stones of a rain
 			"rain_spread": 60.0,  # TUNING (not in GDD) px the stones beyond the groups scatter
+		},
+	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Unholy Desire (owner-approved Act VI proposal "Rewards": "Temptation ->
+	# Unholy Desire (+ Velvet Chains)"): Temptation + Velvet Chains (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: three charms a
+	# cast, longer, harder-hitting thralls, and every charm that ends (or thrall
+	# that falls) BURSTS: `desire` x the thrall's hit to every foe within
+	# TemptData.BURST_RADIUS px (TemptData.BURST_SOURCE). Detected by the
+	# "desire" key.
+	"unholy_desire": {
+		"base": "tempt",
+		"passive": "velvet_chains",
+		"display_name": "Unholy Desire",  # Owner-approved proposal
+		"icon": "unholy_desire",
+		"description": "Three foes at once burn with desire for you, and burst when the spell lets them go.",
+		"labels": {"charms": "Foes charmed", "charm_time": "Charm (s)", "damage": "Thrall hit", "desire": "Burst", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"charms": 3, "charm_time": 8.0, "damage": 30.0, "range": 280.0, "cooldown": 5.0,  # TUNING (not in GDD)
+			"desire": 1.0,  # TUNING (not in GDD) the evolution flag: share of the thrall's hit its burst deals; first pass 1.5 (151k burst damage in the forced run)
 		},
 	},
 }

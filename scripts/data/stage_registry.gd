@@ -186,6 +186,12 @@
 ##                        "burning_gate" is its BurningGateGround (four zone
 ##                        floors). Its "pits" also hold the River of Fire
 ##                        ("band": HellPits._add_band()).
+## --- Act VI: the Palace of Silk and Ash ---
+##   silk_palace        — SilkPalaceDirector config (SilkPalaceStage.SILK_PALACE,
+##                        Act VI, the Palace of Silk and Ash: the Hall of Mirrors'
+##                        reflections, the Twin Succubi's "twins" event, guest
+##                        squads of the Burning Gate's kinds); ground
+##                        "silk_palace" is its SilkPalaceGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

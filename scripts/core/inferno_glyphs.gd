@@ -45,6 +45,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	# --- Act VI: the Burning Gate ---
 	if BurningGateGlyphs.draw_enemy(ci, kind, o, r, flash):
 		return true  # The Hellhound, the Pit Cultist, the Gatekeeper.
+	if SilkPalaceGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # --- Act VI: the Palace of Silk and Ash --- (the Lilim Witch, the Twin Succubi)
 	match kind:
 		"imp":
 			_imp(ci, o, r, flash)

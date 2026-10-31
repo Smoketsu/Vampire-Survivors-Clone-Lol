@@ -2614,3 +2614,33 @@ and Sanctum floors (as every Act V / VI kind), and the props are scenery (a litt
 Code-drawn on purpose: the River of Fire (the Hell Pits' lava texture along its bands), the Brimstone stones and their pits,
 Moloch's furnace glow and fire waves (texture discs), the Gatekeeper's chains, the cultist's rite sparks, the fallbacks
 (`BurningGateGlyphs`).
+
+### Act VI: the Palace of Silk and Ash (Stage 17, phase 2)
+
+<!-- --- Act VI: the Palace of Silk and Ash --- -->
+Stage 17's art (GDD §15.0 "Palace of Silk and Ash art (Act VI phase 2)"): the court of desire, the Inferno's look
+(obsidian, demon skin, charm pink) with rose marble, velvet and mirror glass; the female figures at the approved
+`act6_units.png` level (the Lilim Witch from its concept, Lilith from `act6_boss.png`), chest and hips covered.
+Prompts beside the sources in `art_source/silk_palace/<id>.txt`, every figure's sex named; the rebuild script
+`art_source/silk_palace/make_art.py` (units, figures, badges, props, floors, strips). Pipeline: the bosses through
+`prepare_sprite.py --ink-l 0.18` with explicit ramps; every other figure through `pixelate_source.py` at its height,
+then `--ink-l 0.15 --no-cleanup --no-prune` (the succubus's route). Walk (robe glide, bust and `swish` boxes taken
+from each sprite's torso, for review) and 24-frame idle strips for every figure. Moderation: one refusal (Naamah,
+"hips cocked ... blowing a kiss"); the succubus wording passed again with a plain pose.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `inferno/lilim_witch` | Lilim Witch (support, female): white hair, small horns, crimson slit gown, burning eye-staff | 28x56 | glide + idle |
+| `inferno/twin_naamah` | Naamah, the elder twin (miniboss, female): black ponytail, tall horns, violet trim, wide wings, crown | 48x62 | glide + idle; main shape +0.14 on the darkest floors (wings) |
+| `inferno/twin_agrat` | Agrat, the younger twin (miniboss, female): silver hair, crimson bodysuit, gold crown, wide wings | 48x62 | glide + idle |
+| `bosses/lilith` | Lilith (boss, female): black hair, ram horns, gold crown, huge black feathered wings, crimson gown with a high slit, charm swirl | 100x112 | glide + idle; the black wings keep her +0.12 over the darkest floors |
+| `bosses/lilith_demon` | Lilith's true demon form: four horns, four torn wings, lava cracks, an obsidian corset, pink flames | still | +0.12 over the darkest floors (wings) |
+| `player/succubus_queen` | The Succubus Queen (character, female): violet hair, tiara, lilac skin, violet bodysuit and short cape | 36x56 | glide + idle |
+| `player/succubus_queen_hyper` / `_untouchable` / `_deathlord` | Gilded / white phantom / black iron and crimson with a spiked crown | 36-38x56-58 | glide + idle; Deathlord fails only on the light March road |
+| `summons/bound_succubus` | The Succubus (summon, female): pale lilac, bone collar and shackles, soul-teal eyes | 44x52 | glide + idle; fails only on the light March road |
+| `summons/lilim_matriarch` | The Lilim Matriarch: four horns, bone crown, wide wings, black gown, broken bone chains | 56x62 | glide + idle; +0.10 on the darkest floors (black gown and wings) |
+| `icons/tempt`, `velvet_chains`, `bound_succubus`, `sweet_surrender`, `faithless` | Violet badges: red lips, a velvet chain with a heart padlock, a bound succubus head, a heart flag, a cracked holy sun | 32x32 | the violet frame of `icons/abyssal_pact` |
+| `icons/unholy_desire`, `lilim_matriarch`, `ach_unmoved` | Gold badges: a burning thorned heart, the matriarch's head, a black heart a kiss slides off | 32x32 | the gold frame of `icons/tidecallers_host` |
+| `obstacles/black_rosebush`, `rose_column`, `palace_mirror`, `candelabra` (`_s` / `_l`) | Round props | footprint + 4 wide | height capped at 2.1 x width |
+| `obstacles/velvet_divan`, `mirror_wall` (`_s` / `_l`, `_v`) | Long props, both orientations | length + 2 | end-on `_v` from the sheet's second row |
+| `tiles/silk_palace_roses` / `_mirrors` / `_ballroom` / `_chamber` | Zone floors from two textures (soil, rose marble) | 128 | `make_tile.py` recipes under `# --- Act VI: the Palace of Silk and Ash ---` |

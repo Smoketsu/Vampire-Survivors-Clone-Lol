@@ -636,7 +636,9 @@ func heal_unit(u: SummonedUnit, amount: float) -> float:
 	return healed
 
 
-## Heals the necromancer, capped at max HP. Returns HP restored.
+## Heals the necromancer, capped at max HP. Returns HP restored. While Lilith's
+## kiss marks him (Act VI, Necromancer.kiss_marked_until) the heal is dealt to
+## him as damage instead (source LilithData.KISS_SOURCE) and 0 is returned.
 func heal_player(amount: float, target: Necromancer = null) -> float:
 	if target != null and game.coop != null and target != game.player:
 		var prev := game.coop.bound  # Co-op: heal that necromancer (his own innate hears it).
@@ -644,6 +646,13 @@ func heal_player(amount: float, target: Necromancer = null) -> float:
 		var healed_as := heal_player(amount)
 		game.coop.bind(prev)
 		return healed_as
+	# --- Act VI: the Palace of Silk and Ash --- Lilith's kiss (LilithHazards): while
+	# the necromancer is marked, every heal on him is turned into damage (THE one
+	# check; kiss_marked_until stays 0 on every other run, so nothing changes there).
+	if game.player.kiss_marked_until > game.elapsed and amount > 0.0:
+		game.stat_add("kiss_heals_turned", 1.0)
+		damage_player(amount * LilithData.HEAL_TO_DAMAGE, LilithData.KISS_SOURCE)
+		return 0.0
 	var healed := game.player.heal(amount)
 	game.stat_add("player_healing", healed)
 	if healed > 0.0:

@@ -266,6 +266,12 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	if out.has("sun_reach"):
 		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(BlackSunData.STOLEN_DAWN, BlackSunData.HASTE_KEY))
 		out["beam_heal"] = passive_value(BlackSunData.STOLEN_DAWN, BlackSunData.HEAL_KEY)
+	# --- Act VI: the Palace of Silk and Ash --- Velvet Chains: Temptation's charms
+	# last longer and its thralls strike harder (its keys exist only in the
+	# Temptation / Unholy Desire rows; the passive's values are 0 while not owned).
+	if out.has("charm_time"):
+		out["charm_time"] = float(out["charm_time"]) * (1.0 + passive_value(TemptData.VELVET_CHAINS, TemptData.CHAIN_TIME_KEY))
+		out["damage"] = float(out["damage"]) * (1.0 + passive_value(TemptData.VELVET_CHAINS, TemptData.CHAIN_POWER_KEY))
 	return out
 
 

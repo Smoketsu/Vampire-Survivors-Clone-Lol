@@ -194,6 +194,9 @@ const CLASSES := {
 	# --- Act V: the Road to the Sun ---
 	"bound_oni": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [6, 9], "speed": 260.0,
 		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) shards of stone thrown up by the kanabō
+	# --- Act VI: the Palace of Silk and Ash ---
+	"bound_succubus": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 8], "speed": 220.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(1.0, 0.44, 0.71)},  # TUNING (not in GDD) a ring of charm-pink kisses around each charm
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -242,6 +245,9 @@ const EVOLVED := {
 	# --- Act V: the Road to the Sun ---
 	"oni_lord": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [14], "speed": 300.0,
 		"life": 0.55, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "shard", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) the quake's ring of soul-lit stone
+	# --- Act VI: the Palace of Silk and Ash ---
+	"lilim_matriarch": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 250.0,
+		"life": 0.6, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a soul-lit ring of kisses around each double charm
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -316,6 +322,9 @@ const SPELLS := {
 	# --- Act VI: the Burning Gate ---
 	"brimstone": {"every": 2, "clock": "cooldown", "aim": "densest", "pattern": "ring", "counts": [5, 8, 12], "speed": 200.0,
 		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(1.0, 0.70, 0.28)},  # TUNING (not in GDD) a ring of embers thrown up by every other volley of stones
+	# --- Act VI: the Palace of Silk and Ash ---
+	"tempt": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 7], "spread": 36.0, "speed": 240.0,
+		"life": 0.7, "share": 0.4, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.85, 0.55, 1.0)},  # TUNING (not in GDD) a fan of violet-pink kisses blown with each charm
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

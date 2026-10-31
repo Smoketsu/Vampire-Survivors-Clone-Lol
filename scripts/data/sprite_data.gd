@@ -375,6 +375,18 @@ const HEIGHTS: Dictionary = {
 	"player/furnace_priest_hyper": 56.0,  # TUNING (not in GDD) skin art: his body, gilded
 	"player/furnace_priest_untouchable": 56.0,  # TUNING (not in GDD) skin art: his body, the white phantom
 	"player/furnace_priest_deathlord": 56.0,  # TUNING (not in GDD) skin art: his body, the spiked crown inside the same height
+	# --- Act VI: the Palace of Silk and Ash ---
+	"inferno/lilim_witch": 56.0,  # TUNING (not in GDD) support tier, female (the approved act6_units level): body ~50, the horns and the eye-staff above
+	"inferno/twin_naamah": 62.0,  # TUNING (not in GDD) miniboss tier, female: body ~54, the tall horns and the crown above, the wings wide
+	"inferno/twin_agrat": 62.0,  # TUNING (not in GDD) miniboss tier, female: her sister's size
+	"bosses/lilith": 112.0,  # TUNING (not in GDD) boss tier: a queen, her horns, crown and great wings above
+	"bosses/lilith_demon": 124.0,  # TUNING (not in GDD) her true demon form, bigger (the last phase)
+	"player/succubus_queen": 56.0,  # TUNING (not in GDD) character tier: body ~50, the horns and tiara above
+	"player/succubus_queen_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold and white
+	"player/succubus_queen_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/succubus_queen_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/bound_succubus": 52.0,  # TUNING (not in GDD) a support summon (Banshee ~48), the horns above
+	"summons/lilim_matriarch": 62.0,  # TUNING (not in GDD) its evolution, bigger, the wings wide
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

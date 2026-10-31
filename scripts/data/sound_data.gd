@@ -1322,4 +1322,26 @@ const INFERNO_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "tri", "f0": 110.0, "dur": 1.3, "amp": 0.2, "attack": 0.4, "decay": 0.5, "vib_hz": 3.0, "vib_depth": 0.02},
 			{"wave": "tri", "f0": 155.6, "dur": 1.3, "amp": 0.14, "attack": 0.5, "decay": 0.5, "vib_hz": 3.4, "vib_depth": 0.02},
 			{"wave": "noise", "dur": 1.2, "amp": 0.08, "attack": 0.4, "decay": 0.4, "lp0": 500.0, "lp1": 900.0}]},
+	# --- Act VI: the Palace of Silk and Ash --- (appended: the pack's seeds follow this order)
+	# A reflection steps out of a mirror: a glassy shimmer, three falling chimes.
+	"mirror_lure": {"dur": 0.9, "volume_db": -16.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.4, "amp": 0.08, "attack": 0.05, "decay": 0.15, "lp0": 9000.0, "lp1": 6000.0},
+			{"wave": "sine", "f0": 2637.0, "dur": 0.5, "amp": 0.1, "attack": 0.004, "decay": 0.18, "vib_hz": 6.0, "vib_depth": 0.006},
+			{"wave": "sine", "f0": 2093.0, "start": 0.12, "dur": 0.5, "amp": 0.09, "attack": 0.004, "decay": 0.18, "vib_hz": 6.0, "vib_depth": 0.006},
+			{"wave": "sine", "f0": 1661.0, "start": 0.24, "dur": 0.6, "amp": 0.08, "attack": 0.004, "decay": 0.22, "vib_hz": 6.0, "vib_depth": 0.006}]},
+	# Lilith's charm wave lands: a deep breathy swell under a ring of pink chimes.
+	"lilith_wave": {"dur": 1.3, "volume_db": -10.0, "max_voices": 1, "min_interval": 400, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 110.0, "f1": 82.0, "dur": 1.1, "amp": 0.45, "attack": 0.08, "decay": 0.4},
+			{"wave": "noise", "dur": 0.9, "amp": 0.18, "attack": 0.1, "decay": 0.35, "lp0": 1800.0, "lp1": 600.0},
+			{"wave": "sine", "f0": 1319.0, "start": 0.1, "dur": 0.8, "amp": 0.08, "attack": 0.004, "decay": 0.3, "vib_hz": 5.0, "vib_depth": 0.008},
+			{"wave": "sine", "f0": 1760.0, "start": 0.2, "dur": 0.8, "amp": 0.07, "attack": 0.004, "decay": 0.3, "vib_hz": 5.0, "vib_depth": 0.008},
+			{"wave": "sine", "f0": 2217.0, "start": 0.3, "dur": 0.8, "amp": 0.06, "attack": 0.004, "decay": 0.3, "vib_hz": 5.0, "vib_depth": 0.008}]},
+	# A twin's rage: a falling shriek over a growl.
+	"twin_rage": {"dur": 1.0, "volume_db": -11.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 980.0, "f1": 420.0, "dur": 0.7, "amp": 0.16, "attack": 0.01, "decay": 0.25, "lp0": 4000.0, "lp1": 1800.0},
+			{"wave": "square", "f0": 90.0, "f1": 70.0, "dur": 0.8, "amp": 0.18, "attack": 0.02, "decay": 0.3, "lp0": 600.0},
+			{"wave": "noise", "dur": 0.6, "amp": 0.15, "attack": 0.01, "decay": 0.2, "lp0": 3000.0, "lp1": 900.0}]},
 }

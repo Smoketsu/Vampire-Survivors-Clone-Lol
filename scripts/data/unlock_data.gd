@@ -169,6 +169,18 @@ const UNLOCKS := {
 	"brimstone": {"type": "spell", "boss": "moloch", "text": "Slay Moloch at the Burning Gate to unlock."},  # Owner-approved Act VI proposal
 	"furnace_heart": {"type": "passive", "boss": "moloch", "text": "Slay Moloch at the Burning Gate to unlock."},  # Brimstone's paired passive, unlocked with it
 	"salt_circle": {"type": "passive", "achievement": "gate_crashed", "text": "Earn Gate Crashed: seal 5 portals in one Burning Gate run and slay Moloch."},  # Owner-approved Act VI proposal
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Lilith's fall (owner-approved Act VI proposal "Rewards": Temptation is
+	# unlocked by Lilith; "the Succubus (unlocked by Lilith, like the Fallen Seraph
+	# by Seraphine)"): the spell with its paired passive and the summon class
+	# with its paired passive, offered on every stage (no card-row "act" key).
+	# The stage's achievement Unmoved earns Act VI's counter-passive Faithless
+	# (offered only in Act VI through its card row's "act").
+	"tempt": {"type": "spell", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Owner-approved proposal
+	"velvet_chains": {"type": "passive", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Temptation's paired passive, unlocked with it
+	"bound_succubus": {"type": "class", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Owner-approved proposal
+	"sweet_surrender": {"type": "passive", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Its paired passive (own decision), unlocked with it
+	"faithless": {"type": "passive", "achievement": "unmoved", "text": "Earn Unmoved: slay Lilith without a single summon charmed during her fight."},  # Owner-approved Act VI proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

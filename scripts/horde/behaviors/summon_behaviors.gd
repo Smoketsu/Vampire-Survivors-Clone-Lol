@@ -14,6 +14,7 @@
 ##   "suppress" Iron Revenant     RevenantBehavior (Act III, the Iron Citadel)
 ##   "shieldwall" Myrmidon Shade  MyrmidonBehavior (Act IV, the Asphodel Underworld)
 ##   "kanabo" Bound Oni           OniBehavior (Act V, the Road to the Sun)
+##   "allure" Succubus            BoundSuccubusBehavior (Act VI, the Palace of Silk and Ash)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -65,6 +66,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act V: the Road to the Sun ---
 		"kanabo":
 			b = OniBehavior.new()  # The Bound Oni.
+		# --- Act VI: the Palace of Silk and Ash ---
+		"allure":
+			b = BoundSuccubusBehavior.new()  # The Succubus.
 	if b != null:
 		b.kind = kind
 	return b
@@ -177,6 +181,14 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Smash damage", a, b, "smash_damage")
 				_delta(out, "Stun (s)", a, b, "smash_stun_duration")
+		# --- Act VI: the Palace of Silk and Ash ---
+		"allure":
+			if a.is_empty():
+				out.append("Floats behind the ring and throws kiss bolts")
+				out.append("Charm: the foe it fights fights for you for %.1f s" % float(b["charm_duration"]))
+			else:
+				_delta(out, "Charm (s)", a, b, "charm_duration")
+				_delta(out, "Thrall hit", a, b, "thrall_damage")
 	return out
 
 

@@ -1969,6 +1969,30 @@ integration and the owner's review.
   `--character=furnace_priest`, `--spawn=lava_hound@T`, `pit_cultist@T`, `gatekeeper@T`; lines `burning gate`,
   `burning gate kinds`, `gatekeeper`, `moloch`, `act VI spell`, `act VI passives`.
 
+### Stage 17: the Palace of Silk and Ash (Act VI)
+
+<!-- --- Act VI: the Palace of Silk and Ash --- -->
+The court of desire (GDD §15.0 "The Palace of Silk and Ash (Act VI phase 2)" and the rows after it; data in
+`scripts/data/stages/silk_palace_stage.gd`; still "Coming soon" until the lead's merge). Four zones on the clock:
+**the Rose Garden** (black-thorned roses), **the Hall of Mirrors** (every few seconds a mirror shimmers and a
+**reflection of you** steps out of it: the summons near it walk at it for a moment instead of fighting), **the
+Ballroom** (rose marble over a lava lake: the most fixed Hell Pits of the act) and **the Queen's Chamber**.
+- **Lilim Witches** (support) open small pits under your ring and heal the demons around a standing portal: kill
+  them first, seal the portals.
+- **The Twin Succubi** (miniboss, 8:20 left): two sisters who charm your summons in turns and drop a pink circle of
+  pain on you; kill one and the other rages. One chest, when the second falls.
+- **Lilith, Queen of the Night** (17:00): charm waves that turn a whole arc of your ring for 4 s (marked in hearts
+  first), a kiss that flies at you (your ring can catch it) and **marks** you for 5 s: every heal on you is
+  turned into damage; demon children (imps) born from her wings; at a third of her health her **true demon
+  form**, with a wing storm around her.
+- **Rewards** (slaying Lilith): the spell **Temptation** (charm the strongest foes near you: they fight for you for
+  6 s, then go back; a charmed foe that falls dies for good) evolving into **Unholy Desire** with **Velvet Chains**;
+  the character **the Succubus Queen** (innate Heartbreaker: a foe you charmed goes back losing part of its
+  health); the summon class **the Succubus** (a floating support that charms the foe it fights for a few
+  seconds) evolving into **the Lilim Matriarch** with **Sweet Surrender**. The achievement **Unmoved** (slay
+  Lilith with no summon charmed during her fight) unlocks the Act VI counter-passive **Faithless** (charms on your
+  summons wear off sooner; half as long at Lv 5).
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2630,6 +2654,11 @@ scripts/
                             the Brimstone / Furnace Heart / Salt Circle lines
     burning_gate_ground.gd  The Burning Gate's four zone floors (tiles/burning_gate_<style>, Act VI)
     burning_gate_glyphs.gd  Code-drawn fallbacks of the Burning Gate's obstacles, kinds and Moloch (Act VI)
+    silk_palace_ground.gd   The Palace of Silk and Ash's four zone floors (roses, mirrors, ballroom, chamber; Act VI)
+    silk_palace_glyphs.gd   Its code fallbacks (obstacles, the Lilim Witch, the twins, Lilith) and the thralls'
+                            look (Enthrall: the foe's own art, charmed pink, a heart over it)
+    silk_palace_report.gd   The autotest's Palace lines (the stage, its kinds, Lilith, Temptation, the Succubus,
+                            Faithless)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
                             the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
@@ -2715,6 +2744,9 @@ scripts/
     seraph_texts.gd         Act II: Fallen Seraph / Fallen Grace / Seraph of Ruin card and autotest text
     behaviors/seraph_behavior.gd  Act II: the Fallen Seraph's feather blades and Dive
     behaviors/golem_behavior.gd   Content wave 2: the Bone Golem's slam, Bulwark plant and growth
+    behaviors/bound_succubus_behavior.gd  Act VI: the Succubus's kiss bolts and charm (Enthrall), Sweet Surrender
+    enthrall.gd             Act VI: THE one path that turns a foe to your side for a while (Temptation, the
+                            Succubus): the thrall, its return, Heartbreaker and Unholy Desire's burst
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
@@ -2846,6 +2878,11 @@ scripts/
       lava_hound_kit.gd, pit_cultist_kit.gd   The Hellhound's trail of small pits; the Pit Cultist's portal rite
       gatekeeper_kit.gd     The Gatekeeper: chains through the one pull path (pull()), slam, coffles of the damned
       boss_moloch.gd        Moloch: the swallow (the charm path), fire waves, cracks (open_pit()), the Molten King
+      silk_palace_director.gd   The Palace of Silk and Ash: the Hall of Mirrors' reflections (misdirect()), the
+                            Twin Succubi's event, guest squads
+      lilim_witch_kit.gd, twin_succubus_kit.gd   The Lilim Witch (pits under the ring, portal rites); the Twin
+                            Succubi (charms in turn, the kiss of pain, the rage, the shared miniboss bar)
+      boss_lilith.gd, lilith_hazards.gd   Lilith: charm waves, the kiss and its mark, children, her true form
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3117,6 +3154,10 @@ scripts/
     hades_data.gd           Hades' arrival, fight, god-shade list (GOD_SHADES) and ending (Act IV)
     amaterasu_data.gd       Amaterasu's arrival, fight, sky per phase (SKY) and ending (Act V)
     black_sun_data.gd       Black Sun / Eclipse of Heaven rules, Stolen Dawn keys, Night Prayer key (Act V)
+    lilith_data.gd          Lilith's arrival, fight (charm waves, the kiss, children, her true form) (Act VI)
+    tempt_data.gd           The Enthrall path and Temptation / Unholy Desire rules, Velvet Chains keys,
+                            Heartbreaker key (Act VI)
+    silk_palace_enemy_data.gd   The Palace's kinds: the Lilim Witch, the Twin Succubi (Act VI)
     sun_road_enemy_data.gd  The Road to the Sun's kinds: Kitsune, fox fire, Sohei, the Kirin (Act V)
     river_styx_data.gd      River Styx / Lethe's Flood rules, Ferryman's Toll keys, the Ferrywoman's innate (Act IV)
     kurogane_enemy_data.gd  Castle Kurogane's kinds: Hatamoto, Kiba-musha, the General of the Left (Act V)

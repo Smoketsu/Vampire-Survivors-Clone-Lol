@@ -88,7 +88,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act V: Castle Kurogane ---
 	"banner_of_the_dead",
 	# --- Act VI: the Burning Gate ---
-	"brimstone"]
+	"brimstone",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"tempt"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -645,6 +647,29 @@ const SPELLS := {
 			{"damage": 28.0, "stones": 2, "radius": 38.0, "pit_radius": 30.0, "pit_life": 2.2, "pit_share": 0.3, "cooldown": 2.8, "range": 350.0},  # TUNING (not in GDD)
 			{"damage": 33.0, "stones": 3, "radius": 38.0, "pit_radius": 30.0, "pit_life": 2.4, "pit_share": 0.3, "cooldown": 2.7, "range": 350.0},  # TUNING (not in GDD)
 			{"damage": 40.0, "stones": 3, "radius": 42.0, "pit_radius": 34.0, "pit_life": 2.8, "pit_share": 0.35, "cooldown": 2.5, "range": 360.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Temptation (id "tempt": the Inferno's rule is Temptation and no spell id may
+	# meet a kind; GDD §15.0 "Temptation, Unholy Desire, Velvet Chains and the
+	# Succubus Queen"; owner-approved proposal: "charm the strongest nearby enemy
+	# to fight for you for 6 s"; unlocked by slaying Lilith, UnlockData): every
+	# `cooldown` s the `charms` strongest foes (most HP) within `range` px are
+	# charmed for `charm_time` s through the Enthrall path (never a boss,
+	# miniboss or structure), each fighting for you hitting for `damage`, then
+	# going back to its side. Logic: TemptSpell, Enthrall; fixed rules: TemptData.
+	"tempt": {
+		"display_name": "Temptation",  # Owner-approved proposal
+		"icon": "tempt",
+		"description": "Charm the strongest foe near you: it fights for you for a while.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"charms": "Foes charmed", "charm_time": "Charm (s)", "damage": "Thrall hit", "range": "Reach", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"charms": 1, "charm_time": 6.0, "damage": 14.0, "range": 220.0, "cooldown": 7.0},  # Owner-approved proposal: the 6 s; the rest TUNING (not in GDD)
+			{"charms": 1, "charm_time": 6.0, "damage": 17.0, "range": 230.0, "cooldown": 6.5},  # TUNING (not in GDD)
+			{"charms": 1, "charm_time": 6.5, "damage": 20.0, "range": 240.0, "cooldown": 6.0},  # TUNING (not in GDD)
+			{"charms": 2, "charm_time": 6.5, "damage": 22.0, "range": 250.0, "cooldown": 6.0},  # TUNING (not in GDD)
+			{"charms": 2, "charm_time": 7.0, "damage": 25.0, "range": 260.0, "cooldown": 5.5},  # TUNING (not in GDD)
 		],
 	},
 }

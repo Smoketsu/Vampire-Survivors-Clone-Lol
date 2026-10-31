@@ -74,7 +74,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act V: Castle Kurogane ---
 	"ronin_revenant",
 	# --- Act VI: the Burning Gate ---
-	"furnace_priest"]
+	"furnace_priest",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"succubus_queen"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -129,6 +131,8 @@ const STAT_LABELS := {
 ##                           beam deals, at another group; Act V)
 ##   banner_haste_bonus      BannerOfTheDead.step (extra share of his banners'
 ##                           attack-speed haste, x (1 + value); Act V)
+##   tempt_heartbreak        TemptSpell / Enthrall (share of its max HP a foe
+##                           loses when her charm on it ends; Act VI)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -158,7 +162,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act V: Castle Kurogane ---
 	"banner_haste_bonus",
 	# --- Act VI: the Burning Gate ---
-	"brimstone_extra_stones"]
+	"brimstone_extra_stones",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"tempt_heartbreak"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -614,6 +620,32 @@ const CHARACTERS := {
 		"stats": {"max_hp": 10.0, "move_speed": -0.04},  # TUNING (not in GDD) a heavy, slow priest
 		"sprite": "player/furnace_priest",
 		"tint": Color(0.86, 0.50, 0.32),  # TUNING (not in GDD) an ember orange over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# The Succubus Queen (Temptation's character; owner-approved Act VI proposal
+	# "Rewards": "Temptation ... | The Succubus Queen (figure style at 11)";
+	# female, the approved Act VI figure style at its height, chest and hips
+	# covered): a demon queen who turned on hell to serve the necromancer:
+	# lilac demon skin, deep-violet hair, curled horns and a violet-gold tiara,
+	# half-spread bat wings, a deep-violet corset-style bodysuit with charm-pink
+	# trim, a short violet cape, thigh-high stockings and boots; the bust rig, the
+	# hip swish and idle breathing. Temptation must be unlocked first (by Lilith),
+	# then she unlocks the usual way (the spell to Lv 5). Own decision on her
+	# innate (the proposal names none): HEARTBREAKER: a foe whose charm ends goes
+	# back with a broken heart (Enthrall strikes it for a share of its max HP).
+	"succubus_queen": {
+		"display_name": "The Succubus Queen",  # Owner-approved proposal
+		"title": "She left hell's court for a colder bed: yours.",
+		"spell": "tempt",
+		"innate": {
+			"id": "heartbreaker", "name": "Heartbreaker",
+			"description": "A foe you charmed goes back heartbroken, losing part of its health.",
+			"values": {"tempt_heartbreak": 0.15},  # TUNING (not in GDD) share of the foe's max HP; first pass 0.25 (171k damage in the agent's forced run, more than the evolved spell itself)
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a frail queen on wings
+		"sprite": "player/succubus_queen",
+		"tint": Color(0.86, 0.56, 0.86),  # TUNING (not in GDD) a lilac over the violet
 		"starts_unlocked": false,
 	},
 }

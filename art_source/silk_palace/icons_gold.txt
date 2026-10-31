@@ -1,0 +1,7 @@
+A sheet of THREE separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its third of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. UNHOLY DESIRE: a burning pink heart wrapped in black thorns, small flames of pink fire rising from it.
+2. LILIM MATRIARCH: the head of a demon queen with four curled horns and a bone crown, long pale hair, glowing soul-teal eyes, bat wings spread behind the head.
+3. UNMOVED: a black stone heart standing firm, a pink kiss mark sliding off it and breaking into pieces.
+Colours: charm pink #FF6FB5 #FFB8DD; crimson #5C1A3A #9B2D5E #D45C8A; black #0B0A10 #1E1A26 #352E40 #5A5068; bone #A79A80 #CFC7AE #EDE6D0; soul teal #1F7A5C #3FD39A #9CFFD8; gold #8A6A1E #D9A93A #F5D870.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).
