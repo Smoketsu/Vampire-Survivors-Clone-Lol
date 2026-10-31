@@ -135,6 +135,7 @@ const MARCH := {
 ## of lava (the most fixed pits), the Throne's floor is breaking.
 const PITS := {
 	"fixed_chance": [0.28, 0.55, 0.38, 0.48],  # TUNING (not in GDD) Iron City, Chain Bridges, Cathedral of Ash, Throne
+	"dps_summon": 5.4,  # TUNING (not in GDD) damage per second a burning pit deals to a summon here; was the shared 9.0 (x0.6, owner pass 1: "Pandemonium's pits hurt the army less"). Covers fixed, timed and open_pit() pits (the Morning Star's Beast rings); the necromancer's and enemies' burn stay the shared values
 }
 
 ## The demon portals on this stage: any InfernoRulesData.PORTALS key ({} = the
