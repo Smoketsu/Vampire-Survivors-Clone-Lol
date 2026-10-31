@@ -6,7 +6,9 @@
 ## Vhal'Neth; Act IV, GDD §15.0 "Act IV foundation (phase 1)": the Shores of
 ## Ilion -> Mount Olympus -> the Asphodel Underworld, opened by slaying Deus Ex
 ## Machina; Act V, GDD §15.0 "Act V foundation (phase 1)": the Burning Province
-## -> Castle Kurogane -> the Road to the Sun, opened by making Hades kneel). One
+## -> Castle Kurogane -> the Road to the Sun, opened by making Hades kneel; Act
+## VI, GDD §15.0 "Act VI foundation (phase 1)": the Burning Gate -> the Palace
+## of Silk and Ash -> Pandemonium, opened by putting out Amaterasu's sun). One
 ## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
@@ -57,7 +59,7 @@
 ##   act                — campaign act (1 = the Crimson Covenant, 2 = the
 ##                        Ancient Eye, 3 = the Electronic Empire, 4 = the
 ##                        Olympian Republic, 5 = the Shogunate of the Rising
-##                        Sun; absent = 1). The stage select shows one
+##                        Sun, 6 = the Inferno; absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
 ##   playable           — false hides a registered stage from the stage select
@@ -160,6 +162,23 @@
 ##                        objective of the Shogun's army; its "general_left"
 ##                        event); ground "kurogane" is its KuroganeGround (four
 ##                        zone floors).
+## --- Act VI: the Inferno ---
+##   inferno            — true: the Inferno's shared rules (Act VI, InfernoRules
+##                        as Game.inferno: the Hell Pits, the demon portals,
+##                        Temptation, and the Last Judgment when the RECKONING
+##                        has a "last_judgment" key); ground "inferno" is the
+##                        placeholder InfernoGround (from the "floor" dictionary,
+##                        styles ash / velvet / obsidian).
+##   pits               — the stage's Hell Pits (HellPits): any key of
+##                        InfernoRulesData.PITS overrides it ({} = defaults);
+##                        its fixed pits change with each of the "zones".
+##   portals            — the stage's demon portals (DemonPortals): any key of
+##                        InfernoRulesData.PORTALS ({} = defaults; "table" = the
+##                        squads they pour).
+##   zones              — Act VI stubs too: the planned zones (names and starts;
+##                        the Hell Pits read the starts).
+## Act VI event type "portal" ({count, banner, distance_min, distance_max,
+## table, pour_every}: DemonPortals.start_event()).
 class_name StageRegistry
 extends RefCounted
 
@@ -170,7 +189,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act IV: the Olympian Republic ---
 	"ilion", "olympus", "underworld",
 	# --- Act V: the Shogunate of the Rising Sun ---
-	"province", "kurogane", "sun_road"]
+	"province", "kurogane", "sun_road",
+	# --- Act VI: the Inferno ---
+	"burning_gate", "silk_palace", "pandemonium"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -193,6 +214,10 @@ const STAGES := {
 	"province": ProvinceStage.STAGE,
 	"kurogane": KuroganeStage.STAGE,
 	"sun_road": SunRoadStage.STAGE,
+	# --- Act VI: the Inferno ---
+	"burning_gate": BurningGateStage.STAGE,
+	"silk_palace": SilkPalaceStage.STAGE,
+	"pandemonium": PandemoniumStage.STAGE,  # Act VI, stage 18
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -204,6 +229,8 @@ const ACTS := {
 	4: {"name": "Act IV", "subtitle": "The Olympian Republic"},
 	# --- Act V: the Shogunate of the Rising Sun ---
 	5: {"name": "Act V", "subtitle": "The Shogunate of the Rising Sun"},
+	# --- Act VI: the Inferno ---
+	6: {"name": "Act VI", "subtitle": "The Inferno"},
 }
 
 
@@ -257,4 +284,9 @@ const BOSS_ARRIVALS := {
 	"kage": ProvinceStage.BOSS,
 	"shogun": KuroganeStage.BOSS,
 	"amaterasu": SunRoadStage.BOSS,
+	# --- Act VI: the Inferno (stubs: each stage's BOSS until phase 2 gives the
+	# boss its own data file) ---
+	"moloch": BurningGateStage.BOSS,
+	"lilith": SilkPalaceStage.BOSS,
+	"morning_star": PandemoniumStage.BOSS,  # Act VI, the finale's boss
 }

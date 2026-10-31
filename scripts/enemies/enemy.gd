@@ -590,7 +590,8 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 ## Sprite key of this enemy's art (the engine-motion pivot); bosses override.
 ## An Ancient Eye kind's art lives in eye/ (Act II) and an Electronic Empire
 ## kind's in empire/ (Act III), an Olympian Republic kind's in pantheon/ (Act
-## IV), a Shogunate kind's in shogunate/ (Act V): used when it has no enemies/ art (visual only;
+## IV), a Shogunate kind's in shogunate/ (Act V), an Inferno kind's in inferno/
+## (Act VI): used when it has no enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
 	if wears != "":
@@ -605,6 +606,8 @@ func motion_sprite_key() -> String:
 			return "pantheon/" + kind  # Act IV: an Olympian Republic kind's art.
 		if SpriteBank.has("shogunate/" + kind):
 			return "shogunate/" + kind  # Act V: a Shogunate kind's art.
+		if SpriteBank.has("inferno/" + kind):
+			return "inferno/" + kind  # Act VI: an Inferno kind's art.
 	return key
 
 

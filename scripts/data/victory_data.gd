@@ -39,6 +39,10 @@ const STAGES := {
 	"province": {"title": "The Province Burns Out", "boss_line": "Kage's last shadow is lit and gone."},  # TUNING (not in GDD) Act V placeholder
 	"kurogane": {"title": "The Banners Fall", "boss_line": "Shogun Kurogane's regiments are broken."},  # TUNING (not in GDD) Act V placeholder
 	"sun_road": {"title": "The Sun Goes Out", "boss_line": "Amaterasu falls, and the sun with her."},  # TUNING (not in GDD) Act V placeholder
+	# --- Act VI: the Inferno (placeholders until each stage is built) ---
+	"burning_gate": {"title": "The Gate Is Broken", "boss_line": "Moloch's furnace gutters and goes cold."},  # TUNING (not in GDD) Act VI placeholder
+	"silk_palace": {"title": "The Court Falls Silent", "boss_line": "Lilith's last kiss finds no one to take."},  # TUNING (not in GDD) Act VI placeholder
+	"pandemonium": {"title": "The Throne Is Empty", "boss_line": "The Morning Star falls, and hell answers to you."},  # TUNING (not in GDD) Act VI placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -51,6 +55,8 @@ const ACT_LINES := {
 	4: "You outlasted the gods. Their twilight buried you at last.",  # TUNING (not in GDD) Act IV
 	# --- Act V: the Shogunate of the Rising Sun ---
 	5: "You outlasted the Shogunate. The Endless Night swallowed you at last.",  # TUNING (not in GDD) Act V
+	# --- Act VI: the Inferno ---
+	6: "You outlasted the Inferno. The Last Judgment took you at last.",  # TUNING (not in GDD) Act VI
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

@@ -158,3 +158,34 @@ const SHOGUN_SAKURA_DARK := Color(0.659, 0.329, 0.431)  # #A8546E
 const SHOGUN_SAKURA := Color(0.894, 0.580, 0.675)  # #E494AC
 ## Lit sakura ("sakura_light"): highlights, petals in the light.
 const SHOGUN_SAKURA_LIGHT := Color(0.976, 0.827, 0.867)  # #F9D3DD
+
+# --- Act VI: the Inferno ---
+# GDD §15.0 "Act VI foundation (phase 1)": the fixed values of docs/act6/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps obsidian, lava, demon, charm, owned by the art pass). Gold keeps
+# its meaning (evolution / chest / victory); charm pink is the act's signature colour
+# (Temptation).
+
+## Obsidian outline ink (tools/palette.json "obsidian" ramp, darkest): every Inferno sprite's outline.
+const INFERNO_OBSIDIAN_INK := Color(0.043, 0.039, 0.063)  # #0B0A10
+## Dark obsidian ("obsidian_dark"): armour shadows, the pits' crust, portal stone.
+const INFERNO_OBSIDIAN_DARK := Color(0.118, 0.102, 0.149)  # #1E1A26
+## Obsidian ("obsidian"): hell knight plate, the ash plain's rocks, portal rings.
+const INFERNO_OBSIDIAN := Color(0.208, 0.180, 0.251)  # #352E40
+## Lit obsidian ("obsidian_light"): glassy highlights on armour and rock.
+const INFERNO_OBSIDIAN_LIGHT := Color(0.353, 0.314, 0.408)  # #5A5068
+## Dark lava ("lava_dark"): cooling crust, ember cracks, a pit's rim.
+const INFERNO_LAVA_DARK := Color(0.541, 0.165, 0.031)  # #8A2A08
+## Lava ("lava"): the Hell Pits' fire, burning blades, ember armour.
+const INFERNO_LAVA := Color(0.878, 0.376, 0.102)  # #E0601A
+## Lit lava ("lava_light"): the pits' white-hot core, telegraph rims, sparks.
+const INFERNO_LAVA_LIGHT := Color(1.000, 0.702, 0.278)  # #FFB347
+## Dark demon skin ("demon_dark"): shadowed crimson-violet skin, wings.
+const INFERNO_DEMON_DARK := Color(0.361, 0.102, 0.227)  # #5C1A3A
+## Demon skin ("demon"): imps, brutes, the succubus's wings and tail.
+const INFERNO_DEMON := Color(0.608, 0.176, 0.369)  # #9B2D5E
+## Lit demon skin ("demon_light"): skin highlights.
+const INFERNO_DEMON_LIGHT := Color(0.831, 0.361, 0.541)  # #D45C8A
+## Charm pink ("charm"): Temptation (hearts over a charmed summon, the kiss, portal swirls).
+const INFERNO_CHARM := Color(1.000, 0.435, 0.710)  # #FF6FB5
+## Lit charm pink ("charm_light"): heart highlights, the sealing ring's glow.
+const INFERNO_CHARM_LIGHT := Color(1.000, 0.722, 0.867)  # #FFB8DD

@@ -171,6 +171,10 @@ const STAGE_LINES: Dictionary = {
 	"province": "The war burns the countryside. Fight it by day and by night.",  # TUNING (not in GDD) Act V
 	"kurogane": "Storm the Shogun's castle. Break his regiments.",  # TUNING (not in GDD) Act V
 	"sun_road": "Climb to the sun goddess. Put out the sun.",  # TUNING (not in GDD) Act V
+	# --- Act VI: the Inferno ---
+	"burning_gate": "Hell has come to collect. Meet it at the gate.",  # TUNING (not in GDD) Act VI
+	"silk_palace": "Walk the court of desire. Keep your dead your own.",  # TUNING (not in GDD) Act VI
+	"pandemonium": "Climb to the throne of the Adversary.",  # TUNING (not in GDD) Act VI
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
@@ -363,6 +367,33 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(249, 211, 221),
 	},  # TUNING (not in GDD) sakura_light petals
+	# --- Act VI: the Inferno (placeholder scenes from the shared kinds' art until each
+	# stage brings its own floor, props and boss; a missing sprite is skipped) ---
+	"burning_gate": {
+		"tile": "tiles/graveyard",
+		"items": [
+			["inferno/damned", 200, 96, true], ["inferno/damned", 236, 116, true],
+			["inferno/hell_knight", 196, 186, true], ["inferno/imp", 150, 120, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "embers", "fx_color": Color8(255, 179, 71),
+	},  # TUNING (not in GDD) lava_light embers
+	"silk_palace": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["inferno/succubus", 206, 110, true], ["inferno/imp", 236, 190, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(255, 111, 181),
+	},  # TUNING (not in GDD) charm-pink motes
+	"pandemonium": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["inferno/demon_portal", 210, 96, true], ["inferno/demon_brute", 196, 214, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "embers", "fx_color": Color8(224, 96, 26),
+	},  # TUNING (not in GDD) lava embers
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

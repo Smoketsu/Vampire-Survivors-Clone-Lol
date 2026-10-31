@@ -198,6 +198,17 @@
 ##     danger_push()). When the Shogunate ran, the summary adds the "sun's
 ##     course", "the draw", "from the shadows", "shogunate kinds" and (on an
 ##     Act V stage) "shogunate stage" lines (ShogunateReport).
+##   * Act VI, the Inferno (GDD §15.0 "Act VI foundation (phase 1)"):
+##     --stage=burning_gate|silk_palace|pandemonium, --spawn= with its kinds
+##     (damned, imp, hell_knight, succubus, demon_brute, demon_portal),
+##     --boss=moloch|lilith|morning_star. The bot steps out of the Hell Pits and
+##     their glowing rims and the Adversary's grabs (InfernoRules.danger_push())
+##     and the kits' telegraphs (the knight's sweep, the brute's slam), and it
+##     SEALS portals (its one sealing behaviour, _seal_vector(): it walks into a
+##     portal's ring and stays there when its army holds and it is calm). When
+##     the Inferno ran, the summary adds the "hell pits", "portals",
+##     "temptation", "inferno kinds", "last judgment" (after 0:00) and (on an
+##     Act VI stage) "inferno stage" lines (InfernoReport).
 class_name Autotest
 extends Node
 
@@ -221,6 +232,26 @@ const SANCTUM_SEEK_POLICIES := ["army", "summon", "evolve"]
 ## Summons the bot needs before it walks to the Citadel's gate generators and
 ## turrets (a starting army of four walked into a gate's guns and died).
 const CITADEL_SEEK_ARMY: int = 12
+# --- Act VI: the Inferno ---
+## Summons the bot needs before it walks into a demon portal's ring to seal it
+## ("when its army holds").
+const INFERNO_SEAL_ARMY: int = 8
+## Least share (0..1) of its max HP the bot needs to start a seal.
+const INFERNO_SEAL_HP: float = 0.5
+## Radius (px) in which the bot looks for a portal to seal.
+const INFERNO_SEAL_RADIUS: float = 700.0
+## Weight of the walk into a portal's ring in the autopilot mix (it must hold
+## its ground there against the flee push for the 3 s of the seal).
+const INFERNO_SEAL_WEIGHT: float = 2.2
+## Crowd pressure (the flee vector's length) above which the bot does not set
+## out for a portal ...
+const INFERNO_SEAL_PRESSURE: float = 0.9
+## ... and above which it gives up a seal at the ring.
+const INFERNO_SEAL_PRESSURE_NEAR: float = 2.5
+## "At the ring": within this x the seal radius of the portal's centre.
+const INFERNO_SEAL_NEAR: float = 1.6
+## x the pull while at the ring (it holds its ground through the pour).
+const INFERNO_SEAL_HOLD: float = 2.0
 ## Distance (px) at which the autopilot starts steering off obstacles.
 const OBSTACLE_LOOK: float = 22.0
 ## Game seconds between stuck-unit samples.
@@ -1103,6 +1134,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.pantheon.danger_push(pos)  # Act IV: bolt circles, fissures (null elsewhere).
 	if game.shogunate != null:
 		danger += game.shogunate.danger_push(pos)  # Act V: flashing Draw lines (null elsewhere).
+	if game.inferno != null:
+		danger += game.inferno.danger_push(pos)  # Act VI: the Hell Pits, the Adversary's grabs (null elsewhere).
 	if game.enemies.assembly != null:
 		danger += game.enemies.assembly.danger_push(pos)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	if game.enemies.citadel != null:
@@ -1201,6 +1234,8 @@ func get_move_vector() -> Vector2:
 		danger += game.pantheon.danger_push(p)  # Act IV: bolt circles, fissures (null elsewhere).
 	if game.shogunate != null:
 		danger += game.shogunate.danger_push(p)  # Act V: flashing Draw lines (null elsewhere).
+	if game.inferno != null:
+		danger += game.inferno.danger_push(p)  # Act VI: the Hell Pits, the Adversary's grabs (null elsewhere).
 	if game.enemies.assembly != null:
 		danger += game.enemies.assembly.danger_push(p)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	if game.enemies.citadel != null:
@@ -1253,6 +1288,11 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.sinking.danger_push(p) * 0.5  # Ul-Thalos: keep off the shore the sea is about to take.
 	if goal != Vector2.INF:
 		objective = (goal - p).normalized()
+	# --- Act VI: the Inferno ---
+	if game.inferno != null:
+		var seal := _seal_vector(p, away.length())  # Into a demon portal's ring (zero when not sealing).
+		if seal != Vector2.ZERO:
+			objective = seal * INFERNO_SEAL_WEIGHT
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
 	var wander := Vector2.from_angle(game.elapsed * 0.3) * 0.35
 	var loot := _loot_vector(p, away.length())  # Toward a nearby chest / drop when safe.
@@ -1274,6 +1314,31 @@ func _coop_move(away: Vector2, toward: Vector2, objective: Vector2, danger: Vect
 	var cohesion := co.cohesion_vector(p) * CoopData.BOT_COHESION_WEIGHT
 	var w := wander if slot == 0 else -wander
 	return (away * 1.5 + toward * 1.2 + objective * 1.0 + danger * 3.0 + avoid * 1.5 + w + loot * 1.4 + revive + cohesion).limit_length(1.0)
+
+
+# --- Act VI: the Inferno ---
+## The bot's ONE sealing behaviour (Act VI, DemonPortals): a pull toward the
+## centre of the nearest demon portal within INFERNO_SEAL_RADIUS px when its
+## army holds (INFERNO_SEAL_ARMY summons), its HP is at least INFERNO_SEAL_HP
+## and the crowd `pressure` is low (at the ring it holds on through more
+## pressure, with a stronger pull, for the 3 s of the seal). Zero otherwise
+## (and for every policy that does not seek objectives).
+func _seal_vector(p: Vector2, pressure: float) -> Vector2:
+	if not policy() in SANCTUM_SEEK_POLICIES or game.horde.units.size() < INFERNO_SEAL_ARMY:
+		return Vector2.ZERO
+	if game.player.hp < game.player.max_hp * INFERNO_SEAL_HP:
+		return Vector2.ZERO
+	var at := game.inferno.seal_point(p, INFERNO_SEAL_RADIUS)
+	if at == Vector2.INF:
+		return Vector2.ZERO
+	var to := at - p
+	var d := to.length()
+	var near := d < float(game.inferno.portals.cfg["seal_radius"]) * INFERNO_SEAL_NEAR  # At (or in) the ring: hold on.
+	if pressure > (INFERNO_SEAL_PRESSURE_NEAR if near else INFERNO_SEAL_PRESSURE):
+		return Vector2.ZERO
+	if d < 6.0:
+		return Vector2.ZERO
+	return to / d * (INFERNO_SEAL_HOLD if near else 1.0)
 
 
 ## Unit vector toward the nearest chest (within ChestData.AUTOTEST_SEEK_RADIUS,
@@ -1359,6 +1424,7 @@ func finish(summary: Dictionary) -> void:
 	EmpireReport.print_lines(game, st_all)  # Act III: line of fire, lock-on, steel, purge protocol, kinds, the stage (only when the Empire ran).
 	PantheonReport.print_lines(game, st_all)  # Act IV: divine wrath, phalanx, glory, kinds, the stage (only when the Pantheon ran).
 	ShogunateReport.print_lines(game, st_all)  # Act V: the sun's course, the draw, from the shadows, kinds, the stage (only when the Shogunate ran).
+	InfernoReport.print_lines(game, st_all)  # Act VI: hell pits, portals, temptation, kinds, the last judgment, the stage (only when the Inferno ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	# --- Act V: the Burning Province ---

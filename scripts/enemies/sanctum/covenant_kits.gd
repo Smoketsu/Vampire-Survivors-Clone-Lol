@@ -15,8 +15,10 @@
 ## "trooper" -> TrooperKit), loaded the same way, and an id with neither is
 ## an OLYMPIAN REPUBLIC kit (Act IV): PANTHEON_KIT_DIR + "<id>_kit.gd" (e.g.
 ## "hoplite" -> HopliteKit), and an id with none of those is a SHOGUNATE kit
-## (Act V): SHOGUNATE_KIT_DIR + "<id>_kit.gd" (e.g. "samurai" -> SamuraiKit).
-## Kit ids must be unique across the four folders.
+## (Act V): SHOGUNATE_KIT_DIR + "<id>_kit.gd" (e.g. "samurai" -> SamuraiKit),
+## and an id with none of those is an INFERNO kit (Act VI): INFERNO_KIT_DIR +
+## "<id>_kit.gd" (e.g. "succubus" -> SuccubusKit).
+## Kit ids must be unique across the five folders.
 ## Enemy only ever talks to this file and the CovenantKit base class.
 class_name CovenantKits
 extends RefCounted
@@ -31,6 +33,9 @@ const PANTHEON_KIT_DIR: String = "res://scripts/enemies/pantheon/"
 # --- Act V: the Shogunate of the Rising Sun ---
 ## Folder of the Shogunate's kit scripts ("<id>_kit.gd", each a ShogunateKit; Act V).
 const SHOGUNATE_KIT_DIR: String = "res://scripts/enemies/shogunate/"
+# --- Act VI: the Inferno ---
+## Folder of the Inferno's kit scripts ("<id>_kit.gd", each an InfernoKit; Act VI).
+const INFERNO_KIT_DIR: String = "res://scripts/enemies/inferno/"
 
 ## Eye / Empire kit id -> its loaded Script (null when no file exists), filled on first use.
 static var _eye_scripts: Dictionary = {}
@@ -70,8 +75,9 @@ static func for_enemy(current: CovenantKit, id: String) -> CovenantKit:
 ## A new instance of Ancient Eye kit `id` (EYE_KIT_DIR + "<id>_kit.gd"), else
 ## of Electronic Empire kit `id` (EMPIRE_KIT_DIR + "<id>_kit.gd", Act III), else
 ## of Olympian Republic kit `id` (PANTHEON_KIT_DIR + "<id>_kit.gd", Act IV), else
-## of Shogunate kit `id` (SHOGUNATE_KIT_DIR + "<id>_kit.gd", Act V), or null
-## when no such script exists.
+## of Shogunate kit `id` (SHOGUNATE_KIT_DIR + "<id>_kit.gd", Act V), else of
+## Inferno kit `id` (INFERNO_KIT_DIR + "<id>_kit.gd", Act VI), or null when no
+## such script exists.
 static func _eye_kit(id: String) -> CovenantKit:
 	if not _eye_scripts.has(id):
 		var path := EYE_KIT_DIR + id + "_kit.gd"  # Expected script location.
@@ -81,6 +87,8 @@ static func _eye_kit(id: String) -> CovenantKit:
 			path = PANTHEON_KIT_DIR + id + "_kit.gd"  # Act IV: a Pantheon kit.
 		if not ResourceLoader.exists(path):
 			path = SHOGUNATE_KIT_DIR + id + "_kit.gd"  # Act V: a Shogunate kit.
+		if not ResourceLoader.exists(path):
+			path = INFERNO_KIT_DIR + id + "_kit.gd"  # Act VI: an Inferno kit.
 		_eye_scripts[id] = load(path) if ResourceLoader.exists(path) else null
 	var scr: Script = _eye_scripts[id]
 	if scr == null:

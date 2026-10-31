@@ -1908,6 +1908,34 @@ the ambushes run as on every Act V stage.
 - **Autotest:** `--stage=kurogane`, `--boss=shogun`, `--spells=banner_of_the_dead`, `--passives=unbending`,
   `--character=ronin_revenant`, `--spawn=hatamoto@T`, `kiba_musha@T`, `general_left@T`.
 
+### Act VI: the Inferno (foundation)
+
+<!-- --- Act VI: the Inferno --- -->
+Hell comes to collect. Every soul the necromancer raised was owed to the Pit, and its demons fight for them:
+**the Inferno** (GDD §15.0 "Act VI foundation (phase 1)"; owner-approved proposal `docs/act6/PROPOSAL.md`).
+The stage select has an **Act VI** tab with its three stages, **the Burning Gate**, **the Palace of Silk and
+Ash** and **Pandemonium** (bosses Moloch, the Furnace King; Lilith, Queen of the Night; the Morning Star),
+"Coming soon" until phase 2 builds them; putting out Amaterasu's sun opens the Burning Gate and each boss opens
+the next stage. The act's shared rules:
+
+- **Hell Pits.** Burning pools on the ground hurt anyone standing in them, you, your summons, the damned and
+  the living; demons, imps and other fliers are spared. Each zone has its own fixed pits, and more open near you
+  on a telegraph (a glowing rim for 1.5 s) and close again. The Bone Ring flows around them; luring the damned
+  through them is the counterplay.
+- **Portals.** Demon portals pour out a squad every few seconds while you are near. Break one, or **seal** it:
+  stand inside its ring for 3 s and it closes at once and pays a Soul Ash bounty.
+- **Temptation.** A succubus's kiss charms one of your summons: pink hearts over it, it fights for hell for
+  6 s and then comes back (at most three at once). Kill the charmer and her charms break; break the charmed
+  body and the summon comes back at once, weakened.
+- **The Last Judgment.** At 0:00 every portal opens at once, the pits open faster each minute, demon brutes
+  step out and the Adversary's hand reaches up through the floor under you and your army.
+- **Music.** For now Act VI runs play the Act V loop; "Hymn of the Pit" comes with the audio pass.
+
+The shared kinds so far: **the Damned** (chained souls; they burn in the pits), the **Imp** (a fast flier with
+a pitchfork), the **Hell Knight** (ember armour, a burning greatsword's sweep), the **Succubus** (charms your
+summons; flies) and the **Demon Brute** (four arms, a ground slam that throws your dead aside, flat armour; the
+Last Judgment's heavy). The Codex has an **Inferno** tab.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2151,9 +2179,9 @@ light above, the set-up of Act IV.
   kind slain (soldiers, structures, the Reckoning's Inquisitor, the
   Cathedral Guardian), a boss faced; until then they are dark silhouettes
   named "Unknown". **Ancient Eye** (Act II), **Empire** (Act III),
-  **Republic** (Act IV, the Olympian Republic) and **Shogunate** (Act V, the
-  Shogunate of the Rising Sun) list their faction's soldiers, champions and
-  bosses the same way.
+  **Republic** (Act IV, the Olympian Republic), **Shogunate** (Act V, the
+  Shogunate of the Rising Sun) and **Inferno** (Act VI) list their faction's
+  soldiers, champions and bosses the same way.
   **Evolutions follow the recipe rule**: until you obtain
   one it is a "?" with no name, art or hint (it reads the `[recipes]` book).
   Achievements use four new badge icons (`assets/sprites/icons/ach_*.png`).
@@ -2560,6 +2588,11 @@ scripts/
     underworld_report.gd    The autotest's Underworld lines (the stage, Cerberus, Hades, River Styx, the Myrmidons)
     kurogane_ground.gd      Castle Kurogane's four zone floors (bailey, gatehouse, courtyard, keep; Act V)
     kurogane_glyphs.gd      Code fallbacks of its obstacles, the Shogun and his command platform (Act V)
+    inferno_glyphs.gd       Code-drawn fallbacks of the Inferno's kinds and the Act VI stubs' obstacles; the
+                            Hell Pit, rim, heart and claw textures made once in code (Act VI)
+    inferno_ground.gd       The Act VI stubs' placeholder floor (the STAGE's "floor": ash / velvet / obsidian)
+    inferno_report.gd       The autotest's Act VI lines (hell pits, portals, temptation, kinds, last judgment,
+                            stage)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
                             the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
@@ -2755,6 +2788,23 @@ scripts/
       boss_shogun.gd        Shogun Kurogane: the command platform (untargetable), his bar = his army, the duel
                             (iai cuts and the triple cut through DrawCuts' boss override)
       shogun_regiments.gd   His six regiments: the one count of soldiers left, the march, batches, breaks
+    inferno/                The Inferno (Act VI): its kits ("<id>_kit.gd", loaded by name after the
+                            Shogunate's) and bosses ("boss_<id>.gd"), and the act's shared rules:
+      inferno_rules.gd      Game.inferno: owns the pits, the portals, Temptation and the Last Judgment, the
+                            bot's danger hint and seal point (null on Acts I to V)
+      hell_pits.gd          THE HELL PITS: fixed pits per zone (a seeded cell hash) and telegraphed pits, the
+                            burn through CombatResolver, open_pit() for phase 2, avoid_point() (the ring's one
+                            pit check), the Salt Circle hook
+      demon_portals.gd      THE PORTALS: open() / the "portal" event, squads poured from a table, destroyed or
+                            sealed (3 s in the ring, a Soul Ash bounty), the bot's seek_point()
+      temptation.gd         TEMPTATION (HordeDirector.charm() / break_charms()): the parked summon and its
+                            hostile body, max 3, freed / broken / expired, the Faithless hook
+      last_judgment.gd      The Last Judgment: every portal at once, faster pits, the Adversary's hand
+      inferno_kit.gd        Base kit: the row flags (demon, flier, charmer, damned), try_charm(), a charmer's
+                            death breaks its charms
+      damned_kit.gd, imp_kit.gd, hell_knight_kit.gd, succubus_kit.gd, demon_brute_kit.gd   The shared kinds
+                            (the knight's sweep, the kiss, the brute's slam)
+      demon_portal_kit.gd, charmed_kit.gd   The portal's looping glow; a charmed body's hearts
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3012,6 +3062,15 @@ scripts/
     stages/province_stage.gd       Act V stages: the Burning Province (built: zones, paddies, timeline, PROVINCE), Castle Kurogane and the Road to the Sun;
     stages/kurogane_stage.gd       act 5, "shogunate": true, the Sun's Course timeline, the Endless Night
     stages/sun_road_stage.gd       Reckoning, placeholder floors / obstacles / boss scripts, zone names
+    inferno_enemy_data.gd   The Inferno's shared kinds (the Damned, Imp, Hell Knight, Succubus, Demon Brute),
+                            the demon portal and the charmed body; the demon / flier / charmer / damned flags (Act VI)
+    burning_gate_enemy_data.gd  Each Act VI stage's own kinds (silk_palace_ / pandemonium_enemy_data.gd
+                            likewise; empty until phase 2)
+    inferno_rules_data.gd   Act VI's shared rules: PITS (+ Salt Circle hook), PORTALS, TEMPTATION (+ Faithless
+                            hook), LAST_JUDGMENT, the SOUNDS map
+    stages/burning_gate_stage.gd   Act VI stubs: the Burning Gate, the Palace of Silk and Ash and Pandemonium;
+    stages/silk_palace_stage.gd    act 6, "inferno": true, zones, pits / portals overrides, a timeline of the
+    stages/pandemonium_stage.gd    shared kinds with portal events, the Last Judgment, placeholder floors / bosses
     hades_data.gd           Hades' arrival, fight, god-shade list (GOD_SHADES) and ending (Act IV)
     amaterasu_data.gd       Amaterasu's arrival, fight, sky per phase (SKY) and ending (Act V)
     black_sun_data.gd       Black Sun / Eclipse of Heaven rules, Stolen Dawn keys, Night Prayer key (Act V)
@@ -3217,7 +3276,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, or the Act V stubs `province`, `kurogane` and `sun_road`. Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, or the Act VI stubs `burning_gate`, `silk_palace` and `pandemonium`. Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |
@@ -3226,6 +3285,7 @@ Options (after `--`):
 | (Act V) | `--stage=province\|kurogane\|sun_road` (the Act V stubs) prints `sun's course` (when day, dusk, night and the Endless Night began; stone lanterns lit; ambushes revealed in light; night groups held back by day and night kinds activated by day, both 0 on a stub; Reckoning enemies quickened), `the draw` (lines drawn and on you, cuts, refused at the cap, cancelled by a slain drawer, most at once; bodies cut: you and each summon class; damage to summons and to you; dodged by the bot), `from the shadows` (squads and units, appeared, capped, inside the Bone Ring, obstacle shadow spots, revealed in light, the average warning), `shogunate kinds` (spawned / killed, first appearance and damage per kind; samurai draws, teppo shots, ninja shuriken, oni smashes and summons stunned) and `shogunate stage`. The Draw and kind lines also print on any stage where a Shogunate kind was forced (the Sun's Course stays day there): `--spawn=samurai@60x6,ninja@90x4,oni@120,onryo@30x10`; `--boss=kage\|shogun\|amaterasu` (placeholder boss scripts until phase 2). |
 | (Act V, the Burning Province) | `--stage=province` adds `province` (the paddy checks and slows, the kappa left unslowed, the village fires and their burns, Shuten-dōji, the lanterns lit toward No Shadow Unlit), `province kinds` (Kunoichi smokes, summons blinded and lunges; Kappa grapples; sake and village fires; smoke clouds), `shuten-doji` and `kage` (splits, clones revealed by light / faded / killed, smoke fields, kunai hooks and pulls, phases); `act V spell` / `act V passives` print when Hundred Shadows, Hidden Hand or Paper Lanterns was taken (e.g. `--spells=hundred_shadows --passives=paper_lanterns`, `--character=grave_kunoichi`). `--spawn=kunoichi@60x2,kappa@90x4,shuten_doji@120` works on any stage; `--boss=kage`. |
 | (Castle Kurogane) | `--stage=kurogane` adds `kurogane` (the General of the Left's arrival and fall), `kurogane kinds` (Hatamoto spawned and killed, aura pulses, Kiba-musha charges and their hits; also wherever a Kurogane kind was forced, e.g. `--spawn=hatamoto@60,kiba_musha@90x4,general_left@120`), `general of the left` (charges and hits, riders called, rage, kill time) and `shogun` (the bar, each regiment's order and fate, soldiers sent / killed / fled / lost, other kills taken off the bar, banners broken, when he came down, his guard, iai and triple cuts, Regiments Broken; also `--boss=shogun`). On any stage, `act V spell` (Banner of the Dead when learned, e.g. `--spells=banner_of_the_dead`) and `act V passives` (Warlord's Seal, Unbending, e.g. `--passives=unbending`). |
+| (Act VI) | `--stage=burning_gate\|silk_palace\|pandemonium` (the Act VI stubs) prints `hell pits` (pits opened: timed, Last Judgment, opened by kinds; refused; the most fixed pits live and the zone at the end; burns; damage to summons, to you, to enemies; pit kills and the damned burned), `portals` (opened, destroyed, sealed with the times and the Soul Ash bounty, standing at the end; squads and units poured, capped), `temptation` (charms, the most at once, broken by the charmer's death, expired, freed by breaking the body, refused at the cap; damage by charmed summons to summons and to you; by class), `inferno kinds` (spawned / killed, first appearance and damage per kind; knight sweeps, succubus kisses, brute slams), `last judgment` (after 0:00: portals opened, pits, the Adversary's grabs and their hits) and `inferno stage`. The army bot seals portals (it walks into a ring when its army holds and it is calm). The portal, temptation and kind lines also print on any stage where an Inferno kind was forced (the pits stay off there): `--spawn=succubus@60x2,demon_portal@90,hell_knight@120x4`; `--boss=moloch\|lilith\|morning_star` (placeholder boss scripts until phase 2). |
 | (Assembly Halls) | `--stage=assembly` adds `assembly` (fabricators destroyed / placed / planned and when, soldiers built and capped, the wave and trickle thinning, Cold Assembly, the Beta Build, objective Soul Ash), `assembly floor` (seconds carried by belts for you / summons / enemies, furnace flares, furnace hits and damage per side), `assembly events`, `assembly kinds` (Arc Engineer repairs and jams, Juggernaut flames and flat armour, the Beta Build's swipes, rivets, patching and kill time) and `motherboard` (grabs, hurls, stamps, magnet pulls, turret builds, turrets and their shots, when Full Load and Overclock began, its damage). Reward lines print when owned: `hollow puppet` (`--spells=hollow_puppet`), `class grave_drone` (`--classes=grave_drone`), `signal ghost` (`--passives=signal_ghost`) and `marionette` (`--character=marionette`). `--spawn=arc_engineer@60x4,juggernaut@120x2,beta_build@180` works on any stage. |
 | (the Iron Citadel) | `--stage=citadel` adds `citadel` (gates raised / broken / locked down, garrison spawns, wall pushes, laser cycles and their hits on you, summons and enemies, citadel gun salvos, strikes and hits, turrets placed / destroyed / left behind, guests, objective Soul Ash), `citadel events`, `citadel kinds` (Duelist lunges: blocked / reached you / summons sliced; turret bursts; Valkyrie 2.0: spawned, killed and time to kill, dashes (blocked, hit you), bashes, storms, summon hits) and, when it fought, `deus ex machina` (phase times, plates broken, chaingun / salvo / footfall / stomp counts and hits, drones launched and downed, exposures, lances and their blocked ticks, hangars, pulses, teleports, machines gone dark, damage to you by attack). On every stage, `scrap swarm` (level, damage, kills, bolts, kill drones, peak drones, orbit radius; Machine Soul's bonus damage) and `iron revenant` (level, damage by source, bursts, shells, salvos, missiles; Recoil Frame) print only when used. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |

@@ -37,7 +37,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 		# --- Act IV: the Olympian Republic ---
 		["pantheon", "Republic"],
 		# --- Act V: the Shogunate of the Rising Sun ---
-		["shogunate", "Shogunate"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's
+		["shogunate", "Shogunate"],
+		# --- Act VI: the Inferno ---
+		["inferno", "Inferno"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -172,6 +174,19 @@ const SHOGUNATE_CHAMPIONS: Array[String] = ["oni",
 ## Shogunate stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const SHOGUNATE_BOSSES: Array[String] = ["kage", "shogun", "amaterasu"]
 
+# --- Act VI: the Inferno ---
+## Act VI, the Inferno (GDD §15.0 "Act VI foundation (phase 1)"; the Inferno
+## tab): its soldiers (the demon portal with them, as the Empire's pylons and
+## the Republic's siege towers), its champions (the heavy that is also the Last
+## Judgment's kind, and phase 2's minibosses) and its stage bosses
+## (StageRegistry.BOSS_ARRIVALS ids). The charmed body (Temptation) is never
+## listed. Each Act VI stage adds its own as it is built (phase 2).
+const INFERNO_SOLDIERS: Array[String] = ["damned", "imp", "hell_knight", "succubus", "demon_portal"]
+## Inferno champions (minibosses) and the Act VI Reckoning kinds.
+const INFERNO_CHAMPIONS: Array[String] = ["demon_brute"]
+## Inferno stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const INFERNO_BOSSES: Array[String] = ["moloch", "lilith", "morning_star"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
@@ -183,6 +198,8 @@ const SECTIONS: Dictionary = {
 	"pantheon": [["pantheon_soldiers", "Soldiers"], ["pantheon_champions", "Champions"], ["pantheon_bosses", "Bosses"]],  # TUNING (not in GDD) Act IV
 	# --- Act V: the Shogunate of the Rising Sun ---
 	"shogunate": [["shogunate_soldiers", "Soldiers"], ["shogunate_champions", "Champions"], ["shogunate_bosses", "Bosses"]],  # TUNING (not in GDD) Act V
+	# --- Act VI: the Inferno ---
+	"inferno": [["inferno_soldiers", "Soldiers"], ["inferno_champions", "Champions"], ["inferno_bosses", "Bosses"]],  # TUNING (not in GDD) Act VI
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -309,6 +326,16 @@ const DESCRIPTIONS: Dictionary = {
 	"hatamoto": "Banner guards of the Shogun. While one stands, the soldiers near him fight harder. Kill the banner.",  # Owner-approved Act V proposal
 	"kiba_musha": "Mounted samurai who rein in, then charge down a lane: step aside, or let the horse ride through your dead.",  # Owner-approved Act V proposal
 	"general_left": "The General of the Left charges straight through your ring on his black war horse and calls his riders.",  # Owner-approved Act V proposal
+	# --- Act VI: the Inferno ---
+	"damned": "Chained, wailing souls dragged to the Pit. They burn in the pits like anything living: lead them through.",  # Owner-approved Act VI proposal
+	"imp": "Small winged demons with pitchforks. They fly over the pits and never burn.",  # Owner-approved Act VI proposal
+	"hell_knight": "Knights in ember armour with burning greatswords. Step out of the blade's sweep.",  # Owner-approved Act VI proposal
+	"succubus": "Her kiss turns one of your dead to fight for hell for a few seconds. Kill her and her charms break.",  # Owner-approved Act VI proposal (Temptation)
+	"demon_portal": "A gate of the Pit that pours out demons. Break it, or stand in its ring to seal it for Soul Ash.",  # Owner-approved Act VI proposal (Portals)
+	"demon_brute": "A four-armed demon whose ground slam throws your dead aside. Its hide shrugs off small blows.",  # Owner-approved Act VI proposal
+	"moloch": "The Furnace King, a colossal bull-headed demon. He swallows your dead and cracks the ground into pits.",  # Owner-approved Act VI proposal
+	"lilith": "Queen of the Night, Mother of Demons. Her charm turns a whole arc of your ring.",  # Owner-approved Act VI proposal
+	"morning_star": "The Adversary himself: first the Angel with six burnt wings, then the Beast.",  # Owner-approved Act VI proposal (two phases, owner Oct 26)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -363,6 +390,9 @@ const LOCKED_HINT: Dictionary = {
 	"shogunate_soldiers": "Slay one to record it.",  # TUNING (not in GDD) Act V
 	"shogunate_champions": "Slay one to record it.",  # TUNING (not in GDD) Act V
 	"shogunate_bosses": "Face it to record it.",  # TUNING (not in GDD) Act V
+	"inferno_soldiers": "Slay one to record it.",  # TUNING (not in GDD) Act VI
+	"inferno_champions": "Slay one to record it.",  # TUNING (not in GDD) Act VI
+	"inferno_bosses": "Face it to record it.",  # TUNING (not in GDD) Act VI
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -391,6 +421,9 @@ const TAGS: Dictionary = {
 	"shogunate_soldiers": "Shogunate of the Rising Sun",  # TUNING (not in GDD) Act V
 	"shogunate_champions": "Champion of the Shogunate",  # TUNING (not in GDD) Act V
 	"shogunate_bosses": "Stage boss",  # TUNING (not in GDD) Act V
+	"inferno_soldiers": "The Inferno",  # TUNING (not in GDD) Act VI
+	"inferno_champions": "Champion of the Pit",  # TUNING (not in GDD) Act VI
+	"inferno_bosses": "Stage boss",  # TUNING (not in GDD) Act VI
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -576,10 +609,11 @@ static func is_known(cat: String, id: String) -> bool:
 					or EYE_SOLDIERS.has(id) or EYE_CHAMPIONS.has(id) \
 					or EMPIRE_SOLDIERS.has(id) or EMPIRE_CHAMPIONS.has(id) \
 					or PANTHEON_SOLDIERS.has(id) or PANTHEON_CHAMPIONS.has(id) \
-					or SHOGUNATE_SOLDIERS.has(id) or SHOGUNATE_CHAMPIONS.has(id)  # Act IV, Act V
+					or SHOGUNATE_SOLDIERS.has(id) or SHOGUNATE_CHAMPIONS.has(id) \
+					or INFERNO_SOLDIERS.has(id) or INFERNO_CHAMPIONS.has(id)  # Act IV, Act V, Act VI
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
-					or SHOGUNATE_BOSSES.has(id)  # (Act V last)
+					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id)  # (Act VI last)
 	return false
 
 
@@ -594,10 +628,11 @@ static func total(cat: String) -> int:
 			return SOLDIERS.size() + STRUCTURES.size() + CHAMPIONS.size() + EYE_SOLDIERS.size() + EYE_CHAMPIONS.size() \
 					+ EMPIRE_SOLDIERS.size() + EMPIRE_CHAMPIONS.size() \
 					+ PANTHEON_SOLDIERS.size() + PANTHEON_CHAMPIONS.size() \
-					+ SHOGUNATE_SOLDIERS.size() + SHOGUNATE_CHAMPIONS.size()  # Act IV, Act V
+					+ SHOGUNATE_SOLDIERS.size() + SHOGUNATE_CHAMPIONS.size() \
+					+ INFERNO_SOLDIERS.size() + INFERNO_CHAMPIONS.size()  # Act IV, Act V, Act VI
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
-					+ SHOGUNATE_BOSSES.size()  # (Act V last)
+					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size()  # (Act VI last)
 	return 0
 
 
@@ -621,6 +656,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var shogunate := EnemyDirector.shogunate_def(id)  # Act V kinds ({} when none).
 	if not shogunate.is_empty():
 		return shogunate
+	var inferno := EnemyDirector.inferno_def(id)  # Act VI kinds ({} when none).
+	if not inferno.is_empty():
+		return inferno
 	match id:
 		"alaric":
 			return EnemyData.BOSS

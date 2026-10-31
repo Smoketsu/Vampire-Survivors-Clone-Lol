@@ -24,6 +24,8 @@ static func assign(d: HordeDirector, shape: String, jitter: float) -> void:
 	var ranged: Array[SummonedUnit] = []  # Archers, Mages, Frost Wraiths.
 	var support: Array[SummonedUnit] = []  # Priests.
 	for u in d.units:
+		if u.charmed:
+			continue  # Act VI: parked by Temptation, no post.
 		match role(u.unit_class):
 			"front":
 				front.append(u)
@@ -56,10 +58,15 @@ static func role(cls: String) -> String:
 	return "mid"
 
 
-## Sets `u`'s post to `offset` from the necromancer, moved out of obstacles.
+## Sets `u`'s post to `offset` from the necromancer, moved out of obstacles
+## (and, Act VI, out of the Hell Pits: HellPits.avoid_point(), the one pit
+## avoid check the horde reads; skipped off Act VI).
 static func _place(d: HordeDirector, u: SummonedUnit, offset: Vector2) -> void:
 	var pp := d.game.player.position
-	u.anchor_offset = d.game.arena.free_point(pp + offset, u.radius) - pp
+	var post := d.game.arena.free_point(pp + offset, u.radius)  # The post, out of obstacles.
+	if d.game.inferno != null:
+		post = d.game.inferno.pits.avoid_point(post, u.radius)  # Act VI: the ring flows around the pits.
+	u.anchor_offset = post - pp
 
 
 ## Per-unit angular jitter (radians) scaled by `jitter`.

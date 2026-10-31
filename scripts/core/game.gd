@@ -68,6 +68,11 @@
 ## Draw, From the Shadows, the Endless Night), stepped after the Pantheon's and
 ## before the obstacle push-out; null on Acts I to IV unless a Shogunate kind
 ## forced there asks for it (shogunate_rules()).
+## Act VI (GDD §15.0 "Act VI foundation (phase 1)"): `inferno` (InfernoRules)
+## runs the Inferno's shared rules (the Hell Pits, the demon portals,
+## Temptation, the Last Judgment), stepped after the Shogunate's and before the
+## obstacle push-out; null on Acts I to V unless an Inferno kind forced there
+## asks for it (inferno_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -223,6 +228,11 @@ var pantheon: PantheonRules = null
 ## on another stage asked for it through shogunate_rules(); Acts I to IV never
 ## create it).
 var shogunate: ShogunateRules = null
+# --- Act VI: the Inferno ---
+## Act VI, the Inferno's shared rules (InfernoRules; null unless the stage's
+## STAGE has "inferno": true, or an Inferno kind spawned on another stage asked
+## for it through inferno_rules(); Acts I to V never create it).
+var inferno: InfernoRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -360,6 +370,11 @@ func _ready() -> void:
 		# --- Act V: Castle Kurogane ---
 		"kurogane":
 			ground = KuroganeGround.new()  # Act V: Castle Kurogane's four zone floors (KuroganeStage.ZONES).
+		# --- Act VI: the Inferno ---
+		"inferno":
+			var ig := InfernoGround.new()  # Act VI placeholder floor (the STAGE's "floor").
+			ig.look = stage_def.get("floor", {})
+			ground = ig
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -444,6 +459,8 @@ func _ready() -> void:
 		pantheon_rules()  # Act IV: the Olympian Republic's shared rules.
 	if bool(stage_def.get("shogunate", false)):
 		shogunate_rules()  # Act V: the Shogunate of the Rising Sun's shared rules.
+	if bool(stage_def.get("inferno", false)):
+		inferno_rules()  # Act VI: the Inferno's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -743,6 +760,8 @@ func _physics_process(delta: float) -> void:
 		pantheon.step(delta)  # Act IV: the gods' wrath (its waves carry bodies before the push-out), shield walls.
 	if shogunate != null:
 		shogunate.step(delta)  # Act V: the Sun's Course, ambushes (pushed out of obstacles next), the Draw.
+	if inferno != null:
+		inferno.step(delta)  # Act VI: the Hell Pits, the portals (their squads pushed out of obstacles next), Temptation.
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -875,6 +894,18 @@ func shogunate_rules() -> ShogunateRules:
 	return shogunate
 
 
+# --- Act VI: the Inferno ---
+## The Inferno's shared rules (Act VI), created on first use: at the start of
+## an Act VI run, or when an Inferno kind forced onto another stage is activated
+## (InfernoKit.reset()), so its Temptation works there (the Hell Pits and the
+## Last Judgment stay off off Act VI).
+func inferno_rules() -> InfernoRules:
+	if inferno == null:
+		inferno = InfernoRules.new(self)
+		add_child(inferno)
+	return inferno
+
+
 # --- Act IV: the Asphodel Underworld ---
 ## THE ONE SWITCH that creates the Claims path (EyeClaims, Act II's "the fight
 ## over the dead") outside Act II: Hades, Lord of the Dead (BossHades), calls it
@@ -898,7 +929,7 @@ func _rebuild_grids() -> void:
 			enemy_grid.insert(e, e.position)
 	ally_grid.clear()
 	for u in horde.units:
-		if not u.airborne:  # Flying Gargoyles cannot be targeted, blocked or hit.
+		if not u.airborne and not u.charmed:  # Flying Gargoyles cannot be targeted, blocked or hit; Act VI: a charmed summon is parked.
 			ally_grid.insert(u, u.position)
 
 

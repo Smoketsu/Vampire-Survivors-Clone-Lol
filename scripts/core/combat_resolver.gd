@@ -453,6 +453,8 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 		return
 	if u.airborne:
 		return  # A flying Gargoyle cannot be hit (GargoyleBehavior).
+	if u.charmed:
+		return  # Act VI: parked by Temptation (its hostile body takes the hits).
 	if u.stone_form:
 		game.stat_add("horror_stone_dmg_prevented", amount)
 		return  # A Cathedral Horror in stone form takes no damage (GargoyleBehavior).
