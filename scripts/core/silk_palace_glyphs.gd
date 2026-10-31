@@ -1,7 +1,7 @@
 ## SilkPalaceGlyphs — code-drawn shapes of THE PALACE OF SILK AND ASH (Act VI,
 ## Stage 17; GDD §15.0 "The Palace of Silk and Ash (Act VI phase 2)"): the
 ## fallbacks of its obstacles (their obstacles/<kind>_<size> PNGs replace them;
-## the marble columns and velvet divans are InfernoGlyphs'), of its kinds (the
+## the velvet divans are InfernoGlyphs'), of its kinds (the
 ## Lilim Witch, the Twin Succubi) and of Lilith (bosses/lilith and
 ## bosses/lilith_demon), and the colours of the court: rose marble, velvet,
 ## mirror glass. The Inferno's look (obsidian, lava, demon skin, charm pink);
@@ -83,7 +83,7 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 			ci.draw_rect(rect.grow(-1.5), GILT)
 			ci.draw_rect(rect.grow(-3.0), GLASS)
 			ci.draw_rect(Rect2(rect.position + Vector2(4, 4), Vector2(3, 3)), Color.WHITE)  # A glint.
-		"black_rosebush", "palace_mirror", "candelabra":
+		"black_rosebush", "palace_mirror", "candelabra", "rose_column":
 			var r := o.radius
 			ci.draw_circle(c + Vector2(3, 4), r, Color(0, 0, 0, 0.35))
 			ci.draw_circle(c, r, INK)
@@ -92,6 +92,9 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 					ci.draw_circle(c, r - 1.5, THORN)
 					for i in 4:
 						ci.draw_circle(c + Vector2.from_angle(TAU * float(i) / 4.0 + 0.4) * r * 0.5, r * 0.25, ROSE)  # The roses.
+				"rose_column":
+					ci.draw_circle(c, r - 1.5, MARBLE)
+					ci.draw_arc(c, r - 2.0, 0.0, TAU, 16, GILT, 1.5)  # The gilt capital.
 				"palace_mirror":
 					ci.draw_circle(c, r - 1.5, GILT)
 					ci.draw_circle(c, r - 3.5, GLASS)

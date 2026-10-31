@@ -613,8 +613,8 @@ const CHARACTERS := {
 		"spell": "tempt",
 		"innate": {
 			"id": "heartbreaker", "name": "Heartbreaker",
-			"description": "A foe you charmed goes back heartbroken: it loses a quarter of its health.",
-			"values": {"tempt_heartbreak": 0.25},  # TUNING (not in GDD) share of the foe's max HP
+			"description": "A foe you charmed goes back heartbroken, losing part of its health.",
+			"values": {"tempt_heartbreak": 0.15},  # TUNING (not in GDD) share of the foe's max HP; first pass 0.25 (171k damage in the agent's forced run, more than the evolved spell itself)
 		},
 		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a frail queen on wings
 		"sprite": "player/succubus_queen",

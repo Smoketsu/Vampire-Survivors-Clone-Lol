@@ -551,7 +551,7 @@ const EVOLUTIONS := {
 		"labels": {"charms": "Foes charmed", "charm_time": "Charm (s)", "damage": "Thrall hit", "desire": "Burst", "cooldown": "Cooldown (s)"},
 		"stats": {
 			"charms": 3, "charm_time": 8.0, "damage": 30.0, "range": 280.0, "cooldown": 5.0,  # TUNING (not in GDD)
-			"desire": 1.5,  # TUNING (not in GDD) the evolution flag: share of the thrall's hit its burst deals
+			"desire": 1.0,  # TUNING (not in GDD) the evolution flag: share of the thrall's hit its burst deals; first pass 1.5 (151k burst damage in the forced run)
 		},
 	},
 }

@@ -201,7 +201,7 @@ const ZONES := [
 		"arena": {"density": 0.22, "clear_radius": 220.0, "layout_seed": 1717,  # TUNING (not in GDD) also salts the fixed Hell Pits (HellPits)
 			"kinds": {
 				"black_rosebush": {"weight": 0.55, "shape": "circle", "sizes": [12.0, 15.0]},  # TUNING (not in GDD)
-				"marble_column": {"weight": 0.25, "shape": "circle", "sizes": [12.0, 16.0]},  # TUNING (not in GDD)
+				"rose_column": {"weight": 0.25, "shape": "circle", "sizes": [12.0, 16.0]},  # TUNING (not in GDD)
 				"candelabra": {"weight": 0.2, "shape": "circle", "sizes": [9.0, 11.0]},  # TUNING (not in GDD)
 			}},
 	},
@@ -213,7 +213,7 @@ const ZONES := [
 			"kinds": {
 				"palace_mirror": {"weight": 0.42, "shape": "circle", "sizes": [11.0, 13.0]},  # TUNING (not in GDD) the reflections stand at these
 				"mirror_wall": {"weight": 0.3, "shape": "rect", "sizes": [44.0, 60.0], "short": 14.0},  # TUNING (not in GDD) and at these
-				"marble_column": {"weight": 0.28, "shape": "circle", "sizes": [12.0, 16.0]},  # TUNING (not in GDD)
+				"rose_column": {"weight": 0.28, "shape": "circle", "sizes": [12.0, 16.0]},  # TUNING (not in GDD)
 			}},
 	},
 	{"id": "ballroom", "start": 600.0, "numeral": "III", "name": "The Ballroom",  # Owner-approved proposal zone III
@@ -224,7 +224,7 @@ const ZONES := [
 			"kinds": {
 				"candelabra": {"weight": 0.35, "shape": "circle", "sizes": [9.0, 11.0]},  # TUNING (not in GDD)
 				"velvet_divan": {"weight": 0.35, "shape": "rect", "sizes": [40.0, 52.0], "short": 20.0},  # TUNING (not in GDD)
-				"marble_column": {"weight": 0.3, "shape": "circle", "sizes": [12.0, 16.0]},  # TUNING (not in GDD)
+				"rose_column": {"weight": 0.3, "shape": "circle", "sizes": [12.0, 16.0]},  # TUNING (not in GDD)
 			}},
 	},
 	{"id": "queens_chamber", "start": 900.0, "numeral": "IV", "name": "The Queen's Chamber",  # Owner-approved proposal zone IV

@@ -1,0 +1,2 @@
+Seamless top-down FLOOR TEXTURE for a dark 2D pixel-art game: dark soil of a hellish rose garden seen straight from above, scattered black rose petals and tiny thorny twigs, very flat even lighting, no plants standing up, no objects. Chunky pixel art at about 160 pixels across, crisp square pixels, flat colours, no gradients, no vignette, no text. Fully opaque, filling the whole image edge to edge.
+Colours: very dark soil #141214 #1C181A #241E20, dark crimson petals #2E1620 #3A1A26.
