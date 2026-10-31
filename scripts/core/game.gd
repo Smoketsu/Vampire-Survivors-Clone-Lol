@@ -367,6 +367,9 @@ func _ready() -> void:
 		# --- Act V: the Road to the Sun ---
 		"sun_road":
 			ground = SunRoadGround.new()  # Act V: the Road to the Sun's four zone floors (SunRoadStage.ZONES).
+		# --- Act VI: the Palace of Silk and Ash ---
+		"silk_palace":
+			ground = SilkPalaceGround.new()  # Act VI: the Palace's four zone floors (SilkPalaceStage.ZONES).
 		# --- Act V: Castle Kurogane ---
 		"kurogane":
 			ground = KuroganeGround.new()  # Act V: Castle Kurogane's four zone floors (KuroganeStage.ZONES).

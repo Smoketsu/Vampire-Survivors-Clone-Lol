@@ -42,6 +42,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	var row := EnemyDirector.inferno_def(kind)  # Its design row ({} = not an Inferno kind).
 	if row.is_empty():
 		return false
+	if SilkPalaceGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # --- Act VI: the Palace of Silk and Ash --- (the Lilim Witch, the Twin Succubi)
 	match kind:
 		"imp":
 			_imp(ci, o, r, flash)

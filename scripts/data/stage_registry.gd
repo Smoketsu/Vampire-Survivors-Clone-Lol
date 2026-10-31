@@ -179,6 +179,12 @@
 ##                        the Hell Pits read the starts).
 ## Act VI event type "portal" ({count, banner, distance_min, distance_max,
 ## table, pour_every}: DemonPortals.start_event()).
+## --- Act VI: the Palace of Silk and Ash ---
+##   silk_palace        — SilkPalaceDirector config (SilkPalaceStage.SILK_PALACE,
+##                        Act VI, the Palace of Silk and Ash: the Hall of Mirrors'
+##                        reflections, the Twin Succubi's "twins" event, guest
+##                        squads of the Burning Gate's kinds); ground
+##                        "silk_palace" is its SilkPalaceGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

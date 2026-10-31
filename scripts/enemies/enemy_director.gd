@@ -101,6 +101,10 @@
 ##     Hell Pits, the demon portals, Temptation, the Last Judgment) live in
 ##     InfernoRules (Game.inferno); this director only hands it the "portal"
 ##     events (DemonPortals.start_event()).
+##   * Act VI, the Palace of Silk and Ash (GDD §15.0 "The Palace of Silk and Ash
+##     (Act VI phase 2)"): on a stage with a "silk_palace" config it owns the
+##     SilkPalaceDirector (the Hall of Mirrors' reflections, the Twin Succubi,
+##     guests; `silk_palace`) and hands it the "twins" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -236,6 +240,11 @@ var sun_road: SunRoadDirector = null
 ## Castle Kurogane's mechanics (Act V: the General of the Left, the Shogun's
 ## army objective; StageRegistry "kurogane"; null on every other stage).
 var kurogane: KuroganeDirector = null
+# --- Act VI: the Palace of Silk and Ash ---
+## The Palace of Silk and Ash's mechanics (Act VI: the Hall of Mirrors'
+## reflections, the Twin Succubi, guest squads; StageRegistry "silk_palace";
+## null on every other stage).
+var silk_palace: SilkPalaceDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -368,6 +377,12 @@ func _ready() -> void:
 		kurogane.game = game
 		kurogane.config = stage_def["kurogane"]
 		add_child(kurogane)  # Castle Kurogane's director.
+	# --- Act VI: the Palace of Silk and Ash ---
+	if not (stage_def.get("silk_palace", {}) as Dictionary).is_empty():
+		silk_palace = SilkPalaceDirector.new()
+		silk_palace.game = game
+		silk_palace.config = stage_def["silk_palace"]
+		add_child(silk_palace)  # The Palace of Silk and Ash's director.
 
 
 # =====================================================================================
@@ -482,6 +497,9 @@ func step(delta: float) -> void:
 	# --- Act V: Castle Kurogane ---
 	if kurogane != null:
 		kurogane.step(delta)  # The General of the Left.
+	# --- Act VI: the Palace of Silk and Ash ---
+	if silk_palace != null:
+		silk_palace.step(delta)  # The Hall of Mirrors' reflections, guests.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -590,6 +608,9 @@ func objective_text() -> String:
 	# --- Act V: Castle Kurogane ---
 	if kurogane != null and kurogane.objective_override() != "":
 		return kurogane.objective_override()  # The General of the Left, the Shogun's army.
+	# --- Act VI: the Palace of Silk and Ash ---
+	if silk_palace != null and silk_palace.objective_override() != "":
+		return silk_palace.objective_override()  # The Twin Succubi, the Hall of Mirrors.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -776,6 +797,12 @@ func _run_event(ev: Dictionary) -> void:
 			game.inferno_rules().portals.start_event(ev)  # Demon portals (they show the event's banner).
 			game.stat_add("wave_events", 1.0)
 			return  # An Act VI portal event.
+		# --- Act VI: the Palace of Silk and Ash ---
+		"twins":
+			if silk_palace != null:
+				silk_palace.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Twin Succubi's event (SilkPalaceDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:
