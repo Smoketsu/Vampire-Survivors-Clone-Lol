@@ -42,6 +42,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	var row := EnemyDirector.inferno_def(kind)  # Its design row ({} = not an Inferno kind).
 	if row.is_empty():
 		return false
+	# --- Act VI: the Burning Gate ---
+	if BurningGateGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # The Hellhound, the Pit Cultist, the Gatekeeper.
 	match kind:
 		"imp":
 			_imp(ci, o, r, flash)

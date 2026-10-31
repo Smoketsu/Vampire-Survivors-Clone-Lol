@@ -157,6 +157,10 @@
 ##             exactly 1 while the passive is not owned. Hundred Shadows hears
 ##             each spell hit there too (NecroSpellBook.on_spell_hit(): its
 ##             clones echo the next spell; only while the spell is learned).
+##   the Burning Gate (Act VI phase 2) — Furnace Heart in damage_enemy():
+##             a SPELL hit on a foe standing in fire (Brimstone.in_fire(): a
+##             burning Brimstone pit or Hell Pit) deals more (stat
+##             furnace_heart_bonus_dmg); exactly 1 while the passive is not owned.
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -292,6 +296,15 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 			amount *= 1.0 + hand
 		if game.abilities.spell_level(HundredShadowsData.ID) > 0:
 			game.abilities.spells.on_spell_hit(e, amount, source)
+	# --- Act VI: the Burning Gate --- Furnace Heart (the paired passive of
+	# Brimstone, offered on every stage once Moloch fell): a SPELL hit on a foe
+	# standing in fire (a burning Brimstone pit, or a burning Hell Pit on an Act
+	# VI stage: Brimstone.in_fire()) deals heart_damage more; exactly 1 while
+	# the passive is not owned (the fire test only runs when it is).
+	var heart := game.abilities.passive_value(BrimstoneData.FURNACE_HEART, BrimstoneData.HEART_KEY)  # 0 when not owned.
+	if heart > 0.0 and HundredShadowsData.is_spell_source(source) and Brimstone.in_fire(game, e):
+		game.stat_add("furnace_heart_bonus_dmg", amount * heart)
+		amount *= 1.0 + heart
 	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
 	# undead fighting on it hit weaker.
 	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).

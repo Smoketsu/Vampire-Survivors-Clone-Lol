@@ -72,7 +72,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act V: the Road to the Sun ---
 	"shrine_maiden",
 	# --- Act V: Castle Kurogane ---
-	"ronin_revenant"]
+	"ronin_revenant",
+	# --- Act VI: the Burning Gate ---
+	"furnace_priest"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -154,7 +156,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act V: the Road to the Sun ---
 	"black_sun_fork",
 	# --- Act V: Castle Kurogane ---
-	"banner_haste_bonus"]
+	"banner_haste_bonus",
+	# --- Act VI: the Burning Gate ---
+	"brimstone_extra_stones"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -587,6 +591,29 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": 0.03},  # TUNING (not in GDD) a swordsman's body, a wanderer's pace
 		"sprite": "player/ronin_revenant",
 		"tint": Color(0.80, 0.42, 0.45),  # TUNING (not in GDD) a lacquer red over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act VI: the Burning Gate ---
+	# The Furnace Priest (Brimstone's character; owner-approved Act VI proposal
+	# "Rewards": "Brimstone ... | The Furnace Priest"; male): a priest of Moloch
+	# who fed the furnace for a lifetime and walked out of it dead and still
+	# burning: a soot-black cassock with a violet stole, an iron censer of live
+	# coals on a chain, a bull-horned iron mitre, ember-lit eyes. Brimstone must
+	# be unlocked first (by Moloch), then he unlocks the usual way (the spell to
+	# Lv 5). Own decision on his innate (the proposal names none): Stoker, one
+	# more stone in every Brimstone volley (Brimstone reads it).
+	"furnace_priest": {
+		"display_name": "The Furnace Priest",  # Owner-approved proposal
+		"title": "He fed the furnace all his life. Now it feeds him.",
+		"spell": "brimstone",
+		"innate": {
+			"id": "stoker", "name": "Stoker",
+			"description": "Brimstone drops one more burning stone.",
+			"values": {"brimstone_extra_stones": 1.0},  # TUNING (not in GDD) one more stone per volley
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.04},  # TUNING (not in GDD) a heavy, slow priest
+		"sprite": "player/furnace_priest",
+		"tint": Color(0.86, 0.50, 0.32),  # TUNING (not in GDD) an ember orange over the violet
 		"starts_unlocked": false,
 	},
 }

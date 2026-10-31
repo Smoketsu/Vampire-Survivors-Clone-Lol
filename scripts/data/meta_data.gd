@@ -420,7 +420,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act V: the Road to the Sun ---
 	"the_sun_goes_out",
 	# --- Act V: Castle Kurogane ---
-	"regiments_broken"]
+	"regiments_broken",
+	# --- Act VI: the Burning Gate ---
+	"gate_crashed"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -558,6 +560,15 @@ const ACHIEVEMENTS := {
 	# unlocks the counter-passive Unbending.
 	"regiments_broken": {"display_name": "Regiments Broken", "description": "Slay Shogun Kurogane after breaking all six of his banners",
 		"stat": "shogun_regiments_broken_kills", "goal": 1, "unlock": "The Unbending passive", "bounty": 300},  # Owner-approved Act V proposal; bounty TUNING (not in GDD) (Heel Found 250: all six banners is harder)
+	# --- Act VI: the Burning Gate ---
+	# Owner-approved Act VI achievement "Gate Crashed". Own decision on its rule
+	# (the brief: "e.g. beat Moloch having sealed N portals"): a Burning Gate run
+	# that slays Moloch with at least BurningGateStage.BURNING_GATE
+	# gate_crashed_seals (5) portals sealed (BurningGateDirector sets the run
+	# stat burning_gate_crashed; MetaProgress counts the runs, lifetime
+	# gate_crashed_runs). It unlocks the counter-passive Salt Circle.
+	"gate_crashed": {"display_name": "Gate Crashed", "description": "Seal 5 demon portals in one Burning Gate run and slay Moloch",
+		"stat": "gate_crashed_runs", "goal": 1, "unlock": "The Salt Circle passive", "bounty": 300},  # Owner-approved Act VI proposal; bounty TUNING (not in GDD) as Regiments Broken
 }
 
 # --- Content wave 2: B. Achievement rewards ---

@@ -181,9 +181,13 @@ const SHOGUNATE_BOSSES: Array[String] = ["kage", "shogun", "amaterasu"]
 ## Judgment's kind, and phase 2's minibosses) and its stage bosses
 ## (StageRegistry.BOSS_ARRIVALS ids). The charmed body (Temptation) is never
 ## listed. Each Act VI stage adds its own as it is built (phase 2).
-const INFERNO_SOLDIERS: Array[String] = ["damned", "imp", "hell_knight", "succubus", "demon_portal"]
+const INFERNO_SOLDIERS: Array[String] = ["damned", "imp", "hell_knight", "succubus", "demon_portal",
+	# --- Act VI: the Burning Gate ---
+	"lava_hound", "pit_cultist"]
 ## Inferno champions (minibosses) and the Act VI Reckoning kinds.
-const INFERNO_CHAMPIONS: Array[String] = ["demon_brute"]
+const INFERNO_CHAMPIONS: Array[String] = ["demon_brute",
+	# --- Act VI: the Burning Gate ---
+	"gatekeeper"]
 ## Inferno stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const INFERNO_BOSSES: Array[String] = ["moloch", "lilith", "morning_star"]
 
@@ -336,6 +340,10 @@ const DESCRIPTIONS: Dictionary = {
 	"moloch": "The Furnace King, a colossal bull-headed demon. He swallows your dead and cracks the ground into pits.",  # Owner-approved Act VI proposal
 	"lilith": "Queen of the Night, Mother of Demons. Her charm turns a whole arc of your ring.",  # Owner-approved Act VI proposal
 	"morning_star": "The Adversary himself: first the Angel with six burnt wings, then the Beast.",  # Owner-approved Act VI proposal (two phases, owner Oct 26)
+	# --- Act VI: the Burning Gate ---
+	"lava_hound": "Hellhounds of lava and black crust. They run in packs and leave a trail of fire behind them.",  # Owner-approved Act VI proposal
+	"pit_cultist": "Living men who serve the Pit. Their rite tears a demon portal open: kill them before it is done.",  # Owner-approved Act VI proposal
+	"gatekeeper": "A chained giant of the gate. His chains drag your dead to his fists and the damned into his maw.",  # Owner-approved Act VI proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -535,6 +543,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_sun_goes_out": "ach_the_sun_goes_out",  # TUNING (not in GDD)
 	# --- Act V: Castle Kurogane ---
 	"regiments_broken": "ach_regiments_broken",  # TUNING (not in GDD)
+	# --- Act VI: the Burning Gate ---
+	"gate_crashed": "ach_gate_crashed",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -572,6 +582,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_sun_goes_out": "black_sun",
 	# --- Act V: Castle Kurogane ---
 	"regiments_broken": "unbending",
+	# --- Act VI: the Burning Gate ---
+	"gate_crashed": "salt_circle",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

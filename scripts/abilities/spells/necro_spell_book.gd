@@ -47,6 +47,9 @@
 ## and Act V's (Castle Kurogane, KUROGANE_IDS: the same generic hooks; its own
 ## autotest line, KuroganeReport.item_lines()):
 ##   Banner of the Dead -> BannerOfTheDead (evolves into Hundred Banners)
+## and Act VI's (the Burning Gate, BURNING_GATE_IDS: stepped only; its own
+## autotest line, BurningGateReport.item_lines()):
+##   Brimstone        -> Brimstone        (evolves into Rain of Fire)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -117,6 +120,10 @@ const SUN_ROAD_IDS := ["black_sun"]
 ## Castle Kurogane's unlockable spell (Shogun Kurogane's reward): stepped, kill
 ## hooked and after-physics hooked like UNDERWORLD_IDS, reported by KuroganeReport.
 const KUROGANE_IDS := ["banner_of_the_dead"]
+# --- Act VI: the Burning Gate ---
+## The Burning Gate's unlockable spell (Moloch's reward): stepped like
+## UNDERWORLD_IDS (no kill or after-physics hook), reported by BurningGateReport.
+const BURNING_GATE_IDS := ["brimstone"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -153,6 +160,8 @@ const SOURCES := {
 	"black_sun": ["black_sun", "eclipse_of_heaven", "eclipse_corona"],
 	# --- Act V: Castle Kurogane ---
 	"banner_of_the_dead": ["banner_of_the_dead", "hundred_banners"],
+	# --- Act VI: the Burning Gate ---
+	"brimstone": ["brimstone", "rain_of_fire", "brimstone_pit"],
 }
 
 ## Owning run.
@@ -228,6 +237,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # Castle Kurogane's spell.
+	# --- Act VI: the Burning Gate ---
+	for id: String in BURNING_GATE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Burning Gate's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -294,6 +312,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act V: Castle Kurogane ---
 		"banner_of_the_dead":
 			node = BannerOfTheDead.new()
+		# --- Act VI: the Burning Gate ---
+		"brimstone":
+			node = Brimstone.new()  # The Burning Gate's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

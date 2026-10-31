@@ -1300,4 +1300,26 @@ const INFERNO_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "noise", "dur": 0.08, "amp": 0.8, "attack": 0.001, "decay": 0.02, "lp0": 5000.0, "lp1": 1000.0},
 			{"wave": "sine", "f0": 140.0, "f1": 60.0, "dur": 0.4, "amp": 0.3, "decay": 0.1},
 			{"wave": "noise", "start": 0.05, "dur": 1.0, "amp": 0.35, "attack": 0.03, "decay": 0.35, "lp0": 700.0, "lp1": 150.0}]},
+	# --- Act VI: the Burning Gate --- (appended at the END: the pack's seeds follow its order)
+	# Moloch's furnace roars: a deep bull's bellow over a rising roar of flame.
+	"moloch_roar": {"dur": 1.6, "volume_db": -10.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 82.0, "f1": 62.0, "dur": 1.2, "amp": 0.28, "attack": 0.08, "decay": 0.45, "lp0": 600.0, "lp1": 300.0, "vib_hz": 6.0, "vib_depth": 0.03},
+			{"wave": "sine", "f0": 55.0, "f1": 40.0, "dur": 1.4, "amp": 0.5, "attack": 0.1, "decay": 0.5},
+			{"wave": "noise", "start": 0.1, "dur": 1.4, "amp": 0.32, "attack": 0.4, "decay": 0.5, "lp0": 400.0, "lp1": 2400.0}]},
+	# The Gatekeeper's chains fly out: a heavy rattle of iron links and a whip.
+	"chain_haul": {"dur": 0.8, "volume_db": -13.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.15, "amp": 0.35, "attack": 0.02, "decay": 0.06, "lp0": 1500.0, "lp1": 6000.0},
+			{"wave": "sine", "f0": 1900.0, "start": 0.12, "dur": 0.07, "amp": 0.1, "decay": 0.025},
+			{"wave": "sine", "f0": 2300.0, "start": 0.2, "dur": 0.07, "amp": 0.09, "decay": 0.025},
+			{"wave": "sine", "f0": 1700.0, "start": 0.28, "dur": 0.07, "amp": 0.08, "decay": 0.025},
+			{"wave": "sine", "f0": 2100.0, "start": 0.36, "dur": 0.07, "amp": 0.07, "decay": 0.025},
+			{"wave": "noise", "start": 0.12, "dur": 0.6, "amp": 0.12, "attack": 0.01, "decay": 0.2, "lp0": 4000.0, "lp1": 1800.0}]},
+	# A Pit Cultist's rite: a low muttered chant swelling into a dissonant hum.
+	"cultist_chant": {"dur": 1.4, "volume_db": -17.0, "max_voices": 2, "min_interval": 500, "pitch_var": 0.05, "priority": 1,
+		"layers": [
+			{"wave": "tri", "f0": 110.0, "dur": 1.3, "amp": 0.2, "attack": 0.4, "decay": 0.5, "vib_hz": 3.0, "vib_depth": 0.02},
+			{"wave": "tri", "f0": 155.6, "dur": 1.3, "amp": 0.14, "attack": 0.5, "decay": 0.5, "vib_hz": 3.4, "vib_depth": 0.02},
+			{"wave": "noise", "dur": 1.2, "amp": 0.08, "attack": 0.4, "decay": 0.4, "lp0": 500.0, "lp1": 900.0}]},
 }

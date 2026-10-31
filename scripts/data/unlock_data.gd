@@ -161,6 +161,14 @@ const UNLOCKS := {
 	"banner_of_the_dead": {"type": "spell", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Owner-approved Act V proposal
 	"warlords_seal": {"type": "passive", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Banner of the Dead's paired passive, unlocked with it
 	"unbending": {"type": "passive", "achievement": "regiments_broken", "text": "Earn Regiments Broken: slay the Shogun after breaking all six of his banners."},  # Owner-approved Act V proposal
+	# --- Act VI: the Burning Gate ---
+	# Moloch's fall (owner-approved Act VI proposal "Rewards": Brimstone is
+	# unlocked by Moloch) with its paired passive, offered on every stage; the
+	# stage's achievement Gate Crashed earns Act VI's counter-passive Salt
+	# Circle (offered only in Act VI through its card row's "act").
+	"brimstone": {"type": "spell", "boss": "moloch", "text": "Slay Moloch at the Burning Gate to unlock."},  # Owner-approved Act VI proposal
+	"furnace_heart": {"type": "passive", "boss": "moloch", "text": "Slay Moloch at the Burning Gate to unlock."},  # Brimstone's paired passive, unlocked with it
+	"salt_circle": {"type": "passive", "achievement": "gate_crashed", "text": "Earn Gate Crashed: seal 5 portals in one Burning Gate run and slay Moloch."},  # Owner-approved Act VI proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

@@ -350,6 +350,7 @@ func _rebuild_fixed() -> void:
 				var f := _fixed_in_cell(cx, cy, zone)
 				if f.z > 0.0:
 					fixed.append(f)
+	_add_band()  # Act VI, the Burning Gate: the River of Fire (STAGE "pits" "band"; none elsewhere).
 	fixed_peak = maxi(fixed_peak, fixed.size())
 
 
@@ -523,3 +524,56 @@ func _draw() -> void:
 		var ca := clampf(1.0 - (now - _zone_since) / maxf(float(cfg["close_time"]), 0.01), 0.0, 1.0)
 		for f in _cooling:
 			InfernoGlyphs.draw_pit(self, Vector2(f.x, f.y), f.z, ca, now)
+
+
+# --- Act VI: the Burning Gate ---
+## THE RIVER OF FIRE (GDD §15.0 "The Burning Gate (Act VI phase 2)": "the River
+## of Fire, a burning band through HellPits"): a stage's STAGE "pits" may hold a
+## "band" dictionary (absent / {} = none; only BurningGateStage.PITS has one).
+## In the zones it lists, meandering bands of fire run east-west across the
+## world, one every `spacing` px north-south (band k's centre line is
+## y = k * spacing + amp * sin(TAU * x / wavelength + k)), each a chain of
+## burning circles of `radius` px every `step` px along x, broken by a ford of
+## `ford_width` px every `ford_every` px (each band's fords offset by its own
+## index), so the army can cross. The circles join the zone's FIXED pits
+## (`fixed`): the same live window (active_radius around each necromancer),
+## glow at the zone change, burn, avoid check (the ring flows around the river
+## and through its fords), autotest hint and drawing, with no second pit path.
+## Keys: zones (Array of zone indices), spacing, amp, wavelength, radius, step,
+## ford_every, ford_width (px). Pure arithmetic on the world position (no RNG):
+## the same river in every run. Stat: river_circles_peak.
+func _add_band() -> void:
+	var band: Dictionary = cfg.get("band", {})
+	if band.is_empty() or not (band.get("zones", []) as Array).has(zone):
+		return
+	var spacing := float(band["spacing"])
+	var amp := float(band["amp"])
+	var wave := float(band["wavelength"])
+	var r := float(band["radius"])
+	var step := float(band["step"])
+	var ford_every := int(band["ford_every"])
+	var ford_width := int(band["ford_width"])
+	var reach := float(cfg["active_radius"])
+	var seen := {}  # Circles already added (Vector2i band, column -> true).
+	var n0 := fixed.size()
+	for pl in game.all_players:
+		var k0 := floori((pl.position.y - reach - amp) / spacing)
+		var k1 := floori((pl.position.y + reach + amp) / spacing) + 1
+		var i0 := floori((pl.position.x - reach) / step)
+		var i1 := floori((pl.position.x + reach) / step)
+		for k in range(k0, k1 + 1):
+			var off := posmod(k * 7919, maxi(1, ford_every))  # This band's ford offset (px).
+			for i in range(i0, i1 + 1):
+				var key := Vector2i(k, i)
+				if seen.has(key):
+					continue
+				seen[key] = true
+				var x := float(i) * step
+				if posmod(int(x) + off, maxi(1, ford_every)) < ford_width:
+					continue  # A ford.
+				var y := float(k) * spacing + amp * sin(TAU * x / wave + float(k))
+				var c := Vector2(x, y)
+				if c.length() < float(cfg["fixed_clear"]) + r:
+					continue
+				fixed.append(Vector3(x, y, r))
+	game.stats["river_circles_peak"] = maxf(float(game.stats.get("river_circles_peak", 0.0)), float(fixed.size() - n0))

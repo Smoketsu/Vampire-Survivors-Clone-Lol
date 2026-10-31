@@ -179,6 +179,13 @@
 ##                        the Hell Pits read the starts).
 ## Act VI event type "portal" ({count, banner, distance_min, distance_max,
 ## table, pour_every}: DemonPortals.start_event()).
+## --- Act VI: the Burning Gate ---
+##   burning_gate       — BurningGateDirector config (BurningGateStage
+##                        .BURNING_GATE, Act VI, the Burning Gate: the
+##                        Gatekeeper's "gatekeeper" event, Gate Crashed); ground
+##                        "burning_gate" is its BurningGateGround (four zone
+##                        floors). Its "pits" also hold the River of Fire
+##                        ("band": HellPits._add_band()).
 class_name StageRegistry
 extends RefCounted
 

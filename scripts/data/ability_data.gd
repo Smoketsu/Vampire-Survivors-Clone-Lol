@@ -86,7 +86,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act V: the Road to the Sun ---
 	"black_sun",
 	# --- Act V: Castle Kurogane ---
-	"banner_of_the_dead"]
+	"banner_of_the_dead",
+	# --- Act VI: the Burning Gate ---
+	"brimstone"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -620,6 +622,31 @@ const SPELLS := {
 			{"damage": 48.0, "pulse_radius": 86.0, "haste": 0.40, "radius": 150.0, "banners": 2, "duration": 9.0, "cooldown": 7.0},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act VI: the Burning Gate ---
+	# Brimstone (GDD §15.0 "Brimstone, Rain of Fire, Furnace Heart and the
+	# Furnace Priest (Act VI)"; owner-approved proposal: "burning stones fall on
+	# the densest group and leave a short pit"; unlocked by slaying Moloch,
+	# UnlockData): every `cooldown` s, `stones` stones fall on the densest groups
+	# within `range` px, `damage` to every foe within `radius` px, then a pit of
+	# `pit_radius` px burns foes only for `pit_life` s at `pit_share` x the
+	# damage per s. Stat keys: damage, stones, radius (px), pit_radius (px),
+	# pit_life (s), pit_share, cooldown (s), range (px). Logic: Brimstone; fixed
+	# rules: BrimstoneData; Furnace Heart (its paired passive) raises every spell
+	# hit on a foe standing in fire.
+	"brimstone": {
+		"display_name": "Brimstone",  # Owner-approved proposal
+		"icon": "brimstone",
+		"description": "Burning stones fall on the thickest crowd and leave fire where they land.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act VI spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Stone damage", "stones": "Stones", "radius": "Blast radius", "pit_share": "Fire per second", "pit_life": "Fire lasts (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 20.0, "stones": 1, "radius": 34.0, "pit_radius": 26.0, "pit_life": 1.6, "pit_share": 0.25, "cooldown": 3.0, "range": 340.0},  # TUNING (not in GDD)
+			{"damage": 24.0, "stones": 2, "radius": 34.0, "pit_radius": 26.0, "pit_life": 1.8, "pit_share": 0.25, "cooldown": 3.0, "range": 340.0},  # TUNING (not in GDD)
+			{"damage": 28.0, "stones": 2, "radius": 38.0, "pit_radius": 30.0, "pit_life": 2.2, "pit_share": 0.3, "cooldown": 2.8, "range": 350.0},  # TUNING (not in GDD)
+			{"damage": 33.0, "stones": 3, "radius": 38.0, "pit_radius": 30.0, "pit_life": 2.4, "pit_share": 0.3, "cooldown": 2.7, "range": 350.0},  # TUNING (not in GDD)
+			{"damage": 40.0, "stones": 3, "radius": 42.0, "pit_radius": 34.0, "pit_life": 2.8, "pit_share": 0.35, "cooldown": 2.5, "range": 360.0},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -638,7 +665,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act V: the Burning Province ---
 	"echo_share", "burst_share",
 	# --- Act V: Castle Kurogane ---
-	"haste"]
+	"haste",
+	# --- Act VI: the Burning Gate ---
+	"pit_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]
