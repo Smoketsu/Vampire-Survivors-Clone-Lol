@@ -414,6 +414,9 @@ func step(delta: float) -> void:
 	if game.shogunate != null:
 		bind_primary()
 		game.shogunate.step(delta)  # Act V: the Sun's Course, ambushes, the Draw (before the push-out, as in solo).
+	if game.inferno != null:
+		bind_primary()
+		game.inferno.step(delta)  # Act VI: the Hell Pits, the portals, Temptation (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()
@@ -478,7 +481,7 @@ func _rebuild_grids() -> void:
 	game.ally_grid.clear()
 	for s in slots:
 		for u in s.horde.units:
-			if not u.airborne:
+			if not u.airborne and not u.charmed:  # Act VI: a charmed summon is parked (Temptation).
 				game.ally_grid.insert(u, u.position)
 
 

@@ -481,6 +481,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act V: Castle Kurogane ---
 	if KuroganeGlyphs.draw_obstacle(self, o):
 		return  # A Castle Kurogane obstacle kind (Act V).
+	# --- Act VI: the Inferno ---
+	if InfernoGlyphs.draw_obstacle(self, o):
+		return  # An Act VI stub's placeholder obstacle kind.
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

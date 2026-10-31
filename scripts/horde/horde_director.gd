@@ -36,6 +36,12 @@
 ##     Titan's heal, barrier and death wall through GolemKit (`golems`,
 ##     created by the first Golem, golem_kit()); Grave Masonry's hold bonus in
 ##     compute_stats().
+##   * Act VI, the Inferno: TEMPTATION through ONE call, charm() (and
+##     break_charms() when the charmer dies), run by the Inferno's Temptation
+##     (game.inferno): a charmed summon is parked (SummonedUnit.charmed: it is
+##     skipped by step(), the grids and the ring posts) while a hostile body
+##     wearing its look fights for hell, then comes back. An enemy effect on a
+##     unit, like Act II's Claims: no summon has an act rule of its own.
 ## Ranged overkill reservations are stored on the enemies themselves
 ## (Enemy.incoming_damage) and managed by ProjectileManager.
 class_name HordeDirector
@@ -218,6 +224,8 @@ func step(delta: float) -> void:
 	# Safe to iterate directly: units only die from enemy / projectile / boss
 	# damage, which never runs inside this loop.
 	for u in units:
+		if u.charmed:
+			continue  # Act VI: parked by Temptation (its hostile body fights instead).
 		if u.think_slot == slot:
 			u.think()
 		u.physics_step(delta)
@@ -823,6 +831,33 @@ func on_unit_died(u: SummonedUnit, as_death: bool = true) -> void:
 ## true when `u` was claimed.
 func claim_fallen(u: SummonedUnit) -> bool:
 	return game.claims != null and game.claims.claim_fallen(u)
+
+
+# --- Act VI: the Inferno ---
+## TEMPTATION (Act VI, GDD §15.0 "Temptation"): THE one path that charms a
+## summon. `unit` (a summon of this army) is parked and a hostile body wearing
+## its look fights for hell for `duration` s (x Faithless), then the summon
+## comes back with the body's share of HP; breaking the body frees it at once
+## (weakened), killing the charmer `by` (an Enemy, or null for a boss effect that names no
+## charmer) breaks its charms at once (break_charms()). At most
+## InfernoRulesData.TEMPTATION max_charmed at once across every army. `opts`
+## (all optional) for phase 2: "tint" (Color of the body), "name" (its display
+## name), "source" (stats tag; default the charmer's kind), "ignore_cap"
+## (bool; Moloch's swallow), "no_temporary" (bool: refuse temporary summons). Creates the Inferno's rules on first use (an
+## Inferno kind forced onto another stage). Returns true when it took hold.
+func charm(unit: SummonedUnit, by: Enemy, duration: float, opts: Dictionary = {}) -> bool:
+	if unit == null or unit.director != self:
+		return unit != null and unit.director != null and unit.director.charm(unit, by, duration, opts)  # Co-op: the summon's own army.
+	return game.inferno_rules().temptation.charm(unit, by, duration, opts)
+
+
+## TEMPTATION: breaks every charm charmer `by` holds (its summons come back at
+## once). Called by InfernoKit.on_killed() when a charmer dies; a no-op off
+## Act VI (no Inferno rules). Returns the summons freed.
+func break_charms(by: Enemy) -> int:
+	if game.inferno == null or by == null:
+		return 0
+	return game.inferno.temptation.break_by(by)
 
 
 ## Number of living units of `cls`.

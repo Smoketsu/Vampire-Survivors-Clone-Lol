@@ -94,6 +94,13 @@
 ##     a stage with a "kurogane" config it owns the KuroganeDirector (the
 ##     General of the Left, the Shogun's army objective; `kurogane`) and hands
 ##     it the "general_left" events. Null on every other stage.
+##   * Act VI, the Inferno (GDD §15.0 "Act VI foundation (phase 1)"): its kinds
+##     are looked up through inferno_def() (InfernoEnemyData, then each Act VI
+##     stage's table) after the Shogunate's, and its bosses load by name from
+##     INFERNO_BOSS_DIR after the Shogunate's folder. Its shared rules (the
+##     Hell Pits, the demon portals, Temptation, the Last Judgment) live in
+##     InfernoRules (Game.inferno); this director only hands it the "portal"
+##     events (DemonPortals.start_event()).
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -116,6 +123,9 @@ const PANTHEON_BOSS_DIR: String = "res://scripts/enemies/pantheon/"
 # --- Act V: the Shogunate of the Rising Sun ---
 ## Folder of the Shogunate's boss scripts ("boss_<id>.gd", each a Boss; Act V).
 const SHOGUNATE_BOSS_DIR: String = "res://scripts/enemies/shogunate/"
+# --- Act VI: the Inferno ---
+## Folder of the Inferno's boss scripts ("boss_<id>.gd", each a Boss; Act VI).
+const INFERNO_BOSS_DIR: String = "res://scripts/enemies/inferno/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -761,6 +771,11 @@ func _run_event(ev: Dictionary) -> void:
 				kurogane.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # Castle Kurogane's miniboss.
+		# --- Act VI: the Inferno ---
+		"portal":
+			game.inferno_rules().portals.start_event(ev)  # Demon portals (they show the event's banner).
+			game.stat_add("wave_events", 1.0)
+			return  # An Act VI portal event.
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:
@@ -861,7 +876,8 @@ func _spawn_boss() -> void:
 	# stage adds its boss as a new file), else an Electronic Empire boss from
 	# EMPIRE_BOSS_DIR (Act III, the same way), else an Olympian Republic boss
 	# from PANTHEON_BOSS_DIR (Act IV), else a Shogunate boss from
-	# SHOGUNATE_BOSS_DIR (Act V); Sir Alaric when none exists.
+	# SHOGUNATE_BOSS_DIR (Act V), else an Inferno boss from INFERNO_BOSS_DIR
+	# (Act VI); Sir Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -878,6 +894,8 @@ func _spawn_boss() -> void:
 				path = PANTHEON_BOSS_DIR + "boss_" + sid + ".gd"  # Act IV: an Olympian Republic boss script.
 			if not ResourceLoader.exists(path):
 				path = SHOGUNATE_BOSS_DIR + "boss_" + sid + ".gd"  # Act V: a Shogunate boss script.
+			if not ResourceLoader.exists(path):
+				path = INFERNO_BOSS_DIR + "boss_" + sid + ".gd"  # Act VI: an Inferno boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -978,6 +996,7 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## HarbourEnemyData / ArchiveEnemyData / SpireEnemyData), then the
 ## Electronic Empire's (Act III: empire_def()), then the Olympian Republic's
 ## (Act IV: pantheon_def()), then the Shogunate's (Act V: shogunate_def()),
+## then the Inferno's (Act VI: inferno_def()),
 ## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
@@ -1002,6 +1021,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var shogunate := shogunate_def(kind)  # Act V kinds ({} when not a Shogunate kind).
 	if not shogunate.is_empty():
 		return shogunate
+	var inferno := inferno_def(kind)  # Act VI kinds ({} when not an Inferno kind).
+	if not inferno.is_empty():
+		return inferno
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -1067,6 +1089,23 @@ static func shogunate_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act VI: the Inferno ---
+## Design row of Inferno kind `kind` (real id), or {} when it is none:
+## InfernoEnemyData (the shared kinds, the demon portal, the charmed body, the
+## Last Judgment's Demon Brute among them) first, then each Act VI stage's own
+## table (phase 2 fills them).
+static func inferno_def(kind: String) -> Dictionary:
+	if InfernoEnemyData.ENEMIES.has(kind):
+		return InfernoEnemyData.ENEMIES[kind]
+	if BurningGateEnemyData.ENEMIES.has(kind):
+		return BurningGateEnemyData.ENEMIES[kind]
+	if SilkPalaceEnemyData.ENEMIES.has(kind):
+		return SilkPalaceEnemyData.ENEMIES[kind]
+	if PandemoniumEnemyData.ENEMIES.has(kind):
+		return PandemoniumEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
@@ -1074,7 +1113,8 @@ static func is_known_kind(kind: String) -> bool:
 			or MarchEnemyData.ENEMIES.has(kind) or BattleSisterData.ENEMIES.has(kind) \
 			or SanctumEnemyData.ENEMIES.has(kind) or not eye_def(kind).is_empty() \
 			or not empire_def(kind).is_empty() or not pantheon_def(kind).is_empty() \
-			or not shogunate_def(kind).is_empty()  # Act V
+			or not shogunate_def(kind).is_empty() \
+			or not inferno_def(kind).is_empty()  # Act V, Act VI
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar

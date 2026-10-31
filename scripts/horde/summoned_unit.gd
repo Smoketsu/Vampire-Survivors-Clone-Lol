@@ -322,6 +322,14 @@ var stunned_until: float = 0.0
 ## fight a foe (0 = never / expired). Written only by THE one summon blind
 ## path, CombatResolver.blind_unit() (through blind()).
 var blinded_until: float = 0.0
+# --- Act VI: the Inferno ---
+## True while TEMPTATION holds this summon (Act VI; HordeDirector.charm(), the
+## one charm path, run by Temptation): it is parked off the field (hidden, out
+## of the ally grid, it neither thinks nor steps, CombatResolver.damage_unit()
+## ignores it) while a hostile body wearing its look fights for hell in its
+## place; it comes back (set_charmed(false, ...)) when the charm ends. Still
+## counted in its class (no replacement rises). Always false off Act VI.
+var charmed: bool = false
 
 
 # =====================================================================================
@@ -368,6 +376,7 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	compel_until = 0.0
 	stunned_until = 0.0  # Act IV: Mount Olympus (a Gorgon's stone).
 	blinded_until = 0.0  # Act V: the Burning Province (smoke).
+	charmed = false  # Act VI: the Inferno (Temptation).
 	slot_jitter = randf()
 	band_jitter = randf()
 	anchor_offset = pos - game.player.position
@@ -486,6 +495,7 @@ func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
 ## and hide (GDD §24 "On death").
 func deactivate() -> void:
 	_drop_target()
+	charmed = false  # Act VI: a charmed summon that dies is no longer parked.
 	if behavior != null:
 		behavior.on_deactivate(self)
 	airborne = false
@@ -997,6 +1007,38 @@ func blind(until: float) -> bool:
 	_drop_target()
 	if state != State.FOLLOWING and state != State.RETURNING:
 		_enter(State.FOLLOWING)  # Leaves CASTING: a special in progress is cancelled.
+	queue_redraw()
+	return true
+
+
+# --- Act VI: the Inferno ---
+## Act VI, the summon side of THE one charm path (Temptation calls it through
+## HordeDirector.charm(); nothing else should). `on` true parks the unit: it
+## drops its target, leaves a special in progress (CASTING) and is hidden (a
+## hostile body wearing its look fights in its place). `on` false brings it
+## back at world point `at` (moved out of obstacles), FOLLOWING its ring post.
+## Spawning, dead, airborne and mid-special units cannot be charmed. Returns
+## true when the state changed.
+func set_charmed(on: bool, at: Vector2) -> bool:
+	if on:
+		if not active or charmed or airborne or state == State.SPAWNING or state == State.DEAD:
+			return false
+		if behavior != null and behavior.is_busy():
+			return false  # Mid-special (a dash, a swoop): not now.
+		charmed = true
+		_drop_target()
+		_enter(State.FOLLOWING)  # Leaves CASTING: a special in progress is cancelled.
+		velocity = Vector2.ZERO
+		visible = false
+		return true
+	if not charmed:
+		return false
+	charmed = false
+	position = game.arena.free_point(at, radius)
+	velocity = Vector2.ZERO
+	_stall_since = -1.0
+	_enter(State.FOLLOWING)
+	visible = active
 	queue_redraw()
 	return true
 
