@@ -221,6 +221,15 @@ const UNLOCKS := {
 	"thirst_eternal": {"type": "passive", "boss": "carmilla", "text": "Slay Queen Carmilla and the Elder in Castle Sanguis to unlock."},  # Its paired passive (own decision), unlocked with it
 	"ender_of_the_feast": {"type": "title", "achievement": "last_supper",
 		"text": "Earn Last Supper: beat the Elder in Castle Sanguis."},  # Own decision (the clear is recorded as a title, as Act VI's Sovereign of Pandemonium)
+	# --- Act VIII: Fort Kessler ---
+	# General Harrow's fall (owner-approved Act VIII proposal "Rewards": Bone
+	# Mines is unlocked by General Harrow) with its paired passive, offered on
+	# every stage; the stage's achievement Broken Arrow earns Act VIII's
+	# counter-passive Armour-Piercing Bones (owner answer of Nov 2, 2026; the
+	# lead's pairing; offered only in Act VIII through its card row's "act").
+	"bone_mines": {"type": "spell", "boss": "harrow", "text": "Slay General Harrow at Fort Kessler to unlock."},  # Owner-approved Act VIII proposal
+	"tripwire": {"type": "passive", "boss": "harrow", "text": "Slay General Harrow at Fort Kessler to unlock."},  # Bone Mines' paired passive (owner-approved proposal), unlocked with it
+	"armour_piercing_bones": {"type": "passive", "achievement": "broken_arrow", "text": "Earn Broken Arrow: kill General Harrow before his strike lands."},  # Owner answer (Nov 2, 2026)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

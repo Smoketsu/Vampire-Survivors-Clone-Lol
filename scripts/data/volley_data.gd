@@ -349,6 +349,9 @@ const SPELLS := {
 	# --- Act VII: Castle Sanguis ---
 	"night_swarm": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 30.0, "speed": 260.0,
 		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a fan of spectral wings every third dart cooldown
+	# --- Act VIII: Fort Kessler ---
+	"bone_mines": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [5, 7, 10], "speed": 220.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) a ring of bone splinters with every third drop (Palette.BONE)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

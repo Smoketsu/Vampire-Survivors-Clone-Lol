@@ -249,7 +249,10 @@ const CITY_POLICE: Array[String] = ["riot_cop", "squad_car"]
 ## SWAT and the Guard's kinds (tier "swat").
 const CITY_SWAT: Array[String] = ["swat_breacher", "field_medic"]
 ## The army's kinds (tier "army").
-const CITY_ARMY: Array[String] = ["rifleman", "tank"]
+const CITY_ARMY: Array[String] = ["rifleman", "tank",
+	# --- Act VIII: Fort Kessler --- (Mammoth, the miniboss, with the army: the
+	# Last Line tab has no champions section)
+	"machine_gunner", "attack_helicopter", "mammoth"]
 ## The heroes (tier "heroes": the Supers).
 const CITY_HEROES: Array[String] = ["blitz"]
 ## Last Line stage bosses (StageRegistry.BOSS_ARRIVALS ids).
@@ -456,6 +459,10 @@ const DESCRIPTIONS: Dictionary = {
 	"don_marrow": "Don Marrow, the Kingpin: a bounty on your head, a call to the police, and a gold-plated minigun behind his limousine's armour.",  # Owner-approved Act VIII proposal
 	"harrow": "General Vance Harrow, the Hammer: carpet bombing, a tank column, and Broken Arrow, a strike on his own position.",  # Owner-approved Act VIII proposal
 	"paragon": "Paragon, the Last Hero: the strongest man alive, and every hero still standing flies to his side.",  # Owner-approved Act VIII proposal
+	# --- Act VIII: Fort Kessler ---
+	"machine_gunner": "He sets up his gun and sweeps a fire lane across your ring. Step out of the lane, or put a Bone Wall in it.",  # Owner-approved Act VIII proposal
+	"attack_helicopter": "Strafing runs down the street and rocket pods ahead of it. Swords can barely reach it: Gargoyles, Archers and spells bring it down.",  # Owner-approved Act VIII proposal
+	"mammoth": "A super-heavy tank with two turrets. Its front shrugs off blows; hit it from the side, and it burns into the biggest wreck in the city.",  # Owner-approved Act VIII proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -691,6 +698,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_coven_breaks": "ach_the_coven_breaks",  # TUNING (not in GDD)
 	# --- Act VII: Castle Sanguis ---
 	"last_supper": "ach_last_supper",  # TUNING (not in GDD)
+	# --- Act VIII: Fort Kessler ---
+	"broken_arrow": "ach_broken_arrow",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -740,6 +749,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_coven_breaks": "embalmed",
 	# --- Act VII: Castle Sanguis ---
 	"last_supper": "night_swarm",
+	# --- Act VIII: Fort Kessler ---
+	"broken_arrow": "armour_piercing_bones",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

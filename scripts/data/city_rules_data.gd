@@ -250,4 +250,19 @@ const SOUNDS := {
 	"super_arrive": "super_arrive",  # A rising whoosh and a bright chord (Supers).
 	"weakness_crack": "weakness_crack",  # A glassy crack (a Super exposed).
 	"tier_alarm": "tier_alarm",  # A radio squelch and a low klaxon (the escalation).
+	# --- Act VIII: Fort Kessler --- (the City pack's own sounds, no new synthesis)
+	"mine_blast": "vehicle_wreck",  # A minefield mine going off (Minefields).
+	"mg_sweep": "gun_burst",  # A machine gunner's lane opening up (MachineGunnerKit).
+	"rotor_pass": "engine_rev",  # An attack helicopter starting a strafing run (AttackHelicopterKit).
+	"carpet_call": "siren_wail",  # General Harrow calling a carpet-bombing line (BossHarrow).
+	"broken_arrow": "tier_alarm",  # Broken Arrow ordered, and each 10 s of its countdown (BossHarrow).
 }
+
+# --- Act VIII: Fort Kessler ---
+## Armour-Piercing Bones (Act VIII's counter-passive, earned by the Fort Kessler
+## achievement Broken Arrow; owner answer of Nov 2, 2026: "summon hits ignore
+## part of the Armour rule's shield-front reduction"): its PassiveData id ...
+const ARMOUR_PIERCING: String = "armour_piercing_bones"
+## ... and the passive_value() key of the share (0..1) of a front's cut a
+## summon-class hit ignores (Armour.front_mult(): front x (1 - v)).
+const PIERCE_KEY: String = "front_pierce"

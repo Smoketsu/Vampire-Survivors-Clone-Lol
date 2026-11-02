@@ -61,7 +61,8 @@ static func role(cls: String) -> String:
 ## Sets `u`'s post to `offset` from the necromancer, moved out of obstacles
 ## (and, Act VI, out of the Hell Pits: HellPits.avoid_point(), the one pit
 ## avoid check the horde reads; skipped off Act VI; Act VIII, on a city-block
-## layout: pulled back toward the necromancer, Arena.free_point_toward()).
+## layout: pulled back toward the necromancer, Arena.free_point_toward(); Act
+## VIII, Fort Kessler: off the live mines, Minefields.avoid_point()).
 static func _place(d: HordeDirector, u: SummonedUnit, offset: Vector2) -> void:
 	var pp := d.game.player.position
 	var post: Vector2  # The post, out of obstacles.
@@ -74,6 +75,13 @@ static func _place(d: HordeDirector, u: SummonedUnit, offset: Vector2) -> void:
 		post = d.game.arena.free_point(pp + offset, u.radius)
 	if d.game.inferno != null:
 		post = d.game.inferno.pits.avoid_point(post, u.radius)  # Act VI: the ring flows around the pits.
+	# --- Act VIII: Fort Kessler --- the ring flows around the minefields
+	# (Minefields.avoid_point(), the one mine avoid check; null elsewhere).
+	if d.game.enemies.fort_kessler != null and d.game.enemies.fort_kessler.mines != null:
+		var off_mines := d.game.enemies.fort_kessler.mines.avoid_point(post, u.radius)  # The post, off every live mine.
+		if off_mines != post:
+			d.game.stat_add("mine_ring_posts_moved", 1.0)
+			post = off_mines
 	u.anchor_offset = post - pp
 
 

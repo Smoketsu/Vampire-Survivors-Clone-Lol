@@ -424,6 +424,12 @@ func _ready() -> void:
 			cyg.look = stage_def.get("floor", {})
 			cyg.game = self
 			ground = cyg
+		# --- Act VIII: Fort Kessler ---
+		"fort_kessler":
+			var fkg := FortKesslerGround.new()  # Act VIII: Fort Kessler's zone looks over CityGround (FortKesslerStage.ZONES).
+			fkg.look = stage_def.get("floor", {})
+			fkg.game = self
+			ground = fkg
 		_:
 			ground = Ground.new()
 	add_child(ground)

@@ -82,6 +82,9 @@
 ## Act VII, Castle Sanguis:
 ##   Dhampir          Half-Blood      in NightSwarm.step() (two more bats in the
 ##                    swarm); stats as the spell's (swarm_darts, swarm_bites).
+## Act VIII, Fort Kessler:
+##   Fallen Sergeant  Sapper's Hands  in BoneMines._drop() (one more mine laid
+##                    beside every one); stat bone_mines_extra.
 class_name CharacterInnates
 extends Node2D
 
@@ -427,6 +430,9 @@ func summary_line() -> String:
 		# --- Act VII: Castle Sanguis --- (Half-Blood lives in NightSwarm.step())
 		"half_blood":
 			counters = "extra bats %d (bites %d)" % [int(game.character.innate_value(NightSwarmData.EXTRA_KEY)), int(st.get("swarm_bites", 0.0))]
+		# --- Act VIII: Fort Kessler --- (Sapper's Hands lives in BoneMines._drop())
+		"sappers_hands":
+			counters = "extra mines %d (laid %d)" % [int(st.get("bone_mines_extra", 0.0)), int(st.get("bone_mines_laid", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

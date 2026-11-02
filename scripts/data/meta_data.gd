@@ -432,7 +432,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VII: the Witchwood ---
 	"the_coven_breaks",
 	# --- Act VII: Castle Sanguis ---
-	"last_supper"]
+	"last_supper",
+	# --- Act VIII: Fort Kessler ---
+	"broken_arrow"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -622,6 +624,14 @@ const ACHIEVEMENTS := {
 	# / TitleData).
 	"last_supper": {"display_name": "Last Supper", "description": "Beat the Elder in Castle Sanguis",
 		"stat": "boss_kills", "stage": "castle_sanguis", "goal": 1, "unlock": "The title Ender of the Feast", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Morning Star Falls
+	# --- Act VIII: Fort Kessler ---
+	# Owner-approved Act VIII achievement "Broken Arrow" ("kill the General
+	# before the countdown ends"): a run in which General Harrow fell while his
+	# Broken Arrow countdown was still running (BossHarrow sets the run stat
+	# fort_kessler_broken_arrow; MetaProgress counts the runs, lifetime
+	# broken_arrow_runs). It unlocks the counter-passive Armour-Piercing Bones.
+	"broken_arrow": {"display_name": "Broken Arrow", "description": "Kill General Harrow before his strike lands",
+		"stat": "broken_arrow_runs", "goal": 1, "unlock": "The Armour-Piercing Bones passive", "bounty": 300},  # Owner-approved Act VIII proposal; bounty TUNING (not in GDD) as Coffin Nails
 }
 
 # --- Content wave 2: B. Achievement rewards ---

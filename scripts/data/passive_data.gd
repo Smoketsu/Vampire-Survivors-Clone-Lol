@@ -196,7 +196,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act VII: the Witchwood ---
 	"moonlit_rite", "embalmed",
 	# --- Act VII: Castle Sanguis ---
-	"old_blood", "thirst_eternal"]
+	"old_blood", "thirst_eternal",
+	# --- Act VIII: Fort Kessler ---
+	"tripwire", "armour_piercing_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -234,7 +236,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act VII: the Witchwood ---
 	"embalmed",
 	# --- Act VII: Castle Sanguis ---
-	"thirst_eternal"]
+	"thirst_eternal",
+	# --- Act VIII: Fort Kessler ---
+	"armour_piercing_bones"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1603,6 +1607,52 @@ const PASSIVES := {
 			{"unit_heal": 0.30},  # TUNING (not in GDD)
 			{"unit_heal": 0.40},  # TUNING (not in GDD)
 			{"unit_heal": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VIII: Fort Kessler ---
+	# Tripwire (Bone Mines' paired passive; owner-approved Act VIII proposal:
+	# "Killing Ground (+ Tripwire)"; unlocked with the spell by General Harrow
+	# and offered on every stage). Own decision on its effect: every bone mine's
+	# trigger reaches trip_reach px farther (BoneMines._trigger()), and every
+	# foe caught in a bone mine's blast is slowed by trip_slow for
+	# BoneMinesData.TRIP_SLOW_TIME s (CombatResolver.slow_enemy(), the one slow
+	# path; Spirit Binding and Mournsong lengthen it). Read only by BoneMines:
+	# exactly nothing without the spell.
+	"tripwire": {
+		"display_name": "Tripwire",  # Owner-approved proposal
+		"icon": "tripwire",
+		"description": "Your bone mines go off from farther away, and slow every foe caught in the blast.",
+		"labels": {"trip_reach": ["Mine trigger reach (px)", "num"], "trip_slow": ["Blast slow", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"trip_reach": 4.0, "trip_slow": 0.15},  # TUNING (not in GDD)
+			{"trip_reach": 8.0, "trip_slow": 0.20},  # TUNING (not in GDD)
+			{"trip_reach": 12.0, "trip_slow": 0.25},  # TUNING (not in GDD)
+			{"trip_reach": 16.0, "trip_slow": 0.30},  # TUNING (not in GDD)
+			{"trip_reach": 20.0, "trip_slow": 0.35},  # TUNING (not in GDD)
+		],
+	},
+	# Act VIII's counter-passive Armour-Piercing Bones (owner answer of Nov 2,
+	# 2026, replacing Off the Grid: "summon hits ignore part of the Armour
+	# rule's shield-front reduction (riot shields, SWAT, tanks). Act VIII
+	# only"; unlocked by the Fort Kessler achievement Broken Arrow and offered
+	# only in Act VIII through its card row's "act"). ONE hook,
+	# Armour.front_mult() (Armour.pierce_share()): a summon-class hit on an
+	# armoured front keeps front x (1 - front_pierce) of the cut; flat armour,
+	# spells and the necromancer's own attacks are unchanged.
+	"armour_piercing_bones": {
+		"display_name": "Armour-Piercing Bones",  # Owner answer (Nov 2, 2026)
+		"icon": "armour_piercing_bones",
+		"description": "Your dead strike through shields and armour plate: fronts stop less of their blows.",
+		"labels": {"front_pierce": ["Armoured front ignored", "pct"]},
+		"act": 8,  # Owner answer: Act VIII only (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"front_pierce": 0.15},  # TUNING (not in GDD)
+			{"front_pierce": 0.25},  # TUNING (not in GDD)
+			{"front_pierce": 0.35},  # TUNING (not in GDD)
+			{"front_pierce": 0.45},  # TUNING (not in GDD)
+			{"front_pierce": 0.55},  # TUNING (not in GDD) about half the shield's cut gone at Lv 5
 		],
 	},
 }

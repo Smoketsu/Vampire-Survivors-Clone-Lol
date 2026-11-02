@@ -96,7 +96,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VII: the Witchwood ---
 	"witches_sabbath",
 	# --- Act VII: Castle Sanguis ---
-	"nocturne"]
+	"nocturne",
+	# --- Act VIII: Fort Kessler ---
+	"killing_ground"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -665,6 +667,28 @@ const EVOLUTIONS := {
 		"stats": {
 			"bats": 8, "damage": 13.0, "orbit": 58.0, "cooldown": 1.5,  # TUNING (not in GDD) first pass 15 (Nocturne led every source by ~2x in the forced run)
 			"chain": 1, "chain_share": 0.5,  # TUNING (not in GDD) the evolution flag: leaps after each bite and their share of the bite
+		},
+	},
+	# --- Act VIII: Fort Kessler ---
+	# Killing Ground (owner-approved Act VIII proposal: "Bone Mines -> Killing
+	# Ground (+ Tripwire)"): Bone Mines + Tripwire (a NEW passive, owner rule:
+	# at Lv 5). Own decision on its kit: bigger, harder mines laid faster, and
+	# each blast throws `shards` bone shards on a ring `shard_reach` px out,
+	# each hitting every enemy within `shard_radius` px for shard_share x the
+	# damage (source killing_ground_shards). Detected by the "shards" key.
+	"killing_ground": {
+		"base": "bone_mines",
+		"passive": "tripwire",
+		"display_name": "Killing Ground",  # Owner-approved proposal
+		"icon": "killing_ground",
+		"description": "The ground you walk becomes a minefield, and every blast throws bone shrapnel.",
+		"labels": {"damage": "Blast damage", "radius": "Blast radius", "max_mines": "Mines laid at once", "shards": "Shards", "shard_share": "Shard damage", "cooldown": "Drop every (s)"},
+		"stats": {
+			"damage": 50.0, "radius": 56.0, "trigger": 16.0, "max_mines": 14, "spacing": 32.0, "life": 16.0, "cooldown": 0.8,  # TUNING (not in GDD)
+			"shards": 6,  # TUNING (not in GDD) the evolution flag: bone shards a blast throws
+			"shard_share": 0.4,  # TUNING (not in GDD) of the blast's damage
+			"shard_reach": 64.0,  # TUNING (not in GDD) px out from the blast
+			"shard_radius": 26.0,  # TUNING (not in GDD) px each shard hits
 		},
 	},
 }

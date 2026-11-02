@@ -451,4 +451,120 @@ const ENEMIES := {
 		"kit": "city_wreck",
 		"tier": "army",  # A vehicle's remains (the report lists it with the army).
 	},  # The burning wreck.
+	# --- Act VIII: Fort Kessler ---
+	# Army, heavy ranged (owner-approved proposal: "Machine Gunner | Heavy
+	# ranged (four stars) | Sets up and sweeps a telegraphed fire lane | Grave
+	# Step; Bone Wall in the lane"; built by Fort Kessler, any stage may field
+	# him). He walks in like a rifleman; when his attack is due (the shared
+	# ranged attack: attack_range / attack_interval) he SETS UP: for setup_time
+	# s he kneels behind his gun and the FIRE LANE shows (a gradient strip
+	# lane_length px long, lane_half px each side of its centre line, at its
+	# start angle, the swept arc faint behind it); then he SWEEPS it through
+	# sweep_arc rad across his target over sweep_time s, every `tick` s hitting
+	# every summon and necromancer inside the lane for tick_damage (source
+	# CityEnemyData.MG_SOURCE, a ranged source: Kevlar Bones' hook), and packs
+	# up for pack_time s. A Bone Wall segment in the lane (BoneWall.covers(),
+	# any necromancer's) stops the lane there; Grave Step's i-frames dodge it
+	# (damage_player()). MachineGunnerKit.
+	"machine_gunner": {
+		"display_name": "Machine Gunner",
+		"max_hp": 66.0,  # TUNING (not in GDD) a heavy (the rifleman 42)
+		"move_speed": 36.0,  # TUNING (not in GDD) px/s; he carries the gun
+		"damage": 0.0,  # Unused: tick_damage (his kit fires the lane).
+		"attack_interval": 7.5,  # TUNING (not in GDD) s between two set-ups
+		"attack_range": 250.0,  # TUNING (not in GDD) px: he sets up this close
+		"radius": 11.0,  # TUNING (not in GDD) px
+		"armor": 0.2,  # TUNING (not in GDD) a helmet, a vest and a gun shield
+		"xp": 6,  # TUNING (not in GDD)
+		"behavior": "ranged",
+		"projectile_speed": 0.0,  # Unused: the lane is not a projectile.
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.7,  # TUNING (not in GDD) 0..1
+		"mass": 2.2,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "machine_gunner",
+		"tier": "army",  # Owner-approved proposal: four stars, the army
+		"setup_time": 1.2,  # TUNING (not in GDD) s: the telegraph (the lane shows)
+		"sweep_time": 2.2,  # TUNING (not in GDD) s the sweep lasts
+		"sweep_arc": 0.9,  # TUNING (not in GDD) rad swept, centred on his target
+		"lane_length": 300.0,  # TUNING (not in GDD) px
+		"lane_half": 10.0,  # TUNING (not in GDD) px each side of the lane's centre line
+		"tick": 0.2,  # TUNING (not in GDD) s between two hits of the lane
+		"tick_damage": 1.4,  # TUNING (not in GDD) per hit, before the time scaling
+		"pack_time": 0.6,  # TUNING (not in GDD) s he stands after the sweep
+	},  # The machine gunner.
+	# Army, a flying VEHICLE (owner-approved proposal: "Attack Helicopter |
+	# Vehicle, flying (four stars) | Strafing runs over the ring, rocket pods |
+	# Gargoyles, Archers and spells"; built by Fort Kessler). A "vehicle" (the
+	# Convoy counts it, its run-over box is the bot's lane hint, a dead one
+	# leaves a wreck) that never drives the streets and never runs anything
+	# over: it FLIES (row "flies": no summon body-blocks it). STRAFING RUNS:
+	# it picks the street lane through the necromancer (CityBlocks.lane(); a
+	# straight line off a blocks stage), comes in from run_half px behind him,
+	# flies the lane at its move_speed to run_half px past him, firing a ROCKET
+	# POD every rocket_every s: a landing circle (CityShells, the one shell
+	# path) rocket_lead px ahead of it on the lane, rocket_radius px, landing
+	# after rocket_windup s for rocket_damage (summons and the necromancer only;
+	# source HELI_ROCKET_SOURCE, ranged); then it banks round for turn_time s
+	# and runs the other axis. Its rotors keep it out of a sword's reach: a
+	# MELEE summon's hit deals melee_mult (a summon class whose base attack
+	# range is under PassiveData.OVERCLOCK_MIN_RANGE, except the Gargoyle's
+	# dive); Archers, Mages, Gargoyles, every ranged class and every spell hit
+	# it in full. Shot down over a building it crashes onto the nearest street
+	# (its wreck takes a street cell, never a roof). AttackHelicopterKit.
+	"attack_helicopter": {
+		"display_name": "Attack Helicopter",
+		"max_hp": 380.0,  # TUNING (not in GDD) a vehicle (the squad car 170, the tank 700)
+		"move_speed": 170.0,  # TUNING (not in GDD) px/s on its strafing run
+		"damage": 0.0,  # Unused: the rockets.
+		"attack_interval": 1.0,
+		"attack_range": 0.0,
+		"radius": 18.0,  # TUNING (not in GDD) px (targeting body)
+		"armor": 0.2,  # TUNING (not in GDD)
+		"xp": 14,  # TUNING (not in GDD)
+		"behavior": "melee",  # Unused: its kit flies it.
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.75,  # TUNING (not in GDD) 0..1
+		"mass": 20.0,  # TUNING (not in GDD)
+		"slow_resist": 0.7,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "attack_helicopter",
+		"tier": "army",  # Owner-approved proposal: four stars, the army
+		"vehicle": true,  # Owner-approved proposal: a vehicle (Convoy: counted, wrecked)
+		"flies": true,  # Owner-approved proposal: flying (no summon body-blocks it)
+		"phases": true,  # It flies over the roofs (Enemy.phases_obstacles: no push-out)
+		"half_length": 30.0,  # TUNING (not in GDD) px (the bot's lane hint; it runs nothing over)
+		"half_width": 14.0,  # TUNING (not in GDD) px
+		"run_half": 520.0,  # TUNING (not in GDD) px before and past the necromancer on a run
+		"turn_time": 2.4,  # TUNING (not in GDD) s it banks round between two runs
+		"rocket_every": 0.55,  # TUNING (not in GDD) s between two rockets on a run
+		"rocket_lead": 150.0,  # TUNING (not in GDD) px ahead of it a rocket lands
+		"rocket_windup": 0.9,  # TUNING (not in GDD) s (its landing circle)
+		"rocket_radius": 30.0,  # TUNING (not in GDD) px
+		"rocket_damage": 4.0,  # TUNING (not in GDD) before the time scaling
+		"rocket_reach": 360.0,  # TUNING (not in GDD) px: it fires only this near the necromancer's line
+		"melee_mult": 0.5,  # TUNING (not in GDD) share of a melee summon's hit it takes (rotor height)
+	},  # The attack helicopter.
 }
+
+# --- Act VIII: Fort Kessler ---
+## Kind id of the army's heavy ranged soldier (Fort Kessler builds it).
+const MACHINE_GUNNER: String = "machine_gunner"
+## Kind id of the army's flying vehicle (Fort Kessler builds it).
+const ATTACK_HELICOPTER: String = "attack_helicopter"
+## Damage tag of the machine gunner's fire lane (ranged).
+const MG_SOURCE: String = "machine_gun"
+## Damage tag of the attack helicopter's rocket pods (ranged).
+const HELI_ROCKET_SOURCE: String = "heli_rocket"
+## Ranged damage tags Fort Kessler adds to RANGED_SOURCES' (Kevlar Bones'
+## hook, Armour.kevlar_mult(), reads both lists): the machine gun, the
+## helicopter's rockets, General Harrow's carpet bombs and Mammoth's turret
+## shells. (A list of its own so the three stages' additions merge cleanly.)
+const FORT_KESSLER_RANGED_SOURCES: Array[String] = ["machine_gun", "heli_rocket", "carpet_bomb", "mammoth_shell"]
