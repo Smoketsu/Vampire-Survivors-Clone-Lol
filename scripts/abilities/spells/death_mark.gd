@@ -203,6 +203,8 @@ func _raise_pending(cap: int) -> void:
 			continue
 		var u := game.horde.raise_corpse(GraveSpellData.DEATH_MARK_RISEN_CLASS, pos, GraveSpellData.DEATH_MARK_RISEN_LIFE,
 				GraveSpellData.DEATH_MARK_RISEN_HP, GraveSpellData.DEATH_MARK_RISEN_DAMAGE, "death_mark_risen", "risen", bool(gunners[k]))
+		if u == null:
+			continue  # Nothing rose (HordeDirector.raise_corpse() returned null).
 		_risen.append([u, u.generation])
 		game.effects.ring(u.position, 22.0, Palette.VIOLET, 0.5)
 		game.stat_add("death_mark_risen", 1.0)

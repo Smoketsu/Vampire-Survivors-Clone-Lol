@@ -726,9 +726,19 @@ func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float,
 	return u
 
 
+## A copy of `units` to loop over whenever the loop can kill a summon (an area
+## hit through CombatResolver.damage_unit()): a death swap-pops `units`
+## (on_unit_died()), so a loop over the live array would skip the summon swapped
+## into the dead one's slot. Units killed earlier in the loop stay in the copy
+## with `active` false: callers keep their `u.active` check.
+func units_snapshot() -> Array[SummonedUnit]:
+	return units.duplicate()
+
+
 ## Raises a fallen enemy's corpse as a temporary Risen: THE one path of every
 ## effect that raises a slain foe (Death Mark's Risen, the Lich's raise, Grave
-## Tide, Call of the Drowned's Thralls), always through spawn_temporary(), so
+## Tide, Call of the Drowned's Thralls, the Ferrywoman's Ferry of Souls when the
+## foe is a cyborg), always through spawn_temporary(), so
 ## Restless Dead and the Grave Herald's Restless apply. It rises as class `cls`
 ## at `pos` for `duration` s with `hp_mult` / `dmg_mult`, tagged `tag`
 ## (SummonedUnit.dmg_source) and drawn as `glyph` (glyph_kind). Act III, Steel
@@ -738,11 +748,14 @@ func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float,
 ## STEEL.range_mult), firing for you as STEEL.tag; counted in
 ## steel_gunners_raised and steel_gunners_from_<tag>. A machine never gets here
 ## (Enemy.leaves_corpse() gates every caller). `gunner` is false on Acts I and
-## II, where this is exactly spawn_temporary() plus the two tags.
+## II, where this is exactly spawn_temporary() plus the two tags. Returns null
+## when spawn_temporary() raised nothing (callers must check).
 func raise_corpse(cls: String, pos: Vector2, duration: float, hp_mult: float, dmg_mult: float,
 		tag: String, glyph: String, gunner: bool) -> SummonedUnit:
 	var steel := EmpireRulesData.STEEL  # Grave Gunner rules.
 	var u := spawn_temporary(String(steel["class"]) if gunner else cls, pos, duration, hp_mult, dmg_mult)
+	if u == null:
+		return null  # Nothing rose: every caller checks for null before using the Risen.
 	if gunner:
 		u.attack_range *= float(steel["range_mult"])
 		u.dmg_source = String(steel["tag"])

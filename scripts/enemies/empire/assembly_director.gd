@@ -229,7 +229,7 @@ func _step_furnace(delta: float) -> void:
 			game.combat.damage_player(float(f["damage_player"]) * dm, FURNACE_SOURCE, p)
 			game.stat_add("assembly_furnace_player_hits", 1.0)
 	for h in game.all_hordes:  # (Co-op: every army.)
-		for u in h.units:
+		for u in h.units_snapshot():  # A copy: a summon killed here swap-pops h.units.
 			if u.active and not u.airborne and not u.flies and u.state != SummonedUnit.State.SPAWNING and burning_at(u.position, u.radius):
 				game.combat.damage_unit(u, float(f["damage_summon"]) * dm, FURNACE_SOURCE)
 				game.stat_add("assembly_furnace_summon_hits", 1.0)

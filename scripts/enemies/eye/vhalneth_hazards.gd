@@ -143,7 +143,7 @@ func _step_gaze(delta: float) -> void:
 		game.unbind(prev)
 	var n := 0  # Summons withering in the gaze this tick.
 	for h in game.all_hordes:  # (Co-op: every army.)
-		for u in h.units:
+		for u in h.units_snapshot():  # A copy: a summon killed here swap-pops h.units.
 			if u.active and not u.airborne and u.state != SummonedUnit.State.SPAWNING and u.position.distance_to(gaze_pos) <= gaze_radius + u.radius:
 				game.combat.damage_unit(u, float(def["gaze_summon_damage"]) * scale, GAZE_SOURCE)
 				n += 1
@@ -178,7 +178,7 @@ func _step_roar(delta: float) -> void:
 			game.stat_add("vhalneth_roar_player_hits", 1.0)
 	var n := 0  # Summons struck.
 	for h in game.all_hordes:  # (Co-op: every army.)
-		for u in h.units:
+		for u in h.units_snapshot():  # A copy: a summon killed here swap-pops h.units.
 			if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:
 				continue
 			var off := u.position - c
