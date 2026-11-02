@@ -198,6 +198,14 @@ STRIDE_FAR_SHADE = {"bronze_light": "bronze", "bronze": "bronze_dark", "marble_l
 #           row `pivot_y` (where it is held): each frame its rows slide sideways SWING * px at
 #           its bottom row, proportionally less toward the pivot (a shear, so rows move intact
 #           and every pixel stays an approved one), and it is laid back on top (_swing()).
+#   pendulums  optional list of dicts {box: (x0, x1, y0, y1), pivot: (x, y), degrees: float, colors: [palette names]
+#           (optional), back: float (optional, default 1: share of the swing the other way)}: hanging parts (chains, a censer) that swing like pendulums (_pendulum()): each
+#           part's opaque pixels in the box (only those of `colors`, if set) are turned about the pivot
+#           (where the part is held) by SWING[f] * degrees (+ = clockwise on screen; SWING is one swing
+#           forward and back over the walk's 8 frames, 0 on frame 0 = the still). Pixels only move.
+#   hold    optional list of (x0, x1, y0, y1) boxes of the still: a held prop that must stay fixed to
+#           the body in the walk (the Archfiend's cleaver); after the legs are laid, each box is
+#           cleared and the still's own pixels are put back there, lowered by the body dip (_hold()).
 #   bust    optional (x0, x1, y0, y1, px): the box of the still holding the bust (art px,
 #           [start, end) ; y0 = the neckline, y1 - 1 = the underside) and the bounce in
 #           px at its strongest point. Each frame warps that box vertically (_bounce): the
@@ -559,35 +567,52 @@ RIGS = {
         dict(kind="flap", box=(0, 11, 0, 32), root=11, amp=3)]),
     "inferno/hell_knight": dict(mode="legs", hip=38, back=(0, 20), front=(20, 36), rigid=[(36, 52, 0, None)], spread=2, lift=2, dip=1),
     "inferno/demon_brute": dict(mode="legs", hip=70, back=(0, 38), front=(38, 72), rigid=[], spread=3, lift=3, dip=1),
-    "inferno/succubus": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(12, 26, 13, 19, 2, 2), swish=(11, 27, 23, 32, 2)),
+    "inferno/succubus": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(13, 26, 13, 19, 2, 2), swish=(11, 27, 23, 32, 2)),  # Round 1 redo (act 6): 1 px less on the left (was cols 12-26; owner).
     # --- Act VI: the Burning Gate (every figure here is male: no bust rigs) ---
     "inferno/lava_hound": dict(mode="legs", hip=19, back=(0, 20), front=(20, 40), rigid=[], spread=2, lift=2, dip=1),
     "inferno/pit_cultist": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1),
-    "inferno/gatekeeper": dict(mode="legs", hip=80, back=(0, 58), front=(58, 116), rigid=[], spread=3, lift=3, dip=1),
+    # Round 1 redo (act 6, owner: "Can we make the chains swing back and forth?"): the two hanging chains (left x 5-20, from
+    # the bracelet at row 55; right x 99-113, from the cuff at row 44) swing about where they are held (`pendulums`).
+    "inferno/gatekeeper": dict(mode="legs", hip=80, back=(0, 58), front=(58, 116), rigid=[], spread=3, lift=3, dip=1,
+                               pendulums=[dict(box=(0, 20, 55, 105), pivot=(16, 55), degrees=7.0),
+                                          dict(box=(20, 23, 69, 105), pivot=(16, 55), degrees=7.0),  # The chain's outline beside the leg.
+                                          dict(box=(97, 116, 44, 105), pivot=(106, 44), degrees=7.0, back=0.4)]),
     "bosses/moloch": dict(mode="legs", hip=96, back=(0, 62), front=(62, 124), rigid=[], spread=3, lift=3, dip=1),
-    "player/furnace_priest": dict(mode="robe", hip=46, rigid=[], sway=1, dip=1),
+    # Round 1 redo (act 6, owner: "Any way to make the censer swing back and forth?"): the censer swings about its chain's top
+    # (the hand); the three skins' censers sit elsewhere, so each has its own entry in SKIN_FIX.
+    "player/furnace_priest": dict(mode="robe", hip=46, rigid=[], sway=1, dip=1,
+                                  pendulums=[dict(box=(29, 38, 31, 50), pivot=(30, 30), degrees=10.0)]),
     # --- Act VI: the Palace of Silk and Ash ---
     # The female figures (the approved Act VI level) glide like the succubus: the robe rig, the bust box bouncing and
     # the `swish` hip box swaying (boxes from each sprite's torso; for the owner's review); Lilith glides in her gown.
-    "inferno/lilim_witch": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(5, 19, 13, 19, 2, 2), swish=(4, 20, 24, 32, 2)),
-    "inferno/twin_naamah": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(16, 32, 15, 21, 2, 2), swish=(15, 33, 26, 36, 2)),
-    "inferno/twin_agrat": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(15, 31, 15, 21, 2, 2), swish=(14, 32, 26, 36, 2)),
+    "inferno/lilim_witch": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(7, 19, 13, 19, 2, 2), swish=(4, 20, 24, 32, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 5-19; owner).
+    "inferno/twin_naamah": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(18, 32, 15, 21, 2, 2), swish=(15, 33, 26, 36, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 16-32; owner).
+    "inferno/twin_agrat": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(17, 31, 15, 21, 2, 2), swish=(14, 32, 26, 36, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 15-31; owner).
     "bosses/lilith": dict(mode="robe", hip=64, rigid=[], sway=1, dip=1, bust=(31, 61, 27, 38, 3, 2), swish=(30, 62, 47, 65, 2)),
     "player/succubus_queen": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(11, 25, 13, 19, 2, 2), swish=(10, 26, 24, 32, 2)),
-    "summons/bound_succubus": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(15, 29, 12, 18, 2, 2), swish=(14, 30, 22, 30, 2)),
-    "summons/lilim_matriarch": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(19, 35, 15, 21, 2, 2), swish=(18, 36, 26, 36, 2)),
+    "summons/bound_succubus": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(17, 31, 14, 20, 2, 2), swish=(14, 30, 22, 30, 2)),  # Round 1 redo (act 6): box 2 px down and 2 px right (was cols 15-29, rows 12-18; owner).
+    "summons/lilim_matriarch": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(21, 37, 17, 23, 2, 2), swish=(18, 36, 26, 36, 2)),  # Round 1 redo (act 6): box 2 px down and 2 px right (was cols 19-35, rows 15-21; owner).
     # --- Act VI: Pandemonium ---
     # The Fallen Angel glides like the succubus (robe mode, the boots as one hem) with the figure-redesign rigs: the
     # two-lobe bust box and the hip `swish`; the Fallen Seraph General, the Morning Star's Beast, the Archfiend and the
     # Prince of Hell stride (legs, their wings riding with the body); the Morning Star's Angel glides in his long cloak;
     # the Fallen Saint (figure redesign) glides in her gown, the bust box bouncing.
-    "inferno/fallen_angel": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1, bust=(13, 24, 15, 22, 2, 2), swish=(12, 25, 25, 34, 2)),
+    "inferno/fallen_angel": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1, bust=(17, 28, 15, 22, 2, 2), swish=(12, 25, 25, 34, 2)),  # Round 1 redo (act 6): box 4 px right (was cols 13-24; owner).
     "inferno/seraph_general": dict(mode="legs", hip=62, back=(0, 48), front=(48, 96), rigid=[], spread=2, lift=2, dip=1),
     "bosses/morning_star": dict(mode="robe", hip=80, rigid=[], sway=1, dip=1),
-    "bosses/morning_star_beast": dict(mode="legs", hip=104, back=(0, 70), front=(70, 142), rigid=[], spread=3, lift=3, dip=1),
-    "player/fallen_saint": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(13, 25, 16, 22, 1)),
-    "summons/archfiend": dict(mode="legs", hip=44, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=2, dip=1),
-    "summons/prince_of_hell": dict(mode="legs", hip=52, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1),
+    # Round 1 redo (act 6, owner: "Make the chains sway if you can"): the two gold chains (left from (47, 80), right from
+    # (113, 80)) sway like the Gatekeeper's, gentler (only the chain's gold pixels move).
+    "bosses/morning_star_beast": dict(mode="legs", hip=104, back=(0, 70), front=(70, 142), rigid=[], spread=3, lift=3, dip=1,
+                                      pendulums=[dict(box=(27, 52, 78, 116), pivot=(47, 80), degrees=4.0, colors=["gold"]),
+                                                 dict(box=(103, 121, 78, 118), pivot=(113, 80), degrees=4.0, colors=["gold"])]),
+    "player/fallen_saint": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(17, 29, 16, 22, 1)),  # Round 1 redo (act 6): box 4 px right (was cols 13-25; owner; the Untouchable skin derives from it, the Hyper skin has its own in SKIN_FIX).
+    # Round 1 redo (act 6, owner: "His cleaver moves and it's not supposed to"): the cleaver is held across the front leg's
+    # columns below the hip, so the stride sheared and lifted it with the leg. `hold` keeps the blade (boxes of the still, a
+    # staircase along it so the boot beside it still walks) fixed to the body: only the legs, tail and wings move.
+    "summons/archfiend": dict(mode="legs", hip=44, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=2, dip=1,
+                              hold=[(36, 62, 39, 52), (46, 62, 52, 61)]),
+    "summons/prince_of_hell": dict(mode="legs", hip=52, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1,
+                              hold=[(41, 52, 47, 60), (52, 62, 49, 66), (62, 76, 53, 70)]),
     # --- Act VII: the Sanguine Court (the shared kinds) ---
     # The thrall shambles on bare feet; the bat hovers (the whole bat bobs 2 px, both wings flap from their shoulder roots, the
     # still keeps two empty rows on top); the Blood Knight strides, the upright halberd (cols 24+) rigid with the body; the
@@ -742,6 +767,15 @@ SKINS = {
 SKIN_FIX = {
     # --- Act VI: the Palace of Silk and Ash --- (the Succubus Queen's Deathlord skin is 58 tall: its own boxes)
     "player/succubus_queen_deathlord": {"hip": 33, "bust": (12, 28, 14, 20, 2, 2), "swish": (11, 29, 24, 34, 2)},
+    # --- Act VI: Pandemonium --- (the Fallen Saint's Hyper skin: its own box)
+    # Round 1 redo (act 6, owner: "Bounce box shifted 3 pixels to the right"): the Hyper box is the base's old one (cols 13-25)
+    # +3 (the base and the Untouchable skin moved 4 px, cols 17-29).
+    "player/fallen_saint_hyper": {"bust": (16, 28, 16, 22, 1)},
+    # --- Act VI: the Burning Gate --- (the Furnace Priest's skins: their censers hang elsewhere, so their own pendulums)
+    # Round 1 redo (act 6): each swings about the hand that holds it, like the base's censer.
+    "player/furnace_priest_hyper": {"pendulums": [dict(box=(26, 33, 31, 46), pivot=(28, 30), degrees=10.0)]},
+    "player/furnace_priest_untouchable": {"pendulums": [dict(box=(26, 34, 31, 47), pivot=(26, 30), degrees=10.0)]},
+    "player/furnace_priest_deathlord": {"pendulums": [dict(box=(26, 34, 30, 46), pivot=(27, 29), degrees=10.0)]},
     # --- Act V: the Burning Province --- (the Grave Kunoichi's skins)
     # Round 2 redo: the Hyper and Deathlord skins have their own box, the shared one (derived: cols 23-36, rows 18-25)
     # with 1 px less at the bottom (owner: "reduced like 1 pixel on the bottom"); the base keeps the approved shared box.
@@ -1148,8 +1182,13 @@ def frames_of(key: str) -> list:
         else:
             hem = _shift_rows(parts["hem"], hip, dy, 0, ROBE_SWAY[f] * rig["sway"])
             frame = _stack([hem] + body)
-        if "swing" in rig:
+        if "swing" in rig and isinstance(rig["swing"], tuple):
             frame = _swing(frame, rig["swing"], dy, SWING[f])
+        if "pendulums" in rig:
+            for pend in rig["pendulums"]:
+                frame = _pendulum(frame, pend, dy, SWING[f])
+        if "hold" in rig:
+            frame = _hold(frame, still, rig["hold"], dy)
         if "bust" in rig:
             axis = rig.get("bust_axis", "y")  # "y" bounces, "x" sways (BUST_SWAY).
             share = (BUST_SWAY if axis == "x" else BUST_BOUNCE)[f]
@@ -1194,6 +1233,61 @@ def _swing(frame: np.ndarray, swing: tuple, dy: int, k: float) -> np.ndarray:
             for x in range(max(x0, x1 - 2), x1):
                 if out[y, x, 3] == 0 and frame[y, x, 3] > 0 and int(frame[y, x, :3].sum()) < SWING_INK_SUM:
                     out[y, x] = frame[y, x]
+    return out
+
+
+def _pendulum(frame: np.ndarray, pend: dict, dy: int, k: float) -> np.ndarray:
+    """Swings one hanging part of `frame` (a rig `pendulums` entry) like a pendulum: the
+    opaque pixels of its box (of its `colors` only, if set; the box lowered by the body dip
+    `dy`) are lifted out and turned about the pivot point by k * degrees (k = SWING[f];
+    + = clockwise on screen, the bottom swinging left to right), then laid back on top.
+    Inverse nearest mapping: pixels are only moved, never blended or recoloured. k = 0
+    returns the frame unchanged (frame 0 stays the still)."""
+    if k == 0:
+        return frame
+    x0, x1, y0, y1 = pend["box"]
+    y0, y1 = max(0, y0 + dy), min(frame.shape[0], y1 + dy)
+    px, py = pend["pivot"]  # Pivot (art px, in the still: the part's top / where it is held).
+    py += dy
+    sel = np.zeros(frame.shape[:2], dtype=bool)
+    sel[y0:y1, x0:x1] = frame[y0:y1, x0:x1, 3] > 0
+    if pend.get("colors"):
+        ok = np.zeros(frame.shape[:2], dtype=bool)
+        for c in _palette_rgb(pend["colors"]):
+            ok |= (frame[:, :, :3] == np.array(c, dtype=np.uint8)).all(-1)
+        sel &= ok
+    part = np.zeros_like(frame)
+    part[sel] = frame[sel]  # The lifted part (a copy), then taken out of the body.
+    out = frame.copy()
+    out[sel] = 0
+    if k < 0:
+        k *= pend.get("back", 1.0)  # A part held against a wall (the sprite's edge) swings less that way.
+    a = np.radians(pend["degrees"] * k)  # This frame's angle (rad).
+    ca, sa = np.cos(a), np.sin(a)
+    h, w = frame.shape[:2]
+    # Inverse mapping over the part's rows and a margin: each destination pixel takes the source pixel that turns onto it
+    # (nearest), so a thin chain keeps no holes.
+    for y in range(max(0, y0 - 2), min(h, y1 + 12)):
+        for x in range(max(0, x0 - 12), min(w, x1 + 12)):
+            rx, ry = x - px, y - py
+            sx = int(round(px + rx * ca + ry * sa))
+            sy = int(round(py - rx * sa + ry * ca))
+            if 0 <= sx < w and 0 <= sy < h and sel[sy, sx]:
+                out[y, x] = part[sy, sx]
+    return out
+
+
+def _hold(frame: np.ndarray, still: np.ndarray, hold: list, dy: int) -> np.ndarray:
+    """Keeps a held prop fixed to the body (a rig `hold` entry: boxes (x0, x1, y0, y1) of the
+    still): the box is cleared in `frame` (the legs' sheared copy of it) and the still's own
+    pixels are laid back there, lowered by the body dip `dy` like everything above the hip.
+    Only the legs, tail and wings keep moving; the prop and the hand that holds it do not."""
+    out = frame.copy()
+    for x0, x1, y0, y1 in hold:
+        out[y0 + dy:y1 + dy, x0:x1] = 0
+        src = still[y0:y1, x0:x1]
+        dst = out[y0 + dy:y1 + dy, x0:x1]
+        dst[src[:, :, 3] > 0] = src[src[:, :, 3] > 0]
     return out
 
 

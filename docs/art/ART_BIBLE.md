@@ -538,6 +538,18 @@ style) the Voidcaller.
 `godot --headless --import` for the `.import` file. Tune `hip` (higher = more of the legs move),
 `spread` and `lift`; put anything that must not bend below the hip in `rigid`.
 
+**Pendulums and held props (Act VI art review, round 1, rig group).** Two additive rig keys in `tools/walk_cycle.py`, for the
+owner's notes on swinging chains and a fixed cleaver. `pendulums` is a list of `{box, pivot, degrees, colors?, back?}`: each
+part's opaque pixels in the box (only the listed palette `colors`, if set) are lifted out and turned about the pivot (where the
+part is held) by `degrees` x `SWING[f]`, nearest inverse mapping, laid back on top (`_pendulum()`); one forward-and-back swing
+over the 8 walk frames, frame 0 stays the still, pixels only move. `back` scales the swing in the other direction for a part near
+the sprite's edge. Used by the Gatekeeper's two chains (7 degrees), the Morning Star's Beast's two gold chains (4, gold pixels
+only, gentler) and the Furnace Priest's censer (10, each of his three skins with its own entry in `SKIN_FIX`). `hold` is a list of
+still boxes kept fixed to the body: after the legs are laid each box is cleared and the still's pixels put back, lowered by the
+dip (`_hold()`), so the Archfiend's and the Prince of Hell's cleavers (held across the front leg's columns) no longer shear with
+the leg; a staircase of boxes along the blade lets the boot beside it keep walking. The older tuple `swing` (the Harbourmaster's
+anchor) is unchanged. Bust boxes of the round are listed in the GDD row.
+
 ## Effects (smooth by design)
 
 Effects are short **smooth** animations processed with `--anim` (strips of square frames in
