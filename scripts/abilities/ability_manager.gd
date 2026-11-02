@@ -278,6 +278,12 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	if out.has("fall_time"):
 		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(FallFromGraceData.PRIDE, FallFromGraceData.HASTE_KEY))
 		out[FallFromGraceData.PROUD_KEY] = passive_value(FallFromGraceData.PRIDE, FallFromGraceData.PROUD_KEY)
+	# --- Act VII: Castle Sanguis --- Old Blood: Night Swarm's bats dart sooner and
+	# their bites heal the necromancer (its keys exist only in the Night Swarm /
+	# Nocturne rows; the passive's values are 0 while it is not owned).
+	if out.has("orbit"):
+		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(NightSwarmData.OLD_BLOOD, NightSwarmData.HASTE_KEY))
+		out[NightSwarmData.HEAL_KEY] = passive_value(NightSwarmData.OLD_BLOOD, NightSwarmData.HEAL_KEY)
 	return out
 
 

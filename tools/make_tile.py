@@ -605,6 +605,29 @@ RECIPES = {
         "source": "pandemonium_obsidian.png", "method": "quilt",  # The Throne: polished obsidian.
         "colors": ["obsidian_ink", "floor_soil", "floor_slate", "floor_marble"],
     },
+    # --- Act VII: Castle Sanguis ---
+    # The four zone floors of CASTLE SANGUIS (CastleSanguisGround, tiles/castle_sanguis_<style>): one API texture of grey
+    # castle flagstone (the Courtyard's paving in courses, the Crypt Gallery's cold slabs) and one of black marble veined red
+    # (the Banquet Hall's dark floor under the runners, the Throne of Blood's marble). The runners, moss, bones, gold inlay
+    # and pooled blood stay code-drawn (CastleSanguisGround).
+    "castle_sanguis_courtyard": {
+        "source": "castle_sanguis_stone.png", "method": "layout",  # The Courtyard: grey flagstones in courses.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["floor_slate", "floor_ash", "floor_stone"], "joint": ["obsidian_ink"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "castle_sanguis_banquet": {
+        "source": "castle_sanguis_marble.png", "method": "quilt",  # The Banquet Hall: dark wine-stained stone.
+        "colors": ["blood_ink", "floor_soil", "floor_earth"],
+    },
+    "castle_sanguis_crypt": {
+        "source": "castle_sanguis_stone.png", "method": "quilt",  # The Crypt Gallery: cold dark slabs.
+        "colors": ["obsidian_ink", "floor_soil", "floor_slate"],
+    },
+    "castle_sanguis_throne": {
+        "source": "castle_sanguis_marble.png", "method": "quilt",  # The Throne of Blood: black marble veined red.
+        "colors": ["blood_ink", "obsidian_ink", "floor_soil", "blood_dark"],
+    },
 }
 
 

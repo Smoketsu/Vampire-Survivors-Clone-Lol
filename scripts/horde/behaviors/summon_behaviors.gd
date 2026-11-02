@@ -16,6 +16,7 @@
 ##   "kanabo" Bound Oni           OniBehavior (Act V, the Road to the Sun)
 ##   "allure" Succubus            BoundSuccubusBehavior (Act VI, the Palace of Silk and Ash)
 ##   "hellfire" Archfiend         ArchfiendBehavior (Act VI, Pandemonium)
+##   "bloodthirst" Blood Spawn    BloodSpawnBehavior (Act VII, Castle Sanguis)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -73,6 +74,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act VI: Pandemonium ---
 		"hellfire":
 			b = ArchfiendBehavior.new()  # The Archfiend.
+		# --- Act VII: Castle Sanguis ---
+		"bloodthirst":
+			b = BloodSpawnBehavior.new()  # The Blood Spawn.
 	if b != null:
 		b.kind = kind
 	return b
@@ -201,6 +205,11 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Cleave damage", a, b, "cleave_damage")
 				_delta(out, "Cleave cooldown (s)", a, b, "cleave_cooldown")
+		# --- Act VII: Castle Sanguis ---
+		"bloodthirst":
+			if a.is_empty():
+				out.append("Fast brawlers on the ring's front")
+				out.append("Bloodthirst: every blow that lands heals them")
 	return out
 
 

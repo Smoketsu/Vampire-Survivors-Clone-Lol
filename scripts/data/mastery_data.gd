@@ -47,6 +47,8 @@ const CLASSES: Array[String] = [
 	"bound_succubus",
 	# --- Act VI: Pandemonium ---
 	"archfiend",
+	# --- Act VII: Castle Sanguis ---
+	"blood_spawn",
 ]  # TUNING (not in GDD) every offerable summon class of all five acts
 
 ## Evolved-only class -> the classes whose mastery it uses (the best level
@@ -80,6 +82,8 @@ const FLAVOUR := {
 	"bound_succubus": "A kiss that holds a little longer.",  # TUNING (not in GDD) Act VI's class (the Palace of Silk and Ash)
 	# --- Act VI: Pandemonium ---
 	"archfiend": "A demon that kneels only to you.",  # TUNING (not in GDD) Act VI's finale class
+	# --- Act VII: Castle Sanguis ---
+	"blood_spawn": "A thirst that answers only to you.",  # TUNING (not in GDD) Act VII's finale class
 }  # TUNING (not in GDD) flavour only
 
 ## Autotest profile "max" owns every level of every mastery; "none" and "mid"

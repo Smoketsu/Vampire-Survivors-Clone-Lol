@@ -73,6 +73,9 @@
 ##   Fallen Saint     Second Fall     in FallFromGrace._cast() (every cast drops
 ##                    a second star on the next-strongest foe); stat
 ##                    grace_second_stars.
+## Act VII, Castle Sanguis:
+##   Dhampir          Half-Blood      in NightSwarm.step() (two more bats in the
+##                    swarm); stats as the spell's (swarm_darts, swarm_bites).
 class_name CharacterInnates
 extends Node2D
 
@@ -409,6 +412,9 @@ func summary_line() -> String:
 		# --- Act VI: Pandemonium --- (Second Fall lives in FallFromGrace._cast())
 		"second_fall":
 			counters = "second stars %d (dmg as fall_from_grace / lightbringer)" % int(st.get("grace_second_stars", 0.0))
+		# --- Act VII: Castle Sanguis --- (Half-Blood lives in NightSwarm.step())
+		"half_blood":
+			counters = "extra bats %d (bites %d)" % [int(game.character.innate_value(NightSwarmData.EXTRA_KEY)), int(st.get("swarm_bites", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

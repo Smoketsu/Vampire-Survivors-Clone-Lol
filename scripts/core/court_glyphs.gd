@@ -43,6 +43,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		return false
 	# Phase 2: each Act VII stage's own fallbacks go here, before the shared
 	# kinds' (as InfernoGlyphs asks BurningGateGlyphs first).
+	# --- Act VII: Castle Sanguis ---
+	if CastleSanguisGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # A Castle Sanguis kind (the Chiropteran, the Chiropteran King).
 	match kind:
 		"vampire_bat":
 			_bat(ci, o, r, flash)

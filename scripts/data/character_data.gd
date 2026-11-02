@@ -78,7 +78,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act VI: the Palace of Silk and Ash ---
 	"succubus_queen",
 	# --- Act VI: Pandemonium ---
-	"fallen_saint"]
+	"fallen_saint",
+	# --- Act VII: Castle Sanguis ---
+	"dhampir"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -137,6 +139,7 @@ const STAT_LABELS := {
 ##                           loses when her charm on it ends; Act VI)
 ##   grace_second_star       FallFromGrace._cast (share of a star's damage a
 ##                           second star deals on the next-strongest foe; Act VI)
+##   swarm_extra_bats        NightSwarm.step (extra bats in his swarm; Act VII)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -170,7 +173,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act VI: the Palace of Silk and Ash ---
 	"tempt_heartbreak",
 	# --- Act VI: Pandemonium ---
-	"grace_second_star"]
+	"grace_second_star",
+	# --- Act VII: Castle Sanguis ---
+	"swarm_extra_bats"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -677,6 +682,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail saint whose stars fall wide
 		"sprite": "player/fallen_saint",
 		"tint": Color(0.72, 0.58, 0.90),  # TUNING (not in GDD) a fallen violet over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act VII: Castle Sanguis ---
+	# The Dhampir (Night Swarm's character; owner-approved Act VII proposal
+	# "Rewards": "Night Swarm ... | The Dhampir, half-vampire, half-dead"; the
+	# brief left the sex to the stage agent: MALE, own decision, recorded in GDD
+	# §15.0): a lean young man, half vampire and half dead, pale grey skin, one
+	# red eye and one soul-teal eye, long white hair tied back, a long black
+	# hunter's coat with a high collar and blood-red lining, a silver-edged
+	# sabre, a few spectral bats around his shoulders. Night Swarm must be
+	# unlocked (Carmilla and the Elder) before he can be earned, by the usual
+	# Lv 5 rule. Own decision on his innate (the proposal names none): half of
+	# his blood is the Court's, so more bats answer him (NightSwarm.step()).
+	"dhampir": {
+		"display_name": "The Dhampir",  # Owner-approved proposal
+		"title": "Half the Court's blood, half the grave's. Both answer him.",
+		"spell": "night_swarm",
+		"innate": {
+			"id": "half_blood", "name": "Half-Blood",
+			"description": "Night Swarm calls two more bats.",
+			"values": {"swarm_extra_bats": 2.0},  # TUNING (not in GDD) extra bats in his swarm
+		},
+		"stats": {"max_hp": 5.0, "move_speed": 0.04},  # TUNING (not in GDD) a hardy, quick hunter
+		"sprite": "player/dhampir",
+		"tint": Color(0.86, 0.36, 0.44),  # TUNING (not in GDD) a blood red over the violet
 		"starts_unlocked": false,
 	},
 }

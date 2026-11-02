@@ -211,6 +211,13 @@
 ##   moon               — the stage's Blood Moon (BloodMoon): any key of
 ##                        CourtRulesData.BLOOD_MOON overrides it ({} = defaults).
 ##   zones              — Act VII stubs too: the planned zones (names and starts).
+## --- Act VII: Castle Sanguis ---
+##   castle_sanguis     — CastleSanguisDirector config (CastleSanguisStage
+##                        .CASTLE_SANGUIS, Act VII, Castle Sanguis: the Banquet's
+##                        blood fountains, the Chiropteran King's
+##                        "chiropteran_king" event, guest squads of the other
+##                        Act VII stages' kinds); ground "castle_sanguis" is its
+##                        CastleSanguisGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

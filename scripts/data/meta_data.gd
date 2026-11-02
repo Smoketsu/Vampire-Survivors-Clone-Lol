@@ -426,7 +426,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VI: the Palace of Silk and Ash ---
 	"unmoved",
 	# --- Act VI: Pandemonium ---
-	"morning_star_falls"]
+	"morning_star_falls",
+	# --- Act VII: Castle Sanguis ---
+	"last_supper"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -590,6 +592,15 @@ const ACHIEVEMENTS := {
 	# Sovereign of Pandemonium (UnlockData / TitleData).
 	"morning_star_falls": {"display_name": "Morning Star Falls", "description": "Cast down the Morning Star in Pandemonium",
 		"stat": "boss_kills", "stage": "pandemonium", "goal": 1, "unlock": "The title Sovereign of Pandemonium", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) the end of Part One (The Sun Goes Out 450)
+	# --- Act VII: Castle Sanguis ---
+	# The finale of Act VII (owner-approved Act VII proposal: "Last Supper (beat
+	# the Elder)"): Queen Carmilla and the Elder beaten in Castle Sanguis,
+	# counted from the stage record (the boss falls only as the Elder). No
+	# epilogue part (owner decision Oct 31, 2026: the epilogues wait for the act
+	# order); it records the clear with the title Ender of the Feast (UnlockData
+	# / TitleData).
+	"last_supper": {"display_name": "Last Supper", "description": "Beat the Elder in Castle Sanguis",
+		"stat": "boss_kills", "stage": "castle_sanguis", "goal": 1, "unlock": "The title Ender of the Feast", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Morning Star Falls
 }
 
 # --- Content wave 2: B. Achievement rewards ---

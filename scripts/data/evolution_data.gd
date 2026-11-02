@@ -90,7 +90,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VI: the Palace of Silk and Ash ---
 	"unholy_desire",
 	# --- Act VI: Pandemonium ---
-	"lightbringer"]
+	"lightbringer",
+	# --- Act VII: Castle Sanguis ---
+	"nocturne"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -596,6 +598,25 @@ const EVOLUTIONS := {
 		"stats": {
 			"stars": 3, "damage": 90.0, "radius": 52.0, "splash": 0.5, "fall_time": 0.45, "cooldown": 2.5,  # TUNING (not in GDD) first pass 120 / r56 / 2.2 s led every source by 4x
 			"flare": 0.25,  # TUNING (not in GDD) first pass 0.35; the evolution flag: share of the star's damage its flare ring deals
+		},
+	},
+	# --- Act VII: Castle Sanguis ---
+	# Nocturne (GDD §15.0 "Night Swarm, Nocturne, Old Blood and the Dhampir";
+	# owner-approved proposal "Night Swarm -> Nocturne (+ Old Blood)"): Night
+	# Swarm + Old Blood (a NEW passive, owner rule: at Lv 5). A greater swarm,
+	# and after each bite a bat LEAPS on to up to `chain` more foes within
+	# NightSwarmData.CHAIN_RANGE px (`chain_share` x the damage each). Detected
+	# by the "chain" key.
+	"nocturne": {
+		"base": "night_swarm",
+		"passive": "old_blood",
+		"display_name": "Nocturne",
+		"icon": "nocturne",
+		"description": "A night of bats wheels around you, and every bite leaps on to the next throat.",
+		"labels": {"bats": "Bats", "damage": "Bite damage", "chain": "Leaps", "chain_share": "Leap damage", "cooldown": "Dart every (s)"},
+		"stats": {
+			"bats": 8, "damage": 13.0, "orbit": 58.0, "cooldown": 1.5,  # TUNING (not in GDD) first pass 15 (Nocturne led every source by ~2x in the forced run)
+			"chain": 1, "chain_share": 0.5,  # TUNING (not in GDD) the evolution flag: leaps after each bite and their share of the bite
 		},
 	},
 }

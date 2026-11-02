@@ -394,6 +394,9 @@ func _ready() -> void:
 		# --- Act VI: Pandemonium ---
 		"pandemonium":
 			ground = PandemoniumGround.new()  # Act VI: Pandemonium's four zone floors (PandemoniumStage.ZONES).
+		# --- Act VII: Castle Sanguis ---
+		"castle_sanguis":
+			ground = CastleSanguisGround.new()  # Act VII: Castle Sanguis's four zone floors (CastleSanguisStage.ZONES).
 		# --- Act VII: the Sanguine Court ---
 		"court":
 			var cg := CourtGround.new()  # Act VII placeholder floor (the STAGE's "floor").

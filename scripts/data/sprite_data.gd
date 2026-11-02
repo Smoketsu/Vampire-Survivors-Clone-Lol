@@ -407,6 +407,20 @@ const HEIGHTS: Dictionary = {
 	"court/vampire_noble": 56.0,  # TUNING (not in GDD) elite tier, female (figure redesign at the approved level; 56 as the succubus): body ~52, the high collar above; she glides, the bust and hip box sway in the glide strip
 	"structures/court_coffin": 40.0,  # TUNING (not in GDD) the Court's coffin structure, closed (the loop glow is drawn by code)
 	"structures/court_coffin_open": 40.0,  # TUNING (not in GDD) the same coffin opened: the lid slid aside, a red glow inside
+	# --- Act VII: Castle Sanguis ---
+	"court/chiropteran": 50.0,  # TUNING (not in GDD) elite tier, male bat-man: body ~44, the wings spread wide and the ears above (it glides)
+	"court/chiropteran_king": 96.0,  # TUNING (not in GDD) miniboss tier (the Fallen Seraph General 92): a giant bat-man, the bone crown and the wings above
+	"bosses/carmilla": 64.0,  # TUNING (not in GDD) boss tier, female (the figure style at its limit, the Countess's 56 and up): body ~58, the crown above; she glides, the bust and hip box sway in the glide strip
+	"bosses/elder": 120.0,  # TUNING (not in GDD) boss tier, bigger: the first vampire, hunched, the great bat wings above
+	"structures/blood_fountain": 40.0,  # TUNING (not in GDD) the Banquet's blood fountain: a stone basin brimming red
+	"structures/elder_coffin": 48.0,  # TUNING (not in GDD) the Elder's great coffin, closed
+	"structures/elder_coffin_open": 48.0,  # TUNING (not in GDD) the same coffin opened
+	"player/dhampir": 56.0,  # TUNING (not in GDD) character tier: body ~50, the high collar and the white hair above
+	"player/dhampir_hyper": 56.0,  # TUNING (not in GDD) skin art: his body, gold and white
+	"player/dhampir_untouchable": 56.0,  # TUNING (not in GDD) skin art: his body, the white phantom
+	"player/dhampir_deathlord": 56.0,  # TUNING (not in GDD) skin art: his body, the spiked crown above
+	"summons/blood_spawn": 40.0,  # TUNING (not in GDD) a light summon (Rogue 38): a gaunt crouching brawler
+	"summons/nosferatu": 52.0,  # TUNING (not in GDD) its evolution, taller
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
