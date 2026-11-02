@@ -8,6 +8,16 @@ const CODE_PREFIX: String = "NECRO1:"  # TUNING (not in GDD)
 ## Largest save file (bytes) a code may unpack to; anything bigger is refused (a real
 ## save is a few kB).
 const MAX_SAVE_BYTES: int = 1048576  # TUNING (not in GDD)
+## Longest pasted code accepted (characters), checked before any decoding, so a huge
+## paste is refused before it is allocated (a real code is a few thousand characters).
+const MAX_CODE_CHARS: int = 1500000  # TUNING (not in GDD) adversarial review, Fix 13
+## Text a save never holds: Godot value constructors that build objects or load
+## resources. A code whose save text contains any of them is refused before it is
+## parsed (Meta.save() never writes them; adversarial review, Fix 13).
+const FORBIDDEN_TOKENS: Array[String] = ["Object(", "Resource(", "SubResource(", "ExtResource("]  # TUNING (not in GDD)
+## Suffix of the copy of the progress kept by the last restore (save.cfg.pre_restore),
+## which Undo puts back (adversarial review, Fix 10).
+const PRE_RESTORE_SUFFIX: String = ".pre_restore"  # TUNING (not in GDD)
 ## Seconds (real time) after Backup before the Web build asks whether the clipboard
 ## took the code (the browser answers asynchronously).
 const COPY_CHECK_DELAY: float = 0.6  # TUNING (not in GDD)
@@ -39,4 +49,15 @@ const PROMPT_COPY: String = "Your Necropathy save code. Select it all and copy i
 ## Web build: the browser's box that asks for a code.
 const PROMPT_PASTE: String = "Paste your Necropathy save code:"  # TUNING (not in GDD)
 ## Confirm dialog before a restore replaces the progress (title, body, confirm button).
-const CONFIRM := ["Restore?", "Your current progress is replaced by the backup.", "Restore"]  # TUNING (not in GDD)
+## The body's %s is SUMMARY filled from the code (what the backup holds).
+const CONFIRM := ["Restore?", "Your current progress is replaced by the backup (%s). Undo can bring it back.", "Restore"]  # TUNING (not in GDD)
+## What a code holds, shown in the confirm body: Soul Ash, runs finished.
+const SUMMARY: String = "%d Soul Ash, %d runs"  # TUNING (not in GDD)
+## Undo button: puts back the progress the last restore replaced.
+const UNDO: String = "Undo"  # TUNING (not in GDD)
+## Status after Undo put the previous progress back.
+const UNDONE: String = "Previous progress back"  # TUNING (not in GDD)
+## Status when there is no restore to undo.
+const NOTHING_TO_UNDO: String = "No restore to undo"  # TUNING (not in GDD)
+## Status for a code made by a newer version of the game (refused, not cut down).
+const NEWER: String = "That code is from a newer version: update first"  # TUNING (not in GDD)

@@ -249,6 +249,12 @@ func _build_save(vb: VBoxContainer, focus: Array[Control]) -> void:
 	restore.pressed.connect(_on_restore)
 	vb.add_child(restore)
 	focus.append(restore)
+	var undo := Button.new()  # Puts back the progress the last restore replaced (free and reversible: acts at once).
+	undo.text = SaveBackupData.UNDO
+	undo.custom_minimum_size = Vector2(SettingsUiData.ROW_WIDTH, SettingsUiData.ROW_HEIGHT)
+	undo.pressed.connect(_on_undo_restore)
+	vb.add_child(undo)
+	focus.append(undo)
 	_save_status = UiTheme.tier_label("", UiTheme.Tier.BODY, UiTheme.TEXT_DIM)
 	_save_status.custom_minimum_size = Vector2(SettingsUiData.ROW_WIDTH, SettingsUiData.ROW_HEIGHT)
 	_save_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -282,17 +288,39 @@ func _on_restore() -> void:
 	if code.strip_edges() == "":
 		_set_save_status("", UiTheme.TEXT_DIM)
 		return
-	if SaveBackup.decode(code) == "":
+	var text := SaveBackup.decode(code)  # The code's save text ("" = not a save code).
+	if text == "":
 		_set_save_status(SaveBackupData.INVALID, Palette.CRIMSON.lightened(0.45))
 		Sfx.play_ui("denied")
 		return
-	ConfirmDialog.ask(self, SaveBackupData.CONFIRM[0], SaveBackupData.CONFIRM[1], SaveBackupData.CONFIRM[2], func() -> void:
+	if SaveBackup.is_newer(text):
+		_set_save_status(SaveBackupData.NEWER, Palette.CRIMSON.lightened(0.45))
+		Sfx.play_ui("denied")
+		return
+	var body := String(SaveBackupData.CONFIRM[1]) % SaveBackup.summary(text)  # The confirm text with what the code holds.
+	ConfirmDialog.ask(self, SaveBackupData.CONFIRM[0], body, SaveBackupData.CONFIRM[2], func() -> void:
 		var err := SaveBackup.import_code(code)  # OK, or why the restore failed.
 		if err == OK:
 			_set_save_status(SaveBackupData.RESTORED, UiTheme.TEXT_GOOD)
 			Sfx.play_ui("purchase")
 		else:
 			_set_save_status(SaveBackupData.FAILED, Palette.CRIMSON.lightened(0.45)))
+
+
+## Undo pressed: the progress the last restore replaced comes back (the restored
+## one is kept, so a second Undo is a redo). Not during a run, like Restore.
+func _on_undo_restore() -> void:
+	if _in_run():
+		_set_save_status(SaveBackupData.IN_RUN, UiTheme.TEXT_DIM)
+		return
+	var err := SaveBackup.undo_restore()  # OK, ERR_FILE_NOT_FOUND (no restore yet), or a write error.
+	if err == OK:
+		_set_save_status(SaveBackupData.UNDONE, UiTheme.TEXT_GOOD)
+		Sfx.play_ui("purchase")
+	elif err == ERR_FILE_NOT_FOUND:
+		_set_save_status(SaveBackupData.NOTHING_TO_UNDO, UiTheme.TEXT_DIM)
+	else:
+		_set_save_status(SaveBackupData.FAILED, Palette.CRIMSON.lightened(0.45))
 
 
 ## Shows `text` in the Save tab's status line, in `color`.

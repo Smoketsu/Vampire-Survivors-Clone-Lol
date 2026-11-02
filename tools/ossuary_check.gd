@@ -18,6 +18,8 @@
 ## Step 3 (new options and Dominion) adds the option prices / gates, the mid / max
 ## profiles, Elite Bounty's Soul Ash and the loadout checks.
 ## tools/.gdignore keeps it out of exports.
+## Save safety (adversarial review): save_safety_check.gd adds the newer-save,
+## save-code, crash-recovery and refund checks.
 ## Relics and Grave Offerings (expansion steps 5 and 6a): ossuary_relic_check.gd
 ## adds its checks to the run; --shot-what=rites|picker|relics|offerings makes the
 ## screenshot mode open the pre-run setup screen (its Rites strip, or the relic
@@ -33,6 +35,9 @@ extends Node
 const RelicCheck := preload("res://tools/ossuary_relic_check.gd")
 ## The Recolour Casket checks and screenshot helper.
 const CasketCheck := preload("res://tools/ossuary_casket_check.gd")
+## The save-safety checks (newer saves, save codes, crash recovery, refunds; the
+## adversarial review's fixes).
+const SaveSafetyCheck := preload("res://tools/save_safety_check.gd")
 
 ## Failed checks (any failure exits 1).
 var _failures: int = 0
@@ -119,6 +124,7 @@ func _run() -> void:
 	_check_recolours()
 	RelicCheck.new(self).run()  # Relics and Grave Offerings.
 	CasketCheck.new(self).run()  # Recolour Caskets.
+	SaveSafetyCheck.new(self).run()  # Save safety (docs/review/FIX_PROPOSAL.md).
 	Meta._reset()
 	Meta.save_path = Meta.DEFAULT_PATH
 	if _failures == 0:

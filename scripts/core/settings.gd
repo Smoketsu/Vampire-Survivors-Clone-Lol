@@ -27,8 +27,11 @@
 ##     InputMap) is remapped; secondary keys (arrow keys) and gamepad
 ##     bindings stay as they are. Binding a key that another rebindable
 ##     action already uses as its primary swaps the two keys.
-## In autotest mode the file is still read (so a broken file shows up in the
-## test log) but never written.
+## In autotest mode the file is neither read (unless --meta-save) nor written,
+## so a headless run never depends on, or touches, the player's settings (CLAUDE.md
+## "never touches user://"). Every value is type-checked on load (a hand-edited
+## wrong type keeps the default), a key bound to two actions keeps only the first,
+## and the file is written to a temp file first, then renamed over the old one.
 extends Node
 
 ## Emitted after any option changed and was applied.
@@ -92,27 +95,56 @@ func _ready() -> void:
 	load_settings()
 
 
-## Reads PATH (missing keys keep their defaults) and applies everything.
+## Reads PATH (missing or wrong-typed keys keep their defaults) and applies
+## everything. Skipped under the autotest unless --meta-save (the defaults apply).
 func load_settings() -> void:
+	if GameState.autotest and not GameState.autotest_meta_save:
+		last_load_error = ERR_SKIP
+		apply_all()
+		return
 	var cfg := ConfigFile.new()
 	last_load_error = cfg.load(PATH)
 	if last_load_error == OK:
 		for bus: String in DEFAULT_VOLUMES.keys():
-			volumes[bus] = clampf(float(cfg.get_value("audio", bus.to_lower(), DEFAULT_VOLUMES[bus])), 0.0, 1.0)
-		screen_shake = bool(cfg.get_value("feel", "screen_shake", true))
-		damage_numbers = bool(cfg.get_value("feel", "damage_numbers", true))
-		reduce_motion = bool(cfg.get_value("feel", "reduce_motion", false))
-		volleys = bool(cfg.get_value("feel", "volleys", true))
-		var fx := String(cfg.get_value("video", "effects", _default_effects()))  # Saved effects quality.
+			volumes[bus] = clampf(_num(cfg, "audio", bus.to_lower(), float(DEFAULT_VOLUMES[bus])), 0.0, 1.0)
+		screen_shake = _flag(cfg, "feel", "screen_shake", true)
+		damage_numbers = _flag(cfg, "feel", "damage_numbers", true)
+		reduce_motion = _flag(cfg, "feel", "reduce_motion", false)
+		volleys = _flag(cfg, "feel", "volleys", true)
+		var fx := _text(cfg, "video", "effects", _default_effects())  # Saved effects quality.
 		effects = fx if EffectsData.ORDER.has(fx) else _default_effects()
-		fullscreen = bool(cfg.get_value("video", "fullscreen", false))
-		var z := String(cfg.get_value("video", "zoom", ViewData.DEFAULT_ZOOM))  # Saved zoom id.
+		fullscreen = _flag(cfg, "video", "fullscreen", false)
+		var z := _text(cfg, "video", "zoom", ViewData.DEFAULT_ZOOM)  # Saved zoom id.
 		zoom_id = z if ViewData.ZOOM_LEVELS.has(z) else ViewData.DEFAULT_ZOOM  # The dropped "far" (or junk) loads as Normal.
+		var used := {}  # Physical keycode -> true once an action took it (first action wins).
 		for action: String in REBINDABLE:
-			var kc := int(cfg.get_value("input", action, default_bindings[action]))
-			if kc > 0:
+			var kc := int(_num(cfg, "input", action, float(default_bindings[action])))  # Saved key (physical keycode).
+			if kc > 0 and not used.has(kc):
 				key_bindings[action] = kc
+			used[int(key_bindings[action])] = true
 	apply_all()
+
+
+## The bool at `section`/`key` in `cfg`, or `default` when missing or not a bool.
+static func _flag(cfg: ConfigFile, section: String, key: String, default: bool) -> bool:
+	var v: Variant = cfg.get_value(section, key, default)
+	return bool(v) if typeof(v) == TYPE_BOOL else default
+
+
+## The number at `section`/`key` in `cfg`, or `default` when missing, not a number,
+## NaN or infinite.
+static func _num(cfg: ConfigFile, section: String, key: String, default: float) -> float:
+	var v: Variant = cfg.get_value(section, key, default)
+	if typeof(v) != TYPE_INT and typeof(v) != TYPE_FLOAT:
+		return default
+	var f := float(v)  # The value as a float.
+	return default if is_nan(f) or is_inf(f) else f
+
+
+## The text at `section`/`key` in `cfg`, or `default` when missing or not a String.
+static func _text(cfg: ConfigFile, section: String, key: String, default: String) -> String:
+	var v: Variant = cfg.get_value(section, key, default)
+	return String(v) if typeof(v) == TYPE_STRING or typeof(v) == TYPE_STRING_NAME else default
 
 
 ## Writes the current options to PATH (skipped in autotest mode).
@@ -131,7 +163,14 @@ func save_settings() -> Error:
 	cfg.set_value("video", "effects", effects)
 	for action: String in REBINDABLE:
 		cfg.set_value("input", action, key_bindings[action])
-	return cfg.save(PATH)
+	var tmp := PATH + ".tmp"  # Written in full first, then renamed over the old file.
+	var err := cfg.save(tmp)
+	if err != OK:
+		return cfg.save(PATH)
+	if DirAccess.rename_absolute(tmp, PATH) != OK:
+		DirAccess.remove_absolute(tmp)
+		return cfg.save(PATH)
+	return OK
 
 
 ## Applies every option to the engine.

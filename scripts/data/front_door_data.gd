@@ -63,6 +63,10 @@ const STAT_GAP: int = 20  # TUNING (not in GDD)
 ## Version label inset (px) from the bottom-right corner, and its alpha (0-1).
 const VERSION_INSET: Vector2 = Vector2(14.0, 12.0)  # TUNING (not in GDD)
 const VERSION_ALPHA: float = 0.55  # TUNING (not in GDD)
+## Crimson line at the top of the title screen while the save comes from a newer
+## version of the game (Meta.load_status "newer"): nothing is saved then, so the
+## newer progress is never cut down (adversarial review, Fix 3).
+const NEWER_SAVE_TEXT: String = "This save is from a newer version. Progress is not saved until you update."  # TUNING (not in GDD)
 ## Menu entrance: delay (s) before the buttons' staggered rise.
 const MENU_STAGGER_DELAY: float = 0.12  # TUNING (not in GDD)
 ## A longer column (Feedback, the Epilogue) must still clear the bottom hint

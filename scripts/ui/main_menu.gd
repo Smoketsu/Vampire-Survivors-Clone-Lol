@@ -116,6 +116,8 @@ func _ready() -> void:
 	_marker = SoulMarker.new()
 	_content.add_child(_marker)
 	_content.add_child(_version())
+	if Meta.load_status == "newer":
+		_content.add_child(_newer_save_notice())
 	_content.add_child(InputHints.bottom_strip([[InputHints.MOVE, "Move"], ["ui_accept", "Select"]]))
 	_wire_focus()
 	Meta.changed.connect(_refresh_meta)
@@ -315,6 +317,16 @@ func _version() -> Label:
 	l.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	l.offset_right = -FrontDoorData.VERSION_INSET.x
 	l.offset_bottom = -FrontDoorData.VERSION_INSET.y
+	return l
+
+
+## The crimson line across the top while the save is from a newer build
+## (FrontDoorData.NEWER_SAVE_TEXT; Meta.can_write() is false then).
+func _newer_save_notice() -> Label:
+	var l := UiTheme.tier_label(FrontDoorData.NEWER_SAVE_TEXT, UiTheme.Tier.BODY, Palette.CRIMSON.lightened(0.45))
+	l.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.offset_top = FrontDoorData.VERSION_INSET.y
 	return l
 
 

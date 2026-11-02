@@ -13,8 +13,12 @@
 ## Saving: on every run end, purchase and refund. Never in --autotest unless
 ## the --meta-save test flag asks for it; the autotest does not even read the
 ## file and uses an in-memory --meta profile instead.
-## Loading is migration-safe: a missing file starts fresh, an unreadable
-## (corrupt) file is copied to "<path>.corrupt" and the game starts fresh,
+## Loading is migration-safe: a missing or unreadable file is first recovered
+## from "<path>.tmp" (a save whose final rename never happened) or "<path>.bak"
+## (the previous save, kept by every save()); failing that, a missing file starts
+## fresh and an unreadable (corrupt) file is copied to "<path>.corrupt" (then
+## ".corrupt.2", ...) and the game starts fresh. A save from a newer build is
+## loaded but never written over (can_write()),
 ## every value is type-checked and clamped, unknown keys are ignored, and
 ## tiers whose prerequisite is no longer met are refunded.
 ## Profane Oath (user request): its purchased tier is a normal upgrade tier,
@@ -152,6 +156,9 @@ signal changed
 const DEFAULT_PATH: String = "user://save.cfg"
 ## Upper clamp for any stored counter (guards against absurd edited values).
 const MAX_STORED: int = 1000000000
+## Suffix of the copy of the previous save that save() keeps beside the new one
+## (save.cfg.bak), the fallback when the save cannot be read (_recover()).
+const BACKUP_SUFFIX: String = ".bak"
 
 ## File used by load_save() / save() (tests point this somewhere else).
 var save_path: String = DEFAULT_PATH
@@ -159,6 +166,12 @@ var save_path: String = DEFAULT_PATH
 var soul_ash: int = 0
 ## Upgrade id -> purchased tier (every MetaData upgrade id is present).
 var tiers: Dictionary = {}
+## Upgrade id -> [tier, Soul Ash paid for tiers 1..tier] as bought (saved as
+## [upgrades_paid]). A refund pays back what was paid, not today's price, so a
+## patch that changes a cost is never a profit or a loss (paid_for(); an id with
+## no record, or one whose recorded tier no longer matches, uses today's price;
+## adversarial review, Fix 18).
+var paid: Dictionary = {}
 ## Lifetime statistics (key -> number). See _default_lifetime().
 var lifetime: Dictionary = {}
 ## Achievement id -> true once unlocked.
@@ -1102,8 +1115,11 @@ func purchase_block(id: String) -> String:
 func purchase(id: String) -> bool:
 	if not MetaData.UPGRADES.has(id) or purchase_block(id) != "":
 		return false
-	soul_ash -= next_cost(id)
+	var cost := next_cost(id)  # Soul Ash for this tier.
+	var before := paid_for(id)  # Soul Ash paid for the tiers already owned.
+	soul_ash -= cost
 	tiers[id] = tier(id) + 1
+	paid[id] = [tier(id), before + cost]
 	if id == PactData.OATH_ID:
 		oath_active = tier(id)  # A newly sworn tier is active at once.
 	save()
@@ -1111,12 +1127,22 @@ func purchase(id: String) -> bool:
 	return true
 
 
-## Soul Ash currently invested in upgrades.
+## Soul Ash currently invested in upgrades (what was paid, paid_for()).
 func spent_total() -> int:
 	var total := 0
 	for id: String in MetaData.UPGRADE_ORDER:
-		total += MetaData.cost_up_to(id, tier(id))
+		total += paid_for(id)
 	return total
+
+
+## Soul Ash paid for upgrade `id`'s owned tiers: the recorded amount (`paid`) when
+## its tier still matches, else the tiers at today's prices (an old save, or a tier
+## set directly by a test).
+func paid_for(id: String) -> int:
+	var rec: Variant = paid.get(id, null)  # [tier, Soul Ash] as bought, or null.
+	if rec is Array and (rec as Array).size() == 2 and int(rec[0]) == tier(id):
+		return int(rec[1])
+	return MetaData.cost_up_to(id, tier(id))
 
 
 ## Respec: refunds every purchased tier in full, saves and returns the refund.
@@ -1124,6 +1150,7 @@ func refund_all() -> int:
 	var refund := spent_total()
 	for id: String in MetaData.UPGRADE_ORDER:
 		tiers[id] = 0
+	paid = {}
 	oath_active = 0
 	soul_ash = mini(soul_ash + refund, MAX_STORED)
 	save()
@@ -1219,8 +1246,18 @@ func _load_masteries(cfg: ConfigFile) -> void:
 # =====================================================================================
 
 ## False in the autotest (unless --meta-save), so tests never touch user://,
-## and in a --victory-preview run (its scripted victory is never saved).
+## in a --victory-preview run (its scripted victory is never saved), and while
+## the loaded save comes from a newer build (load_status "newer"): this build
+## would write back only what it knows and drop the rest, so it never writes it
+## (the title screen says so; adversarial review, Fix 3).
 func can_write() -> bool:
+	return mode_allows_write() and load_status != "newer"
+
+
+## The run mode's part of can_write(): false in the autotest (unless
+## --meta-save) and in a --victory-preview run. A restore (SaveBackup) checks only
+## this, so an older backup code can still replace a newer save on purpose.
+func mode_allows_write() -> bool:
 	return (not GameState.autotest or GameState.autotest_meta_save) and not GameState.victory_preview
 
 
@@ -1234,6 +1271,8 @@ func save() -> Error:
 	cfg.set_value("currency", "soul_ash", soul_ash)
 	for id: String in MetaData.UPGRADE_ORDER:
 		cfg.set_value("upgrades", id, tier(id))
+		if tier(id) > 0:
+			cfg.set_value("upgrades_paid", id, [tier(id), paid_for(id)])
 	for key: String in lifetime:
 		cfg.set_value("lifetime", key, lifetime[key])
 	for id: String in MetaData.ACHIEVEMENT_ORDER:
@@ -1283,14 +1322,52 @@ func save() -> Error:
 			cfg.set_value("masteries", cls, mastery_level(cls))
 	relics.write(cfg)  # Relics: [relics] owned / slots, [prerun] relics.
 	caskets.write(cfg)  # Recolour Caskets: [caskets], [casket_skins].
-	var tmp := save_path + ".tmp"
+	var tmp := save_path + ".tmp"  # The new save, written in full before it replaces the old one.
 	var err := cfg.save(tmp)
 	if err != OK:
 		return cfg.save(save_path)
+	if FileAccess.file_exists(save_path):
+		DirAccess.copy_absolute(save_path, save_path + BACKUP_SUFFIX)  # The previous save, kept (load_save() falls back to it).
 	if DirAccess.rename_absolute(tmp, save_path) != OK:
 		DirAccess.remove_absolute(tmp)
 		return cfg.save(save_path)
 	return OK
+
+
+## The save is missing or unreadable (`err`): tries the copies a crash can leave
+## behind, newest first: save.cfg.tmp (written in full, but the rename over the
+## old save never happened, e.g. a power cut on Windows, where the rename removes
+## the old file first), then save.cfg.bak (the save before the last one). The
+## first that loads with a save_version is moved into place (an unreadable save is
+## kept as a numbered .corrupt copy first) and loaded into `cfg`. Returns the new
+## load result, or `err` when nothing could be recovered (adversarial review, Fix 14).
+func _recover(cfg: ConfigFile, err: Error) -> Error:
+	for suffix: String in [".tmp", BACKUP_SUFFIX]:
+		var path := save_path + suffix  # A candidate copy.
+		var probe := ConfigFile.new()  # The candidate, parsed.
+		if not FileAccess.file_exists(path) or probe.load(path) != OK or not probe.has_section_key("meta", "save_version"):
+			continue
+		if FileAccess.file_exists(save_path):
+			DirAccess.copy_absolute(save_path, _free_corrupt_path())
+		if DirAccess.copy_absolute(path, save_path) != OK:
+			continue
+		if suffix == ".tmp":
+			DirAccess.remove_absolute(path)
+		print("[meta] recovered the save from %s" % path)
+		return cfg.load(save_path)
+	return err
+
+
+## The first free save.cfg.corrupt, save.cfg.corrupt.2, .3 ... path (so a second
+## corruption never overwrites the first one's copy).
+func _free_corrupt_path() -> String:
+	var base := save_path + ".corrupt"  # The first copy's name.
+	if not FileAccess.file_exists(base):
+		return base
+	var n := 2  # The next number to try.
+	while FileAccess.file_exists("%s.%d" % [base, n]):
+		n += 1
+	return "%s.%d" % [base, n]
 
 
 ## Loads save_path into memory (see the header for the recovery rules).
@@ -1298,6 +1375,8 @@ func load_save() -> void:
 	_reset()
 	var cfg := ConfigFile.new()
 	last_load_error = cfg.load(save_path)
+	if last_load_error != OK and mode_allows_write():
+		last_load_error = _recover(cfg, last_load_error)
 	if last_load_error == ERR_FILE_NOT_FOUND:
 		load_status = "missing"
 		changed.emit()
@@ -1305,8 +1384,9 @@ func load_save() -> void:
 	if last_load_error != OK:
 		load_status = "corrupt"
 		print("[meta] %s is unreadable (error %d); starting a fresh profile" % [save_path, last_load_error])
-		if can_write() and DirAccess.copy_absolute(save_path, save_path + ".corrupt") == OK:
-			print("[meta] the unreadable file was kept as %s.corrupt" % save_path)
+		var keep := _free_corrupt_path()  # A new name each time: earlier corrupt copies are never overwritten.
+		if can_write() and DirAccess.copy_absolute(save_path, keep) == OK:
+			print("[meta] the unreadable file was kept as %s" % keep)
 		changed.emit()
 		return
 	var version := _read_int(cfg, "meta", "save_version", 0)
@@ -1319,7 +1399,20 @@ func load_save() -> void:
 			soul_ash = mini(soul_ash + int(MetaData.RETIRED_REFUNDS[old_id]), MAX_STORED)
 			retired_refund += int(MetaData.RETIRED_REFUNDS[old_id])
 	for id: String in MetaData.UPGRADE_ORDER:
-		tiers[id] = mini(_read_int(cfg, "upgrades", id, 0), MetaData.max_tier(id))
+		var raw := _read_int(cfg, "upgrades", id, 0)  # The tier as saved.
+		var rec: Variant = cfg.get_value("upgrades_paid", id, []) if cfg.has_section_key("upgrades_paid", id) else []  # [tier, Soul Ash paid] as saved ([] = none).
+		var paid_ash := -1  # Soul Ash the save says was paid (-1 = no valid record).
+		if rec is Array and (rec as Array).size() == 2 and (typeof(rec[0]) == TYPE_INT or typeof(rec[0]) == TYPE_FLOAT) \
+				and (typeof(rec[1]) == TYPE_INT or typeof(rec[1]) == TYPE_FLOAT) and int(rec[0]) == raw:
+			paid_ash = clampi(int(rec[1]), 0, MAX_STORED)
+		tiers[id] = mini(raw, MetaData.max_tier(id))
+		if paid_ash >= 0 and raw > tier(id):
+			# The tier cap was lowered: the clamped-away tiers are paid back.
+			var back := maxi(paid_ash - MetaData.cost_up_to(id, tier(id)), 0)  # Soul Ash for the removed tiers.
+			soul_ash = mini(soul_ash + back, MAX_STORED)
+			paid_ash = MetaData.cost_up_to(id, tier(id))
+		if paid_ash >= 0 and tier(id) > 0:
+			paid[id] = [tier(id), paid_ash]
 	for key: String in lifetime:
 		lifetime[key] = _read_float(cfg, "lifetime", key, float(lifetime[key]))
 	for id: String in MetaData.ACHIEVEMENT_ORDER:
@@ -1546,8 +1639,9 @@ func _enforce_prerequisites() -> void:
 		changed_any = false
 		for id: String in MetaData.UPGRADE_ORDER:
 			if tier(id) > 0 and not prerequisite_met(id):
-				soul_ash = mini(soul_ash + MetaData.cost_up_to(id, tier(id)), MAX_STORED)
+				soul_ash = mini(soul_ash + paid_for(id), MAX_STORED)
 				tiers[id] = 0
+				paid.erase(id)
 				changed_any = true
 
 
@@ -1558,6 +1652,7 @@ func _reset() -> void:
 	tiers = {}
 	for id: String in MetaData.UPGRADE_ORDER:
 		tiers[id] = 0
+	paid = {}
 	lifetime = _default_lifetime()
 	achievements = {}
 	last_award = {}

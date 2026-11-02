@@ -37,6 +37,8 @@ static func export_code() -> String:
 ## Decodes `code` into the save file's text, or "" when it is not a valid save code
 ## (wrong prefix, bad base64 or gzip, not a ConfigFile, no save version).
 static func decode(code: String) -> String:
+	if code.length() > SaveBackupData.MAX_CODE_CHARS:
+		return ""  # Far longer than any save: refused before it is copied or decoded.
 	var c := code.strip_edges().replace(" ", "").replace("\n", "").replace("\r", "")  # Pasted code, whitespace removed.
 	if not c.begins_with(SaveBackupData.CODE_PREFIX):
 		return ""
@@ -52,21 +54,75 @@ static func decode(code: String) -> String:
 	if raw.is_empty():
 		return ""
 	var text := raw.get_string_from_utf8()  # The save file's text.
+	for bad: String in SaveBackupData.FORBIDDEN_TOKENS:
+		if text.contains(bad):
+			return ""  # An object or resource constructor: never in a real save.
 	var cfg := ConfigFile.new()
 	if cfg.parse(text) != OK or not cfg.has_section_key("meta", "save_version"):
 		return ""
+	if cfg.get_sections().size() < 2:
+		return ""  # Only a version: a code like that would wipe the profile.
 	return text
+
+
+## True when save text `text` (from decode()) was written by a newer version of the
+## game than this one (MetaData.SAVE_VERSION): such a code is refused, never cut
+## down to what this version knows (adversarial review, Fix 3).
+static func is_newer(text: String) -> bool:
+	var cfg := ConfigFile.new()
+	if cfg.parse(text) != OK:
+		return false
+	var v: Variant = cfg.get_value("meta", "save_version", 0)  # The code's save format version.
+	return (v is int or v is float) and int(v) > MetaData.SAVE_VERSION
+
+
+## SaveBackupData.SUMMARY for save text `text` (from decode()): its Soul Ash and runs.
+static func summary(text: String) -> String:
+	var cfg := ConfigFile.new()
+	if cfg.parse(text) != OK:
+		return ""
+	var ash: Variant = cfg.get_value("currency", "soul_ash", 0)  # Soul Ash the code holds.
+	var runs: Variant = cfg.get_value("lifetime", "runs", 0)  # Runs finished in the code.
+	return SaveBackupData.SUMMARY % [int(ash) if (ash is int or ash is float) else 0, int(runs) if (runs is int or runs is float) else 0]
 
 
 ## Replaces the progress with the save in `code` and reloads it. Returns OK, or
 ## ERR_INVALID_DATA for a code that is not a save, ERR_UNAVAILABLE when saving is off
 ## (the autotest), or the file error.
 static func import_code(code: String) -> Error:
-	if not Meta.can_write():
+	if not Meta.mode_allows_write():
 		return ERR_UNAVAILABLE
 	var text := decode(code)  # The validated save file text.
-	if text == "":
+	if text == "" or is_newer(text):
 		return ERR_INVALID_DATA
+	return _replace_save(text, true)
+
+
+## Undo of the last restore: puts back the progress it replaced (the
+## PRE_RESTORE_SUFFIX copy), keeping the restored one as the new copy, so Undo
+## twice is a redo. ERR_FILE_NOT_FOUND when no restore was made on this device.
+static func undo_restore() -> Error:
+	if not Meta.mode_allows_write():
+		return ERR_UNAVAILABLE
+	var keep := Meta.save_path + SaveBackupData.PRE_RESTORE_SUFFIX  # The progress the last restore replaced.
+	if not FileAccess.file_exists(keep):
+		return ERR_FILE_NOT_FOUND
+	var text := FileAccess.get_file_as_string(keep)  # Its save text.
+	if text == "":
+		return ERR_FILE_NOT_FOUND
+	return _replace_save(text, true)
+
+
+## Writes save text `text` over the progress and reloads it; with `keep_old`, the
+## current save file is first copied to the PRE_RESTORE_SUFFIX file (Undo).
+static func _replace_save(text: String, keep_old: bool) -> Error:
+	if keep_old and FileAccess.file_exists(Meta.save_path):
+		var old := FileAccess.get_file_as_string(Meta.save_path)  # The progress being replaced.
+		var k := FileAccess.open(Meta.save_path + SaveBackupData.PRE_RESTORE_SUFFIX, FileAccess.WRITE)
+		if k == null:
+			return FileAccess.get_open_error()  # No undo copy: nothing is replaced.
+		k.store_string(old)
+		k.close()
 	var tmp := Meta.save_path + ".tmp"  # Written first, then renamed over the save.
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	if f == null:
