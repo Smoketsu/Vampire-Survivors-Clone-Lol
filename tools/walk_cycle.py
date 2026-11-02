@@ -559,7 +559,7 @@ RIGS = {
         dict(kind="flap", box=(0, 11, 0, 32), root=11, amp=3)]),
     "inferno/hell_knight": dict(mode="legs", hip=38, back=(0, 20), front=(20, 36), rigid=[(36, 52, 0, None)], spread=2, lift=2, dip=1),
     "inferno/demon_brute": dict(mode="legs", hip=70, back=(0, 38), front=(38, 72), rigid=[], spread=3, lift=3, dip=1),
-    "inferno/succubus": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(12, 26, 13, 19, 2, 2), swish=(11, 27, 23, 32, 2)),
+    "inferno/succubus": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(13, 26, 13, 19, 2, 2), swish=(11, 27, 23, 32, 2)),  # Round 1 redo (act 6): 1 px less on the left (was cols 12-26; owner).
     # --- Act VI: the Burning Gate (every figure here is male: no bust rigs) ---
     "inferno/lava_hound": dict(mode="legs", hip=19, back=(0, 20), front=(20, 40), rigid=[], spread=2, lift=2, dip=1),
     "inferno/pit_cultist": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1),
@@ -569,23 +569,23 @@ RIGS = {
     # --- Act VI: the Palace of Silk and Ash ---
     # The female figures (the approved Act VI level) glide like the succubus: the robe rig, the bust box bouncing and
     # the `swish` hip box swaying (boxes from each sprite's torso; for the owner's review); Lilith glides in her gown.
-    "inferno/lilim_witch": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(5, 19, 13, 19, 2, 2), swish=(4, 20, 24, 32, 2)),
-    "inferno/twin_naamah": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(16, 32, 15, 21, 2, 2), swish=(15, 33, 26, 36, 2)),
-    "inferno/twin_agrat": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(15, 31, 15, 21, 2, 2), swish=(14, 32, 26, 36, 2)),
+    "inferno/lilim_witch": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(7, 19, 13, 19, 2, 2), swish=(4, 20, 24, 32, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 5-19; owner).
+    "inferno/twin_naamah": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(18, 32, 15, 21, 2, 2), swish=(15, 33, 26, 36, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 16-32; owner).
+    "inferno/twin_agrat": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(17, 31, 15, 21, 2, 2), swish=(14, 32, 26, 36, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 15-31; owner).
     "bosses/lilith": dict(mode="robe", hip=64, rigid=[], sway=1, dip=1, bust=(31, 61, 27, 38, 3, 2), swish=(30, 62, 47, 65, 2)),
     "player/succubus_queen": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(11, 25, 13, 19, 2, 2), swish=(10, 26, 24, 32, 2)),
-    "summons/bound_succubus": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(15, 29, 12, 18, 2, 2), swish=(14, 30, 22, 30, 2)),
-    "summons/lilim_matriarch": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(19, 35, 15, 21, 2, 2), swish=(18, 36, 26, 36, 2)),
+    "summons/bound_succubus": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(17, 31, 14, 20, 2, 2), swish=(14, 30, 22, 30, 2)),  # Round 1 redo (act 6): box 2 px down and 2 px right (was cols 15-29, rows 12-18; owner).
+    "summons/lilim_matriarch": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(21, 37, 17, 23, 2, 2), swish=(18, 36, 26, 36, 2)),  # Round 1 redo (act 6): box 2 px down and 2 px right (was cols 19-35, rows 15-21; owner).
     # --- Act VI: Pandemonium ---
     # The Fallen Angel glides like the succubus (robe mode, the boots as one hem) with the figure-redesign rigs: the
     # two-lobe bust box and the hip `swish`; the Fallen Seraph General, the Morning Star's Beast, the Archfiend and the
     # Prince of Hell stride (legs, their wings riding with the body); the Morning Star's Angel glides in his long cloak;
     # the Fallen Saint (figure redesign) glides in her gown, the bust box bouncing.
-    "inferno/fallen_angel": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1, bust=(13, 24, 15, 22, 2, 2), swish=(12, 25, 25, 34, 2)),
+    "inferno/fallen_angel": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1, bust=(17, 28, 15, 22, 2, 2), swish=(12, 25, 25, 34, 2)),  # Round 1 redo (act 6): box 4 px right (was cols 13-24; owner).
     "inferno/seraph_general": dict(mode="legs", hip=62, back=(0, 48), front=(48, 96), rigid=[], spread=2, lift=2, dip=1),
     "bosses/morning_star": dict(mode="robe", hip=80, rigid=[], sway=1, dip=1),
     "bosses/morning_star_beast": dict(mode="legs", hip=104, back=(0, 70), front=(70, 142), rigid=[], spread=3, lift=3, dip=1),
-    "player/fallen_saint": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(13, 25, 16, 22, 1)),
+    "player/fallen_saint": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(17, 29, 16, 22, 1)),  # Round 1 redo (act 6): box 4 px right (was cols 13-25; owner; the Untouchable skin derives from it, the Hyper skin has its own in SKIN_FIX).
     "summons/archfiend": dict(mode="legs", hip=44, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=2, dip=1),
     "summons/prince_of_hell": dict(mode="legs", hip=52, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1),
     # --- Act VII: the Sanguine Court (the shared kinds) ---
@@ -742,6 +742,10 @@ SKINS = {
 SKIN_FIX = {
     # --- Act VI: the Palace of Silk and Ash --- (the Succubus Queen's Deathlord skin is 58 tall: its own boxes)
     "player/succubus_queen_deathlord": {"hip": 33, "bust": (12, 28, 14, 20, 2, 2), "swish": (11, 29, 24, 34, 2)},
+    # --- Act VI: Pandemonium --- (the Fallen Saint's Hyper skin: its own box)
+    # Round 1 redo (act 6, owner: "Bounce box shifted 3 pixels to the right"): the Hyper box is the base's old one (cols 13-25)
+    # +3 (the base and the Untouchable skin moved 4 px, cols 17-29).
+    "player/fallen_saint_hyper": {"bust": (16, 28, 16, 22, 1)},
     # --- Act V: the Burning Province --- (the Grave Kunoichi's skins)
     # Round 2 redo: the Hyper and Deathlord skins have their own box, the shared one (derived: cols 23-36, rows 18-25)
     # with 1 px less at the bottom (owner: "reduced like 1 pixel on the bottom"); the base keeps the approved shared box.
