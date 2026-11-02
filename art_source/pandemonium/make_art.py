@@ -172,6 +172,7 @@ def props() -> None:
 
 def floors() -> None:
     run(["tools/make_tile.py", "build", "pandemonium_iron", "pandemonium_bridges", "pandemonium_cathedral", "pandemonium_throne"])
+    run(["art_source/pandemonium/throne_cracks.py"])  # Round 1 redo: lava-filled cracks on the Throne floor (not idempotent).
 
 
 def strips() -> None:

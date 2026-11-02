@@ -39,7 +39,7 @@ FIGURES = {
     "inferno/twin_naamah": ("art_source/inferno/twin_naamah.png", 62, ["--ramps", "obsidian,demon,charm,violet,skin,gold"]),
     "inferno/twin_agrat": ("art_source/inferno/twin_agrat.png", 62, ["--ramps", "obsidian,demon,crimson,charm,skin,marble,gold"]),
     "player/succubus_queen": ("art_source/player/succubus_queen.png", 56, ["--ramps", "violet,demon,charm,obsidian,skin,gold"]),
-    "player/succubus_queen_hyper": ("art_source/player/succubus_queen_hyper.png", 56, ["--ramps", "gold,marble,charm,skin,bone"]),
+    "player/succubus_queen_hyper": ("art_source/player/succubus_queen_hyper.png", 56, ["--ramps", "gold,marble,charm,skin,bone,obsidian"]),
     "player/succubus_queen_untouchable": ("art_source/player/succubus_queen_untouchable.png", 56, ["--ramps", "marble,soul,grey,bone"]),
     "player/succubus_queen_deathlord": ("art_source/player/succubus_queen_deathlord.png", 58, ["--ramps", "grey,crimson,obsidian,skin,bone"]),
     "summons/bound_succubus": ("art_source/summons/bound_succubus.png", 52, ["--ramps", "obsidian,bone,soul,grey,demon,charm"]),

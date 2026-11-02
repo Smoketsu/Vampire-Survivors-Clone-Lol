@@ -587,8 +587,8 @@ RIGS = {
     # the `swish` hip box swaying (boxes from each sprite's torso; for the owner's review); Lilith glides in her gown.
     "inferno/lilim_witch": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(7, 19, 13, 19, 2, 2), swish=(4, 20, 24, 32, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 5-19; owner).
     "inferno/twin_naamah": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(18, 32, 15, 21, 2, 2), swish=(15, 33, 26, 36, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 16-32; owner).
-    "inferno/twin_agrat": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(17, 31, 15, 21, 2, 2), swish=(14, 32, 26, 36, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 15-31; owner).
-    "bosses/lilith": dict(mode="robe", hip=64, rigid=[], sway=1, dip=1, bust=(31, 61, 27, 38, 3, 2), swish=(30, 62, 47, 65, 2)),
+    "inferno/twin_agrat": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(16, 31, 14, 22, 2, 2), swish=(14, 32, 26, 36, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 15-31; owner), refit to the new still.
+    "bosses/lilith": dict(mode="robe", hip=66, rigid=[], sway=1, dip=1, bust=(41, 70, 24, 36, 3, 2), swish=(39, 72, 47, 66, 2)),
     "player/succubus_queen": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(11, 25, 13, 19, 2, 2), swish=(10, 26, 24, 32, 2)),
     "summons/bound_succubus": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(17, 31, 14, 20, 2, 2), swish=(14, 30, 22, 30, 2)),  # Round 1 redo (act 6): box 2 px down and 2 px right (was cols 15-29, rows 12-18; owner).
     "summons/lilim_matriarch": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(21, 37, 17, 23, 2, 2), swish=(18, 36, 26, 36, 2)),  # Round 1 redo (act 6): box 2 px down and 2 px right (was cols 19-35, rows 15-21; owner).

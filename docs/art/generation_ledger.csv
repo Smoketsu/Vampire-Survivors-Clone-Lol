@@ -1127,3 +1127,15 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-02 06:37,summons/nosferatu,gpt-image-2.5-flare,medium,1024x1024,1,273,1024,439,0.0227,nosferatu.png
 2026-11-02 06:38,player/dhampir_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,262,1024,439,0.0227,dhampir_deathlord.png
 2026-11-02 16:15,concepts/act9_boss_r4,gpt-image-2.5-flare,medium,1536x1024,3,753,618,343,0.0190,a1.png
+2026-11-02 18:06,bosses/lilith,gpt-image-2.5-flare,medium,1024x1024,3,932,3072,439,0.0424,lilith_a.png
+2026-11-02 18:06,inferno/hell_knight,gpt-image-2.5-flare,medium,1024x1024,1,602,1024,439,0.0244,hk_a.png
+2026-11-02 18:07,inferno/lava_hound,gpt-image-2.5-flare,medium,1024x1024,1,619,1024,439,0.0245,lh_a.png
+2026-11-02 18:07,bosses/lilith_demon,gpt-image-2.5-flare,medium,1024x1024,2,792,2048,439,0.0335,ld_a.png
+2026-11-02 18:07,inferno/seraph_general,gpt-image-2.5-flare,medium,1024x1024,1,683,1024,439,0.0248,sg_a.png
+2026-11-02 18:07,inferno/twin_agrat,gpt-image-2.5-flare,medium,1024x1024,2,829,2048,439,0.0337,ag_a.png
+2026-11-02 18:08,player/fallen_saint_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,367,2048,439,0.0314,fd_a.png
+2026-11-02 18:08,player/succubus_queen_hyper,gpt-image-2.5-flare,medium,1024x1024,1,269,1024,439,0.0227,qh_a.png
+2026-11-02 18:08,player/fallen_saint_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,388,2048,439,0.0315,fd_b.png
+2026-11-02 18:09,inferno/hell_knight,gpt-image-2.5-flare,medium,1024x1024,1,616,1024,439,0.0244,hk_b.png
+2026-11-02 18:12,bosses/lilith_demon,gpt-image-2.5-flare,medium,1024x1024,2,803,2048,439,0.0336,ld_b.png
+2026-11-02 18:13,inferno/twin_agrat,gpt-image-2.5-flare,medium,1024x1024,2,854,2048,439,0.0338,ag_b.png

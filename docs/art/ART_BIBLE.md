@@ -2810,3 +2810,9 @@ Contact sheet `docs/act7/castle_sanguis_contact_sheet.png`.
 (the Graveyard soil, the March road), as the approved Countess does: the dark Court figures read against Castle
 Sanguis's own floors (mean L 0.16-0.28). Pale skin snaps to the `skin` ramp, so Carmilla's face reads tan (the known
 foundation weak spot, for the art review).
+
+### Act VI art review, round 1 (Group B: figures and the throne)
+- Regenerated with the old source as the first reference (plus the approved Succubus Queen / Naamah for the figure level). **Name the sex, and ask for ONE figure**: with a second character image attached the API copied it into the picture twice (Agrat, Lilith's demon form); the prompt now ends "Draw ONLY ONE figure" and the extra reference is a different pose.
+- Lilith's neckline is a plunging V filled by a gold panel and gem; the chest and hips stay covered.
+- The Hyper Succubus Queen converts with `obsidian` in the ramps (without it the dark feathers snap to brown).
+- `art_source/pandemonium/throne_cracks.py` draws the Throne's lava cracks after the tile build (not idempotent: always run it right after `make_tile.py build pandemonium_throne`).
