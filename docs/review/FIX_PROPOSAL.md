@@ -1,7 +1,21 @@
 # Fix proposal for the adversarial review
 
 This proposes a concrete code change for every finding in `docs/review/ADVERSARIAL_REVIEW.md`, numbered as there.
-Nothing here has been applied yet. Each fix lists:
+**Status (Nov 2, 2026): applied** on `claude/adversarial-code-review-kpdm1y`, all four batches, with these
+deviations:
+- Fix 17 keeps the publish jobs fast: they still don't wait for `coop-lockstep`. Instead, a red lockstep run on
+  `main` opens an issue.
+- Fix 7 adds a `join_rate` error code.
+- Wrangler is pinned to an exact version.
+- No hazard data was retuned for Fix 11; the balance numbers are in the GDD §15.0 row.
+
+Verification: the import is clean. The same-seed summaries for all 12 stages, the default / `--mortal` / army runs
+and `--coop-bot` are identical before and after, except the runs Batch D changes on purpose: Assembly, Ul-Thalos,
+Road to the Sun and the Ferrywoman on the Wastes. These also pass: `tools/ossuary_check` (with the new
+`tools/save_safety_check.gd`), `coop_net_test.py`, `coop_relay_check.py` and `coop_lockstep_gate.py` (no desync).
+The CI workflow changes and `tools/web_smoke.js` have not run on GitHub yet.
+
+Each fix lists:
 - the files it touches;
 - the change, as code where the change is small enough to show;
 - whether it keeps the same-seed autotest summaries identical (**gate-safe**), or changes gameplay on purpose (**gameplay change**);
