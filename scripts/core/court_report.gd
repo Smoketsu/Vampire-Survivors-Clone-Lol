@@ -17,6 +17,8 @@
 ##   court stage:   the Act VII stage itself (stub status, boss, Soul Ash, the
 ##                  Reckoning)
 ## Phase 2 adds one line per stage system here (each stage in its own block).
+##   Act VII, Ravensmoor: RavensmoorReport.print_lines() (ravensmoor,
+##   ravensmoor kinds, old greymane, vargr).
 ## Read-only: it never changes the run.
 class_name CourtReport
 extends RefCounted
@@ -61,6 +63,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not court.endless.cfg.is_empty())])
 	# Phase 2: each Act VII stage's own lines go here (its stage, kinds and boss).
+	# --- Act VII: Ravensmoor ---
+	RavensmoorReport.print_lines(game, st)  # The sleeping coffins, the ghouls, Old Greymane, Vargr (each when it ran).
 
 
 ## The "bloodfeast" line (Bloodfeast).

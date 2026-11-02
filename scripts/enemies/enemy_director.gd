@@ -115,6 +115,10 @@
 ##     from COURT_BOSS_DIR after the Inferno's folder. Its shared rules
 ##     (Bloodfeast, Night Wings, the Blood Moon, the Endless Feast) live in
 ##     CourtRules (Game.court); this director hands it nothing.
+##   * Act VII, Ravensmoor (GDD §15.0 "Ravensmoor (Act VII phase 2)"): on a
+##     stage with a "ravensmoor" config it creates the RavensmoorDirector (the
+##     sleeping coffins, Coffin Nails, the ghoul packs, Old Greymane;
+##     `ravensmoor`) and hands it the "greymane" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -266,6 +270,11 @@ var silk_palace: SilkPalaceDirector = null
 ## Pandemonium's mechanics (Act VI: the Fallen Seraph General, guest squads;
 ## StageRegistry "pandemonium"; null on every other stage).
 var pandemonium: PandemoniumDirector = null
+# --- Act VII: Ravensmoor ---
+## Ravensmoor's mechanics (Act VII: the sleeping coffins, Coffin Nails, the
+## ghoul packs, Old Greymane; StageRegistry "ravensmoor"; null on every other
+## stage).
+var ravensmoor: RavensmoorDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -416,6 +425,12 @@ func _ready() -> void:
 		pandemonium.game = game
 		pandemonium.config = stage_def["pandemonium"]
 		add_child(pandemonium)  # Pandemonium's director.
+	# --- Act VII: Ravensmoor ---
+	if not (stage_def.get("ravensmoor", {}) as Dictionary).is_empty():
+		ravensmoor = RavensmoorDirector.new()
+		ravensmoor.game = game
+		ravensmoor.config = stage_def["ravensmoor"]
+		add_child(ravensmoor)  # Ravensmoor's director.
 
 
 # =====================================================================================
@@ -539,6 +554,9 @@ func step(delta: float) -> void:
 	# --- Act VI: Pandemonium ---
 	if pandemonium != null:
 		pandemonium.step(delta)  # Pandemonium's guest squads.
+	# --- Act VII: Ravensmoor ---
+	if ravensmoor != null:
+		ravensmoor.step(delta)  # The sleeping coffins, the ghoul packs, Old Greymane.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -656,6 +674,9 @@ func objective_text() -> String:
 	# --- Act VI: Pandemonium ---
 	if pandemonium != null and pandemonium.objective_override() != "":
 		return pandemonium.objective_override()  # The Fallen Seraph General.
+	# --- Act VII: Ravensmoor ---
+	if ravensmoor != null and ravensmoor.objective_override() != "":
+		return ravensmoor.objective_override()  # Old Greymane.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -860,6 +881,12 @@ func _run_event(ev: Dictionary) -> void:
 				pandemonium.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # Pandemonium's miniboss (PandemoniumDirector).
+		# --- Act VII: Ravensmoor ---
+		"greymane":
+			if ravensmoor != null:
+				ravensmoor.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Ravensmoor's miniboss (RavensmoorDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

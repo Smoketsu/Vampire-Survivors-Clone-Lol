@@ -193,6 +193,14 @@ const UNLOCKS := {
 	"crown_of_horns": {"type": "passive", "boss": "morning_star", "text": "Cast down the Morning Star in Pandemonium to unlock."},  # Its paired passive (own decision), unlocked with it
 	"sovereign_of_pandemonium": {"type": "title", "achievement": "morning_star_falls",
 		"text": "Earn Morning Star Falls: cast down the Morning Star in Pandemonium."},  # Own decision (the clear is recorded as a title, as Act III's Breaker of Engines)
+	# --- Act VII: Ravensmoor ---
+	# Vargr's fall (owner-approved Act VII proposal "Rewards": Moonfang is
+	# unlocked by Vargr) with its paired passive, offered on every stage; the
+	# stage's achievement Coffin Nails earns Act VII's counter-passive Silver
+	# Bones (offered only in Act VII through its card row's "act").
+	"moonfang": {"type": "spell", "boss": "vargr", "text": "Slay Vargr on Ravensmoor to unlock."},  # Owner-approved Act VII proposal
+	"pack_blood": {"type": "passive", "boss": "vargr", "text": "Slay Vargr on Ravensmoor to unlock."},  # Moonfang's paired passive (owner-approved proposal), unlocked with it
+	"silver_bones": {"type": "passive", "achievement": "coffin_nails", "text": "Earn Coffin Nails: break every sleeping coffin on Ravensmoor before it opens."},  # Owner-approved Act VII proposal
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

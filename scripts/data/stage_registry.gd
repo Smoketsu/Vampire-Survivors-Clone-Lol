@@ -211,6 +211,12 @@
 ##   moon               — the stage's Blood Moon (BloodMoon): any key of
 ##                        CourtRulesData.BLOOD_MOON overrides it ({} = defaults).
 ##   zones              — Act VII stubs too: the planned zones (names and starts).
+## --- Act VII: Ravensmoor ---
+##   ravensmoor         — RavensmoorDirector config (RavensmoorStage
+##                        .RAVENSMOOR, Act VII, Ravensmoor: the sleeping coffin
+##                        waves and their bounty, Coffin Nails, the ghoul packs,
+##                        Old Greymane's "greymane" event); ground "ravensmoor"
+##                        is its RavensmoorGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

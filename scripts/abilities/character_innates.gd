@@ -73,6 +73,9 @@
 ##   Fallen Saint     Second Fall     in FallFromGrace._cast() (every cast drops
 ##                    a second star on the next-strongest foe); stat
 ##                    grace_second_stars.
+## Act VII, Ravensmoor:
+##   Moon-Cursed      Hunter's Moon   in Moonfang._cast() (one more jaw in every
+##   Huntress                         cast); stat moonfang_extra_jaws.
 class_name CharacterInnates
 extends Node2D
 
@@ -409,6 +412,9 @@ func summary_line() -> String:
 		# --- Act VI: Pandemonium --- (Second Fall lives in FallFromGrace._cast())
 		"second_fall":
 			counters = "second stars %d (dmg as fall_from_grace / lightbringer)" % int(st.get("grace_second_stars", 0.0))
+		# --- Act VII: Ravensmoor --- (Hunter's Moon lives in Moonfang._cast())
+		"hunters_moon":
+			counters = "extra jaws %d (casts %d)" % [int(st.get("moonfang_extra_jaws", 0.0)), int(st.get("moonfang_casts", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

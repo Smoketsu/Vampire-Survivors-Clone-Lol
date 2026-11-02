@@ -78,7 +78,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act VI: the Palace of Silk and Ash ---
 	"succubus_queen",
 	# --- Act VI: Pandemonium ---
-	"fallen_saint"]
+	"fallen_saint",
+	# --- Act VII: Ravensmoor ---
+	"moon_huntress"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -170,7 +172,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act VI: the Palace of Silk and Ash ---
 	"tempt_heartbreak",
 	# --- Act VI: Pandemonium ---
-	"grace_second_star"]
+	"grace_second_star",
+	# --- Act VII: Ravensmoor ---
+	"moonfang_extra_jaws"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -677,6 +681,30 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail saint whose stars fall wide
 		"sprite": "player/fallen_saint",
 		"tint": Color(0.72, 0.58, 0.90),  # TUNING (not in GDD) a fallen violet over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act VII: Ravensmoor ---
+	# The Moon-Cursed Huntress (Moonfang's character; owner-approved Act VII
+	# proposal "Rewards": "Moonfang ... | The Moon-Cursed Huntress, a werewolf
+	# hunter who turned (figure style)"): female, in the figure-redesign style,
+	# an hourglass figure fully clothed in a dark leather hunter's coat and
+	# corset, a torn grey wolf-pelt mantle, long silver-grey hair with wolf ears,
+	# pale skin, glowing amber eyes, a silver crossbow; the bust rig and idle
+	# breathing. Moonfang must be unlocked (by Vargr) before she can be earned,
+	# by the usual Lv 5 rule. Own decision on her innate (the proposal names
+	# none): Hunter's Moon, one more jaw in every Moonfang cast (Moonfang._cast()).
+	"moon_huntress": {
+		"display_name": "The Moon-Cursed Huntress",  # Owner-approved proposal
+		"title": "She hunted wolves until the moon hunted her.",
+		"spell": "moonfang",
+		"innate": {
+			"id": "hunters_moon", "name": "Hunter's Moon",
+			"description": "Moonfang snaps one more set of jaws.",
+			"values": {"moonfang_extra_jaws": 1.0},  # TUNING (not in GDD) one more jaw per cast
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.06},  # TUNING (not in GDD) a light, quick hunter
+		"sprite": "player/moon_huntress",
+		"tint": Color(0.74, 0.76, 0.86),  # TUNING (not in GDD) a moonlit silver over the violet
 		"starts_unlocked": false,
 	},
 }

@@ -166,3 +166,18 @@ func draw_under(e: Enemy) -> void:
 	var k := clampf(phase_time / maxf(float(d.get("lunge_windup", 0.5)), 0.01), 0.0, 1.0)
 	CourtGlyphs.draw_thread(e, Vector2.ZERO, _to - e.position, 4.0, Color(Palette.COURT_BLOOD, 0.3 + 0.5 * k), CourtGlyphs.unmirror_xf(e))
 	e.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+# --- Act VII: Ravensmoor ---
+## THE HOWL's turning (Old Greymane's howl and Vargr's, Ravensmoor; owner-
+## approved: "who howls the rest of the wolves into beast form early"):
+## werewolf `e` turns into the beast now, moon or not, through the same _turn()
+## as the moon and its wounds (counted as werewolf_turned_howl instead of
+## werewolf_turned_hp). True when it turned (false when it already was one).
+func howl_turn(e: Enemy) -> bool:
+	if beast or not e.active:
+		return false
+	_turn(e, false)
+	e.game.stat_add("werewolf_turned_hp", -1.0)  # _turn() counted a wound; it was the howl.
+	e.game.stat_add("werewolf_turned_howl", 1.0)
+	return true

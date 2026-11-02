@@ -219,6 +219,12 @@ var flies: bool = false
 ## CombatResolver.damage_enemy() spends it before HP (Bloodfeast.absorb()).
 ## 0 for every enemy that never fed (always 0 on Acts I to VI).
 var blood_shield: float = 0.0
+# --- Act VII: Ravensmoor ---
+## The pool generation of this foe whose corpse a Ghoul claimed
+## (GhoulKit.claim_corpse()): while it equals `generation`, leaves_corpse()
+## is false (the one corpse-path check of the Ghouls' meals). -1 = never
+## eaten (always on every stage without ghouls).
+var ghoul_meal: int = -1
 ## True for animated stone (Sentinel, Guardian): never healed, shielded or
 ## raised by Covenant priests.
 var is_construct: bool = false
@@ -635,10 +641,13 @@ func motion_sprite_key() -> String:
 ## raise, Grave Tide and Call of the Drowned. Exactly `not is_structure` on
 ## Acts I and II (no machines there). Act IV: a foe lying on an open Hades
 ## fissure leaves no corpse either (DivineWrath.swallows(); Game.pantheon is
-## null on every other act, so nothing changes there).
+## null on every other act, so nothing changes there). Act VII: a corpse a
+## Ghoul claimed is eaten (ghoul_meal; -1 everywhere without ghouls).
 func leaves_corpse() -> bool:
 	if game.pantheon != null and game.pantheon.swallows_corpse(position, radius):
 		return false  # Act IV: swallowed by an open fissure.
+	if ghoul_meal == generation:
+		return false  # Act VII, Ravensmoor: a Ghoul is eating it (GhoulKit.claim_corpse(); fewer raises).
 	return not is_structure and body != EmpireEnemyData.MACHINE
 
 

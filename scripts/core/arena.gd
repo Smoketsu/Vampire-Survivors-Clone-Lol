@@ -496,6 +496,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act VI: Pandemonium ---
 	if PandemoniumGlyphs.draw_obstacle(self, o):
 		return  # A Pandemonium obstacle kind (Act VI).
+	# --- Act VII: Ravensmoor ---
+	if RavensmoorGlyphs.draw_obstacle(self, o):
+		return  # A Ravensmoor obstacle kind (Act VII).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

@@ -172,4 +172,7 @@ const SOUNDS := {
 	"wolf_howl": "wolf_howl",  # A Werewolf's howl (Court pack).
 	"coffin_creak": "coffin_creak",  # A Court coffin opening (Court pack).
 	"mist_form": "mist_form",  # A Vampire Noble turning to mist (Court pack).
+	# --- Act VII: Ravensmoor ---
+	"ghoul_feed": "ghoul_feed",  # SoundData.COURT_SOUNDS: a Ghoul sets to eating a corpse (GhoulKit)
+	"vargr_roar": "vargr_roar",  # SoundData.COURT_SOUNDS: Vargr calls his moon (his arrival, the Turning, the Moon-Eater; BossVargr)
 }

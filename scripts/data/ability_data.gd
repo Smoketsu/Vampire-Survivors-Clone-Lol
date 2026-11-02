@@ -92,7 +92,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act VI: the Palace of Silk and Ash ---
 	"tempt",
 	# --- Act VI: Pandemonium ---
-	"fall_from_grace"]
+	"fall_from_grace",
+	# --- Act VII: Ravensmoor ---
+	"moonfang"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -699,6 +701,31 @@ const SPELLS := {
 			{"damage": 80.0, "radius": 48.0, "splash": 0.5, "fall_time": 0.5, "cooldown": 2.4},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act VII: Ravensmoor ---
+	# Moonfang (GDD §15.0 "Moonfang, Wolf of the Red Moon, Pack Blood and the
+	# Moon-Cursed Huntress (Act VII)"; owner-approved proposal: "spectral wolf
+	# jaws snap at the nearest group and leave bleeds"; unlocked by slaying
+	# Vargr, UnlockData): every `cooldown` s, `jaws` spectral jaws open over the
+	# nearest groups of foes within `range` px, close in MoonfangData.SNAP_TIME
+	# s and bite every foe within `radius` px for `damage`; each bitten foe
+	# bleeds `bleed_share` x the damage per s for `bleed_time` s. Stat keys:
+	# damage, jaws, radius (px), bleed_share, bleed_time (s), cooldown (s),
+	# range (px). Logic: Moonfang; fixed rules: MoonfangData; Pack Blood (its
+	# paired passive) makes every bleeding foe take more from every hit.
+	"moonfang": {
+		"display_name": "Moonfang",  # Owner-approved proposal
+		"icon": "moonfang",
+		"description": "Spectral wolf jaws snap at the nearest foes and leave them bleeding.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act VII spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bite damage", "jaws": "Jaws", "radius": "Bite radius", "bleed_share": "Bleed per second", "bleed_time": "Bleed lasts (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 12.0, "jaws": 2, "radius": 26.0, "bleed_share": 0.2, "bleed_time": 3.0, "cooldown": 2.6, "range": 300.0},  # TUNING (not in GDD) first pass 16-34 damage at Lv 1-5 (409k with the evolution in the forced seed-7 run, 3x the top summon class)
+			{"damage": 14.0, "jaws": 2, "radius": 28.0, "bleed_share": 0.2, "bleed_time": 3.0, "cooldown": 2.5, "range": 310.0},  # TUNING (not in GDD)
+			{"damage": 17.0, "jaws": 3, "radius": 28.0, "bleed_share": 0.22, "bleed_time": 3.5, "cooldown": 2.4, "range": 320.0},  # TUNING (not in GDD)
+			{"damage": 20.0, "jaws": 3, "radius": 30.0, "bleed_share": 0.22, "bleed_time": 3.5, "cooldown": 2.3, "range": 330.0},  # TUNING (not in GDD)
+			{"damage": 24.0, "jaws": 4, "radius": 32.0, "bleed_share": 0.25, "bleed_time": 4.0, "cooldown": 2.2, "range": 340.0},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -721,7 +748,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VI: the Burning Gate ---
 	"pit_share",
 	# --- Act VI: Pandemonium ---
-	"splash", "flare"]
+	"splash", "flare",
+	# --- Act VII: Ravensmoor ---
+	"bleed_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]
