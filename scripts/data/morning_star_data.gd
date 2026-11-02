@@ -81,7 +81,7 @@ const LATE_ANNOUNCE := ["THE THRONE IS YOURS", "The Morning Star falls.", "Even 
 ## His design row.
 const BOSS := {
 	"display_name": "The Morning Star",
-	"max_hp": 14000.0,  # TUNING (not in GDD) x the stage HP multiplier (24,500 on Pandemonium; Amaterasu 14,000 on the Road)
+	"max_hp": 11900.0,  # TUNING (not in GDD) x the stage HP multiplier (20,825 on Pandemonium; Amaterasu 14,000 on the Road); owner pass 2: 14000 -> 11900 (-15%)
 	"move_speed": 44.0,  # TUNING (not in GDD) px/s; the Angel walks, the Beast lumbers (beast_speed_mult)
 	"damage": 14.0,  # TUNING (not in GDD) a blow in reach, before the time scaling
 	"attack_interval": 1.3,  # TUNING (not in GDD) s
@@ -121,15 +121,15 @@ const BOSS := {
 	"light_length": 420.0,  # TUNING (not in GDD) px
 	"light_width": 22.0,  # TUNING (not in GDD) px
 	"light_telegraph": 1.0,  # TUNING (not in GDD) s
-	"light_damage_player": 12.0,  # TUNING (not in GDD) before the time scaling
-	"light_damage_summon": 11.0,  # TUNING (not in GDD) before the time scaling
+	"light_damage_player": 8.4,  # TUNING (not in GDD) before the time scaling; owner pass 2: 12 -> 8.4 (-30%)
+	"light_damage_summon": 7.7,  # TUNING (not in GDD) before the time scaling; owner pass 2: 11 -> 7.7 (-30%)
 	"dark_count": 4,  # TUNING (not in GDD) lines through one point
 	"dark_length": 340.0,  # TUNING (not in GDD) px
 	"dark_width": 26.0,  # TUNING (not in GDD) px
 	"dark_offset": 60.0,  # TUNING (not in GDD) px beside the necromancer (they cross his army)
 	"dark_telegraph": 1.2,  # TUNING (not in GDD) s
-	"dark_damage_player": 11.0,  # TUNING (not in GDD) before the time scaling
-	"dark_damage_summon": 13.0,  # TUNING (not in GDD) before the time scaling
+	"dark_damage_player": 7.7,  # TUNING (not in GDD) before the time scaling; owner pass 2: 11 -> 7.7 (-30%)
+	"dark_damage_summon": 9.1,  # TUNING (not in GDD) before the time scaling; owner pass 2: 13 -> 9.1 (-30%)
 	# The Beast.
 	"beast_radius": 34.0,  # TUNING (not in GDD) px (drawn huge)
 	"beast_speed_mult": 0.75,  # TUNING (not in GDD) x his walk
@@ -137,8 +137,8 @@ const BOSS := {
 	"slam_cooldown": 4.5,  # TUNING (not in GDD) s
 	"slam_radius": 70.0,  # TUNING (not in GDD) px
 	"slam_telegraph": 1.1,  # TUNING (not in GDD) s
-	"slam_damage_player": 16.0,  # TUNING (not in GDD) before the time scaling
-	"slam_damage_summon": 18.0,  # TUNING (not in GDD) before the time scaling
+	"slam_damage_player": 12.0,  # TUNING (not in GDD) before the time scaling; owner pass 2: 16 -> 12 (-25%)
+	"slam_damage_summon": 13.5,  # TUNING (not in GDD) before the time scaling; owner pass 2: 18 -> 13.5 (-25%)
 	"slam_push": 40.0,  # TUNING (not in GDD) px
 	"slam_pit_radius": 40.0,  # TUNING (not in GDD) px
 	"slam_pit_life": 8.0,  # TUNING (not in GDD) s
