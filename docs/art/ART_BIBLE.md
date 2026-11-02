@@ -2816,3 +2816,8 @@ foundation weak spot, for the art review).
 - Lilith's neckline is a plunging V filled by a gold panel and gem; the chest and hips stay covered.
 - The Hyper Succubus Queen converts with `obsidian` in the ramps (without it the dark feathers snap to brown).
 - `art_source/pandemonium/throne_cracks.py` draws the Throne's lava cracks after the tile build (not idempotent: always run it right after `make_tile.py build pandemonium_throne`).
+
+### Act VII art review, round 1 (Group B: figures)
+- Redone from the old source as the reference with "ONLY ONE figure" in the prompt; prompts updated in `art_source/ravensmoor/*.txt`, `art_source/court/blood_knight.txt`, `art_source/castle_sanguis/{nosferatu,dhampir_deathlord}.txt`.
+- Black coats (Nosferatu, both Deathlord skins) need the `velvet` ramp first and `--no-levels`; with `grey` alone they snap to mid grey.
+- `bosses/elder_vampire` (90x120, `art_source/castle_sanguis/elder_vampire.txt`) is the Elder's first form; `bosses/elder` is the second. Its walk is the robe glide (hip 84).

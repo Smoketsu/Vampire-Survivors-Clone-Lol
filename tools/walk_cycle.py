@@ -623,12 +623,12 @@ RIGS = {
     "court/vampire_bat": dict(mode="hover", bob=2, parts=[
         dict(kind="flap", box=(0, 12, 0, 22), root=12, amp=3),
         dict(kind="flap", box=(20, 32, 0, 22), root=20, amp=3)]),
-    "court/blood_knight": dict(mode="legs", hip=36, back=(0, 16), front=(16, 24), rigid=[(24, 32, 0, None)], spread=2, lift=2, dip=1),
+    "court/blood_knight": dict(mode="legs", hip=36, back=(0, 16), front=(16, 24), rigid=[(26, 34, 0, None)], spread=2, lift=2, dip=1),  # Round 1 redo (act 7): the gold-trimmed still is 34 wide (halberd cols 26+, was 24+ of 32).
     "court/werewolf": dict(mode="legs", hip=36, back=(0, 27), front=(27, 48), rigid=[], spread=2, lift=2, dip=1),
     "court/werewolf_beast": dict(mode="legs", hip=60, back=(0, 36), front=(36, 66), rigid=[], spread=3, lift=3, dip=1),
     "court/vampire_noble": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, bust=(9, 24, 11, 18, 2, 2), swish=(8, 25, 26, 36, 2)),
     # --- Act VII: Ravensmoor ---
-    "court/ghoul": dict(mode="legs", hip=18, back=(0, 17), front=(17, 34), rigid=[], spread=1, lift=1, dip=1),
+    "court/ghoul": dict(mode="legs", hip=18, back=(0, 16), front=(16, 32), rigid=[], spread=1, lift=1, dip=1),
     "court/old_greymane": dict(mode="legs", hip=64, back=(0, 43), front=(43, 86), rigid=[], spread=3, lift=3, dip=1),
     "bosses/vargr": dict(mode="legs", hip=82, back=(0, 63), front=(63, 126), rigid=[], spread=3, lift=3, dip=1),
     "player/moon_huntress": dict(mode="robe", hip=30, rigid=[(31, 42, 0, None)], sway=1, dip=1, bust=(19, 27, 12, 18, 2)),
@@ -649,9 +649,11 @@ RIGS = {
     "court/chiropteran_king": dict(mode="robe", hip=60, rigid=[], sway=1, dip=1),
     "bosses/carmilla": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1, bust=(26, 39, 14, 21, 2, 2), swish=(22, 42, 26, 36, 2)),
     "bosses/elder": dict(mode="legs", hip=80, back=(0, 61), front=(61, 122), rigid=[], spread=3, lift=3, dip=1),
+    # The Elder's first form (round 1 redo, act 7): a long robe to the floor, so he glides like the other robed figures.
+    "bosses/elder_vampire": dict(mode="robe", hip=84, rigid=[], sway=1, dip=1),
     "player/dhampir": dict(mode="legs", hip=34, back=(0, 23), front=(23, 46), rigid=[], spread=2, lift=2, dip=1),
     "summons/blood_spawn": dict(mode="legs", hip=26, back=(0, 25), front=(25, 50), rigid=[], spread=2, lift=2, dip=1),
-    "summons/nosferatu": dict(mode="legs", hip=34, back=(0, 27), front=(27, 54), rigid=[], spread=2, lift=2, dip=1),
+    "summons/nosferatu": dict(mode="legs", hip=34, back=(0, 26), front=(26, 52), rigid=[], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -765,6 +767,9 @@ SKINS = {
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
+    # --- Act VII round 1 redo: the regenerated Deathlord skins are 44 wide (the bases 42 / 46), so their own splits and box ---
+    "player/dhampir_deathlord": {"back": (0, 22), "front": (22, 44)},
+    "player/moon_huntress_deathlord": {"bust": (17, 27, 15, 21, 2)},
     # --- Act VI: the Palace of Silk and Ash --- (the Succubus Queen's Deathlord skin is 58 tall: its own boxes)
     "player/succubus_queen_deathlord": {"hip": 33, "bust": (12, 28, 14, 20, 2, 2), "swish": (11, 29, 24, 34, 2)},
     # --- Act VI: Pandemonium --- (the Fallen Saint's Hyper skin: its own box)
