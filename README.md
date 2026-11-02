@@ -2126,8 +2126,10 @@ kinds join as guest squads. At 3:00 left **Queen Carmilla** descends: **the Cour
 mist, her drain beam sweeps your army, her nobles step out beside her), **the Waking** (she kneels at the Elder's
 coffin and feeds him: the boss bar becomes his and fills with every heal she lands and every **Blood Bearer** that
 reaches her; stuns, freezes and Soul Chains interrupt her, and a dead bearer brings nothing) and **the Elder** (the
-first vampire, with the health she gave him: every bat on the map turns on you, he drains everything touching him
-and beats his wings). When he falls he turns to ash and the Court's veil tears (a short ending text, no epilogue).
+first vampire, with the health she gave him, in two forms: first **the vampire lord**, a fast duelist whose
+telegraphed blood-blade lunges cut through your ring and feed him, mist-stepping in when you are far; at half his
+health he transforms into **the bat-winged horror**: every bat on the map turns on you, he drains everything touching
+him and beats his wings). When he falls he turns to ash and the Court's veil tears (a short ending text, no epilogue).
 Rewards: the spell **Night Swarm** (spectral bats circle you and dart at the nearest foes; evolves into **Nocturne**,
 whose bites leap on to the next foe, with **Old Blood**: the bats dart sooner and their bites heal you), the
 character **the Dhampir** (Half-Blood: two more bats), the summon class **the Blood Spawn** (fast vampire brawlers

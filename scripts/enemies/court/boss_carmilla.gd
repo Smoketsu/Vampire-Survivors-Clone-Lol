@@ -24,9 +24,20 @@
 ##     (CarmillaData.INTERRUPT_SOURCES, read in damage_taken_mult()) stops her
 ##     feeding for interrupt_time s.
 ##   * THE ELDER (after rise_time s, invulnerable, climbing out): his health is
-##     what she gave him. He commands every flier on the map (a frenzy on the
-##     necromancer, more bats from his wings), drains every body touching him
-##     and beats his wings (a telegraphed circle). His blows feed him.
+##     what she gave him, split between TWO FORMS (owner request, Act VII art
+##     review; the Morning Star's Angel / Beast pattern):
+##       - THE VAMPIRE LORD (first form, until horror_at of the health he rose
+##         with): a fast, regal duelist; telegraphed BLOOD-BLADE LUNGES through
+##         the ring (every body on the line cut once, feeding him) and a short
+##         MIST STEP (immune) when the necromancer is far.
+##       - THE TRANSFORMATION (change_time s, invulnerable: a blood burst, the
+##         Court's blood-burst sound, a banner; the sprite flickers between
+##         the forms).
+##       - THE BAT-WINGED HORROR (second form, the rest): he commands every
+##         flier on the map (a frenzy on the necromancer, more bats from his
+##         wings), drains every body touching him and beats his wings (a
+##         telegraphed circle).
+##     His blows feed him in both forms (Bloodfeast, the one heal path).
 ## Beaten, the Elder turns to ash: the defeat banner and a short
 ## announcement (CarmillaData.ENDING_ANNOUNCE), no epilogue (owner decision
 ## Oct 31, 2026). Determinism: no RNG (the coffin rises on her side of the
@@ -37,14 +48,18 @@
 ## feeding), carmilla_fed_bearers (from the bearers), carmilla_interrupts
 ## (and _stun / _chains), carmilla_bearers (sent), carmilla_bearers_poured,
 ## carmilla_elder_hp (his health when he rose), carmilla_elder_share,
-## carmilla_commanded (fliers frenzied).
+## carmilla_commanded (fliers frenzied), carmilla_transform_at (the lord's
+## transformation began), carmilla_horror_at (the horror walks),
+## carmilla_lord_hits (lunge cuts on bodies).
 class_name BossCarmilla
 extends Boss
 
 ## Her phases.
-enum Phase { ARRIVING, COURT, TO_COFFIN, WAKING, RISING, ELDER }
-## Her actions (inside a phase).
-enum Act { NONE, MIST_WINDUP, MIST, BEAM_WINDUP, BEAM, BUFFET_WINDUP, RECOVER }
+## LORD is the Elder's first form, CHANGING his transformation, ELDER his
+## second form (the bat-winged horror).
+enum Phase { ARRIVING, COURT, TO_COFFIN, WAKING, RISING, LORD, CHANGING, ELDER }
+## Her actions (inside a phase); LUNGE_* and STEP are the vampire lord's.
+enum Act { NONE, MIST_WINDUP, MIST, BEAM_WINDUP, BEAM, BUFFET_WINDUP, LUNGE_WINDUP, LUNGE, STEP, RECOVER }
 
 ## Current phase.
 var phase: Phase = Phase.ARRIVING
@@ -64,8 +79,18 @@ var _noble_cd: float = 0.0
 var _mist_from: Vector2 = Vector2.ZERO
 ## End of the mist dance's line (world px).
 var _mist_to: Vector2 = Vector2.ZERO
-## Bodies the current mist dance already drained (each once).
+## Bodies the current mist dance (or the lord's lunge) already struck (each once).
 var _mist_hit: Dictionary = {}
+## The vampire lord's lunge line: start (world px).
+var _lunge_from: Vector2 = Vector2.ZERO
+## End of the lunge line (world px).
+var _lunge_to: Vector2 = Vector2.ZERO
+## Where the mist step began (world px).
+var _step_from: Vector2 = Vector2.ZERO
+## Where the mist step reforms him (world px).
+var _step_to: Vector2 = Vector2.ZERO
+## Health (HP) at which the vampire lord transforms: horror_at of what he rose with.
+var _horror_hp: float = 0.0
 ## Unit direction at the middle of the drain beam's sweep.
 var _beam_mid: Vector2 = Vector2.RIGHT
 ## Seconds until the beam's next tick.
@@ -128,23 +153,34 @@ func special_ids() -> Array:
 	return CarmillaData.SPECIALS
 
 
-## True while she (or the Elder) walks at the necromancer (Boss hook, the stuck check).
+## True while she (or the Elder, either form) walks at the necromancer (Boss hook, the stuck check).
 func is_walking() -> bool:
-	return (phase == Phase.COURT or phase == Phase.ELDER) and act == Act.NONE
+	return (phase == Phase.COURT or phase == Phase.LORD or phase == Phase.ELDER) and act == Act.NONE
 
 
-## Sprite key of the art (engine-motion pivot): the Queen, then the Elder.
+## Sprite key of the art (engine-motion pivot): the Queen, the vampire lord
+## (rising, walking and transforming), then the horror.
 func motion_sprite_key() -> String:
-	return CarmillaData.SPRITE_ELDER if phase == Phase.RISING or phase == Phase.ELDER else CarmillaData.SPRITE_QUEEN
+	match phase:
+		Phase.RISING, Phase.LORD, Phase.CHANGING:
+			return CarmillaData.SPRITE_ELDER_LORD
+		Phase.ELDER:
+			return CarmillaData.SPRITE_ELDER
+	return CarmillaData.SPRITE_QUEEN
 
 
 ## Immune while she descends, dances in mist, flies to the coffin, kneels and
-## while the Elder rises; the Queen never falls below waking_hp (the Waking
-## takes over). A Soul Chains hit during the Waking interrupts her feeding.
+## while the Elder rises, mist-steps and transforms; the Queen never falls
+## below waking_hp (the Waking takes over) and the lord never below his
+## transformation health (the horror takes the rest). A Soul Chains hit during
+## the Waking interrupts her feeding.
 func damage_taken_mult(source: String) -> float:
 	match phase:
-		Phase.ARRIVING, Phase.TO_COFFIN, Phase.RISING:
+		Phase.ARRIVING, Phase.TO_COFFIN, Phase.RISING, Phase.CHANGING:
 			return 0.0
+		Phase.LORD:
+			if act == Act.STEP or hp <= _horror_hp + 1.0:
+				return 0.0
 		Phase.WAKING:
 			if CarmillaData.INTERRUPT_SOURCES.has(source):
 				_interrupt("chains")
@@ -186,6 +222,14 @@ func physics_step(delta: float) -> void:
 		Phase.RISING:
 			_hold(delta)
 			if phase_time >= float(boss_def["rise_time"]):
+				_enter(Phase.LORD)
+		Phase.LORD:
+			_step_lord(delta)
+			if hp <= _horror_hp + 1.0 and (act == Act.NONE or act == Act.RECOVER):
+				_transform()
+		Phase.CHANGING:
+			_hold(delta)
+			if phase_time >= float(boss_def["change_time"]):
 				_enter(Phase.ELDER)
 		Phase.ELDER:
 			_step_elder(delta)
@@ -201,12 +245,24 @@ func _enter(p: Phase) -> void:
 		Phase.COURT:
 			special_cd = float(boss_def["special_first"])
 			_noble_cd = 0.0  # Her nobles step out at once.
-		Phase.ELDER:
-			special_cd = float(boss_def["buffet_first"])
-			_command_cd = 0.0  # He commands the bats as he rises.
-			_touch_cd = float(boss_def["touch_tick"])
+		Phase.LORD:
+			special_cd = float(boss_def["lunge_first"])
+			attack_interval = float(boss_def["attack_interval"]) * float(boss_def["lord_attack_mult"])
 			game.stats["carmilla_elder_at"] = game.elapsed
-			game.enemies.show_banner("THE ELDER: the first vampire walks! Every bat answers him, and he feeds on all he touches!")
+			game.enemies.show_banner("THE ELDER: the first vampire walks, a lord of the old night! His blood-blade cuts through your ring, and every cut feeds him!")
+			game.effects.impact(position, radius * 3.0, Palette.COURT_BLOOD)
+			game.shake(8.0)
+			Sfx.play("boss_impact", position, 0.9)
+		Phase.ELDER:
+			radius = float(boss_def["elder_radius"])  # The horror is huge.
+			position = game.arena.free_point(position, radius)
+			attack_interval = float(boss_def["attack_interval"])
+			special_cd = float(boss_def["buffet_first"])
+			_command_cd = 0.0  # He commands the bats as he unfolds.
+			_touch_cd = float(boss_def["touch_tick"])
+			_reset_motion()
+			game.stats["carmilla_horror_at"] = game.elapsed
+			game.enemies.show_banner("THE ELDER'S TRUE FORM: every bat answers him, and he feeds on all he touches!")
 			game.effects.impact(position, radius * 3.0, Palette.COURT_BLOOD)
 			game.shake(10.0)
 			Sfx.play("boss_impact", position, 0.7)
@@ -529,9 +585,11 @@ func _rise() -> void:
 	phase_time = 0.0
 	act = Act.NONE
 	coffin_open = true
-	position = game.arena.free_point(coffin_at, float(boss_def["elder_radius"]))
-	radius = float(boss_def["elder_radius"])
+	position = game.arena.free_point(coffin_at, float(boss_def["lord_radius"]))
+	radius = float(boss_def["lord_radius"])  # The vampire lord first (the horror grows to elder_radius).
 	display_name = "The Elder"
+	_horror_hp = hp * float(boss_def["horror_at"])
+	_reset_motion()
 	game.stats["carmilla_elder_hp"] = hp
 	game.stats["carmilla_elder_share"] = hp / maxf(max_hp, 1.0)
 	game.stat_add("boss_atk_elder_rises", 1.0)
@@ -543,8 +601,150 @@ func _rise() -> void:
 	queue_redraw()
 
 
+## Re-seats the engine motion on the current form's art and radius (as
+## BossMerrow's change). Visual only.
+func _reset_motion() -> void:
+	if motion != null:
+		motion.reset(UnitMotion.feet_of(motion_sprite_key(), "", radius), radius, MotionData.BOSS_SCALE, false)
+
+
 # =====================================================================================
-# Phase 3: the Elder
+# Phase 3a: the Elder's first form, the vampire lord
+# =====================================================================================
+
+## The vampire lord: the lunge and the mist step on one clock, else he walks
+## (fast) at the necromancer with his claws.
+func _step_lord(delta: float) -> void:
+	if act != Act.NONE:
+		act_time += delta
+		_hold(delta)
+		match act:
+			Act.LUNGE_WINDUP:
+				if act_time >= float(boss_def["lunge_telegraph"]):
+					act = Act.LUNGE
+					act_time = 0.0
+					_mist_hit.clear()
+					game.stat_add("boss_atk_blood_lunge", 1.0)
+					game.court_rules().play_sound("bite_feed", position)
+			Act.LUNGE:
+				_step_lunge()
+			Act.STEP:
+				_step_mist_step()
+			Act.RECOVER:
+				if act_time >= 0.35:
+					act = Act.NONE
+					act_time = 0.0
+		return
+	special_cd -= delta
+	if special_cd <= 0.0 and not game.ultimates.player_untargetable():
+		var dist := position.distance_to(game.player.position)
+		if dist > float(boss_def["step_trigger"]):
+			_start_mist_step()
+			return
+		if dist <= float(boss_def["lunge_range"]):
+			_start_lunge()
+			return
+	_walk(delta, float(boss_def["lord_speed_mult"]))
+
+
+## Telegraphs the blood-blade lunge: a line from him through the necromancer.
+func _start_lunge() -> void:
+	var to := game.player.position - position
+	var dir := to.normalized() if to.length() > 1.0 else Vector2.RIGHT
+	_lunge_from = position
+	_lunge_to = position + dir * game.arena.clear_length(position, dir, float(boss_def["lunge_length"]), radius)
+	game.effects.telegraph_line(_lunge_from, _lunge_to, float(boss_def["lunge_width"]), float(boss_def["lunge_telegraph"]), self)
+	motion_lunge(dir, MotionData.POWER_CAST)
+	special_cd = float(boss_def["lunge_cooldown"])
+	act = Act.LUNGE_WINDUP
+	act_time = 0.0
+	queue_redraw()
+
+
+## The cut: he darts along the line; every body he passes is cut once (a feeding hit).
+func _step_lunge() -> void:
+	var t := clampf(act_time / maxf(float(boss_def["lunge_time"]), 0.01), 0.0, 1.0)
+	position = _lunge_from.lerp(_lunge_to, t)
+	var half := float(boss_def["lunge_width"]) * 0.5 + radius * 0.5
+	var mult := game.enemies.damage_mult * hit_mult()
+	for pl in game.all_players:
+		if not pl.dead and not _mist_hit.has(pl) and pl.position.distance_to(position) <= half + pl.radius:
+			_mist_hit[pl] = true
+			game.combat.damage_player(float(boss_def["lunge_damage_player"]) * mult, CarmillaData.SRC_LUNGE, pl, self)
+			game.stat_add("carmilla_player_hits", 1.0)
+	var hits: Array = []  # Own buffer: a death hook may query the grid again.
+	game.ally_grid.query(position, half + UnitData.MAX_BLOCK_RADIUS, hits)
+	for u: SummonedUnit in hits:
+		if _mist_hit.has(u) or not u.active or u.state == SummonedUnit.State.SPAWNING or u.state == SummonedUnit.State.DEAD:
+			continue
+		if u.position.distance_to(position) <= half + u.radius:
+			_mist_hit[u] = true
+			game.combat.damage_unit(u, float(boss_def["lunge_damage_summon"]) * mult, CarmillaData.SRC_LUNGE, self)
+			game.stat_add("carmilla_summon_hits", 1.0)
+			game.stat_add("carmilla_lord_hits", 1.0)
+	queue_redraw()
+	if t >= 1.0:
+		position = game.arena.free_point(position, radius)
+		_mist_hit.clear()
+		game.effects.ring(position, radius * 1.6, Palette.COURT_BLOOD_LIGHT, 0.3)
+		_recover()
+
+
+## The mist step: he dissolves (untargetable, immune) toward the necromancer.
+func _start_mist_step() -> void:
+	var to := game.player.position - position
+	var dir := to.normalized() if to.length() > 1.0 else Vector2.RIGHT
+	_step_from = position
+	_step_to = game.player.position - dir * float(boss_def["step_land"])
+	special_cd = float(boss_def["step_followup"])
+	untargetable = true
+	flies = true  # In mist the ring cannot body-block him.
+	act = Act.STEP
+	act_time = 0.0
+	game.stat_add("boss_atk_mist_step", 1.0)
+	game.effects.ring(position, radius * 2.0, Palette.COURT_MOON_LIGHT, 0.35)
+	game.court_rules().play_sound("mist_form", position)
+	queue_redraw()
+
+
+## The step: he drifts to the landing point and reforms there.
+func _step_mist_step() -> void:
+	var t := clampf(act_time / maxf(float(boss_def["step_time"]), 0.01), 0.0, 1.0)
+	position = _step_from.lerp(_step_to, t)
+	queue_redraw()
+	if t >= 1.0:
+		position = game.arena.free_point(position, radius)
+		untargetable = false
+		flies = false
+		game.effects.ring(position, radius * 2.0, Palette.COURT_BLOOD_LIGHT, 0.35)
+		act = Act.NONE
+		act_time = 0.0
+
+
+## The transformation (invulnerable): the lord's skin splits and his wings
+## unfold (a burst of blood, the Court's blood-burst sound, a banner; no
+## damage: the horror's first buffet comes buffet_first s after).
+func _transform() -> void:
+	phase = Phase.CHANGING
+	phase_time = 0.0
+	act = Act.NONE
+	act_time = 0.0
+	untargetable = false
+	flies = false
+	game.stats["carmilla_transform_at"] = game.elapsed
+	game.stat_add("boss_atk_transform", 1.0)
+	game.enemies.show_banner("The Elder's skin splits... the first vampire unfolds his wings!")
+	game.effects.ring(position, 180.0, Palette.COURT_BLOOD, 1.0)
+	game.effects.ring(position, 110.0, Palette.COURT_VELVET_LIGHT, 0.8)
+	Juice.fx.burst(position, Palette.COURT_BLOOD_LIGHT, Palette.COURT_VELVET_LIGHT, 22, 260.0, 1.0, 3.0)
+	game.court_rules().play_sound("blood_burst", position)
+	game.shake(8.0)
+	Sfx.play("boss_impact", position, 0.8)
+	queue_redraw()
+
+
+# =====================================================================================
+# Phase 3b: the Elder's second form, the bat-winged horror
 # =====================================================================================
 
 ## The Elder: his bats, his touch, his wings; he lumbers between.
@@ -696,6 +896,8 @@ func danger_push(p: Vector2) -> Vector2:
 			if CovenantKit.in_sector(position, _beam_mid, float(boss_def["beam_length"]) + 20.0, half, radius, p, 12.0):
 				var away := p - position
 				return away.normalized() * 1.5 if away.length() > 0.1 else Vector2.RIGHT
+		Act.LUNGE_WINDUP, Act.LUNGE:
+			return KirinKit._off_line(p, _lunge_from, _lunge_to, float(boss_def["lunge_width"]) * 0.5 + 18.0)
 		Act.BUFFET_WINDUP:
 			var reach := float(boss_def["buffet_radius"]) + 20.0
 			var off := p - position
@@ -707,14 +909,14 @@ func danger_push(p: Vector2) -> Vector2:
 ## Under the body: the Elder's coffin (from the Waking on) and a pool of blood
 ## under her. Visual only.
 func _draw_under() -> void:
-	if has_coffin and phase != Phase.ELDER:
+	if has_coffin and phase != Phase.LORD and phase != Phase.CHANGING and phase != Phase.ELDER:
 		var c := (coffin_at - position) * Vector2(scale.x, 1.0)  # The coffin in her (mirrored) frame.
 		var key := CarmillaData.SPRITE_COFFIN_OPEN if coffin_open else CarmillaData.SPRITE_COFFIN
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2(scale.x, 1.0))
 		if not SpriteBank.draw(self, key, c, false):
 			CourtGlyphs.draw_coffin(self, c, 16.0, false, coffin_open)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	var col := Palette.COURT_VELVET_LIGHT if phase == Phase.ELDER or phase == Phase.RISING else Palette.COURT_BLOOD
+	var col := Palette.COURT_VELVET_LIGHT if phase == Phase.ELDER or phase == Phase.CHANGING else Palette.COURT_BLOOD
 	var a := 0.18
 	if phase == Phase.ARRIVING:
 		a *= clampf(phase_time / maxf(0.1, float(boss_def["arrive_time"])), 0.0, 1.0)
@@ -722,10 +924,11 @@ func _draw_under() -> void:
 	draw_texture_rect(SpriteBank.disc(), Rect2(Vector2(-r, -r * 0.5), Vector2(r * 2.0, r)), false, Color(col, a))
 
 
-## Body layer on `ci`: the Queen (in mist: drifting mist), then the Elder; the
-## glyph without art.
+## Body layer on `ci`: the Queen (in mist: drifting mist), then the Elder's
+## vampire lord (in his mist step: mist), flickering into the horror while he
+## transforms (as Lilith's demon form), then the horror; the glyphs without art.
 func _draw_body(ci: CanvasItem) -> void:
-	if (phase == Phase.COURT and act == Act.MIST) or phase == Phase.TO_COFFIN:
+	if (phase == Phase.COURT and act == Act.MIST) or phase == Phase.TO_COFFIN or (phase == Phase.LORD and act == Act.STEP):
 		CourtGlyphs.draw_mist(ci, radius * 1.4, game.elapsed)
 		return
 	var alpha := 1.0
@@ -736,10 +939,19 @@ func _draw_body(ci: CanvasItem) -> void:
 	var tint := Color(1.0, 1.0, 1.0, alpha)
 	if phase == Phase.WAKING and interrupt_left > 0.0:
 		tint = Color(0.75, 0.8, 0.95, 1.0)  # Interrupted: she pales.
-	if phase == Phase.RISING or phase == Phase.ELDER:
+	var horror := phase == Phase.ELDER
+	if phase == Phase.CHANGING:
+		var rate := 4.0 + 12.0 * phase_time / maxf(0.1, float(boss_def["change_time"]))  # Flickers faster as he changes.
+		horror = int(phase_time * rate) % 2 == 1
+	if horror:
 		if SpriteBank.draw(ci, CarmillaData.SPRITE_ELDER, Vector2.ZERO, flash > 0.0, tint):
 			return
-		CastleSanguisGlyphs.draw_elder(ci, Vector2.ZERO, radius, flash > 0.0, tint.a)
+		CastleSanguisGlyphs.draw_elder(ci, Vector2.ZERO, float(boss_def["elder_radius"]), flash > 0.0, tint.a)
+		return
+	if phase == Phase.RISING or phase == Phase.LORD or phase == Phase.CHANGING:
+		if SpriteBank.draw(ci, CarmillaData.SPRITE_ELDER_LORD, Vector2.ZERO, flash > 0.0, tint):
+			return
+		CastleSanguisGlyphs.draw_elder_lord(ci, Vector2.ZERO, radius, flash > 0.0, tint.a)
 		return
 	if SpriteBank.draw(ci, CarmillaData.SPRITE_QUEEN, Vector2.ZERO, flash > 0.0, tint):
 		return
@@ -769,16 +981,20 @@ static func summary_line(st: Dictionary) -> String:
 	var t0 := float(st.get("carmilla_spawn_time", -1.0))
 	var waking := "%.1fs" % (float(st["carmilla_waking_at"]) - t0) if st.has("carmilla_waking_at") else "-"
 	var elder := "%.1fs" % (float(st["carmilla_elder_at"]) - t0) if st.has("carmilla_elder_at") else "-"
+	var change := "%.1fs" % (float(st["carmilla_transform_at"]) - t0) if st.has("carmilla_transform_at") else "-"
 	var kill := "%.1fs" % float(st["carmilla_kill_time"]) if st.has("carmilla_kill_time") else "-"
-	return "phases: the waking %s, the elder %s, he falls %s | court: mist dances %d, drain beams %d, nobles %d | waking: fed %d (bearers %d of %d sent poured %d HP), interrupts %d (stun %d, chains %d), elder rose with %d HP (%.0f%%) | elder: bat commands %d (fliers %d), wing buffets %d | you hit %d, summon hits %d | dmg to you: mist %d, beam %d, touch %d, buffet %d, claws %d | dmg to summons: mist %d, beam %d, touch %d, buffet %d" % [
-		waking, elder, kill, int(st.get("boss_atk_mist_dance", 0.0)), int(st.get("boss_atk_drain_beam", 0.0)), int(st.get("boss_atk_nobles", 0.0)),
+	return "phases: the waking %s, the elder %s, he transforms %s, he falls %s | court: mist dances %d, drain beams %d, nobles %d | waking: fed %d (bearers %d of %d sent poured %d HP), interrupts %d (stun %d, chains %d), elder rose with %d HP (%.0f%%) | lord: lunges %d (cuts on summons %d), mist steps %d | horror: bat commands %d (fliers %d), wing buffets %d | you hit %d, summon hits %d | dmg to you: mist %d, beam %d, lunge %d, touch %d, buffet %d, claws %d | dmg to summons: mist %d, beam %d, lunge %d, touch %d, buffet %d" % [
+		waking, elder, change, kill, int(st.get("boss_atk_mist_dance", 0.0)), int(st.get("boss_atk_drain_beam", 0.0)), int(st.get("boss_atk_nobles", 0.0)),
 		int(st.get("carmilla_fed", 0.0)), int(st.get("carmilla_bearers_poured", 0.0)), int(st.get("carmilla_bearers", 0.0)), int(st.get("carmilla_fed_bearers", 0.0)),
 		int(st.get("carmilla_interrupts", 0.0)), int(st.get("carmilla_interrupts_stun", 0.0)), int(st.get("carmilla_interrupts_chains", 0.0)),
 		int(st.get("carmilla_elder_hp", 0.0)), float(st.get("carmilla_elder_share", 0.0)) * 100.0,
+		int(st.get("boss_atk_blood_lunge", 0.0)), int(st.get("carmilla_lord_hits", 0.0)), int(st.get("boss_atk_mist_step", 0.0)),
 		int(st.get("boss_atk_bat_command", 0.0)), int(st.get("carmilla_commanded", 0.0)), int(st.get("boss_atk_wing_buffet", 0.0)),
 		int(st.get("carmilla_player_hits", 0.0)), int(st.get("carmilla_summon_hits", 0.0)),
 		int(st.get("player_dmg_from_" + CarmillaData.SRC_MIST, 0.0)), int(st.get("player_dmg_from_" + CarmillaData.SRC_BEAM, 0.0)),
+		int(st.get("player_dmg_from_" + CarmillaData.SRC_LUNGE, 0.0)),
 		int(st.get("player_dmg_from_" + CarmillaData.SRC_TOUCH, 0.0)), int(st.get("player_dmg_from_" + CarmillaData.SRC_BUFFET, 0.0)),
 		int(st.get("player_dmg_from_boss", 0.0)),
 		int(st.get("summon_dmg_from_" + CarmillaData.SRC_MIST, 0.0)), int(st.get("summon_dmg_from_" + CarmillaData.SRC_BEAM, 0.0)),
+		int(st.get("summon_dmg_from_" + CarmillaData.SRC_LUNGE, 0.0)),
 		int(st.get("summon_dmg_from_" + CarmillaData.SRC_TOUCH, 0.0)), int(st.get("summon_dmg_from_" + CarmillaData.SRC_BUFFET, 0.0))]
