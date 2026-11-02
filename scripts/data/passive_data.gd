@@ -192,7 +192,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act VI: Pandemonium ---
 	"pride", "crown_of_horns",
 	# --- Act VII: Ravensmoor ---
-	"pack_blood", "silver_bones"]
+	"pack_blood", "silver_bones",
+	# --- Act VII: the Witchwood ---
+	"moonlit_rite", "embalmed"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -226,7 +228,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act VI: Pandemonium ---
 	"crown_of_horns",
 	# --- Act VII: Ravensmoor ---
-	"silver_bones"]
+	"silver_bones",
+	# --- Act VII: the Witchwood ---
+	"embalmed"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1500,6 +1504,50 @@ const PASSIVES := {
 			{"silver_damage": 0.26, "mist_reduction": 0.30},  # TUNING (not in GDD)
 			{"silver_damage": 0.34, "mist_reduction": 0.40},  # TUNING (not in GDD)
 			{"silver_damage": 0.42, "mist_reduction": 0.50},  # Owner-approved proposal: "mist form lasts half as long" at Lv 5; damage TUNING (not in GDD)
+		],
+	},
+	# --- Act VII: the Witchwood ---
+	# Moonlit Rite (Hex Circle's paired passive; owner-approved Act VII proposal:
+	# "Witches' Sabbath (+ Moonlit Rite)"; unlocked with the spell by Isolde and
+	# offered on every stage). Own decision on its effect: the rite under the
+	# moon: every SPELL hit (HundredShadowsData.is_spell_source()) on a foe
+	# standing inside one of the necromancer's hex circles (WitchCircle
+	# .in_circle(): the Hex Circle and the Sabbath's dancing circles) deals
+	# rite_damage more (CombatResolver.damage_enemy(), one block; stat
+	# moonlit_rite_bonus_dmg). Pairs with Hex Circle -> Witches' Sabbath.
+	"moonlit_rite": {
+		"display_name": "Moonlit Rite",  # Owner-approved proposal
+		"icon": "moonlit_rite",
+		"description": "Your spells strike foes inside your hex circle harder.",
+		"labels": {"rite_damage": ["Spell damage inside your circle", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"rite_damage": 0.08},  # TUNING (not in GDD)
+			{"rite_damage": 0.16},  # TUNING (not in GDD)
+			{"rite_damage": 0.24},  # TUNING (not in GDD)
+			{"rite_damage": 0.32},  # TUNING (not in GDD)
+			{"rite_damage": 0.40},  # TUNING (not in GDD) as Furnace Heart
+		],
+	},
+	# Act VII's counter-passive Embalmed (owner-approved Act VII proposal:
+	# "Embalmed (enemies heal half as much from hitting summons)"; unlocked by
+	# the achievement The Coven Breaks and offered only in Act VII through its
+	# card row's "act"). Bloodfeast.embalmed_mult() (the foundation's one read,
+	# CourtRulesData.EMBALMED / EMBALMED_KEY): a Court enemy's feed on a summon
+	# heals it 1 - feed_reduction as much (Lv 5: half, the proposal's number).
+	"embalmed": {
+		"display_name": "Embalmed",  # Owner-approved proposal
+		"icon": "embalmed",
+		"description": "Your dead are embalmed: the Court heals less from biting them.",
+		"labels": {"feed_reduction": ["Court feeding on summons", "neg_pct"]},
+		"act": 7,  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"feed_reduction": 0.15},  # TUNING (not in GDD)
+			{"feed_reduction": 0.25},  # TUNING (not in GDD)
+			{"feed_reduction": 0.33},  # TUNING (not in GDD)
+			{"feed_reduction": 0.42},  # TUNING (not in GDD)
+			{"feed_reduction": 0.5},  # Owner-approved proposal: "enemies heal half as much from hitting summons"
 		],
 	},
 }

@@ -2079,6 +2079,40 @@ integration and the owner's review.
   `--character=moon_huntress`, `--spawn=ghoul@T`, `old_greymane@T`, `sleeping_coffin@T`; lines `ravensmoor`,
   `ravensmoor kinds`, `old greymane`, `vargr`, `act VII spell`, `act VII passives`.
 
+### Act VII: the Witchwood (Stage 20)
+
+<!-- --- Act VII: the Witchwood --- -->
+A black fen and a wood of hanging charms where the Court's witches keep their sabbath (GDD §15.0 "The Witchwood (Act
+VII phase 2)" and the rows after it). Built, still hidden ("playable": false) until the lead's integration and the
+owner's review.
+
+- **Four zones on the clock:** the Fen (20:00), the Hanging Wood (15:00), the Standing Stones (10:00) and the
+  Cauldron (5:00), each with its own floor and obstacles (fen snags, charm fences, standing stones, cauldrons).
+- **The Fen.** In the first zone still pools of black water lie on the ground; they slow everyone who wades them
+  (the necromancer and the summons through the one ground-slow path, Brinewalker applies; the living foes too).
+- **Hex stones.** From 1:00 and in every zone three hex stones rise around you. A Crimson Witch coven near a
+  standing stone can cast without the Blood Moon; a broken stone leaves dead ground where no coven casts.
+- **Crimson Witches** (any Act VII stage). Free witches band into covens of three; under the Blood Moon (or powered
+  by a stone) a coven chants a hex circle that heals the Court inside it and drains your summons. Kill one witch and
+  the circle fails.
+- **Bloated Thralls** (any Act VII stage). Slow heavies that burst into a blood pool when they die: Court units in it
+  heal (never a boss or miniboss). Kill them away from the knights.
+- **The Bog Mother** (miniboss, 9:00 left). A vast drowned witch wading in her own black water (it slows): her
+  weed-ropes mark the nearest summons, then drag them to her side to drown; a mire slam.
+- **Isolde Vane, the Witch of the Red Moon** (3:00 left). Hex circles under your ring, cauldron bombs that leave
+  healing pools for the thralls she calls. At two thirds she **splits into three sisters**: all three must fall
+  within 10 s of each other or the fallen rise again (weaker each time; after 100 s they stop rising). Then she
+  reforms and **calls the Blood Moon**, keeping it up until she falls.
+- **Rewards.** Slaying Isolde unlocks **Hex Circle** (a crimson circle under you drains every foe inside and you
+  drink a little of it; evolves into **Witches' Sabbath** with **Moonlit Rite**: your spells hit foes inside your
+  circle harder) and so its character, **the Hedge Witch** (innate Hedge Lore: every circle a quarter wider; skins
+  Gilded, Untouchable, Deathlord). The achievement **The Coven Breaks** (kill Isolde's three sisters within 1 s)
+  unlocks the Act VII counter-passive **Embalmed** (the Court heals less from biting your summons; offered only in
+  Act VII).
+- **Autotest:** `--stage=witchwood`, `--boss=isolde`, `--spells=witch_circle`, `--passives=embalmed`,
+  `--character=hedge_witch`, `--spawn=crimson_witch@T`, `bloated_thrall@T`, `bog_mother@T`, `hex_stone@T`; lines
+  `witchwood`, `witch hexes`, `witchwood kinds`, `bog mother`, `isolde`, `act VII spell`, `act VII passives`.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2759,6 +2793,11 @@ scripts/
                             Moonfang / Pack Blood / Silver Bones lines (Act VII)
     ravensmoor_ground.gd    Ravensmoor's four zone floors (tiles/ravensmoor_<style>, Act VII)
     ravensmoor_glyphs.gd    Code-drawn fallbacks of Ravensmoor's obstacles, kinds and Vargr (Act VII)
+    witchwood_ground.gd     The Witchwood's four zone floors and the Fen's pools (tiles/witchwood_<style>, Act VII)
+    witchwood_glyphs.gd     Code-drawn fallbacks of the Witchwood's obstacles, kinds, hex stones, Isolde and the
+                            Fen's water (Act VII)
+    witchwood_report.gd     The autotest's Witchwood lines (witchwood, witch hexes, kinds, the Bog Mother, Isolde)
+                            and the Hex Circle / Moonlit Rite / Embalmed lines (Act VII)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
                             the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
@@ -3013,6 +3052,17 @@ scripts/
                             packs, Old Greymane's event and objective
       boss_vargr.gd         Vargr: the Hunt (circling, the lunge at the weakest summon), the Turning (the howl,
                             the leap), the Moon-Eater (the darkness, harder feeding); vargr_dark.gd draws it
+      witch_hexes.gd        The witches' hexes (Act VII, the Witchwood; CourtRules.witch_hexes()): covens of three,
+                            the hex circles (cast_circle()), the hex stones' power and dead ground, the blood pools
+                            (open_pool(), the one pool path)
+      fen_water.gd          FenWater.wade(): the fen's black water slows everyone (TerrainSlow)
+      witchwood_director.gd The Witchwood: the Fen's pools, the hex stones per zone, the Bog Mother's and the covens'
+                            events, The Coven Breaks in the summary
+      crimson_witch_kit.gd, bloated_thrall_kit.gd, hex_stone_kit.gd
+                            The Witchwood's kinds (covens, the burst into a pool, the stone)
+      bog_mother_kit.gd     The Bog Mother (miniboss): her bog, the drag (the one pull path pull()), the mire slam
+      boss_isolde.gd, isolde_sister_kit.gd
+                            Isolde Vane: circles, cauldron bombs, thralls; the three sisters; the Red Moon
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3282,7 +3332,8 @@ scripts/
     stages/silk_palace_stage.gd    act 6, "inferno": true, zones, pits / portals overrides, a timeline of the
     stages/pandemonium_stage.gd    shared kinds with portal events, the Last Judgment, placeholder floors / bosses
     court_enemy_data.gd     The Sanguine Court's shared kinds (Blood Thrall, Vampire Bat, Blood Knight, Werewolf,
-                            Vampire Noble) and the coffin; the feeds / flies / werebeast / noble keys (Act VII)
+                            Vampire Noble) and the coffin; the feeds / flies / werebeast / noble keys (Act VII);
+                            the Witchwood's block: the Crimson Witch and the Bloated Thrall
                             (ravensmoor_ / witchwood_ / castle_sanguis_enemy_data.gd: each stage's own;
                             Ravensmoor's: Old Greymane and the sleeping coffin; the Ghoul is a shared row)
     vargr_data.gd           Vargr's arrival and fight (the Hunt, the Turning, the Moon-Eater) (Act VII)
@@ -3292,7 +3343,12 @@ scripts/
                             BLOOD_MOON, ENDLESS_FEAST, the SOUNDS map
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
     stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
-    stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses
+    stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four
+                                   zones, the Fen, hex stones, covens, the Bog Mother, Isolde; Act VII phase 2)
+    witchwood_enemy_data.gd The Witchwood's own kinds: the Bog Mother, Isolde's sisters, the hex stone (Act VII)
+    witch_hex_data.gd       The witches' covens, hex circles, hex stones and blood pools (Act VII)
+    isolde_data.gd          Isolde Vane's arrival and fight (Act VII)
+    witch_circle_data.gd    Hex Circle / Witches' Sabbath / Moonlit Rite / Hedge Lore / Embalmed ids and rules
     hades_data.gd           Hades' arrival, fight, god-shade list (GOD_SHADES) and ending (Act IV)
     amaterasu_data.gd       Amaterasu's arrival, fight, sky per phase (SKY) and ending (Act V)
     morning_star_data.gd    The Morning Star's arrival, two phases (the Angel, the Beast) and ending (Act VI)

@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a heavy lumbering stance, arms hanging, belly thrust forward
+
+LOW-RESOLUTION pixel art: the whole figure is only 60 pixels tall and about 46 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a MALE BLOATED THRALL (a heavy of the vampire Court): a huge bald man swollen with drunk blood, a vast round pale belly crossed with red bite wounds and a dark bleeding gash, pale grey-white skin with red veins, glowing pale eyes, blood smeared on his mouth and chin, a ragged brown loincloth, thick short legs, heavy arms. Grotesque but readable.
+Signature shape that must read in silhouette: the enormous round belly on short legs.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: pale skin #D9B8A8 #A8806E #6E5A52; blood #5A0A14 #A3142A #E0384E; ragged brown cloth #3A2416 #6B4A2E #8C6A48; eyes #B4C0D0
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) approved concept art of this unit for the build only (do NOT copy its detail level or painted shading).

@@ -175,4 +175,10 @@ const SOUNDS := {
 	# --- Act VII: Ravensmoor ---
 	"ghoul_feed": "ghoul_feed",  # SoundData.COURT_SOUNDS: a Ghoul sets to eating a corpse (GhoulKit)
 	"vargr_roar": "vargr_roar",  # SoundData.COURT_SOUNDS: Vargr calls his moon (his arrival, the Turning, the Moon-Eater; BossVargr)
+	# --- Act VII: the Witchwood ---
+	"hex_chant": "hex_chant",  # A coven's hex circle biting (Court pack).
+	"blood_burst": "blood_burst",  # A Bloated Thrall bursting, a cauldron bomb landing (Court pack).
+	"bog_drag": "bog_drag",  # The Bog Mother's weed-ropes (Court pack).
+	"isolde_cackle": "isolde_cackle",  # Isolde's cackle (Court pack).
+	"stone_break": "stone_break",  # A hex stone breaking (Court pack).
 }

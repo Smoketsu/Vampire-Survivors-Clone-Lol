@@ -59,6 +59,9 @@
 ## and Act VII's (Ravensmoor, RAVENSMOOR_IDS: stepped only; its own autotest
 ## line, RavensmoorReport.item_lines()):
 ##   Moonfang         -> Moonfang         (evolves into Wolf of the Red Moon)
+## and Act VII's (the Witchwood, WITCHWOOD_IDS: stepped only; its own autotest
+## line, WitchwoodReport.item_lines()):
+##   Hex Circle ("witch_circle") -> WitchCircle (evolves into Witches' Sabbath)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -146,6 +149,11 @@ const PANDEMONIUM_IDS := ["fall_from_grace"]
 ## Ravensmoor's unlockable spell (Vargr's reward): stepped like BURNING_GATE_IDS
 ## (no kill or after-physics hook), reported by RavensmoorReport.
 const RAVENSMOOR_IDS := ["moonfang"]
+# --- Act VII: the Witchwood ---
+## The Witchwood's unlockable spell (Isolde's reward): stepped like
+## BURNING_GATE_IDS (no kill or after-physics hook), reported by WitchwoodReport.
+## Its id is "witch_circle" (never a kind or the witches' own circle tag).
+const WITCHWOOD_IDS := ["witch_circle"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -190,6 +198,8 @@ const SOURCES := {
 	"fall_from_grace": ["fall_from_grace", "lightbringer", "lightbringer_flare"],
 	# --- Act VII: Ravensmoor ---
 	"moonfang": ["moonfang", "wolf_of_the_red_moon", "moonfang_bleed"],
+	# --- Act VII: the Witchwood ---
+	"witch_circle": ["witch_circle", "witches_sabbath"],
 }
 
 ## Owning run.
@@ -301,6 +311,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # Ravensmoor's spell.
+	# --- Act VII: the Witchwood ---
+	for id: String in WITCHWOOD_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Witchwood's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -379,6 +398,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act VII: Ravensmoor ---
 		"moonfang":
 			node = Moonfang.new()  # Ravensmoor's spell.
+		# --- Act VII: the Witchwood ---
+		"witch_circle":
+			node = WitchCircle.new()  # Hex Circle (its id "witch_circle").
 		_:
 			node = PlagueCloud.new()
 	node.game = game

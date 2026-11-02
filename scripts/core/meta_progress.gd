@@ -424,6 +424,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("lilith_unmoved_kills", float(st.get("lilith_unmoved_kills", 0.0)))  # Unmoved (Act VI, the Palace of Silk and Ash)
 	# --- Act VII: Ravensmoor ---
 	_add_lifetime("coffin_nails_runs", 1.0 if float(st.get("ravensmoor_coffin_nails", 0.0)) > 0.0 else 0.0)  # Coffin Nails (Act VII, Ravensmoor)
+	# --- Act VII: the Witchwood ---
+	_add_lifetime("coven_breaks_runs", 1.0 if float(st.get("witchwood_coven_breaks", 0.0)) > 0.0 else 0.0)  # The Coven Breaks (Act VII, the Witchwood)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
@@ -1627,6 +1629,8 @@ static func _default_lifetime() -> Dictionary:
 		"lilith_unmoved_kills": 0.0,  # Lilith slain with no summon charmed during her fight (Unmoved)
 		# --- Act VII: Ravensmoor ---
 		"coffin_nails_runs": 0.0,  # Ravensmoor runs that broke every sleeping coffin before it opened (Coffin Nails)
+		# --- Act VII: the Witchwood ---
+		"coven_breaks_runs": 0.0,  # runs in which Isolde's three sisters fell within 1 s of each other (The Coven Breaks)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

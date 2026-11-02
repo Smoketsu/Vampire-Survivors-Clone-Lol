@@ -76,6 +76,9 @@
 ## Act VII, Ravensmoor:
 ##   Moon-Cursed      Hunter's Moon   in Moonfang._cast() (one more jaw in every
 ##   Huntress                         cast); stat moonfang_extra_jaws.
+## Act VII, the Witchwood:
+##   Hedge Witch      Hedge Lore      in WitchCircle.step() (every hex circle of
+##                    the spell a quarter wider); stat witch_circle_hits.
 class_name CharacterInnates
 extends Node2D
 
@@ -415,6 +418,9 @@ func summary_line() -> String:
 		# --- Act VII: Ravensmoor --- (Hunter's Moon lives in Moonfang._cast())
 		"hunters_moon":
 			counters = "extra jaws %d (casts %d)" % [int(st.get("moonfang_extra_jaws", 0.0)), int(st.get("moonfang_casts", 0.0))]
+		# --- Act VII: the Witchwood --- (Hedge Lore lives in WitchCircle.step())
+		"hedge_lore":
+			counters = "circle radius x%.2f (hits %d)" % [1.0 + game.character.innate_value(WitchCircleData.RADIUS_KEY), int(st.get("witch_circle_hits", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

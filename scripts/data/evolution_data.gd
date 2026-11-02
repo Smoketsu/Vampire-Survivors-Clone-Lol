@@ -92,7 +92,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VI: Pandemonium ---
 	"lightbringer",
 	# --- Act VII: Ravensmoor ---
-	"wolf_of_the_red_moon"]
+	"wolf_of_the_red_moon",
+	# --- Act VII: the Witchwood ---
+	"witches_sabbath"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -620,6 +622,28 @@ const EVOLUTIONS := {
 			"chain": 1,  # TUNING (not in GDD) the evolution flag: more snaps each jaw leaps on to (first pass 2)
 			"chain_gap": 0.18,  # TUNING (not in GDD) s between two snaps of a leaping jaw
 			"chain_reach": 130.0,  # TUNING (not in GDD) px a jaw leaps to its next group
+		},
+	},
+	# --- Act VII: the Witchwood ---
+	# Witches' Sabbath (owner-approved Act VII proposal: "Hex Circle -> Witches'
+	# Sabbath (+ Moonlit Rite)"): Hex Circle + Moonlit Rite (a NEW passive, owner
+	# rule: at Lv 5). Own decision on its kit: the coven of the necromancer's
+	# own: the circle grows and `sabbath_circles` smaller circles of
+	# `sabbath_radius` px orbit it `sabbath_orbit` px out at `sabbath_speed`
+	# rad/s, each draining like the first. Detected by the "sabbath_circles" key.
+	"witches_sabbath": {
+		"base": "witch_circle",
+		"passive": "moonlit_rite",
+		"display_name": "Witches' Sabbath",  # Owner-approved proposal
+		"icon": "witches_sabbath",
+		"description": "Your circle grows, and three lesser circles dance around it, draining all they cross.",
+		"labels": {"damage": "Drain per pulse", "radius": "Radius", "sabbath_circles": "Dancing circles", "cooldown": "Pulse every (s)", "drain": "Drunk back"},
+		"stats": {
+			"damage": 14.0, "radius": 104.0, "cooldown": 0.8, "drain": 0.2, "heal_cap": 5.0,  # TUNING (not in GDD) first pass 17 (358k in the forced run, ahead of Rain of Fire's 157k)
+			"sabbath_circles": 3,  # TUNING (not in GDD) the evolution flag: orbiting circles
+			"sabbath_radius": 40.0,  # TUNING (not in GDD) px; first pass 46
+			"sabbath_orbit": 160.0,  # TUNING (not in GDD) px from the necromancer
+			"sabbath_speed": 1.2,  # TUNING (not in GDD) rad/s
 		},
 	},
 }

@@ -201,6 +201,14 @@ const UNLOCKS := {
 	"moonfang": {"type": "spell", "boss": "vargr", "text": "Slay Vargr on Ravensmoor to unlock."},  # Owner-approved Act VII proposal
 	"pack_blood": {"type": "passive", "boss": "vargr", "text": "Slay Vargr on Ravensmoor to unlock."},  # Moonfang's paired passive (owner-approved proposal), unlocked with it
 	"silver_bones": {"type": "passive", "achievement": "coffin_nails", "text": "Earn Coffin Nails: break every sleeping coffin on Ravensmoor before it opens."},  # Owner-approved Act VII proposal
+	# --- Act VII: the Witchwood ---
+	# Isolde's fall (owner-approved Act VII proposal "Rewards": Hex Circle is
+	# unlocked by Isolde Vane) with its paired passive, offered on every stage;
+	# the stage's achievement The Coven Breaks earns Act VII's counter-passive
+	# Embalmed (offered only in Act VII through its card row's "act").
+	"witch_circle": {"type": "spell", "boss": "isolde", "text": "Slay Isolde Vane in the Witchwood to unlock."},  # Owner-approved Act VII proposal
+	"moonlit_rite": {"type": "passive", "boss": "isolde", "text": "Slay Isolde Vane in the Witchwood to unlock."},  # Hex Circle's paired passive (owner-approved proposal), unlocked with it
+	"embalmed": {"type": "passive", "achievement": "the_coven_breaks", "text": "Earn The Coven Breaks: kill Isolde's three sisters within 1 second of each other."},  # Owner-approved Act VII proposal (the brief: The Coven Breaks unlocks Embalmed)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

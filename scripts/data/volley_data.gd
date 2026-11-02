@@ -337,6 +337,9 @@ const SPELLS := {
 	# --- Act VII: Ravensmoor ---
 	"moonfang": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 8], "spread": 30.0, "speed": 360.0,
 		"life": 0.6, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.902, 0.933, 0.969)},  # TUNING (not in GDD) a fan of moonlit fang-shards with every other snap (Palette.COURT_MOON_LIGHT)
+	# --- Act VII: the Witchwood ---
+	"witch_circle": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 12], "speed": 160.0,
+		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.88, 0.22, 0.31)},  # TUNING (not in GDD) a ring of blood-red runes with every third pulse
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

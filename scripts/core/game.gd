@@ -402,6 +402,9 @@ func _ready() -> void:
 		# --- Act VII: Ravensmoor ---
 		"ravensmoor":
 			ground = RavensmoorGround.new()  # Act VII: Ravensmoor's four zone floors (RavensmoorStage.ZONES).
+		# --- Act VII: the Witchwood ---
+		"witchwood":
+			ground = WitchwoodGround.new()  # Act VII: the Witchwood's four zone floors and the Fen's water (WitchwoodStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

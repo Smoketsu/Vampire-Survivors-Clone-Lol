@@ -65,6 +65,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	# Phase 2: each Act VII stage's own lines go here (its stage, kinds and boss).
 	# --- Act VII: Ravensmoor ---
 	RavensmoorReport.print_lines(game, st)  # The sleeping coffins, the ghouls, Old Greymane, Vargr (each when it ran).
+	# --- Act VII: the Witchwood ---
+	WitchwoodReport.print_lines(game, st)  # The Fen, the stones, the covens, the pools, the Bog Mother, Isolde (each when it ran).
 
 
 ## The "bloodfeast" line (Bloodfeast).

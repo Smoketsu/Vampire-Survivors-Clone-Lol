@@ -217,6 +217,12 @@
 ##                        waves and their bounty, Coffin Nails, the ghoul packs,
 ##                        Old Greymane's "greymane" event); ground "ravensmoor"
 ##                        is its RavensmoorGround (four zone floors).
+## --- Act VII: the Witchwood ---
+##   witchwood          — WitchwoodDirector config (WitchwoodStage.WITCHWOOD, Act
+##                        VII, the Witchwood: the Fen's pools ("fen"), the hex
+##                        stones ("stones"), the Bog Mother's "bog_mother" event
+##                        and the "coven" events); ground "witchwood" is its
+##                        WitchwoodGround (four zone floors and the Fen's water).
 class_name StageRegistry
 extends RefCounted
 

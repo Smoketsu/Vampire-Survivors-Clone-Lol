@@ -607,12 +607,25 @@ RIGS = {
     "court/old_greymane": dict(mode="legs", hip=64, back=(0, 43), front=(43, 86), rigid=[], spread=3, lift=3, dip=1),
     "bosses/vargr": dict(mode="legs", hip=82, back=(0, 63), front=(63, 126), rigid=[], spread=3, lift=3, dip=1),
     "player/moon_huntress": dict(mode="robe", hip=30, rigid=[(31, 42, 0, None)], sway=1, dip=1, bust=(19, 27, 12, 18, 2)),
+    # --- Act VII: the Witchwood ---
+    # The Crimson Witch, Isolde and the Hedge Witch glide in their gowns (robe mode) with the figure-redesign rigs (bust
+    # bounce, hip swish, idle strips), their staffs rigid; the Bloated Thrall waddles on short legs; the Bog Mother
+    # wades (robe mode, the weed hem swaying).
+    "court/crimson_witch": dict(mode="robe", hip=28, rigid=[(21, 28, 0, None)], sway=1, dip=1, bust=(8, 20, 14, 20, 2), swish=(6, 21, 30, 42, 2)),
+    "court/bloated_thrall": dict(mode="legs", hip=44, back=(0, 18), front=(18, 36), rigid=[], spread=1, lift=1, dip=1),
+    "court/bog_mother": dict(mode="robe", hip=70, rigid=[], sway=2, dip=1),
+    "bosses/isolde": dict(mode="robe", hip=54, rigid=[(12, 25, 0, None)], sway=1, dip=1, bust=(28, 48, 28, 38, 3), swish=(24, 52, 56, 80, 2)),
+    "player/hedge_witch": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(14, 24, 15, 21, 2), swish=(10, 26, 30, 44, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
 # its character's body height and pose (ART_BIBLE "Player skins"), so its rig is derived
 # from the character's (skin_rig()); SKIN_FIX overrides single fields after review.
 SKINS = {
+    # --- Act VII: the Witchwood ---
+    "player/hedge_witch_hyper": "player/hedge_witch",
+    "player/hedge_witch_untouchable": "player/hedge_witch",
+    "player/hedge_witch_deathlord": "player/hedge_witch",
     # --- Act VI: the Palace of Silk and Ash ---
     "player/succubus_queen_hyper": "player/succubus_queen",
     "player/succubus_queen_untouchable": "player/succubus_queen",

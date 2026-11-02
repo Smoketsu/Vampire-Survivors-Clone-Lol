@@ -428,7 +428,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VI: Pandemonium ---
 	"morning_star_falls",
 	# --- Act VII: Ravensmoor ---
-	"coffin_nails"]
+	"coffin_nails",
+	# --- Act VII: the Witchwood ---
+	"the_coven_breaks"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -601,6 +603,14 @@ const ACHIEVEMENTS := {
 	# coffins after 0:00 do not count. It unlocks the counter-passive Silver Bones.
 	"coffin_nails": {"display_name": "Coffin Nails", "description": "Break every sleeping coffin on Ravensmoor before it opens",
 		"stat": "coffin_nails_runs", "goal": 1, "unlock": "The Silver Bones passive", "bounty": 300},  # Owner-approved Act VII proposal; bounty TUNING (not in GDD) as Gate Crashed
+	# --- Act VII: the Witchwood ---
+	# Owner-approved Act VII achievement "The Coven Breaks" (kill Isolde's three
+	# sisters within 1 s): BossIsolde sets the run stat witchwood_coven_breaks
+	# when the three falls that end her second phase lie within IsoldeData
+	# coven_break s; MetaProgress counts the runs (lifetime coven_breaks_runs).
+	# It unlocks the counter-passive Embalmed.
+	"the_coven_breaks": {"display_name": "The Coven Breaks", "description": "Kill Isolde's three sisters within 1 second of each other",
+		"stat": "coven_breaks_runs", "goal": 1, "unlock": "The Embalmed passive", "bounty": 300},  # Owner-approved Act VII proposal; bounty TUNING (not in GDD) as Gate Crashed
 }
 
 # --- Content wave 2: B. Achievement rewards ---

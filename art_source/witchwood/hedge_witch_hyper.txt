@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a playful confident pose, weight on one leg, one hand cupping a small glowing crimson rune circle, the other holding a crooked hazel wand
+
+LOW-RESOLUTION pixel art: the whole figure is only 56 pixels tall and about 38 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: THE HEDGE WITCH (a FEMALE playable character, a necromancer's witch) in the game's figure-redesign style: the most exaggerated hourglass figure (very full bust, an extremely tiny cinched waist less than half as wide as the hips, very wide curvy hips), glamorous and confident, her face clearly readable: pale skin, long wavy auburn-brown hair with a sprig of dried herbs, green eyes, a soft smile. A floppy wide-brimmed black and gold witch hat with a crooked tip and a band of dried flowers; a black corset trimmed in gold bodice laced with a moss-green ribbon, a deep neckline fully covering her chest, a moss-green knitted shawl over bare shoulders, a long patched skirt of violet and moss with a HIGH SLIT showing one leg in a striped stocking and a short boot; hips and chest fully covered, never nude, tasteful. Little pouches and a bone charm at her belt. Her whole outfit is GILDED: gold trims, a gold crescent on the hat, a glowing gold rune circle instead of crimson.
+Signature shape that must read in silhouette: the floppy wide hat, the hourglass figure and the shawl.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: pale skin #D9B8A8 #A8806E; black #160F1C #2B1E36 #4D3A5E; gold #8C6A1E #E0B848 #F7E08A; moss green #2E4A22 #4F7A36; auburn hair #5A2E1A #8C4A2A
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) a related figure for the style family only (do NOT copy her costume).

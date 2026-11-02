@@ -626,6 +626,26 @@ RECIPES = {
         "source": "ravensmoor_heath.png", "method": "quilt",  # The Wolfwood: pine needles and roots.
         "colors": ["ink_green", "floor_soil", "floor_grass", "floor_earth"],
     },
+    # --- Act VII: the Witchwood ---
+    # The four zone floors of THE WITCHWOOD (WitchwoodGround, tiles/witchwood_<style>), one API source each, stored
+    # with their alpha set opaque (as the Burning Gate's).
+    "witchwood_fen": {
+        "source": "witchwood_fen.png", "method": "quilt",  # The Fen: black peat and reeds (the pools are drawn by code).
+        "colors": ["ink_green", "floor_soil", "floor_moss"],
+        "shares": {"ink_green": 0.08, "floor_soil": 0.72, "floor_moss": 0.20},  # Exact shares: a dark, quiet peat.
+    },
+    "witchwood_hanging_wood": {
+        "source": "witchwood_hanging_wood.png", "method": "quilt",  # The Hanging Wood: leaf litter and roots.
+        "colors": ["ink_warm", "floor_soil", "floor_earth"],
+    },
+    "witchwood_standing_stones": {
+        "source": "witchwood_standing_stones.png", "method": "quilt",  # The Standing Stones: a dark heath.
+        "colors": ["ink_cold", "floor_soil", "floor_moss", "floor_slate"],
+    },
+    "witchwood_cauldron": {
+        "source": "witchwood_cauldron.png", "method": "quilt",  # The Cauldron: scorched ash soil, old blood.
+        "colors": ["ink_red", "ink_warm", "floor_soil", "floor_ash"],
+    },
 }
 
 

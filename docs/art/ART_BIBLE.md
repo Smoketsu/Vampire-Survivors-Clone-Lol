@@ -2727,3 +2727,41 @@ huntress should. Walk strips by `walk_cycle.py` (rigs under `# --- Act VII: Rave
 passes on the dark floors; Vargr, the Huntress, her Deathlord skin and the props fail only on the March and Sanctum road
 floors (lighter than any Act VII floor). Each prop and badge sheet came back with one extra piece (a barrel; a copy of the
 reference badge), skipped. 13 API images, about $0.30 (ledger), no redos, no refusals. **For the owner's review.**
+
+### Act VII: the Witchwood (Stage 20; Act VII phase 2, Nov 2026)
+
+<!-- --- Act VII: the Witchwood --- -->
+The Witchwood's art (GDD §15.0 "The Witchwood (Act VII phase 2)" and the rows after it), in the Court's style above
+(blood, velvet, moonlight, candle gold) with the fen's black water and pondweed green. The Crimson Witch matches the
+approved lineup (`act7_lineup.png`: red hair, crimson pointed hat, velvet gown with a high slit, a staff) and the
+Bloated Thrall its pale swollen thrall; Isolde is the Crimson Witch made grander (a tall black hat with a gold crescent,
+a raven capelet, a cauldron-staff). Every prompt names the figure's sex; the women are in the figure-redesign style,
+chest and hips covered. Prompts and raw API images in `art_source/witchwood/` (`<id>.txt`, `raw/`, `refs/`: a Court
+sprite blown up 8-10x for the pixel look and 2x crops of the lineup for the costume); `art_source/witchwood/build.sh`
+rebuilds everything. 16 API images (8 figures, 2 prop sheets, 4 floors, 2 icon sheets), about $0.40 (ledger), no
+redos, no moderation refusals. Contact sheet `docs/act7/witchwood_art_contact_sheet.png`.
+
+Pipeline: the women through `pixelate_source.py` at their height, then `prepare_sprite.py --ink-l 0.15 --no-cleanup
+--no-prune` (the figure route); the Bloated Thrall and the Bog Mother straight (the Bog Mother lifted x1.5 by
+`art_source/burning_gate/brighten.py` first and converted `--no-levels`: she read too dark). Props, the hex stones and the badges from split sheets by `art_source/witchwood/make_art.py` (tall
+circle props capped at 2.8 x their footprint radius, else a standing stone stood twice the necromancer's height; the
+violet icon sheet's piece 3 and the gold sheet's piece 2 are copies of the reference badge, unused). Floors by
+`make_tile.py` (recipes `witchwood_<style>`, sources stored opaque). Walk / glide strips and the idle breathing strips
+by `walk_cycle.py` (rigs under `# --- Act VII: the Witchwood ---`).
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `court/crimson_witch` | Crimson Witch (support, female, figure redesign): crimson pointed hat, red hair, velvet slit gown, a staff | 28x52 | robe glide (hip 28, staff rigid), bust, swish, idle strip |
+| `court/bloated_thrall` | Bloated Thrall (heavy, male): a vast pale belly with bite wounds, blood on the chin | 36x60 | legs walk (hip 44) |
+| `court/bog_mother` | The Bog Mother (miniboss, female): a vast drowned witch, grey-green skin, weed-hung hair, root crown, rotted gown, wading | 96x110 | robe glide (hip 70, sway 2); her black water is code (texture discs) |
+| `bosses/isolde` | Isolde Vane (boss, female, figure redesign): tall black hat with a gold crescent, red hair, crimson corset, raven capelet, a cauldron-staff, a red hex rune over her raised hand | 72x104 | robe glide (hip 54, staff rigid), bust, swish, idle strip; her three sisters draw it tinted (`IsoldeData.SISTER_TINTS`) |
+| `structures/hex_stone` / `_broken` | A black standing stone with glowing red runes and bone charms; snapped in two | 24x44 / 18x28 | still; the rune pulse is code |
+| `player/hedge_witch` | The Hedge Witch (character, female, figure redesign): floppy violet hat with herbs, moss-green shawl, violet bodice, patched slit skirt, striped stockings, a crimson rune in her hand | 32x56 | robe glide (hip 30), bust, swish, idle strip |
+| `player/hedge_witch_hyper` / `_untouchable` / `_deathlord` | Her skins: gilded black and gold; the white phantom with soul-teal trims; a spiked iron crown and crimson | 34-36x56 | the character's rig (`SKINS`) |
+| `obstacles/fen_snag_*`, `standing_stone_*`, `witch_cauldron_*` | A drowned tree's stump; a mossy standing stone; a cauldron of red brew (circles) | s / m / l | scenery, calmer than the units |
+| `obstacles/charm_fence_*` (+ `_v`) | A crooked fence of stakes hung with charms and red threads (rect, both orientations) | s / l | |
+| `tiles/witchwood_fen` / `_hanging_wood` / `_standing_stones` / `_cauldron` | Black peat; leaf litter and roots; a dark heath; scorched ash soil | 128 | the Fen's pools are drawn on top by code |
+| `icons/witch_circle`, `moonlit_rite`, `embalmed` (violet); `witches_sabbath`, `ach_the_coven_breaks` (gold) | A rune circle with a crescent; a crescent over a rune circle and candles; a bandaged canopic jar; a hat in a circle with three orbiting circles; three broken hats | 32 | badge frames `abyssal_pact` / `tidecallers_host` |
+
+**For the owner's review.** Known weak spots: the pale skins snap to the `skin` ramp and read warmer than the concept;
+the Hedge Witch's Deathlord skin reads more "crimson witch" than armoured; the Bog Mother has no bust rig (she wades).
