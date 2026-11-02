@@ -1164,3 +1164,6 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-02 21:40,player/fallen_saint_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,498,2048,439,0.0320,fsd_b.png
 2026-11-02 21:41,court/ghoul,gpt-image-2.5-flare,medium,1024x1024,1,740,1024,439,0.0251,gh_a.png
 2026-11-02 21:41,court/ghoul,gpt-image-2.5-flare,medium,1024x1024,1,740,1024,439,0.0251,gh_b.png
+2026-11-02 21:56,court/ghoul_r3a,gpt-image-2.5-flare,medium,1024x1024,4,498,2486,439,0.0355,a1.png
+2026-11-02 21:58,court/ghoul_r3b,gpt-image-2.5-flare,medium,1024x1024,4,533,2486,439,0.0357,a2.png
+2026-11-02 21:59,court/ghoul_r3c,gpt-image-2.5-flare,medium,1024x1024,4,550,2486,439,0.0358,a3.png

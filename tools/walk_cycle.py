@@ -703,7 +703,7 @@ RIGS = {
     "city/tank": dict(mode="legs", hip=40, back=(0, 39), front=(39, 78), rigid=[], spread=0, lift=1, dip=1),
     "city/blitz": dict(mode="legs", hip=36, back=(0, 19), front=(19, 48), rigid=[], spread=1, lift=1, dip=1),
     # --- Act VII: Ravensmoor ---
-    "court/ghoul": dict(mode="legs", hip=18, back=(0, 16), front=(16, 32), rigid=[], spread=1, lift=1, dip=1),
+    "court/ghoul": dict(mode="legs", hip=29, back=(0, 12), front=(12, 30), rigid=[], spread=1, lift=1, dip=1),
     "court/old_greymane": dict(mode="legs", hip=64, back=(0, 43), front=(43, 86), rigid=[], spread=3, lift=3, dip=1),
     "bosses/vargr": dict(mode="legs", hip=82, back=(0, 63), front=(63, 126), rigid=[], spread=3, lift=3, dip=1),
     "player/moon_huntress": dict(mode="robe", hip=30, rigid=[(31, 42, 0, None)], sway=1, dip=1, bust=(19, 27, 12, 18, 2)),

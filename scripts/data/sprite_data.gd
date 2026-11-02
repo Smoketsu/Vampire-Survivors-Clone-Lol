@@ -422,7 +422,7 @@ const HEIGHTS: Dictionary = {
 	"structures/city_wreck": 34.0,  # TUNING (not in GDD) a burning vehicle wreck (about 40 wide), the flames above
 	"structures/city_wreck_burnt": 34.0,  # TUNING (not in GDD) the same wreck burnt out: fire out, the shell and a few embers
 	# --- Act VII: Ravensmoor (assets/sprites/court/, bosses/, player/) ---
-	"court/ghoul": 30.0,  # TUNING (not in GDD) pack fodder: a gaunt grey corpse-eater hunched on all fours, ~1.3 x as long as tall
+	"court/ghoul": 38.0,  # TUNING (not in GDD) pack fodder: a gaunt grey corpse-eater, hunched and walking, big head carried forward (raised 30 -> 38 so its face reads)
 	"court/old_greymane": 96.0,  # TUNING (not in GDD) miniboss tier: a huge grey-maned wolf-man (the werewolf beast 84), the scarred mane above
 	"bosses/vargr": 120.0,  # TUNING (not in GDD) boss tier: the black wolf king, red cloak and iron crown (Moloch 124)
 	"player/moon_huntress": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign): body ~50, the wolf ears above
