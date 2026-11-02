@@ -616,6 +616,17 @@ RIGS = {
     "court/bog_mother": dict(mode="robe", hip=70, rigid=[], sway=2, dip=1),
     "bosses/isolde": dict(mode="robe", hip=54, rigid=[(12, 25, 0, None)], sway=1, dip=1, bust=(28, 48, 28, 38, 3), swish=(24, 52, 56, 80, 2)),
     "player/hedge_witch": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(14, 24, 15, 21, 2), swish=(10, 26, 30, 44, 2)),
+    # --- Act VII: Castle Sanguis ---
+    # The Chiropteran and its King glide (robe mode: fliers glide, the legs and wings ride as one layer); Queen Carmilla
+    # glides in her gown with the figure-redesign rigs (the two-lobe bust box and the hip `swish`, and an idle strip); the
+    # Elder, the Dhampir, the Blood Spawn and Nosferatu stride (legs).
+    "court/chiropteran": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1),
+    "court/chiropteran_king": dict(mode="robe", hip=60, rigid=[], sway=1, dip=1),
+    "bosses/carmilla": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1, bust=(26, 39, 14, 21, 2, 2), swish=(22, 42, 26, 36, 2)),
+    "bosses/elder": dict(mode="legs", hip=80, back=(0, 61), front=(61, 122), rigid=[], spread=3, lift=3, dip=1),
+    "player/dhampir": dict(mode="legs", hip=34, back=(0, 23), front=(23, 46), rigid=[], spread=2, lift=2, dip=1),
+    "summons/blood_spawn": dict(mode="legs", hip=26, back=(0, 25), front=(25, 50), rigid=[], spread=2, lift=2, dip=1),
+    "summons/nosferatu": dict(mode="legs", hip=34, back=(0, 27), front=(27, 54), rigid=[], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -722,6 +733,10 @@ SKINS = {
     "player/moon_huntress_hyper": "player/moon_huntress",
     "player/moon_huntress_untouchable": "player/moon_huntress",
     "player/moon_huntress_deathlord": "player/moon_huntress",
+    # --- Act VII: Castle Sanguis ---
+    "player/dhampir_hyper": "player/dhampir",
+    "player/dhampir_untouchable": "player/dhampir",
+    "player/dhampir_deathlord": "player/dhampir",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

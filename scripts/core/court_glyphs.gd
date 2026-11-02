@@ -49,6 +49,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	# --- Act VII: the Witchwood ---
 	if WitchwoodGlyphs.draw_enemy(ci, kind, o, r, flash):
 		return true  # The Crimson Witch, the Bloated Thrall, the Bog Mother, Isolde's sisters, the hex stone.
+	# --- Act VII: Castle Sanguis ---
+	if CastleSanguisGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # A Castle Sanguis kind (the Chiropteran, the Chiropteran King).
 	match kind:
 		"vampire_bat":
 			_bat(ci, o, r, flash)

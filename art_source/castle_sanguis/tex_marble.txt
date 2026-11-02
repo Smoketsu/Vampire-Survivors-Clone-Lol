@@ -1,0 +1,2 @@
+Seamless top-down FLOOR TEXTURE for a dark 2D pixel-art game: polished black-and-crimson marble of a vampire queen's throne room seen straight from above, thin dark red veins winding through black stone, very flat even lighting, no objects, no joints needed (just the stone surface). Chunky pixel art at about 160 pixels across, crisp square pixels, flat colours, no gradients, no vignette, no text. Fully opaque, filling the whole image edge to edge.
+Colours: black marble #0E0A0E #140F14 #1A131A #21171F, red veins #3E0E18 #5A1420.

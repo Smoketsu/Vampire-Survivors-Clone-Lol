@@ -200,6 +200,9 @@ const CLASSES := {
 	# --- Act VI: Pandemonium ---
 	"archfiend": {"trigger": "special", "every": 1, "pattern": "fan", "counts": [5, 7], "spread": 60.0, "speed": 300.0,
 		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a fan of soul-fire embers off the cleave
+	# --- Act VII: Castle Sanguis ---
+	"blood_spawn": {"trigger": "attack", "every": 4, "pattern": "fan", "counts": [3, 4], "spread": 40.0, "speed": 300.0,
+		"life": 0.4, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.88, 0.22, 0.31)},  # TUNING (not in GDD) a spray of blood-red claw shards every fourth blow
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -254,6 +257,9 @@ const EVOLVED := {
 	# --- Act VI: Pandemonium ---
 	"prince_of_hell": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 320.0,
 		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) the full-circle cleave's ring of soul-fire
+	# --- Act VII: Castle Sanguis ---
+	"nosferatu": {"trigger": "attack", "every": 3, "pattern": "ring", "counts": [8], "speed": 280.0,
+		"life": 0.45, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a soul-lit ring of blood every third blow
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -340,6 +346,9 @@ const SPELLS := {
 	# --- Act VII: the Witchwood ---
 	"witch_circle": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 12], "speed": 160.0,
 		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.88, 0.22, 0.31)},  # TUNING (not in GDD) a ring of blood-red runes with every third pulse
+	# --- Act VII: Castle Sanguis ---
+	"night_swarm": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 30.0, "speed": 260.0,
+		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a fan of spectral wings every third dart cooldown
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

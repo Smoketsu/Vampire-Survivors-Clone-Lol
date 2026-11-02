@@ -283,6 +283,11 @@ var ravensmoor: RavensmoorDirector = null
 ## The Witchwood's mechanics (Act VII: the Fen, the hex stones, the Bog
 ## Mother, the covens; StageRegistry "witchwood"; null on every other stage).
 var witchwood: WitchwoodDirector = null
+# --- Act VII: Castle Sanguis ---
+## Castle Sanguis's mechanics (Act VII: the Banquet's blood fountains, the
+## Chiropteran King, guest squads; StageRegistry "castle_sanguis"; null on
+## every other stage).
+var castle_sanguis: CastleSanguisDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -445,6 +450,12 @@ func _ready() -> void:
 		witchwood.game = game
 		witchwood.config = stage_def["witchwood"]
 		add_child(witchwood)  # The Witchwood's director.
+	# --- Act VII: Castle Sanguis ---
+	if not (stage_def.get("castle_sanguis", {}) as Dictionary).is_empty():
+		castle_sanguis = CastleSanguisDirector.new()
+		castle_sanguis.game = game
+		castle_sanguis.config = stage_def["castle_sanguis"]
+		add_child(castle_sanguis)  # Castle Sanguis's director.
 
 
 # =====================================================================================
@@ -574,6 +585,9 @@ func step(delta: float) -> void:
 	# --- Act VII: the Witchwood ---
 	if witchwood != null:
 		witchwood.step(delta)  # The Fen, the hex stones, the Bog Mother.
+	# --- Act VII: Castle Sanguis ---
+	if castle_sanguis != null:
+		castle_sanguis.step(delta)  # The Banquet's fountains, guest squads.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -697,6 +711,9 @@ func objective_text() -> String:
 	# --- Act VII: the Witchwood ---
 	if witchwood != null and witchwood.objective_override() != "":
 		return witchwood.objective_override()  # The Bog Mother.
+	# --- Act VII: Castle Sanguis ---
+	if castle_sanguis != null and castle_sanguis.objective_override() != "":
+		return castle_sanguis.objective_override()  # The Chiropteran King, the Waking.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -913,6 +930,12 @@ func _run_event(ev: Dictionary) -> void:
 				witchwood.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Witchwood's miniboss and covens (WitchwoodDirector).
+		# --- Act VII: Castle Sanguis ---
+		"chiropteran_king":
+			if castle_sanguis != null:
+				castle_sanguis.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Castle Sanguis's miniboss (CastleSanguisDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

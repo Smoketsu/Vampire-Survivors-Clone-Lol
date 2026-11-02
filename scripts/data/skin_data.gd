@@ -103,6 +103,8 @@ const HYPER_NAMES := {
 	"moon_huntress": "Huntress of the Golden Moon",  # TUNING (not in GDD)
 	# --- Act VII: the Witchwood ---
 	"hedge_witch": "The Gilded Hedge Witch",  # TUNING (not in GDD)
+	# --- Act VII: Castle Sanguis ---
+	"dhampir": "Gilded Dhampir",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -153,6 +155,8 @@ const HYPER_TINTS := {
 	"moon_huntress": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 	# --- Act VII: the Witchwood ---
 	"hedge_witch": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
+	# --- Act VII: Castle Sanguis ---
+	"dhampir": Color(1.2, 1.05, 0.6),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD

@@ -223,6 +223,13 @@
 ##                        stones ("stones"), the Bog Mother's "bog_mother" event
 ##                        and the "coven" events); ground "witchwood" is its
 ##                        WitchwoodGround (four zone floors and the Fen's water).
+## --- Act VII: Castle Sanguis ---
+##   castle_sanguis     — CastleSanguisDirector config (CastleSanguisStage
+##                        .CASTLE_SANGUIS, Act VII, Castle Sanguis: the Banquet's
+##                        blood fountains, the Chiropteran King's
+##                        "chiropteran_king" event, guest squads of the other
+##                        Act VII stages' kinds); ground "castle_sanguis" is its
+##                        CastleSanguisGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

@@ -2765,3 +2765,36 @@ by `walk_cycle.py` (rigs under `# --- Act VII: the Witchwood ---`).
 
 **For the owner's review.** Known weak spots: the pale skins snap to the `skin` ramp and read warmer than the concept;
 the Hedge Witch's Deathlord skin reads more "crimson witch" than armoured; the Bog Mother has no bust rig (she wades).
+
+### Act VII: Castle Sanguis (phase 2, Nov 2026)
+
+<!-- --- Act VII: Castle Sanguis --- -->
+Castle Sanguis's art (GDD §15.0 "Castle Sanguis (Act VII phase 2)" and the rows after it), in the Court's style above
+(blood, velvet, moonlight, candle gold). Prompts in `art_source/castle_sanguis/<id>.txt` (every figure's sex named), the
+whole rebuild in `art_source/castle_sanguis/make_art.py` (units, figures, badges, props, floors, strips). Generated with
+`tools/gen_image.py`, `--ref` an existing sprite upscaled 8x for the pixel look plus a crop of the approved concepts
+(`act7_lineup.png` for the Chiropteran, `act7_boss.png` for Carmilla, the Elder and his coffin); the skins, Nosferatu and
+the open coffin with their base source as the reference. 19 API images, about $0.42 (ledger), no redos, no refusals.
+Contact sheet `docs/act7/castle_sanguis_contact_sheet.png`.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `court/chiropteran` | Chiropteran (elite, male bat-man): grey fur, violet wings, brown loincloth | 48x50 | robe (glides) |
+| `court/chiropteran_king` | The Chiropteran King (miniboss, male): bone crown, blood-red mantle, huge wings | 100x96 | robe (flies) |
+| `bosses/carmilla` | Queen Carmilla (female, the figure style at its limit): gold crown, towering red collar, slit velvet gown, the drain beam from her hand | 66x64 | through `pixelate_source.py` at 64; robe with `bust` and `swish`, idle strip |
+| `bosses/elder` | The Elder (male, the first vampire): ash-grey, bat ears, red-membraned wings, long claws | 122x120 | legs (spread 3) |
+| `player/dhampir` | The Dhampir (male): white hair, red and teal eyes, black coat with red lining, sabre, two teal bats | 46x56 | legs; skins `_hyper` (gold), `_untouchable` (white phantom), `_deathlord` (iron crown, crimson) |
+| `summons/blood_spawn` | Blood Spawn (male): gaunt pale crouching brawler, teal eyes, bloody claws | 50x40 | legs |
+| `summons/nosferatu` | Nosferatu (male): tall bald rat-fanged vampire in a tattered black coat | 54x52 | legs |
+| `structures/blood_fountain` | The Banquet's blood fountain: stone basin, a bat statue spouting blood | 30x40 | drawn by CastleSanguisDirector |
+| `structures/elder_coffin`, `_open` | The Elder's great coffin, closed / open | 52x48, 56x48 | drawn by BossCarmilla from the Waking on |
+| `icons/night_swarm`, `old_blood`, `blood_spawn`, `thirst_eternal` | badges on the violet frame | 32x32 | the violet sheet drew a fifth spare symbol (skipped) |
+| `icons/nocturne`, `nosferatu`, `ach_last_supper` | badges on the gold frame | 32x32 | |
+| `obstacles/castle_well`, `gargoyle_statue`, `candelabra`, `wine_barrel`, `crypt_pillar`, `blood_urn` | round props per zone size | | one sheet |
+| `obstacles/castle_wall`, `feast_table`, `sarcophagus` (+ `_v`) | long props, both orientations | | one sheet |
+| `tiles/castle_sanguis_courtyard/_banquet/_crypt/_throne` | zone floors | 128x128 | `make_tile.py` from two textures (grey flagstone, black marble veined red) |
+
+`art_check.py`: height, alpha and palette pass on every sprite; the lightness check fails only against the Act I floors
+(the Graveyard soil, the March road), as the approved Countess does: the dark Court figures read against Castle
+Sanguis's own floors (mean L 0.16-0.28). Pale skin snaps to the `skin` ramp, so Carmilla's face reads tan (the known
+foundation weak spot, for the art review).

@@ -64,7 +64,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act VI: the Palace of Silk and Ash --- (a silhouette naming its unlock until met)
 		"bound_succubus",
 		# --- Act VI: Pandemonium --- (a silhouette naming its unlock until met)
-		"archfiend"]
+		"archfiend",
+		# --- Act VII: Castle Sanguis --- (a silhouette naming its unlock until met)
+		"blood_spawn"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -216,13 +218,17 @@ const COURT_SOLDIERS: Array[String] = ["blood_thrall", "vampire_bat", "blood_kni
 	# --- Act VII: Ravensmoor ---
 	"ghoul",
 	# --- Act VII: the Witchwood ---
-	"crimson_witch", "bloated_thrall", "hex_stone"]
+	"crimson_witch", "bloated_thrall", "hex_stone",
+	# --- Act VII: Castle Sanguis ---
+	"chiropteran", "blood_bearer"]
 ## Court champions (minibosses) and the Act VII Reckoning kinds.
 const COURT_CHAMPIONS: Array[String] = ["werewolf",
 	# --- Act VII: Ravensmoor ---
 	"old_greymane",
 	# --- Act VII: the Witchwood ---
-	"bog_mother"]
+	"bog_mother",
+	# --- Act VII: Castle Sanguis ---
+	"chiropteran_king"]
 ## Court stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const COURT_BOSSES: Array[String] = ["vargr", "isolde", "carmilla"]
 
@@ -406,6 +412,10 @@ const DESCRIPTIONS: Dictionary = {
 	"bloated_thrall": "A thrall swollen with blood. It bursts into a pool that heals the Court: kill it away from the knights.",  # Owner-approved Act VII proposal
 	"hex_stone": "A standing stone carved with the witches' runes. It powers the covens' circles; broken, no coven casts near it.",  # Owner-approved Act VII proposal
 	"bog_mother": "A vast drowned witch of the fen. Her weed-ropes drag your dead into her black water to drown.",  # Owner-approved Act VII proposal
+	# --- Act VII: Castle Sanguis ---
+	"chiropteran": "Bat-folk who glide over your ring. Their shriek stuns your dead in a cone: step out of it.",  # Owner-approved Act VII proposal
+	"blood_bearer": "Thralls with chalices who carry blood to their kneeling Queen. Kill them before they reach her.",  # Owner-approved Act VII proposal ("the thralls that bring her blood")
+	"chiropteran_king": "A giant bat-man who seizes your dead, flies them off over the ring and drops them outside it.",  # Owner-approved Act VII proposal (the miniboss)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -623,6 +633,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"coffin_nails": "ach_coffin_nails",  # TUNING (not in GDD)
 	# --- Act VII: the Witchwood ---
 	"the_coven_breaks": "ach_the_coven_breaks",  # TUNING (not in GDD)
+	# --- Act VII: Castle Sanguis ---
+	"last_supper": "ach_last_supper",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -670,6 +682,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"coffin_nails": "silver_bones",
 	# --- Act VII: the Witchwood ---
 	"the_coven_breaks": "embalmed",
+	# --- Act VII: Castle Sanguis ---
+	"last_supper": "night_swarm",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

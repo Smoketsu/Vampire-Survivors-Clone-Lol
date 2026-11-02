@@ -1511,6 +1511,8 @@ func finish(summary: Dictionary) -> void:
 	RavensmoorReport.item_lines(game, st)  # Moonfang, Pack Blood, Silver Bones (only when taken; the stage's own lines are CourtReport's).
 	# --- Act VII: the Witchwood ---
 	WitchwoodReport.item_lines(game, st)  # Hex Circle, Moonlit Rite, Embalmed (only when taken; the stage's own lines are CourtReport's).
+	# --- Act VII: Castle Sanguis ---
+	CastleSanguisReport.item_lines(game, st)  # Night Swarm, Old Blood, the Blood Spawn, Thirst Eternal (only when used; the stage's own lines are CourtReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

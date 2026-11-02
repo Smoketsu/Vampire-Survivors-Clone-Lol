@@ -1,0 +1,13 @@
+Pixel-art game object for a top-down 2D horde-survival game. Three-quarter top-down view (camera above and slightly in front), the ELDER'S COFFIN lying on a low stone dais, CLOSED, long side toward the viewer, lid on.
+
+LOW-RESOLUTION pixel art: the whole object is only 48 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze.
+
+Subject: a huge, ancient gothic COFFIN of black stone and dark wood (hexagonal, wider at the shoulders), a great stone BAT carved on the lid with spread wings, iron bands and corner studs, dried blood running down its sides, a few candle stubs at its foot. Ancient, heavy and dreadful.
+Signature shape that must read in silhouette: the big hexagonal coffin with the bat on the lid.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: black stone and wood #160F1C #2B1E36 #4D3A5E; iron silver #6E7A8C #B4C0D0; blood #5A0A14 #A3142A #E0384E; candle wax #CFC7AE, flame #E0A92E.
+
+Outline: a clean 1-pixel dark outline around the whole object in the darkest shade of each part's own colour. Light from the top-left.
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha), one object only, centred, filling about 85% of the image height. No ground, no cast shadow, no text, no frame, no watermark.
+Attached: a game structure sprite for pixel size, outline weight and flat look.

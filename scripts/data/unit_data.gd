@@ -55,7 +55,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"bound_succubus",
 		# --- Act VI: Pandemonium ---
 		# Unlockable (UnlockData: defeating the Morning Star), so a fresh save never offers it.
-		"archfiend"]
+		"archfiend",
+		# --- Act VII: Castle Sanguis ---
+		# Unlockable (UnlockData: defeating Queen Carmilla and the Elder), so a fresh save never offers it.
+		"blood_spawn"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1206,6 +1209,51 @@ const UNITS := {
 			"cleave_trigger": 28.0,  # TUNING (not in GDD) px edge to edge: it cleaves when a foe is this close
 		},
 	},
+	# --- Act VII: Castle Sanguis ---
+	# Blood Spawn (owner-approved proposal: "Blood Spawn, fast vampire brawlers
+	# that heal themselves on every hit (a class special, so it works on every
+	# stage; evolution Nosferatu)"; GDD §15.0 "The Blood Spawn, Nosferatu and
+	# Thirst Eternal"): the necromancer's own vampires, raised from the Court's
+	# fallen (male, gaunt and pale grey-white, soul-teal eyes, bared fangs, torn
+	# black rags, long claws). Fast melee brawlers on the Bone Ring's front
+	# posts (formation "front"; they do not body-block: no block_radius) whose
+	# BLOODTHIRST (BloodSpawnBehavior, "bloodthirst") heals them for
+	# drink_share x the damage of every blow that lands, through the one
+	# unit-heal path. Unlockable (UnlockData), then offered on every stage.
+	"blood_spawn": {
+		"display_name": "Blood Spawn",  # Owner-approved proposal
+		"plural": "Blood Spawn",
+		"description": "Fast vampire brawlers that heal themselves with every blow.",  # Card text: one short sentence (owner rule).
+		"max_hp": 72.0,  # TUNING (not in GDD) a brawler that lives on its bites (Warrior 90, Rogue 38)
+		"damage": 9.0,  # TUNING (not in GDD) a claw rake
+		"attack_interval": 0.75,  # TUNING (not in GDD) s, fast
+		"attack_range": 10.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 104.0,  # TUNING (not in GDD) px/s, fast (Rogue 112)
+		"radius": 10.0,  # TUNING (not in GDD) px
+		"acquisition_range": 170.0,  # TUNING (not in GDD) px
+		"replenish_interval": 10.0,  # TUNING (not in GDD) s
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 100.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.1,  # TUNING (not in GDD) eager
+		"w_formation": 0.35,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) they never shy away
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.12,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.5,  # TUNING (not in GDD) they heal themselves
+		"formation": "front",  # Owner-approved proposal: "fast vampire brawlers"
+		"capacity_bonus_mult": 0.6,  # TUNING (not in GDD) Grave Dominion V: +3, like the Rogues
+		"behavior": "bloodthirst",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"drink_share": 0.3,  # TUNING (not in GDD) share of each blow's damage it heals (no suffix: the special's scaling leaves it alone)
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1424,6 +1472,16 @@ const LEVELS := {
 		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_haste": 0.1},
 		{"count": 2, "hp_bonus": 0.4, "special_bonus": 0.35, "special_area": 0.2, "special_haste": 0.1},
 		{"count": 3, "hp_bonus": 0.4, "damage_bonus": 0.2, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act VII: Castle Sanguis ---
+	# TUNING (not in GDD): a pack of brawlers, 2 -> 5 Blood Spawn; then tougher,
+	# harder and quicker.
+	"blood_spawn": [
+		{"count": 2},
+		{"count": 3, "hp_bonus": 0.1},
+		{"count": 3, "hp_bonus": 0.2, "damage_bonus": 0.15},
+		{"count": 4, "hp_bonus": 0.25, "damage_bonus": 0.2, "speed_bonus": 0.1},
+		{"count": 5, "hp_bonus": 0.3, "damage_bonus": 0.3, "speed_bonus": 0.15},
 	],
 }
 

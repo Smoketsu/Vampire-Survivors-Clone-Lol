@@ -679,9 +679,16 @@ func _check_last_rites() -> void:
 
 
 ## Heals a summon, capped at max HP. Returns HP actually restored.
+## Act VII (Castle Sanguis): Thirst Eternal makes every heal on a summon larger
+## (_thirst_eternal(), THE one check; 0 while not owned, so nothing changes
+## on any other run).
 func heal_unit(u: SummonedUnit, amount: float) -> float:
 	if not u.active:
 		return 0.0
+	# --- Act VII: Castle Sanguis --- Thirst Eternal (0 while not owned).
+	var thirst := _thirst_eternal(u)  # Extra share of the heal (0..).
+	if thirst > 0.0:
+		amount *= 1.0 + thirst
 	var healed := minf(amount, u.max_hp - u.hp)
 	if healed <= 0.0:
 		return 0.0
@@ -1050,3 +1057,18 @@ func _holy_retribution(e: Enemy) -> void:
 				Projectile.Kind.RADIANT_BOLT, "holy_retribution")
 	game.effects.ring(e.position, 34.0, Palette.GOLD, 0.35)
 	game.stat_add("holy_retribution_bursts", 1.0)
+
+
+# --- Act VII: Castle Sanguis ---
+## Thirst Eternal (PassiveData "thirst_eternal", Nosferatu's paired passive):
+## the extra share (0..) of every heal summon `u` receives, read from its own
+## necromancer's build (co-op: the slot whose army it is, like
+## _onis_resolve()); 0 while not owned.
+func _thirst_eternal(u: SummonedUnit) -> float:
+	var ab := game.abilities  # The bound player's passives.
+	if game.coop != null and u != null:
+		for s in game.coop.slots:
+			if s.horde == u.director:
+				ab = s.abilities
+				break
+	return maxf(0.0, ab.passive_value(BloodSpawnBehavior.THIRST, BloodSpawnBehavior.THIRST_KEY))

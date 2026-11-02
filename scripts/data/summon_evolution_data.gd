@@ -75,7 +75,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act VI: the Palace of Silk and Ash ---
 	"lilim_matriarch",
 	# --- Act VI: Pandemonium ---
-	"prince_of_hell"]
+	"prince_of_hell",
+	# --- Act VII: Castle Sanguis ---
+	"nosferatu"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -875,6 +877,39 @@ const EVOLUTIONS := {
 			"cleave_arc": 180.0,  # TUNING (not in GDD) a full circle
 			"dread_cut": 0.25,  # TUNING (not in GDD) its foes deal 25% less
 			"dread_duration": 3.0,  # TUNING (not in GDD) s
+		},
+	},
+	# --- Act VII: Castle Sanguis ---
+	# Nosferatu (owner-approved proposal: "Blood Spawn ... evolution Nosferatu";
+	# GDD §15.0 "The Blood Spawn, Nosferatu and Thirst Eternal"): Blood Spawn Lv
+	# 5 + Thirst Eternal Lv 5 (a NEW passive, own decision, owner rule: maxed).
+	# Tall, bald and rat-fanged, long clawed fingers, a black coat. They drink
+	# deeper, and the blood they cannot hold spills to the most wounded summon
+	# near them. BloodSpawnBehavior reads these special_set keys (final):
+	#   drink_share  — share of each blow's damage it heals (Blood Spawn 0.3);
+	#   spill_share  — share of the heal past its full health given on;
+	#   spill_radius — px within which the most wounded other summon gets it
+	#                  (not scaled by special area: special_set is final).
+	"nosferatu": {
+		"mode": "transform",
+		"bases": ["blood_spawn"],
+		"passive": "thirst_eternal",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Nosferatu",  # Owner-approved proposal
+		"plural": "Nosferatu",
+		"icon": "nosferatu",
+		"description": "Ancient blood-drinkers: they drink deep, and the blood they cannot hold feeds your other dead.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 11.0,  # TUNING (not in GDD) Blood Spawn 10
+		},
+		"special_set": {
+			"drink_share": 0.45,  # TUNING (not in GDD)
+			"spill_share": 0.6,  # TUNING (not in GDD)
+			"spill_radius": 90.0,  # TUNING (not in GDD) px
 		},
 	},
 }

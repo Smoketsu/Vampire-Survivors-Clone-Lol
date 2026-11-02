@@ -96,7 +96,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act VII: Ravensmoor ---
 	"moonfang",
 	# --- Act VII: the Witchwood ---
-	"witch_circle"]
+	"witch_circle",
+	# --- Act VII: Castle Sanguis ---
+	"night_swarm"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -752,6 +754,29 @@ const SPELLS := {
 			{"damage": 15.0, "radius": 96.0, "cooldown": 0.8, "drain": 0.18, "heal_cap": 4.0},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act VII: Castle Sanguis ---
+	# Night Swarm (GDD §15.0 "Night Swarm, Nocturne, Old Blood and the Dhampir";
+	# owner-approved proposal: "a cloud of spectral bats circles the necromancer
+	# and darts at enemies"; unlocked by defeating Queen Carmilla and the Elder,
+	# UnlockData): `bats` spectral bats circle the necromancer `orbit` px out;
+	# each, every `cooldown` s, darts at the nearest foe within
+	# NightSwarmData.AIM_RANGE px and bites it for `damage`, then flies back.
+	# Logic: NightSwarm; fixed rules: NightSwarmData. A steady single-target
+	# spell around the necromancer: it answers the Court's fliers inside the ring.
+	"night_swarm": {
+		"display_name": "Night Swarm",
+		"icon": "night_swarm",
+		"description": "Spectral bats circle you and dart at your foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"bats": "Bats", "damage": "Bite damage", "cooldown": "Dart every (s)"},
+		"levels": [
+			{"bats": 3, "damage": 7.0, "orbit": 46.0, "cooldown": 2.2},  # TUNING (not in GDD)
+			{"bats": 3, "damage": 9.0, "orbit": 48.0, "cooldown": 2.0},  # TUNING (not in GDD)
+			{"bats": 4, "damage": 10.0, "orbit": 50.0, "cooldown": 1.9},  # TUNING (not in GDD)
+			{"bats": 4, "damage": 12.0, "orbit": 52.0, "cooldown": 1.75},  # TUNING (not in GDD)
+			{"bats": 5, "damage": 13.0, "orbit": 54.0, "cooldown": 1.6},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -778,7 +803,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VII: Ravensmoor ---
 	"bleed_share",
 	# --- Act VII: the Witchwood ---
-	"drain"]
+	"drain",
+	# --- Act VII: Castle Sanguis ---
+	"chain_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

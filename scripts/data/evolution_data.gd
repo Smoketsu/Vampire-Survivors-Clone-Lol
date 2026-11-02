@@ -94,7 +94,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VII: Ravensmoor ---
 	"wolf_of_the_red_moon",
 	# --- Act VII: the Witchwood ---
-	"witches_sabbath"]
+	"witches_sabbath",
+	# --- Act VII: Castle Sanguis ---
+	"nocturne"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -644,6 +646,25 @@ const EVOLUTIONS := {
 			"sabbath_radius": 40.0,  # TUNING (not in GDD) px; first pass 46
 			"sabbath_orbit": 160.0,  # TUNING (not in GDD) px from the necromancer
 			"sabbath_speed": 1.2,  # TUNING (not in GDD) rad/s
+		},
+	},
+	# --- Act VII: Castle Sanguis ---
+	# Nocturne (GDD §15.0 "Night Swarm, Nocturne, Old Blood and the Dhampir";
+	# owner-approved proposal "Night Swarm -> Nocturne (+ Old Blood)"): Night
+	# Swarm + Old Blood (a NEW passive, owner rule: at Lv 5). A greater swarm,
+	# and after each bite a bat LEAPS on to up to `chain` more foes within
+	# NightSwarmData.CHAIN_RANGE px (`chain_share` x the damage each). Detected
+	# by the "chain" key.
+	"nocturne": {
+		"base": "night_swarm",
+		"passive": "old_blood",
+		"display_name": "Nocturne",
+		"icon": "nocturne",
+		"description": "A night of bats wheels around you, and every bite leaps on to the next throat.",
+		"labels": {"bats": "Bats", "damage": "Bite damage", "chain": "Leaps", "chain_share": "Leap damage", "cooldown": "Dart every (s)"},
+		"stats": {
+			"bats": 8, "damage": 13.0, "orbit": 58.0, "cooldown": 1.5,  # TUNING (not in GDD) first pass 15 (Nocturne led every source by ~2x in the forced run)
+			"chain": 1, "chain_share": 0.5,  # TUNING (not in GDD) the evolution flag: leaps after each bite and their share of the bite
 		},
 	},
 }

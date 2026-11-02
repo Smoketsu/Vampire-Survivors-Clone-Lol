@@ -368,3 +368,17 @@ func _draw() -> void:
 		var fade := clampf(w.time_left / GraveSpellData.BONE_WALL_RISE_TIME, 0.0, 1.0)  # 1 -> 0 as it crumbles.
 		for k in w.segs.size():
 			GraveSpellGlyphs.draw_wall_segment(self, w.segs[k], r, minf(rise, fade), k, w.ring, _phase)
+
+
+# --- Act VII: Castle Sanguis ---
+## The Banquet's denial (CastleSanguisDirector.denied(), the one check): true
+## when a standing segment of any wall (the spell's walls, Bastion rings and an
+## Ossuary Titan's wall alike) lies within `r` px of `p` (its body touching a
+## blood fountain's pool of radius `r` at `p`). Read only; walls never change here.
+func covers(p: Vector2, r: float) -> bool:
+	var reach := GraveSpellData.BONE_WALL_SEGMENT_RADIUS + r  # Segment + pool radius (px).
+	for w in _walls:
+		for q: Vector2 in w.segs:
+			if q.distance_squared_to(p) <= reach * reach:
+				return true
+	return false

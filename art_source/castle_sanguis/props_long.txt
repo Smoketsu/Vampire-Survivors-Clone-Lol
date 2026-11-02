@@ -1,0 +1,7 @@
+A sheet of pixel-art game OBSTACLE PROPS in TWO ROWS on a FULLY TRANSPARENT background (real alpha), wide empty gaps between all props. Three-quarter top-down view (camera above and in front), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+TOP ROW, three LONG props lying left-right (each about 60 pixels long and 16 pixels deep), from left to right:
+1. A CASTLE WALL: a low crenellated wall of grey castle stone blocks.
+2. A FEAST TABLE: a long dark oak banquet table with a blood-red runner down its middle, gold goblets, a candlestick and a platter.
+3. A SARCOPHAGUS: a long grey stone sarcophagus with a carved lid showing a resting vampire noble.
+BOTTOM ROW, the SAME three props seen END-ON (turned 90 degrees, so each is narrow and runs away from the camera, about 16 pixels wide and 40 pixels tall), in the same order.
+Colours: grey stone #3A3A42 #5C5C66 #8A8A94; oak #2A1C12 #5B3D26 #8A5E3A; blood #5A0A14 #A3142A #E0384E; gold #8A6A1E #E0A92E #F5D870; candle wax #CFC7AE.

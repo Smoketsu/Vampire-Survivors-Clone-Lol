@@ -25,7 +25,9 @@ const ORDER := ["heretics_bane", "master_of_the_drowned", "archnecromancer", "ex
 	# --- Act III: the Iron Citadel ---
 	"breaker_of_engines",
 	# --- Act VI: Pandemonium ---
-	"sovereign_of_pandemonium"]  # owner-approved Proposal 2; Act III proposal; Act VI (own decision)
+	"sovereign_of_pandemonium",
+	# --- Act VII: Castle Sanguis ---
+	"ender_of_the_feast"]  # owner-approved Proposal 2; Act III proposal; Act VI and Act VII (own decisions)
 
 ## Title id -> row (keys above).
 const TITLES := {
@@ -37,6 +39,8 @@ const TITLES := {
 	"breaker_of_engines": {"display_name": "Breaker of Engines", "achievement": "nothing_is_deathless", "frame": ""},  # Owner-approved Act III proposal
 	# --- Act VI: Pandemonium ---
 	"sovereign_of_pandemonium": {"display_name": "Sovereign of Pandemonium", "achievement": "morning_star_falls", "frame": ""},  # Own decision: Morning Star Falls records the clear (no epilogue yet, owner Oct 31)
+	# --- Act VII: Castle Sanguis ---
+	"ender_of_the_feast": {"display_name": "Ender of the Feast", "achievement": "last_supper", "frame": ""},  # Own decision: Last Supper records the clear (no epilogue, owner Oct 31)
 }
 
 ## Text of the "no title" choice on the setup screen's cycle row.

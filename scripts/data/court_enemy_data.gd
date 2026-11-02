@@ -398,6 +398,59 @@ const ENEMIES := {
 		"pool_radius": 46.0,  # TUNING (not in GDD) px; first pass 52
 		"pool_life": 7.0,  # TUNING (not in GDD) s; first pass 10 (the pools healed 185k in the first seed-7 run)
 	},  # The Bloated Thrall (Act VII: the Witchwood).
+	# --- Act VII: Castle Sanguis ---
+	# Elite (male, a mutated bat-man; owner-approved proposal: "Mutated
+	# bat-people that glide over the ring; a sonic shriek cone that stuns
+	# summons for 1.5 s ... Hit them in the air; Grave Step out of the cone").
+	# A FLIER (row "flies": Night Wings, CourtKit's swoop and bite) built by
+	# Castle Sanguis (ChiropteranKit), usable on any stage. Its SONIC SHRIEK:
+	# when it is ready and a summon or the necromancer is within shriek_range
+	# px it hovers, a cone of shriek_range px and shriek_arc degrees each side
+	# is marked toward its target for shriek_telegraph s, then every summon in
+	# it is stunned for shriek_stun s (CombatResolver.stun_unit(), the one
+	# summon stun path) and a necromancer in it takes shriek_damage (Grave Step
+	# out of the cone).
+	#   shriek_every / shriek_first — s between two shrieks / before the first.
+	#   shriek_range / shriek_arc / shriek_telegraph / shriek_stun /
+	#   shriek_damage — the cone and its effect (damage before the time scaling).
+	#   swoop_time / landed_time / swoop_reach / swoop_follow — Night Wings, as
+	#   the vampire bat's.
+	"chiropteran": {
+		"display_name": "Chiropteran",
+		"max_hp": 76.0,  # TUNING (not in GDD) an elite (the Vampire Noble 90): frail but out of reach in the air
+		"move_speed": 74.0,  # TUNING (not in GDD) px/s; it glides
+		"damage": 4.5,  # TUNING (not in GDD) a claw-bite, before the time scaling
+		"attack_interval": 1.4,  # TUNING (not in GDD) s (a swoop, a bite, a take-off)
+		"attack_range": 6.0,  # TUNING (not in GDD) px
+		"radius": 11.0,  # TUNING (not in GDD) px
+		"armor": 0.05,  # TUNING (not in GDD)
+		"xp": 8,  # TUNING (not in GDD) an elite's XP
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.85,  # TUNING (not in GDD) 0..1; archers and mages pick it out
+		"mass": 1.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "chiropteran",
+		"feeds": 0.25,  # Owner-approved (Oct 31, 2026): not a vampire (bat-folk): 25%
+		"flies": true,  # Owner-approved proposal: "glide over the ring" (Night Wings)
+		"phases": true,  # A flier crosses obstacles (Arena.resolve_all() skips it).
+		"floating": true,  # Over the ground (the terrain slows and fires spare it).
+		"swoop_time": 0.5,  # Owner-approved proposal: Night Wings' 0.5 s swoop
+		"landed_time": 0.6,  # TUNING (not in GDD) s
+		"swoop_reach": 6.0,  # TUNING (not in GDD) px
+		"swoop_follow": 1.5,  # TUNING (not in GDD) x move speed
+		"shriek_first": 3.0,  # TUNING (not in GDD) s after it appears
+		"shriek_every": 11.0,  # TUNING (not in GDD) s; first pass 8 (229 summon stuns in the forced seed-7 run)
+		"shriek_range": 110.0,  # TUNING (not in GDD) px
+		"shriek_arc": 30.0,  # TUNING (not in GDD) degrees each side
+		"shriek_telegraph": 0.7,  # TUNING (not in GDD) s (time to Grave Step out)
+		"shriek_stun": 1.5,  # Owner-approved proposal: "stuns summons for 1.5 s"
+		"shriek_damage": 4.0,  # TUNING (not in GDD) to a necromancer in the cone, before the time scaling
+	},
 }
 
 # --- Act VII: Ravensmoor ---

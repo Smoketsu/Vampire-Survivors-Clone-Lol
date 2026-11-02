@@ -209,6 +209,18 @@ const UNLOCKS := {
 	"witch_circle": {"type": "spell", "boss": "isolde", "text": "Slay Isolde Vane in the Witchwood to unlock."},  # Owner-approved Act VII proposal
 	"moonlit_rite": {"type": "passive", "boss": "isolde", "text": "Slay Isolde Vane in the Witchwood to unlock."},  # Hex Circle's paired passive (owner-approved proposal), unlocked with it
 	"embalmed": {"type": "passive", "achievement": "the_coven_breaks", "text": "Earn The Coven Breaks: kill Isolde's three sisters within 1 second of each other."},  # Owner-approved Act VII proposal (the brief: The Coven Breaks unlocks Embalmed)
+	# --- Act VII: Castle Sanguis ---
+	# Queen Carmilla and the Elder's fall (owner-approved Act VII proposal
+	# "Rewards": Night Swarm is unlocked by Carmilla and the Elder; the finale
+	# grants the Blood Spawn): the spell with its paired passive, and the summon
+	# class with its paired passive, offered on every stage (no card-row "act"
+	# key). The title Ender of the Feast is the Last Supper achievement's reward.
+	"night_swarm": {"type": "spell", "boss": "carmilla", "text": "Slay Queen Carmilla and the Elder in Castle Sanguis to unlock."},  # Owner-approved Act VII proposal
+	"old_blood": {"type": "passive", "boss": "carmilla", "text": "Slay Queen Carmilla and the Elder in Castle Sanguis to unlock."},  # Night Swarm's paired passive (owner-approved proposal), unlocked with it
+	"blood_spawn": {"type": "class", "boss": "carmilla", "text": "Slay Queen Carmilla and the Elder in Castle Sanguis to unlock."},  # Owner-approved proposal: the finale's reward
+	"thirst_eternal": {"type": "passive", "boss": "carmilla", "text": "Slay Queen Carmilla and the Elder in Castle Sanguis to unlock."},  # Its paired passive (own decision), unlocked with it
+	"ender_of_the_feast": {"type": "title", "achievement": "last_supper",
+		"text": "Earn Last Supper: beat the Elder in Castle Sanguis."},  # Own decision (the clear is recorded as a title, as Act VI's Sovereign of Pandemonium)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

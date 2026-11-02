@@ -67,6 +67,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	RavensmoorReport.print_lines(game, st)  # The sleeping coffins, the ghouls, Old Greymane, Vargr (each when it ran).
 	# --- Act VII: the Witchwood ---
 	WitchwoodReport.print_lines(game, st)  # The Fen, the stones, the covens, the pools, the Bog Mother, Isolde (each when it ran).
+	# --- Act VII: Castle Sanguis --- (its stage, kinds and boss; CastleSanguisReport)
+	CastleSanguisReport.stage_lines(game, st)
 
 
 ## The "bloodfeast" line (Bloodfeast).

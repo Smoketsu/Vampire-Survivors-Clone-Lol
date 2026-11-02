@@ -194,7 +194,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act VII: Ravensmoor ---
 	"pack_blood", "silver_bones",
 	# --- Act VII: the Witchwood ---
-	"moonlit_rite", "embalmed"]
+	"moonlit_rite", "embalmed",
+	# --- Act VII: Castle Sanguis ---
+	"old_blood", "thirst_eternal"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -230,7 +232,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act VII: Ravensmoor ---
 	"silver_bones",
 	# --- Act VII: the Witchwood ---
-	"embalmed"]
+	"embalmed",
+	# --- Act VII: Castle Sanguis ---
+	"thirst_eternal"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -351,6 +355,10 @@ const AREA_HOLY_SOURCES := {
 	"morning_star_light": "holy",  # TUNING (not in GDD) the Morning Star's light beams.
 	"morning_star_dark": "area",  # TUNING (not in GDD) his dark beams.
 	"morning_star_slam": "area",  # TUNING (not in GDD) the Beast's slam.
+	# --- Act VII: Castle Sanguis ---
+	"carmilla_beam": "area",  # TUNING (not in GDD) Queen Carmilla's sweeping drain beam.
+	"elder_buffet": "area",  # TUNING (not in GDD) the Elder's wing buffet.
+	"king_drop": "area",  # TUNING (not in GDD) a summon the Chiropteran King drops.
 }
 ## Bone Plating: a plated hit always keeps at least this fraction (0..1) of
 ## its damage, so the flat reduction never makes a summon immune to the
@@ -1548,6 +1556,53 @@ const PASSIVES := {
 			{"feed_reduction": 0.33},  # TUNING (not in GDD)
 			{"feed_reduction": 0.42},  # TUNING (not in GDD)
 			{"feed_reduction": 0.5},  # Owner-approved proposal: "enemies heal half as much from hitting summons"
+		],
+	},
+	# --- Act VII: Castle Sanguis ---
+	# Old Blood (owner-approved proposal: Nocturne's paired passive; own decision
+	# on its rule; GDD §15.0 "Night Swarm, Nocturne, Old Blood and the Dhampir";
+	# unlocked by defeating Queen Carmilla and the Elder, UnlockData): the
+	# oldest blood remembers the night: Night Swarm's bats dart swarm_haste
+	# sooner and each bite heals the necromancer for bite_heal x its damage (at
+	# most NightSwarmData.HEAL_CAP_PER_S HP a second; AbilityManager
+	# .apply_spell_mods() on the spell rows' own keys, like Pride; NightSwarm
+	# reads "bite_heal" and heals through CombatResolver.heal_player()). Pairs
+	# with Night Swarm -> Nocturne.
+	"old_blood": {
+		"display_name": "Old Blood",  # Owner-approved proposal
+		"icon": "old_blood",
+		"description": "Your bats dart sooner, and their bites feed you.",
+		"labels": {"swarm_haste": ["Night Swarm dart cooldown", "neg_pct"], "bite_heal": ["Bite damage healed", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"swarm_haste": 0.04, "bite_heal": 0.02},  # TUNING (not in GDD)
+			{"swarm_haste": 0.08, "bite_heal": 0.04},  # TUNING (not in GDD)
+			{"swarm_haste": 0.12, "bite_heal": 0.06},  # TUNING (not in GDD)
+			{"swarm_haste": 0.16, "bite_heal": 0.08},  # TUNING (not in GDD)
+			{"swarm_haste": 0.20, "bite_heal": 0.10},  # TUNING (not in GDD)
+		],
+	},
+	# Thirst Eternal (own decision: Nosferatu's paired passive, its name and
+	# rule; GDD §15.0 "The Blood Spawn, Nosferatu and Thirst Eternal"; unlocked
+	# by defeating Queen Carmilla and the Elder): the undying hunger of the
+	# Court, given to your dead: every heal a summon receives (priests, the
+	# Blood Spawn's own bites, Soul Recycling, every source) is unit_heal
+	# larger (CombatResolver.heal_unit(), THE one check in the one unit-heal
+	# path, read from the summon's own necromancer's build; 0 when not owned,
+	# so every other run is unchanged). Works the same on every stage. Pairs
+	# with the Blood Spawn -> Nosferatu.
+	"thirst_eternal": {
+		"display_name": "Thirst Eternal",
+		"icon": "thirst_eternal",
+		"description": "Every heal your dead receive is stronger.",
+		"labels": {"unit_heal": ["Summon healing", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"unit_heal": 0.10},  # TUNING (not in GDD)
+			{"unit_heal": 0.20},  # TUNING (not in GDD)
+			{"unit_heal": 0.30},  # TUNING (not in GDD)
+			{"unit_heal": 0.40},  # TUNING (not in GDD)
+			{"unit_heal": 0.50},  # TUNING (not in GDD)
 		],
 	},
 }
