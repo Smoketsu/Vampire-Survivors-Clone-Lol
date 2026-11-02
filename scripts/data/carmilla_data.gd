@@ -39,7 +39,22 @@
 ##        the time is up or the Elder is full.
 ##   THE ELDER (rise_time s invulnerable as he climbs out, then his health is
 ##        what she gave him: owner-approved proposal "with as much HP as she
-##        gave him"): the first vampire, a bat-winged horror (male), radius
+##        gave him"), in TWO FORMS that split that health (owner request, Act
+##        VII art review: "Starts as a cool vampire guy, then becomes this?"):
+##     THE VAMPIRE LORD (first form, from the rise until his health falls to
+##        horror_at of what he rose with): a fast, regal duelist (male), radius
+##        lord_radius, lord_speed_mult x her walk, quicker claws
+##        (lord_attack_mult x attack_interval). His BLOOD-BLADE LUNGE: when the
+##        necromancer is within lunge_range px he shows a line (lunge_telegraph
+##        s) and cuts lunge_length px along it in lunge_time s, every body on
+##        it (lunge_width px) cut once (lunge_damage_*, a feeding hit:
+##        Bloodfeast); lunge_cooldown s between lunges. His MIST STEP: when the
+##        necromancer is farther than step_trigger px he dissolves
+##        (untargetable, immune) for step_time s and reforms step_land px short
+##        of the necromancer, his next lunge step_followup s later.
+##     THE TRANSFORMATION (change_time s, invulnerable): his skin splits and
+##        the wings unfold (a blood burst and a banner, no damage).
+##     THE BAT-WINGED HORROR (second form, the rest of his health): radius
 ##        elder_radius, slow (elder_speed_mult). He COMMANDS EVERY BAT ON THE
 ##        MAP (on rising and every command_every s every flier alive is set on
 ##        the necromancer with a command_time s frenzy: x command_damage blow,
@@ -74,7 +89,7 @@ const ARRIVAL := {
 }
 
 ## Special ids in report order (the autotest "boss attacks" line, boss_atk_<id>).
-const SPECIALS := ["mist_dance", "drain_beam", "nobles", "waking", "interrupted", "bearers_poured", "elder_rises", "bat_command", "wing_buffet"]
+const SPECIALS := ["mist_dance", "drain_beam", "nobles", "waking", "interrupted", "bearers_poured", "elder_rises", "blood_lunge", "mist_step", "transform", "bat_command", "wing_buffet"]
 
 ## Damage source tag of her mist dance (a feeding drain).
 const SRC_MIST: String = "carmilla_mist"
@@ -82,6 +97,8 @@ const SRC_MIST: String = "carmilla_mist"
 const SRC_BEAM: String = "carmilla_beam"
 ## Damage source tag of the Elder's touch (a feeding drain).
 const SRC_TOUCH: String = "elder_touch"
+## Damage source tag of the vampire lord's blood-blade lunge (a feeding cut).
+const SRC_LUNGE: String = "elder_lunge"
 ## Damage source tag of the Elder's wing buffet (AREA).
 const SRC_BUFFET: String = "elder_buffet"
 ## Damage sources that interrupt her Waking when they strike her (Soul Chains
@@ -91,8 +108,12 @@ const INTERRUPT_SOURCES := ["soul_chains", "chains_damned"]
 
 ## Sprite key of the Queen (BossPoseData pose 1: the beam raised, if posed).
 const SPRITE_QUEEN: String = "bosses/carmilla"
-## Sprite key of the Elder.
+## Sprite key of the Elder's second form, the bat-winged horror.
 const SPRITE_ELDER: String = "bosses/elder"
+## Sprite key of the Elder's first form, the vampire lord (walk strip
+## "bosses/elder_vampire_walk" through SpriteBank's walk path; without art the
+## CastleSanguisGlyphs.draw_elder_lord() fallback).
+const SPRITE_ELDER_LORD: String = "bosses/elder_vampire"
 ## Sprite key of the Elder's coffin, closed and open.
 const SPRITE_COFFIN: String = "structures/elder_coffin"
 ## Sprite key of the open coffin (the Elder has risen).
@@ -169,6 +190,26 @@ const BOSS := {
 	"bearer_heal": 0.035,  # TUNING (not in GDD) share of his health one bearer's chalice is worth
 	# The Elder.
 	"rise_time": 2.5,  # TUNING (not in GDD) s he climbs out (invulnerable)
+	# The Elder's first form, the vampire lord (owner request, Act VII art review).
+	"horror_at": 0.5,  # TUNING (not in GDD) share of the health he rose with at which the lord transforms (the forms split it)
+	"lord_radius": 20.0,  # TUNING (not in GDD) px
+	"lord_speed_mult": 1.2,  # TUNING (not in GDD) x her walk (fast)
+	"lord_attack_mult": 0.75,  # TUNING (not in GDD) x attack_interval: quicker claws
+	"lunge_first": 1.5,  # TUNING (not in GDD) s after he begins walking
+	"lunge_range": 180.0,  # TUNING (not in GDD) px: he lunges when the necromancer is this close
+	"lunge_telegraph": 0.6,  # TUNING (not in GDD) s the line is shown
+	"lunge_time": 0.25,  # TUNING (not in GDD) s of the cut
+	"lunge_length": 130.0,  # TUNING (not in GDD) px along the line
+	"lunge_width": 26.0,  # TUNING (not in GDD) px
+	"lunge_damage_player": 9.0,  # TUNING (not in GDD)
+	"lunge_damage_summon": 8.0,  # TUNING (not in GDD)
+	"lunge_cooldown": 4.0,  # TUNING (not in GDD) s
+	"step_trigger": 220.0,  # TUNING (not in GDD) px: farther than this from the necromancer, he mist-steps
+	"step_time": 0.45,  # TUNING (not in GDD) s in mist
+	"step_land": 80.0,  # TUNING (not in GDD) px short of the necromancer he reforms
+	"step_followup": 0.6,  # TUNING (not in GDD) s from the step to his next lunge
+	"change_time": 1.6,  # TUNING (not in GDD) s of the transformation (invulnerable)
+	# The Elder's second form, the bat-winged horror.
 	"elder_radius": 30.0,  # TUNING (not in GDD) px (drawn huge)
 	"elder_speed_mult": 0.75,  # TUNING (not in GDD) x her walk
 	"command_every": 14.0,  # TUNING (not in GDD) s
