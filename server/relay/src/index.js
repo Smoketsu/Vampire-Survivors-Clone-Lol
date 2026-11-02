@@ -1,6 +1,6 @@
 // Necropathy co-op relay: a Cloudflare Worker with one Durable Object per lobby.
 //
-// It hands out 5-letter lobby codes and relays the two players' messages to each other in order (the protocol,
+// It hands out 6-letter lobby codes and relays the two players' messages to each other in order (the protocol,
 // its limits and error codes are in ../PROTOCOL.md; tools/coop_relay.py is the same relay in Python for local
 // tests and must stay identical). The Worker routes each request: `/lobby/new/ws` and `POST /lobby` pick a free
 // code (retrying on a collision) and create that lobby's Durable Object; `/lobby/CODE/ws` goes to lobby CODE's
@@ -15,7 +15,7 @@ const PROTOCOL = 1;
 // Code alphabet: 20 consonants (no vowels, so no words; no O / I / L to misread).
 const ALPHABET = "BCDFGHJKMNPQRSTVWXYZ";
 // Letters in a code.
-const CODE_LENGTH = 5;
+const CODE_LENGTH = 6;
 // Tries at a free code before giving up (each try is one Durable Object request).
 const CREATE_TRIES = 8;
 // Largest accepted message, text or binary (bytes).
@@ -41,6 +41,22 @@ const ACTIVE_WRITE_MS = 60000;
 // Lobby creations allowed per client IP per window (best effort, per Worker isolate), and the window (ms).
 const CREATE_LIMIT = 20;
 const CREATE_WINDOW_MS = 600000;
+// Failed joins (a malformed or unknown code: `no_lobby`) allowed per client IP per window before that IP's
+// joins are refused with `join_rate` (best effort, per Worker isolate, like CREATE_LIMIT; the Cloudflare
+// rate-limiting rule in docs/coop/RELAY_SETUP.md is the hard limit), and the window (ms). A refused join
+// never reaches a Durable Object, so a code-guessing flood cannot use up the free plan's request quota.
+const JOIN_FAIL_LIMIT = 30;
+const JOIN_FAIL_WINDOW_MS = 600000;
+// Most client IPs kept in one per-IP log (createLog, joinFailLog), and how many of the oldest are evicted
+// when it grows past that (a Map iterates in insertion order), so a flood of addresses never resets the
+// counts of the others.
+const LOG_MAX_IPS = 10000;
+const LOG_EVICT_IPS = 1000;
+// Text message types a player may send to the other seat (PROTOCOL.md "Player messages"). Every other type,
+// above all the relay's own welcome / peer / left / error, is dropped, so a player cannot fake the relay.
+// `hello`, `leave` and `start` have their own cases in webSocketMessage(). Keep in step with the game's
+// _send_json() calls (scripts/coop/coop_net.gd) and tools/coop_relay.py.
+const PLAYER_TYPES = new Set(["loadout", "settings", "pping", "ppong"]);
 // Longest kept hello strings (characters): game version, platform, player name.
 const MAX_GAME_CHARS = 40;
 const MAX_PLATFORM_CHARS = 16;
@@ -57,10 +73,13 @@ const CLOSE_CODES = {
   rate: 4008,
   too_big: 4009,
   protocol: 4010,
+  join_rate: 4011,
 };
 
 // Client IP -> {count, since} of recent lobby creations (best effort: one map per isolate).
 const createLog = new Map();
+// Client IP -> {count, since} of recent failed joins (best effort: one map per isolate).
+const joinFailLog = new Map();
 
 // A JSON HTTP response with `status`, plus CORS headers for `origin`.
 function json(body, status, origin) {
@@ -112,17 +131,47 @@ function validCode(code) {
   return true;
 }
 
+// Counts one event for client `ip` in per-IP `log` (a window of `windowMs`) and returns the count in the
+// current window. A new window moves the IP to the end of the Map; past LOG_MAX_IPS the LOG_EVICT_IPS
+// oldest IPs are evicted (bounded memory, and the other IPs keep their counts).
+function countIp(log, ip, windowMs) {
+  const now = Date.now();
+  const e = log.get(ip);
+  if (e && now - e.since <= windowMs) {
+    e.count += 1;
+    return e.count;
+  }
+  log.delete(ip);
+  log.set(ip, { count: 1, since: now });
+  if (log.size > LOG_MAX_IPS) {
+    let n = 0;
+    for (const k of log.keys()) {
+      if (n++ >= LOG_EVICT_IPS) break;
+      log.delete(k);
+    }
+  }
+  return 1;
+}
+
+// The count of client `ip` in per-IP `log` in the current window of `windowMs` (0 = none), not counting.
+function ipCount(log, ip, windowMs) {
+  const e = log.get(ip);
+  return e && Date.now() - e.since <= windowMs ? e.count : 0;
+}
+
 // True when client `ip` may create another lobby now (and counts this one).
 function mayCreate(ip) {
-  const now = Date.now();
-  const e = createLog.get(ip);
-  if (!e || now - e.since > CREATE_WINDOW_MS) {
-    createLog.set(ip, { count: 1, since: now });
-    if (createLog.size > 10000) createLog.clear(); // Bounded memory.
-    return true;
-  }
-  e.count += 1;
-  return e.count <= CREATE_LIMIT;
+  return countIp(createLog, ip, CREATE_WINDOW_MS) <= CREATE_LIMIT;
+}
+
+// True when client `ip` failed too many joins lately (its next join is refused with `join_rate`).
+function joinBlocked(ip) {
+  return ipCount(joinFailLog, ip, JOIN_FAIL_WINDOW_MS) >= JOIN_FAIL_LIMIT;
+}
+
+// Counts one failed join (`no_lobby`) of client `ip`.
+function noteJoinFail(ip) {
+  countIp(joinFailLog, ip, JOIN_FAIL_WINDOW_MS);
 }
 
 // Accepts a WebSocket in the Worker only to refuse it: sends the error, then closes (for malformed codes).
@@ -142,6 +191,21 @@ function toLobby(env, request, code, create) {
   headers.set("X-Lobby-Create", create ? "1" : "0");
   const stub = env.LOBBY.get(env.LOBBY.idFromName(code));
   return stub.fetch(new Request(request.url, { method: request.method, headers }));
+}
+
+// Joins lobby `code` (the GET /lobby/CODE/ws upgrade): refused at once (no Durable Object request) for an IP
+// with too many failed joins; a malformed code, or one the lobby object reports missing (its X-Lobby-Missing
+// response header), counts as a failed join.
+async function joinLobby(env, request, code) {
+  const ip = request.headers.get("CF-Connecting-IP") || "local";
+  if (joinBlocked(ip)) return refuseSocket("join_rate");
+  if (!validCode(code)) {
+    noteJoinFail(ip);
+    return refuseSocket("no_lobby");
+  }
+  const res = await toLobby(env, request, code, false);
+  if (res.headers.get("X-Lobby-Missing") === "1") noteJoinFail(ip);
+  return res;
 }
 
 // Creates a lobby under a free code (POST /lobby, or /lobby/new/ws with the upgrade passed on).
@@ -177,9 +241,7 @@ export default {
         return json({ error: "expected a WebSocket upgrade" }, 426, origin);
       }
       if (m[1].toLowerCase() === "new") return createLobby(env, request, origin);
-      const code = m[1].toUpperCase();
-      if (!validCode(code)) return refuseSocket("no_lobby");
-      return toLobby(env, request, code, false);
+      return joinLobby(env, request, m[1].toUpperCase());
     }
     return json({ error: "not found" }, 404, origin);
   },
@@ -237,9 +299,10 @@ export class Lobby extends DurableObject {
     server.serializeAttachment({ slot: -1, at: Date.now(), gone: false });
     if (!rec) {
       this.drop(server, "no_lobby");
-    } else {
-      await this.alarmBy(Date.now() + HELLO_TIMEOUT_MS);
+      // X-Lobby-Missing: tells the Worker this join failed (it counts failed joins per IP, joinLobby()).
+      return new Response(null, { status: 101, webSocket: client, headers: { "X-Lobby-Missing": "1" } });
     }
+    await this.alarmBy(Date.now() + HELLO_TIMEOUT_MS);
     return new Response(null, { status: 101, webSocket: client });
   }
 
@@ -381,6 +444,7 @@ export class Lobby extends DurableObject {
         return this.relay(0, message);
       }
       default:
+        if (!PLAYER_TYPES.has(m.t)) return; // Not a player message (e.g. a faked `left`): never forwarded.
         return this.relay(att.slot, message);
     }
   }

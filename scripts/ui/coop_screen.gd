@@ -4,7 +4,7 @@
 ## one line, and either:
 ##   * the choice: Host (CoopNet.host(): the relay makes a lobby) and Join
 ##     (shows the letter pad), or
-##   * the Join page (CoopJoinPad: five letter slots, the on-screen pad,
+##   * the Join page (CoopJoinPad: CODE_LENGTH letter slots, the on-screen pad,
 ##     Delete / Paste / Join; a `?join=CODE` link opens it filled in),
 ## then one status line ("Connecting to the relay...", or the error in plain
 ## words: bad code, lobby full, other version, relay unreachable, host left)

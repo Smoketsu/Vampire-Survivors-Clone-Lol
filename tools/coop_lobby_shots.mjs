@@ -147,7 +147,7 @@ async function main() {
     await key(host, "Enter"); // Co-op screen (Host focused).
     await sleep(800);
     await key(host, "Enter"); // Host.
-    const code = (await waitLog(host, /\[coop\] lobby ([A-Z]{5}), seat 0/))[1];
+    const code = (await waitLog(host, /\[coop\] lobby ([A-Z]+), seat 0/))[1];
     await sleep(1500);
     await host.screenshot({ path: path.join(SHOTS, "lobby_host_waiting.png") });
     console.log(`host lobby ${code}`);
@@ -162,7 +162,7 @@ async function main() {
     await tap(guest, PHONE.delete);
     await tap(guest, keyPoint(code.slice(-1)));
     await tap(guest, PHONE.join);
-    await waitLog(guest, /\[coop\] lobby [A-Z]{5}, seat 1/);
+    await waitLog(guest, /\[coop\] lobby [A-Z]+, seat 1/);
     await waitLog(host, /\[coop\] partner joined: seat 1/);
     await sleep(3000); // Loadouts, settings, a ping or two.
     await guest.screenshot({ path: path.join(SHOTS, "lobby_two_players_phone.png") });

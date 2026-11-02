@@ -107,7 +107,7 @@ function pick(lines, prefix) { return lines.filter((l) => l.startsWith(prefix));
   } else {
     await openPage(browser, port, relay.url, ['--coop-net=host', '--character=gravecaller', ...runFlags()], hostLines, 'web-host');
   }
-  const code = await waitFor(() => { const l = hostLines.find((x) => x.startsWith('COOP_CODE=')); return l ? l.slice(10, 15) : null; }, 300000);
+  const code = await waitFor(() => { const l = hostLines.find((x) => x.startsWith('COOP_CODE=')); return l ? l.slice(10).trim() : null; }, 300000);
   if (!code) { console.log('FAIL: no lobby code'); process.exit(1); }
   await openPage(browser, port, relay.url, ['--coop-net=join', `--coop-code=${code}`, '--character=bone_oracle', ...runFlags()], joinLines, 'web-join');
   const done = (ls) => ls.some((l) => l.startsWith('[autotest] coop lockstep:'));

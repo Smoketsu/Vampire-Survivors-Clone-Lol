@@ -38,3 +38,26 @@ The game already points at `wss://necropathy-relay.smoketsu.workers.dev` (`scrip
 - **Testing on your own machine** needs no Cloudflare at all: `python3 tools/coop_relay.py` runs the same relay
   locally; start the desktop game with `-- --relay=ws://127.0.0.1:8765`, or open the Web build with
   `?relay=ws://127.0.0.1:8765` after its address.
+
+## Limiting join attempts (recommended)
+
+Lobby codes are 6 letters (64M codes), and the relay itself refuses a client IP's joins for the rest of a 10-minute
+window after 30 wrong codes (`join_rate`, `server/relay/PROTOCOL.md` "Rules"). That count lives in each Worker
+instance's memory, so it is best effort: someone spreading guesses over many addresses or instances gets past it.
+The hard limit is a Cloudflare **rate-limiting rule** in front of the Worker (GDD §15.0 "Co-op relay hardening"):
+
+1. A WAF rule needs the relay on a **custom domain** of a zone in your account (a `workers.dev` address has no
+   zone, so its rules cannot be set). If you add one: **Workers & Pages** → `necropathy-relay` → **Settings** →
+   **Domains & Routes** → **Add** → **Custom domain** (e.g. `relay.example.com`), then point `RELAY_URL` in
+   `scripts/data/coop_net_data.gd` at `wss://relay.example.com`.
+2. In that zone: **Security** → **WAF** → **Rate limiting rules** → **Create rule**:
+   - **If incoming requests match**: *URI Path* *wildcard* `/lobby/*/ws` (or the expression
+     `starts_with(http.request.uri.path, "/lobby/") and ends_with(http.request.uri.path, "/ws")`);
+   - **With the same characteristics**: *IP*;
+   - **When rate exceeds**: about 20 requests a minute (the free plan offers only a 10-second period: use
+     10 requests per 10 seconds);
+   - **Then take action**: *Block*, for the longest duration the plan allows.
+   A player joins once per lobby, so a real player never reaches it.
+3. Without a custom domain, the per-IP count in the Worker is the only limit. Check now and then in **Workers &
+   Pages** → `necropathy-relay` → **Metrics** that the daily Durable Object requests stay well under the free
+   plan's 100,000.

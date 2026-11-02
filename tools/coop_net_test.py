@@ -38,7 +38,7 @@ def pump(proc, sink, tag, found):
         line = raw.rstrip("\n")
         sink.append(line)
         print("[%s] %s" % (tag, line), flush=True)
-        m = re.match(r"COOP_CODE=([A-Z]{5})", line)
+        m = re.match(r"COOP_CODE=([A-Z]+)", line)
         if m:
             found["code"] = m.group(1)
 

@@ -4,7 +4,8 @@
 Runs the same scenario against any relay, so the Python relay (tools/coop_relay.py) and the Cloudflare Worker
 (`wrangler dev` in server/relay, or the deployed workers.dev address) can be shown to behave the same: health,
 create and join, the welcome / peer / left messages, text and binary relaying in order, start, full, version,
-no_lobby, started, bad_hello, too_big, host_left and a POST /lobby reservation. Needs the `websockets` package
+no_lobby, started, bad_hello, too_big, host_left, a POST /lobby reservation, and that a player's faked relay
+messages (`left`, `welcome`, `peer`, `error`) and unknown types are never forwarded. Needs the `websockets` package
 (pip install websockets).
 
     python3 tools/coop_relay_check.py http://127.0.0.1:8765
@@ -25,6 +26,16 @@ GAME = "check-1"
 ORDER_COUNT = 500
 # Seconds to wait for one expected message.
 TIMEOUT = 5.0
+# Letters in a lobby code (the relay's CODE_LENGTH).
+CODE_LENGTH = 6
+# Messages a player sends that look like the relay's own (or are unknown): the relay must drop every one.
+FORGED = [
+    {"t": "left", "slot": 0},
+    {"t": "welcome", "code": "BCDFGH", "slot": 7, "peer": None},
+    {"t": "peer", "peer": {"slot": 1, "game": GAME, "platform": "other", "name": "X"}},
+    {"t": "error", "code": "expired"},
+    {"t": "made_up"},
+]
 
 failures = []  # Names of the failed checks.
 
@@ -71,7 +82,7 @@ async def run(http_base):
     w = await recv_json(host)
     code = w.get("code", "")
     check("create: welcome slot 0", w.get("t") == "welcome" and w.get("slot") == 0 and w.get("peer") is None, str(w))
-    check("code alphabet", len(code) == 5 and all(c in "BCDFGHJKMNPQRSTVWXYZ" for c in code), code)
+    check("code alphabet", len(code) == CODE_LENGTH and all(c in "BCDFGHJKMNPQRSTVWXYZ" for c in code), code)
 
     guest = await connect(ws_base, code.lower(), name="Guest")
     w = await recv_json(guest)
@@ -90,6 +101,13 @@ async def run(http_base):
     await guest.send(json.dumps({"t": "loadout", "x": 2}))
     m = await recv_json(host)
     check("text relay guest->host", m == {"t": "loadout", "x": 2}, str(m))
+
+    # Faked relay messages: relayed in order, a forwarded fake would arrive before the marker loadout.
+    for f in FORGED:
+        await guest.send(json.dumps(f))
+    await guest.send(json.dumps({"t": "loadout", "x": 3}))
+    m = await recv_json(host)
+    check("faked left / welcome / peer / error not forwarded", m == {"t": "loadout", "x": 3}, str(m))
 
     for i in range(ORDER_COUNT):
         await host.send(i.to_bytes(4, "big") + bytes(i % 7))
@@ -123,7 +141,7 @@ async def run(http_base):
     check("leave after start: host hears left, stays", m == {"t": "left", "slot": 1}, str(m))
     await host.close()
 
-    for c, name in (("AEIOU", "malformed code"), ("BBBBB", "unknown code")):
+    for c, name in (("AEIOUA", "malformed code"), ("BBBBB", "short code"), ("BBBBBB", "unknown code")):
         ws = await connect(ws_base, c)
         ok, d = await expect_error(ws, "no_lobby", 4001)
         check(name + ": no_lobby", ok, d)
@@ -149,7 +167,7 @@ async def run(http_base):
     with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
         code = json.loads(r.read()).get("code", "")
         status = r.status
-    check("POST /lobby", status == 201 and len(code) == 5, "%s %s" % (status, code))
+    check("POST /lobby", status == 201 and len(code) == CODE_LENGTH, "%s %s" % (status, code))
     host = await connect(ws_base, code, name="H")
     w = await recv_json(host)
     check("reserved lobby: first joiner is host", w.get("slot") == 0 and w.get("code") == code, str(w))
