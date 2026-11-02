@@ -109,7 +109,7 @@ const POOLS := {
 	"radius": 46.0,  # TUNING (not in GDD) px
 	"life": 7.0,  # TUNING (not in GDD) s; first pass 9
 	"tick": 0.5,  # TUNING (not in GDD) s
-	"heal_share": 0.03,  # TUNING (not in GDD) per s; first pass 0.05 (pools healed 185k in the seed-7 run)
+	"heal_share": 0.021,  # TUNING (not in GDD) per s; first pass 0.05 (pools healed 185k in the seed-7 run); was 0.03, Act VII pass 1, owner: Ease the Witchwood (-30%)
 	"boss_heal_mult": 0.0,  # TUNING (not in GDD) first pass 0.15: "healing pools for her thralls", never for her or the Bog Mother
 	"max_pools": 16,  # TUNING (not in GDD)
 	"fade": 0.8,  # TUNING (not in GDD) s

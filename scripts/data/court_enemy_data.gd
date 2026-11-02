@@ -378,7 +378,7 @@ const ENEMIES := {
 		"display_name": "Bloated Thrall",
 		"max_hp": 190.0,  # TUNING (not in GDD) a heavy (the Werewolf 300, the Demon Brute 330): slow and soft
 		"move_speed": 34.0,  # TUNING (not in GDD) px/s; swollen and slow
-		"damage": 6.0,  # TUNING (not in GDD) a heavy slam, before the time scaling; first pass 8 (the necromancer's main foe in the seed-7 run)
+		"damage": 4.5,  # TUNING (not in GDD) a heavy slam, before the time scaling; first pass 8 (the necromancer's main foe in the seed-7 run); was 6.0, Act VII pass 1, owner: Ease the Witchwood (-25%)
 		"attack_interval": 1.6,  # TUNING (not in GDD) s
 		"attack_range": 8.0,  # TUNING (not in GDD) px
 		"radius": 16.0,  # TUNING (not in GDD) px; the belly
