@@ -47,6 +47,10 @@ const STAGES := {
 	"ravensmoor": {"title": "The Moor Is Quiet", "boss_line": "Vargr's howl fades, and the moon pales."},  # TUNING (not in GDD) Act VII placeholder
 	"witchwood": {"title": "The Coven Breaks", "boss_line": "Isolde Vane's circle burns out in the fen."},  # TUNING (not in GDD) Act VII placeholder
 	"castle_sanguis": {"title": "The Feast Is Over", "boss_line": "The Elder turns to ash, and the Court's veil tears."},  # TUNING (not in GDD) Act VII placeholder
+	# --- Act VIII: the Last Line (placeholders until each stage is built) ---
+	"skid_row": {"title": "The Blocks Are Yours", "boss_line": "Don Marrow's limousine burns in the street."},  # TUNING (not in GDD) Act VIII placeholder
+	"fort_kessler": {"title": "The Line Is Broken", "boss_line": "General Harrow's hammer falls silent."},  # TUNING (not in GDD) Act VIII placeholder
+	"liberty_heights": {"title": "No More Heroes", "boss_line": "Paragon falls, and the living have no one left."},  # TUNING (not in GDD) Act VIII placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -63,6 +67,8 @@ const ACT_LINES := {
 	6: "You outlasted the Inferno. The Last Judgment took you at last.",  # TUNING (not in GDD) Act VI
 	# --- Act VII: the Sanguine Court ---
 	7: "You outlasted the Court. The Endless Feast drank you dry at last.",  # TUNING (not in GDD) Act VII
+	# --- Act VIII: the Last Line ---
+	8: "You outlasted the city. Martial Law ground you down at last.",  # TUNING (not in GDD) Act VIII
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

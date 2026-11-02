@@ -2135,6 +2135,46 @@ that heal themselves with every blow; evolves into **Nosferatu**, who spill the 
 wounded summon nearby, with **Thirst Eternal**: every heal your dead receive is larger) and its Ossuary mastery, and
 the achievement **Last Supper** (beat the Elder: the title Ender of the Feast).
 
+### Act VIII: the Last Line (foundation)
+
+<!-- --- Act VIII: the Last Line --- -->
+Behind the Court's veil were the last great cities of the living, lit all night and armed, and they fight back:
+**the Last Line** (GDD §15.0 "Act VIII foundation (phase 1)" and the rows after it; owner-approved proposal
+`docs/act8/PROPOSAL.md`). The stage select has an **Act VIII** tab with its three stages, **Skid Row**, **Fort
+Kessler** and **Liberty Heights** (bosses Don Marrow, the Kingpin; General Vance Harrow, the Hammer; Paragon, the
+Last Hero), "Coming soon" until phase 2 builds them; slaying Queen Carmilla opens Skid Row and each boss opens the
+next stage. The act's arenas and shared rules:
+
+- **City blocks.** The maps are a grid of rectangular buildings instead of scattered obstacles: 256 x 192 px
+  buildings, two by two in a block with a cross of 80 px alleys through it, and 192 px streets (a roadway and two
+  sidewalks) around every block. About a fifth of the lots are open (plazas, parking lots, parks), and the run
+  starts on a crossing of two streets. Your Bone Ring flattens along a street (a post inside a building is pulled
+  back toward you) and is round again at a crossing; the city's soldiers follow the streets to you.
+- **The escalation.** A plain clock (no Wanted Level): the gangs from 0:00, the police at 4:00, SWAT and the Guard
+  at 8:00, the army at 12:00 and the heroes at 15:00, each warned 10 s ahead by a banner, with the current tier on
+  the HUD. From the heroes, a Super arrives every 90 s.
+- **Armour.** Riot shields and tank fronts cut most of a hit from the front: flank them (arcing hits from above
+  ignore the front). Vehicles drive straight down a street lane at your street (their headlights show the lane 1 s
+  ahead), run over every summon in the lane and you (Grave Step dodges it), then turn and come again. A destroyed
+  vehicle becomes a burning wreck, a new obstacle for the rest of the run, that explodes 3 s later and hurts both
+  sides; a vehicle that rams a wreck stops and takes damage. The tank fires shells with a landing circle.
+- **Supers.** Named heroes with one power and one weakness on their plate. Blitz, the first: "Fast. Can't turn."
+  He dashes down a street through your ring; a dash that ends on a building, a wreck, a Bone Wall or a blocker
+  summon stuns him and **exposes** him (x1.5 damage taken for 4 s); until then he takes only x0.6.
+- **Civilians.** A crowd flees through the streets from the start, and more come until the army arrives. They
+  never fight back; your army kills them like any enemy, and each one drops XP. No sparing, no penalty.
+- **Martial Law.** At 0:00 every tier comes at once (tanks, riot cops, breachers and rifle squads), artillery walks
+  down the streets in lines of landing circles that hurt both sides, and every Super you met returns, one every
+  20 s.
+- **Police lights** pulse slowly (at most 1 Hz, a soft fade; never a flash).
+- **Music.** For now Act VIII runs play the Act VII loop; "Sirens at Midnight" comes with the audio pass.
+
+The shared kinds so far: the **Civilian** (a man or a woman, running), the **Street Thug** (bats and pipes, in
+crowds), the **Gang Gunner** (two pistols sprayed from the hip), the **Riot Cop** (a shield front and a baton), the
+**Squad Car** (a vehicle), the **SWAT Breacher** (a flashbang that stuns your summons for 1 s, a shotgun), the
+**Field Medic** (heals the soldiers near her), the **Rifleman** (squads of four, short bursts), the **Tank** (front
+and flat armour, a cannon) and **Blitz** (the speedster Super). The Codex has a **Last Line** tab, grouped by tier.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2381,7 +2421,8 @@ light above, the set-up of Act IV.
   **Republic** (Act IV, the Olympian Republic), **Shogunate** (Act V, the
   Shogunate of the Rising Sun), **Inferno** (Act VI) and **Court** (Act VII,
   the Sanguine Court) list their faction's soldiers, champions and bosses the
-  same way.
+  same way; **Last Line** (Act VIII) lists its kinds by escalation tier
+  (civilians, gangs, police, SWAT, army, heroes) and its bosses.
   **Evolutions follow the recipe rule**: until you obtain
   one it is a "?" with no name, art or hint (it reads the `[recipes]` book).
   Achievements use four new badge icons (`assets/sprites/icons/ach_*.png`).
@@ -2825,6 +2866,16 @@ scripts/
                             and its obstacles (Act VII)
     castle_sanguis_report.gd  The autotest's Castle Sanguis lines (castle sanguis, kinds, carmilla) and the Night
                             Swarm / Blood Spawn item lines (Act VII)
+    city_blocks.gd          THE CITY-BLOCK LAYOUT (Act VIII; owned by Arena as city_blocks): the lot grid, the
+                            one-lookup obstacle_at(), open lots, lane(), the wrecks (add_wreck()), the
+                            street-steering hint street_dir() and the bots' steer()
+    city_ground.gd          The Act VIII stubs' floor, drawn from the CityBlocks geometry (streets, alleys,
+                            crossings, crosswalks, sidewalks, open lots; tiles/city_* when present)
+    city_glyphs.gd          Code-drawn fallbacks of the Last Line's kinds; the buildings (tiles/city_roof_<style>
+                            atlases and roof decals) and wrecks, headlights, the light bar, the Supers' plate and
+                            crack, the landing circles (Act VIII)
+    city_report.gd          The autotest's Act VIII lines (city blocks, armour, supers, civilians, escalation,
+                            kinds, martial law, stage)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
                             the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
@@ -3097,6 +3148,24 @@ scripts/
       castle_sanguis_director.gd  Castle Sanguis: the Banquet's blood fountains (the one denial check), the King's
                             event, the guest squads
       boss_carmilla.gd      Queen Carmilla and the Elder: the Court, the Waking (the Elder's bar fills), the Elder
+    city/                   The Last Line (Act VIII): its kits ("<id>_kit.gd", loaded by name after the Court's)
+                            and bosses ("boss_<id>.gd"), and the act's shared rules:
+      city_rules.gd         Game.city: owns the escalation, Armour, Convoy, the Supers, the civilians, the shells
+                            and Martial Law; armour_mult() (the one front call) and blast() (null on Acts I to VII)
+      escalation.gd         THE ESCALATION: the plain clock of tiers, the banner 10 s ahead, the HUD badge, the
+                            heroes' Supers every 90 s
+      armour.gd             ARMOUR: the front test (CombatResolver.damage_enemy()), the Kevlar Bones hook
+      convoy.gd             The vehicles: the run-over, the wrecks and their explosions, the headlight push
+      super_roster.gd       The Supers: the met list, call_super(), call_next(), the counters
+      civilians.gd          CIVILIANS: the 0:00 crowd, the trickle until the army, their own alive cap
+      city_shells.gd        Every landing circle: the tank's shells, the flashbangs, the artillery
+      martial_law.gd        Martial Law: artillery lines along the streets, the met Supers return
+      city_kit.gd           Base kit: the row flags (tier, armour_front, vehicle, civilian, super), the facing,
+                            a vehicle's drive (the lane, the turn, the ram, the headlights, the light bar)
+      super_kit.gd          The Supers' base kit: guarded / exposed, expose(), the plate
+      civilian_kit.gd, street_thug_kit.gd, gang_gunner_kit.gd, riot_cop_kit.gd, squad_car_kit.gd,
+      swat_breacher_kit.gd, field_medic_kit.gd, rifleman_kit.gd, tank_kit.gd, blitz_kit.gd, city_wreck_kit.gd
+                            The shared kinds (the flight, the spray, the flashbang, the bursts, the cannon, the dash)
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3596,7 +3665,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, or the Act VII stubs `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stubs `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), or the Act VIII stubs `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |

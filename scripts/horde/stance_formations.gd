@@ -60,10 +60,18 @@ static func role(cls: String) -> String:
 
 ## Sets `u`'s post to `offset` from the necromancer, moved out of obstacles
 ## (and, Act VI, out of the Hell Pits: HellPits.avoid_point(), the one pit
-## avoid check the horde reads; skipped off Act VI).
+## avoid check the horde reads; skipped off Act VI; Act VIII, on a city-block
+## layout: pulled back toward the necromancer, Arena.free_point_toward()).
 static func _place(d: HordeDirector, u: SummonedUnit, offset: Vector2) -> void:
 	var pp := d.game.player.position
-	var post := d.game.arena.free_point(pp + offset, u.radius)  # The post, out of obstacles.
+	var post: Vector2  # The post, out of obstacles.
+	if d.game.arena.city_blocks != null:
+		# --- Act VIII: the Last Line --- on a city-block layout only, a post inside a
+		# building is pulled back toward the necromancer (Arena.free_point_toward()),
+		# so the ring flattens along the street (terrain, not a summon rule).
+		post = d.game.arena.free_point_toward(pp + offset, pp, u.radius)
+	else:
+		post = d.game.arena.free_point(pp + offset, u.radius)
 	if d.game.inferno != null:
 		post = d.game.inferno.pits.avoid_point(post, u.radius)  # Act VI: the ring flows around the pits.
 	u.anchor_offset = post - pp

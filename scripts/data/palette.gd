@@ -216,3 +216,38 @@ const COURT_MOON_DARK := Color(0.431, 0.478, 0.549)  # #6E7A8C
 const COURT_MOON := Color(0.706, 0.753, 0.816)  # #B4C0D0
 ## Lit moonlight ("moon_light"): silver glints, mist.
 const COURT_MOON_LIGHT := Color(0.902, 0.933, 0.969)  # #E6EEF7
+
+# --- Act VIII: the Last Line ---
+# GDD §15.0 "Act VIII foundation (phase 1)": the fixed values of docs/act8/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps asphalt, concrete, neon, olive, siren, owned by the art pass). Gold keeps
+# its meaning (evolution / chest / victory) and crimson stays danger; the heroes' bright colours pop
+# off the asphalt.
+
+## City outline ink (tools/palette.json "asphalt" ramp, darkest): every City sprite's outline.
+const CITY_INK := Color(0.063, 0.067, 0.078)  # #101114
+## Dark asphalt ("asphalt_dark"): alleys, the road in shadow, tyres.
+const CITY_ASPHALT_DARK := Color(0.118, 0.125, 0.141)  # #1E2024
+## Asphalt ("asphalt"): the streets' roadway.
+const CITY_ASPHALT := Color(0.227, 0.239, 0.267)  # #3A3D44
+## Concrete ("concrete"): sidewalks, curbs, rooftops, the base's walls.
+const CITY_CONCRETE := Color(0.333, 0.349, 0.373)  # #55595F
+## Lit concrete ("concrete_light"): curb edges, parapets, plaza paving.
+const CITY_CONCRETE_LIGHT := Color(0.478, 0.498, 0.529)  # #7A7F87
+## Sodium orange ("sodium"): streetlights, the lane lines, headlight glow.
+const CITY_SODIUM := Color(0.910, 0.643, 0.227)  # #E8A43A
+## Neon pink ("neon_pink"): signs of the Night Market, the gangs' colours.
+const CITY_NEON_PINK := Color(1.000, 0.310, 0.659)  # #FF4FA8
+## Neon cyan ("neon_cyan"): signs, the speedster's trail, a super's plate edge.
+const CITY_NEON_CYAN := Color(0.247, 0.878, 0.910)  # #3FE0E8
+## Dark olive ("olive_dark"): the army's drab in shadow, tank hulls.
+const CITY_OLIVE_DARK := Color(0.294, 0.325, 0.188)  # #4B5330
+## Olive ("olive"): the army's drab, tanks, sandbags.
+const CITY_OLIVE := Color(0.420, 0.459, 0.271)  # #6B7545
+## Hazard yellow ("hazard"): hazard stripes, the escalation badge, a shell's landing ring.
+const CITY_HAZARD := Color(0.949, 0.769, 0.094)  # #F2C418
+## Police blue ("police_blue"): the police's uniforms and the light bar's blue half.
+const CITY_POLICE_BLUE := Color(0.180, 0.373, 0.816)  # #2E5FD0
+## Siren red ("siren_red"): the light bar's red half (pulsed slowly, never a flash).
+const CITY_SIREN_RED := Color(0.847, 0.165, 0.165)  # #D82A2A
+## Hero orange ("hero_orange"): the speedster's suit, a super's plate accent.
+const CITY_HERO_ORANGE := Color(0.941, 0.478, 0.118)  # #F07A1E

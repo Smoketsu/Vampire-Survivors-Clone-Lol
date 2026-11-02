@@ -41,7 +41,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 		# --- Act VI: the Inferno ---
 		["inferno", "Inferno"],
 		# --- Act VII: the Sanguine Court ---
-		["court", "Court"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's
+		["court", "Court"],
+		# --- Act VIII: the Last Line ---
+		["city", "Last Line"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -232,6 +234,27 @@ const COURT_CHAMPIONS: Array[String] = ["werewolf",
 ## Court stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const COURT_BOSSES: Array[String] = ["vargr", "isolde", "carmilla"]
 
+# --- Act VIII: the Last Line ---
+## Act VIII, the Last Line (GDD §15.0 "Act VIII foundation (phase 1)"; the
+## Last Line tab), GROUPED BY TIER (the escalation): the civilians, then each
+## tier's kinds (gangs, police, SWAT and the Guard, the army, the heroes), then
+## its stage bosses (StageRegistry.BOSS_ARRIVALS ids). Each Act VIII stage adds
+## its own as it is built (phase 2). The burning wreck is not an entry (it is
+## never slain).
+const CITY_CIVILIANS: Array[String] = ["civilian"]
+## The gangs' kinds (tier "gangs").
+const CITY_GANGS: Array[String] = ["street_thug", "gang_gunner"]
+## The police's kinds (tier "police").
+const CITY_POLICE: Array[String] = ["riot_cop", "squad_car"]
+## SWAT and the Guard's kinds (tier "swat").
+const CITY_SWAT: Array[String] = ["swat_breacher", "field_medic"]
+## The army's kinds (tier "army").
+const CITY_ARMY: Array[String] = ["rifleman", "tank"]
+## The heroes (tier "heroes": the Supers).
+const CITY_HEROES: Array[String] = ["blitz"]
+## Last Line stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const CITY_BOSSES: Array[String] = ["don_marrow", "harrow", "paragon"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
@@ -247,6 +270,9 @@ const SECTIONS: Dictionary = {
 	"inferno": [["inferno_soldiers", "Soldiers"], ["inferno_champions", "Champions"], ["inferno_bosses", "Bosses"]],  # TUNING (not in GDD) Act VI
 	# --- Act VII: the Sanguine Court ---
 	"court": [["court_soldiers", "Soldiers"], ["court_champions", "Champions"], ["court_bosses", "Bosses"]],  # TUNING (not in GDD) Act VII
+	# --- Act VIII: the Last Line (grouped by tier) ---
+	"city": [["city_civilians", "Civilians"], ["city_gangs", "Gangs"], ["city_police", "Police"], ["city_swat", "SWAT and the Guard"],
+		["city_army", "The Army"], ["city_heroes", "The Heroes"], ["city_bosses", "Bosses"]],  # TUNING (not in GDD) Act VIII
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -416,6 +442,20 @@ const DESCRIPTIONS: Dictionary = {
 	"chiropteran": "Bat-folk who glide over your ring. Their shriek stuns your dead in a cone: step out of it.",  # Owner-approved Act VII proposal
 	"blood_bearer": "Thralls with chalices who carry blood to their kneeling Queen. Kill them before they reach her.",  # Owner-approved Act VII proposal ("the thralls that bring her blood")
 	"chiropteran_king": "A giant bat-man who seizes your dead, flies them off over the ring and drops them outside it.",  # Owner-approved Act VII proposal (the miniboss)
+	# --- Act VIII: the Last Line ---
+	"civilian": "The living of the last city, running from your dead. They never fight back, and each one you catch is XP.",  # Owner answer Oct 31, 2026 (Civilians)
+	"street_thug": "The gangs who own the blocks: bats and pipes, in crowds.",  # Owner-approved Act VIII proposal
+	"gang_gunner": "Two pistols sprayed from the hip as he walks in: poor aim, a lot of bullets. Blockers soak it.",  # Owner-approved Act VIII proposal
+	"riot_cop": "Riot shields in a line. From the front the shield takes most of a blow: flank them.",  # Owner-approved Act VIII proposal (Armour)
+	"squad_car": "A police car that drives its lane through your ring. Its headlights show where it will be: get out of the way.",  # Owner-approved Act VIII proposal (Armour)
+	"swat_breacher": "Flashbangs that stun your dead for a moment, and a shotgun up close. Kill them first.",  # Owner-approved Act VIII proposal
+	"field_medic": "She patches up the soldiers around her. A priority target.",  # Owner-approved Act VIII proposal
+	"rifleman": "Rifle squads of four, firing short bursts as they advance. Area damage breaks them.",  # Owner-approved Act VIII proposal
+	"tank": "Armoured in front, shells with a landing circle, and it drives over your ring. Let it ram a wreck.",  # Owner-approved Act VIII proposal (Armour)
+	"blitz": "A speedster who dashes through your ring. Fast, but he can't turn: a wall, a wreck or a blocker stops him cold.",  # Owner-approved Act VIII proposal (Supers)
+	"don_marrow": "Don Marrow, the Kingpin: a bounty on your head, a call to the police, and a gold-plated minigun behind his limousine's armour.",  # Owner-approved Act VIII proposal
+	"harrow": "General Vance Harrow, the Hammer: carpet bombing, a tank column, and Broken Arrow, a strike on his own position.",  # Owner-approved Act VIII proposal
+	"paragon": "Paragon, the Last Hero: the strongest man alive, and every hero still standing flies to his side.",  # Owner-approved Act VIII proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -477,6 +517,14 @@ const LOCKED_HINT: Dictionary = {
 	"court_soldiers": "Slay one to record it.",  # TUNING (not in GDD) Act VII
 	"court_champions": "Slay one to record it.",  # TUNING (not in GDD) Act VII champions
 	"court_bosses": "Face it to record it.",  # TUNING (not in GDD) Act VII bosses
+	# --- Act VIII: the Last Line ---
+	"city_civilians": "Catch one to record it.",  # TUNING (not in GDD) Act VIII
+	"city_gangs": "Slay one to record it.",  # TUNING (not in GDD) Act VIII gangs
+	"city_police": "Slay one to record it.",  # TUNING (not in GDD) Act VIII police
+	"city_swat": "Slay one to record it.",  # TUNING (not in GDD) Act VIII SWAT
+	"city_army": "Slay one to record it.",  # TUNING (not in GDD) Act VIII army
+	"city_heroes": "Slay one to record it.",  # TUNING (not in GDD) Act VIII heroes
+	"city_bosses": "Face it to record it.",  # TUNING (not in GDD) Act VIII bosses
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -512,6 +560,14 @@ const TAGS: Dictionary = {
 	"court_soldiers": "The Sanguine Court",  # TUNING (not in GDD) Act VII
 	"court_champions": "Champion of the Court",  # TUNING (not in GDD) Act VII champions
 	"court_bosses": "Stage boss",  # TUNING (not in GDD) Act VII bosses
+	# --- Act VIII: the Last Line ---
+	"city_civilians": "The last city",  # TUNING (not in GDD) Act VIII
+	"city_gangs": "The gangs",  # TUNING (not in GDD) Act VIII gangs
+	"city_police": "The police",  # TUNING (not in GDD) Act VIII police
+	"city_swat": "SWAT and the Guard",  # TUNING (not in GDD) Act VIII SWAT
+	"city_army": "The army",  # TUNING (not in GDD) Act VIII army
+	"city_heroes": "Super",  # TUNING (not in GDD) Act VIII heroes
+	"city_bosses": "Stage boss",  # TUNING (not in GDD) Act VIII bosses
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -723,10 +779,13 @@ static func is_known(cat: String, id: String) -> bool:
 					or PANTHEON_SOLDIERS.has(id) or PANTHEON_CHAMPIONS.has(id) \
 					or SHOGUNATE_SOLDIERS.has(id) or SHOGUNATE_CHAMPIONS.has(id) \
 					or INFERNO_SOLDIERS.has(id) or INFERNO_CHAMPIONS.has(id) \
-					or COURT_SOLDIERS.has(id) or COURT_CHAMPIONS.has(id)  # Act IV, Act V, Act VI, Act VII
+					or COURT_SOLDIERS.has(id) or COURT_CHAMPIONS.has(id) \
+					or CITY_CIVILIANS.has(id) or CITY_GANGS.has(id) or CITY_POLICE.has(id) \
+					or CITY_SWAT.has(id) or CITY_ARMY.has(id) or CITY_HEROES.has(id)  # Act IV to Act VIII
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
-					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id)  # (Act VII last)
+					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id) \
+					or CITY_BOSSES.has(id)  # (Act VIII last)
 	return false
 
 
@@ -743,10 +802,13 @@ static func total(cat: String) -> int:
 					+ PANTHEON_SOLDIERS.size() + PANTHEON_CHAMPIONS.size() \
 					+ SHOGUNATE_SOLDIERS.size() + SHOGUNATE_CHAMPIONS.size() \
 					+ INFERNO_SOLDIERS.size() + INFERNO_CHAMPIONS.size() \
-					+ COURT_SOLDIERS.size() + COURT_CHAMPIONS.size()  # Act IV, Act V, Act VI, Act VII
+					+ COURT_SOLDIERS.size() + COURT_CHAMPIONS.size() \
+					+ CITY_CIVILIANS.size() + CITY_GANGS.size() + CITY_POLICE.size() \
+					+ CITY_SWAT.size() + CITY_ARMY.size() + CITY_HEROES.size()  # Act IV to Act VIII
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
-					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size()  # (Act VII last)
+					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size() \
+					+ CITY_BOSSES.size()  # (Act VIII last)
 	return 0
 
 
@@ -776,6 +838,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var court := EnemyDirector.court_def(id)  # Act VII kinds ({} when none).
 	if not court.is_empty():
 		return court
+	var city := EnemyDirector.city_def(id)  # Act VIII kinds ({} when none).
+	if not city.is_empty():
+		return city
 	match id:
 		"alaric":
 			return EnemyData.BOSS

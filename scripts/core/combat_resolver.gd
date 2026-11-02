@@ -178,6 +178,14 @@
 ##             SPELL hit on a foe standing inside one of the necromancer's hex
 ##             circles (WitchCircle.in_circle()) deals more (stat
 ##             moonlit_rite_bonus_dmg); exactly 1 while the passive is not owned.
+## Act VIII (the Last Line; GDD §15.0 "Armour"; Game.city is null on every
+## other act, so none of this runs there): ARMOUR's front — damage_enemy()
+## multiplies a directed hit (an origin, not from above) once by
+## CityRules.armour_mult() right after the Phalanx block (a City kind's
+## "armour_front" share is cut from a hit inside its front arc; stats
+## armour_front_hits, armour_front_dmg_prevented); flat armour is the existing
+## path. damage_unit() reads the Kevlar Bones hook (Armour.kevlar_mult(): less
+## RANGED City damage to summons; exactly 1 while the passive is not built).
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -291,6 +299,14 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 			if front < 1.0:
 				game.stat_add("phalanx_front_dmg_prevented", amount * (1.0 - front) * (1.0 - e.armor))
 			amount *= front
+	# --- Act VIII: the Last Line --- Armour's front (the one front test of the
+	# act): a directed hit on a City kind with an "armour_front". Skipped
+	# entirely off Act VIII (Game.city null) and for hits with no direction.
+	if game.city != null and origin != NO_ORIGIN:
+		var am := game.city.armour_mult(e, origin, shot, source)  # 1 = the front did nothing.
+		if am < 1.0:
+			game.stat_add("armour_front_dmg_prevented", amount * (1.0 - am) * (1.0 - e.armor))
+			amount *= am
 	# --- Act IV: the Shores of Ilion --- Mortal Heel (the paired passive of
 	# Paris's Arrow, offered on every stage once Achilles fell): a directed hit
 	# from BEHIND its target (PantheonRules.hit_from_behind(), the one direction
@@ -566,6 +582,14 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 	if lead > 0.0 and is_ranged_source(source):
 		game.stat_add("lead_lined_dmg_prevented", amount * lead)
 		amount *= 1.0 - lead
+	# --- Act VIII: the Last Line --- Kevlar Bones (hook, not built): ranged City
+	# hits deal less (Armour.kevlar_mult(); exactly 1 while the passive is not
+	# owned, and off Act VIII).
+	if game.city != null:
+		var kev := game.city.armour.kevlar_mult(source)  # Share of the hit kept.
+		if kev < 1.0:
+			game.stat_add("kevlar_dmg_prevented", amount * (1.0 - kev))
+			amount *= kev
 	var plate := ab.passive_value("bone_plating", "flat_reduction")  # Flat damage off this hit.
 	if plate > 0.0 and not source in PassiveData.PLATING_EXEMPT_SOURCES:
 		var cut := minf(plate, amount * (1.0 - PassiveData.PLATING_MIN_FRACTION))  # Damage actually removed.

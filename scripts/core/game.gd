@@ -78,6 +78,11 @@
 ## Moon, the Endless Feast), stepped after the Inferno's and before the
 ## obstacle push-out; null on Acts I to VI unless a Court kind forced there
 ## asks for it (court_rules()).
+## Act VIII (GDD §15.0 "Act VIII foundation (phase 1)"): `city` (CityRules)
+## runs the Last Line's shared rules (the escalation, Armour, Supers,
+## Civilians, Martial Law), stepped after the Court's and before the obstacle
+## push-out; null on Acts I to VII unless a City kind forced there asks for it
+## (city_rules()). Its city-block layout is the arena's (Arena.city_blocks).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -243,6 +248,11 @@ var inferno: InfernoRules = null
 ## stage's STAGE has "court": true, or a Court kind spawned on another stage
 ## asked for it through court_rules(); Acts I to VI never create it).
 var court: CourtRules = null
+# --- Act VIII: the Last Line ---
+## Act VIII, the Last Line's shared rules (CityRules; null unless the stage's
+## STAGE has "city": true, or a City kind spawned on another stage asked for it
+## through city_rules(); Acts I to VII never create it).
+var city: CityRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -408,6 +418,12 @@ func _ready() -> void:
 		# --- Act VII: the Witchwood ---
 		"witchwood":
 			ground = WitchwoodGround.new()  # Act VII: the Witchwood's four zone floors and the Fen's water (WitchwoodStage.ZONES).
+		# --- Act VIII: the Last Line ---
+		"city":
+			var cyg := CityGround.new()  # Act VIII placeholder floor, drawn from the arena's CityBlocks.
+			cyg.look = stage_def.get("floor", {})
+			cyg.game = self
+			ground = cyg
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -496,6 +512,8 @@ func _ready() -> void:
 		inferno_rules()  # Act VI: the Inferno's shared rules.
 	if bool(stage_def.get("court", false)):
 		court_rules()  # Act VII: the Sanguine Court's shared rules.
+	if bool(stage_def.get("city", false)):
+		city_rules()  # Act VIII: the Last Line's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -799,6 +817,8 @@ func _physics_process(delta: float) -> void:
 		inferno.step(delta)  # Act VI: the Hell Pits, the portals (their squads pushed out of obstacles next), Temptation.
 	if court != null:
 		court.step(delta)  # Act VII: the Endless Feast, the Blood Moon, Bloodfeast's threads (coffin nobles pushed out next).
+	if city != null:
+		city.step(delta)  # Act VIII: the escalation, the civilians, wrecks and shells, Martial Law (pushed out of buildings next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -953,6 +973,19 @@ func court_rules() -> CourtRules:
 		court = CourtRules.new(self)
 		add_child(court)
 	return court
+
+
+# --- Act VIII: the Last Line ---
+## The Last Line's shared rules (Act VIII), created on first use: at the start
+## of an Act VIII run, or when a City kind forced onto another stage is
+## activated (CityKit.reset()), so its front, its vehicle and its Super kit
+## work there (the escalation, the civilians and Martial Law stay off off Act
+## VIII).
+func city_rules() -> CityRules:
+	if city == null:
+		city = CityRules.new(self)
+		add_child(city)
+	return city
 
 
 # --- Act IV: the Asphodel Underworld ---

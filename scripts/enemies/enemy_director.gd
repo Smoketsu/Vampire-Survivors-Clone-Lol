@@ -115,6 +115,13 @@
 ##     from COURT_BOSS_DIR after the Inferno's folder. Its shared rules
 ##     (Bloodfeast, Night Wings, the Blood Moon, the Endless Feast) live in
 ##     CourtRules (Game.court); this director hands it nothing.
+##   * Act VIII, the Last Line (GDD §15.0 "Act VIII foundation (phase 1)"):
+##     its kinds are looked up through city_def() (CityEnemyData, then each
+##     Act VIII stage's table) after the Court's, and its bosses load by name
+##     from CITY_BOSS_DIR after the Court's folder. Its shared rules (the
+##     escalation, Armour, Supers, Civilians, Martial Law) live in CityRules
+##     (Game.city). Civilians have their own alive cap: regular_alive() leaves
+##     them out, and they are never recycled to the spawn ring (they flee off).
 ##   * Act VII, Ravensmoor (GDD §15.0 "Ravensmoor (Act VII phase 2)"): on a
 ##     stage with a "ravensmoor" config it creates the RavensmoorDirector (the
 ##     sleeping coffins, Coffin Nails, the ghoul packs, Old Greymane;
@@ -151,6 +158,9 @@ const INFERNO_BOSS_DIR: String = "res://scripts/enemies/inferno/"
 # --- Act VII: the Sanguine Court ---
 ## Folder of the Sanguine Court's boss scripts ("boss_<id>.gd", each a Boss; Act VII).
 const COURT_BOSS_DIR: String = "res://scripts/enemies/court/"
+# --- Act VIII: the Last Line ---
+## Folder of the Last Line's boss scripts ("boss_<id>.gd", each a Boss; Act VIII).
+const CITY_BOSS_DIR: String = "res://scripts/enemies/city/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -519,7 +529,7 @@ func step(delta: float) -> void:
 			e.update_separation()
 		e.physics_step(delta)
 		e.resolve_blocking()
-		if not e.is_boss and not e.is_objective and not e.is_miniboss and e.position.distance_squared_to(player_pos) > recycle2:
+		if not e.is_boss and not e.is_objective and not e.is_miniboss and not e.civilian and e.position.distance_squared_to(player_pos) > recycle2:
 			_recycle(e)
 	if co != null:
 		co.bind_primary()  # Co-op: the stage directors act around the primary necromancer.
@@ -633,12 +643,15 @@ func release_retired() -> void:
 	_awaiting_grid_clear.clear()
 
 
-## Number of living regular (non-boss) enemies.
+## Number of living regular (non-boss) enemies (Act VIII: not counting the
+## civilians, who have their own alive cap).
 func regular_alive() -> int:
 	var n := 0
 	for e in active:
 		if e.active and not e.is_boss:
 			n += 1
+	if game.city != null:
+		n -= game.city.civilians.alive_count()  # Act VIII: civilians have their own cap.
 	return n
 
 
@@ -1037,8 +1050,8 @@ func _spawn_boss() -> void:
 	# EMPIRE_BOSS_DIR (Act III, the same way), else an Olympian Republic boss
 	# from PANTHEON_BOSS_DIR (Act IV), else a Shogunate boss from
 	# SHOGUNATE_BOSS_DIR (Act V), else an Inferno boss from INFERNO_BOSS_DIR
-	# (Act VI), else a Sanguine Court boss from COURT_BOSS_DIR (Act VII); Sir
-	# Alaric when none exists.
+	# (Act VI), else a Sanguine Court boss from COURT_BOSS_DIR (Act VII), else a
+	# Last Line boss from CITY_BOSS_DIR (Act VIII); Sir Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -1059,6 +1072,8 @@ func _spawn_boss() -> void:
 				path = INFERNO_BOSS_DIR + "boss_" + sid + ".gd"  # Act VI: an Inferno boss script.
 			if not ResourceLoader.exists(path):
 				path = COURT_BOSS_DIR + "boss_" + sid + ".gd"  # Act VII: a Sanguine Court boss script.
+			if not ResourceLoader.exists(path):
+				path = CITY_BOSS_DIR + "boss_" + sid + ".gd"  # Act VIII: a Last Line boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -1160,7 +1175,7 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## Electronic Empire's (Act III: empire_def()), then the Olympian Republic's
 ## (Act IV: pantheon_def()), then the Shogunate's (Act V: shogunate_def()),
 ## then the Inferno's (Act VI: inferno_def()), then the Sanguine Court's
-## (Act VII: court_def()),
+## (Act VII: court_def()), then the Last Line's (Act VIII: city_def()),
 ## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
@@ -1191,6 +1206,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var court := court_def(kind)  # Act VII kinds ({} when not a Court kind).
 	if not court.is_empty():
 		return court
+	var city := city_def(kind)  # Act VIII kinds ({} when not a City kind).
+	if not city.is_empty():
+		return city
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -1289,6 +1307,22 @@ static func court_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act VIII: the Last Line ---
+## Design row of Last Line kind `kind` (real id), or {} when it is none:
+## CityEnemyData (the shared kinds and the wreck) first, then each Act VIII
+## stage's own table (phase 2 fills them).
+static func city_def(kind: String) -> Dictionary:
+	if CityEnemyData.ENEMIES.has(kind):
+		return CityEnemyData.ENEMIES[kind]
+	if SkidRowEnemyData.ENEMIES.has(kind):
+		return SkidRowEnemyData.ENEMIES[kind]
+	if FortKesslerEnemyData.ENEMIES.has(kind):
+		return FortKesslerEnemyData.ENEMIES[kind]
+	if LibertyHeightsEnemyData.ENEMIES.has(kind):
+		return LibertyHeightsEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
@@ -1298,7 +1332,8 @@ static func is_known_kind(kind: String) -> bool:
 			or not empire_def(kind).is_empty() or not pantheon_def(kind).is_empty() \
 			or not shogunate_def(kind).is_empty() \
 			or not inferno_def(kind).is_empty() \
-			or not court_def(kind).is_empty()  # Act V, Act VI, Act VII
+			or not court_def(kind).is_empty() \
+			or not city_def(kind).is_empty()  # Act V, Act VI, Act VII, Act VIII
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar
