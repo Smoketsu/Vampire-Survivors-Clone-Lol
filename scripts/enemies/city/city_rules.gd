@@ -53,6 +53,8 @@ var supers: SuperRoster
 var civilians: Civilians
 ## The landing circles (child node: drawn on the ground).
 var shells: CityShells
+## The rooftop antenna lamps' slow pulse (child node; null headless).
+var lamps: CityLamps = null
 ## Martial Law (the Reckoning).
 var martial: MartialLaw
 ## City kind -> game time (s) of its first activation this run (the
@@ -76,6 +78,9 @@ func _init(p_game: Game) -> void:
 	civilians = Civilians.new(p_game, enabled)
 	shells = CityShells.new(p_game)
 	add_child(shells)
+	if DisplayServer.get_name() != "headless":
+		lamps = CityLamps.new(p_game)  # Visual only: draws nothing off a city-block layout.
+		add_child(lamps)
 	martial = MartialLaw.new(p_game, enabled)
 	if p_game.arena != null and p_game.arena.city_blocks != null:
 		_check_body_radii()

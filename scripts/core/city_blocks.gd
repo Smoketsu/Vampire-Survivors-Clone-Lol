@@ -213,7 +213,8 @@ func lane(pos: Vector2, dir: Vector2) -> Dictionary:
 ## a blocks layout): the direction (unit) from `pos` toward `target` for a body
 ## of radius `r`:
 ##   * straight at it while the straight line is clear (no building or wreck
-##     within `look` px);
+##     within `look` px, and the body is not pressed against a face that line
+##     runs into);
 ##   * else it routes along the streets to the target's STREET POINT (the
 ##     target itself when it stands in a street, else the nearest point of the
 ##     nearest street centre line: the mouth of its alley or the edge of its open
@@ -221,7 +222,13 @@ func lane(pos: Vector2, dir: Vector2) -> Dictionary:
 ##     the crossing onto that point's vertical street (or straight along x to
 ##     it when it lies in this street), and the other way round; in a crossing
 ##     it takes the street that already runs to that point's street. At the
-##     point it goes straight in (sliding along the faces). The first clear of
+##     point it goes straight in (sliding along the faces). Level with that
+##     point (within a wreck's half length plus its radius) it heads across the
+##     street toward the target instead of along it: along, the sign of a
+##     near-zero offset flipped every decision, and with a wreck on the point
+##     (an alley mouth) the bodies dithered round it for good (Fort Kessler,
+##     seed 7); across, a wreck in the way is stepped round (below) and the
+##     body walks past it. The first clear of
 ##     that direction (a wreck in it: first a step round the wreck, to the
 ##     side the body is on), a step in toward that street's centre line (off a
 ##     building corner at a crossing's edge), the axes toward the target and a
@@ -233,7 +240,16 @@ func street_dir(pos: Vector2, target: Vector2, r: float = 8.0, look: float = 96.
 	if dist < 1.0:
 		return Vector2.ZERO
 	var straight := to / dist
-	var o := _blocker(pos, straight, r, minf(dist, r + 16.0))
+	# A body already pressed against a face (or a corner) whose straight line
+	# runs into it is blocked by it, whatever the probes ahead say: they sample
+	# end points only and step over the corner the body leans on. Without this
+	# the body went "straight", the Arena slide (its side remembered while the
+	# contact lasts) carried it back along the face, the probes then routed it
+	# away, and the two alternated round one spot for good (the co-op Skid Row
+	# thugs at a building corner, seed 7).
+	var o := _pressing(pos, straight, r)
+	if o == null:
+		o = _blocker(pos, straight, r, minf(dist, r + 16.0))
 	if o == null:
 		o = _blocker(pos, straight, r, minf(dist, look))
 	if o == null:
@@ -255,10 +271,16 @@ func street_dir(pos: Vector2, target: Vector2, r: float = 8.0, look: float = 96.
 				cands.append(Vector2(_sgn(tg.x), 0.0) if absf(tg.x) >= absf(tg.y) else Vector2(0.0, _sgn(tg.y)))
 		elif inh:
 			var xs := goal.x if (same_h and in_h_street(goal)) else v_street_x(v_street(goal))  # Along this street to ...
-			cands.append(Vector2(_sgn(xs - pos.x), 0.0))
+			if same_h and absf(xs - pos.x) <= CityBlockData.WRECK_HALF_MAX + r and absf(target.y - pos.y) > 2.0:
+				cands.append(Vector2(0.0, _sgn(target.y - pos.y)))  # Level with its street point: across, toward the target.
+			else:
+				cands.append(Vector2(_sgn(xs - pos.x), 0.0))
 		elif inv:
 			var ys := goal.y if (same_v and in_v_street(goal)) else h_street_y(h_street(goal))
-			cands.append(Vector2(0.0, _sgn(ys - pos.y)))
+			if same_v and absf(ys - pos.y) <= CityBlockData.WRECK_HALF_MAX + r and absf(target.x - pos.x) > 2.0:
+				cands.append(Vector2(_sgn(target.x - pos.x), 0.0))  # Level with its street point: across, toward the target.
+			else:
+				cands.append(Vector2(0.0, _sgn(ys - pos.y)))
 		if not cands.is_empty():
 			var d0: Vector2 = cands[0]  # The routed direction.
 			var rb := _blocker(pos, d0, r, r + 16.0)  # What blocks it (null = clear).
@@ -315,6 +337,19 @@ static func _sgn(v: float) -> float:
 ## `dir` without touching a building or a wreck (the civilians' flight).
 func clear_dir(pos: Vector2, dir: Vector2, r: float) -> bool:
 	return _blocker(pos, dir, r, r + 16.0) == null
+
+
+## The building or wreck a body of radius `r` at `pos` touches (within
+## CityBlockData.STEER_CONTACT_SLACK px) when moving along `dir` presses into
+## it (against the face's outward normal), else null.
+func _pressing(pos: Vector2, dir: Vector2, r: float) -> Arena.Obstacle:
+	var o := obstacle_at(pos)
+	if o == null:
+		return null
+	var push := Arena.separation(o, pos, r + CityBlockData.STEER_CONTACT_SLACK)  # Out of the face (ZERO = no contact).
+	if push != Vector2.ZERO and dir.dot(push) < 0.0:
+		return o
+	return null
 
 
 ## The building or wreck a body of radius `r` at `pos` would touch `length` px

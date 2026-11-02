@@ -2172,7 +2172,8 @@ next stage. The act's arenas and shared rules:
   down the streets in lines of landing circles that hurt both sides, and every Super you met returns, one every
   20 s.
 - **Police lights** pulse slowly (at most 1 Hz, a soft fade; never a flash).
-- **Music.** For now Act VIII runs play the Act VII loop; "Sirens at Midnight" comes with the audio pass.
+- **Music.** Act VIII runs play "Sirens at Midnight"; every City event (sirens, gunfire, engines, wrecks, the crowd,
+  a Super's arrival, a weakness cracking, the tier alarm) plays its own City sound. Rooftop antenna lamps blink slowly.
 
 The shared kinds so far: the **Civilian** (a man or a woman, running), the **Street Thug** (bats and pipes, in
 crowds), the **Gang Gunner** (two pistols sprayed from the hip), the **Riot Cop** (a shield front and a baton), the
@@ -2879,6 +2880,8 @@ scripts/
     city_glyphs.gd          Code-drawn fallbacks of the Last Line's kinds; the buildings (tiles/city_roof_<style>
                             atlases and roof decals) and wrecks, headlights, the light bar, the Supers' plate and
                             crack, the landing circles (Act VIII)
+    city_lamps.gd           The slow red pulse of the rooftop antenna lamps in view (Act VIII; visual only, never
+                            headless)
     city_report.gd          The autotest's Act VIII lines (city blocks, armour, supers, civilians, escalation,
                             kinds, martial law, stage)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and

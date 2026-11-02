@@ -210,8 +210,5 @@ const STAGE := {
 	"civilians": CIVILIANS,  # Act VIII: this stage's civilians overrides ({} = the defaults).
 	"supers": SUPERS,  # Act VIII: the Supers the escalation sends.
 	"zones": ZONES,  # Act VIII stub: the planned zones (phase 2 builds them).
-	# Music key "sanguine" FOR NOW (the Act VII loop): the audio pass adds
-	# "siren" ("Sirens at Midnight", SoundData.SIREN_SCORE) and the lead
-	# switches this to "siren" at the merge.
-	"music": "sanguine",
+	"music": "siren",  # Act VIII: "Sirens at Midnight" (SoundData.SIREN_SCORE); also renders the City pack.
 }

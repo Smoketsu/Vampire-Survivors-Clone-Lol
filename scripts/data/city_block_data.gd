@@ -92,6 +92,11 @@ const STEER_LOOK: float = 96.0  # TUNING (not in GDD)
 ## px of clear straight line an enemy that left the straight line needs to go
 ## straight again (hysteresis: no flip-flop at the edge of the look-ahead).
 const STEER_LOOK_BACK: float = 160.0  # TUNING (not in GDD)
+## px of slack within which a body counts as touching a building or wreck for
+## the steering (CityBlocks.street_dir(): a body pressed against a face whose
+## straight line runs into it is routed, never sent straight; the integration
+## fix for the co-op corner trap).
+const STEER_CONTACT_SLACK: float = 1.5  # TUNING (not in GDD) px
 
 # --- Wrecks (CityBlocks.add_wreck(); Convoy places them) ---------------------------------------
 

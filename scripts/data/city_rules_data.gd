@@ -132,6 +132,13 @@ const WRECK := {
 ## at most 1 Hz, a soft fade, never a full-screen flash.
 const SIREN_PULSE_HZ: float = 0.8  # TUNING (not in GDD) owner rule: at most 1.0
 
+## Rooftop antenna lamps (CityLamps; the art pass draws them unlit): the slow
+## red pulse rate (Hz; same owner rule as the police lights: at most 1 Hz, a
+## soft fade, never a flash), the soft glow's radius (px) and its peak alpha (0..1).
+const ANTENNA_PULSE_HZ: float = 0.35  # TUNING (not in GDD) a slow aircraft-warning blink
+const ANTENNA_GLOW_RADIUS: float = 6.0  # TUNING (not in GDD) px
+const ANTENNA_GLOW_ALPHA: float = 0.55  # TUNING (not in GDD) 0..1
+
 # --- Supers (SuperKit, SuperRoster) ---------------------------------------------------------
 
 ## The Supers.
@@ -231,18 +238,16 @@ const MARTIAL_LAW := {
 
 # --- Sounds -----------------------------------------------------------------------------
 
-## City event -> sound id. FOR NOW each points at an existing startup-bank
-## sound (the City pack, SoundData.CITY_SOUNDS, is the audio agent's; the lead
-## switches each to its own id at the merge). Intended ids (the Fixed names):
-## siren_wail, gun_burst, engine_rev, vehicle_wreck, crowd_panic, super_arrive,
-## weakness_crack, tier_alarm.
+## City event -> sound id: the City pack (SoundData.CITY_SOUNDS), rendered lazily
+## with the "siren" music the first time an Act VIII run asks for it. Kept as a
+## map (not hard-coded ids) so one place can repoint an event.
 const SOUNDS := {
-	"siren_wail": "boss_telegraph",  # Intended: "siren_wail"
-	"gun_burst": "catapult_launch",  # Intended: "gun_burst"
-	"engine_rev": "abom_stomp",  # Intended: "engine_rev"
-	"vehicle_wreck": "eruption",  # Intended: "vehicle_wreck"
-	"crowd_panic": "",  # Intended: "crowd_panic" (no stand-in: silent until the pack exists)
-	"super_arrive": "boss_arrive",  # Intended: "super_arrive"
-	"weakness_crack": "orb_block",  # Intended: "weakness_crack"
-	"tier_alarm": "stance_command",  # Intended: "tier_alarm"
+	"siren_wail": "siren_wail",  # A slow, distant siren rise and fall (police cars).
+	"gun_burst": "gun_burst",  # A short dry burst of shots (gunners, riflemen).
+	"engine_rev": "engine_rev",  # An engine revving up (vehicles).
+	"vehicle_wreck": "vehicle_wreck",  # A crunch of metal and a fire whoomp (wrecks).
+	"crowd_panic": "crowd_panic",  # A short alarmed crowd shout (civilians).
+	"super_arrive": "super_arrive",  # A rising whoosh and a bright chord (Supers).
+	"weakness_crack": "weakness_crack",  # A glassy crack (a Super exposed).
+	"tier_alarm": "tier_alarm",  # A radio squelch and a low klaxon (the escalation).
 }

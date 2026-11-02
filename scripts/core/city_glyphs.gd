@@ -31,6 +31,11 @@ const INK := Palette.CITY_INK
 const ROOF_CELL: int = 32
 ## Rooftop decal keys (the art pass's decals; a missing one is skipped).
 const ROOF_DECALS: Array[String] = ["decals/city_vent", "decals/city_ac_unit", "decals/city_water_tank", "decals/city_hatch", "decals/city_antenna"]
+## The antenna decal (its red lamp is drawn unlit; CityLamps pulses it).
+const ANTENNA_DECAL: String = "decals/city_antenna"
+## The lamp's centre in the antenna decal's own pixels (from its top-left; the
+## 20 x 28 PNG has the 1 x 2 px lamp at column 10, rows 1-2).
+const ANTENNA_LAMP: Vector2 = Vector2(10.5, 2.0)
 ## Code roof colour of each style (when its atlas PNG is missing).
 const ROOF_COLORS := {
 	"tenement": Color(0.30, 0.30, 0.33),
@@ -150,14 +155,40 @@ static func _draw_roof_code(ci: CanvasItem, rect: Rect2, style: String, variant:
 static func _draw_decals(ci: CanvasItem, rect: Rect2, variant: int) -> void:
 	var h := absi(variant)
 	var n := 2 + h % 2  # Decals on this roof.
-	var inner := rect.grow(-float(ROOF_CELL))  # Keep off the parapet.
 	for k in n:
-		var hk := absi(hash(Vector2i(h, k)))
-		var tex := EnvironmentArt.texture(ROOF_DECALS[hk % ROOF_DECALS.size()])
+		var key := decal_key(variant, k)
+		var tex := EnvironmentArt.texture(key)
 		if tex == null:
 			continue
-		var at := inner.position + Vector2(float((hk >> 4) % maxi(1, int(inner.size.x))), float((hk >> 12) % maxi(1, int(inner.size.y))))
-		ci.draw_texture(tex, (at - tex.get_size() * 0.5).round())
+		ci.draw_texture(tex, (decal_at(rect, variant, k) - tex.get_size() * 0.5).round())
+
+
+## The decal key of roof decal `k` of a building of `variant` (the hash both
+## the roof drawing and the antenna lamps read, so they always agree).
+static func decal_key(variant: int, k: int) -> String:
+	var hk := absi(hash(Vector2i(absi(variant), k)))
+	return ROOF_DECALS[hk % ROOF_DECALS.size()]
+
+
+## The centre (world px) of roof decal `k` of building rect `rect` of `variant`.
+static func decal_at(rect: Rect2, variant: int, k: int) -> Vector2:
+	var hk := absi(hash(Vector2i(absi(variant), k)))
+	var inner := rect.grow(-float(ROOF_CELL))  # Keep off the parapet.
+	return inner.position + Vector2(float((hk >> 4) % maxi(1, int(inner.size.x))), float((hk >> 12) % maxi(1, int(inner.size.y))))
+
+
+## Appends to `out` the world position of every antenna's red lamp on building
+## `o` (a roof whose decals include decals/city_antenna; none when that PNG is
+## missing). CityLamps pulses them.
+static func antenna_lamps(o: Arena.Obstacle, out: PackedVector2Array) -> void:
+	var tex := EnvironmentArt.texture(ANTENNA_DECAL)
+	if tex == null:
+		return
+	var rect := Rect2(o.center - o.half, o.half * 2.0)
+	var n := 2 + absi(o.variant) % 2  # Decals on this roof (as _draw_decals()).
+	for k in n:
+		if decal_key(o.variant, k) == ANTENNA_DECAL:
+			out.append((decal_at(rect, o.variant, k) - tex.get_size() * 0.5).round() + ANTENNA_LAMP)
 
 
 ## Draws the wreck `o` (CityBlocks) lying along street axis `axis`, `age` s
