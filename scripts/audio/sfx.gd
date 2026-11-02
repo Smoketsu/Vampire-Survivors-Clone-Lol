@@ -93,6 +93,9 @@ const MUSIC_SUN: StringName = &"sun"
 ## play_music() mode: the Act VI in-run loop "Hymn of the Pit" (SoundData.BRIMSTONE_SCORE;
 ## a stage whose STAGE has "music": "brimstone").
 const MUSIC_BRIMSTONE: StringName = &"brimstone"
+## play_music() mode: the Act VII in-run loop "Waltz of the Red Moon" (SoundData.SANGUINE_SCORE;
+## a stage whose STAGE has "music": "sanguine").
+const MUSIC_SANGUINE: StringName = &"sanguine"
 ## play_music() mode: the epilogue's slow "Grave Lullaby" cue (content wave 2;
 ## MenuThemeData.EPILOGUE_VARIANT, rendered the first time the epilogue plays).
 const MUSIC_EPILOGUE: StringName = &"epilogue"
@@ -105,14 +108,14 @@ const SYNTH_SEED: int = 9001
 ## Fixed synth seed of each score loop (SoundData.SCORES id -> seed); the tide
 ## keeps the SYNTH_SEED - 2 it always had.
 const SCORE_SEEDS := {"tide": SYNTH_SEED - 2, "iron": SYNTH_SEED - 3, "bronze": SYNTH_SEED - 4, "sun": SYNTH_SEED - 5,
-	"brimstone": SYNTH_SEED - 6}
+	"brimstone": SYNTH_SEED - 6, "sanguine": SYNTH_SEED - 7}
 ## Seed base of the lazily rendered sound packs (pack sound i uses PACK_SEED + i).
 const PACK_SEED: int = SYNTH_SEED + 5000
 ## Seed offset of each lazily rendered pack (pack sound i of pack P uses
 ## PACK_SEED + PACK_SEED_OFFSETS[P] + i), so a pack's sounds never depend on
 ## which pack was asked for first. The Act III pack keeps offset 0 (its
 ## seeds are what they always were).
-const PACK_SEED_OFFSETS := {"empire": 0, "pantheon": 1000, "shogunate": 2000, "inferno": 3000}
+const PACK_SEED_OFFSETS := {"empire": 0, "pantheon": 1000, "shogunate": 2000, "inferno": 3000, "court": 4000}
 ## A card_select within this many ms replaces the generic ui_confirm click.
 const CONFIRM_SUPPRESS_MSEC: int = 120  # TUNING (not in GDD)
 ## Sounds that replace the generic ui_confirm click of the same press when
@@ -477,7 +480,7 @@ func play_music(mode: StringName) -> void:
 
 
 ## The run-loop mode of stage `stage_id`: its STAGE "music" id when that is a
-## SoundData.SCORES entry (MUSIC_TIDE on Act II, MUSIC_IRON on Act III, MUSIC_BRONZE on Act IV, MUSIC_SUN on Act V, MUSIC_BRIMSTONE on Act VI),
+## SoundData.SCORES entry (MUSIC_TIDE on Act II, MUSIC_IRON on Act III, MUSIC_BRONZE on Act IV, MUSIC_SUN on Act V, MUSIC_BRIMSTONE on Act VI, MUSIC_SANGUINE on Act VII),
 ## MUSIC_RUN otherwise.
 static func run_mode_for(stage_id: String) -> StringName:
 	if StageRegistry.STAGES.has(stage_id):
@@ -539,6 +542,8 @@ func prepare_pack(pack: String) -> void:
 		defs = SoundData.SHOGUNATE_SOUNDS
 	elif pack == "inferno":
 		defs = SoundData.INFERNO_SOUNDS  # Act VI
+	elif pack == "court":
+		defs = SoundData.COURT_SOUNDS  # Act VII
 	var k := 0  # Index of the sound within its pack (its seed).
 	_mutex.lock()  # The worker reads the queue and recipes.
 	for id: String in defs:

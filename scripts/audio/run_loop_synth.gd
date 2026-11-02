@@ -58,6 +58,13 @@
 ##             (`roots`, Hz, bar b uses roots[b % roots.size()]), as saws plus a square
 ##             through a low-pass, then soft-clipped by tanh(drive * x) ({beat,
 ##             beats_per_bar, roots, pattern, drive, amp, decay, lp0, lp1}).
+## Act VII (SoundData.SANGUINE_SCORE, "Waltz of the Red Moon") adds one more, the same way
+## (its harpsichord is the existing "arp", its church organ the existing "organ", its low
+## strings the existing "horn", its slow heartbeat the default heartbeat job):
+##   "waltz" — an oom-pah-pah of plucked low strings: per `beat`-second beat of a
+##             `beats_per_bar` bar, bar b plays bars[b % bars.size()] = [bass Hz, [chord Hz,
+##             ...]]: the bass on beat 0 and the chord tones together on the other beats
+##             ({beat, beats_per_bar, bars, bass_amp, chord_amp, dur, decay, lp0, lp1}).
 ## Every note ends before the loop end, so the loop stays seamless.
 class_name RunLoopSynth
 extends RefCounted
@@ -206,6 +213,8 @@ func _init(rng_seed: int, score: Dictionary = {}) -> void:
 		_jobs.append(_job_organ)  # Act VI: the pipe-organ pedal.
 	if score.has("snarl"):
 		_jobs.append(_job_snarl)  # Act VI: the distorted bass pulse.
+	if score.has("waltz"):
+		_jobs.append(_job_waltz)  # Act VII: the plucked oom-pah-pah.
 	if score.has("koto"):
 		_jobs.append(_job_koto)  # Act V: the plucked koto line.
 	if score.has("flute"):
@@ -516,6 +525,29 @@ func _job_snarl() -> void:
 	var amp := float(sn["amp"])  # Level of the clipped line in the mix.
 	for i in _n:
 		_buf[i] += tanh(drive * scratch[i]) * amp
+
+
+## Waltz strings (a score's "waltz", Act VII): per bar a plucked bass note on beat 0 and
+## the chord's tones on the other beats (triangle plucks through a closing low-pass). A
+## note that would not end before the loop end is skipped.
+func _job_waltz() -> void:
+	var w: Dictionary = _score["waltz"]
+	var beat := float(w["beat"])  # s per beat.
+	var bar_beats := int(w["beats_per_bar"])  # Beats per bar.
+	var bars_def: Array = w["bars"]  # [bass Hz, [chord Hz, ...]] per bar.
+	var dur := float(w["dur"])  # Note length (s).
+	var bars := int(_loop_s / (beat * float(bar_beats)))  # Whole bars in the loop.
+	for b in bars:
+		var bar: Array = bars_def[b % bars_def.size()]  # This bar's bass and chord.
+		for k in bar_beats:
+			var at := (float(b * bar_beats) + float(k)) * beat  # Beat time (s).
+			if at + dur >= _loop_s:
+				continue
+			var hzs: Array = [float(bar[0])] if k == 0 else bar[1]  # Pitches struck on this beat.
+			var amp := float(w["bass_amp"]) if k == 0 else float(w["chord_amp"])  # Level per pitch.
+			for hz: float in hzs:
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": hz, "start": at, "dur": dur, "amp": amp,
+					"attack": 0.004, "decay": float(w["decay"]), "lp0": float(w["lp0"]), "lp1": float(w["lp1"])}, _rng)
 
 
 ## Peak search over samples [a, b) of the finished mix.

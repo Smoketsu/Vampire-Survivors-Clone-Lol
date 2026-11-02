@@ -571,24 +571,79 @@ const BRIMSTONE_SCORE := {
 		"partials": [[1.0, 0.1], [2.76, 0.06], [5.4, 0.035], [8.93, 0.015]], "click": 0.08},  # TUNING (not in GDD)
 }
 
+## "Waltz of the Red Moon", the Act VII run loop (GDD §15.0 "Waltz of the Red Moon and
+## the Court sounds"): the RunLoopSynth score of every stage whose STAGE has "music":
+## "sanguine". A gothic waltz in A minor (harmonic: the E chord carries G sharp), 3/4 at
+## 90 bpm: 3 beats of 2/3 s make a 2 s bar, eight bars a 16 s loop. A harpsichord
+## arpeggio (the "arp" job: bright, short plucked saws, six eighth notes a bar), a church
+## organ (the "organ" job: a full stack of sine partials under each chord), low strings
+## swelling bar by bar (the "horn" job: a saw and its fifth through a rising low-pass), a
+## plucked oom-pah-pah (the new "waltz" job) and a slow heartbeat (the default heartbeat
+## job, once a bar on the downbeat) under a low velvet pad. Rendered lazily (Sfx), never
+## under the autotest. Chord order per 4 s segment: Am, Dm, E, Am/C.
+const SANGUINE_SCORE := {
+	"loop_seconds": 16.0,  # TUNING (not in GDD) eight 3/4 bars of 2 s (90 bpm)
+	"root_hz": 55.0,  # TUNING (not in GDD) A1, the drone under A minor
+	"chords": [
+		[110.0, 164.81, 220.0, 261.63],
+		[146.83, 220.0, 293.66, 349.23],
+		[164.81, 207.65, 246.94, 329.63],
+		[130.81, 164.81, 220.0, 329.63],
+	],  # TUNING (not in GDD) Am, Dm, E (G sharp), Am/C
+	"drone_lp_hz": 70.0,  # TUNING (not in GDD) a velvet hum
+	"wind_lp_hz": 180.0,  # TUNING (not in GDD) a draught through a drawing room
+	"wind_swells": 2.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.5,  # TUNING (not in GDD)
+	"vibrato_depth": 0.003,  # TUNING (not in GDD)
+	"beat_seconds": 2.0,  # TUNING (not in GDD) the heartbeat: one lub-dub a bar, on the downbeat
+	# Harpsichord: one note every 1/3 s (six a bar) cycling up the segment's tones.
+	"arp": {"step": 0.33333, "dur": 0.3, "amp": 0.045, "decay": 0.08, "lp0": 3400.0, "wave": "saw",
+		"chords": [
+			[220.0, 261.63, 329.63, 440.0, 329.63, 261.63],
+			[293.66, 349.23, 440.0, 587.33, 440.0, 349.23],
+			[329.63, 415.3, 493.88, 659.25, 493.88, 415.3],
+			[261.63, 329.63, 440.0, 523.25, 440.0, 329.63],
+		]},  # TUNING (not in GDD)
+	# Church organ: a full stack of sine partials swelling in under each chord root.
+	"organ": {"attack": 0.9, "decay": 1.6, "vib_hz": 5.0, "vib_depth": 0.003,
+		"partials": [[1.0, 0.1], [2.0, 0.08], [3.0, 0.05], [4.0, 0.04], [5.0, 0.02], [6.0, 0.015]],
+		"notes": [[0.0, 110.0, 3.9], [4.0, 146.83, 3.9], [8.0, 164.81, 3.9], [12.0, 110.0, 3.7]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# Low strings: a bar-long swell of a saw and its fifth, root then fifth per chord.
+	"horn": {"starts": [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0], "dur": 1.95, "attack": 0.7, "decay": 0.6, "amp": 0.045,
+		"lp0": 350.0, "lp1": 1500.0,
+		"notes": [[110.0, 164.81], [110.0, 164.81], [146.83, 220.0], [146.83, 220.0],
+			[164.81, 246.94], [164.81, 246.94], [110.0, 164.81], [110.0, 164.81]]},  # TUNING (not in GDD)
+	# Oom-pah-pah: a plucked bass on beat 1, the chord on beats 2 and 3 (bars Am Am Dm Dm E E Am Am).
+	"waltz": {"beat": 0.66667, "beats_per_bar": 3, "dur": 0.5, "bass_amp": 0.2, "chord_amp": 0.05, "decay": 0.16,
+		"lp0": 1600.0, "lp1": 600.0,
+		"bars": [
+			[55.0, [220.0, 261.63, 329.63]], [55.0, [220.0, 261.63, 329.63]],
+			[73.42, [220.0, 293.66, 349.23]], [73.42, [220.0, 293.66, 349.23]],
+			[82.41, [246.94, 207.65, 329.63]], [82.41, [246.94, 207.65, 329.63]],
+			[55.0, [220.0, 261.63, 329.63]], [55.0, [220.0, 261.63, 329.63]],
+		]},  # TUNING (not in GDD) [bass Hz, [chord Hz, ...]] per bar
+}
+
 ## Run-loop scores by STAGE "music" id (Sfx.play_music() modes; "" / absent =
 ## the Act I loop): "tide" = "Below the Tide" (Act II), "iron" = "Iron Requiem"
-## (Act III), "bronze" = "Hymn of Bronze" (Act IV), "sun" = "The Setting Sun" (Act V), "brimstone" = "Hymn of the Pit" (Act VI). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
+## (Act III), "bronze" = "Hymn of Bronze" (Act IV), "sun" = "The Setting Sun" (Act V), "brimstone" = "Hymn of the Pit" (Act VI), "sanguine" = "Waltz of the Red Moon" (Act VII). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
 const SCORES := {
 	"tide": TIDE_SCORE,
 	"iron": IRON_SCORE,
 	"bronze": BRONZE_SCORE,
 	"sun": SUN_SCORE,  # Act V
 	"brimstone": BRIMSTONE_SCORE,  # Act VI
+	"sanguine": SANGUINE_SCORE,  # Act VII
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
 ## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
-## the Act IV ones; "shogunate" = SHOGUNATE_SOUNDS, the Act V ones; "inferno" = INFERNO_SOUNDS, the Act VI ones); absent = none.
+## the Act IV ones; "shogunate" = SHOGUNATE_SOUNDS, the Act V ones; "inferno" = INFERNO_SOUNDS, the Act VI ones; "court" = COURT_SOUNDS, the Act VII ones); absent = none.
 const SCORE_PACKS := {
 	"iron": "empire",
 	"bronze": "pantheon",
 	"sun": "shogunate",  # Act V
 	"brimstone": "inferno",  # Act VI
+	"sanguine": "court",  # Act VII
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -1344,4 +1399,71 @@ const INFERNO_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "saw", "f0": 980.0, "f1": 420.0, "dur": 0.7, "amp": 0.16, "attack": 0.01, "decay": 0.25, "lp0": 4000.0, "lp1": 1800.0},
 			{"wave": "square", "f0": 90.0, "f1": 70.0, "dur": 0.8, "amp": 0.18, "attack": 0.02, "decay": 0.3, "lp0": 600.0},
 			{"wave": "noise", "dur": 0.6, "amp": 0.15, "attack": 0.01, "decay": 0.2, "lp0": 3000.0, "lp1": 900.0}]},
+}
+
+## Act VII sound effects (the Sanguine Court; recipe keys as SOUNDS). Kept OUT of SOUNDS
+## like the other packs: Sfx renders it lazily the first time an Act VII run's music
+## ("sanguine") is asked for (Sfx.prepare_pack("court"); seeds Sfx.PACK_SEED +
+## Sfx.PACK_SEED_OFFSETS["court"] + i). Nothing plays them until the lead wires the
+## foundation's sound map.
+const COURT_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# A vampire feeds: a wet bite (a puncture click, a squelch) and a sip.
+	"bite_feed": {"dur": 0.55, "volume_db": -15.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.03, "amp": 0.5, "attack": 0.001, "decay": 0.008, "lp0": 6000.0, "lp1": 2500.0},
+			{"wave": "sine", "f0": 320.0, "f1": 120.0, "start": 0.02, "dur": 0.14, "amp": 0.3, "attack": 0.004, "decay": 0.05},
+			{"wave": "noise", "start": 0.03, "dur": 0.12, "amp": 0.2, "attack": 0.01, "decay": 0.04, "lp0": 1400.0, "lp1": 500.0},
+			{"wave": "sine", "f0": 260.0, "f1": 520.0, "start": 0.24, "dur": 0.1, "amp": 0.14, "attack": 0.01, "decay": 0.04},
+			{"wave": "noise", "start": 0.26, "dur": 0.1, "amp": 0.14, "attack": 0.02, "decay": 0.04, "lp0": 2200.0, "lp1": 900.0}]},
+	# A blood shield rises: a dark shimmer, a low swell under falling glass partials.
+	"blood_shield": {"dur": 1.0, "volume_db": -14.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 90.0, "f1": 140.0, "dur": 0.9, "amp": 0.3, "attack": 0.25, "decay": 0.4},
+			{"wave": "tri", "f0": 440.0, "dur": 0.9, "amp": 0.1, "attack": 0.2, "decay": 0.5, "vib_hz": 7.0, "vib_depth": 0.012},
+			{"wave": "tri", "f0": 523.0, "dur": 0.9, "amp": 0.08, "attack": 0.25, "decay": 0.5, "vib_hz": 6.0, "vib_depth": 0.012},
+			{"wave": "sine", "f0": 1760.0, "f1": 1320.0, "start": 0.1, "dur": 0.8, "amp": 0.05, "attack": 0.1, "decay": 0.4, "vib_hz": 9.0, "vib_depth": 0.01},
+			{"wave": "noise", "dur": 0.8, "amp": 0.06, "attack": 0.2, "decay": 0.4, "lp0": 5000.0, "lp1": 2500.0}]},
+	# A bat's cry: a high chittering screech, four quick falling squeaks.
+	"bat_screech": {"dur": 0.5, "volume_db": -19.0, "max_voices": 4, "min_interval": 110, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 3600.0, "f1": 2400.0, "dur": 0.07, "amp": 0.12, "attack": 0.003, "decay": 0.03},
+			{"wave": "sine", "f0": 3900.0, "f1": 2600.0, "start": 0.09, "dur": 0.07, "amp": 0.12, "attack": 0.003, "decay": 0.03},
+			{"wave": "sine", "f0": 4200.0, "f1": 2800.0, "start": 0.18, "dur": 0.07, "amp": 0.11, "attack": 0.003, "decay": 0.03},
+			{"wave": "sine", "f0": 3500.0, "f1": 2000.0, "start": 0.27, "dur": 0.14, "amp": 0.11, "attack": 0.003, "decay": 0.06},
+			{"wave": "noise", "dur": 0.4, "amp": 0.04, "attack": 0.01, "decay": 0.15, "lp0": 8000.0, "lp1": 5000.0}]},
+	# The Blood Moon rises: a low swell and a distant howl above it.
+	"moon_rise": {"dur": 2.4, "volume_db": -11.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.02, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 55.0, "f1": 82.0, "dur": 2.2, "amp": 0.5, "attack": 1.0, "decay": 0.9},
+			{"wave": "noise", "dur": 2.2, "amp": 0.18, "attack": 1.0, "decay": 0.9, "lp0": 200.0, "lp1": 900.0},
+			{"wave": "tri", "f0": 330.0, "f1": 520.0, "start": 0.9, "dur": 1.2, "amp": 0.08, "attack": 0.4, "decay": 0.6, "vib_hz": 5.5, "vib_depth": 0.02},
+			{"wave": "tri", "f0": 520.0, "f1": 410.0, "start": 1.9, "dur": 0.5, "amp": 0.06, "attack": 0.05, "decay": 0.25, "vib_hz": 5.5, "vib_depth": 0.02}]},
+	# The Blood Moon sets: a fading minor chord, a bell-like tail.
+	"moon_set": {"dur": 2.2, "volume_db": -14.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.02, "priority": 3,
+		"layers": [
+			{"wave": "tri", "f0": 220.0, "dur": 2.1, "amp": 0.14, "attack": 0.05, "decay": 1.4},
+			{"wave": "tri", "f0": 261.6, "dur": 2.1, "amp": 0.12, "attack": 0.05, "decay": 1.4},
+			{"wave": "tri", "f0": 329.6, "dur": 2.1, "amp": 0.1, "attack": 0.05, "decay": 1.4},
+			{"wave": "sine", "f0": 110.0, "f1": 90.0, "dur": 2.1, "amp": 0.25, "attack": 0.03, "decay": 1.2},
+			{"wave": "sine", "f0": 880.0, "dur": 1.6, "amp": 0.04, "attack": 0.01, "decay": 0.9}]},
+	# A werewolf's howl: a long rising-then-falling cry with a rasp of breath.
+	"wolf_howl": {"dur": 2.0, "volume_db": -12.0, "max_voices": 2, "min_interval": 500, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 200.0, "f1": 420.0, "dur": 0.9, "amp": 0.16, "attack": 0.25, "decay": 0.3, "lp0": 1400.0, "lp1": 1800.0, "vib_hz": 5.0, "vib_depth": 0.02},
+			{"wave": "saw", "f0": 420.0, "f1": 230.0, "start": 0.9, "dur": 1.0, "amp": 0.16, "attack": 0.02, "decay": 0.6, "lp0": 1800.0, "lp1": 900.0, "vib_hz": 5.5, "vib_depth": 0.025},
+			{"wave": "sine", "f0": 400.0, "f1": 840.0, "dur": 0.9, "amp": 0.06, "attack": 0.25, "decay": 0.3},
+			{"wave": "noise", "dur": 1.9, "amp": 0.07, "attack": 0.3, "decay": 0.7, "lp0": 1500.0, "lp1": 800.0}]},
+	# A coffin lid groans open: wood creaking, a low scrape and a hollow thud.
+	"coffin_creak": {"dur": 1.3, "volume_db": -13.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "saw", "f0": 140.0, "f1": 210.0, "dur": 0.5, "amp": 0.12, "attack": 0.05, "decay": 0.2, "lp0": 700.0, "lp1": 1200.0, "vib_hz": 23.0, "vib_depth": 0.08},
+			{"wave": "saw", "f0": 170.0, "f1": 120.0, "start": 0.5, "dur": 0.6, "amp": 0.11, "attack": 0.03, "decay": 0.25, "lp0": 900.0, "lp1": 500.0, "vib_hz": 17.0, "vib_depth": 0.09},
+			{"wave": "noise", "dur": 1.0, "amp": 0.1, "attack": 0.1, "decay": 0.4, "lp0": 600.0, "lp1": 1600.0},
+			{"wave": "sine", "f0": 80.0, "f1": 45.0, "start": 1.05, "dur": 0.22, "amp": 0.4, "attack": 0.002, "decay": 0.08}]},
+	# A noble turns to mist: a breathy whoosh that rises and thins.
+	"mist_form": {"dur": 1.1, "volume_db": -15.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 1.0, "amp": 0.4, "attack": 0.25, "decay": 0.5, "lp0": 600.0, "lp1": 4500.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.9, "amp": 0.15, "attack": 0.3, "decay": 0.4, "lp0": 3000.0, "lp1": 7000.0},
+			{"wave": "sine", "f0": 180.0, "f1": 360.0, "dur": 0.9, "amp": 0.08, "attack": 0.3, "decay": 0.4}]},
 }
