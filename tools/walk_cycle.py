@@ -627,6 +627,26 @@ RIGS = {
     "court/werewolf": dict(mode="legs", hip=36, back=(0, 27), front=(27, 48), rigid=[], spread=2, lift=2, dip=1),
     "court/werewolf_beast": dict(mode="legs", hip=60, back=(0, 36), front=(36, 66), rigid=[], spread=3, lift=3, dip=1),
     "court/vampire_noble": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, bust=(9, 24, 11, 18, 2, 2), swish=(8, 25, 26, 36, 2)),
+    # --- Act VIII: the Last Line (the shared kinds) ---
+    # The men stride on two legs, the weapon and shield ends above the hip riding with the body (the riot cop's shield foot
+    # rigid beside the leg that steps). The cars roll like the siege carts (no wheel turns without a redraw: spread 0, the
+    # body dips and each side's wheels take a turn riding up a bump, lift 1), a "drive strip" in the engine's `_walk` slot.
+    # Blitz's sprint is his `_walk` strip too (a dash strip: spread 1, lift 1, the speed rings trailing with the back leg).
+    # The two women are figure-redesign rigs: the civilian runs (a small bust box and a `swish` skirt box), the field medic
+    # strides, both with an idle strip; boxes are art px in the still, [start, end).
+    "city/civilian": dict(mode="legs", hip=20, back=(0, 11), front=(11, 24), rigid=[], spread=2, lift=2, dip=1),
+    "city/civilian_woman": dict(mode="legs", hip=19, back=(0, 9), front=(9, 20), rigid=[], spread=2, lift=2, dip=1,
+                                bust=(5, 17, 8, 13, 1, 1), swish=(3, 18, 14, 19, 1)),
+    "city/street_thug": dict(mode="legs", hip=22, back=(0, 11), front=(11, 22), rigid=[], spread=2, lift=1, dip=1),
+    "city/gang_gunner": dict(mode="legs", hip=20, back=(0, 16), front=(16, 32), rigid=[], spread=2, lift=1, dip=1),
+    "city/riot_cop": dict(mode="legs", hip=29, back=(0, 15), front=(15, 32), rigid=[(17, 29, 29, 37)], spread=2, lift=1, dip=1),
+    "city/swat_breacher": dict(mode="legs", hip=29, back=(0, 15), front=(15, 32), rigid=[], spread=2, lift=2, dip=1),
+    "city/rifleman": dict(mode="legs", hip=28, back=(0, 13), front=(13, 30), rigid=[], spread=2, lift=2, dip=1),
+    "city/field_medic": dict(mode="legs", hip=27, back=(0, 13), front=(13, 26), rigid=[], spread=1, lift=1, dip=1,
+                             bust=(7, 21, 13, 19, 1, 2), swish=(3, 23, 19, 27, 1)),
+    "city/squad_car": dict(mode="legs", hip=22, back=(0, 32), front=(32, 64), rigid=[], spread=0, lift=1, dip=1),
+    "city/tank": dict(mode="legs", hip=40, back=(0, 39), front=(39, 78), rigid=[], spread=0, lift=1, dip=1),
+    "city/blitz": dict(mode="legs", hip=36, back=(0, 19), front=(19, 48), rigid=[], spread=1, lift=1, dip=1),
     # --- Act VII: Ravensmoor ---
     "court/ghoul": dict(mode="legs", hip=18, back=(0, 17), front=(17, 34), rigid=[], spread=1, lift=1, dip=1),
     "court/old_greymane": dict(mode="legs", hip=64, back=(0, 43), front=(43, 86), rigid=[], spread=3, lift=3, dip=1),

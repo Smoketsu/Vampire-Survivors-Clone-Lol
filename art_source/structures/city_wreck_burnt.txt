@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), the same burnt-out car wreck seen from above and the front-side, but the fire is OUT: only a dead charred black-and-grey metal shell, a tilted car body with a torn bonnet, blown-out windows, a flat tyre, a few cooling red embers, a little ash and debris beside it, no flames, no smoke
+
+LOW-RESOLUTION pixel art: the whole wreck is only 40 pixels wide and 34 high, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a BURNT-OUT CAR WRECK (a destroyed civilian car, fire out, no markings, no letters).
+Signature shape that must read in silhouette: the tilted charred shell.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: charred metal #101114 #1E2024 #3A3D44 #55595F; rust #4F3320; a few embers #D82A2A #F07A1E
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).

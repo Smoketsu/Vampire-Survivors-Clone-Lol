@@ -1139,3 +1139,17 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-02 18:09,inferno/hell_knight,gpt-image-2.5-flare,medium,1024x1024,1,616,1024,439,0.0244,hk_b.png
 2026-11-02 18:12,bosses/lilith_demon,gpt-image-2.5-flare,medium,1024x1024,2,803,2048,439,0.0336,ld_b.png
 2026-11-02 18:13,inferno/twin_agrat,gpt-image-2.5-flare,medium,1024x1024,2,854,2048,439,0.0338,ag_b.png
+2026-11-02 14:20,city/street_thug,gpt-image-2.5-flare,medium,1024x1024,2,491,648,439,0.0208,street_thug.png
+2026-11-02 14:20,city/gang_gunner,gpt-image-2.5-flare,medium,1024x1024,2,535,840,439,0.0226,gang_gunner.png
+2026-11-02 14:20,city/riot_cop,gpt-image-2.5-flare,medium,1024x1024,2,535,680,439,0.0213,riot_cop.png
+2026-11-02 14:21,city/swat_breacher,gpt-image-2.5-flare,medium,1024x1024,2,513,584,439,0.0204,swat_breacher.png
+2026-11-02 14:21,city/field_medic,gpt-image-2.5-flare,medium,1024x1024,2,612,552,439,0.0206,field_medic.png
+2026-11-02 14:21,city/rifleman,gpt-image-2.5-flare,medium,1024x1024,2,513,520,439,0.0199,rifleman.png
+2026-11-02 14:21,city/squad_car,gpt-image-2.5-flare,medium,1024x1024,2,572,808,439,0.0225,squad_car.png
+2026-11-02 14:21,city/tank,gpt-image-2.5-flare,medium,1024x1024,2,517,744,439,0.0217,tank.png
+2026-11-02 14:22,city/blitz,gpt-image-2.5-flare,medium,1024x1024,2,562,936,439,0.0235,blitz.png
+2026-11-02 14:22,city/civilian,gpt-image-2.5-flare,medium,1024x1024,2,496,904,439,0.0229,civilian.png
+2026-11-02 14:22,city/civilian_woman,gpt-image-2.5-flare,medium,1024x1024,3,545,1448,439,0.0275,civilian_woman.png
+2026-11-02 14:22,city/city_wreck,gpt-image-2.5-flare,medium,1024x1024,2,508,904,439,0.0229,city_wreck.png
+2026-11-02 14:26,city/field_medic_r2,gpt-image-2.5-flare,medium,1024x1024,2,667,552,439,0.0209,field_medic2.png
+2026-11-02 14:26,city/city_wreck_burnt,gpt-image-2.5-flare,medium,1024x1024,2,499,1032,439,0.0239,city_wreck_burnt.png

@@ -203,6 +203,17 @@ FACTION_RAMPS = {
     # pale skin and wood; never the player's violet, the undead's bone or soul teal, or the
     # Covenant's crimson.
     "court": ["blood", "velvet", "moonlight", "gold", "skin", "brown"],
+    # --- Act VIII: the Last Line (assets/sprites/city/) ---
+    # Asphalt-black riot and SWAT armour, concrete grey, neon and sodium glow, army olive with hazard
+    # yellow, police blue / siren red / hero orange, plus skin, leather and wood, and bone ivory for
+    # white clothes (the medic's coat, Blitz's suit); the medic's green is the per-key moss below;
+    # never the player's violet, the undead's teal or the Covenant's crimson.
+    # Each hue has its own ramp (palette.json): one ramp across blue, red and orange would stretch
+    # lightness over three hues and turn the blue into red; "neon" and "siren" are documentation groups.
+    # The orange hues (neon_sodium, hero) are left out of the default set: skin tones sit in the same hue and
+    # would snap onto them; the keys that need them add them in KEY_RAMPS.
+    "city": ["asphalt", "concrete", "olive", "hazard", "neon_pink", "neon_cyan", "police", "siren_red",
+             "skin", "brown", "bone"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
 # blue of the Mage and Lich and the icy cyan of the frost summons never mix (GDD 15.0 art
@@ -215,6 +226,9 @@ KEY_RAMPS = {
     "summons/winter_revenant": ([], ["arcane"]),
     "summons/hellhound": (["flame"], []),
     "summons/ossuary_engine": (["flame"], []),
+    # --- Act VIII: the Last Line ---
+    "city/field_medic": (["moss"], []),  # the medic's green skirt and satchel, beside the ivory coat
+    "city/blitz": (["hero"], ["skin"]),  # the orange suit; the face is behind helmet and goggles, so no skin ramp to steal the orange
 }
 # Ramps holding less than this share (0-1) of the opaque pixels are dropped (re-snapped).
 RAMP_MIN_SHARE = 0.03
