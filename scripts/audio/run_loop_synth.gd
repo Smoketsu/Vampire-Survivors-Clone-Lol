@@ -65,6 +65,20 @@
 ##             `beats_per_bar` bar, bar b plays bars[b % bars.size()] = [bass Hz, [chord Hz,
 ##             ...]]: the bass on beat 0 and the chord tones together on the other beats
 ##             ({beat, beats_per_bar, bars, bass_amp, chord_amp, dur, decay, lp0, lp1}).
+## Act VIII (SoundData.SIREN_SCORE, "Sirens at Midnight") adds three more, the same way
+## (its arpeggio is the existing "arp", its low brass stabs the existing "horn" with a fast attack):
+##   "machine" — a drum machine instead of the heartbeat: per `step`-second step of a
+##               `steps_per_bar` bar, kick / snare / closed hat / open hat on the listed step
+##               indices ({step, steps_per_bar, kick_steps, snare_steps, hat_steps,
+##               open_hat_steps, kick_amp, snare_amp, hat_amp, open_hat_amp, kick_hz0, kick_hz1,
+##               kick_dur, snare_dur, hat_dur, open_hat_dur}),
+##   "sub"     — a clean sub bass: per `beat`-second beat of a `beats_per_bar` bar the pattern
+##               entries [beat, ratio, length in beats] on that bar's root (`roots`, Hz, bar b
+##               uses roots[b % roots.size()]) as a sine plus a faint triangle an octave up
+##               ({beat, beats_per_bar, roots, pattern, amp, octave_amp, decay}),
+##   "siren"   — a distant siren: each sweep [start s, length s, from Hz, to Hz] is a slow
+##               triangle glide through a low-pass, with a slightly detuned twin
+##               ({sweeps, amp, attack, decay, lp0, lp1, detune, detune_amp}).
 ## Every note ends before the loop end, so the loop stays seamless.
 class_name RunLoopSynth
 extends RefCounted
@@ -201,6 +215,8 @@ func _init(rng_seed: int, score: Dictionary = {}) -> void:
 		_jobs.append(_job_taiko)  # Act V: taiko patterns replace the heartbeat.
 	elif score.has("drums"):
 		_jobs.append(_job_drums)  # Act IV: the war drum replaces the heartbeat.
+	elif score.has("machine"):
+		_jobs.append(_job_machine)  # Act VIII: the drum machine replaces the heartbeat.
 	else:
 		_jobs.append(_job_heartbeat)
 	if score.has("hits"):
@@ -215,6 +231,10 @@ func _init(rng_seed: int, score: Dictionary = {}) -> void:
 		_jobs.append(_job_snarl)  # Act VI: the distorted bass pulse.
 	if score.has("waltz"):
 		_jobs.append(_job_waltz)  # Act VII: the plucked oom-pah-pah.
+	if score.has("sub"):
+		_jobs.append(_job_sub)  # Act VIII: the clean sub bass.
+	if score.has("siren"):
+		_jobs.append(_job_siren)  # Act VIII: the distant siren glide.
 	if score.has("koto"):
 		_jobs.append(_job_koto)  # Act V: the plucked koto line.
 	if score.has("flute"):
@@ -548,6 +568,72 @@ func _job_waltz() -> void:
 			for hz: float in hzs:
 				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": hz, "start": at, "dur": dur, "amp": amp,
 					"attack": 0.004, "decay": float(w["decay"]), "lp0": float(w["lp0"]), "lp1": float(w["lp1"])}, _rng)
+
+
+## Drum machine (a score's "machine", Act VIII): per bar of `steps_per_bar` steps a falling-sine
+## kick, a noise-and-tone snare, closed hats and open hats on the listed step indices. A hit that
+## would not end before the loop end is skipped, so the loop stays seamless.
+func _job_machine() -> void:
+	var m: Dictionary = _score["machine"]
+	var step := float(m["step"])  # s per step.
+	var per_bar := int(m["steps_per_bar"])  # Steps in a bar.
+	var bars := int(_loop_s / (step * float(per_bar)))  # Whole bars in the loop.
+	for b in bars:
+		for k in per_bar:
+			var at := float(b * per_bar + k) * step  # This step (s).
+			if k in (m["kick_steps"] as Array) and at + float(m["kick_dur"]) < _loop_s:
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": float(m["kick_hz0"]), "f1": float(m["kick_hz1"]),
+					"start": at, "dur": float(m["kick_dur"]), "amp": float(m["kick_amp"]), "attack": 0.002, "decay": 0.09}, _rng)
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": 0.02, "amp": float(m["kick_amp"]) * 0.25,
+					"decay": 0.006, "lp0": 2500.0}, _rng)
+			if k in (m["snare_steps"] as Array) and at + float(m["snare_dur"]) < _loop_s:
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": float(m["snare_dur"]),
+					"amp": float(m["snare_amp"]), "attack": 0.001, "decay": 0.06, "lp0": 5500.0, "lp1": 2200.0}, _rng)
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": 220.0, "f1": 150.0, "start": at,
+					"dur": float(m["snare_dur"]) * 0.6, "amp": float(m["snare_amp"]) * 0.7, "attack": 0.001, "decay": 0.04}, _rng)
+			if k in (m["hat_steps"] as Array) and not k in (m["open_hat_steps"] as Array) and at + float(m["hat_dur"]) < _loop_s:
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": float(m["hat_dur"]),
+					"amp": float(m["hat_amp"]), "attack": 0.001, "decay": 0.012, "lp0": 9000.0, "lp1": 6000.0}, _rng)
+			if k in (m["open_hat_steps"] as Array) and at + float(m["open_hat_dur"]) < _loop_s:
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": float(m["open_hat_dur"]),
+					"amp": float(m["open_hat_amp"]), "attack": 0.002, "decay": 0.07, "lp0": 9000.0, "lp1": 5000.0}, _rng)
+
+
+## Sub bass (a score's "sub", Act VIII): the pattern's notes on each bar's root, a sine with a
+## faint triangle an octave up so small speakers still hear it. A note that would not end before
+## the loop end is skipped.
+func _job_sub() -> void:
+	var sb: Dictionary = _score["sub"]
+	var beat := float(sb["beat"])  # s per beat.
+	var bar_beats := int(sb["beats_per_bar"])  # Beats per bar.
+	var roots: Array = sb["roots"]  # Bar root pitches (Hz).
+	var bars := int(_loop_s / (beat * float(bar_beats)))  # Whole bars in the loop.
+	for b in bars:
+		var root := float(roots[b % roots.size()])  # This bar's root (Hz).
+		for h: Array in sb["pattern"]:
+			var at := (float(b * bar_beats) + float(h[0])) * beat  # Note start (s).
+			var dur := float(h[2]) * beat  # Note length (s).
+			if at + dur >= _loop_s:
+				continue
+			var hz := root * float(h[1])  # Note pitch (Hz).
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": hz, "start": at, "dur": dur,
+				"amp": float(sb["amp"]), "attack": 0.01, "decay": float(sb["decay"])}, _rng)
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": hz * 2.0, "start": at, "dur": dur,
+				"amp": float(sb["octave_amp"]), "attack": 0.01, "decay": float(sb["decay"]), "lp0": 600.0}, _rng)
+
+
+## Distant siren (a score's "siren", Act VIII): each sweep is a slow triangle glide between two
+## pitches through a low-pass, with a slightly detuned twin for a soft beating; each ends before
+## the loop end.
+func _job_siren() -> void:
+	var sr: Dictionary = _score["siren"]
+	for sw: Array in sr["sweeps"]:
+		var at := float(sw[0])  # Sweep start (s).
+		var dur := minf(float(sw[1]), _loop_s - at - 0.05)  # Sweep length (s).
+		for v: Array in [[1.0, 1.0], [float(sr["detune"]), float(sr["detune_amp"])]]:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": float(sw[2]) * float(v[0]), "f1": float(sw[3]) * float(v[0]),
+				"start": at, "dur": dur, "amp": float(sr["amp"]) * float(v[1]), "attack": float(sr["attack"]),
+				"decay": float(sr["decay"]), "lp0": float(sr["lp0"]), "lp1": float(sr["lp1"])}, _rng)
 
 
 ## Peak search over samples [a, b) of the finished mix.
