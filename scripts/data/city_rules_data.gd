@@ -223,6 +223,15 @@ const SHELL_CAP: int = 64  # TUNING (not in GDD)
 ##   offset          — px from the necromancer the line starts (it walks
 ##                     through his street).
 ##   super_every     — s between two returning Supers.
+##   act_supers      — the act's Supers, in turn, that Martial Law calls on a
+##                     stage whose run met none before 0:00 (owner, Nov 2,
+##                     2026: "Supers appear in Martial Law on every Act VIII
+##                     stage"; GDD §15.0 "Martial Law brings the Supers to every
+##                     stage").
+##   act_super_max   — most of those act Supers standing at once (the
+##                     escalation's rule: one at a time).
+##   act_super_retry — s before Martial Law looks again when an act Super
+##                     still stands.
 const MARTIAL_LAW := {
 	"artillery_first": 4.0,  # TUNING (not in GDD)
 	"artillery_every": 8.0,  # TUNING (not in GDD)
@@ -234,6 +243,9 @@ const MARTIAL_LAW := {
 	"damage": 22.0,  # TUNING (not in GDD)
 	"offset": 300.0,  # TUNING (not in GDD) px
 	"super_every": 20.0,  # TUNING (not in GDD) brief: one every 20 s
+	"act_supers": ["blitz", "aurora", "atlas", "nightjar"],  # Owner (Nov 2, 2026): every Act VIII stage; Blitz first, then Liberty Heights' roster order
+	"act_super_max": 1,  # TUNING (not in GDD) one standing at a time, as the escalation's super_max
+	"act_super_retry": 5.0,  # TUNING (not in GDD) s, as the escalation's look-again delay
 }
 
 # --- Sounds -----------------------------------------------------------------------------

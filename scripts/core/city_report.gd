@@ -17,7 +17,8 @@
 ##   escalation:  Escalation (the time each tier began)
 ##   city kinds:  spawns / kills of every City kind that spawned, its first
 ##                appearance, its damage to the necromancer and to summons
-##   martial law: MartialLaw (only once the Reckoning ran)
+##   martial law: MartialLaw (only once the Reckoning ran; the act supers part:
+##                whether the act's Supers came, owner Nov 2, 2026)
 ##   city stage:  the Act VIII stage itself (stub status, boss, Soul Ash, the
 ##                Reckoning)
 ## Phase 2 adds one line per stage system here (each stage in its own block).
@@ -56,10 +57,11 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			int(st.get("rifle_bursts", 0.0)), int(st.get("tank_shells", 0.0)), int(st.get("medic_heals", 0.0))])
 	if city.martial.running():
 		var m := city.martial
-		print("[autotest] martial law: began %s | artillery lines %d (shells %d; hits on summons %d, on you %d, on enemies %d) | supers returned %d" % [
+		print("[autotest] martial law: began %s | artillery lines %d (shells %d; hits on summons %d, on you %d, on enemies %d) | supers returned %d | act supers %s (called %d; met this run: %s)" % [
 			EmpireReport._clock(m.started_at), m.lines, int(st.get("martial_shells", 0.0)),
 			int(st.get("city_blast_hits_summons", 0.0)), int(st.get("city_blast_hits_you", 0.0)), int(st.get("city_blast_hits_enemies", 0.0)),
-			m.supers_back])
+			m.supers_back, "on" if m.act_roster else "off", m.act_called,
+			", ".join(city.supers.met) if not city.supers.met.is_empty() else "none"])
 	var sd := game.stage_def  # The run's stage.
 	if StageRegistry.act_of(String(sd["id"])) == 8:
 		var boss: Dictionary = sd["boss"]

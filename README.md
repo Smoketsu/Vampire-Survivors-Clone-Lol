@@ -2172,7 +2172,8 @@ next stage. The act's arenas and shared rules:
   never fight back; your army kills them like any enemy, and each one drops XP. No sparing, no penalty.
 - **Martial Law.** At 0:00 every tier comes at once (tanks, riot cops, breachers and rifle squads), artillery walks
   down the streets in lines of landing circles that hurt both sides, and every Super you met returns, one every
-  20 s.
+  20 s. On a stage where you met none (Skid Row, Fort Kessler) the act's Supers come in turn instead, Blitz first,
+  then Aurora, Atlas and Nightjar, one standing at a time (owner, Nov 2, 2026).
 - **Police lights** pulse slowly (at most 1 Hz, a soft fade; never a flash).
 - **Music.** Act VIII runs play "Sirens at Midnight"; every City event (sirens, gunfire, engines, wrecks, the crowd,
   a Super's arrival, a weakness cracking, the tier alarm) plays its own City sound. Rooftop antenna lamps blink slowly.
@@ -2195,7 +2196,7 @@ and the owner's review.
   street) and the Precinct (5:00: blue-trimmed precinct roofs, blue kerb paint). A zone changes the looks only; no
   street moves.
 - **The ladder stops at SWAT** (owner): the gangs from 0:00, the police at 4:00, SWAT and the Guard at 8:00. No army
-  and no Supers before 0:00; Martial Law still throws every tier.
+  and no Supers before 0:00; Martial Law still throws every tier, and brings the act's Supers one at a time.
 - **Tear gas.** Riot cops (on every Act VIII stage) lob a canister at your ring every 14 s: a grey-green cloud that
   slows your summons inside it for 4 s (the ground-slow path; Brinewalker helps). It clears when its cop falls.
 - **Big Sal and the Armoured Limo** (miniboss, 9:30 left). His black limo rams through your ring with an armoured
@@ -2223,7 +2224,7 @@ phase 2)" and the rows after it). Built, still hidden ("playable": false) until 
 review.
 
 - **The escalation stops at the army** (gangs 0:00, police 2:30, SWAT 5:00, the army 7:30; no Super on the clock).
-  Martial Law still throws every tier at 0:00.
+  Martial Law still throws every tier at 0:00, and brings the act's Supers one at a time.
 - **Four zones on the clock** over the same city blocks: the Checkpoints (20:00; sandbags and barrier booms), the
   Minefield (16:00), the Airfield (10:00; open concrete aprons) and the Command Bunker (6:00; bunker roofs).
 - **Minefields.** In the Minefield zone the open lots and some streets are mined: blinking mines (a slow blink) that go
@@ -2256,7 +2257,7 @@ after it; built, still hidden until the Act VIII integration). The heart of the 
 a new look over the same streets (towers and plazas, a quarter of the lots open): **the Plaza**, **the Rooftops**,
 **the Tower Lobby** and **the Watchtower**. The escalation starts high: the army from 0:00 (so only the opening crowd
 of civilians runs) and the heroes from 15:00. The army's kinds: the stage's own **Conscripts** (bayonets, in crowds),
-rifle squads and tanks (Fort Kessler's Machine Gunners and Attack Helicopters join as guests once that stage is in).
+rifle squads and tanks (Fort Kessler's Machine Gunners and Attack Helicopters join as guests from 7:00).
 **The Supers lead one zone each as its miniboss** (a chest when they fall): **Blitz** in the Plaza, **Aurora** on the
 Rooftops ("Flies. Falls when stunned.": a flier who rains energy blasts on your ring; any stun drops her out of the
 sky and she is exposed until she rises), **Atlas** in the Tower Lobby ("Strong. Slow to throw.": he lifts a wreck off
@@ -3281,7 +3282,8 @@ scripts/
       super_roster.gd       The Supers: the met list, call_super(), call_next(), the counters
       civilians.gd          CIVILIANS: the 0:00 crowd, the trickle until the army, their own alive cap
       city_shells.gd        Every landing circle: the tank's shells, the flashbangs, the artillery
-      martial_law.gd        Martial Law: artillery lines along the streets, the met Supers return
+      martial_law.gd        Martial Law: artillery lines along the streets, the met Supers return (the act's
+                            Supers in turn on a stage that met none)
       city_kit.gd           Base kit: the row flags (tier, armour_front, vehicle, civilian, super), the facing,
                             a vehicle's drive (the lane, the turn, the ram, the headlights, the light bar)
       super_kit.gd          The Supers' base kit: guarded / exposed, expose(), the plate

@@ -40,6 +40,10 @@ order of it again, so don't worry about epilogue stuff of each act until we nail
   Witnesses: kill every civilian of the opening crowd before they flee the streets.
 - **The lead's call (the owner may revise it): Don Marrow's "the Call".** It used to raise the Wanted Level to three
   stars. Now the police and SWAT tiers arrive at once for the rest of his fight.
+- **Martial Law brings the Supers to every stage (owner, Nov 2, 2026):** "cool theming for the act". On Skid Row and
+  Fort Kessler, which meet no Super before 0:00, Martial Law calls the act's Supers in turn (Blitz, Aurora, Atlas,
+  Nightjar), one standing at a time; where Supers were met, those return as before (GDD §15.0 "Martial Law brings the
+  Supers to every stage").
 
 ## Act VIII: The Last Line
 The living fight back. Behind the Court's veil were the last great cities of the living: millions of people, lit all night, with guns. The necromancer's dead walk into the streets, and the city answers the way a modern city does, in rising order: the gangs who own the blocks, then the police, then the army, and at the end its superheroes. The look is asphalt and concrete, sodium-orange streetlights, neon, olive drab and hazard yellow, with the heroes in bright primary colours that pop off everything else. Police lights pulse slowly (no fast strobes: a photosensitivity rule for the whole act).

@@ -312,7 +312,10 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Act V: the Road to the Sun --- (the Bound Oni's kanabō smash and the Oni Lord's quake)
 	"oni_kanabo", "oni_quake",
 	# --- Act VI: Pandemonium --- (the Archfiend's Hellfire Cleave)
-	"archfiend_cleave"]
+	"archfiend_cleave",
+	# --- Act VIII: Liberty Heights --- (the Fallen Hero's and Black Paragon's slams, FallenHeroBehavior; also
+	# what lets Armour-Piercing Bones, Armour.pierce_share(), count them as summon hits)
+	"fallen_hero_slam", "black_paragon_slam"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source

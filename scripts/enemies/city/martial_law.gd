@@ -13,9 +13,16 @@
 ##     `spacing` px apart, each landing `walk` s after the last after a `warn` s
 ##     telegraph (CityShells, both sides hurt; never civilians);
 ##   * THE SUPERS RETURN: every super_every s the next Super of
-##     SuperRoster.met comes back (SuperRoster.call_super()).
+##     SuperRoster.met comes back (SuperRoster.call_super()). On a stage whose
+##     run met no Super before 0:00 (Skid Row, Fort Kessler), Martial Law
+##     instead calls the act's Supers in turn (`act_supers`: Blitz, Aurora,
+##     Atlas, Nightjar) through the same SuperRoster.call_super(), every
+##     super_every s, at most `act_super_max` of them standing at once (owner,
+##     Nov 2, 2026: "Supers appear in Martial Law on every Act VIII stage";
+##     GDD §15.0 "Martial Law brings the Supers to every stage").
 ## Determinism: the seeded gameplay RNG only (which necromancer, the axis, the
-## arrival angle). Stats: martial_lines, martial_shells, martial_supers.
+## arrival angle). Stats: martial_lines, martial_shells, martial_supers,
+## martial_act_supers.
 class_name MartialLaw
 extends RefCounted
 
@@ -37,6 +44,11 @@ var _next_line: float = INF
 var _next_super: float = INF
 ## Index of the next met Super to return.
 var _super_i: int = 0
+## True when the run had met no Super as Martial Law began: it calls the act's
+## Supers (cfg "act_supers") in turn instead of the met list.
+var act_roster: bool = false
+## Act Supers Martial Law called on such a stage (a subset of supers_back).
+var act_called: int = 0
 
 
 ## Builds Martial Law for `p_game`; `enabled`: an Act VIII stage.
@@ -65,11 +77,14 @@ func step(_delta: float) -> void:
 			started_at = game.elapsed
 			_next_line = game.elapsed + float(cfg["artillery_first"])
 			_next_super = game.elapsed + 2.0  # The first returning Super right after the banner.
+			act_roster = game.city.supers.met.is_empty()  # No Super met: the act's Supers come instead.
 		return
 	if game.elapsed >= _next_line:
 		_next_line += float(cfg["artillery_every"])
 		_artillery_line()
-	if game.elapsed >= _next_super:
+	if game.elapsed >= _next_super and act_roster:
+		_call_act_super()
+	elif game.elapsed >= _next_super:
 		_next_super += float(cfg["super_every"])
 		var met := game.city.supers.met
 		if not met.is_empty():
@@ -78,6 +93,27 @@ func step(_delta: float) -> void:
 			if game.city.supers.call_super(id, game.enemies.ring_point(randf() * TAU)) != null:
 				supers_back += 1
 				game.stat_add("martial_supers", 1.0)
+
+
+## On a stage that met no Super: the act's next Super (cfg "act_supers", in
+## turn) through SuperRoster.call_super(), unless `act_super_max` already
+## stand (then it looks again after `act_super_retry` s).
+func _call_act_super() -> void:
+	var ids: Array = cfg["act_supers"]
+	if ids.is_empty():
+		_next_super = INF
+		return
+	if game.city.supers.alive_count() >= int(cfg["act_super_max"]):
+		_next_super = game.elapsed + float(cfg["act_super_retry"])
+		return
+	_next_super = game.elapsed + float(cfg["super_every"])
+	var id := String(ids[_super_i % ids.size()])
+	_super_i += 1
+	if game.city.supers.call_super(id, game.enemies.ring_point(randf() * TAU)) != null:
+		supers_back += 1
+		act_called += 1
+		game.stat_add("martial_supers", 1.0)
+		game.stat_add("martial_act_supers", 1.0)
 
 
 ## One artillery line through a standing necromancer's street: `shells`

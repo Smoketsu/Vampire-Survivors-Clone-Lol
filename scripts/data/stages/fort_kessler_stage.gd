@@ -123,7 +123,8 @@ const ESCALATION := {
 ## stops when the army comes, at 7:30).
 const CIVILIANS := {}
 ## The Supers the escalation sends here: none (the ladder stops at the army;
-## Martial Law brings back only Supers met, so none here).
+## Martial Law, having met none, calls the act's Supers in turn:
+## CityRulesData.MARTIAL_LAW "act_supers", owner Nov 2, 2026).
 const SUPERS: Array[String] = []
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): MARTIAL LAW,

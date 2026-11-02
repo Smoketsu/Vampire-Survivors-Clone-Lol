@@ -74,7 +74,8 @@ const ESCALATION := {
 ## never comes, so their trickle runs until 0:00: intended, brief).
 const CIVILIANS := {}
 ## The Supers the escalation would send here (it never reaches the heroes on
-## Skid Row; Martial Law only brings back the Supers the run met).
+## Skid Row; Martial Law, having met none, calls the act's Supers in turn:
+## CityRulesData.MARTIAL_LAW "act_supers", owner Nov 2, 2026).
 const SUPERS: Array[String] = ["blitz"]
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): MARTIAL LAW,

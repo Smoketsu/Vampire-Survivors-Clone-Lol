@@ -19,7 +19,7 @@
 ## the heroes from 15:00 (ESCALATION), so the civilians' trickle stops at once
 ## (the opening crowd still flees) and the timeline spawns only the army's
 ## kinds (the stage's own Conscripts, rifle squads of 4, tanks; Fort Kessler's
-## Machine Gunners and Attack Helicopters as guests once that stage merges):
+## Machine Gunners and Attack Helicopters as guests, merged at the integration):
 ##   20:00  Zone I,   the Plaza:       BLITZ leads the heroes (17:30)
 ##   15:00  Zone II,  the Rooftops:    AURORA, who flies (13:30)
 ##   10:00  Zone III, the Tower Lobby: ATLAS, who throws wrecks (8:30)
@@ -274,8 +274,8 @@ const LIBERTY_HEIGHTS := {
 	"guest_growth": 0.25,  # TUNING (not in GDD)
 	"guest_max": 4,  # TUNING (not in GDD)
 	"guests": [
-		{"ids": ["machine_gunner"], "weight": 0.6},  # Fort Kessler (Act VIII phase 2): the Machine Gunner (id checked at integration)
-		{"ids": ["attack_helicopter"], "weight": 0.4},  # Fort Kessler: the Attack Helicopter (id checked at integration)
+		{"ids": ["machine_gunner"], "weight": 0.6},  # Fort Kessler (Act VIII phase 2): the Machine Gunner (id checked at the integration: a real CityEnemyData row)
+		{"ids": ["attack_helicopter"], "weight": 0.4},  # Fort Kessler: the Attack Helicopter (id checked at the integration: a real CityEnemyData row)
 	],
 }
 
