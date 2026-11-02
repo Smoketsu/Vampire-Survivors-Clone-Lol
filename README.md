@@ -2017,7 +2017,8 @@ light above, the set-up of Act IV.
   `--meta=mid` is unchanged; with any upgrades the autotest prints an
   `ossuary:` line (levels owned / 140, levels 6-10 owned / 65, Soul Ash). The
   check `godot --headless res://tools/ossuary_check.tscn -- --autotest` covers
-  prices, gates, the migration, Refund all and the co-op loadout (temp files only;
+  prices, gates, the migration, Refund all, the co-op loadout and the save safety
+  (`tools/save_safety_check.gd`: newer saves, save codes, Undo, crash recovery; temp files only;
   CI runs it in the Graveyard job; `--shot=PATH [--phone]` saves a screenshot).
 - **New options and Dominion** (Ossuary expansion step 3, GDD §15.0 "Ossuary new
   options and Dominion"): sideways upgrades, small values, **8,560** Soul Ash in all
@@ -2576,7 +2577,8 @@ scripts/
     harbour_report.gd       Gullhaven's autotest lines (tide, harbour, kinds, Merrow, Act II spell / passives)
     terrain_slow.gd         The one ground-slow path (tide water, later ink): Brinewalker applies here
     save_backup.gd          Save codes (Settings -> Save): the progress file gzipped + base64, copied out
-                            (clipboard / the browser's prompt box) and validated + restored through Meta
+                            (clipboard / the browser's prompt box) and validated + restored through Meta;
+                            the pre-restore copy and Undo
     settings.gd             Autoload: persistent settings (volumes, toggles, key rebinds) in user://settings.cfg
     meta_progress.gd        Autoload "Meta": Soul Ash, upgrade tiers, lifetime stats, achievements,
                             discovered evolution recipes, per-spell best levels (character unlocks),
@@ -3056,6 +3058,7 @@ scripts/
     ossuary_ui_data.gd      Ossuary screen layout, pip colours, purchase flash / burst / shake, words
     settings_ui_data.gd     Settings tabs, binding groups, short labels, sizes, tab keys
     save_backup_data.gd     Save code prefix and size limit, Save tab words
+    web_link_data.gd        Autotest flags a page address may never set (?necro_autotest=)
     codex_data.gd           The Codex: categories, tabs, sections, Covenant descriptions, layout,
                             achievement badges and the feats' texts
     credits_data.gd         The Credits roll, the licence files and the roll's motion
@@ -3461,8 +3464,16 @@ support).
   - **Save codes:** **Settings → Save** has **Backup** (the progress as a code of about 1,000 characters,
     `NECRO1:` + base64 of the gzipped `save.cfg`; the browser's clipboard, else a prompt box showing it to copy;
     on desktop the system clipboard) and **Restore** (paste a code into the browser's prompt box, or copy it on
-    desktop first; checked, then confirmed, then loaded; not during a run). A code moves the profile between
-    devices and builds; settings and key bindings are not in it.
+    desktop first; checked, then confirmed with the code's Soul Ash and runs, then loaded; not during a run) and
+    **Undo** (puts back the progress the last restore replaced, kept as `save.cfg.pre_restore`; a second Undo is a
+    redo). A code moves the profile between devices and builds; settings and key bindings are not in it. A code
+    from a newer version of the game, or one holding anything a real save never holds, is refused.
+  - **Save safety:** every save keeps the previous one as `save.cfg.bak`; a missing or unreadable save is
+    recovered from `save.cfg.tmp` (a save interrupted before its final rename) or `.bak` before a fresh profile
+    starts. A save written by a newer version loads but is never written over (the title screen says so), so an
+    older or cached build never cuts it down. Refunds pay back what was paid (`[upgrades_paid]`).
+  - **Links are not trusted:** a released page ignores `?relay=` (only test runs and dev builds use it), and
+    `?necro_autotest=` can never set `--meta-save`, `--feedback-url=` or `--relay=` (`WebLinkData`).
   - **Fullscreen** is the browser's: the Settings toggle works (a click or key press allows it), F11 works too, and
     Esc always leaves it first (a browser rule). It is not restored at startup (browsers refuse without a click or
     key press), and the toggle shows the page's real state.
