@@ -2,7 +2,7 @@
 """Local co-op relay for Necropathy: the same protocol as the Cloudflare Worker (server/relay/PROTOCOL.md).
 
 For development, the two-process network test (tools/coop_net_test.py) and the Playwright lobby check. It pairs
-two players in a lobby named by a 5-letter code and relays their messages in order, with the Worker's checks,
+two players in a lobby named by a 6-letter code and relays their messages in order, with the Worker's checks,
 limits, error codes and close codes. Keep the two in step: a change to one is a change to both.
 
 Standard library only (asyncio with a small RFC 6455 WebSocket server): CI needs no pip install, and it can
@@ -33,7 +33,7 @@ PROTOCOL = 1
 # Code alphabet: 20 consonants (no vowels, so no words; no O / I / L to misread).
 ALPHABET = "BCDFGHJKMNPQRSTVWXYZ"
 # Letters in a code.
-CODE_LENGTH = 5
+CODE_LENGTH = 6
 # Largest accepted message, text or binary (bytes).
 MAX_MESSAGE_BYTES = 16384
 # Sustained message rate per socket (messages per second) and the burst allowance (messages).
@@ -56,6 +56,18 @@ CHECK_PERIOD = 1.0
 MAX_GAME_CHARS = 40
 MAX_PLATFORM_CHARS = 16
 MAX_NAME_CHARS = 24
+# Failed joins (a malformed or unknown code: `no_lobby`) allowed per client IP per window before that IP's joins
+# are refused with `join_rate`, and the window (s). Must match the Worker's JOIN_FAIL_LIMIT / JOIN_FAIL_WINDOW_MS.
+JOIN_FAIL_LIMIT = 30
+JOIN_FAIL_WINDOW = 600.0
+# Most client IPs kept in the failed-join log, and how many of the oldest are evicted past that (the Worker's
+# LOG_MAX_IPS / LOG_EVICT_IPS).
+LOG_MAX_IPS = 10000
+LOG_EVICT_IPS = 1000
+# Text message types a player may send to the other seat (PROTOCOL.md "Player messages"); every other type, above
+# all the relay's own welcome / peer / left / error, is dropped. `hello`, `leave` and `start` have their own cases.
+# Must match the Worker's PLAYER_TYPES.
+PLAYER_TYPES = frozenset(("loadout", "settings", "pping", "ppong"))
 # Largest HTTP request head read (bytes).
 MAX_HEAD_BYTES = 8192
 # GUID of the WebSocket handshake (RFC 6455).
@@ -72,6 +84,7 @@ CLOSE_CODES = {
     "rate": 4008,
     "too_big": 4009,
     "protocol": 4010,
+    "join_rate": 4011,
 }
 
 
@@ -143,7 +156,7 @@ class Lobby:
     """One lobby: its code, times, flags and sockets."""
 
     def __init__(self, code, reserved):
-        self.code = code  # The 5-letter code.
+        self.code = code  # The 6-letter code.
         self.created = time.monotonic()  # Creation time (s, monotonic).
         self.started = False  # True once the host sent `start`.
         self.reserved = reserved  # True for a POST /lobby lobby nobody has joined yet.
@@ -170,6 +183,7 @@ class Relay:
         self.delay = max(0.0, delay_ms) / 1000.0  # Test latency added to every relayed message (s).
         self.jitter = max(0.0, jitter_ms) / 1000.0  # Test jitter: a random 0..jitter extra per message (s).
         self.rng = random.Random(seed)  # Jitter draws (test only).
+        self.join_fails = {}  # Client IP -> [count, since (s, monotonic)] of recent failed joins (insertion order).
 
     def log(self, *args):
         if not self.quiet:
@@ -183,6 +197,24 @@ class Relay:
             code = "".join(secrets.choice(ALPHABET) for _ in range(CODE_LENGTH))
             if code not in self.lobbies:
                 return code
+
+    def join_blocked(self, ip):
+        """True when client `ip` failed JOIN_FAIL_LIMIT joins in the current window (the Worker's joinBlocked())."""
+        e = self.join_fails.get(ip)
+        return e is not None and time.monotonic() - e[1] <= JOIN_FAIL_WINDOW and e[0] >= JOIN_FAIL_LIMIT
+
+    def note_join_fail(self, ip):
+        """Counts one failed join of client `ip`; past LOG_MAX_IPS the oldest IPs are evicted (the Worker's countIp())."""
+        now = time.monotonic()
+        e = self.join_fails.get(ip)
+        if e is not None and now - e[1] <= JOIN_FAIL_WINDOW:
+            e[0] += 1
+            return
+        self.join_fails.pop(ip, None)
+        self.join_fails[ip] = [1, now]
+        if len(self.join_fails) > LOG_MAX_IPS:
+            for k in list(self.join_fails)[:LOG_EVICT_IPS]:
+                del self.join_fails[k]
 
     def create(self, reserved):
         lobby = Lobby(self.new_code(), reserved)
@@ -269,6 +301,8 @@ class Relay:
                 return
             lobby.started = True
             self.log("lobby", lobby.code, "started")
+        elif t not in PLAYER_TYPES:
+            return  # Not a player message (e.g. a faked `left`): never forwarded.
         self.relay(lobby, s.slot, 0x1, payload)
 
     def hello(self, s, m):
@@ -391,12 +425,18 @@ class Relay:
             writer.write(("HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n"
                           "Sec-WebSocket-Accept: %s\r\n\r\n" % accept).encode("latin-1"))
             code = parts[2].upper()
+            ip = (writer.get_extra_info("peername") or ("local",))[0]  # The client's address (the Worker's CF-Connecting-IP).
             if parts[2].lower() == "new":
                 lobby = self.create(False)
+            elif self.join_blocked(ip):
+                s = Sock(writer, None)
+                self.drop(s, "join_rate")
+                return await self.finish(writer)
             else:
                 lobby = self.lobbies.get(code)
             s = Sock(writer, lobby)
             if lobby is None:
+                self.note_join_fail(ip)
                 self.drop(s, "no_lobby")
                 return await self.finish(writer)
             lobby.socks.append(s)

@@ -45,8 +45,8 @@ const ERROR_CASE_S: float = 12.0
 ## The error cases: [code to join, relay override ("" = the test relay), expected error].
 const ERROR_CASES: Array = [
 	["BC", "", "bad_code"],
-	["BBBBB", "", "no_lobby"],
-	["BCDFG", "ws://127.0.0.1:9", "unreachable"],
+	["BBBBBB", "", "no_lobby"],
+	["BCDFGH", "ws://127.0.0.1:9", "unreachable"],
 ]
 
 ## "host" or "join".

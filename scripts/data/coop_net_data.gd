@@ -24,13 +24,15 @@ const DEV_BUILD_ID: String = "dev"  # TUNING (not in GDD)
 const PROTOCOL: int = 1  # TUNING (not in GDD)
 ## Letters a lobby code is made of: 20 consonants (no vowels, so no words; no O / I / L to misread).
 const CODE_ALPHABET: String = "BCDFGHJKMNPQRSTVWXYZ"  # TUNING (not in GDD) must match the relay's ALPHABET
-## Letters in a lobby code.
-const CODE_LENGTH: int = 5  # TUNING (not in GDD) must match the relay's CODE_LENGTH
+## Letters in a lobby code (6: 64M codes, so guessing one is out of reach; GDD §15.0 "Co-op relay
+## hardening").
+const CODE_LENGTH: int = 6  # TUNING (not in GDD) must match the relay's CODE_LENGTH
 ## Relay error code -> its WebSocket close code (PROTOCOL.md), so a refusal whose error message
 ## was lost still reads plainly.
 const CLOSE_CODES: Dictionary = {
 	"no_lobby": 4001, "full": 4002, "version": 4003, "started": 4004, "bad_hello": 4005,  # TUNING (not in GDD) must match the relay
 	"host_left": 4006, "expired": 4007, "rate": 4008, "too_big": 4009, "protocol": 4010,  # TUNING (not in GDD) must match the relay
+	"join_rate": 4011,  # TUNING (not in GDD) must match the relay
 }
 ## Largest message the relay accepts (bytes); send_frame() refuses bigger frames.
 const MAX_MESSAGE_BYTES: int = 16384  # TUNING (not in GDD) must match the relay's MAX_MESSAGE_BYTES
@@ -66,7 +68,7 @@ const DEFAULT_NAMES: Array = ["Host", "Guest"]  # TUNING (not in GDD)
 const MAX_NAME_CHARS: int = 16  # TUNING (not in GDD)
 ## Title of the share sheet / the text copied with the code (web): %s = code, then the join link.
 const SHARE_TEXT: String = "Join my Necropathy lobby: %s"  # TUNING (not in GDD)
-## Page query key that opens the Join pad with a code filled in (`?join=BCDFG`, the shared link).
+## Page query key that opens the Join pad with a code filled in (`?join=BCDFGH`, the shared link).
 const JOIN_QUERY_KEY: String = "join"  # TUNING (not in GDD)
 ## Page query key overriding RELAY_URL in the Web build (tests).
 const RELAY_QUERY_KEY: String = "relay"  # TUNING (not in GDD)
@@ -84,7 +86,8 @@ const ERROR_TEXT: Dictionary = {
 	"rate": "Too many messages: the relay closed the connection.",  # TUNING (not in GDD)
 	"too_big": "A message was too large for the relay.",  # TUNING (not in GDD)
 	"protocol": "The relay speaks another protocol. Update the game.",  # TUNING (not in GDD)
-	"bad_code": "A code is 5 letters.",  # TUNING (not in GDD)
+	"bad_code": "A code is 6 letters.",  # TUNING (not in GDD)
+	"join_rate": "Too many wrong codes from this network. Wait a few minutes, then try again.",  # TUNING (not in GDD)
 	"unreachable": "Cannot reach the co-op relay. Check your connection.",  # TUNING (not in GDD)
 	"lost": "Connection to the relay lost.",  # TUNING (not in GDD)
 	"no_relay": "Co-op is not set up in this build yet (no relay address).",  # TUNING (not in GDD)

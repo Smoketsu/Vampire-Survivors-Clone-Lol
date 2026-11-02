@@ -43,7 +43,7 @@ def pump(proc, sink, tag, found, echo):
         if echo or line.startswith("[coop]") or line.startswith("COOP_") or BAD_LINE.search(line) \
                 or "lockstep" in line or CLOCK.match(line):
             print("[%s] %s" % (tag, line), flush=True)
-        m = re.match(r"COOP_CODE=([A-Z]{5})", line)
+        m = re.match(r"COOP_CODE=([A-Z]+)", line)
         if m:
             found["code"] = m.group(1)
         m = CLOCK.match(line)

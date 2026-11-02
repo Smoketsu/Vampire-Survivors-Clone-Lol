@@ -131,7 +131,7 @@ func _my_name() -> String:
 	return String((CoopNet.loadouts[CoopNet.local_slot] as Dictionary).get("name", ""))
 
 
-## The code row: "Code", five gold letter slots, Copy and (browser) Share.
+## The code row: "Code", CoopNetData.CODE_LENGTH gold letter slots, Copy and (browser) Share.
 func _code_row() -> Control:
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER

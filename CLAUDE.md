@@ -209,12 +209,19 @@ autotest with the naive and army policies, a Crimson March autotest, a Sanctum o
 policy) and one army autotest per Act II, Act IV and Act V stage; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
-waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
-`CLOUDFLARE_ACCOUNT_ID`, at `wss://necropathy-relay.smoketsu.workers.dev`). The release and publish jobs
+waited on by the publish jobs: a failure on a `main` push opens a GitHub issue instead) and, on `main` pushes,
+`deploy-relay` (the Worker, after `coop-net`, the tests and the exports; wrangler locked by
+`server/relay/package-lock.json`, `npm ci`; secrets `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` only in its
+deploy step; at `wss://necropathy-relay.smoketsu.workers.dev`). The export job also loads the patched Web build in
+headless Chromium (`tools/web_smoke.js`: engine startup within 60 s of Play, no console error). The token is
+read-only by default (`permissions: contents: read`); third-party actions are pinned to a commit SHA. The relay
+forwards only the player message types (`PLAYER_TYPES` in both relays: add a new one there, and deploy the Worker
+first) and lobby codes are 6 letters (GDD §15.0 "Co-op relay hardening", "CI publishing safety"). The release and publish jobs
 wait for the tests and exports. Pushing a `v*` tag publishes a GitHub Release with the three zips. **GitHub Pages is the game's web
 home** (owner decision Oct 2026; itch.io publishing dropped, GDD §15.0 "GitHub Pages is the web home"):
 `publish-pages-repo` (variable `PAGES_REPO` = `Smoketsu/NecropathyPlay` + secret `PAGES_TOKEN`) pushes the Web build
-from `main` pushes, `v*` tags and manual runs of `main` to that public build-only repository, served at
+from `main` pushes, `v*` tags and manual runs of `main` to that public build-only repository (one at a time, and only
+when the run's commit is still `main`'s tip), served at
 <https://smoketsu.github.io/NecropathyPlay/>; `publish-pages` (variable `WEB_PAGES` = `true`, this repository's own
 Pages) stays optional and off. Artifacts are kept 7 days (test logs 3): a full artifact store blocks every publish. Local web export: `mkdir -p build/web && touch build/.gdignore`, then
 `godot --headless --export-release "Web" build/web/index.html` (templates `web_nothreads_*.zip`), then
