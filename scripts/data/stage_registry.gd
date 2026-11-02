@@ -268,6 +268,12 @@
 ##                        objectives; the "mammoth" event); ground
 ##                        "fort_kessler" is its FortKesslerGround (the four
 ##                        zone looks over CityGround).
+## --- Act VIII: Liberty Heights ---
+##   liberty_heights    — LibertyHeightsDirector config (LibertyHeightsStage
+##                        .LIBERTY_HEIGHTS, Act VIII, Liberty Heights: the zone
+##                        Supers in the roster's order, each promoted to its
+##                        zone's miniboss; guest squads of Fort Kessler's army
+##                        kinds; the cracks of Paragon's craters).
 class_name StageRegistry
 extends RefCounted
 

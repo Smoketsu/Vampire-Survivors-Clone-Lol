@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, flying low, leaning forward, one fist drawn back to slam, a tattered cape streaming behind
+
+LOW-RESOLUTION pixel art: the whole figure is only 46 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: THE FALLEN HERO, a MALE summon of the necromancer: a dead superhero raised as undead, broad and powerful, GREY dead skin, glowing SOUL-TEAL eyes, short dark hair, a torn CHARCOAL-AND-SILVER bodysuit ripped at the shoulders and knees, a long TATTERED DARK cape. NO chest emblem, NO logo, NO letters.
+Signature shape that must read in silhouette: the broad flying body, the drawn-back fist and the tattered cape.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: charcoal #16171C #2A2C34 #44474F; silver #6E7A8C #B4C0D0; dead skin #6E6A78 #9A96A4 #C6C2CE; cape #1C1426 #3A2E4E; soul teal #1F7A5C #3FD39A #9CFFD8.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a summon of this game for the pixel size, outline weight and flat look (not its subject).

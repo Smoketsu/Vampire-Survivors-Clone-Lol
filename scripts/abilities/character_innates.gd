@@ -88,6 +88,9 @@
 ## Act VIII, Fort Kessler:
 ##   Fallen Sergeant  Sapper's Hands  in BoneMines._drop() (one more mine laid
 ##                    beside every one); stat bone_mines_extra.
+## Act VIII, Liberty Heights:
+##   Revenant Heroine Back From the Dead  in HerosFist.step() (one more fist a
+##                    cast); stats as the spell's (fist_casts, fist_slams).
 class_name CharacterInnates
 extends Node2D
 
@@ -439,6 +442,9 @@ func summary_line() -> String:
 		# --- Act VIII: Fort Kessler --- (Sapper's Hands lives in BoneMines._drop())
 		"sappers_hands":
 			counters = "extra mines %d (laid %d)" % [int(st.get("bone_mines_extra", 0.0)), int(st.get("bone_mines_laid", 0.0))]
+		# --- Act VIII: Liberty Heights --- (Back From the Dead lives in HerosFist.step())
+		"back_from_the_dead":
+			counters = "extra fists %d (slams %d)" % [int(game.character.innate_value(HerosFistData.EXTRA_KEY)), int(st.get("fist_slams", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

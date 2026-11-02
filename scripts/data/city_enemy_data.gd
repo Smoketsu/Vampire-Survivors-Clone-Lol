@@ -113,7 +113,9 @@ const DASH_SOURCE: String = "blitz_dash"
 ## Bones' hook reads them through Armour.kevlar_mult()).
 const RANGED_SOURCES: Array[String] = ["tank_shell", "artillery",
 	# --- Act VIII: Skid Row --- the limo crew's sprays, Don Marrow's revolver and gold minigun.
-	"limo_spray", "marrow_revolver", "marrow_minigun"]
+	"limo_spray", "marrow_revolver", "marrow_minigun",
+	# --- Act VIII: Liberty Heights --- (Aurora's energy blasts, Atlas's thrown wreck, Paragon's heat vision)
+	"aurora_blast", "atlas_throw", "paragon_heat"]
 
 ## The City's shared kinds, keyed by kind id.
 const ENEMIES := {
@@ -571,6 +573,156 @@ const ENEMIES := {
 		"rocket_reach": 360.0,  # TUNING (not in GDD) px: it fires only this near the necromancer's line
 		"melee_mult": 0.5,  # TUNING (not in GDD) share of a melee summon's hit it takes (rotor height)
 	},  # The attack helicopter.
+	# --- Act VIII: Liberty Heights ---
+	# The three Supers Liberty Heights builds (GDD §15.0 "Atlas, Aurora and
+	# Nightjar (Act VIII)"; owner-approved proposal: "Atlas (a strongman who
+	# throws wrecks; a long wind-up), Aurora (a flying energy blaster, figure
+	# style; falls out of the sky when stunned), Nightjar (a gadget vigilante
+	# who grapples summons out of the ring; must land to strike)"; owner:
+	# open parody nods, no names, logos, emblems or exact costumes). Rows of
+	# the shared table, so any stage may use them; on Liberty Heights each
+	# leads a zone as its miniboss (LibertyHeightsDirector). Each is a
+	# SuperKit: guarded (x0.6) until its weakness calls expose().
+	# Heroes, a SUPER (male strongman): "Strong. Slow to throw." Every
+	# throw_every s, with the necromancer within throw_range px, he lifts the
+	# nearest wreck within lift_range px (CityBlocks.remove_wreck(): the wreck
+	# leaves the street) or, with none, a parked car, and WINDS UP for
+	# throw_windup s (his mark on the ground where it will land: the
+	# necromancer's spot); then he throws it: a CityShells landing circle of
+	# throw_radius px lands throw_flight s later (throw_damage) and, on a
+	# blocks layout, the car lands as a new wreck there. A STUN (or a Deep
+	# Freeze) during the wind-up EXPOSES him (SuperKit.expose(), "stun") and
+	# the throw is dropped at his feet.
+	"atlas": {
+		"display_name": "Atlas",
+		"max_hp": 1700.0,  # TUNING (not in GDD) the strongman (Blitz 1300)
+		"move_speed": 58.0,  # TUNING (not in GDD) px/s; heavy
+		"damage": 10.0,  # TUNING (not in GDD) a haymaker, before the time scaling
+		"attack_interval": 1.3,  # TUNING (not in GDD) s
+		"attack_range": 10.0,  # TUNING (not in GDD) px
+		"radius": 16.0,  # TUNING (not in GDD) px (x1.35 as an elite = 21.6 <= CityBlockData.MAX_BODY_RADIUS 36)
+		"armor": 0.25,  # TUNING (not in GDD)
+		"xp": 50,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.9,  # TUNING (not in GDD) 0..1
+		"mass": 40.0,  # TUNING (not in GDD) hard to shove
+		"slow_resist": 0.6,  # TUNING (not in GDD)
+		"always_elite": true,  # A Super is an elite (owner-approved proposal: "the act's elites")
+		"faction": FACTION,
+		"kit": "atlas",
+		"tier": "heroes",  # Owner-approved proposal: the heroes
+		"super": {"power": "Strong.", "weakness": "Slow to throw."},  # Owner-approved proposal ("a long wind-up"); brief: the plate
+		"throw_every": 7.0,  # TUNING (not in GDD) s between throws
+		"throw_first": 3.0,  # TUNING (not in GDD) s before his first throw
+		"throw_range": 380.0,  # TUNING (not in GDD) px to the necromancer
+		"lift_range": 260.0,  # TUNING (not in GDD) px within which he lifts a wreck (else a parked car)
+		"throw_windup": 1.6,  # TUNING (not in GDD) s, the long wind-up (the weakness's window)
+		"throw_flight": 0.8,  # TUNING (not in GDD) s of the landing circle after the throw
+		"throw_radius": 46.0,  # TUNING (not in GDD) px
+		"throw_damage": 16.0,  # TUNING (not in GDD) before the time scaling
+		"throw_half": 26.0,  # TUNING (not in GDD) px, half length of the wreck he leaves (CityBlocks.add_wreck())
+	},  # Atlas.
+	# Heroes, a SUPER (female energy blaster, figure style; she flies, row
+	# "flies": no summon body-blocks her): "Flies. Falls when stunned." She
+	# hovers hover_dist px from the necromancer, drifting round him, and every
+	# blast_every s fires blast_count energy blasts (hostile bolts tagged
+	# aurora_blast, a ranged City source: Kevlar Bones) at the necromancer or
+	# the nearest summon. In the air a grounded melee summon's blow deals
+	# aloft_melee_taken of itself (FallenAngelKit.grounded_melee()). ANY STUN
+	# (or a Deep Freeze) DROPS HER OUT OF THE SKY: she falls, lands (no longer
+	# "flies": blockers hold her and every blow lands in full) and is EXPOSED
+	# (SuperKit.expose(), "stun") until she rises again, grounded_time s later.
+	"aurora": {
+		"display_name": "Aurora",
+		"max_hp": 1100.0,  # TUNING (not in GDD) the flier (Blitz 1300)
+		"move_speed": 90.0,  # TUNING (not in GDD) px/s in the air
+		"damage": 7.0,  # TUNING (not in GDD) one energy blast (her shared ranged attack is unused), before the time scaling
+		"attack_interval": 1.0,  # TUNING (not in GDD) s, her blow when grounded
+		"attack_range": 8.0,  # TUNING (not in GDD) px
+		"radius": 12.0,  # TUNING (not in GDD) px (x1.35 as an elite = 16.2)
+		"armor": 0.05,  # TUNING (not in GDD)
+		"xp": 45,  # TUNING (not in GDD)
+		"behavior": "melee",  # Her kit flies and blasts; on the ground she strikes in melee.
+		"projectile_speed": 300.0,  # TUNING (not in GDD) px/s of a blast
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.9,  # TUNING (not in GDD) 0..1
+		"mass": 3.0,  # TUNING (not in GDD)
+		"slow_resist": 0.5,  # TUNING (not in GDD)
+		"always_elite": true,  # A Super is an elite (owner-approved proposal: "the act's elites")
+		"faction": FACTION,
+		"kit": "aurora",
+		"tier": "heroes",  # Owner-approved proposal: the heroes
+		"flies": true,  # Owner-approved proposal: "a flying energy blaster" (Enemy.flies: over the Bone Ring)
+		"figure": true,  # Female, the figure-redesign style (art only)
+		"super": {"power": "Flies.", "weakness": "Falls when stunned.", "exposed_time": 3.5},  # Owner-approved proposal; exposed_time TUNING (not in GDD): exposed until she rises (stun 1 s + 3.5 s = grounded_time)
+		"hover_dist": 150.0,  # TUNING (not in GDD) px from the necromancer (over the ring's outer posts)
+		"hover_speed": 0.45,  # TUNING (not in GDD) rad/s she drifts round him
+		"blast_every": 1.8,  # TUNING (not in GDD) s
+		"blast_count": 2,  # TUNING (not in GDD) bolts a volley
+		"blast_spread": 0.12,  # TUNING (not in GDD) rad between two bolts
+		"blast_range": 360.0,  # TUNING (not in GDD) px
+		"blast_damage": 7.0,  # TUNING (not in GDD) a bolt, before the time scaling
+		"aloft_melee_taken": 0.5,  # TUNING (not in GDD) share of a grounded melee blow that lands in flight
+		"grounded_time": 4.5,  # TUNING (not in GDD) s she lies grounded after a stun (expose stun 1 s + exposed_time)
+		"fall_time": 0.4,  # TUNING (not in GDD) s of the fall (drawn)
+	},  # Aurora.
+	# Heroes, a SUPER (male gadget vigilante, the cowled night watchman; no
+	# bat shapes or emblems): "Grapples. Must land to strike." He swings over
+	# the ring (row "flies") and every grapple_every s fires his GRAPPLE at a
+	# summon within grapple_range px (a telegraphed line, grapple_windup s):
+	# the summon is reeled pull_time s out to pull_out px beyond the Bone
+	# Ring's outer edge, away from the necromancer, through THE HELD HOOK
+	# (SummonedUnit.held_until renewed each tick, the one place that moves it:
+	# carry(), as the Chiropteran King's carry-off), then dropped (drop_daze s
+	# more). He then LANDS beside it to strike (land_time s, no longer "flies":
+	# his blows land, and every blow on him lands in full). While he is
+	# LANDED, a BLOCKER summon touching him (a block radius) or a STUN EXPOSES
+	# him (SuperKit.expose(), "blocker" / "stun"). In the air a grounded melee
+	# blow deals aloft_melee_taken of itself.
+	"nightjar": {
+		"display_name": "Nightjar",
+		"max_hp": 1400.0,  # TUNING (not in GDD) the vigilante
+		"move_speed": 96.0,  # TUNING (not in GDD) px/s swinging
+		"damage": 9.0,  # TUNING (not in GDD) a gauntlet strike when landed, before the time scaling
+		"attack_interval": 0.7,  # TUNING (not in GDD) s
+		"attack_range": 8.0,  # TUNING (not in GDD) px
+		"radius": 13.0,  # TUNING (not in GDD) px (x1.35 as an elite = 17.6)
+		"armor": 0.15,  # TUNING (not in GDD)
+		"xp": 45,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.9,  # TUNING (not in GDD) 0..1
+		"mass": 4.0,  # TUNING (not in GDD)
+		"slow_resist": 0.5,  # TUNING (not in GDD)
+		"always_elite": true,  # A Super is an elite (owner-approved proposal: "the act's elites")
+		"faction": FACTION,
+		"kit": "nightjar",
+		"tier": "heroes",  # Owner-approved proposal: the heroes
+		"flies": true,  # He swings over the ring between strikes (owner-approved proposal: "must land to strike")
+		"super": {"power": "Grapples.", "weakness": "Must land to strike."},  # Owner-approved proposal; brief: the plate
+		"grapple_every": 6.0,  # TUNING (not in GDD) s
+		"grapple_first": 2.5,  # TUNING (not in GDD) s before the first
+		"grapple_range": 230.0,  # TUNING (not in GDD) px to the summon
+		"grapple_windup": 0.7,  # TUNING (not in GDD) s, the line shows
+		"pull_time": 0.9,  # TUNING (not in GDD) s the summon is reeled
+		"pull_out": 90.0,  # TUNING (not in GDD) px beyond the Bone Ring's outer edge
+		"drop_daze": 0.6,  # TUNING (not in GDD) s held after the drop
+		"land_time": 3.2,  # TUNING (not in GDD) s he stands landed to strike (the weakness's window)
+		"strike_damage": 12.0,  # TUNING (not in GDD) his landing strike on the reeled summon, before the time scaling
+		"aloft_melee_taken": 0.5,  # TUNING (not in GDD) share of a grounded melee blow that lands in flight
+	},  # Nightjar.
 }
 
 # --- Act VIII: Fort Kessler ---
@@ -587,3 +739,22 @@ const HELI_ROCKET_SOURCE: String = "heli_rocket"
 ## helicopter's rockets, General Harrow's carpet bombs and Mammoth's turret
 ## shells. (A list of its own so the three stages' additions merge cleanly.)
 const FORT_KESSLER_RANGED_SOURCES: Array[String] = ["machine_gun", "heli_rocket", "carpet_bomb", "mammoth_shell"]
+
+# --- Act VIII: Liberty Heights ---
+## Kind id of Atlas, the strongman Super.
+const ATLAS: String = "atlas"
+## Kind id of Aurora, the flying blaster Super (female).
+const AURORA: String = "aurora"
+## Kind id of Nightjar, the gadget vigilante Super.
+const NIGHTJAR: String = "nightjar"
+## Damage tag of Atlas's thrown wreck (a ranged City source: RANGED_SOURCES).
+const THROW_SOURCE: String = "atlas_throw"
+## Damage tag of Aurora's energy blasts (a ranged City source: RANGED_SOURCES).
+const BLAST_SOURCE: String = "aurora_blast"
+## Damage tag of a summon Nightjar drops after his grapple.
+const GRAPPLE_SOURCE: String = "nightjar_drop"
+## Damage tag of Nightjar's landing strike.
+const STRIKE_SOURCE: String = "nightjar_strike"
+## Damage tags of the three Supers' specials, in report order (LibertyHeightsReport
+## sums their player_dmg_from_ / summon_dmg_from_ stats).
+const SUPER_TAGS: Array[String] = ["atlas_throw", "aurora_blast", "nightjar_drop", "nightjar_strike"]

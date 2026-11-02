@@ -17,6 +17,7 @@
 ##   "allure" Succubus            BoundSuccubusBehavior (Act VI, the Palace of Silk and Ash)
 ##   "hellfire" Archfiend         ArchfiendBehavior (Act VI, Pandemonium)
 ##   "bloodthirst" Blood Spawn    BloodSpawnBehavior (Act VII, Castle Sanguis)
+##   "hero_slam" Fallen Hero      FallenHeroBehavior (Act VIII, Liberty Heights)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -77,6 +78,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act VII: Castle Sanguis ---
 		"bloodthirst":
 			b = BloodSpawnBehavior.new()  # The Blood Spawn.
+		# --- Act VIII: Liberty Heights ---
+		"hero_slam":
+			b = FallenHeroBehavior.new()  # The Fallen Hero.
 	if b != null:
 		b.kind = kind
 	return b
@@ -210,6 +214,13 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			if a.is_empty():
 				out.append("Fast brawlers on the ring's front")
 				out.append("Bloodthirst: every blow that lands heals them")
+		# --- Act VIII: Liberty Heights ---
+		"hero_slam":
+			if a.is_empty():
+				out.append("Flies around your ring, then slams the densest pack")
+			else:
+				_delta(out, "Slam damage", a, b, "slam_damage")
+				_delta(out, "Slam cooldown (s)", a, b, "slam_cooldown")
 	return out
 
 

@@ -761,6 +761,20 @@ RIGS = {
     "city/big_sal": dict(mode="legs", hip=37, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
     "bosses/don_marrow": dict(mode="legs", hip=54, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=2, dip=1),
     "player/undertaker": dict(mode="legs", hip=42, back=(0, 16), front=(16, 32), rigid=[], spread=1, lift=1, dip=1),
+    # --- Act VIII: Liberty Heights ---
+    # Atlas, the Conscript and the Revenant Heroine stride (legs; the heroine with the figure-redesign rigs: the bust box,
+    # the hip `swish` and an idle strip); Nightjar strides between swings (legs; his grapple gun rides with the body);
+    # Aurora hovers in her cape (robe mode, the bust box and an idle strip); Paragon and the Fallen Hero fly (robe mode:
+    # the cape sways); Black Paragon flies like the Fallen Hero.
+    "city/atlas": dict(mode="legs", hip=34, back=(0, 20), front=(20, 40), rigid=[], spread=1, lift=1, dip=1),
+    "city/conscript": dict(mode="legs", hip=19, back=(0, 14), front=(14, 22), rigid=[], spread=1, lift=1, dip=1),
+    "city/nightjar": dict(mode="legs", hip=29, back=(0, 34), front=(34, 66), rigid=[], spread=1, lift=1, dip=1),
+    "city/aurora": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(19, 30, 9, 16, 1)),
+    "player/revenant_heroine": dict(mode="legs", hip=33, back=(0, 24), front=(24, 38), rigid=[], spread=1, lift=1, dip=1,
+                                    bust=(15, 30, 13, 21, 2), swish=(12, 32, 24, 32, 1)),
+    "summons/fallen_hero": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1),
+    "summons/black_paragon": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1),
+    "bosses/paragon": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -879,6 +893,10 @@ SKINS = {
     "player/undertaker_hyper": "player/undertaker",
     "player/undertaker_untouchable": "player/undertaker",
     "player/undertaker_deathlord": "player/undertaker",
+    # --- Act VIII: Liberty Heights ---
+    "player/revenant_heroine_hyper": "player/revenant_heroine",
+    "player/revenant_heroine_untouchable": "player/revenant_heroine",
+    "player/revenant_heroine_deathlord": "player/revenant_heroine",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

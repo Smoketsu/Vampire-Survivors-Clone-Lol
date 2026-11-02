@@ -100,7 +100,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VIII: Skid Row ---
 	"funeral_procession",
 	# --- Act VIII: Fort Kessler ---
-	"killing_ground"]
+	"killing_ground",
+	# --- Act VIII: Liberty Heights ---
+	"doomsday"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -713,6 +715,25 @@ const EVOLUTIONS := {
 			"shard_share": 0.4,  # TUNING (not in GDD) of the blast's damage
 			"shard_reach": 64.0,  # TUNING (not in GDD) px out from the blast
 			"shard_radius": 26.0,  # TUNING (not in GDD) px each shard hits
+		},
+	},
+	# --- Act VIII: Liberty Heights ---
+	# Doomsday (GDD §15.0 "Hero's Fist, Doomsday, Secret Identity and the
+	# Revenant Heroine"; owner-approved proposal "Hero's Fist -> Doomsday (+
+	# Secret Identity)"): Hero's Fist + Secret Identity (a NEW passive, owner
+	# rule: at Lv 5). Two fists, harder and farther, and where a flung foe
+	# lands (or around an unmoved one) a CRATER of `crater` px strikes
+	# crater_share x the damage. Detected by the "crater" key.
+	"doomsday": {
+		"base": "heros_fist",
+		"passive": "secret_identity",
+		"display_name": "Doomsday",
+		"icon": "doomsday",
+		"description": "Two fists fall like the end of the world, and every foe they fling lands in a crater.",
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "fists": "Fists", "fling": "Flung (px)", "fling_share": "Flung foe's hit", "crater": "Crater (px)", "crater_share": "Crater damage"},
+		"stats": {
+			"damage": 95.0, "cooldown": 2.3, "fists": 2, "fling": 240.0, "fling_share": 0.5,  # TUNING (not in GDD) first pass 110 / 2.2 s / 0.65: ~500k damage in the forced seed-7 run, far ahead of every source
+			"crater": 64.0, "crater_share": 0.4,  # TUNING (not in GDD) the evolution flag: the crater where a flung foe lands (first pass 0.6)
 		},
 	},
 }

@@ -1540,6 +1540,8 @@ func finish(summary: Dictionary) -> void:
 	SkidRowReport.item_lines(game, st)  # Hearse Run, Black Car, Kevlar Bones (only when taken; the stage's own lines are CityReport's).
 	# --- Act VIII: Fort Kessler ---
 	FortKesslerReport.item_lines(game, st)  # Bone Mines, Tripwire, Armour-Piercing Bones (only when taken; the stage's own lines are CityReport's).
+	# --- Act VIII: Liberty Heights ---
+	LibertyHeightsReport.item_lines(game, st)  # Hero's Fist, Secret Identity, the Fallen Hero, Origin Story (only when used; the stage's own lines are CityReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

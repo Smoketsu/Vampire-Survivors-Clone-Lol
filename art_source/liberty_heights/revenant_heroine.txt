@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a confident fighter's stance, one fist raised and glowing soul-teal, a short tattered cape behind her
+
+LOW-RESOLUTION pixel art: the whole figure is only 56 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: THE REVENANT HEROINE, a FEMALE playable necromancer, a superheroine raised from the dead, in the game's figure-redesign style: an extremely exaggerated hourglass figure (very full bust, a tiny cinched waist, very wide hips), glamorous and confident, her FACE CLEARLY VISIBLE: grey-pale skin, glowing SOUL-TEAL eyes, long dark hair. A fitted DARK-BLUE bodysuit with SILVER panels, torn at the edges, silver gauntlets whose knuckles glow soul-teal, tall dark boots, a short TATTERED dark cape. Chest and hips FULLY COVERED, never nude, tasteful. NO chest emblem, NO logo, NO letters.
+Signature shape that must read in silhouette: the hourglass figure, the tattered cape and the glowing raised fist.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: suit blue #141C3A #22306A #3A4E9A; silver #6E7A8C #B4C0D0 #E6EEF7; skin #8A8796 #B4B0BE #DAD6E2; hair #16141C #2E2A38; cape #1C1426 #3A2E4E; soul teal #1F7A5C #3FD39A #9CFFD8.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a female playable character of this game in the figure-redesign style, for the pixel size, outline weight, proportions and flat look (not its subject).

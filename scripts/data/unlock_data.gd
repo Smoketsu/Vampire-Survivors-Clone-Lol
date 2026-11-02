@@ -239,6 +239,18 @@ const UNLOCKS := {
 	"bone_mines": {"type": "spell", "boss": "harrow", "text": "Slay General Harrow at Fort Kessler to unlock."},  # Owner-approved Act VIII proposal
 	"tripwire": {"type": "passive", "boss": "harrow", "text": "Slay General Harrow at Fort Kessler to unlock."},  # Bone Mines' paired passive (owner-approved proposal), unlocked with it
 	"armour_piercing_bones": {"type": "passive", "achievement": "broken_arrow", "text": "Earn Broken Arrow: kill General Harrow before his strike lands."},  # Owner answer (Nov 2, 2026)
+	# --- Act VIII: Liberty Heights ---
+	# Paragon's fall (owner-approved Act VIII proposal "Rewards": Hero's Fist is
+	# unlocked by Paragon; the finale grants the Fallen Hero): the spell with
+	# its paired passive, and the summon class with its paired passive, offered
+	# on every stage (no card-row "act" key). The title Bane of Heroes is the
+	# No More Heroes achievement's reward.
+	"heros_fist": {"type": "spell", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Owner-approved Act VIII proposal
+	"secret_identity": {"type": "passive", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Hero's Fist's paired passive (owner-approved proposal), unlocked with it
+	"fallen_hero": {"type": "class", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Owner-approved proposal: the finale's reward
+	"origin_story": {"type": "passive", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Its paired passive (own decision), unlocked with it
+	"bane_of_heroes": {"type": "title", "achievement": "no_more_heroes",
+		"text": "Earn No More Heroes: beat Paragon with no Super at his side."},  # Own decision (the clear is recorded as a title, as Act VII's Ender of the Feast)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

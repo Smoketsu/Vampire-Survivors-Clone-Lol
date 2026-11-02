@@ -430,6 +430,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("no_witnesses_runs", 1.0 if float(st.get("skid_row_no_witnesses", 0.0)) > 0.0 else 0.0)  # No Witnesses (Act VIII, Skid Row)
 	# --- Act VIII: Fort Kessler ---
 	_add_lifetime("broken_arrow_runs", 1.0 if float(st.get(HarrowData.STOPPED_STAT, 0.0)) > 0.0 else 0.0)  # Broken Arrow (Act VIII, Fort Kessler)
+	# --- Act VIII: Liberty Heights ---
+	_add_lifetime("paragon_no_heroes_kills", float(st.get("paragon_no_heroes_kills", 0.0)))  # No More Heroes (Act VIII, Liberty Heights)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
@@ -1639,6 +1641,8 @@ static func _default_lifetime() -> Dictionary:
 		"no_witnesses_runs": 0.0,  # Skid Row runs that killed the whole opening crowd before one fled (No Witnesses)
 		# --- Act VIII: Fort Kessler ---
 		"broken_arrow_runs": 0.0,  # runs in which General Harrow fell before his Broken Arrow strike landed (Broken Arrow)
+		# --- Act VIII: Liberty Heights ---
+		"paragon_no_heroes_kills": 0.0,  # Paragon slain on Liberty Heights with no Super at his side (No More Heroes)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

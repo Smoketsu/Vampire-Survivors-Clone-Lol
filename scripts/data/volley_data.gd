@@ -203,6 +203,9 @@ const CLASSES := {
 	# --- Act VII: Castle Sanguis ---
 	"blood_spawn": {"trigger": "attack", "every": 4, "pattern": "fan", "counts": [3, 4], "spread": 40.0, "speed": 300.0,
 		"life": 0.4, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.88, 0.22, 0.31)},  # TUNING (not in GDD) a spray of blood-red claw shards every fourth blow
+	# --- Act VIII: Liberty Heights ---
+	"fallen_hero": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [6, 8], "speed": 280.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul shards off every slam
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -260,6 +263,9 @@ const EVOLVED := {
 	# --- Act VII: Castle Sanguis ---
 	"nosferatu": {"trigger": "attack", "every": 3, "pattern": "ring", "counts": [8], "speed": 280.0,
 		"life": 0.45, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a soul-lit ring of blood every third blow
+	# --- Act VIII: Liberty Heights ---
+	"black_paragon": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 320.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a full ring of soul-fire off every slam
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -355,6 +361,9 @@ const SPELLS := {
 	# --- Act VIII: Fort Kessler ---
 	"bone_mines": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [5, 7, 10], "speed": 220.0,
 		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) a ring of bone splinters with every third drop (Palette.BONE)
+	# --- Act VIII: Liberty Heights ---
+	"heros_fist": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 260.0,
+		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of knuckle-sparks with every other cast
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

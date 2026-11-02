@@ -1191,3 +1191,17 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-02 22:01,player/fallen_sergeant_untouchable,gpt-image-2.5-flare,medium,1024x1024,1,182,1024,439,0.0223,fallen_sergeant_untouchable.png
 2026-11-02 22:01,player/fallen_sergeant_hyper,gpt-image-2.5-flare,medium,1024x1024,1,181,1024,439,0.0223,fallen_sergeant_hyper.png
 2026-11-02 22:01,player/fallen_sergeant_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,172,1024,439,0.0222,fallen_sergeant_deathlord.png
+2026-11-02 22:05,city/atlas,gpt-image-2.5-flare,medium,1024x1024,2,545,618,439,0.0208,atlas.png
+2026-11-02 22:05,city/aurora,gpt-image-2.5-flare,medium,1024x1024,2,616,644,439,0.0214,aurora.png
+2026-11-02 22:05,city/nightjar,gpt-image-2.5-flare,medium,1024x1024,2,573,676,439,0.0214,nightjar.png
+2026-11-02 22:05,city/conscript,gpt-image-2.5-flare,medium,1024x1024,2,517,226,439,0.0176,conscript.png
+2026-11-02 22:06,bosses/paragon,gpt-image-2.5-flare,medium,1024x1024,2,613,937,439,0.0237,paragon.png
+2026-11-02 22:06,player/revenant_heroine,gpt-image-2.5-flare,medium,1024x1024,1,640,9,439,0.0164,revenant_heroine.png
+2026-11-02 22:06,summons/fallen_hero,gpt-image-2.5-flare,medium,1024x1024,1,543,12,439,0.0160,fallen_hero.png
+2026-11-02 22:06,icons/liberty_heights_violet,gpt-image-2.5-flare,medium,1024x1024,1,368,4,439,0.0150,icons_violet.png
+2026-11-02 22:06,icons/liberty_heights_gold,gpt-image-2.5-flare,medium,1024x1024,1,402,4,439,0.0152,icons_gold.png
+2026-11-02 22:07,bosses/paragon,gpt-image-2.5-flare,medium,1024x1024,2,623,937,439,0.0238,paragon.png
+2026-11-02 22:07,player/revenant_heroine_hyper,gpt-image-2.5-flare,medium,1024x1024,1,176,1024,439,0.0222,revenant_heroine_hyper.png
+2026-11-02 22:08,player/revenant_heroine_untouchable,gpt-image-2.5-flare,medium,1024x1024,1,201,1024,439,0.0224,revenant_heroine_untouchable.png
+2026-11-02 22:08,player/revenant_heroine_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,304,1024,439,0.0229,revenant_heroine_deathlord.png
+2026-11-02 22:08,summons/black_paragon,gpt-image-2.5-flare,medium,1024x1024,1,233,1024,439,0.0225,black_paragon.png

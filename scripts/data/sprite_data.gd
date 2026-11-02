@@ -478,6 +478,18 @@ const HEIGHTS: Dictionary = {
 	"structures/kessler_mine": 9.0,  # TUNING (not in GDD) a minefield mine (Minefields), an olive disc; its red lamp is code
 	"spells/bone_mine": 9.0,  # TUNING (not in GDD) a Bone Mines mine, a bone disc; its violet lamp is code
 	"decals/fk_sandbags": 16.0,  # TUNING (not in GDD) a sandbag wall decal (FortKesslerGround), 44 long
+	# --- Act VIII: Liberty Heights ---
+	"city/atlas": 54.0,  # TUNING (not in GDD) elite Super, male strongman: broad and tall (Blitz 44)
+	"city/aurora": 48.0,  # TUNING (not in GDD) elite Super, female (figure redesign): body ~44, the hair and cape above; she hovers (glide strip, bust and hip box sway)
+	"city/nightjar": 48.0,  # TUNING (not in GDD) elite Super, male vigilante: the cowl and the spread cloak
+	"city/conscript": 32.0,  # TUNING (not in GDD) army fodder (the rifleman 40, the thug 30): the bayonet above
+	"bosses/paragon": 64.0,  # TUNING (not in GDD) boss tier, male: the strongest man alive, the cape behind
+	"player/revenant_heroine": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign): body ~50, the hair above
+	"player/revenant_heroine_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold and white
+	"player/revenant_heroine_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/revenant_heroine_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/fallen_hero": 46.0,  # TUNING (not in GDD) a raised Super (male): the tattered cape behind
+	"summons/black_paragon": 54.0,  # TUNING (not in GDD) its evolution, taller
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

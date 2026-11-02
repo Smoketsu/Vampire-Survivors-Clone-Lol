@@ -2214,6 +2214,7 @@ and the owner's review.
   before one flees the streets) unlocks the Act VIII counter-passive **Kevlar Bones** (the city's guns hurt your
   summons less).
 - **Wrecks** now cover their whole footprint (60 x 38 art for the 52 x 36 wreck).
+
 ### Act VIII: Fort Kessler (Stage 23)
 
 <!-- --- Act VIII: Fort Kessler --- -->
@@ -2246,6 +2247,36 @@ review.
   where one drops; skins Golden Sergeant, Untouchable, Deathlord). The achievement **Broken Arrow** (kill Harrow before
   his strike lands) unlocks the Act VIII counter-passive **Armour-Piercing Bones** (your summons' blows ignore part of
   every armoured front; offered only in Act VIII).
+
+### Act VIII: Liberty Heights (Stage 24)
+
+<!-- --- Act VIII: Liberty Heights --- -->
+**Liberty Heights** (Stage 24, the finale of Act VIII; GDD §15.0 "Liberty Heights (Act VIII phase 2)" and the rows
+after it; built, still hidden until the Act VIII integration). The heart of the city in four zones on the clock, each
+a new look over the same streets (towers and plazas, a quarter of the lots open): **the Plaza**, **the Rooftops**,
+**the Tower Lobby** and **the Watchtower**. The escalation starts high: the army from 0:00 (so only the opening crowd
+of civilians runs) and the heroes from 15:00. The army's kinds: the stage's own **Conscripts** (bayonets, in crowds),
+rifle squads and tanks (Fort Kessler's Machine Gunners and Attack Helicopters join as guests once that stage is in).
+**The Supers lead one zone each as its miniboss** (a chest when they fall): **Blitz** in the Plaza, **Aurora** on the
+Rooftops ("Flies. Falls when stunned.": a flier who rains energy blasts on your ring; any stun drops her out of the
+sky and she is exposed until she rises), **Atlas** in the Tower Lobby ("Strong. Slow to throw.": he lifts a wreck off
+the street, or a parked car, and throws it at your spot; stun him during the long wind-up and he drops it, exposed)
+and **Nightjar** at the Watchtower ("Grapples. Must land to strike.": he reels your dead out of the ring with his
+grapple, then lands beside them; a blocker summon or a stun while he is landed exposes him). At 3:00 left
+**Paragon, the Last Hero** descends: **the Hero** (he flies over your ring, cuts telegraphed heat-vision lines through
+it and punches your biggest summon across the arena), **Hope** (every roster Super you have not killed this run flies
+to his side, and he cannot be harmed while they stand: kill them earlier and this phase is short) and **No
+Restraint** (the sky turns white, and he dives from orbit onto telegraphed craters that crack the streets). When he
+falls the living have no one left to defend them (a short ending text, no epilogue). Rewards: the spell **Hero's
+Fist** (a spectral fist slams the strongest foe and sends it flying through the rest; evolves into **Doomsday**: two
+fists, and every flung foe lands in a crater, with **Secret Identity**: the fist strikes sooner and the flung foe hits
+harder), the character **the Revenant Heroine** (Back From the Dead: one more fist), the summon class **the Fallen
+Hero** (raised heroes that fly around your ring and slam into packs; evolves into **Black Paragon**, whose slams stun
+and chain on to the next pack, with **Origin Story**: every summon's special reaches wider) and its Ossuary mastery,
+and the achievement **No More Heroes** (beat Paragon with no Super at his side: the title Bane of Heroes). Autotest:
+`--stage=liberty_heights`, `--boss=paragon`, `--spells=heros_fist`, `--classes=fallen_hero`,
+`--character=revenant_heroine`, `--spawn=atlas@T`, `aurora@T`, `nightjar@T`, `conscript@T`; lines `liberty heights`,
+`liberty heights events`, `liberty heights supers`, `paragon`, `heros fist`, `fallen hero`.
 
 ### The illustrated epilogue
 
@@ -2961,6 +2992,10 @@ scripts/
     fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
                             sandbags)
     fort_kessler_glyphs.gd  Code fallbacks of General Harrow's art
+    liberty_heights_glyphs.gd  Liberty Heights's textures (the thrown car, the crack decal, Hero's Fist) and
+                            Paragon's code fallback (Act VIII)
+    liberty_heights_report.gd  The autotest's Liberty Heights lines (liberty heights, supers, paragon) and the
+                            Hero's Fist / Fallen Hero lines (Act VIII)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
                             the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
@@ -3051,6 +3086,8 @@ scripts/
                             Succubus): the thrall, its return, Heartbreaker and Unholy Desire's burst
     behaviors/archfiend_behavior.gd  Act VI: the Archfiend's Hellfire Cleave (the Prince of Hell's full circle and dread)
     behaviors/blood_spawn_behavior.gd  Act VII: the Blood Spawn's Bloodthirst (Nosferatu's spill; Thirst Eternal's key)
+    behaviors/fallen_hero_behavior.gd  Act VIII: the Fallen Hero's Hero's Slam (the orbit, the dive on the densest pack;
+                            Black Paragon's stun and chain; Origin Story's key)
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
@@ -3265,6 +3302,14 @@ scripts/
       mammoth_kit.gd        Mammoth, Fort Kessler's miniboss: two turrets, the largest wreck
       boss_harrow.gd        General Vance Harrow: the command car and carpet bombing, the power armour, the tank
                             column, Broken Arrow and its strike
+      atlas_kit.gd, aurora_kit.gd, nightjar_kit.gd  Liberty Heights's Supers (shared rows): Atlas's lift
+                            (CityBlocks.remove_wreck()) and throw, Aurora's flight, blasts and fall, Nightjar's
+                            grapple (the held hook) and landing; each weakness calls expose()
+      conscript_kit.gd      Liberty Heights's army fodder
+      liberty_heights_director.gd  Liberty Heights: the zone Supers (call_next(), promoted to the zone's miniboss),
+                            the guest squads, the cracks of Paragon's craters
+      boss_paragon.gd       Paragon: the Hero (heat vision, the punch's fling), Hope (the roster Supers not yet
+                            killed), No Restraint (the dives, the craters); paragon_sky.gd draws the white sky
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3565,6 +3610,8 @@ scripts/
     don_marrow_data.gd      Don Marrow's arrival and fight (the Bounty, the Call, the Last Stand) (Act VIII)
     hearse_run_data.gd      Hearse Run / Funeral Procession / Black Car / Last Ride / Kevlar Bones ids and rules
                             (Act VIII)
+    paragon_data.gd         Paragon, the Last Hero: arrival, three phases and ending (Act VIII)
+    heros_fist_data.gd      Hero's Fist / Doomsday / Secret Identity / Back From the Dead rules (Act VIII)
     black_sun_data.gd       Black Sun / Eclipse of Heaven rules, Stolen Dawn keys, Night Prayer key (Act V)
     lilith_data.gd          Lilith's arrival, fight (charm waves, the kiss, children, her true form) (Act VI)
     tempt_data.gd           The Enthrall path and Temptation / Unholy Desire rules, Velvet Chains keys,

@@ -71,6 +71,9 @@
 ## and Act VIII's (Fort Kessler, FORT_KESSLER_IDS: stepped only; its own
 ## autotest line, FortKesslerReport.item_lines()):
 ##   Bone Mines       -> BoneMines        (evolves into Killing Ground)
+## and Act VIII's (Liberty Heights, LIBERTY_HEIGHTS_IDS: stepped only; its own
+## autotest line, LibertyHeightsReport.item_lines()):
+##   Hero's Fist      -> HerosFist        (evolves into Doomsday)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -176,6 +179,10 @@ const SKID_ROW_IDS := ["hearse_run"]
 ## kill or after-physics hook), reported by FortKesslerReport. Its id is
 ## "bone_mines" (never the minefield's "kessler_mine").
 const FORT_KESSLER_IDS := ["bone_mines"]
+# --- Act VIII: Liberty Heights ---
+## Liberty Heights's unlockable spell (Paragon's reward): stepped only (no kill
+## or after-physics hook), reported by LibertyHeightsReport.
+const LIBERTY_HEIGHTS_IDS := ["heros_fist"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -228,6 +235,8 @@ const SOURCES := {
 	"hearse_run": ["hearse_run", "funeral_procession"],
 	# --- Act VIII: Fort Kessler ---
 	"bone_mines": ["bone_mines", "killing_ground", "killing_ground_shards"],
+	# --- Act VIII: Liberty Heights ---
+	"heros_fist": ["heros_fist", "heros_fist_fling", "doomsday", "doomsday_crater"],
 }
 
 ## Owning run.
@@ -375,6 +384,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # Fort Kessler's spell.
+	# --- Act VIII: Liberty Heights ---
+	for id: String in LIBERTY_HEIGHTS_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Liberty Heights's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -465,6 +483,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act VIII: Fort Kessler ---
 		"bone_mines":
 			node = BoneMines.new()  # Fort Kessler's spell.
+		# --- Act VIII: Liberty Heights ---
+		"heros_fist":
+			node = HerosFist.new()  # Liberty Heights's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

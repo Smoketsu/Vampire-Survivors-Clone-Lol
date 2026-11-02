@@ -315,6 +315,11 @@ var skid_row: SkidRowDirector = null
 ## Fort Kessler's mechanics (Act VIII: the minefields, Mammoth, the Broken
 ## Arrow objective; StageRegistry "fort_kessler"; null on every other stage).
 var fort_kessler: FortKesslerDirector = null
+# --- Act VIII: Liberty Heights ---
+## Liberty Heights's mechanics (Act VIII: the zone Supers, Fort Kessler's guest
+## squads, the cracks of Paragon's craters; StageRegistry "liberty_heights";
+## null on every other stage).
+var liberty_heights: LibertyHeightsDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -495,6 +500,12 @@ func _ready() -> void:
 		fort_kessler.game = game
 		fort_kessler.config = stage_def["fort_kessler"]
 		add_child(fort_kessler)  # Fort Kessler's director.
+	# --- Act VIII: Liberty Heights ---
+	if not (stage_def.get("liberty_heights", {}) as Dictionary).is_empty():
+		liberty_heights = LibertyHeightsDirector.new()
+		liberty_heights.game = game
+		liberty_heights.config = stage_def["liberty_heights"]
+		add_child(liberty_heights)  # Liberty Heights's director.
 
 
 # =====================================================================================
@@ -633,6 +644,9 @@ func step(delta: float) -> void:
 	# --- Act VIII: Fort Kessler ---
 	if fort_kessler != null:
 		fort_kessler.step(delta)  # The minefields, Mammoth.
+	# --- Act VIII: Liberty Heights ---
+	if liberty_heights != null:
+		liberty_heights.step(delta)  # The zone Supers, guest squads.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -768,6 +782,9 @@ func objective_text() -> String:
 	# --- Act VIII: Fort Kessler ---
 	if fort_kessler != null and fort_kessler.objective_override() != "":
 		return fort_kessler.objective_override()  # Broken Arrow's countdown, Mammoth.
+	# --- Act VIII: Liberty Heights ---
+	if liberty_heights != null and liberty_heights.objective_override() != "":
+		return liberty_heights.objective_override()  # A zone's Super.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]

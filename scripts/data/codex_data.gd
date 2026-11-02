@@ -68,7 +68,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act VI: Pandemonium --- (a silhouette naming its unlock until met)
 		"archfiend",
 		# --- Act VII: Castle Sanguis --- (a silhouette naming its unlock until met)
-		"blood_spawn"]
+		"blood_spawn",
+		# --- Act VIII: Liberty Heights --- (a silhouette naming its unlock until met)
+		"fallen_hero"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -254,9 +256,13 @@ const CITY_SWAT: Array[String] = ["swat_breacher", "field_medic"]
 const CITY_ARMY: Array[String] = ["rifleman", "tank",
 	# --- Act VIII: Fort Kessler --- (Mammoth, the miniboss, with the army: the
 	# Last Line tab has no champions section)
-	"machine_gunner", "attack_helicopter", "mammoth"]
+	"machine_gunner", "attack_helicopter", "mammoth",
+	# --- Act VIII: Liberty Heights ---
+	"conscript"]
 ## The heroes (tier "heroes": the Supers).
-const CITY_HEROES: Array[String] = ["blitz"]
+const CITY_HEROES: Array[String] = ["blitz",
+	# --- Act VIII: Liberty Heights --- (the zones' Supers; each leads one as its miniboss there)
+	"aurora", "atlas", "nightjar"]
 ## Last Line stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const CITY_BOSSES: Array[String] = ["don_marrow", "harrow", "paragon"]
 
@@ -468,6 +474,11 @@ const DESCRIPTIONS: Dictionary = {
 	"machine_gunner": "He sets up his gun and sweeps a fire lane across your ring. Step out of the lane, or put a Bone Wall in it.",  # Owner-approved Act VIII proposal
 	"attack_helicopter": "Strafing runs down the street and rocket pods ahead of it. Swords can barely reach it: Gargoyles, Archers and spells bring it down.",  # Owner-approved Act VIII proposal
 	"mammoth": "A super-heavy tank with two turrets. Its front shrugs off blows; hit it from the side, and it burns into the biggest wreck in the city.",  # Owner-approved Act VIII proposal
+	# --- Act VIII: Liberty Heights ---
+	"atlas": "A strongman who lifts wrecks and throws them at you. Strong, but slow to throw: stun him while he winds up.",  # Owner-approved Act VIII proposal (Supers)
+	"aurora": "A flier who rains energy blasts on your ring. Any stun drops her out of the sky, and she is open until she rises.",  # Owner-approved Act VIII proposal (Supers)
+	"nightjar": "A vigilante who grapples your dead out of the ring. He must land to strike: hold him there with a blocker.",  # Owner-approved Act VIII proposal (Supers)
+	"conscript": "Young Guardsmen with bayonets, sent in crowds to hold the heart of the city.",  # TUNING (not in GDD) Liberty Heights's army fodder
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -707,6 +718,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"no_witnesses": "ach_no_witnesses",  # TUNING (not in GDD)
 	# --- Act VIII: Fort Kessler ---
 	"broken_arrow": "ach_broken_arrow",  # TUNING (not in GDD)
+	# --- Act VIII: Liberty Heights ---
+	"no_more_heroes": "ach_no_more_heroes",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -760,6 +773,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"no_witnesses": "kevlar_bones",
 	# --- Act VIII: Fort Kessler ---
 	"broken_arrow": "armour_piercing_bones",
+	# --- Act VIII: Liberty Heights ---
+	"no_more_heroes": "heros_fist",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

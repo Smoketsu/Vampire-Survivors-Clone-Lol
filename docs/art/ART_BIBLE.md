@@ -2886,6 +2886,7 @@ repetition. Street pieces tile along their length and rotate 90 degrees for the 
 checked on a 1280x720 mock of the grid (`docs/act8/art_mock_city.png`: buildings 256x192, streets 192, alleys 80); contact
 sheet `docs/act8/art_contact_sheet.png`. `art_check.py` rows against the older stages' floors fail the lightness gap for
 the dark armour (those floors are other acts'); on the city's own street (L 0.24) riot, SWAT and rifle armour read.
+
 ### Act VIII: Skid Row (phase 2, Nov 2026)
 
 <!-- --- Act VIII: Skid Row --- -->
@@ -2915,6 +2916,7 @@ parapet; roof style `precinct`), `decals/skid_row_stall` (34x26, a Night Market 
 grey so code tints it neon pink or cyan) and `decals/skid_row_footing` (18x18, an overpass pillar's flat footing plate
 with a hazard ring: flat paint, since nothing on the floor may look solid). The Overpass's deck shadow and the zones'
 paint are code (`SkidRowGround`). Contact sheet `docs/act8/skid_row_contact_sheet.png`. **For the owner's review.**
+
 ### Act VIII: Fort Kessler (Stage 23; Act VIII phase 2, Nov 2026)
 
 <!-- --- Act VIII: Fort Kessler --- -->
@@ -2946,6 +2948,37 @@ signs, apron taxi lines and helipads) are code on the ground layer, drawn only w
 gold icon sheet came back with an extra copy of the reference badge, skipped. 12 API images, about $0.27 (ledger), no
 redos, no refusals. Contact sheet `docs/act8/fort_kessler_contact_sheet.png`. **For the owner's review.**
 
+### Act VIII: Liberty Heights (phase 2, Nov 2026)
+
+<!-- --- Act VIII: Liberty Heights --- -->
+Stage 24's kinds, boss and rewards (GDD §15.0 "Liberty Heights (Act VIII phase 2)" and the rows after it), matched to the
+approved concepts `act8_lineup.png` (the Supers) and `act8_boss.png` (Paragon). The Supers are open nods with no emblem, logo,
+letter, bat shape or lightning bolt; every prompt names the sex; the women are in the figure-redesign style (clothed, chest
+and hips covered). Prompts, the rebuild script and the badge sheets are in `art_source/liberty_heights/` (`make_art.py`:
+units through `prepare_sprite.py --ink-l 0.15` with explicit ramps, the women through `pixelate_source.py` first, badges set on
+the approved violet / gold frames, `walk_cycle.py` strips and idle strips under `# --- Act VIII: Liberty Heights ---`).
+`--ref` the foundation's Blitz / field medic / rifleman sprite plus a crop of the concept for the Supers, the Conscript and
+Paragon; the Wither Witch for the heroine; the Blood Spawn for the Fallen Hero; the base sprite for the skins and Black Paragon.
+14 API images, about $0.28 (ledger). Contact sheet `docs/act8/liberty_heights_contact_sheet.png`.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `city/atlas` | male strongman: bald, bearded, green-and-gold sleeveless suit, gold arm bands and boots | 40x54 | legs (hip 34); ramps moss, gold, skin, brown |
+| `city/aurora` | **female**, figure style: blonde flier, white-and-gold suit, flowing cape, glowing hands | 38x48 | robe glide (hip 30), bust box (19-30, rows 9-16), idle strip |
+| `city/nightjar` | male vigilante: charcoal-and-purple armour, hood, round cyan goggles, scarf, grapple gun | 66x48 | legs (hip 29); concrete ramp for the charcoal (asphalt sank on the street) |
+| `city/conscript` | male army fodder: olive fatigues, helmet, bayoneted rifle | 32x32 | legs (hip 19) |
+| `bosses/paragon` | male: blond, white-and-silver suit, gold trim, royal-blue cape, red eyes | 76x64 | robe (hip 40); first source had the heat-vision beams drawn in, redone with "NO beams" (the beams are code) |
+| `player/revenant_heroine` | **female**, figure style: grey-pale raised heroine, dark-blue and silver suit, tattered cape, soul-teal fist | 38x56 | legs (hip 33), bust (15-30, rows 13-21) + `swish` (12-32, rows 24-32), idle strip |
+| `player/revenant_heroine_hyper` / `_untouchable` / `_deathlord` | Golden Age Heroine (gold and white), the white phantom, the Deathlord (black iron, crown, crimson sash) | 38 / 36 / 40 x56 | rigs derived (`SKINS`); the Deathlord `velvet` first and `--no-levels` |
+| `summons/fallen_hero` | male raised hero: grey skin, torn charcoal-and-silver suit, tattered cape, flying pose | 54x46 | robe (hip 30); the source faced left and was mirrored |
+| `summons/black_paragon` | the same in black and silver, soul-fire fists | 62x54 | robe (hip 34); mirrored source |
+| `icons/heros_fist`, `secret_identity`, `fallen_hero`, `origin_story` | violet badges | 32x32 | |
+| `icons/doomsday`, `black_paragon`, `ach_no_more_heroes` | gold badges | 32x32 | |
+
+Code-drawn (no PNG): the heat-vision beams (the headlight gradient in siren red), the thrown car (the wreck sprite), the crack
+decal (a made texture), Hero's Fist (discs), the white sky (an additive rect). Known for the art review: the heroine, the Fallen
+Hero and Black Paragon are dark (the `art_check.py` lightness rows against the older acts' floors fail; on the city's asphalt
+they read), and the Deathlord skin's face is small.
 ### Act VII art review, round 1 (Group B: figures)
 - Redone from the old source as the reference with "ONLY ONE figure" in the prompt; prompts updated in `art_source/ravensmoor/*.txt`, `art_source/court/blood_knight.txt`, `art_source/castle_sanguis/{nosferatu,dhampir_deathlord}.txt`.
 - Black coats (Nosferatu, both Deathlord skins) need the `velvet` ramp first and `--no-levels`; with `grey` alone they snap to mid grey.

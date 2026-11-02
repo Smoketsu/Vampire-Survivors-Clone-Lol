@@ -436,7 +436,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VIII: Skid Row ---
 	"no_witnesses",
 	# --- Act VIII: Fort Kessler ---
-	"broken_arrow"]
+	"broken_arrow",
+	# --- Act VIII: Liberty Heights ---
+	"no_more_heroes"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -645,6 +647,16 @@ const ACHIEVEMENTS := {
 	# broken_arrow_runs). It unlocks the counter-passive Armour-Piercing Bones.
 	"broken_arrow": {"display_name": "Broken Arrow", "description": "Kill General Harrow before his strike lands",
 		"stat": "broken_arrow_runs", "goal": 1, "unlock": "The Armour-Piercing Bones passive", "bounty": 300},  # Owner-approved Act VIII proposal; bounty TUNING (not in GDD) as Coffin Nails
+	# --- Act VIII: Liberty Heights ---
+	# The finale of Act VIII (owner-approved Act VIII proposal: "No More Heroes
+	# (beat Paragon with no Super at his side)"; brief: "every roster Super
+	# killed before Hope begins"): BossParagon counts paragon_no_heroes_kills
+	# when he falls on Liberty Heights and his Hope called no Super (MetaProgress
+	# keeps the lifetime count). No epilogue part (owner decision Oct 31, 2026):
+	# it records the clear with the title Bane of Heroes (UnlockData /
+	# TitleData).
+	"no_more_heroes": {"display_name": "No More Heroes", "description": "Beat Paragon at Liberty Heights with no Super at his side",
+		"stat": "paragon_no_heroes_kills", "goal": 1, "unlock": "The title Bane of Heroes", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
 }
 
 # --- Content wave 2: B. Achievement rewards ---
