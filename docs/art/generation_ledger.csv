@@ -1160,3 +1160,5 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-02 18:21,player/moon_huntress_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,379,1024,439,0.0233,huntress_dl.png
 2026-11-02 18:21,bosses/vargr,gpt-image-2.5-flare,medium,1024x1024,1,726,1024,439,0.0250,vargr.png
 2026-11-02 18:21,player/dhampir_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,332,1024,439,0.0230,dhampir_dl.png
+2026-11-02 21:39,player/fallen_saint_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,498,2048,439,0.0320,fsd_a.png
+2026-11-02 21:40,player/fallen_saint_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,498,2048,439,0.0320,fsd_b.png
