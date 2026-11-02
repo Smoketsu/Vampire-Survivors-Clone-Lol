@@ -298,6 +298,11 @@ var witchwood: WitchwoodDirector = null
 ## Chiropteran King, guest squads; StageRegistry "castle_sanguis"; null on
 ## every other stage).
 var castle_sanguis: CastleSanguisDirector = null
+# --- Act VIII: Liberty Heights ---
+## Liberty Heights's mechanics (Act VIII: the zone Supers, Fort Kessler's guest
+## squads, the cracks of Paragon's craters; StageRegistry "liberty_heights";
+## null on every other stage).
+var liberty_heights: LibertyHeightsDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -466,6 +471,12 @@ func _ready() -> void:
 		castle_sanguis.game = game
 		castle_sanguis.config = stage_def["castle_sanguis"]
 		add_child(castle_sanguis)  # Castle Sanguis's director.
+	# --- Act VIII: Liberty Heights ---
+	if not (stage_def.get("liberty_heights", {}) as Dictionary).is_empty():
+		liberty_heights = LibertyHeightsDirector.new()
+		liberty_heights.game = game
+		liberty_heights.config = stage_def["liberty_heights"]
+		add_child(liberty_heights)  # Liberty Heights's director.
 
 
 # =====================================================================================
@@ -598,6 +609,9 @@ func step(delta: float) -> void:
 	# --- Act VII: Castle Sanguis ---
 	if castle_sanguis != null:
 		castle_sanguis.step(delta)  # The Banquet's fountains, guest squads.
+	# --- Act VIII: Liberty Heights ---
+	if liberty_heights != null:
+		liberty_heights.step(delta)  # The zone Supers, guest squads.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -727,6 +741,9 @@ func objective_text() -> String:
 	# --- Act VII: Castle Sanguis ---
 	if castle_sanguis != null and castle_sanguis.objective_override() != "":
 		return castle_sanguis.objective_override()  # The Chiropteran King, the Waking.
+	# --- Act VIII: Liberty Heights ---
+	if liberty_heights != null and liberty_heights.objective_override() != "":
+		return liberty_heights.objective_override()  # A zone's Super.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]

@@ -604,3 +604,34 @@ static func is_building(o: Arena.Obstacle) -> bool:
 ## Lot indices whose lot overlaps `rect` (inclusive range: [from, to]).
 func lot_range(rect: Rect2) -> Array[Vector2i]:
 	return [lot_of(rect.position), lot_of(rect.end)]
+
+
+# --- Act VIII: Liberty Heights ---
+## Wrecks taken off the street by a game event (Atlas lifting one to throw).
+var wrecks_removed: int = 0
+
+
+## The standing wreck nearest to `pos` within `reach` px (its centre), or null
+## (ties: the older wreck). Read only.
+func nearest_wreck(pos: Vector2, reach: float) -> Wreck:
+	var best: Wreck = null
+	var bd := reach
+	for w in wrecks:
+		var dd := w.obstacle.center.distance_to(pos)
+		if dd <= bd and (best == null or dd < bd):
+			bd = dd
+			best = w
+	return best
+
+
+## Takes wreck `w` off the street (Atlas lifts it to throw: the brief's
+## "add CityBlocks.remove_wreck() additively"): its cell is free again, the
+## layer redraws. False when `w` is no longer standing. The one remove path.
+func remove_wreck(w: Wreck) -> bool:
+	if w == null or not wrecks.has(w):
+		return false
+	wrecks.erase(w)
+	_wrecks.erase(w.key)
+	wrecks_removed += 1
+	dirty = true
+	return true

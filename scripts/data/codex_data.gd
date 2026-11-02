@@ -68,7 +68,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act VI: Pandemonium --- (a silhouette naming its unlock until met)
 		"archfiend",
 		# --- Act VII: Castle Sanguis --- (a silhouette naming its unlock until met)
-		"blood_spawn"]
+		"blood_spawn",
+		# --- Act VIII: Liberty Heights --- (a silhouette naming its unlock until met)
+		"fallen_hero"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -249,9 +251,13 @@ const CITY_POLICE: Array[String] = ["riot_cop", "squad_car"]
 ## SWAT and the Guard's kinds (tier "swat").
 const CITY_SWAT: Array[String] = ["swat_breacher", "field_medic"]
 ## The army's kinds (tier "army").
-const CITY_ARMY: Array[String] = ["rifleman", "tank"]
+const CITY_ARMY: Array[String] = ["rifleman", "tank",
+	# --- Act VIII: Liberty Heights ---
+	"conscript"]
 ## The heroes (tier "heroes": the Supers).
-const CITY_HEROES: Array[String] = ["blitz"]
+const CITY_HEROES: Array[String] = ["blitz",
+	# --- Act VIII: Liberty Heights --- (the zones' Supers; each leads one as its miniboss there)
+	"aurora", "atlas", "nightjar"]
 ## Last Line stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const CITY_BOSSES: Array[String] = ["don_marrow", "harrow", "paragon"]
 
@@ -456,6 +462,11 @@ const DESCRIPTIONS: Dictionary = {
 	"don_marrow": "Don Marrow, the Kingpin: a bounty on your head, a call to the police, and a gold-plated minigun behind his limousine's armour.",  # Owner-approved Act VIII proposal
 	"harrow": "General Vance Harrow, the Hammer: carpet bombing, a tank column, and Broken Arrow, a strike on his own position.",  # Owner-approved Act VIII proposal
 	"paragon": "Paragon, the Last Hero: the strongest man alive, and every hero still standing flies to his side.",  # Owner-approved Act VIII proposal
+	# --- Act VIII: Liberty Heights ---
+	"atlas": "A strongman who lifts wrecks and throws them at you. Strong, but slow to throw: stun him while he winds up.",  # Owner-approved Act VIII proposal (Supers)
+	"aurora": "A flier who rains energy blasts on your ring. Any stun drops her out of the sky, and she is open until she rises.",  # Owner-approved Act VIII proposal (Supers)
+	"nightjar": "A vigilante who grapples your dead out of the ring. He must land to strike: hold him there with a blocker.",  # Owner-approved Act VIII proposal (Supers)
+	"conscript": "Young Guardsmen with bayonets, sent in crowds to hold the heart of the city.",  # TUNING (not in GDD) Liberty Heights's army fodder
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -691,6 +702,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_coven_breaks": "ach_the_coven_breaks",  # TUNING (not in GDD)
 	# --- Act VII: Castle Sanguis ---
 	"last_supper": "ach_last_supper",  # TUNING (not in GDD)
+	# --- Act VIII: Liberty Heights ---
+	"no_more_heroes": "ach_no_more_heroes",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -740,6 +753,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_coven_breaks": "embalmed",
 	# --- Act VII: Castle Sanguis ---
 	"last_supper": "night_swarm",
+	# --- Act VIII: Liberty Heights ---
+	"no_more_heroes": "heros_fist",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

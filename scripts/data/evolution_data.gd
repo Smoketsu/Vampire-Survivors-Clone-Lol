@@ -96,7 +96,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VII: the Witchwood ---
 	"witches_sabbath",
 	# --- Act VII: Castle Sanguis ---
-	"nocturne"]
+	"nocturne",
+	# --- Act VIII: Liberty Heights ---
+	"doomsday"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -665,6 +667,25 @@ const EVOLUTIONS := {
 		"stats": {
 			"bats": 8, "damage": 13.0, "orbit": 58.0, "cooldown": 1.5,  # TUNING (not in GDD) first pass 15 (Nocturne led every source by ~2x in the forced run)
 			"chain": 1, "chain_share": 0.5,  # TUNING (not in GDD) the evolution flag: leaps after each bite and their share of the bite
+		},
+	},
+	# --- Act VIII: Liberty Heights ---
+	# Doomsday (GDD §15.0 "Hero's Fist, Doomsday, Secret Identity and the
+	# Revenant Heroine"; owner-approved proposal "Hero's Fist -> Doomsday (+
+	# Secret Identity)"): Hero's Fist + Secret Identity (a NEW passive, owner
+	# rule: at Lv 5). Two fists, harder and farther, and where a flung foe
+	# lands (or around an unmoved one) a CRATER of `crater` px strikes
+	# crater_share x the damage. Detected by the "crater" key.
+	"doomsday": {
+		"base": "heros_fist",
+		"passive": "secret_identity",
+		"display_name": "Doomsday",
+		"icon": "doomsday",
+		"description": "Two fists fall like the end of the world, and every foe they fling lands in a crater.",
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "fists": "Fists", "fling": "Flung (px)", "fling_share": "Flung foe's hit", "crater": "Crater (px)", "crater_share": "Crater damage"},
+		"stats": {
+			"damage": 110.0, "cooldown": 2.2, "fists": 2, "fling": 240.0, "fling_share": 0.65,  # TUNING (not in GDD)
+			"crater": 64.0, "crater_share": 0.6,  # TUNING (not in GDD) the evolution flag: the crater where a flung foe lands
 		},
 	},
 }

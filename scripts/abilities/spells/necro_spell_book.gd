@@ -65,6 +65,9 @@
 ## and Act VII's (Castle Sanguis, CASTLE_SANGUIS_IDS: stepped only; its own
 ## autotest line, CastleSanguisReport.item_lines()):
 ##   Night Swarm      -> NightSwarm       (evolves into Nocturne)
+## and Act VIII's (Liberty Heights, LIBERTY_HEIGHTS_IDS: stepped only; its own
+## autotest line, LibertyHeightsReport.item_lines()):
+##   Hero's Fist      -> HerosFist        (evolves into Doomsday)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -161,6 +164,10 @@ const WITCHWOOD_IDS := ["witch_circle"]
 ## Castle Sanguis's unlockable spell (Queen Carmilla and the Elder's reward):
 ## stepped only (no kill or after-physics hook), reported by CastleSanguisReport.
 const CASTLE_SANGUIS_IDS := ["night_swarm"]
+# --- Act VIII: Liberty Heights ---
+## Liberty Heights's unlockable spell (Paragon's reward): stepped only (no kill
+## or after-physics hook), reported by LibertyHeightsReport.
+const LIBERTY_HEIGHTS_IDS := ["heros_fist"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -209,6 +216,8 @@ const SOURCES := {
 	"witch_circle": ["witch_circle", "witches_sabbath"],
 	# --- Act VII: Castle Sanguis ---
 	"night_swarm": ["night_swarm", "nocturne", "nocturne_leap"],
+	# --- Act VIII: Liberty Heights ---
+	"heros_fist": ["heros_fist", "heros_fist_fling", "doomsday", "doomsday_crater"],
 }
 
 ## Owning run.
@@ -338,6 +347,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # Castle Sanguis's spell.
+	# --- Act VIII: Liberty Heights ---
+	for id: String in LIBERTY_HEIGHTS_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Liberty Heights's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -422,6 +440,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act VII: Castle Sanguis ---
 		"night_swarm":
 			node = NightSwarm.new()  # Castle Sanguis's spell.
+		# --- Act VIII: Liberty Heights ---
+		"heros_fist":
+			node = HerosFist.new()  # Liberty Heights's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

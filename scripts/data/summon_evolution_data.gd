@@ -77,7 +77,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act VI: Pandemonium ---
 	"prince_of_hell",
 	# --- Act VII: Castle Sanguis ---
-	"nosferatu"]
+	"nosferatu",
+	# --- Act VIII: Liberty Heights ---
+	"black_paragon"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -910,6 +912,46 @@ const EVOLUTIONS := {
 			"drink_share": 0.45,  # TUNING (not in GDD)
 			"spill_share": 0.6,  # TUNING (not in GDD)
 			"spill_radius": 90.0,  # TUNING (not in GDD) px
+		},
+	},
+	# --- Act VIII: Liberty Heights ---
+	# Black Paragon (owner-approved proposal: "the Fallen Hero ... (evolution
+	# Black Paragon)"; GDD §15.0 "The Fallen Hero, Black Paragon and Origin
+	# Story"): Fallen Hero Lv 5 + Origin Story Lv 5 (a NEW passive, own
+	# decision, owner rule: maxed). The dead hero in black and silver with a
+	# ragged black cape, his eyes soul-teal fire. Every slam stuns what it hits
+	# and he flies on to the next pack. FallenHeroBehavior reads these
+	# special_set keys (final):
+	#   chain_slams     — more packs he slams before landing (each within
+	#                     FallenHeroBehavior.CHAIN_RANGE px of the last);
+	#   slam_stun       — s every foe a slam hits is stunned
+	#                     (CombatResolver.stun_enemy());
+	#   stun_boss_mult  — x that stun on bosses and minibosses;
+	#   stun_elite_mult — x that stun on elites.
+	"black_paragon": {
+		"mode": "transform",
+		"bases": ["fallen_hero"],
+		"passive": "origin_story",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Black Paragon",  # Owner-approved proposal
+		"plural": "Black Paragons",
+		"icon": "black_paragon",
+		"description": "The last hero, in black: every slam stuns, and he flies on to the next pack.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.35,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 13.0,  # TUNING (not in GDD) Fallen Hero 12
+		},
+		"special_mult": {
+			"slam_radius": 1.2,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"chain_slams": 1,  # TUNING (not in GDD)
+			"slam_stun": 0.6,  # TUNING (not in GDD) s
+			"stun_boss_mult": 0.25,  # TUNING (not in GDD) as the Cathedral Horror's
+			"stun_elite_mult": 0.6,  # TUNING (not in GDD)
 		},
 	},
 }

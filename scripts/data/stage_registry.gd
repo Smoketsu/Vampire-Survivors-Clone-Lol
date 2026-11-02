@@ -254,6 +254,12 @@
 ##   supers             — the Super ids the escalation sends here, in turn
 ##                        (absent = CityRulesData.SUPERS "roster").
 ##   zones              — Act VIII stubs too: the planned zones (names and starts).
+## --- Act VIII: Liberty Heights ---
+##   liberty_heights    — LibertyHeightsDirector config (LibertyHeightsStage
+##                        .LIBERTY_HEIGHTS, Act VIII, Liberty Heights: the zone
+##                        Supers in the roster's order, each promoted to its
+##                        zone's miniboss; guest squads of Fort Kessler's army
+##                        kinds; the cracks of Paragon's craters).
 class_name StageRegistry
 extends RefCounted
 

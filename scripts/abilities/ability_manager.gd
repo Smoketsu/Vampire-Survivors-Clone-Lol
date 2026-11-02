@@ -284,6 +284,12 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	if out.has("orbit"):
 		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(NightSwarmData.OLD_BLOOD, NightSwarmData.HASTE_KEY))
 		out[NightSwarmData.HEAL_KEY] = passive_value(NightSwarmData.OLD_BLOOD, NightSwarmData.HEAL_KEY)
+	# --- Act VIII: Liberty Heights --- Secret Identity: Hero's Fist recharges
+	# sooner and the foe it flings strikes harder (its keys exist only in the
+	# Hero's Fist / Doomsday rows; the passive's values are 0 while not owned).
+	if out.has("fling"):
+		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(HerosFistData.SECRET_IDENTITY, HerosFistData.HASTE_KEY))
+		out["fling_share"] = float(out.get("fling_share", 0.0)) + passive_value(HerosFistData.SECRET_IDENTITY, HerosFistData.FLING_KEY)
 	return out
 
 

@@ -84,7 +84,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act VII: the Witchwood ---
 	"hedge_witch",
 	# --- Act VII: Castle Sanguis ---
-	"dhampir"]
+	"dhampir",
+	# --- Act VIII: Liberty Heights ---
+	"revenant_heroine"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -185,7 +187,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act VII: the Witchwood ---
 	"witch_circle_radius",
 	# --- Act VII: Castle Sanguis ---
-	"swarm_extra_bats"]
+	"swarm_extra_bats",
+	# --- Act VIII: Liberty Heights ---
+	"fist_extra_fists"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -766,6 +770,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": 0.04},  # TUNING (not in GDD) a hardy, quick hunter
 		"sprite": "player/dhampir",
 		"tint": Color(0.86, 0.36, 0.44),  # TUNING (not in GDD) a blood red over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act VIII: Liberty Heights ---
+	# The Revenant Heroine (Hero's Fist's character; owner-approved Act VIII
+	# proposal "Rewards": "Hero's Fist ... | The Revenant Heroine, a raised
+	# superheroine (figure style)"): FEMALE, in the figure-redesign style
+	# (clothed, chest and hips covered): a superheroine raised from the dead,
+	# grey-pale skin, soul-teal glowing eyes, long dark hair, a torn dark-blue
+	# and silver bodysuit with a short tattered cape, gauntlets with soul-teal
+	# light at the knuckles; a nod with NO emblem or logo. Hero's Fist must be
+	# unlocked (Paragon) before she can be earned, by the usual Lv 5 rule. Own
+	# decision on her innate (the proposal names none): she came back once, so
+	# her fist comes down twice (HerosFist.step()).
+	"revenant_heroine": {
+		"display_name": "The Revenant Heroine",  # Owner-approved proposal
+		"title": "She died saving the city. She came back to finish it.",
+		"spell": "heros_fist",
+		"innate": {
+			"id": "back_from_the_dead", "name": "Back From the Dead",
+			"description": "Hero's Fist strikes one more foe.",
+			"values": {"fist_extra_fists": 1.0},  # TUNING (not in GDD) extra fists a cast
+		},
+		"stats": {"max_hp": 10.0, "move_speed": 0.03},  # TUNING (not in GDD) a hero's toughness, still quick
+		"sprite": "player/revenant_heroine",
+		"tint": Color(0.40, 0.62, 0.95),  # TUNING (not in GDD) a hero's blue over the violet
 		"starts_unlocked": false,
 	},
 }

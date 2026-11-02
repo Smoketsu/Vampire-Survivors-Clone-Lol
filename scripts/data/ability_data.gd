@@ -98,7 +98,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act VII: the Witchwood ---
 	"witch_circle",
 	# --- Act VII: Castle Sanguis ---
-	"night_swarm"]
+	"night_swarm",
+	# --- Act VIII: Liberty Heights ---
+	"heros_fist"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -777,6 +779,30 @@ const SPELLS := {
 			{"bats": 5, "damage": 13.0, "orbit": 54.0, "cooldown": 1.6},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act VIII: Liberty Heights ---
+	# Hero's Fist (GDD §15.0 "Hero's Fist, Doomsday, Secret Identity and the
+	# Revenant Heroine"; owner-approved proposal: "a spectral fist slams the
+	# strongest enemy and sends it flying through the rest"; unlocked by
+	# defeating Paragon, UnlockData): every `cooldown` s a spectral fist slams
+	# the strongest foe within HerosFistData.AIM_RANGE px for `damage`, then
+	# sends it `fling` px flying away from the necromancer through the others
+	# (fling_share x the damage to each it passes). Logic: HerosFist; fixed
+	# rules: HerosFistData. A single-target blow that also breaks the pack
+	# behind it.
+	"heros_fist": {
+		"display_name": "Hero's Fist",
+		"icon": "heros_fist",
+		"description": "A spectral fist slams the strongest foe and sends it flying through the rest.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "fling": "Flung (px)", "fling_share": "Flung foe's hit"},
+		"levels": [
+			{"damage": 40.0, "cooldown": 3.0, "fling": 140.0, "fling_share": 0.4},  # TUNING (not in GDD)
+			{"damage": 50.0, "cooldown": 2.85, "fling": 155.0, "fling_share": 0.45},  # TUNING (not in GDD)
+			{"damage": 60.0, "cooldown": 2.7, "fling": 170.0, "fling_share": 0.5},  # TUNING (not in GDD)
+			{"damage": 72.0, "cooldown": 2.55, "fling": 185.0, "fling_share": 0.55},  # TUNING (not in GDD)
+			{"damage": 85.0, "cooldown": 2.4, "fling": 200.0, "fling_share": 0.6},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -805,7 +831,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VII: the Witchwood ---
 	"drain",
 	# --- Act VII: Castle Sanguis ---
-	"chain_share"]
+	"chain_share",
+	# --- Act VIII: Liberty Heights ---
+	"fling_share", "crater_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

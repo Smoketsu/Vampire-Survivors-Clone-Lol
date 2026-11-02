@@ -58,7 +58,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"archfiend",
 		# --- Act VII: Castle Sanguis ---
 		# Unlockable (UnlockData: defeating Queen Carmilla and the Elder), so a fresh save never offers it.
-		"blood_spawn"]
+		"blood_spawn",
+		# --- Act VIII: Liberty Heights ---
+		# Unlockable (UnlockData: defeating Paragon), so a fresh save never offers it.
+		"fallen_hero"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1254,6 +1257,63 @@ const UNITS := {
 			"drink_share": 0.3,  # TUNING (not in GDD) share of each blow's damage it heals (no suffix: the special's scaling leaves it alone)
 		},
 	},
+	# --- Act VIII: Liberty Heights ---
+	# The Fallen Hero (owner-approved proposal: "Finale summon class: the Fallen
+	# Hero, a raised Super who flies around the ring and slams into packs
+	# (evolution Black Paragon)"; GDD §15.0 "The Fallen Hero, Black Paragon and
+	# Origin Story"): a hero of the living raised by the necromancer (MALE, own
+	# decision: a broad dead hero in a torn charcoal-and-silver suit with a
+	# tattered dark cape, grey skin, soul-teal eyes; no emblem). A melee fighter
+	# on the Bone Ring's front posts (formation "front"; no body-block: no
+	# block_radius) whose HERO'S SLAM (FallenHeroBehavior, "hero_slam") flies
+	# it round the ring and down on the densest pack. Unlockable (UnlockData),
+	# then offered on every stage.
+	"fallen_hero": {
+		"display_name": "Fallen Hero",  # Owner-approved proposal
+		"plural": "Fallen Heroes",
+		"description": "Raised heroes that fly around your ring and slam into packs.",  # Card text: one short sentence (owner rule).
+		"max_hp": 110.0,  # TUNING (not in GDD) a hero's body (Warrior 90, Gargoyle 70)
+		"damage": 12.0,  # TUNING (not in GDD) a punch (melee)
+		"attack_interval": 1.0,  # TUNING (not in GDD) s
+		"attack_range": 12.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 98.0,  # TUNING (not in GDD) px/s
+		"radius": 12.0,  # TUNING (not in GDD) px
+		"acquisition_range": 200.0,  # TUNING (not in GDD) px
+		"replenish_interval": 14.0,  # TUNING (not in GDD) s
+		"band_min": 50.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 110.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.05,  # TUNING (not in GDD)
+		"attack_profile": "melee",
+		"target_profile": "skirmisher",
+		"windup": 0.15,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "front",  # Owner-approved proposal: it flies round the ring
+		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2, a heavy class
+		"behavior": "hero_slam",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"slam_damage": 34.0,  # TUNING (not in GDD) AoE damage where it lands
+			"slam_radius": 56.0,  # TUNING (not in GDD) impact radius (px)
+			"slam_cooldown": 6.5,  # TUNING (not in GDD) s between slams
+			"slam_takeoff": 0.25,  # TUNING (not in GDD) s rising in place (already airborne)
+			"slam_orbit": 0.55,  # TUNING (not in GDD) s flying round the ring before the dive
+			"slam_land": 0.3,  # TUNING (not in GDD) s settling after the last slam (still airborne)
+			"slam_speed": 360.0,  # TUNING (not in GDD) flight speed (px/s)
+			"slam_range": 300.0,  # TUNING (not in GDD) px from its necromancer it looks for a pack
+			"slam_min_enemies": 3,  # TUNING (not in GDD) foes around the pick (an elite / boss alone also counts)
+			"slam_knockback": 200.0,  # TUNING (not in GDD) px/s impulse, divided by enemy mass
+			"slam_lift": 22.0,  # TUNING (not in GDD) px the body is drawn above its shadow at full height
+			"slam_shake": 2.0,  # TUNING (not in GDD) screen-shake request (px, Juice)
+			"cluster_bonus": 0.5,  # TUNING (not in GDD) target-score bonus x cluster fullness while the slam is ready
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1482,6 +1542,16 @@ const LEVELS := {
 		{"count": 3, "hp_bonus": 0.2, "damage_bonus": 0.15},
 		{"count": 4, "hp_bonus": 0.25, "damage_bonus": 0.2, "speed_bonus": 0.1},
 		{"count": 5, "hp_bonus": 0.3, "damage_bonus": 0.3, "speed_bonus": 0.15},
+	],
+	# --- Act VIII: Liberty Heights ---
+	# TUNING (not in GDD): 1 -> 3 Fallen Heroes; harder, wider, then more
+	# frequent slams.
+	"fallen_hero": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
 	],
 }
 

@@ -109,3 +109,12 @@ func draw_over(e: Enemy, ci: CanvasItem) -> void:
 		var k := clampf((exposed_until - e.game.elapsed) / maxf(exposed_until - exposed_at, 0.01), 0.0, 1.0)
 		CityGlyphs.draw_crack(ci, e.radius, k)
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+# --- Act VIII: Liberty Heights ---
+## A Super falls (killed, not despawned): the roster's `fallen` list
+## (SuperRoster.note_fallen(); Paragon's Hope calls only the roster Supers not
+## in it).
+func on_killed(e: Enemy) -> void:
+	super.on_killed(e)
+	rules(e).supers.note_fallen(e)

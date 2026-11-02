@@ -196,7 +196,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act VII: the Witchwood ---
 	"moonlit_rite", "embalmed",
 	# --- Act VII: Castle Sanguis ---
-	"old_blood", "thirst_eternal"]
+	"old_blood", "thirst_eternal",
+	# --- Act VIII: Liberty Heights ---
+	"secret_identity", "origin_story"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -234,7 +236,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act VII: the Witchwood ---
 	"embalmed",
 	# --- Act VII: Castle Sanguis ---
-	"thirst_eternal"]
+	"thirst_eternal",
+	# --- Act VIII: Liberty Heights ---
+	"origin_story"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -359,6 +363,9 @@ const AREA_HOLY_SOURCES := {
 	"carmilla_beam": "area",  # TUNING (not in GDD) Queen Carmilla's sweeping drain beam.
 	"elder_buffet": "area",  # TUNING (not in GDD) the Elder's wing buffet.
 	"king_drop": "area",  # TUNING (not in GDD) a summon the Chiropteran King drops.
+	# --- Act VIII: Liberty Heights ---
+	"atlas_throw": "area",  # TUNING (not in GDD) Atlas's thrown car (a landing circle).
+	"paragon_dive": "area",  # TUNING (not in GDD) Paragon's craters from orbit.
 }
 ## Bone Plating: a plated hit always keeps at least this fraction (0..1) of
 ## its damage, so the flat reduction never makes a summon immune to the
@@ -1603,6 +1610,50 @@ const PASSIVES := {
 			{"unit_heal": 0.30},  # TUNING (not in GDD)
 			{"unit_heal": 0.40},  # TUNING (not in GDD)
 			{"unit_heal": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VIII: Liberty Heights ---
+	# Secret Identity (owner-approved proposal: Doomsday's paired passive; own
+	# decision on its rule; GDD §15.0 "Hero's Fist, Doomsday, Secret Identity
+	# and the Revenant Heroine"; unlocked by defeating Paragon, UnlockData):
+	# nobody sees the blow coming: Hero's Fist recharges fist_haste sooner and
+	# the foe it flings strikes the others fist_fling harder (added to the
+	# spell's fling_share; AbilityManager.apply_spell_mods() on the spell rows'
+	# own keys, like Old Blood). Pairs with Hero's Fist -> Doomsday.
+	"secret_identity": {
+		"display_name": "Secret Identity",  # Owner-approved proposal
+		"icon": "secret_identity",
+		"description": "Your fist strikes sooner, and the foes it flings hit harder.",
+		"labels": {"fist_haste": ["Hero's Fist cooldown", "neg_pct"], "fist_fling": ["Flung foe's hit", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"fist_haste": 0.04, "fist_fling": 0.04},  # TUNING (not in GDD)
+			{"fist_haste": 0.08, "fist_fling": 0.08},  # TUNING (not in GDD)
+			{"fist_haste": 0.12, "fist_fling": 0.12},  # TUNING (not in GDD)
+			{"fist_haste": 0.16, "fist_fling": 0.16},  # TUNING (not in GDD)
+			{"fist_haste": 0.20, "fist_fling": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# Origin Story (own decision: Black Paragon's paired passive, its name and
+	# rule; GDD §15.0 "The Fallen Hero, Black Paragon and Origin Story";
+	# unlocked by defeating Paragon): every raised hero remembers how it began:
+	# every class special reaches special_reach wider (its *_radius / *_length
+	# keys; HordeDirector._special_stats(), THE one path of summon special
+	# numbers, its own category beside the level row's special_area; 0 when not
+	# owned, so every other run is unchanged). Works the same on every stage.
+	# Pairs with the Fallen Hero -> Black Paragon.
+	"origin_story": {
+		"display_name": "Origin Story",
+		"icon": "origin_story",
+		"description": "Every summon's special reaches wider.",
+		"labels": {"special_reach": ["Special reach", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"special_reach": 0.05},  # TUNING (not in GDD)
+			{"special_reach": 0.10},  # TUNING (not in GDD)
+			{"special_reach": 0.15},  # TUNING (not in GDD)
+			{"special_reach": 0.20},  # TUNING (not in GDD)
+			{"special_reach": 0.25},  # TUNING (not in GDD)
 		],
 	},
 }

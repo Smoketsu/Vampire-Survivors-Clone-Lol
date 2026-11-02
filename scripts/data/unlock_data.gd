@@ -221,6 +221,18 @@ const UNLOCKS := {
 	"thirst_eternal": {"type": "passive", "boss": "carmilla", "text": "Slay Queen Carmilla and the Elder in Castle Sanguis to unlock."},  # Its paired passive (own decision), unlocked with it
 	"ender_of_the_feast": {"type": "title", "achievement": "last_supper",
 		"text": "Earn Last Supper: beat the Elder in Castle Sanguis."},  # Own decision (the clear is recorded as a title, as Act VI's Sovereign of Pandemonium)
+	# --- Act VIII: Liberty Heights ---
+	# Paragon's fall (owner-approved Act VIII proposal "Rewards": Hero's Fist is
+	# unlocked by Paragon; the finale grants the Fallen Hero): the spell with
+	# its paired passive, and the summon class with its paired passive, offered
+	# on every stage (no card-row "act" key). The title Bane of Heroes is the
+	# No More Heroes achievement's reward.
+	"heros_fist": {"type": "spell", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Owner-approved Act VIII proposal
+	"secret_identity": {"type": "passive", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Hero's Fist's paired passive (owner-approved proposal), unlocked with it
+	"fallen_hero": {"type": "class", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Owner-approved proposal: the finale's reward
+	"origin_story": {"type": "passive", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Its paired passive (own decision), unlocked with it
+	"bane_of_heroes": {"type": "title", "achievement": "no_more_heroes",
+		"text": "Earn No More Heroes: beat Paragon with no Super at his side."},  # Own decision (the clear is recorded as a title, as Act VII's Ender of the Feast)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

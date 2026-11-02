@@ -104,3 +104,28 @@ func _compact() -> void:
 			alive.remove_at(i)
 			_gens.remove_at(i)
 		i -= 1
+
+
+# --- Act VIII: Liberty Heights ---
+## Every Super id KILLED this run (once each, in the order they fell; a Super
+## that returned and fell again is listed once). Paragon's Hope calls every
+## roster Super not in it to his side (BossParagon); No More Heroes needs the
+## whole roster in it before Hope begins.
+var fallen: Array[String] = []
+
+
+## A Super `e` was killed (SuperKit.on_killed()): it joins `fallen`.
+func note_fallen(e: Enemy) -> void:
+	if not fallen.has(e.kind):
+		fallen.append(e.kind)
+	game.stat_add("city_supers_fallen", 1.0)
+
+
+## The roster Supers not yet killed this run (STAGE "supers" order): the ones
+## Paragon's Hope calls to his side.
+func standing_roster() -> Array[String]:
+	var out: Array[String] = []
+	for id in roster:
+		if not fallen.has(id) and not out.has(id):
+			out.append(id)
+	return out
