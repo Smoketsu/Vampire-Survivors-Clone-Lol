@@ -334,8 +334,10 @@ func _on_share() -> void:
 		Sfx.play_ui("denied")
 		return
 	Sfx.play("ui_confirm")
-	var js := "(function(){var u=location.origin+location.pathname+'?%s=%s';navigator.share({title:'Necropathy',text:%s,url:u}).catch(function(){});})()" % [
-		CoopNetData.JOIN_QUERY_KEY, c, JSON.stringify(CoopNetData.SHARE_TEXT % c)]
+	# Every value goes in as a JSON literal (never pasted raw into the script): the
+	# code comes from the relay, so it is untrusted text (adversarial review, Fix 1).
+	var js := "(function(k,c,t){var u=location.origin+location.pathname+'?'+k+'='+encodeURIComponent(c);navigator.share({title:'Necropathy',text:t,url:u}).catch(function(){});})(%s,%s,%s)" % [
+		JSON.stringify(CoopNetData.JOIN_QUERY_KEY), JSON.stringify(c), JSON.stringify(CoopNetData.SHARE_TEXT % c)]
 	JavaScriptBridge.eval(js, true)
 
 

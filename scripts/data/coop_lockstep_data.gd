@@ -62,6 +62,10 @@ const MOVE_STEPS: int = 127  # TUNING (not in GDD)
 const DIR_STEPS: int = 256  # TUNING (not in GDD)
 ## Commands one player can attach to one tick (the rest wait for the next).
 const MAX_COMMANDS_PER_TICK: int = 4  # TUNING (not in GDD)
+## How far ahead of our own tick a partner's input or checksum may be and still be
+## accepted (ticks): the largest input delay plus a full u8 bundle of slack. A
+## frame pointing further ahead is malformed (CoopLockstep._on_frame()).
+const FRAME_AHEAD_MAX: int = DELAY_MAX + 255  # TUNING (not in GDD) adversarial review, Fix 6
 
 # ------------------------------------------------------------------ desync check
 

@@ -777,21 +777,36 @@ static func _put_u32(buf: PackedByteArray, v: int) -> void:
 	buf.encode_u32(at, v & 0xFFFFFFFF)
 
 
-## A frame from the partner: his inputs and checksums.
+## A frame from the partner: his inputs and checksums. The frame is parsed into
+## locals first and applied only when all of it parses: every read is length-checked,
+## a command count above MAX_COMMANDS_PER_TICK, a tick beyond FRAME_AHEAD_MAX or a
+## checksum off the CHECKSUM_INTERVAL grid is malformed, and a malformed frame
+## counts as the partner leaving (_bad_frame()), never a script error or unbounded
+## buffering (adversarial review, Fix 6). An honest partner never trips any check.
 func _on_frame(bytes: PackedByteArray) -> void:
 	if dropped:
 		return
 	frames_received += 1
 	_progress_ms = Time.get_ticks_msec()
-	var at := 0
-	while at < bytes.size():
+	var horizon := tick + CoopLockstepData.FRAME_AHEAD_MAX  # The furthest tick an honest partner can send.
+	var got_inputs: Array = []  # [tick, input] pairs parsed from this frame.
+	var got_sums: Array = []  # [tick, fields] pairs parsed from this frame.
+	var size := bytes.size()  # Frame length (bytes).
+	var at := 0  # Read position (bytes).
+	while at < size:
 		var kind := bytes[at]
 		at += 1
 		if kind == REC_INPUTS:
+			if at + 5 > size:
+				_bad_frame("inputs header")
+				return
 			var first := bytes.decode_u32(at)
 			var n := bytes[at + 4]
 			at += 5
 			for i in n:
+				if at + 3 > size:
+					_bad_frame("input")
+					return
 				var inp := _empty_input()
 				inp["mx"] = bytes.decode_s8(at)
 				inp["my"] = bytes.decode_s8(at + 1)
@@ -799,33 +814,67 @@ func _on_frame(bytes: PackedByteArray) -> void:
 				inp["b"] = b
 				at += 3
 				if b & BTN_DIR:
+					if at + 1 > size:
+						_bad_frame("direction")
+						return
 					inp["dir"] = bytes[at]
 					at += 1
 				if b & BTN_CMD:
-					var nc := bytes[at]
+					if at + 1 > size:
+						_bad_frame("command count")
+						return
+					var nc := bytes[at]  # Commands attached to this tick.
 					at += 1
+					if nc > CoopLockstepData.MAX_COMMANDS_PER_TICK or at + nc * 2 > size:
+						_bad_frame("commands")
+						return
 					var cmds: Array = []
 					for _k in nc:
 						cmds.append([int(bytes[at]), int(bytes[at + 1])])
 						at += 2
 					inp["cmds"] = cmds
 				var t := first + i
-				if t >= tick:
-					_inputs[remote][t] = inp
-				_remote_high = maxi(_remote_high, t)
+				if t > horizon:
+					_bad_frame("input tick %d" % t)
+					return
+				got_inputs.append([t, inp])
 		elif kind == REC_CHECKSUM:
+			if at + 5 > size:
+				_bad_frame("checksum header")
+				return
 			var t := bytes.decode_u32(at)
 			var n := bytes[at + 4]
 			at += 5
+			if at + n * 4 > size:
+				_bad_frame("checksum")
+				return
+			if t > horizon or t % CoopLockstepData.CHECKSUM_INTERVAL != 0:
+				_bad_frame("checksum tick %d" % t)
+				return
 			var f := PackedInt64Array()
 			for i in n:
 				f.append(bytes.decode_u32(at))
 				at += 4
-			_their_sums[t] = f
-			_compare(t)
+			got_sums.append([t, f])
 		else:
-			push_error("CoopLockstep: unknown record %d in a partner frame" % kind)
+			_bad_frame("record %d" % kind)
 			return
+	for pair: Array in got_inputs:
+		var t: int = pair[0]
+		if t >= tick:
+			_inputs[remote][t] = pair[1]
+		_remote_high = maxi(_remote_high, t)
+	for pair: Array in got_sums:
+		_their_sums[pair[0]] = pair[1]
+		_compare(pair[0])
+
+
+## A partner frame that does not parse (`what` names the part, for the log): the
+## partner is treated as gone (the army bot takes his necromancer over), the same
+## clean path as a lost connection.
+func _bad_frame(what: String) -> void:
+	push_warning("CoopLockstep: malformed partner frame (%s); the partner is dropped" % what)
+	_on_partner_gone("stall")
 
 
 ## A round-trip sample from CoopNet's pings (ms): feeds the jitter estimate.
@@ -916,7 +965,10 @@ func _compare(t: int) -> void:
 	_own_sums.erase(t)
 	_their_sums.erase(t)
 	compared += 1
-	for i in mini(a.size(), b.size()):
+	if a.size() != b.size():  # Both builds hash the same fields: a different count is a mismatch too.
+		_desync(t, "field count", a.size(), b.size())
+		return
+	for i in a.size():
 		if a[i] != b[i]:
 			_desync(t, CoopLockstepData.CHECKSUM_FIELDS[i] if i < CoopLockstepData.CHECKSUM_FIELDS.size() else str(i), a[i], b[i])
 			return

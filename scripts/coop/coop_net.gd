@@ -394,9 +394,12 @@ static func platform() -> String:
 
 
 ## The relay address: `--relay=` (desktop), `?relay=` (Web page), else CoopNetData.RELAY_URL.
+## The page's `?relay=` counts only in a test run (the autotest, which never touches
+## the save) or a dev build: on a released page a shared link could otherwise send a
+## player to a stranger's relay (adversarial review, Fix 1).
 static func relay_address() -> String:
 	var v := _cli_value("--relay=")
-	if v == "":
+	if v == "" and (GameState.autotest or build_id() == CoopNetData.DEV_BUILD_ID):
 		v = page_query(CoopNetData.RELAY_QUERY_KEY)
 	return v if v != "" else CoopNetData.RELAY_URL
 
@@ -597,7 +600,12 @@ func _on_text(text: String) -> void:
 				lobby_changed.emit()
 		"start":
 			if local_slot == 1 and state == State.LOBBY:
-				_begin_run(m.get("info", {}) as Dictionary, 1)
+				var info: Variant = m.get("info", {})  # The host's start info (untrusted: checked first).
+				var why := _start_problem(info)  # "" when the start is well formed and matches our loadout.
+				if why != "":
+					_fail("bad_start", why)
+					return
+				_begin_run(info as Dictionary, 1)
 		"pping":
 			_partner_heard_ms = Time.get_ticks_msec()
 			partner_rtt_ms = float(m.get("rtt", -1.0))
@@ -613,10 +621,17 @@ func _on_text(text: String) -> void:
 				lobby_changed.emit()
 
 
-## The relay seated us.
+## The relay seated us. Refused (the session fails with "bad_relay") unless we are
+## still connecting and the code and seat are well formed: the code is shown,
+## shared and linked, so it must never carry anything but code letters.
 func _on_welcome(m: Dictionary) -> void:
-	code = String(m.get("code", ""))
-	local_slot = int(m.get("slot", -1))
+	var c := normalize_code(String(m.get("code", "")))  # The lobby code as the relay sent it.
+	var s := int(m.get("slot", -1))  # Our seat as the relay sent it: 0 (host) or 1 (guest).
+	if state != State.CONNECTING or not is_valid_code(c) or s < 0 or s >= CoopData.SLOTS:
+		_fail("bad_relay", "welcome")
+		return
+	code = c
+	local_slot = s
 	peers[local_slot] = {"slot": local_slot, "game": game_version(), "platform": platform(),
 		"name": String(_pending_loadout.get("name", ""))}
 	loadouts[local_slot] = _clean_loadout(_pending_loadout, local_slot)
@@ -662,17 +677,51 @@ func _on_left(slot: int) -> void:
 	lobby_changed.emit()
 
 
+## Why the host's start `info` must be refused ("" = it is fine): not a Dictionary,
+## no config Dictionary, not one loadout Dictionary per seat, or our own seat's
+## Grave Offering / borrowed relic differing from the loadout we sent, or one we
+## can no longer pay. The guest pays only for its own choice (Game._pay_offering()),
+## and it refuses here, before the run, so both machines still build the same run
+## (adversarial review, Fix 2).
+func _start_problem(info: Variant) -> String:
+	if not (info is Dictionary) or not ((info as Dictionary).get("config") is Dictionary):
+		return "shape"
+	var los: Variant = (info as Dictionary).get("loadouts")  # Both seats' loadouts as the host sent them.
+	if not (los is Array) or (los as Array).size() != CoopData.SLOTS:
+		return "loadouts"
+	for lo: Variant in los:
+		if not (lo is Dictionary):
+			return "loadouts"
+	if local_slot < 0 or local_slot >= CoopData.SLOTS or not (loadouts[local_slot] is Dictionary):
+		return "seat"
+	var theirs := _clean_loadout((los as Array)[local_slot] as Dictionary, local_slot)  # Our seat, as the host sent it.
+	var mine: Dictionary = loadouts[local_slot]  # Our seat, as we sent it (already cleaned).
+	if String(theirs["offering"]) != String(mine.get("offering", "")) or String(theirs["borrowed"]) != String(mine.get("borrowed", "")):
+		return "offering"
+	var own := String(mine.get("offering", ""))  # Our own Grave Offering ("" = none).
+	if own != "" and not GameState.autotest and Meta.soul_ash < OfferingData.price(own):
+		return "offering cost"
+	return ""
+
+
 ## Sets start_info from `info` (the parsed start message) with our seat, and announces the run.
+## Each loadout goes through _clean_loadout() (every field typed and in range), the
+## same cleaning both machines apply, so they still build the same run.
 func _begin_run(info: Dictionary, slot: int) -> void:
 	var out := info.duplicate(true)
 	out["seed"] = int(out.get("seed", 0))
 	out["local_slot"] = slot
-	var cfg: Dictionary = out.get("config", {})
+	var cfg_v: Variant = out.get("config", {})  # The run config (a Dictionary on every honest start).
+	var cfg: Dictionary = cfg_v if cfg_v is Dictionary else {}
 	cfg["oath"] = int(cfg.get("oath", 0))
-	for lo: Dictionary in out.get("loadouts", []):
-		var lv: Dictionary = lo.get("meta_levels", {})
-		for k: String in lv:
-			lv[k] = int(lv[k])
+	out["config"] = cfg
+	var cleaned: Array = []  # Both loadouts, cleaned.
+	var los_v: Variant = out.get("loadouts", [])  # The loadouts as received.
+	if los_v is Array:
+		for i in (los_v as Array).size():
+			var lo: Variant = (los_v as Array)[i]
+			cleaned.append(_clean_loadout(lo if lo is Dictionary else {}, i))
+	out["loadouts"] = cleaned
 	start_info = out
 	print("[coop] run starts: seed %d, seat %d, stage %s" % [int(out["seed"]), slot, String(cfg.get("stage_id", ""))])
 	_set_state(State.STARTED)

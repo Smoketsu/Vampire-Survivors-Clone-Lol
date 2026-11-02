@@ -90,6 +90,8 @@ const ERROR_TEXT: Dictionary = {
 	"no_relay": "Co-op is not set up in this build yet (no relay address).",  # TUNING (not in GDD)
 	"platform": "Your partner plays on another platform (%s). Co-op needs the same one: both in a browser, or both on the same desktop system.",  # TUNING (not in GDD)
 	"partner_left": "Your partner left.",  # TUNING (not in GDD)
+	"bad_relay": "The co-op relay sent something unexpected. Try again.",  # TUNING (not in GDD) a malformed welcome (adversarial review, Fix 1)
+	"bad_start": "The host's run did not match your setup (%s). Leave the lobby and join again.",  # TUNING (not in GDD) a refused start message (adversarial review, Fix 2)
 }
 ## Line for an error code missing from ERROR_TEXT.
 const ERROR_FALLBACK: String = "Co-op error: %s"  # TUNING (not in GDD)

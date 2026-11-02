@@ -350,7 +350,8 @@ func _ready() -> void:
 ## parameter (comma-separated, e.g. ?necro_autotest=--coop-bot,--perf,--seed=7),
 ## with --autotest in front, so a headless browser can start a test run (the
 ## performance measurement, docs/coop/PERF.md). Empty without the parameter
-## and on every other platform. The autotest never touches the player's save.
+## and on every other platform. The autotest never touches the player's save: flags
+## that would (--meta-save, WebLinkData.FORBIDDEN_ARGS) are dropped from the URL.
 func _web_args() -> PackedStringArray:
 	if not OS.has_feature("web"):
 		return PackedStringArray()
@@ -358,8 +359,21 @@ func _web_args() -> PackedStringArray:
 	if typeof(q) != TYPE_STRING or String(q) == "":
 		return PackedStringArray()
 	var out := PackedStringArray(["--autotest"])  # The test switch, then the given options.
-	out.append_array(String(q).split(",", false))
+	for a: String in String(q).split(",", false):
+		if _web_arg_forbidden(a):
+			push_warning("?necro_autotest: %s is ignored on the Web (command line only)" % a)
+		else:
+			out.append(a)
 	return out
+
+
+## True when autotest flag `a` may not come from a page address
+## (WebLinkData.FORBIDDEN_ARGS: anything that reaches the save or sends data out).
+static func _web_arg_forbidden(a: String) -> bool:
+	for f: String in WebLinkData.FORBIDDEN_ARGS:
+		if a == f or (f.ends_with("=") and a.begins_with(f)):
+			return true
+	return false
 
 
 ## Parses user command-line arguments (the ones after `--`).

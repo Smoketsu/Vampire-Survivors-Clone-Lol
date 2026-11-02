@@ -1019,8 +1019,12 @@ func _on_level_reached() -> void:
 ## Soul Ash of this machine's Grave Offering as its run starts (never under the
 ## autotest or a --victory-preview run). Solo: an offering the balance can no
 ## longer pay is dropped from run_config before game.meta is built. Online co-op:
-## the local player's own offering from his own save; the run applies both
-## loadouts' offerings either way (both machines must build the same run).
+## the local player's own offering from his own save, read from the loadout this
+## machine sent (CoopNet.loadouts), never from the start message the host sent: a
+## tampered host could otherwise name an offering for us. CoopNet refuses a start
+## whose offering for our seat differs or that we cannot pay (adversarial review,
+## Fix 2). The run applies both loadouts' offerings either way (both machines must
+## build the same run).
 func _pay_offering() -> void:
 	if GameState.autotest or GameState.victory_preview:
 		return
@@ -1029,10 +1033,11 @@ func _pay_offering() -> void:
 			run_config.offering_id = ""
 			run_config.borrowed_relic = ""
 		return
-	var los: Array = coop_start.get("loadouts", [])  # Both loadouts (CoopNet.start_info).
 	var me := int(coop_start.get("local_slot", -1))  # This machine's seat.
-	if me >= 0 and me < los.size():
-		Meta.relics.pay_offering(String((los[me] as Dictionary).get("offering", "")))
+	if me < 0 or me >= CoopNet.loadouts.size() or not (CoopNet.loadouts[me] is Dictionary):
+		return
+	var mine: Dictionary = CoopNet.loadouts[me]  # Our own loadout, as this machine sent it.
+	Meta.relics.pay_offering(String(mine.get("offering", "")))
 
 
 ## Pauses combat and shows three cards (GDD §16 "Level-up panel: Pause combat").
