@@ -348,9 +348,33 @@ Achievements: **Names Taken** (raise 100 Dynasty dead before their cartouches ex
 ### Risks
 The mass of cartouche timers is a UI risk: show one gold cartouche per corpse, hide the timer text and shrink the icon with the count. Heka needs a clear visual on a ring full of summons (a gold sigil above each cursed head). Sandstorm uses a flat rect overlay, never a screen-reading shader.
 
+## On the docket: a Norse act
+
+**Status: possible, not scheduled** (owner, Nov 2, 2026: "Would feel weird to leave out some other major pantheons"). Nothing here is approved for building; it is recorded so the idea is not lost. Working title: **The Hall of the Slain** (the Norse act).
+
+**Faction.** The Einherjar of a great hall, with the raiders who fill it, the frost-giants (jotnar) outside it and the draugr in its barrows. The hook: the Norse dead are **claimed by the halls and the valkyries**. A warrior who dies well is chosen and carried to a hall; the rest lie in barrows. The necromancer is stealing **the chosen dead**, so the valkyries come for them in person.
+
+**Not a copy of the other acts.** Act II's Claims take the necromancer's fallen summons, Act IV's Wrath of the Gods strikes the arena on a rhythm, the Egypt act's Rebirth returns the enemy dead to the field. This act should be about the dead being **chosen**, not taken or returned.
+
+**Three shared rules (candidates, stage key `norse`).**
+1. **The Choosing.** A valkyrie marks the most heroic fallen body on the field (highest-tier kill) and bears it away after 5 s; raising it first steals a stronger temporary summon, losing it empowers the hall's next wave.
+2. **Fimbulwinter.** A creeping cold clock: the arena freezes ring by ring, slowing everyone outside warm braziers; burning the dead for fuel is the choice.
+3. **Shield Wall.** Raiders lock shields in lines that halve damage from the front; a hit from the flank or an arcing shot breaks the line (kept distinct from the Phalanx by being breakable and by facing the summon, not the hit origin).
+
+**Roster sketch (mixed sexes).** Raider and Shield-Maiden (fodder, shieldmaiden in the figure-redesign style), Berserker (elite, frenzy on low health), Skald (support, a war-song buff), Valkyrie (female, figure style; swooping elite who carries off bodies), Draugr (male and female, slow, armoured, cold touch), Frost-Giant (heavy), Wolf of the Wastes (fast beast), Seer (female, figure style, curses from range), Rune-Stone (structure), Hall-Guard Einherjar (miniboss kind).
+
+**Stage ideas.**
+- **A. The Barrow Fields.** Burial mounds in snow; a stage of draugr and raiders; boss **Hel's Herald** or a draugr-king, a barrow lord who rises three times.
+- **B. The Longhouse of Heroes.** A great feast hall of Einherjar and valkyries; boss **Brynhild-like Shield-Queen** (an original valkyrie captain, figure style) who chooses the necromancer's strongest summon each phase.
+- **C. The Frozen Root (finale).** The edge of the world and the last winter; boss **the All-Father's Wolf and the Hanged King**, a two-part fight (a great wolf and a one-eyed god on a throne), ending the Norse claim on the dead.
+
+**Reward sketch.** A spell from each boss with its playable character (the Rune-Seer, the Shield-Maiden, the Berserker), a finale summon class (the Draugr Thane), and the usual evolutions and counter-passives. All left to a later proposal if the act is taken up.
+
 ---
 
 ## Part 4. The new act order
+
+**Deferred (owner, Nov 2, 2026): the reorder waits until all content is added; a full clear of every stage takes about 13 hours.**
 
 ### The throughline
 The necromancer's journey is a climb from **who owns the dead in the living world** to **who owned them before the world began**. It escalates on two axes at once: who comes (a church, cutthroats, a secret court, the modern world, an empire, the oldest death-gods, the Olympians, hell, then forces from outside the world, then the deep past, then the world itself) and how hard the act's rules bend the game (a plain pressure, a constrained arena, an anti-army rule, a shared-resource rule). Part One is the mortal and divine claims on the dead. Part Two is what lies outside and before them.
@@ -427,7 +451,7 @@ It is mostly data and text. The rules are keyed to the STAGE (`eye`, `empire`, `
 ## Part 5. Open questions for the owner
 Each has a recommendation.
 
-1. **Take this thirteen-act order?** Recommend yes. The alternatives are the original ten-act order (without the three new acts) or the swap of the Shogunate and the Last Line (kept second in the earlier proposal).
+1. **Take this thirteen-act order?** *(Deferred: the reorder waits until all content is added, owner, Nov 2, 2026; a Norse act is on the docket and would make fourteen.)* Recommend yes. The alternatives are the original ten-act order (without the three new acts) or the swap of the Shogunate and the Last Line (kept second in the earlier proposal).
 2. **Is the pirate act second?** Recommend yes: a mortal threat that introduces the deck while the enemy tier is low. Alternative: place it fourth, after the Last Line, as "the last mortals". It would then sit beside the Shogunate's sea voyage.
 3. **Prehistoric framing: A (the Last Harvest, after the Concord) or B (the oldest graveyard, any slot)?** Recommend A: the meteor has an author, the necromancer takes the Call, and it needs only a rift in the Ark's vault.
 4. **The meteor: Option A (the Extinction as the finale's Reckoning) or Option B (a stage objective that ends the run early)?** Recommend A, with the optional lit beacons later as a risk-and-reward lever. B needs new early-victory rules.
@@ -438,3 +462,4 @@ Each has a recommendation.
 9. **Act tabs on the stage select: thirteen tabs?** Recommend grouping by Part (two rows, or a Part switch with act tabs under it).
 10. **Where does the Throne phase come back?** The earlier proposal asks whether the Morning Star's cut phase should return as the Turning Year's finale boss rush. Recommend yes, in the Turning Year, since a boss rush of every act's rule fits the end of everything. This is unchanged by this proposal.
 11. **Concept art first for the three new acts?** Recommend a lineup, a boss and a stage image each (the Act VII-IX pattern), with the sex named in every prompt, before any sprite.
+12. **A Norse act?** On the docket as possible, not scheduled (owner, Nov 2, 2026). Decide whether to build it once Acts VII-IX and the three proposed acts are in.
