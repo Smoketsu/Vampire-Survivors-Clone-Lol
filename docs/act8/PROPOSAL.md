@@ -30,6 +30,17 @@ order of it again, so don't worry about epilogue stuff of each act until we nail
 - The act's three shared rules are therefore **Armour, Supers and Civilians**, with the escalation built into the
   timeline.
 
+**Phase 2 answers (Nov 2, 2026).** These override the stage sections and the rewards below.
+- **Tier caps per stage: yes.** Skid Row climbs gangs → police → SWAT and stops there. Fort Kessler climbs up to the
+  army. Only Liberty Heights reaches the heroes. The Martial Law Reckoning still throws every tier on every stage.
+- **Off the Grid is replaced by Armour-Piercing Bones.** Off the Grid was a counter-passive tied to the dropped Wanted
+  Level. Armour-Piercing Bones: summon hits ignore part of the Armour rule's shield-front reduction (riot shields, SWAT,
+  tanks). Act VIII only.
+- **Radio Silence is replaced by No Witnesses.** Radio Silence was the Skid Row achievement "cut every mast". No
+  Witnesses: kill every civilian of the opening crowd before they flee the streets.
+- **The lead's call (the owner may revise it): Don Marrow's "the Call".** It used to raise the Wanted Level to three
+  stars. Now the police and SWAT tiers arrive at once for the rest of his fight.
+
 ## Act VIII: The Last Line
 The living fight back. Behind the Court's veil were the last great cities of the living: millions of people, lit all night, with guns. The necromancer's dead walk into the streets, and the city answers the way a modern city does, in rising order: the gangs who own the blocks, then the police, then the army, and at the end its superheroes. The look is asphalt and concrete, sodium-orange streetlights, neon, olive drab and hazard yellow, with the heroes in bright primary colours that pop off everything else. Police lights pulse slowly (no fast strobes: a photosensitivity rule for the whole act).
 
