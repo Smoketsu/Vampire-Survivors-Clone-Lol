@@ -1,0 +1,8 @@
+A sheet of FOUR separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its quarter of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. NOCTURNE: a great dark bat with wings spread wide across a full blood-red moon, small soul-teal sparks around it.
+2. NOSFERATU: the head of a tall bald rat-fanged vampire in profile facing right, a long pointed ear, a high black collar, a glowing soul-teal eye.
+3. LAST SUPPER: a long banquet table seen from the front with a single gold goblet knocked over, blood spilling, a cracked crown beside it.
+4. A plain round golden sun disc (spare).
+Colours: black #0B0A10 #1C1426; blood #5A0A14 #A3142A #E0384E; gold #8A6A1E #E0A92E #FFDC66; pale #8A8796 #B4B0BE #DAD6E2; dark wood #2A1C12 #5B3D26; soul teal #1F7A5C #3FD39A #9CFFD8.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

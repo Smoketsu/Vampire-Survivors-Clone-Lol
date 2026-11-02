@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a low crouching brawler's lunge, clawed hands forward
+
+LOW-RESOLUTION pixel art: the whole figure is only 40 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: a BLOOD SPAWN, a MALE vampire brawler raised in undeath by the necromancer: a gaunt, wiry, hunched creature with PALE GREY-WHITE skin, a bald head with pointed ears, bared long fangs, glowing SOUL-TEAL eyes (the necromancer's undead), long clawed fingers dripping blood, torn black rags at the waist and shoulders, a bone collar. Fast and feral.
+Signature shape that must read in silhouette: the low crouch, the pointed ears and the long claws.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: pale grey-white skin #8A8796 #B4B0BE #DAD6E2; black rags #14161C #2A2D36; blood on the claws #5A0A14 #A3142A; bone collar #A79A80 #CFC7AE; soul teal eyes #3FD39A #9CFFD8.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: an undead summon of this game for the pixel size, outline weight, flat look and the soul-teal undead style (not its subject).

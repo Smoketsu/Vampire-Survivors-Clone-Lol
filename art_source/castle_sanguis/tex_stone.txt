@@ -1,0 +1,2 @@
+Seamless top-down FLOOR TEXTURE for a dark 2D pixel-art game: cold grey castle flagstone surface seen straight from above, the stone with faint speckles, small chips and a hint of moonlight, very flat even lighting, no objects, no joints needed (just the stone surface). Chunky pixel art at about 160 pixels across, crisp square pixels, flat colours, no gradients, no vignette, no text. Fully opaque, filling the whole image edge to edge.
+Colours: grey stone #24252A #2B2C32 #33343B #3B3C44, a few paler speckles #4A4B54.
