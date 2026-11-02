@@ -438,6 +438,11 @@ all three show "Coming soon" until their stages are built (phase 2). The act's s
   harpsichord arpeggio, a church organ, swelling low strings, a plucked oom-pah-pah and a slow heartbeat once a bar) and the
   eight Court sounds (`SoundData.COURT_SOUNDS`: `bite_feed`, `blood_shield`, `bat_screech`, `moon_rise`, `moon_set`,
   `wolf_howl`, `coffin_creak`, `mist_form`) render lazily the same way once a stage uses `"music": "sanguine"`.
+- **Act VIII music and sounds.** "Sirens at Midnight" (`SoundData.SIREN_SCORE`: a dark urban night track in C minor at
+  120 bpm with a driving drum machine, a clean sub bass, a minor saw arpeggio, low brass stabs and a distant siren as a slow
+  soft pitch glide) and the eight City sounds (`SoundData.CITY_SOUNDS`: `siren_wail`, `gun_burst`, `engine_rev`,
+  `vehicle_wreck`, `crowd_panic`, `super_arrive`, `weakness_crack`, `tier_alarm`) render lazily the same way once a stage
+  uses `"music": "siren"`. `RunLoopSynth` gained three score jobs for it (`machine`, `sub`, `siren`).
 - **Music.** (Act IV's "Hymn of Bronze", a war drum under a Dorian pad with a plucked lyre and brass
   swells, and its eight Pantheon sounds are rendered lazily the same way: `SoundData.BRONZE_SCORE`,
   `PANTHEON_SOUNDS`; the stages switch to it with `"music": "bronze"`.) Act III runs play their own loop, "Iron Requiem" (a pulsing low synth, metallic hits

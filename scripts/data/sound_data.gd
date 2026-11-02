@@ -624,9 +624,60 @@ const SANGUINE_SCORE := {
 		]},  # TUNING (not in GDD) [bass Hz, [chord Hz, ...]] per bar
 }
 
+## "Sirens at Midnight", the Act VIII run loop (GDD §15.0 "Sirens at Midnight and the City
+## sounds"): the RunLoopSynth score of every stage whose STAGE has "music": "siren". A dark
+## urban night track in C minor (Cm, Ab, Eb, Bb), 4/4 at 120 bpm: 4 beats of 0.5 s make a
+## 2 s bar, eight bars a 16 s loop, four 4 s chord segments. A driving drum machine (the new
+## "machine" job: kick, snare, hats on a 16th grid, in place of the heartbeat), a clean sub
+## bass (the new "sub" job), a minor saw arpeggio of eighths (the "arp" job), low brass
+## stabs for the army (the "horn" job with a fast attack) and, far above it all, a distant
+## siren as a slow soft pitch glide (the new "siren" job: tri sweeps through a low-pass,
+## never shrill, never fast) over a velvet drone and a low pad. Rendered lazily (Sfx),
+## never under the autotest. Chord order per 4 s segment: Cm, Ab, Eb, Bb.
+const SIREN_SCORE := {
+	"loop_seconds": 16.0,  # TUNING (not in GDD) eight 4/4 bars of 2 s (120 bpm)
+	"root_hz": 65.41,  # TUNING (not in GDD) C2, the drone under C minor
+	"chords": [
+		[130.81, 155.56, 196.0],
+		[103.83, 130.81, 155.56],
+		[155.56, 196.0, 233.08],
+		[116.54, 146.83, 174.61],
+	],  # TUNING (not in GDD) Cm, Ab, Eb, Bb, voiced low
+	"drone_lp_hz": 80.0,  # TUNING (not in GDD) a city hum
+	"wind_lp_hz": 220.0,  # TUNING (not in GDD) night traffic a long way off
+	"wind_swells": 4.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.5,  # TUNING (not in GDD)
+	"vibrato_depth": 0.002,  # TUNING (not in GDD)
+	# Drum machine: 16 steps of 0.125 s a bar (steps counted from the bar start).
+	"machine": {"step": 0.125, "steps_per_bar": 16, "kick_steps": [0, 4, 8, 10, 12], "snare_steps": [4, 12],
+		"hat_steps": [0, 2, 4, 6, 8, 10, 12, 14], "open_hat_steps": [14], "kick_amp": 0.42, "snare_amp": 0.2,
+		"hat_amp": 0.05, "open_hat_amp": 0.07, "kick_hz0": 130.0, "kick_hz1": 48.0, "kick_dur": 0.3,
+		"snare_dur": 0.2, "hat_dur": 0.05, "open_hat_dur": 0.22},  # TUNING (not in GDD)
+	# Sub bass: clean sine (plus a faint triangle an octave up) on each bar's root.
+	"sub": {"beat": 0.5, "beats_per_bar": 4, "amp": 0.2, "octave_amp": 0.05, "decay": 0.34,
+		"roots": [65.41, 65.41, 51.91, 51.91, 77.78, 77.78, 58.27, 58.27],
+		"pattern": [[0.0, 1.0, 0.75], [1.5, 1.0, 0.5], [2.0, 1.0, 0.75], [3.5, 1.5, 0.5]]},  # TUNING (not in GDD) [beat, ratio, beats]
+	# Minor arpeggio: a saw note every eighth up each segment's tones.
+	"arp": {"step": 0.25, "dur": 0.2, "amp": 0.038, "decay": 0.07, "lp0": 2200.0, "wave": "saw",
+		"chords": [
+			[261.63, 311.13, 392.0, 523.25],
+			[207.65, 261.63, 311.13, 415.3],
+			[311.13, 392.0, 466.16, 622.25],
+			[233.08, 293.66, 349.23, 466.16],
+		]},  # TUNING (not in GDD)
+	# Low brass stabs for the army: two short hits a segment (root and fifth).
+	"horn": {"starts": [1.5, 3.0, 5.5, 7.0, 9.5, 11.0, 13.5, 15.0], "dur": 0.5, "attack": 0.03, "decay": 0.22, "amp": 0.05,
+		"lp0": 500.0, "lp1": 1700.0,
+		"notes": [[130.81, 196.0], [130.81, 196.0], [103.83, 155.56], [103.83, 155.56],
+			[155.56, 233.08], [155.56, 233.08], [116.54, 174.61], [116.54, 174.61]]},  # TUNING (not in GDD)
+	# The distant siren: slow tri glides up and down (Hz), overlapped so the wail swells.
+	"siren": {"amp": 0.045, "attack": 1.4, "decay": 3.5, "lp0": 1000.0, "lp1": 1000.0, "detune": 1.006, "detune_amp": 0.6,
+		"sweeps": [[0.4, 3.6, 640.0, 860.0], [3.6, 3.6, 860.0, 640.0], [8.4, 3.6, 640.0, 860.0], [11.6, 3.6, 860.0, 640.0]]},  # TUNING (not in GDD) [start (s), length (s), from Hz, to Hz]
+}
+
 ## Run-loop scores by STAGE "music" id (Sfx.play_music() modes; "" / absent =
 ## the Act I loop): "tide" = "Below the Tide" (Act II), "iron" = "Iron Requiem"
-## (Act III), "bronze" = "Hymn of Bronze" (Act IV), "sun" = "The Setting Sun" (Act V), "brimstone" = "Hymn of the Pit" (Act VI), "sanguine" = "Waltz of the Red Moon" (Act VII). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
+## (Act III), "bronze" = "Hymn of Bronze" (Act IV), "sun" = "The Setting Sun" (Act V), "brimstone" = "Hymn of the Pit" (Act VI), "sanguine" = "Waltz of the Red Moon" (Act VII), "siren" = "Sirens at Midnight" (Act VIII). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
 const SCORES := {
 	"tide": TIDE_SCORE,
 	"iron": IRON_SCORE,
@@ -634,16 +685,18 @@ const SCORES := {
 	"sun": SUN_SCORE,  # Act V
 	"brimstone": BRIMSTONE_SCORE,  # Act VI
 	"sanguine": SANGUINE_SCORE,  # Act VII
+	"siren": SIREN_SCORE,  # Act VIII
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
 ## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
-## the Act IV ones; "shogunate" = SHOGUNATE_SOUNDS, the Act V ones; "inferno" = INFERNO_SOUNDS, the Act VI ones; "court" = COURT_SOUNDS, the Act VII ones); absent = none.
+## the Act IV ones; "shogunate" = SHOGUNATE_SOUNDS, the Act V ones; "inferno" = INFERNO_SOUNDS, the Act VI ones; "court" = COURT_SOUNDS, the Act VII ones; "city" = CITY_SOUNDS, the Act VIII ones); absent = none.
 const SCORE_PACKS := {
 	"iron": "empire",
 	"bronze": "pantheon",
 	"sun": "shogunate",  # Act V
 	"brimstone": "inferno",  # Act VI
 	"sanguine": "court",  # Act VII
+	"siren": "city",  # Act VIII
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -1516,4 +1569,81 @@ const COURT_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "noise", "dur": 0.2, "amp": 0.55, "attack": 0.001, "decay": 0.07, "lp0": 4000.0, "lp1": 900.0},
 			{"wave": "sine", "f0": 110.0, "f1": 55.0, "dur": 0.3, "amp": 0.35, "attack": 0.002, "decay": 0.12},
 			{"wave": "tri", "f0": 220.0, "f1": 110.0, "start": 0.1, "dur": 0.8, "amp": 0.08, "attack": 0.02, "decay": 0.4}]},
+}
+
+# --- Act VIII: the Last Line ---
+## Act VIII sound effects (the city; recipe keys as SOUNDS). Kept OUT of SOUNDS like the other
+## packs: Sfx renders it lazily the first time an Act VIII run's music ("siren") is asked for
+## (Sfx.prepare_pack("city"); seeds Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["city"] + i).
+## Nothing plays them until the lead wires the foundation's sound map.
+const CITY_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# A distant siren: one slow rise and fall, soft and never shrill.
+	"siren_wail": {"dur": 2.8, "volume_db": -18.0, "max_voices": 1, "min_interval": 1500, "pitch_var": 0.03, "priority": 1,
+		"layers": [
+			{"wave": "tri", "f0": 600.0, "f1": 860.0, "dur": 1.5, "amp": 0.14, "attack": 0.5, "decay": 1.6, "lp0": 1300.0},
+			{"wave": "tri", "f0": 860.0, "f1": 600.0, "start": 1.3, "dur": 1.5, "amp": 0.14, "attack": 0.3, "decay": 0.9, "lp0": 1300.0},
+			{"wave": "tri", "f0": 603.0, "f1": 866.0, "dur": 1.5, "amp": 0.06, "attack": 0.5, "decay": 1.6, "lp0": 1000.0},
+			{"wave": "noise", "dur": 2.6, "amp": 0.03, "attack": 0.6, "decay": 1.0, "lp0": 700.0}]},
+	# A short dry burst: five pistol cracks with a low thump each.
+	"gun_burst": {"dur": 0.55, "volume_db": -20.0, "max_voices": 3, "min_interval": 90, "pitch_var": 0.07, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.04, "amp": 0.5, "attack": 0.001, "decay": 0.01, "lp0": 6500.0, "lp1": 2500.0},
+			{"wave": "noise", "start": 0.08, "dur": 0.04, "amp": 0.46, "attack": 0.001, "decay": 0.01, "lp0": 6500.0, "lp1": 2500.0},
+			{"wave": "noise", "start": 0.16, "dur": 0.04, "amp": 0.5, "attack": 0.001, "decay": 0.01, "lp0": 6500.0, "lp1": 2500.0},
+			{"wave": "noise", "start": 0.25, "dur": 0.04, "amp": 0.44, "attack": 0.001, "decay": 0.01, "lp0": 6500.0, "lp1": 2500.0},
+			{"wave": "noise", "start": 0.32, "dur": 0.04, "amp": 0.4, "attack": 0.001, "decay": 0.01, "lp0": 6500.0, "lp1": 2500.0},
+			{"wave": "sine", "f0": 150.0, "f1": 70.0, "dur": 0.1, "amp": 0.25, "attack": 0.002, "decay": 0.04},
+			{"wave": "sine", "f0": 150.0, "f1": 70.0, "start": 0.16, "dur": 0.1, "amp": 0.22, "attack": 0.002, "decay": 0.04},
+			{"wave": "sine", "f0": 140.0, "f1": 65.0, "start": 0.32, "dur": 0.1, "amp": 0.2, "attack": 0.002, "decay": 0.04},
+			{"wave": "noise", "start": 0.33, "dur": 0.2, "amp": 0.06, "attack": 0.01, "decay": 0.08, "lp0": 2000.0, "lp1": 700.0}]},
+	# An engine revs up: a rising growl with a ragged throb.
+	"engine_rev": {"dur": 1.3, "volume_db": -14.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "saw", "f0": 55.0, "f1": 150.0, "dur": 1.1, "amp": 0.2, "attack": 0.08, "decay": 0.5, "lp0": 450.0, "lp1": 1300.0, "vib_hz": 26.0, "vib_depth": 0.05},
+			{"wave": "square", "f0": 110.0, "f1": 300.0, "dur": 1.1, "amp": 0.07, "attack": 0.1, "decay": 0.5, "lp0": 700.0, "lp1": 1500.0, "vib_hz": 21.0, "vib_depth": 0.04},
+			{"wave": "noise", "dur": 1.2, "amp": 0.12, "attack": 0.1, "decay": 0.5, "lp0": 400.0, "lp1": 1600.0}]},
+	# A vehicle wreck: a crunch of metal, then a fire whoomp.
+	"vehicle_wreck": {"dur": 1.6, "volume_db": -11.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.3, "amp": 0.55, "attack": 0.001, "decay": 0.08, "lp0": 5500.0, "lp1": 800.0},
+			{"wave": "sine", "f0": 310.0, "f1": 250.0, "dur": 0.4, "amp": 0.1, "attack": 0.002, "decay": 0.12},
+			{"wave": "sine", "f0": 730.0, "f1": 640.0, "start": 0.03, "dur": 0.35, "amp": 0.07, "attack": 0.002, "decay": 0.1},
+			{"wave": "sine", "f0": 1190.0, "f1": 1000.0, "start": 0.06, "dur": 0.3, "amp": 0.05, "attack": 0.002, "decay": 0.08},
+			{"wave": "sine", "f0": 80.0, "f1": 36.0, "start": 0.15, "dur": 0.8, "amp": 0.5, "attack": 0.03, "decay": 0.35},
+			{"wave": "noise", "start": 0.15, "dur": 1.3, "amp": 0.26, "attack": 0.06, "decay": 0.5, "lp0": 350.0, "lp1": 120.0}]},
+	# A crowd cries out: several alarmed voices rising together over a gasp. Not graphic.
+	"crowd_panic": {"dur": 1.1, "volume_db": -17.0, "max_voices": 2, "min_interval": 500, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "saw", "f0": 300.0, "f1": 470.0, "dur": 0.7, "amp": 0.07, "attack": 0.06, "decay": 0.3, "lp0": 1500.0, "lp1": 1900.0, "vib_hz": 6.0, "vib_depth": 0.03},
+			{"wave": "saw", "f0": 360.0, "f1": 560.0, "start": 0.08, "dur": 0.7, "amp": 0.06, "attack": 0.06, "decay": 0.3, "lp0": 1700.0, "lp1": 2100.0, "vib_hz": 6.5, "vib_depth": 0.03},
+			{"wave": "saw", "f0": 250.0, "f1": 400.0, "start": 0.15, "dur": 0.8, "amp": 0.06, "attack": 0.08, "decay": 0.35, "lp0": 1400.0, "lp1": 1800.0, "vib_hz": 5.5, "vib_depth": 0.035},
+			{"wave": "tri", "f0": 520.0, "f1": 700.0, "start": 0.05, "dur": 0.6, "amp": 0.05, "attack": 0.05, "decay": 0.25, "vib_hz": 7.0, "vib_depth": 0.03},
+			{"wave": "noise", "dur": 1.0, "amp": 0.07, "attack": 0.1, "decay": 0.4, "lp0": 3000.0, "lp1": 1500.0}]},
+	# A Super arrives: a rising whoosh into a bright chord.
+	"super_arrive": {"dur": 1.8, "volume_db": -12.0, "max_voices": 2, "min_interval": 500, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.85, "amp": 0.3, "attack": 0.6, "decay": 0.25, "lp0": 400.0, "lp1": 6500.0},
+			{"wave": "sine", "f0": 180.0, "f1": 1100.0, "dur": 0.85, "amp": 0.14, "attack": 0.5, "decay": 0.3},
+			{"wave": "tri", "f0": 523.25, "start": 0.8, "dur": 0.95, "amp": 0.12, "attack": 0.01, "decay": 0.6},
+			{"wave": "tri", "f0": 659.25, "start": 0.8, "dur": 0.95, "amp": 0.1, "attack": 0.01, "decay": 0.6},
+			{"wave": "tri", "f0": 783.99, "start": 0.8, "dur": 0.95, "amp": 0.09, "attack": 0.01, "decay": 0.6},
+			{"wave": "sine", "f0": 1568.0, "start": 0.82, "dur": 0.9, "amp": 0.04, "attack": 0.005, "decay": 0.5},
+			{"wave": "sine", "f0": 65.4, "start": 0.8, "dur": 0.9, "amp": 0.25, "attack": 0.01, "decay": 0.5}]},
+	# A Super's weak point breaks: a glassy crack and a tinkle.
+	"weakness_crack": {"dur": 0.7, "volume_db": -13.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.06, "amp": 0.5, "attack": 0.001, "decay": 0.015, "lp0": 9000.0, "lp1": 4000.0},
+			{"wave": "sine", "f0": 2400.0, "f1": 2100.0, "start": 0.01, "dur": 0.3, "amp": 0.14, "attack": 0.001, "decay": 0.09},
+			{"wave": "sine", "f0": 3100.0, "f1": 2800.0, "start": 0.02, "dur": 0.3, "amp": 0.1, "attack": 0.001, "decay": 0.08},
+			{"wave": "sine", "f0": 4700.0, "start": 0.03, "dur": 0.4, "amp": 0.06, "attack": 0.001, "decay": 0.12},
+			{"wave": "sine", "f0": 5300.0, "start": 0.12, "dur": 0.4, "amp": 0.04, "attack": 0.001, "decay": 0.14},
+			{"wave": "sine", "f0": 160.0, "f1": 80.0, "dur": 0.12, "amp": 0.2, "attack": 0.002, "decay": 0.05}]},
+	# A new tier arrives: a radio squelch, then a low two-tone klaxon.
+	"tier_alarm": {"dur": 1.5, "volume_db": -12.0, "max_voices": 1, "min_interval": 1200, "pitch_var": 0.02, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.14, "amp": 0.3, "attack": 0.005, "decay": 0.05, "lp0": 3800.0, "lp1": 2200.0},
+			{"wave": "square", "f0": 1900.0, "f1": 1300.0, "start": 0.02, "dur": 0.1, "amp": 0.05, "attack": 0.003, "decay": 0.04, "lp0": 3000.0},
+			{"wave": "saw", "f0": 110.0, "start": 0.18, "dur": 0.55, "amp": 0.22, "attack": 0.02, "decay": 0.35, "lp0": 800.0, "lp1": 600.0},
+			{"wave": "saw", "f0": 82.4, "start": 0.72, "dur": 0.7, "amp": 0.22, "attack": 0.02, "decay": 0.4, "lp0": 800.0, "lp1": 500.0},
+			{"wave": "sine", "f0": 55.0, "start": 0.18, "dur": 1.2, "amp": 0.25, "attack": 0.05, "decay": 0.6}]},
 }
