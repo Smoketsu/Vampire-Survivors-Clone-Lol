@@ -1,0 +1,8 @@
+A sheet of THREE separate pixel-art game OBSTACLE PROPS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Three-quarter top-down view (camera above and in front, like a top-down action game), each prop standing upright on its base, chunky low-resolution pixel art (each prop about 32 pixels wide), crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+From left to right (Ravensmoor, a cursed village on a moor at night):
+1. A MOOR CAIRN: a low heap of rounded grey moor stones piled on each other, a little dark heather at its base.
+2. A LEANING GRAVE CROSS: a weathered grey stone celtic cross leaning slightly, cracked, on a small mound of earth.
+3. A BLACK PINE: a dark, wind-bent pine tree seen from above and in front, near-black blue-green needles in tiers, a short brown trunk.
+Colours: grey stone #3B4352 #6E7A8C #9AA4B4; heather #241C2A #4D3A5E; earth #221C17 #4F3320; pine needles #101816 #1E2B26 #34463E; trunk #2E2018 #4F3320; outline #12060A.
+Keep them a little darker and calmer than the characters (they are scenery), but clearly brighter than a near-black ground.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

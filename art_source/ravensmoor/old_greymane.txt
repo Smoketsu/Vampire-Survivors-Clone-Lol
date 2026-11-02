@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a hulking forward-leaning stance on two legs, head raised mid-howl, claws spread
+
+LOW-RESOLUTION pixel art: the whole figure is only 96 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: OLD GREYMANE, a MALE WEREWOLF, the old alpha of the pack (a miniboss): a huge, grizzled wolf-man on two legs, bigger and heavier than any werewolf, a thick shaggy mane of pale silver-white fur over his shoulders and back, grey-brown fur on the body, many old scars, one eye scarred shut and one glowing yellow eye, massive clawed arms, a broken iron collar with a dangling chain end, tattered dark trousers. Ancient, battle-worn and terrifying.
+Signature shape that must read in silhouette: the huge pale mane over the hunched shoulders, the raised howling wolf head and the long clawed arms.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: grey-brown fur #4E463E #7A6E62 #A59888; pale silver mane #8E949C #C4CAD2 #E6EEF7; trousers #2B1E36 #4D3A5E; iron collar #3B4352 #6E7A8C; eye and fangs #FFDC66 #E6EEF7; blood red #A3142A (the mouth, the scars)
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite (the werewolf beast of this game) for pixel size, outline weight and flat look: Old Greymane must look like a bigger, older, grizzled alpha of the same kind; (2) concept art of a werewolf for the build only (do NOT copy its detail level or painted shading).

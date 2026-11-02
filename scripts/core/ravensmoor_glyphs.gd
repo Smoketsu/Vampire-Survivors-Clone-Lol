@@ -30,7 +30,7 @@ const GHOUL_SKIN := Color(0.56, 0.56, 0.54)
 static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 	var c := o.center
 	match o.kind:
-		"moor_cairn", "black_pine", "grave_cross":
+		"moor_cairn", "moor_pine", "grave_cross":
 			var r := o.radius
 			SpriteBank.draw_disc(ci, c + Vector2(3, 4), r, Color(0, 0, 0, 0.35))
 			SpriteBank.draw_disc(ci, c, r, INK)
@@ -39,7 +39,7 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 					SpriteBank.draw_disc(ci, c, r - 1.5, STONE)
 					SpriteBank.draw_disc(ci, c + Vector2(-r * 0.3, -r * 0.3), r * 0.4, Palette.COURT_MOON_DARK)
 					SpriteBank.draw_disc(ci, c + Vector2(r * 0.35, r * 0.2), r * 0.3, Color(0.26, 0.26, 0.30))
-				"black_pine":
+				"moor_pine":
 					SpriteBank.draw_disc(ci, c, r - 1.0, PINE)
 					SpriteBank.draw_disc(ci, c + Vector2(-r * 0.25, -r * 0.3), r * 0.5, Color(0.16, 0.21, 0.19))
 					SpriteBank.draw_disc(ci, c, r * 0.18, WOOD)  # The trunk.

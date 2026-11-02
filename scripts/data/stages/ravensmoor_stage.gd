@@ -183,7 +183,7 @@ const EVENTS := [
 ##            stones and its red leaves.
 ## Obstacle kinds (RavensmoorGlyphs without art; obstacles/<kind>_<size>[_v]):
 ##   moor_cairn    — a heap of grey moor stones (circle)
-##   black_pine    — a black, wind-bent pine (circle)
+##   moor_pine    — a black, wind-bent moor pine (circle; not Kurogane's black_pine)
 ##   grave_cross   — a leaning stone cross of the churchyard (circle)
 ##   village_fence — a rotten wooden fence (rect)
 ##   thatch_cottage — a thralls' cottage, sagging thatch (rect)
@@ -196,7 +196,7 @@ const ZONES := [
 		"arena": {"density": 0.16, "clear_radius": 220.0, "layout_seed": 1919,  # TUNING (not in GDD)
 			"kinds": {
 				"moor_cairn": {"weight": 0.7, "shape": "circle", "sizes": [12.0, 16.0, 20.0]},  # TUNING (not in GDD)
-				"black_pine": {"weight": 0.3, "shape": "circle", "sizes": [14.0, 18.0]},  # TUNING (not in GDD)
+				"moor_pine": {"weight": 0.3, "shape": "circle", "sizes": [14.0, 18.0]},  # TUNING (not in GDD)
 			}}},
 	{"start": 285.0, "numeral": "II", "name": "The Village",  # Owner-approved proposal (zones)
 		"blurb": "The cottages of the turned, their lamps still lit",
@@ -223,7 +223,7 @@ const ZONES := [
 			"accent": Color(0.24, 0.22, 0.20), "trim": Palette.COURT_BLOOD_DARK},
 		"arena": {"density": 0.2, "clear_radius": 220.0, "layout_seed": 1949,  # TUNING (not in GDD)
 			"kinds": {
-				"black_pine": {"weight": 0.7, "shape": "circle", "sizes": [14.0, 18.0]},  # TUNING (not in GDD)
+				"moor_pine": {"weight": 0.7, "shape": "circle", "sizes": [14.0, 18.0]},  # TUNING (not in GDD)
 				"moor_cairn": {"weight": 0.3, "shape": "circle", "sizes": [12.0, 16.0, 20.0]},  # TUNING (not in GDD)
 			}}},
 ]
