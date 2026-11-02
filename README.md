@@ -2214,6 +2214,38 @@ and the owner's review.
   before one flees the streets) unlocks the Act VIII counter-passive **Kevlar Bones** (the city's guns hurt your
   summons less).
 - **Wrecks** now cover their whole footprint (60 x 38 art for the 52 x 36 wreck).
+### Act VIII: Fort Kessler (Stage 23)
+
+<!-- --- Act VIII: Fort Kessler --- -->
+A military base on the edge of the city, the army's last line against the dead (GDD §15.0 "Fort Kessler (Act VIII
+phase 2)" and the rows after it). Built, still hidden ("playable": false) until the lead's integration and the owner's
+review.
+
+- **The escalation stops at the army** (gangs 0:00, police 2:30, SWAT 5:00, the army 7:30; no Super on the clock).
+  Martial Law still throws every tier at 0:00.
+- **Four zones on the clock** over the same city blocks: the Checkpoints (20:00; sandbags and barrier booms), the
+  Minefield (16:00), the Airfield (10:00; open concrete aprons) and the Command Bunker (6:00; bunker roofs).
+- **Minefields.** In the Minefield zone the open lots and some streets are mined: blinking mines (a slow blink) that go
+  off under anyone, your dead, you and the city's soldiers alike. Lure the soldiers over them; your Bone Ring steps
+  around them.
+- **New army kinds** (any stage may field them): the **Machine Gunner** kneels and sweeps a telegraphed fire lane
+  (step out of it, or put a Bone Wall in it) and the **Attack Helicopter** flies strafing runs down your street with
+  rocket pods (swords barely reach it: Gargoyles, Archers and spells bring it down; shot down, it crashes onto the
+  street).
+- **Mammoth** (miniboss, 8:30 left), a super-heavy tank with two turrets, each on its own cooldown; armoured in front,
+  and it burns into the biggest wreck in the city (two wreck cells).
+- **General Vance Harrow, the Hammer** (3:00 left). **Command:** from his armoured car he calls carpet-bombing lines down
+  your street (hurting his own soldiers too) and rifle squads. **The Hammer** (below 60%): he climbs out in power
+  armour (a front: hit him from the side), slams his hammer and calls tank columns. **Broken Arrow** (below 30%): he
+  orders a strike on his own position; a 30 s countdown shows as the HUD objective. Kill him in time and it is called
+  off; fail and the strike leaves you at a quarter of your HP (Grave Step does not dodge it), most of your army gone
+  and his army on screen dead; his armour takes it for him (he loses 40% of what he has left and his front).
+- **Rewards.** Slaying Harrow unlocks **Bone Mines** (you drop bone mines as you walk; enemies set them off, your dead
+  never do; evolves into **Killing Ground**, bone shrapnel from every blast, with **Tripwire**: mines go off from
+  farther and slow the foes caught) and so its character, **the Fallen Sergeant** (innate Sapper's Hands: two mines
+  where one drops; skins Golden Sergeant, Untouchable, Deathlord). The achievement **Broken Arrow** (kill Harrow before
+  his strike lands) unlocks the Act VIII counter-passive **Armour-Piercing Bones** (your summons' blows ignore part of
+  every armoured front; offered only in Act VIII).
 
 ### The illustrated epilogue
 
@@ -2924,6 +2956,11 @@ scripts/
                             spectral hearse (Act VIII)
     city_report.gd          The autotest's Act VIII lines (city blocks, armour, supers, civilians, escalation,
                             kinds, martial law, stage)
+    fort_kessler_report.gd  The autotest's Fort Kessler lines (the stage, its kinds, Mammoth, the threats, Harrow) and
+                            its items (Bone Mines, Tripwire, Armour-Piercing Bones)
+    fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
+                            sandbags)
+    fort_kessler_glyphs.gd  Code fallbacks of General Harrow's art
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
                             the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
@@ -3221,6 +3258,13 @@ scripts/
                             sledgehammer) and Don Marrow's board
       boss_don_marrow.gd, marrow_cover_kit.gd  Don Marrow: the Bounty, the revolver, the Call's squads, the Last
                             Stand's limo cover (through Armour) and gold minigun sweeps
+      machine_gunner_kit.gd, attack_helicopter_kit.gd
+                            Fort Kessler's army kinds (the swept fire lane, the strafing runs and rocket pods)
+      fort_kessler_director.gd  Fort Kessler: the Minefields, Mammoth's event, Broken Arrow's HUD countdown
+      minefields.gd         THE MINEFIELDS: hashed mines in the Minefield zone, the trigger, the ring's avoid check
+      mammoth_kit.gd        Mammoth, Fort Kessler's miniboss: two turrets, the largest wreck
+      boss_harrow.gd        General Vance Harrow: the command car and carpet bombing, the power armour, the tank
+                            column, Broken Arrow and its strike
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3497,6 +3541,10 @@ scripts/
     vargr_data.gd           Vargr's arrival and fight (the Hunt, the Turning, the Moon-Eater) (Act VII)
     moonfang_data.gd        Moonfang / Wolf of the Red Moon rules, Pack Blood and Silver Bones keys, Hunter's
                             Moon key (Act VII)
+    harrow_data.gd          General Harrow's arrival and fight (Command, the Hammer, Broken Arrow and its strike)
+                            (Act VIII, Fort Kessler)
+    bone_mines_data.gd      Bone Mines / Killing Ground rules, Tripwire keys, Sapper's Hands key (Act VIII; the
+                            spell node is abilities/spells/bone_mines.gd)
     court_rules_data.gd     Act VII's shared rules: BLOODFEAST (+ Embalmed / Silver Bones keys), NIGHT_WINGS,
                             BLOOD_MOON, ENDLESS_FEAST, the SOUNDS map
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
@@ -3724,7 +3772,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stubs `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), or the Act VIII stubs `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, and Skid Row's `armoured_limo`, `big_sal` and `bounty_board`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car or Kevlar Bones were taken). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stubs `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), or the Act VIII stubs `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |

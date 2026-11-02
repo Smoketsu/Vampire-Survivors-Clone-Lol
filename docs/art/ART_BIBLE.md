@@ -2915,6 +2915,36 @@ parapet; roof style `precinct`), `decals/skid_row_stall` (34x26, a Night Market 
 grey so code tints it neon pink or cyan) and `decals/skid_row_footing` (18x18, an overpass pillar's flat footing plate
 with a hazard ring: flat paint, since nothing on the floor may look solid). The Overpass's deck shadow and the zones'
 paint are code (`SkidRowGround`). Contact sheet `docs/act8/skid_row_contact_sheet.png`. **For the owner's review.**
+### Act VIII: Fort Kessler (Stage 23; Act VIII phase 2, Nov 2026)
+
+<!-- --- Act VIII: Fort Kessler --- -->
+Fort Kessler's art (GDD §15.0 "Fort Kessler art (Act VIII phase 2)"), in the Last Line's style above: army olive drab,
+asphalt and concrete, hazard yellow, no insignia, flags, letters or real markings. **The Machine Gunner** and **General
+Harrow** are **male**; **the Fallen Sergeant** is **female**, in the figure-redesign style (hourglass, fully clothed: an
+olive field jacket over a dark tank top, a webbing belt, cargo trousers, boots, a dented helmet; raised: grey-pale skin,
+soul-teal eyes). Prompts in `art_source/fort_kessler/<id>.txt` (the Act VIII unit template, the sex named), raw API images
+in `art_source/fort_kessler/raw/`, references in `refs/` (the lineup's machine gunner and tank, Harrow and his command car
+cropped from `act8_boss.png`, enlarged game sprites: `city/rifleman`, `city/tank`, `city/field_medic`,
+`player/moon_huntress`; two approved badges). The skins are made from the Sergeant's raw image. Rebuild:
+`python3 art_source/fort_kessler/make_art.py` (steps units, figures, badges, props, strips).
+
+| Sprite | Size (art px) | Notes |
+|---|---|---|
+| `city/machine_gunner` | 46 × 40 | kneeling behind a belt-fed gun on a bipod, brass belt; legs strip |
+| `city/attack_helicopter` | 84 × 44 | olive gunship facing right, rocket pods on stub wings, the rotor a grey disc; 2 empty rows above and below for the hover strip (art_check's "feet" rule fails by design, as the other hover kinds) |
+| `city/mammoth` | 108 × 60 | the super-heavy tank: two turrets, hazard-striped front plates, sandbags; drive strip (the cart rock) |
+| `bosses/harrow` | 72 × 72 | power armour, a badge-less peaked cap, a hazard-striped war hammer on his shoulder; legs strip |
+| `bosses/harrow_command` | 68 × 60 | his six-wheeled command car with a rocket box and the General in the roof hatch (phase 1); drive strip |
+| `player/fallen_sergeant` (+ `_hyper`, `_untouchable`, `_deathlord`) | 32 × 56 (skins 30 × 56) | figure redesign; bust rig (8-22, rows 13-19; skins 7-21) and idle strip; Golden Sergeant (white and gold), white phantom with soul-teal, black iron and crimson with a spiked crown |
+| `structures/kessler_mine` / `spells/bone_mine` | 10 × 9 | the minefield's olive mine / the spell's bone mine (their lamps are code, a slow blink at most 1 Hz) |
+| `decals/fk_sandbags` | 44 × 16 | a sandbag wall (FortKesslerGround) |
+| icons `bone_mines`, `tripwire`, `armour_piercing_bones` (violet), `killing_ground`, `ach_broken_arrow` (gold) | 32 | symbols on the frames of `abyssal_pact` / `tidecallers_host` |
+
+Pipeline notes: `prepare_sprite.py --ink-l 0.15 --no-prune --art-height N` with the army ramps (`make_art.py` UNITS);
+the Sergeant through `pixelate_source.py`, then `--no-cleanup`. The zone looks (barrier booms, minefield tape and warning
+signs, apron taxi lines and helipads) are code on the ground layer, drawn only when the camera crosses a redraw cell. The
+gold icon sheet came back with an extra copy of the reference badge, skipped. 12 API images, about $0.27 (ledger), no
+redos, no refusals. Contact sheet `docs/act8/fort_kessler_contact_sheet.png`. **For the owner's review.**
 
 ### Act VII art review, round 1 (Group B: figures)
 - Redone from the old source as the reference with "ONLY ONE figure" in the prompt; prompts updated in `art_source/ravensmoor/*.txt`, `art_source/court/blood_knight.txt`, `art_source/castle_sanguis/{nosferatu,dhampir_deathlord}.txt`.

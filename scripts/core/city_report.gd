@@ -71,6 +71,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	# Phase 2: each Act VIII stage's own lines go here (its stage, kinds and boss).
 	# --- Act VIII: Skid Row ---
 	SkidRowReport.print_lines(game, st)  # Big Sal, the Bounty, No Witnesses, the tear gas, Don Marrow (each when it ran).
+	# --- Act VIII: Fort Kessler --- (the minefields, Mammoth, the new army kinds, Harrow; FortKesslerReport)
+	FortKesslerReport.print_lines(game, st)
 
 
 ## The "city blocks" line (CityBlocks; "off" without a blocks layout).

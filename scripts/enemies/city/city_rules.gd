@@ -162,9 +162,14 @@ func blast(pos: Vector2, radius: float, dmg: float, source: String, both: bool) 
 
 
 ## The autotest autopilot's push away from every live City telegraph at `p`:
-## the vehicles' headlight lanes (Convoy) and the landing circles (CityShells).
+## the vehicles' headlight lanes (Convoy) and the landing circles (CityShells);
+## on Fort Kessler, the live mines (FortKesslerDirector).
 func danger_push(p: Vector2) -> Vector2:
-	return convoy.danger_push(p) + shells.danger_push(p)
+	var push := convoy.danger_push(p) + shells.danger_push(p)
+	# --- Act VIII: Fort Kessler --- off the minefields (null elsewhere).
+	if game.enemies.fort_kessler != null:
+		push += game.enemies.fort_kessler.danger_push(p)
+	return push
 
 
 ## Stage-load check of the city blocks' one-lookup invariant

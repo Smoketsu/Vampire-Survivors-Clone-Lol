@@ -429,6 +429,12 @@ func _ready() -> void:
 			var srg := SkidRowGround.new()  # Act VIII: Skid Row's four zone looks over the city blocks (SkidRowStage.ZONES).
 			srg.game = self
 			ground = srg
+		# --- Act VIII: Fort Kessler ---
+		"fort_kessler":
+			var fkg := FortKesslerGround.new()  # Act VIII: Fort Kessler's zone looks over CityGround (FortKesslerStage.ZONES).
+			fkg.look = stage_def.get("floor", {})
+			fkg.game = self
+			ground = fkg
 		_:
 			ground = Ground.new()
 	add_child(ground)

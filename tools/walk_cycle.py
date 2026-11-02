@@ -702,6 +702,17 @@ RIGS = {
     "city/squad_car": dict(mode="legs", hip=22, back=(0, 32), front=(32, 64), rigid=[], spread=0, lift=1, dip=1),
     "city/tank": dict(mode="legs", hip=40, back=(0, 39), front=(39, 78), rigid=[], spread=0, lift=1, dip=1),
     "city/blitz": dict(mode="legs", hip=36, back=(0, 19), front=(19, 48), rigid=[], spread=1, lift=1, dip=1),
+    # --- Act VIII: Fort Kessler ---
+    # The Machine Gunner shuffles on his knees (legs, small steps); the helicopter hovers (its rotor disc is one silhouette
+    # with the body, so it bobs whole); Mammoth and the command car roll like the tank (spread 0); General Harrow strides
+    # in his power armour; the Fallen Sergeant strides with the figure-redesign bust box and an idle strip.
+    "city/machine_gunner": dict(mode="legs", hip=30, back=(0, 20), front=(20, 46), rigid=[], spread=1, lift=1, dip=1),
+    "city/attack_helicopter": dict(mode="hover", bob=2, parts=[]),
+    "city/mammoth": dict(mode="legs", hip=44, back=(0, 54), front=(54, 108), rigid=[], spread=0, lift=1, dip=1),
+    "bosses/harrow": dict(mode="legs", hip=50, back=(0, 33), front=(33, 72), rigid=[], spread=2, lift=2, dip=1),
+    "bosses/harrow_command": dict(mode="legs", hip=44, back=(0, 34), front=(34, 68), rigid=[], spread=0, lift=1, dip=1),
+    "player/fallen_sergeant": dict(mode="legs", hip=36, back=(0, 15), front=(15, 32), rigid=[], spread=2, lift=2, dip=1,
+                                   bust=(8, 22, 13, 19, 2)),
     # --- Act VII: Ravensmoor ---
     "court/ghoul": dict(mode="legs", hip=29, back=(0, 12), front=(12, 30), rigid=[], spread=1, lift=1, dip=1),
     "court/old_greymane": dict(mode="legs", hip=64, back=(0, 43), front=(43, 86), rigid=[], spread=3, lift=3, dip=1),
@@ -856,6 +867,10 @@ SKINS = {
     "player/moon_huntress_hyper": "player/moon_huntress",
     "player/moon_huntress_untouchable": "player/moon_huntress",
     "player/moon_huntress_deathlord": "player/moon_huntress",
+    # --- Act VIII: Fort Kessler ---
+    "player/fallen_sergeant_hyper": "player/fallen_sergeant",
+    "player/fallen_sergeant_untouchable": "player/fallen_sergeant",
+    "player/fallen_sergeant_deathlord": "player/fallen_sergeant",
     # --- Act VII: Castle Sanguis ---
     "player/dhampir_hyper": "player/dhampir",
     "player/dhampir_untouchable": "player/dhampir",
@@ -873,6 +888,10 @@ SKIN_FIX = {
     # The Dhampir's Deathlord skin has no spirit bats (old and new still alike): no orbit, although the base rig has one.
     "player/dhampir_deathlord": {"back": (0, 22), "front": (22, 44), "orbit": []},
     "player/moon_huntress_deathlord": {"bust": (17, 27, 15, 21, 2)},
+    # --- Act VIII: Fort Kessler --- (the three skins are 30 wide, the base 32: their own splits and box)
+    "player/fallen_sergeant_hyper": {"back": (0, 14), "front": (14, 30), "bust": (7, 21, 13, 19, 2)},
+    "player/fallen_sergeant_untouchable": {"back": (0, 14), "front": (14, 30), "bust": (7, 21, 13, 19, 2)},
+    "player/fallen_sergeant_deathlord": {"back": (0, 14), "front": (14, 30), "bust": (7, 21, 13, 19, 2)},
     # --- Act VI: the Palace of Silk and Ash --- (the Succubus Queen's Deathlord skin is 58 tall: its own boxes)
     # Round 2 redo: the Hyper skin's bust (tan, cols 21-29) sits right of its feathered arm and wing (cols 17-20), the Untouchable
     # skin's (cream, cols 17-24) right of its grey arm: their own boxes narrowed onto the bust, the arm / glove pixels excluded.

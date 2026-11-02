@@ -134,6 +134,10 @@
 ##     with a "skid_row" config it creates the SkidRowDirector (Big Sal and the
 ##     Armoured Limo, the Bounty's doubled gangs, No Witnesses; `skid_row`) and
 ##     hands it the "big_sal" events. Null elsewhere.
+##   * Act VIII, Fort Kessler (GDD §15.0 "Fort Kessler (Act VIII phase 2)"):
+##     on a stage with a "fort_kessler" config it owns the FortKesslerDirector
+##     (the minefields, Mammoth, the Broken Arrow objective; `fort_kessler`)
+##     and hands it the "mammoth" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -307,6 +311,10 @@ var castle_sanguis: CastleSanguisDirector = null
 ## doubled gangs, No Witnesses; StageRegistry "skid_row"; null on every other
 ## stage).
 var skid_row: SkidRowDirector = null
+# --- Act VIII: Fort Kessler ---
+## Fort Kessler's mechanics (Act VIII: the minefields, Mammoth, the Broken
+## Arrow objective; StageRegistry "fort_kessler"; null on every other stage).
+var fort_kessler: FortKesslerDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -481,6 +489,12 @@ func _ready() -> void:
 		skid_row.game = game
 		skid_row.config = stage_def["skid_row"]
 		add_child(skid_row)  # Skid Row's director.
+	# --- Act VIII: Fort Kessler ---
+	if not (stage_def.get("fort_kessler", {}) as Dictionary).is_empty():
+		fort_kessler = FortKesslerDirector.new()
+		fort_kessler.game = game
+		fort_kessler.config = stage_def["fort_kessler"]
+		add_child(fort_kessler)  # Fort Kessler's director.
 
 
 # =====================================================================================
@@ -616,6 +630,9 @@ func step(delta: float) -> void:
 	# --- Act VIII: Skid Row ---
 	if skid_row != null:
 		skid_row.step(delta)  # The Bounty's gangs, No Witnesses, Big Sal.
+	# --- Act VIII: Fort Kessler ---
+	if fort_kessler != null:
+		fort_kessler.step(delta)  # The minefields, Mammoth.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -748,6 +765,9 @@ func objective_text() -> String:
 	# --- Act VIII: Skid Row ---
 	if skid_row != null and skid_row.objective_override() != "":
 		return skid_row.objective_override()  # Big Sal and his limo.
+	# --- Act VIII: Fort Kessler ---
+	if fort_kessler != null and fort_kessler.objective_override() != "":
+		return fort_kessler.objective_override()  # Broken Arrow's countdown, Mammoth.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -976,6 +996,12 @@ func _run_event(ev: Dictionary) -> void:
 				skid_row.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # Skid Row's miniboss (SkidRowDirector).
+		# --- Act VIII: Fort Kessler ---
+		"mammoth":
+			if fort_kessler != null:
+				fort_kessler.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Fort Kessler's miniboss (FortKesslerDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

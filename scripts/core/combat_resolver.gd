@@ -306,6 +306,8 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		var am := game.city.armour_mult(e, origin, shot, source)  # 1 = the front did nothing.
 		if am < 1.0:
 			game.stat_add("armour_front_dmg_prevented", amount * (1.0 - am) * (1.0 - e.armor))
+			if game.city.armour.last_pierce > 0.0:
+				game.stat_add("armour_pierced_dmg", amount * game.city.armour.last_pierce * (1.0 - e.armor))  # Act VIII, Fort Kessler: Armour-Piercing Bones let this through.
 			amount *= am
 	# --- Act IV: the Shores of Ilion --- Mortal Heel (the paired passive of
 	# Paris's Arrow, offered on every stage once Achilles fell): a directed hit

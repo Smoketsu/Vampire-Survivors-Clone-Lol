@@ -1,0 +1,14 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), a FLYING VEHICLE seen from above and a little from the side, drawn FACING RIGHT (nose to the right), the main rotor seen from above as a wide blurred disc
+
+LOW-RESOLUTION pixel art: the whole helicopter is only 40 pixels tall and about 72 long, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: an ARMY ATTACK HELICOPTER in olive-drab: a slim armoured fuselage with a narrow tandem cockpit canopy, stub wings on each side carrying ROCKET PODS (short tubes with dark holes), a chin gun under the nose, a long tail boom with a small tail rotor at the left end, the main rotor drawn as a pale translucent-looking grey disc ring with two dark blades. No star, no letters, no numbers, no flag, no badge, no insignia, no markings of any real army or agency.
+Signature shape that must read in silhouette: the slim fuselage with the long tail, the stub wings with rocket pods and the rotor disc above.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: olive body #4B5330 #6B7545 lit #8A9558; canopy #1E2024 with a cyan glint #3FE0E8; rocket pods and gun #101114 #3A3D44 #55595F; rotor disc #7A7F87 #A6ABB3; a tiny unlit red lamp #D82A2A
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+
+Attached: (1) a game sprite (the tank of this game) for pixel size, outline weight, the olive colours and flat look; (2) concept art of the army's vehicles for the look only (do NOT copy its detail level or painted shading).

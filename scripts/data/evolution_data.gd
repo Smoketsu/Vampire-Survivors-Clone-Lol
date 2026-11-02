@@ -98,7 +98,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VII: Castle Sanguis ---
 	"nocturne",
 	# --- Act VIII: Skid Row ---
-	"funeral_procession"]
+	"funeral_procession",
+	# --- Act VIII: Fort Kessler ---
+	"killing_ground"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -689,6 +691,28 @@ const EVOLUTIONS := {
 			"procession": 3,  # TUNING (not in GDD) the evolution flag: cars in each procession
 			"procession_gap": 46.0,  # TUNING (not in GDD) px between two cars
 			"pallbearers": 2,  # TUNING (not in GDD) most pallbearers a cast raises (first pass 3: 599 in the forced run)
+		},
+	},
+	# --- Act VIII: Fort Kessler ---
+	# Killing Ground (owner-approved Act VIII proposal: "Bone Mines -> Killing
+	# Ground (+ Tripwire)"): Bone Mines + Tripwire (a NEW passive, owner rule:
+	# at Lv 5). Own decision on its kit: bigger, harder mines laid faster, and
+	# each blast throws `shards` bone shards on a ring `shard_reach` px out,
+	# each hitting every enemy within `shard_radius` px for shard_share x the
+	# damage (source killing_ground_shards). Detected by the "shards" key.
+	"killing_ground": {
+		"base": "bone_mines",
+		"passive": "tripwire",
+		"display_name": "Killing Ground",  # Owner-approved proposal
+		"icon": "killing_ground",
+		"description": "The ground you walk becomes a minefield, and every blast throws bone shrapnel.",
+		"labels": {"damage": "Blast damage", "radius": "Blast radius", "max_mines": "Mines laid at once", "shards": "Shards", "shard_share": "Shard damage", "cooldown": "Drop every (s)"},
+		"stats": {
+			"damage": 50.0, "radius": 56.0, "trigger": 16.0, "max_mines": 14, "spacing": 32.0, "life": 16.0, "cooldown": 0.8,  # TUNING (not in GDD)
+			"shards": 6,  # TUNING (not in GDD) the evolution flag: bone shards a blast throws
+			"shard_share": 0.4,  # TUNING (not in GDD) of the blast's damage
+			"shard_reach": 64.0,  # TUNING (not in GDD) px out from the blast
+			"shard_radius": 26.0,  # TUNING (not in GDD) px each shard hits
 		},
 	},
 }

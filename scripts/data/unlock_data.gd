@@ -230,6 +230,15 @@ const UNLOCKS := {
 	"hearse_run": {"type": "spell", "boss": "don_marrow", "text": "Slay Don Marrow on Skid Row to unlock."},  # Owner-approved Act VIII proposal
 	"black_car": {"type": "passive", "boss": "don_marrow", "text": "Slay Don Marrow on Skid Row to unlock."},  # Hearse Run's paired passive (owner-approved proposal), unlocked with it
 	"kevlar_bones": {"type": "passive", "achievement": "no_witnesses", "text": "Earn No Witnesses: kill every civilian of Skid Row's opening crowd before one flees."},  # Owner (Nov 2, 2026): No Witnesses unlocks Kevlar Bones
+	# --- Act VIII: Fort Kessler ---
+	# General Harrow's fall (owner-approved Act VIII proposal "Rewards": Bone
+	# Mines is unlocked by General Harrow) with its paired passive, offered on
+	# every stage; the stage's achievement Broken Arrow earns Act VIII's
+	# counter-passive Armour-Piercing Bones (owner answer of Nov 2, 2026; the
+	# lead's pairing; offered only in Act VIII through its card row's "act").
+	"bone_mines": {"type": "spell", "boss": "harrow", "text": "Slay General Harrow at Fort Kessler to unlock."},  # Owner-approved Act VIII proposal
+	"tripwire": {"type": "passive", "boss": "harrow", "text": "Slay General Harrow at Fort Kessler to unlock."},  # Bone Mines' paired passive (owner-approved proposal), unlocked with it
+	"armour_piercing_bones": {"type": "passive", "achievement": "broken_arrow", "text": "Earn Broken Arrow: kill General Harrow before his strike lands."},  # Owner answer (Nov 2, 2026)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

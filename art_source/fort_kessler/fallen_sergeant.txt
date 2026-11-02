@@ -1,0 +1,14 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a confident soldier's pose, weight on one leg, a round bone-white mine held up in one hand
+
+LOW-RESOLUTION pixel art: the whole figure is only 56 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: THE FALLEN SERGEANT, a FEMALE soldier killed at a military base and raised as undead (a playable character), in the game's figure-redesign style: the most exaggerated hourglass figure (very full bust, an extremely tiny cinched waist, very wide curvy hips), confident and tough, her face clearly readable: grey-pale undead skin, glowing soul-teal eyes, a small scar, short dark hair under a dented olive helmet. A fitted olive field jacket buttoned up over her chest with the sleeves rolled up, a tight dark tank top under it, a webbing belt with pouches cinched at her waist, olive cargo trousers and black boots, two dog tags on a chain, hips and chest fully covered, never nude, tasteful. In one hand a round BONE MINE (a bone-white disc with a small teal lamp). No star, no letters, no numbers, no flag, no badge, no insignia, no markings of any real army or agency.
+Signature shape that must read in silhouette: the hourglass figure in the olive field jacket and helmet, the round bone mine in her hand.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: grey-pale skin #8C9A96 #B8C4BE; olive jacket, helmet and trousers #4B5330 #6B7545 #8A9558; tank top, belt and boots #101114 #1E2024 #3A3D44; dark hair #2B1E36; soul-teal eyes and lamp #3FE0E8; bone mine and dog tags #8C7B5E #D9CCAA #F2EBD3
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+
+Attached: (1) a game sprite (a female figure of this game) for pixel size, outline weight, the hourglass figure-redesign style and the flat look; (2) a game sprite (the army rifleman of this game) for the olive colours.

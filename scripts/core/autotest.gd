@@ -1538,6 +1538,8 @@ func finish(summary: Dictionary) -> void:
 	CastleSanguisReport.item_lines(game, st)  # Night Swarm, Old Blood, the Blood Spawn, Thirst Eternal (only when used; the stage's own lines are CourtReport's).
 	# --- Act VIII: Skid Row ---
 	SkidRowReport.item_lines(game, st)  # Hearse Run, Black Car, Kevlar Bones (only when taken; the stage's own lines are CityReport's).
+	# --- Act VIII: Fort Kessler ---
+	FortKesslerReport.item_lines(game, st)  # Bone Mines, Tripwire, Armour-Piercing Bones (only when taken; the stage's own lines are CityReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

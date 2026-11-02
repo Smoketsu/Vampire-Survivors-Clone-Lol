@@ -68,6 +68,9 @@
 ## and Act VIII's (Skid Row, SKID_ROW_IDS: stepped only; its own autotest line,
 ## SkidRowReport.item_lines()):
 ##   Hearse Run       -> HearseRun        (evolves into Funeral Procession)
+## and Act VIII's (Fort Kessler, FORT_KESSLER_IDS: stepped only; its own
+## autotest line, FortKesslerReport.item_lines()):
+##   Bone Mines       -> BoneMines        (evolves into Killing Ground)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -168,6 +171,11 @@ const CASTLE_SANGUIS_IDS := ["night_swarm"]
 ## Skid Row's unlockable spell (Don Marrow's reward): stepped only (no kill or
 ## after-physics hook), reported by SkidRowReport.
 const SKID_ROW_IDS := ["hearse_run"]
+# --- Act VIII: Fort Kessler ---
+## Fort Kessler's unlockable spell (General Harrow's reward): stepped only (no
+## kill or after-physics hook), reported by FortKesslerReport. Its id is
+## "bone_mines" (never the minefield's "kessler_mine").
+const FORT_KESSLER_IDS := ["bone_mines"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -218,6 +226,8 @@ const SOURCES := {
 	"night_swarm": ["night_swarm", "nocturne", "nocturne_leap"],
 	# --- Act VIII: Skid Row ---
 	"hearse_run": ["hearse_run", "funeral_procession"],
+	# --- Act VIII: Fort Kessler ---
+	"bone_mines": ["bone_mines", "killing_ground", "killing_ground_shards"],
 }
 
 ## Owning run.
@@ -356,6 +366,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # Skid Row's spell.
+	# --- Act VIII: Fort Kessler ---
+	for id: String in FORT_KESSLER_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Fort Kessler's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -443,6 +462,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act VIII: Skid Row ---
 		"hearse_run":
 			node = HearseRun.new()  # Skid Row's spell.
+		# --- Act VIII: Fort Kessler ---
+		"bone_mines":
+			node = BoneMines.new()  # Fort Kessler's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

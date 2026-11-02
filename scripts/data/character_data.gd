@@ -86,7 +86,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act VII: Castle Sanguis ---
 	"dhampir",
 	# --- Act VIII: Skid Row ---
-	"undertaker"]
+	"undertaker",
+	# --- Act VIII: Fort Kessler ---
+	"fallen_sergeant"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -148,6 +150,8 @@ const STAT_LABELS := {
 ##   witch_circle_radius     WitchCircle.step (share wider every hex circle of the
 ##                           spell; Act VII)
 ##   swarm_extra_bats        NightSwarm.step (extra bats in his swarm; Act VII)
+##   bone_mines_extra        BoneMines._drop (extra mines laid beside each one
+##                           she drops; Act VIII)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -189,7 +193,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act VII: Castle Sanguis ---
 	"swarm_extra_bats",
 	# --- Act VIII: Skid Row ---
-	"hearse_extra"]
+	"hearse_extra",
+	# --- Act VIII: Fort Kessler ---
+	"bone_mines_extra"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -794,6 +800,32 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": -0.03},  # TUNING (not in GDD) a sturdy, unhurried mortician
 		"sprite": "player/undertaker",
 		"tint": Color(0.62, 0.6, 0.66),  # TUNING (not in GDD) a funeral grey over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act VIII: Fort Kessler ---
+	# The Fallen Sergeant (Bone Mines' character; owner-approved Act VIII
+	# proposal "Rewards": "Bone Mines ... | The Fallen Sergeant, a soldier
+	# killed at Fort Kessler (figure style)"): FEMALE, in the figure-redesign
+	# style (hourglass, fully clothed: a torn olive field jacket buttoned over a
+	# fitted tank top, cargo trousers and boots, webbing and pouches, no
+	# insignia), raised: grey-pale skin, soul-teal eyes, short dark hair under a
+	# dented helmet, dog tags, a bone mine in one hand; the bust rig and idle
+	# breathing. Bone Mines must be unlocked (by General Harrow) before she can
+	# be earned, by the usual Lv 5 rule. Own decision on her innate (the
+	# proposal names none): Sapper's Hands, one more mine laid beside every one
+	# she drops (BoneMines._drop()).
+	"fallen_sergeant": {
+		"display_name": "The Fallen Sergeant",  # Owner-approved proposal
+		"title": "She held the minefield to the last. She still holds it.",
+		"spell": "bone_mines",
+		"innate": {
+			"id": "sappers_hands", "name": "Sapper's Hands",
+			"description": "Bone Mines lays two mines where it lays one.",
+			"values": {"bone_mines_extra": 1.0},  # TUNING (not in GDD) one more mine per drop
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) a sturdy soldier, a little slower
+		"sprite": "player/fallen_sergeant",
+		"tint": Color(0.62, 0.72, 0.46),  # TUNING (not in GDD) an olive drab over the violet
 		"starts_unlocked": false,
 	},
 }

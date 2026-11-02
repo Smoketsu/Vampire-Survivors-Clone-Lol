@@ -100,7 +100,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act VII: Castle Sanguis ---
 	"night_swarm",
 	# --- Act VIII: Skid Row ---
-	"hearse_run"]
+	"hearse_run",
+	# --- Act VIII: Fort Kessler ---
+	"bone_mines"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -805,6 +807,32 @@ const SPELLS := {
 			{"damage": 26.0, "hearses": 3, "width": 26.0, "length": 600.0, "speed": 560.0, "cooldown": 2.8, "range": 360.0},  # TUNING (not in GDD) first pass 16-32 at Lv 1-5 (with the evolution 282k in the forced seed-7 run, 2.3x the top summon class)
 		],
 	},
+	# --- Act VIII: Fort Kessler ---
+	# Bone Mines (GDD §15.0 "Bone Mines, Killing Ground, Tripwire and the
+	# Fallen Sergeant (Act VIII)"; owner-approved proposal: "bone mines dropped
+	# along the necromancer's path, triggered by enemies"; unlocked by slaying
+	# General Harrow, UnlockData): every `cooldown` s, once the necromancer
+	# stands `spacing` px from every mine laid, a bone mine drops where he
+	# stands (at most `max_mines`, each lasting `life` s); armed, the first
+	# enemy within `trigger` px sets it off: `damage` to every enemy within
+	# `radius` px. Summons never set one off. Stat keys: damage, radius (px),
+	# trigger (px), max_mines, spacing (px), life (s), cooldown (s). Logic:
+	# BoneMines; fixed rules: BoneMinesData; Tripwire (its paired passive)
+	# widens the trigger and slows the foes caught.
+	"bone_mines": {
+		"display_name": "Bone Mines",  # Owner-approved proposal
+		"icon": "bone_mines",
+		"description": "You drop bone mines as you walk. Enemies set them off; your dead never do.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Blast damage", "radius": "Blast radius", "max_mines": "Mines laid at once", "cooldown": "Drop every (s)"},
+		"levels": [
+			{"damage": 22.0, "radius": 40.0, "trigger": 14.0, "max_mines": 6, "spacing": 40.0, "life": 14.0, "cooldown": 1.4},  # TUNING (not in GDD)
+			{"damage": 27.0, "radius": 42.0, "trigger": 14.0, "max_mines": 7, "spacing": 40.0, "life": 14.0, "cooldown": 1.3},  # TUNING (not in GDD)
+			{"damage": 32.0, "radius": 45.0, "trigger": 15.0, "max_mines": 8, "spacing": 38.0, "life": 15.0, "cooldown": 1.2},  # TUNING (not in GDD)
+			{"damage": 38.0, "radius": 48.0, "trigger": 15.0, "max_mines": 10, "spacing": 36.0, "life": 15.0, "cooldown": 1.05},  # TUNING (not in GDD)
+			{"damage": 44.0, "radius": 52.0, "trigger": 16.0, "max_mines": 12, "spacing": 34.0, "life": 16.0, "cooldown": 0.9},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -833,7 +861,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VII: the Witchwood ---
 	"drain",
 	# --- Act VII: Castle Sanguis ---
-	"chain_share"]
+	"chain_share",
+	# --- Act VIII: Fort Kessler ---
+	"shard_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

@@ -261,6 +261,13 @@
 ##                        Marrow's board stands, No Witnesses); ground
 ##                        "skid_row" is its SkidRowGround (the four zone looks
 ##                        over the city blocks).
+## --- Act VIII: Fort Kessler ---
+##   fort_kessler       — FortKesslerDirector config (FortKesslerStage
+##                        .FORT_KESSLER, Act VIII, Fort Kessler: the
+##                        minefields' numbers, the Mammoth and Broken Arrow
+##                        objectives; the "mammoth" event); ground
+##                        "fort_kessler" is its FortKesslerGround (the four
+##                        zone looks over CityGround).
 class_name StageRegistry
 extends RefCounted
 
