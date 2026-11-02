@@ -1126,3 +1126,4 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-02 06:37,player/dhampir_untouchable,gpt-image-2.5-flare,medium,1024x1024,1,191,1024,439,0.0223,dhampir_untouchable.png
 2026-11-02 06:37,summons/nosferatu,gpt-image-2.5-flare,medium,1024x1024,1,273,1024,439,0.0227,nosferatu.png
 2026-11-02 06:38,player/dhampir_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,262,1024,439,0.0227,dhampir_deathlord.png
+2026-11-02 16:15,concepts/act9_boss_r4,gpt-image-2.5-flare,medium,1536x1024,3,753,618,343,0.0190,a1.png
