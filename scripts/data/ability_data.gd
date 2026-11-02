@@ -796,11 +796,11 @@ const SPELLS := {
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "fling": "Flung (px)", "fling_share": "Flung foe's hit"},
 		"levels": [
-			{"damage": 40.0, "cooldown": 3.0, "fling": 140.0, "fling_share": 0.4},  # TUNING (not in GDD)
-			{"damage": 50.0, "cooldown": 2.85, "fling": 155.0, "fling_share": 0.45},  # TUNING (not in GDD)
-			{"damage": 60.0, "cooldown": 2.7, "fling": 170.0, "fling_share": 0.5},  # TUNING (not in GDD)
-			{"damage": 72.0, "cooldown": 2.55, "fling": 185.0, "fling_share": 0.55},  # TUNING (not in GDD)
-			{"damage": 85.0, "cooldown": 2.4, "fling": 200.0, "fling_share": 0.6},  # TUNING (not in GDD)
+			{"damage": 34.0, "cooldown": 3.0, "fling": 140.0, "fling_share": 0.35},  # TUNING (not in GDD) first pass 40 / 0.4 (trimmed with Doomsday after the forced run)
+			{"damage": 42.0, "cooldown": 2.85, "fling": 155.0, "fling_share": 0.38},  # TUNING (not in GDD)
+			{"damage": 50.0, "cooldown": 2.7, "fling": 170.0, "fling_share": 0.41},  # TUNING (not in GDD)
+			{"damage": 60.0, "cooldown": 2.55, "fling": 185.0, "fling_share": 0.44},  # TUNING (not in GDD)
+			{"damage": 72.0, "cooldown": 2.4, "fling": 200.0, "fling_share": 0.47},  # TUNING (not in GDD) first pass 85 / 0.6
 		],
 	},
 }

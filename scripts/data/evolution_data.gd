@@ -684,8 +684,8 @@ const EVOLUTIONS := {
 		"description": "Two fists fall like the end of the world, and every foe they fling lands in a crater.",
 		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "fists": "Fists", "fling": "Flung (px)", "fling_share": "Flung foe's hit", "crater": "Crater (px)", "crater_share": "Crater damage"},
 		"stats": {
-			"damage": 110.0, "cooldown": 2.2, "fists": 2, "fling": 240.0, "fling_share": 0.65,  # TUNING (not in GDD)
-			"crater": 64.0, "crater_share": 0.6,  # TUNING (not in GDD) the evolution flag: the crater where a flung foe lands
+			"damage": 95.0, "cooldown": 2.3, "fists": 2, "fling": 240.0, "fling_share": 0.5,  # TUNING (not in GDD) first pass 110 / 2.2 s / 0.65: ~500k damage in the forced seed-7 run, far ahead of every source
+			"crater": 64.0, "crater_share": 0.4,  # TUNING (not in GDD) the evolution flag: the crater where a flung foe lands (first pass 0.6)
 		},
 	},
 }
