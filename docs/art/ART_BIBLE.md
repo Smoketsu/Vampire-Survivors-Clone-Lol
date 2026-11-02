@@ -2677,3 +2677,22 @@ recipes `pandemonium_*`.
 | `obstacles/iron_brazier`, `chain_post`, `ash_column`, `burning_censer`, `skull_pillar`, `obsidian_shard` (`_s/_m/_l`) | Round props | footprint + 4 wide | from `props_round.png` |
 | `obstacles/iron_wall`, `bridge_rail`, `ash_pew` (`_s/_l`, `_v`) | Long props, horizontal and end-on | length + 2 | from `props_long.png` |
 | `tiles/pandemonium_iron`, `_bridges`, `_cathedral`, `_throne` | Zone floors | 128x128 | `art_source/tiles/pandemonium_obsidian.png` / `_ash.png` |
+
+
+### Act VII: the Sanguine Court, the shared kinds (foundation, Nov 2026)
+
+<!-- --- Act VII: the Sanguine Court --- -->
+The Court's style for the stage agents (GDD §15.0 "Act VII art: the shared kinds"; `docs/act7/PROPOSAL.md`): **blood red** (`blood`: plate, drain beams, eyes; ink `#12060A` outlines the whole act), **black velvet** (`velvet`: capes, gowns, hair; its light shade is the rim that keeps black cloth readable), **moonlit silver** (`moonlight`: werewolf fur, bat wings, silver weapons, mist; `moon_light` is a glow colour), candle gold for trim (the existing gold), plus skin and brown. Velvet and moonlight borrow the blood ink for their outline. Never the player's violet, the undead's bone or teal, or the Covenant's crimson. Concept references (approved): `art_source/concepts/act7_lineup.png`, `act7_boss.png`, `act7_stage.png`. `prepare_sprite.py` folder `court/`: ramps blood, velvet, moonlight, gold, skin, brown. Prompts in `art_source/court/<id>.txt` (the Act VI template, the sex named).
+
+Generated with `tools/gen_image.py` (`--ref` an Inferno sprite for the pixel look plus a 2x crop of the concept lineup for the costume), one image each, no redos. Pipeline: `prepare_sprite.py --ink-l 0.15` straight on the source (`--no-levels` for the knight and the coffins; the bat `--art-height 20`, then two empty rows added on top for the hover bob by a one-off paste: not scripted, redo it by hand after a reconversion); the **Countess** through `pixelate_source.py` at 56, then `--ink-l 0.15 --no-cleanup --no-prune` (the usual figure route). Her `art_source/court/vampire_noble.png` is that pixelated grid, not the raw AI image (prepare_sprite archived over it). Walk strips by `walk_cycle.py` (rigs under `# --- Act VII: the Sanguine Court (the shared kinds) ---`), the Countess idle by `walk_cycle.py idle`. Pale skin snaps to the `skin` ramp, so faces read tan beside the concept's pallor; accepted.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `court/blood_thrall` | Blood Thrall (fodder, male): bitten, hunched, torn peasant clothes | 20x30 | legs walk (hip 19) |
+| `court/vampire_bat` | Vampire Bat (fodder flier): spread wings, red eyes | 32x22 | hover (bob 2, both wings flap; two empty rows on top) |
+| `court/blood_knight` | Blood Knight (soldier, male): blood-red plate, black cape, a halberd | 32x54 | legs walk (hip 36; the halberd, cols 24+, rigid) |
+| `court/werewolf` | Werewolf, hunter form (heavy, male): fur-collared coat, silver crossbow | 48x52 | legs walk (hip 36) |
+| `court/werewolf_beast` | Werewolf, beast form (heavy, male): grey fur, claws, snarl | 66x84 | legs walk (hip 60, spread 3) |
+| `court/vampire_noble` | The Countess (elite, female, figure redesign): velvet gown with a high slit, corset, high collar, a red drain beam | 32x56 | glide (robe rig, hip 34): bust box (cols 9-24, rows 11-18, two lobes) and `swish` hip box (cols 8-25, rows 26-36); idle strip |
+| `structures/court_coffin` | Closed coffin: black wood, iron bands, a bat emblem | 30x40 | still only; the glow is code |
+| `structures/court_coffin_open` | The same coffin opened: lid slid aside, a red glow and a pale hand inside | 36x40 | still only |

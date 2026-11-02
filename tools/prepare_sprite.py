@@ -198,6 +198,11 @@ FACTION_RAMPS = {
     # the damned's pale skin and wooden shafts; never the player's violet, the undead's bone
     # or soul teal, the Covenant's crimson or the Shogunate's lacquer.
     "inferno": ["obsidian", "lava", "demon", "charm", "grey", "skin", "brown"],
+    # --- Act VII: the Sanguine Court (assets/sprites/court/) ---
+    # Blood-red plate and eyes, black velvet, moonlit silver fur and steel, candle gold trim, plus
+    # pale skin and wood; never the player's violet, the undead's bone or soul teal, or the
+    # Covenant's crimson.
+    "court": ["blood", "velvet", "moonlight", "gold", "skin", "brown"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
 # blue of the Mage and Lich and the icy cyan of the frost summons never mix (GDD 15.0 art
