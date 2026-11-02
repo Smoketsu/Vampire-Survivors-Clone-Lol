@@ -1,8 +1,9 @@
 ## AtlasKit — the kit of ATLAS (CityEnemyData "atlas"; Act VIII, Liberty
 ## Heights; GDD §15.0 "Atlas, Aurora and Nightjar (Act VIII)"; owner-approved
 ## proposal: "Atlas (a strongman who throws wrecks; a long wind-up)"), a
-## SuperKit (guarded x0.6 until his weakness is read). Male: a towering
-## strongman in a sleeveless grey-and-gold wrestling suit, no emblem. His
+## SuperKit (guarded x0.6 until his weakness is read). Male: a huge bald,
+## bearded strongman in a green-and-gold sleeveless suit with gold arm bands,
+## no cape, no emblem (the approved concept act8_lineup.png). His
 ## power and weakness, "Strong. Slow to throw.":
 ##   * THE THROW: every throw_every s, with the necromancer within throw_range
 ##     px, he LIFTS the nearest standing wreck within lift_range px

@@ -2,8 +2,9 @@
 ## Heights; GDD §15.0 "Atlas, Aurora and Nightjar (Act VIII)"; owner-approved
 ## proposal: "Aurora (a flying energy blaster, figure style; falls out of the
 ## sky when stunned)"), a SuperKit (guarded x0.6 until her weakness is read).
-## Female, the figure-redesign style (clothed): a flier in a teal-and-white
-## suit with a short cape of light, no emblem. Her power and weakness,
+## Female, the figure-redesign style (clothed): a blonde flier in a fitted
+## white-and-gold suit with a flowing cape and glowing hands, no emblem (the
+## approved concept act8_lineup.png). Her power and weakness,
 ## "Flies. Falls when stunned.":
 ##   * SHE FLIES (row "flies": Enemy.flies, so no summon body-blocks her; the
 ##     one flag of the rule): the kit owns every tick in the air. She hovers

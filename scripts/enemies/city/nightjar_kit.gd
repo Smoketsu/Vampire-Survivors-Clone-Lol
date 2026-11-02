@@ -2,8 +2,9 @@
 ## Liberty Heights; GDD §15.0 "Atlas, Aurora and Nightjar (Act VIII)";
 ## owner-approved proposal: "Nightjar (a gadget vigilante who grapples summons
 ## out of the ring; must land to strike)"), a SuperKit (guarded x0.6 until his
-## weakness is read). Male: a cowled night watchman in charcoal armour with a
-## grapple gun and a wide dusk-grey cloak (no bat shapes, no emblem). His
+## weakness is read). Male: a hooded vigilante in a charcoal-and-purple
+## armoured suit with round glowing goggles, a short scarf and a grapple gun
+## (no cape, no bat shapes, no emblem; the approved concept act8_lineup.png). His
 ## power and weakness, "Grapples. Must land to strike.":
 ##   * HE SWINGS over the ring between strikes (row "flies": Enemy.flies, no
 ##     summon body-blocks him; in the air a grounded melee blow deals
