@@ -1466,4 +1466,20 @@ const COURT_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "noise", "dur": 1.0, "amp": 0.4, "attack": 0.25, "decay": 0.5, "lp0": 600.0, "lp1": 4500.0},
 			{"wave": "noise", "start": 0.1, "dur": 0.9, "amp": 0.15, "attack": 0.3, "decay": 0.4, "lp0": 3000.0, "lp1": 7000.0},
 			{"wave": "sine", "f0": 180.0, "f1": 360.0, "dur": 0.9, "amp": 0.08, "attack": 0.3, "decay": 0.4}]},
+	# --- Act VII: Ravensmoor --- (appended at the END: the pack's seeds follow its order)
+	# A ghoul sets to eating: wet tearing and a crunch of bone, twice.
+	"ghoul_feed": {"dur": 0.7, "volume_db": -17.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.18, "amp": 0.3, "attack": 0.01, "decay": 0.08, "lp0": 1200.0, "lp1": 500.0},
+			{"wave": "noise", "start": 0.06, "dur": 0.06, "amp": 0.35, "attack": 0.002, "decay": 0.02, "lp0": 4000.0, "lp1": 2500.0},
+			{"wave": "noise", "start": 0.32, "dur": 0.2, "amp": 0.26, "attack": 0.01, "decay": 0.09, "lp0": 1000.0, "lp1": 450.0},
+			{"wave": "noise", "start": 0.4, "dur": 0.05, "amp": 0.3, "attack": 0.002, "decay": 0.02, "lp0": 3500.0, "lp1": 2200.0},
+			{"wave": "sine", "f0": 120.0, "f1": 70.0, "dur": 0.15, "amp": 0.15, "decay": 0.06}]},
+	# Vargr roars as he calls his moon: a deep snarling roar under a rising howl.
+	"vargr_roar": {"dur": 1.8, "volume_db": -10.0, "max_voices": 1, "min_interval": 800, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 95.0, "f1": 70.0, "dur": 1.0, "amp": 0.26, "attack": 0.05, "decay": 0.4, "lp0": 700.0, "lp1": 350.0, "vib_hz": 19.0, "vib_depth": 0.06},
+			{"wave": "noise", "dur": 1.0, "amp": 0.22, "attack": 0.05, "decay": 0.4, "lp0": 900.0, "lp1": 400.0},
+			{"wave": "saw", "f0": 180.0, "f1": 380.0, "start": 0.7, "dur": 1.0, "amp": 0.12, "attack": 0.2, "decay": 0.5, "lp0": 1300.0, "lp1": 1700.0, "vib_hz": 5.0, "vib_depth": 0.02},
+			{"wave": "sine", "f0": 55.0, "f1": 42.0, "dur": 1.2, "amp": 0.4, "attack": 0.04, "decay": 0.5}]},
 }

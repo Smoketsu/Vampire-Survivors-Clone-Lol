@@ -1078,3 +1078,16 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-02 04:16,court/werewolf_beast,gpt-image-2.5-flare,medium,1024x1024,2,572,600,439,0.0208,werewolf_beast.png
 2026-11-02 04:16,structures/court_coffin,gpt-image-2.5-flare,medium,1024x1024,1,423,16,439,0.0154,court_coffin.png
 2026-11-02 04:16,structures/court_coffin_open,gpt-image-2.5-flare,medium,1024x1024,2,480,1040,439,0.0239,court_coffin_open.png
+2026-11-02 06:31,player/moon_huntress,gpt-image-2.5-flare,medium,1024x1024,2,694,1248,439,0.0266,moon_huntress.png
+2026-11-02 06:31,court/old_greymane,gpt-image-2.5-flare,medium,1024x1024,2,640,1280,439,0.0266,old_greymane.png
+2026-11-02 06:31,court/ghoul,gpt-image-2.5-flare,medium,1024x1024,2,548,919,439,0.0233,ghoul.png
+2026-11-02 06:31,bosses/vargr,gpt-image-2.5-flare,medium,1024x1024,2,649,1632,439,0.0295,vargr.png
+2026-11-02 06:32,tiles/ravensmoor_flags,gpt-image-2.5-flare,medium,1024x1024,1,255,1024,439,0.0226,ravensmoor_flags.png
+2026-11-02 06:32,icons/ravensmoor_gold,gpt-image-2.5-flare,medium,1024x1024,1,305,576,439,0.0193,icons_gold.png
+2026-11-02 06:32,player/moon_huntress_untouchable,gpt-image-2.5-flare,medium,1024x1024,1,216,1024,439,0.0224,moon_huntress_untouchable.png
+2026-11-02 06:32,obstacles/ravensmoor_long,gpt-image-2.5-flare,medium,1024x1024,1,449,448,439,0.0190,props_long.png
+2026-11-02 06:32,icons/ravensmoor_violet,gpt-image-2.5-flare,medium,1024x1024,1,345,576,439,0.0195,icons_violet.png
+2026-11-02 06:32,player/moon_huntress_hyper,gpt-image-2.5-flare,medium,1024x1024,1,184,1024,439,0.0223,moon_huntress_hyper.png
+2026-11-02 06:32,obstacles/ravensmoor_round,gpt-image-2.5-flare,medium,1024x1024,1,376,448,439,0.0186,props_round.png
+2026-11-02 06:32,player/moon_huntress_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,293,1024,439,0.0228,moon_huntress_deathlord.png
+2026-11-02 06:32,tiles/ravensmoor_heath,gpt-image-2.5-flare,medium,1024x1024,1,251,1024,439,0.0226,ravensmoor_heath.png

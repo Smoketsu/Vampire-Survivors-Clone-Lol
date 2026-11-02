@@ -298,4 +298,46 @@ const ENEMIES := {
 		"release_reach": 900.0,  # TUNING (not in GDD) px
 		"release_max": 3,  # TUNING (not in GDD) nobles one coffin releases
 	},
+	# --- Act VII: Ravensmoor ---
+	# Fodder pack: the GHOUL (owner-approved roster: "Packs of 4 that stop to
+	# eat corpses (fewer raises) and heal doing it"), built by Ravensmoor and
+	# usable by any stage. A gaunt, grey corpse-eater on all fours; not a
+	# vampire (feeds 0.25). Its MEAL (GhoulKit): a foe dying within eat_reach
+	# px of a free ghoul is claimed by the nearest one (the corpse leaves no
+	# body for any raise: Enemy.leaves_corpse()); it runs there (eat_timeout s
+	# at most) and eats for eat_time s, healing eat_heal of its max HP over the
+	# meal (the enemy heal path), then waits eat_cooldown s before the next.
+	#   eat_reach / eat_time / eat_heal / eat_cooldown / eat_timeout
+	"ghoul": {
+		"display_name": "Ghoul",
+		"max_hp": 20.0,  # TUNING (not in GDD) pack fodder (the thrall 15): it heals at the table
+		"move_speed": 66.0,  # TUNING (not in GDD) px/s; quick on all fours, it reaches the corpses first
+		"damage": 3.0,  # TUNING (not in GDD) a bite, before the time scaling
+		"attack_interval": 1.0,  # TUNING (not in GDD) s
+		"attack_range": 4.0,  # TUNING (not in GDD) px
+		"radius": 8.0,  # TUNING (not in GDD) px
+		"armor": 0.0,  # TUNING (not in GDD)
+		"xp": 1,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.35,  # TUNING (not in GDD) 0..1; "kill them before they reach the corpses"
+		"mass": 0.8,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "ghoul",
+		"feeds": 0.25,  # Owner-approved (Oct 31, 2026): the Court's kinds that are not vampires feed 25%
+		"fodder": true,
+		"eat_reach": 150.0,  # TUNING (not in GDD) px from a dying foe a free ghoul claims its corpse
+		"eat_time": 2.5,  # TUNING (not in GDD) s at the table
+		"eat_heal": 0.6,  # TUNING (not in GDD) share of its max HP healed over a meal
+		"eat_cooldown": 3.0,  # TUNING (not in GDD) s before it claims again
+		"eat_timeout": 4.0,  # TUNING (not in GDD) s it may run to a corpse before it gives up
+	},  # The Ghoul (Ravensmoor).
 }
+
+# --- Act VII: Ravensmoor ---
+## Kind id of the Ghoul (Ravensmoor's fodder pack; GhoulKit).
+const GHOUL: String = "ghoul"

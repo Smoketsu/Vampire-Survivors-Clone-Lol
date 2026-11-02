@@ -605,6 +605,27 @@ RECIPES = {
         "source": "pandemonium_obsidian.png", "method": "quilt",  # The Throne: polished obsidian.
         "colors": ["obsidian_ink", "floor_soil", "floor_slate", "floor_marble"],
     },
+    # --- Act VII: Ravensmoor ---
+    # The four zone floors of RAVENSMOOR (RavensmoorGround, tiles/ravensmoor_<style>): one API texture of night moor
+    # heather over peat (the Moor; recoloured to the Village's trodden mud and the Wolfwood's needles) and one of
+    # sunken churchyard flagstones (the Old Church). Both came back partly transparent and are stored opaque. The
+    # stones, red leaves and heather tufts stay code-drawn (RavensmoorGround).
+    "ravensmoor_moor": {
+        "source": "ravensmoor_heath.png", "method": "quilt",  # The Moor: dark heather over peat.
+        "colors": ["blood_ink", "velvet_dark", "floor_soil", "floor_earth"],
+    },
+    "ravensmoor_village": {
+        "source": "ravensmoor_heath.png", "method": "quilt",  # The Village: a trodden mud lane.
+        "colors": ["ink_warm", "floor_earth", "floor_dirt", "floor_ash"],
+    },
+    "ravensmoor_old_church": {
+        "source": "ravensmoor_flags.png", "method": "quilt",  # The Old Church: sunken flagstones.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_marble"],
+    },
+    "ravensmoor_wolfwood": {
+        "source": "ravensmoor_heath.png", "method": "quilt",  # The Wolfwood: pine needles and roots.
+        "colors": ["ink_green", "floor_soil", "floor_grass", "floor_earth"],
+    },
 }
 
 

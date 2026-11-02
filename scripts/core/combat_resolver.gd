@@ -169,6 +169,11 @@
 ##             a SPELL hit on a foe standing in fire (Brimstone.in_fire(): a
 ##             burning Brimstone pit or Hell Pit) deals more (stat
 ##             furnace_heart_bonus_dmg); exactly 1 while the passive is not owned.
+##   Ravensmoor (Act VII phase 2) — Pack Blood in damage_enemy(): every hit
+##             on a foe bleeding from Moonfang (Moonfang.bleeding()) deals more
+##             (stat pack_blood_bonus_dmg); exactly 1 while the passive is not
+##             owned. The kill path lets a Ghoul claim the corpse first
+##             (GhoulKit.claim_corpse(), only while Game.court exists).
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -313,6 +318,15 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 	if heart > 0.0 and HundredShadowsData.is_spell_source(source) and Brimstone.in_fire(game, e):
 		game.stat_add("furnace_heart_bonus_dmg", amount * heart)
 		amount *= 1.0 + heart
+	# --- Act VII: Ravensmoor --- Pack Blood (the paired passive of Moonfang,
+	# offered on every stage once Vargr fell): every hit on a foe BLEEDING from
+	# the bound necromancer's Moonfang (Moonfang.bleeding()) deals
+	# bleed_vulnerability more; exactly 1 while the passive is not owned (the
+	# bleed test only runs when it is).
+	var pack := game.abilities.passive_value(MoonfangData.PACK_BLOOD, MoonfangData.PACK_KEY)  # 0 when not owned.
+	if pack > 0.0 and Moonfang.bleeding(game, e):
+		game.stat_add("pack_blood_bonus_dmg", amount * pack)
+		amount *= 1.0 + pack
 	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
 	# undead fighting on it hit weaker.
 	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).
@@ -429,6 +443,12 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		game.stat_add("kills_by_" + source, 1.0)  # Killing blow per damage source (autotest spell summaries).
 		if source in MetaData.WARRIOR_KILL_SOURCES:
 			game.stat_add("warrior_kills", 1.0)  # Bone Legion achievement (MetaData)
+		# --- Act VII: Ravensmoor --- a free Ghoul near the corpse claims it
+		# first, so every corpse and raise path below finds no body there
+		# (GhoulKit.claim_corpse() -> Enemy.leaves_corpse(); only while the
+		# Court's rules exist, so nothing changes on Acts I to VI).
+		if game.court != null:
+			GhoulKit.claim_corpse(game, e)
 		game.horde.evolutions.on_enemy_killed(e, source)  # Lich raise-the-dead.
 		game.innates.on_enemy_killed(e, source)  # Character innates (no-op without one).
 		_kill_enemy(e, is_minion_source(source))

@@ -407,6 +407,14 @@ const HEIGHTS: Dictionary = {
 	"court/vampire_noble": 56.0,  # TUNING (not in GDD) elite tier, female (figure redesign at the approved level; 56 as the succubus): body ~52, the high collar above; she glides, the bust and hip box sway in the glide strip
 	"structures/court_coffin": 40.0,  # TUNING (not in GDD) the Court's coffin structure, closed (the loop glow is drawn by code)
 	"structures/court_coffin_open": 40.0,  # TUNING (not in GDD) the same coffin opened: the lid slid aside, a red glow inside
+	# --- Act VII: Ravensmoor (assets/sprites/court/, bosses/, player/) ---
+	"court/ghoul": 30.0,  # TUNING (not in GDD) pack fodder: a gaunt grey corpse-eater hunched on all fours, ~1.3 x as long as tall
+	"court/old_greymane": 96.0,  # TUNING (not in GDD) miniboss tier: a huge grey-maned wolf-man (the werewolf beast 84), the scarred mane above
+	"bosses/vargr": 120.0,  # TUNING (not in GDD) boss tier: the black wolf king, red cloak and iron crown (Moloch 124)
+	"player/moon_huntress": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign): body ~50, the wolf ears above
+	"player/moon_huntress_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gilded
+	"player/moon_huntress_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/moon_huntress_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown inside the same height
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

@@ -90,7 +90,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VI: the Palace of Silk and Ash ---
 	"unholy_desire",
 	# --- Act VI: Pandemonium ---
-	"lightbringer"]
+	"lightbringer",
+	# --- Act VII: Ravensmoor ---
+	"wolf_of_the_red_moon"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -596,6 +598,28 @@ const EVOLUTIONS := {
 		"stats": {
 			"stars": 3, "damage": 90.0, "radius": 52.0, "splash": 0.5, "fall_time": 0.45, "cooldown": 2.5,  # TUNING (not in GDD) first pass 120 / r56 / 2.2 s led every source by 4x
 			"flare": 0.25,  # TUNING (not in GDD) first pass 0.35; the evolution flag: share of the star's damage its flare ring deals
+		},
+	},
+	# --- Act VII: Ravensmoor ---
+	# Wolf of the Red Moon (owner-approved Act VII proposal: "Moonfang -> Wolf
+	# of the Red Moon (+ Pack Blood)"): Moonfang + Pack Blood (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: the jaws are a red wolf's
+	# that leaps from group to group: bigger, harder jaws, longer bleeds, and
+	# every jaw that bit something leaps on to the nearest unbitten foe within
+	# `chain_reach` px and snaps again, `chain` more times, `chain_gap` s apart.
+	# Detected by the "chain" key.
+	"wolf_of_the_red_moon": {
+		"base": "moonfang",
+		"passive": "pack_blood",
+		"display_name": "Wolf of the Red Moon",  # Owner-approved proposal
+		"icon": "wolf_of_the_red_moon",
+		"description": "A red spectral wolf leaps from pack to pack, and every bite leaves them bleeding.",
+		"labels": {"damage": "Bite damage", "jaws": "Jaws", "chain": "Leaps", "radius": "Bite radius", "bleed_share": "Bleed per second", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 26.0, "jaws": 4, "radius": 34.0, "bleed_share": 0.25, "bleed_time": 4.0, "cooldown": 2.1, "range": 360.0,  # TUNING (not in GDD) first pass 40 / r36 / 0.35 / 4.5 s with 2 leaps (272k from the evolved jaws alone in the forced run)
+			"chain": 1,  # TUNING (not in GDD) the evolution flag: more snaps each jaw leaps on to (first pass 2)
+			"chain_gap": 0.18,  # TUNING (not in GDD) s between two snaps of a leaping jaw
+			"chain_reach": 130.0,  # TUNING (not in GDD) px a jaw leaps to its next group
 		},
 	},
 }

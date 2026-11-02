@@ -190,7 +190,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act VI: the Palace of Silk and Ash ---
 	"velvet_chains", "sweet_surrender", "faithless",
 	# --- Act VI: Pandemonium ---
-	"pride", "crown_of_horns"]
+	"pride", "crown_of_horns",
+	# --- Act VII: Ravensmoor ---
+	"pack_blood", "silver_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -222,7 +224,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act VI: the Palace of Silk and Ash ---
 	"sweet_surrender", "faithless",
 	# --- Act VI: Pandemonium ---
-	"crown_of_horns"]
+	"crown_of_horns",
+	# --- Act VII: Ravensmoor ---
+	"silver_bones"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1453,6 +1457,49 @@ const PASSIVES := {
 			{"special_damage": 0.24},  # TUNING (not in GDD)
 			{"special_damage": 0.32},  # TUNING (not in GDD)
 			{"special_damage": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VII: Ravensmoor ---
+	# Pack Blood (Moonfang's paired passive; owner-approved Act VII proposal:
+	# "Wolf of the Red Moon (+ Pack Blood)"; unlocked with the spell by Vargr and
+	# offered on every stage). Own decision on its effect: the pack smells blood:
+	# every hit on a foe BLEEDING from Moonfang (Moonfang.bleeding()) deals
+	# bleed_vulnerability more, from any source, summons and spells alike
+	# (CombatResolver.damage_enemy(), one block; stat pack_blood_bonus_dmg).
+	"pack_blood": {
+		"display_name": "Pack Blood",  # Owner-approved proposal
+		"icon": "pack_blood",
+		"description": "Foes bleeding from Moonfang take more damage from every hit.",
+		"labels": {"bleed_vulnerability": ["Damage to bleeding foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"bleed_vulnerability": 0.03},  # TUNING (not in GDD)
+			{"bleed_vulnerability": 0.06},  # TUNING (not in GDD)
+			{"bleed_vulnerability": 0.09},  # TUNING (not in GDD)
+			{"bleed_vulnerability": 0.12},  # TUNING (not in GDD)
+			{"bleed_vulnerability": 0.15},  # TUNING (not in GDD) every hit, not only spells: lower than Furnace Heart's 0.40; first pass 0.25 (147k bonus in the forced run)
+		],
+	},
+	# Act VII's counter-passive Silver Bones (owner-approved Act VII proposal:
+	# "Silver Bones (summon hits on werewolves and vampire nobles deal more, and
+	# mist form lasts half as long)"; unlocked by the achievement Coffin Nails
+	# and offered only in Act VII through its card row's "act"). The
+	# foundation's two hooks read it: CourtRules.silver_bones_mult() (a summon's
+	# hit on a werebeast or noble kind deals 1 + silver_damage) and
+	# CourtRules.silver_mist_mult() (a noble's mist lasts 1 - mist_reduction).
+	"silver_bones": {
+		"display_name": "Silver Bones",  # Owner-approved proposal
+		"icon": "silver_bones",
+		"description": "Silver in your dead's bones: they strike werewolves and vampire nobles harder, and the nobles' mist breaks sooner.",
+		"labels": {"silver_damage": ["Summon damage to werewolves and nobles", "pct"], "mist_reduction": ["Noble mist time", "neg_pct"]},
+		"act": 7,  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"silver_damage": 0.10, "mist_reduction": 0.10},  # TUNING (not in GDD)
+			{"silver_damage": 0.18, "mist_reduction": 0.20},  # TUNING (not in GDD)
+			{"silver_damage": 0.26, "mist_reduction": 0.30},  # TUNING (not in GDD)
+			{"silver_damage": 0.34, "mist_reduction": 0.40},  # TUNING (not in GDD)
+			{"silver_damage": 0.42, "mist_reduction": 0.50},  # Owner-approved proposal: "mist form lasts half as long" at Lv 5; damage TUNING (not in GDD)
 		],
 	},
 }

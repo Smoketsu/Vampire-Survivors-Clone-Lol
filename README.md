@@ -2046,6 +2046,39 @@ feeds on every hit), the **Werewolf** (a hunter with a silver crossbow until the
 beast that lunges) and the **Vampire Noble** (the Countess: a blood-drain beam that feeds her from range, and at low
 HP 1.5 s of mist before she reforms nearer you), plus the Court's **coffin**. The Codex has a **Court** tab.
 
+### Act VII: Ravensmoor (Stage 19)
+
+<!-- --- Act VII: Ravensmoor --- -->
+A cursed village on the moors below the Court's castle, its people long since turned to thralls (GDD §15.0
+"Ravensmoor (Act VII phase 2)" and the rows after it). Built, still hidden ("playable": false) until the lead's
+integration and the owner's review.
+
+- **Four zones on the clock, each changing as a Blood Moon sets:** the Moor (20:00), the Village (15:15), the Old
+  Church (11:15) and the Wolfwood (7:15), each with its own floor and obstacles (moor cairns, moor pines, village
+  fences, thralls' cottages, the old church's broken walls, grave crosses).
+- **Sleeping coffins.** Two lie near you at the start of each zone. Break one before the next Blood Moon for a Soul
+  Ash bounty (6 each, the end screen's objectives line); any left whole open when the moon rises, and a Vampire
+  Noble climbs out. Vargr's own moons open them too.
+- **Ghouls.** Packs of four grey corpse-eaters (from 2:30, a pack every 45 s, plus the waves). A free ghoul near a
+  dying foe claims its corpse, runs there and eats it, healing; the corpse is gone for every raise (Corpse
+  Explosion, Raise Dead, the Lich, Death Mark, Grave Tide). Kill them on the way or at the table.
+- **Old Greymane** (miniboss, 10:00 left), the pack's alpha, with three werewolf hunters: his howl turns every
+  werewolf near him into the beast at once and spurs them; a feeding lunge.
+- **Vargr, the Moon-Eater** (3:00 left), the werewolf king, who calls his own Blood Moon at each phase. **The
+  Hunt:** he circles your ring and lunges at your weakest summon. **The Turning** (below two thirds): he howls his
+  pack into beasts around him and leaps over the ring at you (a landing circle shows where). **The Moon-Eater**
+  (below a third): the arena goes dark but for a red circle around him, he lunges and leaps both, and every hit he
+  lands feeds him.
+- **Rewards.** Slaying Vargr unlocks **Moonfang** (spectral wolf jaws snap at the nearest groups and leave them
+  bleeding; evolves into **Wolf of the Red Moon** with **Pack Blood**: bleeding foes take more damage from every
+  hit) and so its character, **the Moon-Cursed Huntress** (innate Hunter's Moon: one more set of jaws; skins
+  Golden Moon, Untouchable, Deathlord). The achievement **Coffin Nails** (break every sleeping coffin before it
+  opens) unlocks the Act VII counter-passive **Silver Bones** (summons hit werewolves and nobles harder, and the
+  nobles' mist breaks sooner; offered only in Act VII).
+- **Autotest:** `--stage=ravensmoor`, `--boss=vargr`, `--spells=moonfang`, `--passives=silver_bones`,
+  `--character=moon_huntress`, `--spawn=ghoul@T`, `old_greymane@T`, `sleeping_coffin@T`; lines `ravensmoor`,
+  `ravensmoor kinds`, `old greymane`, `vargr`, `act VII spell`, `act VII passives`.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2722,6 +2755,10 @@ scripts/
     court_ground.gd         The Act VII stubs' placeholder floor (the STAGE's "floor": moor / fen / castle)
     court_report.gd         The autotest's Act VII lines (bloodfeast, night wings, blood moon, kinds, endless
                             feast, stage)
+    ravensmoor_report.gd    The autotest's Ravensmoor lines (ravensmoor, kinds, Old Greymane, Vargr) and the
+                            Moonfang / Pack Blood / Silver Bones lines (Act VII)
+    ravensmoor_ground.gd    Ravensmoor's four zone floors (tiles/ravensmoor_<style>, Act VII)
+    ravensmoor_glyphs.gd    Code-drawn fallbacks of Ravensmoor's obstacles, kinds and Vargr (Act VII)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
                             the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
@@ -2968,6 +3005,14 @@ scripts/
       blood_thrall_kit.gd, vampire_bat_kit.gd, blood_knight_kit.gd, werewolf_kit.gd, vampire_noble_kit.gd
                             The shared kinds (the turning and the lunge, the drain beam and the mist)
       court_coffin_kit.gd   The coffin: open_coffin(), nobles released on its own clock
+      ghoul_kit.gd          Ravensmoor's Ghoul: claim_corpse() (the kill path; the corpse is gone for every
+                            raise through Enemy.leaves_corpse()), the run to the corpse and the meal
+      old_greymane_kit.gd   Old Greymane: the howl (WerewolfKit.howl_turn(), a spur), the lunge, the miniboss bar
+      sleeping_coffin_kit.gd  Ravensmoor's sleeping coffin (one noble inside; tells the director when broken)
+      ravensmoor_director.gd  Ravensmoor: the coffin waves (bounty, opened by the moon), Coffin Nails, the ghoul
+                            packs, Old Greymane's event and objective
+      boss_vargr.gd         Vargr: the Hunt (circling, the lunge at the weakest summon), the Turning (the howl,
+                            the leap), the Moon-Eater (the darkness, harder feeding); vargr_dark.gd draws it
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3238,7 +3283,11 @@ scripts/
     stages/pandemonium_stage.gd    shared kinds with portal events, the Last Judgment, placeholder floors / bosses
     court_enemy_data.gd     The Sanguine Court's shared kinds (Blood Thrall, Vampire Bat, Blood Knight, Werewolf,
                             Vampire Noble) and the coffin; the feeds / flies / werebeast / noble keys (Act VII)
-                            (ravensmoor_ / witchwood_ / castle_sanguis_enemy_data.gd: each stage's own, empty)
+                            (ravensmoor_ / witchwood_ / castle_sanguis_enemy_data.gd: each stage's own;
+                            Ravensmoor's: Old Greymane and the sleeping coffin; the Ghoul is a shared row)
+    vargr_data.gd           Vargr's arrival and fight (the Hunt, the Turning, the Moon-Eater) (Act VII)
+    moonfang_data.gd        Moonfang / Wolf of the Red Moon rules, Pack Blood and Silver Bones keys, Hunter's
+                            Moon key (Act VII)
     court_rules_data.gd     Act VII's shared rules: BLOODFEAST (+ Embalmed / Silver Bones keys), NIGHT_WINGS,
                             BLOOD_MOON, ENDLESS_FEAST, the SOUNDS map
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,

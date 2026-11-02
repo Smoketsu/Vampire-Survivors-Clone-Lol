@@ -1,0 +1,7 @@
+A sheet of THREE separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its third of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. MOONFANG: a pale moonlit spectral wolf's head seen from the side, its jaws wide open with long white fangs, three drops of red blood falling below.
+2. PACK BLOOD: three small grey wolf paw prints in a row, the last one filled with red blood, a red drop above.
+3. SILVER BONES: a white bone crossed with a gleaming silver arrow, a small grey wolf's head silhouette behind them.
+Colours: violet #160A21 #4A2569 #7A42AD #A35CFA; moonlight #6E7A8C #B4C0D0 #E6EEF7; blood #5A0A14 #A3142A #E0384E; bone #8C7B5E #D9CCAA #F2EBD3.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

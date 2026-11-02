@@ -602,6 +602,11 @@ RIGS = {
     "court/werewolf": dict(mode="legs", hip=36, back=(0, 27), front=(27, 48), rigid=[], spread=2, lift=2, dip=1),
     "court/werewolf_beast": dict(mode="legs", hip=60, back=(0, 36), front=(36, 66), rigid=[], spread=3, lift=3, dip=1),
     "court/vampire_noble": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, bust=(9, 24, 11, 18, 2, 2), swish=(8, 25, 26, 36, 2)),
+    # --- Act VII: Ravensmoor ---
+    "court/ghoul": dict(mode="legs", hip=18, back=(0, 17), front=(17, 34), rigid=[], spread=1, lift=1, dip=1),
+    "court/old_greymane": dict(mode="legs", hip=64, back=(0, 43), front=(43, 86), rigid=[], spread=3, lift=3, dip=1),
+    "bosses/vargr": dict(mode="legs", hip=82, back=(0, 63), front=(63, 126), rigid=[], spread=3, lift=3, dip=1),
+    "player/moon_huntress": dict(mode="robe", hip=30, rigid=[(31, 42, 0, None)], sway=1, dip=1, bust=(19, 27, 12, 18, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -700,6 +705,10 @@ SKINS = {
     "player/fallen_saint_hyper": "player/fallen_saint",
     "player/fallen_saint_untouchable": "player/fallen_saint",
     "player/fallen_saint_deathlord": "player/fallen_saint",
+    # --- Act VII: Ravensmoor ---
+    "player/moon_huntress_hyper": "player/moon_huntress",
+    "player/moon_huntress_untouchable": "player/moon_huntress",
+    "player/moon_huntress_deathlord": "player/moon_huntress",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

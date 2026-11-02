@@ -2696,3 +2696,34 @@ Generated with `tools/gen_image.py` (`--ref` an Inferno sprite for the pixel loo
 | `court/vampire_noble` | The Countess (elite, female, figure redesign): velvet gown with a high slit, corset, high collar, a red drain beam | 32x56 | glide (robe rig, hip 34): bust box (cols 9-24, rows 11-18, two lobes) and `swish` hip box (cols 8-25, rows 26-36); idle strip |
 | `structures/court_coffin` | Closed coffin: black wood, iron bands, a bat emblem | 30x40 | still only; the glow is code |
 | `structures/court_coffin_open` | The same coffin opened: lid slid aside, a red glow and a pale hand inside | 36x40 | still only |
+
+### Act VII: Ravensmoor (Stage 19; Act VII phase 2, Nov 2026)
+
+<!-- --- Act VII: Ravensmoor --- -->
+Ravensmoor's art (GDD §15.0 "Ravensmoor (Act VII phase 2)" and the rows after it), in the Court's style above: moonlit
+silver, black velvet and blood, with grey-brown fur (never purple), peat brown and grey moor stone. The **Ghoul**, **Old
+Greymane** and **Vargr** are **male**; **the Moon-Cursed Huntress** is **female**, in the figure-redesign style (hourglass,
+fully clothed: a dark leather hunter's coat over a corset with a covered V neckline, thigh-high boots, a wolf-pelt mantle,
+wolf ears and tail). Prompts in `art_source/ravensmoor/<id>.txt` (the Act VII unit template, the sex named), raw API images in
+`art_source/ravensmoor/raw/`, references in `refs/` (a 2× crop of the ghoul from `act7_lineup.png`, the lineup's werewolf,
+Vargr cropped from `act7_boss.png`, enlarged game sprites: `court/blood_thrall`, `werewolf_beast`, `vampire_noble`; an
+approved tile, obstacle and badge). The skins are made from the Huntress's raw image. Rebuild:
+`python3 art_source/ravensmoor/make_art.py` (steps units, figures, badges, props, floors, strips).
+
+| Sprite | Size (art px) | Notes |
+|---|---|---|
+| `court/ghoul` | 34 × 30 | a gaunt grey corpse-eater hunched low, red eyes and a bloody maw (the concept's teal eyes dropped: teal is the undead's) |
+| `court/old_greymane` | 86 × 96 | the old alpha: grey-brown fur, a pale silver mane, scars, a broken iron collar |
+| `bosses/vargr` | 126 × 120 | the wolf king: charcoal fur lit grey (the concept's black fur would sink into the floor), iron crown, white fur collar, ragged red cloak |
+| `player/moon_huntress` (+ `_hyper`, `_untouchable`, `_deathlord`) | 42 × 56 | figure redesign; bust rig (19-27, rows 12-18) and idle strip; Golden Moon (gilded), white phantom with soul-teal, black iron and crimson |
+| obstacles `moor_cairn` (s/m/l), `grave_cross`, `moor_pine` (s/l); `village_fence`, `thatch_cottage`, `church_ruin` (s/l, H and `_v`) | per size | `moor_pine`, not `black_pine` (Castle Kurogane's kind) |
+| tiles `ravensmoor_moor` / `_village` / `_old_church` / `_wolfwood` | 128 | two API textures (night heath, churchyard flags), recoloured by `make_tile.py` recipes |
+| icons `moonfang`, `pack_blood`, `silver_bones` (violet), `wolf_of_the_red_moon`, `ach_coffin_nails` (gold) | 32 | symbols on the frames of `abyssal_pact` / `tidecallers_host` |
+
+Pipeline notes: `prepare_sprite.py --ink-l 0.15` with explicit ramps (`make_art.py` UNITS / FIGURES). The Huntress goes through
+`pixelate_source.py` and is lifted ×1.35 first by `brighten.py` (her dark coat failed the lightness rule), without the gold
+ramp (her pale face snapped to it) and so without the skin ramp in the result: her face reads moon-pale, as a vampire-touched
+huntress should. Walk strips by `walk_cycle.py` (rigs under `# --- Act VII: Ravensmoor ---`). `art_check.py`: every figure
+passes on the dark floors; Vargr, the Huntress, her Deathlord skin and the props fail only on the March and Sanctum road
+floors (lighter than any Act VII floor). Each prop and badge sheet came back with one extra piece (a barrel; a copy of the
+reference badge), skipped. 13 API images, about $0.30 (ledger), no redos, no refusals. **For the owner's review.**

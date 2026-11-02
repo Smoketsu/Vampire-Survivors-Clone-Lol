@@ -426,7 +426,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VI: the Palace of Silk and Ash ---
 	"unmoved",
 	# --- Act VI: Pandemonium ---
-	"morning_star_falls"]
+	"morning_star_falls",
+	# --- Act VII: Ravensmoor ---
+	"coffin_nails"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -590,6 +592,15 @@ const ACHIEVEMENTS := {
 	# Sovereign of Pandemonium (UnlockData / TitleData).
 	"morning_star_falls": {"display_name": "Morning Star Falls", "description": "Cast down the Morning Star in Pandemonium",
 		"stat": "boss_kills", "stage": "pandemonium", "goal": 1, "unlock": "The title Sovereign of Pandemonium", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) the end of Part One (The Sun Goes Out 450)
+	# --- Act VII: Ravensmoor ---
+	# Owner-approved Act VII achievement "Coffin Nails" ("break every coffin on
+	# Ravensmoor before it opens"): a Ravensmoor run in which every wave of
+	# sleeping coffins was placed and every one was broken while still closed
+	# (RavensmoorDirector sets the run stat ravensmoor_coffin_nails; MetaProgress
+	# counts the runs, lifetime coffin_nails_runs). The Endless Feast's own
+	# coffins after 0:00 do not count. It unlocks the counter-passive Silver Bones.
+	"coffin_nails": {"display_name": "Coffin Nails", "description": "Break every sleeping coffin on Ravensmoor before it opens",
+		"stat": "coffin_nails_runs", "goal": 1, "unlock": "The Silver Bones passive", "bounty": 300},  # Owner-approved Act VII proposal; bounty TUNING (not in GDD) as Gate Crashed
 }
 
 # --- Content wave 2: B. Achievement rewards ---

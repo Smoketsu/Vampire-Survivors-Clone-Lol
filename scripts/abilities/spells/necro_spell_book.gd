@@ -56,6 +56,9 @@
 ## and Act VI's (Pandemonium, PANDEMONIUM_IDS: the same generic hooks; its own
 ## autotest line, PandemoniumReport.item_lines()):
 ##   Fall from Grace  -> FallFromGrace    (evolves into Lightbringer)
+## and Act VII's (Ravensmoor, RAVENSMOOR_IDS: stepped only; its own autotest
+## line, RavensmoorReport.item_lines()):
+##   Moonfang         -> Moonfang         (evolves into Wolf of the Red Moon)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -139,6 +142,10 @@ const SILK_PALACE_IDS := ["tempt"]
 ## Pandemonium's unlockable spell (the Morning Star's reward): stepped, kill
 ## hooked and after-physics hooked like KUROGANE_IDS, reported by PandemoniumReport.
 const PANDEMONIUM_IDS := ["fall_from_grace"]
+# --- Act VII: Ravensmoor ---
+## Ravensmoor's unlockable spell (Vargr's reward): stepped like BURNING_GATE_IDS
+## (no kill or after-physics hook), reported by RavensmoorReport.
+const RAVENSMOOR_IDS := ["moonfang"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -181,6 +188,8 @@ const SOURCES := {
 	"tempt": ["tempt", "unholy_desire", "desire_burst", "tempt_heartbreak"],
 	# --- Act VI: Pandemonium ---
 	"fall_from_grace": ["fall_from_grace", "lightbringer", "lightbringer_flare"],
+	# --- Act VII: Ravensmoor ---
+	"moonfang": ["moonfang", "wolf_of_the_red_moon", "moonfang_bleed"],
 }
 
 ## Owning run.
@@ -283,6 +292,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # Pandemonium's spell.
+	# --- Act VII: Ravensmoor ---
+	for id: String in RAVENSMOOR_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Ravensmoor's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -358,6 +376,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act VI: Pandemonium ---
 		"fall_from_grace":
 			node = FallFromGrace.new()  # Pandemonium's spell.
+		# --- Act VII: Ravensmoor ---
+		"moonfang":
+			node = Moonfang.new()  # Ravensmoor's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

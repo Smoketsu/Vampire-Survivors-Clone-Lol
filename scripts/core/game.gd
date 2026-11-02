@@ -399,6 +399,9 @@ func _ready() -> void:
 			var cg := CourtGround.new()  # Act VII placeholder floor (the STAGE's "floor").
 			cg.look = stage_def.get("floor", {})
 			ground = cg
+		# --- Act VII: Ravensmoor ---
+		"ravensmoor":
+			ground = RavensmoorGround.new()  # Act VII: Ravensmoor's four zone floors (RavensmoorStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)
