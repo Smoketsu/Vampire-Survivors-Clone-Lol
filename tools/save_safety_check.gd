@@ -10,7 +10,10 @@
 ##   numbered (Fix 14);
 ## - refunds pay back what the save says was paid, not today's prices (Fix 18);
 ## - flags a Web page address may not set (WebLinkData, Fix 4) and the typed
-##   settings readers (§20).
+##   settings readers (§20);
+## - co-op input checks: a relay welcome with a script in its code or a bad seat
+##   is refused, and a host start naming another offering for the guest's seat,
+##   or with the wrong number of loadouts, is refused (Fixes 1 and 2).
 ## Called from ossuary_check.gd's _run(); every file lives in that check's temp
 ## directory, never the real save. tools/.gdignore keeps it out of exports.
 extends RefCounted
@@ -31,6 +34,7 @@ func run() -> void:
 	_check_recovery()
 	_check_paid_refund()
 	_check_web_args_and_settings()
+	_check_coop_inputs()
 	GameState.autotest_meta_save = false
 	Meta._reset()
 
@@ -173,3 +177,36 @@ func _check_web_args_and_settings() -> void:
 	cfg.set_value("video", "zoom", 3)
 	_check(Settings._flag(cfg, "feel", "screen_shake", true) == true and is_equal_approx(Settings._num(cfg, "audio", "master", 0.5), 0.5)
 			and Settings._text(cfg, "video", "zoom", "normal") == "normal", "wrong-typed settings keep their defaults")
+
+
+# --- Fixes 1 and 2: what the relay and the host send -----------------------------
+
+func _check_coop_inputs() -> void:
+	CoopNet._reset_session()
+	CoopNet.state = CoopNet.State.CONNECTING
+	CoopNet._on_text(JSON.stringify({"t": "welcome", "code": "AB';alert(1)//", "slot": 0}))
+	_check(CoopNet.state == CoopNet.State.CLOSED and CoopNet.code == "", "a welcome whose code holds a script is refused")
+	CoopNet._reset_session()
+	CoopNet.state = CoopNet.State.CONNECTING
+	CoopNet._on_text(JSON.stringify({"t": "welcome", "code": "BCDFG".rpad(CoopNetData.CODE_LENGTH, "B").left(CoopNetData.CODE_LENGTH), "slot": 7}))
+	_check(CoopNet.state == CoopNet.State.CLOSED and CoopNet.local_slot == -1, "a welcome with a seat beyond 0-1 is refused")
+	CoopNet._reset_session()
+	CoopNet.state = CoopNet.State.LOBBY
+	CoopNet._on_text(JSON.stringify({"t": "welcome", "code": "BCDFG".rpad(CoopNetData.CODE_LENGTH, "B").left(CoopNetData.CODE_LENGTH), "slot": 0}))
+	_check(CoopNet.state == CoopNet.State.CLOSED, "a second welcome in the lobby (a forged one) is refused")
+	# The guest's own loadout: no offering. The host names one for the guest's seat.
+	CoopNet._reset_session()
+	CoopNet.local_slot = 1
+	var mine := CoopNet._clean_loadout({"name": "P2"}, 1)  # The guest's loadout as it sent it.
+	CoopNet.loadouts = [CoopNet._clean_loadout({"name": "P1"}, 0), mine]
+	var offering: String = String(OfferingData.OFFERINGS.keys()[0])  # A real offering id.
+	var forged := mine.duplicate(true)  # The guest's seat as a tampered host sends it.
+	forged["offering"] = offering
+	var info := {"seed": 7, "config": {}, "loadouts": [CoopNet.loadouts[0], forged]}  # The tampered start info.
+	_check(CoopNet._start_problem(info) == "offering", "a start naming an offering the guest never chose is refused")
+	_check(CoopNet._start_problem({"seed": 7, "config": {}, "loadouts": [CoopNet.loadouts[0]]}) == "loadouts", "a start with one loadout is refused")
+	_check(CoopNet._start_problem({"seed": 7, "config": {}, "loadouts": [CoopNet.loadouts[0], 5]}) == "loadouts", "a start with a non-Dictionary loadout is refused")
+	_check(CoopNet._start_problem({"seed": 7, "config": {}, "loadouts": [CoopNet.loadouts[0], mine]}) == "", "an honest start passes")
+	CoopNet._reset_session()
+	CoopNet.state = CoopNet.State.OFFLINE
+	CoopNet.set_process(false)  # As at startup: nothing runs until host() / join().
