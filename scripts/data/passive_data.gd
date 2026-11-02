@@ -196,7 +196,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act VII: the Witchwood ---
 	"moonlit_rite", "embalmed",
 	# --- Act VII: Castle Sanguis ---
-	"old_blood", "thirst_eternal"]
+	"old_blood", "thirst_eternal",
+	# --- Act VIII: Skid Row ---
+	"black_car", "kevlar_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -234,7 +236,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act VII: the Witchwood ---
 	"embalmed",
 	# --- Act VII: Castle Sanguis ---
-	"thirst_eternal"]
+	"thirst_eternal",
+	# --- Act VIII: Skid Row ---
+	"kevlar_bones"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1603,6 +1607,50 @@ const PASSIVES := {
 			{"unit_heal": 0.30},  # TUNING (not in GDD)
 			{"unit_heal": 0.40},  # TUNING (not in GDD)
 			{"unit_heal": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VIII: Skid Row ---
+	# Black Car (Hearse Run's paired passive; owner-approved Act VIII proposal:
+	# "Funeral Procession (+ Black Car)"; unlocked with the spell by Don Marrow
+	# and offered on every stage). Own decision on its effect: the black car
+	# leaves them reeling: every foe a hearse strikes is slowed by hearse_slow
+	# for HearseRunData.BLACK_CAR_SLOW_TIME s (HearseRun reads it once per strike
+	# through CombatResolver.slow_enemy(), the one enemy slow path; stat
+	# hearse_black_car_slows).
+	"black_car": {
+		"display_name": "Black Car",  # Owner-approved proposal
+		"icon": "black_car",
+		"description": "Foes struck by a hearse reel: they are slowed for a while.",
+		"labels": {"hearse_slow": ["Slow on struck foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hearse_slow": 0.15},  # TUNING (not in GDD)
+			{"hearse_slow": 0.22},  # TUNING (not in GDD)
+			{"hearse_slow": 0.29},  # TUNING (not in GDD)
+			{"hearse_slow": 0.36},  # TUNING (not in GDD)
+			{"hearse_slow": 0.45},  # TUNING (not in GDD)
+		],
+	},
+	# Act VIII's counter-passive Kevlar Bones (owner-approved Act VIII proposal:
+	# "Kevlar Bones (summons take less ranged damage)"; unlocked by the
+	# achievement No Witnesses and offered only in Act VIII through its card
+	# row's "act"). The foundation's hook reads it: Armour.kevlar_mult(), once in
+	# CombatResolver.damage_unit(): a RANGED City hit on a summon (a "ranged"
+	# City row's kind id or a CityEnemyData.RANGED_SOURCES tag) deals
+	# 1 - ranged_reduction (stat kevlar_dmg_prevented).
+	"kevlar_bones": {
+		"display_name": "Kevlar Bones",  # Owner-approved proposal
+		"icon": "kevlar_bones",
+		"description": "Your dead are laced with kevlar: the city's guns hurt them less.",
+		"labels": {"ranged_reduction": ["Ranged damage to summons", "neg_pct"]},
+		"act": 8,  # Owner-approved: the act's counter-passives are offered only in Act VIII (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"ranged_reduction": 0.10},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.18},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.26},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.33},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.40},  # TUNING (not in GDD)
 		],
 	},
 }

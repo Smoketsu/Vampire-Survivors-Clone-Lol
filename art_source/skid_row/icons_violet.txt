@@ -1,0 +1,7 @@
+A sheet of THREE separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its third of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. HEARSE RUN: a pale spectral-green ghostly hearse car seen from the side, speeding right, three short motion streaks behind it.
+2. BLACK CAR: the front of a glossy black car seen head-on with two glowing yellow headlights and a small gold grille.
+3. KEVLAR BONES: a white bone crossed over a dark grey bulletproof vest panel with a squashed grey bullet stuck in it.
+Colours: violet #160A21 #4A2569 #7A42AD #A35CFA; spectral green #1F7A5C #3FD39A #9CFFD8; asphalt #101114 #1E2024 #3A3D44 #55595F; gold #7A5A14 #E8A43A #FFD24D; bone #8C7B5E #D9CCAA #F2EBD3.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

@@ -424,6 +424,11 @@ func _ready() -> void:
 			cyg.look = stage_def.get("floor", {})
 			cyg.game = self
 			ground = cyg
+		# --- Act VIII: Skid Row ---
+		"skid_row":
+			var srg := SkidRowGround.new()  # Act VIII: Skid Row's four zone looks over the city blocks (SkidRowStage.ZONES).
+			srg.game = self
+			ground = srg
 		_:
 			ground = Ground.new()
 	add_child(ground)

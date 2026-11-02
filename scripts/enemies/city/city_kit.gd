@@ -242,7 +242,9 @@ func _drive(e: Enemy, delta: float) -> bool:
 		var wreck := o.kind == CityEnemyData.WRECK
 		conv.on_ram(e, wreck)
 		if wreck:
-			g.combat.damage_enemy(e, e.max_hp * float(CityRulesData.CONVOY["ram_damage"]), "wreck_ram")
+			# --- Act VIII: Skid Row --- a row may set its own share (the Armoured Limo's
+			# plated grille); every other vehicle keeps CONVOY's.
+			g.combat.damage_enemy(e, e.max_hp * float(d.get("ram_damage", CityRulesData.CONVOY["ram_damage"])), "wreck_ram")
 		drive_state = RAM
 		_drive_t = 0.0
 		hold(e)

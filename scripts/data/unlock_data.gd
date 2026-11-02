@@ -221,6 +221,15 @@ const UNLOCKS := {
 	"thirst_eternal": {"type": "passive", "boss": "carmilla", "text": "Slay Queen Carmilla and the Elder in Castle Sanguis to unlock."},  # Its paired passive (own decision), unlocked with it
 	"ender_of_the_feast": {"type": "title", "achievement": "last_supper",
 		"text": "Earn Last Supper: beat the Elder in Castle Sanguis."},  # Own decision (the clear is recorded as a title, as Act VI's Sovereign of Pandemonium)
+	# --- Act VIII: Skid Row ---
+	# Don Marrow's fall (owner-approved Act VIII proposal "Rewards": Hearse Run
+	# is unlocked by Don Marrow) with its paired passive, offered on every stage;
+	# the stage's achievement No Witnesses earns Act VIII's counter-passive
+	# Kevlar Bones (offered only in Act VIII through its card row's "act"; the
+	# lead's pairing, GDD §15.0 "Act VIII phase 2: owner answers").
+	"hearse_run": {"type": "spell", "boss": "don_marrow", "text": "Slay Don Marrow on Skid Row to unlock."},  # Owner-approved Act VIII proposal
+	"black_car": {"type": "passive", "boss": "don_marrow", "text": "Slay Don Marrow on Skid Row to unlock."},  # Hearse Run's paired passive (owner-approved proposal), unlocked with it
+	"kevlar_bones": {"type": "passive", "achievement": "no_witnesses", "text": "Earn No Witnesses: kill every civilian of Skid Row's opening crowd before one flees."},  # Owner (Nov 2, 2026): No Witnesses unlocks Kevlar Bones
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

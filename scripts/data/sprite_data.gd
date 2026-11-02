@@ -419,8 +419,8 @@ const HEIGHTS: Dictionary = {
 	"city/rifleman": 40.0,  # TUNING (not in GDD) army ranged soldier: olive drab, helmet, a rifle at the shoulder
 	"city/tank": 52.0,  # TUNING (not in GDD) army vehicle, drawn from above-front facing right: about 78 wide x 52 high (the brief\'s ~80 is its length; the antenna and turret on top); drive strip
 	"city/blitz": 44.0,  # TUNING (not in GDD) the reference Super, male: a sprinting speedster with a winged helmet; dash strip
-	"structures/city_wreck": 34.0,  # TUNING (not in GDD) a burning vehicle wreck (about 40 wide), the flames above
-	"structures/city_wreck_burnt": 34.0,  # TUNING (not in GDD) the same wreck burnt out: fire out, the shell and a few embers
+	"structures/city_wreck": 38.0,  # TUNING (not in GDD) a burning vehicle wreck, 60 x 38 art px (Act VIII, Skid Row: redrawn to cover the 52 x 36 wreck rect; drawn at its own size), the flames above
+	"structures/city_wreck_burnt": 38.0,  # TUNING (not in GDD) the same wreck burnt out, 60 x 38 art px: fire out, the shell and a few embers
 	# --- Act VII: Ravensmoor (assets/sprites/court/, bosses/, player/) ---
 	"court/ghoul": 38.0,  # TUNING (not in GDD) pack fodder: a gaunt grey corpse-eater, hunched and walking, big head carried forward (raised 30 -> 38 so its face reads)
 	"court/old_greymane": 96.0,  # TUNING (not in GDD) miniboss tier: a huge grey-maned wolf-man (the werewolf beast 84), the scarred mane above
@@ -455,6 +455,16 @@ const HEIGHTS: Dictionary = {
 	"player/dhampir_deathlord": 56.0,  # TUNING (not in GDD) skin art: his body, the spiked crown above
 	"summons/blood_spawn": 40.0,  # TUNING (not in GDD) a light summon (Rogue 38): a gaunt crouching brawler
 	"summons/nosferatu": 52.0,  # TUNING (not in GDD) its evolution, taller
+	# --- Act VIII: Skid Row (assets/sprites/city/, bosses/, structures/, projectiles/, player/) ---
+	"city/armoured_limo": 36.0,  # TUNING (not in GDD) the miniboss's car, drawn from above-front facing right: about 80 wide x 36 high (body ~72 x 30); drive strip (the cart rock)
+	"city/big_sal": 52.0,  # TUNING (not in GDD) miniboss tier on foot, male: a huge enforcer in a pinstripe suit, the sledgehammer above his shoulder
+	"bosses/don_marrow": 72.0,  # TUNING (not in GDD) boss tier, male: the Kingpin in a white suit, a gold cane and a gold minigun (body radius 18, drawn larger)
+	"structures/bounty_board": 44.0,  # TUNING (not in GDD) a billboard of wanted posters on two legs (no letters)
+	"projectiles/spectral_hearse": 30.0,  # TUNING (not in GDD) Hearse Run's spectral hearse from above-front, facing right (~56 wide); drawn faded by code
+	"player/undertaker": 56.0,  # TUNING (not in GDD) character tier, male: the top hat above
+	"player/undertaker_hyper": 56.0,  # TUNING (not in GDD) skin art: his body, gilded
+	"player/undertaker_untouchable": 56.0,  # TUNING (not in GDD) skin art: his body, the white phantom
+	"player/undertaker_deathlord": 56.0,  # TUNING (not in GDD) skin art: his body, the spiked crown inside the same height
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

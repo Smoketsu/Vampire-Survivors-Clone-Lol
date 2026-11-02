@@ -65,6 +65,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	if row.is_empty():
 		return false
 	# Phase 2: each Act VIII stage's own fallbacks go here, before the shared kinds'.
+	# --- Act VIII: Skid Row ---
+	if SkidRowGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # Big Sal's Armoured Limo, Big Sal, the bounty board.
 	var body := Palette.CITY_CONCRETE  # Body colour by tier.
 	match String(row.get("tier", "gangs")):
 		"gangs":

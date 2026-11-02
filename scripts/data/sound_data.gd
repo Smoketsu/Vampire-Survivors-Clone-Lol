@@ -1646,4 +1646,18 @@ const CITY_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "saw", "f0": 110.0, "start": 0.18, "dur": 0.55, "amp": 0.22, "attack": 0.02, "decay": 0.35, "lp0": 800.0, "lp1": 600.0},
 			{"wave": "saw", "f0": 82.4, "start": 0.72, "dur": 0.7, "amp": 0.22, "attack": 0.02, "decay": 0.4, "lp0": 800.0, "lp1": 500.0},
 			{"wave": "sine", "f0": 55.0, "start": 0.18, "dur": 1.2, "amp": 0.25, "attack": 0.05, "decay": 0.6}]},
+	# --- Act VIII: Skid Row --- (appended at the END: the pack's seeds follow its order)
+	# Don Marrow's gold minigun: a rising whir and a long, dense rattle of shots.
+	"minigun": {"dur": 1.4, "volume_db": -13.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 60.0, "f1": 140.0, "dur": 0.4, "amp": 0.12, "attack": 0.05, "decay": 0.2, "lp0": 900.0, "lp1": 1400.0},
+			{"wave": "square", "f0": 28.0, "start": 0.25, "dur": 1.1, "amp": 0.18, "attack": 0.01, "decay": 0.3, "lp0": 2600.0, "lp1": 1800.0},
+			{"wave": "noise", "start": 0.25, "dur": 1.1, "amp": 0.3, "attack": 0.01, "decay": 0.35, "lp0": 4200.0, "lp1": 2400.0},
+			{"wave": "sine", "f0": 90.0, "f1": 70.0, "start": 0.25, "dur": 1.0, "amp": 0.2, "attack": 0.02, "decay": 0.4}]},
+	# A riot cop's tear-gas canister lands: a clunk and a long soft hiss.
+	"gas_hiss": {"dur": 1.1, "volume_db": -19.0, "max_voices": 2, "min_interval": 500, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.05, "amp": 0.35, "attack": 0.002, "decay": 0.02, "lp0": 1800.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 220.0, "f1": 160.0, "dur": 0.08, "amp": 0.14, "attack": 0.002, "decay": 0.04},
+			{"wave": "noise", "start": 0.06, "dur": 1.0, "amp": 0.22, "attack": 0.08, "decay": 0.6, "lp0": 7000.0, "lp1": 4000.0}]},
 }

@@ -223,8 +223,8 @@
 ##   * Act VIII, the Last Line (GDD §15.0 "Act VIII foundation (phase 1)"):
 ##     --stage=skid_row|fort_kessler|liberty_heights, --spawn= with its kinds
 ##     (civilian, street_thug, gang_gunner, riot_cop, squad_car, swat_breacher,
-##     field_medic, rifleman, tank, blitz, city_wreck),
-##     --boss=don_marrow|harrow|paragon. The bot keeps out of the vehicles'
+##     field_medic, rifleman, tank, blitz, city_wreck; Skid Row's armoured_limo,
+##     big_sal, bounty_board), --boss=don_marrow|harrow|paragon. The bot keeps out of the vehicles'
 ##     headlight lanes and the landing circles (CityRules.danger_push()) and off
 ##     Blitz's crouched line (his kit's danger_push()), never flees from a
 ##     civilian, and on a city-block layout slides along the building faces
@@ -1536,6 +1536,8 @@ func finish(summary: Dictionary) -> void:
 	WitchwoodReport.item_lines(game, st)  # Hex Circle, Moonlit Rite, Embalmed (only when taken; the stage's own lines are CourtReport's).
 	# --- Act VII: Castle Sanguis ---
 	CastleSanguisReport.item_lines(game, st)  # Night Swarm, Old Blood, the Blood Spawn, Thirst Eternal (only when used; the stage's own lines are CourtReport's).
+	# --- Act VIII: Skid Row ---
+	SkidRowReport.item_lines(game, st)  # Hearse Run, Black Car, Kevlar Bones (only when taken; the stage's own lines are CityReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

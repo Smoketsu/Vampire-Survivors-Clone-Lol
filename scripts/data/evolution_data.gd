@@ -96,7 +96,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VII: the Witchwood ---
 	"witches_sabbath",
 	# --- Act VII: Castle Sanguis ---
-	"nocturne"]
+	"nocturne",
+	# --- Act VIII: Skid Row ---
+	"funeral_procession"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -665,6 +667,28 @@ const EVOLUTIONS := {
 		"stats": {
 			"bats": 8, "damage": 13.0, "orbit": 58.0, "cooldown": 1.5,  # TUNING (not in GDD) first pass 15 (Nocturne led every source by ~2x in the forced run)
 			"chain": 1, "chain_share": 0.5,  # TUNING (not in GDD) the evolution flag: leaps after each bite and their share of the bite
+		},
+	},
+	# --- Act VIII: Skid Row ---
+	# Funeral Procession (GDD §15.0 "Hearse Run, Funeral Procession, Black Car
+	# and the Undertaker (Act VIII)"; owner-approved proposal "Hearse Run ->
+	# Funeral Procession (+ Black Car)"): Hearse Run + Black Car (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: every hearse is a
+	# procession of `procession` cars `procession_gap` px apart, each striking
+	# on its own, and every foe a car kills rises as a PALLBEARER (a temporary
+	# Warrior, at most `pallbearers` a cast). Detected by the "procession" key.
+	"funeral_procession": {
+		"base": "hearse_run",
+		"passive": "black_car",
+		"display_name": "Funeral Procession",  # Owner-approved proposal
+		"icon": "funeral_procession",
+		"description": "A procession of spectral hearses drives through your foes, and the dead it makes walk behind it.",
+		"labels": {"damage": "Hit damage", "hearses": "Hearses", "procession": "Cars each", "pallbearers": "Pallbearers a cast", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 26.0, "hearses": 3, "width": 28.0, "length": 640.0, "speed": 560.0, "cooldown": 2.7, "range": 380.0,  # TUNING (not in GDD) first pass 34 (244k from the processions alone in the forced seed-7 run)
+			"procession": 3,  # TUNING (not in GDD) the evolution flag: cars in each procession
+			"procession_gap": 46.0,  # TUNING (not in GDD) px between two cars
+			"pallbearers": 2,  # TUNING (not in GDD) most pallbearers a cast raises (first pass 3: 599 in the forced run)
 		},
 	},
 }

@@ -2183,6 +2183,38 @@ crowds), the **Gang Gunner** (two pistols sprayed from the hip), the **Riot Cop*
 **Field Medic** (heals the soldiers near her), the **Rifleman** (squads of four, short bursts), the **Tank** (front
 and flat armour, a cannon) and **Blitz** (the speedster Super). The Codex has a **Last Line** tab, grouped by tier.
 
+### Act VIII: Skid Row (Stage 22)
+
+<!-- --- Act VIII: Skid Row --- -->
+The docks and back streets of the last great city, where the dead first come up out of the sewers (GDD §15.0 "Skid
+Row (Act VIII phase 2)" and the rows after it). Built, still hidden ("playable": false) until the lead's integration
+and the owner's review.
+
+- **Four zones on the clock over the same streets:** the Alleys (20:00), the Night Market (15:00: rows of lit neon
+  stalls in the open lots), the Overpass (10:00: the elevated road's shadow and its pillar footings over every other
+  street) and the Precinct (5:00: blue-trimmed precinct roofs, blue kerb paint). A zone changes the looks only; no
+  street moves.
+- **The ladder stops at SWAT** (owner): the gangs from 0:00, the police at 4:00, SWAT and the Guard at 8:00. No army
+  and no Supers before 0:00; Martial Law still throws every tier.
+- **Tear gas.** Riot cops (on every Act VIII stage) lob a canister at your ring every 14 s: a grey-green cloud that
+  slows your summons inside it for 4 s (the ground-slow path; Brinewalker helps). It clears when its cop falls.
+- **Big Sal and the Armoured Limo** (miniboss, 9:30 left). His black limo rams through your ring with an armoured
+  front (hit it from the side) while his crew sprays pistols out of both windows. Wreck it and Big Sal climbs out of
+  the burning wreck with a sledgehammer (a telegraphed swing): kill him for the miniboss chest.
+- **Don Marrow, the Kingpin** (3:00 left), a crime boss in a white suit. **The Bounty:** he raises a bounty board, a
+  priority target; while it stands the gangs come twice as thick. Break it. He fires a gold revolver. **The Call**
+  (below two thirds): squads of riot cops, SWAT breachers, a medic and now and then a squad car come together every
+  10 s until he falls. **The Last Stand** (below a third): his limo rolls up and he fights from behind its armour
+  (hit him from the side) with a gold minigun that sweeps a whole street lane through you after a gold warning:
+  step out of the lane or Grave Step through it.
+- **Rewards.** Slaying Don Marrow unlocks **Hearse Run** (spectral hearses drive street lanes through your foes;
+  evolves into **Funeral Procession** with its paired passive **Black Car**: processions of hearses, and the dead
+  they make rise as pallbearers) and its character **the Undertaker** (Last Ride: one more hearse a cast; a Hyper,
+  an Untouchable and a Deathlord skin). The achievement **No Witnesses** (kill every civilian of the opening crowd
+  before one flees the streets) unlocks the Act VIII counter-passive **Kevlar Bones** (the city's guns hurt your
+  summons less).
+- **Wrecks** now cover their whole footprint (60 x 38 art for the 52 x 36 wreck).
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2884,6 +2916,12 @@ scripts/
                             crack, the landing circles (Act VIII)
     city_lamps.gd           The slow red pulse of the rooftop antenna lamps in view (Act VIII; visual only, never
                             headless)
+    skid_row_report.gd      The autotest's Skid Row lines (skid row, tear gas, big sal, don marrow) and the
+                            Hearse Run / Black Car / Kevlar Bones item lines (Act VIII)
+    skid_row_ground.gd      Skid Row's four zone looks over the city blocks: the market stalls, the overpass's
+                            shadow and footings, the precinct's paint (Act VIII)
+    skid_row_glyphs.gd      Code-drawn fallbacks of Skid Row's limo, Big Sal, the bounty board, Don Marrow and the
+                            spectral hearse (Act VIII)
     city_report.gd          The autotest's Act VIII lines (city blocks, armour, supers, civilians, escalation,
                             kinds, martial law, stage)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
@@ -3175,7 +3213,14 @@ scripts/
       super_kit.gd          The Supers' base kit: guarded / exposed, expose(), the plate
       civilian_kit.gd, street_thug_kit.gd, gang_gunner_kit.gd, riot_cop_kit.gd, squad_car_kit.gd,
       swat_breacher_kit.gd, field_medic_kit.gd, rifleman_kit.gd, tank_kit.gd, blitz_kit.gd, city_wreck_kit.gd
-                            The shared kinds (the flight, the spray, the flashbang, the bursts, the cannon, the dash)
+                            The shared kinds (the flight, the spray, the riot cop's tear gas, the flashbang, the
+                            bursts, the cannon, the dash)
+      skid_row_director.gd  Skid Row: Big Sal's limo and his climb out of the wreck, the Bounty's doubled gangs,
+                            No Witnesses (Act VIII)
+      armoured_limo_kit.gd, big_sal_kit.gd, bounty_board_kit.gd  Skid Row's miniboss (the limo's crew, the
+                            sledgehammer) and Don Marrow's board
+      boss_don_marrow.gd, marrow_cover_kit.gd  Don Marrow: the Bounty, the revolver, the Call's squads, the Last
+                            Stand's limo cover (through Armour) and gold minigun sweeps
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3468,6 +3513,10 @@ scripts/
     fall_from_grace_data.gd Fall from Grace / Lightbringer / Pride / Second Fall rules (Act VI)
     carmilla_data.gd        Queen Carmilla and the Elder: arrival, three phases and ending (Act VII)
     night_swarm_data.gd     Night Swarm / Nocturne / Old Blood / Half-Blood rules (Act VII)
+    skid_row_enemy_data.gd  Skid Row's own kinds: Big Sal's Armoured Limo, Big Sal, the bounty board (Act VIII)
+    don_marrow_data.gd      Don Marrow's arrival and fight (the Bounty, the Call, the Last Stand) (Act VIII)
+    hearse_run_data.gd      Hearse Run / Funeral Procession / Black Car / Last Ride / Kevlar Bones ids and rules
+                            (Act VIII)
     black_sun_data.gd       Black Sun / Eclipse of Heaven rules, Stolen Dawn keys, Night Prayer key (Act V)
     lilith_data.gd          Lilith's arrival, fight (charm waves, the kiss, children, her true form) (Act VI)
     tempt_data.gd           The Enthrall path and Temptation / Unholy Desire rules, Velvet Chains keys,
@@ -3675,7 +3724,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stubs `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), or the Act VIII stubs `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stubs `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), or the Act VIII stubs `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, and Skid Row's `armoured_limo`, `big_sal` and `bounty_board`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car or Kevlar Bones were taken). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |

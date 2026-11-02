@@ -98,7 +98,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act VII: the Witchwood ---
 	"witch_circle",
 	# --- Act VII: Castle Sanguis ---
-	"night_swarm"]
+	"night_swarm",
+	# --- Act VIII: Skid Row ---
+	"hearse_run"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -775,6 +777,32 @@ const SPELLS := {
 			{"bats": 4, "damage": 10.0, "orbit": 50.0, "cooldown": 1.9},  # TUNING (not in GDD)
 			{"bats": 4, "damage": 12.0, "orbit": 52.0, "cooldown": 1.75},  # TUNING (not in GDD)
 			{"bats": 5, "damage": 13.0, "orbit": 54.0, "cooldown": 1.6},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VIII: Skid Row ---
+	# Hearse Run (GDD §15.0 "Hearse Run, Funeral Procession, Black Car and the
+	# Undertaker (Act VIII)"; owner-approved proposal: "a spectral hearse drives
+	# a lane through the enemies"; unlocked by slaying Don Marrow, UnlockData):
+	# every `cooldown` s, `hearses` spectral hearses each pick a lane through
+	# one of the nearest groups within `range` px (a street lane on the city
+	# blocks, CityBlocks.lane(); a straight line from the necromancer
+	# elsewhere) and drive `length` px along it at `speed` px/s, striking every
+	# foe within `width` px once for `damage` and shoving it aside. Stat keys:
+	# damage, hearses, width (px), length (px), speed (px/s), cooldown (s),
+	# range (px). Logic: HearseRun; fixed rules: HearseRunData; Black Car (its
+	# paired passive) slows every foe a hearse strikes.
+	"hearse_run": {
+		"display_name": "Hearse Run",  # Owner-approved proposal
+		"icon": "hearse_run",
+		"description": "A spectral hearse drives a lane through your foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act VIII spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Hit damage", "hearses": "Hearses", "width": "Lane width", "length": "Run length", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 14.0, "hearses": 1, "width": 20.0, "length": 520.0, "speed": 520.0, "cooldown": 3.2, "range": 320.0},  # TUNING (not in GDD)
+			{"damage": 16.0, "hearses": 1, "width": 22.0, "length": 540.0, "speed": 520.0, "cooldown": 3.1, "range": 330.0},  # TUNING (not in GDD)
+			{"damage": 19.0, "hearses": 2, "width": 22.0, "length": 560.0, "speed": 540.0, "cooldown": 3.0, "range": 340.0},  # TUNING (not in GDD)
+			{"damage": 22.0, "hearses": 2, "width": 24.0, "length": 580.0, "speed": 540.0, "cooldown": 2.9, "range": 350.0},  # TUNING (not in GDD)
+			{"damage": 26.0, "hearses": 3, "width": 26.0, "length": 600.0, "speed": 560.0, "cooldown": 2.8, "range": 360.0},  # TUNING (not in GDD) first pass 16-32 at Lv 1-5 (with the evolution 282k in the forced seed-7 run, 2.3x the top summon class)
 		],
 	},
 }

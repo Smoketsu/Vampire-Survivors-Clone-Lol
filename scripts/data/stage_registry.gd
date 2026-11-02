@@ -254,6 +254,13 @@
 ##   supers             — the Super ids the escalation sends here, in turn
 ##                        (absent = CityRulesData.SUPERS "roster").
 ##   zones              — Act VIII stubs too: the planned zones (names and starts).
+## --- Act VIII: Skid Row ---
+##   skid_row           — SkidRowDirector config (SkidRowStage.SKID_ROW, Act
+##                        VIII, Skid Row: Big Sal and the Armoured Limo's
+##                        "big_sal" event, the Bounty's doubled gangs while Don
+##                        Marrow's board stands, No Witnesses); ground
+##                        "skid_row" is its SkidRowGround (the four zone looks
+##                        over the city blocks).
 class_name StageRegistry
 extends RefCounted
 
