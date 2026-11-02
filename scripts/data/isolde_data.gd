@@ -117,7 +117,7 @@ const BOSS := {
 	"circle_radius": 70.0,  # TUNING (not in GDD) px
 	"circle_windup": 1.2,  # TUNING (not in GDD) s
 	"circle_time": 5.0,  # TUNING (not in GDD) s
-	"circle_heal": 0.05,  # TUNING (not in GDD) share of max HP per s for the Court inside
+	"circle_heal": 0.035,  # TUNING (not in GDD) share of max HP per s for the Court inside; first pass 0.05 (55k healed in the forced-spell run)
 	"circle_drain": 3.5,  # TUNING (not in GDD) per s per summon, before the time scaling; first pass 6 (her circles and bombs broke the army to 6 summons)
 	"circle_reach": 260.0,  # TUNING (not in GDD) px from her: the summons she may curse
 	"cast_windup": 0.7,  # TUNING (not in GDD) s she stands with her hand raised

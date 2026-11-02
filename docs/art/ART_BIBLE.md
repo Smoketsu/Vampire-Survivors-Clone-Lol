@@ -2711,8 +2711,8 @@ rebuilds everything. 16 API images (8 figures, 2 prop sheets, 4 floors, 2 icon s
 redos, no moderation refusals. Contact sheet `docs/act7/witchwood_art_contact_sheet.png`.
 
 Pipeline: the women through `pixelate_source.py` at their height, then `prepare_sprite.py --ink-l 0.15 --no-cleanup
---no-prune` (the figure route); the Bloated Thrall and the Bog Mother straight (`--no-levels` for the Bog Mother's
-drowned skin). Props, the hex stones and the badges from split sheets by `art_source/witchwood/make_art.py` (tall
+--no-prune` (the figure route); the Bloated Thrall and the Bog Mother straight (the Bog Mother lifted x1.5 by
+`art_source/burning_gate/brighten.py` first and converted `--no-levels`: she read too dark). Props, the hex stones and the badges from split sheets by `art_source/witchwood/make_art.py` (tall
 circle props capped at 2.8 x their footprint radius, else a standing stone stood twice the necromancer's height; the
 violet icon sheet's piece 3 and the gold sheet's piece 2 are copies of the reference badge, unused). Floors by
 `make_tile.py` (recipes `witchwood_<style>`, sources stored opaque). Walk / glide strips and the idle breathing strips

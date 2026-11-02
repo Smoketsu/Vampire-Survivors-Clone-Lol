@@ -615,9 +615,9 @@ const EVOLUTIONS := {
 		"description": "Your circle grows, and three lesser circles dance around it, draining all they cross.",
 		"labels": {"damage": "Drain per pulse", "radius": "Radius", "sabbath_circles": "Dancing circles", "cooldown": "Pulse every (s)", "drain": "Drunk back"},
 		"stats": {
-			"damage": 17.0, "radius": 104.0, "cooldown": 0.8, "drain": 0.2, "heal_cap": 5.0,  # TUNING (not in GDD)
+			"damage": 14.0, "radius": 104.0, "cooldown": 0.8, "drain": 0.2, "heal_cap": 5.0,  # TUNING (not in GDD) first pass 17 (358k in the forced run, ahead of Rain of Fire's 157k)
 			"sabbath_circles": 3,  # TUNING (not in GDD) the evolution flag: orbiting circles
-			"sabbath_radius": 46.0,  # TUNING (not in GDD) px
+			"sabbath_radius": 40.0,  # TUNING (not in GDD) px; first pass 46
 			"sabbath_orbit": 160.0,  # TUNING (not in GDD) px from the necromancer
 			"sabbath_speed": 1.2,  # TUNING (not in GDD) rad/s
 		},

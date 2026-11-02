@@ -67,7 +67,7 @@ const COVEN := {
 	"cast_time": 5.0,  # TUNING (not in GDD) s
 	"radius": 95.0,  # TUNING (not in GDD) px (the Bone Ring is 60-150 px: a circle under one side of it)
 	"tick": 0.5,  # TUNING (not in GDD) s
-	"heal_share": 0.06,  # TUNING (not in GDD) per s: a Blood Knight inside heals ~30% over a cast
+	"heal_share": 0.04,  # TUNING (not in GDD) per s: a Blood Knight inside heals ~20% over a cast; first pass 0.06 (the covens healed 24k in the forced-spell run)
 	"boss_heal_mult": 0.0,  # TUNING (not in GDD) first pass 0.15: Isolde stood in her own circles and the bot left her at full HP
 	"drain_dps": 3.0,  # TUNING (not in GDD) per s per summon, before the time scaling; first pass 5
 	"drain_player_dps": 0.0,  # Owner-approved proposal: "drains the army" (summons only)

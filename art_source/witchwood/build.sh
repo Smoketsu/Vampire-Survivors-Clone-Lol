@@ -13,9 +13,10 @@ fig hedge_witch_hyper 56 player/hedge_witch_hyper velvet,gold,moss,skin,brown
 fig hedge_witch_untouchable 56 player/hedge_witch_untouchable marble,soul,grey,skin
 fig hedge_witch_deathlord 56 player/hedge_witch_deathlord crimson,obsidian,steel,bone,skin,moss
 python3 tools/prepare_sprite.py $W/raw/bloated_thrall.png court/bloated_thrall --ink-l 0.15 --ramps skin,blood,brown,moonlight
-python3 tools/prepare_sprite.py $W/raw/bog_mother.png court/bog_mother --ink-l 0.15 --no-levels --ramps drowned,moss,velvet,brown,blood,moonlight
+python3 art_source/burning_gate/brighten.py $W/raw/bog_mother.png $G/bog_mother_lit.png 1.5  # Lifted: the drowned witch read too dark.
+python3 tools/prepare_sprite.py $G/bog_mother_lit.png court/bog_mother --ink-l 0.15 --no-levels --ramps drowned,moss,velvet,brown,blood,moonlight
 # The untouched sources are kept as the archives (prepare_sprite archived the pixelated grids over them).
-for k in court/crimson_witch bosses/isolde player/hedge_witch player/hedge_witch_hyper player/hedge_witch_untouchable player/hedge_witch_deathlord; do
+for k in court/bog_mother court/crimson_witch bosses/isolde player/hedge_witch player/hedge_witch_hyper player/hedge_witch_untouchable player/hedge_witch_deathlord; do
 	cp $W/raw/$(basename $k).png art_source/$k.png; done
 # Props, hex stones and badges: split the sheets, then convert (make_art.py).
 mkdir -p $G/ww_split
