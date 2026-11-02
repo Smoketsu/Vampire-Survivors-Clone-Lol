@@ -50,7 +50,7 @@ const ENEMIES := {
 	# Sal climbs out (SkidRowDirector).
 	"armoured_limo": {
 		"display_name": "Big Sal's Armoured Limo",
-		"max_hp": 1500.0,  # TUNING (not in GDD) a miniboss's body (Blitz 1300; the tank 700)
+		"max_hp": 1200.0,  # TUNING (not in GDD) a miniboss's body (Blitz 1300; the tank 700); first pass 1500 (the seed-2 army bot took 5:30 to wreck it)
 		"move_speed": 120.0,  # TUNING (not in GDD) px/s; heavy for a car (the squad car 150)
 		"damage": 0.0,  # Unused: run_damage and the crew.
 		"attack_interval": 1.0,

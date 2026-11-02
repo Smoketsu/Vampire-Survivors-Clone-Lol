@@ -68,8 +68,8 @@ const SPRITE: String = "bosses/don_marrow"
 const COVER_SPRITE: String = "city/armoured_limo"
 
 ## Don Marrow's base max HP (x the boss HP multiplier and the stage's HP
-## multiplier 2.0: 26,000 on Skid Row; Vargr 14,000 x 1.85).
-const MAX_HP: float = 13000.0  # TUNING (not in GDD)
+## multiplier 2.0: 30,000 on Skid Row; Vargr 14,000 x 1.85).
+const MAX_HP: float = 15000.0  # TUNING (not in GDD) first pass 13000 (the seed-7 army run slew him 83 s after he arrived)
 
 ## Don Marrow's design row.
 const BOSS := {

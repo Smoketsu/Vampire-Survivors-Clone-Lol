@@ -229,12 +229,12 @@ const ENEMIES := {
 		"tier": "police",  # Owner-approved proposal: ★★ Police
 		"armour_front": 0.7,  # TUNING (not in GDD) the riot shield cuts 70% from the front ("flank the line")
 		# --- Act VIII: Skid Row --- the tear gas (RiotCopKit).
-		"gas_every": 14.0,  # TUNING (not in GDD) s between two canisters
+		"gas_every": 16.0,  # TUNING (not in GDD) s between two canisters (first pass 14)
 		"gas_range": 200.0,  # TUNING (not in GDD) px to the summon it lobs at
 		"gas_flight": 0.6,  # TUNING (not in GDD) s the canister flies
 		"gas_time": 4.0,  # TUNING (not in GDD) s the cloud hangs
 		"gas_radius": 44.0,  # TUNING (not in GDD) px
-		"gas_slow": 0.35,  # TUNING (not in GDD) share of move speed the summons in it lose
+		"gas_slow": 0.3,  # TUNING (not in GDD) share of move speed the summons in it lose (first pass 0.35)
 		"gas_linger": 0.5,  # TUNING (not in GDD) s the slow lasts after a summon leaves the cloud
 		"gas_tick": 0.25,  # TUNING (not in GDD) s between two slow refreshes
 	},  # The riot cop.

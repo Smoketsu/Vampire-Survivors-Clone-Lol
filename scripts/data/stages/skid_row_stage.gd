@@ -18,7 +18,7 @@
 ##                                      the police came at 16:00 (4:00 elapsed)
 ##   10:00  Zone III, the Overpass:     an elevated road's shadow and its
 ##                                      pillars over the streets; SWAT and the
-##                                      Guard came at 12:00; Big Sal at 9:30 left
+##                                      Guard came at 11:00; Big Sal at 9:30 left
 ##    5:00  Zone IV,  the Precinct:     the police precinct's roofs
 ##    3:00  Don Marrow, the Kingpin (BossDonMarrow, DonMarrowData)
 ##    0:00  Martial Law (the shared Act VIII Reckoning: every tier at once)
@@ -50,8 +50,9 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 ## not damage: the Act IV lesson).
 const ENEMY_HP_MULT: float = 2.0  # TUNING (not in GDD) the foundation's step, kept
 ## Enemy damage multiplier of this stage on top of the shared time scaling
-## (Castle Sanguis's 1.5, kept: the step up is in HP).
-const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) the foundation's, kept
+## (below Castle Sanguis's 1.5: the act's first stage, and the step up is in
+## HP; Fort Kessler and Liberty Heights set their own).
+const ENEMY_DAMAGE_MULT: float = 1.3  # TUNING (not in GDD) first pass 1.5 (the foundation's): the seed-2 army bot's ring broke at 8:00-10:00, lowest HP 3%
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) Acts III to VII: 7:00
@@ -62,10 +63,12 @@ const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026, GDD 
 ## it here; the grid keys only here, never per zone).
 const BLOCKS := {}
 ## The escalation on this stage (keys of CityRulesData.ESCALATION): the
-## ladder stops at SWAT and the Guard (owner, Nov 2, 2026). The tiers begin
-## at the shared times (gangs 0:00, police 4:00, SWAT 8:00).
+## ladder stops at SWAT and the Guard (owner, Nov 2, 2026): gangs 0:00, police
+## 4:00, SWAT 9:00 (a minute after the shared 8:00, so it no longer lands right
+## on the stage's 7:00 HP / damage step).
 const ESCALATION := {
 	"last": "swat",  # Owner (Nov 2, 2026): "Skid Row climbs gangs -> police -> SWAT and stops there"
+	"times": {"gangs": 0.0, "police": 240.0, "swat": 540.0},  # TUNING (not in GDD) first pass SWAT at 8:00 (the shared time): the seed-2 army bot's ring broke at 8:00-10:00
 }
 ## The civilians on this stage: {} = CityRulesData.CIVILIANS (the army tier
 ## never comes, so their trickle runs until 0:00: intended, brief).
@@ -104,7 +107,7 @@ const RECKONING_OBJECTIVE: String = "MARTIAL LAW: every soldier in the city, the
 ## Continuous spawning segments, sorted by start time (keys as
 ## GraveyardStage.SEGMENTS). Only the ladder's tiers: the gangs (street
 ## thugs, gang gunners), the police (riot cops, squad cars) from 4:00, SWAT and
-## the Guard (breachers, field medics) from 8:00. Vehicles stay rare. While
+## the Guard (breachers, field medics) from 9:00. Vehicles stay rare. While
 ## Don Marrow's bounty board stands, SkidRowDirector doubles the gang share of
 ## the live segment (the Bounty).
 const SEGMENTS := [
@@ -123,8 +126,8 @@ const SEGMENTS := [
 	{"start": 300.0, "rate": 2.2, "max_alive": 56,  # TUNING (not in GDD)
 		"weights": {"street_thug": 0.45, "gang_gunner": 0.25, "riot_cop": 0.28, "squad_car": 0.02},
 		"objective": "The Night Market: the gangs hide among the stalls"},
-	# SWAT and the Guard (8:00 elapsed).
-	{"start": 480.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
+	# SWAT and the Guard (9:00 elapsed).
+	{"start": 540.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD) first pass from 8:00
 		"weights": {"street_thug": 0.4, "gang_gunner": 0.22, "riot_cop": 0.26, "swat_breacher": 0.08, "field_medic": 0.03, "squad_car": 0.01},
 		"objective": "SWAT: flashbangs stun your dead. Kill the breachers and the medics first"},
 	# Zone III, the Overpass (10:00): Big Sal at 10:30.
@@ -162,11 +165,11 @@ const EVENTS := [
 		"groups": [{"kind": "squad_car", "count": 2, "elite": false}, {"kind": "riot_cop", "count": 3, "elite": false}]},
 	{"time": 400.0, "type": "wave", "banner": "The gangs rush the market!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "street_thug", "count": 12, "elite": false}, {"kind": "gang_gunner", "count": 6, "elite": false}]},
-	# SWAT and the Guard (8:00).
-	{"time": 490.0, "type": "wave", "banner": "SWAT breaches the block!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "swat_breacher", "count": 3, "elite": false}, {"kind": "field_medic", "count": 1, "elite": false}]},
-	{"time": 560.0, "type": "wave", "banner": "Riot police and a medic!", "formation": "line",  # TUNING (not in GDD)
+	{"time": 480.0, "type": "wave", "banner": "Riot police and a medic!", "formation": "line",  # TUNING (not in GDD) before SWAT (the medic comes with the riot line)
 		"groups": [{"kind": "riot_cop", "count": 5, "elite": false}, {"kind": "field_medic", "count": 1, "elite": false}]},
+	# SWAT and the Guard (9:00).
+	{"time": 550.0, "type": "wave", "banner": "SWAT breaches the block!", "formation": "arc",  # TUNING (not in GDD) first pass 8:10
+		"groups": [{"kind": "swat_breacher", "count": 3, "elite": false}, {"kind": "field_medic", "count": 1, "elite": false}]},
 	# Zone III (10:00): the Overpass; Big Sal at 10:30.
 	{"time": 630.0, "type": "big_sal", "banner": "BIG SAL'S ARMOURED LIMO! His crew shoots from the windows!",  # Owner-approved proposal (miniboss); TUNING (not in GDD) time
 		"kind": "armoured_limo", "crew": 4},  # TUNING (not in GDD) gang gunners riding with him
