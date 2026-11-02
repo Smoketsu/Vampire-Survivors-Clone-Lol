@@ -209,6 +209,17 @@
 ##     the Inferno ran, the summary adds the "hell pits", "portals",
 ##     "temptation", "inferno kinds", "last judgment" (after 0:00) and (on an
 ##     Act VI stage) "inferno stage" lines (InfernoReport).
+##   * Act VII, the Sanguine Court (GDD §15.0 "Act VII foundation (phase 1)"):
+##     --stage=ravensmoor|witchwood|castle_sanguis, --spawn= with its kinds
+##     (blood_thrall, vampire_bat, blood_knight, werewolf, vampire_noble,
+##     court_coffin), --boss=vargr|isolde|carmilla. The bot steps off the
+##     beast's lunge mark (its kit's danger_push()) and, on an Act VII stage,
+##     SAVES Dread Rally for the Blood Moon (_rally_wanted(): spent while the
+##     moon is up, held while it rises within COURT_RALLY_SAVE s unless the
+##     necromancer is in danger; CourtRules.rally_hint()). When the Court ran,
+##     the summary adds the "bloodfeast", "night wings", "blood moon", "court
+##     kinds", "endless feast" (after 0:00) and (on an Act VII stage) "court
+##     stage" lines (CourtReport).
 class_name Autotest
 extends Node
 
@@ -252,6 +263,10 @@ const INFERNO_SEAL_PRESSURE_NEAR: float = 2.5
 const INFERNO_SEAL_NEAR: float = 1.6
 ## x the pull while at the ring (it holds its ground through the pour).
 const INFERNO_SEAL_HOLD: float = 2.0
+# --- Act VII: the Sanguine Court ---
+## Seconds before a Blood Moon's rise within which the bot holds a full Dread
+## Rally meter for the moon (unless the necromancer is in danger).
+const COURT_RALLY_SAVE: float = 45.0
 ## Distance (px) at which the autopilot starts steering off obstacles.
 const OBSTACLE_LOOK: float = 22.0
 ## Game seconds between stuck-unit samples.
@@ -1190,6 +1205,11 @@ func _rally_wanted() -> bool:
 	var h := game.horde
 	if h.player_in_danger or (game.enemies.boss != null and game.enemies.boss.active):
 		return true
+	# --- Act VII: the Sanguine Court --- save it for the Blood Moon (null elsewhere).
+	if game.court != null:
+		var hint := game.court.rally_hint(COURT_RALLY_SAVE)  # 1 spend, 0 hold, -1 no opinion.
+		if hint >= 0:
+			return hint == 1
 	var alive := 0  # Living permanent summons.
 	var hp_frac := 0.0  # Sum of their HP fractions.
 	for u in h.units:
@@ -1425,6 +1445,7 @@ func finish(summary: Dictionary) -> void:
 	PantheonReport.print_lines(game, st_all)  # Act IV: divine wrath, phalanx, glory, kinds, the stage (only when the Pantheon ran).
 	ShogunateReport.print_lines(game, st_all)  # Act V: the sun's course, the draw, from the shadows, kinds, the stage (only when the Shogunate ran).
 	InfernoReport.print_lines(game, st_all)  # Act VI: hell pits, portals, temptation, kinds, the last judgment, the stage (only when the Inferno ran).
+	CourtReport.print_lines(game, st_all)  # Act VII: bloodfeast, night wings, blood moon, kinds, the endless feast, the stage (only when the Court ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	# --- Act V: the Burning Province ---

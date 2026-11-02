@@ -8,7 +8,9 @@
 ## Machina; Act V, GDD §15.0 "Act V foundation (phase 1)": the Burning Province
 ## -> Castle Kurogane -> the Road to the Sun, opened by making Hades kneel; Act
 ## VI, GDD §15.0 "Act VI foundation (phase 1)": the Burning Gate -> the Palace
-## of Silk and Ash -> Pandemonium, opened by putting out Amaterasu's sun). One
+## of Silk and Ash -> Pandemonium, opened by putting out Amaterasu's sun; Act
+## VII, GDD §15.0 "Act VII foundation (phase 1)": Ravensmoor -> the Witchwood
+## -> Castle Sanguis, opened by casting down the Morning Star). One
 ## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
@@ -59,7 +61,8 @@
 ##   act                — campaign act (1 = the Crimson Covenant, 2 = the
 ##                        Ancient Eye, 3 = the Electronic Empire, 4 = the
 ##                        Olympian Republic, 5 = the Shogunate of the Rising
-##                        Sun, 6 = the Inferno; absent = 1). The stage select shows one
+##                        Sun, 6 = the Inferno, 7 = the Sanguine Court;
+##                        absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
 ##   playable           — false hides a registered stage from the stage select
@@ -198,6 +201,16 @@
 ##                        "seraph_general" event, guest squads of the other Act
 ##                        VI stages' kinds); ground "pandemonium" is its
 ##                        PandemoniumGround (four zone floors).
+## --- Act VII: the Sanguine Court ---
+##   court              — true: the Sanguine Court's shared rules (Act VII,
+##                        CourtRules as Game.court: Bloodfeast, Night Wings, the
+##                        Blood Moon, and the Endless Feast when the RECKONING
+##                        has an "endless_feast" key); ground "court" is the
+##                        placeholder CourtGround (from the "floor" dictionary,
+##                        styles moor / fen / castle).
+##   moon               — the stage's Blood Moon (BloodMoon): any key of
+##                        CourtRulesData.BLOOD_MOON overrides it ({} = defaults).
+##   zones              — Act VII stubs too: the planned zones (names and starts).
 class_name StageRegistry
 extends RefCounted
 
@@ -210,7 +223,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act V: the Shogunate of the Rising Sun ---
 	"province", "kurogane", "sun_road",
 	# --- Act VI: the Inferno ---
-	"burning_gate", "silk_palace", "pandemonium"]
+	"burning_gate", "silk_palace", "pandemonium",
+	# --- Act VII: the Sanguine Court ---
+	"ravensmoor", "witchwood", "castle_sanguis"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -237,6 +252,10 @@ const STAGES := {
 	"burning_gate": BurningGateStage.STAGE,
 	"silk_palace": SilkPalaceStage.STAGE,
 	"pandemonium": PandemoniumStage.STAGE,  # Act VI, stage 18
+	# --- Act VII: the Sanguine Court ---
+	"ravensmoor": RavensmoorStage.STAGE,
+	"witchwood": WitchwoodStage.STAGE,
+	"castle_sanguis": CastleSanguisStage.STAGE,  # Act VII, stage 21
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -250,6 +269,8 @@ const ACTS := {
 	5: {"name": "Act V", "subtitle": "The Shogunate of the Rising Sun"},
 	# --- Act VI: the Inferno ---
 	6: {"name": "Act VI", "subtitle": "The Inferno"},
+	# --- Act VII: the Sanguine Court ---
+	7: {"name": "Act VII", "subtitle": "The Sanguine Court"},
 }
 
 
@@ -308,4 +329,9 @@ const BOSS_ARRIVALS := {
 	"moloch": BurningGateStage.BOSS,
 	"lilith": SilkPalaceStage.BOSS,
 	"morning_star": PandemoniumStage.BOSS,  # Act VI, the finale's boss
+	# --- Act VII: the Sanguine Court (stubs: each stage's BOSS until phase 2
+	# gives the boss its own data file) ---
+	"vargr": RavensmoorStage.BOSS,
+	"isolde": WitchwoodStage.BOSS,
+	"carmilla": CastleSanguisStage.BOSS,  # Act VII, the finale's boss
 }

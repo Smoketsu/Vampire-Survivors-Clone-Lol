@@ -118,6 +118,14 @@
 ## tagged with its kind id, or WastesEnemyData.RANGED_EXTRA_SOURCES) is cut by
 ## ranged_reduction (stat lead_lined_dmg_prevented); exactly 1 while the
 ## passive is not owned.
+## Act VII (the Sanguine Court; GDD §15.0 "Bloodfeast"): BLOODFEAST is heard
+## once in damage_unit() (the HP a summon lost) and once in damage_player()
+## (the HP the necromancer lost) when the hit names its attacker (`by`) and
+## Game.court exists (Bloodfeast.on_hit(), the one path: a Court feeder heals
+## through heal_enemy() and banks the rest as Enemy.blood_shield);
+## damage_enemy() spends a blood shield before HP (Bloodfeast.absorb(); the
+## shield is always 0 on Acts I to VI). Night Wings and Silver Bones act
+## through the kits' taken_mult() (Enemy.damage_taken_mult(), the one read).
 ## Ossuary new options (expansion step 3, game.meta): damage_player() spends a
 ## Grave Ward hit before any reduction and starts Last Rites after a hit that
 ## leaves the necromancer under a quarter of his HP; damage_enemy() tells the
@@ -383,6 +391,13 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		if raw <= 0.0:
 			e.on_hit()  # Fully absorbed by a holy shield.
 			return 0.0
+	# --- Act VII: the Sanguine Court --- Bloodfeast's blood shield (0 on every
+	# other act, so the check never passes there).
+	if e.blood_shield > 0.0 and game.court != null:
+		raw = game.court.feast.absorb(e, raw)
+		if raw <= 0.0:
+			e.on_hit()  # Fully absorbed by the blood shield.
+			return 0.0
 	var dealt := minf(raw, e.hp)
 	if rot > 0.0:
 		game.stat_add("rot_bonus_dmg", dealt * rot / (1.0 + rot))
@@ -536,6 +551,8 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 	u.on_hit()
 	game.stat_add("damage_to_summons", dealt)
 	game.stat_add("summon_dmg_from_" + source, dealt)
+	if by != null and game.court != null:
+		game.court.feast.on_hit(by, dealt, u.position, true)  # Act VII: Bloodfeast (the one call on summons).
 	if u.hp <= 0.0:
 		game.stat_add("death_" + u.unit_class + "_by_" + source, 1.0)
 		game.horde.colossi.on_unit_killed(u)  # Bone Colossus shrapnel burst.
@@ -565,11 +582,14 @@ func is_ranged_source(source: String) -> bool:
 ## (evolution passive) and the meta Bone Mail armor (own category) reduce the
 ## damage first. While Sovereign's Decree runs (UltimateSystem
 ## .player_untargetable()) every hit is ignored before anything else.
-func damage_player(amount: float, source: String, target: Necromancer = null) -> void:
+## Act VII: `by` is the enemy whose own blow this is (Enemy._melee_hit(), the
+## Court kits' feeding blows; null for every other hit): Bloodfeast feeds it on
+## the HP lost.
+func damage_player(amount: float, source: String, target: Necromancer = null, by: Enemy = null) -> void:
 	if target != null and game.coop != null and target != game.player:
 		var prev := game.coop.bound  # Co-op: that necromancer's own rules (see the header).
 		game.coop.bind(game.coop.slot_of(target))
-		damage_player(amount, source)
+		damage_player(amount, source, null, by)
 		game.coop.bind(prev)
 		return
 	if game.ultimates.player_untargetable():
@@ -589,6 +609,8 @@ func damage_player(amount: float, source: String, target: Necromancer = null) ->
 		game.rewards.note_player_hit(hp_before, lost, game.player.max_hp)  # Content wave 2: reads only.
 		game.stat_add("damage_to_player", lost)
 		game.stat_add("player_dmg_from_" + source, lost)
+		if by != null and game.court != null:
+			game.court.feast.on_hit(by, lost, game.player.position, false)  # Act VII: Bloodfeast (the one call on the necromancer).
 		game.shake(4.0)
 		_check_last_rites()
 

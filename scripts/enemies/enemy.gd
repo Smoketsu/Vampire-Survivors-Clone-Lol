@@ -207,6 +207,18 @@ var glory_base_radius: float = 0.0
 ## skips it: no summon body-blocks it). THE one path of the rule; false for
 ## every other enemy, so nothing changes on Acts I to IV.
 var ethereal: bool = false
+# --- Act VII: the Sanguine Court ---
+## True for a NIGHT WINGS flier (CourtEnemyData "flies": the vampire bat, phase
+## 2's Chiropterans): it flies over the Bone Ring (resolve_blocking() skips it:
+## no summon body-blocks it). THE flag of the rule (NightWings documents it;
+## its swoop and in-flight hits live in its CourtKit); false for every other
+## enemy, so nothing changes on Acts I to VI.
+var flies: bool = false
+## Bloodfeast's blood shield (HP; Bloodfeast, Act VII): healing past full banks
+## here, up to CourtRulesData.BLOODFEAST shield_cap x max HP, and
+## CombatResolver.damage_enemy() spends it before HP (Bloodfeast.absorb()).
+## 0 for every enemy that never fed (always 0 on Acts I to VI).
+var blood_shield: float = 0.0
 ## True for animated stone (Sentinel, Guardian): never healed, shielded or
 ## raised by Covenant priests.
 var is_construct: bool = false
@@ -397,6 +409,8 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	claim_radius = float(def.get("claim_radius", 0.0))
 	claimer_until = 0.0
 	ethereal = bool(def.get("ethereal", false))  # Act V: the onryō (false elsewhere).
+	flies = bool(def.get("flies", false))  # Act VII: Night Wings (false elsewhere).
+	blood_shield = 0.0  # Act VII: Bloodfeast's shield (never banked elsewhere).
 	phases_obstacles = bool(def.get("phases", false)) or ethereal
 	floating = bool(def.get("floating", false))
 	body = String(def.get("body", ""))  # Act III: machine / cyborg ("" elsewhere).
@@ -591,7 +605,8 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 ## An Ancient Eye kind's art lives in eye/ (Act II) and an Electronic Empire
 ## kind's in empire/ (Act III), an Olympian Republic kind's in pantheon/ (Act
 ## IV), a Shogunate kind's in shogunate/ (Act V), an Inferno kind's in inferno/
-## (Act VI): used when it has no enemies/ art (visual only;
+## (Act VI), a Sanguine Court kind's in court/ (Act VII): used when it has no
+## enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
 	if wears != "":
@@ -608,6 +623,8 @@ func motion_sprite_key() -> String:
 			return "shogunate/" + kind  # Act V: a Shogunate kind's art.
 		if SpriteBank.has("inferno/" + kind):
 			return "inferno/" + kind  # Act VI: an Inferno kind's art.
+		if SpriteBank.has("court/" + kind):
+			return "court/" + kind  # Act VII: a Sanguine Court kind's art.
 	return key
 
 
@@ -1055,6 +1072,8 @@ func _rush_move(delta: float) -> void:
 func resolve_blocking() -> void:
 	if ethereal:
 		return  # Act V: an ethereal body (the onryō) drifts through the Bone Ring.
+	if flies:
+		return  # Act VII, Night Wings: a flier passes over the Bone Ring.
 	var reach := game.horde.block_query_radius if game.coop == null else game.coop.block_query_radius()  # Widest blocker (co-op: of every army).
 	game.ally_grid.query(position, radius + reach, _tmp)
 	var touched := false  # A blocker already engaged this enemy this tick.
@@ -1169,7 +1188,7 @@ func _melee_hit(t: Node2D, dir: Vector2) -> void:
 		if cleave_radius > 0.0:
 			_cleave(t as SummonedUnit, dmg * undead_damage_mult * cleave_mult)
 	else:
-		game.combat.damage_player(dmg, kind, t as Necromancer)  # (Co-op: that necromancer.)
+		game.combat.damage_player(dmg, kind, t as Necromancer, self)  # (Co-op: that necromancer.) self: Act VII, Bloodfeast hears the attacker.
 
 
 ## Halberd sweep (MarchEnemyData cleave_*): up to cleave_targets OTHER
