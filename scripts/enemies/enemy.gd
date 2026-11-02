@@ -225,6 +225,23 @@ var blood_shield: float = 0.0
 ## is false (the one corpse-path check of the Ghouls' meals). -1 = never
 ## eaten (always on every stage without ghouls).
 var ghoul_meal: int = -1
+# --- Act VIII: the Last Line ---
+## True for a CIVILIAN (CityEnemyData "civilian"; Civilians): it never
+## body-blocks the ring (resolve_blocking() skips it), is never healed by a
+## medic (_pick_heal_target()), is never recycled to the spawn ring (it flees
+## off instead), the city's blasts spare it, and EnemyDirector.regular_alive()
+## leaves it out (its own alive cap). False for every other enemy, so nothing
+## changes on Acts I to VII.
+var civilian: bool = false
+## True for a City VEHICLE (CityEnemyData "vehicle"; Convoy): it drives its
+## lane over the ring (resolve_blocking() skips it: it runs summons over
+## instead of being blocked). False for every other enemy.
+var vehicle: bool = false
+## The street-steering hint's last decision (CityBlocks.street_dir(), a
+## city-block layout only): the street direction to keep, or ZERO = straight at
+## the goal; renewed every CityBlockData.STEER_EVERY ticks. Always ZERO on
+## every other stage.
+var street_hint: Vector2 = Vector2.ZERO
 ## True for animated stone (Sentinel, Guardian): never healed, shielded or
 ## raised by Covenant priests.
 var is_construct: bool = false
@@ -417,6 +434,9 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	ethereal = bool(def.get("ethereal", false))  # Act V: the onryō (false elsewhere).
 	flies = bool(def.get("flies", false))  # Act VII: Night Wings (false elsewhere).
 	blood_shield = 0.0  # Act VII: Bloodfeast's shield (never banked elsewhere).
+	civilian = bool(def.get("civilian", false))  # Act VIII: a civilian (false elsewhere).
+	vehicle = bool(def.get("vehicle", false))  # Act VIII: a vehicle (false elsewhere).
+	street_hint = Vector2.ZERO  # Act VIII: no street decision yet.
 	phases_obstacles = bool(def.get("phases", false)) or ethereal
 	floating = bool(def.get("floating", false))
 	body = String(def.get("body", ""))  # Act III: machine / cyborg ("" elsewhere).
@@ -611,8 +631,8 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 ## An Ancient Eye kind's art lives in eye/ (Act II) and an Electronic Empire
 ## kind's in empire/ (Act III), an Olympian Republic kind's in pantheon/ (Act
 ## IV), a Shogunate kind's in shogunate/ (Act V), an Inferno kind's in inferno/
-## (Act VI), a Sanguine Court kind's in court/ (Act VII): used when it has no
-## enemies/ art (visual only;
+## (Act VI), a Sanguine Court kind's in court/ (Act VII), a Last Line kind's
+## in city/ (Act VIII): used when it has no enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
 	if wears != "":
@@ -631,6 +651,8 @@ func motion_sprite_key() -> String:
 			return "inferno/" + kind  # Act VI: an Inferno kind's art.
 		if SpriteBank.has("court/" + kind):
 			return "court/" + kind  # Act VII: a Sanguine Court kind's art.
+		if SpriteBank.has("city/" + kind):
+			return "city/" + kind  # Act VIII: a Last Line kind's art.
 	return key
 
 
@@ -808,8 +830,8 @@ func _pick_heal_target() -> void:
 	var best_frac := EnemyData.HEAL_MIN_MISSING_FRACTION
 	game.enemy_grid.query(position, heal_radius, _tmp)
 	for e: Enemy in _tmp:
-		if e == self or not e.active or e.is_construct:
-			continue
+		if e == self or not e.active or e.is_construct or e.civilian:
+			continue  # (Act VIII: a medic never heals a civilian.)
 		var frac := 1.0 - e.hp / e.max_hp
 		if frac >= best_frac:
 			best_frac = frac
@@ -951,6 +973,20 @@ func physics_step(delta: float) -> void:
 			_try_heal()
 	elif edge > attack_range:
 		move = dir
+	# --- Act VIII: the Last Line --- the street-steering hint (a city-block
+	# layout only: CityBlocks.street_dir(), straight while the street ahead is
+	# clear, else along the street toward the crossing onto the goal's street),
+	# so the advance follows the streets instead of piling on a building face.
+	if move != Vector2.ZERO and game.arena.city_blocks != null:
+		if (game.enemies._frame + think_slot) % CityBlockData.STEER_EVERY == 0:
+			var goal := t.position if (behavior != "ranged" and behavior != "healer" and behavior != "banner") else game.player.position
+			# Hysteresis: once off the straight line it takes a longer clear look to
+			# go straight again (no flip-flop at the edge of the look-ahead).
+			var look := CityBlockData.STEER_LOOK if street_hint == Vector2.ZERO else CityBlockData.STEER_LOOK_BACK
+			var sd := game.arena.city_blocks.street_dir(position, goal, radius, look)  # This tick's decision.
+			street_hint = Vector2.ZERO if sd.dot(move) > 0.999 else sd  # ZERO: straight was clear.
+		if street_hint != Vector2.ZERO:
+			move = street_hint
 	# Anyone in contact can strike except archers (chaplains swing weakly).
 	if behavior != "ranged" and edge <= attack_range and attack_cd <= 0.0:
 		_melee_hit(t, dir)
@@ -1083,6 +1119,8 @@ func resolve_blocking() -> void:
 		return  # Act V: an ethereal body (the onryō) drifts through the Bone Ring.
 	if flies:
 		return  # Act VII, Night Wings: a flier passes over the Bone Ring.
+	if civilian or vehicle:
+		return  # Act VIII: a civilian never blocks the ring; a vehicle runs it over (Convoy).
 	var reach := game.horde.block_query_radius if game.coop == null else game.coop.block_query_radius()  # Widest blocker (co-op: of every army).
 	game.ally_grid.query(position, radius + reach, _tmp)
 	var touched := false  # A blocker already engaged this enemy this tick.

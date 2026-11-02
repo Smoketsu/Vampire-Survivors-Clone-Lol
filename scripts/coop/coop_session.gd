@@ -420,6 +420,9 @@ func step(delta: float) -> void:
 	if game.court != null:
 		bind_primary()
 		game.court.step(delta)  # Act VII: the Endless Feast, the Blood Moon, Bloodfeast (before the push-out, as in solo).
+	if game.city != null:
+		bind_primary()
+		game.city.step(delta)  # Act VIII: the escalation, the civilians, wrecks and shells, Martial Law (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

@@ -129,6 +129,15 @@ static func section_entries(section: String) -> Array:
 				var b := _boss(id)
 				b["section"] = section
 				out.append(b)  # Act VII bosses.
+		# --- Act VIII: the Last Line (grouped by tier) ---
+		"city_civilians", "city_gangs", "city_police", "city_swat", "city_army", "city_heroes":
+			for id: String in _city_list(section):
+				out.append(_covenant(id, section))  # Act VIII kinds, by tier.
+		"city_bosses":
+			for id: String in CodexData.CITY_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act VIII bosses.
 	return out
 
 
@@ -194,6 +203,23 @@ static func _evolution(id: String, section: String) -> Dictionary:
 
 
 ## A Covenant soldier, structure or champion entry.
+# --- Act VIII: the Last Line ---
+## The Last Line kinds of tier section `section` (CodexData.CITY_*).
+static func _city_list(section: String) -> Array[String]:
+	match section:
+		"city_civilians":
+			return CodexData.CITY_CIVILIANS
+		"city_gangs":
+			return CodexData.CITY_GANGS
+		"city_police":
+			return CodexData.CITY_POLICE
+		"city_swat":
+			return CodexData.CITY_SWAT
+		"city_army":
+			return CodexData.CITY_ARMY
+	return CodexData.CITY_HEROES
+
+
 static func _covenant(id: String, section: String) -> Dictionary:
 	var d := CodexData.enemy_row(id)
 	var stats: Array = [[_t("hp"), num(float(d.get("max_hp", 0.0)))]]
@@ -216,6 +242,8 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		sprite = "inferno/" + id  # ...an Inferno kind (Act VI)...
 	elif not SpriteBank.has(sprite) and SpriteBank.has("court/" + id):
 		sprite = "court/" + id  # ...a Sanguine Court kind (Act VII)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("city/" + id):
+		sprite = "city/" + id  # ...a Last Line kind (Act VIII)...
 	elif not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

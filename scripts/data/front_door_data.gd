@@ -179,6 +179,10 @@ const STAGE_LINES: Dictionary = {
 	"ravensmoor": "The starving Court comes down to the moors. Feed it nothing.",  # TUNING (not in GDD) Act VII
 	"witchwood": "Break the covens in the fen under the red moon.",  # TUNING (not in GDD) Act VII
 	"castle_sanguis": "Climb to the Court's banquet. End the feast.",  # TUNING (not in GDD) Act VII
+	# --- Act VIII: the Last Line ---
+	"skid_row": "The dead come up out of the sewers. The gangs own these blocks.",  # TUNING (not in GDD) Act VIII
+	"fort_kessler": "Break the army's last line at the edge of the city.",  # TUNING (not in GDD) Act VIII
+	"liberty_heights": "Climb the Heroes' Tower. No one is left to stop you.",  # TUNING (not in GDD) Act VIII
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
@@ -425,6 +429,34 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(163, 20, 42),
 	},  # TUNING (not in GDD) blood motes
+	# --- Act VIII: the Last Line (placeholder scenes from the shared kinds' art
+	# until each stage brings its own floor, props and boss; a missing sprite or
+	# tile is skipped) ---
+	"skid_row": {
+		"tile": "tiles/city_street",
+		"items": [
+			["city/street_thug", 200, 100, true], ["city/gang_gunner", 236, 120, true],
+			["city/civilian", 150, 180, true], ["city/street_thug", 196, 190, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(255, 79, 168),
+	},  # TUNING (not in GDD) neon pink motes
+	"fort_kessler": {
+		"tile": "tiles/city_street",
+		"items": [
+			["city/tank", 200, 110, true], ["city/rifleman", 196, 196, true], ["city/rifleman", 230, 180, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(242, 196, 24),
+	},  # TUNING (not in GDD) hazard yellow motes
+	"liberty_heights": {
+		"tile": "tiles/city_plaza",
+		"items": [
+			["city/blitz", 206, 110, true], ["city/civilian_woman", 150, 190, true], ["city/riot_cop", 200, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(63, 224, 232),
+	},  # TUNING (not in GDD) neon cyan motes
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

@@ -10,7 +10,9 @@
 ## VI, GDD §15.0 "Act VI foundation (phase 1)": the Burning Gate -> the Palace
 ## of Silk and Ash -> Pandemonium, opened by putting out Amaterasu's sun; Act
 ## VII, GDD §15.0 "Act VII foundation (phase 1)": Ravensmoor -> the Witchwood
-## -> Castle Sanguis, opened by casting down the Morning Star). One
+## -> Castle Sanguis, opened by casting down the Morning Star; Act VIII, GDD
+## §15.0 "Act VIII foundation (phase 1)": Skid Row -> Fort Kessler -> Liberty
+## Heights, opened by slaying Queen Carmilla). One
 ## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
@@ -61,8 +63,8 @@
 ##   act                — campaign act (1 = the Crimson Covenant, 2 = the
 ##                        Ancient Eye, 3 = the Electronic Empire, 4 = the
 ##                        Olympian Republic, 5 = the Shogunate of the Rising
-##                        Sun, 6 = the Inferno, 7 = the Sanguine Court;
-##                        absent = 1). The stage select shows one
+##                        Sun, 6 = the Inferno, 7 = the Sanguine Court,
+##                        8 = the Last Line; absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
 ##   playable           — false hides a registered stage from the stage select
@@ -230,6 +232,28 @@
 ##                        "chiropteran_king" event, guest squads of the other
 ##                        Act VII stages' kinds); ground "castle_sanguis" is its
 ##                        CastleSanguisGround (four zone floors).
+## --- Act VIII: the Last Line ---
+##   city               — true: the Last Line's shared rules (Act VIII,
+##                        CityRules as Game.city: the escalation, Armour,
+##                        Supers, Civilians, and Martial Law when the RECKONING
+##                        has a "martial_law" key); ground "city" is the
+##                        placeholder CityGround (from the "floor" dictionary,
+##                        styles docks / base / downtown, drawn from the
+##                        CityBlocks geometry).
+##   blocks             — the CITY-BLOCK LAYOUT's grid (CityBlocks, owned by
+##                        Arena): any key of CityBlockData.DEFAULTS overrides it
+##                        ({} = defaults). It switches the layout on only
+##                        together with an "arena" layout that carries its own
+##                        "blocks" dictionary (that zone's looks: styles,
+##                        open_share, open_styles; a zone never moves a street).
+##   escalation         — the stage's escalation (Escalation): any key of
+##                        CityRulesData.ESCALATION overrides it ({} = the full
+##                        default ladder; phase 2 sets each stage's "last").
+##   civilians          — the stage's civilians (Civilians): any key of
+##                        CityRulesData.CIVILIANS overrides it ({} = defaults).
+##   supers             — the Super ids the escalation sends here, in turn
+##                        (absent = CityRulesData.SUPERS "roster").
+##   zones              — Act VIII stubs too: the planned zones (names and starts).
 class_name StageRegistry
 extends RefCounted
 
@@ -244,7 +268,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act VI: the Inferno ---
 	"burning_gate", "silk_palace", "pandemonium",
 	# --- Act VII: the Sanguine Court ---
-	"ravensmoor", "witchwood", "castle_sanguis"]
+	"ravensmoor", "witchwood", "castle_sanguis",
+	# --- Act VIII: the Last Line ---
+	"skid_row", "fort_kessler", "liberty_heights"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -275,6 +301,10 @@ const STAGES := {
 	"ravensmoor": RavensmoorStage.STAGE,
 	"witchwood": WitchwoodStage.STAGE,
 	"castle_sanguis": CastleSanguisStage.STAGE,  # Act VII, stage 21
+	# --- Act VIII: the Last Line ---
+	"skid_row": SkidRowStage.STAGE,
+	"fort_kessler": FortKesslerStage.STAGE,
+	"liberty_heights": LibertyHeightsStage.STAGE,  # Act VIII, stage 24
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -290,6 +320,8 @@ const ACTS := {
 	6: {"name": "Act VI", "subtitle": "The Inferno"},
 	# --- Act VII: the Sanguine Court ---
 	7: {"name": "Act VII", "subtitle": "The Sanguine Court"},
+	# --- Act VIII: the Last Line ---
+	8: {"name": "Act VIII", "subtitle": "The Last Line"},
 }
 
 
@@ -353,4 +385,9 @@ const BOSS_ARRIVALS := {
 	"vargr": RavensmoorStage.BOSS,
 	"isolde": WitchwoodStage.BOSS,
 	"carmilla": CastleSanguisStage.BOSS,  # Act VII, the finale's boss
+	# --- Act VIII: the Last Line (stubs: each stage's BOSS until phase 2 gives
+	# the boss its own data file) ---
+	"don_marrow": SkidRowStage.BOSS,
+	"harrow": FortKesslerStage.BOSS,
+	"paragon": LibertyHeightsStage.BOSS,  # Act VIII, the finale's boss
 }

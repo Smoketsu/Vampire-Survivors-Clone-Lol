@@ -220,6 +220,19 @@
 ##     the summary adds the "bloodfeast", "night wings", "blood moon", "court
 ##     kinds", "endless feast" (after 0:00) and (on an Act VII stage) "court
 ##     stage" lines (CourtReport).
+##   * Act VIII, the Last Line (GDD §15.0 "Act VIII foundation (phase 1)"):
+##     --stage=skid_row|fort_kessler|liberty_heights, --spawn= with its kinds
+##     (civilian, street_thug, gang_gunner, riot_cop, squad_car, swat_breacher,
+##     field_medic, rifleman, tank, blitz, city_wreck),
+##     --boss=don_marrow|harrow|paragon. The bot keeps out of the vehicles'
+##     headlight lanes and the landing circles (CityRules.danger_push()) and off
+##     Blitz's crouched line (his kit's danger_push()), never flees from a
+##     civilian, and on a city-block layout slides along the building faces
+##     instead of pinning against them (CityBlocks.steer(), the one bot
+##     steering). When the Last Line ran, the summary adds the "city blocks",
+##     "armour", "supers", "civilians", "escalation", "city kinds", "martial
+##     law" (after 0:00) and (on an Act VIII stage) "city stage" lines
+##     (CityReport).
 class_name Autotest
 extends Node
 
@@ -1157,6 +1170,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.enemies.citadel.danger_push(pos)  # Act III, the Iron Citadel: laser grids (null elsewhere).
 	if game.enemies.underworld != null:
 		danger += game.enemies.underworld.danger_push(pos)  # Act IV, the Asphodel Underworld: out of the Styx (null elsewhere).
+	if game.city != null:
+		danger += game.city.danger_push(pos)  # Act VIII: headlight lanes, landing circles (null elsewhere).
 	return danger
 
 
@@ -1229,8 +1244,8 @@ func get_move_vector() -> Vector2:
 	var away := Vector2.ZERO
 	game.enemy_grid.query(p, FLEE_RADIUS, _tmp)
 	for e: Enemy in _tmp:
-		if not e.active:
-			continue
+		if not e.active or e.civilian:
+			continue  # (Act VIII: a civilian is harmless, never fled from.)
 		var diff := p - e.position
 		var d := maxf(diff.length(), 1.0)
 		away += diff / d * (1.0 - d / FLEE_RADIUS)
@@ -1262,6 +1277,8 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.citadel.danger_push(p)  # Act III, the Iron Citadel: laser grids (null elsewhere).
 	if game.enemies.underworld != null:
 		danger += game.enemies.underworld.danger_push(p)  # Act IV, the Asphodel Underworld: out of the Styx (null elsewhere).
+	if game.city != null:
+		danger += game.city.danger_push(p)  # Act VIII: headlight lanes, landing circles (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1316,9 +1333,14 @@ func get_move_vector() -> Vector2:
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
 	var wander := Vector2.from_angle(game.elapsed * 0.3) * 0.35
 	var loot := _loot_vector(p, away.length())  # Toward a nearby chest / drop when safe.
+	var mv: Vector2  # The mixed move.
 	if game.coop != null:
-		return _coop_move(away, toward, objective, danger, avoid, wander, loot)
-	return (away * 1.5 + toward * 1.2 + objective * 1.0 + danger * 3.0 + avoid * 1.5 + wander + loot * 1.4).limit_length(1.0)
+		mv = _coop_move(away, toward, objective, danger, avoid, wander, loot)
+	else:
+		mv = (away * 1.5 + toward * 1.2 + objective * 1.0 + danger * 3.0 + avoid * 1.5 + wander + loot * 1.4).limit_length(1.0)
+	if game.arena.city_blocks != null:
+		mv = game.arena.city_blocks.steer(p, mv, game.player.radius)  # Act VIII: slide along the building faces.
+	return mv
 
 
 ## Co-op autopilot mix (--coop-bot): the solo mix, plus a walk to a downed
@@ -1446,6 +1468,7 @@ func finish(summary: Dictionary) -> void:
 	ShogunateReport.print_lines(game, st_all)  # Act V: the sun's course, the draw, from the shadows, kinds, the stage (only when the Shogunate ran).
 	InfernoReport.print_lines(game, st_all)  # Act VI: hell pits, portals, temptation, kinds, the last judgment, the stage (only when the Inferno ran).
 	CourtReport.print_lines(game, st_all)  # Act VII: bloodfeast, night wings, blood moon, kinds, the endless feast, the stage (only when the Court ran).
+	CityReport.print_lines(game, st_all)  # Act VIII: city blocks, armour, supers, civilians, escalation, kinds, martial law, the stage (only when the Last Line ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	# --- Act V: the Burning Province ---
