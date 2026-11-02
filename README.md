@@ -1777,7 +1777,8 @@ the Gods.
   river across your foes' way that drains and slows whatever crosses it; evolution **Lethe's Flood**,
   two crossing rivers that make foes forget themselves, with the passive **Ferryman's Toll**: every
   slowed foe that dies heals you a little and fills your Dread Rally), the character **the
-  Ferrywoman** (starts with River Styx; a foe slain in her river rises as a Risen), the summon class
+  Ferrywoman** (starts with River Styx; a foe slain in her river rises as a Risen, never a
+  machine, a boss, a miniboss or a Reckoning foe; an Act III cyborg rises as a Grave Gunner), the summon class
   **Myrmidon Shades** (undead hoplites, three to a card, holding the ring's front; three in a chain
   lock shields and take 30% less, their spear runs through a second foe; evolution **Legion of
   Tartarus** with the passive **Myrmidon Oath**: your front line is hardier and hits harder) and the
