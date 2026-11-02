@@ -1,0 +1,13 @@
+Pixel-art game object for a top-down 2D horde-survival game. Three-quarter top-down view (camera above and slightly in front), a CLOSED vampire's coffin lying on the ground, long side toward the viewer, lid on.
+
+LOW-RESOLUTION pixel art: the whole figure is only 40 pixels tall and about 56 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a gothic stone-and-wood COFFIN (hexagonal, wider at the shoulders), black wood with dark red velvet inside edge, silver-grey iron bands and corner studs, a small gold cross-less bat emblem on the lid, a few cobwebs. Heavy and ominous.
+Signature shape that must read in silhouette: the hexagonal coffin shape.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: black wood #160F1C #2B1E36 #4D3A5E; iron silver #6E7A8C #B4C0D0; blood red #5A0A14 #A3142A (the edge and emblem); candle gold #E0A92E (a few pixels)
+
+Outline: a clean 1-pixel dark outline around the whole object in the darkest shade of each part's own colour. Light from the top-left.
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha), one object only, centred, filling about 85% of the image height. No ground, no cast shadow, no text, no frame, no watermark.
+Attached: (1) a game structure sprite for pixel size, outline weight and flat look.

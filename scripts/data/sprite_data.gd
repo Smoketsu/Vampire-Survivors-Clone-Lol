@@ -398,6 +398,15 @@ const HEIGHTS: Dictionary = {
 	"player/fallen_saint_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 	"summons/archfiend": 62.0,  # TUNING (not in GDD) a heavy summon (Bound Oni 60), the horns and wings above
 	"summons/prince_of_hell": 72.0,  # TUNING (not in GDD) its evolution, bigger
+	# --- Act VII: the Sanguine Court (the shared kinds; assets/sprites/court/) ---
+	"court/blood_thrall": 30.0,  # TUNING (not in GDD) fodder: a hunched, bitten servant in torn peasant clothes, body ~30
+	"court/vampire_bat": 22.0,  # TUNING (not in GDD) fodder flier: body ~20 + two empty rows on top for the hover bob, the wings spread wide
+	"court/blood_knight": 54.0,  # TUNING (not in GDD) soldier tier: body ~50, the crest above, the halberd held upright
+	"court/werewolf": 52.0,  # TUNING (not in GDD) heavy tier, human hunter form: body ~48, the crossbow held forward
+	"court/werewolf_beast": 84.0,  # TUNING (not in GDD) heavy tier, the transformed beast (Demon Brute 84): hunched, the ears and claws
+	"court/vampire_noble": 56.0,  # TUNING (not in GDD) elite tier, female (figure redesign at the approved level; 56 as the succubus): body ~52, the high collar above; she glides, the bust and hip box sway in the glide strip
+	"structures/court_coffin": 40.0,  # TUNING (not in GDD) the Court's coffin structure, closed (the loop glow is drawn by code)
+	"structures/court_coffin_open": 40.0,  # TUNING (not in GDD) the same coffin opened: the lid slid aside, a red glow inside
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

@@ -588,6 +588,20 @@ RIGS = {
     "player/fallen_saint": dict(mode="robe", hip=34, rigid=[], sway=2, dip=1, bust=(13, 25, 16, 22, 1)),
     "summons/archfiend": dict(mode="legs", hip=44, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=2, dip=1),
     "summons/prince_of_hell": dict(mode="legs", hip=52, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1),
+    # --- Act VII: the Sanguine Court (the shared kinds) ---
+    # The thrall shambles on bare feet; the bat hovers (the whole bat bobs 2 px, both wings flap from their shoulder roots, the
+    # still keeps two empty rows on top); the Blood Knight strides, the upright halberd (cols 24+) rigid with the body; the
+    # werewolf hunter and the beast stride (the beast heavily, spread 3). The Countess glides in her gown (robe mode, the hem
+    # as one layer) with the figure-redesign rigs: the two-lobe bust box bounces and the `swish` hip box sways sideways one
+    # frame behind; her idle strip breathes through the same boxes.
+    "court/blood_thrall": dict(mode="legs", hip=19, back=(0, 9), front=(9, 20), rigid=[], spread=1, lift=1, dip=1),
+    "court/vampire_bat": dict(mode="hover", bob=2, parts=[
+        dict(kind="flap", box=(0, 12, 0, 22), root=12, amp=3),
+        dict(kind="flap", box=(20, 32, 0, 22), root=20, amp=3)]),
+    "court/blood_knight": dict(mode="legs", hip=36, back=(0, 16), front=(16, 24), rigid=[(24, 32, 0, None)], spread=2, lift=2, dip=1),
+    "court/werewolf": dict(mode="legs", hip=36, back=(0, 27), front=(27, 48), rigid=[], spread=2, lift=2, dip=1),
+    "court/werewolf_beast": dict(mode="legs", hip=60, back=(0, 36), front=(36, 66), rigid=[], spread=3, lift=3, dip=1),
+    "court/vampire_noble": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, bust=(9, 24, 11, 18, 2, 2), swish=(8, 25, 26, 36, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

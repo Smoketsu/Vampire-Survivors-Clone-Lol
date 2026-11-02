@@ -1066,3 +1066,11 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-31 03:02,player/fallen_saint_untouchable,gpt-image-2.5-flare,medium,1024x1024,1,207,1024,439,0.0224,fallen_saint_untouchable.png
 2026-10-31 03:02,summons/prince_of_hell,gpt-image-2.5-flare,medium,1024x1024,1,227,1024,439,0.0225,prince_of_hell.png
 2026-10-31 03:02,player/fallen_saint_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,282,1024,439,0.0228,fallen_saint_deathlord.png
+2026-11-02 04:14,court/blood_thrall,gpt-image-2.5-flare,medium,1024x1024,2,495,498,439,0.0196,blood_thrall.png
+2026-11-02 04:15,court/vampire_bat,gpt-image-2.5-flare,medium,1024x1024,2,495,726,439,0.0215,vampire_bat.png
+2026-11-02 04:15,court/blood_knight,gpt-image-2.5-flare,medium,1024x1024,2,558,548,439,0.0203,blood_knight.png
+2026-11-02 04:15,court/vampire_noble,gpt-image-2.5-flare,medium,1024x1024,2,642,582,439,0.0210,vampire_noble.png
+2026-11-02 04:15,court/werewolf,gpt-image-2.5-flare,medium,1024x1024,2,574,586,439,0.0207,werewolf.png
+2026-11-02 04:16,court/werewolf_beast,gpt-image-2.5-flare,medium,1024x1024,2,572,600,439,0.0208,werewolf_beast.png
+2026-11-02 04:16,structures/court_coffin,gpt-image-2.5-flare,medium,1024x1024,1,423,16,439,0.0154,court_coffin.png
+2026-11-02 04:16,structures/court_coffin_open,gpt-image-2.5-flare,medium,1024x1024,2,480,1040,439,0.0239,court_coffin_open.png

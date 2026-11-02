@@ -126,7 +126,17 @@
     {"name": "demon", "hex": "#9B2D5E", "ramp": "demon", "index": 2, "group": "unit", "role": "demon skin: imps, brutes, the succubus (Act VI; INFERNO_DEMON; a magenta-red, apart from the Covenant crimson and the Shogunate lacquer)"},
     {"name": "demon_light", "hex": "#D45C8A", "ramp": "demon", "index": 3, "group": "unit", "role": "lit demon skin, horn tips, a rim light (Act VI; INFERNO_DEMON_LIGHT)"},
     {"name": "charm", "hex": "#FF6FB5", "ramp": "charm", "index": 1, "group": "unit", "role": "charm pink, the act's signature colour: Temptation, the portal's swirl, hearts (Act VI; INFERNO_CHARM)"},
-    {"name": "charm_light", "hex": "#FFB8DD", "ramp": "charm", "index": 2, "group": "glow", "role": "pale charm glow: the portal's core, Temptation sparks (Act VI; INFERNO_CHARM_LIGHT)"}
+    {"name": "charm_light", "hex": "#FFB8DD", "ramp": "charm", "index": 2, "group": "glow", "role": "pale charm glow: the portal's core, Temptation sparks (Act VI; INFERNO_CHARM_LIGHT)"},
+    {"name": "blood_ink", "hex": "#12060A", "ramp": "blood", "index": 0, "group": "ink", "role": "outline of the Sanguine Court's blood, velvet and moonlight (Act VII; COURT_BLOOD_INK)"},
+    {"name": "blood_dark", "hex": "#5A0A14", "ramp": "blood", "index": 1, "group": "unit", "role": "blood in shadow: dried blood, the blood knight's plate in shade (Act VII; COURT_BLOOD_DARK)"},
+    {"name": "blood", "hex": "#A3142A", "ramp": "blood", "index": 2, "group": "unit", "role": "blood red: the blood knight's plate, the drain beam, fresh blood, vampire eyes (Act VII; COURT_BLOOD)"},
+    {"name": "blood_light", "hex": "#E0384E", "ramp": "blood", "index": 3, "group": "unit", "role": "lit blood: plate highlights, the drain beam's core, a fed vampire's glow (Act VII; COURT_BLOOD_LIGHT)"},
+    {"name": "velvet_dark", "hex": "#160F1C", "ramp": "velvet", "index": 1, "group": "unit", "role": "black velvet in shadow: capes, hair, the dark of the gown (Act VII; COURT_VELVET_DARK)"},
+    {"name": "velvet", "hex": "#2B1E36", "ramp": "velvet", "index": 2, "group": "unit", "role": "velvet: the Countess's gown, capes, the castle's hangings (Act VII; COURT_VELVET)"},
+    {"name": "velvet_light", "hex": "#4D3A5E", "ramp": "velvet", "index": 3, "group": "unit", "role": "lit velvet, the rim that keeps black cloth readable on a dark floor (Act VII; COURT_VELVET_LIGHT)"},
+    {"name": "moon_dark", "hex": "#6E7A8C", "ramp": "moonlight", "index": 1, "group": "unit", "role": "moonlit silver in shadow: werewolf fur, bat membranes (Act VII; COURT_MOON_DARK)"},
+    {"name": "moon", "hex": "#B4C0D0", "ramp": "moonlight", "index": 2, "group": "unit", "role": "moonlit silver: fur highlights, the silver crossbow, ghoul grey (Act VII; COURT_MOON)"},
+    {"name": "moon_light", "hex": "#E6EEF7", "ramp": "moonlight", "index": 3, "group": "glow", "role": "moonlight glow: the Blood Moon's pale rim, silver glints, mist (Act VII; COURT_MOON_LIGHT)"}
   ],
   "ramps": {
     "violet": {"members": ["ink_violet", "violet_deep", "violet", "violet_glow", "violet_flare"], "role": "the player only: necromancer, the 12 characters, their spells and icons"},
@@ -156,6 +166,9 @@
     "lava": {"members": ["obsidian_ink", "lava_dark", "lava", "lava_light"], "role": "the Inferno's lava (Act VI): ember cracks, burning blades, pit fire and eyes (outline borrowed from the obsidian ink)"},
     "demon": {"members": ["obsidian_ink", "demon_dark", "demon", "demon_light"], "role": "the Inferno's demon skin (Act VI): imps, brutes, the succubus; a magenta-red apart from the Covenant crimson and the Shogunate lacquer (outline borrowed from the obsidian ink)"},
     "charm": {"members": ["obsidian_ink", "charm", "charm_light"], "role": "the Inferno's charm pink (Act VI): Temptation, the portal's swirl, hearts; the act's signature colour (outline borrowed from the obsidian ink)"},
+    "blood": {"members": ["blood_ink", "blood_dark", "blood", "blood_light"], "role": "the Sanguine Court's blood red (Act VII): blood knight plate, drain beams, vampire eyes; darker and bluer than the Covenant crimson (never the player's violet)"},
+    "velvet": {"members": ["blood_ink", "velvet_dark", "velvet", "velvet_light"], "role": "the Sanguine Court's black-purple velvet (Act VII): capes, gowns, hair, hangings; the light shade is the rim that keeps black cloth readable (outline borrowed from the blood ink)"},
+    "moonlight": {"members": ["blood_ink", "moon_dark", "moon", "moon_light"], "role": "the Sanguine Court's moonlit silver (Act VII): werewolf fur, bat membranes, silver weapons, mist (outline borrowed from the blood ink)"},
     "floor": {"members": ["floor_soil", "floor_earth", "floor_grass", "floor_ochre", "floor_slate", "floor_ash", "floor_dirt", "floor_moss", "floor_marble", "floor_stone"], "role": "ground colours of the three stages (tiles only, never sprites), dark -> light; the zone tiles add close shades per zone"}
   }
 }
