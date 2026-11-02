@@ -82,6 +82,9 @@
 ## Act VII, Castle Sanguis:
 ##   Dhampir          Half-Blood      in NightSwarm.step() (two more bats in the
 ##                    swarm); stats as the spell's (swarm_darts, swarm_bites).
+## Act VIII, Skid Row:
+##   Undertaker       Last Ride       in HearseRun._cast() (one more hearse in
+##                                    every cast); stat hearse_extra.
 class_name CharacterInnates
 extends Node2D
 
@@ -427,6 +430,9 @@ func summary_line() -> String:
 		# --- Act VII: Castle Sanguis --- (Half-Blood lives in NightSwarm.step())
 		"half_blood":
 			counters = "extra bats %d (bites %d)" % [int(game.character.innate_value(NightSwarmData.EXTRA_KEY)), int(st.get("swarm_bites", 0.0))]
+		# --- Act VIII: Skid Row --- (Last Ride lives in HearseRun._cast())
+		"last_ride":
+			counters = "extra hearses %d (casts %d)" % [int(st.get("hearse_extra", 0.0)), int(st.get("hearse_casts", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

@@ -426,6 +426,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("coffin_nails_runs", 1.0 if float(st.get("ravensmoor_coffin_nails", 0.0)) > 0.0 else 0.0)  # Coffin Nails (Act VII, Ravensmoor)
 	# --- Act VII: the Witchwood ---
 	_add_lifetime("coven_breaks_runs", 1.0 if float(st.get("witchwood_coven_breaks", 0.0)) > 0.0 else 0.0)  # The Coven Breaks (Act VII, the Witchwood)
+	# --- Act VIII: Skid Row ---
+	_add_lifetime("no_witnesses_runs", 1.0 if float(st.get("skid_row_no_witnesses", 0.0)) > 0.0 else 0.0)  # No Witnesses (Act VIII, Skid Row)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
@@ -1631,6 +1633,8 @@ static func _default_lifetime() -> Dictionary:
 		"coffin_nails_runs": 0.0,  # Ravensmoor runs that broke every sleeping coffin before it opened (Coffin Nails)
 		# --- Act VII: the Witchwood ---
 		"coven_breaks_runs": 0.0,  # runs in which Isolde's three sisters fell within 1 s of each other (The Coven Breaks)
+		# --- Act VIII: Skid Row ---
+		"no_witnesses_runs": 0.0,  # Skid Row runs that killed the whole opening crowd before one fled (No Witnesses)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

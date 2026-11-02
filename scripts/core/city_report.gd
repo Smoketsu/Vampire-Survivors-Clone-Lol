@@ -21,6 +21,8 @@
 ##   city stage:  the Act VIII stage itself (stub status, boss, Soul Ash, the
 ##                Reckoning)
 ## Phase 2 adds one line per stage system here (each stage in its own block).
+##   Act VIII, Skid Row: SkidRowReport.print_lines() (skid row, tear gas, big
+##   sal, don marrow).
 ## Read-only: it never changes the run.
 class_name CityReport
 extends RefCounted
@@ -67,6 +69,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not city.martial.cfg.is_empty())])
 	# Phase 2: each Act VIII stage's own lines go here (its stage, kinds and boss).
+	# --- Act VIII: Skid Row ---
+	SkidRowReport.print_lines(game, st)  # Big Sal, the Bounty, No Witnesses, the tear gas, Don Marrow (each when it ran).
 
 
 ## The "city blocks" line (CityBlocks; "off" without a blocks layout).

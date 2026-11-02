@@ -1160,3 +1160,15 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-02 18:21,player/moon_huntress_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,379,1024,439,0.0233,huntress_dl.png
 2026-11-02 18:21,bosses/vargr,gpt-image-2.5-flare,medium,1024x1024,1,726,1024,439,0.0250,vargr.png
 2026-11-02 18:21,player/dhampir_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,332,1024,439,0.0230,dhampir_dl.png
+2026-11-02 21:56,bosses/don_marrow,gpt-image-2.5-flare,medium,1024x1024,2,625,992,439,0.0242,don_marrow.png
+2026-11-02 21:56,city/armoured_limo,gpt-image-2.5-flare,medium,1024x1024,2,594,1152,439,0.0254,armoured_limo.png
+2026-11-02 21:56,city/big_sal,gpt-image-2.5-flare,medium,1024x1024,1,519,352,439,0.0186,big_sal.png
+2026-11-02 21:56,structures/bounty_board,gpt-image-2.5-flare,medium,1024x1024,1,497,266,439,0.0178,bounty_board.png
+2026-11-02 21:56,projectiles/spectral_hearse,gpt-image-2.5-flare,medium,1024x1024,1,487,512,439,0.0197,spectral_hearse.png
+2026-11-02 21:57,player/undertaker,gpt-image-2.5-flare,medium,1024x1024,1,569,644,439,0.0212,undertaker.png
+2026-11-02 21:57,structures/city_wreck,gpt-image-2.5-flare,medium,1024x1024,1,598,408,439,0.0194,wrecks.png
+2026-11-02 21:57,icons/skid_row_violet,gpt-image-2.5-flare,medium,1024x1024,1,355,256,439,0.0170,icons_violet.png
+2026-11-02 21:57,icons/skid_row_gold,gpt-image-2.5-flare,medium,1024x1024,1,318,256,439,0.0168,icons_gold.png
+2026-11-02 21:59,player/undertaker_hyper,gpt-image-2.5-flare,medium,1024x1024,1,165,608,439,0.0189,undertaker_hyper.png
+2026-11-02 21:59,player/undertaker_untouchable,gpt-image-2.5-flare,medium,1024x1024,1,204,608,439,0.0191,undertaker_untouchable.png
+2026-11-02 21:59,player/undertaker_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,209,608,439,0.0191,undertaker_deathlord.png

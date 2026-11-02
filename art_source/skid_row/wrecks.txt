@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), TWO VEHICLE WRECKS side by side, each seen from above and a little from the front-side, each drawn FACING RIGHT, the same wrecked car twice, far apart with empty space between them
+
+LOW-RESOLUTION pixel art: the whole wreck is only 60 pixels long and about 40 high each, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a WRECKED SEDAN CAR (the remains of a destroyed vehicle in a city street): LEFT: the wreck BURNING, its crumpled black-grey body with the roof caved in, broken windows, a bent bonnet, two wheels gone, bright orange and yellow flames rising from the middle of the car and a little smoke; RIGHT: the SAME wreck BURNT OUT, no flames, a blackened charred shell with rust-brown scorch marks and a few small red embers. Each wreck must be WIDE (about one and a half times as long as it is high), the full length of a car. NO writing, NO letters.
+Signature shape that must read in silhouette: a long low crumpled car.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: charred body #101114 #1E2024 #3A3D44 #55595F; rust and scorch #4F3320 #7A5236; flames #B0500F #F07A1E #F2C418 #FFE680; embers #D82A2A
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow), exactly TWO subjects side by side with a wide empty gap between them, filling most of the image width. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite of the old wreck for the pixel look and colours (make the new wrecks LONGER and LOWER: a whole car, not a pile).

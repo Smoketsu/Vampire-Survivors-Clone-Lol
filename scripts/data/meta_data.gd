@@ -432,7 +432,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VII: the Witchwood ---
 	"the_coven_breaks",
 	# --- Act VII: Castle Sanguis ---
-	"last_supper"]
+	"last_supper",
+	# --- Act VIII: Skid Row ---
+	"no_witnesses"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -622,6 +624,17 @@ const ACHIEVEMENTS := {
 	# / TitleData).
 	"last_supper": {"display_name": "Last Supper", "description": "Beat the Elder in Castle Sanguis",
 		"stat": "boss_kills", "stage": "castle_sanguis", "goal": 1, "unlock": "The title Ender of the Feast", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Morning Star Falls
+	# --- Act VIII: Skid Row ---
+	# Owner's Act VIII achievement "No Witnesses" (Nov 2, 2026, replacing Radio
+	# Silence: "kill every civilian of the opening crowd before they flee the
+	# streets"): a Skid Row run in which every civilian of the 0:00 crowd (36)
+	# was killed and not one of them fled the field (SkidRowDirector sets the
+	# run stat skid_row_no_witnesses from Civilians.crowd_left / crowd_fled;
+	# MetaProgress counts the runs, lifetime no_witnesses_runs). It fails as
+	# soon as one of the crowd leaves the field. It unlocks the counter-passive
+	# Kevlar Bones.
+	"no_witnesses": {"display_name": "No Witnesses", "description": "Kill every civilian of Skid Row's opening crowd before one flees the streets",
+		"stat": "no_witnesses_runs", "goal": 1, "unlock": "The Kevlar Bones passive", "bounty": 300},  # Owner (Nov 2, 2026); bounty TUNING (not in GDD) as Coffin Nails
 }
 
 # --- Content wave 2: B. Achievement rewards ---

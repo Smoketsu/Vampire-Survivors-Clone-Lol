@@ -349,6 +349,9 @@ const SPELLS := {
 	# --- Act VII: Castle Sanguis ---
 	"night_swarm": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 30.0, "speed": 260.0,
 		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a fan of spectral wings every third dart cooldown
+	# --- Act VIII: Skid Row ---
+	"hearse_run": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 7], "spread": 24.0, "speed": 320.0,
+		"life": 0.6, "share": 0.3, "pierce": 2, "radius": 3.5, "style": "shard", "color": Color(0.55, 0.95, 0.8)},  # TUNING (not in GDD) a fan of spectral grave-lights with every other run
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

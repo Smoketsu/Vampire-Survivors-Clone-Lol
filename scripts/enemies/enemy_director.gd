@@ -130,6 +130,10 @@
 ##     a stage with a "witchwood" config it owns the WitchwoodDirector (the Fen,
 ##     the hex stones, the Bog Mother, the covens; `witchwood`) and hands it the
 ##     "bog_mother" and "coven" events. Null elsewhere.
+##   * Act VIII, Skid Row (GDD §15.0 "Skid Row (Act VIII phase 2)"): on a stage
+##     with a "skid_row" config it creates the SkidRowDirector (Big Sal and the
+##     Armoured Limo, the Bounty's doubled gangs, No Witnesses; `skid_row`) and
+##     hands it the "big_sal" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -298,6 +302,11 @@ var witchwood: WitchwoodDirector = null
 ## Chiropteran King, guest squads; StageRegistry "castle_sanguis"; null on
 ## every other stage).
 var castle_sanguis: CastleSanguisDirector = null
+# --- Act VIII: Skid Row ---
+## Skid Row's mechanics (Act VIII: Big Sal and the Armoured Limo, the Bounty's
+## doubled gangs, No Witnesses; StageRegistry "skid_row"; null on every other
+## stage).
+var skid_row: SkidRowDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -466,6 +475,12 @@ func _ready() -> void:
 		castle_sanguis.game = game
 		castle_sanguis.config = stage_def["castle_sanguis"]
 		add_child(castle_sanguis)  # Castle Sanguis's director.
+	# --- Act VIII: Skid Row ---
+	if not (stage_def.get("skid_row", {}) as Dictionary).is_empty():
+		skid_row = SkidRowDirector.new()
+		skid_row.game = game
+		skid_row.config = stage_def["skid_row"]
+		add_child(skid_row)  # Skid Row's director.
 
 
 # =====================================================================================
@@ -598,6 +613,9 @@ func step(delta: float) -> void:
 	# --- Act VII: Castle Sanguis ---
 	if castle_sanguis != null:
 		castle_sanguis.step(delta)  # The Banquet's fountains, guest squads.
+	# --- Act VIII: Skid Row ---
+	if skid_row != null:
+		skid_row.step(delta)  # The Bounty's gangs, No Witnesses, Big Sal.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -727,6 +745,9 @@ func objective_text() -> String:
 	# --- Act VII: Castle Sanguis ---
 	if castle_sanguis != null and castle_sanguis.objective_override() != "":
 		return castle_sanguis.objective_override()  # The Chiropteran King, the Waking.
+	# --- Act VIII: Skid Row ---
+	if skid_row != null and skid_row.objective_override() != "":
+		return skid_row.objective_override()  # Big Sal and his limo.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -949,6 +970,12 @@ func _run_event(ev: Dictionary) -> void:
 				castle_sanguis.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # Castle Sanguis's miniboss (CastleSanguisDirector).
+		# --- Act VIII: Skid Row ---
+		"big_sal":
+			if skid_row != null:
+				skid_row.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Skid Row's miniboss (SkidRowDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

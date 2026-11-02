@@ -741,6 +741,11 @@ RIGS = {
     "bosses/elder_vampire": dict(mode="robe", hip=84, rigid=[], sway=1, dip=1),
     "summons/blood_spawn": dict(mode="legs", hip=26, back=(0, 25), front=(25, 50), rigid=[], spread=2, lift=2, dip=1),
     "summons/nosferatu": dict(mode="legs", hip=34, back=(0, 26), front=(26, 52), rigid=[], spread=2, lift=2, dip=1),
+    # --- Act VIII: Skid Row ---
+    "city/armoured_limo": dict(mode="legs", hip=24, back=(0, 42), front=(42, 84), rigid=[], spread=0, lift=1, dip=1),
+    "city/big_sal": dict(mode="legs", hip=37, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
+    "bosses/don_marrow": dict(mode="legs", hip=54, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=2, dip=1),
+    "player/undertaker": dict(mode="legs", hip=42, back=(0, 16), front=(16, 32), rigid=[], spread=1, lift=1, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -851,6 +856,10 @@ SKINS = {
     "player/dhampir_hyper": "player/dhampir",
     "player/dhampir_untouchable": "player/dhampir",
     "player/dhampir_deathlord": "player/dhampir",
+    # --- Act VIII: Skid Row ---
+    "player/undertaker_hyper": "player/undertaker",
+    "player/undertaker_untouchable": "player/undertaker",
+    "player/undertaker_deathlord": "player/undertaker",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

@@ -1,0 +1,14 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), a STRUCTURE seen from the front and a little from above
+
+LOW-RESOLUTION pixel art: the whole structure is only 44 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a gang boss's BOUNTY BOARD: a wooden billboard on two thick wooden posts, its face covered with five pinned WANTED posters, each poster only a pale paper rectangle with a dark hooded skull silhouette drawn on it (no writing), a gold frame around the board, two small gold coin bags hanging from its corners, a lamp on top.
+NO letters, NO numbers, NO writing anywhere: shapes only.
+Signature shape that must read in silhouette: the wide board on two posts covered in pale posters.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: wood #4F3320 #7A5236; paper posters #B4AA8A #E6DCC0 with skull marks #3A3D44; gold frame and coin bags #7A5A14 #E8A43A #FFD24D; lamp #E8A43A
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no letters, no logo, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look.

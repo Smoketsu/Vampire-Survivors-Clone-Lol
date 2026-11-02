@@ -109,7 +109,9 @@ const WRECK_SOURCE: String = "wreck_blast"
 const DASH_SOURCE: String = "blitz_dash"
 ## Ranged damage tags of the City beyond its "ranged" rows' kind ids (Kevlar
 ## Bones' hook reads them through Armour.kevlar_mult()).
-const RANGED_SOURCES: Array[String] = ["tank_shell", "artillery"]
+const RANGED_SOURCES: Array[String] = ["tank_shell", "artillery",
+	# --- Act VIII: Skid Row --- the limo crew's sprays, Don Marrow's revolver and gold minigun.
+	"limo_spray", "marrow_revolver", "marrow_minigun"]
 
 ## The City's shared kinds, keyed by kind id.
 const ENEMIES := {
@@ -197,7 +199,13 @@ const ENEMIES := {
 		"spray_spread": 0.5,  # TUNING (not in GDD) rad each side ("poor aim")
 	},  # The gang gunner.
 	# Police, soldier: a riot shield in front (ARMOUR: a hit on the front is cut
-	# by armour_front; flank the line) and a baton. Phase 2 adds the tear gas.
+	# by armour_front; flank the line) and a baton. TEAR GAS (Act VIII phase 2,
+	# Skid Row; owner-approved proposal: "tear gas that slows summons"): every
+	# gas_every s, with a summon within gas_range px, it lobs a canister at the
+	# nearest one; after gas_flight s a cloud of gas_radius px hangs there for
+	# gas_time s and slows every summon in it by gas_slow (TerrainSlow
+	# .slow_summon(), the one ground-slow path, refreshed gas_linger s each
+	# gas_tick s). No damage; never the necromancer (RiotCopKit).
 	"riot_cop": {
 		"display_name": "Riot Cop",
 		"max_hp": 54.0,  # TUNING (not in GDD) a soldier (the Blood Knight 44)
@@ -220,6 +228,15 @@ const ENEMIES := {
 		"kit": "riot_cop",
 		"tier": "police",  # Owner-approved proposal: ★★ Police
 		"armour_front": 0.7,  # TUNING (not in GDD) the riot shield cuts 70% from the front ("flank the line")
+		# --- Act VIII: Skid Row --- the tear gas (RiotCopKit).
+		"gas_every": 14.0,  # TUNING (not in GDD) s between two canisters
+		"gas_range": 200.0,  # TUNING (not in GDD) px to the summon it lobs at
+		"gas_flight": 0.6,  # TUNING (not in GDD) s the canister flies
+		"gas_time": 4.0,  # TUNING (not in GDD) s the cloud hangs
+		"gas_radius": 44.0,  # TUNING (not in GDD) px
+		"gas_slow": 0.35,  # TUNING (not in GDD) share of move speed the summons in it lose
+		"gas_linger": 0.5,  # TUNING (not in GDD) s the slow lasts after a summon leaves the cloud
+		"gas_tick": 0.25,  # TUNING (not in GDD) s between two slow refreshes
 	},  # The riot cop.
 	# Police, vehicle: a squad car. CONVOY: it drives straight along a street
 	# lane toward the necromancer's street with its headlights 1 s ahead, runs

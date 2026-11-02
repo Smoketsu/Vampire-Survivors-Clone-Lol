@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), a VEHICLE seen from above and a little from the front-side, drawn FACING RIGHT (nose to the right), the whole car visible, roof, bonnet and windscreen readable
+
+LOW-RESOLUTION pixel art: the whole car is only 80 pixels long and about 36 high, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: an ARMOURED STRETCH LIMOUSINE of a gang boss: a very long, low, glossy black car with gold trim along the sides, gold hubcaps, a heavy reinforced front grille and bumper of dark steel plates, dark tinted side windows with small open gun ports, headlights unlit. NO writing, NO letters, NO badge, NO markings: colour and shape only. The same car as the attached concept art (black with gold trim).
+Signature shape that must read in silhouette: the extra-long black body and the armoured front.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: black body #101114 #1E2024 #3A3D44; tinted windows #1E2024 #55595F; gold trim and hubcaps #7A5A14 #E8A43A #FFD24D; steel front plates #55595F #7A7F87; tyres #101114 #1E2024
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no letters, no logo, no frame, no watermark.
+Attached: (1) a game sprite of a car for pixel size, view angle, outline weight and flat look; (2) concept art of the boss's car for the look only (do NOT copy its detail level or painted shading, do NOT draw the man or the gun).

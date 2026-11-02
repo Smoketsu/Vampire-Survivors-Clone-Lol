@@ -250,4 +250,7 @@ const SOUNDS := {
 	"super_arrive": "super_arrive",  # A rising whoosh and a bright chord (Supers).
 	"weakness_crack": "weakness_crack",  # A glassy crack (a Super exposed).
 	"tier_alarm": "tier_alarm",  # A radio squelch and a low klaxon (the escalation).
+	# --- Act VIII: Skid Row ---
+	"minigun": "minigun",  # SoundData.CITY_SOUNDS: Don Marrow's gold minigun sweeps a lane (BossDonMarrow)
+	"gas_hiss": "gas_hiss",  # SoundData.CITY_SOUNDS: a riot cop's tear-gas canister lands (RiotCopKit)
 }

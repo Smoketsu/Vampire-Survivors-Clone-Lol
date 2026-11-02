@@ -84,7 +84,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act VII: the Witchwood ---
 	"hedge_witch",
 	# --- Act VII: Castle Sanguis ---
-	"dhampir"]
+	"dhampir",
+	# --- Act VIII: Skid Row ---
+	"undertaker"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -185,7 +187,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act VII: the Witchwood ---
 	"witch_circle_radius",
 	# --- Act VII: Castle Sanguis ---
-	"swarm_extra_bats"]
+	"swarm_extra_bats",
+	# --- Act VIII: Skid Row ---
+	"hearse_extra"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -768,5 +772,28 @@ const CHARACTERS := {
 		"tint": Color(0.86, 0.36, 0.44),  # TUNING (not in GDD) a blood red over the violet
 		"starts_unlocked": false,
 	},
+	# --- Act VIII: Skid Row ---
+	# The Undertaker (Hearse Run's character; owner-approved Act VIII proposal
+	# "Rewards": "Hearse Run ... | The Undertaker, the city's mortician-mobster";
+	# the brief: male): a gaunt, pale MALE mortician in a black three-piece suit
+	# and a long black coat, a tall black top hat with a grey band, a grey
+	# waistcoat and a gold watch chain, white gloves, a black cane with a silver
+	# skull knob. Hearse Run must be unlocked (by Don Marrow) before he can be
+	# earned, by the usual Lv 5 rule. Own decision on his innate (the proposal
+	# names none): Last Ride, one more hearse in every Hearse Run cast
+	# (HearseRun._cast()).
+	"undertaker": {
+		"display_name": "The Undertaker",  # Owner-approved proposal
+		"title": "Every family in the city paid him once. Now they all ride with him.",
+		"spell": "hearse_run",
+		"innate": {
+			"id": "last_ride", "name": "Last Ride",
+			"description": "Hearse Run sends one more hearse.",
+			"values": {"hearse_extra": 1.0},  # TUNING (not in GDD) one more hearse per cast
+		},
+		"stats": {"max_hp": 5.0, "move_speed": -0.03},  # TUNING (not in GDD) a sturdy, unhurried mortician
+		"sprite": "player/undertaker",
+		"tint": Color(0.62, 0.6, 0.66),  # TUNING (not in GDD) a funeral grey over the violet
+		"starts_unlocked": false,
+	},
 }
-

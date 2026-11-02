@@ -243,7 +243,9 @@ const COURT_BOSSES: Array[String] = ["vargr", "isolde", "carmilla"]
 ## never slain).
 const CITY_CIVILIANS: Array[String] = ["civilian"]
 ## The gangs' kinds (tier "gangs").
-const CITY_GANGS: Array[String] = ["street_thug", "gang_gunner"]
+const CITY_GANGS: Array[String] = ["street_thug", "gang_gunner",
+	# --- Act VIII: Skid Row --- (the gangs' enforcer: the miniboss in his limo and on foot)
+	"armoured_limo", "big_sal"]
 ## The police's kinds (tier "police").
 const CITY_POLICE: Array[String] = ["riot_cop", "squad_car"]
 ## SWAT and the Guard's kinds (tier "swat").
@@ -456,6 +458,9 @@ const DESCRIPTIONS: Dictionary = {
 	"don_marrow": "Don Marrow, the Kingpin: a bounty on your head, a call to the police, and a gold-plated minigun behind his limousine's armour.",  # Owner-approved Act VIII proposal
 	"harrow": "General Vance Harrow, the Hammer: carpet bombing, a tank column, and Broken Arrow, a strike on his own position.",  # Owner-approved Act VIII proposal
 	"paragon": "Paragon, the Last Hero: the strongest man alive, and every hero still standing flies to his side.",  # Owner-approved Act VIII proposal
+	# --- Act VIII: Skid Row ---
+	"armoured_limo": "Big Sal's armoured limousine rams your ring while his crew sprays pistols from both windows. Its front is armoured: hit it from the side.",  # Owner-approved Act VIII proposal (miniboss)
+	"big_sal": "The gangs' enforcer, who climbs out of his burning limo with a sledgehammer. Step out of its swing.",  # Owner-approved Act VIII proposal (miniboss)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -691,6 +696,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_coven_breaks": "ach_the_coven_breaks",  # TUNING (not in GDD)
 	# --- Act VII: Castle Sanguis ---
 	"last_supper": "ach_last_supper",  # TUNING (not in GDD)
+	# --- Act VIII: Skid Row ---
+	"no_witnesses": "ach_no_witnesses",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -740,6 +747,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_coven_breaks": "embalmed",
 	# --- Act VII: Castle Sanguis ---
 	"last_supper": "night_swarm",
+	# --- Act VIII: Skid Row ---
+	"no_witnesses": "kevlar_bones",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

@@ -51,6 +51,18 @@ var xp_dropped: int = 0
 var _crowd_done: bool = false
 ## Game time (s) of the next trickle civilian.
 var _next: float = 0.0
+# --- Act VIII: Skid Row --- (No Witnesses: the opening crowd's counters)
+## Civilians of the 0:00 crowd that came onto the field (0 before it came).
+var crowd_size: int = 0
+## Civilians of the 0:00 crowd still on the field (alive, not fled).
+var crowd_left: int = 0
+## Civilians of the 0:00 crowd that fled the field (any one fails No Witnesses).
+var crowd_fled: int = 0
+## Civilians of the 0:00 crowd that were killed.
+var crowd_killed: int = 0
+## The crowd's members still on the field: Enemy -> its pool generation (so a
+## recycled pool node is never taken for one of them).
+var _crowd: Dictionary = {}
 
 
 ## Builds the civilians for `p_game`; `p_enabled`: an Act VIII stage.
@@ -81,7 +93,12 @@ func step(_delta: float) -> void:
 		_crowd_done = true
 		var n := int(cfg["crowd"])
 		for k in n:
-			_spawn_near(game.player.position, float(cfg["crowd_min"]), float(cfg["crowd_max"]))
+			var c := _spawn_near(game.player.position, float(cfg["crowd_min"]), float(cfg["crowd_max"]))
+			# --- Act VIII: Skid Row --- the crowd's members (No Witnesses).
+			if c != null:
+				_crowd[c] = c.generation
+				crowd_size += 1
+				crowd_left += 1
 		_next = game.elapsed + float(cfg["trickle_every"])
 		return
 	if game.elapsed < _next or evacuated() or game.countdown_finished():
@@ -93,7 +110,8 @@ func step(_delta: float) -> void:
 
 ## One civilian in a street `rmin`..`rmax` px from `c` (on a blocks layout the
 ## point is moved onto the nearest street's roadway; elsewhere just free).
-func _spawn_near(c: Vector2, rmin: float, rmax: float) -> void:
+## Returns it (Act VIII, Skid Row: the crowd's counters).
+func _spawn_near(c: Vector2, rmin: float, rmax: float) -> Enemy:
 	var p := c + Vector2.from_angle(randf() * TAU) * randf_range(rmin, rmax)
 	var cb := game.arena.city_blocks
 	if cb != null:
@@ -101,7 +119,7 @@ func _spawn_near(c: Vector2, rmin: float, rmax: float) -> void:
 		var off := (randf() * 2.0 - 1.0) * float(ln["half"])  # Across the roadway (px).
 		var d: Vector2 = ln["dir"]
 		p = (ln["point"] as Vector2) + Vector2(-d.y, d.x) * off
-	game.enemies.spawn_at(CityEnemyData.CIVILIAN, p, false)
+	return game.enemies.spawn_at(CityEnemyData.CIVILIAN, p, false)
 
 
 ## A civilian `e` was activated (CivilianKit.reset()).
@@ -121,6 +139,10 @@ func on_gone(_e: Enemy) -> void:
 func on_killed(e: Enemy) -> void:
 	killed += 1
 	xp_dropped += e.xp_value
+	if _is_crowd(e):  # --- Act VIII: Skid Row --- one of the 0:00 crowd fell.
+		_crowd.erase(e)
+		crowd_left -= 1
+		crowd_killed += 1
 	game.stat_add("city_civilians_killed", 1.0)
 	game.stat_add("city_civilians_xp", float(e.xp_value))
 
@@ -130,6 +152,10 @@ func on_killed(e: Enemy) -> void:
 func flee_off(e: Enemy) -> void:
 	fled += 1
 	game.stat_add("city_civilians_fled", 1.0)
+	if _is_crowd(e):  # --- Act VIII: Skid Row --- one of the 0:00 crowd got away (No Witnesses fails).
+		_crowd.erase(e)
+		crowd_left -= 1
+		crowd_fled += 1
 	game.enemies.despawn(e)
 
 
@@ -140,3 +166,9 @@ func far_from_all(e: Enemy) -> bool:
 		if not pl.dead and pl.position.distance_squared_to(e.position) <= r * r:
 			return false
 	return true
+
+
+# --- Act VIII: Skid Row ---
+## True when `e` (still this pool generation) is one of the 0:00 crowd.
+func _is_crowd(e: Enemy) -> bool:
+	return _crowd.has(e) and int(_crowd[e]) == e.generation
