@@ -124,11 +124,14 @@ Other twists for the finale: the Harvester is the one who made the first necroma
 
 ## Concept art
 In `art_source/concepts/act9_*.png`, with the prompts beside each image (awaiting the owner's approval before any sprite).
-- `act9_lineup.png`: Broodling, Burrower, Acid Spitter, Grey Drone, Saucer, Grey Overseer, Vrask Hunter, Lumen Sentinel
-  and the Prism (the Star-Seer, a woman, figure style). The first Prism was drawn in a cut-out bodice and was redone in an
+- `act9_lineup.png` (round 2; round 1 kept as `act9_lineup_r1.png`): Broodling, Burrower, Acid Spitter, Grey Drone, Saucer,
+  Grey Overseer, Vrask Hunter, Lumen Sentinel, the Hive Mother (the Brood's insect queen, a woman in figure style, fully
+  covered in purple chitin, drawn from the earlier concept at `14ed7ee`, owner request) and the Prism (the Star-Seer, a woman, figure style). The first Prism was drawn in a cut-out bodice and was redone in an
   opaque, fully covering gown.
 - `act9_boss.png`: the Harvester floating above a throne of rings on the mothership bridge, with a tractor beam lifting
-  skeletons, its true halo of rings behind it, a Brood queen-guard and a Vrask hunter beside it.
+  skeletons, its true halo of rings behind it, a Brood queen-guard and a Vrask hunter beside it
+  (round 2, `act9_boss_r1.png` is the old one: the stray large archer on the right is gone; only the necromancer's small
+  skeleton army stands at the bottom).
 - `act9_stage.png`: Stage 25, the Crash Site, with a Harvester scout ship in the crater, magenta aiming lines and a
   sweeping beam, a saucer abducting a skeleton, Brood swarming, a burrower mound and Terraforming ground (green healing
   glow on Brood units, patches burnt black).

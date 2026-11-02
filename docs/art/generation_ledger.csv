@@ -1066,3 +1066,7 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-10-31 03:02,player/fallen_saint_untouchable,gpt-image-2.5-flare,medium,1024x1024,1,207,1024,439,0.0224,fallen_saint_untouchable.png
 2026-10-31 03:02,summons/prince_of_hell,gpt-image-2.5-flare,medium,1024x1024,1,227,1024,439,0.0225,prince_of_hell.png
 2026-10-31 03:02,player/fallen_saint_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,282,1024,439,0.0228,fallen_saint_deathlord.png
+2026-11-02 04:14,concepts/act9_lineup_r3,gpt-image-2.5-flare,medium,1536x1024,2,926,2016,343,0.0310,act9_lineup.png
+2026-11-02 04:14,concepts/act9_boss_r2,gpt-image-2.5-flare,medium,1536x1024,1,505,480,343,0.0167,act9_boss.png
+2026-11-02 04:15,concepts/act9_lineup_r4,gpt-image-2.5-flare,medium,1536x1024,2,948,2016,343,0.0312,act9_lineup.png
+2026-11-02 04:15,concepts/act9_boss_r3,gpt-image-2.5-flare,medium,1536x1024,1,564,480,343,0.0169,act9_boss.png
