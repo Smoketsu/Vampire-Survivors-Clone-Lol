@@ -151,6 +151,15 @@ SPIN = (1.0, 0.6, 0.3, 0.6, 1.0, 0.6, 0.3, 0.6)
 # (1, the same leg mirrored about its hip): a cosine, back at frame 4, forward again at frame 8.
 # The far leg runs half a cycle behind, so the legs really alternate instead of closing and opening.
 STRIDE_SWING = tuple((1.0 - float(np.cos(2.0 * np.pi * f / 8))) / 2.0 for f in range(8))
+# Flap rig (mode "flap"): per frame, how far each wing is turned about its shoulder pivot, as a share of the wing's `degrees`
+# (+1 = fully raised, -1 = fully down): one sine over the 8 frames, 0 on frame 0 = the still.
+FLAP_WAVE = tuple(float(np.sin(2.0 * np.pi * f / 8)) for f in range(8))
+# Flap rig: px the body (and the wings with it) sags per frame, times the rig's `bob`: it sags a little while the wings are up
+# and is back at the still's height for the downstroke (the still fills its frame up to row 0, so the body never rises).
+FLAP_BODY = (0, 1, 1, 1, 0, 0, 0, 0)
+# Orbit rig: the loop each small bat flies over the 8 frames, as (dx, dy) shares of the bat's `radius` (an ellipse: x = cos, y = sin;
+# 0 on frame 0 = the still); each bat starts `phase` frames (of 8) later.
+ORBIT_PATH = tuple((float(np.cos(2.0 * np.pi * f / 8)) - 1.0, float(np.sin(2.0 * np.pi * f / 8))) for f in range(8))
 # Per frame: share of the rig's `lift` each leg is raised while it swings forward (the near leg
 # on the second step, the far leg on the first).
 STRIDE_LIFT_NEAR = (0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 1.0, 0.5)
@@ -203,6 +212,17 @@ STRIDE_FAR_SHADE = {"bronze_light": "bronze", "bronze": "bronze_dark", "marble_l
 #           part's opaque pixels in the box (only those of `colors`, if set) are turned about the pivot
 #           (where the part is held) by SWING[f] * degrees (+ = clockwise on screen; SWING is one swing
 #           forward and back over the walk's 8 frames, 0 on frame 0 = the still). Pixels only move.
+#   flap    mode "flap" (a flier whose wings beat instead of a stride: the Chiropteran, its King, the Elder's bat form):
+#           dict(bob=px, wings=[dict(box=(x0, x1, y0, y1), pivot=(x, y), degrees=float, exclude=[(x0, x1, y0, y1), ...] (optional,
+#           body pixels inside the box that stay put), soft_exclude=[boxes] + soft_colors=[names] (inside those boxes only the
+#           body stays: pixels of soft_colors, and outlines touching no body pixel, go with the wing), colors=[palette names] (optional, only those pixels of the box)), ...]).
+#           Each wing's pixels are turned about its shoulder pivot by FLAP_WAVE[f] * degrees (+ = clockwise on screen, so a wing
+#           on the pivot's left rises; use a negative `degrees` for the right wing; entries with the same pivot and degrees are
+#           one wing), drawn BEHIND the body; the body sags FLAP_BODY[f] * bob px. No leg stride. Pixels only move (_flap_frames()).
+#   orbit   optional list of dicts {box: (x0, x1, y0, y1), radius: (rx, ry), phase: int, colors: [palette names] (optional)}: small
+#           flying things (the Dhampir's spirit bats) that each fly a small ellipse around their spot over the 8 frames
+#           (ORBIT_PATH, started `phase` frames late); each box's opaque pixels (of `colors` only, if set) are lifted out and laid
+#           back moved by whole px, behind the body (_orbit()). Frame 0 is the still. Works on a legs / robe rig.
 #   hold    optional list of (x0, x1, y0, y1) boxes of the still: a held prop that must stay fixed to
 #           the body in the walk (the Archfiend's cleaver); after the legs are laid, each box is
 #           cleared and the still's own pixels are put back there, lowered by the body dip (_hold()).
@@ -626,7 +646,7 @@ RIGS = {
     "court/blood_knight": dict(mode="legs", hip=36, back=(0, 16), front=(16, 24), rigid=[(24, 32, 0, None)], spread=2, lift=2, dip=1),
     "court/werewolf": dict(mode="legs", hip=36, back=(0, 27), front=(27, 48), rigid=[], spread=2, lift=2, dip=1),
     "court/werewolf_beast": dict(mode="legs", hip=60, back=(0, 36), front=(36, 66), rigid=[], spread=3, lift=3, dip=1),
-    "court/vampire_noble": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, bust=(9, 24, 11, 18, 2, 2), swish=(8, 25, 26, 36, 2)),
+    "court/vampire_noble": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, bust=(11, 24, 11, 18, 2, 2), swish=(8, 25, 26, 36, 2)),  # R1 redo (act 7): bust x0 9 -> 11 ("2 px less on the left")
     # --- Act VII: Ravensmoor ---
     "court/ghoul": dict(mode="legs", hip=18, back=(0, 17), front=(17, 34), rigid=[], spread=1, lift=1, dip=1),
     "court/old_greymane": dict(mode="legs", hip=64, back=(0, 43), front=(43, 86), rigid=[], spread=3, lift=3, dip=1),
@@ -636,20 +656,36 @@ RIGS = {
     # The Crimson Witch, Isolde and the Hedge Witch glide in their gowns (robe mode) with the figure-redesign rigs (bust
     # bounce, hip swish, idle strips), their staffs rigid; the Bloated Thrall waddles on short legs; the Bog Mother
     # wades (robe mode, the weed hem swaying).
-    "court/crimson_witch": dict(mode="robe", hip=28, rigid=[(21, 28, 0, None)], sway=1, dip=1, bust=(8, 20, 14, 20, 2), swish=(6, 21, 30, 42, 2)),
+    "court/crimson_witch": dict(mode="robe", hip=28, rigid=[(21, 28, 0, None)], sway=1, dip=1, bust=(8, 20, 14, 20, 2)),  # R1 redo (act 7): the lower (swish) box removed
     "court/bloated_thrall": dict(mode="legs", hip=44, back=(0, 18), front=(18, 36), rigid=[], spread=1, lift=1, dip=1),
     "court/bog_mother": dict(mode="robe", hip=70, rigid=[], sway=2, dip=1),
-    "bosses/isolde": dict(mode="robe", hip=54, rigid=[(12, 25, 0, None)], sway=1, dip=1, bust=(28, 48, 28, 38, 3), swish=(24, 52, 56, 80, 2)),
-    "player/hedge_witch": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(14, 24, 15, 21, 2), swish=(10, 26, 30, 44, 2)),
+    "bosses/isolde": dict(mode="robe", hip=54, rigid=[(12, 25, 0, None)], sway=1, dip=1, bust=(28, 50, 28, 38, 3)),  # R1 redo (act 7): the lower (swish) box removed, bust x1 48 -> 50
+    "player/hedge_witch": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(14, 24, 15, 21, 2)),  # R1 redo (act 7): the lower (swish) box removed (the Hyper / Untouchable / Deathlord skins derive it)
     # --- Act VII: Castle Sanguis ---
     # The Chiropteran and its King glide (robe mode: fliers glide, the legs and wings ride as one layer); Queen Carmilla
     # glides in her gown with the figure-redesign rigs (the two-lobe bust box and the hip `swish`, and an idle strip); the
     # Elder, the Dhampir, the Blood Spawn and Nosferatu stride (legs).
-    "court/chiropteran": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1),
-    "court/chiropteran_king": dict(mode="robe", hip=60, rigid=[], sway=1, dip=1),
+    # R1 redo (act 7, owner: "make the wings flap instead of normal walk"): the Chiropteran, its King and the Elder's bat form
+    # beat their wings (mode "flap": each wing turned about its shoulder pivot, drawn behind the body, which sags a px while
+    # they are up) instead of gliding / striding. Left wings turn +degrees (tips rise), right wings -degrees.
+    "court/chiropteran": dict(mode="flap", hip=30, flap=dict(bob=1, wings=[
+        dict(box=(0, 19, 0, 38), pivot=(19, 14), degrees=14.0, soft_exclude=[(14, 19, 17, 36)], soft_colors=["velvet", "velvet_dark", "velvet_light"]),
+        dict(box=(32, 48, 0, 38), pivot=(32, 14), degrees=-14.0, soft_exclude=[(32, 38, 17, 36)], soft_colors=["velvet", "velvet_dark", "velvet_light"])])),
+    "court/chiropteran_king": dict(mode="flap", hip=60, flap=dict(bob=1, wings=[
+        dict(box=(0, 38, 0, 76), pivot=(38, 24), degrees=12.0, soft_exclude=[(22, 38, 28, 76)], soft_colors=["velvet", "velvet_dark", "velvet_light"]),
+        dict(box=(66, 100, 0, 36), pivot=(66, 26), degrees=-12.0),
+        dict(box=(66, 100, 36, 76), pivot=(66, 26), degrees=-12.0, colors=["velvet", "velvet_dark", "velvet_light", "blood_ink"],
+             exclude=[(66, 74, 36, 76)])])),
     "bosses/carmilla": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1, bust=(26, 39, 14, 21, 2, 2), swish=(22, 42, 26, 36, 2)),
-    "bosses/elder": dict(mode="legs", hip=80, back=(0, 61), front=(61, 122), rigid=[], spread=3, lift=3, dip=1),
-    "player/dhampir": dict(mode="legs", hip=34, back=(0, 23), front=(23, 46), rigid=[], spread=2, lift=2, dip=1),
+    "bosses/elder": dict(mode="flap", hip=80, flap=dict(bob=1, wings=[
+        dict(box=(0, 60, 0, 76), pivot=(48, 30), degrees=12.0, exclude=[(50, 60, 34, 76), (21, 45, 66, 90)],
+             soft_exclude=[(27, 50, 34, 66)], soft_colors=["blood_light", "blood", "blood_dark"]),
+        dict(box=(64, 122, 0, 76), pivot=(70, 32), degrees=-12.0, exclude=[(50, 86, 28, 62)],
+             soft_exclude=[(86, 89, 28, 62), (62, 102, 56, 76)], soft_colors=["blood_light", "blood", "blood_dark"])])),
+    # R1 redo (act 7, owner: "any way we can make his little spirit bats fly around?"): the two spirit bats each fly a small
+    # ellipse (`orbit`; the right one half a loop later). The Hyper / Untouchable skins derive this rig (their bats sit in the same boxes).
+    "player/dhampir": dict(mode="legs", hip=34, back=(0, 23), front=(23, 46), rigid=[], spread=2, lift=2, dip=1,
+                           orbit=[dict(box=(8, 18, 4, 11), radius=(2, 2), phase=0), dict(box=(33, 44, 9, 20), radius=(2, 2), phase=4)]),
     "summons/blood_spawn": dict(mode="legs", hip=26, back=(0, 25), front=(25, 50), rigid=[], spread=2, lift=2, dip=1),
     "summons/nosferatu": dict(mode="legs", hip=34, back=(0, 27), front=(27, 54), rigid=[], spread=2, lift=2, dip=1),
 }
@@ -765,6 +801,11 @@ SKINS = {
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
+    # --- Act VII: the Witchwood --- R1 redo: the Deathlord skin has its own upper (bust) box, the base's derived one with x1 + 2.
+    "player/hedge_witch_deathlord": {"bust": (13, 25, 15, 21, 2)},
+    # The Dhampir's Deathlord skin (regenerated by the figures branch): its spirit bats get the same orbit; the boxes are tight
+    # to the outer columns so the current still (no bats) loses nothing, and are to be re-fitted to the new still's bats.
+    "player/dhampir_deathlord": {"orbit": [dict(box=(8, 14, 4, 11), radius=(2, 2), phase=0), dict(box=(34, 46, 9, 20), radius=(2, 2), phase=4)]},
     # --- Act VI: the Palace of Silk and Ash --- (the Succubus Queen's Deathlord skin is 58 tall: its own boxes)
     "player/succubus_queen_deathlord": {"hip": 33, "bust": (12, 28, 14, 20, 2, 2), "swish": (11, 29, 24, 34, 2)},
     # --- Act VI: Pandemonium --- (the Fallen Saint's Hyper skin: its own box)
@@ -1161,11 +1202,19 @@ def frames_of(key: str) -> list:
     rig = RIGS[key]
     if rig["mode"] == "stride":
         return stride_frames(key, still, rig)
+    if rig["mode"] == "flap":
+        out = _flap_frames(still, rig)
+        if not np.array_equal(out[0], still):
+            sys.exit(f"{key}: frame 0 differs from the still (rig error)")
+        return out
     if rig["mode"] == "hover":
         out = hover_frames(key, still, rig)
         if not np.array_equal(out[0], still):
             sys.exit(f"{key}: frame 0 differs from the still (rig error)")
         return out
+    bats = []  # The rig's orbiting bats (cut out of the still; they fly behind the body).
+    if "orbit" in rig:
+        still, bats = _orbit_cut(still, rig["orbit"])
     parts = split(still, rig)
     hip = rig["hip"]
     out = []
@@ -1195,9 +1244,120 @@ def frames_of(key: str) -> list:
             frame = _bounce(frame, rig["bust"], dy, share * rig["bust"][4], axis)
         if "swish" in rig:
             frame = _bounce(frame, rig["swish"], dy, SWISH_SWAY[f] * rig["swish"][4], "x")
+        if bats:
+            frame = _orbit_lay(frame, bats, f)
         out.append(frame)
-    if not np.array_equal(out[0], still):
+    if not np.array_equal(out[0], load(key)):
         sys.exit(f"{key}: frame 0 differs from the still (rig error)")
+    return out
+
+
+def _wing_mask(still: np.ndarray, wing: dict) -> np.ndarray:
+    """Pixels of one `flap` wing entry: the opaque pixels of its box (of its `colors` only, if set) minus its `exclude` boxes."""
+    h, w = still.shape[:2]
+    x0, x1, y0, y1 = wing["box"]
+    m = np.zeros((h, w), dtype=bool)
+    m[y0:y1, x0:x1] = still[y0:y1, x0:x1, 3] > 0
+    if wing.get("colors"):
+        ok = np.zeros((h, w), dtype=bool)
+        for c in _palette_rgb(wing["colors"]):
+            ok |= (still[:, :, :3] == np.array(c, dtype=np.uint8)).all(-1)
+        m &= ok
+    for ex0, ex1, ey0, ey1 in wing.get("exclude", []):
+        m[ey0:ey1, ex0:ex1] = False
+    # Soft exclude boxes: inside them only the body stays put; the pixels of `soft_colors` (the wing's membrane seen behind the
+    # body) go with the wing, and an outline pixel goes with it too unless it touches a body pixel (so no stray ink is left behind).
+    for ex0, ex1, ey0, ey1 in wing.get("soft_exclude", []):
+        box = np.zeros((h, w), dtype=bool)
+        box[ey0:ey1, ex0:ex1] = True
+        opaque = still[:, :, 3] > 0
+        isin = lambda names: np.isin(
+            (still[:, :, 0].astype(int) << 16) | (still[:, :, 1].astype(int) << 8) | still[:, :, 2].astype(int),
+            [(r << 16) | (g << 8) | b for r, g, b in _palette_rgb(names)])
+        ink = isin(["blood_ink", "ink_warm", "ink_violet"]) & opaque
+        membrane = isin(wing["soft_colors"]) & opaque
+        body = box & opaque & ~ink & ~membrane  # The body pixels that stay.
+        near = np.zeros((h, w), dtype=bool)  # Pixels touching a body pixel (8-neighbourhood).
+        for dy in (-1, 0, 1):
+            for dx in (-1, 0, 1):
+                near |= np.roll(np.roll(body, dy, axis=0), dx, axis=1)
+        m &= ~(body | (box & ink & near))
+    return m
+
+
+def _turn(layer: np.ndarray, pivot: tuple, deg: float) -> np.ndarray:
+    """`layer` (RGBA, only the part's pixels) turned `deg` degrees clockwise on screen about `pivot` (x, y): inverse nearest
+    mapping (pixels only move; the part's own pixels fill its turned shape, no holes)."""
+    h, w = layer.shape[:2]
+    a = np.radians(deg)
+    ca, sa = np.cos(a), np.sin(a)
+    ys, xs = np.mgrid[0:h, 0:w]
+    rx, ry = xs - pivot[0], ys - pivot[1]
+    sx = np.rint(pivot[0] + rx * ca + ry * sa).astype(int)
+    sy = np.rint(pivot[1] - rx * sa + ry * ca).astype(int)
+    ok = (sx >= 0) & (sx < w) & (sy >= 0) & (sy < h)
+    out = np.zeros_like(layer)
+    out[ok] = layer[sy[ok], sx[ok]]
+    return out
+
+
+def _flap_frames(still: np.ndarray, rig: dict) -> list:
+    """The walk frames of a mode "flap" rig: each wing entry's pixels are cut out and turned about its pivot by FLAP_WAVE[f] *
+    degrees, drawn behind the body, which sags FLAP_BODY[f] * `bob` px (the wings sag with it). Frame 0 is the still."""
+    spec = rig["flap"]
+    masks = [_wing_mask(still, w) for w in spec["wings"]]
+    allm = np.zeros(still.shape[:2], dtype=bool)
+    for m in masks:
+        allm |= m
+    body = still.copy()
+    body[allm] = 0
+    out = []
+    for f in range(FRAMES):
+        dy = FLAP_BODY[f] * spec.get("bob", 1)
+        layers = []
+        for w, m in zip(spec["wings"], masks):
+            lay = np.zeros_like(still)
+            lay[m] = still[m]
+            lay = _move(lay, dy)
+            if FLAP_WAVE[f] != 0:
+                lay = _turn(lay, (w["pivot"][0], w["pivot"][1] + dy), w["degrees"] * FLAP_WAVE[f])
+            layers.append(lay)
+        out.append(_stack(layers + [_move(body, dy)]))
+    return out
+
+
+def _orbit_cut(still: np.ndarray, orbit: list) -> tuple:
+    """Cuts the rig's `orbit` bats out of `still`: (the still without them, a list of (bat layer, its orbit entry))."""
+    rest = still.copy()
+    bats = []
+    for bat in orbit:
+        m = _wing_mask(still, bat)
+        lay = np.zeros_like(still)
+        lay[m] = still[m]
+        rest[m] = 0
+        bats.append((lay, bat))
+    return rest, bats
+
+
+def _orbit_lay(frame: np.ndarray, bats: list, f: int) -> np.ndarray:
+    """`frame` with each orbiting bat laid BEHIND it, moved by its ORBIT_PATH step (rounded to whole px) for frame `f`."""
+    out = np.zeros_like(frame)
+    for lay, bat in bats:
+        ph = bat.get("phase", 0)  # Frames this bat starts late; its loop is measured from its own start so frame 0 is the still.
+        dx = ORBIT_PATH[(f + ph) % FRAMES][0] - ORBIT_PATH[ph % FRAMES][0]
+        dy = ORBIT_PATH[(f + ph) % FRAMES][1] - ORBIT_PATH[ph % FRAMES][1]
+        rx, ry = bat["radius"]
+        ox, oy = int(round(dx * rx)), int(round(dy * ry))
+        h, w = lay.shape[:2]
+        moved = np.zeros_like(lay)
+        ys, xs = np.nonzero(lay[:, :, 3] > 0)
+        ny, nx = ys + oy, xs + ox
+        ok = (ny >= 0) & (ny < h) & (nx >= 0) & (nx < w)
+        moved[ny[ok], nx[ok]] = lay[ys[ok], xs[ok]]
+        m = moved[:, :, 3] > 0
+        out[m] = moved[m]
+    m = frame[:, :, 3] > 0
+    out[m] = frame[m]
     return out
 
 
