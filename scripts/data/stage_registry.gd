@@ -211,6 +211,12 @@
 ##   moon               — the stage's Blood Moon (BloodMoon): any key of
 ##                        CourtRulesData.BLOOD_MOON overrides it ({} = defaults).
 ##   zones              — Act VII stubs too: the planned zones (names and starts).
+## --- Act VII: the Witchwood ---
+##   witchwood          — WitchwoodDirector config (WitchwoodStage.WITCHWOOD, Act
+##                        VII, the Witchwood: the Fen's pools ("fen"), the hex
+##                        stones ("stones"), the Bog Mother's "bog_mother" event
+##                        and the "coven" events); ground "witchwood" is its
+##                        WitchwoodGround (four zone floors and the Fen's water).
 class_name StageRegistry
 extends RefCounted
 

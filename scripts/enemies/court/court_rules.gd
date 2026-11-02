@@ -67,6 +67,9 @@ func step(delta: float) -> void:
 	endless.step(delta)
 	moon.step(delta)
 	feast.step(delta)
+	# --- Act VII: the Witchwood ---
+	if hexes != null:
+		hexes.step(delta)  # The witches' covens, hex circles, hex stones and blood pools (WitchHexes).
 
 
 ## THE feeding multiplier now (Bloodfeast): the Blood Moon's feed_mult while
@@ -133,3 +136,20 @@ func rally_hint(save: float) -> int:
 	if to_rise >= 0.0 and to_rise <= save:
 		return 0
 	return -1
+
+
+# --- Act VII: the Witchwood ---
+## The witches' shared hexes (WitchHexes, Act VII: the Witchwood): the Crimson
+## Witches' covens and hex circles, the hex stones, the blood pools of the
+## Bloated Thralls and Isolde's bombs. Null until something needs it
+## (witch_hexes()); stepped at the end of step().
+var hexes: WitchHexes = null
+
+
+## The witches' hexes, created on first use (a Crimson Witch, a Bloated Thrall,
+## a hex stone or Isolde asks for them), on any stage the Court's rules exist.
+func witch_hexes() -> WitchHexes:
+	if hexes == null:
+		hexes = WitchHexes.new(game)
+		add_child(hexes)
+	return hexes

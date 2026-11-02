@@ -212,9 +212,13 @@ const INFERNO_BOSSES: Array[String] = ["moloch", "lilith", "morning_star"]
 ## kind, and phase 2's minibosses) and its stage bosses
 ## (StageRegistry.BOSS_ARRIVALS ids). Each Act VII stage adds its own as it is
 ## built (phase 2).
-const COURT_SOLDIERS: Array[String] = ["blood_thrall", "vampire_bat", "blood_knight", "vampire_noble", "court_coffin"]
+const COURT_SOLDIERS: Array[String] = ["blood_thrall", "vampire_bat", "blood_knight", "vampire_noble", "court_coffin",
+	# --- Act VII: the Witchwood ---
+	"crimson_witch", "bloated_thrall", "hex_stone"]
 ## Court champions (minibosses) and the Act VII Reckoning kinds.
-const COURT_CHAMPIONS: Array[String] = ["werewolf"]
+const COURT_CHAMPIONS: Array[String] = ["werewolf",
+	# --- Act VII: the Witchwood ---
+	"bog_mother"]
 ## Court stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const COURT_BOSSES: Array[String] = ["vargr", "isolde", "carmilla"]
 
@@ -390,6 +394,11 @@ const DESCRIPTIONS: Dictionary = {
 	"vargr": "Vargr, the Moon-Eater: the werewolf king, who calls his own Blood Moon and swallows it.",  # Owner-approved Act VII proposal
 	"isolde": "Isolde Vane, the Witch of the Red Moon: hex circles, cauldron bombs and three sisters who must fall together.",  # Owner-approved Act VII proposal
 	"carmilla": "Queen Carmilla, who dances through your ring in mist and feeds the Elder in his coffin.",  # Owner-approved Act VII proposal
+	# --- Act VII: the Witchwood ---
+	"crimson_witch": "Witches of the Court. In covens of three they draw a hex circle that heals the Court and drains your dead: kill one and it fails.",  # Owner-approved Act VII proposal
+	"bloated_thrall": "A thrall swollen with blood. It bursts into a pool that heals the Court: kill it away from the knights.",  # Owner-approved Act VII proposal
+	"hex_stone": "A standing stone carved with the witches' runes. It powers the covens' circles; broken, no coven casts near it.",  # Owner-approved Act VII proposal
+	"bog_mother": "A vast drowned witch of the fen. Her weed-ropes drag your dead into her black water to drown.",  # Owner-approved Act VII proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -603,6 +612,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"unmoved": "ach_unmoved",  # TUNING (not in GDD)
 	# --- Act VI: Pandemonium ---
 	"morning_star_falls": "ach_morning_star_falls",  # TUNING (not in GDD)
+	# --- Act VII: the Witchwood ---
+	"the_coven_breaks": "ach_the_coven_breaks",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -646,6 +657,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"unmoved": "faithless",
 	# --- Act VI: Pandemonium ---
 	"morning_star_falls": "fall_from_grace",
+	# --- Act VII: the Witchwood ---
+	"the_coven_breaks": "embalmed",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

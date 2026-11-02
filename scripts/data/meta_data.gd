@@ -426,7 +426,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VI: the Palace of Silk and Ash ---
 	"unmoved",
 	# --- Act VI: Pandemonium ---
-	"morning_star_falls"]
+	"morning_star_falls",
+	# --- Act VII: the Witchwood ---
+	"the_coven_breaks"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -590,6 +592,14 @@ const ACHIEVEMENTS := {
 	# Sovereign of Pandemonium (UnlockData / TitleData).
 	"morning_star_falls": {"display_name": "Morning Star Falls", "description": "Cast down the Morning Star in Pandemonium",
 		"stat": "boss_kills", "stage": "pandemonium", "goal": 1, "unlock": "The title Sovereign of Pandemonium", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) the end of Part One (The Sun Goes Out 450)
+	# --- Act VII: the Witchwood ---
+	# Owner-approved Act VII achievement "The Coven Breaks" (kill Isolde's three
+	# sisters within 1 s): BossIsolde sets the run stat witchwood_coven_breaks
+	# when the three falls that end her second phase lie within IsoldeData
+	# coven_break s; MetaProgress counts the runs (lifetime coven_breaks_runs).
+	# It unlocks the counter-passive Embalmed.
+	"the_coven_breaks": {"display_name": "The Coven Breaks", "description": "Kill Isolde's three sisters within 1 second of each other",
+		"stat": "coven_breaks_runs", "goal": 1, "unlock": "The Embalmed passive", "bounty": 300},  # Owner-approved Act VII proposal; bounty TUNING (not in GDD) as Gate Crashed
 }
 
 # --- Content wave 2: B. Achievement rewards ---

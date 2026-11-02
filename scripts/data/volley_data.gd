@@ -334,6 +334,9 @@ const SPELLS := {
 	# --- Act VI: Pandemonium ---
 	"fall_from_grace": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [5, 7, 10], "speed": 240.0,
 		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(1.0, 0.82, 0.30)},  # TUNING (not in GDD) a ring of star-sparks with every other cast
+	# --- Act VII: the Witchwood ---
+	"witch_circle": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 12], "speed": 160.0,
+		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.88, 0.22, 0.31)},  # TUNING (not in GDD) a ring of blood-red runes with every third pulse
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

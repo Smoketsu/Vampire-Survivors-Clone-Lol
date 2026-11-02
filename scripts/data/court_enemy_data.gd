@@ -298,4 +298,66 @@ const ENEMIES := {
 		"release_reach": 900.0,  # TUNING (not in GDD) px
 		"release_max": 3,  # TUNING (not in GDD) nobles one coffin releases
 	},
+	# --- Act VII: the Witchwood ---
+	# Support (figure style, female): the CRIMSON WITCH. Owner-approved proposal:
+	# "Covens of three; together they cast a hex circle that heals the Court
+	# inside it and drains the army ... Break the coven: kill one and the circle
+	# fails". On her own she keeps her distance and throws hex bolts (the shared
+	# "ranged" shot: it names no attacker, so it never feeds). Free witches band
+	# into covens of three and cast together while the Blood Moon is up or a
+	# hex stone powers them (WitchHexes, numbers in WitchHexData.COVEN); a coven
+	# witch who strays walks back to her sisters. Any stage can field her.
+	"crimson_witch": {
+		"display_name": "Crimson Witch",
+		"max_hp": 56.0,  # TUNING (not in GDD) support (the Lilim Witch 52); kill one to break the circle
+		"move_speed": 50.0,  # TUNING (not in GDD) px/s
+		"damage": 4.0,  # TUNING (not in GDD) a hex bolt, before the time scaling
+		"attack_interval": 2.0,  # TUNING (not in GDD) s
+		"attack_range": 170.0,  # TUNING (not in GDD) px; she keeps her distance
+		"radius": 9.0,  # TUNING (not in GDD) px
+		"armor": 0.0,  # TUNING (not in GDD)
+		"xp": 6,  # TUNING (not in GDD)
+		"behavior": "ranged",
+		"projectile_speed": 240.0,  # TUNING (not in GDD) px/s
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.8,  # TUNING (not in GDD) 0..1; "break the coven"
+		"mass": 0.8,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "crimson_witch",
+		"feeds": 0.25,  # Owner-approved: not a vampire: 25% (her bolts never feed; a blow in reach would)
+		"witch": true,  # Act VII, the Witchwood: she bands into covens (WitchHexes)
+	},
+	# Heavy: the BLOATED THRALL. Owner-approved proposal: "Swollen with blood;
+	# bursts into a pool that heals Court units walking through it ... Kill it
+	# away from the knights". A slow, heavy feeder; when it dies it BURSTS: a
+	# splash and a blood pool of pool_radius px for pool_life s (WitchHexes
+	# .open_pool(), the one pool path; WitchHexData.POOLS heals in it).
+	#   pool_radius / pool_life — its pool (px, s).
+	"bloated_thrall": {
+		"display_name": "Bloated Thrall",
+		"max_hp": 190.0,  # TUNING (not in GDD) a heavy (the Werewolf 300, the Demon Brute 330): slow and soft
+		"move_speed": 34.0,  # TUNING (not in GDD) px/s; swollen and slow
+		"damage": 8.0,  # TUNING (not in GDD) a heavy slam, before the time scaling
+		"attack_interval": 1.6,  # TUNING (not in GDD) s
+		"attack_range": 8.0,  # TUNING (not in GDD) px
+		"radius": 16.0,  # TUNING (not in GDD) px; the belly
+		"armor": 0.0,  # TUNING (not in GDD)
+		"xp": 10,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.55,  # TUNING (not in GDD) 0..1
+		"mass": 3.5,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "bloated_thrall",
+		"feeds": 0.25,  # Owner-approved: not a vampire (a thrall): 25%
+		"pool_radius": 46.0,  # TUNING (not in GDD) px; first pass 52
+		"pool_life": 7.0,  # TUNING (not in GDD) s; first pass 10 (the pools healed 185k in the first seed-7 run)
+	},  # The Bloated Thrall (Act VII: the Witchwood).
 }

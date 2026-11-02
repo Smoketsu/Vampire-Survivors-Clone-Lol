@@ -78,7 +78,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act VI: the Palace of Silk and Ash ---
 	"succubus_queen",
 	# --- Act VI: Pandemonium ---
-	"fallen_saint"]
+	"fallen_saint",
+	# --- Act VII: the Witchwood ---
+	"hedge_witch"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -137,6 +139,8 @@ const STAT_LABELS := {
 ##                           loses when her charm on it ends; Act VI)
 ##   grace_second_star       FallFromGrace._cast (share of a star's damage a
 ##                           second star deals on the next-strongest foe; Act VI)
+##   witch_circle_radius     WitchCircle.step (share wider every hex circle of the
+##                           spell; Act VII)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -170,7 +174,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act VI: the Palace of Silk and Ash ---
 	"tempt_heartbreak",
 	# --- Act VI: Pandemonium ---
-	"grace_second_star"]
+	"grace_second_star",
+	# --- Act VII: the Witchwood ---
+	"witch_circle_radius"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -677,6 +683,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail saint whose stars fall wide
 		"sprite": "player/fallen_saint",
 		"tint": Color(0.72, 0.58, 0.90),  # TUNING (not in GDD) a fallen violet over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act VII: the Witchwood ---
+	# The Hedge Witch (Hex Circle's character; owner-approved Act VII proposal
+	# "Rewards": "Hex Circle ... | The Hedge Witch (figure style)"; female, in
+	# the figure-redesign style): a village wise-woman of the fens who took the
+	# necromancer's side against the Court's witches: a floppy violet hat
+	# hung with dried herbs, a violet corset bodice laced with moss green, a
+	# knitted shawl, a patched slit skirt and striped stockings, a crimson rune
+	# circle cupped in one hand. Hex Circle must be unlocked first (by Isolde),
+	# then she unlocks the usual way (the spell to Lv 5). Own decision on her
+	# innate (the proposal names none): Hedge Lore, every hex circle of the
+	# spell a quarter wider (WitchCircle reads it).
+	"hedge_witch": {
+		"display_name": "The Hedge Witch",  # Owner-approved proposal
+		"title": "The Court's witches drew their circles in blood. Hers are wider.",
+		"spell": "witch_circle",
+		"innate": {
+			"id": "hedge_lore", "name": "Hedge Lore",
+			"description": "Every Hex Circle she draws is a quarter wider.",
+			"values": {"witch_circle_radius": 0.25},  # TUNING (not in GDD) +25% radius
+		},
+		"stats": {"max_hp": 5.0, "move_speed": 0.03},  # TUNING (not in GDD) a hardy, light-footed fen witch
+		"sprite": "player/hedge_witch",
+		"tint": Color(0.62, 0.78, 0.52),  # TUNING (not in GDD) a moss green over the violet
 		"starts_unlocked": false,
 	},
 }

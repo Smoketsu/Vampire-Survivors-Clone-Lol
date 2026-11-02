@@ -407,6 +407,17 @@ const HEIGHTS: Dictionary = {
 	"court/vampire_noble": 56.0,  # TUNING (not in GDD) elite tier, female (figure redesign at the approved level; 56 as the succubus): body ~52, the high collar above; she glides, the bust and hip box sway in the glide strip
 	"structures/court_coffin": 40.0,  # TUNING (not in GDD) the Court's coffin structure, closed (the loop glow is drawn by code)
 	"structures/court_coffin_open": 40.0,  # TUNING (not in GDD) the same coffin opened: the lid slid aside, a red glow inside
+	# --- Act VII: the Witchwood (assets/sprites/court/, bosses/, player/, structures/) ---
+	"court/crimson_witch": 52.0,  # TUNING (not in GDD) support tier, female (figure redesign): body ~44, the pointed hat above; bust rig, idle strip
+	"court/bloated_thrall": 60.0,  # TUNING (not in GDD) heavy tier: a vast pale belly on short legs
+	"court/bog_mother": 110.0,  # TUNING (not in GDD) miniboss tier (the Gatekeeper 108), female: a vast drowned witch, the root crown above; she glides (wades)
+	"bosses/isolde": 104.0,  # TUNING (not in GDD) boss tier, female (figure redesign): body ~86, the tall hat with its crescent above (Lilith 112); her sisters wear it tinted
+	"structures/hex_stone": 44.0,  # TUNING (not in GDD) a tall black standing stone, red runes
+	"structures/hex_stone_broken": 28.0,  # TUNING (not in GDD) the same stone snapped: the dead ground's stump
+	"player/hedge_witch": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign): body ~48, the floppy hat above
+	"player/hedge_witch_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gilded
+	"player/hedge_witch_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/hedge_witch_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

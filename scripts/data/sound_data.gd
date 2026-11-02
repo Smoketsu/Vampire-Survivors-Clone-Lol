@@ -1466,4 +1466,38 @@ const COURT_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "noise", "dur": 1.0, "amp": 0.4, "attack": 0.25, "decay": 0.5, "lp0": 600.0, "lp1": 4500.0},
 			{"wave": "noise", "start": 0.1, "dur": 0.9, "amp": 0.15, "attack": 0.3, "decay": 0.4, "lp0": 3000.0, "lp1": 7000.0},
 			{"wave": "sine", "f0": 180.0, "f1": 360.0, "dur": 0.9, "amp": 0.08, "attack": 0.3, "decay": 0.4}]},
+	# --- Act VII: the Witchwood --- (appended at the END: the pack's seeds follow its order)
+	# A coven's circle bites: three low voices chanting a minor third under a breathy hiss.
+	"hex_chant": {"dur": 1.6, "volume_db": -16.0, "max_voices": 2, "min_interval": 600, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "tri", "f0": 146.8, "dur": 1.5, "amp": 0.18, "attack": 0.35, "decay": 0.6, "vib_hz": 4.0, "vib_depth": 0.02},
+			{"wave": "tri", "f0": 174.6, "dur": 1.5, "amp": 0.14, "attack": 0.4, "decay": 0.6, "vib_hz": 4.4, "vib_depth": 0.02},
+			{"wave": "tri", "f0": 220.0, "dur": 1.4, "amp": 0.1, "attack": 0.45, "decay": 0.55, "vib_hz": 3.6, "vib_depth": 0.025},
+			{"wave": "noise", "dur": 1.4, "amp": 0.06, "attack": 0.4, "decay": 0.5, "lp0": 2500.0, "lp1": 900.0}]},
+	# A Bloated Thrall bursts (or a cauldron bomb lands): a wet pop and a splatter.
+	"blood_burst": {"dur": 0.7, "volume_db": -12.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 160.0, "f1": 60.0, "dur": 0.18, "amp": 0.45, "attack": 0.002, "decay": 0.08},
+			{"wave": "noise", "dur": 0.12, "amp": 0.5, "attack": 0.001, "decay": 0.05, "lp0": 3000.0, "lp1": 800.0},
+			{"wave": "noise", "start": 0.08, "dur": 0.55, "amp": 0.18, "attack": 0.01, "decay": 0.25, "lp0": 1800.0, "lp1": 500.0}]},
+	# The Bog Mother's ropes: a gurgling drag of water and a low groan.
+	"bog_drag": {"dur": 1.3, "volume_db": -12.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 98.0, "f1": 70.0, "dur": 1.1, "amp": 0.18, "attack": 0.1, "decay": 0.5, "lp0": 500.0, "lp1": 260.0, "vib_hz": 5.0, "vib_depth": 0.04},
+			{"wave": "noise", "dur": 1.2, "amp": 0.22, "attack": 0.15, "decay": 0.5, "lp0": 700.0, "lp1": 300.0},
+			{"wave": "sine", "f0": 300.0, "f1": 180.0, "start": 0.2, "dur": 0.15, "amp": 0.08, "decay": 0.06},
+			{"wave": "sine", "f0": 260.0, "f1": 160.0, "start": 0.55, "dur": 0.15, "amp": 0.07, "decay": 0.06}]},
+	# Isolde's cackle: a rising, wavering laugh over a hiss.
+	"isolde_cackle": {"dur": 1.4, "volume_db": -12.0, "max_voices": 1, "min_interval": 900, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 520.0, "f1": 760.0, "dur": 0.3, "amp": 0.1, "attack": 0.02, "decay": 0.12, "lp0": 2400.0, "lp1": 3200.0, "vib_hz": 11.0, "vib_depth": 0.06},
+			{"wave": "saw", "f0": 600.0, "f1": 820.0, "start": 0.32, "dur": 0.3, "amp": 0.09, "attack": 0.02, "decay": 0.12, "lp0": 2400.0, "lp1": 3200.0, "vib_hz": 12.0, "vib_depth": 0.06},
+			{"wave": "saw", "f0": 680.0, "f1": 900.0, "start": 0.64, "dur": 0.5, "amp": 0.08, "attack": 0.02, "decay": 0.25, "lp0": 2400.0, "lp1": 3400.0, "vib_hz": 13.0, "vib_depth": 0.07},
+			{"wave": "noise", "dur": 1.2, "amp": 0.05, "attack": 0.1, "decay": 0.5, "lp0": 4000.0, "lp1": 2000.0}]},
+	# A hex stone breaks: a stony crack and a dying hum.
+	"stone_break": {"dur": 1.0, "volume_db": -12.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.2, "amp": 0.55, "attack": 0.001, "decay": 0.07, "lp0": 4000.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 110.0, "f1": 55.0, "dur": 0.3, "amp": 0.35, "attack": 0.002, "decay": 0.12},
+			{"wave": "tri", "f0": 220.0, "f1": 110.0, "start": 0.1, "dur": 0.8, "amp": 0.08, "attack": 0.02, "decay": 0.4}]},
 }

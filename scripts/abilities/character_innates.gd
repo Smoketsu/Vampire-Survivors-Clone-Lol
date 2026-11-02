@@ -73,6 +73,9 @@
 ##   Fallen Saint     Second Fall     in FallFromGrace._cast() (every cast drops
 ##                    a second star on the next-strongest foe); stat
 ##                    grace_second_stars.
+## Act VII, the Witchwood:
+##   Hedge Witch      Hedge Lore      in WitchCircle.step() (every hex circle of
+##                    the spell a quarter wider); stat witch_circle_hits.
 class_name CharacterInnates
 extends Node2D
 
@@ -409,6 +412,9 @@ func summary_line() -> String:
 		# --- Act VI: Pandemonium --- (Second Fall lives in FallFromGrace._cast())
 		"second_fall":
 			counters = "second stars %d (dmg as fall_from_grace / lightbringer)" % int(st.get("grace_second_stars", 0.0))
+		# --- Act VII: the Witchwood --- (Hedge Lore lives in WitchCircle.step())
+		"hedge_lore":
+			counters = "circle radius x%.2f (hits %d)" % [1.0 + game.character.innate_value(WitchCircleData.RADIUS_KEY), int(st.get("witch_circle_hits", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

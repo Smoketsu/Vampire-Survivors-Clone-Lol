@@ -115,6 +115,10 @@
 ##     from COURT_BOSS_DIR after the Inferno's folder. Its shared rules
 ##     (Bloodfeast, Night Wings, the Blood Moon, the Endless Feast) live in
 ##     CourtRules (Game.court); this director hands it nothing.
+##   * Act VII, the Witchwood (GDD §15.0 "The Witchwood (Act VII phase 2)"): on
+##     a stage with a "witchwood" config it owns the WitchwoodDirector (the Fen,
+##     the hex stones, the Bog Mother, the covens; `witchwood`) and hands it the
+##     "bog_mother" and "coven" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -266,6 +270,10 @@ var silk_palace: SilkPalaceDirector = null
 ## Pandemonium's mechanics (Act VI: the Fallen Seraph General, guest squads;
 ## StageRegistry "pandemonium"; null on every other stage).
 var pandemonium: PandemoniumDirector = null
+# --- Act VII: the Witchwood ---
+## The Witchwood's mechanics (Act VII: the Fen, the hex stones, the Bog
+## Mother, the covens; StageRegistry "witchwood"; null on every other stage).
+var witchwood: WitchwoodDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -416,6 +424,12 @@ func _ready() -> void:
 		pandemonium.game = game
 		pandemonium.config = stage_def["pandemonium"]
 		add_child(pandemonium)  # Pandemonium's director.
+	# --- Act VII: the Witchwood ---
+	if not (stage_def.get("witchwood", {}) as Dictionary).is_empty():
+		witchwood = WitchwoodDirector.new()
+		witchwood.game = game
+		witchwood.config = stage_def["witchwood"]
+		add_child(witchwood)  # The Witchwood's director.
 
 
 # =====================================================================================
@@ -539,6 +553,9 @@ func step(delta: float) -> void:
 	# --- Act VI: Pandemonium ---
 	if pandemonium != null:
 		pandemonium.step(delta)  # Pandemonium's guest squads.
+	# --- Act VII: the Witchwood ---
+	if witchwood != null:
+		witchwood.step(delta)  # The Fen, the hex stones, the Bog Mother.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -656,6 +673,9 @@ func objective_text() -> String:
 	# --- Act VI: Pandemonium ---
 	if pandemonium != null and pandemonium.objective_override() != "":
 		return pandemonium.objective_override()  # The Fallen Seraph General.
+	# --- Act VII: the Witchwood ---
+	if witchwood != null and witchwood.objective_override() != "":
+		return witchwood.objective_override()  # The Bog Mother.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -860,6 +880,12 @@ func _run_event(ev: Dictionary) -> void:
 				pandemonium.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # Pandemonium's miniboss (PandemoniumDirector).
+		# --- Act VII: the Witchwood ---
+		"bog_mother", "coven":
+			if witchwood != null:
+				witchwood.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Witchwood's miniboss and covens (WitchwoodDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

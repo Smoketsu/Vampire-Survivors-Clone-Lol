@@ -92,7 +92,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act VI: the Palace of Silk and Ash ---
 	"tempt",
 	# --- Act VI: Pandemonium ---
-	"fall_from_grace"]
+	"fall_from_grace",
+	# --- Act VII: the Witchwood ---
+	"witch_circle"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -699,6 +701,30 @@ const SPELLS := {
 			{"damage": 80.0, "radius": 48.0, "splash": 0.5, "fall_time": 0.5, "cooldown": 2.4},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act VII: the Witchwood ---
+	# Hex Circle (GDD §15.0 "Hex Circle, Witches' Sabbath, Moonlit Rite and the
+	# Hedge Witch (Act VII)"; owner-approved proposal: "a crimson circle under
+	# the necromancer that drains every enemy inside"; unlocked by slaying
+	# Isolde, UnlockData; id "witch_circle"): a circle of `radius` px follows the
+	# necromancer; every `cooldown` s it deals `damage` to every foe inside and
+	# the necromancer heals `drain` x the damage dealt, at most `heal_cap` HP
+	# per s. Stat keys: damage, radius (px), cooldown (s), drain (share),
+	# heal_cap (HP/s). Logic: WitchCircle; fixed rules: WitchCircleData; Moonlit
+	# Rite (its paired passive) raises every spell hit on a foe inside it.
+	"witch_circle": {
+		"display_name": "Hex Circle",  # Owner-approved proposal
+		"icon": "witch_circle",
+		"description": "A crimson circle under you drains every foe inside it, and you drink a little of it.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act VII spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Drain per pulse", "radius": "Radius", "cooldown": "Pulse every (s)", "drain": "Drunk back", "heal_cap": "Heal cap (HP/s)"},
+		"levels": [
+			{"damage": 6.0, "radius": 72.0, "cooldown": 1.0, "drain": 0.10, "heal_cap": 2.0},  # TUNING (not in GDD) a step above Wither's Lv 1 (5 / 80 px), smaller
+			{"damage": 8.0, "radius": 76.0, "cooldown": 1.0, "drain": 0.12, "heal_cap": 2.5},  # TUNING (not in GDD)
+			{"damage": 10.0, "radius": 82.0, "cooldown": 0.9, "drain": 0.14, "heal_cap": 3.0},  # TUNING (not in GDD)
+			{"damage": 12.0, "radius": 88.0, "cooldown": 0.9, "drain": 0.16, "heal_cap": 3.5},  # TUNING (not in GDD)
+			{"damage": 15.0, "radius": 96.0, "cooldown": 0.8, "drain": 0.18, "heal_cap": 4.0},  # TUNING (not in GDD)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -721,7 +747,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VI: the Burning Gate ---
 	"pit_share",
 	# --- Act VI: Pandemonium ---
-	"splash", "flare"]
+	"splash", "flare",
+	# --- Act VII: the Witchwood ---
+	"drain"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

@@ -43,6 +43,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		return false
 	# Phase 2: each Act VII stage's own fallbacks go here, before the shared
 	# kinds' (as InfernoGlyphs asks BurningGateGlyphs first).
+	# --- Act VII: the Witchwood ---
+	if WitchwoodGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # The Crimson Witch, the Bloated Thrall, the Bog Mother, Isolde's sisters, the hex stone.
 	match kind:
 		"vampire_bat":
 			_bat(ci, o, r, flash)

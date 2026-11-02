@@ -169,6 +169,10 @@
 ##             a SPELL hit on a foe standing in fire (Brimstone.in_fire(): a
 ##             burning Brimstone pit or Hell Pit) deals more (stat
 ##             furnace_heart_bonus_dmg); exactly 1 while the passive is not owned.
+##   the Witchwood (Act VII phase 2) — Moonlit Rite in damage_enemy(): a
+##             SPELL hit on a foe standing inside one of the necromancer's hex
+##             circles (WitchCircle.in_circle()) deals more (stat
+##             moonlit_rite_bonus_dmg); exactly 1 while the passive is not owned.
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -313,6 +317,15 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 	if heart > 0.0 and HundredShadowsData.is_spell_source(source) and Brimstone.in_fire(game, e):
 		game.stat_add("furnace_heart_bonus_dmg", amount * heart)
 		amount *= 1.0 + heart
+	# --- Act VII: the Witchwood --- Moonlit Rite (the paired passive of Hex
+	# Circle, offered on every stage once Isolde fell): a SPELL hit on a foe
+	# standing inside one of the necromancer's hex circles (WitchCircle
+	# .in_circle()) deals rite_damage more; exactly 1 while the passive is not
+	# owned (the circle test only runs when it is).
+	var rite := game.abilities.passive_value(WitchCircleData.MOONLIT_RITE, WitchCircleData.RITE_KEY)  # 0 when not owned.
+	if rite > 0.0 and HundredShadowsData.is_spell_source(source) and WitchCircle.in_circle(game, e):
+		game.stat_add("moonlit_rite_bonus_dmg", amount * rite)
+		amount *= 1.0 + rite
 	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
 	# undead fighting on it hit weaker.
 	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).

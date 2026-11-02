@@ -172,4 +172,10 @@ const SOUNDS := {
 	"wolf_howl": "wolf_howl",  # A Werewolf's howl (Court pack).
 	"coffin_creak": "coffin_creak",  # A Court coffin opening (Court pack).
 	"mist_form": "mist_form",  # A Vampire Noble turning to mist (Court pack).
+	# --- Act VII: the Witchwood ---
+	"hex_chant": "hex_chant",  # A coven's hex circle biting (Court pack).
+	"blood_burst": "blood_burst",  # A Bloated Thrall bursting, a cauldron bomb landing (Court pack).
+	"bog_drag": "bog_drag",  # The Bog Mother's weed-ropes (Court pack).
+	"isolde_cackle": "isolde_cackle",  # Isolde's cackle (Court pack).
+	"stone_break": "stone_break",  # A hex stone breaking (Court pack).
 }

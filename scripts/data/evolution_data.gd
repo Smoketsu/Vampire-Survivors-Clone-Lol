@@ -90,7 +90,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VI: the Palace of Silk and Ash ---
 	"unholy_desire",
 	# --- Act VI: Pandemonium ---
-	"lightbringer"]
+	"lightbringer",
+	# --- Act VII: the Witchwood ---
+	"witches_sabbath"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -596,6 +598,28 @@ const EVOLUTIONS := {
 		"stats": {
 			"stars": 3, "damage": 90.0, "radius": 52.0, "splash": 0.5, "fall_time": 0.45, "cooldown": 2.5,  # TUNING (not in GDD) first pass 120 / r56 / 2.2 s led every source by 4x
 			"flare": 0.25,  # TUNING (not in GDD) first pass 0.35; the evolution flag: share of the star's damage its flare ring deals
+		},
+	},
+	# --- Act VII: the Witchwood ---
+	# Witches' Sabbath (owner-approved Act VII proposal: "Hex Circle -> Witches'
+	# Sabbath (+ Moonlit Rite)"): Hex Circle + Moonlit Rite (a NEW passive, owner
+	# rule: at Lv 5). Own decision on its kit: the coven of the necromancer's
+	# own: the circle grows and `sabbath_circles` smaller circles of
+	# `sabbath_radius` px orbit it `sabbath_orbit` px out at `sabbath_speed`
+	# rad/s, each draining like the first. Detected by the "sabbath_circles" key.
+	"witches_sabbath": {
+		"base": "witch_circle",
+		"passive": "moonlit_rite",
+		"display_name": "Witches' Sabbath",  # Owner-approved proposal
+		"icon": "witches_sabbath",
+		"description": "Your circle grows, and three lesser circles dance around it, draining all they cross.",
+		"labels": {"damage": "Drain per pulse", "radius": "Radius", "sabbath_circles": "Dancing circles", "cooldown": "Pulse every (s)", "drain": "Drunk back"},
+		"stats": {
+			"damage": 17.0, "radius": 104.0, "cooldown": 0.8, "drain": 0.2, "heal_cap": 5.0,  # TUNING (not in GDD)
+			"sabbath_circles": 3,  # TUNING (not in GDD) the evolution flag: orbiting circles
+			"sabbath_radius": 46.0,  # TUNING (not in GDD) px
+			"sabbath_orbit": 160.0,  # TUNING (not in GDD) px from the necromancer
+			"sabbath_speed": 1.2,  # TUNING (not in GDD) rad/s
 		},
 	},
 }

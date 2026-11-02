@@ -193,6 +193,14 @@ const UNLOCKS := {
 	"crown_of_horns": {"type": "passive", "boss": "morning_star", "text": "Cast down the Morning Star in Pandemonium to unlock."},  # Its paired passive (own decision), unlocked with it
 	"sovereign_of_pandemonium": {"type": "title", "achievement": "morning_star_falls",
 		"text": "Earn Morning Star Falls: cast down the Morning Star in Pandemonium."},  # Own decision (the clear is recorded as a title, as Act III's Breaker of Engines)
+	# --- Act VII: the Witchwood ---
+	# Isolde's fall (owner-approved Act VII proposal "Rewards": Hex Circle is
+	# unlocked by Isolde Vane) with its paired passive, offered on every stage;
+	# the stage's achievement The Coven Breaks earns Act VII's counter-passive
+	# Embalmed (offered only in Act VII through its card row's "act").
+	"witch_circle": {"type": "spell", "boss": "isolde", "text": "Slay Isolde Vane in the Witchwood to unlock."},  # Owner-approved Act VII proposal
+	"moonlit_rite": {"type": "passive", "boss": "isolde", "text": "Slay Isolde Vane in the Witchwood to unlock."},  # Hex Circle's paired passive (owner-approved proposal), unlocked with it
+	"embalmed": {"type": "passive", "achievement": "the_coven_breaks", "text": "Earn The Coven Breaks: kill Isolde's three sisters within 1 second of each other."},  # Owner-approved Act VII proposal (the brief: The Coven Breaks unlocks Embalmed)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.
