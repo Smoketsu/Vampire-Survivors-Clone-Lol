@@ -82,7 +82,7 @@ const ZONES := [
 			"kinds": {
 				"castle_well": {"weight": 0.25, "shape": "circle", "sizes": [14.0, 18.0]},  # TUNING (not in GDD)
 				"gargoyle_statue": {"weight": 0.35, "shape": "circle", "sizes": [12.0, 15.0]},  # TUNING (not in GDD)
-				"castle_wall": {"weight": 0.4, "shape": "rect", "sizes": [44.0, 60.0], "short": 16.0},  # TUNING (not in GDD)
+				"castle_wall": {"weight": 0.4, "shape": "rect", "sizes": [44.0, 60.0], "short": 16.0},  # TUNING (not in GDD) Castle Kurogane's kind id and art (shared, Act VII integration)
 			}},
 	},
 	{"id": "banquet_hall", "start": 300.0, "numeral": "II", "name": "The Banquet Hall",  # Owner-approved proposal zone II
@@ -92,7 +92,7 @@ const ZONES := [
 		"arena": {"density": 0.18, "clear_radius": 220.0, "layout_seed": 2102,  # TUNING (not in GDD) open: the fountains are the feature here
 			"kinds": {
 				"feast_table": {"weight": 0.5, "shape": "rect", "sizes": [44.0, 60.0], "short": 16.0},  # TUNING (not in GDD)
-				"candelabra": {"weight": 0.25, "shape": "circle", "sizes": [10.0, 12.0]},  # TUNING (not in GDD)
+				"candelabra": {"weight": 0.25, "shape": "circle", "sizes": [10.0, 12.0]},  # TUNING (not in GDD) the Palace of Silk and Ash's kind id and art (shared)
 				"wine_barrel": {"weight": 0.25, "shape": "circle", "sizes": [10.0, 12.0]},  # TUNING (not in GDD)
 			}},
 	},
@@ -264,8 +264,10 @@ const EVENTS := [
 ##   guest_* / guests — the other Act VII stages' kinds in small squads (as
 ##       PandemoniumStage.PANDEMONIUM): candidate ids per kind (the first one
 ##       this build knows; none = skipped) and a weight. The ids were guessed
-##       while the three Act VII stages were built in parallel (ghoul,
-##       crimson_witch, bloated_thrall); minibosses are never guests.
+##       while the three Act VII stages were built in parallel and checked at
+##       the Act VII integration against CourtEnemyData (ghoul, crimson_witch,
+##       bloated_thrall: all three real kind ids); minibosses (Old Greymane,
+##       the Bog Mother) are never guests.
 const CASTLE_SANGUIS := {
 	"fountains": {
 		"windows": [[300.0, 600.0, 3], [900.0, 1e9, 2]],  # TUNING (not in GDD) the Banquet Hall (3), the Throne of Blood (2)
@@ -286,9 +288,9 @@ const CASTLE_SANGUIS := {
 	"guest_growth": 0.4,  # TUNING (not in GDD)
 	"guest_max": 6,  # TUNING (not in GDD)
 	"guests": [
-		{"ids": ["ghoul"], "weight": 0.8},  # Ravensmoor (Act VII phase 2): the Ghouls (guessed id)
-		{"ids": ["crimson_witch"], "weight": 0.4},  # The Witchwood: the Crimson Witches (guessed id)
-		{"ids": ["bloated_thrall"], "weight": 0.5},  # The Witchwood: the Bloated Thralls (guessed id)
+		{"ids": ["ghoul"], "weight": 0.8},  # Ravensmoor (Act VII phase 2): the Ghouls (id checked at integration)
+		{"ids": ["crimson_witch"], "weight": 0.4},  # The Witchwood: the Crimson Witches (id checked at integration)
+		{"ids": ["bloated_thrall"], "weight": 0.5},  # The Witchwood: the Bloated Thralls (id checked at integration)
 	],
 }
 

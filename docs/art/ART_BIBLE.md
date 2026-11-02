@@ -2790,8 +2790,8 @@ Contact sheet `docs/act7/castle_sanguis_contact_sheet.png`.
 | `structures/elder_coffin`, `_open` | The Elder's great coffin, closed / open | 52x48, 56x48 | drawn by BossCarmilla from the Waking on |
 | `icons/night_swarm`, `old_blood`, `blood_spawn`, `thirst_eternal` | badges on the violet frame | 32x32 | the violet sheet drew a fifth spare symbol (skipped) |
 | `icons/nocturne`, `nosferatu`, `ach_last_supper` | badges on the gold frame | 32x32 | |
-| `obstacles/castle_well`, `gargoyle_statue`, `candelabra`, `wine_barrel`, `crypt_pillar`, `blood_urn` | round props per zone size | | one sheet |
-| `obstacles/castle_wall`, `feast_table`, `sarcophagus` (+ `_v`) | long props, both orientations | | one sheet |
+| `obstacles/castle_well`, `gargoyle_statue`, `wine_barrel`, `crypt_pillar`, `blood_urn` | round props per zone size | | one sheet; `candelabra` is the Palace of Silk and Ash's existing art (same kind id, found at the Act VII integration; it fits the Banquet Hall, kept shared) |
+| `obstacles/feast_table`, `sarcophagus` (+ `_v`) | long props, both orientations | | one sheet; `castle_wall` is Castle Kurogane's existing art (same kind id, found at the Act VII integration; kept shared for now, a Sanguis wall of its own is an art-review item) |
 | `tiles/castle_sanguis_courtyard/_banquet/_crypt/_throne` | zone floors | 128x128 | `make_tile.py` from two textures (grey flagstone, black marble veined red) |
 
 `art_check.py`: height, alpha and palette pass on every sprite; the lightness check fails only against the Act I floors

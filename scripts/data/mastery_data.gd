@@ -27,7 +27,7 @@ const MAX_LEVEL: int = 3  # TUNING (not in GDD) owner brief: 3 levels
 ## Class level a run must have reached to open that class's mastery.
 const UNLOCK_LEVEL: int = 5  # TUNING (not in GDD) owner brief: "level 5 in any run"
 ## Soul Ash price of level 1, 2, 3 (index = level - 1; ints >= 1).
-const PRICES: Array[int] = [190, 250, 320]  # TUNING (not in GDD) 760 a class (21 classes with the Succubus and the Archfiend = 15,960)
+const PRICES: Array[int] = [190, 250, 320]  # TUNING (not in GDD) 760 a class (22 classes with the Succubus, the Archfiend and the Blood Spawn = 16,720)
 ## Max HP bonus per level (fraction: 0.02 = +2% per level, +6% at level 3).
 const HP_PER_LEVEL: float = 0.02  # TUNING (not in GDD) modest, one shape for all classes; was 0.04, trimmed by the balance batch
 ## Damage bonus per level (fraction: 0.02 = +2% per level, +6% at level 3).
