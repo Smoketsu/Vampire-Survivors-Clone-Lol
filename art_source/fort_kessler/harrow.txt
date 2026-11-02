@@ -1,0 +1,14 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a commanding battle stance, a huge two-handed war hammer resting on one shoulder
+
+LOW-RESOLUTION pixel art: the whole figure is only 64 pixels tall and about 48 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: GENERAL VANCE HARROW, 'THE HAMMER', a MALE army general (a boss) in heavy olive-drab POWER ARMOUR: bulky armoured shoulder pads and gauntlets, a thick armoured chest plate, armoured legs and boots, a stern square-jawed middle-aged face with a grey moustache, a general's olive peaked cap (no badge on it), and a huge industrial war HAMMER with a steel head and hazard-yellow stripes on its haft. Gold-yellow trim lines on the armour edges. No star, no letters, no numbers, no flag, no badge, no insignia, no markings of any real army or agency.
+Signature shape that must read in silhouette: the massive power-armoured general with the peaked cap and the huge hammer on his shoulder.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: olive armour #4B5330 #6B7545 lit #8A9558; dark joints #1E2024 #3A3D44; trim and hammer stripes #B0500F #E0A92E #F2C418; hammer steel #55595F #7A7F87 #A6ABB3; skin #A8806E #D9B8A8; grey moustache #7A7F87
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+
+Attached: (1) a game sprite (the rifleman of this game) for pixel size, outline weight and flat look; (2) the approved concept art of this boss (keep his look, but NO badge on the cap and NO insignia; do NOT copy its detail level or painted shading).

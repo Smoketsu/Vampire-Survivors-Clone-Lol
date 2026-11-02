@@ -471,7 +471,7 @@ const ENEMIES := {
 		"max_hp": 66.0,  # TUNING (not in GDD) a heavy (the rifleman 42)
 		"move_speed": 36.0,  # TUNING (not in GDD) px/s; he carries the gun
 		"damage": 0.0,  # Unused: tick_damage (his kit fires the lane).
-		"attack_interval": 7.5,  # TUNING (not in GDD) s between two set-ups
+		"attack_interval": 9.0,  # TUNING (not in GDD) s between two set-ups (first pass 7.5)
 		"attack_range": 250.0,  # TUNING (not in GDD) px: he sets up this close
 		"radius": 11.0,  # TUNING (not in GDD) px
 		"armor": 0.2,  # TUNING (not in GDD) a helmet, a vest and a gun shield
@@ -487,13 +487,13 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "machine_gunner",
 		"tier": "army",  # Owner-approved proposal: four stars, the army
-		"setup_time": 1.2,  # TUNING (not in GDD) s: the telegraph (the lane shows)
+		"setup_time": 1.4,  # TUNING (not in GDD) s: the telegraph (the lane shows; first pass 1.2)
 		"sweep_time": 2.2,  # TUNING (not in GDD) s the sweep lasts
-		"sweep_arc": 0.9,  # TUNING (not in GDD) rad swept, centred on his target
+		"sweep_arc": 0.8,  # TUNING (not in GDD) rad swept, centred on his target (first pass 0.9)
 		"lane_length": 300.0,  # TUNING (not in GDD) px
 		"lane_half": 10.0,  # TUNING (not in GDD) px each side of the lane's centre line
-		"tick": 0.2,  # TUNING (not in GDD) s between two hits of the lane
-		"tick_damage": 1.4,  # TUNING (not in GDD) per hit, before the time scaling
+		"tick": 0.25,  # TUNING (not in GDD) s between two hits of the lane (first pass 0.2)
+		"tick_damage": 0.7,  # TUNING (not in GDD) per hit, before the time scaling (first pass 1.4: the gunners' lanes wiped the seed-7 army ring at 10:00 on Fort Kessler)
 		"pack_time": 0.6,  # TUNING (not in GDD) s he stands after the sweep
 	},  # The machine gunner.
 	# Army, a flying VEHICLE (owner-approved proposal: "Attack Helicopter |

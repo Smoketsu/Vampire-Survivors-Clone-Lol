@@ -168,13 +168,13 @@ const SEGMENTS := [
 		"weights": {"street_thug": 0.35, "gang_gunner": 0.2, "riot_cop": 0.25, "swat_breacher": 0.13, "field_medic": 0.05, "squad_car": 0.02},
 		"objective": "The Minefield: anyone who steps on a mine sets it off. Lure the soldiers over them"},
 	{"start": 450.0, "rate": 2.4, "max_alive": 62,  # TUNING (not in GDD) the army
-		"weights": {"street_thug": 0.26, "gang_gunner": 0.12, "riot_cop": 0.18, "swat_breacher": 0.12, "field_medic": 0.05, "rifleman": 0.22, "machine_gunner": 0.04, "squad_car": 0.01},
+		"weights": {"street_thug": 0.26, "gang_gunner": 0.12, "riot_cop": 0.18, "swat_breacher": 0.12, "field_medic": 0.05, "rifleman": 0.22, "machine_gunner": 0.03, "squad_car": 0.01},
 		"objective": "The army: rifle squads and machine-gun nests. Step out of a gunner's lane, or wall it"},
 	{"start": 600.0, "rate": 2.6, "max_alive": 70,  # TUNING (not in GDD) the Airfield
-		"weights": {"street_thug": 0.22, "gang_gunner": 0.1, "riot_cop": 0.17, "swat_breacher": 0.12, "field_medic": 0.05, "rifleman": 0.24, "machine_gunner": 0.06, "squad_car": 0.01, "tank": 0.015, "attack_helicopter": 0.015},
+		"weights": {"street_thug": 0.22, "gang_gunner": 0.1, "riot_cop": 0.17, "swat_breacher": 0.12, "field_medic": 0.05, "rifleman": 0.24, "machine_gunner": 0.04, "squad_car": 0.01, "tank": 0.015, "attack_helicopter": 0.015},
 		"objective": "The Airfield: helicopters strafe the streets. Gargoyles, Archers and spells bring them down"},
 	{"start": 840.0, "rate": 2.8, "max_alive": 76,  # TUNING (not in GDD) the Command Bunker
-		"weights": {"street_thug": 0.2, "gang_gunner": 0.1, "riot_cop": 0.16, "swat_breacher": 0.12, "field_medic": 0.05, "rifleman": 0.26, "machine_gunner": 0.07, "squad_car": 0.01, "tank": 0.015, "attack_helicopter": 0.015},
+		"weights": {"street_thug": 0.2, "gang_gunner": 0.1, "riot_cop": 0.16, "swat_breacher": 0.12, "field_medic": 0.05, "rifleman": 0.26, "machine_gunner": 0.05, "squad_car": 0.01, "tank": 0.015, "attack_helicopter": 0.015},
 		"objective": "The Command Bunker: the General's last line"},
 	{"start": BOSS_TIME, "rate": 2.2, "max_alive": 60,  # TUNING (not in GDD) thinner during the boss fight
 		"weights": {"street_thug": 0.25, "gang_gunner": 0.12, "riot_cop": 0.18, "swat_breacher": 0.12, "field_medic": 0.05, "rifleman": 0.24, "machine_gunner": 0.04},

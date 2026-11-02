@@ -1,0 +1,7 @@
+A sheet of THREE separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its third of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. BONE MINES: a round bone-white land mine seen from above at an angle, made of a skull cap with a small glowing violet lamp on top, two small bones crossed under it.
+2. TRIPWIRE: a thin taut wire stretched between two short bone stakes, a small violet spark where a foot snags it, three small motion lines.
+3. ARMOUR-PIERCING BONES: a sharp white bone spike punching clean through a grey steel shield plate, cracks around the hole.
+Colours: violet #160A21 #4A2569 #7A42AD #A35CFA; bone #8C7B5E #D9CCAA #F2EBD3; steel #3A3D44 #55595F #A6ABB3.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

@@ -1,0 +1,14 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, kneeling on one knee behind a belt-fed machine gun on a small bipod, braced to fire
+
+LOW-RESOLUTION pixel art: the whole figure is only 40 pixels tall and about 36 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a MALE ARMY MACHINE GUNNER (heavy ranged soldier): broad and heavy in a bulky olive-drab armour vest with pouches, olive fatigues, an olive helmet, a dark face scarf, gloves, kneeling behind a long BELT-FED MACHINE GUN pointing right, an ammunition belt of brass rounds hanging from it. No star, no letters, no numbers, no flag, no badge, no insignia, no markings of any real army or agency.
+Signature shape that must read in silhouette: the heavy kneeling soldier and the long gun with its bipod and the brass ammo belt.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: olive armour and fatigues #4B5330 #6B7545 lit #8A9558; gun and boots #101114 #1E2024 #3A3D44; gun metal #55595F; brass ammo #B0500F #E0A92E; skin #A8806E #D9B8A8; scarf #3A3D44
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+
+Attached: (1) a game sprite (the rifleman of this game) for pixel size, outline weight and flat look; (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).

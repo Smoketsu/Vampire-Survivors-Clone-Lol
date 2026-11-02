@@ -455,6 +455,19 @@ const HEIGHTS: Dictionary = {
 	"player/dhampir_deathlord": 56.0,  # TUNING (not in GDD) skin art: his body, the spiked crown above
 	"summons/blood_spawn": 40.0,  # TUNING (not in GDD) a light summon (Rogue 38): a gaunt crouching brawler
 	"summons/nosferatu": 52.0,  # TUNING (not in GDD) its evolution, taller
+	# --- Act VIII: Fort Kessler (assets/sprites/city/, bosses/, player/, structures/, spells/, decals/) ---
+	"city/machine_gunner": 40.0,  # TUNING (not in GDD) heavy ranged soldier, male: kneeling behind a belt-fed gun (about 46 wide with the gun and bipod)
+	"city/attack_helicopter": 44.0,  # TUNING (not in GDD) a flying vehicle facing right (40 art px and 2 empty rows above and below for the hover bob): about 84 long with the tail boom, the rotor disc on top; hover strip
+	"city/mammoth": 60.0,  # TUNING (not in GDD) miniboss tier: the super-heavy tank, two turrets, about 108 long (the tank 78); drive strip
+	"bosses/harrow": 72.0,  # TUNING (not in GDD) boss tier, male: General Harrow in olive power armour, the hammer on his shoulder (drawn larger than his 30 px body)
+	"bosses/harrow_command": 60.0,  # TUNING (not in GDD) boss tier: his six-wheeled command car, the General in the roof hatch (phase 1)
+	"player/fallen_sergeant": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, clothed): olive field jacket and helmet, a bone mine in hand
+	"player/fallen_sergeant_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, white and gold
+	"player/fallen_sergeant_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/fallen_sergeant_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, black iron and crimson, the spiked crown inside the same height
+	"structures/kessler_mine": 9.0,  # TUNING (not in GDD) a minefield mine (Minefields), an olive disc; its red lamp is code
+	"spells/bone_mine": 9.0,  # TUNING (not in GDD) a Bone Mines mine, a bone disc; its violet lamp is code
+	"decals/fk_sandbags": 16.0,  # TUNING (not in GDD) a sandbag wall decal (FortKesslerGround), 44 long
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

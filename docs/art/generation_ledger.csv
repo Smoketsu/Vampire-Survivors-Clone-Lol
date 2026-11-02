@@ -1160,3 +1160,15 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-02 18:21,player/moon_huntress_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,379,1024,439,0.0233,huntress_dl.png
 2026-11-02 18:21,bosses/vargr,gpt-image-2.5-flare,medium,1024x1024,1,726,1024,439,0.0250,vargr.png
 2026-11-02 18:21,player/dhampir_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,332,1024,439,0.0230,dhampir_dl.png
+2026-11-02 22:00,player/fallen_sergeant,gpt-image-2.5-flare,medium,1024x1024,2,722,888,439,0.0239,fallen_sergeant.png
+2026-11-02 22:00,icons/fort_kessler_gold,gpt-image-2.5-flare,medium,1024x1024,1,314,1024,439,0.0229,icons_gold.png
+2026-11-02 22:00,city/attack_helicopter,gpt-image-2.5-flare,medium,1024x1024,2,619,915,439,0.0236,attack_helicopter.png
+2026-11-02 22:00,bosses/harrow,gpt-image-2.5-flare,medium,1024x1024,2,647,573,439,0.0210,harrow.png
+2026-11-02 22:00,city/mammoth,gpt-image-2.5-flare,medium,1024x1024,2,639,915,439,0.0237,mammoth.png
+2026-11-02 22:00,structures/fort_kessler_props,gpt-image-2.5-flare,medium,1024x1024,1,342,600,439,0.0197,props.png
+2026-11-02 22:00,icons/fort_kessler_violet,gpt-image-2.5-flare,medium,1024x1024,1,331,1024,439,0.0230,icons_violet.png
+2026-11-02 22:00,city/machine_gunner,gpt-image-2.5-flare,medium,1024x1024,2,591,657,439,0.0214,machine_gunner.png
+2026-11-02 22:00,bosses/harrow_command,gpt-image-2.5-flare,medium,1024x1024,2,630,915,439,0.0236,harrow_command.png
+2026-11-02 22:01,player/fallen_sergeant_untouchable,gpt-image-2.5-flare,medium,1024x1024,1,182,1024,439,0.0223,fallen_sergeant_untouchable.png
+2026-11-02 22:01,player/fallen_sergeant_hyper,gpt-image-2.5-flare,medium,1024x1024,1,181,1024,439,0.0223,fallen_sergeant_hyper.png
+2026-11-02 22:01,player/fallen_sergeant_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,172,1024,439,0.0222,fallen_sergeant_deathlord.png

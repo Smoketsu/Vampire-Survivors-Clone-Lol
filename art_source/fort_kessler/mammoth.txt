@@ -1,0 +1,14 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), a VEHICLE seen from above and a little from the front-side, drawn FACING RIGHT (guns to the right)
+
+LOW-RESOLUTION pixel art: the whole vehicle is only 60 pixels tall and about 100 long, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: MAMMOTH, a SUPER-HEAVY ARMY TANK, much bigger and heavier than a normal tank: a long, wide, boxy armoured hull on two very broad tracks with many road wheels, sloped hazard-striped front armour plates, and TWO TURRETS: a big main turret in the middle with one huge long cannon pointing right, and a smaller second turret at the back with twin short guns, also pointing right; spare track links and a few sandbags on the hull, a short antenna. Olive drab with dark grey armour plates. No star, no letters, no numbers, no flag, no badge, no insignia, no markings of any real army or agency.
+Signature shape that must read in silhouette: the huge long hull with TWO turrets and the very long main cannon.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: hull and turrets olive #4B5330 #6B7545 lit #8A9558; armour plates #3A3D44 #55595F; tracks and wheels #101114 #1E2024 #3A3D44; cannons #3A3D44 #55595F; hazard stripes #F2C418 and #101114; sandbags #8A7A55
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+
+Attached: (1) a game sprite (the normal tank of this game) for pixel size, outline weight and flat look: MAMMOTH must look like a much bigger cousin of it; (2) concept art of the army's tank for the look only.
