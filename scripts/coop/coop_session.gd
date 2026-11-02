@@ -417,6 +417,9 @@ func step(delta: float) -> void:
 	if game.inferno != null:
 		bind_primary()
 		game.inferno.step(delta)  # Act VI: the Hell Pits, the portals, Temptation (before the push-out, as in solo).
+	if game.court != null:
+		bind_primary()
+		game.court.step(delta)  # Act VII: the Endless Feast, the Blood Moon, Bloodfeast (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

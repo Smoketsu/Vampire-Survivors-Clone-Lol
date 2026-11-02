@@ -2010,6 +2010,38 @@ whose Hellfire Cleave throws whole ranks aside; evolves into **the Prince of Hel
 summon special hits harder) and its Ossuary mastery, and the achievement **Morning Star Falls** (the title
 Sovereign of Pandemonium).
 
+### Act VII: the Sanguine Court (foundation)
+
+<!-- --- Act VII: the Sanguine Court --- -->
+The dead who never served. Vampires, bats, werewolves and witches kept their own will in death, and the Court has
+fed on the living in secret for a thousand years; now the necromancer has turned the world's living into his dead,
+and the Court is starving: **the Sanguine Court** (GDD §15.0 "Act VII foundation (phase 1)"; owner-approved proposal
+`docs/act7/PROPOSAL.md`). The stage select has an **Act VII** tab with its three stages, **Ravensmoor**, **the
+Witchwood** and **Castle Sanguis** (bosses Vargr, the Moon-Eater; Isolde Vane, the Witch of the Red Moon; Queen
+Carmilla and the Elder), "Coming soon" until phase 2 builds them; casting down the Morning Star opens Ravensmoor
+and each boss opens the next stage. The act's shared rules:
+
+- **Bloodfeast.** Court enemies heal on their melee hits: a vampire (the Blood Knight, the Vampire Noble) heals half
+  the damage it deals to your summons or to you, every other Court kind a quarter, and a red thread runs from the
+  victim to the feeder. Healing past full banks as a **blood shield** of up to a quarter of its max HP, spent
+  before its HP. **Rot and Wither halve it** on the enemies they touch; ranged summons and spells are never fed on,
+  and a barrier's or ward's share of a hit is not fed on either.
+- **Night Wings.** Vampire bats fly over the Bone Ring: no blocker stops them, and they go for you and the priests
+  inside. They must land to bite (a 0.5 s swoop, its shadow growing on the ground), and in the air only your
+  fliers (Gargoyles), ranged summons, spells and volleys hit them; a melee summon's blow finds only air.
+- **The Blood Moon.** Every 4:00 the moon turns red for 45 s (the HUD counts down the last 10 s before it rises,
+  then the time left). Under it every Court enemy feeds twice as hard and werewolves turn into beasts; save Dread
+  Rally for it.
+- **The Endless Feast.** At 0:00 the Blood Moon rises and never sets, the Court feeds three times as hard each
+  minute, and coffins open around you and release Vampire Nobles.
+- **Music.** For now Act VII runs play the Act VI loop; "Waltz of the Red Moon" comes with the audio pass.
+
+The shared kinds so far: the **Blood Thrall** (bitten servants, pale and slow; they feed a little), the **Vampire
+Bat** (swarms of 10; Night Wings), the **Blood Knight** (a halberd that cleaves and blood-red plate; a vampire that
+feeds on every hit), the **Werewolf** (a hunter with a silver crossbow until the Blood Moon or half HP, then a huge
+beast that lunges) and the **Vampire Noble** (the Countess: a blood-drain beam that feeds her from range, and at low
+HP 1.5 s of mist before she reforms nearer you), plus the Court's **coffin**. The Codex has a **Court** tab.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2254,8 +2286,9 @@ light above, the set-up of Act IV.
   Cathedral Guardian), a boss faced; until then they are dark silhouettes
   named "Unknown". **Ancient Eye** (Act II), **Empire** (Act III),
   **Republic** (Act IV, the Olympian Republic), **Shogunate** (Act V, the
-  Shogunate of the Rising Sun) and **Inferno** (Act VI) list their faction's
-  soldiers, champions and bosses the same way.
+  Shogunate of the Rising Sun), **Inferno** (Act VI) and **Court** (Act VII,
+  the Sanguine Court) list their faction's soldiers, champions and bosses the
+  same way.
   **Evolutions follow the recipe rule**: until you obtain
   one it is a "?" with no name, art or hint (it reads the `[recipes]` book).
   Achievements use four new badge icons (`assets/sprites/icons/ach_*.png`).
@@ -2680,6 +2713,11 @@ scripts/
     pandemonium_glyphs.gd   Code-drawn fallbacks of Pandemonium's kinds, the Morning Star and its obstacles (Act VI)
     pandemonium_report.gd   The autotest's Pandemonium lines (pandemonium, kinds, morning star) and the Fall from
                             Grace / Archfiend lines (Act VI)
+    court_glyphs.gd         Code-drawn fallbacks of the Sanguine Court's kinds (the beast, the mist, the coffin)
+                            and the Act VII stubs' obstacles; the thread and blood-shield textures (Act VII)
+    court_ground.gd         The Act VII stubs' placeholder floor (the STAGE's "floor": moor / fen / castle)
+    court_report.gd         The autotest's Act VII lines (bloodfeast, night wings, blood moon, kinds, endless
+                            feast, stage)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
                             the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
@@ -2909,6 +2947,23 @@ scripts/
                             the Fallen Seraph General (cleave, feathers, the Fallen Host)
       pandemonium_director.gd  Pandemonium: the General's event and the guest squads
       boss_morning_star.gd  The Morning Star: the Angel (sword, light and dark beams), the Beast (slams, pit rings)
+    court/                  The Sanguine Court (Act VII): its kits ("<id>_kit.gd", loaded by name after the
+                            Inferno's) and bosses ("boss_<id>.gd"), and the act's shared rules:
+      court_rules.gd        Game.court: owns Bloodfeast, Night Wings, the Blood Moon and the Endless Feast;
+                            the Silver Bones hooks and the bot's rally hint (null on Acts I to VI)
+      bloodfeast.gd         BLOODFEAST (CombatResolver.damage_unit() / damage_player()): heals through
+                            heal_enemy(), the blood shield (absorb()), Rot / Wither halve it, the red threads,
+                            the Embalmed hook
+      night_wings.gd        NIGHT WINGS: the rule's numbers and counters (the flag is Enemy.flies; the swoop
+                            and the in-flight hits are CourtKit's)
+      blood_moon.gd         THE BLOOD MOON: the clock (is_up(), force(), start_endless()), the red overlay
+                            (a BLEND_MODE_MUL rect) and the HUD line
+      endless_feast.gd      The Endless Feast: the moon never sets, feeding grows, coffins open
+      court_kit.gd          Base kit: the row flags (feeds, flies, werebeast, noble), a flier's swoop, the
+                            in-flight hit rule and the shadow, Silver Bones, the shield ring
+      blood_thrall_kit.gd, vampire_bat_kit.gd, blood_knight_kit.gd, werewolf_kit.gd, vampire_noble_kit.gd
+                            The shared kinds (the turning and the lunge, the drain beam and the mist)
+      court_coffin_kit.gd   The coffin: open_coffin(), nobles released on its own clock
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3177,6 +3232,14 @@ scripts/
     stages/burning_gate_stage.gd   Act VI stubs: the Burning Gate, the Palace of Silk and Ash and Pandemonium;
     stages/silk_palace_stage.gd    act 6, "inferno": true, zones, pits / portals overrides, a timeline of the
     stages/pandemonium_stage.gd    shared kinds with portal events, the Last Judgment, placeholder floors / bosses
+    court_enemy_data.gd     The Sanguine Court's shared kinds (Blood Thrall, Vampire Bat, Blood Knight, Werewolf,
+                            Vampire Noble) and the coffin; the feeds / flies / werebeast / noble keys (Act VII)
+                            (ravensmoor_ / witchwood_ / castle_sanguis_enemy_data.gd: each stage's own, empty)
+    court_rules_data.gd     Act VII's shared rules: BLOODFEAST (+ Embalmed / Silver Bones keys), NIGHT_WINGS,
+                            BLOOD_MOON, ENDLESS_FEAST, the SOUNDS map
+    stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
+    stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
+    stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses
     hades_data.gd           Hades' arrival, fight, god-shade list (GOD_SHADES) and ending (Act IV)
     amaterasu_data.gd       Amaterasu's arrival, fight, sky per phase (SKY) and ending (Act V)
     morning_star_data.gd    The Morning Star's arrival, two phases (the Angel, the Beast) and ending (Act VI)
@@ -3388,7 +3451,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, or the Act VI stubs `burning_gate`, `silk_palace` and `pandemonium`. Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, or the Act VII stubs `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |

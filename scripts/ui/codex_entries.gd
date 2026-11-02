@@ -117,6 +117,18 @@ static func section_entries(section: String) -> Array:
 				var b := _boss(id)
 				b["section"] = section
 				out.append(b)  # Act VI bosses.
+		# --- Act VII: the Sanguine Court ---
+		"court_soldiers":
+			for id: String in CodexData.COURT_SOLDIERS:
+				out.append(_covenant(id, section))
+		"court_champions":
+			for id: String in CodexData.COURT_CHAMPIONS:
+				out.append(_covenant(id, section))  # Act VII champions.
+		"court_bosses":
+			for id: String in CodexData.COURT_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act VII bosses.
 	return out
 
 
@@ -202,6 +214,8 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		sprite = "shogunate/" + id  # ...a Shogunate kind (Act V)...
 	elif not SpriteBank.has(sprite) and SpriteBank.has("inferno/" + id):
 		sprite = "inferno/" + id  # ...an Inferno kind (Act VI)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("court/" + id):
+		sprite = "court/" + id  # ...a Sanguine Court kind (Act VII)...
 	elif not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

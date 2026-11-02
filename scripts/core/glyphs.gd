@@ -147,12 +147,14 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	# Sprite art, if any: soldiers in enemies/, buildings and carts in
 	# structures/, the Ancient Eye's kinds (Act II) in eye/, the Electronic
 	# Empire's (Act III) in empire/, the Olympian Republic's (Act IV) in pantheon/,
-	# the Shogunate's (Act V) in shogunate/, the Inferno's (Act VI) in inferno/.
+	# the Shogunate's (Act V) in shogunate/, the Inferno's (Act VI) in inferno/,
+	# the Sanguine Court's (Act VII) in court/.
 	if SpriteBank.draw(ci, "enemies/" + kind, o, flash) or SpriteBank.draw(ci, "structures/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "eye/" + kind, o, flash) or SpriteBank.draw(ci, "empire/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "pantheon/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "shogunate/" + kind, o, flash) \
-			or SpriteBank.draw(ci, "inferno/" + kind, o, flash):
+			or SpriteBank.draw(ci, "inferno/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "court/" + kind, o, flash):
 		return
 	match kind:
 		"recruit":
@@ -176,7 +178,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 						if not PantheonGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Olympian Republic's (Act IV) ...
 							if not ShogunateGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Shogunate's (Act V) ...
 								if not InfernoGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Inferno's (Act VI) ...
-									EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
+									if not CourtGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Sanguine Court's (Act VII) ...
+										EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
 
 
 ## Covenant Recruit: small crimson round body, ivory tabard, silver helm, spear.

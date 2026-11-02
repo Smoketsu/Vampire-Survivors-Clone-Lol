@@ -189,3 +189,30 @@ const INFERNO_DEMON_LIGHT := Color(0.831, 0.361, 0.541)  # #D45C8A
 const INFERNO_CHARM := Color(1.000, 0.435, 0.710)  # #FF6FB5
 ## Lit charm pink ("charm_light"): heart highlights, the sealing ring's glow.
 const INFERNO_CHARM_LIGHT := Color(1.000, 0.722, 0.867)  # #FFB8DD
+
+# --- Act VII: the Sanguine Court ---
+# GDD §15.0 "Act VII foundation (phase 1)": the fixed values of docs/act7/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps blood, velvet, moonlight, owned by the art pass). Candle gold is the
+# existing gold and keeps its meaning (evolution / chest / victory); fresh blood is the act's
+# signature colour (Bloodfeast).
+
+## Blood outline ink (tools/palette.json "blood" ramp, darkest): every Court sprite's outline.
+const COURT_BLOOD_INK := Color(0.071, 0.024, 0.039)  # #12060A
+## Dark blood ("blood_dark"): dried blood, the shadows of the knights' plate, a blood shield's edge.
+const COURT_BLOOD_DARK := Color(0.353, 0.039, 0.078)  # #5A0A14
+## Blood ("blood"): Bloodfeast's red thread, the knights' plate, the Blood Moon's tint.
+const COURT_BLOOD := Color(0.639, 0.078, 0.165)  # #A3142A
+## Fresh blood ("blood_light"): the act's signature colour: a feeding thread's bright core, a shield's glint.
+const COURT_BLOOD_LIGHT := Color(0.878, 0.220, 0.306)  # #E0384E
+## Dark velvet ("velvet_dark"): gowns and capes in shadow, coffin wood.
+const COURT_VELVET_DARK := Color(0.086, 0.059, 0.110)  # #160F1C
+## Velvet ("velvet"): the nobles' gowns, the bats' wings, the castle's banners.
+const COURT_VELVET := Color(0.169, 0.118, 0.212)  # #2B1E36
+## Lit velvet ("velvet_light"): highlights on velvet and wings.
+const COURT_VELVET_LIGHT := Color(0.302, 0.227, 0.369)  # #4D3A5E
+## Dark moonlight ("moon_dark"): silver in shadow, the werewolf hunter's crossbow, moor stone.
+const COURT_MOON_DARK := Color(0.431, 0.478, 0.549)  # #6E7A8C
+## Moonlight ("moon"): silver, pale thralls' skin, the moon on a clear night.
+const COURT_MOON := Color(0.706, 0.753, 0.816)  # #B4C0D0
+## Lit moonlight ("moon_light"): silver glints, mist.
+const COURT_MOON_LIGHT := Color(0.902, 0.933, 0.969)  # #E6EEF7

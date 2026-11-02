@@ -175,6 +175,10 @@ const STAGE_LINES: Dictionary = {
 	"burning_gate": "Hell has come to collect. Meet it at the gate.",  # TUNING (not in GDD) Act VI
 	"silk_palace": "Walk the court of desire. Keep your dead your own.",  # TUNING (not in GDD) Act VI
 	"pandemonium": "Climb to the throne of the Adversary.",  # TUNING (not in GDD) Act VI
+	# --- Act VII: the Sanguine Court ---
+	"ravensmoor": "The starving Court comes down to the moors. Feed it nothing.",  # TUNING (not in GDD) Act VII
+	"witchwood": "Break the covens in the fen under the red moon.",  # TUNING (not in GDD) Act VII
+	"castle_sanguis": "Climb to the Court's banquet. End the feast.",  # TUNING (not in GDD) Act VII
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
@@ -394,6 +398,33 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "embers", "fx_color": Color8(224, 96, 26),
 	},  # TUNING (not in GDD) lava embers
+	# --- Act VII: the Sanguine Court (placeholder scenes from the shared kinds' art
+	# until each stage brings its own floor, props and boss; a missing sprite is skipped) ---
+	"ravensmoor": {
+		"tile": "tiles/graveyard",
+		"items": [
+			["court/blood_thrall", 200, 100, true], ["court/blood_thrall", 236, 120, true],
+			["court/werewolf", 196, 190, true], ["court/vampire_bat", 150, 110, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(224, 56, 78),
+	},  # TUNING (not in GDD) blood_light motes
+	"witchwood": {
+		"tile": "tiles/graveyard",
+		"items": [
+			["court/vampire_bat", 206, 100, true], ["court/blood_knight", 200, 190, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(180, 192, 208),
+	},  # TUNING (not in GDD) moonlight motes
+	"castle_sanguis": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["structures/court_coffin", 210, 96, true], ["court/vampire_noble", 196, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(163, 20, 42),
+	},  # TUNING (not in GDD) blood motes
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

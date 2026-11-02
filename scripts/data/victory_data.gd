@@ -43,6 +43,10 @@ const STAGES := {
 	"burning_gate": {"title": "The Gate Is Broken", "boss_line": "Moloch's furnace gutters and goes cold."},  # TUNING (not in GDD) Act VI placeholder
 	"silk_palace": {"title": "The Court Falls Silent", "boss_line": "Lilith's last kiss finds no one to take."},  # TUNING (not in GDD) Act VI placeholder
 	"pandemonium": {"title": "The Throne Is Empty", "boss_line": "The Morning Star falls, and hell answers to you."},  # TUNING (not in GDD) Act VI placeholder
+	# --- Act VII: the Sanguine Court (placeholders until each stage is built) ---
+	"ravensmoor": {"title": "The Moor Is Quiet", "boss_line": "Vargr's howl fades, and the moon pales."},  # TUNING (not in GDD) Act VII placeholder
+	"witchwood": {"title": "The Coven Breaks", "boss_line": "Isolde Vane's circle burns out in the fen."},  # TUNING (not in GDD) Act VII placeholder
+	"castle_sanguis": {"title": "The Feast Is Over", "boss_line": "The Elder turns to ash, and the Court's veil tears."},  # TUNING (not in GDD) Act VII placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -57,6 +61,8 @@ const ACT_LINES := {
 	5: "You outlasted the Shogunate. The Endless Night swallowed you at last.",  # TUNING (not in GDD) Act V
 	# --- Act VI: the Inferno ---
 	6: "You outlasted the Inferno. The Last Judgment took you at last.",  # TUNING (not in GDD) Act VI
+	# --- Act VII: the Sanguine Court ---
+	7: "You outlasted the Court. The Endless Feast drank you dry at last.",  # TUNING (not in GDD) Act VII
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

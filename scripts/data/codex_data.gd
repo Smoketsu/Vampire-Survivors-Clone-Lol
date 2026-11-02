@@ -39,7 +39,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 		# --- Act V: the Shogunate of the Rising Sun ---
 		["shogunate", "Shogunate"],
 		# --- Act VI: the Inferno ---
-		["inferno", "Inferno"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's
+		["inferno", "Inferno"],
+		# --- Act VII: the Sanguine Court ---
+		["court", "Court"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -203,6 +205,19 @@ const INFERNO_CHAMPIONS: Array[String] = ["demon_brute",
 ## Inferno stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const INFERNO_BOSSES: Array[String] = ["moloch", "lilith", "morning_star"]
 
+# --- Act VII: the Sanguine Court ---
+## Act VII, the Sanguine Court (GDD §15.0 "Act VII foundation (phase 1)"; the
+## Court tab): its soldiers (the coffin with them, as the Inferno's portal),
+## its champions (the werewolf, the heavy that is also the Endless Feast's
+## kind, and phase 2's minibosses) and its stage bosses
+## (StageRegistry.BOSS_ARRIVALS ids). Each Act VII stage adds its own as it is
+## built (phase 2).
+const COURT_SOLDIERS: Array[String] = ["blood_thrall", "vampire_bat", "blood_knight", "vampire_noble", "court_coffin"]
+## Court champions (minibosses) and the Act VII Reckoning kinds.
+const COURT_CHAMPIONS: Array[String] = ["werewolf"]
+## Court stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const COURT_BOSSES: Array[String] = ["vargr", "isolde", "carmilla"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
@@ -216,6 +231,8 @@ const SECTIONS: Dictionary = {
 	"shogunate": [["shogunate_soldiers", "Soldiers"], ["shogunate_champions", "Champions"], ["shogunate_bosses", "Bosses"]],  # TUNING (not in GDD) Act V
 	# --- Act VI: the Inferno ---
 	"inferno": [["inferno_soldiers", "Soldiers"], ["inferno_champions", "Champions"], ["inferno_bosses", "Bosses"]],  # TUNING (not in GDD) Act VI
+	# --- Act VII: the Sanguine Court ---
+	"court": [["court_soldiers", "Soldiers"], ["court_champions", "Champions"], ["court_bosses", "Bosses"]],  # TUNING (not in GDD) Act VII
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -363,6 +380,16 @@ const DESCRIPTIONS: Dictionary = {
 	# --- Act VI: Pandemonium ---
 	"fallen_angel": "She dives from above with a burning spear. Aloft, your blades barely reach her: gargoyles and ranged dead answer her.",  # Owner-approved Act VI proposal ("Gargoyles, ranged")
 	"seraph_general": "A fallen archangel warlord with four burnt wings. His cleave cracks the ground; at half strength he calls the Fallen Host.",  # Owner-approved Act VI proposal (the miniboss)
+	# --- Act VII: the Sanguine Court ---
+	"blood_thrall": "Bitten servants of the Court, pale and slow. Every bite they land heals them a little.",  # Owner-approved Act VII proposal
+	"vampire_bat": "Swarms of bats that fly over your ring and swoop down to bite. In the air only fliers, arrows and spells reach them.",  # Owner-approved Act VII proposal (Night Wings)
+	"blood_knight": "Vampire knights in blood-red plate. Every blow feeds them: Rot and Wither halve it.",  # Owner-approved Act VII proposal (Bloodfeast)
+	"werewolf": "A hunter with a silver crossbow, until the Blood Moon or his wounds turn him into a huge, lunging beast.",  # Owner-approved Act VII proposal
+	"vampire_noble": "The Countess drains your dead from afar with a beam of blood. Wounded, she turns to mist and reforms closer.",  # Owner-approved Act VII proposal
+	"court_coffin": "A sealed coffin of the Court. Under the endless moon it opens, and a noble climbs out.",  # Owner-approved Act VII proposal (the Endless Feast)
+	"vargr": "Vargr, the Moon-Eater: the werewolf king, who calls his own Blood Moon and swallows it.",  # Owner-approved Act VII proposal
+	"isolde": "Isolde Vane, the Witch of the Red Moon: hex circles, cauldron bombs and three sisters who must fall together.",  # Owner-approved Act VII proposal
+	"carmilla": "Queen Carmilla, who dances through your ring in mist and feeds the Elder in his coffin.",  # Owner-approved Act VII proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -420,6 +447,10 @@ const LOCKED_HINT: Dictionary = {
 	"inferno_soldiers": "Slay one to record it.",  # TUNING (not in GDD) Act VI
 	"inferno_champions": "Slay one to record it.",  # TUNING (not in GDD) Act VI
 	"inferno_bosses": "Face it to record it.",  # TUNING (not in GDD) Act VI
+	# --- Act VII: the Sanguine Court ---
+	"court_soldiers": "Slay one to record it.",  # TUNING (not in GDD) Act VII
+	"court_champions": "Slay one to record it.",  # TUNING (not in GDD) Act VII champions
+	"court_bosses": "Face it to record it.",  # TUNING (not in GDD) Act VII bosses
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -451,6 +482,10 @@ const TAGS: Dictionary = {
 	"inferno_soldiers": "The Inferno",  # TUNING (not in GDD) Act VI
 	"inferno_champions": "Champion of the Pit",  # TUNING (not in GDD) Act VI
 	"inferno_bosses": "Stage boss",  # TUNING (not in GDD) Act VI
+	# --- Act VII: the Sanguine Court ---
+	"court_soldiers": "The Sanguine Court",  # TUNING (not in GDD) Act VII
+	"court_champions": "Champion of the Court",  # TUNING (not in GDD) Act VII champions
+	"court_bosses": "Stage boss",  # TUNING (not in GDD) Act VII bosses
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -649,10 +684,11 @@ static func is_known(cat: String, id: String) -> bool:
 					or EMPIRE_SOLDIERS.has(id) or EMPIRE_CHAMPIONS.has(id) \
 					or PANTHEON_SOLDIERS.has(id) or PANTHEON_CHAMPIONS.has(id) \
 					or SHOGUNATE_SOLDIERS.has(id) or SHOGUNATE_CHAMPIONS.has(id) \
-					or INFERNO_SOLDIERS.has(id) or INFERNO_CHAMPIONS.has(id)  # Act IV, Act V, Act VI
+					or INFERNO_SOLDIERS.has(id) or INFERNO_CHAMPIONS.has(id) \
+					or COURT_SOLDIERS.has(id) or COURT_CHAMPIONS.has(id)  # Act IV, Act V, Act VI, Act VII
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
-					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id)  # (Act VI last)
+					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id)  # (Act VII last)
 	return false
 
 
@@ -668,10 +704,11 @@ static func total(cat: String) -> int:
 					+ EMPIRE_SOLDIERS.size() + EMPIRE_CHAMPIONS.size() \
 					+ PANTHEON_SOLDIERS.size() + PANTHEON_CHAMPIONS.size() \
 					+ SHOGUNATE_SOLDIERS.size() + SHOGUNATE_CHAMPIONS.size() \
-					+ INFERNO_SOLDIERS.size() + INFERNO_CHAMPIONS.size()  # Act IV, Act V, Act VI
+					+ INFERNO_SOLDIERS.size() + INFERNO_CHAMPIONS.size() \
+					+ COURT_SOLDIERS.size() + COURT_CHAMPIONS.size()  # Act IV, Act V, Act VI, Act VII
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
-					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size()  # (Act VI last)
+					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size()  # (Act VII last)
 	return 0
 
 
@@ -698,6 +735,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var inferno := EnemyDirector.inferno_def(id)  # Act VI kinds ({} when none).
 	if not inferno.is_empty():
 		return inferno
+	var court := EnemyDirector.court_def(id)  # Act VII kinds ({} when none).
+	if not court.is_empty():
+		return court
 	match id:
 		"alaric":
 			return EnemyData.BOSS

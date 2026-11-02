@@ -484,6 +484,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act VI: the Inferno ---
 	if InfernoGlyphs.draw_obstacle(self, o):
 		return  # An Act VI stub's placeholder obstacle kind.
+	# --- Act VII: the Sanguine Court ---
+	if CourtGlyphs.draw_obstacle(self, o):
+		return  # An Act VII stub's placeholder obstacle kind.
 	# --- Act VI: the Burning Gate ---
 	if BurningGateGlyphs.draw_obstacle(self, o):
 		return  # A Burning Gate obstacle kind (Act VI).

@@ -73,6 +73,11 @@
 ## Temptation, the Last Judgment), stepped after the Shogunate's and before the
 ## obstacle push-out; null on Acts I to V unless an Inferno kind forced there
 ## asks for it (inferno_rules()).
+## Act VII (GDD §15.0 "Act VII foundation (phase 1)"): `court` (CourtRules)
+## runs the Sanguine Court's shared rules (Bloodfeast, Night Wings, the Blood
+## Moon, the Endless Feast), stepped after the Inferno's and before the
+## obstacle push-out; null on Acts I to VI unless a Court kind forced there
+## asks for it (court_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -233,6 +238,11 @@ var shogunate: ShogunateRules = null
 ## STAGE has "inferno": true, or an Inferno kind spawned on another stage asked
 ## for it through inferno_rules(); Acts I to V never create it).
 var inferno: InfernoRules = null
+# --- Act VII: the Sanguine Court ---
+## Act VII, the Sanguine Court's shared rules (CourtRules; null unless the
+## stage's STAGE has "court": true, or a Court kind spawned on another stage
+## asked for it through court_rules(); Acts I to VI never create it).
+var court: CourtRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -384,6 +394,11 @@ func _ready() -> void:
 		# --- Act VI: Pandemonium ---
 		"pandemonium":
 			ground = PandemoniumGround.new()  # Act VI: Pandemonium's four zone floors (PandemoniumStage.ZONES).
+		# --- Act VII: the Sanguine Court ---
+		"court":
+			var cg := CourtGround.new()  # Act VII placeholder floor (the STAGE's "floor").
+			cg.look = stage_def.get("floor", {})
+			ground = cg
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -470,6 +485,8 @@ func _ready() -> void:
 		shogunate_rules()  # Act V: the Shogunate of the Rising Sun's shared rules.
 	if bool(stage_def.get("inferno", false)):
 		inferno_rules()  # Act VI: the Inferno's shared rules.
+	if bool(stage_def.get("court", false)):
+		court_rules()  # Act VII: the Sanguine Court's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -771,6 +788,8 @@ func _physics_process(delta: float) -> void:
 		shogunate.step(delta)  # Act V: the Sun's Course, ambushes (pushed out of obstacles next), the Draw.
 	if inferno != null:
 		inferno.step(delta)  # Act VI: the Hell Pits, the portals (their squads pushed out of obstacles next), Temptation.
+	if court != null:
+		court.step(delta)  # Act VII: the Endless Feast, the Blood Moon, Bloodfeast's threads (coffin nobles pushed out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -913,6 +932,18 @@ func inferno_rules() -> InfernoRules:
 		inferno = InfernoRules.new(self)
 		add_child(inferno)
 	return inferno
+
+
+# --- Act VII: the Sanguine Court ---
+## The Sanguine Court's shared rules (Act VII), created on first use: at the
+## start of an Act VII run, or when a Court kind forced onto another stage is
+## activated (CourtKit.reset()), so its Bloodfeast and Night Wings work there
+## (the Blood Moon and the Endless Feast stay off off Act VII).
+func court_rules() -> CourtRules:
+	if court == null:
+		court = CourtRules.new(self)
+		add_child(court)
+	return court
 
 
 # --- Act IV: the Asphodel Underworld ---

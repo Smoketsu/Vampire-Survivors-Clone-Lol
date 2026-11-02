@@ -109,6 +109,12 @@
 ##     (Act VI phase 2)"): on a stage with a "silk_palace" config it owns the
 ##     SilkPalaceDirector (the Hall of Mirrors' reflections, the Twin Succubi,
 ##     guests; `silk_palace`) and hands it the "twins" events. Null elsewhere.
+##   * Act VII, the Sanguine Court (GDD §15.0 "Act VII foundation (phase 1)"):
+##     its kinds are looked up through court_def() (CourtEnemyData, then each
+##     Act VII stage's table) after the Inferno's, and its bosses load by name
+##     from COURT_BOSS_DIR after the Inferno's folder. Its shared rules
+##     (Bloodfeast, Night Wings, the Blood Moon, the Endless Feast) live in
+##     CourtRules (Game.court); this director hands it nothing.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -134,6 +140,9 @@ const SHOGUNATE_BOSS_DIR: String = "res://scripts/enemies/shogunate/"
 # --- Act VI: the Inferno ---
 ## Folder of the Inferno's boss scripts ("boss_<id>.gd", each a Boss; Act VI).
 const INFERNO_BOSS_DIR: String = "res://scripts/enemies/inferno/"
+# --- Act VII: the Sanguine Court ---
+## Folder of the Sanguine Court's boss scripts ("boss_<id>.gd", each a Boss; Act VII).
+const COURT_BOSS_DIR: String = "res://scripts/enemies/court/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -952,7 +961,8 @@ func _spawn_boss() -> void:
 	# EMPIRE_BOSS_DIR (Act III, the same way), else an Olympian Republic boss
 	# from PANTHEON_BOSS_DIR (Act IV), else a Shogunate boss from
 	# SHOGUNATE_BOSS_DIR (Act V), else an Inferno boss from INFERNO_BOSS_DIR
-	# (Act VI); Sir Alaric when none exists.
+	# (Act VI), else a Sanguine Court boss from COURT_BOSS_DIR (Act VII); Sir
+	# Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -971,6 +981,8 @@ func _spawn_boss() -> void:
 				path = SHOGUNATE_BOSS_DIR + "boss_" + sid + ".gd"  # Act V: a Shogunate boss script.
 			if not ResourceLoader.exists(path):
 				path = INFERNO_BOSS_DIR + "boss_" + sid + ".gd"  # Act VI: an Inferno boss script.
+			if not ResourceLoader.exists(path):
+				path = COURT_BOSS_DIR + "boss_" + sid + ".gd"  # Act VII: a Sanguine Court boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -1071,7 +1083,8 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## HarbourEnemyData / ArchiveEnemyData / SpireEnemyData), then the
 ## Electronic Empire's (Act III: empire_def()), then the Olympian Republic's
 ## (Act IV: pantheon_def()), then the Shogunate's (Act V: shogunate_def()),
-## then the Inferno's (Act VI: inferno_def()),
+## then the Inferno's (Act VI: inferno_def()), then the Sanguine Court's
+## (Act VII: court_def()),
 ## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
@@ -1099,6 +1112,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var inferno := inferno_def(kind)  # Act VI kinds ({} when not an Inferno kind).
 	if not inferno.is_empty():
 		return inferno
+	var court := court_def(kind)  # Act VII kinds ({} when not a Court kind).
+	if not court.is_empty():
+		return court
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -1181,6 +1197,22 @@ static func inferno_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act VII: the Sanguine Court ---
+## Design row of Sanguine Court kind `kind` (real id), or {} when it is none:
+## CourtEnemyData (the shared kinds and the coffin) first, then each Act VII
+## stage's own table (phase 2 fills them).
+static func court_def(kind: String) -> Dictionary:
+	if CourtEnemyData.ENEMIES.has(kind):
+		return CourtEnemyData.ENEMIES[kind]
+	if RavensmoorEnemyData.ENEMIES.has(kind):
+		return RavensmoorEnemyData.ENEMIES[kind]
+	if WitchwoodEnemyData.ENEMIES.has(kind):
+		return WitchwoodEnemyData.ENEMIES[kind]
+	if CastleSanguisEnemyData.ENEMIES.has(kind):
+		return CastleSanguisEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
@@ -1189,7 +1221,8 @@ static func is_known_kind(kind: String) -> bool:
 			or SanctumEnemyData.ENEMIES.has(kind) or not eye_def(kind).is_empty() \
 			or not empire_def(kind).is_empty() or not pantheon_def(kind).is_empty() \
 			or not shogunate_def(kind).is_empty() \
-			or not inferno_def(kind).is_empty()  # Act V, Act VI
+			or not inferno_def(kind).is_empty() \
+			or not court_def(kind).is_empty()  # Act V, Act VI, Act VII
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar

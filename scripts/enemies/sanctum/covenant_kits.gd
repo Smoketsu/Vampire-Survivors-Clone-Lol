@@ -17,8 +17,10 @@
 ## "hoplite" -> HopliteKit), and an id with none of those is a SHOGUNATE kit
 ## (Act V): SHOGUNATE_KIT_DIR + "<id>_kit.gd" (e.g. "samurai" -> SamuraiKit),
 ## and an id with none of those is an INFERNO kit (Act VI): INFERNO_KIT_DIR +
-## "<id>_kit.gd" (e.g. "succubus" -> SuccubusKit).
-## Kit ids must be unique across the five folders.
+## "<id>_kit.gd" (e.g. "succubus" -> SuccubusKit), and an id with none of
+## those is a SANGUINE COURT kit (Act VII): COURT_KIT_DIR + "<id>_kit.gd"
+## (e.g. "vampire_noble" -> VampireNobleKit).
+## Kit ids must be unique across the six folders.
 ## Enemy only ever talks to this file and the CovenantKit base class.
 class_name CovenantKits
 extends RefCounted
@@ -36,6 +38,9 @@ const SHOGUNATE_KIT_DIR: String = "res://scripts/enemies/shogunate/"
 # --- Act VI: the Inferno ---
 ## Folder of the Inferno's kit scripts ("<id>_kit.gd", each an InfernoKit; Act VI).
 const INFERNO_KIT_DIR: String = "res://scripts/enemies/inferno/"
+# --- Act VII: the Sanguine Court ---
+## Folder of the Sanguine Court's kit scripts ("<id>_kit.gd", each a CourtKit; Act VII).
+const COURT_KIT_DIR: String = "res://scripts/enemies/court/"
 
 ## Eye / Empire kit id -> its loaded Script (null when no file exists), filled on first use.
 static var _eye_scripts: Dictionary = {}
@@ -76,7 +81,8 @@ static func for_enemy(current: CovenantKit, id: String) -> CovenantKit:
 ## of Electronic Empire kit `id` (EMPIRE_KIT_DIR + "<id>_kit.gd", Act III), else
 ## of Olympian Republic kit `id` (PANTHEON_KIT_DIR + "<id>_kit.gd", Act IV), else
 ## of Shogunate kit `id` (SHOGUNATE_KIT_DIR + "<id>_kit.gd", Act V), else of
-## Inferno kit `id` (INFERNO_KIT_DIR + "<id>_kit.gd", Act VI), or null when no
+## Inferno kit `id` (INFERNO_KIT_DIR + "<id>_kit.gd", Act VI), else of Sanguine
+## Court kit `id` (COURT_KIT_DIR + "<id>_kit.gd", Act VII), or null when no
 ## such script exists.
 static func _eye_kit(id: String) -> CovenantKit:
 	if not _eye_scripts.has(id):
@@ -89,6 +95,8 @@ static func _eye_kit(id: String) -> CovenantKit:
 			path = SHOGUNATE_KIT_DIR + id + "_kit.gd"  # Act V: a Shogunate kit.
 		if not ResourceLoader.exists(path):
 			path = INFERNO_KIT_DIR + id + "_kit.gd"  # Act VI: an Inferno kit.
+		if not ResourceLoader.exists(path):
+			path = COURT_KIT_DIR + id + "_kit.gd"  # Act VII: a Sanguine Court kit.
 		_eye_scripts[id] = load(path) if ResourceLoader.exists(path) else null
 	var scr: Script = _eye_scripts[id]
 	if scr == null:
