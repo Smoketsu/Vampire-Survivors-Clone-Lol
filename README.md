@@ -2046,6 +2046,28 @@ feeds on every hit), the **Werewolf** (a hunter with a silver crossbow until the
 beast that lunges) and the **Vampire Noble** (the Countess: a blood-drain beam that feeds her from range, and at low
 HP 1.5 s of mist before she reforms nearer you), plus the Court's **coffin**. The Codex has a **Court** tab.
 
+<!-- --- Act VII: Castle Sanguis --- -->
+**Castle Sanguis** (Stage 21, the finale of Act VII; GDD §15.0 "Castle Sanguis (Act VII phase 2)" and the rows after
+it; built, still hidden until the Act VII integration). The Court's castle above the clouds in four zones on the
+clock: **the Courtyard**, **the Banquet Hall**, **the Crypt Gallery** and **the Throne of Blood**. In the Banquet
+Hall (and again before the throne) **blood fountains** heal every Court enemy standing in them; a Bone Wall segment
+or a Bone Golem on a fountain denies it. Its own kinds: the **Chiropteran** (an elite bat-man who glides over your
+ring and shrieks a cone that stuns your dead for 1.5 s: step out of it; any stage may use it) and, at 8:20 left, the
+miniboss **the Chiropteran King** (he seizes your dead, flies them off over the ring and drops them outside it,
+shrieks a wide stunning cone, and at half health a swarm of bats bursts from his wings). The other Act VII stages'
+kinds join as guest squads. At 3:00 left **Queen Carmilla** descends: **the Court** (she dances through your ring in
+mist, her drain beam sweeps your army, her nobles step out beside her), **the Waking** (she kneels at the Elder's
+coffin and feeds him: the boss bar becomes his and fills with every heal she lands and every **Blood Bearer** that
+reaches her; stuns, freezes and Soul Chains interrupt her, and a dead bearer brings nothing) and **the Elder** (the
+first vampire, with the health she gave him: every bat on the map turns on you, he drains everything touching him
+and beats his wings). When he falls he turns to ash and the Court's veil tears (a short ending text, no epilogue).
+Rewards: the spell **Night Swarm** (spectral bats circle you and dart at the nearest foes; evolves into **Nocturne**,
+whose bites leap on to the next foe, with **Old Blood**: the bats dart sooner and their bites heal you), the
+character **the Dhampir** (Half-Blood: two more bats), the summon class **the Blood Spawn** (fast vampire brawlers
+that heal themselves with every blow; evolves into **Nosferatu**, who spill the blood they cannot hold to your most
+wounded summon nearby, with **Thirst Eternal**: every heal your dead receive is larger) and its Ossuary mastery, and
+the achievement **Last Supper** (beat the Elder: the title Ender of the Feast).
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2722,6 +2744,11 @@ scripts/
     court_ground.gd         The Act VII stubs' placeholder floor (the STAGE's "floor": moor / fen / castle)
     court_report.gd         The autotest's Act VII lines (bloodfeast, night wings, blood moon, kinds, endless
                             feast, stage)
+    castle_sanguis_ground.gd  Castle Sanguis's four zone floors (courtyard / banquet / crypt / throne; Act VII)
+    castle_sanguis_glyphs.gd  Code-drawn fallbacks of Castle Sanguis's kinds, Carmilla, the Elder, the blood fountain
+                            and its obstacles (Act VII)
+    castle_sanguis_report.gd  The autotest's Castle Sanguis lines (castle sanguis, kinds, carmilla) and the Night
+                            Swarm / Blood Spawn item lines (Act VII)
     kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
                             the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
@@ -2811,6 +2838,7 @@ scripts/
     enthrall.gd             Act VI: THE one path that turns a foe to your side for a while (Temptation, the
                             Succubus): the thrall, its return, Heartbreaker and Unholy Desire's burst
     behaviors/archfiend_behavior.gd  Act VI: the Archfiend's Hellfire Cleave (the Prince of Hell's full circle and dread)
+    behaviors/blood_spawn_behavior.gd  Act VII: the Blood Spawn's Bloodthirst (Nosferatu's spill; Thirst Eternal's key)
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
@@ -2968,6 +2996,12 @@ scripts/
       blood_thrall_kit.gd, vampire_bat_kit.gd, blood_knight_kit.gd, werewolf_kit.gd, vampire_noble_kit.gd
                             The shared kinds (the turning and the lunge, the drain beam and the mist)
       court_coffin_kit.gd   The coffin: open_coffin(), nobles released on its own clock
+      chiropteran_kit.gd, chiropteran_king_kit.gd, blood_bearer_kit.gd  Castle Sanguis's kinds: the Chiropteran's
+                            stunning shriek, the King's carry-off (the held hook) and great shriek, the bearers
+                            who walk to the kneeling Queen
+      castle_sanguis_director.gd  Castle Sanguis: the Banquet's blood fountains (the one denial check), the King's
+                            event, the guest squads
+      boss_carmilla.gd      Queen Carmilla and the Elder: the Court, the Waking (the Elder's bar fills), the Elder
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3248,6 +3282,8 @@ scripts/
     amaterasu_data.gd       Amaterasu's arrival, fight, sky per phase (SKY) and ending (Act V)
     morning_star_data.gd    The Morning Star's arrival, two phases (the Angel, the Beast) and ending (Act VI)
     fall_from_grace_data.gd Fall from Grace / Lightbringer / Pride / Second Fall rules (Act VI)
+    carmilla_data.gd        Queen Carmilla and the Elder: arrival, three phases and ending (Act VII)
+    night_swarm_data.gd     Night Swarm / Nocturne / Old Blood / Half-Blood rules (Act VII)
     black_sun_data.gd       Black Sun / Eclipse of Heaven rules, Stolen Dawn keys, Night Prayer key (Act V)
     lilith_data.gd          Lilith's arrival, fight (charm waves, the kiss, children, her true form) (Act VI)
     tempt_data.gd           The Enthrall path and Temptation / Unholy Desire rules, Velvet Chains keys,

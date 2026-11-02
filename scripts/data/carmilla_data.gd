@@ -110,7 +110,7 @@ const LATE_ANNOUNCE := ["THE VEIL TEARS", "The Elder turns to ash.", "Even under
 ## Her design row (the Elder shares it: one boss body).
 const BOSS := {
 	"display_name": "Queen Carmilla",
-	"max_hp": 6400.0,  # TUNING (not in GDD) her bar, before the stage / co-op scaling (the Morning Star's two phases 14,000 in all; the Elder's below); first pass 7600 + 8400: the Elder outlived 0:00 in the seed-7 army run
+	"max_hp": 5000.0,  # TUNING (not in GDD) her bar, before the stage / co-op scaling (the Morning Star's two phases 14,000 in all; the Elder's below); first pass 7600 + 8400, second 6400 + 6400: the Court phase alone took 169 s in the seed-7 army run
 	"move_speed": 52.0,  # TUNING (not in GDD) px/s
 	"damage": 12.0,  # TUNING (not in GDD) a raking claw (the Elder's blow too), before the time scaling
 	"attack_interval": 1.2,  # TUNING (not in GDD) s
@@ -159,7 +159,7 @@ const BOSS := {
 	"coffin_dist": 170.0,  # TUNING (not in GDD) px from the necromancer the coffin rises
 	"kneel_travel": 1.6,  # TUNING (not in GDD) s at most of her flight to the coffin (mist)
 	"waking_time": 22.0,  # TUNING (not in GDD) s at most she kneels
-	"elder_hp": 6400.0,  # TUNING (not in GDD) the Elder's full health, before the stage / co-op scaling
+	"elder_hp": 5200.0,  # TUNING (not in GDD) the Elder's full health, before the stage / co-op scaling
 	"elder_floor": 0.2,  # TUNING (not in GDD) share of his health he has before she feeds
 	"feed_rate": 0.018,  # TUNING (not in GDD) share of his health per second while she feeds
 	"feed_tick": 0.25,  # TUNING (not in GDD) s between two feeding heals

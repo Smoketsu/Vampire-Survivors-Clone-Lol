@@ -28,10 +28,10 @@ static func stage_lines(game: Game, st: Dictionary) -> void:
 	for k: String in [CastleSanguisEnemyData.CHIROPTERAN, CastleSanguisEnemyData.KING, CastleSanguisEnemyData.BEARER]:
 		any = any or int(st.get("spawned_" + k, 0.0)) > 0
 	if any:
-		print("[autotest] castle sanguis kinds: chiropteran %d/%d, shrieks %d, summons stunned %d, you hit %d | chiropteran king %d, killed %d (ttk %ds): carry-offs %d (summons carried %d, dropped %d, %d px on average), shrieks %d (stuns %d), you hit %d, aloft blows grazed %d, colony bats %d | blood bearers %d/%d" % [
+		print("[autotest] castle sanguis kinds: chiropteran %d/%d, shrieks %d, summons stunned %d, you hit %d | chiropteran king %d (max HP %d), killed %d (ttk %ds): carry-offs %d (summons carried %d, dropped %d, %d px on average), shrieks %d (stuns %d), you hit %d, aloft blows grazed %d, colony bats %d | blood bearers %d/%d" % [
 			int(st.get("spawned_" + CastleSanguisEnemyData.CHIROPTERAN, 0.0)), int(st.get("kill_" + CastleSanguisEnemyData.CHIROPTERAN, 0.0)),
 			int(st.get("chiropteran_shrieks", 0.0)), int(st.get("chiropteran_stuns", 0.0)), int(st.get("chiropteran_shriek_player_hits", 0.0)),
-			int(st.get("king_spawned", 0.0)), int(st.get("king_kills", 0.0)), int(st.get("king_ttk", 0.0)),
+			int(st.get("king_spawned", 0.0)), int(st.get("king_max_hp", 0.0)), int(st.get("king_kills", 0.0)), int(st.get("king_ttk", 0.0)),
 			int(st.get("king_grabs", 0.0)), int(st.get("king_carried", 0.0)), int(st.get("king_dropped", 0.0)),
 			int(float(st.get("king_drop_px", 0.0)) / maxf(1.0, float(st.get("king_dropped", 0.0)))),
 			int(st.get("king_shrieks", 0.0)), int(st.get("king_stuns", 0.0)), int(st.get("king_player_hits", 0.0)),

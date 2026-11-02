@@ -23,7 +23,9 @@
 ##     held a moment longer and set under his claws (carry(), the one place
 ##     that moves it). Airborne, spawning, dead, charmed or already compelled
 ##     summons are never seized. If he dies (or the carry is cut short) they
-##     drop where they are.
+##     drop where they are. After the drop he flies back to the Bone Ring's
+##     edge (at most RETURN_MAX s) and LANDS there for the row's land_time s
+##     (after a shriek he lands where he is): every blow lands in full.
 ##   * THE GREAT SHRIEK (no summon in reach): a cone of shriek_range px,
 ##     shriek_arc degrees each side, at the necromancer, telegraphed
 ##     shriek_telegraph s: every summon in it stunned shriek_stun s through
@@ -45,10 +47,13 @@ const GRAB_WINDUP: int = 1
 const CARRY: int = 2
 ## Phase: the great shriek's cone is marked.
 const SHRIEK_WINDUP: int = 3
-## Phase: he hovers after an attack.
+## Phase: he stands on the ground after an attack (row land_time s; every
+## blow lands in full).
 const RECOVER: int = 4
-## Seconds he hovers after an attack.
-const RECOVER_TIME: float = 0.5  # TUNING (not in GDD)
+## Phase: after a drop he flies back to the Bone Ring's edge to land there.
+const RETURN: int = 5
+## Most seconds of his flight back (he lands where he is after it).
+const RETURN_MAX: float = 2.5  # TUNING (not in GDD)
 ## Seconds a carried summon's hold is renewed each tick (it lapses on its own
 ## if the King stops renewing it).
 const CARRY_HOLD: float = 0.2  # TUNING (not in GDD)
@@ -84,6 +89,7 @@ func reset(e: Enemy, def: Dictionary) -> void:
 	_spawned_at = e.game.elapsed
 	e.game.enemies.set_miniboss(e)
 	e.game.stat_add("king_spawned", 1.0)
+	e.game.stats["king_max_hp"] = e.max_hp  # His health as he arrived (the summary's "king" pool).
 
 
 func on_deactivate(e: Enemy) -> void:
@@ -119,13 +125,19 @@ func physics(e: Enemy, delta: float) -> bool:
 			_fly(e, delta)
 			if phase_time >= float(d["carry_time"]) or e.position.distance_to(_carry_to) <= 2.0:
 				_drop_all(e, true)
-				set_phase(e, RECOVER)
+				set_phase(e, RETURN)
+		RETURN:
+			var back := g.player.position - e.position
+			if back.length() <= StanceData.RING_MAX or phase_time >= RETURN_MAX:
+				set_phase(e, RECOVER)  # He lands at the ring's edge, within the army's reach.
+			else:
+				e.position += back.normalized() * minf(back.length(), float(d["carry_speed"]) * delta)
 		SHRIEK_WINDUP:
 			if phase_time >= float(d["shriek_telegraph"]):
 				_shriek(e)
 				set_phase(e, RECOVER)
 		RECOVER:
-			if phase_time >= RECOVER_TIME:
+			if phase_time >= float(d["land_time"]):
 				special_cd = float(d["attack_gap"])
 				set_phase(e, IDLE)
 	return true
@@ -286,9 +298,9 @@ func _call_swarm(e: Enemy) -> void:
 
 ## In flight a grounded melee summon's blow deals aloft_melee_taken of itself;
 ## every other hit (airborne, ranged, spells, hazards) and every hit on the
-## ground lands in full.
+## ground (the swoop, the landing after an attack) lands in full.
 func taken_mult(e: Enemy, source: String) -> float:
-	if in_flight() and FallenAngelKit.grounded_melee(source):
+	if phase != RECOVER and in_flight() and FallenAngelKit.grounded_melee(source):
 		e.game.stat_add("king_aloft_grazed", 1.0)
 		return float(d["aloft_melee_taken"])
 	return 1.0

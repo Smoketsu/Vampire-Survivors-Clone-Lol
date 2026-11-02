@@ -270,7 +270,7 @@ const CASTLE_SANGUIS := {
 	"fountains": {
 		"windows": [[300.0, 600.0, 3], [900.0, 1e9, 2]],  # TUNING (not in GDD) the Banquet Hall (3), the Throne of Blood (2)
 		"radius": 30.0,  # TUNING (not in GDD) px
-		"heal": 0.05,  # TUNING (not in GDD) share of max HP per second
+		"heal": 0.03,  # TUNING (not in GDD) share of max HP per second; first pass 0.05 fed the werewolves 7000 HP in the seed-7 army run
 		"boss_mult": 0.2,  # TUNING (not in GDD) a boss / miniboss drinks a fifth as much
 		"tick": 0.5,  # TUNING (not in GDD) s
 		"ring_min": 150.0,  # TUNING (not in GDD) px

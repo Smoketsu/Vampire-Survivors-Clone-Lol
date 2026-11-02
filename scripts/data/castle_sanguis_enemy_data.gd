@@ -66,7 +66,9 @@ const ENEMIES := {
 	#     px/s) toward carry_out px beyond the Bone Ring, then DROPS them there
 	#     (drop_damage each, time-scaled; held drop_daze s more). While carried
 	#     a summon is held (SummonedUnit.held_until, the Netcaster's hold) and
-	#     moved with him. Killing him drops them at once.
+	#     moved with him. Killing him drops them at once. After the drop he flies
+	#     back to the Bone Ring's edge and LANDS there (after a shriek where
+	#     he is) for land_time s: every blow lands in full.
 	#   GREAT SHRIEK: a cone of shriek_range px, shriek_arc degrees each side,
 	#     at the necromancer, telegraphed shriek_telegraph s: every summon in it
 	#     is stunned shriek_stun s (CombatResolver.stun_unit()), the
@@ -75,7 +77,7 @@ const ENEMIES := {
 	#     Bats burst from his wings around him (the hard cap respected).
 	"chiropteran_king": {
 		"display_name": "The Chiropteran King",
-		"max_hp": 1800.0,  # TUNING (not in GDD) before the time / stage scaling; first pass 2600 lived 488 s in the seed-7 army run (he flies out of reach)
+		"max_hp": 1200.0,  # TUNING (not in GDD) before the time / stage scaling; 2600 lived 488 s, 1800 451 s, 1500 497 s 1300 (landing where he dropped them) and 800 outlived the run: he landed out of the army's reach; he now lands at the ring's edge in the seed-7 army run (he flies out of reach)
 		"move_speed": 60.0,  # TUNING (not in GDD) px/s; he flies
 		"damage": 12.0,  # TUNING (not in GDD) a claw blow, before the time scaling
 		"attack_interval": 1.4,  # TUNING (not in GDD) s
@@ -113,10 +115,11 @@ const ENEMIES := {
 		"grab_radius": 40.0,  # TUNING (not in GDD) px around the first one
 		"grab_telegraph": 0.8,  # TUNING (not in GDD) s (a dark circle where he will strike)
 		"carry_time": 1.6,  # TUNING (not in GDD) s in the air
-		"carry_out": 170.0,  # TUNING (not in GDD) px beyond the Bone Ring's outer edge he drops them
+		"carry_out": 100.0,  # TUNING (not in GDD) px beyond the Bone Ring's outer edge he drops them; first pass 170 (he spent the fight out of the army's reach)
 		"carry_speed": 260.0,  # TUNING (not in GDD) px/s at most while carrying
 		"drop_damage": 10.0,  # TUNING (not in GDD) to each dropped summon, before the time scaling
 		"drop_daze": 0.8,  # TUNING (not in GDD) s a dropped summon stays held where it fell
+		"land_time": 2.5,  # TUNING (not in GDD) s he stands on the ground after a drop or a shriek, every blow landing in full (first pass 0.5 s in the air: he lived ~8 minutes)
 		"shriek_range": 170.0,  # TUNING (not in GDD) px
 		"shriek_arc": 45.0,  # TUNING (not in GDD) degrees each side
 		"shriek_telegraph": 0.9,  # TUNING (not in GDD) s
