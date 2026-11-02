@@ -157,6 +157,9 @@ FLAP_WAVE = tuple(float(np.sin(2.0 * np.pi * f / 8)) for f in range(8))
 # Flap rig: px the body (and the wings with it) sags per frame, times the rig's `bob`: it sags a little while the wings are up
 # and is back at the still's height for the downstroke (the still fills its frame up to row 0, so the body never rises).
 FLAP_BODY = (0, 1, 1, 1, 0, 0, 0, 0)
+# Wings rig (the `wings` key of a legs / robe rig): the idle strip's wing wave, per idle frame: one gentle beat over 12 frames, two a
+# loop (as share of each wing's `degrees`; 0 on frame 0 = the still). The walk uses FLAP_WAVE.
+IDLE_WING_WAVE = tuple(float(np.sin(2.0 * np.pi * f / 12)) for f in range(24))
 # Orbit rig: the loop each small bat flies over the 8 frames, as (dx, dy) shares of the bat's `radius` (an ellipse: x = cos, y = sin;
 # 0 on frame 0 = the still); each bat starts `phase` frames (of 8) later.
 ORBIT_PATH = tuple((float(np.cos(2.0 * np.pi * f / 8)) - 1.0, float(np.sin(2.0 * np.pi * f / 8))) for f in range(8))
@@ -219,6 +222,11 @@ STRIDE_FAR_SHADE = {"bronze_light": "bronze", "bronze": "bronze_dark", "marble_l
 #           Each wing's pixels are turned about its shoulder pivot by FLAP_WAVE[f] * degrees (+ = clockwise on screen, so a wing
 #           on the pivot's left rises; use a negative `degrees` for the right wing; entries with the same pivot and degrees are
 #           one wing), drawn BEHIND the body; the body sags FLAP_BODY[f] * bob px. No leg stride. Pixels only move (_flap_frames()).
+#   wings   optional list of wing dicts, the same entries as a `flap` rig's `wings` (box, pivot, degrees, exclude, colors, soft_*), for a
+#           legs / robe rig that keeps its stride or glide, its bust and its swish (owner's Act VI art review, round 2: "make the wings
+#           flap a bit"): each wing's pixels are cut out of the still, turned about its pivot by FLAP_WAVE[f] * degrees (idle: the slower
+#           IDLE_WING_WAVE), moved with the body dip, and laid BEHIND the finished frame; the extra wing field `seam` (px, default 0) keeps the wing's
+#           pixels in that many columns beside the body-side edge of its box in the body too, so the turning wing leaves no gap there (_wings_cut(), _wings_lay()). Pixels only move.
 #   orbit   optional list of dicts {box: (x0, x1, y0, y1), radius: (rx, ry), phase: int, colors: [palette names] (optional)}: small
 #           flying things (the Dhampir's spirit bats) that each fly a small ellipse around their spot over the 8 frames
 #           (ORBIT_PATH, started `phase` frames late); each box's opaque pixels (of `colors` only, if set) are lifted out and laid
@@ -235,6 +243,10 @@ STRIDE_FAR_SHADE = {"bronze_light": "bronze", "bronze": "bronze_dark", "marble_l
 #           `lobes` (default 1) = 2 puts one bell under each side instead of one across the
 #           box (each side peaks at its own centre, the cleavage stays): for a wide bust whose
 #           outer sides barely moved under one bell (owner's art review, round 2).
+#   bust_exclude  optional list of (x0, x1, y0, y1[, max_sum[, max_chroma]]) boxes of the still: pixels of the `bust` box that must NOT bounce (the arm,
+#           hand and sleeve beside the bust; owner's Act VI art review, round 2: "the arm is bouncing"). Opaque pixels inside them
+#           (only the dark ones, R + G + B <= max_sum, or the grey ones, max - min channel <= max_chroma, when given: a glove in a box that also holds skin) stay still and are
+#           never used as the source of a moved pixel (_exclude_mask()). Also applies to the idle strip. Frame 0 is still the still.
 #   bust_axis  optional "y" (default: the up-and-down bounce above) or "x": the same box and
 #           field moves sideways instead (each pixel takes the pixel |d| columns aside in its
 #           own row; + = right, the facing side), timed by BUST_SWAY in the walk (the kick
@@ -587,7 +599,8 @@ RIGS = {
         dict(kind="flap", box=(0, 11, 0, 32), root=11, amp=3)]),
     "inferno/hell_knight": dict(mode="legs", hip=38, back=(0, 20), front=(20, 36), rigid=[(36, 52, 0, None)], spread=2, lift=2, dip=1),
     "inferno/demon_brute": dict(mode="legs", hip=70, back=(0, 38), front=(38, 72), rigid=[], spread=3, lift=3, dip=1),
-    "inferno/succubus": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(13, 26, 13, 19, 2, 2), swish=(11, 27, 23, 32, 2)),  # Round 1 redo (act 6): 1 px less on the left (was cols 12-26; owner).
+    "inferno/succubus": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(13, 26, 13, 19, 2, 2), swish=(11, 27, 23, 32, 2),
+                         bust_exclude=[(13, 27, 13, 20, 190)]),  # Round 2 redo (act 6): the dark arms / gloves inside the box stay still.  # Round 1 redo (act 6): 1 px less on the left (was cols 12-26; owner).
     # --- Act VI: the Burning Gate (every figure here is male: no bust rigs) ---
     "inferno/lava_hound": dict(mode="legs", hip=19, back=(0, 20), front=(20, 40), rigid=[], spread=2, lift=2, dip=1),
     "inferno/pit_cultist": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1),
@@ -605,20 +618,34 @@ RIGS = {
     # --- Act VI: the Palace of Silk and Ash ---
     # The female figures (the approved Act VI level) glide like the succubus: the robe rig, the bust box bouncing and
     # the `swish` hip box swaying (boxes from each sprite's torso; for the owner's review); Lilith glides in her gown.
-    "inferno/lilim_witch": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(7, 19, 13, 19, 2, 2), swish=(4, 20, 24, 32, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 5-19; owner).
-    "inferno/twin_naamah": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(18, 32, 15, 21, 2, 2), swish=(15, 33, 26, 36, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 16-32; owner).
-    "inferno/twin_agrat": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(16, 31, 14, 22, 2, 2), swish=(14, 32, 26, 36, 2)),  # Round 1 redo (act 6): 2 px less on the left (was cols 15-31; owner), refit to the new still.
-    "bosses/lilith": dict(mode="robe", hip=66, rigid=[], sway=1, dip=1, bust=(41, 70, 24, 36, 3, 2), swish=(39, 72, 47, 66, 2)),
-    "player/succubus_queen": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(11, 25, 13, 19, 2, 2), swish=(10, 26, 24, 32, 2)),
-    "summons/bound_succubus": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(17, 31, 14, 20, 2, 2), swish=(14, 30, 22, 30, 2)),  # Round 1 redo (act 6): box 2 px down and 2 px right (was cols 15-29, rows 12-18; owner).
-    "summons/lilim_matriarch": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(21, 37, 17, 23, 2, 2), swish=(18, 36, 26, 36, 2)),  # Round 1 redo (act 6): box 2 px down and 2 px right (was cols 19-35, rows 15-21; owner).
+    "inferno/lilim_witch": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(7, 19, 13, 19, 2, 2), swish=(4, 20, 24, 32, 2),
+                          bust_exclude=[(7, 11, 13, 20), (11, 19, 13, 20, 150)]),  # Round 2 redo (act 6): the arm / hair beside the bust (cols 7-10) and dark pixels stay still.  # Round 1 redo (act 6): 2 px less on the left (was cols 5-19; owner).
+    "inferno/twin_naamah": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(18, 32, 15, 21, 2, 2), swish=(15, 33, 26, 36, 2),
+                          bust_exclude=[(18, 32, 14, 22, 200, 35)]),  # Round 2 redo (act 6): the black arm / glove stays still.  # Round 1 redo (act 6): 2 px less on the left (was cols 16-32; owner).
+    "inferno/twin_agrat": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(16, 31, 14, 22, 2, 2), swish=(14, 32, 26, 36, 2),
+                          bust_exclude=[(16, 32, 14, 23, 200, 35)]),  # Round 2 redo (act 6): the grey / white / black gloves and arms stay still.  # Round 1 redo (act 6): 2 px less on the left (was cols 15-31; owner), refit to the new still.
+    # Round 2 redo (act 6, owner: "make the wings flap a bit"): the two dark wings (obsidian pixels outside the figure: left cols 0-39,
+    # right cols 73+) beat gently, +-9 degrees about the shoulders (`wings`), behind the gliding body (bust and swish kept).
+    "bosses/lilith": dict(mode="robe", hip=66, rigid=[], sway=1, dip=1, bust=(41, 70, 24, 36, 3, 2), swish=(39, 72, 47, 66, 2),
+                          wings=[dict(box=(0, 40, 4, 98), pivot=(40, 28), degrees=9.0, seam=3, exclude=[(26, 37, 50, 62)], colors=["obsidian_ink", "obsidian", "obsidian_dark", "obsidian_light"]),
+                                 dict(box=(73, 100, 10, 98), pivot=(73, 28), degrees=-9.0, seam=3, colors=["obsidian_ink", "obsidian", "obsidian_dark", "obsidian_light"])]),
+    "player/succubus_queen": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(11, 25, 13, 19, 2, 2), swish=(10, 26, 24, 32, 2),
+                                bust_exclude=[(11, 19, 13, 20), (19, 26, 13, 20, 170)]),  # Round 2 redo (act 6): the violet arm left of the bust and dark pixels stay still (the Hyper / Untouchable skins derive it).
+    "summons/bound_succubus": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(21, 31, 14, 20, 2, 2), swish=(14, 30, 22, 30, 2),
+                                  bust_exclude=[(21, 31, 14, 21, 200)]),  # Round 2 redo (act 6): x0 + 4 (was cols 17-31), dark arm pixels stay still.  # Round 1 redo (act 6): box 2 px down and 2 px right (was cols 15-29, rows 12-18; owner).
+    "summons/lilim_matriarch": dict(mode="robe", hip=35, rigid=[], sway=1, dip=1, bust=(25, 37, 17, 23, 2, 2), swish=(18, 36, 26, 36, 2),
+                                  bust_exclude=[(25, 37, 17, 24, 200)]),  # Round 2 redo (act 6): x0 + 4 (was cols 21-37), dark arm pixels stay still.  # Round 1 redo (act 6): box 2 px down and 2 px right (was cols 19-35, rows 15-21; owner).
     # --- Act VI: Pandemonium ---
     # The Fallen Angel glides like the succubus (robe mode, the boots as one hem) with the figure-redesign rigs: the
     # two-lobe bust box and the hip `swish`; the Fallen Seraph General, the Morning Star's Beast, the Archfiend and the
     # Prince of Hell stride (legs, their wings riding with the body); the Morning Star's Angel glides in his long cloak;
     # the Fallen Saint (figure redesign) glides in her gown, the bust box bouncing.
     "inferno/fallen_angel": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1, bust=(17, 28, 15, 22, 2, 2), swish=(12, 25, 25, 34, 2)),  # Round 1 redo (act 6): box 4 px right (was cols 13-24; owner).
-    "inferno/seraph_general": dict(mode="legs", hip=62, back=(0, 48), front=(48, 96), rigid=[], spread=2, lift=2, dip=1),
+    # Round 2 redo (act 6, owner: "have those wings flap a little bit"): the two wings (left cols 0-27, right cols 62+, above the cape)
+    # beat gently, +-8 degrees about the shoulders (`wings`, no exclude boxes: they left ink seams); the raised greatsword (cols 32-80, rows 0-16) stays with the body.
+    "inferno/seraph_general": dict(mode="legs", hip=62, back=(0, 48), front=(48, 96), rigid=[], spread=2, lift=2, dip=1,
+                                   wings=[dict(box=(0, 27, 3, 54), pivot=(27, 30), degrees=8.0, seam=4),
+                                          dict(box=(62, 92, 17, 62), pivot=(62, 34), degrees=-8.0, seam=4)]),
     "bosses/morning_star": dict(mode="robe", hip=80, rigid=[], sway=1, dip=1),
     # Round 1 redo (act 6, owner: "Make the chains sway if you can"): the two gold chains (left from (47, 80), right from
     # (113, 80)) sway like the Gatekeeper's, gentler (only the chain's gold pixels move).
@@ -632,6 +659,10 @@ RIGS = {
     "summons/archfiend": dict(mode="legs", hip=44, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=2, dip=1,
                               hold=[(36, 62, 39, 52), (46, 62, 52, 61)]),
     "summons/prince_of_hell": dict(mode="legs", hip=52, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1,
+                              # Round 2 redo (act 6, owner: "maybe some flapping wings here too"): the wings (left cols 0-22, right 51+, above the
+                              # cleaver) beat gently, +-9 degrees about the shoulders; the cleaver stays `hold`.
+                              wings=[dict(box=(0, 22, 0, 50), pivot=(22, 22), degrees=9.0, seam=3),
+                                     dict(box=(51, 76, 0, 48), pivot=(51, 22), degrees=-9.0, seam=3)],
                               hold=[(41, 52, 47, 60), (52, 62, 49, 66), (62, 76, 53, 70)]),
     # --- Act VII: the Sanguine Court (the shared kinds) ---
     # The thrall shambles on bare feet; the bat hovers (the whole bat bobs 2 px, both wings flap from their shoulder roots, the
@@ -807,7 +838,11 @@ SKIN_FIX = {
     # to the outer columns so the current still (no bats) loses nothing, and are to be re-fitted to the new still's bats.
     "player/dhampir_deathlord": {"orbit": [dict(box=(8, 14, 4, 11), radius=(2, 2), phase=0), dict(box=(34, 46, 9, 20), radius=(2, 2), phase=4)]},
     # --- Act VI: the Palace of Silk and Ash --- (the Succubus Queen's Deathlord skin is 58 tall: its own boxes)
-    "player/succubus_queen_deathlord": {"hip": 33, "bust": (12, 28, 14, 20, 2, 2), "swish": (11, 29, 24, 34, 2)},
+    # Round 2 redo: the Hyper skin's bust (tan, cols 21-29) sits right of its feathered arm and wing (cols 17-20), the Untouchable
+    # skin's (cream, cols 17-24) right of its grey arm: their own boxes narrowed onto the bust, the arm / glove pixels excluded.
+    "player/succubus_queen_hyper": {"bust": (21, 31, 13, 19, 2, 2), "bust_exclude": [(17, 21, 13, 20), (30, 32, 13, 20)]},
+    "player/succubus_queen_untouchable": {"bust": (17, 25, 13, 19, 2, 2), "bust_exclude": [(17, 20, 13, 20, 420)]},
+    "player/succubus_queen_deathlord": {"bust_exclude": [], "hip": 33, "bust": (12, 28, 14, 20, 2, 2), "swish": (11, 29, 24, 34, 2)},
     # --- Act VI: Pandemonium --- (the Fallen Saint's Hyper skin: its own box)
     # Round 1 redo (act 6, owner: "Bounce box shifted 3 pixels to the right"): the Hyper box is the base's old one (cols 13-25)
     # +3 (the base and the Untouchable skin moved 4 px, cols 17-29).
@@ -901,6 +936,8 @@ def skin_rig(skin: str, base: str) -> dict:
     if "bust" in rig:
         bx0, bx1, by0, by1, bpx = rig["bust"][:5]
         rig["bust"] = (*cols((bx0, bx1)), by0 + dy, by1 + dy, bpx, *rig["bust"][5:])
+    if "bust_exclude" in rig:  # The arm exclusion boxes move with the body like the bust box.
+        rig["bust_exclude"] = [(*cols((e[0], e[1])), e[2] + dy, e[3] + dy, *e[4:]) for e in rig["bust_exclude"]]
     rig.update(SKIN_FIX.get(skin, {}))
     return rig
 
@@ -1215,6 +1252,9 @@ def frames_of(key: str) -> list:
     bats = []  # The rig's orbiting bats (cut out of the still; they fly behind the body).
     if "orbit" in rig:
         still, bats = _orbit_cut(still, rig["orbit"])
+    wings = []  # The rig's wings (cut out of the still; they beat behind the body).
+    if "wings" in rig:
+        still, wings = _wings_cut(still, rig["wings"])
     parts = split(still, rig)
     hip = rig["hip"]
     out = []
@@ -1241,11 +1281,13 @@ def frames_of(key: str) -> list:
         if "bust" in rig:
             axis = rig.get("bust_axis", "y")  # "y" bounces, "x" sways (BUST_SWAY).
             share = (BUST_SWAY if axis == "x" else BUST_BOUNCE)[f]
-            frame = _bounce(frame, rig["bust"], dy, share * rig["bust"][4], axis)
+            frame = _bounce(frame, rig["bust"], dy, share * rig["bust"][4], axis, rig.get("bust_exclude"))
         if "swish" in rig:
             frame = _bounce(frame, rig["swish"], dy, SWISH_SWAY[f] * rig["swish"][4], "x")
         if bats:
             frame = _orbit_lay(frame, bats, f)
+        if wings:
+            frame = _wings_lay(frame, wings, FLAP_WAVE[f], dy)
         out.append(frame)
     if not np.array_equal(out[0], load(key)):
         sys.exit(f"{key}: frame 0 differs from the still (rig error)")
@@ -1324,6 +1366,39 @@ def _flap_frames(still: np.ndarray, rig: dict) -> list:
             layers.append(lay)
         out.append(_stack(layers + [_move(body, dy)]))
     return out
+
+
+def _wings_cut(still: np.ndarray, wings: list) -> tuple:
+    """Cuts a rig's `wings` out of `still`: (the still without them, a list of (wing layer, its entry))."""
+    rest = still.copy()
+    out = []
+    for w in wings:
+        m = _wing_mask(still, w)
+        lay = np.zeros_like(still)
+        lay[m] = still[m]
+        rest[m] = 0
+        seam = int(w.get("seam", 0))  # Columns beside the body-side edge of the box whose pixels stay in the body too (no gap opens there).
+        if seam > 0:
+            x0, x1 = w["box"][0], w["box"][1]
+            strip = np.zeros_like(m)
+            if w["pivot"][0] >= x1 - 1:
+                strip[:, x1 - seam:x1] = True
+            else:
+                strip[:, x0:x0 + seam] = True
+            rest[m & strip] = still[m & strip]
+        out.append((lay, w))
+    return rest, out
+
+
+def _wings_lay(frame: np.ndarray, wings: list, wave: float, dy: int) -> np.ndarray:
+    """`frame` with each cut wing turned by `wave` * its degrees about its pivot (lowered by the body dip `dy`) and laid BEHIND it."""
+    layers = []
+    for lay, w in wings:
+        lay = _move(lay, dy)
+        if wave != 0:
+            lay = _turn(lay, (w["pivot"][0], w["pivot"][1] + dy), w["degrees"] * wave)
+        layers.append(lay)
+    return _stack(layers + [frame])
 
 
 def _orbit_cut(still: np.ndarray, orbit: list) -> tuple:
@@ -1451,7 +1526,27 @@ def _hold(frame: np.ndarray, still: np.ndarray, hold: list, dy: int) -> np.ndarr
     return out
 
 
-def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float, axis: str = "y") -> np.ndarray:
+def _exclude_mask(frame: np.ndarray, excl: list, dy: int) -> np.ndarray:
+    """The pixels a bounce box must NOT move (a rig's `bust_exclude`: an arm, hand or sleeve beside the bust): the opaque pixels
+    of each entry (x0, x1, y0, y1[, max_sum[, max_chroma]]) of the still, lowered by the body dip `dy`; with the optional colour fields
+    only the pixels whose R + G + B is at most `max_sum` (a dark glove or dark arm inside a box that also holds skin) or whose
+    max - min channel is at most `max_chroma` (grey, white or black: a glove, white hair) are taken. Boolean array of the frame's size."""
+    h, w = frame.shape[:2]
+    m = np.zeros((h, w), dtype=bool)
+    for e in excl:
+        x0, x1, y0, y1 = e[:4]
+        sub = frame[max(0, y0 + dy):max(0, y1 + dy), x0:x1]
+        ok = sub[:, :, 3] > 0
+        if len(e) > 4:  # Colour test: a pixel counts as arm if it is dark (sum <= max_sum) OR grey / white / black (chroma <= max_chroma).
+            rgb = sub[:, :, :3].astype(int)
+            max_sum = e[4] if e[4] is not None else -1  # Dark limit (R + G + B); None = no dark test.
+            max_chroma = e[5] if len(e) > 5 else -1  # Grey limit (max channel - min channel); absent = no grey test.
+            ok &= (rgb.sum(axis=2) <= max_sum) | ((rgb.max(axis=2) - rgb.min(axis=2)) <= max_chroma)
+        m[max(0, y0 + dy):max(0, y1 + dy), x0:x1] = ok
+    return m
+
+
+def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float, axis: str = "y", excl: list = None) -> np.ndarray:
     """Warps the bust of `frame` (the still's box `bust` lowered by the body dip `dy`) so its
     underside moves `s` px (+ = down) at the box's centre column. Displacement field: a
     sine bell across the columns (1 at the centre, 0 just outside the box) times a ramp down
@@ -1460,9 +1555,11 @@ def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float, axis: str = "y") 
     in the same column (nearest, inverse mapping: no holes, no new colours). s = 0 returns
     the frame unchanged. axis "x" (a rig's `bust_axis`): the same field moves the pixels
     sideways instead (+ = right): each pixel takes the pixel |d| columns left or right of it
-    in the same row."""
+    in the same row. `excl` (a rig's `bust_exclude`, see _exclude_mask): pixels inside the box that never move and are never
+    taken as the source of a moved pixel, so an arm beside the bust stays still while only the bust bounces."""
     if s == 0:
         return frame
+    keep = _exclude_mask(frame, excl, dy) if excl else None  # Pixels that stay put (arm, hand, sleeve).
     x0, x1 = bust[0], bust[1]  # Box columns [x0, x1) (art px).
     lobes = bust[5] if len(bust) > 5 else 1  # Bells across the box: 1 (centre) or 2 (one per side).
     y0, y1 = bust[2] + dy, bust[3] + dy  # Box rows in this frame: neckline .. underside + 1.
@@ -1480,13 +1577,15 @@ def _bounce(frame: np.ndarray, bust: tuple, dy: int, s: float, axis: str = "y") 
             d = int(round(s * wx * wy))  # Px this pixel's content moves (+ = down, or right on axis "x").
             if d == 0:
                 continue
+            if keep is not None and keep[y, x]:
+                continue
             if axis == "x":
                 sx = x - d  # Source column (inverse mapping).
-                if 0 <= sx < frame.shape[1]:
+                if 0 <= sx < frame.shape[1] and not (keep is not None and keep[y, sx]):
                     out[y, x] = frame[y, sx]
             else:
                 sy = y - d  # Source row (inverse mapping).
-                if 0 <= sy < h:
+                if 0 <= sy < h and not (keep is not None and keep[sy, x]):
                     out[y, x] = frame[sy, x]
     return out
 
@@ -1611,14 +1710,20 @@ def idle_frames_of(key: str) -> list:
         sys.exit(f"{key}: no bust box in its rig (idle strips are for bust rigs only)")
     still = load(key)
     waist = int(IDLE_FIX.get(key, {}).get("waist", rig["hip"] - 1))  # Row taken out on the exhale.
+    wings = []  # The rig's wings (`wings` key), cut out of the still and laid behind each frame.
+    if "wings" in rig:
+        still, wings = _wings_cut(still, rig["wings"])
     out = []
     for f in range(IDLE_FRAMES):
         dy = IDLE_SINK[f]  # Body sink this frame (art px).
         frame = _sink(still, waist, dy)
-        frame = _bounce(frame, rig["bust"], dy, IDLE_BUST[f] * rig["bust"][4], rig.get("bust_axis", "y"))
+        frame = _bounce(frame, rig["bust"], dy, IDLE_BUST[f] * rig["bust"][4], rig.get("bust_axis", "y"), rig.get("bust_exclude"))
         if "swish" in rig:
             frame = _bounce(frame, rig["swish"], dy, IDLE_SWISH[f] * rig["swish"][4], "x")
+        if wings:
+            frame = _wings_lay(frame, wings, IDLE_WING_WAVE[f], dy)
         out.append(frame)
+    still = load(key)
     if not np.array_equal(out[0], still):
         sys.exit(f"{key}: idle frame 0 differs from the still (rig error)")
     keep = np.ones(still.shape[:2], dtype=bool)  # Pixels below the waist that must not move.
@@ -1626,6 +1731,8 @@ def idle_frames_of(key: str) -> list:
     if "swish" in rig:  # The drape's box (with its fade rows and the sink) may sway below the waist.
         sx0, sx1, sy0, sy1, spx = rig["swish"]
         keep[sy0:sy1 + int(np.ceil(spx * BUST_TAIL_PER_PX)) + 3, sx0:sx1] = False
+    for w in rig.get("wings", []):  # The beating wings (and their turned reach) may move below the waist.
+        keep[:, max(0, w["box"][0] - 12):w["box"][1] + 12] = False
     if any(not np.array_equal(f[keep], still[keep]) for f in out):
         sys.exit(f"{key}: an idle frame moved a row below the waist (rig error)")
     return out
