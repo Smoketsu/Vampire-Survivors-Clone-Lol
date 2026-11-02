@@ -407,6 +407,20 @@ const HEIGHTS: Dictionary = {
 	"court/vampire_noble": 56.0,  # TUNING (not in GDD) elite tier, female (figure redesign at the approved level; 56 as the succubus): body ~52, the high collar above; she glides, the bust and hip box sway in the glide strip
 	"structures/court_coffin": 40.0,  # TUNING (not in GDD) the Court's coffin structure, closed (the loop glow is drawn by code)
 	"structures/court_coffin_open": 40.0,  # TUNING (not in GDD) the same coffin opened: the lid slid aside, a red glow inside
+	# --- Act VIII: the Last Line (the shared kinds; assets/sprites/city/) ---
+	"city/civilian": 28.0,  # TUNING (not in GDD) a fleeing male bystander, small (the Blood Thrall 30), running pose
+	"city/civilian_woman": 28.0,  # TUNING (not in GDD) a fleeing female bystander (figure redesign, clothed): the ponytail above, bust rig, `swish`, idle strip
+	"city/street_thug": 30.0,  # TUNING (not in GDD) gang fodder: a hooded man with a raised bat, body ~30
+	"city/gang_gunner": 30.0,  # TUNING (not in GDD) ranged gang fodder: two pistols held out sideways (about 38 wide with the muzzle flashes)
+	"city/riot_cop": 44.0,  # TUNING (not in GDD) soldier tier: black riot armour behind a tall clear shield (the shield is an armour_front, drawn on the right)
+	"city/squad_car": 32.0,  # TUNING (not in GDD) a police car, drawn from above-front facing right: 64 wide x 32 high (the brief\'s ~64 is its length); drive strip
+	"city/swat_breacher": 44.0,  # TUNING (not in GDD) soldier tier: helmet, visor, vest, a shotgun across the body
+	"city/field_medic": 44.0,  # TUNING (not in GDD) support tier, female (figure redesign, clothed): the ponytail above; bust rig, `swish`, idle strip
+	"city/rifleman": 40.0,  # TUNING (not in GDD) army ranged soldier: olive drab, helmet, a rifle at the shoulder
+	"city/tank": 52.0,  # TUNING (not in GDD) army vehicle, drawn from above-front facing right: about 78 wide x 52 high (the brief\'s ~80 is its length; the antenna and turret on top); drive strip
+	"city/blitz": 44.0,  # TUNING (not in GDD) the reference Super, male: a sprinting speedster with a winged helmet; dash strip
+	"structures/city_wreck": 34.0,  # TUNING (not in GDD) a burning vehicle wreck (about 40 wide), the flames above
+	"structures/city_wreck_burnt": 34.0,  # TUNING (not in GDD) the same wreck burnt out: fire out, the shell and a few embers
 	# --- Act VII: Ravensmoor (assets/sprites/court/, bosses/, player/) ---
 	"court/ghoul": 30.0,  # TUNING (not in GDD) pack fodder: a gaunt grey corpse-eater hunched on all fours, ~1.3 x as long as tall
 	"court/old_greymane": 96.0,  # TUNING (not in GDD) miniboss tier: a huge grey-maned wolf-man (the werewolf beast 84), the scarred mane above

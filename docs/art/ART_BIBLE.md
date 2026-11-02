@@ -2798,3 +2798,61 @@ Contact sheet `docs/act7/castle_sanguis_contact_sheet.png`.
 (the Graveyard soil, the March road), as the approved Countess does: the dark Court figures read against Castle
 Sanguis's own floors (mean L 0.16-0.28). Pale skin snaps to the `skin` ramp, so Carmilla's face reads tan (the known
 foundation weak spot, for the art review).
+
+### Act VIII: the Last Line, the shared kinds and the city blocks (foundation, Nov 2026)
+
+<!-- --- Act VIII: the Last Line --- -->
+The Last Line's look (GDD §15.0 "Act VIII art: the shared kinds and the city blocks"; `docs/act8/PROPOSAL.md`; approved
+concepts `art_source/concepts/act8_lineup.png`, `act8_boss.png`, `act8_stage.png` with their prompts): a living city at night,
+**asphalt black and concrete grey** with **sodium-orange** streetlight pools and **pink / cyan neon**, **olive drab** for the
+army (hazard yellow for road paint), **police blue / siren red** and **hero orange** for the Supers. Ink `#101114` (`city_ink`)
+outlines the whole act. No real badges, flags, letters or place names, and no Super emblem, logo, letter, bat shape or lightning
+bolt. Every prompt names the sex; the two female kinds are in the figure-redesign style (hourglass, clothed, chest and hips
+covered). Never the player's violet, the undead's bone or teal, or the Covenant's crimson.
+
+**Palette.** The brief's five ramps are documentation groups; the converter needs one hue per ramp (a ramp that stretches
+lightness over blue, red and orange turned the cop's blue into red), so each hue shades in its own ramp: `asphalt` (ink,
+`#1E2024`, `#3A3D44`), `concrete` (`#55595F`, `#7A7F87`), `olive` (`#4B5330`, `#6B7545`), `hazard` (`#F2C418`), `neon_sodium`
+(`#E8A43A`), `neon_pink` (`#FF4FA8`), `neon_cyan` (`#3FE0E8`), `police` (`#2E5FD0` + added `city_police_dark` `#1F3F94` and
+`city_police_light` `#5C8CEA`), `siren_red` (`#D82A2A`), `hero` (`#F07A1E` + added `city_hero_dark` `#B0500F` and
+`city_hero_light` `#FFA64D`). `neon` and `siren` stay as documentation groups listing the fixed colours. `prepare_sprite.py`
+folder `city/`: asphalt, concrete, olive, hazard, neon_pink, neon_cyan, police, siren_red, skin, brown, bone. The orange hues
+(`neon_sodium`, `hero`) are NOT in the default set: skin tones snap onto them; `KEY_RAMPS` adds `hero` (and drops skin) for
+`city/blitz` and `moss` for `city/field_medic`.
+
+**Sprites** (`assets/sprites/city/`, heights in `SpriteData.HEIGHTS`; prompts and archived sources in `art_source/city/`).
+Generated with `tools/gen_image.py` (`--ref` the Court Blood Knight sprite for the pixel look plus a 2x crop of the concept
+lineup / stage for the costume), one image each (the medic redone once: the first had green hair that swallowed the face).
+Pipeline: `prepare_sprite.py --ink-l 0.15 --no-prune` (`--no-levels` for the car and Blitz; Blitz also `--ramps
+hero,bone,concrete,neon_cyan,asphalt,brown`); the two women through `pixelate_source.py` (the medic at 44, the civilian at 28)
+and then `--no-cleanup --no-prune --no-levels` (medic ramps bone, moss, skin, asphalt, brown, neon_cyan, gold; civilian skin,
+bone, neon_pink, asphalt, concrete, brown); their raw API images are `art_source/city/<id>_source.png`. Walk strips by
+`walk_cycle.py` (rigs under `# --- Act VIII: the Last Line (the shared kinds) ---`), idle strips for the two women.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `city/civilian` | male bystander, running in panic | 24x28 | legs walk (hip 20) |
+| `city/civilian_woman` | **female**, figure style: pink top, short skirt, ponytail | 20x28 | legs walk (hip 19); bust box (5-17, rows 8-13) + `swish` (3-18, rows 14-19); idle strip |
+| `city/street_thug` | hooded fodder, raised bat | 22x30 | legs walk (hip 22) |
+| `city/gang_gunner` | bandana, two pistols out sideways with muzzle flashes | 32x30 | legs walk (hip 20) |
+| `city/riot_cop` | black riot armour, blue fatigues, tall clear shield | 32x44 | legs walk (hip 29); the shield foot rigid |
+| `city/squad_car` | police car, unlit light bar, no markings | 64x32 | drive strip: the siege-cart rock (legs, spread 0) |
+| `city/swat_breacher` | black helmet, cyan visor, vest, shotgun | 32x44 | legs walk (hip 29) |
+| `city/field_medic` | **female**, figure style: white jacket, green skirt and satchel, blonde ponytail, healing sparkle | 26x44 | legs walk (hip 27); bust box (7-21, rows 13-19) + `swish` (3-23, rows 19-27); idle strip |
+| `city/rifleman` | olive drab, helmet, rifle | 30x40 | legs walk (hip 28) |
+| `city/tank` | olive tank, turret and long cannon, antenna | 78x52 | drive strip: the cart rock (legs, spread 0, hip 40) |
+| `city/blitz` | male speedster: orange-and-white suit, winged silver helmet, goggles, speed rings | 48x44 | dash strip (legs, hip 36, rings ride with the back leg) |
+| `structures/city_wreck` / `_burnt` | a burning car wreck / the same burnt out | ~40x34 | stills; the smoke and glow are code |
+
+**The city blocks** are drawn by `tools/city_tiles.py` (deterministic, straight onto the grid; the AI loses parapets, lane lines
+and joints). `tiles/city_roof_<style>.png` (`tenement` tar-paper seams, `warehouse` ribs, `bunker` slabs, `tower` paving
+grid): a 96x96 atlas of 3x3 cells of 32 px (corners at the four corners, edge cells in the middle of each side, the seamless
+centre in the middle; a 6 px parapet band: ink, lit top, shaded lip, the same along every edge so the cells repeat). Code
+draws a building (256x192) as the corners, the edges repeated along the sides and the centre repeated inside. Roof decals
+`decals/city_vent|ac_unit|water_tank|hatch|antenna.png` (the antenna's red lamp is unlit; code pulses it) break the
+repetition. Street pieces tile along their length and rotate 90 degrees for the other axis: `tiles/city_street` 64x192
+(dark asphalt base so the black armour reads, a dashed lane line down the middle), `city_crosswalk` 64x192 (zebra bars),
+`city_sidewalk` 64x32 (kerb on the bottom edge), `city_alley` 64x80, `city_plaza` 64x64 (slabs, tiles both ways). Seams
+checked on a 1280x720 mock of the grid (`docs/act8/art_mock_city.png`: buildings 256x192, streets 192, alleys 80); contact
+sheet `docs/act8/art_contact_sheet.png`. `art_check.py` rows against the older stages' floors fail the lightness gap for
+the dark armour (those floors are other acts'); on the city's own street (L 0.24) riot, SWAT and rifle armour read.

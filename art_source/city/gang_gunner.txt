@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, standing wide, both arms extended to the right each holding a pistol, firing, small muzzle flashes
+
+LOW-RESOLUTION pixel art: the whole figure is only 30 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a MALE GANG GUNNER (ranged gang fodder): a flat cap, a neon-pink bandana over the lower face, a blue jacket over a white shirt, baggy dark trousers, white trainers, a pistol in each hand pointing sideways with a small sodium-orange muzzle flash.
+Signature shape that must read in silhouette: the bandana and the two outstretched pistols.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: jacket police-blue #2E5FD0 darker #1E2024; shirt #7A7F87; trousers asphalt #3A3D44 #1E2024; bandana neon pink #FF4FA8; cap #1E2024; skin #D9B8A8 #A8806E; pistols #55595F; muzzle flash #E8A43A
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).

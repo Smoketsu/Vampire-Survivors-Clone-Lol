@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), a VEHICLE seen from above and a little from the front-side, drawn FACING RIGHT (gun to the right), hull, tracks, round turret and a long cannon all readable
+
+LOW-RESOLUTION pixel art: the whole tank is only 80 pixels long and about 44 high, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: an ARMY BATTLE TANK in olive-drab: a low hull with tracks and road wheels on the near side, a rounded turret with a hatch and a long cannon pointing right, a short radio antenna. No star, no letters, no flag, no markings.
+Signature shape that must read in silhouette: the round turret with the long cannon on a low tracked hull.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: hull and turret olive #4B5330 #6B7545 lit #8A9558; tracks and wheels #101114 #1E2024 #3A3D44; cannon #3A3D44 #55595F; hatch #55595F
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).
