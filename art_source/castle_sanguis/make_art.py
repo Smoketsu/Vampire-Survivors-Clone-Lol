@@ -37,9 +37,10 @@ UNITS = {
     "player/dhampir": ("art_source/player/dhampir.png", ["--ramps", "velvet,blood,moonlight,soul,skin", "--ink-l", "0.15", "--no-levels"]),
     "player/dhampir_hyper": ("art_source/player/dhampir_hyper.png", ["--ramps", "gold,marble,velvet,skin,moonlight", "--ink-l", "0.15", "--no-levels"]),
     "player/dhampir_untouchable": ("art_source/player/dhampir_untouchable.png", ["--ramps", "marble,soul,grey,skin", "--ink-l", "0.15"]),
-    "player/dhampir_deathlord": ("art_source/player/dhampir_deathlord.png", ["--ramps", "grey,crimson,skin,moonlight", "--ink-l", "0.15", "--no-levels"]),
+    "player/dhampir_deathlord": ("art_source/player/dhampir_deathlord.png", ["--ramps", "velvet,grey,crimson,skin,moonlight", "--ink-l", "0.15", "--no-levels"]),  # Round 1 redo (act 7): velvet keeps the coat black.
+    "bosses/elder_vampire": ("art_source/bosses/elder_vampire.png", ["--ramps", "moonlight,blood,velvet,bone,gold,skin", "--ink-l", "0.15", "--no-levels"]),  # The Elder's first form (round 1 redo, act 7); his bat-winged bosses/elder is the second.
     "summons/blood_spawn": ("art_source/summons/blood_spawn.png", ["--ramps", "grey,bone,soul,blood", "--ink-l", "0.15"]),
-    "summons/nosferatu": ("art_source/summons/nosferatu.png", ["--ramps", "grey,bone,soul,blood", "--ink-l", "0.15"]),
+    "summons/nosferatu": ("art_source/summons/nosferatu.png", ["--ramps", "velvet,grey,bone,soul,blood", "--ink-l", "0.15", "--no-levels"]),  # Round 1 redo (act 7): a black coat.
     "structures/blood_fountain": ("art_source/structures/blood_fountain.png", ["--ramps", "grey,blood,gold", "--ink-l", "0.15"]),
     "structures/elder_coffin": ("art_source/structures/elder_coffin.png", ["--ramps", "velvet,blood,moonlight,bone,gold", "--ink-l", "0.15", "--no-levels"]),
     "structures/elder_coffin_open": ("art_source/structures/elder_coffin_open.png", ["--ramps", "velvet,blood,moonlight,bone,gold", "--ink-l", "0.15", "--no-levels"]),

@@ -431,6 +431,7 @@ const HEIGHTS: Dictionary = {
 	"court/chiropteran_king": 96.0,  # TUNING (not in GDD) miniboss tier (the Fallen Seraph General 92): a giant bat-man, the bone crown and the wings above
 	"bosses/carmilla": 64.0,  # TUNING (not in GDD) boss tier, female (the figure style at its limit, the Countess's 56 and up): body ~58, the crown above; she glides, the bust and hip box sway in the glide strip
 	"bosses/elder": 120.0,  # TUNING (not in GDD) boss tier, bigger: the first vampire, hunched, the great bat wings above
+	"bosses/elder_vampire": 120.0,  # TUNING (not in GDD) boss tier, the Elder's first form: a tall regal vampire lord in a long black coat, no wings (the bat-winged "bosses/elder" is his second form)
 	"structures/blood_fountain": 40.0,  # TUNING (not in GDD) the Banquet's blood fountain: a stone basin brimming red
 	"structures/elder_coffin": 48.0,  # TUNING (not in GDD) the Elder's great coffin, closed
 	"structures/elder_coffin_open": 48.0,  # TUNING (not in GDD) the same coffin opened
