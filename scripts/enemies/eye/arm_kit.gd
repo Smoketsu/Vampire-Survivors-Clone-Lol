@@ -135,7 +135,7 @@ func _slam(e: Enemy) -> void:
 	var hits := 0  # Summons struck.
 	var perp := Vector2(-dir.y, dir.x)
 	for h in g.all_hordes:  # (Co-op: every army.)
-		for u in h.units:
+		for u in h.units_snapshot():  # A copy: a summon killed here swap-pops h.units.
 			if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:
 				continue
 			if not _in_lane(e.position, u.position, half + u.radius):

@@ -217,7 +217,7 @@ func _glare(mult: float) -> void:
 		game.combat.damage_player(float(b["glare_damage_player"]) * mult, AmaterasuData.SRC_GLARE, pl)
 		game.stat_add("amaterasu_glare_player_hits", 1.0)
 	for h in game.all_hordes:
-		for u in h.units:
+		for u in h.units_snapshot():  # A copy: a summon killed here swap-pops h.units.
 			if not u.active or u.state == SummonedUnit.State.DEAD or u.state == SummonedUnit.State.SPAWNING:
 				continue
 			if in_shade(u.position, u.radius):

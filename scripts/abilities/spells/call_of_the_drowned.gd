@@ -147,6 +147,8 @@ func _raise(pos: Vector2, stats: Dictionary, host: bool, gunner: bool = false) -
 	var u := game.horde.raise_corpse(cls, pos, float(stats["life"]), hp, float(stats["thrall_damage"]),
 			CallDrownedData.HOST_TAG if host else CallDrownedData.THRALL_TAG,
 			CallDrownedData.HOST_GLYPH if host else CallDrownedData.THRALL_TAG, gunner and not host)
+	if u == null:
+		return  # Nothing rose (HordeDirector.raise_corpse() returned null).
 	_risen.append([u, u.generation])
 	game.stat_add("drowned_host_risen" if host else "drowned_risen", 1.0)
 	game.effects.ring(pos, 22.0, Palette.NECRO_GREEN, 0.45)

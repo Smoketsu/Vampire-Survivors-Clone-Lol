@@ -20,7 +20,10 @@
 ## The Ferrywoman's innate (Ferry of Souls, innate values ferry_cooldown and
 ## ferry_life): a foe slain in one of her rivers rises as a temporary Risen
 ## (HordeDirector.spawn_temporary(), the one path: Restless Dead and the Grave
-## Herald apply), at most once every ferry_cooldown s.
+## Herald apply), at most once every ferry_cooldown s. Only a foe that leaves a
+## body (Enemy.leaves_corpse(): never a structure, an Act III machine or a corpse
+## swallowed by an Act IV fissure) and is no boss, miniboss or Reckoning foe; an
+## Act III cyborg rises as a Grave Gunner (HordeDirector.raise_corpse()).
 ## Determinism: no RNG; the nearest foe by distance, ties in the spatial hash's
 ## order. Stats: styx_spell_rivers, styx_spell_drain_heal, styx_spell_forgets,
 ## ferry_risen; damage as dmg_river_styx / dmg_lethes_flood.
@@ -154,12 +157,20 @@ func in_river(pos: Vector2, r: float) -> bool:
 ## temporary Risen (once every ferry_cooldown s).
 func on_enemy_killed(e: Enemy) -> void:
 	var cd := game.character.innate_value("ferry_cooldown")  # 0 for every other character.
-	if cd <= 0.0 or game.elapsed < _ferry_ready or rivers.is_empty() or e.is_structure:
-		return
+	if cd <= 0.0 or game.elapsed < _ferry_ready or rivers.is_empty() or not e.leaves_corpse() \
+			or e.is_boss or e.is_miniboss or e.is_reckoning:
+		return  # No body to ferry: a structure, an Act III machine, a swallowed corpse, or a boss-class foe.
 	if not in_river(e.position, e.radius):
 		return
 	_ferry_ready = game.elapsed + cd
-	if game.horde.spawn_temporary(RiverStyxData.FERRY_CLASS, e.position, game.character.innate_value("ferry_life"), 1.0, 1.0) != null:
+	var life := game.character.innate_value("ferry_life")  # Seconds the ferried Risen lasts.
+	var u: SummonedUnit = null  # The ferried Risen (null if no summon could rise).
+	if e.rises_as_gunner():
+		# Act III, Steel has no soul: a cyborg rises as a Grave Gunner (the one raise path).
+		u = game.horde.raise_corpse(RiverStyxData.FERRY_CLASS, e.position, life, 1.0, 1.0, "ferry_risen", "risen", true)
+	else:
+		u = game.horde.spawn_temporary(RiverStyxData.FERRY_CLASS, e.position, life, 1.0, 1.0)
+	if u != null:
 		game.stat_add("ferry_risen", 1.0)
 
 

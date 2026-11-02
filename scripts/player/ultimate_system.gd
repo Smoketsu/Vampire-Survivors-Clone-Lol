@@ -292,6 +292,8 @@ func _raise_tide() -> void:
 			continue
 		var u := game.horde.raise_corpse(UltimateData.TIDE_RISEN_CLASS, pos, UltimateData.TIDE_RISEN_LIFE,
 				UltimateData.TIDE_RISEN_HP, UltimateData.TIDE_RISEN_DAMAGE, "grave_tide_risen", "risen", gunner)
+		if u == null:
+			continue  # Nothing rose (HordeDirector.raise_corpse() returned null).
 		_risen.append([u, u.generation])
 		game.stat_add("tide_risen", 1.0)
 		n += 1

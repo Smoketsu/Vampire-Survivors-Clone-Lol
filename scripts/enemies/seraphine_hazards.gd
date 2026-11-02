@@ -336,7 +336,7 @@ func _blast_nova() -> void:
 	var hit := 0  # Summons burned.
 	var spared := 0  # Summons standing in a safe circle.
 	for h in game.all_hordes:  # (Co-op: every army.)
-		for u in h.units:
+		for u in h.units_snapshot():  # A copy: a summon killed here swap-pops h.units.
 			if not u.active or u.state == SummonedUnit.State.SPAWNING or u.position.distance_to(nova_center) > r:
 				continue
 			if in_safe(u.position, u.radius):
@@ -384,7 +384,7 @@ func _step_collapse(delta: float) -> void:
 			game.stat_add("seraphine_collapse_player_ticks", 1.0)
 	var burned := 0  # Summons outside this tick.
 	for h in game.all_hordes:  # (Co-op: every army.)
-		for u in h.units:
+		for u in h.units_snapshot():  # A copy: a summon killed here swap-pops h.units.
 			if u.active and u.state != SummonedUnit.State.SPAWNING and u.position.distance_to(collapse_center) > r:
 				burned += 1
 				game.combat.damage_unit(u, float(def["collapse_damage_summon"]), "seraphine_collapse")

@@ -291,6 +291,8 @@ func on_enemy_killed(e: Enemy, source: String) -> void:
 		return
 	var u := director.raise_corpse(String(raise["class"]), e.position, float(raise["duration"]),
 			float(raise["hp_mult"]), float(raise["damage_mult"]), "lich_risen", "risen", e.rises_as_gunner())
+	if u == null:
+		return  # Nothing rose (HordeDirector.raise_corpse() returned null).
 	_risen.append([u, u.generation])
 	risen_total += 1
 	game.effects.ring(u.position, 22.0, Palette.VIOLET, 0.5)
