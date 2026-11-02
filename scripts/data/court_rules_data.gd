@@ -159,19 +159,17 @@ const ENDLESS_FEAST := {
 # --- Sounds ------------------------------------------------------------------------------------
 
 ## Court event -> sound id played for it (Sfx.play(); an id that is not
-## rendered is a silent no-op). FOR NOW these point at existing startup-bank
-## sounds (only the startup bank, so they sound with any music loaded): the
-## audio pass adds the Court pack (SoundData.COURT_SOUNDS) and the lead
-## switches each value at the merge to the intended id named in its comment
-## (the Fixed names: bite_feed, blood_shield, bat_screech, moon_rise, moon_set,
-## wolf_howl, coffin_creak, mist_form).
+## rendered is a silent no-op). The ids are the Court pack's
+## (SoundData.COURT_SOUNDS), loaded lazily with the "sanguine" music; wired by
+## the lead at the foundation merge. An event with no pack sound would keep its
+## stand-in (none at present: every event has its own id).
 const SOUNDS := {
-	"bite_feed": "plague_tick",  # Intended: "bite_feed"
-	"blood_shield": "priest_ward",  # Intended: "blood_shield"
-	"bat_screech": "",  # Intended: "bat_screech" (no stand-in: silent until the pack exists)
-	"moon_rise": "boss_telegraph",  # Intended: "moon_rise"
-	"moon_set": "orb_block",  # Intended: "moon_set"
-	"wolf_howl": "abom_stomp",  # Intended: "wolf_howl"
-	"coffin_creak": "eruption",  # Intended: "coffin_creak"
-	"mist_form": "pu_nova",  # Intended: "mist_form"
+	"bite_feed": "bite_feed",  # A bite landing and feeding (Court pack).
+	"blood_shield": "blood_shield",  # Overheal banking as a blood shield (Court pack).
+	"bat_screech": "bat_screech",  # A Vampire Bat's screech (Court pack).
+	"moon_rise": "moon_rise",  # The Blood Moon rising (Court pack).
+	"moon_set": "moon_set",  # The Blood Moon setting (Court pack).
+	"wolf_howl": "wolf_howl",  # A Werewolf's howl (Court pack).
+	"coffin_creak": "coffin_creak",  # A Court coffin opening (Court pack).
+	"mist_form": "mist_form",  # A Vampire Noble turning to mist (Court pack).
 }

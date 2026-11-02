@@ -194,8 +194,6 @@ const STAGE := {
 	"court": true,  # Act VII: Bloodfeast, Night Wings, the Blood Moon (CourtRules).
 	"moon": MOON,  # Act VII: this stage's Blood Moon overrides ({} = the defaults).
 	"zones": ZONES,  # Act VII stub: the planned zones (phase 2 builds them).
-	# Music key "brimstone" FOR NOW (the Act VI loop): the audio pass adds
-	# "sanguine" ("Waltz of the Red Moon", SoundData.SANGUINE_SCORE) and the lead
-	# switches this to "sanguine" at the merge.
-	"music": "brimstone",
+	# Music: "Waltz of the Red Moon" (SoundData.SANGUINE_SCORE).
+	"music": "sanguine",
 }
