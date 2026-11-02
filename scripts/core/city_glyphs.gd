@@ -226,7 +226,7 @@ static func draw_plate(ci: CanvasItem, o: Vector2, title: String, line: String, 
 	var h := float(fs) * 2.0 + 4.0
 	var box := Rect2(Vector2(roundf(o.x - w * 0.5), roundf(o.y - h)), Vector2(roundf(w), roundf(h)))
 	ci.draw_texture_rect(white(), box.grow(1.0), false, edge)
-	ci.draw_texture_rect(white(), box, false, Color(INK, 0.85))
+	ci.draw_texture_rect(white(), box, false, INK)
 	ci.draw_string(font, Vector2(box.position.x + 5.0, box.position.y + float(fs) - 2.0), title, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Palette.CITY_HERO_ORANGE)
 	ci.draw_string(font, Vector2(box.position.x + 5.0, box.position.y + float(fs) * 2.0), line, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, edge)
 
