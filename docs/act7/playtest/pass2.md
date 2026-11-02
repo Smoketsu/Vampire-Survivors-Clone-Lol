@@ -32,3 +32,5 @@ Summary per stage and build (deaths before 0:00, boss kills, mean lowest HP, mea
 | witchwood | newclasses | 3 | 1 | 2 | 55 | 3582 | 433 |
 | witchwood | newspells | 3 | 3 | 0 | 91 | 1256 | 124 |
 | witchwood | summon | 3 | 0 | 3 | 114 | 3922 | 730 |
+
+**Owner decision (Nov 2, 2026): "Keep it, move on."** No further change: the newspells deaths at ~8:00 under the second Blood Moon (on all three Act VII stages) are accepted, and Act VII waits for the owner's own playtest (GDD §15.0 "Act VII playtest pass 2").
