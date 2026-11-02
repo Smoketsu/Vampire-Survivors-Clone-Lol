@@ -91,7 +91,7 @@ const BOSS := {
 	"display_name": "Paragon",
 	"max_hp": 9000.0,  # TUNING (not in GDD) before the stage / co-op scaling (Carmilla and the Elder 5,000 + 5,200)
 	"move_speed": 62.0,  # TUNING (not in GDD) px/s, flying
-	"damage": 13.0,  # TUNING (not in GDD) a punch in melee, before the time scaling
+	"damage": 10.0,  # TUNING (not in GDD) a punch in melee, before the time scaling (first pass 13)
 	"attack_interval": 1.0,  # TUNING (not in GDD) s
 	"attack_range": 12.0,  # TUNING (not in GDD) px
 	"radius": 18.0,  # TUNING (not in GDD) px (<= CityBlockData.MAX_BODY_RADIUS 36; the sprite is drawn larger)
@@ -115,7 +115,7 @@ const BOSS := {
 	"aloft_melee_taken": 0.6,  # TUNING (not in GDD) share of a grounded melee blow that lands while he flies
 	# The Hero: heat vision.
 	"heat_first": 3.0,  # TUNING (not in GDD) s before the first
-	"heat_every": 6.0,  # TUNING (not in GDD) s
+	"heat_every": 7.0,  # TUNING (not in GDD) s (first pass 6)
 	"heat_every_p3": 4.5,  # TUNING (not in GDD) s, No Restraint
 	"heat_windup": 0.9,  # TUNING (not in GDD) s the lines show
 	"heat_time": 0.5,  # TUNING (not in GDD) s the beams burn (drawn)
@@ -123,14 +123,14 @@ const BOSS := {
 	"heat_spread": 0.35,  # TUNING (not in GDD) rad between two beams
 	"heat_length": 380.0,  # TUNING (not in GDD) px
 	"heat_width": 12.0,  # TUNING (not in GDD) px each side of a line
-	"heat_damage_summon": 20.0,  # TUNING (not in GDD)
-	"heat_damage_player": 14.0,  # TUNING (not in GDD)
+	"heat_damage_summon": 12.0,  # TUNING (not in GDD) (first pass 20)
+	"heat_damage_player": 6.0,  # TUNING (not in GDD) (first pass 14: 328 HP to the army bot in 8 hits, seed 7)
 	# The Hero: the punch.
 	"punch_first": 6.0,  # TUNING (not in GDD) s before the first
 	"punch_every": 8.0,  # TUNING (not in GDD) s
 	"punch_reach": 240.0,  # TUNING (not in GDD) px to the summon
 	"punch_windup": 0.6,  # TUNING (not in GDD) s, he dives at it
-	"punch_damage": 26.0,  # TUNING (not in GDD)
+	"punch_damage": 20.0,  # TUNING (not in GDD) (first pass 26)
 	"punch_throw": 360.0,  # TUNING (not in GDD) px the summon flies ("sends a summon across the arena")
 	"fling_time": 0.45,  # TUNING (not in GDD) s of its flight
 	"fling_daze": 0.5,  # TUNING (not in GDD) s held after it lands
@@ -142,16 +142,16 @@ const BOSS := {
 	"hope_dist": 90.0,  # TUNING (not in GDD) px around him where they land
 	# No Restraint.
 	"dive_first": 2.5,  # TUNING (not in GDD) s after No Restraint begins
-	"dive_every": 7.5,  # TUNING (not in GDD) s
+	"dive_every": 9.0,  # TUNING (not in GDD) s (first pass 7.5)
 	"dive_rise": 1.0,  # TUNING (not in GDD) s he climbs out of sight (immune)
 	"dive_windup": 1.4,  # TUNING (not in GDD) s the craters show before he lands
 	"dive_radius": 70.0,  # TUNING (not in GDD) px of the crater on the necromancer's spot
 	"dive_extra": 2,  # TUNING (not in GDD) more craters around him
 	"extra_radius": 50.0,  # TUNING (not in GDD) px
 	"extra_dist": 130.0,  # TUNING (not in GDD) px from the necromancer
-	"dive_damage": 24.0,  # TUNING (not in GDD) to every summon and necromancer in a crater
+	"dive_damage": 9.0,  # TUNING (not in GDD) to every summon and necromancer in a crater (first pass 24: 444 HP to the army bot, seed 7)
 	"p3_speed_mult": 1.25,  # TUNING (not in GDD) No Restraint: faster
-	"p3_damage_mult": 1.25,  # TUNING (not in GDD) No Restraint: his blows harder
+	"p3_damage_mult": 1.1,  # TUNING (not in GDD) No Restraint: his blows harder (first pass 1.25)
 	"sky_fade": 4.0,  # TUNING (not in GDD) s the sky takes to turn white (drawn only)
 	"sky_alpha": 0.32,  # TUNING (not in GDD) 0..1, the white over the view at full (drawn only)
 	"crack_max": 14,  # TUNING (not in GDD) crack decals kept (the oldest fades)

@@ -159,7 +159,9 @@ const RECKONING_OBJECTIVE: String = "MARTIAL LAW: every soldier in the city, the
 
 ## Continuous spawning segments (keys as GraveyardStage.SEGMENTS): the army's
 ## kinds only (the brief: "your timeline spawns only your tiers' kinds"):
-## Conscripts as the fodder, riflemen (squads come as events), tanks rare.
+## Conscripts as the fodder, riflemen (squads come as events), tanks rare (a
+## first pass at 0.02-0.03 of the trickle sent 97 tanks in the seed-7 army run,
+## the top killer of the ring).
 const SEGMENTS := [
 	# Zone I, the Plaza.
 	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
@@ -169,26 +171,26 @@ const SEGMENTS := [
 		"weights": {"conscript": 0.82, "rifleman": 0.18},
 		"objective": "Rifle squads advance in bursts: area damage breaks them"},
 	{"start": 180.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
-		"weights": {"conscript": 0.72, "rifleman": 0.26, "tank": 0.02},
+		"weights": {"conscript": 0.732, "rifleman": 0.26, "tank": 0.008},
 		"objective": "Blitz can't turn: a wall, a wreck or a blocker stops him cold"},
 	# Zone II, the Rooftops.
 	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"conscript": 0.68, "rifleman": 0.3, "tank": 0.02},
+		"weights": {"conscript": 0.692, "rifleman": 0.3, "tank": 0.008},
 		"objective": "The Rooftops: a flier rules the sky. Stun her and she falls"},
 	{"start": 480.0, "rate": 2.5, "max_alive": 66,  # TUNING (not in GDD)
-		"weights": {"conscript": 0.66, "rifleman": 0.32, "tank": 0.02},
+		"weights": {"conscript": 0.67, "rifleman": 0.32, "tank": 0.01},
 		"objective": "Tanks have front armour: hit them from the side, or let them ram a wreck"},
 	# Zone III, the Tower Lobby.
 	{"start": 600.0, "rate": 2.7, "max_alive": 72,  # TUNING (not in GDD)
-		"weights": {"conscript": 0.64, "rifleman": 0.33, "tank": 0.03},
+		"weights": {"conscript": 0.66, "rifleman": 0.33, "tank": 0.01},
 		"objective": "The Tower Lobby: the strongman lifts wrecks. Stun him while he winds up"},
 	# Zone IV, the Watchtower.
 	{"start": 900.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"conscript": 0.62, "rifleman": 0.35, "tank": 0.03},
+		"weights": {"conscript": 0.64, "rifleman": 0.35, "tank": 0.01},
 		"objective": "The Watchtower: the vigilante must land to strike. Hold him with a blocker"},
 	# 17:00, the boss: a thinner trickle so the fight stays readable.
 	{"start": BOSS_TIME, "rate": 2.4, "max_alive": 64,  # TUNING (not in GDD)
-		"weights": {"conscript": 0.66, "rifleman": 0.32, "tank": 0.02},
+		"weights": {"conscript": 0.672, "rifleman": 0.32, "tank": 0.008},
 		"objective": "Paragon has come for you"},
 ]
 

@@ -39,7 +39,7 @@ FIGURES = {
     "player/revenant_heroine": ("art_source/player/revenant_heroine.png", 56, ["--ramps", "indigo,steel,grey,soul,velvet"]),
     "player/revenant_heroine_hyper": ("art_source/player/revenant_heroine_hyper.png", 56, ["--ramps", "gold,marble,skin,soul"]),
     "player/revenant_heroine_untouchable": ("art_source/player/revenant_heroine_untouchable.png", 56, ["--ramps", "marble,soul,grey"]),
-    "player/revenant_heroine_deathlord": ("art_source/player/revenant_heroine_deathlord.png", 56, ["--ramps", "grey,crimson,skin", "--no-levels"]),  # --no-levels keeps the black iron black
+    "player/revenant_heroine_deathlord": ("art_source/player/revenant_heroine_deathlord.png", 56, ["--ramps", "velvet,grey,crimson,skin", "--no-levels"]),  # velvet first and --no-levels keep the black iron black (ART_BIBLE, Act VII round 1)
 }
 # Icon sheets: file -> (badge frame to set the symbols on, the symbol ids left to right; "" = skip).
 ICONS = {
