@@ -91,7 +91,7 @@ const COVEN_BANNER: String = "A COVEN casts its hex circle: kill one witch and t
 ##                  director clears it at the next zone too).
 const STONES := {
 	"power_range": 340.0,  # TUNING (not in GDD) px
-	"dead_range": 340.0,  # TUNING (not in GDD) px (as wide as the power it held)
+	"dead_range": 220.0,  # TUNING (not in GDD) px; first pass 340 (as wide as its power: 22 casts denied, only 4 circles in the seed-7 run)
 	"dead_life": 300.0,  # TUNING (not in GDD) s (a zone)
 }
 

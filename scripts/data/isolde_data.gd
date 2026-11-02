@@ -68,9 +68,10 @@ const POOL_TAG: String = "cauldron"
 const SISTER_TINTS: Array[Color] = [Color(1.0, 0.82, 0.82), Color(0.86, 0.80, 1.0), Color(0.86, 0.94, 1.0)]  # TUNING (not in GDD)
 
 ## Isolde's base max HP (x the boss HP multiplier and the stage's HP
-## multiplier: 14,800 on the Witchwood). Moloch 8500 (14,875 on the Burning
-## Gate): a third of her bar is her sisters', and they may rise again.
-const MAX_HP: float = 8000.0  # TUNING (not in GDD)
+## multiplier: 25,900 on the Witchwood). Moloch 8500 (14,875 on the Burning
+## Gate): the Witchwood's army bot, with nothing healing her, burned the first
+## pass's 8000 (14,800) in 32 s, sisters and all.
+const MAX_HP: float = 14000.0  # TUNING (not in GDD) first pass 8000
 
 ## Isolde's design row.
 const BOSS := {
