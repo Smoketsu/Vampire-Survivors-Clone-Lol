@@ -42,8 +42,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			int(st.get("player_dmg_from_" + FortKesslerEnemyData.MAMMOTH, 0.0) + st.get("player_dmg_from_" + FortKesslerEnemyData.MAMMOTH_SHELL_SOURCE, 0.0)),
 			int(st.get("summon_dmg_from_" + FortKesslerEnemyData.MAMMOTH, 0.0) + st.get("summon_dmg_from_" + FortKesslerEnemyData.MAMMOTH_SHELL_SOURCE, 0.0))])
 	if String(game.stage_def.get("id", "")) == FortKesslerStage.ID:
-		print("[autotest] fort kessler threats (summon dmg by source): %s | mines: dmg to you %d, to summons %d" % [
-			_threats(st), int(st.get("player_dmg_from_" + FortKesslerStage.MINE_SOURCE, 0.0)), int(st.get("summon_dmg_from_" + FortKesslerStage.MINE_SOURCE, 0.0))])
+		print("[autotest] fort kessler threats (summon dmg by source): %s | summon deaths by source: %s | mines: dmg to you %d, to summons %d" % [
+			_threats(st), _deaths(st), int(st.get("player_dmg_from_" + FortKesslerStage.MINE_SOURCE, 0.0)), int(st.get("summon_dmg_from_" + FortKesslerStage.MINE_SOURCE, 0.0))])
 	if String(en.boss_info.get("id", "")) == HarrowData.ARRIVAL["id"] and en.boss is BossHarrow:
 		print("[autotest] harrow: %s" % BossHarrow.summary_line(st))
 
@@ -54,6 +54,24 @@ static func _threats(st: Dictionary) -> String:
 	for k: String in st:
 		if k.begins_with("summon_dmg_from_"):
 			rows.append([float(st[k]), k.substr(16)])
+	rows.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) > float(b[0]) or (float(a[0]) == float(b[0]) and String(a[1]) < String(b[1])))
+	var out := PackedStringArray()
+	for i in mini(THREATS, rows.size()):
+		out.append("%s %d" % [String(rows[i][1]), int(rows[i][0])])
+	return ", ".join(out) if not out.is_empty() else "-"
+
+
+## The top THREATS sources of summon deaths of the run ("death_<class>_by_<source>"
+## summed over the classes), "source n".
+static func _deaths(st: Dictionary) -> String:
+	var by := {}  # Source -> deaths.
+	for k: String in st:
+		if k.begins_with("death_") and k.contains("_by_"):
+			var src := k.substr(k.find("_by_") + 4)
+			by[src] = float(by.get(src, 0.0)) + float(st[k])
+	var rows: Array = []  # [deaths, source].
+	for src: String in by:
+		rows.append([float(by[src]), src])
 	rows.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) > float(b[0]) or (float(a[0]) == float(b[0]) and String(a[1]) < String(b[1])))
 	var out := PackedStringArray()
 	for i in mini(THREATS, rows.size()):

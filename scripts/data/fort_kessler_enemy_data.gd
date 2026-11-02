@@ -45,14 +45,14 @@ const ENEMIES := {
 	# than CityBlockData.MAX_BODY_RADIUS (26 x 1.35 as an elite = 35.1 px).
 	"mammoth": {
 		"display_name": "Mammoth",
-		"max_hp": 2600.0,  # TUNING (not in GDD) a miniboss (Old Greymane 2,200; the tank 700)
+		"max_hp": 2200.0,  # TUNING (not in GDD) a miniboss (Old Greymane 2,200; the tank 700; first pass 2,600)
 		"move_speed": 48.0,  # TUNING (not in GDD) px/s; super-heavy treads
 		"damage": 0.0,  # Unused: run_damage and the turrets.
 		"attack_interval": 1.0,
 		"attack_range": 0.0,
 		"radius": 26.0,  # TUNING (not in GDD) px (x 1.35 as an elite = 35.1, under MAX_BODY_RADIUS 36)
 		"armor": 0.25,  # TUNING (not in GDD)
-		"flat_armor": 6.0,  # TUNING (not in GDD) the existing flat armour path (the tank 4)
+		"flat_armor": 4.0,  # TUNING (not in GDD) the existing flat armour path (the tank 4; first pass 6: it outlived the seed-7 army)
 		"xp": 0,  # Its XP is the burst.
 		"behavior": "melee",  # Unused: its kit drives it.
 		"projectile_speed": 0.0,
@@ -69,7 +69,7 @@ const ENEMIES := {
 		"kit": "mammoth",
 		"tier": "army",  # The army's super-heavy (the report and the Codex group it there).
 		"vehicle": true,  # Owner-approved proposal: a tank (Convoy)
-		"armour_front": 0.65,  # TUNING (not in GDD) heavier than the tank's 0.6
+		"armour_front": 0.6,  # TUNING (not in GDD) as the tank's (first pass 0.65)
 		"half_length": 40.0,  # TUNING (not in GDD) px (its run-over box; ~96 px sprite)
 		"half_width": 26.0,  # TUNING (not in GDD) px
 		"run_damage": 10.0,  # TUNING (not in GDD) before the time scaling (the tank 9)
@@ -77,7 +77,7 @@ const ENEMIES := {
 		"main_range": 420.0,  # TUNING (not in GDD) px
 		"main_windup": 1.4,  # TUNING (not in GDD) s (its landing circle)
 		"main_radius": 46.0,  # TUNING (not in GDD) px
-		"main_damage": 9.0,  # TUNING (not in GDD) before the time scaling
+		"main_damage": 7.0,  # TUNING (not in GDD) before the time scaling
 		"twin_every": 4.0,  # TUNING (not in GDD) s
 		"twin_count": 4,  # TUNING (not in GDD) shells in a line
 		"twin_start": 70.0,  # TUNING (not in GDD) px in front of it the line starts
@@ -85,7 +85,7 @@ const ENEMIES := {
 		"twin_walk": 0.18,  # TUNING (not in GDD) s between two shells landing
 		"twin_windup": 1.0,  # TUNING (not in GDD) s (the first landing circle)
 		"twin_radius": 26.0,  # TUNING (not in GDD) px
-		"twin_damage": 4.0,  # TUNING (not in GDD) before the time scaling
+		"twin_damage": 3.0,  # TUNING (not in GDD) before the time scaling
 		"reward_xp": 260,  # TUNING (not in GDD) a miniboss (Old Greymane 220)
 		"reward_crystals": 12,  # TUNING (not in GDD)
 	},  # Mammoth (Fort Kessler).

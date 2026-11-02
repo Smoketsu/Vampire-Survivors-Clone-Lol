@@ -251,7 +251,7 @@ func _broken_arrow() -> void:
 ## THE STRIKE (the ONE documented path of Broken Arrow's blast; see
 ## HarrowData): every necromancer left at strike_hp_left of his max HP (his
 ## i-frames cleared first: Grave Step does not dodge it; never lethal by
-## itself), every summon in view of a necromancer at strike_summon_share of its
+## itself; his ward is burnt through first), every summon in view of a necromancer at strike_summon_share of its
 ## max HP, every enemy there at strike_enemy_share of its max HP (never a
 ## civilian, a boss or a structure); Harrow loses strike_self_share of the HP
 ## he has left and his armour's front.
@@ -290,7 +290,7 @@ func _strike() -> void:
 		if pl.hp > floor_hp:
 			var before := pl.hp
 			pl.iframes = 0.0  # Grave Step does not dodge Broken Arrow.
-			game.combat.damage_player(pl.hp - floor_hp, HarrowData.STRIKE_SOURCE, pl)
+			game.combat.damage_player(pl.hp - floor_hp + pl.shield_hp, HarrowData.STRIKE_SOURCE, pl)  # Through his ward too.
 			game.stat_add("harrow_strike_dmg_you", maxf(0.0, before - pl.hp))
 	var self_loss := hp * float(boss_def["strike_self_share"])
 	hp -= self_loss

@@ -517,7 +517,7 @@ const ENEMIES := {
 	# (its wreck takes a street cell, never a roof). AttackHelicopterKit.
 	"attack_helicopter": {
 		"display_name": "Attack Helicopter",
-		"max_hp": 380.0,  # TUNING (not in GDD) a vehicle (the squad car 170, the tank 700)
+		"max_hp": 260.0,  # TUNING (not in GDD) a vehicle (the squad car 170, the tank 700; first pass 380: none was shot down in the seed-7 army run)
 		"move_speed": 170.0,  # TUNING (not in GDD) px/s on its strafing run
 		"damage": 0.0,  # Unused: the rockets.
 		"attack_interval": 1.0,
@@ -548,7 +548,7 @@ const ENEMIES := {
 		"rocket_lead": 150.0,  # TUNING (not in GDD) px ahead of it a rocket lands
 		"rocket_windup": 0.9,  # TUNING (not in GDD) s (its landing circle)
 		"rocket_radius": 30.0,  # TUNING (not in GDD) px
-		"rocket_damage": 4.0,  # TUNING (not in GDD) before the time scaling
+		"rocket_damage": 3.0,  # TUNING (not in GDD) before the time scaling (first pass 4)
 		"rocket_reach": 360.0,  # TUNING (not in GDD) px: it fires only this near the necromancer's line
 		"melee_mult": 0.5,  # TUNING (not in GDD) share of a melee summon's hit it takes (rotor height)
 	},  # The attack helicopter.

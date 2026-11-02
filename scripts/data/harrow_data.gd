@@ -148,7 +148,7 @@ const BOSS := {
 	"slam_windup": 1.0,  # TUNING (not in GDD) s the landing circle shows
 	"slam_radius": 62.0,  # TUNING (not in GDD) px
 	"slam_damage_player": 12.0,  # TUNING (not in GDD) before the time scaling
-	"slam_damage_summon": 16.0,  # TUNING (not in GDD) before the time scaling
+	"slam_damage_summon": 11.0,  # TUNING (not in GDD) before the time scaling (first pass 16: his slams killed 36 summons in the seed-7 army run)
 	"slam_push": 30.0,  # TUNING (not in GDD) px the summons are thrown out
 	"first_column": 1.0,  # TUNING (not in GDD) s after he climbs out
 	"column_every": 24.0,  # TUNING (not in GDD) s
