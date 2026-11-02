@@ -38,7 +38,7 @@ FIGURES = {
     "player/moon_huntress": ("raw/moon_huntress.png", 56, ["--ramps", "moonlight,velvet,skin,brown,blood"]),  # No gold: her pale face snapped to it; the levels stretch lifts her dark coat (art_check lightness).
     "player/moon_huntress_hyper": ("raw/moon_huntress_hyper.png", 56, ["--ramps", "gold,marble,skin,brown,moonlight", "--no-levels"]),
     "player/moon_huntress_untouchable": ("raw/moon_huntress_untouchable.png", 56, ["--ramps", "marble,soul,grey,skin"]),
-    "player/moon_huntress_deathlord": ("raw/moon_huntress_deathlord.png", 56, ["--ramps", "grey,crimson,skin,moonlight", "--no-levels"]),
+    "player/moon_huntress_deathlord": ("raw/moon_huntress_deathlord.png", 56, ["--ramps", "velvet,grey,crimson,skin,moonlight", "--no-levels"]),  # Round 1 redo (act 7): velvet keeps the coat black against the silver hair.
 }
 # Icon sheets: file -> (badge frame, symbol ids left to right; "" = skip).
 ICONS = {

@@ -550,6 +550,18 @@ dip (`_hold()`), so the Archfiend's and the Prince of Hell's cleavers (held acro
 the leg; a staircase of boxes along the blade lets the boot beside it keep walking. The older tuple `swing` (the Harbourmaster's
 anchor) is unchanged. Bust boxes of the round are listed in the GDD row.
 
+**Bust exclusion and wings on walkers (Act VI art review, round 2).** `bust_exclude` (rig key, also derived by skins) lists boxes
+`(x0, x1, y0, y1[, max_sum[, max_chroma]])` of the still: pixels inside them (opaque; with the colour fields only the dark ones,
+R+G+B <= max_sum, or the grey / white / black ones, max-min channel <= max_chroma) never move with the bust box and are never taken
+as a moved pixel's source, so an arm or glove next to the bust stays still (`_exclude_mask()`, applied to walk and idle). Fit it
+by viewing the strip at 4x with the bust-only changes marked. `wings` (rig key for legs / robe rigs) holds `flap`-style wing
+entries (box, pivot, degrees, exclude, colors, soft_*) plus `seam` (px kept in the body too beside the body-side box edge, so the
+turning wing opens no gap): the wings are cut out, turned about their shoulder by `FLAP_WAVE` (idle: `IDLE_WING_WAVE`) and laid behind the
+frame, so a walker keeps its stride, `hold` props, bust and swish. Avoid `exclude` boxes through the wing membrane: their edges
+leave ink seams.
+
+**Flapping wings and orbiting bats (Act VII art review, round 1, rig group).** Two more additive rig keys. Mode `flap` (`flap=dict(bob, wings=[...])`, `_flap_frames()`): each wing entry (`box`, shoulder `pivot`, `degrees`, optional `colors`, `exclude` boxes whose pixels stay put, `soft_exclude` + `soft_colors` boxes where only the body stays and the membrane and loose outlines go with the wing) is turned by `FLAP_WAVE[f] x degrees` (one sine, frame 0 = the still), drawn behind the body, which sags `FLAP_BODY[f] x bob` px; left wings take positive degrees. Used by the Chiropteran, its King and the Elder's bat form. `orbit` (list of `{box, radius, phase, colors?}`, `_orbit_cut()` / `_orbit_lay()`): small flyers move by whole px on an ellipse (`ORBIT_PATH`), behind the body; the Dhampir's spirit bats.
+
 ## Effects (smooth by design)
 
 Effects are short **smooth** animations processed with `--anim` (strips of square frames in
@@ -2874,3 +2886,7 @@ repetition. Street pieces tile along their length and rotate 90 degrees for the 
 checked on a 1280x720 mock of the grid (`docs/act8/art_mock_city.png`: buildings 256x192, streets 192, alleys 80); contact
 sheet `docs/act8/art_contact_sheet.png`. `art_check.py` rows against the older stages' floors fail the lightness gap for
 the dark armour (those floors are other acts'); on the city's own street (L 0.24) riot, SWAT and rifle armour read.
+### Act VII art review, round 1 (Group B: figures)
+- Redone from the old source as the reference with "ONLY ONE figure" in the prompt; prompts updated in `art_source/ravensmoor/*.txt`, `art_source/court/blood_knight.txt`, `art_source/castle_sanguis/{nosferatu,dhampir_deathlord}.txt`.
+- Black coats (Nosferatu, both Deathlord skins) need the `velvet` ramp first and `--no-levels`; with `grey` alone they snap to mid grey.
+- `bosses/elder_vampire` (90x120, `art_source/castle_sanguis/elder_vampire.txt`) is the Elder's first form; `bosses/elder` is the second. Its walk is the robe glide (hip 84).

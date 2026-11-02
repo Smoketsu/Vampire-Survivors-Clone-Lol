@@ -83,6 +83,20 @@ static func draw_elder(ci: CanvasItem, o: Vector2, r: float, flash: bool, alpha:
 	ci.draw_rect(Rect2(o + Vector2(r * 0.1, -r * 0.75), Vector2(3, 3)), Palette.COURT_BLOOD_LIGHT)
 
 
+## The Elder's first form, the vampire lord (fallback until the
+## "bosses/elder_vampire" art lands): a tall, pale lord in a high-collared
+## black-and-crimson cloak with a blood-red blade; `alpha` fades him. Fallback only.
+static func draw_elder_lord(ci: CanvasItem, o: Vector2, r: float, flash: bool, alpha: float) -> void:
+	SpriteBank.draw_disc(ci, o, r, Color(INK, alpha))
+	SpriteBank.draw_disc(ci, o, r - 2.0, Glyphs._c(Color(Palette.COURT_VELVET_DARK, alpha), flash))  # The black cloak.
+	SpriteBank.draw_disc(ci, o + Vector2(0, -r * 0.1), r * 0.55, Glyphs._c(Color(Palette.COURT_BLOOD_DARK, alpha), flash))  # The crimson lining.
+	ci.draw_rect(Rect2(o + Vector2(-r * 0.55, -r * 1.05), Vector2(r * 1.1, r * 0.3)), Glyphs._c(Color(Palette.COURT_BLOOD, alpha), flash))  # The high collar.
+	SpriteBank.draw_disc(ci, o + Vector2(0, -r * 0.85), r * 0.34, Glyphs._c(Color(PALE, alpha), flash))  # The pale face.
+	ci.draw_rect(Rect2(o + Vector2(-r * 0.15, -r * 0.9), Vector2(2, 2)), Palette.COURT_BLOOD_LIGHT)  # Red eyes.
+	ci.draw_rect(Rect2(o + Vector2(r * 0.05, -r * 0.9), Vector2(2, 2)), Palette.COURT_BLOOD_LIGHT)
+	ci.draw_rect(Rect2(o + Vector2(r * 0.6, -r * 0.6), Vector2(3, r * 1.4)), Glyphs._c(Color(Palette.COURT_BLOOD_LIGHT, alpha), flash))  # The blood-blade.
+
+
 ## A blood fountain (fallback): a stone basin brimming red (pale and dry
 ## while denied); `alpha` fades it in. Fallback only.
 static func draw_fountain(ci: CanvasItem, o: Vector2, r: float, dry: bool, alpha: float) -> void:
