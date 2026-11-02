@@ -15,7 +15,9 @@
 #   2. export - builds single-file Windows (.exe) and Linux executables and the
 #               no-threads Web build (index.html + .js + .wasm + .pck, any static
 #               host) and uploads them as workflow artifacts (Actions tab -> run
-#               -> Artifacts: Necropathy-windows, Necropathy-linux, Necropathy-web).
+#               -> Artifacts: Necropathy-windows, Necropathy-linux, Necropathy-web). The Web
+#               build is then loaded once in headless Chromium (tools/web_smoke.js): it must
+#               start without console errors.
 # On a pushed tag starting with "v" (e.g. v0.2.0) the release job creates a
 # GitHub Release with the three zips attached, so testers can just download and play.
 # Its title is "Necropathy <tag>" and its body is docs/release_notes/<tag>.md
@@ -24,15 +26,18 @@
 #               home"): on pushes to main, on v* tags and on a manual run of main, pushes
 #               the Web build to a separate public repository served by GitHub Pages
 #               (variable PAGES_REPO + secret PAGES_TOKEN; skipped without them). itch.io
-#               publishing was dropped (owner decision, Oct 2026).
+#               publishing was dropped (owner decision, Oct 2026). One publish at a time, and only
+#               the commit main points at: an older run never replaces a newer live build.
 #   coop-net - online co-op connectivity: the relay protocol check and the two-process network test
 #               against the local Python relay (tools/coop_relay*.py, tools/coop_net_test.py).
 #   coop-lockstep - the co-op determinism gate: two headless processes play one full co-op run through
 #               the lockstep (tools/coop_lockstep_gate.py); checksums must match the whole way. Beside
-#               the other jobs (about 8-10 minutes); the release and Pages jobs do not wait for it.
-#   deploy-relay - on pushes to main after coop-net: deploys the co-op relay Worker (server/relay) with
-#               wrangler when the secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID exist
-#               (skipped otherwise; docs/coop/RELAY_SETUP.md).
+#               the other jobs (about 8-10 minutes); the release and Pages jobs do not wait for it
+#               (owner decision, for speed): a failure on a main push opens a GitHub issue instead.
+#   deploy-relay - on pushes to main after coop-net, the playthroughs and the export: deploys the co-op
+#               relay Worker (server/relay) with the wrangler pinned by server/relay/package-lock.json
+#               when the secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID exist (skipped
+#               otherwise; docs/coop/RELAY_SETUP.md).
 #   4. publish-pages - OPTIONAL, off by default: deploys the Web build to this
 #               repository's own GitHub Pages when the repository variable WEB_PAGES is
 #               "true" (Settings -> Pages -> "GitHub Actions"; needs a public repository
@@ -46,6 +51,12 @@ on:
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
+
+# Read-only token by default (GDD 15.0 "CI publishing safety"); the jobs that write (release, publish-pages,
+# the lockstep failure issue) raise only what they need.
+permissions:
+  # contents: read is enough to check out the code and download artifacts.
+  contents: read
 
 env:
   # GODOT_VERSION: engine version the project targets (must match project.godot features).
@@ -219,6 +230,10 @@ jobs:
     # runs beside the other jobs and the release / Pages jobs do not wait for it.
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      # contents: read checks out the code; issues: write lets the last step open an issue on a red main run.
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@v4
 
@@ -259,39 +274,66 @@ jobs:
           path: coop_lockstep.log
           retention-days: 3
 
+      - name: Open an issue when the gate fails on main
+        # The Pages and release jobs do not wait for this gate (owner decision, for speed), so a desync that
+        # reached main is reported as an issue at once (GDD 15.0 "CI publishing safety").
+        if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          # GH_TOKEN: this job's token (issues: write), read by the gh command.
+          GH_TOKEN: ${{ github.token }}
+          # RUN_URL: this run's page, linked from the issue.
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          # BODY: the issue text: the commit, the run and how to reproduce it.
+          BODY="The co-op lockstep gate (coop-lockstep) failed on main at ${GITHUB_SHA}.
+          The Web build of this commit may already be live (the publish jobs do not wait for this gate).
+
+          Run: ${RUN_URL} (artifact coop-lockstep-log).
+          Reproduce: python3 tools/coop_lockstep_gate.py --godot <godot> --seed 7"
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "coop-lockstep failed on main (${GITHUB_SHA::7})" --body "$BODY"
+
   deploy-relay:
     # Deploys the co-op relay (server/relay, a Cloudflare Worker) on pushes to main, once the network
     # test passed, when the secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID exist (skipped
     # cleanly otherwise; setup steps in docs/coop/RELAY_SETUP.md). The Worker serves
-    # wss://necropathy-relay.<subdomain>.workers.dev (CoopNetData.RELAY_URL).
-    needs: [coop-net]
+    # wss://necropathy-relay.<subdomain>.workers.dev (CoopNetData.RELAY_URL). It waits for the playthroughs
+    # and the export too, so a commit that fails them never changes the live relay.
+    needs: [coop-net, test, export]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      # CLOUDFLARE_API_TOKEN: a token from the "Edit Cloudflare Workers" template; empty without the secret.
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      # CLOUDFLARE_ACCOUNT_ID: the Cloudflare account the Worker lives in; empty without the secret.
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      # HAS_CF: "true" when both Cloudflare secrets exist. Only this flag is job-wide; the secrets themselves
+      # reach the deploy step alone (no other step, npm install scripts included, can read them).
+      HAS_CF: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
     steps:
       - name: Skip without the Cloudflare secrets
-        if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == ''
+        if: env.HAS_CF != 'true'
         run: echo "::notice::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set; relay not deployed (docs/coop/RELAY_SETUP.md)."
 
       - uses: actions/checkout@v4
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        if: env.HAS_CF == 'true'
 
       - uses: actions/setup-node@v4
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        if: env.HAS_CF == 'true'
         with:
           node-version: "22"
 
-      - name: Deploy the relay Worker
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+      - name: Install wrangler (the locked version)
+        if: env.HAS_CF == 'true'
         working-directory: server/relay
-        run: |
-          npm install --no-audit --no-fund
-          npx wrangler deploy
+        # npm ci installs exactly server/relay/package-lock.json (wrangler pinned), never a newer release.
+        run: npm ci --no-audit --no-fund
+
+      - name: Deploy the relay Worker
+        if: env.HAS_CF == 'true'
+        working-directory: server/relay
+        env:
+          # CLOUDFLARE_API_TOKEN: a token from the "Edit Cloudflare Workers" template.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # CLOUDFLARE_ACCOUNT_ID: the Cloudflare account the Worker lives in.
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx --no-install wrangler deploy
 
   export:
     # No `needs: test`: the export runs beside the playthroughs (it only builds and
@@ -360,6 +402,21 @@ jobs:
           (cd build/linux && chmod +x Necropathy.x86_64 && zip -q ../Necropathy-linux.zip Necropathy.x86_64)
           # index.html at the zip's root, as static hosts expect.
           (cd build/web && zip -q -r ../Necropathy-web.zip .)
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Smoke-test the Web build in headless Chromium
+        run: |
+          # PW_DIR: a folder outside the project for Playwright (its node_modules never reaches a Godot import).
+          PW_DIR="$RUNNER_TEMP/playwright"
+          npm install --prefix "$PW_DIR" --no-audit --no-fund --no-save playwright@1.63.0
+          "$PW_DIR/node_modules/.bin/playwright" install --with-deps chromium
+          # Serves build/web, presses Play, and passes when the engine starts within 60 s with no console
+          # error (the patched index.js included; GDD 15.0 "CI publishing safety").
+          NODE_PATH="$PW_DIR/node_modules" timeout 300 node tools/web_smoke.js build/web 2>&1 | tee web_smoke.log
+          exit ${PIPESTATUS[0]}
 
       - name: Smoke-test exported Linux build
         run: |
@@ -431,7 +488,9 @@ jobs:
           echo "RELEASE_NOTES=$NOTES" >> "$GITHUB_ENV"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        # Pinned to a commit (a third-party action holding contents: write): v2.6.2, what the v2 tag pointed at
+        # on Nov 2, 2026.
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65
         with:
           name: Necropathy ${{ github.ref_name }}
           body_path: ${{ env.RELEASE_NOTES }}
@@ -493,6 +552,10 @@ jobs:
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && vars.PAGES_REPO != ''
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    concurrency:
+      # One publish at a time, in start order; a newer run waits for the running one (never cancels it).
+      group: pages-repo
+      cancel-in-progress: false
     env:
       # PAGES_TOKEN: push access to PAGES_REPO; empty when the secret does not exist.
       PAGES_TOKEN: ${{ secrets.PAGES_TOKEN }}
@@ -508,7 +571,20 @@ jobs:
 
       - name: Push the build to the Pages repository
         if: env.PAGES_TOKEN != ''
+        env:
+          # GH_TOKEN: this job's own read-only token, to read this repository's main tip.
+          GH_TOKEN: ${{ github.token }}
         run: |
+          # Publish only the commit main points at now (GDD 15.0 "CI publishing safety"): an older push that
+          # finishes last, or a v* tag on an older commit, never replaces a newer live build. A tag on main's
+          # tip still publishes.
+          # TIP: the commit main points at now.
+          TIP=$(git ls-remote "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" refs/heads/main | cut -f1)
+          if [ -z "$TIP" ]; then echo "::error::Could not read main's tip."; exit 1; fi
+          if [ "$TIP" != "$GITHUB_SHA" ]; then
+            echo "::notice::${GITHUB_SHA} is not main's tip (${TIP}); not published."
+            exit 0
+          fi
           # One fresh commit each time, force-pushed: the repository keeps only the latest
           # build (no history of 40 MB builds piling up).
           mkdir site && cp -r web/. site/

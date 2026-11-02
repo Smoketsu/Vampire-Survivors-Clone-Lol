@@ -174,7 +174,7 @@ Two players, each on their own screen, browser or desktop, through a small relay
 The lobby, the connection and the co-op run itself (deterministic lockstep, below) are in; the partner's HUD bar
 and edge arrow come with the co-op HUD branch.
 
-- **Host:** title screen → **Co-op** → **Host**. The lobby shows a 5-letter code: press **Copy** (or **Share** on a
+- **Host:** title screen → **Co-op** → **Host**. The lobby shows a 6-letter code: press **Copy** (or **Share** on a
   phone, which also sends a link that opens the game with the code filled in) and send it to your friend.
 - **Join:** title screen → **Co-op** → **Join**, then tap the code's letters on the pad (or type them) and **Join**.
 - **In the lobby** each player picks their own character, skin, ultimate and title with **Setup** (from their own
@@ -211,7 +211,10 @@ and edge arrow come with the co-op HUD branch.
   first. Screenshots: `node tools/coop_hud_shots.mjs phone defeat` (Web build) or `--coop-shots=` (see the autotest
   table).
 - **The relay** is a Cloudflare Worker (`server/relay`, protocol in `server/relay/PROTOCOL.md`) deployed by CI's
-  `deploy-relay` job; one-time owner setup in `docs/coop/RELAY_SETUP.md`.
+  `deploy-relay` job; one-time owner setup in `docs/coop/RELAY_SETUP.md`. It forwards only the players' own message
+  types (`loadout`, `settings`, `pping`, `ppong`, `start`), so a modified client cannot fake the relay's `left` /
+  `welcome` / `peer` / `error`, and after 30 wrong codes in 10 minutes it refuses that network's joins for a while
+  ("Too many wrong codes", GDD §15.0 "Co-op relay hardening").
 
 ### Feedback
 
@@ -3402,14 +3405,25 @@ the live build instead of about 30):
    not cancel the others. Logs: `test-logs-<id>`.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in
    the executable) and the no-threads Web build, runs the autotest again on the exported Linux build, and uploads all
-   three as workflow artifacts (`Necropathy-windows`, `Necropathy-linux`, `Necropathy-web`), kept 7 days (test logs
+   three as workflow artifacts (`Necropathy-windows`, `Necropathy-linux`, `Necropathy-web`). The patched Web build is
+   also loaded once in headless Chromium (`tools/web_smoke.js`): it must reach the engine's startup line within 60 s
+   of Play with no console error. Artifacts are kept 7 days (test logs
    3 days): the account's artifact storage is small, and when it is full no build can be uploaded, so the publish
    jobs have nothing to publish (tagged builds stay in their GitHub Release). On a `v*` tag, the **release** job
    creates the GitHub Release once every test and the export have passed.
 3. **publish-pages-repo** (the game's web home; see *Play in the browser* below): on pushes to `main`, on `v*` tags
    and on a manual run of `main`, pushes the Web build to a separate public repository that GitHub Pages serves.
    **publish-pages** (optional, off by default) deploys it to this repository's own Pages instead. itch.io
-   publishing was dropped (owner decision, Oct 2026: GDD §15.0 "GitHub Pages is the web home").
+   publishing was dropped (owner decision, Oct 2026: GDD §15.0 "GitHub Pages is the web home"). Publishes run one
+   at a time, and a run publishes only if its commit is still `main`'s tip: an older push that finishes last, or a
+   `v*` tag on an older commit, never replaces a newer live build (a tag on `main`'s tip still publishes).
+4. **coop-net** and **coop-lockstep** (online co-op): the relay protocol check and the two-process network test,
+   and the two-process full-run determinism gate (~10 min). The publish jobs do not wait for the lockstep gate
+   (owner decision, for speed); when it fails on a `main` push it opens a GitHub issue naming the commit.
+   **deploy-relay** deploys the relay Worker on `main` pushes once `coop-net`, every playthrough and the export
+   passed, with the wrangler version locked by `server/relay/package-lock.json` (`npm ci`); the Cloudflare secrets
+   reach only its deploy step. The workflow's token is read-only by default (`permissions: contents: read`); the
+   release's third-party action is pinned to a commit (GDD §15.0 "CI publishing safety").
 
 To publish a downloadable release, bump `config/version` in `project.godot` (shown on the main menu) and the
 `application/*_version` fields in `export_presets.cfg`, write the player-facing notes in
