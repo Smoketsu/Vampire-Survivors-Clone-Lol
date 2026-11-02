@@ -45,14 +45,15 @@ const ENEMIES := {
 	#   howl_buff_speed  — extra share of speed of a spurred werewolf.
 	#   howl_buff_time   — s the spur lasts.
 	#   lunge_every / lunge_trigger / lunge_min / lunge_windup / lunge_time /
-	#   lunge_damage     — his lunge (as the werewolf beast's keys).
+	#   lunge_damage     — his lunge (as the werewolf beast's keys), only ever at
+	#                      a summon: the alpha leaps into the ring at your dead.
 	#   advance_range / advance_speed_mult — the forced march.
 	#   reward_xp / reward_crystals — his XP burst.
 	"old_greymane": {
 		"display_name": "Old Greymane",
 		"max_hp": 2200.0,  # TUNING (not in GDD) a miniboss (the Gatekeeper 2,300)
 		"move_speed": 62.0,  # TUNING (not in GDD) px/s; the alpha runs ahead of his pack
-		"damage": 13.0,  # TUNING (not in GDD) a bite, before the time scaling
+		"damage": 8.0,  # TUNING (not in GDD) a bite, before the time scaling (first pass 13, then 11: the --mortal seed-7 army bot died to him at 10:30)
 		"attack_interval": 1.1,  # TUNING (not in GDD) s
 		"attack_range": 14.0,  # TUNING (not in GDD) px
 		"radius": 22.0,  # TUNING (not in GDD) px; bigger than a beast (20)
@@ -77,7 +78,7 @@ const ENEMIES := {
 		"howl_every": 14.0,  # TUNING (not in GDD) s
 		"howl_time": 0.9,  # TUNING (not in GDD) s
 		"howl_radius": 380.0,  # TUNING (not in GDD) px
-		"howl_buff_damage": 0.2,  # TUNING (not in GDD)
+		"howl_buff_damage": 0.1,  # TUNING (not in GDD) first pass 0.2
 		"howl_buff_speed": 0.15,  # TUNING (not in GDD)
 		"howl_buff_time": 6.0,  # TUNING (not in GDD) s
 		"lunge_every": 7.0,  # TUNING (not in GDD) s
@@ -85,7 +86,7 @@ const ENEMIES := {
 		"lunge_min": 30.0,  # TUNING (not in GDD) px
 		"lunge_windup": 0.55,  # TUNING (not in GDD) s
 		"lunge_time": 0.3,  # TUNING (not in GDD) s
-		"lunge_damage": 18.0,  # TUNING (not in GDD) before the time scaling
+		"lunge_damage": 12.0,  # TUNING (not in GDD) before the time scaling, on a summon only (first pass 18: 100 damage to the necromancer in one fight)
 		"advance_range": 420.0,  # TUNING (not in GDD) px
 		"advance_speed_mult": 1.6,  # TUNING (not in GDD)
 		"reward_xp": 220,  # TUNING (not in GDD) as the Gatekeeper

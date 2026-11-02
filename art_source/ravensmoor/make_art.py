@@ -35,7 +35,7 @@ UNITS = {
 }
 # The figure-redesign figures: key -> (raw source, art height, extra arguments).
 FIGURES = {
-    "player/moon_huntress": ("raw/moon_huntress.png", 56, ["--ramps", "moonlight,velvet,skin,brown,blood", "--no-levels"]),  # No gold: her pale face snapped to it.
+    "player/moon_huntress": ("raw/moon_huntress.png", 56, ["--ramps", "moonlight,velvet,skin,brown,blood"]),  # No gold: her pale face snapped to it; the levels stretch lifts her dark coat (art_check lightness).
     "player/moon_huntress_hyper": ("raw/moon_huntress_hyper.png", 56, ["--ramps", "gold,marble,skin,brown,moonlight", "--no-levels"]),
     "player/moon_huntress_untouchable": ("raw/moon_huntress_untouchable.png", 56, ["--ramps", "marble,soul,grey,skin"]),
     "player/moon_huntress_deathlord": ("raw/moon_huntress_deathlord.png", 56, ["--ramps", "grey,crimson,skin,moonlight", "--no-levels"]),
@@ -97,10 +97,19 @@ def units() -> None:
         (HERE / src).write_bytes(keep)
 
 
+# Figures lifted before conversion (brighten.py factor): the Huntress's dark coat failed art_check's lightness rule.
+LIFT = {"player/moon_huntress": 1.35}
+
+
 def figures() -> None:
     for key, (src, height, extra) in FIGURES.items():
         pix = SCRATCH / (key.replace("/", "_") + ".png")
-        run(["tools/pixelate_source.py", str(HERE / src), str(height), str(pix)])
+        source = HERE / src
+        if key in LIFT:
+            lit = SCRATCH / (key.replace("/", "_") + "_lit.png")
+            run([str(HERE / "brighten.py"), str(source), str(lit), str(LIFT[key])])
+            source = lit
+        run(["tools/pixelate_source.py", str(source), str(height), str(pix)])
         run(["tools/prepare_sprite.py", str(pix), key, "--ink-l", "0.15", "--no-cleanup", "--art-height", str(height)] + extra)
 
 

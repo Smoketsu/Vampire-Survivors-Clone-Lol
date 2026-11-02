@@ -17,7 +17,7 @@
 ##   15:15  Zone II,  the Village:    the thralls' cottages and fences; the
 ##                                    Blood Knights, the werewolf hunters
 ##   11:15  Zone III, the Old Church: the ruined church and its graves; the
-##                                    nobles; Old Greymane at 9:00
+##                                    nobles; Old Greymane at 10:00
 ##    7:15  Zone IV,  the Wolfwood:   black pines; the werewolves at their
 ##                                    thickest
 ##    3:00  Vargr, the Moon-Eater (BossVargr, VargrData)
@@ -112,16 +112,16 @@ const SEGMENTS := [
 	{"start": 420.0, "rate": 2.5, "max_alive": 66,  # TUNING (not in GDD)
 		"weights": {"blood_thrall": 0.48, "vampire_bat": 0.2, "ghoul": 0.06, "blood_knight": 0.24, "werewolf": 0.018, "vampire_noble": 0.01},
 		"objective": "Blood Knights feed on every blow: Rot and Wither halve it"},
-	# Zone III, the Old Church (8:45): Old Greymane at 11:00.
+	# Zone III, the Old Church (8:45): Old Greymane at 10:00.
 	{"start": 525.0, "rate": 2.7, "max_alive": 72,  # TUNING (not in GDD)
-		"weights": {"blood_thrall": 0.45, "vampire_bat": 0.2, "ghoul": 0.06, "blood_knight": 0.26, "werewolf": 0.02, "vampire_noble": 0.012},
+		"weights": {"blood_thrall": 0.46, "vampire_bat": 0.2, "ghoul": 0.06, "blood_knight": 0.26, "werewolf": 0.012, "vampire_noble": 0.008},  # first pass werewolf 0.02, noble 0.012 (the seed-7 army bot fell to 29 HP at 12:00-14:00)
 		"objective": "The Old Church: the nobles drain from afar. Burst them before they turn to mist"},
 	# Zone IV, the Wolfwood (12:45): the werewolves at their thickest.
 	{"start": 765.0, "rate": 2.9, "max_alive": 80,  # TUNING (not in GDD)
-		"weights": {"blood_thrall": 0.42, "vampire_bat": 0.2, "ghoul": 0.06, "blood_knight": 0.26, "werewolf": 0.03, "vampire_noble": 0.012},
+		"weights": {"blood_thrall": 0.44, "vampire_bat": 0.2, "ghoul": 0.06, "blood_knight": 0.26, "werewolf": 0.02, "vampire_noble": 0.01},  # first pass werewolf 0.03, noble 0.012
 		"objective": "The Wolfwood: the pack hunts among the pines"},
 	{"start": 900.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"blood_thrall": 0.42, "vampire_bat": 0.2, "ghoul": 0.06, "blood_knight": 0.26, "werewolf": 0.03, "vampire_noble": 0.012},
+		"weights": {"blood_thrall": 0.44, "vampire_bat": 0.2, "ghoul": 0.06, "blood_knight": 0.26, "werewolf": 0.02, "vampire_noble": 0.01},  # first pass werewolf 0.03, noble 0.012
 		"objective": "The whole Court comes to feed"},
 	# 17:00, the boss: thinner, so the fight is the hunt.
 	{"start": BOSS_TIME, "rate": 2.4, "max_alive": 64,  # TUNING (not in GDD) thinner during the boss fight
@@ -152,13 +152,13 @@ const EVENTS := [
 		"groups": [{"kind": "vampire_noble", "count": 1, "elite": false}, {"kind": "blood_thrall", "count": 10, "elite": false}]},
 	{"time": 470.0, "type": "wave", "banner": "The bats darken the sky!", "formation": "ring",  # TUNING (not in GDD) during the second Blood Moon
 		"groups": [{"kind": "vampire_bat", "count": 10, "elite": false}, {"kind": "blood_knight", "count": 3, "elite": false}]},
-	# Zone III (8:45): the Old Church; Old Greymane at 11:00.
+	# Zone III (8:45): the Old Church; Old Greymane at 10:00 (10:00 left).
 	{"time": 560.0, "type": "wave", "banner": "Werewolves and their hunters!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "werewolf", "count": 2, "elite": false}, {"kind": "ghoul", "count": 4, "elite": false}, {"kind": "blood_thrall", "count": 10, "elite": false}]},
-	{"time": 600.0, "type": "wave", "banner": "The nobles of the Court descend on the churchyard!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "werewolf", "count": 1, "elite": false}, {"kind": "ghoul", "count": 4, "elite": false}, {"kind": "blood_thrall", "count": 10, "elite": false}]},  # first pass 2 werewolves
+	{"time": 600.0, "type": "greymane", "banner": "OLD GREYMANE HOWLS: the pack's alpha turns his wolves into beasts!",  # Owner-approved proposal (miniboss); 10:00 left (first pass 11:00: he died right as the 12:00 moon turned his pack, the bot's low point)
+		"kind": "old_greymane", "pack": 1, "elite": false},  # TUNING (not in GDD) first pass 3 hunters, then 2
+	{"time": 640.0, "type": "wave", "banner": "The nobles of the Court descend on the churchyard!", "formation": "ring",  # TUNING (not in GDD) after Old Greymane's arrival
 		"groups": [{"kind": "vampire_noble", "count": 1, "elite": false}, {"kind": "blood_knight", "count": 4, "elite": false}, {"kind": "vampire_bat", "count": 10, "elite": false}]},
-	{"time": 660.0, "type": "greymane", "banner": "OLD GREYMANE HOWLS: the pack's alpha turns his wolves into beasts!",  # Owner-approved proposal (miniboss); 9:00 left like the Gatekeeper
-		"kind": "old_greymane", "pack": 3, "elite": false},
 	# Zone IV (12:45): the Wolfwood.
 	{"time": 800.0, "type": "wave", "banner": "The pack hunts among the pines!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "werewolf", "count": 2, "elite": false}, {"kind": "ghoul", "count": 4, "elite": false}, {"kind": "blood_knight", "count": 3, "elite": false}]},

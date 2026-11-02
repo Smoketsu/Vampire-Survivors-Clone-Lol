@@ -58,10 +58,10 @@ const LEAP_SOURCE: String = "vargr_leap"
 const SPRITE: String = "bosses/vargr"
 
 ## Vargr's base max HP (x the boss HP multiplier and the stage's HP multiplier:
-## 19,425 on Ravensmoor). Moloch 8,500 (14,875 on the Burning Gate); higher,
-## because his Hunt keeps him off the ring's blockers and the army's ranged
-## classes are what reach him.
-const MAX_HP: float = 10500.0  # TUNING (not in GDD) first pass 7500: the seed-7 army run with Moonfang killed him in 60 s, all three phases in 36 s
+## 25,900 on Ravensmoor). Moloch 8,500 (14,875 on the Burning Gate); higher,
+## because the Act VII army at 17:00 is big and his three phases need time to
+## show (the Moon-Eater's hits heal him back some).
+const MAX_HP: float = 14000.0  # TUNING (not in GDD) first pass 7500 (the seed-7 army run with Moonfang killed him in 60 s), then 10500 (70 s, the Moon-Eater only 20 s)
 
 ## Vargr's design row.
 const BOSS := {
@@ -114,8 +114,8 @@ const BOSS := {
 	# The Turning: the howl and the leap over the ring.
 	"howl_radius": 360.0,  # TUNING (not in GDD) px: werewolves he turns at once
 	"howl_every": 22.0,  # TUNING (not in GDD) s between two howls
-	"pack_count": 2,  # TUNING (not in GDD) werewolves stepping out with each howl, turned
-	"pack_cap": 4,  # TUNING (not in GDD) most of his pack standing at once
+	"pack_count": 1,  # TUNING (not in GDD) werewolves stepping out with each howl, turned (first pass 2: the forced Moonfang build lost its army to his pack and leaps)
+	"pack_cap": 3,  # TUNING (not in GDD) most of his pack standing at once (first pass 4)
 	"pack_dist": 70.0,  # TUNING (not in GDD) px from him they step out
 	"first_leap": 3.0,  # TUNING (not in GDD) s after the Turning
 	"leap_cooldown": 9.0,  # TUNING (not in GDD) s, the Turning
@@ -125,7 +125,7 @@ const BOSS := {
 	"leap_height": 70.0,  # TUNING (not in GDD) px of the arc (drawn only)
 	"leap_radius": 64.0,  # TUNING (not in GDD) px of the landing
 	"leap_damage_player": 13.0,  # TUNING (not in GDD) before the time scaling
-	"leap_damage_summon": 16.0,  # TUNING (not in GDD) before the time scaling
+	"leap_damage_summon": 13.0,  # TUNING (not in GDD) before the time scaling (first pass 16)
 	"leap_push": 34.0,  # TUNING (not in GDD) px the summons are thrown out
 	# The Moon-Eater.
 	"eater_speed": 70.0,  # TUNING (not in GDD) px/s

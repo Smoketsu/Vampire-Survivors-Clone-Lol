@@ -15,8 +15,10 @@
 ##       every werewolf there is spurred for howl_buff_time s (+howl_buff_damage
 ##       damage, +howl_buff_speed speed through Enemy.apply_buff(), the one
 ##       enemy buff path, as the Banner Bearer's).
-##   * THE LUNGE — like the beasts': when his target is between lunge_min and
-##       lunge_trigger px (edge to edge) and the lunge is ready, he crouches
+##   * THE LUNGE — like the beasts', but only at a SUMMON (he leaps into the
+##       ring at your dead, never at the necromancer): when his target is
+##       between lunge_min and lunge_trigger px (edge to edge) and the lunge is
+##       ready, he crouches
 ##       lunge_windup s (a red line to his mark), leaps there in lunge_time s
 ##       and bites for lunge_damage (a feeding blow).
 ##   * The forced march — beyond advance_range px he strides
@@ -105,8 +107,8 @@ func physics(e: Enemy, delta: float) -> bool:
 	var edge := dt - e.radius - body_radius(e, t)
 	if edge < float(d.get("lunge_min", 30.0)) or edge > float(d.get("lunge_trigger", 130.0)) or dt < 0.01:
 		return false
-	if t == g.player and g.ultimates.player_untargetable():
-		return false
+	if not (t is SummonedUnit):
+		return false  # Own decision (tuning): he leaps into the ring at the dead, never at the necromancer.
 	_lunge_cd = float(d.get("lunge_every", 7.0))
 	_to = g.arena.free_point(t.position - to / dt * (e.radius + body_radius(e, t)), e.radius * 0.5)
 	g.stat_add("greymane_lunges", 1.0)
