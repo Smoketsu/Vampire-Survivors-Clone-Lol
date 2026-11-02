@@ -52,7 +52,9 @@
 ##                   lane, leaves a wreck (Convoy). Keys: half_length /
 ##                   half_width (px, its body along / across its lane; the
 ##                   run-over box), run_damage (a run-over hit, before the time
-##                   scaling; "damage" is unused).
+##                   scaling; "damage" is unused); optional ram_damage (share
+##                   of its max HP a wreck ram costs it; absent = CityRulesData
+##                   .CONVOY's; Act VIII, Skid Row's limo).
 ##   super         — Dictionary: the Super's plate and weakness: "power" and
 ##                   "weakness" (the two short plate lines), and optional
 ##                   "stun" / "exposed_time" overrides of CityRulesData.SUPERS.

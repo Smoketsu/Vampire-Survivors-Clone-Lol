@@ -2886,6 +2886,36 @@ repetition. Street pieces tile along their length and rotate 90 degrees for the 
 checked on a 1280x720 mock of the grid (`docs/act8/art_mock_city.png`: buildings 256x192, streets 192, alleys 80); contact
 sheet `docs/act8/art_contact_sheet.png`. `art_check.py` rows against the older stages' floors fail the lightness gap for
 the dark armour (those floors are other acts'); on the city's own street (L 0.24) riot, SWAT and rifle armour read.
+### Act VIII: Skid Row (phase 2, Nov 2026)
+
+<!-- --- Act VIII: Skid Row --- -->
+Skid Row's own art (GDD §15.0 "Skid Row art (Act VIII phase 2)"; prompts and API sources in `art_source/skid_row/`,
+rebuilt by `art_source/skid_row/make_art.py`). Matched to the approved `act8_boss.png` (Don Marrow in a white suit and
+fedora with a cigar, his black limousine with gold trim and the gold minigun). Every prompt names the sex (all male here;
+no female figure on this stage). No letters, badges or real insignia anywhere. Generated with `tools/gen_image.py`
+(`--ref` an upscaled City sprite for the pixel look, plus a crop of the boss concept for Don Marrow and the limo), one
+image each, 12 API images in all (about $0.24, ledger). Converted with `prepare_sprite.py --ink-l 0.15` (0.12 for the dark limo,
+Big Sal and the Undertaker, with the levels stretch on: with `--no-levels` their black suits and the black car read as a
+blob); the skins with the ramps of the Act VII skins (Hyper gold, Untouchable marble / soul, Deathlord velvet / crimson).
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `bosses/don_marrow` | **male** Kingpin: white suit and fedora, red tie, cigar, a gold six-barrel minigun at the hip | 68x72 | legs walk (hip 54); body radius 18, drawn larger |
+| `city/armoured_limo` | Big Sal's black stretch limo, gold trim, steel-plated grille, gun ports | 84x36 | drive strip: the cart rock (legs, spread 0, hip 24); BossDonMarrow also draws it in front of him in the Last Stand |
+| `city/big_sal` | **male** enforcer: grey pinstripe suit, flat cap, moustache, sledgehammer on the shoulder | 48x52 | legs walk (hip 37) |
+| `structures/bounty_board` | a wooden billboard on two posts, five wanted posters with a hooded-skull mark (no letters), gold frame and coin bags | 46x44 | still; a slow gold glow under it is code |
+| `projectiles/spectral_hearse` | Hearse Run's ghost hearse, soul green, a coffin through the rear glass | 48x30 | drawn faded by code, mirrored when it drives left |
+| `player/undertaker` (+ `_hyper`, `_untouchable`, `_deathlord`) | **male** mortician: top hat, long black frock coat, grey waistcoat, gold watch chain, white gloves, skull-knob cane | 32x56 | legs walk (hip 42); the skins derive the rig |
+| `structures/city_wreck` / `_burnt` | **redrawn**: a whole crumpled sedan, burning / burnt out | 60x38 | the 52 x 36 wreck rect is covered (the old 32 x 34 art left bodies stopping on air); cut from one sheet and stretched to the footprint |
+| `icons/hearse_run`, `black_car`, `kevlar_bones` (violet), `funeral_procession`, `ach_no_witnesses` (gold) | badges | 32x32 | two sheets on the approved frames (the gold sheet's extra copy of the reference badge skipped) |
+
+**Drawn on the grid** (`art_source/skid_row/skid_row_tiles.py`, deterministic, built on `tools/city_tiles.py`):
+`tiles/city_roof_precinct` (the Precinct's station roof: dark concrete slabs with a police-blue stripe inside the
+parapet; roof style `precinct`), `decals/skid_row_stall` (34x26, a Night Market stall from above, its awning in light
+grey so code tints it neon pink or cyan) and `decals/skid_row_footing` (18x18, an overpass pillar's flat footing plate
+with a hazard ring: flat paint, since nothing on the floor may look solid). The Overpass's deck shadow and the zones'
+paint are code (`SkidRowGround`). Contact sheet `docs/act8/skid_row_contact_sheet.png`. **For the owner's review.**
+
 ### Act VII art review, round 1 (Group B: figures)
 - Redone from the old source as the reference with "ONLY ONE figure" in the prompt; prompts updated in `art_source/ravensmoor/*.txt`, `art_source/court/blood_knight.txt`, `art_source/castle_sanguis/{nosferatu,dhampir_deathlord}.txt`.
 - Black coats (Nosferatu, both Deathlord skins) need the `velvet` ramp first and `--no-levels`; with `grey` alone they snap to mid grey.

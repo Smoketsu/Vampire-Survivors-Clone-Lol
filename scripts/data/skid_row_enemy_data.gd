@@ -75,6 +75,7 @@ const ENEMIES := {
 		"half_length": 36.0,  # TUNING (not in GDD) px (~80 px sprite); the wreck is clamped to WRECK_HALF_MAX
 		"half_width": 15.0,  # TUNING (not in GDD) px
 		"run_damage": 7.0,  # TUNING (not in GDD) before the time scaling (the squad car 5, the tank 9)
+		"ram_damage": 0.05,  # TUNING (not in GDD) share of its max HP a wreck ram costs it (CONVOY's 0.15 for every other vehicle): its plated grille. Without it the seed-7 and seed-1 limos rammed themselves to death on wrecks in ~35 s without firing a shot
 		"crew_every": 1.6,  # TUNING (not in GDD) s between two volleys from the windows
 		"crew_range": 210.0,  # TUNING (not in GDD) px from its side a target must be
 		"crew_spray": 4,  # TUNING (not in GDD) bullets a side (the gang gunner's 4)
