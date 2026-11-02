@@ -600,6 +600,10 @@ RIGS = {
     "inferno/hell_knight": dict(mode="legs", hip=38, back=(0, 20), front=(20, 36), rigid=[(36, 52, 0, None)], spread=2, lift=2, dip=1),
     "inferno/demon_brute": dict(mode="legs", hip=70, back=(0, 38), front=(38, 72), rigid=[], spread=3, lift=3, dip=1),
     "inferno/succubus": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(13, 26, 13, 19, 2, 2), swish=(11, 27, 23, 32, 2),
+                         # Art review round 3 (act 6, owner: "Can we get a lil wing flap here too?"): her two bat wings (left cols 0-12, right 26+)
+                         # beat gently, +-7 degrees about the shoulders (`wings`), behind the gliding body (bust, arm exclusion and swish kept).
+                         wings=[dict(box=(0, 12, 6, 28), pivot=(12, 14), degrees=7.0, seam=2),
+                                dict(box=(26, 36, 12, 28), pivot=(26, 15), degrees=-7.0, seam=2)],
                          bust_exclude=[(13, 27, 13, 20, 190)]),  # Round 2 redo (act 6): the dark arms / gloves inside the box stay still.  # Round 1 redo (act 6): 1 px less on the left (was cols 12-26; owner).
     # --- Act VI: the Burning Gate (every figure here is male: no bust rigs) ---
     "inferno/lava_hound": dict(mode="legs", hip=19, back=(0, 20), front=(20, 40), rigid=[], spread=2, lift=2, dip=1),
@@ -863,7 +867,9 @@ SKIN_FIX = {
     # --- Act VI: the Palace of Silk and Ash --- (the Succubus Queen's Deathlord skin is 58 tall: its own boxes)
     # Round 2 redo: the Hyper skin's bust (tan, cols 21-29) sits right of its feathered arm and wing (cols 17-20), the Untouchable
     # skin's (cream, cols 17-24) right of its grey arm: their own boxes narrowed onto the bust, the arm / glove pixels excluded.
-    "player/succubus_queen_hyper": {"bust": (21, 31, 13, 19, 2, 2), "bust_exclude": [(17, 21, 13, 20), (30, 32, 13, 20)]},
+    # Art review round 3 (act 6): the black-wing still came back with a halo, 6 rows taller (62 px): every row +6 (hip 38, swish and boxes).
+    "player/succubus_queen_hyper": {"hip": 38, "bust": (21, 31, 19, 25, 2, 2), "bust_exclude": [(17, 21, 19, 26), (30, 32, 19, 26)],
+                                    "swish": (10, 26, 30, 38, 2)},
     "player/succubus_queen_untouchable": {"bust": (17, 25, 13, 19, 2, 2), "bust_exclude": [(17, 20, 13, 20, 420)]},
     "player/succubus_queen_deathlord": {"bust_exclude": [], "hip": 33, "bust": (12, 28, 14, 20, 2, 2), "swish": (11, 29, 24, 34, 2)},
     # --- Act VI: Pandemonium --- (the Fallen Saint's Hyper skin: its own box)
