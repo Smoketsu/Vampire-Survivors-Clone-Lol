@@ -550,6 +550,18 @@ dip (`_hold()`), so the Archfiend's and the Prince of Hell's cleavers (held acro
 the leg; a staircase of boxes along the blade lets the boot beside it keep walking. The older tuple `swing` (the Harbourmaster's
 anchor) is unchanged. Bust boxes of the round are listed in the GDD row.
 
+**Bust exclusion and wings on walkers (Act VI art review, round 2).** `bust_exclude` (rig key, also derived by skins) lists boxes
+`(x0, x1, y0, y1[, max_sum[, max_chroma]])` of the still: pixels inside them (opaque; with the colour fields only the dark ones,
+R+G+B <= max_sum, or the grey / white / black ones, max-min channel <= max_chroma) never move with the bust box and are never taken
+as a moved pixel's source, so an arm or glove next to the bust stays still (`_exclude_mask()`, applied to walk and idle). Fit it
+by viewing the strip at 4x with the bust-only changes marked. `wings` (rig key for legs / robe rigs) holds `flap`-style wing
+entries (box, pivot, degrees, exclude, colors, soft_*) plus `seam` (px kept in the body too beside the body-side box edge, so the
+turning wing opens no gap): the wings are cut out, turned about their shoulder by `FLAP_WAVE` (idle: `IDLE_WING_WAVE`) and laid behind the
+frame, so a walker keeps its stride, `hold` props, bust and swish. Avoid `exclude` boxes through the wing membrane: their edges
+leave ink seams.
+
+**Flapping wings and orbiting bats (Act VII art review, round 1, rig group).** Two more additive rig keys. Mode `flap` (`flap=dict(bob, wings=[...])`, `_flap_frames()`): each wing entry (`box`, shoulder `pivot`, `degrees`, optional `colors`, `exclude` boxes whose pixels stay put, `soft_exclude` + `soft_colors` boxes where only the body stays and the membrane and loose outlines go with the wing) is turned by `FLAP_WAVE[f] x degrees` (one sine, frame 0 = the still), drawn behind the body, which sags `FLAP_BODY[f] x bob` px; left wings take positive degrees. Used by the Chiropteran, its King and the Elder's bat form. `orbit` (list of `{box, radius, phase, colors?}`, `_orbit_cut()` / `_orbit_lay()`): small flyers move by whole px on an ellipse (`ORBIT_PATH`), behind the body; the Dhampir's spirit bats.
+
 ## Effects (smooth by design)
 
 Effects are short **smooth** animations processed with `--anim` (strips of square frames in
