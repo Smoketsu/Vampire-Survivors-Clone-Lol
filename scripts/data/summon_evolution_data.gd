@@ -79,7 +79,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act VII: Castle Sanguis ---
 	"nosferatu",
 	# --- Act VIII: Liberty Heights ---
-	"black_paragon"]
+	"black_paragon",
+	# --- Act IX: the Ark ---
+	"black_mothership"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -952,6 +954,39 @@ const EVOLUTIONS := {
 			"slam_stun": 0.6,  # TUNING (not in GDD) s
 			"stun_boss_mult": 0.25,  # TUNING (not in GDD) as the Cathedral Horror's
 			"stun_elite_mult": 0.6,  # TUNING (not in GDD)
+		},
+	},
+	# --- Act IX: the Ark ---
+	# Black Mothership (owner-approved proposal: "the Ghost Saucer ...
+	# (evolution Black Mothership)"; GDD §15.0 "The Ghost Saucer, Black
+	# Mothership and Crop Circles"): Ghost Saucer Lv 5 + Crop Circles Lv 5 (a
+	# NEW passive, own decision, owner rule: maxed). A black mothership of bone
+	# and soul-light, larger, three beams a volley and two foes held at once.
+	# GhostSaucerBehavior reads these special_set keys (final):
+	#   beams — beams an attack (fanned beam_spread rad apart);
+	#   lifts — foes it holds at once.
+	"black_mothership": {
+		"mode": "transform",
+		"bases": ["ghost_saucer"],
+		"passive": "crop_circles",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Black Mothership",  # Owner-approved proposal
+		"plural": "Black Motherships",
+		"icon": "black_mothership",
+		"description": "A black mothership of bone: three beams at once, and two foes lifted at a time.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 12.0,  # TUNING (not in GDD) Ghost Saucer 10
+		},
+		"special_mult": {
+			"lift_radius": 1.3,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"beams": 3,  # TUNING (not in GDD)
+			"lifts": 2,  # TUNING (not in GDD)
 		},
 	},
 }

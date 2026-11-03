@@ -442,7 +442,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Crash Site ---
 	"nothing_hatched",
 	# --- Act IX: the Proving Moon ---
-	"the_hunter_hunted"]
+	"the_hunter_hunted",
+	# --- Act IX: the Ark ---
+	"last_harvest"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -678,6 +680,14 @@ const ACHIEVEMENTS := {
 	# hunter_hunted_runs). It unlocks the counter-passive Mirror Bones (brief).
 	"the_hunter_hunted": {"display_name": "The Hunter Hunted", "description": "Kill Vrask'Tal before his Last Trophy goes off",
 		"stat": "hunter_hunted_runs", "goal": 1, "unlock": "The Mirror Bones passive", "bounty": 300},  # Owner-approved Act IX proposal; bounty TUNING (not in GDD) as Broken Arrow
+	# --- Act IX: the Ark ---
+	# The finale of Act IX (owner-approved Act IX proposal: "The Last Harvest
+	# (beat the Harvester)"; owner answers of Oct 31 and Nov 3, 2026: no
+	# epilogue part, no closing card and no epilogue hook): counted from the
+	# stage record (a boss kill on the Ark), as Last Supper. It only records the
+	# clear, with the title The Unharvested (UnlockData / TitleData).
+	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
+		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
 }
 
 # --- Content wave 2: B. Achievement rewards ---

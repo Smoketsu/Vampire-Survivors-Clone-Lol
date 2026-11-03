@@ -106,7 +106,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IX: the Crash Site ---
 	"hive_of_bone",
 	# --- Act IX: the Proving Moon ---
-	"apex_predator"]
+	"apex_predator",
+	# --- Act IX: the Ark ---
+	"star_abduction"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -778,6 +780,27 @@ const EVOLUTIONS := {
 			"damage": 58.0, "targets": 5, "lock": 0.4, "range": 360.0, "cooldown": 1.9,  # TUNING (not in GDD)
 			"elite_mult": 1.5,  # TUNING (not in GDD) x on elites, minibosses and bosses
 			"refund": 0.25,  # TUNING (not in GDD) the evolution flag: s of the cooldown given back per kill
+		},
+	},
+	# --- Act IX: the Ark ---
+	# Abduction (id "star_abduction": "abduction" is the Concord rule's source
+	# tag and class name; its display name stays "Abduction"; GDD §15.0
+	# "Tractor Beam, Abduction, Starseed and the Starborn"; owner-approved
+	# proposal "Tractor Beam -> Abduction (+ Starseed)"): Tractor Beam +
+	# Starseed (a NEW passive, owner rule: at Lv 5). Three foes lifted a cast,
+	# held longer, and every slam first DRAGS the foes within `pull` px in
+	# toward it (pull_force / mass) and shakes them for quake_share x the
+	# damage. Detected by the "pull" key.
+	"star_abduction": {
+		"base": "tractor_lift",
+		"passive": "starseed",
+		"display_name": "Abduction",  # Owner-approved proposal
+		"icon": "star_abduction",
+		"description": "Three foes rise into the light, and each falls like a star, dragging the rest in after it.",
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "lifts": "Lifts", "lift_time": "Lift (s)", "slam_radius": "Slam (px)", "slam_share": "Slam splash", "pull": "Pull (px)", "quake_share": "Quake damage"},
+		"stats": {
+			"damage": 88.0, "cooldown": 2.4, "lifts": 3, "lift_time": 1.2, "slam_radius": 70.0, "slam_share": 0.5,  # TUNING (not in GDD) first pass 96 / 0.55
+			"pull": 120.0, "pull_force": 260.0, "quake_share": 0.18,  # TUNING (not in GDD) the evolution flag: the pull round each slam (first pass 0.3: 244k damage, 95k of it quake, in the forced seed-7 Graveyard run)
 		},
 	},
 }

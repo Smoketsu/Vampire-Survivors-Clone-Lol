@@ -309,6 +309,12 @@
 ##                        Warbeast and Last Trophy objectives; the "warbeast"
 ##                        event); ground "proving_moon" is its
 ##                        ProvingMoonGround (the four zone floors).
+## --- Act IX: the Ark ---
+##   ark                — ArkDirector config (ArkStage.ARK, Act IX, the Ark of
+##                        the Concord: the Specimen Vaults' tanks and the
+##                        Reactor's vents as structure windows, the wrecks;
+##                        the "luminous_archon" event); ground "ark" is its
+##                        ArkGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

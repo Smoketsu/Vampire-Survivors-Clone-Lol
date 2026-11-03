@@ -3106,3 +3106,44 @@ two approved badges). The skins are made from the Blooded's raw image. Rebuild: 
 | `decals/proving_moon_trophy_hall_skulls` | 28 × 24 | fallen trophy skulls and a broken cord |
 | `decals/proving_moon_duelling_ring_ring` | 40 × 39 | a faded teal duelling mark (a ring with four ticks) |
 | `tiles/proving_moon_landing`, `_craters`, `_trophy_hall`, `_duelling_ring` | 128 × 128 | `make_tile.py` quilts: one regolith texture (the Landing; darker for the Craters, paler for the Duelling Ring) and one of dark cut slabs (the Trophy Hall) |
+
+### Act IX: the Ark of the Concord (phase 2, Nov 2026)
+
+<!-- --- Act IX: the Ark --- -->
+Stage 27's kinds, boss and rewards (GDD §15.0 "The Ark of the Concord (Act IX phase 2)" and the rows after it), matched to the
+approved concepts `act9_lineup.png` (the Grey Overseer; the Lumen Sentinel for the Archon) and `act9_boss.png` (the Harvester and its
+rings). Every prompt names the sex (or says creature / machine): the greys' sex is unmarked (the Overseer, the Harvester), the Archon is
+male, the freed beast a creature, the saucers machines; the Starborn is a **female** grey in the figure-redesign style (a fully covering
+suit). No Concord unit is in violet and bone; the Ghost Saucer and Black Mothership are the necromancer's (raised), so they are bone and
+soul-teal. Prompts and the rebuild script are in `art_source/ark/` (`make_art.py`: units through `prepare_sprite.py --ink-l 0.15` with
+explicit ramps, the saucers padded 2 empty rows each side for the hover bob, the Starborn through `pixelate_source.py` first, the
+Deathlord skin straight with `grey` first and `--no-levels`, badges set on the approved violet / gold frames (the generator copied the
+reference badge in as a last symbol: skipped), `walk_cycle.py` strips and idle strips under `# --- Act IX: the Ark ---`). `--ref` the
+act's own sprites enlarged x4-12 nearest (the Grey Drone, the Lumen Sentinel, the Broodling, the Hive Mother, the Saucer) plus a crop of
+the concept; the Revenant Heroine for the Starborn's figure; the base sprite for the skins, the true form and Black Mothership.
+13 API images, about $0.30 (ledger). Contact sheet `docs/act9/ark_contact_sheet.png`.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `concord/grey_overseer` | sex unmarked: tall grey, white robe, gunmetal collar, green brow mark | 16x38 | robe glide (hip 24) |
+| `concord/luminous_archon` | male: a being of white-gold light, crystal plates, a halo of shards | 38x64 | robe glide (hip 40) |
+| `concord/vault_beast` | creature: six-legged rust-red grazer-predator, brown crest, gold eyes | 48x30 | legs (hip 19); ramps crimson, brown, gold, lumen |
+| `bosses/harvester` | sex unmarked: the oldest grey, tattered white robes, spread arms | 72x96 | robe glide (hip 60); its throne of rings is code (`effects/ark_ring`) |
+| `bosses/harvester_true` | its true form: white-gold light inside four concentric gold rings | 72x112 | still (the Gardener) |
+| `player/starborn` | **female**, figure style: a grey deserter, hull-white suit, gunmetal coat, plasma seams | 30x56 | legs (hip 36), bust (12-24, rows 14-22) + `swish` (4-26, rows 26-35), idle strip |
+| `player/starborn_hyper` / `_untouchable` / `_deathlord` | the Gilded Deserter (gold and white), the white phantom, the Deathlord (black iron, crown, crimson sash) | 30 / 30 / 28 x56 | rigs derived (`SKINS`) |
+| `summons/ghost_saucer` | machine: a raised saucer, bone plates, soul-teal dome and lamps | 52x34 (30 + 2 empty rows each side) | hover strip (bob 2) |
+| `summons/black_mothership` | machine: a black saucer, bone trim, three prongs, soul-teal lenses | 54x40 (36 + 2 + 2) | hover strip (bob 2) |
+| `icons/tractor_lift`, `starseed`, `ghost_saucer`, `crop_circles` | violet badges | 32x32 | |
+| `icons/star_abduction`, `black_mothership`, `ach_last_harvest` | gold badges | 32x32 | |
+
+**Drawn on the grid** by `tools/ark_tiles.py` (deterministic, no API): the zone floors `tiles/ark_hangar` (gunmetal deck plates,
+rivets, a dim plasma guide stripe), `ark_vaults` (a dark grating between sunken specimen-tank lids, dim glass so the units read),
+`ark_reactor` (a grating with a dim plasma glow in its slots, brighter at seeded hot spots), `ark_bridge` (starfield glass under
+gunmetal ribs), 128x128 seamless; the obstacles `obstacles/ark_crate_s/_l` (+ `_v`), `ark_console_s/_l` (+ `_v`), `ark_pillar_s/_l`; the
+structures `structures/specimen_tank` (+ `_dead`), `reactor_vent` (+ `_dead`), `reap_emitter`; and `effects/ark_ring` (64x64, a grey tint
+mask squashed into the throne's tilted rings by the code).
+
+Code-drawn (no PNG): the Grey Overseer's widening pulse ring, the Archon's glow, Tractor Beam's column of soul light and the lifted
+foe's mark (the enemy's body stays on the ground: an Enemy has no draw offset), the Ghost Saucer's short beams, the Reaping's glow over
+the ring, the true form's glow over the base sprite when its art is missing.

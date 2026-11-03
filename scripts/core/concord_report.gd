@@ -55,6 +55,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	CrashSiteReport.print_lines(game, st)  # The crater, the eggs, the Burrowers, the acid, the Matriarch, the Hive Mother.
 	# --- Act IX: the Proving Moon --- (low gravity, the Warbeast, Vrask'Tal; ProvingMoonReport)
 	ProvingMoonReport.print_lines(game, st)
+	# --- Act IX: the Ark --- (its stage, kinds and boss; ArkReport)
+	ArkReport.stage_lines(game, st)
 
 
 ## The "beams" line (ConcordBeams).

@@ -290,6 +290,12 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	if out.has("fling"):
 		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(HerosFistData.SECRET_IDENTITY, HerosFistData.HASTE_KEY))
 		out["fling_share"] = float(out.get("fling_share", 0.0)) + passive_value(HerosFistData.SECRET_IDENTITY, HerosFistData.FLING_KEY)
+	# --- Act IX: the Ark --- Starseed: Tractor Beam lifts sooner and its slam
+	# reaches wider (its keys exist only in the Tractor Beam / Abduction rows;
+	# the passive's values are 0 while not owned).
+	if out.has("lift_time"):
+		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(TractorLiftData.STARSEED, TractorLiftData.HASTE_KEY))
+		out["slam_radius"] = float(out.get("slam_radius", 50.0)) * (1.0 + passive_value(TractorLiftData.STARSEED, TractorLiftData.REACH_KEY))
 	return out
 
 

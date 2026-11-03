@@ -348,6 +348,11 @@ var crash_site: CrashSiteDirector = null
 ## The Proving Moon's mechanics (Act IX: the Warbeast, the Last Trophy
 ## objective; StageRegistry "proving_moon"; null on every other stage).
 var proving_moon: ProvingMoonDirector = null
+# --- Act IX: the Ark ---
+## The Ark of the Concord's mechanics (Act IX: the Specimen Vaults' tanks, the
+## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
+## other stage).
+var ark: ArkDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -546,6 +551,12 @@ func _ready() -> void:
 		proving_moon.game = game
 		proving_moon.config = stage_def["proving_moon"]
 		add_child(proving_moon)  # The Proving Moon's director.
+	# --- Act IX: the Ark ---
+	if not (stage_def.get("ark", {}) as Dictionary).is_empty():
+		ark = ArkDirector.new()
+		ark.game = game
+		ark.config = stage_def["ark"]
+		add_child(ark)  # The Ark of the Concord's director.
 
 
 # =====================================================================================
@@ -693,6 +704,9 @@ func step(delta: float) -> void:
 	# --- Act IX: the Proving Moon ---
 	if proving_moon != null:
 		proving_moon.step(delta)  # The Warbeast.
+	# --- Act IX: the Ark ---
+	if ark != null:
+		ark.step(delta)  # The tanks, the vents.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -839,6 +853,9 @@ func objective_text() -> String:
 	# --- Act IX: the Proving Moon ---
 	if proving_moon != null and proving_moon.objective_override() != "":
 		return proving_moon.objective_override()  # The Last Trophy's countdown, the Warbeast.
+	# --- Act IX: the Ark ---
+	if ark != null and ark.objective_override() != "":
+		return ark.objective_override()  # The Luminous Archon, the Reaping.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1085,6 +1102,12 @@ func _run_event(ev: Dictionary) -> void:
 				proving_moon.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Proving Moon's miniboss (ProvingMoonDirector).
+		# --- Act IX: the Ark ---
+		"luminous_archon":
+			if ark != null:
+				ark.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Ark's miniboss (ArkDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

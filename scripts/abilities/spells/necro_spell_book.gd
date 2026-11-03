@@ -80,6 +80,9 @@
 ## and Act IX's (the Proving Moon, PROVING_MOON_IDS: stepped only; its own
 ## autotest line, ProvingMoonReport.item_lines()):
 ##   Soul Caster      -> SoulCaster       (evolves into Apex Predator)
+## and Act IX's (the Ark, ARK_IDS: stepped only; its own autotest line,
+## ArkReport.item_lines()):
+##   Tractor Beam     -> TractorLift      (evolves into Abduction)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -198,6 +201,11 @@ const CRASH_SITE_IDS := ["bone_beetles"]
 ## The Proving Moon's unlockable spell (Vrask'Tal's reward): stepped only (no
 ## kill or after-physics hook), reported by ProvingMoonReport.
 const PROVING_MOON_IDS := ["soul_caster"]
+# --- Act IX: the Ark ---
+## The Ark of the Concord's unlockable spell (the Harvester's reward): stepped
+## only (no kill or after-physics hook), reported by ArkReport. Its id is
+## "tractor_lift" (never the Concord's "tractor_beam" sound / event).
+const ARK_IDS := ["tractor_lift"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -256,6 +264,8 @@ const SOURCES := {
 	"bone_beetles": ["bone_beetles", "hive_of_bone"],
 	# --- Act IX: the Proving Moon ---
 	"soul_caster": ["soul_caster", "apex_predator"],
+	# --- Act IX: the Ark ---
+	"tractor_lift": ["tractor_lift", "star_abduction", "star_abduction_quake"],
 }
 
 ## Owning run.
@@ -430,6 +440,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Proving Moon's spell.
+	# --- Act IX: the Ark ---
+	for id: String in ARK_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Ark's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -529,6 +548,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act IX: the Proving Moon ---
 		"soul_caster":
 			node = SoulCaster.new()  # The Proving Moon's spell.
+		# --- Act IX: the Ark ---
+		"tractor_lift":
+			node = TractorLift.new()  # The Ark's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

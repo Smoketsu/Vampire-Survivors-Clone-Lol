@@ -94,7 +94,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act IX: the Crash Site ---
 	"broodbound",
 	# --- Act IX: the Proving Moon ---
-	"blooded"]
+	"blooded",
+	# --- Act IX: the Ark ---
+	"starborn"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -211,7 +213,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act IX: the Crash Site ---
 	"beetle_extra",
 	# --- Act IX: the Proving Moon ---
-	"soul_caster_extra_targets"]
+	"soul_caster_extra_targets",
+	# --- Act IX: the Ark ---
+	"tractor_extra_lifts"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -918,6 +922,31 @@ const CHARACTERS := {
 		"stats": {"move_speed": 0.05, "max_hp": -5.0},  # TUNING (not in GDD) a huntress: quick, a little frailer
 		"sprite": "player/blooded",
 		"tint": Color(0.62, 0.40, 0.36),  # TUNING (not in GDD) a hunter's red-brown leather over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act IX: the Ark ---
+	# The Starborn (Tractor Beam's character; owner-approved Act IX proposal
+	# "Rewards": "Tractor Beam ... | The Starborn, a Harvester who deserted
+	# (figure style)"): FEMALE, in the figure-redesign style (clothed, chest
+	# and hips covered): a grey who deserted the Harvesters, in a covering
+	# suit of hull white and gunmetal with plasma-green seams, a long fitted
+	# coat, her great black eyes; never the necromancer's violet and bone
+	# (brief). Tractor Beam must be unlocked (the Harvester) before she can be
+	# earned, by the usual Lv 5 rule. Own decision on her innate (the proposal
+	# names none): she still knows the Harvesters' signals, so her beam lifts
+	# one more foe (TractorLift.step()).
+	"starborn": {
+		"display_name": "The Starborn",  # Owner-approved proposal
+		"title": "She fled the harvest. She came back to end it.",
+		"spell": "tractor_lift",
+		"innate": {
+			"id": "deserters_signal", "name": "Deserter's Signal",
+			"description": "Tractor Beam lifts one more foe.",
+			"values": {"tractor_extra_lifts": 1.0},  # TUNING (not in GDD) extra lifts a cast
+		},
+		"stats": {"max_hp": 5.0, "move_speed": 0.04},  # TUNING (not in GDD) a light, quick deserter
+		"sprite": "player/starborn",
+		"tint": Color(0.70, 0.86, 0.74),  # TUNING (not in GDD) a pale plasma green over the violet
 		"starts_unlocked": false,
 	},
 }

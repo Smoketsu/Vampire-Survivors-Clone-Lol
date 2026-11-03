@@ -926,6 +926,19 @@ RIGS = {
     "bosses/vrask_tal": dict(mode="legs", hip=64, back=(0, 58), front=(58, 106), rigid=[], spread=3, lift=3, dip=1),
     "player/blooded": dict(mode="legs", hip=34, back=(0, 16), front=(16, 30), rigid=[], spread=2, lift=2, dip=1,
                            bust=(12, 22, 13, 20, 2)),
+    # --- Act IX: the Ark ---
+    # The Grey Overseer, the Luminous Archon and the Harvester glide (robe: the long robe / the light-trail sways); the freed
+    # beast scuttles (legs: its back and front legs); the Starborn (female, figure redesign) strides with the bust box bouncing,
+    # the coat's `swish` and an idle strip; the Ghost Saucer and Black Mothership hover (the whole hull bobs 2 px). Boxes read
+    # from each still (art px, [start, end)).
+    "concord/grey_overseer": dict(mode="robe", hip=24, rigid=[], sway=1, dip=1),
+    "concord/luminous_archon": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1),
+    "concord/vault_beast": dict(mode="legs", hip=19, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=1, dip=1),
+    "bosses/harvester": dict(mode="robe", hip=60, rigid=[], sway=1, dip=1),
+    "player/starborn": dict(mode="legs", hip=36, back=(0, 15), front=(15, 30), rigid=[], spread=1, lift=1, dip=1,
+                            bust=(12, 24, 14, 22, 2), swish=(4, 26, 26, 35, 1)),
+    "summons/ghost_saucer": dict(mode="hover", bob=2, parts=[]),
+    "summons/black_mothership": dict(mode="hover", bob=2, parts=[]),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -1055,6 +1068,10 @@ SKINS = {
     "player/blooded_hyper": "player/blooded",
     "player/blooded_untouchable": "player/blooded",
     "player/blooded_deathlord": "player/blooded",
+    # --- Act IX: the Ark ---
+    "player/starborn_hyper": "player/starborn",
+    "player/starborn_untouchable": "player/starborn",
+    "player/starborn_deathlord": "player/starborn",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

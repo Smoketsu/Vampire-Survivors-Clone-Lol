@@ -40,6 +40,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	if kind == ProvingMoonEnemyData.WARBEAST:
 		ProvingMoonGlyphs.draw_warbeast(ci, o, r, flash, false)
 		return true
+	# --- Act IX: the Ark ---
+	if ArkGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # The Ark's kinds and the Grey Overseer.
 	match kind:
 		"broodling":
 			_broodling(ci, o, r, flash)

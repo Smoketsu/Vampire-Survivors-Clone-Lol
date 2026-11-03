@@ -456,6 +456,9 @@ func _ready() -> void:
 		# --- Act IX: the Proving Moon ---
 		"proving_moon":
 			ground = ProvingMoonGround.new()  # Act IX: the Proving Moon's four zone floors (ProvingMoonStage.ZONES).
+		# --- Act IX: the Ark ---
+		"ark":
+			ground = ArkGround.new()  # Act IX: the Ark of the Concord's four zone floors (ArkStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)
