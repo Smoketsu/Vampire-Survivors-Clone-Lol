@@ -2323,6 +2323,45 @@ your summons barely scratch it until a spell reveals it; a three-dot lock, then 
 `--boss=hive_mother|vrask_tal|harvester`, `--spawn=` with the kinds above (`concord_terraformer@T` drops a pod); lines
 `beams`, `abduction`, `terraforming`, `final harvest`, `concord kinds`, `concord stage`.
 
+### Act IX: the Proving Moon (Stage 26)
+
+<!-- --- Act IX: the Proving Moon --- -->
+The Vrask take the necromancer to their hunting ground on the moon, to see what he is worth (GDD §15.0 "The Proving Moon
+(Act IX phase 2)" and the rows after it; `docs/act9/BRIEF_PHASE2.md`). The Vrask lead here: their hunters come more often
+and in hunting parties, their Brood beasts are the fodder, and the Harvesters and the Luminous fight beside them. Beams,
+Abduction, Terraforming and the Final Harvest work as on every Act IX stage. Still hidden from the stage select
+(`"playable": false`) until the lead's integration pass.
+
+- **Low gravity.** Knockback goes twice as far for everyone (STAGE key `gravity` 2.0, read only through
+  `ConcordRules.gravity()`): every knock you deal sends an enemy twice as far, the enemies' shoves throw your summons twice
+  as far, and the Warbeast and Vrask'Tal leap twice as far. Grave Step is a shadow step and stays as it is.
+- **Four zones:** the Landing (grey regolith, boulders), the Craters (crater rims), the Trophy Hall (dark stone, trophy
+  walls hung with skulls) and the Duelling Ring (the duellists' marked circles).
+- **The Warbeast** (11:30, in the Trophy Hall): the Vrask's armoured war-hound, the miniboss. Armour plates (flat armour:
+  weak blows barely scratch it; Wither shreds it). It crouches over a landing circle and **pounces** onto it from up to
+  300 px away (150 × the low gravity), over your ring, biting everything in the circle and throwing your summons out.
+- **Vrask'Tal, the Hunt-Lord** (17:00), three phases:
+  - **the Stalk:** cloaked while he moves (a shimmer: your summons' blows deal half, a spell hit reveals him for 2 s), he
+    hunts the **edge of your ring** (the summon near him farthest from you) with his glaive and his shoulder caster's
+    three-dot lock. Every summon he kills hangs a **skull** on his belt: +4% damage each, at most eight.
+  - **the Duel** (below 65%): he drops his cloak, comes for you, locks you with his caster and **leaps over the ring** onto
+    you (a landing circle; up to 400 px away on the moon).
+  - **the Last Trophy** (below 25%): he arms the bomb on his wrist, a **20 s countdown** shown as the objective text. Kill
+    him in time and it is off (the achievement **The Hunter Hunted**). If it ends, it blows up where he stands: within
+    190 px you are left at a quarter of your health (never killed by it; Grave Step does not dodge it), your summons are
+    destroyed, and **he dies in it** (the kill still counts for the unlock chain, never for the achievement). Keep away
+    from him while it counts.
+- **Rewards.** Slaying Vrask'Tal unlocks the spell **Soul Caster** (a shoulder cannon locks the three strongest foes with
+  three soul-teal dots, then fires into each; evolves into **Apex Predator**: five locks, harder against elites and bosses,
+  and every kill reloads it) with its paired passive **Trophy Rack** (each of its kills adds a trophy: more damage per
+  trophy, up to a cap). Reach Soul Caster Lv 5 to unlock **the Blooded** (female, figure style), the one human who
+  survived the Hunt; her innate **First Blood** locks one more target. **The Hunter Hunted** unlocks Act IX's
+  counter-passive **Mirror Bones** (offered only in Act IX: your summons take less beam damage, and the beams you reflect
+  hit a little harder).
+- **Autotest:** `--stage=proving_moon`, `--boss=vrask_tal`, `--spawn=warbeast@T`, `--spells=soul_caster`,
+  `--passives=trophy_rack,mirror_bones`, `--character=blooded`; lines `proving moon`, `warbeast`, `proving moon threats`
+  (with the reflected beams' share of the run's damage), `vrask'tal`, `act IX spell`, `act IX passives`.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -3039,6 +3078,10 @@ scripts/
                             streak, the saucer's tractor cone, the Final Harvest's eye (textures only; Act IX)
     concord_report.gd       The autotest's Act IX lines (beams, abduction, terraforming, final harvest, concord
                             kinds, concord stage)
+    proving_moon_ground.gd  The Proving Moon's four zone floors (tiles/proving_moon_<style>, decals; Act IX)
+    proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
+    proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
+                            and passives' item lines; Act IX)
     fort_kessler_report.gd  The autotest's Fort Kessler lines (the stage, its kinds, Mammoth, the threats, Harrow) and
                             its items (Bone Mines, Tripwire, Armour-Piercing Bones)
     fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
@@ -3380,6 +3423,10 @@ scripts/
       broodling_kit.gd, grey_drone_kit.gd, saucer_kit.gd, vrask_hunter_kit.gd, lumen_sentinel_kit.gd, prism_kit.gd,
       concord_terraformer_kit.gd  The shared kinds (the probe, the hover and tractor beam, the cloak and lock, the
                             sweep, the Star-Seer's glint, the pod's roots)
+      proving_moon_director.gd  The Proving Moon: the Warbeast's event, the Last Trophy objective (Act IX)
+      warbeast_kit.gd       The Warbeast: the pounce (x the low gravity), its plates (flat armour), the XP burst
+      boss_vrask_tal.gd     Vrask'Tal: the Stalk (the cloak, the ring-edge prey, the skulls), the Duel (the leap over
+                            the ring), the Last Trophy (the 20 s countdown, the bomb)
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3671,7 +3718,11 @@ scripts/
     stages/crash_site_stage.gd     Act IX stubs: the Crash Site, the Proving Moon and the Ark of the Concord; act 9,
     stages/proving_moon_stage.gd   "concord": true, zones, the "terraforming" overrides, a timeline of the shared
     stages/ark_stage.gd            kinds of all four races, the Final Harvest, placeholder floors / bosses; the
-                                   Proving Moon reserves "gravity" (phase 2)
+                                   Proving Moon reads "gravity" (ConcordRules.gravity())
+    proving_moon_enemy_data.gd  The Proving Moon's table: the Warbeast (Act IX)
+    vrask_tal_data.gd       Vrask'Tal's arrival and numbers (the Stalk, the Duel, the Last Trophy and its bomb)
+    soul_caster_data.gd     Soul Caster / Apex Predator rules, Trophy Rack keys, First Blood key (Act IX; the spell
+                            node is abilities/spells/soul_caster.gd)
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
     stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
     stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four

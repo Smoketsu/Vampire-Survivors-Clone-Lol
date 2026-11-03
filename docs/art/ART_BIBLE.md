@@ -3047,3 +3047,33 @@ a frame, tiles along +x) and `effects/beam_hit.png` (6 frames of 64x64 grey burs
 `concord/mothership_eye.png` (192x192, the API source snapped to the Concord colours, round with transparent corners; the code fades it in).
 Seams checked on a 1280x720 mock (`docs/act9/art_mock_turf.png`); contact sheet `docs/act9/art_contact_sheet.png`. `art_check.py` rows against
 older stages' light floors fail the lightness gap for the dark Brood and Vrask (those floors are other acts').
+
+### Act IX: the Proving Moon (Stage 26; Act IX phase 2, Nov 2026)
+
+<!-- --- Act IX: the Proving Moon --- -->
+The Proving Moon's art (GDD §15.0 "The Proving Moon art (Act IX phase 2)"), in the Concord's style above: Vrask teal and
+dark gunmetal, hull-white blades, magenta lamps, grey regolith; never the player's violet and bone on a Concord unit (the
+trophy skulls are a weathered yellow-grey, `concord_hive_bone`). **The Warbeast** is a **creature**; **Vrask'Tal** is
+**male**; **the Blooded** is **female**, in the figure-redesign style (hourglass, fully clothed: a brown leather hunting coat
+buttoned to a high collar, a belt, trousers and boots; raised: grey-pale skin, soul-teal eyes, a dark-red braid, claw
+scars, a teal Vrask scale on a cord, a bone-and-iron shoulder cannon). Prompts in `art_source/proving_moon/<id>.txt` (the
+unit template, the sex or "a creature" named), raw API images in `art_source/proving_moon/raw/` (`blooded_a_unused.png`
+is the first Blooded try: the figure was too plain), references in `refs/` (the lineup's Vrask hunter, enlarged game
+sprites `concord/vrask_hunter`, `player/fallen_sergeant`, `bosses/vargr`, `concord/broodling`, two obstacles, a floor tile,
+two approved badges). The skins are made from the Blooded's raw image. Rebuild: `python3 art_source/proving_moon/make_art.py`
+(steps units, figures, badges, props, decals, floors, strips).
+
+| Sprite | Size (art px) | Notes |
+|---|---|---|
+| `concord/warbeast` | 92 × 44 | a creature: a long, low armoured war-hound, teal hide, gunmetal plates with teal trim, a magenta collar lamp; legs strip (hind / fore halves, hip 28) |
+| `bosses/vrask_tal` | 106 × 84 | male: the horned Hunt-Lord, shoulder caster, wrist bomb, skull belt, scale cloak, glaive; legs strip (hip 64). No attack poses yet (the still shows; the code lifts him on his leap and fades him while cloaked); his skull belt's kill count is drawn by code over it |
+| `player/blooded` (+ `_hyper`, `_untouchable`, `_deathlord`) | 30 × 56 (skins 32 / 32 / 28 × 56) | figure redesign; bust rig (12-22, rows 13-20) and idle strip; the Gilded Quarry (white and gold), white phantom with soul-teal, black iron and crimson with a small spiked crown. `art_check` lightness on the Graveyard soil +0.14 (need +0.15): the `brown` ramp has two shades and a brighter source does not move it; the Deathlord skin is dark by design, as every Deathlord skin |
+| `icons/soul_caster`, `trophy_rack`, `mirror_bones` | 32 × 32 | violet badges (the `abyssal_pact` frame) |
+| `icons/apex_predator`, `ach_the_hunter_hunted` | 32 × 32 | gold badges (the `tidecallers_host` frame) |
+| `obstacles/moon_boulder_s/m/l` | 28 / 40 / 54 wide | grey lunar boulders (circles of 12 / 18 / 24 px) |
+| `obstacles/crater_rim_s/m/l` | 48 / 64 / 82 wide | a raised regolith rim round a dark bowl (circles of 22 / 30 / 38 px) |
+| `obstacles/trophy_pillar_s/l` (+ `_v`) | 42 × 13 / 62 × 18 (end-on 28 × 54 / 70) | a dark cut-stone trophy wall, a teal-trimmed rail, yellow-grey alien skulls |
+| `decals/proving_moon_landing_crater`, `_craters_crater` | 24 × 20 | a small moon crater (the same decal in both zones) |
+| `decals/proving_moon_trophy_hall_skulls` | 28 × 24 | fallen trophy skulls and a broken cord |
+| `decals/proving_moon_duelling_ring_ring` | 40 × 39 | a faded teal duelling mark (a ring with four ticks) |
+| `tiles/proving_moon_landing`, `_craters`, `_trophy_hall`, `_duelling_ring` | 128 × 128 | `make_tile.py` quilts: one regolith texture (the Landing; darker for the Craters, paler for the Duelling Ring) and one of dark cut slabs (the Trophy Hall) |

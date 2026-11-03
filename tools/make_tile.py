@@ -669,6 +669,26 @@ RECIPES = {
         "source": "castle_sanguis_marble.png", "method": "quilt",  # The Throne of Blood: black marble veined red.
         "colors": ["blood_ink", "obsidian_ink", "floor_soil", "blood_dark"],
     },
+    # --- Act IX: the Proving Moon ---
+    # The four zone floors of THE PROVING MOON (ProvingMoonGround, tiles/proving_moon_<style>): one API texture of grey moon
+    # regolith (the Landing; recoloured darker for the Craters and paler for the Duelling Ring's packed dust) and one of the
+    # Trophy Hall's dark cut slabs. The craters, skulls and duelling marks are decals (decals/proving_moon_*).
+    "proving_moon_landing": {
+        "source": "proving_moon_regolith.png", "method": "quilt",  # The Landing: grey regolith.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_marble"],
+    },
+    "proving_moon_craters": {
+        "source": "proving_moon_regolith.png", "method": "quilt",  # The Craters: darker, pitted regolith.
+        "colors": ["ink_cold", "floor_soil", "floor_slate"],
+    },
+    "proving_moon_trophy_hall": {
+        "source": "proving_moon_hall.png", "method": "quilt",  # The Trophy Hall: dark cut slabs.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_marble"],
+    },
+    "proving_moon_duelling_ring": {
+        "source": "proving_moon_regolith.png", "method": "quilt",  # The Duelling Ring: packed, paler dust.
+        "colors": ["floor_soil", "floor_slate", "floor_marble", "floor_stone"],
+    },
 }
 
 
