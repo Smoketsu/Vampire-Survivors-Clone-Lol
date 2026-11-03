@@ -283,7 +283,7 @@ TYRE = ["city_ink", "city_asphalt_dark", "city_asphalt", "city_concrete", "city_
 #           Each wing's pixels are turned about its shoulder pivot by FLAP_WAVE[f] * degrees (+ = clockwise on screen, so a wing
 #           on the pivot's left rises; use a negative `degrees` for the right wing; entries with the same pivot and degrees are
 #           one wing), drawn BEHIND the body; the body sags FLAP_BODY[f] * bob px. No leg stride. Pixels only move (_flap_frames()).
-#   wings   optional list of wing dicts, the same entries as a `flap` rig's `wings` (box, pivot, degrees, exclude, colors, soft_*), for a
+#   wings   optional list of wing dicts, the same entries as a `flap` rig's `wings` (box, pivot, degrees, exclude, colors, soft_*, `keep`: boxes whose wing pixels stay in the body too, and `ink`: palette names of outline pixels that touch an `exclude` box and stay with the body), for a
 #           legs / robe rig that keeps its stride or glide, its bust and its swish (owner's Act VI art review, round 2: "make the wings
 #           flap a bit"): each wing's pixels are cut out of the still, turned about its pivot by FLAP_WAVE[f] * degrees (idle: the slower
 #           IDLE_WING_WAVE), moved with the body dip, and laid BEHIND the finished frame; the extra wing field `seam` (px, default 0) keeps the wing's
@@ -916,13 +916,19 @@ RIGS = {
     "concord/lumen_sentinel": dict(mode="robe", hip=28, rigid=[(14, 20, 0, None)], sway=1, dip=1),
     "concord/prism": dict(mode="robe", hip=28, rigid=[], sway=1, dip=1, bust=(7, 15, 10, 16, 1, 2),
                           bust_exclude=[(15, 20, 8, 20)], swish=(5, 17, 24, 38, 1)),
-    "bosses/hive_mother": dict(mode="robe", hip=62, rigid=[], sway=1, dip=1, bust=(36, 53, 31, 41, 2, 2)),  # Act IX R1 redo: refit to the new, fuller still (the cream hooks beside the lobes stay outside the box).
+    "bosses/hive_mother": dict(mode="robe", hip=62, rigid=[], sway=1, dip=1, bust=(36, 53, 31, 41, 2, 2),
+                          # Round 2 (owner: "make the wings flap a bit"): her two chitin wings (left cols 0-37, right 51+, above the lobes) beat +-7 degrees about the shoulders (`wings`), behind the gliding body (bust kept).
+                          wings=[dict(box=(0, 38, 0, 68), pivot=(38, 36), degrees=7.0, seam=3, exclude=[(27, 38, 46, 68)]),  # the hooks hanging below the wing ride with it; the lobes (cols 27+, rows 46+) stay
+                                 dict(box=(50, 88, 0, 68), pivot=(50, 36), degrees=-7.0, seam=3, exclude=[(50, 61, 46, 68)])]),  # Act IX R1 redo: refit to the new, fuller still (the cream hooks beside the lobes stay outside the box).
     # --- Act IX: the Crash Site --- (the Brood's soldiers walk on their legs; the Matriarch and the Hive Mother's
     # Flight form hover; the Broodbound glides in her chitin gown with the bust bounce and an idle strip)
     "concord/burrower": dict(mode="legs", hip=26, back=(0, 16), front=(16, 32), rigid=[], spread=1, lift=1, dip=1),
     "concord/acid_spitter": dict(mode="legs", hip=21, back=(0, 15), front=(15, 32), rigid=[], spread=1, lift=1, dip=1),
     "concord/brood_matriarch": dict(mode="hover", bob=2, parts=[]),
-    "bosses/hive_mother_flight": dict(mode="hover", bob=2, parts=[]),
+    "bosses/hive_mother_flight": dict(mode="hover", bob=2, parts=[],
+                                      # Round 2 (owner: "make the wings flap a bit"): the two wings (left cols 0-41, right 58+; the horns and the body stay) beat +-7 degrees about the shoulders (`wings`, hover rigs too), the body keeps its bob.
+                                      wings=[dict(box=(0, 42, 0, 76), pivot=(42, 40), degrees=7.0, seam=3, exclude=[(29, 42, 44, 76)], keep=[(26, 42, 41, 44)], ink=["concord_ink", "brown_light", "ink_warm"]),
+                                             dict(box=(58, 100, 0, 76), pivot=(58, 40), degrees=-7.0, seam=3, exclude=[(58, 71, 44, 76)], keep=[(58, 74, 41, 44)], ink=["concord_ink", "brown_light", "ink_warm"])]),
     "player/broodbound": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(14, 24, 14, 22, 2), bust_exclude=[(24, 32, 10, 24)]),  # Act IX R1 redo: the new insect-woman still (bust cols 14-23, rows 14-21; the raised arm beyond col 24 and the shoulder case left of col 14 stay still).
     # --- Act IX: the Proving Moon ---
     # The Warbeast (a creature) prowls on its four legs (its hind and fore pairs as the back and front halves, like Old
@@ -931,7 +937,7 @@ RIGS = {
     "concord/warbeast": dict(mode="legs", hip=28, back=(0, 46), front=(46, 92), rigid=[], spread=2, lift=2, dip=1),
     "bosses/vrask_tal": dict(mode="legs", hip=64, back=(0, 58), front=(58, 106), rigid=[], spread=3, lift=3, dip=1),
     "player/blooded": dict(mode="legs", hip=34, back=(0, 16), front=(16, 30), rigid=[], spread=2, lift=2, dip=1,
-                           bust=(16, 26, 13, 20, 2)),  # x + 4 (owner, Act IX art review round 1).
+                           bust=(12, 26, 13, 20, 2)),  # Round 2 (owner: "extended, not moved": the original left edge 12, +4 on the right so it covers her whole chest).
     # --- Act IX: the Ark ---
     # The Grey Overseer, the Luminous Archon and the Harvester glide (robe: the long robe / the light-trail sways); the freed
     # beast scuttles (legs: its back and front legs); the Starborn (female, figure redesign) strides with the bust box bouncing,
@@ -1240,7 +1246,10 @@ def _move(layer: np.ndarray, dy: int) -> np.ndarray:
     if dy == 0:
         return layer.copy()
     out = np.zeros_like(layer)
-    out[dy:] = layer[:-dy]
+    if dy > 0:
+        out[dy:] = layer[:-dy]
+    else:  # A hover rig's wings rise with the body (rows pushed past the top are dropped).
+        out[:dy] = layer[-dy:]
     return out
 
 
@@ -1507,7 +1516,13 @@ def frames_of(key: str) -> list:
             sys.exit(f"{key}: frame 0 differs from the still (rig error)")
         return out
     if rig["mode"] == "hover":
-        out = hover_frames(key, still, rig)
+        wings_h = []  # The rig's `wings` (cut out of the still; they beat behind the hovering body).
+        if "wings" in rig:
+            still_w, wings_h = _wings_cut(still, rig["wings"])
+            out = hover_frames(key, still_w, rig)
+            out = [_wings_lay(fr, wings_h, FLAP_WAVE[f], -int(round(HOVER_BOB[f] * rig.get("bob", 1)))) for f, fr in enumerate(out)]
+        else:
+            out = hover_frames(key, still, rig)
         if not np.array_equal(out[0], still):
             sys.exit(f"{key}: frame 0 differs from the still (rig error)")
         return out
@@ -1570,8 +1585,20 @@ def _wing_mask(still: np.ndarray, wing: dict) -> np.ndarray:
         for c in _palette_rgb(wing["colors"]):
             ok |= (still[:, :, :3] == np.array(c, dtype=np.uint8)).all(-1)
         m &= ok
+    ex_all = np.zeros((h, w), dtype=bool)  # The excluded boxes' opaque pixels (the body that stays).
     for ex0, ex1, ey0, ey1 in wing.get("exclude", []):
         m[ey0:ey1, ex0:ex1] = False
+        ex_all[ey0:ey1, ex0:ex1] = True
+    if wing.get("ink") and ex_all.any():  # `ink` (palette names): outline pixels touching the excluded body stay with it (no stray ink lines).
+        ink_px = np.isin(
+            (still[:, :, 0].astype(int) << 16) | (still[:, :, 1].astype(int) << 8) | still[:, :, 2].astype(int),
+            [(r << 16) | (g << 8) | b for r, g, b in _palette_rgb(wing["ink"])])
+        ex_all &= still[:, :, 3] > 0
+        near = np.zeros((h, w), dtype=bool)
+        for dy in (-1, 0, 1):
+            for dx in (-1, 0, 1):
+                near |= np.roll(np.roll(ex_all, dy, axis=0), dx, axis=1)
+        m &= ~(near & ink_px)
     # Soft exclude boxes: inside them only the body stays put; the pixels of `soft_colors` (the wing's membrane seen behind the
     # body) go with the wing, and an outline pixel goes with it too unless it touches a body pixel (so no stray ink is left behind).
     for ex0, ex1, ey0, ey1 in wing.get("soft_exclude", []):
@@ -1651,6 +1678,10 @@ def _wings_cut(still: np.ndarray, wings: list) -> tuple:
             else:
                 strip[:, x0:x0 + seam] = True
             rest[m & strip] = still[m & strip]
+        for kx0, kx1, ky0, ky1 in w.get("keep", []):  # `keep` boxes: the wing's pixels there stay in the body too (closes a gap along an `exclude` edge).
+            km = np.zeros_like(m)
+            km[ky0:ky1, kx0:kx1] = True
+            rest[m & km] = still[m & km]
         out.append((lay, w))
     return rest, out
 
