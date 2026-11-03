@@ -83,7 +83,7 @@ const LATE_ANNOUNCE := ["THE HIVE IS SILENT", "The Hive Mother falls under the o
 
 ## The Hive Mother's base max HP (x the boss HP multiplier and the stage's HP
 ## multiplier 2.15; Don Marrow 15,000 x 2.0, Paragon on Liberty Heights).
-const MAX_HP: float = 14000.0  # TUNING (not in GDD) she is out of reach part of the Burrow
+const MAX_HP: float = 12500.0  # TUNING (not in GDD) she is out of reach part of the Burrow (first pass 14000: the seed-2 army bot had not slain her by 0:00)
 
 ## The Hive Mother's design row.
 const BOSS := {
@@ -125,7 +125,7 @@ const BOSS := {
 	"egg_min": 70.0,  # TUNING (not in GDD) px from the necromancer
 	"egg_max": 150.0,  # TUNING (not in GDD) px (the ring is 60-150 px)
 	"burrowers_first": 6.0,  # TUNING (not in GDD) s after she arrives
-	"burrowers_every": 14.0,  # TUNING (not in GDD) s between two burrower waves (the Brood and the Burrow)
+	"burrowers_every": 20.0,  # TUNING (not in GDD) s between two burrower waves (the Brood and the Burrow; first pass 14: her fight broke the seed-2 army's ring)
 	"burrowers_count": 4,  # Owner-approved proposal: "burrowers from every side" (four sides); TUNING (not in GDD) the count
 	# The Burrow.
 	"dive_time": 0.8,  # TUNING (not in GDD) s she sinks
@@ -144,13 +144,13 @@ const BOSS := {
 	"hover_turn": 0.35,  # TUNING (not in GDD) rad/s she circles
 	"flight_melee_taken": 0.5,  # TUNING (not in GDD) share of a grounded melee blow she takes aloft (she swoops low)
 	"acid_first": 2.0,  # TUNING (not in GDD) s after the phase begins
-	"acid_every": 3.2,  # TUNING (not in GDD) s between two acid volleys
+	"acid_every": 3.6,  # TUNING (not in GDD) s between two acid volleys (first pass 3.2)
 	"acid_globs": 5,  # TUNING (not in GDD) globs a volley
 	"acid_min": 60.0,  # TUNING (not in GDD) px from the necromancer
 	"acid_max": 140.0,  # TUNING (not in GDD) px
 	"acid_flight": 1.0,  # TUNING (not in GDD) s each glob falls (its landing telegraph shows as long)
 	"acid_radius": 32.0,  # TUNING (not in GDD) px (the Acid Spitter's 28, larger)
 	"acid_life": 4.0,  # TUNING (not in GDD) s
-	"acid_dps": 4.0,  # TUNING (not in GDD) before the time scaling
-	"acid_impact": 6.0,  # TUNING (not in GDD) the splash, before the time scaling
+	"acid_dps": 3.0,  # TUNING (not in GDD) before the time scaling (first pass 4)
+	"acid_impact": 3.0,  # TUNING (not in GDD) the splash, before the time scaling (first pass 6: the seed-1 army bot fell to 43% in her Flight, 68 HP from the splashes)
 }

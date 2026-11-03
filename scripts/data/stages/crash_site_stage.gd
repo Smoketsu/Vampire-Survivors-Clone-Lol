@@ -183,7 +183,7 @@ const SEGMENTS := [
 		"objective": "The Glass Spire: the whole coalition comes for your dead"},
 	# 17:00, the boss: thinner, so the fight is the queen.
 	{"start": BOSS_TIME, "rate": 2.4, "max_alive": 64,  # TUNING (not in GDD) thinner during the boss fight
-		"weights": {"broodling": 0.56, "burrower": 0.06, "acid_spitter": 0.08, "grey_drone": 0.16, "lumen_sentinel": 0.07, "prism": 0.03, "vrask_hunter": 0.02, "saucer": 0.02},
+		"weights": {"broodling": 0.62, "burrower": 0.03, "acid_spitter": 0.05, "grey_drone": 0.16, "lumen_sentinel": 0.07, "prism": 0.03, "vrask_hunter": 0.02, "saucer": 0.02},  # first pass burrower 0.06, acid_spitter 0.08 (she brings her own burrowers and acid)
 		"objective": "The Hive Mother has come for you"},
 ]
 

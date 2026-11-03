@@ -370,7 +370,7 @@ const ENEMIES := {
 		"surface_dist": 62.0,  # TUNING (not in GDD) px from the necromancer it surfaces (the ring is 60-150 px)
 		"mound_time": 1.0,  # Owner-approved proposal: "a dirt mound 1 s ahead"
 		"burst_radius": 30.0,  # TUNING (not in GDD) px
-		"burst_damage": 6.0,  # TUNING (not in GDD) before the time scaling, once a body
+		"burst_damage": 4.0,  # TUNING (not in GDD) before the time scaling, once a body (first pass 6)
 		"reburrow_dist": 300.0,  # TUNING (not in GDD) px
 		"reburrow_every": 9.0,  # TUNING (not in GDD) s
 		"mound_radius": 18.0,  # TUNING (not in GDD) px of the mound drawn (and its danger hint)
@@ -406,7 +406,7 @@ const ENEMIES := {
 		"race": "brood",  # Owner: the Brood lead Stage 25
 		"lob_flight": 0.9,  # TUNING (not in GDD) s in the air
 		"acid_radius": 28.0,  # TUNING (not in GDD) px
-		"acid_life": 3.5,  # TUNING (not in GDD) s
+		"acid_life": 3.0,  # TUNING (not in GDD) s (first pass 3.5)
 		"acid_dps": 3.0,  # TUNING (not in GDD) before the time scaling
 		"acid_impact": 3.0,  # TUNING (not in GDD) the splash, before the time scaling
 	},  # The Acid Spitter.
