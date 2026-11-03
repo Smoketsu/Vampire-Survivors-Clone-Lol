@@ -34,6 +34,9 @@ extends Node2D
 ## Sprite key of a puddle's art (grey tint mask, the art pass).
 const POOL_ART: String = "effects/acid_pool"
 ## Colour of the acid (the Brood's acid green, Palette.CONCORD_PLASMA's hue).
+## Tint of a puddle's texture: white, because the art itself is baked in the Concord plasma greens (#1FA84A rim, #3CFF6A body;
+## Act IX art review round 1: "should be green since it's acid"; it was a grey mask under ACID_COLOR). Drawing only.
+const POOL_TINT := Color(1.0, 1.0, 1.0)  # TUNING (not in GDD) drawing only
 const ACID_COLOR := Color(0.55, 1.0, 0.25)  # TUNING (not in GDD) drawing only
 
 ## Owning run.
@@ -247,8 +250,10 @@ func danger_push(p: Vector2) -> Vector2:
 func _draw() -> void:
 	var now := game.elapsed
 	var tex := SpriteBank.texture(POOL_ART)  # The art pass's puddle, or null.
+	var tint := POOL_TINT  # White for the baked art; the white fallback blob takes the acid colour.
 	if tex == null:
 		tex = blob_texture()
+		tint = ACID_COLOR
 	var grow := float(ConcordRulesData.ACID["grow_time"])
 	var fade := float(ConcordRulesData.ACID["fade_time"])
 	for i in count:
@@ -258,7 +263,7 @@ func _draw() -> void:
 		var a := clampf((_end[i] - now) / maxf(fade, 0.01), 0.0, 1.0)  # Fade 1 -> 0.
 		var r := _r[i] * (0.4 + 0.6 * k)
 		var shimmer := 0.85 + 0.15 * sin(now * 3.0 + float(i))
-		draw_texture_rect(tex, Rect2(_at[i] - Vector2(r, r * 0.8), Vector2(r * 2.0, r * 1.6)), false, Color(ACID_COLOR, 0.75 * a * shimmer))
+		draw_texture_rect(tex, Rect2(_at[i] - Vector2(r, r * 0.8), Vector2(r * 2.0, r * 1.6)), false, Color(tint, 0.85 * a * shimmer))
 	var lift := float(ConcordRulesData.ACID["arc_height"])
 	for i in count:
 		if _landed[i] == 1:
