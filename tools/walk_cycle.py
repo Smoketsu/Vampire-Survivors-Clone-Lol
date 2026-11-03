@@ -788,7 +788,7 @@ RIGS = {
     # Art review round 1 (act 8, owner: "remove lower bounce box, bust bounce box needs to move up about 7 pixels"): the swish box is
     # gone; the bust box now sits on the chest (rows 10-14, was 13-18), the arms excluded.
     "city/field_medic": dict(mode="legs", hip=27, back=(0, 13), front=(13, 26), rigid=[], spread=1, lift=1, dip=1,
-                             bust=(9, 19, 10, 15, 1, 2), bust_exclude=[(5, 9, 10, 19), (19, 26, 12, 18)]),
+                             bust=(13, 23, 10, 15, 1, 2), bust_exclude=[(5, 9, 10, 19), (19, 26, 12, 18)]),  # Round 2 (act 8, owner: "move bounce box 4 pixels to the right"): x0 + 4, x1 + 4 (was cols 9-19); the arm boxes stay, so the pixels that bounce are cols 13-19.
     # Art review round 1 (act 8): the squad car's wheels turn (`wheels`, no bob); the tank's strip is a firing cycle, not a drive rock
     # (`recoil` + `muzzle`; the engine still plays it while the tank moves).
     "city/squad_car": dict(mode="legs", hip=22, back=(0, 32), front=(32, 64), rigid=[], spread=0, lift=0, dip=0,
@@ -806,7 +806,9 @@ RIGS = {
     "city/machine_gunner": dict(mode="legs", hip=30, back=(0, 20), front=(20, 46), rigid=[], spread=1, lift=1, dip=1,
                                 muzzle=[dict(tip=(43, 17), face=1, frames=((1, "small"), (2, "spark"), (3, "small"), (4, "spark"), (6, "small"), (7, "spark")))]),
     "city/attack_helicopter": dict(mode="hover", bob=2, parts=[],
-                                rotor=[dict(c=(37.5, 9.0), r=(19.5, 5.3), hold=[(33, 42, 0, 20)], colors=TYRE), dict(c=(6.5, 9.0), r=(2.6, 5.4), colors=TYRE)]),
+                                rotor=[dict(c=(37.5, 9.0), r=(19.5, 5.3), hold=[(33, 42, 0, 20)], colors=TYRE)],
+                                # Round 2 (act 8, owner: "the rear propeller" does not read): the tail rotor is a turning blade pair (`tail`).
+                                tail=dict(c=(6.5, 8.0), half=5.0, box=(4, 9, 3, 13), colors=TYRE, hub=(6, 8))),
     # Act VIII art review round 1: Mammoth (redone with a long main gun, 118 px wide) plays the shared tank firing cycle: `recoil` on
     # the main gun (the barrel's greys from the mantlet at x 66; the open-air pixels from x 95 on are cleared) and `muzzle` flashes
     # (`heavy` on frame 1, `big` on frame 2) at the barrel tip; treads and hull never move (spread / lift / dip 0).
@@ -863,8 +865,8 @@ RIGS = {
     # --- Act VIII: Skid Row ---
     # Art review round 1 (act 8): the limo's wheels turn (`wheels`, no bob).
     "city/armoured_limo": dict(mode="legs", hip=24, back=(0, 42), front=(42, 84), rigid=[], spread=0, lift=0, dip=0,
-                            wheels=[dict(c=(41.0, 31.0), r=(3.0, 2.5), colors=TYRE), dict(c=(52.0, 29.5), r=(2.5, 4.5), colors=TYRE),
-                                    dict(c=(62.5, 27.5), r=(4.5, 4.0), colors=TYRE)]),
+                            wheels=[dict(c=(41.0, 31.0), r=(3.0, 2.5), colors=TYRE), dict(c=(52.0, 29.5), r=(2.5, 4.5), colors=TYRE)]),
+    # Round 2 (act 8, owner: "the grill of the car is spinning now"): the third disc (62.5, 27.5) sat on the front grille's grey slats and is gone.
     "city/big_sal": dict(mode="legs", hip=37, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
     # Art review round 1 (act 8, owner: "some animated cigar smoke"): puffs rise from the cigar tip (`smoke`).
     "bosses/don_marrow": dict(mode="legs", hip=54, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=2, dip=1,
@@ -880,7 +882,7 @@ RIGS = {
     "city/nightjar": dict(mode="legs", hip=29, back=(0, 34), front=(34, 66), rigid=[], spread=1, lift=1, dip=1),
     # Art review round 1 (act 8, owner: "bounce box needs up 2 pixels and to the left 2"): Aurora's box was (19, 30, 9, 16); the
     # heroine's ("up 2 and to the right 2", base and Untouchable skin, which derives it) was (15, 30, 13, 21); the Hyper skin: SKIN_FIX.
-    "city/aurora": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(17, 28, 7, 14, 1)),
+    "city/aurora": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(17, 32, 7, 14, 1)),  # Round 2 (act 8, owner: "extend bounce box 4 pixels to the right"): x1 + 4 (was 28).
     "player/revenant_heroine": dict(mode="legs", hip=33, back=(0, 24), front=(24, 38), rigid=[], spread=1, lift=1, dip=1,
                                     bust=(17, 32, 11, 19, 2), swish=(12, 32, 24, 32, 1)),
     # Act VIII art review round 1 (figures): the redone, bolder Deathlord heroine (bare midriff / shoulders / thighs) has her own rig
@@ -1311,6 +1313,8 @@ def hover_frames(key: str, still: np.ndarray, rig: dict) -> list:
             frame = _drop_strays(frame, rig.get("parts", []))
         for disc in rig.get("rotor", []):  # Rotors turn on the still's coordinates, before the whole frame is raised.
             frame = _spin_disc(frame, disc, f)
+        if "tail" in rig and f:
+            frame = _tail_rotor(frame, rig["tail"], f)
         out.append(_shift_v(frame, -int(round(HOVER_BOB[f] * rig.get("bob", 1))), key))
     return out
 
@@ -1755,6 +1759,42 @@ def _spin_disc(frame: np.ndarray, disc: dict, f: int) -> np.ndarray:
             sx, sy = int(np.floor(cx + su * rx)), int(np.floor(cy + sv * ry))
             if 0 <= sx < w and 0 <= sy < h and not held[sy, sx] and frame[sy, sx, 3] > 0 and su * su + sv * sv <= 1.0:
                 out[y, x] = frame[sy, sx]
+    return out
+
+
+def _tail_rotor(frame: np.ndarray, tail: dict, f: int) -> np.ndarray:
+    """The `tail` rig key: a tail rotor drawn as a blade pair turning about the hub, 180 / FRAMES degrees per frame. The still's
+    blade (frame 0, a vertical bar) is cleared from `box` (its tyre-grey pixels only, not the fuselage) and a 2 px wide bar of
+    length 2 * `half` is drawn through `c` at the angle 180 * f / FRAMES from vertical: core city_asphalt, a 1 px rim of city_ink
+    on the empty pixels around it, a city_concrete hub. Only the still's own palette colours are used."""
+    x0, x1, y0, y1 = tail["box"]
+    ink, core, hub = _palette_rgb(["city_ink", "city_asphalt", "city_concrete"])
+    rgbs = {(*c, 255) for c in _palette_rgb(tail["colors"])}
+    out = frame.copy()
+    for y in range(y0, y1):
+        for x in range(x0, x1):
+            if tuple(frame[y, x]) in rgbs and not (x >= x1 - 1 and y >= 9):
+                out[y, x] = 0
+    h, w = frame.shape[:2]
+    th = np.radians(180.0 * f / FRAMES)
+    cx, cy = tail["c"]
+    dx, dy = float(np.sin(th)), -float(np.cos(th))
+    bar = np.zeros((h, w), dtype=bool)
+    for i in range(-40, 41):
+        t = i / 40.0 * tail["half"]
+        px, py = cx + dx * t, cy + dy * t
+        for ox in (0, 1):  # 2 px wide: the pixel and the one to its right.
+            x, y = int(np.floor(px - 0.5)) + ox, int(np.floor(py))
+            if 0 <= x < w and 0 <= y < h:
+                bar[y, x] = True
+    free = out[:, :, 3] == 0
+    rim = np.zeros((h, w), dtype=bool)
+    for oy, ox in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+        rim |= np.roll(np.roll(bar, oy, 0), ox, 1)
+    out[rim & ~bar & free] = (*ink, 255)
+    out[bar] = (*core, 255)
+    hx, hy = tail["hub"]
+    out[hy, hx] = (*hub, 255)
     return out
 
 
