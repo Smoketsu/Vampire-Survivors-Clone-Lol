@@ -918,6 +918,14 @@ RIGS = {
     "concord/brood_matriarch": dict(mode="hover", bob=2, parts=[]),
     "bosses/hive_mother_flight": dict(mode="hover", bob=2, parts=[]),
     "player/broodbound": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(9, 21, 14, 21, 2)),
+    # --- Act IX: the Proving Moon ---
+    # The Warbeast (a creature) prowls on its four legs (its hind and fore pairs as the back and front halves, like Old
+    # Greymane); Vrask'Tal strides (the cloak and glaive end above the hip); the Blooded (female, figure redesign) strides
+    # with the bust box and an idle strip (boxes read from each still, art px, [start, end)).
+    "concord/warbeast": dict(mode="legs", hip=28, back=(0, 46), front=(46, 92), rigid=[], spread=2, lift=2, dip=1),
+    "bosses/vrask_tal": dict(mode="legs", hip=64, back=(0, 58), front=(58, 106), rigid=[], spread=3, lift=3, dip=1),
+    "player/blooded": dict(mode="legs", hip=34, back=(0, 16), front=(16, 30), rigid=[], spread=2, lift=2, dip=1,
+                           bust=(12, 22, 13, 20, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -1043,6 +1051,10 @@ SKINS = {
     "player/broodbound_hyper": "player/broodbound",
     "player/broodbound_untouchable": "player/broodbound",
     "player/broodbound_deathlord": "player/broodbound",
+    # --- Act IX: the Proving Moon ---
+    "player/blooded_hyper": "player/blooded",
+    "player/blooded_untouchable": "player/blooded",
+    "player/blooded_deathlord": "player/blooded",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

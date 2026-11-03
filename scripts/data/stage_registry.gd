@@ -289,12 +289,13 @@
 ##                        ConcordRulesData.TERRAFORMING overrides it ({} = the
 ##                        defaults; e.g. "boss_mult" lets a stage's boss heal on
 ##                        the turf).
-##   gravity            — RESERVED for phase 2 (the Proving Moon's low
-##                        gravity, owner-approved proposal: "knockback goes
-##                        twice as far for everyone, both armies, and leaps are
-##                        longer (one value in the stage data, read by the
-##                        existing knockback code)"): x the knockback of both
-##                        armies; absent = 1. NOTHING READS IT YET.
+##   gravity            — the Proving Moon's low gravity (owner-approved
+##                        proposal: "knockback goes twice as far for everyone,
+##                        both armies, and leaps are longer"; 2.0 there, absent
+##                        = 1): read only through ConcordRules.gravity() (the
+##                        enemy knockback decay is divided by it; the enemies'
+##                        shoves on summons and the Proving Moon kits' leaps
+##                        are multiplied by it).
 ##   zones              — Act IX stubs too: the planned zones (names and starts).
 ## --- Act IX: the Crash Site ---
 ##   crash_site         — CrashSiteDirector config (CrashSiteStage.CRASH_SITE,
@@ -302,6 +303,12 @@
 ##                        Infestation's egg cap, Nothing Hatched, the Brood
 ##                        Matriarch's "matriarch" event); ground "crash_site" is
 ##                        its CrashSiteGround (the four zone floors).
+## --- Act IX: the Proving Moon ---
+##   proving_moon       — ProvingMoonDirector config (ProvingMoonStage
+##                        .PROVING_MOON, Act IX, the Proving Moon: the
+##                        Warbeast and Last Trophy objectives; the "warbeast"
+##                        event); ground "proving_moon" is its
+##                        ProvingMoonGround (the four zone floors).
 class_name StageRegistry
 extends RefCounted
 

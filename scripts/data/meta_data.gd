@@ -440,7 +440,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VIII: Liberty Heights ---
 	"no_more_heroes",
 	# --- Act IX: the Crash Site ---
-	"nothing_hatched"]
+	"nothing_hatched",
+	# --- Act IX: the Proving Moon ---
+	"the_hunter_hunted"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -668,6 +670,14 @@ const ACHIEVEMENTS := {
 	# lifetime nothing_hatched_runs). It unlocks the counter-passive Anchored.
 	"nothing_hatched": {"display_name": "Nothing Hatched", "description": "Beat the Hive Mother at the Crash Site with no egg hatched before she falls",
 		"stat": "nothing_hatched_runs", "goal": 1, "unlock": "The Anchored passive", "bounty": 300},  # Brief (Nov 3, 2026); bounty TUNING (not in GDD) as No Witnesses
+	# --- Act IX: the Proving Moon ---
+	# Owner-approved Act IX achievement "The Hunter Hunted" ("beat Vrask'Tal
+	# before the countdown ends"): a run in which Vrask'Tal fell to anything but
+	# his own Last Trophy bomb (BossVraskTal sets the run stat
+	# proving_moon_hunter_hunted; MetaProgress counts the runs, lifetime
+	# hunter_hunted_runs). It unlocks the counter-passive Mirror Bones (brief).
+	"the_hunter_hunted": {"display_name": "The Hunter Hunted", "description": "Kill Vrask'Tal before his Last Trophy goes off",
+		"stat": "hunter_hunted_runs", "goal": 1, "unlock": "The Mirror Bones passive", "bounty": 300},  # Owner-approved Act IX proposal; bounty TUNING (not in GDD) as Broken Arrow
 }
 
 # --- Content wave 2: B. Achievement rewards ---

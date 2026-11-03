@@ -1,0 +1,7 @@
+A sheet of TWO separate pixel-art game OBSTACLE PROPS on a FULLY TRANSPARENT background (real alpha), with wide empty gaps between them. Three-quarter top-down view (camera above and in front, like a top-down action game), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+Top row, ONE LONG HORIZONTAL prop (about 64 pixels long, about 14 pixels deep):
+1. A TROPHY WALL of the alien hunters: a long low wall of dark cut stone blocks with a teal-trimmed gunmetal rail along its top, and small weathered yellow-grey alien trophy skulls (some horned, some long-snouted) hanging from the rail on short cords, evenly spaced.
+Bottom row, the SAME prop seen END-ON, standing vertically (as tall as the top one is long and as wide as it is deep: the same trophy wall rotated to run away from the camera).
+Colours: dark stone #1E2128 #2E323B #464B56; gunmetal rail #1E242C #3A424C with teal trim #2A8F7A; trophy skulls #8C8466 #C8BE96 #E0D2B0; outline #0B0C10.
+Keep it a little darker and calmer than the characters (it is scenery), but clearly brighter than a near-black ground.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

@@ -53,6 +53,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	# Phase 2: each Act IX stage's own lines go here (its stage, kinds and boss).
 	# --- Act IX: the Crash Site ---
 	CrashSiteReport.print_lines(game, st)  # The crater, the eggs, the Burrowers, the acid, the Matriarch, the Hive Mother.
+	# --- Act IX: the Proving Moon --- (low gravity, the Warbeast, Vrask'Tal; ProvingMoonReport)
+	ProvingMoonReport.print_lines(game, st)
 
 
 ## The "beams" line (ConcordBeams).

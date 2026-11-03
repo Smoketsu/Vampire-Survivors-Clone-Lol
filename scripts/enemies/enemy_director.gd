@@ -150,6 +150,10 @@
 ##     crater, Infestation's eggs, Nothing Hatched, the Brood Matriarch;
 ##     `crash_site`) and hands it the "matriarch" events. Its eggs have their
 ##     own cap: regular_alive() leaves them out. Null elsewhere.
+##   * Act IX, the Proving Moon (GDD §15.0 "The Proving Moon (Act IX phase
+##     2)"): on a stage with a "proving_moon" config it owns the
+##     ProvingMoonDirector (the Warbeast, the Last Trophy objective;
+##     `proving_moon`) and hands it the "warbeast" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -340,6 +344,10 @@ var liberty_heights: LibertyHeightsDirector = null
 ## Hatched, the Brood Matriarch; StageRegistry "crash_site"; null on every
 ## other stage).
 var crash_site: CrashSiteDirector = null
+# --- Act IX: the Proving Moon ---
+## The Proving Moon's mechanics (Act IX: the Warbeast, the Last Trophy
+## objective; StageRegistry "proving_moon"; null on every other stage).
+var proving_moon: ProvingMoonDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -532,6 +540,12 @@ func _ready() -> void:
 		crash_site.game = game
 		crash_site.config = stage_def["crash_site"]
 		add_child(crash_site)  # The Crash Site's director.
+	# --- Act IX: the Proving Moon ---
+	if not (stage_def.get("proving_moon", {}) as Dictionary).is_empty():
+		proving_moon = ProvingMoonDirector.new()
+		proving_moon.game = game
+		proving_moon.config = stage_def["proving_moon"]
+		add_child(proving_moon)  # The Proving Moon's director.
 
 
 # =====================================================================================
@@ -676,6 +690,9 @@ func step(delta: float) -> void:
 	# --- Act IX: the Crash Site ---
 	if crash_site != null:
 		crash_site.step(delta)  # The crater, Infestation's eggs, the Brood Matriarch.
+	# --- Act IX: the Proving Moon ---
+	if proving_moon != null:
+		proving_moon.step(delta)  # The Warbeast.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -819,6 +836,9 @@ func objective_text() -> String:
 	# --- Act IX: the Crash Site ---
 	if crash_site != null and crash_site.objective_override() != "":
 		return crash_site.objective_override()  # The Brood Matriarch.
+	# --- Act IX: the Proving Moon ---
+	if proving_moon != null and proving_moon.objective_override() != "":
+		return proving_moon.objective_override()  # The Last Trophy's countdown, the Warbeast.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1059,6 +1079,12 @@ func _run_event(ev: Dictionary) -> void:
 				crash_site.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Crash Site's miniboss (CrashSiteDirector).
+		# --- Act IX: the Proving Moon ---
+		"warbeast":
+			if proving_moon != null:
+				proving_moon.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Proving Moon's miniboss (ProvingMoonDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

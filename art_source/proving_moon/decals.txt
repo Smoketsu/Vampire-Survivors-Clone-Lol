@@ -1,0 +1,7 @@
+A sheet of THREE separate pixel-art game FLOOR DECALS in one row on a FULLY TRANSPARENT background (real alpha), with wide empty gaps between them, seen straight from above (flat on the ground), chunky low-resolution pixel art, crisp square pixels, flat colours, at most 3 shades, NO outline (they are marks on the floor). No text.
+From left to right:
+1. A SMALL MOON CRATER: about 24 pixels wide, a shallow round dent in grey regolith, a darker bowl and a slightly lighter rim on its lower-right edge.
+2. FALLEN TROPHIES: about 28 pixels wide, three small weathered yellow-grey alien skulls and a broken cord lying on dark stone, a few scattered teeth.
+3. A DUELLING MARK: about 40 pixels wide, a thin painted ring on the ground in faded teal paint with four short ticks at its four points, partly scuffed away.
+Colours: regolith #1B1D23 #26272A #34363C; skulls #6E6850 #8C8466 #C8BE96; faded teal paint #1B5C4E #2A8F7A. Very DARK and LOW CONTRAST: they sit on a dark floor and every character must stand out from them.
+Attached: an approved floor tile of this game, for the pixel size and darkness.

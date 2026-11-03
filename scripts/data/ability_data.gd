@@ -106,7 +106,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act VIII: Liberty Heights ---
 	"heros_fist",
 	# --- Act IX: the Crash Site ---
-	"bone_beetles"]
+	"bone_beetles",
+	# --- Act IX: the Proving Moon ---
+	"soul_caster"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -884,6 +886,31 @@ const SPELLS := {
 			{"damage": 9.0, "beetles": 2, "range": 290.0, "speed": 250.0, "seek": 180.0, "life": 2.6, "cap": 20},  # TUNING (not in GDD) first pass 12
 			{"damage": 10.0, "beetles": 2, "range": 300.0, "speed": 255.0, "seek": 190.0, "life": 2.8, "cap": 24},  # TUNING (not in GDD) first pass 14
 			{"damage": 12.0, "beetles": 3, "range": 320.0, "speed": 260.0, "seek": 200.0, "life": 3.0, "cap": 28},  # TUNING (not in GDD) first pass 16 (with the evolution and Chitin 404k of the forced seed-7 run's 669k, 4.5x the top summon class)
+		],
+	},
+	# --- Act IX: the Proving Moon ---
+	# Soul Caster (GDD §15.0 "Soul Caster, Apex Predator, Trophy Rack and the
+	# Blooded (Act IX)"; owner-approved proposal: "a shoulder cannon that locks
+	# three targets with three red dots and fires"; brief: the dots in the
+	# spell's own soul colour; unlocked by slaying Vrask'Tal, UnlockData): every
+	# `cooldown` s (after the shot) it locks up to `targets` enemies within
+	# `range` px, the strongest first (three soul dots on each for `lock` s),
+	# then fires `damage` into each one still standing. Stat keys: damage,
+	# targets, lock (s), range (px), cooldown (s). Logic: SoulCaster; fixed
+	# rules: SoulCasterData; Trophy Rack (its paired passive) hangs a trophy
+	# for every kill (more damage each). A strong single-target spell.
+	"soul_caster": {
+		"display_name": "Soul Caster",  # Owner-approved proposal
+		"icon": "soul_caster",
+		"description": "A shoulder cannon locks three of the strongest foes, then fires a soul bolt into each.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Shot damage", "targets": "Targets locked", "cooldown": "Cooldown (s)", "range": "Range (px)"},
+		"levels": [
+			{"damage": 20.0, "targets": 3, "lock": 0.6, "range": 300.0, "cooldown": 2.6},  # TUNING (not in GDD) owner-approved proposal: three targets
+			{"damage": 25.0, "targets": 3, "lock": 0.55, "range": 310.0, "cooldown": 2.45},  # TUNING (not in GDD)
+			{"damage": 31.0, "targets": 3, "lock": 0.55, "range": 320.0, "cooldown": 2.3},  # TUNING (not in GDD)
+			{"damage": 38.0, "targets": 3, "lock": 0.5, "range": 330.0, "cooldown": 2.15},  # TUNING (not in GDD)
+			{"damage": 46.0, "targets": 3, "lock": 0.45, "range": 340.0, "cooldown": 2.0},  # TUNING (not in GDD)
 		],
 	},
 }

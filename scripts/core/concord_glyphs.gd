@@ -36,6 +36,10 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	# --- Act IX: the Crash Site ---
 	if CrashSiteGlyphs.draw_enemy(ci, kind, o, r, flash):
 		return true
+	# --- Act IX: the Proving Moon ---
+	if kind == ProvingMoonEnemyData.WARBEAST:
+		ProvingMoonGlyphs.draw_warbeast(ci, o, r, flash, false)
+		return true
 	match kind:
 		"broodling":
 			_broodling(ci, o, r, flash)

@@ -77,6 +77,9 @@
 ## and Act VIII's (Liberty Heights, LIBERTY_HEIGHTS_IDS: stepped only; its own
 ## autotest line, LibertyHeightsReport.item_lines()):
 ##   Hero's Fist      -> HerosFist        (evolves into Doomsday)
+## and Act IX's (the Proving Moon, PROVING_MOON_IDS: stepped only; its own
+## autotest line, ProvingMoonReport.item_lines()):
+##   Soul Caster      -> SoulCaster       (evolves into Apex Predator)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -191,6 +194,10 @@ const LIBERTY_HEIGHTS_IDS := ["heros_fist"]
 ## a kill hook (its beetles burst from slain foes; no after-physics hook),
 ## reported by CrashSiteReport.
 const CRASH_SITE_IDS := ["bone_beetles"]
+# --- Act IX: the Proving Moon ---
+## The Proving Moon's unlockable spell (Vrask'Tal's reward): stepped only (no
+## kill or after-physics hook), reported by ProvingMoonReport.
+const PROVING_MOON_IDS := ["soul_caster"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -247,6 +254,8 @@ const SOURCES := {
 	"heros_fist": ["heros_fist", "heros_fist_fling", "doomsday", "doomsday_crater"],
 	# --- Act IX: the Crash Site ---
 	"bone_beetles": ["bone_beetles", "hive_of_bone"],
+	# --- Act IX: the Proving Moon ---
+	"soul_caster": ["soul_caster", "apex_predator"],
 }
 
 ## Owning run.
@@ -412,6 +421,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Crash Site's spell.
+	# --- Act IX: the Proving Moon ---
+	for id: String in PROVING_MOON_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Proving Moon's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -508,6 +526,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act IX: the Crash Site ---
 		"bone_beetles":
 			node = BoneBeetles.new()  # The Crash Site's spell.
+		# --- Act IX: the Proving Moon ---
+		"soul_caster":
+			node = SoulCaster.new()  # The Proving Moon's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

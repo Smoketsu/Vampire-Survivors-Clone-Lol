@@ -453,6 +453,9 @@ func _ready() -> void:
 		# --- Act IX: the Crash Site ---
 		"crash_site":
 			ground = CrashSiteGround.new()  # Act IX: the Crash Site's four zone floors (CrashSiteStage.ZONES).
+		# --- Act IX: the Proving Moon ---
+		"proving_moon":
+			ground = ProvingMoonGround.new()  # Act IX: the Proving Moon's four zone floors (ProvingMoonStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

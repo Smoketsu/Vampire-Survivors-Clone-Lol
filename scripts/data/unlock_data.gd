@@ -260,6 +260,15 @@ const UNLOCKS := {
 	"bone_beetles": {"type": "spell", "boss": "hive_mother", "text": "Slay the Hive Mother at the Crash Site to unlock."},  # Owner-approved Act IX proposal
 	"chitin": {"type": "passive", "boss": "hive_mother", "text": "Slay the Hive Mother at the Crash Site to unlock."},  # Bone Beetles' paired passive (owner-approved proposal), unlocked with it
 	"anchored": {"type": "passive", "achievement": "nothing_hatched", "text": "Earn Nothing Hatched: let no egg hatch on the Crash Site before the Hive Mother falls."},  # Brief (Nov 3, 2026): Nothing Hatched unlocks Anchored
+	# --- Act IX: the Proving Moon ---
+	# Vrask'Tal's fall (owner-approved Act IX proposal "Rewards": Soul Caster is
+	# unlocked by Vrask'Tal) with its paired passive, offered on every stage; the
+	# stage's achievement The Hunter Hunted earns Act IX's counter-passive Mirror
+	# Bones (brief: the lead's pairing, GDD §15.0 "Act IX phase 2: owner
+	# answers"; offered only in Act IX through its card row's "act").
+	"soul_caster": {"type": "spell", "boss": "vrask_tal", "text": "Slay Vrask'Tal on the Proving Moon to unlock."},  # Owner-approved Act IX proposal
+	"trophy_rack": {"type": "passive", "boss": "vrask_tal", "text": "Slay Vrask'Tal on the Proving Moon to unlock."},  # Soul Caster's paired passive (owner-approved proposal), unlocked with it
+	"mirror_bones": {"type": "passive", "achievement": "the_hunter_hunted", "text": "Earn The Hunter Hunted: kill Vrask'Tal before his Last Trophy goes off."},  # Brief (Nov 3, 2026): The Hunter Hunted unlocks Mirror Bones
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

@@ -92,7 +92,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act VIII: Liberty Heights ---
 	"revenant_heroine",
 	# --- Act IX: the Crash Site ---
-	"broodbound"]
+	"broodbound",
+	# --- Act IX: the Proving Moon ---
+	"blooded"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -158,6 +160,8 @@ const STAT_LABELS := {
 ##                           she drops; Act VIII)
 ##   beetle_extra            BoneBeetles.on_enemy_killed (extra beetles in every
 ##                           burst; Act IX)
+##   soul_caster_extra_targets  SoulCaster._lock (extra targets each Soul
+##                           Caster lock takes; Act IX)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -205,7 +209,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act VIII: Liberty Heights ---
 	"fist_extra_fists",
 	# --- Act IX: the Crash Site ---
-	"beetle_extra"]
+	"beetle_extra",
+	# --- Act IX: the Proving Moon ---
+	"soul_caster_extra_targets"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -886,6 +892,32 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": 0.02},  # TUNING (not in GDD) chitin-plated, light on her feet
 		"sprite": "player/broodbound",
 		"tint": Color(0.45, 0.72, 0.5),  # TUNING (not in GDD) the Brood's green over the violet (until her art)
+		"starts_unlocked": false,
+	},
+	# --- Act IX: the Proving Moon ---
+	# The Blooded (Soul Caster's character; owner-approved Act IX proposal
+	# "Rewards": "Soul Caster ... | The Blooded, the one human who survived the
+	# Hunt (figure style)"): FEMALE, in the figure-redesign style (clothed,
+	# chest and hips covered): a raised huntress, grey-pale skin, soul-teal
+	# eyes, dark hair in a braid, three claw scars across one cheek, a fitted
+	# dark leather hunting coat buttoned over a high-necked top, trousers and
+	# boots, a Vrask trophy (a teal scale) on a cord, the shoulder cannon of
+	# Soul Caster on her right shoulder; never the Vrask's own armour. Soul
+	# Caster must be unlocked (Vrask'Tal) before she can be earned, by the usual
+	# Lv 5 rule. Own decision on her innate (the proposal names none): First
+	# Blood, her cannon locks one more target (SoulCaster._lock()).
+	"blooded": {
+		"display_name": "The Blooded",  # Owner-approved proposal
+		"title": "She was the Vrask's quarry. She took her trophy and came back.",
+		"spell": "soul_caster",
+		"innate": {
+			"id": "first_blood", "name": "First Blood",
+			"description": "Soul Caster locks one more foe.",
+			"values": {"soul_caster_extra_targets": 1.0},  # TUNING (not in GDD) extra targets a lock
+		},
+		"stats": {"move_speed": 0.05, "max_hp": -5.0},  # TUNING (not in GDD) a huntress: quick, a little frailer
+		"sprite": "player/blooded",
+		"tint": Color(0.62, 0.40, 0.36),  # TUNING (not in GDD) a hunter's red-brown leather over the violet
 		"starts_unlocked": false,
 	},
 }

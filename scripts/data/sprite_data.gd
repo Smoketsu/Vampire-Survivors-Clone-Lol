@@ -511,6 +511,13 @@ const HEIGHTS: Dictionary = {
 	"player/broodbound_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold chitin
 	"player/broodbound_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
 	"player/broodbound_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	# --- Act IX: the Proving Moon (assets/sprites/concord/, bosses/, player/) ---
+	"concord/warbeast": 44.0,  # TUNING (not in GDD) miniboss tier, a creature: the Vrask's armoured war-hound, long and low (about 92 wide); walk strip
+	"bosses/vrask_tal": 84.0,  # TUNING (not in GDD) boss tier, male: the Hunt-Lord, horned crest, shoulder caster, skull belt and glaive (about 106 wide); walk strip
+	"player/blooded": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, clothed): a brown hunting coat, the red braid, the shoulder cannon
+	"player/blooded_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, white and gold
+	"player/blooded_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/blooded_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, black iron and crimson, the small crown inside the same height
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

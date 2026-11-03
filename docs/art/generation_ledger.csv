@@ -1237,3 +1237,17 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-03 12:56,obstacles/crash_site,gpt-image-2.5-flare,medium,1536x1024,0,452,0,343,0.0126,obstacles.png
 2026-11-03 12:56,icons/crash_site_violet,gpt-image-2.5-flare,medium,1536x1024,1,335,256,343,0.0140,icons_violet.png
 2026-11-03 12:56,icons/crash_site_gold,gpt-image-2.5-flare,medium,1536x1024,1,307,256,343,0.0139,icons_gold.png
+2026-11-03 12:45,icons/proving_moon_violet,gpt-image-2.5-flare,medium,1536x1024,1,372,1024,343,0.0203,icons_violet.png
+2026-11-03 12:45,concord/warbeast,gpt-image-2.5-flare,medium,1536x1024,2,640,1037,343,0.0218,warbeast.png
+2026-11-03 12:45,player/blooded,gpt-image-2.5-flare,medium,1024x1024,1,695,448,439,0.0202,blooded.png
+2026-11-03 12:45,bosses/vrask_tal,gpt-image-2.5-flare,medium,1024x1024,2,749,1037,439,0.0252,vrask_tal.png
+2026-11-03 12:45,obstacles/proving_moon_long,gpt-image-2.5-flare,medium,1024x1024,1,353,800,439,0.0213,props_long.png
+2026-11-03 12:45,player/blooded,gpt-image-2.5-flare,medium,1024x1024,1,752,448,439,0.0205,blooded_b.png
+2026-11-03 12:45,icons/proving_moon_gold,gpt-image-2.5-flare,medium,1536x1024,1,342,1024,343,0.0202,icons_gold.png
+2026-11-03 12:45,obstacles/proving_moon_round,gpt-image-2.5-flare,medium,1536x1024,1,311,460,343,0.0155,props_round.png
+2026-11-03 12:45,tiles/proving_moon_hall,gpt-image-2.5-flare,medium,1024x1024,1,246,1024,439,0.0226,proving_moon_hall.png
+2026-11-03 12:45,tiles/proving_moon_regolith,gpt-image-2.5-flare,medium,1024x1024,1,242,1024,439,0.0226,proving_moon_regolith.png
+2026-11-03 12:45,decals/proving_moon,gpt-image-2.5-flare,medium,1536x1024,1,303,1024,343,0.0200,decals.png
+2026-11-03 12:46,player/blooded_untouchable,gpt-image-2.5-flare,medium,1024x1024,1,181,1024,439,0.0223,blooded_untouchable.png
+2026-11-03 12:46,player/blooded_hyper,gpt-image-2.5-flare,medium,1024x1024,1,180,1024,439,0.0223,blooded_hyper.png
+2026-11-03 12:46,player/blooded_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,170,1024,439,0.0222,blooded_deathlord.png

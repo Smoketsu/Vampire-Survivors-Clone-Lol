@@ -94,6 +94,9 @@
 ## Act IX, the Crash Site:
 ##   Broodbound       Swarm Bride     in BoneBeetles.on_enemy_killed() (one more
 ##                    beetle in every burst); stat beetle_extra.
+## Act IX, the Proving Moon:
+##   Blooded          First Blood     in SoulCaster._lock() (one more target a
+##                    lock); stat soul_caster_extra.
 class_name CharacterInnates
 extends Node2D
 
@@ -451,6 +454,9 @@ func summary_line() -> String:
 		# --- Act IX: the Crash Site --- (Swarm Bride lives in BoneBeetles.on_enemy_killed())
 		"swarm_bride":
 			counters = "extra beetles %d (bursts %d)" % [int(st.get("beetle_extra", 0.0)), int(st.get("beetle_bursts", 0.0))]
+		# --- Act IX: the Proving Moon --- (First Blood lives in SoulCaster._lock())
+		"first_blood":
+			counters = "extra targets %d (shots %d)" % [int(st.get("soul_caster_extra", 0.0)), int(st.get("soul_caster_shots", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.
