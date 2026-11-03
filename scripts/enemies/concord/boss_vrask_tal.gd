@@ -29,7 +29,7 @@
 ## Caster and Trophy Rack (UnlockData, boss "vrask_tal"). No RNG (the prey is
 ## chosen from the ally grid's deterministic order). Stats: boss_atk_<special>,
 ## vrask_tal_skulls, vrask_tal_prey_kills, vrask_tal_cloak_cut,
-## vrask_tal_reveals, vrask_tal_leap_hits, vrask_tal_leap_reach_max,
+## vrask_tal_reveals, vrask_tal_cloaked_time, vrask_tal_leap_hits, vrask_tal_leap_reach_max,
 ## vrask_tal_phase2_at, vrask_tal_phase3_at, vrask_tal_bomb_at,
 ## vrask_tal_bomb_summons, vrask_tal_bomb_dmg_you, vrask_tal_defused_left,
 ## proving_moon_hunter_hunted, vrask_tal_bombed.
@@ -287,6 +287,8 @@ func _set_phase(p: Phase) -> void:
 func _update_cloak() -> void:
 	var c: Dictionary = boss_def["cloak"]
 	_set_cloak(form == 1 and velocity.length() >= float(c.get("min_speed", 8.0)) and game.elapsed >= revealed_until)
+	if cloaked:
+		game.stat_add("vrask_tal_cloaked_time", get_physics_process_delta_time())
 
 
 ## Switches the cloak (redraws on a change).
@@ -536,8 +538,8 @@ static func summary_line(st: Dictionary) -> String:
 		outcome = ("DEFUSED (%.1f s left)" % float(st.get("vrask_tal_defused_left", 0.0))) if p3 >= 0.0 else "slain before the countdown"
 	elif p3 >= 0.0:
 		outcome = "counting"
-	return "skulls %d (prey kills %d) | cloak cut %d, reveals %d | locks %d | the Duel %s | leaps %d (hits %d, farthest %d px) | the Last Trophy %s | %s | dmg to you %d, to summons %d" % [
-		int(st.get("vrask_tal_skulls", 0.0)), int(st.get("vrask_tal_prey_kills", 0.0)),
+	return "skulls %d (prey kills %d) | cloaked %.1f s, cloak cut %d, reveals %d | locks %d | the Duel %s | leaps %d (hits %d, farthest %d px) | the Last Trophy %s | %s | dmg to you %d, to summons %d" % [
+		int(st.get("vrask_tal_skulls", 0.0)), int(st.get("vrask_tal_prey_kills", 0.0)), float(st.get("vrask_tal_cloaked_time", 0.0)),
 		int(st.get("vrask_tal_cloak_cut", 0.0)), int(st.get("vrask_tal_reveals", 0.0)), int(st.get("boss_atk_lock", 0.0)),
 		EmpireReport._clock(p2) if p2 >= 0.0 else "not reached",
 		int(st.get("boss_atk_leap", 0.0)), int(st.get("vrask_tal_leap_hits", 0.0)), int(st.get("vrask_tal_leap_reach_max", 0.0)),

@@ -31,7 +31,7 @@ var _locked_gen: PackedInt32Array = PackedInt32Array()
 var _lock_left: float = 0.0
 ## Seconds until the next lock may start.
 var _cd: float = 0.0
-## Trophies hung this run (Trophy Rack; counted even without the passive).
+## Trophies hung this run (Trophy Rack: one per kill while the passive is owned).
 var trophies: int = 0
 ## Shots fading (drawn only): {from, to, t (game s)}.
 var _shots: Array[Dictionary] = []
@@ -127,10 +127,11 @@ func _fire() -> void:
 		game.combat.damage_enemy(e, hit, src)
 		game.stat_add("soul_caster_shots", 1.0)
 		if not e.active or e.generation != gen:
-			trophies += 1
 			game.stat_add("soul_caster_kills", 1.0)
-			if per > 0.0 and trophies <= cap:
-				game.stat_add("soul_caster_trophies", 1.0)
+			if per > 0.0:
+				trophies += 1  # A trophy hangs only while Trophy Rack is owned.
+				if trophies <= cap:
+					game.stat_add("soul_caster_trophies", 1.0)
 			if _evolved:
 				_cd -= float(_stats["refund"])
 				game.stat_add("soul_caster_refunds", 1.0)

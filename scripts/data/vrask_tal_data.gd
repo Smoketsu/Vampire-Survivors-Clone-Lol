@@ -91,7 +91,7 @@ const BOSS := {
 	"display_name": "Vrask'Tal, the Hunt-Lord",
 	"max_hp": MAX_HP,
 	"move_speed": 60.0,  # TUNING (not in GDD) px/s (the Vrask hunter 56)
-	"damage": 11.0,  # TUNING (not in GDD) a glaive blow, before the time scaling
+	"damage": 8.0,  # TUNING (not in GDD) a glaive blow, before the time scaling (first pass 11: two blows took the seed-7 army bot to 56 of 120 HP)
 	"attack_interval": 1.1,  # TUNING (not in GDD) s
 	"attack_range": 18.0,  # TUNING (not in GDD) px (the glaive's reach)
 	"radius": 26.0,  # TUNING (not in GDD) px (a ~84 px sprite)
@@ -145,7 +145,7 @@ const BOSS := {
 	"leap_time": 0.55,  # TUNING (not in GDD) s
 	"leap_height": 34.0,  # TUNING (not in GDD) px (drawing)
 	"leap_radius": 58.0,  # TUNING (not in GDD) px
-	"leap_damage_player": 11.0,  # TUNING (not in GDD) before the time scaling
+	"leap_damage_player": 8.0,  # TUNING (not in GDD) before the time scaling (first pass 11: the seed-7 army bot fell to 56 of 120 HP in the Duel)
 	"leap_damage_summon": 12.0,  # TUNING (not in GDD) before the time scaling
 	"leap_push": 22.0,  # TUNING (not in GDD) px, x the low gravity
 	# The Last Trophy.
