@@ -15,10 +15,11 @@
 ## Civilians). THE CLOCK IS AUTHORITATIVE, as on every zoned stage: four zones
 ## on fixed times (ZONES, run by MarchDirector: a zone banner and new looks
 ## over the same streets, CityBlocks.set_zone()). The ESCALATION starts high
-## (the proposal's "Stage 24 starts at 4 and reaches 5"): the army from 0:00,
-## the heroes from 15:00 (ESCALATION), so the civilians' trickle stops at once
-## (the opening crowd still flees) and the timeline spawns only the army's
-## kinds (the stage's own Conscripts, rifle squads of 4, tanks; Fort Kessler's
+## (the proposal's "Stage 24 starts at 4 and reaches 5"): Act VIII pass 2,
+## owner "Later army on Liberty Heights": police 0:00, SWAT 2:30, the army 5:00
+## (was 0:00), the heroes from 15:00 (ESCALATION); the civilians' trickle now
+## runs until 5:00 and the timeline spawns only the reached tiers' kinds (the
+## police and SWAT first, then the army's kinds: the stage's own Conscripts, rifle squads of 4, tanks; Fort Kessler's
 ## Machine Gunners and Attack Helicopters as guests, merged at the integration):
 ##   20:00  Zone I,   the Plaza:       BLITZ leads the heroes (17:30)
 ##   15:00  Zone II,  the Rooftops:    AURORA, who flies (13:30)
@@ -120,7 +121,7 @@ const BLOCKS := {}
 ## 15:00 (the Watchtower: its Super comes with the tier; a Super every 90 s
 ## after it while none stands, the proposal's five stars).
 const ESCALATION := {
-	"times": {"army": 0.0, "heroes": 900.0},  # Brief: the lead's suggestion (army 0:00, heroes 15:00)
+	"times": {"police": 0.0, "swat": 150.0, "army": 300.0, "heroes": 900.0},  # Act VIII pass 2, owner: Later army on Liberty Heights: police 0:00, SWAT 2:30, army 5:00, heroes 15:00 (was army 0:00, heroes 15:00; the brief's lead suggestion)
 	"last": "heroes",  # Owner (Nov 2): only Liberty Heights reaches the heroes
 }
 ## The civilians on this stage: {} = CityRulesData.CIVILIANS (the opening
@@ -164,19 +165,23 @@ const RECKONING_OBJECTIVE: String = "MARTIAL LAW: every soldier in the city, the
 ## the top killer of the ring).
 const SEGMENTS := [
 	# Zone I, the Plaza.
-	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
-		"weights": {"conscript": 1.0},
-		"objective": "The Plaza: the Guard holds the square. The fleeing crowd is XP"},
-	{"start": 60.0, "rate": 1.7, "max_alive": 40,  # TUNING (not in GDD)
-		"weights": {"conscript": 0.82, "rifleman": 0.18},
-		"objective": "Rifle squads advance in bursts: area damage breaks them"},
-	{"start": 180.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
+	# Act VIII pass 2, owner: Later army on Liberty Heights: the police (0:00), SWAT (2:30), then the army (5:00); before, the army from 0:00.
+	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD) Act VIII pass 2, owner: Later army on Liberty Heights: was conscripts 1.0 from 0:00
+		"weights": {"riot_cop": 1.0},
+		"objective": "The Plaza: the police hold the square. The fleeing crowd is XP"},
+	{"start": 60.0, "rate": 1.7, "max_alive": 40,  # TUNING (not in GDD) Act VIII pass 2, owner: Later army on Liberty Heights: was conscript 0.82 / rifleman 0.18
+		"weights": {"riot_cop": 0.97, "squad_car": 0.03},
+		"objective": "Shields to the front: flank the riot line"},
+	{"start": 150.0, "rate": 1.9, "max_alive": 46,  # TUNING (not in GDD) Act VIII pass 2, owner: Later army on Liberty Heights: SWAT at 2:30 (was the army's 1.7 / 40 until 3:00)
+		"weights": {"riot_cop": 0.78, "swat_breacher": 0.15, "field_medic": 0.05, "squad_car": 0.02},
+		"objective": "SWAT: flashbangs stun your dead. Kill the breachers and the medics first"},
+	{"start": 300.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD) Act VIII pass 2, owner: Later army on Liberty Heights: the army at 5:00 starts at the old 3:00 step (was rate 2.3 / 60 at 5:00)
 		"weights": {"conscript": 0.732, "rifleman": 0.26, "tank": 0.008},
-		"objective": "Blitz can't turn: a wall, a wreck or a blocker stops him cold"},
-	# Zone II, the Rooftops.
-	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
+		"objective": "The army marches in. Blitz can't turn: a wall, a wreck or a blocker stops him cold"},
+	# Zone II, the Rooftops (the second step of the army, 6:00 here).
+	{"start": 360.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
 		"weights": {"conscript": 0.692, "rifleman": 0.3, "tank": 0.008},
-		"objective": "The Rooftops: a flier rules the sky. Stun her and she falls"},
+		"objective": "The Rooftops: a flier rules the sky. Stun her and she falls"},  # Act VIII pass 2, owner: Later army on Liberty Heights: start 5:00 -> 6:00
 	{"start": 480.0, "rate": 2.5, "max_alive": 66,  # TUNING (not in GDD)
 		"weights": {"conscript": 0.67, "rifleman": 0.32, "tank": 0.01},
 		"objective": "Tanks have front armour: hit them from the side, or let them ram a wreck"},
@@ -198,16 +203,16 @@ const SEGMENTS := [
 ## squads of 4 (owner-approved proposal).
 const EVENTS := [
 	# Zone I: the Plaza.
-	{"time": 20.0, "type": "wave", "banner": "The Guard pours into the plaza!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "conscript", "count": 14, "elite": false}]},
-	{"time": 100.0, "type": "wave", "banner": "A rifle squad advances across the square!", "formation": "line",  # TUNING (not in GDD) a squad of 4
-		"groups": [{"kind": "rifleman", "count": 4, "elite": false}, {"kind": "conscript", "count": 8, "elite": false}]},
-	{"time": 210.0, "type": "wave", "banner": "A tank rolls past the fountains!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "tank", "count": 1, "elite": false}, {"kind": "rifleman", "count": 4, "elite": false}]},
-	{"time": 270.0, "type": "wave", "banner": "Two rifle squads hold the plaza!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "rifleman", "count": 8, "elite": false}, {"kind": "conscript", "count": 6, "elite": false}]},
+	{"time": 20.0, "type": "wave", "banner": "The riot police pour into the plaza!", "formation": "ring",  # TUNING (not in GDD) Act VIII pass 2, owner: Later army on Liberty Heights: was 14 conscripts
+		"groups": [{"kind": "riot_cop", "count": 14, "elite": false}]},
+	{"time": 100.0, "type": "wave", "banner": "A police line advances across the square!", "formation": "line",  # TUNING (not in GDD) Act VIII pass 2, owner: Later army on Liberty Heights: was a rifle squad of 4 and 8 conscripts
+		"groups": [{"kind": "riot_cop", "count": 12, "elite": false}]},
+	{"time": 210.0, "type": "wave", "banner": "SWAT breaches the fountains!", "formation": "arc",  # TUNING (not in GDD) Act VIII pass 2, owner: Later army on Liberty Heights: was a tank and 4 riflemen
+		"groups": [{"kind": "swat_breacher", "count": 3, "elite": false}, {"kind": "field_medic", "count": 1, "elite": false}, {"kind": "riot_cop", "count": 6, "elite": false}]},
+	{"time": 270.0, "type": "wave", "banner": "SWAT holds the plaza!", "formation": "ring",  # TUNING (not in GDD) Act VIII pass 2, owner: Later army on Liberty Heights: was 8 riflemen and 6 conscripts
+		"groups": [{"kind": "swat_breacher", "count": 4, "elite": false}, {"kind": "riot_cop", "count": 8, "elite": false}]},
 	# Zone II (5:00): the Rooftops.
-	{"time": 330.0, "type": "wave", "banner": "The Guard drops from the skyline!", "formation": "ring",  # TUNING (not in GDD)
+	{"time": 330.0, "type": "wave", "banner": "The Guard drops from the skyline!", "formation": "ring",  # TUNING (not in GDD) Act VIII pass 2, owner: Later army on Liberty Heights: 5:30, the army is here from 5:00 (unchanged)
 		"groups": [{"kind": "conscript", "count": 14, "elite": false}, {"kind": "rifleman", "count": 4, "elite": false}]},
 	{"time": 450.0, "type": "wave", "banner": "Armour between the towers!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "tank", "count": 1, "elite": false}, {"kind": "rifleman", "count": 4, "elite": false}]},
