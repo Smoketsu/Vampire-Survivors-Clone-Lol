@@ -1018,6 +1018,16 @@ const SIPHON_LEASH: float = 40.0  # TUNING (not in GDD)
 ## Seconds of heal_cap the lifesteal budget can bank (the cap is per second,
 ## so a full budget allows at most heal_cap * this HP in one pulse).
 const SIPHON_BUDGET_SECONDS: float = 1.0  # TUNING (not in GDD)
+## Drawing only (owner bug report "no visuals till Lv 3"): seconds a tether
+## that just dropped (its enemy died or strayed) keeps fading on screen, so the
+## one Lv 1-2 tether does not blink out between a kill and the next pulse.
+const SIPHON_FADE_TIME: float = 0.45  # TUNING (not in GDD)
+## Drawing only: seconds the drain flash stays on a tethered enemy after a pulse.
+const SIPHON_FLASH_TIME: float = 0.3  # TUNING (not in GDD)
+## Drawing only: width (px) of the tether's bright core (the glow is wider).
+const SIPHON_BEAM_WIDTH: float = 3.0  # TUNING (not in GDD)
+## Drawing only: size (px) of the drain flash on a tethered enemy.
+const SIPHON_FLASH_SIZE: float = 26.0  # TUNING (not in GDD)
 
 # --- Corpse Explosion / Grave Eruption (CorpseExplosion) ---------------------------
 

@@ -39,6 +39,19 @@ var _glow: float = 0.0
 var _drawn: bool = false
 ## Candidate [score, enemy] pairs when tethers are filled.
 var _cands: Array = []
+## Drawing only: last seen position of each tethered enemy (parallel to
+## _targets), where its tether fades out when it drops.
+var _last_pos: PackedVector2Array = PackedVector2Array()
+## Drawing only: end positions of tethers that just dropped (fading out).
+var _ghosts: PackedVector2Array = PackedVector2Array()
+## Drawing only: seconds left of each fading tether (parallel to _ghosts;
+## starts at AbilityData.SIPHON_FADE_TIME).
+var _ghost_t: PackedFloat32Array = PackedFloat32Array()
+## Drawing only: positions of the drain flashes of the last pulse.
+var _flashes: PackedVector2Array = PackedVector2Array()
+## Drawing only: seconds since the last drain pulse (flashes play over
+## AbilityData.SIPHON_FLASH_TIME).
+var _flash_age: float = 99.0
 
 
 func _ready() -> void:
@@ -51,6 +64,7 @@ func step(delta: float, stats: Dictionary) -> void:
 	_from = game.player.position
 	_phase += delta
 	_glow = maxf(0.0, _glow - delta * 3.0)
+	_age_visuals(delta)
 	var cap := float(stats["heal_cap"])  # HP/s.
 	_budget = minf(_budget + cap * delta, cap * AbilityData.SIPHON_BUDGET_SECONDS)
 	_prune(float(stats["range"]) + AbilityData.SIPHON_LEASH)
@@ -64,9 +78,24 @@ func step(delta: float, stats: Dictionary) -> void:
 		else:
 			_drain(stats)
 			_timer = float(stats["cooldown"])
-	if not _targets.is_empty() or _drawn:
+	var showing := not _targets.is_empty() or not _ghosts.is_empty() or _flash_age < AbilityData.SIPHON_FLASH_TIME  # Anything to draw.
+	if showing or _drawn:
 		queue_redraw()
-	_drawn = not _targets.is_empty()
+	_drawn = showing
+
+
+## Drawing only: ages the fading tethers and the drain flashes (no gameplay
+## state is read or written).
+func _age_visuals(delta: float) -> void:
+	_flash_age += delta
+	var i := 0  # Index into _ghosts.
+	while i < _ghosts.size():
+		_ghost_t[i] -= delta
+		if _ghost_t[i] <= 0.0:
+			_ghosts.remove_at(i)
+			_ghost_t.remove_at(i)
+		else:
+			i += 1
 
 
 ## Drops tethers whose enemy died, was recycled or strayed beyond `reach`.
@@ -75,10 +104,14 @@ func _prune(reach: float) -> void:
 	while i < _targets.size():
 		var e := _targets[i]
 		if e.active and e.generation == _gens[i] and e.position.distance_to(_from) <= reach:
+			_last_pos[i] = e.position
 			i += 1
 		else:
+			_ghosts.append(_last_pos[i])  # Drawing only: the tether fades where it was.
+			_ghost_t.append(AbilityData.SIPHON_FADE_TIME)
 			_targets.remove_at(i)
 			_gens.remove_at(i)
+			_last_pos.remove_at(i)
 
 
 ## Tethers the strongest open enemies in range until `targets` are held.
@@ -105,12 +138,17 @@ func _fill(stats: Dictionary) -> void:
 		var e: Enemy = c[1]
 		_targets.append(e)
 		_gens.append(e.generation)
+		_last_pos.append(e.position)
 
 
 ## One drain pulse: damages every tethered enemy, then heals (capped).
 func _drain(stats: Dictionary) -> void:
 	var dealt := 0.0  # Damage dealt this pulse.
 	var src := "rapture" if _rapture else "siphon"  # Stats tag.
+	_flashes.clear()  # Drawing only: the pulse's flashes, taken before the hits (a kill recycles the enemy).
+	for e: Enemy in _targets:
+		_flashes.append(e.position)
+	_flash_age = 0.0
 	for i in _targets.size():
 		dealt += game.combat.damage_enemy(_targets[i], float(stats["damage"]), src)
 	_glow = 1.0  # The drain sound is the per-hit "siphon_hit" (Juice).
@@ -174,12 +212,18 @@ func _release_bursts(stats: Dictionary) -> void:
 		Sfx.play("rapture_burst", p)
 
 
+## Draws the tethers (textures only, SpellGlyphs.draw_siphon_beam()), the
+## fading tethers that just dropped and the drain flashes, from Lv 1 on.
 func _draw() -> void:
+	for i in _ghosts.size():
+		var fade := _ghost_t[i] / AbilityData.SIPHON_FADE_TIME  # 1 -> 0.
+		SpellGlyphs.draw_siphon_beam(self, _from, _ghosts[i], _phase + float(i) * 1.3, 0.0, _rapture, fade * fade)
 	for i in _targets.size():
 		var e := _targets[i]
-		if not e.active:
+		if not e.active or e.generation != _gens[i]:
 			continue
-		if _rapture:
-			SpellGlyphs.draw_rapture_tether(self, _from, e.position, _phase + float(i) * 0.7, _glow)
-		else:
-			SpellGlyphs.draw_siphon_tether(self, _from, e.position, _phase + float(i) * 0.7, _glow)
+		SpellGlyphs.draw_siphon_beam(self, _from, e.position, _phase + float(i) * 0.7, _glow, _rapture)
+	if _flash_age < AbilityData.SIPHON_FLASH_TIME:
+		var k := _flash_age / AbilityData.SIPHON_FLASH_TIME  # 0 -> 1 over the flash.
+		for p: Vector2 in _flashes:
+			SpellGlyphs.draw_siphon_flash(self, p, k, _rapture)

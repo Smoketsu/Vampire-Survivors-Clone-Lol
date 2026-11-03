@@ -178,6 +178,70 @@ static func draw_rapture_tether(ci: CanvasItem, a: Vector2, b: Vector2, phase: f
 		ci.draw_circle(q, w * 0.8, SOUL)
 
 
+## The in-world Soul Siphon / Soul Rapture tether from `a` (the necromancer)
+## to `b` (the drained enemy), drawn with textures only (Web GL rule: no
+## polyline or circle polygon rebuilt every frame): a wide glow and a bright
+## core along the rippling beam (ConcordBeams.line_texture() stretched per
+## segment), souls streaming back to `a` and a glow on the victim (SpriteBank
+## discs). Siphon: violet glow, drained-life magenta core; Rapture: soul-green
+## and bone braided strands with pale souls. `glow` 1 -> 0 after a drain pulse,
+## `fade` 1 -> 0 for a tether that just dropped. The UI icons keep the
+## draw_siphon_tether() / draw_rapture_tether() line drawings.
+static func draw_siphon_beam(ci: CanvasItem, a: Vector2, b: Vector2, phase: float, glow: float, rapture: bool, fade: float = 1.0) -> void:
+	if fade <= 0.01 or a.distance_squared_to(b) < 4.0:
+		return
+	var w := AbilityData.SIPHON_BEAM_WIDTH  # Core width (px).
+	var tex := ConcordBeams.line_texture()  # Soft-edged white line, tinted.
+	var p1 := _wave(a, b, phase, 6.0 if rapture else 5.0, 1.0)  # Main strand.
+	var halo := Palette.NECRO_GREEN if rapture else Palette.VIOLET  # Glow colour.
+	var core := Palette.BONE if rapture else LIFE  # Core colour.
+	_tex_poly(ci, tex, p1, w * 3.2, Color(halo, (0.35 + 0.4 * glow) * fade))
+	_tex_poly(ci, tex, p1, w * (1.0 + 0.5 * glow), Color(core, 0.9 * fade))
+	if rapture:
+		var p2 := _wave(a, b, phase, 6.0, -1.0)  # Braided second strand.
+		_tex_poly(ci, tex, p2, w * 0.8, Color(Palette.NECRO_GREEN, (0.6 + 0.4 * glow) * fade))
+	var mote := SOUL if rapture else LIFE.lightened(0.35)  # Streaming soul colour.
+	var motes := 4 if rapture else 3  # Souls on the beam.
+	for k in motes:
+		var t := 1.0 - fposmod(phase * (1.6 if rapture else 1.3) + float(k) / float(motes), 1.0)  # 1 at the victim -> 0 at you.
+		var q := _along(p1, t)
+		SpriteBank.draw_disc(ci, q, w * 1.6, Color(mote, 0.35 * fade))
+		SpriteBank.draw_disc(ci, q, w * 0.8, Color(mote, 0.95 * fade))
+	SpriteBank.draw_disc(ci, b, w * (1.6 + 1.0 * glow), Color(halo, (0.25 + 0.3 * glow) * fade))
+
+
+## The drain flash on an enemy at `at`: the `effects/beam_hit` strip (a grey
+## tint mask) tinted drained-life magenta (soul green for Rapture), playing as
+## `k` goes 0 -> 1, else a fading tinted disc. Textures only.
+static func draw_siphon_flash(ci: CanvasItem, at: Vector2, k: float, rapture: bool) -> void:
+	var col := SOUL if rapture else LIFE.lightened(0.2)  # Flash tint.
+	var size := AbilityData.SIPHON_FLASH_SIZE * (0.7 + 0.5 * k)  # Drawn side (px).
+	var a := 1.0 - k  # Opacity.
+	var tex := SpriteBank.texture("effects/beam_hit")  # Shared hit flare strip, or null.
+	if tex != null:
+		var fh := float(tex.get_height())  # A square frame's side (texels).
+		var frames := maxi(1, int(float(tex.get_width()) / maxf(fh, 1.0)))  # Frames in the strip.
+		var f := clampi(int(k * float(frames)), 0, frames - 1)  # Frame by age.
+		ci.draw_texture_rect_region(tex, Rect2(at - Vector2(size, size) * 0.5, Vector2(size, size)), Rect2(fh * float(f), 0.0, fh, fh), Color(col, a))
+		return
+	SpriteBank.draw_disc(ci, at, size * 0.4, Color(col, 0.6 * a))
+
+
+## Texture `tex` stretched along each segment of polyline `pts`, `w` px
+## across, tinted `col` (a textured polyline: batches, no polygon).
+static func _tex_poly(ci: CanvasItem, tex: Texture2D, pts: PackedVector2Array, w: float, col: Color) -> void:
+	if col.a <= 0.01:
+		return
+	for i in pts.size() - 1:
+		var v := pts[i + 1] - pts[i]  # This segment.
+		var l := v.length()  # Its length (px).
+		if l < 0.5:
+			continue
+		ci.draw_set_transform(pts[i], v.angle(), Vector2.ONE)
+		ci.draw_texture_rect(tex, Rect2(Vector2(-0.5, -w * 0.5), Vector2(l + 1.0, w)), false, col)  # 0.5 px overlap closes the joints.
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
 ## Points of a beam from `a` to `b` rippling sideways (amplitude `amp` px,
 ## largest mid-beam; `sgn` flips the ripple for a second strand).
 static func _wave(a: Vector2, b: Vector2, phase: float, amp: float, sgn: float) -> PackedVector2Array:
