@@ -1762,10 +1762,15 @@ def _spin_disc(frame: np.ndarray, disc: dict, f: int) -> np.ndarray:
     return out
 
 
+# Tail rotor spin in degrees a frame (art review round 3, owner: "just needs to spin faster"): 67.5 x 8 frames = 1.5 turns per
+# cycle; the bar is symmetric, so 90 / 180 would read as flicker or standstill. Frame 0 (0 degrees) equals the still.
+TAIL_DEG_PER_FRAME: float = 67.5
+
+
 def _tail_rotor(frame: np.ndarray, tail: dict, f: int) -> np.ndarray:
-    """The `tail` rig key: a tail rotor drawn as a blade pair turning about the hub, 180 / FRAMES degrees per frame. The still's
+    """The `tail` rig key: a tail rotor drawn as a blade pair turning about the hub, TAIL_DEG_PER_FRAME (67.5) degrees per frame (1.5 turns a cycle; round 3: faster; never 90 or 180, which read as flicker or standstill for a symmetric bar). The still's
     blade (frame 0, a vertical bar) is cleared from `box` (its tyre-grey pixels only, not the fuselage) and a 2 px wide bar of
-    length 2 * `half` is drawn through `c` at the angle 180 * f / FRAMES from vertical: core city_asphalt, a 1 px rim of city_ink
+    length 2 * `half` is drawn through `c` at the angle TAIL_DEG_PER_FRAME * f from vertical: core city_asphalt, a 1 px rim of city_ink
     on the empty pixels around it, a city_concrete hub. Only the still's own palette colours are used."""
     x0, x1, y0, y1 = tail["box"]
     ink, core, hub = _palette_rgb(["city_ink", "city_asphalt", "city_concrete"])
@@ -1776,7 +1781,7 @@ def _tail_rotor(frame: np.ndarray, tail: dict, f: int) -> np.ndarray:
             if tuple(frame[y, x]) in rgbs and not (x >= x1 - 1 and y >= 9):
                 out[y, x] = 0
     h, w = frame.shape[:2]
-    th = np.radians(180.0 * f / FRAMES)
+    th = np.radians(TAIL_DEG_PER_FRAME * f)
     cx, cy = tail["c"]
     dx, dy = float(np.sin(th)), -float(np.cos(th))
     bar = np.zeros((h, w), dtype=bool)
