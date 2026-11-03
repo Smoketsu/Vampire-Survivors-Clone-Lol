@@ -43,7 +43,7 @@ FIGURES = {
     "player/starborn": ("art_source/player/starborn.png", 56, ["--ramps", "hull,gunmetal,plasma,grey"]),
     "player/starborn_hyper": ("art_source/player/starborn_hyper.png", 56, ["--ramps", "gold,hull,grey"]),
     "player/starborn_untouchable": ("art_source/player/starborn_untouchable.png", 56, ["--ramps", "marble,soul,grey"]),
-    "player/starborn_deathlord": ("art_source/player/starborn_deathlord.png", 56, ["--ramps", "grey,velvet,crimson,hull", "--no-levels"]),  # grey first for her grey face, --no-levels and keeps the black iron black (ART_BIBLE, Act VII round 1)
+    "player/starborn_deathlord": ("art_source/player/starborn_deathlord.png", 56, ["--ramps", "grey,velvet,crimson,hull", "--no-levels"]),  # R1 redo: black half-mask visor (raw in art_source/crash_site/raw/r1/sdl_a.png, archived here by prepare_sprite)  # grey first for her grey face, --no-levels and keeps the black iron black (ART_BIBLE, Act VII round 1)
 }
 # Figures converted straight by prepare_sprite.py (no pixelate_source step).
 DIRECT = ["player/starborn_deathlord"]

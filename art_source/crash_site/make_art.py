@@ -39,14 +39,16 @@ FIGURES = {
     "bosses/hive_mother_cast": ("raw/hive_mother_cast.png", 96, ["--ramps", "hive,hive_bone,gold", "--no-prune", "--no-levels"]),
     "bosses/hive_mother_strike": ("raw/hive_mother_strike.png", 96, ["--ramps", "hive,hive_bone,gold,brown", "--no-prune", "--no-levels"]),
     "bosses/hive_mother_flight": ("raw/hive_mother_flight.png", 96, ["--ramps", "hive,hive_bone,gold", "--no-prune", "--no-levels"]),
-    "player/broodbound": ("raw/broodbound.png", 56, ["--ramps", "chitin,plasma,grey,gunmetal,hive_bone", "--no-prune"]),  # grey for her pale skin (the skin ramp turned her face dark)
-    "player/broodbound_hyper": ("raw/broodbound_hyper.png", 56, ["--ramps", "gold,gunmetal,grey", "--no-levels"]),  # no skin ramp: it stole the gold's darker shades (round 1 came out brown)
+    # R1 redo (Act IX): the Broodbound is an alien insect woman. Her base converts from raw/broodbound_flat.png (raw/broodbound.png
+    # with the thin orange trim lines opened away, so the 56 px conversion stays readable); the skins straight from their raws.
+    "player/broodbound": ("raw/broodbound_flat.png", 56, ["--ramps", "plasma,chitin,gold,ice,hive_bone", "--no-levels"]),
+    "player/broodbound_hyper": ("raw/broodbound_hyper.png", 56, ["--ramps", "gold,gunmetal,grey,ice", "--no-levels"]),
     "player/broodbound_untouchable": ("raw/broodbound_untouchable.png", 56, ["--ramps", "marble,soul,grey"]),
-    "player/broodbound_deathlord": ("raw/broodbound_deathlord.png", 56, ["--ramps", "velvet,grey,crimson,skin", "--no-levels"]),
+    "player/broodbound_deathlord": ("raw/broodbound_deathlord.png", 56, ["--ramps", "steel,crimson,grey", "--no-levels"]),
 }
 # Figures converted straight by prepare_sprite.py (no pixelate_source step): the Broodbound and her Hyper skin (the
 # pixelated conversion lost her face and eyes at 56 px; the straight one kept them, as the Revenant Heroine's Deathlord).
-DIRECT = ["player/broodbound", "player/broodbound_hyper"]
+DIRECT = ["player/broodbound", "player/broodbound_hyper", "player/broodbound_untouchable", "player/broodbound_deathlord"]  # R1 redo: all four straight (--ink-l 0.15).
 # The obstacle sheet raw/obstacles.png, left to right: (key or keys, art width, ramps). A key list gets the vertical _v
 # too (turned 90 degrees; rect kinds only).
 OBSTACLES = [

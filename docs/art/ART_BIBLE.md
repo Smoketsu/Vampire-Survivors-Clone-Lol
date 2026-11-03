@@ -3147,3 +3147,6 @@ mask squashed into the throne's tilted rings by the code).
 Code-drawn (no PNG): the Grey Overseer's widening pulse ring, the Archon's glow, Tractor Beam's column of soul light and the lifted
 foe's mark (the enemy's body stays on the ground: an Enemy has no draw offset), the Ghost Saucer's short beams, the Reaping's glow over
 the ring, the true form's glow over the base sprite when its art is missing.
+
+### Act IX art review, round 1 (figures)
+The Hive Mother (all poses) was redrawn with wider hips and a bigger bust; the Broodbound is an alien insect woman in bright green and gold (base converted from `art_source/crash_site/raw/broodbound_flat.png`, thin trim lines removed before conversion; skins Hyper / Untouchable / Deathlord regenerated from her); the Starborn Deathlord wears a black half-mask visor. Rebuilt by `art_source/crash_site/make_art.py` (figures step) and `art_source/ark/make_art.py`. Rig lines in `tools/walk_cycle.py`.
