@@ -251,6 +251,15 @@ const UNLOCKS := {
 	"origin_story": {"type": "passive", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Its paired passive (own decision), unlocked with it
 	"bane_of_heroes": {"type": "title", "achievement": "no_more_heroes",
 		"text": "Earn No More Heroes: beat Paragon with no Super at his side."},  # Own decision (the clear is recorded as a title, as Act VII's Ender of the Feast)
+	# --- Act IX: the Crash Site ---
+	# The Hive Mother's fall (owner-approved Act IX proposal "Rewards": Bone
+	# Beetles is unlocked by the Hive Mother) with its paired passive, offered on
+	# every stage; the stage's achievement Nothing Hatched earns Act IX's
+	# counter-passive Anchored (offered only in Act IX through its card row's
+	# "act"; the brief's pairing, GDD §15.0 "Act IX phase 2: owner answers").
+	"bone_beetles": {"type": "spell", "boss": "hive_mother", "text": "Slay the Hive Mother at the Crash Site to unlock."},  # Owner-approved Act IX proposal
+	"chitin": {"type": "passive", "boss": "hive_mother", "text": "Slay the Hive Mother at the Crash Site to unlock."},  # Bone Beetles' paired passive (owner-approved proposal), unlocked with it
+	"anchored": {"type": "passive", "achievement": "nothing_hatched", "text": "Earn Nothing Hatched: let no egg hatch on the Crash Site before the Hive Mother falls."},  # Brief (Nov 3, 2026): Nothing Hatched unlocks Anchored
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

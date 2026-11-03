@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a winged insect queen-guard hovering in the air, its wings spread, long clawed forelegs reaching forward
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 60 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: the BROOD MATRIARCH, the Brood's winged queen-guard (an insect creature, female by name but drawn purely as an insect, no human body, no clothes): a large spiny GREEN-BLACK chitin insect with a crested spiky head, glowing ACID-GREEN eyes, long cream curved claws on two pairs of forelegs, a segmented abdomen ending in a swollen pale-green egg sac, and two pairs of translucent dark-green membranous insect wings spread wide above its back. Never violet or purple. Signature shape that must read in silhouette: the spread wings, the crested head and the long claws.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: chitin #1B3A2A #2E6B45 #3E8A58; wings #24402F #3A6B4C; acid green eyes and sac glow #1FA84A #3CFF6A; claws cream #8A8070 #C8BC9C #E0D2B0
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) a game sprite of this act for pixel size, outline weight and flat look; (2) concept art of this creature (the green beast on the left) for its body only: add the wings (do NOT copy its detail level or painted shading).

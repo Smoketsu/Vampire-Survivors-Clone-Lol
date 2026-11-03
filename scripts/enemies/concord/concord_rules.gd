@@ -22,6 +22,10 @@
 ##                 the burn (burn(), from the ONE check burns_ground()).
 ##   harvest     — FinalHarvest: the shared Act IX Reckoning (RECKONING
 ##                 "final_harvest"): the mothership's eye, the cap lifted.
+##   acid        — AcidPools (Act IX phase 2, the Crash Site): THE ACID PATH
+##                 (lob(): the Acid Spitter's lobs, the Hive Mother's acid
+##                 rain): arcing globs that leave burning puddles hurting
+##                 summons and the necromancer, never enemies.
 ## Hooks for the future counter-passives (exactly 1 / false today):
 ## mirror_reflect_mult(), mirror_taken_mult() (Mirror Bones),
 ## anchored_hold_mult(), anchored_breaks() (Anchored).
@@ -72,6 +76,9 @@ func _init(p_game: Game) -> void:
 	abduction = Abduction.new(p_game)
 	harvest = FinalHarvest.new(p_game, enabled)
 	add_child(harvest)
+	# --- Act IX: the Crash Site --- the acid puddles (on the ground, z -1).
+	acid = AcidPools.new(p_game)
+	add_child(acid)
 
 
 ## Per-tick update (Game, after the enemies, before the obstacle push-out): the
@@ -81,6 +88,7 @@ func step(delta: float) -> void:
 	beams.step(delta)
 	abduction.step(delta)
 	terraforming.step(delta)
+	acid.step(delta)  # Act IX, the Crash Site: lobs land, puddles burn.
 
 
 # =====================================================================================
@@ -135,9 +143,12 @@ func play_sound(event: String, pos: Vector2 = Vector2.INF, gap: float = 0.0) -> 
 
 
 ## The autotest autopilot's push away from every live Concord telegraph at
-## `p`: the aiming lines and live beams (ConcordBeams).
+## `p`: the aiming lines and live beams (ConcordBeams), the acid puddles and
+## landing circles (AcidPools; Act IX, the Crash Site). The kits' own
+## telegraphs (a Burrower's mound) are read through their kits'
+## danger_push(), the Hive Mother's through her Boss.danger_push().
 func danger_push(p: Vector2) -> Vector2:
-	return beams.danger_push(p)
+	return beams.danger_push(p) + acid.danger_push(p)
 
 
 # =====================================================================================
@@ -182,3 +193,8 @@ func anchored_hold_mult(u: SummonedUnit) -> float:
 ## passive does not exist.
 func anchored_breaks(u: SummonedUnit) -> bool:
 	return anchored_hold_mult(u) < 1.0
+
+
+# --- Act IX: the Crash Site ---
+## The acid puddles (child node: drawn on the ground): THE acid path (see the header).
+var acid: AcidPools

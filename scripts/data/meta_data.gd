@@ -438,7 +438,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VIII: Fort Kessler ---
 	"broken_arrow",
 	# --- Act VIII: Liberty Heights ---
-	"no_more_heroes"]
+	"no_more_heroes",
+	# --- Act IX: the Crash Site ---
+	"nothing_hatched"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -657,6 +659,15 @@ const ACHIEVEMENTS := {
 	# TitleData).
 	"no_more_heroes": {"display_name": "No More Heroes", "description": "Beat Paragon at Liberty Heights with no Super at his side",
 		"stat": "paragon_no_heroes_kills", "goal": 1, "unlock": "The title Bane of Heroes", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act IX: the Crash Site ---
+	# The brief's Act IX achievement "Nothing Hatched" (Nov 3, 2026: "No egg
+	# hatches on the Crash Site, from the start until the Hive Mother falls,
+	# and you beat her"): a Crash Site run in which the Hive Mother fell and no
+	# Infestation egg had hatched before her fall (CrashSiteDirector sets the
+	# run stat crash_site_nothing_hatched; MetaProgress counts the runs,
+	# lifetime nothing_hatched_runs). It unlocks the counter-passive Anchored.
+	"nothing_hatched": {"display_name": "Nothing Hatched", "description": "Beat the Hive Mother at the Crash Site with no egg hatched before she falls",
+		"stat": "nothing_hatched_runs", "goal": 1, "unlock": "The Anchored passive", "bounty": 300},  # Brief (Nov 3, 2026); bounty TUNING (not in GDD) as No Witnesses
 }
 
 # --- Content wave 2: B. Achievement rewards ---

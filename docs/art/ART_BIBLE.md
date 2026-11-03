@@ -3047,3 +3047,32 @@ a frame, tiles along +x) and `effects/beam_hit.png` (6 frames of 64x64 grey burs
 `concord/mothership_eye.png` (192x192, the API source snapped to the Concord colours, round with transparent corners; the code fades it in).
 Seams checked on a 1280x720 mock (`docs/act9/art_mock_turf.png`); contact sheet `docs/act9/art_contact_sheet.png`. `art_check.py` rows against
 older stages' light floors fail the lightness gap for the dark Brood and Vrask (those floors are other acts').
+
+### Act IX: the Crash Site (phase 2, Nov 2026)
+
+<!-- --- Act IX: the Crash Site --- -->
+The Crash Site's own art (GDD §15.0 "Crash Site art (Act IX phase 2)"), rebuilt by `art_source/crash_site/make_art.py` from the API
+sources in `art_source/crash_site/raw/` (prompts beside the script, reference crops of the approved concepts in `refs/`; each prompt
+names the sex or says creature). Insects keep the Brood's own colours (green-black chitin, acid green, cream claws, a slate armour);
+the Hive Mother keeps her own `hive` ramp; never the player's violet and bone on a Concord unit.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `concord/burrower` | creature: a slate-dark armoured digger, cream digging claws, one magenta eye, a little dirt | 32x34 | legs walk (hip 26) |
+| `concord/acid_spitter` | creature: a lean green-black insect with a glowing acid sac | 32x32 | legs walk (hip 21) |
+| `concord/brood_matriarch` | insect creature (female by name, not in the figure style): green-black chitin, four wings, cream claws, a pale-green egg sac | 60x60 + 2 empty rows each side | hover strip (bob 2); the concept's queen-guard of `act9_boss.png` with wings |
+| `bosses/hive_mother_cast` / `_strike` | her poses (BossPoseData 1 / 3): claws raised over the egg sac / bursting out of the ground | 96x96 / 84x96 | pixelated conversion, `hive`, `hive_bone`, gold (+ brown dirt on the strike) |
+| `bosses/hive_mother_flight` | her Flight form: wings fully spread, the sac tucked | 100x96 + 2 empty rows each side | hover strip (bob 2), drawn lifted by BossHiveMother |
+| `player/broodbound` | **female**, figure style: a green-black chitin gown (chest and hips covered), pale skin, acid-green eyes, a wing crown, bone beetles on her hand | 30x56 | straight conversion (the pixelated one lost her face); robe glide, bust box (9-21, rows 14-21), idle strip |
+| `player/broodbound_hyper` / `_untouchable` / `_deathlord` | her skins: gold and black chitin / the white phantom / black iron and crimson with a spiked crown | 30x56 / 30x56 / 38x56 | skin rigs from hers (`SKINS`) |
+| `projectiles/bone_beetle` | Bone Beetles' beetle, head to the right | 12x10 | the extra beetle the gold icon sheet came back with, turned 90 degrees |
+| `obstacles/crash_rubble_s/m/l`, `crash_hull_shard_s/l` (+ `_v` turned 90 degrees), `glass_spire_s/l` | the capital's rubble, the scout ship's torn hull plating, spires of fused glass | 26-42 wide | one API sheet cut apart |
+| `icons/bone_beetles`, `chitin`, `anchored` (violet), `hive_of_bone`, `ach_nothing_hatched` (gold) | badges on the approved frames | 32x32 | the violet sheet came back with a fourth symbol, skipped |
+
+**Drawn in code** (`art_source/crash_site/crash_site_tiles.py`, deterministic): the zone floors `tiles/crash_site_crater` (glassed black
+rock in Voronoi plates), `_hatchery` (green-black resin lumps), `_wreck` (32 px hull plates) and `_ruins` (offset paving slabs), each 128x128
+and seamless, dark and flat (the floor rule); `concord/brood_egg` (14x14, a green-black egg with an acid vein on a resin smear) and its
+hatch strip `concord/brood_egg_hatch` (4 frames of 16x16, played over the egg's last 1.2 s; the egg's slow pulse is a tint on game time, no
+flashing); `concord/burrow_mound` (28x16, scaled by `BurrowerKit.draw_mound()` for the Burrower and, larger, the Hive Mother's mound);
+`effects/acid_pool` (32x26 grey tint mask, tinted acid green by `AcidPools`). `art_check.py`: the hover stills fail "feet" by design (as the
+saucer); the dark Brood and the Broodbound fail the lightness gap on older acts' light floors (the Crash Site's floors are near-black).

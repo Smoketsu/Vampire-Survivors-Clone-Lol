@@ -23,9 +23,20 @@
 ##     (x the firer's damage scaling, x its undead mult on a summon, x Mirror
 ##     Bones' mirror_taken_mult()), each AT MOST ONCE A TICK, through
 ##     CombatResolver.damage_unit() / damage_player() (Grave Step's i-frames
-##     dodge it there). THE RING DOES NOT BLOCK IT, nor does a Bone Wall.
-##     Enemies are never hit by a Concord beam, except a reflected one.
+##     dodge it there). THE RING DOES NOT BLOCK IT. Enemies are never hit by
+##     a Concord beam, except a reflected one.
 ## Along the line, the first of these from the muzzle ENDS the beam there:
+##   * A BONE WALL (owner answer, Nov 3, 2026; Act IX phase 2, the Crash
+##     Site): the first Bone Wall segment touching the line (the spell's walls,
+##     Bastion rings and an Ossuary Titan's wall alike; co-op: every player's),
+##     found with Act III's Line of Fire test (EmpireShots.wall_block_t() ->
+##     BoneWall.shot_block_t(), the one segment test, never a copy). The beam
+##     stops there: no reflection and no split past it (an Orb Shield behind
+##     the wall is not even asked, so it spends no charge). It applies to every
+##     Concord beam (the prisms' split beams and the Final Harvest's eye too),
+##     never to a reflected beam (the necromancer's). Counted once per beam
+##     (beam_wall_stops); the hit flare is drawn at the wall, the aiming line
+##     stops there too, and danger_push() reads the shortened line.
 ##   * REFLECTION. An Orb Shield (the Umbral Warden's Eclipsed Guard, else one
 ##     charge of AbilityManager.try_intercept(); once per beam, as
 ##     EmpireShots._orb_stops(); co-op: every standing necromancer's orbs, his
@@ -52,7 +63,7 @@
 ## Stats: beams_fired, beams_fired_<style>, beams_refused, beams_cancelled,
 ## beam_hits_summons, beam_dmg_summons, beam_hits_you, beam_dmg_you,
 ## beam_reflect_orb, beam_reflect_barrier, beam_reflect_hits, beam_reflect_dmg,
-## beam_prism_splits.
+## beam_prism_splits, beam_wall_stops.
 class_name ConcordBeams
 extends Node2D
 
@@ -68,6 +79,12 @@ const FLAG_ORB: int = 1
 const FLAG_BARRIER: int = 2
 ## Flag bit: this beam's prism split was counted.
 const FLAG_PRISM: int = 4
+# --- Act IX: the Crash Site ---
+## End kind of a beam's line: a Bone Wall segment stopped it (the prism's
+## split is 3; REFLECT_* 1 / 2; 0 = its full length).
+const WALL_STOP: int = 4
+## Flag bit: this beam's Bone Wall stop was counted (beam_wall_stops).
+const FLAG_WALL: int = 8
 ## Sprite key of the beam's body strip (a grey tint mask, the art pass).
 const LINE_ART: String = "effects/beam_line"
 ## Sprite key of the beam's hit flare strip (a grey tint mask, the art pass).
@@ -137,6 +154,11 @@ var _end_d: PackedFloat32Array = PackedFloat32Array()
 var _end_kind: PackedInt32Array = PackedInt32Array()
 ## This tick's geometry: the prism (world px) a beam split on (if _end_kind 3).
 var _split_at: PackedVector2Array = PackedVector2Array()
+# --- Act IX: the Crash Site ---
+## This tick's geometry of each beam's three split beams (if _end_kind 3):
+## their lengths (px) after the Bone Wall test, at [3 i + k] for the split
+## k = 0, 1, 2 (angles -prism_angle, 0, +prism_angle).
+var _split_end: PackedFloat32Array = PackedFloat32Array()
 ## Reusable grid query buffer.
 var _tmp: Array = []
 ## Bodies hit this tick by the beam being resolved (each at most once a tick).
@@ -183,6 +205,7 @@ func _init(p_game: Game) -> void:
 	_end_d.resize(_cap)
 	_end_kind.resize(_cap)
 	_split_at.resize(_cap)
+	_split_end.resize(_cap * 3)  # Act IX, the Crash Site: the split beams' wall-stopped lengths.
 	_draws = DisplayServer.get_name() != "headless"
 
 
@@ -307,6 +330,8 @@ func _remove(i: int) -> void:
 		_end_d[i] = _end_d[last]
 		_end_kind[i] = _end_kind[last]
 		_split_at[i] = _split_at[last]
+		for k in 3:
+			_split_end[i * 3 + k] = _split_end[last * 3 + k]  # Act IX, the Crash Site.
 	_owner[last] = null
 	_target[last] = null
 	count = last
@@ -338,6 +363,7 @@ func step(delta: float) -> void:
 				var cur := _dir[i].angle()
 				_dir[i] = Vector2.from_angle(cur + clampf(wrapf(want - cur, -PI, PI), -rate * delta, rate * delta))
 			_lock_angle[i] = _dir[i].angle()
+			_aim_line(i)  # Act IX, the Crash Site: the aiming line stops at a Bone Wall too.
 			i += 1
 			continue
 		var k := clampf((_time[i] - _aim[i]) / maxf(_hold[i], 0.001), 0.0, 1.0)  # 0 -> 1 through the hold.
@@ -391,12 +417,19 @@ func _resolve_line(i: int) -> void:
 	var half := _width[i] * 0.5
 	var end := length  # Main segment's end distance (px).
 	var kind := 0  # What ended it (0 = its length).
+	# 0. Act IX, the Crash Site: a Bone Wall segment on the line stops it there
+	# (nothing past the wall is asked: no orb charge is spent behind it).
+	var wd := wall_d(a, d, length, half)  # Distance of the first wall touch (-1 = none).
+	if wd >= 0.0:
+		end = wd
+		kind = WALL_STOP
 	# 1. An Orb Shield already caught it: the reflection holds.
 	if _orb_d[i] >= 0.0:
-		end = minf(_orb_d[i], length)
-		kind = REFLECT_ORB
+		if _orb_d[i] < end:
+			end = _orb_d[i]
+			kind = REFLECT_ORB
 	else:
-		var od := _orb_on_line(i, a, d, length, half)  # Distance of the first charged orb that caught it (-1 = none).
+		var od := _orb_on_line(i, a, d, end, half)  # Distance of the first charged orb that caught it (-1 = none).
 		if od >= 0.0:
 			end = od
 			kind = REFLECT_ORB
@@ -437,6 +470,18 @@ func _resolve_line(i: int) -> void:
 	if kind == 3 and (_flags[i] & FLAG_PRISM) == 0:
 		_flags[i] |= FLAG_PRISM
 		game.stat_add("beam_prism_splits", 1.0)
+	# --- Act IX: the Crash Site --- the split beams stop at a Bone Wall too.
+	var walled := kind == WALL_STOP  # A wall stopped this beam (main line or a split).
+	if kind == 3:
+		var rest := length - end  # The split beams' full length (px).
+		var spread := deg_to_rad(float(ConcordRulesData.BEAMS["prism_angle"]))
+		for k in 3:
+			var sd := wall_d(_split_at[i], d.rotated(spread * float(k - 1)), rest, half)  # Its wall touch (-1 = none).
+			_split_end[i * 3 + k] = sd if sd >= 0.0 else rest
+			walled = walled or sd >= 0.0
+	if walled and (_flags[i] & FLAG_WALL) == 0:
+		_flags[i] |= FLAG_WALL
+		game.stat_add("beam_wall_stops", 1.0)
 
 
 ## Distance along beam `i`'s line of the first ORB SHIELD that catches it, or
@@ -490,11 +535,10 @@ func _deal_tick(i: int) -> void:
 	var end := _end_d[i]
 	_hit_line(i, a, d, end + 1.0, tick)
 	if _end_kind[i] == 3:
-		var rest := _len[i] - end  # The split beams' length (px).
 		var spread := deg_to_rad(float(ConcordRulesData.BEAMS["prism_angle"]))
 		var from := _split_at[i]
-		for s in [-1.0, 0.0, 1.0]:
-			_hit_line(i, from, d.rotated(spread * s), rest, tick)
+		for k in 3:
+			_hit_line(i, from, d.rotated(spread * float(k - 1)), _split_end[i * 3 + k], tick)  # Each split beam's length after its wall test.
 	elif _end_kind[i] == REFLECT_ORB or _end_kind[i] == REFLECT_BARRIER:
 		_reflect_tick(i, a + d * end, a, tick)
 
@@ -584,8 +628,8 @@ func danger_push(p: Vector2) -> Vector2:
 		var a := _muzzle(i)
 		var d := _dir[i]
 		var along := (p - a).dot(d)  # Distance down the line (px).
-		if along < 0.0 or along > _len[i]:
-			continue
+		if along < 0.0 or along > _end_d[i]:
+			continue  # Past its end (a Bone Wall, a reflector or a prism stops it there; Act IX, the Crash Site).
 		var reach := float(ConcordRulesData.BEAMS["danger_reach"]) + _width[i] * 0.5 + game.player.radius  # Danger band (px).
 		var side := (p - a) - d * along  # Offset from the line.
 		var dist := side.length()
@@ -621,7 +665,9 @@ func _draw() -> void:
 			else:
 				var blink := locked and fmod(now * 10.0, 1.0) < 0.5
 				var w := 2.0 if locked else 1.0
-				_line(a, a + d * _len[i], w, Color(Palette.CONCORD_LASER, float(ConcordRulesData.BEAMS["aim_alpha"]) * (1.0 if blink or not locked else 0.6)))
+				_line(a, a + d * _end_d[i], w, Color(Palette.CONCORD_LASER, float(ConcordRulesData.BEAMS["aim_alpha"]) * (1.0 if blink or not locked else 0.6)))
+				if _end_kind[i] == WALL_STOP:
+					_flare(a + d * _end_d[i], 8.0, Palette.BONE)  # Act IX, the Crash Site: the wall will stop it.
 			continue
 		var w2 := _width[i]
 		var pulse := 0.85 + 0.15 * sin(now * 30.0 + float(i))  # A buzz along the beam.
@@ -630,9 +676,15 @@ func _draw() -> void:
 		if _end_kind[i] == 3:
 			var rest := _len[i] - _end_d[i]
 			var spread := deg_to_rad(float(ConcordRulesData.BEAMS["prism_angle"]))
-			for s in [-1.0, 0.0, 1.0]:
-				_beam(_split_at[i], _split_at[i] + d.rotated(spread * s) * rest, w2 * 0.7 * pulse)
+			for k in 3:
+				var se := _split_end[i * 3 + k]  # This split beam's length after its wall test.
+				var sdir := d.rotated(spread * float(k - 1))
+				_beam(_split_at[i], _split_at[i] + sdir * se, w2 * 0.7 * pulse)
+				if se < rest - 0.5:
+					_flare(_split_at[i] + sdir * se, w2 * 1.2, Palette.BONE)  # Act IX, the Crash Site: a Bone Wall stopped it.
 			_flare(_split_at[i], w2 * 1.6, Palette.CONCORD_LUMEN)
+		elif _end_kind[i] == WALL_STOP:
+			_flare(end, w2 * 1.5, Palette.BONE)  # Act IX, the Crash Site: the beam breaks on the Bone Wall.
 		elif _end_kind[i] == REFLECT_ORB or _end_kind[i] == REFLECT_BARRIER:
 			_line(end, a, w2 * 0.6, Color(Palette.CONCORD_LUMEN, 0.75))  # The reflected beam back at its firer.
 			_flare(end, w2 * 1.8, Palette.CONCORD_LUMEN)
@@ -695,3 +747,26 @@ static func line_texture() -> Texture2D:
 			img.set_pixel(x, y, Color(1.0, 1.0, 1.0, rows[y]))
 	_line_tex = ImageTexture.create_from_image(img)
 	return _line_tex
+
+
+# --- Act IX: the Crash Site ---
+## The Bone Wall stop (owner answer, Nov 3, 2026): distance (px) along the line
+## from `a` in unit direction `d` at which a Bone Wall segment first touches a
+## beam `half` px wide over `length` px, or -1 when none does. The ONE segment
+## test is Act III's (EmpireShots.wall_block_t() -> BoneWall.shot_block_t(),
+## every player's walls); this only turns its path fraction into a distance.
+func wall_d(a: Vector2, d: Vector2, length: float, half: float) -> float:
+	if length <= 0.0:
+		return -1.0
+	var t := EmpireShots.wall_block_t(game, a, a + d * length, half)  # Path fraction of the first touch (INF = none).
+	if t == INF:
+		return -1.0
+	return clampf(t, 0.0, 1.0) * length
+
+
+## While beam `i` aims: its line's end this tick (a Bone Wall stops the aiming
+## line and danger_push() reads it; nothing else ends a line before it fires).
+func _aim_line(i: int) -> void:
+	var wd := wall_d(_muzzle(i), _dir[i], _len[i], _width[i] * 0.5)  # The first wall touch (-1 = none).
+	_end_d[i] = wd if wd >= 0.0 else _len[i]
+	_end_kind[i] = WALL_STOP if wd >= 0.0 else 0

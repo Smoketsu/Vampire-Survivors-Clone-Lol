@@ -1,0 +1,7 @@
+A sheet of THREE separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its third of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. BONE BEETLES: three small bone-white beetles with skull-like shells scuttling out of a burst of soul-teal light.
+2. CHITIN: one curved, glossy beetle shell plate of bone-white chitin with a soul-teal sheen along its ridge.
+3. ANCHORED: a heavy bone anchor driven into the ground, a broken green tractor-beam ray snapping above it.
+Colours: bone #8A8070 #C8BC9C #EDE6D0; soul teal #1F7A5C #3FD39A #9CFFD8; dark #0B0A10 #1C1426; ground brown #3A2C20 #5C4632; tractor green #1FA84A #3CFF6A.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

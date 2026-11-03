@@ -242,6 +242,12 @@
 ##     ran, the summary adds the "beams", "abduction", "terraforming", "concord
 ##     kinds", "final harvest" (after 0:00) and (on an Act IX stage) "concord
 ##     stage" lines (ConcordReport).
+##     The Crash Site (phase 2) adds the kinds burrower, acid_spitter,
+##     brood_egg, brood_matriarch; the bot also steps off a Burrower's mound,
+##     the Hive Mother's mound and the acid puddles and landing circles; the
+##     "crash site", "burrowers", "acid", "brood matriarch" and "hive mother"
+##     lines (CrashSiteReport), and "act IX spell" / "act IX passives" when
+##     Bone Beetles, Chitin or Anchored was taken.
 class_name Autotest
 extends Node
 
@@ -1556,6 +1562,8 @@ func finish(summary: Dictionary) -> void:
 	FortKesslerReport.item_lines(game, st)  # Bone Mines, Tripwire, Armour-Piercing Bones (only when taken; the stage's own lines are CityReport's).
 	# --- Act VIII: Liberty Heights ---
 	LibertyHeightsReport.item_lines(game, st)  # Hero's Fist, Secret Identity, the Fallen Hero, Origin Story (only when used; the stage's own lines are CityReport's).
+	# --- Act IX: the Crash Site ---
+	CrashSiteReport.item_lines(game, st)  # Bone Beetles, Chitin, Anchored (only when taken; the stage's own lines are ConcordReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

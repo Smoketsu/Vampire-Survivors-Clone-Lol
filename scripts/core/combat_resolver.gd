@@ -191,6 +191,12 @@
 ## very end of damage_enemy(), a hit that dealt damage tells
 ## ConcordRules.on_enemy_hit(), which burns the alien ground around the enemy
 ## when the source is a SPELL (ConcordRules.burns_ground(), the one test).
+##   the Crash Site (Act IX phase 2) — INFESTATION in damage_enemy(): an egg
+##             (CrashSiteEnemyData "brood_egg") brought to 0 HP is cleared
+##             without a kill (CrashSiteDirector.clear_egg(), before the kill
+##             path), and the kill path records a Concord enemy's death spot
+##             beside the Ghoul's claim (CrashSiteDirector.on_concord_death():
+##             an egg is laid there on the Crash Site only).
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -475,6 +481,12 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 	if e.is_structure:
 		game.stat_add("structdmg_" + source, dealt)  # Outposts, generators, crystals, altars, carts (autotest).
 	Juice.enemy_hit(e, dealt, source)
+	# --- Act IX: the Crash Site --- an Infestation egg this hit reached is
+	# cleared and leaves the field WITHOUT a kill (no XP, drop, corpse or kill
+	# count: CrashSiteDirector.clear_egg(); false for anything but an egg, and
+	# only asked while Game.concord exists).
+	if e.hp <= 0.0 and game.concord != null and CrashSiteDirector.clear_egg(game, e, source):
+		return dealt
 	if e.hp <= 0.0:
 		game.stat_add("kills_by_" + source, 1.0)  # Killing blow per damage source (autotest spell summaries).
 		if source in MetaData.WARRIOR_KILL_SOURCES:
@@ -485,6 +497,12 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		# Court's rules exist, so nothing changes on Acts I to VI).
 		if game.court != null:
 			GhoulKit.claim_corpse(game, e)
+		# --- Act IX: the Crash Site --- Infestation: a Concord enemy's death
+		# spot is recorded, and an egg sits there (CrashSiteDirector
+		# .on_concord_death(), the one call; it returns at once off the Crash
+		# Site, and nothing runs while the Concord's rules do not exist).
+		if game.concord != null:
+			CrashSiteDirector.on_concord_death(game, e)
 		game.horde.evolutions.on_enemy_killed(e, source)  # Lich raise-the-dead.
 		game.innates.on_enemy_killed(e, source)  # Character innates (no-op without one).
 		_kill_enemy(e, is_minion_source(source))
