@@ -896,6 +896,21 @@ RIGS = {
     "summons/fallen_hero": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1),
     "summons/black_paragon": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1),
     "bosses/paragon": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1),
+    # --- Act IX: the Concord of Stars (the shared kinds; assets/sprites/concord/, bosses/) ---
+    # The Broodling scuttles and the Grey Drone walks (their arms and probes end above the hip, so they ride with the body); the
+    # Vrask Hunter strides (the cloak and glaive end above the hip); the saucer hovers (the whole disc bobs 2 px, its rim lamps chase
+    # round the rim, a `rotor` ellipse that turns only the lamp pixels); the Lumen Sentinel glides (robe: its long light-trail
+    # sways, the staff rides with the hem); the Prism (female, figure redesign) and the Hive Mother glide with the bust box
+    # bouncing, the Prism's skirt `swish` and an idle strip for both (boxes read from each still, art px, [start, end)).
+    "concord/broodling": dict(mode="legs", hip=15, back=(0, 10), front=(10, 20), rigid=[], spread=2, lift=1, dip=1),
+    "concord/grey_drone": dict(mode="legs", hip=18, back=(0, 11), front=(11, 22), rigid=[], spread=1, lift=1, dip=1),
+    "concord/saucer": dict(mode="hover", bob=2, parts=[],
+                           rotor=[dict(c=(29.5, 23.0), r=(26.0, 2.4), deg=45.0, colors=["concord_plasma", "concord_plasma_dark"])]),
+    "concord/vrask_hunter": dict(mode="legs", hip=33, back=(0, 29), front=(29, 54), rigid=[], spread=2, lift=2, dip=1),
+    "concord/lumen_sentinel": dict(mode="robe", hip=28, rigid=[(14, 20, 0, None)], sway=1, dip=1),
+    "concord/prism": dict(mode="robe", hip=28, rigid=[], sway=1, dip=1, bust=(7, 15, 10, 16, 1, 2),
+                          bust_exclude=[(15, 20, 8, 20)], swish=(5, 17, 24, 38, 1)),
+    "bosses/hive_mother": dict(mode="robe", hip=62, rigid=[], sway=1, dip=1, bust=(33, 50, 32, 44, 2, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

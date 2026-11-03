@@ -3003,3 +3003,47 @@ The limo's still has only faint wheels (an AI-blotched body), so its spin is sub
 Paragon is red / white / blue with red eyes (no emblem; ramps `marble,police,siren_red,skin,steel`); Mammoth has the long main gun and a bigger
 machine-gun turret (118 x 60) and a firing-cycle walk strip (the shared tank rig: `recoil` on the main gun + `muzzle` `heavy` / `big` at the barrel tip on frames 1-2);
 the Revenant Heroine Deathlord is bolder (bare midriff / shoulders / thighs, chest and hips covered) with her own bust / swish rig.
+
+### Act IX: the Concord of Stars, the shared kinds and the turf (foundation, Nov 2026)
+
+<!-- --- Act IX: the Concord of Stars --- -->
+The Concord's look (GDD §15.0 "Act IX art: the shared kinds and the turf"; `docs/act9/PROPOSAL.md`; approved concepts
+`art_source/concepts/act9_lineup.png`, `act9_boss.png`, `act9_stage.png` with their prompts): a coalition of aliens seen against
+the starfield. **Hull white and gunmetal** (the Harvesters' saucers and greys), **plasma green** lights, **laser magenta** beams,
+the Brood's **green-black chitin**, the Vrask's **teal scales**, the Luminous's **pale white-gold**, alien flesh **turf purple**.
+Ink `#07080F` (`concord_ink`) outlines the whole act. Every prompt names the sex (or says creature / machine); the Prism and the
+Hive Mother are figure-redesign females whose gowns / chitin fully cover chest and hips; the greys' sex is left unmarked.
+**Insects and machines keep their own colours: never the player's violet and bone on any Concord unit** (the concept's round 3 fix;
+the Hive Mother's purple is her own `hive` ramp, with cream `hive_bone`, added to her key only).
+
+**Palette.** One hue per ramp (the Act VIII lesson): `hull` (ink, `#AEB8C4`, `#E8ECF0`), `gunmetal` (`#1E242C`, `#3A424C`), `plasma`
+(`#1FA84A`, `#3CFF6A`), `laser` (+ added `#A01C7A`, `#FF2FB8`), `chitin` (`#1B3A2A`, `#2E6B45`), `hive` (`#6A3FA0` + added dark `#43266A`
+and light `#8F63C4`), `hive_bone` (`#E0D2B0`), `vrask` (`#2A8F7A` + added `#1B5C4E`, `#5CC2AA`), `lumen` (`#FFE9A0` + added `#C9A95C`),
+`lavender` (added: the Star-Seer's skin `#8D7DB2`, `#C8BAE6`), `turf` (`#1A1C22`, `#5A2A6A` + added light `#7E4A90`). `prepare_sprite.py`
+folder `concord/`: hull, gunmetal, plasma, laser, chitin, vrask, lumen, lavender (no skin, bone, violet or crimson); KEY_RAMPS: the
+Prism drops chitin / vrask / plasma, the Grey Drone drops lavender / lumen / vrask / chitin, `bosses/hive_mother` adds hive, hive_bone, gold.
+The bosses/ and structures/ keys are converted with an explicit `--ramps`.
+
+**Sprites** (`assets/sprites/concord/`, `bosses/`, `structures/`; heights in `SpriteData.HEIGHTS`; prompts and API sources in
+`art_source/concord/`). One image each from `tools/gen_image.py` (`--ref` a game sprite for the pixel look plus a crop of the lineup).
+Figures went through `prepare_sprite.py --ink-l 0.15 --no-prune`; the small ones and the women through `pixelate_source.py` first
+(`--no-cleanup --no-prune --no-levels`; the Hive Mother kept the pixelated conversion: the cleaned one lost her bust and face).
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `concord/broodling` | creature: hunched green-black insect, acid-green eye | 20x22 | legs walk (hip 15) |
+| `concord/grey_drone` | sex unmarked: small grey, black eyes, silver jumpsuit, green probe | 22x28 | legs walk (hip 18) |
+| `concord/saucer` | white saucer, green lamps, no beam (code) | 60x36 (32 + 2 empty rows each side) | hover strip (bob 2, rim lamps chase); art_check "feet" fails by design |
+| `concord/vrask_hunter` | male: teal lizard-man, shoulder caster, glaive | 54x46 | legs walk (hip 33) |
+| `concord/lumen_sentinel` | male: white-gold crystal armour, beam staff | 20x46 | glide strip (robe, staff rigid) |
+| `concord/prism` | **female**, figure style: lavender skin, opaque white-and-magenta gown, prism | 24x44 | glide strip, bust box (7-15, rows 10-16), `swish`, idle strip |
+| `bosses/hive_mother` | **female**, figure style: purple chitin queen, wings, egg sac | 72x96 | glide strip, bust box (33-50, rows 32-44, two lobes), idle strip; phase 2 adds attack poses |
+| `structures/concord_terraformer` / `_dead` | landing pod rooted in turf, vents / cracked, charred | 38x40 / 44x40 | stills; the steam is code |
+
+**The turf and effects** are drawn by `tools/concord_tiles.py` (deterministic, straight onto the grid): `tiles/concord_turf.png`, a 192x192
+atlas of 3x3 cells of 64 px (corners, edges, seamless centre, as the city roofs; veins are a wrapped Voronoi map; ragged dark outline
+toward the outside), `tiles/concord_scorch.png` (64x64 burnt), `effects/beam_line.png` (4 frames of 64x16, grey tint mask, bands flow 16 px
+a frame, tiles along +x) and `effects/beam_hit.png` (6 frames of 64x64 grey burst), both tinted magenta by the code, and
+`concord/mothership_eye.png` (192x192, the API source snapped to the Concord colours, round with transparent corners; the code fades it in).
+Seams checked on a 1280x720 mock (`docs/act9/art_mock_turf.png`); contact sheet `docs/act9/art_contact_sheet.png`. `art_check.py` rows against
+older stages' light floors fail the lightness gap for the dark Brood and Vrask (those floors are other acts').
