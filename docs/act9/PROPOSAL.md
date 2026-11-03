@@ -23,6 +23,19 @@ order of it again, so don't worry about epilogue stuff of each act until we nail
 - The act's three shared rules are therefore **Beams, Abduction and Terraforming**.
 - **A plain finale.** The Harvester fights as written; story twists wait for the act-order talk.
 
+**Phase 2 answers (Nov 3, 2026).** These override the stage sections and the rules below them.
+- **The Crash Site's eggs ("Infestation"), as the lead proposed.** The game leaves no corpses lying on the ground, so the
+  eggs sit where Concord enemies fall:
+  - when a Concord enemy dies on the Crash Site, an egg sits where it fell for 6 s;
+  - any spell or summon hit on that spot clears the egg;
+  - otherwise a broodling hatches from it.
+
+  The death spots are recorded from the kill path in `CombatResolver.damage_enemy()`, only while `game.concord` exists,
+  as the Act VII Ghoul's `claim_corpse()` hook did.
+- **Bone Walls block beams.** A Concord beam stops at the first Bone Wall segment it meets, as Act III's Line of Fire
+  stops shots on summons and walls (the same segment test). Orb Shields and Warder barriers still reflect a beam. This
+  changes the foundation's Beams rule (`ConcordBeams`).
+
 ## Act IX: The Concord of Stars (draft, still cooking)
 The harvest has stopped. Long ago, something out in the dark seeded life on this world, the way a farmer plants a field, and every few thousand years it comes back to reap the dead. This time there is nothing to reap: the necromancer has taken every soul. The Concord (a union of alien races under the Harvesters who rule it) arrives to find out why. The look is hull white and gunmetal, plasma green and laser magenta, against starfield black; each race adds one accent colour of its own. Recommended as a draft: the races, the rules and the bosses below are a starting set, and the ideas bank at the end of this section has the alternatives.
 
