@@ -102,7 +102,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VIII: Fort Kessler ---
 	"killing_ground",
 	# --- Act VIII: Liberty Heights ---
-	"doomsday"]
+	"doomsday",
+	# --- Act IX: the Ark ---
+	"star_abduction"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -734,6 +736,27 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 95.0, "cooldown": 2.3, "fists": 2, "fling": 240.0, "fling_share": 0.5,  # TUNING (not in GDD) first pass 110 / 2.2 s / 0.65: ~500k damage in the forced seed-7 run, far ahead of every source
 			"crater": 64.0, "crater_share": 0.4,  # TUNING (not in GDD) the evolution flag: the crater where a flung foe lands (first pass 0.6)
+		},
+	},
+	# --- Act IX: the Ark ---
+	# Abduction (id "star_abduction": "abduction" is the Concord rule's source
+	# tag and class name; its display name stays "Abduction"; GDD §15.0
+	# "Tractor Beam, Abduction, Starseed and the Starborn"; owner-approved
+	# proposal "Tractor Beam -> Abduction (+ Starseed)"): Tractor Beam +
+	# Starseed (a NEW passive, owner rule: at Lv 5). Three foes lifted a cast,
+	# held longer, and every slam first DRAGS the foes within `pull` px in
+	# toward it (pull_force / mass) and shakes them for quake_share x the
+	# damage. Detected by the "pull" key.
+	"star_abduction": {
+		"base": "tractor_lift",
+		"passive": "starseed",
+		"display_name": "Abduction",  # Owner-approved proposal
+		"icon": "star_abduction",
+		"description": "Three foes rise into the light, and each falls like a star, dragging the rest in after it.",
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "lifts": "Lifts", "lift_time": "Lift (s)", "slam_radius": "Slam (px)", "slam_share": "Slam splash", "pull": "Pull (px)", "quake_share": "Quake damage"},
+		"stats": {
+			"damage": 96.0, "cooldown": 2.4, "lifts": 3, "lift_time": 1.2, "slam_radius": 70.0, "slam_share": 0.55,  # TUNING (not in GDD)
+			"pull": 120.0, "pull_force": 260.0, "quake_share": 0.3,  # TUNING (not in GDD) the evolution flag: the pull round each slam
 		},
 	},
 }

@@ -72,7 +72,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act VII: Castle Sanguis --- (a silhouette naming its unlock until met)
 		"blood_spawn",
 		# --- Act VIII: Liberty Heights --- (a silhouette naming its unlock until met)
-		"fallen_hero"]
+		"fallen_hero",
+		# --- Act IX: the Ark --- (a silhouette naming its unlock until met)
+		"ghost_saucer"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -276,11 +278,15 @@ const CITY_BOSSES: Array[String] = ["don_marrow", "harrow", "paragon"]
 ## built (phase 2). The landing pod sits with the Harvesters (it is slain).
 const CONCORD_BROOD: Array[String] = ["broodling"]
 ## The Harvesters' kinds (race "harvesters"), and the landing pod.
-const CONCORD_HARVESTERS: Array[String] = ["grey_drone", "saucer", "concord_terraformer"]
+const CONCORD_HARVESTERS: Array[String] = ["grey_drone", "saucer", "concord_terraformer",
+	# --- Act IX: the Ark --- (the Grey Overseer; the Ark's structures and the freed beast, the Harvesters' captive)
+	"grey_overseer", "specimen_tank", "vault_beast", "reactor_vent", "reap_emitter"]
 ## The Vrask's kinds (race "vrask").
 const CONCORD_VRASK: Array[String] = ["vrask_hunter"]
 ## The Luminous's kinds (race "luminous").
-const CONCORD_LUMINOUS: Array[String] = ["lumen_sentinel", "prism"]
+const CONCORD_LUMINOUS: Array[String] = ["lumen_sentinel", "prism",
+	# --- Act IX: the Ark --- (the miniboss with its race, as Act VIII placed Mammoth with the army)
+	"luminous_archon"]
 ## Concord stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const CONCORD_BOSSES: Array[String] = ["hive_mother", "vrask_tal", "harvester"]
 
@@ -511,6 +517,13 @@ const DESCRIPTIONS: Dictionary = {
 	"hive_mother": "The Hive Mother, the Brood's queen grown into the crater: egg waves, a burrow under your ring, and acid from the sky.",  # Owner-approved Act IX proposal
 	"vrask_tal": "Vrask'Tal, the Hunt-Lord: he stalks your ring cloaked, duels you with his glaive, and arms the bomb on his wrist.",  # Owner-approved Act IX proposal
 	"harvester": "The Harvester, the oldest of its kind: the one who planted the world, come to reap what is left.",  # Owner-approved Act IX proposal
+	# --- Act IX: the Ark ---
+	"grey_overseer": "A tall grey whose psionic pulse stuns your dead and whose will shields the greys round it. Kill it first.",  # Owner-approved Act IX proposal
+	"luminous_archon": "A being of pure light: every blow it strikes is a beam. Catch them on your Orb Shield and barriers and send them back.",  # Owner-approved Act IX proposal
+	"specimen_tank": "A sealed tank in the Ark's vaults. Break it, and the beast inside attacks everyone near it.",  # Owner-approved Act IX proposal
+	"vault_beast": "A beast the Concord harvested from some dead world. Freed, it bites whatever is nearest: your dead, you, or its keepers.",  # Owner-approved Act IX proposal
+	"reactor_vent": "A vent of the Ark's reactor that breathes alien ground on a timer. Break it to stop it.",  # TUNING (not in GDD) brief
+	"reap_emitter": "One of the Harvester's emitters: its tractor beam lifts your dead from the ring. Destroy them all to end the Reaping.",  # Owner-approved Act IX proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -764,6 +777,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"broken_arrow": "ach_broken_arrow",  # TUNING (not in GDD)
 	# --- Act VIII: Liberty Heights ---
 	"no_more_heroes": "ach_no_more_heroes",  # TUNING (not in GDD)
+	# --- Act IX: the Ark ---
+	"last_harvest": "ach_last_harvest",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -819,6 +834,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"broken_arrow": "armour_piercing_bones",
 	# --- Act VIII: Liberty Heights ---
 	"no_more_heroes": "heros_fist",
+	# --- Act IX: the Ark ---
+	"last_harvest": "tractor_lift",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

@@ -18,6 +18,7 @@
 ##   "hellfire" Archfiend         ArchfiendBehavior (Act VI, Pandemonium)
 ##   "bloodthirst" Blood Spawn    BloodSpawnBehavior (Act VII, Castle Sanguis)
 ##   "hero_slam" Fallen Hero      FallenHeroBehavior (Act VIII, Liberty Heights)
+##   "saucer_lift" Ghost Saucer   GhostSaucerBehavior (Act IX, the Ark of the Concord)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -81,6 +82,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act VIII: Liberty Heights ---
 		"hero_slam":
 			b = FallenHeroBehavior.new()  # The Fallen Hero.
+		# --- Act IX: the Ark ---
+		"saucer_lift":
+			b = GhostSaucerBehavior.new()  # The Ghost Saucer.
 	if b != null:
 		b.kind = kind
 	return b
@@ -221,6 +225,14 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Slam damage", a, b, "slam_damage")
 				_delta(out, "Slam cooldown (s)", a, b, "slam_cooldown")
+		# --- Act IX: the Ark ---
+		"saucer_lift":
+			if a.is_empty():
+				out.append("Hovers over your army and fires short beams")
+				out.append("Lifts small foes and drops them hard")
+			else:
+				_delta(out, "Drop damage", a, b, "lift_damage")
+				_delta(out, "Lift cooldown (s)", a, b, "lift_cooldown")
 	return out
 
 

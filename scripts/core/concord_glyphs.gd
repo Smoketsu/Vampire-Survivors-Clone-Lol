@@ -33,6 +33,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		return false
 	# Phase 2: each Act IX stage's own fallbacks go here, before the shared
 	# kinds' (as CourtGlyphs asks RavensmoorGlyphs first).
+	# --- Act IX: the Ark ---
+	if ArkGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # The Ark's kinds and the Grey Overseer.
 	match kind:
 		"broodling":
 			_broodling(ci, o, r, flash)

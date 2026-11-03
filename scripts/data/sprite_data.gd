@@ -500,6 +500,23 @@ const HEIGHTS: Dictionary = {
 	"bosses/hive_mother": 96.0,  # TUNING (not in GDD) boss tier, female (figure redesign, chitin covers her completely): the Brood's queen, wings, horned helm and egg-sac abdomen (about 90 wide); idle strip
 	"structures/concord_terraformer": 40.0,  # TUNING (not in GDD) a landing pod rooted in alien turf, about 54 x 40 art px, vents glowing green; the steam is code
 	"structures/concord_terraformer_dead": 40.0,  # TUNING (not in GDD) the same pod cracked, charred and dark (destroyed)
+	# --- Act IX: the Ark ---
+	"concord/grey_overseer": 38.0,  # TUNING (not in GDD) Harvester support, sex unmarked: a tall grey in a gunmetal mantle, a plasma crown; walk strip
+	"concord/luminous_archon": 64.0,  # TUNING (not in GDD) the miniboss, male: a being of white-gold light in crystal plates, a crown of shards; glide strip
+	"concord/vault_beast": 30.0,  # TUNING (not in GDD) a freed beast, a creature: six legs, rust-red hide, ochre crest, about 40 long; walk strip
+	"structures/specimen_tank": 40.0,  # TUNING (not in GDD) a sealed specimen tank, green fluid, a beast curled inside (tools/ark_tiles.py)
+	"structures/specimen_tank_dead": 22.0,  # TUNING (not in GDD) its shattered base and spilt fluid (ArkDirector's wreck)
+	"structures/reactor_vent": 30.0,  # TUNING (not in GDD) a round grated vent on a gunmetal collar, plasma below (tools/ark_tiles.py)
+	"structures/reactor_vent_dead": 22.0,  # TUNING (not in GDD) the same cracked and dark
+	"structures/reap_emitter": 46.0,  # TUNING (not in GDD) a gunmetal pylon with a plasma lens (tools/ark_tiles.py)
+	"bosses/harvester": 96.0,  # TUNING (not in GDD) boss tier, sex unmarked: the oldest grey, white robes, its great head (its throne of rings is code)
+	"bosses/harvester_true": 112.0,  # TUNING (not in GDD) its true form, a vast being of light and rings (the Gardener)
+	"player/starborn": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, suit covers chest and hips): a grey deserter in hull white and gunmetal
+	"player/starborn_hyper": 56.0,  # TUNING (not in GDD) skin art: her suit gilded
+	"player/starborn_untouchable": 56.0,  # TUNING (not in GDD) skin art: the white phantom
+	"player/starborn_deathlord": 56.0,  # TUNING (not in GDD) skin art: black iron, a crown above
+	"summons/ghost_saucer": 30.0,  # TUNING (not in GDD) a raised saucer, a machine: bone-grey hull, soul-light (about 44 wide); hover strip
+	"summons/black_mothership": 36.0,  # TUNING (not in GDD) its evolution, larger, black and soul-lit
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

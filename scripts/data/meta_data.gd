@@ -438,7 +438,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VIII: Fort Kessler ---
 	"broken_arrow",
 	# --- Act VIII: Liberty Heights ---
-	"no_more_heroes"]
+	"no_more_heroes",
+	# --- Act IX: the Ark ---
+	"last_harvest"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -657,6 +659,14 @@ const ACHIEVEMENTS := {
 	# TitleData).
 	"no_more_heroes": {"display_name": "No More Heroes", "description": "Beat Paragon at Liberty Heights with no Super at his side",
 		"stat": "paragon_no_heroes_kills", "goal": 1, "unlock": "The title Bane of Heroes", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act IX: the Ark ---
+	# The finale of Act IX (owner-approved Act IX proposal: "The Last Harvest
+	# (beat the Harvester)"; owner answers of Oct 31 and Nov 3, 2026: no
+	# epilogue part, no closing card and no epilogue hook): counted from the
+	# stage record (a boss kill on the Ark), as Last Supper. It only records the
+	# clear, with the title The Unharvested (UnlockData / TitleData).
+	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
+		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
 }
 
 # --- Content wave 2: B. Achievement rewards ---

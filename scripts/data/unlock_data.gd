@@ -251,6 +251,18 @@ const UNLOCKS := {
 	"origin_story": {"type": "passive", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Its paired passive (own decision), unlocked with it
 	"bane_of_heroes": {"type": "title", "achievement": "no_more_heroes",
 		"text": "Earn No More Heroes: beat Paragon with no Super at his side."},  # Own decision (the clear is recorded as a title, as Act VII's Ender of the Feast)
+	# --- Act IX: the Ark ---
+	# The Harvester's fall (owner-approved Act IX proposal "Rewards": Tractor
+	# Beam is unlocked by the Harvester; the finale grants the Ghost Saucer):
+	# the spell with its paired passive, and the summon class with its paired
+	# passive, offered on every stage (no card-row "act" key). The title The
+	# Unharvested is The Last Harvest's reward (it only records the clear).
+	"tractor_lift": {"type": "spell", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Owner-approved Act IX proposal
+	"starseed": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Tractor Beam's paired passive (owner-approved proposal), unlocked with it
+	"ghost_saucer": {"type": "class", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Owner-approved proposal: the finale's reward
+	"crop_circles": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Its paired passive (own decision), unlocked with it
+	"the_unharvested": {"type": "title", "achievement": "last_harvest",
+		"text": "Earn The Last Harvest: beat the Harvester on the Ark of the Concord."},  # Own decision (the clear is recorded as a title, as Acts VI-VIII did)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

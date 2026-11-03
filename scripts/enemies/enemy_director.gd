@@ -330,6 +330,11 @@ var fort_kessler: FortKesslerDirector = null
 ## squads, the cracks of Paragon's craters; StageRegistry "liberty_heights";
 ## null on every other stage).
 var liberty_heights: LibertyHeightsDirector = null
+# --- Act IX: the Ark ---
+## The Ark of the Concord's mechanics (Act IX: the Specimen Vaults' tanks, the
+## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
+## other stage).
+var ark: ArkDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -516,6 +521,12 @@ func _ready() -> void:
 		liberty_heights.game = game
 		liberty_heights.config = stage_def["liberty_heights"]
 		add_child(liberty_heights)  # Liberty Heights's director.
+	# --- Act IX: the Ark ---
+	if not (stage_def.get("ark", {}) as Dictionary).is_empty():
+		ark = ArkDirector.new()
+		ark.game = game
+		ark.config = stage_def["ark"]
+		add_child(ark)  # The Ark of the Concord's director.
 
 
 # =====================================================================================
@@ -657,6 +668,9 @@ func step(delta: float) -> void:
 	# --- Act VIII: Liberty Heights ---
 	if liberty_heights != null:
 		liberty_heights.step(delta)  # The zone Supers, guest squads.
+	# --- Act IX: the Ark ---
+	if ark != null:
+		ark.step(delta)  # The tanks, the vents.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -795,6 +809,9 @@ func objective_text() -> String:
 	# --- Act VIII: Liberty Heights ---
 	if liberty_heights != null and liberty_heights.objective_override() != "":
 		return liberty_heights.objective_override()  # A zone's Super.
+	# --- Act IX: the Ark ---
+	if ark != null and ark.objective_override() != "":
+		return ark.objective_override()  # The Luminous Archon, the Reaping.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1029,6 +1046,12 @@ func _run_event(ev: Dictionary) -> void:
 				fort_kessler.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # Fort Kessler's miniboss (FortKesslerDirector).
+		# --- Act IX: the Ark ---
+		"luminous_archon":
+			if ark != null:
+				ark.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Ark's miniboss (ArkDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

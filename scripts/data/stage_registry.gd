@@ -296,6 +296,12 @@
 ##                        existing knockback code)"): x the knockback of both
 ##                        armies; absent = 1. NOTHING READS IT YET.
 ##   zones              — Act IX stubs too: the planned zones (names and starts).
+## --- Act IX: the Ark ---
+##   ark                — ArkDirector config (ArkStage.ARK, Act IX, the Ark of
+##                        the Concord: the Specimen Vaults' tanks and the
+##                        Reactor's vents as structure windows, the wrecks;
+##                        the "luminous_archon" event); ground "ark" is its
+##                        ArkGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 

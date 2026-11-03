@@ -329,4 +329,57 @@ const ENEMIES := {
 		"race": "harvesters",  # The Harvesters' terraforming (the report lists it with them).
 		"heals_on_turf": false,  # Brief: false for structures
 	},  # The landing pod.
+	# --- Act IX: the Ark ---
+	# The Harvesters, support: THE GREY OVERSEER (owner-approved proposal: "A
+	# psionic pulse that stuns summons for 1 s; shields greys near it |
+	# Priority target"; sex unmarked, as the greys are: a tall grey in a
+	# gunmetal mantle with a glowing plasma crown). GreyOverseerKit: every
+	# pulse_every s, with a summon within pulse_radius px, it shows a widening
+	# psionic ring for pulse_windup s (the telegraph), then stuns every summon
+	# within pulse_radius px for pulse_stun s (CombatResolver.stun_unit(), THE
+	# summon stun path; source PULSE_SOURCE); every shield_every s it shields
+	# the greys (race "harvesters", not structures) within shield_radius px:
+	# shield_share of each one's max HP for shield_time s (Enemy.holy_shield,
+	# the existing shield path). It hangs back with the drones ("ranged" with
+	# no shot of its own).
+	"grey_overseer": {
+		"display_name": "Grey Overseer",  # Owner-approved proposal
+		"max_hp": 64.0,  # TUNING (not in GDD) support, sturdier than a drone
+		"move_speed": 40.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # Its pulse stuns; it never strikes.
+		"attack_interval": 2.0,
+		"attack_range": 120.0,  # TUNING (not in GDD) px it keeps from the necromancer (its pulse reaches the ring)
+		"radius": 10.0,  # TUNING (not in GDD) px (~38 px sprite)
+		"armor": 0.1,  # TUNING (not in GDD)
+		"xp": 6,  # TUNING (not in GDD)
+		"behavior": "ranged",  # Advances and hangs back; its kit fires nothing.
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.9,  # TUNING (not in GDD) 0..1; owner-approved proposal: "Priority target"
+		"mass": 1.2,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "grey_overseer",
+		"race": "harvesters",  # Owner-approved proposal: the Harvesters
+		"pulse_first": 3.0,  # TUNING (not in GDD) s before its first pulse
+		"pulse_every": 7.0,  # TUNING (not in GDD) s between two pulses (from the windup's start)
+		"pulse_windup": 0.8,  # TUNING (not in GDD) s the psionic ring widens (the telegraph)
+		"pulse_radius": 90.0,  # TUNING (not in GDD) px it stuns
+		"pulse_stun": 1.0,  # Owner-approved proposal: "stuns summons for 1 s"
+		"shield_first": 1.5,  # TUNING (not in GDD) s before its first shield
+		"shield_every": 6.0,  # TUNING (not in GDD) s between two shields
+		"shield_radius": 120.0,  # TUNING (not in GDD) px of the greys it shields
+		"shield_share": 0.35,  # TUNING (not in GDD) share of each grey's max HP
+		"shield_time": 5.0,  # TUNING (not in GDD) s a shield lasts
+		"shield_targets": 6,  # TUNING (not in GDD) greys a shield reaches at most
+	},  # The Grey Overseer.
 }
+
+# --- Act IX: the Ark ---
+## Kind id of the Harvesters' support (the Ark's lead kind; any stage may use it).
+const GREY_OVERSEER: String = "grey_overseer"
+## Stun tag of the Grey Overseer's psionic pulse (CombatResolver.stun_unit()
+## stats: summon_stuns_overseer_pulse).
+const PULSE_SOURCE: String = "overseer_pulse"

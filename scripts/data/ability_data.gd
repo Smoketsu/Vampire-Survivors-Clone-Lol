@@ -104,7 +104,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act VIII: Fort Kessler ---
 	"bone_mines",
 	# --- Act VIII: Liberty Heights ---
-	"heros_fist"]
+	"heros_fist",
+	# --- Act IX: the Ark ---
+	"tractor_lift"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -859,6 +861,32 @@ const SPELLS := {
 			{"damage": 72.0, "cooldown": 2.4, "fling": 200.0, "fling_share": 0.47},  # TUNING (not in GDD) first pass 85 / 0.6
 		],
 	},
+	# --- Act IX: the Ark ---
+	# Tractor Beam (id "tractor_lift": "tractor_beam" is a Concord sound and
+	# event id; GDD §15.0 "Tractor Beam, Abduction, Starseed and the Starborn";
+	# owner-approved proposal: "lifts the strongest enemy into the air and
+	# slams it down"; unlocked by defeating the Harvester, UnlockData): every
+	# `cooldown` s a column of soul light lifts the strongest foe within
+	# TractorLiftData.AIM_RANGE px for `lift_time` s (the one enemy-lift
+	# helper, EnemyLift: a stun), then slams it down for `damage` and
+	# slam_share x the damage to the foes within slam_radius px. Bosses,
+	# minibosses and structures are slammed in place. Logic: TractorLift; fixed
+	# rules: TractorLiftData. A single-target blow with a splash, like Hero's
+	# Fist, that also takes its target out of the fight for a moment.
+	"tractor_lift": {
+		"display_name": "Tractor Beam",  # Owner-approved proposal
+		"icon": "tractor_lift",
+		"description": "A beam of soul light lifts the strongest foe into the air and slams it down.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "lift_time": "Lift (s)", "slam_radius": "Slam (px)", "slam_share": "Slam splash"},
+		"levels": [
+			{"damage": 38.0, "cooldown": 3.2, "lift_time": 0.9, "slam_radius": 48.0, "slam_share": 0.45},  # TUNING (not in GDD)
+			{"damage": 46.0, "cooldown": 3.05, "lift_time": 0.9, "slam_radius": 52.0, "slam_share": 0.48},  # TUNING (not in GDD)
+			{"damage": 56.0, "cooldown": 2.9, "lift_time": 0.95, "slam_radius": 56.0, "slam_share": 0.51},  # TUNING (not in GDD)
+			{"damage": 66.0, "cooldown": 2.75, "lift_time": 0.95, "slam_radius": 60.0, "slam_share": 0.54},  # TUNING (not in GDD)
+			{"damage": 78.0, "cooldown": 2.6, "lift_time": 1.0, "slam_radius": 64.0, "slam_share": 0.57},  # TUNING (not in GDD) Hero's Fist Lv5 72 / 2.4 s
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -891,7 +919,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VIII: Fort Kessler ---
 	"shard_share",
 	# --- Act VIII: Liberty Heights ---
-	"fling_share", "crater_share"]
+	"fling_share", "crater_share",
+	# --- Act IX: the Ark ---
+	"slam_share", "quake_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

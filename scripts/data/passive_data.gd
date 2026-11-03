@@ -202,7 +202,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act VIII: Fort Kessler ---
 	"tripwire", "armour_piercing_bones",
 	# --- Act VIII: Liberty Heights ---
-	"secret_identity", "origin_story"]
+	"secret_identity", "origin_story",
+	# --- Act IX: the Ark ---
+	"starseed", "crop_circles"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -246,7 +248,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act VIII: Fort Kessler ---
 	"armour_piercing_bones",
 	# --- Act VIII: Liberty Heights ---
-	"origin_story"]
+	"origin_story",
+	# --- Act IX: the Ark ---
+	"crop_circles"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -315,7 +319,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	"archfiend_cleave",
 	# --- Act VIII: Liberty Heights --- (the Fallen Hero's and Black Paragon's slams, FallenHeroBehavior; also
 	# what lets Armour-Piercing Bones, Armour.pierce_share(), count them as summon hits)
-	"fallen_hero_slam", "black_paragon_slam"]
+	"fallen_hero_slam", "black_paragon_slam",
+	# --- Act IX: the Ark --- (the Ghost Saucer's and Black Mothership's dropped foes, GhostSaucerBehavior)
+	"ghost_saucer_lift", "black_mothership_lift"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -1755,6 +1761,51 @@ const PASSIVES := {
 			{"special_reach": 0.15},  # TUNING (not in GDD)
 			{"special_reach": 0.20},  # TUNING (not in GDD)
 			{"special_reach": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IX: the Ark ---
+	# Starseed (owner-approved proposal: Abduction's paired passive; own
+	# decision on its rule; GDD §15.0 "Tractor Beam, Abduction, Starseed and the
+	# Starborn"; unlocked by defeating the Harvester, UnlockData): the seed the
+	# Harvesters planted answers you now: Tractor Beam recharges starseed_haste
+	# sooner and its slam reaches starseed_reach wider
+	# (AbilityManager.apply_spell_mods() on the spell rows' own keys, like
+	# Secret Identity). Pairs with Tractor Beam -> Abduction.
+	"starseed": {
+		"display_name": "Starseed",  # Owner-approved proposal
+		"icon": "starseed",
+		"description": "Your Tractor Beam lifts sooner, and its slam reaches wider.",
+		"labels": {"starseed_haste": ["Tractor Beam cooldown", "neg_pct"], "starseed_reach": ["Slam reach", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"starseed_haste": 0.04, "starseed_reach": 0.05},  # TUNING (not in GDD)
+			{"starseed_haste": 0.08, "starseed_reach": 0.10},  # TUNING (not in GDD)
+			{"starseed_haste": 0.12, "starseed_reach": 0.15},  # TUNING (not in GDD)
+			{"starseed_haste": 0.16, "starseed_reach": 0.20},  # TUNING (not in GDD)
+			{"starseed_haste": 0.20, "starseed_reach": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# Crop Circles (own decision: Black Mothership's paired passive, its name
+	# and rule; GDD §15.0 "The Ghost Saucer, Black Mothership and Crop
+	# Circles"; unlocked by defeating the Harvester): the marks the saucers
+	# leave: every class special's held effects last special_hold longer (its
+	# *_duration keys: the Ghost Saucer's lift, freezes, stuns, chills;
+	# HordeDirector._special_stats(), THE one path of summon special numbers,
+	# its own category beside the level row's special_duration; 0 when not
+	# owned, so every other run is unchanged). Works the same on every stage.
+	# Pairs with the Ghost Saucer -> Black Mothership.
+	"crop_circles": {
+		"display_name": "Crop Circles",
+		"icon": "crop_circles",
+		"description": "Every summon's special holds its foes longer.",
+		"labels": {"special_hold": ["Special effects' length", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"special_hold": 0.06},  # TUNING (not in GDD)
+			{"special_hold": 0.12},  # TUNING (not in GDD)
+			{"special_hold": 0.18},  # TUNING (not in GDD)
+			{"special_hold": 0.24},  # TUNING (not in GDD)
+			{"special_hold": 0.30},  # TUNING (not in GDD)
 		],
 	},
 }
