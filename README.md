@@ -1620,7 +1620,8 @@ shutting down the Motherboard; Soul Ash ×1.5 (stage 3 of Act III).
   more often.
 - **Citadel guns:** orbital strikes on red circles, more and faster in each zone (the Purge
   Protocol's strike code, shared). **Laser grids** (the Courts and the Core): red bands for 1 s,
-  then sweeping beams that hurt the Empire's soldiers too.
+  then sweeping beams that hurt the Empire's soldiers too; after the sweep each beam stays lit for
+  1.5 s as a burning line that hurts everything standing in it every 0.25 s.
 - **Sentry Turrets:** emplacements that aim (a red flare) and fire bursts at you or your nearest
   summon; each one destroyed pays 3 Soul Ash. Two waves rise at 7:30 and 13:40.
 - **Kinds:** the **Valkyrie Duelist** (an elite cyborg duellist who lunges through your ring at you;
