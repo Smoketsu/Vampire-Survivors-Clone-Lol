@@ -237,6 +237,13 @@ const EVENTS := [
 ##            (`width` px wide), hitting each body once: `damage_player`,
 ##            `damage_summon` (time-scaled) and `damage_enemy` (x the enemies'
 ##            HP scaling); the sweep normal turns through `angles` (degrees).
+##            Then each beam stays LIVE at the end of its sweep for `live` s, a
+##            burning line: every body in it (`width` px + its radius) takes
+##            damage every `tick` s: `live_player` and `live_summon`
+##            (time-scaled), `live_enemy` (x the enemies' HP scaling); owner
+##            bug report "after their initial beam they don't continue to act
+##            as damaging zones" (GDD §15.0 "Iron Citadel laser grids deal
+##            damage (owner bug report)").
 ## `ground` is a CitadelGround look: style "gates" (dark riveted iron plates,
 ## amber trim), "courts" (polished court tiles cut by red grid lines), "lifts"
 ## (steel grating over the lift shafts, hazard stripes) or "core" (black floor
@@ -269,6 +276,8 @@ const ZONES := [
 			"damage": 9.0, "summon_damage": 4.0, "boss_mult": 1.5},  # TUNING (not in GDD) passes 1-2: 16 -> 7 -> 4 on summons (undead do not dodge: the guns ate the ring, 22k summon damage a run)
 		"lasers": {"first": 8.0, "interval": 9.0, "beams": 3, "spacing": 170.0, "length": 1500.0, "telegraph": 1.0,  # Owner-approved proposal: "telegraphed a second before they fire"
 			"sweep": 60.0, "sweep_time": 0.5, "width": 10.0, "damage_player": 9.0, "damage_summon": 3.0, "damage_enemy": 30.0,  # TUNING (not in GDD) passes 1-2: 12 -> 5 -> 3 on summons (they cannot step out)
+			"live": 1.5, "tick": 0.25,  # TUNING (not in GDD) s a beam stays lit (and burning) after its sweep; s between two burn ticks (the furnace's tick)
+			"live_player": 2.5, "live_summon": 0.75, "live_enemy": 5.0,  # TUNING (not in GDD) per tick: 10 / s on him (the furnace's), 3 / s on a summon (they cannot step out), 20 / s x HP scaling on enemies
 			"angles": [0.0, 90.0, 45.0, 135.0]}},
 	{"start": 600.0, "numeral": "III", "name": "The Spire Lifts",  # Owner-approved proposal zone III
 		"blurb": "Steel gratings over the lift shafts, the guns above",
@@ -294,6 +303,8 @@ const ZONES := [
 			"damage": 10.0, "summon_damage": 4.0, "boss_mult": 1.6},  # TUNING (not in GDD) passes 1-2: 18 -> 8 -> 4
 		"lasers": {"first": 14.0, "interval": 13.0, "beams": 2, "spacing": 210.0, "length": 1500.0, "telegraph": 1.0,  # TUNING (not in GDD) rarer in the Core
 			"sweep": 60.0, "sweep_time": 0.5, "width": 10.0, "damage_player": 9.0, "damage_summon": 3.0, "damage_enemy": 30.0,  # TUNING (not in GDD) passes 1-2: 12 -> 5 -> 3 on summons (they cannot step out)
+			"live": 1.5, "tick": 0.25,  # TUNING (not in GDD) as the Courts
+			"live_player": 2.5, "live_summon": 0.75, "live_enemy": 5.0,  # TUNING (not in GDD) as the Courts
 			"angles": [45.0, 135.0, 0.0, 90.0]}},
 ]
 
