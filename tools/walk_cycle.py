@@ -911,6 +911,13 @@ RIGS = {
     "concord/prism": dict(mode="robe", hip=28, rigid=[], sway=1, dip=1, bust=(7, 15, 10, 16, 1, 2),
                           bust_exclude=[(15, 20, 8, 20)], swish=(5, 17, 24, 38, 1)),
     "bosses/hive_mother": dict(mode="robe", hip=62, rigid=[], sway=1, dip=1, bust=(33, 50, 32, 44, 2, 2)),
+    # --- Act IX: the Crash Site --- (the Brood's soldiers walk on their legs; the Matriarch and the Hive Mother's
+    # Flight form hover; the Broodbound glides in her chitin gown with the bust bounce and an idle strip)
+    "concord/burrower": dict(mode="legs", hip=26, back=(0, 16), front=(16, 32), rigid=[], spread=1, lift=1, dip=1),
+    "concord/acid_spitter": dict(mode="legs", hip=21, back=(0, 15), front=(15, 32), rigid=[], spread=1, lift=1, dip=1),
+    "concord/brood_matriarch": dict(mode="hover", bob=2, parts=[]),
+    "bosses/hive_mother_flight": dict(mode="hover", bob=2, parts=[]),
+    "player/broodbound": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(9, 21, 14, 21, 2)),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
@@ -1032,6 +1039,10 @@ SKINS = {
     # --- Act VIII: Liberty Heights ---
     "player/revenant_heroine_hyper": "player/revenant_heroine",
     "player/revenant_heroine_untouchable": "player/revenant_heroine",
+    # --- Act IX: the Crash Site ---
+    "player/broodbound_hyper": "player/broodbound",
+    "player/broodbound_untouchable": "player/broodbound",
+    "player/broodbound_deathlord": "player/broodbound",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

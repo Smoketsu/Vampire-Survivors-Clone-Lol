@@ -1224,3 +1224,16 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-03 05:30,concord/mothership_eye,gpt-image-2.5-flare,medium,1024x1024,1,365,418,439,0.0183,mothership_eye_a.png
 2026-11-03 05:30,structures/concord_terraformer_dead,gpt-image-2.5-flare,medium,1024x1024,2,543,1306,439,0.0263,concord_terraformer_dead_a.png
 2026-11-03 05:30,structures/concord_terraformer,gpt-image-2.5-flare,medium,1024x1024,2,549,1306,439,0.0264,concord_terraformer_a.png
+2026-11-03 12:55,concord/burrower,gpt-image-2.5-flare,medium,1024x1024,2,582,429,439,0.0195,burrower.png
+2026-11-03 12:55,player/broodbound,gpt-image-2.5-flare,medium,1024x1024,1,650,12,439,0.0165,broodbound.png
+2026-11-03 12:55,concord/brood_matriarch,gpt-image-2.5-flare,medium,1024x1024,2,598,1053,439,0.0246,brood_matriarch.png
+2026-11-03 12:55,concord/acid_spitter,gpt-image-2.5-flare,medium,1024x1024,2,554,402,439,0.0192,acid_spitter.png
+2026-11-03 12:55,player/broodbound_untouchable,gpt-image-2.5-flare,medium,1024x1024,1,223,1024,439,0.0225,broodbound_untouchable.png
+2026-11-03 12:55,bosses/hive_mother_cast,gpt-image-2.5-flare,medium,1024x1024,1,325,768,439,0.0209,hive_mother_cast.png
+2026-11-03 12:55,player/broodbound_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,284,1024,439,0.0228,broodbound_deathlord.png
+2026-11-03 12:55,bosses/hive_mother_flight,gpt-image-2.5-flare,medium,1024x1024,1,322,768,439,0.0209,hive_mother_flight.png
+2026-11-03 12:55,player/broodbound_hyper,gpt-image-2.5-flare,medium,1024x1024,1,246,1024,439,0.0226,broodbound_hyper.png
+2026-11-03 12:55,bosses/hive_mother_strike,gpt-image-2.5-flare,medium,1024x1024,1,339,768,439,0.0210,hive_mother_strike.png
+2026-11-03 12:56,obstacles/crash_site,gpt-image-2.5-flare,medium,1536x1024,0,452,0,343,0.0126,obstacles.png
+2026-11-03 12:56,icons/crash_site_violet,gpt-image-2.5-flare,medium,1536x1024,1,335,256,343,0.0140,icons_violet.png
+2026-11-03 12:56,icons/crash_site_gold,gpt-image-2.5-flare,medium,1536x1024,1,307,256,343,0.0139,icons_gold.png

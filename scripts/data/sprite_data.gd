@@ -503,10 +503,10 @@ const HEIGHTS: Dictionary = {
 	# --- Act IX: the Crash Site (assets/sprites/concord/, bosses/, player/) ---
 	"concord/burrower": 34.0,  # TUNING (not in GDD) Brood soldier, a creature: a slate-dark armoured digger, cream claws (about 40 wide); walk strip
 	"concord/acid_spitter": 32.0,  # TUNING (not in GDD) Brood ranged, a creature: a green insect with a glowing acid sac (about 34 wide); walk strip
-	"concord/brood_matriarch": 60.0,  # TUNING (not in GDD) the miniboss, an insect creature (female by name): green-black chitin, wings (about 70 wide); glide strip
+	"concord/brood_matriarch": 64.0,  # TUNING (not in GDD) the miniboss, an insect creature (female by name): green-black chitin, wings, 60 x 60 art px plus 2 empty rows above and below for the hover bob; hover strip
 	"concord/brood_egg": 14.0,  # TUNING (not in GDD) an Infestation egg in a resin smear (about 14 wide); its hatch strip concord/brood_egg_hatch (4 frames of 16)
 	"concord/burrow_mound": 16.0,  # TUNING (not in GDD) a heaving dirt mound (about 28 wide; drawn scaled by BurrowerKit.draw_mound())
-	"bosses/hive_mother_flight": 96.0,  # TUNING (not in GDD) her Flight form (female, figure redesign, chitin covers her): wings spread wide, the egg sac tucked; glide strip
+	"bosses/hive_mother_flight": 100.0,  # TUNING (not in GDD) her Flight form (female, figure redesign, chitin covers her): wings spread wide, 100 x 96 art px plus 2 empty rows above and below for the hover bob; hover strip
 	"player/broodbound": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, a chitin gown covers chest and hips): the wing crown above
 	"player/broodbound_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold chitin
 	"player/broodbound_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
