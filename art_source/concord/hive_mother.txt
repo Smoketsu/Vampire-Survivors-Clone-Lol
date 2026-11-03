@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING FORWARD-RIGHT, a vast regal insect queen rearing up, arms spread slightly with curved bone claws
+
+LOW-RESOLUTION pixel art: the whole figure is only 96 pixels tall and about 90 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a FEMALE HIVE MOTHER, the vast insect queen of the Brood (a boss), in the game's figure-redesign style, drawn EXACTLY like the second reference (attached): a tall regal queen with a humanoid upper body in a glossy PURPLE chitin carapace that fully covers her chest, arms and hips (no bare skin, no nudity anywhere), an exaggerated hourglass shape with a very full bust, a tiny waist and wide hips, a helm-like head with long curved horns and glowing GOLD eyes, large spined purple wings fanned behind her, cream-bone spikes and long curved bone claws, a huge purple egg-sac abdomen below her waist and three glowing gold-and-purple eggs at her base. The largest and most detailed figure; still chunky, simple blocks of colour. Her purple is her own chitin, never the necromancer's violet robe.
+Signature shape that must read in silhouette: the fan of wings, the horned helm and the huge abdomen.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: purple chitin #43266A #6A3FA0 #8F63C4; cream spikes, horns and claws #E0D2B0; eyes and egg glow gold #FFC83C
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).
