@@ -1,13 +1,13 @@
-Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, flying, fists clenched at his sides, his blue cape billowing behind, eyes glowing red (NO beams, NO rays: just two small glowing red eyes)
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, flying, fists clenched at his sides, his blue cape billowing behind, eyes glowing red (NO beams, NO rays: but TWO clearly visible, bright glowing RED eyes, big enough to read at game size)
 
 LOW-RESOLUTION pixel art: the whole figure is only 64 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
 
-Subject: PARAGON, THE LAST HERO, a MALE flying superhero, the strongest man alive, an original design that only loosely nods to famous heroes: a powerful build, short golden-blond hair, a WHITE-AND-SILVER bodysuit with GOLD trim lines and a gold belt, silver boots and gloves, a long ROYAL-BLUE cape, both eyes glowing RED. NOT red-and-blue, NO chest emblem, NO logo, NO letters, NO 'S' shield.
-Signature shape that must read in silhouette: the broad shoulders, the billowing blue cape and the glowing red eyes.
+Subject: PARAGON, THE LAST HERO, a MALE flying superhero, the strongest man alive, an original design that only loosely nods to famous heroes: a powerful build, short golden-blond hair, a RED, WHITE and BLUE costume: a bright RED bodysuit with WHITE shoulder and sleeve panels and a WHITE belt, WHITE gloves, ROYAL-BLUE boots, a long ROYAL-BLUE cape; both eyes glowing bright RED. NO chest emblem, NO logo, NO letters, NO star, NO 'S' shield, NO stripes on the chest: the chest is plain red.
+Signature shape that must read in silhouette: the broad shoulders, the billowing blue cape and the two glowing red eyes.
 
-Colours: ONLY flat fills from this list, at most 3 shades per material: suit white #B8B4AC #E8E4DA #FFFFFF; silver #6E7A8C #B4C0D0; gold #8A6A1E #E0A92E #FFDC66; cape blue #1F3F94 #2E5FD0 #5C8CEA; hair #B08A30 #E8C860; skin #C08060 #E8B898; eyes #D82A2A #FF8060.
+Colours: ONLY flat fills from this list, at most 3 shades per material: suit red #8A1418 #C8262C #EE5A4A; white panels, belt and gloves #B8B4AC #E8E4DA #FFFFFF; boots #1F3F94 #2E5FD0; cape blue #1F3F94 #2E5FD0 #5C8CEA; hair #B08A30 #E8C860; skin #C08060 #E8B898; eyes #D82A2A #FF8060.
 
 Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
 
 Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
-Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of this boss for the costume only (do NOT copy its detail level or painted shading).
+Attached: the CURRENT Paragon sprite: keep his pose, build, face, hair and pixel style, but redo the costume colours as described. ONLY ONE figure.

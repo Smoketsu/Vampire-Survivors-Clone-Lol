@@ -2983,3 +2983,23 @@ they read), and the Deathlord skin's face is small.
 - Redone from the old source as the reference with "ONLY ONE figure" in the prompt; prompts updated in `art_source/ravensmoor/*.txt`, `art_source/court/blood_knight.txt`, `art_source/castle_sanguis/{nosferatu,dhampir_deathlord}.txt`.
 - Black coats (Nosferatu, both Deathlord skins) need the `velvet` ramp first and `--no-levels`; with `grey` alone they snap to mid grey.
 - `bosses/elder_vampire` (90x120, `art_source/castle_sanguis/elder_vampire.txt`) is the Elder's first form; `bosses/elder` is the second. Its walk is the robe glide (hip 84).
+
+### Act VIII art review, round 1: animation rigs (Group A, Nov 2026)
+
+Strips only (`tools/walk_cycle.py`; its header documents every key). Effect rigs are drawn by `_fx()` after the body is composed;
+frame 0 is always the still, and the only colours they add are city ramps (`FX_RGB`, allowed per key by `FX_KEY_COLOURS`).
+
+| Key | What it does |
+|---|---|
+| `smoke` `dict(tip, births)` | Puffs rise 2 px and drift right 2 px a frame over five stages (`SMOKE_STAGES`: dot, 2x2, blob, grey 2x2, dither); city concrete greys. Don Marrow's cigar. |
+| `wheels` `[dict(c, r, deg, hold, colors)]` | A disc (ellipse, centre and radii in art px) whose pixels turn `deg` * frame degrees clockwise (`_spin_disc`; default `WHEEL_DEG` 45 = one turn a cycle). Silhouette and palette never change; `colors` limits it to tyre greys (`TYRE`). Cars use legs mode with spread / lift / dip 0 (no bob). |
+| `rotor` `[dict(...)]` | The same discs on a hover rig: the helicopter's main rotor (`hold` keeps the mast) and tail rotor; the body keeps `bob`. |
+| `recoil` `dict(box, px, clip, free, colors)` | A barrel (the box's pixels of `colors`) slides back along x by `RECOIL_SHARE` * `px` (shot, full, full, return); pixels past `clip` vanish into the mantlet, the open-air pixels from `free` on are cleared. Only the barrel moves. The tank's firing cycle replaces its drive rock (the engine still plays the strip while it moves). |
+| `muzzle` `[dict(tip, face, frames)]` | Flashes at gun tips: `frames` = `((frame, shape), ...)`, shapes `spark`, `small`, `big`, `heavy` in `MUZZLE_SHAPES` (H hazard core, S sodium rim, drawn pointing right, mirrored for `face` -1, clipped to the canvas). Each flash lasts at least 2 frames, never frame 0, never fills the sprite. **The Mammoth reuses `recoil` + `muzzle`**: give it a `recoil` entry for the main gun (`px` 3-4) and a `muzzle` with `heavy` on frame 1 and `big` on frame 2 at its muzzle (stills fill their canvas, so the flash overlaps the gun end), with spread / lift / dip 0 as the tank. |
+| `breath` `True` | A rig with no bust box that keeps an idle strip: the breathing sink alone (the civilian woman). |
+
+The limo's still has only faint wheels (an AI-blotched body), so its spin is subtle; the tyre greys that exist do turn.
+<!-- --- Act VIII art review, round 1 (figures) --- -->
+Paragon is red / white / blue with red eyes (no emblem; ramps `marble,police,siren_red,skin,steel`); Mammoth has the long main gun and a bigger
+machine-gun turret (118 x 60) and a firing-cycle walk strip (the shared tank rig: `recoil` on the main gun + `muzzle` `heavy` / `big` at the barrel tip on frames 1-2);
+the Revenant Heroine Deathlord is bolder (bare midriff / shoulders / thighs, chest and hips covered) with her own bust / swish rig.

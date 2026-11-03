@@ -171,6 +171,61 @@ STRIDE_LIFT_FAR = (0.0, 0.5, 1.0, 0.5, 0.0, 0.0, 0.0, 0.0)
 # the mirrored pose's rim light would otherwise sit on the wrong side): palette name -> darker name.
 STRIDE_FAR_SHADE = {"bronze_light": "bronze", "bronze": "bronze_dark", "marble_light": "marble", "marble": "marble_dark"}
 
+# --- Effect rigs (Act VIII art review round 1) ---
+# Colours the effect rigs may add (all in the city ramps; palette.json): name -> RGB. The build's "no new colour" check allows these
+# only for a rig that has the matching key.
+FX_RGB = {"smoke_dark": (0x55, 0x59, 0x5F),  # city_concrete: an aged puff.
+          "smoke_light": (0x7A, 0x7F, 0x87),  # city_concrete_light: a young puff.
+          "sodium": (0xE8, 0xA4, 0x3A),  # city_sodium: a muzzle flash's rim.
+          "hazard": (0xF2, 0xC4, 0x18)}  # city_hazard: a muzzle flash's core.
+# Which FX_RGB colours each effect key may use.
+FX_KEY_COLOURS = {"smoke": ("smoke_dark", "smoke_light"), "muzzle": ("sodium", "hazard")}
+# Smoke puff life, one entry per frame of life: (dx, dy, pixels (ox, oy), colour name). Offsets from the rig's `tip`; the puff rises
+# 2 px a frame and drifts right 1 px a frame; it shrinks to a dot and darkens to the dark grey (the fade: no alpha in pixel art).
+SMOKE_STAGES = (
+    (0, 0, ((0, 0),), "smoke_light"),
+    (2, -2, ((0, 0), (1, 0), (0, 1), (1, 1)), "smoke_light"),
+    (4, -4, ((1, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2)), "smoke_light"),
+    (6, -5, ((0, 0), (1, 0), (0, 1), (1, 1)), "smoke_dark"),
+    (7, -7, ((0, 0), (1, 1)), "smoke_dark"),
+)
+# Wheels and rotors: degrees turned per frame (clockwise on screen): 45 = one full turn per 8-frame cycle.
+WHEEL_DEG = 45.0
+# Recoil: the share of the rig's `px` the barrel is slid back per frame: the shot at frame 1 (most of it at once), the full recoil
+# on frame 2 and 3, then the barrel runs out again; frame 0 and the last two frames are at rest.
+RECOIL_SHARE = (0.0, 0.67, 1.0, 1.0, 0.67, 0.33, 0.0, 0.0)
+# Muzzle flash shapes: name -> (anchor column, anchor row, rows). The anchor is the gun's tip; the flash points right (+x).
+# H = hazard yellow core, S = sodium orange rim, . = nothing.
+MUZZLE_SHAPES = {
+    "spark": (1, 1, (".S.",
+                     "SHS",
+                     ".S.")),
+    "small": (2, 2, ("..S...",
+                     ".SHS..",
+                     "SHHHSS",
+                     ".SHS..",
+                     "..S...")),
+    "big": (3, 3, ("...S....",
+                   ".S.H.S..",
+                   "..SHHS..",
+                   "SHHHHHSS",
+                   "..SHHS..",
+                   ".S.H.S..",
+                   "...S....")),
+    "heavy": (4, 4, ("....SS......",
+                     "....SS......",
+                     "..SSHHSS....",
+                     "..SSHHSS....",
+                     "SSHHHHHHSSSS",
+                     "SSHHHHHHSSSS",
+                     "..SSHHSS....",
+                     "..SSHHSS....",
+                     "....SS......",
+                     "....SS......")),
+}
+
+# The city greys a tyre is drawn in (the `colors` of a wheel disc): ink, the two asphalts and the two concretes.
+TYRE = ["city_ink", "city_asphalt_dark", "city_asphalt", "city_concrete", "city_concrete_light"]
 # Rigs: how each still is cut. Columns and rows are art px in the still (x from
 # the left, y from the top; ranges are [start, end) ). Keys:
 #   mode    "legs" (two legs), "robe" (one hem layer), "stride" (see `stride`) or "hover" (a flyer: the whole
@@ -256,6 +311,34 @@ STRIDE_FAR_SHADE = {"bronze_light": "bronze", "bronze": "bronze_dark", "marble_l
 #           after the bust box through the same _bounce() field on axis "x", timed by SWISH_SWAY
 #           in the walk and SWISH_IDLE in the idle (each one frame behind the hips). It may
 #           reach below the hip / waist: the idle's waist check skips its columns there.
+#   breath  optional True (a rig WITHOUT a bust box that still wants an idle strip): the idle strip is the breathing sink alone
+#           (no bounce; the civilian woman, whose jiggle the owner had removed, Act VIII art review round 1).
+#   --- effect rigs (Act VIII art review round 1; all drawn by _fx() after the body is composed, all additive) ---
+#   smoke   dict(tip=(x, y), births=(frame, ...)): puffs of smoke rising from a point (Don Marrow's cigar tip). Each puff born on
+#           a listed frame lives the SMOKE_STAGES (5 frames: a light dot, a light 2x2, a light 6-pixel blob, a grey 2x2, a two-pixel dither),
+#           rising and drifting right (2 px a frame); it is drawn in the city concrete greys. A puff must be dead by frame 7 or the loop pops it;
+#           none is alive on frame 0, so frame 0 is still the still. The tip follows the body dip.
+#   wheels  list of dicts {c: (cx, cy), r: (rx, ry), deg: float (optional, default WHEEL_DEG), hold: [(x0, x1, y0, y1)] (optional), colors: [palette names] (optional)}:
+#           a wheel (or any disc: this is also the `rotor` primitive) seen as the ellipse of centre `c` and radii `r` (art px, floats):
+#           its pixels are turned about the centre by `deg` * frame degrees clockwise (the ellipse is un-squashed, rotated, squashed
+#           again, so an iso wheel turns like a wheel), nearest pixel, by _spin_disc(): the silhouette never changes (a pixel is
+#           only replaced by another opaque one inside the ellipse) and every colour is the still's own. Pick the ellipse INSIDE
+#           the tyre outline so the outline stays; `hold` boxes stay put (a hub cap, a mast) and, when `colors` is given, only pixels of those palette colours turn (the tyre's
+#           greys, never the body paint beside it). Frame 0 is the still. A car rig that
+#           rolls uses mode "legs" with spread 0, lift 0 and dip 0 so nothing but the wheels moves (no bob).
+#   rotor   (mode "hover") the same list of discs for rotors: the main rotor's blurred disc (its dark blade streaks turn about the
+#           mast, `hold` keeps the mast still) and the tail rotor; the body keeps its hover bob.
+#   recoil  dict(box=(x0, x1, y0, y1), px=3, clip=x, free=x, colors=[palette names]): a gun that fires (the tank's firing cycle,
+#           the strip replacing the walk: the engine still plays it while the tank moves). The barrel is the box's pixels of `colors`
+#           (the still's greys; the olive turret is not); each frame RECOIL_SHARE * px slides them back along x (left; a horizontal
+#           slide keeps the barrel's rows, so no pixel of the turret under it is ever uncovered), pixels that would land left of
+#           `clip` are hidden in the mantlet, and the pixels the barrel left at x >= `free` (open sky) are cleared; left of `free`
+#           the still's pixel stays under the moved barrel. Treads and hull never move.
+#   muzzle  list of dicts {tip: (x, y), face: +1 | -1 (the way the gun points: +1 right, -1 left), frames: ((frame, shape), ...)}:
+#           muzzle flashes, drawn over the finished frame at each gun's tip (it follows the body dip). The shapes are MUZZLE_SHAPES (ASCII: H = city hazard yellow core, S = city sodium orange rim; "spark",
+#           "small", "big", "heavy"; mirrored for face -1; clipped to the canvas). Rules of the act (photosensitivity): a flash
+#           lasts at least 2 of the 8 frames, is never on frame 0, and never fills the sprite. The Mammoth reuses `muzzle` and
+#           `recoil` (ART_BIBLE "Act VIII art review round 1: animation rigs").
 RIGS = {
     # The pilot (ART_BIBLE "Walk cycles"): the three units with the most screen time.
     "player/necromancer": dict(mode="legs", hip=47, back=(0, 20), front=(20, 33), rigid=[(33, 46, 0, None)], spread=1, lift=1, dip=1),
@@ -690,25 +773,48 @@ RIGS = {
     # The two women are figure-redesign rigs: the civilian runs (a small bust box and a `swish` skirt box), the field medic
     # strides, both with an idle strip; boxes are art px in the still, [start, end).
     "city/civilian": dict(mode="legs", hip=20, back=(0, 11), front=(11, 24), rigid=[], spread=2, lift=2, dip=1),
-    "city/civilian_woman": dict(mode="legs", hip=19, back=(0, 9), front=(9, 20), rigid=[], spread=2, lift=2, dip=1,
-                                bust=(5, 17, 8, 13, 1, 1), swish=(3, 18, 14, 19, 1)),
+    # Art review round 1 (act 8, owner: "remove jiggle here, doesn't look good on this model"): the civilian woman's bust and swish
+    # boxes are gone; she keeps her idle strip as the breathing sink alone (`breath`).
+    "city/civilian_woman": dict(mode="legs", hip=19, back=(0, 9), front=(9, 20), rigid=[], spread=2, lift=2, dip=1, breath=True),
     "city/street_thug": dict(mode="legs", hip=22, back=(0, 11), front=(11, 22), rigid=[], spread=2, lift=1, dip=1),
-    "city/gang_gunner": dict(mode="legs", hip=20, back=(0, 16), front=(16, 32), rigid=[], spread=2, lift=1, dip=1),
+    # Art review round 1 (act 8): the pistols flash in turn (`muzzle`: left, right, left; the flashes sit over the gun ends because
+    # the stills fill their canvas to the edge).
+    "city/gang_gunner": dict(mode="legs", hip=20, back=(0, 16), front=(16, 32), rigid=[], spread=2, lift=1, dip=1,
+                             muzzle=[dict(tip=(4, 6), face=-1, frames=((1, "small"), (2, "spark"), (5, "small"), (6, "spark"))),
+                                     dict(tip=(28, 4), face=1, frames=((3, "small"), (4, "spark")))]),
     "city/riot_cop": dict(mode="legs", hip=29, back=(0, 15), front=(15, 32), rigid=[(17, 29, 29, 37)], spread=2, lift=1, dip=1),
     "city/swat_breacher": dict(mode="legs", hip=29, back=(0, 15), front=(15, 32), rigid=[], spread=2, lift=2, dip=1),
     "city/rifleman": dict(mode="legs", hip=28, back=(0, 13), front=(13, 30), rigid=[], spread=2, lift=2, dip=1),
+    # Art review round 1 (act 8, owner: "remove lower bounce box, bust bounce box needs to move up about 7 pixels"): the swish box is
+    # gone; the bust box now sits on the chest (rows 10-14, was 13-18), the arms excluded.
     "city/field_medic": dict(mode="legs", hip=27, back=(0, 13), front=(13, 26), rigid=[], spread=1, lift=1, dip=1,
-                             bust=(7, 21, 13, 19, 1, 2), swish=(3, 23, 19, 27, 1)),
-    "city/squad_car": dict(mode="legs", hip=22, back=(0, 32), front=(32, 64), rigid=[], spread=0, lift=1, dip=1),
-    "city/tank": dict(mode="legs", hip=40, back=(0, 39), front=(39, 78), rigid=[], spread=0, lift=1, dip=1),
+                             bust=(13, 23, 10, 15, 1, 2), bust_exclude=[(5, 9, 10, 19), (19, 26, 12, 18)]),  # Round 2 (act 8, owner: "move bounce box 4 pixels to the right"): x0 + 4, x1 + 4 (was cols 9-19); the arm boxes stay, so the pixels that bounce are cols 13-19.
+    # Art review round 1 (act 8): the squad car's wheels turn (`wheels`, no bob); the tank's strip is a firing cycle, not a drive rock
+    # (`recoil` + `muzzle`; the engine still plays it while the tank moves).
+    "city/squad_car": dict(mode="legs", hip=22, back=(0, 32), front=(32, 64), rigid=[], spread=0, lift=0, dip=0,
+                           wheels=[dict(c=(9.5, 20.5), r=(4.0, 2.5), colors=TYRE), dict(c=(34.5, 27.0), r=(4.0, 2.5), colors=TYRE)]),
+    "city/tank": dict(mode="legs", hip=40, back=(0, 39), front=(39, 78), rigid=[], spread=0, lift=0, dip=0,
+                      recoil=dict(box=(53, 78, 8, 21), px=3, clip=53, free=58, colors=["city_ink", "city_asphalt_dark", "city_asphalt", "city_concrete", "city_concrete_light"]),
+                      muzzle=[dict(tip=(75, 13), face=1, frames=((1, "heavy"), (2, "big")))]),
     "city/blitz": dict(mode="legs", hip=36, back=(0, 19), front=(19, 48), rigid=[], spread=1, lift=1, dip=1),
     # --- Act VIII: Fort Kessler ---
     # The Machine Gunner shuffles on his knees (legs, small steps); the helicopter hovers (its rotor disc is one silhouette
     # with the body, so it bobs whole); Mammoth and the command car roll like the tank (spread 0); General Harrow strides
     # in his power armour; the Fallen Sergeant strides with the figure-redesign bust box and an idle strip.
-    "city/machine_gunner": dict(mode="legs", hip=30, back=(0, 20), front=(20, 46), rigid=[], spread=1, lift=1, dip=1),
-    "city/attack_helicopter": dict(mode="hover", bob=2, parts=[]),
-    "city/mammoth": dict(mode="legs", hip=44, back=(0, 54), front=(54, 108), rigid=[], spread=0, lift=1, dip=1),
+    # Art review round 1 (act 8): the machine gunner's barrel flashes in bursts (`muzzle`); the helicopter's main and tail rotors spin
+    # (`rotor`) while the body keeps its gentle hover.
+    "city/machine_gunner": dict(mode="legs", hip=30, back=(0, 20), front=(20, 46), rigid=[], spread=1, lift=1, dip=1,
+                                muzzle=[dict(tip=(43, 17), face=1, frames=((1, "small"), (2, "spark"), (3, "small"), (4, "spark"), (6, "small"), (7, "spark")))]),
+    "city/attack_helicopter": dict(mode="hover", bob=2, parts=[],
+                                rotor=[dict(c=(37.5, 9.0), r=(19.5, 5.3), hold=[(33, 42, 0, 20)], colors=TYRE)],
+                                # Round 2 (act 8, owner: "the rear propeller" does not read): the tail rotor is a turning blade pair (`tail`).
+                                tail=dict(c=(6.5, 8.0), half=5.0, box=(4, 9, 3, 13), colors=TYRE, hub=(6, 8))),
+    # Act VIII art review round 1: Mammoth (redone with a long main gun, 118 px wide) plays the shared tank firing cycle: `recoil` on
+    # the main gun (the barrel's greys from the mantlet at x 66; the open-air pixels from x 95 on are cleared) and `muzzle` flashes
+    # (`heavy` on frame 1, `big` on frame 2) at the barrel tip; treads and hull never move (spread / lift / dip 0).
+    "city/mammoth": dict(mode="legs", hip=44, back=(0, 59), front=(59, 118), rigid=[], spread=0, lift=0, dip=0,
+                         recoil=dict(box=(66, 118, 8, 21), px=3, clip=66, free=95, colors=TYRE),
+                         muzzle=[dict(tip=(112, 14), face=1, frames=((1, "heavy"), (2, "big")))]),
     "bosses/harrow": dict(mode="legs", hip=50, back=(0, 33), front=(33, 72), rigid=[], spread=2, lift=2, dip=1),
     "bosses/harrow_command": dict(mode="legs", hip=44, back=(0, 34), front=(34, 68), rigid=[], spread=0, lift=1, dip=1),
     "player/fallen_sergeant": dict(mode="legs", hip=36, back=(0, 15), front=(15, 32), rigid=[], spread=2, lift=2, dip=1,
@@ -757,9 +863,14 @@ RIGS = {
     "summons/blood_spawn": dict(mode="legs", hip=26, back=(0, 25), front=(25, 50), rigid=[], spread=2, lift=2, dip=1),
     "summons/nosferatu": dict(mode="legs", hip=34, back=(0, 26), front=(26, 52), rigid=[], spread=2, lift=2, dip=1),
     # --- Act VIII: Skid Row ---
-    "city/armoured_limo": dict(mode="legs", hip=24, back=(0, 42), front=(42, 84), rigid=[], spread=0, lift=1, dip=1),
+    # Art review round 1 (act 8): the limo's wheels turn (`wheels`, no bob).
+    "city/armoured_limo": dict(mode="legs", hip=24, back=(0, 42), front=(42, 84), rigid=[], spread=0, lift=0, dip=0,
+                            wheels=[dict(c=(41.0, 31.0), r=(3.0, 2.5), colors=TYRE), dict(c=(52.0, 29.5), r=(2.5, 4.5), colors=TYRE)]),
+    # Round 2 (act 8, owner: "the grill of the car is spinning now"): the third disc (62.5, 27.5) sat on the front grille's grey slats and is gone.
     "city/big_sal": dict(mode="legs", hip=37, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
-    "bosses/don_marrow": dict(mode="legs", hip=54, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=2, dip=1),
+    # Art review round 1 (act 8, owner: "some animated cigar smoke"): puffs rise from the cigar tip (`smoke`).
+    "bosses/don_marrow": dict(mode="legs", hip=54, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=2, dip=1,
+                              smoke=dict(tip=(38, 14), births=(1, 3, 7))),
     "player/undertaker": dict(mode="legs", hip=42, back=(0, 16), front=(16, 32), rigid=[], spread=1, lift=1, dip=1),
     # --- Act VIII: Liberty Heights ---
     # Atlas, the Conscript and the Revenant Heroine stride (legs; the heroine with the figure-redesign rigs: the bust box,
@@ -769,9 +880,17 @@ RIGS = {
     "city/atlas": dict(mode="legs", hip=34, back=(0, 20), front=(20, 40), rigid=[], spread=1, lift=1, dip=1),
     "city/conscript": dict(mode="legs", hip=19, back=(0, 14), front=(14, 22), rigid=[], spread=1, lift=1, dip=1),
     "city/nightjar": dict(mode="legs", hip=29, back=(0, 34), front=(34, 66), rigid=[], spread=1, lift=1, dip=1),
-    "city/aurora": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(19, 30, 9, 16, 1)),
+    # Art review round 1 (act 8, owner: "bounce box needs up 2 pixels and to the left 2"): Aurora's box was (19, 30, 9, 16); the
+    # heroine's ("up 2 and to the right 2", base and Untouchable skin, which derives it) was (15, 30, 13, 21); the Hyper skin: SKIN_FIX.
+    "city/aurora": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(17, 32, 7, 14, 1)),  # Round 2 (act 8, owner: "extend bounce box 4 pixels to the right"): x1 + 4 (was 28).
     "player/revenant_heroine": dict(mode="legs", hip=33, back=(0, 24), front=(24, 38), rigid=[], spread=1, lift=1, dip=1,
-                                    bust=(15, 30, 13, 21, 2), swish=(12, 32, 24, 32, 1)),
+                                    bust=(17, 32, 11, 19, 2), swish=(12, 32, 24, 32, 1)),
+    # Act VIII art review round 1 (figures): the redone, bolder Deathlord heroine (bare midriff / shoulders / thighs) has her own rig
+    # (it no longer derives the base's): bust box on her chest (cols 20-30, rows 14-21), the dark glove / arm beside it excluded,
+    # the hip `swish` over the high-cut hips.
+    "player/revenant_heroine_deathlord": dict(mode="legs", hip=34, back=(0, 24), front=(24, 40), rigid=[], spread=1, lift=1, dip=1,
+                                              bust=(20, 31, 14, 21, 2, 2), swish=(14, 32, 26, 34, 1),
+                                              bust_exclude=[(28, 36, 12, 22, 150)]),
     "summons/fallen_hero": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1),
     "summons/black_paragon": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1),
     "bosses/paragon": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1),
@@ -896,7 +1015,6 @@ SKINS = {
     # --- Act VIII: Liberty Heights ---
     "player/revenant_heroine_hyper": "player/revenant_heroine",
     "player/revenant_heroine_untouchable": "player/revenant_heroine",
-    "player/revenant_heroine_deathlord": "player/revenant_heroine",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
@@ -1193,6 +1311,10 @@ def hover_frames(key: str, still: np.ndarray, rig: dict) -> list:
         frame = _stack(layers)
         if f:
             frame = _drop_strays(frame, rig.get("parts", []))
+        for disc in rig.get("rotor", []):  # Rotors turn on the still's coordinates, before the whole frame is raised.
+            frame = _spin_disc(frame, disc, f)
+        if "tail" in rig and f:
+            frame = _tail_rotor(frame, rig["tail"], f)
         out.append(_shift_v(frame, -int(round(HOVER_BOB[f] * rig.get("bob", 1))), key))
     return out
 
@@ -1363,6 +1485,7 @@ def frames_of(key: str) -> list:
             frame = _orbit_lay(frame, bats, f)
         if wings:
             frame = _wings_lay(frame, wings, FLAP_WAVE[f], dy)
+        frame = _fx(frame, rig, f, dy)
         out.append(frame)
     if not np.array_equal(out[0], load(key)):
         sys.exit(f"{key}: frame 0 differs from the still (rig error)")
@@ -1587,6 +1710,160 @@ def _pendulum(frame: np.ndarray, pend: dict, dy: int, k: float) -> np.ndarray:
     return out
 
 
+def _put(frame: np.ndarray, x: int, y: int, rgb: tuple) -> None:
+    """Sets pixel (x, y) of `frame` to opaque `rgb` when it lies inside the canvas (effects are clipped, never wrapped)."""
+    if 0 <= y < frame.shape[0] and 0 <= x < frame.shape[1]:
+        frame[y, x] = (*rgb, 255)
+
+
+def _smoke(frame: np.ndarray, smoke: dict, f: int, dy: int) -> np.ndarray:
+    """Draws the rig's smoke puffs for frame `f` (see the `smoke` rig key): each puff born on frame b shows SMOKE_STAGES[f - b]
+    while 0 <= f - b < len(SMOKE_STAGES); `dy` is the body dip the tip follows."""
+    out = frame.copy()
+    tx, ty = smoke["tip"]
+    for born in smoke["births"]:
+        age = f - born
+        if 0 <= age < len(SMOKE_STAGES):
+            dx, ddy, pixels, name = SMOKE_STAGES[age]
+            for ox, oy in pixels:
+                _put(out, tx + dx + ox, ty + dy + ddy + oy, FX_RGB[name])
+    return out
+
+
+def _spin_disc(frame: np.ndarray, disc: dict, f: int) -> np.ndarray:
+    """Turns the pixels of one disc (a wheel or rotor, see the `wheels` rig key) about its centre by deg * f degrees clockwise.
+    In coordinates normalised by the radii the ellipse is a circle: each destination pixel takes the source pixel a rotation
+    back (nearest). Only opaque pixels inside the ellipse and outside the `hold` boxes are replaced, and only by other such
+    pixels, so the silhouette and the palette never change."""
+    deg = disc.get("deg", WHEEL_DEG) * f
+    if deg % 360.0 == 0.0:
+        return frame
+    cx, cy = disc["c"]
+    rx, ry = disc["r"]
+    th = np.radians(deg)
+    cs, sn = float(np.cos(th)), float(np.sin(th))
+    h, w = frame.shape[:2]
+    held = np.zeros((h, w), dtype=bool)  # Pixels that never turn (a hub cap, a mast).
+    for x0, x1, y0, y1 in disc.get("hold", []):
+        held[y0:y1, x0:x1] = True
+    if "colors" in disc:  # Only pixels of these palette colours turn (a tyre's greys, not the body paint beside it).
+        rgbs = {(*c, 255) for c in _palette_rgb(disc["colors"])}
+        held |= np.array([[tuple(frame[y, x]) not in rgbs for x in range(w)] for y in range(h)], dtype=bool)
+    out = frame.copy()
+    for y in range(max(0, int(np.floor(cy - ry))), min(h, int(np.ceil(cy + ry)) + 1)):
+        for x in range(max(0, int(np.floor(cx - rx))), min(w, int(np.ceil(cx + rx)) + 1)):
+            u, v = (x + 0.5 - cx) / rx, (y + 0.5 - cy) / ry
+            if u * u + v * v > 1.0 or held[y, x] or frame[y, x, 3] == 0:
+                continue
+            su, sv = u * cs + v * sn, -u * sn + v * cs  # The source: this pixel turned back by th.
+            sx, sy = int(np.floor(cx + su * rx)), int(np.floor(cy + sv * ry))
+            if 0 <= sx < w and 0 <= sy < h and not held[sy, sx] and frame[sy, sx, 3] > 0 and su * su + sv * sv <= 1.0:
+                out[y, x] = frame[sy, sx]
+    return out
+
+
+# Tail rotor spin in degrees a frame (art review round 3, owner: "just needs to spin faster"): 67.5 x 8 frames = 1.5 turns per
+# cycle; the bar is symmetric, so 90 / 180 would read as flicker or standstill. Frame 0 (0 degrees) equals the still.
+TAIL_DEG_PER_FRAME: float = 67.5
+
+
+def _tail_rotor(frame: np.ndarray, tail: dict, f: int) -> np.ndarray:
+    """The `tail` rig key: a tail rotor drawn as a blade pair turning about the hub, TAIL_DEG_PER_FRAME (67.5) degrees per frame (1.5 turns a cycle; round 3: faster; never 90 or 180, which read as flicker or standstill for a symmetric bar). The still's
+    blade (frame 0, a vertical bar) is cleared from `box` (its tyre-grey pixels only, not the fuselage) and a 2 px wide bar of
+    length 2 * `half` is drawn through `c` at the angle TAIL_DEG_PER_FRAME * f from vertical: core city_asphalt, a 1 px rim of city_ink
+    on the empty pixels around it, a city_concrete hub. Only the still's own palette colours are used."""
+    x0, x1, y0, y1 = tail["box"]
+    ink, core, hub = _palette_rgb(["city_ink", "city_asphalt", "city_concrete"])
+    rgbs = {(*c, 255) for c in _palette_rgb(tail["colors"])}
+    out = frame.copy()
+    for y in range(y0, y1):
+        for x in range(x0, x1):
+            if tuple(frame[y, x]) in rgbs and not (x >= x1 - 1 and y >= 9):
+                out[y, x] = 0
+    h, w = frame.shape[:2]
+    th = np.radians(TAIL_DEG_PER_FRAME * f)
+    cx, cy = tail["c"]
+    dx, dy = float(np.sin(th)), -float(np.cos(th))
+    bar = np.zeros((h, w), dtype=bool)
+    for i in range(-40, 41):
+        t = i / 40.0 * tail["half"]
+        px, py = cx + dx * t, cy + dy * t
+        for ox in (0, 1):  # 2 px wide: the pixel and the one to its right.
+            x, y = int(np.floor(px - 0.5)) + ox, int(np.floor(py))
+            if 0 <= x < w and 0 <= y < h:
+                bar[y, x] = True
+    free = out[:, :, 3] == 0
+    rim = np.zeros((h, w), dtype=bool)
+    for oy, ox in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+        rim |= np.roll(np.roll(bar, oy, 0), ox, 1)
+    out[rim & ~bar & free] = (*ink, 255)
+    out[bar] = (*core, 255)
+    hx, hy = tail["hub"]
+    out[hy, hx] = (*hub, 255)
+    return out
+
+
+def _recoil(frame: np.ndarray, rec: dict, f: int) -> np.ndarray:
+    """Slides a gun barrel back RECOIL_SHARE[f] * px px (see the `recoil` rig key): the barrel pixels (the box's pixels of the
+    named colours) are cleared where they stand in the open (x >= `free`) and laid again `back` px to the left, those landing
+    left of `clip` dropped (inside the mantlet)."""
+    back = int(round(RECOIL_SHARE[f] * rec["px"]))
+    if back == 0:
+        return frame
+    x0, x1, y0, y1 = rec["box"]
+    rgbs = _palette_rgb(rec["colors"])
+    sub = frame[y0:y1, x0:x1]
+    mask = sub[:, :, 3] > 0
+    mask &= np.isin(sub[:, :, 0].astype(int) * 65536 + sub[:, :, 1].astype(int) * 256 + sub[:, :, 2],
+                    [r * 65536 + g * 256 + b for r, g, b in rgbs])
+    out = frame.copy()
+    ys, xs = np.nonzero(mask)
+    for y, x in zip(ys, xs):
+        if x + x0 >= rec["free"]:
+            out[y + y0, x + x0] = 0
+    for y, x in zip(ys, xs):
+        nx = x + x0 - back
+        if nx >= rec["clip"]:
+            out[y + y0, nx] = frame[y + y0, x + x0]
+    return out
+
+
+def _muzzle(frame: np.ndarray, muzzles: list, f: int, dy: int) -> np.ndarray:
+    """Draws the muzzle flashes of frame `f` (see the `muzzle` rig key): for each gun whose `frames` list holds `f`, the named
+    MUZZLE_SHAPES shape at the tip (+ the body dip `dy`), mirrored for a gun pointing left, clipped to the canvas."""
+    out = frame.copy()
+    for m in muzzles:
+        for ff, name in m["frames"]:
+            if ff != f:
+                continue
+            ax, ay, rows = MUZZLE_SHAPES[name]
+            tx, ty = m["tip"]
+            for r, row in enumerate(rows):
+                for c, ch in enumerate(row):
+                    if ch == ".":
+                        continue
+                    _put(out, tx + (c - ax) * m["face"], ty + dy + r - ay, FX_RGB["hazard" if ch == "H" else "sodium"])
+    return out
+
+
+def _fx(frame: np.ndarray, rig: dict, f: int, dy: int) -> np.ndarray:
+    """Applies a rig's effect keys to a composed walk frame: wheels, recoil, smoke, muzzle flashes (in that order, flashes on top)."""
+    for disc in rig.get("wheels", []):
+        frame = _spin_disc(frame, disc, f)
+    if "recoil" in rig:
+        frame = _recoil(frame, rig["recoil"], f)
+    if "smoke" in rig:
+        frame = _smoke(frame, rig["smoke"], f, dy)
+    if "muzzle" in rig:
+        frame = _muzzle(frame, rig["muzzle"], f, dy)
+    return frame
+
+
+def _fx_allowed(rig: dict) -> set:
+    """The extra RGB colours (beyond the still's own) that `rig`'s effect keys may draw (FX_KEY_COLOURS)."""
+    return {FX_RGB[n] for k, names in FX_KEY_COLOURS.items() if k in rig for n in names}
+
+
 def _hold(frame: np.ndarray, still: np.ndarray, hold: list, dy: int) -> np.ndarray:
     """Keeps a held prop fixed to the body (a rig `hold` entry: boxes (x0, x1, y0, y1) of the
     still): the box is cleared in `frame` (the legs' sheared copy of it) and the still's own
@@ -1673,6 +1950,7 @@ def build(key: str) -> Path:
     Image.fromarray(strip, "RGBA").save(dest, optimize=True)
     still = load(key)  # The approved still (a stride strip's frame 0 is not it).
     new_cols = {tuple(c) for f in frames for c in f[f[:, :, 3] > 0].tolist()} - {tuple(c) for c in still[still[:, :, 3] > 0].tolist()}
+    new_cols -= {(*c, 255) for c in _fx_allowed(RIGS[key])}  # The effect rigs' own city-ramp colours.
     if new_cols:
         sys.exit(f"{key}: frames hold colours the still does not ({len(new_cols)})")
     print(f"{key}{SUFFIX}: {len(frames)} frames of {still.shape[1]}x{still.shape[0]} -> {dest.relative_to(ROOT)} "
@@ -1764,7 +2042,7 @@ if len(IDLE_SINK) != IDLE_FRAMES or len(IDLE_BUST) != IDLE_FRAMES:
 
 def idle_keys() -> list:
     """Keys whose rig has a bust box (the only ones with idle strips)."""
-    return [k for k, r in RIGS.items() if "bust" in r]
+    return [k for k, r in RIGS.items() if "bust" in r or r.get("breath")]
 
 
 def _sink(still: np.ndarray, waist: int, dy: int) -> np.ndarray:
@@ -1781,7 +2059,7 @@ def _sink(still: np.ndarray, waist: int, dy: int) -> np.ndarray:
 def idle_frames_of(key: str) -> list:
     """The IDLE_FRAMES idle frames of `key` (RGBA arrays the still's size); frame 0 is the still."""
     rig = RIGS[key]
-    if "bust" not in rig:
+    if "bust" not in rig and not rig.get("breath"):
         sys.exit(f"{key}: no bust box in its rig (idle strips are for bust rigs only)")
     still = load(key)
     waist = int(IDLE_FIX.get(key, {}).get("waist", rig["hip"] - 1))  # Row taken out on the exhale.
@@ -1792,7 +2070,8 @@ def idle_frames_of(key: str) -> list:
     for f in range(IDLE_FRAMES):
         dy = IDLE_SINK[f]  # Body sink this frame (art px).
         frame = _sink(still, waist, dy)
-        frame = _bounce(frame, rig["bust"], dy, IDLE_BUST[f] * rig["bust"][4], rig.get("bust_axis", "y"), rig.get("bust_exclude"))
+        if "bust" in rig:  # A `breath` rig has none: the sink alone.
+            frame = _bounce(frame, rig["bust"], dy, IDLE_BUST[f] * rig["bust"][4], rig.get("bust_axis", "y"), rig.get("bust_exclude"))
         if "swish" in rig:
             frame = _bounce(frame, rig["swish"], dy, IDLE_SWISH[f] * rig["swish"][4], "x")
         if wings:
