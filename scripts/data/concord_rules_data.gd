@@ -231,7 +231,7 @@ const FINAL_HARVEST := {
 	"eye_offset": 760.0,  # TUNING (not in GDD) px
 	"fade_in": 2.5,  # TUNING (not in GDD) s
 	"overlay_alpha": 0.55,  # TUNING (not in GDD)
-	"overlay_px": 520.0,  # TUNING (not in GDD) px
+	"overlay_px": 420.0,  # TUNING (not in GDD) px
 }
 
 # --- Sounds -------------------------------------------------------------------------------

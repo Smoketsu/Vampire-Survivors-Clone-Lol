@@ -124,7 +124,7 @@ func _draw() -> void:
 	var centre := game.camera.get_screen_center_position()
 	var view := game.view_size() / game.camera.zoom  # World px across the view.
 	var w := float(cfg["overlay_px"])
-	var at := centre + Vector2(0.0, -view.y * 0.5 + w * 0.22)  # Hanging from the top of the view.
+	var at := centre + Vector2(0.0, -view.y * 0.5 + w * 0.12)  # Hanging from the top of the view.
 	var tex := SpriteBank.texture("concord/mothership_eye")
 	if tex != null:
 		var h := w * float(tex.get_height()) / maxf(float(tex.get_width()), 1.0)
