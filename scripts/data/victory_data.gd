@@ -51,6 +51,10 @@ const STAGES := {
 	"skid_row": {"title": "The Blocks Are Yours", "boss_line": "Don Marrow's limousine burns in the street."},  # TUNING (not in GDD) Act VIII placeholder
 	"fort_kessler": {"title": "The Line Is Broken", "boss_line": "General Harrow's hammer falls silent."},  # TUNING (not in GDD) Act VIII placeholder
 	"liberty_heights": {"title": "No More Heroes", "boss_line": "Paragon falls, and the living have no one left."},  # TUNING (not in GDD) Act VIII placeholder
+	# --- Act IX: the Concord of Stars (placeholders until each stage is built) ---
+	"crash_site": {"title": "The Hatchery Burns", "boss_line": "The Hive Mother falls back into her crater."},  # TUNING (not in GDD) Act IX placeholder
+	"proving_moon": {"title": "The Hunt Is Over", "boss_line": "Vrask'Tal's last trophy is his own."},  # TUNING (not in GDD) Act IX placeholder
+	"ark": {"title": "The Harvest Ends", "boss_line": "The Harvester falls, and the stars go dark."},  # TUNING (not in GDD) Act IX placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -69,6 +73,8 @@ const ACT_LINES := {
 	7: "You outlasted the Court. The Endless Feast drank you dry at last.",  # TUNING (not in GDD) Act VII
 	# --- Act VIII: the Last Line ---
 	8: "You outlasted the city. Martial Law ground you down at last.",  # TUNING (not in GDD) Act VIII
+	# --- Act IX: the Concord of Stars ---
+	9: "You outlasted the Concord. The Final Harvest reaped you at last.",  # TUNING (not in GDD) Act IX
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

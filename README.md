@@ -2279,6 +2279,45 @@ and the achievement **No More Heroes** (beat Paragon with no Super at his side: 
 `--character=revenant_heroine`, `--spawn=atlas@T`, `aurora@T`, `nightjar@T`, `conscript@T`; lines `liberty heights`,
 `liberty heights events`, `liberty heights supers`, `paragon`, `heros fist`, `fallen hero`.
 
+### Act IX: the Concord of Stars (foundation)
+
+<!-- --- Act IX: the Concord of Stars --- -->
+Long ago something out in the dark seeded life on this world, and it comes back every few thousand years to reap the
+dead. This time there is nothing to reap: the necromancer has taken every soul. **The Concord of Stars**, a coalition
+of alien races under the Harvesters who rule it, comes to find out why (GDD §15.0 "Act IX foundation (phase 1)" and
+the rows after it; owner-approved proposal `docs/act9/PROPOSAL.md`). The stage select has an **Act IX** tab with its
+three stages, **the Crash Site**, **the Proving Moon** and **the Ark of the Concord** (bosses the Hive Mother,
+Vrask'Tal the Hunt-Lord and the Harvester), "Coming soon" until phase 2 builds them; defeating Paragon opens the Crash
+Site and each boss opens the next stage. One coalition: the Brood lead the Crash Site, the Vrask the Proving Moon, the
+Harvesters the Ark, and the Luminous fight on every stage. The act's shared rules:
+
+- **Beams.** Concord weapons are continuous beams, not bullets: a thin magenta aiming line for 1 s (it follows its
+  target, then stops turning for the last 0.3 s), then a beam that holds and sweeps, cutting through every summon and
+  you on its line. Your Bone Ring does not block it, nor does a Bone Wall: get out of the line (Grave Step dodges it).
+  Your **Orb Shield** (one charge) and a summon with a **Warder or Bishop barrier** reflect a beam back along its line
+  into whoever fired it, hurting every enemy on the way. A beam that passes through a **Star-Seer** splits into three.
+  At most 6 beams at once.
+- **Abduction.** Saucers hover over the edge of your ring, mark a summon with a green tractor cone for 1 s and lift
+  it. It is held for 8 s: shoot the saucer down in time (Archers, Mages, Gargoyles, spells; swords cannot reach it)
+  and the summon drops back; otherwise it is gone until its class's next replenish. Heavy bodies (the Abomination,
+  the Colossus, the Golem) are too heavy to lift. At most 3 summons are held at once.
+- **Terraforming.** Landing pods fall on a telegraphed streak (from 0:40, more often each minute, three at most) and
+  root, growing a patch of alien flesh ground around them ring by ring. Concord units standing on it heal (3% of
+  their health a second; bosses don't). Your **spells** burn it back: a spell hit scorches the ground around its
+  target for 20 s. Break the pods to stop the growth.
+- **The Final Harvest.** At 0:00 the mothership opens its eye over the arena: its beam sweeps across you again and
+  again, saucers fill the sky, and the abduction cap is gone. The pods keep falling.
+- **Music.** The stubs play "Sirens at Midnight" for now; "The Reaping Stars" and the Concord sounds come with the
+  audio pass.
+
+The shared kinds so far: the **Broodling** (fast insects in swarms of twelve), the **Grey Drone** (small greys in
+squads with a probe beam), the **Saucer** (the abductor; a flier), the **Vrask Hunter** (a shimmer while it moves:
+your summons barely scratch it until a spell reveals it; a three-dot lock, then one shot), the **Lumen Sentinel**
+(sweeping beams, a shield that soaks the first hits) and the **Star-Seer** (splits the beams), plus the
+**Terraformer Pod**. The Codex has a **Concord** tab, grouped by race. Autotest: `--stage=crash_site|proving_moon|ark`,
+`--boss=hive_mother|vrask_tal|harvester`, `--spawn=` with the kinds above (`concord_terraformer@T` drops a pod); lines
+`beams`, `abduction`, `terraforming`, `final harvest`, `concord kinds`, `concord stage`.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -2527,6 +2566,8 @@ light above, the set-up of Act IV.
   the Sanguine Court) list their faction's soldiers, champions and bosses the
   same way; **Last Line** (Act VIII) lists its kinds by escalation tier
   (civilians, gangs, police, SWAT, army, heroes) and its bosses.
+  **Concord** (Act IX) lists its kinds by race (the Brood, the Harvesters,
+  the Vrask, the Luminous) and its bosses.
   **Evolutions follow the recipe rule**: until you obtain
   one it is a "?" with no name, art or hint (it reads the `[recipes]` book).
   Achievements use four new badge icons (`assets/sprites/icons/ach_*.png`).
@@ -2988,6 +3029,11 @@ scripts/
                             spectral hearse (Act VIII)
     city_report.gd          The autotest's Act VIII lines (city blocks, armour, supers, civilians, escalation,
                             kinds, martial law, stage)
+    concord_ground.gd       The Act IX stubs' placeholder floor (styles ruins / moon / hull; Act IX)
+    concord_glyphs.gd       Code-drawn fallbacks of the Concord's kinds and the stubs' obstacles; the pod's falling
+                            streak, the saucer's tractor cone, the Final Harvest's eye (textures only; Act IX)
+    concord_report.gd       The autotest's Act IX lines (beams, abduction, terraforming, final harvest, concord
+                            kinds, concord stage)
     fort_kessler_report.gd  The autotest's Fort Kessler lines (the stage, its kinds, Mammoth, the threats, Harrow) and
                             its items (Bone Mines, Tripwire, Armour-Piercing Bones)
     fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
@@ -3312,6 +3358,23 @@ scripts/
                             the guest squads, the cracks of Paragon's craters
       boss_paragon.gd       Paragon: the Hero (heat vision, the punch's fling), Hope (the roster Supers not yet
                             killed), No Restraint (the dives, the craters); paragon_sky.gd draws the white sky
+    concord/                The Concord of Stars (Act IX): its kits ("<id>_kit.gd", loaded by name after the
+                            City's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
+      concord_rules.gd      Game.concord: owns the beams, Abduction, Terraforming and the Final Harvest;
+                            burns_ground() (the one burn check, from CombatResolver.damage_enemy()), the Mirror
+                            Bones / Anchored hooks (null on Acts I to VIII)
+      concord_beams.gd      BEAMS: fire() (the one beam path), the aim, the hold and sweep, the reflection (Orb
+                            Shields, barriers), the prism split, the cap, the bot's danger hint
+      abduction.gd          ABDUCTION: lift() (the one call), pick(), carry() (the one place that moves a lifted
+                            summon), the rescue, the summon taken, the cap
+      terraforming.gd       TERRAFORMING: the cells, the pods, seed() (phase 2's call), the heal on live turf,
+                            burn()
+      final_harvest.gd      The Final Harvest: the mothership's eye (the eye beams, the sky overlay), the cap lifted
+      concord_kit.gd        Base kit: the row flags (race, beam, abducts, cloak, heals_on_turf), the beam fire, the
+                            Night Wings test for fliers, the Lumen shield
+      broodling_kit.gd, grey_drone_kit.gd, saucer_kit.gd, vrask_hunter_kit.gd, lumen_sentinel_kit.gd, prism_kit.gd,
+      concord_terraformer_kit.gd  The shared kinds (the probe, the hover and tractor beam, the cloak and lock, the
+                            sweep, the Star-Seer's glint, the pod's roots)
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3594,6 +3657,16 @@ scripts/
                             spell node is abilities/spells/bone_mines.gd)
     court_rules_data.gd     Act VII's shared rules: BLOODFEAST (+ Embalmed / Silver Bones keys), NIGHT_WINGS,
                             BLOOD_MOON, ENDLESS_FEAST, the SOUNDS map
+    concord_enemy_data.gd   The Concord of Stars' shared kinds (Broodling, Grey Drone, Saucer, Vrask Hunter, Lumen
+                            Sentinel, the Star-Seer) and the landing pod; the race / beam / abducts / cloak /
+                            heals_on_turf keys; the Final Harvest's kind and companions (Act IX)
+                            (crash_site_ / proving_moon_ / ark_enemy_data.gd: each stage's own, empty until phase 2)
+    concord_rules_data.gd   Act IX's shared rules: RACES, BEAMS and BEAM_STYLES, ABDUCTION, TERRAFORMING,
+                            FINAL_HARVEST, the SOUNDS map, the Mirror Bones / Anchored keys
+    stages/crash_site_stage.gd     Act IX stubs: the Crash Site, the Proving Moon and the Ark of the Concord; act 9,
+    stages/proving_moon_stage.gd   "concord": true, zones, the "terraforming" overrides, a timeline of the shared
+    stages/ark_stage.gd            kinds of all four races, the Final Harvest, placeholder floors / bosses; the
+                                   Proving Moon reserves "gravity" (phase 2)
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
     stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
     stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four

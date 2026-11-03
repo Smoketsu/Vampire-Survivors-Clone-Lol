@@ -423,6 +423,9 @@ func step(delta: float) -> void:
 	if game.city != null:
 		bind_primary()
 		game.city.step(delta)  # Act VIII: the escalation, the civilians, wrecks and shells, Martial Law (before the push-out, as in solo).
+	if game.concord != null:
+		bind_primary()
+		game.concord.step(delta)  # Act IX: the Final Harvest, the beams, the lifted summons, the alien ground (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

@@ -21,8 +21,9 @@
 ## those is a SANGUINE COURT kit (Act VII): COURT_KIT_DIR + "<id>_kit.gd"
 ## (e.g. "vampire_noble" -> VampireNobleKit), and an id with none of those is
 ## a LAST LINE kit (Act VIII): CITY_KIT_DIR + "<id>_kit.gd" (e.g. "blitz" ->
-## BlitzKit).
-## Kit ids must be unique across the seven folders.
+## BlitzKit), and an id with none of those is a CONCORD OF STARS kit (Act IX):
+## CONCORD_KIT_DIR + "<id>_kit.gd" (e.g. "saucer" -> SaucerKit).
+## Kit ids must be unique across the eight folders.
 ## Enemy only ever talks to this file and the CovenantKit base class.
 class_name CovenantKits
 extends RefCounted
@@ -46,6 +47,9 @@ const COURT_KIT_DIR: String = "res://scripts/enemies/court/"
 # --- Act VIII: the Last Line ---
 ## Folder of the Last Line's kit scripts ("<id>_kit.gd", each a CityKit; Act VIII).
 const CITY_KIT_DIR: String = "res://scripts/enemies/city/"
+# --- Act IX: the Concord of Stars ---
+## Folder of the Concord of Stars' kit scripts ("<id>_kit.gd", each a ConcordKit; Act IX).
+const CONCORD_KIT_DIR: String = "res://scripts/enemies/concord/"
 
 ## Eye / Empire kit id -> its loaded Script (null when no file exists), filled on first use.
 static var _eye_scripts: Dictionary = {}
@@ -88,8 +92,9 @@ static func for_enemy(current: CovenantKit, id: String) -> CovenantKit:
 ## of Shogunate kit `id` (SHOGUNATE_KIT_DIR + "<id>_kit.gd", Act V), else of
 ## Inferno kit `id` (INFERNO_KIT_DIR + "<id>_kit.gd", Act VI), else of Sanguine
 ## Court kit `id` (COURT_KIT_DIR + "<id>_kit.gd", Act VII), else of Last Line
-## kit `id` (CITY_KIT_DIR + "<id>_kit.gd", Act VIII), or null when no such
-## script exists.
+## kit `id` (CITY_KIT_DIR + "<id>_kit.gd", Act VIII), else of Concord of
+## Stars kit `id` (CONCORD_KIT_DIR + "<id>_kit.gd", Act IX), or null when no
+## such script exists.
 static func _eye_kit(id: String) -> CovenantKit:
 	if not _eye_scripts.has(id):
 		var path := EYE_KIT_DIR + id + "_kit.gd"  # Expected script location.
@@ -105,6 +110,8 @@ static func _eye_kit(id: String) -> CovenantKit:
 			path = COURT_KIT_DIR + id + "_kit.gd"  # Act VII: a Sanguine Court kit.
 		if not ResourceLoader.exists(path):
 			path = CITY_KIT_DIR + id + "_kit.gd"  # Act VIII: a Last Line kit.
+		if not ResourceLoader.exists(path):
+			path = CONCORD_KIT_DIR + id + "_kit.gd"  # Act IX: a Concord of Stars kit.
 		_eye_scripts[id] = load(path) if ResourceLoader.exists(path) else null
 	var scr: Script = _eye_scripts[id]
 	if scr == null:

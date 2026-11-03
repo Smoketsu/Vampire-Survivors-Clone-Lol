@@ -83,6 +83,11 @@
 ## Civilians, Martial Law), stepped after the Court's and before the obstacle
 ## push-out; null on Acts I to VII unless a City kind forced there asks for it
 ## (city_rules()). Its city-block layout is the arena's (Arena.city_blocks).
+## Act IX (GDD §15.0 "Act IX foundation (phase 1)"): `concord` (ConcordRules)
+## runs the Concord of Stars' shared rules (Beams, Abduction, Terraforming, the
+## Final Harvest), stepped after the City's and before the obstacle push-out;
+## null on Acts I to VIII unless a Concord kind forced there asks for it
+## (concord_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -253,6 +258,11 @@ var court: CourtRules = null
 ## STAGE has "city": true, or a City kind spawned on another stage asked for it
 ## through city_rules(); Acts I to VII never create it).
 var city: CityRules = null
+# --- Act IX: the Concord of Stars ---
+## Act IX, the Concord of Stars' shared rules (ConcordRules; null unless the
+## stage's STAGE has "concord": true, or a Concord kind spawned on another stage
+## asked for it through concord_rules(); Acts I to VIII never create it).
+var concord: ConcordRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -435,6 +445,11 @@ func _ready() -> void:
 			fkg.look = stage_def.get("floor", {})
 			fkg.game = self
 			ground = fkg
+		# --- Act IX: the Concord of Stars ---
+		"concord":
+			var cog := ConcordGround.new()  # Act IX placeholder floor (the STAGE's "floor").
+			cog.look = stage_def.get("floor", {})
+			ground = cog
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -525,6 +540,8 @@ func _ready() -> void:
 		court_rules()  # Act VII: the Sanguine Court's shared rules.
 	if bool(stage_def.get("city", false)):
 		city_rules()  # Act VIII: the Last Line's shared rules.
+	if bool(stage_def.get("concord", false)):
+		concord_rules()  # Act IX: the Concord of Stars' shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -830,6 +847,8 @@ func _physics_process(delta: float) -> void:
 		court.step(delta)  # Act VII: the Endless Feast, the Blood Moon, Bloodfeast's threads (coffin nobles pushed out next).
 	if city != null:
 		city.step(delta)  # Act VIII: the escalation, the civilians, wrecks and shells, Martial Law (pushed out of buildings next).
+	if concord != null:
+		concord.step(delta)  # Act IX: the Final Harvest, the beams, the lifted summons, the alien ground (pods pushed out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -997,6 +1016,19 @@ func city_rules() -> CityRules:
 		city = CityRules.new(self)
 		add_child(city)
 	return city
+
+
+# --- Act IX: the Concord of Stars ---
+## The Concord of Stars' shared rules (Act IX), created on first use: at the
+## start of an Act IX run, or when a Concord kind forced onto another stage is
+## activated (ConcordKit.reset()), so its beams, its abduction and its heal on
+## turf work there (the terraformer pods and the Final Harvest stay off off Act
+## IX).
+func concord_rules() -> ConcordRules:
+	if concord == null:
+		concord = ConcordRules.new(self)
+		add_child(concord)
+	return concord
 
 
 # --- Act IV: the Asphodel Underworld ---

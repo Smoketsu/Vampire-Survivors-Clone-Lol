@@ -233,6 +233,15 @@
 ##     "armour", "supers", "civilians", "escalation", "city kinds", "martial
 ##     law" (after 0:00) and (on an Act VIII stage) "city stage" lines
 ##     (CityReport).
+##   * Act IX, the Concord of Stars (GDD §15.0 "Act IX foundation (phase 1)"):
+##     --stage=crash_site|proving_moon|ark, --spawn= with its kinds
+##     (broodling, grey_drone, saucer, vrask_hunter, lumen_sentinel, prism,
+##     concord_terraformer), --boss=hive_mother|vrask_tal|harvester. The bot
+##     steps sideways out of the aiming lines and live beams
+##     (ConcordRules.danger_push(), the one beam behaviour). When the Concord
+##     ran, the summary adds the "beams", "abduction", "terraforming", "concord
+##     kinds", "final harvest" (after 0:00) and (on an Act IX stage) "concord
+##     stage" lines (ConcordReport).
 class_name Autotest
 extends Node
 
@@ -1172,6 +1181,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.enemies.underworld.danger_push(pos)  # Act IV, the Asphodel Underworld: out of the Styx (null elsewhere).
 	if game.city != null:
 		danger += game.city.danger_push(pos)  # Act VIII: headlight lanes, landing circles (null elsewhere).
+	if game.concord != null:
+		danger += game.concord.danger_push(pos)  # Act IX: aiming lines and live beams (null elsewhere).
 	return danger
 
 
@@ -1279,6 +1290,8 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.underworld.danger_push(p)  # Act IV, the Asphodel Underworld: out of the Styx (null elsewhere).
 	if game.city != null:
 		danger += game.city.danger_push(p)  # Act VIII: headlight lanes, landing circles (null elsewhere).
+	if game.concord != null:
+		danger += game.concord.danger_push(p)  # Act IX: aiming lines and live beams (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1469,6 +1482,7 @@ func finish(summary: Dictionary) -> void:
 	InfernoReport.print_lines(game, st_all)  # Act VI: hell pits, portals, temptation, kinds, the last judgment, the stage (only when the Inferno ran).
 	CourtReport.print_lines(game, st_all)  # Act VII: bloodfeast, night wings, blood moon, kinds, the endless feast, the stage (only when the Court ran).
 	CityReport.print_lines(game, st_all)  # Act VIII: city blocks, armour, supers, civilians, escalation, kinds, martial law, the stage (only when the Last Line ran).
+	ConcordReport.print_lines(game, st_all)  # Act IX: beams, abduction, terraforming, the final harvest, kinds, the stage (only when the Concord ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	# --- Act V: the Burning Province ---

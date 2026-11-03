@@ -12,7 +12,9 @@
 ## VII, GDD §15.0 "Act VII foundation (phase 1)": Ravensmoor -> the Witchwood
 ## -> Castle Sanguis, opened by casting down the Morning Star; Act VIII, GDD
 ## §15.0 "Act VIII foundation (phase 1)": Skid Row -> Fort Kessler -> Liberty
-## Heights, opened by slaying Queen Carmilla). One
+## Heights, opened by slaying Queen Carmilla; Act IX, GDD §15.0 "Act IX
+## foundation (phase 1)": the Crash Site -> the Proving Moon -> the Ark of the
+## Concord, opened by defeating Paragon). One
 ## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
@@ -64,7 +66,8 @@
 ##                        Ancient Eye, 3 = the Electronic Empire, 4 = the
 ##                        Olympian Republic, 5 = the Shogunate of the Rising
 ##                        Sun, 6 = the Inferno, 7 = the Sanguine Court,
-##                        8 = the Last Line; absent = 1). The stage select shows one
+##                        8 = the Last Line, 9 = the Concord of Stars;
+##                        absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
 ##   playable           — false hides a registered stage from the stage select
@@ -274,6 +277,25 @@
 ##                        Supers in the roster's order, each promoted to its
 ##                        zone's miniboss; guest squads of Fort Kessler's army
 ##                        kinds; the cracks of Paragon's craters).
+## --- Act IX: the Concord of Stars ---
+##   concord            — true: the Concord of Stars' shared rules (Act IX,
+##                        ConcordRules as Game.concord: Beams, Abduction,
+##                        Terraforming, and the Final Harvest when the
+##                        RECKONING has a "final_harvest" key); ground
+##                        "concord" is the placeholder ConcordGround (from the
+##                        "floor" dictionary, styles ruins / moon / hull), on
+##                        the normal scattered-obstacle arena (no "blocks").
+##   terraforming       — the stage's Terraforming: any key of
+##                        ConcordRulesData.TERRAFORMING overrides it ({} = the
+##                        defaults; e.g. "boss_mult" lets a stage's boss heal on
+##                        the turf).
+##   gravity            — RESERVED for phase 2 (the Proving Moon's low
+##                        gravity, owner-approved proposal: "knockback goes
+##                        twice as far for everyone, both armies, and leaps are
+##                        longer (one value in the stage data, read by the
+##                        existing knockback code)"): x the knockback of both
+##                        armies; absent = 1. NOTHING READS IT YET.
+##   zones              — Act IX stubs too: the planned zones (names and starts).
 class_name StageRegistry
 extends RefCounted
 
@@ -290,7 +312,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act VII: the Sanguine Court ---
 	"ravensmoor", "witchwood", "castle_sanguis",
 	# --- Act VIII: the Last Line ---
-	"skid_row", "fort_kessler", "liberty_heights"]
+	"skid_row", "fort_kessler", "liberty_heights",
+	# --- Act IX: the Concord of Stars ---
+	"crash_site", "proving_moon", "ark"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -325,6 +349,10 @@ const STAGES := {
 	"skid_row": SkidRowStage.STAGE,
 	"fort_kessler": FortKesslerStage.STAGE,
 	"liberty_heights": LibertyHeightsStage.STAGE,  # Act VIII, stage 24
+	# --- Act IX: the Concord of Stars ---
+	"crash_site": CrashSiteStage.STAGE,
+	"proving_moon": ProvingMoonStage.STAGE,
+	"ark": ArkStage.STAGE,  # Act IX, stage 27
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -342,6 +370,8 @@ const ACTS := {
 	7: {"name": "Act VII", "subtitle": "The Sanguine Court"},
 	# --- Act VIII: the Last Line ---
 	8: {"name": "Act VIII", "subtitle": "The Last Line"},
+	# --- Act IX: the Concord of Stars ---
+	9: {"name": "Act IX", "subtitle": "The Concord of Stars"},
 }
 
 
@@ -410,4 +440,9 @@ const BOSS_ARRIVALS := {
 	"don_marrow": SkidRowStage.BOSS,
 	"harrow": FortKesslerStage.BOSS,
 	"paragon": LibertyHeightsStage.BOSS,  # Act VIII, the finale's boss
+	# --- Act IX: the Concord of Stars (stubs: each stage's BOSS until phase 2
+	# gives the boss its own data file) ---
+	"hive_mother": CrashSiteStage.BOSS,
+	"vrask_tal": ProvingMoonStage.BOSS,
+	"harvester": ArkStage.BOSS,  # Act IX, the finale's boss
 }

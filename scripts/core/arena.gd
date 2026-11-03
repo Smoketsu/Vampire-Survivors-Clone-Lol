@@ -599,6 +599,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act VII: Castle Sanguis ---
 	if CastleSanguisGlyphs.draw_obstacle(self, o):
 		return  # A Castle Sanguis obstacle kind (Act VII).
+	# --- Act IX: the Concord of Stars ---
+	if ConcordGlyphs.draw_obstacle(self, o):
+		return  # An Act IX stub's placeholder obstacle kind.
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

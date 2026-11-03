@@ -183,6 +183,10 @@ const STAGE_LINES: Dictionary = {
 	"skid_row": "The dead come up out of the sewers. The gangs own these blocks.",  # TUNING (not in GDD) Act VIII
 	"fort_kessler": "Break the army's last line at the edge of the city.",  # TUNING (not in GDD) Act VIII
 	"liberty_heights": "Climb the Heroes' Tower. No one is left to stop you.",  # TUNING (not in GDD) Act VIII
+	# --- Act IX: the Concord of Stars ---
+	"crash_site": "The stars came down on the capital. The Brood is hatching.",  # TUNING (not in GDD) Act IX
+	"proving_moon": "The Vrask take you to their moon, to see what you are worth.",  # TUNING (not in GDD) Act IX
+	"ark": "Board the Ark of the Concord and face the one who planted the world.",  # TUNING (not in GDD) Act IX
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
@@ -457,6 +461,34 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(63, 224, 232),
 	},  # TUNING (not in GDD) neon cyan motes
+	# --- Act IX: the Concord of Stars (placeholder scenes from the shared kinds'
+	# art until each stage brings its own floor, props and boss; a missing sprite
+	# or tile is skipped) ---
+	"crash_site": {
+		"tile": "tiles/concord_turf",
+		"items": [
+			["concord/broodling", 196, 112, true], ["concord/broodling", 230, 128, true], ["concord/grey_drone", 210, 186, true],
+			["structures/concord_terraformer", 150, 150, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(60, 255, 106),
+	},  # TUNING (not in GDD) plasma-green motes
+	"proving_moon": {
+		"tile": "tiles/concord_turf",
+		"items": [
+			["concord/vrask_hunter", 204, 116, true], ["concord/lumen_sentinel", 236, 184, true], ["concord/broodling", 170, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(42, 143, 122),
+	},  # TUNING (not in GDD) Vrask-teal motes
+	"ark": {
+		"tile": "tiles/concord_turf",
+		"items": [
+			["concord/saucer", 206, 96, true], ["concord/prism", 170, 188, true], ["concord/grey_drone", 228, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(255, 47, 184),
+	},  # TUNING (not in GDD) laser-magenta motes
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

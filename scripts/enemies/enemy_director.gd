@@ -122,6 +122,13 @@
 ##     escalation, Armour, Supers, Civilians, Martial Law) live in CityRules
 ##     (Game.city). Civilians have their own alive cap: regular_alive() leaves
 ##     them out, and they are never recycled to the spawn ring (they flee off).
+##   * Act IX, the Concord of Stars (GDD §15.0 "Act IX foundation (phase 1)"):
+##     its kinds are looked up through concord_def() (ConcordEnemyData, then
+##     each Act IX stage's table) after the City's, and its bosses load by name
+##     from CONCORD_BOSS_DIR after the City's folder. Its shared rules (Beams,
+##     Abduction, Terraforming, the Final Harvest) live in ConcordRules
+##     (Game.concord); this director hands it nothing (its pods spawn through
+##     spawn_at()).
 ##   * Act VII, Ravensmoor (GDD §15.0 "Ravensmoor (Act VII phase 2)"): on a
 ##     stage with a "ravensmoor" config it creates the RavensmoorDirector (the
 ##     sleeping coffins, Coffin Nails, the ghoul packs, Old Greymane;
@@ -169,6 +176,9 @@ const COURT_BOSS_DIR: String = "res://scripts/enemies/court/"
 # --- Act VIII: the Last Line ---
 ## Folder of the Last Line's boss scripts ("boss_<id>.gd", each a Boss; Act VIII).
 const CITY_BOSS_DIR: String = "res://scripts/enemies/city/"
+# --- Act IX: the Concord of Stars ---
+## Folder of the Concord of Stars' boss scripts ("boss_<id>.gd", each a Boss; Act IX).
+const CONCORD_BOSS_DIR: String = "res://scripts/enemies/concord/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -1121,7 +1131,8 @@ func _spawn_boss() -> void:
 	# from PANTHEON_BOSS_DIR (Act IV), else a Shogunate boss from
 	# SHOGUNATE_BOSS_DIR (Act V), else an Inferno boss from INFERNO_BOSS_DIR
 	# (Act VI), else a Sanguine Court boss from COURT_BOSS_DIR (Act VII), else a
-	# Last Line boss from CITY_BOSS_DIR (Act VIII); Sir Alaric when none exists.
+	# Last Line boss from CITY_BOSS_DIR (Act VIII), else a Concord of Stars boss
+	# from CONCORD_BOSS_DIR (Act IX); Sir Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -1144,6 +1155,8 @@ func _spawn_boss() -> void:
 				path = COURT_BOSS_DIR + "boss_" + sid + ".gd"  # Act VII: a Sanguine Court boss script.
 			if not ResourceLoader.exists(path):
 				path = CITY_BOSS_DIR + "boss_" + sid + ".gd"  # Act VIII: a Last Line boss script.
+			if not ResourceLoader.exists(path):
+				path = CONCORD_BOSS_DIR + "boss_" + sid + ".gd"  # Act IX: a Concord of Stars boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -1246,6 +1259,7 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## (Act IV: pantheon_def()), then the Shogunate's (Act V: shogunate_def()),
 ## then the Inferno's (Act VI: inferno_def()), then the Sanguine Court's
 ## (Act VII: court_def()), then the Last Line's (Act VIII: city_def()),
+## then the Concord of Stars' (Act IX: concord_def()),
 ## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
@@ -1279,6 +1293,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var city := city_def(kind)  # Act VIII kinds ({} when not a City kind).
 	if not city.is_empty():
 		return city
+	var concord := concord_def(kind)  # Act IX kinds ({} when not a Concord kind).
+	if not concord.is_empty():
+		return concord
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -1393,6 +1410,22 @@ static func city_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act IX: the Concord of Stars ---
+## Design row of Concord of Stars kind `kind` (real id), or {} when it is none:
+## ConcordEnemyData (the shared kinds and the landing pod) first, then each
+## Act IX stage's own table (phase 2 fills them).
+static func concord_def(kind: String) -> Dictionary:
+	if ConcordEnemyData.ENEMIES.has(kind):
+		return ConcordEnemyData.ENEMIES[kind]
+	if CrashSiteEnemyData.ENEMIES.has(kind):
+		return CrashSiteEnemyData.ENEMIES[kind]
+	if ProvingMoonEnemyData.ENEMIES.has(kind):
+		return ProvingMoonEnemyData.ENEMIES[kind]
+	if ArkEnemyData.ENEMIES.has(kind):
+		return ArkEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
@@ -1403,7 +1436,8 @@ static func is_known_kind(kind: String) -> bool:
 			or not shogunate_def(kind).is_empty() \
 			or not inferno_def(kind).is_empty() \
 			or not court_def(kind).is_empty() \
-			or not city_def(kind).is_empty()  # Act V, Act VI, Act VII, Act VIII
+			or not city_def(kind).is_empty() \
+			or not concord_def(kind).is_empty()  # Act V, Act VI, Act VII, Act VIII, Act IX
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar
