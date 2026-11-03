@@ -443,6 +443,11 @@ all three show "Coming soon" until their stages are built (phase 2). The act's s
   soft pitch glide) and the eight City sounds (`SoundData.CITY_SOUNDS`: `siren_wail`, `gun_burst`, `engine_rev`,
   `vehicle_wreck`, `crowd_panic`, `super_arrive`, `weakness_crack`, `tier_alarm`) render lazily the same way once a stage
   uses `"music": "siren"`. `RunLoopSynth` gained three score jobs for it (`machine`, `sub`, `siren`).
+- **Act IX music and sounds.** "The Reaping Stars" (`SoundData.STARSONG_SCORE`: a vast, cold space track in D Phrygian
+  dominant with a very low drone, a slow pulse, glassy pads, quiet glass glints, a soft swelling harvest horn and a high
+  choir-like line) and the nine Concord sounds (`SoundData.CONCORD_SOUNDS`: `beam_charge`, `beam_fire`, `beam_reflect`,
+  `tractor_beam`, `abduction`, `saucer_down`, `ground_burn`, `brood_chitter`, `harvest_eye`) render lazily the same way once
+  a stage uses `"music": "starsong"`. `RunLoopSynth` gained one score job for it (`choir`).
 - **Music.** (Act IV's "Hymn of Bronze", a war drum under a Dorian pad with a plucked lyre and brass
   swells, and its eight Pantheon sounds are rendered lazily the same way: `SoundData.BRONZE_SCORE`,
   `PANTHEON_SOUNDS`; the stages switch to it with `"music": "bronze"`.) Act III runs play their own loop, "Iron Requiem" (a pulsing low synth, metallic hits

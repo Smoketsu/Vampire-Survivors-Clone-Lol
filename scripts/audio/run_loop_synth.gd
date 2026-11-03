@@ -79,6 +79,13 @@
 ##   "siren"   — a distant siren: each sweep [start s, length s, from Hz, to Hz] is a slow
 ##               triangle glide through a low-pass, with a slightly detuned twin
 ##               ({sweeps, amp, attack, decay, lp0, lp1, detune, detune_amp}).
+## Act IX (SoundData.STARSONG_SCORE, "The Reaping Stars") adds one more, the same way (its slow
+## pulse is the existing "pulse", its glassy pads the existing "organ" with inharmonic partials,
+## its glints the existing "hits", its harvest horn the existing "horn" with a slow attack):
+##   "choir" — a high choir-like line: each note [start s, Hz, length s] is four slightly detuned
+##             saws (spread by `detune`) plus a sine an octave up (`octave_amp`) through a low-pass
+##             that opens, with a slow attack and a vibrato
+##             ({notes, amp, attack, decay, lp0, lp1, vib_hz, vib_depth, detune, octave_amp}).
 ## Every note ends before the loop end, so the loop stays seamless.
 class_name RunLoopSynth
 extends RefCounted
@@ -235,6 +242,8 @@ func _init(rng_seed: int, score: Dictionary = {}) -> void:
 		_jobs.append(_job_sub)  # Act VIII: the clean sub bass.
 	if score.has("siren"):
 		_jobs.append(_job_siren)  # Act VIII: the distant siren glide.
+	if score.has("choir"):
+		_jobs.append(_job_choir)  # Act IX: the high choir-like line.
 	if score.has("koto"):
 		_jobs.append(_job_koto)  # Act V: the plucked koto line.
 	if score.has("flute"):
@@ -634,6 +643,26 @@ func _job_siren() -> void:
 			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": float(sw[2]) * float(v[0]), "f1": float(sw[3]) * float(v[0]),
 				"start": at, "dur": dur, "amp": float(sr["amp"]) * float(v[1]), "attack": float(sr["attack"]),
 				"decay": float(sr["decay"]), "lp0": float(sr["lp0"]), "lp1": float(sr["lp1"])}, _rng)
+
+
+## Choir line (a score's "choir", Act IX): each note is four detuned saws (ratios 1/d^2, 1/d, d,
+## d^2 around the pitch, d = `detune`) and a quiet sine an octave up through a low-pass that opens,
+## with a slow attack and a vibrato; each ends before the loop end.
+func _job_choir() -> void:
+	var ch: Dictionary = _score["choir"]
+	var d := float(ch["detune"])  # Detune ratio between neighbouring voices.
+	for n: Array in ch["notes"]:
+		var at := float(n[0])  # Note start (s).
+		var hz := float(n[1])  # Pitch (Hz).
+		var dur := minf(float(n[2]), _loop_s - at - 0.05)  # Note length (s).
+		for r: float in [1.0 / (d * d), 1.0 / d, d, d * d]:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "saw", "f0": hz * r, "start": at, "dur": dur,
+				"amp": float(ch["amp"]), "attack": float(ch["attack"]), "decay": float(ch["decay"]),
+				"lp0": float(ch["lp0"]), "lp1": float(ch["lp1"]), "vib_hz": float(ch["vib_hz"]),
+				"vib_depth": float(ch["vib_depth"])}, _rng)
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": hz * 2.0, "start": at, "dur": dur,
+			"amp": float(ch["amp"]) * float(ch["octave_amp"]), "attack": float(ch["attack"]), "decay": float(ch["decay"]),
+			"vib_hz": float(ch["vib_hz"]), "vib_depth": float(ch["vib_depth"])}, _rng)
 
 
 ## Peak search over samples [a, b) of the finished mix.
