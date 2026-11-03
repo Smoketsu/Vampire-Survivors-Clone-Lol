@@ -500,6 +500,17 @@ const HEIGHTS: Dictionary = {
 	"bosses/hive_mother": 96.0,  # TUNING (not in GDD) boss tier, female (figure redesign, chitin covers her completely): the Brood's queen, wings, horned helm and egg-sac abdomen (about 90 wide); idle strip
 	"structures/concord_terraformer": 40.0,  # TUNING (not in GDD) a landing pod rooted in alien turf, about 54 x 40 art px, vents glowing green; the steam is code
 	"structures/concord_terraformer_dead": 40.0,  # TUNING (not in GDD) the same pod cracked, charred and dark (destroyed)
+	# --- Act IX: the Crash Site (assets/sprites/concord/, bosses/, player/) ---
+	"concord/burrower": 34.0,  # TUNING (not in GDD) Brood soldier, a creature: a slate-dark armoured digger, cream claws (about 40 wide); walk strip
+	"concord/acid_spitter": 32.0,  # TUNING (not in GDD) Brood ranged, a creature: a green insect with a glowing acid sac (about 34 wide); walk strip
+	"concord/brood_matriarch": 60.0,  # TUNING (not in GDD) the miniboss, an insect creature (female by name): green-black chitin, wings (about 70 wide); glide strip
+	"concord/brood_egg": 14.0,  # TUNING (not in GDD) an Infestation egg in a resin smear (about 14 wide); its hatch strip concord/brood_egg_hatch (4 frames of 16)
+	"concord/burrow_mound": 16.0,  # TUNING (not in GDD) a heaving dirt mound (about 28 wide; drawn scaled by BurrowerKit.draw_mound())
+	"bosses/hive_mother_flight": 96.0,  # TUNING (not in GDD) her Flight form (female, figure redesign, chitin covers her): wings spread wide, the egg sac tucked; glide strip
+	"player/broodbound": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, a chitin gown covers chest and hips): the wing crown above
+	"player/broodbound_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold chitin
+	"player/broodbound_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/broodbound_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
@@ -602,6 +613,8 @@ const FLAT_SIZES: Dictionary = {
 	"overlays/maelstrom_whirl": 96.0,  # TUNING (not in GDD) a Maelstrom whirlpool from above, 92 x 96
 	# --- Act IX: the Concord of Stars ---
 	"concord/mothership_eye": 192.0,  # TUNING (not in GDD) the mothership's eye seen from below, a round 192 x 192 sky overlay with transparent corners (the Final Harvest fades it in; no screen read)
+	# --- Act IX: the Crash Site ---
+	"projectiles/bone_beetle": 10.0,  # TUNING (not in GDD) a Bone Beetles beetle from above, about 10 x 8, its head to the right
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

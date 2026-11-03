@@ -274,7 +274,12 @@ const CITY_BOSSES: Array[String] = ["don_marrow", "harrow", "paragon"]
 ## Harvesters, the Vrask, the Luminous, then its stage bosses
 ## (StageRegistry.BOSS_ARRIVALS ids). Each Act IX stage adds its own as it is
 ## built (phase 2). The landing pod sits with the Harvesters (it is slain).
-const CONCORD_BROOD: Array[String] = ["broodling"]
+const CONCORD_BROOD: Array[String] = ["broodling",
+	# --- Act IX: the Crash Site --- (the Brood's soldiers and the stage's
+	# miniboss with her race: the Concord tab has no champions section; the
+	# Infestation egg has no entry: a cleared egg is never a kill, so the
+	# Codex would never meet it)
+	"burrower", "acid_spitter", "brood_matriarch"]
 ## The Harvesters' kinds (race "harvesters"), and the landing pod.
 const CONCORD_HARVESTERS: Array[String] = ["grey_drone", "saucer", "concord_terraformer"]
 ## The Vrask's kinds (race "vrask").
@@ -511,6 +516,10 @@ const DESCRIPTIONS: Dictionary = {
 	"hive_mother": "The Hive Mother, the Brood's queen grown into the crater: egg waves, a burrow under your ring, and acid from the sky.",  # Owner-approved Act IX proposal
 	"vrask_tal": "Vrask'Tal, the Hunt-Lord: he stalks your ring cloaked, duels you with his glaive, and arms the bomb on his wrist.",  # Owner-approved Act IX proposal
 	"harvester": "The Harvester, the oldest of its kind: the one who planted the world, come to reap what is left.",  # Owner-approved Act IX proposal
+	# --- Act IX: the Crash Site ---
+	"burrower": "It tunnels under your ring and bursts up among your dead. A mound of dirt shows a moment ahead: keep blockers inside the ring.",  # Owner-approved Act IX proposal
+	"acid_spitter": "It lobs acid over your ring that leaves a burning puddle. Kill it on approach, and step out of the green.",  # Owner-approved Act IX proposal
+	"brood_matriarch": "The Brood's winged queen-guard, who spits egg sacs over your ring. Clear her eggs before they hatch.",  # Owner-approved Act IX proposal (miniboss)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -764,6 +773,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"broken_arrow": "ach_broken_arrow",  # TUNING (not in GDD)
 	# --- Act VIII: Liberty Heights ---
 	"no_more_heroes": "ach_no_more_heroes",  # TUNING (not in GDD)
+	# --- Act IX: the Crash Site ---
+	"nothing_hatched": "ach_nothing_hatched",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -819,6 +830,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"broken_arrow": "armour_piercing_bones",
 	# --- Act VIII: Liberty Heights ---
 	"no_more_heroes": "heros_fist",
+	# --- Act IX: the Crash Site ---
+	"nothing_hatched": "anchored",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

@@ -202,7 +202,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act VIII: Fort Kessler ---
 	"tripwire", "armour_piercing_bones",
 	# --- Act VIII: Liberty Heights ---
-	"secret_identity", "origin_story"]
+	"secret_identity", "origin_story",
+	# --- Act IX: the Crash Site ---
+	"chitin", "anchored"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -246,7 +248,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act VIII: Fort Kessler ---
 	"armour_piercing_bones",
 	# --- Act VIII: Liberty Heights ---
-	"origin_story"]
+	"origin_story",
+	# --- Act IX: the Crash Site ---
+	"anchored"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1755,6 +1759,48 @@ const PASSIVES := {
 			{"special_reach": 0.15},  # TUNING (not in GDD)
 			{"special_reach": 0.20},  # TUNING (not in GDD)
 			{"special_reach": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IX: the Crash Site ---
+	# Chitin (Bone Beetles' paired passive; owner-approved Act IX proposal:
+	# "Hive of Bone (+ Chitin)"; unlocked with the spell by the Hive Mother and
+	# offered on every stage). Own decision on its effect: the beetles grow
+	# chitin shells: every bone beetle bite deals bite_bonus more (BoneBeetles
+	# reads it once per bite; stat beetle_chitin_bonus_dmg; 0 while not owned).
+	"chitin": {
+		"display_name": "Chitin",  # Owner-approved proposal
+		"icon": "chitin",
+		"description": "Your bone beetles grow chitin shells: their bites hit harder.",
+		"labels": {"bite_bonus": ["Beetle bite damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"bite_bonus": 0.10},  # TUNING (not in GDD)
+			{"bite_bonus": 0.18},  # TUNING (not in GDD)
+			{"bite_bonus": 0.26},  # TUNING (not in GDD)
+			{"bite_bonus": 0.34},  # TUNING (not in GDD)
+			{"bite_bonus": 0.45},  # TUNING (not in GDD)
+		],
+	},
+	# Act IX's counter-passive Anchored (owner-approved Act IX proposal and the
+	# brief: "abductions last half as long and break when the saucer takes
+	# damage"; unlocked by the Crash Site achievement Nothing Hatched and offered
+	# only in Act IX through its card row's "act"). The foundation's hooks read
+	# it: ConcordRules.anchored_hold_mult() (x the hold, 1 - hold_cut, in
+	# Abduction.lift()) and anchored_breaks() (any level: a hit on the saucer
+	# ends the hold, Abduction.on_saucer_hit(); stat abduction_anchored_breaks).
+	"anchored": {
+		"display_name": "Anchored",  # Owner-approved proposal
+		"icon": "anchored",
+		"description": "Your dead cling to the earth: tractor beams hold them for less, and a hit on the saucer drops them.",
+		"labels": {"hold_cut": ["Abduction hold", "neg_pct"]},
+		"act": 9,  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hold_cut": 0.10},  # TUNING (not in GDD)
+			{"hold_cut": 0.20},  # TUNING (not in GDD)
+			{"hold_cut": 0.30},  # TUNING (not in GDD)
+			{"hold_cut": 0.40},  # TUNING (not in GDD)
+			{"hold_cut": 0.50},  # Brief: 0.5 at full ("half as long")
 		],
 	},
 }

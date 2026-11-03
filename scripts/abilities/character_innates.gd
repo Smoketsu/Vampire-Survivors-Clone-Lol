@@ -91,6 +91,9 @@
 ## Act VIII, Liberty Heights:
 ##   Revenant Heroine Back From the Dead  in HerosFist.step() (one more fist a
 ##                    cast); stats as the spell's (fist_casts, fist_slams).
+## Act IX, the Crash Site:
+##   Broodbound       Swarm Bride     in BoneBeetles.on_enemy_killed() (one more
+##                    beetle in every burst); stat beetle_extra.
 class_name CharacterInnates
 extends Node2D
 
@@ -445,6 +448,9 @@ func summary_line() -> String:
 		# --- Act VIII: Liberty Heights --- (Back From the Dead lives in HerosFist.step())
 		"back_from_the_dead":
 			counters = "extra fists %d (slams %d)" % [int(game.character.innate_value(HerosFistData.EXTRA_KEY)), int(st.get("fist_slams", 0.0))]
+		# --- Act IX: the Crash Site --- (Swarm Bride lives in BoneBeetles.on_enemy_killed())
+		"swarm_bride":
+			counters = "extra beetles %d (bursts %d)" % [int(st.get("beetle_extra", 0.0)), int(st.get("beetle_bursts", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

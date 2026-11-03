@@ -249,6 +249,11 @@ const SOUNDS := {
 	"ground_burn": "ground_burn",  # Concord pack id "ground_burn" (a soft sizzle and hiss).
 	"brood_chitter": "brood_chitter",  # Concord pack id "brood_chitter" (a short insect clicking).
 	"harvest_eye": "harvest_eye",  # Concord pack id "harvest_eye" (a deep opening groan and a low horn).
+	# --- Act IX: the Crash Site ---
+	"burrow": "burrow_rumble",  # Concord pack id "burrow_rumble" (a low earthy rumble and a crack: a mound bursts).
+	"acid_spit": "acid_spit",  # Concord pack id "acid_spit" (a wet hork and a sizzling splash).
+	"egg_hatch": "egg_hatch",  # Concord pack id "egg_hatch" (a soft wet crack and a chitter).
+	"hive_scream": "hive_scream",  # Concord pack id "hive_scream" (the Hive Mother's rasping shriek).
 }
 
 # --- Counter-passive hooks (not built) -----------------------------------------------------
@@ -265,3 +270,36 @@ const MIRROR_TAKEN_KEY: String = "beam_reduction"
 const ANCHORED: String = "anchored"
 ## Its value key: the share of the hold removed (0 while not owned; 0.5 when built).
 const ANCHORED_KEY: String = "hold_cut"
+
+
+# --- Act IX: the Crash Site ---
+## Acid pools (AcidPools, owned by Game.concord as `acid`: THE acid path; the
+## Acid Spitter's lobs, the Hive Mother's acid rain and the Brood Matriarch's
+## egg sacs' flights all go through it). A lob arcs over the Bone Ring (it is
+## arcing: the ring never blocks it) to a point fixed when it is thrown, with a
+## landing telegraph; on landing it splashes and leaves a burning puddle that
+## hurts summons (CombatResolver.damage_unit()) and the necromancer
+## (damage_player()), never enemies.
+##   cap            — most lobs in flight plus puddles at once (one pooled
+##                    store; a lob over it is refused and counted).
+##   tick           — s between two damage ticks of a puddle (each body at
+##                    most once a tick per puddle).
+##   arc_height     — px a lob rises at mid-flight (drawing only).
+##   grow_time      — s a fresh puddle takes to spread to its full radius.
+##   fade_time      — s a puddle takes to fade at the end of its life
+##                    (it no longer burns while it fades).
+##   danger_margin  — px beyond a puddle's or a landing circle's edge the
+##                    autotest bot keeps out of (autotest hint only).
+##   summon_slack   — px added to a grid query around a puddle.
+const ACID := {
+	"cap": 64,  # TUNING (not in GDD)
+	"tick": 0.4,  # TUNING (not in GDD) s
+	"arc_height": 46.0,  # TUNING (not in GDD) px (drawing)
+	"grow_time": 0.25,  # TUNING (not in GDD) s
+	"fade_time": 0.5,  # TUNING (not in GDD) s
+	"danger_margin": 14.0,  # TUNING (not in GDD) px (autotest hint only)
+	"summon_slack": 24.0,  # TUNING (not in GDD) px
+}
+## Damage tag of an acid puddle (and of a lob's splash; the kind that threw it
+## keeps its own id as the source of its lobs' hits, so the reports split them).
+const ACID_SOURCE: String = "acid_pool"

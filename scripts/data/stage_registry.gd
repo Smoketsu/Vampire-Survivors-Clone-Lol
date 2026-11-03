@@ -296,6 +296,12 @@
 ##                        existing knockback code)"): x the knockback of both
 ##                        armies; absent = 1. NOTHING READS IT YET.
 ##   zones              — Act IX stubs too: the planned zones (names and starts).
+## --- Act IX: the Crash Site ---
+##   crash_site         — CrashSiteDirector config (CrashSiteStage.CRASH_SITE,
+##                        Act IX, the Crash Site: the crater's seeded turf,
+##                        Infestation's egg cap, Nothing Hatched, the Brood
+##                        Matriarch's "matriarch" event); ground "crash_site" is
+##                        its CrashSiteGround (the four zone floors).
 class_name StageRegistry
 extends RefCounted
 

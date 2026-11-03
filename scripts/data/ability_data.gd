@@ -104,7 +104,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act VIII: Fort Kessler ---
 	"bone_mines",
 	# --- Act VIII: Liberty Heights ---
-	"heros_fist"]
+	"heros_fist",
+	# --- Act IX: the Crash Site ---
+	"bone_beetles"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -857,6 +859,31 @@ const SPELLS := {
 			{"damage": 50.0, "cooldown": 2.7, "fling": 170.0, "fling_share": 0.41},  # TUNING (not in GDD)
 			{"damage": 60.0, "cooldown": 2.55, "fling": 185.0, "fling_share": 0.44},  # TUNING (not in GDD)
 			{"damage": 72.0, "cooldown": 2.4, "fling": 200.0, "fling_share": 0.47},  # TUNING (not in GDD) first pass 85 / 0.6
+		],
+	},
+	# --- Act IX: the Crash Site ---
+	# Bone Beetles (GDD §15.0 "Bone Beetles, Hive of Bone, Chitin and the
+	# Broodbound (Act IX)"; owner-approved proposal: "slain enemies burst into
+	# bone beetles that bite the next enemy"; unlocked by slaying the Hive
+	# Mother, UnlockData). No cooldown: every foe slain within `range` px of the
+	# necromancer bursts into `beetles` bone beetles (while fewer than `cap`
+	# live); each scuttles at `speed` px/s to the nearest other foe within
+	# `seek` px and bites it once for `damage`, crumbling after `life` s with
+	# no prey. Stat keys: damage, beetles, range (px), speed (px/s), seek (px),
+	# life (s), cap. Logic: BoneBeetles; fixed rules: BoneBeetlesData; Chitin
+	# (its paired passive) makes every bite hit harder.
+	"bone_beetles": {
+		"display_name": "Bone Beetles",  # Owner-approved proposal
+		"icon": "bone_beetles",
+		"description": "Slain foes burst into bone beetles that bite the next foe.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act IX spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bite damage", "beetles": "Beetles a foe", "range": "Range", "cap": "Most beetles"},
+		"levels": [
+			{"damage": 9.0, "beetles": 1, "range": 260.0, "speed": 230.0, "seek": 160.0, "life": 2.5, "cap": 12},  # TUNING (not in GDD)
+			{"damage": 11.0, "beetles": 1, "range": 280.0, "speed": 240.0, "seek": 170.0, "life": 2.5, "cap": 16},  # TUNING (not in GDD)
+			{"damage": 12.0, "beetles": 2, "range": 290.0, "speed": 250.0, "seek": 180.0, "life": 2.6, "cap": 20},  # TUNING (not in GDD)
+			{"damage": 14.0, "beetles": 2, "range": 300.0, "speed": 255.0, "seek": 190.0, "life": 2.8, "cap": 24},  # TUNING (not in GDD)
+			{"damage": 16.0, "beetles": 3, "range": 320.0, "speed": 260.0, "seek": 200.0, "life": 3.0, "cap": 28},  # TUNING (not in GDD)
 		],
 	},
 }

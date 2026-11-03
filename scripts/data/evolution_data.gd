@@ -102,7 +102,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VIII: Fort Kessler ---
 	"killing_ground",
 	# --- Act VIII: Liberty Heights ---
-	"doomsday"]
+	"doomsday",
+	# --- Act IX: the Crash Site ---
+	"hive_of_bone"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -734,6 +736,25 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 95.0, "cooldown": 2.3, "fists": 2, "fling": 240.0, "fling_share": 0.5,  # TUNING (not in GDD) first pass 110 / 2.2 s / 0.65: ~500k damage in the forced seed-7 run, far ahead of every source
 			"crater": 64.0, "crater_share": 0.4,  # TUNING (not in GDD) the evolution flag: the crater where a flung foe lands (first pass 0.6)
+		},
+	},
+	# --- Act IX: the Crash Site ---
+	# Hive of Bone (GDD §15.0 "Bone Beetles, Hive of Bone, Chitin and the
+	# Broodbound (Act IX)"; owner-approved proposal "Bone Beetles -> Hive of
+	# Bone (+ Chitin)"): Bone Beetles + Chitin (a NEW passive, owner rule: at
+	# Lv 5). Own decision on its kit: each beetle bites `bites` foes in turn,
+	# and a foe a beetle kills bursts too (the hive feeds itself, still under
+	# the cap). Detected by the "bites" key.
+	"hive_of_bone": {
+		"base": "bone_beetles",
+		"passive": "chitin",
+		"display_name": "Hive of Bone",  # Owner-approved proposal
+		"icon": "hive_of_bone",
+		"description": "A hive of bone beetles: each bites foe after foe, and every foe they kill bursts into more.",
+		"labels": {"damage": "Bite damage", "beetles": "Beetles a foe", "bites": "Bites each", "range": "Range", "cap": "Most beetles"},
+		"stats": {
+			"damage": 17.0, "beetles": 3, "range": 340.0, "speed": 280.0, "seek": 220.0, "life": 3.5, "cap": 40,  # TUNING (not in GDD)
+			"bites": 3,  # TUNING (not in GDD) the evolution flag: foes each beetle bites in turn
 		},
 	},
 }

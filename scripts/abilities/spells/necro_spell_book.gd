@@ -68,6 +68,9 @@
 ## and Act VIII's (Skid Row, SKID_ROW_IDS: stepped only; its own autotest line,
 ## SkidRowReport.item_lines()):
 ##   Hearse Run       -> HearseRun        (evolves into Funeral Procession)
+## and Act IX's (the Crash Site, CRASH_SITE_IDS: stepped, with a kill hook; its
+## own autotest line, CrashSiteReport.item_lines()):
+##   Bone Beetles     -> BoneBeetles      (evolves into Hive of Bone)
 ## and Act VIII's (Fort Kessler, FORT_KESSLER_IDS: stepped only; its own
 ## autotest line, FortKesslerReport.item_lines()):
 ##   Bone Mines       -> BoneMines        (evolves into Killing Ground)
@@ -183,6 +186,11 @@ const FORT_KESSLER_IDS := ["bone_mines"]
 ## Liberty Heights's unlockable spell (Paragon's reward): stepped only (no kill
 ## or after-physics hook), reported by LibertyHeightsReport.
 const LIBERTY_HEIGHTS_IDS := ["heros_fist"]
+# --- Act IX: the Crash Site ---
+## The Crash Site's unlockable spell (the Hive Mother's reward): stepped, with
+## a kill hook (its beetles burst from slain foes; no after-physics hook),
+## reported by CrashSiteReport.
+const CRASH_SITE_IDS := ["bone_beetles"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -237,6 +245,8 @@ const SOURCES := {
 	"bone_mines": ["bone_mines", "killing_ground", "killing_ground_shards"],
 	# --- Act VIII: Liberty Heights ---
 	"heros_fist": ["heros_fist", "heros_fist_fling", "doomsday", "doomsday_crater"],
+	# --- Act IX: the Crash Site ---
+	"bone_beetles": ["bone_beetles", "hive_of_bone"],
 }
 
 ## Owning run.
@@ -393,6 +403,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # Liberty Heights's spell.
+	# --- Act IX: the Crash Site ---
+	for id: String in CRASH_SITE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Crash Site's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -486,6 +505,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act VIII: Liberty Heights ---
 		"heros_fist":
 			node = HerosFist.new()  # Liberty Heights's spell.
+		# --- Act IX: the Crash Site ---
+		"bone_beetles":
+			node = BoneBeetles.new()  # The Crash Site's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -540,6 +562,11 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act VI spell's node, if learned (Pandemonium).
 		if node != null:
 			node.on_enemy_killed(e)  # Pandemonium's spell.
+	# --- Act IX: the Crash Site ---
+	for id: String in CRASH_SITE_IDS:
+		var node: NecroSpell = nodes.get(id)  # The Crash Site's spell node, if learned.
+		if node != null:
+			node.on_enemy_killed(e)  # Bone Beetles: a slain foe bursts into beetles.
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
