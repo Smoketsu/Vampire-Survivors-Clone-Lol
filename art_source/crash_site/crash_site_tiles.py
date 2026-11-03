@@ -251,7 +251,8 @@ def mound() -> Image.Image:
 
 
 def acid_pool() -> Image.Image:
-    """The 32 x 26 puddle as a grey tint mask: a soft rim, a white body, lighter bubbles."""
+    """The 32 x 26 acid puddle: a soft rim (plasma dark #1FA84A), a body (plasma #3CFF6A), hull-white bubbles; Act IX art
+    review round 1: it was a grey tint mask, now baked in the Concord plasma ramp (AcidPools.POOL_TINT is white)."""
     rng = random.Random(SEEDS["pool"])
     im = blank(32, 26)
     for y in range(26):
@@ -261,12 +262,12 @@ def acid_pool() -> Image.Image:
             edge = 14.5 + 1.2 * math.sin(ang * 3.0) + 0.8 * math.sin(ang * 5.0 + 1.3)
             d = math.hypot(dx, dy)
             if d <= edge:
-                v = 205 if d > edge - 2.0 else 170
-                im.putpixel((x, y), (v, v, v, 150 if d > edge - 2.0 else 200))
+                col = (0x1F, 0xA8, 0x4A) if d > edge - 2.0 else (0x3C, 0xFF, 0x6A)
+                im.putpixel((x, y), col + (150 if d > edge - 2.0 else 200))
     for _ in range(9):  # Bubbles.
         x, y = rng.randrange(6, 26), rng.randrange(5, 21)
         if im.getpixel((x, y))[3] > 0:
-            im.putpixel((x, y), (255, 255, 255, 230))
+            im.putpixel((x, y), (0xE8, 0xEC, 0xF0, 230))
     return im
 
 

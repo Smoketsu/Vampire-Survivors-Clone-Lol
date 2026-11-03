@@ -1283,3 +1283,16 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,1,489,1024,439,0.0238,black_mothership.png
 2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,1,177,1024,439,0.0222,starborn_hyper.png
 2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,2,568,2016,439,0.0321,harvester_true.png
+2026-11-03 19:21,bosses/hive_mother_r1,gpt-image-2.5-flare,medium,1024x1024,2,338,1280,439,0.0251,hive_a.png
+2026-11-03 19:21,bosses/hive_mother_r1,gpt-image-2.5-flare,medium,1024x1024,2,338,1280,439,0.0251,hive_b.png
+2026-11-03 19:22,bosses/hive_mother_cast_r1,gpt-image-2.5-flare,medium,1024x1024,1,348,1024,439,0.0231,hive_cast_a.png
+2026-11-03 19:22,bosses/hive_mother_strike_r1,gpt-image-2.5-flare,medium,1024x1024,1,362,1024,439,0.0232,hive_strike_a.png
+2026-11-03 19:22,bosses/hive_mother_flight_r1,gpt-image-2.5-flare,medium,1024x1024,1,345,1024,439,0.0231,hive_flight_a.png
+2026-11-03 19:23,player/broodbound_r1,gpt-image-2.5-flare,medium,1024x1024,1,597,1024,439,0.0243,brood_a.png
+2026-11-03 19:24,player/broodbound_r1,gpt-image-2.5-flare,medium,1024x1024,1,597,1024,439,0.0243,brood_b.png
+2026-11-03 19:24,player/broodbound_r1,gpt-image-2.5-flare,medium,1024x1024,1,629,1024,439,0.0245,brood_c.png
+2026-11-03 19:26,player/broodbound_hyper_r1,gpt-image-2.5-flare,medium,1024x1024,1,250,1024,439,0.0226,skin_hyper.png
+2026-11-03 19:26,player/broodbound_untouchable_r1,gpt-image-2.5-flare,medium,1024x1024,1,247,1024,439,0.0226,skin_untouchable.png
+2026-11-03 19:26,player/broodbound_deathlord_r1,gpt-image-2.5-flare,medium,1024x1024,1,266,1024,439,0.0227,skin_deathlord.png
+2026-11-03 19:27,player/starborn_deathlord_r1,gpt-image-2.5-flare,medium,1024x1024,1,250,1024,439,0.0226,sdl_a.png
+2026-11-03 19:28,player/starborn_deathlord_r1,gpt-image-2.5-flare,medium,1024x1024,1,250,1024,439,0.0226,sdl_b.png
