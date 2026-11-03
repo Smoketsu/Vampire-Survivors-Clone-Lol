@@ -345,7 +345,7 @@ const ENEMIES := {
 		"display_name": "Rifleman",
 		"max_hp": 42.0,  # TUNING (not in GDD)
 		"move_speed": 42.0,  # TUNING (not in GDD) px/s
-		"damage": 1.5,  # TUNING (not in GDD) per round, before the time scaling (first pass 2.2)
+		"damage": 1.125,  # TUNING (not in GDD) per round, before the time scaling (first pass 2.2; was 1.5, Act VIII pass 1, owner: Softer riflemen, -25%)
 		"attack_interval": 2.2,  # TUNING (not in GDD) s between bursts
 		"attack_range": 230.0,  # TUNING (not in GDD) px
 		"radius": 10.0,  # TUNING (not in GDD) px
