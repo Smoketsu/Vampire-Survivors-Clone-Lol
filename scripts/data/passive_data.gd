@@ -1774,11 +1774,11 @@ const PASSIVES := {
 		"labels": {"bite_bonus": ["Beetle bite damage", "pct"]},
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
-			{"bite_bonus": 0.10},  # TUNING (not in GDD)
+			{"bite_bonus": 0.06},  # TUNING (not in GDD)
+			{"bite_bonus": 0.12},  # TUNING (not in GDD)
 			{"bite_bonus": 0.18},  # TUNING (not in GDD)
-			{"bite_bonus": 0.26},  # TUNING (not in GDD)
-			{"bite_bonus": 0.34},  # TUNING (not in GDD)
-			{"bite_bonus": 0.45},  # TUNING (not in GDD)
+			{"bite_bonus": 0.24},  # TUNING (not in GDD)
+			{"bite_bonus": 0.30},  # TUNING (not in GDD) first pass 0.45
 		],
 	},
 	# Act IX's counter-passive Anchored (owner-approved Act IX proposal and the

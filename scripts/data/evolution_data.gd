@@ -753,8 +753,8 @@ const EVOLUTIONS := {
 		"description": "A hive of bone beetles: each bites foe after foe, and every foe they kill bursts into more.",
 		"labels": {"damage": "Bite damage", "beetles": "Beetles a foe", "bites": "Bites each", "range": "Range", "cap": "Most beetles"},
 		"stats": {
-			"damage": 17.0, "beetles": 3, "range": 340.0, "speed": 280.0, "seek": 220.0, "life": 3.5, "cap": 40,  # TUNING (not in GDD)
-			"bites": 3,  # TUNING (not in GDD) the evolution flag: foes each beetle bites in turn
+			"damage": 11.0, "beetles": 3, "range": 340.0, "speed": 280.0, "seek": 220.0, "life": 3.5, "cap": 32,  # TUNING (not in GDD) first pass 17 / cap 40 (377k from the hive alone in the forced seed-7 run)
+			"bites": 2,  # TUNING (not in GDD) the evolution flag: foes each beetle bites in turn (first pass 3)
 		},
 	},
 }
