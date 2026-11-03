@@ -201,8 +201,6 @@ const STAGE := {
 	"concord": true,  # Act IX: Beams, Abduction, Terraforming (ConcordRules).
 	"terraforming": TERRAFORMING,  # Act IX: this stage's Terraforming overrides ({} = the defaults).
 	"zones": ZONES,  # Act IX stub: the planned zones (phase 2 builds them).
-	# Music key "siren" FOR NOW (the Act VIII loop): the audio pass adds
-	# "starsong" ("The Reaping Stars", SoundData.STARSONG_SCORE) and the lead
-	# switches this to "starsong" at the merge.
-	"music": "siren",
+	# Music: "The Reaping Stars" (SoundData.STARSONG_SCORE).
+	"music": "starsong",
 }

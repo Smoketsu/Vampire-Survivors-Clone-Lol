@@ -236,21 +236,19 @@ const FINAL_HARVEST := {
 
 # --- Sounds -------------------------------------------------------------------------------
 
-## Concord event -> sound id. FOR NOW each event points at an EXISTING sound
-## (the startup bank, or the City pack the stubs' "siren" music loads); the
-## intended Concord pack id (SoundData.CONCORD_SOUNDS, the audio pass) is in
-## the comment: the lead repoints each event to it at the merge. An id that is
-## not rendered is skipped silently by Sfx.play().
+## Concord event -> sound id. Each event points at its Concord pack id
+## (SoundData.CONCORD_SOUNDS, rendered lazily with the Concord music). An id
+## that is not rendered is skipped silently by Sfx.play().
 const SOUNDS := {
-	"beam_charge": "boss_telegraph",  # Intended: "beam_charge" (a thin rising whine: the aiming line).
-	"beam_fire": "bolt_cast",  # Intended: "beam_fire" (a held, buzzing laser tone).
-	"beam_reflect": "orb_block",  # Intended: "beam_reflect" (a bright glassy ping with a reversed tail).
-	"tractor_beam": "banshee_wail",  # Intended: "tractor_beam" (a low, wobbling hum).
-	"abduction": "gargoyle_takeoff",  # Intended: "abduction" (a rising whoosh that thins out).
-	"saucer_down": "vehicle_wreck",  # Intended: "saucer_down" (a sputtering electric crash).
-	"ground_burn": "plague_tick",  # Intended: "ground_burn" (a soft sizzle and hiss).
-	"brood_chitter": "enemy_hit",  # Intended: "brood_chitter" (a short insect clicking).
-	"harvest_eye": "reckoning",  # Intended: "harvest_eye" (a deep opening groan and a low horn).
+	"beam_charge": "beam_charge",  # Concord pack id "beam_charge" (a thin rising whine: the aiming line).
+	"beam_fire": "beam_fire",  # Concord pack id "beam_fire" (a held, buzzing laser tone).
+	"beam_reflect": "beam_reflect",  # Concord pack id "beam_reflect" (a bright glassy ping with a reversed tail).
+	"tractor_beam": "tractor_beam",  # Concord pack id "tractor_beam" (a low, wobbling hum).
+	"abduction": "abduction",  # Concord pack id "abduction" (a rising whoosh that thins out).
+	"saucer_down": "saucer_down",  # Concord pack id "saucer_down" (a sputtering electric crash).
+	"ground_burn": "ground_burn",  # Concord pack id "ground_burn" (a soft sizzle and hiss).
+	"brood_chitter": "brood_chitter",  # Concord pack id "brood_chitter" (a short insect clicking).
+	"harvest_eye": "harvest_eye",  # Concord pack id "harvest_eye" (a deep opening groan and a low horn).
 }
 
 # --- Counter-passive hooks (not built) -----------------------------------------------------

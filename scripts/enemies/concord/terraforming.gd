@@ -415,6 +415,36 @@ func _heal(tick: float) -> void:
 # Drawing (visual only; never headless)
 # =====================================================================================
 
+## Draws one turf cell `c` into `rect`. The art is a 3 x 3 atlas of square
+## pieces (row 0 TL / top / TR, row 1 left / centre / right, row 2 BL / bottom /
+## BR): a side with no turf neighbour (LIVE or GROWING) picks the edge piece for
+## that side, otherwise the centre. Without the art, the made glyph whole.
+func _draw_turf(turf: Texture2D, c: Vector2i, rect: Rect2, col: Color) -> void:
+	if turf == null:
+		draw_texture_rect(glyph_texture(false), rect, false, col)
+		return
+	var col_i := 1  # Atlas column: 0 left edge, 1 middle, 2 right edge.
+	var row_i := 1  # Atlas row: 0 top edge, 1 middle, 2 bottom edge.
+	if not _is_turf(c + Vector2i(-1, 0)):
+		col_i = 0
+	elif not _is_turf(c + Vector2i(1, 0)):
+		col_i = 2
+	if not _is_turf(c + Vector2i(0, -1)):
+		row_i = 0
+	elif not _is_turf(c + Vector2i(0, 1)):
+		row_i = 2
+	var piece := float(turf.get_width()) / 3.0  # One atlas cell's side (texels).
+	draw_texture_rect_region(turf, rect, Rect2(piece * float(col_i), piece * float(row_i), piece, piece), col)
+
+
+## True when cell `c` holds turf (growing or live), for the atlas edge pieces.
+func _is_turf(c: Vector2i) -> bool:
+	if not cells.has(c):
+		return false
+	var st := int((cells[c] as Array)[0])
+	return st == GROWING or st == LIVE
+
+
 ## Draws the falling pods' streaks, every cell in view (growing: fading in;
 ## live: the turf; scorched: black, fading as it clears) and the heal
 ## shimmers.
@@ -434,10 +464,10 @@ func _draw() -> void:
 		match state:
 			GROWING:
 				var k := clampf((now - float(st[1])) / maxf(float(cfg["grow_time"]), 0.01), 0.0, 1.0)
-				draw_texture_rect(turf if turf != null else glyph_texture(false), rect.grow(-s * 0.3 * (1.0 - k)), false, Color(1, 1, 1, 0.4 + 0.5 * k))
+				_draw_turf(turf, c, rect.grow(-s * 0.3 * (1.0 - k)), Color(1, 1, 1, 0.4 + 0.5 * k))
 			LIVE:
 				var pulse := 0.92 + 0.08 * sin(now * 1.6 + float(c.x * 7 + c.y * 3))  # The flesh breathes.
-				draw_texture_rect(turf if turf != null else glyph_texture(false), rect, false, Color(pulse, pulse, pulse, 1.0))
+				_draw_turf(turf, c, rect, Color(pulse, pulse, pulse, 1.0))
 			_:
 				var left := float(cfg["regrow_delay"]) - (now - float(st[1]))  # s until it clears.
 				var a := clampf(left / maxf(float(cfg["scorch_fade"]), 0.01), 0.0, 1.0)
